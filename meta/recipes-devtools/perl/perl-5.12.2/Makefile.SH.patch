@@ -166,12 +166,12 @@ Index: perl-5.12.2/Makefile.SH
  	$(MINIPERL) $(Icwd) mkppport
  
  !NO!SUBS!
-@@ -970,30 +979,30 @@ esac
+@@ -970,29 +979,29 @@ esac
  $spitshell >>$Makefile <<'!NO!SUBS!'
  
  .PHONY: preplibrary
--preplibrary: $(MINIPERL_EXE) $(CONFIGPM) lib/re.pm $(PREPLIBRARY_LIBPERL)
-+preplibrary: $(CONFIGPM) lib/re.pm $(PREPLIBRARY_LIBPERL)
+-preplibrary: $(MINIPERL_EXE) $(CONFIGPM) $(PREPLIBRARY_LIBPERL)
++preplibrary: $(CONFIGPM) $(PREPLIBRARY_LIBPERL)
  
  $(CONFIGPM_FROM_CONFIG_SH): $(CONFIGPOD)
  
@@ -183,10 +183,6 @@ Index: perl-5.12.2/Makefile.SH
 +lib/ExtUtils/Miniperl.pm: miniperlmain.c minimod.pl $(CONFIGPM)
  	$(MINIPERL) minimod.pl > lib/ExtUtils/Miniperl.pm
  
- lib/re.pm: ext/re/re.pm
- 	@-rm -f $@
- 	cp ext/re/re.pm lib/re.pm
- 
 -$(plextract):	$(MINIPERL_EXE) $(CONFIGPM) x2p/s2p $(dynamic_ext)
 +$(plextract):	$(CONFIGPM) x2p/s2p $(dynamic_ext)
  	@-rm -f $@
@@ -196,6 +192,10 @@ Index: perl-5.12.2/Makefile.SH
 +x2p/s2p: $(CONFIGPM) $(dynamic_ext) x2p/s2p.PL
  	cd x2p; $(LDLIBPTH) $(MAKE) s2p
  
+-lib/buildcustomize.pl: $(MINIPERL_EXE) write_buildcustomize.pl
++lib/buildcustomize.pl: write_buildcustomize.pl
+ 	$(MINIPERL) write_buildcustomize.pl >lib/buildcustomize.pl
+ 
  unidatafiles $(unidatafiles) pod/perluniprops.pod: uni.data
  
 -uni.data: $(MINIPERL_EXE) $(CONFIGPM) lib/unicore/mktables $(nonxs_ext)
@@ -203,7 +203,7 @@ Index: perl-5.12.2/Makefile.SH
  	$(MINIPERL) $(Icwd) lib/unicore/mktables -C lib/unicore -P pod -maketest -makelist -p
  #	Commented out so always runs, mktables looks at far more files than we
  #	can in this makefile to decide if needs to run or not
-@@ -1002,21 +1011,21 @@ uni.data: $(MINIPERL_EXE) $(CONFIGPM) li
+@@ -1001,21 +1010,21 @@ uni.data: $(MINIPERL_EXE) $(CONFIGPM) li
  # $(PERL_EXE) and ext because buildtoc uses Text::Wrap uses re
  # But also this ensures that all extensions are built before we try to scan
  # them, which picks up Devel::PPPort's documentation.
@@ -230,7 +230,7 @@ Index: perl-5.12.2/Makefile.SH
  	-@test ! -f extra.pods || rm -f `cat extra.pods`
  	-@rm -f extra.pods
  	-@for x in `grep -l '^=[a-z]' README.* | grep -v README.vms` ; do \
-@@ -1059,11 +1068,7 @@ no-install:
+@@ -1058,11 +1067,7 @@ no-install:
  INSTALL_DEPENDENCE = all
  
  install.perl:	$(INSTALL_DEPENDENCE) installperl
@@ -243,28 +243,28 @@ Index: perl-5.12.2/Makefile.SH
  
  # XXX Experimental. Hardwired values, but useful for testing.
  # Eventually Configure could ask for some of these values.
-@@ -1160,16 +1165,16 @@ manicheck:	FORCE
+@@ -1159,16 +1164,16 @@ manicheck:	FORCE
  #
  # DynaLoader may be needed for extensions that use Makefile.PL.
  
--$(DYNALOADER):	$(MINIPERL_EXE) preplibrary FORCE $(nonxs_ext)
-+$(DYNALOADER):	preplibrary FORCE $(nonxs_ext)
+-$(DYNALOADER):	$(MINIPERL_EXE) lib/buildcustomize.pl preplibrary FORCE $(nonxs_ext)
++$(DYNALOADER):	lib/buildcustomize.pl preplibrary FORCE $(nonxs_ext)
  	$(MINIPERL) make_ext.pl $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL) LINKTYPE=static $(STATIC_LDFLAGS)
  
--d_dummy $(dynamic_ext):	$(MINIPERL_EXE) preplibrary makeppport $(DYNALOADER) FORCE $(PERLEXPORT)
-+d_dummy $(dynamic_ext):	preplibrary makeppport $(DYNALOADER) FORCE $(PERLEXPORT)
+-d_dummy $(dynamic_ext):	$(MINIPERL_EXE) lib/buildcustomize.pl preplibrary makeppport $(DYNALOADER) FORCE $(PERLEXPORT)
++d_dummy $(dynamic_ext):	lib/buildcustomize.pl preplibrary makeppport $(DYNALOADER) FORCE $(PERLEXPORT)
  	$(MINIPERL) make_ext.pl $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL) LINKTYPE=dynamic
  
--s_dummy $(static_ext):	$(MINIPERL_EXE) preplibrary makeppport $(DYNALOADER) FORCE
-+s_dummy $(static_ext):	preplibrary makeppport $(DYNALOADER) FORCE
+-s_dummy $(static_ext):	$(MINIPERL_EXE) lib/buildcustomize.pl preplibrary makeppport $(DYNALOADER) FORCE
++s_dummy $(static_ext):	lib/buildcustomize.pl preplibrary makeppport $(DYNALOADER) FORCE
  	$(MINIPERL) make_ext.pl $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL) LINKTYPE=static $(STATIC_LDFLAGS)
  
--n_dummy $(nonxs_ext):	$(MINIPERL_EXE) preplibrary FORCE
-+n_dummy $(nonxs_ext):	preplibrary FORCE
+-n_dummy $(nonxs_ext):	$(MINIPERL_EXE) lib/buildcustomize.pl preplibrary FORCE
++n_dummy $(nonxs_ext):	lib/buildcustomize.pl preplibrary FORCE
  	$(MINIPERL) make_ext.pl $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL)
  !NO!SUBS!
  
-@@ -1367,10 +1372,10 @@ _test:
+@@ -1366,10 +1371,10 @@ _test:
  
  test_prep_pre: preplibrary utilities $(nonxs_ext)
  
@@ -277,12 +277,12 @@ Index: perl-5.12.2/Makefile.SH
  	$(MINIPERL) make_ext.pl $(dynamic_ext_re) MAKE=$(MAKE) LIBPERL_A=$(LIBPERL) LINKTYPE=dynamic
  	cd t && (rm -f $(PERL_EXE); $(LNS) ../$(PERL_EXE) $(PERL_EXE))
  
-@@ -1461,7 +1466,7 @@ minitest.prep:
+@@ -1460,7 +1465,7 @@ minitest.prep:
  
  # Can't depend on lib/Config.pm because that might be where miniperl
  # is crashing.
--minitest: $(MINIPERL_EXE) lib/re.pm minitest.prep
-+minitest: lib/re.pm minitest.prep
+-minitest: $(MINIPERL_EXE) minitest.prep
++minitest: minitest.prep
  	- cd t && (rm -f $(PERL_EXE); $(LNS) ../$(MINIPERL_EXE) $(PERL_EXE)) \
  		&& $(RUN_PERL) TEST -minitest base/*.t comp/*.t cmd/*.t run/*.t io/*.t re/*.t op/*.t uni/*.t </dev/tty
  

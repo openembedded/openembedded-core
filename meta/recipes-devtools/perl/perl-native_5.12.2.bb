@@ -4,7 +4,7 @@ SECTION = "libs"
 LICENSE = "Artistic|GPL"
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 		    file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
-PR = "r6"
+PR = "r7"
 
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
                     file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
@@ -15,6 +15,9 @@ SRC_URI = "http://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
            file://parallel_build_fix_1.patch \
            file://parallel_build_fix_2.patch \
            file://parallel_build_fix_3.patch \
+           file://parallel_build_fix_4.patch \
+           file://parallel_build_fix_5.patch \
+           file://parallel_build_fix_6.patch \
            file://native-nopacklist.patch;patch=1 \
            file://native-perlinc.patch;patch=1"
 

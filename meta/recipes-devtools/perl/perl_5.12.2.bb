@@ -8,7 +8,7 @@ PRIORITY = "optional"
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db perl-native-${PV} grep-native"
 DEPENDS += "gdbm zlib"
-PR = "r2"
+PR = "r3"
 
 # 5.10.1 has Module::Build built-in
 PROVIDES += "libmodule-build-perl"
@@ -21,6 +21,9 @@ SRC_URI = "ftp://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
         file://parallel_build_fix_1.patch \
         file://parallel_build_fix_2.patch \
         file://parallel_build_fix_3.patch \
+        file://parallel_build_fix_4.patch \
+        file://parallel_build_fix_5.patch \
+        file://parallel_build_fix_6.patch \
         file://Makefile.SH.patch;patch=1 \
         file://installperl.patch;patch=1 \
         file://perl-dynloader.patch;patch=1 \
