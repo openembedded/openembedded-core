@@ -162,7 +162,9 @@ RDEPENDS_task-poky-lsb-graphic-add = "\
     qt4-plugin-sqldriver-sqlite \
     libx11-locale \
     xorg-minimal-fonts \
-    gdk-pixbuf \
+    gdk-pixbuf-loader-ico \
+    gdk-pixbuf-loader-bmp \
+    gdk-pixbuf-loader-ani \
 "
 
 RDEPENDS_task-poky-lsb-graphic-add_qemux86 = "\
