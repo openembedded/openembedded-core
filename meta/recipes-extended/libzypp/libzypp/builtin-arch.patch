@@ -1,0 +1,122 @@
+This patch adds the ${MACHINE_ARCH} and ${PACKAGE_ARCH} to
+libzypp available archs, see do_archpatch in .bb for more
+details, this is the version for ${BASE_PACKAGE_ARCH} already
+recognized in libzypp.
+
+Also "all" is added as a synonym for noarch.
+
+Signed-off-by: Qing He <qing.he@intel.com>
+
+diff --git a/zypp/Arch.cc b/zypp/Arch.cc
+index 7b357bb..d9102cc 100644
+--- a/zypp/Arch.cc
++++ b/zypp/Arch.cc
+@@ -122,7 +122,13 @@ namespace zypp
+ 
+   /** \relates Arch::CompatEntry */
+   inline bool operator==( const Arch::CompatEntry & lhs, const Arch::CompatEntry & rhs )
+-  { return lhs._idStr == rhs._idStr; }
++  {
++    if ( (lhs._idStr == "all" && rhs._idStr == "noarch") ||
++         (lhs._idStr == "noarch" && rhs._idStr == "all") )
++      return true;
++    else
++      return lhs._idStr == rhs._idStr;
++  }
+   /** \relates Arch::CompatEntry */
+   inline bool operator!=( const Arch::CompatEntry & lhs, const Arch::CompatEntry & rhs )
+   { return ! ( lhs == rhs ); }
+@@ -153,7 +159,7 @@ namespace zypp
+     //       bit for each architecture.
+     //
+ #define DEF_BUILTIN(A) const IdString  _##A( #A );
+-    DEF_BUILTIN( noarch );
++    const IdString _noarch( "all" );
+ 
+     DEF_BUILTIN( i386 );
+     DEF_BUILTIN( i486 );
+@@ -202,6 +208,8 @@ namespace zypp
+ 
+     DEF_BUILTIN( sh4 );
+     DEF_BUILTIN( sh4a );
++
++    const IdString _machine( "@MACHINE_ARCH@" );
+ #undef DEF_BUILTIN
+ 
+     ///////////////////////////////////////////////////////////////////
+@@ -326,12 +334,14 @@ namespace zypp
+         //
+         defCompatibleWith( _sh4,	_noarch );
+         defCompatibleWith( _sh4a,	_noarch,_sh4 );
++
++        defCompatibleWith( _machine,    @PKG_ARCH_TAIL@,_@PKG_ARCH@ );
+         //
+         ///////////////////////////////////////////////////////////////////
+         // dumpOn( USR ) << endl;
+       }
+ 
+-    private:
++    public:
+       /** Return the next avialable _idBit.
+        * Ctor injects _noarch into the _compatSet, 1 is for
+        * nonbuiltin archs, so we can use <tt>size</tt> for
+@@ -440,6 +450,8 @@ namespace zypp
+   const Arch Arch_sh4( _sh4 );
+   const Arch Arch_sh4a( _sh4a );
+ 
++  const Arch Arch_machine( _machine );
++
+   ///////////////////////////////////////////////////////////////////
+   //
+   //	METHOD NAME : Arch::Arch
+diff --git a/zypp/Arch.h b/zypp/Arch.h
+index 6b18a6e..092211c 100644
+--- a/zypp/Arch.h
++++ b/zypp/Arch.h
+@@ -249,6 +249,8 @@ namespace zypp
+   extern const Arch Arch_sh4;
+   /** \relates Arch */
+   extern const Arch Arch_sh4a;
++
++  extern const Arch Arch_machine;
+   //@}
+ 
+   ///////////////////////////////////////////////////////////////////
+diff --git a/zypp/parser/yum/schema/common-inc.rnc b/zypp/parser/yum/schema/common-inc.rnc
+index f12ac3b..24ce06e 100644
+--- a/zypp/parser/yum/schema/common-inc.rnc
++++ b/zypp/parser/yum/schema/common-inc.rnc
+@@ -26,6 +26,7 @@ private.evr =
+ private.localizedtext = attribute lang { "en" | "de" }, text
+ 
+ private.archenum = "noarch"
++            | "all"
+             | "armv4l"
+             | "armv5el"
+             | "armv5tel"
+@@ -46,4 +47,5 @@ private.archenum = "noarch"
+             | "sh4"
+             | "x86_64"
+             | "src"
++            | "@MACHINE_ARCH@"
+ 
+diff --git a/zypp/parser/yum/schema/common-inc.rng b/zypp/parser/yum/schema/common-inc.rng
+index 60e5742..8a9ce2e 100644
+--- a/zypp/parser/yum/schema/common-inc.rng
++++ b/zypp/parser/yum/schema/common-inc.rng
+@@ -89,6 +89,7 @@
+   <define name="private.archenum">
+     <choice>
+       <value>noarch</value>
++      <value>all</value>
+       <value>armv4l</value>
+       <value>armv5el</value>
+       <value>armv5tel</value>
+@@ -109,6 +110,7 @@
+       <value>sh4</value>
+       <value>x86_64</value>
+       <value>src</value>
++      <value>@MACHINE_ARCH@</value>
+     </choice>
+   </define>
+ </grammar>
