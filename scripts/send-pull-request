@@ -109,15 +109,17 @@ if [ $AUTO -eq 1 ]; then
     harvest_recipients CC "^.*-[Bb][Yy]: *"
 fi
 
-if [ -z "$TO" ] && [ -z "$CC" ]; then
-    echo "ERROR: you have not specified any recipients."
-    usage
-    exit 1
-fi
-
 case "$PULL_MTA" in
     git)
         FROM="$(git config sendemail.from)"
+	AUTO_TO="$(git config sendemail.to)"
+	if [ -n "$AUTO_TO" ]; then
+	    if [ -n "$TO" ]; then
+		TO="$TO,$AUTO_TO"
+	    else
+		TO="$AUTO_TO"
+	    fi
+	fi
         ;;
     sendmail)
         if [ -z "$FROM" ]; then
@@ -130,6 +132,13 @@ case "$PULL_MTA" in
         fi
         ;;
 esac
+
+if [ -z "$TO" ] && [ -z "$CC" ]; then
+    echo "ERROR: you have not specified any recipients."
+    usage
+    exit 1
+fi
+
 
 # Generate report for the user and require confirmation before sending
 cat <<EOM
