@@ -172,8 +172,8 @@ def check_sanity(e):
             if os.path.exists("/proc/sys/vm/mmap_min_addr"):
                 f = open("/proc/sys/vm/mmap_min_addr", "r")
                 try:
-                    if (int(f.read().strip()) < 65536):
-                        messages = messages + "/proc/sys/vm/mmap_min_addr is not >= 65536. This will cause problems with qemu so please fix the value (as root).\n\nTo fix this in later reboots, set vm.mmap_min_addr = 65536 in /etc/sysctl.conf.\n"
+                    if (int(f.read().strip()) > 65536):
+                        messages = messages + "/proc/sys/vm/mmap_min_addr is not <= 65536. This will cause problems with qemu so please fix the value (as root).\n\nTo fix this in later reboots, set vm.mmap_min_addr = 65536 in /etc/sysctl.conf.\n"
                 finally:
                     f.close()
         except:
