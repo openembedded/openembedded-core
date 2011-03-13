@@ -24,6 +24,8 @@ LIC_FILES_CHKSUM = "file://${POKYBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 # - tools-profile       - profiling tools
 # - tools-testapps      - tools usable to make some device tests
 # - nfs-server          - NFS server (exports / over NFS to everybody)
+# - ssh-server-dropbear - SSH server (dropbear)
+# - ssh-server-openssh  - SSH server (openssh)
 # - dev-pkgs            - development packages
 # - dbg-pkgs            - debug packages
 #
@@ -79,8 +81,15 @@ POKY_BASE_INSTALL = '\
     \
     ${@base_contains("IMAGE_FEATURES", "nfs-server", "task-poky-nfs-server", "",d)} \
     ${@base_contains("IMAGE_FEATURES", ["nfs-server", "dbg-pkgs"], "task-poky-nfs-server-dbg", "",d)} \
-    \
     ${@base_contains("IMAGE_FEATURES", ["nfs-server", "dev-pkgs"], "task-poky-nfs-server-dev", "",d)} \
+    \
+    ${@base_contains("IMAGE_FEATURES", "ssh-server-dropbear", "task-poky-ssh-dropbear", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["ssh-server-dropbear", "dbg-pkgs"], "task-poky-ssh-dropbear-dbg", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["ssh-server-dropbear", "dev-pkgs"], "task-poky-ssh-dropbear-dev", "",d)} \
+    \
+    ${@base_contains("IMAGE_FEATURES", "ssh-server-openssh", "task-poky-ssh-openssh", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["ssh-server-openssh", "dbg-pkgs"], "task-poky-ssh-openssh-dbg", "",d)} \
+    ${@base_contains("IMAGE_FEATURES", ["ssh-server-openssh", "dev-pkgs"], "task-poky-ssh-openssh-dev", "",d)} \
     \
     ${@base_contains("IMAGE_FEATURES", "package-management", "${ROOTFS_PKGMANAGE}", "${ROOTFS_PKGMANAGE_BOOTSTRAP}",d)} \
     ${@base_contains("IMAGE_FEATURES", "qt4-pkgs", "task-poky-qt-demos", "",d)} \
