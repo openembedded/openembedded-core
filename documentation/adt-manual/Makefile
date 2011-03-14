@@ -14,7 +14,7 @@ XSL_XHTML_URI = $(XSL_BASE_URI)/xhtml/docbook.xsl
 all: html pdf tarball
 
 pdf:
-	../tools/poky-docbook-to-pdf kernel-manual.xml ../template
+	../tools/poky-docbook-to-pdf adt-manual.xml ../template
 
 ##
 # These URI should be rewritten by your distribution's xml catalog to
@@ -23,16 +23,16 @@ pdf:
 html:
 #       See http://www.sagehill.net/docbookxsl/HtmlOutput.html 
 
-#	xsltproc $(XSLTOPTS) -o yocto-project-qs.html $(XSL_XHTML_URI) yocto-project-qs.xml
-	xsltproc $(XSLTOPTS) -o kernel-manual.html yocto-project-kernel-manual-customization.xsl kernel-manual.xml
+#	xsltproc $(XSLTOPTS) -o adt-manual.html $(XSL_XHTML_URI) adt-manual.xml
+	xsltproc $(XSLTOPTS) -o adt-manual.html adt-manual-customization.xsl adt-manual.xml
 
 tarball: html
-	tar -cvzf kernel-manual.tgz kernel-manual.html style.css figures/kernel-title.png figures/kernel-big-picture.png figures/kernel-architecture-overview.png
+	tar -cvzf adt-manual.tgz adt-manual.html style.css figures/adt-title.png figures/yocto-project-transp.png
 
 validate:
-	xmllint --postvalid --xinclude --noout kernel-manual.xml
+	xmllint --postvalid --xinclude --noout adt-manual.xml
 
-OUTPUTS = kernel-manual.tgz kernel-manual.html kernel-manual.pdf
+OUTPUTS = adt-manual.tgz adt-manual.html adt-manual.pdf
 SOURCES = *.png *.xml *.css
 
 publish:
