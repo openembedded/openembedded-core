@@ -1,11 +1,11 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 
-<chapter id='kernel-doc-intro'>
+<chapter id='adt-prepare'>
 
 <title>Yocto Project Kernel Architecture and Use Manual</title>
 
-<section id='book-intro'>
+<section id='prepare'>
     <title>Introduction</title>
     <para>
         The Yocto Project presents the kernel as a fully patched, history-clean git
