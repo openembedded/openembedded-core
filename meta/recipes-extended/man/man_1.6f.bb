@@ -10,7 +10,7 @@ DEPENDS = "groff less"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
-SRC_URI = "http://primates.ximian.com/~flucifredi/${PN}/${PN}-${PV}.tar.gz \
+SRC_URI = "http://primates.ximian.com/~flucifredi/${BPN}/${BPN}-${PV}.tar.gz \
            file://man-1.5k-confpath.patch;striplevel=0 \
            file://man-1.5h1-make.patch;striplevel=1 \
            file://man-1.5k-nonascii.patch;striplevel=1 \

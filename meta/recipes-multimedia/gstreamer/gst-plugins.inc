@@ -9,7 +9,7 @@ inherit autotools pkgconfig
 
 FILESPATH =. "${FILE_DIRNAME}/gst-plugins:"
 
-SRC_URI = "http://gstreamer.freedesktop.org/src/${PN}/${PN}-${PV}.tar.bz2"
+SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2"
 
 EXTRA_OECONF = "--disable-valgrind --disable-debug --disable-examples "
 

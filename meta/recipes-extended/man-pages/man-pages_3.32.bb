@@ -7,7 +7,7 @@ LICENSE = "GPL"
 PR = "r1"
 
 LIC_FILES_CHKSUM = "file://README;md5=0422377a748010b2b738342e24f141c1"
-SRC_URI = "http://www.kernel.org/pub/linux/docs/man-pages/Archive/${PN}-${PV}.tar.gz"
+SRC_URI = "http://www.kernel.org/pub/linux/docs/man-pages/Archive/${BPN}-${PV}.tar.gz"
 
 SRC_URI[md5sum] = "cc6c2d4d4eb364fd8da718c412db09d4"
 SRC_URI[sha256sum] = "61ef2fc36421e72eb92d1f533576a439a2fcdae20269393f740dd98abd8be519"

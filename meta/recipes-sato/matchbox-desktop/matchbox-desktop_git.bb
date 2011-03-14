@@ -13,7 +13,7 @@ SECTION = "x11/wm"
 PV = "2.0+git${SRCPV}"
 PR = "r0"
 
-SRC_URI = "git://git.pokylinux.org/${PN}-2;protocol=git \
+SRC_URI = "git://git.pokylinux.org/${BPN}-2;protocol=git \
            file://dso_linking_change_build_fix.patch"
 
 EXTRA_OECONF = "--enable-startup-notification --with-dbus"

@@ -17,7 +17,7 @@ PR = "r6"
 
 S = "${WORKDIR}/${PN}"
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${PN};proto=http \
+SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${BPN};proto=http \
            file://gst_change_state.patch \
 	   file://make-382.patch"
 

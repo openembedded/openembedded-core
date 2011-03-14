@@ -17,7 +17,7 @@ PRIORITY = "optional"
 
 PR = "r1"
 
-SRC_URI = "http://www.progsoc.org/~wildfire/zeroconf/download/${PN}-${PV}.tar.gz \
+SRC_URI = "http://www.progsoc.org/~wildfire/zeroconf/download/${BPN}-${PV}.tar.gz \
            file://compilefix.patch;patch=1 \
            file://zeroconf-default \
            file://debian-zeroconf"

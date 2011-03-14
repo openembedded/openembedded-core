@@ -10,7 +10,7 @@ SECTION = "x11/wm"
 PV = "0.0+git${SRCPV}"
 PR = "r0"
 
-SRC_URI = "git://git.pokylinux.org/${PN};protocol=git \
+SRC_URI = "git://git.pokylinux.org/${BPN};protocol=git \
            file://single-instance.patch;patch=1 \
            file://configure_fix.patch;patch=1;maxrev=1819 \
            file://dso_linking_change_build_fix.patch "

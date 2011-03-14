@@ -8,7 +8,7 @@ DEPENDS = "expat neon"
 
 PR = "r2"
 
-SRC_URI = "http://ftp.musicbrainz.org/pub/musicbrainz/${PN}-${PV}.tar.gz \
+SRC_URI = "http://ftp.musicbrainz.org/pub/musicbrainz/${BPN}-${PV}.tar.gz \
            file://fix_build_issue_for_gcc_4.5.0.patch "
 
 SRC_URI[md5sum] = "f4824d0a75bdeeef1e45cc88de7bb58a"

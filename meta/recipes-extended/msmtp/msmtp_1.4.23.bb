@@ -12,7 +12,7 @@ PR = "r0"
 #COPYING or Licence
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-SRC_URI = "http://sourceforge.net/projects/msmtp/files/msmtp/${PV}/${PN}-${PV}.tar.bz2 \
+SRC_URI = "http://sourceforge.net/projects/msmtp/files/msmtp/${PV}/${BPN}-${PV}.tar.bz2 \
           "
 
 SRC_URI[md5sum] = "5fb7ae88186624cdb125d3efad3fdc16"

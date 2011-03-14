@@ -2,7 +2,7 @@ require sato-icon-theme.inc
 
 DEPENDS += "icon-naming-utils-native"
 
-SRC_URI = "http://pokylinux.org/releases/sato/${PN}-${PV}.tar.gz \
+SRC_URI = "http://pokylinux.org/releases/sato/${BPN}-${PV}.tar.gz \
            file://iconpath-option.patch"
 
 SRC_URI[md5sum] = "86a847f3128a43a9cf23b7029a656f50"

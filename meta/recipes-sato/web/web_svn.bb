@@ -6,7 +6,7 @@ PR = "r4"
 
 PV = "0.0+svnr${SRCPV}"
 
-SRC_URI = 	"svn://svn.o-hand.com/repos/${PN};module=trunk;proto=http \
+SRC_URI = 	"svn://svn.o-hand.com/repos/${BPN};module=trunk;proto=http \
 		file://owl-window-menu.patch \
 		"
 

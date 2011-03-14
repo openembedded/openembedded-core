@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=fe11ac92dcbd84134d91b6e2c2eccab5"
 DEPENDS = "openssl"
 PR = "r0"
 
-SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${PN}-${PV}.tar.gz \
+SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
 	   file://conf.patch \
            file://cross-build-fix.patch \
 	   "

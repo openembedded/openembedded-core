@@ -11,7 +11,7 @@ PR = "r3"
 
 inherit autotools
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/setserial/${PN}-${PV}.tar.gz \
+SRC_URI = "${SOURCEFORGE_MIRROR}/setserial/${BPN}-${PV}.tar.gz \
            file://add_stdlib.patch \
           "
 

@@ -13,7 +13,7 @@ DEPENDS = "virtual/libx11 virtual/libgl glew"
 
 PR = "r1"
 
-SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/demos/${PV}/${PN}-${PV}.tar.bz2 \
+SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/demos/${PV}/${BPN}-${PV}.tar.bz2 \
 	file://dso_linking_change_build_fix.patch"
 
 inherit autotools pkgconfig

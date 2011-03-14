@@ -16,7 +16,7 @@ DEPENDS = "gstreamer gst-plugins-base zlib"
 
 inherit autotools pkgconfig
 
-SRC_URI = "http://gstreamer.freedesktop.org/src/${PN}/${PN}-${PV}.tar.bz2 \
+SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://lower-rank.diff \
 "
 

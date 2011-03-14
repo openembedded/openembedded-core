@@ -15,7 +15,7 @@ DEPENDS = "sysfsutils openssl docbook-utils-native"
 
 PR = "r0"
 
-SRC_URI = "http://www.skbuff.net/iputils/${PN}-${PV}.tar.bz2 \
+SRC_URI = "http://www.skbuff.net/iputils/${BPN}-${PV}.tar.bz2 \
            file://debian/fix-dead-host-ping-stats.diff \
            file://debian/add-icmp-return-codes.diff \
            file://debian/use_gethostbyname2.diff \

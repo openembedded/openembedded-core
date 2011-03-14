@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34 \
 
 DEPENDS = 	"gettext dbus glib-2.0 dbus-glib"
 
-SRC_URI =	"http://www.galago-project.org/files/releases/source/${PN}/${P}.tar.gz \
+SRC_URI =	"http://www.galago-project.org/files/releases/source/${BPN}/${P}.tar.gz \
                  file://mkdir.patch;patch=1 \
                  file://pkgconfig.patch;patch=1 "
 

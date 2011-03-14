@@ -22,7 +22,7 @@ def openmoko_two_get_subdir(d):
 LICENSE = "${@openmoko_two_get_license(d)}"
 SUBDIR = "${@openmoko_two_get_subdir(d)}"
 
-SRC_URI := "${OPENMOKO_MIRROR}/src/target/${OPENMOKO_RELEASE}/${SUBDIR};module=${PN};proto=http"
+SRC_URI := "${OPENMOKO_MIRROR}/src/target/${OPENMOKO_RELEASE}/${SUBDIR};module=${BPN};proto=http"
 S = "${WORKDIR}/${PN}"
 
 FILES_${PN} += "${datadir}/icons"

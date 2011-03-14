@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://README;beginline=33;endline=35;md5=1705549eef7577a3d6
 
 DEPENDS += "libxml-parser-perl"
 
-SRC_URI = "http://www.cpan.org/modules/by-module/XML/${PN}-${PV}.tar.gz"
+SRC_URI = "http://www.cpan.org/modules/by-module/XML/${BPN}-${PV}.tar.gz"
 
 EXTRA_CPANFLAGS = "EXPATLIBPATH=${STAGING_LIBDIR} EXPATINCPATH=${STAGING_INCDIR}"
 

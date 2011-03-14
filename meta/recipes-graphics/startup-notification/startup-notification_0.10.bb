@@ -20,7 +20,7 @@ DEPENDS = "virtual/libx11 libsm xcb-util"
 
 inherit autotools pkgconfig
 
-SRC_URI = "http://www.freedesktop.org/software/startup-notification/releases/${PN}-${PV}.tar.gz"
+SRC_URI = "http://www.freedesktop.org/software/startup-notification/releases/${BPN}-${PV}.tar.gz"
 
 SRC_URI[md5sum] = "bca0ed1c74bc4e483ea2ed12a5717354"
 SRC_URI[sha256sum] = "64bbeb5c28619721fc19d6920ad2b8bf6c0dc3a0e96a1b0bc26f480fbc525459"

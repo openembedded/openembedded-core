@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
 PR = "r0"
 
-SRC_URI = "ftp://ftp.suse.com/pub/projects/init/${PN}-${PV}.tar.bz2 \
+SRC_URI = "ftp://ftp.suse.com/pub/projects/init/${BPN}-${PV}.tar.bz2 \
            file://makefile.patch \
            file://disable_runtests.patch \
            file://insserv.conf"

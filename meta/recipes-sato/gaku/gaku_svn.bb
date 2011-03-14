@@ -19,7 +19,7 @@ PV = "0.0+svnr${SRCPV}"
 
 PR = "r4"
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${PN};proto=http"
+SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${BPN};proto=http"
 
 S = "${WORKDIR}/${PN}"
 

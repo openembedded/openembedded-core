@@ -10,7 +10,7 @@ PR = "r2"
 
 S = "${WORKDIR}/git"
 
-SRC_URI =+ "git://git.gnome.org/${PN};protocol=git \
+SRC_URI =+ "git://git.gnome.org/${BPN};protocol=git \
 	    file://make-382.patch"
 
 S = "${WORKDIR}/git"

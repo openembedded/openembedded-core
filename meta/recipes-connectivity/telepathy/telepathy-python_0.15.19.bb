@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=2d5025d4aa3495befef8f17206a5b0a1 \
 
 RDEPENDS_${PN} += "python-dbus"
 
-SRC_URI = "http://telepathy.freedesktop.org/releases/${PN}/${P}.tar.gz \
+SRC_URI = "http://telepathy.freedesktop.org/releases/${BPN}/${P}.tar.gz \
            file://parallel_make.patch"
 
 PR = "r1"

@@ -13,7 +13,7 @@ PR = "r1"
 
 FILES_${PN} += "${datadir}/*"
 
-SRC_URI = "${GNOME_MIRROR}/${PN}/2.31/${PN}-${PV}.tar.bz2 \
+SRC_URI = "${GNOME_MIRROR}/${BPN}/2.31/${BPN}-${PV}.tar.bz2 \
            file://iconpath-option.patch"
 
 SRC_URI[md5sum] = "8e727703343d4c18c73c79dd2009f8ed"

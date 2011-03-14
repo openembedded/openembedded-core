@@ -10,7 +10,7 @@ PR = "r1"
 
 PR = "r0"
 
-SRC_URI = "http://www.midnight-commander.org/downloads/${PN}-${PV}.tar.bz2"
+SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2"
 
 SRC_URI[md5sum] = "4eb2438b168fb0f93b748889a9294f54"
 SRC_URI[sha256sum] = "0d2b4e87b8a4158edf54380df9402b4a1a19f7494ef06dd0a0a3e3ff6a2b50f1"

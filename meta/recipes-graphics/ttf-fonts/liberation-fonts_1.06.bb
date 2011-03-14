@@ -15,7 +15,7 @@ PE = "1"
 PR = "r0"
 
 FONTREV = "0.20100721"
-SRC_URI = "https://fedorahosted.org/releases/l/i/${PN}/${PN}-${PV}.${FONTREV}.tar.gz \
+SRC_URI = "https://fedorahosted.org/releases/l/i/${BPN}/${BPN}-${PV}.${FONTREV}.tar.gz \
            file://30-liberation-aliases.conf"
 
 S = ${WORKDIR}/${PN}-${PV}.${FONTREV}
