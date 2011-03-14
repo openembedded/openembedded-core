@@ -1,7 +1,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 
-<book id='kernel-manual' lang='en' 
+<book id='adt-manual' lang='en' 
       xmlns:xi="http://www.w3.org/2003/XInclude"
       xmlns="http://docbook.org/ns/docbook"
       >
@@ -9,7 +9,7 @@
 
         <mediaobject>
             <imageobject>
-                <imagedata fileref='figures/kernel-title.png' 
+                <imagedata fileref='figures/adt-title.png' 
                     format='SVG' 
                     align='left' scalefit='1' width='100%'/>
             </imageobject>    
@@ -19,19 +19,19 @@
 
         <authorgroup>
             <author>
-                <firstname>Bruce</firstname> <surname>Ashfield</surname>
+                <firstname>Jessica</firstname> <surname>Zhang</surname>
                 <affiliation>
-                    <orgname>Wind River Corporation</orgname>
+                    <orgname>Intel Corporation</orgname>
                 </affiliation>
-                <email>bruce.ashfield@windriver.com</email>
+                <email>jessica.zhang@intel.com</email>
             </author>
         </authorgroup>
 
         <revhistory>
             <revision>
-                <revnumber>0.9</revnumber>
-                <date>24 November 2010</date>
-                <revremark>Beta Draft</revremark>
+                <revnumber>1.0</revnumber>
+                <date>14 March 2011</date>
+                <revremark>Initial Document released with Yocto Project 1.0.</revremark>
             </revision>
         </revhistory>
 
@@ -49,11 +49,15 @@
 
     </bookinfo>
 
-    <xi:include href="kernel-doc-intro.xml"/>
+    <xi:include href="adt-intro.xml"/>
 
-    <xi:include href="kernel-concepts.xml"/>
+    <xi:include href="adt-prepare.xml"/>
 
-    <xi:include href="kernel-how-to.xml"/>
+    <xi:include href="adt-package.xml"/>
+
+    <xi:include href="adt-eclipse.xml"/>
+
+    <xi:include href="adt-command.xml"/>
 
 <!--    <index id='index'>
       <title>Index</title>
