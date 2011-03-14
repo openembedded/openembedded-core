@@ -1,0 +1,57 @@
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<chapter id='kernel-doc-intro'>
+
+<title>Yocto Project Kernel Architecture and Use Manual</title>
+
+<section id='book-intro'>
+    <title>Introduction</title>
+    <para>
+        The Yocto Project presents the kernel as a fully patched, history-clean git
+        repository. 
+        The git tree represents the selected features, board support,
+        and configurations extensively tested by Yocto Project. 
+        The Yocto Project kernel allows the end user to leverage community
+        best practices to seamlessly manage the development, build and debug cycles.
+    </para>
+    <para>
+        This manual describes the Yocto Project kernel by providing information
+        on its history, organization, benefits, and use.
+        The manual consists of two sections:
+        <itemizedlist>
+            <listitem><para>Concepts - Describes concepts behind the kernel.
+                You will understand how the kernel is organized and why it is organized in 
+                the way it is.  You will understand the benefits of the kernel's organization 
+                and the mechanisms used to work with the kernel and how to apply it in your 
+                design process.</para></listitem>
+            <listitem><para>Using the Kernel - Describes best practices and "how-to" information
+                that lets you put the kernel to practical use.  Some examples are "How to Build a 
+                Project Specific Tree", "How to Examine Changes in a Branch", and "Saving Kernel
+                Modifications."</para></listitem>
+        </itemizedlist>
+    </para>
+    <para>
+        For more information on the kernel, see the following links:
+        <itemizedlist>
+            <listitem><para><ulink url='http://ldn.linuxfoundation.org/book/1-a-guide-kernel-development-process'></ulink></para></listitem>
+            <listitem><para><ulink url='http://userweb.kernel.org/~akpm/stuff/tpp.txt'></ulink></para></listitem>
+            <listitem><para><ulink url='http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=blob_plain;f=Documentation/HOWTO;hb=HEAD'></ulink></para></listitem> 
+        </itemizedlist>
+        <para> 
+        You can find more information on Yocto Project by visiting the website at
+        <ulink url='http://www.yoctoproject.org'></ulink>.
+        </para>
+    </para>
+</section>
+
+
+
+
+
+
+
+</chapter>
+<!--
+vim: expandtab tw=80 ts=4
+-->

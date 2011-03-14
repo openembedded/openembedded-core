@@ -1,0 +1,66 @@
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<book id='kernel-manual' lang='en' 
+      xmlns:xi="http://www.w3.org/2003/XInclude"
+      xmlns="http://docbook.org/ns/docbook"
+      >
+    <bookinfo>
+
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref='figures/kernel-title.png' 
+                    format='SVG' 
+                    align='left' scalefit='1' width='100%'/>
+            </imageobject>    
+        </mediaobject>
+
+        <title></title> 
+
+        <authorgroup>
+            <author>
+                <firstname>Bruce</firstname> <surname>Ashfield</surname>
+                <affiliation>
+                    <orgname>Wind River Corporation</orgname>
+                </affiliation>
+                <email>bruce.ashfield@windriver.com</email>
+            </author>
+        </authorgroup>
+
+        <revhistory>
+            <revision>
+                <revnumber>0.9</revnumber>
+                <date>24 November 2010</date>
+                <revremark>Beta Draft</revremark>
+            </revision>
+        </revhistory>
+
+    <copyright>
+      <year>2010-2011</year>
+      <holder>Linux Foundation</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>
+        Permission is granted to copy, distribute and/or modify this document under 
+        the terms of the <ulink type="http" url="http://creativecommons.org/licenses/by-sa/2.0/uk/">Creative Commons Attribution-Share Alike 2.0 UK: England &amp; Wales</ulink> as published by Creative Commons.
+      </para>
+    </legalnotice>
+
+    </bookinfo>
+
+    <xi:include href="kernel-doc-intro.xml"/>
+
+    <xi:include href="kernel-concepts.xml"/>
+
+    <xi:include href="kernel-how-to.xml"/>
+
+<!--    <index id='index'>
+      <title>Index</title>
+    </index>
+-->
+
+</book>
+<!-- 
+vim: expandtab tw=80 ts=4 
+-->
