@@ -20,6 +20,9 @@ do_populate_sysroot[noexec] = "1"
 
 do_package_index[nostamp] = "1"
 do_package_index[dirs] = "${DEPLOY_DIR_IPK}"
+do_package_index[depends] += "opkg-utils-native:do_populate_sysroot"
+do_package_index[depends] += "opkg-native:do_populate_sysroot"
+
 do_package_index() {
 	set -ex
 	package_update_index_ipk
