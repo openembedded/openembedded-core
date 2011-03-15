@@ -3,7 +3,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 SECTION = "x11"
 PRIORITY = "optional"
-PR = "r24"
+PR = "r25"
 RDEPENDS_${PN} = "dbus-wait sudo"
 
 SRC_URI = "file://xserver-nodm \
@@ -30,12 +30,13 @@ pkg_postinst_${PN} () {
     fi
 
     if [ -f /etc/X11/Xusername ]; then
-        # create the rootless X user, and add user to group tty, video
+        # create the rootless X user, and add user to group tty, video, audio
         username=`cat /etc/X11/Xusername`
         adduser --disabled-password $username
         # FIXME: use addgroup if busybox addgroup is ready
         sed -i -e "s/^video:.*/&${username}/g" /etc/group
         sed -i -e "s/^tty:.*/&${username}/g" /etc/group
+        sed -i -e "s/^audio:.*/&${username}/g" /etc/group
     fi
 }
 
