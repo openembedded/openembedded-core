@@ -77,12 +77,17 @@ kernel_do_compile() {
 		oe_runmake dep CC="${KERNEL_CC}" LD="${KERNEL_LD}"
 	fi
 	oe_runmake ${KERNEL_IMAGETYPE} ${KERNEL_ALT_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}"
+}
+
+do_compile_kernelmodules() {
+	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
 	if (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 		oe_runmake modules  CC="${KERNEL_CC}" LD="${KERNEL_LD}"
 	else
 		oenote "no modules to compile"
 	fi
 }
+addtask compile_kernelmodules after do_compile before do_install
 
 kernel_do_install() {
 	#
