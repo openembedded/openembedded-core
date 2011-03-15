@@ -215,11 +215,15 @@
                     <para>Most custom options are for advanced QEMU users to further 
                     customize their QEMU instance.  
                     These options are specified between paired angled brackets.  
-                    Some options must be specified outside the brackets.  
-                    Use the <filename>man qemu</filename> command to get help on all the options.  
-                    The following is an example custom:
+                    Some options must be specified outside the brackets.
+                    In particular, the options <filename>serial</filename>, 
+                    <filename>nographic</filename>, and <filename>kvm</filename> must all 
+                    be outside the brackets.  
+                    Use the <filename>man qemu</filename> command to get help on all the options
+                    and their use.  
+                    The following is an example:
                         <literallayout class='monospaced'>
-    serial ‘&lt;-m 256 –full-screen&gt;’
+    serial ‘&lt;-m 256 -full-screen&gt;’
                         </literallayout>
                     </para>
                     <para>
