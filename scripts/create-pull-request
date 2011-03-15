@@ -2,7 +2,8 @@
 ODIR=pull-$$
 RELATIVE_TO="master"
 COMMIT_ID="HEAD"
-PULL_URL="git://git.pokylinux.org/poky-contrib.git"
+PULL_URL="git://git.openembedded.org/openembedded-core-contrib"
+WEB_URL_PREFIX="http://git.openembedded.org/cgit.cgi/openembedded-core-contrib/log/?h="
 PREFIX="PATCH"
 
 usage() {
@@ -14,7 +15,7 @@ Usage: $CMD [-h] [-o output_dir] [-m msg_body_file] [-s subject] [-r relative_to
   -m msg_body_file    The file containing a blurb to be inserted into the summary email
   -r relative_to      Starting commit (default: master)
   -i commit_id        Ending commit (default: HEAD)
-  -b contrib_branch   Branch-name in the git.pokylinux.org/poky-contrib tree
+  -b contrib_branch   Branch-name in the $PULL_URL
   -s subject          The subject to be inserted into the summary email
   -p prefix           Use [prefix N/M] instead of [PATCH N/M] as the subject prefix
 
@@ -69,7 +70,7 @@ fi
 
 # Perform a sanity test on the web URL. Issue a warning if it is not
 # accessible, but do not abort as users may want to run offline.
-WEB_URL="http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=$CONTRIB_BRANCH"
+WEB_URL="$WEB_URL_PREFIX$CONTRIB_BRANCH"
 wget -q $WEB_URL -O /dev/null
 if [ $? -ne 0 ]; then
     echo "WARNING: Branch '$CONTRIB_BRANCH' was not found on the contrib git tree."
