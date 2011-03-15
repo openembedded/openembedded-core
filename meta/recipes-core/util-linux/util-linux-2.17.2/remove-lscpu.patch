@@ -1,0 +1,101 @@
+Take out lscpu stuff from the code
+
+2011/03/17
+Saul Wold <saul.wold@intel.com>
+Nitin A Kamble <nitin.a.kamble@intel.com>
+
+Index: util-linux-ng-2.17.2/sys-utils/Makefile.am
+===================================================================
+--- util-linux-ng-2.17.2.orig/sys-utils/Makefile.am
++++ util-linux-ng-2.17.2/sys-utils/Makefile.am
+@@ -11,11 +11,11 @@ dist_man_MANS = flock.1 ipcrm.1 ipcs.1 i
+ if LINUX
+ bin_PROGRAMS += dmesg
+ sbin_PROGRAMS += ctrlaltdel
+-usrbin_exec_PROGRAMS += cytune setarch lscpu
++usrbin_exec_PROGRAMS += cytune setarch
+ usrsbin_exec_PROGRAMS += ldattach tunelp rtcwake
+ 
+ dist_man_MANS += dmesg.1 ctrlaltdel.8 cytune.8 setarch.8 \
+-		ldattach.8 lscpu.1 tunelp.8 rtcwake.8
++		ldattach.8 tunelp.8 rtcwake.8
+ endif
+ 
+ cytune_SOURCES = cytune.c cyclades.h
+Index: util-linux-ng-2.17.2/sys-utils/Makefile.in
+===================================================================
+--- util-linux-ng-2.17.2.orig/sys-utils/Makefile.in
++++ util-linux-ng-2.17.2/sys-utils/Makefile.in
+@@ -47,10 +47,10 @@ usrsbin_exec_PROGRAMS = readprofile$(EXE
+ 	$(am__EXEEXT_10)
+ @LINUX_TRUE@am__append_1 = dmesg
+ @LINUX_TRUE@am__append_2 = ctrlaltdel
+-@LINUX_TRUE@am__append_3 = cytune setarch lscpu
++@LINUX_TRUE@am__append_3 = cytune setarch
+ @LINUX_TRUE@am__append_4 = ldattach tunelp rtcwake
+ @LINUX_TRUE@am__append_5 = dmesg.1 ctrlaltdel.8 cytune.8 setarch.8 \
+-@LINUX_TRUE@		ldattach.8 lscpu.1 tunelp.8 rtcwake.8
++@LINUX_TRUE@		ldattach.8 tunelp.8 rtcwake.8
+ 
+ @BUILD_FALLOCATE_TRUE@am__append_6 = fallocate
+ @BUILD_FALLOCATE_TRUE@am__append_7 = fallocate.1
+@@ -100,7 +100,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" 
+ @BUILD_PIVOT_ROOT_TRUE@am__EXEEXT_4 = pivot_root$(EXEEXT)
+ @BUILD_SWITCH_ROOT_TRUE@am__EXEEXT_5 = switch_root$(EXEEXT)
+ @LINUX_TRUE@am__EXEEXT_6 = cytune$(EXEEXT) setarch$(EXEEXT) \
+-@LINUX_TRUE@	lscpu$(EXEEXT)
++@LINUX_TRUE@
+ @BUILD_FALLOCATE_TRUE@am__EXEEXT_7 = fallocate$(EXEEXT)
+ @BUILD_UNSHARE_TRUE@am__EXEEXT_8 = unshare$(EXEEXT)
+ @LINUX_TRUE@am__EXEEXT_9 = ldattach$(EXEEXT) tunelp$(EXEEXT) \
+@@ -141,9 +141,6 @@ ipcs_LDADD = $(LDADD)
+ ldattach_SOURCES = ldattach.c
+ ldattach_OBJECTS = ldattach.$(OBJEXT)
+ ldattach_LDADD = $(LDADD)
+-lscpu_SOURCES = lscpu.c
+-lscpu_OBJECTS = lscpu.$(OBJEXT)
+-lscpu_LDADD = $(LDADD)
+ pivot_root_SOURCES = pivot_root.c
+ pivot_root_OBJECTS = pivot_root.$(OBJEXT)
+ pivot_root_LDADD = $(LDADD)
+@@ -201,11 +198,11 @@ AM_V_GEN = $(am__v_GEN_$(V))
+ am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+ am__v_GEN_0 = @echo "  GEN   " $@;
+ SOURCES = arch.c ctrlaltdel.c $(cytune_SOURCES) dmesg.c fallocate.c \
+-	flock.c ipcmk.c ipcrm.c ipcs.c ldattach.c lscpu.c pivot_root.c \
++	flock.c ipcmk.c ipcrm.c ipcs.c ldattach.c pivot_root.c \
+ 	rdev.c readprofile.c renice.c rtcwake.c setarch.c setsid.c \
+ 	switch_root.c $(tunelp_SOURCES) unshare.c
+ DIST_SOURCES = arch.c ctrlaltdel.c $(cytune_SOURCES) dmesg.c \
+-	fallocate.c flock.c ipcmk.c ipcrm.c ipcs.c ldattach.c lscpu.c \
++	fallocate.c flock.c ipcmk.c ipcrm.c ipcs.c ldattach.c \
+ 	pivot_root.c rdev.c readprofile.c renice.c rtcwake.c setarch.c \
+ 	setsid.c switch_root.c $(tunelp_SOURCES) unshare.c
+ INFO_DEPS = $(srcdir)/ipc.info
+@@ -248,7 +245,7 @@ NROFF = nroff
+ MANS = $(dist_man_MANS) $(man_MANS)
+ am__dist_noinst_DATA_DIST = flock.1 ipcrm.1 ipcs.1 ipcmk.1 renice.1 \
+ 	setsid.1 readprofile.1 dmesg.1 ctrlaltdel.8 cytune.8 setarch.8 \
+-	ldattach.8 lscpu.1 tunelp.8 rtcwake.8 fallocate.1 pivot_root.8 \
++	ldattach.8 tunelp.8 rtcwake.8 fallocate.1 pivot_root.8 \
+ 	switch_root.8 unshare.1 arch.1 rdev.8
+ DATA = $(dist_noinst_DATA)
+ ETAGS = etags
+@@ -678,9 +675,6 @@ ipcs$(EXEEXT): $(ipcs_OBJECTS) $(ipcs_DE
+ ldattach$(EXEEXT): $(ldattach_OBJECTS) $(ldattach_DEPENDENCIES) 
+ 	@rm -f ldattach$(EXEEXT)
+ 	$(AM_V_CCLD)$(LINK) $(ldattach_OBJECTS) $(ldattach_LDADD) $(LIBS)
+-lscpu$(EXEEXT): $(lscpu_OBJECTS) $(lscpu_DEPENDENCIES) 
+-	@rm -f lscpu$(EXEEXT)
+-	$(AM_V_CCLD)$(LINK) $(lscpu_OBJECTS) $(lscpu_LDADD) $(LIBS)
+ pivot_root$(EXEEXT): $(pivot_root_OBJECTS) $(pivot_root_DEPENDENCIES) 
+ 	@rm -f pivot_root$(EXEEXT)
+ 	$(AM_V_CCLD)$(LINK) $(pivot_root_OBJECTS) $(pivot_root_LDADD) $(LIBS)
+@@ -728,7 +722,6 @@ distclean-compile:
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ipcrm.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ipcs.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ldattach.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lscpu.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pivot_root.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdev.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readprofile.Po@am__quote@

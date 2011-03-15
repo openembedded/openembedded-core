@@ -5,9 +5,7 @@ disk partitioning, kernel message management, filesystem creation, and system lo
 
 SECTION = "base"
 
-# note that `lscpu' is under GPLv3+
 LICENSE = "GPLv2+ & LGPLv2.1+ & BSD"
-LICENSE_util-linux-lscpu = "GPLv3+"
 
 LIC_FILES_CHKSUM = "file://README.licensing;md5=1530e36fe1304d4535513de90a290df9 \
                     file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
@@ -27,11 +25,11 @@ SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/util-linux-ng/v${MAJOR_VERSION}/u
            file://make_include \
            "
 
-PACKAGES =+ "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-swaponoff \
-                    util-linux-losetup util-linux-umount util-linux-mount util-linux-readprofile \
-                    util-linux-libblkid util-linux-libblkid-dev util-linux-libuuid util-linux-libuuid-dev \
-                    util-linux-lscpu util-linux-uuidgen \
-                   "
+PACKAGES =+ "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk \
+             util-linux-swaponoff util-linux-losetup util-linux-umount \
+             util-linux-mount util-linux-readprofile util-linux-libblkid \
+             util-linux-libblkid-dev util-linux-libuuid util-linux-libuuid-dev \
+             util-linux-uuidgen util-linux-lscpu"
 
 S = "${WORKDIR}/util-linux-ng-${PV}"
 
@@ -49,13 +47,13 @@ FILES_util-linux-losetup = "${base_sbindir}/losetup.${PN}"
 FILES_util-linux-mount = "${base_bindir}/mount.${PN}"
 FILES_util-linux-umount = "${base_bindir}/umount.${PN}"
 FILES_util-linux-readprofile = "${base_sbindir}/readprofile"
-FILES_util-linux-lscpu = "${bindir}/lscpu"
 FILES_util-linux-uuidgen = "${bindir}/uuidgen"
 
 FILES_util-linux-libblkid = "${libdir}/libblkid.so.*"
 FILES_util-linux-libblkid-dev = "${libdir}/libblkid.so ${libdir}/libblkid.a ${libdir}/libblkid.la ${includedir}/blkid"
 FILES_util-linux-libuuid = "${libdir}/libuuid.so.*"
 FILES_util-linux-libuuid-dev = "${libdir}/libuuid.so ${libdir}/libuuid.a ${libdir}/libuuid.la ${includedir}/uuid"
+FILES_util-linux-lscpu = "${bindir}/lscpu"
 
 RRECOMMENDS_${PN} = "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-mount util-linux-readprofile "
 RDEPENDS_${PN} = "util-linux-umount util-linux-swaponoff util-linux-losetup"
