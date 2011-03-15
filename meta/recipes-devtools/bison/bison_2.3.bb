@@ -1,0 +1,35 @@
+SUMMARY = "GNU Project parser generator (yacc replacement)."
+DESCRIPTION = "Bison is a general-purpose parser generator that converts an annotated context-free grammar into \
+an LALR(1) or GLR parser for that grammar.  Bison is upward compatible with Yacc: all properly-written Yacc \
+grammars ought to work with Bison with no change. Anyone familiar with Yacc should be able to use Bison with \
+little trouble."
+HOMEPAGE = "http://www.gnu.org/software/bison/"
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
+SECTION = "devel"
+PRIORITY = "optional"
+DEPENDS = "gettext bison-native"
+
+PR = "r0"
+
+BASE_SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.gz \
+         file://bison-2.3_m4.patch"
+
+SRC_URI = "${BASE_SRC_URI}"
+
+SRC_URI[md5sum] = "22327efdd5080e2b1acb6e560a04b43a"
+SRC_URI[sha256sum] = "52f78aa4761a74ceb7fdf770f3554dd84308c3b93c4255e3a5c17558ecda293e"
+
+DEPENDS_virtclass-native = "gettext-native"
+SRC_URI_virtclass-native = "${BASE_SRC_URI}"
+
+inherit autotools
+acpaths = "-I ${S}/m4"
+
+do_install_append_virtclass-native() {
+	create_wrapper ${D}/${bindir}/bison \
+		M4=${STAGING_BINDIR_NATIVE}/m4 \
+		BISON_PKGDATADIR=${STAGING_DATADIR_NATIVE}/bison
+}
+#bison-native encodes the staging M4 path
+BBCLASSEXTEND = "native"
