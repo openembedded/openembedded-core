@@ -2,55 +2,80 @@
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 
 <chapter id='adt-package'>
-
-<title>Yocto Project Kernel Architecture and Use Manual</title>
-
-<section id='package'>
-    <title>Introduction</title>
+<title>Optionally Customizing the Development Packages Installation</title>
     <para>
-        The Yocto Project presents the kernel as a fully patched, history-clean git
-        repository. 
-        The git tree represents the selected features, board support,
-        and configurations extensively tested by Yocto Project. 
-        The Yocto Project kernel allows the end user to leverage community
-        best practices to seamlessly manage the development, build and debug cycles.
+        Because the Yocto Project is suited for embedded Linux development it is 
+        likely that you will need to customize your development packages installation.  
+        For example, if you are developing a minimal image then you might not need 
+        certain packages (e.g. graphics support packages).  
+        Thus, you would like to be able to remove those packages from your sysroot.
     </para>
+
+<section id='package-management-systems'>
+    <title>Package Management Systems</title>
     <para>
-        This manual describes the Yocto Project kernel by providing information
-        on its history, organization, benefits, and use.
-        The manual consists of two sections:
-        <itemizedlist>
-            <listitem><para>Concepts - Describes concepts behind the kernel.
-                You will understand how the kernel is organized and why it is organized in 
-                the way it is.  You will understand the benefits of the kernel's organization 
-                and the mechanisms used to work with the kernel and how to apply it in your 
-                design process.</para></listitem>
-            <listitem><para>Using the Kernel - Describes best practices and "how-to" information
-                that lets you put the kernel to practical use.  Some examples are "How to Build a 
-                Project Specific Tree", "How to Examine Changes in a Branch", and "Saving Kernel
-                Modifications."</para></listitem>
-        </itemizedlist>
-    </para>
-    <para>
-        For more information on the kernel, see the following links:
-        <itemizedlist>
-            <listitem><para><ulink url='http://ldn.linuxfoundation.org/book/1-a-guide-kernel-development-process'></ulink></para></listitem>
-            <listitem><para><ulink url='http://userweb.kernel.org/~akpm/stuff/tpp.txt'></ulink></para></listitem>
-            <listitem><para><ulink url='http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=blob_plain;f=Documentation/HOWTO;hb=HEAD'></ulink></para></listitem> 
-        </itemizedlist>
-        <para> 
-        You can find more information on Yocto Project by visiting the website at
-        <ulink url='http://www.yoctoproject.org'></ulink>.
-        </para>
+        The Yocto Project supports the generation of root filesystem files using 
+        three different Package Management Systems (PMS):
+    <itemizedlist>
+        <listitem><para><emphasis>OPKG</emphasis> – A less well known PMS whose use 
+            originated in the OpenEmbedded and OpenWrt embedded Linux projects.  
+            This PMS works with files packaged in an <filename>.ipk</filename> format.
+            See <ulink url='http://en.wikipedia.org/wiki/Opkg'></ulink> for more 
+            information about OPKG.</para></listitem>
+        <listitem><para><emphasis>RPM</emphasis> – A more widely known PMS intended for GNU/Linux 
+            distributions.  
+            This PMS works with files packaged in an <filename>.rms</filename> format.
+            The Yocto Project currently installs through this PMS by default.  
+            See <ulink url='http://en.wikipedia.org/wiki/RPM_Package_Manager'></ulink>
+            for more information about RPM.</para></listitem>
+        <listitem><para><emphasis>Debian</emphasis> – The PMS for Debian-based systems 
+            is built on many PMS tools.  
+            The lower-level PMS tool dpkg forms the base of the Debian PMS.  
+            For information on dpkg see 
+            <ulink url='http://en.wikipedia.org/wiki/Dpkg'></ulink>.</para></listitem>
+    </itemizedlist>
     </para>
 </section>
 
-
-
-
-
-
-
+<section id='configuring-the-pms'>
+    <title>Configuring the PMS</title>
+    <para>
+        Whichever PMS you are using you need to be sure that the 
+        <filename>PACKAGE_CLASSES</filename> variable in the <filename>conf/local.conf</filename>
+        file is set to reflect that system.  
+        The first value you choose for the variable specifies the package file format for the root
+        filesystem.
+        Additional values specify additional formats for convenience or testing.  
+        See the configuration file for details.
+    </para>
+    <para>
+        As an example, consider a scenario where you are using OPKG and you want to add 
+        the libglade package to sysroot.
+    </para>
+    <para>
+        First, you should generate the ipk file for the libglade package and add it 
+        into a working opkg repository.  
+        Use these commands:
+        <literallayout class='monospaced'>
+     $ bitbake libglade
+     $ bitbake package-index
+        </literallayout>
+    </para>
+    <para>
+        Next, source the environment setup script.  
+        Follow that by setting up the installation destination to point to your 
+        sysroot as <filename>&lt;sysroot dir&gt;</filename>.  
+        Finally, have an opkg configuration file <filename>&lt;conf file&gt;</filename>
+        that corresponds to the opkg repository you have just created. 
+        The following command forms should now work:
+        <literallayout class='monospaced'>
+     $ opkg-cl –f &lt;conf file&gt; -o &lt;sysroot dir&gt; update
+     $ opkg-cl –f &lt;conf file&gt;> -o &lt;sysroot dir&gt; --force-overwrite install libglade
+     $ opkg-cl –f &lt;conf file&gt; -o &lt;sysroot dir&gt; --force-overwrite install libglade-dbg
+     $ opkg-cl –f &lt;conf file&gt; -o &lt;sysroot dir&gt; --force-overwrite install libglade-dev
+        </literallayout>
+    </para>
+</section>
 </chapter>
 <!--
 vim: expandtab tw=80 ts=4
