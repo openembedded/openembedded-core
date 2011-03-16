@@ -78,8 +78,9 @@
     <title>Installing Required Plug-ins and the Eclipse Yocto Plug-in</title>
         <para>
             Before installing the Yocto Plug-in you need to be sure that the 
-            CDT 7.0 and RSE 3.2 plug-ins are all installed.  
-            After installing these two plug-ins, you can install the 
+            CDT 7.0, RSE 3.2, and Autotools plug-ins are all installed in the 
+            following order.  
+            After installing these three plug-ins, you can install the 
             Eclipse Yocto Plug-in.  
             Use the following URLs for the plug-ins:
             <orderedlist>
@@ -97,6 +98,10 @@
                 select the following:  “Remote System Explorer End-User Runtime”, 
                 “Remote System Explorer Extended SDK”, “Remote System Explorer User Actions”, 
                 “RSE Core”, “RSE Terminals UI”, and “Target Management Terminal”.</para></listitem>
+                <listitem><para><emphasis>Autotools</emphasis> – 
+                <ulink url='http://www.download.eclipse.org/technology/linuxtools/update/'></ulink>:
+                Expand the items under “Linux Tools” and select “Autotools support for 
+                CDT (Incubation)”.</para></listitem>
                 <listitem><para><emphasis>Yocto Plug-in</emphasis> – 
                 <ulink url='http://www.yoctoproject.org/downloads/eclipse-plugin/'></ulink>:
                 Check the box next to “Development tools &amp; SDKs for Yocto Linux” 
