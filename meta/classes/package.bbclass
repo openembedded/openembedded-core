@@ -233,7 +233,7 @@ def splitfile2(debugsrcdir, d):
        processdebugsrc =  "LC_ALL=C ; sort -z -u '%s' | egrep -v -z '(<internal>|<built-in>)$' | "
        # We need to ignore files that are not actually ours
        # we do this by only paying attention to items from this package
-       processdebugsrc += "egrep -z '%s' | "
+       processdebugsrc += "fgrep -z '%s' | "
        processdebugsrc += "(cd '%s' ; cpio -pd0mL '%s%s' 2>/dev/null)"
 
        os.system(processdebugsrc % (sourcefile, workbasedir, workparentdir, dvar, debugsrcdir))
