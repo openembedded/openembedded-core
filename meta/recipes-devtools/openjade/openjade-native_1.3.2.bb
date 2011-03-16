@@ -31,6 +31,12 @@ CFLAGS =+ "-I${S}/include"
 
 SSTATEPOSTINSTFUNCS += "openjade_sstate_postinst"
 
+# We need to do this else the source interdependencies aren't generated and
+# build failures can result (e.g. zero size style/Makefile.dep file)
+do_compile_prepend () {
+	oe_runmake depend
+}
+
 do_install() {
 	# Refer to http://www.linuxfromscratch.org/blfs/view/stable/pst/openjade.html
 	# for details.
