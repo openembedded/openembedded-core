@@ -1,0 +1,30 @@
+sat-solver rpmdb based solv database construction
+
+The first time the database is created on an RPM5 system it works 
+correctly.  However any subsequent rebuilds cause an empty database to 
+occur.
+
+The following is from Michael Schroeder <mls@suse.de>:
+> rpmdb2solv contains a hack that makes it use the unchanged already
+> converted packages. To do this, it needs to get the database id
+> for every installed packages by reading the "Name" index. This
+> somehow doesn't seem to work with rpm5.
+>
+> As a workaround you can add a "ref = 0;" line at the top of the
+> repo_add_rpmdb() function in ext/repo_rpmdb.c.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff -ur git.orig/ext/repo_rpmdb.c git/ext/repo_rpmdb.c
+--- git.orig/ext/repo_rpmdb.c	2011-03-16 09:43:50.470008215 -0500
++++ git/ext/repo_rpmdb.c	2011-03-16 09:47:55.503989694 -0500
+@@ -1344,6 +1344,9 @@
+   memset(&dbkey, 0, sizeof(dbkey));
+   memset(&dbdata, 0, sizeof(dbdata));
+ 
++  /* Workaround for RPM 5 database construction */
++  ref = 0;
++
+   if (!rootdir)
+     rootdir = "";
+ 
