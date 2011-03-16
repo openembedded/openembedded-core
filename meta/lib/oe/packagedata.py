@@ -84,7 +84,8 @@ def _pkgmap(d):
             except OSError:
                 continue
 
-            for pkg in pkgdata["PACKAGES"].split():
+            packages = pkgdata.get("PACKAGES") or ""
+            for pkg in packages.split():
                 pkgmap[pkg] = pn
 
     return pkgmap
