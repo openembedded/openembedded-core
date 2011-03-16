@@ -46,6 +46,32 @@ fakeroot rootfs_rpm_do_rootfs () {
 	# Setup base system configuration
 	mkdir -p ${IMAGE_ROOTFS}/etc/rpm/
 
+	mkdir -p ${IMAGE_ROOTFS}${rpmlibdir}
+	mkdir -p ${IMAGE_ROOTFS}${rpmlibdir}/log
+	cat > ${IMAGE_ROOTFS}${rpmlibdir}/DB_CONFIG << EOF
+# ================ Environment
+set_data_dir            .
+set_create_dir          .
+set_lg_dir              ./log
+set_tmp_dir             ./tmp
+
+# -- thread_count must be >= 8
+set_thread_count        64
+
+# ================ Logging
+
+# ================ Memory Pool
+set_mp_mmapsize         268435456
+
+# ================ Locking
+set_lk_max_locks        16384
+set_lk_max_lockers      16384
+set_lk_max_objects      16384
+mutex_set_max           163840
+
+# ================ Replication
+EOF
+
 	#install pacakges
 	export INSTALL_ROOTFS_RPM="${IMAGE_ROOTFS}"
 	export INSTALL_PLATFORM_RPM="${TARGET_ARCH}"
