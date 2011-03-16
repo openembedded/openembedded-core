@@ -50,9 +50,13 @@ body {
   color: #333;
 }
 
+.reviewer {
+  color: red;
+}
+
 h1,h2,h3,h4,h5,h6,h7 {
   font-family: Arial, Sans;
-  color:#999999;
+  color: #00557D;
   clear: both;
 }
 
@@ -76,7 +80,7 @@ h2 {
   margin: 2em 0em 0.66em 0em;
   padding: 0.5em 0em 0em 0em;
   font-size: 1.5em;
-  font-weight: normal;
+  font-weight: bold;
 }
 
 h3.subtitle {
@@ -90,28 +94,28 @@ h3 {
   margin: 1em 0em 0.5em 0em;
   padding: 1em 0em 0em 0em;
   font-size: 140%;
-  font-weight: normal;
+  font-weight: bold;
 }
 
 h4 {
   margin: 1em 0em 0.5em 0em;
   padding: 1em 0em 0em 0em;
   font-size: 120%;
-  font-weight: normal;
+  font-weight: bold;
 }
 
 h5 {
   margin: 1em 0em 0.5em 0em;
   padding: 1em 0em 0em 0em;
-  font-size: 110.000%;
-  border-bottom: 1px solid black;
+  font-size: 110%;
+  font-weight: bold;
 }
 
 h6 {
   margin: 1em 0em 0em 0em;
   padding: 1em 0em 0em 0em;
   font-size: 80%;
-  font-weight: normal;
+  font-weight: bold;
 }
 
 .authorgroup {
@@ -132,6 +136,7 @@ h3.author {
   padding: 0em 0em 0em 0em;
   font-weight: normal;
   font-size: 100%;
+  color: #333;
   clear: both;
 }
 
@@ -154,6 +159,7 @@ h3.author {
 .list-of-examples,
 .list-of-figures {
   padding: 1.33em 0em 2.5em 0em;
+  color: #00557D;
 }
 
 .toc p,
@@ -941,7 +947,7 @@ table {
 
 .tip,
 .note {
-   background: #91ae35;
+   background: #666666;
    color: #fff;   
    padding: 20px;
    margin: 20px;
