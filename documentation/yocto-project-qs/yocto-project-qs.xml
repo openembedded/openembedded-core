@@ -176,7 +176,7 @@
             
         <para>
             The latest release images for the Yocto Project are kept at 
-            <ulink url="http://yoctoproject.org/downloads/yocto-0.9/"></ulink>.
+            <ulink url="http://yoctoproject.org/downloads/yocto-1.0/"></ulink>.
             Nightly and developmental builds are also maintained.  However, for this 
             document a released version of Yocto Project is used.
         </para>
@@ -230,9 +230,9 @@
 
          <para>
              <literallayout class='monospaced'>
-     $ wget http://www.yoctoproject.org/downloads/poky/poky-laverne-4.0.tar.bz2
-     $ tar xjf poky-laverne-4.0.tar.bz2
-     $ source poky-laverne-4.0/poky-init-build-env poky-4.0-build
+     $ wget http://www.yoctoproject.org/downloads/poky/poky-bernard-5.0.tar.bz2
+     $ tar xjf poky-bernard-5.0.tar.bz2
+     $ source poky-bernard-5.0/poky-init-build-env poky-5.0-build
              </literallayout>
          </para>
 
@@ -250,8 +250,8 @@
              <listitem><para>The first two commands extract the Yocto Project files from the 
              release tarball and place them into a subdirectory of your current directory.</para></listitem>
              <listitem><para>The <command>source</command> command creates the 
-             <filename>poky-4.0-build</filename> directory and executes the <command>cd</command>
-             command to make <filename>poky-4.0-build</filename> the working directory.
+             <filename>poky-5.0-build</filename> directory and executes the <command>cd</command>
+             command to make <filename>poky-5.0-build</filename> the working directory.
              The resulting build directory contains all the files created during the build.   
              By default the target architecture is qemux86.
              To change this default, edit the value of the MACHINE variable in the 
@@ -353,9 +353,10 @@
         <title>Installing the Toolchain</title>
          <para>
              You can download the pre-built toolchain, which includes the poky-qemu script and 
-             support files, from <ulink url='http://yoctoproject.org/downloads/yocto-0.9/toolchain/'></ulink>.  
+             support files, from 
+             <ulink url='http://yoctoproject.org/downloads/yocto-1.0/toolchain/'></ulink>.  
              Toolchains are available for 32-bit and 64-bit development systems from the 
-             <filename>i586</filename> and <filename>x86_64</filename> folders, respectively. 
+             <filename>i686</filename> and <filename>x86_64</filename> folders, respectively. 
              Each type of development system supports five target architectures.
              The tarball files are named such that a string representing the host system appears 
              first in the filename and then is immediately followed by a string representing
@@ -367,10 +368,10 @@
 
      Where:
          &lt;<emphasis>host_system</emphasis>&gt; is a string representing your development system: 
-                i586 or x86_64.
+                i686 or x86_64.
        
          &lt;<emphasis>arch</emphasis>&gt; is a string representing the target architecture: 
-                i585, x86_64, powerpc, mips, or arm.
+                i686, x86_64, powerpc, mips, or arm.
        
          &lt;<emphasis>release</emphasis>&gt; is the version of Yocto Project.
          </literallayout>
@@ -381,7 +382,7 @@
          </para>
 
          <literallayout class='monospaced'>
-     yocto-eglibc-x86_64-i586-toolchain-sdk-0.9.tar.bz2
+     yocto-eglibc-x86_64-i686-toolchain-sdk-1.0.tar.bz2
          </literallayout>
 
          <para>
@@ -393,7 +394,7 @@
          <para>
              <literallayout class='monospaced'>
      $ cd /
-     $ sudo tar -xvjf yocto-eglibc-x86_64-i586-toolchain-sdk-0.9.tar.bz2
+     $ sudo tar -xvjf yocto-eglibc-x86_64-i686-toolchain-sdk-1.0.tar.bz2
              </literallayout>
          </para>
          </section>
@@ -403,7 +404,7 @@
          <para>
              You can download the pre-built Linux kernel and the filesystem image suitable for 
              running in the emulator QEMU from 
-             <ulink url='http://yoctoproject.org/downloads/yocto-0.9/qemu'></ulink>.
+             <ulink url='http://yoctoproject.org/downloads/yocto-1.0/machines/qemu'></ulink>.
              Be sure to use the kernel and filesystem image that matches the architecture you want 
              to simulate.
          </para>
@@ -455,10 +456,10 @@
 
      Where:
          &lt;<emphasis>arch</emphasis>&gt; is a string representing the target architecture: 
-                i586, x86_64, ppc603e, mips, or armv5te.
+                i686, x86_64, ppc603e, mips, or armv5te.
 
          &lt;<emphasis>if</emphasis>&gt; is a string representing an embedded application binary interface.
-                Not all setup scripts include this string.
+              Not all setup scripts include this string.
          </literallayout>
 
          <para>
@@ -466,17 +467,16 @@
          </para>
 
          <literallayout class='monospaced'>
-     $ poky-qemu &lt;<emphasis>qemuarch</emphasis>&gt; &lt;<emphasis>kernel</emphasis>&gt; &lt;<emphasis>image</emphasis>&gt; &lt;<emphasis>fstype</emphasis>&gt;
+     $ poky-qemu &lt;<emphasis>qemuarch</emphasis>&gt; &lt;<emphasis>kernel</emphasis>&gt; &lt;<emphasis>filesystem_image</emphasis>&gt;
 
      Where:
          &lt;<emphasis>qemuarch</emphasis>&gt; is a string representing the target architecture: qemux86, qemux86-64, 
                     qemuppc, qemumips, or qemuarm.
 
-         &lt;<emphasis>kernel</emphasis>&gt;    is the architecture-specific kernel.
+         &lt;<emphasis>kernel</emphasis>&gt; is the architecture-specific kernel.
 
-         &lt;<emphasis>image</emphasis>&gt;     is the .ext3 filesystem image.
+         &lt;<emphasis>filesystem_image</emphasis>&gt; is the .ext3 filesystem image.
 
-         &lt;<emphasis>fstype</emphasis>&gt;    is the filesystem type.
          </literallayout>
 
          <para>
@@ -486,8 +486,8 @@
          </para>
 
          <literallayout class='monospaced'>
-     $ source /opt/poky/environment-setup-i586-poky-linux 
-     $ poky-qemu qemui586 zImage-2.6.34-qemux86-0.9 yocto-image-sdk-qemux86-0.9.rootfs.ext3 ext3
+     $ source /opt/poky/environment-setup-i686-poky-linux 
+     $ poky-qemu qemux86 zImage-2.6.34-qemux86-1.0.bin yocto-image-sdk-qemux86-1.0.rootfs.ext3
          </literallayout>
 
          <para>
