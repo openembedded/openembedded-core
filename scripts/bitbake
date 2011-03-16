@@ -1,5 +1,5 @@
 #!/bin/sh
-NO_BUILD_OPTS="--version -h --help -p --parse-only -s --show-versions -e --environment"
+NO_BUILD_OPTS="--version -h --help -p --parse-only -s --show-versions -e --environment -g --graphviz"
 needpseudo="1"
 for opt in $@; do
 for key in $NO_BUILD_OPTS; do
