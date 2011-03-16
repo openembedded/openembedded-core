@@ -5,7 +5,7 @@ if [ -e /etc/formfactor/machconfig ]; then
 fi
 
 if [ -z "$HAVE_TOUCHSCREEN" ]; then
-    HAVE_TOUCHSCREEN=1
+    HAVE_TOUCHSCREEN=0
 fi
 
 if [ -z "$HAVE_KEYBOARD" ]; then
