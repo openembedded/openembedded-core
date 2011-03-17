@@ -26,10 +26,13 @@ SRC_URI += "file://gconftool-lossage.patch;patch=1;pnum=1 \
 SRC_URI[archive.md5sum] = "a05fab03eeef10a47dd156b758982f2e"
 SRC_URI[archive.sha256sum] = "62de64b5b804eb04104ff98fcd6a8b7276d510a49fbd9c0feb568f8996444faa"
 
-EXTRA_OECONF = " \
-                 --disable-hal \
-		 --disable-openssl \
-		 --disable-samba \
+EXTRA_OECONF = " --disable-hal \
+                 --disable-openssl \
+                 --disable-samba \
+                 ac_cv_lib_acl_acl_get_file=no \
+                 ac_cv_lib_sec_acl=no \
+                 gvfs_cv_HAVE_SOLARIS_ACLS=no \
+                 gvfs_cv_HAVE_POSIX_ACLS=no \
 		 "
 
 FILES_${PN} += " ${libdir}/vfs ${datadir}/dbus-1/services"
