@@ -183,12 +183,12 @@
     <para>
         The exact method for debugging Poky depends on the nature of the 
         problem and on the system's area from which the bug originates. 
-        Standard debugging practises such as comparison against the last 
-        known working version with examination of the changes and the reapplication of steps 
+        Standard debugging practices such as comparison against the last 
+        known working version with examination of the changes and the re-application of steps 
         to identify the one causing the problem are
         valid for Poky just as they are for any other system. 
-        It's impossible to detail every possible potential failure but here are some general
-        tips to aid in debugging:
+        Even though it is impossible to detail every possible potential failure, 
+        here are some general tips to aid in debugging:
     </para>
 
     <section id='usingpoky-debugging-taskfailures'>
