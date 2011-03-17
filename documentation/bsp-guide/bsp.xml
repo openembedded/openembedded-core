@@ -160,7 +160,7 @@ meta-&lt;bsp_name&gt;/binary/&lt;bootable_images&gt;
             </programlisting>
 
             <para>
-                This optional area contains useful pre-built kernels and userspace filesystem 
+                This optional area contains useful pre-built kernels and user-space filesystem 
                 images appropriate to the target system.
                 This directory contains the Application Development Toolkit (ADT) and minimal
                 live images when the BSP is has been "tar-balled" and placed on the Yocto Project website. 
@@ -391,7 +391,8 @@ SRC_URI += "file://defconfig \
                 </programlisting>
             </para>
             <para>
-                The FILESEXTRAPATHS variable is boilerplated here in order to make it easy to do that.
+                The FILESEXTRAPATHS variable is in boilerplate form here in order to make it easy 
+                to do that.
                 It basically allows those configuration files to be found by the build process.
             </para>
             <note><para>
@@ -539,7 +540,7 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
               will make available a 'de-featured' BSP completely free of the encumbered IP.
               In that case you can use the substitution directly and without any further licensing
               requirements.  
-              If present, this fully 'de-featured' BSP will be named appropiately different 
+              If present, this fully 'de-featured' BSP will be named appropriately different 
               than the normal encumbered BSP.
               If available, this substitution is the simplest and most preferred option.
               This, of course, assumes the resulting functionality meets requirements.
@@ -562,7 +563,7 @@ FILESEXTRAPATHS := "${THISDIR}/${PN}"
 
 		<para>
 		  Get a license key (or keys) for the encumbered BSP by visiting 
-                  a website and providing the name of the BSB and your email address
+                  a website and providing the name of the BSP and your email address
                   through a web form.
                 </para>
  
