@@ -2,9 +2,9 @@ DESCRIPTION = "The GNU internationalization library."
 HOMEPAGE = "http://www.gnu.org/software/gettext/gettext.html"
 SECTION = "libs"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
+LIC_FILES_CHKSUM = "file://COPYING;md5=9ea3144f04c41cd2eada5d3f472e6ea5"
 
-PR = "r11"
+PR = "r3"
 DEPENDS = "virtual/libiconv"
 DEPENDS_virtclass-native = ""
 PROVIDES = "virtual/libintl"
@@ -12,24 +12,26 @@ PROVIDES_virtclass-native = ""
 
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
            file://gettext-vpath.patch \
-           file://fixchicken.patch \
            file://linklib_from_0.17.patch \
-           file://getline.m4.patch \
-           file://disable_java.patch"
+	   file://gettext-autoconf-lib-link-no-L.patch \
+           file://disable_java.patch \
+           file://fix_aclocal_version.patch \
+           file://fix_gnu_source_circular.patch \
+           file://hardcode_macro_version.patch \
+          "
 
-#	   file://gettext-autoconf-lib-link-no-L.patch
 
 SRC_URI_append_linux-uclibc = " file://gettext-error_print_progname.patch"
 SRC_URI_append_linux-uclibceabi = " file://gettext-error_print_progname.patch"
 
-SRC_URI[md5sum] = "78f4b862510beb2e5d43223dd610e77d"
-SRC_URI[sha256sum] = "41f20c469c7759acb34cfa7e0b3cac9096d59a58ad800e471f07424a8e7adbb7"
+SRC_URI[md5sum] = "3d9ad24301c6d6b17ec30704a13fe127"
+SRC_URI[sha256sum] = "0bf850d1a079fb5a61f0a47b1a9efd35eb44032255375e1cedb0253bc27b376d"
 
 PARALLEL_MAKE = ""
 
 inherit autotools
 
-EXTRA_OECONF += "--without-lisp --disable-csharp"
+EXTRA_OECONF += "--without-lisp --disable-csharp --disable-openmp"
 acpaths = '-I ${S}/autoconf-lib-link/m4/ \
            -I ${S}/gettext-runtime/m4 \
            -I ${S}/gettext-tools/m4'
