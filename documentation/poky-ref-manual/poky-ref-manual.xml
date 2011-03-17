@@ -47,6 +47,11 @@
                 <date>24 November 2010</date>
                 <revremark>Poky Master Documentation</revremark>
             </revision>
+            <revision>
+                <revnumber>1.0</revnumber>
+                <date>6 April 2011</date>
+                <revremark>Poky documentation releasing with the Yocto Project 1.0 Release.</revremark>
+            </revision>
         </revhistory>
 
     <copyright>
