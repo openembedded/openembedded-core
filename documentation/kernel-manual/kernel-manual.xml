@@ -31,7 +31,13 @@
             <revision>
                 <revnumber>0.9</revnumber>
                 <date>24 November 2010</date>
-                <revremark>Beta Draft</revremark>
+                <revremark>This revision is the initial document draft and corresponds with 
+                    the Yocto Project 0.9 Release.</revremark>
+            </revision>
+            <revision>
+                <revnumber>1.0</revnumber>
+                <date>6 April 2011</date>
+                <revremark>This revision corresponds with the Yocto Project 1.0 Release.</revremark>
             </revision>
         </revhistory>
 
