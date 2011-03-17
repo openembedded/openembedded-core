@@ -364,6 +364,16 @@ RRECOMMENDS_task-custom-tools = "\
                 Users can add extra features by extending the class or creating a custom class for use 
                 with specialized image <filename>.bb</filename> files.
             </para>
+            <para>
+                Poky ships with two SSH servers you can use in your images: Dropbear and OpenSSH. 
+                Dropbear is a minimal SSH server appropriate for resource-constrained environments,
+                while OpenSSH is a well-known standard SSH server implementation.
+                By default, poky-image-sato is configured to use Dropbear.
+                The poky-image-basic and poky-image-lsb images both include OpenSSH.
+                To change these defaults, edit the <filename>IMAGE_FEATURES</filename> variable
+                so that it sets the image you are working with to include ssh-server-dropbear 
+                or ssh-server-openssh.
+            </para>
         </section>
 
         <section id='usingpoky-extend-customimage-localconf'>
