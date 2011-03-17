@@ -1,4 +1,8 @@
 #!/bin/sh
+
+export BBFETCH2=True
+export BB_ENV_EXTRAWHITE="PSEUDO_BUILD PSEUDO_DISABLED $BB_ENV_EXTRAWHITE"
+
 NO_BUILD_OPTS="--version -h --help -p --parse-only -s --show-versions -e --environment -g --graphviz"
 needpseudo="1"
 for opt in $@; do
