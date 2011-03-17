@@ -1,0 +1,150 @@
+Description: spice/qxl: locking fix for qemu-kvm
+Author: Gerd Hoffmann <kraxel@redhat.com>
+Source: upstream, http://patchwork.ozlabs.org/patch/84704/
+Forwarding: not-needed
+
+Index: qemu-0.14.0/hw/qxl.c
+===================================================================
+--- qemu-0.14.0.orig/hw/qxl.c
++++ qemu-0.14.0/hw/qxl.c
+@@ -125,6 +125,27 @@ static void qxl_reset_memslots(PCIQXLDev
+ static void qxl_reset_surfaces(PCIQXLDevice *d);
+ static void qxl_ring_set_dirty(PCIQXLDevice *qxl);
+ 
++/* qemu-kvm locking ... */
++void qxl_unlock_iothread(SimpleSpiceDisplay *ssd)
++{
++    if (cpu_single_env) {
++        assert(ssd->env == NULL);
++        ssd->env = cpu_single_env;
++        cpu_single_env = NULL;
++    }
++    qemu_mutex_unlock_iothread();
++}
++
++void qxl_lock_iothread(SimpleSpiceDisplay *ssd)
++{
++    qemu_mutex_lock_iothread();
++    if (ssd->env) {
++        assert(cpu_single_env == NULL);
++        cpu_single_env = ssd->env;
++        ssd->env = NULL;
++    }
++}
++
+ static inline uint32_t msb_mask(uint32_t val)
+ {
+     uint32_t mask;
+@@ -662,10 +683,10 @@ static void qxl_hard_reset(PCIQXLDevice
+     dprint(d, 1, "%s: start%s\n", __FUNCTION__,
+            loadvm ? " (loadvm)" : "");
+ 
+-    qemu_mutex_unlock_iothread();
++    qxl_unlock_iothread(&d->ssd);
+     d->ssd.worker->reset_cursor(d->ssd.worker);
+     d->ssd.worker->reset_image_cache(d->ssd.worker);
+-    qemu_mutex_lock_iothread();
++    qxl_lock_iothread(&d->ssd);
+     qxl_reset_surfaces(d);
+     qxl_reset_memslots(d);
+ 
+@@ -795,9 +816,9 @@ static void qxl_reset_surfaces(PCIQXLDev
+ {
+     dprint(d, 1, "%s:\n", __FUNCTION__);
+     d->mode = QXL_MODE_UNDEFINED;
+-    qemu_mutex_unlock_iothread();
++    qxl_unlock_iothread(&d->ssd);
+     d->ssd.worker->destroy_surfaces(d->ssd.worker);
+-    qemu_mutex_lock_iothread();
++    qxl_lock_iothread(&d->ssd);
+     memset(&d->guest_surfaces.cmds, 0, sizeof(d->guest_surfaces.cmds));
+ }
+ 
+@@ -866,9 +887,9 @@ static void qxl_destroy_primary(PCIQXLDe
+     dprint(d, 1, "%s\n", __FUNCTION__);
+ 
+     d->mode = QXL_MODE_UNDEFINED;
+-    qemu_mutex_unlock_iothread();
++    qxl_unlock_iothread(&d->ssd);
+     d->ssd.worker->destroy_primary_surface(d->ssd.worker, 0);
+-    qemu_mutex_lock_iothread();
++    qxl_lock_iothread(&d->ssd);
+ }
+ 
+ static void qxl_set_mode(PCIQXLDevice *d, int modenr, int loadvm)
+@@ -938,10 +959,10 @@ static void ioport_write(void *opaque, u
+     case QXL_IO_UPDATE_AREA:
+     {
+         QXLRect update = d->ram->update_area;
+-        qemu_mutex_unlock_iothread();
++        qxl_unlock_iothread(&d->ssd);
+         d->ssd.worker->update_area(d->ssd.worker, d->ram->update_surface,
+                                    &update, NULL, 0, 0);
+-        qemu_mutex_lock_iothread();
++        qxl_lock_iothread(&d->ssd);
+         break;
+     }
+     case QXL_IO_NOTIFY_CMD:
+Index: qemu-0.14.0/ui/spice-display.c
+===================================================================
+--- qemu-0.14.0.orig/ui/spice-display.c
++++ qemu-0.14.0/ui/spice-display.c
+@@ -186,18 +186,18 @@ void qemu_spice_create_host_primary(Simp
+     surface.mem        = (intptr_t)ssd->buf;
+     surface.group_id   = MEMSLOT_GROUP_HOST;
+ 
+-    qemu_mutex_unlock_iothread();
++    qxl_unlock_iothread(ssd);
+     ssd->worker->create_primary_surface(ssd->worker, 0, &surface);
+-    qemu_mutex_lock_iothread();
++    qxl_lock_iothread(ssd);
+ }
+ 
+ void qemu_spice_destroy_host_primary(SimpleSpiceDisplay *ssd)
+ {
+     dprint(1, "%s:\n", __FUNCTION__);
+ 
+-    qemu_mutex_unlock_iothread();
++    qxl_unlock_iothread(ssd);
+     ssd->worker->destroy_primary_surface(ssd->worker, 0);
+-    qemu_mutex_lock_iothread();
++    qxl_lock_iothread(ssd);
+ }
+ 
+ void qemu_spice_vm_change_state_handler(void *opaque, int running, int reason)
+@@ -207,9 +207,9 @@ void qemu_spice_vm_change_state_handler(
+     if (running) {
+         ssd->worker->start(ssd->worker);
+     } else {
+-        qemu_mutex_unlock_iothread();
++        qxl_unlock_iothread(ssd);
+         ssd->worker->stop(ssd->worker);
+-        qemu_mutex_lock_iothread();
++        qxl_lock_iothread(ssd);
+     }
+     ssd->running = running;
+ }
+Index: qemu-0.14.0/ui/spice-display.h
+===================================================================
+--- qemu-0.14.0.orig/ui/spice-display.h
++++ qemu-0.14.0/ui/spice-display.h
+@@ -43,6 +43,9 @@ typedef struct SimpleSpiceDisplay {
+     QXLRect dirty;
+     int notify;
+     int running;
++
++    /* qemu-kvm locking ... */
++    void *env;
+ } SimpleSpiceDisplay;
+ 
+ typedef struct SimpleSpiceUpdate {
+@@ -52,6 +55,9 @@ typedef struct SimpleSpiceUpdate {
+     uint8_t *bitmap;
+ } SimpleSpiceUpdate;
+ 
++void qxl_unlock_iothread(SimpleSpiceDisplay *ssd);
++void qxl_lock_iothread(SimpleSpiceDisplay *ssd);
++
+ int qemu_spice_rect_is_empty(const QXLRect* r);
+ void qemu_spice_rect_union(QXLRect *dest, const QXLRect *r);
+ 

@@ -8,10 +8,10 @@ Subject: [PATCH] linux-user: use default mmap_min_addr 65536 when /proc/sys/vm/m
  linux-user/main.c |    5 +++++
  1 files changed, 5 insertions(+), 0 deletions(-)
 
-Index: qemu-0.13.0/linux-user/main.c
+Index: qemu-0.14.0/linux-user/main.c
 ===================================================================
---- qemu-0.13.0.orig/linux-user/main.c
-+++ qemu-0.13.0/linux-user/main.c
+--- qemu-0.14.0.orig/linux-user/main.c
++++ qemu-0.14.0/linux-user/main.c
 @@ -36,6 +36,7 @@
  #include "envlist.h"
  
@@ -20,7 +20,7 @@ Index: qemu-0.13.0/linux-user/main.c
  
  char *exec_path;
  
-@@ -2973,8 +2974,14 @@ int main(int argc, char **argv, char **e
+@@ -3010,8 +3011,14 @@ int main(int argc, char **argv, char **e
              if (fscanf(fp, "%lu", &tmp) == 1) {
                  mmap_min_addr = tmp;
                  qemu_log("host mmap_min_addr=0x%lx\n", mmap_min_addr);

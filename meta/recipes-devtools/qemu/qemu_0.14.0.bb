@@ -3,35 +3,30 @@ require qemu.inc
 LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
                     file://COPYING.LIB;endline=24;md5=c04def7ae38850e7d3ef548588159913"
 
-PR = "r1"
+PR = "r0"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}"
 FILESDIR = "${WORKDIR}"
 
 SRC_URI = "\
     http://download.savannah.gnu.org/releases/qemu/qemu-${PV}.tar.gz \
-    file://workaround_bad_futex_headers.patch \
+    file://powerpc_rom.bin \
     file://qemu-git-qemugl-host.patch \
     file://no-strip.patch \
-    file://fix-dirent.patch \
     file://fix-nogl.patch \
     file://qemugl-allow-glxcontext-release.patch \
     file://linker-flags.patch \
     file://init-info.patch \
     file://qemu-vmware-vga-depth.patch \
-    file://qemu-ppc-hack.patch \
     file://enable-i386-linux-user.patch \
-    file://vmware-vga-fifo-rewind.patch \
     file://fix-configure-checks.patch \
-    file://parallel_make.patch \
-    file://wacom-tablet-fix.patch \
-    file://port92_fix.patch \
-    file://powerpc_rom.bin \
     file://fallback-to-safe-mmap_min_addr.patch \
+    file://spice-qxl-locking-fix-for-qemu-kvm.patch \
+    file://Detect-and-use-GCC-atomic-builtins-for-locking.patch \
+    file://larger_default_ram_size.patch \
     "
-
-SRC_URI[md5sum] = "397a0d665da8ba9d3b9583629f3d6421"
-SRC_URI[sha256sum] = "1e6f5851b05cea6e377c835f4668408d4124cfb845f9948d922808743c5fd877"
+SRC_URI[md5sum] = "f9d145d5c09de9f0984ffe9bd1229970"
+SRC_URI[sha256sum] = "ba21e84d7853217830e167dae9999cdbff481189c6a0bb600ac7fb7201453108"
 
 do_install_append () {
         install -d ${D}${datadir}/qemu

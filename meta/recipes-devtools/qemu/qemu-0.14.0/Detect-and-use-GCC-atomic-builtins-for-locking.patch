@@ -1,0 +1,84 @@
+From de01f17a2cb88dc5ff53cc321342b888c33b120a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Lo=C3=AFc=20Minier?= <lool@dooz.org>
+Date: Thu, 11 Feb 2010 17:42:33 +0100
+Subject: [PATCH] Detect and use GCC atomic builtins for locking
+
+---
+ configure   |   17 +++++++++++++++++
+ qemu-lock.h |   13 +++++++++++++
+ 2 files changed, 30 insertions(+), 0 deletions(-)
+
+Index: qemu-0.14.0/configure
+===================================================================
+--- qemu-0.14.0.orig/configure
++++ qemu-0.14.0/configure
+@@ -2243,6 +2243,20 @@ fi
+ ##########################################
+ 
+ ##########################################
++# check if we have gcc atomic built-ins
++gcc_atomic_builtins=no
++cat > $TMPC << EOF
++int main(void) {
++    int i;
++    __sync_lock_test_and_set(&i, 1);
++    __sync_lock_release(&i);
++}
++EOF
++if compile_prog "" ""; then
++    gcc_atomic_builtins=yes
++fi
++
++##########################################
+ # check if we have fdatasync
+ 
+ fdatasync=no
+@@ -2731,6 +2745,9 @@ fi
+ if test "$gcc_attribute_warn_unused_result" = "yes" ; then
+   echo "CONFIG_GCC_ATTRIBUTE_WARN_UNUSED_RESULT=y" >> $config_host_mak
+ fi
++if test "$gcc_atomic_builtins" = "yes" ; then
++  echo "CONFIG_GCC_ATOMIC_BUILTINS=y" >> $config_host_mak
++fi
+ if test "$fdatasync" = "yes" ; then
+   echo "CONFIG_FDATASYNC=y" >> $config_host_mak
+ fi
+Index: qemu-0.14.0/qemu-lock.h
+===================================================================
+--- qemu-0.14.0.orig/qemu-lock.h
++++ qemu-0.14.0/qemu-lock.h
+@@ -33,6 +33,14 @@
+ 
+ #else
+ 
++#ifdef CONFIG_GCC_ATOMIC_BUILTINS
++typedef int spinlock_t;
++
++#define SPIN_LOCK_UNLOCKED 0
++
++#define resetlock(p) __sync_lock_release((p))
++#else /* CONFIG_GCC_ATOMIC_BUILTINS */
++
+ #if defined(__hppa__)
+ 
+ typedef int spinlock_t[4];
+@@ -56,7 +64,11 @@ static inline void resetlock (spinlock_t
+ }
+ 
+ #endif
++#endif /* !CONFIG_GCC_ATOMIC_BUILTINS */
+ 
++#ifdef CONFIG_GCC_ATOMIC_BUILTINS
++#define testandset(p) __sync_lock_test_and_set((p), 1)
++#else /* CONFIG_GCC_ATOMIC_BUILTINS */
+ #if defined(_ARCH_PPC)
+ static inline int testandset (int *p)
+ {
+@@ -213,6 +225,7 @@ static inline int testandset (int *p)
+ #else
+ #error unimplemented CPU support
+ #endif
++#endif /* !CONFIG_GCC_ATOMIC_BUILTINS */
+ 
+ #if defined(CONFIG_USER_ONLY)
+ static inline void spin_lock(spinlock_t *lock)

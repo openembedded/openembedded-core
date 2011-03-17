@@ -7,11 +7,11 @@ More information is available on the Fedora Wiki:
 https://fedoraproject.org/wiki/UnderstandingDSOLinkChange
 
 JL - 15/06/10
-Index: qemu-0.13.0/Makefile.target
+Index: qemu-0.14.0/Makefile.target
 ===================================================================
---- qemu-0.13.0.orig/Makefile.target	2011-01-15 17:30:45.000000000 +0800
-+++ qemu-0.13.0/Makefile.target	2011-01-15 17:33:22.000000000 +0800
-@@ -193,7 +193,7 @@
+--- qemu-0.14.0.orig/Makefile.target
++++ qemu-0.14.0/Makefile.target
+@@ -218,7 +218,7 @@ obj-$(CONFIG_REALLY_VIRTFS) += virtio-9p
  obj-y += rwhandler.o
  obj-$(CONFIG_KVM) += kvm.o kvm-all.o
  obj-$(CONFIG_NO_KVM) += kvm-stub.o

@@ -1,22 +1,24 @@
-Index: qemu-0.13.0/Makefile.target
+Index: qemu-0.14.0/Makefile.target
 ===================================================================
---- qemu-0.13.0.orig/Makefile.target	2011-01-17 16:53:08.000000000 +0800
-+++ qemu-0.13.0/Makefile.target	2011-01-17 16:53:11.000000000 +0800
-@@ -55,6 +55,10 @@
+--- qemu-0.14.0.orig/Makefile.target
++++ qemu-0.14.0/Makefile.target
+@@ -79,6 +79,12 @@ libobj-y += cpuid.o
  endif
  libobj-$(CONFIG_NEED_MMU) += mmu.o
  libobj-$(TARGET_I386) += helper_opengl.o opengl_exec.o
 +libobj-$(TARGET_X86_64) += helper_opengl.o opengl_exec.o
 +libobj-$(TARGET_ARM) += dummygl.o
 +libobj-$(TARGET_MIPS) += dummygl.o
++libobj-$(TARGET_MIPS64) += dummygl.o
 +libobj-$(TARGET_PPC) += dummygl.o
++libobj-$(TARGET_SH4) += dummygl.o
  libobj-$(TARGET_ARM) += neon_helper.o iwmmxt_helper.o
  
  libobj-y += disas.o
-Index: qemu-0.13.0/target-arm/dummygl.c
+Index: qemu-0.14.0/target-arm/dummygl.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu-0.13.0/target-arm/dummygl.c	2011-01-17 16:53:11.000000000 +0800
+--- /dev/null
++++ qemu-0.14.0/target-arm/dummygl.c
 @@ -0,0 +1,22 @@
 +#include <string.h>
 +#include <stdlib.h>
@@ -40,10 +42,10 @@ Index: qemu-0.13.0/target-arm/dummygl.c
 +{
 +
 +}
-Index: qemu-0.13.0/target-mips/dummygl.c
+Index: qemu-0.14.0/target-mips/dummygl.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu-0.13.0/target-mips/dummygl.c	2011-01-17 16:53:11.000000000 +0800
+--- /dev/null
++++ qemu-0.14.0/target-mips/dummygl.c
 @@ -0,0 +1,22 @@
 +#include <string.h>
 +#include <stdlib.h>
@@ -67,10 +69,37 @@ Index: qemu-0.13.0/target-mips/dummygl.c
 +{
 +
 +}
-Index: qemu-0.13.0/target-ppc/dummygl.c
+Index: qemu-0.14.0/target-ppc/dummygl.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ qemu-0.13.0/target-ppc/dummygl.c	2011-01-17 16:53:11.000000000 +0800
+--- /dev/null
++++ qemu-0.14.0/target-ppc/dummygl.c
+@@ -0,0 +1,22 @@
++#include <string.h>
++#include <stdlib.h>
++#include <assert.h>
++#include <stdint.h>
++#include <X11/Xlib.h>
++#include <X11/Xutil.h>
++
++void opengl_exec_set_parent_window(Display* _dpy, Window _parent_window)
++{
++
++}
++
++void opengl_process_enable(void)
++{
++
++}
++
++
++void mem_opengl(uint64_t ptr)
++{
++
++}
+Index: qemu-0.14.0/target-sh4/dummygl.c
+===================================================================
+--- /dev/null
++++ qemu-0.14.0/target-sh4/dummygl.c
 @@ -0,0 +1,22 @@
 +#include <string.h>
 +#include <stdlib.h>
