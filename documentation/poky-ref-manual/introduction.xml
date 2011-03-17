@@ -8,8 +8,8 @@
     <title>Welcome to Poky!</title>
 
     <para>
-        Poky is the build tool in Yocto Project.
-        Yocto Project uses Poky to build images (kernel, system, and application software) for 
+        Poky is the build tool in the Yocto Project.
+        The Yocto Project uses Poky to build images (kernel, system, and application software) for 
         targeted hardware.
     </para>
 
@@ -78,7 +78,8 @@
     <para>
         The sections in this reference manual describe different aspects of Poky. 
         The <link linkend='usingpoky'>'Using Poky'</link> section provides an overview of the components 
-        that make up Poky followed by information about using Poky and debugging images created in Yocto Project. 
+        that make up Poky followed by information about using Poky and debugging images created in 
+        the Yocto Project. 
         The <link linkend='extendpoky'>'Extending Poky'</link> and 
         <link linkend='bsp'>'Board Support Packages'</link> sections provide information 
         about how to extend and customize Poky along with advice on how to manage these changes. 
@@ -90,7 +91,7 @@
     </para>
 
     <para>
-        This manual applies to Poky Release 4.0 (laverne).
+        This manual applies to Poky Release 5.0 (Bernard).
     </para>
 </section>
 
