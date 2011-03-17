@@ -19,7 +19,7 @@
     </para>
     
     <para>  
-        Bitbake handles the parsing and execution of the data files. 
+        BitBake handles the parsing and execution of the data files. 
         The data itself is of various types:
     <itemizedlist>
         <listitem><para>Recipes:  Provides details about particular pieces of software</para></listitem>
@@ -31,7 +31,7 @@
     </para>
 
     <para> 
-        Bitbake knows how to combine multiple data sources together and refers to each data source
+        BitBake knows how to combine multiple data sources together and refers to each data source
         as a <link linkend='usingpoky-changes-layers'>'layer'</link>.
     </para>
 
@@ -43,10 +43,10 @@
     </para>
 
     <section id='usingpoky-components-bitbake'>
-        <title>Bitbake</title>
+        <title>BitBake</title>
 
         <para>
-            Bitbake is the tool at the heart of Poky and is responsible
+            BitBake is the tool at the heart of Poky and is responsible
             for parsing the metadata, generating a list of tasks from it
             and then executing them. To see a list of the options BitBake
             supports look at 'bitbake --help'.
@@ -63,13 +63,13 @@
      $ bitbake matchbox-desktop
             </literallayout>
             Several different versions of <filename>matchbox-desktop</filename> might exist.
-            Bitbake chooses the one selected by the distribution configuration.
+            BitBake chooses the one selected by the distribution configuration.
             You can get more details about how BitBake chooses between different versions
             and providers in the <link linkend='ref-bitbake-providers'>
             'Preferences and Providers'</link> section.
         </para>
         <para>
-            Bitbake also tries to execute any dependent tasks first.
+            BitBake also tries to execute any dependent tasks first.
             So for example, before building <filename>matchbox-desktop</filename> BitBake
             would build a cross compiler and glibc if they had not already been built.
         </para>
@@ -241,7 +241,7 @@
         <para>
             This sequence first builds <filename>matchbox-desktop</filename> and then recompiles it.
             The last command reruns all tasks, basically the packaging tasks, after the compile.
-            Bitbake recognizes that the "compile" task was rerun and therefore understands that the other
+            BitBake recognizes that the "compile" task was rerun and therefore understands that the other
             tasks also need to be run again.
         </para>
 
@@ -270,7 +270,7 @@
     </section>
 
     <section id='usingpoky-debugging-bitbake'>
-        <title>General Bitbake Problems</title>
+        <title>General BitBake Problems</title>
 
         <para>
             You can see debug output from BitBake by using the "-D" option.
