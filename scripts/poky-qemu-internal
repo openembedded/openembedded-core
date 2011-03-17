@@ -189,6 +189,9 @@ cleanup() {
         echo "poky-export-rootfs stop $ROOTFS"
         poky-export-rootfs stop $ROOTFS
     fi
+    # If QEMU crashes or somehow tty properties are not restored
+    # after qemu exits, we need to run stty sane
+    stty sane
 }
 
 n1=$[ (`echo $TAP | sed 's/tap//'` * 2) + 1 ]
@@ -458,8 +461,7 @@ fi
 echo "Running $QEMU..."
 # -no-reboot is a mandatory option - see bug #100
 echo $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append '"'$KERNCMDLINE $SCRIPT_KERNEL_OPT'"'
-# If QEMU crashes, we need to run stty sane
-$QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT" || stty sane
+$QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT"
 
 
 cleanup
