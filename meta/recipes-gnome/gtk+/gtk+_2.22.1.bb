@@ -37,10 +37,6 @@ LIBV = "2.10.0"
 
 PACKAGES_DYNAMIC += "gtk-immodule-* gtk-printbackend-*"
 
-#-fomit-frame-pointer in default FULL_OPTIMIZATION will cause matchbox-panel segfault on atom-pc & emenlow
-FULL_OPTIMIZATION_emenlow = "-fexpensive-optimizations -frename-registers -O2 -ggdb -feliminate-unused-debug-types"
-FULL_OPTIMIZATION_atom-pc = "-fexpensive-optimizations -frename-registers -O2 -ggdb -feliminate-unused-debug-types"
-
 python populate_packages_prepend () {
 	import os.path
 
