@@ -29,14 +29,15 @@
 
         <revhistory>
             <revision>
-                <revnumber>1.0</revnumber>
-                <date>1 April 2011</date>
-                <revremark>This release represents the initial full release for Yocto Project.</revremark>
-            </revision>
-            <revision>
                 <revnumber>0.9</revnumber>
                 <date>27 October 2010</date>
-                <revremark>This release represents the Yocto Project Beta Draft.</revremark>
+                <revremark>This manual revision is the initial manual and corresponds to the 
+                    Yocto Project 0.9 Release.</revremark>
+            </revision>
+            <revision>
+                <revnumber>1.0</revnumber>
+                <date>6 April 2011</date>
+                <revremark>This manual revision corresponds to the Yocto Project 1.0 Release.</revremark>
             </revision>
         </revhistory>
 
