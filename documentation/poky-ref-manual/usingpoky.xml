@@ -5,7 +5,7 @@
 
     <para>
         This section gives an overview of the components that make up Poky 
-        following by information about running poky builds and dealing with any
+        followed by information about running poky builds and dealing with any
         problems that may arise.
     </para>
 
@@ -13,8 +13,8 @@
     <title>Poky Overview</title>
 
     <para>
-        The bitbake task executor together with various types of configuration files form the core of Poky.
-        This section overviews the bitbake task executor and the
+        The BitBake task executor together with various types of configuration files form the core of Poky.
+        This section overviews the BitBake task executor and the
         configuration files by describing what they are used for and they they interact.
     </para>
     
@@ -48,12 +48,12 @@
         <para>
             Bitbake is the tool at the heart of Poky and is responsible
             for parsing the metadata, generating a list of tasks from it
-            and then executing them. To see a list of the options bitbake
+            and then executing them. To see a list of the options BitBake
             supports look at 'bitbake --help'.
         </para>
 
         <para>
-            The most common usage for bitbake is <filename>bitbake &lt;packagename&gt;</filename>, where
+            The most common usage for BitBake is <filename>bitbake &lt;packagename&gt;</filename>, where
             packagename is the name of the package you want to build (referred to as the 'target'
             in this manual). 
             The target often equates to the first part of a <filename>.bb</filename> filename.
@@ -64,13 +64,13 @@
             </literallayout>
             Several different versions of <filename>matchbox-desktop</filename> might exist.
             Bitbake chooses the one selected by the distribution configuration.
-            You can get more details about how bitbake chooses between different versions
+            You can get more details about how BitBake chooses between different versions
             and providers in the <link linkend='ref-bitbake-providers'>
             'Preferences and Providers'</link> section.
         </para>
         <para>
             Bitbake also tries to execute any dependent tasks first.
-            So for example, before building <filename>matchbox-desktop</filename> bitbake
+            So for example, before building <filename>matchbox-desktop</filename> BitBake
             would build a cross compiler and glibc if they had not already been built.
         </para>
 
@@ -197,7 +197,7 @@
         <para>The log file for shell tasks is available in <filename>${WORKDIR}/temp/log.do_taskname.pid</filename>. 
             For example, the "compile" task of busybox 1.01 on the ARM spitz machine might be 
             <filename>tmp/work/armv5te-poky-linux-gnueabi/busybox-1.01/temp/log.do_compile.1234</filename>.
-            To see what bitbake runs to generate that log, look at the corresponding 
+            To see what BitBake runs to generate that log, look at the corresponding 
             <filename>run.do_taskname.pid </filename> file located in the same directory.
         </para>
 
@@ -214,10 +214,10 @@
             In most cases the series is: fetch, unpack, patch, configure,
             compile, install, package, package_write and build. 
             The default task is "build" and any tasks on which it depends build first - hence, 
-            the standard bitbake behaviour. 
+            the standard BitBake behaviour. 
             Some tasks exist, such as devshell, that are not part of the default build chain.  
             If you wish to run a task that is not part of the default build chain you can use the 
-            "-c" option in bitbake as follows:
+            "-c" option in BitBake as follows:
             <literallayout class='monospaced'>
      $ bitbake matchbox-desktop -c devshell
             </literallayout>
@@ -259,7 +259,7 @@
         <title>Dependency Graphs</title>
 
         <para>
-            Sometimes it can be hard to see why bitbake wants to build some other packages before a given 
+            Sometimes it can be hard to see why BitBake wants to build some other packages before a given 
             package you've specified.
             The <filename>bitbake -g targetname</filename> command creates the <filename>depends.dot</filename> and
             <filename>task-depends.dot</filename> files in the current directory. 
@@ -273,8 +273,8 @@
         <title>General Bitbake Problems</title>
 
         <para>
-            You can see debug output from bitbake by using the "-D" option.
-            The debug output gives more information about what bitbake
+            You can see debug output from BitBake by using the "-D" option.
+            The debug output gives more information about what BitBake
             is doing and the reason behind it. 
             Each "-D" option you use increases the logging level.
             The most common usage is <filename>-DDD</filename>.
@@ -282,9 +282,9 @@
 
         <para>
             The output from <filename>bitbake -DDD -v targetname</filename> can reveal why
-            bitbake chose a certain version of a package or why bitbake
+            BitBake chose a certain version of a package or why BitBake
             picked a certain provider.
-            This command could also help you in a situation where you think bitbake did something 
+            This command could also help you in a situation where you think BitBake did something 
             unexpected.
         </para>
     </section>
@@ -296,7 +296,7 @@
             the command form <filename>bitbake -b somepath/somefile.bb</filename>. 
             This command form does not check for dependencies so you should use it
             only when you know its dependencies already exist. 
-            You can also specify fragments of the filename and bitbake checks for a unique match.
+            You can also specify fragments of the filename and BitBake checks for a unique match.
         </para>
     </section>
 
