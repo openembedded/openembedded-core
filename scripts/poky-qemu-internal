@@ -40,40 +40,36 @@ mem_set=`expr "$SCRIPT_QEMU_EXTRA_OPT" : '.*\(-m[[:space:]] *[0-9]*\)'`
 if [ ! -z "$mem_set" ] ; then
 #Get memory setting size from user input
   mem_size=`echo $mem_set | sed 's/-m[[:space:]] *//'`
-fi
-
-if [ $mem_size -gt 0 ]; then
-  QEMU_MEMORY="$mem_size"M
-fi
-
-if [ -z "$QEMU_MEMORY" ]; then
+else
     case "$MACHINE" in
         "qemux86")
-            QEMU_MEMORY="128M"
+            mem_size=128
             ;;
         "qemux86-64")
-            QEMU_MEMORY="128M"
+            mem_size=128
             ;;
         "qemuarm")
-            QEMU_MEMORY="128M"
+            mem_size=128
             ;;
         "qemumips")
-            QEMU_MEMORY="128M"
+            mem_size=128
             ;;
         "qemuppc")
-            QEMU_MEMORY="128M"
+            mem_size=128
             ;;
         *)
-            QEMU_MEMORY="64M"
+            mem_size=64
             ;;
     esac
 
 fi
 
+# QEMU_MEMORY has 'M' appended to mem_size
+QEMU_MEMORY="$mem_size"M
+
 # Bug 433: qemuarm cannot use > 128 MB RAM
 if [ "$MACHINE" = "qemuarm" ]; then
-    RAM=`echo $QEMU_MEMORY | sed 's/M$//'`
-    if [[ -z "$RAM" || $RAM -gt 128 ]]; then
+    if [[ -z "$mem_size" || $mem_size -gt 128 ]]; then
         echo "WARNING: qemuarm does not support > 128M of RAM."
         echo "Changing QEMU_MEMORY to default of 128M."
         QEMU_MEMORY="128M"
@@ -81,6 +77,12 @@ if [ "$MACHINE" = "qemuarm" ]; then
     fi
 fi
 
+# We need to specify -m <mem_size> to overcome a bug in qemu 0.14.0
+# https://bugs.launchpad.net/ubuntu/+source/qemu-kvm/+bug/584480
+
+if [ -z "$mem_set" ] ; then
+  SCRIPT_QEMU_EXTRA_OPT="$SCRIPT_QEMU_EXTRA_OPT -m $mem_size"
+fi
 # This file is created when poky-gen-tapdevs creates a bank of tap
 # devices, indicating that the user should not bring up new ones using
 # sudo.
