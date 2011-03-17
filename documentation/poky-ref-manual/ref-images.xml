@@ -13,6 +13,18 @@
         Images are listed below along with details of what they contain:
     </para>
 
+    <note>
+        Building an image without GNU Public License Version 3 (GPLv3) components is 
+        only supported for minimal and base images.
+        Furthermore, if you are going to build an image using non-GPLv3 components,
+        you must make the following changes in the <filename>local.conf</filename> file
+        before using the BitBake command to build the minimal or base image:
+        <literallayout class='monospaced'>
+     1. Comment out the IMAGE_EXTRA_FEATURES line
+     2. Set INCOMPATIBLE_LICENSE = "GPLv3"
+        </literallayout>
+    </note>
+
     <itemizedlist>
             <listitem>
                 <para>

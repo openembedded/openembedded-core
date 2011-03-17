@@ -151,13 +151,18 @@
     </para>
     <para>
         The target is the name of the recipe you want to build. 
-        Common targets are the images in <filename>meta/recipes-core/images</filename>),
+        Common targets are the images in <filename>meta/recipes-core/images</filename>,
         <filename>/meta/recipes-sato/images</filename>, etc.
         Or, the target can be the name of a recipe for a specific piece of software such as 
         <application>busybox</application>. 
         For more details about the standard images available, see the 
         <link linkend="ref-images">'Reference: Images'</link> appendix.
     </para>
+    <note>
+        Building an image without GNU Public License Version 3 (GPLv3) components is 
+        only supported for minimal and base images.
+        See <link linkend='ref-images'>'Reference: Images'</link> for more information.
+    </note>
 </section>
 
 <section id='usingpoky-install'>
