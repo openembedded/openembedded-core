@@ -26,10 +26,17 @@
         and run it using the QEMU emulator.
     </para>
     <para>
-        For complete information on the Yocto Project you should check out the 
+        For complete information on the Yocto Project, you should check out the 
         <ulink url='http://www.yoctoproject.org'>Yocto Project Website</ulink>.
         You can find the latest builds, breaking news, full development documentation, and a 
         rich Yocto Project Development Community into which you can tap.
+    </para>
+    <para>
+        Finally, you might find the Frequently Asked Questions (FAQ) for the Yocto Project
+        at <ulink url='https://wiki.yoctoproject.org/wiki/FAQ'>Yocto Project FAQ</ulink> and 
+        the FAQ appendix located in the 
+        <ulink url='http://www.yoctoproject.org/docs/poky-ref-manual/poky-ref-manual.html'>
+        Poky Reference Manual</ulink> helpful.
     </para>
 </section>
 
