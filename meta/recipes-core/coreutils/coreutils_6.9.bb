@@ -8,12 +8,13 @@ BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://src/ls.c;startline=4;endline=16;md5=482a96d4f25010a4e13f8743e0c3685e"
-PR = "r0"
-DEPENDS = "perl-native"
+PR = "r1"
+DEPENDS = "perl-native coreutils-native-${PV} gettext "
+DEPENDS_virtclass-native = "perl-native gettext-native"
 
 inherit autotools gettext
 
-SRC_URI = "http://ftp.gnu.org/gnu/coreutils/${BP}.tar.bz2 \
+SRC_URI_BASE = "http://ftp.gnu.org/gnu/coreutils/${BP}.tar.bz2 \
            file://gnulib_m4.patch \
            file://futimens.patch \
            file://coreutils-ls-x.patch \
@@ -22,6 +23,9 @@ SRC_URI = "http://ftp.gnu.org/gnu/coreutils/${BP}.tar.bz2 \
            file://coreutils-overflow.patch \
            file://coreutils-fix-install.patch \
            file://man-touch.patch"
+
+SRC_URI = "${SRC_URI_BASE} file://fix_for_manpage_building.patch"
+SRC_URI_virtclass-native = "${SRC_URI_BASE}"
 
 # [ gets a special treatment and is not included in this
 bindir_progs = "base64 basename cksum comm csplit cut dir dircolors dirname du \
