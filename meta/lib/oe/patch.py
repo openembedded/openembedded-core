@@ -358,7 +358,7 @@ class UserResolver(Resolver):
             t = bb.data.getVar('T', self.patchset.d, 1)
             if not t:
                 bb.msg.fatal(bb.msg.domain.Build, "T not set")
-            bb.mkdirhier(t)
+            bb.utils.mkdirhier(t)
             import random
             rcfile = "%s/bashrc.%s.%s" % (t, str(os.getpid()), random.random())
             f = open(rcfile, "w")
