@@ -475,7 +475,7 @@ repository.
                 <para>
                     You can use many other comparisons to isolate BSP changes.
                     For example, you can compare against kernel.org tags (e.g. v2.6.27.18, etc), or
-                    you can compare agains subsystems (e.g. git whatchanged mm).
+                    you can compare against subsystems (e.g. git whatchanged mm).
                 </para>
             </section>
         </section>
@@ -600,7 +600,7 @@ repository.
                 <para>
                     Distributed development with git is possible when you use a universally 
                     agreed-upon unique commit identifier (set by the creator of the commit) that maps to a
-                    specific changeset with a specific parent.  
+                    specific change set with a specific parent.  
                     This identifier is created for you when
                     you create a commit, and is re-created when you amend, alter or re-apply
                     a commit.  
@@ -1059,7 +1059,7 @@ That's it. Configure and build.
                         (linux-yocto is the kernel listed in
                         <filename>meta-emenlow/conf/machine/emenlow.conf</filename>)</para></listitem>.
                         <listitem><para>Add a new entry in the <filename>build/conf/bblayers.conf</filename> 
-                        so the new layer can be found by Bitbake.</para></listitem>
+                        so the new layer can be found by BitBake.</para></listitem>
                     </itemizedlist>
                 </para></listitem>
                 
