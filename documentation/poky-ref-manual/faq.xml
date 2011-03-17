@@ -108,7 +108,7 @@
                 </listitem>
                 <listitem>
                     <para>
-                    Send us bitbake recipes if you have them (see the Poky handbook to find out how to create recipes)
+                    Send us BitBake recipes if you have them (see the Poky handbook to find out how to create recipes)
                     </para>
                 </listitem>
             </itemizedlist>
@@ -148,7 +148,7 @@
         </question>
         <answer>
             <para>
-                To add a package you need to create a bitbake recipe - see the Poky handbook to find out how to create a recipe.
+                To add a package you need to create a BitBake recipe - see the Poky handbook to find out how to create a recipe.
             </para>
         </answer>
     </qandaentry>
@@ -332,19 +332,19 @@
         </question>
         <answer>
             <para>
-                If the same build is failing in totally different and random ways the most likely explaination is that either the hardware you're running it on has some problem or if you are running it under virtualisation, the virtualisation probably has bugs. Poky processes a massive amount of data causing lots of network, disk and cpu activity and is senstive to even single bit failure in any of these areas. Totally random failures have always been traced back to hardware or virtualisation issues.
+                If the same build is failing in totally different and random ways the most likely explanation is that either the hardware you're running it on has some problem or if you are running it under virtualisation, the virtualisation probably has bugs. Poky processes a massive amount of data causing lots of network, disk and cpu activity and is sensitive to even single bit failure in any of these areas. Totally random failures have always been traced back to hardware or virtualisation issues.
             </para>
         </answer>
     </qandaentry>
     <qandaentry>
         <question>
             <para>
-                What do we need to ship for licence complience?
+                What do we need to ship for license compliance?
             </para>
         </question>
         <answer>
             <para>
-                This is a difficult question and you need to consult your lawyer for the answer for your specific case. Its worth bearing in mind that for GPL complience there needs to be enough information shipped to allow someone else to rebuild the same end result as you are shipping. This means sharing the source code, any patches applied to it but also any configuration information about how that package was configured and built.
+                This is a difficult question and you need to consult your lawyer for the answer for your specific case. Its worth bearing in mind that for GPL compliance there needs to be enough information shipped to allow someone else to rebuild the same end result as you are shipping. This means sharing the source code, any patches applied to it but also any configuration information about how that package was configured and built.
             </para>
         </answer>
     </qandaentry>
