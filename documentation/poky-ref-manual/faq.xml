@@ -348,6 +348,74 @@
             </para>
         </answer>
     </qandaentry>
+
+    <qandaentry>
+        <question>
+            <para>
+                How do I disable the cursor on my touchscreen device?
+            </para>
+        </question>
+        <answer>
+            <para>
+                You need to create a form factor file as described in 
+                <xref linkend='bsp-filelayout-misc-recipes'>"Miscellaneous Recipe Files"</xref>
+                and set the <filename>HAVE_TOUCHSCREEN</filename> variable equal to one.
+                <literallayout class='monospaced'>
+     HAVE_TOUCHSCREEN=1
+                </literallayout>
+            </para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry>
+        <question>
+            <para>
+                How do I make sure connected network interfaces are brought up by default?
+            </para>
+        </question>
+        <answer>
+            <para>
+                The default interfaces file provided by the netbase recipe does not 
+                automatically bring up network interfaces. 
+                Therefore you will need to add a BSP-specific netbase that includes an interfaces 
+                file.
+                See <xref linkend='bsp-filelayout-misc-recipes'>"Miscellaneous Recipe Files"</xref>
+                for information on creating these types of miscellaneous recipe files.
+            </para>
+            <para>
+                For example, add the following files to your layer:
+                <literallayout class='monospaced'>
+     meta-MACHINE/recipes-bsp/netbase/netbase/MACHINE/interfaces
+     meta-MACHINE/recipes-bsp/netbase/netbase_4.44.bbappend
+                </literallayout>
+            </para>
+        </answer>
+    </qandaentry>
+
+    <qandaentry>
+        <question>
+            <para>
+                How do I create images with more free space?
+            </para>
+        </question>
+        <answer>
+            <para>
+                Images are created to be 1.2 times the size of the populated root filesystem. 
+                To modify this ratio so that there is more free space available you need to 
+                set the configuration value <filename>IMAGE_OVERHEAD_FACTOR</filename>.  
+                For example, setting <filename>IMAGE_OVERHEAD_FACTOR</filename> to 1.5 sets 
+                the image size ratio to one and a half times the size of the populated 
+                root filesystem.
+                <literallayout class='monospaced'>
+     IMAGE_OVERHEAD_FACTOR = "1.5"
+                </literallayout>
+            </para>
+        </answer>
+    </qandaentry>
+
+
+
+
 </qandaset>
 </appendix>
 <!-- 
