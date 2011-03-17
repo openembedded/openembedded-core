@@ -170,7 +170,9 @@ fi
 
 echo_info "Installing target sysroot for arch: $1, rootfs type: $target_sysroot_image, location: $target_sysroot"
 
-sysroot_image_name="poky-image-$target_sysroot_image-qemu$1.tar.bz2"
+
+qemu_type=`echo "$1" | sed -e 's/x86_64/x86-64/'`
+sysroot_image_name="poky-image-$target_sysroot_image-qemu$qemu_type.tar.bz2"
     #echo_info "Extracting rootfs: $sysroot_image_name, using pseudo..."
 
 scripts/extract_rootfs $sysroot_image_name $target_sysroot $POKY_NATIVE_SYSROOT $user_inst_type
@@ -179,8 +181,6 @@ check_result
 echo_info "Updating environment script with target sysroot location."
 if [ "$1" == "x86"  ]; then
   env_filename=`ls $INSTALL_FOLDER/environment-setup-i586*`
-elif [ "$1" == "ppc"  ]; then
-  env_filename=`ls $INSTALL_FOLDER/environment-setup-powerpc*`
 else
   env_filename=`ls $INSTALL_FOLDER/environment-setup-$1*`
 fi

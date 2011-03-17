@@ -82,4 +82,4 @@ do_package_write_rpm[noexec] = "1"
 do_package_write_deb[noexec] = "1"
 do_poplulate_sysroot[noexec] = "1"
 
-addtask deploy before do_populate_sysroot after do_unpack
+addtask deploy before do_populate_sysroot after do_patch

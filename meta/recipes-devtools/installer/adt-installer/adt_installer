@@ -236,12 +236,15 @@ wget "$YOCTOADT_IPKG_REPO/$1" -P $LOCAL_DOWNLOAD --progress=bar:force 2>&1 | tee
 #Need two input params, $1 -- arch_type(arm powerpc x86 mips) $2 rootfs_image_type (a list of sdk sato minimal lsb)
 get_qemu_image()
 {
-  if [ "$1" == "x86" ]; then
-    qemu_kernel="bzImage-qemu$1.bin"
+ 
+  local target=`echo "$1" | sed -e 's/x86_64/x86-64/'`
+
+  if [ "$1" == "x86" ] || [ "$1" == "x86_64" ]; then
+    qemu_kernel="bzImage-qemu$target.bin"
   elif [ "$1" == "mips" ]; then
-    qemu_kernel="vmlinux-qemu$1.bin"
+    qemu_kernel="vmlinux-qemu$target.bin"
   else
-    qemu_kernel="zImage-qemu$1.bin"
+    qemu_kernel="zImage-qemu$target.bin"
   fi
 
   #echo_info "[ADT_INST] Downloading qemu kernel binary: $qemu_kernel"
@@ -250,7 +253,7 @@ get_qemu_image()
   
   for image_type in $select_rootfs; do
     #echo_info "[ADT_INST] Downloading rootfs file: poky-image-$image_type-qemu$1.tar.bz2"
-    filename="poky-image-$image_type-qemu$1.tar.bz2"
+    filename="poky-image-$image_type-qemu$target.tar.bz2"
     download_file qemu$1/$filename
     check_result
   done
