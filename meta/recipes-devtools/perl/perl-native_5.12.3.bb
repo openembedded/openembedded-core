@@ -4,22 +4,22 @@ SECTION = "libs"
 LICENSE = "Artistic|GPL"
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 		    file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
-PR = "r0"
+PR = "r1"
 
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
                     file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
 
 SRC_URI = "http://ftp.funet.fi/pub/CPAN/src/perl-${PV}.tar.gz \
-           file://Configure-multilib.patch;patch=1 \
-           file://perl-configpm-switch.patch;patch=1 \
+           file://Configure-multilib.patch \
+           file://perl-configpm-switch.patch \
            file://parallel_build_fix_1.patch \
            file://parallel_build_fix_2.patch \
            file://parallel_build_fix_3.patch \
            file://parallel_build_fix_4.patch \
            file://parallel_build_fix_5.patch \
            file://parallel_build_fix_6.patch \
-           file://native-nopacklist.patch;patch=1 \
-           file://native-perlinc.patch;patch=1"
+           file://native-nopacklist.patch \
+           file://native-perlinc.patch"
 
 SRC_URI[md5sum] = "29975a69dce54e47fcd6331c085c6c99"
 SRC_URI[sha256sum] = "5678bfd5c2cd59253a26171bf3e681235433b00c730eea8a8046e1b225c11d2f"
