@@ -14,11 +14,10 @@ HOMEPAGE = "http://www.oracle.com/technology/products/berkeley-db/db/index.html"
 LICENSE = "BSD Sleepycat"
 VIRTUAL_NAME ?= "virtual/db"
 CONFLICTS = "db3"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz"
-#SRC_URI_MD5 = "http://downloads.sleepycat.com/db-${PV}.tar.gz.md5"
-SRC_URI += "file://arm-thumb-mutex_db5.patch;patch=1"
+SRC_URI += "file://arm-thumb-mutex_db5.patch;apply=no"
 
 SRC_URI[md5sum] = "76fcbfeebfcd09ba0b4d96bfdf8d884d"
 SRC_URI[sha256sum] = "0194d4ca9266ba1a1c0bfbc233b18bfd05f63163453c81ebcdfdc7112d5ac850"
@@ -78,6 +77,10 @@ EXTRA_OECONF += "${MUTEX}"
 CONFIG_SITE = ""
 do_configure() {
 	oe_runconf
+}
+
+do_patch_append() {
+	os.system("cd ${S}/.. ; patch -p1 -i ${WORKDIR}/arm-thumb-mutex_db5.patch")
 }
 
 do_install_append() {

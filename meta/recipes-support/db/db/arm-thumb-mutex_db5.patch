@@ -1,5 +1,5 @@
---- db-5.1.19/../src/dbinc/mutex_int.h.orig	2011-01-05 19:21:42.181805366 -0600
-+++ db-5.1.19/../src/dbinc/mutex_int.h	2011-01-05 19:24:53.141853117 -0600
+--- db-5.1.19/src/dbinc/mutex_int.h.orig	2011-01-05 19:21:42.181805366 -0600
++++ db-5.1.19/src/dbinc/mutex_int.h	2011-01-05 19:24:53.141853117 -0600
 @@ -474,6 +474,25 @@
  
  #ifdef LOAD_ACTUAL_MUTEX_CODE
