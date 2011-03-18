@@ -301,18 +301,45 @@ def sstate_hardcode_path(d):
 def sstate_package(ss, d):
     import oe.path
 
+    def make_relative_symlink(path, outputpath, d):
+        # Replace out absolute TMPDIR paths in symlinks with relative ones
+        if not os.path.islink(path):
+            return
+        link = os.readlink(path)
+        if not os.path.isabs(link):
+            return
+        if not link.startswith(tmpdir):
+            return
+
+        depth = link.rpartition(tmpdir)[2].count('/')
+        base = link.partition(tmpdir)[2].strip()
+        while depth > 1:
+            base = "../" + base
+            depth -= 1
+
+        bb.debug(2, "Replacing absolute path %s with relative path %s" % (link, base))
+        os.remove(path)
+        os.symlink(base, path)
+
+    tmpdir = bb.data.getVar('TMPDIR', d, True)
+
     sstatebuild = bb.data.expand("${WORKDIR}/sstate-build-%s/" % ss['name'], d)
     sstatepkg = bb.data.getVar('SSTATE_PKG', d, True) + '_'+ ss['name'] + ".tgz"
     bb.mkdirhier(sstatebuild)
     bb.mkdirhier(os.path.dirname(sstatepkg))
     for state in ss['dirs']:
         srcbase = state[0].rstrip("/").rsplit('/', 1)[0]
-        oe.path.copytree(state[1], sstatebuild + state[0])
         for walkroot, dirs, files in os.walk(state[1]):
             for file in files:
                 srcpath = os.path.join(walkroot, file)
                 dstpath = srcpath.replace(state[1], sstatebuild + state[0])
                 bb.debug(2, "Preparing %s for packaging at %s" % (srcpath, dstpath))
+                make_relative_symlink(srcpath, dstpath, d)
+            for dir in dirs:
+                srcpath = os.path.join(walkroot, dir)
+                dstpath = srcpath.replace(state[1], sstatebuild + state[0])
+                make_relative_symlink(srcpath, dstpath, d)
+        oe.path.copytree(state[1], sstatebuild + state[0])
 
     workdir = bb.data.getVar('WORKDIR', d, True)
     for plain in ss['plaindirs']:
