@@ -10,7 +10,7 @@ to recode S-Lang procedures in C if you need to."
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "pcre"
-PR = "r1"
+PR = "r2"
 
 LICENSE = "GPL Artistic"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
@@ -24,6 +24,7 @@ inherit autotools
 SRC_URI[md5sum] = "974437602a781cfe92ab61433dd16d03"
 SRC_URI[sha256sum] = "cfaf8551fa3855f9b0043309bb553ef6d457f931b404df5a6ba6a5a69371fc42"
 
+EXTRA_OECONF += " --x-includes=${STAGING_DIR_HOST}/usr/X11/include"
 do_install() {
 	oe_runmake install DESTDIR=${D} -e 'INST_LIB_DIR=${STAGING_DIR_HOST}/usr/lib'
 }
