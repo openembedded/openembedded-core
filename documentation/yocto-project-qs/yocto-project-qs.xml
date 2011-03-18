@@ -235,6 +235,16 @@
              recommend having at least 100GB of free disk space.
          </para></note>
 
+         <note><para>
+             By default, Poky searches for source code using a pre-determined order
+             through a set of locations.
+             If you encounter problems with Poky finding and downloading source code, see
+             the FAQ entry "How does Poky obtain source code and will it work behind my
+             firewall or proxy server?" in the 
+             <ulink url='http://www.yoctoproject.org/docs/poky-ref-manual/poky-ref-manual.html'>
+             Poky Reference Manual</ulink>.
+         </para></note>
+
          <para>
              <literallayout class='monospaced'>
      $ wget http://www.yoctoproject.org/downloads/poky/poky-bernard-5.0.tar.bz2
