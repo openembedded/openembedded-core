@@ -4,7 +4,7 @@ SECTION = "libs"
 LICENSE = "Artistic|GPL"
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 		    file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
-PR = "r7"
+PR = "r8"
 
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
                     file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
@@ -27,6 +27,8 @@ SRC_URI[sha256sum] = "cf888340021d5a2d1238bbd9b8b55aaf420a848d46e4d317cb8567f86c
 S = "${WORKDIR}/perl-${PV}"
 
 inherit native
+
+export LD="${CCLD}"
 
 do_configure () {
 	./Configure \
