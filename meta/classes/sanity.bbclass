@@ -338,6 +338,19 @@ def check_sanity(e):
     elif oeroot.find (' ') != -1:
         messages = messages + "Error, you have a space in your POKYBASE directory path. Please move Poky to a directory which doesn't include a space."
 
+    # Check that we don't have duplicate entries in PACKAGE_ARCHS
+    pkgarchs = data.getVar('PACKAGE_ARCHS', e.data, True)
+    seen = {}
+    dups = []
+
+    for pa in pkgarchs.split():
+    	if seen.get(pa, 0) == 1:
+	    dups.append(pa)
+	else:
+	    seen[pa] = 1
+    if len(dups):
+       messages = messages + "Error, the PACKAGE_ARCHS variable contains duplicates. The following archs are listed more than once: %s" % " ".join(dups)
+
     if messages != "":
         raise_sanity_error(messages)
 
