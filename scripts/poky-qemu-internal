@@ -442,10 +442,22 @@ else
     echo "Warning: distccd not present, no distcc support loaded."
 fi
 
+# qemu got segfault if linked with nVidia's libgl
+if ldd $QEMUBIN | grep -i nvidia &> /dev/null
+then
+    echo "************** !!!Warning!!! **************
+    nVidia's proprietary OpenGL libraries are known to have compatibility
+    issues with qemu, resulting in a segfault. Please uninstall these
+    drivers or ensure the mesa libGL libraries precede nvidia's via LD_PRELOAD.
+    " 
+fi
+
 echo "Running $QEMU..."
 # -no-reboot is a mandatory option - see bug #100
 echo $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append '"'$KERNCMDLINE $SCRIPT_KERNEL_OPT'"'
-$QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT" || /bin/true
+# If QEMU crashes, we need to run stty sane
+$QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT" || stty sane
+
 
 cleanup
 
