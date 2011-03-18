@@ -508,7 +508,7 @@ COMPATIBLE_MACHINE = '(qemux86|qemumips)'
                 where <filename>MACHINENAME</filename> is the name for which this information
                 applies. 
                 For information about the settings available and the defaults, see 
-                <filename>meta/packages/formfactor/files/config</filename>. 
+                <filename>meta/recipes-bsp/formfactor/files/config</filename>. 
                 Following is an example for qemuarm:
             </para>
             <programlisting>
