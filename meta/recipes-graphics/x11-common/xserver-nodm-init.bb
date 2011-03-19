@@ -12,7 +12,7 @@ SRC_URI = "file://xserver-nodm \
 
 S = ${WORKDIR}
 
-PACKAGE_ARCH = "all"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_install() {
     install -d ${D}/etc
