@@ -241,7 +241,9 @@ def sstate_clean(ss, d):
 
     stfile = d.getVar("STAMP", True) + ".do_" + ss['task']
     oe.path.remove(stfile)
+    oe.path.remove(stfile + "_setscene")
     oe.path.remove(stfile + ".*")
+    oe.path.remove(stfile + "_setscene" + ".*")
 
 CLEANFUNCS += "sstate_cleanall"
 
