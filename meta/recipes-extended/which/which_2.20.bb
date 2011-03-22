@@ -10,7 +10,7 @@ inherit autotools update-alternatives
 
 PR = "r1"
 
-SRC_URI = "http://ftp.gnu.org/gnu/which/which-${PV}.tar.gz \
+SRC_URI = "${GNU_MIRROR}/which/which-${PV}.tar.gz \
            file://remove-declaration.patch"
 
 SRC_URI[md5sum] = "95be0501a466e515422cde4af46b2744"

@@ -7,7 +7,7 @@ NOTES = "Needs to be stripped down to: ascii iso8859-1 eucjp iso-2022jp gb utf8"
 PROVIDES = "virtual/libiconv"
 PR = "r4"
 LICENSE = "LGPL"
-SRC_URI = "ftp://ftp.gnu.org/pub/gnu/libiconv/libiconv-${PV}.tar.gz"
+SRC_URI = "${GNU_MIRROR}/libiconv/libiconv-${PV}.tar.gz"
 
 S = "${WORKDIR}/libiconv-${PV}"
 

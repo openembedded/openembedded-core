@@ -3,13 +3,13 @@ require bash.inc
 PR = "r1"
 
 SRC_URI = "${GNU_MIRROR}/bash/${BPN}-${PV}.tar.gz;name=tarball \
-           http://ftp.gnu.org/gnu/bash/bash-4.1-patches/bash41-001;apply=yes;striplevel=0;name=patch001 \
-           http://ftp.gnu.org/gnu/bash/bash-4.1-patches/bash41-002;apply=yes;striplevel=0;name=patch002 \
-           http://ftp.gnu.org/gnu/bash/bash-4.1-patches/bash41-003;apply=yes;striplevel=0;name=patch003 \
-           http://ftp.gnu.org/gnu/bash/bash-4.1-patches/bash41-004;apply=yes;striplevel=0;name=patch004 \
-           http://ftp.gnu.org/gnu/bash/bash-4.1-patches/bash41-005;apply=yes;striplevel=0;name=patch005 \
-           http://ftp.gnu.org/gnu/bash/bash-4.1-patches/bash41-006;apply=yes;striplevel=0;name=patch006 \
-           http://ftp.gnu.org/gnu/bash/bash-4.1-patches/bash41-007;apply=yes;striplevel=0;name=patch007 \
+           ${GNU_MIRROR}/bash/bash-4.1-patches/bash41-001;apply=yes;striplevel=0;name=patch001 \
+           ${GNU_MIRROR}/bash/bash-4.1-patches/bash41-002;apply=yes;striplevel=0;name=patch002 \
+           ${GNU_MIRROR}/bash/bash-4.1-patches/bash41-003;apply=yes;striplevel=0;name=patch003 \
+           ${GNU_MIRROR}/bash/bash-4.1-patches/bash41-004;apply=yes;striplevel=0;name=patch004 \
+           ${GNU_MIRROR}/bash/bash-4.1-patches/bash41-005;apply=yes;striplevel=0;name=patch005 \
+           ${GNU_MIRROR}/bash/bash-4.1-patches/bash41-006;apply=yes;striplevel=0;name=patch006 \
+           ${GNU_MIRROR}/bash/bash-4.1-patches/bash41-007;apply=yes;striplevel=0;name=patch007 \
            "
 
 SRC_URI[tarball.md5sum] = "9800d8724815fd84994d9be65ab5e7b8"

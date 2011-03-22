@@ -14,7 +14,7 @@ DEPENDS_virtclass-native = "perl-native gettext-native"
 
 inherit autotools gettext
 
-SRC_URI_BASE = "http://ftp.gnu.org/gnu/coreutils/${BP}.tar.bz2 \
+SRC_URI_BASE = "${GNU_MIRROR}/coreutils/${BP}.tar.bz2 \
            file://gnulib_m4.patch \
            file://futimens.patch \
            file://coreutils-ls-x.patch \

@@ -9,9 +9,9 @@ DEPENDS = "ncurses"
 PR = "r7"
 
 SRC_URI = "${GNU_MIRROR}/bash/bash-${PV}.tar.gz \
-           http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-049;apply=yes;striplevel=0 \
-           http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-050;apply=yes;striplevel=0 \
-           http://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-051;apply=yes;striplevel=0"
+           ${GNU_MIRROR}/bash/bash-3.2-patches/bash32-049;apply=yes;striplevel=0 \
+           ${GNU_MIRROR}/bash/bash-3.2-patches/bash32-050;apply=yes;striplevel=0 \
+           ${GNU_MIRROR}/bash/bash-3.2-patches/bash32-051;apply=yes;striplevel=0"
 
 inherit autotools gettext
 

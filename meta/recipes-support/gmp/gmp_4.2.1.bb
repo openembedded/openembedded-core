@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=892f569a555ba9c07a568a7c0c4fa63a \
                     file://gmp-h.in;startline=6;endline=21;md5=5e25ffd16996faba8c1cd27b04b16099"
 PR = "r0"
 
-SRC_URI = "ftp://ftp.gnu.org/gnu/gmp/${BP}.tar.bz2 \
+SRC_URI = "${GNU_MIRROR}/gmp/${BP}.tar.bz2 \
            file://disable-stdc.patch"
 
 inherit autotools

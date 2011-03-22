@@ -11,7 +11,7 @@ PR = "r0"
 
 inherit pkgconfig autotools gettext
 
-SRC_URI = "http://ftp.gnu.org/gnu/libidn/${P}.tar.gz"
+SRC_URI = "${GNU_MIRROR}/libidn/${P}.tar.gz"
 
 SRC_URI[md5sum] = "a45142126d28162014c995f969bdb5a8"
 SRC_URI[sha256sum] = "8ed2e936b1ae3e30b45b54ca3672deaa83ee0f4d20db5ad83dc1af7222d39f41"

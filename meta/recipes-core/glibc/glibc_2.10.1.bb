@@ -40,9 +40,9 @@ RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
 #	   file://arm-machine-gmon.patch;patch=1;pnum=0
 #	   file://arm-ioperm.patch;patch=1;pnum=0
 #	   file://ldd.patch;patch=1;pnum=0
-SRC_URI = "ftp://ftp.gnu.org/pub/gnu/glibc/glibc-${PV}.tar.bz2 \
-           ftp://ftp.gnu.org/pub/gnu/glibc/glibc-ports-${PV}.tar.bz2 \
-           ftp://ftp.gnu.org/pub/gnu/glibc/glibc-libidn-${PV}.tar.bz2 \
+SRC_URI = "${GNU_MIRROR}/glibc/glibc-${PV}.tar.bz2 \
+           ${GNU_MIRROR}/glibc/glibc-ports-${PV}.tar.bz2 \
+           ${GNU_MIRROR}/glibc/glibc-libidn-${PV}.tar.bz2 \
            file://nscd-init.patch;striplevel=0 \
            file://arm-memcpy.patch \
            file://arm-longlong.patch \

@@ -13,7 +13,7 @@ DEPENDS_virtclass-native = "perl-native gmp-native"
 
 inherit autotools gettext
 
-SRC_URI = "http://ftp.gnu.org/gnu/coreutils/${BP}.tar.gz"
+SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.gz"
 
 SRC_URI[md5sum] = "36909ae68840d73a800120cf74af794a"
 SRC_URI[sha256sum] = "aa991fa4296b22ff929a31a5cb5528bb783c84cdef4503c4ff311cfbeaebf50a"
