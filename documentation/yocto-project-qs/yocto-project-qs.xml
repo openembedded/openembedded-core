@@ -289,8 +289,10 @@
              </literallayout>
              <note><para>
                  If you are running Fedora 14 or another distribution 
-                 that ships with GNU make v3.82 you need to run the following two 
-                 <command>bitbake</command> commands instead:
+                 that ships with GNU, run the following two <filename>BitBake</filename>
+                 commands.  
+                 For more information, see
+                 <ulink url='http://www.mail-archive.com/bug-make@gnu.org/msg06220.html'></ulink>.
                  <literallayout class='monospaced'>
      $ bitbake make-native
      $ bitbake poky-image-sato
