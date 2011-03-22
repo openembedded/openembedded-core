@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b \
                     file://ifconfig.c;startline=11;endline=15;md5=da4c7bb79a5d0798faa99ef869721f4a"
 PR = "r0"
 
-SRC_URI = "ftp://ftp.debian.org/debian/pool/main/n/net-tools/net-tools_1.60.orig.tar.gz;name=tarball \
-           ftp://ftp.debian.org/debian/pool/main/n/net-tools/${PN}_${PV}.diff.gz;apply=no;name=patch \
+SRC_URI = "${DEBIAN_MIRROR}/main/n/net-tools/net-tools_1.60.orig.tar.gz;name=tarball \
+           ${DEBIAN_MIRROR}/main/n/net-tools/${PN}_${PV}.diff.gz;apply=no;name=patch \
            file://net-tools-config.h \
            file://net-tools-config.make" 
 
