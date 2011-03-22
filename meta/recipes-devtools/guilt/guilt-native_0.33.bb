@@ -8,7 +8,7 @@ PV = "0.33"
 
 inherit native
 
-SRC_URI = "http://www.kernel.org/pub/linux/kernel/people/jsipek/guilt/guilt-${PV}.tar.gz\
+SRC_URI = "${KERNELORG_MIRROR}/pub/linux/kernel/people/jsipek/guilt/guilt-${PV}.tar.gz\
            file://guilt-push.patch \
 	   file://guilt-pop.patch \
 	   file://guilt.patch \

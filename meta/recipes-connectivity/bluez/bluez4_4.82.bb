@@ -19,7 +19,7 @@ ASNEEDED = ""
 PR = "r0"
 
 SRC_URI = "\
-  http://www.kernel.org/pub/linux/bluetooth/bluez-${PV}.tar.gz \
+  ${KERNELORG_MIRROR}/pub/linux/bluetooth/bluez-${PV}.tar.gz \
   file://fix-dfutool-usb-declaration-mismatch.patch;patch=1 \
   file://sbc-thumb.patch;patch=1 \
   file://bluetooth.conf \
