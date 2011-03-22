@@ -7,7 +7,7 @@ DEPENDS = "libusb bluez4"
 LICENSE = "GPL"
 PR = "r4"
 
-SRC_URI = "${KERNELORG_MIRROR}/pub/linux/bluetooth/openobex-${PV}.tar.gz \
+SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/openobex-${PV}.tar.gz \
            file://disable-cable-test.patch;patch=1 \
 	   file://libusb_crosscompile_check.patch;patch=1"
 

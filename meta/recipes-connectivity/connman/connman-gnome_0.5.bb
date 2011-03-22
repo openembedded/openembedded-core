@@ -10,7 +10,7 @@ PR = "r4"
 
 RRECOMMENDS_${PN} = "python python-dbus connman connman-plugin-ethernet connman-plugin-loopback connman-plugin-udhcp connman-plugin-wifi connman-plugin-fake connman-plugin-bluetooth connman-plugin-dnsproxy"
 
-SRC_URI = "${KERNELORG_MIRROR}/pub/linux/network/connman/connman-gnome-${PV}.tar.gz \
+SRC_URI = "${KERNELORG_MIRROR}/linux/network/connman/connman-gnome-${PV}.tar.gz \
            file://connman-gnome.patch \
            file://remove-connman-property-desktop-file.patch \
            file://service_name_update.patch \

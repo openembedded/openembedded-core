@@ -10,7 +10,7 @@ DEPENDS = "sysfsutils flex-native"
 RDEPENDS_${PN} = "udev module-init-tools"
 RCONFLICTS_${PN} += "pcmcia-cs"
 
-SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/kernel/pcmcia/pcmciautils-${PV}.tar.bz2"
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/pcmcia/pcmciautils-${PV}.tar.bz2"
 
 S = "${WORKDIR}/pcmciautils-${PV}"
 

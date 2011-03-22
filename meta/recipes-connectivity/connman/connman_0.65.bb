@@ -19,7 +19,7 @@ EXTRA_OECONF += "\
   --prefix=/usr --sysconfdir=/etc --localstatedir=/var"
 
 SRC_URI  = "\
-  ${KERNELORG_MIRROR}/pub/linux/network/connman/connman-${PV}.tar.gz \
+  ${KERNELORG_MIRROR}/linux/network/connman/connman-${PV}.tar.gz \
   file://fix-shutdown-ap-disconnect.patch \
   file://add_xuser_dbus_permission.patch \
   file://connman \

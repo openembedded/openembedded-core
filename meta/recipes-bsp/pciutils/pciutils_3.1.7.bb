@@ -11,7 +11,7 @@ DEPENDS = "zlib"
 RDEPENDS_${PN} = "${PN}-ids"
 PR = "r1"
 
-SRC_URI = "${KERNELORG_MIRROR}/pub/software/utils/pciutils/pciutils-${PV}.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.bz2 \
            file://configure.patch \
            file://pcimodules-pciutils.diff \
            file://lib-build-fix.patch \

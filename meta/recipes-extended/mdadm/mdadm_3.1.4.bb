@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 
 PR = "r1"
 
-SRC_URI = "${KERNELORG_MIRROR}/pub/linux/utils/raid/mdadm/${BPN}-${PV}.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.bz2 \
 	   file://fix-z-now.patch;striplevel=0"
 
 SRC_URI[md5sum] = "0e7dcb5cc4192ae3abd9956bac475576"
