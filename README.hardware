@@ -219,8 +219,74 @@ Note: As of the 2.6.37 linux-yocto kernel recipe, the Beagleboard uses the
       SERIAL_CONSOLE_beagleboard = "115200 ttyS2"
 
 
+Freescale MPC8315E-RDB (mpc8315e-rdb)
+=====================================
+
+The MPC8315 PowerPC reference platform (MPC8315E-RDB) is aimed at hardware and
+software development of network attached storage (NAS) and digital media server
+applications. The MPC8315E-RDB features the PowerQUICC II Pro processor, which
+includes a built-in security accelerator.
+
+Setup instructions
+------------------
+
+You will need the following:
+* nfs root setup on your workstation
+* tftp server installed on your workstation
+
+The original U-Boot image on board can't boot kernel versions 2.6.34 or later
+successfully, so the U-Boot image should be upgraded to the latest U-Boot.
+
+ 1. First build a new U-Boot image for mpc8315e-rdb, u-boot.bin.mpc8315erdb,
+    then make it available on your tftp server. To compile the new u-boot:
+
+ $ git clone git://git.denx.de/u-boot.git
+ $ cd u-boot
+ $ git checkout -b v2010.09-mpc8315erdb v2010.09
+ $ make ARCH=powerpc CROSS_COMPILE=<powerpc cross compiler path> MPC8315ERDB_config
+ $ make ARCH=powerpc CROSS_COMPILE=<powerpc cross compiler path> all
+ $ cp u-boot.bin u-boot.bin.mpc8315erdb
+
+ 2. Set up the environment in U-Boot:
+
+ =>setenv ipaddr <board ip>
+ =>setenv serverip <tftp server ip>
+
+ 3. Flash the new U-Boot image:
+
+ =>tftp 200000 u-boot.bin.mpc8315erdb
+ =>protect off all
+ =>erase fe000000 +60000
+ =>cp.b 200000 fe000000 60000
+
+Then the kernel can be booted successfully:
+
+ 1. Get the kernel (uImage.mpc8315erdb) and dtb (mpc8315erdb.dtb) files from
+    the Poky build tmp/deploy directory, and make them available on your tftp
+    server.
+
+ 2. Set up the environment in U-Boot:
+
+ =>setenv bootargs root=/dev/nfs rw nfsroot=<nfsroot ip>:<rootfs path> ip=<board ip>:<server ip>:<gateway ip>:255.255.255.0:mpc8315e:eth0:off console=ttyS0,115200
+
+ 3. Download kernel and dtb to boot kernel.
+
+ =>tftp 800000 uImage.mpc8315erdb
+ =>tftp 780000 mpc8315erdb.dtb
+ =>bootm 800000 - 780000
+
+
 Ubiquiti Networks RouterStation Pro (routerstationpro)
 ======================================================
+
+The RouterStation Pro is an Atheros AR7161 MIPS-based board. Geared towards
+networking applications, it has all of the usual features as well as three
+type IIIA mini-PCI slots and an on-board 3-port 10/100/1000 Ethernet switch,
+in addition to the 10/100/1000 Ethernet WAN port which supports
+Power-over-Ethernet.
+
+Setup instructions
+------------------
 
 You will need the following:
 * A serial cable - female to female (or female to male + gender changer)
@@ -271,7 +337,9 @@ tmp/deploy/images/poky-image-XXXX.tar.bz2 into it (preserving permissions).
 
 6) Connect the board's serial port to your workstation and then start up
 your favourite serial terminal so that you will be able to interact with
-the serial console. (If you don't have a favourite, picocom is suggested.)
+the serial console. If you don't have a favourite, picocom is suggested:
+
+  $ picocom /dev/ttyUSB0 -b 115200
 
 7) Connect the network into eth0 (the one that is NOT the 3 port switch). If
 you are using power-over-ethernet then the board will power up at this point.
