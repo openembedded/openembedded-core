@@ -7,9 +7,9 @@ BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
                     file://src/ls.c;startline=5;endline=16;md5=e1a509558876db58fb6667ba140137ad"
-PR = "r0"
+PR = "r1"
 DEPENDS = "perl-native gmp"
-DEPENDS_virtclass-native = "perl-native gmp-native"
+DEPENDS_virtclass-native = "perl-native"
 
 inherit autotools gettext
 
@@ -17,6 +17,8 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.gz"
 
 SRC_URI[md5sum] = "36909ae68840d73a800120cf74af794a"
 SRC_URI[sha256sum] = "aa991fa4296b22ff929a31a5cb5528bb783c84cdef4503c4ff311cfbeaebf50a"
+
+EXTRA_OECONF_virtclass-native = "--without-gmp"
 
 # [ gets a special treatment and is not included in this
 bindir_progs = "base64 basename chcon cksum comm csplit cut dir dircolors dirname du \
