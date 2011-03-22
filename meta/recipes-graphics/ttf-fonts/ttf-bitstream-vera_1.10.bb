@@ -12,7 +12,7 @@ PACKAGE_ARCH = "all"
 PR = "r3"
 RDEPENDS = "fontconfig-utils"
 
-SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/ttf-bitstream-vera/1.10/ttf-bitstream-vera-${PV}.tar.bz2" 
+SRC_URI = "${GNOME_MIRROR}/ttf-bitstream-vera/1.10/ttf-bitstream-vera-${PV}.tar.bz2" 
 
 do_install () { 
         install -d ${D}${prefix}/share/fonts/ttf/ 

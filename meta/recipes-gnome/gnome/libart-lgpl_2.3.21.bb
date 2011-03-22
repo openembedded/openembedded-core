@@ -7,7 +7,7 @@ PR = "r1"
 ART_CONFIG = "${HOST_ARCH}/art_config.h"
 
 # can't use gnome.oeclass due to _ in filename
-SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/libart_lgpl/2.3/libart_lgpl-${PV}.tar.bz2 \
+SRC_URI = "${GNOME_MIRROR}/libart_lgpl/2.3/libart_lgpl-${PV}.tar.bz2 \
        file://${ART_CONFIG} \
        file://Makefile.am.patch;patch=1"
 

@@ -10,7 +10,7 @@ PR = "r0"
 
 DEPENDS = "glib-2.0 gnutls libxml2 libproxy sqlite3 libgnome-keyring"
 
-SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/libsoup/2.32/libsoup-${PV}.tar.bz2"
+SRC_URI = "${GNOME_MIRROR}/libsoup/2.32/libsoup-${PV}.tar.bz2"
 
 SRC_URI[md5sum] = "894ca0077ec2d923286a69766d0b0b74"
 SRC_URI[sha256sum] = "8779da1b4d85f443f04ea8301f52c4a1943c10e4dc8d20dbcdb3652921de6b8e"

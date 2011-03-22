@@ -6,7 +6,7 @@ PR = "r1"
 
 DEPENDS = "glib-2.0 gnutls libxml2"
 
-SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/${BPN}/2.2/${BPN}-${PV}.tar.bz2"
+SRC_URI = "${GNOME_MIRROR}/${BPN}/2.2/${BPN}-${PV}.tar.bz2"
 
 SRC_URI[md5sum] = "936e29d705aab0483b9a5b8860f68c13"
 SRC_URI[sha256sum] = "fa9f33e96a11133adbfd10538d95ed9704e582ef334c0a119a2a0bfca302877d"
