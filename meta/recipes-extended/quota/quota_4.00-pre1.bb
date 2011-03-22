@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://quota.c;beginline=1;endline=33;md5=331c7d77744bfe0ad2
                     file://svc_socket.c;beginline=1;endline=17;md5=24d5a8792da45910786eeac750be8ceb"
 PR = "r0"
 
-SRC_URI = "http://downloads.sourceforge.net/project/linuxquota/quota-tools/${PV}/quota-${PV}.tar.gz"
+SRC_URI = "${SOURCEFORGE_MIRROR}/project/linuxquota/quota-tools/${PV}/quota-${PV}.tar.gz"
 
 SRC_URI[md5sum] = "ef9d66e8a968ecffd2d9df648fa8ada2"
 SRC_URI[sha256sum] = "181a9b90b10bbffaaf9a18e7fef96a5752ab20f7b72d81c472166ab32e415994"
