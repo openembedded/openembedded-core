@@ -63,6 +63,7 @@ CONFIGUREOPTS = " --build=${BUILD_SYS} \
 		  --oldincludedir=${oldincludedir} \
 		  --infodir=${infodir} \
 		  --mandir=${mandir} \
+		  --disable-silent-rules \
 		  ${@append_libtool_sysroot(d)}"
 
 oe_runconf () {
