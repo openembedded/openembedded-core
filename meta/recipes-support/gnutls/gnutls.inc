@@ -3,6 +3,8 @@ HOMEPAGE = "http://www.gnu.org/software/gnutls/"
 BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
 DEPENDS = "zlib lzo gettext libtasn1 libgcrypt (>= 1.4.2)"
 
+BBCLASSEXTEND = "native"
+
 LICENSE = "GPLv3+ & LGPLv2.1+"
 LICENSE_${PN} = "LGPLv2.1+"
 LICENSE_${PN}-xx = "GPLv2.1+"
