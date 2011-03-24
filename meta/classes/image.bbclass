@@ -69,15 +69,21 @@ def get_imagecmds(d):
     old_overrides = bb.data.getVar('OVERRIDES', d, 0)
     for type in bb.data.getVar('IMAGE_FSTYPES', d, True).split():
         localdata = bb.data.createCopy(d)
-        bb.data.setVar('OVERRIDES', '%s:%s' % (type, old_overrides), localdata)
+        localdata.setVar('OVERRIDES', '%s:%s' % (type, old_overrides))
         bb.data.update_data(localdata)
-        cmd  = "\t#Code for image type " + type + "\n"
-        cmd += "\t${IMAGE_CMD_" + type + "}\n"
-        cmd += "\tcd ${DEPLOY_DIR_IMAGE}/\n"
-        cmd += "\trm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}." + type + "\n"
-        cmd += "\tln -s ${IMAGE_NAME}.rootfs." + type + " ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}." + type + "\n\n"
-        cmds += bb.data.expand(cmd, localdata)
+        localdata.setVar('type', type)
+        cmd = localdata.getVar("IMAGE_CMD_" + type, True)
+        localdata.setVar('cmd', cmd)
+        cmds += localdata.getVar("runimagecmd", True)
     return cmds
+
+runimagecmd () {
+	# Image generation code for image type ${type}
+	${cmd}
+	cd ${DEPLOY_DIR_IMAGE}/
+	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${type}
+	ln -s ${IMAGE_NAME}.rootfs.${type} ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${type}
+}
 
 IMAGE_POSTPROCESS_COMMAND ?= ""
 MACHINE_POSTPROCESS_COMMAND ?= ""
