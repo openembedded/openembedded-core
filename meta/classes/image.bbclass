@@ -64,27 +64,7 @@ def get_devtable_list(d):
         str += " %s" % bb.which(bb.data.getVar('BBPATH', d, 1), devtable)
     return str
 
-def get_imagecmds(d):
-    cmds = "\n"
-    old_overrides = bb.data.getVar('OVERRIDES', d, 0)
-    for type in bb.data.getVar('IMAGE_FSTYPES', d, True).split():
-        localdata = bb.data.createCopy(d)
-        localdata.setVar('OVERRIDES', '%s:%s' % (type, old_overrides))
-        bb.data.update_data(localdata)
-        localdata.setVar('type', type)
-        cmd = localdata.getVar("IMAGE_CMD_" + type, True)
-        localdata.setVar('cmd', cmd)
-        cmds += localdata.getVar("runimagecmd", True)
-    return cmds
-
-runimagecmd () {
-	# Image generation code for image type ${type}
-	ROOTFS_SIZE=`du -ks ${IMAGE_ROOTFS}|awk '{size = $1 * ${IMAGE_OVERHEAD_FACTOR}; print (size > ${IMAGE_ROOTFS_SIZE} ? size : ${IMAGE_ROOTFS_SIZE}) }'`
-	${cmd}
-	cd ${DEPLOY_DIR_IMAGE}/
-	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${type}
-	ln -s ${IMAGE_NAME}.rootfs.${type} ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${type}
-}
+inherit image_types
 
 IMAGE_POSTPROCESS_COMMAND ?= ""
 MACHINE_POSTPROCESS_COMMAND ?= ""
