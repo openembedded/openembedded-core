@@ -31,10 +31,6 @@ KERNEL_FEATURES="features/netfilter"
 KERNEL_FEATURES_append_qemux86=" cfg/sound"
 KERNEL_FEATURES_append_qemux86-64=" cfg/sound"
 
-# Temporary fix for oprofile and latencytop on qemux86-64
-KERNEL_FEATURES_append_qemux86-64=" features/profiling"
-KERNEL_FEATURES_append_qemux86-64=" features/latencytop"
-
 # extra tasks
 addtask kernel_link_vmlinux after do_compile before do_install
 addtask validate_branches before do_patch after do_kernel_checkout
