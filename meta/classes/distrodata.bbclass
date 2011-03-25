@@ -225,17 +225,9 @@ python checkpkg_eventhandler() {
 
 	lf = bb.utils.lockfile(logfile + ".lock")
 	f = open(logfile, "a")
-	f.write("Package\tOwner\tURI Type\tVersion\tTracking\tUpstream\tTMatch\tRMatch\n")
+	f.write("Package\tVersion\tUpver\tLicense\tSection\tHome\tRelease\tPriority\tDepends\tBugTracker\tPE\tDescription\tStatus\tTracking\tURI\tMAINTAINER\n")
         f.close()
         bb.utils.unlockfile(lf)
-	"""initialize log files for package report system"""
-	logfile2 = os.path.join(logpath, "get_pkg_info.%s.log" % bb.data.getVar('DATETIME', e.data, 1))
-	if not os.path.exists(logfile2):
-		slogfile2 = os.path.join(logpath, "get_pkg_info.log")
-		if os.path.exists(slogfile2):
-			os.remove(slogfile2)
-		os.system("touch %s" % logfile2)
-		os.symlink(logfile2, slogfile2)
     return
 }
 
@@ -459,8 +451,6 @@ python do_checkpkg() {
 	logpath = bb.data.getVar('LOG_DIR', d, 1)
 	bb.utils.mkdirhier(logpath)
 	logfile = os.path.join(logpath, "checkpkg.csv")
-	"""initialize log files for package report system"""
-	logfile2 = os.path.join(logpath, "get_pkg_info.log")
 
 	"""generate package information from .bb file"""
 	pname = bb.data.getVar('PN', d, 1)
@@ -582,7 +572,7 @@ python do_checkpkg() {
 				result = bb.utils.vercmp(("0", puptag, ""), ("0", plocaltag, ""))
 				if result > 0:
 					verflag = 1
-					pstatus = "UPADTE"
+					pstatus = "UPDATE"
 					pupver = puptag
 				elif verflag == 0 :
 					pupver = plocaltag
@@ -646,20 +636,15 @@ python do_checkpkg() {
 			pmstatus = "UPDATE"
 	
 	maintainer = bb.data.getVar('RECIPE_MAINTAINER', d, True)
+	psrcuri = psrcuri.split()[0]
+	pdepends = "".join(pdepends.split("\t"))
+	pdesc = "".join(pdesc.split("\t"))
 	lf = bb.utils.lockfile(logfile + ".lock")
 	f = open(logfile, "a")
-	f.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % \
-		  (pname, maintainer, pproto, pcurver, pmver, pupver, pmstatus, pstatus))
+	f.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % \
+		  (pname,pversion,pupver,plicense,psection, phome,prelease, ppriority,pdepends,pbugtracker,ppe,pdesc,pstatus,pmver,psrcuri,maintainer))
 	f.close()
 	bb.utils.unlockfile(lf)
-
-	"""write into get_pkg_info log file to supply data for package report system"""
-	lf2 = bb.utils.lockfile(logfile2 + ".lock")
-	f2 = open(logfile2, "a")
-	f2.write("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n" % \
-		  (pname,pversion,pupver,plicense,psection, phome,prelease, ppriority,pdepends,pbugtracker,ppe,pdesc,pstatus,pmver,psrcuri))
-	f2.close()
-	bb.utils.unlockfile(lf2)
 }
 
 addtask checkpkgall after do_checkpkg
