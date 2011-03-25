@@ -288,17 +288,6 @@
      $ bitbake poky-image-sato
              </literallayout>
              <note><para>
-                 If you are running Fedora 14 or another distribution 
-                 that ships with GNU, run the following two <filename>BitBake</filename>
-                 commands.  
-                 For more information, see
-                 <ulink url='http://www.mail-archive.com/bug-make@gnu.org/msg06220.html'></ulink>.
-                 <literallayout class='monospaced'>
-     $ bitbake make-native
-     $ bitbake poky-image-sato
-                 </literallayout>
-             </para></note>
-             <note><para>
                  BitBake requires Python 2.6.  For more information on this requirement, 
                  see the FAQ appendix in the 
                  <ulink url='http://www.yoctoproject.org/docs/poky-ref-manual/poky-ref-manual.html'>
