@@ -22,6 +22,14 @@
         user-space NFS, define which root filesystem profiles to download, 
         and allows you to define the target sysroot location.
     </para>
+    <note>
+        If you need to generate the ADT tarball you can do so using the following command:
+        <literallayout class='monospaced'>
+     $ bitbake adt-installer
+        </literallayout>
+        This command generates the file <filename>adt-installer.tar.bz2</filename>
+        in the <filename>../build/tmp/deploy/sdk</filename> directory.
+    </note>
 
     <section id='configuring-and-running-the-adt-installer'>
         <title>Configuring and Running the ADT Installer</title>
@@ -120,14 +128,14 @@
     <section id='using-an-existing-toolchain-tarball'>
         <title>Using an Existing Toolchain Tarball</title>
         <para>
-            If you don’t want to use the ADT Installer you can install the toolchain 
+            If you do not want to use the ADT Installer you can install the toolchain 
             and the sysroot by hand.  
             Follow these steps:
             <orderedlist>
                 <listitem><para>Locate and download the architecture-specific toolchain 
-                tarball from <ulink url='http://autobuilder.yoctoproject.org/downloads/yocto-0.9'></ulink>.
+                tarball from <ulink url='http://autobuilder.yoctoproject.org/downloads/yocto-1.0'></ulink>.
                 Look in the ‘toolchain’ folder and then open up the folder that matches your 
-                host development system (i.e. 'i586' for 32-bit machines or 'x86_64' 
+                host development system (i.e. 'i686' for 32-bit machines or 'x86_64' 
                 for 64-bit machines).  
                 Then, select the toolchain tarball whose name includes the appropriate 
                 target architecture.
