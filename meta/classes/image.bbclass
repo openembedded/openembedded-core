@@ -14,9 +14,6 @@ IMAGE_BASENAME[export] = "1"
 export PACKAGE_INSTALL ?= "${IMAGE_INSTALL}"
 PACKAGE_INSTALL_ATTEMPTONLY ?= ""
 
-# We need to recursively follow RDEPENDS and RRECOMMENDS for images
-do_rootfs[recrdeptask] += "do_populate_sysroot"
-
 # Images are generally built explicitly, do not need to be part of world.
 EXCLUDE_FROM_WORLD = "1"
 
