@@ -147,6 +147,13 @@ def sstate_install(ss, d):
 def sstate_installpkg(ss, d):
     import oe.path
 
+    def prepdir(dir):
+        # remove dir if it exists, ensure any parent directories do exist
+        if os.path.exists(dir):
+            oe.path.remove(dir)
+        bb.mkdirhier(dir)
+        oe.path.remove(dir)
+
     sstateinst = bb.data.expand("${WORKDIR}/sstate-install-%s/" % ss['name'], d)
     sstatepkg = bb.data.getVar('SSTATE_PKG', d, True) + '_' + ss['name'] + ".tgz"
 
@@ -178,9 +185,8 @@ def sstate_installpkg(ss, d):
             os.system("sed -i -e s:FIXMESTAGINGDIR:%s:g %s" % (staging, sstateinst + file))
 
     for state in ss['dirs']:
-        if os.path.exists(state[1]):
-            oe.path.remove(state[1])
-        oe.path.copytree(sstateinst + state[0], state[1])
+        prepdir(state[1])
+        os.rename(sstateinst + state[0], state[1])
     sstate_install(ss, d)
 
     for plain in ss['plaindirs']:
@@ -188,8 +194,8 @@ def sstate_installpkg(ss, d):
         src = sstateinst + "/" + plain.replace(workdir, '')
         dest = plain
         bb.mkdirhier(src)
-        bb.mkdirhier(dest)
-        oe.path.copytree(src, dest)
+        prepdir(dest)
+        os.rename(src, dest)
 
     return True
 
