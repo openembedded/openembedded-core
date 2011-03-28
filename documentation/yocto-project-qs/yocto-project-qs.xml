@@ -13,7 +13,7 @@
     <title>Welcome!</title>
     <para>
         Welcome to the Yocto Project!  
-        The Yocto Project (YP) is an open-source collaboration project focused on embedded Linux
+        The Yocto Project is an open-source collaboration project focused on embedded Linux
         developers.
         Amongst other things, YP uses the Poky build tool to construct complete Linux images.
     </para>
