@@ -12,7 +12,7 @@ do_install_perf() {
 
 # perf tasks
 addtask compile_perf after do_compile before do_install
-addtask install_perf after do_install before do_package do_deploy
+addtask install_perf after do_install before do_package
 
 do_compile_perf[depends] =  "virtual/libc:do_populate_sysroot"
 do_compile_perf[depends] =+ "elfutils:do_populate_sysroot"
