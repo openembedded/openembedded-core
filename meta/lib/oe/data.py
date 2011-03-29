@@ -6,6 +6,11 @@ def typed_value(key, d):
     to determine the type and parameters for construction."""
     var_type = d.getVarFlag(key, 'type')
     flags = d.getVarFlags(key)
+    if flags is not None:
+        flags = dict((flag, bb.data.expand(value, d))
+                     for flag, value in flags.iteritems())
+    else:
+        flags = {}
 
     try:
         return oe.maketype.create(d.getVar(key, True) or '', var_type, **flags)
