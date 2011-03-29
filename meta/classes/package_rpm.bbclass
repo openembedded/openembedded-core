@@ -777,16 +777,10 @@ python do_package_rpm () {
 	cmd = cmd + " --define 'debug_package %{nil}'"
 	cmd = cmd + " -bb " + outspecfile
 
-	# Take a shared lock, we can write multiple packages at the same time...
-	# but we need to stop the rootfs/solver from running while we do...
-	lf = bb.utils.lockfile(bb.data.expand("${DEPLOY_DIR_RPM}/rpm.lock", d), True)
-
 	# Build the rpm package!
 	bb.data.setVar('BUILDSPEC', cmd + "\n", d)
 	bb.data.setVarFlag('BUILDSPEC', 'func', '1', d)
 	bb.build.exec_func('BUILDSPEC', d)
-
-	bb.utils.unlockfile(lf)
 }
 
 python () {
@@ -803,6 +797,9 @@ SSTATETASKS += "do_package_write_rpm"
 do_package_write_rpm[sstate-name] = "deploy-rpm"
 do_package_write_rpm[sstate-inputdirs] = "${PKGWRITEDIRRPM}"
 do_package_write_rpm[sstate-outputdirs] = "${DEPLOY_DIR_RPM}"
+# Take a shared lock, we can write multiple packages at the same time...
+# but we need to stop the rootfs/solver from running while we do...
+do_package_write_rpm[sstate-lockfile-shared] += "${DEPLOY_DIR_RPM}/rpm.lock"
 
 python do_package_write_rpm_setscene () {
 	sstate_setscene(d)
