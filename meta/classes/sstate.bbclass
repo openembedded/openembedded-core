@@ -58,6 +58,7 @@ def sstate_init(name, task, d):
     ss['dirs'] = []
     ss['plaindirs'] = []
     ss['lockfiles'] = []
+    ss['lockfiles-shared'] = []
     return ss
 
 def sstate_state_fromvars(d, task = None):
@@ -72,6 +73,7 @@ def sstate_state_fromvars(d, task = None):
     outputs = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-outputdirs', d) or "", d)).split()
     plaindirs = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-plaindirs', d) or "", d)).split()
     lockfiles = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-lockfile', d) or "", d)).split()
+    lockfilesshared = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-lockfile-shared', d) or "", d)).split()
     interceptfuncs = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-interceptfuncs', d) or "", d)).split()
     if not name or len(inputs) != len(outputs):
         bb.fatal("sstate variables not setup correctly?!")
@@ -80,6 +82,7 @@ def sstate_state_fromvars(d, task = None):
     for i in range(len(inputs)):
         sstate_add(ss, inputs[i], outputs[i], d)
     ss['lockfiles'] = lockfiles
+    ss['lockfiles-shared'] = lockfilesshared
     ss['plaindirs'] = plaindirs
     ss['interceptfuncs'] = interceptfuncs
     return ss
@@ -101,6 +104,8 @@ def sstate_install(ss, d):
         bb.fatal("Package already staged (%s)?!" % manifest)
 
     locks = []
+    for lock in ss['lockfiles-shared']:
+        locks.append(bb.utils.lockfile(lock, True))
     for lock in ss['lockfiles']:
         locks.append(bb.utils.lockfile(lock))
 
@@ -231,6 +236,8 @@ def sstate_clean(ss, d):
 
     if os.path.exists(manifest):
         locks = []
+        for lock in ss['lockfiles-shared']:
+            locks.append(bb.utils.lockfile(lock, True))
         for lock in ss['lockfiles']:
             locks.append(bb.utils.lockfile(lock))
 
