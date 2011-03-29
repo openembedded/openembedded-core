@@ -27,6 +27,7 @@ PID = "${@os.getpid()}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_rootfs[depends] += "makedevs-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot ldconfig-native:do_populate_sysroot"
+do_rootfs[depends] += "virtual/update-alternatives-native:do_populate_sysroot update-rc.d-native:do_populate_sysroot"
 
 python () {
     deps = bb.data.getVarFlag('do_rootfs', 'depends', d) or ""
