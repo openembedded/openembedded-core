@@ -8,11 +8,11 @@
  xstrdup.c      |   11 --
  7 files changed, 45 insertions(+), 256 deletions(-)
 
-Index: 1/cache.c
+Index: ldconfig-native-2.12.1/cache.c
 ===================================================================
---- 1.orig/cache.c	2007-11-23 17:05:44.000000000 +0000
-+++ 1/cache.c	2007-11-23 17:05:56.000000000 +0000
-@@ -15,6 +15,9 @@
+--- ldconfig-native-2.12.1.orig/cache.c
++++ ldconfig-native-2.12.1/cache.c
+@@ -16,6 +16,9 @@
     along with this program; if not, write to the Free Software Foundation,
     Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
  
@@ -22,7 +22,7 @@ Index: 1/cache.c
  #include <errno.h>
  #include <error.h>
  #include <dirent.h>
-@@ -29,8 +32,10 @@
+@@ -31,8 +34,10 @@
  #include <sys/stat.h>
  #include <sys/types.h>
  
@@ -35,20 +35,11 @@ Index: 1/cache.c
  
  struct cache_entry
  {
-@@ -230,8 +235,6 @@ init_cache (void)
-   entries = NULL;
- }
- 
--
--
- static
- int compare (const struct cache_entry *e1, const struct cache_entry *e2)
- {
-Index: 1/chroot_canon.c
+Index: ldconfig-native-2.12.1/chroot_canon.c
 ===================================================================
---- 1.orig/chroot_canon.c	2007-11-23 17:05:44.000000000 +0000
-+++ 1/chroot_canon.c	2007-11-23 17:05:56.000000000 +0000
-@@ -16,6 +16,9 @@
+--- ldconfig-native-2.12.1.orig/chroot_canon.c
++++ ldconfig-native-2.12.1/chroot_canon.c
+@@ -17,6 +17,9 @@
     along with this program; if not, write to the Free Software Foundation,
     Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
  
@@ -58,7 +49,7 @@ Index: 1/chroot_canon.c
  #include <stdlib.h>
  #include <string.h>
  #include <unistd.h>
-@@ -26,7 +29,9 @@
+@@ -27,7 +30,9 @@
  #include <stddef.h>
  #include <stdint.h>
  
@@ -69,11 +60,11 @@ Index: 1/chroot_canon.c
  
  #ifndef PATH_MAX
  #define PATH_MAX 1024
-Index: 1/dl-cache.c
+Index: ldconfig-native-2.12.1/dl-cache.c
 ===================================================================
---- 1.orig/dl-cache.c	2007-11-23 17:05:44.000000000 +0000
-+++ 1/dl-cache.c	2007-11-23 17:05:56.000000000 +0000
-@@ -19,12 +19,12 @@
+--- ldconfig-native-2.12.1.orig/dl-cache.c
++++ ldconfig-native-2.12.1/dl-cache.c
+@@ -20,12 +20,12 @@
  
  #include <assert.h>
  #include <unistd.h>
@@ -88,7 +79,7 @@ Index: 1/dl-cache.c
  
  #ifndef _DL_PLATFORMS_COUNT
  # define _DL_PLATFORMS_COUNT 0
-@@ -38,103 +38,7 @@ static size_t cachesize;
+@@ -39,103 +39,7 @@ static size_t cachesize;
  /* 1 if cache_data + PTR points into the cache.  */
  #define _dl_cache_verify_ptr(ptr) (ptr < cache_data_size)
  
@@ -192,13 +183,15 @@ Index: 1/dl-cache.c
  _dl_cache_libcmp (const char *p1, const char *p2)
  {
    while (*p1 != '\0')
-@@ -173,139 +77,4 @@ _dl_cache_libcmp (const char *p1, const 
+@@ -172,139 +76,3 @@ _dl_cache_libcmp (const char *p1, const 
+     }
+   return *p1 - *p2;
  }
- 
- 
+-
+-
 -/* Look up NAME in ld.so.cache and return the file name stored there,
 -   or null if none is found.  */
- 
+-
 -const char *
 -internal_function
 -_dl_load_cache_lookup (const char *name)
@@ -210,7 +203,7 @@ Index: 1/dl-cache.c
 -  const char *best;
 -
 -  /* Print a message if the loading of libs is traced.  */
--  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
+-  if (__builtin_expect (GLRO_dl_debug_mask & DL_DEBUG_LIBS, 0))
 -    _dl_debug_printf (" search cache=%s\n", LD_SO_CACHE);
 -
 -  if (cache == NULL)
@@ -278,21 +271,19 @@ Index: 1/dl-cache.c
 -      if (platform != (uint64_t) -1)
 -	platform = 1ULL << platform;
 -
+-#define _DL_HWCAP_TLS_MASK (1LL << 63)
+-      uint64_t hwcap_exclude = ~((GLRO(dl_hwcap) & GLRO(dl_hwcap_mask))
+-				 | _DL_HWCAP_PLATFORM | _DL_HWCAP_TLS_MASK);
+-
 -      /* Only accept hwcap if it's for the right platform.  */
--#ifdef USE_TLS
--# define _DL_HWCAP_TLS_MASK (1LL << 63)
--#else
--# define _DL_HWCAP_TLS_MASK 0
--#endif
 -#define HWCAP_CHECK \
+-      if (lib->hwcap & hwcap_exclude)					      \
+-	continue;							      \
 -      if (GLRO(dl_osversion) && lib->osversion > GLRO(dl_osversion))	      \
 -	continue;							      \
 -      if (_DL_PLATFORMS_COUNT						      \
 -	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != 0			      \
 -	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != platform)		      \
--	continue;							      \
--      if (lib->hwcap							      \
--	  & ~(GLRO(dl_hwcap) | _DL_HWCAP_PLATFORM | _DL_HWCAP_TLS_MASK))      \
 -	continue
 -      SEARCH_CACHE (cache_new);
 -    }
@@ -310,7 +301,7 @@ Index: 1/dl-cache.c
 -    }
 -
 -  /* Print our result if wanted.  */
--  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0)
+-  if (__builtin_expect (GLRO_dl_debug_mask & DL_DEBUG_LIBS, 0)
 -      && best != NULL)
 -    _dl_debug_printf ("  trying file=%s\n", best);
 -
@@ -332,10 +323,10 @@ Index: 1/dl-cache.c
 -    }
 -}
 -#endif
-Index: 1/dl-cache.h
+Index: ldconfig-native-2.12.1/dl-cache.h
 ===================================================================
---- 1.orig/dl-cache.h	2007-11-23 17:05:44.000000000 +0000
-+++ 1/dl-cache.h	2007-11-23 17:05:56.000000000 +0000
+--- ldconfig-native-2.12.1.orig/dl-cache.h
++++ ldconfig-native-2.12.1/dl-cache.h
 @@ -101,5 +101,4 @@ struct cache_file_new
  (((addr) + __alignof__ (struct cache_file_new) -1)	\
   & (~(__alignof__ (struct cache_file_new) - 1)))
@@ -343,11 +334,11 @@ Index: 1/dl-cache.h
 -extern int _dl_cache_libcmp (const char *p1, const char *p2)
 -     internal_function;
 +extern int _dl_cache_libcmp (const char *p1, const char *p2);
-Index: 1/ldconfig.c
+Index: ldconfig-native-2.12.1/ldconfig.c
 ===================================================================
---- 1.orig/ldconfig.c	2007-11-23 17:05:44.000000000 +0000
-+++ 1/ldconfig.c	2007-11-23 17:05:56.000000000 +0000
-@@ -15,6 +15,9 @@
+--- ldconfig-native-2.12.1.orig/ldconfig.c
++++ ldconfig-native-2.12.1/ldconfig.c
+@@ -16,6 +16,9 @@
     along with this program; if not, write to the Free Software Foundation,
     Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
  
@@ -357,7 +348,7 @@ Index: 1/ldconfig.c
  #define PROCINFO_CLASS static
  #include <alloca.h>
  #include <argp.h>
-@@ -37,10 +40,20 @@
+@@ -39,10 +42,20 @@
  #include <glob.h>
  #include <libgen.h>
  
@@ -381,7 +372,7 @@ Index: 1/ldconfig.c
  
  #ifdef _DL_FIRST_PLATFORM
  # define _DL_FIRST_EXTRA (_DL_FIRST_PLATFORM + _DL_PLATFORMS_COUNT)
-@@ -53,7 +66,7 @@
+@@ -55,7 +68,7 @@
  #endif
  
  /* Get libc version number.  */
@@ -390,7 +381,7 @@ Index: 1/ldconfig.c
  
  #define PACKAGE _libc_intl_domainname
  
-@@ -143,8 +156,8 @@ static const struct argp_option options[
+@@ -152,8 +165,8 @@ static const struct argp_option options[
    { NULL, 0, NULL, 0, NULL, 0 }
  };
  
@@ -401,20 +392,36 @@ Index: 1/ldconfig.c
  
  /* Short description of program.  */
  static const char doc[] = N_("Configure Dynamic Linker Run Time Bindings.");
-@@ -281,7 +294,7 @@ parse_opt (int key, char *arg, struct ar
+@@ -291,6 +304,7 @@ parse_opt (int key, char *arg, struct ar
+   return 0;
+ }
+ 
++#define REPORT_BUGS_TO "mailing list : poky@yoctoproject.org"
+ /* Print bug-reporting information in the help message.  */
+ static char *
+ more_help (int key, const char *text, void *input)
+@@ -315,7 +329,7 @@ For bug reporting instructions, please s
  static void
  print_version (FILE *stream, struct argp_state *state)
  {
--  fprintf (stream, "ldconfig (GNU %s) %s\n", PACKAGE, VERSION);
+-  fprintf (stream, "ldconfig %s%s\n", PKGVERSION, VERSION);
 +  fprintf (stream, "ldconfig (Hacked Poky Version)\n");
    fprintf (stream, gettext ("\
  Copyright (C) %s Free Software Foundation, Inc.\n\
  This is free software; see the source for copying conditions.  There is NO\n\
-Index: 1/readlib.c
+@@ -1233,6 +1247,7 @@ set_hwcap (void)
+     hwcap_mask = strtoul (mask, NULL, 0);
+ }
+ 
++const char _libc_intl_domainname[] = "libc";
+ 
+ int
+ main (int argc, char **argv)
+Index: ldconfig-native-2.12.1/readlib.c
 ===================================================================
---- 1.orig/readlib.c	2007-11-23 17:05:44.000000000 +0000
-+++ 1/readlib.c	2007-11-23 17:05:56.000000000 +0000
-@@ -21,6 +21,9 @@
+--- ldconfig-native-2.12.1.orig/readlib.c
++++ ldconfig-native-2.12.1/readlib.c
+@@ -22,6 +22,9 @@
     development version.  Besides the simplification, it has also been
     modified to read some other file formats.  */
  
@@ -424,7 +431,7 @@ Index: 1/readlib.c
  #include <a.out.h>
  #include <elf.h>
  #include <error.h>
-@@ -34,7 +37,9 @@
+@@ -35,7 +38,9 @@
  #include <sys/stat.h>
  #include <gnu/lib-names.h>
  
@@ -435,11 +442,11 @@ Index: 1/readlib.c
  
  #define Elf32_CLASS ELFCLASS32
  #define Elf64_CLASS ELFCLASS64
-Index: 1/xstrdup.c
+Index: ldconfig-native-2.12.1/xstrdup.c
 ===================================================================
---- 1.orig/xstrdup.c	2007-11-23 17:05:44.000000000 +0000
-+++ 1/xstrdup.c	2007-11-23 17:05:56.000000000 +0000
-@@ -15,15 +15,10 @@
+--- ldconfig-native-2.12.1.orig/xstrdup.c
++++ ldconfig-native-2.12.1/xstrdup.c
+@@ -16,15 +16,10 @@
     along with this program; if not, write to the Free Software Foundation,
     Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
  
