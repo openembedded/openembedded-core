@@ -98,7 +98,8 @@ fakeroot do_rootfs () {
 
 	# Run ldconfig on the image to create a valid cache 
 	# (new format for cross arch compatibility)
-	ldconfig -r ${IMAGE_ROOTFS} -c new
+	echo executing: ldconfig -r ${IMAGE_ROOTFS} -c new -v
+	ldconfig -r ${IMAGE_ROOTFS} -c new -v
 
 	# (re)create kernel modules dependencies
 	# This part is done by kernel-module-* postinstall scripts but if image do
