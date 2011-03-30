@@ -15,7 +15,8 @@
         Welcome to the Yocto Project!  
         The Yocto Project is an open-source collaboration project focused on embedded Linux
         developers.
-        Amongst other things, YP uses the Poky build tool to construct complete Linux images.
+        Amongst other things, the Yocto Project uses the Poky build tool to 
+        construct complete Linux images.
     </para>
     <para>
         This short document will give you some basic information about the environment as well 
