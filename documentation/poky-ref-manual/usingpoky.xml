@@ -163,6 +163,12 @@
         only supported for minimal and base images.
         See <link linkend='ref-images'>'Reference: Images'</link> for more information.
     </note>
+    <note>
+        When building an image using GPL components you need to maintain your original 
+        settings and not switch back and forth applying different versions of the GNU
+        Public License.  If you rebuild using different versions of GPL you can get 
+        dependency errors due to some components not being rebuilt.
+    </note>
 </section>
 
 <section id='usingpoky-install'>
