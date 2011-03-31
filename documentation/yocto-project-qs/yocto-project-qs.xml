@@ -91,11 +91,11 @@
     </itemizedlist>
 
     <para>
-        Yocto Project can generate images for many kinds of devices.  
+        The Yocto Project can generate images for many kinds of devices.  
         However, the standard example machines target QEMU full system emulation for x86, ARM, MIPS,
-        and PPC based architectures as well as specific hardware such as the Intel Desktop Board
+        and PPC-based architectures as well as specific hardware such as the Intel Desktop Board
         DH55TC.  
-        Because an image developed with Yocto Project can boot inside a QEMU emulator, the 
+        Because an image developed with the Yocto Project can boot inside a QEMU emulator, the 
         development environment works nicely as a test platform for developing embedded software.
     </para>
 
@@ -103,7 +103,7 @@
         Another important Yocto Project feature is the Sato reference User Interface. 
         This optional GNOME mobile-based UI, which is intended for devices with
         resolution but restricted size screens, sits neatly on top of a device using the 
-        GNOME Mobile Stack providing a well defined user experience. 
+        GNOME Mobile Stack providing a well-defined user experience. 
         Implemented in its own layer, it makes it clear to developers how they can implement 
         their own UIs on top of Yocto Linux.
     </para>
@@ -119,7 +119,12 @@
     <itemizedlist>
         <listitem>
             <para>A host system running a supported Linux distribution (i.e. recent releases of
-                Fedora, OpenSUSE, Debian, and Ubuntu).</para>
+                Fedora, OpenSUSE, Debian, and Ubuntu).
+            <note>
+                For notes about using the Yocto Project on development systems that use 
+                older Linux distributions see 
+                <ulink url='https://wiki.yoctoproject.org/wiki/BuildingOnRHEL4'></ulink>
+            </note></para>
         </listitem>
         <listitem>
             <para>The right packages.</para>
@@ -260,7 +265,7 @@
              Adding this statement deletes the work directory used for building a package
              once the package is built.
              <literallayout class='monospaced'>
-     INHERIT += "rm_work"
+     INHERIT += rm_work
              </literallayout>
          </para></tip>
 
