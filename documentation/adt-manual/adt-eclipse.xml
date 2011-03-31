@@ -103,7 +103,7 @@
                 Expand the items under “Linux Tools” and select “Autotools support for 
                 CDT (Incubation)”.</para></listitem>
                 <listitem><para><emphasis>Yocto Plug-in</emphasis> – 
-                <ulink url='http://www.yoctoproject.org/downloads/eclipse-plugin/'></ulink>:
+                <ulink url='http://www.yoctoproject.org/downloads/eclipse-plugin/1.0'></ulink>:
                 Check the box next to “Development tools &amp; SDKs for Yocto Linux” 
                 to select all the items.</para></listitem>
             </orderedlist>
