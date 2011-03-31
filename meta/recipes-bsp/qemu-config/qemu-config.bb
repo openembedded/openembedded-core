@@ -15,7 +15,7 @@ SRC_URI = "file://distcc.sh \
 
 S = "${WORKDIR}"
 
-COMPATIBLE_MACHINE = "(qemuarm|qemux86)"
+COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemumips|qemuppc)"
 PACKAGE_ARCH = "all"
 
 do_install() {
