@@ -20,7 +20,7 @@ html:
 	xsltproc $(XSLTOPTS) -o bsp-guide.html bsp-guide-customization.xsl bsp-guide.xml
 
 tarball: html
-	tar -cvzf bsp-guide.tgz style.css bsp-guide.html figures/bsp-title.png
+	tar -cvzf bsp-guide.tgz style.css bsp-guide.html bsp-guide.pdf figures/bsp-title.png
 
 validate:
 	xmllint --postvalid --xinclude --noout bsp-guide.xml
