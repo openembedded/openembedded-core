@@ -7,7 +7,7 @@ COMPATIBLE_MACHINE = "(zylonite|mx31litekit|omap-3430ldp|omap-3430sdp|mx31ads|qe
 STDDEPENDS = "virtual/libx11 gtk-doc-native pango glib-2.0 libxfixes gtk+ libxi"
 BASE_CONF = "--disable-gtk-doc ${@get_clutter_fpu_setting(bb, d)}"
 
-DEPENDS = "${STDDEPENDS} virtual/libgl gettext"
+DEPENDS = "${STDDEPENDS} virtual/libgl"
 EXTRA_OECONF = "${BASE_CONF} --with-flavour=glx"
 
 DEPENDS_zylonite = "${STDDEPENDS} libgles-zylonite tslib"
@@ -45,7 +45,7 @@ PACKAGE_ARCH_menlow = "${MACHINE_ARCH}"
 
 FILESPATH = "${FILE_DIRNAME}/clutter"
 
-inherit autotools pkgconfig gtk-doc
+inherit autotools pkgconfig gtk-doc gettext
 
 #check for TARGET_FPU=soft and inform configure of the result so it can disable some floating points
 require clutter-fpu.inc
