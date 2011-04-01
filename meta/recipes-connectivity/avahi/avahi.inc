@@ -16,8 +16,10 @@ PRIORITY = "optional"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
 DEPENDS = "expat libcap libdaemon dbus glib-2.0 gtk+ libglade"
-RRECOMMENDS_${PN} = "libnss-mdns"
-RRECOMMENDS_avahi-daemon = "libnss-mdns"
+
+# uclibc has no nss
+RRECOMMENDS_avahi-daemon_append_libc-glibc = "libnss-mdns"
+RRECOMMENDS_${PN}_append_libc-glibc = "libnss-mdns"
 
 SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
         file://00avahi-autoipd \
@@ -66,7 +68,9 @@ FILES_avahi-ui-utils = "${bindir}/bssh ${bindir}/bvnc ${bindir}/bshell \
                         ${datadir}/applications \
                         ${datadir}/avahi/interfaces"
 
-RRECOMMENDS_avahi-dev = "gettext-dev expat-dev libcap-dev libdaemon-dev dbus-dev glib-2.0-dev update-rc.d-dev"
+RRECOMMENDS_avahi-dev = "expat-dev libcap-dev libdaemon-dev dbus-dev glib-2.0-dev update-rc.d-dev"
+RRECOMMENDS_avahi-dev_append_libc-glibc = " gettext-dev"
+
 RRECOMMENDS_avahi-dev[nodeprrecs] = 1
 
 CONFFILES_avahi-daemon = "${sysconfdir}/avahi/avahi-daemon.conf"
