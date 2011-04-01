@@ -58,13 +58,13 @@ SRC_URI = "http://www.cpan.org/src/5.0/perl-${PV}.tar.gz \
         file://parallel_build_fix_4.patch \
         file://parallel_build_fix_5.patch \
         file://parallel_build_fix_6.patch \
-        file://Makefile.SH.patch;patch=1 \
-        file://installperl.patch;patch=1 \
-        file://perl-dynloader.patch;patch=1 \
-        file://perl-moreconfig.patch;patch=1 \
-        file://letgcc-find-errno.patch;patch=1 \
-        file://generate-sh.patch;patch=1 \
-        file://09_fix_installperl.patch;patch=1 \
+        file://Makefile.SH.patch \
+        file://installperl.patch \
+        file://perl-dynloader.patch \
+        file://perl-moreconfig.patch \
+        file://letgcc-find-errno.patch \
+        file://generate-sh.patch \
+        file://09_fix_installperl.patch \
         file://native-perlinc.patch \
         file://perl-enable-gdbm.patch \
         file://cross-generate_uudmap.patch \
