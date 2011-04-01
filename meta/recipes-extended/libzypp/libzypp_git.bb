@@ -4,9 +4,9 @@ DESCRIPTION  = "The ZYpp Linux Software management framework"
 LICENSE  = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=11fccc94d26293d78cb4996cb17e5fa7"
 
-inherit cmake
+inherit cmake gettext
 
-DEPENDS  = "rpm boost gettext curl libxml2 zlib sat-solver expat openssl udev"
+DEPENDS  = "rpm boost curl libxml2 zlib sat-solver expat openssl udev"
 
 # rpmdb2solv from sat-solver is run from libzypp
 RDEPENDS_${PN} = "sat-solver"
