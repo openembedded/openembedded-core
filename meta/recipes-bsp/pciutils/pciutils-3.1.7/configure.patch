@@ -63,7 +63,7 @@ diff -uNr pciutils-3.1.5.orig/lib/configure pciutils-3.1.5/lib/configure
 +	sys=linux
 +fi
 +
-+if [ "$host" = "linux--uclibcgnueabi" ]
++if [ "$host" = "linux--uclibceabi" ]
 +then
 +	sys=linux
 +fi

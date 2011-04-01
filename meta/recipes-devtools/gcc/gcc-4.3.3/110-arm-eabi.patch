@@ -5,7 +5,7 @@
  	tmake_file="t-slibgcc-elf-ver t-linux arm/t-arm"
  	case ${target} in
 -	arm*-*-linux-gnueabi)
-+	arm*-*-linux-gnueabi | arm*-*-linux-uclibcgnueabi)
++	arm*-*-linux-gnueabi | arm*-*-linux-uclibceabi)
  	    tm_file="$tm_file arm/bpabi.h arm/linux-eabi.h"
  	    tmake_file="$tmake_file arm/t-arm-elf arm/t-bpabi arm/t-linux-eabi"
    	    # The BPABI long long divmod functions return a 128-bit value in 

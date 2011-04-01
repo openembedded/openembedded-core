@@ -25,7 +25,7 @@ index 4318b05..84f6acb 100755
 -	sys=linux
 -fi
 -
--if [ "$host" = "linux--uclibcgnueabi" ]
+-if [ "$host" = "linux--uclibceabi" ]
 -then
 -	sys=linux
 -fi
