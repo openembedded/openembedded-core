@@ -12,7 +12,7 @@
     </para>
 
         <section id="platdev-appdev-external-sdk">
-        <title>External Development Using the Poky SDK</title>
+        <title>External Development Using the Application Development Toolkit (ADT)</title>
         <para>
             The meta-toolchain and meta-toolchain-sdk targets build tarballs that contain toolchains and 
             libraries suitable for application development outside of Poky. 
@@ -45,17 +45,41 @@
         </section>
 
         <section id="using-the-eclipse-and-anjuta-plug-ins">
-        <title>Using the Eclipse and Anjuta Plug-ins</title>
+        <title>Using the Eclipse Plug-in</title>
         <para>
-            Yocto Project supports both Anjuta and Eclipse IDE plug-ins to make developing software
-            easier for the application developer. The plug-ins provide capability
-            extensions to the graphical IDE allowing for cross compilation, 
-            deployment and execution of the output in a QEMU emulation session. 
-            Support of these plug-ins also allows for cross debugging and
-            profiling.  Additionally, the Eclipse plug-in provides a suite of tools 
+            The current release of the Yocto Project supports the Eclipse IDE plug-in
+            to make developing software easier for the application developer. 
+            The plug-in provides capability extensions to the graphical IDE to allow
+            for cross compilation, deployment and execution of the output in a QEMU 
+            emulation session. 
+            Support of the Eclipse plug-in also allows for cross debugging and
+            profiling.  
+            Additionally, the Eclipse plug-in provides a suite of tools 
             that allows the developer to perform remote profiling, tracing, collection of 
             power data, collection of latency data and collection of performance data.
         </para>
+        <note>
+            The current release of the Yocto Project no longer supports the Anjuta plug-in.
+            However, the Poky Anjuta Plug-in is available to download directly from the Poky 
+            Git repository located through the web interface at
+            <ulink url="http://git.yoctoproject.org/"></ulink> under IDE Plugins.
+            The community is free to continue supporting it beyond the Yocto Project 0.9
+            Release.            
+        </note>
+        <para>
+            To use the Eclipse plug-in you need the Eclipse Framework (Helios 3.6.1) along 
+            with other plug-ins installed into the Eclipse IDE.
+            Once you have your environment setup you need to configure the Eclipse plug-in.
+            For information on how to install and configure the Eclipse plug-in, see the
+            <ulink url='http://www.yoctoproject.org/docs/adt-manual/adt-manual.html#adt-eclipse'>
+            "Working Within Eclipse"</ulink> chapter in the 
+            <ulink url='http://www.yoctoproject.org/docs/adt-manual/adt-manual.html'>
+            "Application Development Toolkit (ADT) User's Guide."</ulink>
+         </para>
+
+
+
+<!--
 
             <section id="the-eclipse-plug-in">
             <title>The Eclipse Plug-in</title>
@@ -309,7 +333,7 @@
              <para>
                 See the README file contained in the project for more information on 
                 Anjuta dependencies and building the plug-in. 
-                If you want to disable remote gdb debugging, pass the "--disable-gdb-integration" switch when 
+                If you want to disable remote gdb debugging, pass the "&dash;&dash;disable-gdb-integration" switch when 
                 you configure the plug-in.
             </para>
                 <section id="setting-up-the-anjuta-plugin">
@@ -416,6 +440,10 @@
                 </para>
                 </section>
             </section>
+
+
+-->
+
         </section>
 
         <section id="platdev-appdev-qemu">
