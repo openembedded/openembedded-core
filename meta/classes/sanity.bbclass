@@ -321,7 +321,7 @@ def check_sanity(e):
             messages = messages + "Staging layout has changed. The cross directory has been deprecated and cross packages are now built under the native sysroot.\nThis requires a rebuild.\n"
         elif abi == "5" and current_abi == "6":
             bb.note("Converting staging layout from version 5 to layout version 6")
-            os.system(bb.data.expand("mv ${TMPDIR}/pstagelogs ${TMPDIR}/sstate-control", e.data))
+            os.system(bb.data.expand("mv ${TMPDIR}/pstagelogs ${SSTATE_MANIFESTS}", e.data))
             f = file(abifile, "w")
             f.write(current_abi)
         elif (abi != current_abi):
