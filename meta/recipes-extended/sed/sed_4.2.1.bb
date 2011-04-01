@@ -6,14 +6,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949 \
 SECTION = "console/utils"
 PR = "r1"
 
-DEPENDS = "gettext"
-
 SRC_URI = "${GNU_MIRROR}/sed/sed-${PV}.tar.gz"
 
 SRC_URI[md5sum] = "f0fd4d7da574d4707e442285fd2d3b86"
 SRC_URI[sha256sum] = "8773541ce097fdc4c5b9e7da12a82dffbb30cd91f7bc169f52f05f93b7fc3060"
 
-inherit autotools update-alternatives
+inherit autotools update-alternatives gettext
 
 do_install () {
 	autotools_do_install

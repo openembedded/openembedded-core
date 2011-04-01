@@ -6,12 +6,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 SECTION = "console/utils"
 PR = "r5"
 
-DEPENDS = "gettext"
-
 SRC_URI = "${GNU_MIRROR}/sed/sed-${PV}.tar.gz \
            file://fix_return_type.patch"
 
-inherit autotools update-alternatives
+inherit autotools update-alternatives gettext
 
 do_install () {
 	autotools_do_install
