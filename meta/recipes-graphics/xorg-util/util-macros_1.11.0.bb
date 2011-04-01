@@ -11,7 +11,7 @@ PE = "1"
 PR = "r0"
 
 # ${PN} is empty so we need to tweak -dev and -dbg package dependencies
-DEPENDS = "gettext libgpg-error"
+DEPENDS = "libgpg-error"
 DEPENDS_virtclass-native = "gettext"
 DEPENDS_virtclass-nativesdk = "gettext"
 
