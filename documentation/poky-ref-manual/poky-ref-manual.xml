@@ -48,9 +48,9 @@
                 <revremark>Poky Master Documentation</revremark>
             </revision>
             <revision>
-                <revnumber>1.0</revnumber>
+                <revnumber>5.0+git</revnumber>
                 <date>6 April 2011</date>
-                <revremark>Poky documentation releasing with the Yocto Project 1.0 Release.</revremark>
+                <revremark>Released with Yocto Project 1.0 (Bernard 5.0).</revremark>
             </revision>
         </revhistory>
 
