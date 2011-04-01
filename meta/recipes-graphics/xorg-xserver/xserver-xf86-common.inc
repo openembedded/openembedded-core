@@ -34,3 +34,4 @@ FILES_${PN}-dbg += "${libdir}/xorg/modules/.debug \
 
 SRC_URI += "file://macro_tweak.patch"
 
+EXTRA_OECONF = "--with-fop=no"
