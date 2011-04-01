@@ -134,6 +134,12 @@ do_configure() {
                        -e "s,\(getnetent_r_proto=\)'\w+',\1'0',g" \
                        -e "s,\(d_sockatmark=\)'define',\1'undef',g" \
                        -e "s,\(d_sockatmarkproto=\)'\w+',\1'0',g" \
+                       -e "s,\(d_eaccess=\)'define',\1'undef',g" \
+                       -e "s,\(d_stdio_ptr_lval=\)'define',\1'undef',g" \
+                       -e "s,\(d_stdio_ptr_lval_sets_cnt=\)'define',\1'undef',g" \
+                       -e "s,\(d_stdiobase=\)'define',\1'undef',g" \
+                       -e "s,\(d_stdstdio=\)'define',\1'undef',g" \
+                       -e "s,-fstack-protector,-fno-stack-protector,g" \
                     config.sh-${TARGET_ARCH}-${TARGET_OS}
         fi
 
@@ -148,6 +154,16 @@ do_configure() {
 	       -e 's,/perl5,/perl,g' \
             config.sh-${TARGET_ARCH}-${TARGET_OS}
 
+	case "${TARGET_ARCH}" in
+		x86_64 | powerpc | s390)
+			sed -i -e "s,\(need_va_copy=\)'undef',\1'define',g" \
+				config.sh-${TARGET_ARCH}-${TARGET_OS}
+			;;
+		arm)
+			sed -i -e "s,\(d_u32align=\)'undef',\1'define',g" \
+				config.sh-${TARGET_ARCH}-${TARGET_OS}
+			;;
+	esac
         # These are strewn all over the source tree
         for foo in `grep -I -m1 \/usr\/include\/.*\\.h ${WORKDIR}/* -r | cut -f 1 -d ":"` ; do
             echo Fixing: $foo
