@@ -19,6 +19,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/libs/pam/library/Linux-PAM-${PV}.tar.bz2 \
            file://99_pam \
            file://pam.d/*"
 
+SRC_URI_append_libc-uclibc = " file://pam-no-innetgr.patch"
+
 SRC_URI[md5sum] = "6db7fcb5db6253350e3a4648ceac40e7"
 SRC_URI[sha256sum] = "17b268789b935a76e736a1150210dd12f156972973e79347668f828d43632652"
 
