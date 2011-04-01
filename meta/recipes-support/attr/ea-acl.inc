@@ -1,11 +1,9 @@
 # this build system is mostly shared by attr and acl
 
-DEPENDS =+ "gettext"
-
 SRC_URI += "file://relative-libdir.patch;striplevel=0 \
             file://no-fixed-prog-path.patch"
 
-inherit autotools
+inherit autotools gettext
 
 # the package comes with a custom config.h.in, it cannot be
 # overwritten by autoheader
