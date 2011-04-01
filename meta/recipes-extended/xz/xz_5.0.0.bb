@@ -14,10 +14,8 @@ SRC_URI = "http://tukaani.org/xz/xz-${PV}.tar.gz"
 SRC_URI[md5sum] = "f3c0706d100ad2b6d63327584d026c50"
 SRC_URI[sha256sum] = "eba9211990a642fc2c35ea02618b710c7fa898d78ccca48b546a07bdde03c44d"
 
-DEPENDS = "gettext"
-
 PR = "r0"
 
-inherit autotools
+inherit autotools gettext
 
 BBCLASSEXTEND = "native"
