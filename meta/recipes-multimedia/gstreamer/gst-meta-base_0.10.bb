@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${POKYBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${POKYBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 
-PR = "r9"
+PR = "r10"
 
 PACKAGES = "\
     gst-meta-base \
@@ -29,7 +29,8 @@ RDEPENDS_gst-meta-base = "\
     gst-plugins-base-typefindfunctions \
     gst-plugins-base-videoscale \
     gst-plugins-base-ffmpegcolorspace \
-    gst-plugins-good-autodetect"
+    gst-plugins-good-autodetect \
+    gst-plugins-good-souphttpsrc"
 
 
 RDEPENDS_gst-meta-audio = "\
