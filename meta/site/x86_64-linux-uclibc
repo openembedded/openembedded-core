@@ -76,3 +76,29 @@ utils_cv_sys_open_max=${utils_cv_sys_open_max=1015}
 
 # gettext
 am_cv_func_working_getline=${am_cv_func_working_getline=yes}
+
+# glib-2.0
+glib_cv_use_pid_surrogate=${glib_cv_use_pid_surrogate=yes}
+ac_cv_func_posix_getgrgid_r=${ac_cv_func_posix_getgrgid_r=yes}
+
+# flex
+ac_cv_func_realloc_works=${ac_cv_func_realloc_works=yes}
+ac_cv_func_realloc_0_nonnull=${ac_cv_func_realloc_0_nonnull=yes}
+
+# libidl
+libIDL_cv_long_long_format=${libIDL_cv_long_long_format=ll}
+
+# ORBit2
+ac_cv_alignof_CORBA_boolean=1
+ac_cv_alignof_CORBA_char=1
+ac_cv_alignof_CORBA_double=4
+ac_cv_alignof_CORBA_float=4
+ac_cv_alignof_CORBA_long=4
+ac_cv_alignof_CORBA_long_double=8
+ac_cv_alignof_CORBA_long_long=8
+ac_cv_alignof_CORBA_octet=1
+ac_cv_alignof_CORBA_pointer=8
+ac_cv_alignof_CORBA_short=2
+ac_cv_alignof_CORBA_struct=1
+ac_cv_alignof_CORBA_wchar=2
+ac_cv_func_getaddrinfo=${ac_cv_func_getaddrinfo=yes}
