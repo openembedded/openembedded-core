@@ -1,7 +1,7 @@
 DESCRIPTION = "GNU Transport Layer Security Library"
 HOMEPAGE = "http://www.gnu.org/software/gnutls/"
 BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
-DEPENDS = "zlib lzo gettext libtasn1 libgcrypt (>= 1.4.2)"
+DEPENDS = "zlib lzo libtasn1 libgcrypt (>= 1.4.2)"
 
 BBCLASSEXTEND = "native"
 
@@ -17,7 +17,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 
 SRC_URI = "ftp://ftp.gnutls.org/pub/gnutls/gnutls-${PV}.tar.bz2"
 
-inherit autotools binconfig pkgconfig
+inherit autotools binconfig pkgconfig gettext
 
 EXTRA_OECONF="--with-included-opencdk --with-included-libcfg --disable-rpath \
               --with-libtasn1-prefix=${STAGING_DIR_HOST}${prefix} \
