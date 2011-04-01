@@ -12,8 +12,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=09d83047c15994e05db29b423ed6662e"
 PR = "r0"
 PE = "1"
 
-DEPENDS += "gettext"
-
 BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI[md5sum] = "cd7372cd827bfd7ca7e9238f2ce274b1"

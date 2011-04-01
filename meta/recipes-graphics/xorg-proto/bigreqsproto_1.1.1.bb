@@ -3,8 +3,6 @@ require xorg-proto-common.inc
 PR = "r0"
 PE = "1"
 
-DEPENDS += "gettext"
-
 SUMMARY = "BigReqs: X Big Requests extension headers"
 
 DESCRIPTION = "This package provides the wire protocol for the \
