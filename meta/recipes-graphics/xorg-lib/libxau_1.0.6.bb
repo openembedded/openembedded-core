@@ -6,10 +6,12 @@ both client-side and server-side."
 
 require xorg-lib-common.inc
 
+inherit gettext
+
 LICENSE = "MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7908e342491198401321cec1956807ec"
 
-DEPENDS += " xproto gettext"
+DEPENDS += " xproto"
 PROVIDES = "xau"
 
 PR = "r0"

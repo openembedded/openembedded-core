@@ -16,7 +16,8 @@ PE = "1"
 PR = "r0"
 
 RDEPENDS_${PN}-dev = ""
-DEPENDS += "gettext"
+
+inherit gettext
 
 BBCLASSEXTEND = "native nativesdk"
 
