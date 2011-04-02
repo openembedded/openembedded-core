@@ -40,6 +40,6 @@ do_configure() {
 SRC_URI_append_virtclass-nativesdk = " file://glflags.patch;patch=1"
 DEPENDS_virtclass-nativesdk = "zlib-nativesdk libsdl-nativesdk qemugl-nativesdk"
 RDEPENDS_virtclass-nativesdk = "libsdl-nativesdk"
-EXTRA_OECONF_virtclass-nativesdk += "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls --cross-prefix=${TARGET_PREFIX}"
+EXTRA_OECONF_virtclass-nativesdk += "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls"
 
 BBCLASSEXTEND = "native nativesdk"
