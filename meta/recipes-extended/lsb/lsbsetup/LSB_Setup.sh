@@ -17,11 +17,38 @@
 
 ##Prepare Steps
 #Steps 0; Confirm the installed LSB Packages
-
+ARCH=`uname -m`
+APP_FILE=`ls /lsb-Application/*.rpm`
 if [ ! -f /opt/lsb/test/manager/bin/dist-checker-start.pl ]
 then
         if [ -d /lsb-dist-testkit ];then
-                cd /lsb-dist-testkit && sh install.sh && cd ../lsb-Application && rpm -ivh *.rpm --nodeps --force
+		if [ ${ARCH} == i686 ];then
+                	echo "i486-suse" >> /etc/rpm/platform
+                	echo "i486-noarch" >> /etc/rpm/platform
+                	echo "i486-pc" >> /etc/rpm/platform
+                	echo "noarch-suse" >> /etc/rpm/platform
+		else
+                	echo "${ARCH}-suse" >> /etc/rpm/platform
+                	echo "${ARCH}-noarch" >> /etc/rpm/platform
+                	echo "${ARCH}-pc" >> /etc/rpm/platform
+                	echo "noarch-suse" >> /etc/rpm/platform
+                fi      
+                cd /lsb-dist-testkit && sh install.sh && cd ../lsb-Application
+                for i in ${APP_FILE}
+                do
+                    echo "$i" |grep -q "apache"
+                    if [ $? -eq 0 ]
+                    then
+                        rpm -ivh $i --noscripts --nodeps --force
+                    else
+                        rpm -ivh $i --nodeps --force
+                    fi
+                done
+                mkdir -p /var/opt/lsb/test/manager/packages/ftp.linuxfoundation.org/pub/lsb/snapshots/appbat/tests/
+                mkdir -p  /var/opt/lsb/test/manager/packages/ftp.linuxfoundation.org/pub/lsb/app-battery/tests/ 
+		cp expect-tests.tar  test1.pdf  test2.pdf /var/opt/lsb/test/manager/packages/ftp.linuxfoundation.org/pub/lsb/app-battery/tests/
+                cp raptor-tests.tar  tcl-tests.tar /var/opt/lsb//test/manager/packages/ftp.linuxfoundation.org/pub/lsb/snapshots/appbat/tests/
+		cd ..
         else 
                 echo "Please install the realted LSB Packages"
                 exit 1
@@ -33,10 +60,6 @@ id tester
 if [ $? -eq  0 ]
 then 
         echo "User tester was existed"
-        echo -n "Deleted tester(yes/no):"
-        read INPUT
-case $INPUT in 
-yes|y)
         sleep 1
         userdel -rf tester
         if [ $? -eq 0 ] || [ $? -eq 6 ]
@@ -45,19 +68,6 @@ yes|y)
        else
                 echo "Fail to delete user tester"
         fi
-        ;;
-no|n)
-        sleep 1
-        echo "There must be deleted User test before ran LSB4 on Target"
-        echo ""
-        exit 1
-        ;;
-*)
-        sleep 1
-        echo "Input ERROR, pls reinput that your expected"
-        echo ""
-        exit 1
-esac
 else 
         echo "There was not User tester"
 fi
@@ -177,7 +187,7 @@ ping -c 5 ftp.linux-foundation.org
 check
 
 #Step 7
-insmod /lib/modules/2.6.37.2-yocto-standard\+/kernel/drivers/block/loop.ko
+insmod /lib/modules/2.6.*/kernel/drivers/block/loop.ko
 if [ $? != 0 ];then
 	echo "Please insmod loop.ko  manully"
 fi
