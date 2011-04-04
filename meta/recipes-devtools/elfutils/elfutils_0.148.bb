@@ -40,10 +40,6 @@ SRC_URI += "\
 
 inherit autotools
 
-# GCC 4.6.0 raises an unused-but-set warning in libasm, for now remove
-# this warning from Werror
-CFLAGS_virtclass-native += "-Wno-error=unused-but-set-variable"
-
 EXTRA_OECONF = "--program-prefix=eu-"
 
 do_configure_prepend() {
