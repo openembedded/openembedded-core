@@ -172,6 +172,9 @@ RDEPENDS_task-poky-lsb-graphic-add_qemux86 = "\
 RDEPENDS_task-poky-lsb-graphic-add_atom-pc = "\
     libqtopengl4 \
 "
+RDEPENDS_task-poky-lsb-graphic-add_qemuppc = "\
+    libqtopengl4 \
+"
 
 #    mesa-dri 
 
