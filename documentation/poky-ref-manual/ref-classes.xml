@@ -35,7 +35,7 @@
         (empty by default). These are often overridden or extended by other classes 
         such as <filename>autotools.bbclass</filename> or 
         <filename>package.bbclass</filename>. The class also contains some commonly
-        used functions such as <variable>oe_runmake</variable>.
+        used functions such as <filename>oe_runmake</filename>.
     </para>
 </section>
 
