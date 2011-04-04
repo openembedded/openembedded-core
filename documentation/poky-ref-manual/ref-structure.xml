@@ -61,7 +61,7 @@
         </para>
     </section>
 
-    <section id='structure-core-meta-extras'>
+<!--    <section id='structure-core-meta-extras'>
         <title><filename class="directory">meta-extras/</filename></title>
 
         <para>
@@ -70,8 +70,25 @@
             This metadata is disabled by default and is not supported as part of Poky.
         </para>
     </section>
+-->
 
-    <section id='structure-core-meta-***'>
+    <section id='structure-core-meta-demoapps'>
+        <title><filename class="directory">meta-demoapps/</filename></title>
+
+        <para>
+            This directory contains recipes for applications and demos that are not core.
+        </para>
+    </section>
+
+    <section id='structure-core-meta-rt'>
+        <title><filename class="directory">meta-rt/</filename></title>
+
+        <para>
+            This directory contains recipes for RealTime.
+        </para>
+    </section>
+
+<!--    <section id='structure-core-meta-***'>
         <title><filename class="directory">meta-***/</filename></title>
 
         <para>
@@ -79,6 +96,7 @@
             The layers are enabled by adding them to the <filename>conf/bblayers.conf</filename> file.
         </para>
     </section>
+-->
 
     <section id='structure-core-scripts'>
         <title><filename class="directory">scripts/</filename></title>
@@ -91,7 +109,7 @@
         </para>
     </section>
 
-    <section id='structure-core-sources'>
+<!--    <section id='structure-core-sources'>
         <title><filename class="directory">sources/</filename></title>
 
         <para>
@@ -123,6 +141,7 @@
             <filename class="extension">.md5</filename> file as well.
         </para>
     </section>
+-->
 
     <section id='handbook'>
         <title><filename class="directory">documentation</filename></title>
@@ -159,10 +178,27 @@
             like Poky to generate the build output.
         </para>
     </section>
+
+    <section id='structure-basic-top-level'>
+        <title><filename>LICENSE, README, and README.hardware</filename></title>
+
+        <para>
+            These files are standard top-level files. 
+        </para>
+    </section>
 </section>
 
 <section id='structure-build'>
     <title>The Build Directory - <filename class="directory">build/</filename></title>
+
+    <section id='structure-build-pseudodone'>
+        <title><filename>build/pseudodone</filename></title>
+
+        <para>
+            This tag file indicates that the intitial pseudo binar was created. 
+            The first time BitBake is invoked this file is built. 
+        </para>
+    </section>
 
     <section id='structure-build-conf-local.conf'>
         <title><filename>build/conf/local.conf</filename></title>
@@ -197,6 +233,36 @@
         </para>
     </section>
 
+    <section id='structure-build-conf-sanity_info'>
+        <title><filename>build/conf/sanity_info</filename></title>
+
+        <para>
+            This file is created during the build to indicate the state of the sanity checks.
+        </para>
+    </section>
+
+    <section id='structure-build-downloads'>
+        <title><filename>build/downloads/</filename></title>
+
+        <para>
+            This directory is used for the upstream source tarballs.
+            The directory can be reused by multiple builds or moved to another location. 
+            You can control the location of this directory through the
+            <glossterm><link linkend='var-DL_DIR'>DL_DIR</link></glossterm> variable.
+        </para>
+    </section>
+
+    <section id='structure-build-sstate-cache'>
+        <title><filename>build/sstate-cache/</filename></title>
+
+        <para>
+            This directory is used for the shared state cache.
+            The directory can be reused by multiple builds or moved to another location. 
+            You can control the location of this directory through the
+            <glossterm><link linkend='var-SSTATE_DIR'>SSTATE_DIR</link></glossterm> variable.
+        </para>
+    </section>
+
     <section id='structure-build-tmp'>
         <title><filename class="directory">build/tmp/</filename></title>
 
@@ -207,6 +273,14 @@
             you can remove everything in this directory or get rid of the directory completely.
             The <filename class="directory">tmp/</filename> directory has some important 
             sub-components detailed below.
+        </para>
+    </section>
+
+    <section id='structure-build-tmp-buildstats'>
+        <title><filename class="directory">build/tmp/buildstats/</filename></title>
+
+        <para>
+            This directory stores the build statistics.
         </para>
     </section>
 
@@ -230,7 +304,7 @@
         <title><filename class="directory">build/tmp/deploy/deb/</filename></title>
 
         <para>
-            This directory receives any .deb packages produced by Poky.
+            This directory receives any <filename>.deb</filename> packages produced by Poky.
             The packages are sorted into feeds for different architecture types.
         </para>
     </section>
@@ -239,7 +313,7 @@
         <title><filename class="directory">build/tmp/deploy/rpm/</filename></title>
 
         <para>
-            This directory receives any .rpm packages produced by Poky.  
+            This directory receives any <filename>.rpm</filename> packages produced by Poky.  
             The packages re sorted into feeds for different architecture types.
         </para>
     </section>
@@ -256,7 +330,7 @@
     <section id='structure-build-tmp-deploy-ipk'>
         <title><filename class="directory">build/tmp/deploy/ipk/</filename></title>
 
-        <para>This directory receives .ipk packages produced by Poky.</para>
+        <para>This directory receives <filename>.ipk</filename> packages produced by Poky.</para>
     </section>
 
     <section id='structure-build-tmp-sysroots'>
@@ -512,6 +586,15 @@
         </para>
     </section>
 
+    <section id='structure-meta-recipes-support'>
+        <title><filename class="directory">meta/recipes-support/</filename></title>
+
+        <para>
+            This directory contains recipes that used by other recipes, but that are not directly 
+            included in images (i.e. depenendies of other recipes).
+        </para>
+    </section>
+
     <section id='structure-meta-site'>
         <title><filename class="directory">meta/site/</filename></title>
 
@@ -520,6 +603,14 @@
             Because certain "autoconf" test results cannot be determined when cross-compiling due to 
             the tests not able to run on a live system, the information in this directory is 
             passed to "autoconf" for the various architectures. 
+        </para>
+    </section>
+
+    <section id='structure-meta-recipes-txt'>
+        <title><filename class="directory">meta/recipes.txt/</filename></title>
+
+        <para>
+            This file is a description of the contents of <filename>recipes-*</filename>.
         </para>
     </section>
 </section>
