@@ -66,8 +66,15 @@ IFS='
 	fi
 	cd ${S}
 
-	# checkout and clobber and unimportant files
-	git checkout -f ${KBRANCH}
+	set +e
+	git show-ref --quiet --verify -- "refs/heads/${KBRANCH}"
+	if [ $? -eq 0 ]; then
+		# checkout and clobber and unimportant files
+		git checkout -f ${KBRANCH}
+	else
+		echo "Not checking out ${KBRANCH}, it will be created later"
+		git checkout -f master
+	fi
 }
 do_kernel_checkout[dirs] = "${S}"
 
@@ -105,20 +112,28 @@ python do_kernel_configcheck() {
     bb.plain( "%s" % result )
 }
 
+# overrides the base kernel_do_configure, since we don't want all the
+# defconfig processing in there
+kernel_do_configure() {
+        yes '' | oe_runmake oldconfig
+}
+
+
 # Ensure that the branches (BSP and meta) are on the locatios specified by
 # their SRCREV values. If they are NOT on the right commits, the branches
 # are reset to the correct commit.
 do_validate_branches() {
 	cd ${S}
- 	branch_head=`git show-ref -s --heads ${KBRANCH}`
- 	meta_head=`git show-ref -s --heads ${KMETA}`
- 	target_branch_head="${SRCREV_machine}"
- 	target_meta_head="${SRCREV_meta}"
 
 	# nothing to do if bootstrapping
  	if [ -n "${YOCTO_KERNEL_EXTERNAL_BRANCH}" ]; then
  	 	return
  	fi
+
+ 	branch_head=`git show-ref -s --heads ${KBRANCH}`
+ 	meta_head=`git show-ref -s --heads ${KMETA}`
+ 	target_branch_head="${SRCREV_machine}"
+ 	target_meta_head="${SRCREV_meta}"
 
 	current=`git branch |grep \*|sed 's/^\* //'`
 	if [ -n "$target_branch_head" ] && [ "$branch_head" != "$target_branch_head" ]; then
