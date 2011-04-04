@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=93ae8952e7d02d855516fbf2efb9a0d2"
 PR = "r0"
 PE = "1"
 
-EXTRA_OECONF_append = "--enable-specs=no"
+EXTRA_OECONF_append = " --enable-specs=no"
 BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI[md5sum] = "65633168e5315c19defb4652cd3d83c1"
