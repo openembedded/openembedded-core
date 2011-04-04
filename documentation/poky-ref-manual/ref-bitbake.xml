@@ -34,7 +34,7 @@
         <para>
             The first thing BitBake does is look for the <filename>bitbake.conf</filename> file.
             Poky keeps this file in <filename class="directory">meta/conf/</filename>.
-            BitBake finds it by examining the <varname>BBPATH</varname> environment 
+            BitBake finds it by examining the <filename>BBPATH</filename> environment 
             variable and looking for the <filename class="directory">meta/conf/</filename> 
             directory.
         </para>
@@ -42,7 +42,7 @@
         <para>
             In Poky, <filename>bitbake.conf</filename> lists other configuration 
             files to include from a <filename class="directory">conf/</filename> 
-            directory below the directories listed in <varname>BBPATH</varname>. 
+            directory below the directories listed in <filename>BBPATH</filename>. 
             In general the most important configuration file from a user's perspective 
             is <filename>local.conf</filename>, which contains a user's customized 
             settings for Poky. 
@@ -70,7 +70,7 @@
             <glossterm><link linkend='var-INHERIT'>INHERIT</link></glossterm>
             variable are also inculded. 
             Class files are searched for in a classes subdirectory 
-            under the paths in <varname>BBPATH</varname> in the same way as
+            under the paths in <filename>BBPATH</filename> in the same way as
             configuration files.
         </para>
 
