@@ -719,7 +719,7 @@
                 </literallayout>
                 Once the binary is built you can find it here: 
                 <programlisting>
-tmp/sysroots/&lt;host-arch&lt;/usr/bin/&lt;target-abi&gt;-gdb 
+tmp/sysroots/&lt;host-arch&gt;/usr/bin/&lt;target-abi&gt;-gdb 
                 </programlisting>
             </para>
 
