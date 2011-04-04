@@ -32,9 +32,8 @@
         </para>
 
         <para>
-            For more information on BitBake, see the BitBake project site at 
-            <ulink url="http://bitbake.berlios.de/"/> 
-            and the BitBake on-line manual at <ulink url="http://bitbake.berlios.de/manual/"/>.
+            For more information on BitBake, see the BitBake on-line manual at 
+            <ulink url="http://bitbake.berlios.de/manual/"/>.
         </para>
     </section>
 
