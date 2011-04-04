@@ -125,7 +125,7 @@
 
         <para>
             Sometimes a target might have multiple providers.
-            An common example is "virtual/kernel", which is provided by each kernel package. 
+            A common example is "virtual/kernel", which is provided by each kernel package. 
             Each machine often elects the best kernel provider by using a line similar to the 
             following in the machine configuration file:
         </para>
