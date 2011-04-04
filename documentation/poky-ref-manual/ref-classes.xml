@@ -15,7 +15,7 @@
     by BUILDDIR (e.g. <filename class="directory">build/</filename>)in the same way as
     <filename class="extension">.conf</filename> files in the <filename 
     class="directory">conf</filename> directory. Class files are searched for 
-    in BBPATH in the same was as <filename class="extension">.conf</filename> files too.
+    in BBPATH in the same was as <filename>.conf</filename> files too.
 </para>
 
 <para>
@@ -43,13 +43,13 @@
     <title>Autotooled Packages - <filename>autotools.bbclass</filename></title>
 
     <para>
-        Autotools (autoconf, automake, libtool) brings standardisation and this
-        class aims to define a set of tasks (configure, compile etc.) that will
-        work for all autotooled packages.  It should usually be enough to define
-        a few standard variables as documented in the <link
-        linkend='usingpoky-extend-addpkg-autotools'>simple autotools
-        example</link> section and then simply "inherit autotools". This class
-        can also work with software that emulates autotools.
+        Autotools (autoconf, automake, libtool) bring standardization. 
+        This class defines a set of tasks (configure, compile etc.) that 
+        work for all autotooled packages.  
+        It should usually be enough to define a few standard variables as documented in the 
+        <link linkend='usingpoky-extend-addpkg-autotools'>simple autotools
+        example</link> section and then simply "inherit autotools". 
+        This class can also work with software that emulates autotools.
     </para>
 
     <para>
@@ -60,26 +60,29 @@
     <itemizedlist>
       <listitem>
         <para>
-            'do_configure' regenerates the configure script (using autoreconf) and
-            then launches it with a standard set of arguments used during
-            cross-compilation. Additional parameters can be passed to 
-            <command>configure</command> through the <glossterm><link 
-            linkend='var-EXTRA_OECONF'>EXTRA_OECONF</link></glossterm> variable.
+            <filename>do_configure</filename> &dash; regenerates the configure script (using autoreconf) 
+            and then launches it with a standard set of arguments used during
+            cross-compilation. 
+            You can pass additional parameters to 
+            <filename>configure</filename> through the 
+            <glossterm><link linkend='var-EXTRA_OECONF'>EXTRA_OECONF</link></glossterm> variable.
         </para>
       </listitem>
       <listitem>
         <para>
-            'do_compile' runs <command>make</command> with arguments specifying 
-            the compiler and linker. Additional arguments can be passed through 
+            <filename>do_compile</filename> &dash; runs <filename>make</filename> with 
+            arguments that specify the compiler and linker. 
+            You can pass additional arguments through 
             the <glossterm><link linkend='var-EXTRA_OEMAKE'>EXTRA_OEMAKE</link>
             </glossterm> variable.
         </para>
       </listitem>
       <listitem>
         <para>
-            'do_install' runs <command>make install</command> passing a DESTDIR 
-            option taking its value from the standard <glossterm><link
-            linkend='var-DESTDIR'>DESTDIR</link></glossterm> variable.
+            <filename>do_install</filename> &dash; runs <filename>make install</filename> 
+            and passes a <filename>DESTDIR</filename> 
+            option, which takes its value from the standard 
+            <glossterm><link linkend='var-DESTDIR'>DESTDIR</link></glossterm> variable.
         </para>
       </listitem>
     </itemizedlist>
