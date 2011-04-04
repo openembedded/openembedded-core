@@ -2,6 +2,9 @@ require recipes-graphics/clutter/clutter.inc
 
 PR = "r0"
 
+# Internal json-glib was removed in Clutter 1.5.2
+STDDEPENDS += "json-glib"
+
 PACKAGES =+ "${PN}-examples"
 FILES_${PN}-examples = "${bindir}/test-* ${pkgdatadir}/redhand.png"
 
@@ -13,8 +16,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 S = "${WORKDIR}/clutter-1.6.8"
 
 BASE_CONF += "--disable-introspection"
-
-EXTRA_OECONF += "--with-json=check"
 
 do_configure_prepend () {
 	# Disable DOLT
