@@ -80,10 +80,8 @@
             is set, usually in
             <filename>local.conf</filename>, and defines the list of places to search for 
             <filename class="extension">.bb</filename> files. 
-            By default, the BBFILES variable specifies the <filename class="directory">meta/packages/
-            </filename> directory within Poky, but other directories such as
-            <filename class="directory">meta-extras/</filename> can be included 
-            too. 
+            By default, the BBFILES variable specifies the <filename class="directory">meta/recipes-*/
+            </filename> directory within Poky. 
             Adding extra content to BBFILES is best achieved through the use of BitBake
             <link linkend='usingpoky-changes-layers'>"layers"</link>.
         </para>
