@@ -766,6 +766,12 @@ recipes-graphics/xorg-font/fiont-alias_1.0.2.bb:PR - "$(INC_PR).0"
             </glossdef>
         </glossentry>
 
+        <glossentry id='var-SSTATE_DIR'><glossterm>SSTATE_DIR</glossterm>
+            <glossdef>
+                <para>Directory for the shared state.</para>
+            </glossdef>
+
+        </glossentry>
         <glossentry id='var-SHELLCMDS'><glossterm>SHELLCMDS</glossterm>
             <glossdef>
                 <para>
