@@ -33,15 +33,15 @@
 
         <para>
             The first thing BitBake does is look for the <filename>bitbake.conf</filename> file.
-            Poky keeps this file in <filename class="directory">meta/conf/</filename>.
+            Poky keeps this file in <filename>meta/conf/</filename>.
             BitBake finds it by examining the <filename>BBPATH</filename> environment 
-            variable and looking for the <filename class="directory">meta/conf/</filename> 
+            variable and looking for the <filename>meta/conf/</filename> 
             directory.
         </para>
 
         <para>
             In Poky, <filename>bitbake.conf</filename> lists other configuration 
-            files to include from a <filename class="directory">conf/</filename> 
+            files to include from a <filename>conf/</filename> 
             directory below the directories listed in <filename>BBPATH</filename>. 
             In general the most important configuration file from a user's perspective 
             is <filename>local.conf</filename>, which contains a user's customized 
@@ -54,11 +54,11 @@
             The DISTRO and MACHINE environment variables are both usually set in 
             the <filename>local.conf</filename> file. 
             Valid distribution 
-            configuration files are available in the <filename class="directory">
+            configuration files are available in the <filename>
             meta/conf/distro/</filename> directory and valid machine configuration 
-            files in the <filename class="directory">meta/conf/machine/</filename> 
+            files in the <filename>meta/conf/machine/</filename> 
             directory. 
-            Within the <filename class="directory">meta/conf/machine/include/</filename> 
+            Within the <filename>meta/conf/machine/include/</filename> 
             directory are various <filename>tune-*.inc</filename> configuration files that provide common 
             "tuning" settings specific to and shared between particular architectures and machines.
         </para>
@@ -79,29 +79,29 @@
             variable <glossterm><link linkend='var-BBFILES'>BBFILES</link></glossterm> 
             is set, usually in
             <filename>local.conf</filename>, and defines the list of places to search for 
-            <filename class="extension">.bb</filename> files. 
-            By default, the BBFILES variable specifies the <filename class="directory">meta/recipes-*/
+            <filename>.bb</filename> files. 
+            By default, the BBFILES variable specifies the <filename>meta/recipes-*/
             </filename> directory within Poky. 
             Adding extra content to BBFILES is best achieved through the use of BitBake
             <link linkend='usingpoky-changes-layers'>"layers"</link>.
         </para>
 
         <para>
-            BitBake parses each <filename class="extension">.bb</filename> file in BBFILES and 
+            BitBake parses each <filename>.bb</filename> file in BBFILES and 
             stores the values of various variables.  
-            In summary, for each <filename class="extension">.bb</filename> 
+            In summary, for each <filename>.bb</filename> 
             file the configuration plus the base class of variables are set, followed 
-            by the data in the <filename class="extension">.bb</filename> file 
+            by the data in the <filename>.bb</filename> file 
             itself, followed by any inherit commands that
-            <filename class="extension">.bb</filename> file might contain.
+            <filename>.bb</filename> file might contain.
         </para>
 
         <para>
-            Because parsing <filename class="extension">.bb</filename> files is a time 
+            Because parsing <filename>.bb</filename> files is a time 
             consuming process, a cache is kept to speed up subsequent parsing. 
-            This cache is invalid if the timestamp of the <filename class="extension">.bb</filename> 
+            This cache is invalid if the timestamp of the <filename>.bb</filename> 
             file itself changes, or if the timestamps of any of the include, 
-            configuration or class files the <filename class="extension">.bb</filename>
+            configuration or class files the <filename>.bb</filename>
             file depends on changes.
         </para>
     </section>
@@ -110,7 +110,7 @@
         <title>Preferences and Providers</title>
 
         <para>
-            Once all the <filename class="extension">.bb</filename> files have been 
+            Once all the <filename>.bb</filename> files have been 
             parsed, BitBake starts to build the target (poky-image-sato in the previous section's 
             example) and looks for providers of that target.
             Once a provider is selected, BitBake resolves all the dependencies for  
@@ -200,11 +200,11 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-rp"
         <para>
             As each task completes, a timestamp is written to the directory specified by the 
             <glossterm><link linkend='var-STAMPS'>STAMPS</link></glossterm> variable (usually 
-            <filename class="directory">build/tmp/stamps/*/</filename>). 
+            <filename>build/tmp/stamps/*/</filename>). 
             On subsequent runs, BitBake looks at the STAMPS directory and does not rerun 
             tasks that are already completed unless a timestamp is found to be invalid. 
             Currently, invalid timestamps are only considered on a per 
-            <filename class="extension">.bb</filename> file basis.
+            <filename>.bb</filename> file basis.
             So, for example, if the configure stamp has a timestamp greater than the 
             compile timestamp for a given target then the compile task would rerun.
             Running the compile task again, however, has no effect on other providers 
