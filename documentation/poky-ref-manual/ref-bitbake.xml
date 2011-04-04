@@ -195,7 +195,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-rp"
             The build now starts with BitBake forking off threads up to the limit set in the 
             <glossterm><link linkend='var-BB_NUMBER_THREADS'>BB_NUMBER_THREADS</link></glossterm> variable.
             BitBake continues to fork threads as long as there are tasks ready to run,
-            those taksks have all their dependencies met, and the thread threshold has not been 
+            those tasks have all their dependencies met, and the thread threshold has not been 
             exceeded.
         </para>
 
