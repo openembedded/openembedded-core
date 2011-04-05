@@ -17,12 +17,12 @@ html:
 	xsltproc $(XSLTOPTS) -o yocto-project-qs.html yocto-project-qs-customization.xsl yocto-project-qs.xml
 
 tarball: html
-	tar -cvzf yocto-project-qs.tgz yocto-project-qs.html style.css figures/yocto-environment.png figures/building-an-image.png figures/using-a-pre-built-image.png figures/yocto-project-transp.png
+	tar -cvzf yocto-project-qs.tgz yocto-project-qs.html ypqs.pdf style.css figures/yocto-environment.png figures/building-an-image.png figures/using-a-pre-built-image.png figures/yocto-project-transp.png
 
 validate:
 	xmllint --postvalid --xinclude --noout yocto-project-qs.xml
 
-OUTPUTS = yocto-project-qs.tgz yocto-project-qs.html
+OUTPUTS = yocto-project-qs.tgz yocto-project-qs.html ypqs.pdf
 SOURCES = *.png *.xml *.css
 
 publish:
