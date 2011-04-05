@@ -27,7 +27,7 @@ html:
 	xsltproc $(XSLTOPTS) -o kernel-manual.html yocto-project-kernel-manual-customization.xsl kernel-manual.xml
 
 tarball: html
-	tar -cvzf kernel-manual.tgz kernel-manual.html style.css figures/kernel-title.png figures/kernel-big-picture.png figures/kernel-architecture-overview.png
+	tar -cvzf kernel-manual.tgz kernel-manual.html kernel-manual.pdf style.css figures/kernel-title.png figures/kernel-big-picture.png figures/kernel-architecture-overview.png
 
 validate:
 	xmllint --postvalid --xinclude --noout kernel-manual.xml
