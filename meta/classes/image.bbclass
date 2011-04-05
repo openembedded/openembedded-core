@@ -23,7 +23,11 @@ PID = "${@os.getpid()}"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-do_rootfs[depends] += "makedevs-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot ldconfig-native:do_populate_sysroot"
+LDCONFIGDEPEND = "ldconfig-native:do_populate_sysroot"
+LDCONFIGDEPEND_linux-uclibc = ""
+LDCONFIGDEPEND_linux-uclibceabi = ""
+
+do_rootfs[depends] += "makedevs-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot ${LDCONFIGDEPEND}"
 do_rootfs[depends] += "virtual/update-alternatives-native:do_populate_sysroot update-rc.d-native:do_populate_sysroot"
 
 python () {
@@ -96,10 +100,12 @@ fakeroot do_rootfs () {
 
 	insert_feed_uris
 
-	# Run ldconfig on the image to create a valid cache 
-	# (new format for cross arch compatibility)
-	echo executing: ldconfig -r ${IMAGE_ROOTFS} -c new -v
-	ldconfig -r ${IMAGE_ROOTFS} -c new -v
+	if [ "x${LDCONFIGDEPEND}" != "x" ]; then
+		# Run ldconfig on the image to create a valid cache 
+		# (new format for cross arch compatibility)
+		echo executing: ldconfig -r ${IMAGE_ROOTFS} -c new -v
+		ldconfig -r ${IMAGE_ROOTFS} -c new -v
+	fi
 
 	# (re)create kernel modules dependencies
 	# This part is done by kernel-module-* postinstall scripts but if image do
