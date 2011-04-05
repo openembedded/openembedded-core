@@ -27,7 +27,7 @@ html:
 	xsltproc $(XSLTOPTS) -o adt-manual.html adt-manual-customization.xsl adt-manual.xml
 
 tarball: html
-	tar -cvzf adt-manual.tgz adt-manual.html style.css figures/adt-title.png figures/yocto-project-transp.png
+	tar -cvzf adt-manual.tgz adt-manual.html adt-manual.pdf style.css figures/adt-title.png figures/yocto-project-transp.png
 
 validate:
 	xmllint --postvalid --xinclude --noout adt-manual.xml
