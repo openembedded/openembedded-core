@@ -1,3 +1,14 @@
+
+directfb: don't use linux/config.h in powerpc assembly
+
+Author: jeremy_laine at openembedded.org
+Branch: org.openembedded.dev
+Revision: 73964f8e6912f066c224fed54daeeb44836d9cdf
+ViewMTN: http://monotone.openembedded.org/revision/info/73964f8e6912f066c224fed54daeeb44836d9cdf
+
+Upstream-Status: Inappropriate [configuration]
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
 diff -urN DirectFB-1.1.0.orig/lib/direct/ppcasm_memcpy_cachable.S DirectFB-1.1.0/lib/direct/ppcasm_memcpy_cachable.S
 --- DirectFB-1.1.0.orig/lib/direct/ppcasm_memcpy_cachable.S	2007-08-07 21:43:00.000000000 +0200
 +++ DirectFB-1.1.0/lib/direct/ppcasm_memcpy_cachable.S	2008-06-07 04:14:26.000000000 +0200

@@ -12,14 +12,11 @@ HOMEPAGE = "http://directfb.org"
 DEPENDS = "jpeg libpng freetype zlib tslib"
 
 SRC_URI = " \
-    http://www.directfb.org/downloads/Old/DirectFB-${PV}.tar.gz \
-    file://fix-pkgconfig-cflags.patch \
-    file://fix-font-missing-char.patch \
-    file://getpagesize.patch \
-    file://mkdfiff.patch \
+    http://directfb.org/downloads/Core/DirectFB-1.4/DirectFB-${PV}.tar.gz \
+    file://directfb-1.2.x-fix-pkgconfig-cflags.patch \
     file://dont-use-linux-config.patch \
-    file://ts_lib_autotools.patch \
-"
+    "
+
 S = "${WORKDIR}/DirectFB-${PV}"
 
 LDFLAGS_append =" -lts -lm"
