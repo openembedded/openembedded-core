@@ -7,8 +7,8 @@ PR = "r0"
 
 SRC_URI = "http://www.mpfr.org/mpfr-${PV}/mpfr-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "f45bac3584922c8004a10060ab1a8f9f"
-SRC_URI[sha256sum] = "8f4e5f9c53536cb798a30455ac429b1f9fc75a0f8af32d6e0ac31ebf1024821f"
+SRC_URI[md5sum] = "bfbecb2eacb6d48432ead5cfc3f7390a"
+SRC_URI[sha256sum] = "e1977099bb494319c0f0c1f85759050c418a56884e9c6cef1c540b9b13e38e7f"
 S = "${WORKDIR}/mpfr-${PV}"
 
 BBCLASSEXTEND = "native nativesdk"
