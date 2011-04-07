@@ -18,5 +18,5 @@ DEPENDS += "libxi"
 #
 EXTRA_OEMAKE += " sdkdir=${STAGING_INCDIR}/xorg "
 
-SRC_URI[md5sum] = "b4e58eba1bdca13f0929a4b03b262135"
-SRC_URI[sha256sum] = "30a33250c4f3d2daa8a61cab847dc7befd3248db0fca139d17fd7b890b5a8fd7"
+SRC_URI[md5sum] = "cbe487f9d22237d1e39c7d0b5812ab7e"
+SRC_URI[sha256sum] = "5874d979f028636dbddf14fffb84b496b006e63d5ea8dfa120820e58642812c2"
