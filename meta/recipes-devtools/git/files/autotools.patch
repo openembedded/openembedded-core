@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [configuration]
+
 Index: git-1.7.2.1/configure.ac
 ===================================================================
 --- git-1.7.2.1.orig/configure.ac	2010-07-28 18:03:43.000000000 +0100
