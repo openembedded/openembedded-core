@@ -15,8 +15,9 @@ DEPENDS = "libnewt popt"
 PR = "r0"
 
 SRC_URI = "http://fedorahosted.org/releases/c/h/chkconfig/${P}.tar.bz2"
-SRC_URI[md5sum] = "9b5e91d25f4f3b21f4c0bdf55a721431"
-SRC_URI[sha256sum] = "775100a9d6f70fbd8f33ed24b560b6842161fc496c21b1fc6d2aed646f9d855f"
+
+SRC_URI[md5sum] = "0a7e5b271084abf368919b51fd917750"
+SRC_URI[sha256sum] = "bfa83a8f69f5127ab772eee33a48f3c1839efac1a622ab484d2f688264d13929"
 
 inherit autotools gettext
 
