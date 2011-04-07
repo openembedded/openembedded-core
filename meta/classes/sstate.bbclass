@@ -39,8 +39,10 @@ python () {
         scan_cmd = "grep -Irl ${STAGING_DIR} ${SSTATE_BUILDDIR}"
         bb.data.setVar('SSTATE_SCAN_CMD', scan_cmd, d)
 
+    unique_tasks = set((bb.data.getVar('SSTATETASKS', d, True) or "").split())
+    d.setVar('SSTATETASKS', " ".join(unique_tasks))
     namemap = []
-    for task in set((bb.data.getVar('SSTATETASKS', d, True) or "").split()):
+    for task in unique_tasks:
         namemap.append(bb.data.getVarFlag(task, 'sstate-name', d))
         funcs = bb.data.getVarFlag(task, 'prefuncs', d) or ""
         funcs = "sstate_task_prefunc " + funcs
@@ -200,7 +202,7 @@ def sstate_clean_cachefile(ss, d):
     oe.path.remove(sstatepkgfile)
 
 def sstate_clean_cachefiles(d):
-    for task in set((bb.data.getVar('SSTATETASKS', d, True) or "").split()):
+    for task in (bb.data.getVar('SSTATETASKS', d, True) or "").split():
         ss = sstate_state_fromvars(d, task[3:])
         sstate_clean_cachefile(ss, d)
 
