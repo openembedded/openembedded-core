@@ -1,14 +1,14 @@
 SECTION = "libs"
 LICENSE = "Artistic"
-LIC_FILES_CHKSUM = "file://README;endline=6;md5=fa7bbbd54d37d6ecf4ef33b7c98b9cd7"
+LIC_FILES_CHKSUM = "file://README;beginline=2;endline=6;md5=c8767d7516229f07b26e42d1cf8b51f1"
 DEPENDS += "expat expat-native"
 
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "http://www.cpan.org/modules/by-module/XML/XML-Parser-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "1b868962b658bd87e1563ecd56498ded"
-SRC_URI[sha256sum] = "9fd529867402456bd826fe0e5588d35b3a2e27e586a2fd838d1352b71c2ed73f"
+SRC_URI[md5sum] = "c66e9adba003d0667cc40115ccd837a5"
+SRC_URI[sha256sum] = "e5e433684e799ef7b6b852c0ca31b71054717628555444d3dc9fceac0df71512"
 
 S = "${WORKDIR}/XML-Parser-${PV}"
 
