@@ -4,10 +4,10 @@ LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7bf87fc37976e93ec66ad84fac58c098"
 SRC_URI = "file://modutils.sh \
 	   file://PD.patch"
-PR = "r4"
+PR = "r5"
 
 INITSCRIPT_NAME = "modutils.sh"
-INITSCRIPT_PARAMS = "start 20 S ."
+INITSCRIPT_PARAMS = "start 2 S ."
 
 inherit update-rc.d
 
