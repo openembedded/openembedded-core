@@ -44,6 +44,26 @@ PACKAGES_DYNAMIC = " \
 		    eglibc-gconv-* eglibc-charmap-* eglibc-localedata-* eglibc-binary-localedata-* \
 		    locale-base-*${PKGSUFFIX}"
 
+# Create a eglibc-binaries
+ALLOW_EMPTY_${PN}-binaries = "1"
+PACKAGES += "${PN}-binaries"
+RRECOMMENDS_${PN}-binaries =  "${@" ".join([p for p in d.getVar('PACKAGES', True).split() if p.find("eglibc-binary") != -1])}"
+
+# Create a eglibc-charmaps package 
+ALLOW_EMPTY_${PN}-charmaps = "1"
+PACKAGES += "${PN}-charmaps"
+RRECOMMENDS_${PN}-charmaps =  "${@" ".join([p for p in d.getVar('PACKAGES', True).split() if p.find("eglibc-charmap") != -1])}"
+
+# Create a eglibc-gconvs package 
+ALLOW_EMPTY_${PN}-gconvs = "1"
+PACKAGES += "${PN}-gconvs"
+RRECOMMENDS_${PN}-gconvs =  "${@" ".join([p for p in d.getVar('PACKAGES', True).split() if p.find("eglibc-gconv") != -1])}"
+
+# Create a eglibc-localedatas package 
+ALLOW_EMPTY_${PN}-localedatas = "1"
+PACKAGES += "${PN}-localedatas"
+RRECOMMENDS_${PN}-localedatas =  "${@" ".join([p for p in d.getVar('PACKAGES', True).split() if p.find("eglibc-localedata") != -1])}"
+
 RPROVIDES_eglibc = "glibc"
 RPROVIDES_eglibc-utils = "glibc-utils"
 RPROVIDES_eglibc-pic = "glibc-pic"
