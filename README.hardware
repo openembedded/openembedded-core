@@ -392,3 +392,25 @@ To boot the flashed kernel perform the following steps.
 (-e means 'elf', -d 'decompress')
 
 2) Execute the kernel using the exec command as above.
+
+--- Automating the boot process ---
+
+After writing the kernel to flash and testing the load and exec commands
+manually, you can automate the boot process with a boot script.
+
+1) RedBoot> fconfig
+   (Answer the questions not specified here as they pertain to your environment)
+2) Run script at boot: true
+  Boot script: 
+  .. fis load -d -e kernel
+  .. exec
+  Enter script, terminate with empty line
+  >> fis load -d -e kernel
+  >> exec -c "console=ttyS0,115200 root=/dev/sda1 rw rootdelay=2 board=UBNT-RSPRO"
+  >> 
+3) Answer the remaining questions and write the changes to flash:
+  Update RedBoot non-volatile configuration - continue (y/n)? y
+  ... Erase from 0xbfff0000-0xc0000000: .
+  ... Program from 0x87ff0000-0x88000000 at 0xbfff0000: .
+4) Power cycle the board.
+
