@@ -1,3 +1,7 @@
+Upstream-Status: Inappropriate [ disable tests make sense in embedded, but not appropriate for upstream]
+
+Signed-off-by: Yu Ke <ke.yu@intel.com>
+
 Index: pango-1.22.2/Makefile.am
 ===================================================================
 --- pango-1.22.2.orig/Makefile.am

@@ -6,7 +6,7 @@ PR = "r0"
 
 SRC_URI += "file://no-tests.patch"
 
-SRC_URI[archive.md5sum] = "caa74baea47e7e16bc73c89f9089d522"
-SRC_URI[archive.sha256sum] = "5e278bc9430cc7bb00270f183360d262c5006b51248e8b537ea904573f200632"
+SRC_URI[archive.md5sum] = "3f3989700f04e9117d30544a9078b3a0"
+SRC_URI[archive.sha256sum] = "7eb035bcc10dd01569a214d5e2bc3437de95d9ac1cfa9f50035a687c45f05a9f"
 
 #PARALLEL_MAKE = ""
