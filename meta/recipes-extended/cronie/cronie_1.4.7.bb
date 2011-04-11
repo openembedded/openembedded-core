@@ -20,8 +20,8 @@ SRC_URI = "https://fedorahosted.org/releases/c/r/cronie/cronie-${PV}.tar.gz \
            file://crond.init \
            file://crontab"
 
-SRC_URI[md5sum] = "968e3d3e7c8e1d0588d533883482d3fa"
-SRC_URI[sha256sum] = "4435484c28a4452ee37db27182675660cdebf16d8956771b28c8a6f2e9c8048b"
+SRC_URI[md5sum] = "dfc26c47756d0c40ee27ae3c7ee98e0d"
+SRC_URI[sha256sum] = "83bae15ae5504454ba74f4142f5db3aa22be594327fea19d2534f65803137fbd"
 
 inherit autotools update-rc.d
 
