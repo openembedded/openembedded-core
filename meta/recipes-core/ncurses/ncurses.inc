@@ -6,11 +6,6 @@ LIC_FILES_CHKSUM = "file://ncurses/base/version.c;beginline=1;endline=27;md5=cbc
 SECTION = "libs"
 DEPENDS = "ncurses-native"
 DEPENDS_virtclass-native = ""
-PACKAGES_prepend = "ncurses-tools "
-PACKAGES_append = " ncurses-terminfo"
-FILES_ncurses_append = " ${datadir}/tabset"
-RSUGGESTS_${PN} = "ncurses-terminfo"
-RPROVIDES = "libncurses5"
 INC_PR = "r0"
 
 inherit autotools binconfig
