@@ -9,8 +9,8 @@ system."
 
 
 LICENSE = "MIT & MIT-style"
-LIC_FILES_CHKSUM = "file://COPYING;md5=3bd0f26ecf86d0f24922125195d5b70a \
-                    file://xfixesproto.h;endline=43;md5=27614675897bb1cdc611ba7de506cddc"
+LIC_FILES_CHKSUM = "file://COPYING;md5=262a7a87da56e66dd639bf7334a110c6 \
+                    file://xfixesproto.h;endline=43;md5=c3a9ee6db3532ed0d44dea266cfc97f4"
 
 CONFLICTS = "fixesext"
 PR = "r0"
@@ -18,5 +18,5 @@ PE = "1"
 
 BBCLASSEXTEND = "nativesdk"
 
-SRC_URI[md5sum] = "bdb58ecc313b509247036d5c11fa99df"
-SRC_URI[sha256sum] = "de4cbfccb533c190073445eb2a891d997e89f6fb58204f68ae82871de044f857"
+SRC_URI[md5sum] = "e7431ab84d37b2678af71e29355e101d"
+SRC_URI[sha256sum] = "ba2f3f31246bdd3f2a0acf8bd3b09ba99cab965c7fb2c2c92b7dc72870e424ce"
