@@ -16,6 +16,7 @@ PE = "1"
 
 XORG_PN = "libXi"
 
+EXTRA_OECONF_append = " --enable-specs=no"
 
-SRC_URI[md5sum] = "4ccdfe866f94c99b9190d16ffcfb3bdc"
-SRC_URI[sha256sum] = "42efe95a08c7bd28bc913bf8c34ed026abcc62504307626fc5150ca360b93283"
+SRC_URI[md5sum] = "3d14f7bfc4a4335cf0144de9b67a5444"
+SRC_URI[sha256sum] = "272b8041efc0a0203fb0ba33481ddec989539aed862181b58c8c3e410e325691"
