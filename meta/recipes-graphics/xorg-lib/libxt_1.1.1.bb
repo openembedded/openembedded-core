@@ -13,7 +13,7 @@ independent of any particular user interface policy or style."
 require xorg-lib-common.inc
 
 LICENSE = "MIT & MIT-style"
-LIC_FILES_CHKSUM = "file://COPYING;md5=917881a51be1013bee30d7f3f5ba9f55"
+LIC_FILES_CHKSUM = "file://COPYING;md5=3239170e81427c5948287df07691f03f"
 
 
 DEPENDS += "libsm virtual/libx11 kbproto libxdmcp"
@@ -39,5 +39,5 @@ do_compile() {
 	oe_runmake
 }
 
-SRC_URI[md5sum] = "8a414f8f2327aaa616ca2dcac1f5d8c3"
-SRC_URI[sha256sum] = "eab91b594b801f7f07a20f936dda70a629028858cbcf541becf94f2786ae6b01"
+SRC_URI[md5sum] = "eb22c0a1f172b06b97a3f5ae89768412"
+SRC_URI[sha256sum] = "a2a1c29c684e3c9082cdb920b5aea802b179d19107b9ab2170fda07575559da7"
