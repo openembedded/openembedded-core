@@ -1,7 +1,7 @@
 require oprofileui.inc
 
 PV = "0.0+git${SRCPV}"
-PR = "r3"
+PR = "r4"
 
 S = "${WORKDIR}/git"
 

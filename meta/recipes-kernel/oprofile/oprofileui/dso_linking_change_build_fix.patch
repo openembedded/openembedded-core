@@ -7,6 +7,8 @@ With dso linking change in gcc, all the libraries are needed to be explicitely s
 | collect2: ld returned 1 exit status^M
 | make[2]: *** [oprofile-viewer] Error 1^M
 
+Upstream-Status: Inappropriate [configuration]
+
 Nitin A Kamble <nitin.a.kamble@intel.com>
 Date: 2011/01/11
 
