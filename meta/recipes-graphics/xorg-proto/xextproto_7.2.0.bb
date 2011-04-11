@@ -17,7 +17,9 @@ PE = "1"
 
 inherit gettext
 
+EXTRA_OECONF_append = " --enable-specs=no"
+
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "263ae968b223c23b2986603d84e5c30e"
-SRC_URI[sha256sum] = "f6f829e112c8eca7c2f10b2193e8d927b9b7722283d647cfd2aea09758159199"
+SRC_URI[md5sum] = "220732210ceffb01bf1caf970e3b1bfb"
+SRC_URI[sha256sum] = "d2bc4208c6b1883ebe00bc5c0048e5d825038cda56775f74bb4aa89afdc576d5"
