@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Patch courtesy gentoo-portage/sys-devel/gnuconfig/files/automake-1.8.5-config-guess-uclibc.patch.
 
 updated to 20050516 by Marcin 'Hrw' Juszkiewicz (by hand)
