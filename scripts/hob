@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+if ! (test -r "$BUILDDIR/conf/hob.local.conf"); then
+    cat <<EOM
+You had no conf/hob.local.conf file. An initial version of this configuration
+file has therefore been created for you. This file will be used to store any
+configuration values you set in hob.
+
+EOM
+(cat <<EOF
+INHERIT += "image_types"
+EOF
+) > conf/hob.local.conf
+fi
+
+bitbake -R conf/hob.local.conf -t xmlrpc -u hob
+
+ret=$?
+exit $ret
