@@ -12,10 +12,10 @@ RDEPENDS_${PN} += "gnome-vfs-plugin-file gnome-vfs-plugin-http gnome-vfs-plugin-
 
 SRC_URI += " file://gst-plugins-base-tremor.patch"
 
-SRC_URI[md5sum] = "9baa0d87e81c88b2477a3554ab629c46"
-SRC_URI[sha256sum] = "abb006c78222cfb69d31e983268d1d5219e9d4e0da24c6c4cd687968af7a33bd"
+SRC_URI[md5sum] = "2920af2b3162f3d9fbaa7fabc8ed4d38"
+SRC_URI[sha256sum] = "e9aabfac83f6480896da0686e9c911989f896fbad634821b7771ed84a446172b"
 
-PR = "r1"
+PR = "r0"
 
 inherit gettext
 

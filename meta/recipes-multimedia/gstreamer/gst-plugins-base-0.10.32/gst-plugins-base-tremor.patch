@@ -1,6 +1,8 @@
 Remove -DTREMOR option since Tremor has dropped its internal
 libogg2, and gst-plugins-base has dependency on that.
 
+Upstream-Status: Inappropriate [configuration]
+
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 
 diff -ruN gst-plugins-base-0.10.30-orig/ext/vorbis/Makefile.am gst-plugins-base-0.10.30/ext/vorbis/Makefile.am
