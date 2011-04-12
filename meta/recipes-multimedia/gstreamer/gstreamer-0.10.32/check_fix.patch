@@ -1,6 +1,8 @@
 # gstreamer: Fix a problem with configure if check has already been built
 # Richard Purdie <rpurdie@linux.intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 diff -urN gstreamer-0.10.29-orig/configure.ac gstreamer-0.10.29/configure.ac
 --- gstreamer-0.10.29-orig/configure.ac	2010-06-26 12:49:27.774930773 +0800
 +++ gstreamer-0.10.29/configure.ac	2010-06-26 12:51:12.899200233 +0800

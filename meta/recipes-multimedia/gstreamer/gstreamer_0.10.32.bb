@@ -16,8 +16,8 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.bz
            file://check_fix.patch \
            file://gst-inspect-check-error.patch"
 
-SRC_URI[md5sum] = "a21fb08bdb578d972c7c14e77da8fbb6"
-SRC_URI[sha256sum] = "7f737e6d047c1ebeb4e1e0725fc377c5d9f12ee89186de7960be3cbba709ab84"
+SRC_URI[md5sum] = "442bc3d37b8511a73379143e7531d726"
+SRC_URI[sha256sum] = "3bf4e46a186ee9a1f5e212aaf651d67cffb4f5f05345a7c99ae71d5d992be133"
 
 inherit autotools pkgconfig gettext
 
