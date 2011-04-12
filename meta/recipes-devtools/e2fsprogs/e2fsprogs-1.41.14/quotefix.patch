@@ -1,3 +1,7 @@
+Upstream-Status: Inappropriate [configuration]
+Signed-off-by: Mei Lei <lei.mei@intel.com>
+
+
 These macros are underquoted and break with recent autoconf+automake
 combinations.
 

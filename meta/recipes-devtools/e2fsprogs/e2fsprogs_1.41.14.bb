@@ -1,12 +1,12 @@
 require e2fsprogs.inc
 
-PR = "r20"
+PR = "r0"
 
 SRC_URI += "file://quotefix.patch;patch=1 \
             file://acinclude.m4"
 
-SRC_URI[md5sum] = "1b24a21fc0c2381ef420961cbfec733f"
-SRC_URI[sha256sum] = "9c26d0dc20bfdafd0f27f3564791d6121d1c1876549d4f2ff1e41955c9bb9f20"
+SRC_URI[md5sum] = "05f70470aea2ef7efbb0845b2b116720"
+SRC_URI[sha256sum] = "3f8ac1fedd7c4bec480afcbe4acabdd4ac59ec0446a0fd50c8975cd0aad7b176"
 #file://no-hardlinks.patch;patch=1
 
 PARALLEL_MAKE = ""
