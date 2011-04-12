@@ -1,3 +1,8 @@
+This patch enable owl menu, which is hidden in the title bar to save space on
+small screen. It has not been used for a long time, rebase needed.
+
+Upstream-Status: Inappropriate [enable feature]
+
 Index: src/gtk/tasks-ui.xml
 ===================================================================
 --- src/gtk/tasks-ui.xml	(revision 338)
