@@ -11,8 +11,8 @@ PR = "r0"
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://ncursesfix.patch;patch=1 "
 
-SRC_URI[md5sum] = "cb0cf46029ac9549cf3a31bff6a4f4e1"
-SRC_URI[sha256sum] = "b7d05e915e25f8540ad151c6dd558cf0fc1e9bb0ee23052d531c983666a1f7b0"
+SRC_URI[md5sum] = "8238cd57cb301d1c36bcf0ecb59ce6b2"
+SRC_URI[sha256sum] = "95127f740291086486c06c28118cabca0814bde48fd14dac041a9812a5ac1be2"
 
 # lazy hack. needs proper fixing in gettext.m4, see
 # http://bugs.openembedded.org/show_bug.cgi?id=2348

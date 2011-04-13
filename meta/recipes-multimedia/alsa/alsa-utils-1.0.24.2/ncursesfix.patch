@@ -1,11 +1,13 @@
-# alsa-utils: Fix ncurses build failures
-# Richard Purdie <rpurdie@linux.intel.com>
-# Rebased to 1.0.23, Dongxiao Xu <dongxiao.xu@intel.com>
+Rebase the patch to fit 1.0.24.2
 
-diff -ruN alsa-utils-1.0.23-orig/configure.in alsa-utils-1.0.23/configure.in
---- alsa-utils-1.0.23-orig/configure.in	2010-04-16 19:19:12.000000000 +0800
-+++ alsa-utils-1.0.23/configure.in	2010-06-22 15:22:06.731202478 +0800
-@@ -109,34 +109,16 @@
+Upstream-Status: Inappropriate [configuration]
+
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+
+diff -ruN alsa-utils-1.0.24.2-orig//configure.in alsa-utils-1.0.24.2/configure.in
+--- alsa-utils-1.0.24.2-orig//configure.in	2011-04-13 13:51:20.337665010 +0800
++++ alsa-utils-1.0.24.2/configure.in	2011-04-13 13:51:54.437664986 +0800
+@@ -127,34 +127,16 @@
    NCURSESLIBSUFFIX=""
    CURSES_NLS="no"
    if test "$curseslib" = "ncursesw" -o \( "$curseslib" = "auto" -a "$USE_NLS" = "yes" \); then
@@ -17,7 +19,7 @@ diff -ruN alsa-utils-1.0.23-orig/configure.in alsa-utils-1.0.23/configure.in
 -      CURSES_CFLAGS=`ncursesw5-config --cflags`
 -      curseslib="ncursesw"
 -    else
-       AC_CHECK_LIB(ncursesw, initscr, 
+       AC_CHECK_LIB(ncursesw, initscr,
                   [ CURSESINC='<ncurses.h>'; CURSESLIB='-lncursesw'; curseslib="ncursesw"])
 -    fi
      if test -n "$CURSESINC"; then
@@ -34,9 +36,9 @@ diff -ruN alsa-utils-1.0.23-orig/configure.in alsa-utils-1.0.23/configure.in
 -      CURSES_CFLAGS=`ncurses5-config --cflags`
 -      curseslib="ncurses"
 -    else
-       AC_CHECK_LIB(ncurses, initscr, 
+       AC_CHECK_LIB(ncurses, initscr,
                   [ CURSESINC='<ncurses.h>'; CURSESLIB='-lncurses'; curseslib="ncurses"])
 -    fi
    fi
    if test "$curseslib" = "curses" -o "$curseslib" = "auto"; then
-     AC_CHECK_LIB(curses, initscr, 
+     AC_CHECK_LIB(curses, initscr,
