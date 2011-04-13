@@ -11,8 +11,8 @@ inherit gconf autotools
 
 SRC_URI = "http://0pointer.de/lennart/projects/libcanberra/libcanberra-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "ee2c66ada7c851a4e7b6eb1682285a24"
-SRC_URI[sha256sum] = "4b5d8d2c2835133620adbc53745dd107b6e58b9a2963059e8f457143fee00982"
+SRC_URI[md5sum] = "c198b4811598c4c161ff505e4531b02c"
+SRC_URI[sha256sum] = "eb1f8b2cabad7f07b6e44d606a91d73e1efca4b46daf92bd553e7222bc68868c"
 
 EXTRA_OECONF = " --disable-oss --disable-ltdl-install" 
 
