@@ -13,10 +13,10 @@ SECTION = "libs"
 PR = "r0"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${PV}.tar.bz2 \
-           file://pkgconfig.patch;"
+           file://pkgconfig.patch"
 
-SRC_URI[md5sum] = "521b98aa9395e7eaf0ef2236233a0796"
-SRC_URI[sha256sum] = "54d9326bfbd46c705963c507953f65a40576d04b374e131008dc5b732ff1e3c3"
+SRC_URI[md5sum] = "736a03daa9dc5873047d4eb4a9c22a16"
+SRC_URI[sha256sum] = "520629b4568b5c29b1991c8ffc267c8bdee5f223c7333c42a651b56f9b1c5431"
 
 # move libgpg-error-config into -dev package
 FILES_${PN} = "${libdir}/lib*.so.*"

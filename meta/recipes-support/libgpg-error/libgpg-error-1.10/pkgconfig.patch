@@ -3,6 +3,8 @@
 # Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
 #
 
+Upstream-Status: Pending
+
 Index: libgpg-error-1.8/configure.ac
 ===================================================================
 --- libgpg-error-1.8.orig/configure.ac	2010-05-06 06:01:08.000000000 -0700
