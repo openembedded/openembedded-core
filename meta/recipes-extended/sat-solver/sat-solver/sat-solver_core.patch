@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [distribution]
+
 Fix "arch" integration with Poky.
 
 Add a missing "any" architecture type and update the semantics to use it.
@@ -5,8 +7,27 @@ Add a missing "any" architecture type and update the semantics to use it.
 Disable the built-in archpolicies structure, and replace it with one
 we generate in the recipe.
 
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+Also add poky semantics option in CMake.
 
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+Signed-off-by: Qing He <qing.he@intel.com>
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 443281e..4456a87 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -45,6 +45,11 @@ MESSAGE(STATUS "Building for Debian")
+ ADD_DEFINITIONS( -DDEBIAN -DDEBIAN_SEMANTICS)
+ ENDIF ( DEBIAN )
+ 
++IF ( OE_CORE )
++MESSAGE(STATUS "Building for OE core")
++ADD_DEFINITIONS( -DOE_CORE -DOE_CORE_SEMANTICS)
++ENDIF ( OE_CORE )
++
+ IF ( MULTI_SEMANTICS )
+ MESSAGE(STATUS "Enabling multi dist support")
+ ADD_DEFINITIONS( -DMULTI_SEMANTICS)
 diff --git a/src/knownid.h b/src/knownid.h
 index 7757ae0..4b8bee7 100644
 --- a/src/knownid.h
@@ -27,7 +48,7 @@ index 55c8677..3356ff8 100644
      }
  
    /* we allow changes to/from noarch */
-+#ifdef POKY_SEMANTICS
++#ifdef OE_CORE_SEMANTICS
 +  if (a1 == a2 || 
 +	a1 == ARCH_NOARCH || a2 == ARCH_NOARCH ||
 +	a1 == ARCH_ANY || a2 == ARCH_ANY ||
@@ -86,7 +107,7 @@ index 34a14a3..2d7cd70 100644
 -  0
 -};
 +/* Provide the const char *archpolicies structure */
-+#include "poky-arch.h"
++#include "core-arch.h"
  
  void
  pool_setarch(Pool *pool, const char *arch)
@@ -97,7 +118,7 @@ index 34a14a3..2d7cd70 100644
 -#ifndef DEBIAN_SEMANTICS
 -  id = ARCH_NOARCH;
 -#else
-+#if defined(DEBIAN_SEMANTICS) || defined(POKY_SEMANTICS)
++#if defined(DEBIAN_SEMANTICS) || defined(OE_CORE_SEMANTICS)
    id = ARCH_ALL;
 +#else
 +  id = ARCH_NOARCH;
