@@ -24,7 +24,7 @@ RRECOMMENDS_${PN}_append_libc-glibc = "libnss-mdns"
 SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
         file://00avahi-autoipd \
         file://99avahi-autoipd \
-        file://initscript.patch;patch=1"
+        file://initscript.patch"
 
 inherit autotools pkgconfig update-rc.d gettext
 

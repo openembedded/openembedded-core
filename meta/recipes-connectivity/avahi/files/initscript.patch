@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 diff --git a/initscript/debian/avahi-daemon.in b/initscript/debian/avahi-daemon.in
 index 30a2c2f..b5848a8 100755
 --- a/initscript/debian/avahi-daemon.in
