@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: ConsoleKit-0.4.3/configure.ac
 ===================================================================
 --- ConsoleKit-0.4.3.orig/configure.ac	2010-10-26 22:34:03.000000000 +0800
