@@ -19,8 +19,8 @@ PR = "r0"
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2 \
            file://fix-tstamp-declaration.patch;patch=1"
 
-SRC_URI[md5sum] = "f48b50421d8a69d2d806d9c47e534f0d"
-SRC_URI[sha256sum] = "b4238ecaba5e4a1383af06180611a57ef29f9bf47bc177136dba1bb5b70ff423"
+SRC_URI[md5sum] = "7cc05f25e1d5b65da8fb3fdcd540f226"
+SRC_URI[sha256sum] = "a32f7c21015b6c71f9a80ff70a2b6a50e4ff4d5c77c744ff0793dea7ba7a2517"
 
 inherit autotools pkgconfig
 

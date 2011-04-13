@@ -4,6 +4,8 @@
 #
 # Acquired from OpenEmbedded
 
+Upstream-Status: Pending
+
 Index: alsa-lib-1.0.13/include/global.h
 ===================================================================
 --- alsa-lib-1.0.13.orig/include/global.h
