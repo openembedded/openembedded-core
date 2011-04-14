@@ -5,7 +5,7 @@ BUGTRACKER = ""
 
 LICENSE ="jpeg"
 LIC_FILES_CHKSUM = "file://cdjpeg.h;endline=12;md5=78fa8dbac547bb5b2a0e6457a6cfe21d \
-                    file://jpeglib.h;endline=14;md5=dd06b5575519f735ec2565ed36ce62e7 \
+                    file://jpeglib.h;endline=14;md5=22f1e0f8fc71f6f7563146d3b210dbe5 \
                     file://djpeg.c;endline=13;md5=ca89254925da06fef47e4b6468233432"
 
 SECTION = "libs"
@@ -17,10 +17,10 @@ DEPENDS_virtclass-native = "libtool-native"
 PR = "r1"
 
 SRC_URI = "http://www.ijg.org/files/jpegsrc.v${PV}.tar.gz \
-	   file://debian-libjpeg7_7-1.diff;patch=1"
+	   file://debian-libjpeg7_7-1.diff;"
 
-SRC_URI[md5sum] = "e022acbc5b36cd2cb70785f5b575661e"
-SRC_URI[sha256sum] = "36e6208edec591bae8f2fc370ea4f991447badb6377a125c211ffa7b503174a7"
+SRC_URI[md5sum] = "a2c10c04f396a9ce72894beb18b4e1f9"
+SRC_URI[sha256sum] = "edfc0b3e004b2fe58ffeeec89f96e3a3c28972c46725ec127d01edf8a1cc7c9a"
 
 inherit autotools 
 

@@ -1,3 +1,7 @@
+This is a well-known debian patch used by many Linux distribution, but not
+accepted by upstream yet.
+Upstream-Status: Pending
+
 --- libjpeg7-7.orig/config.sub
 +++ libjpeg7-7/config.sub
 @@ -1,4 +1,10 @@
