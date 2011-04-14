@@ -99,7 +99,7 @@
                 “Remote System Explorer Extended SDK”, “Remote System Explorer User Actions”, 
                 “RSE Core”, “RSE Terminals UI”, and “Target Management Terminal”.</para></listitem>
                 <listitem><para><emphasis>Autotools</emphasis> – 
-                <ulink url='http://www.download.eclipse.org/technology/linuxtools/update/'></ulink>:
+                <ulink url='http://download.eclipse.org/technology/linuxtools/update/'></ulink>:
                 Expand the items under “Linux Tools” and select “Autotools support for 
                 CDT (Incubation)”.</para></listitem>
                 <listitem><para><emphasis>Yocto Plug-in</emphasis> – 
