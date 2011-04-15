@@ -232,7 +232,7 @@
             architectures (x86, x86-64, mips, powerpc, and arm) that can be used 
             unaltered in the QEMU emulator.  
             These kernels and filesystem images reside in the Yocto Project release 
-            area - <ulink url='http://autobuilder.yoctoproject.org/downloads/yocto-0.9/'></ulink>
+            area - <ulink url='http://autobuilder.yoctoproject.org/downloads/yocto-1.0/'></ulink>
             and are ideal for experimentation within Yocto Project.
         </note>
     </para>
