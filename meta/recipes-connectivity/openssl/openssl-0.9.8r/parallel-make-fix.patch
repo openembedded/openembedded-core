@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 fix the parallel build regarding shared libraries.
 
 Signed-off-by: Qing He <qing.he@intel.com>

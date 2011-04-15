@@ -6,7 +6,7 @@ SECTION = "libs/network"
 
 # "openssl | SSLeay" dual license
 LICENSE = "openssl"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=83d26c69f6f0172ee7f795790424b453"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 
 DEPENDS = "perl-native"
 

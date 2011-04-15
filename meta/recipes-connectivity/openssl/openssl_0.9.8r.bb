@@ -1,6 +1,6 @@
 require openssl.inc
 
-PR = "r3"
+PR = "r0"
 SRC_URI += "file://debian/ca.patch \
             file://debian/config-hurd.patch;apply=no \
             file://debian/debian-targets.patch \
@@ -21,8 +21,8 @@ SRC_URI += "file://debian/ca.patch \
             file://debian/version-script.patch \
             file://debian/perl-path.diff"
 
-SRC_URI[md5sum] = "7f24047f70364c9eabc94899e356ce39"
-SRC_URI[sha256sum] = "b2645e2a2af221fa230b5ef6aa2b9388a875801b74cbddbb16be557f80f45242"
+SRC_URI[md5sum] = "0352932ea863bc02b056cda7c9ac5b79"
+SRC_URI[sha256sum] = "42b2368f786b05ed3be846838dce126b4e8e3dba8fb2e0ce83102df28c102fad"
 
 SRC_URI += "file://configure-targets.patch \
             file://shared-libs.patch"
