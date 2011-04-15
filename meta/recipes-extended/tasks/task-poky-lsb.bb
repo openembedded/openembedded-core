@@ -186,15 +186,13 @@ RDEPENDS_task-poky-lsb-runtime-add = "\
     liburi-perl \
     libxml-parser-perl \
     libxml-perl \
+    eglibc-localedatas \
+    eglibc-gconvs \
+    eglibc-charmaps \
+    eglibc-binaries \
     eglibc-localedata-posix \
     eglibc-extra-nss \
     eglibc-pcprofile \
     eglibc-pic \
     eglibc-utils \
 "
-
-#    eglibc-localedatas \
-#    eglibc-gconvs \
-#    eglibc-charmaps \
-#    eglibc-binarys \
-#
