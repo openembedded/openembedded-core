@@ -14,7 +14,7 @@ PRIORITY = "required"
 DEPENDS = "libtool-cross"
 DEPENDS_virtclass-native = "libtool-native"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://www.ijg.org/files/jpegsrc.v${PV}.tar.gz \
 	   file://debian-libjpeg7_7-1.diff;patch=1"
@@ -45,3 +45,14 @@ DESCRIPTION_jpeg-tools = "The jpeg-tools package includes the client programs fo
 FILES_jpeg-tools = 	"${bindir}/*"
 
 BBCLASSEXTEND = "native"
+
+pkg_postinst_${PN}_poky-lsb () {
+    if [ "$D" = "" ]; then
+        if [ ! -e ${libdir}/libjpeg.so.62 ]; then
+            JPEG=`find ${libdir} -type f -name libjpeg.so.\*.\*.\*`
+            ln -sf `basename $JPEG` ${libdir}/libjpeg.so.62
+        fi
+    else
+        exit 1
+    fi
+}
