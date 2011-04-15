@@ -395,7 +395,7 @@
             oprofile-server must be installed on the remote target, respectively, in order 
             to use.  
             You can locate both the viewer and server from 
-            <ulink url='http://git.pokylinux.org/cgit/cgit.cgi/oprofileui/'></ulink>.  
+            <ulink url='http://git.yoctoproject.org/cgit/cgit.cgi/oprofileui/'></ulink>.  
             You need to compile and install the oprofile-viewer from the source code 
             on your local host machine.  
             The oprofile-server is installed by default in the image.</para></listitem>
