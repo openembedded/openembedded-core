@@ -1022,7 +1022,7 @@ That's it. Configure and build.
                     You can start with something in <filename>meta/conf/machine</filename> - <filename>
                     meta/conf/machine/atom-pc.conf</filename> for example.  Or, you can start with a machine 
                     configuration from any of the BSP layers in the meta-intel repository at 
-                    <ulink url='http://git.pokylinux.org/cgit/cgit.cgi/meta-intel/'></ulink>, such as 
+                    <ulink url='http://git.yoctoproject.org/cgit/cgit.cgi/meta-intel/'></ulink>, such as 
                     <filename>meta-intel/meta-emenlow/conf/machine/emenlow.conf</filename>.
                 </para>
                 
@@ -1073,7 +1073,7 @@ That's it. Configure and build.
                     To create this branch first create a bare clone of the Yocto Project git repository.
                     Next, create a local clone of that:
                     <literallayout class='monospaced'>
-     $ git clone --bare git://git.pokylinux.org/linux-yocto-2.6.37.git
+     $ git clone --bare git://git.yoctoproject.org/linux-yocto-2.6.37.git
      linux-yocto-2.6.37.git
      $ git clone linux-yocto-2.6.37.git linux-yocto-2.6.37
                     </literallayout>
