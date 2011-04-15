@@ -1,11 +1,11 @@
 require rsync.inc
 
-PR = "r1"
+PR = "r0"
 
 SRC_URI += "file://acinclude.m4"
 
-SRC_URI[md5sum] = "b53525900817cf1ba7ad3a516ab5bfe9"
-SRC_URI[sha256sum] = "9ee00d16c023c486328cbb61f59928a954b24b7b7173c3517ebb0d6c3edfe7c8"
+SRC_URI[md5sum] = "0ee8346ce16bdfe4c88a236e94c752b4"
+SRC_URI[sha256sum] = "4b3fc271f4c96036b4c73fb019be078e4d8cce2defe1e7ae7cde1117859a2114"
 
 EXTRA_OECONF += "--disable-xattr-support --disable-acl-support"
 
