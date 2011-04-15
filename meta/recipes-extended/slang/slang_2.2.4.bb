@@ -10,23 +10,25 @@ to recode S-Lang procedures in C if you need to."
 SECTION = "libs"
 PRIORITY = "optional"
 DEPENDS = "pcre"
-PR = "r2"
+PR = "r5"
 
-LICENSE = "GPL Artistic"
-LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=a52a18a472d4f7e45479b06563717c02"
 
 
-SRC_URI = "ftp://space.mit.edu/pub/davis/slang/v2.2/OLD/slang-${PV}.tar.bz2 \
-           file://fix-uclibc.patch"
+SRC_URI = "ftp://space.mit.edu/pub/davis/slang/v2.2/slang-${PV}.tar.bz2 \
+          "
 
 inherit autotools
 
-SRC_URI[md5sum] = "974437602a781cfe92ab61433dd16d03"
-SRC_URI[sha256sum] = "cfaf8551fa3855f9b0043309bb553ef6d457f931b404df5a6ba6a5a69371fc42"
+SRC_URI[md5sum] = "7fcfd447e378f07dd0c0bae671fe6487"
+SRC_URI[sha256sum] = "9a8257a9a2a55099af858b13338dc8f3a06dd2069f46f0df2c9c3bb84a01d5db"
 
-EXTRA_OECONF += " --x-includes=${STAGING_DIR_HOST}/usr/X11/include"
+EXTRA_OECONF += " --without-png"
 do_install() {
 	oe_runmake install DESTDIR=${D} -e 'INST_LIB_DIR=${STAGING_DIR_HOST}/usr/lib'
 }
 
 FILES_${PN} += "${datadir}/slsh/"
+
+PARALLEL_MAKE = ""
