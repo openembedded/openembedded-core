@@ -6,7 +6,7 @@ PROTO_DEPS = "xf86driproto glproto dri2proto"
 LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat \
             libxml2-native"
 
-DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS} makedepend-native"
+DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS} makedepend-native python-native"
 
 PR = "r0"
 
