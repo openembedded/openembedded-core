@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: git/configure.ac
 ===================================================================
 --- git.orig/configure.ac	2009-09-01 16:38:26.000000000 +0100
