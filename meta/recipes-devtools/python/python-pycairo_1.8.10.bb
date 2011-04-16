@@ -6,7 +6,7 @@ LICENSE = "LGPLv2.1 & MPLv1.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=f2e071ab72978431b294a0d696327421"
 # cairo >= 1.8.8
 DEPENDS = "cairo"
-PR = "ml0"
+PR = "r1"
 
 SRC_URI = "http://cairographics.org/releases/py2cairo-${PV}.tar.gz"
 
@@ -15,6 +15,12 @@ SRC_URI[sha256sum] = "b15f71019e42e06d86f7e8fe5587f07c3de5a59a6c3a071b25fe100796
 S = "${WORKDIR}/pycairo-${PV}"
 
 inherit distutils pkgconfig
+
+do_compile_prepend() {
+#fix the installation path of __init__.py
+#It was going in the sysroot instead of target install location
+	sed -i -e "s#dsy.get_python_lib()#'${D}${PYTHON_SITEPACKAGES_DIR}'#" ${S}/setup.py
+}
 
 do_install_append () {
 	install -d ${D}${includedir}
