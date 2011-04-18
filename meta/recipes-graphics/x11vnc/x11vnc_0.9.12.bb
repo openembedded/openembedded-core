@@ -11,7 +11,7 @@ DEPENDS = "openssl virtual/libx11 libxext avahi jpeg zlib"
 
 PR = "r1"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/libvncserver/x11vnc-${PV}.tar.gz\
+SRC_URI = "${SOURCEFORGE_MIRROR}/libvncserver/x11vnc/${PV}/x11vnc-${PV}.tar.gz\
            file://starting-fix.patch \
            file://endian-fix.patch "
 
