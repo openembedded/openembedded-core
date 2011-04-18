@@ -34,3 +34,7 @@ BBCLASSEXTEND = "native nativesdk"
 
 PKGSUFFIX = ""
 PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
+
+# Define a variable to allow distros to run configure earlier.
+# (for example, to enable loading of ethernet kernel modules before networking starts)
+POSTINSTALL_INITPOSITION ?= "98"
