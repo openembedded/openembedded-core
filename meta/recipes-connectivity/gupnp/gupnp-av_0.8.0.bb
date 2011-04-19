@@ -11,5 +11,5 @@ PR = "r0"
 
 inherit autotools pkgconfig
 
-SRC_URI[md5sum] = "6eace748e9869cddb27daab46eb50635"
-SRC_URI[sha256sum] = "e13018d24abec9fafd75ef59c365adbb2ea3712fe5e69fff8c7284dc3f13cdeb"
+SRC_URI[md5sum] = "8a41a3bb60b50fceb5ece71c0dc4dcfb"
+SRC_URI[sha256sum] = "e6aa032377488cedc4e347519bd30701c583780b7c54f00bab083f2316a93dc9"
