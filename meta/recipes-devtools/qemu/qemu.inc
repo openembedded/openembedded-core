@@ -8,9 +8,13 @@ QEMU_TARGETS ?= "arm i386 mips mipsel mips64 mips64el ppc sh4 x86_64"
 
 require qemu-targets.inc
 
-EXTRA_OECONF += "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls --enable-kvm --audio-drv-list=oss,alsa --audio-card-list=ac97,es1370"
+SDL ?= "--disable-sdl"
+SDL_virtclass-native ?= ""
+SDL_virtclass-nativesdk ?= ""
 
-#EXTRA_OECOF += "--disable-sdl"
+EXTRA_OECONF += "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls --enable-kvm --audio-drv-list=oss,alsa --audio-card-list=ac97,es1370 ${SDL}"
+
+#EXTRA_OECONF += "--disable-sdl"
 
 inherit autotools
 
