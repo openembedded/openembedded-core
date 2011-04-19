@@ -5,13 +5,14 @@ terminal emulator rxvt, modified to store text in Unicode \
 (either UCS-2 or UCS-4) and to use locale-correct input and \
 output. It also supports mixing multiple fonts at the \
 same time, including Xft fonts."
-LICENSE = "GPL"
+LICENSE = "GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
+                    file://src/main.C;beginline=1;endline=31;md5=633e23cdeb89fe980ded9a3af4f335c2"
 SRC_URI = "http://dist.schmorp.de/rxvt-unicode/Attic/rxvt-unicode-${PV}.tar.bz2 \
-	   file://xwc.patch;patch=1 \
-	   file://signedchar.patch;patch=1 \
+	   file://xwc.patch \
 	   file://rxvt.desktop \
 	   file://rxvt.png"
-PR = "r5"
+PR = "r0"
 
 inherit autotools update-alternatives
 
@@ -35,29 +36,18 @@ EXTRA_OECONF = "--enable-menubar --enable-xim \
 		--enable-text-blink --enable-rxvt-scroll \
 		--enable-combining --enable-shared \
 		--enable-xgetdefault \
+                --disable-perl \
 		--with-x=${STAGING_DIR_HOST}${prefix}"
-EXTRA_OEMAKE = "'XINC=-I${STAGING_INCDIR}' \
-		'XLIB=-L${STAGING_LIBDIR} -lX11'"
 
-do_configure () {
-	mv autoconf/configure.in . || true
-	rm autoconf/libtool.m4
-	libtoolize --force
-	autotools_do_configure
-	echo '#define RXVT_UTMP_FILE "${localstatedir}/run/utmp"' >> config.h
-	echo '#define RXVT_WTMP_FILE "${localstatedir}/log/wtmp"' >> config.h
-	echo '#define RXVT_LASTLOG_FILE "${localstatedir}/log/lastlog"' >> config.h
-	echo '#define HAVE_XLOCALE 1' >> config.h
+do_configure_prepend () {
+	cp aclocal.m4 acinclude.m4
 }
 
-do_compile () {
-	if test -e ${S}/${HOST_SYS}-libtool; then
-		LIBTOOL=${S}/${HOST_SYS}-libtool
-	else
-		LIBTOOL=${S}/libtool
-	fi
-	# docs need "yodl" and I have no idea what that is
-	oe_runmake -C src "LIBTOOL=$LIBTOOL"
+do_compile_prepend () {
+	echo '#define UTMP_FILE "${localstatedir}/run/utmp"' >> config.h
+	echo '#define WTMP_FILE "${localstatedir}/log/wtmp"' >> config.h
+	echo '#define LASTLOG_FILE "${localstatedir}/log/lastlog"' >> config.h
+	echo '#define HAVE_XLOCALE 1' >> config.h
 }
 
 do_install_append () {
@@ -70,3 +60,6 @@ do_install_append () {
 }
 
 FILES_${PN} += "${datadir}/applications/rxvt.desktop ${datadir}/pixmaps/rxvt.png"
+
+SRC_URI[md5sum] = "a23aa40b31e843878b6f9c44768de430"
+SRC_URI[sha256sum] = "1c238f7e545b1a8da81239b826fb2a7d196c73effbcbd211db7a50995a0a067a"
