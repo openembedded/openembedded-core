@@ -1,6 +1,6 @@
 require recipes-graphics/clutter/clutter.inc
 
-PR = "r1"
+PR = "r0"
 
 # Internal json-glib was removed in Clutter 1.5.2
 STDDEPENDS += "json-glib"
@@ -12,7 +12,7 @@ SRC_URI = "http://source.clutter-project.org/sources/clutter/1.6/clutter-${PV}.t
            file://enable_tests-1.4.patch"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
-S = "${WORKDIR}/clutter-1.6.8"
+S = "${WORKDIR}/clutter-${PV}"
 
 BASE_CONF += "--disable-introspection"
 
@@ -21,5 +21,5 @@ do_configure_prepend () {
 	sed -i -e 's/^DOLT//' ${S}/configure.ac
 }
 
-SRC_URI[md5sum] = "9eedac4216f709a9f144940d24bfbb3e"
-SRC_URI[sha256sum] = "cc147b8e7e62ed4b9b8a83df3db9788cf37db0c83970ba876228433f32bda442"
+SRC_URI[md5sum] = "1da9f983115f9bd28b0be8176e53fe36"
+SRC_URI[sha256sum] = "0564e57ca8eb24e76014627c0bb28a80a6c01b620ba14bc4198365562549576d"
