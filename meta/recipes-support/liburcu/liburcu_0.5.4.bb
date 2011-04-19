@@ -11,17 +11,14 @@ PR = "r0"
 
 SRC_URI = "http://lttng.org/files/urcu/userspace-rcu-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "a2978395806eed5d9a2de1e22efe70e0"
-SRC_URI[sha256sum] = "2f22966fe4b00ef547976a31c1c6a7c7bea3449ffa838806d9610e7424e184dd"
+SRC_URI[md5sum] = "04147d24749be75200173859839207f7"
+SRC_URI[sha256sum] = "02aedbb16c16bd034e246d5c9637a9232be559c66fc2fe4eb28948e234bd89f1"
 
 S = "${WORKDIR}/userspace-rcu-${PV}"
 
 inherit autotools
 
 # liburcu, which is only used by lttng-ust, may not build on other
-# platforms, e.g., on ARM, liburcu is only supported on ARMv7l while poky
-# only supports armv4/armv4t/armv5te. 1 more example: liburcu doesn't support
-# MIPS now.
-# So here let us first suppport x86/powerpc platforms now.
-COMPATIBLE_HOST = '(x86_64.*|i.86.*|powerpc.*)-linux'
+# platforms, like MIPS.
+COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|powerpc.*)-linux'
 
