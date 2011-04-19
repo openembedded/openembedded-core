@@ -8,8 +8,8 @@ PR = "r0"
 
 SRC_URI = "http://www.mega-nerd.com/libsndfile/files/libsndfile-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "d0e22b5ff2ef945615db33960376d733"
-SRC_URI[sha256sum] = "54c9c375598538263395a691f9b30987a2faa3d8a166d27e6a09ba4700223d4d"
+SRC_URI[md5sum] = "8f823c30c1d8d44830db6ab845d6679e"
+SRC_URI[sha256sum] = "b6050e6fbfbb72c8bfbc895104697a4af1d49077a64e4846e0be7af87c9e56a4"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e77fe93202736b47c07035910f47974a"
 
