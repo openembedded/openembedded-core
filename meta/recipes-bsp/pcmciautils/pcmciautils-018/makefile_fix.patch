@@ -1,16 +1,16 @@
-rebase the patch to 017, removing hardcoded path for true
+Hardcoded paths are bad...
+This lets us use the install from OE's native sysroot
+rebase the patch to 018, removing hardcoded path for true
 as well. Removing of -D in install invocation is a little
 questionable, is it some GNU extention?
 
-07/14/2010 - qhe, original patch note follows
+-Khem Raj <raj.khem@gmail.com>
 
-Hardcoded paths are bad...
-
-diff --git a/Makefile b/Makefile
-index 26f3e4b..31f0cdf 100644
---- a/Makefile
-+++ b/Makefile
-@@ -69,7 +69,7 @@ sbindir =	${exec_prefix}/sbin
+Index: pcmciautils-018/Makefile
+===================================================================
+--- pcmciautils-018.orig/Makefile
++++ pcmciautils-018/Makefile
+@@ -76,7 +76,7 @@ sbindir =	${exec_prefix}/sbin
  mandir =	${prefix}/usr/share/man
  udevdir =	${prefix}/lib/udev
  
@@ -19,7 +19,7 @@ index 26f3e4b..31f0cdf 100644
  INSTALL_PROGRAM = ${INSTALL}
  INSTALL_DATA  = ${INSTALL} -m 644
  INSTALL_SCRIPT = ${INSTALL_PROGRAM}
-@@ -171,7 +171,7 @@ endif
+@@ -180,7 +180,7 @@ endif
  # if DEBUG is enabled, then we do not strip or optimize
  ifeq ($(strip $(DEBUG)),true)
  	CFLAGS  += -O1 -g -DDEBUG -D_GNU_SOURCE
@@ -28,7 +28,7 @@ index 26f3e4b..31f0cdf 100644
  else
  	CFLAGS  += $(OPTIMIZATION) -fomit-frame-pointer -D_GNU_SOURCE
  	STRIPCMD = $(STRIP) -s --remove-section=.note --remove-section=.comment
-@@ -264,30 +264,32 @@ clean:
+@@ -273,30 +273,32 @@ clean:
  
  install-hotplug:
  	$(INSTALL) -d $(DESTDIR)$(hotplugdir)
@@ -68,7 +68,7 @@ index 26f3e4b..31f0cdf 100644
  
  uninstall-tools:
  	- rm -f $(DESTDIR)$(sbindir)/$(PCCARDCTL)
-@@ -296,22 +298,24 @@ uninstall-tools:
+@@ -305,22 +307,24 @@ uninstall-tools:
  
  install-config:
  	$(INSTALL) -d $(DESTDIR)$(pcmciaconfdir)
