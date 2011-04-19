@@ -9,6 +9,8 @@ a better fix would need:
 
 8/31/2010 - created by Qing He <qing.he@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 diff --git a/cachegrind/cg_annotate.in b/cachegrind/cg_annotate.in
 index 9dc9565..cc4ef05 100644
 --- a/cachegrind/cg_annotate.in

@@ -3,6 +3,8 @@ The script does not expect use of ccache, hence fix it to recognise it.
 2010/08/17
 Nitin A Kamble <nitin.a.kamble@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: valgrind-3.5.0/coregrind/link_tool_exe_linux.in
 ===================================================================
 --- valgrind-3.5.0.orig/coregrind/link_tool_exe_linux.in
