@@ -8,7 +8,7 @@
 # This script is intended to be run within other scripts by source'ing
 # it, e.g:
 #
-# SYSROOT_SETUP_SCRIPT=`which poky-find-native-sysroot`
+# SYSROOT_SETUP_SCRIPT=`which oe-find-native-sysroot`
 # . $SYSROOT_SETUP_SCRIPT
 #
 # This script will terminate execution of your calling program unless

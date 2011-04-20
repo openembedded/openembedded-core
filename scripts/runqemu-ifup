@@ -14,7 +14,7 @@
 # <my-username> ALL=NOPASSWD: /path/to/runqemu-ifdown
 #
 # If you'd like to create a bank of tap devices at once, you should use
-# the poky-gen-tapdevs script instead. If tap devices are set up using
+# the runqemu-gen-tapdevs script instead. If tap devices are set up using
 # that script, the runqemu script will never end up calling this
 # script.
 #

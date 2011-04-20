@@ -7,7 +7,7 @@ build/tmp/
 build/sstate-cache
 build/pyshtables.py
 pstage/
-scripts/poky-git-proxy-socks
+scripts/oe-git-proxy-socks
 sources/
 meta-darwin
 meta-maemo

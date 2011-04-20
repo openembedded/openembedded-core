@@ -38,9 +38,9 @@ fi
 # Ensure the nfs-export-dir is an absolute path
 NFS_EXPORT_DIR=$(cd "$2" && pwd)
 
-SYSROOT_SETUP_SCRIPT=`which poky-find-native-sysroot`
+SYSROOT_SETUP_SCRIPT=`which oe-find-native-sysroot`
 if [ -z "$SYSROOT_SETUP_SCRIPT" ]; then
-    echo "Error: Unable to find the poky-find-native-sysroot script"
+    echo "Error: Unable to find the oe-find-native-sysroot script"
     echo "Did you forget to source your Poky environment script?"
     exit 1
 fi
@@ -73,7 +73,7 @@ export PSEUDO_LOCALSTATEDIR
 
 if [ ! -d "$PSEUDO_LOCALSTATEDIR" ]; then
 	echo "Error: $PSEUDO_LOCALSTATEDIR does not exist."
-	echo "Did you create the export directory using poky-extract-sdk?"
+	echo "Did you create the export directory using runqemu-extract-sdk?"
 	exit 1	
 fi
 

@@ -1,2 +1,0 @@
-#! /bin/bash
-poky-git-proxy-socks -S $GIT_PROXY_HOST:$GIT_PROXY_PORT $@

@@ -83,7 +83,7 @@ fi
 if [ -z "$mem_set" ] ; then
   SCRIPT_QEMU_EXTRA_OPT="$SCRIPT_QEMU_EXTRA_OPT -m $mem_size"
 fi
-# This file is created when poky-gen-tapdevs creates a bank of tap
+# This file is created when runqemu-gen-tapdevs creates a bank of tap
 # devices, indicating that the user should not bring up new ones using
 # sudo.
 NOSUDO_FLAG="/etc/poky-nosudo"
@@ -186,8 +186,8 @@ cleanup() {
 
     if [ "$NFSRUNNING" = "true" ]; then
         echo "Shutting down the userspace NFS server..."
-        echo "poky-export-rootfs stop $ROOTFS"
-        poky-export-rootfs stop $ROOTFS
+        echo "runqemu-export-rootfs stop $ROOTFS"
+        runqemu-export-rootfs stop $ROOTFS
     fi
     # If QEMU crashes or somehow tty properties are not restored
     # after qemu exits, we need to run stty sane
@@ -258,8 +258,8 @@ if [ "$FSTYPE" = "nfs" ]; then
     fi
 
     # Start the userspace NFS server
-    echo "poky-export-rootfs restart $ROOTFS"
-    poky-export-rootfs restart $ROOTFS
+    echo "runqemu-export-rootfs restart $ROOTFS"
+    runqemu-export-rootfs restart $ROOTFS
     if [ $? != 0 ]; then
         cleanup
         return
@@ -351,7 +351,7 @@ if [ "$MACHINE" = "spitz" ]; then
         echo $ROOTFS
         if [ ! -e "$ROOTFS.qemudisk" ]; then
             echo "Adding a partition table to the ext3 image for use by QEMU, please wait..."
-            poky-addptable2image $ROOTFS $ROOTFS.qemudisk
+            runqemu-addptable2image $ROOTFS $ROOTFS.qemudisk
         fi
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M spitz -hda $ROOTFS.qemudisk -portrait"
     fi

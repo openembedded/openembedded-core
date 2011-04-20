@@ -216,7 +216,7 @@ rootfs_trim_schemas () {
 	do
 		# Need this in case no files exist
 		if [ -e $schema ]; then
-			poky-trim-schemas $schema > $schema.new
+			oe-trim-schemas $schema > $schema.new
         	        mv $schema.new $schema
 		fi
 	done

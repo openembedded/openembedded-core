@@ -29,9 +29,9 @@ if [ $# -ne 2 ]; then
 	exit 1
 fi
 
-SYSROOT_SETUP_SCRIPT=`which poky-find-native-sysroot`
+SYSROOT_SETUP_SCRIPT=`which oe-find-native-sysroot`
 if [ -z "$SYSROOT_SETUP_SCRIPT" ]; then
-    echo "Error: Unable to find the poky-find-native-sysroot script"
+    echo "Error: Unable to find the oe-find-native-sysroot script"
     echo "Did you forget to source your Poky environment script?"
     exit 1
 fi

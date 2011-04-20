@@ -11,13 +11,13 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/tunctl.c;endline=4;md5=ff3a09996bc5fff6bc5
 
 SRC_URI = "file://${COREBASE}/scripts/runqemu \
            file://${COREBASE}/scripts/runqemu-internal \
-           file://${COREBASE}/scripts/poky-addptable2image \
-           file://${COREBASE}/scripts/poky-gen-tapdevs \
+           file://${COREBASE}/scripts/runqemu-addptable2image \
+           file://${COREBASE}/scripts/runqemu-gen-tapdevs \
            file://${COREBASE}/scripts/runqemu-ifup \
            file://${COREBASE}/scripts/runqemu-ifdown \
-           file://${COREBASE}/scripts/poky-find-native-sysroot \
-           file://${COREBASE}/scripts/poky-extract-sdk \
-           file://${COREBASE}/scripts/poky-export-rootfs \
+           file://${COREBASE}/scripts/oe-find-native-sysroot \
+           file://${COREBASE}/scripts/runqemu-extract-sdk \
+           file://${COREBASE}/scripts/runqemu-export-rootfs \
            file://tunctl.c \
            file://raw2flash.c \
           "
@@ -34,7 +34,8 @@ do_compile() {
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ${WORKDIR}${COREBASE}/scripts/poky-* ${D}${bindir}/
+	install -m 0755 ${WORKDIR}${COREBASE}/scripts/oe-* ${D}${bindir}/
+	install -m 0755 ${WORKDIR}${COREBASE}/scripts/runqemu* ${D}${bindir}/
 	install tunctl ${D}${bindir}/
 	install raw2flash.spitz ${D}${bindir}/
 	install flash2raw.spitz ${D}${bindir}/
