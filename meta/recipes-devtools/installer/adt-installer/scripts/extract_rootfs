@@ -61,7 +61,7 @@ extract_rootfs()
 
 #Parameter detail is listed below:
 #Param 4: Silent install or customize install
-#Param 3: POKY_NATIVE_SYSROOT
+#Param 3: OECORE_NATIVE_SYSROOT
 #Param 2: user defined rootfs extraction directory
 #param 1: sysroot image name
 extract_rootfs $1 $2 $3 $4

@@ -46,8 +46,8 @@ if [ -z "$SYSROOT_SETUP_SCRIPT" ]; then
 fi
 . $SYSROOT_SETUP_SCRIPT
 
-if [ ! -e "$POKY_NATIVE_SYSROOT/usr/sbin/rpc.mountd" ]; then
-	echo "Error: Unable to find rpc.mountd binary in $POKY_NATIVE_SYSROOT/usr/sbin/"
+if [ ! -e "$OECORE_NATIVE_SYSROOT/usr/sbin/rpc.mountd" ]; then
+	echo "Error: Unable to find rpc.mountd binary in $OECORE_NATIVE_SYSROOT/usr/sbin/"
 
 	if [ "x$POKY_DISTRO_VERSION" = "x" ]; then
 	    echo "Have you run 'bitbake meta-ide-support'?"
@@ -67,7 +67,7 @@ RMTAB=~/.poky-sdk/rmtab$NFS_INSTANCE
 NFSPID=~/.poky-sdk/nfs$NFS_INSTANCE.pid
 MOUNTPID=~/.poky-sdk/mount$NFS_INSTANCE.pid
 
-PSEUDO_OPTS="-P $POKY_NATIVE_SYSROOT/usr"
+PSEUDO_OPTS="-P $OECORE_NATIVE_SYSROOT/usr"
 PSEUDO_LOCALSTATEDIR="$NFS_EXPORT_DIR/var/pseudo"
 export PSEUDO_LOCALSTATEDIR
 
@@ -99,8 +99,8 @@ fi
 case "$1" in
   start)
 	echo "Starting User Mode rpc.mountd"
-	echo "  $PSEUDO $PSEUDO_OPTS $POKY_NATIVE_SYSROOT/usr/sbin/rpc.mountd $MOUNTD_OPTS"
-	$PSEUDO $PSEUDO_OPTS $POKY_NATIVE_SYSROOT/usr/sbin/rpc.mountd $MOUNTD_OPTS
+	echo "  $PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.mountd $MOUNTD_OPTS"
+	$PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.mountd $MOUNTD_OPTS
 	if [ ! $? = 0 ]; then
 	    echo "====================="
 	    echo "Error starting MOUNTD"
@@ -122,8 +122,8 @@ case "$1" in
 	    exit 1
 	fi
 	echo "Starting User Mode nfsd"
-	echo "  $PSEUDO $PSEUDO_OPTS $POKY_NATIVE_SYSROOT/usr/sbin/rpc.nfsd $NFSD_OPTS"
-	$PSEUDO $PSEUDO_OPTS $POKY_NATIVE_SYSROOT/usr/sbin/rpc.nfsd $NFSD_OPTS
+	echo "  $PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.nfsd $NFSD_OPTS"
+	$PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.nfsd $NFSD_OPTS
 	if [ ! $? = 0 ]; then
 	    echo "Error starting nfsd"
 	    exit 1

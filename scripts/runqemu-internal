@@ -161,10 +161,10 @@ if [ "$TAP" = "" ]; then
 
     GROUPID=`id -g`
     echo "Setting up tap interface under sudo"
-    tap=`sudo $QEMUIFUP $GROUPID $POKY_NATIVE_SYSROOT`
+    tap=`sudo $QEMUIFUP $GROUPID $OECORE_NATIVE_SYSROOT`
     if [ $? -ne 0 ]; then
         # Re-run standalone to see verbose errors
-        sudo $QEMUIFUP $GROUPID $POKY_NATIVE_SYSROOT
+        sudo $QEMUIFUP $GROUPID $OECORE_NATIVE_SYSROOT
         return
     fi
     LOCKFILE="$LOCKDIR/$tap"
@@ -179,7 +179,7 @@ fi
 
 cleanup() {
     if [ ! -e "$NOSUDO_FLAG" ]; then
-        sudo $QEMUIFDOWN $TAP $POKY_NATIVE_SYSROOT
+        sudo $QEMUIFDOWN $TAP $OECORE_NATIVE_SYSROOT
     fi
     echo "Releasing lockfile of preconfigured tap device '$TAP'"
     release_lock $LOCKFILE
@@ -416,7 +416,7 @@ if [ "x$QEMUOPTIONS" = "x" ]; then
     return
 fi
 
-PATH=$CROSSPATH:$POKY_NATIVE_SYSROOT/usr/bin:$PATH
+PATH=$CROSSPATH:$OECORE_NATIVE_SYSROOT/usr/bin:$PATH
 
 QEMUBIN=`which $QEMU`
 if [ ! -x "$QEMUBIN" ]; then

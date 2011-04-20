@@ -2,7 +2,7 @@
 #
 # Find a native sysroot to use - either from an in-tree Poky build or
 # from a toolchain installation. It then ensures the variable
-# $POKY_NATIVE_SYSROOT is set to the sysroot's base directory, and sets 
+# $OECORE_NATIVE_SYSROOT is set to the sysroot's base directory, and sets 
 # $PSEUDO to the path of the pseudo binary.
 #
 # This script is intended to be run within other scripts by source'ing
@@ -30,7 +30,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-if [ -z "$POKY_NATIVE_SYSROOT" ]; then
+if [ -z "$OECORE_NATIVE_SYSROOT" ]; then
     BITBAKE=`which bitbake`
     if [ "x$BITBAKE" != "x" ]; then
 	if [ "$UID" = "0" ]; then
@@ -40,10 +40,10 @@ if [ -z "$POKY_NATIVE_SYSROOT" ]; then
 		exit 1
             fi
             touch conf/sanity.conf
-            POKY_NATIVE_SYSROOT=`bitbake -e | grep ^STAGING_DIR_NATIVE | cut -d '=' -f2 | cut -d '"' -f2`
+            OECORE_NATIVE_SYSROOT=`bitbake -e | grep ^STAGING_DIR_NATIVE | cut -d '=' -f2 | cut -d '"' -f2`
             rm -f conf/sanity.conf
 	else
-            POKY_NATIVE_SYSROOT=`bitbake -e | grep ^STAGING_DIR_NATIVE | cut -d '=' -f2 | cut -d '"' -f2`
+            OECORE_NATIVE_SYSROOT=`bitbake -e | grep ^STAGING_DIR_NATIVE | cut -d '=' -f2 | cut -d '"' -f2`
 	fi
     else
 	echo "Error: Unable to locate your native sysroot."
@@ -56,8 +56,8 @@ if [ -z "$POKY_NATIVE_SYSROOT" ]; then
 fi
 
 # Set up pseudo command
-if [ ! -e "$POKY_NATIVE_SYSROOT/usr/bin/pseudo" ]; then
-    echo "Error: Unable to find pseudo binary in $POKY_NATIVE_SYSROOT/usr/bin/"
+if [ ! -e "$OECORE_NATIVE_SYSROOT/usr/bin/pseudo" ]; then
+    echo "Error: Unable to find pseudo binary in $OECORE_NATIVE_SYSROOT/usr/bin/"
 
     if [ "x$POKY_DISTRO_VERSION" = "x" ]; then
         echo "Have you run 'bitbake meta-ide-support'?"
@@ -69,4 +69,4 @@ if [ ! -e "$POKY_NATIVE_SYSROOT/usr/bin/pseudo" ]; then
         exit 1
     fi
 fi
-PSEUDO="$POKY_NATIVE_SYSROOT/usr/bin/pseudo"
+PSEUDO="$OECORE_NATIVE_SYSROOT/usr/bin/pseudo"

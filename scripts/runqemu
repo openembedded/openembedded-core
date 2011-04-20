@@ -280,17 +280,17 @@ setup_tmpdir() {
 }
 
 setup_sysroot() {
-	# Toolchain installs set up $POKY_NATIVE_SYSROOT in their
+	# Toolchain installs set up $OECORE_NATIVE_SYSROOT in their
 	# environment script. If that variable isn't set, we're
 	# either in an in-tree poky scenario or the environment
 	# script wasn't source'd.
-	if [ -z "$POKY_NATIVE_SYSROOT" ]; then
+	if [ -z "$OECORE_NATIVE_SYSROOT" ]; then
 		setup_tmpdir
 		BUILD_ARCH=`uname -m`
 		BUILD_OS=`uname | tr '[A-Z]' '[a-z]'`
 		BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
 
-		POKY_NATIVE_SYSROOT=$TMPDIR/sysroots/$BUILD_SYS
+		OECORE_NATIVE_SYSROOT=$TMPDIR/sysroots/$BUILD_SYS
 	fi 
 }
 
@@ -380,7 +380,7 @@ echo "ROOTFS: [$ROOTFS]"
 echo "FSTYPE: [$FSTYPE]"
 
 setup_sysroot
-# POKY_NATIVE_SYSROOT is now set for all cases
+# OECORE_NATIVE_SYSROOT is now set for all cases
 
 # We can't run without a libGL.so
 libgl='no'

@@ -29,11 +29,11 @@ parse_config()
   case $INST_ARCH in 
   i[3-6]86)
     OPKG_CONFIG_FILE=$YOCTOADT_OPKG_CONF_FILE_32
-    POKY_NATIVE_SYSROOT="$INSTALL_FOLDER/sysroots/$INST_ARCH-pokysdk-linux/"
+    OECORE_NATIVE_SYSROOT="$INSTALL_FOLDER/sysroots/$INST_ARCH-pokysdk-linux/"
     ;;
   x86_64)
     OPKG_CONFIG_FILE=$YOCTOADT_OPKG_CONF_FILE_64
-    POKY_NATIVE_SYSROOT="$INSTALL_FOLDER/sysroots/x86_64-pokysdk-linux/"
+    OECORE_NATIVE_SYSROOT="$INSTALL_FOLDER/sysroots/x86_64-pokysdk-linux/"
     ;;
   *)
     echo_info "[ADT_INST] Error: Installation Machine is not supported!"
@@ -124,9 +124,9 @@ for native_target_type in $YOCTOADT_TARGETS; do
 done
 
 # Link the ld.so.cache file into the hosts filesystem
-if [ ! -f "$POKY_NATIVE_SYSROOT/etc/ld.so.cache" ]; then 
+if [ ! -f "$OECORE_NATIVE_SYSROOT/etc/ld.so.cache" ]; then 
 echo_info "Link the ld.so.cache file into the host filesystem"
-sudo ln -s /etc/ld.so.cache $POKY_NATIVE_SYSROOT/etc/ld.so.cache
+sudo ln -s /etc/ld.so.cache $OECORE_NATIVE_SYSROOT/etc/ld.so.cache
 check_result
 fi
 
@@ -175,7 +175,7 @@ qemu_type=`echo "$1" | sed -e 's/x86_64/x86-64/'`
 sysroot_image_name="core-image-$target_sysroot_image-qemu$qemu_type.tar.bz2"
     #echo_info "Extracting rootfs: $sysroot_image_name, using pseudo..."
 
-scripts/extract_rootfs $sysroot_image_name $target_sysroot $POKY_NATIVE_SYSROOT $user_inst_type
+scripts/extract_rootfs $sysroot_image_name $target_sysroot $OECORE_NATIVE_SYSROOT $user_inst_type
 check_result
 
 echo_info "Updating environment script with target sysroot location."
