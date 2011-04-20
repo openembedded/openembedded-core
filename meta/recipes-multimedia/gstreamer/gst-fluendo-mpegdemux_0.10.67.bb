@@ -9,5 +9,5 @@ acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 
 PR = "r0"
 
-SRC_URI[md5sum] = "de2a22760f73ba678b7cb51e9f94bc21"
-SRC_URI[sha256sum] = "c4ba24502f59849fc2f3948389213c99e23a0986506111cc22cce3a64a33ac05"
+SRC_URI[md5sum] = "4ee0353eaa386f9b1c5570298d204357"
+SRC_URI[sha256sum] = "410897527f8bd8f007c9915c9450113c9e73c76f89aee3d36da825422a83a621"
