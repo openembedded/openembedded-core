@@ -6,7 +6,7 @@ DESCRIPTION = "Software Development Tasks for OpenedHand Poky"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-DEPENDS = "task-poky"
+DEPENDS = "task-core"
 PR = "r7"
 
 ALLOW_EMPTY = "1"
@@ -48,10 +48,10 @@ RDEPENDS_task-core-sdk = "\
     tcl"
 
 #python generate_sdk_pkgs () {
-#    poky_pkgs = read_pkgdata('task-poky', d)['PACKAGES']
+#    poky_pkgs = read_pkgdata('task-core', d)['PACKAGES']
 #    pkgs = bb.data.getVar('PACKAGES', d, 1).split()
 #    for pkg in poky_pkgs.split():
-#        newpkg = pkg.replace('task-poky', 'task-core-sdk')
+#        newpkg = pkg.replace('task-core', 'task-core-sdk')
 #
 #        # for each of the task packages, add a corresponding sdk task
 #        pkgs.append(newpkg)
