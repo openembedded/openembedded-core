@@ -2,6 +2,8 @@ copy from OE, said to borrow from Ubuntu. Not in glib-2.0 upstream yet. Add for 
 Added to poky by Kevin Tian <kevin.tian@intel.com>, 06/25/2010
 Rebased for glib-2.27.3 by Dongxiao Xu <dongxiao.xu@intel.com>, 11/16/2010
 
+Upstream-Status: Inappropriate [patches for test code]
+
 diff -ruN glib-2.27.3-orig/tests/threadpool-test.c glib-2.27.3/tests/threadpool-test.c
 --- glib-2.27.3-orig/tests/threadpool-test.c	2009-04-01 07:04:21.000000000 +0800
 +++ glib-2.27.3/tests/threadpool-test.c	2010-11-16 12:28:09.002172678 +0800

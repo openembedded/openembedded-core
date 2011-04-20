@@ -7,6 +7,8 @@ http://www.mail-archive.com/openembedded-devel@lists.openembedded.org/msg005
 
 Signed-off-by: Darren Hart <dvhart@linux.intel.com>
 
+Upstream-Status: Pending
+
 Index: glib-2.27.5/glib/gthread.h
 ===================================================================
 --- glib-2.27.5.orig/glib/gthread.h

@@ -8,6 +8,8 @@
 # by Kevin Tian <kevin.tian@intel.com>, 06/25/2010
 # Rebased by Dongxiao Xu <dongxiao.xu@intel.com>, 11/16/2010
 
+Upstream-Status: Inappropriate [configuration]
+
 diff -ruN glib-2.27.3-orig/glib-gettextize.in glib-2.27.3/glib-gettextize.in
 --- glib-2.27.3-orig/glib-gettextize.in	2009-04-01 07:04:20.000000000 +0800
 +++ glib-2.27.3/glib-gettextize.in	2010-11-16 12:55:06.874605916 +0800

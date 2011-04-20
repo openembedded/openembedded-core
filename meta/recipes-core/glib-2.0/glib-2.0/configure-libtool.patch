@@ -4,6 +4,8 @@
 # from PATH though
 # Rebased to glib-2.27.3 by Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 diff -ruN glib-2.27.3-orig/configure.ac glib-2.27.3/configure.ac
 --- glib-2.27.3-orig/configure.ac	2010-11-03 11:02:05.000000000 +0800
 +++ glib-2.27.3/configure.ac	2010-11-16 12:38:12.610485990 +0800
