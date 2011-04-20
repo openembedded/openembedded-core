@@ -29,11 +29,11 @@ parse_config()
   case $INST_ARCH in 
   i[3-6]86)
     OPKG_CONFIG_FILE=$YOCTOADT_OPKG_CONF_FILE_32
-    OECORE_NATIVE_SYSROOT="$INSTALL_FOLDER/sysroots/$INST_ARCH-pokysdk-linux/"
+    OECORE_NATIVE_SYSROOT="$INSTALL_FOLDER/sysroots/$INST_ARCH-${SDK_VENDOR}-linux/"
     ;;
   x86_64)
     OPKG_CONFIG_FILE=$YOCTOADT_OPKG_CONF_FILE_64
-    OECORE_NATIVE_SYSROOT="$INSTALL_FOLDER/sysroots/x86_64-pokysdk-linux/"
+    OECORE_NATIVE_SYSROOT="$INSTALL_FOLDER/sysroots/x86_64-${SDK_VENDOR}-linux/"
     ;;
   *)
     echo_info "[ADT_INST] Error: Installation Machine is not supported!"
@@ -68,7 +68,7 @@ OPKG_LOCK_DIR="$NATIVE_INSTALL_DIR/$OPKG_LIBDIR/opkg"
 if [ ! -d "$OPKG_LOCK_DIR" ]; then
   sudo mkdir -p $OPKG_LOCK_DIR
   echo_info "Successfully create directory $OPKG_LOCK_DIR. "
-#if user delete /opt/poky, while dangling folders there, report error
+#if user delete /opt/xxx, while dangling folders there, report error
 elif [ ! -d "$INSTALL_FOLDER" ]; then
   echo_info "\nDangling opkg cache folder $OPKG_LOCK_DIR detected. Continue installation will remove the folder!"
   confirm_install $1
