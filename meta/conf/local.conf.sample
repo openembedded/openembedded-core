@@ -72,7 +72,7 @@ USER_CLASSES ?= "image-mklibs image-prelink"
 # Note that a full build of everything in OpenEmbedded will take GigaBytes of hard
 # disk space, so make sure to free enough space. The default TMPDIR is
 # <build directory>/tmp
-#TMPDIR = "${POKYBASE}/build/tmp"
+#TMPDIR = "${COREBASE}/build/tmp"
 
 # The following are used to control options related to debugging.
 #

@@ -16,7 +16,7 @@ do_rootfs[depends] += "opkg-native:do_populate_sysroot"
 
 do_rootfs[recrdeptask] += "do_package_write_rpm"
 
-AWKPOSTINSTSCRIPT = "${POKYBASE}/scripts/rootfs_rpm-extract-postinst.awk"
+AWKPOSTINSTSCRIPT = "${COREBASE}/scripts/rootfs_rpm-extract-postinst.awk"
 
 RPM_PREPROCESS_COMMANDS = "package_update_index_rpm; package_generate_rpm_conf; "
 RPM_POSTPROCESS_COMMANDS = ""

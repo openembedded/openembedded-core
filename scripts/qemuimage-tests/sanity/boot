@@ -9,7 +9,7 @@
 # This file is licensed under the GNU General Public License,
 # Version 2.
 #
-. $POKYBASE/scripts/qemuimage-testlib
+. $COREBASE/scripts/qemuimage-testlib
 
 TIMEOUT=120
 

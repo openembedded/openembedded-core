@@ -67,7 +67,7 @@ def qemuimagetest_main(d):
         os.environ["QEMUARCH"] = machine
         os.environ["QEMUTARGET"] = pname
         os.environ["DISPLAY"] = bb.data.getVar("DISPLAY", d, True)
-        os.environ["POKYBASE"] = bb.data.getVar("POKYBASE", d, True)
+        os.environ["COREBASE"] = bb.data.getVar("COREBASE", d, True)
         os.environ["TOPDIR"] = bb.data.getVar("TOPDIR", d, True)
         os.environ["TEST_STATUS"] = bb.data.getVar("TEST_STATUS", d, True)
         os.environ["TARGET_IPSAVE"] = bb.data.getVar("TARGET_IPSAVE", d, True)

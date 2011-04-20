@@ -21,7 +21,7 @@ green='\E[32;40m'
 USER=`whoami`
 ARCH=$1
 MACHINE_ARCH=` bitbake -e | grep ^MACHINE_ARCH | cut -d '=' -f2 | cut -d '"' -f2`
-IMAGE_PATH=` bitbake -e | grep ^POKYBASE | cut -d '=' -f2 | cut -d '"' -f2`/build/tmp/deploy/images/
+IMAGE_PATH=` bitbake -e | grep ^COREBASE | cut -d '=' -f2 | cut -d '"' -f2`/build/tmp/deploy/images/
 
 
 ECHO()

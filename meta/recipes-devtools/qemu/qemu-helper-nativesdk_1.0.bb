@@ -6,18 +6,18 @@ PR = "r9"
 FILESPATH = "${FILE_DIRNAME}/qemu-helper"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/tunctl.c;endline=4;md5=ff3a09996bc5fff6bc5d4e0b4c28f999 \
-                    file://${POKYBASE}/scripts/runqemu;endline=18;md5=ce52af3dd295e20ad1d849611b83690b"
+                    file://${COREBASE}/scripts/runqemu;endline=18;md5=ce52af3dd295e20ad1d849611b83690b"
 
 
-SRC_URI = "file://${POKYBASE}/scripts/runqemu \
-           file://${POKYBASE}/scripts/runqemu-internal \
-           file://${POKYBASE}/scripts/poky-addptable2image \
-           file://${POKYBASE}/scripts/poky-gen-tapdevs \
-           file://${POKYBASE}/scripts/runqemu-ifup \
-           file://${POKYBASE}/scripts/runqemu-ifdown \
-           file://${POKYBASE}/scripts/poky-find-native-sysroot \
-           file://${POKYBASE}/scripts/poky-extract-sdk \
-           file://${POKYBASE}/scripts/poky-export-rootfs \
+SRC_URI = "file://${COREBASE}/scripts/runqemu \
+           file://${COREBASE}/scripts/runqemu-internal \
+           file://${COREBASE}/scripts/poky-addptable2image \
+           file://${COREBASE}/scripts/poky-gen-tapdevs \
+           file://${COREBASE}/scripts/runqemu-ifup \
+           file://${COREBASE}/scripts/runqemu-ifdown \
+           file://${COREBASE}/scripts/poky-find-native-sysroot \
+           file://${COREBASE}/scripts/poky-extract-sdk \
+           file://${COREBASE}/scripts/poky-export-rootfs \
            file://tunctl.c \
            file://raw2flash.c \
           "
@@ -34,7 +34,7 @@ do_compile() {
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ${WORKDIR}${POKYBASE}/scripts/poky-* ${D}${bindir}/
+	install -m 0755 ${WORKDIR}${COREBASE}/scripts/poky-* ${D}${bindir}/
 	install tunctl ${D}${bindir}/
 	install raw2flash.spitz ${D}${bindir}/
 	install flash2raw.spitz ${D}${bindir}/

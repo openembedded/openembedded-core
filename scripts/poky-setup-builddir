@@ -89,7 +89,7 @@ EOM
 
     # Put the abosolute path to the layers in bblayers.conf so we can run
     # bitbake without the init script after the first run
-    sed "s|##POKYBASE##|$OEROOT|g" $POKYLAYERCONF > $BUILDDIR/conf/bblayers.conf
+    sed "s|##COREBASE##|$OEROOT|g" $POKYLAYERCONF > $BUILDDIR/conf/bblayers.conf
 fi
 
 # Prevent disturbing a new GIT clone in same console

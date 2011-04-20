@@ -17,7 +17,7 @@
 TYPE="ext3"
 
 # The folder to hold all scripts running on targets
-TOOLS="$POKYBASE/scripts/qemuimage-tests/tools"
+TOOLS="$COREBASE/scripts/qemuimage-tests/tools"
 
 # Test Directory on target for testing
 TARGET_TEST_DIR="/opt/test"

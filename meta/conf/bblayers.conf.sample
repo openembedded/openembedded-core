@@ -4,5 +4,5 @@ LCONF_VERSION = "4"
 
 BBFILES ?= ""
 BBLAYERS = " \
-  ##POKYBASE##/meta \
+  ##COREBASE##/meta \
   "

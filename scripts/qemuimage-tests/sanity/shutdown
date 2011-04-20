@@ -11,7 +11,7 @@
 # Version 2.
 #
 
-. $POKYBASE/scripts/qemuimage-testlib
+. $COREBASE/scripts/qemuimage-testlib
 
 TIMEOUT=400
 

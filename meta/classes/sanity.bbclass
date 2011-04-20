@@ -332,11 +332,11 @@ def check_sanity(e):
         f.write(current_abi)
     f.close()
 
-    oeroot = data.getVar('POKYBASE', e.data)
+    oeroot = data.getVar('COREBASE', e.data)
     if oeroot.find ('+') != -1:
-        messages = messages + "Error, you have an invalid character (+) in your POKYBASE directory path. Please move Poky to a directory which doesn't include a +."
+        messages = messages + "Error, you have an invalid character (+) in your COREBASE directory path. Please move Poky to a directory which doesn't include a +."
     elif oeroot.find (' ') != -1:
-        messages = messages + "Error, you have a space in your POKYBASE directory path. Please move Poky to a directory which doesn't include a space."
+        messages = messages + "Error, you have a space in your COREBASE directory path. Please move Poky to a directory which doesn't include a space."
 
     # Check that we don't have duplicate entries in PACKAGE_ARCHS
     pkgarchs = data.getVar('PACKAGE_ARCHS', e.data, True)
