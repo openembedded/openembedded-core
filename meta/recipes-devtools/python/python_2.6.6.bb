@@ -5,7 +5,7 @@ PR = "${INC_PR}.1"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=38fdd546420fab09ac6bd3d8a1c83eb6"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
-DISTRO_SRC_URI_poky-lsb = ""
+DISTRO_SRC_URI_linuxstdbase = ""
 SRC_URI = "\
   http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.bz2 \
   file://01-use-proper-tools-for-cross-build.patch \

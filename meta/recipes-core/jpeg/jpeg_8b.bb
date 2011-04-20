@@ -46,7 +46,7 @@ FILES_jpeg-tools = 	"${bindir}/*"
 
 BBCLASSEXTEND = "native"
 
-pkg_postinst_${PN}_poky-lsb () {
+pkg_postinst_${PN}_linuxstdbase () {
     if [ "$D" = "" ]; then
         if [ ! -e ${libdir}/libjpeg.so.62 ]; then
             JPEG=`find ${libdir} -type f -name libjpeg.so.\*.\*.\*`

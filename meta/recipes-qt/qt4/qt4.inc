@@ -7,7 +7,7 @@ QT_ARCH := "${@qt_arch(d)}"
 QT_ENDIAN = "${@qt_endian(d)}"
 
 QT_DISTRO_FLAGS ?= "-no-accessibility -no-sm"
-QT_DISTRO_FLAGS_poky-lsb = "-sm"
+QT_DISTRO_FLAGS_linuxstdbase = "-sm"
 
 QT_CONFIG_FLAGS += "-release -no-cups -reduce-relocations \
                     -shared -no-nas-sound -no-nis \

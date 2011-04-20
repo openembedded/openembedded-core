@@ -160,7 +160,7 @@ do_install_append_netbook-pro () {
 	mkdir -p ${D}/initrd
 }
 
-do_install_append_poky-lsb() {
+do_install_append_linuxstdbase() {
 	for d in ${dirs3755}; do
                 install -m 0755 -d ${D}$d
         done

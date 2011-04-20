@@ -9,4 +9,4 @@ SRC_URI_append = "file://fortran-cross-compile-hack.patch"
 ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_INCDIR}"
 
 EXTRA_OECONF += "--disable-libunwind-exceptions"
-EXTRA_OECONF_append_poky-lsb = " --enable-clocale=gnu"
+EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"

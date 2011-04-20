@@ -29,7 +29,7 @@ S = "${WORKDIR}/glib-${PV}"
 
 EXTRA_OECONF = "--disable-debug --enable-included-printf=no"
 EXTRA_OECONF_virtclass-native = ""
-EXTRA_OECONF_poky-lsb = "--enable-included-printf=no"
+EXTRA_OECONF_linuxstdbase = "--enable-included-printf=no"
 
 FILES_${PN} = "${libdir}/lib*${SOLIBS}"
 FILES_${PN}-dev += "${libdir}/glib-2.0/include"

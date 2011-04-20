@@ -22,7 +22,7 @@ EXTRA_OECONF = "\
   --enable-shared \
 "
 
-EXTRA_OECONF_poky-lsb = "\
+EXTRA_OECONF_linuxstdbase = "\
   --with-threads \
   --with-pymalloc \
   --with-cyclic-gc \
