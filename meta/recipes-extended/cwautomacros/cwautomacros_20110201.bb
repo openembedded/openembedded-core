@@ -8,8 +8,8 @@ SRC_URI = http://download.berlios.de/cwautomacros/cwautomacros-${PV}.tar.bz2
 
 PR = "r0"
 
-SRC_URI[md5sum] = "352b295897ddb30c0d7d0acdd0b2313a"
-SRC_URI[sha256sum] = "8f683713baa63e6b5c2ea72067f77cbacf0bee7d4efa907951c6bb5ac1ffd6b0"
+SRC_URI[md5sum] = "074afcb50d0a8bff10786a2954b2b02d"
+SRC_URI[sha256sum] = "3115603b891f3a163c0bbb5fea2f3742113a183fa6745ee5e89e5f6d0e9f6121"
 
 do_install() {
 	oe_runmake CWAUTOMACROSPREFIX=${D}${prefix} install
