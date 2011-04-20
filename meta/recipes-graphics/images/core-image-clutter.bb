@@ -8,4 +8,4 @@ IMAGE_INSTALL = "\
     task-core-clutter-tests \
     task-core-clutter-apps"
 
-inherit poky-image
+inherit core-image

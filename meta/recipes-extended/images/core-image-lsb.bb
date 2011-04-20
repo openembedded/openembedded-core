@@ -6,4 +6,4 @@ IMAGE_INSTALL = "\
     task-core-lsb \
     "
 
-inherit poky-image
+inherit core-image

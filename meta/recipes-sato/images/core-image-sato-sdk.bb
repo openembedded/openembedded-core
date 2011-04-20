@@ -6,4 +6,4 @@ IMAGE_FEATURES += "apps-console-core ${SATO_IMAGE_FEATURES} tools-debug tools-pr
 
 LICENSE = "MIT"
 
-inherit poky-image
+inherit core-image

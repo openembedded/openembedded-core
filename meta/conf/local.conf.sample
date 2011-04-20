@@ -40,7 +40,7 @@ BBMASK = ""
 # "tools-testapps" - add useful testing tools (ts_print, aplay, arecord etc.)
 # "debug-tweaks"   - make an image for suitable of development
 #                    e.g. ssh root access has a blank password
-# There are other application targets too, see meta/classes/poky-image.bbclass 
+# There are other application targets too, see meta/classes/core-image.bbclass 
 # and meta/packages/tasks/task-core.bb for more details.
 
 EXTRA_IMAGE_FEATURES = "tools-debug tools-profile tools-testapps debug-tweaks"

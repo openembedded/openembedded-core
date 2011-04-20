@@ -9,7 +9,7 @@ IMAGE_LINGUAS = " "
 
 LICENSE = "MIT"
 
-inherit poky-image
+inherit core-image
 
 # remove not needed ipkg informations
 ROOTFS_POSTPROCESS_COMMAND += "remove_packaging_data_files ; "

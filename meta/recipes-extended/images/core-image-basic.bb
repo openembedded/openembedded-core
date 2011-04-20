@@ -7,4 +7,4 @@ IMAGE_INSTALL = "\
 
 #    ${POKY_BASE_INSTALL} 
 
-inherit poky-image
+inherit core-image

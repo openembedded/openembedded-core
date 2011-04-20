@@ -6,4 +6,4 @@ IMAGE_FEATURES += "apps-console-core ${SATO_IMAGE_FEATURES} dev-pkgs"
 
 LICENSE = "MIT"
 
-inherit poky-image
+inherit core-image

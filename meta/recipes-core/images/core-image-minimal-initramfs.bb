@@ -7,4 +7,4 @@ IMAGE_LINGUAS = ""
 
 LICENSE = "MIT"
 
-inherit poky-image
+inherit core-image
