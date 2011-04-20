@@ -13,7 +13,7 @@ SECTION = "x11"
 PV = "0.0+git${SRCPV}"
 PR = "r0"
 
-SRC_URI = "git://git.pokylinux.org/${BPN};protocol=git \
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
            file://configure_fix.patch;patch=1;maxrev=1819 \
            file://single-instance.patch;patch=1 \
 	   file://80matchboxkeyboard.shbg"

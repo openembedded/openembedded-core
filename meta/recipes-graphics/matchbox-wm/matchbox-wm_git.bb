@@ -13,7 +13,7 @@ DEPENDS = "libmatchbox virtual/libx11 libxext libxrender startup-notification ex
 PV = "1.2+git${SRCPV}"
 PR = "r0"
 
-SRC_URI = "git://git.pokylinux.org/matchbox-window-manager;protocol=git \
+SRC_URI = "git://git.yoctoproject.org/matchbox-window-manager;protocol=git \
            file://configure_fix.patch;patch=1;maxrev=1818 \
            file://kbdconfig"
 

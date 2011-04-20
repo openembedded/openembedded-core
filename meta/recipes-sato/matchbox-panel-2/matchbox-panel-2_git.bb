@@ -19,7 +19,7 @@ RPROVIDES_${PN} = "matchbox-panel"
 RREPLACES_${PN} = "matchbox-panel"
 RCONFLICTS_${PN} = "matchbox-panel"
 
-SRC_URI = "git://git.pokylinux.org/${BPN};protocol=git \
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
            file://startup_fix.diff;patch=1"
 
 EXTRA_OECONF = "--enable-startup-notification --enable-dbus"

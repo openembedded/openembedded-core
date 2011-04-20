@@ -9,7 +9,7 @@ PV = "0.1+git${SRCPV}"
 
 inherit native
 
-SRC_URI = "git://git.pokylinux.org/yocto-kernel-tools.git;protocol=git"
+SRC_URI = "git://git.yoctoproject.org/yocto-kernel-tools.git;protocol=git"
 S = "${WORKDIR}"
 
 kern_tools_LIST = kgit kgit-init kgit-meta \

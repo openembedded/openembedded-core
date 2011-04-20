@@ -6,7 +6,7 @@ PV = "0.3+git${SRCPV}"
 
 LIC_FILES_CHKSUM = "file://configure.ac;endline=7;md5=3c4e087662e37f10e469425f3a0ad225"
 
-SRC_URI = "git://git.pokylinux.org/${PN};protocol=git"
+SRC_URI = "git://git.yoctoproject.org/${PN};protocol=git"
 S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig

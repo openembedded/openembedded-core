@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c93c0550bd3173f4504b2cbd8991e50b"
 PV = "1.0+git${SRCPV}"
 PR = "r2"
 
-SRC_URI = "git://git.pokylinux.org/prelink-cross.git;protocol=git \
+SRC_URI = "git://git.yoctoproject.org/prelink-cross.git;protocol=git \
            file://prelink.conf \
            file://prelink.cron.daily \
            file://prelink.default \

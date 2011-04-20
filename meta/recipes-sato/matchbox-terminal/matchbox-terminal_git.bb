@@ -11,7 +11,7 @@ SECTION = "x11/utils"
 PV = "0.0+git${SRCPV}"
 PR = "r0"
 
-SRC_URI = "git://git.pokylinux.org/${BPN};protocol=git"
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git"
 
 S = "${WORKDIR}/git"
 

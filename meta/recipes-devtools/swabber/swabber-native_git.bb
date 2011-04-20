@@ -1,5 +1,5 @@
 DESCRIPTION = "Swabber is a tool that can help with understanding a program's use of host files."
-HOMEPAGE = "http://git.pokylinux.org/cgit/cgit.cgi/swabber"
+HOMEPAGE = "http://git.yoctoproject.org/cgit/cgit.cgi/swabber"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 
@@ -8,7 +8,7 @@ PR = "r0"
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://git.pokylinux.org/swabber;protocol=git"
+SRC_URI = "git://git.yoctoproject.org/swabber;protocol=git"
 
 inherit native
 

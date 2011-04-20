@@ -12,7 +12,7 @@ PV = "2.6.37+git-${SRCPV}"
 PR = "r3"
 
 SRCREV_FORMAT = "meta_machine"
-SRC_URI = "git://git.pokylinux.org/linux-yocto-2.6.37;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
+SRC_URI = "git://git.yoctoproject.org/linux-yocto-2.6.37;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
 
 # force this to empty to prevent installation failures, we aren't
 # building a device tree as part of kern headers
