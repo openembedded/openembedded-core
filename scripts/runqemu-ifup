@@ -10,12 +10,12 @@
 # the following to your /etc/sudoers file to be able to run this
 # command without entering your password each time:
 #
-# <my-username> ALL=NOPASSWD: /path/to/poky-qemu-ifup
-# <my-username> ALL=NOPASSWD: /path/to/poky-qemu-ifdown
+# <my-username> ALL=NOPASSWD: /path/to/runqemu-ifup
+# <my-username> ALL=NOPASSWD: /path/to/runqemu-ifdown
 #
 # If you'd like to create a bank of tap devices at once, you should use
 # the poky-gen-tapdevs script instead. If tap devices are set up using
-# that script, the poky-qemu script will never end up calling this
+# that script, the runqemu script will never end up calling this
 # script.
 #
 # Copyright (c) 2006-2010 Intel Corp.
@@ -38,7 +38,7 @@ usage() {
 }
 
 if [ $EUID -ne 0 ]; then
-	echo "Error: This script (poky-qemu-ifup) must be run with root privileges"
+	echo "Error: This script (runqemu-ifup) must be run with root privileges"
 	exit 1
 fi
 

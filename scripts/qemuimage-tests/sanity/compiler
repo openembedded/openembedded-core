@@ -1,6 +1,6 @@
 #!/bin/bash
 # Compiler Test Case for Sanity Test
-# The case boot up the Qemu target with `poky-qemu qemuxxx`.
+# The case boot up the Qemu target with `runqemu qemuxxx`.
 # Then check if gcc/g++/make command can work in target.
 #
 # Author: Jiajun Xu <jiajun.xu@intel.com>

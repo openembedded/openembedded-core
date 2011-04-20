@@ -1,6 +1,6 @@
 #!/bin/bash
 # SSH Test Case for Sanity Test
-# The case boot up the Qemu target with `poky-qemu qemuxxx`.
+# The case boot up the Qemu target with `runqemu qemuxxx`.
 # Then check if ssh service in qemu is up.
 #
 # Author: Jiajun Xu <jiajun.xu@intel.com>

@@ -8,8 +8,8 @@
 # the following to your /etc/sudoers file to be able to run this
 # command without entering your password each time:
 #
-# <my-username> ALL=NOPASSWD: /path/to/poky-qemu-ifup
-# <my-username> ALL=NOPASSWD: /path/to/poky-qemu-ifdown
+# <my-username> ALL=NOPASSWD: /path/to/runqemu-ifup
+# <my-username> ALL=NOPASSWD: /path/to/runqemu-ifdown
 #
 # Copyright (c) 2006-2010 Intel Corp.
 #
@@ -31,7 +31,7 @@ usage() {
 }
 
 if [ $EUID -ne 0 ]; then
-	echo "Error: This script (poky-qemu-ifdown) must be run with root privileges"
+	echo "Error: This script (runqemu-ifdown) must be run with root privileges"
 	exit 1
 fi
 

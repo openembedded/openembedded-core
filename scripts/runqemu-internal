@@ -88,8 +88,8 @@ fi
 # sudo.
 NOSUDO_FLAG="/etc/poky-nosudo"
 
-QEMUIFUP=`which poky-qemu-ifup`
-QEMUIFDOWN=`which poky-qemu-ifdown`
+QEMUIFUP=`which runqemu-ifup`
+QEMUIFDOWN=`which runqemu-ifdown`
 
 NFSRUNNING="false"
 

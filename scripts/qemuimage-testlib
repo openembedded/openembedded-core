@@ -395,11 +395,11 @@ Test_Create_Qemu()
 	local ret=1
 	local up_time=0
 
-	which poky-qemu
+	which runqemu
 	if [ $? -eq 0 ]; then
-		RUNQEMU=`which poky-qemu`
+		RUNQEMU=`which runqemu`
 	else
-		Test_Error "Can not find poky-qemu in \$PATH, return fail"
+		Test_Error "Can not find runqemu in \$PATH, return fail"
 		exit 1
 	fi
 	

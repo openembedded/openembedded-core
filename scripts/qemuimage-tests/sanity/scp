@@ -1,6 +1,6 @@
 #!/bin/bash
 # SCP Test Case for Sanity Test
-# The case boot up the Qemu target with `poky-qemu qemuxxx`.
+# The case boot up the Qemu target with `runqemu qemuxxx`.
 # Then check if file can be copied into target with scp command.
 #
 # Author: Jiajun Xu <jiajun.xu@intel.com>

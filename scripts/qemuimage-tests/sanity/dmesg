@@ -1,6 +1,6 @@
 #!/bin/bash
 # Dmesg Check Test Case for Sanity Test
-# The case boot up the Qemu target with `poky-qemu qemuxxx`.
+# The case boot up the Qemu target with `runqemu qemuxxx`.
 # Then check if there is any error log in dmesg.
 #
 # Author: Jiajun Xu <jiajun.xu@intel.com>

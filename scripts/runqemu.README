@@ -3,15 +3,15 @@ Poky images with QEMU
 
 Poky can generate qemu bootable kernels and images with can be used 
 on a desktop system. Both arm and x86 images can currently be booted.
-There are two scripts, runqemu and poky-qemu, one for use within poky, 
+There are two scripts, runqemu and runqemu, one for use within poky, 
 the other externally.
 
-QEMU outside Poky (poky-qemu)
+QEMU outside Poky (runqemu)
 =============================
 
-The poky-qemu script is run as: 
+The runqemu script is run as: 
 
-   MACHINE=<machine> poky-qemu <zimage> <filesystem>
+   MACHINE=<machine> runqemu <zimage> <filesystem>
 
 where:
 

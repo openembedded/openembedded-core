@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Create a "bank" of tap network devices that can be used by the
-# poky-qemu script. This script needs to be run as root, and will
+# runqemu script. This script needs to be run as root, and will
 # use the tunctl binary from a Poky sysroot. Note: many Linux distros
 # these days still use an older version of tunctl which does not
 # support the group permissions option, hence the need to use Poky's
@@ -51,9 +51,9 @@ if [[ ! -x "$TUNCTL" || -d "$TUNCTL" ]]; then
 fi
 
 SCRIPT_DIR=`dirname $0`
-POKY_QEMU_IFUP="$SCRIPT_DIR/poky-qemu-ifup"
+POKY_QEMU_IFUP="$SCRIPT_DIR/runqemu-ifup"
 if [ ! -x "$POKY_QEMU_IFUP" ]; then
-	echo "Error: Unable to find the poky-qemu-ifup script in $SCRIPT_DIR"
+	echo "Error: Unable to find the runqemu-ifup script in $SCRIPT_DIR"
 	exit 1
 fi
 
@@ -79,7 +79,7 @@ for ((index=0; index < $COUNT; index++)); do
 	fi
 done
 
-# The poky-qemu script will check for this file, and if it exists,
+# The runqemu script will check for this file, and if it exists,
 # will use the existing bank of tap devices without creating
 # additional ones via sudo.
 touch /etc/poky-nosudo

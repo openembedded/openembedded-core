@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Boot Test Case for Sanity Test
-# The case boot up the Qemu target with `poky-qemu qemuxxx`.
+# The case boot up the Qemu target with `runqemu qemuxxx`.
 # Then check if qemu and qemu network is up.
 #
 # Author: Jiajun Xu <jiajun.xu@intel.com>

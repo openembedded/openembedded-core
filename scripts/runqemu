@@ -267,7 +267,7 @@ setup_tmpdir() {
             type -P bitbake &>/dev/null || {
                 echo "In order for this script to dynamically infer paths";
                 echo "to kernels or filesystem images, you either need";
-                echo "bitbake in your PATH or to source poky-init-build-env";
+                echo "bitbake in your PATH or to source oe-init-build-env";
                 echo "before running this script" >&2;
                 exit 1; }
 
@@ -394,6 +394,6 @@ if [ "$libgl" != 'yes' ]; then
     exit 1;
 fi
 
-INTERNAL_SCRIPT=`which poky-qemu-internal`
+INTERNAL_SCRIPT=`which runqemu-internal`
 
 . $INTERNAL_SCRIPT

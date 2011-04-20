@@ -6,15 +6,15 @@ PR = "r9"
 FILESPATH = "${FILE_DIRNAME}/qemu-helper"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/tunctl.c;endline=4;md5=ff3a09996bc5fff6bc5d4e0b4c28f999 \
-                    file://${POKYBASE}/scripts/poky-qemu;endline=18;md5=ce52af3dd295e20ad1d849611b83690b"
+                    file://${POKYBASE}/scripts/runqemu;endline=18;md5=ce52af3dd295e20ad1d849611b83690b"
 
 
-SRC_URI = "file://${POKYBASE}/scripts/poky-qemu \
-           file://${POKYBASE}/scripts/poky-qemu-internal \
+SRC_URI = "file://${POKYBASE}/scripts/runqemu \
+           file://${POKYBASE}/scripts/runqemu-internal \
            file://${POKYBASE}/scripts/poky-addptable2image \
            file://${POKYBASE}/scripts/poky-gen-tapdevs \
-           file://${POKYBASE}/scripts/poky-qemu-ifup \
-           file://${POKYBASE}/scripts/poky-qemu-ifdown \
+           file://${POKYBASE}/scripts/runqemu-ifup \
+           file://${POKYBASE}/scripts/runqemu-ifdown \
            file://${POKYBASE}/scripts/poky-find-native-sysroot \
            file://${POKYBASE}/scripts/poky-extract-sdk \
            file://${POKYBASE}/scripts/poky-export-rootfs \

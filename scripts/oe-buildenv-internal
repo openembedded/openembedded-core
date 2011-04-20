@@ -51,7 +51,7 @@ fi
 PATH="${OEROOT}/scripts:$BITBAKEDIR/bin/:$PATH"
 unset BITBAKEDIR
 
-# Used by the poky-qemu script
+# Used by the runqemu script
 export BUILDDIR
 export PATH
 
