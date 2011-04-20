@@ -1,4 +1,4 @@
-Install example binary needed for poky-image-clutter
+Install example binary needed for core-image-clutter
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 Index: git/examples/Makefile.am

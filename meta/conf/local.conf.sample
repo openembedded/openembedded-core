@@ -57,7 +57,7 @@ PACKAGE_CLASSES ?= "package_ipk"
 # and less useful for bigger images. Also mklibs library optimization can break the ABI compatibility, so should not be applied to the images which are tobe
 # extended or upgraded later.
 #This enabled mklibs library size optimization just for the specified image.
-#MKLIBS_OPTIMIZED_IMAGES ?= "poky-image-minimal"
+#MKLIBS_OPTIMIZED_IMAGES ?= "core-image-minimal"
 #This enable mklibs library size optimization will be for all the images.
 #MKLIBS_OPTIMIZED_IMAGES ?= "all"
 

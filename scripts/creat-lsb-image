@@ -60,14 +60,14 @@ ECHO "Enter directory $IMAGE_PATH"
 cd $IMAGE_PATH
 
 #get architecture
-PN=`find . -name poky-image-lsb-${MACHINE_ARCH}\*.rootfs.tar.bz2 -type f | awk -F- 'BEGIN{ max=0;} {if( NR!=0 && $5>max ) max=$5 }END{ printf "%d" ,max ;}'`
+PN=`find . -name core-image-lsb-${MACHINE_ARCH}\*.rootfs.tar.bz2 -type f | awk -F- 'BEGIN{ max=0;} {if( NR!=0 && $5>max ) max=$5 }END{ printf "%d" ,max ;}'`
 if [ "XPN" == "X" ];then
-   ECHO "${red}Don't find lsb image on platform, Please run \"poky-image-lsb\" to generate lsb image"
+   ECHO "${red}Don't find lsb image on platform, Please run \"core-image-lsb\" to generate lsb image"
    exit 1
 fi
 
 if [ $PN -eq 0 ];then
-	ECHO "${red}Can't ${MACHINE_ARCH} rootfs.tar.gz,Please run poky-image-lsb to get lsb image"
+	ECHO "${red}Can't ${MACHINE_ARCH} rootfs.tar.gz,Please run core-image-lsb to get lsb image"
 	exit 1
 fi
 #set varible ARCH
@@ -125,25 +125,25 @@ else
 	ECHO "Can't find lsb test suite for ${MACHINE_ARCH}"
 fi
 cd ..
-if [ -L poky-image-lsb-${MACHINE_ARCH}.ext3 ];then
-    /bin/rm poky-image-lsb-${MACHINE_ARCH}.ext3
+if [ -L core-image-lsb-${MACHINE_ARCH}.ext3 ];then
+    /bin/rm core-image-lsb-${MACHINE_ARCH}.ext3
     exit_check
 fi
 
 #creat lsb image
-if [ -f poky-image-lsb-${MACHINE_ARCH}-test.ext3 ];then
+if [ -f core-image-lsb-${MACHINE_ARCH}-test.ext3 ];then
 	if [ -d lsbtmp ];then
     	sudo umount lsbtmp
 	fi
 	ECHO "Remove old lsb image..."
-	/bin/rm poky-image-lsb-${MACHINE_ARCH}-test.ext3
+	/bin/rm core-image-lsb-${MACHINE_ARCH}-test.ext3
 fi	
 ECHO "creat a big ext3 file for lsb image with 5G..."
-dd if=/dev/zero of=poky-image-lsb-${MACHINE_ARCH}-test.ext3 bs=1M count=5000
+dd if=/dev/zero of=core-image-lsb-${MACHINE_ARCH}-test.ext3 bs=1M count=5000
 exit_check
 ECHO "Format ext3 image,please input \"y\""
-mkfs.ext3 poky-image-lsb-${MACHINE_ARCH}-test.ext3
-tune2fs -j  poky-image-lsb-${MACHINE_ARCH}-test.ext3
+mkfs.ext3 core-image-lsb-${MACHINE_ARCH}-test.ext3
+tune2fs -j  core-image-lsb-${MACHINE_ARCH}-test.ext3
 
 
 ECHO "get a lsb image with lsb test suite"
@@ -153,11 +153,11 @@ fi
 
 
 #install file system and lsb test suite to lsb image
-sudo mount -o loop poky-image-lsb-${MACHINE_ARCH}-test.ext3 lsbtmp
+sudo mount -o loop core-image-lsb-${MACHINE_ARCH}-test.ext3 lsbtmp
 exit_check
 
 ECHO "  ->Install file system..."
-sudo tar jxf poky-image-lsb-${MACHINE_ARCH}-${PN}.rootfs.tar.bz2 -C lsbtmp
+sudo tar jxf core-image-lsb-${MACHINE_ARCH}-${PN}.rootfs.tar.bz2 -C lsbtmp
 exit_check
 
 ECHO "  ->Install lsb test suite..."
@@ -181,18 +181,18 @@ exit_check
 sudo rm -rf lsbtmp
 
 #change file attribute
-sudo chown ${USER}:${USER} poky-image-lsb-${MACHINE_ARCH}-test.ext3 
+sudo chown ${USER}:${USER} core-image-lsb-${MACHINE_ARCH}-test.ext3 
 exit_check
-sudo chmod 755 poky-image-lsb-${MACHINE_ARCH}-test.ext3
+sudo chmod 755 core-image-lsb-${MACHINE_ARCH}-test.ext3
 exit_check
 
 #set up link
-if [ -L poky-image-lsb-${MACHINE_ARCH}.ext3 ];then
+if [ -L core-image-lsb-${MACHINE_ARCH}.ext3 ];then
 ECHO "Set up link"
-    /bin/rm poky-image-lsb-${MACHINE_ARCH}.ext3
+    /bin/rm core-image-lsb-${MACHINE_ARCH}.ext3
     exit_check
 fi
-ln -s poky-image-lsb-${MACHINE_ARCH}-test.ext3 poky-image-lsb-${MACHINE_ARCH}.ext3
+ln -s core-image-lsb-${MACHINE_ARCH}-test.ext3 core-image-lsb-${MACHINE_ARCH}.ext3
 
 ECHO "LSB test environment is set successfully, Please run this image on platform ${MACHINE_ARCH}"
 

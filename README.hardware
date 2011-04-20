@@ -87,22 +87,22 @@ Hard Disk:
   1. Build a directdisk image format. This will generate proper partition tables
      that will in turn be written to the physical media. For example:
 
-     $ bitbake poky-image-minimal-directdisk
+     $ bitbake core-image-minimal-directdisk
   
   2. Use the "dd" utility to write the image to the raw block device. For example:
 
-     # dd if=poky-image-minimal-directdisk-atom-pc.hdddirect of=/dev/sdb
+     # dd if=core-image-minimal-directdisk-atom-pc.hdddirect of=/dev/sdb
 
 USB Device:
   1. Build an hddimg image format. This is a simple filesystem without partition
      tables and is suitable for USB keys. For example:
 
-     $ bitbake poky-image-minimal-live
+     $ bitbake core-image-minimal-live
 
   2. Use the "dd" utility to write the image to the raw block device. For
      example:
 
-     # dd if=poky-image-minimal-live-atom-pc.hddimg of=/dev/sdb
+     # dd if=core-image-minimal-live-atom-pc.hddimg of=/dev/sdb
 
   If the device fails to boot with "Boot error" displayed, it is likely the BIOS
   cannot understand the physical layout of the disk (or rather it expects a
@@ -126,7 +126,7 @@ USB Device:
 
      b. Copy the contents of the poky image to the USB-ZIP mode device:
 
-     # mount -o loop poky-image-minimal-live-atom-pc.hddimg  /tmp/image
+     # mount -o loop core-image-minimal-live-atom-pc.hddimg  /tmp/image
      # mount /dev/sdb4 /tmp/usbkey
      # cp -rf /tmp/image/* /tmp/usbkey
 
@@ -185,7 +185,7 @@ and may require modification of the NAND environment.
      # cp u-boot-beagleboard.bin /media/boot/u-boot.bin
 
   3. Install the root filesystem
-     # tar x -C /media/root -f poky-image-$IMAGE_TYPE-beagleboard.tar.bz2
+     # tar x -C /media/root -f core-image-$IMAGE_TYPE-beagleboard.tar.bz2
      # tar x -C /media/root -f modules-$KERNEL_VERSION-beagleboard.tgz
 
   4. Install the kernel uImage
@@ -279,11 +279,11 @@ name in all commands where appropriate.
 
 --- Preparation ---
 
-1) Build an image (e.g. poky-image-minimal) using "routerstationpro" as the
+1) Build an image (e.g. core-image-minimal) using "routerstationpro" as the
 MACHINE
 
 2) Partition the USB drive so that primary partition 1 is type Linux (83).
-Minimum size depends on your root image size - poky-image-minimal probably
+Minimum size depends on your root image size - core-image-minimal probably
 only needs 8-16MB, other images will need more.
 
   # fdisk /dev/sdb
@@ -304,11 +304,11 @@ only needs 8-16MB, other images will need more.
   # mke2fs -j /dev/sdb1
 
 4) Mount partition 1 and then extract the contents of
-tmp/deploy/images/poky-image-XXXX.tar.bz2 into it (preserving permissions).
+tmp/deploy/images/core-image-XXXX.tar.bz2 into it (preserving permissions).
 
   # mount /dev/sdb1 /media/sdb1
   # cd /media/sdb1
-  # tar -xvjpf tmp/deploy/images/poky-image-XXXX.tar.bz2
+  # tar -xvjpf tmp/deploy/images/core-image-XXXX.tar.bz2
 
 5) Unmount the USB drive and then plug it into the board's USB port
 

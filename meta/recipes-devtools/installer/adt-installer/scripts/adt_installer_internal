@@ -172,7 +172,7 @@ echo_info "Installing target sysroot for arch: $1, rootfs type: $target_sysroot_
 
 
 qemu_type=`echo "$1" | sed -e 's/x86_64/x86-64/'`
-sysroot_image_name="poky-image-$target_sysroot_image-qemu$qemu_type.tar.bz2"
+sysroot_image_name="core-image-$target_sysroot_image-qemu$qemu_type.tar.bz2"
     #echo_info "Extracting rootfs: $sysroot_image_name, using pseudo..."
 
 scripts/extract_rootfs $sysroot_image_name $target_sysroot $POKY_NATIVE_SYSROOT $user_inst_type

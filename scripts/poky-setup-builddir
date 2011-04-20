@@ -103,8 +103,8 @@ cat <<EOM
 You can now run 'bitbake <target>'
 
 Common targets are:
-    poky-image-minimal
-    poky-image-sato
+    core-image-minimal
+    core-image-sato
     meta-toolchain
     meta-toolchain-sdk
 

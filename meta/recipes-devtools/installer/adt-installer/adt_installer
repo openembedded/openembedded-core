@@ -252,8 +252,8 @@ get_qemu_image()
   check_result
   
   for image_type in $select_rootfs; do
-    #echo_info "[ADT_INST] Downloading rootfs file: poky-image-$image_type-qemu$1.tar.bz2"
-    filename="poky-image-$image_type-qemu$target.tar.bz2"
+    #echo_info "[ADT_INST] Downloading rootfs file: core-image-$image_type-qemu$1.tar.bz2"
+    filename="core-image-$image_type-qemu$target.tar.bz2"
     download_file qemu$1/$filename
     check_result
   done

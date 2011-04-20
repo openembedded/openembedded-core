@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 RDEPENDS_${PN} += " \
-        task-poky-standalone-sdk-target \
+        task-core-standalone-sdk-target \
         qt4-embedded-mkspecs \
         libqt-embeddedmultimedia4-dev \
         libqt-embeddedphonon4-dev \
