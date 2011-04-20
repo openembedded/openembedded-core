@@ -14,12 +14,12 @@ DEPENDS = "gtk+ pango popt"
 
 SECTION = "devel"
 
-ALTNAME = "lttv-${PV}-18112010"
+ALTNAME = "lttv-${PV}-21032011"
 
 SRC_URI = "http://lttng.org/files/packages/${ALTNAME}.tar.gz"
 
-SRC_URI[md5sum] = "967f7c9c843a43e2ec2ef9216edabc70"
-SRC_URI[sha256sum] = "a7d14ae84f9bb123298840922730d3121fa073dc036dccac63083d9686adeacd"
+SRC_URI[md5sum] = "071bf3dd13e7562c08ee8f8971cfc76d"
+SRC_URI[sha256sum] = "cf87ffcf5d266b18979418e610a180a0b4214de41677f0be867885e15b2f7647"
 S = "${WORKDIR}/${ALTNAME}"
 
 inherit autotools
