@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Prune the list of libraries wanted to what we actually need.
 Bug-Debian: http://bugs.debian.org/128355
 

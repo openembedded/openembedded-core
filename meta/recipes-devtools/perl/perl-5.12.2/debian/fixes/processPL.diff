@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Always use PERLRUNINST when building perl modules.
 Bug-Debian: http://bugs.debian.org/357264
 Bug: http://rt.cpan.org/Public/Bug/Display.html?id=17224

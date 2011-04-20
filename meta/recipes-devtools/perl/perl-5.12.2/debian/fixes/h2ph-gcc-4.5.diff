@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Author: Robin Barker <rmbarker@cpan.org>
 Subject: h2ph fix for gcc 4.5
 Bug-Debian: http://bugs.debian.org/599933

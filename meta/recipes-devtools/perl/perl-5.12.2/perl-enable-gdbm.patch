@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [embedded specific]
+
 Index: perl-5.8.8/config_h.SH
 ===================================================================
 --- perl-5.8.8.orig/config_h.SH	2005-11-01 02:13:05.000000000 +0800

@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Remove overly restrictive DB_File version check.
 Bug-Debian: http://bugs.debian.org/340047
 

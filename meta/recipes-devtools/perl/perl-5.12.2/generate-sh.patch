@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [embedded specific]
+
 Use the ld flags from the supplied configuration file. For sh we need the
 flags that specify to build PIC code so that the shared libraries work.
 

@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [embedded specific]
+
 Index: perl-5.10.1/Makefile.SH
 ===================================================================
 --- perl-5.10.1.orig/Makefile.SH	2010-02-12 19:06:17.000000000 +0300

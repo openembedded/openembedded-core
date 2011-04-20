@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Various debian-specific ExtUtils changes
 
  * Respect umask during installation, and set as appropriate for each of

@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Debian policy doesn't install .packlist files for core or vendor.
 
 

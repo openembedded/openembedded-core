@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Remove standard libs from LD_RUN_PATH as per Debian policy.
 
 

@@ -1,11 +1,15 @@
+Upstream-Status:Inappropriate [embedded specific]
+
 Allow the location that .so files are searched for for dynamic
 loading to be changed via an environment variable. This is to allow
 us to load .so's from the host system while building for the target
 system.
 
+Update by Nitin A Kamble <nitin.a.kamble@intel.com> 2011/04/21
+
 --- perl-5.12.2/dist/XSLoader/XSLoader_pm.PL	2007/04/20 09:03:08	1.1
 +++ perl-5.12.2/dist/XSLoader/XSLoader_pm.PL	2007/04/20 09:03:08
-@@ -65,6 +65,15 @@
+@@ -65,6 +65,19 @@
  print OUT <<'EOT';
      my $modpname = join('/',@modparts);
      my $modlibname = (caller())[1];
@@ -15,7 +19,11 @@ system.
 +    {
 +        my $hostlib = $ENV{PERLHOSTLIB};
 +        print STDERR "*** Module name IN: $modlibname\n";
-+        $modlibname =~ s#(?<!/)(\.\./)*lib/#$hostlib#g;
++        ($p1, $p2, $p3, $p4, $p5) = $modlibname =~ m/(^(.*lib\/)?)((perl\/[0-9\.]*\/)?)(.*)$/;
++        print STDERR "*** p1: $p1  p3: $p3  p5: $p5\n";
++        if ( $p1 ne "" ) {
++            $modlibname = $hostlib.$p5;
++        }
 +        print STDERR "*** Module name OUT: $modlibname\n";
 +    }
      my $c = @modparts;

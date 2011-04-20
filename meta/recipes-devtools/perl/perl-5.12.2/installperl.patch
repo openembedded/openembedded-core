@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [embedded specific]
+
 Index: perl-5.12.2/installperl
 ===================================================================
 --- perl-5.12.2.orig/installperl

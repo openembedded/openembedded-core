@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Part of 52_debian_extutils_hacks.patch just to exclude the installation of .packlist files
 
 Index: perl-5.12.2/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm

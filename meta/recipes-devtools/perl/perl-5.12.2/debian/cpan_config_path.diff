@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Set location of CPAN::Config to /etc/perl as /usr may not be writable.
 
 

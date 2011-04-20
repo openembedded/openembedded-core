@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Raise the timeout of ext/threads/shared/t/stress.t to accommodate slower build hosts
 Bug-Debian: http://bugs.debian.org/501970
 

@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Provide a sensible INSTALLDIRS default for modules installed from CPAN.
 
 Some modules which are included in core set INSTALLDIRS => 'perl'

@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Document the Net::SMTP 'Port' option
 Bug-Debian: http://bugs.debian.org/100195
 Bug: http://rt.cpan.org/Public/Bug/Display.html?id=36038

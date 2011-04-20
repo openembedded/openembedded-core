@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [embedded specific]
+
 This removes all the logic that perl uses to locate an appropriate
 errno.h for the target. Instead we simple create a file that does
 

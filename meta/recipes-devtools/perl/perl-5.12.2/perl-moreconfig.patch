@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [embedded specific]
+
 We need ld in the fake config library, but it's not included by default. So
 expand the number of items included. While this works it indicates that the
 rest of the config items are not being picked up and/or are being picked up

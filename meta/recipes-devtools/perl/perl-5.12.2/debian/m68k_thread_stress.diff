@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Disable some threads tests on m68k for now due to missing TLS.
 Closes: #495826, #517938
 

@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [embedded specific]
+
 Fix for compiling with ssp enabled gcc:
 See http://bugs.openembedded.net/show_bug.cgi?id=1980
 

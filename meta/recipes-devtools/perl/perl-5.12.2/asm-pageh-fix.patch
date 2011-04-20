@@ -1,3 +1,5 @@
+Upstream-Status:Pending
+
 Perl inclues asm/page.h in order to get the definition for getpagesize which
 has been definied in unistd.h since glibc 2.1. Some recent version of linux
 libc headers removed the asm/page.h resulting in failures here for some

@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 From: Niko Tyni <ntyni@debian.org>
 Subject: LC_NUMERIC documentation fixes
 Bug-Debian: http://bugs.debian.org/379329

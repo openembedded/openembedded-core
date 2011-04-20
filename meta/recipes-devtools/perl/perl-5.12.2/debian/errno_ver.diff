@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Remove Errno version check due to upgrade problems with long-running processes.
 Bug-Debian: http://bugs.debian.org/343351
 

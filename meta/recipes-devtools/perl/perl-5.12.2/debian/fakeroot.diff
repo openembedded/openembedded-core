@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Postpone LD_LIBRARY_PATH evaluation to the binary targets.
 
 Modify the setting of LD_LIBRARY_PATH to append pre-existing values at the

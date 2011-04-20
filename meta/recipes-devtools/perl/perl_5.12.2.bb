@@ -8,7 +8,7 @@ PRIORITY = "optional"
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db perl-native-${PV} grep-native"
 DEPENDS += "gdbm zlib"
-PR = "r3"
+PR = "r4"
 
 # 5.10.1 has Module::Build built-in
 PROVIDES += "libmodule-build-perl"

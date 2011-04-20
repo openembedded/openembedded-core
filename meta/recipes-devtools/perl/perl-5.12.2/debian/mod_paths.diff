@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Tweak @INC ordering for Debian
 
 Our order is:

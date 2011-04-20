@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [embedded specific]
+
 Correctly identify arch-specific modules in ext/ where the .pm files
 are under lib.
 

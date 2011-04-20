@@ -1,3 +1,5 @@
+Upstream-Status:Inappropriate [debian patch]
+
 Subject: Tweak enc2xs to follow symlinks and ignore missing @INC directories.
 Bug-Debian: http://bugs.debian.org/290336
 
