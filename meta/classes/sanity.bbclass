@@ -116,7 +116,7 @@ def check_sanity(e):
 
         # Check we are using a valid lacal.conf
         current_conf  = data.getVar('CONF_VERSION', e.data, True)
-        conf_version =  data.getVar('POKY_CONF_VERSION', e.data, True)
+        conf_version =  data.getVar('LOCALCONF_VERSION', e.data, True)
 
         if current_conf != conf_version:
             messages = messages + "Poky has noticed your version of local.conf was generated from an older version of local.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/local.conf conf/local.conf.sample\" is a good way to visualise the changes.\n"
