@@ -1,7 +1,0 @@
-#!/bin/sh
-
-if (grep -q 'tmpfs.*/var.*tmpfs' /proc/mounts)
-then
-	test "$VERBOSE" != no && echo "Copying /var filesystem..."
-	cp -a /boot/var /
-fi
