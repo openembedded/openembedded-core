@@ -14,24 +14,9 @@ meta-maemo
 meta-extras
 meta-m2
 meta-prvt*
-poky-autobuilder*
 *.swp
 *.orig
 *.rej
 *~
-documentation/poky-ref-manual/poky-ref-manual.html
-documentation/poky-ref-manual/poky-ref-manual.pdf
-documentation/poky-ref-manual/poky-ref-manual.tgz
-documentation/poky-ref-manual/bsp-guide.html
-documentation/poky-ref-manual/bsp-guide.pdf
-documentation/bsp-guide/bsp-guide.html
-documentation/bsp-guide/bsp-guide.pdf
-documentation/bsp-guide/bsp-guide.tgz
-documentation/yocto-project-qs/yocto-project-qs.html
-documentation/yocto-project-qs/yocto-project-qs.tgz
-documentation/kernel-manual/kernel-manual.html
-documentation/kernel-manual/kernel-manual.tgz
-documentation/kernel-manual/kernel-manual.pdf
-
 
 
