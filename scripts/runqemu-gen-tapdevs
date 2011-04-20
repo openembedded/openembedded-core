@@ -51,8 +51,8 @@ if [[ ! -x "$TUNCTL" || -d "$TUNCTL" ]]; then
 fi
 
 SCRIPT_DIR=`dirname $0`
-POKY_QEMU_IFUP="$SCRIPT_DIR/runqemu-ifup"
-if [ ! -x "$POKY_QEMU_IFUP" ]; then
+RUNQEMU_IFUP="$SCRIPT_DIR/runqemu-ifup"
+if [ ! -x "$RUNQEMU_IFUP" ]; then
 	echo "Error: Unable to find the runqemu-ifup script in $SCRIPT_DIR"
 	exit 1
 fi
@@ -72,7 +72,7 @@ done
 echo "Creating $COUNT tap devices for GID $GID..."
 for ((index=0; index < $COUNT; index++)); do
 	echo "Creating tap$index"
-	ifup=`$POKY_QEMU_IFUP $GID $SYSROOT 2>&1`
+	ifup=`$RUNQEMU_IFUP $GID $SYSROOT 2>&1`
 	if [ $? -ne 0 ]; then
 		echo "Error running tunctl: $ifup"
 		exit 1
