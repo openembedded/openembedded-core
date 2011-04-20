@@ -19,7 +19,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #
-# Normally this is called as '. ./poky-init-buildenv builddir'
+# Normally this is called as '. ./oe-init-build-env builddir'
 #
 # This works in most shells (not dash), but not all of them pass arg1 when
 # being sourced.   To workaround the shell limitation use "set arg1" prior 
