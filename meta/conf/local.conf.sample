@@ -26,17 +26,6 @@ MACHINE ??= "qemux86"
 #MACHINE ?= "qemux86"
 #MACHINE ?= "qemux86-64"
 
-# Supported target hardware for demonstration purposes
-#MACHINE ?= "atom-pc"
-#MACHINE ?= "beagleboard"
-#MACHINE ?= "emenlow"
-#MACHINE ?= "mpc8315e-rdb"
-#MACHINE ?= "routerstationpro"
-
-DISTRO ?= "poky"
-# For bleeding edge / experimental / unstable package versions
-# DISTRO ?= "poky-bleeding"
-
 BBMASK = ""
 
 # EXTRA_IMAGE_FEATURES allows extra packages to be added to the generated images 
@@ -56,20 +45,13 @@ BBMASK = ""
 
 EXTRA_IMAGE_FEATURES = "tools-debug tools-profile tools-testapps debug-tweaks"
 
-# The default IMAGE_FEATURES above are too large for the mx31phy and 
-# c700/c750 machines which have limited space. The code below limits
-# the default features for those machines.
-EXTRA_IMAGE_FEATURES_c7x0 = "tools-testapps debug-tweaks"
-EXTRA_IMAGE_FEATURES_mx31phy = "debug-tweaks"
-EXTRA_IMAGE_FEATURES_mx31ads = "tools-testapps debug-tweaks"
-
 # A list of packaging systems used in generated images
 # The first package type listed will be used for rootfs generation
 # include 'package_deb' for debs
 # include 'package_ipk' for ipks
 # include 'package_rpm' for rpms
 #PACKAGE_CLASSES ?= "package_rpm package_deb package_ipk"
-PACKAGE_CLASSES ?= "package_rpm package_ipk"
+PACKAGE_CLASSES ?= "package_ipk"
 
 # mklibs library size optimization is more useful to smaller images, 
 # and less useful for bigger images. Also mklibs library optimization can break the ABI compatibility, so should not be applied to the images which are tobe
@@ -85,18 +67,6 @@ PACKAGE_CLASSES ?= "package_rpm package_ipk"
 # include 'image-swab' to perform host system intrusion detection
 # NOTE: if listing mklibs & prelink both, then make sure mklibs is before prelink
 USER_CLASSES ?= "image-mklibs image-prelink"
-
-# POKYMODE controls the characteristics of the generated packages/images by
-# telling poky which type of toolchain to use.
-#
-# Options include several different EABI combinations and a compatibility 
-# mode for the OABI mode poky previously used. 
-#
-# The default is "eabi"
-# Use "oabi" for machines with kernels < 2.6.18 on ARM for example.
-# Use "external-MODE" to use the precompiled external toolchains where MODE
-# is the type of external toolchain to use e.g. eabi.
-# POKYMODE = "external-eabi"
 
 # Uncomment this to specify where BitBake should create its temporary files.
 # Note that a full build of everything in OpenEmbedded will take GigaBytes of hard
@@ -164,7 +134,7 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 # Supported values are i686 and x86_64
 #SDKMACHINE ?= "i686"
 
-# Poky can try and fetch packaged-staging packages from a http, https or ftp
+# We can try and fetch shared state packages from a http, https or ftp
 # mirror. Set this variable to the root of a pstage directory on a server.
 #SSTATE_MIRRORS ?= "\
 #file://.* http://someserver.tld/share/sstate/ \n \
@@ -182,7 +152,7 @@ ENABLE_BINARY_LOCALE_GENERATION = "1"
 #Because of the QEMU booting slowness issue(see bug #646 and #618), autobuilder
 #may suffer a timeout issue when running sanity test. We introduce variable
 #TEST_SERIALIZE here to reduce the time on sanity test. It is by default set 
-#to 1. Poky will start image and run cases in the same image without reboot 
+#to 1. This will start image and run cases in the same image without reboot 
 #or kill. If it is set to 0, the image will be copied and tested for each 
 #case, which will take much time.
 #TEST_SERIALIZE = "1"
