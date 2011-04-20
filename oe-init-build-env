@@ -25,8 +25,8 @@
 # being sourced.   To workaround the shell limitation use "set arg1" prior 
 # to sourcing this script.
 #
-if [ -z "$ZSH_NAME" ] && [ "x$0" = "x./poky-init-build-env" ]; then
-   echo "Error: This script needs to be sourced. Please run as '. ./poky-init-build-env'"
+if [ -z "$ZSH_NAME" ] && [ "x$0" = "x./oe-init-build-env" ]; then
+   echo "Error: This script needs to be sourced. Please run as '. ./oe-init-build-env'"
 else
    if [ -n "$BASH_SOURCE" ]; then
       OEROOT="`dirname $BASH_SOURCE`"
@@ -35,7 +35,7 @@ else
    fi
    OEROOT=`readlink -f "$OEROOT"`
    export OEROOT
-   . $OEROOT/scripts/poky-env-internal
+   . $OEROOT/scripts/oe-buildenv-internal
    $OEROOT/scripts/poky-setup-builddir
    unset OEROOT
    unset BBPATH

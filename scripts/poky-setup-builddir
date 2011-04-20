@@ -31,7 +31,7 @@ if ! (test -d "$BUILDDIR"); then
 fi
 
 if ! (test -w "$BUILDDIR"); then
-    echo >&2 "Error: Cannot write to $BUILDDIR, perhaps try sourcing with a writable path? i.e. . poky-init-build-env ~/my-build"
+    echo >&2 "Error: Cannot write to $BUILDDIR, perhaps try sourcing with a writable path? i.e. . oe-init-build-env ~/my-build"
     exit 1
 fi
 

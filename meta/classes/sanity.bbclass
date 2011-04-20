@@ -46,7 +46,7 @@ def check_pseudo_wrapper():
     # Check if bitbake wrapper is being used
     pseudo_build = os.environ.get( 'PSEUDO_BUILD' )
     if not pseudo_build:
-        bb.warn("Bitbake has not been run using the bitbake wrapper (scripts/bitbake); this is likely because your PATH has been altered from that normally set up by the poky-init-build-env script. Not using the wrapper may result in failures during package installation, so it is highly recommended that you set your PATH back so that the wrapper script is being executed.")
+        bb.warn("Bitbake has not been run using the bitbake wrapper (scripts/bitbake); this is likely because your PATH has been altered from that normally set up by the oe-init-build-env script. Not using the wrapper may result in failures during package installation, so it is highly recommended that you set your PATH back so that the wrapper script is being executed.")
 
     if (not pseudo_build) or pseudo_build == '2':
         # pseudo ought to be working, let's see if it is...
