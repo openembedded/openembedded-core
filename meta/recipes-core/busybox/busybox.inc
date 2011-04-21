@@ -29,9 +29,6 @@ CONFFILES_${PN}-syslog = "${sysconfdir}/syslog.conf.${PN}"
 
 RRECOMMENDS_${PN} = "${PN}-syslog ${PN}-udhcpc"
 
-# This disables the syslog startup links in slugos (see slugos-init)
-INITSCRIPT_PARAMS_${PN}-syslog_slugos = "start 20 ."
-
 inherit cml1 update-rc.d
 
 do_configure () {

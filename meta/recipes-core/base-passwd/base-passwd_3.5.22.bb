@@ -1,7 +1,7 @@
 SUMMARY = "Base system master password/group files."
 DESCRIPTION = "The master copies of the user database files (/etc/passwd and /etc/group).  The update-passwd tool is also provided to keep the system databases synchronized with these master files."
 SECTION = "base"
-PR = "r0"
+PR = "r1"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
@@ -34,11 +34,6 @@ do_install () {
 	install -p -m 644 README ${D}${docdir}/${PN}/
 	install -p -m 644 debian/copyright ${D}${docdir}/${PN}/
 }
-
-do_install_append_openmn() {
-	echo "0:Jn6tcg/qjqvUE:0:0:root:/root:/bin/sh" >>${D}${datadir}/base-passwd/passwd.master
-}
-
 
 pkg_postinst_${PN} () {
 	set -e

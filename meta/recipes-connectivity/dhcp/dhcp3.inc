@@ -47,7 +47,3 @@ FILES_dhcp-client = "${base_sbindir}/dhclient ${base_sbindir}/dhclient-script ${
 RDEPENDS_dhcp-client = "bash"
 
 FILES_dhcp-omshell = "${bindir}/omshell"
-
-CONFFILES_dhcp-server_nylon = "/etc/dhcp/dhcpd.conf"
-CONFFILES_dhcp-relay_nylon = "/etc/default/dhcp-relay"
-CONFFILES_dhcp-client_nylon = "/etc/dhcp/dhclient.conf"

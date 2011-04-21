@@ -17,7 +17,6 @@ PARALLEL_MAKE = ""
 inherit autotools gettext
 
 DPKG_INIT_POSITION = "98"
-DPKG_INIT_POSITION_slugos = "41"
 
 pkg_postinst_dpkg () {
 #!/bin/sh

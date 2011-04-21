@@ -10,11 +10,6 @@ inherit update-rc.d
 
 INITSCRIPT_NAME = "networking"
 INITSCRIPT_PARAMS = "start 40 S . stop 40 0 6 1 ."
-# On MNCI etc, start very late so that our own apps come up faster
-INITSCRIPT_PARAMS_openmn = "start 85 1 2 3 4 5 . stop 85 0 6 1 ."
-# On SlugOS (NSLU2) delay the stop until after network apps have exited
-# Do not stop in single user - there's no way to sulogin!
-INITSCRIPT_PARAMS_slugos = "start 42 S 0 6 ."
 
 SRC_URI = "${DEBIAN_MIRROR}/main/n/netbase/netbase_${PV}.tar.gz \
            file://init \
