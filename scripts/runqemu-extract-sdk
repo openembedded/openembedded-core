@@ -21,7 +21,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
 function usage() {
-	echo "Usage: $0 <runqemu-sdk-tarball> <extract-dir>"
+	echo "Usage: $0 <image-tarball> <extract-dir>"
 }
 
 if [ $# -ne 2 ]; then
