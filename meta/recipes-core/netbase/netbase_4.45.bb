@@ -40,7 +40,7 @@ do_install () {
 
 	# Disable network manager on machines that commonly do NFS booting
 	case "${MACHINE}" in
-		"omap-3430sdp" | "omap-3430ldp" | "omap-2430sdp" | "qemuarm" | "qemux86" | "qemux86-64" )
+		"qemuarm" | "qemux86" | "qemux86-64" | "qemumips" | "qemuppc" )
 			touch ${D}${sysconfdir}/network/nm-disabled-eth0
 			;;
 		*)
@@ -50,9 +50,6 @@ do_install () {
 
 CONFFILES_${PN} = "${sysconfdir}/hosts ${sysconfdir}/network/interfaces"
 
-PACKAGE_ARCH_omap-3430sdp = "${MACHINE_ARCH}"
-PACKAGE_ARCH_omap-3430ldp = "${MACHINE_ARCH}"
-PACKAGE_ARCH_omap-2430sdp = "${MACHINE_ARCH}"
 PACKAGE_ARCH_qemuarm = "${MACHINE_ARCH}"
 PACKAGE_ARCH_qemux86 = "${MACHINE_ARCH}"
 PACKAGE_ARCH_qemux86-64 = "${MACHINE_ARCH}"

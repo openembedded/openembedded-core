@@ -1,5 +1,0 @@
-# I know that this was created for usb-client stuff
-# but tosa/2.6 need (un)loading USB Host module
-# on suspend/resume and this way is simplest one ;)
-
-usbdmodule=ohci-hcd

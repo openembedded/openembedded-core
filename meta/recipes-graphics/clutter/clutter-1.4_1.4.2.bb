@@ -1,6 +1,6 @@
 require clutter.inc
 
-PR = "r0"
+PR = "r1"
 
 PACKAGES =+ "${PN}-examples"
 FILES_${PN}-examples = "${bindir}/test-* ${pkgdatadir}/redhand.png"

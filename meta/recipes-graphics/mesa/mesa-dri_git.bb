@@ -18,9 +18,6 @@ PR = "r1"
 # most of our targets do not have DRI so will use mesa-xlib
 DEFAULT_PREFERENCE = "-1"
 
-# Atom PCs have DRI support so use mesa-dri by default
-DEFAULT_PREFERENCE_atom-pc = "1"
-
 PACKAGES =+ "${PN}-xprogs"
 PACKAGES_DYNAMIC = "mesa-dri-driver-*"
 

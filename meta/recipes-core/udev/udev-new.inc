@@ -27,8 +27,6 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
            file://udev-cache \
            file://init"
 
-SRC_URI_append_h2200 = " file://50-hostap_cs.rules "
-
 inherit autotools pkgconfig update-rc.d
 
 # udevd/udevadm -> /sbin/, libudev.so.* -> /lib/
@@ -39,7 +37,6 @@ EXTRA_OECONF = "--disable-introspection --with-rootlibdir=${base_libdir} \
 
 PACKAGES =+ "udev-cache libudev libudev-dev libudev-dbg"
 PACKAGES =+ "libgudev libgudev-dev libgudev-dbg"
-PACKAGE_ARCH_h2200 = "h2200"
 
 INITSCRIPT_PACKAGES = "udev udev-cache"
 INITSCRIPT_NAME_udev = "udev"
@@ -85,8 +82,4 @@ do_install_append () {
 
 	install -m 0755 ${WORKDIR}/mount.sh ${D}${sysconfdir}/udev/scripts/mount.sh
 	install -m 0755 ${WORKDIR}/network.sh ${D}${sysconfdir}/udev/scripts
-}
-
-do_install_append_h2200() {
-	install -m 0644 ${WORKDIR}/50-hostap_cs.rules         ${D}${sysconfdir}/udev/rules.d/50-hostap_cs.rules
 }

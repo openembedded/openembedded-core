@@ -2,7 +2,7 @@ SUMMARY = "Miscellaneous files for the base system."
 DESCRIPTION = "The base-files package creates the basic system directory structure and provides a small set of key configuration files for the system."
 SECTION = "base"
 PRIORITY = "required"
-PR = "r67"
+PR = "r68"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://licenses/GPL-2;md5=94d55d512a9ba36caa9b7df079bae19f"
 SRC_URI = "file://rotation \
@@ -64,8 +64,6 @@ conffiles = "${sysconfdir}/debian_version ${sysconfdir}/host.conf \
 #
 hostname = "openembedded"
 hostname_slugos = "nslu2"
-hostname_mnci = "MNCI"
-hostname_rt3000 = "MNRT"
 hostname_jlime = "JLime"
 
 BASEFILESISSUEINSTALL ?= "do_install_basefilesissue"
@@ -135,11 +133,6 @@ do_install_basefilesissue () {
  	fi
 }
 
-do_install_append_mnci () {
-	rmdir ${D}/tmp
-	ln -s var/tmp ${D}/tmp
-}
-
 do_install_append_nylon() {
 	printf "" "" >${D}${sysconfdir}/resolv.conf
 	rm -r ${D}/mnt/*
@@ -156,10 +149,6 @@ do_install_append_slugos() {
 	ln -s ../root ${D}/home/root
 }
 
-do_install_append_netbook-pro () {
-	mkdir -p ${D}/initrd
-}
-
 do_install_append_linuxstdbase() {
 	for d in ${dirs3755}; do
                 install -m 0755 -d ${D}$d
@@ -173,10 +162,6 @@ do_install_append_linuxstdbase() {
 PACKAGES = "${PN}-doc ${PN} ${PN}-dev ${PN}-dbg"
 FILES_${PN} = "/"
 FILES_${PN}-doc = "${docdir} ${datadir}/common-licenses"
-
-# M&N specific packaging
-PACKAGE_ARCH_mnci = "mnci"
-PACKAGE_ARCH_rt3000 = "rt3000"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

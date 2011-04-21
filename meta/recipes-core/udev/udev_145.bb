@@ -1,14 +1,11 @@
 RPROVIDES_${PN} = "hotplug"
 
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
            file://enable-gudev.patch;patch=1 \
 	   file://run.rules \
 	   "
-
-SRC_URI_append_h2200 = " file://50-hostap_cs.rules "
-PACKAGE_ARCH_h2200 = "h2200"
 
 require udev.inc
 
@@ -54,9 +51,5 @@ do_install () {
 	install -m 0755 ${WORKDIR}/network.sh ${D}${sysconfdir}/udev/scripts
 
 	install -d ${D}${base_libdir}/udev/
-}
-
-do_install_append_h2200() {
-	install -m 0644 ${WORKDIR}/50-hostap_cs.rules         ${D}${sysconfdir}/udev/rules.d/50-hostap_cs.rules
 }
 

@@ -63,8 +63,6 @@ RRECOMMENDS_task-core-tools-profile = "\
 RDEPENDS_task-core-tools-profile_append_qemux86 = " valgrind lttng-ust systemtap"
 RDEPENDS_task-core-tools-profile_append_qemux86-64 = " lttng-ust systemtap"
 RDEPENDS_task-core-tools-profile_append_qemuppc = " lttng-ust systemtap"
-RDEPENDS_task-core-tools-profile_append_emenlow = " lttng-ust systemtap"
-RDEPENDS_task-core-tools-profile_append_atom-pc = " lttng-ust systemtap"
 
 RDEPENDS_task-core-tools-testapps = "\
     blktool \

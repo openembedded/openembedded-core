@@ -6,12 +6,10 @@ SECTION = "x11/libs"
 PRIORITY = "optional"
 DEPENDS += "virtual/libgl virtual/libx11 fontconfig libxft libxext libxrender libxrandr libxcursor"
 
-INC_PR = "r22"
+INC_PR = "r23"
 
 QT_GLFLAGS ?= "-no-opengl"
 QT_GLFLAGS_qemux86 = "-opengl"
-QT_GLFLAGS_emenlow = "-opengl"
-QT_GLFLAGS_atom-pc = "-opengl"
 QT_GLFLAGS_qemuppc = "-opengl"
 QT_CONFIG_FLAGS += "-no-xinerama -no-xkb ${QT_GLFLAGS}"
 QT_BASE_NAME ?= "qt4"

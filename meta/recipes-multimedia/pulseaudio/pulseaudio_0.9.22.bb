@@ -4,10 +4,6 @@ PR = "r0"
 
 DEPENDS += "gdbm speex"
 
-DEFAULT_PREFERENCE_om-gta01 = "-1"
-DEFAULT_PREFERENCE_om-gta02 = "-1"
-DEFAULT_PREFERENCE_motorola-ezx = "-1"
-
 inherit gettext
 
 SRC_URI += "\
