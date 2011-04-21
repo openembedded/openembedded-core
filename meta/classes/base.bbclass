@@ -53,15 +53,15 @@ oefatal() {
 }
 
 oedebug() {
-	test $# -ge 2 || {
+	if [ $# -lt 2]; then
 		echo "Usage: oedebug level \"message\""
 		exit 1
-	}
+	fi
 
-	test ${OEDEBUG:-0} -ge $1 && {
+	if [ ${OEDEBUG:-0} -ge $1 ]; then
 		shift
 		echo "DEBUG:" $*
-	}
+	fi
 }
 
 oe_runmake() {
