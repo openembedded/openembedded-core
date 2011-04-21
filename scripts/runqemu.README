@@ -1,90 +1,42 @@
-Poky images with QEMU
-=====================
+Using OE images with QEMU
+=========================
 
-Poky can generate qemu bootable kernels and images with can be used 
-on a desktop system. Both arm and x86 images can currently be booted.
-There are two scripts, runqemu and runqemu, one for use within poky, 
-the other externally.
-
-QEMU outside Poky (runqemu)
-=============================
+OE-Core can generate qemu bootable kernels and images with can be used 
+on a desktop system. The scripts currently support booting ARM, MIPS, PowerPC
+and x86 (32 and 64 bit) images. The scripts can be used within the OE build 
+system or externaly.
 
 The runqemu script is run as: 
 
-   MACHINE=<machine> runqemu <zimage> <filesystem>
+   runqemu <machine> <zimage> <filesystem>
 
 where:
 
+   <machine> is the machine/architecture to use (qemuarm/qemumips/qemuppc/qemux86/qemux86-64)
    <zimage> is the path to a kernel (e.g. zimage-qemuarm.bin)
-   <filesystem> is the path to an ext2 image (e.g. filesystem-qemuarm.ext2)
-   <machine> is "qemuarm" or "qemux86"
+   <filesystem> is the path to an ext2 image (e.g. filesystem-qemuarm.ext2) or an nfs directory
    
-The MACHINE=<machine> prefix is optional and without it the script will try 
-to detect the machine name from the name of the <zimage> file.
+If <machine> isn't specified, the script will try to detect the machine name 
+from the name of the <zimage> file.
 
 If <filesystem> isn't specified, nfs booting will be assumed.
 
+When used within the build system, it will default to qemuarm, ext2 and the last kernel and 
+core-image-sato-sdk image built by the build system. If an sdk image isn't present it will look
+for sato and minimal images.
 
-QEMU within Poky (runqemu)
-==========================
-
-The runqemu script is run as: 
-
-   runqemu <target> <type> <zimage> <filesystem>
-
-where:
-
-   <target> is "qemuarm","qemux86","nokia800","spitz" or "akita"
-   <type> is "ext2", "nfs", "ext3" or "jffs2". (not all machines support all options)
-   <zimage> is the path to a kernel (e.g. zimage-qemuarm.bin)
-   <filesystem> is the path to the image (e.g. filesystem-qemuarm.ext2)
-
-It will default to the qemuarm, ext2 and the last kernel and core-image-sdk 
-image built by poky.
+Full usage instructions can be seen by running the command with no options specified.
 
 
 Notes
 =====
 
  - The scripts run qemu using sudo. Change perms on /dev/net/tun to 
-   run as non root
+   run as non root. The runqemu-gen-tapdevs script can also be used by
+   root to prepopulate the appropriate network devices.
  - You can access the host computer at 192.168.7.1 within the image.
  - Your qemu system will be accessible as 192.16.7.2.
- - The default NFS mount points are /srv/nfs/qemux86 or /srv/nfs/qemuarm 
-   depending on the target type.
- - Images built for qemux86/qemuarm contain NFS server which export whole
-   rootfs (/) in read/write mode.
- - You can set QEMU_MEMORY to control amount of available memory (default 64M).
- - You can set SERIAL_LOGFILE to have the serial output from the image logged 
-   to a file.
+ - The script extracts the root filesystem specified under pseudo and sets up a userspace
+   NFS server to share the image over by default meaning the filesystem can be accessed by
+   both the host and guest systems.
 
-
-NFS Image Notes
-===============
-
-As root;
-
-% apt-get install nfs-kernel-server
-
-% mkdir /srv/nfs/qemuarm
-
-Edit via /etc/exports :
-
-# /etc/exports: the access control list for filesystems which may be exported
-#               to NFS clients.  See exports(5).
-/srv/nfs/qemuarm 192.168.7.2(rw,no_root_squash)
-
-% /etc/init.d/nfs-kernel-server restart
-
-% modprobe tun
-
-untar build/tmp/deploy/images/<built image>.rootfs.tar.bz2 into /srv/nfs/qemuarm
-
-Finally, launch:
-
-% runqemu <target> nfs
-
-(Substitute qemux86 for qemuarm when using qemux86)
-
-
-                                         Copyright (C) 2006-2008 OpenedHand Ltd.
