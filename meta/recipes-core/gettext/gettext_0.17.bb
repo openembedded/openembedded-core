@@ -53,9 +53,36 @@ acpaths = '-I ${S}/autoconf-lib-link/m4/ \
 # 1300    KiB /ep93xx/uclibc-dev_0.9.29-r8_ep93xx.ipk
 # 140     KiB /armv4t/gettext-dev_0.14.1-r6_armv4t.ipk
 # 4       KiB /ep93xx/libgcc-s-dev_4.2.2-r2_ep93xx.ipk
+PACKAGES =+ "gettext-runtime gettext-runtime-dev gettext-runtime-doc"
 
-PACKAGES =+ "libgettextlib libgettextsrc"
-FILES_libgettextlib = "${libdir}/libgettextlib-*.so*"
-FILES_libgettextsrc = "${libdir}/libgettextsrc-*.so*"
-
+FILES_gettext-runtime = "${bindir}/gettext \
+                         ${bindir}/ngettext \
+                         ${bindir}/envsubst \
+                         ${bindir}/gettext.sh \
+                         ${libdir}/libasprintf.so* \
+                         ${libdir}/GNU.Gettext.dll \
+                        "
+FILES_gettext-runtime_append_libc-uclibc = " ${libdir}/libintl.so* \
+                                             ${libdir}/charset.alias \
+                                           "
+FILES_gettext-runtime-dev += "${libdir}/libasprintf.a \
+                      ${includedir}/autosprintf.h \
+                     "
+FILES_gettext-runtime-dev_append_libc-uclibc = " ${libdir}/libintl.a \
+                                                 ${includedir}/libintl.h \
+                                               "
+FILES_gettext-runtime-doc = "${mandir}/man1/gettext.* \
+                             ${mandir}/man1/ngettext.* \
+                             ${mandir}/man1/envsubst.* \
+                             ${mandir}/man1/.* \
+                             ${mandir}/man3/* \
+                             ${docdir}/gettext/gettext.* \
+                             ${docdir}/gettext/ngettext.* \
+                             ${docdir}/gettext/envsubst.* \
+                             ${docdir}/gettext/*.3.html \
+                             ${datadir}/gettext/ABOUT-NLS \
+                             ${docdir}/gettext/csharpdoc/* \
+                             ${docdir}/libasprintf/autosprintf.html \
+                             ${infodir}/autosprintf.info \
+                            "
 BBCLASSEXTEND = "native nativesdk"
