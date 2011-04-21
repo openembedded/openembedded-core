@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=963ea0772a2adbdcd607a9b2ec320c11 \
 
 SECTION = "utils"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "https://fedorahosted.org/releases/c/r/cronie/cronie-${PV}.tar.gz \
            file://crond.init \
@@ -37,12 +37,14 @@ do_install_append () {
 	# below are necessary for a complete cron environment
 	install -d ${D}${localstatedir}/spool/cron
 	install -m 0755 ${WORKDIR}/crontab ${D}${sysconfdir}/
-        mkdir -p ${D}${sysconfdir}/cron.d
+	mkdir -p ${D}${sysconfdir}/cron.d
 	mkdir -p ${D}${sysconfdir}/cron.hourly
 	mkdir -p ${D}${sysconfdir}/cron.daily
 	mkdir -p ${D}${sysconfdir}/cron.weekly
 	mkdir -p ${D}${sysconfdir}/cron.monthly
 }
+
+FILES_${PN} += "${sysconfdir}/cron*"
 
 pkg_postinst_${PN} () {
 	if [ "x$D" != "x" ] ; then
