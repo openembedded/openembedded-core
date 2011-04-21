@@ -101,7 +101,7 @@ def check_sanity(e):
     # various classes
     import sys
     if sys.hexversion < 0x020600F0:
-        messages = messages + 'Poky requires at least Python 2.6 to run. Please update your Python interpreter.\n'
+        messages = messages + 'The system requires at least Python 2.6 to run. Please update your Python interpreter.\n'
 
     if (LooseVersion(__version__) < LooseVersion(minversion)):
         messages = messages + 'Bitbake version %s is required and version %s was found\n' % (minversion, __version__)
@@ -119,20 +119,20 @@ def check_sanity(e):
         conf_version =  data.getVar('LOCALCONF_VERSION', e.data, True)
 
         if current_conf != conf_version:
-            messages = messages + "Poky has noticed your version of local.conf was generated from an older version of local.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/local.conf conf/local.conf.sample\" is a good way to visualise the changes.\n"
+            messages = messages + "Your version of local.conf was generated from an older version of local.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/local.conf conf/local.conf.sample\" is a good way to visualise the changes.\n"
 
         # Check bblayers.conf is valid
         current_lconf = data.getVar('LCONF_VERSION', e.data, True)
         lconf_version = data.getVar('LAYER_CONF_VERSION', e.data, True)
         if current_lconf != lconf_version:
-            messages = messages + "Poky has noticed your version of bblayers.conf was generated from an older version of bblayers.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/bblayers.conf conf/bblayers.conf.sample\" is a good way to visualise the changes.\n"
+            messages = messages + "Your version of bblayers.conf was generated from an older version of bblayers.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/bblayers.conf conf/bblayers.conf.sample\" is a good way to visualise the changes.\n"
 
         # If we have a site.conf, check it's valid
         if check_conf_exists("conf/site.conf", e.data):
             current_sconf = data.getVar('SCONF_VERSION', e.data, True)
             sconf_version = data.getVar('SITE_CONF_VERSION', e.data, True)
             if current_sconf != sconf_version:
-                messages = messages + "Poky has noticed your version of site.conf was generated from an older version of site.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/site.conf conf/site.conf.sample\" is a good way to visualise the changes.\n"
+                messages = messages + "Your version of site.conf was generated from an older version of site.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/site.conf conf/site.conf.sample\" is a good way to visualise the changes.\n"
 
     assume_provided = data.getVar('ASSUME_PROVIDED', e.data , True).split()
     # Check user doesn't have ASSUME_PROVIDED = instead of += in local.conf
@@ -334,9 +334,9 @@ def check_sanity(e):
 
     oeroot = data.getVar('COREBASE', e.data)
     if oeroot.find ('+') != -1:
-        messages = messages + "Error, you have an invalid character (+) in your COREBASE directory path. Please move Poky to a directory which doesn't include a +."
+        messages = messages + "Error, you have an invalid character (+) in your COREBASE directory path. Please move the installation to a directory which doesn't include a +."
     elif oeroot.find (' ') != -1:
-        messages = messages + "Error, you have a space in your COREBASE directory path. Please move Poky to a directory which doesn't include a space."
+        messages = messages + "Error, you have a space in your COREBASE directory path. Please move the installation to a directory which doesn't include a space."
 
     # Check that we don't have duplicate entries in PACKAGE_ARCHS
     pkgarchs = data.getVar('PACKAGE_ARCHS', e.data, True)
