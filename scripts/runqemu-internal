@@ -1,8 +1,8 @@
 #!/bin/bash -x
 
-# Handle running Poky images under qemu
+# Handle running OE images under qemu
 #
-# Copyright (C) 2006-2008 OpenedHand Ltd.
+# Copyright (C) 2006-2011 Linux Foundation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -86,7 +86,7 @@ fi
 # This file is created when runqemu-gen-tapdevs creates a bank of tap
 # devices, indicating that the user should not bring up new ones using
 # sudo.
-NOSUDO_FLAG="/etc/poky-nosudo"
+NOSUDO_FLAG="/etc/runqemu-nosudo"
 
 QEMUIFUP=`which runqemu-ifup`
 QEMUIFDOWN=`which runqemu-ifdown`

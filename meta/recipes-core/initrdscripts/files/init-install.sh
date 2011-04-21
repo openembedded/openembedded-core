@@ -21,7 +21,7 @@ for device in 'hda' 'hdb' 'sda' 'sdb'
 	  found="yes"
 
 	  while true; do
-	      echo "Found drive at /dev/${device}. Do you want to install poky there ? [y/n]"
+	      echo "Found drive at /dev/${device}. Do you want to install this image there ? [y/n]"
 	      read answer
 	      if [ "$answer" = "y" ] ; then
 		  break
@@ -153,7 +153,7 @@ echo "(hd0) /dev/${device}" > /ssd/boot/grub/device.map
 
 echo "default 0" > /ssd/boot/grub/menu.lst
 echo "timeout 30" >> /ssd/boot/grub/menu.lst
-echo "title Poky-Netbook" >> /ssd/boot/grub/menu.lst
+echo "title Live Boot/Install-Image" >> /ssd/boot/grub/menu.lst
 echo "root  (hd0,0)" >> /ssd/boot/grub/menu.lst
 echo "kernel /boot/vmlinuz root=$rootfs rw $3 $4 quiet" >> /ssd/boot/grub/menu.lst
 

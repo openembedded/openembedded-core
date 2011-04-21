@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Handle running Poky images standalone with QEMU
+# Handle running OE images standalone with QEMU
 #
-# Copyright (C) 2006-2010 Intel Corp.
+# Copyright (C) 2006-2011 Linux Foundation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -282,7 +282,7 @@ setup_tmpdir() {
 setup_sysroot() {
 	# Toolchain installs set up $OECORE_NATIVE_SYSROOT in their
 	# environment script. If that variable isn't set, we're
-	# either in an in-tree poky scenario or the environment
+	# either in an in-tree build scenario or the environment
 	# script wasn't source'd.
 	if [ -z "$OECORE_NATIVE_SYSROOT" ]; then
 		setup_tmpdir

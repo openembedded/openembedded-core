@@ -32,7 +32,7 @@ fi
 SYSROOT_SETUP_SCRIPT=`which oe-find-native-sysroot`
 if [ -z "$SYSROOT_SETUP_SCRIPT" ]; then
     echo "Error: Unable to find the oe-find-native-sysroot script"
-    echo "Did you forget to source your Poky environment script?"
+    echo "Did you forget to source your build system environment setup script?"
     exit 1
 fi
 . $SYSROOT_SETUP_SCRIPT

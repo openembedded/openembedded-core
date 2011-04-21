@@ -29,7 +29,7 @@ def qemuimagetest_main(d):
     import os
     
     """
-    Test Controller for Poky Testing.
+    Test Controller for automated testing.
     """
     
     casestr = re.compile(r'(?P<scen>\w+\b):(?P<case>\w+$)')

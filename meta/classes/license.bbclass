@@ -1,4 +1,4 @@
-# Populates LICENSE_DIRECTORY as set in poky.conf with the license files as set by
+# Populates LICENSE_DIRECTORY as set in distro config with the license files as set by
 # LIC_FILES_CHKSUM. 
 # TODO:
 # - We should also enable the ability to put the generated license directory onto the
@@ -31,7 +31,7 @@ python do_populate_lic() {
     destdir = os.path.join(bb.data.getVar('LICSSTATEDIR', d, True), pn)
     # The license files are located in S/LIC_FILE_CHECKSUM.
     srcdir = bb.data.getVar('S', d, True)
-    # Directory we store the generic licenses as set in poky.conf
+    # Directory we store the generic licenses as set in the distro configuration
     generic_directory = bb.data.getVar('COMMON_LICENSE_DIR', d, True)
     if not generic_directory:
         raise bb.build.FuncFailed("COMMON_LICENSE_DIR is unset. Please set this in your distro config")

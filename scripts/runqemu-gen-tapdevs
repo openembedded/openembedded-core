@@ -2,10 +2,10 @@
 #
 # Create a "bank" of tap network devices that can be used by the
 # runqemu script. This script needs to be run as root, and will
-# use the tunctl binary from a Poky sysroot. Note: many Linux distros
-# these days still use an older version of tunctl which does not
-# support the group permissions option, hence the need to use Poky's
-# version.
+# use the tunctl binary from the build system sysroot. Note: many Linux 
+# distros these days still use an older version of tunctl which does not
+# support the group permissions option, hence the need to use the build
+# system provided version.
 #
 # Copyright (C) 2010 Intel Corp.
 #
@@ -26,7 +26,7 @@ usage() {
 	echo "Usage: sudo $0 <gid> <num> <native-sysroot-basedir>"
 	echo "Where <gid> is the numeric group id the tap devices will be owned by"
 	echo "<num> is the number of tap devices to create (0 to remove all)"
-	echo "<native-sysroot-basedir> is the path to Poky's native sysroot"
+	echo "<native-sysroot-basedir> is the path to the build system's native sysroot"
 	exit 1
 }
 
@@ -82,4 +82,4 @@ done
 # The runqemu script will check for this file, and if it exists,
 # will use the existing bank of tap devices without creating
 # additional ones via sudo.
-touch /etc/poky-nosudo
+touch /etc/runqemu-nosudo

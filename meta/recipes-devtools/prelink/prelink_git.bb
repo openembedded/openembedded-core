@@ -26,7 +26,7 @@ inherit autotools
 BBCLASSEXTEND = "native"
 
 EXTRA_OECONF = "--disable-selinux --with-pkgversion=${PV}-${PR} \
-	--with-bugurl=http://bugzilla.pokylinux.org/"
+	--with-bugurl=http://bugzilla.yoctoproject.org/"
 
 do_configure_prepend () {
         # Disable documentation!

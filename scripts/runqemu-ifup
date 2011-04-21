@@ -1,10 +1,10 @@
 #!/bin/bash
 #
 # QEMU network interface configuration script. This utility needs to
-# be run as root, and will use the tunctl binary from a Poky sysroot.
+# be run as root, and will use the tunctl binary from a native sysroot.
 # Note: many Linux distros these days still use an older version of
 # tunctl which does not support the group permissions option, hence
-# the need to use Poky's version.
+# the need to use build system's version.
 #
 # If you find yourself calling this script a lot, you can add the
 # the following to your /etc/sudoers file to be able to run this
@@ -18,7 +18,7 @@
 # that script, the runqemu script will never end up calling this
 # script.
 #
-# Copyright (c) 2006-2010 Intel Corp.
+# Copyright (c) 2006-2011 Linux Foundation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as

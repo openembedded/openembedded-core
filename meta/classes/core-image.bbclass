@@ -1,11 +1,11 @@
-# Common for Poky images
+# Common code for generating core reference images
 #
-# Copyright (C) 2007 OpenedHand LTD
+# Copyright (C) 2007-2011 Linux Foundation
 
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
-# IMAGE_FEATURES control content of images built with Poky.
+# IMAGE_FEATURES control content of the core reference images
 # 
 # By default we install task-core-boot and task-base packages - this gives us
 # working (console only) rootfs.

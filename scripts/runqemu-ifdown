@@ -2,7 +2,7 @@
 #
 # QEMU network configuration script to bring down tap devices. This
 # utility needs to be run as root, and will use the tunctl binary
-# from a Poky sysroot. 
+# from the native sysroot. 
 #
 # If you find yourself calling this script a lot, you can add the
 # the following to your /etc/sudoers file to be able to run this
@@ -11,7 +11,7 @@
 # <my-username> ALL=NOPASSWD: /path/to/runqemu-ifup
 # <my-username> ALL=NOPASSWD: /path/to/runqemu-ifdown
 #
-# Copyright (c) 2006-2010 Intel Corp.
+# Copyright (c) 2006-2011 Linux Foundation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as

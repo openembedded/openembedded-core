@@ -1,15 +1,10 @@
-Poky
-====
+OpenEmbedded-Core
+=================
 
-Poky platform builder is a combined cross build system and development 
-environment. It features support for building X11/Matchbox/GTK based 
-filesystem images for various embedded devices and boards. It also 
-supports cross-architecture application development using QEMU emulation
-and a standalone toolchain and SDK with IDE integration.
+For information about OpenEmbedded see their website:
+    http://www.openembedded.org/
 
-Poky has an extensive handbook, the source of which is contained in
-the handbook directory. For compiled HTML or pdf versions of this, 
-see the Poky website http://pokylinux.org.
+The Yocto Project has extensive documentation about OE including a reference manual
+which can be found at:
+    http://yoctoproject.org/community/documentation
 
-Additional information on the specifics of hardware that Poky supports
-is available in README.hardware.

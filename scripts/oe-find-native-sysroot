@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Find a native sysroot to use - either from an in-tree Poky build or
+# Find a native sysroot to use - either from an in-tree OE build or
 # from a toolchain installation. It then ensures the variable
 # $OECORE_NATIVE_SYSROOT is set to the sysroot's base directory, and sets 
 # $PSEUDO to the path of the pseudo binary.
@@ -15,7 +15,7 @@
 # you set a variable $SKIP_STRICT_SYSROOT_CHECK to a non-empty string
 # beforehand.
 #
-# Copyright (c) 2010 Intel Corp.
+# Copyright (c) 2010 Linux Foundation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -47,7 +47,7 @@ if [ -z "$OECORE_NATIVE_SYSROOT" ]; then
 	fi
     else
 	echo "Error: Unable to locate your native sysroot."
-	echo "Did you forget to source the Poky environment script?"
+	echo "Did you forget to source the build environment setup script?"
 
 	if [ -z "$SKIP_STRICT_SYSROOT_CHECK" ]; then
             exit 1
