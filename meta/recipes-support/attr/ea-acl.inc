@@ -1,7 +1,7 @@
 # this build system is mostly shared by attr and acl
 
 SRC_URI += "file://relative-libdir.patch;striplevel=0 \
-            file://no-fixed-prog-path.patch"
+           "
 
 inherit autotools gettext
 
