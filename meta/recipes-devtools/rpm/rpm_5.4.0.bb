@@ -159,7 +159,7 @@ EXTRA_OECONF = "--verbose \
 		--enable-build-debug \
 		--enable-maintainer-mode \
 		--with-path-macros=${rpm_macros} \
-		--with-bugreport=http://bugzilla.pokylinux.org"
+		--with-bugreport=http://bugzilla.yoctoproject.org"
 
 CFLAGS_append = " -DRPM_VENDOR_WINDRIVER -DRPM_VENDOR_POKY"
 
