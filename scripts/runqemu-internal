@@ -246,7 +246,7 @@ if [ "$FSTYPE" = "nfs" ]; then
     NFSD_PORT=$[ 11111 + $NFS_INSTANCE ]
     UNFS_OPTS="nfsvers=2,mountprog=$MOUNTD_PORT,nfsprog=$NFSD_PORT,udp"
 
-    PSEUDO_LOCALSTATEDIR=~/.poky-sdk/pseudo
+    PSEUDO_LOCALSTATEDIR=~/.runqemu-sdk/pseudo
     export PSEUDO_LOCALSTATEDIR
 
     rpcbind_running=`ps ax | grep rpcbind | grep -v grep | wc -l`

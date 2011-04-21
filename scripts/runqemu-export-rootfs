@@ -57,15 +57,15 @@ if [ ! -e "$OECORE_NATIVE_SYSROOT/usr/sbin/rpc.mountd" ]; then
 	exit 1
 fi
 
-if [ ! -d ~/.poky-sdk ]; then
-	mkdir -p ~/.poky-sdk
+if [ ! -d ~/.runqemu-sdk ]; then
+	mkdir -p ~/.runqemu-sdk
 fi
 
 NFS_INSTANCE=${NFS_INSTANCE:=0}
-EXPORTS=~/.poky-sdk/exports$NFS_INSTANCE
-RMTAB=~/.poky-sdk/rmtab$NFS_INSTANCE
-NFSPID=~/.poky-sdk/nfs$NFS_INSTANCE.pid
-MOUNTPID=~/.poky-sdk/mount$NFS_INSTANCE.pid
+EXPORTS=~/.runqemu-sdk/exports$NFS_INSTANCE
+RMTAB=~/.runqemu-sdk/rmtab$NFS_INSTANCE
+NFSPID=~/.runqemu-sdk/nfs$NFS_INSTANCE.pid
+MOUNTPID=~/.runqemu-sdk/mount$NFS_INSTANCE.pid
 
 PSEUDO_OPTS="-P $OECORE_NATIVE_SYSROOT/usr"
 PSEUDO_LOCALSTATEDIR="$NFS_EXPORT_DIR/var/pseudo"
