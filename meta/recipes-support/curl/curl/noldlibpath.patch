@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Manipulating LD_LIBRARY_PATH can totally break builds when cross compiling.
 Since we never run compiled binaries for the target, we should *never* need
 to change LD_LIBRARY_PATH.

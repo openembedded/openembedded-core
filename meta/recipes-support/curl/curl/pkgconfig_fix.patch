@@ -1,3 +1,6 @@
+Upstream-Status: Inappropriate [packaging]
+
+
 Index: curl-7.20.0/libcurl.pc.in
 ===================================================================
 --- curl-7.20.0.orig/libcurl.pc.in	2009-11-17 18:11:07.000000000 +0000
@@ -5,7 +8,7 @@ Index: curl-7.20.0/libcurl.pc.in
 @@ -35,6 +35,7 @@
  URL: http://curl.haxx.se/
  Description: Library to transfer files with ftp, http, etc.
- Version: @VERSION@
+ Version: @CURLVERSION@
 -Libs: -L${libdir} -lcurl @LIBS@
 -Libs.private: @LIBCURL_LIBS@ @LIBS@
 +Requires.private: @GNUTLS_REQUIRED@
