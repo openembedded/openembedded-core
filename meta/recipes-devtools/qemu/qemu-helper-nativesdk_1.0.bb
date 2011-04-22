@@ -6,7 +6,7 @@ PR = "r9"
 FILESPATH = "${FILE_DIRNAME}/qemu-helper"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/tunctl.c;endline=4;md5=ff3a09996bc5fff6bc5d4e0b4c28f999 \
-                    file://${COREBASE}/scripts/runqemu;endline=18;md5=ce52af3dd295e20ad1d849611b83690b"
+                    file://${COREBASE}/scripts/runqemu;endline=18;md5=77fbe442a88b1bcdc29c3ba67733b21b"
 
 
 SRC_URI = "file://${COREBASE}/scripts/runqemu \
