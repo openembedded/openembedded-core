@@ -8,6 +8,7 @@ inherit utils
 inherit utility-tasks
 inherit metadata_scm
 inherit buildstats
+inherit logging
 
 python sys_path_eh () {
     if isinstance(e, bb.event.ConfigParsed):
