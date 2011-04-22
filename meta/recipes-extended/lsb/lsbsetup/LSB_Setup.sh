@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2005-2010 Wind River Systems, Inc.
+# Copyright (C) 2010-2011 Wind River Systems, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -200,6 +200,19 @@ fi
 #Step 9 get ip address for target platform
 addr=`ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}'|sed s/[[:space:]][[:space:]]Bcast//g`
 echo -e "you should input ${addr}:8888 on your browser"
+
+#workaround to add part of locales for LSB test
+localedef -i ja_JP -f EUC-JP ja_JP.eucjp
+localedef -i en_US -f ISO-8859-15  en_US.ISO-8859-15
+localedef -i en_US -f UTF-8 en_US.UTF-8
+localedef -i se_NO -f UTF-8 se_NO.UTF-8
+localedef -i de_DE -f ISO-8859-1 de_DE
+
+#resolve localhost 
+LOCALHOST=`hostname`
+if ! `grep -F -q "$LOCALHOST" /etc/hosts`; then
+    echo "127.0.0.1 $LOCALHOST" >> /etc/hosts
+fi
 
 #Step 10
 echo "Done!!"
