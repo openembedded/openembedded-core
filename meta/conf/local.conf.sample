@@ -115,8 +115,6 @@ PACKAGE_DEBUG_SPLIT_STYLE = '.debug'
 # SELECTED_OPTIMIZATION = "${PROFILE_OPTIMIZATION}"
 # LDFLAGS =+ "-pg"
 
-# Uncomment this if you want BitBake to emit debugging output
-# BBDEBUG = "yes"
 # Uncomment this if you want BitBake to emit the log if a build fails.
 BBINCLUDELOGS = "yes"
 
