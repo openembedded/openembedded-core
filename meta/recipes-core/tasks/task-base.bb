@@ -179,8 +179,11 @@ RDEPENDS_task-base-acpi = "\
     acpid \
     libacpi "
 
+# Distro can override apm provider
+VIRTUAL-RUNTIME_apm ?= "apm"
+
 RDEPENDS_task-base-apm = "\
-    apm \
+    ${VIRTUAL-RUNTIME_apm} \
     apmd"
 
 RDEPENDS_task-base-ext2 = "\
