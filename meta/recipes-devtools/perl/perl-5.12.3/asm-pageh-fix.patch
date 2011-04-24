@@ -1,0 +1,21 @@
+Upstream-Status:Pending
+
+Perl inclues asm/page.h in order to get the definition for getpagesize which
+has been definied in unistd.h since glibc 2.1. Some recent version of linux
+libc headers removed the asm/page.h resulting in failures here for some
+people.
+
+Index: perl-5.12.3/cpan/IPC-SysV/SysV.xs
+===================================================================
+--- perl-5.12.3.orig/cpan/IPC-SysV/SysV.xs	2001-07-01 04:46:07.000000000 +1000
++++ perl-5.12.3/cpan/IPC-SysV/SysV.xs	2001-07-01 04:46:07.000000000 +1000
+@@ -3,9 +3,6 @@
+ #include "XSUB.h"
+ 
+ #include <sys/types.h>
+-#ifdef __linux__
+-#   include <asm/page.h>
+-#endif
+ #if defined(HAS_MSG) || defined(HAS_SEM) || defined(HAS_SHM)
+ #ifndef HAS_SEM
+ #   include <sys/ipc.h>

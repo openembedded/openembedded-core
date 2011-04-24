@@ -1,0 +1,21 @@
+Upstream-Status:Inappropriate [embedded specific]
+
+Correctly identify arch-specific modules in ext/ where the .pm files
+are under lib.
+
+Ensure that POSIX/SigAction is kept with the rest of the POSIX module
+under archlib.
+
+Index: perl-5.12.3/installperl
+===================================================================
+--- perl-5.12.3.orig/installperl
++++ perl-5.12.3/installperl
+@@ -750,7 +750,7 @@ sub installlib {
+     }
+ 
+     if (-f $_) {
+-	if (/\.(?:al|ix)$/ && !($dir =~ m[^auto/(.*)$])) {
++	if (/\.(?:al|ix)$/ && !($dir =~ m[^auto/(.*)$] && $archpms{$1})) {
+ 	    $installlib = $installprivlib;
+ 	    #We're installing *.al and *.ix files into $installprivlib,
+ 	    #but we have to delete old *.al and *.ix files from the 5.000
