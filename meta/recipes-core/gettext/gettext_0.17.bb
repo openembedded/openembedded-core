@@ -8,9 +8,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 PR = "r5"
 DEPENDS = "gettext-native virtual/libiconv ncurses expat"
 DEPENDS_virtclass-native = ""
-PROVIDES = "virtual/libintl"
+PROVIDES = "virtual/libintl virtual/gettext"
 PROVIDES_virtclass-native = ""
-
+CONFLICTS_${PN} = "proxy-libintl"
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
            file://autotools.patch;patch=1 \
            file://wchar-uclibc.patch;patch=1 \
