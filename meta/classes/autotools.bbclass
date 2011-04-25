@@ -127,17 +127,18 @@ autotools_do_configure() {
 			else
 			  CONFIGURE_AC=configure.ac
 			fi
-			if grep "^[[:space:]]*AM_GLIB_GNU_GETTEXT" $CONFIGURE_AC >/dev/null; then
-			  if grep "sed.*POTFILES" $CONFIGURE_AC >/dev/null; then
-			    : do nothing -- we still have an old unmodified configure.ac
-			  else
-			    oenote Executing glib-gettextize --force --copy
-			    echo "no" | glib-gettextize --force --copy
+			if ! echo ${EXTRA_OECONF} | grep -q "\-\-disable-nls"; then
+			  if grep "^[[:space:]]*AM_GLIB_GNU_GETTEXT" $CONFIGURE_AC >/dev/null; then
+			    if grep "sed.*POTFILES" $CONFIGURE_AC >/dev/null; then
+			      : do nothing -- we still have an old unmodified configure.ac
+			    else
+			      oenote Executing glib-gettextize --force --copy
+			      echo "no" | glib-gettextize --force --copy
+			    fi
+			  else if grep "^[[:space:]]*AM_GNU_GETTEXT" $CONFIGURE_AC >/dev/null; then
+			    cp ${STAGING_DATADIR}/gettext/config.rpath ${S}/
 			  fi
-			else if grep "^[[:space:]]*AM_GNU_GETTEXT" $CONFIGURE_AC >/dev/null; then
-			  cp ${STAGING_DATADIR}/gettext/config.rpath ${S}/
 			fi
-
 			fi
 			mkdir -p m4
 			if grep "^[[:space:]]*[AI][CT]_PROG_INTLTOOL" $CONFIGURE_AC >/dev/null; then
