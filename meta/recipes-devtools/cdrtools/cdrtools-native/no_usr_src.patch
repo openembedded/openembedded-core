@@ -1,3 +1,10 @@
+Remove hard-coded references to /usr/src/linux/include to avoid
+host contamination.
+
+Upstream-Status: [Other (build-system specific)]
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 Index: cdrtools-2.01/DEFAULTS/Defaults.gnu
 ===================================================================
 --- cdrtools-2.01.orig/DEFAULTS/Defaults.gnu	2008-09-22 12:42:12.000000000 +0100

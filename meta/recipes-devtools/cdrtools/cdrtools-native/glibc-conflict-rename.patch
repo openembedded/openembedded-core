@@ -1,3 +1,11 @@
+This patch fixes collisions between locally defined functions
+and glibc's fexecve() and getline() functions.
+
+Upstream-Status: Inappropriate [Other]
+Upstream no longer maintains a GPL version of this utility.
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 Index: cdrtools-2.01/include/schily.h
 ===================================================================
 --- cdrtools-2.01.orig/include/schily.h	2009-06-18 11:30:45.000000000 +0100
