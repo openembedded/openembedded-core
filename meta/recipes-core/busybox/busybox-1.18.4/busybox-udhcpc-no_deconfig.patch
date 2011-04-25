@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Add a new option -D to the udhcpc client that allows for
 dhcp renewal to occur without having to down the interface
 in the process.
@@ -7,6 +9,11 @@ Signed-off-by: Greg Moffatt <greg.moffatt@windriver.com>
 Updated to latest Busybox 1.17.3
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+Updated to Busybox 1.18.4
+option spec is changed
+
+Signed-off-by: Qing He <qing.he@intel.com>
 
 diff -ur busybox-1.17.3.orig/networking/udhcp/dhcpc.c busybox-1.17.3/networking/udhcp/dhcpc.c
 --- busybox-1.17.3.orig/networking/udhcp/dhcpc.c
@@ -42,10 +49,10 @@ diff -ur busybox-1.17.3.orig/networking/udhcp/dhcpc.c busybox-1.17.3/networking/
  	bb_info_msg("Entering released state");
  
 @@ -836,6 +841,7 @@
- 		OPT_o = 1 << 18,
- 		OPT_x = 1 << 19,
- 		OPT_f = 1 << 20,
-+		OPT_D = 1 << 21,
+ 		OPT_o = 1 << 17,
+ 		OPT_x = 1 << 18,
+ 		OPT_f = 1 << 19,
++		OPT_D = 1 << 20,
  /* The rest has variable bit positions, need to be clever */
  		OPTBIT_f = 20,
  		USE_FOR_MMU(             OPTBIT_b,)
@@ -53,8 +60,8 @@ diff -ur busybox-1.17.3.orig/networking/udhcp/dhcpc.c busybox-1.17.3/networking/
  #endif
  		;
  	IF_LONG_OPTS(applet_long_options = udhcpc_longopts;)
--	opt = getopt32(argv, "c:CV:H:h:F:i:np:qRr:s:T:t:SA:O:ox:f"
-+	opt = getopt32(argv, "c:CV:H:h:F:i:np:qRr:s:T:t:SA:O:ox:fD"
+-	opt = getopt32(argv, "CV:H:h:F:i:np:qRr:s:T:t:SA:O:ox:f"
++	opt = getopt32(argv, "CV:H:h:F:i:np:qRr:s:T:t:SA:O:ox:fD"
  		USE_FOR_MMU("b")
  		IF_FEATURE_UDHCPC_ARPING("a")
  		IF_FEATURE_UDHCP_PORT("P:")
