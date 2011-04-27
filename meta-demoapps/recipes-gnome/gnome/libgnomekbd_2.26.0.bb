@@ -1,7 +1,7 @@
 DESCRIPTION = "GNOME keyboard library"
 LICENSE = "LGPL"
 
-DEPENDS = "gconf-dbus dbus libxklavier gtk+"
+DEPENDS = "gconf dbus libxklavier gtk+"
 
 inherit gnome
 

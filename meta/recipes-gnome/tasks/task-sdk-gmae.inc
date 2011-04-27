@@ -4,7 +4,7 @@ SDK-GMAE = " \
     gtk+-dev \
     gstreamer-dev \
     bluez4-dev \
-    gconf-dbus-dev \
+    gconf-dev \
     avahi-dev \
     telepathy-glib-dev \
     eds-dbus-dev \
