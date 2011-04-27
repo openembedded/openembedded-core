@@ -16,6 +16,8 @@ EXTRA_OECONF += "--target-list=${@get_qemu_target_list(d)} --disable-werror --di
 
 #EXTRA_OECONF += "--disable-sdl"
 
+COMPATIBLE_MACHINES = "qemux86 qemuppc"
+
 inherit autotools
 
 # For our gl powered QEMU you need libGL and SDL headers
