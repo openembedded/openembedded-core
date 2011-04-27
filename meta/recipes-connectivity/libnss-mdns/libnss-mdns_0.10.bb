@@ -26,9 +26,9 @@ EXTRA_OECONF = "--libdir=/lib --disable-lynx --enable-avahi"
 
 # TODO: pattern based configuration update
 pkg_postinst_${PN} () {
-	cat /etc/nsswitch.conf | grep "hosts:\s*files dns$" > /dev/null && {
-		cat /etc/nsswitch.conf | sed 's/hosts:\s*files dns/& mdns4/' > /tmp/nsswitch.conf
-		mv /tmp/nsswitch.conf /etc/nsswitch.conf
+	cat $D/etc/nsswitch.conf | grep "hosts:\s*files dns$" > /dev/null && {
+		cat $D/etc/nsswitch.conf | sed 's/hosts:\s*files dns/& mdns4/' > /tmp/nsswitch.conf
+		mv /tmp/nsswitch.conf $D/etc/nsswitch.conf
 	}
 }
 
