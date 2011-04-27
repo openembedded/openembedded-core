@@ -35,6 +35,9 @@ do_install () {
 
 pkg_postinst_${PN} () {
 #!/bin/sh
+if [ "x$D" != "x" ] ; then
+	exit 1
+fi
 fc-cache
 }
 
