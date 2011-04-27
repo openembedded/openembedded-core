@@ -24,6 +24,6 @@ then
 	hddown=""
 fi
 
-halt -d -f -i -p $hddown
+halt SED_HALTARGS -p $hddown
 
 : exit 0

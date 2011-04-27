@@ -12,4 +12,4 @@
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 echo -n "Rebooting... "
-reboot -d -f -i
+reboot SED_HALTARGS

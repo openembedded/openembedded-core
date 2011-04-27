@@ -6,7 +6,7 @@ DEPENDS = "makedevs"
 RDEPENDS_${PN} = "makedevs"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
-PR = "r124"
+PR = "r125"
 
 SRC_URI = "file://functions \
            file://halt \
@@ -37,6 +37,13 @@ SRC_URI = "file://functions \
 SRC_URI_append_arm = " file://alignment.sh"
 
 KERNEL_VERSION = ""
+
+HALTARGS ?= "-d -f"
+
+do_configure() {
+	sed -i -e "s:SED_HALTARGS:${HALTARGS}:g" ${WORKDIR}/halt
+	sed -i -e "s:SED_HALTARGS:${HALTARGS}:g" ${WORKDIR}/reboot
+}
 
 do_install () {
 #
