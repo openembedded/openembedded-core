@@ -130,6 +130,7 @@ RDEPENDS_task-core-lsb-command-add = "\
     mailx \
     msmtp \
     chkconfig \
+    xdg-utils \
 "
 #    cups
 
