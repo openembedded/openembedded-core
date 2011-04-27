@@ -8,6 +8,8 @@ Date:   Wed Jan 26 12:04:36 2011 +0100
 
     Virtual size too big, revert the commit 9c4d7592dcb7dc20a48a6f941d9d94bd73d34153.
 
+	Upstream-Status: Pending
+
 diff --git a/src/omapfb-crtc.c b/src/omapfb-crtc.c
 index 9aaa52f..cbeff35 100644
 --- a/src/omapfb-crtc.c

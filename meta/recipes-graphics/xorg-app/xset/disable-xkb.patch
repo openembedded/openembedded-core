@@ -1,5 +1,7 @@
 add "-disable-xkb" option
 
+Upstream-Status: Pending
+
 Rebase for 1.2.1 by: Yu Ke <ke.yu@intel.com>
 
 diff --git a/configure.ac b/configure.ac

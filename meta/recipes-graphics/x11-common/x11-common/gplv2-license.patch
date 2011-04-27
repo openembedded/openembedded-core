@@ -4,6 +4,8 @@ this is a local file recipe and the license file is missing.In order
 to pass the license checksum checking, the license file is needed. So
 this patch add the GPLv2 license file.
 
+Upstream-Status: Inappropriate [licensing]
+
 Signed-off-by: Yu Ke <ke.yu@intel.com>
 
 diff --git a/COPYING b/COPYING

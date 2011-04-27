@@ -6,6 +6,8 @@ Date:   Wed Jan 26 13:20:20 2011 +0100
 
     The new DSS mode breaks XV, so force plain mode
 
+	Upstream-Status: Pending
+
     Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
 
 diff --git a/src/omapfb-driver.c b/src/omapfb-driver.c

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- /tmp/image-format-conversions.h	2009-02-03 10:18:04.000000000 +0100
 +++ git/src/image-format-conversions.h	2009-02-03 10:19:18.000000000 +0100
 @@ -30,6 +30,8 @@

@@ -5,7 +5,9 @@ Date:   Wed Jan 26 13:21:12 2011 +0100
     blacklist tv out
 
     The tv-out gets added last and the driver tries to reconfigure dvi to TV resolutions, which fails. so blacklist it
-    
+
+	Upstream-Status: Pending
+
     Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
 
 diff --git a/src/omapfb-output-dss.c b/src/omapfb-output-dss.c

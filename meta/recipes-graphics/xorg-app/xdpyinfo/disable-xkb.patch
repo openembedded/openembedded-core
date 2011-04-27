@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- xdpyinfo-1.0.1/configure.ac.orig	2006-03-08 16:33:05.000000000 +0100
 +++ xdpyinfo-1.0.1/configure.ac	2006-03-08 16:41:59.000000000 +0100
 @@ -45,11 +45,15 @@

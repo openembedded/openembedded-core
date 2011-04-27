@@ -2,6 +2,8 @@ Remove X11R6 lib directory
 
 "-L/usr/X11R6/lib" is obsolate in poky. Poky currently use Xserver from X.org (X11R7.x), which puts lib in standard /usr/lib, so no need to specify the extra -L/usr/X11R6/lib. Meanwhile, the -L/usr/X11R6/lib will cause warning: library search path "/usr/X11R6/lib" is unsafe for cross-compilation. so better to remove it.
 
+Upstream-Status: Pending
+
 Signed-off-by: Yu Ke <ke.yu@intel.com>
 
 diff --git a/Makefile b/Makefile

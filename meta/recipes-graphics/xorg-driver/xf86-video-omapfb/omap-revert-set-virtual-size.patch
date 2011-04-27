@@ -8,6 +8,8 @@ Date:   Wed Jan 26 13:27:20 2011 +0100
 
     This reverts commit 2653ef07883fbd1a5e7025f9300cf89b79ba429a.
 
+	Upstream-Status: Pending
+
 diff --git a/src/omapfb-crtc.c b/src/omapfb-crtc.c
 index cbeff35..9655db2 100644
 --- a/src/omapfb-crtc.c

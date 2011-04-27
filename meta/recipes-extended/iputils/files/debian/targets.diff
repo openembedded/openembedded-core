@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [disable feature]
+
 Index: trunk/Makefile
 ===================================================================
 --- trunk.orig/Makefile	2010-05-07 23:43:00.000000000 -0700

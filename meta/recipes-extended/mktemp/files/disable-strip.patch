@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff --git a/Makefile.in b/Makefile.in
 index 37b3cc9..f1026f3 100644
 --- a/Makefile.in
