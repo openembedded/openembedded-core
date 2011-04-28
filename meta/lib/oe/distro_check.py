@@ -302,7 +302,7 @@ def compare_in_distro_packages_list(distro_check_dir, d):
     bb.note("Recipe: %s" % recipe_name)
     tmp = bb.data.getVar('DISTRO_PN_ALIAS', localdata, True)
 
-    distro_exceptions = dict({"OE-Core":'OE-Core', "OpenedHand":'OpenedHand', "Intel":'Intel', "Upstream":'Upstream', "WindRiver":'Windriver', "OSPDT":'OSPDT Approved'})
+    distro_exceptions = dict({"OE-Core":'OE-Core', "OpenedHand":'OpenedHand', "Intel":'Intel', "Upstream":'Upstream', "WindRiver":'Windriver', "OSPDT":'OSPDT Approved', "Poky":'poky'})
 
     if tmp:
         list = tmp.split(' ')
@@ -335,8 +335,9 @@ def compare_in_distro_packages_list(distro_check_dir, d):
 
     
     if tmp != None:
-         matching_distros.append(tmp)
-
+	list = tmp.split(' ')
+	for item in list:
+            matching_distros.append(item)
     bb.note("Matching: %s" % matching_distros)
     return matching_distros
 
@@ -348,13 +349,17 @@ def save_distro_check_result(result, datetime, d):
         return
     if not os.path.isdir(logdir):
         os.makedirs(logdir)
-    result_file = os.path.join(logdir, "distrocheck.csv")
+    result_file = os.path.join(logdir, "distrocheck.%s.csv" % datetime)
     line = pn
     for i in result:
         line = line + "," + i
     if not os.path.exists(result_file):
-        open(result_file, 'w+b').close() # touch the file so that the next open won't fail
-    f = open(result_file, "a+b")
+        sresult_file = os.path.join(logdir, "distrocheck.csv")
+	if os.path.exists(sresult_file):
+	    os.remove(sresult_file)
+	os.system("touch %s" % result_file)
+	os.symlink(result_file, sresult_file)
+    f = open(result_file, "a")
     import fcntl
     fcntl.lockf(f, fcntl.LOCK_EX)
     f.seek(0, os.SEEK_END) # seek to the end of file
