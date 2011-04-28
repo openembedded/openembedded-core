@@ -13,13 +13,14 @@ DEPENDS += " ${@base_contains("MACHINE_FEATURES", "acpi", "libacpi", "",d)}"
 DEPENDS += " ${@base_contains("MACHINE_FEATURES", "apm", "apmd", "",d)}"
 
 PV = "0.0+git${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 RPROVIDES_${PN} = "matchbox-panel"
 RREPLACES_${PN} = "matchbox-panel"
 RCONFLICTS_${PN} = "matchbox-panel"
 
-SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \	
+	   file://gcc-4.6.0-compile.patch \
            file://startup_fix.diff;patch=1"
 
 EXTRA_OECONF = "--enable-startup-notification --enable-dbus"
