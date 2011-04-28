@@ -15,6 +15,7 @@ SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
 
 S = "${WORKDIR}/trunk"
 
+SRCREV = "596"
 PV = "0.1.8+svnr${SRCPV}"
 PR = "r2"
 

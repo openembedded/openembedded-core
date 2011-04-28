@@ -1,5 +1,6 @@
 require clutter-gst.inc
 
+SRCREV = "8a087fabc888a6a4a939760c392109dbb610adbf"
 PV = "1.3.4+git${SRCPV}"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34 \

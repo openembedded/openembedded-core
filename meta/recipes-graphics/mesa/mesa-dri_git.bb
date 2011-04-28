@@ -11,6 +11,7 @@ LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat"
 
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 
+SRCREV = "1bf94d419805538ac23a4d0b04d31ac5e4487aca"
 PV = "7.7+git${SRCPV}"
 PR = "r1"
 

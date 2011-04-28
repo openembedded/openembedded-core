@@ -8,6 +8,7 @@ client programs to select input from these devices independently from \
 each other and independently from the core devices."
 
 DEPENDS += "libxext inputproto"
+SRCREV = "d0326fe8cdbb08d4f52d79fd3fd4e1b2a0951d5e"
 PE = "1"
 PV = "1.2.99.5+gitr${SRCPV}"
 

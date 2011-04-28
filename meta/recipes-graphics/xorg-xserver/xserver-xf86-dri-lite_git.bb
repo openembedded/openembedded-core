@@ -1,5 +1,6 @@
 require xserver-xf86-dri-lite.inc
 
+SRCREV = "251d0d8090322b2c9dc0c8b7bef001f338d19433"
 PE = "1"
 PR = "r0"
 PV = "1.7.99+git${SRCPV}"

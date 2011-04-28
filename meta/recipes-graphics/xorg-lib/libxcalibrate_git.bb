@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://xcalibrate.h;endline=21;md5=fa572df6439f0f235f2612f37
 
 DEPENDS = "virtual/libx11 calibrateproto libxext"
 
+SRCREV = "209d83af61ed38a002c8096377deac292b3e396c"
 PV = "0.0+git${SRCPV}"
 PR = "r0"
 

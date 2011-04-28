@@ -1,5 +1,6 @@
 require clutter-gtk.inc
 
+SRCREV = "b92329c4c1288019e2dea6567e2b5e98eb0a9992"
 PV = "0.90.0+git${SRCPV}"
 PR = "r0"
 

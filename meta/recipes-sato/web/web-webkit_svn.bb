@@ -8,6 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 SECTION = "x11"
 DEPENDS = "libxml2 glib-2.0 gtk+ libglade webkit-gtk curl gconf js libowl"
 
+SRCREV = "130"
 PV = "0.0+svnr${SRCPV}"
 PR = "r3"
 

@@ -4,6 +4,7 @@ DEPENDS = "dbus-glib eds-dbus"
 RDEPENDS_${PN} = "libedata-book"
 DESCRIPTION = "Test applications for EDS"
 
+SRCREV = "2008-02-04"
 PR = "r1"
 
 SRC_URI = "bzr://burtonini.com/bzr/eds-tools;proto=http"

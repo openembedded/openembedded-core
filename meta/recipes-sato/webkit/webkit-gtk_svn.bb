@@ -12,6 +12,7 @@ DEPENDS_darwin8 = "curl icu libxml2 cairo libxslt libidn gnutls gtk+ gstreamer f
 
 SRCREV_FORMAT = "webcore-rwebkit"
 
+SRCREV = "72836"
 PV = "1.3.7+svnr${SRCPV}"
 PR = "r0"
 

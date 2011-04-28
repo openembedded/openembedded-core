@@ -3,6 +3,8 @@ DEPENDS = "gtk+ glib-2.0 libxml2"
 DESCRIPTION = "A GTK+ HTML rendering library."
 LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=55ca817ccb7d5b5b66355690e9abc605"
+
+SRCREV = "1144"
 PV = "2.11.0+svnr${SRCPV}"
 PR = "r1"
 

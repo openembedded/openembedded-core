@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 DEPENDS = "gtk+ startup-notification dbus"
 SECTION = "x11/wm"
+SRCREV = "af7ed6775487380be73160aa0298bf6019765fad"
 PV = "2.0+git${SRCPV}"
 PR = "r1"
 

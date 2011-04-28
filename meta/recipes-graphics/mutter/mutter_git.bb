@@ -1,5 +1,6 @@
 require mutter.inc
 
+SRCREV = "01d3bebe24d2a56bdf2d82c4a71923e1573f7b7c"
 PV = "2.29.1+git${SRCPV}"
 PR = "r0"
 

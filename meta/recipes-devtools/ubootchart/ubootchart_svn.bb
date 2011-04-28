@@ -2,6 +2,7 @@ DESCRIPTION = "A boot profiling tool"
 HOMEPAGE = "http://code.google.com/p/ubootchart/"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8f0e2cd40e05189ec81232da84bd6e1a"
+SRCREV = "10"
 PV = "0.0+r${SRCPV}"
 PR = "r5"
 

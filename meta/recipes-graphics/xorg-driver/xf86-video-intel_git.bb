@@ -10,6 +10,7 @@ Infrastructure (DRI)."
 DEPENDS += "virtual/libx11 libxvmc drm dri2proto glproto \
 	    virtual/libgl xineramaproto libpciaccess"
 
+SRCREV = "87ea531c5dc5b39809395b277c330854aaaaf019"
 PV = "2.10.0+git${SRCPV}"
 PR = "r0"
 

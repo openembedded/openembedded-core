@@ -9,6 +9,7 @@ LICENSE = "MIT-X"
 LIC_FILES_CHKSUM = "file://src/omapfb-driver.c;beginline=1;endline=30;md5=a44c2a37e04d1c2c5f0313afb493f833"
 DEPENDS += "virtual/libx11"
 
+SRCREV = "044617665d6737f4909aab96f91b06261dff05d2"
 PE = "1"
 PR = "r1"
 PV = "0.1.1+git${SRCPV}"

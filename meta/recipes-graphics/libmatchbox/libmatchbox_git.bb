@@ -1,5 +1,6 @@
 require libmatchbox.inc
 
+SRCREV = "c81f8f444b83b187727f046432b186d67a42c732"
 PV = "1.9+git${SRCPV}"
 PR = "r0"
 DEFAULT_PREFERENCE = "-1"

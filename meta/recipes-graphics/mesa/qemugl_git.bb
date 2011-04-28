@@ -14,6 +14,8 @@ SRC_URI = "git://git.o-hand.com/qemugl.git;protocol=git \
            file://remove-x11r6-lib-dir.patch"
 S = "${WORKDIR}/git"
 
+SRCREV = "d888bbc723c00d197d34a39b5b7448660ec1b1c0"
+
 PV = "0.0+git${SRCPV}"
 PR = "r7"
 

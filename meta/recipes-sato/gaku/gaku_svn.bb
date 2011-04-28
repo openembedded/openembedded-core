@@ -15,6 +15,7 @@ RRECOMMENDS_${PN} = "gst-plugins-good-id3demux \
                gst-plugins-base-ogg \
                ${COMMERCIAL_AUDIO_PLUGINS}"
 
+SRCREV = "399"
 PV = "0.0+svnr${SRCPV}"
 
 PR = "r4"

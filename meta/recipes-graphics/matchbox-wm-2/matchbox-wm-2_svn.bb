@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://matchbox/core/mb-wm.h;endline=21;md5=1b1d328a52790635
 
 DEPENDS = "virtual/libx11 libxext libxrender startup-notification expat gconf pango libxdamage libxcomposite gtk+"
 
+SRCREV = "2106"
 PV = "0.0+svnr${SRCPV}"
 PR = "r4"
 

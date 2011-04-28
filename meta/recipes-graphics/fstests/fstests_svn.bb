@@ -3,6 +3,8 @@ HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "ZLIB"
 DEPENDS = "pango libxext libxft virtual/libx11 gtk+"
+
+SRCREV = "426"
 PV = "0.0+svnr${SRCPV}"
 PR = "r1"
 

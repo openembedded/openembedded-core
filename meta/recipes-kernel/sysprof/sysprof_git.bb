@@ -4,6 +4,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 DEPENDS = "gtk+ libglade"
 
+SRCREV = "38a6af1f0a45e528fd2842983da71e0f23c70d6a"
 PR = r0
 PV = "1.1.6+git${SRCPV}"
 

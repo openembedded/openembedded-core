@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 DEPENDS = "libfakekey expat libxft gtk+ matchbox-panel-2"
 RDEPENDS_${PN} = "formfactor dbus-wait"
 SECTION = "x11"
+SRCREV = "b38f24036cff3be6c2fbcf9ca9881803e69003ac"
 PV = "0.0+git${SRCPV}"
 PR = "r0"
 

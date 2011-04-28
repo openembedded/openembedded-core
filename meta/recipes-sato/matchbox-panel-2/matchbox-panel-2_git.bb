@@ -12,6 +12,7 @@ DEPENDS = "gtk+ startup-notification dbus dbus-glib"
 DEPENDS += " ${@base_contains("MACHINE_FEATURES", "acpi", "libacpi", "",d)}"
 DEPENDS += " ${@base_contains("MACHINE_FEATURES", "apm", "apmd", "",d)}"
 
+SRCREV = "982d9ea173dc87a84db2303d1a6a12607fc4d539"
 PV = "0.0+git${SRCPV}"
 PR = "r1"
 

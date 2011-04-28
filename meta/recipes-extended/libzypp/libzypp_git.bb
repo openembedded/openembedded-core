@@ -12,6 +12,7 @@ DEPENDS  = "rpm boost curl libxml2 zlib sat-solver expat openssl udev"
 RDEPENDS_${PN} = "sat-solver"
 
 S = "${WORKDIR}/git"
+SRCREV = "15b6c52260bbc52b3d8e585e271b67e10cc7c433"
 PV = "0.0-git${SRCPV}"
 PR = "r9"
 

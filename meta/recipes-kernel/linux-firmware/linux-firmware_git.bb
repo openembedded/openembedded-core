@@ -18,6 +18,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.radeon_rlc;md5=4c243f7854d2884b483abda991adef
 
 PROVIDES += "linux-firmware-sd8686"
 
+SRCREV = "40c0f950be7040614dc45df54e25e54d00e3b73b"
 PV = "0.0+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/dwmw2/linux-firmware.git;protocol=git"

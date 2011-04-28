@@ -12,6 +12,7 @@ extensions."
 
 DEPENDS += "xproto virtual/libx11 xextproto libxau libxdmcp"
 PROVIDES = "xext"
+SRCREV = "d1f3bc77a48c8e42771579e3fdf3370b35d3209d"
 PE = "1"
 PV = "1.0.99.1+gitr${SRCPV}"
 

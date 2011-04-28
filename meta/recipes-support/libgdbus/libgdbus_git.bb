@@ -8,6 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
                     file://COPYING.LIB;md5=fb504b67c50331fc78734fed90fb0e09"
 
 DEPENDS = "glib-2.0 dbus"
+
+SRCREV = "aeab6e3c0185b271ca343b439470491b99cc587f"
 PV = "0.0+git${SRCPV}"
 PR = "r0"
 

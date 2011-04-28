@@ -5,6 +5,7 @@ SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://psplash.h;md5=a87c39812c1e37f3451567cc29a29c8f"
 
+SRCREV = "424"
 PV = "0.0+svnr${SRCPV}"
 PR = "r6"
 

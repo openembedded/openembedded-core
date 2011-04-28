@@ -8,6 +8,7 @@ DEPENDS += "unifdef-native"
 PROVIDES = "linux-libc-headers"
 RPROVIDES_${PN}-dev = "linux-libc-headers-dev"
 RPROVIDES_${PN}-dbg = "linux-libc-headers-dbg"
+SRCREV = "69cfbdf9f1ff461a75e5b77d6d7ba35e97db4cc3"
 PV = "2.6.37+git-${SRCPV}"
 PR = "r3"
 

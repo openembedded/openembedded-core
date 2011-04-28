@@ -8,6 +8,7 @@ functions as a pointer input device, and may be used as the X server's \
 core pointer. Multiple mice are supported by multiple instances of this \
 driver."
 
+SRCREV = "ea5cfe804e112f320f14ad896c7802d53551d3e6"
 PV = "1.3.0+git${SRCPV}"
 PR = "r2"
 

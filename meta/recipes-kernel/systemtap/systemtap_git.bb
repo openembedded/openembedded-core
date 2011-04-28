@@ -4,6 +4,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 DEPENDS = "elfutils"
 
+SRCREV = "4ab3a1863bf4f472acae7a809bf2b38d91658aa8"
 PR = r0
 PV = "1.4+git${SRCPV}"
 

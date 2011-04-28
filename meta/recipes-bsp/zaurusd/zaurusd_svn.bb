@@ -4,6 +4,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 DEPENDS = "tslib"
 RDEPENDS_${PN} = "xrandr"
+SRCREV = "426"
 PV = "0.0+svnr${SRCPV}"
 PR = "r2"
 

@@ -8,6 +8,7 @@ keyboard and pointer."
 
 PR = "r1"
 PE = "1"
+SRCREV = "7203036522ba9d4b224d282d6afc2d0b947711ee"
 PV = "1.9.99.12+git${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/proto/inputproto;protocol=git"

@@ -1,5 +1,7 @@
 require qemu.inc
 
+SRCREV = "72bb3c7571226af13cfe9eec020a56add3d30a70"
+
 PV = "0.12.4"
 PR = "r12"
 

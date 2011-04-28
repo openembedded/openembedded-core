@@ -4,6 +4,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 
 DEPENDS = "libaio"
 
+SRCREV = "1e09f6e9012826fca69fa07222b7bc53c3e629ee"
+
 PR = r2
 PV = "1.0.1+git${SRCPV}"
 

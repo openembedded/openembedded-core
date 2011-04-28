@@ -11,5 +11,7 @@ SRC_URI += "file://X18NCMSstubs.diff;patch=1 \
 DEPENDS += "bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
             libxdmcp xf86bigfontproto kbproto inputproto xproto-native"
 
+SRCREV = "d23aad31338e7d869d878d5aa1b6b91d20287005"
+
 EXTRA_OECONF += "--without-xcb --disable-udc --disable-xcms --disable-xlocale"
 CFLAGS += "-D_GNU_SOURCE"

@@ -8,6 +8,7 @@ PROVIDES = "gconf"
 RPROVIDES_${PN} = "gconf"
 RPROVIDES_${PN}-dev = "gconf-dev"
 
+SRCREV = "705"
 PV = "2.16.0+svnr${SRCPV}"
 
 SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http"

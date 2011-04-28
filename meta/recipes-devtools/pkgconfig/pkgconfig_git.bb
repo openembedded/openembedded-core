@@ -6,6 +6,7 @@ SRC_URI = "git://anongit.freedesktop.org/pkg-config;protocol=git \
 
 S = "${WORKDIR}/git/"
 
+SRCREV = "66d49f1375fec838bcd301bb4ca2ef76cee0e47c"
 PV = "0.23+git${SRCPV}"
 
 DEFAULT_PREFERENCE = "-1"

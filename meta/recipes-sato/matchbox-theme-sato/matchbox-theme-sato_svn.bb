@@ -1,5 +1,6 @@
 require matchbox-theme-sato.inc
 
+SRCREV = "90"
 PV = "0.1+svnr${SRCPV}"
 PR = "r0"
 

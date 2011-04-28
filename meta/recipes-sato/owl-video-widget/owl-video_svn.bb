@@ -8,6 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ac14b7ca45afea5af040da54db270eb0 \
 SECTION = "x11"
 DEPENDS = "libowl-av"
 
+SRCREV = "394"
 PV = "0.0+svnr${SRCPV}"
 PR = "r3"
 

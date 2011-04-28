@@ -11,6 +11,7 @@ SECTION = "x11"
 DEPENDS = "gtk+ gconf intltool-native librsvg"
 DEPENDS_append_poky = " libowl"
 
+SRCREV = "23"
 PV = "0.1+svnr${SRCPV}"
 PR = "r10"
 
