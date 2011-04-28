@@ -21,7 +21,7 @@ def check_conf_exists(fn, data):
             return True
     return False
 
-def check_sanity_sstate_dir_change(sstate_dir):
+def check_sanity_sstate_dir_change(sstate_dir, data):
     # Sanity checks to be done when the value of SSTATE_DIR changes
 
     # Check that SSTATE_DIR isn't on a filesystem with limited filename length (eg. eCryptFS)
@@ -30,14 +30,14 @@ def check_sanity_sstate_dir_change(sstate_dir):
         testmsg = check_create_long_filename(sstate_dir, "SSTATE_DIR")
     return testmsg
 
-def check_sanity_tmpdir_change(tmpdir):
+def check_sanity_tmpdir_change(tmpdir, data):
     # Sanity checks to be done when the value of TMPDIR changes
 
     # Check that TMPDIR isn't on a filesystem with limited filename length (eg. eCryptFS)
     testmsg = check_create_long_filename(tmpdir, "TMPDIR")
     return testmsg
         
-def check_sanity_version_change():
+def check_sanity_version_change(data):
     # Sanity checks to be done when SANITY_VERSION changes
     return ""
 
@@ -266,14 +266,14 @@ def check_sanity(e):
     
     sanity_version = int(data.getVar('SANITY_VERSION', e.data, True) or 1)
     if last_sanity_version < sanity_version: 
-        messages = messages + check_sanity_version_change()
-        messages = messages + check_sanity_tmpdir_change(tmpdir)
-        messages = messages + check_sanity_sstate_dir_change(sstate_dir)
+        messages = messages + check_sanity_version_change(e.data)
+        messages = messages + check_sanity_tmpdir_change(tmpdir, e.data)
+        messages = messages + check_sanity_sstate_dir_change(sstate_dir, e.data)
     else: 
         if last_tmpdir != tmpdir:
-            messages = messages + check_sanity_tmpdir_change(tmpdir)
+            messages = messages + check_sanity_tmpdir_change(tmpdir, e.data)
         if last_sstate_dir != sstate_dir:
-            messages = messages + check_sanity_sstate_dir_change(sstate_dir)
+            messages = messages + check_sanity_sstate_dir_change(sstate_dir, e.data)
 
     if os.path.exists("conf"):
         f = file(sanityverfile, 'w')
