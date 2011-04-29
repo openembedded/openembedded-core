@@ -27,7 +27,7 @@ exec 0<&9 9<&-
 
 test $nfsroot -eq 0 && exit 0
 
-if test -x /sbin/ip ; then
+if [ -x /bin/ip -o -x /sbin/ip ] ; then
     nfs_iface=`ip route get $nfs_addr | grep dev | sed -e 's/^.*dev \([-a-z0-9.]*\).*$/\1/'`
 fi
 
