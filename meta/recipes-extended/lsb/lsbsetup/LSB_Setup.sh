@@ -207,6 +207,7 @@ localedef -i en_US -f ISO-8859-15  en_US.ISO-8859-15
 localedef -i en_US -f UTF-8 en_US.UTF-8
 localedef -i se_NO -f UTF-8 se_NO.UTF-8
 localedef -i de_DE -f ISO-8859-1 de_DE
+localedef -i en_US -f ISO-8859-1 en_US.ISO8859-1
 
 #resolve localhost 
 LOCALHOST=`hostname`
