@@ -165,6 +165,7 @@ RDEPENDS_task-core-lsb-graphic-add = "\
     gdk-pixbuf-loader-ico \
     gdk-pixbuf-loader-bmp \
     gdk-pixbuf-loader-ani \
+    liberation-fonts \
 "
 
 RDEPENDS_task-core-lsb-graphic-add_qemux86 = "\
