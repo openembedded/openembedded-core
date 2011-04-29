@@ -70,10 +70,10 @@ oe_runconf () {
 	if [ -x ${S}/configure ] ; then
 		cfgcmd="${S}/configure \
 		${CONFIGUREOPTS} ${EXTRA_OECONF} $@"
-		oenote "Running $cfgcmd..."
-		$cfgcmd || oefatal "oe_runconf failed" 
+		bbnote "Running $cfgcmd..."
+		$cfgcmd || bbfatal "oe_runconf failed" 
 	else
-		oefatal "no configure script found"
+		bbfatal "no configure script found"
 	fi
 }
 
@@ -132,7 +132,7 @@ autotools_do_configure() {
 			    if grep "sed.*POTFILES" $CONFIGURE_AC >/dev/null; then
 			      : do nothing -- we still have an old unmodified configure.ac
 			    else
-			      oenote Executing glib-gettextize --force --copy
+			      bbnote Executing glib-gettextize --force --copy
 			      echo "no" | glib-gettextize --force --copy
 			    fi
 			  else if grep "^[[:space:]]*AM_GNU_GETTEXT" $CONFIGURE_AC >/dev/null; then
@@ -142,11 +142,11 @@ autotools_do_configure() {
 			fi
 			mkdir -p m4
 			if grep "^[[:space:]]*[AI][CT]_PROG_INTLTOOL" $CONFIGURE_AC >/dev/null; then
-			  oenote Executing intltoolize --copy --force --automake
+			  bbnote Executing intltoolize --copy --force --automake
 			  intltoolize --copy --force --automake
 			fi
-			oenote Executing autoreconf --verbose --install --force ${EXTRA_AUTORECONF} $acpaths
-			autoreconf -Wcross --verbose --install --force ${EXTRA_AUTORECONF} $acpaths || oefatal "autoreconf execution failed."
+			bbnote Executing autoreconf --verbose --install --force ${EXTRA_AUTORECONF} $acpaths
+			autoreconf -Wcross --verbose --install --force ${EXTRA_AUTORECONF} $acpaths || bbfatal "autoreconf execution failed."
 			cd $olddir
 		fi
 	;;
@@ -154,7 +154,7 @@ autotools_do_configure() {
 	if [ -e ${S}/configure ]; then
 		oe_runconf
 	else
-		oenote "nothing to configure"
+		bbnote "nothing to configure"
 	fi
 }
 

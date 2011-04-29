@@ -17,7 +17,7 @@ sip_do_generate() {
 	if [ -z "$MODULES" ]; then
 		die "SIP_MODULES not set and no modules found in $PWD"
         else
-		oenote "using modules '${SIP_MODULES}' and tags '${EXTRA_SIPTAGS}'"
+		bbnote "using modules '${SIP_MODULES}' and tags '${EXTRA_SIPTAGS}'"
 	fi
 
 	if [ -z "${EXTRA_SIPTAGS}" ]; then
@@ -28,7 +28,7 @@ sip_do_generate() {
 
 	if [ ! -z "${SIP_FEATURES}" ]; then
 		FEATURES="-z ${SIP_FEATURES}"
-		oenote "sip feature file: ${SIP_FEATURES}"
+		bbnote "sip feature file: ${SIP_FEATURES}"
 	fi
 
 	for module in $MODULES

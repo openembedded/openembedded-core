@@ -39,7 +39,7 @@ sourcepkg_do_create_orig_tgz(){
 	src_tree=${@get_src_tree(d)}
 	
 	echo $src_tree
-	oenote "Creating .orig.tar.gz in ${DEPLOY_DIR_SRC}/${P}.orig.tar.gz"
+	bbnote "Creating .orig.tar.gz in ${DEPLOY_DIR_SRC}/${P}.orig.tar.gz"
 	tar cvzf ${DEPLOY_DIR_SRC}/${P}.orig.tar.gz --exclude-from temp/exclude-from-file $src_tree
 	tar -cf - -C $src_tree -ps . | tar -xf - -C $src_tree.orig
 }
@@ -93,7 +93,7 @@ sourcepkg_do_create_diff_gz(){
 		cp $i $src_tree/${DISTRO}/files
 	done
 	
-	oenote "Creating .diff.gz in ${DEPLOY_DIR_SRC}/${P}-${PR}.diff.gz"
+	bbnote "Creating .diff.gz in ${DEPLOY_DIR_SRC}/${P}-${PR}.diff.gz"
 	LC_ALL=C TZ=UTC0 diff --exclude-from=temp/exclude-from-file -Naur $src_tree.orig $src_tree | gzip -c > ${DEPLOY_DIR_SRC}/${P}-${PR}.diff.gz
 	rm -rf $src_tree.orig
 }

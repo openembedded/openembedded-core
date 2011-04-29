@@ -39,7 +39,7 @@ qmake_base_do_configure() {
 		die Unsupported target ${TARGET_OS} for oe-g++ qmake spec
 		;;
 	*)
-		oenote Searching for qmake spec file
+		bbnote Searching for qmake spec file
 		paths="${QMAKE_MKSPEC_PATH}/qws/${TARGET_OS}-${TARGET_ARCH}-g++"
 		paths="${QMAKE_MKSPEC_PATH}/${TARGET_OS}-g++ $paths"
 
@@ -55,7 +55,7 @@ qmake_base_do_configure() {
 		;;
 	esac
 
-	oenote "using qmake spec in ${QMAKESPEC}, using profiles '${QMAKE_PROFILES}'"
+	bbnote "using qmake spec in ${QMAKESPEC}, using profiles '${QMAKE_PROFILES}'"
 
 	if [ -z "${QMAKE_PROFILES}" ]; then 
 		PROFILES="`ls *.pro`"
@@ -70,15 +70,15 @@ qmake_base_do_configure() {
 	if [ ! -z "${EXTRA_QMAKEVARS_POST}" ]; then
 		AFTER="-after"
 		QMAKE_VARSUBST_POST="${EXTRA_QMAKEVARS_POST}"
-		oenote "qmake postvar substitution: ${EXTRA_QMAKEVARS_POST}"
+		bbnote "qmake postvar substitution: ${EXTRA_QMAKEVARS_POST}"
 	fi
 
 	if [ ! -z "${EXTRA_QMAKEVARS_PRE}" ]; then
 		QMAKE_VARSUBST_PRE="${EXTRA_QMAKEVARS_PRE}"
-		oenote "qmake prevar substitution: ${EXTRA_QMAKEVARS_PRE}"
+		bbnote "qmake prevar substitution: ${EXTRA_QMAKEVARS_PRE}"
 	fi
 
-#oenote "Calling '${OE_QMAKE_QMAKE} -makefile -spec ${QMAKESPEC} -o Makefile $QMAKE_VARSUBST_PRE $AFTER $PROFILES $QMAKE_VARSUBST_POST'"
+#bbnote "Calling '${OE_QMAKE_QMAKE} -makefile -spec ${QMAKESPEC} -o Makefile $QMAKE_VARSUBST_PRE $AFTER $PROFILES $QMAKE_VARSUBST_POST'"
 	unset QMAKESPEC || true
 	${OE_QMAKE_QMAKE} -makefile -spec ${QMAKESPEC} -o Makefile $QMAKE_VARSUBST_PRE $AFTER $PROFILES $QMAKE_VARSUBST_POST || die "Error calling ${OE_QMAKE_QMAKE} on $PROFILES"
 }

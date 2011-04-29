@@ -91,7 +91,7 @@ oe_soinstall() {
 	#
 	# oe_
 	#
-	#oenote installing shared library $1 to $2
+	#bbnote installing shared library $1 to $2
 	#
 	libname=`basename $1`
 	install -m 755 $1 $2/$libname
@@ -129,7 +129,7 @@ oe_libinstall() {
 			require_shared=1
 			;;
 		-*)
-			oefatal "oe_libinstall: unknown option: $1"
+			bbfatal "oe_libinstall: unknown option: $1"
 			;;
 		*)
 			break;
@@ -142,7 +142,7 @@ oe_libinstall() {
 	shift
 	destpath="$1"
 	if [ -z "$destpath" ]; then
-		oefatal "oe_libinstall: no destination path specified"
+		bbfatal "oe_libinstall: no destination path specified"
 	fi
 	if echo "$destpath/" | egrep '^${STAGING_LIBDIR}/' >/dev/null
 	then
@@ -165,7 +165,7 @@ oe_libinstall() {
 	# Sanity check that the libname.lai is unique
 	number_of_files=`(cd $dir; find . -name "$dotlai") | wc -l`
 	if [ $number_of_files -gt 1 ]; then
-		oefatal "oe_libinstall: $dotlai is not unique in $dir"
+		bbfatal "oe_libinstall: $dotlai is not unique in $dir"
 	fi
 
 
@@ -209,7 +209,7 @@ oe_libinstall() {
 		for f in $files; do
 			if [ ! -e "$f" ]; then
 				if [ -n "$libtool" ]; then
-					oefatal "oe_libinstall: $dir/$f not found."
+					bbfatal "oe_libinstall: $dir/$f not found."
 				fi
 			elif [ -L "$f" ]; then
 				__runcmd cp -P "$f" $destpath/
@@ -223,7 +223,7 @@ oe_libinstall() {
 
 	if [ -z "$libfile" ]; then
 		if  [ -n "$require_shared" ]; then
-			oefatal "oe_libinstall: unable to locate shared library"
+			bbfatal "oe_libinstall: unable to locate shared library"
 		fi
 	elif [ -z "$libtool" ]; then
 		# special case hack for non-libtool .so.#.#.# links
@@ -256,17 +256,17 @@ oe_machinstall() {
 
 	for o in `echo ${OVERRIDES} | tr ':' ' '`; do
 		if [ -e $dirname/$o/$filename ]; then
-			oenote $dirname/$o/$filename present, installing to $4
+			bbnote $dirname/$o/$filename present, installing to $4
 			install $1 $2 $dirname/$o/$filename $4
 			return
 		fi
 	done
-#	oenote overrides specific file NOT present, trying default=$3...
+#	bbnote overrides specific file NOT present, trying default=$3...
 	if [ -e $3 ]; then
-		oenote $3 present, installing to $4
+		bbnote $3 present, installing to $4
 		install $1 $2 $3 $4
 	else
-		oenote $3 NOT present, touching empty $4
+		bbnote $3 NOT present, touching empty $4
 		touch $4
 	fi
 }

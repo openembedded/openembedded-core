@@ -14,7 +14,7 @@ do_srec[nostamp] = "1"
 
 do_srec () {
     if [ ${SREC_VMAADDR} = "" ] ; then
-       oefatal Cannot do_srec without SREC_VMAADDR defined.
+       bbfatal Cannot do_srec without SREC_VMAADDR defined.
     fi
     for type in ${IMAGE_FSTYPES}; do
         for skiptype in ${SREC_SKIP}; do

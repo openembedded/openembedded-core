@@ -84,7 +84,7 @@ do_compile_kernelmodules() {
 	if (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 		oe_runmake modules  CC="${KERNEL_CC}" LD="${KERNEL_LD}"
 	else
-		oenote "no modules to compile"
+		bbnote "no modules to compile"
 	fi
 }
 addtask compile_kernelmodules after do_compile before do_install
@@ -97,7 +97,7 @@ kernel_do_install() {
 	if (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 		oe_runmake DEPMOD=echo INSTALL_MOD_PATH="${D}" modules_install
 	else
-		oenote "no modules to install"
+		bbnote "no modules to install"
 	fi
 
 	#

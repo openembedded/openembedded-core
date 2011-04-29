@@ -67,7 +67,7 @@ oedebug() {
 
 oe_runmake() {
 	if [ x"$MAKE" = x ]; then MAKE=make; fi
-	oenote ${MAKE} ${EXTRA_OEMAKE} "$@"
+	bbnote ${MAKE} ${EXTRA_OEMAKE} "$@"
 	${MAKE} ${EXTRA_OEMAKE} "$@" || die "oe_runmake failed"
 }
 
@@ -231,7 +231,7 @@ base_do_compile() {
 	if [ -e Makefile -o -e makefile ]; then
 		oe_runmake || die "make failed"
 	else
-		oenote "nothing to compile"
+		bbnote "nothing to compile"
 	fi
 }
 

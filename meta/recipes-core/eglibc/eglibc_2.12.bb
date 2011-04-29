@@ -96,7 +96,7 @@ do_compile () {
 		cd ${S}/sunrpc/rpcsvc
 		for r in ${rpcsvc}; do
 			h=`echo $r|sed -e's,\.x$,.h,'`
-			rpcgen -h $r -o $h || oewarn "unable to generate header for $r"
+			rpcgen -h $r -o $h || bbwarn "unable to generate header for $r"
 		done
 	)
 }
