@@ -37,32 +37,7 @@ python sys_path_eh () {
 addhandler sys_path_eh
 
 die() {
-	oefatal "$*"
-}
-
-oenote() {
-	echo "NOTE:" "$*"
-}
-
-oewarn() {
-	echo "WARNING:" "$*"
-}
-
-oefatal() {
-	echo "FATAL:" "$*"
-	exit 1
-}
-
-oedebug() {
-	if [ $# -lt 2]; then
-		echo "Usage: oedebug level \"message\""
-		exit 1
-	fi
-
-	if [ ${OEDEBUG:-0} -ge $1 ]; then
-		shift
-		echo "DEBUG:" $*
-	fi
+	bbfatal "$*"
 }
 
 oe_runmake() {
