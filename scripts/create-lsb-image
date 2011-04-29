@@ -81,7 +81,7 @@ case ${1} in
     ;;
 "ppc32")
     P_ARCH=ppc
-    T_ARCH=${ARCH}
+    T_ARCH=${1}
     COM_PACKAGE_LIST="lsb-dist-testkit-4.1.0-5.${T_ARCH}.tar.gz"
     ;;
 *)
