@@ -28,5 +28,7 @@ PACKAGES =+ "libxmuu libxmuu-dev"
 FILES_libxmuu = "${libdir}/libXmuu.so.*"
 FILES_libxmuu-dev = "${libdir}/libXmuu.so"
 
+BBCLASSEXTEND = "native"
+
 SRC_URI[md5sum] = "6836883a0120e8346cf7f58dc42e465a"
 SRC_URI[sha256sum] = "0fa91f303b70decc1ef6201c88c8a5f0b4ecd68c6c88bdcc891ecd1a689d36ad"
