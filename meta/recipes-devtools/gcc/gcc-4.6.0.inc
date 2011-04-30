@@ -1,4 +1,13 @@
 require gcc-common.inc
+# The below backports are from FSF 4.6 branch on top
+# of latest minor release based of 4.6.x series
+# these patches will collapse once the next minor
+# release is done and we move the recipes to that
+# release
+
+require gcc-4_6-branch-backports.inc
+
+PR = "r1"
 
 DEPENDS =+ "mpfr gmp libmpc"
 NATIVEDEPS = "mpfr-native gmp-native gettext-native libmpc-native"
@@ -12,6 +21,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 		   file://COPYING.RUNTIME;md5=fe60d87048567d4fe8c8a0ed2448bcc8"
 
 SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
+	   ${GCC-4_6-BRANCH-BACKPORTS} \
 	   file://gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
 	   file://100-uclibc-conf.patch \
            file://gcc-uclibc-locale-ctype_touplow_t.patch \
