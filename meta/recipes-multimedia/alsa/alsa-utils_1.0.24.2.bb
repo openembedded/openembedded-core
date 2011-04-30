@@ -9,7 +9,9 @@ DEPENDS = "alsa-lib ncurses"
 PR = "r0"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
-           file://ncursesfix.patch"
+           file://ncursesfix.patch \
+           file://uclibc-exp10-replacement.patch \
+          "
 
 SRC_URI[md5sum] = "8238cd57cb301d1c36bcf0ecb59ce6b2"
 SRC_URI[sha256sum] = "95127f740291086486c06c28118cabca0814bde48fd14dac041a9812a5ac1be2"
