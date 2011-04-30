@@ -1,0 +1,35 @@
+Test for -fstack-protector is compile only test. One might have the option but
+might have build the compiler with --disable-ssp which means ssp should not be
+enabled. Therefore we change the test to a link time test. It will fail if
+libssp is not available.
+
+Upstream-status: Pending
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: libc/configure
+===================================================================
+--- libc.orig/configure
++++ libc/configure
+@@ -6937,7 +6937,7 @@ if test "${libc_cv_ssp+set}" = set; then
+   $as_echo_n "(cached) " >&6
+ else
+   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector
+-			    -o /dev/null -c -x c /dev/null 1>&5'
++			    -o /dev/null -x c /dev/null 1>&5'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+Index: libc/configure.in
+===================================================================
+--- libc.orig/configure.in
++++ libc/configure.in
+@@ -1787,7 +1787,7 @@ AC_SUBST(fno_unit_at_a_time)
+ 
+ AC_CACHE_CHECK(for -fstack-protector, libc_cv_ssp, [dnl
+ if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector
+-			    -o /dev/null -c -x c /dev/null 1>&AS_MESSAGE_LOG_FD])
++			    -o /dev/null -x c /dev/null 1>&AS_MESSAGE_LOG_FD])
+ then
+   libc_cv_ssp=yes
+ else
