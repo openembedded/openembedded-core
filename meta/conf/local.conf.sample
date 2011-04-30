@@ -53,9 +53,10 @@ EXTRA_IMAGE_FEATURES = "tools-debug tools-profile tools-testapps debug-tweaks"
 #PACKAGE_CLASSES ?= "package_rpm package_deb package_ipk"
 PACKAGE_CLASSES ?= "package_ipk"
 
-# mklibs library size optimization is more useful to smaller images, 
-# and less useful for bigger images. Also mklibs library optimization can break the ABI compatibility, so should not be applied to the images which are tobe
-# extended or upgraded later.
+# mklibs library size optimization is more useful to smaller images,
+# and less useful for bigger images. Also mklibs library optimization
+# can break the ABI compatibility, so should not be applied to the
+# images which are to be extended or upgraded later.
 #This enabled mklibs library size optimization just for the specified image.
 #MKLIBS_OPTIMIZED_IMAGES ?= "core-image-minimal"
 #This enable mklibs library size optimization will be for all the images.
