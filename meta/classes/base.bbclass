@@ -89,9 +89,11 @@ def base_dep_prepend(d):
 			deps += " virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}compilerlibs virtual/libc "
 	return deps
 
-DEPENDS_prepend="${@base_dep_prepend(d)} "
-DEPENDS_virtclass-native_prepend="${@base_dep_prepend(d)} "
-DEPENDS_virtclass-nativesdk_prepend="${@base_dep_prepend(d)} "
+BASEDEPENDS = "${@base_dep_prepend(d)}"
+
+DEPENDS_prepend="${BASEDEPENDS} "
+DEPENDS_virtclass-native_prepend="${BASEDEPENDS} "
+DEPENDS_virtclass-nativesdk_prepend="${BASEDEPENDS} "
 
 FILESPATH = "${@base_set_filespath([ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/${P}", "${FILE_DIRNAME}/${PN}", "${FILE_DIRNAME}/${BP}", "${FILE_DIRNAME}/${BPN}", "${FILE_DIRNAME}/files", "${FILE_DIRNAME}" ], d)}"
 # THISDIR only works properly with imediate expansion as it has to run
