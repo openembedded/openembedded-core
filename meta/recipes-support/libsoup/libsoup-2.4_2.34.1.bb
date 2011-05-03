@@ -10,10 +10,11 @@ PR = "r0"
 
 DEPENDS = "glib-2.0 gnutls libxml2 libproxy sqlite3 libgnome-keyring"
 
-SRC_URI = "${GNOME_MIRROR}/libsoup/2.32/libsoup-${PV}.tar.bz2"
+SRC_URI = "${GNOME_MIRROR}/libsoup/2.34/libsoup-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "03f37350a2a31046ebabb8470e75abcc"
-SRC_URI[sha256sum] = "96e6973c8b7459523c0f44e7aec69528ff2fbd388e8ddc415f91bcc42f50777f"
+SRC_URI[md5sum] = "846779d898c11f97b5de28a79ea82254"
+SRC_URI[sha256sum] = "a2f846af2c4c08e15eacc9879c8c9be4d85f8105f960f96a9ba3dbabd9ee517b"
+
 S = "${WORKDIR}/libsoup-${PV}"
 
 inherit autotools pkgconfig
