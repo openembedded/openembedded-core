@@ -6,7 +6,7 @@ DESCRIPTION = "Tools tasks for OE-Core"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-PR = "r9"
+PR = "r10"
 
 PACKAGES = "\
     task-core-tools-debug \
@@ -63,6 +63,7 @@ RRECOMMENDS_task-core-tools-profile = "\
 RDEPENDS_task-core-tools-profile_append_qemux86 = " valgrind lttng-ust systemtap"
 RDEPENDS_task-core-tools-profile_append_qemux86-64 = " lttng-ust systemtap"
 RDEPENDS_task-core-tools-profile_append_qemuppc = " lttng-ust systemtap"
+RDEPENDS_task-core-tools-profile_append_qemuarm = " lttng-ust"
 
 RDEPENDS_task-core-tools-testapps = "\
     blktool \
