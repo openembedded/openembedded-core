@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# CVS compile Test for toolchain test
+# The case extract toolchain tarball into temp folder
+# Then compile CVS with the toolchain environment
+#
+# Author: Jiajun Xu <jiajun.xu@intel.com>
+#
+# This file is licensed under the GNU General Public License,
+# Version 2.
+#
+. $COREBASE/scripts/qemuimage-testlib
+
+TIMEOUT=120
+
+# Extract and test toolchain tarball
+Test_Toolchain cvs ${TIMEOUT}
+
+if [ $? -eq 0 ]; then
+	Test_Info "CVS Test PASS"
+	Test_Print_Result "CVS" 0
+	exit 0
+elif [ $? -eq 1 ]; then
+	Test_Info "CVS Test FAIL"
+	Test_Print_Result "CVS" 1
+	exit 1
+else
+	Test_Info "Skip CVS Test due to some configuration problem"
+	Test_Print_Result "CVS" 2
+	exit 2
+fi

@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# iptables compile Test for toolchain test
+# The case extract toolchain tarball into temp folder
+# Then compile iptables with the toolchain environment
+#
+# Author: Jiajun Xu <jiajun.xu@intel.com>
+#
+# This file is licensed under the GNU General Public License,
+# Version 2.
+#
+. $COREBASE/scripts/qemuimage-testlib
+
+TIMEOUT=120
+
+# Extract and test toolchain tarball
+Test_Toolchain iptables ${TIMEOUT}
+
+if [ $? -eq 0 ]; then
+	Test_Info "iptables Test PASS"
+	Test_Print_Result "iptables" 0
+	exit 0
+elif [ $? -eq 1 ]; then
+	Test_Info "iptables Test FAIL"
+	Test_Print_Result "iptables" 1
+	exit 1
+else
+	Test_Info "Skip iptables Test due to some configuration problem"
+	Test_Print_Result "iptables" 2
+	exit 2
+fi

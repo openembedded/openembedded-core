@@ -19,6 +19,9 @@ TYPE="ext3"
 # The folder to hold all scripts running on targets
 TOOLS="$COREBASE/scripts/qemuimage-tests/tools"
 
+# The folder to hold all projects for toolchain testing
+TOOLCHAIN_PROJECTS="$COREBASE/scripts/qemuimage-tests/toolchain_projects"
+
 # Test Directory on target for testing
 TARGET_TEST_DIR="/opt/test"
 
@@ -27,6 +30,24 @@ PID=0
 
 # Global variable for target ip address
 TARGET_IPADDR=0
+
+# Global variable for test project version during toolchain test
+# Version of cvs is 1.11.23
+# Version of iptables is 1.4.9
+# Version of sudoku-savant is 1.3
+PROJECT_PV=0
+
+# Global variable for test project download URL during toolchain test
+# URL of cvs is http://ftp.gnu.org/non-gnu/cvs/source/stable/1.11.23/cvs-1.11.23.tar.bz2
+# URL of iptables is http://netfilter.org/projects/iptables/files/iptables-1.4.9.tar.bz2
+# URL of sudoku-savant is http://downloads.sourceforge.net/project/sudoku-savant/sudoku-savant/sudoku-savant-1.3/sudoku-savant-1.3.tar.bz2
+PROJECT_DOWNLOAD_URL=0
+
+# SDK folder to hold toolchain tarball
+TOOLCHAIN_DIR="${DEPLOY_DIR}/sdk"
+
+# Toolchain test folder to hold extracted toolchain tarball
+TOOLCHAIN_TEST="/opt"
 
 # common function for information print
 Test_Error()
@@ -400,7 +421,7 @@ Test_Create_Qemu()
 		RUNQEMU=`which runqemu`
 	else
 		Test_Error "Can not find runqemu in \$PATH, return fail"
-		exit 1
+		return 1
 	fi
 	
 	if [ "$QEMUARCH" = "qemux86" -o "$QEMUARCH" = "qemux86-64" ]; then
@@ -498,4 +519,213 @@ Test_Create_Qemu()
 		Test_Update_IPSAVE $PID $TARGET_IPADDR
 		return $ret
 	fi
+}
+
+# Function to prepare test project for toolchain test
+# $1 is the folder holding test project file
+# $2 is the test project name
+Test_Project_Prepare()
+{
+	local toolchain_dir=$1
+	local ret=1
+
+	if [ ! -d ${toolchain_dir} ]; then
+		mkdir -p ${toolchain_dir}
+		ret=$?
+
+		if [ $ret -ne 0 ]; then
+			Test_Info "Create ${toolchain_dir} fail, return"
+			return $ret
+		fi
+	fi
+
+	ret=0
+	# Download test project tarball if it does not exist
+	if [ ! -f ${toolchain_dir}/${2}-${PROJECT_PV}.${suffix} ]; then
+		wget -c -t 5 $PROJECT_DOWNLOAD_URL -O ${toolchain_dir}/${2}-${PROJECT_PV}.${suffix}
+		ret=$?
+	fi
+
+	# Extract the test project into ${TEST_TMP}
+	if [ $ret -eq 0 ]; then
+		tar jxf ${toolchain_dir}/${2}-${PROJECT_PV}.${suffix} -C ${TEST_TMP}
+		ret=$?
+		if [ $ret -eq 0 ]; then
+			Test_Info "Extract ${2}-${PROJECT_PV}.${suffix} into ${TEST_TMP} successfully"
+			return $ret
+		else
+			Test_Info "Fail to extract ${2}-${PROJECT_PV}.${suffix} into ${TEST_TMP}"
+			return $ret
+		fi
+	else
+		Test_Info "Fail to download ${2}-${PROJECT_PV}.${suffix} from $PROJECT_DOWNLOAD_URL"
+		rm -rf ${toolchain_dir}/${2}-${PROJECT_PV}.${suffix}
+		return $ret
+	fi
+}
+
+# Function to prepare toolchain environment
+# $1 is toolchain directory to hold toolchain tarball
+# $2 is prefix name for toolchain tarball
+Test_Toolchain_Prepare()
+{
+	local toolchain_dir=$1
+	local sdk_name=$2
+	local ret=1
+
+	if [ ! -d ${toolchain_dir} ]; then
+		Test_Info "No directory ${toolchain_dir}, which holds toolchain tarballs"
+		return 1
+	fi
+
+	# Check if there is any toolchain tarball under $toolchain_dir with prefix $sdk_name
+	for i in `dir ${toolchain_dir}`
+	do
+		echo $i | grep "${sdk_name}-toolchain-gmae"
+		if [ $? -eq 0 ]; then
+			rm -rf ${TEST_TMP}/opt
+			tar jxf ${toolchain_dir}/${i} -C ${TEST_TMP}
+			ret=$?
+			break
+		fi
+	done
+
+	if [ $ret -eq 0 ]; then
+		Test_Info "Check if /opt is accessible for non-root user"
+
+		# Check if the non-root test user has write access of $TOOLCHAIN_TEST
+		if [ -d ${TOOLCHAIN_TEST} ]; then
+			touch ${TOOLCHAIN_TEST}
+			if [ $? -ne 0 ]; then
+				Test_Info "Has no right to modify folder $TOOLCHAIN_TEST, pls. chown it to test user"
+				return 2
+			fi
+		else
+			mkdir -p ${TOOLCHAIN_TEST}
+			if [ $? -ne 0 ]; then
+				Test_Info "Has no right to create folder $TOOLCHAIN_TEST, pls. create it and chown it to test user"
+				return 2
+			fi
+		fi
+
+		# If there is a toolchain folder under $TOOLCHAIN_TEST, let's remove it
+		if [ -d ${TOOLCHAIN_TEST}/poky ]; then
+			rm -rf ${TOOLCHAIN_TEST}/poky
+		fi
+
+		# Copy toolchain into $TOOLCHAIN_TEST
+		cp -r ${TEST_TMP}/opt/poky ${TOOLCHAIN_TEST}
+		ret=$?
+
+		if [ $ret -eq 0 ]; then
+			Test_Info "Successfully copy toolchain into $TOOLCHAIN_TEST"
+			return $ret
+		else
+			Test_Info "Meet error when copy toolchain into $TOOLCHAIN_TEST"
+			return $ret
+		fi
+	else
+		Test_Info "No tarball named ${sdk_name}-toolchain-gmae under ${toolchain_dir}"
+		return $ret
+	fi
+}
+
+# Function to execute command and exit if run out of time
+# $1 is timeout value
+# $2 is the command to be executed
+Test_Time_Out()
+{
+	local timeout=$1
+	shift
+	local command=$*
+	local date=0
+	local tmp=`mktemp`
+	local ret=1
+
+	# Run command in background
+	($command; echo $? > $tmp) &
+	while ps -e -o pid | grep -qw $!; do
+		if [ $date -ge $timeout ]; then
+			Test_Info "$timeout Timeout when running command $command"
+			rm -rf $tmp
+			return 1
+		fi
+		sleep 5
+		date=`expr $date + 5`
+	done
+	ret=`cat $tmp`
+	rm -rf $tmp
+	return $ret
+}
+
+# Function to test toolchain
+# $1 is test project name
+# $2 is the timeout value
+Test_Toolchain()
+{
+	local test_project=$1
+	local timeout=$2
+	local ret=1
+	local suffix="tar.bz2"
+	local env_setup=""
+	local pro_install="${TEST_TMP}/pro_install"
+
+	# Set value for PROJECT_PV and PROJECT_DOWNLOAD_URL accordingly
+	if [ $test_project == "cvs" ]; then
+		PROJECT_PV=1.11.23
+		PROJECT_DOWNLOAD_URL="http://ftp.gnu.org/non-gnu/cvs/source/stable/1.11.23/cvs-1.11.23.tar.bz2"
+	elif [ $test_project == "iptables" ]; then
+		PROJECT_PV=1.4.9
+		PROJECT_DOWNLOAD_URL="http://netfilter.org/projects/iptables/files/iptables-1.4.9.tar.bz2"
+	elif [ $test_project == "sudoku-savant" ]; then
+		PROJECT_PV=1.3
+		PROJECT_DOWNLOAD_URL="http://downloads.sourceforge.net/project/sudoku-savant/sudoku-savant/sudoku-savant-1.3/sudoku-savant-1.3.tar.bz2"
+	else
+		Test_Info "Unknown test project name $test_project"
+		return 1
+	fi
+
+	# Download test project and extract it
+	Test_Project_Prepare $TOOLCHAIN_PROJECTS $test_project
+	if [ $? -ne 0 ]; then
+		Test_Info "Prepare test project file failed"
+		return 1
+	fi
+
+	# Extract toolchain tarball into ${TEST_TMP}
+	Test_Toolchain_Prepare $TOOLCHAIN_DIR $SDK_NAME
+	ret=$?
+	if [ $ret -ne 0 ]; then
+		Test_Info "Prepare toolchain test environment failed"
+		return $ret
+	fi
+
+	if [ ! -d ${pro_install} ]; then
+		mkdir -p ${pro_install}
+	fi
+
+	# Begin to build test project in toolchain environment
+	env_setup=`find ${TOOLCHAIN_TEST}/poky -name "environment-setup*"`
+
+	source $env_setup
+
+	if [ $test_project == "cvs" -o $test_project == "iptables" ]; then
+		cd ${TEST_TMP}/${test_project}-${PROJECT_PV}
+		Test_Time_Out $timeout ./configure ${CONFIGURE_FLAGS} || { Test_Info "configure failed with $test_project"; return 1; }
+		Test_Time_Out $timeout make -j4 || { Test_Info "make failed with $test_project"; return 1; }
+		Test_Time_Out $timeout make install DESTDIR=${pro_install} || { Test_Info "make failed with $test_project"; return 1; }
+		cd -
+		ret=0
+	elif [ $test_project == "sudoku-savant" ]; then
+		cd ${TEST_TMP}/${test_project}-${PROJECT_PV}
+		Test_Time_Out $timeout ./configure ${CONFIGURE_FLAGS} || { Test_Info "configure failed with $test_project"; return 1; }
+		Test_Time_Out $timeout make -j4 || { Test_Info "make failed with $test_project"; return 1; }
+		cd -
+		ret=0
+	else
+		Test_Info "Unknown test project $test_project"
+		ret=1
+	fi
+
+	return $ret
 }

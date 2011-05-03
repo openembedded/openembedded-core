@@ -27,6 +27,7 @@ def qemuimagetest_main(d):
     import sys
     import re
     import os
+    import shutil
     
     """
     Test Controller for automated testing.
@@ -72,6 +73,7 @@ def qemuimagetest_main(d):
         os.environ["TEST_STATUS"] = bb.data.getVar("TEST_STATUS", d, True)
         os.environ["TARGET_IPSAVE"] = bb.data.getVar("TARGET_IPSAVE", d, True)
         os.environ["TEST_SERIALIZE"] = bb.data.getVar("TEST_SERIALIZE", d, True)
+        os.environ["SDK_NAME"] = bb.data.getVar("SDK_NAME", d, True)
 
         """run Test Case"""
         bb.note("Run %s test in scenario %s" % (case, scen))
@@ -120,7 +122,10 @@ def qemuimagetest_main(d):
         if os.path.isdir(tmppath):
             for f in os.listdir(tmppath):
                 tmpfile = os.path.join(tmppath, f)
-                os.remove(tmpfile)
+		if os.path.isfile(tmpfile):
+                    os.remove(tmpfile)
+                elif os.path.isdir(tmpfile):
+                    shutil.rmtree(tmpfile, True)
 
     """Before running testing, clean temp folder first"""
     clean_tmp()
@@ -154,7 +159,7 @@ def qemuimagetest_main(d):
     os.system("touch %s" % resultfile)
     os.symlink(resultfile, sresultfile)
     f = open(sresultfile, "a")
-    f.write("\tTest Result for %s\n" % machine)
+    f.write("\tTest Result for %s %s\n" % (machine, pname))
     f.write("\t%-15s%-15s%-15s%-15s\n" % ("Testcase", "PASS", "FAIL", "NORESULT"))
     f.close()
     
