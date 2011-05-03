@@ -1,0 +1,42 @@
+Upstream-Status: Inappropriate [configuration]
+
+Explicitly add linkage to lttvwindow.
+
+Without the fix, lttv-gui inside target can't run, complaining
+"undefined symbol: LTTV_VIEWER_CONSTRUCTORS".
+
+Tue May  3 21:39:37 CST 2011
+
+Signed-off-by: Dexuan Cui <dexuan.cui@intel.com>
+
+diff --git a/lttv/modules/gui/common.am b/lttv/modules/gui/common.am
+index ce50113..89083aa 100644
+--- a/lttv/modules/gui/common.am
++++ b/lttv/modules/gui/common.am
+@@ -21,3 +21,4 @@ AM_LDFLAGS = $(MODULE_LDFLAGS)
+ 
+ libdir = ${lttvplugindir}
+ 
++LIBS += $(GTK_LIBS) -L${top_builddir}/lttv/modules/gui/lttvwindow/lttvwindow -llttvwindow
+diff --git a/lttv/modules/gui/lttvwindow/lttvwindow/Makefile.am b/lttv/modules/gui/lttvwindow/lttvwindow/Makefile.am
+index c953fc9..489d640 100644
+--- a/lttv/modules/gui/lttvwindow/lttvwindow/Makefile.am
++++ b/lttv/modules/gui/lttvwindow/lttvwindow/Makefile.am
+@@ -1,13 +1,14 @@
+ ## Process this file with automake to produce Makefile.in
+ 
+-include ../../common.am
+-
+ INCLUDES = \
+ 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
+ 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
+ 	$(DEFAULT_INCLUDES)
+ 
+-#libdir = ${lttvplugindir}
++AM_CFLAGS = $(MODULE_CFLAGS)
++AM_LDFLAGS = $(MODULE_LDFLAGS)
++
++libdir = ${lttvplugindir}
+ 
+ lib_LTLIBRARIES = liblttvwindow.la
+ 
