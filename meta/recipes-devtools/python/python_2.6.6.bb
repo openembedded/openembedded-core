@@ -1,7 +1,7 @@
 require python.inc
 DEPENDS = "python-native db gdbm openssl readline sqlite3 zlib"
 DEPENDS_sharprom = "python-native db readline zlib gdbm openssl"
-PR = "${INC_PR}.2"
+PR = "${INC_PR}.3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=38fdd546420fab09ac6bd3d8a1c83eb6"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
@@ -34,23 +34,26 @@ do_configure_prepend() {
 	autoreconf -Wcross --verbose --install --force --exclude=autopoint Modules/_ctypes/libffi || bbnote "_ctypes failed to autoreconf"
 }
 
-#
-# Copy config.h and an appropriate Makefile for distutils.sysconfig,
-# which laters uses the information out of these to compile extensions
-#
-do_compile_prepend() {
+do_compile() {
+	#
+	# Copy config.h and an appropriate Makefile for distutils.sysconfig,
+	# which laters uses the information out of these to compile extensions
+	#
+	# The following part (until python compilation) should probably moved to an
+	# -initial recipe to handle staging better
+	#
 	install -d ${STAGING_INCDIR}/python${PYTHON_MAJMIN}/
 	install -d ${STAGING_LIBDIR}/python${PYTHON_MAJMIN}/config/
 	install -m 0644 pyconfig.h ${STAGING_INCDIR}/python${PYTHON_MAJMIN}/
-	install -m 0644 Makefile Makefile.orig
-	install -m 0644 Makefile Makefile.backup
-	sed -e 's,${includedir},${STAGING_INCDIR},' < Makefile.backup > Makefile
-	install -m 0644 Makefile Makefile.backup
-	sed -e 's,${libdir},${STAGING_LIBDIR},' < Makefile.backup > Makefile
-	install -m 0644 Makefile ${STAGING_LIBDIR}/python${PYTHON_MAJMIN}/config/
-}
 
-do_compile() {
+	# remove hardcoded ccache, see http://bugs.openembedded.net/show_bug.cgi?id=4144
+	sed -i -e s,ccache,'$(CCACHE)', Makefile
+
+	install -m 0644 Makefile Makefile.orig
+	sed -i -e 's,${includedir},${STAGING_INCDIR},' Makefile
+	sed -i -e 's,${libdir},${STAGING_LIBDIR},' Makefile
+	install -m 0644 Makefile ${STAGING_LIBDIR}/python${PYTHON_MAJMIN}/config/
+
 	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
 		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
 		STAGING_LIBDIR=${STAGING_LIBDIR} \
@@ -69,6 +72,9 @@ do_compile() {
 }
 
 do_install() {
+	# make install needs the original Makefile, or otherwise the inclues would
+	# go to ${D}${STAGING...}/...
+	install -m 0644 Makefile Makefile.sysroot
 	install -m 0644 Makefile.orig Makefile
 	
 	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
@@ -78,12 +84,19 @@ do_install() {
 		BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
 		DESTDIR=${D} LIBDIR=${libdir} install
 
+	install -m 0644 Makefile.sysroot ${D}/${libdir}/python${PYTHON_MAJMIN}/config/Makefile
+	rm Makefile.sysroot
+
 	if [ -e ${WORKDIR}/sitecustomize.py ]; then
 		install -m 0644 ${WORKDIR}/sitecustomize.py ${D}/${libdir}/python${PYTHON_MAJMIN}
 	fi
+}
 
-	# remove hardcoded ccache, see http://bugs.openembedded.net/show_bug.cgi?id=4144
-	sed -i -e s,ccache,'$(CCACHE)', ${D}/${libdir}/python${PYTHON_MAJMIN}/config/Makefile
+PACKAGE_PREPROCESS_FUNCS += "py_package_preprocess"
+
+py_package_preprocess () {
+	# copy back the old Makefile to fix target package
+	install -m 0644 Makefile.orig ${D}/${libdir}/python${PYTHON_MAJMIN}/config/Makefile
 }
 
 require python-${PYTHON_MAJMIN}-manifest.inc
