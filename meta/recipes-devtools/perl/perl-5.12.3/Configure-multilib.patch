@@ -11,7 +11,7 @@ Index: perl-5.12.3/Configure
 -glibpth="/lib /usr/lib $xlibpth"
 +glibpth="/lib /usr/lib /lib64 /usr/lib64 $xlibpth"
  glibpth="$glibpth /usr/ccs/lib /usr/ucblib /usr/local/lib"
-+test -f /usr/lib/`uname -m`-linux-gnu/libc.so && glibpth="/usr/lib/`uname -m`-linux-gnu $glibpth"
++test -f /usr/lib/*-linux-gnu/libc.so && glibpth="/usr/lib/*-linux-gnu $glibpth"
  test -f /usr/shlib/libc.so && glibpth="/usr/shlib $glibpth"
  test -f /shlib/libc.so     && glibpth="/shlib $glibpth"
  test -d /usr/lib64         && glibpth="$glibpth /lib64 /usr/lib64 /usr/local/lib64"
