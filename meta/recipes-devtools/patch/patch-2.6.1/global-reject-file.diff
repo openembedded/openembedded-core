@@ -1,3 +1,5 @@
+Upstream-Status="Inappropriate [debian patch]"
+
 Index: patch-2.6.1/patch.man
 ===================================================================
 --- patch-2.6.1.orig/patch.man
