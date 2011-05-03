@@ -1,3 +1,5 @@
+Upstream-Status="Inappropriate [debian patch]"
+
 Generate unified diff style reject files. Also include the C function names
 in reject files whenever possible.
 

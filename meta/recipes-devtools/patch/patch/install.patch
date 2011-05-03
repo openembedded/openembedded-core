@@ -1,3 +1,5 @@
+Upstream-Status="Inappropriate [embedded specific]"
+
 Index: patch-2.5.4/Makefile.in
 ===================================================================
 --- patch-2.5.4.orig/Makefile.in	2005-03-09 07:23:54.779311824 -0500
