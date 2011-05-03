@@ -1,3 +1,5 @@
+Upstream-Status="Inappropriate [embedded specific]"
+
 Index: subversion-1.5.5/configure.ac
 ===================================================================
 --- subversion-1.5.5.orig/configure.ac	2008-08-26 18:27:56.000000000 +0100

@@ -1,3 +1,5 @@
+Upstream-Status="Inappropriate [embedded specific]"
+
 Index: subversion-1.6.13/build/ac-macros/neon.m4
 ===================================================================
 --- subversion-1.6.13.orig/build/ac-macros/neon.m4
