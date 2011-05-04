@@ -110,7 +110,7 @@ do_install () {
 
 	# Symlinks for ease of running these on the native target
 	for p in ${TARGET_SYS}-* ; do
-		ln -sf $p `echo $p | sed -e s,${TARGET_SYS}-,,`
+		ln -sf $p `echo $p | sed -e s,${TARGET_PREFIX},,`
 	done
 
 	rm ${D}${bindir}/ar ${D}${bindir}/strings
@@ -139,11 +139,11 @@ do_install_virtclass-native () {
 }
 
 pkg_postinst_${PN}-symlinks () {
-	update-alternatives --install ${bindir}/ar ar ${TARGET_SYS}-ar 100
-	update-alternatives --install ${bindir}/strings strings ${TARGET_SYS}-strings 100
+	update-alternatives --install ${bindir}/ar ar ${TARGET_PREFIX}ar 100
+	update-alternatives --install ${bindir}/strings strings ${TARGET_PREFIX}strings 100
 }
 
 pkg_prerm_${PN}-symlinks () {
-	update-alternatives --remove ar ${TARGET_SYS}-ar
-	update-alternatives --remove strings ${TARGET_SYS}-strings
+	update-alternatives --remove ar ${TARGET_PREFIX}ar
+	update-alternatives --remove strings ${TARGET_PREFIX}strings
 }
