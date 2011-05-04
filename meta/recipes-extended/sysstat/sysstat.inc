@@ -4,12 +4,10 @@ HOMEPAGE = "http://sebastien.godard.pagesperso-orange.fr/"
 LICENSE = "GPLv2+"
 SECTION = "console/utils"
 
-DEPENDS = "virtual/libintl"
-
 SRC_URI = "http://pagesperso-orange.fr/sebastien.godard/sysstat-${PV}.tar.gz \
 		   file://99_sysstat"
 
-inherit autotools
+inherit autotools gettext
 
 do_install() {
 	autotools_do_install
