@@ -91,13 +91,13 @@ do_install () {
 	find -name libiberty.h ${D}${exec_prefix}/lib | xargs rm -f
 
 	# Symlinks so we can use these trivially on the target
-	ln -sf ${TARGET_SYS}-g77 g77 || true
-	ln -sf ${TARGET_SYS}-gfortran gfortran || true
-	ln -sf ${TARGET_SYS}-g++ g++
-	ln -sf ${TARGET_SYS}-gcc gcc
+	ln -sf ${TARGET_PREFIX}g77 g77 || true
+	ln -sf ${TARGET_PREFIX}gfortran gfortran || true
+	ln -sf ${TARGET_PREFIX}g++ g++
+	ln -sf ${TARGET_PREFIX}gcc gcc
 	ln -sf g77 f77 || true
 	ln -sf gfortran f95 || true
 	ln -sf g++ c++
 	ln -sf gcc cc
-	ln -sf ${bindir}/${TARGET_SYS}-cpp ${D}${bindir}/cpp
+	ln -sf ${bindir}/${TARGET_PREFIX}cpp ${D}${bindir}/cpp
 }
