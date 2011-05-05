@@ -1,7 +1,7 @@
 def gettext_dependencies(d):
-    if d.getVar('USE_NLS', True) == 'no':
+    if d.getVar('USE_NLS', True) == 'no' and not oe.utils.inherits(d, 'native', 'nativesdk', 'cross'):
         return ""
-    if bb.data.getVar('INHIBIT_DEFAULT_DEPS', d, True) and not oe.utils.inherits(d, 'cross-canadian'):
+    if d.getVar('INHIBIT_DEFAULT_DEPS', True) and not oe.utils.inherits(d, 'cross-canadian'):
         return ""
     return d.getVar('DEPENDS_GETTEXT', False)
 
@@ -14,4 +14,4 @@ def gettext_oeconf(d):
 DEPENDS_GETTEXT = "virtual/gettext gettext-native"
 
 BASEDEPENDS =+ "${@gettext_dependencies(d)}"
-EXTRA_OECONF += "${@gettext_oeconf(d)}"
+EXTRA_OECONF_append = " ${@gettext_oeconf(d)}"
