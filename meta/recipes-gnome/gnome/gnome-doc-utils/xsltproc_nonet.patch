@@ -1,0 +1,34 @@
+This adds the -nonet option to xsltproc invocations, which fixes
+compile errors when building gnome-doc-xslt-de.omf.
+
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
+diff -urN gnome-doc-utils-0.20.5.orig//doc/xslt/Makefile.am gnome-doc-utils-0.20.5/doc/xslt/Makefile.am
+--- gnome-doc-utils-0.20.5.orig//doc/xslt/Makefile.am	2011-03-22 06:56:17.000000000 -0700
++++ gnome-doc-utils-0.20.5/doc/xslt/Makefile.am	2011-05-04 21:03:29.382491164 -0700
+@@ -21,14 +21,14 @@
+ 
+ $(xsldoc_docs): $(xsldoc_xsls) xsldoc.awk xsldoc-fill.xsl
+ 	$(GDU_AWK) -f "$(srcdir)/xsldoc.awk" "$(filter %/$(basename $(notdir $@)).xsl,$(xsldoc_xsls))" \
+-	| xsltproc -o "$@" \
++	| xsltproc -nonet -o "$@" \
+ 	--stringparam basename "$(basename $(notdir $@))" \
+ 	--stringparam xsl_file "$(filter %/$(basename $(notdir $@)).xsl,$(xsldoc_xsls))" \
+ 	"$(srcdir)/xsldoc-fill.xsl" -
+ 
+ $(xsldoc_xmls): xsldoc-docbook.xsl
+ $(xsldoc_xmls): C/%.xml : C/%.xsldoc
+-	xsltproc -o "$@" \
++	xsltproc -nonet -o "$@" \
+ 	--stringparam basename "$(basename $(notdir $@))" \
+ 	--stringparam xsl_file "$(filter %/$(basename $(notdir $@)).xsl,$(xsldoc_xsls))" \
+ 	"$(srcdir)/xsldoc-docbook.xsl" "$<"
+@@ -75,4 +75,4 @@
+ DOC_MODULE = gnome-doc-xslt
+ DOC_INCLUDES = legal.xml translating.xml $(patsubst %,%.xml,$(xsldoc_base))
+ 
+-DOC_LINGUAS = de
+\ No newline at end of file
++DOC_LINGUAS = de
