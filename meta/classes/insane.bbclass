@@ -85,7 +85,9 @@ def package_qa_get_machine_dict():
             "linux-uclibcspe" : {
                         "powerpc":    (20,     0,    0,          False,         32),
                       },
-
+            "linux-gnu" :       {
+                        "microblaze": (47787,  0,    0,          False,         32),
+                      },
        }
 
 
