@@ -2,7 +2,7 @@ require linux-libc-headers.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS += "unifdef-native"
-PR = "r0"
+PR = "r1"
 
 SRC_URI += " file://connector-msg-size-fix.patch"
 
@@ -26,6 +26,7 @@ set_arch() {
 		x86_64*)  ARCH=x86_64 ;;
 		avr32*)   ARCH=avr32 ;;
 		bfin*)    ARCH=blackfin ;;
+		microblaze*) ARCH=microblaze ;;
 	esac
 }
 
