@@ -16,7 +16,7 @@ mklibs_optimize_image_doit() {
 		> ${WORKDIR}/mklibs/executables.list
 
 	case ${TARGET_ARCH} in
-		powerpc | mips )
+		powerpc | mips | microblaze )
 			dynamic_loader="/lib/ld.so.1"
 			;;
 		x86_64)
