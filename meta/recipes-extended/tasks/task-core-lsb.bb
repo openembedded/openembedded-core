@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Create Small Image Tasks"
-PR = "r3"
+PR = "r4"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
@@ -111,6 +111,7 @@ RDEPENDS_task-core-tcl = "\
 RDEPENDS_task-core-misc = "\
     elfutils \
     gettext \
+    gettext-runtime \
     groff \
     lsb \
     lsbsetup \
@@ -131,6 +132,7 @@ RDEPENDS_task-core-lsb-command-add = "\
     msmtp \
     chkconfig \
     xdg-utils \
+    foomatic-filters \
 "
 #    cups
 
@@ -188,6 +190,7 @@ RDEPENDS_task-core-lsb-runtime-add = "\
     liburi-perl \
     libxml-parser-perl \
     libxml-perl \
+    libxml-sax-perl \
     eglibc-localedatas \
     eglibc-gconvs \
     eglibc-charmaps \
