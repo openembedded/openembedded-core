@@ -8,7 +8,9 @@ DEPENDS = "libcheck rpm zlib expat db"
 
 SRCREV = "0a7378d5f482f477a01cf1690d76871ab8bdcc32"
 PV = "0.0-git${SRCPV}"
-PR = "r9"
+PR = "r10"
+
+PARALLEL_MAKE=""
 
 SRC_URI = "git://gitorious.org/opensuse/sat-solver.git;protocol=git \
            file://sat-solver_rpm5.patch \
@@ -16,6 +18,7 @@ SRC_URI = "git://gitorious.org/opensuse/sat-solver.git;protocol=git \
            file://cmake.patch \
            file://db5.patch \
            file://sat-solver_core.patch \
+           file://fix_gcc-4.6.0_compile_issue.patch \
           "
 
 S = "${WORKDIR}/git"
