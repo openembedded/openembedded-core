@@ -1,3 +1,5 @@
+Upstream-Status="Pending"
+
 Index: gcc-4.5.0/libstdc++-v3/include/c_std/cstdio
 ===================================================================
 --- gcc-4.5.0.orig/libstdc++-v3/include/c_std/cstdio	2010-02-04 10:20:34.000000000 -0800

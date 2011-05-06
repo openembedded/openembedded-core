@@ -1,3 +1,5 @@
+Upstream-Status="Pending"
+
 --- gcc/libstdc++-v3/config/locale/uclibc/monetary_members.cc.uclibc200_wchar~	2006-03-10 15:32:37 +0100
 +++ gcc/libstdc++-v3/config/locale/uclibc/monetary_members.cc	2006-03-10 15:37:27 +0100
 @@ -401,7 +401,7 @@

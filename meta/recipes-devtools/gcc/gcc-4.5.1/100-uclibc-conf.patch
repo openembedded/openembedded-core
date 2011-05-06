@@ -1,3 +1,5 @@
+Upstream-Status="Pending"
+
 Index: gcc-4.3.1/contrib/regression/objs-gcc.sh
 ===================================================================
 --- gcc-4.3.1.orig/contrib/regression/objs-gcc.sh	2007-12-24 15:18:57.000000000 -0800

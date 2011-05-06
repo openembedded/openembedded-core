@@ -1,3 +1,5 @@
+Upstream-Status="Inappropriate [embedded specific]"
+
 Index: gcc-4.5.0/libstdc++-v3/configure
 ===================================================================
 --- gcc-4.5.0.orig/libstdc++-v3/configure	2010-06-25 10:48:37.488384191 -0700

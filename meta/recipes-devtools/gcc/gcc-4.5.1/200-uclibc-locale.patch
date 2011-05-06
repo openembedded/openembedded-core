@@ -1,3 +1,5 @@
+Upstream-Status="Pending"
+
 Index: gcc-4.5.0/libstdc++-v3/acinclude.m4
 ===================================================================
 --- gcc-4.5.0.orig/libstdc++-v3/acinclude.m4	2010-04-05 18:27:44.000000000 -0700

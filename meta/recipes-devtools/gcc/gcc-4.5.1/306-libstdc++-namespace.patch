@@ -1,3 +1,5 @@
+Upstream-Status="Pending"
+
 Index: gcc-4.5.0/libstdc++-v3/config/locale/uclibc/messages_members.h
 ===================================================================
 --- gcc-4.5.0.orig/libstdc++-v3/config/locale/uclibc/messages_members.h	2010-06-25 10:49:07.024632961 -0700

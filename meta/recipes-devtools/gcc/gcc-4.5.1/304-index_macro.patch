@@ -1,3 +1,5 @@
+Upstream-Status="Pending"
+
 Index: gcc-4.5.0/libstdc++-v3/include/ext/rope
 ===================================================================
 --- gcc-4.5.0.orig/libstdc++-v3/include/ext/rope	2009-04-09 08:00:19.000000000 -0700

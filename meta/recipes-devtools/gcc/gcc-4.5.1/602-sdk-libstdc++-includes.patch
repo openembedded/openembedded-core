@@ -1,3 +1,5 @@
+Upstream-Status="Inappropriate [embedded specific]"
+
 --- gcc-4.1.0/libstdc++-v3/fragment.am	2005-03-21 11:40:14.000000000 -0600
 +++ gcc-4.1.0-patched/libstdc++-v3/fragment.am	2005-04-25 20:14:39.856251785 -0500
 @@ -21,5 +21,5 @@

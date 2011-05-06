@@ -1,3 +1,5 @@
+Upstream-Status="Pending"
+
 Hi,
 
 The attached patch makes sure that we create smaller object code for

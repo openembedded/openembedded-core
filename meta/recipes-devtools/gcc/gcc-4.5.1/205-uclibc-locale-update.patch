@@ -1,3 +1,5 @@
+Upstream-Status="Pending"
+
 Index: gcc-4.3.2/libstdc++-v3/config/locale/uclibc/c_locale.cc
 ===================================================================
 --- gcc-4.3.2.orig/libstdc++-v3/config/locale/uclibc/c_locale.cc	2008-09-17 22:35:28.000000000 -0700

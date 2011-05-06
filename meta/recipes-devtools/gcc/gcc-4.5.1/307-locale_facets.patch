@@ -1,3 +1,5 @@
+Upstream-Status="Pending"
+
 This patch fixes a bug into ostream::operator<<(double) due to the wrong size
 passed into the __convert_from_v method. The wrong size is then passed to
 std::snprintf function, that, on uClibc, doens't handle sized 0 buffer.
