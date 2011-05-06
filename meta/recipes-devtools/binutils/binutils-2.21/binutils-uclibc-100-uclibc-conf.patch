@@ -1,3 +1,5 @@
+Upstream-Status="Pending"
+
 --- binutils-2.18.orig/configure
 +++ binutils-2.18/configure
 @@ -2206,7 +2206,7 @@
