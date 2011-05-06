@@ -18,3 +18,7 @@ PR = "r2"
 inherit autotools pkgconfig gettext
 
 EXTRA_OECONF = "--disable-tests --disable-check"
+
+do_configure_prepend_libc-uclibc() {
+        touch ${S}/config.rpath
+}
