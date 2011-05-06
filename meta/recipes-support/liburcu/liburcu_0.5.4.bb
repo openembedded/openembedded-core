@@ -15,7 +15,7 @@ SRC_URI[md5sum] = "04147d24749be75200173859839207f7"
 SRC_URI[sha256sum] = "02aedbb16c16bd034e246d5c9637a9232be559c66fc2fe4eb28948e234bd89f1"
 
 S = "${WORKDIR}/userspace-rcu-${PV}"
-
+CFLAGS_append_libc-uclibc = " -D_GNU_SOURCE"
 inherit autotools
 
 # liburcu, which is only used by lttng-ust, may not build on other
