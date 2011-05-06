@@ -9,7 +9,7 @@ Infrastructure (DRI)."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 
-PR = "r1"
+PR = "r0"
 
 EXTRA_OECONF += "--disable-xvmc"
 
@@ -21,5 +21,5 @@ DEPENDS += "virtual/libx11 libxvmc drm xf86driproto glproto \
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
-SRC_URI[md5sum] = "05f187582aeabda57fcd6f2782cfbf8e"
-SRC_URI[sha256sum] = "e18c37a579a960516e69de5c6f74750ca02208c0e41cf763ae5630c84db507df"
+SRC_URI[md5sum] = "ba56ae395a9769ada1fef2014468bee9"
+SRC_URI[sha256sum] = "c377e1e9ab8b846d7e039acc9105479d5dce6a03f1ddccccf01c8474259c1720"
