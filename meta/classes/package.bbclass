@@ -676,9 +676,9 @@ python populate_packages () {
 				unshipped.append(path)
 
 	if unshipped != []:
-		bb.note("the following files were installed but not shipped in any package:")
+		bb.warn("the following files were installed but not shipped in any package:")
 		for f in unshipped:
-			bb.note("  " + f)
+			bb.warn("  " + f)
 
 	bb.build.exec_func("package_name_hook", d)
 
