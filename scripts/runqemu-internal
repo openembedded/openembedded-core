@@ -448,20 +448,29 @@ else
 fi
 
 # qemu got segfault if linked with nVidia's libgl
+GL_LD_PRELOAD=$LD_PRELOAD
+
 if ldd $QEMUBIN | grep -i nvidia &> /dev/null
 then
 cat << EOM
 WARNING: nVidia proprietary OpenGL libraries detected.
 nVidia's OpenGL libraries are known to have compatibility issues with qemu,
 resulting in a segfault. Please uninstall these drivers or ensure the mesa libGL
-libraries precede nvidia's via LD_PRELOAD.
+libraries precede nvidia's via LD_PRELOAD(Already do it on Ubuntu).
 EOM
+
+# Automatically use Ubuntu system's mesa libGL, other distro can add its own path
+    if grep -i ubuntu /etc/lsb-release &> /dev/null
+    then
+        echo "Skip nVidia's libGL on Ubuntu!"
+        GL_LD_PRELOAD="/usr/lib/libGL.so $LD_PRELOAD"
+    fi
 fi
 
 echo "Running $QEMU..."
 # -no-reboot is a mandatory option - see bug #100
 echo $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append '"'$KERNCMDLINE $SCRIPT_KERNEL_OPT'"'
-$QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT"
+LD_PRELOAD="$GL_LD_PRELOAD" $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT"
 
 
 cleanup
