@@ -22,7 +22,7 @@ SRCREV_machine_qemux86-64 = "b906f358fd404a1e74a961f25079274e0d933ee1"
 SRCREV_machine = "b906f358fd404a1e74a961f25079274e0d933ee1"
 SRCREV_meta = "ecab1e2bc12a8b0c4d064a00acc3260f6e8528c5"
 
-PR = "r17"
+PR = "r18"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 SRCREV_FORMAT = "meta_machine"
 
@@ -35,6 +35,8 @@ KERNEL_REVISION_CHECKING ?= "t"
 KERNEL_FEATURES="features/netfilter"
 KERNEL_FEATURES_append_qemux86=" cfg/sound"
 KERNEL_FEATURES_append_qemux86-64=" cfg/sound"
+
+YOCTO_KERNEL_META_DATA=t
 
 # extra tasks
 addtask kernel_link_vmlinux after do_compile before do_install

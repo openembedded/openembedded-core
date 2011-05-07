@@ -13,7 +13,10 @@ do_patch() {
 	fi
 
 	# simply ensures that a branch of the right name has been created
-	createme ${ARCH} ${kbranch} ${defconfig}
+	if [ -n "${YOCTO_KERNEL_META_DATA}" ]; then
+		createme_flags="--disable-meta-gen"
+	fi
+	createme ${createme_flags} ${ARCH} ${kbranch} ${defconfig}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not create ${kbranch}"
 		exit 1
