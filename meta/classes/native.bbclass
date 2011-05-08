@@ -11,6 +11,10 @@ PACKAGES_DYNAMIC = ""
 PACKAGES_DYNAMIC_virtclass-native = ""
 PACKAGE_ARCH = "${BUILD_ARCH}"
 
+# used by cmake class
+OECMAKE_RPATH = "${libdir}"
+OECMAKE_RPATH_virtclass-native = "${libdir}"
+
 BASE_PACKAGE_ARCH = "${BUILD_ARCH}"
 BASEPKG_HOST_SYS = "${BUILD_ARCH}${BUILD_VENDOR}-${BUILD_OS}"
 BASEPKG_TARGET_SYS = "${BUILD_ARCH}${BUILD_VENDOR}-${BUILD_OS}"
