@@ -6,11 +6,6 @@ DEPENDS = "readline ncurses tcl-native"
 DEPENDS_virtclass-native = "tcl-native"
 LICENSE = "PD"
 
-SRC_URI = "http://www.sqlite.org/sqlite-${PV}.tar.gz \
-	   file://libtool.patch"
-
-S = "${WORKDIR}/sqlite-${PV}"
-
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-tcl --enable-shared --enable-threadsafe"
