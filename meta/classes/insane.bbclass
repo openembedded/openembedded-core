@@ -348,7 +348,11 @@ def package_qa_check_license(workdir, d):
     sane = True
 
     lic_files = bb.data.getVar('LIC_FILES_CHKSUM', d, True)
+    lic = bb.data.getVar('LICENSE', d, True)
     pn = bb.data.getVar('PN', d, True)
+
+    if lic == "CLOSED":
+        return True
 
     if not lic_files:
         # just throw a warning now. Once licensing data in entered for enough of the recipes,
