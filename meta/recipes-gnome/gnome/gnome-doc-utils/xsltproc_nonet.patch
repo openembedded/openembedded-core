@@ -1,5 +1,5 @@
 This adds the -nonet option to xsltproc invocations, which fixes
-compile errors when building gnome-doc-xslt-de.omf.
+compile errors when building the gnome-doc-utils docs.
 
 Upstream-Status: Pending
 
@@ -7,7 +7,7 @@ Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 
 diff -urN gnome-doc-utils-0.20.5.orig//doc/xslt/Makefile.am gnome-doc-utils-0.20.5/doc/xslt/Makefile.am
 --- gnome-doc-utils-0.20.5.orig//doc/xslt/Makefile.am	2011-03-22 06:56:17.000000000 -0700
-+++ gnome-doc-utils-0.20.5/doc/xslt/Makefile.am	2011-05-04 21:03:29.382491164 -0700
++++ gnome-doc-utils-0.20.5/doc/xslt/Makefile.am	2011-05-09 09:35:04.946138220 -0700
 @@ -21,14 +21,14 @@
  
  $(xsldoc_docs): $(xsldoc_xsls) xsldoc.awk xsldoc-fill.xsl
@@ -25,6 +25,15 @@ diff -urN gnome-doc-utils-0.20.5.orig//doc/xslt/Makefile.am gnome-doc-utils-0.20
  	--stringparam basename "$(basename $(notdir $@))" \
  	--stringparam xsl_file "$(filter %/$(basename $(notdir $@)).xsl,$(xsldoc_xsls))" \
  	"$(srcdir)/xsldoc-docbook.xsl" "$<"
+@@ -62,7 +62,7 @@
+ gnome-doc-xslt-check-xsldoc: $(xsldoc_docs)
+ 	@echo "Running xsldoc checks";
+ 	@(echo "<xsldoc>"; cat $(xsldoc_docs); echo "</xsldoc>") \
+-	| xsltproc "$(srcdir)/xsldoc-check.xsl" - 1> /dev/null
++	| xsltproc -nonet "$(srcdir)/xsldoc-check.xsl" - 1> /dev/null
+ 
+ .PHONY: clean-xsldoc
+ clean-local: clean_xsldoc
 @@ -75,4 +75,4 @@
  DOC_MODULE = gnome-doc-xslt
  DOC_INCLUDES = legal.xml translating.xml $(patsubst %,%.xml,$(xsldoc_base))
@@ -32,3 +41,60 @@ diff -urN gnome-doc-utils-0.20.5.orig//doc/xslt/Makefile.am gnome-doc-utils-0.20
 -DOC_LINGUAS = de
 \ No newline at end of file
 +DOC_LINGUAS = de
+diff -urN gnome-doc-utils-0.20.5.orig//tools/gnome-doc-utils.make gnome-doc-utils-0.20.5/tools/gnome-doc-utils.make
+--- gnome-doc-utils-0.20.5.orig//tools/gnome-doc-utils.make	2011-03-22 06:56:17.000000000 -0700
++++ gnome-doc-utils-0.20.5/tools/gnome-doc-utils.make	2011-05-09 09:34:03.278985782 -0700
+@@ -37,7 +37,7 @@
+ 	list='$(DOC_H_DOCS)'; for doc in $$list; do \
+ 	  xmlpath="`echo $$doc | sed -e 's/^\(.*\/\).*/\1/' -e '/\//!s/.*//'`:$(srcdir)/`echo $$doc | sed -e 's/^\(.*\/\).*/\1/' -e '/\//!s/.*//'`"; \
+ 	  if ! test -f "$$doc"; then doc="$(srcdir)/$$doc"; fi; \
+-	  xsltproc --path "$$xmlpath" $(_credits) $$doc; \
++	  xsltproc -nonet --path "$$xmlpath" $(_credits) $$doc; \
+ 	done | sort | uniq \
+ 	  | awk 'BEGIN{s=""}{n=split($$0,w,"<");if(s!=""&&s!=substr(w[1],1,length(w[1])-1)){print s};if(n>1){print $$0;s=""}else{s=$$0}};END{if(s!=""){print s}}' \
+ 	  | sed -e 's/\\/\\\\/' -e 's/"/\\"/' -e 's/\(.*\)/\t"\1",/' >> $@.tmp
+@@ -50,7 +50,7 @@
+ 	  docid=`echo "$$doc" | sed -e 's/.*\/\([^/]*\)\.xml/\1/' \
+ 	    | sed -e 's/[^a-zA-Z_]/_/g' | tr 'a-z' 'A-Z'`; \
+ 	  echo $$xmlpath; \
+-	  ids=`xsltproc --xinclude --path "$$xmlpath" $(_ids) $$doc`; \
++	  ids=`xsltproc -nonet --xinclude --path "$$xmlpath" $(_ids) $$doc`; \
+ 	  for id in $$ids; do \
+ 	    echo '#define HELP_'`echo $$docid`'_'`echo $$id \
+ 	      | sed -e 's/[^a-zA-Z_]/_/g' | tr 'a-z' 'A-Z'`' "'$$id'"' >> $@.tmp; \
+@@ -180,7 +180,7 @@
+ 	  echo "The file '$(_skcontentslist)' does not exist." >&2;		\
+ 	  echo "Please check your ScrollKeeper installation." >&2;		\
+ 	  exit 1; }
+-	xsltproc -o $@ $(call db2omf_args,$@,$<,'docbook') || { rm -f "$@"; exit 1; }
++	xsltproc -nonet -o $@ $(call db2omf_args,$@,$<,'docbook') || { rm -f "$@"; exit 1; }
+ 
+ ## @ _DOC_OMF_HTML
+ ## The OMF files for HTML output
+@@ -195,7 +195,7 @@
+ 	  echo "Please check your ScrollKeeper installation." >&2;		\
+ 	  exit 1; }
+ endif
+-	xsltproc -o $@ $(call db2omf_args,$@,$<,'xhtml') || { rm -f "$@"; exit 1; }
++	xsltproc -nonet -o $@ $(call db2omf_args,$@,$<,'xhtml') || { rm -f "$@"; exit 1; }
+ 
+ ## @ _DOC_OMF_ALL
+ ## All OMF output files to be built
+@@ -250,7 +250,7 @@
+ ## All HTML documentation in the C locale
+ # FIXME: probably have to shell escape to determine the file names
+ _DOC_C_HTML = $(foreach f,						\
+-	$(shell xsltproc --xinclude 					\
++	$(shell xsltproc -nonet --xinclude 					\
+ 	  --stringparam db.chunk.basename "$(DOC_MODULE)"		\
+ 	  $(_chunks) "C/$(DOC_MODULE).xml"),				\
+ 	C/$(f).xhtml)
+@@ -379,7 +379,7 @@
+ _DOC_HTML_TOPS = $(foreach lc,C $(_DOC_REAL_LINGUAS),$(lc)/$(DOC_MODULE).xhtml)
+ 
+ $(_DOC_HTML_TOPS): $(_DOC_C_DOCS) $(_DOC_LC_DOCS)
+-	xsltproc -o $@ --xinclude --param db.chunk.chunk_top "false()" --stringparam db.chunk.basename "$(DOC_MODULE)" --stringparam db.chunk.extension ".xhtml" $(_db2html) $(patsubst %.xhtml,%.xml,$@)
++	xsltproc -nonet -o $@ --xinclude --param db.chunk.chunk_top "false()" --stringparam db.chunk.basename "$(DOC_MODULE)" --stringparam db.chunk.extension ".xhtml" $(_db2html) $(patsubst %.xhtml,%.xml,$@)
+ 
+ 
+ ################################################################################
