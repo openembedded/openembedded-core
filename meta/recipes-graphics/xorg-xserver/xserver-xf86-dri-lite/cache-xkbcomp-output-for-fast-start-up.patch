@@ -7,6 +7,8 @@ Organization: Intel
 xkbcomp outputs will be cached in files with hashed keymap as
 names. This saves boot time for around 1s on commodity netbooks.
 
+Upstream-Status: Pending
+
 Signed-off-by: Yan Li <yan.i.li@intel.com>
 ---
  configure.ac        |    6 +-

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: git/os/osdep.h
 ===================================================================
 --- git.orig/os/osdep.h	2008-10-07 18:38:21.000000000 +0100

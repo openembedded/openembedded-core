@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff --git a/configure.ac b/configure.ac
 index b3b752c..600500b 100644
 --- a/configure.ac

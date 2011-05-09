@@ -3,6 +3,8 @@ kind of variable use, otherwise we're looking into /usr/include/.
 
 RP - 26/11/09
 
+Upstream-Status: Pending
+
 Index: git/xorg-server.m4
 ===================================================================
 --- git.orig/xorg-server.m4	2010-02-05 10:00:55.000000000 +0000
