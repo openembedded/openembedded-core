@@ -5,10 +5,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 DEPENDS = "elfutils"
 
 SRCREV = "4ab3a1863bf4f472acae7a809bf2b38d91658aa8"
-PR = r0
+PR = "r1"
 PV = "1.4+git${SRCPV}"
 
 SRC_URI = "git://sources.redhat.com/git/systemtap.git;protocol=git \
+	file://fix_for_compilation_with_gcc-4.6.0.patch \
           "
 
 EXTRA_OECONF = "--prefix=${D} --with-libelf=${STAGING_DIR_TARGET} --without-rpm \
