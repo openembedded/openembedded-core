@@ -6,6 +6,8 @@ xserver-kdrive-1.7.99.2 and xserver-xf86-lite_1.7.99.2. Once they
 are all upgraded to 1.8.99.904, the the files/macro_tweak.patch
 can be safely replace by this patch.
 
+Upstream-Status: Pending
+
 Signed-off-by: Yu Ke <ke.yu@intel.com>
 
 diff --git a/xorg-server.m4 b/xorg-server.m4
