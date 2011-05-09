@@ -7,10 +7,6 @@ KMACHINE_qemux86-64  = "yocto/standard/common-pc-64/base"
 KMACHINE_qemuppc  = "yocto/standard/qemu-ppc32"
 KMACHINE_qemumips = "yocto/standard/mti-malta32-be"
 KMACHINE_qemuarm  = "yocto/standard/arm-versatile-926ejs"
-KMACHINE_atom-pc  = "yocto/standard/common-pc/atom-pc"
-KMACHINE_routerstationpro = "yocto/standard/routerstationpro"
-KMACHINE_mpc8315e-rdb = "yocto/standard/fsl-mpc8315e-rdb"
-KMACHINE_beagleboard = "yocto/standard/beagleboard"
 
 KBRANCH = ${KMACHINE}
 KMETA = meta
@@ -23,11 +19,6 @@ SRCREV_machine_qemumips = "f5d26f2eda2be8b942172cda8f27de33ebf38ec3"
 SRCREV_machine_qemuppc = "7eb6c68d977d9039a2b5a734172b064a9d19cdc1"
 SRCREV_machine_qemux86 = "ad62d1aab734513cd96c8f4517f816420a218e77"
 SRCREV_machine_qemux86-64 = "b906f358fd404a1e74a961f25079274e0d933ee1"
-SRCREV_machine_emenlow = "c3bbcb676f929c4fc0511a6e66494b8770d015a1"
-SRCREV_machine_atom-pc = "b906f358fd404a1e74a961f25079274e0d933ee1"
-SRCREV_machine_routerstationpro = "95ca94d2e71ca2db6822a37a7f575fa79c3d05d0"
-SRCREV_machine_mpc8315e-rdb = "53c800c244e73d81d2832f6da306eeae3b09e5dc"
-SRCREV_machine_beagleboard = "b906f358fd404a1e74a961f25079274e0d933ee1"
 SRCREV_machine = "b906f358fd404a1e74a961f25079274e0d933ee1"
 SRCREV_meta = "ecab1e2bc12a8b0c4d064a00acc3260f6e8528c5"
 
@@ -37,7 +28,7 @@ SRCREV_FORMAT = "meta_machine"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-2.6.37;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
 
-COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64|mpc8315e-rdb|routerstationpro|beagleboard)"
+COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64)"
 
 # Functionality flags
 KERNEL_REVISION_CHECKING ?= "t"
