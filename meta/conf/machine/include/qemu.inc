@@ -1,7 +1,5 @@
 PCMCIA_MANAGER = "pcmciautils"
 PREFERRED_PROVIDER_virtual/xserver ?= "xserver-kdrive"
-GUI_MACHINE_CLASS = "bigscreen"
-GPE_EXTRA_INSTALL += "gaim sylpheed"
 
 MACHINE_FEATURES = "kernel26 apm alsa pcmcia bluetooth irda usbgadget screen"
 
