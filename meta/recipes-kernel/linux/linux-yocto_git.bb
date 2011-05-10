@@ -28,7 +28,8 @@ SRCREV_FORMAT = "meta_machine"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-2.6.37;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
 
-COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64)"
+EXTRA_COMPATMACHS ??= ""
+COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64${EXTRA_COMPATMACHS})"
 
 # Functionality flags
 KERNEL_REVISION_CHECKING ?= "t"
