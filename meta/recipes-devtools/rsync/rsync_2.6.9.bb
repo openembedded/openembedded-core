@@ -8,6 +8,7 @@ PRIORITY = "optional"
 DEPENDS = "popt"
 
 SRC_URI = "http://rsync.samba.org/ftp/rsync/src/rsync-${PV}.tar.gz \
+           file://rsync-2.6.9-fname-obo.patch \
            file://rsyncd.conf"
 
 inherit autotools
@@ -22,4 +23,4 @@ EXTRA_OEMAKE='STRIP=""'
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6d5a9d4c4d3af25cd68fd83e8a8cb09c"
 
-PR = "r2"
+PR = "r3"
