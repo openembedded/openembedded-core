@@ -1,0 +1,22 @@
+Upstream-Status: Pending
+
+Fix following compilation errors with gcc 4.6.0
+Nitin A Kamble <nitin.a.kamble@intel.com> 2011/05/09
+
+| i586-poky-linux-g++: error: unrecognized option '--as-needed'
+| make[2]: *** [zypp/libzypp.so.810.1.0] Error 1
+
+
+Index: git/zypp/CMakeLists.txt
+===================================================================
+--- git.orig/zypp/CMakeLists.txt
++++ git/zypp/CMakeLists.txt
+@@ -903,7 +903,7 @@ SET_LOGGROUP( "satsolver" ${zypp_sat_SRC
+ ADD_LIBRARY(zypp SHARED ${zypp_lib_SRCS})
+ SET_TARGET_PROPERTIES( zypp PROPERTIES VERSION "${LIBZYPP_VERSION_INFO}" )
+ SET_TARGET_PROPERTIES( zypp PROPERTIES SOVERSION "${LIBZYPP_SOVERSION_INFO}" )
+-SET_TARGET_PROPERTIES( zypp PROPERTIES LINK_FLAGS "--as-needed" )
++SET_TARGET_PROPERTIES( zypp PROPERTIES LINK_FLAGS "-Wl,--as-needed" )
+ ADD_DEPENDENCIES(zypp schema_header)
+ # System libraries
+ SET(UTIL_LIBRARY util)
