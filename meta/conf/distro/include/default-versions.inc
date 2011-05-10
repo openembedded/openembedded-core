@@ -1,15 +1,6 @@
-# Preferred Versions:
 #
-PREFERRED_VERSION_libmatchbox ?= "1.9"
-PREFERRED_VERSION_matchbox-theme-sato ?= "0.1"
-PREFERRED_VERSION_elfutils ?= "0.89"
-PREFERRED_VERSION_hal ?= "0.5.14"
-PREFERRED_VERSION_hal-info ?= "20091130"
-PREFERRED_VERSION_udev ?= "164"
-PREFERRED_VERSION_wpa-supplicant ?= "0.7.3"
-PREFERRED_VERSION_pseudo = "1.0"
-PREFERRED_VERSION_pseudo-native = "1.0"
-
+# Default preferred versions
+#
 PULSEAUDIOVERSION ?= "0.9.22"
 PULSEAUDIOVERSION_arm ?= "0.9.15"
 PREFERRED_VERSION_pulseaudio ?= "${PULSEAUDIOVERSION}"
