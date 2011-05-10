@@ -17,6 +17,7 @@ do_install() {
         install -d  ${D}/usr/lib/lsb
         ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/install_initd
         ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/remove_initd
+        ln -sf ${base_sbindir}/sendmail ${D}/${libdir}/lsb/sendmail
 }
 
 FILES_${PN} += "${libdir}/lsb"
