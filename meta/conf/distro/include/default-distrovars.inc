@@ -5,8 +5,6 @@ IMAGE_ROOTFS_SIZE_ext2 ?= "131072"
 OEINCLUDELOGS ?= "yes"
 KERNEL_CONSOLE ?= "ttyS0"
 
-require conf/distro/include/preferred-xorg-versions.inc
-
 PCMCIA_MANAGER ?= "pcmciautils"
 
 IMAGE_LINGUAS ?= "en-us en-gb"
