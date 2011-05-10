@@ -41,8 +41,8 @@ RDEPENDS_${PN}-perltools = "${PN} perl perl-module-file-path findutils"
 
 # git-tk package with gitk and git-gui
 PACKAGES =+ "${PN}-tk"
-RDEPENDS_${PN}-tk = "${PN} tk tcl"
-EXTRA_OEMAKE = "TCL_PATH=${STAGING_BINDIR_CROSS}/tclsh"
+#RDEPENDS_${PN}-tk = "${PN} tk tcl"
+#EXTRA_OEMAKE = "TCL_PATH=${STAGING_BINDIR_CROSS}/tclsh"
 FILES_${PN}-tk = " \
     ${bindir}/gitk \
     ${datadir}/gitk \
