@@ -1,13 +1,13 @@
 require procps.inc
 
-PR = "r0"
+PR = "r1"
 
 inherit update-rc.d update-alternatives
 
 INITSCRIPT_NAME = "procps.sh"
 INITSCRIPT_PARAMS = "start 30 S ."
 
-ALTERNATIVE_LINKS = "${bindir}/top ${bindir}/uptime ${bindir}/free ${bindir}/pkill \
+ALTERNATIVE_LINKS = "${bindir}/top ${bindir}/uptime ${bindir}/free ${bindir}/pkill ${bindir}/pmap \
                      ${base_bindir}/kill ${base_sbindir}/sysctl ${base_bindir}/ps"
 ALTERNATIVE_PRIORITY = "90"
 
