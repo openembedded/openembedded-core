@@ -7,7 +7,13 @@ PR = "r0"
 
 LIC_FILES_CHKSUM = "file://README;md5=12da544b1a3a5a1795a21160b49471cf"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/project/lsb/lsb_release/${PV}/lsb-release-${PV}.tar.gz"
+SRC_URI = "${SOURCEFORGE_MIRROR}/project/lsb/lsb_release/${PV}/lsb-release-${PV}.tar.gz \
+           file://init-functions \
+           file://lsb_killproc \
+           file://lsb_log_message \
+           file://lsb_pidofproc \
+           file://lsb_start_daemon \
+           "
 
 SRC_URI[md5sum] = "30537ef5a01e0ca94b7b8eb6a36bb1e4"
 SRC_URI[sha256sum] = "99321288f8d62e7a1d485b7c6bdccf06766fb8ca603c6195806e4457fdf17172"
@@ -18,45 +24,50 @@ do_install(){
 	mkdir -p ${D}/bin
 	mkdir -p ${D}/lib
 	mkdir -p ${D}/etc/lsb-release.d
-	echo -n "LSB_VERSION=\"core-2.0-noarch:core-3.2-noarch:core-4.0-noarch:" > ${D}/etc/lsb-release
+	echo -n "LSB_VERSION=\"core-4.1-noarch:" > ${D}/etc/lsb-release
 	
 	if [ "${TARGET_ARCH}" == "i586" ];then
-		echo -n "core-2.0-ia32:core-3.2-ia32:core-4.0-ia32" >>  ${D}/etc/lsb-release
+		echo -n "core-4.1-ia32" >>  ${D}/etc/lsb-release
 	else
-		echo -n "core-2.0-${TARGET_ARCH}:core-3.2-${TARGET_ARCH}:core-4.0-${TARGET_ARCH}" >>  ${D}/etc/lsb-release
+		echo -n "core-4.1-${TARGET_ARCH}" >>  ${D}/etc/lsb-release
 	fi
 	echo "\"" >> ${D}/etc/lsb-release
 	
 	if [ "${TARGET_ARCH}" == "i586" ];then
 		mkdir -p ${D}/etc/lsb-release.d
-		touch ${D}/etc/lsb-release.d/graphics-2.0-noarch
-		touch ${D}/etc/lsb-release.d/graphics-3.2-noarch
+		touch ${D}/etc/lsb-release.d/graphics-4.1-noarch
 		touch ${D}/etc/lsb-release.d/graphics-${PV}-noarch
 		touch ${D}/etc/lsb-release.d/desktop-${PV}-noarch
-		touch ${D}/etc/lsb-release.d/graphics-2.0-ia32
-		touch ${D}/etc/lsb-release.d/graphics-3.2-ia32
+		touch ${D}/etc/lsb-release.d/graphics-4.1-ia32
 		touch ${D}/etc/lsb-release.d/graphics-${PV}-ia32
 		touch ${D}/etc/lsb-release.d/desktop-${PV}-ia32
 	elif [ "${TARGET_ARCH}" == "x86_64" ];then
-		touch ${D}/etc/lsb-release.d/graphics-2.0-amd64
-		touch ${D}/etc/lsb-release.d/graphics-3.2-amd64
+		touch ${D}/etc/lsb-release.d/graphics-4.1-noarch
+		touch ${D}/etc/lsb-release.d/graphics-4.1-amd64
 		touch ${D}/etc/lsb-release.d/graphics-${PV}-amd64
 		touch ${D}/etc/lsb-release.d/desktop-${PV}-amd64
 	fi
 	if [ "${TARGET_ARCH}" = "powerpc" ];then
-		touch ${D}/etc/lsb-release.d/graphics-2.0-ppc32
-		touch ${D}/etc/lsb-release.d/graphics-3.2-ppc32
+		touch ${D}/etc/lsb-release.d/graphics-4.1-noarch
+		touch ${D}/etc/lsb-release.d/graphics-4.1-ppc32
 		touch ${D}/etc/lsb-release.d/graphics-${PV}-ppc32
 		touch ${D}/etc/lsb-release.d/desktop-${PV}-ppc32
 	elif [ "${TARGET_ARCH}" = "powerpc64" ];then
-		touch ${D}/etc/lsb-release.d/graphics-2.0-ppc64
-		touch ${D}/etc/lsb-release.d/graphics-3.2-ppc64
+		touch ${D}/etc/lsb-release.d/graphics-4.1-noarch
+		touch ${D}/etc/lsb-release.d/graphics-4.1-ppc64
 		touch ${D}/etc/lsb-release.d/graphics-${PV}-ppc64
 		touch ${D}/etc/lsb-release.d/desktop-${PV}-ppc64
 	fi
 }
 
 do_install_append(){
+       install -d ${D}/etc/core-lsb
+       install -d ${D}/lib/lsb
+       for i in lsb_killproc lsb_log_message lsb_pidofproc lsb_start_daemon
+       do
+           install -m 0755 ${WORKDIR}/${i} ${D}/etc/core-lsb
+       done
+       install -m 0755 ${WORKDIR}/init-functions ${D}/lib/lsb
        if [ "${TARGET_ARCH}" == "x86_64" ];then
 	       cd ${D}
 	       ln -sf lib lib64
