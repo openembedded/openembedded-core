@@ -25,12 +25,9 @@ def base_detect_branch(d):
 			return rev.strip()
 
 	return "<unknown>"	
-	
-	
 
 def base_get_scmbasepath(d):
-	path_to_bbfiles = bb.data.getVar( 'BBFILES', d, 1 ).split()
-	return path_to_bbfiles[0][:path_to_bbfiles[0].rindex( "packages" )]
+	return bb.data.getVar( 'COREBASE', d, 1 )
 
 def base_get_metadata_monotone_branch(path, d):
 	monotone_branch = "<unknown>"
