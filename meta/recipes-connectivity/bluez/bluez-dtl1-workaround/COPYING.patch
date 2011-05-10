@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [others]
+
 diff -ruN bluez-dtl1-workaround-1.0-orig/COPYING bluez-dtl1-workaround-1.0/COPYING
 --- bluez-dtl1-workaround-1.0-orig/COPYING	1970-01-01 08:00:00.000000000 +0800
 +++ bluez-dtl1-workaround-1.0/COPYING	2010-12-09 16:50:46.014910500 +0800

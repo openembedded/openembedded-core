@@ -3,6 +3,8 @@
 # Patch managed by http://www.holgerschurig.de/patcher.html
 #
 
+Upstream-Status: Inappropriate [configuration]
+
 --- hostap-utils-0.2.4/hostap_fw_load~hostap-fw-load
 +++ hostap-utils-0.2.4/hostap_fw_load
 @@ -6,9 +6,9 @@

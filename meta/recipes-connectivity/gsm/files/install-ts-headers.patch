@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [not used]
+
 Index: gsm/include/gsmd/Makefile.am
 ===================================================================
 --- gsm.orig/include/gsmd/Makefile.am	2007-10-29 21:05:57.000000000 +0100

@@ -2,6 +2,8 @@ This patch comes from OpenEmbedded.
 The original patch is from Debian / SuSE to implement replacedefaultroute
 Rebased it to fit ppp-2.4.5. Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Inappropriate [debian/suse patches]
+
 diff -urN ppp-2.4.5-orig/pppd/ipcp.c ppp-2.4.5/pppd/ipcp.c
 --- ppp-2.4.5-orig/pppd/ipcp.c	2010-06-30 15:51:12.050166398 +0800
 +++ ppp-2.4.5/pppd/ipcp.c	2010-06-30 16:40:00.478716855 +0800

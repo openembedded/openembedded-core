@@ -5,6 +5,8 @@
 |
 Derived from OE by Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Pending
+
 Index: pulseaudio-0.9.6/src/pulsecore/core-util.c
 ===================================================================
 --- pulseaudio-0.9.6.orig/src/pulsecore/core-util.c

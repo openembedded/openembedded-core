@@ -5,6 +5,8 @@ error out.
 
 RP - 26/8/09
 
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: opkg-utils/opkg-make-index
 ===================================================================
 --- opkg-utils.orig/opkg-make-index	2009-08-26 17:21:26.000000000 +0100

@@ -1,5 +1,7 @@
 Derived from OE by Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: pulseaudio-0.9.19/configure.ac
 ===================================================================
 --- pulseaudio-0.9.19.orig/configure.ac	2009-10-31 11:40:00.000000000 +0000

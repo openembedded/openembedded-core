@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [not used]
+
 diff --git a/include/gsmd/usock.h b/include/gsmd/usock.h
 index 236ad78..66cdf48 100644
 --- a/include/gsmd/usock.h

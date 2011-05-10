@@ -1,6 +1,8 @@
 The patch comes from OpenEmbedded
 Rebased for ppp-2.4.5. Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Inappropriate [embedded specific]
+
 diff -ruN ppp-2.4.5-orig/pppd/ipcp.c ppp-2.4.5/pppd/ipcp.c
 --- ppp-2.4.5-orig/pppd/ipcp.c	2010-06-30 15:51:12.050166398 +0800
 +++ ppp-2.4.5/pppd/ipcp.c	2010-06-30 17:02:33.930393283 +0800

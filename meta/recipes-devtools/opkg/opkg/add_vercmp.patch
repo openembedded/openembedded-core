@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [function not used]
+
 Index: trunk/libopkg/opkg.c
 ===================================================================
 --- trunk.orig/libopkg/opkg.c	2010-01-26 20:32:19.000000000 +0000

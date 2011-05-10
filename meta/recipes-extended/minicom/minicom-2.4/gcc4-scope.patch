@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [others]
+
 --- minicom-2.1/src/window.c.orig	2006-06-14 17:49:53.000000000 +0200
 +++ minicom-2.1/src/window.c	2006-06-14 17:50:14.000000000 +0200
 @@ -62,7 +62,7 @@

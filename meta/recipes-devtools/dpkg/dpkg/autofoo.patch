@@ -3,6 +3,8 @@
 # Patch managed by http://www.holgerschurig.de/patcher.html
 #
 
+Upstream-Status: Inappropriate [configuration]
+
 --- dpkg-1.10.23/configure.in~autofoo
 +++ dpkg-1.10.23/configure.in
 @@ -227,21 +227,36 @@

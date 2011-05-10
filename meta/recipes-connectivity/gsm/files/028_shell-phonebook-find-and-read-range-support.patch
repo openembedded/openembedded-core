@@ -8,6 +8,8 @@ phonebook.
 
 Signed-off-by: Jim Huang <jserv@openmoko.org>
 
+Upstream-Status: Inappropriate [not used]
+
 Index: gsm/src/util/shell.c
 ===================================================================
 --- gsm.orig/src/util/shell.c	2007-09-17 23:57:51.000000000 +0800

@@ -1,5 +1,7 @@
 Derived from OE by Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: pulseaudio-0.9.21/src/pulsecore/svolume_arm.c
 ===================================================================
 --- pulseaudio-0.9.21.orig/src/pulsecore/svolume_arm.c

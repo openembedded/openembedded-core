@@ -2,6 +2,8 @@ This fixes the hardcoded HOST path
 
 Signed-off-by: Saul Wold <saul.wold@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 --- rpcbind-0.2.0/src/Makefile.am	2010-09-02 11:47:16.725763886 -0700
 +++ rpcbind-0.2.0_fixed/src/Makefile.am	2010-09-02 11:47:36.077763138 -0700
 @@ -29,6 +29,6 @@

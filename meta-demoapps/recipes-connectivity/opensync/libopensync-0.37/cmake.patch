@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 ---
  opensync/CMakeLists.txt |    1 -
  1 file changed, 1 deletion(-)

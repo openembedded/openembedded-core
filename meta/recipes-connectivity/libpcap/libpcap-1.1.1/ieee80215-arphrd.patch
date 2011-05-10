@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: libpcap-1.0.0/pcap-linux.c
 ===================================================================
 --- libpcap-1.0.0.orig/pcap-linux.c	2009-01-28 11:58:54.000000000 +0300

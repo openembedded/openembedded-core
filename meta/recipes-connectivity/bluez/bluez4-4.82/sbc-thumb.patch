@@ -1,4 +1,5 @@
 # Acquired from OpenEmbedded
+Upstream-Status: Inappropriate [embedded specific]
 
 --- bluez/sbc/sbc_math.h~	2008-03-05 20:18:03.000000000 +0000
 +++ bluez/sbc/sbc_math.h	2008-10-27 13:39:27.000000000 +0000

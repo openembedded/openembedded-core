@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: taglib-1.6.1/acinclude.m4
 ===================================================================
 --- taglib-1.6.1.orig/acinclude.m4	2009-10-31 10:04:35.000000000 +0000

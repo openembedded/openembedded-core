@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [not used]
+
 Index: glibc-2.9/ports/sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h
 ===================================================================
 --- glibc-2.9.orig/ports/sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h	2009-06-19 20:54:35.446686910 +0400

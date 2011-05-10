@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [not used]
+
 ---
  doc/reference/Makefile.am |    2 +-
  examples/Makefile.am      |    2 +-

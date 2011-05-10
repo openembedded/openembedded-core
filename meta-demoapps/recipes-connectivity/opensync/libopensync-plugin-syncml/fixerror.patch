@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [others]
+
 Index: libopensync-plugin-syncml-0.38/src/syncml_callbacks.c
 ===================================================================
 --- libopensync-plugin-syncml-0.38.orig/src/syncml_callbacks.c	2009-07-31 10:30:33.000000000 +0100

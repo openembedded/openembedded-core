@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [not used]
+
 --- dbus_dict_helpers.c.array-fix	2006-12-18 12:31:11.000000000 -0500
 +++ dbus_dict_helpers.c	2006-12-20 03:17:08.000000000 -0500
 @@ -629,36 +629,55 @@ dbus_bool_t wpa_dbus_dict_open_read(DBus

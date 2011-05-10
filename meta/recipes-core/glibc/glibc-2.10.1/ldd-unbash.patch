@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [not used]
+
 --- glibc-2.5/elf/ldd.bash.in.org	2006-04-30 16:06:20.000000000 +0000
 +++ glibc-2.5/elf/ldd.bash.in	2007-03-30 19:18:57.000000000 +0000
 @@ -110,7 +110,7 @@

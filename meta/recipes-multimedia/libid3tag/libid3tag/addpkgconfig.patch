@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: libid3tag-0.15.1b/Makefile.am
 ===================================================================
 --- libid3tag-0.15.1b.orig/Makefile.am	2009-07-29 09:29:20.000000000 +0100

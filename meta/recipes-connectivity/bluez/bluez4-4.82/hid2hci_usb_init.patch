@@ -6,6 +6,8 @@
 # data (e.g. ctx) which is used in subsequent calls to libusb
 # We return immediately if usb_init() fails for some reason.
 
+Upstream-Status: Inappropriate [not used]
+
 Index: bluez-4.24/tools/hid2hci.c
 ===================================================================
 --- bluez-4.24.orig/tools/hid2hci.c	2008-10-25 23:40:34.000000000 -0700

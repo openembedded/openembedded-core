@@ -51,6 +51,8 @@ CodeSourcery
 	* sysdeps/unix/sysv/linux/arm/check_pf.c: New file.
 	* sysdeps/unix/sysv/linux/arm/eabi/check_pf.c: New file.
 
+Upstream-Status: Inappropriate [not used]
+
 Index: sysdeps/unix/sysv/linux/arm/check_pf.c
 ===================================================================
 RCS file: sysdeps/unix/sysv/linux/arm/check_pf.c

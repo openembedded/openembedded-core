@@ -4,6 +4,7 @@
        * nptl/sysdeps/pthread/pt-initfini.c: Ditto.
 
 
+Upstream-Status: Inappropriate [not used]
 
 Index: sysdeps/unix/sysv/linux/i386/sysdep.h
 ===================================================================

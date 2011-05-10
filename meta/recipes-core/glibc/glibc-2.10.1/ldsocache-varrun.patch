@@ -5,6 +5,8 @@ where /etc is JFFS2 or CRAMFS but /var is a ramdisk.
 # Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
 #
 
+Upstream-Status: Inappropriate [not used]
+
 --- libc/sysdeps/generic/dl-cache.h~ldsocache-varrun
 +++ libc/sysdeps/generic/dl-cache.h
 @@ -29,7 +29,7 @@

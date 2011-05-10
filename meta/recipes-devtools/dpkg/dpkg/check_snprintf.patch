@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff -ruN dpkg-1.15.8.5-orig/m4/dpkg-funcs.m4 dpkg-1.15.8.5/m4/dpkg-funcs.m4
 --- dpkg-1.15.8.5-orig/m4/dpkg-funcs.m4	2010-10-08 12:27:15.082131611 +0800
 +++ dpkg-1.15.8.5/m4/dpkg-funcs.m4	2010-10-08 13:56:50.074284346 +0800

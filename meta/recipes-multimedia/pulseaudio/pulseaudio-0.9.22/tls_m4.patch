@@ -1,5 +1,7 @@
 Derived from OE by Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: pulseaudio-0.9.15/m4/tls.m4
 ===================================================================
 --- pulseaudio-0.9.15.orig/m4/tls.m4	2008-08-19 23:25:02.000000000 +0200

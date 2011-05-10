@@ -1,6 +1,8 @@
 The patch comes from OpenEmbedded
 Rebased for ppp-2.4.5. Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 diff -ruN ppp-2.4.5-orig/chat/Makefile.linux ppp-2.4.5/chat/Makefile.linux
 --- ppp-2.4.5-orig/chat/Makefile.linux	2010-06-30 15:51:12.050166398 +0800
 +++ ppp-2.4.5/chat/Makefile.linux	2010-06-30 15:51:30.450118446 +0800

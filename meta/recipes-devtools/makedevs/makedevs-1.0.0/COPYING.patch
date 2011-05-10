@@ -1,3 +1,5 @@
+Upstream-Status: Inapropriate [others]
+
 diff -ruN makedevs-1.0.0-orig/COPYING makedevs-1.0.0/COPYING
 --- makedevs-1.0.0-orig/COPYING	1970-01-01 08:00:00.000000000 +0800
 +++ makedevs-1.0.0/COPYING	2010-12-09 16:42:20.274984665 +0800

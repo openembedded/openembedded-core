@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 --- lrzsz-0.12.20.safe/ABOUT-NLS	1998-04-26 09:22:30.000000000 -0400
 +++ lrzsz-0.12.20/ABOUT-NLS	2004-09-12 14:40:34.323752952 -0400
 @@ -1,14 +1,14 @@

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff -ru xournal-0.2/configure.in xournal-0.2.noprint/configure.in
 --- xournal-0.2/configure.in	2006-01-29 22:25:10.000000000 +0000
 +++ xournal-0.2.noprint/configure.in	2006-03-17 13:08:01.000000000 +0000

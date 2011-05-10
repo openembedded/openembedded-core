@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: libopensync-plugin-evolution2-0.36/cmake/modules/FindOpenSync.cmake
 ===================================================================
 --- libopensync-plugin-evolution2-0.36.orig/cmake/modules/FindOpenSync.cmake	2008-10-20 13:07:14.000000000 +0100

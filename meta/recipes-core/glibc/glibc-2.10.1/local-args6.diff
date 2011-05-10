@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [not used]
+
 --- glibc-2.7/ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h.orig
 +++ glibc-2.7/ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h
 @@ -73,6 +73,9 @@

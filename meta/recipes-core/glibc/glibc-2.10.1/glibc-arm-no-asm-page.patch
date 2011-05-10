@@ -1,5 +1,7 @@
 http://sourceware.org/ml/libc-ports/2008-04/msg00005.html
 
+Upstream-Status: Inappropriate [not used]
+
 
 Index: glibc-2.6.1/ports/sysdeps/unix/sysv/linux/arm/ioperm.c
 ===================================================================

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 --- wireless_tools.26/Makefile.orig	2003-06-18 03:38:58.000000000 +0200
 +++ wireless_tools.26/Makefile	2004-07-03 23:35:29.000000000 +0200
 @@ -57,8 +57,8 @@

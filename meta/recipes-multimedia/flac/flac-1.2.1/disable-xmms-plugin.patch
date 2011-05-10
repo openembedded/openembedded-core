@@ -1,4 +1,5 @@
 # Acquired from OpenEmbedded
+Upstream-Status: Inappropriate [disable feature]
 
 diff -ruN flac-1.2.1-orig/src/Makefile.am flac-1.2.1-new/src/Makefile.am
 --- flac-1.2.1-orig/src/Makefile.am	2010-06-23 15:06:29.167865355 +0800

@@ -2,6 +2,8 @@
  scripts/Makefile.am |    3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
+Upstream-Status: Inappropriate [configuration]
+
 --- dpkg-1.13.22.orig/scripts/Makefile.am
 +++ dpkg-1.13.22/scripts/Makefile.am
 @@ -20,8 +20,7 @@ bin_SCRIPTS = \

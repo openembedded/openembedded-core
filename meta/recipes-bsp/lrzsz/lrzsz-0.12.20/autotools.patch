@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 --- lrzsz-0.12.20/acinclude.m4~autotools	1998-12-27 17:08:59.000000000 -0500
 +++ lrzsz-0.12.20/acinclude.m4	2004-05-09 22:26:19.000000000 -0400
 @@ -1,12 +1,11 @@

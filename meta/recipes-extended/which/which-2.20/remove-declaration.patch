@@ -3,6 +3,8 @@ declared in unistd.h
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Inappropriate [embedded specific]
+
 diff -ruN which-2.20-orig/bash.c which-2.20/bash.c
 --- which-2.20-orig/bash.c	2010-08-03 12:59:08.897088878 +0800
 +++ which-2.20/bash.c	2010-08-03 13:17:23.406097212 +0800

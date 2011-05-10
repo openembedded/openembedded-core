@@ -1,6 +1,8 @@
 Lower the rank of ffmpeg plugin so codecs that hook into accelerated pieces (e.g. dsp or hw engines) can get picked over this
 Derived from OE by Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Inappropriate [embedded specific]
+
 --- /tmp/gstffmpegdec.c	2009-03-05 09:31:15.000000000 +0100
 +++ gst-ffmpeg-0.10.6/ext/ffmpeg/gstffmpegdec.c	2009-03-05 09:33:09.000000000 +0100
 @@ -2588,7 +2588,7 @@

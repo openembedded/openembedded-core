@@ -2,6 +2,8 @@ Fix double reference to this file to work with recent autoconf+automake
 
 RP 1/2/10
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: libtelepathy-0.3.3/src/Makefile.am
 ===================================================================
 --- libtelepathy-0.3.3.orig/src/Makefile.am	2010-02-01 13:13:50.869038984 +0000

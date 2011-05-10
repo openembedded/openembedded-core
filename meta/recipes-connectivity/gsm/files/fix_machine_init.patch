@@ -2,6 +2,8 @@ Rebase the patch to latest version.
 
 By Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Pending
+
 diff -ruN gsm-orig/src/gsmd/gsmd.c gsm/src/gsmd/gsmd.c
 --- gsm-orig/src/gsmd/gsmd.c	2010-11-25 10:14:22.000000000 +0800
 +++ gsm/src/gsmd/gsmd.c	2010-11-25 10:14:52.000000000 +0800

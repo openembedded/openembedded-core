@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff -ruN libpcap-1.1.1-orig/aclocal.m4 libpcap-1.1.1/aclocal.m4
 --- libpcap-1.1.1-orig/aclocal.m4	2010-06-29 10:46:32.815117569 +0800
 +++ libpcap-1.1.1/aclocal.m4	2010-06-29 10:49:17.150149949 +0800

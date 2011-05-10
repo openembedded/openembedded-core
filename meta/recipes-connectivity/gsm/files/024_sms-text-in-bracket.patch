@@ -9,6 +9,8 @@ The patch introduces SMS message text in bracket and fixes a NULL pointer
 reference on mailformed "ss" commands.
 
 Signed-off-by: Jim Huang <jserv@openmoko.org>
+
+Upstream-Status: Inappropriate [not used]
 ---
  src/util/shell.c |   32 ++++++++++++++++++++++++++------
  1 file changed, 26 insertions(+), 6 deletions(-)

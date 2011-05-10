@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [not used]
+
 Index: glibc-2.9/ports/sysdeps/unix/sysv/linux/arm/check_pf.c
 ===================================================================
 --- glibc-2.9.orig/ports/sysdeps/unix/sysv/linux/arm/check_pf.c	2009-06-19 20:45:32.451372131 +0400
