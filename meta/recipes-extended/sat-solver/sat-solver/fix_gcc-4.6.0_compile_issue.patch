@@ -1,4 +1,4 @@
-Upstream-Status="Pending"
+Upstream-Status: Pending
 
 Fix the following compilation issues with gcc 4.6.0
 

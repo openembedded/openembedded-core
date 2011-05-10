@@ -1,4 +1,4 @@
-Upstream-Status="Inappropriate [embedded specific]"
+Upstream-Status: Inappropriate [embedded specific]
 
 By default gcc places 64 bit libs in a lib64 directory. This makes it use 
 "lib" instead.

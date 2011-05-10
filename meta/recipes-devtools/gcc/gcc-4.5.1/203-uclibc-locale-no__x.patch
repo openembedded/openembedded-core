@@ -1,4 +1,4 @@
-Upstream-Status="Pending"
+Upstream-Status: Pending
 
 Index: gcc-4.3.1/libstdc++-v3/config/locale/uclibc/c++locale_internal.h
 ===================================================================

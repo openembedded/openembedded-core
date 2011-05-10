@@ -1,4 +1,4 @@
-Upstream-Status="Inappropriate [distribution: codesourcery]"
+Upstream-Status: Inappropriate [distribution: codesourcery]
 
 Patch originally created by Mark Hatle, forward-ported to
 binutils 2.21 by Scott Garman.

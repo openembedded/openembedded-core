@@ -1,4 +1,4 @@
-Upstream-Status="Inappropriate [embedded specific]"
+Upstream-Status: Inappropriate [embedded specific]
 
 Index: subversion-1.6.13/build/ac-macros/neon.m4
 ===================================================================
