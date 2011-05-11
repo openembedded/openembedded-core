@@ -5,6 +5,7 @@
 TARGET_OS = "linux"
 TARGET_OS_arm = "linux-gnueabi"
 TARGET_OS_armeb = "linux-gnueabi"
+TARGET_OS_powerpc = "linux${@['','-gnuspe'][bb.data.getVar('BASE_PACKAGE_ARCH',d,1) in ['ppce500', 'ppce500v2']]}"
 
 # Add glibc to the overrides.
 OVERRIDES =. "libc-glibc:"

@@ -48,6 +48,7 @@ def get_siteinfo_list(d):
                "powerpc-darwin":          "endian-big bit-32 common-darwin",\
                "ppc-linux":               "endian-big bit-32 common-glibc powerpc-common",\ 
 	       "powerpc-linux":           "endian-big bit-32 common-glibc powerpc-common",\
+               "powerpc-linux-gnuspe":    "endian-big bit-32 common-glibc powerpc-common",\
                "powerpc-linux-uclibc":    "endian-big bit-32 common-uclibc powerpc-common",\
                "sh3-linux":               "endian-little bit-32 common-glibc sh-common",\
                "sh4-linux":               "endian-little bit-32 common-glibc sh-common",\
