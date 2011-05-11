@@ -6,9 +6,10 @@ DEPENDS = "tslib"
 RDEPENDS_${PN} = "xrandr"
 SRCREV = "426"
 PV = "0.0+svnr${SRCPV}"
-PR = "r2"
+PR = "r3"
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=zaurusd;proto=http"
+SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=zaurusd;proto=http \
+	file://fix_makefile.patch"
 
 S = "${WORKDIR}/${PN}"
 
