@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Do not set Os optimization in target APP CFLAGS, since it may have potential
 error if "--enable-target-optspace" is not set when configuring GCC.
 

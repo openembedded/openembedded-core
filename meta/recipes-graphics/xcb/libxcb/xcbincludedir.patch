@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 --- libxcb-1.0.orig/configure.ac	2006-11-23 15:33:01.000000000 +0000
 +++ libxcb-1.0/configure.ac	2008-09-10 20:29:12.000000000 +0100
 @@ -50,7 +50,7 @@

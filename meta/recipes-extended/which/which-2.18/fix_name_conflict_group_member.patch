@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [this is 2.18(GPLv2) specific]
+
 # glibc also implements the function group_member. To avoid name conflict,
 # here let us append a "_" to which's version.
 #

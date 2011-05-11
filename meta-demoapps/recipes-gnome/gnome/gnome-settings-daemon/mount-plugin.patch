@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 diff --git a/configure.ac b/configure.ac
 index 135f2ce..ba737a5 100644
 --- a/configure.ac

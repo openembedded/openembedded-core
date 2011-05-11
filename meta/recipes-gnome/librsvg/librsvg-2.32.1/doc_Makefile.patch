@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Automake complains about using += before setting with =
 
 Signed-off-by: Saul Wold <sgw@linux.intel.com>

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 diff --git a/plugins/housekeeping/gsd-housekeeping-manager.c b/plugins/housekeeping/gsd-housekeeping-manager.c
 index f84cfad..e8f474a 100644
 --- a/plugins/housekeeping/gsd-housekeeping-manager.c

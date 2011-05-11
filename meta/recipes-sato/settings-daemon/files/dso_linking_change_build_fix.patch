@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 after gcc linking has changed, all the libraries must be explicitely specified to for linking. 
 This patch avoids this linking error:
 

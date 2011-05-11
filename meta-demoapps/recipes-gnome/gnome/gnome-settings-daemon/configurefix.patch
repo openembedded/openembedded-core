@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: gnome-settings-daemon-2.26.1/configure.ac
 ===================================================================
 --- gnome-settings-daemon-2.26.1.orig/configure.ac	2009-09-16 22:57:31.000000000 +0100

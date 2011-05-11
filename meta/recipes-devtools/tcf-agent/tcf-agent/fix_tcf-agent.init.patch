@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [poky-specific script]
+
 --- a/Makefile
 +++ b/Makefile
 @@ -32,7 +32,7 @@

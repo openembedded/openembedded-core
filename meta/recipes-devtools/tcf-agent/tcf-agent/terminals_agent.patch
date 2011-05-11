@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [source code; we'll remove it when upgrading tcf-agent in future]
+
 Index: org.eclipse.tm.tcf.terminals.agent/terminals.c
 ===================================================================
 --- org.eclipse.tm.tcf.terminals.agent/terminals.c	(revision 0)

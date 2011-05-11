@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: libxklavier-3.7/libxklavier.pc.in
 ===================================================================
 --- libxklavier-3.7.orig/libxklavier.pc.in	2009-06-10 15:58:46.000000000 +0100

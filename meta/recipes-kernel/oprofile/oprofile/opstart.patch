@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: oprofile/utils/Makefile.am
 ===================================================================
 --- oprofile.orig/utils/Makefile.am	2005-03-31 18:20:41.000000000 +0100

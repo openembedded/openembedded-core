@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- /tmp/fontdir.c	2006-08-01 16:17:22.000000000 +0200
 +++ libXfont-1.2.0/src/fontfile/fontdir.c	2006-08-01 16:20:37.248306000 +0200
 @@ -695,6 +695,11 @@

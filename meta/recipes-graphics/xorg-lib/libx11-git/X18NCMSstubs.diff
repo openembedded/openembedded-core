@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 ---
  configure.ac       |    9 -
  src/Makefile.am    |    5 

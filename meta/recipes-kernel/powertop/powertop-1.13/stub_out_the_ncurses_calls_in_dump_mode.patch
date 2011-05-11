@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [this patch is 1.13 specific and 2.0 will be coming.]
+
 Running PowerTop in Poky in dump mode (with --dump) always ends with a
 segmentation fault.
 

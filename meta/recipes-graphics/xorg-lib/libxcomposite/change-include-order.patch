@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 This patch makes the build use its own Xcomposite.h over rather than an
 older Xcomposite.h that might already be installed in the staging dir.
 

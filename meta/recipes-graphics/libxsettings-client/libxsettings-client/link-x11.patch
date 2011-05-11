@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: Xsettings-client-0.10/Makefile.am
 ===================================================================
 --- Xsettings-client-0.10.orig/Makefile.am	2008-02-07 14:49:54.000000000 +0000

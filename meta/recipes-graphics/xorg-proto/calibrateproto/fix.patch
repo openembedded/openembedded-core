@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Add missing length fields to the replies. Without these, sanity checking in recent X
 breaks things.
 

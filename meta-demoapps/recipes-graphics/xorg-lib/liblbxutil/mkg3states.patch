@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 During the build process the mkg3states binary needs to be run. This patch
 allows it to be built with the build systems gcc allowing this to work.
 

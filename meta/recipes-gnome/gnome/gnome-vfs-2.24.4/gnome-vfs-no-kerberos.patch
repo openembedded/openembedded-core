@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 removes kerberos completely to avoid conflicts with installed kerberos
 --- configure.in.orig	2007-01-05 19:42:26.418541610 +0200
 +++ configure.in	2007-01-05 19:42:56.604261797 +0200
