@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 # quilt's configure tosses an error with patch @ GNU patch 2.6.1.81-5b68
 #
 # Signed-off-by: Elizabeth Flanagan <elizabeth.flanagan@intel.com>

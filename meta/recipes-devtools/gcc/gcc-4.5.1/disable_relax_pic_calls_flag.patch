@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 GCC: disable MASK_RELAX_PIC_CALLS bit
 
 The new feature added after 4.3.3

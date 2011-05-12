@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Add the aclocal.m4 as acinclude.m4
 
 Index: quilt-0.47/acinclude.m4

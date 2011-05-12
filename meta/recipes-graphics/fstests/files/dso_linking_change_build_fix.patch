@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 after gcc linking has changed, all the libraries must be explicitely specified 
 This patch avoids these linking errors:
 

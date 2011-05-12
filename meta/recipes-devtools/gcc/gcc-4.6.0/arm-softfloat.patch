@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gcc-4.6.0/gcc/config/arm/t-linux
 ===================================================================
 --- gcc-4.6.0.orig/gcc/config/arm/t-linux

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 # "extern inline" in traditional gcc means that the function should be 
 # inlined wherever it's seen, while in C99, "extern inline" means that i
 # the function should only be inlined where the inline definition is 

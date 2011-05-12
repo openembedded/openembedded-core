@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: binutils-2.21/libtool.m4
 ===================================================================
 --- binutils-2.21.orig/libtool.m4	2010-01-09 13:11:31.000000000 -0800

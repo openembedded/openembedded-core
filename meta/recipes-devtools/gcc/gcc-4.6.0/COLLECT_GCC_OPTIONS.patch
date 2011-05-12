@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 #This patck added --sysroot into COLLECT_GCC_OPTIONS which is used to
 #invoke collect2.
 

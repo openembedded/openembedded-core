@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 We don't build xmkmf so any values returned from it are going to be wrong.
 Using any paths in /usr/ for x headers/libs is a bad idea when cross compiling.
 This patch removes them to stop any confusion.

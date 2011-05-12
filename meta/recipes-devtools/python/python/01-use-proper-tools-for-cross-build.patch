@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 # We need to ensure our host tools get run during build, not the freshly
 # built cross-tools (this will not work), so we introduce HOSTPYTHON and HOSTPGEN.
 # Signed-Off: Michael 'Mickey' Lauer <mickey@vanille-media.de>

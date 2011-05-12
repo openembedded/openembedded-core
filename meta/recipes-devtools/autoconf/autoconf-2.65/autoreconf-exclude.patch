@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: autoconf-2.63/bin/autoreconf.in
 ===================================================================
 --- autoconf-2.63.orig/bin/autoreconf.in	2008-12-31 17:39:01.000000000 +0000

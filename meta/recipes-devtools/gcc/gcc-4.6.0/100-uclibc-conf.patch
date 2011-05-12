@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gcc-4.6.0/contrib/regression/objs-gcc.sh
 ===================================================================
 --- gcc-4.6.0.orig/contrib/regression/objs-gcc.sh

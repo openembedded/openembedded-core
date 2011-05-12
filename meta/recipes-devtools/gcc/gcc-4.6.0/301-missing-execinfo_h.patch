@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gcc-4.6.0/boehm-gc/include/gc.h
 ===================================================================
 --- gcc-4.6.0.orig/boehm-gc/include/gc.h

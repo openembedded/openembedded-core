@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [distribution: codesourcery]
+
        gcc/
        2008-07-02  Joseph Myers  <joseph@codesourcery.com>
        * c-incpath.c: Include toplev.h.

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 # CTypes need to know the actual host we are building on.
 # Signed-Off: Michael Dietrich <mdt@emdete.de>
 

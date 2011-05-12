@@ -24,6 +24,7 @@ case "$1" in
 esac
 
 exit 0
+Upstream-Status: Inappropriate [debian patch]
 
 @DPATCH@
 --- binutils-2.16.91.0.1/ld/Makefile.am

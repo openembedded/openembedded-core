@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 help2man is looking at the generated binary for help output. This does not work for cross compilations. So taking out the local PREPATH (../src) directory from path so that help2 man can find the native version of the bison in the native sysroot directory.
 
 Date: 2010/06/28

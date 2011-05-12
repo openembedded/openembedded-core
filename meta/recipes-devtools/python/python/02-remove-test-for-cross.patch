@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 # OpenEmbedded prepopulates the autotools site cache, so if this
 # would be using AC_TRY_CACHE, we could patch it in a more sane way
 # Alas, I don't have enough autotalent to do that.

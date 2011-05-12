@@ -22,6 +22,7 @@ case "$1" in
 esac
 
 exit 0
+Upstream-Status: Inappropriate [debian patch]
 
 @DPATCH@
 Index: src/ld/emultempl/elf32.em

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Enabling sysroot support in libtool exposed a bug where the final
 library had an RPATH encoded into it which still pointed to the
 sysroot. This works around the issue until it gets sorted out

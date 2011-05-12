@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Sometimes .las have =/a/b/c.la in dependency_libs. This should be
 resolved to sysroot.
 

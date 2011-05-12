@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 gcc-runtime builds libstdc++ separately from gcc-cross-*. Its configure tests using g++ 
 will not run correctly since by default the linker will try to link against libstdc++
 which shouldn't exist yet. We need an option to disable -lstdc++

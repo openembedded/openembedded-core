@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gcc-4.6.0/Makefile.def
 ===================================================================
 --- gcc-4.6.0.orig/Makefile.def

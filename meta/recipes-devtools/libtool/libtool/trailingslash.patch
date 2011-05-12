@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 A command like /bin/sh ../../i586-poky-linux-libtool   --mode=install /usr/bin/install -c   gck-roots-store-standalone.la '/media/data1/builds/poky1/tmp/work/core2-poky-linux/gnome-keyring-2.26.1-r1/image/usr/lib/gnome-keyring/standalone/' fails (e.g. gnome-keyring or pulseaudio)
 
 This is because libdir has a trailing slash which breaks the comparision.

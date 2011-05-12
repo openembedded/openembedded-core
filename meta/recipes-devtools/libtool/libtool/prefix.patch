@@ -1,3 +1,5 @@
+Status: Inappropriate [embedded specific]
+
 Renames "libtool" -> "${TARGET_PREFIX}libtool" which makes sure
 it can't be confused with the host libtool.
 

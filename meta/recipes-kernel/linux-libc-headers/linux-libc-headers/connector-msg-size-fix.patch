@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Currently default header is linux-libc-header, which leads the dismatch
 with wrs kernel.
 

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Add /sw/include and /opt/include based on the original
 zecke-no-host-includes.patch patch.  The original patch checked for
 /usr/include, /sw/include and /opt/include and then triggered a failure and

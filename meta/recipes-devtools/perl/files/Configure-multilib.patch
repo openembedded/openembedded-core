@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: perl-5.12.2/Configure
 ===================================================================
 --- perl-5.12.2.orig/Configure

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 # Reinstate the empty -O option to fix weird mixing of native and target
 # binaries and libraries with LD_LIBRARY_PATH when host==target
 #

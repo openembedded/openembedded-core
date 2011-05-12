@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 # Dimitry Andric <dimitry@andric.com>, 2004-05-01
 #
 # * Removed the extra -lfloat option from LIBGCC_SPEC, since it isn't needed

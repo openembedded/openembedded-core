@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: autoconf-2.59/bin/autoheader.in
 ===================================================================
 --- autoconf-2.59.orig/bin/autoheader.in	2005-03-09 16:27:17.933878952 -0500

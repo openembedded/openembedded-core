@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: gcc-4.6.0/libmudflap/mf-hooks2.c
 ===================================================================
 --- gcc-4.6.0.orig/libmudflap/mf-hooks2.c

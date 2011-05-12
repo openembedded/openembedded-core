@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- upstream/aclocal.m4	1970-01-01 01:00:00.000000000 +0100
 +++ lennart/aclocal.m4	2005-11-18 04:19:18.000000000 +0100
 @@ -0,0 +1,171 @@

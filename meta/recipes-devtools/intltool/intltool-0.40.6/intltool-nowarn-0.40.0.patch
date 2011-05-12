@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: intltool-0.40.0/intltool-extract.in
 ===================================================================
 --- intltool-0.40.0.orig/intltool-extract.in	2008-12-17 11:50:19.000000000 +0000

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Poky provides a list of site files in CONFIG_SITE whereas autoconf 
 only expects one file. This patch changes autoconf to accept a list of 
 them.

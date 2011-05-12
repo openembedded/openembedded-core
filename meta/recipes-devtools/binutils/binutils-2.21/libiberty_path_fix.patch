@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 don't let the distro compiler point to the wrong installation location
 
 Thanks to RP for helping find the source code causing the issue.

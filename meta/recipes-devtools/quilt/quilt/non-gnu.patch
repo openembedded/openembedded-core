@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Patch is from the Fink projetc (http://fink.sf.net)
 
 diff -r 7b51c215fc54 Makefile.in

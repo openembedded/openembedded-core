@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 uclibc defines __GLIBC__ but it does not expose struct shed_param as much as glibc
 and is not needed too per standard. gnulib attempts to use it but we have to account
 for it because in this case uclibc does not behave like glibc.

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- autoconf-2.59/bin/autoheader.in~	2003-10-10 14:52:56.000000000 +0100
 +++ autoconf-2.59/bin/autoheader.in	2004-05-03 01:36:45.000000000 +0100
 @@ -272,8 +272,8 @@

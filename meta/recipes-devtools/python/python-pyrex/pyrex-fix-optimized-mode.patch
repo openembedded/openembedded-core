@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: Pyrex-0.9.8.4/Pyrex/Distutils/extension.py
 ===================================================================
 --- Pyrex-0.9.8.4.orig/Pyrex/Distutils/extension.py

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gcc-4.6.0/libstdc++-v3/include/ext/rope
 ===================================================================
 --- gcc-4.6.0.orig/libstdc++-v3/include/ext/rope

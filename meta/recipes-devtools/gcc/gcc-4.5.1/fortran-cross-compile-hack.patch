@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 * Fortran would have searched for arm-angstrom-gnueabi-gfortran but would have used
   used gfortan. For gcc_4.2.2.bb we want to use the gfortran compiler from our cross
   directory.

@@ -22,6 +22,7 @@ case "$1" in
 esac
 
 exit 0
+Upstream-Status: Inappropriate [debian patch]
 
 @DPATCH@
 diff -urNad /home/james/debian/packages/binutils/binutils-2.14.90.0.6/bfd/opncls.c binutils-2.14.90.0.6/bfd/opncls.c

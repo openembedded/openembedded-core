@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gcc-4.6.0/libstdc++-v3/config/locale/uclibc/c++locale_internal.h
 ===================================================================
 --- gcc-4.6.0.orig/libstdc++-v3/config/locale/uclibc/c++locale_internal.h

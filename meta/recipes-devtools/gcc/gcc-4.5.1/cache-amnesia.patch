@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 ---
  gcc/configure    |    2 +-
  gcc/configure.ac |    2 +-

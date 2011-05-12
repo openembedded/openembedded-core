@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 ---
  Makefile.am |    3 ++-
  Makefile.in |    3 ++-

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: gdb-6.3/gdb/arm-tdep.c
 ===================================================================
 --- gdb-6.3.orig/gdb/arm-tdep.c	2004-08-03 02:02:20.000000000 +0000

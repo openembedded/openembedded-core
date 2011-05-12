@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- gmp-4.1.4/mpn/sh/add_n.s	2005/11/17 08:44:00	1.1
 +++ gmp-4.1.4/mpn/sh/add_n.s	2005/11/17 08:18:57
 @@ -29,8 +29,8 @@

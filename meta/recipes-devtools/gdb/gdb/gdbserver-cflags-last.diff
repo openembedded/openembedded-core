@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gdb/gdbserver/Makefile.in
 ===================================================================
 --- gdb/gdbserver/Makefile.in.orig

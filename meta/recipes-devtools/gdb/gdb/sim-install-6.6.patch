@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 --- gdb-6.1/sim/common/Makefile.in~	2004-01-15 21:25:06.000000000 +0000
 +++ gdb-6.1/sim/common/Makefile.in	2004-07-22 17:07:46.237809032 +0100
 @@ -34,7 +34,7 @@

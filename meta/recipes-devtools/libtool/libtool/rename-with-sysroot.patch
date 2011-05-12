@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 This patch renames the --with-sysroot option to --with-libtool-sysroot
 to avoid namespace conflict with binutils, gcc and other toolchain
 components.
