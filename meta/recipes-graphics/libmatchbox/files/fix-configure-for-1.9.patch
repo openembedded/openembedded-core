@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff -urNd ../libmatchbox-1.6-r1/libmatchbox-1.6/configure.ac libmatchbox-1.6/configure.ac
 --- ../libmatchbox-1.6-r1/libmatchbox-1.6/configure.ac	2005-01-11 21:47:39 +00:00
 +++ libmatchbox-1.6/configure.ac	2005-03-14 03:06:25 +00:00

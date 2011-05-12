@@ -3,6 +3,8 @@ enable owl menu
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
+Upstream-Status: Inappropriate [enable feature]
+
 Index: pcmanfm-0.9.7/configure.ac
 ===================================================================
 --- pcmanfm-0.9.7.orig/configure.ac	2010-07-27 10:28:12.000000000 +0800

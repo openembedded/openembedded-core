@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [disable feature]
+
 Index: git/camel/providers/Makefile.am
 ===================================================================
 --- git.orig/camel/providers/Makefile.am	2010-07-06 18:49:34.000000000 +0800

@@ -2,6 +2,8 @@
 # makes info.info.x11.display zero and avoids the calls to
 # opengl_exec_set_parent_window, one of which is crashing.
 
+Upstream-Status: Pending
+
 Index: qemu-0.14.0/ui/sdl.c
 ===================================================================
 --- qemu-0.14.0.orig/ui/sdl.c

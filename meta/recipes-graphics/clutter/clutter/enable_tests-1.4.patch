@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: git/tests/interactive/Makefile.am
 ===================================================================
 --- git.orig/tests/interactive/Makefile.am	2011-01-28 14:06:29.000000000 +0800

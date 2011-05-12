@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [enable feature]
+
 Index: gtk/gtkcombobox.c
 ===================================================================
 RCS file: /cvs/gnome/gtk+/gtk/gtkcombobox.c,v

@@ -5,6 +5,8 @@
  actions/volume.sh     |    3 ---
  4 files changed, 12 deletions(-)
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: git/eeepc-acpi-scripts/hotkey.sh
 ===================================================================
 --- git.orig/eeepc-acpi-scripts/hotkey.sh	2010-11-28 16:02:17.000000000 +0800

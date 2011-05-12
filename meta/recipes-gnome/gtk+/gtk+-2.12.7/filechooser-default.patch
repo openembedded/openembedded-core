@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [enable feature]
+
 Index: gtk+-2.12.5/gtk/gtkfilechooserdefault.c
 ================ ===================================================
 --- gtk+-2.12.5/gtk/gtkfilechooserdefault.c	(revision 19337)

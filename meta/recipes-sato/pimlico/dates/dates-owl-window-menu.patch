@@ -4,6 +4,8 @@
  src/dates_platform.h |    2 +-
  3 files changed, 7 insertions(+), 7 deletions(-)
 
+Upstream-Status: Inappropriate [enable feature]
+
 Index: git/src/dates_gtk.c
 ===================================================================
 --- git.orig/src/dates_gtk.c	2009-08-18 12:44:56.000000000 +0100

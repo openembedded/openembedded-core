@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: libxslt-1.1.22/libexslt.pc.in
 ===================================================================
 --- libxslt-1.1.22.orig/libexslt.pc.in	2008-03-19 16:52:20.000000000 +0000

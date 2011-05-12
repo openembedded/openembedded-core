@@ -13,6 +13,8 @@ since the internal value is returned without being duplicated.
  gtk/gtkrecentmanager.c |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
+Upstream-Status: Pending
+
 Index: gtk+-2.21.2/gtk/gtkrecentmanager.c
 ===================================================================
 --- gtk+-2.21.2.orig/gtk/gtkrecentmanager.c	2010-06-22 18:11:30.000000000 +0800

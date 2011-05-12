@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [enable feature]
+
 Index: trunk/src/web_main.c
 ===================================================================
 --- trunk.orig/src/web_main.c	2007-12-18 15:04:13.000000000 -0800

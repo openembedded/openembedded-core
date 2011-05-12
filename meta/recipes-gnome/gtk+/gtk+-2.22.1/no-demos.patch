@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: gtk+-2.23.2/Makefile.am
 ===================================================================
 --- gtk+-2.23.2.orig/Makefile.am	2010-11-10 20:34:42.000000000 +0800

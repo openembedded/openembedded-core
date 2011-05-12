@@ -4,6 +4,8 @@ so fall back to old detection.
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: apr-1.4.2/buildconf
 ===================================================================
 --- apr-1.4.2.orig/buildconf	2009-11-13 06:19:49.000000000 +0800

@@ -4,6 +4,9 @@ pkg-config will only search the target sysroot and we want the native script. Th
 patch adds an option to allow the path to the tool to be specified.
 
 RP - 12/8/10"
+
+Upstream-Status: Pending
+
 Index: gnome-icon-theme-2.31.0/configure.ac
 ===================================================================
 --- gnome-icon-theme-2.31.0.orig/configure.ac	2010-12-01 11:00:22.000000000 +0800

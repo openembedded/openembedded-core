@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 --- /tmp/Makefile.am	2007-01-08 17:44:47.000000000 +0100
 +++ gtk+-2.10.7/gtk/Makefile.am	2007-01-08 17:45:17.025251000 +0100
 @@ -1128,11 +1128,11 @@

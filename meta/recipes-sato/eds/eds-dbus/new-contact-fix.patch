@@ -5,6 +5,8 @@ the data base if not exist, but use it without proper initialization.
 
 This patch fix it.
 
+Upstream-Status: Submitted
+
 Signed-off-by: Edwin Zhai <edwin.zhai@intel.com>
 Index: git/addressbook/backends/file/e-book-backend-file.c
 ===================================================================

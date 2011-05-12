@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gtk/gtkcellrenderertoggle.c
 ===================================================================
 --- gtk/gtkcellrenderertoggle.c	(revision 18523)

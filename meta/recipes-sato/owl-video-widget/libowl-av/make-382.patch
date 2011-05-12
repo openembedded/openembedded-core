@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: libowl-av/Makefile.am
 ===================================================================
 --- libowl-av.orig/Makefile.am

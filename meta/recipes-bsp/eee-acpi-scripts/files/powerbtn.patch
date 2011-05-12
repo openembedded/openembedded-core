@@ -3,6 +3,8 @@
  events/powerbtn  |    2 ++
  2 files changed, 5 insertions(+)
 
+Upstream-Status: Inappropriate [enable feature]
+
 Index: git/events/powerbtn
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000

@@ -13,6 +13,7 @@ This patch avoids these linking errors:
 Nitin A Kamble <nitin.a.kamble@intel.com>
 Date: 2011/01/11
 
+Upstream-Status: Pending
 
 Index: matchbox-stroke/configure.ac
 ===================================================================

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [enable feature]
+
 Index: 0.6.4/manager.c
 ===================================================================
 --- 0.6.4.orig/manager.c	2007-06-28 12:23:37.000000000 +0100

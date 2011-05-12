@@ -3,6 +3,8 @@ rather than target binary in cross-compile environment.
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: metacity-2.30.3/src/Makefile.am
 ===================================================================
 --- metacity-2.30.3.orig/src/Makefile.am	2010-09-05 00:09:52.000000000 +0800

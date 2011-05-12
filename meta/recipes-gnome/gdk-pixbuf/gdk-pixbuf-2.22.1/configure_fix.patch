@@ -4,6 +4,8 @@ This patch simple disables it.
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: gdk-pixbuf-2.22.1/configure.ac
 ===================================================================
 --- gdk-pixbuf-2.22.1.orig/configure.ac	2010-11-25 16:26:41.000000000 +0800

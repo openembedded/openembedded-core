@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gtk/gtkcellrenderer.c
 ===================================================================
 RCS file: /cvs/gnome/gtk+/gtk/gtkcellrenderer.c,v

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: git/Makefile.am
 ===================================================================
 --- git.orig/Makefile.am	2009-01-27 13:26:12.000000000 +0000

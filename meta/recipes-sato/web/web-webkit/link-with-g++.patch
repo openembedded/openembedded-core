@@ -3,6 +3,9 @@ linking. The easiest way to achieve this is to add a dummy cpp file.
 This also means we have to add AC_PROG_CXX else libtool 2.2.2 gets upset.
 
 RP - 14/4/08 
+
+Upstream-Status: Inappropriate [configuration]
+
 --- webkit.orig/src/Makefile.am
 +++ webkit/src/Makefile.am
 @@ -1,11 +1,11 @@

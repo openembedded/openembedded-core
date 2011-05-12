@@ -7,6 +7,8 @@
  xtscal.in    |   19 -----
  6 files changed, 14 insertions(+), 455 deletions(-)
 
+Upstream-Status: Pending
+
 Index: xtscal-0.6.3/xtscal.in
 ===================================================================
 --- xtscal-0.6.3.orig/xtscal.in	2004-09-10 20:10:36.000000000 +0100

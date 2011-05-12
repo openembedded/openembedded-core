@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [disable feature]
+
 Index: claws-mail-2.9.1/src/mainwindow.c
 ===================================================================
 --- claws-mail-2.9.1.orig/src/mainwindow.c	2007-04-25 07:40:10.000000000 +0100

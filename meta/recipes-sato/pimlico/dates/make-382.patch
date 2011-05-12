@@ -3,6 +3,8 @@ in upstream git.
 
 JL - 15/12/10
 
+Upstream-Status: Accepted
+
 Index: git/Makefile.am
 ===================================================================
 --- git.orig/Makefile.am

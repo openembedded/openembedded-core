@@ -3,6 +3,8 @@ patch adds an option to allow the path to the tool to be specified.
 
 RP - 12/8/10
 
+Upstream-Status: Pending
+
 Index: sato-icon-theme-0.4.1/configure.ac
 ===================================================================
 --- sato-icon-theme-0.4.1.orig/configure.ac	2010-08-12 12:23:25.000000000 +0100

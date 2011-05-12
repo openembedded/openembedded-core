@@ -4,6 +4,8 @@ remove it to work aound this issue.
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: pcmanfm-0.9.7/data/ui/Makefile.am
 ===================================================================
 --- pcmanfm-0.9.7.orig/data/ui/Makefile.am	2010-07-29 15:10:18.000000000 +0800

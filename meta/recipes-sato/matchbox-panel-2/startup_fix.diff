@@ -2,6 +2,8 @@ Fixed the compile error caused by typo, upstream also need this.
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
+Upstream-Status: Pending
+
 Index: matchbox-panel-2/applets/startup/startup.c
 ===================================================================
 --- matchbox-panel-2/applets/startup/startup.c	(revision 2109)

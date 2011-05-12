@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: libmb/mbpixbuf.c
 ===================================================================
 --- libmatchbox/libmb.orig/mbpixbuf.c	2006-02-01 12:45:55.000000000 +0000

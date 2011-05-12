@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff -urN libglade-2.4.2.orig/configure.in libglade-2.4.2/configure.in
 --- libglade-2.4.2.orig/configure.in	2005-02-11 12:42:58.000000000 +0100
 +++ libglade-2.4.2/configure.in	2005-03-22 01:22:00.000000000 +0100

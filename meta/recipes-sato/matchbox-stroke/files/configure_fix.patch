@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: matchbox-window-manager/configure.ac
 ===================================================================
 --- matchbox-window-manager.orig/configure.ac	2007-11-14 12:02:28.000000000 +0000

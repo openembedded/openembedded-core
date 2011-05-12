@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- tslib/plugins/linear.c~multievent
 +++ tslib/plugins/linear.c
 @@ -39,14 +39,12 @@

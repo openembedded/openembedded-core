@@ -2,6 +2,8 @@ Make 3.82 is much stricter and demands tabs. Obey.
 
 JL - 15/12/10
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: video/Makefile.am
 ===================================================================
 --- video.orig/Makefile.am

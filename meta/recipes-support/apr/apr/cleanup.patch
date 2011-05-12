@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: apr-1.4.2/build/buildcheck.sh
 ===================================================================
 --- apr-1.4.2.orig/build/buildcheck.sh	2009-11-13 08:27:16.000000000 +0800

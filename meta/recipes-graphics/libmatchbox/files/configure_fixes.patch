@@ -3,6 +3,8 @@
  libmb.pc.in  |    2 +-
  2 files changed, 8 insertions(+), 9 deletions(-)
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: libmatchbox-1.9/configure.ac
 ===================================================================
 --- libmatchbox-1.9.orig/configure.ac	2007-11-11 22:26:43.000000000 +0000

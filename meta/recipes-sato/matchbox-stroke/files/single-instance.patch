@@ -6,6 +6,7 @@ in matchbox-desktop.
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
 
 Index: matchbox-stroke/matchbox-stroke.desktop
 ===================================================================

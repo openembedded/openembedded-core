@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 --- /tmp/configure.in	2007-01-08 17:50:49.000000000 +0100
 +++ gtk+-2.10.7/configure.in	2007-01-08 17:52:33.495251000 +0100
 @@ -371,7 +371,7 @@

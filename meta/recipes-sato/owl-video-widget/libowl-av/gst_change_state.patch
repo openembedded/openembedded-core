@@ -9,6 +9,8 @@ We will revisit it in next period.
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Pending
+
 diff -ruN libowl-av-orig/libowl-av/owl-tag-reader.c libowl-av/libowl-av/owl-tag-reader.c
 --- libowl-av-orig/libowl-av/owl-tag-reader.c	2010-10-12 14:30:26.000000000 +0800
 +++ libowl-av/libowl-av/owl-tag-reader.c	2010-10-12 14:32:39.000000000 +0800

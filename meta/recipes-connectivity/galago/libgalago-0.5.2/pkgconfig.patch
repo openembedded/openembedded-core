@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: libgalago-0.5.2/libgalago.pc.in
 ===================================================================
 --- libgalago-0.5.2.orig/libgalago.pc.in	2006-05-17 08:53:26.000000000 +0100

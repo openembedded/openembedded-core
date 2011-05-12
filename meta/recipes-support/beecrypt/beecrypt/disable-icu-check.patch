@@ -1,6 +1,8 @@
 We are unable to run code at configure time in a cross environemnt, but as we
 control the build we can be fairly certain this dependency is met.
 
+Upstream-Status: Inappropriate [embedded specific]
+
 JL 05/07/10
 Index: beecrypt-4.2.1/configure.ac
 ===================================================================

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Remove duplicate file entries as this breaks install with new Automake
 
 JL 19/03/10

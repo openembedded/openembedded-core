@@ -13,6 +13,8 @@ since the internal value is returned without being duplicated.
  gtk/gtkrecentmanager.c |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
+Upstream-Status: Pending
+
 diff --git a/gtk/gtkrecentmanager.c b/gtk/gtkrecentmanager.c
 index 317b3d5..d062572 100644
 --- a/gtk/gtkrecentmanager.c

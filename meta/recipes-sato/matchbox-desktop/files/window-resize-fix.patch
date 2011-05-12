@@ -16,6 +16,8 @@ Date:   Sun Mar 6 17:58:45 2011 +0800
     
     Signed-off-by: Yu Ke <ke.yu@intel.com>
 
+Upstream-Status: Pending
+
 diff --git a/src/desktop.c b/src/desktop.c
 index d4fc2fb..5aa2cfc 100644
 --- a/src/desktop.c

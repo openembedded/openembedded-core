@@ -13,6 +13,7 @@ non-cross-compile environment.
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
+Upstream-Status: Inappropriate [embedded specific]
 
 Index: gpgme-1.3.0/configure.ac
 ===================================================================

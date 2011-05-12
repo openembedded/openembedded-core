@@ -4,6 +4,8 @@
  tests/test-text.c   |    2 +-
  3 files changed, 8 insertions(+), 3 deletions(-)
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: git/tests/interactive/Makefile.am
 ===================================================================
 --- git.orig/tests/interactive/Makefile.am	2009-03-12 11:01:36.000000000 +0000

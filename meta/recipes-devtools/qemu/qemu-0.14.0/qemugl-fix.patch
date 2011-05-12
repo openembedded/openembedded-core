@@ -9,6 +9,8 @@ Upstream-Status: other (logical part of qemu-git-qemugl-host.patch)
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
+Upstream-Status: Inappropriate [other] - depends on qemu gl patch
+
 Index: qemu-0.14.0/target-i386/opengl_func.h
 ===================================================================
 --- qemu-0.14.0.orig/target-i386/opengl_func.h	2011-04-08 16:43:46.000000000 +0800

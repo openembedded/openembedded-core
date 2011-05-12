@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [disable feature]
+
 ---
  xev.c |   16 ++++++++--------
  1 file changed, 8 insertions(+), 8 deletions(-)

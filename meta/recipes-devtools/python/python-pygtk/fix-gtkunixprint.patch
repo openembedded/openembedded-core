@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: pygtk-2.10.0/gtk/gtkunixprint.override
 ===================================================================
 --- pygtk-2.10.0.orig/gtk/gtkunixprint.override

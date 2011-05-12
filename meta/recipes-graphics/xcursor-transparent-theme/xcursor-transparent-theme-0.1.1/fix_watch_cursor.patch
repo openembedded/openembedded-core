@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff -NurP xcursor-transparent-theme-0.1.1-orig/cursors/Makefile.am xcursor-transparent-theme-0.1.1/cursors/Makefile.am
 --- xcursor-transparent-theme-0.1.1-orig/cursors/Makefile.am	2003-10-30 13:13:59.000000000 +0100
 +++ xcursor-transparent-theme-0.1.1/cursors/Makefile.am	2005-12-20 23:35:17.000000000 +0100

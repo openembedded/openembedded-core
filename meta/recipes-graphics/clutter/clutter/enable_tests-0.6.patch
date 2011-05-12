@@ -4,6 +4,8 @@
  tests/test-text.c   |    2 +-
  3 files changed, 8 insertions(+), 3 deletions(-)
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: clutter-0-6/tests/Makefile.am
 ===================================================================
 --- clutter.orig/tests/Makefile.am	2007-11-06 12:29:17.000000000 +0000

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [disable feature]
+
 --- liboil-0.3.9/liboil/liboilfunction.c.old	2006-09-18 13:03:20.000000000 +0100
 +++ liboil-0.3.9/liboil/liboilfunction.c	2006-09-18 13:04:10.000000000 +0100
 @@ -345,7 +345,9 @@

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff -urNd ../kf-0.5.4.1-r0/kf-0.5.4.1/configure.in kf-0.5.4.1/configure.in
 --- ../kf-0.5.4.1-r0/kf-0.5.4.1/configure.in	2005-04-27 19:42:49.000000000 +0100
 +++ kf-0.5.4.1/configure.in	2005-09-29 14:12:32.000000000 +0100

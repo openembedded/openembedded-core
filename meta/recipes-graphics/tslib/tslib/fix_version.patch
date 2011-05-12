@@ -2,6 +2,8 @@
  configure.ac |   10 +++++-----
  1 file changed, 5 insertions(+), 5 deletions(-)
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: tslib-1.0/configure.ac
 ===================================================================
 --- tslib-1.0.orig/configure.ac	2006-08-24 22:02:55.000000000 +0100

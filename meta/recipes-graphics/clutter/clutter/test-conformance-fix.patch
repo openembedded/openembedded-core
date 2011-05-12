@@ -30,6 +30,8 @@ Date:   Mon Oct 11 16:16:45 2010 +0100
     
     http://bugzilla.clutter-project.org/show_bug.cgi?id=2363
 
+Upstream-Status: Backport
+
 diff --git a/tests/conform/Makefile.am b/tests/conform/Makefile.am
 index 3036639..1e723e7 100644
 --- a/tests/conform/Makefile.am

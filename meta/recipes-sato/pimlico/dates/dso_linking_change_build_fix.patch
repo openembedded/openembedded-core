@@ -30,6 +30,8 @@ file, libtool should have added these needed libraries in there.
 Nitin A Kamble <nitin.a.kamble@intel.com>
 Date: 2011/01/19
 
+Upstream-Status: Pending
+
 Index: git/src/Makefile.am
 ===================================================================
 --- git.orig/src/Makefile.am

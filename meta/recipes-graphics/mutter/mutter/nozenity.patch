@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: git/configure.in
 ===================================================================
 --- git.orig/configure.in	2009-06-16 13:12:17.000000000 +0100

@@ -1,4 +1,7 @@
 5f084ea0849d5967a3c22821542ecaaa8accb398
+
+Upstream-Status: Inappropriate [enable feature]
+
 diff --git a/gtk/gtkrange.c b/gtk/gtkrange.c
 index bd95351..64e0e59 100644
 --- gtk/gtkrange.c

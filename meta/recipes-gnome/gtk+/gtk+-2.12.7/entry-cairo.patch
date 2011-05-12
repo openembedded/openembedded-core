@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gtk/gtkentry.c
 ===================================================================
 RCS file: /cvs/gnome/gtk+/gtk/gtkentry.c,v

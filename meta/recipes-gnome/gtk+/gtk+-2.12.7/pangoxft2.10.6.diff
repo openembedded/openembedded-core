@@ -13,6 +13,8 @@ performance figures compared to GTK+ 2.10.6 with pangocairo too
 a python/cairo script to get some nice graphics from a torture test
 session with several GTK+s, hope to get it ready soon.
 
+Upstream-Status: Inappropriate [enable feature]
+
 Index: gtk+-2.10.6/configure.in
 ===================================================================
 --- gtk+-2.10.6.orig/configure.in	2006-10-30 12:59:28.000000000 +0000

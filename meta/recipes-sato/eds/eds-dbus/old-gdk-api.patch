@@ -3,6 +3,8 @@ This avoid build error due to defination missing.
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: git/configure.ac
 ===================================================================
 --- git.orig/configure.ac	2010-12-16 10:25:24.000000000 +0800

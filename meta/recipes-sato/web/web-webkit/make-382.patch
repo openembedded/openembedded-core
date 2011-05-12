@@ -2,6 +2,8 @@ Make 3.82 does not allow 8 spaces instead of a tab
 
 JL - 15/12/10
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: webkit/Makefile.am
 ===================================================================
 --- webkit.orig/Makefile.am

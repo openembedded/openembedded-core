@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gtk/gtkcellrenderer.c
 ===================================================================
 --- gtk/gtkcellrenderer.c.orig	2010-06-22 17:21:22.000000000 +0800

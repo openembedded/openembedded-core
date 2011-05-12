@@ -4,6 +4,8 @@ This patch enables the macros that clutter-gtk is still using
 
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: git/clutter-gtk/Makefile.am
 ===================================================================
 --- git.orig/clutter-gtk/Makefile.am	2011-05-04 14:07:20.000000000 -0700

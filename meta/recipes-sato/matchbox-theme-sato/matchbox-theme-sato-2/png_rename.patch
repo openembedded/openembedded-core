@@ -2,6 +2,8 @@ Background Image name was changed from background.png to template.png
 
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
+Upstream-Status: Pending
+
 Index: matchbox-sato/Sato/matchbox2/Makefile.am
 ===================================================================
 --- matchbox-sato.orig/Sato/matchbox2/Makefile.am	2010-12-29 13:08:43.000000000 -0800

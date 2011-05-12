@@ -9,6 +9,8 @@ http://lists.gnu.org/archive/html/bug-ed/2008-12/msg00001.html
 ed had already taken GPLv3 when this patch out, so it should be GPLv3.
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
+Upstream-Status: Pending
+
 Index: ed-1.5/configure
 ===================================================================
 --- ed-1.5.orig/configure	2010-08-30 07:34:49.000000000 -0700

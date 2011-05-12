@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: gdk-pixbuf-2.22.1/configure.ac
 ===================================================================
 --- gdk-pixbuf-2.22.1.orig/configure.ac	2010-11-26 09:06:34.000000000 +0800

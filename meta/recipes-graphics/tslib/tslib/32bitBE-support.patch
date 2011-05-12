@@ -5,6 +5,9 @@
 ## DP: See bug #496759 - being tested upstream for 32bit BE devices
 
 @DPATCH@
+
+Upstream-Status: Pending
+
 diff -urNad tslib-1.0~/plugins/input-raw.c tslib-1.0/plugins/input-raw.c
 --- tslib-1.0~/plugins/input-raw.c	2008-12-09 10:56:47.000000000 +0000
 +++ tslib-1.0/plugins/input-raw.c	2008-12-09 11:05:41.000000000 +0000

@@ -8,6 +8,8 @@ Subject: [PATCH] linux-user: use default mmap_min_addr 65536 when /proc/sys/vm/m
  linux-user/main.c |    5 +++++
  1 files changed, 5 insertions(+), 0 deletions(-)
 
+Upstream-Status: Pending
+
 Index: qemu-0.14.0/linux-user/main.c
 ===================================================================
 --- qemu-0.14.0.orig/linux-user/main.c

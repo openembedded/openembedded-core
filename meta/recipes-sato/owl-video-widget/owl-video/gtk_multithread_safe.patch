@@ -7,6 +7,8 @@ multi-thread operation.
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 
+Upstream-Status: Pending
+
 diff -ruN video-orig/src/video.c video/src/video.c
 --- video-orig/src/video.c	2010-10-15 16:07:26.522346398 +0800
 +++ video/src/video.c	2010-10-15 16:25:51.780296717 +0800

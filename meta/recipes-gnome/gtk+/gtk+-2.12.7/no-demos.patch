@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 --- gtk+-2.10.1/Makefile.am.orig	2006-08-08 12:37:30.000000000 +0100
 +++ gtk+-2.10.1/Makefile.am	2006-08-08 12:37:48.000000000 +0100
 @@ -1,6 +1,6 @@

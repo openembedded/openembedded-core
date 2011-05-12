@@ -6,6 +6,8 @@ added and files in the sysroot can be found.
 
 Patch from Paul Eggleton, Comments by RP 28/11/10
 
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: qemu-0.14.0/configure
 ===================================================================
 --- qemu-0.14.0.orig/configure

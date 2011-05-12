@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [enable feature]
+
 --- gtk+-2.12.7.orig/gtk/gtkfilechooserdialog.c 
 +++ gtk+-2.12.7/gtk/gtkfilechooserdialog.c 
 @@ -165,10 +165,10 @@

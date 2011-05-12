@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [enable feature]
+
 Index: contacts-0.9/src/contacts-gtk.c
 ===================================================================
 --- contacts-0.9.orig/src/contacts-gtk.c	2008-06-06 12:56:08.000000000 +0100

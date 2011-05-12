@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Common subdirectories: kf-0.5.4.1.orig/data and kf-0.5.4.1/data
 diff -u kf-0.5.4.1.orig/kf.desktop kf-0.5.4.1/kf.desktop
 --- kf-0.5.4.1.orig/kf.desktop	2005-04-19 22:08:44.000000000 +0100

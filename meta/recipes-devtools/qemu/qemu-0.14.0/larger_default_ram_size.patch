@@ -5,6 +5,8 @@ It has not been applied to upstream qemu
 
 Khem Raj <raj.khem@gmail.com>
 
+Upstream-Status: Pending
+
 Index: qemu-0.14.0/vl.c
 ===================================================================
 --- qemu-0.14.0.orig/vl.c

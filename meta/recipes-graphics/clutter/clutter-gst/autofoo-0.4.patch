@@ -5,6 +5,8 @@ Upstream-Status: Inappropriate [not used]
  examples/Makefile.am      |    2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: clutter-gst/examples/Makefile.am
 ===================================================================
 --- clutter-gst.orig/examples/Makefile.am	2007-11-06 12:31:36.000000000 +0000

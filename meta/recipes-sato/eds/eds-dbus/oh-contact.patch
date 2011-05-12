@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: addressbook/libedata-book/ximian-vcard.h
 ===================================================================
 --- addressbook/libedata-book/ximian-vcard.h.orig	2010-02-05 14:57:14.000000000 +0000

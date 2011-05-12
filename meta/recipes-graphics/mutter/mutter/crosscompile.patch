@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: git/configure.in
 ===================================================================
 --- git.orig/configure.in	2009-01-27 14:49:10.000000000 +0000

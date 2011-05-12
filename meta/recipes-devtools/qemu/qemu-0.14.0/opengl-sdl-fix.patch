@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff -u -r qemu-0.14.0/Makefile.target qemu-0.14.0-fixed/Makefile.target
 --- qemu-0.14.0/Makefile.target 2011-04-26 21:22:17.627637741 -0700
 +++ qemu-0.14.0-fixed/Makefile.target   2011-04-26 21:23:02.767637747 -0700

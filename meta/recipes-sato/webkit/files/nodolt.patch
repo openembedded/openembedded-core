@@ -1,6 +1,9 @@
 Dolt cause build error on some platform, so disable it.
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
+
+Upstream-Status: Inappropriate [configuration]
+
 Index: webkit-gtk-1.3.7+svnr72836-r72836-r0/configure.ac
 ===================================================================
 --- webkit-gtk-1.3.7+svnr72836-r72836-r0.orig/configure.ac	2011-01-21 11:11:07.000000000 +0800

@@ -3,6 +3,8 @@ From: Seán de Búrca <leftmostcat@gmail.com>
 Date: Fri, 07 Aug 2009 00:38:52 +0000
 Subject: Remove useless Plural-Forms line which breaks build with gnome-doc-utils master
 
+Upstream-Status: Inappropriate [configuration]
+
 ---
 diff --git a/help/el/el.po b/help/el/el.po
 index ab77264..635b68f 100644

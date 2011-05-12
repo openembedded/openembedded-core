@@ -3,6 +3,8 @@ Author: Gerd Hoffmann <kraxel@redhat.com>
 Source: upstream, http://patchwork.ozlabs.org/patch/84704/
 Forwarding: not-needed
 
+Upstream-Status: Pending
+
 Index: qemu-0.14.0/hw/qxl.c
 ===================================================================
 --- qemu-0.14.0.orig/hw/qxl.c

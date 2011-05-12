@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [enable feature]
+
 Index: epdfview-0.1.7/src/Makefile.am
 ===================================================================
 --- epdfview-0.1.7.orig/src/Makefile.am	2010-07-13 12:30:44.014172385 +0100

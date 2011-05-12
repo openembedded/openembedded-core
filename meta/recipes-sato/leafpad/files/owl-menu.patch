@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [enable feature]
+
 --- tmp/src/menu.c.orig	2007-04-23 12:08:41.000000000 +0100
 +++ tmp/src/menu.c	2007-04-23 12:08:41.000000000 +0100
 @@ -152,7 +152,7 @@

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: tidy/doc/reference/Makefile.am
 ===================================================================
 --- tidy.orig/doc/reference/Makefile.am  2007-11-06 19:36:56.000000000 +0000

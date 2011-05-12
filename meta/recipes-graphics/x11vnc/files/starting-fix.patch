@@ -3,6 +3,9 @@ Removing these 2 parameters makes x11vnc works well on poky sato image.
 
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
+
+Upstream-Status: Inappropriate [configuration]
+
 Index: x11vnc-0.9.12/x11vnc/x11vnc.desktop
 ===================================================================
 --- x11vnc-0.9.12.orig/x11vnc/x11vnc.desktop	2011-03-03 10:33:18.000000000 +0800

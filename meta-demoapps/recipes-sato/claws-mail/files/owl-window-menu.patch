@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [enable feature]
+
 Index: claws-mail-2.9.1/src/addressbook.c
 ===================================================================
 --- claws-mail-2.9.1.orig/src/addressbook.c	2007-04-25 10:18:13.000000000 +0100

@@ -8,6 +8,8 @@ Subject: [PATCH] Detect and use GCC atomic builtins for locking
  qemu-lock.h |   13 +++++++++++++
  2 files changed, 30 insertions(+), 0 deletions(-)
 
+Upstream-Status: Pending
+
 Index: qemu-0.14.0/configure
 ===================================================================
 --- qemu-0.14.0.orig/configure

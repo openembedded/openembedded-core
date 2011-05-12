@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: git/tests/test-depth.c
 ===================================================================
 --- git.orig/tests/test-depth.c	2009-05-24 14:54:40.000000000 +0100

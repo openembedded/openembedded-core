@@ -6,6 +6,8 @@ instead of LIBVNCSERVER_WORDS_BIGENDIAN, which cuase issue in mips.
 
 Signed-off-by: Yu Ke <ke.yu@intel.com>
 
+Upstream-Status: Pending
+
 diff --git a/libvncserver/main.c b/libvncserver/main.c
 index b6bd930..8bbb7bf 100644
 --- a/libvncserver/main.c

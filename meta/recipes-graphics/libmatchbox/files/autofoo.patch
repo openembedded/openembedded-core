@@ -3,6 +3,8 @@
 # Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
 #
 
+Upstream-Status: Inappropriate [configuration]
+
 --- libmatchbox-1.5/configure.ac~autofoo	2004-12-21 12:56:46.000000000 -0500
 +++ libmatchbox-1.5/configure.ac	2005-01-18 16:40:04.421179624 -0500
 @@ -1,10 +1,10 @@

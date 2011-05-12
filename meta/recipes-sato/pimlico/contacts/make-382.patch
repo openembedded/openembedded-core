@@ -2,6 +2,8 @@ Fix for stricter parser in make 3.82. This fix has been pushed to upstream git.
 
 JL - 15/12/10
 
+Upstream-Status: Accepted
+
 Index: git/Makefile.am
 ===================================================================
 --- git.orig/Makefile.am

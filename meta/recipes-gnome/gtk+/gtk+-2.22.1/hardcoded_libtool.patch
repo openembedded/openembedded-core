@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Index: gtk+-2.23.2/configure.in
 ===================================================================
 --- gtk+-2.23.2.orig/configure.in	2010-11-10 22:22:47.000000000 +0800
