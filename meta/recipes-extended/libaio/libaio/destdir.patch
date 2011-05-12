@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 from openembedded, added by Qing He <qing.he@intel.com>
 
 Index: libaio-0.3.106/Makefile

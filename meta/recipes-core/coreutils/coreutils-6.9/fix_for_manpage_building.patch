@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [legacy version]
+
 Use native coreutils binaries to build manpages in cross environment.
 This avoids man page build issues like this:
 

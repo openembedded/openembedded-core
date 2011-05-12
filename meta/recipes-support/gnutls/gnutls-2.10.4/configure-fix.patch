@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [distribution]
+
 rebased from original configure_madness.patch
 
 libtasn1 provides an .pc file in upstream,

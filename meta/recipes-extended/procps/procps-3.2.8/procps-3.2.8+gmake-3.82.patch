@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 Fix for stricter Makefile parser in Make 3.82 take from Gentoo bugzilla:
 http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/sys-process/procps/files/procps-3.2.8%2Bgmake-3.82.patch?revision=1.1
 

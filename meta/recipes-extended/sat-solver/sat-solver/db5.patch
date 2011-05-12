@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 RPM no longer includes an internal version of db, it now relies on the system
 version.  The system version in Poky is available at /usr/include/db51
 

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 # copy commit message from OE as the patch comment:
 #    commit 98c24291aa165f53423c27ae033831ce0b3bb676
 #    Author: Roman I Khimov <khimov@altell.ru>

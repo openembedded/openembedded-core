@@ -1,3 +1,5 @@
+Upstream-Status: Backport [debian]
+
 Index: openssl-0.9.8m/Configure
 ===================================================================
 --- openssl-0.9.8m.orig/Configure	2010-02-27 12:28:32.000000000 +0100

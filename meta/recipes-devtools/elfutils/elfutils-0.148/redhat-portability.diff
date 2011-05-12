@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 Index: elfutils-0.148/backends/ChangeLog
 ===================================================================
 --- elfutils-0.148.orig/backends/ChangeLog	2010-04-13 20:08:02.000000000 +0000

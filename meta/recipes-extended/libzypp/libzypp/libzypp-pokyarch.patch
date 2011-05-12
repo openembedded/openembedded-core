@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [distribution]
+
 Disable all of the internal architectures
 
 We disable all of the internal architectures and replace them with ones

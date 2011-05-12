@@ -2,6 +2,8 @@ CLIENT_PATH is the only environment when executing dhclient-script,
 without this patch, dhclient-script won't run properly because it
 invokes ifconfig and route
 
+Upstream-Status: Inappropriate [configuration]
+
 7/28/2010 - qhe
 
 diff -ru dhcp-4.1.1-P1.orig//client/Makefile.am dhcp-4.1.1-P1/client/Makefile.am

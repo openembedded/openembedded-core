@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 diff --git a/svr-auth.c b/svr-auth.c
 index 5da0aa7..4de4964 100644
 --- a/svr-auth.c

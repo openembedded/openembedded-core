@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 jskwgen should be built by BUILD_CC in cross environment
 
 7/23/2010 - created by Qing He <qing.he@intel.com>

@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 diff -ruN tcp_wrappers_7.6.orig/tcpdchk.c tcp_wrappers_7.6/tcpdchk.c
 --- tcp_wrappers_7.6.orig/tcpdchk.c	2003-08-21 02:50:37.000000000 +0200
 +++ tcp_wrappers_7.6/tcpdchk.c	2003-08-21 02:50:33.000000000 +0200

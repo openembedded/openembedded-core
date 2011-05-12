@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [distribution]
+
 --- udev-081/udevsynthesize.c.orig	2006-01-29 12:22:45.000000000 +0100
 +++ udev-081/udevsynthesize.c	2006-01-29 12:22:40.000000000 +0100
 @@ -0,0 +1,763 @@

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff -Nurd dropbear-0.45/options.h dropbear-0.45.patched/options.h
 --- dropbear-0.45/options.h	2005-03-06 20:27:02.000000000 -0800
 +++ dropbear-0.45.patched/options.h	2005-03-08 15:25:09.368742090 -0800

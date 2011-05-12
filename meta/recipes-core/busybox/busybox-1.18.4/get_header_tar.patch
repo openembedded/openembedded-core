@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 # copy commit message from OE as the patch comment:
 #    commit 5a0e1d473ca7aca5ffefffe9a2ec44ae7a1f35bc
 #    Author: Frans Meulenbroeks <fransmeulenbroeks@gmail.com>

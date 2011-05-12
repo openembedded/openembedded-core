@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Add RPM5 configuration support
 
 Update the cmake configuration to detect additional files needed by RPM5.

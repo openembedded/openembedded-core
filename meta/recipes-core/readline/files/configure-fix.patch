@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Without this it fails to link against libtermcap causing various missing symbols 
 issues.
 

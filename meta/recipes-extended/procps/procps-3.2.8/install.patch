@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 --- procps-3.2.5.virgin/Makefile	2005-01-26 05:55:26.000000000 +0100
 +++ procps-3.2.5/Makefile	2005-08-03 04:55:26.346984488 +0200
 @@ -30,7 +30,10 @@

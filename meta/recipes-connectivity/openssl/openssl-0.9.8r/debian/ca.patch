@@ -1,3 +1,5 @@
+Upstream-Status: Backport [debian]
+
 Index: openssl-0.9.8m/apps/CA.pl.in
 ===================================================================
 --- openssl-0.9.8m.orig/apps/CA.pl.in	2006-04-28 00:28:51.000000000 +0000

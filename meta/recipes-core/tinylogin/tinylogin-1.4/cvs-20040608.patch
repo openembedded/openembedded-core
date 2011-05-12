@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 Index: Config.h
 ===================================================================
 RCS file: /var/cvs/tinylogin/Config.h,v

@@ -1,3 +1,5 @@
+Upstream-Status: Backport [debian]
+
 Index: openssl-0.9.8k/Makefile.shared
 ===================================================================
 --- openssl-0.9.8k.orig/Makefile.shared	2009-07-19 11:35:02.000000000 +0200

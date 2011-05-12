@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 * Mon Feb  5 2001 Preston Brown <pbrown@redhat.com>
 - fix gethostbyname to work better with dot "." notation (#16949)
 

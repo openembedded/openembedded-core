@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 If check is detected, it makes the builds non-determinstic so just force
 it to be disabled.
 

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [packaging]
+
 7/30/2010 - rebased to 3.1.5 by Qing He <qing.he@intel.com>
 
 diff -uNr pciutils-3.1.5.orig/Makefile pciutils-3.1.5/Makefile

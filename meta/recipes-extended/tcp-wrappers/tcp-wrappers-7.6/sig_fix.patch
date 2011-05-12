@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 * Mon Feb 10 2003 Harald Hoyer <harald@redhat.de> 7.6-29
 - added security patch tcp_wrappers-7.6-sig.patch
 

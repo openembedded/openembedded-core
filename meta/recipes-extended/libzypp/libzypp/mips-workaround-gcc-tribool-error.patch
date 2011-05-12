@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 # with gcc 4.3.3 and MIPS target, gcc "internal compiler error: segmentation fault" error
 # occurs when compiling Applydeltarpm.cc. I didn't find the exact reason leading to this
 # error, but it should be related to how boost tribool type is interpreted by g++. So provide

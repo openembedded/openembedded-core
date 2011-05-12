@@ -1,3 +1,5 @@
+Upstream-Status: Backport [debian]
+
 From: Kurt Roeckx <kurt@roeckx.be>
 Subject: Change the perl path's to /usr/bin/perl
 

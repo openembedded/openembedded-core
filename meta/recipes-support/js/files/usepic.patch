@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Mips needs -fPIC to compile properly. These tests are broken anyway as they test 
 the build system architecture, not the target. This is a hack.
 

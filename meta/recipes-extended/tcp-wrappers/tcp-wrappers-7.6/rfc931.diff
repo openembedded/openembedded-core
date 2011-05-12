@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 diff -ruNp tcp_wrappers_7.6.orig/scaffold.c tcp_wrappers_7.6/scaffold.c
 --- tcp_wrappers_7.6.orig/scaffold.c	2005-03-09 18:22:04.000000000 +0100
 +++ tcp_wrappers_7.6/scaffold.c	2005-03-09 18:20:47.000000000 +0100

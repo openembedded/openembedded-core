@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 --- /tmp/configure.in	2007-04-30 13:08:49.000000000 +0200
 +++ gamin-0.1.8/configure.in	2007-04-30 13:10:53.285251000 +0200
 @@ -354,51 +354,6 @@

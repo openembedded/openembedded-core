@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 # copy commit message from OE as the patch comment:
 #    commit 5b1ed09b1ab1a60a28a76e4658bc9957cd361b5d
 #    Author: Valentin Longchamp <valentin.longchamp@epfl.ch>

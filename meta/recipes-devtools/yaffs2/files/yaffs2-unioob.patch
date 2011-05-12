@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 diff -urN yaffs2.orig/yaffs_mtdif2.c yaffs2/yaffs_mtdif2.c
 --- yaffs2.orig/yaffs_mtdif2.c	2005-12-07 14:00:38.000000000 -0800
 +++ yaffs2/yaffs_mtdif2.c	2006-02-10 17:13:58.000000000 -0800

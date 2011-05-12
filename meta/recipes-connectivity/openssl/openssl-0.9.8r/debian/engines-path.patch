@@ -1,3 +1,5 @@
+Upstream-Status: Backport [debian]
+
 Index: openssl-0.9.8m/Makefile.org
 ===================================================================
 --- openssl-0.9.8m.orig/Makefile.org	2010-01-27 16:06:36.000000000 +0000

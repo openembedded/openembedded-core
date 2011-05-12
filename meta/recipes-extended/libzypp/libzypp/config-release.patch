@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [distribution]
+
 Configure distro version package
 
 We need to configure a package that the system can use to determine the

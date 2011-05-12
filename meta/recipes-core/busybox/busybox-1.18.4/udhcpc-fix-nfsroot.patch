@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 # copy commit message from OE as the patch comment:
 #    commit ec4da6df3ad5b8b03446d0dda9c50a2439ae325a
 #    Author: Denys Dmytriyenko <denis@denix.org>

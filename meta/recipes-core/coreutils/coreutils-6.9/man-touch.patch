@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [legacy version]
+
 # man page for 'touch' is generated differently from others. All other utilities
 # are provided static man source files, while for 'touch' it requires help2man
 # to invoke "touch --help" and then convert the output into the manual. Since touch

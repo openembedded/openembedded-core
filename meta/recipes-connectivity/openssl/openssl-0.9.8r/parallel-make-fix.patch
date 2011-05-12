@@ -1,4 +1,4 @@
-Upstream-Status: Pending
+Upstream-Status: Submitted
 
 fix the parallel build regarding shared libraries.
 

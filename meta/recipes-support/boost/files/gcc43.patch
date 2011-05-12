@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 diff -aNru boost_1_34_1-ORIGINAL/boost/archive/polymorphic_iarchive.hpp boost_1_34_1/boost/archive/polymorphic_iarchive.hpp
 --- boost_1_34_1-ORIGINAL/boost/archive/polymorphic_iarchive.hpp	2005-12-11 00:12:51.000000000 -0600
 +++ boost_1_34_1/boost/archive/polymorphic_iarchive.hpp	2008-03-03 03:08:59.000000000 -0600

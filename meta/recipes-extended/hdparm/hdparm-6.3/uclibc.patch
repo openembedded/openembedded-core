@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 --- hdparm-5.8/hdparm.c.ark	2005-05-22 19:48:34.000000000 +0000
 +++ hdparm-5.8/hdparm.c	2005-05-22 19:52:18.000000000 +0000
 @@ -17,7 +17,9 @@

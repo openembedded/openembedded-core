@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 --- boost_1_32_0/libs/test/src/unit_test_result.cpp.orig	2005-07-05 11:00:53.887594850 -0700
 +++ boost_1_32_0/libs/test/src/unit_test_result.cpp	2005-07-05 11:01:20.683533034 -0700
 @@ -144,7 +144,7 @@

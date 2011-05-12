@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 From: Mike Frysinger <vapier@gentoo.org>
 Date: Sun, 13 May 2007 21:17:32 +0000 (-0400)
 Subject: fix building with tcpd support disabled

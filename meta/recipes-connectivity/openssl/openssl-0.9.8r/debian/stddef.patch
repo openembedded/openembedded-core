@@ -1,3 +1,5 @@
+Upstream-Status: Backport [debian]
+
 Index: openssl-0.9.8k/crypto/sha/sha.h
 ===================================================================
 --- openssl-0.9.8k.orig/crypto/sha/sha.h	2008-09-16 12:47:28.000000000 +0200

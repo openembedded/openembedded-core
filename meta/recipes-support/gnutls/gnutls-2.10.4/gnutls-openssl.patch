@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 Index: gnutls-1.6.0/libextra/gnutls_openssl.c
 ===================================================================
 --- gnutls-1.6.0.orig/libextra/gnutls_openssl.c	2006-08-13 22:34:09.000000000 +0200

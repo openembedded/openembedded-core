@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 On many architectures this test fails because binaries/libs produced by
 binutils don't pass elflint. However elfutils shouldn't FTBFS because of this.
 

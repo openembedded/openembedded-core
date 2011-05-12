@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 diff -ruN tcp_wrappers_7.6.orig/fix_options.c tcp_wrappers_7.6/fix_options.c
 --- tcp_wrappers_7.6.orig/fix_options.c	2003-08-21 03:41:33.000000000 +0200
 +++ tcp_wrappers_7.6/fix_options.c	2003-08-21 03:41:27.000000000 +0200

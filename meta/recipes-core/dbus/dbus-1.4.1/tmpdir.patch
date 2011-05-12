@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded]
+
 # avoid to check tmp dir at build time. instead uses hard coded /tmp here
 #
 # comment added by Kevin Tian <kevin.tian@intel.com>

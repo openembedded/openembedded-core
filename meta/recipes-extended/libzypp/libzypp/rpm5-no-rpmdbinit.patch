@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 diff --git a/zypp/target/rpm/librpmDb.cc b/zypp/target/rpm/librpmDb.cc
 index 1689fbb..4999cd9 100644
 --- a/zypp/target/rpm/librpmDb.cc

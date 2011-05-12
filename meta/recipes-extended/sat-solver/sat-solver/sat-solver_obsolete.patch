@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Fix obsolete settings with RPM5.
 
 The following patch is from Michael Schroeder <mls@suse.de>

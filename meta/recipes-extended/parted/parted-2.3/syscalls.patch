@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 ---
  libparted/arch/linux.c |   13 +++++++++++++
  1 file changed, 13 insertions(+)

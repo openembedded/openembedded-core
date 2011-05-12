@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [legacy version]
+
 The install command doesn't over write the dangling symlink, for
 example:
 

@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 diff -ruN tcp_wrappers_7.6.orig/Makefile tcp_wrappers_7.6/Makefile
 --- tcp_wrappers_7.6.orig/Makefile	2003-08-21 01:43:39.000000000 +0200
 +++ tcp_wrappers_7.6/Makefile	2003-08-21 01:43:35.000000000 +0200

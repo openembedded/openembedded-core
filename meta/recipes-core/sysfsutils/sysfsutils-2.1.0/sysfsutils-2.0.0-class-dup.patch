@@ -1,3 +1,5 @@
+Upstream-Status: Backport [from fedora core 9]
+
 This patch is from the Fedora Core 9 sysfsutils-2.1.0-3.fc9 package.
 
 It fixes a problem in the upstream package where not all devices 

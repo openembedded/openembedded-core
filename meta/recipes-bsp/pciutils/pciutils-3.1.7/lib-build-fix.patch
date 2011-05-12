@@ -3,6 +3,8 @@ string into lspci and other utilities, which is not desirable and
 won't work. In the other hand, linking to a symbolic link lib/libpci.so
 doesn't have this issue.
 
+Upstream-Status: Pending
+
 7/30/2010 - created by Qing He <qing.he@intel.com>
 
 diff --git a/Makefile b/Makefile

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: src/config/Linux_All.mk
 ===================================================================
 --- src.orig/config/Linux_All.mk	2005-05-10 19:53:44.000000000 +0000

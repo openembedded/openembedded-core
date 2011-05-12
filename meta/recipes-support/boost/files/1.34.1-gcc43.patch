@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 Index: boost_1_34_1/boost/archive/polymorphic_iarchive.hpp
 ===================================================================
 --- boost_1_34_1.orig/boost/archive/polymorphic_iarchive.hpp	2005-12-11 07:12:51.000000000 +0100

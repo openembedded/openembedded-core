@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 diff --git a/udev_rules_parse.c b/udev_rules_parse.c
 --- a/udev_rules_parse.c
 +++ b/udev_rules_parse.c

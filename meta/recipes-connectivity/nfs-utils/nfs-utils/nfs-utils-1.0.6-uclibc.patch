@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 --- ./support/nfs/svc_socket.c.orig	2004-12-12 06:43:52.000000000 +0000
 +++ ./support/nfs/svc_socket.c	2004-12-12 06:50:04.000000000 +0000
 @@ -66,6 +66,7 @@

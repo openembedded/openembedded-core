@@ -1,3 +1,5 @@
+Upstream-Status: Backport [debian]
+
 Index: openssl-0.9.8k/tools/c_rehash.in
 ===================================================================
 --- openssl-0.9.8k.orig/tools/c_rehash.in	2002-10-11 22:31:27.000000000 +0200

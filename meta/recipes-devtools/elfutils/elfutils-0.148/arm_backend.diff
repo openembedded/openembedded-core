@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 Index: elfutils-0.146/backends/arm_init.c
 ===================================================================
 --- elfutils-0.146.orig/backends/arm_init.c	2009-04-21 14:50:01.000000000 +0000

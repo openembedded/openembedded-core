@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [distribution]
+
 --- client/scripts/bsdos
 +++ client/scripts/bsdos
 @@ -47,6 +47,11 @@

@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 Index: elfutils-0.148/libelf/ChangeLog
 ===================================================================
 --- elfutils-0.148.orig/libelf/ChangeLog	2010-07-03 13:07:10.000000000 +0000

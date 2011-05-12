@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 8/27/2010 - created by Qing He <qing.he@intel.com>
 
 diff --git a/src/Makefile b/src/Makefile

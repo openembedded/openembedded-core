@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 # The src Makefile was checking for libcrypt.a on the host, not in the
 # build environment.  This patch checks for $LCRYPT in the environment
 # and uses it if it's there.

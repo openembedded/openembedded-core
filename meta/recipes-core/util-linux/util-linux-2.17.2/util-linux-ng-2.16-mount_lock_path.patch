@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 The FHS indicates that /etc must be capable of being mounted R/O.
 
 The FHS also indicates that lock files belong in /var/lock, and /var must

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- hal-0.5.9.1/hald/linux/probing/linux_dvd_rw_utils.c.old	2007-08-03 17:24:12.000000000 +0100
 +++ hal-0.5.9.1/hald/linux/probing/linux_dvd_rw_utils.c	2007-08-03 17:25:06.000000000 +0100
 @@ -58,6 +58,10 @@

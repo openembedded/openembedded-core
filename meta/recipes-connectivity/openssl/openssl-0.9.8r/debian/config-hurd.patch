@@ -1,3 +1,5 @@
+Upstream-Status: Backport [debian]
+
 Index: openssl-0.9.8k/config
 ===================================================================
 --- openssl-0.9.8k.orig/config	2009-02-16 09:43:41.000000000 +0100

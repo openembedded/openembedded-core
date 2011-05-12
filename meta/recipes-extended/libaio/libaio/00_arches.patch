@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 from openembedded, added by Qing He <qing.he@intel.com>
 
 --- libaio-0.3.106.orig/src/syscall-m68k.h

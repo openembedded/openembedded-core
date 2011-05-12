@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 diff -ruN tcp_wrappers_7.6.orig/eval.c tcp_wrappers_7.6/eval.c
 --- tcp_wrappers_7.6.orig/eval.c	1995-01-30 19:51:46.000000000 +0100
 +++ tcp_wrappers_7.6/eval.c	2004-11-04 13:59:01.000000000 +0100

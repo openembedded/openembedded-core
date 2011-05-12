@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 diff --git a/pwdx.c b/pwdx.c
 index cb96a52..29ebce2 100644
 --- a/pwdx.c

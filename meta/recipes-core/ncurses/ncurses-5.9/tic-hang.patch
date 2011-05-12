@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 'tic' of some linux distributions (e.g. fedora 11) hang in an infinite
 loop when processing the original file.
 

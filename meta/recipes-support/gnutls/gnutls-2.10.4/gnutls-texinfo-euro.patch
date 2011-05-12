@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 The version of texinfo in Debian Sarge does not understand the @euro{} command.
 This patch replaces the @euro{} command with the word "euro".
 

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 11/30/2010
 --with-libbind=PATH is available but not used by Makefile,
 this patch is to allow building with external bind

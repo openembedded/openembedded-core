@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 On an Fedora host with glib-config installed pkgconfig-native can get into a
 horrible state with recursive calls between pkg-config and glib-config.
 The patch adds a configure time option to disable legacy script support in

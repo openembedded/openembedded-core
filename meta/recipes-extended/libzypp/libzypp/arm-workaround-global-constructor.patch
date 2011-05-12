@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Workaround a problem with the C++ global constructors on ARM.
 
 As documented in the Yocto Bugzilla bug 938, the global constructors 

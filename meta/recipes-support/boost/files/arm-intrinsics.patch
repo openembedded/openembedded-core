@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 8/17/2010 - rebased to 1.44 by Qing He <qing.he@intel.com>
 
 diff --git a/boost/smart_ptr/detail/atomic_count_sync.hpp b/boost/smart_ptr/detail/atomic_count_sync.hpp

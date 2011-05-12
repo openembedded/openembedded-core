@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 without the patch, /usr/include/rpm/ won't be added
 in cppflags
 

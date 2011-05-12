@@ -5,6 +5,8 @@ for example, the following two would break:
 
 use a simpler scheme here and hope it works for all the cases
 
+Upstream-Status: Pending
+
 7/30/2010 - created by Qing He <qing.he@intel.com>
 
 diff --git a/lib/configure b/lib/configure

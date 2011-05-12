@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 # copy commit message from OE as the patch comment
 #   commit c9bb6478a873d6de4c8a0e712435ac9a658a345d
 #   Author: Holger Schurig <schurig@mn-solutions.de>

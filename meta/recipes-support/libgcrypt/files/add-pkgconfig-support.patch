@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [distribution]
+
 Index: libgcrypt-1.2.4/configure.ac
 ===================================================================
 --- libgcrypt-1.2.4.orig/configure.ac	2008-03-19 22:14:50.000000000 +0000

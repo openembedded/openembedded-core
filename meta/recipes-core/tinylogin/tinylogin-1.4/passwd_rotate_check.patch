@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [legacy version]
+
 Fix rotate check logic
 
 Rotate passwd checking code has logic error, which writes data into

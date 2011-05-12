@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- update-rc.d/update-rc.d.org	2005-01-03 00:30:47.000000000 +0200
 +++ update-rc.d/update-rc.d	2007-12-01 19:41:08.000000000 +0200
 @@ -19,6 +19,7 @@

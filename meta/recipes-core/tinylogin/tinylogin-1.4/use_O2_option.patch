@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 tinylogin will meet segment fault if compiled by gcc-4.5.0 when enable both
 frename-registers and Os options. Use O2 instead.
 

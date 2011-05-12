@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- nss-mdns-0.6/src/nss.c.orig	2005-09-25 17:27:51 +0200
 +++ nss-mdns-0.6/src/nss.c	2005-09-25 17:28:55 +0200
 @@ -456,6 +456,8 @@

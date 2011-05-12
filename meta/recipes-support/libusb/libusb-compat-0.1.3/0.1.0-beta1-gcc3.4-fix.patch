@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 Index: libusb-compat-0.1.0-beta1/configure.ac
 ===================================================================
 --- libusb-compat-0.1.0-beta1.orig/configure.ac	2008-07-21 13:14:42.000000000 +0200

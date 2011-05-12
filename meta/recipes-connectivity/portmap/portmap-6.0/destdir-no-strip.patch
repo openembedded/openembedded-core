@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 From: Mike Frysinger <vapier@gentoo.org>
 Date: Sun, 13 May 2007 21:15:12 +0000 (-0400)
 Subject: respect DESTDIR and dont use -s with install

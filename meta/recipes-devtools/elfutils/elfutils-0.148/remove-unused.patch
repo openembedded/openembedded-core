@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 Remove unused variables from the code to prevent -Werror causing a build
 failure on hosts with GCC 4.6.
 

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 *** procps-3.2.5/ps/module.mk.orig	Sun Jul 24 11:54:40 2005
 --- procps-3.2.5/ps/module.mk	Sun Jul 24 11:55:02 2005
 ***************

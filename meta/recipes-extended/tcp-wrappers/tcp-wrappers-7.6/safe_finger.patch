@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 --- tcp-wrappers-7.6-ipv6.1.orig/safe_finger.c
 +++ tcp-wrappers-7.6-ipv6.1/safe_finger.c
 @@ -26,21 +26,24 @@

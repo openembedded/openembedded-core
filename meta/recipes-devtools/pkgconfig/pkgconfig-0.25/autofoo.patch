@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 ---
  glib-1.2.10/acglib.m4    |   12 +-
  glib-1.2.10/configure.in |  212 ++++++++++++++++++++++++++++++------------------

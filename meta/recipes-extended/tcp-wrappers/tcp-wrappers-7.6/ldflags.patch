@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 Index: tcp_wrappers_7.6.orig/Makefile
 ===================================================================
 --- tcp_wrappers_7.6.orig.orig/Makefile	2009-04-06 10:55:47.000000000 +0000

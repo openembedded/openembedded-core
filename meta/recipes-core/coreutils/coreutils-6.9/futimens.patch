@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [legacy version]
+
 # coreutils uses gnulib which conflicts with newer libc header on futimens
 # this patch simply renames coreutils futimes to avoid confliction
 #
