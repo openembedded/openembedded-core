@@ -11,8 +11,8 @@ RRECOMMENDS_${PN} = "avahi-daemon"
 
 # Upstream change this patch periodically so store locally
 # http://0pointer.de/public/distcc-avahi.patch
-SRC_URI = "http://distcc.samba.org/ftp/distcc/distcc-${PV}.tar.bz2 \
-           file://distcc-avahi.patch;patch=1 \	  
+SRC_URI = "http://distcc.googlecode.com/files/${PN}-${PV}.tar.bz2 \
+           file://distcc-avahi.patch \	  
 	   file://default \
 	   file://distccmon-gnome.desktop \
 	   file://distcc"
