@@ -1,15 +1,9 @@
 #!/bin/bash
 AUTO=0
 
-# Check env for any default settings, command line options will override these.
-if [ -z "$PULL_MTA" ]; then
-    PULL_MTA="sendmail"
-fi
-
 # Prevent environment leakage to these vars.
 unset TO
 unset CC
-# allow the user to set FROM in the environment
 
 usage()
 {
@@ -18,10 +12,6 @@ Usage: $(basename $0) [-h] [-a] [[-t email]...] -p pull-dir
   -t email     Explicitly add email to the recipients
   -a           Automatically harvest recipients from "*-by: email" lines
                in the patches in the pull-dir
-  -f           Specify a FROM address, you can also use the FROM environment
-               variable. If you do not specify one, it will try to use the one
-               from your git config. This is ignored if -g is used.
-  -g           Use git-send-email to send mail instead of sendmail
   -p pull-dir  Directory containing summary and patch files
 EOM
 }
@@ -49,16 +39,10 @@ harvest_recipients()
 
 
 # Parse and verify arguments
-while getopts "af:ghp:t:" OPT; do
+while getopts "ahp:t:" OPT; do
 	case $OPT in
 	a)
 		AUTO=1
-		;;
-	f)
-		FROM="$OPTARG"
-		;;
-	g)
-		PULL_MTA="git"
 		;;
 	h)
 		usage
@@ -109,29 +93,14 @@ if [ $AUTO -eq 1 ]; then
 	harvest_recipients CC "^.*-[Bb][Yy]: *"
 fi
 
-case "$PULL_MTA" in
-git)
-	FROM="$(git config sendemail.from)"
-	AUTO_TO="$(git config sendemail.to)"
-	if [ -n "$AUTO_TO" ]; then
-		if [ -n "$TO" ]; then
-			TO="$TO,$AUTO_TO"
-		else
-			TO="$AUTO_TO"
-		fi
+AUTO_TO="$(git config sendemail.to)"
+if [ -n "$AUTO_TO" ]; then
+	if [ -n "$TO" ]; then
+		TO="$TO,$AUTO_TO"
+	else
+		TO="$AUTO_TO"
 	fi
-	;;
-sendmail)
-	if [ -z "$FROM" ]; then
-		FROM="$(git config user.name) <$(git config user.email)>"
-		if [ -z "$FROM" ]; then
-			echo "ERROR: unable to determine a FROM address"
-			usage
-			exit 1
-		fi
-	fi
-	;;
-esac
+fi
 
 if [ -z "$TO" ] && [ -z "$CC" ]; then
 	echo "ERROR: you have not specified any recipients."
@@ -145,10 +114,7 @@ cat <<EOM
 The following patches:
 $(for PATCH in $PDIR/*.patch; do echo "    $PATCH"; done)
 
-will be sent with the following headers:
-  From: $FROM
-    To: $TO
-    CC: $CC
+will now be sent via the git send-email command.
 
 EOM
 echo "Continue? [y/N] "
@@ -156,52 +122,20 @@ read cont
 
 if [ "$cont" == "y" ] || [ "$cont" == "Y" ]; then
 	ERROR=0
-	case "$PULL_MTA" in
-	git)
-		export IFS=$','
-		GIT_TO=$(for R in $TO; do echo -n "--to='$R' "; done)
-		GIT_CC=$(for R in $CC; do echo -n "--cc='$R' "; done)
-		unset IFS
-		for PATCH in $PDIR/*patch; do
-			# We harvest the emails manually, so force git not to.
-			eval "git send-email $GIT_TO $GIT_CC --no-chain-reply-to --suppress-cc=all $PATCH"
-			if [ $? -eq 1 ]; then
-				ERROR=1
-			fi
-		done
-		;;
-	sendmail)
-		for PATCH in $PDIR/*patch; do
-			# Insert To and CC headers via formail to keep them separate and
-			# appending them to the sendmail command as -- $TO $CC has
-			# proven to be an exercise in futility.
-			#
-			# Clear the From header, leaving it up to sendmail to insert an
-			# appropriate one. Insert the original sender (per git) into the
-			# body of the message.
-			#
-			# Use tail to remove the email envelope from git or formail as
-			# msmtp (sendmail) would choke on them.
-			#
-			# Modify the patch date for sequential delivery, but retain the
-			# original date as "Old-Date".
-			DATE=$(date +"%a, %d %b %Y %k:%M:%S %z")
-			GIT_FROM=$(cat $PATCH | formail -X "From:")
-			cat $PATCH | formail -I "To: $TO" -I "CC: $CC" -I "From: $FROM" -i "Date: $DATE" | sed "0,/^$/s/^$/\n$GIT_FROM\n/" | tail -n +2 | sendmail -t
-			if [ $? -eq 1 ]; then
-				ERROR=1
-			fi
-		done
-		;;
-	*)
-		echo "ERROR: unknown MTA: $PULL_MTA"
-		usage
-		exit 1
-		;;
-	esac
+	export IFS=$','
+	GIT_TO=$(for R in $TO; do echo -n "--to='$R' "; done)
+	GIT_CC=$(for R in $CC; do echo -n "--cc='$R' "; done)
+	unset IFS
+	for PATCH in $PDIR/*patch; do
+		# We harvest the emails manually, so force git not to.
+		eval "git send-email $GIT_TO $GIT_CC --no-chain-reply-to --suppress-cc=all $PATCH"
+		if [ $? -eq 1 ]; then
+			ERROR=1
+		fi
+	done
 
 	if [ $ERROR -eq 1 ]; then
-		echo "ERROR: Failed to send one or more messages. Check your MTA log for details."
+		echo "ERROR: Failed to send one or more messages."
 	fi
 else
 	echo "Send aborted."
