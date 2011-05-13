@@ -65,7 +65,19 @@ while getopts "b:hi:m:o:p:r:s:u:" OPT; do
 			echo "ERROR: git config failed to find a url for '$REMOTE'"
 			exit 1
 		fi
-		REMOTE_REPO=$(echo $REMOTE_URL | sed "s#.*/\(.*\)#\1#")
+
+		# Rewrite known private URLs to public URLs
+		# Determine the repository name for use in the WEB_URL later
+		case "$REMOTE_URL" in
+		ssh://git@git.pokylinux.org*)
+			REMOTE_REPO=$(echo $REMOTE_URL | sed "s#.*/\(.*\)#\1#")
+			REMOTE_URL=${REMOTE_URL/'ssh://git@'/'git://'}
+			;;
+		ssh://git@git.yoctoproject.org*)
+			REMOTE_REPO=$(echo $REMOTE_URL | sed "s#.*/\(.*\)#\1#")
+			REMOTE_URL=${REMOTE_URL/"ssh://git@"/"git://"}
+			;;
+		esac
 		# The .git suffix is optional in the URL, drop in for the REPO
 		REMOTE_REPO=${REMOTE_REPO%.git}
 		;;
