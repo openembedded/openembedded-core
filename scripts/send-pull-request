@@ -90,7 +90,7 @@ done
 if [ $AUTO -eq 1 ]; then
 	harvest_recipients TO "^[Tt][Oo]: *"
 	harvest_recipients CC "^[Cc][Cc]: *"
-	harvest_recipients CC "^.*-[Bb][Yy]: *"
+	harvest_recipients CC "^[A-Z][A-Za-z-]*-[Bb][Yy]: *"
 fi
 
 AUTO_TO="$(git config sendemail.to)"
