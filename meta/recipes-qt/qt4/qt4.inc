@@ -9,11 +9,13 @@ QT_ENDIAN = "${@qt_endian(d)}"
 QT_DISTRO_FLAGS ?= "-no-accessibility -no-sm"
 QT_DISTRO_FLAGS_linuxstdbase = "-sm"
 
+QT_SQL_DRIVER_FLAGS ?= "-no-sql-ibase -no-sql-mysql -no-sql-psql -no-sql-odbc -plugin-sql-sqlite"
+
 QT_CONFIG_FLAGS += "-release -no-cups -reduce-relocations \
                     -shared -no-nas-sound -no-nis \
                     -qt-gif -system-libjpeg -system-libpng -system-zlib \
-                    -no-sql-ibase -no-sql-mysql -no-sql-psql -no-sql-odbc -plugin-sql-sqlite \
                     -no-pch -qdbus -stl -glib -phonon -webkit \
+                    ${QT_SQL_DRIVER_FLAGS} \
                     ${QT_DISTRO_FLAGS} "
 
 EXTRA_OEMAKE = "-e"
