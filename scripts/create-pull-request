@@ -10,14 +10,14 @@ usage() {
 CMD=$(basename $0)
 cat <<EOM
 Usage: $CMD [-h] [-o output_dir] [-m msg_body_file] [-s subject] [-r relative_to] [-i commit_id] -b contrib_branch
-  -h                  Display this help message
-  -o output_dir       Specify the output directory for the messages (default: pull-PID)
-  -m msg_body_file    The file containing a blurb to be inserted into the summary email
-  -r relative_to      Starting commit (default: master)
-  -i commit_id        Ending commit (default: HEAD)
   -b contrib_branch   Branch-name in the $PULL_URL
-  -s subject          The subject to be inserted into the summary email
+  -h                  Display this help message
+  -i commit_id        Ending commit (default: HEAD)
+  -m msg_body_file    The file containing a blurb to be inserted into the summary email
+  -o output_dir       Specify the output directory for the messages (default: pull-PID)
   -p prefix           Use [prefix N/M] instead of [PATCH N/M] as the subject prefix
+  -r relative_to      Starting commit (default: master)
+  -s subject          The subject to be inserted into the summary email
 
  Examples:
    $CMD -b nitin/basic
@@ -28,7 +28,7 @@ EOM
 }
 
 # Parse and validate arguments
-while getopts "b:hi:m:o:r:s:p:" OPT; do
+while getopts "b:hi:m:o:p:r:s:" OPT; do
     case $OPT in
     b)
         CONTRIB_BRANCH="$OPTARG"
