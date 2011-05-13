@@ -29,42 +29,42 @@ EOM
 
 # Parse and validate arguments
 while getopts "b:hi:m:o:p:r:s:" OPT; do
-    case $OPT in
-    b)
-        CONTRIB_BRANCH="$OPTARG"
-        ;;
-    h)
-        usage
-        exit 0
-        ;;
-    i)
-        COMMIT_ID="$OPTARG"
-        ;;
-    m)
-        BODY="$OPTARG"
-        if [ ! -e "$BODY" ]; then
-            echo "ERROR: Body file does not exist"
-            exit 1
-        fi
-        ;;
-    o)
-        ODIR="$OPTARG"
-        ;;
-    p)
-        PREFIX="$OPTARG"
-        ;;
-    r)
-        RELATIVE_TO="$OPTARG"
-        ;;
-    s)
-        SUBJECT="$OPTARG"
-        ;;
-    esac
+	case $OPT in
+	b)
+		CONTRIB_BRANCH="$OPTARG"
+		;;
+	h)
+		usage
+		exit 0
+		;;
+	i)
+		COMMIT_ID="$OPTARG"
+		;;
+	m)
+		BODY="$OPTARG"
+		if [ ! -e "$BODY" ]; then
+			echo "ERROR: Body file does not exist"
+			exit 1
+		fi
+		;;
+	o)
+		ODIR="$OPTARG"
+		;;
+	p)
+		PREFIX="$OPTARG"
+		;;
+	r)
+		RELATIVE_TO="$OPTARG"
+		;;
+	s)
+		SUBJECT="$OPTARG"
+		;;
+	esac
 done
 
 if [ -z "$CONTRIB_BRANCH" ]; then
-    usage
-    exit 1
+	usage
+	exit 1
 fi
 
 
@@ -73,9 +73,9 @@ fi
 WEB_URL="$WEB_URL_PREFIX$CONTRIB_BRANCH"
 wget -q $WEB_URL -O /dev/null
 if [ $? -ne 0 ]; then
-    echo "WARNING: Branch '$CONTRIB_BRANCH' was not found on the contrib git tree."
-    echo "         Please check your contrib-branch parameter before sending."
-    echo ""
+	echo "WARNING: Branch '$CONTRIB_BRANCH' was not found on the contrib git tree."
+	echo "         Please check your contrib-branch parameter before sending."
+	echo ""
 fi
 
 if [ -e $ODIR ]; then
@@ -107,13 +107,13 @@ EOM
 # If the user specified a message body, insert it into the cover letter and
 # remove the BLURB token.
 if [ -n "$BODY" ]; then
-    sed -i "/BLURB HERE/ r $BODY" "$CL"
-    sed -i "/BLURB HERE/ d" "$CL"
+	sed -i "/BLURB HERE/ r $BODY" "$CL"
+	sed -i "/BLURB HERE/ d" "$CL"
 fi
 
 # If the user specified a subject, replace the SUBJECT token with it.
 if [ -n "$SUBJECT" ]; then
-    sed -i -e "s/\*\*\* SUBJECT HERE \*\*\*/$SUBJECT/" "$CL"
+	sed -i -e "s/\*\*\* SUBJECT HERE \*\*\*/$SUBJECT/" "$CL"
 fi
 
 
