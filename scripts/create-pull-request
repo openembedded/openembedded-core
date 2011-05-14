@@ -112,7 +112,7 @@ esac
 # Perform a sanity test on the web URL. Issue a warning if it is not
 # accessible, but do not abort as users may want to run offline.
 if [ -n "$WEB_URL" ]; then
-	wget -q $WEB_URL -O /dev/null
+	wget --no-check-certificate -q $WEB_URL -O /dev/null
 	if [ $? -ne 0 ]; then
 		echo "WARNING: Branch '$BRANCH' was not found on the contrib git tree."
 		echo "         Please check your remote and branch parameter before sending."
