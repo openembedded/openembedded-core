@@ -1,7 +1,7 @@
 DESCRIPTION = "open source processor emulator"
 HOMEPAGE = "http://qemu.org"
 LICENSE = "GPLv2 & LGPLv2.1"
-DEPENDS = "zlib alsa-lib"
+DEPENDS = "zlib alsa-lib qemugl"
 
 # QEMU_TARGETS is overridable variable
 QEMU_TARGETS ?= "arm i386 mips mipsel mips64 mips64el ppc sh4 x86_64"
@@ -16,7 +16,6 @@ EXTRA_OECONF += "--target-list=${@get_qemu_target_list(d)} --disable-werror --di
 
 #EXTRA_OECONF += "--disable-sdl"
 
-COMPATIBLE_MACHINES = "qemux86 qemuppc"
 
 inherit autotools
 
@@ -43,9 +42,14 @@ do_configure() {
     chmod a+x ${S}/target-i386/beginend_funcs.sh
 }
 
-SRC_URI_append_virtclass-nativesdk = " file://glflags.patch;patch=1"
+SRC_URI_append_virtclass-nativesdk = " file://glflags.patch"
+DEPENDS_virtclass-native = "zlib-native alsa-lib-native"
 DEPENDS_virtclass-nativesdk = "zlib-nativesdk libsdl-nativesdk qemugl-nativesdk"
 RDEPENDS_virtclass-nativesdk = "libsdl-nativesdk"
 EXTRA_OECONF_virtclass-nativesdk += "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls"
 
 BBCLASSEXTEND = "native nativesdk"
+
+# Qemu target will not build in world build for ARM or Mips
+BROKEN_qemuarm = "1"
+BROKEN_qemumips = "1"
