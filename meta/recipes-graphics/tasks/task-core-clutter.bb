@@ -24,13 +24,13 @@ PACKAGES = "\
 ALLOW_EMPTY = "1"
 
 RDEPENDS_task-core-clutter-core = "\
-    clutter-1.4 \
-    clutter-gst-1.4 \
-    clutter-gtk-1.4"
+    clutter-1.6 \
+    clutter-gst-1.6 \
+    "
 
-RDEPENDS_task-core-clutter-tests = "\
-    clutter-gst-1.4-examples \
-    clutter-gtk-1.4-examples"
+#RDEPENDS_task-core-clutter-tests = "\
+#    clutter-gst-1.6-examples \
+#    clutter-gtk-1.6-examples"
 
 #RDEPENDS_task-core-clutter-apps = "\
 #    clutter-box2d "
