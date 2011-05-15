@@ -7,7 +7,6 @@ BUGTRACKER = "http://code.google.com/p/opkg/issues/list"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://src/opkg-cl.c;beginline=1;endline=20;md5=321f658c3f6b6c832e25c8850b5dffba"
-DEPENDS = "curl gpgme openssl"
 DEPENDS_virtclass-native = "curl-native"
 DEPENDS_virtclass-nativesdk = "curl-nativesdk"
 
@@ -21,9 +20,14 @@ do_configure_prepend() {
 }
 
 inherit autotools pkgconfig
+EXTRA_OECONF += " --disable-gpg \
+                  --disable-openssl \
+                  --disable-ssl-curl \
+                  --disable-curl \
+                  --disable-sha256"
 
 target_localstatedir := "${localstatedir}"
-EXTRA_OECONF = "--with-opkglibdir=${localstatedir}/lib"
+EXTRA_OECONF += "--with-opkglibdir=${localstatedir}/lib"
 EXTRA_OECONF_virtclass-native = "--with-opkglibdir=${target_localstatedir}/lib --disable-gpg --disable-curl --disable-openssl"
 EXTRA_OECONF_virtclass-nativesdk = "--with-opkglibdir=${target_localstatedir}/lib --disable-gpg --disable-curl --disable-openssl"
 
