@@ -18,3 +18,4 @@ SRC_URI = "git://git.moblin.org/mutter.git;protocol=git;branch=master \
            "
 S = "${WORKDIR}/git"
 
+DEFAULT_PREFERENCE = "-1"

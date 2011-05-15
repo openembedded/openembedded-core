@@ -1,0 +1,47 @@
+Update the usage of CGL_TEXTURE_RECTANGLE_ARB to GL_TEXTURE_RECTANGLE_ARB
+
+Upstream-Status: Pending
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: mutter-2.28.1_0.0/src/compositor/mutter-shaped-texture.c
+===================================================================
+--- mutter-2.28.1_0.0.orig/src/compositor/mutter-shaped-texture.c
++++ mutter-2.28.1_0.0/src/compositor/mutter-shaped-texture.c
+@@ -151,7 +151,7 @@ mutter_shaped_texture_dirty_mask (Mutter
+       cogl_texture_get_gl_texture (priv->mask_texture,
+                                    &mask_gl_tex, &mask_gl_target);
+ 
+-      if (mask_gl_target == CGL_TEXTURE_RECTANGLE_ARB)
++      if (mask_gl_target == GL_TEXTURE_RECTANGLE_ARB)
+         glDeleteTextures (1, &mask_gl_tex);
+ 
+       cogl_texture_unref (priv->mask_texture);
+@@ -214,23 +214,23 @@ mutter_shaped_texture_ensure_mask (Mutte
+ 
+       cogl_texture_get_gl_texture (paint_tex, NULL, &paint_gl_target);
+ 
+-      if (paint_gl_target == CGL_TEXTURE_RECTANGLE_ARB)
++      if (paint_gl_target == GL_TEXTURE_RECTANGLE_ARB)
+         {
+           GLuint tex;
+ 
+           glGenTextures (1, &tex);
+-          glBindTexture (CGL_TEXTURE_RECTANGLE_ARB, tex);
++          glBindTexture (GL_TEXTURE_RECTANGLE_ARB, tex);
+           glPixelStorei (GL_UNPACK_ROW_LENGTH, tex_width);
+           glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
+           glPixelStorei (GL_UNPACK_SKIP_ROWS, 0);
+           glPixelStorei (GL_UNPACK_SKIP_PIXELS, 0);
+-          glTexImage2D (CGL_TEXTURE_RECTANGLE_ARB, 0,
++          glTexImage2D (GL_TEXTURE_RECTANGLE_ARB, 0,
+                         GL_ALPHA, tex_width, tex_height,
+                         0, GL_ALPHA, GL_UNSIGNED_BYTE, mask_data);
+ 
+           priv->mask_texture
+             = cogl_texture_new_from_foreign (tex,
+-                                             CGL_TEXTURE_RECTANGLE_ARB,
++                                             GL_TEXTURE_RECTANGLE_ARB,
+                                              tex_width, tex_height,
+                                              0, 0,
+                                              COGL_PIXEL_FORMAT_A_8);
