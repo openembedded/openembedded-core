@@ -14,9 +14,6 @@ LOCALE_UTF8_ONLY ?= "0"
 
 DISTRO_FEATURES ?= "alsa bluetooth ext2 irda pcmcia usbgadget usbhost wifi nfs zeroconf pci"
 
-DISTRO_EXTRA_RDEPENDS += "task-core-boot"
-DISTRO_EXTRA_RRECOMMENDS += "kernel-module-af-packet"
-
 IMAGE_FEATURES ?= ""
 
 # This is a list of packages that are used by the build system to build the distribution, they are not
