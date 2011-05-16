@@ -37,6 +37,8 @@ fi
 
 cd "$BUILDDIR"
 
+TEMPLATECONF=${TEMPLATECONF:-meta/conf}
+
 # 
 # $TEMPLATECONF can point to a directory for the template local.conf & bblayers.conf
 #
@@ -51,8 +53,8 @@ if [ "x" != "x$TEMPLATECONF" ]; then
 	    return
 	fi
     fi
-    OECORELAYERCONF="$TEMPLATECONF/bblayers.conf"
-    OECORELOCALCONF="$TEMPLATECONF/local.conf"
+    OECORELAYERCONF="$TEMPLATECONF/bblayers.conf.sample"
+    OECORELOCALCONF="$TEMPLATECONF/local.conf.sample"
 fi
 
 if [ "x" = "x$OECORELOCALCONF" ]; then
