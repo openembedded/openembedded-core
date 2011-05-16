@@ -73,7 +73,8 @@ def clean_package_list(package_list):
 def get_latest_released_meego_source_package_list():
     "Returns list of all the name os packages in the latest meego distro"
 
-    
+    if not os.path.isfile("/tmp/Meego-1.0"):
+        os.mknod("/tmp/Meego-1.0")
     f = open("/tmp/Meego-1.0", "r")
     package_names = []
     for line in f:
@@ -341,7 +342,22 @@ def compare_in_distro_packages_list(distro_check_dir, d):
     bb.note("Matching: %s" % matching_distros)
     return matching_distros
 
-def save_distro_check_result(result, datetime, d):
+def create_log_file(d, logname):
+    logpath = bb.data.getVar('LOG_DIR', d, True)
+    bb.utils.mkdirhier(logpath)
+    logfn, logsuffix = os.path.splitext(logname)
+    logfile = os.path.join(logpath, "%s.%s%s" % (logfn, bb.data.getVar('DATETIME', d, True), logsuffix))
+    if not os.path.exists(logfile):
+            slogfile = os.path.join(logpath, logname)
+            if os.path.exists(slogfile):
+                    os.remove(slogfile)
+            os.system("touch %s" % logfile)
+            os.symlink(logfile, slogfile)
+            bb.data.setVar('LOG_FILE', logfile, d)
+    return logfile
+
+
+def save_distro_check_result(result, datetime, result_file, d):
     pn = bb.data.getVar('PN', d, True)
     logdir = bb.data.getVar('LOG_DIR', d, True)
     if not logdir:
@@ -349,16 +365,9 @@ def save_distro_check_result(result, datetime, d):
         return
     if not os.path.isdir(logdir):
         os.makedirs(logdir)
-    result_file = os.path.join(logdir, "distrocheck.%s.csv" % datetime)
     line = pn
     for i in result:
         line = line + "," + i
-    if not os.path.exists(result_file):
-        sresult_file = os.path.join(logdir, "distrocheck.csv")
-	if os.path.exists(sresult_file):
-	    os.remove(sresult_file)
-	os.system("touch %s" % result_file)
-	os.symlink(result_file, sresult_file)
     f = open(result_file, "a")
     import fcntl
     fcntl.lockf(f, fcntl.LOCK_EX)
