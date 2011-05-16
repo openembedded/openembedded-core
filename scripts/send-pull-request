@@ -1,6 +1,7 @@
 #!/bin/bash
 AUTO=0
 AUTO_CL=0
+GITSOBCC=""
 
 # Prevent environment leakage to these vars.
 unset TO
@@ -59,10 +60,11 @@ while getopts "achp:t:" OPT; do
 	case $OPT in
 	a)
 		AUTO_CL=1
-		AUTO=1
-		;;
+		# Fall through to include -c
+		;&
 	c)
 		AUTO=1
+		GITSOBCC="--signed-off-by-cc"
 		;;
 	h)
 		usage
@@ -130,48 +132,30 @@ if [ -z "$TO" ] && [ -z "$AUTO_CC" ]; then
 fi
 
 
-# Generate report for the user and require confirmation before sending
-cat <<EOM
-The following patches:
-$(for PATCH in $PDIR/*.patch; do echo "    $PATCH"; done)
+# Convert the collected addresses into git-send-email argument strings
+export IFS=$','
+GIT_TO=$(for R in $TO; do echo -n "--to='$R' "; done)
+GIT_CC=$(for R in $AUTO_CC; do echo -n "--cc='$R' "; done)
+unset IFS
 
-will now be sent via the git send-email command. Git will prompt you before
-sending any email.
 
-EOM
-echo "Continue? [y/N] "
-read cont
-
-if [ "$cont" == "y" ] || [ "$cont" == "Y" ]; then
-	ERROR=0
-	export IFS=$','
-	GIT_TO=$(for R in $TO; do echo -n "--to='$R' "; done)
-	GIT_CC=$(for R in $AUTO_CC; do echo -n "--cc='$R' "; done)
-	unset IFS
-	for PATCH in $PDIR/*patch; do
-		if [ $AUTO -eq 1 ]; then
-			if [ $PATCH == "$CL" ] && [ $AUTO_CL -eq 1 ]; then
-				# Send the cover letter to every recipient, both
-				# specified as well as harvested.
-				eval "git send-email $GIT_TO $GIT_CC --confirm=always --no-chain-reply-to --suppress-cc=all $PATCH"
-			else
-				# Send the patch to the specified recipients and
-				# those git finds in this specific patch.
-				eval "git send-email $GIT_TO --confirm=always --no-chain-reply-to --signed-off-by-cc $PATCH"
-			fi
-		else
-			# Only send to the explicitly specified recipients
-			eval "git send-email $GIT_TO --confirm=always --no-chain-reply-to --suppress-cc=all $PATCH"
-		fi
-		if [ $? -eq 1 ]; then
-			ERROR=1
-		fi
-	done
-
-	if [ $ERROR -eq 1 ]; then
-		echo "ERROR: Failed to send one or more messages."
+# Handoff to git-send-email. It will perform the send confirmation.
+PATCHES=$(echo $PDIR/*.patch)
+if [ $AUTO_CL -eq 1 ]; then
+	# Send the cover letter to every recipient, both specified as well as
+	# harvested. Then remove it from the patches list.
+	eval "git send-email $GIT_TO $GIT_CC --confirm=always --no-chain-reply-to --suppress-cc=all $CL"
+	if [ $? -eq 1 ]; then
+		echo "ERROR: failed to send cover-letter with automatic recipients."
+		exit 1
 	fi
-else
-	echo "Send aborted."
+	PATCHES=${PATCHES/"$CL"/}
 fi
 
+# Send the patch to the specified recipients and, if -c was specified, those git
+# finds in this specific patch.
+eval "git send-email $GIT_TO --confirm=always --no-chain-reply-to $GITSOBCC $PATCHES"
+if [ $? -eq 1 ]; then
+	echo "ERROR: failed to send patches."
+	exit 1
+fi
