@@ -1,6 +1,10 @@
-# Fix path to libtool scripts so autoreconf can succeed.
-#
-# Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+Fix path to libtool scripts so autoreconf can succeed.
+
+Upstream-Status: Inappropriate [Other]
+Workaround specific to our build system.
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 diff -urN sudo-1.7.4p4.orig//aclocal.m4 sudo-1.7.4p4//aclocal.m4
 --- sudo-1.7.4p4.orig//aclocal.m4	2010-08-06 07:17:36.000000000 -0700
 +++ sudo-1.7.4p4//aclocal.m4	2010-11-22 14:38:20.360957038 -0800

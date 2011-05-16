@@ -1,6 +1,9 @@
-# Disable stripping binaries during make install.
-#
-# Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+Disable stripping binaries during make install.
+
+Upstream-Status: Inappropriate [Other]
+Build system specific.
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 
 diff -ur openssh-5.6p1.orig/Makefile.in openssh-5.6p1/Makefile.in
 --- openssh-5.6p1.orig/Makefile.in	2010-05-11 23:51:39.000000000 -0700

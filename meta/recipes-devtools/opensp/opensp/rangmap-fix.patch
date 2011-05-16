@@ -1,6 +1,9 @@
 Patch obtained from OpenEmbedded.
 
+Upstream-Status: Pending
+
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 Index: OpenSP-1.5/include/RangeMap.cxx
 ===================================================================
 --- OpenSP-1.5.orig/include/RangeMap.cxx	2000-02-26 03:55:21.000000000 +1100

@@ -1,6 +1,9 @@
 Patch obtained from OpenEmbedded.
 
+Upstream-Status: Pending
+
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 --- /dev/null	2003-09-23 18:19:32.000000000 -0400
 +++ OpenSP-1.5/m4/codeset.m4	2004-01-20 03:01:28.000000000 -0500
 @@ -0,0 +1,23 @@

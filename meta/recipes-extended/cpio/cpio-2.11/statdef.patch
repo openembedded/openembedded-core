@@ -1,5 +1,9 @@
-# Avoid multiple stat definitions
-# Patch taken from cpio mailing list posting 2010-03-19
+Avoid multiple stat definitions
+Patch taken from cpio mailing list posting 2010-03-19
+
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 
 diff -urN cpio-2.11.orig/src/filetypes.h cpio-2.11/src/filetypes.h
 --- cpio-2.11.orig/src/filetypes.h	2010-02-12 02:19:23.000000000 -0800

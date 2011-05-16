@@ -1,3 +1,9 @@
+Fixes an error which prevents compilation
+
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 Index: source/layoutex/ParagraphLayout.cpp
 ===================================================================
 --- source.orig/layoutex/ParagraphLayout.cpp	2009-06-30 11:48:47.000000000 +0100

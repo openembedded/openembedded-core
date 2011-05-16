@@ -1,3 +1,10 @@
+Use g++ for linking.
+
+Upstream-Status: Inappropriate [Other]
+Build system specific
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 ---
  tools/genccode/Makefile.in |    2 +-
  tools/gencmn/Makefile.in   |    2 +-

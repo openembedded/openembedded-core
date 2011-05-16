@@ -9,6 +9,10 @@ Fixed the issue by adding a dependancy in the makefile.
 Nitin <nitin.a.kamble@intel.com>
 2010/09/02
 
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 Index: at-3.1.12/Makefile.in
 ===================================================================
 --- at-3.1.12.orig/Makefile.in

@@ -2,6 +2,11 @@ innetgr may not be there so make sure that when innetgr is not present
 then we inform about it and not use it.
 
 -Khem
+
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 Index: Linux-PAM-1.1.3/modules/pam_group/pam_group.c
 ===================================================================
 --- Linux-PAM-1.1.3.orig/modules/pam_group/pam_group.c
