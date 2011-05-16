@@ -136,6 +136,13 @@ do_validate_branches() {
  	 	return
  	fi
 
+	# nothing to do if SRCREV=${AUTOREV}
+	if [ "${SRCREV_machine}" = "AUTOINC" ]; then
+		# restore the branch for builds
+		git checkout -f ${KBRANCH}
+		return
+	fi
+
  	branch_head=`git show-ref -s --heads ${KBRANCH}`
  	meta_head=`git show-ref -s --heads ${KMETA}`
  	target_branch_head="${SRCREV_machine}"
