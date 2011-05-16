@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 diff -urN modutils-2.4.27.orig/include/module.h modutils-2.4.27/include/module.h
 --- modutils-2.4.27.orig/include/module.h	2003-01-27 11:22:02.000000000 -0500
 +++ modutils-2.4.27/include/module.h	2004-08-23 19:52:34.756772712 -0400

@@ -1,6 +1,9 @@
 # poky uses new name to differentiate from modutils, so reflect this new name in source
 #
 # comment added by Kevin Tian <kevin.tian@intel.com>, 2010-07-21
+
+Upstream-Status: Inappropriate [embedded specific]
+
 --- module-init-tools-3.0-pre10.orig/generate-modprobe.conf
 +++ module-init-tools-3.0-pre10/generate-modprobe.conf
 @@ -45,12 +45,12 @@

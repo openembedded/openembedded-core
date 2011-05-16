@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [licensing]
+
 diff --git a/COPYING b/COPYING
 new file mode 100644
 index 0000000..d511905

@@ -1,6 +1,8 @@
 Patch from Matthias Goebl <oe@m.goebl.net>
 Added via OE bugtracker: bug #478
 
+Upstream-Status: Pending
+
 --- console-tools-0.3.2/kbdtools/kbd_mode.c.orig
 +++ console-tools-0.3.2/kbdtools/kbd_mode.c
 @@ -29,11 +29,16 @@

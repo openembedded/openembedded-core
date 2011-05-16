@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- modutils-2.4.27/include/elf_arm.h.orig	2004-09-21 18:37:00.000000000 -0400
 +++ modutils-2.4.27/include/elf_arm.h	2004-09-21 18:38:18.000000000 -0400
 @@ -1,7 +1,11 @@

@@ -1,6 +1,8 @@
 Fixing the locale issues isn't enough, console-tools also does a couple of
 other pretty stupid things (like FILE *f; f->_fileno instead of fileno(f)),
 
+Upstream-Status: Pending
+
 --- console-tools-0.3.2/lib/cfont/fontstruct.c.ark	2005-05-22 19:12:38.000000000 +0000
 +++ console-tools-0.3.2/lib/cfont/fontstruct.c	2005-05-22 19:13:23.000000000 +0000
 @@ -50,8 +50,7 @@

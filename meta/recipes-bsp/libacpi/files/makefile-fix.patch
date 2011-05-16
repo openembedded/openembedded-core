@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 ---
  Makefile  |    6 +++---
  config.mk |    3 ++-

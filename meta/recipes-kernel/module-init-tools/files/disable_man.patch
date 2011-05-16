@@ -2,6 +2,8 @@
 #
 # by Kevin Tian <kevin.tian@intel.com>, 2010-07-21
 
+Upstream-Status: Inappropriate [disable feature]
+
 diff --git a/Makefile.am b/Makefile.am
 index 6f83c12..32972a8 100644
 --- a/Makefile.am

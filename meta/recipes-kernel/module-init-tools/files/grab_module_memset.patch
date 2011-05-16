@@ -5,6 +5,8 @@
 #
 # Kevin Tian <kevin.tian@intel.com>, 2010-08-06
 
+Upstream-Status: Pending
+
 diff --git a/depmod.c b/depmod.c
 index 647e5e6..46e03e0 100644
 --- a/depmod.c

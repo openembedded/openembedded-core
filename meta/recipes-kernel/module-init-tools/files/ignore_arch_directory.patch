@@ -2,6 +2,8 @@
 #
 # comments added by Kevin Tian <kevin.tian@intel.com>, 2010-07-21
 
+Upstream-Status: Pending
+
 diff -ruN module-init-tools-3.12.orig/modprobe.8 module-init-tools-3.12/modprobe.8
 --- module-init-tools-3.12/modprobe.8.orig
 +++ module-init-tools-3.12/modprobe.8

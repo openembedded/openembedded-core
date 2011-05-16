@@ -11,6 +11,7 @@ This patch avoids these linking errors:
 Nitin A Kamble <nitin.a.kamble@intel.com>
 Date: 2011/02/03
 
+Upstream-Status: Pending
 
 Index: mesa-demos-8.0.1/src/egl/opengl/Makefile.am
 ===================================================================

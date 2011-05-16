@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- modutils-2.4.25/Makefile.common.in	Sun Nov 24 21:23:35 2002
 +++ modutils-2.4.25/Makefile.common.in	Thu Jan 29 17:16:30 2004
 @@ -7,6 +7,7 @@

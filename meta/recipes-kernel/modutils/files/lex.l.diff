@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- modutils-2.4.26.orig/genksyms/lex.l
 +++ modutils-2.4.26/genksyms/lex.l
 @@ -130,6 +130,7 @@

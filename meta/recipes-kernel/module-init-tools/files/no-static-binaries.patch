@@ -9,6 +9,8 @@
 #
 # by Kevin Tian <kevin.tian@intel.com>, 2010-07-21
 
+Upstream-Status: Pending
+
 Index: module-init-tools-3.2.2/Makefile.am
 ===================================================================
 --- module-init-tools-3.2.2.orig/Makefile.am	2010-05-26 15:43:16.000000000 -0400

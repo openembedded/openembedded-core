@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: modutils-2.4.27/depmod/depmod.c
 ===================================================================
 --- modutils-2.4.27.orig/depmod/depmod.c
