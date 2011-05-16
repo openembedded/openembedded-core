@@ -2,6 +2,8 @@ Enable i386-linux-user
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
+Upstream-Status: Inappropriate [configuration] 
+
 Index: qemu-0.14.0/Makefile.target
 ===================================================================
 --- qemu-0.14.0.orig/Makefile.target

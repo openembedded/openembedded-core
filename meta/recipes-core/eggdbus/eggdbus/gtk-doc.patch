@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration] 
+
 Index: eggdbus-0.6/docs/eggdbus/Makefile.am
 ===================================================================
 --- eggdbus-0.6.orig/docs/eggdbus/Makefile.am

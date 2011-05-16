@@ -1,6 +1,9 @@
 # fix VMware VGA driver depth calculation error, which may cause segmentation fault
 #
 # ktian1, 06/29/2010
+
+Upstream-Status: Pending
+
 Index: qemu-0.14.0/console.h
 ===================================================================
 --- qemu-0.14.0.orig/console.h

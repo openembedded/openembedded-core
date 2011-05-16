@@ -10,6 +10,8 @@ committer Andrzej Zaborowski <andrew.zaborowski@intel.com> Tue, 16 Jun 2009 22:2
  target-i386/opengl_exec.c |   31 ++++++++++++++++---------------
  1 files changed, 16 insertions(+), 15 deletions(-)
 
+Upstream-Status: Inappropriate [configuration] 
+
 Index: qemu-0.14.0/target-i386/opengl_exec.c
 ===================================================================
 --- qemu-0.14.0.orig/target-i386/opengl_exec.c

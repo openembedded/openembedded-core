@@ -6,6 +6,8 @@ introspection is disabled.
 JL 28/03/11
 josh@linux.intel.com
 
+Upstream-Status: Inappropriate [configuration] 
+
 Index: clutter-box2d-0.10.0/clutter-box2d/Makefile.am
 ===================================================================
 --- clutter-box2d-0.10.0.orig/clutter-box2d/Makefile.am

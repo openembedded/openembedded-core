@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [enable feature] 
+
 Index: gtk+-2.12.3/gtk/gtkfilechooser.c
 ===================================================================
 --- gtk+-2.12.3.orig/gtk/gtkfilechooser.c	2007-12-04 16:52:08.000000000 +0000

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff -ruN libfm-0.1.14-orig//src/Makefile.am libfm-0.1.14/src/Makefile.am
 --- libfm-0.1.14-orig//src/Makefile.am	2011-04-26 10:01:44.297664993 +0800
 +++ libfm-0.1.14/src/Makefile.am	2011-04-26 10:02:10.637665004 +0800

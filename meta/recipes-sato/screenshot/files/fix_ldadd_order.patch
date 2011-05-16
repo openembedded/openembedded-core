@@ -1,6 +1,9 @@
 Fix the ordering of LDADD options to fix a compilation failure.
 
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
+Upstream-Status: Inappropriate [configuration] 
+
 diff -urN screenshot.orig//Makefile.am screenshot/Makefile.am
 --- screenshot.orig//Makefile.am	2010-06-29 11:55:00.000000000 -0700
 +++ screenshot/Makefile.am	2011-03-01 11:09:01.215813968 -0800
