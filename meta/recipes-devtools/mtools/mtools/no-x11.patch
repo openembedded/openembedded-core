@@ -2,6 +2,8 @@
  Makefile.in |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+Upstream-Status: Inappropriate [licensing]
+
 --- mtools-3.9.9.orig/Makefile.in
 +++ mtools-3.9.9/Makefile.in
 @@ -128,11 +128,11 @@ X_EXTRA_LIBS = @X_EXTRA_LIBS@

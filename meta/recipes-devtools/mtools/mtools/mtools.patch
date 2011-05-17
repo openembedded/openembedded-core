@@ -4,6 +4,8 @@ $NetBSD: patch-aa,v 1.10 2007/08/17 20:55:34 joerg Exp $
  Makefile.in |   74 ++++++++++++++++++++++++++----------------------------------
  1 file changed, 33 insertions(+), 41 deletions(-)
 
+Upstream-Status: Inappropriate [licensing]
+
 Index: mtools-3.9.9/Makefile.in
 ===================================================================
 --- mtools-3.9.9.orig/Makefile.in	2007-10-12 11:18:46.000000000 +0100
