@@ -3,12 +3,13 @@ SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
 
-PACKAGE_ARCH = "all"
 RDEPENDS_${PN} = "${@base_contains("MACHINE_FEATURES", "kernel26",  "module-init-tools-depmod","modutils-depmod",d)} "
-PR = "r9"
+PR = "r10"
 
 SRC_URI = "file://update-modules \
            file://COPYING.GPL"
+
+inherit allarch
 
 pkg_postinst_${PN} () {
 if [ "x$D" != "x" ]; then

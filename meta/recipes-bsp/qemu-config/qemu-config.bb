@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa
 
 COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemumips|qemuppc)"
 
-PR = "r20"
+PR = "r21"
 
 SRC_URI = "file://distcc.sh \
            file://anjuta-remote-run \
@@ -33,9 +33,8 @@ do_install() {
 }
 
 RDEPENDS_${PN} = "distcc dbus-x11 task-core-nfs-server oprofileui-server rsync bash"
-PACKAGE_ARCH = "all"
 
-inherit update-rc.d
+inherit update-rc.d allarch
 
 INITSCRIPT_NAME = "qemu-autostart"
 INITSCRIPT_PARAMS = "start 999 5 2 . stop 20 0 1 6 ."

@@ -3,10 +3,12 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 SECTION = "console" 
 PRIORITY = "optional" 
-PR = "r2"
+PR = "r3"
  
 SRC_URI = "file://02dtl1_cs.sh \
            file://COPYING.patch"
+
+inherit allarch
 
 do_install() { 
         install -d ${D}${sysconfdir}/apm/event.d/ 
@@ -15,5 +17,3 @@ do_install() {
 
 #Package 02dtl1_cs.sh, which is a nasty hack to get dtl1c_cs cards working with suspend/resume
 FILES_${PN} += "${sysconfdir}/apm/"
-
-PACKAGE_ARCH = "all"

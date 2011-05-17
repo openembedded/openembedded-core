@@ -4,11 +4,12 @@ PRIORITY = "optional"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 RDEPENDS_${PN} = "update-modules"
-PACKAGE_ARCH = "all"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "file://orinoco_cs.conf \
            file://COPYING.patch"
+
+inherit allarch
 
 do_install() {
         install -d ${D}${sysconfdir}/modutils
