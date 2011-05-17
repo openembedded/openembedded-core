@@ -89,7 +89,11 @@ do_configure () {
 	esac
 	# inject machine-specific flags
 	sed -i -e "s|^\(\"$target\",\s*\"[^:]\+\):\([^:]\+\)|\1:${CFLAG}|g" Configure
-	perl ./Configure shared --prefix=${prefix} --openssldir=${libdir}/ssl $target
+        useprefix=${prefix}
+        if [ "x$useprefix" = "x" ]; then
+                useprefix=/
+        fi        
+	perl ./Configure ${EXTRA_OECONF} shared --prefix=$useprefix --openssldir=${libdir}/ssl $target
 }
 
 do_compile () {
