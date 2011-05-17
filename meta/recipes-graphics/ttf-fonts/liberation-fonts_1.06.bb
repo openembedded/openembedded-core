@@ -8,16 +8,17 @@ BUGTRACKER = "https://bugzilla.redhat.com/"
 SECTION = "x11/fonts"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
-PACKAGE_ARCH = "all"
 RDEPENDS_${PN} = "fontconfig-utils"
 PE = "1"
-PR = "r1"
+PR = "r2"
 
 FONTREV = "0.20100721"
 SRC_URI = "https://fedorahosted.org/releases/l/i/${BPN}/${BPN}-${PV}.${FONTREV}.tar.gz \
            file://30-liberation-aliases.conf"
 
 S = ${WORKDIR}/${BPN}-${PV}.${FONTREV}
+
+inherit allarch
 
 do_install () {
 	install -d ${D}${datadir}/fonts/ttf/

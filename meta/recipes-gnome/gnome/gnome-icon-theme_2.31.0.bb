@@ -22,6 +22,3 @@ SRC_URI[sha256sum] = "ea7e05b77ead159379392b3b275ca0c9cbacd7d936014e447cc7c5e27a
 EXTRA_OECONF = "--disable-hicolor-check --with-iconmap=${STAGING_LIBDIR_NATIVE}/../libexec/icon-name-mapping"
 
 inherit autotools
-
-# We can't do this until the output is shared into all target sysroots
-#PACKAGE_ARCH = "all"

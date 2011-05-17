@@ -6,11 +6,8 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SECTION = "x11/gnome"
-PR = "r0"
-inherit gnome
-
-# all isn't appropriate since STAGING_DATADIR is target specific
-# PACKAGE_ARCH="all"
+PR = "r1"
+inherit gnome allarch
 
 # The omf.make file failed if scrollkeeper doesn't happen to be
 # installed

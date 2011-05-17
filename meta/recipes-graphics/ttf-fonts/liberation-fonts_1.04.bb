@@ -8,10 +8,11 @@ BUGTRACKER = "https://bugzilla.redhat.com/"
 SECTION = "x11/fonts"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
-PACKAGE_ARCH = "all"
 RDEPENDS_${PN} = "fontconfig-utils"
-PR = "r1"
+PR = "r2"
 PE = "1"
+
+inherit allarch
 
 SRC_URI = "https://fedorahosted.org/releases/l/i/liberation-fonts/liberation-fonts-${PV}.tar.gz \
            file://30-liberation-aliases.conf"

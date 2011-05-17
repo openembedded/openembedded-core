@@ -8,11 +8,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=56a830bbe6e4697fe6cbbae01bb7c2b2"
 SECTION = "x11"
 DEPENDS = ""
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig allarch
 
 FILES_${PN} += "${datadir}"
-
-PACKAGE_ARCH = "all"
 
 EXTRA_OECONF += "--with-iconmap=${STAGING_LIBDIR_NATIVE}/../libexec/icon-name-mapping"
 
