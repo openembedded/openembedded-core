@@ -1,5 +1,10 @@
 Add 2bpp support
 
+Submitted upstream but rejected as being "out of scope":
+http://bugreports.qt.nokia.com/browse/QTBUG-3468
+
+Upstream-Status: Denied
+Original author: Jeremy Lainé <jeremy.laine@m4x.org>
 Ported from OE by: Yu Ke <ke.yu@intel.com>
 
 diff -urN qt-embedded-linux-opensource-src-4.4.3.orig/configure qt-embedded-linux-opensource-src-4.4.3/configure

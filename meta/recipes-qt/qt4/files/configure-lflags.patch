@@ -1,3 +1,8 @@
+qt4-tools-native: set LFLAGS to pick up zlib from staging
+
+Original Author: Jeremy Lainé <jeremy.laine@m4x.org>
+Upstream-Status: Pending
+
 Index: qtopia-core-opensource-src-4.3.3/configure
 ===================================================================
 --- qtopia-core-opensource-src-4.3.3.orig/configure	2008-01-14 08:53:51.000000000 +0000

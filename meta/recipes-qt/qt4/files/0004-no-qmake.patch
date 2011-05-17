@@ -6,6 +6,7 @@ Subject: [PATCH] no qmake
 qmake is already built in qt4-tools-native, so disable it
 
 Ported from OE by: Yu Ke <ke.yu@intel.com>
+Upstream-Status: Inappropriate [configuration]
 
 ---
  configure |    2 +-

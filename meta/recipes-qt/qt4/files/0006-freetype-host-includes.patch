@@ -3,9 +3,10 @@ From: Michael Krelin <hacker@klever.net>
 Date: Mon, 4 Jun 2007 14:48:50 +0200
 Subject: [PATCH] freetype host includes
 
-Host include path should not be used in corss compiling case.
+Host include path should not be used in cross compiling case.
 
 Ported from OE by: Yu Ke <ke.yu@intel.com>
+Upstream-Status: Pending
 
 ---
  config.tests/unix/freetype/freetype.pri |    2 +-

@@ -1,3 +1,8 @@
+Use OE_QMAKE_* values to specify Qt utility paths
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Upstream-Status: Inappropriate [configuration]
+
 Index: qt-everywhere-opensource-src-4.6.3/configure
 ===================================================================
 --- qt-everywhere-opensource-src-4.6.3.orig/configure	2011-01-10 15:47:37.100607001 +0000

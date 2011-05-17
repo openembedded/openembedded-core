@@ -1,3 +1,15 @@
+Hack to not use the pg_config of the host system which will add /usr/include
+
+pg_config is a native binary so using that when cross compiling
+will always fail.  The commented out fix would do, but for OE
+our -platform and -xplatform is the same so we are actually not
+really cross compiling. Just comment out the test, we are passing
+the location to the postgres headers and if they are okay we
+will pad.
+
+Original Author: Holger Hans Peter Freyther <zecke@selfish.org>
+Upstream-Status: Inappropriate [configuration]
+
 Index: qt-everywhere-opensource-src-4.7.0/configure
 ===================================================================
 --- qt-everywhere-opensource-src-4.7.0.orig/configure	2010-09-22 15:43:51.191162141 -0400

@@ -1,6 +1,11 @@
-Add lib infix to distinguish different qt compile version: e.g. "E" for embedded, "" for X11
+Add lib infix for QtUiTools to distinguish different Qt edition: e.g. "E" for embedded, "" for X11
 
+Patch has been accepted upstream and should be included in the next major version (4.8.0), see:
+http://bugreports.qt.nokia.com/browse/QTBUG-7169
+
+Original Author: Jeremy Lainé <jeremy.laine@m4x.org>
 Ported from OE by: Yu Ke <ke.yu@intel.com>
+Upstream-Status: Accepted
 
 --- /tmp/uitools.prf	2009-12-01 18:38:22.000000000 +0100
 +++ qt-everywhere-opensource-src-4.6.0/mkspecs/features/uitools.prf	2009-12-01 18:58:16.000000000 +0100

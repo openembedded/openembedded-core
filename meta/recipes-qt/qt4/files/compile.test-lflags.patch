@@ -1,3 +1,7 @@
+Pass through LDFLAGS to configure tests
+
+Upstream-Status: Inappropriate [configuration]
+
 Index: qt-everywhere-opensource-src-4.6.3/config.tests/unix/compile.test
 ===================================================================
 --- qt-everywhere-opensource-src-4.6.3.orig/config.tests/unix/compile.test	2010-06-02 06:03:18.000000000 +0400

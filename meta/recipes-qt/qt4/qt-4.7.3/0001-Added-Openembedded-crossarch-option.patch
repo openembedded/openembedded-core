@@ -1,7 +1,10 @@
 From b1ba119f6a824dc01bd42ee00dba4a1653867b72 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Matthias=20G=C3=BCnther?= <matgnt@gmail.com>
+From: Matthias Günther <matgnt@gmail.com>
 Date: Wed, 12 May 2010 16:52:45 +0200
 Subject: [PATCH 1/9] Added Openembedded "-crossarch" option
+
+Original Author: Michael Lauer <mickey@vanille-media.de>
+Upstream-Status: Pending
 
 ---
  configure |    7 ++++++-

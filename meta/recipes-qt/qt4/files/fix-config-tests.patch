@@ -2,7 +2,9 @@ Fix invocation in case of "ccache some-compiler-gcc". As the command "ccache som
 
 both visibility and relocs were affected.
 
+Original Author: Holger Hans Peter Freyther <zecke@selfish.org>
 Ported from OE by: Yu Ke <ke.yu@intel.com>
+Upstream-Status: Pending
 
 Index: qt-x11-opensource-src-4.5.2/config.tests/unix/bsymbolic_functions.test
 ===================================================================
