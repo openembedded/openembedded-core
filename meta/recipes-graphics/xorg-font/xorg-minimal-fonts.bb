@@ -13,10 +13,11 @@ LIC_FILES_CHKSUM = "file://../misc/fonts.alias;md5=bbe8d3c0e4e74af96e3ac393985c4
 SRC_URI = "file://misc"
 
 PE = "1"
-PR = "r0"
+PR = "r1"
+
+inherit allarch
 
 PACKAGES = "${PN}"
-PACKAGE_ARCH = "all"
 FILES_${PN} = "${libdir}/X11/ ${datadir}/fonts/X11/"
 
 do_install() {
