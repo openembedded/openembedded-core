@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 The native version of ldconfig was using native definition of LD_SO (i.e. 
 ld-linux-x86-64.so.2 ) which is not correct for doing the cross ldconfig.
 This was causing libc.so on the target marked as ELF lib rather than 

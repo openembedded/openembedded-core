@@ -1,3 +1,4 @@
+Upstream-Status: Inappropriate [distribution: fedora]
 Index: libjava/configure.ac
 ===================================================================
 --- libjava/configure.ac.orig	2010-03-21 12:41:37.000000000 -0700

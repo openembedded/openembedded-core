@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 # When compiling for an embedded system, we need every bit of
 # performance we can get. default to optimized with the option
 # of opt-out.

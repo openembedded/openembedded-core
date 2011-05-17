@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 # Some versions of SWIG do not use the extension parameter.
 # Make it optional.
 # Signed-Off: Michael 'Mickey' Lauer <mickey@vanille-media.de>

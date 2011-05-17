@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 # Don't modify the she-bang line for a cross-build.
 # Otherwise it points to our hostpython (which we do not want)
 #

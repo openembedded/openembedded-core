@@ -1,3 +1,4 @@
+Upstream-Status: Inappropriate [distribution: fedora]
 2008-01-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* lang.c (java_classify_record): Revert 2007-12-20 change.

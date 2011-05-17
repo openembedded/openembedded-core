@@ -1,4 +1,7 @@
-Do data input/output handling according to endien-ness of the library file.
+Upstream-Status: Inappropriate [embedded specific]
+
+Do data input/output handling according to endien-ness of the library file. That 
+enables use of ldconfig in the cross fashion for any architecture.
 
 2011/04/04
 Richard Purdie <richard.purdie@linuxfoundation.org>

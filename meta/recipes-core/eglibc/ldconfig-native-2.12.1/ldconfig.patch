@@ -1,3 +1,7 @@
+Upstream-Status: Inappropriate [embedded specific]
+
+enable standalone building of ldconfig
+
 ---
  cache.c        |   11 +-
  chroot_canon.c |    7 +

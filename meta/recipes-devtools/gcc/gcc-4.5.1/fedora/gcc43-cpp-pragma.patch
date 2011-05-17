@@ -1,3 +1,4 @@
+Upstream-Status: Inappropriate [distribution: fedora]
 2008-02-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* c-ppoutput.c (scan_translation_unit): Handle CPP_PRAGMA

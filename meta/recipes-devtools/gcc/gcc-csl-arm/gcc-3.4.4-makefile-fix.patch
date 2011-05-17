@@ -1,3 +1,4 @@
+Upstream-Status: Pending
 --- gcc-3.4.4/gcc/Makefile.in.orig	2005-07-25 21:00:37 +0200
 +++ gcc-3.4.4/gcc/Makefile.in	2005-07-25 21:01:19 +0200
 @@ -304,7 +304,7 @@

@@ -1,4 +1,4 @@
-Upstream-Status: Inappropriate [not used]
+Upstream-Status: Inappropriate [configuration]
 
 --- glibc-2.9.orig/configure.in	2009-10-22 15:38:13.000000000 +0200
 +++ glibc-2.9/configure.in	2009-10-22 15:37:33.000000000 +0200

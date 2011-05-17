@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Source: http://sourceware.org/ml/libc-alpha/2010-03/msg00064.html
 
 This patch scratches an itch.  Each individual gcc command in the

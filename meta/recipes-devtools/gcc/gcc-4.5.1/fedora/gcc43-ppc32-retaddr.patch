@@ -1,3 +1,4 @@
+Upstream-Status: Inappropriate [distribution: fedora]
 2005-11-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* config/rs6000/rs6000.c (rs6000_return_addr): If COUNT == 0,

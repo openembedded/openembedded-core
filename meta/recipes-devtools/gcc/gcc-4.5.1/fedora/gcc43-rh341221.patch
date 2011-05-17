@@ -1,3 +1,4 @@
+Upstream-Status: Inappropriate [distribution: fedora]
 2007-10-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* doc/Makefile.am (POD2MAN): Set date from cp-tools.texinfo

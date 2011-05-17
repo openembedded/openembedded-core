@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 import http://sourceware.org/ml/libc-ports/2007-12/msg00000.html
 
 Index: libc/bits/stdio-lock.h

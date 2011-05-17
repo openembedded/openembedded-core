@@ -1,3 +1,4 @@
+Upstream-Status: Pending
 Index: gcc-4.0.2/gcc/config/arm/t-linux
 ===================================================================
 --- gcc-4.0.2.orig/gcc/config/arm/t-linux	2004-05-15 12:41:35.000000000 +0000

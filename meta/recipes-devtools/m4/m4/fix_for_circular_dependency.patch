@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [licensing]
+
 The older GPLv2 m4 does not work well with newer autoconf. It causes the 
 circular dependency as seen bellow.
   Removing this m4 file which was needed only forl older autoconf

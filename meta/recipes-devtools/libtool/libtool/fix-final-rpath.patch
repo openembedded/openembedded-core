@@ -1,4 +1,4 @@
-Status: Inappropriate [embedded specific]
+Upstream-Status: Inappropriate [embedded specific]
 
 Enalbing sysroot support exposed a bug where the final library
 had an RPATH encoded into it which still pointed to the sysroot.

@@ -1,3 +1,4 @@
+Upstream-Status: Inappropriate [distribution: fedora]
 2007-11-06  Jakub Jelinek  <jakub@redhat.com>
 
 	PR tree-optimization/33763

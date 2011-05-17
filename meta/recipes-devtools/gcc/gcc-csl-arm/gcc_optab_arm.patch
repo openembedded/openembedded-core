@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 ARM is the only architecture that has a helper function that returns
 an unbiased result. This fix is trivial enough that we can show it
 doesn't effect any of the other arches. Can we consider this a

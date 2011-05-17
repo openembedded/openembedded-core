@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 The default lib search path order is:
 
   1) LD_LIBRARY_PATH

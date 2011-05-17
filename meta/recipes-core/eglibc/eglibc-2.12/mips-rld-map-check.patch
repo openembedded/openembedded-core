@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 On mips target, binutils currently sets DT_MIPS_RLD_MAP to 0 in dynamic
 section if a --version-script sets _RLD_MAP to local. This is apparently
 a binutils bug, but libc shouldn't segfault in this case.

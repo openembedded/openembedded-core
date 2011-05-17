@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 This patch fixes a build problem for m4-native experienced on Ubuntu 9.10,
 where autoconf/automake (AC_CONFIG_LINKS) ends up making GNUmakefile a
 symlink to itself.

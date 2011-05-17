@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 The patch below fixes a crash building libgfortran on arm-linux-gnueabi.
 
 This target doesn't really have a 128-bit integer type, however it does use 
@@ -31,7 +33,7 @@ Index: gcc-4.2.1/gcc/fortran/trans-types.c
 +
 +      /* Handle TImode as a special case because it is used by some backends
 +         (eg. ARM) even though it is not available for normal use.  */
-+#if HOST_BITS_PER_WIDE_INT >= 65
++#if HOST_BITS_PER_WIDE_INT >= 64
 +      if (bits == TYPE_PRECISION (intTI_type_node))
 +	return intTI_type_node;
 +#endif

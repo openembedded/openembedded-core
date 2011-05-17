@@ -1,3 +1,11 @@
+Upstream-Status: Inappropriate [embedded specific]
+
+We run the ldconfig in the cross fashion. make the code bitsize aware so that 
+we can cross build ldconfig cache for various architectures.
+
+Richard Purdie <richard.purdie@linuxfoundation.org> 2009/05/19
+Nitin A Kamble <nitin.a.kamble@intel.com> 2009/03/29
+
 Index: ldconfig-native-2.12.1/readelflib.c
 ===================================================================
 --- ldconfig-native-2.12.1.orig/readelflib.c

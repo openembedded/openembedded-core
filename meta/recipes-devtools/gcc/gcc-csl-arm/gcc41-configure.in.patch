@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 --- gcc-3.4.4/configure.in.orig	2005-08-09 19:57:51.504323183 -0700
 +++ gcc-3.4.4/configure.in	2005-08-09 20:00:12.073168623 -0700
 @@ -1907,7 +1907,7 @@

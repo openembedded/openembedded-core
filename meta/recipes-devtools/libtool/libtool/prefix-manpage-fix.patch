@@ -1,4 +1,4 @@
-Status: Inappropriate [embedded specific]
+Upstream-Status: Inappropriate [embedded specific]
 
 For cross environment, it not possible to run the generated executable.
 nstead use the build version of libtool to generate the man pages. 
