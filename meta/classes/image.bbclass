@@ -24,8 +24,7 @@ PID = "${@os.getpid()}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 LDCONFIGDEPEND ?= "ldconfig-native:do_populate_sysroot"
-LDCONFIGDEPEND_linux-uclibc = ""
-LDCONFIGDEPEND_linux-uclibceabi = ""
+LDCONFIGDEPEND_libc-uclibc = ""
 
 do_rootfs[depends] += "makedevs-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot ${LDCONFIGDEPEND}"
 do_rootfs[depends] += "virtual/update-alternatives-native:do_populate_sysroot update-rc.d-native:do_populate_sysroot"

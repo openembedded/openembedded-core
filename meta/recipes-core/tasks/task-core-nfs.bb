@@ -22,5 +22,5 @@ RDEPENDS_task-core-nfs-server = "\
 # rpcinfo can be useful but only with glibc images
 GLIBC_DEPENDENCIES = "glibc-utils"
 
-RRECOMMENDS_task-core-nfs-server_append_linux = " ${GLIBC_DEPENDENCIES}"
-RRECOMMENDS_task-core-nfs-server_append_linux-gnueabi = " ${GLIBC_DEPENDENCIES}"
+RRECOMMENDS_task-core-nfs-server_append_libc-glibc = " ${GLIBC_DEPENDENCIES}"
+
