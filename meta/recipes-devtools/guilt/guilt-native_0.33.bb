@@ -28,5 +28,5 @@ do_compile() {
 }
 
 do_install() {
-	oe_runmake PREFIX=${D}/${base_prefix}/usr install
+	oe_runmake PREFIX=${D}/${prefix} install
 }
