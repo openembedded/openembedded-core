@@ -179,6 +179,13 @@ RDEPENDS_task-core-lsb-graphic-add_atom-pc = "\
 RDEPENDS_task-core-lsb-graphic-add_qemuppc = "\
     libqtopengl4 \
 "
+RDEPENDS_task-core-lsb-graphic-add_emenlow = "\
+    libqtopengl4 \
+"
+
+RDEPENDS_task-core-lsb-graphic-add_mpc8315e-rdb = "\
+    libqtopengl4 \
+"
 
 #    mesa-dri 
 
