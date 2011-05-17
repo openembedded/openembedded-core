@@ -20,12 +20,6 @@ CXXFLAGS += "-fvisibility-inlines-hidden"
 
 IMAGE_LINGUAS = ""
 
-DEPLOY_DIR_IMAGE = "${TMPDIR}/deploy/images"
-DEPLOY_DIR_append = "-uclibc"
-STAGING_DIR_TARGET_append = "-uclibc"
-STAGING_DIR_HOST_append = "-uclibc"
-SSTATE_MANIFESTS_append = "-uclibc"
-
 LIBC_DEPENDENCIES = "\
     uclibc \
     uclibc-dbg \
