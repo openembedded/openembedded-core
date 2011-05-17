@@ -23,7 +23,7 @@ PID = "${@os.getpid()}"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-LDCONFIGDEPEND = "ldconfig-native:do_populate_sysroot"
+LDCONFIGDEPEND ?= "ldconfig-native:do_populate_sysroot"
 LDCONFIGDEPEND_linux-uclibc = ""
 LDCONFIGDEPEND_linux-uclibceabi = ""
 
