@@ -3,7 +3,7 @@ SECTION = "console/utils"
 HOMEPAGE = "http://prdownloads.sourceforge.net/lsb"
 PRIORITY = "required"
 LICENSE = "GPLv2+"
-PR = "r0"
+PR = "r1"
 
 LIC_FILES_CHKSUM = "file://README;md5=12da544b1a3a5a1795a21160b49471cf"
 
@@ -94,4 +94,6 @@ do_install_append(){
                ln -sf ld.so.1 ld-lsb-ppc32.so.3
        fi	
 }
-FILES_${PN} += "/lib64"
+FILES_${PN} += "/lib64 \
+                ${base_libdir}/lsb/* \
+               "
