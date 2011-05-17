@@ -8,7 +8,7 @@
 #  licenses.conf and compare them to the license names in the recipes. You'll see some
 #  differences and that should be corrected.
 
-LICENSE_DIRECTORY ??= "${DEPLOY_DIR_IMAGE}/licenses"
+LICENSE_DIRECTORY ??= "${DEPLOY_DIR}/licenses"
 LICSSTATEDIR = "${WORKDIR}/license-destdir/"
 
 addtask populate_lic after do_patch before do_package 
