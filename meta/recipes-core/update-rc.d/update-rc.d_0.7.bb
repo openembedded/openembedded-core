@@ -10,9 +10,9 @@ LIC_FILES_CHKSUM = "file://update-rc.d;beginline=5;endline=15;md5=148a48321b10eb
 PR = "r3"
 
 SRC_URI = "git://github.com/philb/update-rc.d.git;tag=update-rc.d_${PV};protocol=git \
-           file://add-verbose.patch;apply=yes"
+           file://add-verbose.patch;striplevel=1"
 
-S = "${WORKDIR}/update-rc.d"
+S = "${WORKDIR}/git"
 
 
 do_compile() {
