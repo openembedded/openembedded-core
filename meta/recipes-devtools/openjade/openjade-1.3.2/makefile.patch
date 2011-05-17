@@ -1,7 +1,11 @@
 This patch fixes libtool QA issues with WORKDIR creeping in to
 libospgrove.la and libostyle.la. Patch obtained from OpenEmbedded.
 
+Upstream-Status: Inappropriate [Other]
+Workaround is specific to our build system.
+
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 Index: openjade-1.3.2/spgrove/Makefile.sub
 ===================================================================
 --- openjade-1.3.2.orig/spgrove/Makefile.sub

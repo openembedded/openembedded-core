@@ -1,7 +1,7 @@
 Fix path to libtool scripts so autoreconf can succeed.
 
 Upstream-Status: Inappropriate [Other]
-Workaround specific to our build system.
+Workaround is specific to our build system.
 
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 

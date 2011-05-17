@@ -1,6 +1,9 @@
 Patch obtained from OpenEmbedded.
 
+Upstream-Status: Pending
+
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 --- libsgmls-perl-1.03ii.orig/Makefile
 +++ libsgmls-perl-1.03ii/Makefile
 @@ -94,5 +94,5 @@

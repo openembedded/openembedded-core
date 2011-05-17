@@ -1,7 +1,10 @@
-# Disable the make check runtime tests, which cannot be run when
-# cross-compiled.
-#
-# Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+Disable the make check runtime tests, which cannot be run when
+cross-compiled.
+
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 diff -urN insserv-1.14.0.orig//Makefile insserv-1.14.0/Makefile
 --- insserv-1.14.0.orig//Makefile	2010-11-28 17:12:01.715597293 -0800
 +++ insserv-1.14.0/Makefile	2010-11-28 17:16:33.837780660 -0800

@@ -1,15 +1,19 @@
-# Add by RP to address "unable to infer tagged configuration" error:
-#    commit 35de05e61b88c0808a5e885bb0efdf420555d5ad
-#    Author: Richard Purdie <rpurdie@rpsys.net>
-#    Date:   Sun Jun 1 16:13:38 2008 +0000
-#
-#    apmd: Use libtool --tag options to avoid problems with libtool 2.2.4 (from poky)
-#
-# However I didn't see same issue with current libtool-2.2.10. Also per my understanding,
-# the default tag, if not specified, falls back to CC. So disable it from patching, but
-# keep it here. If we encounter similar issue in the future, we could then push upstream
-#
-# Comment added by Kevin Tian <kevin.tian@intel.com>, 2010-07-16
+Add by RP to address "unable to infer tagged configuration" error:
+   commit 35de05e61b88c0808a5e885bb0efdf420555d5ad
+   Author: Richard Purdie <rpurdie@rpsys.net>
+   Date:   Sun Jun 1 16:13:38 2008 +0000
+
+   apmd: Use libtool --tag options to avoid problems with libtool 2.2.4 (from poky)
+
+However I didn't see same issue with current libtool-2.2.10. Also per my understanding,
+the default tag, if not specified, falls back to CC. So disable it from patching, but
+keep it here. If we encounter similar issue in the future, we could then push upstream
+
+Comment added by Kevin Tian <kevin.tian@intel.com>, 2010-07-16
+
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 
 Index: apmd-3.2.2.orig/Makefile
 ===================================================================

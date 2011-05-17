@@ -12,6 +12,10 @@ https://bugs.gentoo.org/358021
 http://clang.llvm.org/compatibility.html#default_init_const
 http://gcc.gnu.org/PR44499"
 
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 --- a/jade/TeXFOTBuilder.cxx
 +++ b/jade/TeXFOTBuilder.cxx
 @@ -88,6 +88,8 @@ public:

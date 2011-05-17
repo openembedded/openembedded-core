@@ -1,7 +1,10 @@
-# Enable debug options and modify the use of CLFAGS (carried over
-# from the previous version's patch).
-#
-# Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+Enable debug options and modify the use of CLFAGS (carried over
+from the previous version's patch).
+
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 diff -urN insserv-1.14.0.orig//Makefile insserv-1.14.0//Makefile
 --- insserv-1.14.0.orig//Makefile	2010-04-29 03:33:40.000000000 -0700
 +++ insserv-1.14.0//Makefile	2010-11-28 17:09:20.537996190 -0800
