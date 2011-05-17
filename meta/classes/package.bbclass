@@ -933,12 +933,17 @@ python package_do_shlibs() {
 			if m:
 				needed[pkg].append(m.group(1))
 			m = re.match("\s+SONAME\s+([^\s]*)", l)
-			if m and not m.group(1) in sonames:
-				# if library is private (only used by package) then do not build shlib for it
-				if not private_libs or -1 == private_libs.find(m.group(1)):
-					sonames.append(m.group(1))
-			if m and libdir_re.match(root):
-				needs_ldconfig = True
+			if m:
+				this_soname = m.group(1)
+				if not this_soname in sonames:
+					# if library is private (only used by package) then do not build shlib for it
+					if not private_libs or -1 == private_libs.find(this_soname):
+						sonames.append(this_soname)
+				if libdir_re.match(root):
+					needs_ldconfig = True
+				if snap_symlinks and (file != this_soname):
+					renames.append((os.path.join(root, file), os.path.join(root, this_soname)))
+
 	def darwin_so(root, path, file):
 		fullpath = os.path.join(root, file)
 		if not os.path.exists(fullpath):
@@ -1000,6 +1005,17 @@ python package_do_shlibs() {
 							if name:
 								needed[pkg].append(name)
 								#bb.note("Adding %s for %s" % (name, pkg))
+
+	if bb.data.getVar('PACKAGE_SNAP_LIB_SYMLINKS', d, True) == "1":
+		snap_symlinks = True
+	else:
+		snap_symlinks = False
+
+	if (bb.data.getVar('USE_LDCONFIG', d, True) or "1") == "1":
+		use_ldconfig = True
+	else:
+		use_ldconfig = False
+
 	needed = {}
 	shlib_provider = {}
 	private_libs = bb.data.getVar('PRIVATE_LIBS', d, True)
@@ -1009,6 +1025,7 @@ python package_do_shlibs() {
 
 		needed[pkg] = []
 		sonames = list()
+		renames = list()
 		top = os.path.join(pkgdest, pkg)
 		for root, dirs, files in os.walk(top):
 			for file in files:
@@ -1020,6 +1037,9 @@ python package_do_shlibs() {
 					darwin_so(root, dirs, file)
 				elif os.access(path, os.X_OK) or lib_re.match(file):
 					linux_so(root, dirs, file)
+		for (old, new) in renames:
+		    	bb.note("Renaming %s to %s" % (old, new))
+			os.rename(old, new)
 		shlibs_file = os.path.join(shlibswork_dir, pkg + ".list")
 		shver_file = os.path.join(shlibswork_dir, pkg + ".ver")
 		if len(sonames):
@@ -1031,7 +1051,7 @@ python package_do_shlibs() {
 			fd = open(shver_file, 'w')
 			fd.write(ver + '\n')
 			fd.close()
-		if needs_ldconfig:
+		if needs_ldconfig and use_ldconfig:
 			bb.debug(1, 'adding ldconfig call to postinst for %s' % pkg)
 			postinst = bb.data.getVar('pkg_postinst_%s' % pkg, d, True) or bb.data.getVar('pkg_postinst', d, True)
 			if not postinst:
