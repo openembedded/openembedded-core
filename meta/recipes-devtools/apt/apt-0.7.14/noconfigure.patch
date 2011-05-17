@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 ---
  apt-pkg/packagemanager.cc |    4 ++++
  1 file changed, 4 insertions(+)

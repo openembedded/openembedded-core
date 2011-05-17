@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- gdbm-1.8.3/Makefile.in.orig	2006-02-16 15:17:25.000000000 +0000
 +++ gdbm-1.8.3/Makefile.in	2006-02-16 15:18:08.000000000 +0000
 @@ -131,7 +131,7 @@

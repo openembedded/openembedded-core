@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [legacy version]
+
 Index: udev-141/extras/volume_id/lib/Makefile.am
 ===================================================================
 --- udev-141.orig/extras/volume_id/lib/Makefile.am	2009-05-17 23:36:16.000000000 +0100

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: udev-145/configure.ac
 ===================================================================
 --- udev-145.orig/configure.ac	2010-01-29 14:41:29.000000000 +0000

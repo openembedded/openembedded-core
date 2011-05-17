@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 Add missing includes required when building with modern toolchain, based on
 patch from Debian bugzilla:
 http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=505954

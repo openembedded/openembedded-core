@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Hardcoded paths are bad...
 This lets us use the install from OE's native sysroot
 rebase the patch to 018, removing hardcoded path for true

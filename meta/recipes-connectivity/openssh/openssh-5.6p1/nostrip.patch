@@ -1,6 +1,7 @@
 Disable stripping binaries during make install.
 
-Upstream-Status: Inappropriate [Other]
+Upstream-Status: Inappropriate [configuration]
+
 Build system specific.
 
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>

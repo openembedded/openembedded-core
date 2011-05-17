@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [legacy version]
+
 Index: udev-141/udev/test-udev.c
 ===================================================================
 --- udev-141.orig/udev/test-udev.c	2008-10-24 09:07:24.000000000 +0100

@@ -1,3 +1,5 @@
+Upstream-Status: Backport
+
 Index: apt-0.6.46.2/buildlib/environment.mak.in
 ===================================================================
 --- apt-0.6.46.2.orig/buildlib/environment.mak.in	2007-03-29 11:38:58.000000000 +0100
