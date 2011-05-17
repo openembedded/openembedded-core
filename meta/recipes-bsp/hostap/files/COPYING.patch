@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [other]
+
 diff -ruN hostap-conf-1.0-orig/COPYING hostap-conf-1.0/COPYING
 --- hostap-conf-1.0-orig/COPYING	1970-01-01 08:00:00.000000000 +0800
 +++ hostap-conf-1.0/COPYING	2010-12-09 16:36:48.000000000 +0800

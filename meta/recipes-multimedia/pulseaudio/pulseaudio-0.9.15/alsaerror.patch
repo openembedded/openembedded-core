@@ -6,6 +6,8 @@ X-Git-Url: http://git.0pointer.de/?p=pulseaudio.git;a=commitdiff_plain;h=98a25c5
 alsa: properly convert return values of snd_strerror() to utf8
 ---
 
+Upstream-Status: Backport
+
 diff --git a/src/modules/alsa/alsa-sink.c b/src/modules/alsa/alsa-sink.c
 index 2fbcd7b..41e8b47 100644
 --- a/src/modules/alsa/alsa-sink.c

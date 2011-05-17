@@ -1,7 +1,7 @@
 uclibc does not have exp10 function which is glibc extension.
 Bur we can get the same behavior by using pow()
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Khem Raj <raj.khem@gmail.com>
 

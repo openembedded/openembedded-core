@@ -2,6 +2,8 @@ Without this, the FILE reference in this header can cause compile issues.
 
 RP - 29/1/10
 
+Upstream-Status: Pending
+
 Index: trunk/libopkg/pkg_dest.h
 ===================================================================
 --- trunk.orig/libopkg/pkg_dest.h	2010-01-29 09:37:22.000000000 +0000

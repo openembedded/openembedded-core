@@ -1,5 +1,7 @@
 X-Git-Url: http://git.0pointer.de/?p=pulseaudio.git;a=blobdiff_plain;f=src%2Fmodules%2Falsa%2Falsa-util.c;h=107bec357c7889f0197853f5e5f1951a5a2f5be0;hp=a3a045080dac0e1b30e8671443ce73a03337cf14;hb=4bffc7849f7898fa85dd6ac8e735db86b57814b3;hpb=d2b5ae5525e9036c4f91b1615879a5a07aac5bf2
 
+Upstream-Status: Backport
+
 diff --git a/src/modules/alsa/alsa-util.c b/src/modules/alsa/alsa-util.c
 index a3a0450..107bec3 100644
 --- a/src/modules/alsa/alsa-util.c

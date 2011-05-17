@@ -3,6 +3,8 @@
 | pulsecore/core-util.c:547: error: label at end of compound statement
 | Signed off: mickey@openmoko.org
 |
+Upstream-Status: Pending
+
 Index: pulseaudio-0.9.6/src/pulsecore/core-util.c
 ===================================================================
 --- pulseaudio-0.9.6.orig/src/pulsecore/core-util.c

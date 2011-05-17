@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 ---
  Makefile |    3 ---
  1 file changed, 3 deletions(-)

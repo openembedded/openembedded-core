@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: pulseaudio-0.9.11/src/pulsecore/atomic.h
 ===================================================================
 --- pulseaudio-0.9.11.orig/src/pulsecore/atomic.h

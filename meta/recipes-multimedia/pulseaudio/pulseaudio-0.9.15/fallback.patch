@@ -10,6 +10,8 @@ only the raw 'hw' device exists but no 'front' although it's a proper
 2ch stereo device.
 ---
 
+Upstream-Status: Backport
+
 diff --git a/src/modules/alsa/alsa-util.c b/src/modules/alsa/alsa-util.c
 index 18d6880..a3a0450 100644
 --- a/src/modules/alsa/alsa-util.c

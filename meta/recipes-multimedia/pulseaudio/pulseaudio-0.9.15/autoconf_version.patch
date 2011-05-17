@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: pulseaudio-0.9.15/configure.ac
 ===================================================================
 --- pulseaudio-0.9.15.orig/configure.ac	2009-04-14 00:09:53.000000000 +0100

@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 ---
  mkfs.jffs2.c |   44 ++++++++++++++++++++++++++++++++++++++++++--
  1 file changed, 42 insertions(+), 2 deletions(-)
