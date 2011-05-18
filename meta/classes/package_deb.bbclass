@@ -431,3 +431,7 @@ python do_package_write_deb () {
 do_package_write_deb[dirs] = "${PKGWRITEDIRDEB}"
 addtask package_write_deb before do_package_write after do_package
 
+
+PACKAGEINDEXES += "package_update_index_deb;"
+PACKAGEINDEXDEPS += "dpkg-native:do_populate_sysroot"
+PACKAGEINDEXDEPS += "apt-native:do_populate_sysroot"

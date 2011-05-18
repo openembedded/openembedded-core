@@ -386,3 +386,7 @@ python do_package_write_ipk () {
 }
 do_package_write_ipk[dirs] = "${PKGWRITEDIRIPK}"
 addtask package_write_ipk before do_package_write after do_package
+
+PACKAGEINDEXES += "package_update_index_ipk;"
+PACKAGEINDEXDEPS += "opkg-utils-native:do_populate_sysroot"
+PACKAGEINDEXDEPS += "opkg-native:do_populate_sysroot"
