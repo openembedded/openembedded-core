@@ -23,8 +23,8 @@ python do_unpack () {
 }
 
 export LSOF_OS = "${TARGET_OS}"
-LSOF_OS_linux-uclibc = "linux"
-LSOF_OS_linux-gnueabi = "linux"
+LSOF_OS_libc-uclibc = "linux"
+LSOF_OS_libc-glibc = "linux"
 export LSOF_INCLUDE = "${STAGING_INCDIR}"
 
 do_configure () {
