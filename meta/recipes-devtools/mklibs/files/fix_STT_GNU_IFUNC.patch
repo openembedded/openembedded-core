@@ -1,5 +1,8 @@
 The libc6-dev in Ubuntu 9.04 is so old that the elf.h doesn't
 define STT_GNU_IFUNC, so we have to define it ourselves.
+
+Upstream-Status: Inappropriate [other] - old release specific, maybe removable
+
 -- Dexuan Cui (dexuan.cui@intel.com) Feb 16, 2011.
 
 diff --git a/src/mklibs-readelf/main.cpp b/src/mklibs-readelf/main.cpp

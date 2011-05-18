@@ -2,6 +2,8 @@ Get the version of mklibs by simpler means. The MKLIBS_VERSION string in the
 configure.ac file is replaced with real version string by the 
 do_configure_prepend() function from the recipe .bb file.
 
+Upstream-Status: Inappropriate [configuration]
+
 Nitin A Kamble <nitin.a.kamble@intel.com>
 Date: 2011/01/24
 
