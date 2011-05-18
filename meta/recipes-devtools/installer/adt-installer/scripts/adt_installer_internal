@@ -29,11 +29,11 @@ parse_config()
   case $INST_ARCH in 
   i[3-6]86)
     OPKG_CONFIG_FILE=$YOCTOADT_OPKG_CONF_FILE_32
-    OECORE_NATIVE_SYSROOT="$INSTALL_FOLDER/sysroots/$INST_ARCH-${SDK_VENDOR}-linux/"
+    OECORE_NATIVE_SYSROOT="$INSTALL_FOLDER/sysroots/$INST_ARCH$SDK_VENDOR-linux/"
     ;;
   x86_64)
     OPKG_CONFIG_FILE=$YOCTOADT_OPKG_CONF_FILE_64
-    OECORE_NATIVE_SYSROOT="$INSTALL_FOLDER/sysroots/x86_64-${SDK_VENDOR}-linux/"
+    OECORE_NATIVE_SYSROOT="$INSTALL_FOLDER/sysroots/x86_64$SDK_VENDOR-linux/"
     ;;
   *)
     echo_info "[ADT_INST] Error: Installation Machine is not supported!"

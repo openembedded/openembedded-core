@@ -48,7 +48,7 @@ usage ()
   echo_info "# Install Qemu:\t\t\t$YOCTOADT_QEMU"
   echo_info "# Install NFS utilities:\t$YOCTOADT_NFS_UTIL"
   #echo_info "# Install bitbake + UI:\t\t$YOCTOADT_BITBAKE"
-  #echo_info "# Install poky metadata:\t$YOCTOADT_METADATA"
+  #echo_info "# Install metadata:\t$YOCTOADT_METADATA"
   #echo_info "############################################################################\n"
 
     echo_info "\n##############################################################################"
