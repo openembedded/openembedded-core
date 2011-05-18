@@ -7,34 +7,37 @@
 #
 # There are the following default steps but PACKAGEFUNCS can be extended:
 #
-# a) perform_packagecopy - Copy D into PKGD
+# a) package_get_auto_pr - get PRAUTO from remote PR service
 #
-# b) package_do_split_locales - Split out the locale files, updates FILES and PACKAGES
+# b) perform_packagecopy - Copy D into PKGD
 #
-# c) split_and_strip_files - split the files into runtime and debug and strip them.
+# c) package_do_split_locales - Split out the locale files, updates FILES and PACKAGES
+#
+# d) split_and_strip_files - split the files into runtime and debug and strip them.
 #    Debug files include debug info split, and associated sources that end up in -dbg packages
 #
-# d) populate_packages - Split the files in PKGD into separate packages in PKGDEST/<pkgname>
+# e) populate_packages - Split the files in PKGD into separate packages in PKGDEST/<pkgname>
 #    Also triggers the binary stripping code to put files in -dbg packages.
 #
-# e) package_do_filedeps - Collect perfile run-time dependency metadata
+# f) package_do_filedeps - Collect perfile run-time dependency metadata
 #    The data is stores in FILER{PROVIDES,DEPENDS}_file_pkg variables with
 #    a list of affected files in FILER{PROVIDES,DEPENDS}FLIST_pkg
 #
-# f) package_do_shlibs - Look at the shared libraries generated and autotmatically add any 
+# g) package_do_shlibs - Look at the shared libraries generated and autotmatically add any 
 #    depenedencies found. Also stores the package name so anyone else using this library 
 #    knows which package to depend on.
 #
-# g) package_do_pkgconfig - Keep track of which packages need and provide which .pc files
+# h) package_do_pkgconfig - Keep track of which packages need and provide which .pc files
 #
-# h) read_shlibdeps - Reads the stored shlibs information into the metadata
+# i) read_shlibdeps - Reads the stored shlibs information into the metadata
 #
-# i) package_depchains - Adds automatic dependencies to -dbg and -dev packages
+# j) package_depchains - Adds automatic dependencies to -dbg and -dev packages
 #
-# j) emit_pkgdata - saves the packaging data into PKGDATA_DIR for use in later 
+# k) emit_pkgdata - saves the packaging data into PKGDATA_DIR for use in later 
 #    packaging steps
 
 inherit packagedata
+inherit prserv
 
 PKGD    = "${WORKDIR}/package"
 PKGDEST = "${WORKDIR}/packages-split"
@@ -325,6 +328,15 @@ def runtime_mapping_rename (varname, d):
 #
 # Package functions suitable for inclusion in PACKAGEFUNCS
 #
+
+python package_get_auto_pr() {
+	if d.getVar('USE_PR_SERV', True):
+		auto_pr=prserv_get_pr_auto(d)
+		if auto_pr is None:
+			bb.fatal("Can NOT get auto PR revision from remote PR service")
+			return
+		d.setVar('PRAUTO',str(auto_pr))
+}
 
 python package_do_split_locales() {
 	if (bb.data.getVar('PACKAGE_NO_LOCALE', d, True) == '1'):
@@ -773,6 +785,8 @@ python emit_pkgdata() {
 		write_if_exists(sf, pkg, 'PN')
 		write_if_exists(sf, pkg, 'PV')
 		write_if_exists(sf, pkg, 'PR')
+		write_if_exists(sf, pkg, 'PKGV')
+		write_if_exists(sf, pkg, 'PKGR')
 		write_if_exists(sf, pkg, 'DESCRIPTION')
 		write_if_exists(sf, pkg, 'SUMMARY')
 		write_if_exists(sf, pkg, 'RDEPENDS')
@@ -911,9 +925,9 @@ python package_do_shlibs() {
 
 	workdir = bb.data.getVar('WORKDIR', d, True)
 
-	ver = bb.data.getVar('PV', d, True)
+	ver = bb.data.getVar('PKGV', d, True)
 	if not ver:
-		bb.error("PV not defined")
+		bb.error("PKGV not defined")
 		return
 
 	pkgdest = bb.data.getVar('PKGDEST', d, True)
@@ -1025,6 +1039,12 @@ python package_do_shlibs() {
 		needs_ldconfig = False
 		bb.debug(2, "calculating shlib provides for %s" % pkg)
 
+		pkgver = bb.data.getVar('PKGV_' + pkg, d, True)
+		if not pkgver:
+			pkgver = bb.data.getVar('PV_' + pkg, d, True)
+		if not pkgver:
+			pkgver = ver
+
 		needed[pkg] = []
 		sonames = list()
 		renames = list()
@@ -1048,10 +1068,10 @@ python package_do_shlibs() {
 			fd = open(shlibs_file, 'w')
 			for s in sonames:
 				fd.write(s + '\n')
-				shlib_provider[s] = (pkg, ver)
+				shlib_provider[s] = (pkg, pkgver)
 			fd.close()
 			fd = open(shver_file, 'w')
-			fd.write(ver + '\n')
+			fd.write(pkgver + '\n')
 			fd.close()
 		if needs_ldconfig and use_ldconfig:
 			bb.debug(1, 'adding ldconfig call to postinst for %s' % pkg)
@@ -1348,7 +1368,8 @@ python package_depchains() {
 }
 
 PACKAGE_PREPROCESS_FUNCS ?= ""
-PACKAGEFUNCS ?= "perform_packagecopy \
+PACKAGEFUNCS ?= "package_get_auto_pr \	
+                perform_packagecopy \
                 ${PACKAGE_PREPROCESS_FUNCS} \
 		package_do_split_locales \
 		split_and_strip_files \
