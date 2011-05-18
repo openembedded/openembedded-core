@@ -228,7 +228,7 @@ if [ -f "$LOCAL_DOWNLOAD/$filename" ]; then
   fi
 fi
 echo_info "Downloading file: $filename..."
-wget "$YOCTOADT_IPKG_REPO/$1" -P $LOCAL_DOWNLOAD --progress=bar:force 2>&1 | tee -a "$YOCTOADT_INSTALL_LOG_FILE" 
+wget "$YOCTOADT_REPO/rootfs/$1" -P $LOCAL_DOWNLOAD --progress=bar:force 2>&1 | tee -a "$YOCTOADT_INSTALL_LOG_FILE" 
 }
 
 
@@ -339,6 +339,17 @@ user_inst_type="$?"
 
 validate_config
 check_result
+
+#check adt_repo exist
+wget $YOCTOADT_REPO 2>&1 | tee -a "$YOCTOADT_INSTALL_LOG_FILE"
+if grep -q "ERROR 404: Not Found" $YOCTOADT_INSTALL_LOG_FILE; then
+  echo -e "[ADT_INST] Error: YOCTOADT_REPO does not exist: $YOCTOADT_REPO"
+  echo -e "\n#############################################################################"
+  echo -e "# Meet error(s) when installing Yocto ADT! Please check log file for details. "
+  echo -e "#############################################################################\n"
+  exit -1
+fi
+
 #firstly we need to install opkg host
 install_opkg
 
