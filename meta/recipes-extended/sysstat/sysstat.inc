@@ -27,6 +27,4 @@ pkg_postinst_${PN} () {
 FILES_${PN} += "${libdir}/sa"
 
 TARGET_CC_ARCH += "${LDFLAGS}"
-LDFLAGS_append_linux-uclibc = " -lintl"
-LDFLAGS_append_linux-uclibceabi = " -lintl"
-LDFLAGS_append_linux-uclibcspe = " -lintl"
+LDFLAGS_append_libc-uclibc = " -lintl"
