@@ -11,6 +11,7 @@ inherit buildstats
 inherit logging
 
 OE_IMPORTS += "os sys time oe.path oe.utils oe.data"
+OE_IMPORTS[type] = "list"
 
 def oe_import(d):
     import os, sys
@@ -25,7 +26,8 @@ def oe_import(d):
         else:
             __builtins__[name] = value
 
-    for toimport in d.getVar("OE_IMPORTS", True).split():
+    import oe.data
+    for toimport in oe.data.typed_value("OE_IMPORTS", d):
         imported = __import__(toimport)
         inject(toimport.split(".", 1)[0], imported)
 
