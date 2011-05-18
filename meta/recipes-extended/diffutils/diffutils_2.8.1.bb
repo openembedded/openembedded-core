@@ -20,7 +20,7 @@ inherit autotools update-alternatives gettext
 # standard functionality.  regex.c actually breaks compilation
 # because it uses __mempcpy, there are other things (TBD:
 # see diffutils.mk in buildroot)
-EXTRA_OECONF_linux-uclibc = "--without-included-regex"
+EXTRA_OECONF_libc-uclibc = "--without-included-regex"
 
 ALTERNATIVE_LINKS = "${bindir}/diff ${bindir}/cmp"
 ALTERNATIVE_PRIORITY = "100"
