@@ -312,7 +312,8 @@ create_wrapper () {
    cmdname=`basename $cmd`.real
    cat <<END >$cmd
 #!/bin/sh
-exec env $@ \`dirname \$0\`/$cmdname "\$@"
+realpath=\`readlink -fn \$0\`
+exec env $@ \`dirname \$realpath\`/$cmdname "\$@"
 END
    chmod +x $cmd
 }
