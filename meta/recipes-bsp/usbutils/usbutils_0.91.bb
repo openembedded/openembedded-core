@@ -11,10 +11,10 @@ DEPENDS = "libusb zlib"
 RDEPENDS_${PN} = "${PN}-ids"
 PR = "r1"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/linux-usb/usbutils-${PV}.tar.gz"
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/usb/usbutils/usbutils-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "34979f675d2bcb3e1b45012fa830a53f"
-SRC_URI[sha256sum] = "b3b2bea6d2cd87660c8201a47071bf2a9889d8ed90c7203cc768b597799c12f4"
+SRC_URI[md5sum] = "49de2403b40bf3a9863faaa8d3858deb"
+SRC_URI[sha256sum] = "c122346b0225121bcf159abf804116f826a4a3462c94ce7b8871f7559e6b3a46"
 
 inherit autotools
 
