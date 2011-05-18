@@ -71,8 +71,7 @@ EXTRA_OEMAKE = "'CC=${CC}' \
 		'EXTRA_CFLAGS=${CFLAGS} -DSYS_ERRLIST_DEFINED -DHAVE_STRERROR -DHAVE_WEAKSYMS -D_REENTRANT -DINET6=1 -Dss_family=__ss_family -Dss_len=__ss_len'"
 
 EXTRA_OEMAKE_NETGROUP = "-DNETGROUP -DUSE_GETDOMAIN"
-EXTRA_OEMAKE_NETGROUP_linux-uclibc = "-DUSE_GETDOMAIN"
-EXTRA_OEMAKE_NETGROUP_linux-uclibceabi = "-DUSE_GETDOMAIN"
+EXTRA_OEMAKE_NETGROUP_libc-uclibc = "-DUSE_GETDOMAIN"
 
 do_compile () {
 	oe_runmake 'TABLES=-DHOSTS_DENY=\"${sysconfdir}/hosts.deny\" -DHOSTS_ALLOW=\"${sysconfdir}/hosts.allow\"' \
