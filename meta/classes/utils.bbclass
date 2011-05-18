@@ -289,7 +289,8 @@ create_cmdline_wrapper () {
    cmdname=`basename $cmd`.real
    cat <<END >$cmd
 #!/bin/sh
-exec \`dirname \$0\`/$cmdname "\$@"
+realpath=\`readlink -fn \$0\`
+exec \`dirname \$realpath\`/$cmdname "\$@"
 END
    chmod +x $cmd
 }
