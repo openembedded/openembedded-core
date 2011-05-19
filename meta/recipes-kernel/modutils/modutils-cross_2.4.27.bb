@@ -1,5 +1,5 @@
 require modutils_${PV}.bb
-PR = "r9"
+PR = "r10"
 inherit cross
 DEPENDS = ""
 PACKAGES = ""
@@ -16,5 +16,5 @@ CFLAGS_prepend_mipsel = "-D__MIPSEL__"
 CFLAGS_prepend_mipseb = "-D__MIPSEB__"
 
 do_install_append () {
-        mv ${D}${bindir}/${TARGET_PREFIX}depmod ${D}${bindir}/${TARGET_PREFIX}depmod-2.4
+        mv ${D}${sbindir}/${TARGET_PREFIX}depmod ${D}${sbindir}/${TARGET_PREFIX}depmod-2.4
 }
