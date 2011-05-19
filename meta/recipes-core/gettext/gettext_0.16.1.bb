@@ -4,10 +4,10 @@ SECTION = "libs"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9ea3144f04c41cd2eada5d3f472e6ea5"
 
-PR = "r3"
+PR = "r4"
 DEPENDS = "virtual/libiconv"
 DEPENDS_virtclass-native = ""
-PROVIDES = "virtual/libintl"
+PROVIDES = "virtual/libintl virtual/gettext"
 PROVIDES_virtclass-native = ""
 
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
