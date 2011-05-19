@@ -330,7 +330,7 @@ python write_specfile () {
 				if dep and ver:
 					if '-' in ver:
 						subd = oe.packagedata.read_subpkgdata_dict(dep, d)
-						pv = subd['PV']
+						pv = subd['PKGV']
 						reppv = pv.replace('-', '+')
 						ver = ver.replace(pv, reppv)
 				newdeps_dict[dep] = ver
@@ -383,9 +383,9 @@ python write_specfile () {
 	# Construct the SPEC file...
 	srcname    = bb.data.getVar('PN', d, True)
 	srcsummary = (bb.data.getVar('SUMMARY', d, True) or bb.data.getVar('DESCRIPTION', d, True) or ".")
-	srcversion = bb.data.getVar('PV', d, True).replace('-', '+')
-	srcrelease = bb.data.getVar('PR', d, True)
-	srcepoch   = (bb.data.getVar('PE', d, True) or "")
+	srcversion = bb.data.getVar('PKGV', d, True).replace('-', '+')
+	srcrelease = bb.data.getVar('PKGR', d, True)
+	srcepoch   = (bb.data.getVar('PKGE', d, True) or "")
 	srclicense = bb.data.getVar('LICENSE', d, True)
 	srcsection = bb.data.getVar('SECTION', d, True)
 	srcmaintainer  = bb.data.getVar('MAINTAINER', d, True)
@@ -438,9 +438,9 @@ python write_specfile () {
 		splitname    = pkgname
 
 		splitsummary = (bb.data.getVar('SUMMARY', localdata, True) or bb.data.getVar('DESCRIPTION', localdata, True) or ".")
-		splitversion = (bb.data.getVar('PV', localdata, True) or "").replace('-', '+')
-		splitrelease = (bb.data.getVar('PR', localdata, True) or "")
-		splitepoch   = (bb.data.getVar('PE', localdata, True) or "")
+		splitversion = (bb.data.getVar('PKGV', localdata, True) or "").replace('-', '+')
+		splitrelease = (bb.data.getVar('PKGR', localdata, True) or "")
+		splitepoch   = (bb.data.getVar('PKGE', localdata, True) or "")
 		splitlicense = (bb.data.getVar('LICENSE', localdata, True) or "")
 		splitsection = (bb.data.getVar('SECTION', localdata, True) or "")
 		splitdescription = (bb.data.getVar('DESCRIPTION', localdata, True) or ".")
