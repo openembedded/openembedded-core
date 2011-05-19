@@ -121,7 +121,6 @@ gethostid
 gethostname
 getifaddrs
 getline
-getloadavg
 getmntent
 getmsg
 getnameinfo
