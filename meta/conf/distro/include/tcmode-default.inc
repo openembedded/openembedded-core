@@ -24,7 +24,7 @@ GCCVERSION_ppc ?= "4.5.1"
 SDKGCCVERSION_ppc ?= "4.5.1"
 BINUVERSION ?= "2.21"
 GLIBCVERSION ?= "2.10.1"
-EGLIBCVERSION ?= "2.12"
+EGLIBCVERSION ?= "2.13"
 LINUXLIBCVERSION ?= "2.6.37.2"
 
 # Temporary preferred version overrides for PPC
