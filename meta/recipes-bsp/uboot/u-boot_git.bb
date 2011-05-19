@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4c6cde5df68eff615d36789dc18edd3b \
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/u-boot-git/${MACHINE}"
 
 SRCREV = "v2010.12"
-PV = "v2010.12+${PR}+git${SRCPV}"
+PV = "v2010.12+git${SRCPV}"
 PR="r2"
 
 SRC_URI = "git://git.denx.de/u-boot.git;branch=master;protocol=git"
