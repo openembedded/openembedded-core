@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [licensing]
+
 # Fix errors when built with gcc 4.3
 # Patch taken from Debian bug #452096
 

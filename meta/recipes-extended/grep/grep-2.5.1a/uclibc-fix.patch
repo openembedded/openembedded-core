@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [licensing]
+
 # Fix to use mempcpy instead of __mempcpy. This is needed for uclibc which
 # doesn't define __mempcpy, only mempcpy. Since both uclibc and glibc have
 # mempcpy, we'll just use that instead.

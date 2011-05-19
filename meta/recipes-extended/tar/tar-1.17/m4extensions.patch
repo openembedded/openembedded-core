@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [licensing]
+
 # Define AC_USE_SYSTEM_EXTENSIONS only if it was previously undefined.
 # This is needed to configure correctly with newer versions of autoconf.
 

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [licensing]
+
 # Avoid multiple stat definitions
 # Patch taken from cpio mailing list posting 2010-03-19
 
