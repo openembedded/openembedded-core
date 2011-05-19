@@ -6,7 +6,10 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 PR = "r6"
 
-DEPENDS = "avahi gtk+"
+DEPENDS = "avahi ${GTKDEP}"
+GTKDEP_libc-uclibc = ""
+GTKDEP = "gtk+"
+
 RRECOMMENDS_${PN} = "avahi-daemon"
 
 # Upstream change this patch periodically so store locally
@@ -24,16 +27,20 @@ inherit autotools pkgconfig update-rc.d
 
 INITSCRIPT_NAME = "distcc"
 
-EXTRA_OECONF = " --with-gtk "
-
+EXTRA_OECONF = "--with-gtk"
+EXTRA_OECONF_libc-uclibc = "--without-gtk --without-gnome"
 do_install_append() {
     install -d ${D}${sysconfdir}/init.d/
     install -d ${D}${sysconfdir}/default
     install -m 0755 ${WORKDIR}/distcc ${D}${sysconfdir}/init.d/
     install -m 0755 ${WORKDIR}/default ${D}${sysconfdir}/default/distcc
+    ${DESKTOPINSTALL}
+}
+DESKTOPINSTALL = ""
+DESKTOPINSTALL_libc-glibc () {
+    install -d ${D}${datadir}/distcc/
     install -m 0644 ${WORKDIR}/distccmon-gnome.desktop ${D}${datadir}/distcc/
 }
-
 PACKAGES += "distcc-distmon-gnome"
 
 FILES_${PN} = " ${sysconfdir} \
