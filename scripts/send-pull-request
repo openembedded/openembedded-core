@@ -67,19 +67,6 @@ harvest_recipients()
 	unset IFS
 }
 
-check_git_sendemail_config()
-{
-	GIT_SMTP=$(git config sendemail.smtpserver)
-	GIT_FROM=$(git config sendemail.from)
-	if [ -z "$GIT_SMTP" ] || [ -z "$GIT_FROM" ]; then
-		echo "ERROR: git sendemail is not configured."
-		echo "Please read GIT-SEND-EMAIL(1) and configure:"
-		echo "  sendemail.smtpserver"
-		echo "  sendemail.from"
-		exit 1
-	fi
-}
-
 # Parse and verify arguments
 while getopts "achp:t:" OPT; do
 	case $OPT in
@@ -112,9 +99,6 @@ while getopts "achp:t:" OPT; do
 		;;
 	esac
 done
-
-# Abort early if git-send-email is not properly configured
-check_git_sendemail_config
 
 if [ -z "$PDIR" ]; then
 	echo "ERROR: you must specify a pull-dir."
