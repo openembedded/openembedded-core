@@ -5,10 +5,12 @@ programs fulfilling the same or similar functions and how they can be installed 
 time."
 LICENSE = "GPL"
 SECTION = "base"
-SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.gz"
+SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.bz2"
 S = "${WORKDIR}/dpkg-${PV}"
 PACKAGE_ARCH = "all"
-PR = "r2"
+INC_PR = "r2"
+
+inherit gettext
 
 do_patch () {
     cat ${S}/scripts/update-alternatives.pl | \
@@ -31,5 +33,11 @@ do_install () {
 
     install -m 0755 scripts/update-alternatives ${D}${sbindir}/update-alternatives
 }
+
+PROVIDES += "virtual/update-alternatives"
+RPROVIDES_${PN} += "update-alternatives"
+EXTRA_RDEPENDS = "perl dpkg"
+EXTRA_RDEPENDS_virtclass-native = ""
+RDEPENDS_${PN} += "${EXTRA_RDEPENDS}"
 
 BBCLASSEXTEND = "native"
