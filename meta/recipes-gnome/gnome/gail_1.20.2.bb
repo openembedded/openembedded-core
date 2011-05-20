@@ -1,9 +1,13 @@
-LICENSE = "LGPL"
-SECTION = "x11/libs"
-PR = "r1"
 DESCRIPTION = "GNOME Accessibility Implementation Library"
+SECTION = "x11/libs"
+
 DEPENDS = "gtk+"
 PROVIDES = "virtual/gail"
+
+LICENSE = "LGPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7"
+
+PR = "r0"
 
 inherit gnome
 
