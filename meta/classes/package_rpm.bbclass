@@ -484,6 +484,7 @@ python write_specfile () {
 			else:
 				bb.note("Creating RPM package for %s" % splitname)
 				spec_files_top.append('%files')
+				spec_files_top.append('%defattr(-,-,-,-)')
 				if file_list:
 					spec_files_top.extend(file_list)
 				spec_files_top.append('')
@@ -570,6 +571,7 @@ python write_specfile () {
 		else:
 			bb.note("Creating RPM package for %s" % splitname)
 			spec_files_bottom.append('%%files -n %s' % splitname)
+			spec_files_bottom.append('%defattr(-,-,-,-)')
 			if file_list:
 				spec_files_bottom.extend(file_list)
 			spec_files_bottom.append('')
