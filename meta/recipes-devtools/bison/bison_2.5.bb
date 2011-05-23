@@ -10,18 +10,17 @@ SECTION = "devel"
 PRIORITY = "optional"
 DEPENDS = "bison-native"
 
-PR = "r2"
+PR = "r0"
 
 BASE_SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.gz \
 	   file://m4.patch \
-	   file://uclibc-sched_param-def.patch \
 	  "
 
 SRC_URI = "${BASE_SRC_URI} \
         file://fix_cross_manpage_building.patch "
 
-SRC_URI[md5sum] = "ea45c778b36bdc7a720096819e292a73"
-SRC_URI[sha256sum] = "6b17be5e63ff6667c83f6ef0423befe0ba23d4bc554c4c33b02ce5bb65179b16"
+SRC_URI[md5sum] = "687e1dcd29452789d34eaeea4c25abe4"
+SRC_URI[sha256sum] = "722def46e4a19a5b7a579ef30db1965f86c37c1a20a5f0113743a2e4399f7c99"
 
 DEPENDS_virtclass-native = "gettext-native"
 SRC_URI_virtclass-native = "${BASE_SRC_URI}"
