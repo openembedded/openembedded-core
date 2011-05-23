@@ -5,14 +5,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7"
 DEPENDS = "python-pygobject-native-${PV} glib-2.0"
 DEPENDS_virtclass-native = "glib-2.0-native"
 RDEPENDS_virtclass-native = ""
-PR = "r2"
+PR = "r0"
 
 MAJ_VER = "${@bb.data.getVar('PV',d,1).split('.')[0]}.${@bb.data.getVar('PV',d,1).split('.')[1]}"
 
 SRC_URI = "${GNOME_MIRROR}/pygobject/${MAJ_VER}/pygobject-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "9e2496ffa4e55911f94232e29ee9f146"
-SRC_URI[sha256sum] = "7594bd86c5b92a4ba1f26927800f1b29e1ec5c246cad67aa085c279d6425b8a2"
+SRC_URI[md5sum] = "2b11a3050264721aac83188224b093a8"
+SRC_URI[sha256sum] = "a1dffbe2a8e0d490594554ed8d06f0ee4a371acb6c210e7f35158e9ae77e0df4"
 S = "${WORKDIR}/pygobject-${PV}"
 
 FILESPATH = "${FILE_DIRNAME}/python-pygobject:${FILE_DIRNAME}/files"
