@@ -2908,11 +2908,13 @@ RECIPE_MAINTAINER_pn-linux-libc-headers = "Nitin A Kamble <nitin.a.kamble@intel.
 RECIPE_STATUS_pn-lsof="green" 
 RECIPE_LATEST_VERSION_pn-lsof="4.84"
 RECIPE_LAST_UPDATE_pn-lsof = "Nov 8, 2010"
+RECIPE_MANUAL_CHECK_DATE_pn-lsof = "May 23, 2011" 
 RECIPE_MAINTAINER_pn-lsof = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-make="green" 
 RECIPE_LATEST_VERSION_pn-make="3.82"
 RECIPE_LAST_UPDATE_pn-make = "Nov 8, 2010"
+RECIPE_MANUAL_CHECK_DATE_pn-make = "May 23, 2011" 
 RECIPE_MAINTAINER_pn-make = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-run-postinsts="green" # all local code
@@ -3003,6 +3005,7 @@ RECIPE_STATUS_pn-gnu-config="green"
 RECIPE_LATEST_VERSION_pn-gnu-config="0.0+git3155524"
 DISTRO_PN_ALIAS_pn-gnu-config = "OpenedHand"
 RECIPE_LAST_UPDATE_pn-gnu-config = "Jun 21, 2010"
+RECIPE_MANUAL_CHECK_DATE_pn-gnu-config = "May 23, 2011" 
 RECIPE_MAINTAINER_pn-gnu-config = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-mpfr="green"
