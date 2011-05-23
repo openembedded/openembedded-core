@@ -97,28 +97,22 @@ while getopts "b:chi:m:o:p:r:s:u:" OPT; do
 			exit 1
 		fi
 
-		# Rewrite known private URLs to public URLs
+		# Rewrite private URLs to public URLs
 		# Determine the repository name for use in the WEB_URL later
 		case "$REMOTE_URL" in
-		ssh://git@git.pokylinux.org*)
-			REMOTE_REPO=$(echo $REMOTE_URL | sed "s#.*/\(.*\)#\1#")
-			REMOTE_URL=${REMOTE_URL/'ssh://git@'/'git://'}
+		*@*)
+			USER_RE="[A-Za-z0-9_.@][A-Za-z0-9_.@-]*\$\?"
+			PROTO_RE="[a-z][a-z]*://"
+			GIT_RE="\(^\($PROTO_RE\)\?$USER_RE@\)\([^:/]*\)[:/]\(.*\)"
+			REMOTE_URL=${REMOTE_URL%.git}
+			REMOTE_REPO=$(echo $REMOTE_URL | sed "s#$GIT_RE#\4#")
+			REMOTE_URL=$(echo $REMOTE_URL | sed "s#$GIT_RE#git://\3/\4#")
 			;;
-		ssh://git@git.yoctoproject.org*)
-			REMOTE_REPO=$(echo $REMOTE_URL | sed "s#.*/\(.*\)#\1#")
-			REMOTE_URL=${REMOTE_URL/"ssh://git@"/"git://"}
-			;;
-		*ssh://git@git.openembedded.org*)
-			REMOTE_REPO=$(echo $REMOTE_URL | sed "s#.*/\(.*\)#\1#")
-			REMOTE_URL=${REMOTE_URL/"ssh://git@"/"git://"}
-			;;
-		git@github.com:*)
-			REMOTE_REPO=$(echo $REMOTE_URL | sed 's#.*:\(.*\)\(\.git\)$#\1#')
-			REMOTE_URL=${REMOTE_URL/"git@github.com:"/"git://github.com/"}
+		*)
+			echo "WARNING: Unrecognized remote URL: $REMOTE_URL"
+			echo "         The pull and browse URLs will likely be incorrect"
 			;;
 		esac
-		# The .git suffix is optional in the URL, drop in for the REPO
-		REMOTE_REPO=${REMOTE_REPO%.git}
 		;;
 	esac
 done
@@ -134,6 +128,7 @@ fi
 
 
 # Set WEB_URL from known remotes
+WEB_URL=""
 case "$REMOTE_URL" in
 	*git.yoctoproject.org*)
 		WEB_URL="http://git.yoctoproject.org/cgit.cgi/$REMOTE_REPO/log/?h=$BRANCH"
