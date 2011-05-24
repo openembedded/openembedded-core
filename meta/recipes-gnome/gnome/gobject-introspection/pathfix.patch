@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: git/giscanner/dumper.py
 ===================================================================
 --- git.orig/giscanner/dumper.py	2010-11-29 15:14:35.000000000 -0800

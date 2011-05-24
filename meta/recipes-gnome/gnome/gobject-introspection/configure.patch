@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: git/common.mk
 ===================================================================
 --- git.orig/common.mk	2009-08-19 11:11:26.000000000 +0100

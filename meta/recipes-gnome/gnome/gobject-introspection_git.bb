@@ -10,8 +10,8 @@ LIC_FILES_CHKSUM = "file://COPYING.tools;md5=94d55d512a9ba36caa9b7df079bae19f \
 		    file://COPYING.lib;md5=3bf50002aefd002f49e7bb854063f7e7"
 
 SRCREV = "efa7266bcf78478ce62e8dd778a4f0417bfd4d15"
-PV = "0.0+git${SRCPV}"
-PR = "r3"
+PV = "0.10.8+git${SRCPV}"
+PR = "r4"
 
 S = "${WORKDIR}/git"
 
