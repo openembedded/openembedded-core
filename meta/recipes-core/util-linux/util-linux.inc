@@ -7,7 +7,7 @@ SECTION = "base"
 
 LICENSE = "GPLv2+ & LGPLv2.1+ & BSD"
 
-LIC_FILES_CHKSUM = "file://README.licensing;md5=1530e36fe1304d4535513de90a290df9 \
+LIC_FILES_CHKSUM = "file://README.licensing;md5=9c920d811858a74b67a36ba23cbaa95f \
                     file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://licenses/COPYING.GPL;md5=8ca43cbc842c2336e835926c2166c28b \
                     file://licenses/COPYING.UCB;md5=263860f8968d8bafa5392cab74285262 \
@@ -18,7 +18,7 @@ DEPENDS = "zlib ncurses"
 DEPENDS_virtclass-native_append = " lzo-native"
 
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux-ng/v${MAJOR_VERSION}/util-linux-ng-${PV}.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux-ng/v${MAJOR_VERSION}/util-linux-${PV}.tar.bz2 \
            file://MCONFIG \
            file://swapargs.h \
            file://defines.h \
@@ -30,8 +30,6 @@ PACKAGES =+ "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk \
              util-linux-mount util-linux-readprofile util-linux-libblkid \
              util-linux-libblkid-dev util-linux-libuuid util-linux-libuuid-dev \
              util-linux-uuidgen util-linux-lscpu"
-
-S = "${WORKDIR}/util-linux-ng-${PV}"
 
 EXTRA_OECONF = "--disable-use-tty-group --disable-makeinstall-chown --enable-elvtune --enable-init --enable-kill --enable-last \
  --enable-mesg --enable-partx --enable-raw --enable-rdev --enable-reset \
