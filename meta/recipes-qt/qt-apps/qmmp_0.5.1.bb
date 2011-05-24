@@ -11,8 +11,9 @@ RDEPENDS_${PN} += "taglib alsa-lib curl"
 
 SRC_URI = "http://qmmp.ylsoftware.com/files/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "e4cce9e0b70230c02263ebcbe958e9c0"
-SRC_URI[sha256sum] = "0fc75012546744657c2cdcea7f30f1be371a9d812811b6901019faa9427f7ba9"
+SRC_URI[md5sum] = "7934c069256bf2fc4ab762ad2683db2f"
+SRC_URI[sha256sum] = "16ab0334f368a5ef14d631a1d43d7cae876ee06b7185643377b5e9cfd6143099"
+
 
 PARALLEL_MAKE = ""
 
