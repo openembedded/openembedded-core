@@ -1,3 +1,6 @@
+
+Upstream-Status: Pending
+
 Index: git/Makefile.in
 ===================================================================
 --- git.orig/Makefile.in
