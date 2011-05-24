@@ -1,5 +1,7 @@
 Remove the -Os flag
 
+Upstream-Status: Inappropriate [configuration]
+
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 Index: git/Makefile
 ===================================================================
