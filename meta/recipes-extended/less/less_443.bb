@@ -9,14 +9,14 @@ SECTION = "console/utils"
 # less is a 2-clause BSD-like permissive license
 LICENSE = "GPLv3+ | less"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
-                    file://LICENSE;md5=fd5ccf3de28f72a0254fa8768ec8180c"
+                    file://LICENSE;md5=1237c0f825bb36122b0b2b486ffbe6be"
 DEPENDS = "ncurses"
 PR = "r0"
 
 SRC_URI = "http://www.greenwoodsoftware.com/${BPN}/${BPN}-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "817bf051953ad2dea825a1cdf460caa4"
-SRC_URI[sha256sum] = "57a16ff07431a9af45cf1cd5b374e1066d019304219f0d156e22bb8c4d6734d2"
+SRC_URI[md5sum] = "47db098fb3cdaf847b3c4be05ee954fc"
+SRC_URI[sha256sum] = "a4c3e8af81fd0944941ee7c74eecc7759422a227df52335e899e69de5eae30ca"
 
 
 inherit autotools update-alternatives
