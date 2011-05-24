@@ -1,0 +1,74 @@
+Upstream-Status: Pending
+
+Index: gettext-0.18.1.1/gettext-runtime/gnulib-lib/wchar.in.h
+===================================================================
+--- gettext-0.18.1.1.orig/gettext-runtime/gnulib-lib/wchar.in.h	2010-05-08 18:36:16.000000000 -0700
++++ gettext-0.18.1.1/gettext-runtime/gnulib-lib/wchar.in.h	2011-05-25 16:28:38.656220937 -0700
+@@ -48,6 +48,14 @@
+ #else
+ /* Normal invocation convention.  */
+ 
++#ifdef __need_mbstate_t
++/* Special invocation convention inside uClibc header files.  */
++
++#@INCLUDE_NEXT@ @NEXT_WCHAR_H@
++
++#else
++/* Normal invocation convention.  */
++
+ #ifndef _GL_WCHAR_H
+ 
+ #define _GL_ALREADY_INCLUDING_WCHAR_H
+@@ -426,3 +434,4 @@
+ #endif /* _GL_WCHAR_H */
+ #endif /* _GL_WCHAR_H */
+ #endif
++#endif
+Index: gettext-0.18.1.1/gettext-tools/gnulib-lib/wchar.in.h
+===================================================================
+--- gettext-0.18.1.1.orig/gettext-tools/gnulib-lib/wchar.in.h	2010-05-24 02:42:48.000000000 -0700
++++ gettext-0.18.1.1/gettext-tools/gnulib-lib/wchar.in.h	2011-05-25 16:28:15.717360791 -0700
+@@ -48,6 +48,14 @@
+ #else
+ /* Normal invocation convention.  */
+ 
++#ifdef __need_mbstate_t
++/* Special invocation convention inside uClibc header files.  */
++
++#@INCLUDE_NEXT@ @NEXT_WCHAR_H@
++
++#else
++/* Normal invocation convention.  */
++
+ #ifndef _GL_WCHAR_H
+ 
+ #define _GL_ALREADY_INCLUDING_WCHAR_H
+@@ -426,3 +434,4 @@
+ #endif /* _GL_WCHAR_H */
+ #endif /* _GL_WCHAR_H */
+ #endif
++#endif
+Index: gettext-0.18.1.1/gettext-tools/libgettextpo/wchar.in.h
+===================================================================
+--- gettext-0.18.1.1.orig/gettext-tools/libgettextpo/wchar.in.h	2010-05-08 18:38:04.000000000 -0700
++++ gettext-0.18.1.1/gettext-tools/libgettextpo/wchar.in.h	2011-05-25 16:28:26.998721087 -0700
+@@ -48,6 +48,14 @@
+ #else
+ /* Normal invocation convention.  */
+ 
++#ifdef __need_mbstate_t
++/* Special invocation convention inside uClibc header files.  */
++
++#@INCLUDE_NEXT@ @NEXT_WCHAR_H@
++
++#else
++/* Normal invocation convention.  */
++
+ #ifndef _GL_WCHAR_H
+ 
+ #define _GL_ALREADY_INCLUDING_WCHAR_H
+@@ -426,3 +434,4 @@
+ #endif /* _GL_WCHAR_H */
+ #endif /* _GL_WCHAR_H */
+ #endif
++#endif

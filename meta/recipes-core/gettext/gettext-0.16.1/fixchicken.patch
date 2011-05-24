@@ -2,6 +2,8 @@
 # 
 # Commented by: Saul Wold <saul.wold@intel.com>
 
+Upstream-Status: Inappropriate [embedded]
+
 Index: gettext-tools/m4/csharpcomp.m4
 ===================================================================
 RCS file: /cvs/gettext/gettext/gettext-tools/m4/csharpcomp.m4,v

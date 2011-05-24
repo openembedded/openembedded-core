@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gettext-0.17/gettext-tools/libgettextpo/error.h
 ===================================================================
 --- gettext-0.17.orig/gettext-tools/libgettextpo/error.h	2008-07-27 21:16:25.561115527 +0200

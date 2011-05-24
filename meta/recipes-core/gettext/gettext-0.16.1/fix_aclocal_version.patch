@@ -2,6 +2,8 @@ This patch updates the required version number from 2.61 to the
 current 2.65 version of aclocal, this will need to be updated 
 when we update aclocal
 
+Upstream-Status: Inappropriate [configuration]
+
 Signed-off-by Saul Wold <sgw@linux.intel.com>
 
 Index: gettext-0.16.1/autoconf-lib-link/m4/lib-link.m4

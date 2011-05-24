@@ -2,6 +2,8 @@
 # 
 # Commented by: Saul Wold <saul.wold@intel.com>
 
+Upstream-Status: Pending
+
 Index: gettext-0.16.1/gettext-runtime/intl/Makefile.in
 ===================================================================
 --- gettext-0.16.1.orig/gettext-runtime/intl/Makefile.in	2006-11-27 09:02:00.000000000 -0800

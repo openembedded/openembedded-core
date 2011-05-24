@@ -3,6 +3,8 @@ AC_USE_SYSTEM_EXTENSIONS.
 
 Thanks to Mark Hatle for the timely pointers and fixes.
 
+Upstream-Status: Inappropriate [configuration]
+
 Signed-off-by Saul Wold <sgw@linux.intel.com>
 
 diff -ru gettext-0.16.1/gettext-runtime/gnulib-m4/extensions.m4 gettext.patched/gettext-runtime/gnulib-m4/extensions.m4

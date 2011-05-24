@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: gettext-0.17/gettext-runtime/man/Makefile.am
 ===================================================================
 --- gettext-0.17.orig/gettext-runtime/man/Makefile.am	2007-10-07 21:37:36.000000000 +0200

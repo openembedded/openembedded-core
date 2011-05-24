@@ -2,6 +2,8 @@ This patch hardcodes in version 0.17 for the GETTEXT_MACRO_VERSION,
 the version check is only part of 0.17 and will not affect any 0.16.1
 operations
 
+Upstream-Status: Inappropriate [configuration]
+
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
 Index: gettext-0.16.1/gettext-runtime/m4/po.m4

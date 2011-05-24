@@ -2,6 +2,8 @@
 # 
 # Commented by: Saul Wold <saul.wold@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 diff -ur gettext-0.14.6/gettext-tools/lib/error.h gettext-0.14.6-patched/gettext-tools/lib/error.h
 --- gettext-0.14.6/gettext-tools/lib/error.h	2005-05-20 16:03:42.000000000 -0500
 +++ gettext-0.14.6-patched/gettext-tools/lib/error.h	2007-01-13 20:57:24.422168053 -0600

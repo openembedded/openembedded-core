@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: gettext-0.17/gettext-tools/src/write-catalog.c
 ===================================================================
 --- gettext-0.17.orig/gettext-tools/src/write-catalog.c	2008-10-16 15:18:16.000000000 +0200

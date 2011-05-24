@@ -22,6 +22,8 @@ Ralf
         * m4/openmp.m4 (AC_OPENMP): Do not define with Autoconf 2.62 or
         newer.
 
+Upstream-Status: Pending
+
 Index: gettext-0.17/gettext-tools/gnulib-m4/openmp.m4
 ===================================================================
 --- gettext-0.17.orig/gettext-tools/gnulib-m4/openmp.m4	2010-02-01 10:51:00.437788710 +0000

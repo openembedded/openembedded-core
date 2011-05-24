@@ -2,6 +2,8 @@
 # 
 # Commented by: Saul Wold <saul.wold@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: gettext-0.16.1/autoconf-lib-link/m4/lib-link.m4
 ===================================================================
 --- gettext-0.16.1.orig/autoconf-lib-link/m4/lib-link.m4	2006-11-27 09:01:58.000000000 -0800

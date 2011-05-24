@@ -2,6 +2,8 @@
 # 
 # Commented by: Saul Wold <saul.wold@intel.com>
 
+Upstream-Status: Inappropriate [configuration]
+
 --- /gettext-tools/m4/orig-getline.m4	2003-07-18 18:11:37.000000000 +0300
 +++ /gettext-tools/m4/getline.m4	2007-02-03 13:33:41.000000000 +0200
 @@ -42,12 +42,23 @@
