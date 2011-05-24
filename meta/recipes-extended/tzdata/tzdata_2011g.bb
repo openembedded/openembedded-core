@@ -15,8 +15,8 @@ RCONFLICTS= "timezones timezone-africa timezone-america timezone-antarctica \
 
 SRC_URI = "ftp://elsie.nci.nih.gov/pub/tzdata${PV}.tar.gz"
 
-SRC_URI[md5sum] = "5cae5c56fad81dc29f8fcd933a05768e"
-SRC_URI[sha256sum] = "cd0f3799688b3b870cd988505e47c2975b1808e73ec0677bc9db4b705b534c07"
+SRC_URI[md5sum] = "a068c27e7e426fdb12ab0c88506df20d"
+SRC_URI[sha256sum] = "01a2a189eeda63baacc5e68e6c13afffc7edce182102fffc53acbf35e8703d3c"
 
 S = "${WORKDIR}"
 
