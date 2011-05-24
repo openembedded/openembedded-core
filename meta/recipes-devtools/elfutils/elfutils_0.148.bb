@@ -30,6 +30,9 @@ SRC_URI += "\
 	file://remove-unused.patch \
 	file://mempcpy.patch \
 "
+# Only apply when building uclibc based target recipe
+SRC_URI_append_libc-uclibc = " ${@['', 'file://uclibc-support.patch']['${PN}' == '${BPN}']}"
+
 # The buildsystem wants to generate 2 .h files from source using a binary it just built,
 # which can not pass the cross compiling, so let's work around it by adding 2 .h files
 # along with the do_configure_prepend()
@@ -38,9 +41,10 @@ SRC_URI += "\
         file://i386_dis.h \
         file://x86_64_dis.h \
 "
-inherit autotools
+inherit autotools gettext
 
 EXTRA_OECONF = "--program-prefix=eu-"
+EXTRA_OECONF_append_libc-uclibc = " ${@['', '--enable-uclibc']['${PN}' == '${BPN}']}"
 
 do_configure_prepend() {
 	sed -i 's:./i386_gendis:echo\ \#:g' ${S}/libcpu/Makefile.am
@@ -48,8 +52,13 @@ do_configure_prepend() {
 	cp ${WORKDIR}/*dis.h ${S}/libcpu
 }
 
-# Only append ldflags for target recipe
-TARGET_LDFLAGS_libc-uclibc += "${@['', '-lintl -luargp']['${PN}' == '${BPN}']}"
+# we can not build complete elfutils when using uclibc
+# but some recipes e.g. gcc 4.5 depends on libelf so we
+# build only libelf for uclibc case
+
+EXTRA_OEMAKE_libc-uclibc = "-C libelf"
+EXTRA_OEMAKE_virtclass-native = ""
+EXTRA_OEMAKE_virtclass-nativesdk = ""
 
 BBCLASSEXTEND = "native nativesdk"
 
