@@ -4,14 +4,14 @@ compatible although it has some extensions (for example, handling more than 9 po
 GNU M4 also has built-in functions for including files, running shell commands, doing arithmetic, etc."
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
-	file://examples/COPYING;md5=380fd7d57d3fd009a5716e074a845d6d"
+	file://examples/COPYING;md5=fbc986d45b3dae6725c29870dd6b669d"
 
 PR = "r0"
 SRC_URI = "${GNU_MIRROR}/m4/m4-${PV}.tar.gz \
            file://ac_config_links.patch;patch=1"
 
-SRC_URI[md5sum] = "5649a2e593b6c639deae9e72ede777dd"
-SRC_URI[sha256sum] = "3d66dfeb609007062265a67b9a2c08d3686a74068830bacae60a6d58413c9367"
+SRC_URI[md5sum] = "a5dfb4f2b7370e9d34293d23fd09b280"
+SRC_URI[sha256sum] = "e9176a35bb13a1b08482359aa554ee8072794f58f00e4827bf0e06b570c827da"
 
 inherit autotools
 
