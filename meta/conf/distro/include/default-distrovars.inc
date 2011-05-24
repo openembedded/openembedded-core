@@ -1,7 +1,5 @@
 QA_LOGFILE = "${TMPDIR}/qa.log"
 
-IMAGE_ROOTFS_SIZE_ext2 ?= "131072"
-
 OEINCLUDELOGS ?= "yes"
 KERNEL_CONSOLE ?= "ttyS0"
 

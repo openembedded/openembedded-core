@@ -8,3 +8,5 @@ IMAGE_LINGUAS = ""
 LICENSE = "MIT"
 
 inherit core-image
+
+IMAGE_ROOTFS_SIZE = "8192"
