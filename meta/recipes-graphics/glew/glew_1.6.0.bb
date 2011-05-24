@@ -13,7 +13,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/glew/glew/${PV}/glew-${PV}.tgz \
            file://autotools.patch \
           "
 
-SRC_URI[md5sum] = "f913ce9dbde4cd250b932731b3534ded"
-SRC_URI[sha256sum] = "86bd36a163640d6027ec6be5fdd8a6e3b90f02dcf55f95c3c2429ebb58be3107"
+SRC_URI[md5sum] = "7dfbb444b5a4e125bc5dba0aef403082"
+SRC_URI[sha256sum] = "bea2a7e9bb97a7a5054d4a65d16aaeedeaa091719359ad3fcd9bfdb0fe8eb7fa"
 
 inherit autotools lib_package
