@@ -1,6 +1,6 @@
 require autoconf.inc
 
-PR = "r2"
+PR = "r0"
 
 PARALLEL_MAKE = ""
 
@@ -17,8 +17,8 @@ SRC_URI += "file://autoreconf-include.patch;patch=1 \
 	   ${@['file://path_prog_fixes.patch;patch=1', ''][bb.data.inherits_class('native', d)]} \
            file://config_site.patch;patch=1"
 
-SRC_URI[md5sum] = "a6de1cc6434cd64038b0a0ae4e252b33"
-SRC_URI[sha256sum] = "db11944057f3faf229ff5d6ce3fcd819f565455c152b72cec17ebc1cbb80136b"
+SRC_URI[md5sum] = "864d785215aa60d627c91fcb21b05b07"
+SRC_URI[sha256sum] = "c491fb273fd6d4ca925e26ceed3d177920233c76d542b150ff35e571454332c8"
 
 DEPENDS_virtclass-native = "m4-native gnu-config-native"
 RDEPENDS_${PN}_virtclass-native = "m4-native gnu-config-native"

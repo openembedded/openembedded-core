@@ -6,11 +6,11 @@ This patch removes them to stop any confusion.
 
 RP - 20071115
 
-Index: autoconf-2.65/lib/autoconf/libs.m4
+Index: autoconf-2.68/lib/autoconf/libs.m4
 ===================================================================
---- autoconf-2.65.orig/lib/autoconf/libs.m4	2009-10-29 01:53:41.000000000 +0000
-+++ autoconf-2.65/lib/autoconf/libs.m4	2010-01-29 13:40:13.000000000 +0000
-@@ -159,53 +159,6 @@
+--- autoconf-2.68.orig/lib/autoconf/libs.m4
++++ autoconf-2.68/lib/autoconf/libs.m4
+@@ -159,53 +159,6 @@ m4_popdef([AC_Lib_Name])dnl
  # --------------------- #
  
  
@@ -32,7 +32,7 @@ Index: autoconf-2.65/lib/autoconf/libs.m4
 -	@echo libdir='${LIBDIR}'
 -_ACEOF
 -  if (export CC; ${XMKMF-xmkmf}) >/dev/null 2>/dev/null && test -f Makefile; then
--    # GNU make sometimes prints "make[1]: Entering...", which would confuse us.
+-    # GNU make sometimes prints "make[1]: Entering ...", which would confuse us.
 -    for ac_var in incroot usrlibdir libdir; do
 -      eval "ac_im_$ac_var=\`\${MAKE-make} $ac_var 2>/dev/null | sed -n 's/^$ac_var=//p'\`"
 -    done
@@ -64,7 +64,7 @@ Index: autoconf-2.65/lib/autoconf/libs.m4
  # _AC_PATH_X_DIRECT
  # -----------------
  # Internal subroutine of _AC_PATH_X.
-@@ -213,44 +166,7 @@
+@@ -213,44 +166,7 @@ fi
  m4_define([_AC_PATH_X_DIRECT],
  [# Standard set of common directories for X headers.
  # Check X11 before X11Rn because it is often a symlink to the current release.
@@ -110,7 +110,7 @@ Index: autoconf-2.65/lib/autoconf/libs.m4
  
  if test "$ac_x_includes" = no; then
    # Guess where to find include files, by looking for Xlib.h.
-@@ -299,7 +215,6 @@
+@@ -299,7 +215,6 @@ AC_DEFUN([_AC_PATH_X],
  [AC_CACHE_VAL(ac_cv_have_x,
  [# One or both of the vars are not set, and there is no cached value.
  ac_x_includes=no ac_x_libraries=no
