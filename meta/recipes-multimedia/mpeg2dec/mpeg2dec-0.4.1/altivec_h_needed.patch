@@ -20,6 +20,8 @@ altivec.h is needed by "typedef vector int t;".
 Here we include another statement "int tmp = __CR6_EQ;", in
 which __CR6_EQ is defined in altivec.h.
 
+Upstream-Status: Pending
+
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 
 diff -ruN mpeg2dec-0.4.1-orig/configure.in mpeg2dec-0.4.1/configure.in
