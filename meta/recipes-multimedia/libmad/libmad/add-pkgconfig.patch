@@ -10,6 +10,8 @@ do not provide mad.pc (google: pkgconfig libmad).
 
 EMH
 
+Upstream-Status: Inappropriate [configuration]
+
 --h31gzZEtNLTqOjlF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=&quot;libmad-0.15.1b-pkgconfig.patch&quot;
