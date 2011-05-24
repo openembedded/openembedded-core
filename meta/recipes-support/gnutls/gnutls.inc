@@ -21,9 +21,9 @@ inherit autotools binconfig pkgconfig gettext
 
 EXTRA_OECONF="--with-included-opencdk --with-included-libcfg --disable-rpath \
               --with-libtasn1-prefix=${STAGING_DIR_HOST}${prefix} \
-              --with-libgcrypt-prefix=${STAGING_DIR_HOST}${prefix} \
-              --with-libz-prefix=${STAGING_DIR_HOST}${prefix} --with-lzo --disable-guile"
-
+              --with-libgcrypt --with-libgcrypt-prefix=${STAGING_DIR_HOST}${prefix} \
+              --with-lzo --disable-guile \
+              "
 do_configure_prepend() {
 	for dir in . lib libextra; do
 		rm ${dir}/aclocal.m4 ${dir}/m4/libtool.m4 ${dir}/m4/lt*.m4
