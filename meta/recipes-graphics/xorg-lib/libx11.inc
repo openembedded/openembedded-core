@@ -6,6 +6,8 @@ basic functions of the window system."
 
 require xorg-lib-common.inc
 
+inherit siteinfo
+
 PROVIDES = "virtual/libx11"
 
 XORG_PN = "libX11"
@@ -22,7 +24,11 @@ do_compile() {
 	touch makekeys-makekeys.o
 	(
 		unset CC LD CXX CCLD CFLAGS CPPFLAGS LDFLAGS CXXFLAGS
-		${BUILD_CC} ${BUILD_CFLAGS} -I${STAGING_INCDIR_NATIVE} makekeys.c -o makekeys
+		if [ "${SITEINFO_BITS}" == "64" ]; then
+                        ${BUILD_CC} ${BUILD_CFLAGS} -I${STAGING_INCDIR_NATIVE} makekeys.c -o makekeys
+                else
+                        ${BUILD_CC} ${BUILD_CFLAGS} -I${STAGING_INCDIR_NATIVE} -DUSE32 makekeys.c -o makekeys
+                fi
 	)
 	if [ "$?" != "0" ]; then
 		exit 1
