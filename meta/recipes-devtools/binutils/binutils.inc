@@ -11,7 +11,7 @@ BUGTRACKER = "http://sourceware.org/bugzilla/"
 SECTION = "devel"
 LICENSE = "GPLv3"
 
-DEPENDS = "flex-native bison-native"
+DEPENDS = "flex-native bison-native zlib-native"
 
 inherit autotools gettext
 
