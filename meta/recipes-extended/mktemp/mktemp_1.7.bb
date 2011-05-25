@@ -2,7 +2,7 @@ DESCRIPTION = "Allow safe temporary file creation from shell scripts."
 HOMEPAGE = "http://www.mktemp.org/"
 BUGTRACKER = "http://www.mktemp.org/bugs"
 SECTION = "console/utils"
-LICENSE = "ISC style"
+LICENSE = "ISC"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=430680f6322a1eb87199b5e01a82c0d4"
 
 PR = "r0"

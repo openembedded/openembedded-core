@@ -7,7 +7,7 @@ DESCRIPTION = "Make system for boost (native)"
 HOMEPAGE = "http://www.boost.org/"
 SECTION = "devel"
 PRIORITY = "optional"
-LICENSE = "Boost Software License"
+LICENSE = "Boost"
 PR = "r0"
 
 LIC_FILES_CHKSUM = "file://LICENSE_1_0.txt;md5=e4224ccaecb14d942c71d31bef20d78c"

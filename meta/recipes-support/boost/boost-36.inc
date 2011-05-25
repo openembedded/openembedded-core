@@ -8,7 +8,7 @@ HOMEPAGE = "http://www.boost.org/"
 SECTION = "libs"
 DEPENDS = "boost-jam-native zlib"
 PRIORITY = "optional"
-LICENSE = "Boost Software License"
+LICENSE = "Boost"
 PR = "r3"
 
 ARM_INSTRUCTION_SET = "arm"

@@ -7,7 +7,7 @@ HOMEPAGE = "https://fedorahosted.org/cronie/"
 BUGTRACKER = "mmaslano@redhat.com"
 
 # Internet Systems Consortium License
-LICENSE = "ISC license & BSD"
+LICENSE = "ISC & BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=963ea0772a2adbdcd607a9b2ec320c11 \
                     file://src/cron.h;endline=20;md5=b425c334265026177128353a142633b4 \
                     file://src/popen.c;beginline=3;endline=31;md5=edd50742d8def712e9472dba353668a9"

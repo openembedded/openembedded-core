@@ -2,7 +2,7 @@ DESCRIPTION = "PNG Library"
 HOMEPAGE = "http://www.libpng.org/"
 SECTION = "libs"
 PRIORITY = "required"
-LICENSE = "libpng"
+LICENSE = "Libpng"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a294a2bb08b7f25558119edbfd6b2e92 \
                     file://png.h;startline=172;endline=261;md5=3253923f0093658f470e52a06ddcf4e7"
 DEPENDS = "zlib"

@@ -11,7 +11,7 @@
 SECTION = "libs"
 DESCRIPTION = "Berkeley DB v5."
 HOMEPAGE = "http://www.oracle.com/technology/products/berkeley-db/db/index.html"
-LICENSE = "BSD Sleepycat"
+LICENSE = "Sleepycat"
 VIRTUAL_NAME ?= "virtual/db"
 CONFLICTS = "db3"
 PR = "r2"

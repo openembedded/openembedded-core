@@ -1,6 +1,6 @@
 DESCRIPTION = "General-purpose x86 assembler"
 SECTION = "devel"
-LICENSE = "simplifiedBSD"
+LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d89d124974e487e5d64da6f1cd8acfbb"
 COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 

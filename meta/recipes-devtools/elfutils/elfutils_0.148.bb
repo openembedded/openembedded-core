@@ -1,7 +1,7 @@
 DESCRIPTION = "A collection of utilities and DSOs to handle compiled objects."
 HOMEPAGE = "https://fedorahosted.org/elfutils"
 SECTION = "base"
-LICENSE = "GPLv2 with exceptions"
+LICENSE = "(GPLv2 & Exception)"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3\
                     file://EXCEPTION;md5=570adcb0c1218ab57f2249c67d0ce417"
 DEPENDS = "libtool bzip2 zlib"

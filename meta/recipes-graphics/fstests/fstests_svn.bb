@@ -1,7 +1,7 @@
 DESCRIPTION = "Various benchmarning tests for X"
 HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
-LICENSE = "ZLIB"
+LICENSE = "Zlib"
 DEPENDS = "pango libxext libxft virtual/libx11 gtk+"
 
 SRCREV = "426"

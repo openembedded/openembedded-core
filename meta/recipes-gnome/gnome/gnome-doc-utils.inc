@@ -1,4 +1,4 @@
-LICENSE = "GPL LGPL"
+LICENSE = "GPL & LGPL"
 DEPENDS = "libxml2 libxslt libxslt-native gnome-doc-utils-native"
 DEPENDS_virtclass-native = "libxml2-native libxslt-native intltool-native"
 

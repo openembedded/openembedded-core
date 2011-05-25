@@ -3,7 +3,7 @@ DESCRIPTION = "A parser generator utility that reads a grammar specification fro
 parser for it.  The parsers consist of a set of LALR(1) parsing tables and a driver routine written in the C \
 programming language."
 SECTION = "devel"
-LICENSE = "public domain"
+LICENSE = "PD"
 
 SRC_URI = "ftp://invisible-island.net/byacc/byacc-${PV}.tgz"
 EXTRA_OECONF += "--program-transform-name='s,^,b,'"

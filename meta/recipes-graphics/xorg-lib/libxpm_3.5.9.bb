@@ -7,7 +7,7 @@ pixmap format, which is commonly used in legacy X applications.  XPM is \
 an extension of the monochrome XBM bitmap specificied in the X \
 protocol."
 
-LICENSE = "X-BSD"
+LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3e07763d16963c3af12db271a31abaa5"
 DEPENDS += "libxext libsm libxt"
 PR = "r3"

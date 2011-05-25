@@ -3,7 +3,7 @@ It's designed to bridge the gap between the nice, high-level, easy-to-use world 
 and the messy, low-level world of C."
 SECTION = "devel/python"
 PRIORITY = "optional"
-LICENSE = "Apache License Version 2.0"
+LICENSE = "Apache-2"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=771d472f53f933033f57eeee7808e5bd"
 SRCNAME = "Pyrex"
 PR = "ml0"

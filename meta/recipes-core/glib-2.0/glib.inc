@@ -2,7 +2,7 @@ SUMMARY = "A general-purpose utility library"
 DESCRIPTION = "GLib is a general-purpose utility library, which provides many useful data types, macros, type conversions, string utilities, file utilities, a main loop abstraction, and so on."
 # pcre is under BSD;
 # docs/reference/COPYING is with a 'public domai'-like license!
-LICENSE = "LGPLv2+ & BSD & public domain"
+LICENSE = "LGPLv2+ & BSD & PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
                     file://glib/glib.h;startline=4;endline=17;md5=a4332fe58b076f29d07c9c066d2967b6 \
                     file://gmodule/COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \

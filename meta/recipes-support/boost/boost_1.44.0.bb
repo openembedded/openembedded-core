@@ -1,6 +1,6 @@
 include boost-36.inc
 
-LICENSE = "boost"
+LICENSE = "Boost"
 LIC_FILES_CHKSUM = "file://LICENSE_1_0.txt;md5=e4224ccaecb14d942c71d31bef20d78c"
 
 PR = "r0"

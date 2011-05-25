@@ -2,7 +2,7 @@ DESCRIPTION = "Python Bindings for the Cairo canvas library"
 HOMEPAGE = "http://cairographics.org/pycairo"
 BUGTRACKER = "http://bugs.freedesktop.org"
 SECTION = "python-devel"
-LICENSE = "LGPLv2.1 & MPLv1.1"
+LICENSE = "LGPLv2.1 & MPL-1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=f2e071ab72978431b294a0d696327421"
 # cairo >= 1.8.8
 DEPENDS = "cairo"
