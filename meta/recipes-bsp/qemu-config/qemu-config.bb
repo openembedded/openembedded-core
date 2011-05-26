@@ -3,8 +3,9 @@ DESCRIPTION = "Adds scripts to use distcc on the host system under qemu"
 LICENSE = "GPL"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
 
-RDEPENDS_${PN} = "distcc task-core-nfs-server oprofileui-server rsync bash"
-PR = "r19"
+COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemumips|qemuppc)"
+
+PR = "r20"
 
 SRC_URI = "file://distcc.sh \
            file://anjuta-remote-run \
@@ -14,9 +15,6 @@ SRC_URI = "file://distcc.sh \
            file://COPYING.GPL"
 
 S = "${WORKDIR}"
-
-COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemumips|qemuppc)"
-PACKAGE_ARCH = "all"
 
 do_install() {
     install -d ${D}${sysconfdir}/profile.d
@@ -33,6 +31,9 @@ do_install() {
     install -d ${D}/etc/init.d
     install qemu-autostart ${D}/etc/init.d/
 }
+
+RDEPENDS_${PN} = "distcc dbus-x11 task-core-nfs-server oprofileui-server rsync bash"
+PACKAGE_ARCH = "all"
 
 inherit update-rc.d
 
