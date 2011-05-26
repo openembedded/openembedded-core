@@ -6,24 +6,19 @@ There are two fixes:
   1. -native needs to customize prefix
   2. needs to change python reference in binaries
 
-Upstream-Status: Inappropriate [native]
-
 Signed-off-by: Qing He <qing.he@intel.com>
-Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
-Index: createrepo-0.9.9/Makefile
-===================================================================
---- createrepo-0.9.9.orig/Makefile	2011-01-26 09:14:30.000000000 -0800
-+++ createrepo-0.9.9/Makefile	2011-04-06 14:12:06.608923997 -0700
-@@ -10,22 +10,22 @@
+diff --git a/Makefile b/Makefile
+index b2d1a32..3c3639f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -3,22 +3,22 @@ VERSION = 0.4.11
  SHELL = /bin/sh
  top_srcdir = .
  srcdir = .
 -prefix = /usr
 -exec_prefix = ${prefix}
-+prefix ?= /usr
-+exec_prefix ?= ${prefix}
- 
+-
 -bindir = ${exec_prefix}/bin
 -sbindir = ${exec_prefix}/sbin
 -libexecdir = ${exec_prefix}/libexec
@@ -33,6 +28,9 @@ Index: createrepo-0.9.9/Makefile
 -localstatedir = ${prefix}/var
 -libdir = ${exec_prefix}/lib
 -infodir = ${prefix}/info
++prefix ?= /usr
++exec_prefix ?= ${prefix}
++
 +bindir ?= ${exec_prefix}/bin
 +sbindir ?= ${exec_prefix}/sbin
 +libexecdir ?= ${exec_prefix}/libexec
@@ -49,21 +47,19 @@ Index: createrepo-0.9.9/Makefile
 -mandir = ${prefix}/share/man
 +mandir ?= ${prefix}/share/man
  
- pkgdatadir = $(datadir)/$(PKGNAME)
- pkglibdir = $(libdir)/$(PKGNAME)
-Index: createrepo-0.9.9/bin/Makefile
-===================================================================
---- createrepo-0.9.9.orig/bin/Makefile	2011-01-26 09:14:30.000000000 -0800
-+++ createrepo-0.9.9/bin/Makefile	2011-04-06 14:15:07.212923998 -0700
+ pkgdatadir = $(datadir)/$(PACKAGE)
+ pkglibdir = $(libdir)/$(PACKAGE)
+diff --git a/bin/Makefile b/bin/Makefile
+index 52c1f50..e30610e 100644
+--- a/bin/Makefile
++++ b/bin/Makefile
 @@ -1,22 +1,22 @@
  SHELL = /bin/sh
  top_srcdir = ..
  srcdir = ../bin
 -prefix = /usr
 -exec_prefix = ${prefix}
-+prefix ?= /usr
-+exec_prefix ?= ${prefix}
- 
+-
 -bindir = ${exec_prefix}/bin
 -sbindir = ${exec_prefix}/sbin
 -libexecdir = ${exec_prefix}/libexec
@@ -73,6 +69,9 @@ Index: createrepo-0.9.9/bin/Makefile
 -localstatedir = ${prefix}/var
 -libdir = ${exec_prefix}/lib
 -infodir = ${prefix}/info
++prefix ?= /usr
++exec_prefix ?= ${prefix}
++
 +bindir ?= ${exec_prefix}/bin
 +sbindir ?= ${exec_prefix}/sbin
 +libexecdir ?= ${exec_prefix}/libexec
@@ -89,55 +88,49 @@ Index: createrepo-0.9.9/bin/Makefile
 -mandir = ${prefix}/man
 +mandir ?= ${prefix}/man
  
- pkgdatadir = $(datadir)/$(PKGNAME)
- pkglibdir = $(libdir)/$(PKGNAME)
-@@ -41,9 +41,14 @@
+ pkgdatadir = $(datadir)/$(PACKAGE)
+ pkglibdir = $(libdir)/$(PACKAGE)
+@@ -40,8 +40,11 @@ all: $(srcdir)/$(PACKAGE)
  
  
  install: all installdirs
--	$(INSTALL_BIN) $(srcdir)/$(PKGNAME) $(DESTDIR)$(bindir)/$(PKGNAME)
+-	$(INSTALL_BIN) $(srcdir)/$(PACKAGE) $(DESTDIR)$(bindir)/$(PACKAGE)
 -	$(INSTALL_BIN) $(srcdir)/modifyrepo $(DESTDIR)$(bindir)/modifyrepo
--	$(INSTALL_BIN) $(srcdir)/mergerepo $(DESTDIR)$(bindir)/mergerepo
 +	sed -e "s|@DATADIR@|$(datadir)|" $(srcdir)/$(PACKAGE) > $(srcdir)/$(PACKAGE).tmp
 +	sed -e "s|@DATADIR@|$(datadir)|" $(srcdir)/modifyrepo > $(srcdir)/modifyrepo.tmp
-+	sed -e "s|@DATADIR@|$(datadir)|" $(srcdir)/mergerepo > $(srcdir)/mergerepo.tmp
 +	$(INSTALL_BIN) $(srcdir)/$(PACKAGE).tmp $(DESTDIR)$(bindir)/$(PACKAGE)
 +	$(INSTALL_BIN) $(srcdir)/modifyrepo.tmp $(DESTDIR)$(bindir)/modifyrepo
-+	$(INSTALL_BIN) $(srcdir)/mergerepo.tmp $(DESTDIR)$(bindir)/mergerepo
-+	rm -f $(srcdir)/$(PACKAGE).tmp $(srcdir)/modifyrepo.tmp $(srcdir)/mergerepo.tmp
-+
++	rm -f $(srcdir)/$(PACKAGE).tmp $(srcdir)/modifyrepo.tmp
  
  
  uninstall:
-Index: createrepo-0.9.9/bin/createrepo
-===================================================================
---- createrepo-0.9.9.orig/bin/createrepo	2011-01-26 09:14:30.000000000 -0800
-+++ createrepo-0.9.9/bin/createrepo	2011-04-06 14:12:06.608923997 -0700
+diff --git a/bin/createrepo b/bin/createrepo
+index b0de515..eaacb39 100755
+--- a/bin/createrepo
++++ b/bin/createrepo
 @@ -1,2 +1,2 @@
  #!/bin/sh
 -exec /usr/share/createrepo/genpkgmetadata.py "$@"
 +exec @DATADIR@/createrepo/genpkgmetadata.py "$@"
-Index: createrepo-0.9.9/bin/modifyrepo
-===================================================================
---- createrepo-0.9.9.orig/bin/modifyrepo	2011-01-26 09:14:30.000000000 -0800
-+++ createrepo-0.9.9/bin/modifyrepo	2011-04-06 14:12:06.608923997 -0700
+diff --git a/bin/modifyrepo b/bin/modifyrepo
+index c9732d8..6f7c1d4 100755
+--- a/bin/modifyrepo
++++ b/bin/modifyrepo
 @@ -1,2 +1,2 @@
  #!/bin/sh
 -exec /usr/share/createrepo/modifyrepo.py "$@"
 +exec @DATADIR@/createrepo/modifyrepo.py "$@"
-Index: createrepo-0.9.9/docs/Makefile
-===================================================================
---- createrepo-0.9.9.orig/docs/Makefile	2011-01-26 09:14:30.000000000 -0800
-+++ createrepo-0.9.9/docs/Makefile	2011-04-06 14:12:06.608923997 -0700
+diff --git a/docs/Makefile b/docs/Makefile
+index 0a41179..e128c85 100644
+--- a/docs/Makefile
++++ b/docs/Makefile
 @@ -1,22 +1,22 @@
  SHELL = /bin/sh
  top_srcdir = ..
  srcdir = ../docs
 -prefix = /usr
 -exec_prefix = ${prefix}
-+prefix ?= /usr
-+exec_prefix ?= ${prefix}
- 
+-
 -bindir = ${exec_prefix}/bin
 -sbindir = ${exec_prefix}/sbin
 -libexecdir = ${exec_prefix}/libexec
@@ -147,6 +140,9 @@ Index: createrepo-0.9.9/docs/Makefile
 -localstatedir = ${prefix}/var
 -libdir = ${exec_prefix}/lib
 -infodir = ${prefix}/info
++prefix ?= /usr
++exec_prefix ?= ${prefix}
++
 +bindir ?= ${exec_prefix}/bin
 +sbindir ?= ${exec_prefix}/sbin
 +libexecdir ?= ${exec_prefix}/libexec
@@ -163,5 +159,5 @@ Index: createrepo-0.9.9/docs/Makefile
 -mandir = ${datadir}/man
 +mandir ?= ${datadir}/man
  
- pkgdatadir = $(datadir)/$(PKGNAME)
- pkglibdir = $(libdir)/$(PKGNAME)
+ pkgdatadir = $(datadir)/$(PACKAGE)
+ pkglibdir = $(libdir)/$(PACKAGE)
