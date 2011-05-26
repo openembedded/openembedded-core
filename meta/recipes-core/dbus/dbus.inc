@@ -24,7 +24,7 @@ DEBIANNAME_${PN} = "dbus-1"
 PACKAGES =+ "${PN}-lib ${PN}-x11 ${PN}-systemd"
 
 FILES_${PN}-x11 = "${bindir}/dbus-launch"
-RDEPENDS_${PN}-x11 "${PN}"
+RDEPENDS_${PN}-x11 = "${PN}"
 
 FILES_${PN}-systemd = "${base_libdir}/systemd/system/"
 
