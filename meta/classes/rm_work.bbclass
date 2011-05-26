@@ -42,6 +42,10 @@ do_rm_work () {
             *do_setscene*)
                 break
                 ;;
+            *sigdata*)
+                i=dummy
+                break
+                ;;
             *do_package_write*)
                 i=dummy
                 break
