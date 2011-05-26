@@ -24,12 +24,12 @@ DEBIANNAME_${PN} = "dbus-1"
 PACKAGES =+ "${PN}-lib ${PN}-x11 ${PN}-systemd"
 
 FILES_${PN}-x11 = "${bindir}/dbus-launch"
+RDEPENDS_${PN}-x11 "${PN}"
 
 FILES_${PN}-systemd = "${base_libdir}/systemd/system/"
 
 FILES_${PN} = "${bindir}/dbus-daemon* \
                ${bindir}/dbus-uuidgen \
-               ${bindir}/dbus-launch \
                ${bindir}/dbus-cleanup-sockets \
                ${bindir}/dbus-send \
                ${bindir}/dbus-monitor \
