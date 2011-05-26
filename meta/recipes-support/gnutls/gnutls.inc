@@ -1,9 +1,9 @@
 DESCRIPTION = "GNU Transport Layer Security Library"
 HOMEPAGE = "http://www.gnu.org/software/gnutls/"
 BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
-DEPENDS = "zlib lzo libtasn1 libgcrypt (>= 1.4.2)"
+DEPENDS = "zlib lzo libtasn1 libgcrypt (>= 1.4.2) libcap"
 
-BBCLASSEXTEND = "native"
+INC_PR = "r1"
 
 LICENSE = "GPLv3+ & LGPLv2.1+"
 LICENSE_${PN} = "LGPLv2.1+"
@@ -44,3 +44,5 @@ FILES_${PN}-dev += "${bindir}/*-config ${bindir}/gnutls-cli-debug"
 FILES_${PN}-extra = "${libdir}/libgnutls-extra.so.*"
 FILES_${PN}-openssl = "${libdir}/libgnutls-openssl.so.*"
 FILES_${PN}-xx = "${libdir}/libgnutlsxx.so.*"
+
+BBCLASSEXTEND = "native"
