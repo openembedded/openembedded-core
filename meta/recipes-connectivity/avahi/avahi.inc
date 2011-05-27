@@ -37,9 +37,14 @@ EXTRA_OECONF = "--with-distro=debian \
              --disable-qt3 \
              --disable-qt4 \
              --disable-python \
-             --disable-doxygen-doc"
+             --disable-doxygen-doc \
+             --with-systemdsystemunitdir=${base_libdir}/systemd/system/ \
+"
 
-PACKAGES =+ "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib libavahi-gobject avahi-autoipd avahi-ui-utils avahi-utils libavahi-ui libavahi-ui-dev"
+PACKAGES =+ "avahi-systemd avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib libavahi-gobject avahi-autoipd avahi-ui-utils avahi-utils libavahi-ui libavahi-ui-dev"
+
+FILES_avahi-systemd = "${base_libdir}/systemd"
+RDEPENDS_avahi-systemd = "avahi-daemon"
 
 FILES_libavahi-common = "${libdir}/libavahi-common.so.*"
 FILES_libavahi-core = "${libdir}/libavahi-core.so.*"
