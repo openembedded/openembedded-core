@@ -16,7 +16,7 @@ inherit autotools pkgconfig
 FILES_${PN}-dev += "${datadir}/xcb/*.xml"
 
 RDEPENDS_${PN}-dev = ""
-RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPV})"
+RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"
 
 DEPENDS_append_virtclass-native = " python-native"
 BBCLASSEXTEND = "native"

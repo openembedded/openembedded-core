@@ -16,7 +16,7 @@ DEPENDS_virtclass-native = "gettext"
 DEPENDS_virtclass-nativesdk = "gettext"
 
 RDEPENDS_${PN}-dev = ""
-RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPV})"
+RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"
 
 BBCLASSEXTEND = "native nativesdk"
 
