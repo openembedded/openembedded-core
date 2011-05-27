@@ -1,8 +1,9 @@
+
 # Pulled from OpenEmbedded
 # 
 # Commented by: Saul Wold <saul.wold@intel.com>
 
-Upstream-Status: Pending
+Upstream-Status: Inappropriate [licensing]
 
 Index: gettext-0.16.1/gettext-runtime/intl/Makefile.in
 ===================================================================

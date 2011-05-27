@@ -1,9 +1,10 @@
+
 This patch removes the circular dependency on AC_GNU_SOURCE in
 AC_USE_SYSTEM_EXTENSIONS.
 
 Thanks to Mark Hatle for the timely pointers and fixes.
 
-Upstream-Status: Inappropriate [configuration]
+Upstream-Status: Inappropriate [licensing]
 
 Signed-off-by Saul Wold <sgw@linux.intel.com>
 

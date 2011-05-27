@@ -1,8 +1,9 @@
+
 # Pulled from OpenEmbedded
 # 
 # Commented by: Saul Wold <saul.wold@intel.com>
 
-Upstream-Status: Inappropriate [configuration]
+Upstream-Status: Inappropriate [licensing]
 
 Index: gettext-0.16.1/autoconf-lib-link/m4/lib-link.m4
 ===================================================================

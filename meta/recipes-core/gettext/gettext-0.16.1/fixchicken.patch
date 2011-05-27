@@ -1,8 +1,9 @@
+
 # Pulled from OpenEmbedded
 # 
 # Commented by: Saul Wold <saul.wold@intel.com>
 
-Upstream-Status: Inappropriate [embedded]
+Upstream-Status: Inappropriate [licensing]
 
 Index: gettext-tools/m4/csharpcomp.m4
 ===================================================================
