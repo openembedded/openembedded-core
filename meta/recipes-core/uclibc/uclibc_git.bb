@@ -27,7 +27,7 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master;protocol=git \
 	file://argp-support.patch \
 	file://argp-headers.patch \
 	file://remove_attribute_optimize_Os.patch \
-	file://uclibc-git/append_UCLIBC_EXTRA_CFLAGS.patch \
+	file://append_UCLIBC_EXTRA_CFLAGS.patch \
 	file://compile-arm-fork-with-O2.patch \
 	"
 S = "${WORKDIR}/git"
