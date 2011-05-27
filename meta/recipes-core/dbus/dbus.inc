@@ -49,12 +49,16 @@ pkg_postinst_dbus() {
 
 	MESSAGEUSER=messagebus
 	MESSAGEHOME=/var/run/dbus
+	UUIDDIR=/var/lib/dbus
 
-	mkdir -p $MESSAGEHOME || true
+	mkdir -p $MESSAGEHOME
+	mkdir -p $UUIDDIR
 	chgrp "$MESSAGEUSER" "$MESSAGEHOME" 2>/dev/null || addgroup "$MESSAGEUSER"
-	chown "$MESSAGEUSER"."$MESSAGEUSER" "$MESSAGEHOME" 2>/dev/null || \
+	chown "$MESSAGEUSER":"$MESSAGEUSER" "$MESSAGEHOME" 2>/dev/null || \
 		adduser --system --home "$MESSAGEHOME" --no-create-home --disabled-password \
 			--ingroup "$MESSAGEUSER" "$MESSAGEUSER"
+
+	chown "$MESSAGEUSER":"$MESSAGEUSER" "$UUIDDIR"
 
 	grep -q netdev: /etc/group || addgroup netdev
 
@@ -63,7 +67,9 @@ pkg_postinst_dbus() {
 
 	# add volatile after new user/grp are created
 	echo "d messagebus messagebus 0755 /var/run/dbus none" > /etc/default/volatiles/99_dbus
-	/etc/init.d/populate-volatile.sh update
+	if [ -e /etc/init.d/populate-volatile.sh ] ; then
+		/etc/init.d/populate-volatile.sh update
+	fi
 }
 
 EXTRA_OECONF_X = "--with-x"
