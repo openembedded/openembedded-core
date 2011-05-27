@@ -1,0 +1,35 @@
+Upstream-Status: Submitted
+
+From: Qing He <qing.he@intel.com>
+Subject: [PATCH] rpm 5.4.0: Fix pointer mishandling
+
+In fpLookupSubdir, data returned by hash should be of type
+"struct rpmffi_s **" instead of "struct rpmffi_s *" to avoid
+segfault.
+
+Signed-off-by: Qing He <qing.he@intel.com>
+
+diff --git a/rpmdb/fprint.c b/rpmdb/fprint.c
+index 0e76148..82b8f45 100644
+--- a/rpmdb/fprint.c
++++ b/rpmdb/fprint.c
+@@ -333,7 +333,7 @@ restart:
+     *te = '\0';
+ 
+     while (te < se) {
+-	struct rpmffi_s * recs;
++	struct rpmffi_s ** recs;
+ 	int numRecs;
+ 	int i;
+ 
+@@ -346,8 +346,8 @@ restart:
+ 	    const char * link;
+ 	    int fx;
+ 
+-	    fx = recs[i].fileno;
+-	    fi =  recs[i].p->fi;
++	    fx = recs[i]->fileno;
++	    fi =  recs[i]->p->fi;
+ 	    flink = fi->flinks[fx];
+ 	    if (!(flink && *flink != '\0'))
+ 		continue;
