@@ -22,7 +22,7 @@ do_populate_lic[cleandirs] = "${LICSSTATEDIR}"
 #
 # We should really discuss standardizing this field, but that's a longer term goal. 
 # For now, we can do this and it should grab the most common LICENSE naming variations.
-# 
+
 #GPL variations
 SPDXLICENSEMAP[GPL] = "GPL-1"
 SPDXLICENSEMAP[GPLv2] = "GPL-2"
@@ -77,7 +77,8 @@ python do_populate_lic() {
             op = node.op
             if isinstance(op, ast.BitOr): 
                 x = LicenseVisitor()
-                x.visit(node)
+                x.visit(node.left)
+                x.visit(node.right)
             else:               
                 ast.NodeVisitor.generic_visit(self, node)
 
@@ -96,7 +97,6 @@ python do_populate_lic() {
             pass
 
     def find_license(license_type):
-
         try:
             bb.mkdirhier(gen_lic_dest)
         except:
@@ -106,7 +106,7 @@ python do_populate_lic() {
         if not os.path.isfile(os.path.join(generic_directory, license_type)):
             if bb.data.getVarFlag('SPDXLICENSEMAP', license_type, d) != None:
                 # Great, there is an SPDXLICENSEMAP. We can copy!
-                bb.warn("We need to use a SPDXLICENSEMAP for %s" % (license_type))
+                bb.note("We need to use a SPDXLICENSEMAP for %s" % (license_type))
                 spdx_generic = bb.data.getVarFlag('SPDXLICENSEMAP', license_type, d)
                 copy_license(generic_directory, gen_lic_dest, spdx_generic)            
                 link_license(gen_lic_dest, destdir, spdx_generic)            
@@ -119,7 +119,6 @@ python do_populate_lic() {
             copy_license(generic_directory, gen_lic_dest, license_type)
             link_license(gen_lic_dest, destdir, license_type)            
 
-
     # All the license types for the package
     license_types = bb.data.getVar('LICENSE', d, True)
     # All the license files for the package
@@ -131,7 +130,7 @@ python do_populate_lic() {
     srcdir = bb.data.getVar('S', d, True)
     # Directory we store the generic licenses as set in the distro configuration
     generic_directory = bb.data.getVar('COMMON_LICENSE_DIR', d, True)
-    bb.warn(generic_directory)
+    
     try:
         bb.mkdirhier(destdir)
     except:
@@ -158,13 +157,15 @@ python do_populate_lic() {
     gen_lic_dest = os.path.join(bb.data.getVar('LICENSE_DIRECTORY', d, True), "common-licenses")
     
     clean_licenses = ""
+
     for x in license_types.replace("(", " ( ").replace(")", " ) ").split():
         if ((x != "(") and (x != ")") and (x != "&") and (x != "|")):
             clean_licenses += "'" + x + "'"
         else:
             clean_licenses += " " + x + " "
 
-    node = ast.parse(clean_licenses)
+    # lstrip any possible indents, since ast needs python syntax.
+    node = ast.parse(clean_licenses.lstrip())
     v = LicenseVisitor()
     v.visit(node)
 }
