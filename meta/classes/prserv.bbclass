@@ -12,7 +12,7 @@ def prserv_make_conn(d):
     return conn
 
 def prserv_get_pr_auto(d):
-    if not d.getVar('USE_PR_SERV', True):
+    if d.getVar('USE_PR_SERV', True) != "0":
         bb.warn("Not using network based PR service")
         return None
 

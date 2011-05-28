@@ -330,7 +330,7 @@ def runtime_mapping_rename (varname, d):
 #
 
 python package_get_auto_pr() {
-	if d.getVar('USE_PR_SERV', True):
+	if d.getVar('USE_PR_SERV', True) != "0":
 		auto_pr=prserv_get_pr_auto(d)
 		if auto_pr is None:
 			bb.fatal("Can NOT get auto PR revision from remote PR service")
