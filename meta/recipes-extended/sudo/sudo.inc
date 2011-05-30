@@ -23,6 +23,18 @@ do_configure_prepend () {
 	fi
 }
 
+# The script "mkinstalldirs" from package "sudo" will create directory 
+# "/var/lib/sudo" by recursion with mode "0700" during installing files.
+# That is to say, "var", "var/lib" and "var/lib/sudo" will possess access authority 
+# with mode "0700". It cause that directory "var" and "var/lib" 
+# can't be accessed by common user. Creating directory "/var/lib" before 
+# installing files can resolve this problem.
+
+do_install_prepend (){
+	mkdir -p ${D}/${localstatedir}/lib
+}
+ 
+
 pkg_postinst_${PN} () {
 	if [ "x$D" != "x" ]; then
 		exit 1
