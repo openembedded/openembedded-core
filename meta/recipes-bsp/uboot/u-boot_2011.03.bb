@@ -14,7 +14,7 @@ FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/u-boot-git/${MACHINE
 
 SRCREV = "v2011.03"
 PV = "v2011.03+git${SRCPV}"
-PR="r3"
+PR="r4"
 
 SRC_URI = "git://git.denx.de/u-boot.git;branch=master;protocol=git"
 

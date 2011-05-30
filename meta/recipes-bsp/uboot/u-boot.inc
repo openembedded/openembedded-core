@@ -21,6 +21,7 @@ python () {
 }
 
 UBOOT_IMAGE ?= "u-boot-${MACHINE}-${PV}-${PR}.bin"
+UBOOT_BINARY ?= "u-boot.bin"
 UBOOT_SYMLINK ?= "u-boot-${MACHINE}.bin"
 UBOOT_MAKE_TARGET ?= "all"
 
@@ -31,6 +32,16 @@ do_compile () {
 	oe_runmake ${UBOOT_MACHINE}
 	oe_runmake ${UBOOT_MAKE_TARGET}
 }
+
+do_install () {
+    install -d ${D}/boot
+    install ${S}/${UBOOT_BINARY} ${D}/boot/${UBOOT_IMAGE}
+    ln -sf ${UBOOT_IMAGE} ${D}/boot/${UBOOT_BINARY}
+}
+
+FILES_${PN} = "/boot"
+# no gnu_hash in uboot.bin, by design, so skip QA
+INSANE_SKIP_${PN} = True
 
 do_deploy () {
 	install ${S}/u-boot.bin ${DEPLOYDIR}/${UBOOT_IMAGE}
