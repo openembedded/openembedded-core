@@ -239,8 +239,6 @@ ac_cv_sizeof_int=${ac_cv_sizeof_int='4'}
 #modphp 
 ac_cv_c_bigendian_php=${ac_cv_c_bigendian_php=yes}
 ac_cv_sizeof_ptrdiff_t=${ac_cv_sizeof_ptrdiff_t=4}
-ac_cv_func_dlopen=${ac_cv_func_dlopen=yes}
-lt_cv_dlopen_self=${lt_cv_dlopen_self=yes}
 
 # apache2 (note other apache stanza in this file)
 ap_void_ptr_lt_long=${ap_void_ptr_lt_long=no}
