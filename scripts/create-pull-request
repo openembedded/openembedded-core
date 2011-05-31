@@ -102,7 +102,7 @@ while getopts "b:chi:m:o:p:r:s:u:" OPT; do
 		case "$REMOTE_URL" in
 		*@*)
 			USER_RE="[A-Za-z0-9_.@][A-Za-z0-9_.@-]*\$\?"
-			PROTO_RE="[a-z][a-z]*://"
+			PROTO_RE="[a-z][a-z+]*://"
 			GIT_RE="\(^\($PROTO_RE\)\?$USER_RE@\)\([^:/]*\)[:/]\(.*\)"
 			REMOTE_URL=${REMOTE_URL%.git}
 			REMOTE_REPO=$(echo $REMOTE_URL | sed "s#$GIT_RE#\4#")
