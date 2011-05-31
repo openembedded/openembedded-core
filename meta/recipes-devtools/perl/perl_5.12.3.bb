@@ -6,9 +6,9 @@ LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 		    file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
 PRIORITY = "optional"
 # We need gnugrep (for -I)
-DEPENDS = "virtual/db perl-native-${PV} grep-native"
+DEPENDS = "virtual/db grep-native"
 DEPENDS += "gdbm zlib"
-PR = "r0"
+PR = "r1"
 
 # 5.10.1 has Module::Build built-in
 PROVIDES += "libmodule-build-perl"
@@ -81,13 +81,13 @@ SRC_URI = "http://www.cpan.org/src/5.0/perl-${PV}.tar.gz \
 SRC_URI[md5sum] = "29975a69dce54e47fcd6331c085c6c99"
 SRC_URI[sha256sum] = "5678bfd5c2cd59253a26171bf3e681235433b00c730eea8a8046e1b225c11d2f"
 
-inherit siteinfo
+inherit perlnative siteinfo
 
 # Where to find the native perl
-HOSTPERL = "${STAGING_BINDIR_NATIVE}/perl${PV}"
+HOSTPERL = "${STAGING_BINDIR_NATIVE}/perl-native/perl${PV}"
 
 # Where to find .so files - use the -native versions not those from the target build
-export PERLHOSTLIB = "${STAGING_LIBDIR_NATIVE}/perl/${PV}/"
+export PERLHOSTLIB = "${STAGING_LIBDIR_NATIVE}/perl-native/perl/${PV}/"
 
 # LDFLAGS for shared libraries
 export LDDLFLAGS = "${LDFLAGS} -shared"
