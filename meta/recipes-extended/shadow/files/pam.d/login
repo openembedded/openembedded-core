@@ -26,13 +26,6 @@ auth       [success=ok ignore=ignore user_unknown=ignore default=die]  pam_secur
 # (Replaces the `NOLOGINS_FILE' option from login.defs)
 auth       requisite  pam_nologin.so
 
-# SELinux needs to be the first session rule. This ensures that any 
-# lingering context has been cleared. Without out this it is possible 
-# that a module could execute code in the wrong domain.
-# When the module is present, "required" would be sufficient (When SELinux
-# is disabled, this returns success.)
-session [success=ok ignore=ignore module_unknown=ignore default=bad] pam_selinux.so close
-
 # This module parses environment configuration file(s)
 # and also allows you to use an extended config
 # file /etc/security/pam_env.conf.
