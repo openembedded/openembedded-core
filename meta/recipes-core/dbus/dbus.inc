@@ -89,6 +89,10 @@ do_install() {
 
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/dbus-1.init ${D}${sysconfdir}/init.d/dbus-1
+
+	# disable dbus-1 sysv script on systemd installs
+	# nearly all distros call the initscript plain 'dbus', but OE-core is different
+	ln -sf /dev/null ${D}/${base_libdir}/systemd/system/dbus-1.service
 }
 
 do_install_virtclass-native() {
