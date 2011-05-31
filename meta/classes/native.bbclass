@@ -67,6 +67,11 @@ base_prefix = "${STAGING_DIR_NATIVE}"
 prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
 exec_prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
 
+NATIVE_PACKAGE_PATH_SUFFIX = ""
+bindir .= "${NATIVE_PACKAGE_PATH_SUFFIX}"
+libdir .= "${NATIVE_PACKAGE_PATH_SUFFIX}"
+libexecdir .= "${NATIVE_PACKAGE_PATH_SUFFIX}"
+
 do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR_NATIVE}"
 do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_NATIVE}"
 
