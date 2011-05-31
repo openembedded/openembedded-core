@@ -133,8 +133,9 @@ RDEPENDS_task-core-lsb-command-add = "\
     chkconfig \
     xdg-utils \
     foomatic-filters \
+    cups \
+    ghostscript \
 "
-#    cups
 
 RDEPENDS_task-core-lsb-perl-add = "\
     perl-modules \
