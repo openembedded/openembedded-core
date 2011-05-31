@@ -5,9 +5,9 @@ HOMEPAGE = "http://sites.google.com/site/fullycapable/"
 LICENSE = "BSD | GPL"
 LIC_FILES_CHKSUM = "file://License;md5=731de803c1ccbcb05a9b3523279c8d7f"
 
-DEPENDS = "libpam attr perl-native"
+DEPENDS = "libpam attr perl-native-runtime"
 # attr and pam are disabled by EXTRA_OEMAKE_virtclass-native
-DEPENDS_virtclass-native = "perl-native"
+DEPENDS_virtclass-native = "perl-native-runtime"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/libs/security/linux-privs/libcap2/${BPN}-${PV}.tar.bz2"
 
