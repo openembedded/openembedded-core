@@ -4,7 +4,7 @@ SECTION = "libs"
 LICENSE = "Artistic|GPL"
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 		    file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
-PR = "r2"
+PR = "r3"
 
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
                     file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
@@ -28,6 +28,8 @@ S = "${WORKDIR}/perl-${PV}"
 
 inherit native
 
+NATIVE_PACKAGE_PATH_SUFFIX = "/${PN}"
+
 export LD="${CCLD}"
 
 do_configure () {
@@ -41,6 +43,7 @@ do_configure () {
 		-Dvendorprefix=${prefix} \
 		-Dsiteprefix=${prefix} \
 		\
+		-Dbin=${STAGING_BINDIR}/${PN} \
 		-Dprivlib=${STAGING_LIBDIR}/perl/${PV} \
 		-Darchlib=${STAGING_LIBDIR}/perl/${PV} \
 		-Dvendorlib=${STAGING_LIBDIR}/perl/${PV} \
