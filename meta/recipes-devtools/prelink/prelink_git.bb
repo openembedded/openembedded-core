@@ -1,6 +1,7 @@
 SECTION = "devel"
 # Need binutils for libiberty.a
-DEPENDS = "elfutils binutils transfig-native"
+# Would need transfig-native for documentation if it wasn't disabled
+DEPENDS = "elfutils binutils"
 SUMMARY = "An ELF prelinking utility"
 DESCRIPTION = "The prelink package contains a utility which modifies ELF shared libraries \
 and executables, so that far fewer relocations need to be resolved at \
