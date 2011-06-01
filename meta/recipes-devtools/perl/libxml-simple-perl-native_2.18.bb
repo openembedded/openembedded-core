@@ -4,4 +4,4 @@ inherit native
 
 require libxml-simple-perl_${PV}.bb
 
-DEPENDS = "libxml-parser-perl-native perl-native"
+DEPENDS += "libxml-parser-perl-native"
