@@ -1,6 +1,6 @@
 require gnutls.inc
 
-PR = "r0"
+PR = "${INC_PR}.0"
 
 SRC_URI += "file://gnutls-openssl.patch \
             file://configure-fix.patch"
