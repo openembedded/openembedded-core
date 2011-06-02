@@ -408,10 +408,13 @@ def check_gcc3(data):
 	
 	return False
 
-addtask cleanall after do_clean
-python do_cleanall() {
+addtask cleansstate after do_clean
+python do_cleansstate() {
         sstate_clean_cachefiles(d)
+}
 
+addtask cleanall after do_cleansstate
+python do_cleanall() {
         src_uri = (bb.data.getVar('SRC_URI', d, True) or "").split()
         if len(src_uri) == 0:
             return
