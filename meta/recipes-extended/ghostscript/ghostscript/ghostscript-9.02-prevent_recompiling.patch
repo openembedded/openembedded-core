@@ -2,7 +2,7 @@ Just use commands provided by ghostscript-native, preventing recompile them when
 compile ghostscript.
 Way to enable cross compile.
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Kang Kai <kai.kang@windriver.com>
 

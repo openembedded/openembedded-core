@@ -24,7 +24,7 @@ CodeSourcery
 	* Makerules ($(common-objpfx)includes.mk): Include and create
 	includes.mk.  Create includes.
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Index: libc/Makeconfig
 ===================================================================

@@ -8,7 +8,7 @@ see also: http://sourceware.org/bugilla/show_bug.cgi?id=11615
 
 9/19/2010 - added by Qing He <qing.he@intel.com>
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 ---
 diff -ru glibc-2.10.1.orig/ports/sysdeps/mips/dl-machine.h glibc-2.10.1/ports/sysdeps/mips/dl-machine.h

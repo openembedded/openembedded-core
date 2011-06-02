@@ -7,7 +7,7 @@ In file included from ../nptl/sysdeps/unix/sysv/linux/libc-lowlevellock.c:21:
 ../nptl/sysdeps/unix/sysv/linux/lowlevellock.c:34: error: 'header' undeclared (first use in this function)
 make[4]: *** [/var/tmp/portage/sys-libs/glibc-2.7-r1/work/build-default-armv4l-unknown-linux-gnu-nptl/nptl/rtld-libc-lowlevellock.os] Error 1
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 --- libc/ports/sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h.orig
 +++ libc/ports/sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h

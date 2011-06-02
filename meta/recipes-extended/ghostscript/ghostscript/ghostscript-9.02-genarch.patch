@@ -2,7 +2,7 @@ Import patch from windriver linux for cross compilation, and split patches
 into oe way under different directories such as i586, powerpc etc according 
 to Richard's opinion.
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Kang Kai <kai.kang@windriver.com>
 

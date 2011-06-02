@@ -3,7 +3,7 @@ might have build the compiler with --disable-ssp which means ssp should not be
 enabled. Therefore we change the test to a link time test. It will fail if
 libssp is not available.
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
