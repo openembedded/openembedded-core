@@ -80,6 +80,9 @@ def package_qa_get_machine_dict():
                         "arm" :       (40,     0,    0,          True,          32),
                         "armeb" :     (40,     0,    0,          False,         32),
                       },
+            "linux-gnu" : {
+                        "powerpc":    (20,     0,    0,          False,         32),
+                      },
             "linux-gnuspe" : {
                         "powerpc":    (20,     0,    0,          False,         32),
                       },
