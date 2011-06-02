@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.gnu.org/software/gnutls/"
 BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
 DEPENDS = "zlib lzo libtasn1 libgcrypt (>= 1.4.2) libcap"
 
-INC_PR = "r1"
+INC_PR = "r2"
 
 LICENSE = "GPLv3+ & LGPLv2.1+"
 LICENSE_${PN} = "LGPLv2.1+"
@@ -39,6 +39,7 @@ FILES_${PN}-bin = "${bindir}/gnutls-serv \
                    ${bindir}/gnutls-cli \
                    ${bindir}/srptool \
                    ${bindir}/psktool \
+                   ${bindir}/p11tool \
                    ${bindir}/certtool \
                    ${bindir}/gnutls-srpcrypt"
 
