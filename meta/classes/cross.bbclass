@@ -5,6 +5,8 @@ inherit relocatable
 EXCLUDE_FROM_WORLD = "1"
 
 PACKAGES = ""
+PACKAGES_DYNAMIC = ""
+PACKAGES_DYNAMIC_virtclass-native = ""
 
 HOST_ARCH = "${BUILD_ARCH}"
 HOST_VENDOR = "${BUILD_VENDOR}"
