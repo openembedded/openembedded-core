@@ -42,8 +42,10 @@ HOMEPAGE = "http://rpm5.org/"
 LICENSE = "LGPL 2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
-DEPENDS = "bzip2 zlib python perl db openssl elfutils expat libpcre attr acl popt"
-PR = "r16"
+rpmdeps = "bzip2 zlib db openssl elfutils expat libpcre attr acl popt"
+DEPENDS = "${rpmdeps} python perl"
+DEPENDS_virtclass-native = "${rpmdeps}"
+PR = "r17"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -92,7 +94,7 @@ WITH_PYTHON = "	--with-python=${PYTHON_BASEVERSION} \
 		--without-pythonembed \
 	      "
 
-WITH_PYTHON_native = " --without-python"
+WITH_PYTHON_virtclass-native = " --without-python"
 
 # Perl modules are not built, but they could be enabled fairly easily
 # the perl module creation and installation would need to be patched.
@@ -100,7 +102,7 @@ WITH_PYTHON_native = " --without-python"
 #WITH_PERL = "	--with-perl --without-perlembed"
 WITH_PERL = "	--without-perl"
 
-WITH_PERL_native = " --without-perl"
+WITH_PERL_virtclass-native = " --without-perl"
 
 WITH_DB = "--with-db --with-dbsql --without-db-tools-integrated --without-sqlite"
 
