@@ -5,7 +5,7 @@ SECTION = "x11/drivers"
 LICENSE = "MIT-X"
 
 PE = "1"
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "virtual/xserver-xf86 xproto randrproto util-macros"
 
@@ -27,3 +27,7 @@ do_configure_prepend () {
     mv configure.ac.new configure.ac
 }
 
+do_install_append () {
+    # driver's la files are not packaged
+    rm -f ${D}${libdir}/xorg/modules/drivers/*.la
+}
