@@ -1051,6 +1051,7 @@ python emit_pkgdata() {
 		write_if_exists(sf, pkg, 'RSUGGESTS')
 		write_if_exists(sf, pkg, 'RREPLACES')
 		write_if_exists(sf, pkg, 'RCONFLICTS')
+		write_if_exists(sf, pkg, 'SECTION')
 		write_if_exists(sf, pkg, 'PKG')
 		write_if_exists(sf, pkg, 'ALLOW_EMPTY')
 		write_if_exists(sf, pkg, 'FILES')
