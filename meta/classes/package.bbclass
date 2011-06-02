@@ -44,6 +44,8 @@ inherit prserv
 PKGD    = "${WORKDIR}/package"
 PKGDEST = "${WORKDIR}/packages-split"
 
+LOCALE_SECTION ?= ''
+
 # rpm is used for the per-file dependency identification
 PACKAGE_DEPENDS += "rpm-native"
 
@@ -401,6 +403,7 @@ python package_do_split_locales() {
 
 	summary = bb.data.getVar('SUMMARY', d, True) or pn
 	description = bb.data.getVar('DESCRIPTION', d, True) or "" 
+        locale_section = bb.data.getVar('LOCALE_SECTION', d, True)
 	for l in locales:
 		ln = legitimize_package_name(l)
 		pkg = pn + '-locale-' + ln
@@ -410,6 +413,8 @@ python package_do_split_locales() {
 		bb.data.setVar('RPROVIDES_' + pkg, '%s-locale %s-translation' % (pn, ln), d)
 		bb.data.setVar('SUMMARY_' + pkg, '%s - %s translations' % (summary, l), d)
 		bb.data.setVar('DESCRIPTION_' + pkg, '%s  This package contains language translation files for the %s locale.' % (description, l), d)
+		if locale_section:
+			bb.data.setVar('SECTION_' + pkg, locale_section, d)
 
 	bb.data.setVar('PACKAGES', ' '.join(packages), d)
 
