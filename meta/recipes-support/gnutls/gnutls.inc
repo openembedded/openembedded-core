@@ -22,6 +22,8 @@ inherit autotools binconfig pkgconfig gettext
 EXTRA_OECONF="--with-included-opencdk --with-included-libcfg --disable-rpath \
               --with-libtasn1-prefix=${STAGING_DIR_HOST}${prefix} \
               --with-libgcrypt --with-libgcrypt-prefix=${STAGING_DIR_HOST}${prefix} \
+              --with-libdl-prefix=${STAGING_DIR_HOST}${prefix} \
+              --with-libpthread-prefix=${STAGING_DIR_HOST}${prefix} \
               --with-lzo --disable-guile \
               "
 do_configure_prepend() {
