@@ -2,6 +2,8 @@
 # Sanity check the users setup for common misconfigurations
 #
 
+SANITY_REQUIRED_UTILITIES ?= "patch diffstat texi2html makeinfo cvs svn bzip2 tar gzip gawk chrpath wget cpio"
+
 def raise_sanity_error(msg):
     bb.fatal(""" Poky's config sanity checker detected a potential misconfiguration.
     Either fix the cause of this error or at your own risk disable the checker (see sanity.conf).
@@ -213,7 +215,7 @@ def check_sanity(e):
     if not check_app_exists('${BUILD_PREFIX}g++', e.data):
         missing = missing + "C++ Compiler (%sg++)," % data.getVar("BUILD_PREFIX", e.data, True)
 
-    required_utilities = "patch diffstat texi2html makeinfo cvs svn bzip2 tar gzip gawk chrpath wget cpio"
+    required_utilities = e.data.getVar('SANITY_REQUIRED_UTILITIES', True)
 
     if "qemu-native" in assume_provided:
         if not check_app_exists("qemu-arm", e.data):
