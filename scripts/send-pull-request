@@ -73,7 +73,7 @@ while getopts "achp:t:" OPT; do
 	a)
 		AUTO_CL=1
 		# Fall through to include -c
-		;&
+		;;
 	c)
 		AUTO=1
 		GITSOBCC="--signed-off-by-cc"
