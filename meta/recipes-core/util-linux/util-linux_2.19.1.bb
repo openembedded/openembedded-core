@@ -6,7 +6,9 @@ require util-linux.inc
 LICENSE_util-linux-lscpu = "GPLv3+"
 
 SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
-                  file://util-linux-ng-2.16-mount_lock_path.patch"
+            file://util-linux-ng-2.16-mount_lock_path.patch \
+            file://uclibc-__progname-conflict.patch \      
+"
 
 SRC_URI[md5sum] = "3eab06f05163dfa65479c44e5231932c"
 SRC_URI[sha256sum] = "d3eac4afcc687b3ae1ffedcab2dc12df84c7ba7045cce31386d2b7040a011c7d"
