@@ -1,0 +1,58 @@
+configure: Fix configuration to match OE-Core requirements
+
+In OE-Core we need to be able to configure for both 32-bit and 64-bit libpseudo
+libraries.  In order to avoid some complex manipulations, we adjust the configure
+and Makefile to facilitate this.
+
+Upstream-Status: Submitted
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff --git a/Makefile.in b/Makefile.in
+index 6c57d43..342d066 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -27,7 +27,7 @@ MARK64=@MARK64@
+ RPATH=@RPATH@
+ VERSION=1.1.1
+ 
+-LIB=$(shell basename $(LIBDIR))
++LIB=@LIB@
+ BIN=bin
+ LOCALSTATE=var/pseudo
+ BINDIR=$(PREFIX)/$(BIN)
+diff --git a/configure b/configure
+index 9a480fb..eeb19f3 100755
+--- a/configure
++++ b/configure
+@@ -80,14 +80,18 @@ if [ -z "$opt_prefix" ]; then
+   usage
+ fi
+ 
+-if [ -n "$opt_bits" ] && [ -n "$opt_libdir" ]; then
+-    echo >&2 "Can not specify both --libdir and --bits"
+-    exit 1
+-fi
+ if [ -z "$opt_libdir" ]; then
+     opt_libdir=$opt_prefix/lib$opt_mark64
+ fi
+ 
++# We need to find the libdir relative to the prefix, this is required
++# by the code in pseudo-utils.c that handles relocation.
++opt_lib=${opt_libdir#$opt_prefix/}
++if [ "$opt_lib" = "$opt_libdir" ]; then
++    echo >&2 "libdir must be relative to prefix."
++    exit 1
++fi
++
+ if [ ! -f "${opt_sqlite}/include/sqlite3.h" ]; then
+     echo >&2 "SQLite3 headers not found in at ${opt_sqlite}/include/sqlite3.h. Please check that SQLite3 and SQLite3 headers are installed."
+     exit 1
+@@ -107,6 +111,7 @@ fi
+ sed -e '
+   s,@PREFIX@,'"$opt_prefix"',g
+   s,@LIBDIR@,'"$opt_libdir"',g
++  s,@LIB@,'"$opt_lib"',g
+   s,@SUFFIX@,'"$opt_suffix"',g
+   s,@SQLITE@,'"$opt_sqlite"',g
+   s!@RPATH@!'"$opt_rpath"'!g
