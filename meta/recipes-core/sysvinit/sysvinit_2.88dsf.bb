@@ -7,6 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://COPYRIGHT;endline=15;md5=349c872e0066155e1818b786938876a4"
 PR = "r3"
 
+# Need to set this since it has machine specific components
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 # USE_VT and SERIAL_CONSOLE are generally defined by the MACHINE .conf.
 # Set PACKAGE_ARCH appropriately.
 PACKAGE_ARCH_${PN}-inittab = "${MACHINE_ARCH}"
