@@ -20,7 +20,7 @@ RDEPENDS_gst-meta-base = "\
     gst-plugins-base-playbin \
     gst-plugins-base-decodebin \
     gst-plugins-base-decodebin2 \
-    gst-plugins-base-gnomevfs \
+    gst-plugins-base-gio \
     gst-plugins-base-alsa \
     gst-plugins-base-volume \
     gst-plugins-base-ximagesink \

@@ -8,4 +8,5 @@ S = "${WORKDIR}/git"
 
 # Oprofileui at http://labs.o-hand.com/oprofileui/ is not maintained now.
 SRC_URI = "git://git.yoctoproject.org/oprofileui;protocol=git \
+           file://migrate-from-gnomevfs-to-gio.patch \
            file://dso_linking_change_build_fix.patch "
