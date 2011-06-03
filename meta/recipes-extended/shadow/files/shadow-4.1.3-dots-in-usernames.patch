@@ -9,6 +9,10 @@
 #
 # comment added by Kevin Tian <kevin.tian@intel.com>, 2010-08-11
 
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 Index: shadow-4.1.4.2/libmisc/chkname.c
 ===================================================================
 --- shadow-4.1.4.2.orig/libmisc/chkname.c	2009-04-28 12:14:04.000000000 -0700

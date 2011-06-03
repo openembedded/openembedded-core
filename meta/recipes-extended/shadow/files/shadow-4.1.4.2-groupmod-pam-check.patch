@@ -17,6 +17,10 @@ http://lists.alioth.debian.org/pipermail/pkg-shadow-devel/2009-November/007850.h
 	* NEWS, src/groupmod.c: Fixed groupmod when configured with
 	--enable-account-tools-setuid.
 
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 Index: shadow-4.1.4.2/src/groupmod.c
 ===================================================================
 --- shadow-4.1.4.2.orig/src/groupmod.c	2009-06-05 15:16:58.000000000 -0700

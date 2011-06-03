@@ -11,6 +11,10 @@
 
 man_nopan is for !USE_PAM already included in man_MANS and automake-1.11 hates to install some file twice
 
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 diff -uNr shadow-4.1.4.2.orig/man/Makefile.am shadow-4.1.4.2/man/Makefile.am
 --- shadow-4.1.4.2.orig/man/Makefile.am	2009-03-14 15:40:10.000000000 +0100
 +++ shadow-4.1.4.2/man/Makefile.am	2010-04-02 07:31:17.000000000 +0200

@@ -12,6 +12,10 @@
 http://bugs.gentoo.org/283725
 https://alioth.debian.org/tracker/index.php?func=detail&aid=311740&group_id=30580&atid=411480
 
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 Index: shadow-4.1.4.2/libmisc/env.c
 ===================================================================
 --- shadow-4.1.4.2.orig/libmisc/env.c	2009-04-27 13:07:56.000000000 -0700
