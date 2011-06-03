@@ -120,7 +120,8 @@ do_configure () {
 
 do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-	base_do_compile
+	oe_runmake busybox_unstripped
+	cp busybox_unstripped busybox
 }
 
 do_install () {
