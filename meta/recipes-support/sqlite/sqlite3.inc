@@ -2,8 +2,8 @@ DESCRIPTION = "An Embeddable SQL Database Engine"
 HOMEPAGE = "http://www.sqlite.org"
 SECTION = "libs"
 PRIORITY = "optional"
-DEPENDS = "readline ncurses tcl-native"
-DEPENDS_virtclass-native = "tcl-native"
+DEPENDS = "readline ncurses"
+DEPENDS_virtclass-native = ""
 LICENSE = "PD"
 
 inherit autotools pkgconfig
