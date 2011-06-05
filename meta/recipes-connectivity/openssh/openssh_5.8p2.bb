@@ -4,10 +4,11 @@ Ssh (Secure Shell) is a program for logging into a remote machine \
 and for executing commands on a remote machine."
 HOMEPAGE = "http://openssh.org"
 SECTION = "console/network"
+PRIORITY = "optional"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://LICENCE;md5=7ae09218173be1643c998a4b71027f9b"
+LIC_FILES_CHKSUM = "file://LICENCE;md5=bae9a689be41581503bcf95d8fb42c4e"
 
-PR = "r2"
+PR = "r0"
 
 DEPENDS = "zlib openssl"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
@@ -25,8 +26,8 @@ SRC_URI = "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.
            file://ssh_config \
            file://init \
           "
-SRC_URI[md5sum] = "e6ee52e47c768bf0ec42a232b5d18fb0"
-SRC_URI[sha256sum] = "538af53b2b8162c21a293bb004ae2bdb141abd250f61b4cea55244749f3c6c2b"
+SRC_URI[md5sum] = "0541579adf9d55abb15ef927048d372e"
+SRC_URI[sha256sum] = "5c35ec7c966ce05cc4497ac59c0b54a556e55ae7368165cc8c4129694654f314"
 
 inherit autotools
 
