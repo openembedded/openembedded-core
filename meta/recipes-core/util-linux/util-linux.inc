@@ -25,7 +25,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux-ng/v${MAJOR_VERSION}/util-
            file://make_include \
            "
 
-PACKAGES =+ "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk \
+PACKAGES =+ "util-linux-agetty util-linux-fdisk util-linux-cfdisk util-linux-sfdisk \
              util-linux-swaponoff util-linux-losetup util-linux-umount \
              util-linux-mount util-linux-readprofile util-linux-libblkid \
              util-linux-libblkid-dev util-linux-libuuid util-linux-libuuid-dev \
@@ -37,6 +37,7 @@ EXTRA_OECONF = "--disable-use-tty-group --disable-makeinstall-chown --enable-elv
 
 FILES_${PN}-doc += "${datadir}/getopt/getopt-*.*"
 
+FILES_util-linux-agetty = "${base_sbindir}/agetty"
 FILES_util-linux-fdisk = "${base_sbindir}/fdisk.${PN}"
 FILES_util-linux-cfdisk = "${base_sbindir}/cfdisk"
 FILES_util-linux-sfdisk = "${sbindir}/sfdisk"
