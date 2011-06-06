@@ -1,7 +1,8 @@
-DESCRIPTION = "grep GNU utility"
+DESCRIPTION = "GNU grep utility"
 HOMEPAGE = "http://savannah.gnu.org/projects/grep/"
 BUGTRACKER = "http://savannah.gnu.org/bugs/?group=grep"
 SECTION = "console/utils"
+PRIORITY = "optional"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8006d9c814277c1bfc4ca22af94b59ee"
 
@@ -9,8 +10,8 @@ PR = "r0"
 
 SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "e848f07e3e79aa7899345d17c7e4115e"
-SRC_URI[sha256sum] = "ad14831015a79cea36785aa47415f6c0653a6ac4eaf9c15456f0d9d09c9e1bad"
+SRC_URI[md5sum] = "cb2dfc502c5afc7a4a6e5f6cefd6850e"
+SRC_URI[sha256sum] = "da48d0e20bceaacc7d05bfcbccb34c3dee0c50bd7e80de5222fd5e319809af27"
 
 inherit autotools gettext
 
