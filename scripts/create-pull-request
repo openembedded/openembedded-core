@@ -94,6 +94,9 @@ while getopts "b:chi:m:o:p:r:s:u:" OPT; do
 		REMOTE_URL=$(git config remote.$REMOTE.url)
 		if [ $? -ne 0 ]; then
 			echo "ERROR: git config failed to find a url for '$REMOTE'"
+			echo
+			echo "To add a remote url for $REMOTE, use:"
+			echo "  git config remote.$REMOTE.url <url>"
 			exit 1
 		fi
 
