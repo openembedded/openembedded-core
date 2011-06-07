@@ -15,17 +15,20 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d151214b3131251dfc9d858593acbd24"
 
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "${PN}-native tiff jpeg fontconfig cups"
 DEPENDS_virtclass-native = ""
 
-SRC_URI = "http://downloads.ghostscript.com/public/ghostscript-${PV}.tar.bz2 \
+SRC_URI_BASE = "http://downloads.ghostscript.com/public/ghostscript-${PV}.tar.bz2"
+
+SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.02-prevent_recompiling.patch \
            file://ghostscript-9.02-genarch.patch \
            file://objarch.h \
            file://soobjarch.h \
            "
+SRC_URI_virtclass-native = "${SRC_URI_BASE}"
 
 SRC_URI[md5sum] = "f67151444bd56a7904579fc75a083dd6"
 SRC_URI[sha256sum] = "03ea2cad13a36f8f9160912012b79619a826e7148fada6d3531feb25409ee05a"
@@ -34,14 +37,12 @@ EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec --without-j
 
 inherit autotools
 
-do_configure_prepend () {
-     mkdir -p obj
-     mkdir -p soobj
-     cp ${WORKDIR}/objarch.h obj/arch.h
-     cp ${WORKDIR}/soobjarch.h soobj/arch.h
-}
-
 do_configure () {
+    mkdir -p obj
+    mkdir -p soobj
+    cp ${WORKDIR}/objarch.h obj/arch.h
+    cp ${WORKDIR}/soobjarch.h soobj/arch.h
+
     oe_runconf
 
     # copy tools from the native ghostscript build
