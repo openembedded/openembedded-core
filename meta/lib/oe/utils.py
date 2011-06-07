@@ -58,7 +58,12 @@ def prune_suffix(var, suffixes, d):
     # remove it if found
     for suffix in suffixes:
         if var.endswith(suffix):
-            return var.replace(suffix, "")
+            var = var.replace(suffix, "")
+
+    prefix = d.getVar("MLPREFIX", True)
+    if prefix and var.startswith(prefix):
+        var = var.replace(prefix, "")
+
     return var
 
 def str_filter(f, str, d):
