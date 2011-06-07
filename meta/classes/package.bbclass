@@ -168,6 +168,17 @@ python () {
         bb.data.setVarFlag('do_package', 'deptask', " ".join(deps), d)
     else:
         d.setVar("PACKAGERDEPTASK", "")
+
+    multilib_archs = []
+    multilibs= d.getVar('MULTILIBS', True) or ""
+    if multilibs:
+        for ext in multilibs.split():
+            eext = ext.split(':')
+            if len(eext) > 1:
+                if eext[0] == 'multilib':
+                    multilib_archs.append('ml' + eext[1])
+
+    d.setVar("MULTILIB_ARCHS", ' '.join(multilib_archs))
 }
 
 def splitfile(file, debugfile, debugsrcdir, d):

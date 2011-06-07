@@ -5,11 +5,9 @@ SECTION = "base"
 LICENSE = "AFL-2 | GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=10dded3b58148f3f1fd804b26354af3e \
                     file://dbus/dbus.h;firstline=6;endline=20;md5=6eea2e0c7750dd8e620dcb1437312fa5"
-x11deps = "virtual/libx11 libsm"
-basedeps = "expat virtual/libintl"
-DEPENDS = "${basedeps} ${x11deps}"
-DEPENDS_virtclass-native = "${basedeps}"
-DEPENDS_virtclass-nativesdk = "${basedeps} virtual/libx11"
+DEPENDS = "expat virtual/libintl virtual/libx11 libsm"
+DEPENDS_virtclass-native = "expat-native virtual/libintl-native"
+DEPENDS_virtclass-nativesdk = "expat-nativesdk virtual/libintl-nativesdk virtual/libx11"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch; \

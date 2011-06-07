@@ -9,7 +9,7 @@ def autotools_dep_prepend(d):
 		return deps
 	deps += 'autoconf-native automake-native help2man-native '
 
-	if not pn in ['libtool', 'libtool-native', 'libtool-cross']:
+	if not pn in ['libtool', 'libtool-native'] and not pn.endswith("libtool-cross"):
 		deps += 'libtool-native '
 		if not bb.data.inherits_class('native', d) \
                         and not bb.data.inherits_class('cross', d) \

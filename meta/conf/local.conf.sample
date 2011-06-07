@@ -193,3 +193,8 @@ NO32LIBS = "1"
 
 # Uncomment this if your host distribution provides the help2man tool.
 #ASSUME_PROVIDED += "help2man-native"
+
+# Uncomment the following lines to enable multilib builds
+#require conf/multilib.conf
+#MULTILIBS = "multilib:lib32"
+#TUNENAME_virtclass-multilib-lib32 = "x86"
