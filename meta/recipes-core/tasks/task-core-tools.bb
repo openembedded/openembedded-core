@@ -77,6 +77,7 @@ RDEPENDS_task-core-tools-testapps = "\
     owl-video \
     gst-meta-video \
     gst-meta-audio \
+    mesa-demos \
     x11perf \
     xrestop \
     xwininfo \
