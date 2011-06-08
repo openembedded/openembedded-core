@@ -17,14 +17,10 @@ LICENSE = "GPLv2+ & LGPLv2.1+"
 
 DEPENDS = "expat libcap libdaemon dbus glib-2.0 gtk+ libglade"
 
-# uclibc has no nss
-RRECOMMENDS_avahi-daemon_append_libc-glibc = "libnss-mdns"
-RRECOMMENDS_${PN}_append_libc-glibc = "libnss-mdns"
-
 SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
-        file://00avahi-autoipd \
-        file://99avahi-autoipd \
-        file://initscript.patch"
+          file://00avahi-autoipd \
+          file://99avahi-autoipd \
+          file://initscript.patch"
 
 inherit autotools pkgconfig update-rc.d gettext
 
@@ -34,6 +30,7 @@ EXTRA_OECONF = "--with-distro=debian \
              --disable-gdbm \
              --disable-mono \
              --disable-monodoc \
+             --disable-gtk3 \
              --disable-qt3 \
              --disable-qt4 \
              --disable-python \
@@ -64,6 +61,15 @@ pkg_postrm_avahi-systemd() {
 	systemctl disable avahi-daemon.service
 }
 
+# uclibc has no nss
+RRECOMMENDS_avahi-daemon_append_libc-glibc = "libnss-mdns"
+RRECOMMENDS_${PN}_append_libc-glibc = "libnss-mdns"
+
+RDEPENDS_avahi-daemon = "sysvinit-pidof"
+
+FILES_avahi-autoipd = "${sbindir}/avahi-autoipd \
+                       ${sysconfdir}/avahi/avahi-autoipd.action \
+                       ${sysconfdir}/dhcp3/*/avahi-autoipd"
 FILES_libavahi-common = "${libdir}/libavahi-common.so.*"
 FILES_libavahi-core = "${libdir}/libavahi-core.so.*"
 FILES_libavahi-ui = "${libdir}/libavahi-ui.so.*"
@@ -78,7 +84,8 @@ FILES_avahi-daemon = "${sbindir}/avahi-daemon \
                       ${sysconfdir}/init.d/avahi-daemon \
                       ${datadir}/avahi/introspection/*.introspect \
                       ${datadir}/avahi/avahi-service.dtd \
-                      ${datadir}/avahi/service-types"
+                      ${datadir}/avahi/service-types \
+                      ${datadir}/dbus-1/system-services"
 FILES_libavahi-client = "${libdir}/libavahi-client.so.*"
 FILES_avahi-dnsconfd = "${sbindir}/avahi-dnsconfd \
                         ${sysconfdir}/avahi/avahi-dnsconfd.action \
