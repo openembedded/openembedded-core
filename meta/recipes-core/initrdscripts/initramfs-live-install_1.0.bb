@@ -11,7 +11,10 @@ do_install() {
         install -m 0755 ${WORKDIR}/init-install.sh ${D}/install.sh
 }
 
-inherit allarch
+# While this package maybe an allarch due to it being a 
+# simple script, reality is that it is Host specific based
+# on the COMPATIBLE_HOST below, which needs to take precedence
+#inherit allarch
 
 FILES_${PN} = " /install.sh "
 
