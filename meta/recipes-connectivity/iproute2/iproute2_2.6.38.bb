@@ -5,5 +5,5 @@ PR = "r0"
 SRC_URI = "http://developer.osdl.org/dev/iproute2/download/${P}.tar.bz2 \
 	   file://configure-cross.patch"
 
-SRC_URI[md5sum] = "b0f281b3124bf04669e18f5fe16d4934"
-SRC_URI[sha256sum] = "8ab2f47e129925fb8acb09421008d07aeafa01b2ddd1fcba4a056de079f090a3"
+SRC_URI[md5sum] = "a243bfea837e71824b7ca26c3bb45fa8"
+SRC_URI[sha256sum] = "47629a4f547f21d94d8e823a87dd8e13042cadecefea2e2dc433e4134fa9aec4"
