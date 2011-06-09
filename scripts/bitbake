@@ -16,10 +16,23 @@ done
 [ $needpseudo = "0" ] && break
 done
 
+needtar="1"
+TARVERSION=`tar --version | head -n 1 | cut -d ' ' -f 4`
+float_test() {
+     echo | awk 'END { exit ( !( '"$1"')); }'
+}
+
+# Tar version 1.24 and onwards handle symlinks in sstate packages correctly
+# but earlier versions do not
+float_test "$TARVERSION > 1.23" && needtar="0"
+
 buildpseudo="1"
 if [ $needpseudo = "1" ] && [ -e "$BUILDDIR/pseudodone" ]; then
     PSEUDOBINDIR=`cat $BUILDDIR/pseudodone`
-    if [ -e "$PSEUDOBINDIR/pseudo" -a -e "$PSEUDOBINDIR/tar" ]; then
+    if [ -e "$PSEUDOBINDIR/pseudo" -a -e "$PSEUDOBINDIR/tar" -a "$needtar" = "1" ]; then
+        buildpseudo="0"
+    fi
+    if [ -e "$PSEUDOBINDIR/pseudo" -a $needtar = "0" ]; then
         buildpseudo="0"
     fi
 fi
@@ -32,7 +45,11 @@ export PATH=`echo $PATH | sed s#[^:]*/scripts:##`
 if [ $buildpseudo = "1" ]; then
     echo "Pseudo is not present but is required, building this first before the main build"
     export PSEUDO_BUILD=1
-    bitbake pseudo-native tar-replacement-native -c populate_sysroot
+    TARTARGET="tar-replacement-native"
+    if [ $needtar = "0" ]; then
+        TARTARGET=""
+    fi
+    bitbake pseudo-native $TARTARGET -c populate_sysroot
     ret=$?
     if [ "$ret" != "0" ]; then
         exit 1
