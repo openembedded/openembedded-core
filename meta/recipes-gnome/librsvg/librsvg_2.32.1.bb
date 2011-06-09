@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco cairo libxml2 popt"
 
-PR = "r2"
+PR = "r3"
 
 inherit autotools pkgconfig gnome
 
@@ -30,8 +30,9 @@ FILES_${PN} = "${libdir}/*.so.*"
 FILES_rsvg = "${bindir}/rsvg \
 	      ${bindir}/rsvg-view \
 	      ${bindir}/rsvg-convert \
-	      ${datadir}/pixmaps/svg-viewer.svg"
-FILES_librsvg-gtk = "${libdir}/gtk-2.0/*/*/*.so"
+	      ${datadir}/pixmaps/svg-viewer.svg \
+	      ${datadir}/themes"
+FILES_librsvg-gtk = "${libdir}/gtk-2.0/*/*/*.so ${libdir}/gdk-pixbuf-2.0/*/*/*.so"
 FILES_librsvg-gtk-dev += "${libdir}/gtk-2.0/*.*a \
 			  ${libdir}/gtk-2.0/*/loaders/*.*a \
 			  ${libdir}/gtk-2.0/*/engines/*.*a"
