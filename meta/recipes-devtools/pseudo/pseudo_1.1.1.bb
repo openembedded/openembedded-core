@@ -1,9 +1,10 @@
 require pseudo.inc
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://www.yoctoproject.org/downloads/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://oe-config.patch \
+           file://realpath_fix.patch \
            file://static_sqlite.patch"
 
 SRC_URI[md5sum] = "dd59766c17e199fe6144fce8a2c67802"
