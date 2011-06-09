@@ -239,7 +239,7 @@ def sstate_clean(ss, d):
     if os.path.exists(manifest):
         locks = []
         for lock in ss['lockfiles-shared']:
-            locks.append(bb.utils.lockfile(lock, True))
+            locks.append(bb.utils.lockfile(lock))
         for lock in ss['lockfiles']:
             locks.append(bb.utils.lockfile(lock))
 
