@@ -8,19 +8,18 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 
 DEPENDS = "dbus"
 
-PR = "r0"
-
 inherit gnome
 
 SRC_URI = "http://www.freedesktop.org/software/ConsoleKit/dist/ConsoleKit-${PV}.tar.bz2 \
            file://nopolkit.patch"
+SRC_URI[md5sum] = "f2657f93761206922d558471a936fbc3"
+SRC_URI[sha256sum] = "43e0780c53078e125efcec3f847e484dc3533e49b408ce6a0ab1b223686b9c38"
 
-SRC_URI[md5sum] = "b57eb18eae8c4d3631d5f4f030218a29"
-SRC_URI[sha256sum] = "f0c00969fb6fe7d628071f0f43ac0d411982a5e798d7dc31747caa772c9716ae"
+
 S = "${WORKDIR}/ConsoleKit-${PV}"
 
-FILES_${PN} += "${libdir}/ConsoleKit ${datadir}/dbus-1 ${datadir}/PolicyKit"
+EXTRA_OECONF = "--with-systemdsystemunitdir=${base_libdir}/systemd/system/"
 
-
+FILES_${PN} += "${libdir}/ConsoleKit ${base_libdir} ${datadir}/dbus-1 ${datadir}/PolicyKit"
 
 
