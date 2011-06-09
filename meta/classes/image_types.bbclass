@@ -6,7 +6,7 @@ def get_imagecmds(d):
         localdata.setVar('OVERRIDES', '%s:%s' % (type, old_overrides))
         bb.data.update_data(localdata)
         localdata.setVar('type', type)
-        cmd = localdata.getVar("IMAGE_CMD_" + type, True)
+        cmd = localdata.getVar("IMAGE_CMD", True)
         localdata.setVar('cmd', cmd)
         cmds += localdata.getVar("runimagecmd", True)
     return cmds
