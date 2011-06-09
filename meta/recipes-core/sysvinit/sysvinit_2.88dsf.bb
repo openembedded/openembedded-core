@@ -5,31 +5,15 @@ SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://COPYRIGHT;endline=15;md5=349c872e0066155e1818b786938876a4"
-PR = "r3"
-
-# Need to set this since it has machine specific components
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-
-# USE_VT and SERIAL_CONSOLE are generally defined by the MACHINE .conf.
-# Set PACKAGE_ARCH appropriately.
-PACKAGE_ARCH_${PN}-inittab = "${MACHINE_ARCH}"
+PR = "r4"
 
 RDEPENDS_${PN} = "${PN}-inittab"
-
-PACKAGES =+ "bootlogd ${PN}-inittab"
-FILES_bootlogd = "/etc/init.d/bootlogd /etc/init.d/stop-bootlogd /etc/rc?.d/S*bootlogd /sbin/bootlogd"
-FILES_${PN}-inittab = "${sysconfdir}/inittab"
-CONFFILES_${PN}-inittab = "${sysconfdir}/inittab"
-
-USE_VT ?= "1"
-SYSVINIT_ENABLED_GETTYS ?= "1"
 
 SRC_URI = "http://download.savannah.gnu.org/releases-noredirect/sysvinit/sysvinit-${PV}.tar.bz2 \
 	   file://install.patch \
 	   file://crypt-lib.patch \
            file://need \
            file://provide \
-           file://inittab \
            file://rcS-default \
            file://rc \
            file://rcS \
@@ -70,29 +54,6 @@ do_install () {
 	install -d ${D}${sysconfdir} \
 		   ${D}${sysconfdir}/default \
 		   ${D}${sysconfdir}/init.d
-	install -m 0644 ${WORKDIR}/inittab ${D}${sysconfdir}/inittab
-	if [ ! -z "${SERIAL_CONSOLE}" ]; then
-		echo "S:2345:respawn:${base_sbindir}/getty ${SERIAL_CONSOLE}" >> ${D}${sysconfdir}/inittab
-	fi
-	if [ "${USE_VT}" = "1" ]; then
-		cat <<EOF >>${D}${sysconfdir}/inittab
-# ${base_sbindir}/getty invocations for the runlevels.
-#
-# The "id" field MUST be the same as the last
-# characters of the device (after "tty").
-#
-# Format:
-#  <id>:<runlevels>:<action>:<process>
-#
-
-EOF
-
-		for n in ${SYSVINIT_ENABLED_GETTYS}
-		do
-			echo "$n:2345:respawn:${base_sbindir}/getty 38400 tty$n" >> ${D}${sysconfdir}/inittab
-		done
-		echo "" >> ${D}${sysconfdir}/inittab
-	fi
 	install -m 0644    ${WORKDIR}/rcS-default	${D}${sysconfdir}/default/rcS
 	install -m 0755    ${WORKDIR}/rc		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/rcS		${D}${sysconfdir}/init.d
