@@ -5747,7 +5747,7 @@ RECIPE_MANUAL_CHECK_DATE_pn-alsa-tools = "Jun 7, 2011"
 
 RECIPE_STATUS_pn-mesa-demos = "red"
 RECIPE_LATEST_VERSION_pn-mesa-demos = "8.0.1"
-RECIPE_LAST_UPDATE_pn-mesa-demos = "July 13, 2010"
+RECIPE_LAST_UPDATE_pn-mesa-demos = "Jul 13, 2010"
 RECIPE_MANUAL_CHECK_DATE_pn-mesa-demos = "Jun 7, 2011" 
 
 RECIPE_STATUS_pn-gettext = "red"
