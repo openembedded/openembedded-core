@@ -80,17 +80,25 @@ EXTRA_NATIVE_PKGCONFIG_PATH ?= ""
 PKG_CONFIG_PATH .= "${EXTRA_NATIVE_PKGCONFIG_PATH}"
 PKG_CONFIG_SYSROOT_DIR = ""
 
-ORIG_DEPENDS := "${DEPENDS}"
-ORIG_RDEPENDS := "${RDEPENDS}"
+python native_virtclass_handler () {
+    if not isinstance(e, bb.event.RecipePreFinalise):
+        return
 
-DEPENDS_virtclass-native ?= "${ORIG_DEPENDS}"
-RDEPENDS_virtclass-native ?= "${ORIG_RDEPENDS}"
+    classextend = bb.data.getVar('BBCLASSEXTEND', e.data, True) or ""
+    if "native" not in classextend:
+        return
 
-python __anonymous () {
-    if "native" in (bb.data.getVar('BBCLASSEXTEND', d, True) or ""):
-        pn = bb.data.getVar("PN", d, True)
-        depends = bb.data.getVar("DEPENDS_virtclass-native", d, True)
-        deps = bb.utils.explode_deps(depends)
+    pn = bb.data.getVar("PN", e.data, True)
+    if not pn.endswith("-native"):
+        return
+
+    def map_dependencies(varname, d, suffix = ""):
+        if suffix:
+            varname = varname + "_" + suffix
+        deps = bb.data.getVar(varname, d, True)
+        if not deps:
+            return
+        deps = bb.utils.explode_deps(deps)
         newdeps = []
         for dep in deps:
             if dep.endswith("-cross"):
@@ -99,28 +107,28 @@ python __anonymous () {
                 newdeps.append(dep + "-native")
             else:
                 newdeps.append(dep)
-        bb.data.setVar("DEPENDS_virtclass-native", " ".join(newdeps), d)
-        rdepends = bb.data.getVar("RDEPENDS_virtclass-native", d, True)
-        rdeps = bb.utils.explode_deps(rdepends)
-        newdeps = []
-        for dep in rdeps:
-            if dep.endswith("-cross"):
-                newdeps.append(dep.replace("-cross", "-native"))
-            elif not dep.endswith("-native"):
-                newdeps.append(dep + "-native")
-            else:
-                newdeps.append(dep)
-        bb.data.setVar("RDEPENDS_virtclass-native", " ".join(newdeps), d)
-        provides = bb.data.getVar("PROVIDES", d, True)
-        for prov in provides.split():
-            if prov.find(pn) != -1:
-                continue
-            if not prov.endswith("-native"):
-    
-                provides = provides.replace(prov, prov + "-native")
-        bb.data.setVar("PROVIDES", provides, d)
-        bb.data.setVar("OVERRIDES", bb.data.getVar("OVERRIDES", d, False) + ":virtclass-native", d)
+        bb.data.setVar(varname, " ".join(newdeps), d)
+
+    map_dependencies("DEPENDS", e.data)
+    for pkg in (e.data.getVar("PACKAGES", True).split() + [""]):
+        map_dependencies("RDEPENDS", e.data, pkg)
+        map_dependencies("RRECOMMENDS", e.data, pkg)
+        map_dependencies("RSUGGESTS", e.data, pkg)
+        map_dependencies("RPROVIDES", e.data, pkg)
+        map_dependencies("RREPLACES", e.data, pkg)
+
+    provides = bb.data.getVar("PROVIDES", e.data, True)
+    for prov in provides.split():
+        if prov.find(pn) != -1:
+            continue
+        if not prov.endswith("-native"):
+            provides = provides.replace(prov, prov + "-native")
+    bb.data.setVar("PROVIDES", provides, e.data)
+
+    bb.data.setVar("OVERRIDES", bb.data.getVar("OVERRIDES", e.data, False) + ":virtclass-native", e.data)
 }
+
+addhandler native_virtclass_handler
 
 do_package[noexec] = "1"
 do_package_write_ipk[noexec] = "1"

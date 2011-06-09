@@ -21,8 +21,6 @@ def autotools_dep_prepend(d):
 EXTRA_OEMAKE = ""
 
 DEPENDS_prepend = "${@autotools_dep_prepend(d)}"
-DEPENDS_virtclass-native_prepend = "${@autotools_dep_prepend(d)}"
-DEPENDS_virtclass-nativesdk_prepend = "${@autotools_dep_prepend(d)}"
 
 inherit siteinfo
 

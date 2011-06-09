@@ -54,12 +54,15 @@ FILES_${PN}-dbg += "${prefix}/.debug \
 export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${libdir}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 
-ORIG_DEPENDS := "${DEPENDS}"
-DEPENDS_virtclass-nativesdk ?= "${ORIG_DEPENDS}"
+python nativesdk_virtclass_handler () {
+    if not isinstance(e, bb.event.RecipePreFinalise):
+        return
 
-python __anonymous () {
-    pn = bb.data.getVar("PN", d, True)
-    depends = bb.data.getVar("DEPENDS_virtclass-nativesdk", d, True)
+    pn = bb.data.getVar("PN", e.data, True)
+    if not pn.endswith("-nativesdk"):
+        return
+
+    depends = bb.data.getVar("DEPENDS", e.data, True)
     deps = bb.utils.explode_deps(depends)
     newdeps = []
     for dep in deps:
@@ -71,16 +74,18 @@ python __anonymous () {
             newdeps.append(dep + "-nativesdk")
         else:
             newdeps.append(dep)
-    bb.data.setVar("DEPENDS_virtclass-nativesdk", " ".join(newdeps), d)
-    provides = bb.data.getVar("PROVIDES", d, True)
+    bb.data.setVar("DEPENDS", " ".join(newdeps), e.data)
+    provides = bb.data.getVar("PROVIDES", e.data, True)
     for prov in provides.split():
         if prov.find(pn) != -1:
             continue
         if not prov.endswith("-nativesdk"):
             provides = provides.replace(prov, prov + "-nativesdk")
-    bb.data.setVar("PROVIDES", provides, d)
-    bb.data.setVar("OVERRIDES", bb.data.getVar("OVERRIDES", d, False) + ":virtclass-nativesdk", d)
+    bb.data.setVar("PROVIDES", provides, e.data)
+    bb.data.setVar("OVERRIDES", bb.data.getVar("OVERRIDES", e.data, False) + ":virtclass-nativesdk", e.data)
 }
+
+addhandler nativesdk_virtclass_handler
 
 do_populate_sysroot[stamp-extra-info] = ""
 do_package[stamp-extra-info] = ""

@@ -42,9 +42,9 @@ HOMEPAGE = "http://rpm5.org/"
 LICENSE = "LGPL 2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
-rpmdeps = "bzip2 zlib db openssl elfutils expat libpcre attr acl popt"
-DEPENDS = "${rpmdeps} python perl"
-DEPENDS_virtclass-native = "${rpmdeps}"
+DEPENDS = "bzip2 zlib db openssl elfutils expat libpcre attr acl popt ${extrarpmdeps}"
+extrarpmdeps = "python perl"
+extrarpmdeps_virtclass-native = ""
 PR = "r17"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
