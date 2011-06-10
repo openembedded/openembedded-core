@@ -29,6 +29,8 @@ SRC_URI = "file://rotation \
            file://licenses/Artistic"
 S = "${WORKDIR}"
 
+INHIBIT_DEFAULT_DEPS = "1"
+
 docdir_append = "/${P}"
 dirs1777 = "/tmp ${localstatedir}/volatile/lock ${localstatedir}/volatile/tmp"
 dirs2775 = "/home ${prefix}/src ${localstatedir}/local"
