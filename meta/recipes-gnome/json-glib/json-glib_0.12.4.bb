@@ -10,8 +10,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
 DEPENDS = "glib-2.0"
 
-SRC_URI[archive.md5sum] = "71f911329c9f742543b378c3494490da"
-SRC_URI[archive.sha256sum] = "89fa9b870dfe2d8b7b00210be76cdbb2d46a8d2cc77ca7cbe5d081bdf8cad780"
+SRC_URI[archive.md5sum] = "347e1714e4a2ce54298969d5ffec7dca"
+SRC_URI[archive.sha256sum] = "462cd611016ae189d5e3f258dc7741e6a2e8267404b4e3806aaf346d50f1df7e"  
 
 PR = "r0"
 
