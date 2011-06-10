@@ -9,6 +9,8 @@ SRC_URI = "file://COPYING \
 
 S = "${WORKDIR}/sysvinit-${PV}"
 
+INHIBIT_DEFAULT_DEPS = "1"
+
 do_configure() {
 	cp ${WORKDIR}/COPYING ${S}/
 }
