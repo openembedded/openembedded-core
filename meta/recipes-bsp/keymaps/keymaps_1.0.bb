@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 PR = "r19"
 
+INHIBIT_DEFAULT_DEPS = "1"
+
 inherit update-rc.d
 
 SRC_URI = "file://keymap.sh \
