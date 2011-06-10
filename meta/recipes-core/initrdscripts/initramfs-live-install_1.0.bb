@@ -15,6 +15,7 @@ do_install() {
 # simple script, reality is that it is Host specific based
 # on the COMPATIBLE_HOST below, which needs to take precedence
 #inherit allarch
+INHIBIT_DEFAULT_DEPS = "1"
 
 FILES_${PN} = " /install.sh "
 
