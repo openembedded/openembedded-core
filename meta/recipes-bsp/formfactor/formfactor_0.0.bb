@@ -9,6 +9,7 @@ SRC_URI = "file://config file://machconfig"
 S = "${WORKDIR}"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+INHIBIT_DEFAULT_DEPS = "1"
 
 do_install() {
 	# Only install file if it has a contents
