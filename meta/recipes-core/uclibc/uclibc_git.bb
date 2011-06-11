@@ -10,7 +10,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/uclibc-git' ], d)}"
 
 SRC_URI = "git://uclibc.org/uClibc.git;branch=master;protocol=git \
-	file://uClibc.config \
 	file://uClibc.machine \
 	file://uClibc.distro \
 	file://uclibc-arm-ftruncate64.patch \

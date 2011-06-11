@@ -202,12 +202,11 @@ do_configure() {
         echo "### FPU" >>${S}/merged.config
         echo "### ABI" >>${S}/merged.config
         echo "### DISTRO FEATURES" >>${S}/merged.config
-        cp ${S}/merged.config ${S}/.config
 
         # Mangle the resulting .config depending on OE variables
-        sed -i -e '${configmangle}' ${S}/.config
+        sed -i -e '${configmangle}' ${S}/merged.config
 
-        oe_runmake oldconfig
+        oe_runmake KCONFIG_ALLCONFIG=${S}/merged.config allnoconfig
 }
 
 do_install() {
