@@ -3,13 +3,15 @@ require libx11.inc
 DESCRIPTION += " Support for XCB, UDC, XCMS and XLOCALE is disabled in \
 this version."
 
-PR = "r1"
+LIC_FILES_CHKSUM = "file://COPYING;md5=597df7e9217e89ccaeb749f48ce2aeb0"
 
-SRC_URI += "file://x11_disable_makekeys.patch;patch=1 \
-            file://include_fix.patch;patch=1 \
-            file://X18NCMSstubs.diff;patch=1 \
-            file://fix-disable-xlocale.diff;patch=1 \
-            file://fix-utf8-wrong-define.patch;patch=1"
+PR = "r2"
+
+SRC_URI += "file://x11_disable_makekeys.patch \
+            file://include_fix.patch \
+            file://X18NCMSstubs.diff \
+            file://fix-disable-xlocale.diff \
+            file://fix-utf8-wrong-define.patch"
 
 DEPENDS += "bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
             libxdmcp xf86bigfontproto kbproto inputproto xproto-native"

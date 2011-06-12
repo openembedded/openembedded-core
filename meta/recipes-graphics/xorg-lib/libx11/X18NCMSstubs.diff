@@ -1,8 +1,10 @@
 Upstream-Status: Pending
 
---- libX11-X11R7.0-1.0.0/src/imConv.c.orig	2006-03-08 09:46:03.000000000 +0100
-+++ libX11-X11R7.0-1.0.0/src/imConv.c	2006-03-08 10:50:10.000000000 +0100
-@@ -83,6 +83,7 @@
+Index: libX11-1.3/src/imConv.c
+===================================================================
+--- libX11-1.3.orig/src/imConv.c
++++ libX11-1.3/src/imConv.c
+@@ -83,6 +83,7 @@ static const struct SubstRec SubstTable[
   * from UCS char to specified charset char.
   * This converter is needed for _XimGetCharCode subroutine.
   */
@@ -10,7 +12,7 @@ Upstream-Status: Pending
  XPointer
  _XimGetLocaleCode (
      _Xconst char*	encoding_name)
-@@ -96,6 +97,7 @@
+@@ -96,6 +97,7 @@ _XimGetLocaleCode (
      }
      return cvt;
  }
@@ -18,15 +20,15 @@ Upstream-Status: Pending
  
  /*
   * Returns the locale dependent representation of a keysym.
-@@ -107,6 +109,7 @@
+@@ -106,6 +108,7 @@ _XimGetLocaleCode (
+  * terminating NUL byte. Return 0 if the keysym is not representable in the
   * locale
   */
- /*ARGSUSED*/
 +#ifdef XLOCALE
- int 
+ /*ARGSUSED*/
+ int
  _XimGetCharCode (
-     XPointer            ucs_conv,
-@@ -135,6 +138,7 @@
+@@ -135,6 +138,7 @@ _XimGetCharCode (
          buf[count]= '\0';
      return count;
  }
@@ -34,8 +36,10 @@ Upstream-Status: Pending
  
  #ifdef XKB
  static int lookup_string(
---- libX11-X11R7.0-1.0.0/src/X18NCMSstubs.c.orig	2006-03-08 08:43:19.000000000 +0100
-+++ libX11-X11R7.0-1.0.0/src/X18NCMSstubs.c	2006-03-08 11:41:28.000000000 +0100
+Index: libX11-1.3/src/X18NCMSstubs.c
+===================================================================
+--- /dev/null
++++ libX11-1.3/src/X18NCMSstubs.c
 @@ -0,0 +1,428 @@
 +/*
 + * X18NCMSstubs.c
@@ -465,9 +469,11 @@ Upstream-Status: Pending
 +}
 +
 +#endif
---- libX11-X11R7.0-1.0.0/src/Makefile.am.orig	2006-03-08 08:31:09.000000000 +0100
-+++ libX11-X11R7.0-1.0.0/src/Makefile.am	2006-03-08 09:36:23.000000000 +0100
-@@ -331,6 +331,8 @@
+Index: libX11-1.3/src/Makefile.am
+===================================================================
+--- libX11-1.3.orig/src/Makefile.am
++++ libX11-1.3/src/Makefile.am
+@@ -335,6 +335,8 @@ if THRSTUBS
  libX11_la_SOURCES+=UIThrStubs.c
  endif
  
@@ -476,7 +482,7 @@ Upstream-Status: Pending
  x11datadir = @X11_DATADIR@
  x11data_DATA = XKeysymDB XErrorDB
  
-@@ -338,7 +340,8 @@
+@@ -342,7 +344,8 @@ EXTRA_DIST = \
  	$(x11data_DATA) \
  	os2Stubs.c \
  	udcInf.c \
@@ -484,11 +490,13 @@ Upstream-Status: Pending
 +	UIThrStubs.c \
 +	X18NCMSstubs.c
  
- #
- # Figure out which sub-libraries to link into Xlib
---- libX11-X11R7.0-1.0.0/src/locking.c.orig	2006-03-08 11:05:56.000000000 +0100
-+++ libX11-X11R7.0-1.0.0/src/locking.c	2006-03-08 11:06:37.000000000 +0100
-@@ -55,7 +55,9 @@
+ if XCB
+ libX11_la_SOURCES += \
+Index: libX11-1.3/src/locking.c
+===================================================================
+--- libX11-1.3.orig/src/locking.c
++++ libX11-1.3/src/locking.c
+@@ -66,7 +66,9 @@ in this Software without prior written a
  #define NUM_FREE_CVLS 4
  
  /* in lcWrap.c */
@@ -498,7 +506,7 @@ Upstream-Status: Pending
  
  #ifdef WIN32
  static DWORD _X_TlsIndex = (DWORD)-1;
-@@ -625,9 +627,11 @@
+@@ -594,9 +596,11 @@ Status XInitThreads(void)
      _Xglobal_lock = &global_lock;
      xmutex_init(_Xglobal_lock->lock);
      xmutex_set_name(_Xglobal_lock->lock, "Xlib global");
@@ -510,10 +518,12 @@ Upstream-Status: Pending
      _XLockMutex_fn = _XLockMutex;
      _XUnlockMutex_fn = _XUnlockMutex;
      _XCreateMutex_fn = _XCreateMutex;
---- libX11-X11R7.0-1.0.0/configure.ac.orig	2006-03-08 10:03:57.000000000 +0100
-+++ libX11-X11R7.0-1.0.0/configure.ac	2006-03-08 10:06:01.000000000 +0100
-@@ -215,7 +215,14 @@
- esac
+Index: libX11-1.3/configure.ac
+===================================================================
+--- libX11-1.3.orig/configure.ac
++++ libX11-1.3/configure.ac
+@@ -289,7 +289,14 @@ else
+ fi
  AC_SUBST(KEYSYMDEF)
  
 -AM_CONDITIONAL(UDC, test xfalse = xtrue)
@@ -526,5 +536,5 @@ Upstream-Status: Pending
 +	AC_DEFINE(UDC,1,[Include support for UDC])
 +fi
  
- AC_ARG_ENABLE(xcms, 
+ AC_ARG_ENABLE(xcms,
                AC_HELP_STRING([--disable-xcms],
