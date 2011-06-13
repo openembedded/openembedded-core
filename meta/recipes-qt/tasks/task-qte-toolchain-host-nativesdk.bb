@@ -1,4 +1,4 @@
-require recipes-core/tasks/task-sdk-host.bb
+require recipes-core/tasks/task-sdk-host-nativesdk.bb
 
 DESCRIPTION = "Host packages for Qt Embedded SDK"
 LICENSE = "MIT"
