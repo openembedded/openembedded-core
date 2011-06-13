@@ -62,27 +62,48 @@ python nativesdk_virtclass_handler () {
     if not pn.endswith("-nativesdk"):
         return
 
-    depends = bb.data.getVar("DEPENDS", e.data, True)
-    deps = bb.utils.explode_deps(depends)
-    newdeps = []
-    for dep in deps:
-        if dep.endswith("-native") or dep.endswith("-cross"):
-            newdeps.append(dep)
-        elif dep.endswith("-gcc-intermediate") or dep.endswith("-gcc-initial") or dep.endswith("-gcc") or dep.endswith("-g++"):
-            newdeps.append(dep + "-crosssdk")
-        elif not dep.endswith("-nativesdk"):
-            newdeps.append(dep + "-nativesdk")
-        else:
-            newdeps.append(dep)
-    bb.data.setVar("DEPENDS", " ".join(newdeps), e.data)
-    provides = bb.data.getVar("PROVIDES", e.data, True)
+    bb.data.setVar("OVERRIDES", bb.data.getVar("OVERRIDES", e.data, False) + ":virtclass-nativesdk", e.data)
+}
+
+python () {
+    pn = bb.data.getVar("PN", d, True)
+    if not pn.endswith("-nativesdk"):
+        return
+
+    def map_dependencies(varname, d, suffix = ""):
+        if suffix:
+            varname = varname + "_" + suffix
+        deps = bb.data.getVar(varname, d, True)
+        if not deps:
+            return
+        deps = bb.utils.explode_deps(deps)
+        newdeps = []
+        for dep in deps:
+            if dep.endswith("-native") or dep.endswith("-cross"):
+                newdeps.append(dep)
+            elif dep.endswith("-gcc-intermediate") or dep.endswith("-gcc-initial") or dep.endswith("-gcc") or dep.endswith("-g++"):
+                newdeps.append(dep + "-crosssdk")
+            elif not dep.endswith("-nativesdk"):
+                newdeps.append(dep.replace("-nativesdk", "") + "-nativesdk")
+            else:
+                newdeps.append(dep)
+        bb.data.setVar(varname, " ".join(newdeps), d)
+
+    map_dependencies("DEPENDS", d)
+    #for pkg in (d.getVar("PACKAGES", True).split() + [""]):
+    #    map_dependencies("RDEPENDS", d, pkg)
+    #    map_dependencies("RRECOMMENDS", d, pkg)
+    #    map_dependencies("RSUGGESTS", d, pkg)
+    #    map_dependencies("RPROVIDES", d, pkg)
+    #    map_dependencies("RREPLACES", d, pkg)
+
+    provides = bb.data.getVar("PROVIDES", d, True)
     for prov in provides.split():
         if prov.find(pn) != -1:
             continue
         if not prov.endswith("-nativesdk"):
             provides = provides.replace(prov, prov + "-nativesdk")
-    bb.data.setVar("PROVIDES", provides, e.data)
-    bb.data.setVar("OVERRIDES", bb.data.getVar("OVERRIDES", e.data, False) + ":virtclass-nativesdk", e.data)
+    bb.data.setVar("PROVIDES", provides, d)
 }
 
 addhandler nativesdk_virtclass_handler
