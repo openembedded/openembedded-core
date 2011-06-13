@@ -1,7 +1,7 @@
 This adds the -nonet option to xsltproc invocations, which fixes
 compile errors when building the gnome-doc-utils docs.
 
-Upstream-Status: Pending
+Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 
