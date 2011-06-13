@@ -15,7 +15,6 @@ SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
           "
 
 SRC_URI_append_libc-uclibc = " file://wchar-uclibc.patch \
-                               file://gettext-error_print_progname.patch \
                                file://gnulib-uclibc-sched_param-def.patch \
                              "
 
