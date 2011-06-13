@@ -1,0 +1,366 @@
+#!/usr/bin/env python
+# ex:ts=4:sw=4:sts=4:et
+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
+#
+# Copyright 2011 Intel Corporation
+# Authored-by:  Yu Ke <ke.yu@intel.com>
+#               Paul Eggleton <paul.eggleton@intel.com>
+#               Richard Purdie <richard.purdie@intel.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+import os, sys
+import optparse
+import logging
+import subprocess
+import ConfigParser
+
+__version__ = "0.1.0"
+
+def logger_create():
+    logger = logging.getLogger("")
+    loggerhandler = logging.StreamHandler()
+    loggerhandler.setFormatter(logging.Formatter("[%(asctime)s] %(message)s","%H:%M:%S"))
+    logger.addHandler(loggerhandler)
+    logger.setLevel(logging.INFO)
+    return logger
+
+logger = logger_create()
+
+class Configuration(object):
+    """
+    Manages the configuration
+
+    A valid conf looks like:
+
+# component name
+[bitbake]
+
+# mandatory options
+
+# git upstream uri
+src_uri = git://git.openembedded.org/bitbake
+
+# the directory to clone the component repo
+local_repo_dir = ~/src/bitbake
+
+# the relative dir to commit the repo patch
+# use "." if it is root dir
+dest_dir = bitbake
+
+# the updated revision last time.
+# leave it empty if no commit updated yet, and then the tool
+# will start from the first commit
+last_revision =
+
+# optional options
+
+# file_filter: only include the interested file
+# file_filter = [path] [path] ...
+# example:
+#   file_filter = src/  : only include the subdir src
+#   file_filter = src/*.c : only include the src *.c file
+#   file_filter = src/main.c src/Makefile.am : only include these two files
+
+[oe-core]
+src_uri = git://git.openembedded.org/openembedded-core
+local_repo_dir = ~/src/oecore
+dest_dir = .
+last_revision =
+
+# more components ...
+
+    """
+    def __init__(self, options):
+        for key, val in options.__dict__.items():
+            setattr(self, key, val)
+        self.parser = ConfigParser.ConfigParser()
+        self.parser.readfp(open(self.conffile))
+        self.repos = {}
+        for repo in self.parser.sections():
+            self.repos[repo] = {}
+            for (name, value) in self.parser.items(repo):
+                self.repos[repo][name] = value
+
+    def update(self, repo, option, value):
+        self.parser.set(repo, option, value)
+        self.parser.write(open(self.conffile, "w"))
+
+    def sanity_check(self):
+        required_options=["src_uri", "local_repo_dir", "dest_dir", "last_revision"]
+        msg = ""
+        for name in self.repos:
+            for option in required_options:
+                if option not in self.repos[name]:
+                    msg = "%s\nOption %s is not defined for component %s" %(msg, option, name)
+        if msg != "":
+            logger.error("configuration file %s has the following error:%s" % (self.conffile,msg))
+            sys.exit(1)
+
+        # filterdiff is required by action_splitpatch, so check its availability
+        if subprocess.call("which filterdiff &>/dev/null", shell=True) != 0:
+            logger.error("ERROR: patchutils package is missing, please install it (e.g. # apt-get install patchutils)")
+            sys.exit(1)
+
+def runcmd(cmd,destdir=None):
+    """
+        execute command, raise CalledProcessError if fail
+        return output if succeed
+    """
+    logger.debug("run cmd '%s' in %s" % (cmd, os.getcwd() if destdir is None else destdir))
+    out = os.tmpfile()
+    try:
+        subprocess.check_call(cmd, stdout=out, stderr=out, cwd=destdir, shell=True)
+    except subprocess.CalledProcessError,e:
+        out.seek(0)
+        logger.error("%s" % out.read())
+        raise e
+
+    out.seek(0)
+    output = out.read()
+    logger.debug("output: %s" % output )
+    return output
+
+def action_init(conf, args):
+    """
+        Clone component repositories
+        Check git initialised and working tree is clean
+    """
+    for name in conf.repos:
+        ldir = conf.repos[name]['local_repo_dir']
+        if not os.path.exists(ldir):
+            logger.info("cloning %s to %s" %(conf.repos[name]['src_uri'], ldir))
+            subprocess.check_call("git clone %s %s" % (conf.repos[name]['src_uri'], ldir), shell=True)
+    if not os.path.exists(".git"):
+        runcmd("git init")
+
+def check_repo_clean(repodir):
+    """
+        check if the repo is clean
+        exit if repo is dirty
+    """
+    try:
+        runcmd("git diff --quiet", repodir)
+        #TODO: also check the index using "git diff --cached"
+        #      but this will fail in just initialized git repo
+        #      so need figure out a way
+    except:
+        logger.error("git repo %s is dirty, please fix it first", repodir)
+        sys.exit(1)
+
+def action_update(conf, args):
+    """
+        update the component repo
+        generate the patch list
+        apply the generated patches
+    """
+    # make sure all repos are clean
+    for name in conf.repos:
+        check_repo_clean(conf.repos[name]['local_repo_dir'])
+    check_repo_clean(os.getcwd())
+
+    import uuid
+    patch_dir = "patch-%s" % uuid.uuid4()
+    os.mkdir(patch_dir)
+
+    for name in conf.repos:
+        repo = conf.repos[name]
+        ldir = repo['local_repo_dir']
+        dest_dir = repo['dest_dir']
+        repo_patch_dir = os.path.join(os.getcwd(), patch_dir, name)
+
+        # Step 1: update the component repo
+        logger.info("git pull for component repo %s in %s ..." % (name, ldir))
+        output=runcmd("git pull", ldir)
+        logger.info(output)
+
+        # Step 2: generate the patch list and store to patch dir
+        logger.info("generating patches for %s" % name)
+        if dest_dir != ".":
+            prefix = "--src-prefix=a/%s/ --dst-prefix=b/%s/" % (dest_dir, dest_dir)
+        else:
+            prefix = ""
+        if repo['last_revision'] == "":
+            logger.info("Warning: last_revision of component %s is not set, so start from the first commit" % name)
+            patch_cmd_range = "--root master"
+            rev_cmd_range = "master"
+        else:
+            patch_cmd_range = "%s..master" % repo['last_revision']
+            rev_cmd_range = "%s..master" % repo['last_revision']
+
+        file_filter = repo.get('file_filter',"")
+
+        patch_cmd = "git format-patch -N %s --output-directory %s %s -- %s" % \
+            (prefix,repo_patch_dir, patch_cmd_range, file_filter)
+        output = runcmd(patch_cmd, ldir)
+        logger.debug("generated patch set:\n%s" % output)
+        patchlist = output.splitlines()
+
+        rev_cmd = 'git log --pretty=format:"%H" ' + rev_cmd_range
+        revlist = runcmd(rev_cmd, ldir).splitlines()
+
+        # Step 3: Call repo specific hook to adjust patch
+        if 'hook' in repo:
+            # hook parameter is: ./hook patchpath revision reponame
+            count=len(revlist)-1
+            for patch in patchlist:
+                runcmd("%s %s %s %s" % (repo['hook'], patch, revlist[count], name))
+                count=count-1
+
+        # Step 4: write patch list and revision list to file, for user to edit later
+        patchlist_file = os.path.join(os.getcwd(), patch_dir, "patchlist-%s" % name)
+        repo['patchlist'] = patchlist_file
+        f = open(patchlist_file, 'w')
+        count=len(revlist)-1
+        for patch in patchlist:
+            f.write("%s %s\n" % (patch, revlist[count]))
+            count=count-1
+        f.close()
+
+    # Step 5: invoke bash for user to edit patch and patch list
+    if conf.interactive:
+        print   'Edit the patch and patch list in %s\n' \
+                'For example, remove the unwanted patch entry from patchlist-*, so that it will be not applied later\n' \
+                'After finish, press following command to continue\n' \
+                '       exit 0  -- exit and continue to apply the patch\n' \
+                '       exit 1  -- abort and not apply patch\n' % patch_dir
+        ret = subprocess.call(["bash"], cwd=patch_dir)
+        if ret != 0:
+            print "Abort without applying patch"
+            sys.exit(0)
+
+    # Step 6: apply the generated and revised patch
+    action_apply_patch(conf, args)
+    runcmd("rm -rf %s" % patch_dir)
+
+def action_apply_patch(conf, args):
+    """
+        apply the generated patch list to combo repo
+    """
+    for name in conf.repos:
+        repo = conf.repos[name]
+        lastrev = repo["last_revision"]
+        for line in open(repo['patchlist']):
+            patchfile = line.split()[0]
+            lastrev = line.split()[1]
+            cmd = "git am -s -p1 %s" % patchfile
+            logger.info("Apply %s" % patchfile )
+            try:
+                runcmd(cmd)
+            except subprocess.CalledProcessError:
+                logger.info('"git am --abort" is executed to cleanup repo')
+                runcmd("git am --abort")
+                logger.error('"%s" failed' % cmd)
+                logger.info("please manually apply patch %s" % patchfile)
+                logger.info("After applying, run this tool again to apply the rest patches")
+                conf.update(name, "last_revision", lastrev)
+                sys.exit(0)
+        conf.update(name, "last_revision", lastrev)
+
+def action_splitpatch(conf, args):
+    """
+        generate the commit patch and
+        split the patch per repo
+    """
+    logger.debug("action_splitpatch")
+    if len(args) > 1:
+        commit = args[1]
+    else:
+        commit = "HEAD"
+    patchdir = "splitpatch-%s" % commit
+    if not os.path.exists(patchdir):
+        os.mkdir(patchdir)
+
+    # filerange_root is for the repo whose dest_dir is root "."
+    # and it should be specified by excluding all other repo dest dir
+    # like "-x repo1 -x repo2 -x repo3 ..."
+    filerange_root = ""
+    for name in conf.repos:
+        dest_dir = conf.repos[name]['dest_dir']
+        if dest_dir != ".":
+            filerange_root = '%s -x "%s/*"' % (filerange_root, dest_dir)
+
+    for name in conf.repos:
+        dest_dir = conf.repos[name]['dest_dir']
+        patch_filename = "%s/%s.patch" % (patchdir, name)
+        if dest_dir == ".":
+            cmd = "git format-patch -n1 --stdout %s^..%s | filterdiff -p1 %s > %s" % (commit, commit, filerange_root, patch_filename)
+        else:
+            cmd = "git format-patch --no-prefix -n1 --stdout %s^..%s -- %s > %s" % (commit, commit, dest_dir, patch_filename)
+        runcmd(cmd)
+        # Detect empty patches (including those produced by filterdiff above
+        # that contain only preamble text)
+        if os.path.getsize(patch_filename) == 0 or runcmd("filterdiff %s" % patch_filename) == "":
+            os.remove(patch_filename)
+            logger.info("(skipping %s - no changes)", name)
+        else:
+            logger.info(patch_filename)
+
+def action_error(conf, args):
+    logger.info("invalid action %s" % args[0])
+
+actions = {
+    "init": action_init,
+    "update": action_update,
+    "splitpatch": action_splitpatch,
+}
+
+def main():
+    parser = optparse.OptionParser(
+        version = "Combo Layer Repo Tool version %s" % __version__,
+        usage = """%prog [options] action
+
+Create and update a combination layer repository from multiple component repositories.
+
+Action:
+  init              initialise the combo layer repo
+  update            get patches from component repos and apply them to the combo repo
+  splitpatch [commit] generate commit patch and split per component, default commit is HEAD""")
+
+    parser.add_option("-c", "--conf", help = "specify the config file. default is conf/combolayer.conf",
+               action = "store", dest = "conffile", default = "combo-layer.conf")
+
+    parser.add_option("-i", "--interactive", help = "interactive mode, user can edit the patch list and patches",
+               action = "store_true", dest = "interactive", default = False)
+
+    parser.add_option("-D", "--debug", help = "output debug information",
+               action = "store_true", dest = "debug", default = False)
+
+    options, args = parser.parse_args(sys.argv)
+
+    # Dispatch to action handler
+    if len(args) == 1:
+        logger.error("No action specified, exiting")
+        parser.print_help()
+    elif args[1] not in actions:
+        logger.error("Unsupported action %s, exiting\n" % (args[1]))
+        parser.print_help()
+    elif not os.path.exists(options.conffile):
+        logger.error("No valid config file, exiting\n")
+        parser.print_help()
+    else:
+        if options.debug:
+            logger.setLevel(logging.DEBUG)
+        confdata = Configuration(options)
+        confdata.sanity_check()
+        actions.get(args[1], action_error)(confdata, args[1:])
+
+if __name__ == "__main__":
+    try:
+        ret = main()
+    except Exception:
+        ret = 1
+        import traceback
+        traceback.print_exc(5)
+    sys.exit(ret)

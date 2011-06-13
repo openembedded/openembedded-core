@@ -1,0 +1,37 @@
+# component name
+[bitbake]
+# mandatory options
+# git upstream uri
+src_uri = git://git.openembedded.org/bitbake
+
+# the directory to clone the component repo
+local_repo_dir = /home/kyu3/src/test/bitbake
+
+# the relative dir to commit the repo patch
+# use "." if it is root dir
+dest_dir = bitbake
+
+# the updated revision last time.
+# If empty, the tool will start from the first commit
+last_revision =
+
+# optional options
+
+# file_filter: only include the interested file
+# file_filter = [path] [path] ...
+# example:
+#   file_filter = src/  : only include the subdir src
+#   file_filter = src/*.c : only include the src *.c file
+#   file_filter = src/main.c src/Makefile.am : only include these two files
+
+# hook: if provided, the tool will call the hook to process the generated patch from upstream,
+#       and then apply the modified patch to combo repo
+# the hook's parameter is: ./hook patchpath revision reponame
+# example:
+#     hook = combo-layer-hook-default.sh
+
+[oe-core]
+src_uri = git://git.openembedded.org/openembedded-core
+local_repo_dir = /home/kyu3/src/test/oecore
+dest_dir = .
+last_revision =
