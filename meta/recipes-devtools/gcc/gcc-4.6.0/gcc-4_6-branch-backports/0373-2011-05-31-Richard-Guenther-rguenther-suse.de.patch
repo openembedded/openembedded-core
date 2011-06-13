@@ -1,0 +1,72 @@
+From d255e20552a56f1aa9b75a0ca45de257e935cd58 Mon Sep 17 00:00:00 2001
+From: rguenth <rguenth@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Tue, 31 May 2011 12:23:55 +0000
+Subject: [PATCH] 2011-05-31  Richard Guenther  <rguenther@suse.de>
+
+	Backport from mainline
+	2011-05-11  Richard Guenther  <rguenther@suse.de>
+
+	PR middle-end/48953
+	* tree-inline.c (remap_gimple_op_r): Also remap types of MEM_REFs.
+
+	* gcc.dg/torture/pr48953.c: New testcase.
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174475 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index b4b333f..d5ea116 100644
+new file mode 100644
+index 0000000..41a3d7b
+--- /dev/null
++++ b/gcc/testsuite/gcc.dg/torture/pr48953.c
+@@ -0,0 +1,17 @@
++/* { dg-do run } */
++/* { dg-options "-fno-tree-dce" } */
++
++static inline int foo (int n, int k)
++{
++  struct S
++  {
++    int i[n];
++    int value;
++  } s[2];
++  return s[k].value = 0;
++}
++
++int main ()
++{
++  return foo (2, 0);
++}
+diff --git a/gcc/tree-inline.c b/gcc/tree-inline.c
+index f2255f8..ef3f1a3 100644
+--- a/gcc/tree-inline.c
++++ b/gcc/tree-inline.c
+@@ -816,6 +816,7 @@ remap_gimple_op_r (tree *tp, int *walk_subtrees, void *data)
+       if (TREE_CODE (*tp) == MEM_REF)
+ 	{
+ 	  tree ptr = TREE_OPERAND (*tp, 0);
++	  tree type = remap_type (TREE_TYPE (*tp), id);
+ 	  tree old = *tp;
+ 	  tree tem;
+ 
+@@ -826,7 +827,7 @@ remap_gimple_op_r (tree *tp, int *walk_subtrees, void *data)
+ 	  if ((tem = maybe_fold_offset_to_reference (EXPR_LOCATION (*tp),
+ 						     ptr,
+ 						     TREE_OPERAND (*tp, 1),
+-						     TREE_TYPE (*tp)))
++						     type))
+ 	      && TREE_THIS_VOLATILE (tem) == TREE_THIS_VOLATILE (old))
+ 	    {
+ 	      tree *tem_basep = &tem;
+@@ -848,7 +849,7 @@ remap_gimple_op_r (tree *tp, int *walk_subtrees, void *data)
+ 	    }
+ 	  else
+ 	    {
+-	      *tp = fold_build2 (MEM_REF, TREE_TYPE (*tp),
++	      *tp = fold_build2 (MEM_REF, type,
+ 				 ptr, TREE_OPERAND (*tp, 1));
+ 	      TREE_THIS_VOLATILE (*tp) = TREE_THIS_VOLATILE (old);
+ 	      TREE_THIS_NOTRAP (*tp) = TREE_THIS_NOTRAP (old);
+-- 
+1.7.0.4
+

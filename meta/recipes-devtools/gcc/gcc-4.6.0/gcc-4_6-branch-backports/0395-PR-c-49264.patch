@@ -1,0 +1,134 @@
+From 90eb3072e3353e49d60c903664b2e9e2efc5d1de Mon Sep 17 00:00:00 2001
+From: jakub <jakub@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Mon, 6 Jun 2011 17:16:35 +0000
+Subject: [PATCH] 	PR c++/49264
+ 	* gimple-fold.c (fold_stmt_1): Don't try to fold *& on the lhs
+ 	if stmt folded into nothing.
+ 	* tree-inline.c (fold_marked_statements): If a builtin at the
+ 	end of a bb folded into nothing, just update cgraph edges
+ 	and move to next bb.
+ 	* cgraph.c (cgraph_update_edges_for_call_stmt_node): Allow new_stmt
+ 	to be NULL.  Don't compute count and frequency if new_call is NULL.
+
+	* g++.dg/opt/pr49264.C: New test.
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174713 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index 64d278f..41265f8 100644
+--- a/gcc/cgraph.c
++++ b/gcc/cgraph.c
+@@ -1241,13 +1241,17 @@ cgraph_make_edge_direct (struct cgraph_edge *edge, struct cgraph_node *callee,
+ 
+ /* Update or remove the corresponding cgraph edge if a GIMPLE_CALL
+    OLD_STMT changed into NEW_STMT.  OLD_CALL is gimple_call_fndecl
+-   of OLD_STMT if it was previously call statement.  */
++   of OLD_STMT if it was previously call statement.
++   If NEW_STMT is NULL, the call has been dropped without any
++   replacement.  */
+ 
+ static void
+ cgraph_update_edges_for_call_stmt_node (struct cgraph_node *node,
+-					gimple old_stmt, tree old_call, gimple new_stmt)
++					gimple old_stmt, tree old_call,
++					gimple new_stmt)
+ {
+-  tree new_call = (is_gimple_call (new_stmt)) ? gimple_call_fndecl (new_stmt) : 0;
++  tree new_call = (new_stmt && is_gimple_call (new_stmt))
++		  ? gimple_call_fndecl (new_stmt) : 0;
+ 
+   /* We are seeing indirect calls, then there is nothing to update.  */
+   if (!new_call && !old_call)
+@@ -1287,7 +1291,7 @@ cgraph_update_edges_for_call_stmt_node (struct cgraph_node *node,
+ 	  loop_nest = e->loop_nest;
+ 	  cgraph_remove_edge (e);
+ 	}
+-      else
++      else if (new_call)
+ 	{
+ 	  /* We are seeing new direct call; compute profile info based on BB.  */
+ 	  basic_block bb = gimple_bb (new_stmt);
+diff --git a/gcc/gimple-fold.c b/gcc/gimple-fold.c
+index 910e3b0..cd8f409 100644
+--- a/gcc/gimple-fold.c
++++ b/gcc/gimple-fold.c
+@@ -1484,6 +1484,11 @@ fold_stmt_1 (gimple_stmt_iterator *gsi, bool inplace)
+   bool changed = false;
+   gimple stmt = gsi_stmt (*gsi);
+   unsigned i;
++  gimple_stmt_iterator gsinext = *gsi;
++  gimple next_stmt;
++
++  gsi_next (&gsinext);
++  next_stmt = gsi_end_p (gsinext) ? NULL : gsi_stmt (gsinext);
+ 
+   /* Fold the main computation performed by the statement.  */
+   switch (gimple_code (stmt))
+@@ -1572,10 +1577,19 @@ fold_stmt_1 (gimple_stmt_iterator *gsi, bool inplace)
+     default:;
+     }
+ 
++  /* If stmt folds into nothing and it was the last stmt in a bb,
++     don't call gsi_stmt.  */
++  if (gsi_end_p (*gsi))
++    {
++      gcc_assert (next_stmt == NULL);
++      return changed;
++    }
++
+   stmt = gsi_stmt (*gsi);
+ 
+-  /* Fold *& on the lhs.  */
+-  if (gimple_has_lhs (stmt))
++  /* Fold *& on the lhs.  Don't do this if stmt folded into nothing,
++     as we'd changing the next stmt.  */
++  if (gimple_has_lhs (stmt) && stmt != next_stmt)
+     {
+       tree lhs = gimple_get_lhs (stmt);
+       if (lhs && REFERENCE_CLASS_P (lhs))
+new file mode 100644
+index 0000000..dc23740
+--- /dev/null
++++ b/gcc/testsuite/g++.dg/opt/pr49264.C
+@@ -0,0 +1,19 @@
++// PR c++/49264
++// { dg-do compile }
++// { dg-options "-O2" }
++
++struct B { };
++struct A { char a[sizeof (B) + 1]; } a;
++
++static inline void
++foo (const B &b)
++{
++  __builtin_memcpy (&a, &b, sizeof (b));
++}
++
++void
++bar ()
++{
++  B c;
++  foo (c);
++}
+diff --git a/gcc/tree-inline.c b/gcc/tree-inline.c
+index ef3f1a3..a0162de 100644
+--- a/gcc/tree-inline.c
++++ b/gcc/tree-inline.c
+@@ -4117,6 +4117,14 @@ fold_marked_statements (int first, struct pointer_set_t *statements)
+ 		  if (fold_stmt (&gsi))
+ 		    {
+ 		      gimple new_stmt;
++		      /* If a builtin at the end of a bb folded into nothing,
++			 the following loop won't work.  */
++		      if (gsi_end_p (gsi))
++			{
++			  cgraph_update_edges_for_call_stmt (old_stmt,
++							     old_decl, NULL);
++			  break;
++			}
+ 		      if (gsi_end_p (i2))
+ 			i2 = gsi_start_bb (BASIC_BLOCK (first));
+ 		      else
+-- 
+1.7.0.4
+

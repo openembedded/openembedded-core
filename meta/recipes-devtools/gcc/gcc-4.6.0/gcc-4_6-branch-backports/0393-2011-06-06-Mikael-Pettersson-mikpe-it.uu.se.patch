@@ -1,0 +1,59 @@
+From 5bc2d161c3700f4916bcdef05043a8420d8c0ebe Mon Sep 17 00:00:00 2001
+From: rguenth <rguenth@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Mon, 6 Jun 2011 11:46:14 +0000
+Subject: [PATCH] 2011-06-06  Mikael Pettersson  <mikpe@it.uu.se>
+
+	PR tree-optimization/49243
+	* calls.c (setjmp_call_p): Also check if fndecl has the
+	returns_twice attribute.
+
+	* gcc.dg/pr49243.c: New.
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174696 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index f539f66..1c161bf 100644
+--- a/gcc/calls.c
++++ b/gcc/calls.c
+@@ -548,6 +548,8 @@ special_function_p (const_tree fndecl, int flags)
+ int
+ setjmp_call_p (const_tree fndecl)
+ {
++  if (DECL_IS_RETURNS_TWICE (fndecl))
++    return ECF_RETURNS_TWICE;
+   return special_function_p (fndecl, 0) & ECF_RETURNS_TWICE;
+ }
+ 
+new file mode 100644
+index 0000000..f896b05
+--- /dev/null
++++ b/gcc/testsuite/gcc.dg/pr49243.c
+@@ -0,0 +1,25 @@
++/* PR tree-optimization/49243 */
++/* { dg-do compile } */
++/* { dg-options "-O2 -Winline" } */
++
++extern unsigned long jb[];
++extern int my_setjmp(unsigned long jb[]) __attribute__((returns_twice));
++extern int decode(const char*);
++
++static inline int wrapper(const char **s_ptr) /* { dg-warning "(inlining failed|function 'wrapper' can never be inlined because it uses setjmp)" } */
++{
++    if (my_setjmp(jb) == 0) {
++	const char *s = *s_ptr;
++	while (decode(s) != 0)
++	    *s_ptr = ++s;
++	return 0;
++    } else
++	return -1;
++}
++
++void parse(const char *data)
++{
++    const char *s = data;
++    if (!(wrapper(&s) == -1 && (s - data) == 1)) /* { dg-warning "called from here" } */
++	__builtin_abort();
++}
+-- 
+1.7.0.4
+

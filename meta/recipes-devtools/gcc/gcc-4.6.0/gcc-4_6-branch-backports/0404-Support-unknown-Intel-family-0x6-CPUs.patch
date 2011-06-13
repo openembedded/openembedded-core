@@ -1,0 +1,48 @@
+From d70a1b2dbd4a959f37b5e3b3b4ca297960ac31fa Mon Sep 17 00:00:00 2001
+From: hjl <hjl@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Wed, 8 Jun 2011 13:50:59 +0000
+Subject: [PATCH] Support unknown Intel family 0x6 CPUs.
+
+2011-06-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	Backport from mainline
+	2011-06-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config/i386/driver-i386.c (host_detect_local_cpu): Support
+	unknown Intel family 0x6 CPUs.
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174810 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index 4fc6b45..985a6ff 100644
+--- a/gcc/config/i386/driver-i386.c
++++ b/gcc/config/i386/driver-i386.c
+@@ -587,9 +587,22 @@ const char *host_detect_local_cpu (int argc, const char **argv)
+ 	default:
+ 	  if (arch)
+ 	    {
+-	      if (has_ssse3)
+-		/* If it is an unknown CPU with SSSE3, assume Core 2.  */
+-		cpu = "core2";
++	      /* This is unknown family 0x6 CPU.  */
++	      if (has_avx)
++		/* Assume Sandy Bridge.  */
++		cpu = "corei7-avx";
++	      else if (has_sse4_2)
++		/* Assume Core i7.  */
++		cpu = "corei7";
++	      else if (has_ssse3)
++		{
++		  if (has_movbe)
++		    /* Assume Atom.  */
++		    cpu = "atom";
++		  else
++		    /* Assume Core 2.  */
++		    cpu = "core2";
++		}
+ 	      else if (has_sse3)
+ 		/* It is Core Duo.  */
+ 		cpu = "pentium-m";
+-- 
+1.7.0.4
+

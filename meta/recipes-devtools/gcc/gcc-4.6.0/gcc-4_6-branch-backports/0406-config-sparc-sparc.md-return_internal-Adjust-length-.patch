@@ -1,0 +1,24 @@
+From 3a73dbd964bf9e608856fef233e9a2639155c7a7 Mon Sep 17 00:00:00 2001
+From: ebotcazou <ebotcazou@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Thu, 9 Jun 2011 19:50:46 +0000
+Subject: [PATCH] 	* config/sparc/sparc.md (return_internal): Adjust 'length' attribute.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174856 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index 5e16179..1ff599d 100644
+--- a/gcc/config/sparc/sparc.md
++++ b/gcc/config/sparc/sparc.md
+@@ -6322,9 +6322,7 @@
+ 			       (if_then_else (eq_attr "isa" "v9")
+ 					     (const_int 2)
+ 					     (const_int 3))
+-			       (if_then_else (eq_attr "isa" "v9")
+-					     (const_int 3)
+-					     (const_int 4)))
++			       (const_int 4))
+ 	       (eq_attr "empty_delay_slot" "true")
+ 		 (if_then_else (eq_attr "delayed_branch" "true")
+ 			       (const_int 2)
+-- 
+1.7.0.4
+

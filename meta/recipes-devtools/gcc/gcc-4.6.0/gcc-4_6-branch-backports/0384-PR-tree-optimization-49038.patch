@@ -1,0 +1,367 @@
+From 57c28e9c809ad3f27fe0743eabb030e8ee8b2af4 Mon Sep 17 00:00:00 2001
+From: irar <irar@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Sat, 4 Jun 2011 09:20:00 +0000
+Subject: [PATCH]         PR tree-optimization/49038
+         * tree-vect-loop-manip.c (vect_generate_tmps_on_preheader):
+         Ensure at least one epilogue iteration if required by data
+         accesses with gaps.
+         * tree-vectorizer.h (struct _loop_vec_info): Add new field
+         to mark loops that require peeling for gaps.
+         * tree-vect-loop.c (new_loop_vec_info): Initialize new field.
+         (vect_get_known_peeling_cost): Take peeling for gaps into
+         account.
+         (vect_transform_loop): Generate epilogue if required by data
+         access with gaps.
+         * tree-vect-data-refs.c (vect_analyze_group_access): Mark the
+         loop as requiring an epilogue if there are gaps in the end of
+         the strided group.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174635 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index 13b7118..8d51590 100644
+new file mode 100644
+index 0000000..91c214f
+--- /dev/null
++++ b/gcc/testsuite/gcc.dg/vect/pr49038.c
+@@ -0,0 +1,42 @@
++#include <sys/mman.h>
++#include <stdio.h>
++
++#define COUNT 320
++#define MMAP_SIZE 0x10000
++#define ADDRESS 0x1122000000
++#define TYPE unsigned short
++
++#ifndef MAP_ANONYMOUS
++#define MAP_ANONYMOUS MAP_ANON
++#endif
++
++void __attribute__((noinline))
++foo (TYPE *__restrict a, TYPE *__restrict b)
++{
++  int n;
++
++  for (n = 0; n < COUNT; n++)
++    a[n] = b[n * 2];
++}
++
++int
++main (void)
++{
++  void *x;
++  size_t b_offset;
++
++  x = mmap ((void *) ADDRESS, MMAP_SIZE, PROT_READ | PROT_WRITE,
++	    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
++  if (x == MAP_FAILED)
++    {
++      perror ("mmap");
++      return 1;
++    }
++
++  b_offset = MMAP_SIZE - (2 * COUNT - 1) * sizeof (TYPE);
++  foo ((unsigned short *) x,
++       (unsigned short *) ((char *) x + b_offset));
++  return 0;
++}
++
++/* { dg-final { cleanup-tree-dump "vect" } } */
+diff --git a/gcc/testsuite/gcc.dg/vect/vect-strided-u8-i8-gap4-unknown.c b/gcc/testsuite/gcc.dg/vect/vect-strided-u8-i8-gap4-unknown.c
+new file mode 100644
+index 0000000..ccbc366
+--- /dev/null
++++ b/gcc/testsuite/gcc.dg/vect/vect-strided-u8-i8-gap4-unknown.c
+@@ -0,0 +1,116 @@
++/* { dg-require-effective-target vect_int } */
++
++#include <stdarg.h>
++#include <stdio.h>
++#include "tree-vect.h"
++
++#define N 160 
++
++typedef struct {
++   unsigned char a;
++   unsigned char b;
++   unsigned char c;
++   unsigned char d;
++   unsigned char e;
++   unsigned char f;
++   unsigned char g;
++   unsigned char h;
++} s;
++
++__attribute__ ((noinline)) int
++main1 (s *arr, int n)
++{
++  int i;
++  s *ptr = arr;
++  s res[N];
++  unsigned char x;
++
++  for (i = 0; i < N; i++)
++    {
++      res[i].a = 0;
++      res[i].b = 0;
++      res[i].c = 0;
++      res[i].d = 0;
++      res[i].e = 0;
++      res[i].f = 0;
++      res[i].g = 0;
++      res[i].h = 0;
++      __asm__ volatile ("");
++    }
++
++  /* Check peeling for gaps for unknown loop bound.  */
++  for (i = 0; i < n; i++)
++    {
++      res[i].c = ptr->b + ptr->c;
++      x = ptr->c + ptr->f;
++      res[i].a = x + ptr->b;
++      res[i].d = ptr->b + ptr->c;
++      res[i].b = ptr->c;
++      res[i].f = ptr->f + ptr->e;
++      res[i].e = ptr->b + ptr->e; 
++      res[i].h = ptr->c;   
++      res[i].g = ptr->b + ptr->c;
++      ptr++; 
++    } 
++   
++  /* check results:  */
++  for (i = 0; i < n; i++)
++    { 
++      if (res[i].c != arr[i].b + arr[i].c
++          || res[i].a != arr[i].c + arr[i].f + arr[i].b
++          || res[i].d != arr[i].b + arr[i].c
++          || res[i].b != arr[i].c
++          || res[i].f != arr[i].f + arr[i].e
++          || res[i].e != arr[i].b + arr[i].e
++          || res[i].h != arr[i].c
++          || res[i].g != arr[i].b + arr[i].c)
++        abort ();
++   }
++
++  /* Check also that we don't do more iterations than needed.  */
++  for (i = n; i < N; i++)
++    {
++      if (res[i].c == arr[i].b + arr[i].c
++          || res[i].a == arr[i].c + arr[i].f + arr[i].b
++          || res[i].d == arr[i].b + arr[i].c
++          || res[i].b == arr[i].c
++          || res[i].f == arr[i].f + arr[i].e
++          || res[i].e == arr[i].b + arr[i].e
++          || res[i].h == arr[i].c
++          || res[i].g == arr[i].b + arr[i].c)
++        abort ();
++   }
++
++  return 0;
++}
++
++
++int main (void)
++{
++  int i;
++  s arr[N];
++  
++  check_vect ();
++
++  for (i = 0; i < N; i++)
++    { 
++      arr[i].a = 5;
++      arr[i].b = 6;
++      arr[i].c = 17;
++      arr[i].d = 3;
++      arr[i].e = 16;
++      arr[i].f = 16;
++      arr[i].g = 3;
++      arr[i].h = 56;
++      if (arr[i].a == 178)
++         abort(); 
++    } 
++
++  main1 (arr, N-2);
++
++  return 0;
++}
++
++/* { dg-final { scan-tree-dump-times "vectorized 1 loops" 1 "vect" { target { vect_interleave && vect_extract_even_odd }  } } } */
++/* { dg-final { cleanup-tree-dump "vect" } } */
++  
+diff --git a/gcc/tree-vect-data-refs.c b/gcc/tree-vect-data-refs.c
+index db5098c..1c60388 100644
+--- a/gcc/tree-vect-data-refs.c
++++ b/gcc/tree-vect-data-refs.c
+@@ -2045,7 +2045,7 @@ vect_analyze_group_access (struct data_reference *dr)
+   loop_vec_info loop_vinfo = STMT_VINFO_LOOP_VINFO (stmt_info);
+   bb_vec_info bb_vinfo = STMT_VINFO_BB_VINFO (stmt_info);
+   HOST_WIDE_INT dr_step = TREE_INT_CST_LOW (step);
+-  HOST_WIDE_INT stride;
++  HOST_WIDE_INT stride, last_accessed_element = 1;
+   bool slp_impossible = false;
+ 
+   /* For interleaving, STRIDE is STEP counted in elements, i.e., the size of the
+@@ -2074,6 +2074,16 @@ vect_analyze_group_access (struct data_reference *dr)
+ 	      fprintf (vect_dump, " step ");
+ 	      print_generic_expr (vect_dump, step, TDF_SLIM);
+ 	    }
++
++	  if (loop_vinfo)
++	    {
++	      LOOP_VINFO_PEELING_FOR_GAPS (loop_vinfo) = true;
++
++	      if (vect_print_dump_info (REPORT_DETAILS))
++		fprintf (vect_dump, "Data access with gaps requires scalar "
++				    "epilogue loop");
++	    }
++
+ 	  return true;
+ 	}
+ 
+@@ -2139,6 +2149,7 @@ vect_analyze_group_access (struct data_reference *dr)
+               next = DR_GROUP_NEXT_DR (vinfo_for_stmt (next));
+               continue;
+             }
++
+           prev = next;
+ 
+           /* Check that all the accesses have the same STEP.  */
+@@ -2169,6 +2180,8 @@ vect_analyze_group_access (struct data_reference *dr)
+               gaps += diff - 1;
+ 	    }
+ 
++	  last_accessed_element += diff;
++
+           /* Store the gap from the previous member of the group. If there is no
+              gap in the access, DR_GROUP_GAP is always 1.  */
+           DR_GROUP_GAP (vinfo_for_stmt (next)) = diff;
+@@ -2260,6 +2273,15 @@ vect_analyze_group_access (struct data_reference *dr)
+             VEC_safe_push (gimple, heap, BB_VINFO_STRIDED_STORES (bb_vinfo),
+                            stmt);
+         }
++
++      /* There is a gap in the end of the group.  */
++      if (stride - last_accessed_element > 0 && loop_vinfo)
++	{
++	  LOOP_VINFO_PEELING_FOR_GAPS (loop_vinfo) = true;
++	  if (vect_print_dump_info (REPORT_DETAILS))
++	    fprintf (vect_dump, "Data access with gaps requires scalar "
++				"epilogue loop");
++	}
+     }
+ 
+   return true;
+diff --git a/gcc/tree-vect-loop-manip.c b/gcc/tree-vect-loop-manip.c
+index b691cd2..da2c9b7 100644
+--- a/gcc/tree-vect-loop-manip.c
++++ b/gcc/tree-vect-loop-manip.c
+@@ -1551,7 +1551,7 @@ vect_generate_tmps_on_preheader (loop_vec_info loop_vinfo,
+   edge pe;
+   basic_block new_bb;
+   gimple_seq stmts;
+-  tree ni_name;
++  tree ni_name, ni_minus_gap_name;
+   tree var;
+   tree ratio_name;
+   tree ratio_mult_vf_name;
+@@ -1568,9 +1568,39 @@ vect_generate_tmps_on_preheader (loop_vec_info loop_vinfo,
+   ni_name = vect_build_loop_niters (loop_vinfo, cond_expr_stmt_list);
+   log_vf = build_int_cst (TREE_TYPE (ni), exact_log2 (vf));
+ 
++  /* If epilogue loop is required because of data accesses with gaps, we
++     subtract one iteration from the total number of iterations here for
++     correct calculation of RATIO.  */
++  if (LOOP_VINFO_PEELING_FOR_GAPS (loop_vinfo))
++    {
++      ni_minus_gap_name = fold_build2 (MINUS_EXPR, TREE_TYPE (ni_name),
++				       ni_name,
++			               build_one_cst (TREE_TYPE (ni_name)));
++      if (!is_gimple_val (ni_minus_gap_name))
++	{
++	  var = create_tmp_var (TREE_TYPE (ni), "ni_gap");
++          add_referenced_var (var);
++
++          stmts = NULL;
++          ni_minus_gap_name = force_gimple_operand (ni_minus_gap_name, &stmts,
++						    true, var);
++          if (cond_expr_stmt_list)
++            gimple_seq_add_seq (&cond_expr_stmt_list, stmts);
++          else
++            {
++              pe = loop_preheader_edge (loop);
++              new_bb = gsi_insert_seq_on_edge_immediate (pe, stmts);
++              gcc_assert (!new_bb);
++            }
++        }
++    }
++  else
++    ni_minus_gap_name = ni_name;
++
+   /* Create: ratio = ni >> log2(vf) */
+ 
+-  ratio_name = fold_build2 (RSHIFT_EXPR, TREE_TYPE (ni_name), ni_name, log_vf);
++  ratio_name = fold_build2 (RSHIFT_EXPR, TREE_TYPE (ni_minus_gap_name),
++			    ni_minus_gap_name, log_vf);
+   if (!is_gimple_val (ratio_name))
+     {
+       var = create_tmp_var (TREE_TYPE (ni), "bnd");
+diff --git a/gcc/tree-vect-loop.c b/gcc/tree-vect-loop.c
+index 7692eb8..44c1ecd 100644
+--- a/gcc/tree-vect-loop.c
++++ b/gcc/tree-vect-loop.c
+@@ -760,6 +760,7 @@ new_loop_vec_info (struct loop *loop)
+   LOOP_VINFO_SLP_INSTANCES (res) = VEC_alloc (slp_instance, heap, 10);
+   LOOP_VINFO_SLP_UNROLLING_FACTOR (res) = 1;
+   LOOP_VINFO_PEELING_HTAB (res) = NULL;
++  LOOP_VINFO_PEELING_FOR_GAPS (res) = false;
+ 
+   return res;
+ }
+@@ -2149,6 +2150,10 @@ vect_get_known_peeling_cost (loop_vec_info loop_vinfo, int peel_iters_prologue,
+       peel_iters_prologue = niters < peel_iters_prologue ?
+                             niters : peel_iters_prologue;
+       *peel_iters_epilogue = (niters - peel_iters_prologue) % vf;
++      /* If we need to peel for gaps, but no peeling is required, we have to
++	 peel VF iterations.  */
++      if (LOOP_VINFO_PEELING_FOR_GAPS (loop_vinfo) && !*peel_iters_epilogue)
++        *peel_iters_epilogue = vf;
+     }
+ 
+    return (peel_iters_prologue * scalar_single_iter_cost)
+@@ -4721,7 +4726,8 @@ vect_transform_loop (loop_vec_info loop_vinfo)
+   do_peeling_for_loop_bound
+     = (!LOOP_VINFO_NITERS_KNOWN_P (loop_vinfo)
+        || (LOOP_VINFO_NITERS_KNOWN_P (loop_vinfo)
+-	   && LOOP_VINFO_INT_NITERS (loop_vinfo) % vectorization_factor != 0));
++	   && LOOP_VINFO_INT_NITERS (loop_vinfo) % vectorization_factor != 0)
++       || LOOP_VINFO_PEELING_FOR_GAPS (loop_vinfo));
+ 
+   if (LOOP_REQUIRES_VERSIONING_FOR_ALIGNMENT (loop_vinfo)
+       || LOOP_REQUIRES_VERSIONING_FOR_ALIAS (loop_vinfo))
+diff --git a/gcc/tree-vectorizer.h b/gcc/tree-vectorizer.h
+index ee8410c..c1ac81c 100644
+--- a/gcc/tree-vectorizer.h
++++ b/gcc/tree-vectorizer.h
+@@ -251,6 +251,11 @@ typedef struct _loop_vec_info {
+   /* Hash table used to choose the best peeling option.  */
+   htab_t peeling_htab;
+ 
++  /* When we have strided data accesses with gaps, we may introduce invalid
++     memory accesses.  We peel the last iteration of the loop to prevent
++     this.  */
++  bool peeling_for_gaps;
++
+ } *loop_vec_info;
+ 
+ /* Access Functions.  */
+@@ -278,6 +283,7 @@ typedef struct _loop_vec_info {
+ #define LOOP_VINFO_SLP_UNROLLING_FACTOR(L) (L)->slp_unrolling_factor
+ #define LOOP_VINFO_REDUCTIONS(L)           (L)->reductions
+ #define LOOP_VINFO_PEELING_HTAB(L)         (L)->peeling_htab
++#define LOOP_VINFO_PEELING_FOR_GAPS(L)     (L)->peeling_for_gaps
+ 
+ #define LOOP_REQUIRES_VERSIONING_FOR_ALIGNMENT(L) \
+ VEC_length (gimple, (L)->may_misalign_stmts) > 0
+-- 
+1.7.0.4
+

@@ -1,0 +1,48 @@
+From 55f5d999fdde931e7c015bed37510c46234bb459 Mon Sep 17 00:00:00 2001
+From: kkojima <kkojima@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Sun, 5 Jun 2011 21:47:42 +0000
+Subject: [PATCH] 	PR target/49186
+ 	* config/sh/sh.c (expand_cbranchdi4): Set msw_skip when the high
+ 	part of the second operand is 0.
+ 	* gcc.c-torture/execute/pr49186.c: New.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174665 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index ffe84b1..05acb0a 100644
+--- a/gcc/config/sh/sh.c
++++ b/gcc/config/sh/sh.c
+@@ -2131,7 +2131,10 @@ expand_cbranchdi4 (rtx *operands, enum rtx_code comparison)
+ 	  else if (op2h != CONST0_RTX (SImode))
+ 	    msw_taken = LTU;
+ 	  else
+-	    break;
++	    {
++	      msw_skip = swap_condition (LTU);
++	      break;
++	    }
+ 	  msw_skip = swap_condition (msw_taken);
+ 	}
+       break;
+new file mode 100644
+index 0000000..743815b
+--- /dev/null
++++ b/gcc/testsuite/gcc.c-torture/execute/pr49186.c
+@@ -0,0 +1,15 @@
++/* PR target/49186 */
++extern void abort (void);
++
++int
++main ()
++{
++  int x;
++  unsigned long long uv = 0x1000000001ULL;
++
++  x = (uv < 0x80) ? 1 : ((uv < 0x800) ? 2 : 3);
++  if (x != 3)
++    abort ();
++
++  return 0;
++}
+-- 
+1.7.0.4
+

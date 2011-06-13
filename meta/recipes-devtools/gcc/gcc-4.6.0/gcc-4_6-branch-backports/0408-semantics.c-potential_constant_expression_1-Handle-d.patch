@@ -1,0 +1,35 @@
+From 8c66e45c90175c237c15b91b6fc5b9097f257c08 Mon Sep 17 00:00:00 2001
+From: jason <jason@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Fri, 10 Jun 2011 04:23:26 +0000
+Subject: [PATCH] 	* semantics.c (potential_constant_expression_1): Handle destructor
+ 	call.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174887 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index 5cb8f49..7e62b61 100644
+--- a/gcc/cp/semantics.c
++++ b/gcc/cp/semantics.c
+@@ -7703,6 +7703,12 @@ potential_constant_expression_1 (tree t, bool want_rval, tsubst_flags_t flags)
+       want_rval = true;
+       goto binary;
+ 
++    case BIT_NOT_EXPR:
++      /* A destructor.  */
++      if (TYPE_P (TREE_OPERAND (t, 0)))
++	return true;
++      /* else fall through.  */
++
+     case REALPART_EXPR:
+     case IMAGPART_EXPR:
+     case CONJ_EXPR:
+@@ -7711,7 +7717,6 @@ potential_constant_expression_1 (tree t, bool want_rval, tsubst_flags_t flags)
+     case FLOAT_EXPR:
+     case NEGATE_EXPR:
+     case ABS_EXPR:
+-    case BIT_NOT_EXPR:
+     case TRUTH_NOT_EXPR:
+     case FIXED_CONVERT_EXPR:
+     case UNARY_PLUS_EXPR:
+-- 
+1.7.0.4
+

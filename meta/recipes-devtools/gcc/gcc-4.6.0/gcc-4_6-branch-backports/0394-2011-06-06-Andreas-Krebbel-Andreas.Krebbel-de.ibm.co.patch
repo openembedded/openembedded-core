@@ -1,0 +1,27 @@
+From 1404c365ac02fa05c2ab6e1759239b35f45f8cb0 Mon Sep 17 00:00:00 2001
+From: krebbel <krebbel@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Mon, 6 Jun 2011 14:34:54 +0000
+Subject: [PATCH] 2011-06-06  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* longlong.h (smul_ppmm): The resulting register pair contains the
+	higher order word first.
+
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174703 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index 5937a48..1bab76d 100644
+--- a/gcc/longlong.h
++++ b/gcc/longlong.h
+@@ -349,7 +349,7 @@ UDItype __umulsidi3 (USItype, USItype);
+     __asm__ ("mr\t%%r0,%3"                                              \
+              : "=r" (r0), "=r" (r1)                                     \
+              : "r"  (r1),  "r" (m1));                                   \
+-    (xh) = r1; (xl) = r0;                                               \
++    (xh) = r0; (xl) = r1;                                               \
+   } while (0)
+ #define sdiv_qrnnd(q, r, n1, n0, d) \
+   do {									\
+-- 
+1.7.0.4
+

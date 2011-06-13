@@ -1,0 +1,29 @@
+From 6387f8d0edf17d5a0ffe499ab890a9a2d3a32940 Mon Sep 17 00:00:00 2001
+From: redi <redi@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Sat, 4 Jun 2011 16:20:55 +0000
+Subject: [PATCH] 2011-06-04  Jonathan Wakely  <jwakely.gcc@gmail.com>
+
+        PR c++/33840
+	* g++.dg/diagnostic/bitfld2.C: New.
+
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174645 138bc75d-0d04-0410-961f-82ee72b054a4
+
+new file mode 100644
+index 0000000..10b7d9c
+--- /dev/null
++++ b/gcc/testsuite/g++.dg/diagnostic/bitfld2.C
+@@ -0,0 +1,9 @@
++// PR c++/33840
++// { dg-do compile }
++
++template<int> struct A
++{
++  struct {} : 2;   // { dg-error "expected ';' after struct" }
++};
++// { dg-error "ISO C.. forbids declaration" "" { target *-*-* } 6 }
++// { dg-error "ISO C.. prohibits anonymous" "" { target *-*-* } 6 }
+-- 
+1.7.0.4
+

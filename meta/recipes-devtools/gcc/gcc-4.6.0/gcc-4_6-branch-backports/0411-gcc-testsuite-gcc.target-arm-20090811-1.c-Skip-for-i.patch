@@ -1,0 +1,79 @@
+From 402f14acd8d298bc8d11cd77fd6e60780903e1b1 Mon Sep 17 00:00:00 2001
+From: janis <janis@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Fri, 10 Jun 2011 18:28:18 +0000
+Subject: [PATCH] 	* gcc/testsuite/gcc.target/arm/20090811-1.c: Skip for incompatible
+ 	options, do not override other options.
+ 	* gcc/testsuite/gcc.target/arm/combine-cmp-shift.c: Skip for
+ 	incompatible options.
+ 	* gcc/testsuite/gcc.target/arm/pr45094.c: Likewise.
+ 	* gcc/testsuite/gcc.target/arm/scd42-1.c: Likewise.
+ 	* gcc/testsuite/gcc.target/arm/scd42-3.c: Likewise.
+ 	* gcc/testsuite/gcc.target/arm/thumb-ltu.c: Likewise.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174923 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index bc0dc93..d820601 100644
+--- a/gcc/testsuite/gcc.target/arm/20090811-1.c
++++ b/gcc/testsuite/gcc.target/arm/20090811-1.c
+@@ -1,4 +1,7 @@
+ /* { dg-do compile } */
++/* { dg-skip-if "incompatible options" { arm*-*-* } { "-march=*" } { "-march=armv7-a" } } */
++/* { dg-skip-if "do not override -mcpu" { *-*-* } { "-mcpu=*" } { "-mcpu=cortex-a8" } } */
++/* { dg-skip-if "do not override -mfloat-abi" { *-*-* } { "-mfloat-abi=*" } { "-mfloat-abi=softfp" } } */
+ /* { dg-options "-O3 -mcpu=cortex-a8 -mfpu=vfp3 -mfloat-abi=softfp" } */
+ 
+ typedef struct cb
+diff --git a/gcc/testsuite/gcc.target/arm/combine-cmp-shift.c b/gcc/testsuite/gcc.target/arm/combine-cmp-shift.c
+index 1cacc29..a64f20e 100644
+--- a/gcc/testsuite/gcc.target/arm/combine-cmp-shift.c
++++ b/gcc/testsuite/gcc.target/arm/combine-cmp-shift.c
+@@ -1,3 +1,4 @@
++/* { dg-skip-if "incompatible options" { arm*-*-* } { "-march=*" } { "-march=armv7-a" } } */
+ /* { dg-options "-O2 -mcpu=cortex-a8" }  */
+ /* { dg-final { scan-assembler "cmp\tr\[0-9\]*, r\[0-9\]*, asr #31" } } */
+ 
+diff --git a/gcc/testsuite/gcc.target/arm/pr45094.c b/gcc/testsuite/gcc.target/arm/pr45094.c
+index 05f16d8..f35e7bb 100644
+--- a/gcc/testsuite/gcc.target/arm/pr45094.c
++++ b/gcc/testsuite/gcc.target/arm/pr45094.c
+@@ -1,4 +1,5 @@
+ /* { dg-do run } */
++/* { dg-skip-if "incompatible options" { arm*-*-* } { "-march=*" } { "-march=armv7-a" } } */
+ /* { dg-require-effective-target arm_neon_hw } */
+ /* { dg-options "-O2 -mcpu=cortex-a8" } */
+ /* { dg-add-options arm_neon } */
+diff --git a/gcc/testsuite/gcc.target/arm/scd42-1.c b/gcc/testsuite/gcc.target/arm/scd42-1.c
+index e02a898..2cd1eeb 100644
+--- a/gcc/testsuite/gcc.target/arm/scd42-1.c
++++ b/gcc/testsuite/gcc.target/arm/scd42-1.c
+@@ -1,5 +1,6 @@
+ /* Verify that mov is preferred on XScale for loading a 1 byte constant. */
+ /* { dg-do compile } */
++/* { dg-skip-if "incompatible options" { arm*-*-* } { "-march=*" } { "" } } */
+ /* { dg-options "-mcpu=xscale -O" } */
+ 
+ unsigned load1(void) __attribute__ ((naked));
+diff --git a/gcc/testsuite/gcc.target/arm/scd42-3.c b/gcc/testsuite/gcc.target/arm/scd42-3.c
+index b2e6666..d1d07b0 100644
+--- a/gcc/testsuite/gcc.target/arm/scd42-3.c
++++ b/gcc/testsuite/gcc.target/arm/scd42-3.c
+@@ -1,5 +1,6 @@
+ /* Verify that ldr is preferred on XScale for loading a 3 or 4 byte constant. */
+ /* { dg-do compile } */
++/* { dg-skip-if "incompatible options" { arm*-*-* } { "-march=*" } { "" } } */
+ /* { dg-options "-mcpu=xscale -O" } */
+ 
+ unsigned load4(void) __attribute__ ((naked));
+diff --git a/gcc/testsuite/gcc.target/arm/thumb-ltu.c b/gcc/testsuite/gcc.target/arm/thumb-ltu.c
+index 899b8d2..2467121 100644
+--- a/gcc/testsuite/gcc.target/arm/thumb-ltu.c
++++ b/gcc/testsuite/gcc.target/arm/thumb-ltu.c
+@@ -1,4 +1,5 @@
+ /* { dg-do compile } */
++/* { dg-skip-if "incompatible options" { arm*-*-* } { "-march=*" } { "-march=armv6" "-march=armv6j" "-march=armv6z" } } */
+ /* { dg-options "-mcpu=arm1136jf-s -mthumb -O2" } */
+ 
+ void f(unsigned a, unsigned b, unsigned c, unsigned d)
+-- 
+1.7.0.4
+

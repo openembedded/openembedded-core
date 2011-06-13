@@ -1,0 +1,37 @@
+From f4e84e1c8443edee24be10cea492892f3621933a Mon Sep 17 00:00:00 2001
+From: jason <jason@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Mon, 6 Jun 2011 20:07:26 +0000
+Subject: [PATCH] 	PR c++/49298
+ 	* semantics.c (potential_constant_expression_1): Handle FIELD_DECL.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174722 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index d56423e..5cb8f49 100644
+--- a/gcc/cp/semantics.c
++++ b/gcc/cp/semantics.c
+@@ -7429,6 +7429,8 @@ potential_constant_expression_1 (tree t, bool want_rval, tsubst_flags_t flags)
+     case TEMPLATE_PARM_INDEX:
+     case TRAIT_EXPR:
+     case IDENTIFIER_NODE:
++      /* We can see a FIELD_DECL in a pointer-to-member expression.  */
++    case FIELD_DECL:
+       return true;
+ 
+     case PARM_DECL:
+new file mode 100644
+index 0000000..873000b
+--- /dev/null
++++ b/gcc/testsuite/g++.dg/cpp0x/regress/ptrmem1.C
+@@ -0,0 +1,9 @@
++// PR c++/49298
++// { dg-options -std=c++0x }
++
++template <class T, int T::*> struct B { };
++template <class T> struct A
++{
++  int i;
++  B<A,&A::i> b;
++};
+-- 
+1.7.0.4
+

@@ -1,0 +1,99 @@
+From 2be264baf4367b63b7cb88bf3d7cb5c687d91c28 Mon Sep 17 00:00:00 2001
+From: jakub <jakub@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Mon, 30 May 2011 12:18:59 +0000
+Subject: [PATCH] 	PR c++/49223
+ 	* semantics.c (finish_omp_clauses): Call require_complete_type
+ 	even for copyin/copyprivate clauses.  Only call
+ 	cxx_omp_create_clause_info if inner_type is COMPLETE_TYPE_P.
+
+	* g++.dg/gomp/pr49223-1.C: New test.
+	* g++.dg/gomp/pr49223-2.C: New test.
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174433 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index cfd6cf0..d56423e 100644
+--- a/gcc/cp/semantics.c
++++ b/gcc/cp/semantics.c
+@@ -3945,12 +3945,13 @@ finish_omp_clauses (tree clauses)
+ 	  break;
+ 	}
+ 
+-      if (need_complete_non_reference)
++      if (need_complete_non_reference || need_copy_assignment)
+ 	{
+ 	  t = require_complete_type (t);
+ 	  if (t == error_mark_node)
+ 	    remove = true;
+-	  else if (TREE_CODE (TREE_TYPE (t)) == REFERENCE_TYPE)
++	  else if (TREE_CODE (TREE_TYPE (t)) == REFERENCE_TYPE
++		   && need_complete_non_reference)
+ 	    {
+ 	      error ("%qE has reference type for %qs", t, name);
+ 	      remove = true;
+@@ -3992,6 +3993,7 @@ finish_omp_clauses (tree clauses)
+ 	 Save the results, because later we won't be in the right context
+ 	 for making these queries.  */
+       if (CLASS_TYPE_P (inner_type)
++	  && COMPLETE_TYPE_P (inner_type)
+ 	  && (need_default_ctor || need_copy_ctor || need_copy_assignment)
+ 	  && !type_dependent_expression_p (t)
+ 	  && cxx_omp_create_clause_info (c, inner_type, need_default_ctor,
+new file mode 100644
+index 0000000..307210f
+--- /dev/null
++++ b/gcc/testsuite/g++.dg/gomp/pr49223-1.C
+@@ -0,0 +1,28 @@
++// PR c++/49223
++// { dg-do compile }
++// { dg-options "-fopenmp" }
++
++template <int N>
++struct V
++{
++  V () {}
++  ~V () {}
++};
++
++template <int N>
++struct S
++{
++  void foo ()
++  {
++    V <0> v;
++    #pragma omp parallel private (v)
++      ;
++  }
++};
++
++void
++bar (void)
++{
++  S <0> s;
++  s.foo ();
++}
+diff --git a/gcc/testsuite/g++.dg/gomp/pr49223-2.C b/gcc/testsuite/g++.dg/gomp/pr49223-2.C
+new file mode 100644
+index 0000000..9539773
+--- /dev/null
++++ b/gcc/testsuite/g++.dg/gomp/pr49223-2.C
+@@ -0,0 +1,16 @@
++// PR c++/49223
++// { dg-do compile }
++// { dg-require-effective-target tls }
++// { dg-options "-fopenmp" }
++
++struct S;			// { dg-error "forward declaration" }
++extern __thread struct S s;	// { dg-error "has incomplete type" }
++struct T;
++extern __thread struct T t;
++
++void
++foo ()
++{
++  #pragma omp parallel copyin (s)
++    ;
++}
+-- 
+1.7.0.4
+

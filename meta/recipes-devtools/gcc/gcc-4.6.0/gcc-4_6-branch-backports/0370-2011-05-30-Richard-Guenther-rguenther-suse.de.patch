@@ -1,0 +1,69 @@
+From e6b2e8c99b9295953acd13658d44591561252337 Mon Sep 17 00:00:00 2001
+From: rguenth <rguenth@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Mon, 30 May 2011 11:17:35 +0000
+Subject: [PATCH] 2011-05-30  Richard Guenther  <rguenther@suse.de>
+
+	PR tree-optimization/49218
+	* tree-vrp.c (adjust_range_with_scev): Properly check whether
+	overflow occured.
+
+	* gcc.c-torture/execute/pr49218.c: New testcase.
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174430 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index 2f50595..be083fc 100644
+new file mode 100644
+index 0000000..2fb18dd
+--- /dev/null
++++ b/gcc/testsuite/gcc.c-torture/execute/pr49218.c
+@@ -0,0 +1,20 @@
++#ifdef __SIZEOF_INT128__
++typedef __int128 L;
++#else
++typedef long long L;
++#endif
++float f;
++
++int
++main ()
++{
++  L i = f;
++  if (i <= 10)
++    do
++      {
++	++i;
++	asm ("");
++      }
++    while (i != 11);
++  return 0;
++}
+diff --git a/gcc/tree-vrp.c b/gcc/tree-vrp.c
+index 6914a08..299a948 100644
+--- a/gcc/tree-vrp.c
++++ b/gcc/tree-vrp.c
+@@ -3422,11 +3422,17 @@ adjust_range_with_scev (value_range_t *vr, struct loop *loop,
+                                            loop->nb_iterations_upper_bound,
+                                            double_int_one),
+                                        unsigned_p, &overflow);
+-      tem = double_int_to_tree (TREE_TYPE (init), dtmp);
+       /* If the multiplication overflowed we can't do a meaningful
+-	 adjustment.  */
+-      if (!overflow && double_int_equal_p (dtmp, tree_to_double_int (tem)))
+-	{
++	 adjustment.  Likewise if the result doesn't fit in the type
++	 of the induction variable.  For a signed type we have to
++	 check whether the result has the expected signedness which
++	 is that of the step as nb_iterations_upper_bound is unsigned.  */
++      if (!overflow
++	  && double_int_fits_to_tree_p (TREE_TYPE (init), dtmp)
++	  && (unsigned_p
++	      || ((dtmp.high ^ TREE_INT_CST_HIGH (step)) >= 0)))
++	{
++	  tem = double_int_to_tree (TREE_TYPE (init), dtmp);
+ 	  extract_range_from_binary_expr (&maxvr, PLUS_EXPR,
+ 					  TREE_TYPE (init), init, tem);
+ 	  /* Likewise if the addition did.  */
+-- 
+1.7.0.4
+

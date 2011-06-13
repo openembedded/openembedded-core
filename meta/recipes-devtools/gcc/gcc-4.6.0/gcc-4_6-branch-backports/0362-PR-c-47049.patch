@@ -1,0 +1,62 @@
+From 6d713af63560a2a98ee2e13d52eb339b57387bc7 Mon Sep 17 00:00:00 2001
+From: jason <jason@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Sat, 28 May 2011 03:22:31 +0000
+Subject: [PATCH] 	PR c++/47049
+ 	* semantics.c (maybe_add_lambda_conv_op): Fix COMDAT sharing.
+ 	* decl.c (start_preparsed_function): Don't call comdat_linkage for
+ 	a template.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174377 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index 8395b2b..7e20009 100644
+--- a/gcc/cp/decl.c
++++ b/gcc/cp/decl.c
+@@ -12425,6 +12425,7 @@ start_preparsed_function (tree decl1, tree attrs, int flags)
+ 	DECL_EXTERNAL (decl1) = 0;
+ 
+       if (ctx != NULL_TREE && DECL_DECLARED_INLINE_P (ctx)
++	  && !processing_template_decl
+ 	  && TREE_PUBLIC (ctx))
+ 	/* This is a function in a local class in an extern inline
+ 	   function.  */
+diff --git a/gcc/cp/semantics.c b/gcc/cp/semantics.c
+index b113626..cfd6cf0 100644
+--- a/gcc/cp/semantics.c
++++ b/gcc/cp/semantics.c
+@@ -8518,7 +8518,7 @@ maybe_add_lambda_conv_op (tree type)
+     {
+       /* Put the thunk in the same comdat group as the call op.  */
+       struct cgraph_node *callop_node, *thunk_node;
+-      DECL_COMDAT_GROUP (statfn) = DECL_COMDAT_GROUP (callop);
++      DECL_COMDAT_GROUP (statfn) = cxx_comdat_group (callop);
+       callop_node = cgraph_node (callop);
+       thunk_node = cgraph_node (statfn);
+       gcc_assert (callop_node->same_comdat_group == NULL);
+new file mode 100644
+index 0000000..12ffde7
+--- /dev/null
++++ b/gcc/testsuite/g++.dg/cpp0x/lambda/lambda-template2.C
+@@ -0,0 +1,20 @@
++// PR c++/47049
++// { dg-options -std=c++0x }
++
++enum { E = 0, F = 1 };
++template <int N, int M = ((N == 1) ? F : E)> class S {};
++template <int N>
++struct T
++{
++  static void
++  foo (S<N> *p)
++  {
++    S<N> u;
++    [&u] ()->bool {} ();
++  }
++};
++
++int main()
++{
++  T<0>().foo(0);
++}
+-- 
+1.7.0.4
+

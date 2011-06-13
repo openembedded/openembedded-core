@@ -1,0 +1,24 @@
+From 71a7bfbc37759a3f596366544c21ec55c4a75385 Mon Sep 17 00:00:00 2001
+From: jason <jason@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Mon, 6 Jun 2011 04:31:24 +0000
+Subject: [PATCH] 	PR c++/49134
+ 	* tree.c (build_target_expr): Deal with ARM ABI tweaks.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174684 138bc75d-0d04-0410-961f-82ee72b054a4
+
+index 16b9ca1..0e08eaf 100644
+--- a/gcc/cp/tree.c
++++ b/gcc/cp/tree.c
+@@ -286,6 +286,9 @@ build_target_expr (tree decl, tree value)
+ #ifdef ENABLE_CHECKING
+   gcc_assert (VOID_TYPE_P (TREE_TYPE (value))
+ 	      || TREE_TYPE (decl) == TREE_TYPE (value)
++	      /* On ARM ctors return 'this'.  */
++	      || (TREE_CODE (TREE_TYPE (value)) == POINTER_TYPE
++		  && TREE_CODE (value) == CALL_EXPR)
+ 	      || useless_type_conversion_p (TREE_TYPE (decl),
+ 					    TREE_TYPE (value)));
+ #endif
+-- 
+1.7.0.4
+
