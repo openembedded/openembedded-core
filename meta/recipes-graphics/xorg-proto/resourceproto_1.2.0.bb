@@ -7,13 +7,13 @@ Resource extension.  XRes provides an interface that allows X clients to \
 see and monitor X resource usage of various clients."
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=e01e66e4b317088cf869bc98e6af4fb6"
+LIC_FILES_CHKSUM = "file://COPYING;md5=604859305e662503077240fee8c77d97"
 
 CONFLICTS = "resourceext"
 
 PR = "r0"
 PE = "1"
 
-SRC_URI[md5sum] = "8ff0525ae7502b48597b78d00bc22284"
-SRC_URI[sha256sum] = "8579818e99aa881c00c04eb5f96fcbeec463816ca8e3cda9d3d25562f7a4b8c6"
+SRC_URI[md5sum] = "cfdb57dae221b71b2703f8e2980eaaf4"
+SRC_URI[sha256sum] = "3c66003a6bdeb0f70932a9ed3cf57cc554234154378d301e0c5cfa189d8f6818"
 
