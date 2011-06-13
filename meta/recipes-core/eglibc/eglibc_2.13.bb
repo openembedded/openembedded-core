@@ -1,6 +1,6 @@
 require eglibc.inc
 
-SRCREV = "13356"
+SRCREV = "14157"
 
 DEPENDS += "gperf-native"
 FILESPATHPKG =. "eglibc-svn:"
