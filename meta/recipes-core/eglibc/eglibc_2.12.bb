@@ -1,7 +1,7 @@
 require eglibc.inc
 
 DEPENDS += "gperf-native"
-PR = "r14"
+PR = "r15"
 
 SRCREV = "14158"
 
