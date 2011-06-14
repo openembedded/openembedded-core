@@ -4,14 +4,12 @@ HOMEPAGE = "http://www.sudo.ws"
 BUGTRACKER = "http://www.sudo.ws/bugs/"
 PRIORITY = "optional"
 SECTION = "admin"
-LICENSE = "ISC & UCB & MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=0b07397b2fca3fb8b71f08cd85c6eb3f \
-                    file://nonunix.h;beginline=4;endline=28;md5=af7d361f47ae60769cac77e4fca0dbb0 \
-                    file://vasgroups.c;beginline=4;endline=28;md5=af7d361f47ae60769cac77e4fca0dbb0 \
-                    file://fnmatch.c;beginline=6;endline=31;md5=5872733146b9eb0deb79e1f664815b85 \
-                    file://getcwd.c;beginline=5;endline=27;md5=449af4cc57fc7d46f42090608ba3e681 \
-                    file://glob.c;beginline=6;endline=31;md5=5872733146b9eb0deb79e1f664815b85 \
-                    file://snprintf.c;beginline=6;endline=31;md5=c98b24f02967c095d7a70ae2e4d4d4ea"
+LICENSE = "ISC & UCB & Zlib"
+LIC_FILES_CHKSUM = "file://doc/LICENSE;md5=54f1b46c2459ecec3d892618eab44302 \
+                    file://compat/fnmatch.c;beginline=6;endline=31;md5=5872733146b9eb0deb79e1f664815b85 \
+                    file://compat/getcwd.c;beginline=5;endline=27;md5=449af4cc57fc7d46f42090608ba3e681 \
+                    file://compat/glob.c;beginline=6;endline=31;md5=5872733146b9eb0deb79e1f664815b85 \
+                    file://compat/snprintf.c;beginline=6;endline=31;md5=c98b24f02967c095d7a70ae2e4d4d4ea"
 
 inherit autotools
 
@@ -23,17 +21,14 @@ do_configure_prepend () {
 	fi
 }
 
-# The script "mkinstalldirs" from package "sudo" will create directory 
-# "/var/lib/sudo" by recursion with mode "0700" during installing files.
-# That is to say, "var", "var/lib" and "var/lib/sudo" will possess access authority 
-# with mode "0700". It cause that directory "var" and "var/lib" 
-# can't be accessed by common user. Creating directory "/var/lib" before 
-# installing files can resolve this problem.
-
+# Explicitly create ${localstatedir}/lib before do_install to ensure
+# the directory is accessible by all users. Otherwise the mkinstalldirs
+# script (from sudo) will recursively create ${localstatedir}/lib/sudo
+# and then chmod each directory with 0700 permissions, which isn't what
+# we want (i.e, users would not be able to access /var/lib).
 do_install_prepend (){
 	mkdir -p ${D}/${localstatedir}/lib
 }
- 
 
 pkg_postinst_${PN} () {
 	if [ "x$D" != "x" ]; then
