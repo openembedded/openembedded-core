@@ -1,4 +1,5 @@
 require xorg-proto-common.inc
+SRC_URI += "file://restore_to_old_xDRI2BufferSwapComplete.patch"
 
 SUMMARY = "DRI2: Direct Rendering Infrastructure 2 headers"
 
@@ -10,7 +11,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2e396fa91834f8786032cad2da5638f3 \
                     file://dri2proto.h;endline=31;md5=22f28bf68d01b533f26195e94b3ed8ca"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI[md5sum] = "0cdeb1e95901813385dc9576be272bd3"
 SRC_URI[sha256sum] = "ff156f178d48ab31beeb4be5eb39d5df7540791ba489a8d94c443bb99a2376f1"
