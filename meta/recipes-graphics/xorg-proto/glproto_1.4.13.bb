@@ -1,4 +1,5 @@
 require xorg-proto-common.inc
+SRC_URI += "file://restore_the_old_xGLXBufferSwapComplete.patch"
 
 SUMMARY = "OpenGL: X OpenGL extension headers"
 
@@ -10,7 +11,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d44ed0146997856304dfbb512a59a8de \
                     file://glxproto.h;beginline=4;endline=32;md5=6b79c570f644363b356456e7d44471d9"
 
-PR = "r0"
+PR = "r1"
 PE = "1"
 
 BBCLASSEXTEND = "nativesdk"
