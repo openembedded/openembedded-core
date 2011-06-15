@@ -5,9 +5,10 @@ HOMEPAGE = "http://qt.nokia.com"
 PRIORITY = "optional"
 LICENSE = "LGPLv2.1 | GPLv3"
 
-INC_PR = "r3"
+INC_PR = "r4"
 
-FILESPATHPKG =. "qt-${PV}:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt-${PV}:"
+
 inherit nativesdk qmake2
 
 SRC_URI = "http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${PV}.tar.gz \
