@@ -35,11 +35,11 @@ FILES_${PN}-utils = "${bindir}/host ${bindir}/dig ${bindir}/nslookup"
 FILES_${PN}-dev += "${bindir}/isc-config.h"
 
 do_install_append() {
-	rm "${D}/usr/bin/nslookup"
-	install -d "${D}/etc/bind"
-	install -d "${D}/etc/init.d"
-	install -m 644 ${S}/conf/* "${D}/etc/bind"
-	install -m 755 "${S}/init.d" "${D}/etc/init.d/bind"
+	rm "${D}${bindir}/nslookup"
+	install -d "${D}${sysconfdir}/bind"
+	install -d "${D}${sysconfdir}/init.d"
+	install -m 644 ${S}/conf/* "${D}${sysconfdir}/bind/"
+	install -m 755 "${S}/init.d" "${D}${sysconfdir}/init.d/bind"
 }
 
 CONFFILES_${PN} = " \
