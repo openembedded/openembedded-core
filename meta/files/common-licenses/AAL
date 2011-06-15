@@ -2,7 +2,7 @@
 Attribution Assurance License
 Copyright (c) 2002 by AUTHOR
 PROFESSIONAL IDENTIFICATION * URL
-"PROMOTIONAL SLOGAN FOR AUTHOR'S PROFESSIONAL PRACTICE"
+"PROMOTIONAL SLOGAN FOR AUTHOR`S PROFESSIONAL PRACTICE"
 
 All Rights Reserved
 ATTRIBUTION ASSURANCE LICENSE (adapted from the original BSD license)
@@ -19,7 +19,7 @@ text in verifiable form.
 2. Redistributions of the Code in binary form must be accompanied by
 this GPG-signed text in any documentation and, each time the resulting
 executable program or a program dependent thereon is launched, a
-prominent display (e.g., splash screen or banner text) of the Author's
+prominent display (e.g., splash screen or banner text) of the Author`s
 attribution information, which includes:
 (a) Name ("AUTHOR"),
 (b) Professional identification ("PROFESSIONAL IDENTIFICATION"), and
@@ -47,3 +47,5 @@ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--End of License
+

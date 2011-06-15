@@ -1,23 +1,19 @@
 
 MOTOSOTO OPEN SOURCE LICENSE - Version 0.9.1
-This Motosoto Open Source License (the "License") applies to
-"Community
+This Motosoto Open Source License (the "License") applies to "Community
 Portal Server" and related software products as well as any updatesor
 maintenance releases of that software ("Motosoto Products") that are
 distributed by Motosoto.Com B.V. ("Licensor"). Any Motosoto
-Product licensed pursuant to this License is a "Licensed Product."
-Licensed
+Product licensed pursuant to this License is a "Licensed Product." Licensed
 Product, in its entirety, is protected by Dutch copyright law.
 This
-License identifies the terms under which you may use, copy, distribute or
-modify
+License identifies the terms under which you may use, copy, distribute or modify
 Licensed Product and has been submitted to the Open Software Initiative (OSI)
 for approval.
 
 Preamble
 
-This Preamble is intended to describe, in plain English, the nature and scope
-of
+This Preamble is intended to describe, in plain English, the nature and scope of
 this License. However, this Preamble is not a part of this license. The legal
 effect of this License is dependent only upon the terms of the License and not
 this Preamble.
@@ -34,10 +30,8 @@ required.
 
 2. Both Source Code and executable versions of the Licensed Product,
 including Modifications made by previous Contributors, are
-available for your use. (The terms "Licensed Product,"
-"Modifications,"
-"Contributors" and "Source Code" are defined in the
-License.)
+available for your use. (The terms "Licensed Product," "Modifications,"
+"Contributors" and "Source Code" are defined in the License.)
 
 3. You are allowed to make Modifications to the Licensed Product, and you
 can create Derivative Works from it. (The term "Derivative
@@ -51,7 +45,7 @@ Modifications available to others.
 
 5. You may use the Licensed Product for any purpose, but the Licensor is
 not providing you any warranty whatsoever, nor is the Licensor
-accepting any liability in the event that the Licensed Product doesn't
+accepting any liability in the event that the Licensed Product doesn`t
 work properly or causes you any injury or damages.
 
 6. If you sublicense the Licensed Product or Derivative Works, you may
@@ -177,7 +171,7 @@ include a copy of this License with every copy of the
 Modifications you distribute. You agree not to offer or impose any
 terms on any Source Code or executable version of the Licensed
 Product or Modifications that alter or restrict the applicable
-version of this License or the recipients' rights hereunder.
+version of this License or the recipients` rights hereunder.
 However, you may include an additional document offering the
 additional rights described in Section 4(e).
 
@@ -215,7 +209,7 @@ the Licensed Product.
 d. Intellectual Property Matters.
 
 i. Third Party Claims. If you have
-knowledge that a license to a third party's intellectual property right is
+knowledge that a license to a third party`s intellectual property right is
 required
 to exercise the rights granted by this License, you must
 include a text file with the Source Code distribution titled
@@ -231,8 +225,7 @@ received the Licensed Product from you that new knowledge
 has been obtained.
 
 ii. Contributor APIs. If your
-Modifications include an application programming interface ("API")
-and you have
+Modifications include an application programming interface ("API") and you have
 knowledge of patent licenses that are reasonably necessary
 to implement that API, you must also include this
 information in the LEGAL file.
@@ -246,7 +239,7 @@ conveyed by this License.
 e. Required Notices. You must duplicate this
 License in any documentation you provide along with the Source Code of any
 Modifications you create or to which you contribute, and which you
-distribute, wherever you describe recipients' rights
+distribute, wherever you describe recipients` rights
 relating to Licensed Product. You must duplicate the notice
 contained in Exhibit A (the "Notice") in each file of the Source
 Code of any copy you distribute of the Licensed Product. If you
@@ -426,9 +419,4 @@ HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGES. THIS LIMITATION OF
 LIABILITY SHALL NOT
 APPLY TO LIABILITY FOR DEATH OR PERSONAL INJURY RESULTING FROM SUCH
 PARTY
-
-
-
-
-
 

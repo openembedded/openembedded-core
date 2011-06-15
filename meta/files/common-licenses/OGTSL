@@ -38,26 +38,26 @@ let us know so we can feed this back into the original, and also
 raise any specification issues with the appropriate bodies (for
 example the POSIX committees).
 
-Definitions:
+Definitions: 
 
-"Package" refers to the collection of files distributed by the
-Copyright Holder, and derivatives of that collection of files
-created through textual modification.
-"Standard Version" refers to such a Package if it has not been
-modified, or has been modified in accordance with the wishes
-of the Copyright Holder.
-"Copyright Holder" is whoever is named in the copyright or
-copyrights for the package. "You" is you, if you're thinking
-about copying or distributing this Package.
-"Reasonable copying fee" is whatever you can justify on the
-basis of media cost, duplication charges, time of people
-involved, and so on. (You will not be required to justify it
-to the Copyright Holder, but only to the computing community
-at large as a market that must bear the fee.)
-"Freely Available" means that no fee is charged for the item
-itself, though there may be fees involved in handling the
-item. It also means that recipients of the item may
-redistribute it under the same conditions they received it.
+     "Package" refers to the collection of files distributed by the
+     Copyright Holder, and derivatives of that collection of files
+     created through textual modification. 
+     "Standard Version" refers to such a Package if it has not been
+     modified, or has been modified in accordance with the wishes
+     of the Copyright Holder. 
+     "Copyright Holder" is whoever is named in the copyright or
+     copyrights for the package. "You" is you, if you`re thinking
+     about copying or distributing this Package. 
+     "Reasonable copying fee" is whatever you can justify on the
+     basis of media cost, duplication charges, time of people
+     involved, and so on. (You will not be required to justify it
+     to the Copyright Holder, but only to the computing community
+     at large as a market that must bear the fee.) 
+     "Freely Available" means that no fee is charged for the item
+     itself, though there may be fees involved in handling the
+     item. It also means that recipients of the item may
+     redistribute it under the same conditions they received it. 
 
 1. You may make and give away verbatim copies of the source form of
 the Standard Version of this Package without restriction, provided
@@ -74,22 +74,22 @@ provided that you insert a prominent notice in each changed file
 stating how and when you changed that file, and provided that you
 do at least the following:
 
-rename any non-standard executables and testcases so the
-names do not conflict with standard executables and
-testcases, which must also be provided, and provide a
-separate manual page for each non-standard executable and
-testcase that clearly documents how it differs from the
-Standard Version.
+     rename any non-standard executables and testcases so the
+     names do not conflict with standard executables and
+     testcases, which must also be provided, and provide a
+     separate manual page for each non-standard executable and
+     testcase that clearly documents how it differs from the
+     Standard Version.
 
 4. You may distribute the programs of this Package in object code
-or executable form, provided that you do at least the following:
+or executable form, provided that you do at least the following: 
 
-accompany any non-standard executables and testcases with
-their corresponding Standard Version executables and
-testcases, giving the non-standard executables and
-testcases non-standard names, and clearly documenting the
-differences in manual pages (or equivalent), together with
-instructions on where to get the Standard Version.
+     accompany any non-standard executables and testcases with
+     their corresponding Standard Version executables and
+     testcases, giving the non-standard executables and
+     testcases non-standard names, and clearly documenting the
+     differences in manual pages (or equivalent), together with
+     instructions on where to get the Standard Version.
 
 5. You may charge a reasonable copying fee for any distribution of
 this Package. You may charge any fee you choose for support of this
@@ -106,7 +106,7 @@ generated them, and may be sold commercially, and may be aggregated
 with this Package.
 
 7.Subroutines supplied by you and linked into this Package shall
-not be considered part of this Package.
+not be considered part of this Package. 
 
 8. The name of the Copyright Holder may not be used to endorse or
 promote products derived from this software without specific prior
@@ -117,9 +117,4 @@ IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 The End
-
-
-
-
-
 
