@@ -1,0 +1,31 @@
+libarchive: Ignore ENOSYS error when setting up xattrs. (Closes: #588925)
+
+Modestas Vainius found out that HPPA returns errno ENOSYS
+on listxattrs. Currently, ENOTSUP is ignored so we'll do the
+same for ENOSYS as well.
+
+For full debug info about this see Modestas Vainius awesome
+report at:
+
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=588925#10
+
+Upstream-Status: Pending
+
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+
+diff --git a/libarchive/archive_read_disk_entry_from_file.c b/libarchive/archive_read_disk_entry_from_file.c
+index 27671df..c49e755 100644
+--- a/libarchive/archive_read_disk_entry_from_file.c
++++ b/libarchive/archive_read_disk_entry_from_file.c
+@@ -398,7 +398,7 @@ setup_xattrs(struct archive_read_disk *a,
+ 		list_size = listxattr(path, NULL, 0);
+ 
+ 	if (list_size == -1) {
+-		if (errno == ENOTSUP)
++		if (errno == ENOTSUP || errno == ENOSYS)
+ 			return (ARCHIVE_OK);
+ 		archive_set_error(&a->archive, errno,
+ 			"Couldn't list extended attributes");
+-- 
+1.7.1
+

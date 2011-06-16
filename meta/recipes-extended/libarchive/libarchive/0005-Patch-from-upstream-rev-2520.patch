@@ -1,0 +1,31 @@
+libarchive: Backport patch from upstream (rev 2520)
+
+Fix version/dot stripping code in joliet extension of iso9660.
+
+Upstream-Status: Backport
+
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+
+diff --git a/libarchive/archive_read_support_format_iso9660.c b/libarchive/archive_read_support_format_iso9660.c
+index 8dcfeb4..2d3a855 100644
+--- a/libarchive/archive_read_support_format_iso9660.c
++++ b/libarchive/archive_read_support_format_iso9660.c
+@@ -1766,13 +1766,13 @@ parse_file_info(struct archive_read *a, struct file_info *parent,
+ 		 *       *, /, :, ;, ? and \.
+ 		 */
+ 		/* Chop off trailing ';1' from files. */
+-		if (*(wp-2) == ';' && *(wp-1) == '1') {
++		if (*(wp-2) == L';' && *(wp-1) == L'1') {
+ 			wp-=2;
+ 			*wp = L'\0';
+ 		}
+ 
+ 		/* Chop off trailing '.' from filenames. */
+-		if (*(wp-1) == '.')
++		if (*(wp-1) == L'.')
+ 			*(--wp) = L'\0';
+ 
+ 		/* store the result in the file name field. */
+-- 
+1.7.1
+

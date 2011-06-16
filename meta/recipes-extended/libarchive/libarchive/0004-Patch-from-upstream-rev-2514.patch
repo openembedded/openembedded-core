@@ -1,0 +1,33 @@
+libarchive: Backport patch from upstream (rev 2514)
+
+Enable version stripping code in joliet extension support for iso9660.
+
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=587316
+
+Upstream-Status: Backport
+
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+
+diff --git a/libarchive/archive_read_support_format_iso9660.c b/libarchive/archive_read_support_format_iso9660.c
+index fdef3fb..8dcfeb4 100644
+--- a/libarchive/archive_read_support_format_iso9660.c
++++ b/libarchive/archive_read_support_format_iso9660.c
+@@ -1755,7 +1755,6 @@ parse_file_info(struct archive_read *a, struct file_info *parent,
+ 		}
+ 		*wp = L'\0';
+ 
+-#if 0 /* untested code, is it at all useful on Joliet? */
+ 		/* trim trailing first version and dot from filename.
+ 		 *
+ 		 * Remember we where in UTF-16BE land!
+@@ -1775,7 +1774,6 @@ parse_file_info(struct archive_read *a, struct file_info *parent,
+ 		/* Chop off trailing '.' from filenames. */
+ 		if (*(wp-1) == '.')
+ 			*(--wp) = L'\0';
+-#endif
+ 
+ 		/* store the result in the file name field. */
+ 		archive_strappend_w_utf8(&file->name, wbuff);
+-- 
+1.7.1
+
