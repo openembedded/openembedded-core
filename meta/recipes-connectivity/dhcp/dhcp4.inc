@@ -47,7 +47,9 @@ do_install_append () {
 	install -m 0644 ${WORKDIR}/dhcpd.conf ${D}${sysconfdir}/dhcp/dhcpd.conf
 
 	install -d ${D}${base_sbindir}/
-	mv ${D}${sbindir}/dhclient ${D}${base_sbindir}/
+	if [ "${sbindir}" != "${base_sbindir}" ]; then
+		mv ${D}${sbindir}/dhclient ${D}${base_sbindir}/
+	fi
 	install -m 0755 ${S}/client/scripts/linux ${D}${base_sbindir}/dhclient-script
 }
 
