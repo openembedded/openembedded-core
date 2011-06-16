@@ -8,10 +8,15 @@ PROVIDES = "gconf"
 RPROVIDES_${PN} = "gconf"
 RPROVIDES_${PN}-dev = "gconf-dev"
 
-SRCREV = "705"
-PV = "2.16.0+svnr${SRCPV}"
+#SRCREV = "705"
+#PV = "2.16.0+svnr${SRCPV}"
+PR = "r0"
 
-SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http"
+# This SVN repo is no longer available use a tarball mirror site until
+# we move to proper gconf recipe.
+#SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http"
+SRC_URI = "http://autobuilder.pokylinux.org/sources/trunk_developer.imendio.com_.svn.gconf-dbus_705_.tar.gz"
+
 S = "${WORKDIR}/trunk"
 
 inherit pkgconfig autotools
