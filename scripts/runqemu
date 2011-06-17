@@ -71,7 +71,7 @@ process_filename() {
             usage
         fi
     elif [[ "x$EXT" == "xext2" || "x$EXT" == "xext3" ||
-            "x$EXT" == "xjffs2" ]]; then
+            "x$EXT" == "xjffs2" || "x$EXT" == "xbtrfs" ]]; then
         # A file ending in a supportted fs type is a rootfs image
         if [[ -z "$FSTYPE" || "$FSTYPE" == "$EXT" ]]; then
             FSTYPE=$EXT
@@ -101,7 +101,7 @@ while [ $i -le $# ]; do
                 usage
             fi
             ;;
-        "ext2" | "ext3" | "jffs2" | "nfs")
+        "ext2" | "ext3" | "jffs2" | "nfs" | "btrfs")
             if [[ -z "$FSTYPE" || "$FSTYPE" == "$arg" ]]; then
                 FSTYPE=$arg
             else
@@ -317,7 +317,7 @@ if [[ -e "$ROOTFS" && -z "$FSTYPE" ]]; then
     # Extract the filename extension
     EXT=`echo $ROOTFS | awk -F . '{ print \$NF }'`
     if [[ "x$EXT" == "xext2" || "x$EXT" == "xext3" || 
-          "x$EXT" == "xjffs2" ]]; then
+          "x$EXT" == "xjffs2" || "x$EXT" == "xbtrfs" ]]; then
         FSTYPE=$EXT
     else
         echo "Note: Unable to determine filesystem extension for $ROOTFS"
