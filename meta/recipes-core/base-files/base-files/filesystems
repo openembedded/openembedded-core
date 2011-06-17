@@ -3,4 +3,5 @@ fat
 vfat
 ext2
 ext3
+btrfs
 *
