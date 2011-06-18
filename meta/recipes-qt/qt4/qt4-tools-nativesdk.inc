@@ -17,6 +17,7 @@ SRC_URI = "http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${PV}.
            file://qt-config.patch \
            file://qmake-exists-check.patch \
            file://configure-paths.patch \
+           file://qt-dbus-const.patch \
            file://g++.conf \
            file://linux.conf"
 
