@@ -1,7 +1,0 @@
-From e844fd1afbcb37f828f48c5aa80941f1c5349957 Mon Sep 17 00:00:00 2001
-From: rsandifo <rsandifo@138bc75d-0d04-0410-961f-82ee72b054a4>
-Date: Sun, 29 May 2011 17:50:18 +0000
-Subject: [PATCH] Add PR target/43700 to last changelog entry.
-
-git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch@174406 138bc75d-0d04-0410-961f-82ee72b054a4
-
