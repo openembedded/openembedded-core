@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SECTION = "x11/gnome"
 
-PR = "r1"
+PR = "r2"
 
 inherit autotools gnome pkgconfig
 
@@ -30,6 +30,6 @@ do_install_append () {
 	install -m 0644 ${WORKDIR}/org.gnome.keyring.service ${D}${datadir}/dbus-1/services
 }
 
-FILES_${PN} += "${datadir}/dbus-1/services"
+FILES_${PN} += "${datadir}/dbus-1/services ${datadir}/gcr ${libdir}/security/*.so"
 FILES_${PN}-dbg += "${libdir}/gnome-keyring/standalone/.debug/"
 FILES_${PN}-dbg += "${libdir}/gnome-keyring/devel/.debug/"
