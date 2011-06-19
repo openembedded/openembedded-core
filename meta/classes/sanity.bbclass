@@ -42,6 +42,10 @@ def check_sanity_version_change():
     return ""
 
 def check_pseudo_wrapper():
+    import sys
+    if not sys.argv[0].endswith('/bitbake'):
+        return ""
+
     import subprocess as sub
     # Check if bitbake wrapper is being used
     pseudo_build = os.environ.get( 'PSEUDO_BUILD' )
