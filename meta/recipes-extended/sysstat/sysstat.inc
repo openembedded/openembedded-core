@@ -9,6 +9,8 @@ SRC_URI = "http://pagesperso-orange.fr/sebastien.godard/sysstat-${PV}.tar.gz \
 
 inherit autotools gettext
 
+EXTRA_OEMAKE += 'LFLAGS=""'
+
 do_install() {
 	autotools_do_install
 
@@ -25,6 +27,7 @@ pkg_postinst_${PN} () {
 
 
 FILES_${PN} += "${libdir}/sa"
+FILES_${PN}-dbg += "${libdir}/sa/.debug/"
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 LDFLAGS_append_libc-uclibc = " -lintl"
