@@ -4,6 +4,11 @@
 # (C) 2002-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
 # (C) 2007 Jeremy Laine
 # licensed under MIT, see COPYING.MIT
+#
+# June 22, 2011 -- Mark Hatle <mark.hatle@windriver.com>
+#  * Updated to no longer generate special -dbg package, instead use the
+#    single system -dbg
+#  * Update version with ".1" to indicate this change
 
 import os
 import sys
@@ -12,7 +17,7 @@ import time
 VERSION = "2.6.6"
 
 __author__ = "Michael 'Mickey' Lauer <mlauer@vanille-media.de>"
-__version__ = "20110222"
+__version__ = "20110222.1"
 
 class MakefileMaker:
 
@@ -76,9 +81,9 @@ class MakefileMaker:
         # generate package line
         #
 
-        packageLine = 'PACKAGES="${PN}-core-dbg '
+        packageLine = 'PACKAGES="${PN}-dbg '
         for name in sorted(self.packages):
-            if name != '${PN}-core-dbg':
+            if name != '${PN}-dbg':
                 packageLine += "%s " % name
         packageLine += '${PN}-modules"'
 
@@ -123,7 +128,7 @@ class MakefileMaker:
         line = 'RDEPENDS_${PN}-modules="'
 
         for name, data in sorted(self.packages.iteritems()):
-            if name not in ['${PN}-core-dbg', '${PN}-dev']:
+            if name not in ['${PN}-dev']:
                 line += "%s " % name
 
         self.out( "%s \"" % line )
@@ -160,9 +165,6 @@ if __name__ == "__main__":
     "UserDict.* UserList.* UserString.* " +
     "lib-dynload/binascii.so lib-dynload/_struct.so lib-dynload/time.so " +
     "lib-dynload/xreadlines.so types.* platform.* ${bindir}/python*" )
-
-    m.addPackage( "${PN}-core-dbg", "Python core module debug information", "${PN}-core",
-    "config/.debug lib-dynload/.debug ${bindir}/.debug ${libdir}/.debug" )
 
     m.addPackage( "${PN}-dev", "Python Development Package", "${PN}-core",
     "${includedir} ${libdir}/libpython2.6.so" ) # package
