@@ -215,6 +215,7 @@ python checkpkg_eventhandler() {
 addtask checkpkg
 do_checkpkg[nostamp] = "1"
 python do_checkpkg() {
+	localdata = bb.data.createCopy(d)
 	import sys
 	import re
 	import tempfile
@@ -435,18 +436,38 @@ python do_checkpkg() {
 
 	"""generate package information from .bb file"""
 	pname = bb.data.getVar('PN', d, True)
-	pdesc = bb.data.getVar('DESCRIPTION', d, True)
-	pgrp = bb.data.getVar('SECTION', d, True)
-	pversion = bb.data.getVar('PV', d, True)
-	plicense = bb.data.getVar('LICENSE', d, True)
-	psection = bb.data.getVar('SECTION', d, True)
-	phome = bb.data.getVar('HOMEPAGE', d, True)
-	prelease = bb.data.getVar('PR', d, True)
-	ppriority = bb.data.getVar('PRIORITY', d, True)
-	pdepends = bb.data.getVar('DEPENDS', d, True)
-	pbugtracker = bb.data.getVar('BUGTRACKER', d, True)
-	ppe = bb.data.getVar('PE', d, True)
-	psrcuri = bb.data.getVar('SRC_URI', d, True)
+
+	if pname.find("-native") != -1:
+	    pnstripped = pname.split("-native")
+	    bb.note("Native Split: %s" % pnstripped)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.update_data(localdata)
+
+	if pname.find("-cross") != -1:
+	    pnstripped = pname.split("-cross")
+	    bb.note("cross Split: %s" % pnstripped)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.update_data(localdata)
+
+	if pname.find("-initial") != -1:
+	    pnstripped = pname.split("-initial")
+	    bb.note("initial Split: %s" % pnstripped)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.update_data(localdata)
+
+	pdesc = bb.data.getVar('DESCRIPTION', localdata, True)
+	pgrp = bb.data.getVar('SECTION', localdata, True)
+	pversion = bb.data.getVar('PV', localdata, True)
+	plicense = bb.data.getVar('LICENSE', localdata, True)
+	psection = bb.data.getVar('SECTION', localdata, True)
+	phome = bb.data.getVar('HOMEPAGE', localdata, True)
+	prelease = bb.data.getVar('PR', localdata, True)
+	ppriority = bb.data.getVar('PRIORITY', localdata, True)
+	pdepends = bb.data.getVar('DEPENDS', localdata, True)
+	pbugtracker = bb.data.getVar('BUGTRACKER', localdata, True)
+	ppe = bb.data.getVar('PE', localdata, True)
+	psrcuri = bb.data.getVar('SRC_URI', localdata, True)
+	maintainer = bb.data.getVar('RECIPE_MAINTAINER', localdata, True)
 
 	found = 0
 	for uri in src_uri.split():
@@ -616,7 +637,6 @@ python do_checkpkg() {
 		else:
 			pmstatus = "UPDATE"
 	
-	maintainer = bb.data.getVar('RECIPE_MAINTAINER', d, True)
 	psrcuri = psrcuri.split()[0]
 	pdepends = "".join(pdepends.split("\t"))
 	pdesc = "".join(pdesc.split("\t"))
