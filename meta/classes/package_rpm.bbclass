@@ -486,7 +486,10 @@ python write_specfile () {
 				spec_files_top.append('%files')
 				spec_files_top.append('%defattr(-,-,-,-)')
 				if file_list:
+					bb.note("Creating RPM package for %s" % splitname)
 					spec_files_top.extend(file_list)
+				else:
+					bb.note("Creating EMPTY RPM Package for %s" % splitname)
 				spec_files_top.append('')
 
 			bb.utils.unlockfile(lf)
@@ -569,11 +572,13 @@ python write_specfile () {
 		if not file_list and bb.data.getVar('ALLOW_EMPTY', localdata) != "1":
 			bb.note("Not creating empty RPM package for %s" % splitname)
 		else:
-			bb.note("Creating RPM package for %s" % splitname)
 			spec_files_bottom.append('%%files -n %s' % splitname)
 			spec_files_bottom.append('%defattr(-,-,-,-)')
 			if file_list:
+				bb.note("Creating RPM package for %s" % splitname)
 				spec_files_bottom.extend(file_list)
+			else:
+				bb.note("Creating EMPTY RPM Package for %s" % splitname)
 			spec_files_bottom.append('')
 
 		del localdata
