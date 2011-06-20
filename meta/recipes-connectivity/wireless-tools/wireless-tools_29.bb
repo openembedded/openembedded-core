@@ -8,12 +8,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 SECTION = "base"
 PRIORITY = "optional"
 PE = "1"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.29.tar.gz \
            file://man.patch;apply=yes \
 	   file://wireless-tools.if-pre-up \
-	   file://zzz-wireless.if-pre-up"
+	   file://zzz-wireless.if-pre-up \
+	   file://avoid_strip.patch"
 
 SRC_URI[md5sum] = "e06c222e186f7cc013fd272d023710cb"
 SRC_URI[sha256sum] = "6fb80935fe208538131ce2c4178221bab1078a1656306bce8909c19887e2e5a1"
