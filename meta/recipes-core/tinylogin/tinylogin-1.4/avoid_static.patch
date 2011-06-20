@@ -1,0 +1,33 @@
+tinylogin: Do not link statically when building debug
+
+For some reason if DODEBUG was enabled (to prevent stripping) the binary was
+also statically linked.  This patch prevents that behavior.
+
+Upstream-Status: Inappropriate [no upstream]
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff -ur tinylogin-1.4.orig/Makefile tinylogin-1.4/Makefile
+--- tinylogin-1.4.orig/Makefile	2011-06-18 11:00:23.073927349 -0500
++++ tinylogin-1.4/Makefile	2011-06-18 11:03:26.394849372 -0500
+@@ -123,20 +123,6 @@
+     LDFLAGS += -s -Wl,-warn-common 
+     STRIP    = $(STRIPTOOL) --remove-section=.note --remove-section=.comment $(PROG)
+ endif
+-ifeq ($(strip $(DODEBUG)),true)
+-    LDFLAGS += --static
+-    #
+-    #use '-ffunction-sections -fdata-sections' and '--gc-sections' (if they 
+-    # work) to try and strip out any unused junk.  Doesn't do much for me, 
+-    # but you may want to give it a shot...
+-    #
+-    #ifeq ($(shell $(CC) -ffunction-sections -fdata-sections -S \
+-    #	-o /dev/null -xc /dev/null 2>/dev/null && $(LD) \
+-    #			--gc-sections -v >/dev/null && echo 1),1)
+-    #	CFLAGS += -ffunction-sections -fdata-sections
+-    #	LDFLAGS += --gc-sections
+-    #endif
+-endif
+ ifeq ($(strip $(DOSTATIC)),true)
+     LDFLAGS += --static
+     #
