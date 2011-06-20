@@ -15,7 +15,7 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d151214b3131251dfc9d858593acbd24"
 
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "${PN}-native tiff jpeg fontconfig cups"
 DEPENDS_virtclass-native = ""
@@ -57,6 +57,8 @@ do_install_append () {
     mkdir -p ${D}${datadir}/ghostscript/${PV}/
     cp -r Resource ${D}${datadir}/ghostscript/${PV}/
     cp -r iccprofiles ${D}${datadir}/ghostscript/${PV}/
+
+    chown -R root:lp ${D}${sysconfdir}/cups
 }
 
 python do_patch_virtclass-native () {
