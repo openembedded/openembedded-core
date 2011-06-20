@@ -9,6 +9,8 @@ EXTRA_OECONF = "--disable-scrollkeeper"
 do_install_append() {
 	mkdir -p  ${D}${datadir}/xml/gnome/xslt/
 	cp -pPr ${S}/xslt/* ${D}${datadir}/xml/gnome/xslt/
+
+	chown -R root:root ${D}
 }
 
 FILES_${PN} += "${datadir}/xml*"
