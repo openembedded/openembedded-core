@@ -31,7 +31,8 @@ EXTRA_OECONF = "--disable-debug --enable-included-printf=no"
 EXTRA_OECONF_virtclass-native = ""
 EXTRA_OECONF_linuxstdbase = "--enable-included-printf=no"
 
-FILES_${PN} = "${libdir}/lib*${SOLIBS}"
+FILES_${PN} = "${libdir}/lib*${SOLIBS} ${sysconfdir}/bash_completion.d ${datadir}/glib-2.0/schemas"
 FILES_${PN}-dev += "${libdir}/glib-2.0/include"
+FILES_${PN}-dbg += "${datadir}/glib-2.0/gdb ${datadir}/gdb"
 
 ARM_INSTRUCTION_SET = "arm"
