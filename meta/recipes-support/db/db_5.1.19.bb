@@ -14,7 +14,7 @@ HOMEPAGE = "http://www.oracle.com/technology/products/berkeley-db/db/index.html"
 LICENSE = "Sleepycat"
 VIRTUAL_NAME ?= "virtual/db"
 CONFLICTS = "db3"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz"
 SRC_URI += "file://arm-thumb-mutex_db5.patch;patchdir=.."
@@ -76,6 +76,7 @@ EXTRA_OECONF += "${MUTEX}"
 # configure.
 CONFIG_SITE = ""
 do_configure() {
+	export STRIP="true"
 	oe_runconf
 }
 
