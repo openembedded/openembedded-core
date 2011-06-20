@@ -22,7 +22,7 @@ SRCREV_machine_qemux86-64 = "72ca49ab08b8eb475cec82a10049503602325791"
 SRCREV_machine = "72ca49ab08b8eb475cec82a10049503602325791"
 SRCREV_meta = "ec26387cb168e9e0976999b528b5a9dd62e3157a"
 
-PR = "r1"
+PR = "r2"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 SRCREV_FORMAT = "meta_machine"
 
