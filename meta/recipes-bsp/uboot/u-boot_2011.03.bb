@@ -12,9 +12,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1707d6db1d42237583f50183a5651ecb \
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/u-boot-git/${MACHINE}"
 
-SRCREV = "v2011.03"
+# This revision corresponds to the tag "v2011.03"
+# We use the revision in order to avoid having to fetch it from the repo during parse
+SRCREV = "19b54a701811220221fc4d5089a2bb18892018ca"
+
 PV = "v2011.03+git${SRCPV}"
-PR="r4"
+PR = "r5"
 
 SRC_URI = "git://git.denx.de/u-boot.git;branch=master;protocol=git"
 
