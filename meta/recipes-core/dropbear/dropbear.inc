@@ -32,12 +32,14 @@ EXTRA_OEMAKE = 'MULTI=1 SCPPROGRESS=1 PROGRAMS="${SBINCOMMANDS} ${BINCOMMANDS}"'
 
 DISTRO_TYPE = "${@base_contains("IMAGE_FEATURES", "debug-tweaks", "debug", "",d)}"
 
-do_configure_prepend() {
+do_debug_patch() {
 	if [ "${DISTRO_TYPE}" = "debug" ]; then
 		bbnote "WARNING: applying allow-nopw.patch which allows password-less logins!"
 		patch -p1 < ${WORKDIR}/allow-nopw.patch
 	fi
 }
+
+addtask do_debug_patch after do_patch before do_configure
 
 do_install() {
 	install -d ${D}${sysconfdir} \
