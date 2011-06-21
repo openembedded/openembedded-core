@@ -98,6 +98,8 @@ do_install_append() {
 		test ! -d "${D}/${docdir}" || rm -rf "${D}/${docdir}"
 		mv "${D}/${prefix}/docs" "${D}/${docdir}"
 	fi
+
+	chown -R root:root ${D}
 }
 
 BBCLASSEXTEND = "native nativesdk"
