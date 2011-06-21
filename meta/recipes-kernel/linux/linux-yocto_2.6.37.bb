@@ -20,9 +20,9 @@ SRCREV_machine_qemuppc = "9d278962ff228ea9627a85b0d21ed717246ebf1f"
 SRCREV_machine_qemux86 = "57545699dff0b384bb16be74b0358059da5cce6a"
 SRCREV_machine_qemux86-64 = "5d36c23eecdc9663c9c3a2a511d4872d3b3fd669"
 SRCREV_machine = "12646d158aced2ba0122787bd56ff554e371091c"
-SRCREV_meta = "8888d948e0ddbc5f37bd3dc23cc1b398ab230e2e"
+SRCREV_meta = "94fa015b130e96a3b6242a8ac4ff4cca9406951f"
 
-PR = "r18"
+PR = "r19"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 SRCREV_FORMAT = "meta_machine"
 
@@ -33,6 +33,7 @@ COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64)"
 # Functionality flags
 KERNEL_REVISION_CHECKING ?= "t"
 KERNEL_FEATURES="features/netfilter"
+KERNEL_FEATURES_append=" features/taskstats"
 KERNEL_FEATURES_append_qemux86=" cfg/sound"
 KERNEL_FEATURES_append_qemux86-64=" cfg/sound"
 
