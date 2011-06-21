@@ -9,7 +9,7 @@ SECTION = "libs"
 DEPENDS = "boost-jam-native zlib"
 PRIORITY = "optional"
 LICENSE = "Boost"
-PR = "r3"
+PR = "r4"
 
 ARM_INSTRUCTION_SET = "arm"
 BOOST_VER = "${@"_".join(bb.data.getVar("PV",d,1).split("."))}"
@@ -126,11 +126,13 @@ BJAM_OPTS    = '${BJAM_TOOLS} \
 		${BJAM_EXTRA}'
 
 
-do_configure_prepend() {
+do_boostconfig() {
 	cp -f boost/config/platform/linux.hpp boost/config/platform/linux-gnueabi.hpp
 
 	echo 'using gcc : 4.3.1 : ${CXX} : compileflags -DBOOST_SP_USE_PTHREADS -I${includedir} linkflags -L${libdir} ;' >> ${S}/tools/build/v2/user-config.jam
 }
+
+addtask do_boostconfig after do_patch before do_configure
 
 do_compile() {
 	set -ex
