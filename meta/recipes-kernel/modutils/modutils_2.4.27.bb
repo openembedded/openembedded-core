@@ -5,7 +5,7 @@ manageable for all users, administrators and distribution maintainers."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 DEPENDS = "bison-native"
-PR = "r9"
+PR = "r10"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/modutils/v2.4/modutils-${PV}.tar.bz2 \
            file://lex.l.diff;patch=1 \
@@ -86,7 +86,7 @@ pkg_prerm_modutils-modinfo() {
 update-alternatives --remove modinfo /sbin/modinfo.24
 }
 
-PACKAGES = "modutils-depmod modutils-modinfo modutils-doc modutils"
+PACKAGES = "${PN}-dbg modutils-depmod modutils-modinfo modutils-doc modutils"
 
 FILES_modutils-depmod = "sbin/depmod.24"
 FILES_modutils-modinfo = "sbin/modinfo.24"
