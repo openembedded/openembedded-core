@@ -318,8 +318,20 @@ python write_specfile () {
 	import textwrap
 	import oe.packagedata
 
-	# We need to change '-' in a version field to '+'
-	# This needs to be done BEFORE the mapping_rename_hook
+	# In RPM, dependencies are of the format: pkg <>= Epoch:Version-Release
+	# This format is similar to OE, however there are restrictions on the
+	# characters that can be in a field.  In the Version field, "-"
+	# characters are not allowed.  "-" is allowed in the Release field.
+	#
+	# We translate the "-" in the version to a "+", by loading the PKGV
+	# from the dependent recipe, replacing the - with a +, and then using
+	# that value to do a replace inside of this recipe's dependencies.
+	# This preserves the "-" separator between the version and release, as
+	# well as any "-" characters inside of the release field.
+	#
+	# All of this has to happen BEFORE the mapping_rename_hook as
+	# after renaming we cannot look up the dependencies in the packagedata
+	# store.
 	def translate_vers(varname, d):
 		depends = bb.data.getVar(varname, d, True)
 		if depends:
@@ -330,9 +342,10 @@ python write_specfile () {
 				if dep and ver:
 					if '-' in ver:
 						subd = oe.packagedata.read_subpkgdata_dict(dep, d)
-						pv = subd['PKGV']
-						reppv = pv.replace('-', '+')
-						ver = ver.replace(pv, reppv)
+						if 'PKGV' in subd:
+							pv = subd['PKGV']
+							reppv = pv.replace('-', '+')
+							ver = ver.replace(pv, reppv)
 				newdeps_dict[dep] = ver
 			depends = bb.utils.join_deps(newdeps_dict)
 			bb.data.setVar(varname, depends.strip(), d)
