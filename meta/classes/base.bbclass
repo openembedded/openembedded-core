@@ -362,10 +362,7 @@ python () {
                     if local.startswith(mp):
                         #bb.note("overriding PACKAGE_ARCH from %s to %s" % (pkg_arch, mach_arch))
                         bb.data.setVar('PACKAGE_ARCH', "${MACHINE_ARCH}", d)
-                        bb.data.setVar('MULTIMACH_ARCH', mach_arch, d)
                         return
-
-    multiarch = pkg_arch
 
     packages = bb.data.getVar('PACKAGES', d, 1).split()
     for pkg in packages:
@@ -375,10 +372,7 @@ python () {
         # if multiple differences are present?
         # Look through PACKAGE_ARCHS for the priority order?
         if pkgarch and pkgarch == mach_arch:
-            multiarch = mach_arch
-            break
-
-    bb.data.setVar('MULTIMACH_ARCH', multiarch, d)
+            bb.fatal("Recipe %s is marked as only being architecture specific but seems to have machine specific packages?" % d.getVar("PN", True))
 }
 
 def check_gcc3(data):

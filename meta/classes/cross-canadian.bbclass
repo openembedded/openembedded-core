@@ -9,14 +9,14 @@
 # or indirectly via dependency.  No need to be in 'world'.
 EXCLUDE_FROM_WORLD = "1"
 
-STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${SDK_VENDOR}-${SDK_OS}:${STAGING_DIR_NATIVE}${bindir_native}/${OLD_PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
+STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${SDK_VENDOR}-${SDK_OS}:${STAGING_DIR_NATIVE}${bindir_native}/${OLD_BASE_PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
 
 #
 # Update BASE_PACKAGE_ARCH and PACKAGE_ARCHS
 #
-OLD_MULTIMACH_ARCH := "${MULTIMACH_ARCH}"
+OLD_PACKAGE_ARCH := "${PACKAGE_ARCH}"
 OLD_MULTIMACH_TARGET_SYS := "${MULTIMACH_TARGET_SYS}"
-OLD_PACKAGE_ARCH := ${BASE_PACKAGE_ARCH}
+OLD_BASE_PACKAGE_ARCH := ${BASE_PACKAGE_ARCH}
 BASE_PACKAGE_ARCH = "${SDK_ARCH}-nativesdk"
 python () {
     archs = bb.data.getVar('PACKAGE_ARCHS', d, True).split()
@@ -25,7 +25,7 @@ python () {
         sdkarchs.append(arch + '-nativesdk')
     bb.data.setVar('PACKAGE_ARCHS', " ".join(sdkarchs), d)
 }
-MULTIMACH_TARGET_SYS = "${MULTIMACH_ARCH}${HOST_VENDOR}-${HOST_OS}"
+MULTIMACH_TARGET_SYS = "${PACKAGE_ARCH}${HOST_VENDOR}-${HOST_OS}"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
@@ -66,12 +66,12 @@ target_exec_prefix := "${exec_prefix}"
 base_prefix = "${SDKPATHNATIVE}"
 prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
 exec_prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
-bindir = "${exec_prefix}/bin/${OLD_MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
+bindir = "${exec_prefix}/bin/${OLD_PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
 sbindir = "${bindir}"
 base_bindir = "${bindir}"
 base_sbindir = "${bindir}"
-libdir = "${exec_prefix}/lib/${OLD_MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
-libexecdir = "${exec_prefix}/libexec/${OLD_MULTIMACH_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
+libdir = "${exec_prefix}/lib/${OLD_PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
+libexecdir = "${exec_prefix}/libexec/${OLD_PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
 
 FILES_${PN} = "${prefix}"
 FILES_${PN}-dbg += "${prefix}/.debug \
