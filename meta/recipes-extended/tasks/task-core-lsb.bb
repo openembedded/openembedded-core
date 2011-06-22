@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Create Small Image Tasks"
-PR = "r4"
+PR = "r5"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
@@ -54,6 +54,7 @@ RDEPENDS_task-core-lsb = "\
 
 RDEPENDS_task-core-sys-extended = "\
     binutils \
+    binutils-symlinks \
     chkconfig \
     curl \
     dhcp-client \
@@ -169,6 +170,9 @@ RDEPENDS_task-core-lsb-graphic-add = "\
     gdk-pixbuf-loader-bmp \
     gdk-pixbuf-loader-ani \
     liberation-fonts \
+    gtk+ \
+    atk \
+    libasound \
 "
 
 RDEPENDS_task-core-lsb-graphic-add_qemux86 = "\
