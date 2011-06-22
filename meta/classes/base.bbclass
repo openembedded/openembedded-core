@@ -262,14 +262,18 @@ python () {
     # If we're building a target package we need to use fakeroot (pseudo)
     # in order to capture permissions, owners, groups and special files
     if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
+        bb.data.setVarFlag('do_configure', 'umask', 022, d)
+        bb.data.setVarFlag('do_compile', 'umask', 022, d)
         deps = (bb.data.getVarFlag('do_install', 'depends', d) or "").split()
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         bb.data.setVarFlag('do_install', 'depends', " ".join(deps),d)
         bb.data.setVarFlag('do_install', 'fakeroot', 1, d)
+        bb.data.setVarFlag('do_install', 'umask', 022, d)
         deps = (bb.data.getVarFlag('do_package', 'depends', d) or "").split()
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         bb.data.setVarFlag('do_package', 'depends', " ".join(deps),d)
         bb.data.setVarFlag('do_package', 'fakeroot', 1, d)
+        bb.data.setVarFlag('do_package', 'umask', 022, d)
         bb.data.setVarFlag('do_package_setscene', 'fakeroot', 1, d)
     source_mirror_fetch = bb.data.getVar('SOURCE_MIRROR_FETCH', d, 0)
     if not source_mirror_fetch:

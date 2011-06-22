@@ -83,6 +83,8 @@ do_build[nostamp] = "1"
 
 # Must call real_do_rootfs() from inside here, rather than as a separate
 # task, so that we have a single fakeroot context for the whole process.
+do_rootfs[umask] = 022
+
 fakeroot do_rootfs () {
 	#set -x
 	rm -rf ${IMAGE_ROOTFS}

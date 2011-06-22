@@ -19,6 +19,8 @@ fakeroot do_install_perf() {
 addtask compile_perf after do_compile before do_install
 addtask install_perf after do_install before do_package
 
+do_compile_perf[umask] = 022
+do_install_perf[umask] = 022
 
 PERFDEPENDS = "virtual/libc:do_populate_sysroot elfutils:do_populate_sysroot"
 PERFDEPENDS_libc-uclibc = ""

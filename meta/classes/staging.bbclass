@@ -58,6 +58,7 @@ sysroot_stage_all() {
 }
 
 do_populate_sysroot[dirs] = "${SYSROOT_DESTDIR}"
+do_populate_sysroot[umask] = 022
 
 addtask populate_sysroot after do_install
 

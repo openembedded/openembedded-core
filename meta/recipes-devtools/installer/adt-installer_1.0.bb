@@ -54,6 +54,8 @@ SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
            file://opkg/conf/opkg-sdk-i686.conf \
 	  "
 
+do_deploy[umask] = 022
+
 fakeroot do_deploy () {
 	cd ${WORKDIR}
 	mkdir -p ${ADT_DEPLOY}
