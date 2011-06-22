@@ -6,7 +6,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833 \
                     file://alsactl/utils.c;beginline=1;endline=20;md5=fe9526b055e246b5558809a5ae25c0b9"
 DEPENDS = "alsa-lib ncurses"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://ncursesfix.patch \
@@ -26,7 +26,7 @@ EXTRA_OECONF_append_libc-uclibc = " --disable-nls"
 inherit autotools gettext
 
 # This are all packages that we need to make. Also, the now empty alsa-utils
-# ipk depend on them.
+# ipk depends on them.
 
 PACKAGES += "\
              alsa-utils-alsamixer \
@@ -39,7 +39,10 @@ PACKAGES += "\
              alsa-utils-aseqnet \
              alsa-utils-aseqdump \
              alsa-utils-alsaconf \
-             alsa-utils-alsactl "
+             alsa-utils-alsactl \
+             alsa-utils-alsaloop \
+             alsa-utils-alsaucm \
+            "
 
 # We omit alsaconf, because
 # a) this is a bash script
@@ -54,9 +57,12 @@ FILES_alsa-utils-midi        = "${bindir}/aplaymidi ${bindir}/arecordmidi ${bind
 FILES_alsa-utils-aconnect    = "${bindir}/aconnect"
 FILES_alsa-utils-aseqnet     = "${bindir}/aseqnet"
 FILES_alsa-utils-iecset      = "${bindir}/iecset"
-FILES_alsa-utils-alsactl     = "${sbindir}/alsactl"
+FILES_alsa-utils-alsactl     = "${sbindir}/alsactl ${base_libdir}/udev/rules.d ${base_libdir}/systemd"
 FILES_alsa-utils-aseqdump    = "${bindir}/aseqdump"
 FILES_alsa-utils-alsaconf    = "${sbindir}/alsaconf"
+FILES_alsa-utils-alsaloop    = "${bindir}/alsaloop"
+FILES_alsa-utils-alsaucm     = "${bindir}/alsaucm"
+
 
 DESCRIPTION_alsa-utils-aplay        = "play (and record) sound files via ALSA"
 DESCRIPTION_alsa-utils-amixer       = "command-line based control for ALSA mixer and settings"
@@ -67,5 +73,6 @@ DESCRIPTION_alsa-utils-aconnect     = "ALSA sequencer connection manager"
 DESCRIPTION_alsa-utils-aseqnet      = "network client/server on ALSA sequencer"
 DESCRIPTION_alsa-utils-alsactl      = "saves/restores ALSA-settings in /etc/asound.state"
 DESCRIPTION_alsa-utils-alsaconf     = "a bash script that creates ALSA configuration files"
+DESCRIPTION_alsa-utils-alsaucm      = "ALSA Use Case Manager"
 
 ALLOW_EMPTY_alsa-utils = "1"
