@@ -1,12 +1,13 @@
 require eglibc.inc
 
-SRCREV = "14285"
+SRCREV = "14157"
 
 DEPENDS += "gperf-native"
-PR = "r0"
+FILESPATHPKG =. "eglibc-svn:"
+PR = "r2"
 PR_append = "+svnr${SRCPV}"
 
-EGLIBC_BRANCH="eglibc-2_14"
+EGLIBC_BRANCH="eglibc-2_13"
 SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};proto=http \
            file://eglibc-svn-arm-lowlevellock-include-tls.patch \
            file://IO-acquire-lock-fix.patch \
