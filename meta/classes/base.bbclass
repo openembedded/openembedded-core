@@ -303,10 +303,6 @@ python () {
                     bb.note("SKIPPING %s because it's %s" % (pn, this_license))
                     raise bb.parse.SkipPackage("incompatible with license %s" % this_license)
 
-    use_nls = bb.data.getVar('USE_NLS_%s' % pn, d, 1)
-    if use_nls != None:
-        bb.data.setVar('USE_NLS', use_nls, d)
-
     # Git packages should DEPEND on git-native
     srcuri = bb.data.getVar('SRC_URI', d, 1)
     if "git://" in srcuri:
