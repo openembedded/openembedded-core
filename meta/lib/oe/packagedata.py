@@ -58,6 +58,8 @@ def read_subpkgdata_dict(pkg, d):
     subd = read_pkgdatafile(get_subpkgedata_fn(pkg, d))
     for var in subd:
         newvar = var.replace("_" + pkg, "")
+        if newvar == var and var + "_" + pkg in subd:
+            continue
         ret[newvar] = subd[var]
     return ret
 
