@@ -85,6 +85,8 @@ EXTRA_NATIVE_PKGCONFIG_PATH ?= ""
 PKG_CONFIG_PATH .= "${EXTRA_NATIVE_PKGCONFIG_PATH}"
 PKG_CONFIG_SYSROOT_DIR = ""
 
+PATH =. "${COREBASE}/scripts/native-intercept:"
+
 python native_virtclass_handler () {
     if not isinstance(e, bb.event.RecipePreFinalise):
         return
