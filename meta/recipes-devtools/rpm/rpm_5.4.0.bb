@@ -84,7 +84,7 @@ rpm_macros_virtclass-native = "%{_usrlibrpm}/macros:%{_usrlibrpm}/poky/macros:%{
 # Configure values taken from rpm.spec
 WITH_BZIP2 = "--with-bzip2"
 
-WITH_XZ = "--without-xz"
+WITH_XZ = "--with-xz=none"
 
 WITH_Z = "--with-zlib $WITH_BZIP2 $WITH_XZ"
 
