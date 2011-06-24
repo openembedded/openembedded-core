@@ -25,6 +25,7 @@ RDEPENDS_task-core-sdk = "\
     coreutils \
     cpp \
     cpp-symlinks \
+    ccache \
     diffutils \
     gcc \
     gcc-symlinks \
