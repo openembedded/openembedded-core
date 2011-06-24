@@ -32,9 +32,9 @@ do_compile() {
 do_install() {
 	install -d  ${D}/lib/firmware/
 	# Libertas sd8686
-	install -m 0666 libertas/sd8686_v9.bin ${D}/lib/firmware/sd8686.bin
-	install -m 0666 libertas/sd8686_v9_helper.bin ${D}/lib/firmware/sd8686_helper.bin
-	install -m 0666 LICENCE.libertas ${D}/lib/firmware/
+	install -m 0644 libertas/sd8686_v9.bin ${D}/lib/firmware/sd8686.bin
+	install -m 0644 libertas/sd8686_v9_helper.bin ${D}/lib/firmware/sd8686_helper.bin
+	install -m 0644 LICENCE.libertas ${D}/lib/firmware/
 }
 
 PACKAGES = "${PN}-sd8686"
