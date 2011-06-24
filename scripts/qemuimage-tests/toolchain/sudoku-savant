@@ -11,7 +11,7 @@
 #
 . $COREBASE/scripts/qemuimage-testlib
 
-TIMEOUT=120
+TIMEOUT=240
 
 # Extract and test toolchain tarball
 Test_Toolchain sudoku-savant ${TIMEOUT}

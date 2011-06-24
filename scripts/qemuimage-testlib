@@ -32,14 +32,14 @@ PID=0
 TARGET_IPADDR=0
 
 # Global variable for test project version during toolchain test
-# Version of cvs is 1.11.23
-# Version of iptables is 1.4.9
+# Version of cvs is 1.12.13
+# Version of iptables is 1.4.11
 # Version of sudoku-savant is 1.3
 PROJECT_PV=0
 
 # Global variable for test project download URL during toolchain test
-# URL of cvs is http://ftp.gnu.org/non-gnu/cvs/source/stable/1.11.23/cvs-1.11.23.tar.bz2
-# URL of iptables is http://netfilter.org/projects/iptables/files/iptables-1.4.9.tar.bz2
+# URL of cvs is http://ftp.gnu.org/non-gnu/cvs/source/feature/1.12.13/cvs-1.12.13.tar.bz2
+# URL of iptables is http://netfilter.org/projects/iptables/files/iptables-1.4.11.tar.bz2
 # URL of sudoku-savant is http://downloads.sourceforge.net/project/sudoku-savant/sudoku-savant/sudoku-savant-1.3/sudoku-savant-1.3.tar.bz2
 PROJECT_DOWNLOAD_URL=0
 
@@ -641,14 +641,46 @@ Test_Time_Out()
 	local date=0
 	local tmp=`mktemp`
 	local ret=1
+	local pid=0
+	local ppid=0
+	local i=0
+	declare local pid_l
 
 	# Run command in background
 	($command; echo $? > $tmp) &
-	while ps -e -o pid | grep -qw $!; do
+	pid=$!
+	while ps -e -o pid | grep -qw $pid; do
 		if [ $date -ge $timeout ]; then
 			Test_Info "$timeout Timeout when running command $command"
 			rm -rf $tmp
-			return 1
+
+			# Find all child processes of pid and kill them
+			ppid=$pid
+			ps -f --ppid $ppid
+			ret=$?
+	
+			while [ $ret -eq 0 ]
+			do
+				# If yes, get the child pid and check if the child pid has other child pid
+				# Continue the while loop until there is no child pid found
+				pid_l[$i]=`ps -f --ppid $ppid | awk '{if ($2 != "PID") print $2}'`
+				ppid=${pid_l[$i]}
+				i=$((i+1))
+				ps -f --ppid $ppid
+				ret=$?
+			done
+	
+				# Kill these children pids from the last one
+				while [ $i -ne 0 ]
+				do
+					i=$((i-1))
+					kill ${pid_l[$i]}
+					sleep 2
+				done
+	
+				# Kill the parent id
+				kill $pid
+				return 1
 		fi
 		sleep 5
 		date=`expr $date + 5`
@@ -672,11 +704,11 @@ Test_Toolchain()
 
 	# Set value for PROJECT_PV and PROJECT_DOWNLOAD_URL accordingly
 	if [ $test_project == "cvs" ]; then
-		PROJECT_PV=1.11.23
-		PROJECT_DOWNLOAD_URL="http://ftp.gnu.org/non-gnu/cvs/source/stable/1.11.23/cvs-1.11.23.tar.bz2"
+		PROJECT_PV=1.12.13
+		PROJECT_DOWNLOAD_URL="http://ftp.gnu.org/non-gnu/cvs/source/feature/1.12.13/cvs-1.12.13.tar.bz2"
 	elif [ $test_project == "iptables" ]; then
-		PROJECT_PV=1.4.9
-		PROJECT_DOWNLOAD_URL="http://netfilter.org/projects/iptables/files/iptables-1.4.9.tar.bz2"
+		PROJECT_PV=1.4.11
+		PROJECT_DOWNLOAD_URL="http://netfilter.org/projects/iptables/files/iptables-1.4.11.tar.bz2"
 	elif [ $test_project == "sudoku-savant" ]; then
 		PROJECT_PV=1.3
 		PROJECT_DOWNLOAD_URL="http://downloads.sourceforge.net/project/sudoku-savant/sudoku-savant/sudoku-savant-1.3/sudoku-savant-1.3.tar.bz2"

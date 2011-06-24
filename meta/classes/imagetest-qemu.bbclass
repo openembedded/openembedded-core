@@ -33,7 +33,7 @@ def qemuimagetest_main(d):
     Test Controller for automated testing.
     """
     
-    casestr = re.compile(r'(?P<scen>\w+\b):(?P<case>\w+$)')
+    casestr = re.compile(r'(?P<scen>\w+\b):(?P<case>\S+$)')
     resultstr = re.compile(r'\s*(?P<case>\w+)\s*(?P<pass>\d+)\s*(?P<fail>\d+)\s*(?P<noresult>\d+)')
     machine = bb.data.getVar('MACHINE', d, 1)
     pname = bb.data.getVar('PN', d, 1)
