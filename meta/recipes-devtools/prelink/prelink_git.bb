@@ -8,9 +8,24 @@ and executables, so that far fewer relocations need to be resolved at \
 runtime and thus programs come up faster."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c93c0550bd3173f4504b2cbd8991e50b"
-SRCREV = "909470ee441237563d6236c505cb2d02ddc48704"
+SRCREV = "ac461e73b17253a4da25c5aafeac7193b553156c"
 PV = "1.0+git${SRCPV}"
-PR = "r2"
+PR = "r3"
+
+#
+# The cron script attempts to re-prelink the system daily -- on
+# systems where users are adding applications, this might be reasonable
+# but for embedded, we should be re-running prelink -a after an update.
+#
+# Default is prelinking is enabled.
+#
+SUMMARY_${PN}-cron = "Cron scripts to control automatic prelinking"
+DESCRIPTION_${PN}-cron = "Cron scripts to control automatic prelinking.  \
+See: ${sysconfdir}/cron.daily/prelink for configuration information."
+
+FILES_${PN}-cron = "${sysconfdir}/cron.daily ${sysconfdir}/default"
+
+PACKAGES =+ "${PN}-cron"
 
 SRC_URI = "git://git.yoctoproject.org/prelink-cross.git;protocol=git \
            file://prelink.conf \
@@ -53,8 +68,12 @@ fi
 prelink -a
 }
 
-pkg_postrm_prelink() {
+pkg_prerm_prelink() {
 #!/bin/sh
+
+if [ "x$D" != "x" ]; then
+  exit 1
+fi
 
 prelink -au
 }

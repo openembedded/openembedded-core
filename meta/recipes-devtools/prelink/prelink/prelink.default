@@ -2,7 +2,7 @@
 # or to yes to enable it.
 # (if you change this from yes to no prelink -ua
 # will be run next night to undo prelinking)
-PRELINKING=unknown
+PRELINKING=yes
 
 # Options to pass to prelink
 # -m	Try to conserve virtual memory by allowing overlapping
