@@ -37,6 +37,7 @@ do_install () {
 		cd ${B}/$d/
 		oe_runmake 'DESTDIR=${D}' install
 	done
+	chown -R root:root ${D}
 }
 
 INHIBIT_DEFAULT_DEPS = "1"

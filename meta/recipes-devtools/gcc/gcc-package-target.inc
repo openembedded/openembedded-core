@@ -101,4 +101,6 @@ do_install () {
 	ln -sf g++ c++
 	ln -sf gcc cc
 	ln -sf ${bindir}/${TARGET_PREFIX}cpp ${D}${bindir}/cpp
+
+	chown -R root:root ${D}
 }

@@ -36,6 +36,8 @@ do_install () {
 	else
 		mv ${D}${libdir}/libgcc* ${D}${base_libdir} || true
 	fi
+
+	chown -R root:root ${D}
 }
 
 do_package_write_ipk[depends] += "virtual/libc:do_package"

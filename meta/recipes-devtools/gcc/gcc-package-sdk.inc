@@ -48,5 +48,7 @@ do_install () {
 	for t in ar as ld nm objcopy objdump ranlib strip g77 gcc cpp gfortran; do
 		ln -sf ${bindir}/${TARGET_PREFIX}$t $dest$t
 	done
+
+	chown -R root:root ${D}
 }
 
