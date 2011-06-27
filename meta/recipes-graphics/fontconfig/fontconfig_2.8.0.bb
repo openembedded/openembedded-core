@@ -20,7 +20,7 @@ SECTION = "libs"
 
 DEPENDS = "expat freetype zlib"
 
-PR = "r1"
+PR = "r3"
 
 SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
            file://fix-pkgconfig.patch \
@@ -45,7 +45,7 @@ inherit autotools pkgconfig
 
 export HASDOCBOOK="no"
 
-EXTRA_OECONF = " --disable-docs --with-arch=${HOST_ARCH}"
+EXTRA_OECONF = " --disable-docs --with-arch=${HOST_ARCH} --with-default-fonts=${datadir}/fonts"
 EXTRA_OEMAKE = "FC_LANG=fc-lang FC_GLYPHNAME=fc-glyphname"
 
 # The tarball has some of the patched files as read only, which
