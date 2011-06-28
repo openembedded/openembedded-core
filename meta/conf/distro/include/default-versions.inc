@@ -12,7 +12,3 @@ PREFERRED_VERSION_python-native ?= "2.6.6"
 
 # Force the older version of liberation-fonts until we fix the fontforge issue
 PREFERRED_VERSION_liberation-fonts ?= "1.04"
-
-
-
-
