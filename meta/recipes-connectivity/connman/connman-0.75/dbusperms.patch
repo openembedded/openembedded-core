@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: git/src/connman-dbus.conf
 ===================================================================
 --- git.orig/src/connman-dbus.conf	2009-05-26 00:34:35.000000000 +0100

@@ -14,7 +14,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
                     file://src/main.c;beginline=1;endline=20;md5=4b55b550fa6b33cc2055ef30dd262b3e"
 
 DEPENDS  = "libgdbus dbus glib-2.0 hal iptables"
-RDEPENDS_${PN} = "wpa-supplicant resolvconf"
 
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
@@ -40,7 +39,18 @@ FILES_${PN}-dbg += "${libdir}/connman/plugins/.debug \
                     ${libdir}/connman/scripts/.debug"
 
 python populate_packages_prepend() {
+	depmap = dict( wifi="wpa-supplicant", bluetooth="bluez4", ofono="ofono" )
+	packages = []
+	hook = lambda file,pkg,b,c,d:packages.append((file,pkg))
+
 	plugin_dir = bb.data.expand('${libdir}/connman/plugins/', d)
 	plugin_name = bb.data.expand('${PN}-plugin-%s', d)
-	do_split_packages(d, plugin_dir, '^(.*).so$', plugin_name, '${PN} plugin for %s', extra_depends='' )
+
+	do_split_packages(d, plugin_dir, '^(.*).so$', plugin_name, '${PN} plugin for %s', extra_depends='', hook=hook )
+
+	for (file, package) in packages:
+		plugintype = package.split( '-' )[-1]
+		if plugintype in depmap:
+			bb.note( "Adding rdependency on %s to package %s" % ( depmap[plugintype], package ) )
+			bb.data.setVar("RDEPENDS_%s" % package, depmap[plugintype], d)
 }

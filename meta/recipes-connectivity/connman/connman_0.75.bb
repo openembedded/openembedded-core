@@ -1,5 +1,5 @@
 require connman.inc
-PR = "r1"
+PR = "r0"
 
 EXTRA_OECONF += "\
   ac_cv_path_WPASUPPLICANT=/usr/sbin/wpa_supplicant \
@@ -16,14 +16,14 @@ EXTRA_OECONF += "\
   --disable-udev \
   --disable-polkit \
   --enable-client \
+  --enable-ofono \
   --prefix=/usr --sysconfdir=/etc --localstatedir=/var"
 
 SRC_URI  = "\
   ${KERNELORG_MIRROR}/linux/network/connman/connman-${PV}.tar.gz \
-  file://fix-shutdown-ap-disconnect.patch \
   file://add_xuser_dbus_permission.patch \
   file://connman \
 "
 
-SRC_URI[md5sum] = "bd714da295ed2d2d91a49539f4c4fa3a"
-SRC_URI[sha256sum] = "a1c1d93da6bb4c2d8ae53293b06f237e02f5e796d2bba73ec639a466d05259c3"
+SRC_URI[md5sum] = "9973cb89a11fff6b51fc85b51c13b711"
+SRC_URI[sha256sum] = "b15361237f7ec8092fb0e55d4585550ab35491485edaf10ddd032d6e36299db7"

@@ -1,6 +1,8 @@
 Some platform (like atom-pc) enables rootless X,
 thus we need to add the xuser in the list.
 
+Upstream-Status: Inappropriate [configuration]
+
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 
 diff -ruN connman-0.65-orig/src/connman-dbus.conf connman-0.65/src/connman-dbus.conf
