@@ -66,11 +66,14 @@ SRC_URI = "svn://gcc.gnu.org/svn/gcc/branches;module=${BRANCH};proto=http \
 	   file://GPLUSPLUS_INCLUDE_DIR_with_sysroot.patch \
 	   file://COLLECT_GCC_OPTIONS.patch \
            file://volatile_access_backport.patch \
+           file://use-defaults.h-and-t-oe-in-B.patch \
 	  "
 
 SRC_URI_append_sh3  = " file://sh3-installfix-fixheaders.patch;patch=1 "
 
-S = "${WORKDIR}/${BRANCH}"
+#S = "${WORKDIR}/${BRANCH}"
+S = "${TMPDIR}/work-shared/gcc-${PV}/${BRANCH}"
+B = "${WORKDIR}/${BRANCH}/build.${HOST_SYS}.${TARGET_SYS}"
 
 # Language Overrides
 FORTRAN = ""
