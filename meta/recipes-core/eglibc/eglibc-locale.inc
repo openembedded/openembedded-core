@@ -26,20 +26,18 @@ BINARY_LOCALE_ARCHES ?= "arm.* i[3-6]86 x86_64 powerpc mips"
 # set "0" for qemu emulation of native localedef for locale generation
 LOCALE_GENERATION_WITH_CROSS-LOCALEDEF = "1"
 
-PR = "r0"
+PR = "r1"
 
 PKGSUFFIX = ""
 PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
 
-PACKAGES = "eglibc-locale localedef${PKGSUFFIX}"
+PACKAGES = "localedef${PKGSUFFIX}"
 
 PACKAGES_DYNAMIC = "locale-base-* \
                     eglibc-gconv-* eglibc-charmap-* eglibc-localedata-* eglibc-binary-localedata-* \
                     glibc-gconv-*${PKGSUFFIX}  glibc-charmap-*  glibc-localedata-*  glibc-binary-localedata-*"
 
 PROVIDES = "virtual/libc-locale${PKGSUFFIX}"
-
-RPROVIDES_eglibc-locale = "glibc-locale"
 
 FILES_eglibc-gconv = "${libdir}/gconv/*"
 FILES_localedef${PKGSUFFIX} = "${bindir}/localedef"
