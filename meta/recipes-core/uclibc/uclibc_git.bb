@@ -29,5 +29,6 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master;protocol=git \
 	file://epoll-asm-fix.patch \
 	file://orign_path.patch \
 	file://rtld_no.patch \
+	file://0001-Config.in.arch-Free-UCLIBC_HAS_FPU-setting-from-depe.patch \
 	"
 S = "${WORKDIR}/git"
