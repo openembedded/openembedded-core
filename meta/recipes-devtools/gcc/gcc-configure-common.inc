@@ -61,6 +61,34 @@ SYSTEMHEADERS = "${target_includedir}"
 SYSTEMLIBS = "${target_base_libdir}/"
 SYSTEMLIBS1 = "${target_libdir}/"
 
+do_configure_prepend () {
+	# Change the default dynamic linker path, only useful for SDK, other's value
+	# are not changed according to the SYSTEMLIBS_DIR
+	sed -i ${S}/gcc/config/*/linux*.h -e \
+		's#\(GLIBC_DYNAMIC_LINKER[^ ]*\)\( *"/lib.*\)#\1 SYSTEMLIBS_DIR\2#'
+
+	SYSTEMLIBS_DIR=`dirname ${SYSTEMLIBS}`
+	[ "$SYSTEMLIBS_DIR" = "/" ] && SYSTEMLIBS_DIR=""
+	# teach gcc to find correct target includedir when checking libc ssp support
+	mkdir -p ${B}/gcc
+	echo "NATIVE_SYSTEM_HEADER_DIR = ${SYSTEMHEADERS}" > ${B}/gcc/t-oe
+	cat ${S}/gcc/defaults.h | grep -v "\#endif.*GCC_DEFAULTS_H" > ${B}/gcc/defaults.h.new
+	cat >>${B}/gcc/defaults.h.new <<_EOF
+#ifndef STANDARD_INCLUDE_DIR
+#define STANDARD_INCLUDE_DIR "${SYSTEMHEADERS}"
+#endif
+#ifndef STANDARD_STARTFILE_PREFIX_1
+#define STANDARD_STARTFILE_PREFIX_1 "${SYSTEMLIBS}"
+#endif
+#ifndef STANDARD_STARTFILE_PREFIX_2
+#define STANDARD_STARTFILE_PREFIX_2 "${SYSTEMLIBS1}"
+#endif
+#define SYSTEMLIBS_DIR "$SYSTEMLIBS_DIR"
+#endif /* ! GCC_DEFAULTS_H */
+_EOF
+	mv ${B}/gcc/defaults.h.new ${B}/gcc/defaults.h
+}
+
 do_configure () {
 	# Setup these vars for cross building only
 	# ... because foo_FOR_TARGET apparently gets misinterpreted inside the
@@ -86,27 +114,7 @@ do_configure () {
 	export LDFLAGS_FOR_BUILD="${BUILD_LDFLAGS}"
 	export ARCH_FLAGS_FOR_TARGET="${ARCH_FLAGS_FOR_TARGET}"
 	(cd ${S} && gnu-configize) || die "failure running gnu-configize"
-	
-	# teach gcc to find correct target includedir when checking libc ssp support
-	sed -i 's:^\([ 	]*\)glibc_header_dir=\"${with_build_sysroot}/usr/include\":\1glibc_header_dir=\"${with_build_sysroot}${SYSTEMHEADERS}\":g' ${S}/gcc/configure.ac
-	sed -i 's:^\([ 	]*\)glibc_header_dir=\"${with_build_sysroot}/usr/include\":\1glibc_header_dir=\"${with_build_sysroot}${SYSTEMHEADERS}\":g' ${S}/gcc/configure
 
-	# splice our idea of where the headers live into gcc's world
-	echo "NATIVE_SYSTEM_HEADER_DIR = ${SYSTEMHEADERS}" > ${T}/t-oe
-	sed 's%^tmake_file=.*$%& ${T}/t-oe%' < ${S}/gcc/Makefile.in >${S}/gcc/Makefile.in.new
-	mv ${S}/gcc/Makefile.in.new ${S}/gcc/Makefile.in
-	cat ${S}/gcc/defaults.h | grep -v "\#endif.*GCC_DEFAULTS_H" > ${S}/gcc/defaults.h.new
-	echo "#ifndef STANDARD_INCLUDE_DIR" >> ${S}/gcc/defaults.h.new
-	echo "#define STANDARD_INCLUDE_DIR \"${SYSTEMHEADERS}\"" >> ${S}/gcc/defaults.h.new
-	echo "#endif" >> ${S}/gcc/defaults.h.new
-	echo "#ifndef STANDARD_STARTFILE_PREFIX_1" >> ${S}/gcc/defaults.h.new
-	echo "#define STANDARD_STARTFILE_PREFIX_1 \"${SYSTEMLIBS}\"" >> ${S}/gcc/defaults.h.new
-	echo "#endif" >> ${S}/gcc/defaults.h.new
-	echo "#ifndef STANDARD_STARTFILE_PREFIX_2" >> ${S}/gcc/defaults.h.new
-	echo "#define STANDARD_STARTFILE_PREFIX_2 \"${SYSTEMLIBS1}\"" >> ${S}/gcc/defaults.h.new
-	echo "#endif" >> ${S}/gcc/defaults.h.new
-	echo "#endif /* ! GCC_DEFAULTS_H */" >> ${S}/gcc/defaults.h.new
-	mv ${S}/gcc/defaults.h.new ${S}/gcc/defaults.h
 	oe_runconf
 }
 
