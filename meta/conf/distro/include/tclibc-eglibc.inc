@@ -15,6 +15,7 @@ PREFERRED_PROVIDER_virtual/libiconv-nativesdk ?= "eglibc-nativesdk"
 PREFERRED_PROVIDER_virtual/libintl ?= "eglibc"
 PREFERRED_PROVIDER_virtual/libc ?= "eglibc"
 PREFERRED_PROVIDER_virtual/libc-nativesdk ?= "eglibc-nativesdk"
+PREFERRED_PROVIDER_virtual/libc-locale ?= "eglibc-locale"
 
 CXXFLAGS += "-fvisibility-inlines-hidden"
 

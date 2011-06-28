@@ -14,33 +14,13 @@ python __anonymous () {
                                    bb.data.getVar('TARGET_OS', d, 1))
 }
 
-
-# Binary locales are generated at build time if ENABLE_BINARY_LOCALE_GENERATION
-# is set. The idea is to avoid running localedef on the target (at first boot)
-# to decrease initial boot time and avoid localedef being killed by the OOM
-# killer which used to effectively break i18n on machines with < 128MB RAM.
-
-# default to disabled until qemu works for everyone
-ENABLE_BINARY_LOCALE_GENERATION ?= "0"
-ENABLE_BINARY_LOCALE_GENERATION_pn-glibc-nativesdk = "0"
-
-# BINARY_LOCALE_ARCHES is a space separated list of regular expressions
-BINARY_LOCALE_ARCHES ?= "arm.* i[3-6]86 x86_64 powerpc mips"
-
-# set "1" to use cross-localedef for locale generation
-# set "0" for qemu emulation of native localedef for locale generation
-LOCALE_GENERATION_WITH_CROSS-LOCALEDEF = "1"
-
 PKGSUFFIX = ""
 PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
 
 PACKAGES = "${PN}-dbg ${PN} catchsegv${PKGSUFFIX} sln${PKGSUFFIX} nscd${PKGSUFFIX} \
-	ldd${PKGSUFFIX} localedef${PKGSUFFIX} ${PN}-utils ${PN}-dev ${PN}-doc \
-	${PN}-locale libsegfault${PKGSUFFIX} ${PN}-extra-nss ${PN}-thread-db \
+	ldd${PKGSUFFIX} ${PN}-utils ${PN}-dev ${PN}-doc \
+	libsegfault${PKGSUFFIX} ${PN}-extra-nss ${PN}-thread-db \
 	${PN}-pcprofile"
-
-PACKAGES_DYNAMIC = "glibc-gconv-*${PKGSUFFIX} glibc-charmap-* glibc-localedata-* locale-base-* \
-	glibc-binary-localedata-*"
 
 libc_baselibs = "${base_libdir}/libc* ${base_libdir}/libm* ${base_libdir}/ld* \
 	${base_libdir}/libpthread* ${base_libdir}/libresolv* ${base_libdir}/librt* \
@@ -77,7 +57,6 @@ FILES_catchsegv${PKGSUFFIX} = "${bindir}/catchsegv"
 RDEPENDS_catchsegv${PKGSUFFIX} = "libsegfault"
 FILES_glibc-pcprofile = "${base_libdir}/libpcprofile.so"
 FILES_glibc-thread-db = "${base_libdir}/libthread_db*"
-FILES_localedef${PKGSUFFIX} = "${bindir}/localedef"
 RPROVIDES_glibc-dev += "libc-dev"
 
 SUMMARY_sln = "The static ln."
@@ -88,10 +67,10 @@ SUMMARY_glibc-extra-nss = "hesiod, NIS and NIS+ nss libraries"
 DESCRIPTION_glibc-extra-nss = "glibc: nis, nisplus and hesiod search services.
 SUMMARY_ldd = "print shared library dependencies"
 DESCRIPTION_ldd = "/usr/bin/ldd prints shared library dependencies for each program or shared library specified on the command line."
-DESCRIPTION_localedef = "glibc: compile locale definition files"
 SUMMARY_glibc-utils = "Miscellaneous utilities provided by glibc"
 DESCRIPTION_glibc-utils = "Miscellaneous utilities including getconf, iconf, locale, gencat, tzselect, zic, rpcinfo, ..."
 
 EXTRA_OEMAKE += "rootsbindir=${base_sbindir}"
 
-inherit libc-package
+inherit libc-common
+

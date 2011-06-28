@@ -40,6 +40,7 @@ do_install() {
 
 GLIBC_INTERNAL_USE_BINARY_LOCALE ?= "compile"
 
+inherit libc-common
 inherit libc-package
 
 PACKAGES += "libgcc libgcc-dev libstdc++ libstdc++-dev linux-libc-headers"
