@@ -2,7 +2,7 @@ DESCRIPTION = "Merge machine and distro options to create a basic machine task/p
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-PR = "r70"
+PR = "r71"
 
 inherit task
 
@@ -35,6 +35,7 @@ PACKAGES = ' \
 	    \
             ${@base_contains("DISTRO_FEATURES", "bluetooth", "task-base-bluetooth", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "wifi", "task-base-wifi", "", d)} \
+            ${@base_contains("DISTRO_FEATURES", "3g", "task-base-3g", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "cramfs", "task-base-cramfs", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "ipsec", "task-base-ipsec", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "ipv6", "task-base-ipv6", "", d)} \
@@ -95,6 +96,7 @@ RDEPENDS_task-base = "\
     ${@base_contains('COMBINED_FEATURES', 'usbhost', 'task-base-usbhost', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'bluetooth', 'task-base-bluetooth', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'wifi', 'task-base-wifi', '',d)} \
+    ${@base_contains('COMBINED_FEATURES', '3g', 'task-base-3g', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'uboot', 'task-base-uboot', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'redboot', 'task-base-redboot', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'apex', 'task-base-apex', '',d)} \
@@ -114,10 +116,12 @@ RDEPENDS_task-base-extended = "\
     task-base \
     ${ADD_WIFI} \
     ${ADD_BT} \
+    ${ADD_3G} \
     "
 
 ADD_WIFI = ""
 ADD_BT = ""
+ADD_3G = ""
 
 python __anonymous () {
     # If Distro want wifi and machine feature wifi/pci/pcmcia/usbhost (one of them)
@@ -133,6 +137,9 @@ python __anonymous () {
 
     if "wifi" in distro_features and not "wifi" in machine_features and ("pcmcia" in machine_features or "pci" in machine_features or "usbhost" in machine_features):
 	bb.data.setVar("ADD_WIFI", "task-base-wifi", d)
+
+    if "3g" in distro_features and not "3g" in machine_features and ("pcmcia" in machine_features or "pci" in machine_features or "usbhost" in machine_features):
+	bb.data.setVar("ADD_3G", "task-base-3g", d)
 }
 
 #
@@ -338,6 +345,13 @@ RRECOMMENDS_task-base-wifi = "\
     kernel-module-michael-mic \
     kernel-module-aes-generic \
     kernel-module-aes"
+
+RDEPENDS_task-base-3g = "\
+    ofono"
+
+RRECOMMENDS_task-base-3g = "\
+    kernel-module-cdc-acm \
+    kernel-module-cdc-wdm"
 
 RRECOMMENDS_task-base-smbfs = "\
     kernel-module-cifs \
