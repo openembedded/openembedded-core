@@ -166,8 +166,29 @@ python base_eventhandler() {
 
 	if name.startswith("BuildStarted"):
 		bb.data.setVar( 'BB_VERSION', bb.__version__, e.data )
-		statusvars = ['BB_VERSION', 'METADATA_BRANCH', 'METADATA_REVISION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'DISTRO_VERSION','TARGET_FPU']
+		statusvars = ['BB_VERSION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'DISTRO_VERSION','TARGET_FPU']
 		statuslines = ["%-17s = \"%s\"" % (i, bb.data.getVar(i, e.data, 1) or '') for i in statusvars]
+
+		layers = (data.getVar("BBLAYERS", e.data, 1) or "").split()
+		layers_branch_rev = ["%-17s = \"%s:%s\"" % (os.path.basename(i), \
+			base_get_metadata_git_branch(i, None).strip(), \
+			base_get_metadata_git_revision(i, None)) \
+				for i in layers]
+		i = len(layers_branch_rev)-1
+		p1 = layers_branch_rev[i].find("=")
+		s1= layers_branch_rev[i][p1:]
+		while i > 0:
+			p2 = layers_branch_rev[i-1].find("=")
+			s2= layers_branch_rev[i-1][p2:]
+			if s1 == s2:
+				layers_branch_rev[i-1] = layers_branch_rev[i-1][0:p2]
+				i -= 1
+			else:
+				i -= 1
+				p1 = layers_branch_rev[i].find("=")
+				s1= layers_branch_rev[i][p1:]
+
+		statuslines += layers_branch_rev
 		statusmsg = "\nOE Build Configuration:\n%s\n" % '\n'.join(statuslines)
 		print statusmsg
 
