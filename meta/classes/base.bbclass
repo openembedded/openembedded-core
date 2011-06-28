@@ -368,7 +368,8 @@ python () {
         # if multiple differences are present?
         # Look through PACKAGE_ARCHS for the priority order?
         if pkgarch and pkgarch == mach_arch:
-            bb.fatal("Recipe %s is marked as only being architecture specific but seems to have machine specific packages?" % d.getVar("PN", True))
+            bb.data.setVar('PACAKGE_ARCH', "${MACHINE_ARCH}", d)
+            bb.warn("Recipe %s is marked as only being architecture specific but seems to have machine specific packages?! The recipe may as well mark itself as machine specific directly." % d.getVar("PN", True))
 }
 
 def check_gcc3(data):
