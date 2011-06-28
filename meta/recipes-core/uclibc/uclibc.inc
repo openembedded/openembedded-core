@@ -164,7 +164,7 @@ python () {
     "/^### FPU$/a\\\n%s\n\n" % (["UCLIBC_HAS_FPU=y","# UCLIBC_HAS_FPU is not set"][bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]]), d)
   if "${UCLIBC_ENDIAN}":
     bb.data.setVar('configmangle_append',
-                   "/^### ABI$/a\\\nARCH_%s_ENDIAN=y\n\n" % ("${UCLIBC_ENDIAN}"),
+                   "/^### ABI$/a\\\nARCH_WANTS_%s_ENDIAN=y\n\n" % ("${UCLIBC_ENDIAN}"),
                    d)
   if "${UCLIBC_ABI}":
     bb.data.setVar('configmangle_append',
