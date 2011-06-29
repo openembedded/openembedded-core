@@ -6,7 +6,7 @@ this header is not needed even in eglibc case so it can be removed
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Upstream-Status: Submitted
+Upstream-Status: Accepted
 
 Index: ust-0.12/libust/tracer.h
 ===================================================================
