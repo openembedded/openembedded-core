@@ -70,7 +70,7 @@ common configuration options are commented.
 
 The Yocto Project has extensive documentation about OE including a reference manual
 which can be found at:
-    http://yoctoproject.org/community/documentation
+    http://yoctoproject.org/documentation
 
 For more information about OpenEmbedded see their website:
     http://www.openembedded.org/
@@ -90,7 +90,7 @@ configuration please add entries to this file.
 
 The Yocto Project has extensive documentation about OE including a reference manual
 which can be found at:
-    http://yoctoproject.org/community/documentation
+    http://yoctoproject.org/documentation
 
 For more information about OpenEmbedded see their website:
     http://www.openembedded.org/
@@ -118,6 +118,8 @@ Common targets are:
     core-image-sato
     meta-toolchain
     meta-toolchain-sdk
+    adt-install
+    meta-ide-support
 
 You can also run generated qemu images with a command like 'runqemu qemux86'
 
