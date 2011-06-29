@@ -273,6 +273,8 @@ python sstate_cleanall() {
              name = manifest.replace(manifest_pattern[:-1], "")
              namemap = d.getVar('SSTATETASKNAMES', True).split()
              tasks = d.getVar('SSTATETASKS', True).split()
+             if name not in namemap:
+                  continue
              taskname = tasks[namemap.index(name)]
              shared_state = sstate_state_fromvars(d, taskname[3:])
              sstate_clean(shared_state, d)
