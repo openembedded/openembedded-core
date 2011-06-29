@@ -11,10 +11,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c93c0550bd3173f4504b2cbd8991e50b \
                     file://grub/main.c;beginline=3;endline=9;md5=22a5f28d2130fff9f2a17ed54be90ed6"
 
 RDEPENDS_${PN} = "diffutils"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "ftp://alpha.gnu.org/gnu/grub/grub-${PV}.tar.gz; \
-	   file://autohell.patch;apply=yes "
+            file://no-reorder-functions.patch \
+            file://autohell.patch "
 
 SRC_URI[md5sum] = "cd3f3eb54446be6003156158d51f4884"
 SRC_URI[sha256sum] = "4e1d15d12dbd3e9208111d6b806ad5a9857ca8850c47877d36575b904559260b"
