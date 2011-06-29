@@ -35,6 +35,8 @@ def check_sanity_tmpdir_change(tmpdir, data):
 
     # Check that TMPDIR isn't on a filesystem with limited filename length (eg. eCryptFS)
     testmsg = check_create_long_filename(tmpdir, "TMPDIR")
+    # Check that we can fetch from various network transports
+    testmsg = testmsg + check_connectivity(data)
     return testmsg
         
 def check_sanity_version_change(data):
@@ -78,6 +80,41 @@ def check_create_long_filename(filepath, pathname):
         else:
             return "Failed to create a file in %s: %s" % (pathname, strerror)
     return ""
+
+def check_connectivity(d):
+    # URI's to check can be set in the CONNECTIVITY_CHECK_URIS variable
+    # using the same syntax as for SRC_URI. If the variable is not set
+    # the check is skipped
+    test_uris = (bb.data.getVar('CONNECTIVITY_CHECK_URIS', d, True) or "").split()
+    retval = ""
+
+    # Only check connectivity if network enabled and the
+    # CONNECTIVITY_CHECK_URIS are set
+    network_enabled = not bb.data.getVar('BB_NO_NETWORK', d, True)
+    check_enabled = len(test_uris)
+    if check_enabled and network_enabled:
+        data = bb.data.createCopy(d)
+        bookmark = os.getcwd()
+        dldir = bb.data.expand('${TMPDIR}/sanity', data)
+        bb.data.setVar('DL_DIR', dldir, data)
+
+        try:
+            fetcher = bb.fetch2.Fetch(test_uris, data)
+            fetcher.download()
+            fetcher.clean(test_uris)
+        except Exception:
+            # Allow the message to be configured so that users can be
+            # pointed to a support mechanism.
+            msg = bb.data.getVar('CONNECTIVITY_CHECK_MSG', d, True) or ""
+            if len(msg) == 0:
+                msg = "Failed to fetch test data from the network. Please ensure your network is configured correctly.\n"
+            retval = msg
+        finally:
+            # Make sure we tidy up the cruft
+            oe.path.remove(dldir)
+            os.chdir(bookmark)
+
+    return retval
 
 def check_sanity(e):
     from bb import note, error, data, __version__
