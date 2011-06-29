@@ -1,0 +1,34 @@
+rpmfc.c:  Always generate per-file information
+
+Even when the per-file dependency generate is disabled, we want to generate
+per file classification and other associated data.
+
+Note: this is a temporary workaround.  Eventually we will want to have a way
+to seed per-file dependency and other information in order to generate a
+package from previously determined information.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff --git a/lib/rpmfc.c b/lib/rpmfc.c
+index 0c3befd..9306999 100644
+--- a/lib/rpmfc.c
++++ b/lib/rpmfc.c
+@@ -1692,7 +1692,6 @@ rpmRC rpmfcGenerateDepends(void * specp, void * pkgp)
+ 	/* ... then generate dependencies using %{__find_requires} et al. */
+ 	rc = rpmfcGenerateDependsHelper(spec, pkg, fi);
+ 	printDeps(pkg->header);
+-	return rc;
+     }
+ 
+     /* Generate scriptlet Dependencies. */
+@@ -1720,8 +1719,8 @@ rpmRC rpmfcGenerateDepends(void * specp, void * pkgp)
+     av[ac] = NULL;
+ 
+     fc = rpmfcNew();
+-    fc->skipProv = !pkg->autoProv;
+-    fc->skipReq = !pkg->autoReq;
++    fc->skipProv = !pkg->autoProv || !internaldeps;
++    fc->skipReq = !pkg->autoReq || !internaldeps;
+     fc->tracked = 0;
+ 
+     {	const char * buildRootURL;

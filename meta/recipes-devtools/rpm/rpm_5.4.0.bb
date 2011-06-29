@@ -60,6 +60,7 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.0-0.20101229.src.rpm;ex
 	   file://rpm-solvedb.patch \
 	   file://rpm-tools-mtree-LDFLAGS.patch \
 	   file://fprint-pointer-fix.patch \
+	   file://rpm-fileclass.patch \
 	  "
 
 #           file://hdraddorappend.patch \
