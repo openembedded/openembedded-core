@@ -74,3 +74,23 @@ EXTRA_OEMAKE += "rootsbindir=${base_sbindir}"
 
 inherit libc-common
 
+do_install_locale () {
+	dest=${D}/${includedir}/glibc-locale-internal-${MULTIMACH_TARGET_SYS}
+	install -d ${dest}${base_libdir} ${dest}${bindir} ${dest}${libdir} ${dest}${datadir}
+	cp -fpPR ${D}${base_libdir}/* ${dest}${base_libdir}
+	cp -fpP ${D}${bindir}/localedef ${dest}${bindir}
+        mv ${D}${libdir}/gconv ${dest}${libdir}
+	cp -fpPR ${D}${libdir}/* ${dest}${libdir}
+        mv ${D}${datadir}/i18n ${dest}${datadir}
+	cp -fpPR ${D}${datadir}/* ${dest}${datadir}
+	cp -fpPR ${WORKDIR}/SUPPORTED ${dest}
+}
+
+addtask do_install_locale after do_install before do_populate_sysroot
+
+PACKAGE_PREPROCESS_FUNCS += "glibc_package_preprocess"
+
+glibc_package_preprocess () {
+	rm -rf ${PKGD}/${includedir}/eglibc-locale-internal-${MULTIMACH_TARGET_SYS}
+}
+
