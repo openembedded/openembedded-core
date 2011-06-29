@@ -26,28 +26,36 @@ BINARY_LOCALE_ARCHES ?= "arm.* i[3-6]86 x86_64 powerpc mips"
 # set "0" for qemu emulation of native localedef for locale generation
 LOCALE_GENERATION_WITH_CROSS-LOCALEDEF = "1"
 
-PR = "r1"
+PR = "r2"
 
 PKGSUFFIX = ""
 PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
 
-PACKAGES = "localedef${PKGSUFFIX}"
+PROVIDES = "virtual/libc-locale${PKGSUFFIX}"
+
+PACKAGES = "localedef${PKGSUFFIX} ${PN}-dbg"
 
 PACKAGES_DYNAMIC = "locale-base-* \
                     eglibc-gconv-* eglibc-charmap-* eglibc-localedata-* eglibc-binary-localedata-* \
                     glibc-gconv-*${PKGSUFFIX}  glibc-charmap-*  glibc-localedata-*  glibc-binary-localedata-*"
 
-PROVIDES = "virtual/libc-locale${PKGSUFFIX}"
+DESCRIPTION_localedef = "eglibc: compile locale definition files"
 
 FILES_eglibc-gconv = "${libdir}/gconv/*"
+FILES_${PN}-dbg += "${libdir}/gconv/.debug/*"
 FILES_localedef${PKGSUFFIX} = "${bindir}/localedef"
 
-do_install () {
-	cp -fpPR ${STAGING_INCDIR}/eglibc-locale-internal-${MULTIMACH_TARGET_SYS}/* ${D}
-	cp -fpPR ${D}/SUPPORTED ${WORKDIR}
-}
+LOCALETREESRC = "${STAGING_INCDIR}/eglibc-locale-internal-${MULTIMACH_TARGET_SYS}"
 
-DESCRIPTION_localedef = "eglibc: compile locale definition files"
+do_install () {
+	mkdir -p ${D}${bindir} ${D}${datadir} ${D}${libdir}
+	cp -fpPR ${LOCALETREESRC}/${bindir}/* ${D}${bindir}
+	cp -fpPR ${LOCALETREESRC}/${libdir}/locale ${D}${libdir}
+	cp -fpPR ${LOCALETREESRC}/${libdir}/gconv ${D}${libdir}
+	cp -fpPR ${LOCALETREESRC}/${datadir}/i18n ${D}${datadir}
+	cp -fpPR ${LOCALETREESRC}/${datadir}/locale ${D}${datadir}
+	cp -fpPR ${LOCALETREESRC}/SUPPORTED ${WORKDIR}
+}
 
 inherit libc-package
 

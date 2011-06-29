@@ -1,4 +1,4 @@
-#INHIBIT_DEFAULT_DEPS = "1"
+INHIBIT_DEFAULT_DEPS = "1"
 LICENSE = "LGPL"
 
 BPN = "glibc"
@@ -31,21 +31,32 @@ PR = "r1"
 PKGSUFFIX = ""
 PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
 
-PROVIDES = "virtual/libc-locale"
+PROVIDES = "virtual/libc-locale${PKGSUFFIX}"
 
-PACKAGES = "localedef${PKGSUFFIX}"
+PACKAGES = "localedef${PKGSUFFIX} ${PN}-dbg"
 
 PACKAGES_DYNAMIC = "locale-base-* \
                     glibc-gconv-*${PKGSUFFIX}  glibc-charmap-*  glibc-localedata-*  glibc-binary-localedata-*"
 
-FILES_localedef${PKGSUFFIX} = "${bindir}/localedef"
 
 DESCRIPTION_localedef = "glibc: compile locale definition files"
 
+FILES_${PN}-dbg += "${libdir}/gconv/.debug/*"
+FILES_localedef${PKGSUFFIX} = "${bindir}/localedef"
+
+LOCALETREESRC = "${STAGING_INCDIR}/glibc-locale-internal-${MULTIMACH_TARGET_SYS}"
+
 do_install () {
-	cp -fpPR ${STAGING_INCDIR}/glibc-locale-internal-${MULTIMACH_TARGET_SYS}/* ${D}
-	cp -fpPR ${D}/SUPPORTED ${WORKDIR}
+	mkdir -p ${D}${bindir} ${D}${datadir} ${D}${libdir}
+	cp -fpPR ${LOCALETREESRC}/${bindir}/* ${D}${bindir}
+	cp -fpPR ${LOCALETREESRC}/${libdir}/locale ${D}${libdir}
+	cp -fpPR ${LOCALETREESRC}/${libdir}/gconv ${D}${libdir}
+	cp -fpPR ${LOCALETREESRC}/${datadir}/i18n ${D}${datadir}
+	cp -fpPR ${LOCALETREESRC}/${datadir}/locale ${D}${datadir}
+	cp -fpPR ${LOCALETREESRC}/SUPPORTED ${WORKDIR}
 }
+
+inherit libc-package
 
 do_install[depends] += "virtual/libc${PKGSUFFIX}:do_populate_sysroot"
 
