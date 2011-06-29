@@ -10,6 +10,9 @@ SRC_URI = "http://dri.freedesktop.org/libdrm/libdrm-${PV}.tar.bz2"
 PROVIDES = "drm"
 DEPENDS = "libpthread-stubs udev cairo virtual/libx11"
 
+#libpciaccess is required starting from libdrm 2.4.26
+DEPENDS += " libpciaccess"
+
 inherit autotools pkgconfig
 
 PACKAGES =+ "libdrm-tests"
