@@ -1,6 +1,6 @@
 # Acquired from OpenEmbedded
 # Fix no declaration of memcmp()
-Upstream-Status: Pending
+Upstream-Status: Submitted
 
 diff -urN flac-1.2.1-orig/examples/cpp/encode/file/main.cpp flac-1.2.1/examples/cpp/encode/file/main.cpp
 --- flac-1.2.1-orig/examples/cpp/encode/file/main.cpp	2010-06-23 15:06:29.159481339 +0800
