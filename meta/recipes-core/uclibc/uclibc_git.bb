@@ -2,7 +2,7 @@ SRCREV="71d63ed75648da9b0b71afabb9c60aaad792c55c"
 
 require uclibc.inc
 PV = "0.9.31+0.9.32rc3"
-PR = "${INC_PR}.4"
+PR = "${INC_PR}.5"
 PROVIDES += "virtual/${TARGET_PREFIX}libc-for-gcc"
 
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/uclibc-git' ], d)}"
@@ -30,5 +30,6 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master;protocol=git \
 	file://orign_path.patch \
 	file://rtld_no.patch \
 	file://0001-Config.in.arch-Free-UCLIBC_HAS_FPU-setting-from-depe.patch \
+	file://0001-mips-signalfd.h-SFD_NONBLOCK-for-mips-is-0200-unlike.patch \
 	"
 S = "${WORKDIR}/git"
