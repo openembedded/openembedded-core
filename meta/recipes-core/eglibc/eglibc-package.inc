@@ -92,7 +92,7 @@ do_install_locale () {
 	dest=${D}/${includedir}/eglibc-locale-internal-${MULTIMACH_TARGET_SYS}
 	install -d ${dest}${base_libdir} ${dest}${bindir} ${dest}${libdir} ${dest}${datadir}
 	cp -fpPR ${D}${base_libdir}/* ${dest}${base_libdir}
-	cp -fpP ${D}${bindir}/localedef ${dest}${bindir}
+	mv ${D}${bindir}/localedef ${dest}${bindir}
         mv ${D}${libdir}/gconv ${dest}${libdir}
 	cp -fpPR ${D}${libdir}/* ${dest}${libdir}
         mv ${D}${datadir}/i18n ${dest}${datadir}
@@ -100,7 +100,7 @@ do_install_locale () {
 	cp -fpPR ${WORKDIR}/SUPPORTED ${dest}
 }
 
-addtask do_install_locale after do_install before do_populate_sysroot
+addtask do_install_locale after do_install before do_populate_sysroot do_package
 
 PACKAGE_PREPROCESS_FUNCS += "eglibc_package_preprocess"
 
