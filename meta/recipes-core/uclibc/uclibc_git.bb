@@ -6,7 +6,7 @@ require uclibc.inc
 DEFAULT_PREFERENCE = "-1"
 
 PV = "0.9.32+0.9.33-rc0"
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 PROVIDES += "virtual/${TARGET_PREFIX}libc-for-gcc"
 
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/uclibc-git' ], d)}"
@@ -24,5 +24,7 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master;protocol=git \
 	file://compile-arm-fork-with-O2.patch \
 	file://orign_path.patch \
 	file://rtld_no.patch \
+	file://uclibc-execvpe.patch \
+	file://uclibc_scheduler_update.patch \
 	"
 S = "${WORKDIR}/git"
