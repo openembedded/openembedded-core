@@ -171,3 +171,10 @@ UCLIBC_HAS_PTY=y
 UCLIBC_BSD_SPECIFIC=y
 UCLIBC_HAS_EPOLL=y
 UCLIBC_HAS_FLOATS=y
+
+# The below option is needed for ARM since depending
+# upong what intruction set is chosen this will be
+# enabled. As such it is harmless and will be punted
+# by menuconfig for other arches.
+
+# COMPILE_IN_THUMB_MODE is not set
