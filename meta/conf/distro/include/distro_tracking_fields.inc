@@ -1,5 +1,6 @@
 RECIPE_STATUS_pn-diffutils = "green"
 RECIPE_LATEST_VERSION_pn-diffutils = "3.0"
+
 RECIPE_LAST_UPDATE_pn-diffutils = "Dec 10, 2010"
 RECIPE_MAINTAINER_pn-diffutils = "Mei Lei <lei.mei@intel.com>"
 
@@ -683,13 +684,6 @@ RECIPE_LATEST_RELEASE_DATE_pn-keymaps = "n/a"
 RECIPE_COMMENTS_pn-keymaps = "local scripts follow Poky's MIT license, however it contains a GPL notation"
 RECIPE_LAST_UPDATE_pn-keymaps = "Jul 21, 2006"
 RECIPE_MAINTAINER_pn-keymaps = "Yu Ke <ke.yu@intel.com>"
-
-RECIPE_STATUS_pn-modutils = "red"
-RECIPE_DEPENDENCY_CHECK_pn-modutils-initscripts = "not done"
-RECIPE_LATEST_VERSION_pn-modutils = "2.4.27"
-RECIPE_LAST_UPDATE_pn-modutils = "Jul 21, 2006"
-RECIPE_MAINTAINER_pn-modutils = "Yu Ke <ke.yu@intel.com>"
-DISTRO_PN_ALIAS_pn-modutils = "Ubuntu=module-init-tools Fedora=module-init-tools"
 
 RECIPE_STATUS_pn-modutils-initscripts = "green"
 RECIPE_DEPENDENCY_CHECK_pn-modutils-initscripts = "not done"
