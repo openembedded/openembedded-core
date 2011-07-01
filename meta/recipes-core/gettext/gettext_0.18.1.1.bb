@@ -5,7 +5,7 @@ SECTION = "libs"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-PR = "r0"
+PR = "r1"
 DEPENDS = "gettext-native virtual/libiconv ncurses expat"
 DEPENDS_virtclass-native = ""
 PROVIDES = "virtual/libintl virtual/gettext"
@@ -51,6 +51,11 @@ acpaths = '-I ${S}/gettext-runtime/m4 \
 # 1300    KiB /ep93xx/uclibc-dev_0.9.29-r8_ep93xx.ipk
 # 140     KiB /armv4t/gettext-dev_0.14.1-r6_armv4t.ipk
 # 4       KiB /ep93xx/libgcc-s-dev_4.2.2-r2_ep93xx.ipk
+
+PACKAGES =+ "libgettextlib libgettextsrc"
+FILES_libgettextlib = "${libdir}/libgettextlib-*.so*"
+FILES_libgettextsrc = "${libdir}/libgettextsrc-*.so*"
+
 PACKAGES =+ "gettext-runtime gettext-runtime-dev gettext-runtime-doc"
 
 FILES_gettext-runtime = "${bindir}/gettext \
