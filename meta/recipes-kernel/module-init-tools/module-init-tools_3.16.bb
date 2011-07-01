@@ -1,5 +1,5 @@
 require module-init-tools.inc
-PR = "r1"
+PR = "r0"
 
 # autotools set prefix to /usr, however we want them in /bin and /sbin
 bindir = "/bin"
@@ -38,5 +38,5 @@ pkg_prerm_module-init-tools-depmod() {
 	update-alternatives --remove depmod /sbin/depmod.26
 }
 
-SRC_URI[md5sum] = "8b2257ce9abef74c4a44d825d23140f3"
-SRC_URI[sha256sum] = "d012ab07ea26721467a85a775f34747c1c8897e37f16bec5317d8a72ef8b4f17"
+SRC_URI[md5sum] = "bc44832c6e41707b8447e2847d2019f5"
+SRC_URI[sha256sum] = "e1f2cdcae64a8effc25e545a5e0bdaf312f816ebbcd0916e4e87450755fab64b"

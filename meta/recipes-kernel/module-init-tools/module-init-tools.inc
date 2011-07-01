@@ -12,7 +12,6 @@ FILES_module-init-tools-depmod = "${sbindir}/depmod.26"
 FILES_module-init-tools-insmod-static = "${sbindir}/insmod.static"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/module-init-tools/module-init-tools-${PV}.tar.bz2 \
-           file://ignore_arch_directory.patch \
            file://modutils_extension.patch \
            file://disable_man.patch \
            file://grab_module_memset.patch"
