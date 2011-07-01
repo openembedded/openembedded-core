@@ -1,0 +1,16 @@
+# in OE we use TARGET_CC_ARCH="-march=mips32" but by
+# default uclibc uses mips1 ISA for o32 ABI which ends
+# up with conflicting march options to gcc. Here we
+# ask for MIPS32 ISA to match the OE defaults
+
+CONFIG_MIPS_ISA_MIPS32=y
+
+# Below options are exact copy of general
+# uClibc.machine file
+#
+FORCE_OPTIONS_FOR_ARCH=y
+ARCH_HAS_MMU=y
+ARCH_USE_MMU=y
+KERNEL_HEADERS="/usr/include"
+HAVE_DOT_CONFIG=y
+
