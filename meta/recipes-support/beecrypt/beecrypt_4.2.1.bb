@@ -24,4 +24,8 @@ acpaths=""
 
 EXTRA_OECONF="--without-python --enable-shared --enable-static --disable-openmp"
 
+FILES_${PN} = "${sysconfdir} ${libdir}/*.so.* ${libdir}/${BPN}/*.so.*"
+FILES_${PN}-dev += "${libdir}/${BPN}/*.so ${libdir}/${BPN}/*.la"
+FILES_${PN}-staticdev += "${libdir}/${BPN}/*.a"
+
 BBCLASSEXTEND = "native"
