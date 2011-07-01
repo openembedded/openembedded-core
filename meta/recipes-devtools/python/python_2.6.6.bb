@@ -1,7 +1,7 @@
 require python.inc
 DEPENDS = "python-native db gdbm openssl readline sqlite3 zlib"
 DEPENDS_sharprom = "python-native db readline zlib gdbm openssl"
-PR = "${INC_PR}.5"
+PR = "${INC_PR}.6"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=38fdd546420fab09ac6bd3d8a1c83eb6"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
@@ -113,7 +113,7 @@ FILES_${PN}-core += "${bindir}/2to3"
 
 # package libpython2
 PACKAGES =+ "lib${PN}2"
-FILES_lib${PN}2 = "${libdir}/libpython*.so*"
+FILES_lib${PN}2 = "${libdir}/libpython*.so.*"
 
 # additional stuff -dev
 
