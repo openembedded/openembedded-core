@@ -35,11 +35,13 @@ PACKAGES =+ "\
   ${PN}-tools \
   ${BASEPN}-plugins \
   ${BASEPN}-plugin-machine-generic \
+  ${BASEPN}-plugin-machine-telit \
   ${BASEPN}-plugin-machine-tihtc \
   ${BASEPN}-plugin-machine-gta01 \
   ${BASEPN}-plugin-vendor-bcm \
   ${BASEPN}-plugin-vendor-qc \
   ${BASEPN}-plugin-vendor-ti \
+  ${BASEPN}-plugin-vendor-telit \
   ${BASEPN}-plugin-vendor-tihtc \
 "
 
@@ -47,11 +49,13 @@ ALLOW_EMPTY_${BASEPN}-plugin-machine-gta01 = "1"
 
 RDEPENDS_${BASEPN}-plugins = "\
   ${BASEPN}-plugin-machine-generic \
+  ${BASEPN}-plugin-machine-telit \
   ${BASEPN}-plugin-machine-tihtc \
   ${BASEPN}-plugin-machine-gta01 \
   ${BASEPN}-plugin-vendor-bcm \
   ${BASEPN}-plugin-vendor-qc \
   ${BASEPN}-plugin-vendor-ti \
+  ${BASEPN}-plugin-vendor-telit \
   ${BASEPN}-plugin-vendor-tihtc \
 "
 
@@ -59,15 +63,19 @@ RDEPENDS_${PN} += "update-rc.d initscripts"
 RRECOMMENDS_${PN} += "${BASEPN}-plugins"
 
 FILES_${PN}-dbg += "${libdir}/gsmd/.debug/*"
+FILES_${PN}-dev += "${libdir}/gsmd/*.so ${libdir}/gsmd/*.la"
+FILES_${PN}-staticdev += "${libdir}/gsmd/*.a"
 FILES_${PN}-tools = "${bindir}/*"
 FILES_${BASEPN}-plugins = ""
-FILES_${BASEPN}-plugin-machine-generic = "${libdir}/gsmd/libgsmd-machine_generic.so*"
-FILES_${BASEPN}-plugin-machine-tihtc = "${libdir}/gsmd/libgsmd-machine_tihtc.so*"
-FILES_${BASEPN}-plugin-machine-gta01 = "${libdir}/gsmd/libgsmd-machine_gta01.so*"
-FILES_${BASEPN}-plugin-vendor-qc = "${libdir}/gsmd/libgsmd-vendor_qc.so*"
-FILES_${BASEPN}-plugin-vendor-bcm = "${libdir}/gsmd/libgsmd-vendor_bcm.so*"
-FILES_${BASEPN}-plugin-vendor-ti = "${libdir}/gsmd/libgsmd-vendor_ti.so*"
-FILES_${BASEPN}-plugin-vendor-tihtc = "${libdir}/gsmd/libgsmd-vendor_tihtc.so*"
+FILES_${BASEPN}-plugin-machine-generic = "${libdir}/gsmd/libgsmd-machine_generic.so.*"
+FILES_${BASEPN}-plugin-machine-tihtc = "${libdir}/gsmd/libgsmd-machine_tihtc.so.*"
+FILES_${BASEPN}-plugin-machine-telit = "${libdir}/gsmd/libgsmd-machine_telit.so.*"
+FILES_${BASEPN}-plugin-machine-gta01 = "${libdir}/gsmd/libgsmd-machine_gta01.so.*"
+FILES_${BASEPN}-plugin-vendor-qc = "${libdir}/gsmd/libgsmd-vendor_qc.so.*"
+FILES_${BASEPN}-plugin-vendor-bcm = "${libdir}/gsmd/libgsmd-vendor_bcm.so.*"
+FILES_${BASEPN}-plugin-vendor-ti = "${libdir}/gsmd/libgsmd-vendor_ti.so.*"
+FILES_${BASEPN}-plugin-vendor-telit = "${libdir}/gsmd/libgsmd-vendor_telit.so.*"
+FILES_${BASEPN}-plugin-vendor-tihtc = "${libdir}/gsmd/libgsmd-vendor_tihtc.so.*"
 
 PACKAGES_DYNAMIC = "lib${BASEPN}* ${BASEPN}"
 
@@ -77,20 +85,24 @@ RCONFLICTS_lib${BASEPN} = "lib${CONFLICTNAME}"
 RCONFLICTS_${BASEPN} = "${CONFLICTNAME}"
 RCONFLICTS_${BASEPN}-plugins = "${CONFLICTNAME}-plugins"
 RCONFLICTS_${BASEPN}-plugin-machine-generic = "${CONFLICTNAME}-plugin-machine-generic"
+RCONFLICTS_${BASEPN}-plugin-machine-telit = "${CONFLICTNAME}-plugin-machine-telit"
 RCONFLICTS_${BASEPN}-plugin-machine-tihtc = "${CONFLICTNAME}-plugin-machine-tihtc"
 RCONFLICTS_${BASEPN}-plugin-machine-gta01 = "${CONFLICTNAME}-plugin-machine-gta01"
 RCONFLICTS_${BASEPN}-plugin-vendor-qc = "${CONFLICTNAME}-plugin-vendor-qc"
 RCONFLICTS_${BASEPN}-plugin-vendor-bcm = "${CONFLICTNAME}-plugin-vendor-bcm"
 RCONFLICTS_${BASEPN}-plugin-vendor-ti = "${CONFLICTNAME}-plugin-vendor-ti"
+RCONFLICTS_${BASEPN}-plugin-vendor-telit = "${CONFLICTNAME}-plugin-vendor-telit"
 RCONFLICTS_${BASEPN}-plugin-vendor-tihtc = "${CONFLICTNAME}-plugin-vendor-tihtc"
 
 RPROVIDES_lib${BASEPN} += "lib${CONFLICTNAME}"
 RPROVIDES_${BASEPN} = "${CONFLICTNAME}"
 RPROVIDES_${BASEPN}-plugins = "${CONFLICTNAME}-plugins"
 RPROVIDES_${BASEPN}-plugin-machine-generic = "${CONFLICTNAME}-plugin-machine-generic"
+RPROVIDES_${BASEPN}-plugin-machine-telit = "${CONFLICTNAME}-plugin-machine-telit"
 RPROVIDES_${BASEPN}-plugin-machine-tihtc = "${CONFLICTNAME}-plugin-machine-tihtc"
 RPROVIDES_${BASEPN}-plugin-machine-gta01 = "${CONFLICTNAME}-plugin-machine-gta01"
 RPROVIDES_${BASEPN}-plugin-vendor-qc = "${CONFLICTNAME}-plugin-vendor-qc"
 RPROVIDES_${BASEPN}-plugin-vendor-bcm = "${CONFLICTNAME}-plugin-vendor-bcm"
 RPROVIDES_${BASEPN}-plugin-vendor-ti = "${CONFLICTNAME}-plugin-vendor-ti"
+RPROVIDES_${BASEPN}-plugin-vendor-telit = "${CONFLICTNAME}-plugin-vendor-telit"
 RPROVIDES_${BASEPN}-plugin-vendor-tihtc = "${CONFLICTNAME}-plugin-vendor-tihtc"
