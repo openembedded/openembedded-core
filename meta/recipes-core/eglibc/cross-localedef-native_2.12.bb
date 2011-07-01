@@ -1,7 +1,6 @@
 DESCRIPTION = "Cross locale generation tool for eglibc"
 HOMEPAGE = "http://www.eglibc.org/home"
 SECTION = "libs"
-PRIORITY = "required"
 LICENSE = "LGPL"
 
 LIC_DIR = "${WORKDIR}/${EGLIBC_BRANCH}/libc"

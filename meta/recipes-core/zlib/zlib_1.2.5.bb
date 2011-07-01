@@ -3,7 +3,6 @@ DESCRIPTION = "Zlib is a general-purpose, patent-free, lossless data compression
 library which is used by many different programs."
 HOMEPAGE = "http://zlib.net/"
 SECTION = "libs"
-PRIORITY = "required"
 LICENSE = "Zlib"
 LIC_FILES_CHKSUM = "file://zlib.h;beginline=4;endline=23;md5=084e9c30e4e6272c3b057b13c6467f3d"
 

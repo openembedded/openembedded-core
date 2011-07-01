@@ -1,6 +1,5 @@
 DESCRIPTION = " A compact getty program for virtual consoles only"
 SECTION = "console/utils"
-PRIORITY = "required"
 HOMEPAGE = "http://sourceforge.net/projects/mingetty/"
 LICENSE = "GPLv2"
 PR = "r0"

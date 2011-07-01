@@ -1,7 +1,6 @@
 DESCRIPTION = "libcurl python bindings."
 HOMEPAGE = "http://pycurl.sourceforge.net/"
 SECTION = "devel/python"
-PRIORITY = "optional"
 LICENSE = "LGPLv2.1+ | MIT"
 LIC_FILES_CHKSUM = "file://README;endline=13;md5=fbfe545b1869617123a08c0983ef17b2 \
                     file://COPYING;md5=3579a9fd0221d49a237aaa33492f988c \

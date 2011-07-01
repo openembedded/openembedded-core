@@ -1,7 +1,6 @@
 DESCRIPTION = "U-boot bootloader"
 HOMEPAGE = "http://u-boot.sf.net"
 SECTION = "bootloaders"
-PRIORITY = "optional"
 PROVIDES = "virtual/bootloader"
 
 inherit deploy

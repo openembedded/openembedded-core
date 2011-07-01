@@ -1,7 +1,6 @@
 DESCRIPTION = "LSB support for Poky Linux"
 SECTION = "console/utils"
 HOMEPAGE = "http://prdownloads.sourceforge.net/lsb"
-PRIORITY = "required"
 LICENSE = "GPLv2+"
 PR = "r1"
 

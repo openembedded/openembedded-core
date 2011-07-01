@@ -2,7 +2,6 @@ DESCRIPTION = "A file-synchronization tool"
 HOMEPAGE = "http://rsync.samba.org/"
 BUGTRACKER = "http://rsync.samba.org/bugzilla.html"
 SECTION = "console/network"
-PRIORITY = "optional"
 
 # GPLv2+ (<< 3.0.0), GPLv3+ (>= 3.0.0)
 LICENSE = "GPLv3+"

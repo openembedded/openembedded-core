@@ -7,7 +7,6 @@ DESCRIPTION = "Free peer-reviewed portable C++ source libraries"
 HOMEPAGE = "http://www.boost.org/"
 SECTION = "libs"
 DEPENDS = "boost-jam-native zlib"
-PRIORITY = "optional"
 LICENSE = "Boost"
 PR = "r4"
 

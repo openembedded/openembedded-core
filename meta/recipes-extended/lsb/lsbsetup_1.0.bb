@@ -1,6 +1,5 @@
 DESCRIPTION = "auto-setup environment for lsb test"
 SECTION = "console/utils"
-PRIORITY = "required"
 LICENSE = "GPLv2"
 PR = "r3"
 

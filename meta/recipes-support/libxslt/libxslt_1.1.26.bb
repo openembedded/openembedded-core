@@ -6,7 +6,6 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0cd9a07afbeb24026c9b03aecfeba458"
 
 SECTION = "libs"
-PRIORITY = "optional"
 DEPENDS = "libxml2 (>=2.6.27)"
 PR = "r0"
 

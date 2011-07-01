@@ -2,7 +2,6 @@ SUMMARY = "Provide limited super user privileges to specific users"
 DESCRIPTION = "Sudo (superuser do) allows a system administrator to give certain users (or groups of users) the ability to run some (or all) commands as root while logging all commands and arguments."
 HOMEPAGE = "http://www.sudo.ws"
 BUGTRACKER = "http://www.sudo.ws/bugs/"
-PRIORITY = "optional"
 SECTION = "admin"
 LICENSE = "ISC & UCB & Zlib"
 LIC_FILES_CHKSUM = "file://doc/LICENSE;md5=54f1b46c2459ecec3d892618eab44302 \

@@ -2,7 +2,6 @@ DESCRIPTION = "GNU C Library"
 HOMEPAGE = "http://www.gnu.org/software/libc/libc.html"
 BUGTRACKER = "http://sources.redhat.com/bugzilla/"
 SECTION = "libs"
-PRIORITY = "required"
 LICENSE = "LGPLv2.1+ & GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833 \
                     file://elf/cache.c;beginline=1;endline=17;md5=926aac25497b1de7d630b4749005d208 \

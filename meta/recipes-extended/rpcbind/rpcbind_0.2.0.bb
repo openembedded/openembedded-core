@@ -2,7 +2,6 @@ SUMMARY = "Universal Addresses to RPC Program Number Mapper"
 DESCRIPTION = "The rpcbind utility is a server that converts RPC \
                program numbers into universal addresses."
 SECTION = "console/network"
-PRIORITY = "optional"
 HOMEPAGE = "http://sourceforge.net/projects/rpcbind/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=201237&atid=976751"
 DEPENDS = "libtirpc"

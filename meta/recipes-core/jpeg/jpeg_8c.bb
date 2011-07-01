@@ -9,7 +9,6 @@ LIC_FILES_CHKSUM = "file://cdjpeg.h;endline=12;md5=78fa8dbac547bb5b2a0e6457a6cfe
                     file://djpeg.c;endline=13;md5=ca89254925da06fef47e4b6468233432"
 
 SECTION = "libs"
-PRIORITY = "required"
 
 DEPENDS = "libtool-cross"
 DEPENDS_virtclass-native = "libtool-native"

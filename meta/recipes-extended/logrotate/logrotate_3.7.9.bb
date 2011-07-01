@@ -1,6 +1,5 @@
 DESCRIPTION = "Rotates, compresses, removes and mails system log files"
 SECTION = "console/utils"
-PRIORITY = "required"
 HOMEPAGE = "https://fedorahosted.org/releases/l/o/logrotate"
 LICENSE = "GPLv2"
 PR = "r0"

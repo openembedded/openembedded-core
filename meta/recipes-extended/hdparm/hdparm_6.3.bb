@@ -2,7 +2,6 @@ SUMMARY = "Utility for displaying and setting hard disk parameters"
 DESCRIPTION = "hdparm is a system utility for viewing \
 and manipulating various IDE drive and driver parameters."
 SECTION = "console/utils"
-PRIORITY = "optional"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=910a8a42c962d238619c75fdb78bdb24"
 

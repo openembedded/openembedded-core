@@ -2,7 +2,6 @@ SUMMARY = "Host side USB console utilities."
 DESCRIPTION = "Contains the lsusb utility for inspecting the devices connected to the USB bus."
 HOMEPAGE = "http://www.linux-usb.org"
 SECTION = "base"
-PRIORITY = "optional"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"

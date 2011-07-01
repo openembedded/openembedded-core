@@ -9,7 +9,6 @@ Extension."
 HOMEPAGE = "http://cairographics.org"
 BUGTRACKER = "http://bugs.freedesktop.org"
 SECTION = "libs"
-PRIORITY = "optional"
 LICENSE = "MPL-1 & LGPLv2.1"
 DEPENDS = "virtual/libx11 libsm libpng fontconfig libxrender pixman glib-2.0"
 

@@ -3,7 +3,6 @@ DESCRIPTION = "A collection of all the free software tools you need to \
 work on and format DocBook documents."
 HOMEPAGE = "http://sources.redhat.com/docbook-tools/"
 SECTION = "console/utils"
-PRIORITY = "required"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 DEPENDS = "openjade-native sgmlspl-native docbook-dsssl-stylesheets-native docbook-sgml-dtd-3.1-native"

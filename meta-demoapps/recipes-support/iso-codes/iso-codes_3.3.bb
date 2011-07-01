@@ -1,6 +1,5 @@
 SECTION = "libs"
 DESCRIPTION = "ISO language, territory, currency, script codes and their translations"
-PRIORITY = "optional"
 LICENSE = "LGPL"
 SECTION = "libs"
 PACKAGE_ARCH = "all"

@@ -1,6 +1,5 @@
 DESCRIPTION = "Fribidi library for bidirectional text"
 SECTION = "libs"
-PRIORITY = "optional"
 LICENSE = "GPL"
 
 inherit autotools pkgconfig

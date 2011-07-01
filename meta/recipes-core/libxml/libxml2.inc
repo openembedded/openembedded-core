@@ -3,7 +3,6 @@ DESCRIPTION = "The XML Parser Library allows for manipulation of XML files.  Lib
 HOMEPAGE = "http://www.xmlsoft.org/"
 BUGTRACKER = "http://bugzilla.gnome.org/buglist.cgi?product=libxml2"
 SECTION = "libs"
-PRIORITY = "optional"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=bb90c48926316d9af6e2d70ca7013ade \
                     file://hash.c;beginline=6;endline=15;md5=ce702952bfddd7aee22639a2d6b54136 \

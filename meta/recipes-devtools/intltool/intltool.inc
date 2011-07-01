@@ -1,5 +1,4 @@
 DESCRIPTION = "Utility scripts for internationalizing XML"
-PRIORITY = "optional"
 SECTION = "devel"
 LICENSE = "GPL"
 

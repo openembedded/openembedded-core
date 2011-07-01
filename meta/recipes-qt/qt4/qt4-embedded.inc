@@ -1,7 +1,6 @@
 DESCRIPTION = "Qt is a versatile cross-platform application framework -- this is the embedded version."
 SECTION = "libs"
 LICENSE = "LGPLv2.1 | GPLv3"
-PRIORITY = "optional"
 HOMEPAGE = "http://qt.nokia.com"
 DEPENDS += "directfb tslib"
 INC_PR = "r26"

@@ -6,7 +6,6 @@ for MIME, IMAP, POP3, SMTP, and S/MIME."
 
 HOMEPAGE = "http://heirloom.sourceforge.net/mailx.html"
 SECTION = "console/network"
-PRIORITY = "required"
 PR = "r0"
 LICENSE = "GPL"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4202a0a62910cf94f7af8a3436a2a2dd"

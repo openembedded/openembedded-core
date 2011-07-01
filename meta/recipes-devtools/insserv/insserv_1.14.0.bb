@@ -3,7 +3,6 @@ DESCRIPTION = "This utility reorders the init.d boot scripts based on dependenci
 headers, or in override files included in this package or added in /etc/insserv."
 # There is no known home page for insserv
 SECTION = "base"
-PRIORITY = "optional"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 

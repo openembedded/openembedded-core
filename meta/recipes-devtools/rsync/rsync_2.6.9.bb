@@ -2,7 +2,6 @@ DESCRIPTION = "A file-synchronization tool"
 HOMEPAGE = "http://rsync.samba.org/"
 BUGTRACKER = "http://rsync.samba.org/bugzilla.html"
 SECTION = "console/network"
-PRIORITY = "optional"
 
 # needs to add acl and attr
 DEPENDS = "popt"

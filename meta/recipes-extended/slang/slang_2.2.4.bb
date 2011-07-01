@@ -8,7 +8,6 @@ extension language.  S-Lang's syntax resembles C, which makes it easy \
 to recode S-Lang procedures in C if you need to."
 
 SECTION = "libs"
-PRIORITY = "optional"
 DEPENDS = "pcre"
 PR = "r5"
 

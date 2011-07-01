@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 			file://COPYRIGHT;md5=8e55eb14894e782b84488d5a239bc23d \
 			file://version.h;beginline=1;endline=8;md5=aa07311dd39288d4349f28e1de516454"
 SECTION = "libs"
-PRIORITY = "optional"
 DEPENDS = "libid3tag"
 PR = "r2"
 

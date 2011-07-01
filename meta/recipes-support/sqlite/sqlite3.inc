@@ -1,7 +1,6 @@
 DESCRIPTION = "An Embeddable SQL Database Engine"
 HOMEPAGE = "http://www.sqlite.org"
 SECTION = "libs"
-PRIORITY = "optional"
 DEPENDS = "readline ncurses"
 DEPENDS_virtclass-native = ""
 LICENSE = "PD"

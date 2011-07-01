@@ -1,6 +1,5 @@
 DESCRIPTION  = "Check Test Framework"
 HOMEPAGE = "http://gitorious.org/opensuse/zypper"
-PRIORITY = "optional"
 SECTION = "devel"
 
 LICENSE  = "LGPLv2.1+"

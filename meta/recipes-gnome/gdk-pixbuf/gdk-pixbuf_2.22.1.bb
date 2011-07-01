@@ -7,7 +7,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
                     file://gdk-pixbuf/gdk-pixbuf.h;endline=26;md5=5066b71daefeff678494fffa3040aba9"
 
 SECTION = "libs"
-PRIORITY = "optional"
 
 DEPENDS = "libpng glib-2.0 jpeg"
 PR = "r0"

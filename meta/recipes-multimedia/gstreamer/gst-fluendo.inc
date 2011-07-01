@@ -1,6 +1,5 @@
 DESCRIPTION = "Fluendo closed-format GStreamer plug-in"
 SECTION = "multimedia"
-PRIORITY = "optional"
 HOMEPAGE = "http://www.fluendo.com/resources/source-plugins.php"
 DEPENDS = "gstreamer zlib"
 

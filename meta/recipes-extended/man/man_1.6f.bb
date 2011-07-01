@@ -2,7 +2,6 @@ SUMMARY = "Online documentation tools"
 DESCRIPTION = "A set of documentation tools: man, apropos and whatis"
 SECTION = "console/utils"
 HOMEPAGE = "http://primates.ximian.com/~flucifredi/man"
-PRIORITY = "required"
 LICENSE = "GPLv2"
 PR = "r0"
 

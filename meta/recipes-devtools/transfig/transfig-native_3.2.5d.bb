@@ -3,7 +3,6 @@ DESCRIPTION = "This package contains utilities (mainly fig2dev) to \
 handle XFig (Facility for Interactive Generation of figures) files."
 HOMEPAGE = "http://www-epb.lbl.gov/xfig/"
 SECTION = "console/utils"
-PRIORITY = "required"
 LICENSE = "xfig"
 LIC_FILES_CHKSUM = "file://fig2dev/fig2dev.c;endline=16;md5=6bab01e017409cf9ab21d3e953b793f7"
 PR = "r0"

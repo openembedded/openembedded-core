@@ -1,6 +1,5 @@
 DESCRIPTION = "x-load bootloader loader"
 SECTION = "bootloaders"
-PRIORITY = "optional"
 LICENSE = "GPL"
 
 inherit deploy

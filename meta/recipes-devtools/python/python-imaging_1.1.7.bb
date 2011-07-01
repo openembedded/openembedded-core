@@ -1,6 +1,5 @@
 DESCRIPTION = "Python Imaging Library"
 SECTION = "devel/python"
-PRIORITY = "optional"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://README;beginline=92;endline=120;md5=c4371af4579f1e489cf881c1443dd4ec"
 DEPENDS = "freetype jpeg tiff"

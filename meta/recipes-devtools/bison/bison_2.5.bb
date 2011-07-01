@@ -7,7 +7,6 @@ HOMEPAGE = "http://www.gnu.org/software/bison/"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SECTION = "devel"
-PRIORITY = "optional"
 DEPENDS = "bison-native"
 
 PR = "r0"

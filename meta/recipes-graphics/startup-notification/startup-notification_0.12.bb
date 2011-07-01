@@ -14,7 +14,6 @@ PR = "r0"
 
 SECTION = "libs"
 
-PRIORITY = "optional"
 
 DEPENDS = "virtual/libx11 libsm xcb-util"
 

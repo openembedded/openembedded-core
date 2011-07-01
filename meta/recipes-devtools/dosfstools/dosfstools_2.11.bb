@@ -5,7 +5,6 @@
 DESCRIPTION = "DOS FAT Filesystem Utilities"
 
 SECTION = "base"
-PRIORITY = "optional"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://mkdosfs/COPYING;md5=cbe67f08d6883bff587f615f0cc81aa8"
 PR = "r0"

@@ -2,7 +2,6 @@ DESCRIPTION = "Native tools for Qt/[X11|Mac|Embedded] version 4.x"
 DEPENDS = "zlib-native dbus-native"
 SECTION = "libs"
 HOMEPAGE = "http://qt.nokia.com"
-PRIORITY = "optional"
 
 LICENSE = "LGPLv2.1 | GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \

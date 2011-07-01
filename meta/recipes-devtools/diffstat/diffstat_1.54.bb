@@ -3,7 +3,6 @@ DESCRIPTION = "diffstat reads the output of diff and displays a histogram of \
 the insertions, deletions, and modifications per-file. It is useful for \
 reviewing large, complex patch files."
 HOMEPAGE = "http://invisible-island.net/diffstat/"
-PRIORITY = "optional"
 SECTION = "devel"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://install-sh;endline=42;md5=b3549726c1022bee09c174c72a0ca4a5"
