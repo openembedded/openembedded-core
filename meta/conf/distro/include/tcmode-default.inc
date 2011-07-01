@@ -21,6 +21,7 @@ SDKGCCVERSION ?= "4.6%"
 BINUVERSION ?= "2.21"
 GLIBCVERSION ?= "2.10.1"
 EGLIBCVERSION ?= "2.13"
+UCLIBCVERSION ?= "0.9.32"
 LINUXLIBCVERSION ?= "2.6.37.2"
 
 # Temporary preferred version overrides for PPC
@@ -57,6 +58,8 @@ PREFERRED_VERSION_eglibc-nativesdk         ?= "${EGLIBCVERSION}"
 PREFERRED_VERSION_eglibc-initial           ?= "${EGLIBCVERSION}"
 PREFERRED_VERSION_eglibc-initial-nativesdk ?= "${EGLIBCVERSION}"
 PREFERRED_VERSION_cross-localedef-native   ?= "${EGLIBCVERSION}"
+PREFERRED_VERSION_uclibc                   ?= "${UCLIBCVERSION}"
+PREFERRED_VERSION_uclibc-initial           ?= "${UCLIBCVERSION}"
 PREFERRED_VERSION_elfutils ?= "0.148"
 # don't use version earlier than 1.4 for gzip-native, as it's necessary for
 # some packages using an archive format incompatible with earlier gzip
