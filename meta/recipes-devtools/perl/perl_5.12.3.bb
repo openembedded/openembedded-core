@@ -8,7 +8,7 @@ PRIORITY = "optional"
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db grep-native"
 DEPENDS += "gdbm zlib"
-PR = "r1"
+PR = "r2"
 
 # 5.10.1 has Module::Build built-in
 PROVIDES += "libmodule-build-perl"
@@ -68,6 +68,7 @@ SRC_URI = "http://www.cpan.org/src/5.0/perl-${PV}.tar.gz \
         file://native-perlinc.patch \
         file://perl-enable-gdbm.patch \
         file://cross-generate_uudmap.patch \
+	file://fix_bad_rpath.patch \
 	\
         file://config.sh \
         file://config.sh-32 \
@@ -178,7 +179,8 @@ do_configure() {
 do_compile() {
         sed -i -e 's|/usr/include|${STAGING_INCDIR}|g' ext/Errno/Errno_pm.PL
         sed -i -e 's|/usr/include|${STAGING_INCDIR}|g' cpan/Compress-Raw-Zlib/config.in
-        sed -i -e 's|/usr/lib|${STAGING_LIBDIR}|g' cpan/Compress-Raw-Zlib/config.in
+        sed -i -e 's|/usr/lib|""|g' cpan/Compress-Raw-Zlib/config.in
+        sed -i -e 's|SYSROOTLIB|${STAGING_LIBDIR}|g' cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm
 
         cd Cross
         oe_runmake perl LD="${CCLD}"
