@@ -12,6 +12,9 @@ PR = "r1"
 SRC_URI = "http://libmpeg2.sourceforge.net/files/mpeg2dec-${PV}.tar.gz \
            file://altivec_h_needed.patch"
 
+SRC_URI[md5sum] = "7631b0a4bcfdd0d78c0bb0083080b0dc"
+SRC_URI[sha256sum] = "c74a76068f8ec36d4bb59a03bf1157be44118ca02252180e8b358b0b5e3edeee"
+
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "--enable-shared --disable-sdl --with-x"
