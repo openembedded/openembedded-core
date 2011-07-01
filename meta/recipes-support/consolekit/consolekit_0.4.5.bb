@@ -2,13 +2,13 @@ DESCRIPTION = "ConsoleKit is a framework for defining and tracking users, login 
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/ConsoleKit"
 BUGTRACKER="https://bugs.freedesktop.org/buglist.cgi?query_format=specific&product=ConsoleKit"
 
-PR = "r3"
+PR = "r4"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://src/main.c;endline=21;md5=0a994e09769780220163255d8f9071c3"
 
-DEPENDS = "dbus polkit ${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
+DEPENDS = "glib-2.0 dbus polkit ${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
 inherit gnome
 
