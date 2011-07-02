@@ -492,11 +492,12 @@ RECIPE_STATUS_pn-sqlite3 = "green"   # need upgrade
 RECIPE_LAST_UPDATE_pn-sqlite3 = "Nov 24, 2010"
 RECIPE_MAINTAINER_pn-sqlite3 = "Yu Ke <ke.yu@intel.com>"
 RECIPE_DEPENDENCY_CHECK_pn-sqlite3 = "not done"
-RECIPE_LATEST_VERSION_pn-sqlite3 = "3.7.3"
+RECIPE_LATEST_VERSION_pn-sqlite3 = "3.7.7.1"
 RECIPE_INTEL_SECTION_pn-sqlite3 = "base libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-sqlite3 = "1 month"
 RECIPE_LATEST_RELEASE_DATE_pn-sqlite3 = "10/2010"
 RECIPE_COMMENTS_pn-sqlite3 = ""
+RECIPE_MANUAL_CHECK_DATE_pn-sqlite3= "Jul 01, 2011"
 
 RECIPE_STATUS_pn-libpthread-stubs = "green"
 RECIPE_LAST_UPDATE_pn-libpthread-stubs = "Jul 6, 2010"
@@ -1249,6 +1250,7 @@ RECIPE_LATEST_VERSION_pn-console-tools = "0.3.2"
 RECIPE_LAST_UPDATE_pn-console-tools = "Jul 21, 2006"
 RECIPE_MAINTAINER_pn-console-tools = "Yu Ke <ke.yu@intel.com>"
 DISTRO_PN_ALIAS_pn-console-tools = "Debian=console-tools Ubuntu=console-tools"
+RECIPE_MANUAL_CHECK_DATE_pn-console-tools= "Jul 01, 2011"
 
 RECIPE_STATUS_pn-fuse = "red"
 RECIPE_LATEST_VERSION_pn-fuse = "2.8.4"
@@ -1463,6 +1465,7 @@ RECIPE_INTEL_SECTION_pn-gconf-dbus = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gconf-dbus = "n/a"
 RECIPE_LATEST_RELEASE_DATE_pn-gconf-dbus = "n/a"
 RECIPE_COMMENTS_pn-gconf-dbus = "difficult to identify official site and current status"
+RECIPE_MANUAL_CHECK_DATE_pn-gconf-dbus = "Jul 01, 2011"
 
 RECIPE_STATUS_pn-elfutils ="green" # no update needed
 RECIPE_LAST_UPDATE_pn-elfutils = "Jul 16, 2010"
@@ -3359,6 +3362,7 @@ RECIPE_INTEL_SECTION_pn-qemugl="graphic app"
 RECIPE_LAST_UPDATE_pn-qemugl = "Nov 28, 2010"
 RECIPE_NO_UPDATE_REASON_pn-qemugl = "Do not upgrade to version: 33466cd8 because the upstream is broken in x86_64 build"
 RECIPE_MAINTAINER_pn-qemugl="Yu Ke <ke.yu@intel.com>"
+RECIPE_MANUAL_CHECK_DATE_pn-qemugl= "Jul 01, 2011"
 
 RECIPE_STATUS_pn-fotowall="green" # no update needed
 RECIPE_LATEST_VERSION_pn-fotowall="0.9"
