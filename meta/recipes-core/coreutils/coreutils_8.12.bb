@@ -15,8 +15,8 @@ inherit autotools gettext
 
 SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "36909ae68840d73a800120cf74af794a"
-SRC_URI[sha256sum] = "aa991fa4296b22ff929a31a5cb5528bb783c84cdef4503c4ff311cfbeaebf50a"
+SRC_URI[md5sum] = "fce7999953a67243d00d75cc86dbcaa6"
+SRC_URI[sha256sum] = "9e233a62c98a3378a7b0483d2ae3d662dbaf6cd3917d3830d3514665e12a85c8"
 
 EXTRA_OECONF_virtclass-native = "--without-gmp"
 
