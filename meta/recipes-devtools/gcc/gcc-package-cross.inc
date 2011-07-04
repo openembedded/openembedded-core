@@ -29,8 +29,8 @@ do_install () {
 	done
 
 	# We use libiberty from binutils
-	find -name libiberty.a ${D}${exec_prefix}/lib | xargs rm -f
-	find -name libiberty.h ${D}${exec_prefix}/lib | xargs rm -f
+	find ${D}${exec_prefix}/lib -name libiberty.a | xargs rm -f
+	find ${D}${exec_prefix}/lib -name libiberty.h | xargs rm -f
 
 	# gcc-runtime installs libgcc into a special location in staging since it breaks doing a standalone build
 	if [ "${PN}" == "gcc-cross" -o "${PN}" == "gcc-crosssdk" ]; then

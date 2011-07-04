@@ -88,8 +88,8 @@ do_install () {
 	rm -f *gcc-?.?*
 
 	# We use libiberty from binutils
-	find -name libiberty.a ${D}${exec_prefix}/lib | xargs rm -f
-	find -name libiberty.h ${D}${exec_prefix}/lib | xargs rm -f
+	find ${D}${exec_prefix}/lib -name libiberty.a | xargs rm -f
+	find ${D}${exec_prefix}/lib -name libiberty.h | xargs rm -f
 
 	# Symlinks so we can use these trivially on the target
 	ln -sf ${TARGET_PREFIX}g77 g77 || true

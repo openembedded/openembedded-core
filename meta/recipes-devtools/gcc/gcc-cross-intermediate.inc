@@ -40,8 +40,8 @@ do_install () {
 	rm -rf ${D}${datadir}/
 
 	# We use libiberty from binutils
-	find -name libiberty.a ${D}${exec_prefix}/lib | xargs rm -f
-	find -name libiberty.h ${D}${exec_prefix}/lib | xargs rm -f
+	find ${D}${exec_prefix}/lib -name libiberty.a | xargs rm -f
+	find ${D}${exec_prefix}/lib -name libiberty.h | xargs rm -f
 
 	# Insert symlinks into libexec so when tools without a prefix are searched for, the correct ones are
 	# found. These need to be relative paths so they work in different locations.
