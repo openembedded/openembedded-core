@@ -11,13 +11,12 @@ AUTHOR = "Thomas Hood"
 HOMEPAGE = "http://packages.debian.org/resolvconf"
 DEPENDS = "bash"
 RDEPENDS_${PN} = "bash"
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/r/resolvconf/resolvconf_${PV}.tar.gz"
 
-SRC_URI[md5sum] = "b226e02704a545238eac5ef70f6d3c4c"
-SRC_URI[sha256sum] = "4b07832680b82d401a76132cd6bbe13961231235287f2662a6604edbcac82bb1"
-
+SRC_URI[md5sum] = "6232b336e6bb05282791b5506bbbfa42"
+SRC_URI[sha256sum] = "853016a2ef16a8fdd6d1e29ac94bc6391199033235aa8e3b373345979c617431"
 
 do_compile () {
 	:
