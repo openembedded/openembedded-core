@@ -6,8 +6,8 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 PR = "r0"
-DEPENDS = "gettext-native virtual/libiconv ncurses expat git-native"
-DEPENDS_virtclass-native = "git-native"
+DEPENDS = "gettext-native virtual/libiconv ncurses expat"
+DEPENDS_virtclass-native = ""
 PROVIDES = "virtual/libintl virtual/gettext"
 PROVIDES_virtclass-native = ""
 CONFLICTS_${PN} = "proxy-libintl"
@@ -34,7 +34,8 @@ EXTRA_OECONF += "--without-lispdir \
                  --with-included-glib \
                  --with-libncurses-prefix=${STAGING_LIBDIR}/.. \
                  --without-emacs \
-                 --with-git \
+                 --without-cvs \
+                 --without-git \
                 "
 
 acpaths = '-I ${S}/gettext-runtime/m4 \
