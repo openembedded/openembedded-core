@@ -383,7 +383,7 @@ def package_qa_check_staged(path,d):
     return sane
 
 # Walk over all files in a directory and call func
-def package_qa_walk(path, warnfuncs, errorfuncs, package, d):
+def package_qa_walk(path, warnfuncs, errorfuncs, skip, package, d):
     import oe.qa
 
     #if this will throw an exception, then fix the dict above
@@ -414,7 +414,7 @@ def package_qa_walk(path, warnfuncs, errorfuncs, package, d):
 
     return len(errors) == 0
 
-def package_qa_check_rdepends(pkg, pkgdest, d):
+def package_qa_check_rdepends(pkg, pkgdest, skip, d):
     sane = True
     if not "-dbg" in pkg and not "task-" in pkg and not "-image" in pkg:
         # Copied from package_ipk.bbclass
@@ -439,7 +439,7 @@ def package_qa_check_rdepends(pkg, pkgdest, d):
 
         # Now do the sanity check!!!
         for rdepend in rdepends:
-            if "-dbg" in rdepend:
+            if "-dbg" in rdepend and "debug-deps" not in skip:
                 error_msg = "%s rdepends on %s" % (pkgname,rdepend)
                 sane = package_qa_handle_error("debug-deps", error_msg, d)
 
@@ -480,27 +480,30 @@ python do_package_qa () {
     testmatrix = d.getVarFlags("QAPATHTEST")
 
     g = globals()
-    warnchecks = []
-    for w in (d.getVar("WARN_QA", True) or "").split():
-        if w in testmatrix and testmatrix[w] in g:
-            warnchecks.append(g[testmatrix[w]])
-    errorchecks = []
-    for e in (d.getVar("ERROR_QA", True) or "").split():
-        if e in testmatrix and testmatrix[e] in g:
-            errorchecks.append(g[testmatrix[e]])
-
     walk_sane = True
     rdepends_sane = True
     for package in packages.split():
-        if bb.data.getVar('INSANE_SKIP_' + package, d, True):
-            bb.note("Package: %s (skipped)" % package)
-            continue
+        skip = (bb.data.getVar('INSANE_SKIP_' + package, d, True) or "").split()
+        if skip:
+            bb.note("Package %s skipping QA tests: %s" % (package, str(skip)))
+        warnchecks = []
+        for w in (d.getVar("WARN_QA", True) or "").split():
+            if w in skip:
+               continue
+            if w in testmatrix and testmatrix[w] in g:
+                warnchecks.append(g[testmatrix[w]])
+        errorchecks = []
+        for e in (d.getVar("ERROR_QA", True) or "").split():
+            if e in skip:
+               continue
+            if e in testmatrix and testmatrix[e] in g:
+                errorchecks.append(g[testmatrix[e]])
 
         bb.note("Checking Package: %s" % package)
         path = "%s/%s" % (pkgdest, package)
-        if not package_qa_walk(path, warnchecks, errorchecks, package, d):
+        if not package_qa_walk(path, warnchecks, errorchecks, skip, package, d):
             walk_sane  = False
-        if not package_qa_check_rdepends(package, pkgdest, d):
+        if not package_qa_check_rdepends(package, pkgdest, skip, d):
             rdepends_sane = False
 
 
