@@ -61,6 +61,28 @@ python package_ipk_install () {
 		raise bb.build.FuncFailed
 }
 
+package_tryout_install_multilib_ipk() {
+	#try install multilib
+	multilib_tryout_dirs=""
+	for arch in ${MULTILIB_ARCHS}; do
+		local target_rootfs="${MULTILIB_TEMP_ROOTFS}/${arch}"
+		local ipkg_args="-f ${INSTALL_CONF_IPK} -o ${target_rootfs} --force_overwrite"
+		local selected_pkg=""
+		#strip the "ml" from package_arch
+		local pkgarch_prefix="${arch:2}-"
+		for pkg in "${INSTALL_PACKAGES_MULTILIB_IPK}"; do
+			if [ ${pkg:0:${#pkgarch_prefix}} == ${pkgarch_prefix} ]; then
+			    selected_pkg="${selected_pkg} ${pkg}"
+			fi
+		done
+		if [ ! -z "${selected_pkg}" ]; then
+			mkdir -p ${target_rootfs}/${opkglibdir}
+			opkg-cl ${ipkg_args} update
+			opkg-cl ${ipkg_args} install ${selected_pkg}
+			multilib_tryout_dirs="${multilib_tryout_dirs} ${target_rootfs}"
+		fi
+	done
+}
 #
 # install a bunch of packages using opkg
 # the following shell variables needs to be set before calling this func:
@@ -78,6 +100,7 @@ package_install_internal_ipk() {
 	local package_to_install="${INSTALL_PACKAGES_NORMAL_IPK}"
 	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_IPK}"
 	local package_lingusa="${INSTALL_PACKAGES_LINGUAS_IPK}"
+	local package_multilib="${INSTALL_PACKAGES_MULTILIB_IPK}"
 	local task="${INSTALL_TASK_IPK}"
 
 	mkdir -p ${target_rootfs}${localstatedir}/lib/opkg/
@@ -101,6 +124,14 @@ package_install_internal_ipk() {
 
 	if [ ! -z "${package_attemptonly}" ]; then
 		opkg-cl ${ipkg_args} install ${package_attemptonly} > "${WORKDIR}/temp/log.do_${task}_attemptonly.${PID}" || true
+	fi
+
+	package_tryout_install_multilib_ipk
+	#sanity check
+	multilib_sanity_check  ${target_rootfs} ${multilib_tryout_dirs}|| exit 1
+
+	if [ ! -z "${package_multilib}" ]; then
+		opkg-cl ${ipkg_args} install ${package_multilib}
 	fi
 }
 
@@ -142,6 +173,11 @@ package_update_index_ipk () {
 		packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch ${DEPLOY_DIR_IPK}/$sdkarch-nativesdk"
 	done
 
+	multilib_archs="${MULTILIB_ARCHS}"
+	for arch in $multilib_archs; do
+		packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch"
+	done
+
 	for pkgdir in $packagedirs; do
 		if [ -e $pkgdir/ ]; then
 			touch $pkgdir/Packages
@@ -173,6 +209,13 @@ package_generate_ipkg_conf () {
 		        echo "src oe-$sdkarch$extension file:${DEPLOY_DIR_IPK}/$sdkarch$extension" >> ${IPKGCONF_SDK}
 		fi
 	done
+
+	multilib_archs="${MULTILIB_ARCHS}"
+	for arch in $multilib_archs; do
+		if [ -e ${DEPLOY_DIR_IPK}/$arch/Packages ] ; then
+		        echo "src oe-$arch file:${DEPLOY_DIR_IPK}/$arch" >> ${IPKGCONF_TARGET}
+		fi
+	done
 }
 
 package_generate_archlist () {
@@ -188,6 +231,14 @@ package_generate_archlist () {
 		echo "arch $sdkarch$extension $priority" >> ${IPKGCONF_SDK}
 		priority=$(expr $priority + 5)
 	done
+
+	multilib_archs="${MULTILIB_ARCHS}"
+	for arch in $multilib_archs; do
+		echo "arch $arch $priority" >> ${IPKGCONF_TARGET}
+		priority=$(expr $priority + 5)
+	done
+
+
 }
 
 python do_package_ipk () {
