@@ -173,23 +173,7 @@ RDEPENDS_task-core-lsb-graphic-add = "\
     gtk+ \
     atk \
     libasound \
-"
-
-RDEPENDS_task-core-lsb-graphic-add_qemux86 = "\
-    libqtopengl4 \
-"
-RDEPENDS_task-core-lsb-graphic-add_atom-pc = "\
-    libqtopengl4 \
-"
-RDEPENDS_task-core-lsb-graphic-add_qemuppc = "\
-    libqtopengl4 \
-"
-RDEPENDS_task-core-lsb-graphic-add_emenlow = "\
-    libqtopengl4 \
-"
-
-RDEPENDS_task-core-lsb-graphic-add_mpc8315e-rdb = "\
-    libqtopengl4 \
+    ${@base_contains("DISTRO_FEATURES", "opengl", "libqtopengl4", "", d)} \
 "
 
 #    mesa-dri 
