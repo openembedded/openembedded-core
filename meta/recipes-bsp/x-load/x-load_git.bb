@@ -6,7 +6,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://README;beginline=1;endline=25;md5=ef08d08cb99057bbb5b9d6d0c5a4396f"
 
 SRCREV = "9f94c6577e3a018b6b75cbe39f32bb331871f915"
-PV = "1.5+${PR}+git${SRCPV}"
+PV = "1.5.0+git${SRCPV}"
 PR="r0"
 
 #SRC_URI = "git://www.sakoman.net/git/x-load-omap3.git;branch=master;protocol=git"
