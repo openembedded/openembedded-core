@@ -12,7 +12,6 @@ PR = "r0"
 DEPENDS = "zlib openssl"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
-PROVIDES = "ssh sshd"
 RPROVIDES = "ssh sshd"
 
 CONFLICTS_${PN} = "dropbear"
