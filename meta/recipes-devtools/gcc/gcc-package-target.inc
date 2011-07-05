@@ -6,6 +6,8 @@ PACKAGES = "\
   gfortran gfortran-symlinks \
   gcov gcov-symlinks \
   ${PN}-doc \
+  ${PN}-dev \
+  ${PN}-dbg \
 "
 
 FILES_${PN} = "\
@@ -18,6 +20,12 @@ FILES_${PN} = "\
   ${gcclibdir}/${TARGET_SYS}/${BINV}/lib* \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/include \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/include-fixed \
+"
+FILES_${PN}-dbg += "\
+  ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/.debug/ \
+"
+FILES_${PN}-dev = "\
+  ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/include/ \
 "
 FILES_${PN}-symlinks = "\
   ${bindir}/cc \
@@ -93,16 +101,23 @@ do_install () {
 	find ${D}${exec_prefix}/lib -name libiberty.a | xargs rm -f
 	find ${D}${exec_prefix}/lib -name libiberty.h | xargs rm -f
 
+	# Not sure why we end up with these but we don't want them...
+	rm -f ${TARGET_PREFIX}${TARGET_PREFIX}*
+
 	# Symlinks so we can use these trivially on the target
-	ln -sf ${TARGET_PREFIX}g77 g77 || true
-	ln -sf ${TARGET_PREFIX}gfortran gfortran || true
+	if [ -e ${TARGET_PREFIX}g77 ]; then
+		ln -sf ${TARGET_PREFIX}g77 g77 || true
+		ln -sf g77 f77 || true
+	fi
+	if [ -e ${TARGET_PREFIX}gfortran ]; then
+		ln -sf ${TARGET_PREFIX}gfortran gfortran || true
+		ln -sf gfortran f95 || true
+	fi
 	ln -sf ${TARGET_PREFIX}g++ g++
 	ln -sf ${TARGET_PREFIX}gcc gcc
-	ln -sf g77 f77 || true
-	ln -sf gfortran f95 || true
+	ln -sf ${TARGET_PREFIX}cpp cpp
 	ln -sf g++ c++
 	ln -sf gcc cc
-	ln -sf ${bindir}/${TARGET_PREFIX}cpp ${D}${bindir}/cpp
 
 	chown -R root:root ${D}
 }
