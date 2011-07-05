@@ -1,0 +1,31 @@
+Upstream-Status: Pending
+
+Allow mandir to be set from the environment, fixing the following packaging warnings:
+
+WARNING: For recipe btrfs-tools, the following files were installed but not shipped in any package:
+WARNING:   /usr/man/man8/btrfs-show.8.gz
+WARNING:   /usr/man/man8/btrfs-image.8.gz
+WARNING:   /usr/man/man8/btrfsctl.8.gz
+WARNING:   /usr/man/man8/btrfs.8.gz
+WARNING:   /usr/man/man8/btrfsck.8.gz
+WARNING:   /usr/man/man8/mkfs.btrfs.8.gz
+
+RP - 5/7/2011
+
+Index: git/man/Makefile
+===================================================================
+--- git.orig/man/Makefile	2011-07-05 22:03:58.949919067 +0100
++++ git/man/Makefile	2011-07-05 22:04:07.789919856 +0100
+@@ -2,9 +2,9 @@
+ INSTALL= install
+ 
+ prefix ?= /usr/local
+-bindir = $(prefix)/bin
+-mandir = $(prefix)/man
+-man8dir = $(mandir)/man8
++bindir ?= $(prefix)/bin
++mandir ?= $(prefix)/man
++man8dir ?= $(mandir)/man8
+ 
+ MANPAGES = mkfs.btrfs.8.gz btrfsctl.8.gz btrfsck.8.gz btrfs-image.8.gz \
+ 	   btrfs-show.8.gz btrfs.8.gz

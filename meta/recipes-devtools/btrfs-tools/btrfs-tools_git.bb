@@ -15,7 +15,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs-unsta
 
 S = "${WORKDIR}/git"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI += "file://upstream-tmp/0001-Btrfs-progs-add-a-btrfs-select-super-command-to-over.patch \
 	    file://upstream-tmp/0002-Btrfs-progs-use-safe-string-manipulation-functions.patch \
@@ -40,6 +40,7 @@ SRC_URI += "file://upstream-tmp/0001-Btrfs-progs-add-a-btrfs-select-super-comman
 	    file://debian/01-labels.patch \
 	    file://debian/02-ftbfs.patch \
 	    file://fix_use_of_gcc.patch \
+	    file://weak-defaults.patch \
 		"
 
 SRC_URI[md5sum] = "78b1700d318de8518abfaab71f99a885"
