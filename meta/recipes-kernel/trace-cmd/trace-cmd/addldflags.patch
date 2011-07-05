@@ -1,0 +1,43 @@
+Upstream-Status: Pending
+
+Add ability for the Makefile to respect LDFLAGS.
+
+Also remove hardcoded /usr/local/include include path.
+
+RP 7/5/2011
+
+Index: git/Makefile
+===================================================================
+--- git.orig/Makefile	2011-07-05 11:58:11.699910550 +0100
++++ git/Makefile	2011-07-05 23:30:12.319920617 +0100
+@@ -189,10 +189,11 @@
+ TRACECMD_VERSION = $(TC_VERSION).$(TC_PATCHLEVEL).$(TC_EXTRAVERSION)
+ KERNELSHARK_VERSION = $(KS_VERSION).$(KS_PATCHLEVEL).$(KS_EXTRAVERSION)
+ 
+-INCLUDES = -I. -I/usr/local/include $(CONFIG_INCLUDES)
++INCLUDES = -I. $(CONFIG_INCLUDES)
+ 
+ # Set compile option CFLAGS if not set elsewhere
+ CFLAGS ?= -g -Wall
++LDFLAGS ?=
+ 
+ # Append required CFLAGS
+ override CFLAGS += $(CONFIG_FLAGS) $(INCLUDES) $(PLUGIN_DIR_SQ)
+@@ -225,7 +226,7 @@
+ 
+ do_app_build =						\
+ 	($(print_app_build)				\
+-	$(CC) $^ -rdynamic -o $@ $(CONFIG_LIBS) $(LIBS))
++	$(CC) $^ -rdynamic -o $@ $(LDFLAGS) $(CONFIG_LIBS) $(LIBS))
+ 
+ do_compile_shared_library =			\
+ 	($(print_shared_lib_compile)		\
+@@ -237,7 +238,7 @@
+ 
+ do_plugin_build =				\
+ 	($(print_plugin_build)			\
+-	$(CC) $(CFLAGS) -shared -nostartfiles -o $@ $<)
++	$(CC) $(CFLAGS) $(LDFLAGS) -shared -nostartfiles -o $@ $<)
+ 
+ do_build_static_lib =				\
+ 	($(print_static_lib_build)		\
