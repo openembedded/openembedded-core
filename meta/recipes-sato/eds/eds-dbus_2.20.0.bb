@@ -34,6 +34,7 @@ PACKAGES =+ "libcamel libcamel-dev libebook libebook-dev libecal libecal-dev \
              libedataserver libedataserver-dev \
              libedataserverui libedataserverui-dev"
 
+FILES_${PN} =+ "${datadir}/evolution-data-server-*/ui/"
 FILES_${PN}-dev =+ "${libdir}/pkgconfig/evolution-data-server-*.pc"
 FILES_${PN}-dbg =+ "${libdir}/evolution-data-server-*/camel-providers/.debug \
                     ${libdir}/evolution-data-server*/extensions/.debug/"
@@ -45,6 +46,7 @@ FILES_libcamel = "${libexecdir}/camel-* ${libdir}/libcamel-*.so.* \
                   ${libdir}/evolution-data-server-*/camel-providers/*.urls"
 FILES_libcamel-dev = "${libdir}/libcamel-*.so ${libdir}/libcamel-provider-*.so \
                       ${libdir}/pkgconfig/camel*pc \
+                    ${libdir}/evolution-data-server-*/camel-providers/*.la \
                       ${includedir}/evolution-data-server*/camel"
 
 FILES_libebook = "${libdir}/libebook-*.so.*"
@@ -55,7 +57,6 @@ RRECOMMENDS_libebook = "libedata-book"
 
 FILES_libecal = "${libdir}/libecal-*.so.* \
                  ${datadir}/evolution-data-server-1.4/zoneinfo"
-
 FILES_libecal-dev = "${libdir}/libecal-*.so ${libdir}/pkgconfig/libecal-*.pc \
                      ${includedir}/evolution-data-server*/libecal/*.h \
                      ${includedir}/evolution-data-server*/libical/*.h"
@@ -68,6 +69,7 @@ FILES_libedata-book = "${libexecdir}/e-addressbook-factory \
                        ${datadir}/evolution-data-server-1.4/weather/Locations.xml"
 FILES_libedata-book-dev = "${libdir}/libedata-book-*.so \
                            ${libdir}/pkgconfig/libedata-book-*.pc \
+                           ${libdir}/evolution-data-server-*/extensions/libebook*.la \
                            ${includedir}/evolution-data-server-*/libedata-book"
 
 FILES_libedata-cal = "${libexecdir}/e-calendar-factory \
@@ -76,7 +78,8 @@ FILES_libedata-cal = "${libexecdir}/e-calendar-factory \
                       ${libdir}/evolution-data-server-*/extensions/libecal*.so"
 FILES_libedata-cal-dev = "${libdir}/libedata-cal-*.so \
                           ${libdir}/pkgconfig/libedata-cal-*.pc \
-                          ${includedir}/evolution-data-server-*/libedata-cal"
+                          ${includedir}/evolution-data-server-*/libedata-cal \
+                          ${libdir}/evolution-data-server-*/extensions/libecal*.la"
 
 FILES_libedataserver = "${libdir}/libedataserver-*.so.*"
 FILES_libedataserver-dev = "${libdir}/libedataserver-*.so \
