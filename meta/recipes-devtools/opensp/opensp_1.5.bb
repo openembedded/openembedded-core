@@ -5,7 +5,7 @@ SECTION = "libs"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=641ff1e4511f0a87044ad42f87cb1045"
 
-PR = "r0"
+PR = "r1"
 
 # At -Os it encounters calls to some inline functions which are then
 # not found in any other objects with gcc 4.5
@@ -41,5 +41,7 @@ do_install_append() {
 	done
 	ln -sf osx sgml2xml
 }
+
+FILES_${PN} += "${datadir}/OpenSP/"
 
 BBCLASSEXTEND = "native"
