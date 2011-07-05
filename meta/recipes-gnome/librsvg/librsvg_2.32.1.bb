@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco cairo libxml2 popt"
 
-PR = "r3"
+PR = "r4"
 
 inherit autotools pkgconfig gnome
 
@@ -27,16 +27,21 @@ do_configure_prepend () {
 
 PACKAGES =+ "librsvg-gtk librsvg-gtk-dbg librsvg-gtk-dev rsvg"
 FILES_${PN} = "${libdir}/*.so.*"
+FILES_${PN}-staticdev += "${libdir}/gdk-pixbuf-2.0/*.a ${libdir}/gdk-pixbuf-2.0/*/*/*.a \
+                          ${libdir}/gtk-2.0/*.a ${libdir}/gtk-2.0/*/*/*.a"
 FILES_rsvg = "${bindir}/rsvg \
 	      ${bindir}/rsvg-view \
 	      ${bindir}/rsvg-convert \
 	      ${datadir}/pixmaps/svg-viewer.svg \
 	      ${datadir}/themes"
 FILES_librsvg-gtk = "${libdir}/gtk-2.0/*/*/*.so ${libdir}/gdk-pixbuf-2.0/*/*/*.so"
-FILES_librsvg-gtk-dev += "${libdir}/gtk-2.0/*.*a \
-			  ${libdir}/gtk-2.0/*/loaders/*.*a \
-			  ${libdir}/gtk-2.0/*/engines/*.*a"
-FILES_librsvg-gtk-dbg += "${libdir}/gtk-2.0/.debug \
+FILES_librsvg-gtk-dev += "${libdir}/gtk-2.0/*.la \
+			  ${libdir}/gtk-2.0/*/*/*.la \
+			  ${libdir}/gdk-pixbuf-2.0/*.la \
+			  ${libdir}/gdk-pixbuf-2.0/*/*/*.la"
+FILES_librsvg-gtk-dbg += "${libdir}/gdk-pixbuf-2.0/.debug \
+                          ${libdir}/gdk-pixbuf-2.0/*/*/.debug \
+                          ${libdir}/gtk-2.0/.debug \
                           ${libdir}/gtk-2.0/*/*/.debug"
 
 pkg_postinst_librsvg-gtk() {
