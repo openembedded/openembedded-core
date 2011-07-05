@@ -9,7 +9,7 @@ RDEPENDS_${PN} += "python-dbus"
 SRC_URI = "http://telepathy.freedesktop.org/releases/${BPN}/${P}.tar.gz \
            file://parallel_make.patch"
 
-PR = "r1"
+PR = "r2"
 
 inherit autotools
 
@@ -20,3 +20,10 @@ FILES_${PN} += "\
     ${libdir}/python*/site-packages/telepathy/*.py \
     ${libdir}/python*/site-packages/telepathy/*/*.py \
     "
+
+do_install_append () {
+	rm -f ${D}${libdir}/python*/site-packages/telepathy/*.pyc
+	rm -f ${D}${libdir}/python*/site-packages/telepathy/*.pyo
+	rm -f ${D}${libdir}/python*/site-packages/telepathy/*/*.pyc
+	rm -f ${D}${libdir}/python*/site-packages/telepathy/*/*.pyo
+}
