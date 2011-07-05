@@ -15,8 +15,8 @@ PR = "r0"
 
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "35937a0f83f0efe7a8c2dee635624784"
-SRC_URI[sha256sum] = "2146b3cc7a2d2b16a9457e73f14a3cb51a4292575425ed8f16f7e0a5e4f1a50d"
+SRC_URI[md5sum] = "51e417b71287629940051e6f652c6492"
+SRC_URI[sha256sum] = "c3a7cf7d976e05c6a1d8a9b3f14fa55d4304707408ddafb1396212653ea00be5"
 
 inherit autotools gettext update-alternatives
 
