@@ -91,9 +91,9 @@ def package_qa_get_machine_dict():
        }
 
 
-WARN_QA ?= "dev-so rpaths debug-deps debug-files arch la2 pkgconfig desktop la ldflags perms"
+WARN_QA ?= "dev-so rpaths debug-deps dev-deps debug-files arch la2 pkgconfig desktop la ldflags perms"
 ERROR_QA ?= ""
-#ERROR_QA ?= "rpaths debug-deps debug-files arch pkgconfig perms"
+#ERROR_QA ?= "rpaths debug-deps dev-deps debug-files arch pkgconfig perms"
 
 def package_qa_clean_path(path,d):
     """ Remove the common prefix from the path. In this case it is the TMPDIR"""
@@ -442,6 +442,9 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, d):
             if "-dbg" in rdepend and "debug-deps" not in skip:
                 error_msg = "%s rdepends on %s" % (pkgname,rdepend)
                 sane = package_qa_handle_error("debug-deps", error_msg, d)
+            if (not "-dev" in pkg and not "-staticdev" in pkg) and rdepend.endswith("-dev"):
+               error_msg = "%s rdepends on %s" % (pkgname, rdepend)
+                sane = package_qa_handle_error("dev-deps", error_msg, d)
 
     return sane
 
