@@ -136,7 +136,7 @@ do_validate_branches() {
  	 	return
  	fi
 
-	# nothing to do if SRCREV=${AUTOREV}
+	# nothing to do if SRCREV is AUTOREV
 	if [ "${SRCREV_machine}" = "AUTOINC" ]; then
 		# restore the branch for builds
 		git checkout -f ${KBRANCH}
