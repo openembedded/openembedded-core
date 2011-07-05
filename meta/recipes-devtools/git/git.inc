@@ -38,6 +38,9 @@ FILES_${PN}-perltools += " \
 "
 RDEPENDS_${PN}-perltools = "${PN} perl perl-module-file-path findutils"
 
+PACKAGES =+ "${PN}-python"
+FILES_${PN}-python = "${libdir}/python*"
+
 # git-tk package with gitk and git-gui
 PACKAGES =+ "${PN}-tk"
 #RDEPENDS_${PN}-tk = "${PN} tk tcl"
@@ -46,6 +49,9 @@ FILES_${PN}-tk = " \
     ${bindir}/gitk \
     ${datadir}/gitk \
 "
+
+PACKAGES =+ "gitweb"
+FILES_gitweb = "${datadir}/gitweb/"
 
 
 BBCLASSEXTEND = "native"
