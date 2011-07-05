@@ -38,6 +38,8 @@ FILES_${PN} = "${bindir}/* ${sbindir}/* ${libexecdir}/* ${libdir}/lib*.so.* \
 FILES_${PN}-dbg += "${libdir}/connman/plugins/.debug \
                     ${libdir}/connman/scripts/.debug"
 
+FILES_${PN}-dev += "${libdir}/connman/plugins/*.la"
+
 python populate_packages_prepend() {
 	depmap = dict( wifi="wpa-supplicant", bluetooth="bluez4", ofono="ofono" )
 	packages = []
