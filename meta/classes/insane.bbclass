@@ -86,7 +86,8 @@ def package_qa_get_machine_dict():
                         "powerpc":    (20,     0,    0,          False,         32),
                       },
             "linux-gnu" :       {
-                        "microblaze": (47787,  0,    0,          False,         32),
+                        "microblaze":   (47787,  0,    0,          False,         32),
+                        "microblazeel": (47787,  0,    0,          True,          32),
                       },
        }
 
