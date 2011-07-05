@@ -5,13 +5,15 @@ inherit imagetest-${IMAGETEST}
 
 LICENSE = "MIT"
 PACKAGES = ""
-RDEPENDS += "${IMAGE_INSTALL} ${LINGUAS_INSTALL}"
+MULTILIB_IMAGE_INSTALL ?= ""
+RDEPENDS += "${IMAGE_INSTALL} ${LINGUAS_INSTALL} ${MULTILIB_IMAGE_INSTALL}"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
 # "export IMAGE_BASENAME" not supported at this time
 IMAGE_BASENAME[export] = "1"
 export PACKAGE_INSTALL ?= "${IMAGE_INSTALL}"
+export MULTILIB_PACKAGE_INSTALL ?= "${MULTILIB_IMAGE_INSTALL}"
 PACKAGE_INSTALL_ATTEMPTONLY ?= ""
 
 # Images are generally built explicitly, do not need to be part of world.
@@ -91,6 +93,7 @@ do_rootfs[umask] = 022
 fakeroot do_rootfs () {
 	#set -x
 	rm -rf ${IMAGE_ROOTFS}
+	rm -rf ${MULTILIB_TEMP_ROOTFS}
 	mkdir -p ${IMAGE_ROOTFS}
 	mkdir -p ${DEPLOY_DIR_IMAGE}
 
@@ -164,6 +167,55 @@ log_check() {
 		fi
 		echo "Logfile is clean"
 	done
+}
+
+MULTILIBRE_ALLOW_REP =. "${base_bindir}|${base_sbindir}|${bindir}|${sbindir}|${libexecdir}|"
+MULTILIBRE_FORCE_SAME =. "${sysconfdir}|${datadir}|"
+MULTILIB_CHECK_FILE = "${WORKDIR}/multilib_check.py"
+MULTILIB_TEMP_ROOTFS = "${WORKDIR}/multilib"
+
+multilib_generate_python_file() {
+  cat >${MULTILIB_CHECK_FILE} <<EOF
+import sys, os, os.path
+import re,filecmp
+
+allow_rep=re.compile(re.sub("\|$","","${MULTILIBRE_ALLOW_REP}"))
+force_same=re.compile(re.sub("\|$","","${MULTILIBRE_FORCE_SAME}"))
+error_promt="Multilib check error:"
+
+files={}
+dirs=raw_input()
+for dir in dirs.split():
+  for root, subfolers, subfiles in os.walk(dir):
+    for file in subfiles:
+      item=os.path.join(root,file)
+      key=str(os.path.join("/",os.path.relpath(item,dir)))
+
+      valid=True;
+      if files.has_key(key):
+        #check whether files are the same
+        if force_same.match(key):
+          if not filecmp.cmp(files[key],item):
+             valid=False
+             print("%s %s is not the same as %s\n" % (error_promt, item, files[key]))
+             sys.exit(1)
+        #check whether the file is allow to replace
+        elif allow_rep.match(key):
+          valid=True
+        else: 
+          valid=False
+          print("%s duplicated files %s %s not allowed\n" % (error_promt, item, files[key]))
+          sys.exit(1)
+
+      #pass the check, add to list
+      if valid:
+        files[key]=item
+EOF
+}
+
+multilib_sanity_check() {
+  multilib_generate_python_file
+  echo $@ | python ${MULTILIB_CHECK_FILE}
 }
 
 # set '*' as the rootpassword so the images
