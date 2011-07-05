@@ -443,7 +443,7 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, d):
                 error_msg = "%s rdepends on %s" % (pkgname,rdepend)
                 sane = package_qa_handle_error("debug-deps", error_msg, d)
             if (not "-dev" in pkg and not "-staticdev" in pkg) and rdepend.endswith("-dev"):
-               error_msg = "%s rdepends on %s" % (pkgname, rdepend)
+                error_msg = "%s rdepends on %s" % (pkgname, rdepend)
                 sane = package_qa_handle_error("dev-deps", error_msg, d)
 
     return sane
