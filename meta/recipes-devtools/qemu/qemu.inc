@@ -38,8 +38,15 @@ do_configure_prepend_virtclass-native() {
 }
 
 do_configure() {
-    ${S}/configure --prefix=${prefix} ${EXTRA_OECONF}
+    ${S}/configure --prefix=${prefix} --sysconfdir=${sysconfdir} --disable-strip ${EXTRA_OECONF}
     chmod a+x ${S}/target-i386/beginend_funcs.sh
+}
+
+do_install () {
+	export STRIP="true"
+	autotools_do_install
+	install -d ${D}${datadir}/qemu
+	install -m 0755 ${WORKDIR}/powerpc_rom.bin ${D}${datadir}/qemu
 }
 
 SRC_URI_append_virtclass-nativesdk = " file://glflags.patch"
@@ -53,3 +60,5 @@ BBCLASSEXTEND = "native nativesdk"
 # Qemu target will not build in world build for ARM or Mips
 BROKEN_qemuarm = "1"
 BROKEN_qemumips = "1"
+
+INSANE_SKIP_${PN} = "arch"

@@ -30,9 +30,4 @@ SRC_URI = "\
 SRC_URI[md5sum] = "f9d145d5c09de9f0984ffe9bd1229970"
 SRC_URI[sha256sum] = "ba21e84d7853217830e167dae9999cdbff481189c6a0bb600ac7fb7201453108"
 
-do_install_append () {
-        install -d ${D}${datadir}/qemu
-        install -m 0755 ${WORKDIR}/powerpc_rom.bin ${D}${datadir}/qemu
-}
-
 S = "${WORKDIR}/qemu-${PV}"
