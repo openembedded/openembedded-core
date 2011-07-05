@@ -102,5 +102,7 @@ do_install_append() {
 	chown -R root:root ${D}
 }
 
+INSANE_SKIP_${PN} = "dev-so"
+
 BBCLASSEXTEND = "native nativesdk"
 
