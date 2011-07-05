@@ -921,7 +921,7 @@ python populate_packages () {
 				unshipped.append(path)
 
 	if unshipped != []:
-		bb.warn("the following files were installed but not shipped in any package: %s" % pn)
+		bb.warn("For recipe %s, the following files were installed but not shipped in any package:" % pn)
 		for f in unshipped:
 			bb.warn("  " + f)
 
