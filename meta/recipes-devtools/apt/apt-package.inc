@@ -62,7 +62,7 @@ FILES_${PN}-utils = "${bindir}/apt-sortpkgs ${bindir}/apt-extracttemplates"
 FILES_${PN}-doc = "${@get_files_apt_doc(d, bb, bb.data.getVar('apt-manpages', d, 1))} \
 		   ${docdir}/apt"
 FILES_${PN}-utils-doc = "${@get_files_apt_doc(d, bb, bb.data.getVar('apt-utils-manpages', d, 1))}"
-FILES_${PN}-dev = "${libdir}/libapt*.so"
+FILES_${PN}-dev = "${libdir}/libapt*.so ${includedir}"
 
 do_install () {
 	set -x
