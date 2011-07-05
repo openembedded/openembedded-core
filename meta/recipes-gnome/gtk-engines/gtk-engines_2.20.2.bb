@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=2d5025d4aa3495befef8f17206a5b0a1"
 SECTION = "x11/base"
 DEPENDS = "gtk+"
 
-PR = "r0"
+PR = "r1"
 
 PACKAGES_DYNAMIC = "gtk-engine-* gtk-theme-*"
 
@@ -20,6 +20,9 @@ RDEPENDS_gtk-theme-lighthouseblue = "gtk-engine-lighthouseblue"
 RDEPENDS_gtk-theme-thinice = "gtk-engine-thinice"
 RDEPENDS_gtk-theme-industrial = "gtk-engine-industrial"
 RDEPENDS_gtk-theme-clearlooks = "gtk-engine-clearlooks"
+
+FILES_${PN}-dev += "${libdir}/gtk-2.0/*/engines/*.la"
+FILES_${PN}-dbg += "${libdir}/gtk-2.0/*/engines/.debug"
 
 CFLAGS_prepend = "-DHAVE_ANIMATION "
 
