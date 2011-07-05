@@ -13,7 +13,10 @@ SRC_URI = "http://xcb.freedesktop.org/dist/xcb-proto-${PV}.tar.bz2"
 
 inherit autotools pkgconfig
 
-FILES_${PN}-dev += "${datadir}/xcb/*.xml"
+PACKAGES += "python-xcbgen"
+
+FILES_${PN}-dev += "${datadir}/xcb/*.xml ${datadir}/xcb/*.xsd"
+FILES_python-xcbgen = "${libdir}/python*"
 
 RDEPENDS_${PN}-dev = ""
 RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"
