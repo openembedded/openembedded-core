@@ -1,7 +1,8 @@
 RECIPE_STATUS_pn-diffutils = "green"
 RECIPE_LATEST_VERSION_pn-diffutils = "3.0"
-
 RECIPE_LAST_UPDATE_pn-diffutils = "Dec 10, 2010"
+RECIPE_NO_UPDATE_REASON_pn-diffutils = "3.0 is the latest version"
+RECIPE_MANUAL_CHECK_DATE_pn-diffutils = "Jul 4, 2011"
 RECIPE_MAINTAINER_pn-diffutils = "Mei Lei <lei.mei@intel.com>"
 
 RECIPE_STATUS_pn-epdfview = "red"
@@ -1792,9 +1793,9 @@ RECIPE_MAINTAINER_pn-sysklogd = "Saul Wold <sgw@linux.intel.com>"
 RECIPE_LATEST_VERSION_pn-sysklogd = "1.5"
 
 RECIPE_STATUS_pn-gawk = "red"    # need upgrade
-RECIPE_LAST_UPDATE_pn-gawk = "Aug 27, 2010"
+RECIPE_LAST_UPDATE_pn-gawk = "Jul 5, 2011"
 RECIPE_MAINTAINER_pn-gawk = "Mei Lei <lei.mei@intel.com>"
-RECIPE_LATEST_VERSION_pn-gawk = "3.1.7"
+RECIPE_LATEST_VERSION_pn-gawk = "4.0.0"
 
 RECIPE_STATUS_pn-mktemp="red"
 RECIPE_LAST_UPDATE_pn-mktemp = "Jul 29, 2010"
@@ -2112,12 +2113,12 @@ RECIPE_LAST_UPDATE_pn-empathy = "Aug 19, 2009"
 RECIPE_MAINTAINER_pn-empathy = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-gupnp = "green"
-RECIPE_LATEST_VERSION_pn-gupnp = "0.16.0"
+RECIPE_LATEST_VERSION_pn-gupnp = "0.16.1"
 RECIPE_NO_OF_PATCHES_pn-gupnp= "1"
-RECIPE_LATEST_RELEASE_DATE_pn-gupnp= "2011/04/08"
-RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gupnp= "3 month"
-RECIPE_LAST_UPDATE_pn-gupnp = "Apr 15, 2011"
-RECIPE_MAINTAINER_pn-gupnp= "Dongxiao Xu <dongxiao.xu@intel.com>"
+RECIPE_LATEST_RELEASE_DATE_pn-gupnp= "2011/04/30"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-gupnp= "1 month"
+RECIPE_LAST_UPDATE_pn-gupnp = "Jul 4, 2011"
+RECIPE_MAINTAINER_pn-gupnp= "Mei Lei <lei.mei@intel.com>"
 
 RECIPE_STATUS_pn-gupnp-av = "green"
 RECIPE_LATEST_VERSION_pn-gupnp-av = "0.8.0"
