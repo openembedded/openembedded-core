@@ -75,4 +75,4 @@ FILES_${PN}-binutils = "\
 FILES_${PN} =+ "${libdir}/*-${PV}.so"
 
 # The elfutils package contains symlinks that trip up insane
-INSANE_SKIP_elfutils = "1"
+INSANE_SKIP_${PN} = "dev-so"
