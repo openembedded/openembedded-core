@@ -7,7 +7,10 @@ LIC_FILES_CHKSUM = "file://update-rc.d;beginline=5;endline=15;md5=148a48321b10eb
 
 PR = "r4"
 
-SRC_URI = "git://github.com/philb/update-rc.d.git;tag=update-rc.d_${PV};protocol=git \
+# Revision corresponding to tag update-rc.d_0.7
+SRCREV = "eca680ddf28d024954895f59a241a622dd575c11"
+
+SRC_URI = "git://github.com/philb/update-rc.d.git;protocol=git \
            file://add-verbose.patch;striplevel=1"
 
 S = "${WORKDIR}/git"
