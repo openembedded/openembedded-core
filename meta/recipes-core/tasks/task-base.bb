@@ -109,7 +109,6 @@ RRECOMMENDS_task-base = "\
     kernel-module-rtc-dev \
     kernel-module-rtc-proc \
     kernel-module-rtc-sysfs \
-    kernel-module-rtc-sa1100 \
     kernel-module-unix"
 
 RDEPENDS_task-base-extended = "\
