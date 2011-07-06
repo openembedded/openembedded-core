@@ -65,7 +65,7 @@ FILES_libpulse-mainloop-glib = "${libdir}/libpulse-mainloop-glib.so.*"
 				   	 
 FILES_${PN}-dbg += "${libexecdir}/pulse/.debug \
                     ${libdir}/pulse-${PV}/modules/.debug"
-FILES_${PN}-dev += "${libdir}/pulse-${PV}/modules/*.la"		    
+FILES_${PN}-dev += "${libdir}/pulse-${PV}/modules/*.la ${datadir}/vala"		    
 FILES_${PN}-conf = "${sysconfdir}"
 FILES_${PN}-bin = "${bindir}/* \
                    ${sysconfdir}/default/volatiles/volatiles.04_pulse"
