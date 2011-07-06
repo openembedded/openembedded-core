@@ -2,7 +2,7 @@ DESCRIPTION = "Merge machine and distro options to create a basic machine task/p
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-PR = "r71"
+PR = "r72"
 
 inherit task
 
@@ -45,7 +45,6 @@ PACKAGES = ' \
             ${@base_contains("DISTRO_FEATURES", "raid", "task-base-raid", "",d)} \
             ${@base_contains("DISTRO_FEATURES", "zeroconf", "task-base-zeroconf", "", d)} \
             \
-            ${@base_contains("MACHINE_FEATURES","kernel26","task-base-kernel26","task-base-kernel24",d)} \
             '
 
 ALLOW_EMPTY = "1"
@@ -54,16 +53,6 @@ ALLOW_EMPTY = "1"
 # packages which content depend on MACHINE_FEATURES need to be MACHINE_ARCH
 #
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-
-#
-# linux-hotplug or none
-#
-HOTPLUG ?= "${@base_contains("MACHINE_FEATURES", "kernel24",  "linux-hotplug","",d)} "
-
-#
-# pcmciautils for >= 2.6.13-rc1, pcmcia-cs for others
-#
-PCMCIA_MANAGER ?= "${@base_contains('MACHINE_FEATURES', 'kernel26','pcmciautils','pcmcia-cs',d)} "
 
 #
 # those ones can be set in machine config to supply packages needed to get machine booting
@@ -77,9 +66,9 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS ?= ""
 RDEPENDS_task-base = "\
     task-distro-base \
     task-machine-base \
-    ${HOTPLUG} \
     \
-    ${@base_contains('MACHINE_FEATURES', 'kernel26','task-base-kernel26','task-base-kernel24',d)} \
+    sysfsutils \
+    module-init-tools \
     ${@base_contains('MACHINE_FEATURES', 'apm', 'task-base-apm', '',d)} \
     ${@base_contains('MACHINE_FEATURES', 'acpi', 'task-base-acpi', '',d)} \
     ${@base_contains('MACHINE_FEATURES', 'keyboard', 'task-base-keyboard', '',d)} \
@@ -111,6 +100,17 @@ RDEPENDS_task-base = "\
     ${@base_contains('DISTRO_FEATURES', 'zeroconf', 'task-base-zeroconf', '',d)} \
     "
 # bluez-dtl1-workaround above is workaround for bitbake not handling DEPENDS on it in
+
+
+RRECOMMENDS_task-base = "\
+    kernel-module-nls-utf8 \
+    kernel-module-input \
+    kernel-module-uinput \
+    kernel-module-rtc-dev \
+    kernel-module-rtc-proc \
+    kernel-module-rtc-sysfs \
+    kernel-module-rtc-sa1100 \
+    kernel-module-unix"
 
 RDEPENDS_task-base-extended = "\
     task-base \
@@ -155,27 +155,6 @@ RRECOMMENDS_task-distro-base = "${DISTRO_EXTRA_RRECOMMENDS}"
 RDEPENDS_task-machine-base = "${MACHINE_EXTRA_RDEPENDS}"
 RRECOMMENDS_task-machine-base = "${MACHINE_EXTRA_RRECOMMENDS}"
 
-RDEPENDS_task-base-kernel24 = "\
-    modutils-depmod"
-
-RDEPENDS_task-base-kernel26 = "\
-    sysfsutils \
-    module-init-tools"
-
-RRECOMMENDS_task-base-kernel24 = "\
-    kernel-module-input \
-    kernel-module-uinput"
-
-RRECOMMENDS_task-base-kernel26 = "\
-    kernel-module-nls-utf8 \
-    kernel-module-input \
-    kernel-module-uinput \
-    kernel-module-rtc-dev \
-    kernel-module-rtc-proc \
-    kernel-module-rtc-sysfs \
-    kernel-module-rtc-sa1100 \
-    kernel-module-unix"
-
 RDEPENDS_task-base-keyboard = "\
     keymaps"
 
@@ -214,28 +193,19 @@ RRECOMMENDS_task-base-alsa = "\
     kernel-module-snd-pcm-oss"
 
 RDEPENDS_task-base-pcmcia = "\
-    ${PCMCIA_MANAGER} \
+    pcmciautils \
     "
 #${@base_contains('DISTRO_FEATURES', 'wifi', 'prism-firmware', '',d)}
 #${@base_contains('DISTRO_FEATURES', 'wifi', 'spectrum-fw', '',d)}
 
 
 RRECOMMENDS_task-base-pcmcia = "\
-    ${@base_contains('MACHINE_FEATURES', 'kernel26', '${task-base-pcmcia26}', '${task-base-pcmcia24}',d)} \
     kernel-module-pcmcia \
     kernel-module-airo-cs \
     kernel-module-pcnet-cs \
     kernel-module-serial-cs \
     kernel-module-ide-cs \
     kernel-module-ide-disk \
-    "
-
-task-base-pcmcia24 = "\
-    ${@base_contains('DISTRO_FEATURES', 'wifi', 'hostap-modules-cs', '',d)} \
-    ${@base_contains('DISTRO_FEATURES', 'wifi', 'orinoco-modules-cs', '',d)} \
-    "
-
-task-base-pcmcia26 = "\
     ${@base_contains('DISTRO_FEATURES', 'wifi', 'kernel-module-hostap-cs', '',d)} \
     ${@base_contains('DISTRO_FEATURES', 'wifi', 'kernel-module-orinoco-cs', '',d)} \
     ${@base_contains('DISTRO_FEATURES', 'wifi', 'kernel-module-spectrum-cs', '',d)}"
