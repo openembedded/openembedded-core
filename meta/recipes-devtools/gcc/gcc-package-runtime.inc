@@ -18,7 +18,7 @@ RRECOMMENDS_${PN}-dbg = ""
 # include python debugging scripts
 FILES_${PN}-dbg += "\
   ${libdir}/libstdc++.so.*-gdb.py \
-  ${datadir}/gcc-${PV}/python/libstdcxx"
+  ${datadir}/gcc-${BINV}/python/libstdcxx"
 
 FILES_libg2c = "${target_libdir}/libg2c.so.*"
 FILES_libg2c-dev = "\
