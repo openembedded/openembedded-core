@@ -88,6 +88,10 @@ DESCRIPTION_libsotruss = "Library to support sotruss which traces calls through 
 
 inherit libc-common
 
+do_install_append () {
+	rm -f ${D}${sysconfdir}/localtime
+}
+
 do_install_locale () {
 	dest=${D}/${includedir}/eglibc-locale-internal-${MULTIMACH_TARGET_SYS}
 	install -d ${dest}${base_libdir} ${dest}${bindir} ${dest}${libdir} ${dest}${datadir}
