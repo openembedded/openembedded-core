@@ -3,6 +3,10 @@
 #
 
 ROOTFS_PKGMANAGE = "rpm zypper"
+
+# Add 50Meg of extra space for zypper database space
+IMAGE_ROOTFS_EXTRA_SPACE_append = "${@base_contains("PACKAGE_INSTALL", "zypper", " + 51200", "" ,d)}"
+
 # Postinstalls on device are handled within this class at present
 ROOTFS_PKGMANAGE_BOOTSTRAP = ""
 
