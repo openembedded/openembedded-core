@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b \
 # syslog initscript is handled explicitly because order of
 # update-rc.d and update-alternatives is important (see below)
 DEPENDS_append = " update-rc.d update-rc.d-native"
-RDEPENDS_${PN}_append = " ${@base_conditional("ONLINE_PACKAGE_MANAGEMENT", "none", "", "update-rc.d", d)}"
+RDEPENDS_${PN}_append = " update-rc.d"
 
 SRC_URI = "http://www.infodrom.org/projects/sysklogd/download/sysklogd-${PV}.tar.gz \
            file://no-strip-install.patch \
