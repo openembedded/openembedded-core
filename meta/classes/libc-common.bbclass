@@ -12,7 +12,7 @@ do_install() {
 		grep -v $i ${WORKDIR}/SUPPORTED > ${WORKDIR}/SUPPORTED.tmp
 		mv ${WORKDIR}/SUPPORTED.tmp ${WORKDIR}/SUPPORTED
 	done
-	rm -f ${D}{sysconfdir}/rpc
+	rm -f ${D}${sysconfdir}/rpc
 	rm -rf ${D}${datadir}/zoneinfo
 	rm -rf ${D}${libexecdir}/getconf
 }
