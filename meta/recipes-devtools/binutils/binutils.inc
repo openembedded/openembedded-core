@@ -35,11 +35,13 @@ FILES_${PN}-symlinks = " \
 	${bindir}/c++filt \
 	${bindir}/gprof \
 	${bindir}/ld \
+	${bindir}/ld.bfd \
 	${bindir}/nm \
 	${bindir}/objcopy \
 	${bindir}/objdump \
 	${bindir}/ranlib \
 	${bindir}/readelf \
+	${bindir}/elfedit \
 	${bindir}/size \
 	${bindir}/strip"
 
