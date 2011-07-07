@@ -112,10 +112,10 @@ def package_qa_handle_error(error_class, error_msg, d):
     package_qa_write_error(error_msg, d)
     if error_class in (d.getVar("ERROR_QA", True) or "").split():
         bb.error("QA Issue: %s" % error_msg)
-        return True
+        return False
     else:
         bb.warn("QA Issue: %s" % error_msg)
-        return False
+        return True
 
 QAPATHTEST[rpaths] = "package_qa_check_rpath"
 def package_qa_check_rpath(file,name, d, elf, messages):
