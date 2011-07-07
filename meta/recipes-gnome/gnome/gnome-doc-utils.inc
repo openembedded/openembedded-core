@@ -15,4 +15,6 @@ do_install_append() {
 
 FILES_${PN} += "${datadir}/xml*"
 
+RDEPENDS_${PN} = "bash"
+
 BBCLASSEXTEND = "native"
