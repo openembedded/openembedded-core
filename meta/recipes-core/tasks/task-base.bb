@@ -80,7 +80,6 @@ RDEPENDS_task-base = "\
     ${@base_contains('COMBINED_FEATURES', 'irda', 'task-base-irda', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'pci', 'task-base-pci', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'pcmcia', 'task-base-pcmcia', '',d)} \
-    ${@base_contains('COMBINED_FEATURES', 'pcmcia', 'bluez-dtl1-workaround', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'usbgadget', 'task-base-usbgadget', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'usbhost', 'task-base-usbhost', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'bluetooth', 'task-base-bluetooth', '',d)} \
@@ -99,7 +98,6 @@ RDEPENDS_task-base = "\
     ${@base_contains('DISTRO_FEATURES', 'raid', 'task-base-raid', '',d)} \
     ${@base_contains('DISTRO_FEATURES', 'zeroconf', 'task-base-zeroconf', '',d)} \
     "
-# bluez-dtl1-workaround above is workaround for bitbake not handling DEPENDS on it in
 
 
 RRECOMMENDS_task-base = "\
@@ -229,10 +227,7 @@ RRECOMMENDS_task-base-bluetooth = "\
     ${@base_contains('COMBINED_FEATURES', 'pcmcia', 'kernel-module-bluecard-cs', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'pcmcia', 'kernel-module-bluetoothuart-cs', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'pcmcia', 'kernel-module-dtl1-cs', '',d)} \
-    ${@base_contains('COMBINED_FEATURES', 'pcmcia', 'bluez-dtl1-workaround', '',d)} \
     "
-# bluez-dtl1-workaround above is workaround for bitbake not handling DEPENDS on it in
-# kernel.bbclass. It should be there as long as kernel-module-dtl1-cs is, but not longer.
 
 RDEPENDS_task-base-irda = "\
     irda-utils"
