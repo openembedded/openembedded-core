@@ -82,4 +82,6 @@ RDEPENDS_task-core-tools-testapps = "\
     xrestop \
     xwininfo \
     xprop \
-    xvideo-tests"
+    xvideo-tests \
+    clutter-box2d-1.6 \
+    "
