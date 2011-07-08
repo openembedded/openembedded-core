@@ -91,9 +91,11 @@ inherit libc-common
 do_install_locale () {
 	dest=${D}/${includedir}/eglibc-locale-internal-${MULTIMACH_TARGET_SYS}
 	install -d ${dest}${base_libdir} ${dest}${bindir} ${dest}${libdir} ${dest}${datadir}
-	cp -fpPR ${D}${base_libdir}/* ${dest}${base_libdir}
+	if [ "${base_libdir}" != "${libdir}" ]; then
+		cp -fpPR ${D}${base_libdir}/* ${dest}${base_libdir}
+	fi
 	mv ${D}${bindir}/localedef ${dest}${bindir}
-        mv ${D}${libdir}/gconv ${dest}${libdir}
+	mv ${D}${libdir}/gconv ${dest}${libdir}
 	cp -fpPR ${D}${libdir}/* ${dest}${libdir}
         mv ${D}${datadir}/i18n ${dest}${datadir}
 	cp -fpPR ${D}${datadir}/* ${dest}${datadir}
