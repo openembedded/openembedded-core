@@ -4,6 +4,8 @@ Its more enforced by libtool 2.4. I have not checked it with older libtool
 libiconv 1.11.x is relatively old release and libtool 2.4 did not exist when it
 was released these kind of problem are more likely
 
+Upstream-Status: Pending
+
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 Index: libiconv-1.11.1/lib/Makefile.in

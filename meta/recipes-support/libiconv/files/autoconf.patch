@@ -2,6 +2,8 @@ It adds the variables that are needed
 for autoconf 2.65 to reconfigure libiconv and defines the m4 macros 
 directory. Its imported from OE.
 
+Upstream-Status: Pending
+
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 Index: libiconv-1.11.1/configure.ac
