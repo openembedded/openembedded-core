@@ -7,7 +7,9 @@ PR = "r0"
 
 DEPENDS = "libxml2"
 
-SRC_URI = "http://libarchive.googlecode.com/files/libarchive-${PV}.tar.gz \
+# We need to repack the tarball due undistributable content on the upstream one.
+# More details at http://code.google.com/p/libarchive/issues/detail?id=162
+SRC_URI = "http://autobuilder.yoctoproject.org/sources/libarchive-${PV}.tar.gz \
            file://0001-Patch-from-upstream-revision-1990.patch \
            file://0002-Patch-from-upstream-revision-1991.patch \
            file://0003-Patch-from-upstream-rev-2516.patch \
@@ -17,8 +19,8 @@ SRC_URI = "http://libarchive.googlecode.com/files/libarchive-${PV}.tar.gz \
            file://0007-Ignore-ENOSYS-error-when-setting-up-xattrs.-Closes-5.patch \
            "
 
-SRC_URI[md5sum] = "83b237a542f27969a8d68ac217dc3796"
-SRC_URI[sha256sum] = "86cffa3eaa28d3116f5d0b20284026c3762cf4a2b52b9844df2b494d4a89f688"
+SRC_URI[md5sum] = "71242da5191f1218f13dd520d95a870e"
+SRC_URI[sha256sum] = "8cd55db11b1d6001ff8007e4d22b6f4a4bb215e70750e19ab44b84b99ab76053"
 
 inherit autotools lib_package
 
