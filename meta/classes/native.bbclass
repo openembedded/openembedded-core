@@ -67,6 +67,8 @@ base_prefix = "${STAGING_DIR_NATIVE}"
 prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
 exec_prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
 
+libdir = "${STAGING_DIR_NATIVE}${libdir_native}"
+
 NATIVE_PACKAGE_PATH_SUFFIX = ""
 bindir .= "${NATIVE_PACKAGE_PATH_SUFFIX}"
 libdir .= "${NATIVE_PACKAGE_PATH_SUFFIX}"
