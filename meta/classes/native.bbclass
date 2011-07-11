@@ -15,10 +15,6 @@ PACKAGE_ARCH = "${BUILD_ARCH}"
 OECMAKE_RPATH = "${libdir}"
 OECMAKE_RPATH_virtclass-native = "${libdir}"
 
-BASE_PACKAGE_ARCH = "${BUILD_ARCH}"
-BASEPKG_HOST_SYS = "${BUILD_ARCH}${BUILD_VENDOR}-${BUILD_OS}"
-BASEPKG_TARGET_SYS = "${BUILD_ARCH}${BUILD_VENDOR}-${BUILD_OS}"
-
 # When this class has packaging enabled, setting 
 # RPROVIDES becomes unnecessary.
 RPROVIDES = "${PN}"

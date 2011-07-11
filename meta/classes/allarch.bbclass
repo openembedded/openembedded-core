@@ -2,7 +2,6 @@
 # This class is used for architecture independent recipes/data files (usally scripts)
 #
 
-BASE_PACKAGE_ARCH = "all"
 PACKAGE_ARCH = "all"
 
 # No need for virtual/libc or a cross compiler
