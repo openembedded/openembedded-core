@@ -20,6 +20,9 @@ OPKG_POSTPROCESS_COMMANDS = "ipk_insert_feed_uris"
 
 opkglibdir = "${localstatedir}/lib/opkg"
 
+# Which packages to not install on the basis of a recommendation
+BAD_RECOMMENDATIONS ?= ""
+
 fakeroot rootfs_ipk_do_rootfs () {
 	set -x
 
@@ -29,6 +32,23 @@ fakeroot rootfs_ipk_do_rootfs () {
 	${OPKG_PREPROCESS_COMMANDS}
 
 	mkdir -p ${T}/
+ 
+	STATUS=${IMAGE_ROOTFS}${opkglibdir}/status
+	mkdir -p ${IMAGE_ROOTFS}${opkglibdir}
+
+	opkg-cl ${IPKG_ARGS} update
+
+	# prime the status file with bits that we don't want
+	for i in ${BAD_RECOMMENDATIONS}; do
+		pkginfo="`opkg-cl ${IPKG_ARGS} info $i`"
+		if [ ! -z "$pkginfo" ]; then
+			echo "$pkginfo" | grep -e '^Package:' -e '^Architecture:' -e '^Version:' >> $STATUS
+			echo "Status: deinstall ok not-installed" >> $STATUS
+			echo >> $STATUS
+		else
+			echo "Requested ignored recommendation $i is not a package"
+		fi
+	done
 
 	#install
 	export INSTALL_PACKAGES_ATTEMPTONLY_IPK="${PACKAGE_INSTALL_ATTEMPTONLY}"
