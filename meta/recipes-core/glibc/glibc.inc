@@ -48,7 +48,7 @@ do_rig_locales() {
 		head -n 3 $INFILE > $OUTFILE
 		for i in ${LIMIT_BUILT_LOCALES}; do
 			echo 
-			grep $i $INFILE >> $OUTFILE
+			grep $i $INFILE >> $OUTFILE || true
 		done
 		head --lines=-1 $OUTFILE > $INFILE
 		tail --lines=1 $OUTFILE | sed 's#\\##' >> $INFILE
