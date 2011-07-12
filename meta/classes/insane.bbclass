@@ -416,6 +416,11 @@ def package_qa_walk(path, warnfuncs, errorfuncs, skip, package, d):
     return len(errors) == 0
 
 def package_qa_check_rdepends(pkg, pkgdest, skip, d):
+    # Don't do this check for kernel/module recipes, there aren't too many debug/development
+    # packages and you can get false positives e.g. on kernel-module-lirc-dev
+    if bb.data.inherits_class("kernel", d) or bb.data.inherits_class("module-base", d):
+        return True
+
     sane = True
     if not "-dbg" in pkg and not "task-" in pkg and not "-image" in pkg:
         # Copied from package_ipk.bbclass
