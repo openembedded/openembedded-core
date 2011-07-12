@@ -1,2 +1,0 @@
-# <type> <owner> <group> <mode> <path> <linksource>
-d pulse pulse 0755 /var/run/pulse none
