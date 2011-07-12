@@ -14,10 +14,12 @@ FILES_${PN} = "\
   ${bindir}/${TARGET_PREFIX}gcc \
   ${bindir}/${TARGET_PREFIX}gccbug \
   ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/collect2 \
-  ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/* \
+  ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/cc* \
+  ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/lto* \
+  ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/lib*${SOLIBS} \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/*.o \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/specs \
-  ${gcclibdir}/${TARGET_SYS}/${BINV}/lib* \
+  ${gcclibdir}/${TARGET_SYS}/${BINV}/lib*${SOLIBS} \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/include \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/include-fixed \
 "
@@ -26,6 +28,8 @@ FILES_${PN}-dbg += "\
 "
 FILES_${PN}-dev = "\
   ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/include/ \
+  ${gcclibdir}/${TARGET_SYS}/${BINV}/lib*${SOLIBSDEV} \
+  ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/lib*${SOLIBSDEV} \
 "
 FILES_${PN}-symlinks = "\
   ${bindir}/cc \
@@ -80,7 +84,6 @@ do_install () {
 	# Cleanup some of the ${libdir}{,exec}/gcc stuff ...
 	rm -r ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
 	rm -r ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
-	rm -r ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/*.so
 	rm -r ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/*.la
 
 	# Hack around specs file assumptions
