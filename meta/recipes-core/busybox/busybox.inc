@@ -47,8 +47,8 @@ def busybox_cfg(feature, features, tokens, cnf, rem):
 # Map distro and machine features to config settings
 def features_to_busybox_settings(d):
 	cnf, rem = ([], [])
-	distro_features = bb.data.getVar('DISTRO_FEATURES', d).split()
-	machine_features = bb.data.getVar('MACHINE_FEATURES', d).split()
+	distro_features = bb.data.getVar('DISTRO_FEATURES', d, True).split()
+	machine_features = bb.data.getVar('MACHINE_FEATURES', d, True).split()
 	busybox_cfg('ipv6', distro_features, 'CONFIG_FEATURE_IPV6', cnf, rem)
 	busybox_cfg('largefile', distro_features, 'CONFIG_LFS', cnf, rem)
 	busybox_cfg('largefile', distro_features, 'CONFIG_FDISK_SUPPORT_LARGE_DISKS', cnf, rem)
