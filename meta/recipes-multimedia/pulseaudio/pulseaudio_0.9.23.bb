@@ -1,6 +1,6 @@
 require pulseaudio.inc
 
-PR = "r1"
+PR = "r3"
 
 DEPENDS += "gdbm speex"
 
