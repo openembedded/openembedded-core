@@ -27,6 +27,7 @@ EXTRA_OECONF = "\
 		--with-alsa \
 		--with-oss \
 		--without-hal \
+		--disable-hal \
 "
 
 PARALLEL_MAKE = ""
@@ -108,7 +109,6 @@ python populate_packages_prepend() {
 }
 
 RDEPENDS_pulseaudio-module-console-kit =+ "consolekit"
-RDEPENDS_pulseaudio-module-hal-detect =+ "hal"
 RDEPENDS_pulseaudio-server = " \
     pulseaudio-module-device-restore \
     pulseaudio-module-stream-restore \
@@ -119,7 +119,6 @@ RDEPENDS_pulseaudio-server = " \
     pulseaudio-module-alsa-source \
     pulseaudio-module-alsa-card \
     pulseaudio-module-native-protocol-unix \
-    pulseaudio-module-hal-detect \
     pulseaudio-module-default-device-restore \
     pulseaudio-module-rescue-streams \
     pulseaudio-module-always-sink \
