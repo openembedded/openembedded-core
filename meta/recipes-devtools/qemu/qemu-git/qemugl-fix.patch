@@ -5,7 +5,7 @@ support 32/64b combination of target/host.
 
 This is not perfect fix, and we need consider other GL alternatives in future.
 
-Upstream-Status: other (logical part of qemu-git-qemugl-host.patch)
+Upstream-Status: Inappropriate [other (logical part of qemu-git-qemugl-host.patch)]
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 

@@ -3,7 +3,7 @@ From: Ilya Yanok <yanok@emcraft.com>
 Date: Mon, 20 Jun 2011 12:45:37 +0000
 Subject: config.mk: move LDSCRIPT processing to the top-level Makefile
 
-Upstream-Status: Applied
+Upstream-Status: Accepted
 
 LDSCRIPT is used only from the top-level Makefile and only when the
 system is configured so we can move LDSCRIPT and CONFIG_SYS_LDSCRIPT

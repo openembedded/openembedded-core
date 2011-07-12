@@ -1,4 +1,3 @@
-Upstream-Status: Pending
 
 On mips target, binutils currently sets DT_MIPS_RLD_MAP to 0 in dynamic
 section if a --version-script sets _RLD_MAP to local. This is apparently
@@ -6,9 +5,10 @@ a binutils bug, but libc shouldn't segfault in this case.
 
 see also: http://sourceware.org/bugilla/show_bug.cgi?id=11615
 
+Upstream-Status: Pending
+
 9/19/2010 - added by Qing He <qing.he@intel.com>
 
-Upstream-Status: Pending
 
 ---
 diff -ru glibc-2.10.1.orig/ports/sysdeps/mips/dl-machine.h glibc-2.10.1/ports/sysdeps/mips/dl-machine.h

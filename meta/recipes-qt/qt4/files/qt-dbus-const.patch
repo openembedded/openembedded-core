@@ -1,12 +1,13 @@
 Remove "const" usage that causes compile failure building qt4-tools-nativesdk
 
+Upstream-Status: Denied [possible retry]
+
 Patch has apparently been rejected upstream, not because it is invalid
 but because the submitter did not submit a merge request for it, so the
 validity of the patch upstream is uncertain. For further details see:
 http://bugreports.qt.nokia.com/browse/QTBUG-17962
 
 Original Author: Pavel Heimlich <tropikhajma at gmail.com>
-Upstream-Status: Rejected
 
 --- qt-everywhere-opensource-src-4.7.3/src/dbus/qdbusintegrator.cpp.orig	2011-03-12 02:11:32.313467991 +0100
 +++ qt-everywhere-opensource-src-4.7.3/src/dbus/qdbusintegrator.cpp	2011-03-12 02:11:03.795809176 +0100

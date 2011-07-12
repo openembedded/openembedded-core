@@ -3,7 +3,7 @@ From: Koen Kooi <koen@dominion.thruhere.net>
 Date: Sat, 18 Jun 2011 23:52:17 +0200
 Subject: [PATCH 5/7] don't leak buildpaths into perl hashbang
 
-Upstream-Status: Unknown
+Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
 ---

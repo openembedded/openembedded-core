@@ -2,7 +2,7 @@ Fix a possible overflow (reported by _FORTIFY_SOURCE=2)
 
 Ported from Gentoo
 
-Upstream-Status: Unknown
+Upstream-Status: Pending
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 

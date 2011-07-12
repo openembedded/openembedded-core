@@ -3,7 +3,7 @@ From: Koen Kooi <koen@dominion.thruhere.net>
 Date: Sat, 18 Jun 2011 23:51:35 +0200
 Subject: [PATCH 3/7] gatomic-proper-pointer-get-cast.patch
 
-Upstream-Status: Unknown
+Upstream-Status: Pending
 
 Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
 ---

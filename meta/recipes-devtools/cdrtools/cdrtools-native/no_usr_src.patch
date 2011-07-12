@@ -1,7 +1,7 @@
 Remove hard-coded references to /usr/src/linux/include to avoid
 host contamination.
 
-Upstream-Status: [Other (build-system specific)]
+Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 

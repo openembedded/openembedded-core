@@ -6,7 +6,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Upstream-Status: Applied
+Upstream-Status: Accepted
 
 "make tools-all" should allow building tools such as mkimage and the new
 imximage without any config, but imximage.c currently fails to build
