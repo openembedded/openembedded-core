@@ -118,7 +118,7 @@ Common targets are:
     core-image-sato
     meta-toolchain
     meta-toolchain-sdk
-    adt-install
+    adt-installer
     meta-ide-support
 
 You can also run generated qemu images with a command like 'runqemu qemux86'
