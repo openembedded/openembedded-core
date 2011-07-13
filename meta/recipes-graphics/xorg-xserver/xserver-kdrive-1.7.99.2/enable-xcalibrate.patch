@@ -1,3 +1,7 @@
+Upstream-Status: Pending
+
+Signed-off-by: Yu Ke <ke.yu@intel.com>
+
 ---
  Xext/Makefile.am           |    6 ++++++
  configure.ac               |   11 +++++++++--

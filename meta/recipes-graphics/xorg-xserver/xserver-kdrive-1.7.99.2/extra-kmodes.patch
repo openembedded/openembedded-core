@@ -1,5 +1,9 @@
 Add some extra video modes and change the default to VGA.
 
+Upstream-Status: Pending
+
+Signed-off-by: Yu Ke <ke.yu@intel.com>
+
 ---
  hw/kdrive/src/kmode.c |   41 +++++++++++++++++++++++++++++++++++++++--
  1 file changed, 39 insertions(+), 2 deletions(-)

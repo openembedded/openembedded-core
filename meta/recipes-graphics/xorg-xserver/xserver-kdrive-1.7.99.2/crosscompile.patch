@@ -1,3 +1,7 @@
+Upstream-Status: Inappropriate [cross compiling]
+
+Signed-off-by: Yu Ke <ke.yu@intel.com>
+
 Index: xorg-server-1.7.99.2/configure.ac
 ===================================================================
 --- xorg-server-1.7.99.2.orig/configure.ac	2010-01-29 16:38:49.000000000 +0000

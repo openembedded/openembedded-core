@@ -1,3 +1,7 @@
+Upstream-Status: Inappropriate [disable feature]
+
+Signed-off-by: Yu Ke <ke.yu@intel.com>
+
 --- xserver/hw/kdrive/linux/linux.c.orig	2005-04-23 15:56:13.988849232 +0000
 +++ xserver/hw/kdrive/linux/linux.c	2005-04-23 15:57:05.001094192 +0000
 @@ -342,7 +342,7 @@

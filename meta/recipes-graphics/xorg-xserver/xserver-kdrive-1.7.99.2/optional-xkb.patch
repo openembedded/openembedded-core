@@ -1,3 +1,7 @@
+Upstream-Status: Pending
+
+Signed-off-by: Yu Ke <ke.yu@intel.com>
+
 Index: xorg-server-1.2.0/Makefile.am
 ===================================================================
 --- xorg-server-1.2.0.orig/Makefile.am	2007-01-23 06:39:15.000000000 +0100

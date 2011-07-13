@@ -1,3 +1,7 @@
+Upstream-Status: Pending
+
+Signed-off-by: Yu Ke <ke.yu@intel.com>
+
 --- xserver/hw/kdrive/fbdev/fbinit.c~	2006-01-31 17:09:33.000000000 +0100
 +++ xserver/hw/kdrive/fbdev/fbinit.c	2006-01-31 17:11:55.000000000 +0100
 @@ -28,6 +28,8 @@

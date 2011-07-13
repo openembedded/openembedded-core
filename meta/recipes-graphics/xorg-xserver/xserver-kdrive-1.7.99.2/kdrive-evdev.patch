@@ -1,5 +1,10 @@
 # Kdrive evdev support patch, posted by Ander Conselvan de Oliveira at
 # http://lists.freedesktop.org/archives/xorg/2005-December/011635.html
+
+Upstream-Status: Pending
+
+Signed-off-by: Yu Ke <ke.yu@intel.com>
+
 diff -u -r --exclude=CVS --exclude=Makefile --exclude='*.o' --exclude=ephyr --exclude='*.Po' xserver.original/hw/kdrive/linux/evdev.c xserver/hw/kdrive/linux/evdev.c
 --- xserver.original/hw/kdrive/linux/evdev.c	2005-12-16 10:36:05.000000000 -0200
 +++ xserver/hw/kdrive/linux/evdev.c	2005-12-16 10:40:51.077410192 -0200

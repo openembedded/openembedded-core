@@ -1,3 +1,7 @@
+Upstream-Status: Pending
+
+Signed-off-by: Yu Ke <ke.yu@intel.com>
+
 Index: xorg-server-1.7.99.2/dix/window.c
 ===================================================================
 --- xorg-server-1.7.99.2.orig/dix/window.c	2009-11-04 16:25:50.000000000 +0000

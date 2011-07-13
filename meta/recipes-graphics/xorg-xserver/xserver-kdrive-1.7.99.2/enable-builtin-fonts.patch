@@ -1,3 +1,7 @@
+Upstream-Status: Pending
+
+Signed-off-by: Yu Ke <ke.yu@intel.com>
+
 --- xorg-server-X11R7.1-1.1.0/dix/dixfonts.c.orig	2006-06-08 14:49:12.158684250 +0200
 +++ xorg-server-X11R7.1-1.1.0/dix/dixfonts.c	2006-06-08 14:49:52.493205000 +0200
 @@ -52,8 +52,8 @@
