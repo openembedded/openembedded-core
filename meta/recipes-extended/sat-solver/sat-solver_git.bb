@@ -8,7 +8,7 @@ DEPENDS = "libcheck rpm zlib expat db"
 
 SRCREV = "0a7378d5f482f477a01cf1690d76871ab8bdcc32"
 PV = "0.0-git${SRCPV}"
-PR = "r10"
+PR = "r11"
 
 PARALLEL_MAKE=""
 
@@ -23,7 +23,9 @@ SRC_URI = "git://gitorious.org/opensuse/sat-solver.git;protocol=git \
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECMAKE += "-DLIB=lib -DRPM5=RPM5 -DOE_CORE=OE_CORE"
+EXTRA_OECMAKE += "-DRPM5=RPM5 -DOE_CORE=OE_CORE"
+
+EXTRA_OECMAKE += " -DLIB=${@os.path.basename('${libdir}')}"
 
 inherit cmake pkgconfig
 
