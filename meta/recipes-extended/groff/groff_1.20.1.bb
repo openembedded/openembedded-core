@@ -18,6 +18,7 @@ DEPENDS_virtclass-native = ""
 
 inherit autotools
 
+EXTRA_OECONF = "--without-x"
 PARALLEL_MAKE = ""
 
 do_configure_prepend() {
