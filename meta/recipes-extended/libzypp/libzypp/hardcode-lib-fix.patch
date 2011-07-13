@@ -1,0 +1,22 @@
+tools/CMakeLists.txt: replace the hardcode "lib"
+
+replace the hardcode "lib" with LIB_INSTALL_DIR
+this will work with non /usr/lib libdir case
+
+Upstream-Status: Pending
+
+Signed-off-by: Yu Ke <ke.yu@intel.com>
+
+Index: libzypp/tools/CMakeLists.txt
+===================================================================
+--- libzypp.orig/tools/CMakeLists.txt
++++ libzypp/tools/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ 
+ ADD_SUBDIRECTORY( package-manager )
+ 
+-INSTALL( FILES notify-message DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/zypp" )
++INSTALL( FILES notify-message DESTINATION "${LIB_INSTALL_DIR}/zypp" )
+ 
+ ## ############################################################
+ 
