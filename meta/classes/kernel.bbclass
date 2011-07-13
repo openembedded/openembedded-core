@@ -195,7 +195,7 @@ kernel_do_configure() {
 	fi
 }
 
-kernel_do_configure[depends] += "${INITRAMFS_TASK}"
+do_configure[depends] += "${INITRAMFS_TASK}"
 
 do_menuconfig() {
         export DISPLAY='${DISPLAY}'
