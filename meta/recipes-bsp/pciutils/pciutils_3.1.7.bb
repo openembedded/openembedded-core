@@ -9,13 +9,14 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 DEPENDS = "zlib"
 RDEPENDS_${PN} = "${PN}-ids"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.bz2 \
            file://configure.patch \
            file://pcimodules-pciutils.diff \
            file://lib-build-fix.patch \
-           file://guess-fix.patch"
+           file://guess-fix.patch \
+           file://makefile.patch"
 
 SRC_URI[md5sum] = "35222edb86b50a6641352c66fe829b2e"
 SRC_URI[sha256sum] = "d8fe23b6966c1abf29b3b38b08b0cf33f731cd6e6a89d9b8d2b8d5e982c3f544"
