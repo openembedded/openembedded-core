@@ -34,7 +34,6 @@ ac_cv_sizeof_unsigned_long=${ac_cv_sizeof_unsigned_long=4}
 ac_cv_sizeof_unsigned_long_long=${ac_cv_sizeof_unsigned_long_long=8}
 ac_cv_sizeof_signed_char=${ac_cv_sizeof_signed_char=1}
 
-ac_cv_sys_restartable_syscalls=yes
 ac_cv_uchar=${ac_cv_uchar=no}
 ac_cv_uint=${ac_cv_uint=yes}
 ac_cv_ulong=${ac_cv_ulong=yes}

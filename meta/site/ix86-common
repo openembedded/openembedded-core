@@ -47,7 +47,6 @@ lf_cv_sane_realloc=yes
 jm_cv_func_gettimeofday_clobber=no
 samba_cv_HAVE_GETTIMEOFDAY_TZ=yes
 bf_lsbf=1
-ac_cv_sys_restartable_syscalls=yes
 ac_cv_uchar=${ac_cv_uchar=no}
 ac_cv_uint=${ac_cv_uint=yes}
 ac_cv_ulong=${ac_cv_ulong=yes}
@@ -126,7 +125,6 @@ glib_cv_use_pid_surrogate=${glib_cv_use_pid_surrogate=yes}
 ac_cv_func_posix_getgrgid_r=${ac_cv_func_posix_getgrgid_r=yes}
 
 # guile
-ac_cv_sys_restartable_syscalls=yes
 ac_cv_uchar=${ac_cv_uchar=no}
 ac_cv_uint=${ac_cv_uint=yes}
 ac_cv_ulong=${ac_cv_ulong=yes}
@@ -165,7 +163,6 @@ cv_mono_sizeof_sunpath=108
 # mysql
 mysql_cv_func_atomic_sub=${mysql_cv_func_atomic_sub=yes}
 mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=yes}
-ac_cv_conv_longlong_to_float=${ac_cv_conv_longlong_to_float=yes}
 
 # ORBit2
 ac_cv_alignof_CORBA_boolean=1

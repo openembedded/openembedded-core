@@ -29,7 +29,6 @@ ac_cv_alignof_CORBA_long_double=4
 ac_cv_c_long_double=${ac_cv_c_long_double=yes}
 
 
-ac_cv_sys_restartable_syscalls=yes
 ac_cv_uchar=${ac_cv_uchar=no}
 ac_cv_uint=${ac_cv_uint=yes}
 ac_cv_ulong=${ac_cv_ulong=yes}

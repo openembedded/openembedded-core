@@ -138,7 +138,6 @@ cv_mono_sizeof_sunpath=108
 # mysql
 mysql_cv_func_atomic_sub=${mysql_cv_func_atomic_sub=no}
 mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=no}
-ac_cv_conv_longlong_to_float=${ac_cv_conv_longlong_to_float=yes}
 
 # nano
 ac_cv_regexec_segfault_emptystr=${ac_cv_regexec_segfault_emptystr=no}
