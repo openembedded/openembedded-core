@@ -243,7 +243,7 @@ Index: Python-2.6.6/configure.in
  
 +AC_SUBST(LIB)
 +AC_MSG_CHECKING(LIB)
-+LIB=`basename ${LIBDIR}`
++LIB=`basename ${libdir}`
 +AC_MSG_RESULT($LIB)
  
  AC_SUBST(LIBRARY)
