@@ -11,6 +11,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=de10de48642ab74318e893a61105afbb"
 SECTION = "base"
 
 export EXTRA_CFLAGS = "${CFLAGS}"
+export EXTRA_LDFLAGS = "${LDFLAGS}"
+
 PACKAGES =+ "${PN}-httpd ${PN}-udhcpd ${PN}-udhcpc ${PN}-syslog ${PN}-mdev"
 
 FILES_${PN}-httpd = "${sysconfdir}/init.d/busybox-httpd /srv/www"
