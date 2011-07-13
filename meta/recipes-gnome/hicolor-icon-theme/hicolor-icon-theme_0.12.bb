@@ -10,7 +10,7 @@ inherit gnome
 
 PR = "r0"
 
-SRC_URI = "http://icon-theme.freedesktop.org/releases/${P}.tar.gz \
+SRC_URI = "http://icon-theme.freedesktop.org/releases/${BPN}-${PV}.tar.gz \
         file://index.theme"
 
 SRC_URI[md5sum] = "55cafbcef8bcf7107f6d502149eb4d87"
