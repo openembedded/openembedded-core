@@ -89,6 +89,11 @@ ac_cv_lib_m_sin=${ac_cv_lib_m_sin=yes}
 
 #orbit
 libIDL_cv_long_long_format=ll
+
+# bash
+bash_cv_func_sigsetjmp=${bash_cv_func_sigsetjmp=present}
+
+# ORBit2
 ac_cv_alignof_CORBA_boolean=1
 ac_cv_alignof_CORBA_char=1
 ac_cv_alignof_CORBA_double=8
