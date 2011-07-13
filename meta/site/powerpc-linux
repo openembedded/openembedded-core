@@ -4,9 +4,6 @@ ac_cv_func_setgrent_void=yes
 ac_cv_func_posix_getpwuid_r=${ac_cv_func_posix_getpwuid_r=yes}
 ac_cv_func_posix_getgrgid_r=${ac_cv_func_posix_getgrgid_r=yes}
 
-# bash
-bash_cv_have_mbstate_t=${bash_cv_have_mbstate_t=yes}
-
 # startup-notification
 lf_cv_sane_realloc=yes
 

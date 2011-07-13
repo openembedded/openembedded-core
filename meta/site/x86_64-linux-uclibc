@@ -24,7 +24,6 @@ ac_cv_sizeof_short_int=${ac_cv_sizeof_short_int=2}
 ac_cv_sizeof_size_t=${ac_cv_sizeof_size_t=8}
 ac_cv_sizeof_void_p=${ac_cv_sizeof_void_p=8}
 ac_cv_strerror_r_SUSv3=${ac_cv_strerror_r_SUSv3=no}
-bash_cv_have_mbstate_t=${bash_cv_have_mbstate_t=yes}
 db_cv_alignp_t=${db_cv_alignp_t='unsigned long long'}
 db_cv_align_t=${db_cv_align_t='unsigned long long'}
 db_cv_fcntl_f_setfd=${db_cv_fcntl_f_setfd=yes}

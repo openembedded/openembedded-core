@@ -53,6 +53,3 @@ glib_cv_stack_grows=${glib_cv_stack_grows=no}
 
 #linux
 ac_cv_linux_vers=${ac_cv_linux_vers=2}
-
-#bash
-bash_cv_have_mbstate_t=${bash_cv_have_mbstate_t=yes}
