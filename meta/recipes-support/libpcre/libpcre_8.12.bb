@@ -17,6 +17,7 @@ SRC_URI[sha256sum] = "c63070d461edc451ec9457f2324e152a531e907d5c5d2d8f8121e725ac
 S = "${WORKDIR}/pcre-${PV}"
 
 PROVIDES = "pcre"
+DEPENDS = "bzip2 zlib readline"
 
 inherit autotools binconfig
 
