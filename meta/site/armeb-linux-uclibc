@@ -31,8 +31,6 @@ ac_cv_time_r_type=${ac_cv_time_r_type=POSIX}
 
 # samba
 samba_cv_HAVE_GETTIMEOFDAY_TZ=${samba_cv_HAVE_GETTIMEOFDAY_TZ=yes}
-samba_cv_HAVE_IFACE_IFCONF=${samba_cv_HAVE_IFACE_IFCONF=yes}
-samba_cv_HAVE_IFACE_IFREQ=${samba_cv_HAVE_IFACE_IFREQ=yes}
 samba_cv_USE_SETEUID=${samba_cv_USE_SETEUID=yes}
 samba_cv_USE_SETRESUID=${samba_cv_USE_SETRESUID=yes}
 samba_cv_USE_SETREUID=${samba_cv_USE_SETREUID=yes}
