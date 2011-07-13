@@ -1,6 +1,6 @@
 require gcc-common.inc
 
-PR = "r8"
+PR = "r0"
 
 # Third digit in PV should be incremented after a minor release
 # happens from this branch on gcc e.g. currently its 4.6.0
@@ -8,7 +8,7 @@ PR = "r8"
 # on branch then PV should be incremented to 4.6.1+svnr${SRCPV}
 # to reflect that change
 
-PV = "4.6.0+svnr${SRCPV}"
+PV = "4.6.1+svnr${SRCPV}"
 
 # BINV should be incremented after updating to a revision
 # after a minor gcc release (e.g. 4.6.1 or 4.6.2) has been made
@@ -18,7 +18,7 @@ PV = "4.6.0+svnr${SRCPV}"
 
 BINV = "4.6.1"
 
-SRCREV = 175150
+SRCREV = 175454
 BRANCH = "gcc-4_6-branch"
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/gcc-4.6' ], d)}"
 
