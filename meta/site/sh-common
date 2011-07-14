@@ -1,7 +1,5 @@
 ac_cv_func_setpgrp_void=yes
 ac_cv_func_setgrent_void=yes
-ac_cv_func_malloc_0_nonnull=yes
-ac_cv_func_malloc_works=yes
 ac_cv_func_posix_getpwuid_r=${ac_cv_func_posix_getpwuid_r=yes}
 ac_cv_func_setvbuf_reversed=no
 ac_cv_sizeof___int64=${ac_cv_sizeof___int64=0}
@@ -178,10 +176,6 @@ compat_cv_func_dirname_works=${compat_cv_func_dirname_works=no}
 slrn_cv___va_copy=${slrn_cv___va_copy=yes}
 slrn_cv_va_copy=${slrn_cv_va_copy=no}
 slrn_cv_va_val_copy=${slrn_cv_va_val_copy=yes}
-ac_cv_func_realloc_works=${ac_cv_func_realloc_works=yes}
-ac_cv_func_realloc_0_nonnull=${ac_cv_func_realloc_0_nonnull=yes}
-ac_cv_func_malloc_works=${ac_cv_func_malloc_works=yes}
-ac_cv_func_malloc_0_nonnull=${ac_cv_func_malloc_0_nonnull=yes}
 
 # startup-notification
 lf_cv_sane_realloc=yes

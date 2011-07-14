@@ -3,9 +3,6 @@ ac_cv_func_getpgrp_void=${ac_cv_func_getpgrp_void=yes}
 ac_cv_func_setvbuf_reversed=${ac_cv_func_setvbuf_reversed=no}
 ac_cv_func_posix_getpwuid_r=${ac_cv_func_posix_getpwuid_r=yes}
 
-# tslib, others
-ac_cv_func_malloc_0_nonnull=${ac_cv_func_malloc_0_nonnull=yes}
-
 # bash
 ac_cv_c_long_double=${ac_cv_c_long_double=no}
 bash_cv_func_sigsetjmp=${bash_cv_func_sigsetjmp=present}

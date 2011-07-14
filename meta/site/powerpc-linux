@@ -7,10 +7,6 @@ ac_cv_func_posix_getgrgid_r=${ac_cv_func_posix_getgrgid_r=yes}
 # startup-notification
 lf_cv_sane_realloc=yes
 
-# flex
-ac_cv_func_realloc_works=${ac_cv_func_realloc_works=yes}
-ac_cv_func_realloc_0_nonnull=${ac_cv_func_realloc_0_nonnull=yes}
-
 # glib
 glib_cv_stack_grows=${glib_cv_stack_grows=no}
 glib_cv_uscore=${glib_cv_uscore=no}
