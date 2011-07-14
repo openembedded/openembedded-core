@@ -25,20 +25,8 @@ cvs_cv_func_printf_ptr=${cvs_cv_func_printf_ptr=yes}
 # db (sleepycat)
 db_cv_fcntl_f_setfd=${db_cv_fcntl_f_setfd=yes}
 db_cv_sprintf_count=${db_cv_sprintf_count=yes}
-db_cv_path_ar=${db_cv_path_ar=/usr/bin/ar}
-db_cv_path_chmod=${db_cv_path_chmod=/bin/chmod}
-db_cv_path_cp=${db_cv_path_cp=/bin/cp}
-db_cv_path_ln=${db_cv_path_ln=/bin/ln}
-db_cv_path_mkdir=${db_cv_path_mkdir=/bin/mkdir}
-db_cv_path_ranlib=${db_cv_path_ranlib=/usr/bin/ranlib}
-db_cv_path_rm=${db_cv_path_rm=/bin/rm}
-db_cv_path_sh=${db_cv_path_sh=/bin/sh}
-db_cv_path_strip=${db_cv_path_strip=/usr/bin/strip}
 db_cv_align_t=${db_cv_align_t='unsigned long long'}
 db_cv_alignp_t=${db_cv_alignp_t='unsigned long'}
-db_cv_mutex=${db_cv_mutex=no}
-db_cv_posixmutexes=${db_cv_posixmutexes=no}
-db_cv_uimutexes=${db_cv_uimutexes=no}
 
 # D-BUS
 ac_cv_func_posix_getpwnam_r=${ac_cv_func_posix_getpwnam_r=yes}
