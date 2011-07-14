@@ -263,6 +263,7 @@ python do_package_ipk () {
 		fields.append(["Section: %s\n", ['SECTION']])
 		fields.append(["Priority: %s\n", ['PRIORITY']])
 		fields.append(["Maintainer: %s\n", ['MAINTAINER']])
+		fields.append(["License: %s\n", ['LICENSE']])
 		fields.append(["Architecture: %s\n", ['PACKAGE_ARCH']])
 		fields.append(["OE: %s\n", ['PN']])
 		fields.append(["Homepage: %s\n", ['HOMEPAGE']])
