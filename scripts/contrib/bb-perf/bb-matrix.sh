@@ -62,8 +62,8 @@ for BB in $BB_RANGE; do
 		echo "BB=$BB PM=$PM Logging to $BB_LOG"
 
 		# Export the variables under test and run the bitbake command
-		export BB_NUMBER_THREADS="${BB##*0}"
-		export PARALLEL_MAKE="-j ${PM##*0}"
+		export BB_NUMBER_THREADS=$(echo $BB | sed 's/^0*//')
+		export PARALLEL_MAKE="-j $(echo $PM | sed 's/^0*//')"
 		/usr/bin/time -f "$BB $PM $TIME_STR" -a -o $RUNTIME_LOG $BB_CMD &> $BB_LOG
 		
 		echo "  $(tail -n1 $RUNTIME_LOG)"
