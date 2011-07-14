@@ -1,0 +1,39 @@
+Add knowledge about License field in ipk headers
+
+Upstream-Status: Pending
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: opkg-utils/opkg.py
+===================================================================
+--- opkg-utils.orig/opkg.py	2010-11-01 04:52:35.000000000 -0700
++++ opkg-utils/opkg.py	2011-07-13 15:18:03.900037344 -0700
+@@ -145,6 +145,7 @@
+         self.priority = None
+         self.tags = None
+         self.fn = fn
++        self.license = None
+ 
+         if fn:
+             # see if it is deb format
+@@ -319,6 +320,12 @@
+     def get_section(self, section):
+         return self.section
+ 
++    def set_license(self, license):
++        self.license = license
++
++    def get_license(self, license):
++        return self.license
++
+     def get_file_list(self):
+         if not self.fn:
+             return []
+@@ -425,6 +432,7 @@
+         if self.description: out = out + "Description: %s\n" % (self.description)
+         if self.oe: out = out + "OE: %s\n" % (self.oe)
+         if self.homepage: out = out + "HomePage: %s\n" % (self.homepage)
++        if self.license: out = out + "License: %s\n" % (self.license)
+         if self.priority: out = out + "Priority: %s\n" % (self.priority)
+         if self.tags: out = out + "Tags: %s\n" % (self.tags)
+         out = out + "\n"
