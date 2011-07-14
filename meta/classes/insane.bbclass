@@ -92,7 +92,7 @@ def package_qa_get_machine_dict():
        }
 
 
-WARN_QA ?= "dev-so rpaths debug-deps dev-deps debug-files arch la2 pkgconfig desktop la ldflags perms"
+WARN_QA ?= "dev-so rpaths debug-deps dev-deps debug-files arch la2 pkgconfig desktop la ldflags perms useless-rpaths"
 ERROR_QA ?= ""
 #ERROR_QA ?= "rpaths debug-deps dev-deps debug-files arch pkgconfig perms"
 
@@ -140,6 +140,31 @@ def package_qa_check_rpath(file,name, d, elf, messages):
         for dir in bad_dirs:
             if dir in line:
                 messages.append("package %s contains bad RPATH %s in file %s" % (name, line, file))
+
+QAPATHTEST[useless-rpaths] = "package_qa_check_useless_rpaths"
+def package_qa_check_useless_rpaths(file,name, d, elf, messages):
+    """
+    Check for RPATHs that are useless but not dangerous
+    """
+    if not elf:
+        return
+
+    objdump = bb.data.getVar('OBJDUMP', d, True)
+    env_path = bb.data.getVar('PATH', d, True)
+
+    libdir = bb.data.getVar("libdir", d, True)
+    base_libdir = bb.data.getVar("base_libdir", d, True)
+
+    import re
+    rpath_re = re.compile("\s+RPATH\s+(.*)")
+    for line in os.popen("LC_ALL=C PATH=%s %s -p '%s' 2> /dev/null" % (env_path, objdump, file), "r"):
+    	m = rpath_re.match(line)
+	if m:
+	   rpath = m.group(1)
+	   if rpath == libdir or rpath == base_libdir:
+	      # The dynamic linker searches both these places anyway.  There is no point in
+	      # looking there again.
+	      messages.append("dynamic section contains probably-redundant RPATH %s" % rpath)
 
 QAPATHTEST[dev-so] = "package_qa_check_dev"
 def package_qa_check_dev(path, name, d, elf, messages):
@@ -238,22 +263,19 @@ def package_qa_hash_style(path, name, d, elf, messages):
     objdump = bb.data.getVar('OBJDUMP', d, True)
     env_path = bb.data.getVar('PATH', d, True)
 
-    sane = True
-    elf = False
-    # A bit hacky. We do not know if path is an elf binary or not
-    # we will search for 'NEEDED' or 'INIT' as this should be printed...
-    # and come before the HASH section (guess!!!) and works on split out
-    # debug symbols too
+    sane = False
+    has_syms = False
+
+    # If this binary has symbols, we expect it to have GNU_HASH too.
     for line in os.popen("LC_ALL=C PATH=%s %s -p '%s' 2> /dev/null" % (env_path, objdump, path), "r"):
-        if "NEEDED" in line or "INIT" in line:
-            sane = False
-            elf = True
+        if "SYMTAB" in line:
+            has_syms = True
         if "GNU_HASH" in line:
             sane = True
         if "[mips32]" in line or "[mips64]" in line:
 	    sane = True
 
-    if elf and not sane:
+    if has_syms and not sane:
         messages.append("No GNU_HASH in the elf binary: '%s'" % path)
 
 
