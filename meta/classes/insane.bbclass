@@ -142,7 +142,7 @@ def package_qa_check_rpath(file,name, d, elf, messages):
                 messages.append("package %s contains bad RPATH %s in file %s" % (name, line, file))
 
 QAPATHTEST[useless-rpaths] = "package_qa_check_useless_rpaths"
-def package_qa_check_useless_rpaths(file,name, d, elf, messages):
+def package_qa_check_useless_rpaths(file, name, d, elf, messages):
     """
     Check for RPATHs that are useless but not dangerous
     """
@@ -164,7 +164,7 @@ def package_qa_check_useless_rpaths(file,name, d, elf, messages):
 	   if rpath == libdir or rpath == base_libdir:
 	      # The dynamic linker searches both these places anyway.  There is no point in
 	      # looking there again.
-	      messages.append("dynamic section contains probably-redundant RPATH %s" % rpath)
+	      messages.append("%s: %s contains probably-redundant RPATH %s" % (name, package_qa_clean_path(file, d), rpath))
 
 QAPATHTEST[dev-so] = "package_qa_check_dev"
 def package_qa_check_dev(path, name, d, elf, messages):
