@@ -49,7 +49,7 @@ fi
 if [ ! -e "$OECORE_NATIVE_SYSROOT/usr/sbin/rpc.mountd" ]; then
 	echo "Error: Unable to find rpc.mountd binary in $OECORE_NATIVE_SYSROOT/usr/sbin/"
 
-	if [ "x$POKY_DISTRO_VERSION" = "x" ]; then
+	if [ "x$OECORE_DISTRO_VERSION" = "x" ]; then
 	    echo "Have you run 'bitbake meta-ide-support'?"
 	else
 	    echo "This shouldn't happen - something is missing from your toolchain installation"
