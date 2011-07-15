@@ -4,7 +4,7 @@ DAEMON=/usr/sbin/ofonod
 PIDFILE=/var/run/ofonod.pid
 DESC="Telephony daemon"
 
-if [ -f /etc/default/ofono] ; then
+if [ -f /etc/default/ofono ] ; then
 	. /etc/default/ofono
 fi
 
