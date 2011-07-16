@@ -70,6 +70,20 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 	given package, usually plugins or modules.
 	"""
 
+	ml = d.getVar("MLPREFIX", True)
+	if ml:
+		if not output_pattern.startswith(ml):
+			output_pattern = ml + output_pattern
+
+		newdeps = []
+		for dep in (extra_depends or "").split():
+			if dep.startswith(ml):
+				newdeps.append(dep)
+			else:
+				newdeps.append(ml + dep)
+		if newdeps:
+			extra_depends = " ".join(newdeps)
+
 	dvar = bb.data.getVar('PKGD', d, True)
 
 	packages = bb.data.getVar('PACKAGES', d, True).split()
