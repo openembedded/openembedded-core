@@ -20,7 +20,3 @@ do_install_append() {
 	sed -i ${D}${libdir}/libattr.la -e \
 	    s,^libdir=\'${base_libdir}\'$,libdir=\'${libdir}\',
 }
-
-# Only append ldflags for target recipe
-LDFLAGS_libc-uclibc += "${@['', '-lintl']['${PN}' == '${BPN}']}"
-
