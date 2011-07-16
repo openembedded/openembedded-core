@@ -33,11 +33,14 @@ FILES_${PN} = "${bindir}/gdk-pixbuf-query-loaders \
 
 FILES_${PN}-dev += " \
 	${bindir}/gdk-pixbuf-csource \
-	${includedir}/*"
+	${includedir}/* \
+	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/*.la \
+"
 
 FILES_${PN}-dbg += " \
         ${libdir}/.debug/* \
-	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/.debug/*"
+	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/.debug/* \
+"
 
 postinst_pixbufloader () {
 if [ "x$D" != "x" ]; then
