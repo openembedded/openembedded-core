@@ -2,7 +2,7 @@ SUMMARY = "Embedded GLIBC (GNU C Library)"
 DESCRIPTION = "Embedded GLIBC (EGLIBC) is a variant of the GNU C Library (GLIBC) that is designed to work well on embedded systems. EGLIBC strives to be source and binary compatible with GLIBC. EGLIBC's goals include reduced footprint, configurable components, better support for cross-compilation and cross-testing."
 HOMEPAGE = "http://www.eglibc.org/home"
 SECTION = "libs"
-LICENSE = "LGPL"
+LICENSE = "GPLv2 & LGPLv2.1"
 INC_PR = "r11"
 LIC_FILES_CHKSUM ?= "file://LICENSES;md5=07a394b26e0902b9ffdec03765209770 \
       file://COPYING;md5=393a5ca445f6965873eca0259a17f833 \

@@ -1,5 +1,5 @@
 INHIBIT_DEFAULT_DEPS = "1"
-LICENSE = "LGPL"
+LICENSE = "GPLv2 & LGPLv2.1"
 
 BPN = "eglibc"
 
