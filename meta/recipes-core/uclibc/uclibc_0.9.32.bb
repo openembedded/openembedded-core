@@ -1,7 +1,7 @@
 SRCREV="9152c4d67c763fde5712e2d181d92c0d7e1e2ab9"
 
 require uclibc.inc
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 PROVIDES += "virtual/${TARGET_PREFIX}libc-for-gcc"
 
 SRC_URI = "git://uclibc.org/uClibc.git;branch=${PV};protocol=git \
@@ -28,5 +28,6 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=${PV};protocol=git \
 	file://0001-mips-signalfd.h-SFD_NONBLOCK-for-mips-is-0200-unlike.patch \
 	file://uclibc-execvpe.patch \
 	file://uclibc_scheduler_update.patch \
+	file://sync_file_range2.patch \
 	"
 S = "${WORKDIR}/git"
