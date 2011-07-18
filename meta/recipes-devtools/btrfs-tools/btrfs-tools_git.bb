@@ -10,12 +10,13 @@ HOMEPAGE = "https://btrfs.wiki.kernel.org"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=fcb02dc552a041dee27e4b85c7396067"
 SECTION = "base"
+DEPENDS = "util-linux"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs-unstable.git;protocol=git;tag=1b444cd2e6ab8dcafdd47dbaeaae369dd1517c17;branch=master"
 
 S = "${WORKDIR}/git"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI += "file://upstream-tmp/0001-Btrfs-progs-add-a-btrfs-select-super-command-to-over.patch \
 	    file://upstream-tmp/0002-Btrfs-progs-use-safe-string-manipulation-functions.patch \
