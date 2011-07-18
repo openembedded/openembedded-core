@@ -19,10 +19,11 @@ FILES_${PN} = "${bindir} ${libdir}/${BPN}/lib*.so.* ${datadir}/${BPN}"
 FILES_${PN}-dev += "${libdir}/${BPN}/lib*.so ${libdir}/${BPN}/lib*.la"
 FILES_${PN}-staticdev += "${libdir}/${BPN}/lib*.a"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/oprofile/oprofile-${PV}.tar.gz \
            file://opstart.patch \
+           file://oprofile-no-query-modules.patch \
            file://acinclude.m4"
 
 SRC_URI[md5sum] = "4e407093ac06200185d5a5e6437d7242"

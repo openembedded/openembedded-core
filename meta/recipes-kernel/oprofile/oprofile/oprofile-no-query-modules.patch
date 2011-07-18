@@ -1,0 +1,29 @@
+disable portions which use query_module on 2.6 kernel this is not available
+in OE we dont support 2.4 anyway
+
+
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: oprofile-0.9.6/daemon/liblegacy/opd_kernel.c
+===================================================================
+--- oprofile-0.9.6.orig/daemon/liblegacy/opd_kernel.c	2009-11-24 07:25:17.000000000 -0800
++++ oprofile-0.9.6/daemon/liblegacy/opd_kernel.c	2011-07-18 10:08:39.863798825 -0700
+@@ -270,6 +270,9 @@
+  */
+ static void opd_drop_module_sample(unsigned long eip)
+ {
++	verbprintf(vmodule, "query_module not available on linux-2.6: %s\n", strerror(EPERM));
++
++#if	0
+ 	char * module_names;
+ 	char * name;
+ 	size_t size = 1024;
+@@ -307,6 +310,7 @@
+ 
+ 	if (module_names)
+ 		free(module_names);
++#endif
+ }
+ 
+ 
