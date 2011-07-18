@@ -5,11 +5,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 DEPENDS = "gtk+ libglade"
 
 SRCREV = "38a6af1f0a45e528fd2842983da71e0f23c70d6a"
-PR = r0
+PR = r1
 PV = "1.1.6+git${SRCPV}"
 
 SRC_URI = "git://git.gnome.org/sysprof;protocol=git \
-           "
+           file://define-NT_GNU_BUILD_ID.patch \
+          "
 
 SRC_URI_append_arm  = " file://rmb-arm.patch"
 SRC_URI_append_mips = " file://rmb-mips.patch"
