@@ -16,10 +16,10 @@ require xorg-lib-common.inc
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9fe101f30dd24134cf43146863241868"
 
-DEPENDS += "damageproto libxfixes"
+DEPENDS += "virtual/libx11 damageproto libxfixes"
 PROVIDES = "xdamage"
 
-PR = "r0"
+PR = "r1"
 PE = "1"
 
 XORG_PN = "libXdamage"
