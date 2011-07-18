@@ -93,7 +93,7 @@ EOF
 
 	# List must be prefered to least preferred order
 	INSTALL_PLATFORM_EXTRA_RPM=""
-	for each_arch in ${PACKAGE_ARCHS} ; do
+	for each_arch in ${MULTILIB_PACKAGE_ARCHS} ${PACKAGE_ARCHS}; do
 		INSTALL_PLATFORM_EXTRA_RPM="$each_arch $INSTALL_PLATFORM_EXTRA_RPM"
 	done
 	export INSTALL_PLATFORM_RPM
@@ -207,4 +207,19 @@ python () {
         bb.data.setVarFlag('do_rootfs', 'recrdeptask', flags, d)
         bb.data.setVar('RPM_PREPROCESS_COMMANDS', '', d)
         bb.data.setVar('RPM_POSTPROCESS_COMMANDS', '', d)
+
+    ml_package_archs = ""
+    multilibs = d.getVar('MULTILIBS', True) or ""
+    for ext in multilibs.split():
+        eext = ext.split(':')
+        if len(eext) > 1 and eext[0] == 'multilib':
+            localdata = bb.data.createCopy(d)
+            overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + eext[1]
+            localdata.setVar("OVERRIDES", overrides)
+            # TEMP: OVERRIDES isn't working right
+            localdata.setVar("TUNENAME", localdata.getVar("TUNENAME_virtclass-multilib-" + eext[1], False) or "")
+            ml_package_archs += localdata.getVar("PACKAGE_ARCHS", True) or ""
+            bb.note("ML_PACKAGE_ARCHS %s %s %s" % (eext[1], localdata.getVar("PACKAGE_ARCHS", True) or "(none)", overrides))
+    bb.data.setVar('MULTILIB_PACKAGE_ARCHS', ml_package_archs, d)
+
 }
