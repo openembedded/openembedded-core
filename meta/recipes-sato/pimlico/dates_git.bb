@@ -7,10 +7,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
 
 SRCREV = "514185dc1f6588085fda41eb59898b93d0487dd4"
 PV = "0.4.11+git${SRCPV}"
-PR = "r3"
+PR = "r4"
 
 S = "${WORKDIR}/git"
 
 SRC_URI = "git://git.gnome.org/${BPN};protocol=git \
 	   file://make-382.patch \
-	   file://dso_linking_change_build_fix.patch"
+	   file://dso_linking_change_build_fix.patch \
+	   file://uclibc-NL_TIME_FIRST_WEEKDAY-absent.patch \
+          "

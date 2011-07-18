@@ -8,7 +8,7 @@ SECTION = "x11"
 DEPENDS = "glib-2.0 gtk+ libglade eds-dbus"
 RDEPENDS_${PN} = "libedata-cal"
 
-inherit autotools pkgconfig gtk-icon-cache
+inherit autotools gettext pkgconfig gtk-icon-cache
 
 # Poky/Sato specific enhancements
 OWL = "--disable-owl"
