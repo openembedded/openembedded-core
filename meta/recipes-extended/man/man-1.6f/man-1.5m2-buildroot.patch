@@ -1,3 +1,7 @@
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 --- ./configure.less	2003-12-11 19:18:15.000000000 +0100
 +++ ./configure	2003-12-11 19:20:03.000000000 +0100
 @@ -401,18 +401,13 @@

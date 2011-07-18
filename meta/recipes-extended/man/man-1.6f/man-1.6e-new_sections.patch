@@ -1,3 +1,7 @@
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 --- man-1.6e.orig/configure	2006-05-01 14:56:14.000000000 -0300
 +++ man-1.6e/configure	2007-05-18 14:35:43.000000000 -0300
 @@ -960,7 +960,7 @@

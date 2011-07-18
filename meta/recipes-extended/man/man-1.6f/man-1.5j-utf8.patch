@@ -1,3 +1,7 @@
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 --- man-1.5j/configure.utf8	Thu Nov 22 15:02:35 2001
 +++ man-1.5j/configure	Thu Nov 22 15:03:15 2001
 @@ -408,9 +408,9 @@

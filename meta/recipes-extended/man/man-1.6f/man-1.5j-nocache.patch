@@ -1,3 +1,7 @@
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 --- man-1.5j/src/man.conf.in.nocache	Thu Nov 22 15:07:12 2001
 +++ man-1.5j/src/man.conf.in	Thu Nov 22 15:07:12 2001
 @@ -81,6 +81,9 @@

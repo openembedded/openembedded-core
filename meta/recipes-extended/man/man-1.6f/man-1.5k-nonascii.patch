@@ -1,3 +1,7 @@
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 --- ./src/apropos.sh.nonascii	2001-11-23 00:30:42.000000000 +0100
 +++ ./src/apropos.sh	2002-08-13 15:44:53.000000000 +0200
 @@ -18,9 +18,9 @@

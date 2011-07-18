@@ -1,3 +1,7 @@
+Upstream-Status: Pending
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 --- man-1.5j/src/man.c.sofix	Thu Nov 22 14:51:44 2001
 +++ man-1.5j/src/man.c	Thu Nov 22 14:52:44 2001
 @@ -300,7 +300,7 @@
