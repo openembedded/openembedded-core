@@ -1,6 +1,6 @@
 require binutils.inc
 
-PR = "r1"
+PR = "r2"
 
 LIC_FILES_CHKSUM="\
     file://src-release;endline=17;md5=4830a9ef968f3b18dd5e9f2c00db2d35\
@@ -29,6 +29,7 @@ SRC_URI = "\
      file://libiberty_path_fix.patch \
      file://binutils-poison.patch \
      file://libtool-rpath-fix.patch \
+     file://clone-shadow.patch \
      "
 
 SRC_URI[md5sum] = "a22801a9cad45c85e9ff6afc10537d72"
