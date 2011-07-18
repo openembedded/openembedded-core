@@ -19,6 +19,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY = "1"
 
 NETWORK_MANAGER ?= "connman-gnome"
+NETWORK_MANAGER_libc-uclibc = ""
+
 RDEPENDS_task-core-x11-sato = "\
     matchbox-desktop \
     matchbox-session-sato \
