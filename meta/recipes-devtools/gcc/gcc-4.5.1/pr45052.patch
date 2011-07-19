@@ -1,0 +1,30 @@
+From 138f1af2d77d56762a2c2af4759efd53c275b67e Mon Sep 17 00:00:00 2001
+From: Ilya Yanok <yanok@emcraft.com>
+Date: Mon, 21 Mar 2011 00:49:43 +0100
+Subject: [PATCH 5/6] PR45052
+
+---
+ gcc/ipa-pure-const.c |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
+
+diff --git a/gcc/ipa-pure-const.c b/gcc/ipa-pure-const.c
+index 166dabb..da9d5d6 100644
+--- a/gcc/ipa-pure-const.c
++++ b/gcc/ipa-pure-const.c
+@@ -416,6 +416,13 @@ check_stmt (gimple_stmt_iterator *gsip, funct_state local, bool ipa)
+       print_gimple_stmt (dump_file, stmt, 0, 0);
+     }
+ 
++  if (gimple_has_volatile_ops (stmt))
++    {
++      local->pure_const_state = IPA_NEITHER;
++      if (dump_file)
++	fprintf (dump_file, "    Volatile stmt is not const/pure\n");
++    }
++
+   /* Look for loads and stores.  */
+   walk_stmt_load_store_ops (stmt, local, check_load, check_store);
+ 
+-- 
+1.7.4
+
