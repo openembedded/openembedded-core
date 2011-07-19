@@ -53,6 +53,11 @@ RRECOMMENDS_task-core-tools-profile = "\
     sysprof \
     "
 
+# systemtap needs elfutils which is not fully buildable on uclibc
+# hence we exclude it from uclibc based builds
+SYSTEMTAP = "systemtap"
+SYSTEMTAP_libc-uclibc = ""
+
 #    exmap-console
 #    exmap-server
 
@@ -60,9 +65,9 @@ RRECOMMENDS_task-core-tools-profile = "\
 # qemux86/qemux86-64/qemuppc/qemuarm/emenlow/atom-pc since upstream liburcu
 # (which is required by lttng-ust) may not build on other platforms, like
 # MIPS.
-RDEPENDS_task-core-tools-profile_append_qemux86 = " valgrind lttng-ust systemtap"
-RDEPENDS_task-core-tools-profile_append_qemux86-64 = " lttng-ust systemtap"
-RDEPENDS_task-core-tools-profile_append_qemuppc = " lttng-ust systemtap"
+RDEPENDS_task-core-tools-profile_append_qemux86 = " valgrind lttng-ust ${SYSTEMTAP}"
+RDEPENDS_task-core-tools-profile_append_qemux86-64 = " lttng-ust ${SYSTEMTAP}"
+RDEPENDS_task-core-tools-profile_append_qemuppc = " lttng-ust ${SYSTEMTAP}"
 RDEPENDS_task-core-tools-profile_append_qemuarm = " lttng-ust"
 
 RDEPENDS_task-core-tools-testapps = "\
