@@ -1,0 +1,57 @@
+From 33ba46dc9395d7a6b1496e9f273cf953d59a8d71 Mon Sep 17 00:00:00 2001
+From: froydnj <froydnj@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Wed, 23 Feb 2011 18:06:29 +0000
+Subject: [PATCH 1/6] PR target/43810
+
+	Backport from mainline:
+	2010-07-23  Nathan Froyd  <froydnj@codesourcery.com>
+
+	* config.host (powerpc*-eabispe*): Set tmake_file.
+	(powerpc*-eabi*): Likewise.
+	* config/rs6000/t-ppccomm (EXTRA_PARTS): Add crtbegin, crtend,
+	crtbeginS, crtendS, crtbeginT.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-4_5-branch@170443 138bc75d-0d04-0410-961f-82ee72b054a4
+---
+ libgcc/config.host             |    2 ++
+ libgcc/config/rs6000/t-ppccomm |    4 +++-
+ 2 files changed, 5 insertions(+), 1 deletions(-)
+
+diff --git a/libgcc/config.host b/libgcc/config.host
+index fe3465e..f85c723 100644
+--- a/libgcc/config.host
++++ b/libgcc/config.host
+@@ -454,6 +454,7 @@ powerpc*-*-freebsd*)
+ powerpc-*-netbsd*)
+ 	;;
+ powerpc-*-eabispe*)
++	tmake_file="${tmake_file} rs6000/t-ppccomm"
+ 	;;
+ powerpc-*-eabisimaltivec*)
+ 	;;
+@@ -464,6 +465,7 @@ powerpc-*-elf*)
+ powerpc-*-eabialtivec*)
+ 	;;
+ powerpc-*-eabi*)
++	tmake_file="${tmake_file} rs6000/t-ppccomm"
+ 	;;
+ powerpc-*-rtems*)
+ 	;;
+diff --git a/libgcc/config/rs6000/t-ppccomm b/libgcc/config/rs6000/t-ppccomm
+index 1a711eb..4548cd7 100644
+--- a/libgcc/config/rs6000/t-ppccomm
++++ b/libgcc/config/rs6000/t-ppccomm
+@@ -15,7 +15,9 @@ LIB2ADD_ST += crtsavfpr.S crtresfpr.S \
+   e500crtsavg64gpr.S \
+   e500crtsavg64gprctr.S
+ 
+-EXTRA_PARTS += ecrti$(objext) ecrtn$(objext) ncrti$(objext) ncrtn$(objext)
++EXTRA_PARTS += crtbegin$(objext) crtend$(objext) \
++  crtbeginS$(objext) crtendS$(objext) crtbeginT$(objext) \
++  ecrti$(objext) ecrtn$(objext) ncrti$(objext) ncrtn$(objext)
+ 
+ # We build {e,n}crti.o and {e,n}crtn.o, which serve to add begin and
+ # end labels to all of the special sections used when we link using gcc.
+-- 
+1.7.4
+
