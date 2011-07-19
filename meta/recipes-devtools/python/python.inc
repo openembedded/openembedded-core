@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.python.org"
 LICENSE = "PSF"
 SECTION = "devel/python"
 # bump this on every change in contrib/python/generate-manifest-2.6.py
-INC_PR = "nk2"
+INC_PR = "r2"
 
 DEFAULT_PREFERENCE = "-26"
 
