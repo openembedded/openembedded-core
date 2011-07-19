@@ -98,8 +98,12 @@ do_install_locale () {
 	if [ "${base_libdir}" != "${libdir}" ]; then
 		cp -fpPR ${D}${base_libdir}/* ${dest}${base_libdir}
 	fi
-	mv ${D}${bindir}/localedef ${dest}${bindir}
-	mv ${D}${libdir}/gconv ${dest}${libdir}
+	if [ -f ${D}${bindir}/localedef ]; then
+		mv -f ${D}${bindir}/localedef ${dest}${bindir}
+	fi
+	if [ -f ${D}${libdir}/gconv ]; then
+		mv -f ${D}${libdir}/gconv ${dest}${libdir}
+	fi
 	cp -fpPR ${D}${libdir}/* ${dest}${libdir}
         mv ${D}${datadir}/i18n ${dest}${datadir}
 	cp -fpPR ${D}${datadir}/* ${dest}${datadir}
