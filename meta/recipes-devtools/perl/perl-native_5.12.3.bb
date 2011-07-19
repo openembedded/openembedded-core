@@ -4,7 +4,7 @@ SECTION = "libs"
 LICENSE = "Artistic|GPL"
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 		    file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
-PR = "r3"
+PR = "r4"
 
 LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
                     file://Artistic;md5=f921793d03cc6d63ec4b15e9be8fd3f8"
@@ -101,4 +101,19 @@ do_install () {
 
 	create_wrapper ${D}${bindir}/perl PERL5LIB='$PERL5LIB:${STAGING_LIBDIR}/perl/${PV}:${STAGING_LIBDIR}/perl/'
 	create_wrapper ${D}${bindir}/perl${PV} PERL5LIB='$PERL5LIB:${STAGING_LIBDIR}/perl/${PV}:${STAGING_LIBDIR}/perl/'
+}
+
+SYSROOT_PREPROCESS_FUNCS += "perl_sysroot_create_wrapper"
+
+perl_sysroot_create_wrapper () {
+	mkdir -p ${SYSROOT_DESTDIR}${bindir}
+	# Create a wrapper that /usr/bin/env perl will use to get perl-native.
+	# This MUST live in the normal bindir.
+	cat > ${SYSROOT_DESTDIR}${bindir}/../nativeperl << EOF
+#!/bin/sh
+realpath=\`readlink -fn \$0\`
+exec \`dirname \$realpath\`/perl-native/perl "\$@"
+EOF
+	chmod 0755 ${SYSROOT_DESTDIR}${bindir}/../nativeperl
+	cat ${SYSROOT_DESTDIR}${bindir}/../nativeperl
 }
