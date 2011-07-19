@@ -9,7 +9,7 @@ Index: gcc-4.5/gcc/config/arm/arm.md
    [(set (match_operand:SI 0 "s_register_operand" "=r")
    	(bswap:SI (match_operand:SI 1 "s_register_operand" "r")))]
 -"TARGET_EITHER"
-+"TARGET_EITHER && (arm_arch6 && !optimize_size)"
++"TARGET_EITHER && (arm_arch6 || !optimize_size)"
  "
    if (!arm_arch6)
      {
