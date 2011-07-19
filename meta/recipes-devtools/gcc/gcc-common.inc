@@ -12,6 +12,8 @@ FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/gcc-${PV}"
 def get_gcc_fpu_setting(bb, d):
     if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
         return "--with-float=soft"
+    if bb.data.getVar('TARGET_FPU', d, 1) in [ 'ppc-efd' ]:
+        return "--enable-e500_double"
     return ""
 
 def get_gcc_mips_plt_setting(bb, d):
