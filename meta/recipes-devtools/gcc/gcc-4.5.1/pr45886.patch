@@ -1,0 +1,55 @@
+From d066d0682da4e60b811d9282b00128244caa5c29 Mon Sep 17 00:00:00 2001
+From: Ilya Yanok <yanok@emcraft.com>
+Date: Mon, 21 Mar 2011 00:55:25 +0100
+Subject: [PATCH 6/6] PR45886
+
+---
+ gcc/config/arm/arm.c |    2 +-
+ gcc/config/arm/arm.h |   11 ++++++++++-
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/gcc/config/arm/arm.c b/gcc/config/arm/arm.c
+index 0382b24..5634829 100644
+--- a/gcc/config/arm/arm.c
++++ b/gcc/config/arm/arm.c
+@@ -700,7 +700,7 @@ static int after_arm_reorg = 0;
+ /* The maximum number of insns to be used when loading a constant.  */
+ static int arm_constant_limit = 3;
+ 
+-static enum arm_pcs arm_pcs_default;
++enum arm_pcs arm_pcs_default;
+ 
+ /* For an explanation of these variables, see final_prescan_insn below.  */
+ int arm_ccfsm_state;
+diff --git a/gcc/config/arm/arm.h b/gcc/config/arm/arm.h
+index 26ffaf8..ac7bbb3 100644
+--- a/gcc/config/arm/arm.h
++++ b/gcc/config/arm/arm.h
+@@ -94,7 +94,13 @@ extern char arm_arch_name[];
+ 	if (arm_arch_iwmmxt)				\
+ 	  builtin_define ("__IWMMXT__");		\
+ 	if (TARGET_AAPCS_BASED)				\
+-	  builtin_define ("__ARM_EABI__");		\
++	  {						\
++	    if (arm_pcs_default == ARM_PCS_AAPCS_VFP)	\
++	      builtin_define ("__ARM_PCS_VFP");		\
++	    else if (arm_pcs_default == ARM_PCS_AAPCS)	\
++	      builtin_define ("__ARM_PCS");		\
++	    builtin_define ("__ARM_EABI__");		\
++	  }						\
+     } while (0)
+ 
+ /* The various ARM cores.  */
+@@ -1648,6 +1654,9 @@ enum arm_pcs
+   ARM_PCS_UNKNOWN
+ };
+ 
++/* Default procedure calling standard of current compilation unit. */
++extern enum arm_pcs arm_pcs_default;
++
+ /* A C type for declaring a variable that is used as the first argument of
+    `FUNCTION_ARG' and other related values.  */
+ typedef struct
+-- 
+1.7.4
+
