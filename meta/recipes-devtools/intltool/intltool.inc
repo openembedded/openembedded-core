@@ -10,7 +10,7 @@ DEPENDS = "libxml-parser-perl-native"
 #RDEPENDS_${PN} = "libxml-parser-perl"
 RRECOMMENDS_${PN} = "perl-modules"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig perlnative
 
 export PERL_virtclass-native = "/usr/bin/env perl"
 BBCLASSEXTEND = "native"
