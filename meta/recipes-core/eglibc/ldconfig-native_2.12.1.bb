@@ -9,9 +9,10 @@ SRC_URI = "file://ldconfig-native-2.12.1.tar.bz2 \
            file://ldconfig_aux-cache_path_fix.patch \
            file://32and64bit.patch \
            file://endian-ness_handling.patch \
-           file://flag_fix.patch "
+           file://flag_fix.patch \
+           file://endianess-header.patch"
 
-PR = "r0"
+PR = "r1"
 
 inherit native
 
