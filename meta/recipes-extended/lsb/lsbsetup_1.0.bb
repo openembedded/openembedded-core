@@ -14,7 +14,7 @@ do_install() {
     install -d ${D}/usr/bin
     install -d ${D}/${sysconfdir}
     install -m 0755 ${S}/LSB_Setup.sh ${D}/usr/bin
-    install -d  ${D}/usr/lib/lsb
+    install -d  ${D}/${libdir}/lsb
     ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/install_initd
     ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/remove_initd
     ln -sf ${sbindir}/sendmail ${D}/${libdir}/sendmail
