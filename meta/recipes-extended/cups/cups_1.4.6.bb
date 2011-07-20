@@ -1,7 +1,8 @@
 require cups14.inc
 
-PR = "r0"
-DEPENDS += "libusb"
+PR = "r1"
+DEPENDS += "libusb \
+       ${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=956e7600195e6139f12de8c2a5bbefa9"
 SRC_URI += " \
@@ -12,6 +13,7 @@ SRC_URI += " \
 SRC_URI[md5sum] = "de8fb5a29c36554925c0c6a6e2c0dae1"
 SRC_URI[sha256sum] = "f08711702a77b52c7150f96fe1f45482f6151cb95ef601268c528607fe6ad514"
 
-EXTRA_OECONF += " --disable-gssapi --enable-debug --disable-relro --enable-libusb"
+EXTRA_OECONF += " --disable-gssapi --enable-debug --disable-relro --enable-libusb \
+       ${@base_contains('DISTRO_FEATURES', 'pam', '--enable-pam', '--disable-pam', d)}"
 
 CONFFILES_${PN} += "${sysconfdir}/cups/cupsd.conf"
