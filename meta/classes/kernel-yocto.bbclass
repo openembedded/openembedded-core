@@ -118,12 +118,6 @@ python do_kernel_configcheck() {
     bb.plain( "%s" % result )
 }
 
-# overrides the base kernel_do_configure, since we don't want all the
-# defconfig processing in there
-kernel_do_configure() {
-        yes '' | oe_runmake oldconfig
-}
-
 
 # Ensure that the branches (BSP and meta) are on the locatios specified by
 # their SRCREV values. If they are NOT on the right commits, the branches
