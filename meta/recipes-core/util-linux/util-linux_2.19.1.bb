@@ -1,5 +1,5 @@
 MAJOR_VERSION = "2.19"
-PR = "r2"
+PR = "r3"
 require util-linux.inc
 
 # note that `lscpu' is under GPLv3+
@@ -8,6 +8,7 @@ LICENSE_util-linux-lscpu = "GPLv3+"
 SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             file://util-linux-ng-2.16-mount_lock_path.patch \
             file://uclibc-__progname-conflict.patch \      
+            file://remove_sigsetmark.patch \
 "
 
 SRC_URI[md5sum] = "3eab06f05163dfa65479c44e5231932c"

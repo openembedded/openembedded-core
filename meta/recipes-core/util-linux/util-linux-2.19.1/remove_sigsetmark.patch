@@ -1,0 +1,35 @@
+simpleinit: remove deprecated sigsetmask()
+
+The sigsetmask() is deprecated in favor of sigprocmask().
+
+This is not needed upstream since simpleinit is removed from
+util-linux-ng master
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Inappropriate
+
+Index: util-linux-2.19.1/simpleinit/shutdown.c
+===================================================================
+--- util-linux-2.19.1.orig/simpleinit/shutdown.c	2011-03-04 03:47:47.000000000 -0800
++++ util-linux-2.19.1/simpleinit/shutdown.c	2011-07-06 08:43:39.183849752 -0700
+@@ -145,7 +145,7 @@
+ {
+ 	int c, i, fd;
+ 	char *ptr;
+-
++	sigset_t sigmask;
+ 	i = getdtablesize ();
+ 	for (fd = 3; fd < i; fd++) close (fd);
+ 	if (getpid () == 1)
+@@ -153,7 +153,9 @@
+ 	    for (fd = 0; fd < 3; fd++) close (fd);
+ 	    while (1) wait (NULL);  /*  Grim reaper never stops  */
+ 	}
+-	sigsetmask (0); /*  simpleinit(8) blocks all signals: undo for ALRM  */
++	/*  simpleinit(8) blocks all signals: undo for ALRM  */
++	sigemptyset(&sigmask);
++	sigprocmask (SIG_SETMASK, &sigmask, NULL);
+ 	for (i = 1; i < NSIG; i++) signal (i, SIG_DFL);
+ 
+         setlocale(LC_ALL, "");
