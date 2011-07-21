@@ -1,0 +1,22 @@
+sigmask is a macro which is dropped if BSD compatibility is
+not enabled. So we check if the macro does not exist then
+we define it to __sigmask
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: strace-4.5.20/signal.c
+===================================================================
+--- strace-4.5.20.orig/signal.c	2010-02-23 13:26:16.000000000 -0800
++++ strace-4.5.20/signal.c	2011-07-20 23:06:35.842339197 -0700
+@@ -140,6 +140,11 @@
+ #endif
+ #endif /* LINUX */
+ 
++#if !defined (sigmask) && defined (__sigmask)
++/* Compute mask for signal SIG.  */
++#define sigmask(sig)   __sigmask(sig)
++#endif /* sigmask */
++
+ const char *const signalent0[] = {
+ #include "signalent.h"
+ };
