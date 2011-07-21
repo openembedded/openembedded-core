@@ -1,3 +1,10 @@
+Some architectures like ppc, arm use aligned 64 bit inputs so a register is not wasted
+this then uses __NR_sync_file_range2 syscall. Implement is
+
+Singed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+
 Index: git/libc/sysdeps/linux/common/sync_file_range.c
 ===================================================================
 --- git.orig/libc/sysdeps/linux/common/sync_file_range.c	2011-07-19 14:23:35.000000000 -0700
