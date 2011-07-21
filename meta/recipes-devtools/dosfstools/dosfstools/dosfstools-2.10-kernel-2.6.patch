@@ -2,7 +2,7 @@ Submitted By: Jim Gifford (jim at linuxfromscratch dot org)
 Date: 2004-02-09
 Initial Package Version: 2.6
 Origin: Jim Gifford
-Upstream Status: Accepted
+Upstream-Status: Accepted
 Description: Fixes Compile Issues with the 2.6 Kernel
  
 --- dosfstools-2.10/dosfsck/common.h.orig	2004-02-09 18:37:59.056737458 +0000

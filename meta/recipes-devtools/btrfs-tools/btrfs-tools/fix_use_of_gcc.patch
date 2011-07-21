@@ -1,5 +1,5 @@
 Nitin A Kamble <nitin.a.kamble@intel.com> 2011/06/09
-UpstreamStatus: Pending
+Upstream-Status: Pending
 
 Avoid these kinds of errors while doing cross build:
 
