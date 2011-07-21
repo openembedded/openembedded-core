@@ -28,7 +28,7 @@ index 77ed055..5a77f2d 100644
  		   scripts/solaris scripts/openwrt
  dhclient_LDADD = ../common/libdhcp.a ../omapip/libomapi.a \
 -		 ../bind/lib/libdns.a ../bind/lib/libisc.a
-+		 $(libbind)/lib/libdns.a $(libbind)/lib/libisc.a
++		 $(libbind)/libdns.a $(libbind)/libisc.a
  man_MANS = dhclient.8 dhclient-script.8 dhclient.conf.5 dhclient.leases.5
  EXTRA_DIST = $(man_MANS)
  
@@ -53,7 +53,7 @@ index 61049be..85aefa3 100644
  omshell_SOURCES = omshell.c
  omshell_LDADD = libdhcpctl.a ../common/libdhcp.a ../omapip/libomapi.a \
 -	        ../bind/lib/libdns.a ../bind/lib/libisc.a
-+	        $(libbind)/lib/libdns.a $(libbind)/lib/libisc.a
++	        $(libbind)/libdns.a $(libbind)/libisc.a
  
  libdhcpctl_a_SOURCES = dhcpctl.c callback.c remote.c
  
@@ -61,7 +61,7 @@ index 61049be..85aefa3 100644
  cltest_LDADD = libdhcpctl.a ../common/libdhcp.a ../omapip/libomapi.a \
 -	       ../bind/lib/libdns.a ../bind/lib/libisc.a
 \ No newline at end of file
-+	       $(libbind)/lib/libdns.a $(libbind)/lib/libisc.a
++	       $(libbind)/libdns.a $(libbind)/libisc.a
 diff --git a/omapip/Makefile.am b/omapip/Makefile.am
 index 595950a..17f2233 100644
 --- a/omapip/Makefile.am
@@ -71,7 +71,7 @@ index 595950a..17f2233 100644
  
  svtest_SOURCES = test.c
 -svtest_LDADD = libomapi.a ../bind/lib/libdns.a ../bind/lib/libisc.a
-+svtest_LDADD = libomapi.a $(libbind)/lib/libdns.a $(libbind)/lib/libisc.a
++svtest_LDADD = libomapi.a $(libbind)/libdns.a $(libbind)/libisc.a
  
 diff --git a/relay/Makefile.am b/relay/Makefile.am
 index d8757ca..a7885da 100644
@@ -82,7 +82,7 @@ index d8757ca..a7885da 100644
  dhcrelay_SOURCES = dhcrelay.c
  dhcrelay_LDADD = ../common/libdhcp.a ../omapip/libomapi.a \
 -		 ../bind/lib/libdns.a ../bind/lib/libisc.a
-+		 $(libbind)/lib/libdns.a $(libbind)/lib/libisc.a
++		 $(libbind)/libdns.a $(libbind)/libisc.a
  man_MANS = dhcrelay.8
  EXTRA_DIST = $(man_MANS)
  
@@ -96,8 +96,8 @@ index cdfaf47..d2c254b 100644
  dhcpd_LDADD = ../common/libdhcp.a ../omapip/libomapi.a \
 -	      ../dhcpctl/libdhcpctl.a ../bind/lib/libdns.a \
 -	      ../bind/lib/libisc.a
-+	      ../dhcpctl/libdhcpctl.a $(libbind)/lib/libdns.a \
-+	      $(libbind)/lib/libisc.a
++	      ../dhcpctl/libdhcpctl.a $(libbind)/libdns.a \
++	      $(libbind)/libisc.a
  
  man_MANS = dhcpd.8 dhcpd.conf.5 dhcpd.leases.5
  EXTRA_DIST = $(man_MANS)

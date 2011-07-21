@@ -25,7 +25,7 @@ EXTRA_OECONF = "--with-srv-lease-file=${localstatedir}/lib/dhcp/dhcpd.leases \
                 --with-srv6-lease-file=${localstatedir}/lib/dhcp/dhcpd6.leases \
                 --with-cli-lease-file=${localstatedir}/lib/dhcp/dhclient.leases \
                 --with-cli6-lease-file=${localstatedir}/lib/dhcp/dhclient6.leases \
-                --with-libbind=${STAGING_LIBDIR}/.. \
+                --with-libbind=${STAGING_LIBDIR}/ \
                "
 
 do_compile_prepend () {
