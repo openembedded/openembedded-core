@@ -1,11 +1,11 @@
 *.pyc
 *.pyo
-build/conf/local.conf
-build/conf/bblayers.conf
-build/downloads
-build/tmp/
-build/sstate-cache
-build/pyshtables.py
+build*/conf/local.conf
+build*/conf/bblayers.conf
+build*/downloads
+build*/tmp/
+build*/sstate-cache
+build*/pyshtables.py
 pstage/
 scripts/oe-git-proxy-socks
 sources/
