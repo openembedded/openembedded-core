@@ -2,15 +2,15 @@ Upstream-Status: Inappropriate [poky-specific script]
 
 --- a/Makefile
 +++ b/Makefile
-@@ -32,7 +32,7 @@
- 	install -d -m 755 $(INSTALLROOT)$(SBIN)
- 	install -d -m 755 $(INSTALLROOT)$(INIT)
+@@ -64,7 +64,7 @@
+ 	install -d -m 755 $(INSTALLROOT)$(INCLUDE)/tcf/services
  	install -c $(BINDIR)/agent -m 755 $(INSTALLROOT)$(SBIN)/tcf-agent
--	install -c $(TCF_AGENT_DIR)/main/tcf-agent.init -m 755 $(INSTALLROOT)$(INIT)/tcf-agent
+ 	install -c $(BINDIR)/client -m 755 $(INSTALLROOT)$(SBIN)/tcf-client
+-	install -c main/tcf-agent.init -m 755 $(INSTALLROOT)$(INIT)/tcf-agent
 +	install -c tcf-agent.init -m 755 $(INSTALLROOT)$(INIT)/tcf-agent
- 
- clean:
- 	rm -rf $(BINDIR)
+ 	install -c config.h -m 755 $(INSTALLROOT)$(INCLUDE)/tcf/config.h
+ 	install -c -t $(INSTALLROOT)$(INCLUDE)/tcf/framework -m 644 framework/*.h
+ 	install -c -t $(INSTALLROOT)$(INCLUDE)/tcf/services -m 644 services/*.h
 --- /dev/null
 +++ b/tcf-agent.init
 @@ -0,0 +1,78 @@
