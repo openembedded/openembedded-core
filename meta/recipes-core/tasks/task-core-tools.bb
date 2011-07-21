@@ -58,6 +58,15 @@ RRECOMMENDS_task-core-tools-profile = "\
 SYSTEMTAP = "systemtap"
 SYSTEMTAP_libc-uclibc = ""
 
+# lttng-ust uses sched_getcpu() which is not there on uclibc
+# for some of the architectures it can be patched to call the
+# syscall directly but for x86_64 __NR_getcpu is a vsyscall
+# which means we can not use syscall() to call it. So we ignore
+# it for x86_64/uclibc
+
+LTTNGUST = "lttng-ust"
+LTTNGUST_libc-uclibc = ""
+
 #    exmap-console
 #    exmap-server
 
@@ -66,7 +75,7 @@ SYSTEMTAP_libc-uclibc = ""
 # (which is required by lttng-ust) may not build on other platforms, like
 # MIPS.
 RDEPENDS_task-core-tools-profile_append_qemux86 = " valgrind lttng-ust ${SYSTEMTAP}"
-RDEPENDS_task-core-tools-profile_append_qemux86-64 = " lttng-ust ${SYSTEMTAP}"
+RDEPENDS_task-core-tools-profile_append_qemux86-64 = " ${LTTNGUST} ${SYSTEMTAP}"
 RDEPENDS_task-core-tools-profile_append_qemuppc = " lttng-ust ${SYSTEMTAP}"
 RDEPENDS_task-core-tools-profile_append_qemuarm = " lttng-ust"
 
