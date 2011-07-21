@@ -22,7 +22,7 @@ addtask install_perf after do_install before do_package
 do_compile_perf[umask] = 022
 do_install_perf[umask] = 022
 
-PERFDEPENDS = "virtual/libc:do_populate_sysroot elfutils:do_populate_sysroot"
+PERFDEPENDS = "virtual/${MLPREFIX}libc:do_populate_sysroot ${MLPREFIX}elfutils:do_populate_sysroot"
 PERFDEPENDS_libc-uclibc = ""
 PERFRDEPENDS = "python perl elfutils"
 PERFRDEPENDS_libc-uclibc = ""
