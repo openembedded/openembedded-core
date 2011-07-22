@@ -1,6 +1,7 @@
 inherit kernel
 require recipes-kernel/linux/linux-yocto.inc
 
+KMACHINE = "common-pc"
 KMACHINE_qemux86  = "common_pc"
 KMACHINE_qemux86-64  = "common_pc_64"
 
@@ -13,6 +14,7 @@ KBRANCH = ${KMACHINE}-${LINUX_KERNEL_TYPE}
 
 SRCREV_machine_qemux86 = "439602eb6acd53d9beb8493710310214fc7bd749"
 SRCREV_machine_qemux86-64 = "3c84c45ad3c3592f9c7ff4076de9bee417cd322e"
+SRCREV_machine = "439602eb6acd53d9beb8493710310214fc7bd749"
 SRCREV_meta = "e1f85a470934a0cf6abde5d95533e74501822c6b"
 
 PR = "r2"
