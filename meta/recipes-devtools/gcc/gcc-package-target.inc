@@ -17,6 +17,7 @@ FILES_${PN} = "\
   ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/cc* \
   ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/lto* \
   ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/lib*${SOLIBS} \
+  ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/liblto*${SOLIBSDEV} \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/*.o \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/specs \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/lib*${SOLIBS} \
