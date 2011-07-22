@@ -4,5 +4,5 @@ TUNE_ARCH = "sh4"
 # But it is not compatible for sh4.
 # The binary optimized by m4a doesn't operate on sh4. It works on sh4a only.
 
-TARGET_CC_ARCH = "-ml -m4"
+TUNE_CCARGS = "-ml -m4"
 TUNE_PKGARCH = "sh4"

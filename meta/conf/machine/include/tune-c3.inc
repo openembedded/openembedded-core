@@ -2,5 +2,5 @@ TUNE_ARCH = "i586"
 
 TUNE_PKGARCH = "i586"
 
-TARGET_CC_ARCH = "-march=c3 -mtune=c3"
+TUNE_CCARGS = "-march=c3 -mtune=c3"
 PACKAGE_EXTRA_ARCHS = "i386 i486 i586"
