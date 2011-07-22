@@ -1,4 +1,4 @@
-TUNE_ARCH = "arm"
+require conf/machine/include/arm/arch-arm.inc
 
 # valid options for -march: `armv7', `armv7-a', `armv7-r', `armv7-m'
 # valid option for -mtune: `cortex-a8', `cortex-r4', `cortex-m3', `cortex-m1'

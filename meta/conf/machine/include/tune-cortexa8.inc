@@ -1,4 +1,5 @@
-TUNE_ARCH = "arm"
+require conf/machine/include/arm/arch-arm.inc
+
 
 # Instead of using -mfpu=vfp[2] we can use -mfpu=neon to make use of gcc intrinsics[1] and vectorize loops with -ftree-vectorize[3]
 # [1] http://gcc.gnu.org/onlinedocs/gcc/ARM-NEON-Intrinsics.html

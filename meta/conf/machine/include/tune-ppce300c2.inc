@@ -1,4 +1,4 @@
-TUNE_ARCH = "powerpc"
+require conf/machine/include/powerpc/arch-powerpc.inc
 
 TUNE_CCARGS = "-mcpu=e300c2 -msoft-float"
 TUNE_PKGARCH = "ppce300"

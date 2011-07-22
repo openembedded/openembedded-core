@@ -1,4 +1,4 @@
-TUNE_ARCH = "arm"
+require conf/machine/include/arm/arch-arm.inc
 
 TUNE_PKGARCH = "armv4t"
 TUNE_CCARGS = "-march=armv4t -mtune=arm920t"

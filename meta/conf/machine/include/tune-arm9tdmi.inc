@@ -1,4 +1,4 @@
-TUNE_ARCH = "arm"
+require conf/machine/include/arm/arch-arm.inc
 
 TUNE_PKGARCH = "armv4t"
 PACKAGE_EXTRA_ARCHS = "arm armv4 armv4t"

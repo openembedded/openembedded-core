@@ -1,5 +1,3 @@
-TUNE_ARCH = "x86_64"
+require conf/machine/include/ia32/arch-ia32.inc
 
-TUNE_PKGARCH = "x86_64"
-TUNE_CCARGS = "-m64"
-
+DEFAULTTUNE = "x86-64"

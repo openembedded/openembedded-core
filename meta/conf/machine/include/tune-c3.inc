@@ -1,4 +1,4 @@
-TUNE_ARCH = "i586"
+require conf/machine/include/ia32/arch-ia32.inc
 
 TUNE_PKGARCH = "i586"
 

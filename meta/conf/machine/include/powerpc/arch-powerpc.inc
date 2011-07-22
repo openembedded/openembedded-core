@@ -1,0 +1,1 @@
+TUNE_ARCH = "powerpc"
