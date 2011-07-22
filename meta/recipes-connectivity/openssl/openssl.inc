@@ -83,6 +83,9 @@ do_configure () {
 	linux-gnuspe-powerpc)
 		target=linux-ppc
 		;;
+	linux-powerpc64)
+		target=linux-ppc64
+		;;
 	linux-supersparc)
 		target=linux-sparcv8
 		;;
