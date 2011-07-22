@@ -1,3 +1,4 @@
+TUNE_ARCH = "mips"
+
 TARGET_CC_ARCH = "-march=mips32"
-FEED_ARCH = "${TARGET_ARCH}"
-BASE_PACKAGE_ARCH = "${TARGET_ARCH}"
+TUNE_PKGARCH = "mips"

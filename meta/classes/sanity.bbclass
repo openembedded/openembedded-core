@@ -147,9 +147,13 @@ def check_sanity(e):
     if (LooseVersion(__version__) < LooseVersion(minversion)):
         messages = messages + 'Bitbake version %s is required and version %s was found\n' % (minversion, __version__)
 
-    # Check TARGET_ARCH is set
-    if data.getVar('TARGET_ARCH', e.data, True) == 'INVALID':
-        messages = messages + 'Please set TARGET_ARCH directly, or choose a MACHINE or DISTRO that does so.\n'
+    # Check TUNE_ARCH is set
+    if data.getVar('TUNE_ARCH', e.data, True) == 'INVALID':
+        messages = messages + 'TUNE_ARCH is unset. Please ensure your MACHINE configuration includes a valid tune configuration file which will set this correctly.\n'
+
+    # Check TARGET_ARCH is set correctly
+    if data.getVar('TARGE_ARCH', e.data, False) == '${TUNE_ARCH}':
+        messages = messages + 'TARGET_ARCH is being overwritten, likely by your MACHINE configuration files.\nPlease use a valid tune configuration file which should set this correctly automatically\nand avoid setting this in the machine configuration. See the OE-Core mailing list for more information.\n'
     
     # Check TARGET_OS is set
     if data.getVar('TARGET_OS', e.data, True) == 'INVALID':

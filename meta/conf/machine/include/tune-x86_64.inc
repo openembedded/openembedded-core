@@ -1,0 +1,5 @@
+TUNE_ARCH = "x86_64"
+
+TUNE_PKGARCH = "x86_64"
+TARGET_CC_ARCH = "-m64"
+

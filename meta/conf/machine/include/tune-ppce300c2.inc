@@ -1,3 +1,5 @@
+TUNE_ARCH = "powerpc"
+
 TARGET_CC_ARCH = "-mcpu=e300c2 -msoft-float"
-BASE_PACKAGE_ARCH = "ppce300"
+TUNE_PKGARCH = "ppce300"
 PACKAGE_EXTRA_ARCHS = "powerpc ppce300"
