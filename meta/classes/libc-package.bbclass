@@ -266,6 +266,7 @@ python package_do_split_gconvs () {
 			locale_arch_options = { \
 				"arm":     " --uint32-align=4 --little-endian ", \
 				"powerpc": " --uint32-align=4 --big-endian ",    \
+				"powerpc64": " --uint32-align=4 --big-endian ",  \
 				"mips":    " --uint32-align=4 --big-endian ",    \
 				"mipsel":  " --uint32-align=4 --little-endian ", \
 				"i586":    " --uint32-align=4 --little-endian ", \
