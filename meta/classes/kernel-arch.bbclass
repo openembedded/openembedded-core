@@ -6,7 +6,7 @@
 
 valid_archs = "alpha cris ia64 \
                i386 x86 \
-               m68knommu m68k ppc powerpc ppc64  \
+               m68knommu m68k ppc powerpc powerpc64 ppc64  \
 	       sparc sparc64 \
                arm  arm26 \
                m32r mips \
@@ -24,6 +24,7 @@ def map_kernel_arch(a, d):
 	elif re.match('arm26$', a):		        return 'arm26'
 	elif re.match('armeb$', a):		        return 'arm'
 	elif re.match('mipsel$', a):		        return 'mips'
+	elif re.match('p(pc|owerpc)(|64)', a):		return 'powerpc'
 	elif re.match('sh(3|4)$', a):		        return 'sh'
 	elif re.match('bfin', a):                       return 'blackfin'
 	elif re.match('microblazeel', a):               return 'microblaze'
@@ -36,7 +37,7 @@ export ARCH = "${@map_kernel_arch(bb.data.getVar('TARGET_ARCH', d, 1), d)}"
 def map_uboot_arch(a, d):
 	import re
 
-	if   re.match('powerpc$', a): return 'ppc'
+	if   re.match('p(pc|owerpc)(|64)', a): return 'ppc'
 	elif re.match('i.86$', a): return 'x86'
 	return a
 
