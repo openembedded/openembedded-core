@@ -21,15 +21,11 @@ ac_cv_sizeof_uid_t=${ac_cv_sizeof_uid_t=4}
 ac_cv_sizeof_gid_t=${ac_cv_sizeof_gid_t=4}
 ac_cv_sizeof_ino_t=${ac_cv_sizeof_ino_t=4}
 ac_cv_sizeof_dev_t=${ac_cv_sizeof_dev_t=8}
-ac_cv_func_getpgrp_void=${ac_cv_func_getpgrp_void=yes}
-ac_cv_func_getpwuid_r=${ac_cv_func_getpwuid_r=yes}
 ac_cv_func_lstat_dereferences_slashed_symlink=${ac_cv_func_lstat_dereferences_slashed_symlink=yes}
 ac_cv_func_lstat_empty_string_bug=${ac_cv_func_lstat_empty_string_bug=no}
 ac_cv_func_pthread_key_delete=${ac_cv_func_pthread_key_delete=yes}
-ac_cv_func_setpgrp_void=${ac_cv_func_setpgrp_void=yes}
 ac_cv_func_setvbuf_reversed=${ac_cv_func_setvbuf_reversed=no}
 ac_cv_func_stat_empty_string_bug=${ac_cv_func_stat_empty_string_bug=no}
-ac_cv_func_posix_getpwuid_r=${ac_cv_func_posix_getpwuid_r=yes}
 ac_cv_func_stat_ignores_trailing_slash=${ac_cv_func_stat_ignores_trailing_slash=no}
 
 ac_cv_header_netinet_sctp_h=${ac_cv_header_netinet_sctp_h=no}
@@ -106,9 +102,7 @@ glib_cv_rtldglobal_broken=${glib_cv_rtldglobal_broken=yes}
 # glib-2.0
 glib_cv_stack_grows=${glib_cv_stack_grows=no}
 utils_cv_sys_open_max=${utils_cv_sys_open_max=1015}
-ac_cv_func_posix_getpwuid_r=${ac_cv_func_posix_getpwuid_r=yes}
 glib_cv_use_pid_surrogate=${glib_cv_use_pid_surrogate=yes}
-ac_cv_func_posix_getgrgid_r=${ac_cv_func_posix_getgrgid_r=yes}
 
 # guile
 ac_cv_uchar=${ac_cv_uchar=no}

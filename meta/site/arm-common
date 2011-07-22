@@ -48,9 +48,6 @@ ac_cv_func_fnmatch_works=${ac_cv_func_fnmatch_works=yes}
 # gettext
 am_cv_func_working_getline=${am_cv_func_working_getline=yes}
 
-# gio
-ac_cv_func_getgrgid_r=${ac_cv_func_getgrgid_r=yes}
-
 # glib
 glib_cv_sizeof_gmutex=${glib_cv_sizeof_gmutex=24}
 glib_cv_sizeof_system_thread=${glib_cv_sizeof_system_thread=4}
@@ -67,7 +64,6 @@ glib_cv_va_copy=${glib_cv_va_copy=yes}
 glib_cv_va_val_copy=${glib_cv_va_val_copy=yes}
 glib_cv___va_copy=${glib_cv___va_copy=yes}
 glib_cv_rtldglobal_broken=${glib_cv_rtldglobal_broken=no}
-ac_cv_func_getpwuid_r=${ac_cv_func_getpwuid_r=yes}
 glib_cv_sys_pthread_mutex_trylock_posix=${glib_cv_sys_pthread_mutex_trylock_posix=yes}
 glib_cv_sys_pthread_getspecific_posix=${glib_cv_sys_pthread_getspecific_posix=yes}
 glib_cv_sys_pthread_cond_timedwait_posix=${glib_cv_sys_pthread_cond_timedwait_posix=yes}

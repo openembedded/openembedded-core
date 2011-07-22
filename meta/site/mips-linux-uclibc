@@ -1,7 +1,4 @@
-
-ac_cv_func_getpgrp_void=${ac_cv_func_getpgrp_void=yes}
 ac_cv_func_setvbuf_reversed=${ac_cv_func_setvbuf_reversed=no}
-ac_cv_func_posix_getpwuid_r=${ac_cv_func_posix_getpwuid_r=yes}
 
 # bash
 ac_cv_c_long_double=${ac_cv_c_long_double=no}
@@ -35,9 +32,7 @@ glib_cv_va_val_copy=${glib_cv_va_val_copy=yes}
 # glib-2.0
 glib_cv_stack_grows=${glib_cv_stack_grows=no}
 utils_cv_sys_open_max=${utils_cv_sys_open_max=1015}
-ac_cv_func_posix_getpwuid_r=${ac_cv_func_posix_getpwuid_r=yes}
 glib_cv_use_pid_surrogate=${glib_cv_use_pid_surrogate=yes}
-ac_cv_func_posix_getgrgid_r=${ac_cv_func_posix_getgrgid_r=yes}
 
 # libpcap
 ac_cv_linux_vers=${ac_cv_linux_vers=2}
@@ -55,7 +50,6 @@ lf_cv_sane_realloc=${lf_cv_sane_realloc=yes}
 libIDL_cv_long_long_format=${libIDL_cv_long_long_format=ll}
 
 # ncftp
-ac_cv_func_setpgrp_void=${ac_cv_func_setpgrp_void=yes}
 wi_cv_struct_timeval_tv_sec=${wi_cv_struct_timeval_tv_sec=long}
 wi_cv_struct_timeval_tv_usec=${wi_cv_struct_timeval_tv_usec=long}
 wi_cv_unix_domain_sockets=${wi_cv_unix_domain_sockets=yes}

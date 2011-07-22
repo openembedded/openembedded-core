@@ -1,7 +1,4 @@
-
-ac_cv_func_getpgrp_void=${ac_cv_func_getpgrp_void=yes}
 ac_cv_func_setvbuf_reversed=${ac_cv_func_setvbuf_reversed=no}
-ac_cv_func_posix_getpwuid_r=${ac_cv_func_posix_getpwuid_r=yes}
 
 # bash
 ac_cv_c_long_double=${ac_cv_c_long_double=no}
@@ -48,7 +45,6 @@ lf_cv_sane_realloc=${lf_cv_sane_realloc=yes}
 libIDL_cv_long_long_format=${libIDL_cv_long_long_format=ll}
 
 # ncftp
-ac_cv_func_setpgrp_void=${ac_cv_func_setpgrp_void=yes}
 wi_cv_struct_timeval_tv_sec=${wi_cv_struct_timeval_tv_sec=long}
 wi_cv_struct_timeval_tv_usec=${wi_cv_struct_timeval_tv_usec=long}
 wi_cv_unix_domain_sockets=${wi_cv_unix_domain_sockets=yes}
