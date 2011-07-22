@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://README;beginline=41;endline=74;md5=875385159b2ee76ecf
 
 DEPENDS = "sgml-common-native"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/docbook/docbook-dsssl-${PV}.tar.bz2"
 
@@ -19,6 +19,8 @@ S = "${WORKDIR}/docbook-dsssl-${PV}"
 inherit native
 
 SSTATEPOSTINSTFUNCS += "docbook_dsssl_stylesheets_sstate_postinst"
+SYSROOT_PREPROCESS_FUNCS += "docbook_dsssl_sysroot_preprocess"
+
 
 do_install () {
 	# Refer to http://www.linuxfromscratch.org/blfs/view/stable/pst/docbook-dsssl.html
@@ -42,8 +44,14 @@ docbook_dsssl_stylesheets_sstate_postinst () {
 	then
 		# Ensure that the catalog file sgml-docbook.cat is properly
 		# updated when the package is installed from sstate cache.
-		install-catalog \
+		${SYSROOT_DESTDIR}${bindir_crossscripts}/install-catalog-docbook-dsssl \
 			--add ${sysconfdir}/sgml/sgml-docbook.cat \
 			${sysconfdir}/sgml/dsssl-docbook-stylesheets.cat
 	fi
 }
+
+docbook_dsssl_sysroot_preprocess () {
+    install -d ${SYSROOT_DESTDIR}${bindir_crossscripts}/
+    install -m 755 ${STAGING_BINDIR_NATIVE}/install-catalog ${SYSROOT_DESTDIR}${bindir_crossscripts}/install-catalog-docbook-dsssl
+}
+
