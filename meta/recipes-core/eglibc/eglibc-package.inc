@@ -43,7 +43,7 @@ PACKAGES += "${PN}-localedatas"
 RRECOMMENDS_${PN}-localedatas =  "${@" ".join([p for p in d.getVar('PACKAGES', True).split() if p.find("eglibc-localedata") != -1])}"
 
 RPROVIDES_eglibc = "glibc"
-RPROVIDES_eglibc-utils = "glibc-utils"
+RPROVIDES_${PN}-utils = "glibc-utils"
 RPROVIDES_eglibc-pic = "glibc-pic"
 RPROVIDES_eglibc-dev = "glibc-dev"
 RPROVIDES_eglibc-doc = "glibc-doc"
