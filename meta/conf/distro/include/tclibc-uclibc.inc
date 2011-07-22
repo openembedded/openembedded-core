@@ -5,7 +5,7 @@
 TARGET_OS = "linux-uclibc"
 TARGET_OS_arm = "linux-uclibceabi"
 TARGET_OS_armeb = "linux-uclibceabi"
-TARGET_OS_powerpc = "linux${@['','-gnuspe'][bb.data.getVar('TARGET_FPU',d,1) in ['ppc-efd', 'ppc-efs']]}"
+TARGET_OS_powerpc = "linux-uclibc${@['','spe'][bb.data.getVar('TARGET_FPU',d,1) in ['ppc-efd', 'ppc-efs']]}"
 
 # Add uclibc overrides to the overrides.
 OVERRIDES =. "libc-uclibc:"
