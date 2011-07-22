@@ -2,10 +2,7 @@
 # uclibc specific configuration
 #
 
-TARGET_OS = "linux-uclibc"
-TARGET_OS_arm = "linux-uclibceabi"
-TARGET_OS_armeb = "linux-uclibceabi"
-TARGET_OS_powerpc = "linux-uclibc${@['','spe'][bb.data.getVar('TARGET_FPU',d,1) in ['ppc-efd', 'ppc-efs']]}"
+LIBCEXTENSION = "-uclibc"
 
 # Add uclibc overrides to the overrides.
 OVERRIDES =. "libc-uclibc:"
