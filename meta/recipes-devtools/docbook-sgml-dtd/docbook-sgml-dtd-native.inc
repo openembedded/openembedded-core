@@ -20,9 +20,10 @@ SRC_URI = "http://www.docbook.org/sgml/${DTD_VERSION}/docbook-${DTD_VERSION}.zip
 # The .zip file extracts to the current dir
 S = "${WORKDIR}"
 
-INC_PR = "r1"
+INC_PR = "r2"
 
 SSTATEPOSTINSTFUNCS += "docbook_sgml_dtd_sstate_postinst"
+SYSROOT_PREPROCESS_FUNCS += "docbook_sgml_dtd_sysroot_preprocess"
 
 inherit native
 
@@ -43,8 +44,14 @@ docbook_sgml_dtd_sstate_postinst () {
 	then
 		# Ensure that the catalog file sgml-docbook.cat is properly
 		# updated when the package is installed from sstate cache.
-		install-catalog \
+		${SYSROOT_DESTDIR}${bindir_crossscripts}/install-catalog-docbook-sgml-dtd-${DTD_VERSION} \
 			--add ${sysconfdir}/sgml/sgml-docbook.cat \
 			${sysconfdir}/sgml/sgml-docbook-dtd-${DTD_VERSION}.cat
 	fi
 }
+
+docbook_sgml_dtd_sysroot_preprocess () {
+    install -d ${SYSROOT_DESTDIR}${bindir_crossscripts}/
+    install -m 755 ${STAGING_BINDIR_NATIVE}/install-catalog ${SYSROOT_DESTDIR}${bindir_crossscripts}/install-catalog-docbook-sgml-dtd-${DTD_VERSION}
+}
+
