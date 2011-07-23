@@ -272,22 +272,27 @@ setup_tmpdir() {
 
         # We have bitbake in PATH, get TMPDIR from bitbake
         TMPDIR=`bitbake -e | grep TMPDIR=\" | cut -d '=' -f2 | cut -d '"' -f2`
+        if [ -z "$TMPDIR" ]; then
+            echo "Error: this script needs to be run from your build directory,"
+            echo "or you need to explicitly set TMPDIR in your environment"
+            exit 1
+        fi
     fi
 }
 
 setup_sysroot() {
-	# Toolchain installs set up $OECORE_NATIVE_SYSROOT in their
-	# environment script. If that variable isn't set, we're
-	# either in an in-tree build scenario or the environment
-	# script wasn't source'd.
-	if [ -z "$OECORE_NATIVE_SYSROOT" ]; then
-		setup_tmpdir
-		BUILD_ARCH=`uname -m`
-		BUILD_OS=`uname | tr '[A-Z]' '[a-z]'`
-		BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
+    # Toolchain installs set up $OECORE_NATIVE_SYSROOT in their
+    # environment script. If that variable isn't set, we're
+    # either in an in-tree build scenario or the environment
+    # script wasn't source'd.
+    if [ -z "$OECORE_NATIVE_SYSROOT" ]; then
+        setup_tmpdir
+        BUILD_ARCH=`uname -m`
+        BUILD_OS=`uname | tr '[A-Z]' '[a-z]'`
+        BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
 
-		OECORE_NATIVE_SYSROOT=$TMPDIR/sysroots/$BUILD_SYS
-	fi 
+        OECORE_NATIVE_SYSROOT=$TMPDIR/sysroots/$BUILD_SYS
+    fi 
 }
 
 # Locate a rootfs image based on defaults defined above
