@@ -57,7 +57,7 @@ set( CMAKE_INSTALL_RPATH ${OECMAKE_RPATH} )
 set( CMAKE_MODULE_PATH ${STAGING_DATADIR}/cmake/Modules/ )
 
 # add for non /usr/lib libdir, e.g. /usr/lib64
-LIST(APPEND CMAKE_SYSTEM_LIBRARY_PATH ${libdir})
+set( CMAKE_LIBRARY_PATH ${libdir} )
 
 EOF
 }
