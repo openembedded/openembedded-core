@@ -2,8 +2,8 @@ DESCRIPTION = "support for getting/setting POSIX.1e capabilities"
 HOMEPAGE = "http://sites.google.com/site/fullycapable/"
 
 # no specific GPL version required
-LICENSE = "BSD | GPL"
-LIC_FILES_CHKSUM = "file://License;md5=731de803c1ccbcb05a9b3523279c8d7f"
+LICENSE = "BSD | GPLv2"
+LIC_FILES_CHKSUM = "file://License;md5=3f84fd6f29d453a56514cb7e4ead25f1"
 
 DEPENDS = "libpam attr perl-native-runtime"
 # attr and pam are disabled by EXTRA_OEMAKE_virtclass-native
