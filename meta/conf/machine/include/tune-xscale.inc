@@ -1,11 +1,17 @@
-require conf/machine/include/arm/arch-arm.inc
+DEFAULTTUNE ?= "xscale"
 
-INHERIT += "siteinfo"
+require conf/machine/include/arm/arch-armv5-dsp.inc
 
-TUNE_CCARGS = "-march=armv5te -mtune=xscale"
-TARGET_CC_KERNEL_ARCH = "-march=armv5te -mtune=xscale"
-TUNE_PKGARCH = "${@['armv5teb', 'armv5te'][bb.data.getVar('SITEINFO_ENDIANNESS', d, 1) == 'le']}"
-PACKAGE_EXTRA_ARCHS = "${@['armeb armv4b armv4tb armv5teb', 'arm armv4 armv4t armv5te'][bb.data.getVar('SITEINFO_ENDIANNESS', d, 1) == 'le']}"
+TUNEVALID[xscale] = "Enable PXA255/PXA26x Xscale specific processor optimizations"
+TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "xscale", "-mtune=xscale", "", d)}"
+
+AVAILTUNES += "xscale"
+TUNE_FEATURES_tune-xscale = "${TUNE_FEATURES_tune-armv5te} xscale"
+PACKAGE_EXTRA_ARCHS_tune-xscale = "${PACKAGE_EXTRA_ARCHS_tune-armv5te}"
+
+AVAILTUNES += "xscale-be"
+TUNE_FEATURES_tune-xscale = "${TUNE_FEATURES_tune-armv5teb} xscale"
+PACKAGE_EXTRA_ARCHS_tune-xscale-be = "${PACKAGE_EXTRA_ARCHS_tune-armv5teb}"
 
 # webkit-gtk has alignment issues with double instructions on armv5 so
 # disable them here

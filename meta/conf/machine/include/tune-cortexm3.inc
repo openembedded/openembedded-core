@@ -1,5 +1,15 @@
-require conf/machine/include/arm/arch-arm.inc
+DEFAULTTUNE ?= "cortexm3"
+ARMPKGARCH ?= "armv7m"
 
-# valid options for -march: `armv7', `armv7-m'
-TUNE_CCARGS = "-march=armv7-m -mtune=cortex-m3 -mfpu=vfp -mfloat-abi=softfp"
-TUNE_PKGARCH = "armv7"
+require conf/machine/include/arm/arch-armv7a.inc
+
+TUNEVALID[cortexm3] = "Enable Cortex-M3 specific processor optimizations"
+TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "cortexm3", "-mtune=cortex-m3", "", d)}"
+
+TUNEVALID[armv7m] = "Enable Cortex-M3 specific processor optimizations"
+TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "armv7m", "-march=armv7-m", "", d)}"
+
+AVAILTUNES += "cortexm3"
+TUNE_FEATURES_tune-cortexm3 = "armv7m vfp coretexm3"
+PACKAGE_EXTRA_ARCHS_tune-cortexm3 = "${PACKAGE_EXTRA_ARCHS_tune-armv7at} armv7m"
+

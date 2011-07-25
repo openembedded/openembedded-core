@@ -1,15 +1,16 @@
-require conf/machine/include/arm/arch-arm.inc
+DEFAULTTUNE ?= "cortexa8-neon"
 
+require conf/machine/include/arm/arch-armv7a.inc
 
-# Instead of using -mfpu=vfp[2] we can use -mfpu=neon to make use of gcc intrinsics[1] and vectorize loops with -ftree-vectorize[3]
-# [1] http://gcc.gnu.org/onlinedocs/gcc/ARM-NEON-Intrinsics.html
-# [2] http://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html 
-# [3] https://support.codesourcery.com/GNUToolchain/kbentry29
+TUNEVALID[cortexa8] = "Enable Cortex-A8 specific processor optimizations"
+TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "cortexa8", "-mtune=cortex-a8", "", d)}"
 
-TUNE_CCARGS = "-march=armv7-a -mtune=cortex-a8 -mfpu=neon -mfloat-abi=softfp -fno-tree-vectorize"
+AVAILTUNES += "cortexa8 cortexa8t"
+TUNE_FEATURES_tune-cortexa8 = "${TUNE_FEATURES_tune-armv7a} cortexa8"
+TUNE_FEATURES_tune-cortexa8t = "${TUNE_FEATURES_tune-armv7at} cortexa8"
+TUNE_FEATURES_tune-cortexa8-neon = "${TUNE_FEATURES_tune-cortexa8} neon"
 
-# Other potentially useful options
-#-ftree-vectorize -ffast-math -fno-omit-frame-pointer
+PACKAGE_EXTRA_ARCHS_tune-cortexa8 = "${PACKAGE_EXTRA_ARCHS_tune-armv7at}"
+PACKAGE_EXTRA_ARCHS_tune-cortexa8t = "${PACKAGE_EXTRA_ARCHS_tune-armv7at}"
+PACKAGE_EXTRA_ARCHS_tune-cortexa8-neon = "${PACKAGE_EXTRA_ARCHS_tune-armv7at-neon}"
 
-TUNE_PKGARCH = "armv7a"
-PACKAGE_EXTRA_ARCHS = "arm armv4 armv4t armv5te armv6 armv7 armv7a"

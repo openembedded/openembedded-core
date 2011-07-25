@@ -1,9 +1,12 @@
-require conf/machine/include/arm/arch-arm.inc
+DEFAULTTUNE ?= "strongarm"
 
-TUNE_PKGARCH = "arm"
+require conf/machine/include/arm/arch-armv4.inc
 
-# This machine lists common configuration options for Strongarm 1100 devices
-# NOTE: The Zaurus Collie also has a Strongarm processor, but uses the 1110 type
+TUNEVALID[strongarm] = "Enable Strongarm 1100 series processor optimizations"
+TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "strongarm", "-mtune=strongarm1100", "", d)}"
 
-TUNE_CCARGS = "-march=armv4 -mtune=strongarm1100"
+AVAILTUNES += "strongarm"
+TUNE_FEATURES_tune-strongarm = "${TUNE_FEATURES_tune-armv4} strongarm"
+PACKAGE_EXTRA_ARCHS_tune-strongarm = "${PACKAGE_EXTRA_ARCHS_tune-armv4}"
+
 

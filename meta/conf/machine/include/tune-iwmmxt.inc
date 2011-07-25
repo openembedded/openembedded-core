@@ -1,8 +1,16 @@
-require conf/machine/include/arm/arch-arm.inc
-
 # Configurations for the Intel PXA27x Appications Processor Family. 
 # Please use tune-xscale for PXA255/PXA26x based processors.
-TUNE_CCARGS = "-march=iwmmxt -mcpu=iwmmxt -mtune=iwmmxt"
-PACKAGE_EXTRA_ARCHS = "arm armv4 armv4t armv5te iwmmxt"
-TUNE_PKGARCH = "iwmmxt"
+
+DEFAULTTUNE ?= "iwmmxt"
+ARMPKGARCH ?= "iwmmxt"
+
+require conf/machine/include/arm/arch-armv5-dsp.inc
+
+TUNEVALID[iwmmxt] = "Enable Intel PXA27x specific processor optimizations"
+TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "iwmmxt", "-march=iwmmxt -mtune=iwmmxt", "", d)}"
+
+AVAILTUNES += "iwmmxt"
+TUNE_FEATURES_tune-iwmmxt = "thumb iwmmxt"
+PACKAGE_EXTRA_ARCHS_tune-iwmmxt = "${PACKAGE_EXTRA_ARCHS_tune-armv5te} iwmmxt"
+
 
