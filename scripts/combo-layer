@@ -254,7 +254,7 @@ def action_apply_patch(conf, args):
         for line in open(repo['patchlist']):
             patchfile = line.split()[0]
             lastrev = line.split()[1]
-            cmd = "git am -s -p1 %s" % patchfile
+            cmd = "git am --keep-cr -s -p1 %s" % patchfile
             logger.info("Apply %s" % patchfile )
             try:
                 runcmd(cmd)
