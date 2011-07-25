@@ -19,7 +19,7 @@ Update by Nitin A Kamble <nitin.a.kamble@intel.com> 2011/04/21
 +    {
 +        my $hostlib = $ENV{PERLHOSTLIB};
 +        print STDERR "*** Module name IN: $modlibname\n";
-+        ($p1, $p2, $p3, $p4, $p5) = $modlibname =~ m/(^(.*lib\/)?)((perl\/[0-9\.]*\/)?)(.*)$/;
++        ($p1, $p2, $p3, $p4, $p5) = $modlibname =~ m/(^(.*lib\w*\/)?)((perl\/[0-9\.]*\/)?)(.*)$/;
 +        print STDERR "*** p1: $p1  p3: $p3  p5: $p5\n";
 +        if ( $p1 ne "" ) {
 +            $modlibname = $hostlib.$p5;
