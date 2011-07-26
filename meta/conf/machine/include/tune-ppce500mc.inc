@@ -1,5 +1,11 @@
+DEFAULTTUNE ?= "ppce500mc"
+
 require conf/machine/include/powerpc/arch-powerpc.inc
 
-TUNE_CCARGS = "-mcpu=e500mc"
-TUNE_PKGARCH = "ppce500mc"
-PACKAGE_EXTRA_ARCHS = "powerpc ppce500mc"
+TUNEVALID[ppce500mc] = "Enable ppce500mc specific processor optimizations"
+TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "ppce500mc", "-mcpu=e500mc", "", d)}"
+TUNE_PKGARCH .= "${@bb.utils.contains("TUNE_FEATURES", "ppce500mc", "ppce500mc", "", d)}"
+
+AVAILTUNES += "ppce500mc"
+TUNE_FEATURES_tune-ppce500mc = "m32 hard-fpu ppce500mc"
+PACKAGE_EXTRA_ARCHS_tune-ppce500mc = "powerpc ppce500mc"

@@ -1,0 +1,10 @@
+TUNEVALID[m64] = "Power ELF64 standard ABI"
+TUNE_CONFLICTS[m64] = "m32"
+TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "n64", "-m64", "", d)}"
+TUNE_ARCH .= "${@bb.utils.contains("TUNE_FEATURES", [ "m64" ], "powerpc64", "", d)}"
+
+AVAILTUNES += "powerpc64 powerpc64-nf"
+TUNE_FEATURES_tune-powerpc64 ?= "m64 fpu-hard"
+BASE_LIB_tune-powerpc64 = "lib64"
+TUNE_FEATURES_tune-powerpc64-nf ?= "m64 fpu-soft"
+BASE_LIB_tune-powerpc64-nf = "lib64"
