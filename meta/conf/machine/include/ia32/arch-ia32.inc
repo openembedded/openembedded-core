@@ -4,17 +4,19 @@
 
 DEFAULTTUNE ?= "x86"
 TARGET_FPU ?= ""
+X86ARCH32 ?= "i586"
+X86ARCH64 ?= "x86_64"
 
 # ELF32 ABI
 TUNEVALID[m32] = "IA32 ELF32 standard ABI"
 TUNECONFLICTS[m32] = "m64"
-TUNE_ARCH .= "${@bb.utils.contains("TUNE_FEATURES", "m32", "i586", "" ,d)}"
+TUNE_ARCH .= "${@bb.utils.contains("TUNE_FEATURES", "m32", "${X86ARCH32}", "" ,d)}"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "m32", "-m32", "", d)}"
 
 # ELF64 ABI
 TUNEVALID[m64] = "IA32e (x86_64) ELF64 standard ABI"
 TUNECONFLICT[m64] = "m32"
-TUNE_ARCH .= "${@bb.utils.contains("TUNE_FEATURES", "m64", "x86_64", "" ,d)}"
+TUNE_ARCH .= "${@bb.utils.contains("TUNE_FEATURES", "m64", "${X86ARCH64}", "" ,d)}"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "m64", "-m64", "", d)}"
 
 TUNE_PKGARCH ?= "${@bb.utils.contains("TUNE_FEATURES", "m32", "x86", "x86_64", d)}"

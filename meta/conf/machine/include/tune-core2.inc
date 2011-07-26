@@ -1,5 +1,5 @@
 DEFAULTTUNE ?= "core2"
-TUNE_ARCH ?= "${@bb.utils.contains("TUNE_FEATURES", "m32", "i686", "x86_64", d)}"
+X86ARCH32 ?= "i686"
 TUNE_PKGARCH ?= "${@bb.utils.contains("TUNE_FEATURES", "m32", "core2", "core2-64", d)}"
 
 require conf/machine/include/tune-i586.inc
