@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Double path references breaks recent autoconf+automake
 
 RP 2/1/10

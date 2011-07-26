@@ -1,3 +1,7 @@
+Upstream-Status: Inappropriate [others]
+
+Patch from gentoo which is not appropriate for us to upstream.
+
 # Patch copied from the OpenEmbedded libatomics-ops recipe. Original
 # source was from Gentoo.
 #

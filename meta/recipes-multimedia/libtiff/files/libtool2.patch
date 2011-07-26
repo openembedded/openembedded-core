@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 ---
  configure.ac |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

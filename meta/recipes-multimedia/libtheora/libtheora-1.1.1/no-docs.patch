@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: libtheora-1.1.1/Makefile.am
 ===================================================================
 --- libtheora-1.1.1.orig/Makefile.am	2009-11-25 22:01:53.593775926 +0100

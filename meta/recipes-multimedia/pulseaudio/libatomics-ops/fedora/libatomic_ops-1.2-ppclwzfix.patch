@@ -1,3 +1,8 @@
+Upstream-Status: Inappropriate [others]
+
+The patch is imported from fedora project, and is not appropriate for us
+to upstream it.
+
 http://cvs.fedoraproject.org/viewcvs/devel/libatomic_ops/libatomic_ops-1.2-ppclwzfix.patch
 
 * add fix for bad variable handling on PPC

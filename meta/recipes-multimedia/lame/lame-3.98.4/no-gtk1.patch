@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 # Acquired from OpenEmbedded
 
 --- lame-3.96.1/configure.in~no-gtk1.patch	2004-07-25 15:52:12.000000000 +0100
