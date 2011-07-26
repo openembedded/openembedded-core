@@ -13,7 +13,7 @@ LICENSE = "GPLv3"
 
 DEPENDS = "flex-native bison-native zlib-native"
 
-inherit autotools gettext
+inherit autotools gettext multilib_header
 
 PACKAGES += "${PN}-symlinks"
 
@@ -116,6 +116,8 @@ do_install () {
 	done
 
 	rm ${D}${bindir}/ar ${D}${bindir}/strings
+
+	oe_multilib_header bfd.h
 }
 
 do_install_virtclass-native () {
