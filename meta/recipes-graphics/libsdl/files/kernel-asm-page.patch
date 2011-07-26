@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 diff --git a/src/video/Xext/Xxf86dga/XF86DGA.c b/src/video/Xext/Xxf86dga/XF86DGA.c
 index 4e3d662..de38a3c 100644
 --- a/src/video/Xext/Xxf86dga/XF86DGA.c

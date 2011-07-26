@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 Index: Mesa-7.10.2/src/mesa/main/imports.c
 ===================================================================
 --- Mesa-7.10.2.orig/src/mesa/main/imports.c	2011-03-01 12:57:29.000000000 -0800
