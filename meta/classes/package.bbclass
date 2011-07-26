@@ -472,7 +472,7 @@ python fixup_perms () {
 			else:
 				return int(mode,8)
 
-		# Note uid/gid -1 has special significance in os.chown
+		# Note uid/gid -1 has special significance in os.lchown
 		def _procuid(self, uid):
 			if uid is None or uid == "-":
 				return -1
@@ -514,14 +514,14 @@ python fixup_perms () {
 
 	# Fix the permission, owner and group of path
 	def fix_perms(path, mode, uid, gid, dir):
-		if mode:
+		if mode and not os.path.islink(path):
 			#bb.note("Fixup Perms: chmod 0%o %s" % (mode, dir))
 			os.chmod(path, mode)
 		# -1 is a special value that means don't change the uid/gid
-		# if they are BOTH -1, don't bother to chown
+		# if they are BOTH -1, don't bother to lchown
 		if not (uid == -1 and gid == -1):
-			#bb.note("Fixup Perms: chown %d:%d %s" % (uid, gid, dir))
-			os.chown(path, uid, gid)
+			#bb.note("Fixup Perms: lchown %d:%d %s" % (uid, gid, dir))
+			os.lchown(path, uid, gid)
 
 	# Return a list of configuration files based on either the default
 	# files/fs-perms.txt or the contents of FILESYSTEM_PERMS_TABLES
