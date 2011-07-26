@@ -17,6 +17,9 @@ PR = "r8"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS ?= ""
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS ?= ""
 
+# Distro can override dev_manager provider
+VIRTUAL-RUNTIME_dev_manager ?= "udev"
+
 PACKAGES = "\
     task-core-boot \
     task-core-boot-dbg \
@@ -33,7 +36,7 @@ RDEPENDS_task-core-boot = "\
     netbase \
     sysvinit \
     tinylogin \
-    udev \
+    ${VIRTUAL-RUNTIME_dev_manager} \
     ${VIRTUAL-RUNTIME_update-alternatives} \
     ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
 
