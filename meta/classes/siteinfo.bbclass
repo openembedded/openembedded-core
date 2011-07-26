@@ -86,9 +86,9 @@ def siteinfo_data(d):
 python () {
     sitedata = set(siteinfo_data(d))
     if "endian-little" in sitedata:
-        d.setVar("SITEINFO_ENDIANESS", "le")
+        d.setVar("SITEINFO_ENDIANNESS", "le")
     elif "endian-big" in sitedata:
-        d.setVar("SITEINFO_ENDIANESS", "be")
+        d.setVar("SITEINFO_ENDIANNESS", "be")
     else:
         bb.error("Unable to determine endianness for architecture '%s'" %
                  d.getVar("HOST_ARCH", True))
