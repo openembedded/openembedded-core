@@ -116,9 +116,6 @@ with_broken_putenv=${with_broken_putenv=no}
 # links
 ac_cv_lib_png_png_create_info_struct=${ac_cv_lib_png_png_create_info_struct=yes}
 
-# mono
-cv_mono_sizeof_sunpath=108
-
 # mysql
 mysql_cv_func_atomic_sub=${mysql_cv_func_atomic_sub=no}
 mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=no}

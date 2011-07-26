@@ -272,10 +272,6 @@ samba_cv_have_longlong=${samba_cv_have_longlong=yes}
 samba_cv_have_setresgid=${samba_cv_have_setresgid=yes}
 samba_cv_have_setresuid=${samba_cv_have_setresuid=yes}
 
-#monotone
-ac_cv_sync_with_stdio=${ac_cv_sync_with_stdio=yes} 
-ac_cv_sync_with_stdio_2=${ac_cv_sync_with_stdio_2=yes}
-
 # mysql
 mysql_cv_func_atomic_sub=${mysql_cv_func_atomic_sub=no}
 mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=no}

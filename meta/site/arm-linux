@@ -154,9 +154,6 @@ ac_cv_have_abstract_sockets=${ac_cv_have_abstract_sockets=yes}
 # lftp
 ac_cv_file___dev_ptc_=yes
 
-#mono
-mono_cv_uscore=${mono_cv_uscore=no}
-
 # guile
 ac_cv_func_pthread_attr_getstack=${ac_cv_func_pthread_attr_getstack=yes}
 

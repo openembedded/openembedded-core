@@ -137,9 +137,6 @@ ac_libnet_have_packet_socket=${ac_libnet_have_packet_socket=yes}
 # libxfce4util
 with_broken_putenv=${with_broken_putenv=no}
 
-# mono
-cv_mono_sizeof_sunpath=108
-
 # mysql
 mysql_cv_func_atomic_sub=${mysql_cv_func_atomic_sub=yes}
 mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=yes}

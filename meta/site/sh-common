@@ -201,9 +201,6 @@ cvs_cv_func_printf_ptr=${cvs_cv_func_printf_ptr=yes}
 ac_cv_c_long_double=${ac_cv_c_long_double=yes}
 bash_cv_func_sigsetjmp=${bash_cv_func_sigsetjmp=missing}
 
-# mono
-cv_mono_sizeof_sunpath=108
-
 # mysql
 mysql_cv_func_atomic_sub=${mysql_cv_func_atomic_sub=no}
 mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=no}
