@@ -4,7 +4,7 @@ compilation of C/C++/ObjC code across machines on a network."
 SECTION = "devel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
-PR = "r6"
+PR = "r7"
 
 DEPENDS = "avahi ${GTKDEP}"
 GTKDEP_libc-uclibc = ""
@@ -16,6 +16,7 @@ RRECOMMENDS_${PN} = "avahi-daemon"
 # http://0pointer.de/public/distcc-avahi.patch
 SRC_URI = "http://distcc.googlecode.com/files/${PN}-${PV}.tar.bz2 \
            file://distcc-avahi.patch \	  
+           file://makefile-param-order.patch \
 	   file://default \
 	   file://distccmon-gnome.desktop \
 	   file://distcc"

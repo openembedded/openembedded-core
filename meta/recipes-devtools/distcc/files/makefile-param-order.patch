@@ -1,0 +1,20 @@
+distcc: Put the "-lLIB" parameter in the end of the gcc command.
+
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+
+Upstream-Status: Pending
+
+diff -ruN distcc-2.18.3-orig/Makefile.in distcc-2.18.3/Makefile.in
+--- distcc-2.18.3-orig/Makefile.in	2011-07-25 16:43:21.000000000 +0800
++++ distcc-2.18.3/Makefile.in	2011-07-25 16:45:39.000000000 +0800
+@@ -378,8 +378,8 @@
+ 
+ distccmon-gnome@EXEEXT@: $(mon_obj) $(gnome_obj)
+ 	$(CC) -o $@ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LIBS)	\
+-		$(GNOME_CFLAGS) $(GNOME_LIBS)			\
+-		$(mon_obj) $(gnome_obj)
++		$(GNOME_CFLAGS) 				\
++		$(mon_obj) $(gnome_obj) $(GNOME_LIBS)
+ 
+ 
+ ## Dist targets
