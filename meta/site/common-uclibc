@@ -11,6 +11,7 @@ ac_cv_func_getgrgid_r=${ac_cv_func_getgrgid_r=yes}
 ac_cv_func_getpwuid_r=${ac_cv_func_getpwuid_r=yes}
 ac_cv_func_posix_getpwuid_r=${ac_cv_func_posix_getpwuid_r=yes}
 ac_cv_func_posix_getgrgid_r=${ac_cv_func_posix_getgrgid_r=yes}
+ac_cv_func_getaddrinfo=${ac_cv_func_getaddrinfo=yes}
 
 # glib
 glib_cv_strlcpy=${glib_cv_strlcpy=no}

@@ -180,7 +180,6 @@ ac_cv_alignof_CORBA_pointer=4
 ac_cv_alignof_CORBA_short=2
 ac_cv_alignof_CORBA_struct=4
 ac_cv_alignof_CORBA_wchar=2
-ac_cv_func_getaddrinfo=${ac_cv_func_getaddrinfo=yes}
 
 # cvs
 cvs_cv_func_printf_ptr=${cvs_cv_func_printf_ptr=yes}

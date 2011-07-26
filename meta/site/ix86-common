@@ -117,7 +117,6 @@ ac_cv_func_fnmatch_works=${ac_cv_func_fnmatch_works=yes}
 ac_cv_va_copy=${ac_cv_va_copy=no}
 ac_cv___va_copy=${ac_cv___va_copy=yes}
 ac_cv_va_val_copy=${ac_cv_va_val_copy=yes}
-racoon_cv_bug_getaddrinfo=${racoon_cv_bug_getaddrinfo=no}
 
 # jikes-native
 ac_cv_sizeof_wchar_t=4
@@ -154,7 +153,6 @@ ac_cv_alignof_CORBA_pointer=4
 ac_cv_alignof_CORBA_short=2
 ac_cv_alignof_CORBA_struct=4
 ac_cv_alignof_CORBA_wchar=2
-ac_cv_func_getaddrinfo=${ac_cv_func_getaddrinfo=yes}
 
 # php
 ac_cv_pread=${ac_cv_pread=no}

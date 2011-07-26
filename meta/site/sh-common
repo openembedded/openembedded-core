@@ -192,7 +192,6 @@ ac_cv_alignof_CORBA_pointer=4
 ac_cv_alignof_CORBA_short=2
 ac_cv_alignof_CORBA_struct=4
 ac_cv_alignof_CORBA_wchar=2
-ac_cv_func_getaddrinfo=${ac_cv_func_getaddrinfo=yes}
 
 # cvs
 cvs_cv_func_printf_ptr=${cvs_cv_func_printf_ptr=yes}
@@ -232,7 +231,6 @@ rsync_cv_REPLACE_INET_ATON=${rsync_cv_REPLACE_INET_ATON=no}
 ac_cv_va_copy=${ac_cv_va_copy=no}
 ac_cv_va_val_copy=${ac_cv_va_val_copy=yes}
 ac_cv___va_copy=${ac_cv___va_copy=yes}
-racoon_cv_bug_getaddrinfo=${racoon_cv_bug_getaddrinfo=no}
 
 # libxfce4util
 with_broken_putenv=${with_broken_putenv=no}

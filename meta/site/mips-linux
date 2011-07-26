@@ -36,7 +36,6 @@ glib_cv_use_pid_surrogate=${glib_cv_use_pid_surrogate=yes}
 
 # libpcap
 ac_cv_linux_vers=${ac_cv_linux_vers=2}
-ac_cv_func_getaddrinfo=${ac_cv_func_getaddrinfo=yes}
 
 # slrn
 slrn_cv___va_copy=${slrn_cv___va_copy=yes}
