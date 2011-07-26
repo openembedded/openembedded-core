@@ -17,10 +17,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=9894370afd5dfe7d02b8d14319e729a1 \
 
 DEPENDS = "icu"
 
-PR = "r0"
+PR = "r1"
 
-inherit autotools
+inherit autotools multilib_header
 acpaths=""
+
+do_install_append() {
+	oe_multilib_header beecrypt/gnu.h
+}
 
 EXTRA_OECONF="--without-python --enable-shared --enable-static --disable-openmp"
 
