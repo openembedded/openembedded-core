@@ -231,9 +231,6 @@ rsync_cv_HAVE_SECURE_MKSTEMP=${rsync_cv_HAVE_SECURE_MKSTEMP=yes}
 rsync_cv_REPLACE_INET_NTOA=${rsync_cv_REPLACE_INET_NTOA=no}
 rsync_cv_REPLACE_INET_ATON=${rsync_cv_REPLACE_INET_ATON=no}
 
-# sudo
-sudo_cv_uid_t_len=${sudo_cv_uid_t_len=10}
-
 # ipsec-tools
 ac_cv_va_copy=${ac_cv_va_copy=no}
 ac_cv_va_val_copy=${ac_cv_va_val_copy=yes}

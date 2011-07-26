@@ -191,9 +191,6 @@ ac_cv_have_openpty_ctty_bug=${ac_cv_have_openpty_ctty_bug=yes}
 # startup-notification
 lf_cv_sane_realloc=yes
 
-# sudo
-sudo_cv_uid_t_len=${sudo_cv_uid_t_len=10}
-
 # xffm
 jm_cv_func_working_readdir=yes
 

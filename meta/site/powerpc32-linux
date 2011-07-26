@@ -280,9 +280,6 @@ ac_cv_sync_with_stdio_2=${ac_cv_sync_with_stdio_2=yes}
 mysql_cv_func_atomic_sub=${mysql_cv_func_atomic_sub=no}
 mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=no}
 
-# sudo
-sudo_cv_uid_t_len=${sudo_cv_uid_t_len=10}
-
 # dpkg
 dpkg_cv_va_copy=${ac_cv_va_copy=yes}
 dpkg_cv___va_copy=${ac_cv___va_copy=yes}
