@@ -1,7 +1,18 @@
+
 def get_imagecmds(d):
     cmds = "\n"
     old_overrides = bb.data.getVar('OVERRIDES', d, 0)
-    for type in bb.data.getVar('IMAGE_FSTYPES', d, True).split():
+
+    types = bb.data.getVar('IMAGE_FSTYPES', d, True).split()
+    # Live images will be processed via inheriting bbclass and 
+    # does not get processed here.
+    # live images also depend on ext3 so ensure its present
+    if "live" in types:
+        if "ext3" not in types:
+            types.append("ext3")
+        types.remove("live")
+
+    for type in types:
         localdata = bb.data.createCopy(d)
         localdata.setVar('OVERRIDES', '%s:%s' % (type, old_overrides))
         bb.data.update_data(localdata)
@@ -103,4 +114,4 @@ IMAGE_DEPENDS_ubi = "mtd-utils-native"
 IMAGE_DEPENDS_ubifs = "mtd-utils-native"
 
 # This variable is available to request which values are suitable for IMAGE_FSTYPES
-IMAGE_TYPES = "jffs2 cramfs ext2 ext2.gz ext3 ext3.gz squashfs squashfs-lzma ubi tar tar.gz tar.bz2 tar.xz cpio cpio.gz cpio.xz cpio.lzma"
+IMAGE_TYPES = "jffs2 cramfs ext2 ext2.gz ext3 ext3.gz live squashfs squashfs-lzma ubi tar tar.gz tar.bz2 tar.xz cpio cpio.gz cpio.xz cpio.lzma"
