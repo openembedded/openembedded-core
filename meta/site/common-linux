@@ -34,3 +34,6 @@ bash_cv_unusable_rtsigs=${bash_cv_unusable_rtsigs=no}
 # mysql
 ac_cv_sys_restartable_syscalls=${ac_cv_sys_restartable_syscalls=yes}
 ac_cv_conv_longlong_to_float=${ac_cv_conv_longlong_to_float=yes}
+
+# TCL
+tcl_cv_api_serial=${tcl_cv_api_serial=termios}
