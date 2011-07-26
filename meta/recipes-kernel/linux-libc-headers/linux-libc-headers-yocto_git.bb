@@ -10,7 +10,7 @@ RPROVIDES_${PN}-dev = "linux-libc-headers-dev"
 RPROVIDES_${PN}-dbg = "linux-libc-headers-dbg"
 SRCREV = "69cfbdf9f1ff461a75e5b77d6d7ba35e97db4cc3"
 PV = "2.6.37+git-${SRCPV}"
-PR = "r3"
+PR = "r4"
 
 SRCREV_FORMAT = "meta_machine"
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-2.6.37;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
@@ -47,6 +47,9 @@ do_compile () {
 do_install() {
 	set_arch
 	oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix} ARCH=$ARCH
+
+        # The ..install.cmd conflicts between various configure runs
+        find ${D}${includedir} -name ..install.cmd | xargs rm -f
 }
 
 BBCLASSEXTEND = "nativesdk"

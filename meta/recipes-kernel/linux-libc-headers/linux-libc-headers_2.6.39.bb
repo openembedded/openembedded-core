@@ -9,6 +9,8 @@ SRC_URI[sha256sum] = "584d17f2a3ee18a9501d7ff36907639e538cfdba4529978b8550c461d4
 
 S = "${WORKDIR}/linux-${PV}"
 
+PR = "r2"
+
 set_arch() {
 	case ${TARGET_ARCH} in
 		alpha*)   ARCH=alpha ;;
@@ -44,6 +46,9 @@ do_install() {
 	oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix} ARCH=$ARCH
 	# Kernel should not be exporting this header
 	rm -f ${D}${exec_prefix}/include/scsi/scsi.h
+
+        # The ..install.cmd conflicts between various configure runs
+        find ${D}${includedir} -name ..install.cmd | xargs rm -f
 }
 
 BBCLASSEXTEND = "nativesdk"
