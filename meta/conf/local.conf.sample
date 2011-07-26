@@ -184,8 +184,12 @@ NO32LIBS = "1"
 # when resolving patches which cannot be applied
 # Supported shell prefixes for *_TERMCMD and *_TERMCMDRUN ARE:
 # GNOME, SCREEN, XTERM and KONSOLE
-#TERMCMD = "${KONSOLE_TERMCMD}"
-#TERMCMDRUN = "${KONSOLE_TERMCMDRUN}"
+# Note: currently, Konsole support only works for KDE 3.x due to the way
+# newer Konsole versions behave
+#TERMCMD = "${XTERM_TERMCMD}"
+#TERMCMDRUN = "${XTERM_TERMCMDRUN}"
+# Alternatively, if you prefer you can disable patch resolution:
+#PATCHRESOLVE = "noop"
 
 # Uncomment this if your host distribution provides the help2man tool.
 #ASSUME_PROVIDED += "help2man-native"
