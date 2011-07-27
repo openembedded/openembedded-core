@@ -133,6 +133,13 @@ def generate_git_config(e):
                 f.write(proxy_command)
                 f.close
 
+def pkgarch_mapping(d):
+    # Compatibility mappings of TUNE_PKGARCH (opt in)
+    if d.getVar("PKGARCHCOMPAT_ARMV7A", True):
+        if d.getVar("TUNE_PKGARCH", True) == "armv7a-vfp-neon":
+            d.setVar("TUNE_PKGARCH", "armv7a")
+
+
 addhandler base_eventhandler
 python base_eventhandler() {
 	from bb import note, error, data
@@ -203,6 +210,7 @@ python base_eventhandler() {
 
         if name == "ConfigParsed":
                 generate_git_config(e)
+                pkgarch_mapping(e.data)
 
 	if not data in e.__dict__:
 		return
