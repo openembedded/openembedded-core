@@ -1,3 +1,6 @@
+# general
+ac_cv_va_val_copy=${ac_cv_va_val_copy=yes}
+
 # cvs
 cvs_cv_func_printf_ptr=${cvs_cv_func_printf_ptr=yes}
 
@@ -26,9 +29,14 @@ ac_cv_alignof_CORBA_long_double=8
 ac_cv_alignof_CORBA_pointer=4
 ac_cv_alignof_CORBA_struct=1
 
-# dpkg
-dpkg_cv_va_copy=${ac_cv_va_copy=yes}
-dpkg_cv___va_copy=${ac_cv___va_copy=yes}
-
-# apr
+# apache
+ac_cv_func_pthread_key_delete=${ac_cv_func_pthread_key_delete=yes}
+apr_cv_process_shared_works=${apr_cv_process_shared_works=no}
+ac_cv_sizeof_ssize_t=${ac_cv_sizeof_ssize_t=4}
 apr_cv_tcp_nodelay_with_cork=${apr_cv_tcp_nodelay_with_cork=yes}
+
+# glib
+glib_cv_va_val_copy=${glib_cv_va_val_copy=yes}
+
+# slrn
+slrn_cv_va_val_copy=${slrn_cv_va_val_copy=yes}

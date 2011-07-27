@@ -1,3 +1,5 @@
+# general
+ac_cv_va_val_copy=${ac_cv_va_val_copy=yes}
 ac_cv_func_lstat_dereferences_slashed_symlink=${ac_cv_func_lstat_dereferences_slashed_symlink=yes}
 ac_cv_func_lstat_empty_string_bug=${ac_cv_func_lstat_empty_string_bug=no}
 ac_cv_func_stat_empty_string_bug=${ac_cv_func_stat_empty_string_bug=no}
@@ -60,9 +62,7 @@ glib_cv_hasinline=${glib_cv_hasinline=yes}
 glib_cv_sane_realloc=${glib_cv_sane_realloc=yes}
 glib_cv_sizeof_gmutex=${glib_cv_sizeof_gmutex=24}
 glib_cv_uscore=${glib_cv_uscore=no}
-glib_cv_va_copy=${glib_cv_va_copy=yes}
 glib_cv_va_val_copy=${glib_cv_va_val_copy=yes}
-glib_cv___va_copy=${glib_cv___va_copy=yes}
 glib_cv_rtldglobal_broken=${glib_cv_rtldglobal_broken=no}
 glib_cv_sys_pthread_mutex_trylock_posix=${glib_cv_sys_pthread_mutex_trylock_posix=yes}
 glib_cv_sys_pthread_getspecific_posix=${glib_cv_sys_pthread_getspecific_posix=yes}
@@ -83,19 +83,12 @@ as_cv_unaligned_access=${as_cv_unaligned_access=no}
 # httppc
 ac_cv_strerror_r_SUSv3=${ac_cv_strerror_r_SUSv3=no}
 
-# ipsec-tools
-ac_cv_va_copy=${ac_cv_va_copy=yes}
-ac_cv___va_copy=${ac_cv___va_copy=yes}
-ac_cv_va_val_copy=${ac_cv_va_val_copy=yes}
-
 # jikes
 ac_cv_sizeof_wchar_t=4
 
 # lftp
 ac_cv_need_trio=${ac_cv_need_trio=no}
-lftp_cv_va_copy=${lftp_cv_va_copy=yes}
 lftp_cv_va_val_copy=${lftp_cv_va_val_copy=yes}
-lftp_cv___va_copy=${lftp_cv___va_copy=yes}
 
 # libesmtp
 acx_working_snprintf=${acx_working_snprintf=yes}
@@ -168,8 +161,6 @@ screen_cv_sys_sockets_usable=${screen_cv_sys_sockets_usable=yes}
 screen_cv_sys_terminfo_used=${screen_cv_sys_terminfo_used=yes}
 
 # slrn
-slrn_cv___va_copy=${slrn_cv___va_copy=yes}
-slrn_cv_va_copy=${slrn_cv_va_copy=yes}
 slrn_cv_va_val_copy=${slrn_cv_va_val_copy=yes}
 
 # socat
@@ -188,10 +179,6 @@ lf_cv_sane_realloc=yes
 
 # xffm
 jm_cv_func_working_readdir=yes
-
-# dpkg
-dpkg_cv_va_copy=${ac_cv_va_copy=yes}
-dpkg_cv___va_copy=${ac_cv___va_copy=yes}
 
 # eds-dbus
 ac_cv_libiconv_utf8=${ac_cv_libiconv_utf8=yes}

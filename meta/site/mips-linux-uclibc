@@ -1,3 +1,4 @@
+# general
 ac_cv_func_setvbuf_reversed=${ac_cv_func_setvbuf_reversed=no}
 
 # bash
@@ -26,8 +27,6 @@ glib_cv_sizeof_gmutex=${glib_cv_sizeof_gmutex=24}
 glib_cv_sizeof_system_thread=${glib_cv_sizeof_system_thread=4}
 glib_cv_stack_grows=${glib_cv_stack_grows=no}
 glib_cv_uscore=${glib_cv_uscore=no}
-glib_cv_va_copy=${glib_cv_va_copy=yes}
-glib_cv_va_val_copy=${glib_cv_va_val_copy=yes}
 
 # glib-2.0
 glib_cv_stack_grows=${glib_cv_stack_grows=no}
@@ -36,11 +35,6 @@ glib_cv_use_pid_surrogate=${glib_cv_use_pid_surrogate=yes}
 
 # libpcap
 ac_cv_linux_vers=${ac_cv_linux_vers=2}
-
-# slrn
-slrn_cv___va_copy=${slrn_cv___va_copy=yes}
-slrn_cv_va_copy=${slrn_cv_va_copy=yes}
-slrn_cv_va_val_copy=${slrn_cv_va_val_copy=yes}
 
 # startup-notification
 lf_cv_sane_realloc=${lf_cv_sane_realloc=yes}
@@ -83,10 +77,6 @@ ac_cv_uint=${ac_cv_unit=yes}
 
 # D-BUS
 ac_cv_func_posix_getpwnam_r=${ac_cv_func_posix_getpwnam_r=yes}
-
-# popt
-ac_cv_va_copy=${ac_cv_va_copy=yes}
-ac_cv___va_copy=${ac_cv___va_copy=yes}
 
 # eds-dbus
 ac_cv_libiconv_utf8=${ac_cv_libiconv_utf8=yes}

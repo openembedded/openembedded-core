@@ -1,11 +1,17 @@
+# general
+ac_cv_va_val_copy=${ac_cv_va_val_copy=yes}
+
 # startup-notification
 lf_cv_sane_realloc=yes
 
 # glib
 glib_cv_stack_grows=${glib_cv_stack_grows=no}
 glib_cv_uscore=${glib_cv_uscore=no}
+glib_cv_va_val_copy=${glib_cv_va_val_copy=yes}
 ac_cv_func_getpwuid_r=${ac_cv_func_getpwuid_r=yes}
 
-# popt/rpm
-ac_cv_va_copy=${ac_cv_va_copy=yes}
-ac_cv___va_copy=${ac_cv___va_copy=yes}
+# lftp
+lftp_cv_va_val_copy=${lftp_cv_va_val_copy=yes}
+
+# slrn
+slrn_cv_va_val_copy=${slrn_cv_va_val_copy=yes}

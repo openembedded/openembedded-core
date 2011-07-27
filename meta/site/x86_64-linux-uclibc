@@ -1,3 +1,5 @@
+# general
+ac_cv_va_val_copy=${ac_cv_va_val_copy=no}
 ac_cv_func_lstat_dereferences_slashed_symlink=${ac_cv_func_lstat_dereferences_slashed_symlink=yes}
 ac_cv_func_lstat_empty_string_bug=${ac_cv_func_lstat_empty_string_bug=no}
 ac_cv_func_posix_getpwnam_r=${ac_cv_func_posix_getpwnam_r=yes}
@@ -39,10 +41,7 @@ glib_cv_sys_pthread_cond_timedwait_posix=${glib_cv_sys_pthread_cond_timedwait_po
 glib_cv_sys_pthread_getspecific_posix=${glib_cv_sys_pthread_getspecific_posix=yes}
 glib_cv_sys_pthread_mutex_trylock_posix=${glib_cv_sys_pthread_mutex_trylock_posix=yes}
 glib_cv_uscore=${glib_cv_uscore=no}
-glib_cv___va_copy=${glib_cv___va_copy=yes}
-glib_cv_va_copy=${glib_cv_va_copy=yes}
 glib_cv_va_val_copy=${glib_cv_va_val_copy=no}
-lftp_cv_va_copy=${lftp_cv_va_copy=yes}
 nano_cv_func_regexec_segv_emptystr=${nano_cv_func_regexec_segv_emptystr=no}
 samba_cv_HAVE_VA_COPY=${samba_cv_HAVE_VA_COPY=yes}
 screen_cv_sys_bcopy_overlap=${screen_cv_sys_bcopy_overlap=no}
@@ -81,3 +80,9 @@ ac_cv_alignof_CORBA_wchar=2
 
 # startup-notification
 lf_cv_sane_realloc=${lf_cv_sane_realloc=yes}
+
+# lftp
+lftp_cv_va_val_copy=${lftp_cv_va_val_copy=no}
+
+# slrn
+slrn_cv_va_val_copy=${slrn_cv_va_val_copy=no}
