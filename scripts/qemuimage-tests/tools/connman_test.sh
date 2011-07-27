@@ -27,21 +27,21 @@ if [ ! -f /usr/sbin/connmand ]; then
 fi
 
 # Check if connmand is running in background
-count=`ps -eo cmd | cut -d " " -f 1 | grep -c connmand`
+count=`ps -eo comm | cut -d " " -f 1 | grep -c connmand`
 
 if [ $count -ne 1 ]; then
 	Target_Info "connmand has issue when running in background, Pls, check the output of ps"
-	ps -ef cmd | grep connmand
+	ps -ef | grep connmand
 	exit 1
 fi
 
 # Check if there is always only one connmand running in background
 if [ connmand > /dev/null 2>&1 ]; then
 	Target_Info "connmand command run without problem"
-	count=`ps -eo cmd | cut -d " " -f 1 | grep -c connmand`
+	count=`ps -eo comm | cut -d " " -f 1 | grep -c connmand`
 	if [ $count -ne 1 ]; then
 		Target_Info "There are more than one connmand running in background, Pls, check the output of ps"
-		ps -ef cmd | grep connmand
+		ps -ef | grep connmand
 		exit 1
 	else
 		Target_Info "There is always one connmand running in background, test pass"
