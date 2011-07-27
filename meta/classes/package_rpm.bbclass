@@ -66,7 +66,7 @@ package_update_index_rpm () {
 			fi
 		done
 
-		cat /dev/null > ${RPMCONF_HOST_BASE}.conf
+		cat /dev/null > ${RPMCONF_HOST_BASE}-${archvar}.conf
 		for pkgdir in $packagedirs_sdk; do
 			if [ -e $pkgdir/ ]; then
 				echo "Generating solve db for $pkgdir..."
