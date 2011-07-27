@@ -18,14 +18,14 @@ RDEPENDS_${PN} += " \
 
 PR = "r0"
 
-SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.tar.gz;name=src \
+SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.tar.bz2 \
         file://index.html \
         file://lighttpd.conf \
         file://lighttpd \
 "
 
-SRC_URI[src.md5sum] = "202d36efc6324adb95a3600d2826ec6a"
-SRC_URI[src.sha256sum] = "efd7623f43182723b99c51d57a24158e22a207cd90dca35aaf3b2e3bac115712"
+SRC_URI[md5sum] = "e6e67b09986cb504db630b5a86b2dd76"
+SRC_URI[sha256sum] = "afd8af213e65afb48b397d004696c6620a7ae7f3d4f162ec46a04b9b9dbfd599"
 
 EXTRA_OECONF = " \
              --without-bzip2 \
