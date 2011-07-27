@@ -41,7 +41,8 @@ FILES_${PN}-dbg += "${libdir}/connman/plugins/.debug \
 FILES_${PN}-dev += "${libdir}/connman/plugins/*.la"
 
 python populate_packages_prepend() {
-	depmap = dict( wifi="wpa-supplicant", bluetooth="bluez4", ofono="ofono" )
+	prefix = (d.getVar("MLPREFIX", True) or "")
+	depmap = dict( wifi=prefix+"wpa-supplicant", bluetooth=prefix+"bluez4", ofono=prefix+"ofono" )
 	packages = []
 	hook = lambda file,pkg,b,c,d:packages.append((file,pkg))
 
