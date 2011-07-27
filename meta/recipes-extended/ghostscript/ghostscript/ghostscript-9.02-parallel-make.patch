@@ -1,0 +1,17 @@
+When parallel make it will fail with multi copy, see
+http://bugzilla.pokylinux.org/show_bug.cgi?id=1202
+
+Upstream-Status: Pending
+
+Signed-off-by: Kang Kai <kai.kang@windriver.com>
+--- ghostscript-9.02/base/unixhead.mak.orig	2011-07-27 17:06:17.749456100 +0800
++++ ghostscript-9.02/base/unixhead.mak	2011-07-27 17:06:37.449456100 +0800
+@@ -54,7 +54,7 @@
+ 
+ # Define generic commands.
+ 
+-CP_=cp
++CP_=cp -f
+ RM_=rm -f
+ RMN_=rm -f
+ 
