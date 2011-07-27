@@ -200,9 +200,6 @@ bash_cv_func_sigsetjmp=${bash_cv_func_sigsetjmp=missing}
 mysql_cv_func_atomic_sub=${mysql_cv_func_atomic_sub=no}
 mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=no}
 
-# rp-pppoe
-rpppoe_cv_pack_bitfields=${rpppoe_cv_pack_bitfields=rev}
-
 # gettext
 am_cv_func_working_getline=${am_cv_func_working_getline=yes}
 

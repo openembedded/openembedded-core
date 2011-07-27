@@ -45,10 +45,6 @@ libIDL_cv_long_long_format=${libIDL_cv_long_long_format=ll}
 # ncftp
 wi_cv_struct_timeval_tv_sec=${wi_cv_struct_timeval_tv_sec=long}
 wi_cv_struct_timeval_tv_usec=${wi_cv_struct_timeval_tv_usec=long}
-wi_cv_unix_domain_sockets=${wi_cv_unix_domain_sockets=yes}
-
-# rp-pppoe
-rpppoe_cv_pack_bitfields=${rpppoe_cv_pack_bitfields=rev}
 
 # db
 db_cv_align_t=${db_cv_align_t='unsigned long long'}

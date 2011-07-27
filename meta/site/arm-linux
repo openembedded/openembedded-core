@@ -158,6 +158,3 @@ ac_cv_func_pthread_attr_getstack=${ac_cv_func_pthread_attr_getstack=yes}
 ac_cv_member_struct_sockaddr_sa_len=${ac_cv_member_struct_sockaddr_sa_len=no}
 ac_cv_gnet_have_abstract_sockets=${ac_cv_gnet_have_abstract_sockets=no}
 gnet_sockaddr_family_field_name=${gnet_sockaddr_family_field_name=ss_family}
-
-# rp-pppoe
-rpppoe_cv_pack_bitfields=${rpppoe_cv_pack_bitfields=rev}
