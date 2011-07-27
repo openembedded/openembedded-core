@@ -1,3 +1,6 @@
+# apr
+ac_cv_file__dev_zero=${ac_cv_file__dev_zero=yes}
+
 # samba
 samba_cv_HAVE_IFACE_AIX=${samba_cv_HAVE_IFACE_AIX=no}
 samba_cv_HAVE_IFACE_IFCONF=${samba_cv_HAVE_IFACE_IFCONF=yes}
