@@ -14,7 +14,7 @@ RDEPENDS_${PN} = "sat-solver"
 S = "${WORKDIR}/git"
 SRCREV = "15b6c52260bbc52b3d8e585e271b67e10cc7c433"
 PV = "0.0-git${SRCPV}"
-PR = "r11"
+PR = "r12"
 
 SRC_URI = "git://gitorious.org/opensuse/libzypp.git;protocol=git \
            file://no-doc.patch \
@@ -111,9 +111,9 @@ do_archgen () {
 				shift ; continue;;
 		esac
 		if [ "${AVOID_CONSTRUCTOR}" != "true" ]; then
-		  ARCH="_$1"
+		  CARCH="_$1"
 		else
-		  ARCH="IdString(\"$1\")"
+		  CARCH="IdString(\"$1\")"
 		fi
 		shift
 		COMPAT=""
@@ -129,7 +129,7 @@ do_archgen () {
 				COMPAT="${arch_val},$COMPAT"
 			fi
 		done
-		COMPAT_WITH="${ARCH},${COMPAT} $COMPAT_WITH"
+		COMPAT_WITH="${CARCH},${COMPAT} $COMPAT_WITH"
 	done
 	for each_compat in ${COMPAT_WITH} ; do
 		echo "        defCompatibleWith( ${each_compat} );"		>> zypp/poky-arch.h
