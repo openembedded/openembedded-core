@@ -17,16 +17,18 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
 # slang needs to be >= 2.2
 DEPENDS = "slang popt"
 
-PR = "r2"
+PR = "r0"
 
 SRCREV = "c3c7be75f6ef1adfc2be5f99c1e8ef3f0ab58c38"
 
-SRC_URI = "git://git.fedorahosted.org/git/newt;protocol=git \
-           file://include-without-python.patch \
+SRC_URI = "https://fedorahosted.org/releases/n/e/newt/newt-${PV}.tar.gz \
            file://remove_slang_include.patch \
            file://fix_SHAREDDIR.patch"
 
-S = "${WORKDIR}/git"
+SRC_URI[md5sum] = "77de05b3f58540152a4ae32a1a64e5d0"
+SRC_URI[sha256sum] = "01c254b00a3d27e22f13240b6db74df04e721ccec4d1d4fc7b45fee009efc05f"
+
+S = "${WORKDIR}/newt-${PV}"
 
 EXTRA_OECONF = "--without-python --without-tcl"
 
