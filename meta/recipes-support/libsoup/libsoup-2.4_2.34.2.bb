@@ -12,8 +12,8 @@ DEPENDS = "glib-2.0 gnutls libxml2 libproxy sqlite3 libgnome-keyring"
 
 SRC_URI = "${GNOME_MIRROR}/libsoup/2.34/libsoup-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "846779d898c11f97b5de28a79ea82254"
-SRC_URI[sha256sum] = "a2f846af2c4c08e15eacc9879c8c9be4d85f8105f960f96a9ba3dbabd9ee517b"
+SRC_URI[md5sum] = "2454b38681a6e082b613a781a501e721"
+SRC_URI[sha256sum] = "1d70edc48c309528635012269733739f9cd22548913125864318a65d1b6f1261"
 
 S = "${WORKDIR}/libsoup-${PV}"
 
