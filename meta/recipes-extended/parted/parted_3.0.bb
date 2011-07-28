@@ -10,8 +10,8 @@ SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.gz \
            file://no_check.patch \
            file://syscalls.patch "
 
-SRC_URI[md5sum] = "30ceb6df7e8681891e865e2fe5a7903d"
-SRC_URI[sha256sum] = "e81fa140805b5cd029ff6dda5cfa94d223e83ac182ebcae94f841d62ce468829"
+SRC_URI[md5sum] = "a94e84a9b9944715c4453f82ccc639bf"
+SRC_URI[sha256sum] = "8886eece015202f6bd5ce8414f4b68838452cef509f2e3389ad56128219837b7"
 
 EXTRA_OECONF = "--disable-Werror --disable-device-mapper"
 
