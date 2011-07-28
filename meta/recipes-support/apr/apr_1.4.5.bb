@@ -9,13 +9,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=0c35ff3c4c83b89d2f076e315caac28b \
 PR = "r1"
 
 SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.bz2 \
-           file://configure_fixes.patch;patch=1 \
-	   file://cleanup.patch;patch=1 \
-           file://configfix.patch;patch=1 \
-           file://buildconf_fix.patch;patch=1"
+           file://configure_fixes.patch \
+           file://cleanup.patch \
+           file://configfix.patch"
 
-SRC_URI[md5sum] = "4b00e8f70c067893d075577962656b35"
-SRC_URI[sha256sum] = "2017ca700694d09d2b0b21dd7c4d195e43a48735aac88526160c6195ee8f5391"
+SRC_URI[md5sum] = "8b53f5a5669d0597f2da889a2f576eb6"
+SRC_URI[sha256sum] = "38c61cacb39be649411cdab212979c71ce29495549c249c2e9a1b0d12480c93e"
 
 inherit autotools lib_package binconfig multilib_header
 
@@ -25,6 +24,8 @@ do_configure_prepend() {
 	cd ${S}
 	./buildconf
 }
+
+FILES_${PN}-dev += "${libdir}/apr.exp ${datadir}/build-1/*"
 
 #for some reason, build/libtool.m4 handled by buildconf still be overwritten
 #when autoconf, so handle it again.
