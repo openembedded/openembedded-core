@@ -10,11 +10,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=519e0a18e03f7c023070568c14b077bb \
 PR = "r0"
 
 SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.gz \
-           file://configfix.patch;patch=1 \
-           file://configure_fixes.patch;patch=1"
+           file://configfix.patch \
+           file://configure_fixes.patch"
 
-SRC_URI[md5sum] = "82acd25cf3df8c72eba44eaee8b80c19"
-SRC_URI[sha256sum] = "7c37ac40b2351bfc23000fb6b7b54a67e0872255df315c82eb60c821bcef4b23"
+SRC_URI[md5sum] = "d1977289889592ef998e3f777f68efe4"
+SRC_URI[sha256sum] = "815b6fc82950f61050a5e711a7f3c20fd9b6ffcc7a4cacfe9f291fb241210cd8"
 
 EXTRA_OECONF = "--with-apr=${STAGING_BINDIR_CROSS}/apr-1-config \ 
 		--without-odbc \
@@ -32,4 +32,8 @@ OE_BINCONFIG_EXTRA_MANGLE = " -e 's:location=source:location=installed:'"
 do_configure_prepend() {
 	cp ${STAGING_DATADIR}/apr/apr_rules.mk ${S}/build/rules.mk
 }
+
+FILES_${PN}     += "${libdir}/apr-util-1/apr_dbm_gdbm-1.so"
+FILES_${PN}-dev += "${libdir}/aprutil.exp ${libdir}/apr-util-1/apr_dbm_gdbm.*"
+FILES_${PN}-dbg += "${libdir}/apr-util-1/.debug/*"
 
