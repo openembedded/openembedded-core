@@ -2,7 +2,7 @@ DESCRIPTION = "Poppler is a PDF rendering library based on the xpdf-3.0 code bas
 LICENSE = "Adobe"
 PR = "r0"
 
-SRC_URI = "http://poppler.freedesktop.org/${PN}-${PV}.tar.gz"
+SRC_URI = "http://poppler.freedesktop.org/${BPN}-${PV}.tar.gz"
 
 do_compile() {
 }

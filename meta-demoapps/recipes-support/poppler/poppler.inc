@@ -3,7 +3,7 @@ DEPENDS = "fontconfig jpeg zlib gtk+ cairo"
 LICENSE = "GPL"
 PR = "r1"
 
-SRC_URI = "http://poppler.freedesktop.org/${PN}-${PV}.tar.gz"
+SRC_URI = "http://poppler.freedesktop.org/${BPN}-${PV}.tar.gz"
 
 inherit autotools pkgconfig
 

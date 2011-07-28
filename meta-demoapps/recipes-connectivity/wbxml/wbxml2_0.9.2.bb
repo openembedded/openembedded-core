@@ -7,7 +7,7 @@ LICENSE = "GPLv2"
 
 DEPENDS = "libxml2 sed-native expat"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/wbxmllib/${P}.tar.gz \
+SRC_URI = "${SOURCEFORGE_MIRROR}/wbxmllib/${BPN}-${PV}.tar.gz \
 	   file://no-doc-install.patch;patch=1"
 
 inherit autotools pkgconfig

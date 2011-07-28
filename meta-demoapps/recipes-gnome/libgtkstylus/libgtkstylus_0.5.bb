@@ -6,7 +6,7 @@ PR = "r2"
 
 inherit autotools
 
-SRC_URI = "http://burtonini.com/temp/${PN}-${PV}.tar.gz \
+SRC_URI = "http://burtonini.com/temp/${BPN}-${PV}.tar.gz \
 	file://gtkstylus.sh"
 
 do_install_append() {

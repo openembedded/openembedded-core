@@ -5,6 +5,6 @@ LICENSE = "LGPL"
 DEPENDS = "glib-2.0 gnutls libcheck"
 PR = "r2"
 
-SRC_URI = "http://ftp.imendio.com/pub/imendio/${PN}/src/${PN}-${PV}.tar.bz2"
+SRC_URI = "http://ftp.imendio.com/pub/imendio/${BPN}/src/${BPN}-${PV}.tar.bz2"
 
 inherit autotools pkgconfig

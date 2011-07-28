@@ -11,8 +11,8 @@ PR = "r0"
 DEPENDS += "xz-native"
 PROVIDES = "virtual/librpc"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/${PN}/${P}.tar.bz2;name=libtirpc \
-           ${GENTOO_MIRROR}/${PN}-glibc-nfs.tar.xz;name=glibc-nfs \
+SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2;name=libtirpc \
+           ${GENTOO_MIRROR}/${BPN}-glibc-nfs.tar.xz;name=glibc-nfs \
            file://libtirpc-0.2.1-fortify.patch \
            file://libtirpc-0.2.2-rpc-des-prot.patch \
            file://remove-des-crypt.patch \

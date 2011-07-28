@@ -16,6 +16,6 @@ PR = "r6"
 
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${BPN};proto=http"
 
-S = "${WORKDIR}/${PN}"
+S = "${WORKDIR}/${BPN}"
 
 inherit autotools pkgconfig

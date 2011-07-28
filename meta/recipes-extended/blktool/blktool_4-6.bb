@@ -19,6 +19,6 @@ SRC_URI[tarball.sha256sum] = "b1e6d5912546d2a4b704ec65c2b9664aa3b4663e7d800e0680
 SRC_URI[patch.md5sum] = "2d1bc2f2c38b65d47e27da7c7508d17f"
 SRC_URI[patch.sha256sum] = "999f2062203e389327d997724621be37bea9c98fa226238f9f4eb4a6ea25bd4b"
 
-S = "${WORKDIR}/${PN}-4.orig"
+S = "${WORKDIR}/${BPN}-4.orig"
 
 inherit autotools

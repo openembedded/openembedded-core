@@ -9,6 +9,6 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/wvware/wv-${PV}.tar.gz \
 
 inherit autotools pkgconfig
 
-S = "${WORKDIR}/${PN}-${PV}"
+S = "${WORKDIR}/${BPN}-${PV}"
 
 EXTRA_OECONF = ""

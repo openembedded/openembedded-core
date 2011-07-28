@@ -7,7 +7,7 @@ HOMEPAGE = "http://subversion.tigris.org"
 
 PR = "r0"
 
-SRC_URI = "http://subversion.tigris.org/downloads/${P}.tar.bz2 \
+SRC_URI = "http://subversion.tigris.org/downloads/${BPN}-${PV}.tar.bz2 \
            file://disable-revision-install.patch;patch=1 \
 	   file://neon-detection.patch;patch=1 \
 	   file://libtool2.patch;patch=1"

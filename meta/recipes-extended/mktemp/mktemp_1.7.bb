@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=430680f6322a1eb87199b5e01a82c0d4"
 
 PR = "r0"
 
-SRC_URI = "ftp://ftp.mktemp.org/pub/mktemp/${P}.tar.gz \
+SRC_URI = "ftp://ftp.mktemp.org/pub/mktemp/${BPN}-${PV}.tar.gz \
         file://disable-strip.patch \
         "
 

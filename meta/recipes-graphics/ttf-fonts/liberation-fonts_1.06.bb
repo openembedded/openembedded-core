@@ -17,7 +17,7 @@ FONTREV = "0.20100721"
 SRC_URI = "https://fedorahosted.org/releases/l/i/${BPN}/${BPN}-${PV}.${FONTREV}.tar.gz \
            file://30-liberation-aliases.conf"
 
-S = ${WORKDIR}/${PN}-${PV}.${FONTREV}
+S = ${WORKDIR}/${BPN}-${PV}.${FONTREV}
 
 do_install () {
 	install -d ${D}${datadir}/fonts/ttf/

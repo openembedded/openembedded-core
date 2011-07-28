@@ -14,7 +14,7 @@ RRECOMMENDS_${PN} = "avahi-daemon"
 
 # Upstream change this patch periodically so store locally
 # http://0pointer.de/public/distcc-avahi.patch
-SRC_URI = "http://distcc.googlecode.com/files/${PN}-${PV}.tar.bz2 \
+SRC_URI = "http://distcc.googlecode.com/files/${BPN}-${PV}.tar.bz2 \
            file://distcc-avahi.patch \	  
            file://makefile-param-order.patch \
 	   file://default \

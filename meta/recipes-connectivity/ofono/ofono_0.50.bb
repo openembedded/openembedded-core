@@ -2,7 +2,7 @@ require ofono.inc
 
 PR = "r1"
 
-SRC_URI  = "${KERNELORG_MIRROR}/linux/network/ofono/${P}.tar.bz2 \
+SRC_URI  = "${KERNELORG_MIRROR}/linux/network/ofono/${BPN}-${PV}.tar.bz2 \
 	          file://ofono"
 
 EXTRA_OECONF += "\

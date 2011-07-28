@@ -5,7 +5,7 @@ DEPENDS = "glib-2.0 dbus loudmouth telepathy-glib dbus-glib"
 LICENSE = "LGPL"
 
 # gabble.manager needs to get regenerated every release, so please don't copy it over blindly
-SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-gabble/${P}.tar.gz \
+SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-gabble/${BPN}-${PV}.tar.gz \
            file://gabble.manager"
 
 inherit autotools pkgconfig

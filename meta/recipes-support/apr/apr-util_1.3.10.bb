@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=519e0a18e03f7c023070568c14b077bb \
 
 PR = "r0"
 
-SRC_URI = "${APACHE_MIRROR}/apr/${P}.tar.gz \
+SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.gz \
            file://configfix.patch;patch=1 \
            file://configure_fixes.patch;patch=1"
 

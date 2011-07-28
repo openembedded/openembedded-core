@@ -22,7 +22,7 @@ inherit autotools pkgconfig
 SRC_URI = "svn://svn.o-hand.com/repos/;module=oh-puzzles;proto=http"
 SRC_URI_append_poky = " file://oh-puzzles-owl-menu.patch;patch=1;pnum=0 "
 
-S = "${WORKDIR}/${PN}"
+S = "${WORKDIR}/${BPN}"
 
 EXTRA_OEMAKE += "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1"
 

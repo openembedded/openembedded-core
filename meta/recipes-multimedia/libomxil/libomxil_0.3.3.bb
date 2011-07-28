@@ -7,7 +7,7 @@ DEPENDS = "libvorbis libogg alsa-lib libmad"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/omxil/libomxil-B-${PV}.tar.gz"
 
-S = "${WORKDIR}/${PN}-B-${PV}"
+S = "${WORKDIR}/${BPN}-B-${PV}"
 
 inherit autotools
 

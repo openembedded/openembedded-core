@@ -15,7 +15,7 @@ PR = "r2"
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${BPN};proto=http \
            file://fix_ldadd_order.patch"
 
-S = ${WORKDIR}/${PN}
+S = ${WORKDIR}/${BPN}
 
 inherit autotools pkgconfig
 

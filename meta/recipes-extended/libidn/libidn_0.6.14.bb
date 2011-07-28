@@ -11,7 +11,7 @@ PR = "r0"
 
 inherit pkgconfig autotools gettext
 
-SRC_URI = "http://alpha.gnu.org/gnu/libidn/${P}.tar.gz"
+SRC_URI = "http://alpha.gnu.org/gnu/libidn/${BPN}-${PV}.tar.gz"
 
 EXTRA_OECONF = " --disable-tld"
 

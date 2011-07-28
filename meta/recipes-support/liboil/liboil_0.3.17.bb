@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ad80780d9c5205d63481a0184e199a15 \
 DEPENDS = "glib-2.0"
 PR = "r3"
 
-SRC_URI = "http://liboil.freedesktop.org/download/${P}.tar.gz \
+SRC_URI = "http://liboil.freedesktop.org/download/${BPN}-${PV}.tar.gz \
            file://no-tests.patch \
            file://fix-unaligned-whitelist.patch \
           "

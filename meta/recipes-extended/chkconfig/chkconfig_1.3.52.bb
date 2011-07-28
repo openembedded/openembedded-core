@@ -14,7 +14,7 @@ DEPENDS = "libnewt popt"
 
 PR = "r0"
 
-SRC_URI = "http://fedorahosted.org/releases/c/h/chkconfig/${P}.tar.bz2"
+SRC_URI = "http://fedorahosted.org/releases/c/h/chkconfig/${BPN}-${PV}.tar.bz2"
 
 SRC_URI[md5sum] = "a576808a6d66763606d750ec451bab6d"
 SRC_URI[sha256sum] = "aa36bf7fd3f7c6e3371eddd8a7846b83435c48f132cc5919d83a830504b797d6"

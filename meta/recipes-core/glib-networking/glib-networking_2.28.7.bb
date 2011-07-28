@@ -10,7 +10,7 @@ DEPENDS = "glib-2.0 gnutls"
 
 PR = "r0"
 
-SRC_URI = "${GNOME_MIRROR}/${PN}/2.28/${PN}-${PV}.tar.bz2"
+SRC_URI = "${GNOME_MIRROR}/${BPN}/2.28/${BPN}-${PV}.tar.bz2"
 
 SRC_URI[md5sum] = "c10e51571d03c10111a37bcd21fbf777"
 SRC_URI[sha256sum] = "98bedfbd530c4b1b53c91025fe82290bafd289d249e4eb549c3b90d23a76021c"

@@ -9,7 +9,7 @@ PR = "r1"
 
 DEPENDS = "virtual/xserver-xf86 xproto randrproto util-macros"
 
-XORG_PN = "${PN}"
+XORG_PN = "${BPN}"
 SRC_URI = "${XORG_MIRROR}/individual/driver/${XORG_PN}-${PV}.tar.bz2"
 
 S = "${WORKDIR}/${XORG_PN}-${PV}"

@@ -11,7 +11,7 @@ PR = "r3"
 SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=zaurusd;proto=http \
 	file://fix_makefile.patch"
 
-S = "${WORKDIR}/${PN}"
+S = "${WORKDIR}/${BPN}"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
