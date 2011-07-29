@@ -12,7 +12,7 @@ SRC_URI = "http://hal.freedesktop.org/releases/polkit-${PV}.tar.gz \
 
 PAM_SRC_URI = "file://polkit-1_pam.patch"
 PR = "r1"
-DEPENDS = "libpam expat dbus-glib eggdbus intltool"
+DEPENDS = "libpam expat dbus-glib eggdbus intltool-native"
 RDEPENDS_${PN} = "libpam"
 EXTRA_OECONF = "--with-authfw=pam --with-os-type=moblin --disable-man-pages --disable-gtk-doc --disable-introspection"
 
