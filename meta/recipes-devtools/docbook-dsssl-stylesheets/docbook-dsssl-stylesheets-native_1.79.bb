@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://README;beginline=41;endline=74;md5=875385159b2ee76ecf
 
 DEPENDS = "sgml-common-native"
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/docbook/docbook-dsssl-${PV}.tar.bz2"
 
@@ -44,6 +44,9 @@ docbook_dsssl_stylesheets_sstate_postinst () {
 	then
 		# Ensure that the catalog file sgml-docbook.cat is properly
 		# updated when the package is installed from sstate cache.
+		${SYSROOT_DESTDIR}${bindir_crossscripts}/install-catalog-docbook-dsssl \
+			--add ${sysconfdir}/sgml/sgml-docbook.bak \
+			${sysconfdir}/sgml/dsssl-docbook-stylesheets.cat
 		${SYSROOT_DESTDIR}${bindir_crossscripts}/install-catalog-docbook-dsssl \
 			--add ${sysconfdir}/sgml/sgml-docbook.cat \
 			${sysconfdir}/sgml/dsssl-docbook-stylesheets.cat
