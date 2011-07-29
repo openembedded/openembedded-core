@@ -375,8 +375,10 @@ def check_sanity(e):
     elif oeroot.find (' ') != -1:
         messages = messages + "Error, you have a space in your COREBASE directory path. Please move the installation to a directory which doesn't include a space."
 
-    # Check that we don't have duplicate entries in PACKAGE_ARCHS
+    # Check that we don't have duplicate entries in PACKAGE_ARCHS & that TUNE_PKGARCH is in PACKAGE_ARCHS
     pkgarchs = data.getVar('PACKAGE_ARCHS', e.data, True)
+    tunepkg = data.getVar('TUNE_PKGARCH', e.data, True)
+    tunefound = False
     seen = {}
     dups = []
 
@@ -385,8 +387,14 @@ def check_sanity(e):
 	    dups.append(pa)
 	else:
 	    seen[pa] = 1
+	if pa == tunepkg:
+	    tunefound = True
+
     if len(dups):
        messages = messages + "Error, the PACKAGE_ARCHS variable contains duplicates. The following archs are listed more than once: %s" % " ".join(dups)
+
+    if tunefound == False:
+       messages = messages + "Error, the PACKAGE_ARCHS variable does not contain TUNE_PKGARCH (%s)." % tunepkg
 
     if messages != "":
         raise_sanity_error(messages)
