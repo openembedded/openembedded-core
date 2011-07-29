@@ -3,7 +3,7 @@ require eglibc.inc
 SRCREV = "14157"
 
 DEPENDS += "gperf-native"
-PR = "r12"
+PR = "r13"
 PR_append = "+svnr${SRCPV}"
 
 EGLIBC_BRANCH="eglibc-2_13"
@@ -18,6 +18,7 @@ SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};proto=http
            file://generate-supported.mk \
            file://glibc_bug_fix_12454.patch \
            file://ppc-sqrt.patch \
+           file://multilib_readlib.patch \
 	   "
 LIC_FILES_CHKSUM = "file://LICENSES;md5=98a1128c4b58120182cbea3b1752d8b9 \
       file://COPYING;md5=393a5ca445f6965873eca0259a17f833 \
@@ -83,6 +84,7 @@ do_move_ports() {
 
 do_patch_append() {
 	bb.build.exec_func('do_fix_ia_headers', d)
+	bb.build.exec_func('do_fix_readlib_c', d)
 }
 
 # We need to ensure that all of the i386 and x86_64 headers are identical
@@ -172,6 +174,10 @@ do_fix_ia_headers() {
 	cp ${S}/sysdeps/unix/sysv/linux/x86_64/sys/user.h ${S}/sysdeps/unix/sysv/linux/i386/sys/user.h
 }
 
+do_fix_readlib_c () {
+	sed -i -e 's#OECORE_KNOWN_INTERPRETER_NAMES#${EGLIBC_KNOWN_INTERPRETER_NAMES}#' ${S}/elf/readlib.c
+}
+
 do_configure () {
 # override this function to avoid the autoconf/automake/aclocal/autoheader
 # calls for now
@@ -201,6 +207,11 @@ do_compile () {
 			rpcgen -h $r -o $h || oewarn "unable to generate header for $r"
 		done
 	)
+	echo "Adjust ldd script"
+	[ -z "${RTLDLIST}" ] && return
+	sed -i ${B}/elf/ldd -e 's#^\(RTLDLIST=\)"\(.*\)"$#\1\2#'
+	sed -i ${B}/elf/ldd -e 's#^\(RTLDLIST=\)\(.*\)$#\1"${RTLDLIST} \2"#'
+
 }
 
 require eglibc-package.inc
