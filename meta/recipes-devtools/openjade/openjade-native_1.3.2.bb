@@ -7,7 +7,7 @@ SECTION = "base"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=641ff1e4511f0a87044ad42f87cb1045"
 
-PR = "r3"
+PR = "r4"
 
 DEPENDS = "opensp-native sgml-common-native"
 RDEPENDS_${PN} = "sgml-common"
@@ -68,6 +68,9 @@ openjade_sstate_postinst() {
 	then
 		# Ensure that the catalog file sgml-docbook.cat is properly
 		# updated when the package is installed from sstate cache.
+		${SYSROOT_DESTDIR}${bindir_crossscripts}/install-catalog-openjade \
+			--add ${sysconfdir}/sgml/sgml-docbook.bak \
+			${sysconfdir}/sgml/openjade-${PV}.cat
 		${SYSROOT_DESTDIR}${bindir_crossscripts}/install-catalog-openjade \
 			--add ${sysconfdir}/sgml/sgml-docbook.cat \
 			${sysconfdir}/sgml/openjade-${PV}.cat
