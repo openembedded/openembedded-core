@@ -341,3 +341,32 @@ def base_set_filespath(path, d):
 		for o in overrides.split(":"):
 			filespath.append(os.path.join(p, o))
 	return ":".join(filespath)
+
+def extend_variants(d, var, extend, delim=':'):
+	"""Return a string of all bb class extend variants for the given extend"""
+	variants = []
+	whole = d.getVar(var, True) or ""
+	for ext in whole.split():
+		eext = ext.split(delim)
+		if len(eext) > 1 and eext[0] == extend:
+			variants.append(eext[1])
+	return " ".join(variants)
+
+def all_multilib_tune_values(d, var, unique=True):
+	"""Return a string of all ${var} in all multilib tune configuration"""
+	values = []
+	value = d.getVar(var, True) or ""
+	if value != "":
+		values.append(value)
+	variants = d.getVar("MULTILIB_VARIANTS", True) or ""
+	for item in variants.split():
+		localdata = bb.data.createCopy(d)
+		overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
+		localdata.setVar("OVERRIDES", overrides)
+		bb.data.update_data(localdata)
+		value = localdata.getVar(var, True) or ""
+		if value != "":
+			values.append(value)
+	if unique:
+		values = set(values)
+	return " ".join(values)

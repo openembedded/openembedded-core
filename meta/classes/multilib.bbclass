@@ -6,7 +6,12 @@ python multilib_virtclass_handler () {
     variant = e.data.getVar("BBEXTENDVARIANT", True)
     if cls != "multilib" or not variant:
         return
- 
+    save_var_name=e.data.getVar("MULTILIB_SAVE_VARNAME", True) or ""
+    for name in save_var_name.split():
+        val=e.data.getVar(name, True)
+        if val:
+            e.data.setVar(name + "_MULTILIB_ORIGINAL", val)
+
     override = ":virtclass-multilib-" + variant
 
     e.data.setVar("MLPREFIX", variant + "-")
