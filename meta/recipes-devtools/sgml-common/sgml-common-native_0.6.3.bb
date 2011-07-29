@@ -13,7 +13,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://LICENSE-GPLv2;md5=ab8a50abe86dfc859e148baae043c89b"
 SECTION = "base"
 
-PR = "r0"
+PR = "r1"
 
 require sgml-common_${PV}.bb
 inherit native
@@ -21,6 +21,8 @@ inherit native
 S = "${WORKDIR}/sgml-common-${PV}"
 
 SYSROOT_PREPROCESS_FUNCS += "sgml_common_native_mangle"
+SSTATEPOSTINSTFUNCS += "sgml_common_sstate_postinst"
+
 
 do_install_append() {
 	# install-catalog script contains hard-coded references to
@@ -45,4 +47,18 @@ sgml_common_native_mangle () {
 	sed -i -e "s|${D}${sysconfdir}/sgml/sgml-ent.cat|${sysconfdir}/sgml/sgml-ent.cat|g" ${SYSROOT_DESTDIR}${sysconfdir}/sgml/sgml-docbook.cat
 	# Remove ${D} path from catalog file created by install-catalog script
 	sed -i -e "s|${D}||g" ${SYSROOT_DESTDIR}${sysconfdir}/sgml/catalog
+}
+
+sgml_common_sstate_postinst() {
+	if [ "${BB_CURRENTTASK}" = "populate_sysroot" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
+	then
+		if [ -e ${sysconfdir}/sgml/sgml-docbook.bak ]; then
+			for catalog in `awk '{print $2}' ${sysconfdir}/sgml/sgml-docbook.bak`; do
+				if [ ! `grep $catalog ${sysconfdir}/sgml/sgml-docbook.cat 1> /dev/null 2>&1` ]; then
+					${bindir}/install-catalog \
+						--add ${sysconfdir}/sgml/sgml-docbook.cat $catalog
+				fi
+			done
+		fi
+	fi
 }
