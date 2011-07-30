@@ -194,7 +194,7 @@ package_install_internal_rpm () {
 	local confbase="${INSTALL_CONFBASE_RPM}"
 	local package_to_install="${INSTALL_PACKAGES_NORMAL_RPM}"
 	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_RPM}"
-	local package_lingusa="${INSTALL_PACKAGES_LINGUAS_RPM}"
+	local package_linguas="${INSTALL_PACKAGES_LINGUAS_RPM}"
 	local providename="${INSTALL_PROVIDENAME_RPM}"
 	local task="${INSTALL_TASK_RPM}"
 
@@ -223,8 +223,8 @@ package_install_internal_rpm () {
 
 	# Uclibc builds don't provide this stuff...
 	if [ x${TARGET_OS} = "xlinux" ] || [ x${TARGET_OS} = "xlinux-gnueabi" ] ; then
-		if [ ! -z "${package_lingusa}" ]; then
-			for pkg in ${package_lingusa}; do
+		if [ ! -z "${package_linguas}" ]; then
+			for pkg in ${package_linguas}; do
 				echo "Processing $pkg..."
 
 				archvar=base_package_archs

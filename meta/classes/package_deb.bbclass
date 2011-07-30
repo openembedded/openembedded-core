@@ -116,7 +116,7 @@ package_install_internal_deb () {
 	local archs="${INSTALL_ARCHS_DEB}"
 	local package_to_install="${INSTALL_PACKAGES_NORMAL_DEB}"
 	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_DEB}"
-	local package_lingusa="${INSTALL_PACKAGES_LINGUAS_DEB}"
+	local package_linguas="${INSTALL_PACKAGES_LINGUAS_DEB}"
 	local task="${INSTALL_TASK_DEB}"
 
 	rm -f ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev
@@ -155,12 +155,12 @@ package_install_internal_deb () {
 
 	# Uclibc builds don't provide this stuff..
 	if [ x${TARGET_OS} = "xlinux" ] || [ x${TARGET_OS} = "xlinux-gnueabi" ] ; then
-		if [ ! -z "${package_lingusa}" ]; then
+		if [ ! -z "${package_linguas}" ]; then
 			apt-get install glibc-localedata-i18n --force-yes --allow-unauthenticated
 			if [ $? -ne 0 ]; then
 				exit 1
 			fi
-			for i in ${package_lingusa}; do
+			for i in ${package_linguas}; do
 				apt-get install $i --force-yes --allow-unauthenticated
 				if [ $? -ne 0 ]; then
 					exit 1

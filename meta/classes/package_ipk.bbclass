@@ -99,7 +99,7 @@ package_install_internal_ipk() {
 	local conffile="${INSTALL_CONF_IPK}"
 	local package_to_install="${INSTALL_PACKAGES_NORMAL_IPK}"
 	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_IPK}"
-	local package_lingusa="${INSTALL_PACKAGES_LINGUAS_IPK}"
+	local package_linguas="${INSTALL_PACKAGES_LINGUAS_IPK}"
 	local package_multilib="${INSTALL_PACKAGES_MULTILIB_IPK}"
 	local task="${INSTALL_TASK_IPK}"
 
@@ -111,8 +111,8 @@ package_install_internal_ipk() {
 
 	# Uclibc builds don't provide this stuff...
 	if [ x${TARGET_OS} = "xlinux" ] || [ x${TARGET_OS} = "xlinux-gnueabi" ] ; then
-		if [ ! -z "${package_lingusa}" ]; then
-			for i in ${package_lingusa}; do
+		if [ ! -z "${package_linguas}" ]; then
+			for i in ${package_linguas}; do
 				opkg-cl ${ipkg_args} install $i
 			done
 		fi
