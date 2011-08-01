@@ -1,5 +1,4 @@
 FILES_${PN} += "${datadir}/icons/hicolor"
-RDEPENDS += "hicolor-icon-theme"
 
 # This could run on the host as icon cache files are architecture independent,
 # but there is no gtk-update-icon-cache built natively.
@@ -34,7 +33,12 @@ python populate_packages_append () {
 		icon_dir = '%s/%s/%s/icons' % (pkgdest, pkg, bb.data.getVar('datadir', d, 1))
 		if not os.path.exists(icon_dir):
 			continue
-		
+
+		bb.note("adding hicolor-icon-theme dependency to %s" % pkg)	
+		rdepends = bb.data.getVar('RDEPENDS', d, 1)
+		rdepends += "hicolor-icon-theme"
+		bb.data.setVar('RDEPENDS', rdepends, d)
+	
 		bb.note("adding gtk-icon-cache postinst and postrm scripts to %s" % pkg)
 		
 		postinst = bb.data.getVar('pkg_postinst_%s' % pkg, d, 1) or bb.data.getVar('pkg_postinst', d, 1)
