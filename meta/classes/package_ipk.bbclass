@@ -127,8 +127,10 @@ package_install_internal_ipk() {
 	fi
 
 	package_tryout_install_multilib_ipk
-	#sanity check
-	multilib_sanity_check  ${target_rootfs} ${multilib_tryout_dirs}|| exit 1
+	if [ ! -z "${MULTILIB_CHECK_FILE}" ]; then
+		#sanity check
+		multilib_sanity_check ${target_rootfs} ${multilib_tryout_dirs} || exit 1
+	fi
 
 	if [ ! -z "${package_multilib}" ]; then
 		opkg-cl ${ipkg_args} install ${package_multilib}
