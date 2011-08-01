@@ -78,13 +78,9 @@ package_update_index_deb () {
 		return
 	fi
 
-	for arch in ${PACKAGE_ARCHS}; do
-		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
+	for arch in ${PACKAGE_ARCHS} ${SDK_PACKAGE_ARCHS}; do
 		if [ -e ${DEPLOY_DIR_DEB}/$arch ]; then
 			debarchs="$debarchs $arch"
-		fi
-		if [ -e ${DEPLOY_DIR_DEB}/$sdkarch-nativesdk ]; then
-			debarchs="$debarchs $sdkarch-nativesdk"
 		fi
 	done
 

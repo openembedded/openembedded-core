@@ -22,6 +22,15 @@ fakeroot do_populate_sdk() {
 	rm -rf ${SDK_OUTPUT}
 	mkdir -p ${SDK_OUTPUT}
 
+	# populate_sdk_<image> is required to construct two images:
+	#  SDK_ARCH-nativesdk - contains the cross compiler and associated tooling
+	#  target - contains a target rootfs configured for the SDK usage
+	#
+	# the output of populate_sdk_<image> should end up in ${SDK_OUTPUT} it is made
+	# up of:
+	#  ${SDK_OUTPUT}/<sdk_arch-nativesdk pkgs>
+	#  ${SDK_OUTPUT}/${SDKTARGETSYSROOT}/<target pkgs>
+
 	populate_sdk_${IMAGE_PKGTYPE}
 
 	# Don't ship any libGL in the SDK

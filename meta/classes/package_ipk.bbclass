@@ -161,7 +161,7 @@ ipk_log_check() {
 package_update_index_ipk () {
 	set -x
 
-	ipkgarchs="${PACKAGE_ARCHS}"
+	ipkgarchs="${PACKAGE_ARCHS} ${SDK_PACKAGE_ARCHS}"
 
 	if [ ! -z "${DEPLOY_KEEP_PACKAGES}" ]; then
 		return
@@ -169,8 +169,7 @@ package_update_index_ipk () {
 
 	packagedirs="${DEPLOY_DIR_IPK}"
 	for arch in $ipkgarchs; do
-		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
-		packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch ${DEPLOY_DIR_IPK}/$sdkarch-nativesdk"
+		packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch"
 	done
 
 	multilib_archs="${MULTILIB_ARCHS}"
@@ -193,20 +192,19 @@ package_update_index_ipk () {
 #
 package_generate_ipkg_conf () {
 	package_generate_archlist
-	echo "src oe file:${DEPLOY_DIR_IPK}" >> ${IPKGCONF_TARGET}
 	echo "src oe file:${DEPLOY_DIR_IPK}" >> ${IPKGCONF_SDK}
+	ipkgarchs="${SDK_PACKAGE_ARCHS}"
+	for arch in $ipkgarchs; do
+		if [ -e ${DEPLOY_DIR_IPK}/$arch/Packages ] ; then
+		        echo "src oe-$arch file:${DEPLOY_DIR_IPK}/$arch" >> ${IPKGCONF_SDK}
+		fi
+	done
+
+	echo "src oe file:${DEPLOY_DIR_IPK}" >> ${IPKGCONF_TARGET}
 	ipkgarchs="${PACKAGE_ARCHS}"
 	for arch in $ipkgarchs; do
 		if [ -e ${DEPLOY_DIR_IPK}/$arch/Packages ] ; then
 		        echo "src oe-$arch file:${DEPLOY_DIR_IPK}/$arch" >> ${IPKGCONF_TARGET}
-		fi
-		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
-		extension=-nativesdk
-		if [ "$sdkarch" = "all" -o "$sdkarch" = "any" -o "$sdkarch" = "noarch" ]; then
-		    extension=""
-		fi
-		if [ -e ${DEPLOY_DIR_IPK}/$sdkarch$extension/Packages ] ; then
-		        echo "src oe-$sdkarch$extension file:${DEPLOY_DIR_IPK}/$sdkarch$extension" >> ${IPKGCONF_SDK}
 		fi
 	done
 
@@ -219,16 +217,17 @@ package_generate_ipkg_conf () {
 }
 
 package_generate_archlist () {
+	ipkgarchs="${SDK_PACKAGE_ARCHS}"
+	priority=1
+	for arch in $ipkgarchs; do
+		echo "arch $arch $priority" >> ${IPKGCONF_SDK}
+		priority=$(expr $priority + 5)
+	done
+
 	ipkgarchs="${PACKAGE_ARCHS}"
 	priority=1
 	for arch in $ipkgarchs; do
-		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
 		echo "arch $arch $priority" >> ${IPKGCONF_TARGET}
-		extension=-nativesdk
-		if [ "$sdkarch" = "all" -o "$sdkarch" = "any" -o "$sdkarch" = "noarch" ]; then
-		    extension=""
-		fi
-		echo "arch $sdkarch$extension $priority" >> ${IPKGCONF_SDK}
 		priority=$(expr $priority + 5)
 	done
 
@@ -237,8 +236,6 @@ package_generate_archlist () {
 		echo "arch $arch $priority" >> ${IPKGCONF_TARGET}
 		priority=$(expr $priority + 5)
 	done
-
-
 }
 
 python do_package_ipk () {

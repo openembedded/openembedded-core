@@ -31,15 +31,7 @@ package_update_index_rpm () {
 	package_update_index_rpm_common "${RPMCONF_TARGET_BASE}" base_archs ml_archs
 
 	# Update SDK packages
-	base_archs=""
-	for arch in ${PACKAGE_ARCHS}; do
-		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
-		extension="-nativesdk"
-		if [ "$sdkarch" = "all" -o "$sdkarch" = "any" -o "$sdkarch" = "noarch" ]; then
-		    extension=""
-		fi
-		base_archs="$base_archs $sdkarch$extension"
-	done
+	base_archs="${SDK_PACKAGE_ARCHS}"
 	package_update_index_rpm_common "${RPMCONF_HOST_BASE}" base_archs
 }
 
