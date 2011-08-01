@@ -7,9 +7,9 @@ HOMEPAGE = "http://www.gnu.org/software/bison/"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 SECTION = "devel"
-DEPENDS = "bison-native"
+DEPENDS = "bison-native flex-native"
 
-PR = "r0"
+PR = "r1"
 
 BASE_SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.gz \
          file://bison-2.3_m4.patch"

@@ -7,9 +7,9 @@ HOMEPAGE = "http://www.gnu.org/software/bison/"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SECTION = "devel"
-DEPENDS = "bison-native"
+DEPENDS = "bison-native flex-native"
 
-PR = "r0"
+PR = "r1"
 
 BASE_SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.gz \
 	   file://m4.patch \
