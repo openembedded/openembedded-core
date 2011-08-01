@@ -1,0 +1,112 @@
+Upstream-Status: Pending
+
+Add support for FSL PowerPC e5500 core.
+
+Signed-off-by: Edmar Wienskoski <edmar@freescale.com>
+Signed-off-by: Kumar Gala <galak@kernel.crashing.org>
+
+Index: binutils-2.21.1/bfd/archures.c
+===================================================================
+--- binutils-2.21.1.orig/bfd/archures.c
++++ binutils-2.21.1/bfd/archures.c
+@@ -231,6 +231,7 @@ DESCRIPTION
+ .#define bfd_mach_ppc_e500      500
+ .#define bfd_mach_ppc_e500mc    5001
+ .#define bfd_mach_ppc_e500mc64  5005
++.#define bfd_mach_ppc_e5500     5006
+ .#define bfd_mach_ppc_titan     83
+ .  bfd_arch_rs6000,    {* IBM RS/6000 *}
+ .#define bfd_mach_rs6k		6000
+Index: binutils-2.21.1/bfd/bfd-in2.h
+===================================================================
+--- binutils-2.21.1.orig/bfd/bfd-in2.h
++++ binutils-2.21.1/bfd/bfd-in2.h
+@@ -1918,6 +1918,7 @@ enum bfd_architecture
+ #define bfd_mach_ppc_e500      500
+ #define bfd_mach_ppc_e500mc    5001
+ #define bfd_mach_ppc_e500mc64  5005
++#define bfd_mach_ppc_e5500     5006
+ #define bfd_mach_ppc_titan     83
+   bfd_arch_rs6000,    /* IBM RS/6000 */
+ #define bfd_mach_rs6k          6000
+Index: binutils-2.21.1/bfd/cpu-powerpc.c
+===================================================================
+--- binutils-2.21.1.orig/bfd/cpu-powerpc.c
++++ binutils-2.21.1/bfd/cpu-powerpc.c
+@@ -352,6 +352,20 @@ const bfd_arch_info_type bfd_powerpc_arc
+     FALSE, /* not the default */
+     powerpc_compatible,
+     bfd_default_scan,
++    &bfd_powerpc_archs[19]
++  },
++  {
++    64, /* 64 bits in a word */
++    64, /* 64 bits in an address */
++    8,  /* 8 bits in a byte */
++    bfd_arch_powerpc,
++    bfd_mach_ppc_e5500,
++    "powerpc",
++    "powerpc:e5500",
++    3,
++    FALSE, /* not the default */
++    powerpc_compatible,
++    bfd_default_scan,
+     0
+   }
+ };
+Index: binutils-2.21.1/gas/config/tc-ppc.c
+===================================================================
+--- binutils-2.21.1.orig/gas/config/tc-ppc.c
++++ binutils-2.21.1/gas/config/tc-ppc.c
+@@ -1236,6 +1236,7 @@ PowerPC options:\n\
+ -me500, -me500x2        generate code for Motorola e500 core complex\n\
+ -me500mc,               generate code for Freescale e500mc core complex\n\
+ -me500mc64,             generate code for Freescale e500mc64 core complex\n\
++-me5500,                generate code for Freescale e5500 core complex\n\
+ -mspe                   generate code for Motorola SPE instructions\n\
+ -mtitan                 generate code for AppliedMicro Titan core complex\n\
+ -mregnames              Allow symbolic names for registers\n\
+Index: binutils-2.21.1/gas/doc/as.texinfo
+===================================================================
+--- binutils-2.21.1.orig/gas/doc/as.texinfo
++++ binutils-2.21.1/gas/doc/as.texinfo
+@@ -432,7 +432,7 @@ gcc(1), ld(1), and the Info entries for 
+    [@b{-a32}|@b{-a64}]
+    [@b{-mpwrx}|@b{-mpwr2}|@b{-mpwr}|@b{-m601}|@b{-mppc}|@b{-mppc32}|@b{-m603}|@b{-m604}|@b{-m403}|@b{-m405}|
+     @b{-m440}|@b{-m464}|@b{-m476}|@b{-m7400}|@b{-m7410}|@b{-m7450}|@b{-m7455}|@b{-m750cl}|@b{-mppc64}|
+-    @b{-m620}|@b{-me500}|@b{-e500x2}|@b{-me500mc}|@b{-me500mc64}|@b{-mppc64bridge}|@b{-mbooke}|
++    @b{-m620}|@b{-me500}|@b{-e500x2}|@b{-me500mc}|@b{-me500mc64}|@b{-me5500}|@b{-mppc64bridge}|@b{-mbooke}|
+     @b{-mpower4}|@b{-mpr4}|@b{-mpower5}|@b{-mpwr5}|@b{-mpwr5x}|@b{-mpower6}|@b{-mpwr6}|
+     @b{-mpower7}|@b{-mpw7}|@b{-ma2}|@b{-mcell}|@b{-mspe}|@b{-mtitan}|@b{-me300}|@b{-mcom}]
+    [@b{-many}] [@b{-maltivec}|@b{-mvsx}]
+Index: binutils-2.21.1/gas/doc/c-ppc.texi
+===================================================================
+--- binutils-2.21.1.orig/gas/doc/c-ppc.texi
++++ binutils-2.21.1/gas/doc/c-ppc.texi
+@@ -85,6 +85,9 @@ Generate code for Freescale e500mc core 
+ @item -me500mc64
+ Generate code for Freescale e500mc64 core complex.
+ 
++@item -me5500
++Generate code for Freescale e5500 core complex.
++
+ @item -mspe
+ Generate code for Motorola SPE instructions.
+ 
+Index: binutils-2.21.1/opcodes/ppc-dis.c
+===================================================================
+--- binutils-2.21.1.orig/opcodes/ppc-dis.c
++++ binutils-2.21.1/opcodes/ppc-dis.c
+@@ -114,6 +114,12 @@ struct ppc_mopt ppc_opts[] = {
+ 		| PPC_OPCODE_E500MC | PPC_OPCODE_64 | PPC_OPCODE_POWER5
+ 		| PPC_OPCODE_POWER6 | PPC_OPCODE_POWER7),
+     0 },
++  { "e5500",    (PPC_OPCODE_PPC | PPC_OPCODE_BOOKE | PPC_OPCODE_ISEL
++		| PPC_OPCODE_PMR | PPC_OPCODE_CACHELCK | PPC_OPCODE_RFMCI
++		| PPC_OPCODE_E500MC | PPC_OPCODE_64 | PPC_OPCODE_POWER4
++		| PPC_OPCODE_POWER5 | PPC_OPCODE_POWER6
++		| PPC_OPCODE_POWER7),
++    0 },
+   { "e500x2",  (PPC_OPCODE_PPC | PPC_OPCODE_BOOKE | PPC_OPCODE_SPE
+ 		| PPC_OPCODE_ISEL | PPC_OPCODE_EFS | PPC_OPCODE_BRLOCK
+ 		| PPC_OPCODE_PMR | PPC_OPCODE_CACHELCK | PPC_OPCODE_RFMCI
