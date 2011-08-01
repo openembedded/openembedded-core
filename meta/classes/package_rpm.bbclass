@@ -25,56 +25,45 @@ package_update_index_rpm () {
 		return
 	fi
 
-	base_package_archs="${PACKAGE_ARCHS}"
-	ml_package_archs="${MULTILIB_PACKAGE_ARCHS}"
+	# Update target packages
+	base_archs="${PACKAGE_ARCHS}"
+	ml_archs="${MULTILIB_PACKAGE_ARCHS}"
+	package_update_index_rpm_common "${RPMCONF_TARGET_BASE}" base_archs ml_archs
 
-	for archvar in base_package_archs ml_package_archs; do
+	# Update SDK packages
+	base_archs=""
+	for arch in ${PACKAGE_ARCHS}; do
+		sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
+		extension="-nativesdk"
+		if [ "$sdkarch" = "all" -o "$sdkarch" = "any" -o "$sdkarch" = "noarch" ]; then
+		    extension=""
+		fi
+		base_archs="$base_archs $sdkarch$extension"
+	done
+	package_update_index_rpm_common "${RPMCONF_HOST_BASE}" base_archs
+}
+
+package_update_index_rpm_common () {
+	rpmconf_base="$1"
+	shift
+
+	for archvar in "$@"; do
 		eval archs=\${${archvar}}
 		packagedirs=""
-		packagedirs_sdk=""
 		for arch in $archs; do
-			sdkarch=`echo $arch | sed -e 's/${HOST_ARCH}/${SDK_ARCH}/'`
-			extension="-nativesdk"
-			if [ "$sdkarch" = "all" -o "$sdkarch" = "any" -o "$sdkarch" = "noarch" ]; then
-			    extension=""
-			fi
 			packagedirs="${DEPLOY_DIR_RPM}/$arch $packagedirs"
-			packagedirs_sdk="${DEPLOY_DIR_RPM}/$sdkarch$extension $packagedirs_sdk"
-
 			rm -rf ${DEPLOY_DIR_RPM}/$arch/solvedb
-			rm -rf ${DEPLOY_DIR_RPM}/$sdkarch$extension/solvedb
 		done
 
-		cat /dev/null > ${RPMCONF_TARGET_BASE}-${archvar}.conf
+		cat /dev/null > ${rpmconf_base}-${archvar}.conf
 		for pkgdir in $packagedirs; do
 			if [ -e $pkgdir/ ]; then
 				echo "Generating solve db for $pkgdir..."
-				echo $pkgdir/solvedb >> ${RPMCONF_TARGET_BASE}-${archvar}.conf
+				echo $pkgdir/solvedb >> ${rpmconf_base}-${archvar}.conf
 				if [ -d $pkgdir/solvedb ]; then
 					# We've already processed this and it's a duplicate
 					continue
 				fi
-				mkdir -p $pkgdir/solvedb
-				echo "# Dynamically generated solve manifest" >> $pkgdir/solvedb/manifest
-				find $pkgdir -maxdepth 1 -type f >> $pkgdir/solvedb/manifest
-				${RPM} -i --replacepkgs --replacefiles --oldpackage \
-					-D "_dbpath $pkgdir/solvedb" --justdb \
-					--noaid --nodeps --noorder --noscripts --notriggers --noparentdirs --nolinktos --stats \
-					--ignoresize --nosignature --nodigest \
-					-D "__dbi_txn create nofsync" \
-					$pkgdir/solvedb/manifest
-			fi
-		done
-
-		cat /dev/null > ${RPMCONF_HOST_BASE}-${archvar}.conf
-		for pkgdir in $packagedirs_sdk; do
-			if [ -e $pkgdir/ ]; then
-				echo "Generating solve db for $pkgdir..."
-				echo $pkgdir/solvedb >> ${RPMCONF_HOST_BASE}-${archvar}.conf
-				if [ -d $pkgdir/solvedb ]; then
-					# We've already processed this and it's a duplicate
-					continue
-				fi	
 				mkdir -p $pkgdir/solvedb
 				echo "# Dynamically generated solve manifest" >> $pkgdir/solvedb/manifest
 				find $pkgdir -maxdepth 1 -type f >> $pkgdir/solvedb/manifest
@@ -94,45 +83,38 @@ package_update_index_rpm () {
 # generated depsolver db's...
 #
 package_generate_rpm_conf () {
-	printf "_solve_dbpath " > ${RPMCONF_TARGET_BASE}.macro
-	o_colon_t=false
-	o_colon_h=false
+	# Update target packages
+	package_generate_rpm_conf_common "${RPMCONF_TARGET_BASE}" base_archs ml_archs
 
-	for archvar in base_package_archs ml_package_archs; do
-		printf "_solve_dbpath " > ${RPMCONF_TARGET_BASE}-${archvar}.macro
+	# Update SDK packages
+	package_generate_rpm_conf_common "${RPMCONF_HOST_BASE}" base_archs
+}
+
+package_generate_rpm_conf_common() {
+	rpmconf_base="$1"
+	shift
+
+	printf "_solve_dbpath " > ${rpmconf_base}.macro
+	o_colon=false
+
+	for archvar in "$@"; do
+		printf "_solve_dbpath " > ${rpmconf_base}-${archvar}.macro
 		colon=false
-		for each in `cat ${RPMCONF_TARGET_BASE}-${archvar}.conf` ; do
-			if [ "$o_colon_t" == true ]; then
-				printf ":" >> ${RPMCONF_TARGET_BASE}.macro
+		for each in `cat ${rpmconf_base}-${archvar}.conf` ; do
+			if [ "$o_colon" == true ]; then
+				printf ":" >> ${rpmconf_base}.macro
 			fi
 			if [ "$colon" == true ]; then
-				printf ":" >> ${RPMCONF_TARGET_BASE}-${archvar}.macro
+				printf ":" >> ${rpmconf_base}-${archvar}.macro
 			fi
-			printf "%s" $each >> ${RPMCONF_TARGET_BASE}.macro
-			o_colon_t=true
-			printf "%s" $each >> ${RPMCONF_TARGET_BASE}-${archvar}.macro
+			printf "%s" $each >> ${rpmconf_base}.macro
+			o_colon=true
+			printf "%s" $each >> ${rpmconf_base}-${archvar}.macro
 			colon=true
 		done
-		printf "\n" >> ${RPMCONF_TARGET_BASE}-${archvar}.macro
-
-		printf "_solve_dbpath " > ${RPMCONF_HOST_BASE}-${archvar}.macro
-		colon=false
-		for each in `cat ${RPMCONF_HOST_BASE}-${archvar}.conf` ; do
-			if [ "$o_colon_h" == true ]; then
-				printf ":" >> ${RPMCONF_HOST_BASE}.macro
-			fi
-			if [ "$colon" == true ]; then
-				printf ":" >> ${RPMCONF_HOST_BASE}-${archvar}.macro
-			fi
-			printf "%s" $each >> ${RPMCONF_HOST_BASE}.macro
-			o_colon_h=true
-			printf "%s" $each >> ${RPMCONF_HOST_BASE}-${archvar}.macro
-			colon=true
-		done
-		printf "\n" >> ${RPMCONF_HOST_BASE}-${archvar}.macro
+		printf "\n" >> ${rpmconf_base}-${archvar}.macro
 	done
-	printf "\n" >> ${RPMCONF_TARGET_BASE}.macro
-	printf "\n" >> ${RPMCONF_HOST_BASE}.macro
+	printf "\n" >> ${rpmconf_base}.macro
 }
 
 rpm_log_check() {
@@ -211,7 +193,7 @@ package_install_internal_rpm () {
 	mkdir -p ${target_rootfs}/etc/rpm/sysinfo
 	echo "/" >${target_rootfs}/etc/rpm/sysinfo/Dirnames
 	if [ ! -z "$providename" ]; then
-		>>${target_rootfs}/etc/rpm/sysinfo/Providename
+		cat /dev/null > ${target_rootfs}/etc/rpm/sysinfo/Providename
 		for provide in $providename ; do
 			echo $provide >> ${target_rootfs}/etc/rpm/sysinfo/Providename
 		done
@@ -227,10 +209,10 @@ package_install_internal_rpm () {
 			for pkg in ${package_linguas}; do
 				echo "Processing $pkg..."
 
-				archvar=base_package_archs
+				archvar=base_archs
 				ml_pkg=$(echo ${pkg} | sed "s,^${MLPREFIX}\(.*\),\1,")
 				if [ "${ml_pkg}" != "${pkg}" ]; then
-					archvar=ml_package_archs
+					archvar=ml_archs
 				fi
 
 				pkg_name=$(resolve_package_rpm ${confbase}-${archvar}.conf ${ml_pkg})
@@ -238,7 +220,7 @@ package_install_internal_rpm () {
 					echo "Unable to find package $pkg ($ml_pkg)!"
 					exit 1
 				fi
-				echo $pkg_name >> ${IMAGE_ROOTFS}/install/install.manifest
+				echo $pkg_name >> ${target_rootfs}/install/install.manifest
 			done
 		fi
 	fi
@@ -247,10 +229,10 @@ package_install_internal_rpm () {
 		for pkg in ${package_to_install} ; do
 			echo "Processing $pkg..."
 
-			archvar=base_package_archs
+			archvar=base_archs
 			ml_pkg=$(echo ${pkg} | sed "s,^${MLPREFIX}\(.*\),\1,")
 			if [ "${ml_pkg}" != "${pkg}" ]; then
-				archvar=ml_package_archs
+				archvar=ml_archs
 			fi
 
 			pkg_name=$(resolve_package_rpm ${confbase}-${archvar}.conf ${ml_pkg})
@@ -258,7 +240,7 @@ package_install_internal_rpm () {
 				echo "Unable to find package $pkg ($ml_pkg)!"
 				exit 1
 			fi
-			echo $pkg_name >> ${IMAGE_ROOTFS}/install/install.manifest
+			echo $pkg_name >> ${target_rootfs}/install/install.manifest
 		done
 	fi
 
@@ -303,7 +285,7 @@ package_install_internal_rpm () {
 		# Dump the full set of recommends...
 		${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
 			--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
-			-D "_dbpath ${IMAGE_ROOTFS}/install" -D "`cat ${confbase}.macro`" \
+			-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
 			-D "__dbi_txn create nofsync private" \
 			-qa --qf "[%{RECOMMENDS}\n]" | sort -u > ${target_rootfs}/install/recommend
 		# Did we add more to the list?

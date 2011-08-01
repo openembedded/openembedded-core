@@ -52,12 +52,16 @@ fakeroot rootfs_rpm_do_rootfs () {
 
 	#createrepo "${DEPLOY_DIR_RPM}"
 
-	# Setup base system configuration
-	mkdir -p ${IMAGE_ROOTFS}/etc/rpm/
+	# install packages
+	# This needs to work in the same way as populate_sdk_rpm.bbclass!
+	export INSTALL_ROOTFS_RPM="${IMAGE_ROOTFS}"
 
-	mkdir -p ${IMAGE_ROOTFS}${rpmlibdir}
-	mkdir -p ${IMAGE_ROOTFS}${rpmlibdir}/log
-	cat > ${IMAGE_ROOTFS}${rpmlibdir}/DB_CONFIG << EOF
+	# Setup base system configuration
+	mkdir -p ${INSTALL_ROOTFS_RPM}/etc/rpm/
+
+	mkdir -p ${INSTALL_ROOTFS_RPM}${rpmlibdir}
+	mkdir -p ${INSTALL_ROOTFS_RPM}${rpmlibdir}/log
+	cat > ${INSTALL_ROOTFS_RPM}${rpmlibdir}/DB_CONFIG << EOF
 # ================ Environment
 set_data_dir            .
 set_create_dir          .
@@ -81,15 +85,13 @@ mutex_set_max           163840
 # ================ Replication
 EOF
 
-	#install pacakges
-	export INSTALL_ROOTFS_RPM="${IMAGE_ROOTFS}"
 	export INSTALL_PLATFORM_RPM="${TARGET_ARCH}"
 	export INSTALL_CONFBASE_RPM="${RPMCONF_TARGET_BASE}"
 	export INSTALL_PACKAGES_NORMAL_RPM="${PACKAGE_INSTALL}"
 	export INSTALL_PACKAGES_ATTEMPTONLY_RPM="${PACKAGE_INSTALL_ATTEMPTONLY}"
 	export INSTALL_PACKAGES_LINGUAS_RPM="${LINGUAS_INSTALL}"
 	export INSTALL_PROVIDENAME_RPM=""
-	export INSTALL_TASK_RPM="populate_sdk"
+	export INSTALL_TASK_RPM="rootfs_rpm_do_rootfs"
 
 	# List must be prefered to least preferred order
 	INSTALL_PLATFORM_EXTRA_RPM=""
@@ -221,5 +223,4 @@ python () {
             ml_package_archs += localdata.getVar("PACKAGE_ARCHS", True) or ""
             #bb.note("ML_PACKAGE_ARCHS %s %s %s" % (eext[1], localdata.getVar("PACKAGE_ARCHS", True) or "(none)", overrides))
     bb.data.setVar('MULTILIB_PACKAGE_ARCHS', ml_package_archs, d)
-
 }
