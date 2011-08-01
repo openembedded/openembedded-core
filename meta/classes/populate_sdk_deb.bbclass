@@ -11,30 +11,38 @@ populate_sdk_post_deb () {
 
 fakeroot populate_sdk_deb () {
 
+	# update index
 	package_update_index_deb
 
-	export INSTALL_TASK_DEB="populate_sdk"
-	export INSTALL_PACKAGES_LINGUAS_DEB=""
-	export INSTALL_PACKAGES_ATTEMPTONLY_DEB=""
-
-	#install target
+	## install target ##
+	# This needs to work in the same way as rootfs_deb.bbclass
 	echo "Installing TARGET packages"
+
+	mkdir -p ${IMAGE_ROOTFS}/var/dpkg/alternatives
+
 	export INSTALL_ROOTFS_DEB="${SDK_OUTPUT}/${SDKTARGETSYSROOT}"
 	export INSTALL_BASEARCH_DEB="${DPKG_ARCH}"
 	export INSTALL_ARCHS_DEB="${PACKAGE_ARCHS}"
 	export INSTALL_PACKAGES_NORMAL_DEB="${TOOLCHAIN_TARGET_TASK}"
+	export INSTALL_PACKAGES_ATTEMPTONLY_DEB=""
+	export PACKAGES_LINGUAS_DEB=""
+	export INSTALL_TASK_DEB="populate_sdk-target"
 
 	package_install_internal_deb
+
 	populate_sdk_post_deb ${INSTALL_ROOTFS_DEB}
 
 	populate_sdk_log_check populate_sdk
 
-	#install host
-	echo "Installing HOST packages"
+	## install nativesdk ##
+	echo "Installing NATIVESDK packages"
 	export INSTALL_ROOTFS_DEB="${SDK_OUTPUT}"
 	export INSTALL_BASEARCH_DEB="${SDK_ARCH}"
-	export INSTALL_PACKAGES_NORMAL_DEB="${TOOLCHAIN_HOST_TASK}"
 	export INSTALL_ARCHS_DEB="${SDK_PACKAGE_ARCHS}"
+	export INSTALL_PACKAGES_NORMAL_DEB="${TOOLCHAIN_HOST_TASK}"
+	export INSTALL_PACKAGES_ATTEMPTONLY_DEB=""
+	export PACKAGES_LINGUAS_DEB=""
+	export INSTALL_TASK_DEB="populate_sdk-nativesdk"
 
 	package_install_internal_deb
 	populate_sdk_post_deb ${SDK_OUTPUT}/${SDKPATHNATIVE}
