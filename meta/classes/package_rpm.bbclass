@@ -248,7 +248,7 @@ package_install_internal_rpm () {
 			echo "Processing $pkg..."
 
 			archvar=base_package_archs
-			ml_pkg=$(echo ${pkg} | sed "s,$^{MLPREFIX}\(.*\),\1,")
+			ml_pkg=$(echo ${pkg} | sed "s,^${MLPREFIX}\(.*\),\1,")
 			if [ "${ml_pkg}" != "${pkg}" ]; then
 				archvar=ml_package_archs
 			fi
