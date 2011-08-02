@@ -20,7 +20,8 @@ ABIEXTENSION = "${@['','spe'][d.getVar('TARGET_FPU', True) in ['ppc-efd', 'ppc-e
 
 PPCPKGSFX_FPU = "${@bb.utils.contains("TUNE_FEATURES", "fpu-hard" , "", "-nf", d)}"
 
-TUNE_PKGARCH ?= "${TUNE_ARCH}${PPCPKGSFX_FPU}"
+PPCPKGARCH = "${TUNE_ARCH}${PPCPKGSFX_FPU}"
+TUNE_PKGARCH ?= "${PPCPKGARCH}"
 
 # Basic tune definitions
 AVAILTUNES += "powerpc powerpc-nf" 
