@@ -16,7 +16,7 @@ LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3239170e81427c5948287df07691f03f"
 
 
-DEPENDS += "libsm virtual/libx11 kbproto libxdmcp"
+DEPENDS += "util-linux libxcb libsm virtual/libx11 kbproto libxdmcp"
 PROVIDES = "xt"
 
 PR = "r0"
