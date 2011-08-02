@@ -54,7 +54,7 @@ do_archgen () {
 	echo ""									>> zypp/poky-arch.h
 	echo "#ifndef POKY_ARCH_H"						>> zypp/poky-arch.h
 	echo "#define POKY_ARCH_H 1"						>> zypp/poky-arch.h
-	echo "#define Arch_machine Arch_${MACHINE_ARCH}"			>> zypp/poky-arch.h
+	echo "#define Arch_machine Arch_${MACHINE_ARCH}" | tr - _		>> zypp/poky-arch.h
 	echo "#endif /* POKY_ARCH_H */"						>> zypp/poky-arch.h
 	echo ""									>> zypp/poky-arch.h
 	if [ "${AVOID_CONSTRUCTOR}" != "true" ]; then
@@ -65,7 +65,7 @@ do_archgen () {
 			all | any | noarch)
 				continue;;
 		esac
-		echo "    DEF_BUILTIN( ${each_arch} );"				>> zypp/poky-arch.h
+		echo "    DEF_BUILTIN( ${each_arch} );"	 | tr - _		>> zypp/poky-arch.h
 	  done
 	  echo "#endif /* DEF_BUILTIN */"						>> zypp/poky-arch.h
 	  echo ""									>> zypp/poky-arch.h
@@ -77,7 +77,7 @@ do_archgen () {
 			all | any | noarch)
 				continue;;
 		esac
-		echo "  extern const Arch Arch_${each_arch};"			>> zypp/poky-arch.h
+		echo "  extern const Arch Arch_${each_arch};" | tr - _		>> zypp/poky-arch.h
 	done
 	echo "#endif /* POKY_EXTERN_PROTO */"					>> zypp/poky-arch.h
 	echo ""									>> zypp/poky-arch.h
@@ -89,9 +89,11 @@ do_archgen () {
 				continue;;
 		esac
 		if [ "${AVOID_CONSTRUCTOR}" != "true" ]; then
-		  echo "  const Arch Arch_${each_arch} (_${each_arch});"		>> zypp/poky-arch.h
+		  echo -n "  const Arch Arch_${each_arch} " | tr - _		>> zypp/poky-arch.h
+		  echo "(_${each_arch});" 					>> zypp/poky-arch.h
 		else
-		  echo "  const Arch Arch_${each_arch} ( IdString ( \"${each_arch}\" ) );"		>> zypp/poky-arch.h
+		  echo -n "  const Arch Arch_${each_arch} " | tr - _		>> zypp/poky-arch.h
+		  echo "( IdString ( \"${each_arch}\" ) );" 			>> zypp/poky-arch.h
 		fi
 	done
 	echo "#endif /* POKY_PROTO */"						>> zypp/poky-arch.h
