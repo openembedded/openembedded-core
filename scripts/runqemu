@@ -271,7 +271,7 @@ setup_tmpdir() {
             exit 1; }
 
         # We have bitbake in PATH, get TMPDIR from bitbake
-        TMPDIR=`bitbake -e | grep TMPDIR=\" | cut -d '=' -f2 | cut -d '"' -f2`
+        TMPDIR=`bitbake -e | grep ^TMPDIR=\" | cut -d '=' -f2 | cut -d '"' -f2`
         if [ -z "$TMPDIR" ]; then
             echo "Error: this script needs to be run from your build directory,"
             echo "or you need to explicitly set TMPDIR in your environment"
