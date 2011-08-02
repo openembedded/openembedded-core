@@ -1,4 +1,4 @@
-PR = "r4"
+PR = "r5"
 
 require gcc-${PV}.inc
 require gcc-configure-target.inc

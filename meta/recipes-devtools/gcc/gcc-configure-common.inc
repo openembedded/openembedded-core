@@ -64,11 +64,15 @@ SYSTEMLIBS1 = "${target_libdir}/"
 do_configure_prepend () {
 	# Change the default dynamic linker path, only useful for SDK, other's value
 	# are not changed according to the SYSTEMLIBS_DIR
+	#
+	# We want something like the following:
+	# 	#define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux-x86-64.so.2"
+	# becomes
+	#	#define GLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-linux-x86-64.so.2"
+	#
 	sed -i ${S}/gcc/config/*/linux*.h -e \
-		's#\(GLIBC_DYNAMIC_LINKER[^ ]*\)\( *"/lib.*\)#\1 SYSTEMLIBS_DIR\2#'
+		's#\(GLIBC_DYNAMIC_LINKER[^ ]*\) \( *"/lib.*\)/\(.*\)#\1 SYSTEMLIBS_DIR "\3#'
 
-	SYSTEMLIBS_DIR=`dirname ${SYSTEMLIBS}`
-	[ "$SYSTEMLIBS_DIR" = "/" ] && SYSTEMLIBS_DIR=""
 	# teach gcc to find correct target includedir when checking libc ssp support
 	mkdir -p ${B}/gcc
 	echo "NATIVE_SYSTEM_HEADER_DIR = ${SYSTEMHEADERS}" > ${B}/gcc/t-oe
@@ -83,7 +87,7 @@ do_configure_prepend () {
 #ifndef STANDARD_STARTFILE_PREFIX_2
 #define STANDARD_STARTFILE_PREFIX_2 "${SYSTEMLIBS1}"
 #endif
-#define SYSTEMLIBS_DIR "$SYSTEMLIBS_DIR"
+#define SYSTEMLIBS_DIR "${SYSTEMLIBS}"
 #endif /* ! GCC_DEFAULTS_H */
 _EOF
 	mv ${B}/gcc/defaults.h.new ${B}/gcc/defaults.h
