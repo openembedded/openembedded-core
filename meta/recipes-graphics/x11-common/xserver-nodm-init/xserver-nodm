@@ -35,10 +35,8 @@ case "$1" in
            chmod g+r /dev/tty[0-3]
            chmod o+rw /dev/input/*
        fi
-       # Using sudo -i here has the nice side effect of making sire
-       # HOME, USER and other previously problematic variables
-       # are set correctly
-       sudo -b -i -u $username /etc/X11/Xserver
+       # Using su rather than sudo as latest 1.8.1 cause failure [YOCTO #1211]
+       su -l -c '/etc/X11/Xserver&' $username 
        # Wait for the desktop to say its finished loading
        dbus-wait org.matchbox_project.desktop Loaded
   ;;
