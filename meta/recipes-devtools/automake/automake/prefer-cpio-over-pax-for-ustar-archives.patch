@@ -1,0 +1,41 @@
+When the user has a UID or GID that is larger than the ustar format
+supports, pax does not error out gracefully in some cases (FC13).  In
+this case cpio does.
+
+See for more details: http://debbugs.gnu.org/cgi/bugreport.cgi?bug=8343
+
+Additionally drop tar.m4 out of that part of the Makefile or we end up in
+a fatal attempt to regen loop:
+
+CDPATH="${ZSH_VERSION+.}:" && cd . && perllibdir="automake-1.11.1/lib:./lib" "automake-1.11.1/aclocal" --acdir=m4 -I m4
+/bin/sh: automake-1.11.1/aclocal: No such file or directory
+make: *** [aclocal.m4] Error 127
+
+Signed-off-by: Tom Rini <tom_rini@mentor.com>
+
+Index: automake-1.11.1/m4/tar.m4
+===================================================================
+--- automake-1.11.1.orig/m4/tar.m4
++++ automake-1.11.1/m4/tar.m4
+@@ -30,7 +30,7 @@ m4_if([$1], [v7],
+               [m4_fatal([Unknown tar format])])
+ AC_MSG_CHECKING([how to create a $1 tar archive])
+ # Loop over all known methods to create a tar archive until one works.
+-_am_tools='gnutar m4_if([$1], [ustar], [plaintar]) pax cpio none'
++_am_tools='gnutar m4_if([$1], [ustar], [plaintar]) cpio pax none'
+ _am_tools=${am_cv_prog_tar_$1-$_am_tools}
+ # Do not fold the above two line into one, because Tru64 sh and
+ # Solaris sh will not grok spaces in the rhs of `-'.
+Index: automake-1.11.1/Makefile.in
+===================================================================
+--- automake-1.11.1.orig/Makefile.in
++++ automake-1.11.1/Makefile.in
+@@ -44,7 +44,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/a
+ 	$(top_srcdir)/m4/missing.m4 $(top_srcdir)/m4/mkdirp.m4 \
+ 	$(top_srcdir)/m4/options.m4 $(top_srcdir)/m4/runlog.m4 \
+ 	$(top_srcdir)/m4/sanity.m4 $(top_srcdir)/m4/strip.m4 \
+-	$(top_srcdir)/m4/substnot.m4 $(top_srcdir)/m4/tar.m4 \
++	$(top_srcdir)/m4/substnot.m4 \
+ 	$(top_srcdir)/configure.ac
+ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
+ 	$(ACLOCAL_M4)
