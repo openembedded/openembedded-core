@@ -21,7 +21,7 @@
 # It is assumed OEROOT is already defined when this is called
 if [ -z "$OEROOT" ]; then
     echo >&2 "Error: OEROOT is not defined!"
-    return
+    return 1
 fi
 
 if [ "x$BDIR" = "x" ]; then
@@ -29,6 +29,15 @@ if [ "x$BDIR" = "x" ]; then
         BDIR="build"
     else
         BDIR=`readlink -f "$1"`
+        if [ -z "$BDIR"  ]; then
+            if expr "$1" : '.*/$' >/dev/null; then
+                echo >&2 "Error: please remove any trailing / in the argument."
+            else
+                PARENTDIR=`dirname "$1"`
+                echo >&2 "Error: the directory $PARENTDIR doesn't exist?"
+            fi
+            return 1
+        fi
     fi
 fi
 if expr "$BDIR" : '/.*' > /dev/null ; then
@@ -45,7 +54,7 @@ BUILDDIR=`readlink -f "$BUILDDIR"`
 
 if ! (test -d "$BITBAKEDIR"); then
     echo >&2 "Error: The bitbake directory ($BITBAKEDIR) does not exist!  Please ensure a copy of bitbake exists at this location"
-    return
+    return 1
 fi
 
 PATH="${OEROOT}/scripts:$BITBAKEDIR/bin/:$PATH"
