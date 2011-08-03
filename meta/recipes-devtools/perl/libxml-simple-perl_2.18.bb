@@ -14,3 +14,5 @@ S = "${WORKDIR}/XML-Simple-${PV}"
 EXTRA_PERLFLAGS = "-I ${STAGING_LIBDIR_NATIVE}/perl-native/perl/${@get_perl_version(d)}"
 
 inherit cpan
+
+BBCLASSEXTEND = "native"
