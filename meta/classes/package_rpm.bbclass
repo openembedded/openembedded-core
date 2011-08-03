@@ -357,8 +357,8 @@ python write_specfile () {
 		multilibs = d.getVar('MULTILIBS', True) or ""
 		for ext in multilibs.split():
 			eext = ext.split(':')
-			if len(eext) > 1 and eext[0] == 'multilib' and name and name.find(eext[1] + '-') == 0:
-				name = (eext[1] + '-').join(name.split(eext[1] + '-', 1)[1:])
+			if len(eext) > 1 and eext[0] == 'multilib' and name and name.find(eext[1] + '-') >= 0:
+				name = "".join(name.split(eext[1] + '-'))
 		return name
 
 #		ml = bb.data.getVar("MLPREFIX", d, True)
@@ -755,8 +755,8 @@ python do_package_rpm () {
 	# and dependency information...
 	def strip_multilib(name, d):
 		ml = bb.data.getVar("MLPREFIX", d, True)
-		if ml and name and len(ml) != 0 and name.find(ml) == 0:
-			return ml.join(name.split(ml, 1)[1:])
+		if ml and name and len(ml) != 0 and name.find(ml) >= 0:
+			return "".join(name.split(ml))
 		return name
 
 	workdir = bb.data.getVar('WORKDIR', d, True)
