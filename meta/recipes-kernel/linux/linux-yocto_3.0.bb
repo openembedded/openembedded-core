@@ -20,7 +20,7 @@ SRCREV_machine_qemuppc = "582dcc88c7c4d765c03b38ff384210d6efbf7956"
 SRCREV_machine_qemux86 = "099a40c1669d20fdae2846cfd28bf74fd38dacea"
 SRCREV_machine_qemux86-64 = "896b8fd5783a6aac80d1447da5958334f4734845"
 SRCREV_machine = "2d22c15ef4802bc117c5482217c2b2c4d34ab303"
-SRCREV_meta = "37856a69113155d343efc8f8c59c7e63fbf963c4"
+SRCREV_meta = "76b3679beff6c640388a609ccf87f46bb7bf0f2b"
 
 PR = "r0"
 PV = "${LINUX_VERSION}+git${SRCPV}"
