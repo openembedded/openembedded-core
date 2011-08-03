@@ -41,7 +41,10 @@ PACKAGES_DYNAMIC = "locale-base-* \
 
 DESCRIPTION_localedef = "eglibc: compile locale definition files"
 
-FILES_eglibc-gconv = "${libdir}/gconv/*"
+# eglibc-gconv is dynamically added into PACKAGES, thus
+# FILES_eglibc-gconv will not be automatically extended in multilib.
+# Explicitly add ${MLPREFIX} for FILES_eglibc-gconv.
+FILES_${MLPREFIX}eglibc-gconv = "${libdir}/gconv/*"
 FILES_${PN}-dbg += "${libdir}/gconv/.debug/*"
 FILES_localedef${PKGSUFFIX} = "${bindir}/localedef"
 

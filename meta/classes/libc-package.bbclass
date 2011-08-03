@@ -191,7 +191,7 @@ python package_do_split_gconvs () {
 
 	do_split_packages(d, locales_dir, file_regex='(.*)', output_pattern=bpn+'-localedata-%s', \
 		description='locale definition for %s', hook=calc_locale_deps, extra_depends='')
-	bb.data.setVar('PACKAGES', bb.data.getVar('PACKAGES', d) + ' ' + bpn + '-gconv', d)
+	bb.data.setVar('PACKAGES', bb.data.getVar('PACKAGES', d) + ' ' + bb.data.getVar('MLPREFIX', d) + bpn + '-gconv', d)
 
 	use_bin = bb.data.getVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", d, 1)
 
