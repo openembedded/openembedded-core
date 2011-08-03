@@ -111,8 +111,13 @@ autotools_do_configure() {
 			if [ -d ${STAGING_DATADIR_NATIVE}/aclocal-$AUTOV ]; then
 				acpaths="$acpaths -I${STAGING_DATADIR_NATIVE}/aclocal-$AUTOV"
 			fi
+			# The aclocal directory could get modified by other processes 
+			# uninstalling data from the sysroot. See Yocto #861 for details.
+			# We avoid this by taking a copy here and then files cannot disappear.
 			if [ -d ${STAGING_DATADIR}/aclocal ]; then
-				acpaths="$acpaths -I ${STAGING_DATADIR}/aclocal"
+				mkdir -p ${B}/aclocal-copy/
+				cp ${STAGING_DATADIR}/aclocal/* ${B}/aclocal-copy/
+				acpaths="$acpaths -I ${B}/aclocal-copy/"
 			fi
 			# autoreconf is too shy to overwrite aclocal.m4 if it doesn't look
 			# like it was auto-generated.  Work around this by blowing it away
