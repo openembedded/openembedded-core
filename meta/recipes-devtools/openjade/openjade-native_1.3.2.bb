@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=641ff1e4511f0a87044ad42f87cb1045"
 PR = "r4"
 
 DEPENDS = "opensp-native sgml-common-native"
-RDEPENDS_${PN} = "sgml-common"
+RDEPENDS_${PN} = "sgml-common-native"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/openjade/openjade-${PV}.tar.gz \
            file://makefile.patch \
