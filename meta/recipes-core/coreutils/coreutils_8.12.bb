@@ -7,13 +7,15 @@ BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
                     file://src/ls.c;startline=5;endline=16;md5=e1a509558876db58fb6667ba140137ad"
-PR = "r2"
+PR = "r3"
 DEPENDS = "gmp"
 DEPENDS_virtclass-native = ""
 
 inherit autotools gettext
 
-SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.gz"
+SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.gz \
+           file://remove-usr-local-lib-from-m4.patch \
+          "
 
 SRC_URI[md5sum] = "fce7999953a67243d00d75cc86dbcaa6"
 SRC_URI[sha256sum] = "9e233a62c98a3378a7b0483d2ae3d662dbaf6cd3917d3830d3514665e12a85c8"
