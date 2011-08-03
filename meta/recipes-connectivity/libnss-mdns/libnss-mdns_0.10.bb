@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "avahi"
 RDEPENDS_${PN} = "avahi-daemon"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://0pointer.de/lennart/projects/nss-mdns/nss-mdns-${PV}.tar.gz"
 
@@ -21,7 +21,7 @@ inherit autotools
 LEAD_SONAME = "libnss_mdns.so"
 DEBIANNAME_${PN} = "libnss-mdns"
 
-EXTRA_OECONF = "--libdir=/lib --disable-lynx --enable-avahi"
+EXTRA_OECONF = "--libdir=${base_libdir} --disable-lynx --enable-avahi"
 
 # TODO: pattern based configuration update
 pkg_postinst_${PN} () {
