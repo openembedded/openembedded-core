@@ -394,7 +394,7 @@ python write_specfile () {
 							pv = subd['PKGV']
 							reppv = pv.replace('-', '+')
 							ver = ver.replace(pv, reppv)
-				newdeps_dict[strip_multilib(dep, d)] = ver
+				newdeps_dict[dep] = ver
 			depends = bb.utils.join_deps(newdeps_dict)
 			bb.data.setVar(varname, depends.strip(), d)
 
@@ -516,12 +516,12 @@ python write_specfile () {
 		# Map the dependencies into their final form
 		bb.build.exec_func("mapping_rename_hook", localdata)
 
-		splitrdepends    = bb.data.getVar('RDEPENDS', localdata, True) or ""
-		splitrrecommends = bb.data.getVar('RRECOMMENDS', localdata, True) or ""
-		splitrsuggests   = bb.data.getVar('RSUGGESTS', localdata, True) or ""
-		splitrprovides   = bb.data.getVar('RPROVIDES', localdata, True) or ""
-		splitrreplaces   = bb.data.getVar('RREPLACES', localdata, True) or ""
-		splitrconflicts  = bb.data.getVar('RCONFLICTS', localdata, True) or ""
+		splitrdepends    = strip_multilib(bb.data.getVar('RDEPENDS', localdata, True), d) or ""
+		splitrrecommends = strip_multilib(bb.data.getVar('RRECOMMENDS', localdata, True), d) or ""
+		splitrsuggests   = strip_multilib(bb.data.getVar('RSUGGESTS', localdata, True), d) or ""
+		splitrprovides   = strip_multilib(bb.data.getVar('RPROVIDES', localdata, True), d) or ""
+		splitrreplaces   = strip_multilib(bb.data.getVar('RREPLACES', localdata, True), d) or ""
+		splitrconflicts  = strip_multilib(bb.data.getVar('RCONFLICTS', localdata, True), d) or ""
 		splitrobsoletes  = []
 
 		# For now we need to manually supplement RPROVIDES with any update-alternatives links
