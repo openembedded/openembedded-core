@@ -11,15 +11,15 @@ DEPENDS = "readline"
 
 inherit autotools
 
-PACKAGES =+ "${PN}-lenses lib${PN} lib${PN}-dev lib${PN}-dbg"
+PACKAGES =+ "${PN}-lenses lib${BPN} lib${BPN}-dev lib${BPN}-dbg"
 
 FILES_${PN}-lenses = "${datadir}/augeas/lenses"
-FILES_lib${PN} = "${libdir}/*.so.*"
-FILES_lib${PN}-dev = "${libdir}/*.so ${libdir}/*.a ${libdir}/*.la ${includedir} ${libdir}/pkgconfig"
-FILES_lib${PN}-dbg = "${libdir}/.debug"
+FILES_lib${BPN} = "${libdir}/*.so.*"
+FILES_lib${BPN}-dev = "${libdir}/*.so ${libdir}/*.a ${libdir}/*.la ${includedir} ${libdir}/pkgconfig"
+FILES_lib${BPN}-dbg = "${libdir}/.debug"
 
-RDEPENDS_lib${PN} += "${PN}-lenses"
-RRECOMMENDS_lib${PN} += "${PN}"
+RDEPENDS_lib${BPN} += "${PN}-lenses"
+RRECOMMENDS_lib${BPN} += "${PN}"
 
 LEAD_SONAME = "libaugeas.so"
 

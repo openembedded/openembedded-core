@@ -17,12 +17,12 @@ export config_TARGET_LINK = "${CCLD}"
 export config_TARGET_CFLAGS = "${CFLAGS}"
 export config_TARGET_LFLAGS = "${LDFLAGS}"
 
-PACKAGES = "lib${PN} lib${PN}-dev lib${PN}-doc ${PN} ${PN}-dbg"
+PACKAGES = "lib${BPN} lib${BPN}-dev lib${BPN}-doc ${PN} ${PN}-dbg"
 FILES_${PN} = "${bindir}/*"
 FILES_lib${PN} = "${libdir}/*.so.*"
 FILES_lib${PN}-dev = "${libdir}/*.a ${libdir}/*.la ${libdir}/*.so \
 		       ${libdir}/pkgconfig ${includedir}"
-FILES_lib${PN}-doc = "${docdir} ${mandir} ${infodir}"
-AUTO_LIBNAME_PKGS = "lib${PN}"
+FILES_lib${BPN}-doc = "${docdir} ${mandir} ${infodir}"
+AUTO_LIBNAME_PKGS = "lib${BPN}"
 
 BBCLASSEXTEND = "native nativesdk"

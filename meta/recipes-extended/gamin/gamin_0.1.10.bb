@@ -20,14 +20,14 @@ inherit autotools pkgconfig
 
 EXTRA_OECONF = "--without-python"
 
-PACKAGES += "lib${PN} lib${PN}-dev"
+PACKAGES += "lib${BPN} lib${BPN}-dev"
 FILES_${PN} = "${libexecdir}"
 FILES_${PN}-dbg += "${libexecdir}/.debug"
-FILES_lib${PN} = "${libdir}/lib*.so.*"
-FILES_lib${PN}-dev = "${includedir} ${libdir}/pkgconfig ${libdir}/lib*.la \
+FILES_lib${BPN} = "${libdir}/lib*.so.*"
+FILES_lib${BPN}-dev = "${includedir} ${libdir}/pkgconfig ${libdir}/lib*.la \
                       ${libdir}/lib*.a ${libdir}/lib*.so"
 
-RDEPENDS_lib${PN} = "${PN}"
+RDEPENDS_lib${BPN} = "${PN}"
 
 LEAD_SONAME = "libgamin-1.so"
 

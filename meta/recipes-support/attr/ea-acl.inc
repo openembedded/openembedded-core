@@ -16,7 +16,7 @@ do_install () {
 	oe_runmake install install-lib install-dev DIST_ROOT="${D}"
 }
 
-PACKAGES =+ "lib${PN} lib${PN}-dev lib${PN}-doc"
+PACKAGES =+ "lib${BPN} lib${BPN}-dev lib${BPN}-doc"
 
 FILES_lib${PN} = "${base_libdir}/lib*.so.*"
 

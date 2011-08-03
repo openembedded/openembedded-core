@@ -116,8 +116,8 @@ FILES_${PN}-core += "${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py"
 FILES_${PN}-core += "${bindir}/2to3"
 
 # package libpython2
-PACKAGES =+ "lib${PN}2"
-FILES_lib${PN}2 = "${libdir}/libpython*.so.*"
+PACKAGES =+ "lib${BPN}2"
+FILES_lib${BPN}2 = "${libdir}/libpython*.so.*"
 
 # additional stuff -dev
 
