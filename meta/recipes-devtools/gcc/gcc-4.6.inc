@@ -1,6 +1,6 @@
 require gcc-common.inc
 
-PR = "r3"
+PR = "r4"
 
 # Third digit in PV should be incremented after a minor release
 # happens from this branch on gcc e.g. currently its 4.6.0
@@ -67,6 +67,7 @@ SRC_URI = "svn://gcc.gnu.org/svn/gcc/branches;module=${BRANCH};proto=http \
 	   file://COLLECT_GCC_OPTIONS.patch \
            file://volatile_access_backport.patch \
            file://use-defaults.h-and-t-oe-in-B.patch \
+	   file://powerpc-e5500.patch \
 	  "
 
 SRC_URI_append_sh3  = " file://sh3-installfix-fixheaders.patch;patch=1 "
