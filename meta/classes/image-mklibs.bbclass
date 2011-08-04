@@ -19,6 +19,9 @@ mklibs_optimize_image_doit() {
 		powerpc | mips | microblaze )
 			dynamic_loader="/lib/ld.so.1"
 			;;
+		powerpc64)
+			dynamic_loader="${base_libdir}/ld64.so.1"
+			;;
 		x86_64)
 			dynamic_loader="/lib/ld-linux-x86-64.so.2"
 			;;
