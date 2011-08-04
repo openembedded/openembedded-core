@@ -28,14 +28,21 @@ if [ "x$BDIR" = "x" ]; then
     if [ "x$1" = "x" ]; then
         BDIR="build"
     else
-        BDIR=`readlink -f "$1"`
-        if [ -z "$BDIR"  ]; then
-            if expr "$1" : '.*/$' >/dev/null; then
-                echo >&2 "Error: please remove any trailing / in the argument."
-            else
-                PARENTDIR=`dirname "$1"`
-                echo >&2 "Error: the directory $PARENTDIR doesn't exist?"
-            fi
+        BDIR="$1"
+        if [ "$BDIR" = "/" ]; then
+            echo >&2 "Error: / is not supported as a build directory."
+            return 1
+        fi
+
+        # Remove any possible trailing slashes. This is used to work around
+        # buggy readlink in Ubuntu 10.04 that doesn't ignore trailing slashes
+        # and hence "readlink -f new_dir_to_be_created/" returns empty.
+        BDIR=`echo $BDIR | sed -re 's|/+$||'`
+
+        BDIR=`readlink -f "$BDIR"`
+        if [ -z "$BDIR" ]; then
+            PARENTDIR=`dirname "$1"`
+            echo >&2 "Error: the directory $PARENTDIR does not exist?"
             return 1
         fi
     fi
