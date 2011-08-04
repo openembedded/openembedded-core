@@ -8,14 +8,15 @@ before the usage of _foo during the initialization of the compatibility
 table.
 
 The patch, along with a similar change to the recipe generation of the 
-poky-arch.h file, remove the DEF_BUILTIN globals and replace them with
+oe-arch.h file, remove the DEF_BUILTIN globals and replace them with
 immediate strings wherever they are used.
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-diff -ur git.orig/zypp/Arch.cc git/zypp/Arch.cc
---- git.orig/zypp/Arch.cc	2011-03-29 14:15:32.695079271 -0500
-+++ git/zypp/Arch.cc	2011-03-29 14:17:22.680910025 -0500
+Index: git/zypp/Arch.cc
+===================================================================
+--- git.orig/zypp/Arch.cc	2011-08-04 21:03:31.000000000 -0700
++++ git/zypp/Arch.cc	2011-08-04 21:04:16.635480895 -0700
 @@ -152,13 +152,10 @@
      // NOTE: Thake care CompatBits::IntT is able to provide one
      //       bit for each architecture.
@@ -24,12 +25,12 @@ diff -ur git.orig/zypp/Arch.cc git/zypp/Arch.cc
 -    DEF_BUILTIN( all );
 -    DEF_BUILTIN( any );
 -    DEF_BUILTIN( noarch );
- 
--#include "poky-arch.h"
--#undef DEF_BUILTIN
 +/* Global constructors are not working properly on ARM, avoid the
 + * known bad case and merge constructors in with the usages
 + */
+ 
+-#include "oe-arch.h"
+-#undef DEF_BUILTIN
  
      ///////////////////////////////////////////////////////////////////
      //
@@ -46,7 +47,7 @@ diff -ur git.orig/zypp/Arch.cc git/zypp/Arch.cc
          ///////////////////////////////////////////////////////////////////
          // Define the CompatibleWith relation:
          //
-@@ -305,9 +302,9 @@
+@@ -331,9 +328,9 @@
    ///////////////////////////////////////////////////////////////////
  
    const Arch Arch_empty ( IdString::Empty );
@@ -57,9 +58,9 @@ diff -ur git.orig/zypp/Arch.cc git/zypp/Arch.cc
 +  const Arch Arch_any( IdString ( "any" ) );
 +  const Arch Arch_noarch( IdString ( "noarch" ) );
  
- #define POKY_PROTO 1
- #include "poky-arch.h"
-@@ -316,7 +316,7 @@
+ #define OE_PROTO 1
+ #include "oe-arch.h"
+@@ -345,7 +342,7 @@
    //	METHOD TYPE : Ctor
    //
    Arch::Arch()

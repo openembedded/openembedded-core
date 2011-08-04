@@ -1,0 +1,54 @@
+zypp/Arch.cc: Add room for additional architecture compatibilities
+
+Upstream-status: Pending
+
+Increase the size of the compatibility table from 9 to 30.  There are already
+existing checks within libzypp to ensure that we don't overflow the 64-bit
+architecture field, so nothing further was required.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff -ur git.orig/zypp/Arch.cc git/zypp/Arch.cc
+--- git.orig/zypp/Arch.cc	2011-08-02 16:40:37.696662889 -0500
++++ git/zypp/Arch.cc	2011-08-04 11:24:18.051745246 -0500
+@@ -280,13 +280,39 @@
+                               IdString arch6_r = IdString(),
+                               IdString arch7_r = IdString(),
+                               IdString arch8_r = IdString(),
+-                              IdString arch9_r = IdString() )
++                              IdString arch9_r = IdString(),
++                              IdString arch10_r = IdString(),
++                              IdString arch11_r = IdString(),
++                              IdString arch12_r = IdString(),
++                              IdString arch13_r = IdString(),
++                              IdString arch14_r = IdString(),
++                              IdString arch15_r = IdString(),
++                              IdString arch16_r = IdString(),
++                              IdString arch17_r = IdString(),
++                              IdString arch18_r = IdString(),
++                              IdString arch19_r = IdString(),
++                              IdString arch20_r = IdString(),
++                              IdString arch21_r = IdString(),
++                              IdString arch22_r = IdString(),
++                              IdString arch23_r = IdString(),
++                              IdString arch24_r = IdString(),
++                              IdString arch25_r = IdString(),
++                              IdString arch26_r = IdString(),
++                              IdString arch27_r = IdString(),
++                              IdString arch28_r = IdString(),
++                              IdString arch29_r = IdString(),
++                              IdString arch30_r = IdString() )
+       {
+         const CompatEntry & target( assertCompatSetEntry( targetArch_r ) );
+         target.addCompatBit( assertCompatSetEntry( arch0_r )._idBit );
+ #define _SETARG(N) if ( arch##N##_r.empty() ) return; target.addCompatBit( assertCompatSetEntry( arch##N##_r )._idBit )
+         _SETARG(1); _SETARG(2); _SETARG(3); _SETARG(4);
+         _SETARG(5); _SETARG(6); _SETARG(7); _SETARG(8); _SETARG(9);
++        _SETARG(10); _SETARG(11); _SETARG(12); _SETARG(13); _SETARG(14);
++        _SETARG(15); _SETARG(16); _SETARG(17); _SETARG(18); _SETARG(19);
++        _SETARG(20); _SETARG(21); _SETARG(22); _SETARG(23); _SETARG(24);
++        _SETARG(25); _SETARG(26); _SETARG(27); _SETARG(28); _SETARG(29);
++	_SETARG(30);
+ #undef _SETARG
+       }
+ 
