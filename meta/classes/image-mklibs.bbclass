@@ -17,19 +17,19 @@ mklibs_optimize_image_doit() {
 
 	case ${TARGET_ARCH} in
 		powerpc | mips | microblaze )
-			dynamic_loader="/lib/ld.so.1"
+			dynamic_loader="${base_libdir}/ld.so.1"
 			;;
 		powerpc64)
 			dynamic_loader="${base_libdir}/ld64.so.1"
 			;;
 		x86_64)
-			dynamic_loader="/lib/ld-linux-x86-64.so.2"
+			dynamic_loader="${base_libdir}/ld-linux-x86-64.so.2"
 			;;
 		i586 )
-			dynamic_loader="/lib/ld-linux.so.2"
+			dynamic_loader="${base_libdir}/ld-linux.so.2"
 			;;
 		arm )
-			dynamic_loader="/lib/ld-linux.so.3"
+			dynamic_loader="${base_libdir}/ld-linux.so.3"
 			;;
 		* )
 			dynamic_loader="/unknown_dynamic_linker"
