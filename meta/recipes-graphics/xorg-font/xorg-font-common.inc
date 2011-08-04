@@ -30,8 +30,6 @@ do_install_append() {
 	find ${D}${datadir}/fonts/X11 -type f -name fonts.scale | xargs rm -f	
 }
 
-PACKAGE_ARCH = "all"
-
 FILES_${PN} += " ${libdir}/X11/fonts ${datadir}"
 
 pkg_postinst_${PN} () {
