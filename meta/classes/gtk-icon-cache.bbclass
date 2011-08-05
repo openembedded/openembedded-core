@@ -1,5 +1,7 @@
 FILES_${PN} += "${datadir}/icons/hicolor"
 
+DEPENDS += "${@['hicolor-icon-theme', '']['${BPN}' == 'hicolor-icon-theme']}"
+
 # This could run on the host as icon cache files are architecture independent,
 # but there is no gtk-update-icon-cache built natively.
 gtk_icon_cache_postinst() {
