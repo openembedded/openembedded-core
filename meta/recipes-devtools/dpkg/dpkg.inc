@@ -2,6 +2,8 @@ DESCRIPTION = "Package maintenance system for Debian."
 LICENSE = "GPL"
 SECTION = "base"
 
+INC_PR = "r4"
+
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.bz2 \
            file://ignore_extra_fields.patch;patch=1"
 
@@ -14,7 +16,7 @@ S = "${WORKDIR}/${BPN}-${PV}"
 
 PARALLEL_MAKE = ""
 
-inherit autotools gettext
+inherit autotools gettext perlnative
 
 DPKG_INIT_POSITION = "98"
 
