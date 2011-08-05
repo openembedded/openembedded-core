@@ -14,12 +14,12 @@ KMETA = meta
 LINUX_VERSION ?= "3.0"
 LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE}"
 
-SRCREV_machine_qemuarm = "703430f6cd786d9f42fdee1936337ecf1c3d27b5"
-SRCREV_machine_qemumips = "a3bb11ebd7dd1482de334dd71f8e4afe5e2bcd32"
-SRCREV_machine_qemuppc = "582dcc88c7c4d765c03b38ff384210d6efbf7956"
-SRCREV_machine_qemux86 = "099a40c1669d20fdae2846cfd28bf74fd38dacea"
-SRCREV_machine_qemux86-64 = "896b8fd5783a6aac80d1447da5958334f4734845"
-SRCREV_machine = "2d22c15ef4802bc117c5482217c2b2c4d34ab303"
+SRCREV_machine_qemuarm = "30a2cec4e9d7048681c1d239f49cc935287a7012"
+SRCREV_machine_qemumips = "f9b9688cefaa87d898394902acfb858d6b0f1e28"
+SRCREV_machine_qemuppc = "a46a4c356f8bcf7a30d967a1b43633b824cd07a1"
+SRCREV_machine_qemux86 = "efaab1f75dbc577922c862fa19d45c3f31cb99cb"
+SRCREV_machine_qemux86-64 = "c30a56850c73c74af2d056d803081a0d829ce35c"
+SRCREV_machine = "318b059a472128f67119f367f51f11893ee60269"
 SRCREV_meta = "76b3679beff6c640388a609ccf87f46bb7bf0f2b"
 
 PR = "r0"
