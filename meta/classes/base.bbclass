@@ -139,6 +139,50 @@ def pkgarch_mapping(d):
         if d.getVar("TUNE_PKGARCH", True) == "armv7a-vfp-neon":
             d.setVar("TUNE_PKGARCH", "armv7a")
 
+def preferred_ml_updates(d):
+    # If any PREFERRED_PROVIDER or PREFERRED_VERSIONS are set,
+    # we need to mirror these variables in the multilib case
+    multilibs = d.getVar('MULTILIBS', True) or ""
+    if not multilibs:
+        return
+
+    prefixes = []
+    for ext in multilibs.split():
+        eext = ext.split(':')
+        if len(eext) > 1 and eext[0] == 'multilib':
+            prefixes.append(eext[1])
+
+    versions = []
+    providers = []
+    for v in d.keys():
+        if v.startswith("PREFERRED_VERSION_"):
+            versions.append(v)
+        if v.startswith("PREFERRED_PROVIDER_"):
+            providers.append(v)
+
+    for v in versions:
+        val = d.getVar(v, False)
+        pkg = v.replace("PREFERRED_VERSION_", "")
+        if pkg.endswith("-native") or pkg.endswith("-nativesdk"):
+            continue
+        for p in prefixes:
+            newname = "PREFERRED_VERSION_" + p + "-" + pkg
+            if not d.getVar(newname, False):
+                d.setVar(newname, val)
+
+    for prov in providers:
+        val = d.getVar(prov, False)
+        pkg = prov.replace("PREFERRED_PROVIDER_", "")
+        if pkg.endswith("-native") or pkg.endswith("-nativesdk"):
+            continue
+        virt = ""
+        if pkg.startswith("virtual/"):
+             pkg = pkg.replace("virtual/", "")
+             virt = "virtual/"
+        for p in prefixes:
+            newname = "PREFERRED_PROVIDER_" + virt + p + "-" + pkg
+            if not d.getVar(newname, False):
+                d.setVar(newname, p + "-" + val)
 
 addhandler base_eventhandler
 python base_eventhandler() {
@@ -211,6 +255,7 @@ python base_eventhandler() {
         if name == "ConfigParsed":
                 generate_git_config(e)
                 pkgarch_mapping(e.data)
+                preferred_ml_updates(e.data)
 
 	if not data in e.__dict__:
 		return
