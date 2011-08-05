@@ -8,12 +8,12 @@ LIC_FILES_CHKSUM = "file://DISCLAIMER;md5=071bd69cb78b18888ea5e3da5c3127fa"
 PR ="r0"
 
 
-PACKAGES = "${PN}-dbg libwrap libwrap-doc libwrap-dev tcp-wrappers tcp-wrappers-doc"
+PACKAGES = "${PN}-dbg libwrap libwrap-doc libwrap-dev ${PN} ${PN}-doc"
 FILES_libwrap = "${base_libdir}/lib*.so.*"
 FILES_libwrap-doc = "${mandir}/man3 ${mandir}/man5"
 FILES_libwrap-dev = "${libdir}/lib*.so ${libdir}/lib*.a ${includedir}"
-FILES_tcp-wrappers = "${bindir}"
-FILES_tcp-wrappers-doc = "${mandir}/man8"
+FILES_${PN} = "${sbindir}"
+FILES_${PN}-doc = "${mandir}/man8"
 
 SRC_URI = "ftp://ftp.porcupine.org/pub/security/tcp_wrappers_${PV}.tar.gz \
            file://00_man_quoting.diff \
