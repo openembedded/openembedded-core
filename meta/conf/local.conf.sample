@@ -28,7 +28,7 @@ MACHINE ??= "qemux86"
 
 # BBMASK is a regular expression that can be used to tell BitBake to ignore
 # certain recipes.
-BBMASK = ""
+#BBMASK = ""
 
 # EXTRA_IMAGE_FEATURES allows extra packages to be added to the generated images 
 # (Some of these are automatically added to certain image types)
