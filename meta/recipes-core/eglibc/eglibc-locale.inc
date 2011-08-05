@@ -62,6 +62,6 @@ do_install () {
 
 inherit libc-package
 
-do_install[depends] += "virtual/libc${PKGSUFFIX}:do_populate_sysroot"
+do_install[depends] += "virtual/${MLPREFIX}libc${PKGSUFFIX}:do_populate_sysroot"
 
 BBCLASSEXTEND = "nativesdk"
