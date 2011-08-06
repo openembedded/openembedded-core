@@ -10,18 +10,19 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e647752e045a8c45b6f583771bd561ef \
 
 DEPENDS = "liburcu"
 
-PR = "r0"
+PR = "r2"
 
-SRC_URI = "http://lttng.org/files/ust/releases/ust-${PV}.tar.gz \
-           file://uclibc-sched_getcpu.patch \
-          "
+SRC_URI = "http://lttng.org/files/ust/releases/ust-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "fae6e324a56016658c5b83ec14ba0043"
-SRC_URI[sha256sum] = "215b05f47d0c9e3a2934926a7d14fa9c67025db917c3a1f641df40b08314ab0c"
+SRC_URI[md5sum] = "86c71486a70695dc0b2171ad16fc82b3" 
+SRC_URI[sha256sum] = "7ff7ecdc051c0649d5fd21b5ceff4895ca95dc34f14cdc04e50de13cfd1903c5"
+
 
 S = "${WORKDIR}/ust-${PV}"
 
 inherit autotools
+
+#EXTRA_OECONF = "ac_cv_lib_urcu_bp_synchronize_rcu_bp=no"
 
 # Due to liburcu not building on MIPS currently this recipe needs to
 # be limited also.
