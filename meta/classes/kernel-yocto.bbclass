@@ -84,6 +84,7 @@ do_kernel_checkout[dirs] = "${S}"
 
 addtask kernel_checkout before do_patch after do_unpack
 
+do_kernel_configme[dirs] = "${CCACHE_DIR} ${S} ${B}"
 do_kernel_configme() {
 	echo "[INFO] doing kernel configme"
 
