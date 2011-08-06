@@ -2,16 +2,18 @@ Upstream-Status: Pending
 
 Index: gdb/gdbserver/Makefile.in
 ===================================================================
---- gdb/gdbserver/Makefile.in.orig
-+++ gdb/gdbserver/Makefile.in
-@@ -89,8 +89,8 @@ WARN_CFLAGS = -Wall
+--- gdb/gdbserver/Makefile.in.orig	2011-03-09 23:32:02.000000000 -0800
++++ gdb/gdbserver/Makefile.in	2011-08-05 21:16:43.592202579 -0700
+@@ -94,10 +94,10 @@
  CFLAGS = @CFLAGS@
  
  # INTERNAL_CFLAGS is the aggregate of all other *CFLAGS macros.
--INTERNAL_CFLAGS =  $(WARN_CFLAGS) ${CFLAGS} ${GLOBAL_CFLAGS} \
--	${PROFILE_CFLAGS} ${INCLUDE_CFLAGS}
-+INTERNAL_CFLAGS =  $(WARN_CFLAGS) ${GLOBAL_CFLAGS} \
-+	${PROFILE_CFLAGS} ${INCLUDE_CFLAGS} ${CFLAGS}
+-INTERNAL_CFLAGS_BASE =  ${CFLAGS} ${GLOBAL_CFLAGS} \
++INTERNAL_CFLAGS_BASE =  ${GLOBAL_CFLAGS} \
+ 	${PROFILE_CFLAGS} ${INCLUDE_CFLAGS}
+ INTERNAL_WARN_CFLAGS =  ${INTERNAL_CFLAGS_BASE} $(WARN_CFLAGS)
+-INTERNAL_CFLAGS =  ${INTERNAL_WARN_CFLAGS} $(WERROR_CFLAGS)
++INTERNAL_CFLAGS =  ${INTERNAL_WARN_CFLAGS} $(WERROR_CFLAGS) ${CFLAGS}
  
  # LDFLAGS is specifically reserved for setting from the command line
  # when running make.

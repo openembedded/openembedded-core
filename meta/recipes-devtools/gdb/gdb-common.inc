@@ -2,7 +2,9 @@ DESCRIPTION = "gdb - GNU debugger"
 HOMEPAGE = "http://www.gnu.org/software/gdb/"
 LICENSE="GPLv3+"
 SECTION = "devel"
-DEPENDS = "ncurses readline elfutils"
+DEPENDS = "ncurses readline elfutils lttng-ust"
+
+INC_PR = "r2"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 		file://COPYING.LIB;md5=9f604d8a4f8e74f4f5140845a21b6674 \
@@ -12,6 +14,9 @@ inherit autotools
 
 SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.gz \
            file://no-werror.patch"
+
+SRC_URI[md5sum] = "1d6b4e469270433583ef62a906c02fa8"
+SRC_URI[sha256sum] = "d1791d1f9d6c21ec265f4f74dadc15bc35698158a1b836d1626b9a69b818f5c5"
 
 export CC_FOR_BUILD = "${BUILD_CC}"
 export CXX_FOR_BUILD = "${BUILD_CXX}"
@@ -29,7 +34,6 @@ EXPAT = "--without-expat"
 EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x \
                 --with-curses --disable-multilib --with-system-readline --disable-sim \
                 ${GDBPROPREFIX} --with-libelf=${STAGING_DIR_TARGET} ${EXPAT} \
-                --without-ust \
                "
 
 GDBPROPREFIX = "--program-prefix=''"

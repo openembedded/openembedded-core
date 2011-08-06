@@ -1,26 +1,26 @@
 Upstream-Status: Inappropriate [embedded specific]
 
-Index: gdb-6.3/gdb/arm-tdep.c
+Index: gdb-7.3/gdb/arm-tdep.c
 ===================================================================
---- gdb-6.3.orig/gdb/arm-tdep.c	2004-08-03 02:02:20.000000000 +0000
-+++ gdb-6.3/gdb/arm-tdep.c	2005-11-09 15:13:29.000000000 +0000
-@@ -2491,6 +2491,19 @@
+--- gdb-7.3.orig/gdb/arm-tdep.c	2011-05-17 14:27:01.000000000 -0700
++++ gdb-7.3/gdb/arm-tdep.c	2011-08-05 22:29:58.784201850 -0700
+@@ -7806,6 +7806,19 @@
  static void
  arm_elf_make_msymbol_special(asymbol *sym, struct minimal_symbol *msym)
  {
 +
-+   /* FIXME: We want gdb to ignore the ARM ELF mapping symbols when
-+      displaying disassembly so we use this horrible hack here to
-+      artifically set their address to the highest possible value.
-+      This is wrong of course, and it prevents the symbols from being
-+      used for their intended purpose - to distinguish between ARM
-+      and THUMB code.  So we ought to find a better way to do this.  */
-+  if (bfd_asymbol_name (sym)
-+       && bfd_asymbol_name (sym)[0] == '$'
-+       && bfd_asymbol_name (sym)[1] != 0
-+       && bfd_asymbol_name (sym)[2] == 0)
-+     SYMBOL_VALUE_ADDRESS(msym) = (CORE_ADDR) 0x7ffffffc;
++    /* FIXME: We want gdb to ignore the ARM ELF mapping symbols when
++	displaying disassembly so we use this horrible hack here to
++	artifically set their address to the highest possible value.
++	This is wrong of course, and it prevents the symbols from being
++	used for their intended purpose - to distinguish between ARM
++	and THUMB code.  So we ought to find a better way to do this.  */
++    if (bfd_asymbol_name (sym)
++	&& bfd_asymbol_name (sym)[0] == '$'
++	&& bfd_asymbol_name (sym)[1] != 0
++	&& bfd_asymbol_name (sym)[2] == 0)
++      SYMBOL_VALUE_ADDRESS(msym) = (CORE_ADDR) 0x7ffffffc;
 +
-   /* Thumb symbols are of type STT_LOPROC, (synonymous with
-      STT_ARM_TFUNC).  */
-   if (ELF_ST_TYPE (((elf_symbol_type *)sym)->internal_elf_sym.st_info)
+   if (ARM_SYM_BRANCH_TYPE (&((elf_symbol_type *)sym)->internal_elf_sym)
+       == ST_BRANCH_TO_THUMB)
+     MSYMBOL_SET_SPECIAL (msym);
