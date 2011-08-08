@@ -16,5 +16,6 @@ do_install_append() {
 FILES_${PN} += "${datadir}/xml* ${PYTHON_SITEPACKAGES_DIR}/*"
 
 RDEPENDS_${PN} = "bash"
+RDEPENDS_${PN}_virtclass-native = ""
 
 BBCLASSEXTEND = "native"
