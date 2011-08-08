@@ -21,7 +21,7 @@ S = ${WORKDIR}/lsb-release-${PV}
 do_install(){
 	oe_runmake install prefix=${D}  mandir=${D}/man/ DESTDIR=${D} 
 	mkdir -p ${D}/bin
-	mkdir -p ${D}/lib
+	mkdir -p ${D}/${baselib}
 	mkdir -p ${D}/etc/lsb-release.d
 	echo -n "LSB_VERSION=\"core-4.1-noarch:" > ${D}/etc/lsb-release
 	
@@ -61,34 +61,34 @@ do_install(){
 
 do_install_append(){
        install -d ${D}/etc/core-lsb
-       install -d ${D}/lib/lsb
+       install -d ${D}/${baselib}/lsb
        for i in lsb_killproc lsb_log_message lsb_pidofproc lsb_start_daemon
        do
            install -m 0755 ${WORKDIR}/${i} ${D}/etc/core-lsb
        done
-       install -m 0755 ${WORKDIR}/init-functions ${D}/lib/lsb
+       install -m 0755 ${WORKDIR}/init-functions ${D}/${baselib}/lsb
        if [ "${TARGET_ARCH}" == "x86_64" ];then
 	       cd ${D}
-	       ln -sf lib lib64
-	       cd ${D}/lib
+	       ln -sf ${baselib} lib
+	       cd ${D}/${baselib}
                ln -sf ld-linux-x86-64.so.2 ld-lsb-x86-64.so.2
                ln -sf ld-linux-x86-64.so.2 ld-lsb-x86-64.so.3
        fi
        if [ "${TARGET_ARCH}" == "i586" ];then
-	       cd ${D}/lib
+	       cd ${D}/${baselib}
                ln -sf ld-linux.so.2 ld-lsb.so.2
                ln -sf ld-linux.so.2 ld-lsb.so.3
        fi
  
        if [ "${TARGET_ARCH}" == "powerpc64" ];then
   	       cd ${D}
-	       ln -sf lib lib64
-               cd ${D}/lib
+	       ln -sf ${baselib} lib
+               cd ${D}/${baselib}
                ln -sf ld64.so.1 ld-lsb-ppc64.so.2
                ln -sf ld64.so.1 ld-lsb-ppc64.so.3
        fi
        if [ "${TARGET_ARCH}" == "powerpc" ];then
-	       cd ${D}/lib
+	       cd ${D}/${baselib}
                ln -sf ld.so.1 ld-lsb-ppc32.so.2
                ln -sf ld.so.1 ld-lsb-ppc32.so.3
        fi	
