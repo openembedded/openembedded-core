@@ -6,8 +6,8 @@ inherit imagetest-${IMAGETEST}
 LICENSE = "MIT"
 PACKAGES = ""
 MULTILIB_IMAGE_INSTALL ?= ""
-RDEPENDS += "${IMAGE_INSTALL} ${LINGUAS_INSTALL} ${MULTILIB_IMAGE_INSTALL} ${FEATURE_INSTALL}"
-RRECOMMENDS += "${FEATURE_INSTALL_OPTIONAL}"
+RDEPENDS += "${IMAGE_INSTALL} ${LINGUAS_INSTALL} ${MULTILIB_IMAGE_INSTALL} ${NORMAL_FEATURE_INSTALL}"
+RRECOMMENDS += "${NORMAL_FEATURE_INSTALL_OPTIONAL}"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
@@ -18,6 +18,36 @@ IMAGE_FEATURES[type] = "list"
 # packages to install from features
 FEATURE_INSTALL = "${@' '.join(oe.packagegroup.required_packages(oe.data.typed_value('IMAGE_FEATURES', d), d))}"
 FEATURE_INSTALL_OPTIONAL = "${@' '.join(oe.packagegroup.optional_packages(oe.data.typed_value('IMAGE_FEATURES', d), d))}"
+
+# packages to install from features, excluding dev/dbg/doc
+NORMAL_FEATURE_INSTALL = "${@' '.join(oe.packagegroup.required_packages(normal_groups(d), d))}"
+NORMAL_FEATURE_INSTALL_OPTIONAL = "${@' '.join(oe.packagegroup.optional_packages(normal_groups(d), d))}"
+
+def normal_groups(d):
+    """Return all the IMAGE_FEATURES, with the exception of our special package groups"""
+    extras = set(['dev-pkgs', 'doc-pkgs', 'dbg-pkgs'])
+    features = set(oe.data.typed_value('IMAGE_FEATURES', d))
+    return features.difference(extras)
+
+def normal_pkgs_to_install(d):
+    import oe.packagedata
+
+    to_install = oe.data.typed_value('IMAGE_INSTALL', d)
+    features = normal_groups(d)
+    required = list(oe.packagegroup.required_packages(features, d))
+    optional = list(oe.packagegroup.optional_packages(features, d))
+    all_packages = to_install + required + optional
+
+    recipes = filter(None, [oe.packagedata.recipename(pkg, d) for pkg in all_packages])
+
+    return all_packages + recipes
+
+PACKAGE_GROUP_dbg-pkgs = "${@' '.join('%s-dbg' % pkg for pkg in normal_pkgs_to_install(d))}"
+PACKAGE_GROUP_dbg-pkgs[optional] = "1"
+PACKAGE_GROUP_dev-pkgs = "${@' '.join('%s-dev' % pkg for pkg in normal_pkgs_to_install(d))}"
+PACKAGE_GROUP_dev-pkgs[optional] = "1"
+PACKAGE_GROUP_doc-pkgs = "${@' '.join('%s-doc' % pkg for pkg in normal_pkgs_to_install(d))}"
+PACKAGE_GROUP_doc-pkgs[optional] = "1"
 
 # "export IMAGE_BASENAME" not supported at this time
 IMAGE_INSTALL ?= ""
