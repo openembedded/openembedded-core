@@ -7,12 +7,12 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 PR = "r0"
 
-LTTDATE = "09242010"
+LTTDATE = "05122011"
 
 SRC_URI = "http://lttng.org/files/lttng/ltt-control-${PV}-${LTTDATE}.tar.gz"
 
-SRC_URI[md5sum] = "ca81d874352756837518d74c9d1091a7"
-SRC_URI[sha256sum] = "89c625a4d1b0823954217df232a31f3cae31de7b6655c0d885a61bece0dfcd88"
+SRC_URI[md5sum] = "2e5a531bf5cab88eef5282b45271789f"
+SRC_URI[sha256sum] = "feb120e0bedd9ef8917dd14ee96cc94941f517826a4c2035d1c4aa33e4e808ab"
 
 S = "${WORKDIR}/ltt-control-${PV}-${LTTDATE}"
 
