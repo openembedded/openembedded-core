@@ -4,7 +4,7 @@ DEPENDS_virtclass-native = "libxml2-native libxslt-native intltool-native"
 
 inherit gnome gettext python-dir
 
-EXTRA_OECONF = "--disable-scrollkeeper"
+EXTRA_OECONF += "--disable-scrollkeeper"
 
 do_install_append() {
 	mkdir -p  ${D}${datadir}/xml/gnome/xslt/
