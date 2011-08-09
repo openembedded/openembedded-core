@@ -1,5 +1,3 @@
-PR = "r6"
-
 require gcc-${PV}.inc
 require gcc-configure-runtime.inc
 require gcc-package-runtime.inc

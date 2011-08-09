@@ -1,5 +1,7 @@
 require gcc-common.inc
 
+PR = "r8"
+
 DEPENDS =+ "mpfr gmp libmpc elfutils"
 NATIVEDEPS = "mpfr-native gmp-native gettext-native libmpc-native elfutils-native"
 

@@ -1,7 +1,5 @@
 require gcc-${PV}.inc
 
-PR = "r0"
-
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
 

@@ -2,6 +2,7 @@ require gcc-common.inc
 
 BINV = "4.2.3"
 PV = "4.2.3+csl-arm-2008q1-126"
+PR = "r6"
 
 FILESDIR = "${FILE_DIRNAME}/gcc-csl-arm"
 

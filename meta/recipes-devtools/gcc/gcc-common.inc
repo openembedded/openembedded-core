@@ -40,17 +40,18 @@ ${GNU_MIRROR}/gcc/	http://gcc.get-software.com/releases/ \n \
 gcclibdir = "${libdir}/gcc"
 BINV = "${PV}"
 #S = "${WORKDIR}/gcc-${PV}"
-S = "${TMPDIR}/work-shared/gcc-${PV}/gcc-${PV}"
+S = "${TMPDIR}/work-shared/gcc-${PV}/gcc-${PV}-${PR}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 
 # SS means Shared Stamps directory
-SS = "${TMPDIR}/stamps/work-shared/gcc-${PV}"
+SS = "${TMPDIR}/stamps/work-shared/gcc-${PV}-${PR}"
 do_fetch[stamp-base] = "${SS}"
 do_unpack[stamp-base] = "${SS}"
+do_headerfix[stamp-base] = "${SS}"
 do_patch[stamp-base] = "${SS}"
 
 # SW means Shared Work directory
-SW = "${TMPDIR}/work-shared/gcc-${PV}"
+SW = "${TMPDIR}/work-shared/gcc-${PV}-${PR}"
 WORKDIR_task-unpack = "${SW}"
 WORKDIR_task-patch = "${SW}"
 
@@ -61,7 +62,7 @@ target_prefix ?= "${prefix}"
 
 CLEANFUNCS += "workshared_clean"
 # The do_clean should be exclusive since share ${S}
-do_clean[lockfiles] = "${TMPDIR}/stamps/work-shared/gcc-${PV}.clean.lock"
+do_clean[lockfiles] = "${SW}.clean.lock"
 
 python workshared_clean () {
 	"""clear the source directory"""
