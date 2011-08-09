@@ -31,6 +31,7 @@ require eglibc-options.inc
 LEAD_SONAME = "libc.so"
 
 GLIBC_EXTRA_OECONF ?= ""
+GLIBC_EXTRA_OECONF_virtclass-nativesdk = ""
 INHIBIT_DEFAULT_DEPS = "1"
 
 ARM_INSTRUCTION_SET = "arm"
