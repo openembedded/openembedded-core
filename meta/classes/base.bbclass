@@ -184,6 +184,20 @@ def preferred_ml_updates(d):
             if not d.getVar(newname, False):
                 d.setVar(newname, p + "-" + val)
 
+
+    mp = (d.getVar("MULTI_PROVIDER_WHITELIST", True) or "").split()
+    extramp = []
+    for p in mp:
+        if p.endswith("-native") or p.endswith("-nativesdk"):
+            continue
+        virt = ""
+        if p.startswith("virtual/"):
+            p = p.replace("virtual/", "")
+            virt = "virtual/"
+        for pref in prefixes:
+            extramp.append(virt + pref + "-" + p)
+    d.setVar("MULTI_PROVIDER_WHITELIST", " ".join(mp + extramp))
+
 addhandler base_eventhandler
 python base_eventhandler() {
 	from bb import note, error, data
