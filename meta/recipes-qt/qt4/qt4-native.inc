@@ -54,8 +54,11 @@ TOBUILD = "\
   src/gui \
   src/testlib \
   src/qt3support \
+  src/tools/uic3 \
   tools/linguist/lrelease \
   tools/linguist/lupdate \
+  tools/qdbus/qdbuscpp2xml \
+  tools/qdbus/qdbusxml2cpp \
 "
 
 do_compile() {
@@ -67,7 +70,7 @@ do_compile() {
 do_install() {
 	install -d ${D}${bindir}/
 	install -m 0755 bin/qmake ${D}${bindir}/qmake2
-	for i in moc uic rcc lrelease lupdate; do
+	for i in moc uic uic3 rcc lrelease lupdate qdbuscpp2xml qdbusxml2cpp; do
 		install -m 0755 bin/${i} ${D}${bindir}/${i}4
 	done
     
