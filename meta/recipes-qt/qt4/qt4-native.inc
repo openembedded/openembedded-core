@@ -1,7 +1,8 @@
-DESCRIPTION = "Native tools for Qt/[X11|Mac|Embedded] version 4.x"
+DESCRIPTION = "Native version of Qt/[X11|Mac|Embedded]"
 DEPENDS = "zlib-native dbus-native"
 SECTION = "libs"
 HOMEPAGE = "http://qt.nokia.com"
+PROVIDES = "qt4-tools-native"
 
 LICENSE = "LGPLv2.1 | GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
@@ -25,11 +26,11 @@ EXTRA_OECONF = "-prefix ${prefix} \
                 -no-libjpeg -no-libpng -no-libmng -no-libtiff \
                 -no-accessibility \
                 -no-cups \
-                -no-exceptions  \
                 -no-nas-sound \
                 -no-nis -no-openssl \
-                -verbose -release -static \
+                -verbose -release \
                 -embedded -no-freetype -no-glib -no-iconv \
+                -exceptions -xmlpatterns \
                 -qt3support"
 
 # yank default -e, otherwise we get the following error:
@@ -44,12 +45,15 @@ TOBUILD = "\
   src/tools/moc \
   src/corelib \
   src/sql \
-  src/dbus \
-  src/qt3support \
   src/xml \
+  src/network \
   src/tools/uic \
   src/tools/rcc \
-  src/network \
+  src/xmlpatterns \
+  src/dbus \
+  src/gui \
+  src/testlib \
+  src/qt3support \
   tools/linguist/lrelease \
   tools/linguist/lupdate \
 "
@@ -73,4 +77,8 @@ do_install() {
 	cp -f ${WORKDIR}/g++.conf ${WORKDIR}/linux.conf ${D}${datadir}/qt4/mkspecs/common/
 
 	install -m 0644 tools/porting/src/q3porting.xml ${D}${datadir}/qt4/
+
+	for i in ${TOBUILD}; do
+		cd ${S}/$i && oe_runmake install INSTALL_ROOT=${D}
+	done
 }
