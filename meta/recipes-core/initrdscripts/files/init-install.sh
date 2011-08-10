@@ -105,13 +105,13 @@ echo "Creating new partition table on /dev/${device} ..."
 parted /dev/${device} mklabel msdos
 
 echo "Creating boot partition on /dev/${device}1"
-parted /dev/${device} mkpartfs primary ext2 0 $boot_size
+parted /dev/${device} mkpart primary 1 $boot_size
 
 echo "Creating rootfs partition on /dev/${device}2"
-parted /dev/${device} mkpartfs primary ext2 $rootfs_start $rootfs_end 
+parted /dev/${device} mkpart primary $rootfs_start $rootfs_end
 
 echo "Creating swap partition on /dev/${device}3"
-parted /dev/${device} mkpartfs primary linux-swap $swap_start $disk_size
+parted /dev/${device} mkpart primary $swap_start $disk_size
 
 parted /dev/${device} print
 
