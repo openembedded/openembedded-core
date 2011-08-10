@@ -79,6 +79,14 @@ local_repo_dir = ~/src/oecore
 dest_dir = .
 last_revision =
 
+# it's also possible to embed python code in the config values. Similar
+# to bitbake it considers every value starting with @ to be a python script. 
+# So local_repo could be easily configured using an environment variable as:
+#
+# [bitbake]
+# local_repo = @os.getenv("LOCAL_REPO_DIR") + "/bitbake"
+#
+
 # more components ...
 
     """
@@ -91,7 +99,10 @@ last_revision =
         for repo in self.parser.sections():
             self.repos[repo] = {}
             for (name, value) in self.parser.items(repo):
-                self.repos[repo][name] = value
+                if value.startswith("@"):
+                    self.repos[repo][name] = eval(value.strip("@"))
+                else:
+                    self.repos[repo][name] = value
 
     def update(self, repo, option, value):
         self.parser.set(repo, option, value)
