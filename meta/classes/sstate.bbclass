@@ -477,10 +477,12 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
     for task in range(len(sq_fn)):
         sstatefile = bb.data.expand("${SSTATE_DIR}/" + sq_hashfn[task] + "_" + mapping[sq_task[task]] + ".tgz", d)
         sstatefile = sstatefile.replace("${BB_TASKHASH}", sq_hash[task])
-        #print("Checking for %s" % sstatefile)
         if os.path.exists(sstatefile):
+            bb.debug(2, "SState: Found valid sstate file %s" % sstatefile)
             ret.append(task)
             continue
+        else:
+            bb.debug(2, "SState: Looked for but didn't find file %s" % sstatefile)
 
     mirrors = bb.data.getVar("SSTATE_MIRRORS", d, True)
     if mirrors:
@@ -492,6 +494,8 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
         bb.data.setVar('DL_DIR', dldir, localdata)
         bb.data.setVar('PREMIRRORS', mirrors, localdata)
 
+        bb.debug(2, "SState using premirror of: %s" % mirrors)
+
         for task in range(len(sq_fn)):
             if task in ret:
                 continue
@@ -501,13 +505,15 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
 
             srcuri = "file://" + os.path.basename(sstatefile)
             bb.data.setVar('SRC_URI', srcuri, localdata)
-            #bb.note(str(srcuri))
+            bb.debug(2, "SState: Attempting to fetch %s" % srcuri)
 
             try:
                 fetcher = bb.fetch2.Fetch(srcuri.split(), localdata)
                 fetcher.checkstatus()
+                bb.debug(2, "SState: Successful fetch test for %s" % srcuri)
                 ret.append(task)
             except:
+                bb.debug(2, "SState: Unsuccessful fetch test for %s" % srcuri)
                 pass     
 
     return ret
