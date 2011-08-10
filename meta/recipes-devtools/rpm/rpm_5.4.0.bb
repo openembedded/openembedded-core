@@ -45,7 +45,7 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 DEPENDS = "bzip2 zlib db openssl elfutils expat libpcre attr acl popt ${extrarpmdeps}"
 extrarpmdeps = "python perl"
 extrarpmdeps_virtclass-native = ""
-PR = "r19"
+PR = "r20"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -61,14 +61,12 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.0-0.20101229.src.rpm;ex
 	   file://rpm-tools-mtree-LDFLAGS.patch \
 	   file://fprint-pointer-fix.patch \
 	   file://rpm-fileclass.patch \
+	   file://rpm-canonarch.patch \
+	   file://rpm-no-loopmsg.patch \
 	  "
 
-#           file://hdraddorappend.patch \
-#           file://export-rpmbag-h.patch \
-#	   file://rpm-nrescan.patch \
 #	   file://rpm-autoconf.patch \
 #	   file://remove-compiled-tests.patch;apply=no \
-#	   file://rpm-no-loop.patch \
 #	  "
 
 SRC_URI[md5sum] = "19c1a7f68d7765eeb7615c9c4e54e380"
