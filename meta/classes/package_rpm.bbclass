@@ -177,7 +177,15 @@ package_install_internal_rpm () {
 	echo "${platform}${TARGET_VENDOR}-${TARGET_OS}" > ${target_rootfs}/etc/rpm/platform
 	if [ ! -z "$platform_extra" ]; then
 		for pt in $platform_extra ; do
-			echo "$pt-.*-${TARGET_OS}" >> ${target_rootfs}/etc/rpm/platform
+			case $pt in
+				noarch | any | all)
+					os="`echo ${TARGET_OS} | sed "s,-.*,,"`.*"
+					;;
+				*)
+					os="${TARGET_OS}"
+					;;
+			esac
+			echo "$pt-.*-$os" >> ${target_rootfs}/etc/rpm/platform
 		done
 	fi
 
@@ -821,13 +829,13 @@ python do_package_rpm () {
 	targetsys = bb.data.getVar('TARGET_SYS', d, True)
 	targetvendor = bb.data.getVar('TARGET_VENDOR', d, True)
 	pkgwritedir = bb.data.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH}', d)
-	pkgarch = bb.data.expand('${PACKAGE_ARCH}', d)
+	pkgarch = bb.data.expand('${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}', d)
 	magicfile = bb.data.expand('${STAGING_DIR_NATIVE}/usr/share/misc/magic.mgc', d)
 	bb.mkdirhier(pkgwritedir)
 	os.chmod(pkgwritedir, 0755)
 
 	cmd = rpmbuild
-	cmd = cmd + " --nodeps --short-circuit --target " + pkgarch + targetvendor + "-linux-gnu --buildroot " + pkgd
+	cmd = cmd + " --nodeps --short-circuit --target " + pkgarch + " --buildroot " + pkgd
 	cmd = cmd + " --define '_topdir " + workdir + "' --define '_rpmdir " + pkgwritedir + "'"
 	cmd = cmd + " --define '_build_name_fmt %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm'"
 	cmd = cmd + " --define '_use_internal_dependency_generator 0'"
