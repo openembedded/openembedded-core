@@ -98,7 +98,8 @@ OTHER_PACKAGES = "\
              ${QT_BASE_NAME}-pixeltool \
              ${QT_BASE_NAME}-qmlviewer \
              ${QT_BASE_NAME}-xmlpatterns \
-             ${QT_BASE_NAME}-qt3to4"
+             ${QT_BASE_NAME}-qt3to4 \
+             ${QT_BASE_NAME}-qml-plugins"
 
 PACKAGES += "${LIB_PACKAGES} ${DEV_PACKAGES} ${DBG_PACKAGES} ${OTHER_PACKAGES}"
 PACKAGES_DYNAMIC = "${QT_BASE_NAME}-plugin-* ${QT_BASE_NAME}-translation-* ${QT_BASE_NAME}-fonts-*"
@@ -122,11 +123,15 @@ RRECOMMENDS_${QT_BASE_NAME}-demos += " \
             ${QT_BASE_NAME}-examples \
             ${QT_BASE_NAME}-plugin-sqldriver-sqlite \
             ${QT_BASE_NAME}-plugin-imageformat-jpeg \
+            ${QT_BASE_NAME}-qml-plugins \
             ${QT_BASE_NAME}-assistant \
             ${PN}-doc"
 RRECOMMENDS_${QT_BASE_NAME}-examples += " \
             ${QT_BASE_NAME}-plugin-sqldriver-sqlite \
-            ${QT_BASE_NAME}-plugin-imageformat-jpeg"
+            ${QT_BASE_NAME}-plugin-imageformat-jpeg \
+            ${QT_BASE_NAME}-qml-plugins"
+RRECOMMENDS_${QT_BASE_NAME}-qmlviewer += " \
+            ${QT_BASE_NAME}-qml-plugins"
 
 FILES_${QT_BASE_NAME}-tools                = "${bindir}/qttracereplay ${bindir}/qdoc*"
 FILES_${QT_BASE_NAME}-tools-dbg            = "${bindir}/.debug/qttracereplay ${bindir}/.debug/qdoc*"
@@ -160,7 +165,8 @@ FILES_${QT_BASE_NAME}-makeqpf-dbg          = "${bindir}/.debug/makeqpf"
 FILES_${QT_BASE_NAME}-mkspecs              = "${datadir}/${QT_DIR_NAME}/mkspecs/*"
 FILES_${QT_BASE_NAME}-xmlpatterns          = "${bindir}/xmlpatterns*"
 FILES_${QT_BASE_NAME}-xmlpatterns-dbg      = "${bindir}/.debug/xmlpatterns*"
-
+FILES_${QT_BASE_NAME}-qml-plugins          = "${libdir}/${QT_DIR_NAME}/imports/* ${libdir}/${QT_DIR_NAME}/plugins/qmltooling/*"
+FILES_${QT_BASE_NAME}-qml-plugins-dbg      = "${libdir}/${QT_DIR_NAME}/imports/*/*/*/.debug/* ${libdir}/${QT_DIR_NAME}/imports/*/.debug"
 
 do_configure() {
 	unset QMAKESPEC
@@ -183,6 +189,7 @@ do_configure() {
 	echo "Libraries=${libdir}"                    >> $QT_CONF_PATH
 	echo "Binaries=${bindir}"                     >> $QT_CONF_PATH
 	echo "Plugins=${libdir}/${QT_DIR_NAME}/plugins" >> $QT_CONF_PATH
+	echo "Imports=${libdir}/${QT_DIR_NAME}/imports" >> $QT_CONF_PATH
 	echo "Data=${datadir}/${QT_DIR_NAME}"         >> $QT_CONF_PATH
 	echo "Translations=${datadir}/${QT_DIR_NAME}/translations" >> $QT_CONF_PATH
 	echo "Settings=${sysconfdir}/${QT_DIR_NAME}"  >> $QT_CONF_PATH
@@ -200,6 +207,7 @@ do_configure() {
 			-docdir ${docdir}/${QT_DIR_NAME} \
 			-headerdir ${includedir}/${QT_DIR_NAME} \
 			-plugindir ${libdir}/${QT_DIR_NAME}/plugins \
+			-importdir ${libdir}/${QT_DIR_NAME}/imports \
 			-translationdir ${datadir}/${QT_DIR_NAME}/translations \
 			-examplesdir ${bindir}/${QT_DIR_NAME}/examples \
 			-demosdir ${bindir}/${QT_DIR_NAME}/demos \
