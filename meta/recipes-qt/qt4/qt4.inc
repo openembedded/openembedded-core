@@ -279,6 +279,7 @@ do_install() {
 	# These are host binaries, we should only use them in staging
 	rm ${D}/${bindir}/qmake
 	rm ${D}/${bindir}/uic
+	rm ${D}/${bindir}/uic3
 	rm ${D}/${bindir}/moc
 	rm ${D}/${bindir}/rcc
 	rm ${D}/${bindir}/lrelease
