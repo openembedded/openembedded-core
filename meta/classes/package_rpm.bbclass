@@ -822,6 +822,7 @@ python do_package_rpm () {
 	targetvendor = bb.data.getVar('TARGET_VENDOR', d, True)
 	pkgwritedir = bb.data.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH}', d)
 	pkgarch = bb.data.expand('${PACKAGE_ARCH}', d)
+	magicfile = bb.data.expand('${STAGING_DIR_NATIVE}/usr/share/misc/magic.mgc', d)
 	bb.mkdirhier(pkgwritedir)
 	os.chmod(pkgwritedir, 0755)
 
@@ -834,6 +835,7 @@ python do_package_rpm () {
 	cmd = cmd + " --define '__find_provides " + outprovides + "'"
 	cmd = cmd + " --define '_unpackaged_files_terminate_build 0'"
 	cmd = cmd + " --define 'debug_package %{nil}'"
+	cmd = cmd + " --define '_rpmfc_magic_path " + magicfile + "'"
 	cmd = cmd + " -bb " + outspecfile
 
 	# Build the rpm package!
