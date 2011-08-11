@@ -1,0 +1,14 @@
+Upstream-Status: Inappropriate [embedded specific]
+
+Signed-off-by: Kumar Gala <galak@kernel.crashing.org>
+
+Index: xcb-proto-1.6/xcb-proto.pc.in
+===================================================================
+--- xcb-proto-1.6.orig/xcb-proto.pc.in
++++ xcb-proto-1.6/xcb-proto.pc.in
+@@ -1,4 +1,5 @@
+ prefix=@prefix@
++libdir=@libdir@
+ datarootdir=@datarootdir@
+ datadir=@datadir@
+ xcbincludedir=@xcbincludedir@

@@ -10,7 +10,7 @@ SECTION = "x11/libs"
 LICENSE = "MIT-X"
 
 SRC_URI = "http://xcb.freedesktop.org/dist/xcb-proto-${PV}.tar.bz2 \
-           file://aclocal.patch"
+           file://xcb-proto-libdir.patch"
 
 inherit autotools pkgconfig
 
