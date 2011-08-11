@@ -33,7 +33,8 @@ PATHFIXPATCH = "file://path_prog_fixes.patch;patch=1"
 PATHFIXPATCH_virtclass-native = ""
 
 SRC_URI += "${PATHFIXPATCH} \
-	    file://prefer-cpio-over-pax-for-ustar-archives.patch"
+	    file://prefer-cpio-over-pax-for-ustar-archives.patch \
+	    file://python-libdir.patch"
 
 SRC_URI[md5sum] = "c2972c4d9b3e29c03d5f2af86249876f"
 SRC_URI[sha256sum] = "5b159d3c0e0a1f87de71b68bcb9f1a1c49e9e71749c9b723f17e2e1e0295c7ae"

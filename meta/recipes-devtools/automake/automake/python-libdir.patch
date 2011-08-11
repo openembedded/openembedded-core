@@ -1,0 +1,60 @@
+Upstream-Status: Inappropriate [embedded specific]
+
+Signed-off-by: Kumar Gala <galak@kernel.crashing.org>
+
+Index: automake-1.11.1/m4/python.m4
+===================================================================
+--- automake-1.11.1.orig/m4/python.m4
++++ automake-1.11.1/m4/python.m4
+@@ -88,12 +88,13 @@ python2.1 python2.0])
+     [am_cv_python_version=`$PYTHON -c "import sys; sys.stdout.write(sys.version[[:3]])"`])
+   AC_SUBST([PYTHON_VERSION], [$am_cv_python_version])
+ 
+-  dnl Use the values of $prefix and $exec_prefix for the corresponding
+-  dnl values of PYTHON_PREFIX and PYTHON_EXEC_PREFIX.  These are made
++  dnl Use the values of $prefix, $libdir and $exec_prefix for the corresponding
++  dnl values of PYTHON_PREFIX PYTHON_LIB_PREFIX, and PYTHON_EXEC_PREFIX.  These are made
+   dnl distinct variables so they can be overridden if need be.  However,
+   dnl general consensus is that you shouldn't need this ability.
+ 
+   AC_SUBST([PYTHON_PREFIX], ['${prefix}'])
++  AC_SUBST([PYTHON_LIB_PREFIX], ['${libdir}'])
+   AC_SUBST([PYTHON_EXEC_PREFIX], ['${exec_prefix}'])
+ 
+   dnl At times (like when building shared libraries) you may want
+@@ -122,7 +123,7 @@ python2.1 python2.0])
+        am_py_prefix=$prefix
+      fi
+      am_cv_python_pythondir=`$PYTHON -c "import sys; from distutils import sysconfig; sys.stdout.write(sysconfig.get_python_lib(0,0,prefix='$am_py_prefix'))" 2>/dev/null ||
+-     echo "$PYTHON_PREFIX/lib/python$PYTHON_VERSION/site-packages"`
++     echo "$PYTHON_LIB_PREFIX/python$PYTHON_VERSION/site-packages"`
+      case $am_cv_python_pythondir in
+      $am_py_prefix*)
+        am__strip_prefix=`echo "$am_py_prefix" | sed 's|.|.|g'`
+@@ -132,7 +133,7 @@ python2.1 python2.0])
+        case $am_py_prefix in
+          /usr|/System*) ;;
+          *)
+-	  am_cv_python_pythondir=$PYTHON_PREFIX/lib/python$PYTHON_VERSION/site-packages
++	  am_cv_python_pythondir=$PYTHON_LIB_PREFIX/python$PYTHON_VERSION/site-packages
+ 	  ;;
+        esac
+        ;;
+@@ -160,7 +161,7 @@ python2.1 python2.0])
+        am_py_exec_prefix=$exec_prefix
+      fi
+      am_cv_python_pyexecdir=`$PYTHON -c "import sys; from distutils import sysconfig; sys.stdout.write(sysconfig.get_python_lib(1,0,prefix='$am_py_exec_prefix'))" 2>/dev/null ||
+-     echo "$PYTHON_EXEC_PREFIX/lib/python$PYTHON_VERSION/site-packages"`
++     echo "$PYTHON_LIB_PREFIX/python$PYTHON_VERSION/site-packages"`
+      case $am_cv_python_pyexecdir in
+      $am_py_exec_prefix*)
+        am__strip_prefix=`echo "$am_py_exec_prefix" | sed 's|.|.|g'`
+@@ -170,7 +171,7 @@ python2.1 python2.0])
+        case $am_py_exec_prefix in
+          /usr|/System*) ;;
+          *)
+-	   am_cv_python_pyexecdir=$PYTHON_EXEC_PREFIX/lib/python$PYTHON_VERSION/site-packages
++	   am_cv_python_pyexecdir=$PYTHON_LIB_PREFIX/python$PYTHON_VERSION/site-packages
+ 	   ;;
+        esac
+        ;;
