@@ -1,0 +1,26 @@
+valgrind: Add 3.x statements to "case" for supporting the kernel 3.x
+
+Signed-off-by: Lin Tong <tong.lin@intel.com>
+
+Upstream-Status: Pending
+
+diff --git a/configure.in b/configure.in
+index 3878619..1cb7dc7 100644
+--- a/configure.in
++++ b/configure.in
+@@ -229,10 +229,14 @@ case "${host_os}" in
+         	    AC_MSG_RESULT([2.4 family (${kernel})])
+         	    AC_DEFINE([KERNEL_2_4], 1, [Define to 1 if you're using Linux 2.4.x])
+         	    ;;
++             3.*)
++                    AC_MSG_RESULT([3 family (${kernel})])
++                    AC_DEFINE([KERNEL_3], 1, [Define to 1 if you're using Linux 3.x])
++                    ;;
+ 
+              *) 
+         	    AC_MSG_RESULT([unsupported (${kernel})])
+-        	    AC_MSG_ERROR([Valgrind works on kernels 2.4, 2.6])
++        	    AC_MSG_ERROR([Valgrind works on kernels 2.4, 2.6, 3.x])
+         	    ;;
+         esac
+ 
