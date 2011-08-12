@@ -1,0 +1,116 @@
+# BBMASK is a regular expression that can be used to tell BitBake to ignore
+# certain recipes.
+#BBMASK = ""
+
+# eglibc configurability is used to reduce minimal images's size.
+# the all supported eglibc options are listed in DISTRO_FEATURES_LIBC
+# and disabled by default. Uncomment and copy the DISTRO_FEATURES_LIBC
+# and DISTRO_FEATURES definitions to local.conf to enable the options.
+#DISTRO_FEATURES_LIBC = "ipv6 libc-backtrace libc-big-macros libc-bsd libc-cxx-tests libc-catgets libc-charsets libc-crypt \
+#               libc-crypt-ufc libc-db-aliases libc-envz libc-fcvt libc-fmtmsg libc-fstab libc-ftraverse \
+#               libc-getlogin libc-idn libc-inet libc-inet-anl libc-libm libc-libm-big libc-locales libc-locale-code \
+#               libc-memusage libc-nis libc-nsswitch libc-rcmd libc-rtld-debug libc-spawn libc-streams libc-sunrpc \
+#               libc-utmp libc-utmpx libc-wordexp libc-posix-clang-wchar libc-posix-regexp libc-posix-regexp-glibc \
+#               libc-posix-wchar-io"
+
+#DISTRO_FEATURES = "alsa bluetooth ext2 irda pcmcia usbgadget usbhost wifi nfs zeroconf pci ${DISTRO_FEATURES_LIBC}"
+
+# ENABLE_BINARY_LOCALE_GENERATION controls the generation of binary locale
+# packages at build time using qemu-native. Disabling it (by setting it to 0)
+# will save some build time at the expense of breaking i18n on devices with
+# less than 128MB RAM.
+#ENABLE_BINARY_LOCALE_GENERATION = "1"
+
+# Set GLIBC_GENERATE_LOCALES to the locales you wish to generate should you not
+# wish to perform the time-consuming step of generating all LIBC locales.
+# NOTE: If removing en_US.UTF-8 you will also need to uncomment, and set
+# appropriate values for IMAGE_LINGUAS and LIMIT_BUILT_LOCALES
+# WARNING: this may break localisation!
+#GLIBC_GENERATE_LOCALES = "en_GB.UTF-8 en_US.UTF-8"
+# See message above as to whether setting these is required
+#IMAGE_LINGUAS ?= "en-gb"
+#LIMIT_BUILT_LOCALES ?= "POSIX en_GB"
+
+# The following are used to control options related to debugging.
+#
+# Uncomment this to change the optimization to make debugging easer, at the 
+# possible cost of performance.
+# DEBUG_BUILD = "1"
+#
+# Uncomment this to disable the stripping of the installed binaries
+# INHIBIT_PACKAGE_STRIP = "1"
+#
+# Uncomment this to disable the split of the debug information into -dbg files
+# INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+#
+# When splitting debug information, the following controls the results of the
+# file splitting.
+#
+#  .debug (default):
+#    When splitting the debug information will be placed into
+#    a .debug directory in the same dirname of the binary produced:
+#      /bin/foo -> /bin/.debug/foo
+#
+#  debug-file-directory:
+#    When splitting the debug information will be placed into
+#    a central debug-file-directory, /usr/lib/debug:
+#      /bin/foo -> /usr/lib/debug/bin/foo.debug
+#
+#  Any source code referenced in the debug symbols will be copied
+#  and made available within the /usr/src/debug directory
+#
+#PACKAGE_DEBUG_SPLIT_STYLE = '.debug'
+# PACKAGE_DEBUG_SPLIT_STYLE = 'debug-file-directory'
+
+# Uncomment these to build a package such that you can use gprof to profile it.
+# NOTE: This will only work with 'linux' targets, not
+# 'linux-uclibc', as uClibc doesn't provide the necessary
+# object files.  Also, don't build glibc itself with these
+# flags, or it'll fail to build.
+#
+# PROFILE_OPTIMIZATION = "-pg"
+# SELECTED_OPTIMIZATION = "${PROFILE_OPTIMIZATION}"
+# LDFLAGS =+ "-pg"
+
+# TCMODE controls the characteristics of the generated packages/images by
+# telling poky which toolchain 'profile' to use.
+#
+# The default is "default"
+# Use "external-MODE" to use the precompiled external toolchains where MODE
+# is the type of external toolchain to use e.g. eabi. You need to ensure 
+# the toolchain you want to use is included in an an appropriate layer
+# TCMODE = "external-eabi"
+
+# mklibs library size optimization is more useful to smaller images,
+# and less useful for bigger images. Also mklibs library optimization
+# can break the ABI compatibility, so should not be applied to the
+# images which are to be extended or upgraded later.
+#This enabled mklibs library size optimization just for the specified image.
+#MKLIBS_OPTIMIZED_IMAGES ?= "core-image-minimal"
+#This enable mklibs library size optimization will be for all the images.
+#MKLIBS_OPTIMIZED_IMAGES ?= "all"
+
+# Uncomment this if your host distribution provides the help2man tool.
+#ASSUME_PROVIDED += "help2man-native"
+
+# This value is currently used by pseudo to determine if the recipe should
+# build both the 32-bit and 64-bit wrapper libraries on a 64-bit build system.
+#
+# Pseudo will attempt to determine if a 32-bit wrapper is necessary, but
+# it doesn't always guess properly.  If you have 32-bit executables on 
+# your 64-bit build system, you likely want to set this to "0", 
+# otherwise you could end up with incorrect file attributes on the 
+# target filesystem.
+#
+# Default is to not build 32 bit libs on 64 bit systems, uncomment this
+# if you need the 32 bits libs
+#NO32LIBS = "0"
+
+# Uncomment the following lines to enable multilib builds
+#require conf/multilib.conf
+#MULTILIBS = "multilib:lib32"
+#DEFAULTTUNE_virtclass-multilib-lib32 = "x86"
+
+# The network based PR service host and port
+#PRSERV_HOST = "localhost"
+#PRSERV_PORT = "8585"
