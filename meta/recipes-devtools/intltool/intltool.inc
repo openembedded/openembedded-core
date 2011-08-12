@@ -1,6 +1,6 @@
 DESCRIPTION = "Utility scripts for internationalizing XML"
 SECTION = "devel"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 
 URLV="${@'.'.join(bb.data.getVar('PV',d,1).split('.')[0:2])}"
 SRC_URI = "${GNOME_MIRROR}/intltool/${URLV}/intltool-${PV}.tar.bz2"
@@ -13,5 +13,4 @@ RRECOMMENDS_${PN}_virtclass-native = ""
 
 inherit autotools pkgconfig perlnative
 
-export PERL_virtclass-native = "/usr/bin/env perl"
 BBCLASSEXTEND = "native"
