@@ -19,13 +19,11 @@ PR = "r0"
 
 SRC_URI = "\
   ${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.gz \
-  file://fix-dfutool-usb-declaration-mismatch.patch;patch=1 \
-  file://sbc-thumb.patch;patch=1 \
   file://bluetooth.conf \
 "
 
-SRC_URI[md5sum] = "b9e5de607e5e43c868c35c68fe6f189f"
-SRC_URI[sha256sum] = "75dc506f5346e1eb803f44294ae02406e806e309d9c9bda1de7ed235ff794b6d"
+SRC_URI[md5sum] = "296111afac49e3f9035085ac14daf518"
+SRC_URI[sha256sum] = "c06fd50fd77909cad55e3181a42c6bce7cfcf7abb8cd87871c13d0d70f87fa99"
 S = "${WORKDIR}/bluez-${PV}"
 
 inherit autotools
