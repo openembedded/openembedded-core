@@ -257,10 +257,16 @@ package_install_internal_rpm () {
 		echo "Adding attempt only packages..."
 		for pkg in ${package_attemptonly} ; do
 			echo "Processing $pkg..."
-			pkg_name=$(resolve_package_rpm $pkg ${confbase}.conf)
+			archvar=base_archs
+			ml_pkg=$(echo ${pkg} | sed "s,^${MLPREFIX}\(.*\),\1,")
+			if [ "${ml_pkg}" != "${pkg}" ]; then
+				archvar=ml_archs
+			fi
+
+			pkg_name=$(resolve_package_rpm ${confbase}-${archvar}.conf ${ml_pkg})
 			if [ -z "$pkg_name" ]; then
-				echo "Unable to find package $pkg!"
-				exit 1
+				echo "Note: Unable to find package $pkg ($ml_pkg) -- PACKAGE_INSTALL_ATTEMPTONLY"
+				continue
 			fi
 			echo "Attempting $pkg_name..." >> "${WORKDIR}/temp/log.do_${task}_attemptonly.${PID}"
 			${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
@@ -297,8 +303,17 @@ package_install_internal_rpm () {
 			# Ohh there was a new one, we'll need to loop again...
 			loop=1
 			echo "Processing $pkg..."
-			pkg_name=$(resolve_package $pkg ${confbase}.conf)
-			if [ -z "$pkg_name" ]; then
+			found=0
+			for archvar in base_archs ml_archs ; do
+				pkg_name=$(resolve_package_rpm ${confbase}-${archvar}.conf ${pkg})
+				if [ -n "$pkg_name" ]; then
+					found=1
+					break
+				fi
+			done
+
+			if [ $found -eq 0 ]; then
+				echo "Note: Unable to find package $pkg -- suggests"
 				echo "Unable to find package $pkg." >> "${WORKDIR}/temp/log.do_${task}_recommend.${PID}"
 				continue
 			fi
