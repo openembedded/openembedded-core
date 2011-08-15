@@ -6,12 +6,17 @@ python multilib_virtclass_handler () {
     variant = e.data.getVar("BBEXTENDVARIANT", True)
     if cls != "multilib" or not variant:
         return
+
+    # There should only be one kernel in multilib configs
+    if bb.data.inherits_class('kernel', e.data) or bb.data.inherits_class('module-base', e.data) or bb.data.inherits_class('allarch', e.data):
+        raise bb.parse.SkipPackage("We shouldn't have multilib variants for the kernel")
+
     save_var_name=e.data.getVar("MULTILIB_SAVE_VARNAME", True) or ""
     for name in save_var_name.split():
         val=e.data.getVar(name, True)
         if val:
             e.data.setVar(name + "_MULTILIB_ORIGINAL", val)
-
+ 
     override = ":virtclass-multilib-" + variant
 
     e.data.setVar("MLPREFIX", variant + "-")
@@ -28,16 +33,6 @@ STAGINGCC_prepend = "${BBEXTENDVARIANT}-"
 python __anonymous () {
     variant = d.getVar("BBEXTENDVARIANT", True)
 
-    def extend_name(name):
-        if name.startswith("virtual/"):
-            subs = name.split("/", 1)[1]
-            if not subs.startswith(variant):
-                return "virtual/" + variant + "-" + subs
-            return name
-        if not name.startswith(variant):
-            return variant + "-" + name
-        return name
-
     def map_dependencies(varname, d, suffix = ""):
         if suffix:
             varname = varname + "_" + suffix
@@ -50,25 +45,15 @@ python __anonymous () {
             if dep.endswith(("-native", "-native-runtime")):
                 newdeps.append(dep)
             else:
-                newdeps.append(extend_name(dep))
+                newdeps.append(multilib_extend_name(variant, dep))
         d.setVar(varname, " ".join(newdeps))
-
-    def map_variable(varname, d):
-        var = d.getVar(varname, True)
-        if not var:
-            return
-        var = var.split()
-        newvar = []
-        for v in var:
-            newvar.append(extend_name(v))
-        d.setVar(varname, " ".join(newvar))
 
     pkgs_mapping = []
     for pkg in (d.getVar("PACKAGES", True) or "").split():
         if pkg.startswith(variant):
             pkgs_mapping.append([pkg.split(variant + "-")[1], pkg])
             continue
-        pkgs_mapping.append([pkg, extend_name(pkg)])
+        pkgs_mapping.append([pkg, multilib_extend_name(variant, pkg)])
 
     d.setVar("PACKAGES", " ".join([row[1] for row in pkgs_mapping]))
 
@@ -87,8 +72,8 @@ python __anonymous () {
         map_dependencies("RCONFLICTS", d, pkg)
         map_dependencies("PKG", d, pkg)
 
-    map_variable("PROVIDES", d)
-    map_variable("PACKAGES_DYNAMIC", d)
-    map_variable("PACKAGE_INSTALL", d)
-    map_variable("INITSCRIPT_PACKAGES", d)
+    multilib_map_variable("PROVIDES", variant, d)
+    multilib_map_variable("PACKAGES_DYNAMIC", variant, d)
+    multilib_map_variable("PACKAGE_INSTALL", variant, d)
+    multilib_map_variable("INITSCRIPT_PACKAGES", variant, d)
 }
