@@ -18,7 +18,8 @@ pidofproc () {
 
 	# pidof output null when no program is running, so no "2>/dev/null".
 	pid=`pidof $1`
-	case $? in
+	status=$?
+	case $status in
 	0)
 		echo $pid
 		return 0
@@ -28,7 +29,7 @@ pidofproc () {
 		exit 127
 		;;
 	*)
-		return $?
+		return $status
 		;;
 	esac
 }
