@@ -11,7 +11,7 @@ KMACHINE_qemuarm  = "yocto/standard/arm-versatile-926ejs"
 KBRANCH = ${KMACHINE}
 KMETA = meta
 
-LINUX_VERSION ?= "3.0"
+LINUX_VERSION ?= "3.0.1"
 LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE}"
 
 SRCREV_machine_qemuarm = "36b4cdddcafc711f0ec9ad97882f23a6443c61b2"
@@ -22,7 +22,7 @@ SRCREV_machine_qemux86-64 = "d0b814813bce09971c5cbb0d22bacb8842146fa0"
 SRCREV_machine = "ad13129a87957656c18584793abcee51de0e196a"
 SRCREV_meta = "7782fc673afd6a1c742409896ae787560d96fce8"
 
-PR = "r0"
+PR = "r1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 SRCREV_FORMAT = "meta_machine"
 
