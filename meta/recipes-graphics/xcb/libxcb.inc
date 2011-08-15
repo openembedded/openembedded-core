@@ -5,6 +5,8 @@ the protocol, improved threading support, and extensibility."
 HOMEPAGE = "http://xcb.freedesktop.org"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=XCB"
 
+BBCLASSEXTEND = "native nativesdk"
+
 SECTION = "x11/libs"
 LICENSE = "MIT-X"
 
