@@ -51,7 +51,7 @@ python __anonymous () {
                   ${includedir}/${QT_DIR_NAME}/%(incname)s
                   ${libdir}/pkgconfig/%(name)s${QT_LIBINFIX}.pc""" % locals(), d)
         bb.data.setVar("FILES_%s-dbg" % pkg, "${libdir}/.debug/lib%(name)s${QT_LIBINFIX}.so.*" % locals(), d)
-        bb.data.setVar("RRECOMMENDS_%s-dbg" % pkg, "${QT_BASE_NAME}-dbg", d)
+        bb.data.setVar("RRECOMMENDS_%s-dbg" % pkg, "${PN}-dbg", d)
         lib_packages.append(pkg)
         dev_packages.append("%s-dev" % pkg)
         dbg_packages.append("%s-dbg" % pkg)
@@ -68,7 +68,7 @@ python __anonymous () {
                   ${includedir}/${QT_DIR_NAME}/%(incname)s
                   ${libdir}/pkgconfig/%(name)s.pc""" % locals(), d)
         bb.data.setVar("FILES_%s-dbg" % pkg, "${libdir}/.debug/lib%(name)s.so.*" % locals(), d)
-        bb.data.setVar("RRECOMMENDS_%s-dbg" % pkg, "${QT_BASE_NAME}-dbg", d)
+        bb.data.setVar("RRECOMMENDS_%s-dbg" % pkg, "${PN}-dbg", d)
         lib_packages.append(pkg)
         dev_packages.append("%s-dev" % pkg)
         dbg_packages.append("%s-dbg" % pkg)
