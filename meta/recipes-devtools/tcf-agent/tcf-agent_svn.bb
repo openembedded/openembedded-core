@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://../epl-v10.html;md5=7aa4215a330a0a4f6a1cbf8da1a0879f 
 
 SRCREV = "1855"
 PV = "0.0+svnr${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "svn://dev.eclipse.org/svnroot/dsdp/org.eclipse.tm.tcf/trunk;module=agent;proto=http \
            http://dev.eclipse.org/svnroot/dsdp/org.eclipse.tm.tcf/trunk/epl-v10.html;name=epl \
@@ -19,7 +19,7 @@ SRC_URI = "svn://dev.eclipse.org/svnroot/dsdp/org.eclipse.tm.tcf/trunk;module=ag
 SRC_URI[epl.md5sum] = "7aa4215a330a0a4f6a1cbf8da1a0879f"
 SRC_URI[epl.sha256sum] = "4fd64aeed340d62a64a8da4b371efe0f6d0d745f4d2dbefacba86c646d36bc72"
 
-DEPENDS = "util-linux"
+DEPENDS = "util-linux openssl"
 RDEPENDS_${PN} = "bash"
 
 S = "${WORKDIR}/agent"
