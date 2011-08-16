@@ -352,12 +352,16 @@ def extend_variants(d, var, extend, delim=':'):
 			variants.append(eext[1])
 	return " ".join(variants)
 
-def all_multilib_tune_values(d, var, unique=True):
+def all_multilib_tune_values(d, var, unique = True, need_split = True, delim = ' '):
 	"""Return a string of all ${var} in all multilib tune configuration"""
 	values = []
 	value = d.getVar(var, True) or ""
 	if value != "":
-		values.append(value)
+		if need_split:
+			for item in value.split(delim):
+				values.append(item)
+		else:
+			values.append(value)
 	variants = d.getVar("MULTILIB_VARIANTS", True) or ""
 	for item in variants.split():
 		localdata = bb.data.createCopy(d)
@@ -366,7 +370,17 @@ def all_multilib_tune_values(d, var, unique=True):
 		bb.data.update_data(localdata)
 		value = localdata.getVar(var, True) or ""
 		if value != "":
-			values.append(value)
+			if need_split:
+				for item in value.split(delim):
+					values.append(item)
+			else:
+				values.append(value)
 	if unique:
-		values = set(values)
-	return " ".join(values)
+		#we do this to keep order as much as possible
+		ret = []
+		for value in values:
+			if not value in ret:
+				ret.append(value)
+	else:
+		ret = values
+	return " ".join(ret)

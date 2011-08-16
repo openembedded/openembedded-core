@@ -46,6 +46,8 @@ PKGDEST = "${WORKDIR}/packages-split"
 
 LOCALE_SECTION ?= ''
 
+ALL_MULTILIB_PACKAGE_ARCHS = "${@all_multilib_tune_values(d, 'PACKAGE_ARCHS')}"
+
 # rpm is used for the per-file dependency identification
 PACKAGE_DEPENDS += "rpm-native"
 
@@ -184,17 +186,6 @@ python () {
         bb.data.setVarFlag('do_package', 'deptask', " ".join(deps), d)
     else:
         d.setVar("PACKAGERDEPTASK", "")
-
-    multilib_archs = []
-    multilibs= d.getVar('MULTILIBS', True) or ""
-    if multilibs:
-        for ext in multilibs.split():
-            eext = ext.split(':')
-            if len(eext) > 1:
-                if eext[0] == 'multilib':
-                    multilib_archs.append('ml' + eext[1])
-
-    d.setVar("MULTILIB_ARCHS", ' '.join(multilib_archs))
 }
 
 def splitfile(file, debugfile, debugsrcdir, d):

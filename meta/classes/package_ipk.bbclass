@@ -64,14 +64,13 @@ python package_ipk_install () {
 package_tryout_install_multilib_ipk() {
 	#try install multilib
 	multilib_tryout_dirs=""
-	for arch in ${MULTILIB_ARCHS}; do
-		local target_rootfs="${MULTILIB_TEMP_ROOTFS}/${arch}"
+	for item in ${MULTILIB_VARIANTS}; do
+		local target_rootfs="${MULTILIB_TEMP_ROOTFS}/${item}"
 		local ipkg_args="-f ${INSTALL_CONF_IPK} -o ${target_rootfs} --force_overwrite"
 		local selected_pkg=""
-		#strip the "ml" from package_arch
-		local pkgarch_prefix="${arch:2}-"
-		for pkg in "${INSTALL_PACKAGES_MULTILIB_IPK}"; do
-			if [ ${pkg:0:${#pkgarch_prefix}} == ${pkgarch_prefix} ]; then
+		local pkgname_prefix="${item}-"
+		for pkg in ${INSTALL_PACKAGES_MULTILIB_IPK}; do
+			if [ ${pkg:0:${#pkgname_prefix}} == ${pkgname_prefix} ]; then
 			    selected_pkg="${selected_pkg} ${pkg}"
 			fi
 		done
@@ -163,7 +162,7 @@ ipk_log_check() {
 package_update_index_ipk () {
 	set -x
 
-	ipkgarchs="${PACKAGE_ARCHS} ${SDK_PACKAGE_ARCHS}"
+	ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS} ${SDK_PACKAGE_ARCHS}"
 
 	if [ ! -z "${DEPLOY_KEEP_PACKAGES}" ]; then
 		return
@@ -203,15 +202,8 @@ package_generate_ipkg_conf () {
 	done
 
 	echo "src oe file:${DEPLOY_DIR_IPK}" >> ${IPKGCONF_TARGET}
-	ipkgarchs="${PACKAGE_ARCHS}"
+	ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS}"
 	for arch in $ipkgarchs; do
-		if [ -e ${DEPLOY_DIR_IPK}/$arch/Packages ] ; then
-		        echo "src oe-$arch file:${DEPLOY_DIR_IPK}/$arch" >> ${IPKGCONF_TARGET}
-		fi
-	done
-
-	multilib_archs="${MULTILIB_ARCHS}"
-	for arch in $multilib_archs; do
 		if [ -e ${DEPLOY_DIR_IPK}/$arch/Packages ] ; then
 		        echo "src oe-$arch file:${DEPLOY_DIR_IPK}/$arch" >> ${IPKGCONF_TARGET}
 		fi
@@ -226,15 +218,9 @@ package_generate_archlist () {
 		priority=$(expr $priority + 5)
 	done
 
-	ipkgarchs="${PACKAGE_ARCHS}"
+	ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS}"
 	priority=1
 	for arch in $ipkgarchs; do
-		echo "arch $arch $priority" >> ${IPKGCONF_TARGET}
-		priority=$(expr $priority + 5)
-	done
-
-	multilib_archs="${MULTILIB_ARCHS}"
-	for arch in $multilib_archs; do
 		echo "arch $arch $priority" >> ${IPKGCONF_TARGET}
 		priority=$(expr $priority + 5)
 	done
