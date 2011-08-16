@@ -4,11 +4,14 @@ the system load levels drop to a particular level."
 SECTION = "base"
 LICENSE="GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4325afd396febcb659c36b49533135d4"
-DEPENDS = "flex libpam initscripts \
+DEPENDS = "flex initscripts \
 	${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
+RDEPENDS = "${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_DEPS}', '', d)}"
+PAM_DEPS = "libpam libpam-runtime pam-plugin-env pam-plugin-limits"
+
 RCONFLICTS_${PN} = "atd"
 RREPLACES_${PN} = "atd"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
     file://configure.patch \
@@ -54,25 +57,6 @@ do_install () {
 			break
 		fi
 	done
-}
-
-pkg_postinst_${PN} () {
-	if [ "x$D" != "x" ] ; then
-		exit 1
-	fi
-
-	# below is necessary to allow at usable to normal users
-	# now at is has its own /var/spool/at instead of under /var/spool/cron
-	# this way is better to allow setgid on both sides
-	grep "^daemon" /etc/group || groupadd daemon
-	chown root:daemon /usr/bin/at
-	chmod 2755 /usr/bin/at
-
-	chown root:daemon -R /var/spool/at
-	chmod 770 -R /var/spool/at
-
-	chown root:daemon /etc/at.deny
-	chmod 640 /etc/at.deny
 }
 
 PARALLEL_MAKE = ""
