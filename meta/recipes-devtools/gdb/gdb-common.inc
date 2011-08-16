@@ -2,9 +2,16 @@ DESCRIPTION = "gdb - GNU debugger"
 HOMEPAGE = "http://www.gnu.org/software/gdb/"
 LICENSE="GPLv3+"
 SECTION = "devel"
-DEPENDS = "ncurses readline elfutils lttng-ust"
+DEPENDS = "ncurses readline elfutils ${LTTNGUST}"
 
-INC_PR = "r2"
+LTTNGUST = "lttng-ust"
+LTTNGUST_libc-uclibc = ""
+LTTNGUST_mips = ""
+LTTNGUST_mipsel = ""
+LTTNGUST_mips64 = ""
+LTTNGUST_mips64el = ""
+
+INC_PR = "r3"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 		file://COPYING.LIB;md5=9f604d8a4f8e74f4f5140845a21b6674 \
