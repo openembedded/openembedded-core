@@ -138,6 +138,8 @@ fakeroot do_rootfs () {
 	mkdir -p ${IMAGE_ROOTFS}
 	mkdir -p ${DEPLOY_DIR_IMAGE}
 
+	cp -n ${COREBASE}/meta/files/deploydir_readme.txt ${DEPLOY_DIR_IMAGE}/README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt
+
 	if [ "${USE_DEVFS}" != "1" ]; then
 		for devtable in ${@get_devtable_list(d)}; do
 			makedevs -r ${IMAGE_ROOTFS} -D $devtable
