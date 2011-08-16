@@ -118,7 +118,7 @@ python () {
         bb.fatal("Please add your architecture to siteinfo.bbclass")
 }
 
-def siteinfo_get_files(d):
+def siteinfo_get_files(d, no_cache = False):
     sitedata = siteinfo_data(d)
     sitefiles = ""
     for path in d.getVar("BBPATH", True).split(":"):
@@ -126,6 +126,8 @@ def siteinfo_get_files(d):
             filename = os.path.join(path, "site", element)
             if os.path.exists(filename):
                 sitefiles += filename + " "
+
+    if no_cache: return sitefiles
 
     # Now check for siteconfig cache files
     path_siteconfig = bb.data.getVar('SITECONFIG_SYSROOTCACHE', d, 1)
