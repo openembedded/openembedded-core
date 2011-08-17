@@ -29,7 +29,7 @@ INITSCRIPT_NAME_${PN}-mdev = "mdev"
 INITSCRIPT_PARAMS_${PN}-mdev = "start 06 S ."
 INITSCRIPT_NAME_${PN}-udhcpd = "busybox-udhcpd" 
 INITSCRIPT_NAME_${PN}-udhcpc = "busybox-udhcpc" 
-CONFFILES_${PN}-syslog = "${sysconfdir}/syslog.conf.${PN}"
+CONFFILES_${PN}-syslog = "${sysconfdir}/syslog.conf.${BPN}"
 CONFFILES_${PN}-mdev = "${sysconfdir}/mdev.conf"
 
 RRECOMMENDS_${PN} = "${PN}-syslog ${PN}-udhcpc"
@@ -152,24 +152,24 @@ do_install () {
 		install -d ${D}${libdir} ${D}${bindir} ${D}${sbindir}
 		cat busybox.links | while read FILE; do
 			NAME=`basename "$FILE"`
-			install -m 0755 "0_lib/$NAME" "${D}$FILE.${PN}"
+			install -m 0755 "0_lib/$NAME" "${D}$FILE.${BPN}"
 		done
 		# add suid bit where needed
 		for i in `grep -E "APPLET.*_BB_SUID_((MAYBE|REQUIRE))" include/applets.h | grep -v _BB_SUID_DROP | cut -f 3 -d '(' | cut -f 1 -d ','`; do
-			find ${D} -name $i.${PN} -exec chmod a+s {} \;
+			find ${D} -name $i.${BPN} -exec chmod a+s {} \;
 		done
 		install -m 0755 0_lib/libbusybox.so.${PV} ${D}${libdir}/libbusybox.so.${PV}
-		ln -sf sh.${PN} ${D}${base_bindir}/sh
-		ln -sf ln.${PN} ${D}${base_bindir}/ln
-		ln -sf test.${PN} ${D}${bindir}/test
-		if [ -f ${D}/linuxrc.${PN} ]; then
-			mv ${D}/linuxrc.${PN} ${D}/linuxrc
+		ln -sf sh.${BPN} ${D}${base_bindir}/sh
+		ln -sf ln.${BPN} ${D}${base_bindir}/ln
+		ln -sf test.${BPN} ${D}${bindir}/test
+		if [ -f ${D}/linuxrc.${BPN} ]; then
+			mv ${D}/linuxrc.${BPN} ${D}/linuxrc
 		fi
 	fi
 
 	if grep -q "CONFIG_SYSLOGD=y" ${WORKDIR}/defconfig; then
-		install -m 0755 ${WORKDIR}/syslog ${D}${sysconfdir}/init.d/syslog.${PN}
-		install -m 644 ${WORKDIR}/syslog.conf ${D}${sysconfdir}/syslog.conf.${PN}
+		install -m 0755 ${WORKDIR}/syslog ${D}${sysconfdir}/init.d/syslog.${BPN}
+		install -m 644 ${WORKDIR}/syslog.conf ${D}${sysconfdir}/syslog.conf.${BPN}
 	fi
 	if grep "CONFIG_CROND=y" ${WORKDIR}/defconfig; then
 		install -m 0755 ${WORKDIR}/busybox-cron ${D}${sysconfdir}/init.d/
@@ -193,7 +193,7 @@ do_install () {
 		install -m 0755 ${WORKDIR}/busybox-udhcpc ${D}${sysconfdir}/init.d/
 	fi
 	if grep "CONFIG_INETD=y" ${WORKDIR}/defconfig; then
-		install -m 0755 ${WORKDIR}/inetd ${D}${sysconfdir}/init.d/inetd.${PN}
+		install -m 0755 ${WORKDIR}/inetd ${D}${sysconfdir}/init.d/inetd.${BPN}
 		install -m 0644 ${WORKDIR}/inetd.conf ${D}${sysconfdir}/
 	fi
         if grep "CONFIG_MDEV=y" ${WORKDIR}/defconfig; then
@@ -217,8 +217,8 @@ pkg_postinst_${PN} () {
 }
 
 pkg_postinst_${PN}-syslog () {
-	update-alternatives --install ${sysconfdir}/init.d/syslog syslog-init syslog.${PN} 50
-	update-alternatives --install ${sysconfdir}/syslog.conf syslog-conf syslog.conf.${PN} 50
+	update-alternatives --install ${sysconfdir}/init.d/syslog syslog-init syslog.${BPN} 50
+	update-alternatives --install ${sysconfdir}/syslog.conf syslog-conf syslog.conf.${BPN} 50
 }
 
 pkg_prerm_${PN} () {
@@ -260,6 +260,6 @@ pkg_prerm_${PN}-syslog () {
 		fi
 	fi
 
-	update-alternatives --remove syslog-init syslog.${PN}
-	update-alternatives --remove syslog-conf syslog.conf.${PN}
+	update-alternatives --remove syslog-init syslog.${BPN}
+	update-alternatives --remove syslog-conf syslog.conf.${BPN}
 }
