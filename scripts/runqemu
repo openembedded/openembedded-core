@@ -388,7 +388,7 @@ libgl='no'
 
 test -e /usr/lib/libGL.so -a -e /usr/lib/libGLU.so && libgl='yes'
 test -e /usr/lib64/libGL.so -a -e /usr/lib64/libGLU.so && libgl='yes'
-test -e /usr/lib/`uname -i`-linux-gnu/libGL.so -a -e /usr/lib/`uname -i`-linux-gnu/libGLU.so && libgl='yes'
+test -e /usr/lib/*-linux-gnu/libGL.so -a -e /usr/lib/*-linux-gnu/libGLU.so && libgl='yes'
 
 if [ "$libgl" != 'yes' ]; then
     echo "You need libGL.so and libGLU.so to exist in your library path to run the QEMU emulator.
