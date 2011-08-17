@@ -138,9 +138,10 @@ def write_task_data(status, logfile, dev, e):
         for key in sorted(diskdata.iterkeys()):
             file.write(key + ": " + diskdata[key] + "\n")
     if status is "passed":
-	    file.write("Status: PASSED")
+	    file.write("Status: PASSED \n")
     else:
-        file.write("Status: FAILED")
+        file.write("Status: FAILED \n")
+    file.write("Ended: %0.2f \n" % time.time())
     file.close()
 
 python run_buildstats () {
@@ -148,7 +149,6 @@ python run_buildstats () {
     import bb.event
     import bb.data
     import time, subprocess, platform
-
 
     if isinstance(e, bb.event.BuildStarted):
         ########################################################################
