@@ -10,6 +10,10 @@ PR = "r1"
 SRC_URI  = "git://git.kernel.org/pub/scm/network/ofono/ofono.git;protocol=git \
 	    file://ofono"
 
+EXTRA_OECONF += "\
+    ${@base_contains('DISTRO_FEATURES', 'bluetooth','--enable-bluetooth', '--disable-bluetooth', d)} \
+"
+
 do_configure_prepend () {
   ${S}/bootstrap
 }

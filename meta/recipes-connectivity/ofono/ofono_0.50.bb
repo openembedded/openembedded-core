@@ -7,6 +7,7 @@ SRC_URI  = "${KERNELORG_MIRROR}/linux/network/ofono/${BPN}-${PV}.tar.bz2 \
 
 EXTRA_OECONF += "\
     --enable-test \
+    ${@base_contains('DISTRO_FEATURES', 'bluetooth','--enable-bluetooth', '--disable-bluetooth', d)} \
 "
 
 SRC_URI[md5sum] = "b2656fd0bbf33f926fc86c1e8915d697"
