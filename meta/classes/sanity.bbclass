@@ -118,6 +118,52 @@ def check_connectivity(d):
 
     return retval
 
+def check_supported_distro(e):
+    tested_distros = e.data.getVar('SANITY_TESTED_DISTROS', True)
+    if not tested_distros:
+        return
+
+    if os.path.exists("/etc/redhat-release"):
+        f = open("/etc/redhat-release", "r")
+        try:
+            distro = f.readline()
+        finally:
+            f.close()
+    elif os.path.exists("/etc/SuSE-release"):
+        f = open("/etc/SuSE-release", "r")
+        try:
+            distro = f.readline()
+            # Remove the architecture suffix e.g. (i586)
+            distro = re.sub(r' \([a-zA-Z0-9\-_]*\)$', '', distro).strip()
+        finally:
+            f.close()
+    else:
+        # Use LSB method
+        import subprocess as sub
+        try:
+            p = sub.Popen(['lsb_release','-d','-s'],stdout=sub.PIPE,stderr=sub.PIPE)
+            out, err = p.communicate()
+            distro = out.rstrip()
+        except Exception:
+            distro = None
+
+        if not distro:
+            if os.path.exists("/etc/lsb-release"):
+                f = open("/etc/lsb-release", "r")
+                try:
+                    for line in f:
+                        lns = line.split('=')
+                        if lns[0] == "DISTRIB_DESCRIPTION":
+                            distro = lns[1].strip('"\n')
+                            break
+                finally:
+                    f.close()
+    if distro:
+        if distro not in [x.strip() for x in tested_distros.split('\n')]:
+            bb.warn('Host distribution "%s" has not been validated with this version of the build system; you may possibly experience unexpected failures. It is recommended that you use a tested distribution.' % distro)
+    else:
+        bb.warn('Host distribution could not be determined; you may possibly experience unexpected failures. It is recommended that you use a tested distribution.')
+
 def check_sanity(e):
     from bb import note, error, data, __version__
 
@@ -248,6 +294,8 @@ def check_sanity(e):
     pseudo_msg = check_pseudo_wrapper()
     if pseudo_msg != "":
         messages = messages + pseudo_msg + '\n'
+
+    check_supported_distro(e)
 
     # Check if DISPLAY is set if IMAGETEST is set
     if not data.getVar( 'DISPLAY', e.data, True ) and data.getVar( 'IMAGETEST', e.data, True ) == 'qemu':
