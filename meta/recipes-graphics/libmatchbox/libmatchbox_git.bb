@@ -6,10 +6,10 @@ PR = "r0"
 DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
-           file://configure_fixes.patch;patch=1 \
+           file://configure_fixes.patch \
 	   file://check.m4 \
-	   file://16bppfixes.patch;patch=1 \
-	   file://matchbox-start-fix.patch;patch=1"
+	   file://16bppfixes.patch \
+	   file://matchbox-start-fix.patch"
 
 S = "${WORKDIR}/git"
 

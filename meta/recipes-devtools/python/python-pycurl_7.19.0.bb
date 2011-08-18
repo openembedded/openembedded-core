@@ -13,7 +13,7 @@ PR = "r1"
 
 SRC_URI = "\
   http://${SRCNAME}.sourceforge.net/download/${SRCNAME}-${PV}.tar.gz;name=archive \
-  file://no-static-link.patch;patch=1 \
+  file://no-static-link.patch \
 "
 
 SRC_URI[archive.md5sum] = "919d58fe37e69fe87ce4534d8b6a1c7b"

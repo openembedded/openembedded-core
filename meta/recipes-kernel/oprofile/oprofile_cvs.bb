@@ -12,7 +12,7 @@ RRECOMMENDS_${PN} = "kernel-vmlinux"
 DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "cvs://anonymous@oprofile.cvs.sourceforge.net/cvsroot/oprofile;module=oprofile \
-           file://opstart.patch;patch=1 \
+           file://opstart.patch \
 	   file://acinclude.m4"
 S = "${WORKDIR}/oprofile"
 

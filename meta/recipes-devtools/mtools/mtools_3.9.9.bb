@@ -10,9 +10,9 @@ PR = "r4"
 
 #http://mtools.linux.lu/mtools-${PV}.tar.gz 
 SRC_URI="http://folks.o-hand.com/richard/poky/sources/mtools-${PV}.tar.gz \
-	file://mtools-makeinfo.patch;patch=1 \
-	file://mtools.patch;patch=1 \
-	file://no-x11.patch;patch=1"
+	file://mtools-makeinfo.patch \
+	file://mtools.patch \
+	file://no-x11.patch"
 
 S = "${WORKDIR}/mtools-${PV}"
 

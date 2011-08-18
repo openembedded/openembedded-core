@@ -3,26 +3,26 @@ require gtk+.inc
 PR = "r11"
 
 SRC_URI = "http://download.gnome.org/sources/gtk+/2.12/gtk+-${PV}.tar.bz2 \
-           file://xsettings.patch;patch=1 \
-           file://run-iconcache.patch;patch=1 \
-           file://disable-print.patch;patch=1 \
-           file://hardcoded_libtool.patch;patch=1 \
-           file://no-demos.patch;patch=1 \
-           file://cellrenderer-cairo.patch;patch=1;pnum=0 \
-           file://entry-cairo.patch;patch=1;pnum=0 \
-           file://toggle-font.diff;patch=1;pnum=0 \
-           file://scrolled-placement.patch;patch=1;pnum=0 \
-           file://filesystem-volumes.patch;patch=1 \
-           file://filechooser-props.patch;patch=1 \
-           file://filechooser-default.patch;patch=1 \
-           file://filechooser-sizefix.patch;patch=1 \
+           file://xsettings.patch \
+           file://run-iconcache.patch \
+           file://disable-print.patch \
+           file://hardcoded_libtool.patch \
+           file://no-demos.patch \
+           file://cellrenderer-cairo.patch;striplevel=0 \
+           file://entry-cairo.patch;striplevel=0 \
+           file://toggle-font.diff;striplevel=0 \
+           file://scrolled-placement.patch;striplevel=0 \
+           file://filesystem-volumes.patch \
+           file://filechooser-props.patch \
+           file://filechooser-default.patch \
+           file://filechooser-sizefix.patch \
 	  "
 # temporary
-#           file://gtklabel-resize-patch;patch=1
-#           file://menu-deactivate.patch;patch=1
-#        file://combo-arrow-size.patch;patch=1;pnum=0
+#           file://gtklabel-resize-patch
+#           file://menu-deactivate.patch
+#        file://combo-arrow-size.patch;striplevel=0
 # die die die
-#           file://pangoxft2.10.6.diff;patch=1
+#           file://pangoxft2.10.6.diff
 
 
 EXTRA_OECONF = "--without-libtiff --disable-xkb --disable-glibtest --enable-display-migration"

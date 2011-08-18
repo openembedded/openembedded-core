@@ -6,9 +6,9 @@ LICENSE = "GPLv2"
 PR = "r2"
 
 SRC_URI = "git://git.infradead.org/mtd-utils.git;protocol=git;tag=b995f89a81589be8d8a41c374a6df109d0ee12b3 \
-           file://add-exclusion-to-mkfs-jffs2-git.patch;patch=1 \
-	   file://remove-ubi.patch;patch=1 \
-	   file://fix-ignoreerrors-git.patch;patch=1"
+           file://add-exclusion-to-mkfs-jffs2-git.patch \
+	   file://remove-ubi.patch \
+	   file://fix-ignoreerrors-git.patch"
 
 S = "${WORKDIR}/git/"
 

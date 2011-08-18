@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://portmap.c;beginline=2;endline=31;md5=51ff67e66ec84b20
 DEPENDS = "virtual/fakeroot-native"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/p/portmap/portmap_5.orig.tar.gz \
-	${DEBIAN_MIRROR}/main/p/portmap/portmap_${PV}.diff.gz;patch=1 \
+	${DEBIAN_MIRROR}/main/p/portmap/portmap_${PV}.diff.gz \
 	file://portmap.init \
 	file://make.patch;apply=yes"
 S = "${WORKDIR}/portmap_5beta"

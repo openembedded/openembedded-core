@@ -15,8 +15,8 @@ PV = "0.0+git${SRCPV}"
 PR = "r0"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
-           file://configure_fix.patch;patch=1;maxrev=1819 \
-           file://single-instance.patch;patch=1 \
+           file://configure_fix.patch;maxrev=1819 \
+           file://single-instance.patch \
 	   file://80matchboxkeyboard.shbg"
 
 S = "${WORKDIR}/git"

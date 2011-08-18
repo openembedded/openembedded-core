@@ -10,10 +10,10 @@ LIC_FILES_CHKSUM="file://LICENSE;md5=f1060fa3a366f098b5b1d8c2077ba269"
 PR = "r7"
 
 SRC_URI = "http://www.angstrom-distribution.org/unstable/sources/tinylogin-${PV}.tar.bz2 \
-	file://cvs-20040608.patch;patch=1;pnum=1 \
-	file://add-system.patch;patch=1;pnum=1 \
-	file://adduser-empty_pwd.patch;patch=1 \
-	file://remove-index.patch;patch=1 \
+	file://cvs-20040608.patch \
+	file://add-system.patch \
+	file://adduser-empty_pwd.patch \
+	file://remove-index.patch \
 	file://use_O2_option.patch \
 	file://passwd_rotate_check.patch \
 	file://avoid_static.patch"

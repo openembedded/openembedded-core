@@ -41,9 +41,9 @@ SRC_URI = "svn://gcc.gnu.org/svn/gcc/branches;module=${BRANCH};proto=http \
 	   file://gcc-flags-for-build.patch \
            file://103-uclibc-conf-noupstream.patch  \
            file://200-uclibc-locale.patch  \
-           file://203-uclibc-locale-no__x.patch;striplevel=1 \
-           file://204-uclibc-locale-wchar_fix.patch;striplevel=1 \
-           file://205-uclibc-locale-update.patch;striplevel=1 \
+           file://203-uclibc-locale-no__x.patch; \
+           file://204-uclibc-locale-wchar_fix.patch; \
+           file://205-uclibc-locale-update.patch; \
            file://301-missing-execinfo_h.patch  \
            file://302-c99-snprintf.patch  \
            file://303-c99-complex-ugly-hack.patch  \
@@ -70,7 +70,7 @@ SRC_URI = "svn://gcc.gnu.org/svn/gcc/branches;module=${BRANCH};proto=http \
 	   file://powerpc-e5500.patch \
 	  "
 
-SRC_URI_append_sh3  = " file://sh3-installfix-fixheaders.patch;patch=1 "
+SRC_URI_append_sh3  = " file://sh3-installfix-fixheaders.patch "
 
 #S = "${WORKDIR}/${BRANCH}"
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/${BRANCH}"

@@ -1,9 +1,9 @@
 SRC_URI = "git://git.gnome.org/gobject-introspection;protocol=git \
-           file://configure.patch;patch=1 \
-           file://pathfix.patch;patch=1"
+           file://configure.patch \
+           file://pathfix.patch"
 
 SRC_URI_virtclass-native = "git://git.gnome.org/gobject-introspection;protocol=git \
-                            file://pathfix.patch;patch=1"
+                            file://pathfix.patch"
 
 LICENSE = "GPLv2+ & LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING.tools;md5=94d55d512a9ba36caa9b7df079bae19f \

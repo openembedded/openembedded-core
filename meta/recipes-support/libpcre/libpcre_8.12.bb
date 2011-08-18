@@ -9,7 +9,7 @@ PR = "r1"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=77f9b14fe707d0376d89bc162e6c54ff"
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcre/pcre-${PV}.tar.bz2 \
-           file://pcre-cross.patch;patch=1 \
+           file://pcre-cross.patch \
            file://fix-pcre-name-collision.patch"
 
 SRC_URI[md5sum] = "f14a9fef3c92f3fc6c5ac92d7a2c7eb3"

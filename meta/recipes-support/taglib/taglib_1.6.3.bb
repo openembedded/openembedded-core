@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING.LGPL;md5=db979804f025cf55aabec7129cb671ed \
 PR = "r1"
 # http://developer.kde.org/~wheeler/files/src/taglib-${PV}.tar.gz
 SRC_URI = "http://launchpad.net/${BPN}/trunk/${PV}/+download/${BPN}-${PV}.tar.gz \
-           file://configuretweak.patch;patch=1 \
-           file://nolibtool.patch;patch=1"
+           file://configuretweak.patch \
+           file://nolibtool.patch"
 
 SRC_URI[md5sum] = "ddf02f4e1d2dc30f76734df806e613eb"
 SRC_URI[sha256sum] = "a9ba089cc2c6d26d266bad492de31cadaeb878dea858e22ae3196091718f284b"

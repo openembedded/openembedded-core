@@ -7,26 +7,26 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
 PR = "r2"
 
 SRC_URI = "http://download.gnome.org/sources/gtk+/2.22/gtk+-${PV}.tar.bz2 \
-           file://xsettings.patch;patch=1 \
-           file://run-iconcache.patch;patch=1 \
-           file://hardcoded_libtool.patch;patch=1 \
-           file://no-demos.patch;patch=1 \
-           file://cellrenderer-cairo.patch;patch=1;pnum=0 \
-           file://toggle-font.diff;patch=1;pnum=0 \
-           file://0001-bgo-584832-Duplicate-the-exec-string-returned-by-gtk.patch;patch=1 \
+           file://xsettings.patch \
+           file://run-iconcache.patch \
+           file://hardcoded_libtool.patch \
+           file://no-demos.patch \
+           file://cellrenderer-cairo.patch;striplevel=0 \
+           file://toggle-font.diff;striplevel=0 \
+           file://0001-bgo-584832-Duplicate-the-exec-string-returned-by-gtk.patch \
            file://doc-fixes.patch \
 	  "
 # TO MERGE
-#           file://entry-cairo.patch;patch=1;pnum=0
-#           file://filesystem-volumes.patch;patch=1
-#           file://filechooser-props.patch;patch=1
-#           file://filechooser-default.patch;patch=1
-#           file://filechooser-sizefix.patch;patch=1
+#           file://entry-cairo.patch;striplevel=0
+#           file://filesystem-volumes.patch
+#           file://filechooser-props.patch
+#           file://filechooser-default.patch
+#           file://filechooser-sizefix.patch
 # temporary
-#           file://gtklabel-resize-patch;patch=1
-#           file://menu-deactivate.patch;patch=1
-#        file://combo-arrow-size.patch;patch=1;pnum=0
-#            file://configurefix.patch;patch=1
+#           file://gtklabel-resize-patch
+#           file://menu-deactivate.patch
+#        file://combo-arrow-size.patch;striplevel=0
+#            file://configurefix.patch
 
 SRC_URI[md5sum] = "fdce46ba354c155230b7d4090b17f7d9"
 SRC_URI[sha256sum] = "965bc124f0d25087c4cb2a64cbfd7e4f896e05be8d560fbba68dd8685ba24d07"

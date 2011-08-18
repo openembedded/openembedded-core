@@ -17,8 +17,8 @@ DEPENDS = "libogg"
 PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/flac/flac-${PV}.tar.gz \
-           file://disable-xmms-plugin.patch;patch=1 \
-           file://flac-gcc43-fixes.patch;patch=1 \
+           file://disable-xmms-plugin.patch \
+           file://flac-gcc43-fixes.patch \
            file://xmms.m4 \
            file://0001-No-AltiVec-on-SPE.patch"
 

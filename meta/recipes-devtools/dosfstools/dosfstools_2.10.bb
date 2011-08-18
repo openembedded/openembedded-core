@@ -10,10 +10,10 @@ LIC_FILES_CHKSUM = "file://mkdosfs/COPYING;md5=cbe67f08d6883bff587f615f0cc81aa8"
 PR = "r2"
 
 SRC_URI = "ftp://ftp.uni-erlangen.de/pub/Linux/LOCAL/dosfstools/dosfstools-${PV}.src.tar.gz \
-	   file://alignment_hack.patch;patch=1 \
-	   file://dosfstools-2.10-kernel-2.6.patch;patch=1 \
-           file://msdos_fat12_undefined.patch;patch=1 \
-	   file://include-linux-types.patch;patch=1"
+	   file://alignment_hack.patch \
+	   file://dosfstools-2.10-kernel-2.6.patch \
+           file://msdos_fat12_undefined.patch \
+	   file://include-linux-types.patch"
 
 do_install () {
 	oe_runmake "PREFIX=${D}" "SBINDIR=${D}${sbindir}" \

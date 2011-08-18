@@ -10,7 +10,7 @@ DEPENDS = "zlib"
 PR = "r3"
 
 SRC_URI = "ftp://ftp.mars.org/pub/mpeg/libid3tag-${PV}.tar.gz \
-           file://addpkgconfig.patch;patch=1"
+           file://addpkgconfig.patch"
 
 SRC_URI[md5sum] = "e5808ad997ba32c498803822078748c3"
 SRC_URI[sha256sum] = "63da4f6e7997278f8a3fef4c6a372d342f705051d1eeb6a46a86b03610e26151"

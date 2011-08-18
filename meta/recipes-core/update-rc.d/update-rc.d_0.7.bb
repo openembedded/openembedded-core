@@ -11,7 +11,7 @@ PR = "r4"
 SRCREV = "eca680ddf28d024954895f59a241a622dd575c11"
 
 SRC_URI = "git://github.com/philb/update-rc.d.git;protocol=git \
-           file://add-verbose.patch;striplevel=1"
+           file://add-verbose.patch;"
 
 S = "${WORKDIR}/git"
 

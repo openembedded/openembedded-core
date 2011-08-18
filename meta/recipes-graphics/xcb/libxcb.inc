@@ -15,7 +15,7 @@ DEPENDS = "xcb-proto xproto libxau libxslt-native xcb-proto-native"
 # DEPENDS += "xsltproc-native gperf-native"
 
 SRC_URI = "http://xcb.freedesktop.org/dist/libxcb-${PV}.tar.bz2"
-#           file://xcbincludedir.patch;patch=1"
+#           file://xcbincludedir.patch"
 
 PACKAGES =+ "libxcb-composite libxcb-damage libxcb-dpms libxcb-glx \
              libxcb-randr libxcb-record libxcb-render libxcb-res \

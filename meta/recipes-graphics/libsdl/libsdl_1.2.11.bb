@@ -17,8 +17,8 @@ PR = "r7"
 
 SRC_URI = "http://www.libsdl.org/release/SDL-${PV}.tar.gz \
 	   file://acinclude.m4 \
-	   file://configure_tweak.patch;patch=1 \
-	   file://kernel-asm-page.patch;patch=1 "
+	   file://configure_tweak.patch \
+	   file://kernel-asm-page.patch "
 
 S = "${WORKDIR}/SDL-${PV}"
 

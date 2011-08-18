@@ -12,8 +12,8 @@ DEPENDS = "libpng glib-2.0 jpeg"
 PR = "r1"
 
 SRC_URI = "http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.22/gdk-pixbuf-${PV}.tar.gz \
-           file://hardcoded_libtool.patch;patch=1 \
-           file://configure_fix.patch;patch=1 \
+           file://hardcoded_libtool.patch \
+           file://configure_fix.patch \
            "
 
 SRC_URI[md5sum] = "fcfc854e9aec7dbb2bb3059484d44556"

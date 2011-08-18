@@ -9,7 +9,7 @@ ART_CONFIG = "${HOST_ARCH}/art_config.h"
 # can't use gnome.oeclass due to _ in filename
 SRC_URI = "${GNOME_MIRROR}/libart_lgpl/2.3/libart_lgpl-${PV}.tar.bz2 \
        file://${ART_CONFIG} \
-       file://Makefile.am.patch;patch=1"
+       file://Makefile.am.patch"
 
 SRC_URI[md5sum] = "08559ff3c67fd95d57b0c5e91a6b4302"
 SRC_URI[sha256sum] = "fdc11e74c10fc9ffe4188537e2b370c0abacca7d89021d4d303afdf7fd7476fa"

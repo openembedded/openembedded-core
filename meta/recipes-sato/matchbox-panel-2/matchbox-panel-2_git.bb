@@ -21,7 +21,7 @@ RCONFLICTS_${PN} = "matchbox-panel"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \	
 	   file://gcc-4.6.0-compile.patch \
-           file://startup_fix.diff;patch=1"
+           file://startup_fix.diff"
 
 EXTRA_OECONF = "--enable-startup-notification --enable-dbus"
 EXTRA_OECONF += " ${@base_contains("MACHINE_FEATURES", "acpi", "--with-battery=acpi", "",d)}"

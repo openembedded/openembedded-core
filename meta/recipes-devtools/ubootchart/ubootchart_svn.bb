@@ -9,7 +9,7 @@ PR = "r5"
 #RRECOMMENDS_${PN} = "acct"
 
 SRC_URI = "svn://ubootchart.googlecode.com/svn/;proto=http;module=trunk \
-        file://sysvinit.patch;patch=1;pnum=0 \
+        file://sysvinit.patch;striplevel=0 \
         file://ubootchart-stop \
         file://ubootchart.desktop"
 

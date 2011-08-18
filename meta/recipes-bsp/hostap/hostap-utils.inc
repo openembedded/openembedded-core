@@ -10,7 +10,7 @@ SECTION = "kernel/userland"
 PR = "r4"
 
 SRC_URI = "http://hostap.epitest.fi/releases/hostap-utils-${PV}.tar.gz \
-	   file://hostap-fw-load.patch;patch=1"
+	   file://hostap-fw-load.patch"
 S = "${WORKDIR}/hostap-utils-${PV}"
 
 BINARIES = "hostap_crypt_conf hostap_diag hostap_fw_load hostap_io_debug \

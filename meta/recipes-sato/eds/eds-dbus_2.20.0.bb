@@ -9,8 +9,8 @@ DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libi
 PR = "r1"
 
 SRC_URI = "http://ftp.gnome.org/pub/GNOME/mobile/2.23/2.23.92/sources/evolution-data-server-dbus-${PV}.tar.gz  \
-           file://oh-contact.patch;patch=1;pnum=0 \
-           file://no_iconv_test.patch;patch=1 \
+           file://oh-contact.patch;striplevel=0 \
+           file://no_iconv_test.patch \
            file://iconv-detect.h"
 
 S = "${WORKDIR}/evolution-data-server-dbus-${PV}"

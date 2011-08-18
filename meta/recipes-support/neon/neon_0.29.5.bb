@@ -9,7 +9,7 @@ DEPENDS = "zlib libxml2 expat time gnutls"
 PR = "r0"
 
 SRC_URI = "http://www.webdav.org/${BPN}/${BPN}-${PV}.tar.gz \
-           file://pkgconfig.patch;patch=1"
+           file://pkgconfig.patch"
 
 SRC_URI[md5sum] = "ff369e69ef0f0143beb5626164e87ae2"
 SRC_URI[sha256sum] = "dea3c52b9f3f915651c6279c76758acf7c427727e8b9b0130f8b138f24012290"

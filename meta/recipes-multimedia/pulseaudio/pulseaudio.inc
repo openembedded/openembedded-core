@@ -12,7 +12,7 @@ DEPENDS = "libatomics-ops liboil avahi libsamplerate0 libsndfile1 libtool virtua
 DEPENDS += "bluez4 udev alsa-lib glib-2.0 dbus consolekit"
 
 SRC_URI = "http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-${PV}.tar.gz \
-           file://gcc4-compile-fix.patch;patch=1 \
+           file://gcc4-compile-fix.patch \
            file://volatiles.04_pulse"
 
 inherit autotools pkgconfig

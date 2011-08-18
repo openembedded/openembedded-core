@@ -5,7 +5,7 @@ SECTION = "base"
 INC_PR = "r4"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.bz2 \
-           file://ignore_extra_fields.patch;patch=1"
+           file://ignore_extra_fields.patch"
 
 DEPENDS = "zlib bzip2 perl"
 DEPENDS_virtclass-native = "bzip2-native zlib-native virtual/update-alternatives-native gettext-native perl-native-runtime"

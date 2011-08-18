@@ -29,7 +29,7 @@ RDEPENDS_automake += "\
 
 RDEPENDS_automake-native = "autoconf-native perl-native-runtime"
 
-PATHFIXPATCH = "file://path_prog_fixes.patch;patch=1"
+PATHFIXPATCH = "file://path_prog_fixes.patch"
 PATHFIXPATCH_virtclass-native = ""
 
 SRC_URI += "${PATHFIXPATCH} \

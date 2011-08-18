@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34 \
 DEPENDS = 	"dbus glib-2.0 dbus-glib"
 
 SRC_URI =	"http://www.galago-project.org/files/releases/source/${BPN}/${BPN}-${PV}.tar.gz \
-                 file://mkdir.patch;patch=1 \
-                 file://pkgconfig.patch;patch=1 "
+                 file://mkdir.patch \
+                 file://pkgconfig.patch "
 
 SRC_URI[md5sum] = "7ec92f2ecba1309ac4b71b4b4d8d0a0d"
 SRC_URI[sha256sum] = "9b7c9845e2f661dbf5c2595e67bc7afd48f090ac2c033726c89d7f0e90791dfa"

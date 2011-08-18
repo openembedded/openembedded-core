@@ -1,7 +1,7 @@
 require dpkg.inc
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-SRC_URI += "file://noman.patch;patch=1 \
+SRC_URI += "file://noman.patch \
             file://check_snprintf.patch \
             file://check_version.patch"
 

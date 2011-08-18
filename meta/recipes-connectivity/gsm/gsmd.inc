@@ -13,7 +13,7 @@ PV = "0.1+svnr${SRCPV}"
 PR = "r2"
 
 SRC_URI = "svn://svn.openmoko.org/trunk/src/target;module=gsm;proto=http \
-           file://fix_machine_init.patch;patch=1 \
+           file://fix_machine_init.patch \
            file://gsmd \
            file://default"
 S = "${WORKDIR}/gsm"

@@ -6,11 +6,11 @@ DESCRIPTION = "Provides tools that enable the set-up and manipulation of the lin
 PR = "r4"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/lct/console-tools-${PV}.tar.gz \
-           file://codepage.patch;patch=1 \
-           file://configure.patch;patch=1 \
-           file://compile.patch;patch=1 \
-           file://kbdrate.patch;patch=1 \
-           file://uclibc-fileno.patch;patch=1 \
+           file://codepage.patch \
+           file://configure.patch \
+           file://compile.patch \
+           file://kbdrate.patch \
+           file://uclibc-fileno.patch \
            file://config"
 
 SRC_URI[md5sum] = "bf21564fc38b3af853ef724babddbacd"

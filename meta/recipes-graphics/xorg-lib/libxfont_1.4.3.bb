@@ -15,7 +15,7 @@ PROVIDES = "xfont"
 PR = "r0"
 PE = "1"
 
-#SRC_URI += "file://no-scalable-crash.patch;patch=1"
+#SRC_URI += "file://no-scalable-crash.patch"
 
 XORG_PN = "libXfont"
 

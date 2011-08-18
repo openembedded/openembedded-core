@@ -15,11 +15,11 @@ PV = "2.30+git${SRCPV}"
 PR = "r1"
 
 SRC_URI = "git://git.gnome.org/evolution-data-server;protocol=git \
-           file://oh-contact.patch;patch=1;pnum=0 \
-           file://nossl.patch;patch=1 \
-           file://optional_imapx_provider.patch;patch=1 \
-           file://new-contact-fix.patch;patch=1 \
-           file://old-gdk-api.patch;patch=1 \
+           file://oh-contact.patch;striplevel=0 \
+           file://nossl.patch \
+           file://optional_imapx_provider.patch \
+           file://new-contact-fix.patch \
+           file://old-gdk-api.patch \
            file://iconv-detect.h"
 
 S = "${WORKDIR}/git"

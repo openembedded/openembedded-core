@@ -11,11 +11,11 @@ PR = "r1"
 DEPENDS = "zlib"
 
 SRC_URI = "${GNU_MIRROR}/texinfo/texinfo-${PV}.tar.gz \
-           file://texinfo-4.12-zlib.patch;striplevel=1 \
-           file://texinfo-4.13a-data_types.patch;striplevel=1 \
-           file://texinfo-4.13a-mosdo-crash.patch;striplevel=1 \
-           file://texinfo-4.13a-powerpc.patch;striplevel=1 \
-           file://texinfo-4.13a-help-index-segfault.patch;striplevel=1"
+           file://texinfo-4.12-zlib.patch; \
+           file://texinfo-4.13a-data_types.patch; \
+           file://texinfo-4.13a-mosdo-crash.patch; \
+           file://texinfo-4.13a-powerpc.patch; \
+           file://texinfo-4.13a-help-index-segfault.patch;"
 
 SRC_URI[md5sum] = "71ba711519209b5fb583fed2b3d86fcb"
 SRC_URI[sha256sum] = "1303e91a1c752b69a32666a407e9fbdd6e936def4b09bc7de30f416301530d68"

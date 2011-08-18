@@ -3,7 +3,7 @@ RPROVIDES_${PN} = "hotplug"
 PR = "r11"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
-           file://enable-gudev.patch;patch=1 \
+           file://enable-gudev.patch \
 	   file://run.rules \
 	   "
 

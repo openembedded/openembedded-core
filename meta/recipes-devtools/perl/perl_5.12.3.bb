@@ -50,7 +50,7 @@ SRC_URI = "http://www.cpan.org/src/5.0/perl-${PV}.tar.gz \
 	file://debian/fixes/h2ph-gcc-4.5.diff \
 	file://debian/patchlevel \
 	\
-        file://Makefile.patch;patch=1 \
+        file://Makefile.patch \
         file://parallel_build_fix_1.patch \
         file://parallel_build_fix_2.patch \
         file://parallel_build_fix_3.patch \

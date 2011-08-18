@@ -20,8 +20,8 @@ inherit gnome
 # This is to provide compatibility with the gnome-vfs DBus fork
 RPROVIDES = "gnome-vfs-plugin-dbus"
 
-SRC_URI += "file://gconftool-lossage.patch;patch=1;pnum=1 \
-	    file://gnome-vfs-no-kerberos.patch;patch=1;pnum=0"
+SRC_URI += "file://gconftool-lossage.patch \
+	    file://gnome-vfs-no-kerberos.patch;striplevel=0"
 
 SRC_URI[archive.md5sum] = "a05fab03eeef10a47dd156b758982f2e"
 SRC_URI[archive.sha256sum] = "62de64b5b804eb04104ff98fcd6a8b7276d510a49fbd9c0feb568f8996444faa"

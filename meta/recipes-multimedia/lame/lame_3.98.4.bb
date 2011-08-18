@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c46bda00ffbb0ba1dac22f8d087f54d9 \
 PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/lame/lame-${PV}.tar.gz \
-           file://no-gtk1.patch;patch=1"
+           file://no-gtk1.patch"
 
 inherit autotools
 

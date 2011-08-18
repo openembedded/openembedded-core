@@ -1,9 +1,9 @@
 include mesa-common.inc
 
 SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git \
-           file://cross2.patch;patch=1 \
+           file://cross2.patch \
            file://matypes.h"
-#           file://mesa-DRI2Swapbuffer.patch;patch=1 "
+#           file://mesa-DRI2Swapbuffer.patch "
 S = "${WORKDIR}/git"
 
 PROTO_DEPS = "xf86driproto glproto dri2proto"

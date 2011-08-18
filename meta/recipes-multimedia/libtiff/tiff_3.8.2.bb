@@ -6,7 +6,7 @@ DEPENDS = "zlib jpeg lzo"
 PR = "r2"
 
 SRC_URI = "ftp://ftp.remotesensing.org/pub/libtiff/tiff-${PV}.tar.gz \
-           file://libtool2.patch;patch=1"
+           file://libtool2.patch"
 
 SRC_URI[md5sum] = "fbb6f446ea4ed18955e2714934e5b698"
 SRC_URI[sha256sum] = "be88f037080b93ce0a337b2b3ca5e8195f76885deb6c558cc3aa872ee848fc76"

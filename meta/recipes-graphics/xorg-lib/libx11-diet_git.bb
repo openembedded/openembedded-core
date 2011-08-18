@@ -4,9 +4,9 @@ require libx11_git.inc
 DESCRIPTION += " Support for XCB, UDC, XCMS and XLOCALE is disabled in \
 this version."
 
-SRC_URI += "file://X18NCMSstubs.diff;patch=1 \
-            file://fix-disable-xlocale.diff;patch=1 \
-            file://fix-utf8-wrong-define.patch;patch=1"
+SRC_URI += "file://X18NCMSstubs.diff \
+            file://fix-disable-xlocale.diff \
+            file://fix-utf8-wrong-define.patch"
 
 DEPENDS += "bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
             libxdmcp xf86bigfontproto kbproto inputproto xproto-native"
