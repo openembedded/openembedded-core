@@ -5770,10 +5770,11 @@ RECIPE_COMMENTS_pn-rxvt-unicode = ""
 RECIPE_LAST_UPDATE_pn-rxvt-unicode = "May 25, 2011"
 RECIPE_MAINTAINER_pn-rxvt-unicode = "Saul Wold <sgw@linux.intel.com>"
 
-RECIPE_STATUS_pn-alsa-tools = "red"
+RECIPE_STATUS_pn-alsa-tools = "green"
 RECIPE_LATEST_VERIONS_pn-alsa-tools = "1.0.24.1
-RECIPE_LAST_UPDATE_pn-alsa-tools = "Jan 31, 2011"
-RECIPE_MANUAL_CHECK_DATE_pn-alsa-tools = "Jun 7, 2011" 
+RECIPE_LAST_UPDATE_pn-alsa-tools = "Jul 28, 2011"
+RECIPE_MANUAL_CHECK_DATE_pn-alsa-tools = "Jul 28, 2011"
+RECIPE_MAINTAINER_pn-alsa-tools = "Kai Kang <kai.kang@windriver.com>"
 
 RECIPE_STATUS_pn-mesa-demos = "red"
 RECIPE_LATEST_VERSION_pn-mesa-demos = "8.0.1"
