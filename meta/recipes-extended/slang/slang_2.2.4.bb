@@ -7,9 +7,10 @@ The S-Lang library, provided in this package, provides the S-Lang \
 extension language.  S-Lang's syntax resembles C, which makes it easy \
 to recode S-Lang procedures in C if you need to."
 
+HOMEPAGE = "http://www.jedsoft.org/slang/"
 SECTION = "libs"
 DEPENDS = "pcre"
-PR = "r5"
+PR = "r6"
 
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a52a18a472d4f7e45479b06563717c02"

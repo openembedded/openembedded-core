@@ -5731,8 +5731,9 @@ RECIPE_MAINTAINER_pn-linuxdoc-tools = "Scott Garman <scott.a.garman@intel.com>"
 
 RECIPE_STATUS_pn-slang = "green"
 RECIPE_LATEST_VERSION_pn-slang = "2.2.4"
-RECIPE_LAST_UPDATE_pn-slang = "Apr 10, 2011"
-RECIPE_MANUAL_CHECK_DATE_pn-slang = "Jun 6, 2011"
+RECIPE_LAST_UPDATE_pn-slang = "Jul 28, 2011"
+RECIPE_MANUAL_CHECK_DATE_pn-slang = "Jun 28, 2011"
+RECIPE_MAINTAINER_pn-slang = "Kai Kang <kai.kang@windriver.com>"
 
 RECIPE_STATUS_pn-libnewt = "green"
 RECIPE_LATEST_VERSION_pn-libnewt = "0.52.12"
