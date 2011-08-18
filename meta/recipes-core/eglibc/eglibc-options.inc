@@ -10,10 +10,83 @@ def eglibc_cfg(feature, features, tokens, cnf):
 				cnf.extend(["OPTION_EGLIBC_NSSWITCH_FIXED_CONFIG = ${S}/nss/nsswitch.conf"])
 				cnf.extend(["OPTION_EGLIBC_NSSWITCH_FIXED_FUNCTIONS = ${S}/nss/fixed-nsswitch.functions"])
 
+# arrange the dependencies among eglibc configuable options according to file option-groups.def from eglibc source code
+def distro_features_check_deps(distro_features):
+    new_dep = True
+    while new_dep:
+        new_dep = False
+
+        if 'ipv6' in distro_features and 'ipv4' not in distro_features:
+            new_dep = True
+            distro_features.extend(['ipv4'])
+
+        if 'ipv4' in distro_features and 'libc-nsswitch' not in distro_features:
+            new_dep = True
+            distro_features.extend(['libc-nsswitch'])
+
+        if 'libc-cxx-tests' in distro_features:
+            if 'libc-posix-wchar-io' not in distro_features:
+                new_dep = True
+                distro_features.extend(['libc-posix-wchar-io'])
+            if 'libc-libm' not in distro_features:
+                new_dep = True
+                distro_features.extend(['libc-libm'])
+
+        if 'libc-catgets' in distro_features and 'libc-locale-code' not in distro_features:
+            new_dep = True
+            distro_features.extend(['libc-locale-code'])
+
+        if 'libc-crypt-ufc' in distro_features and 'libc-crypt' not in distro_features:
+            new_dep = True
+            distro_features.extend(['libc-crypt'])
+
+        if 'libc-getlogin' in distro_features and 'libc-utmp' not in distro_features:
+            new_dep = True
+            distro_features.extend(['libc-utmp'])
+
+        if 'libc-inet-anl' in distro_features and 'ipv4' not in distro_features:
+            new_dep = True
+            distro_features.extend(['ipv4'])
+
+        if 'libc-locale-code' in distro_features and 'libc-posix-clang-wchar' not in distro_features:
+            new_dep = True
+            distro_features.extend(['libc-posix-clang-wchar'])
+
+        if 'libc-nis' in distro_features:
+            if 'ipv4' not in distro_features:
+                new_dep = True
+                distro_features.extend(['ipv4'])
+            if 'libc-sunrpc' not in distro_features:
+                new_dep = True
+                distro_features.extend(['libc-sunrpc'])
+
+        if 'libc-rcmd' in distro_features and 'ipv4' not in distro_features:
+            new_dep = True
+            distro_features.extend(['ipv4'])
+
+        if 'libc-sunrpc' in distro_features and 'ipv4' not in distro_features:
+            new_dep = True
+            distro_features.extend(['ipv4'])
+
+        if 'libc-utmpx' in distro_features and 'libc-utmp' not in distro_features:
+            new_dep = True
+            distro_features.extend(['libc-utmp'])
+
+        if 'libc-posix-regexp-glibc' in distro_features and 'libc-posix-regexp' not in distro_features:
+            new_dep = True
+            distro_features.extend(['libc-posix-regexp'])
+
+        if 'libc-posix-wchar-io' in distro_features and 'libc-posix-clang-wchar' not in distro_features:
+            new_dep = True
+            distro_features.extend(['libc-posix-clang-wchar'])
+
 # Map distro features to eglibc options settings
 def features_to_eglibc_settings(d):
         cnf = ([])
         distro_features = (bb.data.getVar('DISTRO_FEATURES', d, True) or '').split()
+
+        distro_features_check_deps(distro_features)
+
         eglibc_cfg('ipv6',      distro_features, 'OPTION_EGLIBC_ADVANCED_INET6', cnf)
         eglibc_cfg('libc-backtrace',      distro_features, 'OPTION_EGLIBC_BACKTRACE', cnf)
         eglibc_cfg('libc-big-macros',      distro_features, 'OPTION_EGLIBC_BIG_MACROS', cnf)
@@ -31,7 +104,7 @@ def features_to_eglibc_settings(d):
         eglibc_cfg('libc-ftraverse',      distro_features, 'OPTION_EGLIBC_FTRAVERSE', cnf)
         eglibc_cfg('libc-getlogin',      distro_features, 'OPTION_EGLIBC_GETLOGIN', cnf)
         eglibc_cfg('libc-idn',      distro_features, 'OPTION_EGLIBC_IDN', cnf)
-        eglibc_cfg('libc-inet',      distro_features, 'OPTION_EGLIBC_INET', cnf)
+        eglibc_cfg('ipv4',      distro_features, 'OPTION_EGLIBC_INET', cnf)
         eglibc_cfg('libc-inet-anl',      distro_features, 'OPTION_EGLIBC_INET_ANL', cnf)
         eglibc_cfg('libc-libm',      distro_features, 'OPTION_EGLIBC_LIBM', cnf)
         eglibc_cfg('libc-libm-big',      distro_features, 'OPTION_EGLIBC_LIBM_BIG', cnf)
