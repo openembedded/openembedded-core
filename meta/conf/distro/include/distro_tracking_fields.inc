@@ -5699,8 +5699,13 @@ RECIPE_MAINTAINER_pn-docbook-utils = "Scott Garman <scott.a.garman@intel.com>"
 RECIPE_LATEST_VERSION_pn-task-qte-toolchain-target = "1.0"
 RECIPE_MANUAL_CHECK_DATE_pn-task-qte-toolchain-target = "Feb 28, 2011"
 DISTRO_PN_ALIAS_pn-task-qte-toolchain-target = "Intel"
-RECIPE_LATEST_VERSION_pn-mailx = "12.4"
-RECIPE_MANUAL_CHECK_DATE_pn-mailx = "Feb 28, 2011"
+
+RECIPE_STATUS_pn-mailx = "green"
+RECIPE_LATEST_VERSION_pn-mailx = "12.5"
+RECIPE_LAST_UPDATE_pn-mailx = "Jul 1, 2011"
+RECIPE_MANUAL_CHECK_DATE_pn-mailx = "Jul 28, 2011"
+RECIPE_MAINTAINER_pn-mailx = "Kai Kang <kai.kang@windriver.com>"
+
 RECIPE_LATEST_VERSION_pn-libgcc = "4.5.1"
 RECIPE_MANUAL_CHECK_DATE_pn-libgcc = "Feb 28, 2011"
 
