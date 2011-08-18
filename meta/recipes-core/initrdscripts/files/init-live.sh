@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ROOT_MOUNT="/rootfs/"
-ROOT_IMAGE=rootfs.img
+ROOT_IMAGE="isolinux/rootfs.img"
 MOUNT="/bin/mount"
 UMOUNT="/bin/umount"
 
