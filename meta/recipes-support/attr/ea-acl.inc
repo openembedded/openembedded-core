@@ -18,9 +18,9 @@ do_install () {
 
 PACKAGES =+ "lib${BPN} lib${BPN}-dev lib${BPN}-doc"
 
-FILES_lib${PN} = "${base_libdir}/lib*.so.*"
+FILES_lib${BPN} = "${base_libdir}/lib*.so.*"
 
-FILES_lib${PN}-dev = "${includedir} \
+FILES_lib${BPN}-dev = "${includedir} \
                       ${libdir}/lib*.so \
                       ${libdir}/lib*.a \
                       ${libdir}/lib*.la \
@@ -28,7 +28,7 @@ FILES_lib${PN}-dev = "${includedir} \
                       ${base_libdir}/lib*.a \
                       ${base_libdir}/lib*.la"
 
-FILES_lib${PN}-doc = "${mandir}/man2 \
+FILES_lib${BPN}-doc = "${mandir}/man2 \
                       ${mandir}/man3"
 
 BBCLASSEXTEND = "native"
