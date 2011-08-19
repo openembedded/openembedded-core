@@ -31,7 +31,7 @@ ALLOW_EMPTY = "1"
 PACKAGES = ""
 PACKAGE_ARCH = "all"
 
-PR = "r3"
+PR = "r4"
 
 ADT_DEPLOY = "${TMPDIR}/deploy/sdk/"
 ADT_DIR = "${WORKDIR}/adt-installer/"
@@ -54,6 +54,8 @@ SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
            file://opkg/conf/opkg-sdk-i686.conf \
 	  "
 
+ADTREPO = "http://adtrepo.yoctoproject.org/${SDK_VERSION}"
+
 do_deploy[umask] = 022
 
 fakeroot do_deploy () {
@@ -63,6 +65,7 @@ fakeroot do_deploy () {
 	rm -rf ${ADT_DIR}
 	mkdir -p ${ADT_DIR}/opkg/build
 	cp -r opkg ${ADT_DIR}/
+	sed -i -e 's#ADTREPO_URL#${ADTREPO}#' ${ADT_DIR}/opkg/conf/*.conf
 	cp -r trunk ${ADT_DIR}/opkg/build/
 	mv ${ADT_DIR}/opkg/build/trunk ${ADT_DIR}/opkg/build/opkg-svn
 	cp -r scripts ${ADT_DIR}/
