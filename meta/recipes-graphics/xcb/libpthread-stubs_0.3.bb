@@ -21,3 +21,5 @@ inherit autotools pkgconfig
 
 RDEPENDS_${PN}-dev = ""
 RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"
+
+BBCLASSEXTEND = "native nativesdk"

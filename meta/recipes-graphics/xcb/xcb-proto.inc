@@ -23,4 +23,4 @@ RDEPENDS_${PN}-dev = ""
 RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"
 
 DEPENDS_append_virtclass-native = " python-native"
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
