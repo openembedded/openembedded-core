@@ -12,6 +12,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 # Set this to 'preempt_rt' in the local.conf if you want a real time kernel
 LINUX_KERNEL_TYPE ?= standard
 
+KMETA ?= meta
+SRCREV_FORMAT ?= "meta_machine" 
+
+LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE}"
+KERNEL_REVISION_CHECKING ?= "t"
+YOCTO_KERNEL_META_DATA ?= t
+
 do_patch[depends] = "kern-tools-native:do_populate_sysroot"
 
 addtask kernel_configme before do_configure after do_patch
