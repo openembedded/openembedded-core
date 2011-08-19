@@ -338,8 +338,9 @@ def base_set_filespath(path, d):
 	# The ":" ensures we have an 'empty' override
 	overrides = (bb.data.getVar("OVERRIDES", d, 1) or "") + ":"
 	for p in path:
-		for o in overrides.split(":"):
-			filespath.append(os.path.join(p, o))
+		if p != "": 
+			for o in overrides.split(":"):
+				filespath.append(os.path.join(p, o))
 	return ":".join(filespath)
 
 def extend_variants(d, var, extend, delim=':'):
