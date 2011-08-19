@@ -339,8 +339,8 @@ Action:
   update            get patches from component repos and apply them to the combo repo
   splitpatch [commit] generate commit patch and split per component, default commit is HEAD""")
 
-    parser.add_option("-c", "--conf", help = "specify the config file. default is conf/combolayer.conf",
-               action = "store", dest = "conffile", default = "combo-layer.conf")
+    parser.add_option("-c", "--conf", help = "specify the config file (conf/combo-layer.conf is the default).",
+               action = "store", dest = "conffile", default = "conf/combo-layer.conf")
 
     parser.add_option("-i", "--interactive", help = "interactive mode, user can edit the patch list and patches",
                action = "store_true", dest = "interactive", default = False)
