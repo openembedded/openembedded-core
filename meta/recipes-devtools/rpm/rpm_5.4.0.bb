@@ -162,7 +162,8 @@ EXTRA_OECONF = "--verbose \
 		--enable-maintainer-mode \
 		--with-path-macros=${rpm_macros} \
 		--with-path-lib=${libdir}/rpm \
-		--with-bugreport=http://bugzilla.yoctoproject.org"
+		--with-bugreport=http://bugzilla.yoctoproject.org \
+		--program-prefix="
 
 CFLAGS_append = " -DRPM_VENDOR_WINDRIVER -DRPM_VENDOR_POKY"
 
