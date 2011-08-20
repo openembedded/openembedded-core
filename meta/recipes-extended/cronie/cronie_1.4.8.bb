@@ -15,7 +15,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=963ea0772a2adbdcd607a9b2ec320c11 \
 SECTION = "utils"
 
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
-PR = "r0"
+RDEPENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_DEPS}', '', d)}"
+PAM_DEPS = "libpam libpam-runtime pam-plugin-access pam-plugin-loginuid"
+
+PR = "r1"
 
 SRC_URI = "https://fedorahosted.org/releases/c/r/cronie/cronie-${PV}.tar.gz \
            file://crond.init \
@@ -31,7 +34,7 @@ SRC_URI[sha256sum] = "a3b910876f255712f1a5c364b74f34b0ceac9f6f3bbc45e854c5722785
 inherit autotools update-rc.d
 
 EXTRA_OECONF += "\
-                ${@base_contains('DISTRO_FEATURES', 'pam', '--with-libpam', '--without-libpam', d)}"
+                ${@base_contains('DISTRO_FEATURES', 'pam', '--with-pam', '--without-pam', d)}"
 
 INITSCRIPT_NAME = "crond"
 INITSCRIPT_PARAMS = "start 90 2 3 4 5 . stop 60 0 1 6 ."
@@ -50,6 +53,7 @@ do_install_append () {
 	mkdir -p ${D}${sysconfdir}/cron.daily
 	mkdir -p ${D}${sysconfdir}/cron.weekly
 	mkdir -p ${D}${sysconfdir}/cron.monthly
+	touch ${D}${sysconfdir}/cron.deny
 }
 
 FILES_${PN} += "${sysconfdir}/cron*"
