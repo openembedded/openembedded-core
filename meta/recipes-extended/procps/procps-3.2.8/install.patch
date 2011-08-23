@@ -1,20 +1,30 @@
 Upstream-Status: Inappropriate [configuration]
 
---- procps-3.2.5.virgin/Makefile	2005-01-26 05:55:26.000000000 +0100
-+++ procps-3.2.5/Makefile	2005-08-03 04:55:26.346984488 +0200
-@@ -30,7 +30,10 @@
+diff -ruN procps-3.2.8-orig//Makefile procps-3.2.8/Makefile
+--- procps-3.2.8-orig//Makefile	2011-08-23 22:06:46.471163999 +0800
++++ procps-3.2.8/Makefile	2011-08-23 22:15:01.091163999 +0800
+@@ -29,9 +29,6 @@
+ ln_sf    := ln -sf
  install  := install -D --owner 0 --group 0
  
- # Lame x86-64 /lib64 and /usr/lib64 abomination:
+-# Lame x86-64 /lib64 and /usr/lib64 abomination:
 -lib64    := lib$(shell [ -d /lib64 ] && echo 64)
-+# lib64    := lib$(shell [ -d /lib64 ] && echo 64)
-+
-+# Equally lame hack to work around makefile lameness when the host arch is 64bit, but the target is not.
-+lib64      := lib
- 
+-
  usr/bin                  := $(DESTDIR)/usr/bin/
  bin                      := $(DESTDIR)/bin/
-@@ -211,10 +214,10 @@
+ sbin                     := $(DESTDIR)/sbin/
+@@ -39,8 +36,8 @@
+ man1                     := $(DESTDIR)/usr/share/man/man1/
+ man5                     := $(DESTDIR)/usr/share/man/man5/
+ man8                     := $(DESTDIR)/usr/share/man/man8/
+-lib                      := $(DESTDIR)/$(lib64)/
+-usr/lib                  := $(DESTDIR)/usr/$(lib64)/
++lib                      := $(DESTDIR)/$(base_libdir)/
++usr/lib                  := $(DESTDIR)/$(libdir)/
+ usr/include              := $(DESTDIR)/usr/include/
+ 
+ #SKIP     := $(bin)kill $(man1)kill.1
+@@ -222,10 +219,10 @@
  ###### install
  
  $(BINFILES) : all
