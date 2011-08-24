@@ -30,7 +30,9 @@ def oe_terminal(command, title, d):
 
     env = dict(os.environ)
     for export in oe.data.typed_value('OE_TERMINAL_EXPORTS', d):
-        env[export] = d.getVar(export, True)
+        value = d.getVar(export, True)
+        if value is not None:
+            env[export] = str(value)
 
     try:
         oe.terminal.spawn_preferred(command, title, env)
