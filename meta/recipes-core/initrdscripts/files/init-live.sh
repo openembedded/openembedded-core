@@ -1,9 +1,10 @@
 #!/bin/sh
 
 ROOT_MOUNT="/rootfs/"
-ROOT_IMAGE="isolinux/rootfs.img"
+ROOT_IMAGE="rootfs.img"
 MOUNT="/bin/mount"
 UMOUNT="/bin/umount"
+ISOLINUX=""
 
 early_setup() {
     mkdir /proc
@@ -58,8 +59,12 @@ while true
 do
   for i in `ls /media 2>/dev/null`; do
       if [ -f /media/$i/$ROOT_IMAGE ] ; then
-	  found="yes"
-	  break
+		found="yes"
+		break
+	  elif [ -f /media/$i/isolinux/$ROOT_IMAGE ]; then
+		found="yes"
+		ISOLINUX="isolinux"
+		break	
       fi
   done
   if [ "$found" = "yes" ]; then
@@ -73,15 +78,15 @@ case $label in
 	mkdir $ROOT_MOUNT
 	mknod /dev/loop0 b 7 0
 
-	if ! $MOUNT -o rw,loop,noatime,nodiratime /media/$i/$ROOT_IMAGE $ROOT_MOUNT ; then
+	if ! $MOUNT -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
 	    fatal "Couldnt mount rootfs image"
 	else
 	    boot_live_root
 	fi
 	;;
     install)
-	if [ -f /media/$i/$ROOT_IMAGE ] ; then
-	    ./install.sh $i $ROOT_IMAGE $video_mode $vga_mode
+	if [ -f /media/$i/$ISOLINUX/$ROOT_IMAGE ] ; then
+	    ./install.sh $i/$ISOLINUX $ROOT_IMAGE $video_mode $vga_mode
 	else
 	    fatal "Couldnt find install script"
 	fi
