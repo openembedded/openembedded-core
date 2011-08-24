@@ -9,14 +9,14 @@ KMACHINE_qemuppc  = "qemu-ppc32"
 KMACHINE_qemumips = "mti-malta32-be"
 
 KBRANCH = "yocto/standard/preempt-rt/base"
-KMETA = meta
+KBRANCH_qemuppc = "yocto/standard/preempt-rt/qemu-ppc32"
 
 LINUX_VERSION ?= "3.0"
 LINUX_KERNEL_TYPE = "preempt-rt"
-LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE}"
 
-SRCREV_machine = "7e1e5b6c8a13c615feb0d7b6d37988a094aae98f"
-SRCREV_meta = "7782fc673afd6a1c742409896ae787560d96fce8"
+SRCREV_machine ?= "67ce0924042a2faa12b71ac3e92175c789c32af6"
+SRCREV_machine_qemuppc ?= "839638f4efda0c70c6f491161ab2c042f5bc3e66"
+SRCREV_meta ?= "13dbce30d6a647228bf5a9483a9b9c2da1514f78"
 
 PR = "r0"
 PV = "${LINUX_VERSION}+git${SRCPV}"
@@ -30,13 +30,10 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.0.git;protocol=git;nocheckou
 COMPATIBLE_MACHINE = "(qemux86|qemux86-64|qemuarm)"
 
 # Functionality flags
-KERNEL_REVISION_CHECKING ?= "t"
 KERNEL_FEATURES=features/netfilter
 KERNEL_FEATURES_append=" features/taskstats"
 KERNEL_FEATURES_append_qemux86=" cfg/sound"
 KERNEL_FEATURES_append_qemux86-64=" cfg/sound"
-
-YOCTO_KERNEL_META_DATA=t
 
 # extra tasks
 addtask kernel_link_vmlinux after do_compile before do_install
