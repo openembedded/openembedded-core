@@ -95,15 +95,9 @@ def check_connectivity(d):
     network_enabled = not bb.data.getVar('BB_NO_NETWORK', d, True)
     check_enabled = len(test_uris)
     if check_enabled and network_enabled:
-        data = bb.data.createCopy(d)
-        bookmark = os.getcwd()
-        dldir = bb.data.expand('${TMPDIR}/sanity', data)
-        bb.data.setVar('DL_DIR', dldir, data)
-
         try:
-            fetcher = bb.fetch2.Fetch(test_uris, data)
-            fetcher.download()
-            fetcher.clean(test_uris)
+            fetcher = bb.fetch2.Fetch(test_uris, d)
+            fetcher.checkstatus()
         except Exception:
             # Allow the message to be configured so that users can be
             # pointed to a support mechanism.
@@ -111,10 +105,6 @@ def check_connectivity(d):
             if len(msg) == 0:
                 msg = "Failed to fetch test data from the network. Please ensure your network is configured correctly.\n"
             retval = msg
-        finally:
-            # Make sure we tidy up the cruft
-            oe.path.remove(dldir)
-            os.chdir(bookmark)
 
     return retval
 
