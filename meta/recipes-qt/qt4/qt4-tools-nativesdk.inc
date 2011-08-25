@@ -4,7 +4,7 @@ SECTION = "libs"
 HOMEPAGE = "http://qt.nokia.com"
 LICENSE = "LGPLv2.1 | GPLv3"
 
-INC_PR = "r4"
+INC_PR = "r5"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt-${PV}:"
 
@@ -43,13 +43,8 @@ EXTRA_OECONF = "-prefix ${prefix} \
                 -arch ${@qt_arch(d)} \
                 -embedded -no-freetype -no-glib -no-iconv \
                 -qt3support \
-                -I${STAGING_DIR_HOST}${SDKPATHNATIVE}/usr/include \
                 -I${STAGING_DIR_HOST}${SDKPATHNATIVE}/usr/include/dbus-1.0 \
-                -I${STAGING_DIR_HOST}${SDKPATHNATIVE}/usr/lib/dbus-1.0/include \
-                -I${STAGING_DIR_HOST}${SDKPATHNATIVE}/usr/include/c++ \
-                -I${STAGING_DIR_HOST}${SDKPATHNATIVE}/usr/include/c++/${TARGET_SYS} \
-                -L${STAGING_DIR_HOST}${SDKPATHNATIVE}/lib \
-                -L${STAGING_DIR_HOST}${SDKPATHNATIVE}/usr/lib"
+                -I${STAGING_DIR_HOST}${SDKPATHNATIVE}/usr/lib/dbus-1.0/include"
 
 # yank default -e, otherwise we get the following error:
 # moc_qbuffer.cpp: No such file or directory
