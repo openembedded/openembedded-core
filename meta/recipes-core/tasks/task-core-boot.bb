@@ -19,6 +19,10 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS ?= ""
 
 # Distro can override dev_manager provider
 VIRTUAL-RUNTIME_dev_manager ?= "udev"
+# Distro can override login_manager provider
+VIRTUAL-RUNTIME_login_manager ?= "tinylogin"
+# Distro can override init_manager provider
+VIRTUAL-RUNTIME_init_manager ?= "sysvinit"
 
 PACKAGES = "\
     task-core-boot \
@@ -34,8 +38,8 @@ RDEPENDS_task-core-boot = "\
     ${@base_contains("MACHINE_FEATURES", "keyboard", "keymaps", "", d)} \
     modutils-initscripts \
     netbase \
-    sysvinit \
-    tinylogin \
+    ${VIRTUAL-RUNTIME_login_manager} \
+    ${VIRTUAL-RUNTIME_init_manager} \
     ${VIRTUAL-RUNTIME_dev_manager} \
     ${VIRTUAL-RUNTIME_update-alternatives} \
     ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
