@@ -184,7 +184,7 @@ python () {
         # shlibs requires any DEPENDS to have already packaged for the *.list files
         deps.append("do_package")
         bb.data.setVarFlag('do_package', 'deptask', " ".join(deps), d)
-    else:
+    elif not bb.data.inherits_class('image', d):
         d.setVar("PACKAGERDEPTASK", "")
 }
 
