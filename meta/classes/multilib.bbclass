@@ -63,20 +63,18 @@ python __anonymous () {
             newvar.append(extend_name(v))
         d.setVar(varname, " ".join(newvar))
 
-    pkgs = []
-    pkgrename = {}
+    pkgs_mapping = []
     for pkg in (d.getVar("PACKAGES", True) or "").split():
         if pkg.startswith(variant):
-            pkgs.append(pkg)
+            pkgs_mapping.append([pkg.split(variant + "-")[1], pkg])
             continue
-        pkgrename[pkg] = extend_name(pkg)
-        pkgs.append(pkgrename[pkg])
+        pkgs_mapping.append([pkg, extend_name(pkg)])
 
-    if pkgrename:
-        d.setVar("PACKAGES", " ".join(pkgs))
-        for pkg in pkgrename:
-            for subs in ["FILES", "RDEPENDS", "RRECOMMENDS", "SUMMARY", "DESCRIPTION", "RSUGGESTS", "RPROVIDES", "RCONFLICTS", "PKG", "ALLOW_EMPTY"]:
-                d.renameVar("%s_%s" % (subs, pkg), "%s_%s" % (subs, pkgrename[pkg]))
+    d.setVar("PACKAGES", " ".join([row[1] for row in pkgs_mapping]))
+
+    for pkg_mapping in pkgs_mapping:
+        for subs in ["FILES", "RDEPENDS", "RRECOMMENDS", "SUMMARY", "DESCRIPTION", "RSUGGESTS", "RPROVIDES", "RCONFLICTS", "PKG", "ALLOW_EMPTY"]:
+            d.renameVar("%s_%s" % (subs, pkg_mapping[0]), "%s_%s" % (subs, pkg_mapping[1]))
 
     map_dependencies("DEPENDS", d)
     for pkg in (d.getVar("PACKAGES", True).split() + [""]):
