@@ -4,7 +4,7 @@ inherit cmake
 
 DEPENDS += "curl expat zlib libarchive ncurses"
 
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 
 SRC_URI += "file://dont-run-cross-binaries.patch"
 
@@ -32,12 +32,6 @@ EXTRA_OECMAKE=" \
     -DKWSYS_CHAR_IS_SIGNED=1 \
     ${@base_contains('DISTRO_FEATURES', 'largefile', '-DKWSYS_LFS_WORKS=1', '-DKWSYS_LFS_DISABLE=1', d)} \
 "
-
-# FIXME: Hack due gcc-crosssdk not being able to detect those automatically
-CXXFLAGS_virtclass-nativesdk += " \
-   -I${STAGING_DIR_HOST}${SDKPATHNATIVE}/usr/include/c++ \
-   -I${STAGING_DIR_HOST}${SDKPATHNATIVE}/usr/include/c++/${TARGET_SYS} \
-   "
 
 FILES_${PN} += "${datadir}/cmake-${CMAKE_MAJOR_VERSION}"
 FILES_${PN}-doc += "${docdir}/cmake-${CMAKE_MAJOR_VERSION}"
