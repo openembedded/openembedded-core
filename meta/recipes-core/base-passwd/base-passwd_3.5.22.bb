@@ -30,11 +30,11 @@ do_install () {
 	install -o root -g root -p -m 644 passwd.master ${D}${datadir}/base-passwd/
 	install -o root -g root -p -m 644 group.master ${D}${datadir}/base-passwd/
 
-	install -d -m 755 ${D}${docdir}/${PN}
-	install -p -m 644 debian/changelog ${D}${docdir}/${PN}/
-	gzip -9 ${D}${docdir}/${PN}/*
-	install -p -m 644 README ${D}${docdir}/${PN}/
-	install -p -m 644 debian/copyright ${D}${docdir}/${PN}/
+	install -d -m 755 ${D}${docdir}/${BPN}
+	install -p -m 644 debian/changelog ${D}${docdir}/${BPN}/
+	gzip -9 ${D}${docdir}/${BPN}/*
+	install -p -m 644 README ${D}${docdir}/${BPN}/
+	install -p -m 644 debian/copyright ${D}${docdir}/${BPN}/
 }
 
 pkg_postinst_${PN} () {
