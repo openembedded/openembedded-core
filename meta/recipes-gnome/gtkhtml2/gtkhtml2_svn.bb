@@ -6,18 +6,15 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=55ca817ccb7d5b5b66355690e9abc605"
 
 SRCREV = "1161"
 PV = "2.11.0+svnr${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "svn://svn.gnome.org/svn/gtkhtml2/;module=trunk;proto=http \
-	http://svn.o-hand.com/repos/web/trunk/patches/at-import_box-pos.patch;striplevel=0;maxrev=1157;name=patch1 \
-	http://svn.o-hand.com/repos/web/trunk/patches/css-stylesheet-user.patch;striplevel=0;maxrev=1157;name=patch2 \
-	http://svn.o-hand.com/repos/web/trunk/patches/css-media.patch;striplevel=0;maxrev=1157;name=patch3 \
-	http://svn.o-hand.com/repos/web/trunk/patches/add-end-element-signal.patch;striplevel=0;maxrev=1157;name=patch4 \
-	http://svn.o-hand.com/repos/web/trunk/patches/add-dom-functions.patch;striplevel=0;maxrev=1157;name=patch5 \
-	http://svn.o-hand.com/repos/web/trunk/patches/iain-mem-leak.patch;striplevel=0;maxrev=1157;name=patch6"
-
-SRC_URI[patch1.md5sum] = "160c648e29637f2ed6301f4dfdecce21"
-SRC_URI[patch1.sha256sum] = "3ec786e6df9e1a935aff4848b6989cad8f87c1fa8813dc033b338e18b17138d8"
+           http://git.yoctoproject.org/cgit/cgit.cgi/web-patches/plain/css-stylesheet-user.patch;striplevel=0;name=patch2 \
+           http://git.yoctoproject.org/cgit/cgit.cgi/web-patches/plain/css-media.patch;striplevel=0;name=patch3 \
+           http://git.yoctoproject.org/cgit/cgit.cgi/web-patches/plain/add-end-element-signal.patch;striplevel=0;name=patch4 \
+           http://git.yoctoproject.org/cgit/cgit.cgi/web-patches/plain/add-dom-functions.patch;striplevel=0;name=patch5 \
+           http://git.yoctoproject.org/cgit/cgit.cgi/web-patches/plain/iain-mem-leak.patch;striplevel=0;name=patch6 \
+          "
 
 SRC_URI[patch2.md5sum] = "05fc3627ca364095702dc804f41c8391"
 SRC_URI[patch2.sha256sum] = "df5cca50a8f95333505d7920929fea251daea3be25be6834a1c50a742d9eb674"

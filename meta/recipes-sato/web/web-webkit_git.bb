@@ -11,15 +11,15 @@ DEPENDS = "libxml2 glib-2.0 gtk+ libglade webkit-gtk curl gconf js libowl"
 # To access https web pages
 RRECOMMENDS_${PN} += "glib-networking"
 
-SRCREV = "130"
-PV = "0.0+svnr${SRCPV}"
-PR = "r4"
+SRCREV = "0f7019acd9db5383c732d0524c7c3a5eaec9be2b"
+PV = "0.1+git${SRCPV}"
+PR = "r0"
 
-SRC_URI = "svn://svn.o-hand.com/repos/web/branches;module=webkit;proto=http \
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
            file://link-with-g++.patch \
 	   file://make-382.patch"
 
-S = "${WORKDIR}/webkit"
+S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--enable-libowl"
 

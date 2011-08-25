@@ -12,14 +12,15 @@ DEPENDS = "gtk+ gstreamer gst-plugins-base"
 RDEPENDS_${PN} = "gst-meta-base"
 RRECOMMENDS_${PN} = "gst-meta-audio gst-meta-video"
 
-SRCREV = "416"
-PV = "0.0+svnr${SRCPV}"
-PR = "r6"
+SRCREV = "1379fd230a32509e94971961183f1031f469737a"
+PV = "0.1+git${SRCPV}"
+PR = "r0"
 
-S = "${WORKDIR}/${BPN}"
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${BPN};proto=http \
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
            file://gst_change_state.patch \
 	   file://make-382.patch"
+
+S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig

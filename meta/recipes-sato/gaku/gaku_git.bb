@@ -15,13 +15,12 @@ RRECOMMENDS_${PN} = "gst-plugins-good-id3demux \
                gst-plugins-base-ogg \
                ${COMMERCIAL_AUDIO_PLUGINS}"
 
-SRCREV = "399"
-PV = "0.0+svnr${SRCPV}"
+SRCREV = "a0be2fe4b5f12b8b07f4e3bd624b3729657f0ac5"
+PV = "0.1+git${SRCPV}"
+PR = "r0"
 
-PR = "r4"
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git"
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${BPN};proto=http"
-
-S = "${WORKDIR}/${BPN}"
+S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig

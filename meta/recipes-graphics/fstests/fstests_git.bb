@@ -4,16 +4,17 @@ SECTION = "devel"
 LICENSE = "Zlib"
 DEPENDS = "pango libxext libxft virtual/libx11 gtk+"
 
-SRCREV = "426"
-PV = "0.0+svnr${SRCPV}"
-PR = "r1"
+SRCREV = "218b99d82b56011e3f1b909e6baf22ce25af6334"
+PV = "0.1+git${SRCPV}"
+PR = "r0"
+
+
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
+           file://dso_linking_change_build_fix.patch"
+
+S = "${WORKDIR}/git/tests"
 
 inherit autotools
-
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=fstests;proto=http \
-	file://dso_linking_change_build_fix.patch"
-
-S = "${WORKDIR}/fstests/tests"
 
 do_install() {
     install -d ${D}${bindir}

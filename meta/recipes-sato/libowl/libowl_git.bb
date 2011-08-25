@@ -10,12 +10,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SECTION = "libs"
 DEPENDS = "gtk+"
-SRCREV = "408"
-PV = "0.0+svnr${SRCPV}"
-PR = "r6"
+SRCREV = "6ebc8ac8f8575278dd40a535cadefa26374e44b1"
+PV = "0.1+git${SRCPV}"
+PR = "r0"
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${BPN};proto=http"
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git"
 
-S = "${WORKDIR}/${BPN}"
+S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig

@@ -8,13 +8,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ac14b7ca45afea5af040da54db270eb0 \
 SECTION = "x11"
 DEPENDS = "libowl-av"
 
-SRCREV = "394"
-PV = "0.0+svnr${SRCPV}"
-PR = "r3"
+SRCREV = "f133472318970796fae1ea3e98ac062156768baf"
+PV = "0.1+git${SRCPV}"
+PR = "r0"
 
-S = "${WORKDIR}/video"
+S = "${WORKDIR}/git"
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=video;proto=http \
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
            file://gtk_multithread_safe.patch \
            file://owl-video-widget.png \
            file://stock_media-play.png \

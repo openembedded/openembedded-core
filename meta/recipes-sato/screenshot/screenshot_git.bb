@@ -8,14 +8,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://screenshot-ui.h;endline=9;md5=638d9ffa83e9325a36df224166ed6ad0"
 
 DEPENDS = "matchbox-panel-2"
-SRCREV = "292"
-PV = "0.0+svnr${SRCPV}"
-PR = "r2"
+SRCREV = "c792e4edc758bab21e0b01814979eacf0b1af945"
+PV = "0.1+git${SRCPV}"
+PR = "r0"
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=${BPN};proto=http \
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
            file://fix_ldadd_order.patch"
 
-S = ${WORKDIR}/${BPN}
+S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
 

@@ -11,18 +11,18 @@ SECTION = "x11"
 DEPENDS = "gtk+ gconf intltool-native librsvg"
 DEPENDS_append_poky = " libowl"
 
-SRCREV = "23"
-PV = "0.1+svnr${SRCPV}"
+SRCREV = "92f1a20e4b72eed7a35b00984d9793b51dc2fb3b"
+PV = "0.2+git${SRCPV}"
 PR = "r10"
 
-bindir = "/usr/games"
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git"
+SRC_URI_append_poky = " file://oh-puzzles-owl-menu.patch;striplevel=0 "
+
+S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
 
-SRC_URI = "svn://svn.o-hand.com/repos/;module=oh-puzzles;proto=http"
-SRC_URI_append_poky = " file://oh-puzzles-owl-menu.patch;striplevel=0 "
-
-S = "${WORKDIR}/${BPN}"
+bindir = "/usr/games"
 
 EXTRA_OEMAKE += "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1"
 

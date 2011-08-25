@@ -5,15 +5,15 @@ LIC_FILES_CHKSUM = "file://matchbox/core/mb-wm.h;endline=21;md5=1b1d328a52790635
 
 DEPENDS = "virtual/libx11 libxext libxrender startup-notification expat gconf pango libxdamage libxcomposite gtk+"
 
-SRCREV = "2106"
-PV = "0.0+svnr${SRCPV}"
-PR = "r5"
+SRCREV = "18ab9c7e4ffcb066b25281172ea82947bd56cb86"
+PV = "0.1+git${SRCPV}"
+PR = "r0"
 
-SRC_URI = "svn://svn.o-hand.com/repos/matchbox/trunk;module=matchbox-window-manager-2;proto=http \
+SRC_URI = "git://git.yoctoproject.org/matchbox-window-manager-2;proto=git \
 	file://fix_makefile.patch \
 	  "
 
-S = "${WORKDIR}/matchbox-window-manager-2"
+S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig update-alternatives
 

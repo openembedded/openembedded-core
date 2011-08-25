@@ -1,16 +1,17 @@
 DESCRIPTION = "A simple tool to wait for a specific signal over DBus"
-HOMEPAGE = "http://svn.o-hand.com/repos/misc/trunk"
+HOMEPAGE = "http://git.yoctoproject.org/cgit/cgit.cgi/dbus-wait"
 SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRCREV = "426"
 DEPENDS = "dbus"
-PV = "0.0+svnr${SRCPV}"
+
+SRCREV = "1a3e1343761b30750bed70e0fd688f6d3c7b3717"
+PV = "0.1+git${SRCPV}"
 PR = "r2"
 
-SRC_URI = "svn://svn.o-hand.com/repos/misc/trunk;module=dbus-wait;proto=http"
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git"
 
-S = "${WORKDIR}/${BPN}"
+S = "${WORKDIR}/git"
 
 inherit autotools
