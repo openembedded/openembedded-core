@@ -354,6 +354,12 @@ if [ -z "$FSTYPE" ]; then
         usage
     fi
 fi
+
+if [ "$FSTYPE" = "nfs" -a "$MACHINE" = "qemuppc" ]; then
+    echo "Error: usermode NFS boot is not available for qemuppc."
+    exit 1
+fi
+
 # FSTYPE is now set for all cases
 
 # Handle cases where a ROOTFS type is given instead of a filename, e.g.
