@@ -1,0 +1,314 @@
+Upstream-Status: Pending
+
+Backport of bugfix in gcc-4.6.x and mainline that address bug 44618 in
+which we get wrong code generation with -Os -frename-registers.
+
+ 	2011-06-13  Edmar Wienskoski  <edmar@freescale.com>
+
+	PR target/44618
+	* config/rs6000/rs6000.md (save_gpregs_<mode>): Replaced pattern
+	with a set of similar patterns, where the MATCH_OPERAND for the
+	function argument is replaced with individual references to hardware
+	registers.
+	(save_fpregs_<mode>): Ditto
+	(restore_gpregs_<mode>): Ditto
+	(return_and_restore_gpregs_<mode>): Ditto
+	(return_and_restore_fpregs_<mode>): Ditto
+	(return_and_restore_fpregs_aix_<mode>): Ditto
+
+	* gcc.target/powerpc/outofline_rnreg.c: New testcase.
+
+Index: gcc-4.5.1/gcc/config/rs6000/rs6000.md
+===================================================================
+--- gcc-4.5.1.orig/gcc/config/rs6000/rs6000.md
++++ gcc-4.5.1/gcc/config/rs6000/rs6000.md
+@@ -15256,25 +15256,88 @@
+   "{stm|stmw} %2,%1"
+   [(set_attr "type" "store_ux")])
+ 
+-(define_insn "*save_gpregs_<mode>"
++; The following comment applies to:
++;     save_gpregs_*
++;     save_fpregs_*
++;     restore_gpregs*
++;     return_and_restore_gpregs*
++;     return_and_restore_fpregs*
++;     return_and_restore_fpregs_aix*
++;
++; The out-of-line save / restore functions expects one input argument.
++; Since those are not standard call_insn's, we must avoid using
++; MATCH_OPERAND for that argument. That way the register rename
++; optimization will not try to rename this register.
++; Each pattern is repeated for each possible register number used in 
++; various ABIs (r11, r1, and for some functions r12)
++
++(define_insn "*save_gpregs_<mode>_r11"
++  [(match_parallel 0 "any_parallel_operand"
++		   [(clobber (reg:P 65))
++		    (use (match_operand:P 1 "symbol_ref_operand" "s"))
++                    (use (reg:P 11))
++		    (set (match_operand:P 2 "memory_operand" "=m")
++			 (match_operand:P 3 "gpc_reg_operand" "r"))])]
++  ""
++  "bl %1"
++  [(set_attr "type" "branch")
++   (set_attr "length" "4")])
++
++(define_insn "*save_gpregs_<mode>_r12"
++  [(match_parallel 0 "any_parallel_operand"
++		   [(clobber (reg:P 65))
++		    (use (match_operand:P 1 "symbol_ref_operand" "s"))
++                    (use (reg:P 12))
++		    (set (match_operand:P 2 "memory_operand" "=m")
++			 (match_operand:P 3 "gpc_reg_operand" "r"))])]
++  ""
++  "bl %1"
++  [(set_attr "type" "branch")
++   (set_attr "length" "4")])
++
++(define_insn "*save_gpregs_<mode>_r1"
++  [(match_parallel 0 "any_parallel_operand"
++		   [(clobber (reg:P 65))
++		    (use (match_operand:P 1 "symbol_ref_operand" "s"))
++                    (use (reg:P 1))
++		    (set (match_operand:P 2 "memory_operand" "=m")
++			 (match_operand:P 3 "gpc_reg_operand" "r"))])]
++  ""
++  "bl %1"
++  [(set_attr "type" "branch")
++   (set_attr "length" "4")])
++
++(define_insn "*save_fpregs_<mode>_r11"
++  [(match_parallel 0 "any_parallel_operand"
++		   [(clobber (reg:P 65))
++		    (use (match_operand:P 1 "symbol_ref_operand" "s"))
++                    (use (reg:P 11))
++		    (set (match_operand:DF 2 "memory_operand" "=m")
++			 (match_operand:DF 3 "gpc_reg_operand" "d"))])]
++  ""
++  "bl %1"
++  [(set_attr "type" "branch")
++   (set_attr "length" "4")])
++
++(define_insn "*save_fpregs_<mode>_r12"
+   [(match_parallel 0 "any_parallel_operand"
+ 		   [(clobber (reg:P 65))
+ 		    (use (match_operand:P 1 "symbol_ref_operand" "s"))
+-                    (use (match_operand:P 2 "gpc_reg_operand" "r"))
+-		    (set (match_operand:P 3 "memory_operand" "=m")
+-			 (match_operand:P 4 "gpc_reg_operand" "r"))])]
++                    (use (reg:P 12))
++		    (set (match_operand:DF 2 "memory_operand" "=m")
++			 (match_operand:DF 3 "gpc_reg_operand" "d"))])]
+   ""
+   "bl %1"
+   [(set_attr "type" "branch")
+    (set_attr "length" "4")])
+ 
+-(define_insn "*save_fpregs_<mode>"
++(define_insn "*save_fpregs_<mode>_r1"
+   [(match_parallel 0 "any_parallel_operand"
+ 		   [(clobber (reg:P 65))
+ 		    (use (match_operand:P 1 "symbol_ref_operand" "s"))
+-                    (use (match_operand:P 2 "gpc_reg_operand" "r"))
+-		    (set (match_operand:DF 3 "memory_operand" "=m")
+-			 (match_operand:DF 4 "gpc_reg_operand" "d"))])]
++                    (use (reg:P 1))
++		    (set (match_operand:DF 2 "memory_operand" "=m")
++			 (match_operand:DF 3 "gpc_reg_operand" "d"))])]
+   ""
+   "bl %1"
+   [(set_attr "type" "branch")
+@@ -15372,52 +15435,156 @@
+ ; FIXME: This would probably be somewhat simpler if the Cygnus sibcall
+ ; stuff was in GCC.  Oh, and "any_parallel_operand" is a bit flexible...
+ 
+-(define_insn "*restore_gpregs_<mode>"
++; The following comment applies to:
++;     save_gpregs_*
++;     save_fpregs_*
++;     restore_gpregs*
++;     return_and_restore_gpregs*
++;     return_and_restore_fpregs*
++;     return_and_restore_fpregs_aix*
++;
++; The out-of-line save / restore functions expects one input argument.
++; Since those are not standard call_insn's, we must avoid using
++; MATCH_OPERAND for that argument. That way the register rename
++; optimization will not try to rename this register.
++; Each pattern is repeated for each possible register number used in 
++; various ABIs (r11, r1, and for some functions r12)
++
++(define_insn "*restore_gpregs_<mode>_r11"
++ [(match_parallel 0 "any_parallel_operand"
++                  [(clobber (match_operand:P 1 "register_operand" "=l"))
++                   (use (match_operand:P 2 "symbol_ref_operand" "s"))
++                   (use (reg:P 11))
++		   (set (match_operand:P 3 "gpc_reg_operand" "=r")
++			(match_operand:P 4 "memory_operand" "m"))])]
++ ""
++ "bl %2"
++ [(set_attr "type" "branch")
++  (set_attr "length" "4")])
++
++(define_insn "*restore_gpregs_<mode>_r12"
+  [(match_parallel 0 "any_parallel_operand"
+                   [(clobber (match_operand:P 1 "register_operand" "=l"))
+                    (use (match_operand:P 2 "symbol_ref_operand" "s"))
+-                   (use (match_operand:P 3 "gpc_reg_operand" "r"))
+-		   (set (match_operand:P 4 "gpc_reg_operand" "=r")
+-			(match_operand:P 5 "memory_operand" "m"))])]
++                   (use (reg:P 12))
++		   (set (match_operand:P 3 "gpc_reg_operand" "=r")
++			(match_operand:P 4 "memory_operand" "m"))])]
+  ""
+  "bl %2"
+  [(set_attr "type" "branch")
+   (set_attr "length" "4")])
+ 
+-(define_insn "*return_and_restore_gpregs_<mode>"
++(define_insn "*restore_gpregs_<mode>_r1"
++ [(match_parallel 0 "any_parallel_operand"
++                  [(clobber (match_operand:P 1 "register_operand" "=l"))
++                   (use (match_operand:P 2 "symbol_ref_operand" "s"))
++                   (use (reg:P 1))
++		   (set (match_operand:P 3 "gpc_reg_operand" "=r")
++			(match_operand:P 4 "memory_operand" "m"))])]
++ ""
++ "bl %2"
++ [(set_attr "type" "branch")
++  (set_attr "length" "4")])
++
++(define_insn "*return_and_restore_gpregs_<mode>_r11"
++ [(match_parallel 0 "any_parallel_operand"
++                  [(return)
++		   (clobber (match_operand:P 1 "register_operand" "=l"))
++		   (use (match_operand:P 2 "symbol_ref_operand" "s"))
++                   (use (reg:P 11))
++		   (set (match_operand:P 3 "gpc_reg_operand" "=r")
++			(match_operand:P 4 "memory_operand" "m"))])]
++ ""
++ "b %2"
++ [(set_attr "type" "branch")
++  (set_attr "length" "4")])
++
++(define_insn "*return_and_restore_gpregs_<mode>_r12"
++ [(match_parallel 0 "any_parallel_operand"
++                  [(return)
++		   (clobber (match_operand:P 1 "register_operand" "=l"))
++		   (use (match_operand:P 2 "symbol_ref_operand" "s"))
++                   (use (reg:P 12))
++		   (set (match_operand:P 3 "gpc_reg_operand" "=r")
++			(match_operand:P 4 "memory_operand" "m"))])]
++ ""
++ "b %2"
++ [(set_attr "type" "branch")
++  (set_attr "length" "4")])
++
++(define_insn "*return_and_restore_gpregs_<mode>_r1"
+  [(match_parallel 0 "any_parallel_operand"
+                   [(return)
+ 		   (clobber (match_operand:P 1 "register_operand" "=l"))
+ 		   (use (match_operand:P 2 "symbol_ref_operand" "s"))
+-                   (use (match_operand:P 3 "gpc_reg_operand" "r"))
+-		   (set (match_operand:P 4 "gpc_reg_operand" "=r")
+-			(match_operand:P 5 "memory_operand" "m"))])]
++                   (use (reg:P 1))
++		   (set (match_operand:P 3 "gpc_reg_operand" "=r")
++			(match_operand:P 4 "memory_operand" "m"))])]
+  ""
+  "b %2"
+  [(set_attr "type" "branch")
+   (set_attr "length" "4")])
+ 
+-(define_insn "*return_and_restore_fpregs_<mode>"
++(define_insn "*return_and_restore_fpregs_<mode>_r11"
+  [(match_parallel 0 "any_parallel_operand"
+                   [(return)
+ 		   (clobber (match_operand:P 1 "register_operand" "=l"))
+ 		   (use (match_operand:P 2 "symbol_ref_operand" "s"))
+-                   (use (match_operand:P 3 "gpc_reg_operand" "r"))
+-		   (set (match_operand:DF 4 "gpc_reg_operand" "=d")
+-			(match_operand:DF 5 "memory_operand" "m"))])]
++                   (use (reg:P 11))
++		   (set (match_operand:DF 3 "gpc_reg_operand" "=d")
++			(match_operand:DF 4 "memory_operand" "m"))])]
++ ""
++ "b %2"
++ [(set_attr "type" "branch")
++  (set_attr "length" "4")])
++
++(define_insn "*return_and_restore_fpregs_<mode>_r12"
++ [(match_parallel 0 "any_parallel_operand"
++                  [(return)
++		   (clobber (match_operand:P 1 "register_operand" "=l"))
++		   (use (match_operand:P 2 "symbol_ref_operand" "s"))
++                   (use (reg:P 12))
++		   (set (match_operand:DF 3 "gpc_reg_operand" "=d")
++			(match_operand:DF 4 "memory_operand" "m"))])]
++ ""
++ "b %2"
++ [(set_attr "type" "branch")
++  (set_attr "length" "4")])
++
++(define_insn "*return_and_restore_fpregs_<mode>_r1"
++ [(match_parallel 0 "any_parallel_operand"
++                  [(return)
++		   (clobber (match_operand:P 1 "register_operand" "=l"))
++		   (use (match_operand:P 2 "symbol_ref_operand" "s"))
++                   (use (reg:P 1))
++		   (set (match_operand:DF 3 "gpc_reg_operand" "=d")
++			(match_operand:DF 4 "memory_operand" "m"))])]
++ ""
++ "b %2"
++ [(set_attr "type" "branch")
++  (set_attr "length" "4")])
++
++(define_insn "*return_and_restore_fpregs_aix_<mode>_r11"
++ [(match_parallel 0 "any_parallel_operand"
++		  [(return)
++		   (use (match_operand:P 1 "register_operand" "l"))
++		   (use (match_operand:P 2 "symbol_ref_operand" "s"))
++		   (use (reg:P 11))
++		   (set (match_operand:DF 3 "gpc_reg_operand" "=d")
++			(match_operand:DF 4 "memory_operand" "m"))])]
+  ""
+  "b %2"
+  [(set_attr "type" "branch")
+   (set_attr "length" "4")])
+ 
+-(define_insn "*return_and_restore_fpregs_aix_<mode>"
++(define_insn "*return_and_restore_fpregs_aix_<mode>_r1"
+  [(match_parallel 0 "any_parallel_operand"
+ 		  [(return)
+ 		   (use (match_operand:P 1 "register_operand" "l"))
+ 		   (use (match_operand:P 2 "symbol_ref_operand" "s"))
+-		   (use (match_operand:P 3 "gpc_reg_operand" "r"))
+-		   (set (match_operand:DF 4 "gpc_reg_operand" "=d")
+-			(match_operand:DF 5 "memory_operand" "m"))])]
++		   (use (reg:P 1))
++		   (set (match_operand:DF 3 "gpc_reg_operand" "=d")
++			(match_operand:DF 4 "memory_operand" "m"))])]
+  ""
+  "b %2"
+  [(set_attr "type" "branch")
+Index: gcc-4.5.1/gcc/testsuite/gcc.target/powerpc/outofline_rnreg.c
+===================================================================
+--- /dev/null
++++ gcc-4.5.1/gcc/testsuite/gcc.target/powerpc/outofline_rnreg.c
+@@ -0,0 +1,15 @@
++/* Test that registers used by out of line restore functions does not get renamed.
++   AIX, and 64 bit targets uses r1, which rnreg stays away from.
++   Linux 32 bits targets uses r11, which is susceptible to be renamed */
++/* { dg-do compile } */
++/* { dg-require-effective-target ilp32 } */
++/* { dg-options "-Os -frename-registers -fdump-rtl-rnreg" } */
++/* "* renamed" or "* no available better choice" results are not acceptable */
++/* { dg-final { scan-rtl-dump-not "Register 11 in insn *" "rnreg" { target powerpc*-*-linux* } } } */
++/* { dg-final { cleanup-rtl-dump "rnreg" } } */
++int
++calc (int j)
++{
++  if (j<=1) return 1;
++  return calc(j-1)*(j+1);
++}
