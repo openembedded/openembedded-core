@@ -39,6 +39,26 @@ PACKAGES_DYNAMIC = "locale-base-* \
                     eglibc-gconv-* eglibc-charmap-* eglibc-localedata-* eglibc-binary-localedata-* \
                     glibc-gconv-*${PKGSUFFIX}  glibc-charmap-*  glibc-localedata-*  glibc-binary-localedata-*"
 
+# Create a eglibc-binaries package
+ALLOW_EMPTY_${BPN}-binaries = "1"
+PACKAGES += "${BPN}-binaries"
+RRECOMMENDS_${BPN}-binaries =  "${@" ".join([p for p in d.getVar('PACKAGES', True).split() if p.find("eglibc-binary") != -1])}"
+
+# Create a eglibc-charmaps package
+ALLOW_EMPTY_${BPN}-charmaps = "1"
+PACKAGES += "${BPN}-charmaps"
+RRECOMMENDS_${BPN}-charmaps =  "${@" ".join([p for p in d.getVar('PACKAGES', True).split() if p.find("eglibc-charmap") != -1])}"
+
+# Create a eglibc-gconvs package
+ALLOW_EMPTY_${BPN}-gconvs = "1"
+PACKAGES += "${BPN}-gconvs"
+RRECOMMENDS_${BPN}-gconvs =  "${@" ".join([p for p in d.getVar('PACKAGES', True).split() if p.find("eglibc-gconv") != -1])}"
+
+# Create a eglibc-localedatas package
+ALLOW_EMPTY_${BPN}-localedatas = "1"
+PACKAGES += "${BPN}-localedatas"
+RRECOMMENDS_${BPN}-localedatas =  "${@" ".join([p for p in d.getVar('PACKAGES', True).split() if p.find("eglibc-localedata") != -1])}"
+
 DESCRIPTION_localedef = "eglibc: compile locale definition files"
 
 # eglibc-gconv is dynamically added into PACKAGES, thus
