@@ -241,9 +241,9 @@ python package_do_split_gconvs () {
 		(locale, encoding, locale), d)
 
 	def output_locale_binary_rdepends(name, pkgname, locale, encoding):
-		m = re.match("(.*)_(.*)", name)
+		m = re.match("(.*)\.(.*)", name)
 		if m:
-			libc_name = "%s-%s" % (m.group(1), m.group(2).lower().replace("-",""))
+			libc_name = "%s.%s" % (m.group(1), m.group(2).lower().replace("-",""))
 		else:
 			libc_name = name
 		bb.data.setVar('RDEPENDS_%s' % pkgname, legitimize_package_name('%s-binary-localedata-%s' \
