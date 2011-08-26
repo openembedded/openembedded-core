@@ -6,14 +6,15 @@ been done in the context of the GTK+ widget toolkit. Pango forms the \
 core of text and font handling for GTK+-2.x."
 HOMEPAGE = "http://www.pango.org/"
 BUGTRACKER = "http://bugzilla.gnome.org"
-SECTION = "x11/libs"
+SECTION = "libs"
 LICENSE = "LGPL"
 
-DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv virtual/libx11 libxft gtk-doc-native cairo"
+X11DEPENDS = "virtual/libx11 libxft"
+DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv gtk-doc-native cairo ${@base_contains('DISTRO_FEATURES', 'x11', '${X11DEPENDS}', '', d)}"
 
 PACKAGES_DYNAMIC = "pango-module-*"
 
-RRECOMMENDS_${PN} = "pango-module-basic-x pango-module-basic-fc" 
+RRECOMMENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'x11', 'pango-module-basic-x', '', d)} pango-module-basic-fc" 
 
 inherit gnome
 
@@ -24,7 +25,8 @@ FULL_OPTIMIZATION_arm = "-O2"
 
 EXTRA_OECONF = "--disable-glibtest \
 		--enable-explicit-deps=no \
-	        --disable-debug"
+	        --disable-debug \
+		${@base_contains('DISTRO_FEATURES', 'x11', '--with-x', '--without-x', d)}"
 
 LEAD_SONAME = "libpango-1.0*"
 LIBV = "1.6.0"
