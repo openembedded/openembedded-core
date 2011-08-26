@@ -34,6 +34,10 @@ case "$1" in
            chmod o+w /var/log
            chmod g+r /dev/tty[0-3]
            chmod o+rw /dev/input/*
+           # hidraw device is probably needed
+           if [ -e /dev/hidraw0 ]; then
+               chmod o+rw /dev/hidraw*
+           fi
        fi
        # Using su rather than sudo as latest 1.8.1 cause failure [YOCTO #1211]
        su -l -c '/etc/X11/Xserver&' $username 
