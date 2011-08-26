@@ -54,3 +54,20 @@ Index: opkg-utils/opkg-make-index
  if packages_filename:
       sys.stdout.close()
       sys.stdout = old_stdout
+@@ -197,7 +197,15 @@
+ names = packages.packages.keys()
+ names.sort()
+ for name in names:
+-     for fn in packages[name].get_file_list():
++     try:
++          fnlist = packages[name].get_file_list()
++     except OSError, e:
++          sys.stderr.write("Package %s disappeared on us!\n" % (name))
++          continue
++     except IOError, e:
++          sys.stderr.write("Package %s disappeared on us!\n" % (name))
++          continue
++     for fn in fnlist:
+           (h,t) = os.path.split(fn)
+           if not t: continue
+           if not files.has_key(t): files[t] = name+':'+fn
