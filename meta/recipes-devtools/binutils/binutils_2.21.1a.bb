@@ -1,6 +1,6 @@
 require binutils.inc
 
-PR = "r4"
+PR = "r0"
 
 LIC_FILES_CHKSUM="\
     file://src-release;endline=17;md5=4830a9ef968f3b18dd5e9f2c00db2d35\
@@ -33,7 +33,10 @@ SRC_URI = "\
      file://binutils-powerpc-e5500.patch \
      "
 
-SRC_URI[md5sum] = "a22801a9cad45c85e9ff6afc10537d72"
-SRC_URI[sha256sum] = "f769b64350a02fbee009e1582cc12b6ed43b41985de65effb741e258e075dd05"
+SRC_URI[md5sum] = "bde820eac53fa3a8d8696667418557ad"
+SRC_URI[sha256sum] = "cdecfa69f02aa7b05fbcdf678e33137151f361313b2f3e48aba925f64eabf654"
+
+# 2.21.1a has a mismatched dir name within the tarball
+S = "${WORKDIR}/binutils-2.21.1"
 
 BBCLASSEXTEND = "native"
