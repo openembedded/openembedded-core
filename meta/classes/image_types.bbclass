@@ -1,4 +1,3 @@
-
 def get_imagecmds(d):
     cmds = "\n"
     old_overrides = bb.data.getVar('OVERRIDES', d, 0)
@@ -61,6 +60,30 @@ IMAGE_CMD_ext3.gz () {
 	rmdir ${DEPLOY_DIR_IMAGE}/tmp.gz
 }
 
+oe_mkext4fs () {
+	genext2fs -b $ROOTFS_SIZE -d ${IMAGE_ROOTFS} ${EXTRA_IMAGECMD} $1
+	tune2fs -O extents,uninit_bg,dir_index,has_journal $1
+	e2fsck -yfDC0 $1 || chk=$?
+	case $chk in
+	0|1|2)
+	    ;;
+	*)
+	    return $chk
+	    ;;
+	esac
+}
+
+IMAGE_CMD_ext4 () {
+	oe_mkext4fs ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ext4
+}
+IMAGE_CMD_ext4.gz () {
+	rm -rf ${DEPLOY_DIR_IMAGE}/tmp.gz && mkdir ${DEPLOY_DIR_IMAGE}/tmp.gz
+	oe_mkext4fs ${DEPLOY_DIR_IMAGE}/tmp.gz/${IMAGE_NAME}.rootfs.ext4
+	gzip -f -9 ${DEPLOY_DIR_IMAGE}/tmp.gz/${IMAGE_NAME}.rootfs.ext4
+	mv ${DEPLOY_DIR_IMAGE}/tmp.gz/${IMAGE_NAME}.rootfs.ext4.gz ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ext4.gz
+	rmdir ${DEPLOY_DIR_IMAGE}/tmp.gz
+}
+
 IMAGE_CMD_btrfs () {
 	mkfs.btrfs -b `expr ${ROOTFS_SIZE} \* 1024` ${EXTRA_IMAGECMD} -r ${IMAGE_ROOTFS} ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.btrfs
 }
@@ -104,6 +127,8 @@ IMAGE_DEPENDS_ext2 = "genext2fs-native"
 IMAGE_DEPENDS_ext2.gz = "genext2fs-native"
 IMAGE_DEPENDS_ext3 = "genext2fs-native e2fsprogs-native"
 IMAGE_DEPENDS_ext3.gz = "genext2fs-native e2fsprogs-native"
+IMAGE_DEPENDS_ext4 = "genext2fs-native e2fsprogs-native"
+IMAGE_DEPENDS_ext4.gz = "genext2fs-native e2fsprogs-native"
 IMAGE_DEPENDS_btrfs = "btrfs-tools-native"
 IMAGE_DEPENDS_squashfs = "squashfs-tools-native"
 IMAGE_DEPENDS_squashfs-lzma = "squashfs-lzma-tools-native"
