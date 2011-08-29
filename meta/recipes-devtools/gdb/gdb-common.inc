@@ -11,7 +11,7 @@ LTTNGUST_mipsel = ""
 LTTNGUST_mips64 = ""
 LTTNGUST_mips64el = ""
 
-INC_PR = "r3"
+INC_PR = "r4"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 		file://COPYING.LIB;md5=9f604d8a4f8e74f4f5140845a21b6674 \
@@ -22,8 +22,8 @@ inherit autotools
 SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.gz \
            file://no-werror.patch"
 
-SRC_URI[md5sum] = "1d6b4e469270433583ef62a906c02fa8"
-SRC_URI[sha256sum] = "d1791d1f9d6c21ec265f4f74dadc15bc35698158a1b836d1626b9a69b818f5c5"
+SRC_URI[md5sum] = "9443a370dabd9ca9c41b496b59f05145"
+SRC_URI[sha256sum] = "2c2b26eea33ab477ea1f7739a8e511b1e8d89b6f74d87cdd510c6262a3af82d7"
 
 export CC_FOR_BUILD = "${BUILD_CC}"
 export CXX_FOR_BUILD = "${BUILD_CXX}"
