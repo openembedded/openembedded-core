@@ -38,7 +38,8 @@ case "$1" in
        # Using su rather than sudo as latest 1.8.1 cause failure [YOCTO #1211]
        su -l -c '/etc/X11/Xserver&' $username 
        # Wait for the desktop to say its finished loading
-       dbus-wait org.matchbox_project.desktop Loaded
+       # before loading the rest of the system
+       # dbus-wait org.matchbox_project.desktop Loaded
   ;;
 
   stop)
