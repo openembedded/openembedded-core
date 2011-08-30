@@ -1620,6 +1620,19 @@ python package_depchains() {
 				pkg_addrrecs(pkg, base, suffix, func, rdeps, d)
 }
 
+# Since bitbake can't determine which variables are accessed during package 
+# iteration, we need to list them here:
+PACKAGEVARS = "FILES RDEPENDS RRECOMMENDS SUMMARY DESCRIPTION RSUGGESTS RPROVIDES RCONFLICTS PKG ALLOW_EMPTY pkg_postinst pkg_postrm INITSCRIPT_NAME INITSCRIPT_PARAMS"
+
+def gen_packagevar(d):
+    ret = []
+    pkgs = (d.getVar("PACKAGES", True) or "").split()
+    vars = (d.getVar("PACKAGEVARS", True) or "").split()
+    for p in pkgs:
+        for v in vars:
+            ret.append(v + "_" + p)
+    return " ".join(ret)
+
 PACKAGE_PREPROCESS_FUNCS ?= ""
 PACKAGEFUNCS ?= "package_get_auto_pr \	
                 perform_packagecopy \
@@ -1656,6 +1669,7 @@ python do_package () {
 }
 
 do_package[dirs] = "${SHLIBSWORKDIR} ${PKGDESTWORK} ${D}"
+do_package[vardeps] += "${PACKAGEFUNCS} ${@gen_packagevar(d)}"
 addtask package before do_build after do_install
 
 PACKAGELOCK = "${STAGING_DIR}/package-output.lock"
