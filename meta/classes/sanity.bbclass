@@ -423,12 +423,12 @@ def check_sanity(e):
     dups = []
 
     for pa in pkgarchs.split():
-    	if seen.get(pa, 0) == 1:
-	    dups.append(pa)
-	else:
-	    seen[pa] = 1
-	if pa == tunepkg:
-	    tunefound = True
+        if seen.get(pa, 0) == 1:
+            dups.append(pa)
+        else:
+            seen[pa] = 1
+        if pa == tunepkg:
+            tunefound = True
 
     if len(dups):
        messages = messages + "Error, the PACKAGE_ARCHS variable contains duplicates. The following archs are listed more than once: %s" % " ".join(dups)
