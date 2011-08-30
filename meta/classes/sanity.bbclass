@@ -154,6 +154,48 @@ def check_supported_distro(e):
     else:
         bb.warn('Host distribution could not be determined; you may possibly experience unexpected failures. It is recommended that you use a tested distribution.')
 
+# Checks we should only make if MACHINE is set correctly
+def check_sanity_validmachine(e):
+    from bb import data
+
+    messages = ""
+
+    # Check TUNE_ARCH is set
+    if data.getVar('TUNE_ARCH', e.data, True) == 'INVALID':
+        messages = messages + 'TUNE_ARCH is unset. Please ensure your MACHINE configuration includes a valid tune configuration file which will set this correctly.\n'
+
+    # Check TARGET_ARCH is set correctly
+    if data.getVar('TARGE_ARCH', e.data, False) == '${TUNE_ARCH}':
+        messages = messages + 'TARGET_ARCH is being overwritten, likely by your MACHINE configuration files.\nPlease use a valid tune configuration file which should set this correctly automatically\nand avoid setting this in the machine configuration. See the OE-Core mailing list for more information.\n'
+    
+    # Check TARGET_OS is set
+    if data.getVar('TARGET_OS', e.data, True) == 'INVALID':
+        messages = messages + 'Please set TARGET_OS directly, or choose a MACHINE or DISTRO that does so.\n'
+
+    # Check that we don't have duplicate entries in PACKAGE_ARCHS & that TUNE_PKGARCH is in PACKAGE_ARCHS
+    pkgarchs = data.getVar('PACKAGE_ARCHS', e.data, True)
+    tunepkg = data.getVar('TUNE_PKGARCH', e.data, True)
+    tunefound = False
+    seen = {}
+    dups = []
+
+    for pa in pkgarchs.split():
+        if seen.get(pa, 0) == 1:
+            dups.append(pa)
+        else:
+            seen[pa] = 1
+        if pa == tunepkg:
+            tunefound = True
+
+    if len(dups):
+       messages = messages + "Error, the PACKAGE_ARCHS variable contains duplicates. The following archs are listed more than once: %s" % " ".join(dups)
+
+    if tunefound == False:
+       messages = messages + "Error, the PACKAGE_ARCHS variable does not contain TUNE_PKGARCH (%s)." % tunepkg
+
+    return messages
+
+
 def check_sanity(e):
     from bb import note, error, data, __version__
 
@@ -185,17 +227,14 @@ def check_sanity(e):
     if (LooseVersion(__version__) < LooseVersion(minversion)):
         messages = messages + 'Bitbake version %s is required and version %s was found\n' % (minversion, __version__)
 
-    # Check TUNE_ARCH is set
-    if data.getVar('TUNE_ARCH', e.data, True) == 'INVALID':
-        messages = messages + 'TUNE_ARCH is unset. Please ensure your MACHINE configuration includes a valid tune configuration file which will set this correctly.\n'
-
-    # Check TARGET_ARCH is set correctly
-    if data.getVar('TARGE_ARCH', e.data, False) == '${TUNE_ARCH}':
-        messages = messages + 'TARGET_ARCH is being overwritten, likely by your MACHINE configuration files.\nPlease use a valid tune configuration file which should set this correctly automatically\nand avoid setting this in the machine configuration. See the OE-Core mailing list for more information.\n'
-    
-    # Check TARGET_OS is set
-    if data.getVar('TARGET_OS', e.data, True) == 'INVALID':
-        messages = messages + 'Please set TARGET_OS directly, or choose a MACHINE or DISTRO that does so.\n'
+    # Check that the MACHINE is valid, if it is set
+    if data.getVar('MACHINE', e.data, True):
+        if not check_conf_exists("conf/machine/${MACHINE}.conf", e.data):
+            messages = messages + 'Please set a valid MACHINE in your local.conf or environment\n'
+        else:
+            messages = messages + check_sanity_validmachine(e)
+    else:
+        messages = messages + 'Please set a MACHINE in your local.conf or environment\n'
 
     # Check we are using a valid lacal.conf
     current_conf  = data.getVar('CONF_VERSION', e.data, True)
@@ -221,11 +260,6 @@ def check_sanity(e):
     # Check user doesn't have ASSUME_PROVIDED = instead of += in local.conf
     if "diffstat-native" not in assume_provided:
         messages = messages + 'Please use ASSUME_PROVIDED +=, not ASSUME_PROVIDED = in your local.conf\n'
-    
-    # Check that the MACHINE is valid, if it is set
-    if data.getVar('MACHINE', e.data, True):
-        if not check_conf_exists("conf/machine/${MACHINE}.conf", e.data):
-            messages = messages + 'Please set a valid MACHINE in your local.conf\n'
 
     # Check that DL_DIR is set, exists and is writable. In theory, we should never even hit the check if DL_DIR isn't 
     # set, since so much relies on it being set.
@@ -414,27 +448,6 @@ def check_sanity(e):
         messages = messages + "Error, you have an invalid character (+) in your COREBASE directory path. Please move the installation to a directory which doesn't include a +."
     elif oeroot.find (' ') != -1:
         messages = messages + "Error, you have a space in your COREBASE directory path. Please move the installation to a directory which doesn't include a space."
-
-    # Check that we don't have duplicate entries in PACKAGE_ARCHS & that TUNE_PKGARCH is in PACKAGE_ARCHS
-    pkgarchs = data.getVar('PACKAGE_ARCHS', e.data, True)
-    tunepkg = data.getVar('TUNE_PKGARCH', e.data, True)
-    tunefound = False
-    seen = {}
-    dups = []
-
-    for pa in pkgarchs.split():
-        if seen.get(pa, 0) == 1:
-            dups.append(pa)
-        else:
-            seen[pa] = 1
-        if pa == tunepkg:
-            tunefound = True
-
-    if len(dups):
-       messages = messages + "Error, the PACKAGE_ARCHS variable contains duplicates. The following archs are listed more than once: %s" % " ".join(dups)
-
-    if tunefound == False:
-       messages = messages + "Error, the PACKAGE_ARCHS variable does not contain TUNE_PKGARCH (%s)." % tunepkg
 
     if messages != "":
         raise_sanity_error(messages)
