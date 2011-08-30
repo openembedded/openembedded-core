@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=08c553a87d4e51bbed50b20e0adcaede \
 
 DEPENDS = "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_PLUGINS}', '', d)}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://pkg-shadow.alioth.debian.org/releases/${BPN}-${PV}.tar.bz2 \
            file://login_defs_pam.sed \
@@ -96,6 +96,11 @@ do_install_append() {
 	mv ${D}${sbindir}/vigr ${D}${base_sbindir}/vigr.${PN}
 	mv ${D}${sbindir}/vipw ${D}${base_sbindir}/vipw.${PN}
 	mv ${D}${bindir}/login ${D}${base_bindir}/login.${PN}
+
+	# Handle link properly after rename, otherwise missing files would
+	# lead rpm failed dependencies.
+	ln -sf vipw.${PN} ${D}${base_sbindir}/vigr.${PN}
+	ln -sf newgrp.${PN} ${D}${bindir}/sg
 
 	# Ensure we add a suitable securetty file to the package that has
 	# most common embedded TTYs defined.
