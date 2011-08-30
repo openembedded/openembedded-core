@@ -197,25 +197,25 @@ def check_sanity(e):
     if data.getVar('TARGET_OS', e.data, True) == 'INVALID':
         messages = messages + 'Please set TARGET_OS directly, or choose a MACHINE or DISTRO that does so.\n'
 
-        # Check we are using a valid lacal.conf
-        current_conf  = data.getVar('CONF_VERSION', e.data, True)
-        conf_version =  data.getVar('LOCALCONF_VERSION', e.data, True)
+    # Check we are using a valid lacal.conf
+    current_conf  = data.getVar('CONF_VERSION', e.data, True)
+    conf_version =  data.getVar('LOCALCONF_VERSION', e.data, True)
 
-        if current_conf != conf_version:
-            messages = messages + "Your version of local.conf was generated from an older version of local.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/local.conf conf/local.conf.sample\" is a good way to visualise the changes.\n"
+    if current_conf != conf_version:
+        messages = messages + "Your version of local.conf was generated from an older version of local.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/local.conf conf/local.conf.sample\" is a good way to visualise the changes.\n"
 
-        # Check bblayers.conf is valid
-        current_lconf = data.getVar('LCONF_VERSION', e.data, True)
-        lconf_version = data.getVar('LAYER_CONF_VERSION', e.data, True)
-        if current_lconf != lconf_version:
-            messages = messages + "Your version of bblayers.conf was generated from an older version of bblayers.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/bblayers.conf conf/bblayers.conf.sample\" is a good way to visualise the changes.\n"
+    # Check bblayers.conf is valid
+    current_lconf = data.getVar('LCONF_VERSION', e.data, True)
+    lconf_version = data.getVar('LAYER_CONF_VERSION', e.data, True)
+    if current_lconf != lconf_version:
+        messages = messages + "Your version of bblayers.conf was generated from an older version of bblayers.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/bblayers.conf conf/bblayers.conf.sample\" is a good way to visualise the changes.\n"
 
-        # If we have a site.conf, check it's valid
-        if check_conf_exists("conf/site.conf", e.data):
-            current_sconf = data.getVar('SCONF_VERSION', e.data, True)
-            sconf_version = data.getVar('SITE_CONF_VERSION', e.data, True)
-            if current_sconf != sconf_version:
-                messages = messages + "Your version of site.conf was generated from an older version of site.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/site.conf conf/site.conf.sample\" is a good way to visualise the changes.\n"
+    # If we have a site.conf, check it's valid
+    if check_conf_exists("conf/site.conf", e.data):
+        current_sconf = data.getVar('SCONF_VERSION', e.data, True)
+        sconf_version = data.getVar('SITE_CONF_VERSION', e.data, True)
+        if current_sconf != sconf_version:
+            messages = messages + "Your version of site.conf was generated from an older version of site.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/site.conf conf/site.conf.sample\" is a good way to visualise the changes.\n"
 
     assume_provided = data.getVar('ASSUME_PROVIDED', e.data , True).split()
     # Check user doesn't have ASSUME_PROVIDED = instead of += in local.conf
