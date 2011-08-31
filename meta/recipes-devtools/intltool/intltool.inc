@@ -13,4 +13,7 @@ RRECOMMENDS_${PN}_virtclass-native = ""
 
 inherit autotools pkgconfig perlnative
 
+export PERL = "${bindir}/env perl"
+PERL_virtclass-native = "/usr/bin/env nativeperl"
+
 BBCLASSEXTEND = "native"
