@@ -64,7 +64,7 @@ if [ $STATUS -ne 0 ]; then
 	exit 1
 fi
 
-IFCONFIG=`which ifconfig`
+IFCONFIG=`which ifconfig 2> /dev/null`
 if [ "x$IFCONFIG" = "x" ]; then
 	# better than nothing...
 	IFCONFIG=/sbin/ifconfig

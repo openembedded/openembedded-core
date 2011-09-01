@@ -133,7 +133,7 @@ if [ ! -d "$LOCKDIR" ]; then
     chmod 777 $LOCKDIR
 fi
 
-IFCONFIG=`which ifconfig`
+IFCONFIG=`which ifconfig 2> /dev/null`
 if [ -z "$IFCONFIG" ]; then
     IFCONFIG=/sbin/ifconfig
 fi
