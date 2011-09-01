@@ -74,8 +74,8 @@ fi
 }
 
 useradd_sysroot () {
-	export PSEUDO="${STAGING_DIR_NATIVE}/usr/bin/pseudo"
-	export PSEUDO_LOCALSTATEDIR="${STAGING_DIR_TARGET}/var/pseudo"
+	export PSEUDO="${STAGING_DIR_NATIVE}${bindir}/pseudo"
+	export PSEUDO_LOCALSTATEDIR="${STAGING_DIR_TARGET}${localstatedir}/pseudo"
 
 	# Explicitly set $D since it isn't set to anything
 	# before do_install
