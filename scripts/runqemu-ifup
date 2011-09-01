@@ -69,11 +69,28 @@ if [ "x$IFCONFIG" = "x" ]; then
 	# better than nothing...
 	IFCONFIG=/sbin/ifconfig
 fi
+if [ ! -x "$IFCONFIG" ]; then
+	echo "$IFCONFIG cannot be executed"
+	exit 1
+fi
 
 ROUTE=`which route`
 if [ "x$ROUTE" = "x" ]; then
 	# better than nothing...
 	ROUTE=/sbin/route
+fi
+if [ ! -x "$ROUTE" ]; then
+	echo "$ROUTE cannot be executed"
+	exit 1
+fi
+
+IPTABLES=`which iptables 2> /dev/null`
+if [ "x$IPTABLES" = "x" ]; then
+	IPTABLES=/sbin/iptables
+fi
+if [ ! -x "$IPTABLES" ]; then
+	echo "$IPTABLES cannot be executed"
+	exit 1
 fi
 
 n=$[ (`echo $TAP | sed 's/tap//'` * 2) + 1 ]
@@ -83,11 +100,6 @@ dest=$[ (`echo $TAP | sed 's/tap//'` * 2) + 2 ]
 $ROUTE add -host 192.168.7.$dest $TAP
 
 # setup NAT for tap0 interface to have internet access in QEMU
-IPTABLES=`which iptables`
-if [ "x$IPTABLES" = "x" ]; then
-	IPTABLES=/sbin/iptables
-fi
-
 $IPTABLES -A POSTROUTING -t nat -j MASQUERADE -s 192.168.7.0/24
 echo 1 > /proc/sys/net/ipv4/ip_forward
 $IPTABLES -P FORWARD ACCEPT

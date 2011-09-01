@@ -31,7 +31,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 if [ -z "$OECORE_NATIVE_SYSROOT" ]; then
-    BITBAKE=`which bitbake`
+    BITBAKE=`which bitbake 2> /dev/null`
     if [ "x$BITBAKE" != "x" ]; then
 	if [ "$UID" = "0" ]; then
             # Root cannot run bitbake unless sanity checking is disabled

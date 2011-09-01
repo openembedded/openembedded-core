@@ -62,6 +62,10 @@ if [ -z "$IFCONFIG" ]; then
 	# Is it ever anywhere else?
 	IFCONFIG=/sbin/ifconfig
 fi
+if [ ! -x "$IFCONFIG" ]; then
+       echo "$IFCONFIG cannot be executed"
+       exit 1
+fi
 
 # Ensure we start with a clean slate
 for tap in `$IFCONFIG | grep ^tap | awk '{ print \$1 }'`; do

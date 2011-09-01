@@ -88,8 +88,16 @@ fi
 # sudo.
 NOSUDO_FLAG="/etc/runqemu-nosudo"
 
-QEMUIFUP=`which runqemu-ifup`
-QEMUIFDOWN=`which runqemu-ifdown`
+QEMUIFUP=`which runqemu-ifup 2> /dev/null`
+QEMUIFDOWN=`which runqemu-ifdown 2> /dev/null`
+if [ -z "$QEMUIFUP" -o ! -x "$QEMUIFUP" ]; then
+       echo "runqemu-ifup cannot be found or executed"
+       exit 1
+fi
+if [ -z "$QEMUIFDOWN" -o ! -x "$QEMUIFDOWN" ]; then
+       echo "runqemu-ifdown cannot be found or executed"
+       exit 1
+fi
 
 NFSRUNNING="false"
 
@@ -136,6 +144,10 @@ fi
 IFCONFIG=`which ifconfig 2> /dev/null`
 if [ -z "$IFCONFIG" ]; then
     IFCONFIG=/sbin/ifconfig
+fi
+if [ ! -x "$IFCONFIG" ]; then
+       echo "$IFCONFIG cannot be executed"
+       exit 1
 fi
 
 POSSIBLE=`$IFCONFIG -a | grep '^tap' | awk '{print $1}'`
@@ -418,7 +430,7 @@ fi
 
 PATH=$CROSSPATH:$OECORE_NATIVE_SYSROOT/usr/bin:$PATH
 
-QEMUBIN=`which $QEMU`
+QEMUBIN=`which $QEMU 2> /dev/null`
 if [ ! -x "$QEMUBIN" ]; then
     echo "Error: No QEMU binary '$QEMU' could be found."
     cleanup
@@ -434,7 +446,7 @@ function _quit() {
     return
 }
 
-DISTCCD=`which distccd`
+DISTCCD=`which distccd 2> /dev/null`
 PIDFILE=""
 
 trap _quit INT TERM QUIT

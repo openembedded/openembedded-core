@@ -38,7 +38,7 @@ fi
 # Ensure the nfs-export-dir is an absolute path
 NFS_EXPORT_DIR=$(cd "$2" && pwd)
 
-SYSROOT_SETUP_SCRIPT=`which oe-find-native-sysroot`
+SYSROOT_SETUP_SCRIPT=`which oe-find-native-sysroot 2> /dev/null`
 if [ -z "$SYSROOT_SETUP_SCRIPT" ]; then
     echo "Error: Unable to find the oe-find-native-sysroot script"
     echo "Did you forget to source your build environment setup script?"
