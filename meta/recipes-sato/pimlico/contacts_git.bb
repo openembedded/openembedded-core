@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SRCREV = "19853893fdb595de6aa59db0d9dc2f9451ed2933"
 PV = "0.12+git${SRCPV}"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}/git"
 

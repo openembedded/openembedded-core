@@ -2,7 +2,7 @@ LICENSE = "GPLv2"
 SECTION = "x11"
 DEPENDS = "libxml2 glib-2.0 gtk+ libglade gtkhtml2 curl gconf js libowl"
 DESCRIPTION = "Web is a multi-platform web browsing application."
-PR = "r1"
+PR = "r2"
 
 SRCREV = "96da839f65e17ecc6d5261c1d74accd88423dd7a"
 PV = "0.0+git${SRCPV}"

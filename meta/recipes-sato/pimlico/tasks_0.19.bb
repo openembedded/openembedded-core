@@ -12,4 +12,4 @@ SRC_URI[sha256sum] = "1a7fdc5f95a2193a1a25fdb13f071867fb7e42245ce19ccee4bcccb69e
 
 OWL_poky = "--with-owl"
 
-PR = "r0"
+PR = "r1"
