@@ -149,7 +149,7 @@ def check_supported_distro(e):
                 finally:
                     f.close()
     if distro:
-        if distro not in [x.strip() for x in tested_distros.split('\n')]:
+        if distro not in [x.strip() for x in tested_distros.split('\\n')]:
             bb.warn('Host distribution "%s" has not been validated with this version of the build system; you may possibly experience unexpected failures. It is recommended that you use a tested distribution.' % distro)
     else:
         bb.warn('Host distribution could not be determined; you may possibly experience unexpected failures. It is recommended that you use a tested distribution.')
