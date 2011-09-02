@@ -1,0 +1,18 @@
+dropbear: Change the path ("/etc/pam.d/sshd" as default) to find a pam configuration file \
+to "/etc/pam.d/dropbear for dropbear when enabling pam supporting" 
+
+Upstream-Status: Inappropriate [configuration] 
+
+Signed-off-by: Xiaofeng Yan <xiaofeng.yan@windriver.com>
+
+--- a/svr-authpam.c	2008-11-11 22:09:03.000000000 +0800
++++ b/svr-authpam.c.new	2011-08-29 09:53:24.000000000 +0800
+@@ -199,7 +199,7 @@
+ 	userData.passwd = password;
+ 
+ 	/* Init pam */
+-	if ((rc = pam_start("sshd", NULL, &pamConv, &pamHandlep)) != PAM_SUCCESS) {
++	if ((rc = pam_start("dropbear", NULL, &pamConv, &pamHandlep)) != PAM_SUCCESS) {
+ 		dropbear_log(LOG_WARNING, "pam_start() failed, rc=%d, %s\n", 
+ 				rc, pam_strerror(pamHandlep, rc));
+ 		goto cleanup;
