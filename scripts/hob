@@ -22,6 +22,11 @@ EOF
 ) > conf/hob-post.conf
 fi
 
+# Users don't like to launch GUI's and see a bunch of text whiz by, notify them
+if [ ! -e "$BUILDDIR/pseudodone" ]; then
+    echo "Before we can launch the GUI we need to build some native tools required for running"
+fi
+
 bitbake -r conf/hob-pre.conf -R conf/hob-post.conf -u hob
 
 ret=$?
