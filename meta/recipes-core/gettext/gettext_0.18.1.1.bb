@@ -5,7 +5,7 @@ SECTION = "libs"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-PR = "r2"
+PR = "r3"
 DEPENDS = "libxml2-native gettext-native virtual/libiconv ncurses expat"
 DEPENDS_virtclass-native = "libxml2-native"
 PROVIDES = "virtual/libintl virtual/gettext"
@@ -36,6 +36,8 @@ EXTRA_OECONF += "--without-lispdir \
                  --without-emacs \
                  --without-cvs \
                  --without-git \
+                 --with-included-libxml \
+                 --with-included-libcroco \
                 "
 
 acpaths = '-I ${S}/gettext-runtime/m4 \
