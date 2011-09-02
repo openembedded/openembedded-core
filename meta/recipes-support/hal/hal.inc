@@ -6,7 +6,7 @@ SECTION = "unknown"
 LICENSE = "GPLv2+ | AFL"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5b5ffd59fbb7c2fff6de76c94177af31"
 
-DEPENDS = "virtual/kernel dbus-glib udev util-linux intltool intltool-native expat libusb gperf-native"
+DEPENDS = "dbus-glib udev util-linux intltool intltool-native expat libusb gperf-native"
 RDEPENDS_${PN} += "udev hal-info"
 
 SRC_URI = "http://hal.freedesktop.org/releases/hal-${PV}.tar.gz \
@@ -30,9 +30,8 @@ EXTRA_OECONF = "--with-hwdata=${datadir}/hwdata \
                 ${@base_contains('MACHINE_FEATURES', 'acpi', '--enable-acpi', '--disable-acpi',d)} \
                "
 
-MY_ARCH := "${PACKAGE_ARCH}"
-PACKAGE_ARCH = "${@base_contains('MACHINE_FEATURES', 'acpi', '${MACHINE_ARCH}', '${MY_ARCH}',d)}"
-PACKAGE_ARCH = "${@base_contains('MACHINE_FEATURES', 'pci', '${MACHINE_ARCH}', '${MY_ARCH}',d)}"
+PACKAGE_ARCH = "${@base_contains('MACHINE_FEATURES', 'acpi', '${MACHINE_ARCH}', '${TUNE_PKGARCH}',d)}"
+PACKAGE_ARCH = "${@base_contains('MACHINE_FEATURES', 'pci', '${MACHINE_ARCH}', '${TUNE_PKGARCH}',d)}"
 
 do_install_append() {
         install -d ${D}/etc/dbus-1/event.d
