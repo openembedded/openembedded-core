@@ -3,6 +3,7 @@ HOMEPAGE = "http://www-01.ibm.com/software/globalization/icu/index.jsp"
 
 BASE_SRC_URI = "ftp://ftp.software.ibm.com/software/globalization/icu/3.6/icu4c-3_6-src.tgz \
            file://gccfix.patch;apply=yes \
+           file://fix-parallel-build.patch \
            file://use-g++-for-linking.patch;apply=yes"
 SRC_URI = "${BASE_SRC_URI} \
            file://noldlibpath.patch;apply=yes"

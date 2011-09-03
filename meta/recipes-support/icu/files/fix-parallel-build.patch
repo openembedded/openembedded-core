@@ -1,0 +1,19 @@
+Upstream-Status: pending
+
+Fix parallel builds
+
+Signed-off-by: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+
+Index: source/data/Makefile.in
+===================================================================
+--- source.orig/data/Makefile.in	2011-09-02 02:03:37.000000000 +0400
++++ source/data/Makefile.in	2011-09-02 02:06:26.000000000 +0400
+@@ -351,8 +351,8 @@
+ endif
+
+
+-build-dir: $(BUILD_DIRS)
+-$(BUILD_DIRS):
++$(MAINBUILDDIR) $(BUILD_DIRS): build-dir
++build-dir:
+	-$(MKINSTALLDIRS) $(BUILD_DIRS)
