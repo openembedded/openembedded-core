@@ -254,9 +254,8 @@ multilib_sanity_check() {
   echo $@ | python ${MULTILIB_CHECK_FILE}
 }
 
-# set '*' as the rootpassword so the images
+# set '*' as the root password so the images
 # can decide if they want it or not
-
 zap_root_password () {
 	sed 's%^root:[^:]*:%root:*:%' < ${IMAGE_ROOTFS}/etc/passwd >${IMAGE_ROOTFS}/etc/passwd.new
 	mv ${IMAGE_ROOTFS}/etc/passwd.new ${IMAGE_ROOTFS}/etc/passwd
@@ -314,8 +313,6 @@ rootfs_trim_schemas () {
 	done
 }
 
-
-# export the zap_root_password, and remote_init_link
 EXPORT_FUNCTIONS zap_root_password remove_init_link do_rootfs make_zimage_symlink_relative set_image_autologin rootfs_update_timestamp rootfs_no_x_startup
 
 addtask rootfs before do_build after do_install
