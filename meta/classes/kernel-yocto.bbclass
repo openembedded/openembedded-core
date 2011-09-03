@@ -105,7 +105,7 @@ python do_kernel_configcheck() {
     bb.plain("NOTE: validating kernel configuration")
 
     pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, True)
-    cmd = bb.data.expand("cd ${B}/..; kconf_check -${LINUX_KERNEL_TYPE}-config-${LINUX_VERSION} ${B} ${S} ${B} ${KBRANCH}",d )
+    cmd = bb.data.expand("cd ${B}/..; kconf_check -${LINUX_KERNEL_TYPE}-config- ${B} ${S} ${B} ${KBRANCH}",d )
     ret, result = commands.getstatusoutput("%s%s" % (pathprefix, cmd))
 
     bb.plain( "%s" % result )
