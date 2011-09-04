@@ -4,7 +4,7 @@ formatting commands and produces formatted output."
 SECTION = "base"
 HOMEPAGE = "ftp://ftp.gnu.org/gnu/groff/"
 LICENSE = "GPLv2"
-PR = "r0"
+PR = "r1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
@@ -33,5 +33,12 @@ do_configure_prepend() {
 		    ${S}/doc/Makefile.sub
 	fi
 }
+
+do_install_append_virtclass-native() {
+	create_cmdline_wrapper ${D}/${bindir}/groff \
+		-F${STAGING_DIR_NATIVE}${datadir_native}/groff/${PV}/font \
+		-M${STAGING_DIR_NATIVE}${datadir_native}/groff/${PV}/tmac
+}
+
 
 BBCLASSEXTEND = "native"
