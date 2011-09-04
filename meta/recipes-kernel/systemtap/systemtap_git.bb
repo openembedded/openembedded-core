@@ -1,15 +1,14 @@
 DESCRIPTION = "SystemTap - script-directed dynamic tracing and performance analysis tool for Linux"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS = "elfutils sqlite3"
 
-SRCREV = "4ab3a1863bf4f472acae7a809bf2b38d91658aa8"
-PR = "r4"
-PV = "1.4+git${SRCPV}"
+SRCREV = "820f2d22fc47fad6e09ba886efb9b91e1247cb39"
+PR = "r0"
+PV = "1.6+git${SRCPV}"
 
 SRC_URI = "git://sources.redhat.com/git/systemtap.git;protocol=git \
-	file://fix_for_compilation_with_gcc-4.6.0.patch \
           "
 
 EXTRA_OECONF += "--with-libelf=${STAGING_DIR_TARGET} --without-rpm \
@@ -23,11 +22,11 @@ EXTRA_OECONF += "--with-libelf=${STAGING_DIR_TARGET} --without-rpm \
 SRC_URI[md5sum]    = "cb202866ed704c44a876d041f788bdee"
 SRC_URI[sha256sum] = "8ffe35caec0d937bd23fd78a3a8d94b58907cc0de0330b35e38f9f764815c459"
 
-# systemtap doesn't work on arm and doesn't support mips
-COMPATIBLE_HOST = '(x86_64.*|i.86.*|powerpc.*)-linux'
+# systemtap doesn't support mips
+COMPATIBLE_HOST = '(x86_64.*|i.86.*|powerpc.*|arm.*)-linux'
 
 S = "${WORKDIR}/git"
 
-inherit autotools
+inherit autotools gettext
 
 FILES_${PN}-dbg += "${libexecdir}/systemtap/.debug"
