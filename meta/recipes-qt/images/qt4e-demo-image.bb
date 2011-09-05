@@ -11,6 +11,7 @@ RDEPENDS_${PN} += " \
 	"
 
 IMAGE_INSTALL += "\
+	busybox \
 	module-init-tools \
 	task-qt4e-base \
 "
