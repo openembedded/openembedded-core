@@ -108,3 +108,13 @@ lftp_cv_va_val_copy=${lftp_cv_va_val_copy=no}
 
 # slrn
 slrn_cv_va_val_copy=${slrn_cv_va_val_copy=no}
+
+# grub
+ac_cv_func___ashldi3=no
+ac_cv_func___ashrdi3=no
+ac_cv_func___bswapdi2=no
+ac_cv_func___bswapsi2=no
+ac_cv_func___lshrdi3=no
+ac_cv_func___trampoline_setup=no
+ac_cv_func___ucmpdi2=no
+ac_cv_func__restgpr_14_x=no
