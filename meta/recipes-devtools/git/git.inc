@@ -18,6 +18,12 @@ do_install () {
 		GIT_PYTHON_DIR=${D}${datadir}/git-core/python
 }
 
+do_install_append_virtclass-native() {
+	create_wrapper ${D}/${bindir}/git \
+		GIT_EXEC_PATH=${libexecdir}/git-core \
+		GIT_TEMPLATE_DIR=${STAGING_DATADIR_NATIVE}/git-core/templates
+}
+
 FILES_${PN} += "${datadir}/git-core ${libxecdir}/git-core/"
 FILES_${PN}-dbg += "${libexecdir}/git-core/.debug"
 
