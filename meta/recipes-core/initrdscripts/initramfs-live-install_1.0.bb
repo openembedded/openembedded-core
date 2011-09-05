@@ -20,4 +20,5 @@ INHIBIT_DEFAULT_DEPS = "1"
 FILES_${PN} = " /install.sh "
 
 # Alternatives to grub need adding for other arch support
-COMPATIBLE_HOST = "(i.86|x86_64).*-linux"
+# consistent with grub 0.97
+COMPATIBLE_HOST = "i.86.*-linux"
