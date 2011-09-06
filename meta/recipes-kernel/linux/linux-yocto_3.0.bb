@@ -12,13 +12,13 @@ KBRANCH = ${KMACHINE}
 
 LINUX_VERSION ?= "3.0.4"
 
-SRCREV_machine_qemuarm ?= "b18f5c601ccc90b4c94d1d29282cf7c53fcb6e22"
-SRCREV_machine_qemumips ?= "0696ab4056ddc1b4504e8636e47a918bdff5b257"
-SRCREV_machine_qemuppc ?= "af58047d79790a06e5ac5ba09837c6e65220d7aa"
-SRCREV_machine_qemux86 ?= "515e039eeb316494955e46d38c164e56999511ae"
-SRCREV_machine_qemux86-64 ?= "d19118d19d5f95e83d6fbe1268fe6b84f67de6d3"
-SRCREV_machine ?= "6fcf6f1bca9323fa2e9a5ea15fa84153cccbc28b"
-SRCREV_meta ?= "82140b960a7cc13d116be61a85d4fe7f7d38680f"
+SRCREV_machine_qemuarm ?= "7908f38ac44359d58c40b166dbb45e48fc58295c"
+SRCREV_machine_qemumips ?= "7ea75f58d69293e6b1c2f904f8f5790521a7ccee"
+SRCREV_machine_qemuppc ?= "eccd57eaa4c2b580b9adbbc39e19ecbff56779ae"
+SRCREV_machine_qemux86 ?= "72671808fdbe69a9fe03fd8f094e7c59da04a28c"
+SRCREV_machine_qemux86-64 ?= "2b2d0954a6fd12b4bb7f02f019bc62633c8060a1"
+SRCREV_machine ?= "6b2c7d65b844e686eae7d5cccb9b638887afe28e"
+SRCREV_meta ?= "3c9ebeed2598b74798a0c9247ef7c385e0cd96a7"
 
 PR = "r1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
