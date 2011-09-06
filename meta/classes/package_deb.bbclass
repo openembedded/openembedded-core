@@ -176,7 +176,7 @@ package_install_internal_deb () {
 	rm -f ${WORKDIR}/temp/log.do_${task}-attemptonly.${PID}
 	if [ ! -z "${package_attemptonly}" ]; then
 		for i in ${package_attemptonly}; do
-			apt-get install $i --force-yes --allow-unauthenticated >> ${WORKDIR}/temp/log.do_${task}-attemptonly.${PID} || true
+			apt-get install $i --force-yes --allow-unauthenticated >> ${WORKDIR}/temp/log.do_${task}-attemptonly.${PID} 2>&1 || true
 		done
 	fi
 
