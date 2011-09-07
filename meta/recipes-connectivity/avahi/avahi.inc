@@ -14,7 +14,8 @@ SECTION = "network"
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-DEPENDS = "expat libcap libdaemon dbus glib-2.0 gtk+ libglade"
+X11DEPENDS = "gtk+ libglade"
+DEPENDS = "expat libcap libdaemon dbus glib-2.0 ${@base_contains('DISTRO_FEATURES', 'x11', '${X11DEPENDS}', '', d)}"
 
 SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
           file://00avahi-autoipd \
@@ -30,6 +31,7 @@ EXTRA_OECONF = "--with-distro=debian \
              --disable-mono \
              --disable-monodoc \
              --disable-gtk3 \
+	     ${@base_contains('DISTRO_FEATURES', 'x11', '--enable-gtk', '--disable-gtk', d)} \
              --disable-qt3 \
              --disable-qt4 \
              --disable-python \
