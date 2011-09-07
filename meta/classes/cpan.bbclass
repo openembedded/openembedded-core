@@ -24,7 +24,8 @@ cpan_do_configure () {
 		for f in `find -name Makefile.PL`; do
 			f2=`echo $f | sed -e 's/.PL//'`
 			sed -i -e "s:\(PERL_ARCHLIB = \).*:\1${PERL_ARCHLIB}:" \
-			$f2
+				-e 's/perl.real/perl/' \
+				$f2
 		done
 	fi
 }
