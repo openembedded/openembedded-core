@@ -269,10 +269,12 @@ def check_sanity(e):
     if os.path.exists(dldir) and not os.access(dldir, os.W_OK):
         messages = messages + "DL_DIR: %s exists but you do not appear to have write access to it. \n" % dldir
     
-    # Check that the DISTRO is valid
+    # Check that the DISTRO is valid, if set
     # need to take into account DISTRO renaming DISTRO
-    #if not ( check_conf_exists("conf/distro/${DISTRO}.conf", e.data) or check_conf_exists("conf/distro/include/${DISTRO}.inc", e.data) ):
-    #    messages = messages + "DISTRO '%s' not found. Please set a valid DISTRO in your local.conf\n" % data.getVar("DISTRO", e.data, True )
+    distro = data.getVar('DISTRO', e.data, True)
+    if distro:
+        if not ( check_conf_exists("conf/distro/${DISTRO}.conf", e.data) or check_conf_exists("conf/distro/include/${DISTRO}.inc", e.data) ):
+            messages = messages + "DISTRO '%s' not found. Please set a valid DISTRO in your local.conf\n" % data.getVar("DISTRO", e.data, True )
 
     missing = ""
 
