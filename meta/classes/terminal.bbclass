@@ -15,6 +15,11 @@ def oe_terminal(command, title, d):
     import oe.data
     import oe.terminal
 
+    for export in oe.data.typed_value('OE_TERMINAL_EXPORTS', d):
+        value = d.getVar(export, True)
+        if value is not None:
+            os.environ[export] = str(value)
+
     terminal = oe.data.typed_value('OE_TERMINAL', d).lower()
     if terminal == 'none':
         bb.fatal('Devshell usage disabled with OE_TERMINAL')
@@ -28,14 +33,8 @@ def oe_terminal(command, title, d):
         except oe.terminal.ExecutionError as exc:
             bb.fatal('Unable to spawn terminal %s: %s' % (terminal, exc))
 
-    env = dict(os.environ)
-    for export in oe.data.typed_value('OE_TERMINAL_EXPORTS', d):
-        value = d.getVar(export, True)
-        if value is not None:
-            env[export] = str(value)
-
     try:
-        oe.terminal.spawn_preferred(command, title, env)
+        oe.terminal.spawn_preferred(command, title)
     except oe.terminal.NoSupportedTerminals:
         bb.fatal('No valid terminal found, unable to open devshell')
     except oe.terminal.ExecutionError as exc:
