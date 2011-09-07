@@ -26,6 +26,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 # - nfs-server          - NFS server (exports / over NFS to everybody)
 # - ssh-server-dropbear - SSH server (dropbear)
 # - ssh-server-openssh  - SSH server (openssh)
+# - debug-tweaks        - makes an image suitable for development
 #
 PACKAGE_GROUP_apps-console-core = "task-core-apps-console"
 PACKAGE_GROUP_x11-base = "task-core-x11-base"
@@ -65,3 +66,7 @@ inherit image
 
 # Create /etc/timestamp during image construction to give a reasonably sane default time setting
 ROOTFS_POSTPROCESS_COMMAND += "rootfs_update_timestamp ; "
+
+# Zap the root password if debug-tweaks feature is not enabled
+ROOTFS_POSTPROCESS_COMMAND += '${@base_contains("IMAGE_FEATURES", "debug-tweaks", "", "zap_root_password ; ",d)}'
+
