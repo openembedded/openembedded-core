@@ -17,6 +17,8 @@ python multilib_virtclass_handler_global () {
 addhandler multilib_virtclass_handler_global
 
 def multilib_extend_name(variant, name):
+    if name.startswith("kernel-module"):
+        return name
     if name.startswith("virtual/"):
         subs = name.split("/", 1)[1]
         if not subs.startswith(variant):
