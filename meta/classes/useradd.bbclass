@@ -15,8 +15,8 @@ SYSROOT=""
 
 if test "x$D" != "x"; then
 	# Installing into a sysroot
-	SYSROOT="${STAGING_DIR_TARGET}"
-	OPT="--root ${STAGING_DIR_TARGET}"
+	SYSROOT="$D"
+	OPT="--root $D"
 
 	# Add groups and users defined for all recipe packages
 	GROUPADD_PARAM="${@get_all_cmd_params(d, 'group')}"
@@ -79,7 +79,7 @@ useradd_sysroot () {
 
 	# Explicitly set $D since it isn't set to anything
 	# before do_install
-	D=${D}
+	D=${STAGING_DIR_TARGET}
 	useradd_preinst
 }
 
