@@ -8,6 +8,6 @@ recipes-gnome        - All things related to the GTK+ application framework
 recipes-graphics     - X and other graphically related system libraries  
 recipes-kernel       - The kernel and generic applications/libraries with strong kernel dependencies
 recipes-multimedia   - Codecs and support utilties for audio, images and video
-recipes-qt           - All things related to the QT application framework
+recipes-qt           - All things related to the Qt application framework
 recipes-sato         - The Sato demo/reference UI/UX, its associated apps and configuration 
 
