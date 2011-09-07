@@ -1,0 +1,17 @@
+Work around a bug introduced with the --root option which was causing
+all other arguments to be ignored.
+
+Upstream-Status: inappropriate
+Signed-off-by: Phil Blundell <philb@gnu.org>
+
+--- a/src/useradd.c~	2011-09-01 15:36:40.398234861 +0100
++++ b/src/useradd.c	2011-09-01 17:29:00.782004133 +0100
+@@ -1957,6 +1957,8 @@
+ 
+ 	get_defaults ();
+ 
++	optind = 1;
++
+ 	process_flags (argc, argv);
+ 
+ #ifdef ACCT_TOOLS_SETUID
