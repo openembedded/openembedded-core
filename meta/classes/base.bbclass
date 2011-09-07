@@ -340,9 +340,9 @@ python () {
     if license == "INVALID":
         bb.fatal('This recipe does not have the LICENSE field set (%s)' % pn)
 
-    commercial_license = bb.data.getVar('COMMERCIAL_LICENSE', d, 1)
+    commercial_license = " %s " % bb.data.getVar('COMMERCIAL_LICENSE', d, 1)
     import re
-    pnr = pn.replace('+', "\+")
+    pnr = "[ \t]%s[ \t]" % pn.replace('+', "\+")
     if commercial_license and re.search(pnr, commercial_license):
         bb.debug(1, "Skipping %s because it's commercially licensed" % pn)
         raise bb.parse.SkipPackage("because it may require a commercial license to ship in a product (listed in COMMERCIAL_LICENSE)")
