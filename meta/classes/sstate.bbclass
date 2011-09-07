@@ -183,6 +183,9 @@ def sstate_installpkg(ss, d):
             os.system("sed -i -e s:FIXMESTAGINGDIRTARGET:%s:g %s" % (staging_target, sstateinst + file))
             os.system("sed -i -e s:FIXMESTAGINGDIRHOST:%s:g %s" % (staging_host, sstateinst + file))
             os.system("sed -i -e s:FIXMESTAGINGDIR:%s:g %s" % (staging, sstateinst + file))
+        # Need to remove this or we'd copy it into the target directory and may 
+        # conflict with another writer
+        os.remove(fixmefn)
 
     for state in ss['dirs']:
         prepdir(state[1])
