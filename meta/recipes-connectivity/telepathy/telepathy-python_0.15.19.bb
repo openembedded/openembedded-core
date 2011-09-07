@@ -7,9 +7,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=2d5025d4aa3495befef8f17206a5b0a1 \
 RDEPENDS_${PN} += "python-dbus"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/${BPN}/${BPN}-${PV}.tar.gz \
-           file://parallel_make.patch"
+           file://parallel_make.patch \
+           file://remove_duplicate_install.patch"
 
-PR = "r2"
+PR = "r3"
 
 inherit autotools
 
