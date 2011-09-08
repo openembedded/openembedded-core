@@ -11,6 +11,3 @@ EXTRA_OECONF += "\
                  --with-pic \
                  --with-int10=x86emu \
 "
-
-# Due to mesa-dri
-COMPATIBLE_HOST = '(i.86.*-linux|x86_64.*-linux)'
