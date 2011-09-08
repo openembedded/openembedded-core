@@ -76,4 +76,9 @@ python __anonymous () {
     multilib_map_variable("PACKAGES_DYNAMIC", variant, d)
     multilib_map_variable("PACKAGE_INSTALL", variant, d)
     multilib_map_variable("INITSCRIPT_PACKAGES", variant, d)
+
+    package_arch = d.getVar("PACKAGE_ARCH", True)
+    machine_arch = d.getVar("MACHINE_ARCH", True)
+    if package_arch == machine_arch:
+        d.setVar("PACKAGE_ARCH", variant + "_" + package_arch)
 }
