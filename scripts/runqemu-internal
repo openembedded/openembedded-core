@@ -173,7 +173,9 @@ if [ "$TAP" = "" ]; then
 
     GROUPID=`id -g`
     echo "Setting up tap interface under sudo"
-    tap=`sudo $QEMUIFUP $GROUPID $OECORE_NATIVE_SYSROOT`
+    # Redirect stderr since we could see a LD_PRELOAD warning here if pseudo is loaded
+    # but inactive. This looks scary but is harmless
+    tap=`sudo $QEMUIFUP $GROUPID $OECORE_NATIVE_SYSROOT 2> /dev/null`
     if [ $? -ne 0 ]; then
         # Re-run standalone to see verbose errors
         sudo $QEMUIFUP $GROUPID $OECORE_NATIVE_SYSROOT
@@ -191,7 +193,9 @@ fi
 
 cleanup() {
     if [ ! -e "$NOSUDO_FLAG" ]; then
-        sudo $QEMUIFDOWN $TAP $OECORE_NATIVE_SYSROOT
+        # Redirect stderr since we could see a LD_PRELOAD warning here if pseudo is loaded
+        # but inactive. This looks scary but is harmless
+        sudo $QEMUIFDOWN $TAP $OECORE_NATIVE_SYSROOT 2> /dev/null
     fi
     echo "Releasing lockfile of preconfigured tap device '$TAP'"
     release_lock $LOCKFILE
