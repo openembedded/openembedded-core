@@ -457,6 +457,7 @@ Test_Create_Qemu()
 		timeout=50
 	else
 		rm -rf $TEST_ROOTFS_IMAGE
+		echo "Copying rootfs $ROOTFS_IMAGE to $TEST_ROOTFS_IMAGE"
 		$CP $ROOTFS_IMAGE $TEST_ROOTFS_IMAGE
 		if [ $? -ne 0 ]; then
 			Test_Info "Image ${ROOTFS_IMAGE} copy to ${TEST_ROOTFS_IMAGE} failed, return fail"
@@ -466,8 +467,8 @@ Test_Create_Qemu()
 		export MACHINE=$QEMUARCH
 
 		# Create Qemu in localhost VNC Port 1
-		echo "Running xterm -display ${DISPLAY} -e 'BUILDDIR=${TOPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE}' &"
-	    	xterm -display ${DISPLAY} -e "BUILDDIR=${TOPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE}" &
+		echo "Running xterm -display ${DISPLAY} -e 'TMPDIR=${TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} && /bin/sleep 60' &"
+	    	xterm -display ${DISPLAY} -e "TMPDIR=${TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} && /bin/sleep 60" &
 	
 		# Get the pid of the xterm processor, which will be used in Test_Kill_Qemu
 		PID=$!
