@@ -10,6 +10,9 @@ QT_DIR_NAME = "qtopia"
 QT_TOOLS_PREFIX = "${SDKPATHNATIVE}${bindir_nativesdk}"
 
 toolchain_create_sdk_env_script_append() {
+    echo 'export OE_QMAKE_CFLAGS="$CFLAGS"' >> $script
+    echo 'export OE_QMAKE_CXXFLAGS="$CXXFLAGS"' >> $script
+    echo 'export OE_QMAKE_LDFLAGS="$LDFLAGS"' >> $script
     echo 'export OE_QMAKE_CC=${TARGET_PREFIX}gcc' >> $script
     echo 'export OE_QMAKE_CXX=${TARGET_PREFIX}g++' >> $script
     echo 'export OE_QMAKE_LINK=${TARGET_PREFIX}g++' >> $script
@@ -24,4 +27,8 @@ toolchain_create_sdk_env_script_append() {
     echo 'export OE_QMAKE_QDBUSXML2CPP=${QT_TOOLS_PREFIX}/qdbusxml2cpp4' >> $script
     echo 'export OE_QMAKE_QT_CONFIG=${SDKTARGETSYSROOT}/${datadir}/${QT_DIR_NAME}/mkspecs/qconfig.pri' >> $script
     echo 'export QMAKESPEC=${SDKTARGETSYSROOT}/${datadir}/${QT_DIR_NAME}/mkspecs/linux-g++' >> $script
+
+    # make a symbolic link to mkspecs for compatibility with Nokia's SDK
+    # and QTCreator
+    (cd ${SDK_OUTPUT}/${QT_TOOLS_PREFIX}/..; ln -s ${SDKTARGETSYSROOT}/usr/share/qtopia/mkspecs mkspecs;)
 }
