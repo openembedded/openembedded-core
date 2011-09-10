@@ -2,6 +2,8 @@ require qt4-native.inc
 
 PR = "${INC_PR}.1"
 
+SRC_URI += "file://blacklist-diginotar-certs.diff"
+
 # Find the g++.conf/linux.conf in the right directory.
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt-${PV}:"
 
