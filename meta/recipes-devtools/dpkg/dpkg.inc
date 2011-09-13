@@ -2,7 +2,7 @@ DESCRIPTION = "Package maintenance system for Debian."
 LICENSE = "GPL"
 SECTION = "base"
 
-INC_PR = "r4"
+INC_PR = "r5"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.bz2 \
            file://ignore_extra_fields.patch"
@@ -20,17 +20,14 @@ inherit autotools gettext perlnative
 
 DPKG_INIT_POSITION = "98"
 
-pkg_postinst_dpkg () {
-#!/bin/sh
-if [ "x$D" != "x" ]; then
-	install -d $D/${sysconfdir}/rcS.d
+do_install_prepend () {
+	install -d ${D}/${sysconfdir}/rcS.d
 	# this happens at S98 where our good 'ole packages script used to run
-	echo -e "#!/bin/sh
-	dpkg --configure -a
-	rm -f /${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
-" > ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
-	chmod 0755 $D/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
-fi
+	printf "#!/bin/sh
+dpkg --configure -a
+rm -f ${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
+" > ${D}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
+	chmod 0755 ${D}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
 }
 
 do_configure () {

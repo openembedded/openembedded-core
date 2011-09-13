@@ -20,6 +20,6 @@ EXTRA_OECONF = "--without-static-progs \
 
 BBCLASSEXTEND = "native"
 
-do_install_append_virtclass-native () {
+do_install_append () {
 	rm ${D}${bindir}/update-alternatives
 }
