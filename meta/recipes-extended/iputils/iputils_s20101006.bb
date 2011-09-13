@@ -21,6 +21,7 @@ SRC_URI = "http://www.skbuff.net/iputils/${BPN}-${PV}.tar.bz2 \
            file://debian/use_gethostbyname2.diff \
            file://debian/targets.diff \
            file://debian/fix-arping-timeouts.diff \
+           file://nsgmls-path-fix.patch \
           "
 
 SRC_URI[md5sum] = "a36c25e9ec17e48be514dc0485e7376c"
