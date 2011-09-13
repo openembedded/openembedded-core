@@ -14,7 +14,7 @@ RDEPENDS_${PN} = "sat-solver"
 S = "${WORKDIR}/git"
 SRCREV = "15b6c52260bbc52b3d8e585e271b67e10cc7c433"
 PV = "0.0-git${SRCPV}"
-PR = "r13"
+PR = "r14"
 
 SRC_URI = "git://gitorious.org/opensuse/libzypp.git;protocol=git \
            file://no-doc.patch \
@@ -32,8 +32,15 @@ SRC_URI_append_mips = " file://mips-workaround-gcc-tribool-error.patch"
 # ARM specific global constructor workaround
 SRC_URI_append_arm  = " file://arm-workaround-global-constructor.patch"
 
+PACKAGES =+ "${PN}-pkgmgt"
+
 FILES_${PN} += "${libdir}/zypp ${datadir}/zypp ${datadir}/icons"
 FILES_${PN}-dev += "${datadir}/cmake"
+
+FILES_${PN}-pkgmgt = "${bindir}/package-manager \
+                      ${bindir}/package-manager-su \
+                      ${datadir}/applications/package-manager.desktop \
+                     "
 
 EXTRA_OECMAKE += " -DLIB=${@os.path.basename('${libdir}')}"
 
