@@ -15,4 +15,4 @@ def typed_value(key, d):
     try:
         return oe.maketype.create(d.getVar(key, True) or '', var_type, **flags)
     except (TypeError, ValueError), exc:
-        bb.msg.fatal(bb.msg.domain.Data, "%s: %s" % (key, str(exc)))
+        bb.msg.fatal("Data", "%s: %s" % (key, str(exc)))
