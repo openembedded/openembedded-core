@@ -7,11 +7,15 @@ python multilib_virtclass_handler_global () {
     if isinstance(e, bb.event.RecipeParsed) and not variant:
         if bb.data.inherits_class('kernel', e.data) or bb.data.inherits_class('module-base', e.data) or bb.data.inherits_class('allarch', e.data):
             origprovs = provs = e.data.getVar("PROVIDES", True)
+            rprovs = e.data.getVar("RPROVIDES", True)
             variants = (e.data.getVar("MULTILIB_VARIANTS", True) or "").split()
             for variant in variants:
                 provs = provs + " " + multilib_map_variable("PROVIDES", variant, e.data)
+                for pkg in e.data.getVar("PACKAGES", True).split():
+                    rprovs = rprovs + " " + variant + "-" + pkg
                 e.data.setVar("PROVIDES", origprovs)
             e.data.setVar("PROVIDES", provs)
+            e.data.setVar("RPROVIDES", rprovs)
 }
 
 addhandler multilib_virtclass_handler_global
