@@ -10,13 +10,13 @@ SECTION = "libs"
 LICENSE = "LGPL"
 
 X11DEPENDS = "virtual/libx11 libxft"
-DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv gtk-doc-native cairo qemu-native ${@base_contains('DISTRO_FEATURES', 'x11', '${X11DEPENDS}', '', d)}"
+DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv gtk-doc-native cairo ${@base_contains('DISTRO_FEATURES', 'x11', '${X11DEPENDS}', '', d)}"
 
 PACKAGES_DYNAMIC = "pango-module-*"
 
 RRECOMMENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'x11', 'pango-module-basic-x', '', d)} pango-module-basic-fc" 
 
-inherit gnome qemu
+inherit gnome
 
 EXTRA_AUTORECONF = ""
 
@@ -33,12 +33,9 @@ LIBV = "1.6.0"
 
 postinst_prologue() {
 if [ "x$D" != "x" ]; then
-	if [ ! -f "$D${sysconfdir}/pango/pango.modules" ]; then
-		mkdir -p $D${sysconfdir}/pango
-		PSEUDO_RELOADED=YES ${@qemu_target_binary(d)} -L $D $D${bindir}/pango-querymodules > "$D${sysconfdir}/pango/pango.modules"
-	fi
-	exit 0
+  exit 1
 fi
+
 }
 
 python populate_packages_prepend () {
