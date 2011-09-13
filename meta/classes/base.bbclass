@@ -181,8 +181,10 @@ def preferred_ml_updates(d):
              virt = "virtual/"
         for p in prefixes:
             newname = "PREFERRED_PROVIDER_" + virt + p + "-" + pkg
+            if pkg != "kernel":
+                val = p + "-" + val
             if not d.getVar(newname, False):
-                d.setVar(newname, p + "-" + val)
+                d.setVar(newname, val)
 
 
     mp = (d.getVar("MULTI_PROVIDER_WHITELIST", True) or "").split()
