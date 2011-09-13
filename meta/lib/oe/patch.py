@@ -358,7 +358,7 @@ class UserResolver(Resolver):
 
             t = bb.data.getVar('T', self.patchset.d, 1)
             if not t:
-                bb.msg.fatal(bb.msg.domain.Build, "T not set")
+                bb.msg.fatal("Build", "T not set")
             bb.utils.mkdirhier(t)
             import random
             rcfile = "%s/bashrc.%s.%s" % (t, str(os.getpid()), random.random())
@@ -376,7 +376,7 @@ class UserResolver(Resolver):
             os.environ['SHELLCMDS'] = "bash --rcfile " + rcfile
             rc = os.system(bb.data.getVar('TERMCMDRUN', self.patchset.d, 1))
             if os.WIFEXITED(rc) and os.WEXITSTATUS(rc) != 0:
-                bb.msg.fatal(bb.msg.domain.Build, ("Cannot proceed with manual patch resolution - '%s' not found. " \
+                bb.msg.fatal("Build", ("Cannot proceed with manual patch resolution - '%s' not found. " \
                     + "Check TERMCMDRUN variable.") % bb.data.getVar('TERMCMDRUN', self.patchset.d, 1))
 
             # Construct a new PatchSet after the user's changes, compare the
