@@ -8,9 +8,9 @@ and executables, so that far fewer relocations need to be resolved at \
 runtime and thus programs come up faster."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c93c0550bd3173f4504b2cbd8991e50b"
-SRCREV = "964f6eba613bf1c791a2a0b858cd044f05e2f151"
+SRCREV = "3e3f9b0876aa5ac83a783a95b8bab52cb38ed785"
 PV = "1.0+git${SRCPV}"
-PR = "r6"
+PR = "r7"
 
 #
 # The cron script attempts to re-prelink the system daily -- on
