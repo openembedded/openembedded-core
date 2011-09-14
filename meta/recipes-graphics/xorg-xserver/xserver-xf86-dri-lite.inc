@@ -28,7 +28,7 @@ EXTRA_OECONF += "--disable-static \
                  --localstatedir=/var \
                  --with-pic \
                  --with-int10=x86emu \
-                 --with-fontdir=/usr/share/fonts/X11 \
+                 --with-fontdir=${datadir}/fonts/X11 \
                  --with-xkb-output=/var/lib/xkb \
                  ac_cv_file__usr_share_sgml_X11_defs_ent=no"
 
