@@ -29,6 +29,6 @@ EXTRA_OECONF += "--disable-static \
                  --disable-glx \
                  --sysconfdir=/etc/X11 \
                  --localstatedir=/var \
-                 --with-fontdir=/usr/share/fonts/X11 \
+                 --with-fontdir=${datadir}/fonts/X11 \
                  --with-xkb-output=/var/lib/xkb \
                  ac_cv_file__usr_share_sgml_X11_defs_ent=no"
