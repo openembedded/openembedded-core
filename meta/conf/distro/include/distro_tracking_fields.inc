@@ -1811,6 +1811,7 @@ RECIPE_STATUS_pn-mktemp="red"
 RECIPE_LAST_UPDATE_pn-mktemp = "Jul 29, 2010"
 RECIPE_MAINTAINER_pn-mktemp="Yu Ke <ke.yu@intel.com>"
 RECIPE_LATEST_VERSION_pn-mktemp="1.7"
+DISTRO_PN_ALIAS_pn-mktemp = "Mandriva=mktemp Fedora=mktemp"
 
 RECIPE_STATUS_pn-iputils="red"
 RECIPE_LAST_UPDATE_pn-iputils = "Jul 29, 2010"
@@ -2917,6 +2918,7 @@ RECIPE_STATUS_pn-distcc="green"
 RECIPE_LATEST_VERSION_pn-distcc="2.18.3"
 RECIPE_LAST_UPDATE_pn-distcc = "Oct 28, 2006"
 RECIPE_MAINTAINER_pn-distcc = "Nitin A Kamble <nitin.a.kamble@intel.com>"
+DISTRO_PN_ALIAS_pn-distcc = "Debian=distcc Fedora=distcc"
 
 RECIPE_STATUS_pn-flex="green" 
 RECIPE_LATEST_VERSION_pn-flex="2.5.35"
@@ -3404,6 +3406,7 @@ RECIPE_LATEST_RELEASE_DATE_pn-imake = "2010/04/16"
 RECIPE_INTEL_SECTION_pn-imake = "graphic app"
 RECIPE_LAST_UPDATE_pn-imake = "Nov 21, 2010"
 RECIPE_MAINTAINER_pn-imake = "Yu Ke <ke.yu@intel.com>"
+DISTRO_PN_ALIAS_pn-imake = "Mandriva=xutils Ubuntu=xutils"
 
 RECIPE_STATUS_pn-qt4-tools-native = "green" # no update needed
 RECIPE_LATEST_VERSION_pn-qt4-tools-native = "4.7.3"
@@ -3543,6 +3546,7 @@ RECIPE_LATEST_RELEASE_DATE_pn-libxfontcache="2009/10/08"
 RECIPE_INTEL_SECTION_pn-libxfontcache="graphic core"
 RECIPE_LAST_UPDATE_pn-libxfontcache = "Jun 23, 2010"
 RECIPE_MAINTAINER_pn-libxfontcache="Yu Ke <ke.yu@intel.com>"
+DISTRO_PN_ALIAS_pn-libxfontcache = "Mandriva=libxfontcache Debian=libxfontcache"
 
 RECIPE_STATUS_pn-xf86-input-evdev="green" # no update needed
 DISTRO_PN_ALIAS_pn-xf86-input-evdev = "Ubuntu=xserver-xorg-input-evdev Mandriva=x11-driver-input-evdev Debian=xserver-xorg-input-evdev Fedora=xorg-x11-drv-evdev Meego=xorg-x11-drv-evdev"
@@ -3618,6 +3622,9 @@ RECIPE_LATEST_RELEASE_DATE_pn-mesa-dri="2010/06/17"
 RECIPE_INTEL_SECTION_pn-mesa-dri="graphic core"
 RECIPE_LAST_UPDATE_pn-mesa-dri = "Jan 18, 2011"
 RECIPE_MAINTAINER_pn-mesa-dri="Yu Ke <ke.yu@intel.com>"
+DISTRO_PN_ALIAS_pn-mesa-dri = "Fedora=mesa Ubuntu=libgl1-mesa-dri"
+
+DISTRO_PN_ALIAS_pn-mesa-xlib = "Fedora=mesa Ubuntu=libgl1-mesa-swx11"
 
 RECIPE_STATUS_pn-mesa-dri-glsl-native="green" # no update needed
 RECIPE_LATEST_VERSION_pn-mesa-dri-glsl-native="7.8.2"
@@ -5792,3 +5799,9 @@ RECIPE_LAST_UPDATE_pn-pseudo = "Jun 06, 2011"
 RECIPE_MAINTAINER_pn-pseudo = "Mark Hatle <mark.hatle@windriver.com>"
 RECIPE_COMMENTS_pn-pseudo = "Yocto Project maintained"
 RECIPE_MANUAL_CHECK_DATE_pn-pseudo = "Jun 06, 2011" 
+
+DISTRO_PN_ALIAS_pn-btrfs-tools = "Debian=btrfs-tools Fedora=btrfs-progs"
+DISTRO_PN_ALIAS_pn-rt-tests = "Debian=rt-tests Ubuntu =rt-tests"
+DISTRO_PN_ALIAS_pn-xserver-xf86-lite = "Fedora=xorg-x11-server Ubuntu=xserver-xorg"
+DISTRO_PN_ALIAS_pn-xserver-xf86-dri-lite = "Fedora=xorg-x11-server Ubuntu=xserver-xorg"
+DISTRO_PN_ALIAS_pn-xserver-kdrive = "Fedora=xorg-x11-server Ubuntu=xserver-xorg"
