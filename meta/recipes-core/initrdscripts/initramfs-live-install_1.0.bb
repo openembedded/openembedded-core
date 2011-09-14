@@ -1,9 +1,9 @@
-DESCRIPTION = "A live image init script"
+DESCRIPTION = "A live image init script for grub"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 SRC_URI = "file://init-install.sh"
 
-PR = "r4"
+PR = "r5"
 
 RDEPENDS="grub parted e2fsprogs-mke2fs"
 
@@ -19,6 +19,4 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 FILES_${PN} = " /install.sh "
 
-# Alternatives to grub need adding for other arch support
-# consistent with grub 0.97
-COMPATIBLE_HOST = "i.86.*-linux"
+COMPATIBLE_HOST = "(i.86|x86_64).*-linux"

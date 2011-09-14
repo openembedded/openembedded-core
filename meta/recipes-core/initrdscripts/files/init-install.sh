@@ -1,6 +1,6 @@
 #!/bin/sh -e
 #
-# Copyright (C) 2008 Intel
+# Copyright (C) 2008-2011 Intel
 #
 # install.sh [device_name] [rootfs_name] [video_mode] [vga_mode]
 #
@@ -126,6 +126,7 @@ mkswap $swap
 
 mkdir /ssd
 mkdir /rootmnt
+mkdir /bootmnt
 
 mount $rootfs /ssd
 mount -o rw,loop,noatime,nodiratime /media/$1/$2 /rootmnt
@@ -142,6 +143,16 @@ if [ -d /ssd/etc/ ] ; then
     fi
 fi
 
+if [ -f /ssd/etc/grub.d/40_custom ] ; then
+    echo "Preparing custom grub2 menu..."
+    sed -i "s@__ROOTFS__@$rootfs@g" /ssd/etc/grub.d/40_custom
+    sed -i "s/__VIDEO_MODE__/$3/g" /ssd/etc/grub.d/40_custom
+    sed -i "s/__VGA_MODE__/$4/g" /ssd/etc/grub.d/40_custom
+    mount $bootfs /bootmnt
+    cp /ssd/etc/grub.d/40_custom /bootmnt/40_custom
+    umount /bootmnt
+fi
+
 umount /ssd
 umount /rootmnt
 
@@ -151,11 +162,19 @@ grub-install --root-directory=/ssd /dev/${device}
 
 echo "(hd0) /dev/${device}" > /ssd/boot/grub/device.map
 
-echo "default 0" > /ssd/boot/grub/menu.lst
-echo "timeout 30" >> /ssd/boot/grub/menu.lst
-echo "title Live Boot/Install-Image" >> /ssd/boot/grub/menu.lst
-echo "root  (hd0,0)" >> /ssd/boot/grub/menu.lst
-echo "kernel /boot/vmlinuz root=$rootfs rw $3 $4 quiet" >> /ssd/boot/grub/menu.lst
+if [ -f /ssd/40_custom ] ; then
+    mv /ssd/40_custom /ssd/boot/grub/grub.cfg
+    sed -i "/#/d" /ssd/boot/grub/grub.cfg
+    sed -i "/exec tail/d" /ssd/boot/grub/grub.cfg
+    chmod 0444 /ssd/boot/grub/grub.cfg
+else
+    echo "Preparing custom grub menu..."
+    echo "default 0" > /ssd/boot/grub/menu.lst
+    echo "timeout 30" >> /ssd/boot/grub/menu.lst
+    echo "title Live Boot/Install-Image" >> /ssd/boot/grub/menu.lst
+    echo "root  (hd0,0)" >> /ssd/boot/grub/menu.lst
+    echo "kernel /boot/vmlinuz root=$rootfs rw $3 $4 quiet" >> /ssd/boot/grub/menu.lst
+fi
 
 cp /media/$1/vmlinuz /ssd/boot/
 
