@@ -94,14 +94,18 @@ def check_connectivity(d):
     # CONNECTIVITY_CHECK_URIS are set
     network_enabled = not bb.data.getVar('BB_NO_NETWORK', d, True)
     check_enabled = len(test_uris)
+    # Take a copy of the data store and unset MIRRORS and PREMIRROS
+    data = bb.data.createCopy(d)
+    data.delVar('PREMIRRORS')
+    data.delVar('MIRRORS')
     if check_enabled and network_enabled:
         try:
-            fetcher = bb.fetch2.Fetch(test_uris, d)
+            fetcher = bb.fetch2.Fetch(test_uris, data)
             fetcher.checkstatus()
         except Exception:
             # Allow the message to be configured so that users can be
             # pointed to a support mechanism.
-            msg = bb.data.getVar('CONNECTIVITY_CHECK_MSG', d, True) or ""
+            msg = bb.data.getVar('CONNECTIVITY_CHECK_MSG', data, True) or ""
             if len(msg) == 0:
                 msg = "Failed to fetch test data from the network. Please ensure your network is configured correctly.\n"
             retval = msg
