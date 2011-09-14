@@ -6,13 +6,7 @@ inherit package
 
 IMAGE_PKGTYPE ?= "deb"
 
-# Map TARGET_ARCH to Debian's ideas about architectures
 DPKG_ARCH ?= "${TARGET_ARCH}" 
-DPKG_ARCH_x86 ?= "i386"
-DPKG_ARCH_i486 ?= "i386"
-DPKG_ARCH_i586 ?= "i386"
-DPKG_ARCH_i686 ?= "i386"
-DPKG_ARCH_pentium ?= "i386"
 
 PKGWRITEDIRDEB = "${WORKDIR}/deploy-debs"
 
@@ -418,6 +412,10 @@ python () {
         bb.data.setVarFlag('do_package_write_deb', 'depends', " ".join(deps), d)
         bb.data.setVarFlag('do_package_write_deb', 'fakeroot', "1", d)
         bb.data.setVarFlag('do_package_write_deb_setscene', 'fakeroot', "1", d)
+
+    # Map TARGET_ARCH to Debian's ideas about architectures
+    if bb.data.getVar('DPKG_ARCH', d, True) in ["x86", "i486", "i586", "i686", "pentium"]:
+        bb.data.setVar('DPKG_ARCH', 'i386', d)
 }
 
 python do_package_write_deb () {

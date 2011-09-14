@@ -2,6 +2,10 @@ do_populate_sdk[depends] += "dpkg-native:do_populate_sysroot apt-native:do_popul
 do_populate_sdk[recrdeptask] += "do_package_write_deb"
 
 
+DEB_SDK_ARCH = "${@[bb.data.getVar('SDK_ARCH', d, 1), "i386"]\
+                [bb.data.getVar('SDK_ARCH', d, 1) in \
+                ["x86", "i486", "i586", "i686", "pentium"]]}"
+
 populate_sdk_post_deb () {
 
 	local target_rootfs=$1
@@ -37,7 +41,7 @@ fakeroot populate_sdk_deb () {
 	## install nativesdk ##
 	echo "Installing NATIVESDK packages"
 	export INSTALL_ROOTFS_DEB="${SDK_OUTPUT}"
-	export INSTALL_BASEARCH_DEB="${SDK_ARCH}"
+	export INSTALL_BASEARCH_DEB="${DEB_SDK_ARCH}"
 	export INSTALL_ARCHS_DEB="${SDK_PACKAGE_ARCHS}"
 	export INSTALL_PACKAGES_NORMAL_DEB="${TOOLCHAIN_HOST_TASK}"
 	export INSTALL_PACKAGES_ATTEMPTONLY_DEB=""
