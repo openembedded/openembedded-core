@@ -1,17 +1,14 @@
 #
-# Copyright (C) 2007-2008 OpenedHand Ltd.
+# Copyright (C) 2011 Intel Corporation
 #
 
-DESCRIPTION = "Tasks for OpenedHand Poky"
+DESCRIPTION = "Tasks for core X11 applications"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-PR = "r34"
+PR = "r35"
 
 PACKAGES = "\
-    task-core-apps-console \
-    task-core-apps-console-dbg \
-    task-core-apps-console-dev \
     task-core-apps-x11-core \
     task-core-apps-x11-core-dbg \
     task-core-apps-x11-core-dev \
@@ -29,17 +26,9 @@ XSERVER ?= "xserver-kdrive-fbdev"
 
 ALLOW_EMPTY = "1"
 
-SPLASH ?= "psplash"
-
 # pcmanfm doesn't work on mips/powerpc
 FILEMANAGER ?= "pcmanfm"
 FILEMANAGER_mips ?= ""
-
-RDEPENDS_task-core-apps-console = "\
-    avahi-daemon \
-    dbus \
-    portmap \
-    ${SPLASH}"
 
 
 RDEPENDS_task-core-x11-base = "\

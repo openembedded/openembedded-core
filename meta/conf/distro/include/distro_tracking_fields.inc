@@ -2460,9 +2460,13 @@ RECIPE_LATEST_VERSION_pn-core-image-sato-sdk = "1.0"
 RECIPE_MAINTAINER_pn-core-image-sato-sdk = "Dongxiao Xu <dongxiao.xu@intel.com>"
 DISTRO_PN_ALIAS_pn-core-image-sdk = "OE-Core"
 
-RECIPE_STATUS_pn-task-core = "green"
-RECIPE_LATEST_VERSION_pn-task-core = "1.0"
-RECIPE_MAINTAINER_pn-task-core = "Dongxiao Xu <dongxiao.xu@intel.com>"
+RECIPE_STATUS_pn-task-core-console = "green"
+RECIPE_LATEST_VERSION_pn-task-core-console = "1.0"
+RECIPE_MAINTAINER_pn-task-core-console = "Dongxiao Xu <dongxiao.xu@intel.com>"
+
+RECIPE_STATUS_pn-task-core-x11 = "green"
+RECIPE_LATEST_VERSION_pn-task-core-x11 = "1.0"
+RECIPE_MAINTAINER_pn-task-core-x11 = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-task-core-basic = "green"
 RECIPE_LATEST_VERSION_pn-task-core-basic = "1.0"
