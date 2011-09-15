@@ -36,6 +36,10 @@ check_keys() {
 		echo "  generating ssh RSA key..."
 		ssh-keygen -q -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
 	fi
+	if [ ! -f /etc/ssh/ssh_host_ecdsa_key ]; then
+		echo "  generating ssh ECDSA key..."
+		ssh-keygen -q -f /etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa
+	fi
 	if [ ! -f /etc/ssh/ssh_host_dsa_key ]; then
 		echo "  generating ssh DSA key..."
 		ssh-keygen -q -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa
