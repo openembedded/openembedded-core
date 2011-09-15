@@ -7,13 +7,10 @@ cml1_do_configure() {
 EXPORT_FUNCTIONS do_configure
 addtask configure after do_unpack do_patch before do_compile
 
-do_menuconfig() {
-	export TERMWINDOWTITLE="${PN} Configuration"
-	export SHELLCMDS="make menuconfig"
-	${TERMCMDRUN}
-	if [ $? -ne 0 ]; then
-		oefatal "'${TERMCMD}' not found. Check TERMCMD variable."
-	fi
+inherit terminal
+
+python do_menuconfig() {
+        oe_terminal("make menuconfig", '${PN} Configuration', d)
 }
 do_menuconfig[nostamp] = "1"
 addtask menuconfig after do_configure
