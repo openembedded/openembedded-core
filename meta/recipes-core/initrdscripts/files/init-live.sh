@@ -1,5 +1,7 @@
 #!/bin/sh
 
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
 ROOT_MOUNT="/rootfs/"
 ROOT_IMAGE="rootfs.img"
 MOUNT="/bin/mount"
@@ -12,7 +14,7 @@ early_setup() {
     mount -t proc proc /proc
     mount -t sysfs sysfs /sys
     udevd --daemon
-    /sbin/udevadm trigger --action=add
+    udevadm trigger --action=add
 }
 
 read_args() {

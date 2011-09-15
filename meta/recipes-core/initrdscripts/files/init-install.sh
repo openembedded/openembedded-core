@@ -5,6 +5,8 @@
 # install.sh [device_name] [rootfs_name] [video_mode] [vga_mode]
 #
 
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
 # We need 20 Mb for the boot partition
 boot_size=20
 
