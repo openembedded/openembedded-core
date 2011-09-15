@@ -22,7 +22,6 @@ FILES_${PN} = "${bindir} ${datadir}/pixmaps ${datadir}/applications"
 EXTRA_OECONF = "--disable-aspell-test 		\
 		--disable-aspell 		\
 		--disable-manual		\
-#  		--disable-openssl 		\
 		--disable-crash-dialog		\
 		--disable-jpilot		\
 		--disable-trayicon-plugin	\
@@ -33,11 +32,13 @@ EXTRA_OECONF = "--disable-aspell-test 		\
 		--disable-pgpinline-plugin	\
   		--disable-dillo-viewer-plugin	\
 		--disable-clamav-plugin		\
-#		--disable-libetpan		\
 		--disable-gnomeprint		\
 		--disable-valgrind		\
     --disable-static    \
 		"
+
+#  		--disable-openssl 		\
+#		--disable-libetpan		\
 
 CFLAGS += "-D_GNU_SOURCE"
 
