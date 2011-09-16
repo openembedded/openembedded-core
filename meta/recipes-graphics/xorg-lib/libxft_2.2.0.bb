@@ -18,14 +18,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=90b90b60eb30f65fc9c2673d7cf59e24"
 DEPENDS += "virtual/libx11 libxrender freetype fontconfig"
 PROVIDES = "xft"
 
-PR = "r1"
+PR = "r2"
 PE = "1"
 
 XORG_PN = "libXft"
 
 python () {
         if bb.data.getVar('DEBIAN_NAMES', d, 1):
-            bb.data.setVar('PKG_${PN}', 'libxft2', d)
+            bb.data.setVar('PKG_${PN}', '${MLPREFIX}libxft2', d)
 }
 
 FILES_${PN} = "${libdir}/lib*${SOLIBS}"

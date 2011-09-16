@@ -1,6 +1,6 @@
 require gtk+.inc
 
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "http://download.gnome.org/sources/gtk+/2.16/gtk+-${PV}.tar.bz2 \
            file://xsettings.patch \
@@ -47,5 +47,5 @@ python populate_packages_prepend () {
 	do_split_packages(d, printmodules_root, '^libprintbackend-(.*)\.so$', 'gtk-printbackend-%s', 'GTK printbackend module for %s')
 
         if (bb.data.getVar('DEBIAN_NAMES', d, 1)):
-                bb.data.setVar('PKG_${PN}', 'libgtk-2.0', d)
+                bb.data.setVar('PKG_${PN}', '${MLPREFIX}libgtk-2.0', d)
 }
