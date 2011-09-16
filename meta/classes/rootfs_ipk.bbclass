@@ -114,7 +114,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 			rm -rf ${IMAGE_ROOTFS}${opkglibdir}
 		fi
 	fi
-
+	set +x
 	log_check rootfs 	
 }
 

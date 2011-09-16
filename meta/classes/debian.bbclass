@@ -104,6 +104,10 @@ python debian_package_name_hook () {
 						newpkg = pkgname
 					else:
 						newpkg = pkg.replace(orig_pkg, devname, 1)
+					mlpre=bb.data.getVar('MLPREFIX', d, True)
+					if mlpre:
+						if not newpkg.find(mlpre) == 0:
+							newpkg = mlpre + newpkg
 					if newpkg != pkg:
 						bb.data.setVar('PKG_' + pkg, newpkg, d)
 

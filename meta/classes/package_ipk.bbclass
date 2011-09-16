@@ -75,6 +75,7 @@ package_tryout_install_multilib_ipk() {
 			fi
 		done
 		if [ ! -z "${selected_pkg}" ]; then
+			rm -f ${target_rootfs}
 			mkdir -p ${target_rootfs}/${opkglibdir}
 			opkg-cl ${ipkg_args} update
 			opkg-cl ${ipkg_args} install ${selected_pkg}
