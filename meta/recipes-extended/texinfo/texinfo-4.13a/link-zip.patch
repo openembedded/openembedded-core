@@ -1,0 +1,16 @@
+install-info uses symbols from zlib so must link against it.
+
+Upstream-Status: Pending
+
+Signed-off-by: Joshua Lock <josh@linux.intel.com>
+
+Index: texinfo-4.13/install-info/Makefile.am
+===================================================================
+--- texinfo-4.13.orig/install-info/Makefile.am
++++ texinfo-4.13/install-info/Makefile.am
+@@ -28,4 +28,4 @@ AM_CPPFLAGS = 					\
+   -I$(top_srcdir)/gnulib/lib			\
+   -I$(top_builddir)/gnulib/lib			\
+   -DLOCALEDIR=\"$(localedir)\"
+-LDADD = ../lib/libtxi.a $(top_builddir)/gnulib/lib/libgnu.a $(LIBINTL)
++LDADD = ../lib/libtxi.a $(top_builddir)/gnulib/lib/libgnu.a $(LIBINTL) -lz

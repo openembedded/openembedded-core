@@ -8,14 +8,18 @@ LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=adefda309052235aa5d1e99ce7557010"
 PR = "r1"
 
-DEPENDS = "zlib"
+DEPENDS = "zlib ncurses texinfo-native"
+DEPENDS_virtclass-native = "zlib-native ncurses-native"
 
 SRC_URI = "${GNU_MIRROR}/texinfo/texinfo-${PV}.tar.gz \
-           file://texinfo-4.12-zlib.patch; \
-           file://texinfo-4.13a-data_types.patch; \
-           file://texinfo-4.13a-mosdo-crash.patch; \
-           file://texinfo-4.13a-powerpc.patch; \
-           file://texinfo-4.13a-help-index-segfault.patch;"
+           file://texinfo-4.12-zlib.patch \
+           file://texinfo-4.13a-data_types.patch \
+           file://texinfo-4.13a-mosdo-crash.patch \
+           file://texinfo-4.13a-powerpc.patch \
+           file://texinfo-4.13a-help-index-segfault.patch \
+           file://disable-native-tools.patch \
+           file://link-zip.patch \
+           file://gettext-macros.patch"
 
 SRC_URI[md5sum] = "71ba711519209b5fb583fed2b3d86fcb"
 SRC_URI[sha256sum] = "1303e91a1c752b69a32666a407e9fbdd6e936def4b09bc7de30f416301530d68"
@@ -25,13 +29,9 @@ tex_texinfo = "texmf/tex/texinfo"
 
 inherit gettext autotools
 
-do_configure() {
-	oe_runconf
-}
-
-do_compile_prepend(){
+do_compile_prepend() {
 	if [ -d tools ];then
-		make -C tools/gnulib/lib
+		oe_runmake -C tools/gnulib/lib
 	fi
 }
 
