@@ -936,8 +936,11 @@ python populate_packages () {
 
 	unshipped = []
 	for root, dirs, files in os.walk(dvar):
+		dir = root[len(dvar):]
+		if not dir:
+			dir = os.sep
 		for f in files:
-			path = os.path.join(root[len(dvar):], f)
+			path = os.path.join(dir, f)
 			if ('.' + path) not in seen:
 				unshipped.append(path)
 
