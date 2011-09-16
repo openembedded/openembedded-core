@@ -61,6 +61,15 @@ class Konsole(XTerminal):
     command = 'konsole -T "{title}" -e {command}'
     priority = 2
 
+    def __init__(self, command, title=None, env=None):
+        # Check version
+        vernum = check_konsole_version("konsole")
+        if vernum:
+            if vernum.split('.')[0] == "2":
+                logger.debug(1, 'Konsole from KDE 4.x will not work as devshell, skipping')
+                raise UnsupportedTerminal(self.name)
+        XTerminal.__init__(self, command, title, env)
+
 class XTerm(XTerminal):
     command = 'xterm -T "{title}" -e {command}'
     priority = 1
@@ -104,3 +113,21 @@ def spawn(name, command, title=None, env=None):
     output = pipe.communicate()[0]
     if pipe.returncode != 0:
         raise ExecutionError(pipe.command, pipe.returncode, output)
+
+def check_konsole_version(konsole):
+    import subprocess as sub
+    try:
+        p = sub.Popen(['sh', '-c', '%s --version' % konsole],stdout=sub.PIPE,stderr=sub.PIPE)
+        out, err = p.communicate()
+        ver_info = out.rstrip().split('\n')
+    except OSError as exc:
+        import errno
+        if exc.errno == errno.ENOENT:
+            return None
+        else:
+            raise
+    vernum = None
+    for ver in ver_info:
+        if ver.startswith('Konsole'):
+            vernum = ver.split(' ')[-1]
+    return vernum
