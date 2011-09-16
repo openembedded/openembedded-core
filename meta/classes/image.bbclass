@@ -213,7 +213,6 @@ log_check() {
 }
 
 MULTILIBRE_ALLOW_REP =. "${base_bindir}|${base_sbindir}|${bindir}|${sbindir}|${libexecdir}|"
-MULTILIBRE_FORCE_SAME =. "${sysconfdir}|${datadir}|"
 MULTILIB_CHECK_FILE = "${WORKDIR}/multilib_check.py"
 MULTILIB_TEMP_ROOTFS = "${WORKDIR}/multilib"
 
@@ -223,7 +222,6 @@ import sys, os, os.path
 import re,filecmp
 
 allow_rep=re.compile(re.sub("\|$","","${MULTILIBRE_ALLOW_REP}"))
-force_same=re.compile(re.sub("\|$","","${MULTILIBRE_FORCE_SAME}"))
 error_promt="Multilib check error:"
 
 files={}
@@ -236,19 +234,14 @@ for dir in dirs.split():
 
       valid=True;
       if files.has_key(key):
-        #check whether files are the same
-        if force_same.match(key):
+        #check whether the file is allow to replace
+        if allow_rep.match(key):
+          valid=True
+        else:
           if not filecmp.cmp(files[key],item):
              valid=False
-             print("%s %s is not the same as %s\n" % (error_promt, item, files[key]))
+             print("%s duplicate files %s %s is not the same\n" % (error_promt, item, files[key]))
              sys.exit(1)
-        #check whether the file is allow to replace
-        elif allow_rep.match(key):
-          valid=True
-        else: 
-          valid=False
-          print("%s duplicated files %s %s not allowed\n" % (error_promt, item, files[key]))
-          sys.exit(1)
 
       #pass the check, add to list
       if valid:
