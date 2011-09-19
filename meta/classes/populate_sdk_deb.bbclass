@@ -52,8 +52,8 @@ fakeroot populate_sdk_deb () {
 	populate_sdk_post_deb ${SDK_OUTPUT}/${SDKPATHNATIVE}
 
 	#move remainings
-	install -d ${SDK_OUTPUT}/${SDKPATHNATIVE}/var/dpkg
-	mv ${SDK_OUTPUT}/var/dpkg/* ${SDK_OUTPUT}/${SDKPATHNATIVE}/var/dpkg
+	install -d ${SDK_OUTPUT}/${SDKPATHNATIVE}/var/lib/dpkg
+	mv ${SDK_OUTPUT}/var/lib/dpkg/* ${SDK_OUTPUT}/${SDKPATHNATIVE}/var/lib/dpkg
 	rm -rf ${SDK_OUTPUT}/var
 
 	populate_sdk_log_check populate_sdk

@@ -9,7 +9,7 @@
 BEGIN {
   rc=system("test -d /usr/dpkg/info/")
   if (rc==0)
-    pkgdir="/var/dpkg/info"
+    pkgdir="/var/lib/dpkg/info"
   else
     pkgdir="/usr/lib/opkg/info"
   package=""

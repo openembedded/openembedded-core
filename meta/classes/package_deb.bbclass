@@ -135,11 +135,11 @@ package_install_internal_deb () {
 
 	export APT_CONFIG="${STAGING_ETCDIR_NATIVE}/apt/apt-${task}.conf"
 
-	mkdir -p ${target_rootfs}/var/dpkg/info
-	mkdir -p ${target_rootfs}/var/dpkg/updates
+	mkdir -p ${target_rootfs}/var/lib/dpkg/info
+	mkdir -p ${target_rootfs}/var/lib/dpkg/updates
 
-	> ${target_rootfs}/var/dpkg/status
-	> ${target_rootfs}/var/dpkg/available
+	> ${target_rootfs}/var/lib/dpkg/status
+	> ${target_rootfs}/var/lib/dpkg/available
 
 	apt-get update
 
@@ -179,7 +179,7 @@ package_install_internal_deb () {
 	done
 
 	# Mark all packages installed
-	sed -i -e "s/Status: install ok unpacked/Status: install ok installed/;" ${target_rootfs}/var/dpkg/status
+	sed -i -e "s/Status: install ok unpacked/Status: install ok installed/;" ${target_rootfs}/var/lib/dpkg/status
 }
 
 deb_log_check() {

@@ -5,7 +5,7 @@
 # Author: Richard Purdie <rpurdie@openedhand.com>
 #
 
-PKGSYSTEM=/var/dpkg
+PKGSYSTEM=/var/lib/dpkg
 
 if [ ! -e $PKGSYSTEM/status ]; then
   if [ -e /usr/lib/opkg/status ]; then

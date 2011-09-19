@@ -8,7 +8,7 @@ SECTION = "base"
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.bz2"
 S = "${WORKDIR}/dpkg-${PV}"
 PACKAGE_ARCH = "all"
-INC_PR = "r2"
+INC_PR = "r3"
 
 inherit gettext
 
@@ -20,7 +20,7 @@ do_patch () {
         s/^.*$/$D=$ENV{"D"} || ""\;/;
         p;
         x;
-        s,^\$admindir=.*staging.*$,$admindir="$D${localstatedir}/dpkg"\;,;
+        s,^\$admindir=.*staging.*$,$admindir="$D${localstatedir}/lib/dpkg"\;,;
     };
     s,^\$altdir=.*$,$altdir="$D${sysconfdir}/alternatives"\;,;
     p;' > ${S}/scripts/update-alternatives
@@ -28,7 +28,7 @@ do_patch () {
 
 do_install () {
     install -d ${D}${sbindir} \
-               ${D}${localstatedir}/dpkg/alternatives \
+               ${D}${localstatedir}/lib/dpkg/alternatives \
                ${D}${sysconfdir}/alternatives
 
     install -m 0755 scripts/update-alternatives ${D}${sbindir}/update-alternatives

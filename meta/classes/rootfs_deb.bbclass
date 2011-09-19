@@ -13,7 +13,7 @@ opkglibdir = "${localstatedir}/lib/opkg"
 fakeroot rootfs_deb_do_rootfs () {
 	set +e
 
-	mkdir -p ${IMAGE_ROOTFS}/var/dpkg/alternatives
+	mkdir -p ${IMAGE_ROOTFS}/var/lib/dpkg/alternatives
 
 	# update index
 	package_update_index_deb
@@ -36,15 +36,15 @@ fakeroot rootfs_deb_do_rootfs () {
 	export OPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
 
 	_flag () {
-		sed -i -e "/^Package: $2\$/{n; s/Status: install ok .*/Status: install ok $1/;}" ${IMAGE_ROOTFS}/var/dpkg/status
+		sed -i -e "/^Package: $2\$/{n; s/Status: install ok .*/Status: install ok $1/;}" ${IMAGE_ROOTFS}/var/lib/dpkg/status
 	}
 	_getflag () {
-		cat ${IMAGE_ROOTFS}/var/dpkg/status | sed -n -e "/^Package: $2\$/{n; s/Status: install ok .*/$1/; p}"
+		cat ${IMAGE_ROOTFS}/var/lib/dpkg/status | sed -n -e "/^Package: $2\$/{n; s/Status: install ok .*/$1/; p}"
 	}
 
 	# Attempt to run preinsts
 	# Mark packages with preinst failures as unpacked
-	for i in ${IMAGE_ROOTFS}/var/dpkg/info/*.preinst; do
+	for i in ${IMAGE_ROOTFS}/var/lib/dpkg/info/*.preinst; do
 		if [ -f $i ] && ! sh $i; then
 			_flag unpacked `basename $i .preinst`
 		fi
@@ -52,7 +52,7 @@ fakeroot rootfs_deb_do_rootfs () {
 
 	# Attempt to run postinsts
 	# Mark packages with postinst failures as unpacked
-	for i in ${IMAGE_ROOTFS}/var/dpkg/info/*.postinst; do
+	for i in ${IMAGE_ROOTFS}/var/lib/dpkg/info/*.postinst; do
 		if [ -f $i ] && ! sh $i configure; then
 			_flag unpacked `basename $i .postinst`
 		fi
@@ -65,12 +65,12 @@ fakeroot rootfs_deb_do_rootfs () {
 
 	# Hacks to allow opkg's update-alternatives and opkg to coexist for now
 	mkdir -p ${IMAGE_ROOTFS}${opkglibdir}
-	if [ -e ${IMAGE_ROOTFS}/var/dpkg/alternatives ]; then
-		rmdir ${IMAGE_ROOTFS}/var/dpkg/alternatives
+	if [ -e ${IMAGE_ROOTFS}/var/lib/dpkg/alternatives ]; then
+		rmdir ${IMAGE_ROOTFS}/var/lib/dpkg/alternatives
 	fi
-	ln -s ${opkglibdir}/alternatives ${IMAGE_ROOTFS}/var/dpkg/alternatives
-	ln -s /var/dpkg/info ${IMAGE_ROOTFS}${opkglibdir}/info
-	ln -s /var/dpkg/status ${IMAGE_ROOTFS}${opkglibdir}/status
+	ln -s ${opkglibdir}/alternatives ${IMAGE_ROOTFS}/var/lib/dpkg/alternatives
+	ln -s /var/lib/dpkg/info ${IMAGE_ROOTFS}${opkglibdir}/info
+	ln -s /var/lib/dpkg/status ${IMAGE_ROOTFS}${opkglibdir}/status
 
 	${ROOTFS_POSTPROCESS_COMMAND}
 

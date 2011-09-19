@@ -3,7 +3,7 @@ RDEPENDS_${PN} = "dpkg"
 LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=0636e73ff0215e8d672dc4c32c317bb3"
 require apt.inc
 
-PR = "r7"
+PR = "r8"
 
 SRC_URI += "file://nodoc.patch \
             file://includes-fix.patch "
