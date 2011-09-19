@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://docs/LICENSE.TXT;md5=28d5381b1bef2649c59f20c20bae4f39
 
 SECTION = "libs"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
            file://no-hardcode.patch"
@@ -28,7 +28,7 @@ inherit autotools pkgconfig binconfig
 LIBTOOL = "${S}/builds/unix/${HOST_SYS}-libtool"
 EXTRA_OEMAKE = "'LIBTOOL=${LIBTOOL}'"
 EXTRA_OEMAKE_virtclass-native = ""
-EXTRA_OECONF = "--without-zlib"
+EXTRA_OECONF = "--without-zlib --without-bzip2"
 
 do_configure() {
 	cd builds/unix
