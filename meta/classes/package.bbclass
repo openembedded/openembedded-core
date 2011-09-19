@@ -1652,6 +1652,12 @@ PACKAGEFUNCS ?= "package_get_auto_pr \
 		emit_pkgdata"
 
 python do_package () {
+        # Change the following version to cause sstate to invalidate the package
+        # cache.  This is useful if an item this class depends on changes in a
+        # way that the output of this class changes.  rpmdeps is a good example
+        # as any change to rpmdeps requires this to be rerun.
+        # PACKAGE_BBCLASS_VERSION = "1"
+
 	packages = (bb.data.getVar('PACKAGES', d, True) or "").split()
 	if len(packages) < 1:
 		bb.debug(1, "No packages to build, skipping do_package")
