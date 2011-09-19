@@ -840,7 +840,7 @@ python do_package_rpm () {
 	os.chmod(outdepends, 0755)
 
 	# Poky / RPM Provides
-	outprovides = workdir + "/" + srcname + ".requires"
+	outprovides = workdir + "/" + srcname + ".provides"
 
 	try:
 		from __builtin__ import file
