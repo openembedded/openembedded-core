@@ -205,6 +205,38 @@ do_install () {
 	install -m 0644 ${S}/busybox.links ${D}${sysconfdir}
 }
 
+python package_do_filedeps_append () {
+	# We need to load the full set of busybox provides from the /etc/busybox.links
+	# The pkg_postinst_ is what creates the actual links
+
+	pkg = d.getVar('PN', True)
+	f_busybox = "/bin/busybox"
+	f_busybox_links = "/etc/busybox.links"
+
+	requires_files = []
+	provides_files = []
+
+	# Load/backup original set
+	filerprovides = d.getVar('FILERPROVIDES_%s_%s' % (f_busybox, pkg), True) or ""
+
+	dep_pipe = os.popen('sed -e "s,^,Provides: ," %s/%s%s' % (pkgdest, pkg, f_busybox_links))
+
+	process_deps(dep_pipe, pkg, "%s/%s%s" % (pkgdest, pkg, f_busybox), provides_files, requires_files)
+
+	# Add the new set
+	filerprovides += d.getVar('FILERPROVIDES_%s_%s' % (f_busybox, pkg), True) or ""
+
+	# Make sure there is an entry for this item in the FILERPROVIDESFLIST...
+	filerprovidesflist = (d.getVar('FILERPROVIDESFLIST_%s' % pkg, True) or "").split()
+	for file in provides_files:
+		if file not in filerprovidesflist:
+			filerprovidesflist.append(file)
+	d.setVar('FILERPROVIDESFLIST_%s' % pkg, " ".join(filerprovidesflist))
+
+	# Store the new provides
+	d.setVar('FILERPROVIDES_%s_%s' % (f_busybox, pkg), filerprovides)
+}
+
 pkg_postinst_${PN} () {
 	# If we are not making an image we create links for the utilities that doesn't exist
 	# so the update-alternatives script will get the utilities it needs
