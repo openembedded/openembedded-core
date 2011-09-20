@@ -1,0 +1,56 @@
+From 852abfca6f4c349dce9b895956922f96d82df579 Mon Sep 17 00:00:00 2001
+From: Andrew den Exter <andrew.den-exter@nokia.com>
+Date: Thu, 8 Sep 2011 12:28:49 +1000
+Subject: [PATCH] Fix double click and drag not extending word selection.
+
+mousePressed isn't set on the second press of a double click and so
+can't be used to determine if all selections should be skipped.  Instead
+skip only the single click and drag selections if mousePressed is false.
+
+Change-Id: I5e7ba033f38b0f9b98fdca5c61a8548f92991601
+Task-number: QTBUG-20925
+Reviewed-by: Martin Jones
+
+https://bugreports.qt.nokia.com/browse/QTBUG-20925
+
+Original Author:Andrew den Exter <andrew.den-exter@nokia.com>
+Upstream-Status: Integrated in upcoming versions (4.8) as commit 852abfca6f4c349dce9b895956922f96d82df579
+---
+ src/gui/text/qtextcontrol.cpp          |    7 +----
+ tests/auto/qtextedit/tst_qtextedit.cpp |   41 ++++++++++++++++++++++++++++++++
+ 2 files changed, 43 insertions(+), 5 deletions(-)
+
+diff --git a/src/gui/text/qtextcontrol.cpp b/src/gui/text/qtextcontrol.cpp
+index aacac04..996d488 100644
+--- a/src/gui/text/qtextcontrol.cpp
++++ b/src/gui/text/qtextcontrol.cpp
+@@ -1628,16 +1628,13 @@ void QTextControlPrivate::mouseMoveEvent(QEvent *e, Qt::MouseButton button, cons
+         return;
+     }
+ 
+-    if (!mousePressed)
+-        return;
+-
+     const qreal mouseX = qreal(mousePos.x());
+ 
+     int newCursorPos = q->hitTest(mousePos, Qt::FuzzyHit);
+     if (newCursorPos == -1)
+         return;
+ 
+-    if (wordSelectionEnabled && !selectedWordOnDoubleClick.hasSelection()) {
++    if (mousePressed && wordSelectionEnabled && !selectedWordOnDoubleClick.hasSelection()) {
+         selectedWordOnDoubleClick = cursor;
+         selectedWordOnDoubleClick.select(QTextCursor::WordUnderCursor);
+     }
+@@ -1646,7 +1643,7 @@ void QTextControlPrivate::mouseMoveEvent(QEvent *e, Qt::MouseButton button, cons
+         extendBlockwiseSelection(newCursorPos);
+     else if (selectedWordOnDoubleClick.hasSelection())
+         extendWordwiseSelection(newCursorPos, mouseX);
+-    else
++    else if (mousePressed)
+         setCursorPosition(newCursorPos, QTextCursor::KeepAnchor);
+ 
+     if (interactionFlags & Qt::TextEditable) {
+-- 
+1.6.1
+
