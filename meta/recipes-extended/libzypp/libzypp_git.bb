@@ -16,7 +16,7 @@ SRCREV = "15b6c52260bbc52b3d8e585e271b67e10cc7c433"
 PV = "0.0-git${SRCPV}"
 PR = "r14"
 
-SRC_URI = "git://gitorious.org/opensuse/libzypp.git;protocol=git \
+SRC_URI = "git://github.com/openSUSE/libzypp.git;protocol=git \
            file://no-doc.patch \
            file://rpm5.patch \
            file://rpm5-no-rpmdbinit.patch \
