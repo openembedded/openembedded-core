@@ -12,7 +12,7 @@ PR = "r11"
 
 PARALLEL_MAKE=""
 
-SRC_URI = "git://gitorious.org/opensuse/sat-solver.git;protocol=git \
+SRC_URI = "git://github.com/openSUSE/sat-solver.git;protocol=git \
            file://sat-solver_rpm5.patch \
            file://sat-solver_obsolete.patch \
            file://cmake.patch \
