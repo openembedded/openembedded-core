@@ -6,16 +6,33 @@ python multilib_virtclass_handler_global () {
 
     if isinstance(e, bb.event.RecipeParsed) and not variant:
         if bb.data.inherits_class('kernel', e.data) or bb.data.inherits_class('module-base', e.data) or bb.data.inherits_class('allarch', e.data):
-            origprovs = provs = e.data.getVar("PROVIDES", True)
-            rprovs = e.data.getVar("RPROVIDES", True)
             variants = (e.data.getVar("MULTILIB_VARIANTS", True) or "").split()
+
+            # Process PROVIDES
+            origprovs = provs = e.data.getVar("PROVIDES", True) or ""
             for variant in variants:
                 provs = provs + " " + multilib_map_variable("PROVIDES", variant, e.data)
-                for pkg in e.data.getVar("PACKAGES", True).split():
-                    rprovs = rprovs + " " + variant + "-" + pkg
+                # Reset to original value so next time around multilib_map_variable works properly
                 e.data.setVar("PROVIDES", origprovs)
             e.data.setVar("PROVIDES", provs)
+
+            # Process RPROVIDES
+            origrprovs = rprovs = e.data.getVar("RPROVIDES", True) or ""
+            for variant in variants:
+                rprovs = rprovs + " " + multilib_map_variable("RPROVIDES", variant, e.data)
+                # Reset to original value so next time around multilib_map_variable works properly
+                e.data.setVar("RPROVIDES", origrprovs)
             e.data.setVar("RPROVIDES", rprovs)
+
+	    # Process RPROVIDES_${PN}...
+            for pkg in (e.data.getVar("PACKAGES", True) or "").split():
+                origrprovs = rprovs = e.data.getVar("RPROVIDES_%s" % pkg, True) or ""
+                for variant in variants:
+                    rprovs = rprovs + " " + multilib_map_variable("RPROVIDES_%s" % pkg, variant, e.data)
+                    rprovs = rprovs + " " + variant + "-" + pkg
+                    # Reset to original value so next time around multilib_map_variable works properly
+                    e.data.setVar("RPROVIDES_%s" % pkg, origrprovs)
+                e.data.setVar("RPROVIDES_%s" % pkg, rprovs)
 }
 
 addhandler multilib_virtclass_handler_global
@@ -35,7 +52,7 @@ def multilib_extend_name(variant, name):
 def multilib_map_variable(varname, variant, d):
     var = d.getVar(varname, True)
     if not var:
-        return
+        return ""
     var = var.split()
     newvar = []
     for v in var:
