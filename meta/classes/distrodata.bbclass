@@ -8,7 +8,7 @@ python distro_eventhandler() {
 	logfile = dc.create_log_file(e.data, "distrodata.csv")
 	lf = bb.utils.lockfile("%s.lock" % logfile)
 	f = open(logfile, "a")
-	f.write("Package,Description,Owner,License,ChkSum,Status,VerMatch,Version,Upsteam,Non-Update,Reason,Recipe Status\n")
+	f.write("Package,Description,Owner,License,ChkSum,Status,VerMatch,Version,Upsteam,Non-Update,Reason,Recipe Status,Distro 1,Distro 2,Distro 3\n")
         f.close()
         bb.utils.unlockfile(lf)
 
@@ -34,8 +34,20 @@ python do_distrodata_np() {
 	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
 	    bb.data.update_data(localdata)
 
+	if pn.find("-nativesdk") != -1:
+	    pnstripped = pn.split("-nativesdk")
+	    bb.note("Native Split: %s" % pnstripped)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.update_data(localdata)
+
 	if pn.find("-cross") != -1:
 	    pnstripped = pn.split("-cross")
+	    bb.note("cross Split: %s" % pnstripped)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.update_data(localdata)
+
+	if pn.find("-crosssdk") != -1:
+	    pnstripped = pn.split("-crosssdk")
 	    bb.note("cross Split: %s" % pnstripped)
 	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
 	    bb.data.update_data(localdata)
@@ -181,7 +193,7 @@ python do_distrodata() {
 
 	lf = bb.utils.lockfile("%s.lock" % logfile)
 	f = open(logfile, "a")
-	f.write("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s," % \
+	f.write("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s" % \
 		  (pname, pdesc, maintainer, plicense, pchksum, hasrstatus, vermatch, pcurver, pupver, noupdate, noupdate_reason, rstatus))
         line = ""
         for i in result:
@@ -671,6 +683,9 @@ python do_distro_check() {
     import oe.distro_check as dc
     import bb
     import shutil
+    if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('sdk', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('nativesdk',d):
+        return
+
     localdata = bb.data.createCopy(d)
     bb.data.update_data(localdata)
     tmpdir = bb.data.getVar('TMPDIR', d, True)

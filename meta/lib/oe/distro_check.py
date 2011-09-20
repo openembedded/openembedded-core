@@ -73,9 +73,9 @@ def clean_package_list(package_list):
 def get_latest_released_meego_source_package_list():
     "Returns list of all the name os packages in the latest meego distro"
 
-    if not os.path.isfile("/tmp/Meego-1.0"):
-        os.mknod("/tmp/Meego-1.0")
-    f = open("/tmp/Meego-1.0", "r")
+    if not os.path.isfile("/tmp/Meego-1.1"):
+        os.mknod("/tmp/Meego-1.1")
+    f = open("/tmp/Meego-1.1", "r")
     package_names = []
     for line in f:
         package_names.append(line[:-1] + ":" + "main") # Also strip the '\n' at the end
@@ -303,7 +303,7 @@ def compare_in_distro_packages_list(distro_check_dir, d):
     bb.note("Recipe: %s" % recipe_name)
     tmp = bb.data.getVar('DISTRO_PN_ALIAS', localdata, True)
 
-    distro_exceptions = dict({"OE-Core":'OE-Core', "OpenedHand":'OpenedHand', "Intel":'Intel', "Upstream":'Upstream', "WindRiver":'Windriver', "OSPDT":'OSPDT Approved', "Poky":'poky'})
+    distro_exceptions = dict({"OE-Core":'OE-Core', "OpenedHand":'OpenedHand', "Intel":'Intel', "Upstream":'Upstream', "Windriver":'Windriver', "OSPDT":'OSPDT Approved', "Poky":'poky'})
 
     if tmp:
         list = tmp.split(' ')
