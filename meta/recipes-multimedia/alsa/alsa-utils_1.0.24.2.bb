@@ -6,7 +6,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833 \
                     file://alsactl/utils.c;beginline=1;endline=20;md5=fe9526b055e246b5558809a5ae25c0b9"
 DEPENDS = "alsa-lib ncurses"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://ncursesfix.patch \
@@ -28,7 +28,7 @@ inherit autotools gettext
 # This are all packages that we need to make. Also, the now empty alsa-utils
 # ipk depends on them.
 
-PACKAGES += "\
+ALSA_UTILS_PKGS = "\
              alsa-utils-alsamixer \
              alsa-utils-midi \
              alsa-utils-aplay \
@@ -43,6 +43,9 @@ PACKAGES += "\
              alsa-utils-alsaloop \
              alsa-utils-alsaucm \
             "
+
+PACKAGES += "${ALSA_UTILS_PKGS}"
+RDEPENDS_${PN} += "${ALSA_UTILS_PKGS}"
 
 # We omit alsaconf, because
 # a) this is a bash script
