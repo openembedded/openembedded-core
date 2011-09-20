@@ -14,8 +14,9 @@ SECTION = "network"
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-X11DEPENDS = "gtk+ libglade"
-DEPENDS = "expat libcap libdaemon dbus glib-2.0 ${@base_contains('DISTRO_FEATURES', 'x11', '${X11DEPENDS}', '', d)}"
+INC_PR = "r6"
+
+DEPENDS = "expat libcap libdaemon dbus glib-2.0"
 
 SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
           file://00avahi-autoipd \
@@ -25,58 +26,38 @@ SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
 inherit autotools pkgconfig update-rc.d gettext
 
 EXTRA_OECONF = "--with-distro=debian \
+             --disable-introspection \
              --with-avahi-priv-access-group=adm \
              --disable-stack-protector \
              --disable-gdbm \
              --disable-mono \
              --disable-monodoc \
-             --disable-gtk3 \
-	     ${@base_contains('DISTRO_FEATURES', 'x11', '--enable-gtk', '--disable-gtk', d)} \
              --disable-qt3 \
              --disable-qt4 \
              --disable-python \
              --disable-doxygen-doc \
              --with-systemdsystemunitdir=${base_libdir}/systemd/system/ \
-"
+             ${AVAHI_GTK} \
+           "
 
-PACKAGES =+ "avahi-systemd avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib libavahi-gobject avahi-autoipd avahi-ui-utils avahi-utils libavahi-ui libavahi-ui-dev"
+AVAHI_GTK ?= "--disable-gtk --disable-gtk3"
+
+LDFLAGS_append_libc-uclibc = " -lintl"
+LDFLAGS_append_uclinux-uclibc = " -lintl"
+
+do_configure_prepend() {
+    sed 's:AM_CHECK_PYMOD:echo "no pymod" #AM_CHECK_PYMOD:g' -i configure.ac
+}
+
+
+PACKAGES =+ "avahi-systemd avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib libavahi-ui avahi-autoipd avahi-utils"
 
 FILES_avahi-systemd = "${base_libdir}/systemd"
-RDEPENDS_avahi-systemd = "avahi-daemon"
-
-pkg_postinst_avahi-systemd() {
-	# can't do this offline
-	if [ "x$D" != "x" ]; then
-		exit 1
-	fi
-	
-	systemctl enable avahi-daemon.service
-}
-
-pkg_postrm_avahi-systemd() {
-	# can't do this offline
-	if [ "x$D" != "x" ]; then
-		exit 1
-	fi
-
-	systemctl disable avahi-daemon.service
-}
-
-# uclibc has no nss
-RRECOMMENDS_avahi-daemon_append_libc-glibc = "libnss-mdns"
-RRECOMMENDS_${PN}_append_libc-glibc = "libnss-mdns"
-
-RDEPENDS_avahi-daemon = "sysvinit-pidof"
-
 FILES_avahi-autoipd = "${sbindir}/avahi-autoipd \
                        ${sysconfdir}/avahi/avahi-autoipd.action \
                        ${sysconfdir}/dhcp3/*/avahi-autoipd"
 FILES_libavahi-common = "${libdir}/libavahi-common.so.*"
 FILES_libavahi-core = "${libdir}/libavahi-core.so.*"
-FILES_libavahi-ui = "${libdir}/libavahi-ui.so.*"
-FILES_libavahi-ui-dev = "${libdir}/libavahi-ui.* \
-                         ${includedir}/avahi-ui/* \
-                         ${libdir}/pkgconfig/avahi-ui.pc"
 FILES_avahi-daemon = "${sbindir}/avahi-daemon \
                       ${sysconfdir}/avahi/avahi-daemon.conf \
                       ${sysconfdir}/avahi/hosts \
@@ -88,16 +69,19 @@ FILES_avahi-daemon = "${sbindir}/avahi-daemon \
                       ${datadir}/avahi/service-types \
                       ${datadir}/dbus-1/system-services"
 FILES_libavahi-client = "${libdir}/libavahi-client.so.*"
+FILES_libavahi-ui = "${libdir}/libavahi-ui.so.*"
 FILES_avahi-dnsconfd = "${sbindir}/avahi-dnsconfd \
                         ${sysconfdir}/avahi/avahi-dnsconfd.action \
                         ${sysconfdir}/init.d/avahi-dnsconfd"
 FILES_libavahi-glib = "${libdir}/libavahi-glib.so.*"
 FILES_libavahi-gobject = "${libdir}/libavahi-gobject.so.*"
 FILES_avahi-utils = "${bindir}/avahi-*"
-FILES_avahi-ui-utils = "${bindir}/bssh ${bindir}/bvnc ${bindir}/bshell \
-                        ${bindir}/avahi-discover-standalone \
-                        ${datadir}/applications \
-                        ${datadir}/avahi/interfaces"
+
+RDEPENDS_avahi-daemon = "sysvinit-pidof"
+
+# uclibc has no nss
+RRECOMMENDS_avahi-daemon_append_libc-glibc = "libnss-mdns"
+RRECOMMENDS_${PN}_append_libc-glibc = "libnss-mdns"
 
 RRECOMMENDS_avahi-dev = "expat-dev libcap-dev libdaemon-dev dbus-dev glib-2.0-dev update-rc.d-dev"
 RRECOMMENDS_avahi-dev_append_libc-glibc = " gettext-dev"
@@ -119,6 +103,14 @@ do_install() {
 	# /var/run of current version is empty, so just remove it.
 	# if /var/run become non-empty in the future, need to install it via volatile
 	rm -rf ${D}/var/run
+	rm -rf ${D}${datadir}/dbus-1/interfaces
+}
+
+do_install_avahi-autoipd() {
+	autotools_do_install
+	install -d ${D}${sysconfdir}/udhcpc.d
+	install ${WORKDIR}/00avahi-autoipd ${D}${sysconfdir}/udhcpc.d
+	install ${WORKDIR}/99avahi-autoipd ${D}${sysconfdir}/udhcpc.d
 }
 
 # At the time the postinst runs, dbus might not be setup so only restart if running
@@ -157,9 +149,21 @@ pkg_postrm_avahi-autoipd () {
 	delgroup avahi-autoipd || true
 }
 
-do_install_avahi-autoipd() {
-	autotools_do_install
-	install -d ${D}${sysconfdir}/udhcpc.d
-	install ${WORKDIR}/00avahi-autoipd ${D}${sysconfdir}/udhcpc.d
-	install ${WORKDIR}/99avahi-autoipd ${D}${sysconfdir}/udhcpc.d
+pkg_postinst_avahi-systemd() {
+	# can't do this offline
+	if [ "x$D" != "x" ]; then
+		exit 1
+	fi
+	
+	systemctl enable avahi-daemon.service
 }
+
+pkg_postrm_avahi-systemd() {
+	# can't do this offline
+	if [ "x$D" != "x" ]; then
+		exit 1
+	fi
+
+	systemctl disable avahi-daemon.service
+}
+
