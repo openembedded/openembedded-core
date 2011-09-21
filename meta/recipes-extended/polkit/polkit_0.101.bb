@@ -11,7 +11,7 @@ SRC_URI = "http://hal.freedesktop.org/releases/polkit-${PV}.tar.gz \
            ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)}"
 
 PAM_SRC_URI = "file://polkit-1_pam.patch"
-PR = "r1"
+PR = "r2"
 DEPENDS = "libpam expat dbus-glib eggdbus intltool-native"
 RDEPENDS_${PN} = "libpam"
 EXTRA_OECONF = "--with-authfw=pam --with-os-type=moblin --disable-man-pages --disable-gtk-doc --disable-introspection"
@@ -22,6 +22,11 @@ FILES_${PN} += "${libdir}/${PN}-1/extensions/*.so \
                 ${datadir}/${PN}-1/actions/* \
                 ${datadir}/dbus-1/system-services/*"
 FILES_${PN}-dbg += "${libdir}/${PN}-1/extensions/.debug/*.so"
+FILES_${PN}-dev += "${libdir}/${PN}-1/extensions/*.la "
+
+do_install_append() {
+	rm -f ${D}${libdir}/${PN}-1/extensions/*.a
+}
 
 SRC_URI[md5sum] = "f925ac93aba3c072977370c1e27feb7f"
 SRC_URI[sha256sum] = "927f65760e4fce23d7cdeae90245c22986eb0a39335a344915302158f73f9f1b"
