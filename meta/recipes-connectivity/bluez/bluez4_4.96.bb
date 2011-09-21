@@ -12,7 +12,7 @@ RDEPENDS_${PN}-dev = "bluez-hcidump"
 
 ASNEEDED = ""
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "\
   ${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.gz \
@@ -39,7 +39,7 @@ EXTRA_OECONF = "\
   --enable-dund \
   --disable-cups \
   --enable-test \
-  --enable-configfiles \
+  --enable-datafiles \
 "
 
 do_install_append() {
