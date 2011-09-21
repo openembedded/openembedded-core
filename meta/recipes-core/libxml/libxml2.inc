@@ -37,7 +37,7 @@ python populate_packages_prepend () {
 		bb.data.setVar('PKG_libxml2', '${MLPREFIX}libxml2', d)
 }
 
-PACKAGES = "${PN}-dbg ${PN}-dev ${PN}-utils ${PN} ${PN}-doc ${PN}-locale"
+PACKAGES += "${PN}-utils"
 
 FILES_${PN}-dev += "${bindir}/*-config ${libdir}/xml2Conf.sh"
 FILES_${PN}-utils += "${bindir}/*"
