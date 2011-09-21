@@ -166,7 +166,8 @@ package_install_internal_rpm () {
 	local platform="${INSTALL_PLATFORM_RPM}"
 	local platform_extra="${INSTALL_PLATFORM_EXTRA_RPM}"
 	local confbase="${INSTALL_CONFBASE_RPM}"
-	local package_to_install="${INSTALL_PACKAGES_NORMAL_RPM} ${INSTALL_PACKAGES_MULTILIB_RPM}"
+	local package_to_install="${INSTALL_PACKAGES_NORMAL_RPM}"
+	local multilib_to_install="${INSTALL_PACKAGES_MULTILIB_RPM}"
 	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_RPM}"
 	local package_linguas="${INSTALL_PACKAGES_LINGUAS_RPM}"
 	local providename="${INSTALL_PROVIDENAME_RPM}"
@@ -253,11 +254,13 @@ package_install_internal_rpm () {
 		done
 	fi
 
+	# Normal package installation
+
 	# Generate an install solution by doing a --justdb install, then recreate it with
 	# an actual package install!
 	${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
 		--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
-		-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
+		-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}-base_archs.macro`" \
 		-D "__dbi_txn create nofsync" \
 		-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 		${target_rootfs}/install/install.manifest
@@ -351,14 +354,57 @@ package_install_internal_rpm () {
 		-D "__dbi_txn create nofsync private" \
 		| grep -i 'Packageorigin' | cut -d : -f 2 > ${target_rootfs}/install/install_solution.manifest
 
+	if [ ! -z "${multilib_to_install}" ]; then
+		for pkg in ${multilib_to_install} ; do
+			echo "Processing $pkg..."
+
+			archvar=base_archs
+			ml_prefix=`echo ${pkg} | cut -d'-' -f1`
+			ml_pkg=$pkg
+			for i in ${MULTILIB_PREFIX_LIST} ; do
+				if [ ${ml_prefix} == ${i} ]; then
+					ml_pkg=$(echo ${pkg} | sed "s,^${ml_prefix}-\(.*\),\1,")
+					archvar=ml_archs
+					break
+				fi
+			done
+
+			pkg_name=$(resolve_package_rpm ${confbase}-${archvar}.conf ${ml_pkg})
+			if [ -z "$pkg_name" ]; then
+				echo "Unable to find package $pkg ($ml_pkg)!"
+				exit 1
+			fi
+			echo $pkg_name >> ${target_rootfs}/install/install_multilib.manifest
+		done
+	fi
+
+	# multilib package installation
+
+	# Generate an install solution by doing a --justdb install, then recreate it with
+	# an actual package install!
+	${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+		--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
+		-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}-ml_archs.macro`" \
+		-D "__dbi_txn create nofsync" \
+		-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
+		${target_rootfs}/install/install_multilib.manifest
+
+	# Now that we have a solution, pull out a list of what to install...
+	echo "Manifest: ${target_rootfs}/install/install_multilib.manifest"
+	${RPM} -D "_dbpath ${target_rootfs}/install" -qa --yaml \
+		-D "__dbi_txn create nofsync private" \
+		| grep -i 'Packageorigin' | cut -d : -f 2 > ${target_rootfs}/install/install_multilib_solution.manifest
+
+
 	# Attempt install
 	${RPM} --root ${target_rootfs} \
 		--predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
 		--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
 		-D "_dbpath ${rpmlibdir}" \
-		--noscripts --notriggers --noparentdirs --nolinktos \
+		--noscripts --notriggers --noparentdirs --nolinktos --replacepkgs \
 		-D "__dbi_txn create nofsync private" \
-		-Uhv ${target_rootfs}/install/install_solution.manifest
+		-Uhv ${target_rootfs}/install/install_solution.manifest \
+		${target_rootfs}/install/install_multilib_solution.manifest
 }
 
 python write_specfile () {
