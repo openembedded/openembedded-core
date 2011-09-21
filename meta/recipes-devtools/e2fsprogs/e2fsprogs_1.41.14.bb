@@ -1,6 +1,6 @@
 require e2fsprogs.inc
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI += "file://quotefix.patch \
             file://acinclude.m4"
@@ -51,5 +51,6 @@ FILES_libcomerr = "${libdir}/libcom_err.so.*"
 FILES_libss = "${libdir}/libss.so.*"
 FILES_libe2p = "${libdir}/libe2p.so.*"
 FILES_libext2fs = "${libdir}/e2initrd_helper ${libdir}/libext2fs.so.*"
+FILES_${PN}-dev += "${datadir}/*/*.awk ${datadir}/*/*.sed"
 
 BBCLASSEXTEND = "native"
