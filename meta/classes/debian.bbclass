@@ -24,6 +24,9 @@ python debian_package_name_hook () {
 
 	pkgdest = bb.data.getVar('PKGDEST', d, 1)
 	packages = bb.data.getVar('PACKAGES', d, 1)
+	bin_re = re.compile(".*/s?" + os.path.basename(d.getVar("bindir", True)) + "$")
+	lib_re = re.compile(".*/" + os.path.basename(d.getVar("libdir", True)) + "$")
+	so_re = re.compile("lib.*\.so")
 
 	def socrunch(s):
 		s = s.lower().replace('_', '-')
@@ -45,9 +48,6 @@ python debian_package_name_hook () {
 		return (s[stat.ST_MODE] & stat.S_IEXEC)
 
 	def auto_libname(packages, orig_pkg):
-		bin_re = re.compile(".*/s?bin$")
-		lib_re = re.compile(".*/lib$")
-		so_re = re.compile("lib.*\.so")
 		sonames = []
 		has_bins = 0
 		has_libs = 0
