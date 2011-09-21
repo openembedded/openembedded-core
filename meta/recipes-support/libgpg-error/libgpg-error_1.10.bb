@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 
 
 SECTION = "libs"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch"
@@ -23,3 +23,8 @@ FILES_${PN} = "${libdir}/lib*.so.*"
 FILES_${PN}-dev += "${bindir}/*"
 
 inherit autotools binconfig pkgconfig gettext
+
+do_install_append() {
+	# we don't have common lisp in OE
+	rm -rf "${D}${datadir}/common-lisp/"
+}
