@@ -33,7 +33,7 @@ def icecc_dep_prepend(d):
     # we need that built is the responsibility of the patch function / class, not
     # the application.
     if not bb.data.getVar('INHIBIT_DEFAULT_DEPS', d):
-        return "icecc-create-env"
+        return "icecc-create-env-native"
     return ""
 
 DEPENDS_prepend += "${@icecc_dep_prepend(d)} "

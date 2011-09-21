@@ -1,7 +1,7 @@
 --- a/icecc-create-env	2006-12-14 09:50:46.000000000 +0300
 +++ b/icecc-create-env	2011-08-31 17:52:45.000000000 +0400
 @@ -27,9 +27,6 @@
-   # readlink is not portable enough. 
+   # readlink is not portable enough.
    path=`ls -H $path`
    toadd="$name=$path"
 -  if test "$name" = "$path"; then
@@ -13,7 +13,7 @@
 @@ -117,6 +114,14 @@
    add_file "$specfile"
  fi
- 
+
 +ltofile=`$added_gcc -print-prog-name=lto1`
 +pluginfile="${ltofile%lto1}liblto_plugin.so"
 +if test -r "$pluginfile"
@@ -24,14 +24,14 @@
 +
  tempdir=`mktemp -d /tmp/iceccenvXXXXXX`
  new_target_files=
- for i in $target_files; do 
+ for i in $target_files; do
 @@ -140,49 +147,44 @@
  done
- 
+
  #sort the files
 - target_files=`for i in $new_target_files; do echo $i; done | sort`
 +target_files=`for i in $new_target_files; do echo $i; done | sort`
- 
+
  #test if an archive name was supplied
  #if not use the md5 of all files as the archive name
  if test -z "$archive_name"; then
@@ -49,7 +49,7 @@
 +      break
 +    fi
 +  done
- 
+
 -#calculate md5 and use it as the archive name
 -archive_name=`for i in $target_files; do $md5sum $tempdir/$i; done | sed -e 's/ .*$//' | $md5sum | sed -e 's/ .*$//'` || {
 -  if test -z "$silent"; then
@@ -64,7 +64,7 @@
 +  mydir=`pwd`
 +else
 +  mydir="`dirname "$archive_name"`"
-+ 
++
 +  #check if we have a full path or only a filename
 +  if test "$mydir" = "." ; then
 +    mydir=`pwd`
@@ -75,18 +75,18 @@
 -}
 -
  fi
- 
+
  if test -z "$silent"; then
 -echo "creating $archive_name.tar.gz"
 +echo "creating $archive_name"
  fi
- 
+
 -if test -z "$archive_name"; then
 - mydir=`pwd`
 -else
 -# mydir=dirname ${archive_name}
 -  mydir=${archive_name%/*}
-- 
+-
 -#check if we have a full path or only a filename
 - if test -z "$mydir"; then
 -  mydir=`pwd`
