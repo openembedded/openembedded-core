@@ -15,6 +15,8 @@ DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor \
 
 inherit autotools pkgconfig
 
+PACKAGES += "libgail"
+
 FILES_${PN} = "${bindir}/gtk-update-icon-cache \
 	${bindir}/gtk-query-immodules-2.0 \
 	${libdir}/lib*${SOLIBS} \
@@ -24,16 +26,24 @@ FILES_${PN} = "${bindir}/gtk-update-icon-cache \
 FILES_${PN}-dev += " \
         ${datadir}/gtk-2.0/include \
 	${libdir}/gtk-2.0/include \
+	${libdir}/gtk-2.0/modules/*.la \
 	${libdir}/gtk-2.0/${LIBV}/loaders/*.la \
 	${libdir}/gtk-2.0/${LIBV}/immodules/*.la \
+	${libdir}/gtk-2.0/${LIBV}/printbackends/*.la \
 	${libdir}/gtk-2.0/${LIBV}/engines/*.la \
 	${bindir}/gtk-builder-convert"
 
 FILES_${PN}-dbg += " \
+	${libdir}/gtk-2.0/modules/.debug/* \
         ${libdir}/gtk-2.0/${LIBV}/loaders/.debug/* \
 	${libdir}/gtk-2.0/${LIBV}/immodules/.debug/* \
 	${libdir}/gtk-2.0/${LIBV}/engines/.debug/* \
 	${libdir}/gtk-2.0/${LIBV}/printbackends/.debug/*"
+
+FILES_libgail = " \
+	${libdir}/gtk-2.0/modules/libgail.so \
+	${libdir}/gtk-2.0/modules/libferret.so \
+	"
 
 GTKBASE_RRECOMMENDS ?= "liberation-fonts gdk-pixbuf-loader-png gdk-pixbuf-loader-jpeg gdk-pixbuf-loader-gif gdk-pixbuf-loader-xpm shared-mime-info"
 GTKGLIBC_RRECOMMENDS ?= "${GTKBASE_RRECOMMENDS} glibc-gconv-iso8859-1"
