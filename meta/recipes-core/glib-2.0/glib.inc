@@ -19,7 +19,7 @@ DEPENDS_virtclass-nativesdk = "libtool-nativesdk"
 PACKAGES =+ "${PN}-utils "
 
 LEAD_SONAME = "libglib-2.0.*"
-FILES_${PN}-utils = "${bindir}/*"
+FILES_${PN}-utils = "${bindir}/* ${datadir}/glib-2.0/gettext"
 
 inherit autotools pkgconfig gettext
 
