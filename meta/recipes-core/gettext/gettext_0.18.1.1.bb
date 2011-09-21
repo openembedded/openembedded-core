@@ -5,7 +5,7 @@ SECTION = "libs"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-PR = "r3"
+PR = "r4"
 DEPENDS = "libxml2-native gettext-native virtual/libiconv ncurses expat"
 DEPENDS_virtclass-native = "libxml2-native"
 PROVIDES = "virtual/libintl virtual/gettext"
@@ -90,4 +90,9 @@ FILES_gettext-runtime-doc = "${mandir}/man1/gettext.* \
                              ${docdir}/libasprintf/autosprintf.html \
                              ${infodir}/autosprintf.info \
                             "
+
+do_install_append() {
+    rm -f ${D}${libdir}/preloadable_libintl.so
+}
+
 BBCLASSEXTEND = "native nativesdk"
