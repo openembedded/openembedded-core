@@ -13,6 +13,7 @@ FILES_${PN} = "\
     ${gcclibdir}/${TARGET_SYS}/${BINV}/lib* \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/include \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/include-fixed \
+    ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/include/ \
     ${includedir}/c++/${BINV} \
     ${prefix}/${TARGET_SYS}/bin/* \
     ${prefix}/${TARGET_SYS}/lib/* \
