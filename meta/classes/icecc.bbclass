@@ -113,9 +113,7 @@ def icc_is_kernel(bb, d):
 def icc_is_native(bb, d):
     return \
         bb.data.inherits_class("cross", d) or \
-        bb.data.inherits_class("cross-canadian", d) or \
-        bb.data.inherits_class("native", d) or \
-        bb.data.inherits_class("nativesdk", d);
+        bb.data.inherits_class("native", d);
 
 def icc_version(bb, d):
     if use_icc(bb, d) == "no":
