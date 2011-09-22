@@ -8,12 +8,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605 \
                     file://glade/glade-gtk.c;endline=22;md5=766f993433e2642fec87936d319990ff"
 
 SECTION = "libs"
-PR = "r0"
+PR = "r1"
 DEPENDS = "gtk+ gtk-doc-native"
 
 inherit autotools pkgconfig gnome
 
-SRC_URI += "file://glade-cruft.patch file://no-xml2.patch"
+SRC_URI += "file://glade-cruft.patch file://no-xml2.patch file://python_environment.patch"
 
 SRC_URI[archive.md5sum] = "d1776b40f4e166b5e9c107f1c8fe4139"
 SRC_URI[archive.sha256sum] = "64361e7647839d36ed8336d992fd210d3e8139882269bed47dc4674980165dec"
