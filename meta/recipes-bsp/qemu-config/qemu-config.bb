@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa
 
 COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemumips|qemuppc)"
 
-PR = "r21"
+PR = "r22"
 
 SRC_URI = "file://distcc.sh \
            file://anjuta-remote-run \
@@ -30,6 +30,11 @@ do_install() {
 
     install -d ${D}/etc/init.d
     install qemu-autostart ${D}/etc/init.d/
+}
+
+pkg_postinst_${PN} () {
+    grep -q qemuarm $D${sysconfdir}/hostname && \
+        sed -i $D${datadir}/applications/shutdown.desktop -e 's/^Exec=halt/Exec=reboot/'
 }
 
 RDEPENDS_${PN} = "distcc dbus-x11 task-core-nfs-server oprofileui-server rsync bash"
