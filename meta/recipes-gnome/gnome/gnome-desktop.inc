@@ -11,7 +11,11 @@ do_configure_prepend () {
 
 FILES_${PN} += "${datadir}/gnome-about"
 
-PR = "r1"
+PR = "r2"
 
 inherit gnome pkgconfig
+
+do_install_append () {
+	sed -i -e's,${STAGING_BINDIR_NATIVE},${bindir},g' ${D}${bindir}/gnome-about
+}
 
