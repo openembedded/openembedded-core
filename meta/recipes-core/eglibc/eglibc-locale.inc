@@ -26,15 +26,10 @@ BINARY_LOCALE_ARCHES ?= "arm.* i[3-6]86 x86_64 powerpc mips"
 # set "0" for qemu emulation of native localedef for locale generation
 LOCALE_GENERATION_WITH_CROSS-LOCALEDEF = "1"
 
-PR = "r17"
+PR = "r18"
 
-python __anonymous () {
-    import bb
-    if bb.data.inherits_class("nativesdk", d):
-        bb.data.setVar("PKGSUFFIX", "-nativesdk", d)
-    else:
-        bb.data.setVar("PKGSUFFIX", "", d)
-}
+PKGSUFFIX = ""
+PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
 
 PROVIDES = "virtual/libc-locale${PKGSUFFIX}"
 
