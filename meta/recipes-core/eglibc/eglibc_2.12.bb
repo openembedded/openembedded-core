@@ -1,7 +1,7 @@
 require eglibc.inc
 
 DEPENDS += "gperf-native"
-PR = "r24"
+PR = "r27"
 
 SRCREV = "14158"
 
@@ -12,6 +12,7 @@ SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};proto=http
            file://shorten-build-commands.patch \
            file://mips-rld-map-check.patch \
            file://armv4-eabi-compile-fix.patch \
+           file://ppc-enable-603e-cpu.patch \
            file://etc/ld.so.conf \
            file://generate-supported.mk \
 	  "
