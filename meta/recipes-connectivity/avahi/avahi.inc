@@ -14,7 +14,7 @@ SECTION = "network"
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-INC_PR = "r7"
+INC_PR = "r8"
 
 DEPENDS = "expat libcap libdaemon dbus glib-2.0"
 
@@ -77,6 +77,8 @@ FILES_avahi-dnsconfd = "${sbindir}/avahi-dnsconfd \
 FILES_libavahi-glib = "${libdir}/libavahi-glib.so.*"
 FILES_libavahi-gobject = "${libdir}/libavahi-gobject.so.*"
 FILES_avahi-utils = "${bindir}/avahi-*"
+
+RDEPENDS_avahi-systemd = "avahi-daemon"
 
 RDEPENDS_avahi-daemon = "sysvinit-pidof"
 
