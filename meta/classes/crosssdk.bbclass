@@ -18,6 +18,7 @@ target_includedir = "${SDKPATHNATIVE}${includedir_nativesdk}"
 target_base_libdir = "${SDKPATHNATIVE}${base_libdir_nativesdk}"
 target_prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
 target_exec_prefix = "${SDKPATHNATIVE}${exec_prefix_nativesdk}"
+baselib = "lib"
 
 do_populate_sysroot[stamp-extra-info] = ""
 do_package[stamp-extra-info] = ""

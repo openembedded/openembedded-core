@@ -11,6 +11,10 @@ python multilib_virtclass_handler () {
     if bb.data.inherits_class('kernel', e.data) or bb.data.inherits_class('module-base', e.data) or bb.data.inherits_class('allarch', e.data):
         raise bb.parse.SkipPackage("We shouldn't have multilib variants for the kernel")
 
+    if bb.data.inherits_class('image', e.data):
+        e.data.setVar("PN", variant + "-" + e.data.getVar("PN", False))
+        return
+
     save_var_name=e.data.getVar("MULTILIB_SAVE_VARNAME", True) or ""
     for name in save_var_name.split():
         val=e.data.getVar(name, True)
@@ -47,6 +51,15 @@ python __anonymous () {
             else:
                 newdeps.append(multilib_extend_name(variant, dep))
         d.setVar(varname, " ".join(newdeps))
+
+    if bb.data.inherits_class('image', d):
+        map_dependencies("PACKAGE_INSTALL", d)
+        pinstall = d.getVar("PACKAGE_INSTALL", True) + " " + d.getVar("MULTILIB_PACKAGE_INSTALL", False)
+        d.setVar("MULTILIB_PACKAGE_INSTALL", pinstall)
+        d.setVar("PACKAGE_INSTALL", "")
+        # FIXME, we need to map this to something, not delete it!
+        d.setVar("PACKAGE_INSTALL_ATTEMPTONLY", "")
+        return
 
     pkgs_mapping = []
     for pkg in (d.getVar("PACKAGES", True) or "").split():
