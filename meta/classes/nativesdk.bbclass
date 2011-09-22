@@ -48,6 +48,7 @@ LDFLAGS = "${BUILDSDK_LDFLAGS}"
 base_prefix = "${SDKPATHNATIVE}"
 prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
 exec_prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
+baselib = "lib"
 
 FILES_${PN} += "${prefix}"
 FILES_${PN}-dbg += "${prefix}/.debug \
