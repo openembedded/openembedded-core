@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db grep-native"
 DEPENDS += "gdbm zlib"
-PR = "r4"
+PR = "r5"
 
 # 5.10.1 has Module::Build built-in
 PROVIDES += "libmodule-build-perl"
@@ -216,9 +216,17 @@ perl_package_preprocess () {
                -e "s,${STAGING_LIBDIR},${libdir},g" \
                -e "s,${STAGING_BINDIR},${bindir},g" \
                -e "s,${STAGING_INCDIR},${includedir},g" \
+               -e "s,${STAGING_BINDIR_NATIVE}/perl-native/,${bindir}/,g" \
                -e "s,${STAGING_BINDIR_NATIVE}/,,g" \
             ${PKGD}${bindir}/h2xs \
             ${PKGD}${bindir}/h2ph \
+            ${PKGD}${bindir}/pod2html \
+            ${PKGD}${bindir}/pod2latex \
+            ${PKGD}${bindir}/pod2man \
+            ${PKGD}${bindir}/pod2text \
+            ${PKGD}${bindir}/pod2usage \
+            ${PKGD}${bindir}/podchecker \
+            ${PKGD}${bindir}/podselect \
             ${PKGD}${libdir}/perl/${PV}/pod/*.pod \
             ${PKGD}${libdir}/perl/${PV}/cacheout.pl \
             ${PKGD}${libdir}/perl/${PV}/FileCache.pm \
