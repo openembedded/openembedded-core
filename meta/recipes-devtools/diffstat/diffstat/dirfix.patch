@@ -1,0 +1,27 @@
+$libdir isn't used by the Makefile at all apart from in this mkdir.
+This will be used without any DESTDIR so if your libdir is a different
+layout to the bulid system it will cause a failure. E.g:
+
+Build system has /usr/lib only
+libdir = /usr/lib64 for the target
+Results in "mkdir: cannot create directory `/usr/lib64': Permission denied"
+
+Since the directory is never used, we can just remove the mkdir.
+
+Upstream-Status: Pending
+
+RP 23/9/2011
+
+Index: diffstat-1.54/makefile.in
+===================================================================
+--- diffstat-1.54.orig/makefile.in	2011-09-22 19:13:11.330158571 +0100
++++ diffstat-1.54/makefile.in	2011-09-22 19:13:35.610158363 +0100
+@@ -79,7 +79,7 @@
+ 	$(INSTALL_DATA) $(srcdir)/$(THIS).1 $(man1dir)/$(THIS).$(manext)
+ 
+ installdirs :
+-	mkdir -p $(BINDIR) $(libdir) $(man1dir)
++	mkdir -p $(BINDIR) $(man1dir)
+ 
+ uninstall :
+ 	rm -f $(BINDIR)/$(PROG) $(man1dir)/$(THIS).$(manext)
