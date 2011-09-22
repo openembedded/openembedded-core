@@ -64,16 +64,24 @@ python do_package_append() {
 
 PACKAGES =+ "${PN}-lib ${PN}-libimage"
 
+FILES_${PN} += "${exec_prefix}/lib/cups/backend \
+		${exec_prefix}/lib/cups/cgi-bin \
+		${exec_prefix}/lib/cups/filter \
+		${exec_prefix}/lib/cups/monitor \
+		${exec_prefix}/lib/cups/notifier \
+		${exec_prefix}/lib/cups/daemon \
+	       "
+
 FILES_${PN}-lib = "${libdir}/libcups.so.*"
 
 FILES_${PN}-libimage = "${libdir}/libcupsimage.so.*"
 
-FILES_${PN}-dbg += "${libdir}/cups/backend/.debug \
-                    ${libdir}/cups/cgi-bin/.debug \
-                    ${libdir}/cups/filter/.debug \
-                    ${libdir}/cups/monitor/.debug \
-                    ${libdir}/cups/notifier/.debug \
-                    ${libdir}/cups/daemon/.debug \
+FILES_${PN}-dbg += "${exec_prefix}/lib/cups/backend/.debug \
+                    ${exec_prefix}/lib/cups/cgi-bin/.debug \
+                    ${exec_prefix}/lib/cups/filter/.debug \
+                    ${exec_prefix}/lib/cups/monitor/.debug \
+                    ${exec_prefix}/lib/cups/notifier/.debug \
+                    ${exec_prefix}/lib/cups/daemon/.debug \
                    "
 
 #package the html for the webgui inside the main packages (~1MB uncompressed)
