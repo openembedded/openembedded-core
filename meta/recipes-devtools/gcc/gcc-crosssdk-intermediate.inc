@@ -7,3 +7,5 @@ SYSTEMLIBS1 = "${SDKPATHNATIVE}${libdir_nativesdk}/"
 DEPENDS = "virtual/${TARGET_PREFIX}binutils-crosssdk gettext-native"
 DEPENDS += "virtual/${TARGET_PREFIX}libc-initial-nativesdk"
 PROVIDES = "virtual/${TARGET_PREFIX}gcc-intermediate-crosssdk"
+
+EXTRA_OECONF += " --with-headers=${STAGING_DIR_TCBOOTSTRAP}${SYSTEMHEADERS} "
