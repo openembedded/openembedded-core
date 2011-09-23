@@ -205,31 +205,7 @@ python base_eventhandler() {
 	from bb import note, error, data
 	from bb.event import getName
 
-	messages = {}
-	messages["Completed"] = "completed"
-	messages["Succeeded"] = "completed"
-	messages["Started"] = "started"
-	messages["Failed"] = "failed"
-
 	name = getName(e)
-	msg = ""
-	if name.startswith("Pkg"):
-		msg += "package %s: " % data.getVar("P", e.data, 1)
-		msg += messages.get(name[3:]) or name[3:]
-	elif name.startswith("Task"):
-		msg += "package %s: task %s: " % (data.getVar("PF", e.data, 1), e.task)
-		msg += messages.get(name[4:]) or name[4:]
-	elif name.startswith("Build"):
-		msg += "build %s: " % e.name
-		msg += messages.get(name[5:]) or name[5:]
-	elif name == "UnsatisfiedDep":
-		msg += "package %s: dependency %s %s" % (e.pkg, e.dep, name[:-3].lower())
-
-	# Only need to output when using 1.8 or lower, the UI code handles it
-	# otherwise
-	if (int(bb.__version__.split(".")[0]) <= 1 and int(bb.__version__.split(".")[1]) <= 8):
-		if msg:
-			note(msg)
 
 	if name.startswith("BuildStarted"):
 		bb.data.setVar( 'BB_VERSION', bb.__version__, e.data )
@@ -275,12 +251,6 @@ python base_eventhandler() {
 
 	if not data in e.__dict__:
 		return
-
-	log = data.getVar("EVENTLOG", e.data, 1)
-	if log:
-		logfile = file(log, "a")
-		logfile.write("%s\n" % msg)
-		logfile.close()
 }
 
 addtask configure after do_unpack do_patch
