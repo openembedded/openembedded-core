@@ -114,15 +114,16 @@ def sstate_install(ss, d):
     for state in ss['dirs']:
         oe.path.copytree(state[1], state[2])
         for walkroot, dirs, files in os.walk(state[1]):
+            bb.debug(2, "Staging files from %s to %s" % (state[1], state[2]))
             for file in files:
                 srcpath = os.path.join(walkroot, file)
                 dstpath = srcpath.replace(state[1], state[2])
-                bb.debug(2, "Staging %s to %s" % (srcpath, dstpath))
+                #bb.debug(2, "Staging %s to %s" % (srcpath, dstpath))
                 sharedfiles.append(dstpath)
             for dir in dirs:
                 srcdir = os.path.join(walkroot, dir)
                 dstdir = srcdir.replace(state[1], state[2])
-                bb.debug(2, "Staging %s to %s" % (srcdir, dstdir))
+                #bb.debug(2, "Staging %s to %s" % (srcdir, dstdir))
                 if not dstdir.endswith("/"):
                     dstdir = dstdir + "/"
                 shareddirs.append(dstdir)
@@ -360,12 +361,12 @@ def sstate_package(ss, d):
             for file in files:
                 srcpath = os.path.join(walkroot, file)
                 dstpath = srcpath.replace(state[1], sstatebuild + state[0])
-                bb.debug(2, "Preparing %s for packaging at %s" % (srcpath, dstpath))
                 make_relative_symlink(srcpath, dstpath, d)
             for dir in dirs:
                 srcpath = os.path.join(walkroot, dir)
                 dstpath = srcpath.replace(state[1], sstatebuild + state[0])
                 make_relative_symlink(srcpath, dstpath, d)
+        bb.debug(2, "Preparing tree %s for packaging at %s" % (state[1], sstatebuild + state[0]))
         oe.path.copytree(state[1], sstatebuild + state[0])
 
     workdir = bb.data.getVar('WORKDIR', d, True)
