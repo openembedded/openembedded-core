@@ -10,7 +10,7 @@ RPROVIDES_${PN}-dev = "gconf-dev"
 
 #SRCREV = "705"
 #PV = "2.16.0+svnr${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 # This SVN repo is no longer available use a tarball mirror site until
 # we move to proper gconf recipe.
@@ -33,6 +33,8 @@ do_configure_prepend() {
 
 FILES_${PN} = "${libdir}/GConf-dbus/2/*.so ${libdir}/dbus-1.0 ${sysconfdir} ${datadir}/dbus* ${libdir}/*.so.* ${bindir}/* ${libexecdir}/*"
 FILES_${PN}-dbg += " ${libdir}/GConf-dbus/2/.debug"
+FILES_${PN}-dev += "${datadir}/sgml/gconf/gconf-1.0.dtd \
+		    ${libdir}/GConf-dbus/2/*.la"
 
 BBCLASSEXTEND = "native"
 
