@@ -31,6 +31,8 @@ export CONFIG_SITE = "${@siteinfo_get_files(d)}"
 acpaths = "default"
 EXTRA_AUTORECONF = "--exclude=autopoint"
 
+export lt_cv_sys_lib_dlsearch_path_spec = "${libdir} ${base_libdir}"
+
 def autotools_set_crosscompiling(d):
 	if not bb.data.inherits_class('native', d):
 		return " cross_compiling=yes"
