@@ -15,7 +15,8 @@ SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://resolve-sysroot.patch \
            file://use-sysroot-in-libpath.patch \
            file://fix-final-rpath.patch \
-           file://avoid_absolute_paths_for_general_utils.patch "
+           file://avoid_absolute_paths_for_general_utils.patch \
+           file://fix-rpath.patch "
 
 do_compile_prepend () {
 	# Sometimes this file doesn't get rebuilt, force the issue

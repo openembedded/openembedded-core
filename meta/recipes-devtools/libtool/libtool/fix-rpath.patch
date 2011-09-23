@@ -1,0 +1,63 @@
+We don't want to add RPATHS which match default linker
+search paths, they're a waste of space. This patch
+filters libtools list and removes the ones we don't need.
+
+RP 23/9/2011
+
+Upstream-status: Pending
+
+Index: libtool-2.4/libltdl/config/ltmain.m4sh
+===================================================================
+--- libtool-2.4.orig/libltdl/config/ltmain.m4sh	2011-09-23 08:38:06.365043626 +0100
++++ libtool-2.4/libltdl/config/ltmain.m4sh	2011-09-23 09:57:05.235003068 +0100
+@@ -7264,8 +7264,14 @@
+ 		  esac
+ 		fi
+ 	      else
+-		eval flag=\"$hardcode_libdir_flag_spec\"
+-		func_append dep_rpath " $flag"
++                # We only want to hardcode in an rpath if it isn't in the
++                # default dlsearch path.
++	        case " $sys_lib_dlsearch_path " in
++	        *" $libdir "*) ;;
++	        *) eval flag=\"$hardcode_libdir_flag_spec\"
++                   func_append dep_rpath " $flag"
++                   ;;
++	        esac
+ 	      fi
+ 	    elif test -n "$runpath_var"; then
+ 	      case "$perm_rpath " in
+@@ -8001,8 +8007,14 @@
+ 	      esac
+ 	    fi
+ 	  else
+-	    eval flag=\"$hardcode_libdir_flag_spec\"
+-	    func_append rpath " $flag"
++            # We only want to hardcode in an rpath if it isn't in the
++            # default dlsearch path.
++	    case " $sys_lib_dlsearch_path " in
++	    *" $libdir "*) ;;
++	    *) eval flag=\"$hardcode_libdir_flag_spec\"
++               rpath+=" $flag"
++               ;;
++	    esac
+ 	  fi
+ 	elif test -n "$runpath_var"; then
+ 	  case "$perm_rpath " in
+@@ -8052,8 +8064,14 @@
+ 	      esac
+ 	    fi
+ 	  else
+-	    eval flag=\"$hardcode_libdir_flag_spec\"
+-	    func_append rpath " $flag"
++            # We only want to hardcode in an rpath if it isn't in the
++            # default dlsearch path.
++	    case " $sys_lib_dlsearch_path " in
++	    *" $libdir "*) ;;
++	    *) eval flag=\"$hardcode_libdir_flag_spec\"
++               func_append rpath " $flag"
++               ;;
++	    esac    
+ 	  fi
+ 	elif test -n "$runpath_var"; then
+ 	  case "$finalize_perm_rpath " in
