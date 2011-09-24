@@ -35,3 +35,20 @@ BBCLASSEXTEND = "native"
 # Only append ldflags for target recipe and if USE_NLS is enabled
 LDFLAGS_append_libc-uclibc = "${@['', ' -lintl '][(bb.data.getVar('PN', d, True) == bb.data.getVar('BPN', d , True)) and (bb.data.getVar('USE_NLS', d, True) == 'yes')]}"
 EXTRA_OECONF_append_libc-uclibc = "${@['', ' --disable-gettext '][(bb.data.getVar('PN', d, True) == bb.data.getVar('BPN', d , True)) and (bb.data.getVar('USE_NLS', d, True) == 'no')]}"
+
+fix_symlink () {
+	# Remove bad symlinks & create the correct symlinks
+	if test -L ${libdir}/lib${BPN}.so ; then
+		rm -rf ${libdir}/lib${BPN}.so
+		ln -sf ${base_libdir}/lib${BPN}.so ${libdir}/lib${BPN}.so
+	fi
+	if test -L ${base_libdir}/lib${BPN}.a ; then
+		rm -rf ${base_libdir}/lib${BPN}.a
+		ln -sf ${libdir}/lib${BPN}.a ${base_libdir}/lib${BPN}.a
+	fi
+	if test -L  ${base_libdir}/lib${BPN}.la ; then
+		rm -rf ${base_libdir}/lib${BPN}.la
+		ln -sf ${libdir}/lib${BPN}.la ${base_libdir}/lib${BPN}.la
+	fi
+}
+SSTATEPOSTINSTFUNCS_virtclass-native += "fix_symlink"
