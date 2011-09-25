@@ -3,7 +3,7 @@ SECTION = "libs"
 LICENSE = "LGPLv2.1 | GPLv3"
 HOMEPAGE = "http://qt.nokia.com"
 DEPENDS += "directfb tslib"
-INC_PR = "r31"
+INC_PR = "r32"
 
 QT_BASE_NAME ?= "qt4-embedded"
 QT_BASE_LIB  ?= "libqt-embedded"
@@ -27,7 +27,11 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/qte.sh ${D}${sysconfdir}/profile.d/
 }
 
-FILES_${PN} += " ${sysconfdir}/profile.d/qte.sh"
+# We put the qte profile into it's own package as we don't want to install all qt stuff
+# with depending on the global package qt4-embedded
+PACKAGES += " ${PN}-conf"
+FILES_${PN}-conf += " ${sysconfdir}/profile.d/qte.sh"
+RDEPENDS_${PN} += " ${PN}-conf"
 
 inherit qt4e
 
