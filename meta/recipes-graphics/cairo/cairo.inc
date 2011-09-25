@@ -18,3 +18,6 @@ require cairo-fpu.inc
 EXTRA_OECONF += "${@get_cairo_fpu_setting(bb, d)} ${@base_contains('DISTRO_FEATURES', 'x11', '--with-x', '--without-x', d)}"
 
 inherit autotools pkgconfig
+
+# We don't depend on binutils so we need to disable this
+export ac_cv_lib_bfd_bfd_openr=no
