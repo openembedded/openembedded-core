@@ -1,7 +1,7 @@
 DESCRIPTION = "GNOME library for reading .desktop files"
 SECTION = "x11/gnome"
 LICENSE = "GPLv2 & LGPLv2"
-DEPENDS = "gconf libxrandr virtual/libx11 gtk+ glib-2.0 gnome-doc-utils"
+DEPENDS = "gconf libxrandr virtual/libx11 gtk+ glib-2.0 gnome-doc-utils startup-notification"
 
 EXTRA_OECONF = "--disable-scrollkeeper --disable-desktop-docs"
 
@@ -11,7 +11,7 @@ do_configure_prepend () {
 
 FILES_${PN} += "${datadir}/gnome-about"
 
-PR = "r2"
+PR = "r3"
 
 inherit gnome pkgconfig
 
