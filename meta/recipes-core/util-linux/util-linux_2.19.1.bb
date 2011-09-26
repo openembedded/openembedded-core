@@ -1,5 +1,5 @@
 MAJOR_VERSION = "2.19"
-PR = "r4"
+PR = "r5"
 require util-linux.inc
 
 # note that `lscpu' is under GPLv3+
@@ -44,3 +44,7 @@ addtask remove_lscpu before do_configure after do_patch
 # we need to disable it for older versions
 EXTRA_OECONF += "ac_cv_func_fallocate=no"
 EXTRA_OECONF_virtclass-native += "--disable-fallocate --disable-use-tty-group"
+
+do_install_append () {
+	sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${bindir}/chkdupexe
+}
