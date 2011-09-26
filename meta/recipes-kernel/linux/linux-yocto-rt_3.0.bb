@@ -16,7 +16,7 @@ LINUX_KERNEL_TYPE = "preempt-rt"
 
 SRCREV_machine ?= "0936e13cc65d816f1759e2322c5e3fc82a5037f3"
 SRCREV_machine_qemuppc ?= "0936e13cc65d816f1759e2322c5e3fc82a5037f3"
-SRCREV_meta ?= "0dcdf7bb40a8e1fb18fd27d442fa5ace8cff4941"
+SRCREV_meta ?= "67a46a608f47c19f16995be7de7b272025864b1b"
 
 PR = "r1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
