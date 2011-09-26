@@ -41,4 +41,4 @@ do_install_append () {
 
 FILES_${PN}-doc = "${datadir}"
 FILES_${PN} = "/usr /etc"
-
+INSANE_SKIP_${PN} = "arch"
