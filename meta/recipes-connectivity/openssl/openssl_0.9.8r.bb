@@ -1,6 +1,6 @@
 require openssl.inc
 
-PR = "r5"
+PR = "r6"
 SRC_URI += "file://debian/ca.patch \
             file://debian/config-hurd.patch;apply=no \
             file://debian/debian-targets.patch \
