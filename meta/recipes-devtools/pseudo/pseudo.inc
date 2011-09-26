@@ -10,7 +10,13 @@ LICENSE = "LGPL2.1"
 DEPENDS = "sqlite3"
 
 FILES_${PN} = "${libdir}/libpseudo.so ${bindir}/* ${localstatedir}/pseudo"
+FILES_${PN}-dbg += "${libdir}/pseudo/lib*/.debug"
 PROVIDES += "virtual/fakeroot"
+
+# In the nativesdk case, we'll already search the searchpaths
+# pseudo tries to build in so override RPATH
+MAKEOPTS = ""
+MAKEOPTS_virtclass-nativesdk = "'RPATH='"
 
 inherit siteinfo
 
@@ -27,7 +33,7 @@ do_compile () {
 	else
 	  ${S}/configure --prefix=${prefix} --libdir=${prefix}/lib/pseudo/lib --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=${SITEINFO_BITS}
 	fi
-	oe_runmake
+	oe_runmake ${MAKEOPTS}
 }
 
 # Two below are the same
@@ -37,9 +43,9 @@ do_compile_prepend_virtclass-native () {
 	if [ "${SITEINFO_BITS}" == "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" == "pseudo-native" -a "${NO32LIBS}" != "1" ]; then
 		# We need the 32-bit libpseudo on a 64-bit machine...
 		./configure --prefix=${prefix} --libdir=${prefix}/lib/pseudo/lib --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=32
-		oe_runmake libpseudo
+		oe_runmake ${MAKEOPTS} libpseudo
 		# prevent it from removing the lib, but remove everything else
-		make 'LIB=foo' distclean 
+		make 'LIB=foo' ${MAKEOPTS} distclean 
 	fi
 }
 
@@ -47,14 +53,14 @@ do_compile_prepend_virtclass-nativesdk () {
 	if [ "${SITEINFO_BITS}" == "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" == "pseudo-native" -a "${NO32LIBS}" != "1" ]; then
 		# We need the 32-bit libpseudo on a 64-bit machine...
 		./configure --prefix=${prefix} --libdir=${prefix}/lib/pseudo/lib --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=32
-		oe_runmake libpseudo
+		oe_runmake ${MAKEOPTS} libpseudo
 		# prevent it from removing the lib, but remove everything else
-		make 'LIB=foo' distclean 
+		make 'LIB=foo' ${MAKEOPTS} distclean 
 	fi
 }
 
 do_install () {
-	oe_runmake 'DESTDIR=${D}' 'LIB=lib/pseudo/lib$(MARK64)' install
+	oe_runmake 'DESTDIR=${D}' ${MAKEOPTS} 'LIB=lib/pseudo/lib$(MARK64)' install
 }
 
 # Two below are the same
