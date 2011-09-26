@@ -19,6 +19,8 @@ FILES_${PN} = "\
     ${prefix}/${TARGET_SYS}/lib/* \
     ${prefix}/${TARGET_SYS}/usr/include/* \
     "
+INSANE_SKIP_${PN} += "dev-so"
+
 FILES_${PN}-doc = "\
     ${infodir} \
     ${mandir} \
@@ -40,6 +42,8 @@ do_install () {
 
 	# We use libiberty from binutils
 	rm -f ${D}${prefix}/${TARGET_SYS}/lib/libiberty.a
+	# Not sure where the strange paths come from
+	rm -f ${D}${libdir}/../lib/libiberty.a
 	rm -f ${D}${libdir}/libiberty.a
 
 	# Insert symlinks into libexec so when tools without a prefix are searched for, the correct ones are

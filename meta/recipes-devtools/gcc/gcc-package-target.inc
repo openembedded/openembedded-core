@@ -24,6 +24,8 @@ FILES_${PN} = "\
   ${gcclibdir}/${TARGET_SYS}/${BINV}/include \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/include-fixed \
 "
+INSANE_SKIP_${PN} += "dev-so"
+
 FILES_${PN}-dbg += "\
   ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/.debug/ \
 "
