@@ -1,4 +1,6 @@
-Upstream-Status: Pending
+Upstream-Status: Accepted
+Instead matchbox-window-manager-2, it is in libmatchboxwm2, which has build
+failure as partial gtk-doc implementation.
 
 Nitin A Kamble <nitin.a.kamble@intel.com> 2011/05/10
 Fix following build error:

@@ -13,8 +13,7 @@ PR = "r0"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
            file://single-instance.patch \
-           file://configure_fix.patch;maxrev=1819 \
-           file://dso_linking_change_build_fix.patch "
+           file://configure_fix.patch;maxrev=1819"
 
 S = "${WORKDIR}/git"
 

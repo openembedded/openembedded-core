@@ -1,11 +1,10 @@
 require matchbox-theme-sato.inc
 
 DEPENDS = "matchbox-wm-2"
-SRCREV = "f72cf4ed7d71ad9e47b0f2d3dbc593bc2f3e76f8"
+SRCREV = "e3ccc08d4a680d70fd4891fca966aa6ce503065c"
 PV = "0.2+git${SRCPV}"
 
-SRC_URI = "git://git.yoctoproject.org/matchbox-sato;protocol=git \
-          file://png_rename.patch"
+SRC_URI = "git://git.yoctoproject.org/matchbox-sato;protocol=git"
 
 S = "${WORKDIR}/git"
 

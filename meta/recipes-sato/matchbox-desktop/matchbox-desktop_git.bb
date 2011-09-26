@@ -10,13 +10,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 DEPENDS = "gtk+ startup-notification dbus"
 SECTION = "x11/wm"
-SRCREV = "af7ed6775487380be73160aa0298bf6019765fad"
+SRCREV = "71e3e6e04271e9d5a14f1c231ef100c7f320134d"
 PV = "2.0+git${SRCPV}"
-PR = "r1"
+PR = "r0"
 
-SRC_URI = "git://git.yoctoproject.org/${BPN}-2;protocol=git \
-           file://dso_linking_change_build_fix.patch \
-           file://window-resize-fix.patch"
+SRC_URI = "git://git.yoctoproject.org/${BPN}-2;protocol=git"
 
 EXTRA_OECONF = "--enable-startup-notification --with-dbus"
 
