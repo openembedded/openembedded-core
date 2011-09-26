@@ -6,7 +6,7 @@ SECTION = "console/utils"
 DEPENDS = "ncurses glib-2.0"
 RDEPENDS_${PN} = "ncurses-terminfo"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2"
 
@@ -18,3 +18,8 @@ inherit autotools gettext
 EXTRA_OECONF = "--with-screen=ncurses --without-gpm-mouse --without-x --without-samba"
 
 FILES_${PN}-dbg += "${libexecdir}/mc/.debug/"
+
+do_install_append () {
+       sed -i -e '1s,#!.*perl,#!${bindir}/env perl,' ${D}${libexecdir}/mc/extfs.d/*
+       
+}
