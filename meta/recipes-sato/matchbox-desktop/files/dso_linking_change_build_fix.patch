@@ -11,7 +11,7 @@ This patch avoids this linking error:
 Nitin A Kamble <nitin.a.kamble@intel.com>
 Date: 2011/01/11
 
-Upstream-Status: Pending
+Upstream-Status: Accepted
 
 Index: matchbox-desktop-2/configure.ac
 ===================================================================

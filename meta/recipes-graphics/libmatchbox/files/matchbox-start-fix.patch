@@ -6,7 +6,7 @@ on x86-64. This patch forces a NULL pointer as terminator to fix it.
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
-Upstream-Status: Pending
+Upstream-Status: Accepted
 
 Index: libmatchbox-1.9/libmb/mbexp.c
 ===================================================================
