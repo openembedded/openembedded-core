@@ -44,8 +44,8 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "bzip2 zlib db openssl elfutils expat libpcre attr acl popt ${extrarpmdeps}"
 extrarpmdeps = "python perl"
-extrarpmdeps_virtclass-native = ""
-PR = "r21"
+extrarpmdeps_virtclass-native = "file-native"
+PR = "r22"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -119,7 +119,7 @@ EXTRA_OECONF = "--verbose \
 		${WITH_DB} \
 		${WITH_Z} \
 		--with-file \
-		--with-path-magic=/usr/share/misc/magic \
+		--with-path-magic=%{_usrlibrpm}/../../share/misc/magic \
 		--without-lua \
 		--without-tcl \
 		--with-syck=internal \
@@ -289,6 +289,7 @@ FILES_${PN}-build = "${prefix}/src/rpm \
 		${libdir}/rpm/vpkg-provides2.sh \
 		${libdir}/rpm/perfile_rpmdeps.sh \
 		"
+RDEPENDS_${PN}-build = "file"
 
 #%rpmattr       %{_rpmhome}/gem_helper.rb
 #%rpmattr       %{_rpmhome}/symclash.*
@@ -419,6 +420,13 @@ do_install_append_virtclass-native() {
 		RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
 		RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
 		RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
+
+	for rpm_binary in ${D}/${libdir}/rpm/bin/rpm*; do
+        	create_wrapper $rpm_binary
+			RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
+			RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
+			RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
+	done
 
 	# Adjust popt macros to match...
 	cat ${D}/${libdir}/rpm/rpmpopt | sed -e "s,^\(rpm[^ 	]*\)\([ 	]\),\1.real\2," > ${D}/${libdir}/rpm/rpmpopt.new
