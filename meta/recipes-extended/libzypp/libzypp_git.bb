@@ -8,13 +8,10 @@ inherit cmake gettext
 
 DEPENDS  = "rpm boost curl libxml2 zlib sat-solver expat openssl udev"
 
-# rpmdb2solv from sat-solver is run from libzypp
-RDEPENDS_${PN} = "sat-solver"
-
 S = "${WORKDIR}/git"
 SRCREV = "15b6c52260bbc52b3d8e585e271b67e10cc7c433"
 PV = "0.0-git${SRCPV}"
-PR = "r14"
+PR = "r15"
 
 SRC_URI = "git://github.com/openSUSE/libzypp.git;protocol=git \
            file://no-doc.patch \
@@ -31,6 +28,9 @@ SRC_URI_append_mips = " file://mips-workaround-gcc-tribool-error.patch"
 
 # ARM specific global constructor workaround
 SRC_URI_append_arm  = " file://arm-workaround-global-constructor.patch"
+
+# rpmdb2solv from sat-solver is run from libzypp
+RDEPENDS_${PN} = "sat-solver rpm-libs"
 
 PACKAGES =+ "${PN}-pkgmgt"
 

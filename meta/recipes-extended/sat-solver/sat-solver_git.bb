@@ -8,7 +8,7 @@ DEPENDS = "libcheck rpm zlib expat db"
 
 SRCREV = "0a7378d5f482f477a01cf1690d76871ab8bdcc32"
 PV = "0.0-git${SRCPV}"
-PR = "r11"
+PR = "r12"
 
 PARALLEL_MAKE=""
 
@@ -28,6 +28,8 @@ EXTRA_OECMAKE += "-DRPM5=RPM5 -DOE_CORE=OE_CORE"
 EXTRA_OECMAKE += " -DLIB=${@os.path.basename('${libdir}')}"
 
 inherit cmake pkgconfig
+
+RDEPENDS_${PN} = "rpm-libs"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
