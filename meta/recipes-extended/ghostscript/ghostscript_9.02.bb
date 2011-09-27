@@ -36,6 +36,11 @@ SRC_URI[sha256sum] = "03ea2cad13a36f8f9160912012b79619a826e7148fada6d3531feb2540
 
 EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec --without-jasper --with-fontpath=${datadir}/fonts"
 
+# This has been fixed upstream but for now we need to subvert the check for time.h
+# http://bugs.ghostscript.com/show_bug.cgi?id=692443
+# http://bugs.ghostscript.com/show_bug.cgi?id=692426
+CFLAGS += "-DHAVE_SYS_TIME_H=1"
+
 inherit autotools
 
 do_configure () {
