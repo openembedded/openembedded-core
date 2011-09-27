@@ -1,6 +1,6 @@
 require gcc-common.inc
 
-PR = "r13"
+PR = "r14"
 
 # Third digit in PV should be incremented after a minor release
 # happens from this branch on gcc e.g. currently its 4.6.0
@@ -16,9 +16,9 @@ PV = "4.6.1+svnr${SRCPV}"
 # 4.6.1 then the value below will have 2 which will mean 4.6.2
 # which will be next minor release and so on.
 
-BINV = "4.6.1"
+BINV = "4.6.2"
 
-SRCREV = 175454
+SRCREV = 178924
 BRANCH = "gcc-4_6-branch"
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/gcc-4.6' ], d)}"
 
