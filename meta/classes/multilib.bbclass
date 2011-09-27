@@ -8,7 +8,7 @@ python multilib_virtclass_handler () {
         return
 
     # There should only be one kernel in multilib configs
-    if bb.data.inherits_class('kernel', e.data) or bb.data.inherits_class('module-base', e.data) or bb.data.inherits_class('allarch', e.data):
+    if bb.data.inherits_class('kernel', e.data) or bb.data.inherits_class('module-base', e.data):
         raise bb.parse.SkipPackage("We shouldn't have multilib variants for the kernel")
 
     if bb.data.inherits_class('image', e.data):
