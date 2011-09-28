@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ca0395de9a86191a078b8b79302e3083"
 
 PR = "r2"
 
-DEPENDS = "bison flex cracklib"
+DEPENDS = "bison flex flex-native cracklib"
 RDEPENDS_${PN}-runtime = "libpam pam-plugin-deny pam-plugin-permit pam-plugin-warn pam-plugin-unix"
 RDEPENDS_${PN}-xtests = "libpam pam-plugin-access pam-plugin-debug pam-plugin-cracklib pam-plugin-pwhistory \
                         pam-plugin-succeed-if pam-plugin-time coreutils"
