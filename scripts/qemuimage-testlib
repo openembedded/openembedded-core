@@ -467,8 +467,8 @@ Test_Create_Qemu()
 		export MACHINE=$QEMUARCH
 
 		# Create Qemu in localhost VNC Port 1
-		echo "Running xterm -display ${DISPLAY} -e 'TMPDIR=${TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} && /bin/sleep 60' &"
-	    	xterm -display ${DISPLAY} -e "TMPDIR=${TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} && /bin/sleep 60" &
+		echo "Running xterm -display ${DISPLAY} -e 'OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} && /bin/sleep 60' &"
+		xterm -display ${DISPLAY} -e "OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} && /bin/sleep 60" &
 	
 		# Get the pid of the xterm processor, which will be used in Test_Kill_Qemu
 		PID=$!

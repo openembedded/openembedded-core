@@ -17,9 +17,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
+
+# Don't use TMPDIR from the external environment, it may be a distro
+# variable pointing to /tmp (e.g. within X on OpenSUSE)
+# Instead, use OE_TMPDIR for passing this in externally.
+TMPDIR="$OE_TMPDIR"
+
 function usage() {
 	echo "Usage: $0 <rpm-dir>"
-	echo "  <rpm-dir>: default is $TPMDIR/deploy/rpm"
+	echo "  <rpm-dir>: default is $TMPDIR/deploy/rpm"
 }
 
 if [ $# -gt 1 ]; then

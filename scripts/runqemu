@@ -55,6 +55,11 @@ SCRIPT_QEMU_OPT=""
 SCRIPT_QEMU_EXTRA_OPT=""
 SCRIPT_KERNEL_OPT=""
 
+# Don't use TMPDIR from the external environment, it may be a distro
+# variable pointing to /tmp (e.g. within X on OpenSUSE)
+# Instead, use OE_TMPDIR for passing this in externally.
+TMPDIR="$OE_TMPDIR"
+
 # Determine whether the file is a kernel or QEMU image, and set the
 # appropriate variables
 process_filename() {
@@ -260,7 +265,7 @@ SPITZ_DEFAULT_FSTYPE=ext3
 
 setup_tmpdir() {
     if [ -z "$TMPDIR" ]; then
-        # BUILDDIR unset, try and get TMPDIR from bitbake
+        # Try to get TMPDIR from bitbake
         type -P bitbake &>/dev/null || {
             echo "In order for this script to dynamically infer paths";
             echo "to kernels or filesystem images, you either need";
