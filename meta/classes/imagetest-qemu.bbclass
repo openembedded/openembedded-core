@@ -70,7 +70,7 @@ def qemuimagetest_main(d):
         os.environ["DISPLAY"] = bb.data.getVar("DISPLAY", d, True)
         os.environ["COREBASE"] = bb.data.getVar("COREBASE", d, True)
         os.environ["TOPDIR"] = bb.data.getVar("TOPDIR", d, True)
-        os.environ["TMPDIR"] = bb.data.getVar("TMPDIR", d, True)
+        os.environ["OE_TMPDIR"] = bb.data.getVar("TMPDIR", d, True)
         os.environ["TEST_STATUS"] = bb.data.getVar("TEST_STATUS", d, True)
         os.environ["TARGET_IPSAVE"] = bb.data.getVar("TARGET_IPSAVE", d, True)
         os.environ["TEST_SERIALIZE"] = bb.data.getVar("TEST_SERIALIZE", d, True)
