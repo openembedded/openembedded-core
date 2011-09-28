@@ -311,7 +311,7 @@ python package_do_split_gconvs () {
 			raise bb.build.FuncFailed("localedef returned an error")
 
 	def output_locale(name, locale, encoding):
-		pkgname = 'locale-base-' + legitimize_package_name(name)
+		pkgname = bb.data.getVar('MLPREFIX', d) + 'locale-base-' + legitimize_package_name(name)
 		bb.data.setVar('ALLOW_EMPTY_%s' % pkgname, '1', d)
 		bb.data.setVar('PACKAGES', '%s %s' % (pkgname, bb.data.getVar('PACKAGES', d, 1)), d)
 		rprovides = ' virtual-locale-%s' % legitimize_package_name(name)
