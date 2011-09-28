@@ -904,8 +904,14 @@ python do_package_rpm () {
 	rpmbuild = bb.data.getVar('RPMBUILD', d, True)
 	targetsys = bb.data.getVar('TARGET_SYS', d, True)
 	targetvendor = bb.data.getVar('TARGET_VENDOR', d, True)
-	pkgwritedir = bb.data.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH}', d)
-	pkgarch = bb.data.expand('${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}', d)
+	package_arch = bb.data.getVar('PACKAGE_ARCH', d, True) or ""
+	if package_arch not in "all any noarch".split():
+		ml_prefix = (bb.data.getVar('MLPREFIX', d, True) or "").replace("-", "_")
+		bb.data.setVar('PACKAGE_ARCH_EXTEND', ml_prefix + package_arch, d)
+	else:
+		bb.data.setVar('PACKAGE_ARCH_EXTEND', package_arch, d)
+	pkgwritedir = bb.data.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH_EXTEND}', d)
+	pkgarch = bb.data.expand('${PACKAGE_ARCH_EXTEND}${TARGET_VENDOR}-${TARGET_OS}', d)
 	magicfile = bb.data.expand('${STAGING_DIR_NATIVE}/usr/share/misc/magic.mgc', d)
 	bb.mkdirhier(pkgwritedir)
 	os.chmod(pkgwritedir, 0755)
