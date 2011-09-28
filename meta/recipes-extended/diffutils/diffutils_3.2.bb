@@ -21,5 +21,5 @@ EXTRA_OECONF_libc-uclibc = "--without-included-regex"
 ALTERNATIVE_LINKS = "${bindir}/diff ${bindir}/cmp"
 ALTERNATIVE_PRIORITY = "100"
 
-SRC_URI[md5sum] = "684aaba1baab743a2a90e52162ff07da"
-SRC_URI[sha256sum] = "2fb91f65bbae3c6043b85ba23967f27235b12928da8e406dc91b48b0a589e809"
+SRC_URI[md5sum] = "22e4deef5d8949a727b159d6bc65c1cc"
+SRC_URI[sha256sum] = "2aaaebef615be7dc365306a14caa5d273a4fc174f9f10abca8b60e082c054ed3"
