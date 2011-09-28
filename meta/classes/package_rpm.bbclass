@@ -395,6 +395,8 @@ package_install_internal_rpm () {
 		-D "__dbi_txn create nofsync private" \
 		| grep -i 'Packageorigin' | cut -d : -f 2 > ${target_rootfs}/install/install_multilib_solution.manifest
 
+	cat ${target_rootfs}/install/install_solution.manifest > ${target_rootfs}/install/total_solution.manifest
+	cat ${target_rootfs}/install/install_multilib_solution.manifest >> ${target_rootfs}/install/total_solution.manifest
 
 	# Attempt install
 	${RPM} --root ${target_rootfs} \
@@ -403,8 +405,7 @@ package_install_internal_rpm () {
 		-D "_dbpath ${rpmlibdir}" \
 		--noscripts --notriggers --noparentdirs --nolinktos --replacepkgs \
 		-D "__dbi_txn create nofsync private" \
-		-Uhv ${target_rootfs}/install/install_solution.manifest \
-		${target_rootfs}/install/install_multilib_solution.manifest
+		-Uhv ${target_rootfs}/install/total_solution.manifest
 }
 
 python write_specfile () {
