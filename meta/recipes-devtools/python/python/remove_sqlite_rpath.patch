@@ -1,0 +1,19 @@
+This patch removes the RPATH setting which contains a pointer to
+the target relocated sysroot, which is incorrect.
+
+Upstream-Status: Inappropriate [Embedded Specific]
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: Python-2.6.6/setup.py
+===================================================================
+--- Python-2.6.6.orig/setup.py	2011-09-28 14:22:57.000000000 -0700
++++ Python-2.6.6/setup.py	2011-09-28 16:11:25.147279633 -0700
+@@ -1079,7 +1079,6 @@
+                                   include_dirs=["Modules/_sqlite",
+                                                 sqlite_incdir],
+                                   library_dirs=sqlite_libdir,
+-                                  runtime_library_dirs=sqlite_libdir,
+                                   extra_link_args=sqlite_extra_link_args,
+                                   libraries=["sqlite3",]))
+         else:
