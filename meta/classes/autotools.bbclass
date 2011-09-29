@@ -7,7 +7,7 @@ def autotools_dep_prepend(d):
 
 	if pn in ['autoconf-native', 'automake-native', 'help2man-native']:
 		return deps
-	deps += 'autoconf-native automake-native help2man-native '
+	deps += 'autoconf-native automake-native '
 
 	if not pn in ['libtool', 'libtool-native'] and not pn.endswith("libtool-cross"):
 		deps += 'libtool-native '
