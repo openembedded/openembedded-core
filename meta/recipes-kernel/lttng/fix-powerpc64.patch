@@ -1,0 +1,17 @@
+Upstream-Status: Submitted
+
+Add bit to detect if we are running on powerpc64 and treat it the
+same as ppc64
+
+Index: ust-0.15/configure.ac
+===================================================================
+--- ust-0.15.orig/configure.ac
++++ ust-0.15/configure.ac
+@@ -111,6 +111,7 @@ changequote([,])dnl
+ 	x86_64) LIBFORMAT="elf64-x86-64" ;;
+ 	powerpc) LIBFORMAT="elf32-powerpc" ;;
+ 	ppc64) LIBFORMAT="elf64-powerpc" ;;
++	powerpc64) LIBFORMAT="elf64-powerpc" ;;
+ 	s390) LIBFORMAT="elf32-s390" ;;
+ 	s390x) LIBFORMAT="elf64-s390" ;;
+         armv5) LIBFORMAT="elf32-littlearm"; NO_UNALIGNED_ACCESS=1 ;;
