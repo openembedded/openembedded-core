@@ -99,9 +99,9 @@ def package_qa_get_machine_dict():
        }
 
 
-WARN_QA ?= "dev-so rpaths debug-deps dev-deps debug-files arch la2 pkgconfig desktop la ldflags perms useless-rpaths"
-ERROR_QA ?= ""
-#ERROR_QA ?= "rpaths debug-deps dev-deps debug-files arch pkgconfig perms"
+# Currently not being used by default "desktop"
+WARN_QA ?= "ldflags useless-rpaths rpaths"
+ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch la2 pkgconfig la perms"
 
 def package_qa_clean_path(path,d):
     """ Remove the common prefix from the path. In this case it is the TMPDIR"""
