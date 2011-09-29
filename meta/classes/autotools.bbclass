@@ -64,6 +64,7 @@ CONFIGUREOPTS = " --build=${BUILD_SYS} \
 		  --infodir=${infodir} \
 		  --mandir=${mandir} \
 		  --disable-silent-rules \
+		  --disable-dependency-tracking \
 		  ${@append_libtool_sysroot(d)}"
 
 oe_runconf () {
