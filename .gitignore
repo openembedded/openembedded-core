@@ -9,11 +9,9 @@ build*/pyshtables.py
 pstage/
 scripts/oe-git-proxy-socks
 sources/
-meta-darwin
-meta-maemo
-meta-extras
-meta-m2
-meta-prvt*
+meta-*
+!meta-skeleton
+!meta-demoapps
 *.swp
 *.orig
 *.rej
