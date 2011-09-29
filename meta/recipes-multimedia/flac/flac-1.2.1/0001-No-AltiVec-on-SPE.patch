@@ -39,14 +39,16 @@ diff --git a/src/libFLAC/Makefile.am b/src/libFLAC/Makefile.am
 index cbfb0ac..5785372 100644
 --- a/src/libFLAC/Makefile.am
 +++ b/src/libFLAC/Makefile.am
-@@ -40,8 +40,13 @@ if FLaC__SYS_DARWIN
+@@ -40,8 +40,15 @@ if FLaC__SYS_DARWIN
  CPUCFLAGS = -faltivec -force_cpusubtype_ALL -DFLAC__NO_ASM
  else
  # Linux-gcc for PPC does not have -force_cpusubtype_ALL, it is Darwin-specific
 +CPUCFLAGS =
 +if FLaC__CPU_PPC_SPE
 +else
++if FLaC__USE_ALTIVEC
 +CPUCFLAGS += -maltivec -mabi=altivec
++endif
 +endif
  #@@@ PPC optimizations temporarily disabled
 -CPUCFLAGS = -maltivec -mabi=altivec -DFLAC__NO_ASM
