@@ -6,8 +6,6 @@ impact on case when they are available.
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Upstream-Status: Inappropriate [embedded specific]
-
 
 Index: glib-2.26.1/glib/gconvert.c
 ===================================================================
