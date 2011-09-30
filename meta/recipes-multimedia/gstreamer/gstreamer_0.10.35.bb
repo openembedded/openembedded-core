@@ -9,14 +9,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605 \
                     file://gst/gst.h;beginline=1;endline=21;md5=8e5fe5e87d33a04479fde862e238eaa4"
 DEPENDS = "glib-2.0 libxml2 bison-native flex-native"
 
-PR = "r1"
-
 SRC_URI = "http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.bz2 \
            file://check_fix.patch \
            file://gst-inspect-check-error.patch"
 
-SRC_URI[md5sum] = "442bc3d37b8511a73379143e7531d726"
-SRC_URI[sha256sum] = "3bf4e46a186ee9a1f5e212aaf651d67cffb4f5f05345a7c99ae71d5d992be133"
+SRC_URI[md5sum] = "4a0a00edad7a2c83de5211ca679dfaf9"
+SRC_URI[sha256sum] = "817bfea2cd46e2487b97e2ed9218f0299b32a3de1e5e80b4c7868d17e9089786"
 
 inherit autotools pkgconfig gettext
 
