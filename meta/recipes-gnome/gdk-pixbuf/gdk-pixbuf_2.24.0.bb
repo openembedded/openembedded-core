@@ -9,15 +9,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
 SECTION = "libs"
 
 DEPENDS = "libpng glib-2.0 jpeg"
-PR = "r1"
 
-SRC_URI = "http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.22/gdk-pixbuf-${PV}.tar.gz \
+SRC_URI = "http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.24/gdk-pixbuf-${PV}.tar.bz2 \
            file://hardcoded_libtool.patch \
            file://configure_fix.patch \
            "
 
-SRC_URI[md5sum] = "fcfc854e9aec7dbb2bb3059484d44556"
-SRC_URI[sha256sum] = "bbb57364ffba70d64f5fcfe6eda1d67249b3d58844edb06dc0f94d1ad599b4ec"
+SRC_URI[md5sum] = "d8ece3a4ade4a91c768328620e473ab8"
+SRC_URI[sha256sum] = "38d2630314e6d91976bffd833236f84fefa440a9038f86dc422820a39f2e3700"
 
 inherit autotools pkgconfig gettext
 
