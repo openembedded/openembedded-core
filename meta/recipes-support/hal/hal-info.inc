@@ -18,5 +18,4 @@ do_configure() {
 	oe_runconf
 }
 
-PACKAGE_ARCH = "all"
 FILES_${PN} += "${datadir}/hal/"
