@@ -354,6 +354,8 @@ package_install_internal_rpm () {
 		-D "__dbi_txn create nofsync private" \
 		| grep -i 'Packageorigin' | cut -d : -f 2 > ${target_rootfs}/install/install_solution.manifest
 
+	touch ${target_rootfs}/install/install_multilib_solution.manifest
+
 	if [ ! -z "${multilib_to_install}" ]; then
 		for pkg in ${multilib_to_install} ; do
 			echo "Processing $pkg..."
@@ -376,24 +378,25 @@ package_install_internal_rpm () {
 			fi
 			echo $pkg_name >> ${target_rootfs}/install/install_multilib.manifest
 		done
+
+		# multilib package installation
+
+		# Generate an install solution by doing a --justdb install, then recreate it with
+		# an actual package install!
+		${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+			--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
+			-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}-ml_archs.macro`" \
+			-D "__dbi_txn create nofsync" \
+			-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
+			${target_rootfs}/install/install_multilib.manifest
+
+		# Now that we have a solution, pull out a list of what to install...
+		echo "Manifest: ${target_rootfs}/install/install_multilib.manifest"
+		${RPM} -D "_dbpath ${target_rootfs}/install" -qa --yaml \
+			-D "__dbi_txn create nofsync private" \
+			| grep -i 'Packageorigin' | cut -d : -f 2 > ${target_rootfs}/install/install_multilib_solution.manifest
+
 	fi
-
-	# multilib package installation
-
-	# Generate an install solution by doing a --justdb install, then recreate it with
-	# an actual package install!
-	${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
-		--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
-		-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}-ml_archs.macro`" \
-		-D "__dbi_txn create nofsync" \
-		-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
-		${target_rootfs}/install/install_multilib.manifest
-
-	# Now that we have a solution, pull out a list of what to install...
-	echo "Manifest: ${target_rootfs}/install/install_multilib.manifest"
-	${RPM} -D "_dbpath ${target_rootfs}/install" -qa --yaml \
-		-D "__dbi_txn create nofsync private" \
-		| grep -i 'Packageorigin' | cut -d : -f 2 > ${target_rootfs}/install/install_multilib_solution.manifest
 
 	cat ${target_rootfs}/install/install_solution.manifest > ${target_rootfs}/install/total_solution.manifest
 	cat ${target_rootfs}/install/install_multilib_solution.manifest >> ${target_rootfs}/install/total_solution.manifest
