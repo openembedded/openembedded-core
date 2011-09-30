@@ -15,7 +15,8 @@ DEPENDS += " libpciaccess"
 
 inherit autotools pkgconfig
 
-PACKAGES =+ "libdrm-tests"
-FILES_libdrm-tests = "${bindir}/dr* ${bindir}/mode*"
+PACKAGES =+ "${PN}-tests ${PN}-drivers ${PN}-kms"
+FILES_${PN}-tests = "${bindir}/dr* ${bindir}/mode*"
+FILES_${PN}-drivers = "${libdir}/libdrm_*.so.*"
+FILES_${PN}-kms = "${libdir}/libkms*.so.*"
 
-LEAD_SONAME = "libdrm.so"
