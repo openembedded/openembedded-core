@@ -3,6 +3,8 @@ Upstream-Status: Accepted
 Similar patch is already included in 2.0.1 and newer
 http://ftp.gnome.org/pub/gnome/sources/atk/2.0/atk-2.0.1.news
 
+Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+
 diff -uNr atk-1.32.0.orig/atk/atkaction.c atk-1.32.0/atk/atkaction.c
 --- atk-1.32.0.orig/atk/atkaction.c	2010-09-06 08:45:45.000000000 +0200
 +++ atk-1.32.0/atk/atkaction.c	2011-09-30 10:29:49.896997586 +0200
