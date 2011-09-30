@@ -2,7 +2,7 @@ require xserver-xf86-lite.inc
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=74df27b6254cc88d2799b5f4f5949c00"
 
-PR = "r0"
+PR = "r1"
 
 DEPENDS += "font-util"
 

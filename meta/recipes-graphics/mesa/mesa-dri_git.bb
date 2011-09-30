@@ -13,7 +13,7 @@ DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
 
 SRCREV = "1bf94d419805538ac23a4d0b04d31ac5e4487aca"
 PV = "7.7+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 # most of our targets do not have DRI so will use mesa-xlib
 DEFAULT_PREFERENCE = "-1"
