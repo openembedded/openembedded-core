@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605 \
 
 SECTION = "libs"
 PR = "r1"
-DEPENDS = "gtk+ gtk-doc-native"
+DEPENDS = "gdk-pixbuf gtk+ gtk-doc-native"
 
 inherit autotools pkgconfig gnome
 
