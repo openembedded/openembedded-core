@@ -6,10 +6,11 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2b41e13261a330ee784153ecbb6a82bc"
 
 DEPENDS = "flex-native bison-native"
-PR = "r2"
+PR = "r3"
 
 SRC_URI= "http://www.infradead.org/~tgr/libnl/files/${BPN}-${PV}.tar.gz \
           file://fix-makefile.patch \
+	  file://fix-pktloc_syntax_h-race.patch \
          "
 
 SRC_URI[md5sum] = "6aaf1e9802a17a7d702bb0638044ffa7"
