@@ -11,10 +11,8 @@ DEPENDS = "gconf"
 
 SRC_URI = "http://libproxy.googlecode.com/files/libproxy-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "199c6b120baf1f7258a55f38d5ec74f5"
-SRC_URI[sha256sum] = "9ad912e63b1efca98fb442240a2bc7302e6021c1d0b1b9363327729f29462f30"
-
-PR = "r2"
+SRC_URI[md5sum] = "509e03a488a61cd62bfbaf3ab6a2a7a5"
+SRC_URI[sha256sum] = "8fe0a58810139ba3c2e186deccf3e68adcd127aa0e972b0862b30b3dde493797"
 
 inherit cmake pkgconfig
 
