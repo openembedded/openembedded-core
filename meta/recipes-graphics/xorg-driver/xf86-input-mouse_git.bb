@@ -1,4 +1,4 @@
-require xf86-input-common.inc
+require xorg-driver-input.inc
 
 SUMMARY = "X.Org X server -- mouse input driver"
 
@@ -10,7 +10,7 @@ driver."
 
 SRCREV = "ea5cfe804e112f320f14ad896c7802d53551d3e6"
 PV = "1.3.0+git${SRCPV}"
-PR = "r2"
+PR = "${INC_PR}.0"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/driver/xf86-input-mouse;protocol=git \
            file://unbreak.patch"

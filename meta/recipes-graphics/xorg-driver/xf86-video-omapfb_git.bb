@@ -1,4 +1,4 @@
-require xf86-driver-common.inc
+require xorg-driver-driver.inc
 
 SUMMARY = "X.Org X server -- Texas Instruments OMAP framebuffer driver"
 
@@ -11,7 +11,7 @@ DEPENDS += "virtual/libx11"
 
 SRCREV = "044617665d6737f4909aab96f91b06261dff05d2"
 PE = "1"
-PR = "r1"
+PR = "${INC_PR}.0"
 PV = "0.1.1+git${SRCPV}"
 
 SRC_URI = "git://git.pingu.fi/xf86-video-omapfb.git;protocol=http \

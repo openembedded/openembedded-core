@@ -1,4 +1,4 @@
-require xf86-video-common.inc
+require xorg-driver-video.inc
 
 SUMMARY = "X.Org X server -- Intel integrated graphics chipsets driver"
 
@@ -9,7 +9,7 @@ Infrastructure (DRI)."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 
-PR = "r0"
+PR = "${INC_PR}.0"
 
 EXTRA_OECONF += "--disable-xvmc"
 

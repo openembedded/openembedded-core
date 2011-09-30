@@ -5,14 +5,13 @@ SECTION = "x11/drivers"
 LICENSE = "MIT-X"
 
 PE = "1"
-PR = "r1"
+INC_PR = "r15"
 
 DEPENDS = "virtual/xserver-xf86 xproto randrproto util-macros"
 
-XORG_PN = "${BPN}"
-SRC_URI = "${XORG_MIRROR}/individual/driver/${XORG_PN}-${PV}.tar.bz2"
+SRC_URI = "${XORG_MIRROR}/individual/driver/${BPN}-${PV}.tar.bz2"
 
-S = "${WORKDIR}/${XORG_PN}-${PV}"
+S = "${WORKDIR}/${BPN}-${PV}"
 
 FILES_${PN} += " ${libdir}/xorg/modules/drivers/*.so"
 FILES_${PN}-dbg += " ${libdir}/xorg/modules/drivers/.debug"
@@ -27,7 +26,8 @@ do_configure_prepend () {
     mv configure.ac.new configure.ac
 }
 
-do_install_append () {
-    # driver's la files are not packaged
-    rm -f ${D}${libdir}/xorg/modules/drivers/*.la
+# FIXME: We don't want to include the libtool archives (*.la) from modules
+# directory, as they serve no useful purpose. Upstream should fix Makefile.am
+do_install_append() {
+	find ${D}${libdir}/xorg/modules -regex ".*\.la$" | xargs rm -f --
 }

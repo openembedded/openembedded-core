@@ -1,4 +1,4 @@
-include xf86-driver-common.inc
+include xorg-driver-common.inc
 
 DEPENDS =+ "renderproto videoproto xextproto fontsproto"
 

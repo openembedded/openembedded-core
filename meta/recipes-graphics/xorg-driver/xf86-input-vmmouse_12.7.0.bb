@@ -1,7 +1,7 @@
-require xf86-input-common.inc
+require xorg-driver-input.inc
 
 DESCRIPTION = "X.Org X server -- VMWare mouse input driver"
-PR = "r0"
+PR = "${INC_PR}.0"
 
 RDEPENDS_${PN} += "xf86-input-mouse"
 

@@ -1,4 +1,4 @@
-require xf86-input-common.inc
+require xorg-driver-input.inc
 
 SUMMARY = "X.Org X server -- synaptics touchpad input driver"
 
@@ -9,6 +9,8 @@ handled by the normal evdev or mouse drivers, this driver allows more \
 advanced features of the touchpad to become available."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e395e21f3c21d4fc3a243783e85e9ab5"
+
+PR = "${INC_PR}.0"
 
 DEPENDS += "libxi"
 
