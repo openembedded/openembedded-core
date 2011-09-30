@@ -5,4 +5,4 @@ EXPAT = "--with-expat"
 
 PR = "${INC_PR}.0"
 
-S = "${WORKDIR}/${BPN}-7.3"
+S = "${WORKDIR}/${BPN}-${PV}"

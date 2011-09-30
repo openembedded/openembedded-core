@@ -22,8 +22,8 @@ inherit autotools
 SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.gz \
            file://no-werror.patch"
 
-SRC_URI[md5sum] = "9443a370dabd9ca9c41b496b59f05145"
-SRC_URI[sha256sum] = "2c2b26eea33ab477ea1f7739a8e511b1e8d89b6f74d87cdd510c6262a3af82d7"
+SRC_URI[md5sum] = "c2795d636a9481d022608cab201be613"
+SRC_URI[sha256sum] = "d7d909b4b8ae0932ba6c1602f2f1f32bef60f0c71c72f1dd833ab6cb15e0d357"
 
 export CC_FOR_BUILD = "${BUILD_CC}"
 export CXX_FOR_BUILD = "${BUILD_CXX}"
