@@ -1,18 +1,18 @@
 Upstream-Status: Inappropriate [embedded specific]
 
 diff --git a/svr-auth.c b/svr-auth.c
-index 5da0aa7..4de4964 100644
+index 87e3c5e..3e78c1a 100644
 --- a/svr-auth.c
 +++ b/svr-auth.c
-@@ -249,6 +249,7 @@ static int checkusername(unsigned char *username, unsigned int userlen) {
+@@ -250,6 +250,7 @@ static int checkusername(unsigned char *username, unsigned int userlen) {
  	}
  
  	/* check for an empty password */
 +#ifdef DISALLOW_EMPTY_PW
  	if (ses.authstate.pw_passwd[0] == '\0') {
  		TRACE(("leave checkusername: empty pword"))
- 		dropbear_log(LOG_WARNING, "user '%s' has blank password, rejected",
-@@ -256,6 +257,7 @@ static int checkusername(unsigned char *username, unsigned int userlen) {
+ 		dropbear_log(LOG_WARNING, "User '%s' has blank password, rejected",
+@@ -257,6 +258,7 @@ static int checkusername(unsigned char *username, unsigned int userlen) {
  		send_msg_userauth_failure(0, 1);
  		return DROPBEAR_FAILURE;
  	}
@@ -21,7 +21,7 @@ index 5da0aa7..4de4964 100644
  	TRACE(("shell is %s", ses.authstate.pw_shell))
  
 diff --git a/svr-authpasswd.c b/svr-authpasswd.c
-index 53550a2..7b896bd 100644
+index a29fd63..6a3c7e9 100644
 --- a/svr-authpasswd.c
 +++ b/svr-authpasswd.c
 @@ -64,9 +64,13 @@ void svr_auth_password() {
@@ -29,11 +29,11 @@ index 53550a2..7b896bd 100644
  	 * in auth.c */
  	if (passwdcrypt[0] == '\0') {
 +#ifdef DISALLOW_EMPTY_PASSWD
- 		dropbear_log(LOG_WARNING, "user '%s' has blank password, rejected",
+ 		dropbear_log(LOG_WARNING, "User '%s' has blank password, rejected",
  				ses.authstate.pw_name);
  		send_msg_userauth_failure(0, 1);
 +#else
-+		send_msg_userauth_success();
++               send_msg_userauth_success();
 +#endif
  		return;
  	}

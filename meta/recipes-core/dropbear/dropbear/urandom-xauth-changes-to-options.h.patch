@@ -1,13 +1,14 @@
 Upstream-Status: Inappropriate [configuration]
 
-diff -Nurd dropbear-0.45/options.h dropbear-0.45.patched/options.h
---- dropbear-0.45/options.h	2005-03-06 20:27:02.000000000 -0800
-+++ dropbear-0.45.patched/options.h	2005-03-08 15:25:09.368742090 -0800
-@@ -167,7 +167,7 @@
+diff --git a/options.h b/options.h
+index d309ab4..7fbe97b 100644
+--- a/options.h
++++ b/options.h
+@@ -236,7 +236,7 @@ much traffic. */
  /* The command to invoke for xauth when using X11 forwarding.
   * "-q" for quiet */
  #ifndef XAUTH_COMMAND
--#define XAUTH_COMMAND "/usr/X11R6/bin/xauth -q"
+-#define XAUTH_COMMAND "/usr/bin/X11/xauth -q"
 +#define XAUTH_COMMAND "xauth -q"
  #endif
  

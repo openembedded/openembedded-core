@@ -1,0 +1,29 @@
+Upstream-Status: Inappropriate [Pending]
+Get this patch from  buildroot maillist.
+
+dropbear: fix static build
+
+The latest release 0.53.1 change: lcrypt needs to be before object files for static linking
+
+the -lcrypt is missing during the link
+
+svr-authpasswd.o: In function `svr_auth_password':
+svr-authpasswd.c:(.text+0xfc): undefined reference to `crypt'
+collect2: ld returned 1 exit status
+
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj at jcrosoft.com>
+Signed-off-by: Mei Lei <lei.mei@intel.com>
+
+diff --git a/Makefile.in b/Makefile.in
+index 8d81647..0b9b769 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -77,7 +77,7 @@ STRIP=@STRIP@
+ INSTALL=@INSTALL@
+ CPPFLAGS=@CPPFLAGS@
+ CFLAGS+=-I. -I$(srcdir) $(CPPFLAGS) @CFLAGS@
+-LIBS+=@LIBS@
++LIBS+=@CRYPTLIB@ @LIBS@
+ LDFLAGS=@LDFLAGS@
+ 
+ EXEEXT=@EXEEXT@
