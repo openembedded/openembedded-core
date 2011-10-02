@@ -7,7 +7,7 @@
 #
 # End result is two things:
 #
-# 1. A .hddimage file which is an msdos filesystem containing syslinux, a kernel, 
+# 1. A .hddimg file which is an msdos filesystem containing syslinux, a kernel,
 # an initrd and a rootfs image. These can be written to harddisks directly and 
 # also booted on USB flash disks (write them there with dd).
 #
