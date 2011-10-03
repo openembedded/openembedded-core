@@ -13,5 +13,5 @@ DEPENDS += "bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
 
 SRCREV = "d23aad31338e7d869d878d5aa1b6b91d20287005"
 
-EXTRA_OECONF += "--without-xcb --disable-udc --disable-xcms --disable-xlocale"
+EXTRA_OECONF += "--with-keysymdef=${STAGING_INCDIR}/X11/keysymdef.h --without-xcb --disable-udc --disable-xcms --disable-xlocale"
 CFLAGS += "-D_GNU_SOURCE"

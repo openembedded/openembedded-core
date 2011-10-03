@@ -17,4 +17,4 @@ SRC_URI += "file://../libx11-${PV}/x11_disable_makekeys.patch \
 SRC_URI[md5sum] = "f65c9c7ecbfb64c19dbd7927160d63fd"
 SRC_URI[sha256sum] = "88d7238ce5f7cd123450567de7a3b56a43556e4ccc45df38b8324147c889a844"
 
-EXTRA_OECONF += "--disable-xcms --with-xcb"
+EXTRA_OECONF += "--with-keysymdef=${STAGING_INCDIR}/X11/keysymdef.h --disable-xcms --with-xcb"

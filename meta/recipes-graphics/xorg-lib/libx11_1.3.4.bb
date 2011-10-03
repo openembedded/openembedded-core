@@ -30,6 +30,6 @@ DEPENDS_virtclass-nativesdk += "bigreqsproto xproto xextproto \
 XCB = "--with-xcb"
 XCB_virtclass-native = "--without-xcb"
 XCB_virtclass-nativesdk = "--without-xcb"
-EXTRA_OECONF += "${XCB}"
+EXTRA_OECONF += "--with-keysymdef=${STAGING_INCDIR}/X11/keysymdef.h ${XCB}"
 
 BBCLASSEXTEND = "native nativesdk"

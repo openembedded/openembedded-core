@@ -22,5 +22,5 @@ DEPENDS += "bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
 
 FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libx11"
 
-EXTRA_OECONF += "--without-xcb --disable-udc --disable-xcms --disable-xlocale"
+EXTRA_OECONF += "--with-keysymdef=${STAGING_INCDIR}/X11/keysymdef.h --without-xcb --disable-udc --disable-xcms --disable-xlocale"
 CFLAGS += "-D_GNU_SOURCE"

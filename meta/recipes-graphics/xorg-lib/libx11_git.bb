@@ -11,4 +11,6 @@ DEPENDS = "xproto xextproto xcmiscproto xf86bigfontproto kbproto inputproto \
 
 DEFAULT_PREFERENCE = "-1"
 
+EXTRA_OECONF += "--with-keysymdef=${STAGING_INCDIR}/X11/keysymdef.h"
+
 BBCLASSEXTEND = "nativesdk"
