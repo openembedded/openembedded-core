@@ -5,7 +5,7 @@ SECTION = "x11/drivers"
 LICENSE = "MIT-X"
 
 PE = "1"
-INC_PR = "r15"
+INC_PR = "r17"
 
 DEPENDS = "virtual/xserver xproto randrproto util-macros"
 
