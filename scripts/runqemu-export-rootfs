@@ -118,6 +118,9 @@ case "$1" in
 		echo "    echo RPCBIND_OPTIONS=-i >> /etc/sysconfig/rpcbind"
 		echo "    /etc/init.d/rpcbind restart"
 		echo "==============================================="
+		echo "For Ubuntu 11.10 hosts"
+		echo "Add OPTIONS=\"-i -w\"  to /etc/default/rpcbind"
+		echo "sudo service portmap restart"
 	    fi
 	    exit 1
 	fi
