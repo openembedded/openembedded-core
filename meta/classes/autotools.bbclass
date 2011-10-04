@@ -64,8 +64,10 @@ CONFIGUREOPTS = " --build=${BUILD_SYS} \
 		  --infodir=${infodir} \
 		  --mandir=${mandir} \
 		  --disable-silent-rules \
-		  --disable-dependency-tracking \
+		  ${CONFIGUREOPT_DEPTRACK} \
 		  ${@append_libtool_sysroot(d)}"
+CONFIGUREOPT_DEPTRACK = "--disable-dependency-tracking"
+
 
 oe_runconf () {
 	if [ -x ${S}/configure ] ; then
