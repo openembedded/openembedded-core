@@ -4,10 +4,10 @@ DEPENDS = "dbus-glib eds-dbus"
 RDEPENDS_${PN} = "libedata-book"
 DESCRIPTION = "Test applications for EDS"
 
-SRCREV = "2008-02-04"
-PR = "r1"
+SRCREV = "882df681014cf42f75882995e507c75254b6b62f"
+PR = "r0"
 
-SRC_URI = "bzr://burtonini.com/bzr/eds-tools;proto=http"
+SRC_URI = "git://github.com/rossburton/eds-tools.git;protocol=git"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
