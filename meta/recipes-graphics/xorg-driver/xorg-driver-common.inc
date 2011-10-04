@@ -7,7 +7,7 @@ LICENSE = "MIT-X"
 PE = "1"
 INC_PR = "r15"
 
-DEPENDS = "virtual/xserver-xf86 xproto randrproto util-macros"
+DEPENDS = "virtual/xserver xproto randrproto util-macros"
 
 SRC_URI = "${XORG_MIRROR}/individual/driver/${BPN}-${PV}.tar.bz2"
 
