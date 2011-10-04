@@ -7,7 +7,7 @@ RDEPENDS_${PN} += "xkeyboard-config"
 EXTRA_OECONF += "--disable-glx"
 
 PE = "1"
-PR = "r26"
+PR = "r27"
 
 SRC_URI = "${XORG_MIRROR}/individual/xserver/xorg-server-${PV}.tar.bz2 \
 	file://extra-kmodes.patch \
@@ -24,6 +24,9 @@ SRC_URI = "${XORG_MIRROR}/individual/xserver/xorg-server-${PV}.tar.bz2 \
 #	file://kdrive-use-evdev.patch
 #	file://enable-builtin-fonts.patch
 #	file://optional-xkb.patch
+
+SRC_URI[md5sum] = "cafc4e2d4ef6cf6e47f3e7dffeb3346a"
+SRC_URI[sha256sum] = "a89f13b166b412930fe418ff50032dd2cde8bb181d8b47b5ca6f848d218fdcf2"
 
 
 S = "${WORKDIR}/xorg-server-${PV}"
