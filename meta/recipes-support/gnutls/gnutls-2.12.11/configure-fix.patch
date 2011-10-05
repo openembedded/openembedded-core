@@ -11,13 +11,13 @@ against 2.8.6
 07/02/2010 - qhe
 
 ---
-Index: gnutls-2.12.5/lib/configure.ac
+Index: gnutls-2.12.11/lib/configure.ac
 ===================================================================
---- gnutls-2.12.5.orig/lib/configure.ac	2011-05-11 00:05:33.000000000 -0700
-+++ gnutls-2.12.5/lib/configure.ac	2011-05-25 19:45:23.721180103 -0700
-@@ -96,8 +96,8 @@
- dnl for pakchois
- AC_LIB_HAVE_LINKFLAGS(dl,, [#include <dlfcn.h>], [dlclose (0);])
+--- gnutls-2.12.11.orig/lib/configure.ac
++++ gnutls-2.12.11/lib/configure.ac
+@@ -126,8 +126,8 @@ lgl_INIT
+ AC_CHECK_FUNCS(getrusage,,)
+ AC_LIB_HAVE_LINKFLAGS(pthread,, [#include <pthread.h>], [pthread_mutex_lock (0);])
  
 -LIBGNUTLS_LIBS="-L${libdir} -lgnutls $LIBS"
 -LIBGNUTLS_CFLAGS="-I${includedir}"
@@ -26,24 +26,22 @@ Index: gnutls-2.12.5/lib/configure.ac
  AC_SUBST(LIBGNUTLS_LIBS)
  AC_SUBST(LIBGNUTLS_CFLAGS)
  
-Index: gnutls-2.12.5/lib/gnutls.pc.in
+Index: gnutls-2.12.11/lib/gnutls.pc.in
 ===================================================================
---- gnutls-2.12.5.orig/lib/gnutls.pc.in	2011-04-23 08:00:07.000000000 -0700
-+++ gnutls-2.12.5/lib/gnutls.pc.in	2011-05-25 19:50:11.926102288 -0700
-@@ -19,7 +19,6 @@
- Description: Transport Security Layer implementation for the GNU system
+--- gnutls-2.12.11.orig/lib/gnutls.pc.in
++++ gnutls-2.12.11/lib/gnutls.pc.in
+@@ -20,6 +20,4 @@ Description: Transport Security Layer im
  URL: http://www.gnu.org/software/gnutls/
  Version: @VERSION@
-+Requires.private: libgcrypt, libtasn1
  Libs: -L${libdir} -lgnutls
--Libs.private: @LTLIBGCRYPT@ @NETTLE_LIBS@
+-Libs.private: @LTLIBGCRYPT@ @LTLIBNETTLE@ @NETTLE_LIBS@ @GNUTLS_ZLIB_LIBS_PRIVATE@
 -@GNUTLS_REQUIRES_PRIVATE@
  Cflags: -I${includedir}
-Index: gnutls-2.12.5/libextra/configure.ac
+Index: gnutls-2.12.11/libextra/configure.ac
 ===================================================================
---- gnutls-2.12.5.orig/libextra/configure.ac	2011-05-11 00:05:31.000000000 -0700
-+++ gnutls-2.12.5/libextra/configure.ac	2011-05-25 19:45:23.722186801 -0700
-@@ -41,8 +41,8 @@
+--- gnutls-2.12.11.orig/libextra/configure.ac
++++ gnutls-2.12.11/libextra/configure.ac
+@@ -41,8 +41,8 @@ LIBGNUTLS_EXTRA_HOOKS
  
  xgl_INIT
  
@@ -54,11 +52,11 @@ Index: gnutls-2.12.5/libextra/configure.ac
  AC_SUBST(LIBGNUTLS_EXTRA_LIBS)
  AC_SUBST(LIBGNUTLS_EXTRA_CFLAGS)
  
-Index: gnutls-2.12.5/libextra/gnutls-extra.pc.in
+Index: gnutls-2.12.11/libextra/gnutls-extra.pc.in
 ===================================================================
---- gnutls-2.12.5.orig/libextra/gnutls-extra.pc.in	2011-04-07 17:30:45.000000000 -0700
-+++ gnutls-2.12.5/libextra/gnutls-extra.pc.in	2011-05-25 19:45:23.722186801 -0700
-@@ -22,5 +22,5 @@
+--- gnutls-2.12.11.orig/libextra/gnutls-extra.pc.in
++++ gnutls-2.12.11/libextra/gnutls-extra.pc.in
+@@ -22,5 +22,5 @@ URL: http://www.gnu.org/software/gnutls/
  Requires: gnutls
  Version: @VERSION@
  Libs: -L${libdir} -lgnutls-extra
