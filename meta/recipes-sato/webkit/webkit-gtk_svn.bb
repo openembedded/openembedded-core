@@ -45,6 +45,8 @@ EXTRA_OECONF = "\
 
 EXTRA_AUTORECONF = " -I Source/autotools "
 
+CONFIGUREOPT_DEPTRACK = ""
+
 do_configure_append() {
 	# somethings wrong with icu, fix it up manually
 	for makefile in $(find ${S} -name "GNUmakefile") ; do
