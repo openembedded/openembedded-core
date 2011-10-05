@@ -1,0 +1,50 @@
+From 19986c721c9ac4b353c8592998d70d0dc8860bfd Mon Sep 17 00:00:00 2001
+From: Milan Broz <mbroz@redhat.com>
+Date: Thu, 14 Jul 2011 13:58:36 +1000
+Subject: [PATCH] mdadm: fix build failures (ppc64)
+
+This patch fixes these build issues:
+
+super-intel.c: In function 'getinfo_super_imsm_volume':
+super-intel.c:2327:4: error: format '%llu' expects argument of type 'long long
+unsigned int', but argument 3 has type '__u64' [-Werror=format]
+
+super-intel.c: In function 'imsm_reshape_super':
+super-intel.c:8665:7: error: 'devnum' may be used uninitialized in this function [-Werror=uninitialized]
+
+Signed-off-by: Milan Broz <mbroz@redhat.com>
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ super-intel.c |    9 ++++++---
+ 1 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/super-intel.c b/super-intel.c
+index 5ea3b36..70cf993 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -2326,7 +2326,9 @@ static void getinfo_super_imsm_volume(struct supertype *st, struct mdinfo *info,
+ 
+ 			dprintf("IMSM: General Migration checkpoint : %llu "
+ 			       "(%llu) -> read reshape progress : %llu\n",
+-				units, blocks_per_unit, info->reshape_progress);
++				(unsigned long long)units,
++				(unsigned long long)blocks_per_unit,
++				info->reshape_progress);
+ 
+ 			used_disks = imsm_num_data_members(dev, 1);
+ 			if (used_disks > 0) {
+@@ -8661,8 +8663,9 @@ static int imsm_reshape_super(struct supertype *st, long long size, int level,
+ 		dprintf("imsm: info: Volume operation\n");
+ 		/* find requested device */
+ 		while (dev) {
+-			imsm_find_array_minor_by_subdev(dev->index, st->container_dev, &devnum);
+-			if (devnum == geo.dev_id)
++			if (imsm_find_array_minor_by_subdev(
++				    dev->index, st->container_dev, &devnum) == 0
++			    && devnum == geo.dev_id)
+ 				break;
+ 			dev = dev->next;
+ 		}
+-- 
+1.7.6.1
+
