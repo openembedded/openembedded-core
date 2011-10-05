@@ -7,7 +7,7 @@ RDEPENDS_${PN} = "pseudo"
 RDEPENDS_${PN}_virtclass-native = "pseudo-native"
 RDEPENDS_${PN}_virtclass-nativesdk = "pseudo-nativesdk"
 BASEPV = "2.2beta47"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://linux.mathematik.tu-darmstadt.de/pub/linux/oldstuff/people/okir/nfs-server-${BASEPV}.tar.gz \
            file://001-2.2b47-2.2b51.patch \
@@ -32,6 +32,7 @@ SRC_URI = "ftp://linux.mathematik.tu-darmstadt.de/pub/linux/oldstuff/people/okir
            file://020-undefined-chmod-fix.patch \
            file://021-nolibwrap.patch \
            file://022-add-close-on-exec-descriptors.patch \
+           file://023-no-rpc-register.patch \
           "
 
 SRC_URI[md5sum] = "79a29fe9f79b2f3241d4915767b8c511"

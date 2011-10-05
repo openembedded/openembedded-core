@@ -83,10 +83,12 @@ NFS_MOUNTPROG=$[ 21111 + $NFS_INSTANCE ]
 NFS_NFSPROG=$[ 11111 + $NFS_INSTANCE ]
 # NFS port number
 NFS_PORT=$[ 3049 + $NFS_INSTANCE ]
+# mountd port number
+MOUNT_PORT=$[ 3048 + $NFS_INSTANCE ]
 
 ## For debugging you would additionally add
 ## --debug all
-MOUNTD_OPTS="--allow-non-root --mount-pid $MOUNTPID -f $EXPORTS --rmtab $RMTAB --prog $NFS_MOUNTPROG -r"
+MOUNTD_OPTS="--allow-non-root --mount-pid $MOUNTPID -f $EXPORTS --rmtab $RMTAB --prog $NFS_MOUNTPROG -r -P $MOUNT_PORT"
 NFSD_OPTS="--allow-non-root --nfs-pid $NFSPID -f $EXPORTS --prog $NFS_NFSPROG -P $NFS_PORT -r"
 
 # Setup the exports file
