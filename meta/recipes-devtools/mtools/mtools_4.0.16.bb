@@ -18,4 +18,6 @@ inherit autotools
 
 EXTRA_OECONF = "--without-x"
 
+PARALLEL_MAKEINST = ""
+
 BBCLASSEXTEND = "native"
