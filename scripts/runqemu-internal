@@ -258,20 +258,14 @@ fi
 if [ "$FSTYPE" = "nfs" ]; then
     NFS_SERVER="192.168.7.1"
     NFS_DIR=`echo $ROOTFS | sed 's/^[^:]*:\(.*\)/\1/'`
-    MOUNTD_PORT=$[ 21111 + $NFS_INSTANCE ]
-    NFSD_PORT=$[ 11111 + $NFS_INSTANCE ]
-    UNFS_OPTS="nfsvers=2,mountprog=$MOUNTD_PORT,nfsprog=$NFSD_PORT,udp"
+    MOUNTD_RPCPORT=$[ 21111 + $NFS_INSTANCE ]
+    NFSD_RPCPORT=$[ 11111 + $NFS_INSTANCE ]
+    NFSD_PORT=$[ 3049 + $NFS_INSTANCE ]
+    MOUNTD_PORT=$[ 3048 + $NFS_INSTANCE ]
+    UNFS_OPTS="nfsvers=2,mountprog=$MOUNTD_RPCPORT,nfsprog=$NFSD_RPCPORT,udp,port=$NFSD_PORT,mountport=$MOUNTD_PORT"
 
     PSEUDO_LOCALSTATEDIR=~/.runqemu-sdk/pseudo
     export PSEUDO_LOCALSTATEDIR
-
-    rpcbind_running=`ps ax | grep rpcbind | grep -v grep | wc -l`
-    portmap_running=`ps ax | grep portmap | grep -v grep | wc -l`
-    if [[ $rpcbind_running == 0 && $portmap_running == 0 ]]; then
-        echo "You need to be running either rpcbind or portmap to continue"
-        cleanup
-        return
-    fi
 
     # Start the userspace NFS server
     echo "runqemu-export-rootfs restart $ROOTFS"
