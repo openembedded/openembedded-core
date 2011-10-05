@@ -6,4 +6,4 @@ PR = "${INC_PR}.0"
 GDBPROPREFIX = "--program-prefix='${TARGET_PREFIX}'"
 EXPAT = "--with-expat"
 
-S = "${WORKDIR}/${BPN}-${PN}"
+S = "${WORKDIR}/${BPN}-${PV}"
