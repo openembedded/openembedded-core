@@ -1,0 +1,22 @@
+This patch is taken from debian. 128M is too less sometimes if distro
+with lot of packages is booted so this patch raises the default to 384M
+
+It has not been applied to upstream qemu
+
+Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+
+Index: qemu-0.14.0/vl.c
+===================================================================
+--- qemu-0.14.0.orig/vl.c
++++ qemu-0.14.0/vl.c
+@@ -168,7 +168,7 @@ int main(int argc, char **argv)
+ //#define DEBUG_NET
+ //#define DEBUG_SLIRP
+ 
+-#define DEFAULT_RAM_SIZE 128
++#define DEFAULT_RAM_SIZE 384
+ 
+ #define MAX_VIRTIO_CONSOLES 1
+ 

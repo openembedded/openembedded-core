@@ -1,0 +1,18 @@
+# This is a workaround to the crashes seen on Ubuntu.  Setting info to zero
+# makes info.info.x11.display zero and avoids the calls to
+# opengl_exec_set_parent_window, one of which is crashing.
+
+Upstream-Status: Pending
+
+Index: qemu-0.14.0/ui/sdl.c
+===================================================================
+--- qemu-0.14.0.orig/ui/sdl.c
++++ qemu-0.14.0/ui/sdl.c
+@@ -863,6 +863,7 @@ void sdl_display_init(DisplayState *ds,
+     vi = SDL_GetVideoInfo();
+     host_format = *(vi->vfmt);
+ 
++    bzero(&info, sizeof(info));
+     SDL_GetWMInfo(&info);
+     if (info.subsystem == SDL_SYSWM_X11 && info.info.x11.display)
+         opengl_exec_set_parent_window(info.info.x11.display,

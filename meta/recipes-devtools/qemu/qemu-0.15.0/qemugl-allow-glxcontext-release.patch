@@ -1,0 +1,65 @@
+Allow releasing the GLXContext/Drawable with glXMakeCurrent.
+
+---
+commit d942ed4e853e08d2298f3e11e9a952c1d952bff5
+tree f0a934efd8a8ff48e2d96f0d6fc7d70bef106bfe
+parent 93619e6be184f8de08759d347825ee0d678a6f9c
+author Andrzej Zaborowski <andrew.zaborowski@intel.com> Tue, 16 Jun 2009 22:22:05 +0200
+committer Andrzej Zaborowski <andrew.zaborowski@intel.com> Tue, 16 Jun 2009 22:22:05 +0200
+
+ target-i386/opengl_exec.c |   31 ++++++++++++++++---------------
+ 1 files changed, 16 insertions(+), 15 deletions(-)
+
+Upstream-Status: Inappropriate [configuration]
+
+Index: qemu-0.14.0/target-i386/opengl_exec.c
+===================================================================
+--- qemu-0.14.0.orig/target-i386/opengl_exec.c
++++ qemu-0.14.0/target-i386/opengl_exec.c
+@@ -1600,10 +1600,9 @@ int do_function_call(int func_number, ar
+                 fprintf(stderr, "client_drawable=%p fake_ctx=%d\n",
+                         (void *) client_drawable, fake_ctxt);
+ 
+-            if (client_drawable == 0 && fake_ctxt == 0) {
++            if (client_drawable == 0 && fake_ctxt == 0)
+                 ret_int = glXMakeCurrent(dpy, 0, NULL);
+-                process->current_state = &process->default_state;
+-            } else if ((drawable = (GLXDrawable)
++            else if ((drawable = (GLXDrawable)
+                                     get_association_fakepbuffer_pbuffer(
+                                             process, client_drawable))) {
+                 GLXContext ctxt = get_association_fakecontext_glxcontext(
+@@ -1651,19 +1650,21 @@ int do_function_call(int func_number, ar
+             }
+ 
+             if (ret_int) {
+-                for (i = 0; i < process->nb_states; i ++) {
+-                    if (process->glstates[i]->fake_ctxt == fake_ctxt) {
+-                        /* HACK !!! REMOVE */
+-                        process->current_state = process->glstates[i];
+-                        process->current_state->drawable = drawable;
+-                        break;
+-                    }
+-                }
++                if (fake_ctxt) {
++                    for (i = 0; i < process->nb_states; i ++)
++                        if (process->glstates[i]->fake_ctxt == fake_ctxt) {
++                            /* HACK !!! REMOVE */
++                            process->current_state = process->glstates[i];
++                            process->current_state->drawable = drawable;
++                            break;
++                        }
+ 
+-                if (i == process->nb_states) {
+-                    fprintf(stderr, "error remembering the new context\n");
+-                    exit(-1);
+-                }
++                    if (i == process->nb_states) {
++                        fprintf(stderr, "error remembering the new context\n");
++                        exit(-1);
++                    }
++                } else
++                    process->current_state = &process->default_state;
+             }
+             break;
+         }

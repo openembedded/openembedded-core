@@ -1,0 +1,15 @@
+Upstream-Status: Inappropriate [configuration]
+
+Index: qemu-0.14.0/Makefile.target
+===================================================================
+--- qemu-0.14.0.orig/Makefile.target	2011-04-04 12:12:19.142871742 +0100
++++ qemu-0.14.0/Makefile.target	2011-04-04 12:12:21.772871742 +0100
+@@ -362,7 +362,7 @@
+ 
+ monitor.o: hmp-commands.h qmp-commands.h
+ 
+-LIBS += -lGL -lGLU
++LIBS += -lGL
+ 
+ $(obj-y) $(obj-$(TARGET_BASE_ARCH)-y): $(GENERATED_HEADERS)
+ 

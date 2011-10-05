@@ -1,0 +1,43 @@
+Upstream-Status: Inappropriate [configuration]
+
+diff -u -r qemu-0.14.0/Makefile.target qemu-0.14.0-fixed/Makefile.target
+--- qemu-0.14.0/Makefile.target 2011-04-26 21:22:17.627637741 -0700
++++ qemu-0.14.0-fixed/Makefile.target   2011-04-26 21:23:02.767637747 -0700
+@@ -82,8 +82,10 @@
+ libobj-$(TARGET_I386) += helper_opengl.o opengl_exec.o
+ libobj-$(TARGET_X86_64) += helper_opengl.o opengl_exec.o
+ else
++ifdef CONFIG_SDL
+ libobj-$(TARGET_I386) += dummygl.o
+ libobj-$(TARGET_X86_64) += dummygl.o
++endif
+ endif #CONFIG_LINUX_USER
+ libobj-$(TARGET_ARM) += dummygl.o
+ libobj-$(TARGET_MIPS) += dummygl.o
+Only in qemu-0.14.0-fixed: config.log
+diff -u -r qemu-0.14.0/target-i386/helper.h qemu-0.14.0-fixed/target-i386/helper.h
+--- qemu-0.14.0/target-i386/helper.h    2011-04-26 21:22:11.418637742 -0700
++++ qemu-0.14.0-fixed/target-i386/helper.h      2011-04-26 21:23:02.539637747 -0700
+@@ -217,6 +217,9 @@
+ DEF_HELPER_2(rcrq, tl, tl, tl)
+ #endif
+ 
++#ifdef CONFIG_SDL
+ DEF_HELPER_0(opengl, void)
++#endif
++
+ 
+ #include "def-helper.h"
+diff -u -r qemu-0.14.0/target-i386/translate.c qemu-0.14.0-fixed/target-i386/translate.c
+--- qemu-0.14.0/target-i386/translate.c 2011-04-26 21:22:21.600637743 -0700
++++ qemu-0.14.0-fixed/target-i386/translate.c   2011-04-26 21:23:02.538637747 -0700
+@@ -2659,7 +2659,7 @@
+ static void gen_interrupt(DisasContext *s, int intno,
+                           target_ulong cur_eip, target_ulong next_eip)
+ {
+-#if !defined(CONFIG_USER_ONLY)
++#if !defined(CONFIG_USER_ONLY) && defined(CONFIG_SDL)
+     if (enable_gl && intno == 0x99) {
+         gen_helper_opengl();
+         return;
+

@@ -1,0 +1,39 @@
+From c313f89c33217ac0e471554dace2144718f86669 Mon Sep 17 00:00:00 2001
+From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Thu, 13 May 2010 12:23:40 +0200
+Subject: [PATCH] linux-user: use default mmap_min_addr 65536 when /proc/sys/vm/mmap_min_addr cannot be read
+
+* 65536 is default at least for ubuntu and fedora.
+---
+ linux-user/main.c |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+Upstream-Status: Pending
+
+Index: qemu-0.14.0/linux-user/main.c
+===================================================================
+--- qemu-0.14.0.orig/linux-user/main.c
++++ qemu-0.14.0/linux-user/main.c
+@@ -36,6 +36,7 @@
+ #include "envlist.h"
+ 
+ #define DEBUG_LOGFILE "/tmp/qemu.log"
++#define MMAP_MIN_ADDR_DEFAULT 65536
+ 
+ char *exec_path;
+ 
+@@ -3010,8 +3011,14 @@ int main(int argc, char **argv, char **e
+             if (fscanf(fp, "%lu", &tmp) == 1) {
+                 mmap_min_addr = tmp;
+                 qemu_log("host mmap_min_addr=0x%lx\n", mmap_min_addr);
++            } else {
++                qemu_log("cannot read value from /proc/sys/vm/mmap_min_addr, assuming %d\n", MMAP_MIN_ADDR_DEFAULT);
++                mmap_min_addr = MMAP_MIN_ADDR_DEFAULT;
+             }
+             fclose(fp);
++        } else {
++            qemu_log("cannot open /proc/sys/vm/mmap_min_addr for reading, assuming %d\n", MMAP_MIN_ADDR_DEFAULT);
++            mmap_min_addr = MMAP_MIN_ADDR_DEFAULT;
+         }
+     }
+ 

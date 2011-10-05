@@ -1,0 +1,15 @@
+Upstream-Status: Inappropriate [configuration]
+
+Index: qemu-0.14.0/Makefile
+===================================================================
+--- qemu-0.14.0.orig/Makefile
++++ qemu-0.14.0/Makefile
+@@ -235,7 +235,7 @@ install-sysconfig:
+ install: all $(if $(BUILD_DOCS),install-doc) install-sysconfig
+ 	$(INSTALL_DIR) "$(DESTDIR)$(bindir)"
+ ifneq ($(TOOLS),)
+-	$(INSTALL_PROG) $(STRIP_OPT) $(TOOLS) "$(DESTDIR)$(bindir)"
++	$(INSTALL_PROG) $(TOOLS) "$(DESTDIR)$(bindir)"
+ endif
+ ifneq ($(BLOBS),)
+ 	$(INSTALL_DIR) "$(DESTDIR)$(datadir)"

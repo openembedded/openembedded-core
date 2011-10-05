@@ -1,0 +1,22 @@
+In native builds, qemu can fail to find zlib development files in the native 
+sysroot and the build machine might not have zlib-dev packages installed.
+
+Add CFLAGS to qemu's CFLAGS which in the native case means BUILD_CFLAGS are
+added and files in the sysroot can be found.
+
+Patch from Paul Eggleton, Comments by RP 28/11/10
+
+Upstream-Status: Inappropriate [embedded specific]
+
+Index: qemu-0.14.0/configure
+===================================================================
+--- qemu-0.14.0.orig/configure
++++ qemu-0.14.0/configure
+@@ -229,6 +229,7 @@ QEMU_CFLAGS="-Wstrict-prototypes -Wredun
+ QEMU_CFLAGS="-D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE $QEMU_CFLAGS"
+ QEMU_CFLAGS="-D_FORTIFY_SOURCE=2 $QEMU_CFLAGS"
+ QEMU_INCLUDES="-I. -I\$(SRC_PATH)"
++QEMU_CFLAGS="$QEMU_CFLAGS $CFLAGS"
+ LDFLAGS="-g $LDFLAGS"
+ 
+ # make source path absolute

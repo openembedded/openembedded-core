@@ -1,0 +1,74 @@
+This patch fix GL application start failure on qemu 0.14.0.
+
+Some turn-on macro/variable are re-arranged, buffer pointer is extended to
+support 32/64b combination of target/host.
+
+This is not perfect fix, and we need consider other GL alternatives in future.
+
+Upstream-Status: Inappropriate [other] - depends on qemu gl patch
+
+Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
+
+
+Index: qemu-0.14.0/target-i386/opengl_func.h
+===================================================================
+--- qemu-0.14.0.orig/target-i386/opengl_func.h	2011-04-08 16:43:46.000000000 +0800
++++ qemu-0.14.0/target-i386/opengl_func.h	2011-04-08 16:45:55.000000000 +0800
+@@ -26,8 +26,9 @@
+ #include "mesa_glext.h"
+ 
+ /* Argument list are internally of a type that can hold a target pointer
+- * or a host pointer.  */
+-typedef target_phys_addr_t arg_t;
++ * or a host pointer. If 32b target runs on 64b host, it should be big enough
++ * to hold host pointer */
++typedef long unsigned int arg_t;
+ 
+ enum {
+     TYPE_NONE,
+Index: qemu-0.14.0/target-i386/translate.c
+===================================================================
+--- qemu-0.14.0.orig/target-i386/translate.c	2011-04-08 16:19:15.000000000 +0800
++++ qemu-0.14.0/target-i386/translate.c	2011-04-08 16:22:03.000000000 +0800
+@@ -2652,17 +2652,19 @@
+     s->is_jmp = DISAS_TB_JUMP;
+ }
+ 
+-int enable_gl = 0;
++extern int enable_gl;
+ 
+ /* an interrupt is different from an exception because of the
+    privilege checks */
+ static void gen_interrupt(DisasContext *s, int intno,
+                           target_ulong cur_eip, target_ulong next_eip)
+ {
++#if !defined(CONFIG_USER_ONLY)
+     if (enable_gl && intno == 0x99) {
+         gen_helper_opengl();
+         return;
+     }
++#endif
+ 
+     if (s->cc_op != CC_OP_DYNAMIC)
+         gen_op_set_cc_op(s->cc_op);
+Index: qemu-0.14.0/vl.c
+===================================================================
+--- qemu-0.14.0.orig/vl.c	2011-04-08 16:11:43.000000000 +0800
++++ qemu-0.14.0/vl.c	2011-04-08 16:20:05.000000000 +0800
+@@ -229,7 +229,7 @@
+ unsigned int nb_prom_envs = 0;
+ const char *prom_envs[MAX_PROM_ENVS];
+ int boot_menu;
+-extern int enable_gl;
++int enable_gl = 0;
+ 
+ typedef struct FWBootEntry FWBootEntry;
+ 
+@@ -1909,6 +1909,7 @@
+     return popt;
+ }
+ 
++#define TARGET_OPENGL_OK
+ int main(int argc, char **argv, char **envp)
+ {
+     const char *gdbstub_dev = NULL;

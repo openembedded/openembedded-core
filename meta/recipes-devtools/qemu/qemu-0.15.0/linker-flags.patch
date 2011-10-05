@@ -1,0 +1,25 @@
+Fedora 13 switched the default behaviour of the linker to no longer
+indirectly link to required libraries (i.e. dependencies of a library
+already linked to). Therefore we need to explicitly pass the depended on
+libraries into the linker for building to work on Fedora 13.
+
+More information is available on the Fedora Wiki:
+https://fedoraproject.org/wiki/UnderstandingDSOLinkChange
+
+JL - 15/06/10
+
+Upstream-Status: Inappropriate [configuration]
+
+Index: qemu-0.14.0/Makefile.target
+===================================================================
+--- qemu-0.14.0.orig/Makefile.target
++++ qemu-0.14.0/Makefile.target
+@@ -218,7 +218,7 @@ obj-$(CONFIG_REALLY_VIRTFS) += virtio-9p
+ obj-y += rwhandler.o
+ obj-$(CONFIG_KVM) += kvm.o kvm-all.o
+ obj-$(CONFIG_NO_KVM) += kvm-stub.o
+-LIBS+=-lz
++LIBS+=-lz -lX11 -ldl
+ 
+ QEMU_CFLAGS += $(VNC_TLS_CFLAGS)
+ QEMU_CFLAGS += $(VNC_SASL_CFLAGS)

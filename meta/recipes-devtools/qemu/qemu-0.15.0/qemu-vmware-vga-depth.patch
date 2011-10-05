@@ -1,0 +1,118 @@
+# fix VMware VGA driver depth calculation error, which may cause segmentation fault
+#
+# ktian1, 06/29/2010
+
+Upstream-Status: Pending
+
+Index: qemu-0.14.0/console.h
+===================================================================
+--- qemu-0.14.0.orig/console.h
++++ qemu-0.14.0/console.h
+@@ -171,6 +171,12 @@ struct DisplayAllocator {
+     void (*free_displaysurface)(DisplaySurface *surface);
+ };
+ 
++struct DisplayPostCallback {
++    void (*postcall) (void *);
++    void *parm;
++    struct DisplayPostCallback *next;
++};
++
+ struct DisplayState {
+     struct DisplaySurface *surface;
+     void *opaque;
+@@ -178,6 +184,7 @@ struct DisplayState {
+ 
+     struct DisplayAllocator* allocator;
+     struct DisplayChangeListener* listeners;
++    struct DisplayPostCallback* postcalls;
+ 
+     void (*mouse_set)(int x, int y, int on);
+     void (*cursor_define)(QEMUCursor *cursor);
+@@ -229,6 +236,12 @@ static inline void register_displaychang
+     ds->listeners = dcl;
+ }
+ 
++static inline void register_displaypostcallback(DisplayState *ds, DisplayPostCallback *dpc)
++{
++    dpc->next = ds->postcalls;
++    ds->postcalls = dpc;
++}
++
+ static inline void dpy_update(DisplayState *s, int x, int y, int w, int h)
+ {
+     struct DisplayChangeListener *dcl = s->listeners;
+Index: qemu-0.14.0/hw/vmware_vga.c
+===================================================================
+--- qemu-0.14.0.orig/hw/vmware_vga.c
++++ qemu-0.14.0/hw/vmware_vga.c
+@@ -1001,8 +1001,9 @@ static void vmsvga_update_display(void *
+     }
+ }
+ 
+-static void vmsvga_reset(struct vmsvga_state_s *s)
++static void vmsvga_reset(void *parm)
+ {
++    struct vmsvga_state_s *s = (struct vmsvga_state_s *)parm;
+     s->index = 0;
+     s->enable = 0;
+     s->config = 0;
+@@ -1207,6 +1208,8 @@ static const VMStateDescription vmstate_
+ 
+ static void vmsvga_init(struct vmsvga_state_s *s, int vga_ram_size)
+ {
++    DisplayPostCallback *dpc;
++
+     s->scratch_size = SVGA_SCRATCH_SIZE;
+     s->scratch = qemu_malloc(s->scratch_size * 4);
+ 
+@@ -1224,7 +1227,10 @@ static void vmsvga_init(struct vmsvga_st
+     vga_init(&s->vga);
+     vmstate_register(NULL, 0, &vmstate_vga_common, &s->vga);
+ 
+-    vmsvga_reset(s);
++    dpc = qemu_mallocz(sizeof(DisplayPostCallback));
++    dpc->postcall = vmsvga_reset;
++    dpc->parm = s;
++    register_displaypostcallback(s->vga.ds, dpc);
+ }
+ 
+ static void pci_vmsvga_map_ioport(PCIDevice *pci_dev, int region_num,
+Index: qemu-0.14.0/qemu-common.h
+===================================================================
+--- qemu-0.14.0.orig/qemu-common.h
++++ qemu-0.14.0/qemu-common.h
+@@ -241,6 +241,7 @@ typedef struct DisplayState DisplayState
+ typedef struct DisplayChangeListener DisplayChangeListener;
+ typedef struct DisplaySurface DisplaySurface;
+ typedef struct DisplayAllocator DisplayAllocator;
++typedef struct DisplayPostCallback DisplayPostCallback;
+ typedef struct PixelFormat PixelFormat;
+ typedef struct TextConsole TextConsole;
+ typedef TextConsole QEMUConsole;
+Index: qemu-0.14.0/vl.c
+===================================================================
+--- qemu-0.14.0.orig/vl.c
++++ qemu-0.14.0/vl.c
+@@ -1920,6 +1920,7 @@ int main(int argc, char **argv, char **e
+     char boot_devices[33] = "cad"; /* default to HD->floppy->CD-ROM */
+     DisplayState *ds;
+     DisplayChangeListener *dcl;
++    DisplayPostCallback *dpc;
+     int cyls, heads, secs, translation;
+     QemuOpts *hda_opts = NULL, *opts;
+     QemuOptsList *olist;
+@@ -3101,6 +3102,13 @@ int main(int argc, char **argv, char **e
+ 
+     /* display setup */
+     dpy_resize(ds);
++    dpc = ds->postcalls;
++    while (dpc != NULL) {
++        if (dpc->postcall != NULL)
++            dpc->postcall(dpc->parm);
++        dpc = dpc->next;
++    }
++
+     dcl = ds->listeners;
+     while (dcl != NULL) {
+         if (dcl->dpy_refresh != NULL) {

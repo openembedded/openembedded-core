@@ -1,0 +1,55 @@
+Enable i386-linux-user
+
+Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
+
+Upstream-Status: Inappropriate [configuration]
+
+Index: qemu-0.14.0/Makefile.target
+===================================================================
+--- qemu-0.14.0.orig/Makefile.target
++++ qemu-0.14.0/Makefile.target
+@@ -78,8 +78,13 @@ ifeq ($(TARGET_BASE_ARCH), i386)
+ libobj-y += cpuid.o
+ endif
+ libobj-$(CONFIG_NEED_MMU) += mmu.o
++ifndef CONFIG_LINUX_USER
+ libobj-$(TARGET_I386) += helper_opengl.o opengl_exec.o
+ libobj-$(TARGET_X86_64) += helper_opengl.o opengl_exec.o
++else
++libobj-$(TARGET_I386) += dummygl.o
++libobj-$(TARGET_X86_64) += dummygl.o
++endif #CONFIG_LINUX_USER
+ libobj-$(TARGET_ARM) += dummygl.o
+ libobj-$(TARGET_MIPS) += dummygl.o
+ libobj-$(TARGET_PPC) += dummygl.o
+Index: qemu-0.14.0/target-i386/dummygl.c
+===================================================================
+--- /dev/null
++++ qemu-0.14.0/target-i386/dummygl.c
+@@ -0,0 +1,26 @@
++#include <string.h>
++#include <stdlib.h>
++#include <assert.h>
++#include <stdint.h>
++#include <X11/Xlib.h>
++#include <X11/Xutil.h>
++
++void opengl_exec_set_parent_window(Display* _dpy, Window _parent_window)
++{
++
++}
++
++void opengl_process_enable(void)
++{
++
++}
++
++
++void mem_opengl(uint64_t ptr)
++{
++
++}
++
++void helper_opengl(void)
++{
++}
