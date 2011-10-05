@@ -10,12 +10,15 @@ RPROVIDES_${PN}-dev = "gconf-dev"
 
 #SRCREV = "705"
 #PV = "2.16.0+svnr${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 # This SVN repo is no longer available use a tarball mirror site until
 # we move to proper gconf recipe.
 #SRC_URI = "svn://developer.imendio.com/svn/gconf-dbus;module=trunk;proto=http"
 SRC_URI = "http://autobuilder.pokylinux.org/sources/trunk_developer.imendio.com_.svn.gconf-dbus_705_.tar.gz"
+
+SRC_URI[md5sum] = "dba8d534b0c6262d24817c842b36369d"
+SRC_URI[sha256sum] = "5552b1884d42d4072a199c93e35a28dc1799f9166baefbf9243394966039e416"
 
 S = "${WORKDIR}/trunk"
 
