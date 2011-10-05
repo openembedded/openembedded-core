@@ -10,6 +10,7 @@ PV = "1.1.6+git${SRCPV}"
 
 SRC_URI = "git://git.gnome.org/sysprof;protocol=git \
            file://define-NT_GNU_BUILD_ID.patch \
+	   file://0001-Fix-PowerPC-checks-for-__NR_perf_counter_open.patch \
           "
 
 SRC_URI_append_arm  = " file://rmb-arm.patch"
