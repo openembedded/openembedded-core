@@ -37,6 +37,9 @@ LDFLAGS_append_libc-uclibc = "${@['', ' -lintl '][(bb.data.getVar('PN', d, True)
 EXTRA_OECONF_append_libc-uclibc = "${@['', ' --disable-gettext '][(bb.data.getVar('PN', d, True) == bb.data.getVar('BPN', d , True)) and (bb.data.getVar('USE_NLS', d, True) == 'no')]}"
 
 fix_symlink () {
+	if test "${libdir}" = "${base_libdir}" ; then
+		return
+	fi
 	# Remove bad symlinks & create the correct symlinks
 	if test -L ${libdir}/lib${BPN}.so ; then
 		rm -rf ${libdir}/lib${BPN}.so
