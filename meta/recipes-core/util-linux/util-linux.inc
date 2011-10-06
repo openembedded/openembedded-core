@@ -29,7 +29,7 @@ PACKAGES =+ "util-linux-agetty util-linux-fdisk util-linux-cfdisk util-linux-sfd
              util-linux-swaponoff util-linux-losetup util-linux-umount \
              util-linux-mount util-linux-readprofile util-linux-libblkid \
              util-linux-libblkid-dev util-linux-libuuid util-linux-libuuid-dev \
-             util-linux-uuidgen util-linux-lscpu"
+             util-linux-uuidgen util-linux-lscpu util-linux-fsck"
 
 EXTRA_OECONF = "--disable-use-tty-group --disable-makeinstall-chown --enable-elvtune --enable-init --enable-kill --enable-last \
  --enable-mesg --enable-partx --enable-raw --enable-rdev --enable-reset \
@@ -53,6 +53,8 @@ FILES_util-linux-libblkid-dev = "${libdir}/libblkid.so ${libdir}/libblkid.a ${li
 FILES_util-linux-libuuid = "${libdir}/libuuid.so.*"
 FILES_util-linux-libuuid-dev = "${libdir}/libuuid.so ${libdir}/libuuid.a ${libdir}/libuuid.la ${includedir}/uuid"
 FILES_util-linux-lscpu = "${bindir}/lscpu"
+
+FILES_util-linux-fsck = "${base_sbindir}/fsck*"
 
 RRECOMMENDS_${PN} = "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-mount util-linux-readprofile "
 RDEPENDS_${PN} = "util-linux-umount util-linux-swaponoff util-linux-losetup perl"
@@ -172,7 +174,6 @@ pkg_postinst_${PN} () {
 	update-alternatives --install ${base_sbindir}/pivot_root pivot_root pivot_root.${PN} 100
 #	update-alternatives --install ${base_sbindir}/sln sln sln.${PN} 100
 	update-alternatives --install ${base_sbindir}/mkfs.minix mkfs.minix mkfs.minix.${PN} 100
-	update-alternatives --install ${base_sbindir}/fsck.minix fsck.minix fsck.minix.${PN} 100
 	update-alternatives --install ${bindir}/hexdump hexdump hexdump.${PN} 100
 	update-alternatives --install ${bindir}/last last last.${PN} 100
 	update-alternatives --install ${bindir}/logger logger logger.${PN} 100
@@ -201,7 +202,6 @@ pkg_prerm_${PN} () {
 	update-alternatives --remove shutdown shutdown.${PN}
 #	update-alternatives --remove sln sln.${PN}
 	update-alternatives --remove mkfs.minix mkfs.minix.${PN}
-	update-alternatives --remove fsck.minix fsck.minix.${PN}
 	update-alternatives --remove hexdump hexdump.${PN}
 	update-alternatives --remove last last.${PN}
 	update-alternatives --remove logger logger.${PN}
@@ -250,6 +250,16 @@ pkg_postinst_util-linux-swaponoff () {
 pkg_prerm_util-linux-swaponoff () {
 	update-alternatives --remove swapoff swapoff.${PN}
 	update-alternatives --remove swapon swapon.${PN}
+}
+
+pkg_postinst_util-linux-fsck () {	
+	update-alternatives --install ${base_sbindir}/fsck.minix fsck.minix fsck.minix.${PN} 100
+	update-alternatives --install ${base_sbindir}/fsck fsck fsck.${PN} 100
+}
+
+pkg_prerm_util-linux-fsck () {
+	update-alternatives --remove fsck.minix fsck.minix.${PN}
+	update-alternatives --remove fsck fsck.${PN}
 }
 
 BBCLASSEXTEND = "native"
