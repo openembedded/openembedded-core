@@ -202,7 +202,6 @@ def preferred_ml_updates(d):
 
 addhandler base_eventhandler
 python base_eventhandler() {
-	from bb import note, error, data
 	from bb.event import getName
 
 	name = getName(e)
@@ -212,7 +211,7 @@ python base_eventhandler() {
 		statusvars = ['BB_VERSION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'DISTRO_VERSION','TUNE_FEATURES', 'TARGET_FPU']
 		statuslines = ["%-17s = \"%s\"" % (i, bb.data.getVar(i, e.data, 1) or '') for i in statusvars]
 
-		layers = (data.getVar("BBLAYERS", e.data, 1) or "").split()
+		layers = (bb.data.getVar("BBLAYERS", e.data, 1) or "").split()
 		layers_branch_rev = ["%-17s = \"%s:%s\"" % (os.path.basename(i), \
 			base_get_metadata_git_branch(i, None).strip(), \
 			base_get_metadata_git_revision(i, None)) \
@@ -248,9 +247,6 @@ python base_eventhandler() {
                 generate_git_config(e)
                 pkgarch_mapping(e.data)
                 preferred_ml_updates(e.data)
-
-	if not data in e.__dict__:
-		return
 }
 
 addtask configure after do_patch
