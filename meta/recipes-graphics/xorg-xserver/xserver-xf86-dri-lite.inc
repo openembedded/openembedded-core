@@ -6,7 +6,7 @@ LIB_DEPS = "pixman virtual/libgl libxfont xtrans libxau libxext libxdmcp libdrm 
 
 DEPENDS = "${PROTO_DEPS} ${LIB_DEPS}"
 
-RDEPENDS_${PN} += "hal xorg-minimal-fonts"
+RDEPENDS_${PN} += "xorg-minimal-fonts"
 
 FILES_${PN} += "${bindir}/Xorg "
 
@@ -34,4 +34,3 @@ EXTRA_OECONF += "--disable-static \
 
 # Due to mesa-dri
 COMPATIBLE_HOST = '(i.86.*-linux|x86_64.*-linux)'
-

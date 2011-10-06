@@ -7,7 +7,7 @@ PROTO_DEPS += "xf86driproto dri2proto"
 DEPENDS += "font-util"
 
 PE = "1"
-PR = "r1"
+PR = "r3"
 
 SRC_URI += "file://crosscompile.patch"
 

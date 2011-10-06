@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=74df27b6254cc88d2799b5f4f5949c00"
 
 SRCREV = "6689e8add183835274a70ee013e5d3bc8023681f"
 PE = "1"
-PR = "r1"
+PR = "r3"
 PV = "1.10+git${SRCPV}"
 
 PROTO_DEPS += "xf86driproto dri2proto"

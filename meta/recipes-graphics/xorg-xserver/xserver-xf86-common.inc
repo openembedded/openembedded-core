@@ -35,3 +35,8 @@ FILES_${PN}-dbg += "${libdir}/xorg/modules/.debug \
 SRC_URI += "file://macro_tweak.patch"
 
 EXTRA_OECONF = "--with-fop=no"
+
+PACKAGECONFIG ??= "udev"
+PACKAGECONFIG[hal] = "--enable-config-hal,--disable-config-hal,,hal"
+PACKAGECONFIG[udev] = "--enable-config-udev,--disable-config-udev,udev"
+

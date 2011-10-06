@@ -8,7 +8,7 @@ LIB_DEPS = "pixman libxfont xtrans libxau libxext libxdmcp libdrm libxkbfile lib
 
 DEPENDS = "${PROTO_DEPS} ${LIB_DEPS}"
 
-RDEPENDS_${PN} += "hal xorg-minimal-fonts"
+RDEPENDS_${PN} += "xorg-minimal-fonts"
 
 FILES_${PN} += "${bindir}/Xorg "
 
