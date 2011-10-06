@@ -291,6 +291,44 @@ do_build () {
 python () {
     import exceptions, string, re
 
+    # Handle PACKAGECONFIG
+    #
+    # These take the form:
+    #
+    # PACKAGECONFIG ?? = "<default options>"
+    # PACKAGECONFIG[foo] = "--enable-foo,--disable-foo,foo_depends,foo_runtime_depends"
+    pkgconfig = (d.getVar('PACKAGECONFIG', True) or "").split()
+    if pkgconfig:
+        def appendVar(varname, appends):
+            if not appends:
+                return
+            varname = bb.data.expand(varname, d)
+            content = d.getVar(varname, False) or ""
+            content = content + " " + " ".join(appends)
+            d.setVar(varname, content)
+
+        extradeps = []
+        extrardeps = []
+        extraconf = []
+        for flag, flagval in (d.getVarFlags("PACKAGECONFIG") or {}).items():
+            if flag == "defaultval":
+                continue
+            items = flagval.split(",")
+            if len(items) == 3:
+                enable, disable, depend = items
+                rdepend = ""
+            elif len(items) == 4:
+                enable, disable, depend, rdepend = items
+            if flag in pkgconfig:
+                extradeps.append(depend)
+                extrardeps.append(rdepend)
+                extraconf.append(enable)
+            else:
+                extraconf.append(disable)
+        appendVar('DEPENDS', extradeps)
+        appendVar('RDEPENDS_${PN}', extrardeps)
+        appendVar('EXTRA_OECONF', extraconf)
+
     # If PRINC is set, try and increase the PR value by the amount specified
     princ = bb.data.getVar('PRINC', d, True)
     if princ:
