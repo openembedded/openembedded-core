@@ -13,7 +13,6 @@ EXTRA_OECONF += "\
   --enable-dnsproxy \
   --disable-dhclient \
   --enable-test \
-  --disable-udev \
   --disable-polkit \
   --enable-client \
   --enable-ofono \
