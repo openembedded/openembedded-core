@@ -14,6 +14,7 @@ PROVIDES += "virtual/xserver"
 
 XORG_PN = "xorg-server"
 SRC_URI = "${XORG_MIRROR}/individual/xserver/${XORG_PN}-${PV}.tar.bz2"
+SRC_URI += "file://macro_tweak.patch"
 
 S = "${WORKDIR}/${XORG_PN}-${PV}"
 
@@ -31,8 +32,6 @@ FILES_${PN}-dbg += "${libdir}/xorg/modules/.debug \
                     ${libdir}/xorg/modules/*/.debug \
 		    ${libdir}/xorg/modules/*/*/.debug \
 		    "
-
-SRC_URI += "file://macro_tweak.patch"
 
 EXTRA_OECONF = "--with-fop=no"
 
