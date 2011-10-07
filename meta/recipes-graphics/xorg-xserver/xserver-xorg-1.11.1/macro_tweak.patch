@@ -1,10 +1,5 @@
 This is the revised version of files/macro_tweak.patch for
-xorg-server 1.8.99.904.
-
-the files/macro_tweak.patch can not removed now since it is used by
-xserver-kdrive-1.7.99.2 and xserver-xorg(-lite). Once they
-are all upgraded to 1.8.99.904, the the files/macro_tweak.patch
-can be safely replace by this patch.
+xorg-server 1.8.99.904 and newer.
 
 Upstream-Status: Pending
 
