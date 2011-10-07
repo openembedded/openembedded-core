@@ -1,11 +1,5 @@
 require xserver-xorg-common.inc
 
-PROTO_DEPS = "randrproto renderproto fixesproto damageproto xextproto xproto xf86dgaproto xf86miscproto xf86rushproto xf86vidmodeproto xf86bigfontproto compositeproto recordproto resourceproto videoproto scrnsaverproto evieext trapproto xineramaproto fontsproto kbproto inputproto bigreqsproto xcmiscproto glproto"
-
-LIB_DEPS = "pixman libxfont xtrans libxau libxext libxdmcp libdrm libxkbfile libpciaccess openssl"
-
-DEPENDS = "${PROTO_DEPS} ${LIB_DEPS}"
-
 RDEPENDS_${PN} += "xorg-minimal-fonts"
 
 FILES_${PN} += "${bindir}/Xorg "
