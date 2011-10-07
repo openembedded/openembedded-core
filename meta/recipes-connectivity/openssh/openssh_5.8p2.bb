@@ -29,6 +29,14 @@ PAM_SRC_URI = "file://sshd"
 SRC_URI[md5sum] = "0541579adf9d55abb15ef927048d372e"
 SRC_URI[sha256sum] = "5c35ec7c966ce05cc4497ac59c0b54a556e55ae7368165cc8c4129694654f314"
 
+inherit useradd update-rc.d
+
+USERADD_PACKAGES = "${PN}-sshd"
+USERADD_PARAM_${PN}-sshd = "--system --no-create-home --home-dir /var/run/sshd --shell /bin/false --user-group sshd"
+INITSCRIPT_PACKAGES = "${PN}-sshd"
+INITSCRIPT_NAME_${PN}-sshd = "sshd"
+INITSCRIPT_PARAMS_${PN}-sshd = "defaults 9"
+
 inherit autotools
 
 # LFS support:
@@ -91,16 +99,6 @@ RDEPENDS_${PN} += "${PN}-scp ${PN}-ssh ${PN}-sshd ${PN}-keygen"
 DEPENDS_${PN}-sshd += "update-rc.d"
 RDEPENDS_${PN}-sshd += "update-rc.d ${PN}-keygen"
 
-pkg_postinst_${PN}-sshd () {
-	if [ "x$D" != "x" ]; then
-		exit 1
-	else
-		addgroup sshd
-		adduser --system --home /var/run/sshd --no-create-home --disabled-password --ingroup sshd -s /bin/false sshd
-		update-rc.d sshd defaults 9
-	fi
-}
-
 pkg_postinst_${PN}-scp () {
 	update-alternatives --install ${bindir}/scp scp scp.${PN} 90
 }
@@ -115,17 +113,6 @@ pkg_postrm_${PN}-ssh () {
 
 pkg_postrm_${PN}-scp () {
 	update-alternatives --remove ${bindir}/scp scp.${PN}
-}
-
-pkg_postrm_${PN}-sshd () {
-	if [ "x$D" != "x" ]; then
-		exit 1
-	else
-		${sysconfdir}/init.d/sshd stop
-		deluser sshd
-		delgroup sshd
-		update-rc.d -f sshd remove
-	fi
 }
 
 CONFFILES_${PN}-sshd = "${sysconfdir}/ssh/sshd_config"
