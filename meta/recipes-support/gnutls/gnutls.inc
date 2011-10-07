@@ -25,6 +25,7 @@ EXTRA_OECONF="--with-included-opencdk --with-included-libcfg --disable-rpath \
               --with-libdl-prefix=${STAGING_DIR_HOST}${prefix} \
               --with-libpthread-prefix=${STAGING_DIR_HOST}${prefix} \
               --with-lzo --disable-guile \
+              --without-p11-kit \
               "
 do_configure_prepend() {
 	for dir in . lib libextra; do
