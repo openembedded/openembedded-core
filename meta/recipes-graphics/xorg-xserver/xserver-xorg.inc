@@ -5,26 +5,12 @@ LIB_DEPS += "virtual/libgl"
 
 require ../mesa/glx-use-tls.inc
 
-EXTRA_OECONF += "--disable-static \
-                 --disable-acfb \
-                 --disable-ccfb \
-                 --disable-mcfb \
-                 --disable-dga \
-                 --disable-xinerama \
-                 --disable-xf86misc \
-                 --disable-xorgcfg \
-                 --disable-record \
-                 --disable-dmx \
-                 --disable-xnest \
-                 --disable-xvfb \
-                 --enable-composite \
-                 --sysconfdir=/etc/X11 \
-                 --localstatedir=/var \
+EXTRA_OECONF += "\
+                 --enable-dri \
+                 --enable-dri2 \
                  --with-pic \
                  --with-int10=x86emu \
-                 --with-fontdir=${datadir}/fonts/X11 \
-                 --with-xkb-output=/var/lib/xkb \
-                 ac_cv_file__usr_share_sgml_X11_defs_ent=no"
+"
 
 # Due to mesa-dri
 COMPATIBLE_HOST = '(i.86.*-linux|x86_64.*-linux)'
