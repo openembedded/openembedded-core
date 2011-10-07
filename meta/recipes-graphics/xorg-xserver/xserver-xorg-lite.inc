@@ -1,7 +1,5 @@
 require xserver-xorg-common.inc
 
-RDEPENDS_${PN} += "xorg-minimal-fonts"
-
 FILES_${PN} += "${bindir}/Xorg "
 
 EXTRA_OECONF += "--disable-static \
