@@ -1,7 +1,10 @@
 DEPENDS = "virtual/${TARGET_PREFIX}binutils ${NATIVEDEPS}"
-DEPENDS += "virtual/${TARGET_PREFIX}libc-initial gettext-native"
+DEPENDS += "virtual/${TARGET_PREFIX}libc-initial"
 PROVIDES = "virtual/${TARGET_PREFIX}gcc-intermediate"
 PACKAGES = ""
+
+INHIBIT_DEFAULT_DEPS = "1"
+INHIBIT_AUTOTOOLS_DEPS = "1"
 
 CROSS_TARGET_SYS_DIR_append = ".${PN}"
 
@@ -13,6 +16,7 @@ CROSS_TARGET_SYS_DIR_append = ".${PN}"
 # preferred linker.
 EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} \
 		--enable-shared \
+		--disable-nls \
 		--disable-multilib \
 		--disable-threads \
 		--enable-languages=c \

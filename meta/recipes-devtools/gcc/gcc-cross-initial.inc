@@ -1,6 +1,9 @@
-DEPENDS = "virtual/${TARGET_PREFIX}binutils gettext-native ${NATIVEDEPS}"
+DEPENDS = "virtual/${TARGET_PREFIX}binutils ${NATIVEDEPS}"
 PROVIDES = "virtual/${TARGET_PREFIX}gcc-initial"
 PACKAGES = ""
+
+INHIBIT_AUTOTOOLS_DEPS = "1"
+INHIBIT_DEFAULT_DEPS = "1"
 
 CROSS_TARGET_SYS_DIR_append = ".${PN}"
 
@@ -11,6 +14,7 @@ EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} \
 		--without-headers \
 		--disable-shared \
 		--disable-threads \
+		--disable-nls \
 		--disable-multilib \
 		--disable-__cxa_atexit \
 		--enable-languages=c \

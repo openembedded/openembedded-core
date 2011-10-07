@@ -23,7 +23,7 @@ BRANCH = "gcc-4_6-branch"
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/gcc-4.6' ], d)}"
 
 DEPENDS =+ "mpfr gmp libmpc"
-NATIVEDEPS = "mpfr-native gmp-native gettext-native libmpc-native"
+NATIVEDEPS = "mpfr-native gmp-native libmpc-native"
 
 LICENSE="GPL-3.0-with-GCC-exception & GPLv3"
 
@@ -108,3 +108,4 @@ EXTRA_OECONF_INTERMEDIATE = "--disable-libmudflap \
 EXTRA_OECONF_append_linux-uclibc = " --disable-decimal-float "
 EXTRA_OECONF_append_linux-uclibceabi = " --disable-decimal-float "
 EXTRA_OECONF_append_linux-uclibcspe = " --disable-decimal-float "
+
