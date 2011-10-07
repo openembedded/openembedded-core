@@ -3,8 +3,6 @@ require xserver-xorg-common.inc
 PROTO_DEPS += "xf86driproto dri2proto"
 LIB_DEPS += "virtual/libgl"
 
-FILES_${PN} += "${bindir}/Xorg "
-
 EXTRA_OECONF += "--disable-static \
                  --disable-acfb \
                  --disable-ccfb \

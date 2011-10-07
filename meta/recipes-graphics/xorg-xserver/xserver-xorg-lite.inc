@@ -1,7 +1,5 @@
 require xserver-xorg-common.inc
 
-FILES_${PN} += "${bindir}/Xorg "
-
 EXTRA_OECONF += "--disable-static \
                  --disable-acfb \
                  --disable-ccfb \
