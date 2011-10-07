@@ -252,6 +252,8 @@ python package_do_split_gconvs () {
 		rprovides.append(legitimize_package_name('%s-binary-localedata-%s' % (bpn, libc_name)))
 		bb.data.setVar('RPROVIDES_%s' % pkgname, " ".join(rprovides), d)
 
+	commands = {}
+
 	def output_locale_binary(name, pkgname, locale, encoding):
 		treedir = base_path_join(bb.data.getVar("WORKDIR", d, 1), "locale-tree")
 		ldlibdir = base_path_join(treedir, bb.data.getVar("base_libdir", d, 1))
@@ -298,17 +300,9 @@ python package_do_split_gconvs () {
 				-E LD_LIBRARY_PATH=%s %s %s/bin/localedef %s" % \
 				(path, i18npath, qemu, treedir, ldlibdir, qemu_options, treedir, localedef_opts)
 
+		commands["%s/%s" % (outputpath, name)] = cmd
+
 		bb.note("generating locale %s (%s)" % (locale, encoding))
-		import subprocess
-		process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		if process.wait() != 0:
-			bb.note("cmd:")
-			bb.note(cmd)
-			bb.note("stdout:")
-			bb.note(process.stdout.read())
-			bb.note("stderr:")
-			bb.note(process.stderr.read())
-			raise bb.build.FuncFailed("localedef returned an error")
 
 	def output_locale(name, locale, encoding):
 		pkgname = bb.data.getVar('MLPREFIX', d) + 'locale-base-' + legitimize_package_name(name)
@@ -353,6 +347,17 @@ python package_do_split_gconvs () {
 		bb.note("  " + " ".join(non_utf8))
 
 	if use_bin == "compile":
+		makefile = base_path_join(bb.data.getVar("WORKDIR", d, 1), "locale-tree", "Makefile")
+		m = open(makefile, "w")
+		m.write("all: %s\n\n" % " ".join(commands.keys()))
+		for cmd in commands:
+			m.write(cmd + ":\n")
+			m.write("	" + commands[cmd] + "\n\n")
+		m.close()
+		d.setVar("B", os.path.dirname(makefile))
+		d.setVar("EXTRA_OEMAKE", "${PARALLEL_MAKE}")
+		bb.note("Executing binary locale generation makefile")
+		bb.build.exec_func("oe_runmake", d)
 		bb.note("collecting binary locales from locale tree")
 		bb.build.exec_func("do_collect_bins_from_locale_tree", d)
 		do_split_packages(d, binary_locales_dir, file_regex='(.*)', \
