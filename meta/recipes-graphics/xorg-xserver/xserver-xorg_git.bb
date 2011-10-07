@@ -1,4 +1,4 @@
-require xserver-xf86-dri-lite.inc
+require xserver-xorg.inc
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=74df27b6254cc88d2799b5f4f5949c00"
 
