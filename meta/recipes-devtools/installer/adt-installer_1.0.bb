@@ -29,7 +29,6 @@ LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
 PACKAGES = ""
-PACKAGE_ARCH = "all"
 
 PR = "r4"
 
@@ -38,7 +37,7 @@ ADT_DIR = "${WORKDIR}/adt-installer/"
 YOCTOADT_VERSION = "${SDK_VERSION}"
 S = "${WORKDIR}/trunk"
 
-inherit deploy
+inherit deploy allarch
 
 SRCREV = "596"
 PV = "0.1.8+svnr${SRCPV}"

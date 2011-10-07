@@ -30,6 +30,8 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/dwmw2/linux-firmware.gi
 
 S = "${WORKDIR}/git"
 
+inherit allarch
+
 do_compile() {
 	:
 }
@@ -78,4 +80,3 @@ FILES_${PN}-rtl8192su = " \
 "
 RPROVIDES_${PN}-rtl8192su = "${PN}-rtl8192su"
 
-PACKAGE_ARCH = "all"
