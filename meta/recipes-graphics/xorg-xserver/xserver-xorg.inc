@@ -3,6 +3,8 @@ require xserver-xorg-common.inc
 PROTO_DEPS += "xf86driproto dri2proto"
 LIB_DEPS += "virtual/libgl"
 
+require ../mesa/glx-use-tls.inc
+
 EXTRA_OECONF += "--disable-static \
                  --disable-acfb \
                  --disable-ccfb \
@@ -16,7 +18,6 @@ EXTRA_OECONF += "--disable-static \
                  --disable-xnest \
                  --disable-xvfb \
                  --enable-composite \
-                 --enable-glx-tls \
                  --sysconfdir=/etc/X11 \
                  --localstatedir=/var \
                  --with-pic \
