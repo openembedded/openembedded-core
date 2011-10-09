@@ -1,0 +1,46 @@
+From 37c99a3cbff36915b56a5703eeaed3c70796f80f Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Sun, 9 Oct 2011 20:06:35 +0200
+Subject: [PATCH] alsactl: don't let systemd unit restore the volume when asound.state is missing
+
+This avoids an error on bootup
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+---
+
+Filed as https://bugtrack.alsa-project.org/alsa-bug/view.php?id=5459
+
+Upstream-status: Pending
+
+ alsactl/Makefile.am             |    2 +-
+ alsactl/alsa-restore.service.in |    1 +
+ 2 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/alsactl/Makefile.am b/alsactl/Makefile.am
+index 5cfc415..c3768c4 100644
+--- a/alsactl/Makefile.am
++++ b/alsactl/Makefile.am
+@@ -34,7 +34,7 @@ install-data-hook:
+ endif
+ 
+ edit = \
+-	sed $(SED) -r 's,@sbindir\@,$(sbindir),g' < $< > $@ || rm $@
++	sed $(SED) -e 's,@localstatedir\@,$(localstatedir),g' -e 's,@sbindir\@,$(sbindir),g' < $< > $@ || rm $@
+ 
+ alsa-store.service: alsa-store.service.in
+ 	$(edit)
+diff --git a/alsactl/alsa-restore.service.in b/alsactl/alsa-restore.service.in
+index e97d196..3b76710 100644
+--- a/alsactl/alsa-restore.service.in
++++ b/alsactl/alsa-restore.service.in
+@@ -4,6 +4,7 @@ DefaultDependencies=no
+ After=sysinit.target
+ Before=shutdown.target
+ Conflicts=shutdown.target
++ConditionPathExists=@localstatedir@/lib/alsa/asound.state
+ 
+ [Service]
+ Type=oneshot
+-- 
+1.6.6.1
+
