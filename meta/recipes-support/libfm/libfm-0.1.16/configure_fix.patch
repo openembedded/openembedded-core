@@ -1,0 +1,19 @@
+Update configure.ac after docs removed in 0.1.16
+
+Upstream-Status: Pending
+
+Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
+Index: libfm-0.1.16/configure.ac
+===================================================================
+--- libfm-0.1.16.orig/configure.ac	2011-10-10 15:13:21.000000000 +0800
++++ libfm-0.1.16/configure.ac	2011-10-10 15:13:30.000000000 +0800
+@@ -153,9 +153,6 @@
+     data/Makefile
+     data/ui/Makefile
+     po/Makefile.in
+-    docs/Makefile
+-    docs/reference/Makefile
+-    docs/reference/libfm/Makefile
+     libfm.pc
+     libfm-gtk.pc
+ ])
