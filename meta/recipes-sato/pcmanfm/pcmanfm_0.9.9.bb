@@ -11,7 +11,7 @@ SECTION = "x11"
 DEPENDS = "gtk+ startup-notification libfm"
 DEPENDS_append_poky = " libowl"
 
-PR = "r1"
+PR = "r0"
 
 COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|mips.*|powerpc.*)-(linux|freebsd.*)'
 
@@ -24,8 +24,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.gz \
 
 SRC_URI_append_poky = " file://owl-window-menu.patch"
 
-SRC_URI[md5sum] = "4a7fdc0526ed14e3293d784c0ce27dea"
-SRC_URI[sha256sum] = "a9335baf127d133da1b2873b3065545bd278fadd4b33e4b91e3d10b165961b68"
+SRC_URI[md5sum] = "f31ed6defb600f7046a456220d8efa3a"
+SRC_URI[sha256sum] = "bc48af4ade638b47e4207cc274f6e38c2bd3786a811d20da47c3df9907c6fb6c"
 
 inherit autotools pkgconfig
 

@@ -5,10 +5,10 @@ Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
 
 Upstream-Status: Inappropriate [enable feature]
 
-Index: pcmanfm-0.9.7/configure.ac
+Index: pcmanfm-0.9.9/configure.ac
 ===================================================================
---- pcmanfm-0.9.7.orig/configure.ac	2010-07-27 10:28:12.000000000 +0800
-+++ pcmanfm-0.9.7/configure.ac	2010-07-27 18:03:42.000000000 +0800
+--- pcmanfm-0.9.9.orig/configure.ac	2011-08-10 05:28:31.000000000 +0800
++++ pcmanfm-0.9.9/configure.ac	2011-10-10 15:47:33.000000000 +0800
 @@ -70,6 +70,8 @@
  
  gtk_modules="gtk+-2.0 >= 2.16.0"
@@ -18,21 +18,21 @@ Index: pcmanfm-0.9.7/configure.ac
  AC_SUBST(GTK_CFLAGS)
  AC_SUBST(GTK_LIBS)
  
-Index: pcmanfm-0.9.7/src/main-win.c
+Index: pcmanfm-0.9.9/src/main-win.c
 ===================================================================
---- pcmanfm-0.9.7.orig/src/main-win.c	2010-07-27 10:56:08.000000000 +0800
-+++ pcmanfm-0.9.7/src/main-win.c	2010-07-27 17:28:59.000000000 +0800
-@@ -36,6 +36,8 @@
- #include "main-win.h"
+--- pcmanfm-0.9.9.orig/src/main-win.c	2011-08-10 05:28:32.000000000 +0800
++++ pcmanfm-0.9.9/src/main-win.c	2011-10-10 15:50:48.000000000 +0800
+@@ -37,6 +37,8 @@
  #include "pref.h"
+ #include "tab-page.h"
  
 +#include "libowl/owlwindowmenu.h"
 +
  static void fm_main_win_finalize              (GObject *object);
  G_DEFINE_TYPE(FmMainWin, fm_main_win, GTK_TYPE_WINDOW);
  
-@@ -466,9 +468,27 @@
-         fm_main_win_chdir(win, path);
+@@ -400,9 +402,27 @@
+     }
  }
  
 +/* Transfer gtk_ui_manager menubar to gtk menubar */
@@ -53,30 +53,29 @@ Index: pcmanfm-0.9.7/src/main-win.c
 +    return main_menu;
 +}
 +
- static void fm_main_win_init(FmMainWin *self)
+ static void fm_main_win_init(FmMainWin *win)
  {
--    GtkWidget *vbox, *menubar, *toolitem, *scroll;
-+    GtkWidget *vbox, *menubar, *owl_menubar, *toolitem, *scroll;
+-    GtkWidget *vbox, *menubar, *toolitem, *btn;
++    GtkWidget *vbox, *menubar, *owl_menubar, *toolitem, *btn;
      GtkUIManager* ui;
      GtkActionGroup* act_grp;
      GtkAction* act;
-@@ -537,7 +557,6 @@
- 
-     self->popup = gtk_ui_manager_get_widget(ui, "/popup");
+@@ -456,7 +476,6 @@
+     win->popup = gtk_ui_manager_get_widget(ui, "/popup");
+     gtk_menu_attach_to_widget(GTK_WIDGET(win->popup), win, NULL);
  
 -    gtk_box_pack_start( (GtkBox*)vbox, menubar, FALSE, TRUE, 0 );
-     gtk_box_pack_start( (GtkBox*)vbox, self->toolbar, FALSE, TRUE, 0 );
+     gtk_box_pack_start( (GtkBox*)vbox, win->toolbar, FALSE, TRUE, 0 );
  
      /* load bookmarks menu */
-@@ -586,6 +605,11 @@
-     gtk_container_add( (GtkContainer*)self, vbox );
-     gtk_widget_show_all(vbox);
+@@ -517,6 +536,10 @@
  
-+    owl_menubar = ui_menubar_to_menu(menubar);
-+    gtk_widget_show_all (owl_menubar);
-+    owl_set_window_menu (GTK_WINDOW(self),
-+			 GTK_MENU(owl_menubar));
+     gtk_container_add( (GtkContainer*)win, vbox );
+     gtk_widget_show_all(vbox);
 +
-     /* create new tab */
-     fm_main_win_add_tab(self, fm_path_get_home());
-     gtk_widget_grab_focus(self->folder_view);
++    owl_menubar = ui_menubar_to_menu(menubar);
++    gtk_widget_show_all(owl_menubar);
++    owl_set_window_menu(GTK_WINDOW(win), GTK_MENU(owl_menubar));
+ }
+ 
+ 
