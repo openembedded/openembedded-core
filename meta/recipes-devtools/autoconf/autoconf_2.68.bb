@@ -1,6 +1,6 @@
 require autoconf.inc
 
-PR = "r2"
+PR = "r3"
 
 PARALLEL_MAKE = ""
 
@@ -26,5 +26,7 @@ DEPENDS_virtclass-native = "m4-native gnu-config-native"
 RDEPENDS_${PN}_virtclass-native = "m4-native gnu-config-native"
 
 SRC_URI_append_virtclass-native = " file://fix_path_xtra.patch"
+
+EXTRA_OECONF += "ac_cv_path_M4=m4"
 
 BBCLASSEXTEND = "native"
