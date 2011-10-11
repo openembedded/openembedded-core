@@ -4,18 +4,16 @@ Upstream-Status: Inappropriate [configuration]
  configure.ac |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- tiff-3.8.2.orig/configure.ac
-+++ tiff-3.8.2/configure.ac
-@@ -25,11 +25,11 @@ dnl OF THIS SOFTWARE.
- dnl Process this file with autoconf to produce a configure script.
- 
- AC_PREREQ(2.59)
- AC_INIT([LibTIFF Software], 3.8.2, [tiff@lists.maptools.org], tiff)
+Index: tiff-3.9.5/configure.ac
+===================================================================
+--- tiff-3.9.5.orig/configure.ac
++++ tiff-3.9.5/configure.ac
+@@ -27,7 +27,7 @@ dnl Process this file with autoconf to p
+ AC_PREREQ(2.64)
+ AC_INIT([LibTIFF Software],[3.9.5],[tiff@lists.maptools.org],[tiff])
  AC_CONFIG_AUX_DIR(config)
 -AC_CONFIG_MACRO_DIR(m4)
 +dnl AC_CONFIG_MACRO_DIR(m4)
  AC_LANG(C)
  
- dnl Compute the canonical target-system type variable
- AC_CANONICAL_TARGET
- 
+ dnl Compute the canonical host (run-time) system type variable
