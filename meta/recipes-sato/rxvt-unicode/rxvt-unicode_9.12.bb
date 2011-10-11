@@ -8,11 +8,16 @@ same time, including Xft fonts."
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://src/main.C;beginline=1;endline=31;md5=775485398a09fa7aee6f90464af88432"
+
+PR = "r0"
+
 SRC_URI = "http://dist.schmorp.de/rxvt-unicode/Attic/rxvt-unicode-${PV}.tar.bz2 \
 	   file://xwc.patch \
 	   file://rxvt.desktop \
 	   file://rxvt.png"
-PR = "r1"
+
+SRC_URI[md5sum] = "945af37d661c8c45a7cac292160e7c70"
+SRC_URI[sha256sum] = "1db334204bfb264b3134e01d9d3cf446c5ac7d47514909435f914f3906f37e7e"
 
 inherit autotools update-alternatives
 
@@ -60,6 +65,3 @@ do_install_append () {
 }
 
 FILES_${PN} += "${datadir}/applications/rxvt.desktop ${datadir}/pixmaps/rxvt.png"
-
-SRC_URI[md5sum] = "1bed5bfeed026e0bfafa0e9e4f62aa37"
-SRC_URI[sha256sum] = "0452c00066774ef6e32fcd0a1e6f09230392ea9f6f42e1c2ef7b91d6fcb82d85"
