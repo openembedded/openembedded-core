@@ -13,6 +13,11 @@ early_setup() {
     mkdir /sys
     mount -t proc proc /proc
     mount -t sysfs sysfs /sys
+
+    # support modular kernel
+    modprobe isofs 2> /dev/null
+
+    mkdir /run
     udevd --daemon
     udevadm trigger --action=add
 }
@@ -25,21 +30,25 @@ read_args() {
             root=*)
                 ROOT_DEVICE=$optarg ;;
             rootfstype=*)
-                ROOT_FSTYPE=$optarg ;;
-            rootdelay=*)
-                rootdelay=$optarg ;;
-	    LABEL=*)
-		label=$optarg ;;
-	    video=*)
-		video_mode=$arg ;;
-	    vga=*)
-		vga_mode=$arg ;;
+                modprobe $optarg 2> /dev/null ;;
+            LABEL=*)
+                label=$optarg ;;
+            video=*)
+                video_mode=$arg ;;
+            vga=*)
+                vga_mode=$arg ;;
         esac
     done
 }
 
 boot_live_root() {
-    killall udevd
+    killall udevd 2>/dev/null
+
+    # use devtmpfs if available
+    if grep -q devtmpfs /proc/filesystems; then
+        mount -t devtmpfs devtmpfs $ROOT_MOUNT/dev
+    fi
+
     cd $ROOT_MOUNT
     exec switch_root -c /dev/console $ROOT_MOUNT /sbin/init
 }
@@ -78,7 +87,7 @@ done
 case $label in
     boot)
 	mkdir $ROOT_MOUNT
-	mknod /dev/loop0 b 7 0
+	mknod /dev/loop0 b 7 0 2>/dev/null
 
 	if ! $MOUNT -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
 	    fatal "Couldnt mount rootfs image"
@@ -97,4 +106,3 @@ case $label in
 	fatal "Installation image failed"
 	;;
 esac
-
