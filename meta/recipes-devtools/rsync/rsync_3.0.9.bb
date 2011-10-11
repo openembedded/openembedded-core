@@ -4,8 +4,8 @@ PR = "r0"
 
 SRC_URI += "file://acinclude.m4"
 
-SRC_URI[md5sum] = "0ee8346ce16bdfe4c88a236e94c752b4"
-SRC_URI[sha256sum] = "4b3fc271f4c96036b4c73fb019be078e4d8cce2defe1e7ae7cde1117859a2114"
+SRC_URI[md5sum] = "5ee72266fe2c1822333c407e1761b92b"
+SRC_URI[sha256sum] = "30f10f8dd5490d28240d4271bb652b1da7a60b22ed2b9ae28090668de9247c05"
 
 EXTRA_OECONF += "--disable-xattr-support --disable-acl-support"
 
