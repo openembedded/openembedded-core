@@ -2,7 +2,7 @@
 # certain recipes.
 #BBMASK = ""
 
-# eglibc configurability is used to reduce minimal images's size.
+# eglibc configurability is used to reduce minimal image's size.
 # the all supported eglibc options are listed in DISTRO_FEATURES_LIBC
 # and disabled by default. Uncomment and copy the DISTRO_FEATURES_LIBC
 # and DISTRO_FEATURES definitions to local.conf to enable the options.
@@ -56,8 +56,8 @@
 #    a central debug-file-directory, /usr/lib/debug:
 #      /bin/foo -> /usr/lib/debug/bin/foo.debug
 #
-#  Any source code referenced in the debug symbols will be copied
-#  and made available within the /usr/src/debug directory
+#    Any source code referenced in the debug symbols will be copied
+#    and made available within the /usr/src/debug directory
 #
 #PACKAGE_DEBUG_SPLIT_STYLE = '.debug'
 # PACKAGE_DEBUG_SPLIT_STYLE = 'debug-file-directory'
@@ -78,7 +78,7 @@
 # The default is "default"
 # Use "external-MODE" to use the precompiled external toolchains where MODE
 # is the type of external toolchain to use e.g. eabi. You need to ensure 
-# the toolchain you want to use is included in an an appropriate layer
+# the toolchain you want to use is included in an appropriate layer
 # TCMODE = "external-eabi"
 
 # mklibs library size optimization is more useful to smaller images,
