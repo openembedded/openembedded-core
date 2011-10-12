@@ -27,7 +27,7 @@ SRC_URI[sha256sum] = "9635a44bceb478bbf2ee8a785cf6986fba525afb5fad1fd4bba73cf71f
 
 S = "${WORKDIR}/flac-${PV}"
 
-inherit autotools
+inherit autotools gettext
 
 EXTRA_OECONF = "--disable-oggtest --disable-id3libtest \
                 --with-ogg-libraries=${STAGING_LIBDIR} \
