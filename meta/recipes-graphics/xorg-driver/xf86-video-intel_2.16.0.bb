@@ -21,5 +21,7 @@ DEPENDS += "virtual/libx11 libxvmc drm xf86driproto glproto \
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
-SRC_URI[md5sum] = "ba56ae395a9769ada1fef2014468bee9"
-SRC_URI[sha256sum] = "c377e1e9ab8b846d7e039acc9105479d5dce6a03f1ddccccf01c8474259c1720"
+SRC_URI += "file://buildfix.patch"
+
+SRC_URI[md5sum] = "e0406c50a747c358654b93cb23bf7375"
+SRC_URI[sha256sum] = "77482bcd1e30a57b68ba0d6a1862b4ff3c55fa23bf0109ec2af318a3e066ebfe"

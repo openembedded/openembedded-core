@@ -1,0 +1,22 @@
+Newer mesa doesn't provide dri support, just dri2. The intel driver
+hasn't quite caught up and whilst the configure checks work, the
+global includes have not and need manually tweaking.
+
+RP 2011/10/12
+
+Upstream Status: Superceeded
+
+Index: src/intel.h
+===================================================================
+--- src.orig/intel.h	2011-10-12 20:36:18.587187994 +0100
++++ src/intel.h	2011-10-12 20:36:30.717188011 +0100
+@@ -65,9 +65,7 @@
+ #include <pciaccess.h>
+ 
+ #include "xf86drm.h"
+-#include "sarea.h"
+ #define _XF86DRI_SERVER_
+-#include "dri.h"
+ #include "dri2.h"
+ #include "intel_bufmgr.h"
+ #include "i915_drm.h"
