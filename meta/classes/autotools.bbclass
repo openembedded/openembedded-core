@@ -80,6 +80,8 @@ oe_runconf () {
 	fi
 }
 
+AUTOTOOLS_AUXDIR ?= "${S}"
+
 autotools_do_configure() {
 	case ${PN} in
 	autoconf*)
@@ -144,7 +146,11 @@ autotools_do_configure() {
 			      echo "no" | glib-gettextize --force --copy
 			    fi
 			  else if grep "^[[:space:]]*AM_GNU_GETTEXT" $CONFIGURE_AC >/dev/null; then
-			    cp ${STAGING_DATADIR}/gettext/config.rpath ${S}/
+                            # We'd call gettextize here if it wasn't so broken...
+			    cp ${STAGING_DATADIR}/gettext/config.rpath ${AUTOTOOLS_AUXDIR}/
+			    if [ ! -e ${S}/po/Makefile.in.in ]; then
+			      cp ${STAGING_DATADIR}/gettext/po/Makefile.in.in ${S}/po/
+                            fi
 			  fi
 			fi
 			fi
