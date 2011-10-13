@@ -6,10 +6,8 @@ SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git \
 #           file://mesa-DRI2Swapbuffer.patch "
 S = "${WORKDIR}/git"
 
-PROTO_DEPS = "xf86driproto glproto dri2proto"
-LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat"
-
-DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS}"
+PROTO_DEPS += "dri2proto"
+LIB_DEPS += "libdrm expat"
 
 SRCREV = "1bf94d419805538ac23a4d0b04d31ac5e4487aca"
 PV = "7.7+git${SRCPV}"

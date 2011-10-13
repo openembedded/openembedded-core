@@ -18,6 +18,11 @@ PE = "2"
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2"
 S = "${WORKDIR}/Mesa-${PV}"
 
+PROTO_DEPS = "xf86driproto glproto"
+LIB_DEPS = "virtual/libx11 libxext libxxf86vm libxdamage libxfixes libxml2-native"
+
+DEPENDS = "makedepend-native python-native ${PROTO_DEPS} ${LIB_DEPS}"
+
 PROVIDES = "virtual/libgl"
 
 # for mesa-dri and mesa-xlib

@@ -1,11 +1,8 @@
 include mesa-common.inc
 include mesa-${PV}.inc
 
-PROTO_DEPS = "xf86driproto glproto dri2proto"
-LIB_DEPS = "libdrm virtual/libx11 libxext libxxf86vm libxdamage libxfixes expat \
-            libxml2-native"
-
-DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS} makedepend-native python-native"
+PROTO_DEPS += "dri2proto"
+LIB_DEPS += "libdrm expat"
 
 PR = "${INC_PR}.0"
 
