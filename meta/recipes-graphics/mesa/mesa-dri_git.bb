@@ -15,8 +15,6 @@ PACKAGES =+ "${PN}-xprogs"
 
 FILES_${PN}-xprogs = "${bindir}/glxdemo ${bindir}/glxgears ${bindir}/glxheads ${bindir}/glxinfo"
 
-LEAD_SONAME = "libGL.so.1"
-
 do_configure_prepend () {
     cp ${WORKDIR}/matypes.h ${S}/src/mesa/x86
     touch ${S}/src/mesa/x86/matypes.h
