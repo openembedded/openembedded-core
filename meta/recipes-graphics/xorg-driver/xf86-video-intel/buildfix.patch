@@ -6,10 +6,10 @@ RP 2011/10/12
 
 Upstream Status: Superceeded
 
-Index: src/intel.h
+Index: xf86-video-intel-2.16.0/src/intel.h
 ===================================================================
---- src.orig/intel.h	2011-10-12 20:36:18.587187994 +0100
-+++ src/intel.h	2011-10-12 20:36:30.717188011 +0100
+--- xf86-video-intel-2.16.0.orig/src/intel.h	2011-10-12 20:36:18.587187994 +0100
++++ xf86-video-intel-2.16.0/src/intel.h	2011-10-12 20:36:30.717188011 +0100
 @@ -65,9 +65,7 @@
  #include <pciaccess.h>
  
