@@ -12,8 +12,7 @@ LIB_DEPS = "virtual/libx11 libxext libxxf86vm libxdamage libxfixes libxml2-nativ
 
 DEPENDS = "${PROTO_DEPS}  ${LIB_DEPS} makedepend-native"
 
-PE = "1"
-PR = "r1"
+PR = "${INC_PR}.0"
 
 EXTRA_OECONF += "--with-driver=xlib --without-gallium-drivers"
 
