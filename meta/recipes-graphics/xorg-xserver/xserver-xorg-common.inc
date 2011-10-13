@@ -12,6 +12,8 @@ PROVIDES = "virtual/xserver-xf86"
 # Other packages tend to just care that there is *an* X server:
 PROVIDES += "virtual/xserver"
 
+PE = "2"
+
 XORG_PN = "xorg-server"
 SRC_URI = "${XORG_MIRROR}/individual/xserver/${XORG_PN}-${PV}.tar.bz2"
 SRC_URI += "file://macro_tweak.patch"
