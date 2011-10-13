@@ -4,7 +4,7 @@ BUGTRACKER = "https://bugs.freedesktop.org"
 SECTION = "x11/drivers"
 LICENSE = "MIT-X"
 
-PE = "1"
+PE = "2"
 INC_PR = "r17"
 
 DEPENDS = "virtual/xserver xproto randrproto util-macros"
