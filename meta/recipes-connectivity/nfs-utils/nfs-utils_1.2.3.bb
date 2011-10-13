@@ -9,10 +9,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
 
 # util-linux for libblkid
 DEPENDS = "libcap libnfsidmap libevent util-linux tcp-wrappers"
-RDEPENDS_${PN} = "portmap python"
+RDEPENDS_${PN} = "portmap"
 RRECOMMENDS_${PN} = "kernel-module-nfsd"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/nfs/nfs-utils-${PV}.tar.bz2 \
            file://nfs-utils-1.0.6-uclibc.patch \
@@ -44,6 +44,11 @@ EXTRA_OECONF = "--with-statduser=nobody \
                 --with-statedir=/var/lib/nfs"
 
 INHIBIT_AUTO_STAGE = "1"
+
+PACKAGES =+ "${PN}-client ${PN}-stats"
+FILES_${PN}-client = "${base_sbindir}/*mount.nfs*"
+FILES_${PN}-stats = "${sbindir}/mountstats ${sbindir}/nfsiostat"
+RDEPENDS_${PN}-stats = "python"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
