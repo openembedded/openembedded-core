@@ -9,4 +9,3 @@ QT_CONFIG_FLAGS += " \
  -exceptions \
 "
 
-DEFAULT_PREFERENCE = "-1"
