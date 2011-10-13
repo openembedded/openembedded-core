@@ -1,30 +1,19 @@
-SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git \
-           file://cross2.patch \
-           file://matypes.h"
-#           file://mesa-DRI2Swapbuffer.patch "
+DEPENDS += "mesa-dri-glsl-native"
+
+SRCREV = "983fa4ad523535debf2e94cf6ac1fd4c5630c0d2"
+PV = "7.11+gitr${SRCPV}"
+
+FILESEXTRAPATHS_prepend := "${THISDIR}/mesa-git:"
+
+SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git"
+SRC_URI += "file://uclibc.patch \
+            file://crossfix.patch \
+           "
 S = "${WORKDIR}/git"
 
-SRCREV = "1bf94d419805538ac23a4d0b04d31ac5e4487aca"
-PV = "7.7+git${SRCPV}"
-
-PACKAGES =+ "${PN}-xprogs"
-
-FILES_${PN}-xprogs = "${bindir}/glxdemo ${bindir}/glxgears ${bindir}/glxheads ${bindir}/glxinfo"
-
-do_configure_prepend () {
-    cp ${WORKDIR}/matypes.h ${S}/src/mesa/x86
-    touch ${S}/src/mesa/x86/matypes.h
-}
-
-do_compile () {
-	oe_runmake clean
-	oe_runmake -C src/glsl CC='${BUILD_CC}' CFLAGS=""
-	mv ${S}/src/glsl/apps/compile ${S}/host_compile
-	oe_runmake clean
-	oe_runmake GLSL_CL="${S}/host_compile"
-}
-
-do_install_append () {
-    install -d ${D}/usr/bin
-    install -m 0755 ${S}/progs/xdemos/{glxdemo,glxgears,glxheads,glxinfo} ${D}/usr/bin/
+do_configure_prepend() {
+  #check for python not python2, because python-native does not stage python2 binary/link
+  sed -i 's/AC_CHECK_PROGS(\[PYTHON2\], \[python2 python\])/AC_CHECK_PROGS(\[PYTHON2\], \[python python\])/g' ${S}/configure.ac
+  # We need builtin_compiler built for buildhost arch instead of target (is provided by mesa-dri-glsl-native)"
+  sed -i "s#\./builtin_compiler#${STAGING_BINDIR_NATIVE}/glsl/builtin_compiler#g" ${S}/src/glsl/Makefile
 }
