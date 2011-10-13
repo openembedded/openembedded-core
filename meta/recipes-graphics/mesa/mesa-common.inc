@@ -18,6 +18,9 @@ S = "${WORKDIR}/Mesa-${PV}"
 
 PROVIDES = "virtual/libgl"
 
+# for mesa-dri and mesa-xlib
+FILESEXTRAPATHS_append := "${THISDIR}/mesa:"
+
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "--enable-glu \

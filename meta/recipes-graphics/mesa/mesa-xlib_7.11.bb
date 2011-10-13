@@ -1,7 +1,5 @@
 include mesa-common.inc
 
-FILESPATH =. "${FILE_DIRNAME}/mesa-dri:"
-
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \
            file://uclibc.patch \
            "
