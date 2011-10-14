@@ -15,3 +15,8 @@ TARGET_CC_ARCH = "none"
 TARGET_LD_ARCH = "none"
 TARGET_AS_ARCH = "none"
 PACKAGE_EXTRA_ARCHS = ""
+
+# No need to do shared library processing or debug symbol handling
+EXCLUDE_FROM_SHLIBS = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+INHIBIT_PACKAGE_STRIP = "1"
