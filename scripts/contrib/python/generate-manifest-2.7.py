@@ -164,7 +164,9 @@ if __name__ == "__main__":
     "warnings.* site.* stat.* " +
     "UserDict.* UserList.* UserString.* " +
     "lib-dynload/binascii.so lib-dynload/_struct.so lib-dynload/time.so " +
-    "lib-dynload/xreadlines.so types.* platform.* ${bindir}/python*" )
+    "lib-dynload/xreadlines.so types.* platform.* ${bindir}/python* "  + 
+    "_weakrefset.* sysconfig.* config/Makefile " +
+    "${includedir}/python${PYTHON_MAJMIN}/pyconfig.h " )
 
     m.addPackage( "${PN}-dev", "Python Development Package", "${PN}-core",
     "${includedir} ${libdir}/libpython2.6.so" ) # package
