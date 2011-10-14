@@ -1,15 +1,12 @@
 require python.inc
 DEPENDS = "python-native db gdbm openssl readline sqlite3 zlib"
 DEPENDS_sharprom = "python-native db readline zlib gdbm openssl"
-PR = "${INC_PR}.11"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=38fdd546420fab09ac6bd3d8a1c83eb6"
+PR = "${INC_PR}.0"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
 DISTRO_SRC_URI_linuxstdbase = ""
-SRC_URI = "\
-  http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.bz2 \
+SRC_URI += "\
   file://01-use-proper-tools-for-cross-build.patch \
-  file://02-remove-test-for-cross.patch \
   file://03-fix-tkinter-detection.patch \
   file://04-default-is-optimized.patch \
   file://05-enable-ctypes-cross-build.patch \
@@ -19,13 +16,10 @@ SRC_URI = "\
   file://99-ignore-optimization-flag.patch \
   ${DISTRO_SRC_URI} \
   file://multilib.patch \
-  file://security_issue_2254_fix.patch \
   file://cgi_py.patch \
   file://remove_sqlite_rpath.patch \
 "
 
-SRC_URI[md5sum] = "cf4e6881bb84a7ce6089e4a307f71f14"
-SRC_URI[sha256sum] = "134c5e0736bae2e5570d0b915693374f11108ded63c35a23a35d282737d2ce83"
 S = "${WORKDIR}/Python-${PV}"
 
 inherit autotools

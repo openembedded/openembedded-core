@@ -14,29 +14,16 @@ Acked-by: Martin Jansa <Martin.Jansa@gmail.com>
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
-diff -pruN Python-2.6.4.orig//Modules/_ctypes/libffi/configure.ac Python-2.6.4/Modules/_ctypes/libffi/configure.ac
---- Python-2.6.4.orig//Modules/_ctypes/libffi/configure.ac      2009-04-28 22:01:18.000000000 +0200
-+++ Python-2.6.4/Modules/_ctypes/libffi/configure.ac    2010-04-20 22:46:02.000000000 +0200
-@@ -23,6 +23,7 @@ AM_INIT_AUTOMAKE
- m4_rename([_AC_ARG_VAR_PRECIOUS],[real_PRECIOUS])
- m4_define([_AC_ARG_VAR_PRECIOUS],[])
- AC_PROG_CC
-+m4_undefine([_AC_ARG_VAR_PRECIOUS])
- m4_rename([real_PRECIOUS],[_AC_ARG_VAR_PRECIOUS])
- 
- AC_SUBST(CFLAGS)
-@@ -366,7 +367,7 @@ test -d src/$TARGETDIR || mkdir src/$TAR
- 
- AC_CONFIG_LINKS(include/ffitarget.h:src/$TARGETDIR/ffitarget.h)
- 
--AC_CONFIG_FILES(include/ffi.h)
-+AC_CONFIG_FILES(include/ffi.h include/Makefile Makefile)
- 
- AC_CONFIG_LINKS(include/ffi_common.h:include/ffi_common.h)
- 
-diff -pruN Python-2.6.4.orig//Modules/_ctypes/libffi/Makefile.am Python-2.6.4/Modules/_ctypes/libffi/Makefile.am
---- Python-2.6.4.orig//Modules/_ctypes/libffi/Makefile.am       2008-03-04 21:09:11.000000000 +0100
-+++ Python-2.6.4/Modules/_ctypes/libffi/Makefile.am     2010-04-20 22:54:03.000000000 +0200
+
+2011/09/29
+Rebased for python 2.7.2
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+
+
+Index: Python-2.7.2/Modules/_ctypes/libffi/Makefile.am
+===================================================================
+--- Python-2.7.2.orig/Modules/_ctypes/libffi/Makefile.am
++++ Python-2.7.2/Modules/_ctypes/libffi/Makefile.am
 @@ -2,7 +2,7 @@
  
  AUTOMAKE_OPTIONS = foreign subdir-objects
@@ -45,14 +32,13 @@ diff -pruN Python-2.6.4.orig//Modules/_ctypes/libffi/Makefile.am Python-2.6.4/Mo
 +SUBDIRS = include
  
  EXTRA_DIST = LICENSE ChangeLog.v1 ChangeLog.libgcj configure.host \
-        src/alpha/ffi.c src/alpha/osf.S src/alpha/ffitarget.h \
-@@ -32,8 +32,6 @@ EXTRA_DIST = LICENSE ChangeLog.v1 Change
-        src/frv/ffi.c src/frv/eabi.S src/frv/ffitarget.h src/dlmalloc.c \
-        libtool-version ChangeLog.libffi
+ 	src/alpha/ffi.c src/alpha/osf.S src/alpha/ffitarget.h \
+@@ -34,8 +34,6 @@ EXTRA_DIST = LICENSE ChangeLog.v1 Change
+ 	libtool-version ChangeLog.libffi m4/libtool.m4 \
+ 	m4/lt~obsolete.m4 m4/ltoptions.m4 m4/ltsugar.m4 m4/ltversion.m4
  
 -info_TEXINFOS = doc/libffi.texi
 -
  ## ################################################################
  
  ##
-

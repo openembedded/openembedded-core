@@ -9,11 +9,15 @@ This Patch fixes this issue in the python build environment.
 11 Oct 2010
 Nitin A Kamble <nitin.a.kamble@intel.com>
 
-Index: Python-2.6.6/setup.py
+2011/09/29
+Rebased for python 2.7.2
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+
+Index: Python-2.7.2/setup.py
 ===================================================================
---- Python-2.6.6.orig/setup.py
-+++ Python-2.6.6/setup.py
-@@ -665,12 +665,10 @@ class PyBuildExt(build_ext):
+--- Python-2.7.2.orig/setup.py
++++ Python-2.7.2/setup.py
+@@ -680,12 +680,10 @@ class PyBuildExt(build_ext):
                  pass # Issue 7384: Already linked against curses or tinfo.
              elif curses_library:
                  readline_libs.append(curses_library)

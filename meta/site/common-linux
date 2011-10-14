@@ -43,3 +43,6 @@ ac_cv_conv_longlong_to_float=${ac_cv_conv_longlong_to_float=yes}
 
 # TCL
 tcl_cv_api_serial=${tcl_cv_api_serial=termios}
+
+# python
+ac_cv_have_long_long_format=yes

@@ -1,11 +1,8 @@
 require python.inc
 DEPENDS = "openssl-native bzip2-full-native zlib-native readline-native sqlite3-native"
-PR = "${INC_PR}.4"
+PR = "${INC_PR}.0"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=38fdd546420fab09ac6bd3d8a1c83eb6"
-
-SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.bz2 \
-           file://04-default-is-optimized.patch \
+SRC_URI += "file://04-default-is-optimized.patch \
            file://05-enable-ctypes-cross-build.patch \
            file://06-ctypes-libffi-fix-configure.patch \
            file://10-distutils-fix-swig-parameter.patch \
@@ -13,11 +10,9 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.bz2 \
            file://12-distutils-prefix-is-inside-staging-area.patch \
            file://debug.patch \
            file://unixccompiler.patch \
-           file://nohostlibs.patch"
+           file://nohostlibs.patch \
+           file://multilib.patch "
 S = "${WORKDIR}/Python-${PV}"
-
-SRC_URI[md5sum] = "cf4e6881bb84a7ce6089e4a307f71f14"
-SRC_URI[sha256sum] = "134c5e0736bae2e5570d0b915693374f11108ded63c35a23a35d282737d2ce83"
 
 inherit native
 

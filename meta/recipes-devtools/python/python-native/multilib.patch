@@ -10,8 +10,12 @@ Date:   Tue Jun 28 21:21:29 2011 +0800
     
     Picked-by: Yu Ke <ke.yu@intel.com>
 
+
 2011/09/29
-Rebased for python 2.7.2
+The python recipe building was failing because python-native 
+could not handle sys.lib var. sys.lib var is defined in the 
+multilib patch hence added this multilib.patch for python-native 
+recipe.
 Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
 
 Index: Python-2.7.2/Include/pythonrun.h
@@ -48,24 +52,6 @@ Index: Python-2.7.2/Lib/distutils/command/install.py
          'headers': '$base/include/python$py_version_short/$dist_name',
          'scripts': '$base/bin',
          'data'   : '$base',
-Index: Python-2.7.2/Lib/distutils/sysconfig.py
-===================================================================
---- Python-2.7.2.orig/Lib/distutils/sysconfig.py
-+++ Python-2.7.2/Lib/distutils/sysconfig.py
-@@ -114,8 +114,11 @@ def get_python_lib(plat_specific=0, stan
-         prefix = plat_specific and EXEC_PREFIX or PREFIX
- 
-     if os.name == "posix":
--        libpython = os.path.join(prefix,
--                                 "lib", "python" + get_python_version())
-+        if plat_specific or standard_lib:
-+            lib = sys.lib
-+        else:
-+            lib = "lib"
-+        libpython = os.path.join(prefix, lib, "python" + get_python_version())
-         if standard_lib:
-             return libpython
-         else:
 Index: Python-2.7.2/Lib/pydoc.py
 ===================================================================
 --- Python-2.7.2.orig/Lib/pydoc.py
@@ -162,7 +148,7 @@ Index: Python-2.7.2/Makefile.pre.in
  
  # Detailed destination directories
  BINLIBDEST=	$(LIBDIR)/python$(VERSION)
-@@ -533,6 +534,7 @@ Modules/getpath.o: $(srcdir)/Modules/get
+@@ -532,6 +533,7 @@ Modules/getpath.o: $(srcdir)/Modules/get
  		-DEXEC_PREFIX='"$(exec_prefix)"' \
  		-DVERSION='"$(VERSION)"' \
  		-DVPATH='"$(VPATH)"' \
@@ -170,7 +156,7 @@ Index: Python-2.7.2/Makefile.pre.in
  		-o $@ $(srcdir)/Modules/getpath.c
  
  Modules/python.o: $(srcdir)/Modules/python.c
-@@ -567,7 +569,7 @@ $(AST_C): $(AST_ASDL) $(ASDLGEN_FILES)
+@@ -566,7 +568,7 @@ $(AST_C): $(AST_ASDL) $(ASDLGEN_FILES)
  Python/compile.o Python/symtable.o Python/ast.o: $(GRAMMAR_H) $(AST_H)
  
  Python/getplatform.o: $(srcdir)/Python/getplatform.c
