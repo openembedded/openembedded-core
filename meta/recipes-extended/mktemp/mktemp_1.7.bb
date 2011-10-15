@@ -5,10 +5,11 @@ SECTION = "console/utils"
 LICENSE = "ISC"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=430680f6322a1eb87199b5e01a82c0d4"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://ftp.mktemp.org/pub/mktemp/${BPN}-${PV}.tar.gz \
         file://disable-strip.patch \
+        file://fix-parallel-make.patch \
         "
 
 SRC_URI[md5sum] = "787bbed9fa2ee8e7645733c0e8e65172"
