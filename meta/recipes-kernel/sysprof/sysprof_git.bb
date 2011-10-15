@@ -15,7 +15,6 @@ SRC_URI = "git://git.gnome.org/sysprof;protocol=git \
 
 SRC_URI_append_arm  = " file://rmb-arm.patch"
 SRC_URI_append_mips = " file://rmb-mips.patch"
-SRC_URI_append_powerpc = " file://ppc-macro-fix.patch"
 
 SRC_URI[md5sum]    = "80902a7b3d6f7cb83eb6b47e87538747"
 SRC_URI[sha256sum] = "1c6403278fa4f3b37a1fb9f0784e496dce1703fe84ac03b2650bf469133a0cb3"
