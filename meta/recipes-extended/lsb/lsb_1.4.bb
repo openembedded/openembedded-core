@@ -2,7 +2,7 @@ DESCRIPTION = "LSB support for Poky Linux"
 SECTION = "console/utils"
 HOMEPAGE = "http://prdownloads.sourceforge.net/lsb"
 LICENSE = "GPLv2+"
-PR = "r1"
+PR = "r2"
 
 LIC_FILES_CHKSUM = "file://README;md5=12da544b1a3a5a1795a21160b49471cf"
 
@@ -19,7 +19,7 @@ SRC_URI[sha256sum] = "99321288f8d62e7a1d485b7c6bdccf06766fb8ca603c6195806e4457fd
 S = ${WORKDIR}/lsb-release-${PV}
 
 do_install(){
-	oe_runmake install prefix=${D}  mandir=${D}/man/ DESTDIR=${D} 
+	oe_runmake install prefix=${D}  mandir=${D}/${datadir}/man/ DESTDIR=${D} 
 	mkdir -p ${D}/bin
 	mkdir -p ${D}/${baselib}
 	mkdir -p ${D}/etc/lsb-release.d
@@ -69,7 +69,9 @@ do_install_append(){
        install -m 0755 ${WORKDIR}/init-functions ${D}/${baselib}/lsb
        if [ "${TARGET_ARCH}" == "x86_64" ];then
 	       cd ${D}
-	       ln -sf ${baselib} lib
+               if [ "${baselib}" != "lib64" ]; then
+                   ln -sf ${baselib} lib64
+               fi
 	       cd ${D}/${baselib}
                ln -sf ld-linux-x86-64.so.2 ld-lsb-x86-64.so.2
                ln -sf ld-linux-x86-64.so.2 ld-lsb-x86-64.so.3
@@ -82,7 +84,9 @@ do_install_append(){
  
        if [ "${TARGET_ARCH}" == "powerpc64" ];then
   	       cd ${D}
-	       ln -sf ${baselib} lib
+               if [ "${baselib}" != "lib64" ]; then
+                   ln -sf ${baselib} lib64
+               fi
                cd ${D}/${baselib}
                ln -sf ld64.so.1 ld-lsb-ppc64.so.2
                ln -sf ld64.so.1 ld-lsb-ppc64.so.3
