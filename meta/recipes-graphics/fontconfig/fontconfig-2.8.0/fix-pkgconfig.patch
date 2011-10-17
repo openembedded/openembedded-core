@@ -11,5 +11,5 @@ Upstream-Status: Inappropriate [configuration]
  Version: @VERSION@
  Libs: -L${libdir} -lfontconfig
 -Libs.private: @LIBXML2_LIBS@ @EXPAT_LIBS@ @FREETYPE_LIBS@ @ICONV_LIBS@
-+Libs.private: @LIBXML2_LIBS@ @EXPAT_LIBS@ -L{libdir} -lfreetype @ICONV_LIBS@
++Libs.private: @LIBXML2_LIBS@ @EXPAT_LIBS@ -L${libdir} -lfreetype @ICONV_LIBS@
  Cflags: -I${includedir}
