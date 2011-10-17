@@ -14,7 +14,7 @@ SRCREV_FORMAT = "source"
 
 SRCREV = "90727"
 PV = "1.5.1+svnr${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "\
   svn://svn.webkit.org/repository/webkit/trunk/;module=Source;proto=http;name=source \
@@ -44,6 +44,22 @@ EXTRA_OECONF = "\
                "
 
 EXTRA_AUTORECONF = " -I Source/autotools "
+
+#| ./Source/JavaScriptCore/heap/HandleTypes.h: In static member function 'static T* JSC::HandleTypes<T>::getFromSlot(JSC::HandleSlot) [with T = JSC::Structure, JSC::HandleTypes<T>::ExternalType = JSC::Structure*, JSC::HandleSlot = JSC::JSValue*]':
+#| ./Source/JavaScriptCore/heap/Handle.h:141:79:   instantiated from 'JSC::Handle<T>::ExternalType JSC::Handle<T>::get() const [with T = JSC::Structure, JSC::Handle<T>::ExternalType = JSC::Structure*]'
+#| ./Source/JavaScriptCore/runtime/ScopeChain.h:39:75:   instantiated from here
+#| ./Source/JavaScriptCore/heap/HandleTypes.h:38:130: warning: cast from 'JSC::JSCell*' to 'JSC::HandleTypes<JSC::Structure>::ExternalType {aka JSC::Structure*}' increases required alignment of target type [-Wcast-align]
+#| {standard input}: Assembler messages:
+#| {standard input}:28873: Error: invalid immediate: 983040 is out of range
+#| {standard input}:28873: Error: value of 983040 too large for field of 2 bytes at 15110
+#| /OE/shr-core/tmp/sysroots/x86_64-linux/usr/libexec/armv4t-oe-linux-gnueabi/gcc/arm-oe-linux-gnueabi/4.6.2/as: BFD (GNU Binutils) 2.21.1 assertion fail /OE/shr-core/tmp/work/armv4t-oe-linux-gnueabi/binutils-cross-2.21.1a-r0/binutils-2.21.1/bfd/elf.c:2819
+#| arm-oe-linux-gnueabi-g++: internal compiler error: Segmentation fault (program as)
+#| Please submit a full bug report,
+#| with preprocessed source if appropriate.
+#| See <http://gcc.gnu.org/bugs.html> for instructions.
+#| make[1]: *** [Source/JavaScriptCore/jit/libjavascriptcoregtk_1_0_la-JIT.lo] Error 1
+#| make[1]: Leaving directory `/OE/shr-core/tmp/work/armv4t-oe-linux-gnueabi/webkit-gtk-1.5.1+svnr90727-r0'
+ARM_INSTRUCTION_SET = "arm"
 
 do_configure_append() {
 	# somethings wrong with icu, fix it up manually
