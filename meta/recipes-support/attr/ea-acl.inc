@@ -9,6 +9,7 @@ inherit autotools gettext
 # overwritten by autoheader
 export AUTOHEADER = "true"
 EXTRA_OECONF = "INSTALL_USER=root INSTALL_GROUP=root"
+EXTRA_OECONF_append_virtclass-native = " --enable-gettext=no"
 
 EXTRA_OEMAKE = "PKG_LIB_DIR=${base_libdir} PKG_DEVLIB_DIR=${libdir}"
 

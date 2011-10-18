@@ -21,7 +21,7 @@ SRC_URI = "${BASE_SRC_URI} \
 SRC_URI[md5sum] = "687e1dcd29452789d34eaeea4c25abe4"
 SRC_URI[sha256sum] = "722def46e4a19a5b7a579ef30db1965f86c37c1a20a5f0113743a2e4399f7c99"
 
-DEPENDS_virtclass-native = "gettext-native"
+DEPENDS_virtclass-native = "gettext-minimal-native"
 SRC_URI_virtclass-native = "${BASE_SRC_URI}"
 
 inherit autotools gettext
