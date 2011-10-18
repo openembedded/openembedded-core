@@ -90,3 +90,7 @@ do_install_virtclass-native () {
 }
 
 BBCLASSEXTEND = "native"
+
+# Ghostscript install tool 'instcopy' tries to remove already created
+# directories during install and parallel make causes problems.
+PARALLEL_MAKEINST=""
