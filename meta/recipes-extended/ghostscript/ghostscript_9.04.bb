@@ -15,24 +15,24 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d151214b3131251dfc9d858593acbd24"
 
-PR = "r4"
+PR = "r0"
 
 DEPENDS = "ghostscript-native tiff jpeg fontconfig cups"
 DEPENDS_virtclass-native = ""
 
-SRC_URI_BASE = "http://downloads.ghostscript.com/public/ghostscript-${PV}.tar.bz2"
+SRC_URI_BASE = "http://downloads.ghostscript.com/public/ghostscript-${PV}.tar.gz"
 
 SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.02-prevent_recompiling.patch \
            file://ghostscript-9.02-genarch.patch \
            file://objarch.h \
-           file://soobjarch.h \
            file://ghostscript-9.02-parallel-make.patch \
            "
+
 SRC_URI_virtclass-native = "${SRC_URI_BASE}"
 
-SRC_URI[md5sum] = "f67151444bd56a7904579fc75a083dd6"
-SRC_URI[sha256sum] = "03ea2cad13a36f8f9160912012b79619a826e7148fada6d3531feb25409ee05a"
+SRC_URI[md5sum] = "9c2fb4af1eb609d09dba5bb0fa76173a"
+SRC_URI[sha256sum] = "f1e333738c41c3bf2b47ceb9806abb8045bcdc7353002c32736150425a7c1ef4"
 
 EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec --without-jasper --with-fontpath=${datadir}/fonts"
 
@@ -47,15 +47,13 @@ do_configure () {
     mkdir -p obj
     mkdir -p soobj
     cp ${WORKDIR}/objarch.h obj/arch.h
-    cp ${WORKDIR}/soobjarch.h soobj/arch.h
 
     oe_runconf
 
     # copy tools from the native ghostscript build
-    mkdir -p obj soobj
+    mkdir -p obj/aux soobj
     for i in genarch genconf mkromfs echogs gendev genht; do
-        cp ${STAGING_BINDIR_NATIVE}/ghostscript-${PV}/$i obj/$i
-        cp ${STAGING_BINDIR_NATIVE}/ghostscript-${PV}/$i soobj/$i
+        cp ${STAGING_BINDIR_NATIVE}/ghostscript-${PV}/$i obj/aux/$i
     done
 }
 
@@ -64,7 +62,9 @@ do_install_append () {
     cp -r Resource ${D}${datadir}/ghostscript/${PV}/
     cp -r iccprofiles ${D}${datadir}/ghostscript/${PV}/
 
-    chown -R root:lp ${D}${sysconfdir}/cups
+    if [ -f ${D}${sysconfdir}/cups ]; then
+        chown -R root:lp ${D}${sysconfdir}/cups
+    fi
 }
 
 python do_patch_virtclass-native () {
@@ -78,14 +78,14 @@ do_configure_virtclass-native () {
 do_compile_virtclass-native () {
     mkdir -p obj
     for i in genarch genconf mkromfs echogs gendev genht; do
-        oe_runmake obj/$i
+        oe_runmake obj/aux/$i
     done
 }
 
 do_install_virtclass-native () {
     install -d ${D}${bindir}/ghostscript-${PV}
     for i in genarch genconf mkromfs echogs gendev genht; do
-        install -m 755 obj/$i ${D}${bindir}/ghostscript-${PV}/$i
+        install -m 755 obj/aux/$i ${D}${bindir}/ghostscript-${PV}/$i
     done
 }
 
