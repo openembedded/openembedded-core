@@ -48,34 +48,36 @@ SYSLINUXMENU = "${HDDDIR}/menu"
 inherit syslinux
 		
 build_boot_bin() {
-	install -d ${HDDDIR}
-	install -m 0644 ${STAGING_DIR_HOST}/kernel/bzImage \
-	${HDDDIR}/vmlinuz
+	# Create an HDD image
+	if [ "${NOHDD}" != "1" ] ; then
+		install -d ${HDDDIR}
+		install -m 0644 ${STAGING_DIR_HOST}/kernel/bzImage \
+		${HDDDIR}/vmlinuz
 
-	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ]; then 
-    		install -m 0644 ${INITRD} ${HDDDIR}/initrd
+		if [ -n "${INITRD}" ] && [ -s "${INITRD}" ]; then
+				install -m 0644 ${INITRD} ${HDDDIR}/initrd
+		fi
+
+		if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then
+				install -m 0644 ${ROOTFS} ${HDDDIR}/rootfs.img
+		fi
+
+		install -m 444 ${STAGING_LIBDIR}/syslinux/ldlinux.sys ${HDDDIR}/ldlinux.sys
+
+		# Do a little math, bash style
+		BLOCKS=`du -bks ${HDDDIR} | cut -f 1`
+		SIZE=`expr $BLOCKS + ${BOOTIMG_EXTRA_SPACE}`
+
+		mkdosfs -n ${BOOTIMG_VOLUME_ID} -d ${HDDDIR} \
+		-C ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg $SIZE
+
+		syslinux ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
+		chmod 644 ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
+
+		cd ${DEPLOY_DIR_IMAGE}
+		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hddimg
+		ln -s ${IMAGE_NAME}.hddimg ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hddimg
 	fi
-
-	if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then 
-    		install -m 0644 ${ROOTFS} ${HDDDIR}/rootfs.img
-	fi
-
-	install -m 444 ${STAGING_LIBDIR}/syslinux/ldlinux.sys ${HDDDIR}/ldlinux.sys
-
-	# Do a little math, bash style
-	#BLOCKS=`du -s ${HDDDIR} | cut -f 1`
-	BLOCKS=`du -bks ${HDDDIR} | cut -f 1`
-	SIZE=`expr $BLOCKS + ${BOOTIMG_EXTRA_SPACE}`	
-
-	mkdosfs -n ${BOOTIMG_VOLUME_ID} -d ${HDDDIR} \
-	-C ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg $SIZE 
-
-	syslinux ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
-	chmod 644 ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
-
-	cd ${DEPLOY_DIR_IMAGE}
-	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hddimg
-	ln -s ${IMAGE_NAME}.hddimg ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hddimg
 	
 	#Create an ISO if we have an INITRD
 	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ] && [ "${NOISO}" != "1" ] ; then
