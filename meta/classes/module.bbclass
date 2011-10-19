@@ -14,8 +14,11 @@ do_make_scripts() {
 	           -C ${STAGING_KERNEL_DIR} scripts
 }
 
+addtask make_scripts before do_compile
+do_make_scripts[lockfiles] = "${TMPDIR}/kernel-scripts.lock"
+do_make_scripts[deptask] = "do_populate_sysroot"
+
 module_do_compile() {
-	do_make_scripts
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 	oe_runmake KERNEL_PATH=${STAGING_KERNEL_DIR}   \
 		   KERNEL_SRC=${STAGING_KERNEL_DIR}    \
