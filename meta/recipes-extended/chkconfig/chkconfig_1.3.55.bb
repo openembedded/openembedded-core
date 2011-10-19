@@ -12,12 +12,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5574c6965ae5f583e55880e397fbb018"
 
 DEPENDS = "libnewt popt"
 
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "http://fedorahosted.org/releases/c/h/chkconfig/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "a576808a6d66763606d750ec451bab6d"
-SRC_URI[sha256sum] = "aa36bf7fd3f7c6e3371eddd8a7846b83435c48f132cc5919d83a830504b797d6"
+SRC_URI[md5sum] = "de562d5bff5116d1acf2d3191603096b"
+SRC_URI[sha256sum] = "ac5e8f6c5ed83f5b65a3dd9187f8c534f167193446082e6a6576a0d9f72ba968"
 
 inherit autotools gettext
 
