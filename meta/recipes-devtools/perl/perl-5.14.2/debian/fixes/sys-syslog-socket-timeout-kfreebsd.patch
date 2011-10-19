@@ -1,0 +1,36 @@
+From 9ba88d73444c22788b7c2a212e15dbfe3da2a1af Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Wed, 3 Aug 2011 22:36:24 +0300
+Subject: Use a socket timeout on GNU/kFreeBSD to catch ICMP port unreachable
+ messages
+
+Bug: http://rt.cpan.org/Ticket/Display.html?id=69997
+Bug-Debian: http://bugs.debian.org/627821
+
+Without this, openlog() on a UDP socket may succeed on the FreeBSD kernel
+even when there's no listener, causing test failures.
+
+It seems probable that all FreeBSD-based systems suffer from the
+same issue, but that's for upstream to decide.
+
+Patch-Name: fixes/sys-syslog-socket-timeout-kfreebsd.patch
+---
+ cpan/Sys-Syslog/Syslog.pm |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+diff --git a/cpan/Sys-Syslog/Syslog.pm b/cpan/Sys-Syslog/Syslog.pm
+index 002e6e4..b445c66 100644
+--- a/cpan/Sys-Syslog/Syslog.pm
++++ b/cpan/Sys-Syslog/Syslog.pm
+@@ -138,7 +138,10 @@ my @fallbackMethods = ();
+ # happy, the timeout is now zero by default on all systems 
+ # except on OSX where it is set to 250 msec, and can be set 
+ # with the infamous setlogsock() function.
+-$sock_timeout = 0.25 if $^O =~ /darwin/;
++#
++# Debian change: include Debian GNU/kFreeBSD, lower to 1ms
++# see [rt.cpan.org #69997]
++$sock_timeout = 0.001 if $^O =~ /darwin|gnukfreebsd/;
+ 
+ # coderef for a nicer handling of errors
+ my $err_sub = $options{nofatal} ? \&warnings::warnif : \&croak;

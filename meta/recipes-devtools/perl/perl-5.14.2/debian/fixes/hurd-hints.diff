@@ -1,0 +1,48 @@
+From d6fd7595fcd04b332e7449f59ea298639f10a183 Mon Sep 17 00:00:00 2001
+From: Pino Toscano <pino@debian.org>
+Date: Wed, 10 Aug 2011 08:11:33 +0300
+Subject: Improve general GNU hints, needed for GNU/Hurd.
+
+Bug-Debian: http://bugs.debian.org/636609
+
+Patch-Name: fixes/hurd-hints.diff
+---
+ ext/ODBM_File/hints/gnu.pl |    1 +
+ hints/gnu.sh               |   12 ++++++++++++
+ 2 files changed, 13 insertions(+), 0 deletions(-)
+ create mode 100644 ext/ODBM_File/hints/gnu.pl
+
+diff --git a/ext/ODBM_File/hints/gnu.pl b/ext/ODBM_File/hints/gnu.pl
+new file mode 100644
+index 0000000..db63567
+--- /dev/null
++++ b/ext/ODBM_File/hints/gnu.pl
+@@ -0,0 +1 @@
++do './hints/linux.pl' or die $@;
+diff --git a/hints/gnu.sh b/hints/gnu.sh
+index c1ba2db..f075642 100644
+--- a/hints/gnu.sh
++++ b/hints/gnu.sh
+@@ -8,10 +8,22 @@ set `echo X "$libswanted "| sed -e 's/ nsl / /' -e 's/ c / pthread /'`
+ shift
+ libswanted="$*"
+ 
++# Debian 4.0 puts ndbm in the -lgdbm_compat library.
++libswanted="$libswanted gdbm_compat"
++
+ case "$optimize" in
+ '') optimize='-O2' ;;
+ esac
+ 
++case "$plibpth" in
++'') plibpth=`gcc -print-search-dirs | grep libraries |
++        cut -f2- -d= | tr ':' $trnl | grep -v 'gcc' | sed -e 's:/$::'`
++    set X $plibpth # Collapse all entries on one line
++    shift
++    plibpth="$*"
++    ;;
++esac
++
+ # Flags needed to produce shared libraries.
+ lddlflags='-shared'
+ 

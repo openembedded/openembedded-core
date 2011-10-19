@@ -1,0 +1,44 @@
+From 9825086b15f34f365a272cc8d6caf4e2044bede6 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Mon, 6 Jul 2009 22:17:53 +0300
+Subject: Save local versions of CPANPLUS::Config::System into /etc/perl.
+
+This is a configuration file and needs to go in /etc by policy.
+Besides, /usr may not even be writable.
+
+This mirrors the Debian setup of CPAN.pm in debian/cpan_config_path.
+
+See #533707.
+
+Patch-Name: debian/cpanplus_config_path.diff
+---
+ cpan/CPANPLUS/lib/CPANPLUS/Configure.pm           |    1 +
+ cpan/CPANPLUS/lib/CPANPLUS/Internals/Constants.pm |    3 +++
+ 2 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/cpan/CPANPLUS/lib/CPANPLUS/Configure.pm b/cpan/CPANPLUS/lib/CPANPLUS/Configure.pm
+index ba1ca07..25cbe5f 100644
+--- a/cpan/CPANPLUS/lib/CPANPLUS/Configure.pm
++++ b/cpan/CPANPLUS/lib/CPANPLUS/Configure.pm
+@@ -280,6 +280,7 @@ Saves the configuration to the package name you provided.
+ If this package is not C<CPANPLUS::Config::System>, it will
+ be saved in your C<.cpanplus> directory, otherwise it will
+ be attempted to be saved in the system wide directory.
++(On Debian systems, this system wide directory is /etc/perl.)
+ 
+ If no argument is provided, it will default to your personal
+ config.
+diff --git a/cpan/CPANPLUS/lib/CPANPLUS/Internals/Constants.pm b/cpan/CPANPLUS/lib/CPANPLUS/Internals/Constants.pm
+index 443d5a4..f7085a8 100644
+--- a/cpan/CPANPLUS/lib/CPANPLUS/Internals/Constants.pm
++++ b/cpan/CPANPLUS/lib/CPANPLUS/Internals/Constants.pm
+@@ -209,6 +209,9 @@ use constant CONFIG_USER_FILE    => sub {
+                                     ) . '.pm';
+                                 };
+ use constant CONFIG_SYSTEM_FILE  => sub {
++                                    # Debian-specific shortcut
++                                    return '/etc/perl/CPANPLUS/Config/System.pm';
++                                    
+                                     require CPANPLUS::Internals;
+                                     require File::Basename;
+                                     my $dir = File::Basename::dirname(

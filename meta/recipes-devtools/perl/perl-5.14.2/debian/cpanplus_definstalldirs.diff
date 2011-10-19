@@ -1,0 +1,55 @@
+From 66517b14790aa6410fd37e411dd62521e1e02b7f Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Mon, 6 Jul 2009 21:58:41 +0300
+Subject: Configure CPANPLUS to use the site directories by default.
+
+Bug-Debian: http://bugs.debian.org/533707
+
+The core modules usually default to INSTALLDIRS=perl (ExtUtils::MakeMaker)
+or installdirs=core (Module::Build), so we need to explicitly ask for
+the site destination to get upgraded versions into /usr/local.
+
+See also the sister patch, debian/cpan_definstalldirs .
+
+Patch-Name: debian/cpanplus_definstalldirs.diff
+---
+ cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm |   30 +++++++++++++++++++++++++++
+ 1 files changed, 30 insertions(+), 0 deletions(-)
+ create mode 100644 cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm
+
+diff --git a/cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm b/cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm
+new file mode 100644
+index 0000000..5e6e11e
+--- /dev/null
++++ b/cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm
+@@ -0,0 +1,30 @@
++### minimal pod, so you can find it with perldoc -l, etc
++=pod
++
++=head1 NAME
++
++CPANPLUS::Config::System
++
++=head1 DESCRIPTION
++
++This is a CPANPLUS configuration file that sets appropriate default
++settings on Debian systems.
++
++The only preconfigured settings are C<makemakerflags> (set to
++C<INSTALLDIRS=site>) and C<buildflags> (set to C<--installdirs site>).
++
++These settings will not have any effect if
++C</etc/perl/CPANPLUS/Config/System.pm> is present.
++
++=cut
++
++
++package CPANPLUS::Config::System;
++
++sub setup {
++    my $conf = shift;
++    $conf->set_conf( makemakerflags => 'INSTALLDIRS=site' );    
++    $conf->set_conf( buildflags => '--installdirs site' );    
++}
++
++1;

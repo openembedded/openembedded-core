@@ -1,0 +1,73 @@
+From e25298a339dd6679f1b080f0125ac1b237b87950 Mon Sep 17 00:00:00 2001
+From: David Mitchell <davem@iabyn.com>
+Date: Tue, 28 Jun 2011 17:04:40 +0100
+Subject: RT 64804: tainting with index() of a constant
+
+Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=64804
+Bug-Debian: http://bugs.debian.org/291450
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/3b36395d31cf0a2f3a017505cd0ea857a7acb5d1
+
+At compile time, ck_index with a tainted constant set PL_tainted,
+which remained on during the rest of compilation, tainting all other
+constants.
+
+Fix this by saving and restoring PL_tainted across the call to
+fbm_compile, which is what sets PL_tainted.
+
+Patch-Name: fixes/index-tainting.diff
+---
+ op.c         |    5 ++++-
+ t/op/taint.t |   16 +++++++++++++++-
+ 2 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/op.c b/op.c
+index e21b9a4..973df13 100644
+--- a/op.c
++++ b/op.c
+@@ -7780,8 +7780,11 @@ Perl_ck_index(pTHX_ OP *o)
+ 	OP *kid = cLISTOPo->op_first->op_sibling;	/* get past pushmark */
+ 	if (kid)
+ 	    kid = kid->op_sibling;			/* get past "big" */
+-	if (kid && kid->op_type == OP_CONST)
++	if (kid && kid->op_type == OP_CONST) {
++	    const bool save_taint = PL_tainted;
+ 	    fbm_compile(((SVOP*)kid)->op_sv, 0);
++	    PL_tainted = save_taint;
++	}
+     }
+     return ck_fun(o);
+ }
+diff --git a/t/op/taint.t b/t/op/taint.t
+index 9df6fee..a300b9b 100644
+--- a/t/op/taint.t
++++ b/t/op/taint.t
+@@ -17,7 +17,7 @@ BEGIN {
+ use strict;
+ use Config;
+ 
+-plan tests => 774;
++plan tests => 778;
+ 
+ $| = 1;
+ 
+@@ -2144,6 +2144,20 @@ end
+     is_tainted $dest, "ucfirst(tainted) taints its return value";
+ }
+ 
++
++# tainted constants and index()
++#  RT 64804; http://bugs.debian.org/291450
++{
++    ok(tainted $old_env_path, "initial taintedness");
++    BEGIN { no strict 'refs'; my $v = $old_env_path; *{"::C"} = sub () { $v }; }
++    ok(tainted C, "constant is tainted properly");
++    ok(!tainted "", "tainting not broken yet");
++    index(undef, C);
++    ok(!tainted "", "tainting still works after index() of the constant");
++}
++
++
++
+ # This may bomb out with the alarm signal so keep it last
+ SKIP: {
+     skip "No alarm()"  unless $Config{d_alarm};

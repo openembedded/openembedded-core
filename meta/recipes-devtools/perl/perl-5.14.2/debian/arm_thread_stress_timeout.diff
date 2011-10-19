@@ -1,0 +1,26 @@
+From f624a9f1206cdd44fde99c40d82e2f326db485dd Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Sat, 1 Nov 2008 15:10:16 +0200
+Subject: Raise the timeout of ext/threads/shared/t/stress.t to accommodate
+ slower build hosts
+
+Bug-Debian: http://bugs.debian.org/501970
+
+Patch-Name: debian/arm_thread_stress_timeout.diff
+---
+ dist/threads-shared/t/stress.t |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/dist/threads-shared/t/stress.t b/dist/threads-shared/t/stress.t
+index adfd1ed..652a3e6 100644
+--- a/dist/threads-shared/t/stress.t
++++ b/dist/threads-shared/t/stress.t
+@@ -34,7 +34,7 @@ use threads::shared;
+ {
+     my $cnt = 50;
+ 
+-    my $TIMEOUT = 60;
++    my $TIMEOUT = 150;
+ 
+     my $mutex = 1;
+     share($mutex);

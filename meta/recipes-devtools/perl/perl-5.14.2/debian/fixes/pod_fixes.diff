@@ -1,0 +1,145 @@
+From c6b1fdd18dab0236458502564e54c180bb0ce341 Mon Sep 17 00:00:00 2001
+From: Keith Thompson <kst@mib.org>
+Date: Fri, 29 Jul 2011 17:17:00 -0700
+Subject: Fix typos in several pod/perl*.pod files
+
+Bug-Debian: http://bugs.debian.org/637816
+Origin: http://perl5.git.perl.org/perl.git/commit/7698aede74509727f7bca31c58fc7a53b182315d
+Patch-Name: fixes/pod_fixes.diff
+---
+ pod/perlfunc.pod     |    8 ++++----
+ pod/perlglossary.pod |   10 +++++-----
+ pod/perlmod.pod      |    4 ++--
+ pod/perlretut.pod    |    6 +++---
+ 4 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/pod/perlfunc.pod b/pod/perlfunc.pod
+index 2ee3637..719a740 100644
+--- a/pod/perlfunc.pod
++++ b/pod/perlfunc.pod
+@@ -3918,7 +3918,7 @@ count.  A numeric repeat count may optionally be enclosed in brackets, as
+ in C<pack("C[80]", @arr)>.  The repeat count gobbles that many values from
+ the LIST when used with all format types other than C<a>, C<A>, C<Z>, C<b>,
+ C<B>, C<h>, C<H>, C<@>, C<.>, C<x>, C<X>, and C<P>, where it means
+-something else, dscribed below.  Supplying a C<*> for the repeat count
++something else, described below.  Supplying a C<*> for the repeat count
+ instead of a number means to use however many items are left, except for:
+ 
+ =over 
+@@ -5870,7 +5870,7 @@ sometimes saying the opposite, for example) the results are not
+ well-defined.
+ 
+ Because C<< <=> >> returns C<undef> when either operand is C<NaN>
+-(not-a-number), and laso because C<sort> raises an exception unless the
++(not-a-number), and also because C<sort> raises an exception unless the
+ result of a comparison is defined, be careful when sorting with a
+ comparison function like C<< $a <=> $b >> any lists that might contain a
+ C<NaN>.  The following example takes advantage that C<NaN != NaN> to
+@@ -5958,7 +5958,7 @@ specified.
+ 
+ A pattern matching the empty string (not to be confused with
+ an empty pattern C<//>, which is just one member of the set of patterns
+-matching the epmty string), splits EXPR into individual
++matching the empty string), splits EXPR into individual
+ characters.  For example:
+ 
+     print join(':', split(/ */, 'hi there')), "\n";
+@@ -6222,7 +6222,7 @@ For example:
+   printf '<%.1e>', 10; # prints "<1.0e+01>"
+ 
+ For "g" and "G", this specifies the maximum number of digits to show,
+-including thoe prior to the decimal point and those after it; for 
++including those prior to the decimal point and those after it; for 
+ example:
+ 
+   # These examples are subject to system-specific variation.
+diff --git a/pod/perlglossary.pod b/pod/perlglossary.pod
+index 639ce33..191371c 100644
+--- a/pod/perlglossary.pod
++++ b/pod/perlglossary.pod
+@@ -507,7 +507,7 @@ the class (its L<objects|/object>).  See also L</inheritance>.
+ 
+ =item class method
+ 
+-A L</method> whose L</invocand> is a L</package> name, not an
++A L</method> whose L</invocant> is a L</package> name, not an
+ L</object> reference.  A method associated with the class as a whole.
+ 
+ =item client
+@@ -1470,7 +1470,7 @@ Perl, C<print STDOUT "$foo\n";> can be understood as "verb
+ indirect-object object" where L</STDOUT> is the recipient of the
+ L<print|perlfunc/print> action, and C<"$foo"> is the object being
+ printed.  Similarly, when invoking a L</method>, you might place the
+-invocand between the method and its arguments:
++invocant between the method and its arguments:
+ 
+   $gollum = new Pathetic::Creature "Smeagol";
+   give $gollum "Fisssssh!";
+@@ -1548,11 +1548,11 @@ of compiler that takes a program and turns it into a more executable
+ form (L<syntax trees|/syntax tree>) within the I<perl> process itself,
+ which the Perl L</run time> system then interprets.
+ 
+-=item invocand
++=item invocant
+ 
+ The agent on whose behalf a L</method> is invoked.  In a L</class>
+-method, the invocand is a package name.  In an L</instance> method,
+-the invocand is an object reference.
++method, the invocant is a package name.  In an L</instance> method,
++the invocant is an object reference.
+ 
+ =item invocation
+ 
+diff --git a/pod/perlmod.pod b/pod/perlmod.pod
+index 5266f19..17de73e 100644
+--- a/pod/perlmod.pod
++++ b/pod/perlmod.pod
+@@ -571,7 +571,7 @@ like for example handle the cloning of non-Perl data, if necessary.
+ C<CLONE> will be called once as a class method for every package that has it
+ defined (or inherits it).  It will be called in the context of the new thread,
+ so all modifications are made in the new area.  Currently CLONE is called with
+-no parameters other than the invocand package name, but code should not assume
++no parameters other than the invocant package name, but code should not assume
+ that this will remain unchanged, as it is likely that in future extra parameters
+ will be passed in to give more information about the state of cloning.
+ 
+@@ -593,7 +593,7 @@ to make use of the objects, then a more sophisticated approach is
+ needed.
+ 
+ Like C<CLONE>, C<CLONE_SKIP> is currently called with no parameters other
+-than the invocand package name, although that may change. Similarly, to
++than the invocant package name, although that may change. Similarly, to
+ allow for future expansion, the return value should be a single C<0> or
+ C<1> value.
+ 
+diff --git a/pod/perlretut.pod b/pod/perlretut.pod
+index ea80594..1c65f5b 100644
+--- a/pod/perlretut.pod
++++ b/pod/perlretut.pod
+@@ -781,7 +781,7 @@ so may lead to surprising and unsatisfactory results.
+ =head2 Relative backreferences
+ 
+ Counting the opening parentheses to get the correct number for a
+-backreference is errorprone as soon as there is more than one
++backreference is error-prone as soon as there is more than one
+ capturing group.  A more convenient technique became available
+ with Perl 5.10: relative backreferences. To refer to the immediately
+ preceding capture group one now may write C<\g{-1}>, the next but
+@@ -1537,7 +1537,7 @@ the regexp in the I<last successful match> is used instead.  So we have
+ 
+ =head3 Global matching
+ 
+-The final two modifiers we will disccuss here,
++The final two modifiers we will discuss here,
+ C<//g> and C<//c>, concern multiple matches.
+ The modifier C<//g> stands for global matching and allows the
+ matching operator to match within a string as many times as possible.
+@@ -1870,7 +1870,7 @@ substituted.
+ 
+ C<\Q>, C<\L>, C<\l>, C<\U>, C<\u> and C<\E> are actually part of
+ double-quotish syntax, and not part of regexp syntax proper.  They will
+-work if they appear in a regular expression embeddded directly in a
++work if they appear in a regular expression embedded directly in a
+ program, but not when contained in a string that is interpolated in a
+ pattern.
+ 

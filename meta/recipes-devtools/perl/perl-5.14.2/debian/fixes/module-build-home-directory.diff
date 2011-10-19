@@ -1,0 +1,37 @@
+From 9266292f705f2a3b6e5b97fa50e5f2be31371d5c Mon Sep 17 00:00:00 2001
+From: Dominic Hargreaves <dom@earth.li>
+Date: Mon, 2 May 2011 10:35:04 +0100
+Subject: Fix failing tilde test when run under a UID without a passwd entry
+
+Bug: https://rt.cpan.org/Public/Bug/Display.html?id=67893
+Bug-Debian: http://bugs.debian.org/624850
+
+Patch-Name: fixes/module-build-home-directory.diff
+---
+ cpan/Module-Build/t/tilde.t |    6 ++++--
+ 1 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/cpan/Module-Build/t/tilde.t b/cpan/Module-Build/t/tilde.t
+index fac821b..04f0210 100644
+--- a/cpan/Module-Build/t/tilde.t
++++ b/cpan/Module-Build/t/tilde.t
+@@ -46,7 +46,8 @@ SKIP: {
+ 
+     unless (defined $home) {
+       my @info = eval { getpwuid $> };
+-      skip "No home directory for tilde-expansion tests", 15 if $@;
++      skip "No home directory for tilde-expansion tests", 15 if $@
++        or !defined $info[7];
+       $home = $info[7];
+     }
+ 
+@@ -95,7 +96,8 @@ SKIP: {
+ # Again, with named users
+ SKIP: {
+     my @info = eval { getpwuid $> };
+-    skip "No home directory for tilde-expansion tests", 1 if $@;
++    skip "No home directory for tilde-expansion tests", 1 if $@
++        or !defined $info[7] or !defined $info[0];
+     my ($me, $home) = @info[0,7];
+ 
+     my $expected = "$home/fooxzy";

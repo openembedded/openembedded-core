@@ -1,0 +1,30 @@
+From 90c7967530102c66bbff25d89273d3f0bf189a83 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Fri, 10 Apr 2009 01:17:43 +0300
+Subject: Disable zlib bundling in Compress::Raw::Zlib
+
+Compress::Raw::Zlib statically links its bundled version of zlib
+by default, but we use the system library instead.
+
+Patch-Name: debian/disable-zlib-bundling.diff
+---
+ cpan/Compress-Raw-Zlib/config.in |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/cpan/Compress-Raw-Zlib/config.in b/cpan/Compress-Raw-Zlib/config.in
+index c56cc03..2c6659b 100644
+--- a/cpan/Compress-Raw-Zlib/config.in
++++ b/cpan/Compress-Raw-Zlib/config.in
+@@ -16,9 +16,9 @@
+ #    Setting the Gzip OS Code
+ #
+ 
+-BUILD_ZLIB      = True
+-INCLUDE         = ./zlib-src
+-LIB             = ./zlib-src
++BUILD_ZLIB      = False
++INCLUDE         = /usr/include
++LIB             = /usr/lib
+ 
+ OLD_ZLIB        = False
+ GZIP_OS_CODE    = AUTO_DETECT

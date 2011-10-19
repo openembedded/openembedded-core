@@ -1,0 +1,39 @@
+From ff2815399ad94915da2e63cb3c4bbd2d02dac4b2 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Fri, 5 Aug 2011 10:50:18 +0300
+Subject: Skip a crashing test case in t/op/threads.t on GNU/kFreeBSD
+
+Bug: http://rt.perl.org/rt3/Ticket/Display.html?id=96272
+Bug-Debian: http://bugs.debian.org/628493
+
+The crash is not a regression in 5.14, it just gets triggered there by
+a new unrelated test case.
+
+Skip the test until the culprit is found.
+
+Patch-Name: debian/skip-kfreebsd-crash.diff
+---
+ t/op/threads.t |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/t/op/threads.t b/t/op/threads.t
+index 24e84e4..6a91366 100644
+--- a/t/op/threads.t
++++ b/t/op/threads.t
+@@ -342,6 +342,9 @@ threads->create(
+ 
+ EOI
+ 
++SKIP: {
++    skip "[perl #96272] avoid crash on GNU/kFreeBSD", 1
++        if $^O eq 'gnukfreebsd';
+ # [perl #78494] Pipes shared between threads block when closed
+ watchdog 10;
+ {
+@@ -351,5 +354,6 @@ watchdog 10;
+   threads->create(sub { })->join;
+   ok(1, "Pipes shared between threads do not block when closed");
+ }
++}
+ 
+ # EOF

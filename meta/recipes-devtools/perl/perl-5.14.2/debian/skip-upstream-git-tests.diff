@@ -1,0 +1,59 @@
+From 2be2eed9148c38d3e982d3371f379ce77021aeb5 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Fri, 22 Apr 2011 11:15:32 +0300
+Subject: Skip tests specific to the upstream Git repository
+
+These tests fail if run from a different git repository than
+upstream. This complicates things needlessly for downstream packagers.
+
+Skip the tests altogether even if the .git directory exists.
+
+Patch-Name: debian/skip-upstream-git-tests.diff
+---
+ t/porting/authors.t     |    3 ++-
+ t/porting/cmp_version.t |    3 ++-
+ t/porting/manifest.t    |    3 ++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/t/porting/authors.t b/t/porting/authors.t
+index 28ca1ca..3c7f069 100644
+--- a/t/porting/authors.t
++++ b/t/porting/authors.t
+@@ -9,7 +9,8 @@ BEGIN {
+ use strict;
+ use warnings;
+ 
+-if (! -d '.git' ) {
++# Debian change: skip as we're probably in a different git repository
++if (1 || ! -d '.git' ) {
+     print "1..0 # SKIP: not being run from a git checkout\n";
+     exit 0;
+ }
+diff --git a/t/porting/cmp_version.t b/t/porting/cmp_version.t
+index b3c677c..f89f2a7 100644
+--- a/t/porting/cmp_version.t
++++ b/t/porting/cmp_version.t
+@@ -25,7 +25,8 @@ use File::Spec::Functions qw(rel2abs abs2rel catfile catdir curdir);
+ use Getopt::Std;
+ use Maintainers;
+ 
+-if (! -d '.git' ) {
++# Debian change: skip as we're probably in a different git repository
++if (1 || ! -d '.git' ) {
+     print "1..0 # SKIP: not being run from a git checkout\n";
+     exit 0;
+ }
+diff --git a/t/porting/manifest.t b/t/porting/manifest.t
+index 48dd3ac..b08126b 100644
+--- a/t/porting/manifest.t
++++ b/t/porting/manifest.t
+@@ -59,7 +59,8 @@ SKIP: {
+ 
+ SKIP: {
+     chdir "..";
+-    skip("not under git control", 3) unless -d '.git';
++    # Debian change: skip as we're probably in a different git repository
++    skip("not under git control", 3) unless 0 && -d '.git';
+     chomp(my @repo= grep { !/\.gitignore$/ } `git ls-files`);
+     skip("git ls-files didnt work",3)
+         if !@repo;

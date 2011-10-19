@@ -1,0 +1,25 @@
+From ab32eba7fcc45d864c22e8f4ee02e0a6712070e0 Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Thu, 20 Sep 2007 19:47:14 +1000
+Subject: Document the Net::SMTP 'Port' option
+
+Bug-Debian: http://bugs.debian.org/100195
+Bug: http://rt.cpan.org/Public/Bug/Display.html?id=36038
+
+Patch-Name: fixes/net_smtp_docs.diff
+---
+ cpan/libnet/Net/SMTP.pm |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/cpan/libnet/Net/SMTP.pm b/cpan/libnet/Net/SMTP.pm
+index a28496d..07b2498 100644
+--- a/cpan/libnet/Net/SMTP.pm
++++ b/cpan/libnet/Net/SMTP.pm
+@@ -625,6 +625,7 @@ Net::SMTP will attempt to extract the address from the value passed.
+ 
+ B<Debug> - Enable debugging information
+ 
++B<Port> - Select a port on the remote host to connect to (default is 25)
+ 
+ Example:
+ 

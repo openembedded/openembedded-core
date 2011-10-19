@@ -1,0 +1,30 @@
+From f66e8575cb0ca11171f43efe0f9e3c6e790b75bc Mon Sep 17 00:00:00 2001
+From: Samuel Thibault <sthibault@debian.org>
+Date: Wed, 4 Aug 2010 13:34:05 +0300
+Subject: Make hints/gnu.sh append to $ccflags rather than overriding them
+
+Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=92244
+Bug-Debian: http://bugs.debian.org/587901
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/a190e648879
+
+Don't override possible extra $ccflags values given to Configure
+on GNU/Hurd.
+
+Patch-Name: fixes/hurd-ccflags.diff
+---
+ hints/gnu.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/hints/gnu.sh b/hints/gnu.sh
+index 2cfce54..c1ba2db 100644
+--- a/hints/gnu.sh
++++ b/hints/gnu.sh
+@@ -19,7 +19,7 @@ lddlflags='-shared'
+ ccdlflags='-Wl,-E'
+ 
+ # Debian bug #258618
+-ccflags='-D_GNU_SOURCE'
++ccflags="-D_GNU_SOURCE $ccflags"
+ 
+ # The following routines are only available as stubs in GNU libc.
+ # XXX remove this once metaconf detects the GNU libc stubs.

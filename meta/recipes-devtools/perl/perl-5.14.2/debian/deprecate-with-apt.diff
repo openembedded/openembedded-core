@@ -1,0 +1,406 @@
+From c2bd2059cfbba573643c748ace4ff4db4cbf015d Mon Sep 17 00:00:00 2001
+From: Dominic Hargreaves <dom@earth.li>
+Date: Mon, 17 May 2010 13:23:07 +0300
+Subject: Point users to Debian packages of deprecated core modules
+
+Bug-Debian: http://bugs.debian.org/580034
+
+Class::ISA, Switch, Pod::Plainer, and (partially) Shell were
+deprecated from the Perl core in 5.12.0.
+
+Class::ISA, Switch, Pod::Plainer were removed from the Perl core in
+5.14.0.
+
+Shell and Devel::DProf, and Perl 4 libraries, were deprecated from the
+Perl core in 5.14.0.
+
+To get a clean transition, perl/perl-modules is going to recommend the
+separate Debian packages of these for one release cycle so that they will be
+pulled in by default on upgrades.
+
+However, on systems configured to ignore recommendations the deprecation
+warnings will still be useful, so modify them slightly to point to the
+separate packages instead.
+
+Patch-Name: debian/deprecate-with-apt.diff
+---
+ lib/abbrev.pl     |    2 +-
+ lib/assert.pl     |    2 +-
+ lib/bigfloat.pl   |    2 +-
+ lib/bigint.pl     |    2 +-
+ lib/bigrat.pl     |    2 +-
+ lib/cacheout.pl   |    2 +-
+ lib/complete.pl   |    2 +-
+ lib/ctime.pl      |    2 +-
+ lib/deprecate.pm  |   16 +++++++++++++++-
+ lib/dotsh.pl      |    2 +-
+ lib/exceptions.pl |    2 +-
+ lib/fastcwd.pl    |    2 +-
+ lib/find.pl       |    2 +-
+ lib/finddepth.pl  |    2 +-
+ lib/flush.pl      |    2 +-
+ lib/getcwd.pl     |    2 +-
+ lib/getopt.pl     |    2 +-
+ lib/getopts.pl    |    2 +-
+ lib/hostname.pl   |    2 +-
+ lib/importenv.pl  |    2 +-
+ lib/look.pl       |    2 +-
+ lib/newgetopt.pl  |    2 +-
+ lib/open2.pl      |    2 +-
+ lib/open3.pl      |    2 +-
+ lib/pwd.pl        |    2 +-
+ lib/shellwords.pl |    2 +-
+ lib/stat.pl       |    2 +-
+ lib/syslog.pl     |    2 +-
+ lib/tainted.pl    |    2 +-
+ lib/termcap.pl    |    2 +-
+ lib/timelocal.pl  |    2 +-
+ lib/validate.pl   |    2 +-
+ 32 files changed, 46 insertions(+), 32 deletions(-)
+
+diff --git a/lib/abbrev.pl b/lib/abbrev.pl
+index d46321f..0168631 100644
+--- a/lib/abbrev.pl
++++ b/lib/abbrev.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ ;# Usage:
+ ;#	%foo = ();
+diff --git a/lib/assert.pl b/lib/assert.pl
+index d47e006..80593c5 100644
+--- a/lib/assert.pl
++++ b/lib/assert.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ #
+ # This library is no longer being maintained, and is included for backward
+diff --git a/lib/bigfloat.pl b/lib/bigfloat.pl
+index 82d0f5c..c21bac6 100644
+--- a/lib/bigfloat.pl
++++ b/lib/bigfloat.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ package bigfloat;
+ require "bigint.pl";
+diff --git a/lib/bigint.pl b/lib/bigint.pl
+index 6de1c53..031e8ad 100644
+--- a/lib/bigint.pl
++++ b/lib/bigint.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ package bigint;
+ #
+diff --git a/lib/bigrat.pl b/lib/bigrat.pl
+index aaf1713..146a8f4 100644
+--- a/lib/bigrat.pl
++++ b/lib/bigrat.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ package bigrat;
+ require "bigint.pl";
+diff --git a/lib/cacheout.pl b/lib/cacheout.pl
+index a5da453..937405d 100644
+--- a/lib/cacheout.pl
++++ b/lib/cacheout.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ #
+ # This library is no longer being maintained, and is included for backward
+diff --git a/lib/complete.pl b/lib/complete.pl
+index 9ed041c..2ab0c6a 100644
+--- a/lib/complete.pl
++++ b/lib/complete.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ ;#
+ #
+diff --git a/lib/ctime.pl b/lib/ctime.pl
+index aa00d00..ac24e71 100644
+--- a/lib/ctime.pl
++++ b/lib/ctime.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ ;# ctime.pl is a simple Perl emulation for the well known ctime(3C) function.
+ #
+diff --git a/lib/deprecate.pm b/lib/deprecate.pm
+index 7562c69..fc548b0 100644
+--- a/lib/deprecate.pm
++++ b/lib/deprecate.pm
+@@ -7,6 +7,14 @@ our $VERSION = 0.02;
+ our %Config;
+ unless (%Config) { require Config; *Config = \%Config::Config; }
+ 
++# Debian-specific change: recommend the separate Debian packages of
++# deprecated modules where available
++
++my %DEBIAN_PACKAGES = (
++    "Shell"		=> "libshell-perl",
++    "Devel::DProf"	=> "libdevel-dprof-perl"
++);
++
+ # This isn't a public API. It's internal to code maintained by the perl-porters
+ # If you would like it to be a public API, please send a patch with
+ # documentation and tests. Until then, it may change without warning.
+@@ -58,9 +66,15 @@ EOM
+ 	if (defined $callers_bitmask
+ 	    && (vec($callers_bitmask, $warnings::Offsets{deprecated}, 1)
+ 		|| vec($callers_bitmask, $warnings::Offsets{all}, 1))) {
+-	    warn <<"EOM";
++		if (my $deb = $DEBIAN_PACKAGES{$package}) {
++		    warn <<"EOM";
++$package will be removed from the Perl core distribution in the next major release. Please install the separate $deb package. It is being used at $call_file, line $call_line.
++EOM
++		} else {
++		    warn <<"EOM";
+ $package will be removed from the Perl core distribution in the next major release. Please install it from CPAN. It is being used at $call_file, line $call_line.
+ EOM
++		}
+ 	}
+     }
+ }
+diff --git a/lib/dotsh.pl b/lib/dotsh.pl
+index 92f1f4c..4085122 100644
+--- a/lib/dotsh.pl
++++ b/lib/dotsh.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ #
+ #   @(#)dotsh.pl                                               03/19/94
+diff --git a/lib/exceptions.pl b/lib/exceptions.pl
+index 8af64c8..b5b1427 100644
+--- a/lib/exceptions.pl
++++ b/lib/exceptions.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ # exceptions.pl
+ # tchrist@convex.com
+diff --git a/lib/fastcwd.pl b/lib/fastcwd.pl
+index 70007a1..2c7c42e 100644
+--- a/lib/fastcwd.pl
++++ b/lib/fastcwd.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ # By John Bazik
+ #
+diff --git a/lib/find.pl b/lib/find.pl
+index 8e1b42c..7fb2fbf 100644
+--- a/lib/find.pl
++++ b/lib/find.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ # This library is deprecated and unmaintained. It is included for
+ # compatibility with Perl 4 scripts which may use it, but it will be
+diff --git a/lib/finddepth.pl b/lib/finddepth.pl
+index 479905f..c07cea5 100644
+--- a/lib/finddepth.pl
++++ b/lib/finddepth.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ # This library is deprecated and unmaintained. It is included for
+ # compatibility with Perl 4 scripts which may use it, but it will be
+diff --git a/lib/flush.pl b/lib/flush.pl
+index c427976..e5ed0ae 100644
+--- a/lib/flush.pl
++++ b/lib/flush.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ #
+ # This library is no longer being maintained, and is included for backward
+diff --git a/lib/getcwd.pl b/lib/getcwd.pl
+index 77b2442..3810a99 100644
+--- a/lib/getcwd.pl
++++ b/lib/getcwd.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ # By Brandon S. Allbery
+ #
+diff --git a/lib/getopt.pl b/lib/getopt.pl
+index 1d4008a..019a165 100644
+--- a/lib/getopt.pl
++++ b/lib/getopt.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ ;# $RCSfile: getopt.pl,v $$Revision: 4.1 $$Date: 92/08/07 18:23:58 $
+ #
+diff --git a/lib/getopts.pl b/lib/getopts.pl
+index 37ecb4a..3d27418 100644
+--- a/lib/getopts.pl
++++ b/lib/getopts.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ ;# getopts.pl - a better getopt.pl
+ #
+diff --git a/lib/hostname.pl b/lib/hostname.pl
+index f57375e..b055d30 100644
+--- a/lib/hostname.pl
++++ b/lib/hostname.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ # From: asherman@fmrco.com (Aaron Sherman)
+ #
+diff --git a/lib/importenv.pl b/lib/importenv.pl
+index 625edf6..52ee722 100644
+--- a/lib/importenv.pl
++++ b/lib/importenv.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ # This library is no longer being maintained, and is included for backward
+ # compatibility with Perl 4 programs which may require it.
+diff --git a/lib/look.pl b/lib/look.pl
+index 7be55b2..12dcace 100644
+--- a/lib/look.pl
++++ b/lib/look.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ ;# Usage: &look(*FILEHANDLE,$key,$dict,$fold)
+ #
+diff --git a/lib/newgetopt.pl b/lib/newgetopt.pl
+index 4ac9470..08df6cb 100644
+--- a/lib/newgetopt.pl
++++ b/lib/newgetopt.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ # This library is no longer being maintained, and is included for backward
+ # compatibility with Perl 4 programs which may require it.
+diff --git a/lib/open2.pl b/lib/open2.pl
+index ceb5653..a05f2ab 100644
+--- a/lib/open2.pl
++++ b/lib/open2.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ # This legacy library is deprecated and will be removed in a future
+ # release of perl.
+diff --git a/lib/open3.pl b/lib/open3.pl
+index 9f4d5a4..27f7ab4 100644
+--- a/lib/open3.pl
++++ b/lib/open3.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ # This legacy library is deprecated and will be removed in a future
+ # release of perl.
+diff --git a/lib/pwd.pl b/lib/pwd.pl
+index bd8123b..bdace6e 100644
+--- a/lib/pwd.pl
++++ b/lib/pwd.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ ;# pwd.pl - keeps track of current working directory in PWD environment var
+ ;#
+diff --git a/lib/shellwords.pl b/lib/shellwords.pl
+index b562f5f..7f16375 100644
+--- a/lib/shellwords.pl
++++ b/lib/shellwords.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ ;# This legacy library is deprecated and will be removed in a future
+ ;# release of perl.
+diff --git a/lib/stat.pl b/lib/stat.pl
+index feda273..910ce1c 100644
+--- a/lib/stat.pl
++++ b/lib/stat.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ ;# This legacy library is deprecated and will be removed in a future
+ ;# release of perl.
+diff --git a/lib/syslog.pl b/lib/syslog.pl
+index 7504a5d..4c2b95f 100644
+--- a/lib/syslog.pl
++++ b/lib/syslog.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ #
+ # syslog.pl
+diff --git a/lib/tainted.pl b/lib/tainted.pl
+index e88bca1..d58c765 100644
+--- a/lib/tainted.pl
++++ b/lib/tainted.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ # This legacy library is deprecated and will be removed in a future
+ # release of perl.
+diff --git a/lib/termcap.pl b/lib/termcap.pl
+index a84cba3..e641f4d 100644
+--- a/lib/termcap.pl
++++ b/lib/termcap.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ ;# $RCSfile: termcap.pl,v $$Revision: 4.1 $$Date: 92/08/07 18:24:16 $
+ #
+diff --git a/lib/timelocal.pl b/lib/timelocal.pl
+index fefb9da..2297888 100644
+--- a/lib/timelocal.pl
++++ b/lib/timelocal.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ ;# timelocal.pl
+ ;#
+diff --git a/lib/validate.pl b/lib/validate.pl
+index fc2d16a..1a8aef4 100644
+--- a/lib/validate.pl
++++ b/lib/validate.pl
+@@ -1,4 +1,4 @@
+-warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install it from the CPAN distribution Perl4::CoreLibs. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
++warn "Legacy library @{[(caller(0))[6]]} will be removed from the Perl core distribution in the next major release. Please install the separate libperl4-corelibs-perl package. It is being used at @{[(caller)[1]]}, line @{[(caller)[2]]}.\n";
+ 
+ ;# The validate routine takes a single multiline string consisting of
+ ;# lines containing a filename plus a file test to try on it.  (The

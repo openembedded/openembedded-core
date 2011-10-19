@@ -1,0 +1,69 @@
+From 37969e249dfc593ebabfcb682893b6c69dc6b313 Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Wed, 18 May 2011 21:44:06 -0700
+Subject: Make h2ph correctly search gcc include directories
+
+Bug: http://rt.perl.org/rt3/Public/Bug/Display.html?id=90122
+Bug-Debian: http://bugs.debian.org/625808
+Origin: upstream, http://perl5.git.perl.org/perl.git/commit/e7ec705d9b91d35fa99dc50d0a232b6372160a77
+
+System header conversion with "h2ph -a" is currently broken on Ubuntu
+Natty and Oneiric (unless the gcc-multilib package is installed for
+backward compatibility), resulting in things like
+
+ # perl -e 'require "syscall.ph"'
+ Can't locate asm/unistd.ph in @INC [...]
+
+This happens because Ubuntu has switched to a 'multiarch' setup, see
+<https://wiki.ubuntu.com/MultiarchSpec> for details.
+
+The asm subdirectory isn't in $Config{usrinc} anymore: /usr/include/asm
+is now /usr/include/x86_64-linux-gnu/asm. (The third component of the
+new path varies with the actual architecture.)
+
+gcc --print-search-dirs doesn't really tell anything about where gcc
+looks for the include directories, it was just used to find the gcc
+internal directory prefix.
+
+Parse the output of "gcc -v -E" instead, and append $Config{usrinc}
+for safety. Duplicates shouldn't matter.
+
+The h2ph "-a" switch isn't currently tested automatically, and that
+seems nontrivial to do portably. Manual testing was done with
+
+ # mkdir ttt
+ # ./perl -Ilib ./utils/h2ph -a -d $(pwd)/ttt syscall.h
+
+The gcc invocation has been tested to work with gcc 4.6, 4.1, and 3.3.
+
+http://bugs.debian.org/625808
+https://bugs.launchpad.net/bugs/777903
+
+Patch-Name: fixes/h2ph-multiarch.diff
+---
+ utils/h2ph.PL |   12 ++----------
+ 1 files changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/utils/h2ph.PL b/utils/h2ph.PL
+index 87f3c7d..4545d6d 100644
+--- a/utils/h2ph.PL
++++ b/utils/h2ph.PL
+@@ -761,16 +761,8 @@ sub queue_includes_from
+ # non-GCC?) C compilers, but gcc uses additional include directories.
+ sub inc_dirs
+ {
+-    my $from_gcc    = `LC_ALL=C $Config{cc} -v 2>&1`;
+-    if( !( $from_gcc =~ s:^Reading specs from (.*?)/specs\b.*:$1/include:s ) )
+-    { # gcc-4+ :
+-       $from_gcc   = `LC_ALL=C $Config{cc} -print-search-dirs 2>&1`;
+-       if ( !($from_gcc =~ s/^install:\s*([^\s]+[^\s\/])([\s\/]*).*$/$1\/include/s) )
+-       {
+-           $from_gcc = '';
+-       };
+-    };
+-    length($from_gcc) ? ($from_gcc, $from_gcc . "-fixed", $Config{usrinc}) : ($Config{usrinc});
++    my $from_gcc   = `LC_ALL=C $Config{cc} -v -E - < /dev/null 2>&1 | awk '/^#include/, /^End of search list/' | grep '^ '`;
++    length($from_gcc) ? (split(' ', $from_gcc), $Config{usrinc}) : ($Config{usrinc});
+ }
+ 
+ 
