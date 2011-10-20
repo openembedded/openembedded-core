@@ -37,7 +37,13 @@ if test "x$GROUPADD_PARAM" != "x"; then
 	opts=`echo "$GROUPADD_PARAM" | cut -d ';' -f 1`
 	remaining=`echo "$GROUPADD_PARAM" | cut -d ';' -f 2-`
 	while test "x$opts" != "x"; do
-		eval $PSEUDO groupadd -f $OPT $opts
+		groupname=`echo "$opts" | awk '{ print $NF }'`
+		group_exists=`grep "^$groupname:" $SYSROOT/etc/group || true`
+		if test "x$group_exists" = "x"; then
+			eval $PSEUDO groupadd  $OPT $opts
+		else
+			echo "Note: group $groupname already exists, not re-creating it"
+		fi
 
 		if test "x$opts" = "x$remaining"; then
 			break
