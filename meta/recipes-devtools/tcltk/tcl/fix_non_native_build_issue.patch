@@ -4,7 +4,7 @@ Index: unix/Makefile.in
 ===================================================================
 --- unix.orig/Makefile.in
 +++ unix/Makefile.in
-@@ -619,20 +619,20 @@ ro-test: tcltest@EXEEXT@
+@@ -619,13 +619,13 @@ ro-test: tcltest@EXEEXT@
  shell: ${TCL_EXE}
  	@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
@@ -19,16 +19,8 @@ Index: unix/Makefile.in
 +	$(GDB) ${TCL_EXE} --command=gdb.run
  	rm gdb.run
  
- # This target can be used to run tclsh inside ddd
- ddd: ${TCL_EXE}
- 	@echo "set env @LD_LIBRARY_PATH_VAR@=\"`pwd`:$${@LD_LIBRARY_PATH_VAR@}\"" > gdb.run
- 	@echo "set env TCL_LIBRARY=${TCL_BUILDTIME_LIBRARY}" >> gdb.run
--	$(DDD) -command=gdb.run ./${TCL_EXE}
-+	$(DDD) -command=gdb.run ${TCL_EXE}
- 	rm gdb.run
- 
  VALGRINDARGS=--tool=memcheck --num-callers=8 --leak-resolution=high --leak-check=yes --show-reachable=yes -v
-@@ -645,7 +645,7 @@ valgrind: ${TCL_EXE} tcltest@EXEEXT@
+@@ -638,7 +638,7 @@ valgrind: ${TCL_EXE} tcltest@EXEEXT@
  valgrindshell: ${TCL_EXE}
  	@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
@@ -37,7 +29,7 @@ Index: unix/Makefile.in
  
  # The following target outputs the name of the top-level source directory for
  # Tcl (it is used by Tk's configure script, for example). The .NO_PARALLEL
-@@ -809,14 +809,14 @@ install-tzdata: ${TCL_EXE}
+@@ -802,14 +802,14 @@ install-tzdata: ${TCL_EXE}
  	@echo "Installing time zone data"
  	@@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
@@ -54,7 +46,7 @@ Index: unix/Makefile.in
  	    $(TOP_DIR)/library/msgs "$(SCRIPT_INSTALL_DIR)"/msgs
  
  install-doc: doc
-@@ -1756,7 +1756,7 @@ html-tk: ${TCL_EXE}
+@@ -1730,7 +1730,7 @@ html-tk: ${TCL_EXE}
  BUILD_HTML = \
  	@@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
