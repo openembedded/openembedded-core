@@ -7,18 +7,17 @@ BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
                     file://src/ls.c;startline=5;endline=16;md5=e1a509558876db58fb6667ba140137ad"
-PR = "r3"
+PR = "r0"
 DEPENDS = "gmp"
 DEPENDS_virtclass-native = ""
 
 inherit autotools gettext
 
-SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.gz \
+SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
            file://remove-usr-local-lib-from-m4.patch \
           "
-
-SRC_URI[md5sum] = "fce7999953a67243d00d75cc86dbcaa6"
-SRC_URI[sha256sum] = "9e233a62c98a3378a7b0483d2ae3d662dbaf6cd3917d3830d3514665e12a85c8"
+SRC_URI[md5sum] = "bcb135ce553493a45aba01b39eb3920a"
+SRC_URI[sha256sum] = "0d120817c19292edb19e92ae6b8eac9020e03d51e0af9cb116cf82b65d18b02d"
 
 EXTRA_OECONF_virtclass-native = "--without-gmp"
 
@@ -49,6 +48,8 @@ do_install_append() {
 	# in update-alternatives to fail, therefore use lbracket - the name used
 	# for the actual source file.
 	mv ${D}${bindir}/[ ${D}${bindir}/lbracket.${PN}
+	install -d ${D}${libdir}/coreutils
+	mv ${D}${libexecdir}/coreutils/libstdbuf.so ${D}${libdir}/coreutils
 }
 
 pkg_postinst_${PN} () {
