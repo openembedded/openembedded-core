@@ -15,20 +15,15 @@ DEPENDS = "popt binutils"
 RDEPENDS_${PN} = "binutils-symlinks"
 RRECOMMENDS_${PN} = "kernel-vmlinux"
 
-FILES_${PN} = "${bindir} ${libdir}/${BPN}/lib*.so.* ${datadir}/${BPN}"
-FILES_${PN}-dev += "${libdir}/${BPN}/lib*.so ${libdir}/${BPN}/lib*.la"
+FILES_${PN} = "${bindir} ${libdir}/${BPN}/lib*${SOLIBS} ${datadir}/${BPN}"
+FILES_${PN}-dev += "${libdir}/${BPN}/lib*${SOLIBSDEV} ${libdir}/${BPN}/lib*.la"
 FILES_${PN}-staticdev += "${libdir}/${BPN}/lib*.a"
 
-PR = "r2"
+INC_PR = "r0"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/oprofile/oprofile-${PV}.tar.gz \
-           file://opstart.patch \
+SRC_URI = "file://opstart.patch \
            file://oprofile-no-query-modules.patch \
            file://acinclude.m4"
-
-SRC_URI[md5sum] = "4e407093ac06200185d5a5e6437d7242"
-SRC_URI[sha256sum] = "3f0dd40a7749fc650d25d79d42ebbff8f3b6db310c36e7c3839696cc09077880"
-S = "${WORKDIR}/oprofile-${PV}"
 
 inherit autotools
 
