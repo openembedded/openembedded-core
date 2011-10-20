@@ -1,0 +1,59 @@
+
+Upstream-Status: Pending
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: wget-1.12/po/Makefile.in.in
+===================================================================
+--- wget-1.12.orig/po/Makefile.in.in	2009-09-04 09:31:54.000000000 -0700
++++ wget-1.12/po/Makefile.in.in	2011-10-19 20:32:53.714812160 -0700
+@@ -8,8 +8,8 @@
+ # Please note that the actual code of GNU gettext is covered by the GNU
+ # General Public License and is *not* in the public domain.
+ #
+-# Origin: gettext-0.17
+-GETTEXT_MACRO_VERSION = 0.17
++# Origin: gettext-0.18
++GETTEXT_MACRO_VERSION = 0.18
+ 
+ PACKAGE = @PACKAGE@
+ VERSION = @VERSION@
+Index: wget-1.12/configure.ac
+===================================================================
+--- wget-1.12.orig/configure.ac	2009-09-22 09:39:49.000000000 -0700
++++ wget-1.12/configure.ac	2011-10-19 20:32:53.714812160 -0700
+@@ -110,7 +110,7 @@
+ dnl Gettext
+ dnl
+ AM_GNU_GETTEXT([external],[need-ngettext])
+-AM_GNU_GETTEXT_VERSION([0.17])
++AM_GNU_GETTEXT_VERSION([0.18])
+ 
+ AC_PROG_RANLIB
+ 
+Index: wget-1.12/configure
+===================================================================
+--- wget-1.12.orig/configure	2009-09-22 09:40:13.000000000 -0700
++++ wget-1.12/configure	2011-10-19 20:33:46.578812174 -0700
+@@ -5297,7 +5297,7 @@
+ 
+ 
+ 
+-      GETTEXT_MACRO_VERSION=0.17
++      GETTEXT_MACRO_VERSION=0.18
+ 
+ 
+ 
+Index: wget-1.12/m4/po.m4
+===================================================================
+--- wget-1.12.orig/m4/po.m4	2009-09-04 09:31:54.000000000 -0700
++++ wget-1.12/m4/po.m4	2011-10-19 20:33:53.426812176 -0700
+@@ -30,7 +30,7 @@
+ 
+   dnl Release version of the gettext macros. This is used to ensure that
+   dnl the gettext macros and po/Makefile.in.in are in sync.
+-  AC_SUBST([GETTEXT_MACRO_VERSION], [0.17])
++  AC_SUBST([GETTEXT_MACRO_VERSION], [0.18])
+ 
+   dnl Perform the following tests also if --disable-nls has been given,
+   dnl because they are needed for "make dist" to work.
