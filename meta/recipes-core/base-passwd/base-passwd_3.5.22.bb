@@ -1,7 +1,7 @@
 SUMMARY = "Base system master password/group files."
 DESCRIPTION = "The master copies of the user database files (/etc/passwd and /etc/group).  The update-passwd tool is also provided to keep the system databases synchronized with these master files."
 SECTION = "base"
-PR = "r3"
+PR = "r4"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
@@ -35,6 +35,23 @@ do_install () {
 	gzip -9 ${D}${docdir}/${BPN}/*
 	install -p -m 644 README ${D}${docdir}/${BPN}/
 	install -p -m 644 debian/copyright ${D}${docdir}/${BPN}/
+}
+
+pkg_preinst_${PN} () {
+	set -e
+
+	# Used for rootfs generation. On in-target install this will be run
+        # before the unpack so the files won't be available
+
+	if [ ! -e $D${sysconfdir}/passwd ] && [ -e $D${datadir}/base-passwd/passwd.master ]; then
+		cp $D${datadir}/base-passwd/passwd.master $D${sysconfdir}/passwd
+	fi
+
+	if [ ! -e $D${sysconfdir}/group ] && [ -e $D${datadir}/base-passwd/group.master ]; then
+		cp $D${datadir}/base-passwd/group.master $D${sysconfdir}/group
+	fi
+
+	exit 0
 }
 
 pkg_postinst_${PN} () {
