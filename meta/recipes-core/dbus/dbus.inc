@@ -86,6 +86,9 @@ do_install() {
 	chown root:messagebus ${D}${libexecdir}/dbus-daemon-launch-helper
 	chmod 4754 ${D}${libexecdir}/dbus-daemon-launch-helper
 
+	# Remove Red Hat initscript
+	rm -rf ${D}${sysconfdir}/rc.d
+
 	# disable dbus-1 sysv script on systemd installs
 	# nearly all distros call the initscript plain 'dbus', but OE-core is different
 	ln -sf /dev/null ${D}/${base_libdir}/systemd/system/dbus-1.service
