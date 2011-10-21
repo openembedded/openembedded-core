@@ -13,8 +13,8 @@ RRECOMMENDS_${PN}    = "glibc-gconv-ibm850 glibc-gconv-cp1252 \
 RELURI = "http://www.abiword.org/downloads/abiword/${PV}/source/abiword-${PV}.tar.gz"
 RELSRC = "${WORKDIR}/abiword-${PV}/abi"
 
-CVSURI = "cvs://anoncvs:anoncvs@anoncvs.abisource.com/cvsroot;module=abi"
-CVSSRC = "${WORKDIR}/abi"
+SVNURI = "svn://svn.abisource.com/abiword/trunk;module=abiword;proto=http"
+SVNSRC = "${WORKDIR}/abi"
 
 #want 2.x from 2.x.y for the installation directory
 SHRT_VER = "${@bb.data.getVar('PV',d,1).split('.')[0]}.${@bb.data.getVar('PV',d,1).split('.')[1]}"
