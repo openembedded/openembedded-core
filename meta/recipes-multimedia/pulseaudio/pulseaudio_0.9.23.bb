@@ -1,10 +1,10 @@
 require pulseaudio.inc
 
-PR = "r4"
+PR = "r5"
 
-DEPENDS += "gdbm speex"
+DEPENDS += "gdbm speex libxml-parser-perl-native"
 
-inherit gettext
+inherit gettext perlnative
 
 SRC_URI = "http://freedesktop.org/software/pulseaudio/releases/pulseaudio-${PV}.tar.gz \
   file://buildfix.patch \
