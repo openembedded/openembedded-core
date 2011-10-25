@@ -7,15 +7,15 @@ LIC_FILES_CHKSUM = "file://src/COPYING.LIB;md5=f30a9716ef3762e3467a2f62bf790f0a 
 DEPENDS = "zlib libxml2 expat time gnutls libproxy"
 DEPENDS_virtclass-native = "zlib-native libxml2-native expat-native gnutls-native"
 
-PR = "r1"
+PR = "r0"
 
 BBCLASSEXTEND = "native"
 
 SRC_URI = "http://www.webdav.org/${BPN}/${BPN}-${PV}.tar.gz \
            file://pkgconfig.patch"
 
-SRC_URI[md5sum] = "ff369e69ef0f0143beb5626164e87ae2"
-SRC_URI[sha256sum] = "dea3c52b9f3f915651c6279c76758acf7c427727e8b9b0130f8b138f24012290"
+SRC_URI[md5sum] = "591e0c82e6979e7e615211b386b8f6bc"
+SRC_URI[sha256sum] = "9c640b728d6dc80ef1e48f83181166ab6bc95309cece5537e01ffdd01b96eb43"
 
 inherit autotools binconfig lib_package pkgconfig
 
