@@ -5976,6 +5976,18 @@ RECIPE_MANUAL_CHECK_DATE_pn-libsdl = "Jul 28, 2011"
 RECIPE_MAINTAINER_pn-libsdl = "Kai Kang <kai.kang@windriver.com>"
 DISTRO_PN_ALIAS_pn-libsdl = "Fedora=SDL Opensuse=SDL"
 
+RECIPE_STATUS_pn-ccache = "green"
+RECIPE_MAINTAINER_pn-ccache = "Wenzong Fan <wenzong.fan@windriver.com>"
+RECIPE_LATEST_VERSION_pn-ccache = "3.1.6"
+RECIPE_LAST_UPDATE_pn-ccache = "October 19, 2011"
+RECIPE_MANUAL_CHECK_DATE_pn-ccache = "October 25, 2011"
+
+RECIPE_STATUS_pn-chkconfig = "green"
+RECIPE_MAINTAINER_pn-chkconfig = "Wenzong Fan <wenzong.fan@windriver.com>"
+RECIPE_LATEST_VERSION_pn-chkconfig = "1.3.55"
+RECIPE_LAST_UPDATE_pn-chkconfig = "October 19, 2011"
+RECIPE_MANUAL_CHECK_DATE_pn-chkconfig = "October 25, 2011"
+
 DISTRO_PN_ALIAS_pn-lame = "Debian=lame Ubuntu=lame"
 DISTRO_PN_ALIAS_pn-libiconv = "Fedora=mingw-libiconv Opensuse=cross-mingw-libiconv"
 DISTRO_PN_ALIAS_pn-qt4-native = "Fedora=qt4 Debian=qt4-dev-tools"
