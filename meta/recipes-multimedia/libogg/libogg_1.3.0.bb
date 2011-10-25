@@ -13,7 +13,7 @@ PR = "r0"
 
 SRC_URI = "http://downloads.xiph.org/releases/ogg/libogg-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "5a9fcabc9a1b7c6f1cd75ddc78f36c56"
-SRC_URI[sha256sum] = "ab000574bc26d5f01284f5b0f50e12dc761d035c429f2e9c70cb2a9487d8cfba"
+SRC_URI[md5sum] = "0a7eb40b86ac050db3a789ab65fe21c2"
+SRC_URI[sha256sum] = "a8de807631014615549d2356fd36641833b8288221cea214f8a72750efe93780"
 
 inherit autotools pkgconfig
