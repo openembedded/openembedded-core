@@ -11,8 +11,8 @@ SRC_URI = "${GNU_MIRROR}/mtools/mtools-${PV}.tar.bz2 \
            file://mtools-makeinfo.patch \
            file://no-x11.gplv3.patch"
 
-SRC_URI[md5sum] = "e9b07f35272210f407012abaf5d1b9b5"
-SRC_URI[sha256sum] = "7c9e337786d142399d37202ff2002f95bfb3f4e96620223a18d7206708ad2ed5"
+SRC_URI[md5sum] = "15571c615d8f75f5f6d294272f80c7fa"
+SRC_URI[sha256sum] = "0ecc358e30a72d215b1d4c625b27e67121cd6f6075370dfb791ef2a8b980ecb6"
 
 inherit autotools
 
