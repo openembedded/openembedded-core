@@ -9,8 +9,8 @@ PR = "r0"
 
 SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "cb2dfc502c5afc7a4a6e5f6cefd6850e"
-SRC_URI[sha256sum] = "da48d0e20bceaacc7d05bfcbccb34c3dee0c50bd7e80de5222fd5e319809af27"
+SRC_URI[md5sum] = "03e3451a38b0d615cb113cbeaf252dc0"
+SRC_URI[sha256sum] = "e9118eac72ecc71191725a7566361ab7643edfd3364869a47b78dc934a357970"
 
 inherit autotools gettext
 
