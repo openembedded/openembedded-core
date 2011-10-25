@@ -4,7 +4,7 @@ HOMEPAGE = "http://packages.debian.org/netbase"
 SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=3dd6192d306f582dee7687da3d8748ab"
-PR = "r1"
+PR = "r0"
 
 inherit update-rc.d
 
@@ -49,5 +49,5 @@ PACKAGE_ARCH_qemuarm = "${MACHINE_ARCH}"
 PACKAGE_ARCH_qemux86 = "${MACHINE_ARCH}"
 PACKAGE_ARCH_qemux86-64 = "${MACHINE_ARCH}"
 
-SRC_URI[md5sum] = "a56cb362ece358a5b3b8972e5c7be534"
-SRC_URI[sha256sum] = "dea29d60b3d751f0c5669b5299af312ad269c48e6440e0072d0d68d9544ebad3"
+SRC_URI[md5sum] = "e15762f4a8280a62f7ddfea6093120f1"
+SRC_URI[sha256sum] = "2fdee144112731ee0028fee2584cc82d664857ca7004c2eb59de7bda5b159838"
