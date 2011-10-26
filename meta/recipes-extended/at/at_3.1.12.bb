@@ -11,7 +11,7 @@ PAM_DEPS = "libpam libpam-runtime pam-plugin-env pam-plugin-limits"
 
 RCONFLICTS_${PN} = "atd"
 RREPLACES_${PN} = "atd"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
     file://configure.patch \
@@ -50,6 +50,8 @@ do_install () {
 	install -d ${D}${sysconfdir}/rcS.d
 	install -m 0755    ${WORKDIR}/S99at		${D}${sysconfdir}/init.d/atd
 	ln -sf		../init.d/atd		${D}${sysconfdir}/rcS.d/S99at
+	cp -r ${D}/usr/doc/at ${D}${docdir}/
+	rm -rf ${D}/usr/doc
 
 	for feature in ${DISTRO_FEATURES}; do
 		if [ "$feature" = "pam" ]; then
