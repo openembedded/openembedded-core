@@ -1,0 +1,64 @@
+xtables_merge_options API change, fix its calling in connman.
+
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+
+Upstream-Status: Backport
+
+diff -ruN connman-0.75-orig//src/iptables.c connman-0.75/src/iptables.c
+--- connman-0.75-orig//src/iptables.c	2011-02-22 12:16:25.000000000 +0800
++++ connman-0.75/src/iptables.c	2011-10-26 09:21:33.941164000 +0800
+@@ -1089,7 +1089,11 @@
+ 			if (xt_t->init != NULL)
+ 				xt_t->init(xt_t->t);
+ 			iptables_globals.opts =
+-				xtables_merge_options(iptables_globals.opts,
++				xtables_merge_options(
++#if XTABLES_VERSION_CODE > 5
++                                                     iptables_globals.orig_opts,
++#endif
++                                                     iptables_globals.opts,
+ 						     xt_t->extra_opts,
+ 						     &xt_t->option_offset);
+ 			if (iptables_globals.opts == NULL)
+@@ -1113,7 +1117,11 @@
+ 				xt_m->init(xt_m->m);
+ 			if (xt_m != xt_m->next) {
+ 				iptables_globals.opts =
+-				xtables_merge_options(iptables_globals.opts,
++				xtables_merge_options(
++#if XTABLES_VERSION_CODE > 5
++                                                iptables_globals.orig_opts,
++#endif
++                                                iptables_globals.opts,
+ 						xt_m->extra_opts,
+ 						&xt_m->option_offset);
+ 				if (iptables_globals.opts == NULL)
+diff -ruN connman-0.75-orig//tools/iptables-test.c connman-0.75/tools/iptables-test.c
+--- connman-0.75-orig//tools/iptables-test.c	2011-02-22 12:16:25.000000000 +0800
++++ connman-0.75/tools/iptables-test.c	2011-10-26 09:23:25.701164000 +0800
+@@ -1076,7 +1076,11 @@
+ 			if (xt_t->init != NULL)
+ 				xt_t->init(xt_t->t);
+ 			connman_iptables_globals.opts =
+-				xtables_merge_options(connman_iptables_globals.opts,
++				xtables_merge_options(
++#if XTABLES_VERSION_CODE > 5
++						     connman_iptables_globals.orig_opts,
++#endif
++						     connman_iptables_globals.opts,
+ 						     xt_t->extra_opts,
+ 						     &xt_t->option_offset);
+ 			if (connman_iptables_globals.opts == NULL)
+@@ -1102,7 +1106,11 @@
+ 				xt_m->init(xt_m->m);
+ 			if (xt_m != xt_m->next) {
+ 				connman_iptables_globals.opts =
+-					xtables_merge_options(connman_iptables_globals.opts,
++					xtables_merge_options(
++#if XTABLES_VERSION_CODE > 5
++						connman_iptables_globals.orig_opts,
++#endif
++						connman_iptables_globals.opts,
+ 						xt_m->extra_opts,
+ 						&xt_m->option_offset);
+ 				if (connman_iptables_globals.opts == NULL)
