@@ -3,7 +3,7 @@ DESCRIPTION = "A set of documentation tools: man, apropos and whatis"
 SECTION = "console/utils"
 HOMEPAGE = "http://primates.ximian.com/~flucifredi/man"
 LICENSE = "GPLv2"
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "groff less"
 
@@ -61,4 +61,4 @@ do_install_append(){
 }
 
 
-FILES_${PN} += "${datadir}/locale"
+FILES_${PN} += "${datadir}/locale ${sysconfdir}/man.conf"
