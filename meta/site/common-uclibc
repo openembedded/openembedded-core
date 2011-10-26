@@ -28,6 +28,9 @@ ac_cv_have_abstract_sockets=${ac_cv_have_abstract_sockets=yes}
 bash_cv_under_sys_siglist=${bash_cv_under_sys_siglist=no}
 bash_cv_sys_siglist=${bash_cv_sys_siglist=no}
 
+# coreutils
+fu_cv_sys_stat_statfs2_bsize=${fu_cv_sys_stat_statfs2_bsize=yes}
+
 # va_copy and _va_copy
 ac_cv_va_copy=${ac_cv_va_copy=yes}
 ac_cv___va_copy=${ac_cv___va_copy=yes}

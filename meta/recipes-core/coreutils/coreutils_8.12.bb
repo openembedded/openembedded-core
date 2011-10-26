@@ -28,7 +28,7 @@ bindir_progs = "base64 basename chcon cksum comm csplit cut dir dircolors dirnam
                 join link logname md5sum mkfifo mktemp nice nl nohup nproc od paste pathchk \
                 pinky pr printenv printf ptx readlink runcon seq sha1sum sha224sum sha256sum \
                 sha384sum sha512sum shred shuf sort split stat stdbuf sum tac tail tee test timeout\
-                tr truncate tsort tty unexpand uniq unlink uptime users vdir wc who whoami yes"
+                tr truncate tsort tty unexpand uniq unlink uptime users vdir wc who whoami yes df"
 
 # hostname gets a special treatment and is not included in this
 base_bindir_progs = "cat chgrp chmod chown cp date dd echo false kill ln ls mkdir \
