@@ -25,6 +25,9 @@ clamav_av_have_in_port_t=${clamav_av_have_in_port_t=yes}
 clamav_av_have_in_addr_t=${clamav_av_have_in_addr_t=yes}
 ac_cv_func_mmap_fixed_mapped=${ac_cv_func_mmap_fixed_mapped=yes}
 
+# coreutils
+fu_cv_sys_stat_statfs2_bsize=${fu_cv_sys_stat_statfs2_bsize=yes}
+
 # glib
 glib_cv_strlcpy=${glib_cv_strlcpy=no}
 ac_cv_func_printf_unix98=${ac_cv_func_printf_unix98=yes}
