@@ -18,7 +18,12 @@ DEPENDS  = "libgdbus dbus glib-2.0 hal iptables"
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
 
-inherit autotools pkgconfig update-rc.d
+USERADD_PACKAGES = "${PN}"
+USERADD_PARAM_${PN} = "--system --no-create-home \
+                       --shell /bin/false --groups video,tty,audio \
+                       --user-group xuser"
+
+inherit autotools pkgconfig update-rc.d useradd
 
 do_install_append() {
     install -d ${D}${sysconfdir}/init.d/
