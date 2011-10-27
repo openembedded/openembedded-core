@@ -21,7 +21,7 @@ SDKGCCVERSION ?= "4.6%"
 BINUVERSION ?= "2.21.1a"
 EGLIBCVERSION ?= "2.13"
 UCLIBCVERSION ?= "0.9.32"
-LINUXLIBCVERSION ?= "2.6.37.2"
+LINUXLIBCVERSION ?= "3.1"
 
 # Temporary preferred version overrides for PPC
 PREFERRED_VERSION_u-boot-mkimage-native_powerpc ?= "2009.08"
