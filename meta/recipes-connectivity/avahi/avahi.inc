@@ -14,7 +14,7 @@ SECTION = "network"
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-INC_PR = "r7"
+INC_PR = "r8"
 
 DEPENDS = "expat libcap libdaemon dbus glib-2.0"
 
@@ -23,7 +23,12 @@ SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
           file://99avahi-autoipd \
           file://initscript.patch"
 
-inherit autotools pkgconfig update-rc.d gettext
+USERADD_PACKAGES = "${PN}-daemon"
+USERADD_PARAM_${PN}-daemon = "--system --home /var/run/avahi-daemon \
+                              --no-create-home --shell /bin/false \
+                              --user-group avahi"
+
+inherit autotools pkgconfig update-rc.d gettext useradd
 
 EXTRA_OECONF = "--with-distro=debian \
              --disable-introspection \
@@ -114,15 +119,12 @@ do_install_avahi-autoipd() {
 	install ${WORKDIR}/99avahi-autoipd ${D}${sysconfdir}/udhcpc.d
 }
 
-# At the time the postinst runs, dbus might not be setup so only restart if running
+# At the time the postinst runs, dbus might not be setup so only restart if running 
 
 pkg_postinst_avahi-daemon () {
-	# can't do this offline
 	if [ "x$D" != "x" ]; then
-		exit 1
+		exit 0
 	fi
-	grep "^avahi:" /etc/group > /dev/null || addgroup avahi
-	grep "^avahi:" /etc/passwd > /dev/null || adduser --disabled-password --system --home /var/run/avahi-daemon --no-create-home avahi --ingroup avahi -g Avahi
 
 	DBUSPID=`pidof dbus-daemon`
 
