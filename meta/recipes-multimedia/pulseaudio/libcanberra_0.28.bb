@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LGPL;md5=2d5025d4aa3495befef8f17206a5b0a1 \
                     file://src/canberra.h;beginline=7;endline=24;md5=c616c687cf8da540a14f917e0d23ab03"
 
 DEPENDS = "gtk+ pulseaudio alsa-lib libtool"
-PR = "r0"
+PR = "r1"
 
 inherit gconf autotools
 
@@ -20,6 +20,13 @@ do_configure_prepend () {
 	rm -f ${S}/libltdl/configure*
 }
 
+PACKAGES += "${PN}-gnome"
+
 FILES_${PN} += "${libdir}/gtk-2.0/modules/ ${datadir}/gnome"
-FILES_${PN}-dbg += "${libdir}/gtk-2.0/modules/.debug"
+FILES_${PN}-gnome += "${datadir}/gdm/autostart/LoginWindow/libcanberra-ready-sound.desktop \
+	              ${libdir}/gnome-settings-daemon-3.0/gtk-modules/canberra-gtk-module.desktop"
+FILES_${PN}-dev += "${libdir}/libcanberra-0.28/libcanberra-*.so \
+		    ${libdir}/libcanberra-0.28/libcanberra-*.la \
+		    ${datadir}/vala/vapi"
+FILES_${PN}-dbg += "${libdir}/gtk-2.0/modules/.debug ${libdir}/libcanberra-0.28/.debug"
 
