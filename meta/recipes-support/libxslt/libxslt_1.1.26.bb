@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0cd9a07afbeb24026c9b03aecfeba458"
 
 SECTION = "libs"
 DEPENDS = "libxml2"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "ftp://xmlsoft.org/libxslt//libxslt-${PV}.tar.gz \
            file://pkgconfig_fix.patch"
@@ -24,6 +24,6 @@ RPROVIDES_${PN}-bin += "${PN}-utils"
 RCONFLICTS_${PN}-bin += "${PN}-utils"
 RREPLACES_${PN}-bin += "${PN}-utils"
 
-FILES_${PN}-dev += "${bindir}/xsltConf.sh"
+FILES_${PN}-dev += "${libdir}/xsltConf.sh"
 
 BBCLASSEXTEND = "native"
