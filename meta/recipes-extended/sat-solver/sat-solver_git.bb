@@ -1,5 +1,5 @@
 DESCRIPTION  = "Sat Solver"
-HOMEPAGE = "http://en.opensue.org/Portal:Libzypp"
+HOMEPAGE = "http://http://en.opensuse.org/openSUSE:Libzypp_satsolver"
 
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.BSD;md5=62272bd11c97396d4aaf1c41bc11f7d8"

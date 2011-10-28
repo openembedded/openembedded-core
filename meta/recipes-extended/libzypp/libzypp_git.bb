@@ -1,4 +1,4 @@
-HOMEPAGE = "http://en.opensue.org/Portal:Libzypp"
+HOMEPAGE = "http://en.opensuse.org/Portal:Libzypp"
 DESCRIPTION  = "The ZYpp Linux Software management framework"
 
 LICENSE  = "GPLv2+"
