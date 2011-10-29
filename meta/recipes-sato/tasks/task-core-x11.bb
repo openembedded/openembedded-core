@@ -30,6 +30,12 @@ ALLOW_EMPTY = "1"
 FILEMANAGER ?= "pcmanfm"
 FILEMANAGER_mips ?= ""
 
+# xserver-common, x11-common
+VIRTUAL-RUNTIME_xserver_common ?= "x11-common"
+
+# elsa, xserver-nodm-init
+VIRTUAL-RUNTIME_graphical_init_manager ?= "xserver-nodm-init"
+
 
 RDEPENDS_task-core-x11-base = "\
     dbus \
@@ -42,8 +48,8 @@ RDEPENDS_task-core-x11-base = "\
     matchbox-desktop \
     matchbox-session \
     ${XSERVER} \
-    x11-common \
-    xserver-nodm-init \
+    ${VIRTUAL-RUNTIME_xserver_common} \
+    ${VIRTUAL-RUNTIME_graphical_init_manager} \
     liberation-fonts \
     xauth \
     xhost \
