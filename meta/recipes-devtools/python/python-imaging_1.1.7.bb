@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://README;beginline=92;endline=120;md5=c4371af4579f1e489
 DEPENDS = "freetype jpeg tiff"
 RDEPENDS_${PN} = "python-lang python-stringold"
 SRCNAME = "Imaging"
-PR = "ml1"
+PR = "ml2"
 
 SRC_URI = "http://effbot.org/downloads/Imaging-${PV}.tar.gz \
            file://path.patch"

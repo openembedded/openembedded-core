@@ -10,7 +10,7 @@ SRC_URI = "http://telepathy.freedesktop.org/releases/${BPN}/${BPN}-${PV}.tar.gz 
            file://parallel_make.patch \
            file://remove_duplicate_install.patch"
 
-PR = "r3"
+PR = "r4"
 
 inherit autotools
 

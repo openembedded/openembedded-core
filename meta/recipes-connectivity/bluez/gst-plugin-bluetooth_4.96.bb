@@ -1,6 +1,8 @@
 require bluez4.inc
 require recipes-multimedia/gstreamer/gst-plugins-package.inc
 
+PR = "r1"
+
 DEPENDS = "bluez4 gst-plugins-base"
 
 EXTRA_OECONF = "\
