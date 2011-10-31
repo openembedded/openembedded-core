@@ -3,11 +3,7 @@ SECTION = "console/network"
 LICENSE = "GPL"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-DEPENDS = ""
-
 INC_PR = "r10"
-
-S = "${WORKDIR}/wget-${PV}"
 
 inherit autotools gettext update-alternatives
 
