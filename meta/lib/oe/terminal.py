@@ -57,6 +57,20 @@ class Gnome(XTerminal):
     command = 'gnome-terminal --disable-factory -t "{title}" -x {command}'
     priority = 2
 
+class Xfce(XTerminal):
+    command = 'Terminal -T "{title}" -e "{command}"'
+    priority = 2
+
+    def __init__(self, command, title=None, env=None):
+        # Upstream binary name is Terminal but Debian/Ubuntu use
+        # xfce4-terminal to avoid possible(?) conflicts
+        distro = distro_name()
+        if distro == 'ubuntu' or distro == 'debian':
+            cmd = 'xfce4-terminal -T "{title}" -e "{command}"'
+        else:
+            cmd = command
+        XTerminal.__init__(self, cmd, title, env)
+
 class Konsole(XTerminal):
     command = 'konsole -T "{title}" -e {command}'
     priority = 2
@@ -131,3 +145,12 @@ def check_konsole_version(konsole):
         if ver.startswith('Konsole'):
             vernum = ver.split(' ')[-1]
     return vernum
+
+def distro_name():
+    try:
+        p = Popen(['lsb_release', '-i'])
+        out, err = p.communicate()
+        distro = out.split(':')[1].strip().lower()
+    except:
+        distro = "unknown"
+    return distro
