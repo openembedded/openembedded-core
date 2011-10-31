@@ -5,7 +5,9 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=4535377ede62550fdeaf39f595fd550a"
 PR = "r2"
 
-RDEPENDS = "perl"
+PACKAGES =+ "${PN}-graph "
+FILES_${PN}-graph = "${bindir}/strace-graph"
+RDEPENDS_${PN}-graph = "perl"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.bz2 \
            file://sigmask.patch \
