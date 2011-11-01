@@ -48,13 +48,24 @@ def set_device(e):
     # something like stick DL_DIR on a different partition and this would
     # throw stats gathering off. The same goes with SSTATE_DIR. However, let's
     # get the basics in here and work on the cornercases later. 
+    # A note. /proc/diskstats does not contain info on encryptfs, tmpfs, etc.
+    # If we end up hitting one of these fs, we'll just skip diskstats collection.
     ############################################################################
     device=os.stat(tmpdir)
     majordev=os.major(device.st_dev)
     minordev=os.minor(device.st_dev)
+    ############################################################################
+    # Bug 1700: 
+    # Because tmpfs/encryptfs/ramfs etc inserts no entry in /proc/diskstats
+    # we set rdev to NoLogicalDevice and search for it later. If we find NLD
+    # we do not collect diskstats as the method to collect meaningful statistics
+    # for these fs types requires a bit more research. 
+    ############################################################################
     for line in open("/proc/diskstats", "r"):
         if majordev == int(line.split()[0]) and minordev == int(line.split()[1]):
            rdev=line.split()[2]
+        else:
+           rdev="NoLogicalDevice"
     file = open(bb.data.getVar('DEVFILE', e.data, True), "w")
     file.write(rdev)
     file.close()
@@ -133,10 +144,11 @@ def write_task_data(status, logfile, dev, e):
     # For the best information, running things with BB_TOTAL_THREADS = "1"
     # would return accurate per task results.
     ############################################################################
-    diskdata = get_diskdata("__diskdata_task", dev, e.data)
-    if diskdata:
-        for key in sorted(diskdata.iterkeys()):
-            file.write(key + ": " + diskdata[key] + "\n")
+    if dev != "NoLogicalDevice":
+        diskdata = get_diskdata("__diskdata_task", dev, e.data)
+        if diskdata:
+            for key in sorted(diskdata.iterkeys()):
+                file.write(key + ": " + diskdata[key] + "\n")
     if status is "passed":
 	    file.write("Status: PASSED \n")
     else:
@@ -169,7 +181,8 @@ python run_buildstats () {
             bb.mkdirhier(bsdir)
         except:
             pass
-        set_diskdata("__diskdata_build", device, e.data)
+        if device != "NoLogicalDevice":
+            set_diskdata("__diskdata_build", device, e.data)
         set_timedata("__timedata_build", e.data)
         build_time = os.path.join(bsdir, "build_stats")
         # write start of build into build_time
@@ -185,7 +198,7 @@ python run_buildstats () {
                 
     elif isinstance(e, bb.event.BuildCompleted):
         bn = get_bn(e)
-        dev = get_device(e)
+        device = get_device(e)
         bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
         taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
         build_time = os.path.join(bsdir, "build_stats")
@@ -201,10 +214,11 @@ python run_buildstats () {
             file.write("Elapsed time: %0.2f seconds \n" % (time))
             if cpu:
                 file.write("CPU usage: %0.1f%% \n" % cpu)
-        diskio = get_diskdata("__diskdata_build", dev, e.data)
-        if diskio:
-            for key in sorted(diskio.iterkeys()):
-                file.write(key + ": " + diskio[key] + "\n")
+        if device != "NoLogicalDevice":
+            diskio = get_diskdata("__diskdata_build", device, e.data)
+            if diskio:
+                for key in sorted(diskio.iterkeys()):
+                    file.write(key + ": " + diskio[key] + "\n")
         file.close()
 
     if isinstance(e, bb.build.TaskStarted):
@@ -212,7 +226,8 @@ python run_buildstats () {
         device = get_device(e)
         bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
         taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
-        set_diskdata("__diskdata_task", device, e.data)
+        if device != "NoLogicalDevice":
+            set_diskdata("__diskdata_task", device, e.data)
         set_timedata("__timedata_task", e.data)
         try:
             bb.mkdirhier(taskdir)
