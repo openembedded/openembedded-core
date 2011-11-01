@@ -10,8 +10,6 @@ DEPENDS = "expat virtual/libintl ${@base_contains('DISTRO_FEATURES', 'x11', '${X
 DEPENDS_virtclass-native = "expat-native virtual/libintl-native"
 DEPENDS_virtclass-nativesdk = "expat-nativesdk virtual/libintl-nativesdk virtual/libx11"
 
-PR = "r1"
-
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch; \
            file://dbus-1.init"
@@ -44,6 +42,7 @@ FILES_${PN} = "${bindir}/dbus-daemon* \
                ${bindir}/dbus-monitor \
                ${libexecdir}/dbus* \
                ${sysconfdir} \
+               ${localstatedir} \
                ${datadir}/dbus-1/services \
                ${datadir}/dbus-1/system-services"
 FILES_${PN}-lib = "${libdir}/lib*.so.*"
