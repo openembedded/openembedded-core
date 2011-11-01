@@ -8,7 +8,7 @@ BASE_CONF = "--disable-gtk-doc ${@get_clutter_fpu_setting(bb, d)}"
 DEPENDS = "${STDDEPENDS} virtual/libgl"
 EXTRA_OECONF = "${BASE_CONF} --with-flavour=glx"
 
-FILESPATH = "${FILE_DIRNAME}/clutter"
+FILESPATH = "${FILE_DIRNAME}/cogl"
 
 inherit autotools pkgconfig gtk-doc gettext
 
