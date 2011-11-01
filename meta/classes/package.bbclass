@@ -916,16 +916,37 @@ python populate_packages () {
 			if file in seen:
 				continue
 			seen.append(file)
+
+			def mkdir(src, dest, p):
+				src = os.path.join(src, p)
+				dest = os.path.join(dest, p)
+				bb.mkdirhier(dest)
+				fstat = os.stat(src)
+				os.chmod(dest, fstat.st_mode)
+				os.chown(dest, fstat.st_uid, fstat.st_gid)
+				if p not in seen:
+					seen.append(p)
+
+			def mkdir_recurse(src, dest, paths):
+				while paths.startswith("./"):
+					paths = paths[2:]
+				p = "."
+				for c in paths.split("/"):
+					p = os.path.join(p, c)
+					if not os.path.exists(os.path.join(dest, p)):
+						mkdir(src, dest, p)
+
 			if os.path.isdir(file) and not os.path.islink(file):
-				bb.mkdirhier(os.path.join(root,file))
-				os.chmod(os.path.join(root,file), os.stat(file).st_mode)
+				mkdir_recurse(dvar, root, file)
 				continue
 
+			mkdir_recurse(dvar, root, os.path.dirname(file))
 			fpath = os.path.join(root,file)
-			dpath = os.path.dirname(fpath)
-			bb.mkdirhier(dpath)
 			if not os.path.islink(file):
 				os.link(file, fpath)
+				fstat = os.stat(file)
+				os.chmod(fpath, fstat.st_mode)
+				os.chown(fpath, fstat.st_uid, fstat.st_gid)
 				continue
 			ret = bb.copyfile(file, fpath)
 			if ret is False or ret == 0:
@@ -939,13 +960,13 @@ python populate_packages () {
 		dir = root[len(dvar):]
 		if not dir:
 			dir = os.sep
-		for f in files:
+		for f in (files + dirs):
 			path = os.path.join(dir, f)
 			if ('.' + path) not in seen:
 				unshipped.append(path)
 
 	if unshipped != []:
-		bb.warn("For recipe %s, the following files were installed but not shipped in any package:" % pn)
+		bb.warn("For recipe %s, the following files/directories were installed but not shipped in any package:" % pn)
 		for f in unshipped:
 			bb.warn("  " + f)
 
