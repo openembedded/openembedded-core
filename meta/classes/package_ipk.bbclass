@@ -7,6 +7,9 @@ IPKGCONF_SDK =  "${WORKDIR}/opkg-sdk.conf"
 
 PKGWRITEDIRIPK = "${WORKDIR}/deploy-ipks"
 
+# Program to be used to build opkg packages
+OPKGBUILDCMD ??= "opkg-build"
+
 python package_ipk_fn () {
 	bb.data.setVar('PKGFN', bb.data.getVar('PKG',d), d)
 }
