@@ -1,0 +1,59 @@
+This is a hacky way to prevent GConf from trying to build the introspection related pieces.
+Clearly not appropriate for upstream.
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Joshua Lock <josh@linux.intel.com>
+
+Index: GConf-3.2.2/gconf/Makefile.am
+===================================================================
+--- GConf-3.2.2.orig/gconf/Makefile.am
++++ GConf-3.2.2/gconf/Makefile.am
+@@ -145,34 +145,6 @@ libgconf_2_la_LDFLAGS = -version-info $(
+ 
+ libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS) $(DEPENDENT_DBUS_LIBS) $(DEPENDENT_ORBIT_LIBS)
+ 
+--include $(INTROSPECTION_MAKEFILE)
+-INTROSPECTION_GIRS =
+-INTROSPECTION_SCANNER_ARGS = --warn-all --add-include-path=$(srcdir)
+-INTROSPECTION_COMPILER_ARGS= --includedir=$(srcdir)
+-
+-if HAVE_INTROSPECTION
+-introspection_files =				\
+-	$(gconfinclude_HEADERS)			\
+-	$(filter-out $(CORBA_SOURCECODE), $(filter %.c,$(libgconf_2_la_SOURCES)))
+-GConf-2.0.gir: libgconf-2.la Makefile
+-GConf_2_0_gir_INCLUDES = GObject-2.0
+-GConf_2_0_gir_CFLAGS = \
+-	$(INCLUDES)
+-GConf_2_0_gir_LIBS = libgconf-2.la
+-GConf_2_0_gir_FILES = $(addprefix $(srcdir)/, $(introspection_files))
+-GConf_2_0_gir_SCANNERFLAGS = --identifier-prefix=GConf --symbol-prefix=gconf --c-include "gconf/gconf.h"
+-GConf_2_0_gir_EXPORT_PACKAGES = gconf-2.0
+-INTROSPECTION_GIRS += GConf-2.0.gir
+-
+-girdir = $(datadir)/gir-1.0/
+-gir_DATA = $(INTROSPECTION_GIRS)
+-
+-typelibsdir = $(libdir)/girepository-1.0/
+-typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+-
+-CLEANFILES += $(gir_DATA) $(typelibs_DATA)
+-endif
+-
+ EXTRA_DIST=GConfX.idl default.path.in org.gnome.GConf.service.in gconfmarshal.list regenerate-enum-header.sh regenerate-enum-footer.sh
+ 
+ default.path: $(srcdir)/default.path.in
+Index: GConf-3.2.2/configure.in
+===================================================================
+--- GConf-3.2.2.orig/configure.in
++++ GConf-3.2.2/configure.in
+@@ -354,8 +354,6 @@ AM_GLIB_GNU_GETTEXT
+ 
+ AC_CHECK_FUNCS(bind_textdomain_codeset)
+ 
+-GOBJECT_INTROSPECTION_CHECK([0.9.5])
+-
+ AC_SUBST(CFLAGS)
+ AC_SUBST(CPPFLAGS)
+ AC_SUBST(LDFLAGS)
