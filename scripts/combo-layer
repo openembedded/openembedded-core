@@ -26,7 +26,7 @@ import logging
 import subprocess
 import ConfigParser
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 def logger_create():
     logger = logging.getLogger("")
@@ -146,7 +146,7 @@ def runcmd(cmd,destdir=None):
 def action_init(conf, args):
     """
         Clone component repositories
-        Check git initialised and working tree is clean
+        Check git is initialised; if not, copy initial data from component repos
     """
     for name in conf.repos:
         ldir = conf.repos[name]['local_repo_dir']
@@ -155,6 +155,24 @@ def action_init(conf, args):
             subprocess.check_call("git clone %s %s" % (conf.repos[name]['src_uri'], ldir), shell=True)
     if not os.path.exists(".git"):
         runcmd("git init")
+        for name in conf.repos:
+            ldir = conf.repos[name]['local_repo_dir']
+            logger.info("copying data from %s..." % name)
+            dest_dir = conf.repos[name]['dest_dir']
+            if dest_dir and dest_dir != ".":
+                extract_dir = os.path.join(os.getcwd(), dest_dir)
+                os.makedirs(extract_dir)
+            else:
+                extract_dir = os.getcwd()
+            file_filter = conf.repos[name].get('file_filter',"")
+            runcmd("git archive master | tar -x -C %s %s" % (extract_dir, file_filter), ldir)
+            lastrev = runcmd("git rev-parse HEAD", ldir).strip()
+            conf.update(name, "last_revision", lastrev)
+        runcmd("git add .")
+        logger.info("Initial combo layer repository data has been created; please make any changes if desired and then use 'git commit' to make the initial commit.")
+    else:
+        logger.info("Repository already initialised, nothing to do.")
+
 
 def check_repo_clean(repodir):
     """

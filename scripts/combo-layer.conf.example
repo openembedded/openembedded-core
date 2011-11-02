@@ -11,8 +11,9 @@ local_repo_dir = /home/kyu3/src/test/bitbake
 # use "." if it is root dir
 dest_dir = bitbake
 
-# the updated revision last time.
-# If empty, the tool will start from the first commit
+# the last update revision.
+# "init" will set this automatically, however if it is empty when "update"
+# is run, the tool will start from the first commit.
 last_revision =
 
 # optional options
