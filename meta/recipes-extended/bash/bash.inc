@@ -22,9 +22,12 @@ ALTERNATIVE_PATH = "${base_bindir}/bash"
 ALTERNATIVE_LINK = "${base_bindir}/sh"
 ALTERNATIVE_PRIORITY = "100"
 
-do_configure () {
-	gnu-configize
-	oe_runconf
+export AUTOHEADER = "true"
+
+do_configure_prepend () {
+	if [ ! -e acinclude.m4 ]; then
+		cat aclocal.m4 > acinclude.m4
+	fi
 }
 
 pkg_postinst_${PN} () {
