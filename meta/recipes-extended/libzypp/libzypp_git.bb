@@ -11,7 +11,7 @@ DEPENDS  = "rpm boost curl libxml2 zlib sat-solver expat openssl udev"
 S = "${WORKDIR}/git"
 SRCREV = "15b6c52260bbc52b3d8e585e271b67e10cc7c433"
 PV = "0.0-git${SRCPV}"
-PR = "r15"
+PR = "r16"
 
 SRC_URI = "git://github.com/openSUSE/libzypp.git;protocol=git \
            file://no-doc.patch \
@@ -98,10 +98,10 @@ do_archgen () {
 		esac
 		if [ "${AVOID_CONSTRUCTOR}" != "true" ]; then
 		  echo -n "  const Arch Arch_${each_arch} " | tr - _		>> zypp/oe-arch.h
-		  echo "(_${each_arch});" 					>> zypp/oe-arch.h
+		  echo "(_${each_arch});" | tr - _				>> zypp/oe-arch.h
 		else
 		  echo -n "  const Arch Arch_${each_arch} " | tr - _		>> zypp/oe-arch.h
-		  echo "( IdString ( \"${each_arch}\" ) );" 			>> zypp/oe-arch.h
+		  echo "( IdString ( \"${each_arch}\" ) );" | tr - _		>> zypp/oe-arch.h
 		fi
 	done
 	echo "#endif /* OE_PROTO */"						>> zypp/oe-arch.h
@@ -142,7 +142,7 @@ do_archgen () {
 		COMPAT_WITH="${CARCH},${COMPAT} $COMPAT_WITH"
 	done
 	for each_compat in ${COMPAT_WITH} ; do
-		echo "        defCompatibleWith( ${each_compat} );"		>> zypp/oe-arch.h
+		echo "        defCompatibleWith( ${each_compat} );" | tr - _	>> zypp/oe-arch.h
 	done
 	echo "#endif /* DEF_COMPAT */"						>> zypp/oe-arch.h
 	echo ""									>> zypp/oe-arch.h
