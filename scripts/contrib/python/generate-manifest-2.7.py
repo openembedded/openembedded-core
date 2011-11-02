@@ -17,7 +17,7 @@ import time
 VERSION = "2.7.2"
 
 __author__ = "Michael 'Mickey' Lauer <mlauer@vanille-media.de>"
-__version__ = "20110222.1"
+__version__ = "20110222.2"
 
 class MakefileMaker:
 
@@ -166,28 +166,41 @@ if __name__ == "__main__":
     "lib-dynload/binascii.so lib-dynload/_struct.so lib-dynload/time.so " +
     "lib-dynload/xreadlines.so types.* platform.* ${bindir}/python* "  + 
     "_weakrefset.* sysconfig.* config/Makefile " +
-    "${includedir}/python${PYTHON_MAJMIN}/pyconfig.h " )
+    "${includedir}/python${PYTHON_MAJMIN}/pyconfig.h " +
+    "${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py ")
 
     m.addPackage( "${PN}-dev", "Python Development Package", "${PN}-core",
-    "${includedir} ${libdir}/libpython2.6.so" ) # package
+    "${includedir} " +
+    "${libdir}/lib*${SOLIBSDEV} " +
+    "${libdir}/*.la " +
+    "${libdir}/*.a " +
+    "${libdir}/*.o " +
+    "${libdir}/pkgconfig " +
+    "${base_libdir}/*.a " +
+    "${base_libdir}/*.o " +
+    "${datadir}/aclocal " +
+    "${datadir}/pkgconfig " )
+
+    m.addPackage( "${PN}-2to3", "Python Automated Python 2 to 3 code translation", "${PN}-core",
+    "${bindir}/2to3 lib2to3" ) # package
 
     m.addPackage( "${PN}-idle", "Python Integrated Development Environment", "${PN}-core ${PN}-tkinter",
     "${bindir}/idle idlelib" ) # package
 
     m.addPackage( "${PN}-pydoc", "Python Interactive Help Support", "${PN}-core ${PN}-lang ${PN}-stringold ${PN}-re",
-    "${bindir}/pydoc pydoc.*" )
+    "${bindir}/pydoc pydoc.* pydoc_data" )
 
     m.addPackage( "${PN}-smtpd", "Python Simple Mail Transport Daemon", "${PN}-core ${PN}-netserver ${PN}-email ${PN}-mime",
-    "${bindir}/smtpd.*" )
+    "${bindir}/smtpd.* smtpd.*" )
 
     m.addPackage( "${PN}-audio", "Python Audio Handling", "${PN}-core",
-    "wave.* chunk.* sndhdr.* lib-dynload/ossaudiodev.so lib-dynload/audioop.so" )
+    "wave.* chunk.* sndhdr.* lib-dynload/ossaudiodev.so lib-dynload/audioop.so audiodev.* sunaudio.* sunau.* toaiff.*" )
 
     m.addPackage( "${PN}-bsddb", "Python Berkeley Database Bindings", "${PN}-core",
     "bsddb lib-dynload/_bsddb.so" ) # package
 
     m.addPackage( "${PN}-codecs", "Python Codecs, Encodings & i18n Support", "${PN}-core ${PN}-lang",
-    "codecs.* encodings gettext.* locale.* lib-dynload/_locale.so lib-dynload/unicodedata.so stringprep.* xdrlib.*" )
+    "codecs.* encodings gettext.* locale.* lib-dynload/_locale.so lib-dynload/_codecs* lib-dynload/_multibytecodec.so lib-dynload/unicodedata.so stringprep.* xdrlib.*" )
 
     m.addPackage( "${PN}-compile", "Python Bytecode Compilation Support", "${PN}-core",
     "py_compile.* compileall.*" )
@@ -208,7 +221,7 @@ if __name__ == "__main__":
     "curses lib-dynload/_curses.so lib-dynload/_curses_panel.so" ) # directory + low level module
 
     m.addPackage( "${PN}-ctypes", "Python C Types Support", "${PN}-core",
-    "ctypes lib-dynload/_ctypes.so" ) # directory + low level module
+    "ctypes lib-dynload/_ctypes.so lib-dynload/_ctypes_test.so" ) # directory + low level module
 
     m.addPackage( "${PN}-datetime", "Python Calendar and Time support", "${PN}-core ${PN}-codecs",
     "_strptime.* calendar.* lib-dynload/datetime.so" )
@@ -242,7 +255,7 @@ if __name__ == "__main__":
     "hotshot lib-dynload/_hotshot.so" )
 
     m.addPackage( "${PN}-html", "Python HTML Processing", "${PN}-core",
-    "formatter.* htmlentitydefs.* htmllib.* markupbase.* sgmllib.* " )
+    "formatter.* htmlentitydefs.* htmllib.* markupbase.* sgmllib.* HTMLParser.* " )
 
     m.addPackage( "${PN}-gdbm", "Python GNU Database Support", "${PN}-core",
     "lib-dynload/gdbm.so" )
@@ -251,11 +264,11 @@ if __name__ == "__main__":
     "colorsys.* imghdr.* lib-dynload/imageop.so lib-dynload/rgbimg.so" )
 
     m.addPackage( "${PN}-io", "Python Low-Level I/O", "${PN}-core ${PN}-math",
-    "lib-dynload/_socket.so lib-dynload/_ssl.so lib-dynload/select.so lib-dynload/termios.so lib-dynload/cStringIO.so " +
-    "pipes.* socket.* ssl.* tempfile.* StringIO.* " )
+    "lib-dynload/_socket.so lib-dynload/_io.so lib-dynload/_ssl.so lib-dynload/select.so lib-dynload/termios.so lib-dynload/cStringIO.so " +
+    "pipes.* socket.* ssl.* tempfile.* StringIO.* io.* _pyio.*" )
 
     m.addPackage( "${PN}-json", "Python JSON Support", "${PN}-core ${PN}-math ${PN}-re",
-    "json" ) # package
+    "json lib-dynload/_json.so" ) # package
 
     m.addPackage( "${PN}-lang", "Python Low-Level Language Support", "${PN}-core",
     "lib-dynload/_bisect.so lib-dynload/_collections.so lib-dynload/_heapq.so lib-dynload/_weakref.so lib-dynload/_functools.so " +
@@ -273,7 +286,7 @@ if __name__ == "__main__":
     "lib-dynload/cmath.so lib-dynload/math.so lib-dynload/_random.so random.* sets.*" )
 
     m.addPackage( "${PN}-mime", "Python MIME Handling APIs", "${PN}-core ${PN}-io",
-    "mimetools.* uu.* quopri.* rfc822.*" )
+    "mimetools.* uu.* quopri.* rfc822.* MimeWriter.*" )
 
     m.addPackage( "${PN}-mmap", "Python Memory-Mapped-File Support", "${PN}-core ${PN}-io",
     "lib-dynload/mmap.so " )
@@ -292,7 +305,7 @@ if __name__ == "__main__":
     "decimal.* numbers.*" )
 
     m.addPackage( "${PN}-pickle", "Python Persistence Support", "${PN}-core ${PN}-codecs ${PN}-io ${PN}-re",
-    "pickle.* shelve.* lib-dynload/cPickle.so" )
+    "pickle.* shelve.* lib-dynload/cPickle.so pickletools.*" )
 
     m.addPackage( "${PN}-pkgutil", "Python Package Extension Utility Support", "${PN}-core",
     "pkgutil.*")
@@ -328,7 +341,7 @@ if __name__ == "__main__":
     "sqlite3/test" )
 
     m.addPackage( "${PN}-stringold", "Python String APIs [deprecated]", "${PN}-core ${PN}-re",
-    "lib-dynload/strop.so string.*" )
+    "lib-dynload/strop.so string.* stringold.*" )
 
     m.addPackage( "${PN}-syslog", "Python Syslog Interface", "${PN}-core",
     "lib-dynload/syslog.so" )
@@ -346,7 +359,7 @@ if __name__ == "__main__":
     "lib-dynload/_tkinter.so lib-tk" ) # package
 
     m.addPackage( "${PN}-unittest", "Python Unit Testing Framework", "${PN}-core ${PN}-stringold ${PN}-lang",
-    "unittest.*" )
+    "unittest/" )
 
     m.addPackage( "${PN}-unixadmin", "Python Unix Administration Support", "${PN}-core",
     "lib-dynload/nis.so lib-dynload/grp.so lib-dynload/pwd.so getpass.*" )
@@ -355,7 +368,7 @@ if __name__ == "__main__":
     "lib-dynload/pyexpat.so xml xmllib.*" ) # package
 
     m.addPackage( "${PN}-xmlrpc", "Python XMLRPC Support", "${PN}-core ${PN}-xml ${PN}-netserver ${PN}-lang",
-    "xmlrpclib.* SimpleXMLRPCServer.*" )
+    "xmlrpclib.* SimpleXMLRPCServer.* DocXMLRPCServer.*" )
 
     m.addPackage( "${PN}-zlib", "Python zlib Support.", "${PN}-core",
     "lib-dynload/zlib.so" )

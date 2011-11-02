@@ -1,7 +1,7 @@
 require python.inc
 DEPENDS = "python-native db gdbm openssl readline sqlite3 zlib"
 DEPENDS_sharprom = "python-native db readline zlib gdbm openssl"
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
 DISTRO_SRC_URI_linuxstdbase = ""
@@ -107,29 +107,9 @@ RPROVIDES_${PN}-core = "${PN}"
 RRECOMMENDS_${PN}-core = "${PN}-readline"
 RRECOMMENDS_${PN}-crypt = "openssl"
 
-# add sitecustomize
-FILES_${PN}-core += "${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py"
-# ship 2to3
-FILES_${PN}-core += "${bindir}/2to3"
-
 # package libpython2
 PACKAGES =+ "lib${BPN}2"
 FILES_lib${BPN}2 = "${libdir}/libpython*.so.*"
-
-# additional stuff -dev
-
-FILES_${PN}-dev = "\
-  ${includedir} \
-  ${libdir}/lib*${SOLIBSDEV} \
-  ${libdir}/*.la \
-  ${libdir}/*.a \
-  ${libdir}/*.o \
-  ${libdir}/pkgconfig \
-  ${base_libdir}/*.a \
-  ${base_libdir}/*.o \
-  ${datadir}/aclocal \
-  ${datadir}/pkgconfig \
-"
 
 # catch debug extensions (isn't that already in python-core-dbg?)
 FILES_${PN}-dbg += "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/.debug"
