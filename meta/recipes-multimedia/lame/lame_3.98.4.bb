@@ -10,6 +10,9 @@ PR = "r0"
 SRC_URI = "${SOURCEFORGE_MIRROR}/lame/lame-${PV}.tar.gz \
            file://no-gtk1.patch"
 
+SRC_URI[md5sum] = "8e9866ad6b570c6c95c8cba48060473f"
+SRC_URI[sha256sum] = "ac3144c76617223a9be4aaa3e28a66b51bcab28141050c3af04cb06836f772c8"
+
 inherit autotools
 
 PACKAGES += "libmp3lame libmp3lame-dev"
