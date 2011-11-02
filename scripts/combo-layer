@@ -42,52 +42,7 @@ class Configuration(object):
     """
     Manages the configuration
 
-    A valid conf looks like:
-
-# component name
-[bitbake]
-
-# mandatory options
-
-# git upstream uri
-src_uri = git://git.openembedded.org/bitbake
-
-# the directory to clone the component repo
-local_repo_dir = ~/src/bitbake
-
-# the relative dir to commit the repo patch
-# use "." if it is root dir
-dest_dir = bitbake
-
-# the updated revision last time.
-# leave it empty if no commit updated yet, and then the tool
-# will start from the first commit
-last_revision =
-
-# optional options
-
-# file_filter: only include the interested file
-# file_filter = [path] [path] ...
-# example:
-#   file_filter = src/  : only include the subdir src
-#   file_filter = src/*.c : only include the src *.c file
-#   file_filter = src/main.c src/Makefile.am : only include these two files
-
-[oe-core]
-src_uri = git://git.openembedded.org/openembedded-core
-local_repo_dir = ~/src/oecore
-dest_dir = .
-last_revision =
-
-# it's also possible to embed python code in the config values. Similar
-# to bitbake it considers every value starting with @ to be a python script. 
-# So local_repo could be easily configured using an environment variable as:
-#
-# [bitbake]
-# local_repo = @os.getenv("LOCAL_REPO_DIR") + "/bitbake"
-#
-
-# more components ...
+    For an example config file, see combo-layer.conf.example
 
     """
     def __init__(self, options):

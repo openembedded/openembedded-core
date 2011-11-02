@@ -1,3 +1,5 @@
+# combo-layer example configuration file
+
 # component name
 [bitbake]
 # mandatory options
@@ -7,8 +9,8 @@ src_uri = git://git.openembedded.org/bitbake
 # the directory to clone the component repo
 local_repo_dir = /home/kyu3/src/test/bitbake
 
-# the relative dir to commit the repo patch
-# use "." if it is root dir
+# the relative dir within the combo repo to put the component files
+# use "." if the files should be in the root dir
 dest_dir = bitbake
 
 # the last update revision.
@@ -25,9 +27,10 @@ last_revision =
 #   file_filter = src/*.c : only include the src *.c file
 #   file_filter = src/main.c src/Makefile.am : only include these two files
 
-# hook: if provided, the tool will call the hook to process the generated patch from upstream,
-#       and then apply the modified patch to combo repo
-# the hook's parameter is: ./hook patchpath revision reponame
+# hook: if provided, the tool will call the hook to process the generated
+#     patch from upstream, and then apply the modified patch to the combo
+#     repo.
+# the hook script is called as follows: ./hook patchpath revision reponame
 # example:
 #     hook = combo-layer-hook-default.sh
 
@@ -36,3 +39,13 @@ src_uri = git://git.openembedded.org/openembedded-core
 local_repo_dir = /home/kyu3/src/test/oecore
 dest_dir = .
 last_revision =
+
+# It is also possible to embed python code in the config values. Similar
+# to bitbake it considers every value starting with @ to be a python
+# script.
+# e.g. local_repo_dir could easily be configured using an environment
+# variable:
+#
+# [bitbake]
+# local_repo_dir = @os.getenv("LOCAL_REPO_DIR") + "/bitbake"
+#
