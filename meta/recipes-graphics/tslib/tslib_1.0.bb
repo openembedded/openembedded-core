@@ -10,10 +10,11 @@ SECTION = "base"
 LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=f30a9716ef3762e3467a2f62bf790f0a"
 
-PR = "r18"
+PR = "r19"
 
 SRC_URI = "http://download.berlios.de/tslib/tslib-${PV}.tar.bz2 \
            file://fix_version.patch \
+           file://0001-Link-plugins-against-libts.patch \
            file://ts.conf \
            file://tslib.sh"
 
