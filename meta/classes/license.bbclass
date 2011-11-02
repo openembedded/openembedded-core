@@ -44,7 +44,7 @@ SPDXLICENSEMAP[MPLv1.1] = "MPL-1"
 SPDXLICENSEMAP[MIT-X] = "MIT"
 
 #Openssl variations
-SPDXLICENSEMAP[openssl] = "Openssl"
+SPDXLICENSEMAP[openssl] = "OpenSSL"
 
 #Other variations
 SPDXLICENSEMAP[AFL2.1] = "AFL-2"
