@@ -138,12 +138,8 @@ def check_repo_clean(repodir):
         check if the repo is clean
         exit if repo is dirty
     """
-    try:
-        runcmd("git diff --quiet", repodir)
-        #TODO: also check the index using "git diff --cached"
-        #      but this will fail in just initialized git repo
-        #      so need figure out a way
-    except:
+    output=runcmd("git status --porcelain", repodir)
+    if output:
         logger.error("git repo %s is dirty, please fix it first", repodir)
         sys.exit(1)
 
