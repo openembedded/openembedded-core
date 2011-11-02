@@ -108,19 +108,23 @@ def action_init(conf, args):
         if not os.path.exists(ldir):
             logger.info("cloning %s to %s" %(conf.repos[name]['src_uri'], ldir))
             subprocess.check_call("git clone %s %s" % (conf.repos[name]['src_uri'], ldir), shell=True)
+        branch = conf.repos[name].get('branch', "master")
+        runcmd("git checkout %s" % branch, ldir)
     if not os.path.exists(".git"):
         runcmd("git init")
         for name in conf.repos:
-            ldir = conf.repos[name]['local_repo_dir']
+            repo = conf.repos[name]
+            ldir = repo['local_repo_dir']
             logger.info("copying data from %s..." % name)
-            dest_dir = conf.repos[name]['dest_dir']
+            dest_dir = repo['dest_dir']
             if dest_dir and dest_dir != ".":
                 extract_dir = os.path.join(os.getcwd(), dest_dir)
                 os.makedirs(extract_dir)
             else:
                 extract_dir = os.getcwd()
-            file_filter = conf.repos[name].get('file_filter',"")
-            runcmd("git archive master | tar -x -C %s %s" % (extract_dir, file_filter), ldir)
+            branch = repo.get('branch', "master")
+            file_filter = repo.get('file_filter', "")
+            runcmd("git archive %s | tar -x -C %s %s" % (branch, extract_dir, file_filter), ldir)
             lastrev = runcmd("git rev-parse HEAD", ldir).strip()
             conf.update(name, "last_revision", lastrev)
         runcmd("git add .")
@@ -162,9 +166,11 @@ def action_update(conf, args):
         repo = conf.repos[name]
         ldir = repo['local_repo_dir']
         dest_dir = repo['dest_dir']
+        branch = repo.get('branch', "master")
         repo_patch_dir = os.path.join(os.getcwd(), patch_dir, name)
 
         # Step 1: update the component repo
+        runcmd("git checkout %s" % branch, ldir)
         logger.info("git pull for component repo %s in %s ..." % (name, ldir))
         output=runcmd("git pull", ldir)
         logger.info(output)
@@ -177,11 +183,11 @@ def action_update(conf, args):
             prefix = ""
         if repo['last_revision'] == "":
             logger.info("Warning: last_revision of component %s is not set, so start from the first commit" % name)
-            patch_cmd_range = "--root master"
-            rev_cmd_range = "master"
+            patch_cmd_range = "--root %s" % branch
+            rev_cmd_range = branch
         else:
-            patch_cmd_range = "%s..master" % repo['last_revision']
-            rev_cmd_range = "%s..master" % repo['last_revision']
+            patch_cmd_range = "%s..%s" % (repo['last_revision'], branch)
+            rev_cmd_range = patch_cmd_range
 
         file_filter = repo.get('file_filter',"")
 
