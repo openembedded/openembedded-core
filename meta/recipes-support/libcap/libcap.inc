@@ -21,9 +21,18 @@ do_configure() {
 	sed -e 's,BUILD_CFLAGS ?=,BUILD_CFLAGS := $(BUILD_CFLAGS),' -i Make.Rules
 }
 
-EXTRA_OEMAKE = "LIBATTR=yes PAM_CAP=${@base_contains('DISTRO_FEATURES', 'pam', 'yes', 'no', d)} INDENT= SYSTEM_HEADERS=${STAGING_INCDIR} RAISE_SETFCAP=no"
-EXTRA_OEMAKE_virtclass-native = "LIBATTR=no PAM_CAP=no INDENT= "
-EXTRA_OEMAKE += " lib=${@os.path.basename('${libdir}')}"
+EXTRA_OEMAKE = " \
+  LIBATTR=yes \
+  PAM_CAP=${@base_contains('DISTRO_FEATURES', 'pam', 'yes', 'no', d)} \
+  INDENT= SYSTEM_HEADERS=${STAGING_INCDIR} RAISE_SETFCAP=no \
+  lib=${@os.path.basename('${libdir}')} \
+"
+EXTRA_OEMAKE_virtclass-native = " \
+  LIBATTR=no \
+  PAM_CAP=no \
+  INDENT= \
+  lib=${@os.path.basename('${libdir}')} \
+"
 
 do_compile() {
 	oe_runmake
