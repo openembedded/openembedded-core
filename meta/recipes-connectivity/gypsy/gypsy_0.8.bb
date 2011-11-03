@@ -16,11 +16,11 @@ DEPENDS = "glib-2.0 dbus bluez4 dbus-glib libxslt"
 SRC_URI = "http://gypsy.freedesktop.org/releases/gypsy-${PV}.tar.gz \
            file://fix-unused-but-set-variable-warning.patch \
           "
-PR = "r1"
+PR = "r2"
 
 inherit autotools pkgconfig
 
-FILES_${PN} += "/usr/share/dbus-1/services/"
+FILES_${PN} += "/usr/share/dbus-1/system-services/"
 
 SRC_URI[md5sum] = "32b8db24db86d2dac87b391dd255f4bf"
 SRC_URI[sha256sum] = "1986a58189614a950725c3bc7d05faa3b84695f35cb696326f340ef87fc3acaa"
