@@ -4,11 +4,13 @@ libnl has progressed to 0.3.2 and there does not appear to be any
 "make -j" issues with this build after my limited testing on that
 newer version so we can assume this issue is fixed upstream
 
+Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+
 Index: libnl-2.0/lib/Makefile.am
 ===================================================================
 --- libnl-2.0.orig/lib/Makefile.am
 +++ libnl-2.0/lib/Makefile.am
-@@ -27,11 +27,15 @@ CLEANFILES = \
+@@ -27,11 +27,16 @@ CLEANFILES = \
  	route/pktloc_grammar.c route/pktloc_grammar.h \
  	route/pktloc_syntax.c route/pktloc_syntax.h
  
@@ -16,6 +18,7 @@ Index: libnl-2.0/lib/Makefile.am
 +
  # Hack to avoid using ylwrap. It does not function correctly in combination
  # with --header-file=
++route/pktloc.lo: route/pktloc_syntax.h route/pktloc_grammar.h
 +route/pktloc_grammar.h: route/pktloc_grammar.c
  route/pktloc_grammar.c: route/pktloc_grammar.l
  	$(LEX) --header-file=route/pktloc_grammar.h $(LFLAGS) -o $@ $^
