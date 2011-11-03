@@ -168,20 +168,16 @@ USER_CLASSES ?= "image-mklibs image-prelink"
 # Under certain circumstances the system may need input from you and to do this it 
 # can launch an interactive shell. It needs to do this since the build is 
 # multithreaded and needs to be able to handle the case where more than one parallel
-# process may require the user's attention. The default is to use xterm.
+# process may require the user's attention. The default is iterate over the available
+# terminal types to find one that works.
 #
 # Examples of the occasions this may happen are when resolving patches which cannot
 # be applied, to use the devshell or the kernel menuconfig
 #
-# If you do not use (or have installed) xterm you will need to
-# uncomment these variables and set them to the terminal you wish to use
-# 
-# Supported shell prefixes for *_TERMCMD and *_TERMCMDRUN are:
-# GNOME, SCREEN, XTERM and KONSOLE
+# Supported values are auto, gnome, xfce, rxvt, xcreen, konsole (3.x only), none
 # Note: currently, Konsole support only works for KDE 3.x due to the way
 # newer Konsole versions behave
-#TERMCMD = "${XTERM_TERMCMD}"
-#TERMCMDRUN = "${XTERM_TERMCMDRUN}"
+#OE_TERMINAL = "auto"
 # By default disable interactive patch resolution (tasks will just fail instead):
 PATCHRESOLVE = "noop"
 
