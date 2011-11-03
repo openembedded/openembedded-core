@@ -19,4 +19,8 @@ SRC_URI[sha256sum] = "5a40dc903d3ca1074da7424b908bec8ff16936484798c7e46e53e9db8b
 
 inherit autotools pkgconfig
 
-LEAD_SONAME = "libnl.so"
+PACKAGES =+ "${PN}-route ${PN}-nf ${PN}-genl ${PN}-cli"
+FILES_${PN}-route = "${libdir}/libnl-route.so.*"
+FILES_${PN}-nf    = "${libdir}/libnl-nf.so.*"
+FILES_${PN}-genl  = "${libdir}/libnl-genl.so.*"
+FILES_${PN}-cli   = "${libdir}/libnl-cli.so.*"
