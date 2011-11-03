@@ -311,7 +311,7 @@ class QuiltTree(PatchSet):
             self._runcmd(args)
 
 class Resolver(object):
-    def __init__(self, patchset):
+    def __init__(self, patchset, terminal):
         raise NotImplementedError()
 
     def Resolve(self):
@@ -324,8 +324,9 @@ class Resolver(object):
         raise NotImplementedError()
 
 class NOOPResolver(Resolver):
-    def __init__(self, patchset):
+    def __init__(self, patchset, terminal):
         self.patchset = patchset
+        self.terminal = terminal
 
     def Resolve(self):
         olddir = os.path.abspath(os.curdir)
@@ -341,13 +342,13 @@ class NOOPResolver(Resolver):
 # resolution, with the exception of refreshing the remote copy of the patch
 # files (the urls).
 class UserResolver(Resolver):
-    def __init__(self, patchset):
+    def __init__(self, patchset, terminal):
         self.patchset = patchset
+        self.terminal = terminal
 
     # Force a push in the patchset, then drop to a shell for the user to
     # resolve any rejected hunks
     def Resolve(self):
-
         olddir = os.path.abspath(os.curdir)
         os.chdir(self.patchset.dir)
         try:
@@ -368,16 +369,10 @@ class UserResolver(Resolver):
             f.write("echo 'Run \"quilt refresh\" when patch is corrected, press CTRL+D to exit.'\n")
             f.write("echo ''\n")
             f.write(" ".join(patchcmd) + "\n")
-            f.write("#" + bb.data.getVar('TERMCMDRUN', self.patchset.d, 1))
             f.close()
             os.chmod(rcfile, 0775)
 
-            os.environ['TERMWINDOWTITLE'] = "Bitbake: Please fix patch rejects manually"
-            os.environ['SHELLCMDS'] = "bash --rcfile " + rcfile
-            rc = os.system(bb.data.getVar('TERMCMDRUN', self.patchset.d, 1))
-            if os.WIFEXITED(rc) and os.WEXITSTATUS(rc) != 0:
-                bb.msg.fatal("Build", ("Cannot proceed with manual patch resolution - '%s' not found. " \
-                    + "Check TERMCMDRUN variable.") % bb.data.getVar('TERMCMDRUN', self.patchset.d, 1))
+            self.terminal("bash --rcfile " + rcfile, 'Patch Rejects: Please fix patch rejects manually', self.patchset.d)
 
             # Construct a new PatchSet after the user's changes, compare the
             # sets, checking patches for modifications, and doing a remote

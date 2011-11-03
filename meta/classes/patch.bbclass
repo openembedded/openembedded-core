@@ -5,6 +5,8 @@ QUILTRCFILE ?= "${STAGING_BINDIR_NATIVE}/quiltrc"
 
 PATCHDEPENDENCY = "${PATCHTOOL}-native:do_populate_sysroot"
 
+inherit terminal
+
 python patch_do_patch() {
 	import oe.patch
 
@@ -124,7 +126,7 @@ python patch_do_patch() {
 
 		if not patchdir in classes:
 			patchset = cls(patchdir, d)
-			resolver = rcls(patchset)
+			resolver = rcls(patchset, oe_terminal)
 			classes[patchdir] = (patchset, resolver)
 			patchset.Clean()
 		else:
