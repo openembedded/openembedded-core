@@ -7,10 +7,11 @@ DEPENDS = "flex-native bison-native"
 inherit autotools
 
 SRC_URI = "git://www.jdl.com/software/dtc.git;protocol=git \
+           file://make_install.patch \
 	  "
 
 EXTRA_OEMAKE='PREFIX="${prefix}"'
-INC_PR = "r1"
+INC_PR = "r2"
 
 S = "${WORKDIR}/git"
 
