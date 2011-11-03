@@ -11,6 +11,7 @@ PR = "r3"
 SRC_URI = "\
   http://www.infradead.org/~tgr/${BPN}/files/${BP}.tar.gz \
   file://fix-pktloc_syntax_h-race.patch \
+  file://fix-pc-file.patch \
 "
 
 SRC_URI[md5sum] = "6aaf1e9802a17a7d702bb0638044ffa7"
