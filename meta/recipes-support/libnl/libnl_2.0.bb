@@ -6,7 +6,8 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2b41e13261a330ee784153ecbb6a82bc"
 
 DEPENDS = "flex-native bison-native"
-PR = "r3"
+PE = "1"
+PR = "r6"
 
 SRC_URI = "\
   http://www.infradead.org/~tgr/${BPN}/files/${BP}.tar.gz \
