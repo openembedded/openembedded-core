@@ -71,7 +71,7 @@ class Configuration(object):
                 if option not in self.repos[name]:
                     msg = "%s\nOption %s is not defined for component %s" %(msg, option, name)
         if msg != "":
-            logger.error("configuration file %s has the following error:%s" % (self.conffile,msg))
+            logger.error("configuration file %s has the following error: %s" % (self.conffile,msg))
             sys.exit(1)
 
         # filterdiff is required by action_splitpatch, so check its availability
@@ -145,7 +145,7 @@ def check_repo_clean(repodir):
 
 def action_update(conf, args):
     """
-        update the component repo
+        update the component repos
         generate the patch list
         apply the generated patches
     """
@@ -178,7 +178,7 @@ def action_update(conf, args):
         else:
             prefix = ""
         if repo['last_revision'] == "":
-            logger.info("Warning: last_revision of component %s is not set, so start from the first commit" % name)
+            logger.info("Warning: last_revision of component %s is not set, starting from the first commit" % name)
             patch_cmd_range = "--root %s" % branch
             rev_cmd_range = branch
         else:
@@ -218,12 +218,12 @@ def action_update(conf, args):
     if conf.interactive:
         print   'Edit the patch and patch list in %s\n' \
                 'For example, remove the unwanted patch entry from patchlist-*, so that it will be not applied later\n' \
-                'After finish, press following command to continue\n' \
+                'When you are finished, run the following to continue:\n' \
                 '       exit 0  -- exit and continue to apply the patch\n' \
-                '       exit 1  -- abort and not apply patch\n' % patch_dir
+                '       exit 1  -- abort and do not apply the patch\n' % patch_dir
         ret = subprocess.call(["bash"], cwd=patch_dir)
         if ret != 0:
-            print "Abort without applying patch"
+            print "Aborting without applying the patch"
             sys.exit(0)
 
     # Step 6: apply the generated and revised patch
@@ -257,11 +257,11 @@ def action_apply_patch(conf, args):
             try:
                 runcmd(cmd)
             except subprocess.CalledProcessError:
-                logger.info('"git am --abort" is executed to cleanup repo')
+                logger.info('running "git am --abort" to cleanup repo')
                 runcmd("git am --abort")
                 logger.error('"%s" failed' % cmd)
                 logger.info("please manually apply patch %s" % patchfile)
-                logger.info("After applying, run this tool again to apply the rest patches")
+                logger.info("After applying, run this tool again to apply the remaining patches")
                 conf.update(name, "last_revision", lastrev)
                 sys.exit(0)
         conf.update(name, "last_revision", lastrev)
