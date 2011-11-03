@@ -1,5 +1,5 @@
 require connman.inc
-PR = "r3"
+PR = "r4"
 
 EXTRA_OECONF += "\
   ac_cv_path_WPASUPPLICANT=/usr/sbin/wpa_supplicant \
