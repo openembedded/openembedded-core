@@ -23,8 +23,11 @@ do_install () {
     rm ${D}/share -rf || true
 }
 
-FILES_${PN} += "/usr/lib/tc/*"
-FILES_${PN}-dbg += "/usr/lib/tc/.debug"
+# There are only .so files in iproute2
+INSANE_SKIP_${PN} = "dev-so"
+
+FILES_${PN} += "${base_libdir}/tc/*"
+FILES_${PN}-dbg += "${base_libdir}/tc/.debug"
 
 ALTERNATIVE_NAME = "ip"
 ALTERNATIVE_PATH = "${base_sbindir}/ip.iproute2"
