@@ -77,6 +77,12 @@ fakeroot rootfs_ipk_do_rootfs () {
 	${ROOTFS_POSTINSTALL_COMMAND}
 	
 	runtime_script_required=0
+
+	# Base-passwd needs to run first to install /etc/passwd and friends
+	if [ -e ${IMAGE_ROOTFS}${opkglibdir}/info/base-passwd.preinst ] ; then
+		sh ${IMAGE_ROOTFS}${opkglibdir}/info/base-passwd.preinst
+	fi
+
 	for i in ${IMAGE_ROOTFS}${opkglibdir}/info/*.preinst; do
 		if [ -f $i ] && ! sh $i; then
 		     	runtime_script_required=1
