@@ -30,6 +30,9 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/connman ${D}${sysconfdir}/init.d/connman
 }
 
+PACKAGES += "${PN}-scripts"
+RDEPENDS_${PN}-scripts += "python"
+
 PACKAGES_DYNAMIC = "${PN}-plugin-*"
 FILES_${PN} = "${bindir}/* ${sbindir}/* ${libexecdir}/* ${libdir}/lib*.so.* \
             ${sysconfdir} ${sharedstatedir} ${localstatedir} \
@@ -37,13 +40,14 @@ FILES_${PN} = "${bindir}/* ${sbindir}/* ${libexecdir}/* ${libdir}/lib*.so.* \
             ${datadir}/pixmaps ${datadir}/applications \
             ${datadir}/idl ${datadir}/omf ${datadir}/sounds \
             ${libdir}/bonobo/servers \
-            ${libdir}/${PN}/test/* \
             ${datadir}/dbus-1/system-services/* \
             ${libdir}/connman/scripts/dhclient*"
 FILES_${PN}-dbg += "${libdir}/connman/plugins/.debug \
                     ${libdir}/connman/scripts/.debug"
 
 FILES_${PN}-dev += "${libdir}/connman/plugins/*.la"
+
+FILES_${PN}-scripts += "${libdir}/${PN}/test/*"
 
 python populate_packages_prepend() {
 	prefix = (d.getVar("MLPREFIX", True) or "")
