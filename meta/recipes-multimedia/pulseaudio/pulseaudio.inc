@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://GPL;md5=4325afd396febcb659c36b49533135d4 \
                     file://LGPL;md5=2d5025d4aa3495befef8f17206a5b0a1 \
                     file://src/modules/bluetooth/proximity-helper.c;beginline=1;endline=25;md5=e4cc710e40a4d900c2c294167bc58270 \
                     file://src/pulsecore/vector.h;beginline=1;endline=21;md5=1b561f0a2ca47b1fa49862a6ccaacff1"
-DEPENDS = "libatomics-ops liboil avahi libsamplerate0 libsndfile1 libtool virtual/libx11"
+DEPENDS = "libatomics-ops liboil avahi libsamplerate0 libsndfile1 libtool ${@base_contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 gtk+', '', d)}"
 # optional
 DEPENDS += "udev alsa-lib glib-2.0 dbus consolekit \
            ${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluez4', '', d)}"
@@ -22,7 +22,7 @@ EXTRA_OECONF = "\
 		--disable-lynx \
 		${@base_contains('DISTRO_FEATURES', 'bluetooth', '--enable-bluez', '--disable-bluez', d)} \
 		--disable-polkit \
-		--with-x \
+		${@base_contains('DISTRO_FEATURES', 'x11', '--with-x', '--without-x', d)} \
 		--without-jack \
 		--with-glib \
 		--with-alsa \
