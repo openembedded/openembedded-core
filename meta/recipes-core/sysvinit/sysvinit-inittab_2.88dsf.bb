@@ -25,6 +25,16 @@ do_install() {
     if [ ! -z "${SERIAL_CONSOLE}" ]; then
         echo "S:2345:respawn:${base_sbindir}/getty ${SERIAL_CONSOLE}" >> ${D}${sysconfdir}/inittab
     fi
+
+    idx=0
+    tmp="${SERIAL_CONSOLES}"
+    for i in $tmp
+    do
+	j=`echo ${i} | sed s/\;/\ /g`
+        echo "${idx}:2345:respawn:${base_sbindir}/getty ${j}" >> ${D}${sysconfdir}/inittab
+	idx=`expr $idx + 1`
+    done
+
     if [ "${USE_VT}" = "1" ]; then
         cat <<EOF >>${D}${sysconfdir}/inittab
 # ${base_sbindir}/getty invocations for the runlevels.
