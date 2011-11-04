@@ -9,7 +9,7 @@ DEPENDS = "virtual/libx11 xproto glproto libxfixes"
 
 COMPATIBLE_HOST = '(x86_64.*|i.86.*)-(linux|freebsd.*)'
 
-SRC_URI = "git://git.o-hand.com/qemugl.git;protocol=git \
+SRC_URI = "git://git.yoctoproject.org/qemugl;protocol=git \
            file://versionfix.patch \
            file://remove-x11r6-lib-dir.patch \
            file://call_opengl_fix.patch"
