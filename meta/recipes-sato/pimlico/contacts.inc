@@ -23,7 +23,8 @@ do_install_append () {
 }
 
 FILES_${PN} += "${datadir}/pixmaps/stock_contact.png \
-		${datadir}/pixmaps/stock_person.png"
+		${datadir}/pixmaps/stock_person.png \
+		${datadir}/icons/hicolor"
 
 SRC_URI = "file://stock_contact.png \
            file://stock_person.png"
