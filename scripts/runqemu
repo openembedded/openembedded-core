@@ -114,7 +114,7 @@ while [ $i -le $# ]; do
                 usage
             fi
             ;;
-        *-image-*)
+        *-image*)
             if [ -z "$ROOTFS" ]; then
                 if [ -f "$arg" ]; then
                     process_filename $arg
@@ -307,7 +307,7 @@ findimage() {
 
     # Sort rootfs candidates by modification time - the most
     # recently created one is the one we most likely want to boot.
-    filenames=`ls -t $where/*core-image*$machine.$extension 2>/dev/null | xargs`
+    filenames=`ls -t $where/*-image*$machine.$extension 2>/dev/null | xargs`
     for name in $filenames; do
         if [[ "$name" =~ core-image-sato-sdk ||
               "$name" =~ core-image-sato     ||
