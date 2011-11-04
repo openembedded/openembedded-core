@@ -1,4 +1,4 @@
-require dhcp4.inc
+require dhcp.inc
 
 PR = "r2"
 
