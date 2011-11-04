@@ -6,6 +6,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=587ce626d15bd61699a64a6b8a5afefb"
 inherit autotools gettext
 
 BBCLASSEXTEND = "native"
+RREPLACES_${PN} = "console-tools"
+RPROVIDES_${PN} = "console-tools"
+RCONFLICTS_${PN} = "console-tools"
+
+PR = "r1"
 
 SRC_URI="${KERNELORG_MIRROR}/linux/utils/kbd/kbd-1.15.2.tar.bz2"
 SRC_URI[md5sum] = "e850eb91e4d3b94b194efe8e953204c5"
