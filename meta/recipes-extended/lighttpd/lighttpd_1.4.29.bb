@@ -16,10 +16,10 @@ RDEPENDS_${PN} += " \
                lighttpd-module-staticfile \
 "
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.tar.bz2 \
-        file://index.html \
+        file://index.html.lighttpd \
         file://lighttpd.conf \
         file://lighttpd \
 "
@@ -48,7 +48,7 @@ do_install_append() {
     install -d ${D}${sysconfdir}/init.d ${D}/www/logs ${D}/www/pages/dav ${D}/www/var
     install -m 0755 ${WORKDIR}/lighttpd ${D}${sysconfdir}/init.d
     install -m 0755 ${WORKDIR}/lighttpd.conf ${D}${sysconfdir}
-    install -m 0644 ${WORKDIR}/index.html ${D}/www/pages/
+    install -m 0644 ${WORKDIR}/index.html.lighttpd ${D}/www/pages/index.html
 }
 
 FILES_${PN} += "${sysconfdir} /www"
