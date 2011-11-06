@@ -4,7 +4,6 @@ USERADDPN ?= "${PN}"
 # target sysroot, and shadow -native and -sysroot provide the utilities
 # and support files needed to add and modify user and group accounts
 DEPENDS_append = " base-passwd shadow-native shadow-sysroot"
-RDEPENDS_${USERADDPN}_append = " base-passwd shadow"
 
 # This preinstall function will be run in two contexts: once for the
 # native sysroot (as invoked by the useradd_sysroot() wrapper), and
@@ -147,6 +146,11 @@ fakeroot python populate_packages_prepend () {
 		preinst += d.getVar('useradd_preinst', True)
 		bb.data.setVar('pkg_preinst_%s' % pkg, preinst, d)
 
+		# RDEPENDS setup
+		rdepends = d.getVar("RDEPENDS_%s" % pkg, True) or ""
+		rdepends += " base-passwd shadow"
+		bb.data.setVar("RDEPENDS_%s" % pkg, rdepends, d)
+		
 	# We add the user/group calls to all packages to allow any package
 	# to contain files owned by the users/groups defined in the recipe.
 	# The user/group addition code is careful not to create duplicate
