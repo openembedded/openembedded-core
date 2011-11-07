@@ -252,18 +252,21 @@ def action_apply_patch(conf, args):
         for line in open(repo['patchlist']):
             patchfile = line.split()[0]
             lastrev = line.split()[1]
-            cmd = "git am --keep-cr -s -p1 %s" % patchfile
-            logger.info("Apply %s" % patchfile )
-            try:
-                runcmd(cmd)
-            except subprocess.CalledProcessError:
-                logger.info('running "git am --abort" to cleanup repo')
-                runcmd("git am --abort")
-                logger.error('"%s" failed' % cmd)
-                logger.info("please manually apply patch %s" % patchfile)
-                logger.info("After applying, run this tool again to apply the remaining patches")
-                conf.update(name, "last_revision", lastrev)
-                sys.exit(0)
+            if os.path.getsize(patchfile) == 0:
+                logger.info("(skipping %s - no changes)", lastrev)
+            else:
+                cmd = "git am --keep-cr -s -p1 %s" % patchfile
+                logger.info("Apply %s" % patchfile )
+                try:
+                    runcmd(cmd)
+                except subprocess.CalledProcessError:
+                    logger.info('running "git am --abort" to cleanup repo')
+                    runcmd("git am --abort")
+                    logger.error('"%s" failed' % cmd)
+                    logger.info("please manually apply patch %s" % patchfile)
+                    logger.info("After applying, run this tool again to apply the remaining patches")
+                    conf.update(name, "last_revision", lastrev)
+                    sys.exit(0)
         conf.update(name, "last_revision", lastrev)
 
 def action_splitpatch(conf, args):
