@@ -9,19 +9,19 @@ DEPENDS = "libxml2"
 
 # We need to repack the tarball due undistributable content on the upstream one.
 # More details at http://code.google.com/p/libarchive/issues/detail?id=162
-SRC_URI = "http://autobuilder.yoctoproject.org/sources/libarchive-${PV}.tar.gz \
+SRC_URI = "http://libarchive.googlecode.com/files/libarchive-${PV}.tar.gz \
            file://0001-Patch-from-upstream-revision-1990.patch \
            file://0002-Patch-from-upstream-revision-1991.patch \
-           file://0003-Patch-from-upstream-rev-2516.patch \
            file://0004-Patch-from-upstream-rev-2514.patch \
            file://0005-Patch-from-upstream-rev-2520.patch \
            file://0006-Patch-from-upstream-rev-2521.patch \
            file://0007-Ignore-ENOSYS-error-when-setting-up-xattrs.-Closes-5.patch \
            "
 
-SRC_URI[md5sum] = "71242da5191f1218f13dd520d95a870e"
-SRC_URI[sha256sum] = "8cd55db11b1d6001ff8007e4d22b6f4a4bb215e70750e19ab44b84b99ab76053"
+SRC_URI[md5sum] = "9caf51dcf6213e9c9f5a1c27448b9c90"
+SRC_URI[sha256sum] = "13993e0ffbd121ccda46ea226b1f8eac218de0fa8da7d8b1f998093d5c32a72d"
 
 inherit autotools lib_package
 
 BBCLASSEXTEND = "nativesdk"
+
