@@ -4615,7 +4615,10 @@ RECIPE_MAINTAINER_pn-libx11-diet = "Xiaofeng Yan <xiaofeng.yan@windriver.com>"
 RECIPE_STATUS_pn-directfb = "red"
 RECIPE_MAINTAINER_pn-directfb = "Xiaofeng Yan <xiaofeng.yan@windriver.com>"
 
-RECIPE_STATUS_pn-libarchive  = "red"
+RECIPE_STATUS_pn-libarchive  = "green"
+RECIPE_LATEST_VERSION_pn-libarchive = "2.8.5"
+RECIPE_LATEST_RELEASE_DATE_pn-libarchive = "Sept 3, 2011"
+RECIPE_LAST_UPDATE_pn-libarchive = "Nov 7, 2011"
 RECIPE_MAINTAINER_pn-libarchive  = "Xiaofeng Yan <xiaofeng.yan@windriver.com>"
 
 RECIPE_STATUS_pn-xserver-kdrive  = "red"
