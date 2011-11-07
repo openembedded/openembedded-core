@@ -114,3 +114,9 @@
 # The network based PR service host and port
 #PRSERV_HOST = "localhost"
 #PRSERV_PORT = "8585"
+
+# Additional image generation features
+#
+# The following is a list of classes to import to use in the generation of images
+# currently an example class is image_types_uboot
+# IMAGE_CLASSES = " image_types_uboot"
