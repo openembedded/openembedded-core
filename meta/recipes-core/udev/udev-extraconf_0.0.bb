@@ -3,7 +3,7 @@ DESCRIPTION = "Extra machine specific configuration files for udev, specifically
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "file://mount.blacklist \
            file://COPYING.GPL"
