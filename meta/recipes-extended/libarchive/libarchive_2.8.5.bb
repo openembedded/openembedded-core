@@ -7,8 +7,6 @@ PR = "r0"
 
 DEPENDS = "libxml2"
 
-# We need to repack the tarball due undistributable content on the upstream one.
-# More details at http://code.google.com/p/libarchive/issues/detail?id=162
 SRC_URI = "http://libarchive.googlecode.com/files/libarchive-${PV}.tar.gz \
            file://0001-Patch-from-upstream-revision-1990.patch \
            file://0002-Patch-from-upstream-revision-1991.patch \
@@ -24,4 +22,3 @@ SRC_URI[sha256sum] = "13993e0ffbd121ccda46ea226b1f8eac218de0fa8da7d8b1f998093d5c
 inherit autotools lib_package
 
 BBCLASSEXTEND = "nativesdk"
-
