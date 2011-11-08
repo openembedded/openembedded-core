@@ -9,8 +9,13 @@ systems. When this first client exits, xinit will kill the X server and \
 then terminate."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=0d4b5eef75f1584ccbdc5e4a34314407"
-PR = "r0"
+
+PR = "r1"
 PE = "1"
+
+EXTRA_OECONF = "ac_cv_path_MCOOKIE=${bindir}/mcookie"
+
+RDEPENDS_${PN} += "util-linux"
 
 FILES_${PN} += "${libdir}X11/xinit"
 
