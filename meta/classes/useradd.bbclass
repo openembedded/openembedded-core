@@ -3,7 +3,9 @@ USERADDPN ?= "${PN}"
 # base-passwd-cross provides the default passwd and group files in the
 # target sysroot, and shadow -native and -sysroot provide the utilities
 # and support files needed to add and modify user and group accounts
-DEPENDS_append = " base-passwd shadow-native shadow-sysroot"
+DEPENDS_append = "${USERADDDEPENDS}"
+USERADDDEPENDS = " base-passwd shadow-native shadow-sysroot"
+USERADDDEPENDS_virtclass-nativesdk = ""
 
 # This preinstall function will be run in two contexts: once for the
 # native sysroot (as invoked by the useradd_sysroot() wrapper), and
@@ -95,8 +97,12 @@ useradd_sysroot_sstate () {
 	fi
 }
 
-do_install[prefuncs] += "useradd_sysroot"
-SSTATEPOSTINSTFUNCS += "useradd_sysroot_sstate"
+do_install[prefuncs] += "${SYSROOTFUNC}"
+SYSROOTFUNC = "useradd_sysroot"
+SYSROOTFUNC_virtclass-nativesdk = ""
+SSTATEPOSTINSTFUNCS += "${SYSROOTPOSTFUNC}"
+SYSROOTPOSTFUNC = "useradd_sysroot_sstate"
+SYSROOTPOSTFUNC_virtclass-nativesdk = ""
 
 # Recipe parse-time sanity checks
 def update_useradd_after_parse(d):
