@@ -96,6 +96,13 @@ expect {
     eof          { exit [ lindex [wait] 3 ] }
 }
 EOF`
+
+	expect=`which expect`
+	if [ ! -x "$expect" ]; then
+		Test_Error "ERROR: Please install expect"
+		return 1
+	fi
+
 	expect -c "$exp_cmd"
 	ret=$?
 	rm -rf $tmpfile
@@ -120,6 +127,13 @@ expect {
     eof          { exit [ lindex [wait] 3 ] }
 }
 EOF`
+
+	expect=`which expect`
+	if [ ! -x "$expect" ]; then
+		Test_Error "ERROR: Please install expect"
+		return 1
+	fi
+
 	expect -c "$exp_cmd"
 	ret=$?
 	rm -rf $tmpfile
