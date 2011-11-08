@@ -83,12 +83,34 @@ package_tryout_install_multilib_ipk() {
 		fi
 	done
 }
+
+split_multilib_packages() {
+	INSTALL_PACKAGES_NORMAL_IPK=""
+	INSTALL_PACKAGES_MULTILIB_IPK=""
+	for pkg in ${INSTALL_PACKAGES_IPK}; do
+		is_multilib=0
+		for item in ${MULTILIB_VARIANTS}; do
+			local pkgname_prefix="${item}-"
+			if [ ${pkg:0:${#pkgname_prefix}} == ${pkgname_prefix} ]; then
+				is_multilib=1
+				break
+			fi
+		done
+
+		if [ ${is_multilib} = 0 ]; then
+			INSTALL_PACKAGES_NORMAL_IPK="${INSTALL_PACKAGES_NORMAL_IPK} ${pkg}"
+		else
+			INSTALL_PACKAGES_MULTILIB_IPK="${INSTALL_PACKAGES_MULTILIB_IPK} ${pkg}"
+		fi
+	done
+}
+
 #
 # install a bunch of packages using opkg
 # the following shell variables needs to be set before calling this func:
 # INSTALL_ROOTFS_IPK - install root dir
 # INSTALL_CONF_IPK - configuration file
-# INSTALL_PACKAGES_NORMAL_IPK - packages to be installed
+# INSTALL_PACKAGES_IPK - packages to be installed
 # INSTALL_PACKAGES_ATTEMPTONLY_IPK - packages attemped to be installed only
 # INSTALL_PACKAGES_LINGUAS_IPK - additional packages for uclibc
 # INSTALL_TASK_IPK - task name
@@ -97,11 +119,14 @@ package_install_internal_ipk() {
 
 	local target_rootfs="${INSTALL_ROOTFS_IPK}"
 	local conffile="${INSTALL_CONF_IPK}"
-	local package_to_install="${INSTALL_PACKAGES_NORMAL_IPK}"
 	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_IPK}"
 	local package_linguas="${INSTALL_PACKAGES_LINGUAS_IPK}"
-	local package_multilib="${INSTALL_PACKAGES_MULTILIB_IPK}"
 	local task="${INSTALL_TASK_IPK}"
+
+	split_multilib_packages
+
+	local package_to_install="${INSTALL_PACKAGES_NORMAL_IPK}"
+	local package_multilib="${INSTALL_PACKAGES_MULTILIB_IPK}"
 
 	mkdir -p ${target_rootfs}${localstatedir}/lib/opkg/
 

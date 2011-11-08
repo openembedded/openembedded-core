@@ -154,7 +154,7 @@ resolve_package_rpm () {
 # INSTALL_PLATFORM_RPM - main platform
 # INSTALL_PLATFORM_EXTRA_RPM - extra platform
 # INSTALL_CONFBASE_RPM - configuration file base name
-# INSTALL_PACKAGES_NORMAL_RPM - packages to be installed
+# INSTALL_PACKAGES_RPM - packages to be installed
 # INSTALL_PACKAGES_ATTEMPTONLY_RPM - packages attemped to be installed only
 # INSTALL_PACKAGES_LINGUAS_RPM - additional packages for uclibc
 # INSTALL_PROVIDENAME_RPM - content for provide name
@@ -166,8 +166,7 @@ package_install_internal_rpm () {
 	local platform="${INSTALL_PLATFORM_RPM}"
 	local platform_extra="${INSTALL_PLATFORM_EXTRA_RPM}"
 	local confbase="${INSTALL_CONFBASE_RPM}"
-	local package_to_install="${INSTALL_PACKAGES_NORMAL_RPM}"
-	local multilib_to_install="${INSTALL_PACKAGES_MULTILIB_RPM}"
+	local package_to_install="${INSTALL_PACKAGES_RPM}"
 	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_RPM}"
 	local package_linguas="${INSTALL_PACKAGES_LINGUAS_RPM}"
 	local providename="${INSTALL_PROVIDENAME_RPM}"
@@ -211,12 +210,14 @@ package_install_internal_rpm () {
 				echo "Processing $pkg..."
 
 				archvar=base_archs
+				manifest=install.manifest
 				ml_prefix=`echo ${pkg} | cut -d'-' -f1`
 				ml_pkg=$pkg
 				for i in ${MULTILIB_PREFIX_LIST} ; do
 					if [ ${ml_prefix} == ${i} ]; then
 						ml_pkg=$(echo ${pkg} | sed "s,^${ml_prefix}-\(.*\),\1,")
 						archvar=ml_archs
+						manifest=install_multilib.manifest
 						break
 					fi
 				done
@@ -226,7 +227,7 @@ package_install_internal_rpm () {
 					echo "Unable to find package $pkg ($ml_pkg)!"
 					exit 1
 				fi
-				echo $pkg_name >> ${target_rootfs}/install/install.manifest
+				echo $pkg_name >> ${target_rootfs}/install/${manifest}
 			done
 		fi
 	fi
@@ -235,12 +236,14 @@ package_install_internal_rpm () {
 			echo "Processing $pkg..."
 
 			archvar=base_archs
+			manifest=install.manifest
 			ml_prefix=`echo ${pkg} | cut -d'-' -f1`
 			ml_pkg=$pkg
 			for i in ${MULTILIB_PREFIX_LIST} ; do
 				if [ ${ml_prefix} == ${i} ]; then
 					ml_pkg=$(echo ${pkg} | sed "s,^${ml_prefix}-\(.*\),\1,")
 					archvar=ml_archs
+					manifest=install_multilib.manifest
 					break
 				fi
 			done
@@ -250,7 +253,7 @@ package_install_internal_rpm () {
 				echo "Unable to find package $pkg ($ml_pkg)!"
 				exit 1
 			fi
-			echo $pkg_name >> ${target_rootfs}/install/install.manifest
+			echo $pkg_name >> ${target_rootfs}/install/${manifest}
 		done
 	fi
 
@@ -356,29 +359,7 @@ package_install_internal_rpm () {
 
 	touch ${target_rootfs}/install/install_multilib_solution.manifest
 
-	if [ ! -z "${multilib_to_install}" ]; then
-		for pkg in ${multilib_to_install} ; do
-			echo "Processing $pkg..."
-
-			archvar=base_archs
-			ml_prefix=`echo ${pkg} | cut -d'-' -f1`
-			ml_pkg=$pkg
-			for i in ${MULTILIB_PREFIX_LIST} ; do
-				if [ ${ml_prefix} == ${i} ]; then
-					ml_pkg=$(echo ${pkg} | sed "s,^${ml_prefix}-\(.*\),\1,")
-					archvar=ml_archs
-					break
-				fi
-			done
-
-			pkg_name=$(resolve_package_rpm ${confbase}-${archvar}.conf ${ml_pkg})
-			if [ -z "$pkg_name" ]; then
-				echo "Unable to find package $pkg ($ml_pkg)!"
-				exit 1
-			fi
-			echo $pkg_name >> ${target_rootfs}/install/install_multilib.manifest
-		done
-
+	if [ -e "${target_rootfs}/install/install_multilib.manifest" ]; then
 		# multilib package installation
 
 		# Generate an install solution by doing a --justdb install, then recreate it with
