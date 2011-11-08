@@ -102,4 +102,8 @@ do_install_virtclass-native() {
 	# dbus-glib-native and dbus-glib need this xml file
 	./bus/dbus-daemon --introspect > ${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml
 }
+
+do_install_virtclass-nativesdk() {
+	autotools_do_install
+}
 BBCLASSEXTEND = "native nativesdk"
