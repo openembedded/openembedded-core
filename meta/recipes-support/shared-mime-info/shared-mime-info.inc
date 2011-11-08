@@ -17,13 +17,16 @@ EXTRA_OECONF = "--disable-update-mimedb"
 FILES_${PN} += "${datadir}/mime"
 FILES_${PN}-dev += "${datadir}/pkgconfig/shared-mime-info.pc"
 
+# freedesktop.org.xml is only required when updating the mime database,
+# package it separately
+PACKAGES += "shared-mime-info-data"
+FILES_shared-mime-info-data = "${datadir}/mime/packages/freedesktop.org.xml"
+RDEPENDS_shared-mime-info-data = "shared-mime-info"
+
 do_install () {
 	autotools_do_install
 
 	update-mime-database ${D}${datadir}/mime
-
-	# we do not need it on device and it is huge
-	rm ${D}${datadir}/mime/packages/freedesktop.org.xml
 }
 
 do_install_virtclass-native () {
