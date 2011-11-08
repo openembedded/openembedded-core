@@ -56,9 +56,8 @@ python __anonymous () {
         map_dependencies("PACKAGE_INSTALL", d)
         map_dependencies("LINGUAS_INSTALL", d)
         map_dependencies("RDEPENDS", d)
-        pinstall = d.getVar("LINGUAS_INSTALL", True) + " " + d.getVar("PACKAGE_INSTALL", True) + " " + d.getVar("MULTILIB_PACKAGE_INSTALL", False)
-        d.setVar("MULTILIB_PACKAGE_INSTALL", pinstall)
-        d.setVar("PACKAGE_INSTALL", "")
+        pinstall = d.getVar("LINGUAS_INSTALL", True) + " " + d.getVar("PACKAGE_INSTALL", True)
+        d.setVar("PACKAGE_INSTALL", pinstall)
         d.setVar("LINGUAS_INSTALL", "")
         # FIXME, we need to map this to something, not delete it!
         d.setVar("PACKAGE_INSTALL_ATTEMPTONLY", "")

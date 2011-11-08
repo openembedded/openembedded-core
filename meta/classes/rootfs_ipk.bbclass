@@ -58,8 +58,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 
 	export INSTALL_ROOTFS_IPK="${IMAGE_ROOTFS}"
 	export INSTALL_CONF_IPK="${IPKGCONF_TARGET}"
-	export INSTALL_PACKAGES_NORMAL_IPK="${PACKAGE_INSTALL}"
-	export INSTALL_PACKAGES_MULTILIB_IPK="${MULTILIB_PACKAGE_INSTALL}"
+	export INSTALL_PACKAGES_IPK="${PACKAGE_INSTALL}"
 
 	package_install_internal_ipk
 
