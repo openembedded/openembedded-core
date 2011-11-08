@@ -331,9 +331,6 @@ def check_sanity(e):
     if not data.getVar( 'DISPLAY', e.data, True ) and data.getVar( 'IMAGETEST', e.data, True ) == 'qemu':
         messages = messages + 'qemuimagetest needs a X desktop to start qemu, please set DISPLAY correctly (e.g. DISPLAY=:1.0)\n'
 
-    if os.path.basename(os.readlink('/bin/sh')) == 'dash':
-        messages = messages + "Using dash as /bin/sh causes various subtle build problems, please use bash instead (e.g. 'dpkg-reconfigure dash' on an Ubuntu system.\n"
-
     omask = os.umask(022)
     if omask & 0755:
         messages = messages + "Please use a umask which allows a+rx and u+rwx\n"

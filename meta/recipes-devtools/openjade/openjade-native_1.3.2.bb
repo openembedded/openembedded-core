@@ -53,7 +53,9 @@ do_install() {
 
 	install -d ${D}${datadir}/sgml/openjade-${PV}
 	install -m 644 dsssl/catalog ${D}${datadir}/sgml/openjade-${PV}
-	install -m 644 dsssl/*.{dtd,dsl,sgm} ${D}${datadir}/sgml/openjade-${PV}
+	install -m 644 dsssl/*.dtd ${D}${datadir}/sgml/openjade-${PV}
+	install -m 644 dsssl/*.dsl ${D}${datadir}/sgml/openjade-${PV}
+	install -m 644 dsssl/*.sgm ${D}${datadir}/sgml/openjade-${PV}
 
 	install -d ${datadir}/sgml/openjade-${PV}
 	install -m 644 dsssl/catalog ${datadir}/sgml/openjade-${PV}/catalog

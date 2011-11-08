@@ -8,6 +8,15 @@ Originally by: RP
 Updated: Date: 2010/06/28
 Nitin A Kamble <nitin.a.kamble@intel.com>
 
+It also adjusts libtool so that the header at the script is used for 
+script execution and not thevalue of $SHELL. This is because many 
+Makefiles change $SHELL so dash can get used to execute what is 
+otherwise configured as a bash shell script. Since we don't need to 
+execute scipts this way on any system I'm aware of us building upon, 
+the simplest fix is just to remove $SHELL.
+
+Updated: Date: 2011/11/09
+RP
 
 Index: libtool-2.4/libltdl/m4/libtool.m4
 ===================================================================
@@ -18,7 +27,7 @@ Index: libtool-2.4/libltdl/m4/libtool.m4
  
  # Always use our own libtool.
 -LIBTOOL='$(SHELL) $(top_builddir)/libtool'
-+LIBTOOL='$(SHELL) $(top_builddir)'
++LIBTOOL='$(top_builddir)'
 +LIBTOOL="$LIBTOOL/${host_alias}-libtool"
  AC_SUBST(LIBTOOL)dnl
  
