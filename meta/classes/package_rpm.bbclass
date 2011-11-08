@@ -87,22 +87,22 @@ package_generate_rpm_conf_common() {
 	shift
 
 	printf "_solve_dbpath " > ${rpmconf_base}.macro
-	o_colon=false
+	o_colon="false"
 
 	for archvar in "$@"; do
 		printf "_solve_dbpath " > ${rpmconf_base}-${archvar}.macro
-		colon=false
+		colon="false"
 		for each in `cat ${rpmconf_base}-${archvar}.conf` ; do
-			if [ "$o_colon" == true ]; then
+			if [ "$o_colon" = "true" ]; then
 				printf ":" >> ${rpmconf_base}.macro
 			fi
-			if [ "$colon" == true ]; then
+			if [ "$colon" = "true" ]; then
 				printf ":" >> ${rpmconf_base}-${archvar}.macro
 			fi
 			printf "%s" $each >> ${rpmconf_base}.macro
-			o_colon=true
+			o_colon="true"
 			printf "%s" $each >> ${rpmconf_base}-${archvar}.macro
-			colon=true
+			colon="true"
 		done
 		printf "\n" >> ${rpmconf_base}-${archvar}.macro
 	done
@@ -214,7 +214,7 @@ package_install_internal_rpm () {
 				ml_prefix=`echo ${pkg} | cut -d'-' -f1`
 				ml_pkg=$pkg
 				for i in ${MULTILIB_PREFIX_LIST} ; do
-					if [ ${ml_prefix} == ${i} ]; then
+					if [ ${ml_prefix} = ${i} ]; then
 						ml_pkg=$(echo ${pkg} | sed "s,^${ml_prefix}-\(.*\),\1,")
 						archvar=ml_archs
 						manifest=install_multilib.manifest
@@ -240,7 +240,7 @@ package_install_internal_rpm () {
 			ml_prefix=`echo ${pkg} | cut -d'-' -f1`
 			ml_pkg=$pkg
 			for i in ${MULTILIB_PREFIX_LIST} ; do
-				if [ ${ml_prefix} == ${i} ]; then
+				if [ ${ml_prefix} = ${i} ]; then
 					ml_pkg=$(echo ${pkg} | sed "s,^${ml_prefix}-\(.*\),\1,")
 					archvar=ml_archs
 					manifest=install_multilib.manifest
@@ -276,7 +276,7 @@ package_install_internal_rpm () {
 			ml_prefix=`echo ${pkg} | cut -d'-' -f1`
 			ml_pkg=$pkg
 			for i in ${MULTILIB_PREFIX_LIST} ; do
-				if [ ${ml_prefix} == ${i} ]; then
+				if [ ${ml_prefix} = ${i} ]; then
 					ml_pkg=$(echo ${pkg} | sed "s,^${ml_prefix}-\(.*\),\1,")
 					archvar=ml_archs
 					break

@@ -152,7 +152,7 @@ kernel_do_install() {
 	#
 	cp -fR * $kerneldir
 	cp .config $kerneldir
-	if [ ! "${S}" == "${B}" ]; then
+	if [ "${S}" != "${B}" ]; then
 		cp -fR ${S}/* $kerneldir
 	fi
 	install -m 0644 ${KERNEL_OUTPUT} $kerneldir/${KERNEL_IMAGETYPE}
