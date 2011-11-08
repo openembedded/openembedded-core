@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://ncurses/base/version.c;beginline=1;endline=27;md5=cbc
 SECTION = "libs"
 DEPENDS = "ncurses-native"
 DEPENDS_virtclass-native = ""
-INC_PR = "r1"
+INC_PR = "r2"
 
 inherit autotools binconfig multilib_header
 
@@ -26,6 +26,36 @@ ENABLE_WIDEC = "true"
 # builds.
 BUILD_CPPFLAGS += "-D_GNU_SOURCE"
 
+# Helper function for do_configure to allow multiple configurations
+# $1 the directory to run configure in
+# $@ the arguments to pass to configure
+ncurses_configure() {
+	mkdir -p $1
+	cd $1
+	shift
+	oe_runconf \
+	        --disable-static \
+	        --without-debug \
+	        --without-ada \
+	        --without-gpm \
+	        --enable-hard-tabs \
+	        --enable-xmc-glitch \
+	        --enable-colorfgbg \
+	        --with-termpath='${sysconfdir}/termcap:${datadir}/misc/termcap' \
+	        --with-terminfo-dirs='${sysconfdir}/terminfo:${datadir}/terminfo' \
+	        --with-shared \
+	        --disable-big-core \
+	        --program-prefix= \
+	        --with-ticlib \
+	        --with-termlib=tinfo \
+	        --enable-sigwinch \
+	        --enable-pc-files \
+	        --disable-rpath-hack \
+	        --with-manpage-format=normal \
+	        "$@" || return 1
+	cd ..
+}
+
 # Override the function from the autotools class; ncurses requires a
 # patched autoconf213 to generate the configure script. This autoconf
 # is not available so that the shipped script will be used.
@@ -35,36 +65,10 @@ do_configure() {
         # not the case for /dev/null redirections)
         export cf_cv_working_poll=yes
 
-        for i in \
-        'narrowc' \
-        'widec   --enable-widec --without-progs'; do
-                set -- $i
-                mkdir -p $1
-                cd $1
-                shift
-
-                oe_runconf \
-                        --disable-static \
-                        --without-debug \
-                        --without-ada \
-                        --without-gpm \
-                        --enable-hard-tabs \
-                        --enable-xmc-glitch \
-                        --enable-colorfgbg \
-                        --with-termpath='${sysconfdir}/termcap:${datadir}/misc/termcap' \
-                        --with-terminfo-dirs='${sysconfdir}/terminfo:${datadir}/terminfo' \
-                        --with-shared \
-                        --disable-big-core \
-                        --program-prefix= \
-                        --with-ticlib \
-                        --with-termlib=tinfo \
-                        --enable-sigwinch \
-                        --enable-pc-files \
-                        --disable-rpath-hack \
-                        --with-manpage-format=normal \
-                        "$@"
-                cd ..
-        done
+	ncurses_configure "narrowc" || \
+		return 1
+	! ${ENABLE_WIDEC} || \
+		ncurses_configure "widec" "--enable-widec" "--without-progs"
 }
 
 do_compile() {
