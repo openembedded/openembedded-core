@@ -471,6 +471,16 @@ python write_specfile () {
 				else:
 					target.append(path + "/" + file)
 
+	# Prevent the prerm/postrm scripts from being run during an upgrade
+	def wrap_uninstall(scriptvar):
+		scr = scriptvar.strip()
+		if scr.startswith("#!"):
+			pos = scr.find("\n") + 1
+		else:
+			pos = 0
+		scr = scr[:pos] + 'if [ "$1" = "0" ] ; then\n' + scr[pos:] + '\nfi'
+		return scr
+
 	packages = bb.data.getVar('PACKAGES', d, True)
 	if not packages or packages == '':
 		bb.debug(1, "No packages; nothing to do")
@@ -671,8 +681,10 @@ python write_specfile () {
 				spec_scriptlets_bottom.append('%%post -n %s' % splitname)
 			elif script == 'prerm':
 				spec_scriptlets_bottom.append('%%preun -n %s' % splitname)
+				scriptvar = wrap_uninstall(scriptvar)
 			elif script == 'postrm':
 				spec_scriptlets_bottom.append('%%postun -n %s' % splitname)
+				scriptvar = wrap_uninstall(scriptvar)
 			spec_scriptlets_bottom.append(scriptvar)
 			spec_scriptlets_bottom.append('')
 
@@ -758,11 +770,13 @@ python write_specfile () {
 		spec_scriptlets_top.append('')
 	if srcprerm:
 		spec_scriptlets_top.append('%preun')
-		spec_scriptlets_top.append(srcprerm)
+		scriptvar = wrap_uninstall(srcprerm)
+		spec_scriptlets_top.append(scriptvar)
 		spec_scriptlets_top.append('')
 	if srcpostrm:
 		spec_scriptlets_top.append('%postun')
-		spec_scriptlets_top.append(srcpostrm)
+		scriptvar = wrap_uninstall(srcpostrm)
+		spec_scriptlets_top.append(scriptvar)
 		spec_scriptlets_top.append('')
 
 	# Write the SPEC file
