@@ -270,6 +270,7 @@ pkg_prerm_${PN} () {
 	ln -s /bin/busybox $tmpdir/rm
 	ln -s /bin/busybox $tmpdir/sed
 	ln -s /bin/busybox $tmpdir/sort
+	ln -s /bin/busybox $tmpdir/grep
 	export PATH=$PATH:$tmpdir
 
 	while read link
