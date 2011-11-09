@@ -23,4 +23,7 @@ do_install_append () {
 			break
 		fi
 	done
+
+	chmod 4111 $D/usr/bin/sudo
+	chmod 0440 $D/etc/sudoers
 }
