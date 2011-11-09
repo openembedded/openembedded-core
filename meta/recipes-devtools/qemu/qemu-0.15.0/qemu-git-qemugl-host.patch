@@ -280,7 +280,7 @@ Index: qemu-0.14.0/target-i386/beginend_funcs.sh
 --- /dev/null
 +++ qemu-0.14.0/target-i386/beginend_funcs.sh
 @@ -0,0 +1,23 @@
-+#! /bin/sh
++#! /bin/bash
 +# Copyright 2008 (C) Intel Corporation
 +#
 +# echo names of functions that are legal between a glBegin and glEnd pair.
