@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=08c553a87d4e51bbed50b20e0adcaede \
 
 DEPENDS = "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_PLUGINS}', '', d)}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://pkg-shadow.alioth.debian.org/releases/${BPN}-${PV}.tar.bz2 \
            file://login_defs_pam.sed \
@@ -128,11 +128,13 @@ pkg_postinst_${PN} () {
 	update-alternatives --install ${base_sbindir}/vigr vigr vigr.${PN} 200
 
 	if [ "x$D" != "x" ]; then
-		exit 1
-	fi  
+	  rootarg="--root=$D"
+	else
+	  rootarg=""
+	fi
 
-	pwconv
-	grpconv
+	pwconv $rootarg
+	grpconv $rootarg
 }
 
 pkg_prerm_${PN} () {
