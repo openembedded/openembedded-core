@@ -17,13 +17,12 @@ PACKAGES =+ "${PN}-user3"
 
 inherit useradd
 
-# Specify which package(s) should include the user/group code.
-# Make sure that any packages which install files owned by custom
-# users/groups are included here. The code which adds users and
-# groups is idempotent.
+# You must set USERADD_PACKAGES when you inherit useradd. This
+# lists which output packages will include the user/group
+# creation code.
 USERADD_PACKAGES = "${PN} ${PN}-user3"
 
-# You *must* set USERADD_PARAM and/or GROUPADD_PARAM when
+# You must also set USERADD_PARAM and/or GROUPADD_PARAM when
 # you inherit useradd.
 
 # USERADD_PARAM specifies command line options to pass to the
