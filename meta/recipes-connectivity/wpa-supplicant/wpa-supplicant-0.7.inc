@@ -66,9 +66,9 @@ do_install () {
 }
 
 pkg_postinst_wpa-supplicant () {
-	# can't do this offline
+	# If we're offline, we don't need to do this.
 	if [ "x$D" != "x" ]; then
-		exit 1
+		exit 0
 	fi
 
 	DBUSPID=`pidof dbus-daemon`
