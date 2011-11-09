@@ -153,10 +153,11 @@ fakeroot python populate_packages_prepend () {
 		rdepends = d.getVar("RDEPENDS_%s" % pkg, True) or ""
 		rdepends += " base-passwd shadow"
 		bb.data.setVar("RDEPENDS_%s" % pkg, rdepends, d)
-	
+
 	# Add the user/group preinstall scripts and RDEPENDS requirements
 	# to packages specified by USERADD_PACKAGES
-	useradd_packages = d.getVar('USERADD_PACKAGES', True) or ""
-	for pkg in useradd_packages.split():
-		update_useradd_package(pkg)
+	if not bb.data.inherits_class('nativesdk', d):
+		useradd_packages = d.getVar('USERADD_PACKAGES', True) or ""
+		for pkg in useradd_packages.split():
+			update_useradd_package(pkg)
 }
