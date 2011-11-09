@@ -27,7 +27,7 @@ fi
 }
 
 python populate_packages_append () {
-	import os.path, re
+	import re
 	packages = d.getVar('PACKAGES', True).split()
 	pkgdest =  d.getVar('PKGDEST', True)
 
