@@ -1,5 +1,3 @@
-USERADDPN ?= "${PN}"
-
 # base-passwd-cross provides the default passwd and group files in the
 # target sysroot, and shadow -native and -sysroot provide the utilities
 # and support files needed to add and modify user and group accounts
@@ -106,30 +104,29 @@ SYSROOTPOSTFUNC_virtclass-nativesdk = ""
 
 # Recipe parse-time sanity checks
 def update_useradd_after_parse(d):
-	if not d.getVar('USERADD_PACKAGES', False):
-		if not d.getVar('USERADD_PARAM', False) and not d.getVar('GROUPADD_PARAM', False):
-			raise bb.build.FuncFailed, "%s inherits useradd but doesn't set USERADD_PARAM or GROUPADD_PARAM" % bb.data.getVar('FILE', d)
+	useradd_packages = d.getVar('USERADD_PACKAGES', True)
+
+	if not useradd_packages:
+		raise bb.build.FuncFailed, "%s inherits useradd but doesn't set USERADD_PACKAGES" % bb.data.getVar('FILE', d)
+
+	for pkg in useradd_packages.split():
+		if not d.getVar('USERADD_PARAM_%s' % pkg, True) and not d.getVar('GROUPADD_PARAM_%s' % pkg, True):
+			raise bb.build.FuncFailed, "%s inherits useradd but doesn't set USERADD_PARAM or GROUPADD_PARAM for package %s" % (bb.data.getVar('FILE', d), pkg)
 
 python __anonymous() {
 	update_useradd_after_parse(d)
 }
 
 # Return a single [GROUP|USER]ADD_PARAM formatted string which includes the
-# [group|user]add parameters for all packages in this recipe
+# [group|user]add parameters for all USERADD_PACKAGES in this recipe
 def get_all_cmd_params(d, cmd_type):
 	import string
 	
 	param_type = cmd_type.upper() + "ADD_PARAM_%s"
 	params = []
 
-	pkgs = d.getVar('USERADD_PACKAGES', True)
-	if not pkgs:
-		pkgs = d.getVar('USERADDPN', True)
-		packages = (d.getVar('PACKAGES', True) or "").split()
-		if packages and pkgs not in packages:
-			pkgs = packages[0]
-
-	for pkg in pkgs.split():
+	useradd_packages = d.getVar('USERADD_PACKAGES', True) or ""
+	for pkg in useradd_packages.split():
 		param = d.getVar(param_type % pkg, True)
 		if param:
 			params.append(param)
@@ -156,17 +153,10 @@ fakeroot python populate_packages_prepend () {
 		rdepends = d.getVar("RDEPENDS_%s" % pkg, True) or ""
 		rdepends += " base-passwd shadow"
 		bb.data.setVar("RDEPENDS_%s" % pkg, rdepends, d)
-		
-	# We add the user/group calls to all packages to allow any package
-	# to contain files owned by the users/groups defined in the recipe.
-	# The user/group addition code is careful not to create duplicate
-	# entries, so this is safe.
-	pkgs = d.getVar('USERADD_PACKAGES', True)
-	if not pkgs:
-		pkgs = d.getVar('USERADDPN', True)
-		packages = (d.getVar('PACKAGES', True) or "").split()
-		if packages and pkgs not in packages:
-			pkgs = packages[0]
-	for pkg in pkgs.split():
+	
+	# Add the user/group preinstall scripts and RDEPENDS requirements
+	# to packages specified by USERADD_PACKAGES
+	useradd_packages = d.getVar('USERADD_PACKAGES', True) or ""
+	for pkg in useradd_packages.split():
 		update_useradd_package(pkg)
 }
