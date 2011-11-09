@@ -8,7 +8,7 @@ def process_dir (directory, d):
     import stat
 
     cmd = bb.data.expand('${CHRPATH_BIN}', d)
-    tmpdir = bb.data.getVar('TMPDIR', d)
+    tmpdir = d.getVar('TMPDIR')
     basedir = bb.data.expand('${base_prefix}', d)
 
     #bb.debug("Checking %s for binaries to process" % directory)

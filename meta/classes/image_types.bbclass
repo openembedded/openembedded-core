@@ -1,8 +1,8 @@
 def get_imagecmds(d):
     cmds = "\n"
-    old_overrides = bb.data.getVar('OVERRIDES', d, 0)
+    old_overrides = d.getVar('OVERRIDES', 0)
 
-    types = bb.data.getVar('IMAGE_FSTYPES', d, True).split()
+    types = d.getVar('IMAGE_FSTYPES', True).split()
     # Live images will be processed via inheriting bbclass and 
     # does not get processed here.
     # live images also depend on ext3 so ensure its present

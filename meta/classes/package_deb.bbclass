@@ -11,18 +11,18 @@ DPKG_ARCH ?= "${TARGET_ARCH}"
 PKGWRITEDIRDEB = "${WORKDIR}/deploy-debs"
 
 python package_deb_fn () {
-    bb.data.setVar('PKGFN', bb.data.getVar('PKG',d), d)
+    bb.data.setVar('PKGFN', d.getVar('PKG'), d)
 }
 
 addtask package_deb_install
 python do_package_deb_install () {
-    pkg = bb.data.getVar('PKG', d, True)
-    pkgfn = bb.data.getVar('PKGFN', d, True)
-    rootfs = bb.data.getVar('IMAGE_ROOTFS', d, True)
-    debdir = bb.data.getVar('DEPLOY_DIR_DEB', d, True)
+    pkg = d.getVar('PKG', True)
+    pkgfn = d.getVar('PKGFN', True)
+    rootfs = d.getVar('IMAGE_ROOTFS', True)
+    debdir = d.getVar('DEPLOY_DIR_DEB', True)
     apt_config = bb.data.expand('${STAGING_ETCDIR_NATIVE}/apt/apt.conf', d)
-    stagingbindir = bb.data.getVar('STAGING_BINDIR_NATIVE', d, True)
-    tmpdir = bb.data.getVar('TMPDIR', d, True)
+    stagingbindir = d.getVar('STAGING_BINDIR_NATIVE', True)
+    tmpdir = d.getVar('TMPDIR', True)
 
     if None in (pkg,pkgfn,rootfs):
         raise bb.build.FuncFailed("missing variables (one or more of PKG, PKGFN, IMAGE_ROOTFS)")
@@ -206,22 +206,22 @@ python do_package_deb () {
     import re, copy
     import textwrap
 
-    workdir = bb.data.getVar('WORKDIR', d, True)
+    workdir = d.getVar('WORKDIR', True)
     if not workdir:
         bb.error("WORKDIR not defined, unable to package")
         return
 
-    outdir = bb.data.getVar('PKGWRITEDIRDEB', d, True)
+    outdir = d.getVar('PKGWRITEDIRDEB', True)
     if not outdir:
         bb.error("PKGWRITEDIRDEB not defined, unable to package")
         return
 
-    packages = bb.data.getVar('PACKAGES', d, True)
+    packages = d.getVar('PACKAGES', True)
     if not packages:
         bb.debug(1, "PACKAGES not defined, nothing to package")
         return
 
-    tmpdir = bb.data.getVar('TMPDIR', d, True)
+    tmpdir = d.getVar('TMPDIR', True)
 
     if os.access(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"),os.R_OK):
         os.unlink(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"))
@@ -230,7 +230,7 @@ python do_package_deb () {
         bb.debug(1, "No packages; nothing to do")
         return
 
-    pkgdest = bb.data.getVar('PKGDEST', d, True)
+    pkgdest = d.getVar('PKGDEST', True)
 
     for pkg in packages.split():
         localdata = bb.data.createCopy(d)
@@ -238,19 +238,19 @@ python do_package_deb () {
 
         lf = bb.utils.lockfile(root + ".lock")
 
-        bb.data.setVar('ROOT', '', localdata)
-        bb.data.setVar('ROOT_%s' % pkg, root, localdata)
-        pkgname = bb.data.getVar('PKG_%s' % pkg, localdata, True)
+        localdata.setVar('ROOT', '')
+        localdata.setVar('ROOT_%s' % pkg, root)
+        pkgname = localdata.getVar('PKG_%s' % pkg, True)
         if not pkgname:
             pkgname = pkg
-        bb.data.setVar('PKG', pkgname, localdata)
+        localdata.setVar('PKG', pkgname)
 
-        bb.data.setVar('OVERRIDES', pkg, localdata)
+        localdata.setVar('OVERRIDES', pkg)
 
         bb.data.update_data(localdata)
         basedir = os.path.join(os.path.dirname(root))
 
-        pkgoutdir = os.path.join(outdir, bb.data.getVar('PACKAGE_ARCH', localdata, True))
+        pkgoutdir = os.path.join(outdir, localdata.getVar('PACKAGE_ARCH', True))
         bb.mkdirhier(pkgoutdir)
 
         os.chdir(root)
@@ -261,8 +261,8 @@ python do_package_deb () {
             del g[g.index('./DEBIAN')]
         except ValueError:
             pass
-        if not g and bb.data.getVar('ALLOW_EMPTY', localdata) != "1":
-            bb.note("Not creating empty archive for %s-%s-%s" % (pkg, bb.data.getVar('PKGV', localdata, True), bb.data.getVar('PKGR', localdata, True)))
+        if not g and localdata.getVar('ALLOW_EMPTY') != "1":
+            bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', True), localdata.getVar('PKGR', True)))
             bb.utils.unlockfile(lf)
             continue
 
@@ -278,7 +278,7 @@ python do_package_deb () {
             raise bb.build.FuncFailed("unable to open control file for writing.")
 
         fields = []
-        pe = bb.data.getVar('PKGE', d, True)
+        pe = d.getVar('PKGE', True)
         if pe and int(pe) > 0:
             fields.append(["Version: %s:%s-%s\n", ['PKGE', 'PKGV', 'PKGR']])
         else:
@@ -298,10 +298,10 @@ python do_package_deb () {
         def pullData(l, d):
             l2 = []
             for i in l:
-                data = bb.data.getVar(i, d, True)
+                data = d.getVar(i, True)
                 if data is None:
                     raise KeyError(f)
-                if i == 'DPKG_ARCH' and bb.data.getVar('PACKAGE_ARCH', d, True) == 'all':
+                if i == 'DPKG_ARCH' and d.getVar('PACKAGE_ARCH', True) == 'all':
                     data = 'all'
                 l2.append(data)
             return l2
@@ -311,12 +311,12 @@ python do_package_deb () {
         try:
             for (c, fs) in fields:
                 for f in fs:
-                     if bb.data.getVar(f, localdata) is None:
+                     if localdata.getVar(f) is None:
                          raise KeyError(f)
                 # Special behavior for description...
                 if 'DESCRIPTION' in fs:
-                     summary = bb.data.getVar('SUMMARY', localdata, True) or bb.data.getVar('DESCRIPTION', localdata, True) or "."
-                     description = bb.data.getVar('DESCRIPTION', localdata, True) or "."
+                     summary = localdata.getVar('SUMMARY', True) or localdata.getVar('DESCRIPTION', True) or "."
+                     description = localdata.getVar('DESCRIPTION', True) or "."
                      description = textwrap.dedent(description).strip()
                      ctrlfile.write('Description: %s\n' % unicode(summary))
                      ctrlfile.write('%s\n' % unicode(textwrap.fill(description, width=74, initial_indent=' ', subsequent_indent=' ')))
@@ -332,18 +332,18 @@ python do_package_deb () {
 
         bb.build.exec_func("mapping_rename_hook", localdata)
 
-        rdepends = bb.utils.explode_dep_versions(bb.data.getVar("RDEPENDS", localdata, True) or "")
+        rdepends = bb.utils.explode_dep_versions(localdata.getVar("RDEPENDS", True) or "")
         for dep in rdepends:
                 if '*' in dep:
                         del rdepends[dep]
-        rrecommends = bb.utils.explode_dep_versions(bb.data.getVar("RRECOMMENDS", localdata, True) or "")
+        rrecommends = bb.utils.explode_dep_versions(localdata.getVar("RRECOMMENDS", True) or "")
         for dep in rrecommends:
                 if '*' in dep:
                         del rrecommends[dep]
-        rsuggests = bb.utils.explode_dep_versions(bb.data.getVar("RSUGGESTS", localdata, True) or "")
-        rprovides = bb.utils.explode_dep_versions(bb.data.getVar("RPROVIDES", localdata, True) or "")
-        rreplaces = bb.utils.explode_dep_versions(bb.data.getVar("RREPLACES", localdata, True) or "")
-        rconflicts = bb.utils.explode_dep_versions(bb.data.getVar("RCONFLICTS", localdata, True) or "")
+        rsuggests = bb.utils.explode_dep_versions(localdata.getVar("RSUGGESTS", True) or "")
+        rprovides = bb.utils.explode_dep_versions(localdata.getVar("RPROVIDES", True) or "")
+        rreplaces = bb.utils.explode_dep_versions(localdata.getVar("RREPLACES", True) or "")
+        rconflicts = bb.utils.explode_dep_versions(localdata.getVar("RCONFLICTS", True) or "")
         if rdepends:
             ctrlfile.write("Depends: %s\n" % unicode(bb.utils.join_deps(rdepends)))
         if rsuggests:
@@ -359,7 +359,7 @@ python do_package_deb () {
         ctrlfile.close()
 
         for script in ["preinst", "postinst", "prerm", "postrm"]:
-            scriptvar = bb.data.getVar('pkg_%s' % script, localdata, True)
+            scriptvar = localdata.getVar('pkg_%s' % script, True)
             if not scriptvar:
                 continue
             try:
@@ -372,7 +372,7 @@ python do_package_deb () {
             scriptfile.close()
             os.chmod(os.path.join(controldir, script), 0755)
 
-        conffiles_str = bb.data.getVar("CONFFILES", localdata, True)
+        conffiles_str = localdata.getVar("CONFFILES", True)
         if conffiles_str:
             try:
                 conffiles = file(os.path.join(controldir, 'conffiles'), 'w')
@@ -384,7 +384,7 @@ python do_package_deb () {
             conffiles.close()
 
         os.chdir(basedir)
-        ret = os.system("PATH=\"%s\" dpkg-deb -b %s %s" % (bb.data.getVar("PATH", localdata, True), root, pkgoutdir))
+        ret = os.system("PATH=\"%s\" dpkg-deb -b %s %s" % (localdata.getVar("PATH", True), root, pkgoutdir))
         if ret != 0:
             bb.utils.prunedir(controldir)
             bb.utils.unlockfile(lf)
@@ -405,17 +405,17 @@ python do_package_write_deb_setscene () {
 addtask do_package_write_deb_setscene
 
 python () {
-    if bb.data.getVar('PACKAGES', d, True) != '':
-        deps = (bb.data.getVarFlag('do_package_write_deb', 'depends', d) or "").split()
+    if d.getVar('PACKAGES', True) != '':
+        deps = (d.getVarFlag('do_package_write_deb', 'depends') or "").split()
         deps.append('dpkg-native:do_populate_sysroot')
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         bb.data.setVarFlag('do_package_write_deb', 'depends', " ".join(deps), d)
-        bb.data.setVarFlag('do_package_write_deb', 'fakeroot', "1", d)
-        bb.data.setVarFlag('do_package_write_deb_setscene', 'fakeroot', "1", d)
+        d.setVarFlag('do_package_write_deb', 'fakeroot', "1")
+        d.setVarFlag('do_package_write_deb_setscene', 'fakeroot', "1")
 
     # Map TARGET_ARCH to Debian's ideas about architectures
-    if bb.data.getVar('DPKG_ARCH', d, True) in ["x86", "i486", "i586", "i686", "pentium"]:
-        bb.data.setVar('DPKG_ARCH', 'i386', d)
+    if d.getVar('DPKG_ARCH', True) in ["x86", "i486", "i586", "i686", "pentium"]:
+        d.setVar('DPKG_ARCH', 'i386')
 }
 
 python do_package_write_deb () {

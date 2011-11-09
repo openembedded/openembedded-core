@@ -61,10 +61,10 @@ FILES_${PN}-extra = "/usr/games/ /usr/share/applications /etc/gconf/schemas"
 python __anonymous () {
     import bb
     var = bb.data.expand("FILES_${PN}", d, 1)
-    data = bb.data.getVar(var, d, 1)
+    data = d.getVar(var, 1)
     for name in ("bridges", "fifteen", "inertia", "map", "samegame", "slant"):
         data = data + " /usr/games/%s" % name
         data = data + " /usr/share/applications/%s.desktop" % name
         data = data + " /etc/gconf/schemas/%s.schemas" % name
-    bb.data.setVar(var, data, d)
+    d.setVar(var, data)
 }

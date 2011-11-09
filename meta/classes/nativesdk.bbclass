@@ -11,7 +11,7 @@ STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${S
 #
 PACKAGE_ARCH = "${SDK_ARCH}-nativesdk"
 python () {
-    archs = bb.data.getVar('PACKAGE_ARCHS', d, True).split()
+    archs = d.getVar('PACKAGE_ARCHS', True).split()
     sdkarchs = []
     for arch in archs:
         sdkarchs.append(arch + '-nativesdk')
@@ -62,22 +62,22 @@ python nativesdk_virtclass_handler () {
     if not isinstance(e, bb.event.RecipePreFinalise):
         return
 
-    pn = bb.data.getVar("PN", e.data, True)
+    pn = e.data.getVar("PN", True)
     if not pn.endswith("-nativesdk"):
         return
 
-    bb.data.setVar("OVERRIDES", bb.data.getVar("OVERRIDES", e.data, False) + ":virtclass-nativesdk", e.data)
+    bb.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + ":virtclass-nativesdk", e.data)
 }
 
 python () {
-    pn = bb.data.getVar("PN", d, True)
+    pn = d.getVar("PN", True)
     if not pn.endswith("-nativesdk"):
         return
 
     def map_dependencies(varname, d, suffix = ""):
         if suffix:
             varname = varname + "_" + suffix
-        deps = bb.data.getVar(varname, d, True)
+        deps = d.getVar(varname, True)
         if not deps:
             return
         deps = bb.utils.explode_deps(deps)
@@ -101,13 +101,13 @@ python () {
     #    map_dependencies("RPROVIDES", d, pkg)
     #    map_dependencies("RREPLACES", d, pkg)
 
-    provides = bb.data.getVar("PROVIDES", d, True)
+    provides = d.getVar("PROVIDES", True)
     for prov in provides.split():
         if prov.find(pn) != -1:
             continue
         if not prov.endswith("-nativesdk"):
             provides = provides.replace(prov, prov + "-nativesdk")
-    bb.data.setVar("PROVIDES", provides, d)
+    d.setVar("PROVIDES", provides)
 }
 
 addhandler nativesdk_virtclass_handler

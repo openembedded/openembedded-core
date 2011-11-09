@@ -32,7 +32,7 @@ def icecc_dep_prepend(d):
     # INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
     # we need that built is the responsibility of the patch function / class, not
     # the application.
-    if not bb.data.getVar('INHIBIT_DEFAULT_DEPS', d):
+    if not d.getVar('INHIBIT_DEFAULT_DEPS'):
         return "icecc-create-env-native"
     return ""
 
@@ -54,7 +54,7 @@ def create_path(compilers, bb, d):
         staging += "-kernel"
 
     #check if the icecc path is set by the user
-    icecc   = bb.data.getVar('ICECC_PATH', d) or os.popen("which icecc").read()[:-1]
+    icecc   = d.getVar('ICECC_PATH') or os.popen("which icecc").read()[:-1]
 
     # Create the dir if necessary
     try:
@@ -81,7 +81,7 @@ def use_icc(bb,d):
     package_tmp = bb.data.expand('${PN}', d)
 
     system_class_blacklist = [ "none" ] 
-    user_class_blacklist = (bb.data.getVar('ICECC_USER_CLASS_BL', d) or "none").split()
+    user_class_blacklist = (d.getVar('ICECC_USER_CLASS_BL') or "none").split()
     package_class_blacklist = system_class_blacklist + user_class_blacklist
 
     for black in package_class_blacklist:
@@ -92,7 +92,7 @@ def use_icc(bb,d):
     #"system" package blacklist contains a list of packages that can not distribute compile tasks
     #for one reason or the other
     system_package_blacklist = [ "uclibc", "glibc", "gcc", "bind", "u-boot", "dhcp-forwarder", "enchant", "connman", "orbit2" ]
-    user_package_blacklist = (bb.data.getVar('ICECC_USER_PACKAGE_BL', d) or "").split()
+    user_package_blacklist = (d.getVar('ICECC_USER_PACKAGE_BL') or "").split()
     package_blacklist = system_package_blacklist + user_package_blacklist
 
     for black in package_blacklist:
@@ -100,7 +100,7 @@ def use_icc(bb,d):
             #bb.note(package_tmp, ' found in blacklist, disable icecc')
             return "no"
 
-    if bb.data.getVar('PARALLEL_MAKE', d) == "":
+    if d.getVar('PARALLEL_MAKE') == "":
         bb.note(package_tmp, " ", bb.data.expand('${PV}', d), " has empty PARALLEL_MAKE, disable icecc")
         return "no"
 
@@ -119,8 +119,8 @@ def icc_version(bb, d):
     if use_icc(bb, d) == "no":
         return ""
 
-    parallel = bb.data.getVar('ICECC_PARALLEL_MAKE', d) or ""
-    bb.data.setVar("PARALLEL_MAKE", parallel, d)
+    parallel = d.getVar('ICECC_PARALLEL_MAKE') or ""
+    d.setVar("PARALLEL_MAKE", parallel)
 
     if icc_is_native(bb, d):
         archive_name = "local-host-env"
@@ -130,7 +130,7 @@ def icc_version(bb, d):
         prefix = bb.data.expand('${HOST_PREFIX}' , d)
         distro = bb.data.expand('${DISTRO}', d)
         target_sys = bb.data.expand('${TARGET_SYS}', d)
-        float = bb.data.getVar('TARGET_FPU', d) or "hard"
+        float = d.getVar('TARGET_FPU') or "hard"
         archive_name = prefix + distro + "-"        + target_sys + "-" + float
         if icc_is_kernel(bb, d):
             archive_name += "-kernel"

@@ -56,7 +56,7 @@ PACKAGES_DYNAMIC += "gdk-pixbuf-loader-*"
 PACKAGES_DYNAMIC_virtclass-native = ""
 
 python populate_packages_prepend () {
-	postinst_pixbufloader = bb.data.getVar("postinst_pixbufloader", d, 1)
+	postinst_pixbufloader = d.getVar("postinst_pixbufloader", 1)
 
 	loaders_root = bb.data.expand('${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders', d)
 

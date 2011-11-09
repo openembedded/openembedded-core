@@ -33,7 +33,7 @@ python __anonymous () {
     import bb, re, string
 
     kerntype = string.replace(bb.data.expand("${LINUX_KERNEL_TYPE}", d), "_", "-")
-    bb.data.setVar("LINUX_KERNEL_TYPE_EXTENSION", kerntype, d)
+    d.setVar("LINUX_KERNEL_TYPE_EXTENSION", kerntype)
 }
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-2.6.34.git;protocol=git;nocheckout=1;branch=${KBRANCH},wrs_meta;name=machine,meta"

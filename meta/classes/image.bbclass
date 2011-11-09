@@ -74,17 +74,17 @@ IMAGE_TYPE = ${@base_contains("IMAGE_FSTYPES", "live", "live", "empty", d)}
 inherit image-${IMAGE_TYPE}
 
 python () {
-    deps = bb.data.getVarFlag('do_rootfs', 'depends', d) or ""
-    for type in (bb.data.getVar('IMAGE_FSTYPES', d, True) or "").split():
-        for dep in ((bb.data.getVar('IMAGE_DEPENDS_%s' % type, d) or "").split() or []):
+    deps = d.getVarFlag('do_rootfs', 'depends') or ""
+    for type in (d.getVar('IMAGE_FSTYPES', True) or "").split():
+        for dep in ((d.getVar('IMAGE_DEPENDS_%s' % type) or "").split() or []):
             deps += " %s:do_populate_sysroot" % dep
-    for dep in (bb.data.getVar('EXTRA_IMAGEDEPENDS', d, True) or "").split():
+    for dep in (d.getVar('EXTRA_IMAGEDEPENDS', True) or "").split():
         deps += " %s:do_populate_sysroot" % dep
-    bb.data.setVarFlag('do_rootfs', 'depends', deps, d)
+    d.setVarFlag('do_rootfs', 'depends', deps)
 
     # If we don't do this we try and run the mapping hooks while parsing which is slow
     # bitbake should really provide something to let us know this...
-    if bb.data.getVar('BB_WORKERCONTEXT', d, True) is not None:
+    if d.getVar('BB_WORKERCONTEXT', True) is not None:
         runtime_mapping_rename("PACKAGE_INSTALL", d)
         runtime_mapping_rename("PACKAGE_INSTALL_ATTEMPTONLY", d)
 }
@@ -98,15 +98,15 @@ python () {
 # is searched for in the BBPATH (same as the old version.)
 #
 def get_devtable_list(d):
-    devtable = bb.data.getVar('IMAGE_DEVICE_TABLE', d, 1)
+    devtable = d.getVar('IMAGE_DEVICE_TABLE', 1)
     if devtable != None:
         return devtable
     str = ""
-    devtables = bb.data.getVar('IMAGE_DEVICE_TABLES', d, 1)
+    devtables = d.getVar('IMAGE_DEVICE_TABLES', 1)
     if devtables == None:
         devtables = 'files/device_table-minimal.txt'
     for devtable in devtables.split():
-        str += " %s" % bb.which(bb.data.getVar('BBPATH', d, 1), devtable)
+        str += " %s" % bb.which(d.getVar('BBPATH', 1), devtable)
     return str
 
 IMAGE_CLASSES ?= "image_types"
@@ -119,7 +119,7 @@ ROOTFS_POSTPROCESS_COMMAND ?= ""
 # some default locales
 IMAGE_LINGUAS ?= "de-de fr-fr en-gb"
 
-LINGUAS_INSTALL = "${@" ".join(map(lambda s: "locale-base-%s" % s, bb.data.getVar('IMAGE_LINGUAS', d, 1).split()))}"
+LINGUAS_INSTALL = "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('IMAGE_LINGUAS', 1).split()))}"
 
 do_rootfs[nostamp] = "1"
 do_rootfs[dirs] = "${TOPDIR}"

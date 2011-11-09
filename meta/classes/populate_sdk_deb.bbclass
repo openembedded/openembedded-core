@@ -2,8 +2,8 @@ do_populate_sdk[depends] += "dpkg-native:do_populate_sysroot apt-native:do_popul
 do_populate_sdk[recrdeptask] += "do_package_write_deb"
 
 
-DEB_SDK_ARCH = "${@[bb.data.getVar('SDK_ARCH', d, 1), "i386"]\
-                [bb.data.getVar('SDK_ARCH', d, 1) in \
+DEB_SDK_ARCH = "${@[d.getVar('SDK_ARCH', 1), "i386"]\
+                [d.getVar('SDK_ARCH', 1) in \
                 ["x86", "i486", "i586", "i686", "pentium"]]}"
 
 populate_sdk_post_deb () {

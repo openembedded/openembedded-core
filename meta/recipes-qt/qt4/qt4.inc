@@ -39,8 +39,8 @@ python __anonymous () {
     lib_packages = []
     dev_packages = []
     dbg_packages = []
-    for name in bb.data.getVar("QT_LIB_NAMES", d, 1).split():
-        pkg = bb.data.getVar("QT_BASE_LIB",d, True) + name.lower().replace("qt", "").replace("_", "-") + "4"
+    for name in d.getVar("QT_LIB_NAMES", 1).split():
+        pkg = d.getVar("QT_BASE_LIB", True) + name.lower().replace("qt", "").replace("_", "-") + "4"
         # NOTE: the headers for QtAssistantClient are different
         incname = name.replace("QtAssistantClient", "QtAssistant")
         bb.data.setVar("FILES_%s" % pkg, "${libdir}/lib%(name)s${QT_LIBINFIX}.so.*" % locals(), d)
@@ -51,15 +51,15 @@ python __anonymous () {
                   ${includedir}/${QT_DIR_NAME}/%(incname)s
                   ${libdir}/pkgconfig/%(name)s${QT_LIBINFIX}.pc""" % locals(), d)
         bb.data.setVar("FILES_%s-dbg" % pkg, "${libdir}/.debug/lib%(name)s${QT_LIBINFIX}.so*" % locals(), d)
-        bb.data.setVar("RRECOMMENDS_%s-dbg" % pkg, "${PN}-dbg", d)
+        d.setVar("RRECOMMENDS_%s-dbg" % pkg, "${PN}-dbg")
         lib_packages.append(pkg)
         dev_packages.append("%s-dev" % pkg)
         dbg_packages.append("%s-dbg" % pkg)
-    for name in bb.data.getVar("OTHER_PACKAGES", d, 1).split():
+    for name in d.getVar("OTHER_PACKAGES", 1).split():
         dbg_packages.append("%s-dbg" % name)
 
-    for name in bb.data.getVar("QT_EXTRA_LIBS", d, 1).split():
-        pkg = bb.data.getVar("QT_BASE_LIB",d, True) + name.lower().replace("qt", "").replace("_", "-") + "4"
+    for name in d.getVar("QT_EXTRA_LIBS", 1).split():
+        pkg = d.getVar("QT_BASE_LIB", True) + name.lower().replace("qt", "").replace("_", "-") + "4"
         bb.data.setVar("FILES_%s" % pkg, "${libdir}/lib%(name)s.so.*" % locals(), d)
         bb.data.setVar("FILES_%s-dev" % pkg, """${libdir}/lib%(name)s.prl
                   ${libdir}/lib%(name)s.a
@@ -68,7 +68,7 @@ python __anonymous () {
                   ${includedir}/${QT_DIR_NAME}/%(incname)s
                   ${libdir}/pkgconfig/%(name)s.pc""" % locals(), d)
         bb.data.setVar("FILES_%s-dbg" % pkg, "${libdir}/.debug/lib%(name)s.so*" % locals(), d)
-        bb.data.setVar("RRECOMMENDS_%s-dbg" % pkg, "${PN}-dbg", d)
+        d.setVar("RRECOMMENDS_%s-dbg" % pkg, "${PN}-dbg")
         lib_packages.append(pkg)
         dev_packages.append("%s-dev" % pkg)
         dbg_packages.append("%s-dbg" % pkg)
@@ -256,14 +256,14 @@ python populate_packages_prepend() {
                 do_split_packages(d, plugin_dir, glob, plugin_name, '${PN} %s for %%s' % name, extra_depends='', hook=dev_hook)
                 # Create a -dbg package as well
                 plugin_dir_dbg = bb.data.expand('${libdir}/${QT_DIR_NAME}/plugins/%s/.debug' % path, d)
-                packages = bb.data.getVar('PACKAGES',d)
+                packages = d.getVar('PACKAGES')
                 for (file,package) in dev_packages:
                         packages = "%s %s-dbg" % (packages, package)
                         file_name = os.path.join(plugin_dir_dbg, os.path.basename(file))
-                        bb.data.setVar("FILES_%s-dbg" % package, file_name, d)
+                        d.setVar("FILES_%s-dbg" % package, file_name)
                         bb.data.setVar("DESCRIPTION_%s-dbg" % package, "${PN} %s for %s" % (name, package), d)
 
-                bb.data.setVar('PACKAGES', packages, d)
+                d.setVar('PACKAGES', packages)
 
         qtopia_split('accessible',    'accessible',    '^libq(.*)\.so$')
         qtopia_split('codecs',        'codec',         '^libq(.*)\.so$')

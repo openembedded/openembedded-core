@@ -105,7 +105,7 @@ ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch la2 pkgconfig la perms"
 
 def package_qa_clean_path(path,d):
     """ Remove the common prefix from the path. In this case it is the TMPDIR"""
-    return path.replace(bb.data.getVar('TMPDIR',d,True),"")
+    return path.replace(d.getVar('TMPDIR',True),"")
 
 def package_qa_write_error(error, d):
     logfile = d.getVar('QA_LOGFILE', True)
@@ -132,13 +132,13 @@ def package_qa_check_rpath(file,name, d, elf, messages):
     if not elf:
         return
 
-    scanelf = os.path.join(bb.data.getVar('STAGING_BINDIR_NATIVE',d,True),'scanelf')
-    bad_dirs = [bb.data.getVar('TMPDIR', d, True) + "/work", bb.data.getVar('STAGING_DIR_TARGET', d, True)]
-    bad_dir_test = bb.data.getVar('TMPDIR', d, True)
+    scanelf = os.path.join(d.getVar('STAGING_BINDIR_NATIVE',True),'scanelf')
+    bad_dirs = [d.getVar('TMPDIR', True) + "/work", d.getVar('STAGING_DIR_TARGET', True)]
+    bad_dir_test = d.getVar('TMPDIR', True)
     if not os.path.exists(scanelf):
         bb.fatal("Can not check RPATH, scanelf (part of pax-utils-native) not found")
 
-    if not bad_dirs[0] in bb.data.getVar('WORKDIR', d, True):
+    if not bad_dirs[0] in d.getVar('WORKDIR', True):
         bb.fatal("This class assumed that WORKDIR is ${TMPDIR}/work... Not doing any check")
 
     output = os.popen("%s -B -F%%r#F '%s'" % (scanelf,file))
@@ -156,11 +156,11 @@ def package_qa_check_useless_rpaths(file, name, d, elf, messages):
     if not elf:
         return
 
-    objdump = bb.data.getVar('OBJDUMP', d, True)
-    env_path = bb.data.getVar('PATH', d, True)
+    objdump = d.getVar('OBJDUMP', True)
+    env_path = d.getVar('PATH', True)
 
-    libdir = bb.data.getVar("libdir", d, True)
-    base_libdir = bb.data.getVar("base_libdir", d, True)
+    libdir = d.getVar("libdir", True)
+    base_libdir = d.getVar("base_libdir", True)
 
     import re
     rpath_re = re.compile("\s+RPATH\s+(.*)")
@@ -209,8 +209,8 @@ def package_qa_check_arch(path,name,d, elf, messages):
     if not elf:
         return
 
-    target_os   = bb.data.getVar('TARGET_OS',   d, True)
-    target_arch = bb.data.getVar('TARGET_ARCH', d, True)
+    target_os   = d.getVar('TARGET_OS', True)
+    target_arch = d.getVar('TARGET_ARCH', True)
 
     # FIXME: Cross package confuse this check, so just skip them
     for s in ['cross', 'nativesdk', 'cross-canadian']:
@@ -243,7 +243,7 @@ def package_qa_check_desktop(path, name, d, elf, messages):
     Run all desktop files through desktop-file-validate.
     """
     if path.endswith(".desktop"):
-        desktop_file_validate = os.path.join(bb.data.getVar('STAGING_BINDIR_NATIVE',d,True),'desktop-file-validate')
+        desktop_file_validate = os.path.join(d.getVar('STAGING_BINDIR_NATIVE',True),'desktop-file-validate')
         output = os.popen("%s %s" % (desktop_file_validate, path))
         # This only produces output on errors
         for l in output:
@@ -261,14 +261,14 @@ def package_qa_hash_style(path, name, d, elf, messages):
     if os.path.islink(path):
         return
 
-    gnu_hash = "--hash-style=gnu" in bb.data.getVar('LDFLAGS', d, True)
+    gnu_hash = "--hash-style=gnu" in d.getVar('LDFLAGS', True)
     if not gnu_hash:
-        gnu_hash = "--hash-style=both" in bb.data.getVar('LDFLAGS', d, True)
+        gnu_hash = "--hash-style=both" in d.getVar('LDFLAGS', True)
     if not gnu_hash:
         return
 
-    objdump = bb.data.getVar('OBJDUMP', d, True)
-    env_path = bb.data.getVar('PATH', d, True)
+    objdump = d.getVar('OBJDUMP', True)
+    env_path = d.getVar('PATH', True)
 
     sane = False
     has_syms = False
@@ -299,7 +299,7 @@ def package_qa_check_buildpaths(path, name, d, elf, messages):
     if os.path.islink(path):
         return
 
-    tmpdir = bb.data.getVar('TMPDIR', d, True)
+    tmpdir = d.getVar('TMPDIR', True)
     file_content = open(path).read()
     if tmpdir in file_content:
         messages.append("File %s in package contained reference to tmpdir" % package_qa_clean_path(path,d))
@@ -311,9 +311,9 @@ def package_qa_check_license(workdir, d):
     import tempfile
     sane = True
 
-    lic_files = bb.data.getVar('LIC_FILES_CHKSUM', d, True)
-    lic = bb.data.getVar('LICENSE', d, True)
-    pn = bb.data.getVar('PN', d, True)
+    lic_files = d.getVar('LIC_FILES_CHKSUM', True)
+    lic = d.getVar('LICENSE', True)
+    pn = d.getVar('PN', True)
 
     if lic == "CLOSED":
         return True
@@ -324,7 +324,7 @@ def package_qa_check_license(workdir, d):
         bb.error(pn + ": Recipe file does not have license file information (LIC_FILES_CHKSUM)")
         return False
 
-    srcdir = bb.data.getVar('S', d, True)
+    srcdir = d.getVar('S', True)
 
     for url in lic_files.split():
         (type, host, path, user, pswd, parm) = bb.decodeurl(url)
@@ -384,7 +384,7 @@ def package_qa_check_staged(path,d):
     """
 
     sane = True
-    tmpdir = bb.data.getVar('TMPDIR', d, True)
+    tmpdir = d.getVar('TMPDIR', True)
     workdir = os.path.join(tmpdir, "work")
 
     installed = "installed=yes"
@@ -417,8 +417,8 @@ def package_qa_walk(path, warnfuncs, errorfuncs, skip, package, d):
     import oe.qa
 
     #if this will throw an exception, then fix the dict above
-    target_os   = bb.data.getVar('TARGET_OS',   d, True)
-    target_arch = bb.data.getVar('TARGET_ARCH', d, True)
+    target_os   = d.getVar('TARGET_OS', True)
+    target_arch = d.getVar('TARGET_ARCH', True)
 
     warnings = []
     errors = []
@@ -457,19 +457,19 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, d):
         localdata = bb.data.createCopy(d)
         root = "%s/%s" % (pkgdest, pkg)
 
-        bb.data.setVar('ROOT', '', localdata) 
-        bb.data.setVar('ROOT_%s' % pkg, root, localdata)
-        pkgname = bb.data.getVar('PKG_%s' % pkg, localdata, True)
+        localdata.setVar('ROOT', '') 
+        localdata.setVar('ROOT_%s' % pkg, root)
+        pkgname = localdata.getVar('PKG_%s' % pkg, True)
         if not pkgname:
             pkgname = pkg
-        bb.data.setVar('PKG', pkgname, localdata)
+        localdata.setVar('PKG', pkgname)
 
-        bb.data.setVar('OVERRIDES', pkg, localdata)
+        localdata.setVar('OVERRIDES', pkg)
 
         bb.data.update_data(localdata)
 
         # Now check the RDEPENDS
-        rdepends = bb.utils.explode_deps(bb.data.getVar('RDEPENDS', localdata, True) or "")
+        rdepends = bb.utils.explode_deps(localdata.getVar('RDEPENDS', True) or "")
 
 
         # Now do the sanity check!!!
@@ -487,8 +487,8 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, d):
 python do_package_qa () {
     bb.note("DO PACKAGE QA")
 
-    logdir = bb.data.getVar('T', d, True)
-    pkg = bb.data.getVar('PN', d, True)
+    logdir = d.getVar('T', True)
+    pkg = d.getVar('PN', True)
 
     # Check the compile log for host contamination
     compilelog = os.path.join(logdir,"log.do_compile")
@@ -508,8 +508,8 @@ python do_package_qa () {
                 (pkg, installlog))
 
     # Scan the packages...
-    pkgdest = bb.data.getVar('PKGDEST', d, True)
-    packages = bb.data.getVar('PACKAGES',d, True)
+    pkgdest = d.getVar('PKGDEST', True)
+    packages = d.getVar('PACKAGES', True)
 
     # no packages should be scanned
     if not packages:
@@ -521,7 +521,7 @@ python do_package_qa () {
     walk_sane = True
     rdepends_sane = True
     for package in packages.split():
-        skip = (bb.data.getVar('INSANE_SKIP_' + package, d, True) or "").split()
+        skip = (d.getVar('INSANE_SKIP_' + package, True) or "").split()
         if skip:
             bb.note("Package %s skipping QA tests: %s" % (package, str(skip)))
         warnchecks = []
@@ -560,7 +560,7 @@ python do_qa_staging() {
 
 python do_qa_configure() {
     configs = []
-    workdir = bb.data.getVar('WORKDIR', d, True)
+    workdir = d.getVar('WORKDIR', True)
     bb.note("Checking autotools environment for common misconfiguration")
     for root, dirs, files in os.walk(workdir):
         statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % \
@@ -575,8 +575,8 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
         if "configure.in" in files:
             configs.append(os.path.join(root, "configure.in"))
 
-    cnf = bb.data.getVar('EXTRA_OECONF', d, True) or ""
-    if "gettext" not in bb.data.getVar('P', d, True) and "gcc-runtime" not in bb.data.getVar('P', d, True) and "--disable-nls" not in cnf:
+    cnf = d.getVar('EXTRA_OECONF', True) or ""
+    if "gettext" not in d.getVar('P', True) and "gcc-runtime" not in d.getVar('P', True) and "--disable-nls" not in cnf:
        ml = d.getVar("MLPREFIX", True) or ""
        if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('nativesdk', d):
           gt = "gettext-native"
@@ -584,7 +584,7 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
           gt = "gettext-nativesdk"
        else:
           gt = "virtual/" + ml + "gettext"
-       deps = bb.utils.explode_deps(bb.data.getVar('DEPENDS', d, True) or "")
+       deps = bb.utils.explode_deps(d.getVar('DEPENDS', True) or "")
        if gt not in deps:
           for config in configs:
               gnu = "grep \"^[[:space:]]*AM_GNU_GETTEXT\" %s >/dev/null" % config

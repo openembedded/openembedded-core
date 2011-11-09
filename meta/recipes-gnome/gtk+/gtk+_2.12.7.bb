@@ -34,8 +34,8 @@ PACKAGES_DYNAMIC += "gdk-pixbuf-loader-* gtk-immodule-* gtk-printbackend-*"
 python populate_packages_prepend () {
 	import os.path
 
-	prologue = bb.data.getVar("postinst_prologue", d, 1)
-	postinst_pixbufloader = bb.data.getVar("postinst_pixbufloader", d, 1)
+	prologue = d.getVar("postinst_prologue", 1)
+	postinst_pixbufloader = d.getVar("postinst_pixbufloader", 1)
 
 	gtk_libdir = bb.data.expand('${libdir}/gtk-2.0/${LIBV}', d)
 	loaders_root = os.path.join(gtk_libdir, 'loaders')
@@ -46,6 +46,6 @@ python populate_packages_prepend () {
 	do_split_packages(d, immodules_root, '^im-(.*)\.so$', 'gtk-immodule-%s', 'GTK input module for %s', prologue + 'gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules')
 	do_split_packages(d, printmodules_root, '^libprintbackend-(.*)\.so$', 'gtk-printbackend-%s', 'GTK printbackend module for %s')
 
-        if (bb.data.getVar('DEBIAN_NAMES', d, 1)):
-                bb.data.setVar('PKG_${PN}', '${MLPREFIX}libgtk-2.0', d)
+        if (d.getVar('DEBIAN_NAMES', 1)):
+                d.setVar('PKG_${PN}', '${MLPREFIX}libgtk-2.0')
 }

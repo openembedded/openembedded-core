@@ -26,8 +26,8 @@ XORG_PN = "libXft"
 BBCLASSEXTEND = "native nativesdk"
 
 python () {
-        if bb.data.getVar('DEBIAN_NAMES', d, 1):
-            bb.data.setVar('PKG_${PN}', '${MLPREFIX}libxft2', d)
+        if d.getVar('DEBIAN_NAMES', 1):
+            d.setVar('PKG_${PN}', '${MLPREFIX}libxft2')
 }
 
 FILES_${PN} = "${libdir}/lib*${SOLIBS}"

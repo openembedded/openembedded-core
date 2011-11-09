@@ -27,8 +27,8 @@ done
 
 python populate_packages_append () {
 	import re
-	packages = bb.data.getVar('PACKAGES', d, 1).split()
-	pkgdest =  bb.data.getVar('PKGDEST', d, 1)
+	packages = d.getVar('PACKAGES', 1).split()
+	pkgdest =  d.getVar('PKGDEST', 1)
 	
 	for pkg in packages:
 		schema_dir = '%s/%s/etc/gconf/schemas' % (pkgdest, pkg)
@@ -41,15 +41,15 @@ python populate_packages_append () {
 		if schemas != []:
 			bb.note("adding gconf postinst and prerm scripts to %s" % pkg)
 			bb.data.setVar('SCHEMA_FILES', " ".join(schemas), d)
-			postinst = bb.data.getVar('pkg_postinst_%s' % pkg, d, 1) or bb.data.getVar('pkg_postinst', d, 1)
+			postinst = d.getVar('pkg_postinst_%s' % pkg, 1) or d.getVar('pkg_postinst', 1)
 			if not postinst:
 				postinst = '#!/bin/sh\n'
-			postinst += bb.data.getVar('gconf_postinst', d, 1)
-			bb.data.setVar('pkg_postinst_%s' % pkg, postinst, d)
-			prerm = bb.data.getVar('pkg_prerm_%s' % pkg, d, 1) or bb.data.getVar('pkg_prerm', d, 1)
+			postinst += d.getVar('gconf_postinst', 1)
+			d.setVar('pkg_postinst_%s' % pkg, postinst)
+			prerm = d.getVar('pkg_prerm_%s' % pkg, 1) or d.getVar('pkg_prerm', 1)
 			if not prerm:
 				prerm = '#!/bin/sh\n'
-			prerm += bb.data.getVar('gconf_prerm', d, 1)
-			bb.data.setVar('pkg_prerm_%s' % pkg, prerm, d)
+			prerm += d.getVar('gconf_prerm', 1)
+			d.setVar('pkg_prerm_%s' % pkg, prerm)
 
 }

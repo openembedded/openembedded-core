@@ -6,7 +6,7 @@ python do_listtasks() {
 	#bb.data.emit_env(sys.__stdout__, d)
 	# emit the metadata which isnt valid shell
 	for e in d.keys():
-		if bb.data.getVarFlag(e, 'task', d):
+		if d.getVarFlag(e, 'task'):
 			bb.plain("%s" % e)
 }
 
@@ -20,18 +20,18 @@ python do_clean() {
 	bb.note("Removing " + dir)
 	oe.path.remove(dir)
 
-	dir = "%s.*" % bb.data.expand(bb.data.getVar('STAMP', d), d)
+	dir = "%s.*" % bb.data.expand(d.getVar('STAMP'), d)
 	bb.note("Removing " + dir)
 	oe.path.remove(dir)
 
-	for f in (bb.data.getVar('CLEANFUNCS', d, 1) or '').split():
+	for f in (d.getVar('CLEANFUNCS', 1) or '').split():
 		bb.build.exec_func(f, d)
 }
 
 addtask checkuri
 do_checkuri[nostamp] = "1"
 python do_checkuri() {
-	src_uri = (bb.data.getVar('SRC_URI', d, True) or "").split()
+	src_uri = (d.getVar('SRC_URI', True) or "").split()
 	if len(src_uri) == 0:
 		return
 

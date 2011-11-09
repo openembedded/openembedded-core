@@ -126,17 +126,17 @@ python __anonymous () {
 
     import bb
 
-    distro_features = set(bb.data.getVar("DISTRO_FEATURES", d, 1).split())
-    machine_features= set(bb.data.getVar("MACHINE_FEATURES", d, 1).split())
+    distro_features = set(d.getVar("DISTRO_FEATURES", 1).split())
+    machine_features= set(d.getVar("MACHINE_FEATURES", 1).split())
 
     if "bluetooth" in distro_features and not "bluetooth" in machine_features and ("pcmcia" in machine_features or "pci" in machine_features or "usbhost" in machine_features):
-	bb.data.setVar("ADD_BT", "task-base-bluetooth", d)
+	d.setVar("ADD_BT", "task-base-bluetooth")
 
     if "wifi" in distro_features and not "wifi" in machine_features and ("pcmcia" in machine_features or "pci" in machine_features or "usbhost" in machine_features):
-	bb.data.setVar("ADD_WIFI", "task-base-wifi", d)
+	d.setVar("ADD_WIFI", "task-base-wifi")
 
     if "3g" in distro_features and not "3g" in machine_features and ("pcmcia" in machine_features or "pci" in machine_features or "usbhost" in machine_features):
-	bb.data.setVar("ADD_3G", "task-base-3g", d)
+	d.setVar("ADD_3G", "task-base-3g")
 }
 
 #

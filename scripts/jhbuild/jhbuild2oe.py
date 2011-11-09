@@ -161,9 +161,9 @@ class Handlers(object):
         # create the package
         d = bb.data.init()
         pn = self.packagename(element.attrib.get('id'))
-        bb.data.setVar('PN', pn, d)
+        d.setVar('PN', pn)
         bb.data.setVar('DEPENDS', ' '.join(deps), d)
-        bb.data.setVar('_handler', 'metamodule', d)
+        d.setVar('_handler', 'metamodule')
         self.packages.append(d)
 
     def autotools(self, element, parent):
@@ -181,23 +181,23 @@ class Handlers(object):
         if id is None:
             raise Exception('Error: autotools element has no id attribute.')
         pn = self.packagename(id)
-        bb.data.setVar('PN', pn, d)
+        d.setVar('PN', pn)
         if deps is not None:
             bb.data.setVar('DEPENDS', ' '.join(deps), d)
 
         if branch is not None:
             # <branch repo="git.freedesktop.org" module="xorg/xserver"/>
             repo = os.path.join(self.repositories[branch.attrib.get('repo')], branch.attrib.get('module'))
-            bb.data.setVar('SRC_URI', repo, d)
+            d.setVar('SRC_URI', repo)
 
             checkoutdir = branch.attrib.get('checkoutdir')
             if checkoutdir is not None:
                 bb.data.setVar('S', os.path.join('${WORKDIR}', checkoutdir), d)
 
         # build class
-        bb.data.setVar('INHERITS', 'autotools', d)
-        bb.data.setVarFlag('INHERITS', 'operator', '+=', d)
-        bb.data.setVar('_handler', 'autotools', d)
+        d.setVar('INHERITS', 'autotools')
+        d.setVarFlag('INHERITS', 'operator', '+=')
+        d.setVar('_handler', 'autotools')
         self.packages.append(d)
 
 class Emitter(object):
@@ -209,7 +209,7 @@ class Emitter(object):
     def __init__(self, filefunc = None, basedir = None):
         def _defaultfilefunc(package):
             # return a relative path to the bitbake .bb which will be written
-            return bb.data.getVar('PN', package, 1) + '.bb'
+            return package.getVar('PN', 1) + '.bb'
 
         self.filefunc = filefunc or _defaultfilefunc
         self.basedir = basedir or os.path.abspath(os.curdir)
@@ -226,16 +226,16 @@ class Emitter(object):
             f.close()
 
             for key in bb.data.keys(package):
-                fdata = fdata.replace('@@'+key+'@@', bb.data.getVar(key, package))
+                fdata = fdata.replace('@@'+key+'@@', package.getVar(key))
         else:
             for key in bb.data.keys(package):
                 if key == '_handler':
                     continue
                 elif key == 'INHERITS':
-                    fdata += 'inherit %s\n' % bb.data.getVar('INHERITS', package)
+                    fdata += 'inherit %s\n' % package.getVar('INHERITS')
                 else:
-                    oper = bb.data.getVarFlag(key, 'operator', package) or '='
-                    fdata += '%s %s "%s"\n' % (key, oper, bb.data.getVar(key, package))
+                    oper = package.getVarFlag(key, 'operator') or '='
+                    fdata += '%s %s "%s"\n' % (key, oper, package.getVar(key))
 
         if not os.path.exists(os.path.join(self.basedir, os.path.dirname(self.filefunc(package)))):
             os.makedirs(os.path.join(self.basedir, os.path.dirname(self.filefunc(package))))
@@ -254,8 +254,8 @@ def _test():
 
     def filefunc(package):
         # return a relative path to the bitbake .bb which will be written
-        src_uri = bb.data.getVar('SRC_URI', package, 1)
-        filename = bb.data.getVar('PN', package, 1) + '.bb'
+        src_uri = package.getVar('SRC_URI', 1)
+        filename = package.getVar('PN', 1) + '.bb'
         if not src_uri:
             return filename
         else:

@@ -78,38 +78,38 @@ fi
 }
 
 def update_alternatives_after_parse(d):
-    if bb.data.getVar('ALTERNATIVE_LINKS', d) != None:
-        doinstall = bb.data.getVar('do_install', d, 0)
-        doinstall += bb.data.getVar('update_alternatives_batch_doinstall', d, 0)
-        bb.data.setVar('do_install', doinstall, d)
+    if d.getVar('ALTERNATIVE_LINKS') != None:
+        doinstall = d.getVar('do_install', 0)
+        doinstall += d.getVar('update_alternatives_batch_doinstall', 0)
+        d.setVar('do_install', doinstall)
         return
 
-    if bb.data.getVar('ALTERNATIVE_NAME', d) == None:
-        raise bb.build.FuncFailed, "%s inherits update-alternatives but doesn't set ALTERNATIVE_NAME" % bb.data.getVar('FILE', d)
-    if bb.data.getVar('ALTERNATIVE_PATH', d) == None:
-        raise bb.build.FuncFailed, "%s inherits update-alternatives but doesn't set ALTERNATIVE_PATH" % bb.data.getVar('FILE', d)
+    if d.getVar('ALTERNATIVE_NAME') == None:
+        raise bb.build.FuncFailed, "%s inherits update-alternatives but doesn't set ALTERNATIVE_NAME" % d.getVar('FILE')
+    if d.getVar('ALTERNATIVE_PATH') == None:
+        raise bb.build.FuncFailed, "%s inherits update-alternatives but doesn't set ALTERNATIVE_PATH" % d.getVar('FILE')
 
 python __anonymous() {
     update_alternatives_after_parse(d)
 }
 
 python populate_packages_prepend () {
-	pkg = bb.data.getVar('PN', d, 1)
+	pkg = d.getVar('PN', 1)
 	bb.note('adding update-alternatives calls to postinst/postrm for %s' % pkg)
-	postinst = bb.data.getVar('pkg_postinst_%s' % pkg, d, 1) or bb.data.getVar('pkg_postinst', d, 1)
+	postinst = d.getVar('pkg_postinst_%s' % pkg, 1) or d.getVar('pkg_postinst', 1)
 	if not postinst:
 		postinst = '#!/bin/sh\n'
-	if bb.data.getVar('ALTERNATIVE_LINKS', d) != None:
-		postinst += bb.data.getVar('update_alternatives_batch_postinst', d, 1)
+	if d.getVar('ALTERNATIVE_LINKS') != None:
+		postinst += d.getVar('update_alternatives_batch_postinst', 1)
 	else:
-		postinst += bb.data.getVar('update_alternatives_postinst', d, 1)
-	bb.data.setVar('pkg_postinst_%s' % pkg, postinst, d)
-	postrm = bb.data.getVar('pkg_postrm_%s' % pkg, d, 1) or bb.data.getVar('pkg_postrm', d, 1)
+		postinst += d.getVar('update_alternatives_postinst', 1)
+	d.setVar('pkg_postinst_%s' % pkg, postinst)
+	postrm = d.getVar('pkg_postrm_%s' % pkg, 1) or d.getVar('pkg_postrm', 1)
 	if not postrm:
 		postrm = '#!/bin/sh\n'
-	if bb.data.getVar('ALTERNATIVE_LINKS', d) != None:
-		postrm += bb.data.getVar('update_alternatives_batch_postrm', d, 1)
+	if d.getVar('ALTERNATIVE_LINKS') != None:
+		postrm += d.getVar('update_alternatives_batch_postrm', 1)
 	else:
-		postrm += bb.data.getVar('update_alternatives_postrm', d, 1)
-	bb.data.setVar('pkg_postrm_%s' % pkg, postrm, d)
+		postrm += d.getVar('update_alternatives_postrm', 1)
+	d.setVar('pkg_postrm_%s' % pkg, postrm)
 }

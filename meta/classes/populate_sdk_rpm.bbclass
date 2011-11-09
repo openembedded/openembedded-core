@@ -127,6 +127,6 @@ python () {
             localdata.setVar("DEFAULTTUNE", localdata.getVar("DEFAULTTUNE_virtclass-multilib-" + eext[1], False) or "")
             ml_package_archs += localdata.getVar("PACKAGE_ARCHS", True) or ""
             #bb.note("ML_PACKAGE_ARCHS %s %s %s" % (eext[1], localdata.getVar("PACKAGE_ARCHS", True) or "(none)", overrides))
-    bb.data.setVar('MULTILIB_PACKAGE_ARCHS', ml_package_archs, d)
+    d.setVar('MULTILIB_PACKAGE_ARCHS', ml_package_archs)
 }
 

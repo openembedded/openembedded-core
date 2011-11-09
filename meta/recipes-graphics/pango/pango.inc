@@ -39,7 +39,7 @@ fi
 }
 
 python populate_packages_prepend () {
-	prologue = bb.data.getVar("postinst_prologue", d, 1)
+	prologue = d.getVar("postinst_prologue", 1)
 
 	modules_root = bb.data.expand('${libdir}/pango/${LIBV}/modules', d)
 

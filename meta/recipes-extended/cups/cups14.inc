@@ -58,7 +58,7 @@ fakeroot do_install () {
 
 python do_package_append() {
 	# Change permissions back the way they were, they probably had a reason...
-	workdir = bb.data.getVar('WORKDIR', d, 1)
+	workdir = d.getVar('WORKDIR', 1)
 	os.system('chmod 0511 %s/install/cups/var/run/cups/certs' % workdir)
 }
 

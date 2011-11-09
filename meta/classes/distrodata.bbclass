@@ -19,87 +19,87 @@ addtask distrodata_np
 do_distrodata_np[nostamp] = "1"
 python do_distrodata_np() {
 	localdata = bb.data.createCopy(d)
-        pn = bb.data.getVar("PN", d, True)
+        pn = d.getVar("PN", True)
         bb.note("Package Name: %s" % pn)
 
         import oe.distro_check as dist_check
-        tmpdir = bb.data.getVar('TMPDIR', d, True)
+        tmpdir = d.getVar('TMPDIR', True)
         distro_check_dir = os.path.join(tmpdir, "distro_check")
-        datetime = bb.data.getVar('DATETIME', localdata, True)
+        datetime = localdata.getVar('DATETIME', True)
         dist_check.update_distro_data(distro_check_dir, datetime)
 
 	if pn.find("-native") != -1:
 	    pnstripped = pn.split("-native")
 	    bb.note("Native Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
 	    bb.data.update_data(localdata)
 
 	if pn.find("-nativesdk") != -1:
 	    pnstripped = pn.split("-nativesdk")
 	    bb.note("Native Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
 	    bb.data.update_data(localdata)
 
 	if pn.find("-cross") != -1:
 	    pnstripped = pn.split("-cross")
 	    bb.note("cross Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
 	    bb.data.update_data(localdata)
 
 	if pn.find("-crosssdk") != -1:
 	    pnstripped = pn.split("-crosssdk")
 	    bb.note("cross Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
 	    bb.data.update_data(localdata)
 
 	if pn.find("-initial") != -1:
 	    pnstripped = pn.split("-initial")
 	    bb.note("initial Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
 	    bb.data.update_data(localdata)
 
 	"""generate package information from .bb file"""
-	pname = bb.data.getVar('PN', localdata, True)
-	pcurver = bb.data.getVar('PV', localdata, True)
-	pdesc = bb.data.getVar('DESCRIPTION', localdata, True)
+	pname = localdata.getVar('PN', True)
+	pcurver = localdata.getVar('PV', True)
+	pdesc = localdata.getVar('DESCRIPTION', True)
         if pdesc is not None:
                 pdesc = pdesc.replace(',','')
                 pdesc = pdesc.replace('\n','')
 
-	pgrp = bb.data.getVar('SECTION', localdata, True)
-	plicense = bb.data.getVar('LICENSE', localdata, True).replace(',','_')
-	if bb.data.getVar('LIC_FILES_CHKSUM', localdata, True):
+	pgrp = localdata.getVar('SECTION', True)
+	plicense = localdata.getVar('LICENSE', True).replace(',','_')
+	if localdata.getVar('LIC_FILES_CHKSUM', True):
 		pchksum="1"
 	else:
 		pchksum="0"
 
-	if bb.data.getVar('RECIPE_STATUS', localdata, True):
+	if localdata.getVar('RECIPE_STATUS', True):
 		hasrstatus="1"
 	else:
 		hasrstatus="0"
 
-	rstatus = bb.data.getVar('RECIPE_STATUS', localdata, True)
+	rstatus = localdata.getVar('RECIPE_STATUS', True)
         if rstatus is not None:
                 rstatus = rstatus.replace(',','')
 		
-	pupver = bb.data.getVar('RECIPE_LATEST_VERSION', localdata, True)
+	pupver = localdata.getVar('RECIPE_LATEST_VERSION', True)
 	if pcurver == pupver:
 		vermatch="1"
 	else:
 		vermatch="0"
-	noupdate_reason = bb.data.getVar('RECIPE_NO_UPDATE_REASON', localdata, True)
+	noupdate_reason = localdata.getVar('RECIPE_NO_UPDATE_REASON', True)
 	if noupdate_reason is None:
 		noupdate="0"
 	else:
 		noupdate="1"
                 noupdate_reason = noupdate_reason.replace(',','')
 
-	ris = bb.data.getVar('RECIPE_INTEL_SECTION', localdata, True)
-	maintainer = bb.data.getVar('RECIPE_MAINTAINER', localdata, True)
-	rttr = bb.data.getVar('RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES', localdata, True)
-	rlrd = bb.data.getVar('RECIPE_LATEST_RELEASE_DATE', localdata, True)
-	dc = bb.data.getVar('DEPENDENCY_CHECK', localdata, True)
-	rc = bb.data.getVar('RECIPE_COMMENTS', localdata, True)
+	ris = localdata.getVar('RECIPE_INTEL_SECTION', True)
+	maintainer = localdata.getVar('RECIPE_MAINTAINER', True)
+	rttr = localdata.getVar('RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES', True)
+	rlrd = localdata.getVar('RECIPE_LATEST_RELEASE_DATE', True)
+	dc = localdata.getVar('DEPENDENCY_CHECK', True)
+	rc = localdata.getVar('RECIPE_COMMENTS', True)
         result = dist_check.compare_in_distro_packages_list(distro_check_dir, localdata)
 
 	bb.note("DISTRO: %s,%s,%s,%s,%s,%s,%s,%s,%s, %s, %s, %s\n" % \
@@ -113,81 +113,81 @@ python do_distrodata_np() {
 addtask distrodata
 do_distrodata[nostamp] = "1"
 python do_distrodata() {
-	logpath = bb.data.getVar('LOG_DIR', d, True)
+	logpath = d.getVar('LOG_DIR', True)
 	bb.utils.mkdirhier(logpath)
 	logfile = os.path.join(logpath, "distrodata.csv")
 
         import oe.distro_check as dist_check
 	localdata = bb.data.createCopy(d)
-        tmpdir = bb.data.getVar('TMPDIR', d, True)
+        tmpdir = d.getVar('TMPDIR', True)
         distro_check_dir = os.path.join(tmpdir, "distro_check")
-        datetime = bb.data.getVar('DATETIME', localdata, True)
+        datetime = localdata.getVar('DATETIME', True)
         dist_check.update_distro_data(distro_check_dir, datetime)
 
-        pn = bb.data.getVar("PN", d, True)
+        pn = d.getVar("PN", True)
         bb.note("Package Name: %s" % pn)
 
 	if pn.find("-native") != -1:
 	    pnstripped = pn.split("-native")
 	    bb.note("Native Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
 	    bb.data.update_data(localdata)
 
 	if pn.find("-cross") != -1:
 	    pnstripped = pn.split("-cross")
 	    bb.note("cross Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
 	    bb.data.update_data(localdata)
 
 	if pn.find("-initial") != -1:
 	    pnstripped = pn.split("-initial")
 	    bb.note("initial Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
 	    bb.data.update_data(localdata)
 
 	"""generate package information from .bb file"""
-	pname = bb.data.getVar('PN', localdata, True)
-	pcurver = bb.data.getVar('PV', localdata, True)
-	pdesc = bb.data.getVar('DESCRIPTION', localdata, True)
+	pname = localdata.getVar('PN', True)
+	pcurver = localdata.getVar('PV', True)
+	pdesc = localdata.getVar('DESCRIPTION', True)
         if pdesc is not None:
                 pdesc = pdesc.replace(',','')
                 pdesc = pdesc.replace('\n','')
 
-	pgrp = bb.data.getVar('SECTION', localdata, True)
-	plicense = bb.data.getVar('LICENSE', localdata, True).replace(',','_')
-	if bb.data.getVar('LIC_FILES_CHKSUM', localdata, True):
+	pgrp = localdata.getVar('SECTION', True)
+	plicense = localdata.getVar('LICENSE', True).replace(',','_')
+	if localdata.getVar('LIC_FILES_CHKSUM', True):
 		pchksum="1"
 	else:
 		pchksum="0"
 
-	if bb.data.getVar('RECIPE_STATUS', localdata, True):
+	if localdata.getVar('RECIPE_STATUS', True):
 		hasrstatus="1"
 	else:
 		hasrstatus="0"
 
-	rstatus = bb.data.getVar('RECIPE_STATUS', localdata, True)
+	rstatus = localdata.getVar('RECIPE_STATUS', True)
         if rstatus is not None:
                 rstatus = rstatus.replace(',','')
 		
-	pupver = bb.data.getVar('RECIPE_LATEST_VERSION', localdata, True)
+	pupver = localdata.getVar('RECIPE_LATEST_VERSION', True)
 	if pcurver == pupver:
 		vermatch="1"
 	else:
 		vermatch="0"
 
-	noupdate_reason = bb.data.getVar('RECIPE_NO_UPDATE_REASON', localdata, True)
+	noupdate_reason = localdata.getVar('RECIPE_NO_UPDATE_REASON', True)
 	if noupdate_reason is None:
 		noupdate="0"
 	else:
 		noupdate="1"
                 noupdate_reason = noupdate_reason.replace(',','')
 
-	ris = bb.data.getVar('RECIPE_INTEL_SECTION', localdata, True)
-	maintainer = bb.data.getVar('RECIPE_MAINTAINER', localdata, True)
-	rttr = bb.data.getVar('RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES', localdata, True)
-	rlrd = bb.data.getVar('RECIPE_LATEST_RELEASE_DATE', localdata, True)
-	dc = bb.data.getVar('DEPENDENCY_CHECK', localdata, True)
-	rc = bb.data.getVar('RECIPE_COMMENTS', localdata, True)
+	ris = localdata.getVar('RECIPE_INTEL_SECTION', True)
+	maintainer = localdata.getVar('RECIPE_MAINTAINER', True)
+	rttr = localdata.getVar('RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES', True)
+	rlrd = localdata.getVar('RECIPE_LATEST_RELEASE_DATE', True)
+	dc = localdata.getVar('DEPENDENCY_CHECK', True)
+	rc = localdata.getVar('RECIPE_COMMENTS', True)
         # do the comparison
         result = dist_check.compare_in_distro_packages_list(distro_check_dir, localdata)
 
@@ -298,7 +298,7 @@ python do_checkpkg() {
 		Clear internal url cache as it's a temporary check. Not doing so will have 
 		bitbake check url multiple times when looping through a single url
 		"""
-		fn = bb.data.getVar('FILE', d, True)
+		fn = d.getVar('FILE', True)
 		bb.fetch2.urldata_cache[fn] = {}
 
 		"""
@@ -329,7 +329,7 @@ python do_checkpkg() {
 	Return new version if success, or else error in "Errxxxx" style
 	"""
 	def check_new_dir(url, curver, d):
-		pn = bb.data.getVar('PN', d, True)
+		pn = d.getVar('PN', True)
 		f = tempfile.NamedTemporaryFile(delete=False, prefix="%s-1-" % pn)
 		status = internal_fetch_wget(url, d, f)
 		fhtml = f.read()
@@ -372,7 +372,7 @@ python do_checkpkg() {
 
 		f.close()
 		if status != "ErrHostNoDir" and re.match("Err", status):
-			logpath = bb.data.getVar('LOG_DIR', d, 1)
+			logpath = d.getVar('LOG_DIR', 1)
 			os.system("cp %s %s/" % (f.name, logpath))
 		os.unlink(f.name)
 		return status
@@ -388,7 +388,7 @@ python do_checkpkg() {
 		"""possible to have no version in pkg name, such as spectrum-fw"""
 		if not re.search("\d+", curname):
 			return pcurver
-		pn = bb.data.getVar('PN', d, True)
+		pn = d.getVar('PN', True)
 		f = tempfile.NamedTemporaryFile(delete=False, prefix="%s-2-" % pn)
 		status = internal_fetch_wget(url, d, f)
 		fhtml = f.read()
@@ -431,55 +431,55 @@ python do_checkpkg() {
 		f.close()
 		"""if host hasn't directory information, no need to save tmp file"""
 		if status != "ErrHostNoDir" and re.match("Err", status):
-			logpath = bb.data.getVar('LOG_DIR', d, True)
+			logpath = d.getVar('LOG_DIR', True)
 			os.system("cp %s %s/" % (f.name, logpath))
 		os.unlink(f.name)
 		return status
 
 	"""first check whether a uri is provided"""
-	src_uri = bb.data.getVar('SRC_URI', d, True)
+	src_uri = d.getVar('SRC_URI', True)
 	if not src_uri:
 		return
 
 	"""initialize log files."""
-	logpath = bb.data.getVar('LOG_DIR', d, True)
+	logpath = d.getVar('LOG_DIR', True)
 	bb.utils.mkdirhier(logpath)
 	logfile = os.path.join(logpath, "checkpkg.csv")
 
 	"""generate package information from .bb file"""
-	pname = bb.data.getVar('PN', d, True)
+	pname = d.getVar('PN', True)
 
 	if pname.find("-native") != -1:
 	    pnstripped = pname.split("-native")
 	    bb.note("Native Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
 	    bb.data.update_data(localdata)
 
 	if pname.find("-cross") != -1:
 	    pnstripped = pname.split("-cross")
 	    bb.note("cross Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
 	    bb.data.update_data(localdata)
 
 	if pname.find("-initial") != -1:
 	    pnstripped = pname.split("-initial")
 	    bb.note("initial Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
 	    bb.data.update_data(localdata)
 
-	pdesc = bb.data.getVar('DESCRIPTION', localdata, True)
-	pgrp = bb.data.getVar('SECTION', localdata, True)
-	pversion = bb.data.getVar('PV', localdata, True)
-	plicense = bb.data.getVar('LICENSE', localdata, True)
-	psection = bb.data.getVar('SECTION', localdata, True)
-	phome = bb.data.getVar('HOMEPAGE', localdata, True)
-	prelease = bb.data.getVar('PR', localdata, True)
-	ppriority = bb.data.getVar('PRIORITY', localdata, True)
-	pdepends = bb.data.getVar('DEPENDS', localdata, True)
-	pbugtracker = bb.data.getVar('BUGTRACKER', localdata, True)
-	ppe = bb.data.getVar('PE', localdata, True)
-	psrcuri = bb.data.getVar('SRC_URI', localdata, True)
-	maintainer = bb.data.getVar('RECIPE_MAINTAINER', localdata, True)
+	pdesc = localdata.getVar('DESCRIPTION', True)
+	pgrp = localdata.getVar('SECTION', True)
+	pversion = localdata.getVar('PV', True)
+	plicense = localdata.getVar('LICENSE', True)
+	psection = localdata.getVar('SECTION', True)
+	phome = localdata.getVar('HOMEPAGE', True)
+	prelease = localdata.getVar('PR', True)
+	ppriority = localdata.getVar('PRIORITY', True)
+	pdepends = localdata.getVar('DEPENDS', True)
+	pbugtracker = localdata.getVar('BUGTRACKER', True)
+	ppe = localdata.getVar('PE', True)
+	psrcuri = localdata.getVar('SRC_URI', True)
+	maintainer = localdata.getVar('RECIPE_MAINTAINER', True)
 
 	found = 0
 	for uri in src_uri.split():
@@ -497,9 +497,9 @@ python do_checkpkg() {
 
 	(type, host, path, user, pswd, parm) = bb.decodeurl(uri)
 	if type in ['http', 'https', 'ftp']:
-		pcurver = bb.data.getVar('PV', d, True)
+		pcurver = d.getVar('PV', True)
 	else:
-		pcurver = bb.data.getVar("SRCREV", d, True)
+		pcurver = d.getVar("SRCREV", True)
 
 	if type in ['http', 'https', 'ftp']:
 		newver = pcurver
@@ -639,7 +639,7 @@ python do_checkpkg() {
 		pstatus += ":%s%s" % (host, path)
 
 	"""Read from manual distro tracking fields as alternative"""
-	pmver = bb.data.getVar("RECIPE_LATEST_VERSION", d, True)
+	pmver = d.getVar("RECIPE_LATEST_VERSION", True)
 	if not pmver:
 		pmver = "N/A"
 		pmstatus = "ErrNoRecipeData"
@@ -688,12 +688,12 @@ python do_distro_check() {
 
     localdata = bb.data.createCopy(d)
     bb.data.update_data(localdata)
-    tmpdir = bb.data.getVar('TMPDIR', d, True)
+    tmpdir = d.getVar('TMPDIR', True)
     distro_check_dir = os.path.join(tmpdir, "distro_check")
-    logpath = bb.data.getVar('LOG_DIR', d, True)
+    logpath = d.getVar('LOG_DIR', True)
     bb.utils.mkdirhier(logpath)
     result_file = os.path.join(logpath, "distrocheck.csv")
-    datetime = bb.data.getVar('DATETIME', localdata, True)
+    datetime = localdata.getVar('DATETIME', True)
     dc.update_distro_data(distro_check_dir, datetime)
 
     # do the comparison
@@ -734,12 +734,12 @@ python do_checklicense() {
     import os
     import bb
     import shutil
-    logpath = bb.data.getVar('LOG_DIR', d, True)
+    logpath = d.getVar('LOG_DIR', True)
     bb.utils.mkdirhier(logpath)
-    pn = bb.data.getVar('PN', d, True)
+    pn = d.getVar('PN', True)
     logfile = os.path.join(logpath, "missinglicense.csv")
-    generic_directory = bb.data.getVar('COMMON_LICENSE_DIR', d, True)
-    license_types = bb.data.getVar('LICENSE', d, True)
+    generic_directory = d.getVar('COMMON_LICENSE_DIR', True)
+    license_types = d.getVar('LICENSE', True)
     for license_type in ((license_types.replace('+', '').replace('|', '&')
                           .replace('(', '').replace(')', '').replace(';', '')
                           .replace(',', '').replace(" ", "").split("&"))):

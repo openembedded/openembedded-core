@@ -179,7 +179,7 @@ class GitApplyTree(PatchTree):
 
 class QuiltTree(PatchSet):
     def _runcmd(self, args, run = True):
-        quiltrc = bb.data.getVar('QUILTRCFILE', self.d, 1)
+        quiltrc = self.d.getVar('QUILTRCFILE', 1)
         if not run:
             return ["quilt"] + ["--quiltrc"] + [quiltrc] + args
         runcmd(["quilt"] + ["--quiltrc"] + [quiltrc] + args, self.dir)
@@ -357,7 +357,7 @@ class UserResolver(Resolver):
             # Patch application failed
             patchcmd = self.patchset.Push(True, False, False)
 
-            t = bb.data.getVar('T', self.patchset.d, 1)
+            t = self.patchset.d.getVar('T', 1)
             if not t:
                 bb.msg.fatal("Build", "T not set")
             bb.utils.mkdirhier(t)

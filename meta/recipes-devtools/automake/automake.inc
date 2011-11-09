@@ -10,6 +10,6 @@ SRC_URI = "${GNU_MIRROR}/automake/automake-${PV}.tar.bz2 "
 
 inherit autotools
 
-export AUTOMAKE = "${@bb.which('automake', bb.data.getVar('PATH', d, 1))}"
+export AUTOMAKE = "${@bb.which('automake', d.getVar('PATH', 1))}"
 
 FILES_${PN} += "${datadir}/automake* ${datadir}/aclocal*"

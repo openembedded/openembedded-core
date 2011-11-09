@@ -9,7 +9,7 @@ RDEPENDS_${PN}    = "glibc-gconv-ibm850 glibc-gconv-cp1252 \
 SRC_URI = "http://www.abiword.org/downloads/abiword/${PV}/source/abiword-${PV}.tar.gz"
 
 #want 2.x from 2.x.y for the installation directory
-SHRT_VER = "${@bb.data.getVar('PV',d,1).split('.')[0]}.${@bb.data.getVar('PV',d,1).split('.')[1]}"
+SHRT_VER = "${@d.getVar('PV',1).split('.')[0]}.${@d.getVar('PV',1).split('.')[1]}"
 
 FILES_${PN} += " \
 		${datadir}/icons/* \

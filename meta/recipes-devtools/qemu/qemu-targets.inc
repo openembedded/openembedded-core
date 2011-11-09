@@ -4,7 +4,7 @@
 
 def get_qemu_target_list(d):
     import bb
-    archs = bb.data.getVar('QEMU_TARGETS', d, True).split()
+    archs = d.getVar('QEMU_TARGETS', True).split()
     targets = ""
     for arch in ['mips64', 'mips64el', 'ppcemb']:
         if arch in archs:

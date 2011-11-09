@@ -103,7 +103,7 @@ pkg_postrm_${PN}-server() {
 }
 
 python populate_packages_prepend() {
-        #bb.data.setVar('PKG_pulseaudio', 'pulseaudio', d)
+        #d.setVar('PKG_pulseaudio', 'pulseaudio')
 
         plugindir = bb.data.expand('${libdir}/pulse-${PV}/modules/', d)
         do_split_packages(d, plugindir, '^module-(.*)\.so$', 'pulseaudio-module-%s', 'PulseAudio module for %s', extra_depends='' )

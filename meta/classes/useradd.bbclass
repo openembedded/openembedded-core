@@ -107,11 +107,11 @@ def update_useradd_after_parse(d):
 	useradd_packages = d.getVar('USERADD_PACKAGES', True)
 
 	if not useradd_packages:
-		raise bb.build.FuncFailed, "%s inherits useradd but doesn't set USERADD_PACKAGES" % bb.data.getVar('FILE', d)
+		raise bb.build.FuncFailed, "%s inherits useradd but doesn't set USERADD_PACKAGES" % d.getVar('FILE')
 
 	for pkg in useradd_packages.split():
 		if not d.getVar('USERADD_PARAM_%s' % pkg, True) and not d.getVar('GROUPADD_PARAM_%s' % pkg, True):
-			raise bb.build.FuncFailed, "%s inherits useradd but doesn't set USERADD_PARAM or GROUPADD_PARAM for package %s" % (bb.data.getVar('FILE', d), pkg)
+			raise bb.build.FuncFailed, "%s inherits useradd but doesn't set USERADD_PARAM or GROUPADD_PARAM for package %s" % (d.getVar('FILE'), pkg)
 
 python __anonymous() {
 	update_useradd_after_parse(d)
@@ -147,12 +147,12 @@ fakeroot python populate_packages_prepend () {
 		if not preinst:
 			preinst = '#!/bin/sh\n'
 		preinst += d.getVar('useradd_preinst', True)
-		bb.data.setVar('pkg_preinst_%s' % pkg, preinst, d)
+		d.setVar('pkg_preinst_%s' % pkg, preinst)
 
 		# RDEPENDS setup
 		rdepends = d.getVar("RDEPENDS_%s" % pkg, True) or ""
 		rdepends += " base-passwd shadow"
-		bb.data.setVar("RDEPENDS_%s" % pkg, rdepends, d)
+		d.setVar("RDEPENDS_%s" % pkg, rdepends)
 
 	# Add the user/group preinstall scripts and RDEPENDS requirements
 	# to packages specified by USERADD_PACKAGES

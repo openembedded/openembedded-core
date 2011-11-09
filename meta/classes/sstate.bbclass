@@ -20,7 +20,7 @@ SSTATEPOSTINSTFUNCS ?= ""
 
 python () {
     if bb.data.inherits_class('native', d):
-        bb.data.setVar('SSTATE_PKGARCH', bb.data.getVar('BUILD_ARCH', d), d)
+        bb.data.setVar('SSTATE_PKGARCH', d.getVar('BUILD_ARCH'), d)
     elif bb.data.inherits_class('cross', d):
         bb.data.setVar('SSTATE_PKGARCH', bb.data.expand("${BUILD_ARCH}_${TUNE_PKGARCH}", d), d)
         bb.data.setVar('SSTATE_MANMACH', bb.data.expand("${BUILD_ARCH}_${MACHINE}", d), d)
@@ -37,19 +37,19 @@ python () {
     # reused if we manipulate the paths
     if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('sdk', d) or bb.data.inherits_class('crosssdk', d):
         scan_cmd = "grep -Irl ${STAGING_DIR} ${SSTATE_BUILDDIR}"
-        bb.data.setVar('SSTATE_SCAN_CMD', scan_cmd, d)
+        d.setVar('SSTATE_SCAN_CMD', scan_cmd)
 
-    unique_tasks = set((bb.data.getVar('SSTATETASKS', d, True) or "").split())
+    unique_tasks = set((d.getVar('SSTATETASKS', True) or "").split())
     d.setVar('SSTATETASKS', " ".join(unique_tasks))
     namemap = []
     for task in unique_tasks:
-        namemap.append(bb.data.getVarFlag(task, 'sstate-name', d))
-        funcs = bb.data.getVarFlag(task, 'prefuncs', d) or ""
+        namemap.append(d.getVarFlag(task, 'sstate-name'))
+        funcs = d.getVarFlag(task, 'prefuncs') or ""
         funcs = "sstate_task_prefunc " + funcs
-        bb.data.setVarFlag(task, 'prefuncs', funcs, d)
-        funcs = bb.data.getVarFlag(task, 'postfuncs', d) or ""
+        d.setVarFlag(task, 'prefuncs', funcs)
+        funcs = d.getVarFlag(task, 'postfuncs') or ""
         funcs = funcs + " sstate_task_postfunc"
-        bb.data.setVarFlag(task, 'postfuncs', funcs, d)
+        d.setVarFlag(task, 'postfuncs', funcs)
     d.setVar('SSTATETASKNAMES', " ".join(namemap))
 }
 
@@ -65,18 +65,18 @@ def sstate_init(name, task, d):
 
 def sstate_state_fromvars(d, task = None):
     if task is None:
-        task = bb.data.getVar('BB_CURRENTTASK', d, True)
+        task = d.getVar('BB_CURRENTTASK', True)
         if not task:
             bb.fatal("sstate code running without task context?!")
         task = task.replace("_setscene", "")
 
-    name = bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-name', d), d)
-    inputs = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-inputdirs', d) or "", d)).split()
-    outputs = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-outputdirs', d) or "", d)).split()
-    plaindirs = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-plaindirs', d) or "", d)).split()
-    lockfiles = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-lockfile', d) or "", d)).split()
-    lockfilesshared = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-lockfile-shared', d) or "", d)).split()
-    interceptfuncs = (bb.data.expand(bb.data.getVarFlag("do_" + task, 'sstate-interceptfuncs', d) or "", d)).split()
+    name = bb.data.expand(d.getVarFlag("do_" + task, 'sstate-name'), d)
+    inputs = (bb.data.expand(d.getVarFlag("do_" + task, 'sstate-inputdirs') or "", d)).split()
+    outputs = (bb.data.expand(d.getVarFlag("do_" + task, 'sstate-outputdirs') or "", d)).split()
+    plaindirs = (bb.data.expand(d.getVarFlag("do_" + task, 'sstate-plaindirs') or "", d)).split()
+    lockfiles = (bb.data.expand(d.getVarFlag("do_" + task, 'sstate-lockfile') or "", d)).split()
+    lockfilesshared = (bb.data.expand(d.getVarFlag("do_" + task, 'sstate-lockfile-shared') or "", d)).split()
+    interceptfuncs = (bb.data.expand(d.getVarFlag("do_" + task, 'sstate-interceptfuncs') or "", d)).split()
     if not name or len(inputs) != len(outputs):
         bb.fatal("sstate variables not setup correctly?!")
 
@@ -139,7 +139,7 @@ def sstate_install(ss, d):
         f.write(di + "\n")
     f.close()
 
-    for postinst in (bb.data.getVar('SSTATEPOSTINSTFUNCS', d, True) or '').split():
+    for postinst in (d.getVar('SSTATEPOSTINSTFUNCS', True) or '').split():
         bb.build.exec_func(postinst, d)
 
     for lock in locks:
@@ -156,7 +156,7 @@ def sstate_installpkg(ss, d):
         oe.path.remove(dir)
 
     sstateinst = bb.data.expand("${WORKDIR}/sstate-install-%s/" % ss['name'], d)
-    sstatepkg = bb.data.getVar('SSTATE_PKG', d, True) + '_' + ss['name'] + ".tgz"
+    sstatepkg = d.getVar('SSTATE_PKG', True) + '_' + ss['name'] + ".tgz"
 
     if not os.path.exists(sstatepkg):
        pstaging_fetch(sstatepkg, d)
@@ -167,16 +167,16 @@ def sstate_installpkg(ss, d):
 
     sstate_clean(ss, d)
 
-    bb.data.setVar('SSTATE_INSTDIR', sstateinst, d)
-    bb.data.setVar('SSTATE_PKG', sstatepkg, d)
+    d.setVar('SSTATE_INSTDIR', sstateinst)
+    d.setVar('SSTATE_PKG', sstatepkg)
     bb.build.exec_func('sstate_unpack_package', d)
 
     # Fixup hardcoded paths
     fixmefn =  sstateinst + "fixmepath"
     if os.path.isfile(fixmefn):
-        staging = bb.data.getVar('STAGING_DIR', d, True)
-        staging_target = bb.data.getVar('STAGING_DIR_TARGET', d, True)
-        staging_host = bb.data.getVar('STAGING_DIR_HOST', d, True)
+        staging = d.getVar('STAGING_DIR', True)
+        staging_target = d.getVar('STAGING_DIR_TARGET', True)
+        staging_host = d.getVar('STAGING_DIR_HOST', True)
         fixmefd = open(fixmefn, "r")
         fixmefiles = fixmefd.readlines()
         fixmefd.close()
@@ -206,13 +206,13 @@ def sstate_installpkg(ss, d):
 def sstate_clean_cachefile(ss, d):
     import oe.path
 
-    sstatepkgdir = bb.data.getVar('SSTATE_DIR', d, True)
-    sstatepkgfile = sstatepkgdir + '/' + bb.data.getVar('SSTATE_PKGSPEC', d, True) + "*_" + ss['name'] + ".tgz*"
+    sstatepkgdir = d.getVar('SSTATE_DIR', True)
+    sstatepkgfile = sstatepkgdir + '/' + d.getVar('SSTATE_PKGSPEC', True) + "*_" + ss['name'] + ".tgz*"
     bb.note("Removing %s" % sstatepkgfile)
     oe.path.remove(sstatepkgfile)
 
 def sstate_clean_cachefiles(d):
-    for task in (bb.data.getVar('SSTATETASKS', d, True) or "").split():
+    for task in (d.getVar('SSTATETASKS', True) or "").split():
         ss = sstate_state_fromvars(d, task[3:])
         sstate_clean_cachefile(ss, d)
 
@@ -274,10 +274,10 @@ CLEANFUNCS += "sstate_cleanall"
 python sstate_cleanall() {
     import fnmatch
 
-    bb.note("Removing shared state for package %s" % bb.data.getVar('PN', d, True))
+    bb.note("Removing shared state for package %s" % d.getVar('PN', True))
 
-    manifest_dir = bb.data.getVar('SSTATE_MANIFESTS', d, True)
-    manifest_prefix = bb.data.getVar("SSTATE_MANFILEPREFIX", d, True)
+    manifest_dir = d.getVar('SSTATE_MANIFESTS', True)
+    manifest_prefix = d.getVar("SSTATE_MANFILEPREFIX", True)
     manifest_pattern = os.path.basename(manifest_prefix) + ".*"
 
     if not os.path.exists(manifest_dir):
@@ -298,7 +298,7 @@ python sstate_cleanall() {
 def sstate_hardcode_path(d):
 	# Need to remove hardcoded paths and fix these when we install the
 	# staging packages.
-	sstate_scan_cmd = bb.data.getVar('SSTATE_SCAN_CMD', d, True)
+	sstate_scan_cmd = d.getVar('SSTATE_SCAN_CMD', True)
 	p = os.popen("%s" % sstate_scan_cmd)
 	file_list = p.read()
 
@@ -306,10 +306,10 @@ def sstate_hardcode_path(d):
 		p.close()
 		return
 
-	staging = bb.data.getVar('STAGING_DIR', d, True)
-	staging_target = bb.data.getVar('STAGING_DIR_TARGET', d, True)
-	staging_host = bb.data.getVar('STAGING_DIR_HOST', d, True)
-	sstate_builddir = bb.data.getVar('SSTATE_BUILDDIR', d, True)
+	staging = d.getVar('STAGING_DIR', True)
+	staging_target = d.getVar('STAGING_DIR_TARGET', True)
+	staging_host = d.getVar('STAGING_DIR_HOST', True)
+	sstate_builddir = d.getVar('SSTATE_BUILDDIR', True)
 
 	for i in file_list.split('\n'):
 		if not i:
@@ -349,10 +349,10 @@ def sstate_package(ss, d):
         os.remove(path)
         os.symlink(base, path)
 
-    tmpdir = bb.data.getVar('TMPDIR', d, True)
+    tmpdir = d.getVar('TMPDIR', True)
 
     sstatebuild = bb.data.expand("${WORKDIR}/sstate-build-%s/" % ss['name'], d)
-    sstatepkg = bb.data.getVar('SSTATE_PKG', d, True) + '_'+ ss['name'] + ".tgz"
+    sstatepkg = d.getVar('SSTATE_PKG', True) + '_'+ ss['name'] + ".tgz"
     bb.mkdirhier(sstatebuild)
     bb.mkdirhier(os.path.dirname(sstatepkg))
     for state in ss['dirs']:
@@ -369,15 +369,15 @@ def sstate_package(ss, d):
         bb.debug(2, "Preparing tree %s for packaging at %s" % (state[1], sstatebuild + state[0]))
         oe.path.copytree(state[1], sstatebuild + state[0])
 
-    workdir = bb.data.getVar('WORKDIR', d, True)
+    workdir = d.getVar('WORKDIR', True)
     for plain in ss['plaindirs']:
         pdir = plain.replace(workdir, sstatebuild)
         bb.mkdirhier(plain)
         bb.mkdirhier(pdir)
         oe.path.copytree(plain, pdir)
 
-    bb.data.setVar('SSTATE_BUILDDIR', sstatebuild, d)
-    bb.data.setVar('SSTATE_PKG', sstatepkg, d)
+    d.setVar('SSTATE_BUILDDIR', sstatebuild)
+    d.setVar('SSTATE_PKG', sstatepkg)
     sstate_hardcode_path(d)
     bb.build.exec_func('sstate_create_package', d)
     
@@ -389,7 +389,7 @@ def pstaging_fetch(sstatepkg, d):
     import bb.fetch2
 
     # Only try and fetch if the user has configured a mirror
-    mirrors = bb.data.getVar('SSTATE_MIRRORS', d, True)
+    mirrors = d.getVar('SSTATE_MIRRORS', True)
     if not mirrors:
         return
 
@@ -402,9 +402,9 @@ def pstaging_fetch(sstatepkg, d):
 
     bb.mkdirhier(dldir)
 
-    bb.data.setVar('DL_DIR', dldir, localdata)
-    bb.data.setVar('PREMIRRORS', mirrors, localdata)
-    bb.data.setVar('SRC_URI', srcuri, localdata)
+    localdata.setVar('DL_DIR', dldir)
+    localdata.setVar('PREMIRRORS', mirrors)
+    localdata.setVar('SRC_URI', srcuri)
 
     # Try a fetch from the sstate mirror, if it fails just return and
     # we will build the package
@@ -493,15 +493,15 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
         else:
             bb.debug(2, "SState: Looked for but didn't find file %s" % sstatefile)
 
-    mirrors = bb.data.getVar("SSTATE_MIRRORS", d, True)
+    mirrors = d.getVar("SSTATE_MIRRORS", True)
     if mirrors:
         # Copy the data object and override DL_DIR and SRC_URI
         localdata = bb.data.createCopy(d)
         bb.data.update_data(localdata)
 
         dldir = bb.data.expand("${SSTATE_DIR}", localdata)
-        bb.data.setVar('DL_DIR', dldir, localdata)
-        bb.data.setVar('PREMIRRORS', mirrors, localdata)
+        localdata.setVar('DL_DIR', dldir)
+        localdata.setVar('PREMIRRORS', mirrors)
 
         bb.debug(2, "SState using premirror of: %s" % mirrors)
 
@@ -513,7 +513,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
             sstatefile = sstatefile.replace("${BB_TASKHASH}", sq_hash[task])
 
             srcuri = "file://" + os.path.basename(sstatefile)
-            bb.data.setVar('SRC_URI', srcuri, localdata)
+            localdata.setVar('SRC_URI', srcuri)
             bb.debug(2, "SState: Attempting to fetch %s" % srcuri)
 
             try:

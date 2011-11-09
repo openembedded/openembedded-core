@@ -10,7 +10,7 @@ inherit terminal
 python patch_do_patch() {
 	import oe.patch
 
-	src_uri = (bb.data.getVar('SRC_URI', d, 1) or '').split()
+	src_uri = (d.getVar('SRC_URI', 1) or '').split()
 	if not src_uri:
 		return
 
@@ -20,23 +20,23 @@ python patch_do_patch() {
 		"git": oe.patch.GitApplyTree,
 	}
 
-	cls = patchsetmap[bb.data.getVar('PATCHTOOL', d, 1) or 'quilt']
+	cls = patchsetmap[d.getVar('PATCHTOOL', 1) or 'quilt']
 
 	resolvermap = {
 		"noop": oe.patch.NOOPResolver,
 		"user": oe.patch.UserResolver,
 	}
 
-	rcls = resolvermap[bb.data.getVar('PATCHRESOLVE', d, 1) or 'user']
+	rcls = resolvermap[d.getVar('PATCHRESOLVE', 1) or 'user']
 
-	s = bb.data.getVar('S', d, 1)
+	s = d.getVar('S', 1)
 
 	path = os.getenv('PATH')
-	os.putenv('PATH', bb.data.getVar('PATH', d, 1))
+	os.putenv('PATH', d.getVar('PATH', 1))
 
 	classes = {}
 
-	workdir = bb.data.getVar('WORKDIR', d, 1)
+	workdir = d.getVar('WORKDIR', 1)
 	for url in src_uri:
 		(type, host, path, user, pswd, parm) = bb.decodeurl(url)
 
@@ -76,13 +76,13 @@ python patch_do_patch() {
 			pname = os.path.basename(local)
 
 		if "mindate" in parm or "maxdate" in parm:
-			pn = bb.data.getVar('PN', d, 1)
-			srcdate = bb.data.getVar('SRCDATE_%s' % pn, d, 1)
+			pn = d.getVar('PN', 1)
+			srcdate = d.getVar('SRCDATE_%s' % pn, 1)
 			if not srcdate:
-				srcdate = bb.data.getVar('SRCDATE', d, 1)
+				srcdate = d.getVar('SRCDATE', 1)
 
 			if srcdate == "now":
-				srcdate = bb.data.getVar('DATE', d, 1)
+				srcdate = d.getVar('DATE', 1)
 
 			if "maxdate" in parm and parm["maxdate"] < srcdate:
 				bb.note("Patch '%s' is outdated" % pname)
@@ -94,25 +94,25 @@ python patch_do_patch() {
 
 
 		if "minrev" in parm:
-			srcrev = bb.data.getVar('SRCREV', d, 1)
+			srcrev = d.getVar('SRCREV', 1)
 			if srcrev and srcrev < parm["minrev"]:
 				bb.note("Patch '%s' applies to later revisions" % pname)
 				continue
 
 		if "maxrev" in parm:
-			srcrev = bb.data.getVar('SRCREV', d, 1)		
+			srcrev = d.getVar('SRCREV', 1)		
 			if srcrev and srcrev > parm["maxrev"]:
 				bb.note("Patch '%s' applies to earlier revisions" % pname)
 				continue
 
 		if "rev" in parm:
-			srcrev = bb.data.getVar('SRCREV', d, 1)		
+			srcrev = d.getVar('SRCREV', 1)		
 			if srcrev and parm["rev"] not in srcrev:
 				bb.note("Patch '%s' doesn't apply to revision" % pname)
 				continue
 
 		if "notrev" in parm:
-			srcrev = bb.data.getVar('SRCREV', d, 1)		
+			srcrev = d.getVar('SRCREV', 1)		
 			if srcrev and parm["notrev"] in srcrev:
 				bb.note("Patch '%s' doesn't apply to revision" % pname)
 				continue

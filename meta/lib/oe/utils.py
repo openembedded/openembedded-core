@@ -16,19 +16,19 @@ def ifelse(condition, iftrue = True, iffalse = False):
         return iffalse
 
 def conditional(variable, checkvalue, truevalue, falsevalue, d):
-    if bb.data.getVar(variable,d,1) == checkvalue:
+    if d.getVar(variable,1) == checkvalue:
         return truevalue
     else:
         return falsevalue
 
 def less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
-    if float(bb.data.getVar(variable,d,1)) <= float(checkvalue):
+    if float(d.getVar(variable,1)) <= float(checkvalue):
         return truevalue
     else:
         return falsevalue
 
 def version_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
-    result = bb.vercmp(bb.data.getVar(variable,d,True), checkvalue)
+    result = bb.vercmp(d.getVar(variable,True), checkvalue)
     if result <= 0:
         return truevalue
     else:
@@ -48,7 +48,7 @@ def contains(variable, checkvalues, truevalue, falsevalue, d):
     return falsevalue
 
 def both_contain(variable1, variable2, checkvalue, d):
-    if bb.data.getVar(variable1,d,1).find(checkvalue) != -1 and bb.data.getVar(variable2,d,1).find(checkvalue) != -1:
+    if d.getVar(variable1,1).find(checkvalue) != -1 and d.getVar(variable2,1).find(checkvalue) != -1:
         return checkvalue
     else:
         return ""

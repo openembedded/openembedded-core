@@ -33,7 +33,7 @@ do_configure() {
 
 python __anonymous () {
     import re
-    host = bb.data.getVar('HOST_SYS', d, 1)
+    host = d.getVar('HOST_SYS', 1)
     if not re.match('x86.64.*-linux', host) and not re.match('i.86.*-linux', host):
         raise bb.parse.SkipPackage("incompatible with host %s" % host)
 }

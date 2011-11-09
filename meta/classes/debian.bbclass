@@ -22,8 +22,8 @@ python () {
 python debian_package_name_hook () {
 	import glob, copy, stat, errno, re
 
-	pkgdest = bb.data.getVar('PKGDEST', d, 1)
-	packages = bb.data.getVar('PACKAGES', d, 1)
+	pkgdest = d.getVar('PKGDEST', 1)
+	packages = d.getVar('PACKAGES', 1)
 	bin_re = re.compile(".*/s?" + os.path.basename(d.getVar("bindir", True)) + "$")
 	lib_re = re.compile(".*/" + os.path.basename(d.getVar("libdir", True)) + "$")
 	so_re = re.compile("lib.*\.so")
@@ -60,7 +60,7 @@ python debian_package_name_hook () {
 				for f in files:
 					if so_re.match(f):
 						fp = os.path.join(root, f)
-						cmd = (bb.data.getVar('BUILD_PREFIX', d, 1) or "") + "objdump -p " + fp + " 2>/dev/null"
+						cmd = (d.getVar('BUILD_PREFIX', 1) or "") + "objdump -p " + fp + " 2>/dev/null"
 						fd = os.popen(cmd)
 						lines = fd.readlines()
 						fd.close()
@@ -74,7 +74,7 @@ python debian_package_name_hook () {
 		if len(sonames) == 1:
 			soname = sonames[0]
 		elif len(sonames) > 1:
-			lead = bb.data.getVar('LEAD_SONAME', d, 1)
+			lead = d.getVar('LEAD_SONAME', 1)
 			if lead:
 				r = re.compile(lead)
 				filtered = []
@@ -95,21 +95,21 @@ python debian_package_name_hook () {
 			if soname_result:
 				(pkgname, devname) = soname_result
 				for pkg in packages.split():
-					if (bb.data.getVar('PKG_' + pkg, d) or bb.data.getVar('DEBIAN_NOAUTONAME_' + pkg, d)):
+					if (d.getVar('PKG_' + pkg) or d.getVar('DEBIAN_NOAUTONAME_' + pkg)):
 						continue
-					debian_pn = bb.data.getVar('DEBIANNAME_' + pkg, d)
+					debian_pn = d.getVar('DEBIANNAME_' + pkg)
 					if debian_pn:
 						newpkg = debian_pn
 					elif pkg == orig_pkg:
 						newpkg = pkgname
 					else:
 						newpkg = pkg.replace(orig_pkg, devname, 1)
-					mlpre=bb.data.getVar('MLPREFIX', d, True)
+					mlpre=d.getVar('MLPREFIX', True)
 					if mlpre:
 						if not newpkg.find(mlpre) == 0:
 							newpkg = mlpre + newpkg
 					if newpkg != pkg:
-						bb.data.setVar('PKG_' + pkg, newpkg, d)
+						d.setVar('PKG_' + pkg, newpkg)
 
 	# reversed sort is needed when some package is substring of another
 	# ie in ncurses we get without reverse sort: 
@@ -117,7 +117,7 @@ python debian_package_name_hook () {
 	# and later
 	# DEBUG: LIBNAMES: pkgname libtic5 devname libtic pkg ncurses-libticw orig_pkg ncurses-libtic debian_pn None newpkg libticw
 	# so we need to handle ncurses-libticw->libticw5 before ncurses-libtic->libtic5
-	for pkg in sorted((bb.data.getVar('AUTO_LIBNAME_PKGS', d, 1) or "").split(), reverse=True):
+	for pkg in sorted((d.getVar('AUTO_LIBNAME_PKGS', 1) or "").split(), reverse=True):
 		auto_libname(packages, pkg)
 }
 

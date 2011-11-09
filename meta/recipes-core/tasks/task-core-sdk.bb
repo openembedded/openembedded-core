@@ -50,7 +50,7 @@ RDEPENDS_task-core-sdk = "\
 
 #python generate_sdk_pkgs () {
 #    poky_pkgs = read_pkgdata('task-core', d)['PACKAGES']
-#    pkgs = bb.data.getVar('PACKAGES', d, 1).split()
+#    pkgs = d.getVar('PACKAGES', 1).split()
 #    for pkg in poky_pkgs.split():
 #        newpkg = pkg.replace('task-core', 'task-core-sdk')
 #
@@ -79,9 +79,9 @@ RDEPENDS_task-core-sdk = "\
 #                    if packaged('%s-dev' % name, d):
 #                        rreclist.append('%s-dev' % name)
 #
-#            oldrrec = bb.data.getVar('RRECOMMENDS_%s' % newpkg, d) or ''
+#            oldrrec = d.getVar('RRECOMMENDS_%s' % newpkg) or ''
 #            bb.data.setVar('RRECOMMENDS_%s' % newpkg, oldrrec + ' ' + ' '.join(rreclist), d)
-#            # bb.note('RRECOMMENDS_%s = "%s"' % (newpkg, bb.data.getVar('RRECOMMENDS_%s' % newpkg, d)))
+#            # bb.note('RRECOMMENDS_%s = "%s"' % (newpkg, d.getVar('RRECOMMENDS_%s' % newpkg)))
 #
 #    # bb.note('pkgs is %s' % pkgs)
 #    bb.data.setVar('PACKAGES', ' '.join(pkgs), d)

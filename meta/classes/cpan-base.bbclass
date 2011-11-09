@@ -28,7 +28,7 @@ def get_perl_version(d):
 
 # Determine where the library directories are
 def perl_get_libdirs(d):
-	libdir = bb.data.getVar('libdir', d, 1)
+	libdir = d.getVar('libdir', 1)
 	if is_target(d) == "no":
 		libdir += '/perl-native'
 	libdir += '/perl'

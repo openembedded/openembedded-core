@@ -28,31 +28,31 @@ done
 }
 
 python populate_packages_append () {
-	packages = bb.data.getVar('PACKAGES', d, 1).split()
-	pkgdest =  bb.data.getVar('PKGDEST', d, 1)
+	packages = d.getVar('PACKAGES', 1).split()
+	pkgdest =  d.getVar('PKGDEST', 1)
 	
 	for pkg in packages:
-		icon_dir = '%s/%s/%s/icons' % (pkgdest, pkg, bb.data.getVar('datadir', d, 1))
+		icon_dir = '%s/%s/%s/icons' % (pkgdest, pkg, d.getVar('datadir', 1))
 		if not os.path.exists(icon_dir):
 			continue
 
 		bb.note("adding hicolor-icon-theme dependency to %s" % pkg)	
-		rdepends = bb.data.getVar('RDEPENDS_%s' % pkg, d, 1)
-		rdepends = rdepends + ' ' + bb.data.getVar('MLPREFIX', d) + "hicolor-icon-theme"
-		bb.data.setVar('RDEPENDS_%s' % pkg, rdepends, d)
+		rdepends = d.getVar('RDEPENDS_%s' % pkg, 1)
+		rdepends = rdepends + ' ' + d.getVar('MLPREFIX') + "hicolor-icon-theme"
+		d.setVar('RDEPENDS_%s' % pkg, rdepends)
 	
 		bb.note("adding gtk-icon-cache postinst and postrm scripts to %s" % pkg)
 		
-		postinst = bb.data.getVar('pkg_postinst_%s' % pkg, d, 1) or bb.data.getVar('pkg_postinst', d, 1)
+		postinst = d.getVar('pkg_postinst_%s' % pkg, 1) or d.getVar('pkg_postinst', 1)
 		if not postinst:
 			postinst = '#!/bin/sh\n'
-		postinst += bb.data.getVar('gtk_icon_cache_postinst', d, 1)
-		bb.data.setVar('pkg_postinst_%s' % pkg, postinst, d)
+		postinst += d.getVar('gtk_icon_cache_postinst', 1)
+		d.setVar('pkg_postinst_%s' % pkg, postinst)
 
-		postrm = bb.data.getVar('pkg_postrm_%s' % pkg, d, 1) or bb.data.getVar('pkg_postrm', d, 1)
+		postrm = d.getVar('pkg_postrm_%s' % pkg, 1) or d.getVar('pkg_postrm', 1)
 		if not postrm:
 			postrm = '#!/bin/sh\n'
-		postrm += bb.data.getVar('gtk_icon_cache_postrm', d, 1)
-		bb.data.setVar('pkg_postrm_%s' % pkg, postrm, d)
+		postrm += d.getVar('gtk_icon_cache_postrm', 1)
+		d.setVar('pkg_postrm_%s' % pkg, postrm)
 }
 

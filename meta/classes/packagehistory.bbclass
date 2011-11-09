@@ -10,8 +10,8 @@ PKGHIST_DIR = "${TMPDIR}/pkghistory/${BASEPKG_TARGET_SYS}/"
 # for comparision when writing future packages
 #
 python emit_pkghistory() {
-	packages = bb.data.getVar('PACKAGES', d, True)
-	pkghistdir = bb.data.getVar('PKGHIST_DIR', d, True)
+	packages = d.getVar('PACKAGES', True)
+	pkghistdir = d.getVar('PKGHIST_DIR', True)
 
 
 	# Should check PACKAGES here to see if anything removed
@@ -72,14 +72,14 @@ def check_pkghistory(pkg, pe, pv, pr, lastversion):
 def write_pkghistory(pkg, pe, pv, pr, d):
 	bb.debug(2, "Writing package history")
 
-	pkghistdir = bb.data.getVar('PKGHIST_DIR', d, True)
+	pkghistdir = d.getVar('PKGHIST_DIR', True)
 
 	verpath = os.path.join(pkghistdir, pkg, pe, pv, pr)
 	if not os.path.exists(verpath):
 		os.makedirs(verpath)
 
 def write_latestlink(pkg, pe, pv, pr, d):
-	pkghistdir = bb.data.getVar('PKGHIST_DIR', d, True)
+	pkghistdir = d.getVar('PKGHIST_DIR', True)
 
 	def rm_link(path):
 		try: 

@@ -14,7 +14,7 @@ def raise_sanity_error(msg):
 def check_conf_exists(fn, data):
     bbpath = []
     fn = bb.data.expand(fn, data)
-    vbbpath = bb.data.getVar("BBPATH", data)
+    vbbpath = data.getVar("BBPATH")
     if vbbpath:
         bbpath += vbbpath.split(":")
     for p in bbpath:
@@ -87,12 +87,12 @@ def check_connectivity(d):
     # URI's to check can be set in the CONNECTIVITY_CHECK_URIS variable
     # using the same syntax as for SRC_URI. If the variable is not set
     # the check is skipped
-    test_uris = (bb.data.getVar('CONNECTIVITY_CHECK_URIS', d, True) or "").split()
+    test_uris = (d.getVar('CONNECTIVITY_CHECK_URIS', True) or "").split()
     retval = ""
 
     # Only check connectivity if network enabled and the
     # CONNECTIVITY_CHECK_URIS are set
-    network_enabled = not bb.data.getVar('BB_NO_NETWORK', d, True)
+    network_enabled = not d.getVar('BB_NO_NETWORK', True)
     check_enabled = len(test_uris)
     # Take a copy of the data store and unset MIRRORS and PREMIRROS
     data = bb.data.createCopy(d)
@@ -105,7 +105,7 @@ def check_connectivity(d):
         except Exception:
             # Allow the message to be configured so that users can be
             # pointed to a support mechanism.
-            msg = bb.data.getVar('CONNECTIVITY_CHECK_MSG', data, True) or ""
+            msg = data.getVar('CONNECTIVITY_CHECK_MSG', True) or ""
             if len(msg) == 0:
                 msg = "Failed to fetch test data from the network. Please ensure your network is configured correctly.\n"
             retval = msg
@@ -450,7 +450,7 @@ def check_sanity(e):
 
 addhandler check_sanity_eventhandler
 python check_sanity_eventhandler() {
-    if bb.event.getName(e) == "ConfigParsed" and bb.data.getVar("BB_WORKERCONTEXT", e.data, True) != "1":
+    if bb.event.getName(e) == "ConfigParsed" and e.data.getVar("BB_WORKERCONTEXT", True) != "1":
         check_sanity(e)
 
     return

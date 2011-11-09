@@ -21,25 +21,25 @@ def get_cputime():
     return sum(int(field) for field in fields)
 
 def set_bn(e):
-    bn = e.getPkgs()[0] + "-" + bb.data.getVar('MACHINE',e.data, True)
+    bn = e.getPkgs()[0] + "-" + e.data.getVar('MACHINE', True)
     try:
-        os.remove(bb.data.getVar('BNFILE', e.data, True))
+        os.remove(e.data.getVar('BNFILE', True))
     except:
         pass
-    file = open(bb.data.getVar('BNFILE', e.data, True), "w")
-    file.write(os.path.join(bn, bb.data.getVar('BUILDNAME', e.data, True)))
+    file = open(e.data.getVar('BNFILE', True), "w")
+    file.write(os.path.join(bn, e.data.getVar('BUILDNAME', True)))
     file.close()
 
 def get_bn(e):
-    file = open(bb.data.getVar('BNFILE', e.data, True))
+    file = open(e.data.getVar('BNFILE', True))
     bn = file.readline()
     file.close()
     return bn
 
 def set_device(e):
-    tmpdir = bb.data.getVar('TMPDIR', e.data, True)
+    tmpdir = e.data.getVar('TMPDIR', True)
     try:
-        os.remove(bb.data.getVar('DEVFILE', e.data, True))
+        os.remove(e.data.getVar('DEVFILE', True))
     except:
         pass
     ############################################################################
@@ -66,12 +66,12 @@ def set_device(e):
            rdev=line.split()[2]
         else:
            rdev="NoLogicalDevice"
-    file = open(bb.data.getVar('DEVFILE', e.data, True), "w")
+    file = open(e.data.getVar('DEVFILE', True), "w")
     file.write(rdev)
     file.close()
     
 def get_device(e):
-    file = open(bb.data.getVar('DEVFILE', e.data, True))
+    file = open(e.data.getVar('DEVFILE', True))
     device = file.readline()
     file.close()
     return device
@@ -126,7 +126,7 @@ def get_timedata(var, data):
     
 def write_task_data(status, logfile, dev, e):
     bn = get_bn(e)
-    bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
+    bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
     taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
     file = open(os.path.join(logfile), "a")
     timedata = get_timedata("__timedata_task", e.data)
@@ -168,7 +168,7 @@ python run_buildstats () {
         # set the buildname
         ########################################################################
         try:
-            bb.mkdirhier(bb.data.getVar('BUILDSTATS_BASE', e.data, True))
+            bb.mkdirhier(e.data.getVar('BUILDSTATS_BASE', True))
         except:
             pass
         set_bn(e)
@@ -176,7 +176,7 @@ python run_buildstats () {
         set_device(e)
         device = get_device(e)
         
-        bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
+        bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
         try:
             bb.mkdirhier(bsdir)
         except:
@@ -199,7 +199,7 @@ python run_buildstats () {
     elif isinstance(e, bb.event.BuildCompleted):
         bn = get_bn(e)
         device = get_device(e)
-        bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
+        bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
         taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
         build_time = os.path.join(bsdir, "build_stats")
         file = open(build_time, "a")
@@ -224,7 +224,7 @@ python run_buildstats () {
     if isinstance(e, bb.build.TaskStarted):
         bn = get_bn(e)
         device = get_device(e)
-        bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
+        bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
         taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
         if device != "NoLogicalDevice":
             set_diskdata("__diskdata_task", device, e.data)
@@ -242,14 +242,14 @@ python run_buildstats () {
     elif isinstance(e, bb.build.TaskSucceeded):
         bn = get_bn(e)
         device = get_device(e)
-        bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
+        bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
         taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
         write_task_data("passed", os.path.join(taskdir, e.task), device, e)
         if e.task == "do_rootfs":
-            bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
+            bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
             bs=os.path.join(bsdir, "build_stats")
             file = open(bs,"a") 
-            rootfs = bb.data.getVar('IMAGE_ROOTFS', e.data, True)
+            rootfs = e.data.getVar('IMAGE_ROOTFS', True)
             rootfs_size = subprocess.Popen(["du", "-sh", rootfs], stdout=subprocess.PIPE).stdout.read() 
             file.write("Uncompressed Rootfs size: %s" % rootfs_size)
             file.close()
@@ -257,7 +257,7 @@ python run_buildstats () {
     elif isinstance(e, bb.build.TaskFailed):
         bn = get_bn(e)
         device = get_device(e)
-        bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
+        bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
         taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
         write_task_data("failed", os.path.join(taskdir, e.task), device, e)
         ########################################################################

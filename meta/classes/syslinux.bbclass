@@ -8,12 +8,12 @@ python build_syslinux_menu () {
 	import copy
 	import sys
 
-	workdir = bb.data.getVar('WORKDIR', d, 1)
+	workdir = d.getVar('WORKDIR', 1)
 	if not workdir:
 		bb.error("WORKDIR is not defined")
 		return
 		
-	labels = bb.data.getVar('LABELS', d, 1)
+	labels = d.getVar('LABELS', 1)
 	if not labels:
 		bb.debug(1, "LABELS not defined, nothing to do")
 		return
@@ -22,7 +22,7 @@ python build_syslinux_menu () {
 		bb.debug(1, "No labels, nothing to do")
 		return
 
-	cfile = bb.data.getVar('SYSLINUXMENU', d, 1)
+	cfile = d.getVar('SYSLINUXMENU', 1)
 	if not cfile:
 		raise bb.build.FuncFailed('Unable to read SYSLINUXMENU')
 
@@ -45,15 +45,15 @@ python build_syslinux_menu () {
 		from copy import deepcopy
 		localdata = deepcopy(d)
 
-		overrides = bb.data.getVar('OVERRIDES', localdata)
+		overrides = localdata.getVar('OVERRIDES')
 		if not overrides:
 			raise bb.build.FuncFailed('OVERRIDES not defined')
 		overrides = bb.data.expand(overrides, localdata)
 	
-		bb.data.setVar('OVERRIDES', label + ':' + overrides, localdata)
+		localdata.setVar('OVERRIDES', label + ':' + overrides)
 		bb.data.update_data(localdata)
 
-		usage = bb.data.getVar('USAGE', localdata, 1)
+		usage = localdata.getVar('USAGE', 1)
 		cfgfile.write('  \x0F\x30\x3E%16s\x0F\x30\x37: ' % (label))
 		cfgfile.write('%s\n' % (usage))
 
@@ -67,12 +67,12 @@ python build_syslinux_cfg () {
 	import copy
 	import sys
 
-	workdir = bb.data.getVar('WORKDIR', d, 1)
+	workdir = d.getVar('WORKDIR', 1)
 	if not workdir:
 		bb.error("WORKDIR not defined, unable to package")
 		return
 		
-	labels = bb.data.getVar('LABELS', d, 1)
+	labels = d.getVar('LABELS', 1)
 	if not labels:
 		bb.debug(1, "LABELS not defined, nothing to do")
 		return
@@ -81,7 +81,7 @@ python build_syslinux_cfg () {
 		bb.debug(1, "No labels, nothing to do")
 		return
 
-	cfile = bb.data.getVar('SYSLINUXCFG', d, 1)
+	cfile = d.getVar('SYSLINUXCFG', 1)
 	if not cfile:
 		raise bb.build.FuncFailed('Unable to read SYSLINUXCFG')
 
@@ -98,7 +98,7 @@ python build_syslinux_cfg () {
 
 	cfgfile.write('# Automatically created by OE\n')
 
-	opts = bb.data.getVar('SYSLINUX_OPTS', d, 1)
+	opts = d.getVar('SYSLINUX_OPTS', 1)
 
 	if opts:
 		for opt in opts.split(';'):
@@ -107,7 +107,7 @@ python build_syslinux_cfg () {
 	cfgfile.write('ALLOWOPTIONS 1\n');
 	cfgfile.write('DEFAULT %s\n' % (labels.split()[0]))
 
-	timeout = bb.data.getVar('SYSLINUX_TIMEOUT', d, 1)
+	timeout = d.getVar('SYSLINUX_TIMEOUT', 1)
 
 	if timeout:
 		cfgfile.write('TIMEOUT %s\n' % timeout)
@@ -116,29 +116,29 @@ python build_syslinux_cfg () {
 
 	cfgfile.write('PROMPT 1\n')
 
-	menu = bb.data.getVar('AUTO_SYSLINUXMENU', d, 1)
+	menu = d.getVar('AUTO_SYSLINUXMENU', 1)
 
 	# This is ugly.  My bad.
 
 	if menu:
 		bb.build.exec_func('build_syslinux_menu', d)
-		mfile = bb.data.getVar('SYSLINUXMENU', d, 1)
+		mfile = d.getVar('SYSLINUXMENU', 1)
 		cfgfile.write('DISPLAY %s\n' % (mfile.split('/')[-1]) )
 	
 	for label in labels.split():
 		localdata = bb.data.createCopy(d)
 
-		overrides = bb.data.getVar('OVERRIDES', localdata, True)
+		overrides = localdata.getVar('OVERRIDES', True)
 		if not overrides:
 			raise bb.build.FuncFailed('OVERRIDES not defined')
 	
-		bb.data.setVar('OVERRIDES', label + ':' + overrides, localdata)
+		localdata.setVar('OVERRIDES', label + ':' + overrides)
 		bb.data.update_data(localdata)
 	
 		cfgfile.write('LABEL %s\nKERNEL vmlinuz\n' % (label))
 
-		append = bb.data.getVar('APPEND', localdata, 1)
-		initrd = bb.data.getVar('INITRD', localdata, 1)
+		append = localdata.getVar('APPEND', 1)
+		initrd = localdata.getVar('INITRD', 1)
 
 		if append:
 			cfgfile.write('APPEND ')

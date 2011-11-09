@@ -200,14 +200,14 @@ install_all_locales() {
 }
 
 python () {
-    if bb.data.getVar('BUILD_IMAGES_FROM_FEEDS', d, True):
-        flags = bb.data.getVarFlag('do_rootfs', 'recrdeptask', d)
+    if d.getVar('BUILD_IMAGES_FROM_FEEDS', True):
+        flags = d.getVarFlag('do_rootfs', 'recrdeptask')
         flags = flags.replace("do_package_write_rpm", "")
         flags = flags.replace("do_deploy", "")
         flags = flags.replace("do_populate_sysroot", "")
-        bb.data.setVarFlag('do_rootfs', 'recrdeptask', flags, d)
-        bb.data.setVar('RPM_PREPROCESS_COMMANDS', '', d)
-        bb.data.setVar('RPM_POSTPROCESS_COMMANDS', '', d)
+        d.setVarFlag('do_rootfs', 'recrdeptask', flags)
+        d.setVar('RPM_PREPROCESS_COMMANDS', '')
+        d.setVar('RPM_POSTPROCESS_COMMANDS', '')
 
     ml_package_archs = ""
     ml_prefix_list = ""
@@ -224,6 +224,6 @@ python () {
             ml_package_archs += " " + package_archs
             ml_prefix_list += " " + eext[1]
             #bb.note("ML_PACKAGE_ARCHS %s %s %s" % (eext[1], localdata.getVar("PACKAGE_ARCHS", True) or "(none)", overrides))
-    bb.data.setVar('MULTILIB_PACKAGE_ARCHS', ml_package_archs, d)
-    bb.data.setVar('MULTILIB_PREFIX_LIST', ml_prefix_list, d)
+    d.setVar('MULTILIB_PACKAGE_ARCHS', ml_package_archs)
+    d.setVar('MULTILIB_PREFIX_LIST', ml_prefix_list)
 }

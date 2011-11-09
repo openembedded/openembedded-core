@@ -104,7 +104,7 @@ python do_kernel_configcheck() {
 
     bb.plain("NOTE: validating kernel configuration")
 
-    pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, True)
+    pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
     cmd = bb.data.expand("cd ${B}/..; kconf_check -config- ${B} ${S} ${B} ${KBRANCH}",d )
     ret, result = commands.getstatusoutput("%s%s" % (pathprefix, cmd))
 

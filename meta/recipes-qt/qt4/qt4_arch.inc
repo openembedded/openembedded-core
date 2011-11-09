@@ -4,7 +4,7 @@ ARM_INSTRUCTION_SET = "arm"
 
 def qt_arch(d):
     import bb, re
-    arch = bb.data.getVar('TARGET_ARCH', d, 1)
+    arch = d.getVar('TARGET_ARCH', 1)
     if re.match("^i.86$", arch):
         arch = "i386"
     elif re.match("^arm.*", arch):
@@ -17,9 +17,9 @@ def qt_arch(d):
 
 def qt_endian(d):
     import bb
-    if bb.data.getVar('SITEINFO_ENDIANNESS', d, True) == "le":
+    if d.getVar('SITEINFO_ENDIANNESS', True) == "le":
         return "-little-endian"
-    elif bb.data.getVar('SITEINFO_ENDIANNESS', d, True) == "be":
+    elif d.getVar('SITEINFO_ENDIANNESS', True) == "be":
         return "-big-endian"
     else:
         assert False

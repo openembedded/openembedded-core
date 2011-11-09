@@ -276,32 +276,32 @@ def compare_in_distro_packages_list(distro_check_dir, d):
     localdata = bb.data.createCopy(d)
     pkglst_dir = os.path.join(distro_check_dir, "package_lists")
     matching_distros = []
-    pn = bb.data.getVar('PN', d, True)
-    recipe_name = bb.data.getVar('PN', d, True)
+    pn = d.getVar('PN', True)
+    recipe_name = d.getVar('PN', True)
     bb.note("Checking: %s" % pn)
 
     trim_dict = dict({"-native":"-native", "-cross":"-cross", "-initial":"-initial"})
 
     if pn.find("-native") != -1:
         pnstripped = pn.split("-native")
-        bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+        bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
         bb.data.update_data(localdata)
         recipe_name = pnstripped[0]
 
     if pn.find("-cross") != -1:
         pnstripped = pn.split("-cross")
-        bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+        bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
         bb.data.update_data(localdata)
         recipe_name = pnstripped[0]
 
     if pn.find("-initial") != -1:
         pnstripped = pn.split("-initial")
-        bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + bb.data.getVar('OVERRIDES', d, True), localdata)
+        bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
         bb.data.update_data(localdata)
         recipe_name = pnstripped[0]
 
     bb.note("Recipe: %s" % recipe_name)
-    tmp = bb.data.getVar('DISTRO_PN_ALIAS', localdata, True)
+    tmp = localdata.getVar('DISTRO_PN_ALIAS', True)
 
     distro_exceptions = dict({"OE-Core":'OE-Core', "OpenedHand":'OpenedHand', "Intel":'Intel', "Upstream":'Upstream', "Windriver":'Windriver', "OSPDT":'OSPDT Approved', "Poky":'poky'})
 
@@ -343,23 +343,23 @@ def compare_in_distro_packages_list(distro_check_dir, d):
     return matching_distros
 
 def create_log_file(d, logname):
-    logpath = bb.data.getVar('LOG_DIR', d, True)
+    logpath = d.getVar('LOG_DIR', True)
     bb.utils.mkdirhier(logpath)
     logfn, logsuffix = os.path.splitext(logname)
-    logfile = os.path.join(logpath, "%s.%s%s" % (logfn, bb.data.getVar('DATETIME', d, True), logsuffix))
+    logfile = os.path.join(logpath, "%s.%s%s" % (logfn, d.getVar('DATETIME', True), logsuffix))
     if not os.path.exists(logfile):
             slogfile = os.path.join(logpath, logname)
             if os.path.exists(slogfile):
                     os.remove(slogfile)
             os.system("touch %s" % logfile)
             os.symlink(logfile, slogfile)
-            bb.data.setVar('LOG_FILE', logfile, d)
+            d.setVar('LOG_FILE', logfile)
     return logfile
 
 
 def save_distro_check_result(result, datetime, result_file, d):
-    pn = bb.data.getVar('PN', d, True)
-    logdir = bb.data.getVar('LOG_DIR', d, True)
+    pn = d.getVar('PN', True)
+    logdir = d.getVar('LOG_DIR', True)
     if not logdir:
         bb.error("LOG_DIR variable is not defined, can't write the distro_check results")
         return

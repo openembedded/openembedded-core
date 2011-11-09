@@ -49,8 +49,8 @@ def busybox_cfg(feature, features, tokens, cnf, rem):
 # Map distro and machine features to config settings
 def features_to_busybox_settings(d):
 	cnf, rem = ([], [])
-	distro_features = bb.data.getVar('DISTRO_FEATURES', d, True).split()
-	machine_features = bb.data.getVar('MACHINE_FEATURES', d, True).split()
+	distro_features = d.getVar('DISTRO_FEATURES', True).split()
+	machine_features = d.getVar('MACHINE_FEATURES', True).split()
 	busybox_cfg('ipv6', distro_features, 'CONFIG_FEATURE_IPV6', cnf, rem)
 	busybox_cfg('largefile', distro_features, 'CONFIG_LFS', cnf, rem)
 	busybox_cfg('largefile', distro_features, 'CONFIG_FDISK_SUPPORT_LARGE_DISKS', cnf, rem)
@@ -79,7 +79,7 @@ DO_IPv6 := ${@base_contains('DISTRO_FEATURES', 'ipv6', 1, 0, d)}
 
 python () {
   if "${OE_DEL}":
-    bb.data.setVar('configmangle_append', "${OE_DEL}" + "\n", d)
+    d.setVar('configmangle_append', "${OE_DEL}" + "\n")
   if "${OE_FEATURES}":
     bb.data.setVar('configmangle_append',
                    "/^### DISTRO FEATURES$/a\\\n%s\n\n" %

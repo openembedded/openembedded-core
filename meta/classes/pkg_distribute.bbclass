@@ -1,6 +1,6 @@
 PKG_DISTRIBUTECOMMAND[func] = "1"
 python do_distribute_packages () {
-	cmd = bb.data.getVar('PKG_DISTRIBUTECOMMAND', d, 1)
+	cmd = d.getVar('PKG_DISTRIBUTECOMMAND', 1)
 	if not cmd:
 		raise bb.build.FuncFailed("Unable to distribute packages, PKG_DISTRIBUTECOMMAND not defined")
 	bb.build.exec_func('PKG_DISTRIBUTECOMMAND', d)

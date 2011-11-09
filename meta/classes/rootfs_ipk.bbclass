@@ -185,13 +185,13 @@ ipk_insert_feed_uris () {
 
 python () {
 
-    if bb.data.getVar('BUILD_IMAGES_FROM_FEEDS', d, True):
-        flags = bb.data.getVarFlag('do_rootfs', 'recrdeptask', d)
+    if d.getVar('BUILD_IMAGES_FROM_FEEDS', True):
+        flags = d.getVarFlag('do_rootfs', 'recrdeptask')
         flags = flags.replace("do_package_write_ipk", "")
         flags = flags.replace("do_deploy", "")
         flags = flags.replace("do_populate_sysroot", "")
-        bb.data.setVarFlag('do_rootfs', 'recrdeptask', flags, d)
-        bb.data.setVar('OPKG_PREPROCESS_COMMANDS', "package_generate_archlist\nipk_insert_feed_uris", d)
-        bb.data.setVar('OPKG_POSTPROCESS_COMMANDS', '', d)
+        d.setVarFlag('do_rootfs', 'recrdeptask', flags)
+        d.setVar('OPKG_PREPROCESS_COMMANDS', "package_generate_archlist\nipk_insert_feed_uris")
+        d.setVar('OPKG_POSTPROCESS_COMMANDS', '')
 }
 

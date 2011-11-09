@@ -104,10 +104,10 @@ python do_populate_lic() {
 
         # If the generic does not exist we need to check to see if there is an SPDX mapping to it
         if not os.path.isfile(os.path.join(generic_directory, license_type)):
-            if bb.data.getVarFlag('SPDXLICENSEMAP', license_type, d) != None:
+            if d.getVarFlag('SPDXLICENSEMAP', license_type) != None:
                 # Great, there is an SPDXLICENSEMAP. We can copy!
                 bb.note("We need to use a SPDXLICENSEMAP for %s" % (license_type))
-                spdx_generic = bb.data.getVarFlag('SPDXLICENSEMAP', license_type, d)
+                spdx_generic = d.getVarFlag('SPDXLICENSEMAP', license_type)
                 copy_license(generic_directory, gen_lic_dest, spdx_generic)            
                 link_license(gen_lic_dest, destdir, spdx_generic)            
             else:
@@ -120,16 +120,16 @@ python do_populate_lic() {
             link_license(gen_lic_dest, destdir, license_type)            
 
     # All the license types for the package
-    license_types = bb.data.getVar('LICENSE', d, True)
+    license_types = d.getVar('LICENSE', True)
     # All the license files for the package
-    lic_files = bb.data.getVar('LIC_FILES_CHKSUM', d, True)
-    pn = bb.data.getVar('PN', d, True)
+    lic_files = d.getVar('LIC_FILES_CHKSUM', True)
+    pn = d.getVar('PN', True)
     # The base directory we wrangle licenses to
-    destdir = os.path.join(bb.data.getVar('LICSSTATEDIR', d, True), pn)
+    destdir = os.path.join(d.getVar('LICSSTATEDIR', True), pn)
     # The license files are located in S/LIC_FILE_CHECKSUM.
-    srcdir = bb.data.getVar('S', d, True)
+    srcdir = d.getVar('S', True)
     # Directory we store the generic licenses as set in the distro configuration
-    generic_directory = bb.data.getVar('COMMON_LICENSE_DIR', d, True)
+    generic_directory = d.getVar('COMMON_LICENSE_DIR', True)
     
     try:
         bb.mkdirhier(destdir)
@@ -154,7 +154,7 @@ python do_populate_lic() {
         if ret is False or ret == 0:
             bb.warn("%s could not be copied for some reason. It may not exist. WARN for now." % srclicfile)
  
-    gen_lic_dest = os.path.join(bb.data.getVar('LICENSE_DIRECTORY', d, True), "common-licenses")
+    gen_lic_dest = os.path.join(d.getVar('LICENSE_DIRECTORY', True), "common-licenses")
     
     clean_licenses = ""
 

@@ -11,16 +11,16 @@ PKGWRITEDIRIPK = "${WORKDIR}/deploy-ipks"
 OPKGBUILDCMD ??= "opkg-build"
 
 python package_ipk_fn () {
-	bb.data.setVar('PKGFN', bb.data.getVar('PKG',d), d)
+	bb.data.setVar('PKGFN', d.getVar('PKG'), d)
 }
 
 python package_ipk_install () {
-	pkg = bb.data.getVar('PKG', d, 1)
-	pkgfn = bb.data.getVar('PKGFN', d, 1)
-	rootfs = bb.data.getVar('IMAGE_ROOTFS', d, 1)
-	ipkdir = bb.data.getVar('DEPLOY_DIR_IPK', d, 1)
-	stagingdir = bb.data.getVar('STAGING_DIR', d, 1)
-	tmpdir = bb.data.getVar('TMPDIR', d, 1)
+	pkg = d.getVar('PKG', 1)
+	pkgfn = d.getVar('PKGFN', 1)
+	rootfs = d.getVar('IMAGE_ROOTFS', 1)
+	ipkdir = d.getVar('DEPLOY_DIR_IPK', 1)
+	stagingdir = d.getVar('STAGING_DIR', 1)
+	tmpdir = d.getVar('TMPDIR', 1)
 
 	if None in (pkg,pkgfn,rootfs):
 		raise bb.build.FuncFailed("missing variables (one or more of PKG, PKGFN, IMAGEROOTFS)")
@@ -36,7 +36,7 @@ python package_ipk_install () {
 	# Generate ipk.conf if it or the stamp doesnt exist
 	conffile = os.path.join(stagingdir,"ipkg.conf")
 	if not os.access(conffile, os.R_OK):
-		ipkg_archs = bb.data.getVar('PACKAGE_ARCHS',d)
+		ipkg_archs = d.getVar('PACKAGE_ARCHS')
 		if ipkg_archs is None:
 			bb.error("PACKAGE_ARCHS missing")
 			raise FuncFailed
@@ -259,15 +259,15 @@ python do_package_ipk () {
 	import re, copy
 	import textwrap
 
-	workdir = bb.data.getVar('WORKDIR', d, True)
-	outdir = bb.data.getVar('PKGWRITEDIRIPK', d, True)
-	tmpdir = bb.data.getVar('TMPDIR', d, True)
-	pkgdest = bb.data.getVar('PKGDEST', d, True)
+	workdir = d.getVar('WORKDIR', True)
+	outdir = d.getVar('PKGWRITEDIRIPK', True)
+	tmpdir = d.getVar('TMPDIR', True)
+	pkgdest = d.getVar('PKGDEST', True)
 	if not workdir or not outdir or not tmpdir:
 		bb.error("Variables incorrectly set, unable to package")
 		return
 
-	packages = bb.data.getVar('PACKAGES', d, True)
+	packages = d.getVar('PACKAGES', True)
 	if not packages or packages == '':
 		bb.debug(1, "No packages; nothing to do")
 		return
@@ -283,18 +283,18 @@ python do_package_ipk () {
 
 		lf = bb.utils.lockfile(root + ".lock")
 
-		bb.data.setVar('ROOT', '', localdata)
-		bb.data.setVar('ROOT_%s' % pkg, root, localdata)
-		pkgname = bb.data.getVar('PKG_%s' % pkg, localdata, 1)
+		localdata.setVar('ROOT', '')
+		localdata.setVar('ROOT_%s' % pkg, root)
+		pkgname = localdata.getVar('PKG_%s' % pkg, 1)
 		if not pkgname:
 			pkgname = pkg
-		bb.data.setVar('PKG', pkgname, localdata)
+		localdata.setVar('PKG', pkgname)
 
-		bb.data.setVar('OVERRIDES', pkg, localdata)
+		localdata.setVar('OVERRIDES', pkg)
 
 		bb.data.update_data(localdata)
 		basedir = os.path.join(os.path.dirname(root))
-		arch = bb.data.getVar('PACKAGE_ARCH', localdata, 1)
+		arch = localdata.getVar('PACKAGE_ARCH', 1)
 		pkgoutdir = "%s/%s" % (outdir, arch)
 		bb.mkdirhier(pkgoutdir)
 		os.chdir(root)
@@ -305,8 +305,8 @@ python do_package_ipk () {
 			del g[g.index('./CONTROL')]
 		except ValueError:
 			pass
-		if not g and bb.data.getVar('ALLOW_EMPTY', localdata) != "1":
-			bb.note("Not creating empty archive for %s-%s-%s" % (pkg, bb.data.getVar('PKGV', localdata, 1), bb.data.getVar('PKGR', localdata, 1)))
+		if not g and localdata.getVar('ALLOW_EMPTY') != "1":
+			bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', 1), localdata.getVar('PKGR', 1)))
 			bb.utils.unlockfile(lf)
 			continue
 
@@ -319,7 +319,7 @@ python do_package_ipk () {
 			raise bb.build.FuncFailed("unable to open control file for writing.")
 
 		fields = []
-		pe = bb.data.getVar('PKGE', d, 1)
+		pe = d.getVar('PKGE', 1)
 		if pe and int(pe) > 0:
 			fields.append(["Version: %s:%s-%s\n", ['PKGE', 'PKGV', 'PKGR']])
 		else:
@@ -336,7 +336,7 @@ python do_package_ipk () {
 		def pullData(l, d):
 			l2 = []
 			for i in l:
-				l2.append(bb.data.getVar(i, d, 1))
+				l2.append(d.getVar(i, 1))
 			return l2
 
 		ctrlfile.write("Package: %s\n" % pkgname)
@@ -344,12 +344,12 @@ python do_package_ipk () {
 		try:
 			for (c, fs) in fields:
 				for f in fs:
-					if bb.data.getVar(f, localdata) is None:
+					if localdata.getVar(f) is None:
 						raise KeyError(f)
 				# Special behavior for description...
 				if 'DESCRIPTION' in fs:
-					summary = bb.data.getVar('SUMMARY', localdata, True) or bb.data.getVar('DESCRIPTION', localdata, True) or "."
-					description = bb.data.getVar('DESCRIPTION', localdata, True) or "."
+					summary = localdata.getVar('SUMMARY', True) or localdata.getVar('DESCRIPTION', True) or "."
+					description = localdata.getVar('DESCRIPTION', True) or "."
 					description = textwrap.dedent(description).strip()
 					ctrlfile.write('Description: %s\n' % summary)
 					ctrlfile.write('%s\n' % textwrap.fill(description, width=74, initial_indent=' ', subsequent_indent=' '))
@@ -365,12 +365,12 @@ python do_package_ipk () {
 
 		bb.build.exec_func("mapping_rename_hook", localdata)
 
-		rdepends = bb.utils.explode_dep_versions(bb.data.getVar("RDEPENDS", localdata, 1) or "")
-		rrecommends = bb.utils.explode_dep_versions(bb.data.getVar("RRECOMMENDS", localdata, 1) or "")
-		rsuggests = bb.utils.explode_dep_versions(bb.data.getVar("RSUGGESTS", localdata, 1) or "")
-		rprovides = bb.utils.explode_dep_versions(bb.data.getVar("RPROVIDES", localdata, 1) or "")
-		rreplaces = bb.utils.explode_dep_versions(bb.data.getVar("RREPLACES", localdata, 1) or "")
-		rconflicts = bb.utils.explode_dep_versions(bb.data.getVar("RCONFLICTS", localdata, 1) or "")
+		rdepends = bb.utils.explode_dep_versions(localdata.getVar("RDEPENDS", 1) or "")
+		rrecommends = bb.utils.explode_dep_versions(localdata.getVar("RRECOMMENDS", 1) or "")
+		rsuggests = bb.utils.explode_dep_versions(localdata.getVar("RSUGGESTS", 1) or "")
+		rprovides = bb.utils.explode_dep_versions(localdata.getVar("RPROVIDES", 1) or "")
+		rreplaces = bb.utils.explode_dep_versions(localdata.getVar("RREPLACES", 1) or "")
+		rconflicts = bb.utils.explode_dep_versions(localdata.getVar("RCONFLICTS", 1) or "")
 
 		if rdepends:
 			ctrlfile.write("Depends: %s\n" % bb.utils.join_deps(rdepends))
@@ -384,14 +384,14 @@ python do_package_ipk () {
 			ctrlfile.write("Replaces: %s\n" % bb.utils.join_deps(rreplaces))
 		if rconflicts:
 			ctrlfile.write("Conflicts: %s\n" % bb.utils.join_deps(rconflicts))
-		src_uri = bb.data.getVar("SRC_URI", localdata, 1)
+		src_uri = localdata.getVar("SRC_URI", 1)
 		if src_uri:
 			src_uri = re.sub("\s+", " ", src_uri)
 			ctrlfile.write("Source: %s\n" % " ".join(src_uri.split()))
 		ctrlfile.close()
 
 		for script in ["preinst", "postinst", "prerm", "postrm"]:
-			scriptvar = bb.data.getVar('pkg_%s' % script, localdata, 1)
+			scriptvar = localdata.getVar('pkg_%s' % script, 1)
 			if not scriptvar:
 				continue
 			try:
@@ -403,7 +403,7 @@ python do_package_ipk () {
 			scriptfile.close()
 			os.chmod(os.path.join(controldir, script), 0755)
 
-		conffiles_str = bb.data.getVar("CONFFILES", localdata, 1)
+		conffiles_str = localdata.getVar("CONFFILES", 1)
 		if conffiles_str:
 			try:
 				conffiles = file(os.path.join(controldir, 'conffiles'), 'w')
@@ -415,8 +415,8 @@ python do_package_ipk () {
 			conffiles.close()
 
 		os.chdir(basedir)
-		ret = os.system("PATH=\"%s\" %s %s %s" % (bb.data.getVar("PATH", localdata, 1), 
-                                                          bb.data.getVar("OPKGBUILDCMD",d,1), pkg, pkgoutdir))
+		ret = os.system("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH", 1), 
+                                                          d.getVar("OPKGBUILDCMD",1), pkg, pkgoutdir))
 		if ret != 0:
 			bb.utils.unlockfile(lf)
 			raise bb.build.FuncFailed("opkg-build execution failed")
@@ -437,13 +437,13 @@ python do_package_write_ipk_setscene () {
 addtask do_package_write_ipk_setscene
 
 python () {
-    if bb.data.getVar('PACKAGES', d, True) != '':
-        deps = (bb.data.getVarFlag('do_package_write_ipk', 'depends', d) or "").split()
+    if d.getVar('PACKAGES', True) != '':
+        deps = (d.getVarFlag('do_package_write_ipk', 'depends') or "").split()
         deps.append('opkg-utils-native:do_populate_sysroot')
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         bb.data.setVarFlag('do_package_write_ipk', 'depends', " ".join(deps), d)
-        bb.data.setVarFlag('do_package_write_ipk', 'fakeroot', "1", d)
-        bb.data.setVarFlag('do_package_write_ipk_setscene', 'fakeroot', "1", d)
+        d.setVarFlag('do_package_write_ipk', 'fakeroot', "1")
+        d.setVarFlag('do_package_write_ipk_setscene', 'fakeroot', "1")
 }
 
 python do_package_write_ipk () {

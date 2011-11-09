@@ -84,7 +84,7 @@ python do_populate_sysroot () {
     #
 
     bb.build.exec_func("sysroot_stage_all", d)
-    for f in (bb.data.getVar('SYSROOT_PREPROCESS_FUNCS', d, True) or '').split():
+    for f in (d.getVar('SYSROOT_PREPROCESS_FUNCS', True) or '').split():
         bb.build.exec_func(f, d)
 }
 
@@ -100,8 +100,8 @@ python do_populate_sysroot_setscene () {
 addtask do_populate_sysroot_setscene
 
 python () {
-    if bb.data.getVar('do_stage', d, True) is not None:
-        bb.fatal("Legacy staging found for %s as it has a do_stage function. This will need conversion to a do_install or often simply removal to work with Poky" % bb.data.getVar("FILE", d, True))
+    if d.getVar('do_stage', True) is not None:
+        bb.fatal("Legacy staging found for %s as it has a do_stage function. This will need conversion to a do_install or often simply removal to work with Poky" % d.getVar("FILE", True))
 }
 
 

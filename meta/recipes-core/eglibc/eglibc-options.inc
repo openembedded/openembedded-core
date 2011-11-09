@@ -83,7 +83,7 @@ def distro_features_check_deps(distro_features):
 # Map distro features to eglibc options settings
 def features_to_eglibc_settings(d):
         cnf = ([])
-        distro_features = (bb.data.getVar('DISTRO_FEATURES', d, True) or '').split()
+        distro_features = (d.getVar('DISTRO_FEATURES', True) or '').split()
 
         distro_features_check_deps(distro_features)
 
@@ -128,8 +128,8 @@ def features_to_eglibc_settings(d):
 
         # try to fix disable charsets/locales/locale-code compile fail
         if 'libc-charsets' in distro_features and 'libc-locales' in distro_features and 'libc-locale-code' in distro_features:
-            bb.data.setVar('PACKAGE_NO_GCONV', '0', d)
+            d.setVar('PACKAGE_NO_GCONV', '0')
         else:
-            bb.data.setVar('PACKAGE_NO_GCONV', '1', d)
+            d.setVar('PACKAGE_NO_GCONV', '1')
 
         return "\n".join(cnf)

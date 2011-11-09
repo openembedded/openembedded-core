@@ -331,12 +331,12 @@ def explode_deps(s):
 
 def base_set_filespath(path, d):
 	filespath = []
-	extrapaths = (bb.data.getVar("FILESEXTRAPATHS", d, True) or "")
+	extrapaths = (d.getVar("FILESEXTRAPATHS", True) or "")
 	# Don't prepend empty strings to the path list
 	if extrapaths != "":
 		path = extrapaths.split(":") + path
 	# The ":" ensures we have an 'empty' override
-	overrides = (bb.data.getVar("OVERRIDES", d, 1) or "") + ":"
+	overrides = (d.getVar("OVERRIDES", 1) or "") + ":"
 	for p in path:
 		if p != "": 
 			for o in overrides.split(":"):

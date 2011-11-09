@@ -130,7 +130,7 @@ def siteinfo_get_files(d, no_cache = False):
     if no_cache: return sitefiles
 
     # Now check for siteconfig cache files
-    path_siteconfig = bb.data.getVar('SITECONFIG_SYSROOTCACHE', d, 1)
+    path_siteconfig = d.getVar('SITECONFIG_SYSROOTCACHE', 1)
     if os.path.isdir(path_siteconfig):
         for i in os.listdir(path_siteconfig):
             filename = os.path.join(path_siteconfig, i)

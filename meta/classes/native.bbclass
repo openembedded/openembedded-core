@@ -98,18 +98,18 @@ python native_virtclass_handler () {
     if not isinstance(e, bb.event.RecipePreFinalise):
         return
 
-    classextend = bb.data.getVar('BBCLASSEXTEND', e.data, True) or ""
+    classextend = e.data.getVar('BBCLASSEXTEND', True) or ""
     if "native" not in classextend:
         return
 
-    pn = bb.data.getVar("PN", e.data, True)
+    pn = e.data.getVar("PN", True)
     if not pn.endswith("-native"):
         return
 
     def map_dependencies(varname, d, suffix = ""):
         if suffix:
             varname = varname + "_" + suffix
-        deps = bb.data.getVar(varname, d, True)
+        deps = d.getVar(varname, True)
         if not deps:
             return
         deps = bb.utils.explode_deps(deps)
@@ -131,15 +131,15 @@ python native_virtclass_handler () {
         map_dependencies("RPROVIDES", e.data, pkg)
         map_dependencies("RREPLACES", e.data, pkg)
 
-    provides = bb.data.getVar("PROVIDES", e.data, True)
+    provides = e.data.getVar("PROVIDES", True)
     for prov in provides.split():
         if prov.find(pn) != -1:
             continue
         if not prov.endswith("-native"):
             provides = provides.replace(prov, prov + "-native")
-    bb.data.setVar("PROVIDES", provides, e.data)
+    e.data.setVar("PROVIDES", provides)
 
-    bb.data.setVar("OVERRIDES", bb.data.getVar("OVERRIDES", e.data, False) + ":virtclass-native", e.data)
+    bb.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + ":virtclass-native", e.data)
 }
 
 addhandler native_virtclass_handler

@@ -64,5 +64,5 @@ python populate_packages_prepend() {
 		plugintype = package.split( '-' )[-1]
 		if plugintype in depmap:
 			bb.note( "Adding rdependency on %s to package %s" % ( depmap[plugintype], package ) )
-			bb.data.setVar("RDEPENDS_%s" % package, depmap[plugintype], d)
+			d.setVar("RDEPENDS_%s" % package, depmap[plugintype])
 }

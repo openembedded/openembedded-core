@@ -88,9 +88,9 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 		if newdeps:
 			extra_depends = " ".join(newdeps)
 
-	dvar = bb.data.getVar('PKGD', d, True)
+	dvar = d.getVar('PKGD', True)
 
-	packages = bb.data.getVar('PACKAGES', d, True).split()
+	packages = d.getVar('PACKAGES', True).split()
 
 	if postinst:
 		postinst = '#!/bin/sh\n' + postinst + '\n'
@@ -136,7 +136,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 				packages = [pkg] + packages
 			else:
 				packages.append(pkg)
-		oldfiles = bb.data.getVar('FILES_' + pkg, d, True)
+		oldfiles = d.getVar('FILES_' + pkg, True)
 		if not oldfiles:
 			the_files = [os.path.join(root, o)]
 			if aux_files_pattern:
@@ -153,17 +153,17 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 					the_files.append(aux_files_pattern_verbatim % m.group(1))
 			bb.data.setVar('FILES_' + pkg, " ".join(the_files), d)
 			if extra_depends != '':
-				the_depends = bb.data.getVar('RDEPENDS_' + pkg, d, True)
+				the_depends = d.getVar('RDEPENDS_' + pkg, True)
 				if the_depends:
 					the_depends = '%s %s' % (the_depends, extra_depends)
 				else:
 					the_depends = extra_depends
-				bb.data.setVar('RDEPENDS_' + pkg, the_depends, d)
-			bb.data.setVar('DESCRIPTION_' + pkg, description % on, d)
+				d.setVar('RDEPENDS_' + pkg, the_depends)
+			d.setVar('DESCRIPTION_' + pkg, description % on)
 			if postinst:
-				bb.data.setVar('pkg_postinst_' + pkg, postinst, d)
+				d.setVar('pkg_postinst_' + pkg, postinst)
 			if postrm:
-				bb.data.setVar('pkg_postrm_' + pkg, postrm, d)
+				d.setVar('pkg_postrm_' + pkg, postrm)
 		else:
 			bb.data.setVar('FILES_' + pkg, oldfiles + " " + os.path.join(root, o), d)
 		if callable(hook):
@@ -174,13 +174,13 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 PACKAGE_DEPENDS += "file-native"
 
 python () {
-    if bb.data.getVar('PACKAGES', d, True) != '':
-        deps = bb.data.getVarFlag('do_package', 'depends', d) or ""
-        for dep in (bb.data.getVar('PACKAGE_DEPENDS', d, True) or "").split():
+    if d.getVar('PACKAGES', True) != '':
+        deps = d.getVarFlag('do_package', 'depends') or ""
+        for dep in (d.getVar('PACKAGE_DEPENDS', True) or "").split():
             deps += " %s:do_populate_sysroot" % dep
-        bb.data.setVarFlag('do_package', 'depends', deps, d)
+        d.setVarFlag('do_package', 'depends', deps)
 
-        deps = (bb.data.getVarFlag('do_package', 'deptask', d) or "").split()
+        deps = (d.getVarFlag('do_package', 'deptask') or "").split()
         # shlibs requires any DEPENDS to have already packaged for the *.list files
         deps.append("do_package")
         bb.data.setVarFlag('do_package', 'deptask', " ".join(deps), d)
@@ -198,9 +198,9 @@ def splitfile(file, debugfile, debugsrcdir, d):
 
     import commands, stat
 
-    dvar = bb.data.getVar('PKGD', d, True)
-    pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, True)
-    objcopy = bb.data.getVar("OBJCOPY", d, True)
+    dvar = d.getVar('PKGD', True)
+    pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
+    objcopy = d.getVar("OBJCOPY", True)
     debugedit = bb.data.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit", d)
     workdir = bb.data.expand("${WORKDIR}", d)
     workparentdir = os.path.dirname(workdir)
@@ -240,10 +240,10 @@ def splitfile2(debugsrcdir, d):
 
     import commands, stat
 
-    dvar = bb.data.getVar('PKGD', d, True)
-    pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, True)
-    strip = bb.data.getVar("STRIP", d, True)
-    objcopy = bb.data.getVar("OBJCOPY", d, True)
+    dvar = d.getVar('PKGD', True)
+    pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
+    strip = d.getVar("STRIP", True)
+    objcopy = d.getVar("OBJCOPY", True)
     debugedit = bb.data.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit", d)
     workdir = bb.data.expand("${WORKDIR}", d)
     workparentdir = os.path.dirname(workdir)
@@ -279,8 +279,8 @@ def runstrip(file, elftype, d):
 
     import commands, stat
 
-    pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, True)
-    strip = bb.data.getVar("STRIP", d, True)
+    pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
+    strip = d.getVar("STRIP", True)
 
     # Handle kernel modules specifically - .debug directories here are pointless
     if file.find("/lib/modules/") != -1 and file.endswith(".ko"):
@@ -329,10 +329,10 @@ def get_package_mapping (pkg, d):
 	return pkg
 
 def runtime_mapping_rename (varname, d):
-	#bb.note("%s before: %s" % (varname, bb.data.getVar(varname, d, True)))	
+	#bb.note("%s before: %s" % (varname, d.getVar(varname, True)))	
 
 	new_depends = []
-	deps = bb.utils.explode_dep_versions(bb.data.getVar(varname, d, True) or "")
+	deps = bb.utils.explode_dep_versions(d.getVar(varname, True) or "")
 	for depend in deps:
 		# Have to be careful with any version component of the depend
 		new_depend = get_package_mapping(depend, d)
@@ -343,7 +343,7 @@ def runtime_mapping_rename (varname, d):
 
 	bb.data.setVar(varname, " ".join(new_depends) or None, d)
 
-	#bb.note("%s after: %s" % (varname, bb.data.getVar(varname, d, True)))
+	#bb.note("%s after: %s" % (varname, d.getVar(varname, True)))
 
 #
 # Package functions suitable for inclusion in PACKAGEFUNCS
@@ -359,19 +359,19 @@ python package_get_auto_pr() {
 }
 
 python package_do_split_locales() {
-	if (bb.data.getVar('PACKAGE_NO_LOCALE', d, True) == '1'):
+	if (d.getVar('PACKAGE_NO_LOCALE', True) == '1'):
 		bb.debug(1, "package requested not splitting locales")
 		return
 
-	packages = (bb.data.getVar('PACKAGES', d, True) or "").split()
+	packages = (d.getVar('PACKAGES', True) or "").split()
 
-	datadir = bb.data.getVar('datadir', d, True)
+	datadir = d.getVar('datadir', True)
 	if not datadir:
 		bb.note("datadir not defined")
 		return
 
-	dvar = bb.data.getVar('PKGD', d, True)
-	pn = bb.data.getVar('PN', d, True)
+	dvar = d.getVar('PKGD', True)
+	pn = d.getVar('PN', True)
 
 	if pn + '-locale' in packages:
 		packages.remove(pn + '-locale')
@@ -392,9 +392,9 @@ python package_do_split_locales() {
 	if mainpkg.find('-dev'):
 		mainpkg = mainpkg.replace('-dev', '')
 
-	summary = bb.data.getVar('SUMMARY', d, True) or pn
-	description = bb.data.getVar('DESCRIPTION', d, True) or "" 
-        locale_section = bb.data.getVar('LOCALE_SECTION', d, True)
+	summary = d.getVar('SUMMARY', True) or pn
+	description = d.getVar('DESCRIPTION', True) or "" 
+        locale_section = d.getVar('LOCALE_SECTION', True)
 	for l in locales:
 		ln = legitimize_package_name(l)
 		pkg = pn + '-locale-' + ln
@@ -405,7 +405,7 @@ python package_do_split_locales() {
 		bb.data.setVar('SUMMARY_' + pkg, '%s - %s translations' % (summary, l), d)
 		bb.data.setVar('DESCRIPTION_' + pkg, '%s  This package contains language translation files for the %s locale.' % (description, l), d)
 		if locale_section:
-			bb.data.setVar('SECTION_' + pkg, locale_section, d)
+			d.setVar('SECTION_' + pkg, locale_section)
 
 	bb.data.setVar('PACKAGES', ' '.join(packages), d)
 
@@ -415,14 +415,14 @@ python package_do_split_locales() {
 	# glibc-localedata-translit* won't install as a dependency
 	# for some other package which breaks meta-toolchain
 	# Probably breaks since virtual-locale- isn't provided anywhere
-	#rdep = (bb.data.getVar('RDEPENDS_%s' % mainpkg, d, True) or bb.data.getVar('RDEPENDS', d, True) or "").split()
+	#rdep = (d.getVar('RDEPENDS_%s' % mainpkg, True) or d.getVar('RDEPENDS', True) or "").split()
 	#rdep.append('%s-locale*' % pn)
 	#bb.data.setVar('RDEPENDS_%s' % mainpkg, ' '.join(rdep), d)
 }
 
 python perform_packagecopy () {
-	dest = bb.data.getVar('D', d, True)
-	dvar = bb.data.getVar('PKGD', d, True)
+	dest = d.getVar('D', True)
+	dvar = d.getVar('PKGD', True)
 
 	bb.mkdirhier(dvar)
 
@@ -549,16 +549,16 @@ python fixup_perms () {
 	# paths are resolved via BBPATH
 	def get_fs_perms_list(d):
 		str = ""
-		fs_perms_tables = bb.data.getVar('FILESYSTEM_PERMS_TABLES', d, True)
+		fs_perms_tables = d.getVar('FILESYSTEM_PERMS_TABLES', True)
 		if not fs_perms_tables:
 			fs_perms_tables = 'files/fs-perms.txt'
 		for conf_file in fs_perms_tables.split():
-			str += " %s" % bb.which(bb.data.getVar('BBPATH', d, True), conf_file)
+			str += " %s" % bb.which(d.getVar('BBPATH', True), conf_file)
 		return str
 
 
 
-	dvar = bb.data.getVar('PKGD', d, True)
+	dvar = d.getVar('PKGD', True)
 
 	fs_perms_table = {}
 
@@ -586,7 +586,7 @@ python fixup_perms () {
 				'oldincludedir' ]
 
 	for path in target_path_vars:
-		dir = bb.data.getVar(path, d, True) or ""
+		dir = d.getVar(path, True) or ""
 		if dir == "":
 			continue
 		fs_perms_table[dir] = fs_perms_entry(bb.data.expand("%s 0755 root root false - - -" % (dir), d))
@@ -664,11 +664,11 @@ python fixup_perms () {
 python split_and_strip_files () {
 	import commands, stat, errno
 
-	dvar = bb.data.getVar('PKGD', d, True)
-	pn = bb.data.getVar('PN', d, True)
+	dvar = d.getVar('PKGD', True)
+	pn = d.getVar('PN', True)
 
 	# We default to '.debug' style
-	if bb.data.getVar('PACKAGE_DEBUG_SPLIT_STYLE', d, True) == 'debug-file-directory':
+	if d.getVar('PACKAGE_DEBUG_SPLIT_STYLE', True) == 'debug-file-directory':
 		# Single debug-file-directory style debug info
 		debugappend = ".debug"
 		debugdir = ""
@@ -691,7 +691,7 @@ python split_and_strip_files () {
 	# 8 - shared library
 	def isELF(path):
 		type = 0
-		pathprefix = "export PATH=%s; " % bb.data.getVar('PATH', d, True)
+		pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
 		ret, result = commands.getstatusoutput("%sfile '%s'" % (pathprefix, path))
 
 		if ret:
@@ -715,8 +715,8 @@ python split_and_strip_files () {
 	#
 	file_list = {}
 	file_links = {}
-	if (bb.data.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT', d, True) != '1') and \
-	   (bb.data.getVar('INHIBIT_PACKAGE_STRIP', d, True) != '1'):
+	if (d.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT', True) != '1') and \
+	   (d.getVar('INHIBIT_PACKAGE_STRIP', True) != '1'):
 		for root, dirs, files in os.walk(dvar):
 			for f in files:
 				file = os.path.join(root, f)
@@ -764,7 +764,7 @@ python split_and_strip_files () {
 	#
 	# First lets process debug splitting
 	#
-	if (bb.data.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT', d, True) != '1'):
+	if (d.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT', True) != '1'):
 		for file in file_list:
 			src = file[len(dvar):]
 			dest = debuglibdir + os.path.dirname(src) + debugdir + "/" + os.path.basename(src) + debugappend
@@ -842,7 +842,7 @@ python split_and_strip_files () {
 	#
 	# Now lets go back over things and strip them
 	#
-	if (bb.data.getVar('INHIBIT_PACKAGE_STRIP', d, True) != '1'):	
+	if (d.getVar('INHIBIT_PACKAGE_STRIP', True) != '1'):	
 		for file in file_list:
 			if file_list[file].startswith("ELF: "):
 				elf_file = int(file_list[file][5:])
@@ -856,11 +856,11 @@ python split_and_strip_files () {
 python populate_packages () {
 	import glob, stat, errno, re
 
-	workdir = bb.data.getVar('WORKDIR', d, True)
-	outdir = bb.data.getVar('DEPLOY_DIR', d, True)
-	dvar = bb.data.getVar('PKGD', d, True)
-	packages = bb.data.getVar('PACKAGES', d, True)
-	pn = bb.data.getVar('PN', d, True)
+	workdir = d.getVar('WORKDIR', True)
+	outdir = d.getVar('DEPLOY_DIR', True)
+	dvar = d.getVar('PKGD', True)
+	packages = d.getVar('PACKAGES', True)
+	pn = d.getVar('PN', True)
 
 	bb.mkdirhier(outdir)
 	os.chdir(dvar)
@@ -877,7 +877,7 @@ python populate_packages () {
 		else:
 			package_list.append(pkg)
 
-	pkgdest = bb.data.getVar('PKGDEST', d, True)
+	pkgdest = d.getVar('PKGDEST', True)
 	os.system('rm -rf %s' % pkgdest)
 
 	seen = []
@@ -887,14 +887,14 @@ python populate_packages () {
 		root = os.path.join(pkgdest, pkg)
 		bb.mkdirhier(root)
 
-		bb.data.setVar('PKG', pkg, localdata)
-		overrides = bb.data.getVar('OVERRIDES', localdata, True)
+		localdata.setVar('PKG', pkg)
+		overrides = localdata.getVar('OVERRIDES', True)
 		if not overrides:
 			raise bb.build.FuncFailed('OVERRIDES not defined')
-		bb.data.setVar('OVERRIDES', overrides + ':' + pkg, localdata)
+		localdata.setVar('OVERRIDES', overrides + ':' + pkg)
 		bb.data.update_data(localdata)
 
-		filesvar = bb.data.getVar('FILES', localdata, True) or ""
+		filesvar = localdata.getVar('FILES', True) or ""
 		files = filesvar.split()
 		file_links = {}
 		for file in files:
@@ -973,9 +973,9 @@ python populate_packages () {
 	bb.build.exec_func("package_name_hook", d)
 
 	for pkg in package_list:
-		pkgname = bb.data.getVar('PKG_%s' % pkg, d, True)
+		pkgname = d.getVar('PKG_%s' % pkg, True)
 		if pkgname is None:
-			bb.data.setVar('PKG_%s' % pkg, pkg, d)
+			d.setVar('PKG_%s' % pkg, pkg)
 
 	dangling_links = {}
 	pkg_files = {}
@@ -999,7 +999,7 @@ python populate_packages () {
 					dangling_links[pkg].append(os.path.normpath(target))
 
 	for pkg in package_list:
-		rdepends = bb.utils.explode_dep_versions(bb.data.getVar('RDEPENDS_' + pkg, d, True) or bb.data.getVar('RDEPENDS', d, True) or "")
+		rdepends = bb.utils.explode_dep_versions(d.getVar('RDEPENDS_' + pkg, True) or d.getVar('RDEPENDS', True) or "")
 
 		for l in dangling_links[pkg]:
 			found = False
@@ -1040,9 +1040,9 @@ python emit_pkgdata() {
 			f.write('%s: %s\n' % (var, encode(val)))
 		return
 
-	packages = bb.data.getVar('PACKAGES', d, True)
-	pkgdest = bb.data.getVar('PKGDEST', d, 1)
-	pkgdatadir = bb.data.getVar('PKGDESTWORK', d, True)
+	packages = d.getVar('PACKAGES', True)
+	pkgdest = d.getVar('PKGDEST', 1)
+	pkgdatadir = d.getVar('PKGDESTWORK', True)
 
 	# Take shared lock since we're only reading, not writing
 	lf = bb.utils.lockfile(bb.data.expand("${PACKAGELOCK}", d), True)
@@ -1052,7 +1052,7 @@ python emit_pkgdata() {
 	f.write("PACKAGES: %s\n" % packages)
 	f.close()
 
-	workdir = bb.data.getVar('WORKDIR', d, True)
+	workdir = d.getVar('WORKDIR', True)
 
 	for pkg in packages.split():
 		subdata_file = pkgdatadir + "/runtime/%s" % pkg
@@ -1080,19 +1080,19 @@ python emit_pkgdata() {
 		write_if_exists(sf, pkg, 'pkg_preinst')
 		write_if_exists(sf, pkg, 'pkg_prerm')
 		write_if_exists(sf, pkg, 'FILERPROVIDESFLIST')
-		for dfile in (bb.data.getVar('FILERPROVIDESFLIST_' + pkg, d, True) or "").split():
+		for dfile in (d.getVar('FILERPROVIDESFLIST_' + pkg, True) or "").split():
 			write_if_exists(sf, pkg, 'FILERPROVIDES_' + dfile)
 
 		write_if_exists(sf, pkg, 'FILERDEPENDSFLIST')
-		for dfile in (bb.data.getVar('FILERDEPENDSFLIST_' + pkg, d, True) or "").split():
+		for dfile in (d.getVar('FILERDEPENDSFLIST_' + pkg, True) or "").split():
 			write_if_exists(sf, pkg, 'FILERDEPENDS_' + dfile)
 
 		sf.close()
 
 
-		allow_empty = bb.data.getVar('ALLOW_EMPTY_%s' % pkg, d, True)
+		allow_empty = d.getVar('ALLOW_EMPTY_%s' % pkg, True)
 		if not allow_empty:
-			allow_empty = bb.data.getVar('ALLOW_EMPTY', d, True)
+			allow_empty = d.getVar('ALLOW_EMPTY', True)
 		root = "%s/%s" % (pkgdest, pkg)
 		os.chdir(root)
 		g = glob('*')
@@ -1123,8 +1123,8 @@ RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/bin/rpmdeps"
 python package_do_filedeps() {
 	import os, re
 
-	pkgdest = bb.data.getVar('PKGDEST', d, True)
-	packages = bb.data.getVar('PACKAGES', d, True)
+	pkgdest = d.getVar('PKGDEST', True)
+	packages = d.getVar('PACKAGES', True)
 
 	rpmdeps = bb.data.expand("${RPMDEPS}", d)
 	r = re.compile(r'[<>=]+ +[^ ]*')
@@ -1189,7 +1189,7 @@ SHLIBSWORKDIR = "${WORKDIR}/shlibs"
 python package_do_shlibs() {
 	import re
 
-	exclude_shlibs = bb.data.getVar('EXCLUDE_FROM_SHLIBS', d, 0)
+	exclude_shlibs = d.getVar('EXCLUDE_FROM_SHLIBS', 0)
 	if exclude_shlibs:
 		bb.note("not generating shlibs")
 		return
@@ -1197,27 +1197,27 @@ python package_do_shlibs() {
 	lib_re = re.compile("^.*\.so")
 	libdir_re = re.compile(".*/lib$")
 
-	packages = bb.data.getVar('PACKAGES', d, True)
-	targetos = bb.data.getVar('TARGET_OS', d, True)
+	packages = d.getVar('PACKAGES', True)
+	targetos = d.getVar('TARGET_OS', True)
 
-	workdir = bb.data.getVar('WORKDIR', d, True)
+	workdir = d.getVar('WORKDIR', True)
 
-	ver = bb.data.getVar('PKGV', d, True)
+	ver = d.getVar('PKGV', True)
 	if not ver:
 		bb.error("PKGV not defined")
 		return
 
-	pkgdest = bb.data.getVar('PKGDEST', d, True)
+	pkgdest = d.getVar('PKGDEST', True)
 
-	shlibs_dir = bb.data.getVar('SHLIBSDIR', d, True)
-	shlibswork_dir = bb.data.getVar('SHLIBSWORKDIR', d, True)
+	shlibs_dir = d.getVar('SHLIBSDIR', True)
+	shlibswork_dir = d.getVar('SHLIBSWORKDIR', True)
 
 	# Take shared lock since we're only reading, not writing
 	lf = bb.utils.lockfile(bb.data.expand("${PACKAGELOCK}", d))
 
 	def linux_so(root, path, file):
-		cmd = bb.data.getVar('OBJDUMP', d, True) + " -p " + os.path.join(root, file) + " 2>/dev/null"
-		cmd = "PATH=\"%s\" %s" % (bb.data.getVar('PATH', d, True), cmd)
+		cmd = d.getVar('OBJDUMP', True) + " -p " + os.path.join(root, file) + " 2>/dev/null"
+		cmd = "PATH=\"%s\" %s" % (d.getVar('PATH', True), cmd)
 		fd = os.popen(cmd)
 		lines = fd.readlines()
 		fd.close()
@@ -1264,7 +1264,7 @@ python package_do_shlibs() {
 				if not combo in sonames:
 					sonames.append(combo)
 		if file.endswith('.dylib') or file.endswith('.so'):
-			lafile = fullpath.replace(os.path.join(pkgdest, pkg), bb.data.getVar('PKGD', d, True))
+			lafile = fullpath.replace(os.path.join(pkgdest, pkg), d.getVar('PKGD', True))
 			# Drop suffix
 			lafile = lafile.rsplit(".",1)[0]
 			lapath = os.path.dirname(lafile)
@@ -1299,26 +1299,26 @@ python package_do_shlibs() {
 								needed[pkg].append(name)
 								#bb.note("Adding %s for %s" % (name, pkg))
 
-	if bb.data.getVar('PACKAGE_SNAP_LIB_SYMLINKS', d, True) == "1":
+	if d.getVar('PACKAGE_SNAP_LIB_SYMLINKS', True) == "1":
 		snap_symlinks = True
 	else:
 		snap_symlinks = False
 
-	if (bb.data.getVar('USE_LDCONFIG', d, True) or "1") == "1":
+	if (d.getVar('USE_LDCONFIG', True) or "1") == "1":
 		use_ldconfig = True
 	else:
 		use_ldconfig = False
 
 	needed = {}
 	shlib_provider = {}
-	private_libs = bb.data.getVar('PRIVATE_LIBS', d, True)
+	private_libs = d.getVar('PRIVATE_LIBS', True)
 	for pkg in packages.split():
 		needs_ldconfig = False
 		bb.debug(2, "calculating shlib provides for %s" % pkg)
 
-		pkgver = bb.data.getVar('PKGV_' + pkg, d, True)
+		pkgver = d.getVar('PKGV_' + pkg, True)
 		if not pkgver:
-			pkgver = bb.data.getVar('PV_' + pkg, d, True)
+			pkgver = d.getVar('PV_' + pkg, True)
 		if not pkgver:
 			pkgver = ver
 
@@ -1352,11 +1352,11 @@ python package_do_shlibs() {
 			fd.close()
 		if needs_ldconfig and use_ldconfig:
 			bb.debug(1, 'adding ldconfig call to postinst for %s' % pkg)
-			postinst = bb.data.getVar('pkg_postinst_%s' % pkg, d, True) or bb.data.getVar('pkg_postinst', d, True)
+			postinst = d.getVar('pkg_postinst_%s' % pkg, True) or d.getVar('pkg_postinst', True)
 			if not postinst:
 				postinst = '#!/bin/sh\n'
-			postinst += bb.data.getVar('ldconfig_postinst_fragment', d, True)
-			bb.data.setVar('pkg_postinst_%s' % pkg, postinst, d)
+			postinst += d.getVar('ldconfig_postinst_fragment', True)
+			d.setVar('pkg_postinst_%s' % pkg, postinst)
 
 	list_re = re.compile('^(.*)\.list$')
 	for dir in [shlibs_dir]: 
@@ -1380,7 +1380,7 @@ python package_do_shlibs() {
 
 	bb.utils.unlockfile(lf)
 
-	assumed_libs = bb.data.getVar('ASSUME_SHLIBS', d, True)
+	assumed_libs = d.getVar('ASSUME_SHLIBS', True)
 	if assumed_libs:
 	    for e in assumed_libs.split():
 		l, dep_pkg = e.split(":")
@@ -1424,12 +1424,12 @@ python package_do_shlibs() {
 python package_do_pkgconfig () {
 	import re
 
-	packages = bb.data.getVar('PACKAGES', d, True)
-	workdir = bb.data.getVar('WORKDIR', d, True)
-	pkgdest = bb.data.getVar('PKGDEST', d, True)
+	packages = d.getVar('PACKAGES', True)
+	workdir = d.getVar('WORKDIR', True)
+	pkgdest = d.getVar('PKGDEST', True)
 
-	shlibs_dir = bb.data.getVar('SHLIBSDIR', d, True)
-	shlibswork_dir = bb.data.getVar('SHLIBSWORKDIR', d, True)
+	shlibs_dir = d.getVar('SHLIBSDIR', True)
+	shlibswork_dir = d.getVar('SHLIBSWORKDIR', True)
 
 	pc_re = re.compile('(.*)\.pc$')
 	var_re = re.compile('(.*)=(.*)')
@@ -1515,9 +1515,9 @@ python package_do_pkgconfig () {
 }
 
 python read_shlibdeps () {
-	packages = bb.data.getVar('PACKAGES', d, True).split()
+	packages = d.getVar('PACKAGES', True).split()
 	for pkg in packages:
-		rdepends = bb.utils.explode_dep_versions(bb.data.getVar('RDEPENDS_' + pkg, d, 0) or bb.data.getVar('RDEPENDS', d, 0) or "")
+		rdepends = bb.utils.explode_dep_versions(d.getVar('RDEPENDS_' + pkg, 0) or d.getVar('RDEPENDS', 0) or "")
 
 		for extension in ".shlibdeps", ".pcdeps", ".clilibdeps":
 			depsfile = bb.data.expand("${PKGDEST}/" + pkg + extension, d)
@@ -1544,14 +1544,14 @@ python package_depchains() {
 	package.
 	"""
 
-	packages  = bb.data.getVar('PACKAGES', d, True)
-	postfixes = (bb.data.getVar('DEPCHAIN_POST', d, True) or '').split()
-	prefixes  = (bb.data.getVar('DEPCHAIN_PRE', d, True) or '').split()
+	packages  = d.getVar('PACKAGES', True)
+	postfixes = (d.getVar('DEPCHAIN_POST', True) or '').split()
+	prefixes  = (d.getVar('DEPCHAIN_PRE', True) or '').split()
 
 	def pkg_adddeprrecs(pkg, base, suffix, getname, depends, d):
 
 		#bb.note('depends for %s is %s' % (base, depends))
-		rreclist = bb.utils.explode_dep_versions(bb.data.getVar('RRECOMMENDS_' + pkg, d, True) or bb.data.getVar('RRECOMMENDS', d, True) or "")
+		rreclist = bb.utils.explode_dep_versions(d.getVar('RRECOMMENDS_' + pkg, True) or d.getVar('RRECOMMENDS', True) or "")
 
 		for depend in depends:
 			if depend.find('-native') != -1 or depend.find('-cross') != -1 or depend.startswith('virtual/'):
@@ -1572,7 +1572,7 @@ python package_depchains() {
 	def pkg_addrrecs(pkg, base, suffix, getname, rdepends, d):
 
 		#bb.note('rdepends for %s is %s' % (base, rdepends))
-		rreclist = bb.utils.explode_dep_versions(bb.data.getVar('RRECOMMENDS_' + pkg, d, True) or bb.data.getVar('RRECOMMENDS', d, True) or "")
+		rreclist = bb.utils.explode_dep_versions(d.getVar('RRECOMMENDS_' + pkg, True) or d.getVar('RRECOMMENDS', True) or "")
 
 		for depend in rdepends:
 			if depend.find('virtual-locale-') != -1:
@@ -1596,15 +1596,15 @@ python package_depchains() {
 			list.append(dep)
 
 	depends = []
-	for dep in bb.utils.explode_deps(bb.data.getVar('DEPENDS', d, True) or ""):
+	for dep in bb.utils.explode_deps(d.getVar('DEPENDS', True) or ""):
 		add_dep(depends, dep)
 
 	rdepends = []
-	for dep in bb.utils.explode_deps(bb.data.getVar('RDEPENDS', d, True) or ""):
+	for dep in bb.utils.explode_deps(d.getVar('RDEPENDS', True) or ""):
 		add_dep(rdepends, dep)
 
 	for pkg in packages.split():
-		for dep in bb.utils.explode_deps(bb.data.getVar('RDEPENDS_' + pkg, d, True) or ""):
+		for dep in bb.utils.explode_deps(d.getVar('RDEPENDS_' + pkg, True) or ""):
 			add_dep(rdepends, dep)
 
 	#bb.note('rdepends is %s' % rdepends)
@@ -1630,7 +1630,7 @@ python package_depchains() {
 
 	for suffix in pkgs:
 		for pkg in pkgs[suffix]:
-			if bb.data.getVarFlag('RRECOMMENDS_' + pkg, 'nodeprrecs', d):
+			if d.getVarFlag('RRECOMMENDS_' + pkg, 'nodeprrecs'):
 				continue
 			(base, func) = pkgs[suffix][pkg]
 			if suffix == "-dev":
@@ -1639,7 +1639,7 @@ python package_depchains() {
 				pkg_addrrecs(pkg, base, suffix, func, rdepends, d)
 			else:
 				rdeps = []
-				for dep in bb.utils.explode_deps(bb.data.getVar('RDEPENDS_' + base, d, True) or bb.data.getVar('RDEPENDS', d, True) or ""):
+				for dep in bb.utils.explode_deps(d.getVar('RDEPENDS_' + base, True) or d.getVar('RDEPENDS', True) or ""):
 					add_dep(rdeps, dep)
 				pkg_addrrecs(pkg, base, suffix, func, rdeps, d)
 }
@@ -1679,22 +1679,22 @@ python do_package () {
         # as any change to rpmdeps requires this to be rerun.
         # PACKAGE_BBCLASS_VERSION = "1"
 
-	packages = (bb.data.getVar('PACKAGES', d, True) or "").split()
+	packages = (d.getVar('PACKAGES', True) or "").split()
 	if len(packages) < 1:
 		bb.debug(1, "No packages to build, skipping do_package")
 		return
 
-	workdir = bb.data.getVar('WORKDIR', d, True)
-	outdir = bb.data.getVar('DEPLOY_DIR', d, True)
-	dest = bb.data.getVar('D', d, True)
-	dvar = bb.data.getVar('PKGD', d, True)
-	pn = bb.data.getVar('PN', d, True)
+	workdir = d.getVar('WORKDIR', True)
+	outdir = d.getVar('DEPLOY_DIR', True)
+	dest = d.getVar('D', True)
+	dvar = d.getVar('PKGD', True)
+	pn = d.getVar('PN', True)
 
 	if not workdir or not outdir or not dest or not dvar or not pn or not packages:
 		bb.error("WORKDIR, DEPLOY_DIR, D, PN and PKGD all must be defined, unable to package")
 		return
 
-	for f in (bb.data.getVar('PACKAGEFUNCS', d, True) or '').split():
+	for f in (d.getVar('PACKAGEFUNCS', True) or '').split():
 		bb.build.exec_func(f, d)
 }
 

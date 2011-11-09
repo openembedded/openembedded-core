@@ -137,8 +137,8 @@ toolchain_create_sdk_version () {
 }
 
 python __anonymous () {
-    deps = bb.data.getVarFlag('do_configure', 'depends', d) or ""
-    for dep in (bb.data.getVar('TOOLCHAIN_NEED_CONFIGSITE_CACHE', d, True) or "").split():
+    deps = d.getVarFlag('do_configure', 'depends') or ""
+    for dep in (d.getVar('TOOLCHAIN_NEED_CONFIGSITE_CACHE', True) or "").split():
         deps += " %s:do_populate_sysroot" % dep
-    bb.data.setVarFlag('do_configure', 'depends', deps, d)
+    d.setVarFlag('do_configure', 'depends', deps)
 }

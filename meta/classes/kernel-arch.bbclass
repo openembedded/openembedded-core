@@ -18,7 +18,7 @@ valid_archs = "alpha cris ia64 \
 def map_kernel_arch(a, d):
 	import re
 
-	valid_archs = bb.data.getVar('valid_archs', d, 1).split()
+	valid_archs = d.getVar('valid_archs', 1).split()
 
 	if   re.match('(i.86|athlon|x86.64)$', a):	return 'x86'
 	elif re.match('arm26$', a):		        return 'arm26'
@@ -32,7 +32,7 @@ def map_kernel_arch(a, d):
 	else:
 		bb.error("cannot map '%s' to a linux kernel architecture" % a)
 
-export ARCH = "${@map_kernel_arch(bb.data.getVar('TARGET_ARCH', d, 1), d)}"
+export ARCH = "${@map_kernel_arch(d.getVar('TARGET_ARCH', 1), d)}"
 
 def map_uboot_arch(a, d):
 	import re
@@ -41,5 +41,5 @@ def map_uboot_arch(a, d):
 	elif re.match('i.86$', a): return 'x86'
 	return a
 
-export UBOOT_ARCH = "${@map_uboot_arch(bb.data.getVar('ARCH', d, 1), d)}"
+export UBOOT_ARCH = "${@map_uboot_arch(d.getVar('ARCH', 1), d)}"
 

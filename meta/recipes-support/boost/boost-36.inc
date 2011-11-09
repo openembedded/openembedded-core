@@ -11,8 +11,8 @@ LICENSE = "Boost"
 PR = "r4"
 
 ARM_INSTRUCTION_SET = "arm"
-BOOST_VER = "${@"_".join(bb.data.getVar("PV",d,1).split("."))}"
-BOOST_MAJ = "${@"_".join(bb.data.getVar("PV",d,1).split(".")[0:2])}"
+BOOST_VER = "${@"_".join(d.getVar("PV",1).split("."))}"
+BOOST_MAJ = "${@"_".join(d.getVar("PV",1).split(".")[0:2])}"
 BOOST_P = "boost_${BOOST_VER}"
 
 BOOST_LIBS = "\
@@ -46,12 +46,12 @@ python __anonymous () {
 
     packages = []
     extras = []
-    for lib in bb.data.getVar('BOOST_LIBS', d, 1).split( ):
+    for lib in d.getVar('BOOST_LIBS', 1).split( ):
             pkg = "boost-%s" % lib.replace("_", "-")
             extras.append("--with-%s" % lib)
             packages.append(pkg)
-            if not bb.data.getVar("FILES_%s" % pkg, d, 1):
-                    bb.data.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s*.so.*" % lib, d)
+            if not d.getVar("FILES_%s" % pkg, 1):
+                    d.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s*.so.*" % lib)
     bb.data.setVar("BOOST_PACKAGES", " ".join(packages), d)
     bb.data.setVar("BJAM_EXTRA", " ".join(extras), d)
 }

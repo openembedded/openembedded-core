@@ -7,17 +7,17 @@ NATIVEDEPS = ""
 
 inherit autotools gettext
 
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/gcc-${PV}"
+FILESDIR = "${@os.path.dirname(d.getVar('FILE',1))}/gcc-${PV}"
 
 def get_gcc_fpu_setting(bb, d):
-    if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
+    if d.getVar('TARGET_FPU', 1) in [ 'soft' ]:
         return "--with-float=soft"
-    if bb.data.getVar('TARGET_FPU', d, 1) in [ 'ppc-efd' ]:
+    if d.getVar('TARGET_FPU', 1) in [ 'ppc-efd' ]:
         return "--enable-e500_double"
     return ""
 
 def get_gcc_mips_plt_setting(bb, d):
-    if bb.data.getVar('TARGET_ARCH', d, 1) in [ 'mips', 'mipsel' ] and 'mplt' in bb.data.getVar('DISTRO_FEATURES',d,1).split() :
+    if d.getVar('TARGET_ARCH', 1) in [ 'mips', 'mipsel' ] and 'mplt' in d.getVar('DISTRO_FEATURES',1).split() :
         return "--with-mips-plt"
     return ""
 

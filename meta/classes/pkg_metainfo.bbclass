@@ -1,5 +1,5 @@
 python do_pkg_write_metainfo () {
-	deploydir = bb.data.getVar('DEPLOY_DIR', d, 1)
+	deploydir = d.getVar('DEPLOY_DIR', 1)
 	if not deploydir:
 		bb.error("DEPLOY_DIR not defined, unable to write package info")
 		return
@@ -9,11 +9,11 @@ python do_pkg_write_metainfo () {
 	except OSError:
 		raise bb.build.FuncFailed("unable to open package-info file for writing.")
 	
-	name = bb.data.getVar('PN', d, 1)
-	version = bb.data.getVar('PV', d, 1)
-	desc = bb.data.getVar('DESCRIPTION', d, 1)
-	page = bb.data.getVar('HOMEPAGE', d, 1)
-	lic = bb.data.getVar('LICENSE', d, 1)
+	name = d.getVar('PN', 1)
+	version = d.getVar('PV', 1)
+	desc = d.getVar('DESCRIPTION', 1)
+	page = d.getVar('HOMEPAGE', 1)
+	lic = d.getVar('LICENSE', 1)
 	
 	infofile.write("|| "+ name +" || "+ version + " || "+ desc +" || "+ page +" || "+ lic + " ||\n" ) 
 	infofile.close()

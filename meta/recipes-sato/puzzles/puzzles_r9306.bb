@@ -3,7 +3,7 @@ HOMEPAGE="http://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
 
 DEPENDS = "gtk+ libxt"
 PR = "r0"
-MOD_PV = "${@bb.data.getVar('PV',d,1)[1:]}"
+MOD_PV = "${@d.getVar('PV',1)[1:]}"
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=9928b60f3b78be315b7ab699c1b03ff5"

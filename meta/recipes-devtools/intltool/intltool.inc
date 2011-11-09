@@ -2,7 +2,7 @@ DESCRIPTION = "Utility scripts for internationalizing XML"
 SECTION = "devel"
 LICENSE = "GPLv2"
 
-URLV="${@'.'.join(bb.data.getVar('PV',d,1).split('.')[0:2])}"
+URLV="${@'.'.join(d.getVar('PV',1).split('.')[0:2])}"
 SRC_URI = "${GNOME_MIRROR}/intltool/${URLV}/intltool-${PV}.tar.bz2"
 S = "${WORKDIR}/intltool-${PV}"
 

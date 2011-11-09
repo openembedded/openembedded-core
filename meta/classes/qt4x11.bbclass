@@ -1,4 +1,4 @@
-DEPENDS_prepend = "${@["qt4-x11-free ", ""][(bb.data.getVar('BPN', d, True)[:12] == 'qt4-x11-free')]}"
+DEPENDS_prepend = "${@["qt4-x11-free ", ""][(d.getVar('BPN', True)[:12] == 'qt4-x11-free')]}"
 
 inherit qmake2
 

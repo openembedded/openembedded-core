@@ -54,10 +54,10 @@ python populate_packages_prepend () {
 
 	def pam_plugin_append_file(pn, dir, file):
 		nf = os.path.join(dir, file)
-		of = bb.data.getVar('FILES_' + pn, d, True)
+		of = d.getVar('FILES_' + pn, True)
 		if of:
 			nf = of + " " + nf
-		bb.data.setVar('FILES_' + pn, nf, d)
+		d.setVar('FILES_' + pn, nf)
 
 	dvar = bb.data.expand('${WORKDIR}/package', d, True)
 	pam_libdir = bb.data.expand('${base_libdir}/security', d)

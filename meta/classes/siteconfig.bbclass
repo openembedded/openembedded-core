@@ -2,7 +2,7 @@ python siteconfig_do_siteconfig () {
 	shared_state = sstate_state_fromvars(d)
 	if shared_state['name'] != 'populate-sysroot':
 		return
-	if not os.path.isdir(os.path.join(bb.data.getVar('FILE_DIRNAME', d, 1), 'site_config')):
+	if not os.path.isdir(os.path.join(d.getVar('FILE_DIRNAME', 1), 'site_config')):
 		bb.debug(1, "No site_config directory, skipping do_siteconfig")
 		return
 	bb.build.exec_func('do_siteconfig_gencache', d)

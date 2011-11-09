@@ -12,7 +12,7 @@ DEPENDS_virtclass-nativesdk = "curl-nativesdk"
 
 PE = "1"
 
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/opkg"
+FILESDIR = "${@os.path.dirname(d.getVar('FILE',1))}/opkg"
 
 # Werror gives all kinds bounds issuses with gcc 4.3.3
 do_configure_prepend() {

@@ -13,8 +13,8 @@ SRC_URI[sha256sum] = "5e18bff75f01656c64f553412a8905527e1b85efaf3163c6fb81ea5aac
 
 # Strip ${prefix} from ${docdir}, set result into docdir_stripped
 python () {
-    prefix=bb.data.getVar("prefix", d, 1)
-    docdir=bb.data.getVar("docdir", d, 1)
+    prefix=d.getVar("prefix", 1)
+    docdir=d.getVar("docdir", 1)
 
     if not docdir.startswith(prefix):
 	raise bb.build.FuncFailed('docdir must contain prefix as its prefix')
@@ -23,7 +23,7 @@ python () {
     if len(docdir_stripped) > 0 and docdir_stripped[0] == '/':
 	docdir_stripped = docdir_stripped[1:]
 
-    bb.data.setVar("docdir_stripped", docdir_stripped, d)
+    d.setVar("docdir_stripped", docdir_stripped)
 }
 
 EXTRA_OECMAKE=" \

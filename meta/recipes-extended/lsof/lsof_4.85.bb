@@ -17,10 +17,10 @@ LIC_FILES_CHKSUM = "file://${S}/00README;beginline=645;endline=679;md5=e0108f781
 
 python do_unpack () {
     bb.build.exec_func('base_do_unpack', d)
-    src_uri = bb.data.getVar('SRC_URI', d)
-    bb.data.setVar('SRC_URI', '${LOCALSRC}', d)
+    src_uri = d.getVar('SRC_URI')
+    d.setVar('SRC_URI', '${LOCALSRC}')
     bb.build.exec_func('base_do_unpack', d)
-    bb.data.setVar('SRC_URI', src_uri, d)
+    d.setVar('SRC_URI', src_uri)
 }
 
 export LSOF_OS = "${TARGET_OS}"

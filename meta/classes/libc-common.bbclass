@@ -18,13 +18,13 @@ do_install() {
 }
 
 def get_libc_fpu_setting(bb, d):
-    if bb.data.getVar('TARGET_FPU', d, 1) in [ 'soft' ]:
+    if d.getVar('TARGET_FPU', 1) in [ 'soft' ]:
         return "--without-fp"
     return ""
 
 python populate_packages_prepend () {
-	if bb.data.getVar('DEBIAN_NAMES', d, 1):
-		bpn = bb.data.getVar('BPN', d, 1)
-		bb.data.setVar('PKG_'+bpn, 'libc6', d)
-		bb.data.setVar('PKG_'+bpn+'-dev', 'libc6-dev', d)
+	if d.getVar('DEBIAN_NAMES', 1):
+		bpn = d.getVar('BPN', 1)
+		d.setVar('PKG_'+bpn, 'libc6')
+		d.setVar('PKG_'+bpn+'-dev', 'libc6-dev')
 }
