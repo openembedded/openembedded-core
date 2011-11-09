@@ -2,7 +2,7 @@
 # target sysroot, and shadow -native and -sysroot provide the utilities
 # and support files needed to add and modify user and group accounts
 DEPENDS_append = "${USERADDDEPENDS}"
-USERADDDEPENDS = " base-passwd shadow-native shadow-sysroot"
+USERADDDEPENDS = " base-passwd shadow-native shadow-sysroot shadow"
 USERADDDEPENDS_virtclass-nativesdk = ""
 
 # This preinstall function will be run in two contexts: once for the
