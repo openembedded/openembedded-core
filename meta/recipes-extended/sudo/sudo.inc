@@ -29,11 +29,3 @@ do_install_prepend (){
 	mkdir -p ${D}/${localstatedir}/lib
 }
 
-pkg_postinst_${PN} () {
-	if [ "x$D" != "x" ]; then
-		exit 1
-	fi
-
-	chmod 4111 /usr/bin/sudo
-	chmod 0440 /etc/sudoers
-}

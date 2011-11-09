@@ -1,6 +1,6 @@
 require sudo.inc
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://ftp.sudo.ws/sudo/dist/sudo-${PV}.tar.gz \
            file://libtool.patch \
@@ -23,4 +23,7 @@ do_install_append () {
 			break
 		fi
 	done
+
+	chmod 4111 $D/usr/bin/sudo
+	chmod 0440 $D/etc/sudoers
 }
