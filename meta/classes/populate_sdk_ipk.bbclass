@@ -18,14 +18,14 @@ populate_sdk_ipk() {
 	#install target
 	export INSTALL_ROOTFS_IPK="${SDK_OUTPUT}/${SDKTARGETSYSROOT}"
 	export INSTALL_CONF_IPK="${IPKGCONF_TARGET}"
-	export INSTALL_PACKAGES_NORMAL_IPK="${TOOLCHAIN_TARGET_TASK}"
+	export INSTALL_PACKAGES_IPK="${TOOLCHAIN_TARGET_TASK}"
 
 	package_install_internal_ipk
 
 	#install host
 	export INSTALL_ROOTFS_IPK="${SDK_OUTPUT}"
 	export INSTALL_CONF_IPK="${IPKGCONF_SDK}"
-	export INSTALL_PACKAGES_NORMAL_IPK="${TOOLCHAIN_HOST_TASK}"
+	export INSTALL_PACKAGES_IPK="${TOOLCHAIN_HOST_TASK}"
 
 	package_install_internal_ipk
 
