@@ -111,6 +111,8 @@ build_boot_bin() {
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		${S}/cd/
 
+		isohybrid ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso
+
 		cd ${DEPLOY_DIR_IMAGE}
 		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.iso
 		ln -s ${IMAGE_NAME}.iso ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.iso
