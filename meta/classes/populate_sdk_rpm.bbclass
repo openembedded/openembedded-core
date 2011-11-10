@@ -21,7 +21,7 @@ populate_sdk_post_rpm () {
 	rm -rf ${target_rootfs}/install
 }
 
-fakeroot populate_sdk_rpm () {
+populate_sdk_rpm () {
 
 	package_update_index_rpm
 	package_generate_rpm_conf

@@ -13,7 +13,7 @@ populate_sdk_post_deb () {
 	tar -cf - -C ${STAGING_ETCDIR_NATIVE} -ps apt | tar -xf - -C ${target_rootfs}/etc
 }
 
-fakeroot populate_sdk_deb () {
+populate_sdk_deb () {
 
 	# update index
 	package_update_index_deb
