@@ -116,9 +116,9 @@ do_install () {
 
 	mkdir -p ${D}${base_bindir}
 
-        sbinprogs="agetty blockdev ctrlaltdel cfdisk vipw vigr"
-        sbinprogs_a="pivot_root hwclock mkswap shutdown mkfs.minix fsck.minix losetup swapon fdisk readprofile fsck blkid sln"
-        usrbinprogs_a="chfn chsh hexdump last logger mesg newgrp renice wall setsid chrt"
+        sbinprogs="agetty ctrlaltdel cfdisk vipw vigr"
+        sbinprogs_a="pivot_root hwclock mkswap shutdown mkfs.minix fsck.minix losetup swapon fdisk readprofile fsck blkid sln blockdev"
+        usrbinprogs_a="chfn chsh hexdump last logger mesg newgrp renice wall setsid chrt flock"
         binprogs_a="dmesg kill more umount mount login reset"
 
         if [ "${base_sbindir}" != "${sbindir}" ]; then
@@ -180,6 +180,7 @@ pkg_postinst_${PN} () {
 	update-alternatives --install ${base_bindir}/kill kill kill.${PN} 100
 	update-alternatives --install ${base_bindir}/more more more.${PN} 100
 	update-alternatives --install ${base_sbindir}/mkswap mkswap mkswap.${PN} 100
+	update-alternatives --install ${base_sbindir}/blockdev blockdev blockdev.${PN} 100
 	test -x ${base_sbindir}/pivot_root.${PN} && \
 	update-alternatives --install ${base_sbindir}/pivot_root pivot_root pivot_root.${PN} 100
 #	update-alternatives --install ${base_sbindir}/sln sln sln.${PN} 100
@@ -190,6 +191,7 @@ pkg_postinst_${PN} () {
 	update-alternatives --install ${bindir}/mesg mesg mesg.${PN} 100
 	update-alternatives --install ${bindir}/renice renice renice.${PN} 100
 	update-alternatives --install ${bindir}/wall wall wall.${PN} 100
+	update-alternatives --install ${bindir}/flock flock flock.${PN} 100
 	
 	# There seems to be problem, atleast on nslu2, with these, untill they are
 	# fixed the busybox ones have higher priority
@@ -208,6 +210,7 @@ pkg_prerm_${PN} () {
 	update-alternatives --remove halt halt.${PN}
 	update-alternatives --remove hwclock hwclock.${PN}
 	update-alternatives --remove mkswap mkswap.${PN}
+	update-alternatives --remove blockdev blockdev.${PN}
 	update-alternatives --remove reboot reboot.${PN}
 	update-alternatives --remove shutdown shutdown.${PN}
 #	update-alternatives --remove sln sln.${PN}
@@ -218,6 +221,7 @@ pkg_prerm_${PN} () {
 	update-alternatives --remove mesg mesg.${PN}
 	update-alternatives --remove renice renice.${PN}
 	update-alternatives --remove wall wall.${PN}
+	update-alternatives --remove flock flock.${PN}
 }
 
 pkg_postinst_util-linux-fdisk () {
