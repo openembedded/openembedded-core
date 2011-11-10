@@ -10,7 +10,7 @@ RREPLACES_${PN} = "console-tools"
 RPROVIDES_${PN} = "console-tools"
 RCONFLICTS_${PN} = "console-tools"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI="${KERNELORG_MIRROR}/linux/utils/kbd/kbd-1.15.2.tar.bz2"
 SRC_URI[md5sum] = "e850eb91e4d3b94b194efe8e953204c5"
@@ -22,3 +22,30 @@ FILES_${PN}-consolefonts = "${datadir}/consolefonts"
 FILES_${PN}-consoletrans = "${datadir}/consoletrans"
 FILES_${PN}-keymaps = "${datadir}/keymaps"
 FILES_${PN}-unimaps = "${datadir}/unimaps"
+
+ALTERNATIVE_NAMES_USRBIN = "chvt deallocvt fgconsole openvt"
+
+do_install_append() {
+  usrbinprogs_a="${ALTERNATIVE_NAMES_USRBIN}"
+  for p in $usrbinprogs_a; do
+    if [ -f "${D}${bindir}/$p" ]; then
+      mv "${D}${bindir}/$p" "${D}${bindir}/$p.${PN}"
+    fi
+  done
+}
+
+pkg_postinst_${PN} () {
+  usrbinprogs_a="${ALTERNATIVE_NAMES_USRBIN}"
+  for p in $usrbinprogs_a; do
+    if [ -f "$D${bindir}/$p" ]; then
+      update-alternatives --install ${bindir}/$p $p $p.${PN} 100
+    fi
+  done
+}
+
+pkg_postrm_${PN} () {
+  usrbinprogs_a="${ALTERNATIVE_NAMES_USRBIN}"
+  for p in $usrbinprogs_a; do
+    update-alternatives --remove $p $p.${PN}
+  done
+}
