@@ -191,6 +191,8 @@ pkg_postinst_${PN} () {
 	update-alternatives --install ${bindir}/mesg mesg mesg.${PN} 100
 	update-alternatives --install ${bindir}/renice renice renice.${PN} 100
 	update-alternatives --install ${bindir}/wall wall wall.${PN} 100
+	update-alternatives --install ${bindir}/setsid setsid setsid.${PN} 100
+	update-alternatives --install ${bindir}/chrt chrt chrt.${PN} 100
 	update-alternatives --install ${bindir}/flock flock flock.${PN} 100
 	
 	# There seems to be problem, atleast on nslu2, with these, untill they are
@@ -221,6 +223,8 @@ pkg_prerm_${PN} () {
 	update-alternatives --remove mesg mesg.${PN}
 	update-alternatives --remove renice renice.${PN}
 	update-alternatives --remove wall wall.${PN}
+	update-alternatives --remove setsid setsid.${PN}
+	update-alternatives --remove chrt chrt.${PN}
 	update-alternatives --remove flock flock.${PN}
 }
 
