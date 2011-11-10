@@ -1,0 +1,159 @@
+Enable a cross-install scriptlet helper.
+
+The helper is called from outside of the chroot with the arguments:
+
+<root> <prog> <script> <arg1> [<arg2> ... <argN>]
+
+The helper script is used by oe-core to facilitate shell script actions that
+can not be run from within a chroot on a foreign target system during a
+cross install.
+
+Upstream-Status: Pending
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff -ur rpm-5.4.0.orig/lib/psm.c rpm-5.4.0/lib/psm.c
+--- rpm-5.4.0.orig/lib/psm.c	2010-12-29 07:42:11.000000000 -0600
++++ rpm-5.4.0/lib/psm.c	2011-11-08 13:38:48.132791154 -0600
+@@ -792,6 +792,10 @@
+     int xx;
+     int i;
+ 
++#ifdef RPM_VENDOR_POKY
++    const char * scriptletWrapper = rpmExpand("%{?_cross_scriptlet_wrapper}", NULL);
++#endif
++    
+     if (psm->sstates != NULL && ix >= 0 && ix < RPMSCRIPT_MAX)
+ 	ssp = psm->sstates + ix;
+     if (ssp != NULL)
+@@ -858,14 +862,29 @@
+ 		(F_ISSET(psm, UNORDERED) ? "a" : ""));
+ 
+     if (Phe->p.argv == NULL) {
+-	argv = alloca(5 * sizeof(*argv));
+-	argv[0] = "/bin/sh";
+-	argc = 1;
++	argv = alloca(7 * sizeof(*argv));
++	argc = 0;
++    } else {
++	argv = alloca((Phe->c + 6) * sizeof(*argv));
++	argc = 0;
++    }
++
++#ifdef RPM_VENDOR_POKY
++    if (scriptletWrapper && *scriptletWrapper) {
++        argv[argc++] = scriptletWrapper;
++	argv[argc] = rpmtsRootDir(ts);
++	if (!argv[argc] || !*argv[argc])
++	   argv[argc] = "/";
++	argc++;
++    }
++#endif
++
++    if (Phe->p.argv == NULL) {
++        argv[argc++] = "/bin/sh";
+ 	ldconfig_done = 0;
+     } else {
+-	argv = alloca((Phe->c + 4) * sizeof(*argv));
+-	memcpy(argv, Phe->p.argv, Phe->c * sizeof(*argv));
+-	argc = Phe->c;
++	memcpy((argv + argc), Phe->p.argv, Phe->c * sizeof(*argv));
++	argc += Phe->c;
+ 	ldconfig_done = (ldconfig_path && !strcmp(argv[0], ldconfig_path)
+ 		? 1 : 0);
+     }
+@@ -916,7 +935,12 @@
+ 	    goto exit;
+ 
+ 	if (rpmIsDebug() &&
+-	    (!strcmp(argv[0], "/bin/sh") || !strcmp(argv[0], "/bin/bash")))
++	    (!strcmp(argv[0], "/bin/sh") || !strcmp(argv[0], "/bin/bash"))
++#ifdef RPM_VENDOR_POKY
++	    || (scriptletWrapper && *scriptletWrapper && !strcmp(argv[1], "/bin/sh"))
++	    || (scriptletWrapper && *scriptletWrapper && !strcmp(argv[1], "/bin/bash"))
++#endif
++	   )
+ 	{
+ 	    static const char set_x[] = "set -x\n";
+ 	    nw = Fwrite(set_x, sizeof(set_x[0]), sizeof(set_x)-1, fd);
+@@ -1051,12 +1075,22 @@
+ 
+ 	{   const char * rootDir = rpmtsRootDir(ts);
+ 	    if (!rpmtsChrootDone(ts) && rootDir != NULL &&
++#ifdef RPM_VENDOR_POKY
++		!(scriptletWrapper && *scriptletWrapper) &&
++#endif
+ 		!(rootDir[0] == '/' && rootDir[1] == '\0'))
+ 	    {
+ 		/*@-modobserver@*/
+ 		xx = Chroot(rootDir);
+ 		/*@=modobserver@*/
+ 	    }
++#ifdef RPM_VENDOR_POKY
++	    if (!rpmtsChrootDone(ts) && rootDir != NULL &&
++		(scriptletWrapper && *scriptletWrapper) &&
++		!(rootDir[0] == '/' && rootDir[1] == '\0'))
++		xx = Chdir(rootDir);
++	    else 
++#endif
+ 	    xx = Chdir("/");
+ 	    rpmlog(RPMLOG_DEBUG, D_("%s: %s(%s)\texecv(%s) pid %d\n"),
+ 			psm->stepName, sln, NVRA,
+@@ -2961,6 +2995,13 @@
+     case PSM_SCRIPT:	/* Run current package scriptlets. */
+ 	/* XXX running %verifyscript/%sanitycheck doesn't have psm->te */
+     {	rpmtxn _parent = (psm && psm->te ? psm->te->txn : NULL);
++
++#ifdef RPM_VENDOR_POKY
++        const char * scriptletWrapper = rpmExpand("%{?_cross_scriptlet_wrapper}", NULL);
++	if (scriptletWrapper && *scriptletWrapper)
++	     rc = rpmpsmNext(psm, PSM_CHROOT_OUT);
++#endif
++
+ 	xx = rpmtxnBegin(rpmtsGetRdb(ts), _parent, NULL);
+ 	rc = runInstScript(psm);
+ 	if (rc)
+@@ -2968,11 +3009,24 @@
+ 	else
+ 	     xx = rpmtxnCommit(rpmtsGetRdb(ts)->db_txn);
+ 	rpmtsGetRdb(ts)->db_txn = NULL;
++#ifdef RPM_VENDOR_POKY
++	if (scriptletWrapper && *scriptletWrapper)
++	     rc = rpmpsmNext(psm, PSM_CHROOT_IN);
++#endif
+     }	break;
+     case PSM_TRIGGERS:
+ 	/* Run triggers in other package(s) this package sets off. */
+ 	if (rpmtsFlags(ts) & RPMTRANS_FLAG_TEST)	break;
++#ifdef RPM_VENDOR_POKY
++        const char * scriptletWrapper = rpmExpand("%{?_cross_scriptlet_wrapper}", NULL);
++	if (scriptletWrapper && *scriptletWrapper)
++	     rc = rpmpsmNext(psm, PSM_CHROOT_OUT);
++#endif
+ 	rc = runTriggers(psm);
++#ifdef RPM_VENDOR_POKY
++	if (scriptletWrapper && *scriptletWrapper)
++	     rc = rpmpsmNext(psm, PSM_CHROOT_IN);
++#endif
+ 	break;
+     case PSM_IMMED_TRIGGERS:
+ 	/* Run triggers in this package other package(s) set off. */
+@@ -2982,7 +3036,18 @@
+ 	    F_SET(psm, GOTTRIGGERS);
+ 	}
+ 	if (psm->triggers != NULL)
++#ifdef RPM_VENDOR_POKY
++	{
++            const char * scriptletWrapper = rpmExpand("%{?_cross_scriptlet_wrapper}", NULL);
++	    if (scriptletWrapper && *scriptletWrapper)
++	         rc = rpmpsmNext(psm, PSM_CHROOT_OUT);
++#endif
+ 	    rc = runImmedTriggers(psm);
++#ifdef RPM_VENDOR_POKY
++	    if (scriptletWrapper && *scriptletWrapper)
++	         rc = rpmpsmNext(psm, PSM_CHROOT_IN);
++	}
++#endif
+ 	break;
+ 
+     case PSM_RPMIO_FLAGS:
