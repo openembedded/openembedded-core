@@ -382,13 +382,39 @@ package_install_internal_rpm () {
 	cat ${target_rootfs}/install/install_solution.manifest > ${target_rootfs}/install/total_solution.manifest
 	cat ${target_rootfs}/install/install_multilib_solution.manifest >> ${target_rootfs}/install/total_solution.manifest
 
+	# Construct install scriptlet wrapper
+	cat << EOF > ${WORKDIR}/scriptlet_wrapper
+#!/bin/bash
+
+export PATH="${PATH}"
+export D="${target_rootfs}"
+export OFFLINE_ROOT="\$D"
+export IPKG_OFFLINE_ROOT="\$D"
+export OPKG_OFFLINE_ROOT="\$D"
+
+\$2 \$1/\$3 \$4
+if [ \$? -ne 0 ]; then
+  mkdir -p \$1/etc/rpm-postinsts
+  num=100
+  while [ -e \$1/etc/rpm-postinsts/\${num} ]; do num=\$((num + 1)); done
+  echo "#!\$2" > \$1/etc/rpm-postinsts/\${num}
+  echo "# Arg: \$4" >> \$1/etc/rpm-postinsts/\${num}
+  cat \$1/\$3 >> \$1/etc/rpm-postinsts/\${num}
+  chmod +x \$1/etc/rpm-postinsts/\${num}
+fi
+EOF
+
+	chmod 0755 ${WORKDIR}/scriptlet_wrapper
+
 	# Attempt install
 	${RPM} --root ${target_rootfs} \
 		--predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
 		--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
+		-D "_var ${localstatedir}" \
 		-D "_dbpath ${rpmlibdir}" \
-		--noscripts --notriggers --noparentdirs --nolinktos --replacepkgs \
+		--noparentdirs --nolinktos --replacepkgs \
 		-D "__dbi_txn create nofsync private" \
+		-D "_cross_scriptlet_wrapper ${WORKDIR}/scriptlet_wrapper" \
 		-Uhv ${target_rootfs}/install/total_solution.manifest
 }
 
@@ -685,6 +711,7 @@ python write_specfile () {
 			elif script == 'postrm':
 				spec_scriptlets_bottom.append('%%postun -n %s' % splitname)
 				scriptvar = wrap_uninstall(scriptvar)
+			spec_scriptlets_bottom.append('# %s - %s' % (splitname, script))
 			spec_scriptlets_bottom.append(scriptvar)
 			spec_scriptlets_bottom.append('')
 
@@ -762,19 +789,23 @@ python write_specfile () {
 
 	if srcpreinst:
 		spec_scriptlets_top.append('%pre')
+		spec_scriptlets_top.append('# %s - preinst' % srcname)
 		spec_scriptlets_top.append(srcpreinst)
 		spec_scriptlets_top.append('')
 	if srcpostinst:
 		spec_scriptlets_top.append('%post')
+		spec_scriptlets_top.append('# %s - postinst' % srcname)
 		spec_scriptlets_top.append(srcpostinst)
 		spec_scriptlets_top.append('')
 	if srcprerm:
 		spec_scriptlets_top.append('%preun')
+		spec_scriptlets_top.append('# %s - prerm' % srcname)
 		scriptvar = wrap_uninstall(srcprerm)
 		spec_scriptlets_top.append(scriptvar)
 		spec_scriptlets_top.append('')
 	if srcpostrm:
 		spec_scriptlets_top.append('%postun')
+		spec_scriptlets_top.append('# %s - postrm' % srcname)
 		scriptvar = wrap_uninstall(srcpostrm)
 		spec_scriptlets_top.append(scriptvar)
 		spec_scriptlets_top.append('')

@@ -20,8 +20,6 @@ do_rootfs[depends] += "opkg-native:do_populate_sysroot"
 
 do_rootfs[recrdeptask] += "do_package_write_rpm"
 
-AWKPOSTINSTSCRIPT = "${COREBASE}/scripts/rootfs_rpm-extract-postinst.awk"
-
 RPM_PREPROCESS_COMMANDS = "package_update_index_rpm; package_generate_rpm_conf; "
 RPM_POSTPROCESS_COMMANDS = ""
 
@@ -108,19 +106,9 @@ EOF
 
 	${ROOTFS_POSTINSTALL_COMMAND}
 
-	mkdir -p ${IMAGE_ROOTFS}/etc/rpm-postinsts/
-	${RPM} --root ${IMAGE_ROOTFS} -D '_dbpath ${rpmlibdir}' -qa \
-		-D "__dbi_txn create nofsync private" \
-		--qf 'Name: %{NAME}\n%|POSTIN?{postinstall scriptlet%|POSTINPROG?{ (using %{POSTINPROG})}|:\n%{POSTIN}\n}:{%|POSTINPROG?{postinstall program: %{POSTINPROG}\n}|}|' \
-		> ${IMAGE_ROOTFS}/etc/rpm-postinsts/combined
-	awk -f ${AWKPOSTINSTSCRIPT} < ${IMAGE_ROOTFS}/etc/rpm-postinsts/combined
-	rm ${IMAGE_ROOTFS}/etc/rpm-postinsts/combined	
-
-	for i in ${IMAGE_ROOTFS}/etc/rpm-postinsts/*.sh; do
-		if [ -f $i ] && sh $i; then
-			# rm $i
-			mv $i $i.done
-		fi
+	# Report delayed package scriptlets
+	for i in ${IMAGE_ROOTFS}/etc/rpm-postinsts/*; do
+		echo "Delayed package scriptlet: `head -n 3 $i | tail -n 1`"
 	done
 
 	install -d ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d
@@ -128,11 +116,10 @@ EOF
 	i=\$i
 	cat > ${IMAGE_ROOTFS}${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}configure << EOF
 #!/bin/sh
-for i in /etc/rpm-postinsts/*.sh; do
+for i in /etc/rpm-postinsts/*; do
 	echo "Running postinst $i..."
-	if [ -f $i ] && sh $i; then
-		# rm $i
-		mv $i $i.done
+	if [ -f $i ] && $i; then
+		rm $i
 	else
 		echo "ERROR: postinst $i failed."
 	fi
