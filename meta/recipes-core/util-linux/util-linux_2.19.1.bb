@@ -1,5 +1,5 @@
 MAJOR_VERSION = "2.19"
-PR = "r9"
+PR = "r10"
 require util-linux.inc
 
 # note that `lscpu' is under GPLv3+
