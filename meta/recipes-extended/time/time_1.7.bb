@@ -1,5 +1,7 @@
 require time.inc
 
+PR = "r1"
+
 SRC_URI = "${GNU_MIRROR}/time/time-${PV}.tar.gz \
 	   file://debian.patch"
 
