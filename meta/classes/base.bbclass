@@ -401,8 +401,14 @@ python () {
                     bb.note("SKIPPING %s because it's %s" % (pn, this_license))
                     raise bb.parse.SkipPackage("incompatible with license %s" % this_license)
 
-    # Git packages should DEPEND on git-native
     srcuri = d.getVar('SRC_URI', 1)
+    # Svn packages should DEPEND on subversion-native
+    if "svn://" in srcuri:
+        depends = d.getVarFlag('do_fetch', 'depends') or ""
+        depends = depends + " subversion-native:do_populate_sysroot"
+        d.setVarFlag('do_fetch', 'depends', depends)
+
+    # Git packages should DEPEND on git-native
     if "git://" in srcuri:
         depends = d.getVarFlag('do_fetch', 'depends') or ""
         depends = depends + " git-native:do_populate_sysroot"
