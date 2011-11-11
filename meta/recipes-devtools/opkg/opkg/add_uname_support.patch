@@ -1,0 +1,88 @@
+
+When updating packages on the target device we ideally want to match 
+user and group numbers from the existing file system. This patch encourages
+opkg to lookup the uname/gname fields first and only use the hardcoded
+numerical values if that fails.
+
+Upstream-Status: Pending
+
+RP 11/11/11
+
+Index: trunk/libbb/unarchive.c
+===================================================================
+--- trunk.orig/libbb/unarchive.c	2011-11-11 15:52:59.761674091 +0000
++++ trunk/libbb/unarchive.c	2011-11-11 17:04:56.501574419 +0000
+@@ -22,10 +22,13 @@
+ #include <stdio.h>
+ #include <errno.h>
+ #include <stdlib.h>
++#include <stdbool.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include <utime.h>
+ #include <libgen.h>
++#include <grp.h>
++#include <pwd.h>
+ 
+ #include "libbb.h"
+ 
+@@ -436,6 +439,42 @@
+ 	free(ar_entry);
+ }
+ 
++static char uname_cache[32] = "";
++static uid_t uid_cache;
++
++static bool update_unamecache(char *uname) {
++	struct passwd *passwd;
++	if (!uname)
++		return FALSE;
++	if (!uname_cache[0] && strcmp(uname_cache, uname) == 0)
++		return TRUE;
++	passwd = getpwnam(uname);
++	if (passwd) {
++		uid_cache = passwd->pw_uid;
++		strncpy(uname, uname_cache, 32);
++		return TRUE;
++	}
++	return FALSE;
++}
++
++static char gname_cache[32] = "";
++static gid_t gid_cache;
++
++static bool update_gnamecache(char *gname) {
++	struct group *group;
++	if (!gname)
++		return FALSE;
++	if (!gname_cache[0] && strcmp(gname_cache, gname) == 0)
++		return TRUE;
++	group = getgrnam(gname);
++	if (group) {
++		gid_cache = group->gr_gid;
++		strncpy(gname, gname_cache, 32);
++		return TRUE;
++	}
++	return FALSE;
++}
++
+ 
+ static file_header_t *
+ get_header_tar(FILE *tar_stream)
+@@ -515,8 +554,14 @@
+ */
+         tar_entry->mode = 07777 & strtol(tar.formated.mode, NULL, 8);
+ 
+-	tar_entry->uid   = strtol(tar.formated.uid, NULL, 8);
+-	tar_entry->gid   = strtol(tar.formated.gid, NULL, 8);
++	if (update_unamecache(tar.formated.uname))
++		tar_entry->uid = uid_cache;
++	else
++		tar_entry->uid = strtol(tar.formated.uid, NULL, 8);
++	if (update_gnamecache(tar.formated.gname))
++		tar_entry->gid = gid_cache;
++	else
++		tar_entry->gid = strtol(tar.formated.gid, NULL, 8);
+ 	tar_entry->size  = strtol(tar.formated.size, NULL, 8);
+ 	tar_entry->mtime = strtol(tar.formated.mtime, NULL, 8);
+ 
