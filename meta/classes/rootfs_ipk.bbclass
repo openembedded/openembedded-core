@@ -44,7 +44,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 		pkginfo="`opkg-cl ${IPKG_ARGS} info $i`"
 		if [ ! -z "$pkginfo" ]; then
 			echo "$pkginfo" | grep -e '^Package:' -e '^Architecture:' -e '^Version:' >> $STATUS
-			echo "Status: deinstall ok not-installed" >> $STATUS
+			echo "Status: deinstall hold not-installed" >> $STATUS
 			echo >> $STATUS
 		else
 			echo "Requested ignored recommendation $i is not a package"
