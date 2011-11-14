@@ -1,0 +1,22 @@
+We want to be able to set PERL_LIBDIR from the environment. This
+hardcoded assignment prevents us from doing so and obtains an 
+incorrect value.
+
+Upstream-Status: Inappropriate [in this form at least]
+
+RP 14/11/2011
+
+Index: dpkg-1.15.8.7/m4/dpkg-progs.m4
+===================================================================
+--- dpkg-1.15.8.7.orig/m4/dpkg-progs.m4	2011-11-14 17:32:21.252053239 +0000
++++ dpkg-1.15.8.7/m4/dpkg-progs.m4	2011-11-14 17:32:55.180052455 +0000
+@@ -9,9 +9,6 @@
+ [AC_ARG_VAR([PERL], [Perl interpreter])dnl
+ AC_PATH_PROG([PERL], [perl], [/usr/bin/perl])dnl
+ AC_ARG_VAR([PERL_LIBDIR], [Perl library directory])dnl
+-PERL_LIBDIR=$($PERL -MConfig -e 'my $r = $Config{vendorlibexp};
+-                                 $r =~ s/$Config{vendorprefixexp}/\$(prefix)/;
+-                                 print $r')dnl
+ ])# DPKG_PROG_PERL
+ 
+ # DPKG_PROG_PO4A
