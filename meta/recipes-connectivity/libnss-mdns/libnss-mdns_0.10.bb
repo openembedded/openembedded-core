@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "avahi"
 RDEPENDS_${PN} = "avahi-daemon"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://0pointer.de/lennart/projects/nss-mdns/nss-mdns-${PV}.tar.gz"
 
@@ -26,14 +26,12 @@ EXTRA_OECONF = "--libdir=${base_libdir} --disable-lynx --enable-avahi"
 # TODO: pattern based configuration update
 pkg_postinst_${PN} () {
 	cat $D/etc/nsswitch.conf | grep "hosts:\s*files dns$" > /dev/null && {
-		cat $D/etc/nsswitch.conf | sed 's/hosts:\s*files dns/& mdns4/' > /tmp/nsswitch.conf
-		mv /tmp/nsswitch.conf $D/etc/nsswitch.conf
+		sed -i 's/hosts:\s*files dns/& mdns4/' $D/etc/nsswitch.conf
 	}
 }
 
 pkg_prerm_${PN} () {
 	cat /etc/nsswitch.conf | grep "hosts:\s*files dns mdns4$" > /dev/null && {
-		cat /etc/nsswitch.conf | sed 's/\(hosts:\s*files dns\) mdns4*/\1/' > /tmp/nsswitch.conf
-		mv /tmp/nsswitch.conf /etc/nsswitch.conf
+		sed -i 's/\(hosts:\s*files dns\) mdns4*/\1/' /etc/nsswitch.conf
 	}
 }
