@@ -14,7 +14,7 @@ BBCLASSEXTEND = "native"
 #FIXME: remove the following
 ARM_INSTRUCTION_SET = "arm"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2 \
            file://fix-tstamp-declaration.patch"
@@ -31,17 +31,20 @@ EXTRA_OECONF = "--with-cards=pdaudiocf --with-oss=yes --disable-python"
 
 EXTRA_OECONF_append_libc-uclibc = " --with-versioned=no "
 
-PACKAGES =+ "alsa-server libasound alsa-conf-base alsa-conf alsa-doc alsa-dev"
+PKGSUFFIX = ""
+PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
+
+PACKAGES =+ "alsa-server${PKGSUFFIX} libasound${PKGSUFFIX} alsa-conf-base${PKGSUFFIX} alsa-conf${PKGSUFFIX} alsa-doc${PKGSUFFIX} alsa-dev${PKGSUFFIX}"
 FILES_${PN}-dbg += "${libdir}/alsa-lib/*/.debu*"
-FILES_libasound = "${libdir}/libasound.so.*"
-FILES_alsa-server = "${bindir}/*"
-FILES_alsa-conf = "${datadir}/alsa/"
-FILES_alsa-dev += "${libdir}/pkgconfig/ /usr/include/ ${datadir}/aclocal/*"
-FILES_alsa-conf-base = "\
+FILES_libasound${PKGSUFFIX} = "${libdir}/libasound.so.*"
+FILES_alsa-server${PKGSUFFIX} = "${bindir}/*"
+FILES_alsa-conf${PKGSUFFIX} = "${datadir}/alsa/"
+FILES_alsa-dev${PKGSUFFIX} += "${libdir}/pkgconfig/ /usr/include/ ${datadir}/aclocal/*"
+FILES_alsa-conf-base${PKGSUFFIX} = "\
 ${datadir}/alsa/alsa.conf \
 ${datadir}/alsa/cards/aliases.conf \
 ${datadir}/alsa/pcm/default.conf \
 ${datadir}/alsa/pcm/dmix.conf \
 ${datadir}/alsa/pcm/dsnoop.conf"
 
-RDEPENDS_libasound = "alsa-conf-base"
+RDEPENDS_libasound${PKGSUFFIX} = "alsa-conf-base${PKGSUFFIX}"
