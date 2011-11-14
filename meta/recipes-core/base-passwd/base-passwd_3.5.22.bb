@@ -1,7 +1,7 @@
 SUMMARY = "Base system master password/group files."
 DESCRIPTION = "The master copies of the user database files (/etc/passwd and /etc/group).  The update-passwd tool is also provided to keep the system databases synchronized with these master files."
 SECTION = "base"
-PR = "r5"
+PR = "r9"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
@@ -15,6 +15,11 @@ SRC_URI[sha256sum] = "d34acb35a9f9f221e7e4f642b9ef4b22083dd77bb2fc7216756f445316
 S = "${WORKDIR}/base-passwd"
 
 inherit autotools
+
+PACKAGES =+ "${PN}-update"
+FILES_${PN}-update = "${sbindir}/* ${datadir}/${PN}"
+
+ALLOW_EMPTY_${PN} = "1"
 
 SSTATEPOSTINSTFUNCS += "base_passwd_sstate_postinst"
 
@@ -78,3 +83,10 @@ fi
 	d.setVar('pkg_preinst_${PN}', preinst)
 }
 
+pkg_postinst_${PN}-update () {
+#!/bin/sh
+if [ -n "$D" ]; then
+	exit 0
+fi
+${sbindir}/update-passwd
+}
