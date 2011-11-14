@@ -1,7 +1,7 @@
 SUMMARY = "Base system master password/group files."
 DESCRIPTION = "The master copies of the user database files (/etc/passwd and /etc/group).  The update-passwd tool is also provided to keep the system databases synchronized with these master files."
 SECTION = "base"
-PR = "r4"
+PR = "r5"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
@@ -37,36 +37,6 @@ do_install () {
 	install -p -m 644 debian/copyright ${D}${docdir}/${BPN}/
 }
 
-pkg_preinst_${PN} () {
-	set -e
-
-	# Used for rootfs generation. On in-target install this will be run
-        # before the unpack so the files won't be available
-
-	if [ ! -e $D${sysconfdir}/passwd ] && [ -e $D${datadir}/base-passwd/passwd.master ]; then
-		cp $D${datadir}/base-passwd/passwd.master $D${sysconfdir}/passwd
-	fi
-
-	if [ ! -e $D${sysconfdir}/group ] && [ -e $D${datadir}/base-passwd/group.master ]; then
-		cp $D${datadir}/base-passwd/group.master $D${sysconfdir}/group
-	fi
-
-	exit 0
-}
-
-pkg_postinst_${PN} () {
-	set -e
-
-	if [ ! -e $D${sysconfdir}/passwd ] ; then
-		cp $D${datadir}/base-passwd/passwd.master $D${sysconfdir}/passwd
-	fi
-
-	if [ ! -e $D${sysconfdir}/group ] ; then
-		cp $D${datadir}/base-passwd/group.master $D${sysconfdir}/group
-	fi
-	exit 0
-}
-
 base_passwd_sstate_postinst() {
 	if [ "${BB_CURRENTTASK}" = "populate_sysroot" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
 	then
@@ -80,3 +50,31 @@ base_passwd_sstate_postinst() {
 		install -p -m 644 ${STAGING_DIR_TARGET}${datadir}/base-passwd/group.master ${STAGING_DIR_TARGET}${sysconfdir}/group
 	fi
 }
+
+python populate_packages_prepend() {
+	# Add in the preinst function for ${PN}
+	# We have to do this here as prior to this, passwd/group.master
+	# would be unavailable. We need to create these files at preinst
+	# time before the files from the package may be available, hence
+	# storing the data from the files in the preinst directly.
+
+	f = open(bb.data.expand("${STAGING_DATADIR}/base-passwd/passwd.master", d), 'r')
+	passwd = "".join(f.readlines())
+	f.close()
+	f = open(bb.data.expand("${STAGING_DATADIR}/base-passwd/group.master", d), 'r')
+	group = "".join(f.readlines())
+	f.close()
+
+	preinst = """#!/bin/sh
+if [ ! -e $D${sysconfdir}/passwd ]; then
+	cat << EOF > $D${sysconfdir}/passwd
+""" + passwd + """EOF
+fi
+if [ ! -e $D${sysconfdir}/group ]; then
+	cat << EOF > $D${sysconfdir}/group
+""" + group + """EOF
+fi
+"""
+	d.setVar('pkg_preinst_${PN}', preinst)
+}
+
