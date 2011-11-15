@@ -10,16 +10,15 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=2;md5=6a7382872edb68d33e1a9398b6e03
 
 DEPENDS = "zlib file-native"
 DEPENDS_virtclass-native = "zlib-native"
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "ftp://ftp.astron.com/pub/file/file-${PV}.tar.gz \
-           file://stringb-compat.patch \
-           file://ge-le.patch \
+           file://fix_version_check.patch \
            file://dump \
            file://filesystems"
 
-SRC_URI[md5sum] = "accade81ff1cc774904b47c72c8aeea0"
-SRC_URI[sha256sum] = "4c9e6e7994e74cb3386374ae91b055d26ac96b9d3e82fd157ae2d62e87a4260c"
+SRC_URI[md5sum] = "6fd7cd6c4281e68fe9ec6644ce0fac6f"
+SRC_URI[sha256sum] = "bde1c9830ee6c234871778faae8277fdcf775fbb16dea63c8251e24b7c2f869c"
 
 inherit autotools
 

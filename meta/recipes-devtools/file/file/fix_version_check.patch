@@ -1,0 +1,21 @@
+Since we are cross-compiling and need to have a cover script this
+version check sees "file.real-5.09" not "file-5.09", so fix the
+sed.
+
+Upstream-Status: Inapproriate [build-specific]
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: file-5.09/magic/Makefile.am
+===================================================================
+--- file-5.09.orig/magic/Makefile.am
++++ file-5.09/magic/Makefile.am
+@@ -260,7 +260,7 @@ ${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_D
+ 	@(if expr "${FILE_COMPILE}" : '.*/.*' > /dev/null; then \
+ 	    echo "Using ${FILE_COMPILE} to generate ${MAGIC}" > /dev/null; \
+ 	  else \
+-	    v=$$(file --version | sed -e s/file-// -e q); \
++	    v=$$(file --version | sed -e s/file.real-// -e q); \
+ 	    if [ "$$v" != "${PACKAGE_VERSION}" ]; then \
+ 		echo "Cannot use the installed version of file ($$v) to"; \
+ 		echo "cross-compile file ${PACKAGE_VERSION}"; \
