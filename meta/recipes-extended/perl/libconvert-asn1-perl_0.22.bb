@@ -11,10 +11,8 @@ SRC_URI[sha256sum] = "be63d5cc715d7306e54b41d3c68c3617ca306289cff619a2ca43505e35
 
 S = "${WORKDIR}/Convert-ASN1-${PV}"
 
-inherit cpan
+inherit cpan allarch
 
 EXTRA_PERLFLAGS = "-I ${STAGING_LIBDIR_NATIVE}/perl-native/perl/${@get_perl_version(d)}"
 
-BBCLASSEXTEND="native"
-
-PACKAGE_ARCH = "all"
+BBCLASSEXTEND = "native"
