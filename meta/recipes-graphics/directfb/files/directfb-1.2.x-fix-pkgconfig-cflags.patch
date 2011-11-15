@@ -1,9 +1,11 @@
-Upstream-Status: Inappropriate [configuration]
+directfb: Get this patch from Openembedded
 
-Index: DirectFB-1.4.11/directfb-internal.pc.in
-===================================================================
---- DirectFB-1.4.11.orig/directfb-internal.pc.in	2010-10-08 05:43:46.000000000 -0700
-+++ DirectFB-1.4.11/directfb-internal.pc.in	2011-04-06 13:48:23.120923997 -0700
+Upstream-Status: Inappropriate [configuration]
+Signed-off-by: Xiaofeng Yan <xiaofeng.yan@windriver.com>
+
+diff -Nur DirectFB-1.4.15/directfb-internal.pc.in DirectFB-1.4.15.new//directfb-internal.pc.in
+--- DirectFB-1.4.15/directfb-internal.pc.in	2011-09-29 17:51:21.000000000 +0800
++++ DirectFB-1.4.15.new//directfb-internal.pc.in	2011-11-03 15:14:37.000000000 +0800
 @@ -2,10 +2,10 @@
  exec_prefix=@exec_prefix@
  moduledir=@MODULEDIR@
@@ -17,31 +19,27 @@ Index: DirectFB-1.4.11/directfb-internal.pc.in
  Requires: directfb = @VERSION@
 -Cflags: @DFB_INTERNAL_CFLAGS@ -I@INTERNALINCLUDEDIR@
 +Cflags: @DFB_INTERNAL_CFLAGS@ -I${includedir}/directfb -I${includedir}
-Index: DirectFB-1.4.11/directfb.pc.in
-===================================================================
---- DirectFB-1.4.11.orig/directfb.pc.in	2010-11-15 13:13:59.000000000 -0800
-+++ DirectFB-1.4.11/directfb.pc.in	2011-04-06 14:09:33.528923998 -0700
-@@ -9,4 +9,5 @@
+diff -Nur DirectFB-1.4.15/directfb.pc.in DirectFB-1.4.15.new//directfb.pc.in
+--- DirectFB-1.4.15/directfb.pc.in	2011-09-29 17:51:21.000000000 +0800
++++ DirectFB-1.4.15.new//directfb.pc.in	2011-11-03 15:15:55.000000000 +0800
+@@ -9,4 +9,4 @@
  Requires: @DEP_VOODOO@ fusion direct
  Libs: -L${libdir} -ldirectfb @THREADLIB@ @OSX_LIBS@
- Libs.private: -L${libdir} @MEDIALIB@ @DYNLIB@ @ZLIB_LIBS@
+ Libs.private: -L${libdir} @LIBM@ @DYNLIB@ @ZLIB_LIBS@
 -Cflags: @THREADFLAGS@ -I@INCLUDEDIR@
 +Cflags: @THREADFLAGS@ -I${includedir}/directfb
-+
-Index: DirectFB-1.4.11/lib/fusion/fusion.pc.in
-===================================================================
---- DirectFB-1.4.11.orig/lib/fusion/fusion.pc.in	2010-10-08 05:43:46.000000000 -0700
-+++ DirectFB-1.4.11/lib/fusion/fusion.pc.in	2011-04-06 13:48:23.120923997 -0700
+diff -Nur DirectFB-1.4.15/lib/fusion/fusion.pc.in DirectFB-1.4.15.new//lib/fusion/fusion.pc.in
+--- DirectFB-1.4.15/lib/fusion/fusion.pc.in	2011-09-29 17:51:21.000000000 +0800
++++ DirectFB-1.4.15.new//lib/fusion/fusion.pc.in	2011-11-03 15:16:46.000000000 +0800
 @@ -8,4 +8,4 @@
  Version: @VERSION@
  Requires: direct
  Libs: -L${libdir} -lfusion
 -Cflags: -I@INCLUDEDIR@
 +Cflags: -I${includedir}/directfb -I${includedir}
-Index: DirectFB-1.4.11/lib/voodoo/voodoo.pc.in
-===================================================================
---- DirectFB-1.4.11.orig/lib/voodoo/voodoo.pc.in	2010-10-08 05:43:46.000000000 -0700
-+++ DirectFB-1.4.11/lib/voodoo/voodoo.pc.in	2011-04-06 13:48:23.120923997 -0700
+diff -Nur DirectFB-1.4.15/lib/voodoo/voodoo.pc.in DirectFB-1.4.15.new//lib/voodoo/voodoo.pc.in
+--- DirectFB-1.4.15/lib/voodoo/voodoo.pc.in	2011-09-29 17:51:21.000000000 +0800
++++ DirectFB-1.4.15.new//lib/voodoo/voodoo.pc.in	2011-11-03 15:17:34.000000000 +0800
 @@ -8,4 +8,4 @@
  Version: @VERSION@
  Requires: direct
