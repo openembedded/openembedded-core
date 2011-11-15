@@ -6,14 +6,21 @@
 DESCRIPTION = "Free peer-reviewed portable C++ source libraries"
 HOMEPAGE = "http://www.boost.org/"
 SECTION = "libs"
-DEPENDS = "boost-jam-native zlib"
+DEPENDS = "boost-native zlib"
+DEPENDS_virtclass-native = ""
 LICENSE = "Boost"
-PR = "r4"
 
 ARM_INSTRUCTION_SET = "arm"
+
 BOOST_VER = "${@"_".join(d.getVar("PV",1).split("."))}"
 BOOST_MAJ = "${@"_".join(d.getVar("PV",1).split(".")[0:2])}"
 BOOST_P = "boost_${BOOST_VER}"
+
+INC_PR = "r0"
+
+SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BOOST_P}.tar.bz2"
+
+S = "${WORKDIR}/${BOOST_P}"
 
 BOOST_LIBS = "\
 	date_time \
@@ -36,8 +43,6 @@ BOOST_LIBS = "\
 #DEPENDS += "python"
 #PYTHON_ROOT = "${STAGING_DIR_HOST}/${prefix}"
 #PYTHON_VERSION = "2.5"
-
-S = "${WORKDIR}/${BOOST_P}"
 
 # Make a package for each library, plus -dev
 PACKAGES = "${PN}-dbg ${BOOST_PACKAGES}"
@@ -148,3 +153,32 @@ do_install() {
 		--includedir=${D}${includedir} \
 		install
 }
+
+BBCLASSEXTEND = "native"
+
+do_configure_virtclass-native() {
+	:
+}
+
+do_boostconfig_virtclass-native() {
+	:
+}
+
+do_compile_virtclass-native() {
+	set -ex
+	cd ${S}/tools/build/v2/engine
+	rm -rf bin.*
+	./build.sh gcc
+}
+
+# This is too terrible - the build script doesn't give any good
+# way I can see to find out where the binaries are placed, so
+# rely on only one bin.foo directory being created.
+do_install_virtclass-native () {
+	set -ex
+	cd ${S}/tools/build/v2/engine
+	install -d ${D}${bindir}/
+	install -c -m 755 bin.*/bjam ${D}${bindir}/
+}
+
+
