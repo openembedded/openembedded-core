@@ -44,7 +44,8 @@ do_patch() {
 }
 
 do_kernel_checkout() {
-	if [ -d ${WORKDIR}/git/.git/refs/remotes/origin ]; then
+	if [ -d $
+{WORKDIR}/git/.git/refs/remotes/origin ]; then
 		echo "Fixing up git directory for ${LINUX_KERNEL_TYPE}/${KMACHINE}"
 		rm -rf ${S}
 		mkdir ${S}
@@ -88,8 +89,18 @@ do_kernel_configme[dirs] = "${CCACHE_DIR} ${S} ${B}"
 do_kernel_configme() {
 	echo "[INFO] doing kernel configme"
 
+	if [ -n ${KCONFIG_MODE} ]; then
+		configmeflags=${KCONFIG_MODE}
+	else
+		# If a defconfig was passed, use =n as the baseline, which is achieved
+		# via --allnoconfig
+		if [ -f ${WORKDIR}/defconfig ]; then
+			configmeflags="--allnoconfig"
+		fi
+	fi
+
 	cd ${S}
-	configme --reconfig --output ${B} ${KBRANCH} ${KMACHINE}
+	configme ${configmeflags} --reconfig --output ${B} ${KBRANCH} ${KMACHINE}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not configure ${KMACHINE}-${LINUX_KERNEL_TYPE}"
 		exit 1
