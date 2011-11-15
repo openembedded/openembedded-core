@@ -12,7 +12,7 @@ SRCREV = "c792e4edc758bab21e0b01814979eacf0b1af945"
 PV = "0.1+git${SRCPV}"
 PR = "r0"
 
-SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
+SRC_URI = "git://git.yoctoproject.org/screenshot;protocol=git \
            file://fix_ldadd_order.patch"
 
 S = "${WORKDIR}/git"

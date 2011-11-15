@@ -61,7 +61,7 @@ RDEPENDS_task-core-apps-x11-core = "\
     leafpad \
     ${FILEMANAGER} \
     matchbox-terminal \
-    screenshot"
+    sato-screenshot"
 
 
 RDEPENDS_task-core-apps-x11-games = "\
