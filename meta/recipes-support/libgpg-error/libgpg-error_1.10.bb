@@ -28,3 +28,5 @@ do_install_append() {
 	# we don't have common lisp in OE
 	rm -rf "${D}${datadir}/common-lisp/"
 }
+
+BBCLASSEXTEND = "native"
