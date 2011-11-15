@@ -52,7 +52,7 @@ python populate_packages_append () {
 			postrm += d.getVar('mime_postrm', True)
 			d.setVar('pkg_postrm_%s' % pkg, postrm)
 			bb.note("adding shared-mime-info-data dependency to %s" % pkg)
-			rdepends = explode_deps(dgetVar('RDEPENDS_' + pkg, False) or d.getVar('RDEPENDS', False)) or ""
+			rdepends = explode_deps(d.getVar('RDEPENDS_' + pkg, False) or d.getVar('RDEPENDS', False)) or ""
 			rdepends.append("shared-mime-info-data")
 			d.setVar('RDEPENDS_' + pkg, " " + " ".join(rdepends))
 }
