@@ -1,21 +1,22 @@
 SUMMARY = "gnu-configize"
 DESCRIPTION = "Tool that installs the GNU config.guess / config.sub into a directory tree"
 SECTION = "devel"
-LICENSE = "GPLv1+"
-LIC_FILES_CHKSUM = "file://config.guess;endline=39;md5=a089987af4a25cb0419d1c2fd6d495e3"
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://config.guess;endline=39;md5=0e6ca0501b27177f3bc640f7225e3ead"
 
 DEPENDS_virtclass-native = "perl-native-runtime"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
-FIXEDSRCDATE = "${@d.getVar('FILE', 1).split('_')[-1].split('.')[0]}"
-PV = "0.1+cvs${FIXEDSRCDATE}"
-PR = "r4"
+SRCREV = "a47f842264fc19837f8a00eb1d2d254a4c527334"
+PV = "1.0+git${SRCPV}"
+PR = "r0"
 
-SRC_URI = "cvs://anonymous@cvs.sv.gnu.org/cvsroot/config;module=config;method=pserver;date=${FIXEDSRCDATE} \
+SRC_URI = "git://git.sv.gnu.org/config.git;protocol=git \
 	   file://config-guess-uclibc.patch \
            file://gnu-configize.in"
-S = "${WORKDIR}/config"
+
+S = "${WORKDIR}/git"
 
 do_compile() {
 	:
