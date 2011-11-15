@@ -1,5 +1,6 @@
 Upstream-Status: Pending
 
+Upstream-Status: Inappropriate [configuration]
 Index: libX11-1.3/src/imConv.c
 ===================================================================
 --- libX11-1.3.orig/src/imConv.c

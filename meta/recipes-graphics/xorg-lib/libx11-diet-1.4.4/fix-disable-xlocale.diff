@@ -1,5 +1,6 @@
 Upstream-Status: Pending
 
+Signed-off-by: Xiaofeng Yan <xiaofeng.yan@windriver.com>
 --- libX11-X11R7.0-1.0.0/src/Font.c.orig	2006-03-12 18:35:42.000000000 +0100
 +++ libX11-X11R7.0-1.0.0/src/Font.c	2006-03-12 18:40:27.000000000 +0100
 @@ -701,7 +701,11 @@
