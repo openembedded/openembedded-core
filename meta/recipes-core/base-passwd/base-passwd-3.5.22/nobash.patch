@@ -1,14 +1,17 @@
-# use /bin/sh instead of /bin/bash, since the latter may not be included in
-# some images such as minimal
-#
-# comment added by Kevin Tian <kevin.tian@intel.com>, 2010-07-06
-#
-# remove "*" for root since we don't have a /etc/shadow so far.
-#
-# by Kevin Tian <kevin.tian@intel.com>, 2010-07-06
-#
-# Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
-#
+use /bin/sh instead of /bin/bash, since the latter may not be included in
+some images such as minimal
+
+comment added by Kevin Tian <kevin.tian@intel.com>, 2010-07-06
+
+remove "*" for root since we don't have a /etc/shadow so far.
+
+by Kevin Tian <kevin.tian@intel.com>, 2010-07-06
+
+Patch managed by http://www.mn-logistik.de/unsupported/pxa250/patcher
+
+Upstream-Status: Invalid [configuration]
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 
 --- base-passwd/passwd.master~nobash
 +++ base-passwd/passwd.master

@@ -1,6 +1,11 @@
-# poky uses /home/root instead of /root.
-#
-# comment added by Kevin Tian <kevin.tian@intel.com>, 2010-07-06
+we use /home/root instead of /root
+
+Comment added by Kevin Tian <kevin.tian@intel.com>, 2010-07-06
+
+Upstream-Status: Inappropriate [configuration]
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 --- base-passwd/passwd.master.orig	2005-07-08 06:26:22.000000000 +0200
 +++ base-passwd/passwd.master	2005-07-08 06:31:58.000000000 +0200
 @@ -1,4 +1,4 @@
