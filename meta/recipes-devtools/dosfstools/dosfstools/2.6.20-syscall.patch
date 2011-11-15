@@ -1,3 +1,10 @@
+Only use the system's llseek().
+
+Upstream-Status: Inappropriate [licensing]
+We're tracking an old release of dosfstools due to licensing issues.
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 Index: dosfstools-2.10/dosfsck/io.c
 ===================================================================
 --- dosfstools-2.10.orig/dosfsck/io.c	2007-06-07 16:15:52.000000000 +0200

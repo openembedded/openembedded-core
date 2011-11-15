@@ -1,3 +1,10 @@
+Add option to read in bootcode from a file.
+
+Upstream-Status: Inappropriate [licensing]
+We're tracking an old release of dosfstools due to licensing issues.
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
 diff -urN dosfstools-2.10.orig/mkdosfs/ChangeLog dosfstools-2.10/mkdosfs/ChangeLog
 --- dosfstools-2.10.orig/mkdosfs/ChangeLog	1997-06-18 03:09:38.000000000 -0700
 +++ dosfstools-2.10/mkdosfs/ChangeLog	2004-08-02 20:57:57.734939816 -0700
