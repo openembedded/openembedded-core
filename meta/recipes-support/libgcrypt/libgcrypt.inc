@@ -28,3 +28,5 @@ ARM_INSTRUCTION_SET = "arm"
 # move libgcrypt-config into -dev package
 FILES_${PN} = "${libdir}/lib*.so.*"
 FILES_${PN}-dev += "${bindir} ${libdir}/pkgconfig/*.pc"
+
+BBCLASSEXTEND = "native"
