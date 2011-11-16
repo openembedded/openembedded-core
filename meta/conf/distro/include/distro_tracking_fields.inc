@@ -5721,6 +5721,9 @@ RECIPE_LATEST_VERSION_pn-groff = "1.21"
 RECIPE_NO_UPDATE_REASON_pn-groff = "1.18.1.4 is latest GPLv2 Version no 1.21"
 
 RECIPE_STATUS_pn-eglibc = "red"
+RECIPE_LATEST_VERSION_pn-eglibc = "2.13-r15508"
+RECIPE_LAST_UPDATE_pn-eglibc = "Nov 16, 2011"
+RECIPE_MANUAL_CHECK_DATE_pn = "Nov 16, 2011"
 
 RECIPE_STATUS_pn-lighttpd = "red"
 RECIPE_LAST_UPDATE_pn-lighttpd = "Jul 28, 2011"
