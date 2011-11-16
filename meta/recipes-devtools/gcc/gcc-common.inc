@@ -21,6 +21,16 @@ def get_gcc_mips_plt_setting(bb, d):
         return "--with-mips-plt"
     return ""
 
+def get_gcc_multiarch_setting(bb, d):
+    if 'multiarch' in bb.data.getVar('DISTRO_FEATURES',d,1).split() :
+        if bb.data.getVar('TARGET_ARCH', d, 1) in [ 'i586', 'i686' ] :
+            return "--enable-targets=all"
+        if bb.data.getVar('TARGET_ARCH', d, 1) in [ 'powerpc' ] :
+            return "--enable-targets=powerpc64"
+        if bb.data.getVar('TARGET_ARCH', d, 1) in [ 'sparc' ] :
+            return "--enable-targets=all"
+    return ""
+
 # We really need HOST_SYS here for some packages and TARGET_SYS for others.
 # For now, libgcc is most important so we fix for that - RP.
 SHLIBSDIR = "${STAGING_DIR_TARGET}/shlibs"
