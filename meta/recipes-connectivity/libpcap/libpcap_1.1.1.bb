@@ -1,6 +1,6 @@
 require libpcap.inc
 
-PR = "r0"
+PR = "${INC_PR}.0"
 
 SRC_URI += "file://aclocal.patch \
             file://ieee80215-arphrd.patch"
