@@ -955,6 +955,7 @@ python do_package_rpm () {
 	cmd = cmd + " --define '_unpackaged_files_terminate_build 0'"
 	cmd = cmd + " --define 'debug_package %{nil}'"
 	cmd = cmd + " --define '_rpmfc_magic_path " + magicfile + "'"
+	cmd = cmd + " --define '_tmppath " + workdir + "'"
 	cmd = cmd + " -bb " + outspecfile
 
 	# Build the rpm package!
