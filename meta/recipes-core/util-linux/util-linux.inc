@@ -236,6 +236,14 @@ pkg_prerm_util-linux-fdisk () {
 	update-alternatives --remove fdisk fdisk.${PN}
 }
 
+pkg_postinst_util-linux-agetty () {
+	update-alternatives --install ${base_sbindir}/getty getty agetty 100
+}
+
+pkg_prerm_util-linux-agetty () {
+	update-alternatives --remove getty agetty
+}
+
 pkg_postinst_util-linux-mount () {
 	update-alternatives --install ${base_bindir}/mount mount mount.${PN} 100
 }
