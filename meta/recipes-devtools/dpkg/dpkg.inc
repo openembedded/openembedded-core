@@ -48,10 +48,18 @@ rm -f ${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
 }
 
 do_install_append () {
-	mv ${D}${bindir}/update-alternatives ${D}${sbindir}
+	if [ "${PN}" = "dpkg-native" ]; then
+		# update-alternatives doesn't have an offline mode
+		rm ${D}${bindir}/update-alternatives
+	else
+		mv ${D}${bindir}/update-alternatives ${D}${sbindir}
+	fi
 }
 
-PROVIDES += "virtual/update-alternatives"
+PROV = "virtual/update-alternatives"
+PROV_virtclass-native = ""
+
+PROVIDES += "${PROV}"
 
 PACKAGES =+ "update-alternatives-dpkg"
 FILES_update-alternatives-dpkg = "${sbindir}/update-alternatives ${localstatedir}/lib/dpkg/alternatives ${sysconfdir}/alternatives"

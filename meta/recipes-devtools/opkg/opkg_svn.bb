@@ -18,7 +18,7 @@ S = "${WORKDIR}/trunk"
 
 SRCREV = "625"
 PV = "0.1.8+svnr${SRCPV}"
-PR = "r3"
+PR = "r4"
 
 PACKAGES =+ "libopkg${PKGSUFFIX}-dev libopkg${PKGSUFFIX} update-alternatives-cworth${PKGSUFFIX}"
 
