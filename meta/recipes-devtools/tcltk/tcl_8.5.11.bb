@@ -19,8 +19,8 @@ BASE_SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl${PV}-src.tar.gz \
 SRC_URI = "${BASE_SRC_URI} \
 	   file://fix_non_native_build_issue.patch "
 
-SRC_URI[md5sum] = "a08eaf8467c0631937067c1948dd326b"
-SRC_URI[sha256sum] = "f582063edd5419a39ee8f7b5c8f95d557b5daad13efb0ed2f0967ca185613bb7"
+SRC_URI[md5sum] = "b01a9691c83990b3db0ce62d1012ca67"
+SRC_URI[sha256sum] = "8addc385fa6b5be4605e6d68fbdc4c0e674c5af1dc1c95ec5420390c4b08042a"
 
 SRC_URI_virtclass-native = "${BASE_SRC_URI}"
 
