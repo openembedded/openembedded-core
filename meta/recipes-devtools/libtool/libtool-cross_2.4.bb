@@ -1,8 +1,9 @@
 require libtool-${PV}.inc
 
-PR = "r4"
+PR = "r5"
 PACKAGES = ""
 SRC_URI += "file://prefix.patch"
+SRC_URI += "file://fixinstall.patch"
 
 datadir = "${STAGING_DIR_TARGET}${target_datadir}"
 

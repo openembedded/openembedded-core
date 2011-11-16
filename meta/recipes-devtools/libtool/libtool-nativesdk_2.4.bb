@@ -1,7 +1,8 @@
 require libtool-${PV}.inc
 
-PR = "r4"
+PR = "r5"
 SRC_URI += "file://prefix.patch"
+SRC_URI += "file://fixinstall.patch"
 
 inherit nativesdk
 
