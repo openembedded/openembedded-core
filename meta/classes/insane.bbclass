@@ -211,6 +211,7 @@ def package_qa_check_arch(path,name,d, elf, messages):
 
     target_os   = d.getVar('TARGET_OS', True)
     target_arch = d.getVar('TARGET_ARCH', True)
+    provides = d.getVar('PROVIDES', d, True)
 
     # FIXME: Cross package confuse this check, so just skip them
     for s in ['cross', 'nativesdk', 'cross-canadian']:
@@ -230,9 +231,10 @@ def package_qa_check_arch(path,name,d, elf, messages):
     if not machine == elf.machine():
         messages.append("Architecture did not match (%d to %d) on %s" % \
                  (machine, elf.machine(), package_qa_clean_path(path,d)))
-    elif not bits == elf.abiSize():
-        messages.append("Bit size did not match (%d to %d) on %s" % \
-                 (bits, elf.abiSize(), package_qa_clean_path(path,d)))
+    elif not ((bits == elf.abiSize()) or  \
+	("virtual/kernel" in provides) and (target_os == "linux-gnux32")):
+        messages.append("Bit size did not match (%d to %d) %s on %s" % \
+                 (bits, elf.abiSize(), bpn, package_qa_clean_path(path,d)))
     elif not littleendian == elf.isLittleEndian():
         messages.append("Endiannes did not match (%d to %d) on %s" % \
                  (littleendian, elf.isLittleEndian(), package_qa_clean_path(path,d)))
