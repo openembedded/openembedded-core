@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [licensing]
+
 posixtm.[ch] files are replaced with gplv2 version from these locations:
 
 http://git.savannah.gnu.org/gitweb/?p=gnulib.git;a=blob;f=lib/posixtm.c;hb=5661ab9d49512b4cf3c19caa11bb581d8ce561ba

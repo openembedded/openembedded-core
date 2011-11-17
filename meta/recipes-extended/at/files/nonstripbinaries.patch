@@ -1,3 +1,4 @@
+Upstream-Status: Pending
 #Because remove nonrootinstall patch, the stripping of the binaries can not
 #be handled.
 #This patch is to handle the stripping of the binaries.
