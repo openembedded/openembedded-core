@@ -138,7 +138,7 @@ python patch_do_patch() {
 			raise bb.build.FuncFailed(str(sys.exc_value))
 		resolver.Resolve()
 }
-patch_do_patch[vardepsexclude] = "DATE SRCDATE"
+patch_do_patch[vardepsexclude] = "DATE SRCDATE PATCHRESOLVE"
 
 addtask patch after do_unpack
 do_patch[dirs] = "${WORKDIR}"
