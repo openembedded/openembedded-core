@@ -1,0 +1,14 @@
+Upstream-Status: Inappropriate [configuration]
+Signed-Off-By: Xiaofeng Yan <xiaofeng.yan@windriver.com>
+# Pick up ${NM} from the environment
+--- a/configure.in
++++ b/configure.in
+@@ -190,7 +190,7 @@
+ AC_SYS_LARGEFILE
+ 
+ AM_PROG_AS
+-AC_PATH_PROG(NM, nm, nm)
++AC_CHECK_TOOLS(NM, [$NM nm], nm)
+ 
+ dnl Initialize maintainer mode
+ AM_MAINTAINER_MODE
