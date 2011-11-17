@@ -1110,7 +1110,7 @@ if [ x"$D" = "x" ]; then
 fi
 }
 
-RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/bin/rpmdeps"
+RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/bin/rpmdeps  --define '_rpmfc_magic_path ${STAGING_DIR_NATIVE}/usr/share/misc/magic.mgc'"
 
 # Collect perfile run-time dependency metadata
 # Output:
