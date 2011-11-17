@@ -45,11 +45,12 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 DEPENDS = "bzip2 zlib db openssl elfutils expat libpcre attr acl popt ${extrarpmdeps}"
 extrarpmdeps = "python perl"
 extrarpmdeps_virtclass-native = "file-native"
-PR = "r23"
+PR = "r24"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
 SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.0-0.20101229.src.rpm;extract=rpm-5.4.0.tar.gz \
+	   file://rpm-log-auto-rm.patch \
 	   file://perfile_rpmdeps.sh \
 	   file://rpm-autogen.patch \
 	   file://rpm-libsql-fix.patch \
@@ -192,6 +193,7 @@ FILES_${PN} = "${bindir}/rpm \
 		${libdir}/rpm/bin/rpmrepo \
 		${libdir}/rpm/bin/rpmspecdump \
 		${libdir}/rpm/bin/wget \
+		/var/lib/rpm \
 		"
 
 #		${libdir}/rpm/magic
@@ -208,7 +210,6 @@ FILES_${PN}-dbg += "${libdir}/rpm/.debug \
 FILES_${PN}-common = "${bindir}/rpm2cpio \
 		${bindir}/gendiff \
 		/etc/rpm \
-		/var/lib/rpm \
 		/var/spool/repackage \
 		"
 
