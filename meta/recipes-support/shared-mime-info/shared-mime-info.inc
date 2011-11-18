@@ -19,7 +19,7 @@ FILES_${PN}-dev += "${datadir}/pkgconfig/shared-mime-info.pc"
 
 # freedesktop.org.xml is only required when updating the mime database,
 # package it separately
-PACKAGES += "shared-mime-info-data"
+PACKAGES =+ "shared-mime-info-data"
 FILES_shared-mime-info-data = "${datadir}/mime/packages/freedesktop.org.xml"
 RDEPENDS_shared-mime-info-data = "shared-mime-info"
 
