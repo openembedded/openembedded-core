@@ -2,6 +2,7 @@ DEPENDS += "mesa-dri-glsl-native"
 
 SRC_URI += "file://uclibc.patch \
             file://crossfix.patch \
+            file://crossfix-mklib.patch \
            "
 SRC_URI[md5sum] = "ff03aca82d0560009a076a87c888cf13"
 SRC_URI[sha256sum] = "f8bf37a00882840a3e3d327576bc26a79ae7f4e18fe1f7d5f17a5b1c80dd7acf"

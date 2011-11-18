@@ -1,0 +1,71 @@
+This patch is ported from WindRiver linux and to fix cross compile failure.
+
+And original commits are:
+commit 8d5ccc8113e1b51b0529a00c18a4aba956247e1b
+commit 5c4212084b871a0c0fb7d174280ec9a634637deb
+
+Upstream-Status: Pending
+
+Signed-off-by: Kang Kai <kai.kang@windriver.com>
+
+--- Mesa-7.10.2/bin/mklib.orig	2011-09-28 16:15:34.170000074 +0800
++++ Mesa-7.10.2/bin/mklib	2011-09-28 16:15:42.370000073 +0800
+@@ -49,8 +49,8 @@
+                     /*) ;;
+                     *)  FILE="$ORIG_DIR/$FILE" ;;
+                 esac
+-                MEMBERS=`ar t $FILE`
+-                ar x $FILE
++                MEMBERS=`${AR} t $FILE`
++                ${AR} x $FILE
+                 for MEMBER in $MEMBERS ; do
+                     NEWFILES="$NEWFILES $DIR/$MEMBER"
+                 done
+@@ -77,7 +77,7 @@
+ make_ar_static_lib() {
+     OPTS=$1
+     shift;
+-    RANLIB=$1
++    USE_RANLIB=$1
+     shift;
+     LIBNAME=$1
+     shift;
+@@ -87,11 +87,11 @@
+     rm -f ${LIBNAME}
+ 
+     # make static lib
+-    ar ${OPTS} ${LIBNAME} ${OBJECTS}
++    ${AR} ${OPTS} ${LIBNAME} ${OBJECTS}
+ 
+     # run ranlib
+-    if [ ${RANLIB} = 1 ] ; then
+-        ranlib ${LIBNAME}
++    if [ ${USE_RANLIB} = 1 ] ; then
++        ${RANLIB} ${LIBNAME}
+     fi
+ 
+     echo ${LIBNAME}
+@@ -313,9 +313,9 @@
+ 	if [ "x$LINK" = "x" ] ; then
+ 	    # -linker was not specified so set default link command now
+             if [ $CPLUSPLUS = 1 ] ; then
+-                LINK=g++
++                LINK=$CXX
+             else
+-                LINK=gcc
++                LINK=$CC
+             fi
+ 	fi
+ 
+@@ -531,9 +531,9 @@
+ 	if [ "x$LINK" = "x" ] ; then
+ 	    # -linker was not specified so set default link command now
+             if [ $CPLUSPLUS = 1 ] ; then
+-                LINK=g++
++                LINK=${CXX}
+             else
+-                LINK=gcc
++                LINK=${CC}
+             fi
+ 	fi
+ 
