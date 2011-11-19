@@ -18,7 +18,7 @@ DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_DEPS}', '', d)}"
 PAM_DEPS = "libpam libpam-runtime pam-plugin-access pam-plugin-loginuid"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "https://fedorahosted.org/releases/c/r/cronie/cronie-${PV}.tar.gz \
            file://crond.init \
@@ -31,13 +31,16 @@ PAM_SRC_URI = "file://crond_pam_config.patch"
 SRC_URI[md5sum] = "9b1d2ce6db8d1883e06635f437170657"
 SRC_URI[sha256sum] = "a3b910876f255712f1a5c364b74f34b0ceac9f6f3bbc45e854c5722785f513b3"
 
-inherit autotools update-rc.d
+inherit autotools update-rc.d useradd
 
 EXTRA_OECONF += "\
                 ${@base_contains('DISTRO_FEATURES', 'pam', '--with-pam', '--without-pam', d)}"
 
 INITSCRIPT_NAME = "crond"
 INITSCRIPT_PARAMS = "start 90 2 3 4 5 . stop 60 0 1 6 ."
+
+USERADD_PACKAGES = "${PN}"
+GROUPADD_PARAM_${PN} = "crontab"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/sysconfig/
@@ -54,25 +57,19 @@ do_install_append () {
 	mkdir -p ${D}${sysconfdir}/cron.weekly
 	mkdir -p ${D}${sysconfdir}/cron.monthly
 	touch ${D}${sysconfdir}/cron.deny
+	
+	# below setting is necessary to allow normal user using crontab
+
+	# setgid for crontab binary
+	chown root:crontab ${D}/usr/bin/crontab
+	chmod 2755 ${D}/usr/bin/crontab
+
+	# allow 'crontab' group write to /var/spool/cron
+	chown root:crontab ${D}/var/spool/cron
+	chmod 770 ${D}/var/spool/cron
+
+	chmod 600 ${D}/etc/crontab
 }
 
 FILES_${PN} += "${sysconfdir}/cron*"
 
-pkg_postinst_${PN} () {
-	if [ "x$D" != "x" ] ; then
-		exit 1
-	fi
-
-	# below setting is necessary to allow normal user using crontab
-
-	# add 'crontab' group and setgid for crontab binary
-	grep crontab /etc/group || addgroup crontab
-	chown root:crontab /usr/bin/crontab
-	chmod 2755 /usr/bin/crontab
-
-	# allow 'crontab' group write to /var/spool/cron
-	chown root:crontab /var/spool/cron
-	chmod 770 /var/spool/cron
-
-	chmod 600 /etc/crontab
-}
