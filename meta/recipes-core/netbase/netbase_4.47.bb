@@ -17,6 +17,9 @@ SRC_URI = "${DEBIAN_MIRROR}/main/n/netbase/netbase_${PV}.tar.gz \
            file://interfaces \
            file://nfsroot"
 
+SRC_URI[md5sum] = "fcd87a62f177592724a8066e3774ae97"
+SRC_URI[sha256sum] = "a7e6525c9a09b00eff3395d09739b3c70a18bff8d13f7daa21fdf81989387726"
+
 do_install () {
 	install -d ${D}${sysconfdir}/init.d \
 		   ${D}${sbindir} \
@@ -48,6 +51,3 @@ CONFFILES_${PN} = "${sysconfdir}/hosts ${sysconfdir}/network/interfaces"
 PACKAGE_ARCH_qemuarm = "${MACHINE_ARCH}"
 PACKAGE_ARCH_qemux86 = "${MACHINE_ARCH}"
 PACKAGE_ARCH_qemux86-64 = "${MACHINE_ARCH}"
-
-SRC_URI[md5sum] = "e15762f4a8280a62f7ddfea6093120f1"
-SRC_URI[sha256sum] = "2fdee144112731ee0028fee2584cc82d664857ca7004c2eb59de7bda5b159838"
