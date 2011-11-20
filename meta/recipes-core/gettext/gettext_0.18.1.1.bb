@@ -5,7 +5,7 @@ SECTION = "libs"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-PR = "r4"
+PR = "r5"
 DEPENDS = "libxml2-native gettext-native virtual/libiconv ncurses expat"
 DEPENDS_virtclass-native = "libxml2-native"
 PROVIDES = "virtual/libintl virtual/gettext"
@@ -67,13 +67,14 @@ FILES_gettext-runtime = "${bindir}/gettext \
                          ${libdir}/libasprintf.so* \
                          ${libdir}/GNU.Gettext.dll \
                         "
-FILES_gettext-runtime_append_libc-uclibc = " ${libdir}/libintl.so* \
+FILES_gettext-runtime_append_libc-uclibc = " ${libdir}/libintl.so.* \
                                              ${libdir}/charset.alias \
                                            "
 FILES_gettext-runtime-dev += "${libdir}/libasprintf.a \
                       ${includedir}/autosprintf.h \
                      "
 FILES_gettext-runtime-dev_append_libc-uclibc = " ${libdir}/libintl.a \
+                                                 ${libdir}/libintl.so \
                                                  ${includedir}/libintl.h \
                                                "
 FILES_gettext-runtime-doc = "${mandir}/man1/gettext.* \
