@@ -778,6 +778,8 @@ python split_and_strip_files () {
 				if lpath and lpath != ".":
 					ftarget += lpath + debugdir + "/"
 				ftarget += lbase + debugappend
+				if lpath.startswith(".."):
+					ftarget = os.path.join("..", ftarget)
 				bb.mkdirhier(os.path.dirname(fpath))
 				#bb.note("Symlink %s -> %s" % (fpath, ftarget))
 				os.symlink(ftarget, fpath)
