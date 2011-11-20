@@ -1,6 +1,6 @@
 require pulseaudio.inc
 
-PR = "r7"
+PR = "r8"
 
 DEPENDS += "gdbm speex libxml-parser-perl-native"
 
@@ -12,6 +12,7 @@ SRC_URI = "http://freedesktop.org/software/pulseaudio/releases/pulseaudio-${PV}.
   file://tls_m4.patch \
   file://configure_silent_rules.patch \
   file://volatiles.04_pulse \
+  file://fix_bluez_build.patch \
 "
 
 SRC_URI[md5sum] = "7391205a337d1e04a9ff38025f684034"
