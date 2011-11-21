@@ -6,6 +6,15 @@ do_patch() {
 	    defconfig=${WORKDIR}/defconfig
 	fi
 
+	# if kernel tools are available in-tree, they are preferred
+	# and are placed on the path before any external tools. Unless
+	# the external tools flag is set, in that case we do nothing.
+	if [ -f "${S}/scripts/util/configme" ]; then
+		if [ -z "${EXTERNAL_KERNEL_TOOLS}" ]; then
+			PATH=${S}/scripts/util:${PATH}
+		fi
+	fi
+
 	kbranch=${KBRANCH}
 	if [ -n "${YOCTO_KERNEL_EXTERNAL_BRANCH}" ]; then
            # switch from a generic to a specific branch
@@ -100,6 +109,7 @@ do_kernel_configme() {
 	fi
 
 	cd ${S}
+	PATH=${PATH}:${S}/scripts/util
 	configme ${configmeflags} --reconfig --output ${B} ${KBRANCH} ${KMACHINE}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not configure ${KMACHINE}-${LINUX_KERNEL_TYPE}"
@@ -116,7 +126,7 @@ python do_kernel_configcheck() {
     bb.plain("NOTE: validating kernel configuration")
 
     pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
-    cmd = bb.data.expand("cd ${B}/..; kconf_check -config- ${B} ${S} ${B} ${KBRANCH}",d )
+    cmd = bb.data.expand("cd ${B}/..; ${S}/scripts/util/kconf_check -config- ${B} ${S} ${B} ${KBRANCH}",d )
     ret, result = commands.getstatusoutput("%s%s" % (pathprefix, cmd))
 
     bb.plain( "%s" % result )
