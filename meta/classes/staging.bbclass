@@ -73,6 +73,21 @@ python sysroot_cleansstate () {
 }
 do_configure[prefuncs] += "sysroot_cleansstate"
 
+
+BB_SETSCENE_VERIFY_FUNCTION = "sysroot_checkhashes"
+
+def sysroot_checkhashes(covered, tasknames, fnids, fns, d):
+    problems = set()
+    configurefnids = set()
+    for task in xrange(len(tasknames)):
+        if tasknames[task] == "do_configure" and task not in covered:
+            configurefnids.add(fnids[task])
+    for task in covered:
+        if tasknames[task] == "do_populate_sysroot" and fnids[task] in configurefnids:
+            problems.add(task)
+            bb.error("sysroot task found %s" % fns[fnids[task]])
+    return problems
+
 python do_populate_sysroot () {
     #
     # if do_stage exists, we're legacy. In that case run the do_stage,
