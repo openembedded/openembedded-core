@@ -259,7 +259,7 @@ def sstate_clean(ss, d):
             bb.utils.unlockfile(lock)
 
     stfile = d.getVar("STAMP", True) + ".do_" + ss['task']
-    extrainf = d.getVarFlag("do_" + ss['task'], 'stamp-extra-info')
+    extrainf = d.getVarFlag("do_" + ss['task'], 'stamp-extra-info', True)
     oe.path.remove(stfile)
     oe.path.remove(stfile + "_setscene")
     if extrainf:
