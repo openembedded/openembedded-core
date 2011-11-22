@@ -85,7 +85,6 @@ def sysroot_checkhashes(covered, tasknames, fnids, fns, d):
     for task in covered:
         if tasknames[task] == "do_populate_sysroot" and fnids[task] in configurefnids:
             problems.add(task)
-            bb.error("sysroot task found %s" % fns[fnids[task]])
     return problems
 
 python do_populate_sysroot () {
