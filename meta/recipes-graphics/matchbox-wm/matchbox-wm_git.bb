@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://src/wm.h;endline=21;md5=a7e844465edbcf79c282369f93caa
 SECTION = "x11/wm"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxrender startup-notification expat gconf"
 
-SRCREV = "e8236c9ab44a8af8137cac2a35fb87f9146a9656"
+SRCREV = "f4394eaed475de6e627d373c5b35ee2cf87072e3"
 PV = "1.2+git${SRCPV}"
 PR = "r0"
 
