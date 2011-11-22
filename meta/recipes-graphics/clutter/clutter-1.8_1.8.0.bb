@@ -6,9 +6,6 @@ PR = "r3"
 # We're API/ABI compatible and this may make things easier for layers
 PROVIDES += "clutter-1.6"
 
-# Internal json-glib was removed in Clutter 1.5.2
-STDDEPENDS += "json-glib cogl atk"
-
 PACKAGES =+ "${PN}-examples"
 FILES_${PN}-examples = "${bindir}/test-* ${pkgdatadir}/redhand.png"
 

@@ -1,9 +1,7 @@
 require clutter.inc
 require clutter-package.inc
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
-
-DEPENDS += "cogl"
+LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 SRCREV = "39db46123ed6bbbc3e6ad359a64d4d344ca9e11b"
 PV = "1.8.0+git${SRCPV}"
