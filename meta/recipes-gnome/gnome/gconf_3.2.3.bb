@@ -5,10 +5,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
 
 DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native"
 
+PR = "r1"
+
 inherit gnomebase
 
 SRC_URI = "${GNOME_MIRROR}/GConf/${@gnome_verdir("${PV}")}/GConf-${PV}.tar.bz2;name=archive \
-	   file://nointro.patch"
+	   file://nointro.patch \
+	   file://backenddir.patch"
 
 SRC_URI[archive.md5sum] = "f80329173cd9d134ad07e36002dd2a15"
 SRC_URI[archive.sha256sum] = "52008a82a847527877d9e1e549a351c86cc53cada4733b8a70a1123925d6aff4"
