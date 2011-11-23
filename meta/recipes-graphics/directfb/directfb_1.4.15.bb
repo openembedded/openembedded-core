@@ -1,7 +1,7 @@
 require directfb.inc
 
 RV = "1.4-6"
-PR = "r0"
+PR = "r1"
 
 DEPENDS += "sysfsutils"
 
@@ -21,7 +21,5 @@ EXTRA_OECONF = "\
 
 LEAD_SONAME = "libdirectfb-1.4.so.6"
 
-SRC_URI[md5sum] = "2c779c9a8456790c6c29ad85459b2600"
-SRC_URI[sha256sum] = "b119ab9c5c0c505c23e32d41ae54bd04cb474c5e58900ec0f1cf9482f892f9b2"
-
-
+SRC_URI[md5sum] = "9b2b90b81d7ded2a4a5caa22daeb81ef"
+SRC_URI[sha256sum] = "a40e640b53da9b2b155d98bf8cb1d173b01418c04b176768307adebefa0b78a8"
