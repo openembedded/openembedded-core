@@ -1,9 +1,10 @@
 require sudo.inc
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://ftp.sudo.ws/sudo/dist/sudo-${PV}.tar.gz \
            file://libtool.patch \
+	   file://sudo-parallel-build.patch \ 
            ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)}"
 
 PAM_SRC_URI = "file://sudo.pam"

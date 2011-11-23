@@ -1,0 +1,15 @@
+Upstream-Status: Accepted
+
+Index: sudo-1.8.1p2/plugins/sudoers/Makefile.in
+===================================================================
+--- sudo-1.8.1p2.orig/plugins/sudoers/Makefile.in
++++ sudo-1.8.1p2/plugins/sudoers/Makefile.in
+@@ -164,7 +164,7 @@ sudoers.la: $(SUDOERS_OBJS) libsudoers.l
+ visudo: libsudoers.la $(VISUDO_OBJS) $(LIBS)
+ 	$(LIBTOOL) --mode=link $(CC) -o $@ $(VISUDO_OBJS) $(LDFLAGS) libsudoers.la $(LIBS) $(NET_LIBS)
+ 
+-sudoreplay: $(REPLAY_OBJS) $(LIBS)
++sudoreplay: timestr.lo $(REPLAY_OBJS) $(LIBS)
+ 	$(LIBTOOL) --mode=link $(CC) -o $@ $(REPLAY_OBJS) $(LDFLAGS) timestr.lo $(REPLAY_LIBS) $(LIBS)
+ 
+ testsudoers: libsudoers.la $(TEST_OBJS) $(LIBS)
