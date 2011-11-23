@@ -22,6 +22,8 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
 SRC_URI[md5sum] = "ca9f2a2d571b57fc5c53212d1d22e2b5"
 SRC_URI[sha256sum] = "b91f420f2c51f6155e088e34ff99bea09cc1fb89585cf7c0179644e57abd28ff"
 
+COMPATIBLE_HOST = '(x86_64.*|i.86.*)-(linux|freebsd.*)'
+
 inherit autotools
 inherit gettext
 
@@ -29,13 +31,6 @@ EXTRA_OECONF = "--with-platform=pc --disable-grub-mkfont --target=${TARGET_ARCH}
 
 do_configure() {
     oe_runconf
-}
-
-python __anonymous () {
-    import re
-    host = d.getVar('HOST_SYS', 1)
-    if not re.match('x86.64.*-linux', host) and not re.match('i.86.*-linux', host):
-        raise bb.parse.SkipPackage("incompatible with host %s" % host)
 }
 
 do_install_append () {
