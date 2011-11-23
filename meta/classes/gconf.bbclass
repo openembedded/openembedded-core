@@ -1,5 +1,9 @@
 DEPENDS += "gconf gconf-native"
 
+# This is referenced by the gconf m4 macros and would default to the value hardcoded
+# into gconf at compile time otherwise
+export GCONF_SCHEMA_INSTALL_SOURCE = "xml:merged:${STAGING_DIR_NATIVE}${sysconfdir}/gconf/gconf.xml.defaults"
+
 gconf_postinst() {
 if [ "x$D" != "x" ]; then
 	exit 1
