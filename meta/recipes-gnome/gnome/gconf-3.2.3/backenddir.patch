@@ -2,6 +2,8 @@ Allow the backend directory to be specified from the environment. This is
 required so we can relocate gconf-native to different paths and still
 allow it to work.
 
+Bug filed upstream with patch: https://bugzilla.gnome.org/show_bug.cgi?id=664650
+
 Upstream-Status: Pending
 
 RP 2011/11/23
