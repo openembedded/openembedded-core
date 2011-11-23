@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://src/matchbox-stroke.h;endline=12;md5=8ed5c5bbec2321fb
 
 DEPENDS = "libfakekey expat libxft"
 SECTION = "x11/wm"
-SRCREV = "8edfd9a2bf1f0d6b28d4afee4bda9d3635f26a0b"
+SRCREV = "2b772583b61d2f6e8358e7c80e10293fc27cfcb7"
 PV = "0.0+git${SRCPV}"
 PR = "r0"
 
