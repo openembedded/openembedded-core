@@ -118,3 +118,6 @@ ac_cv_func___lshrdi3=no
 ac_cv_func___trampoline_setup=no
 ac_cv_func___ucmpdi2=no
 ac_cv_func__restgpr_14_x=no
+
+# cvs
+cvs_cv_func_printf_ptr=${cvs_cv_func_printf_ptr=yes}
