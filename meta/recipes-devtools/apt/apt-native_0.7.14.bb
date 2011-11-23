@@ -1,6 +1,6 @@
 require apt-native.inc
 
-PR = "r5"
+PR = "r6"
 
 SRC_URI += "file://nodoc.patch \
             file://noconfigure.patch \

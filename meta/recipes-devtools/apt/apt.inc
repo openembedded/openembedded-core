@@ -5,6 +5,7 @@ SECTION = "base"
 SRC_URI = "${DEBIAN_MIRROR}/main/a/apt/apt_${PV}.tar.gz \
            file://no-ko-translation.patch \
            file://use-host.patch \
+           file://localefixes.patch \
            "
 
 inherit autotools gettext

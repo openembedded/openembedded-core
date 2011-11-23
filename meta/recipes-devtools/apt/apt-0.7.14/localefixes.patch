@@ -1,0 +1,91 @@
+Add in missing header includes to resolve compile failures with recent 
+compiler/glibc combinations.
+
+Upstream-Status: Inappropriate [Resolved upstream]
+
+RP 2011/11/23
+
+Index: apt-0.7.14/apt-pkg/init.cc
+===================================================================
+--- apt-0.7.14.orig/apt-pkg/init.cc	2011-11-23 22:48:53.544637868 +0000
++++ apt-0.7.14/apt-pkg/init.cc	2011-11-23 22:48:59.456638260 +0000
+@@ -16,6 +16,7 @@
+ #include <config.h>
+ #include <cstdlib>
+ #include <sys/stat.h>
++#include <locale>
+ 									/*}}}*/
+ 
+ #define Stringfy_(x) # x
+Index: apt-0.7.14/cmdline/apt-cache.cc
+===================================================================
+--- apt-0.7.14.orig/cmdline/apt-cache.cc	2011-11-23 22:53:29.048631067 +0000
++++ apt-0.7.14/cmdline/apt-cache.cc	2011-11-23 22:54:15.784616212 +0000
+@@ -32,6 +32,7 @@
+ #include <apti18n.h>
+ 
+ #include <locale.h>
++#include <locale>
+ #include <iostream>
+ #include <unistd.h>
+ #include <errno.h>
+Index: apt-0.7.14/cmdline/apt-cdrom.cc
+===================================================================
+--- apt-0.7.14.orig/cmdline/apt-cdrom.cc	2011-11-23 22:53:29.064631096 +0000
++++ apt-0.7.14/cmdline/apt-cdrom.cc	2011-11-23 22:53:57.616630261 +0000
+@@ -27,6 +27,7 @@
+ //#include "indexcopy.h"
+ 
+ #include <locale.h>
++#include <locale>
+ #include <iostream>
+ #include <fstream>
+ #include <vector>
+Index: apt-0.7.14/cmdline/apt-config.cc
+===================================================================
+--- apt-0.7.14.orig/cmdline/apt-config.cc	2011-11-23 22:50:16.796635352 +0000
++++ apt-0.7.14/cmdline/apt-config.cc	2011-11-23 22:50:25.640633906 +0000
+@@ -27,6 +27,7 @@
+ #include <locale.h>
+ #include <iostream>
+ #include <string>
++#include <locale>
+ 									/*}}}*/
+ using namespace std;
+ 
+Index: apt-0.7.14/cmdline/apt-extracttemplates.cc
+===================================================================
+--- apt-0.7.14.orig/cmdline/apt-extracttemplates.cc	2011-11-23 22:53:29.080631084 +0000
++++ apt-0.7.14/cmdline/apt-extracttemplates.cc	2011-11-23 22:53:38.304630439 +0000
+@@ -39,6 +39,7 @@
+ #include <config.h>
+ #include <apti18n.h>
+ #include "apt-extracttemplates.h"
++#include <locale>
+ 									/*}}}*/
+ 
+ using namespace std;
+Index: apt-0.7.14/cmdline/apt-get.cc
+===================================================================
+--- apt-0.7.14.orig/cmdline/apt-get.cc	2011-11-23 22:53:29.096631090 +0000
++++ apt-0.7.14/cmdline/apt-get.cc	2011-11-23 22:53:49.368629452 +0000
+@@ -48,6 +48,7 @@
+ 
+ #include <set>
+ #include <locale.h>
++#include <locale>
+ #include <langinfo.h>
+ #include <fstream>
+ #include <termios.h>
+Index: apt-0.7.14/cmdline/apt-sortpkgs.cc
+===================================================================
+--- apt-0.7.14.orig/cmdline/apt-sortpkgs.cc	2011-11-23 22:52:03.872640247 +0000
++++ apt-0.7.14/cmdline/apt-sortpkgs.cc	2011-11-23 22:52:10.880638611 +0000
+@@ -27,6 +27,7 @@
+ 
+ #include <locale.h>
+ #include <unistd.h>
++#include <locale>
+ 									/*}}}*/
+ 
+ using namespace std;
