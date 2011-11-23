@@ -100,7 +100,6 @@ EXTRA_OECONF += "--with-fop=no \
                  --disable-acfb \
                  --disable-ccfb \
                  --disable-mcfb \
-                 --disable-dga \
                  --disable-xinerama \
                  --disable-xf86misc \
                  --disable-xorgcfg \
