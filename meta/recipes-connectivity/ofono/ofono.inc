@@ -17,4 +17,8 @@ do_install_append() {
   install -m 0755 ${WORKDIR}/ofono ${D}${sysconfdir}/init.d/ofono
 }
 
+PACKAGES =+ "${PN}-tests"
+
 FILES_${PN} += "${base_libdir}/udev ${base_libdir}/systemd"
+FILES_${PN}-tests = "${libdir}/ofono"
+RDEPENDS_${PN}-tests = "python"

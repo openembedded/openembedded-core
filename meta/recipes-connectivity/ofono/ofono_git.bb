@@ -1,6 +1,6 @@
 require ofono.inc
 
-PR = "r1"
+PR = "r2"
 
 S	 = "${WORKDIR}/git"
 SRCREV = "14544d5996836f628613c2ce544380ee6fc8f514"

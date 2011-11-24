@@ -1,6 +1,6 @@
 require ofono.inc
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI  = "${KERNELORG_MIRROR}/linux/network/ofono/${BPN}-${PV}.tar.bz2 \
 	          file://ofono"
