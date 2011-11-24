@@ -232,7 +232,7 @@ python base_eventhandler() {
 
 		statuslines += layers_branch_rev
 		statusmsg = "\nOE Build Configuration:\n%s\n" % '\n'.join(statuslines)
-		print statusmsg
+		bb.plain(statusmsg)
 
 		needed_vars = [ "TARGET_ARCH", "TARGET_OS" ]
 		pesteruser = []
