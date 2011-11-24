@@ -425,7 +425,7 @@ RECIPE_INTEL_SECTION_pn-readline = "base libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-readline = "11 months"
 RECIPE_LATEST_RELEASE_DATE_pn-readline = "Feb 13, 2011"
 RECIPE_COMMENTS_pn-readline = ""
-RECIPE_MANUAL_CHECK_DATE_pn-readline = "Sep 27, 2011"
+RECIPE_MANUAL_CHECK_DATE_pn-readline = "Nov 23, 2011"
 
 RECIPE_STATUS_pn-libgcrypt = "green"
 RECIPE_LATEST_VERSION_pn-libgcrypt = "1.5.0"
@@ -437,6 +437,7 @@ RECIPE_PATCH_pn-libgcrypt+add-pkgconfig-support = "add .pc file"
 RECIPE_INTEL_SECTION_pn-libgcrypt = "base libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libgcrypt = "11 months"
 RECIPE_COMMENTS_pn-libgcrypt = ""
+RECIPE_MANUAL_CHECK_DATE_pn-libgcrypt = "Nov 23, 2011"
 
 RECIPE_STATUS_pn-gnutls = "yellow"   # need explict pre configure
 RECIPE_LATEST_VERSION_pn-gnutls = "2.12.11"
