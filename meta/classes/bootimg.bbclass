@@ -38,7 +38,24 @@ BOOTIMG_EXTRA_SPACE ?= "512"
 EFI = ${@base_contains("MACHINE_FEATURES", "efi", "1", "0", d)}
 EFI_CLASS = ${@base_contains("MACHINE_FEATURES", "efi", "grub-efi", "dummy", d)}
 
-inherit syslinux
+# Include legacy boot if MACHINE_FEATURES includes "pcbios" or if it does not
+# contain "efi". This way legacy is supported by default if neither is
+# specified, maintaining the original behavior.
+def pcbios(d):
+	pcbios = base_contains("MACHINE_FEATURES", "pcbios", "1", "0", d)
+	if pcbios == "0":
+		pcbios = base_contains("MACHINE_FEATURES", "efi", "0", "1", d)
+	return pcbios
+
+def pcbios_class(d):
+	if d.getVar("PCBIOS", True) == "1":
+		return "syslinux"
+	return "dummy"
+
+PCBIOS = ${@pcbios(d)}
+PCBIOS_CLASS = ${@pcbios_class(d)}
+
+inherit ${PCBIOS_CLASS}
 inherit ${EFI_CLASS}
 
 
@@ -51,15 +68,24 @@ build_iso() {
 
 	install -d ${ISODIR}
 
-	syslinux_iso_populate
+	if [ "${PCBIOS}" = "1" ]; then
+		syslinux_iso_populate
+	fi
 	if [ "${EFI}" = "1" ]; then
 		grubefi_iso_populate
 	fi
 
-	mkisofs -V ${BOOTIMG_VOLUME_ID} \
-	        -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso \
-		-b ${ISO_BOOTIMG} -c ${ISO_BOOTCAT} -r \
-		${MKISOFS_OPTIONS} ${ISODIR}
+	if [ "${PCBIOS}" = "1" ]; then
+		mkisofs -V ${BOOTIMG_VOLUME_ID} \
+		        -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso \
+			-b ${ISO_BOOTIMG} -c ${ISO_BOOTCAT} -r \
+			${MKISOFS_OPTIONS} ${ISODIR}
+	else
+		bbnote "EFI-only ISO images are untested, please provide feedback."
+		mkisofs -V ${BOOTIMG_VOLUME_ID} \
+		        -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso \
+			-r ${ISODIR}
+	fi
 
 	cd ${DEPLOY_DIR_IMAGE}
 	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.iso
@@ -70,7 +96,9 @@ build_hddimg() {
 	# Create an HDD image
 	if [ "${NOHDD}" != "1" ] ; then
 		install -d ${HDDDIR}
-		syslinux_hddimg_populate
+		if [ "${PCBIOS}" = "1" ]; then
+			syslinux_hddimg_populate
+		fi
 		if [ "${EFI}" = "1" ]; then
 			grubefi_hddimg_populate
 		fi
@@ -82,7 +110,9 @@ build_hddimg() {
 		mkdosfs -n ${BOOTIMG_VOLUME_ID} -d ${HDDDIR} \
 		        -C ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg $SIZE
 
-		syslinux_hddimg_install
+		if [ "${PCBIOS}" = "1" ]; then
+			syslinux_hddimg_install
+		fi
 
 		chmod 644 ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
 
@@ -93,7 +123,8 @@ build_hddimg() {
 }
 
 python do_bootimg() {
-	bb.build.exec_func('build_syslinux_cfg', d)
+	if d.getVar("PCBIOS", True) == "1":
+		bb.build.exec_func('build_syslinux_cfg', d)
 	if d.getVar("EFI", True) == "1":
 		bb.build.exec_func('build_grub_cfg', d)
 	bb.build.exec_func('build_hddimg', d)
