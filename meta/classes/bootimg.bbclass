@@ -35,7 +35,12 @@ ISODIR = "${S}/cd"
 BOOTIMG_VOLUME_ID   ?= "boot"
 BOOTIMG_EXTRA_SPACE ?= "512"
 
+EFI = ${@base_contains("MACHINE_FEATURES", "efi", "1", "0", d)}
+EFI_CLASS = ${@base_contains("MACHINE_FEATURES", "efi", "grub-efi", "dummy", d)}
+
 inherit syslinux
+inherit ${EFI_CLASS}
+
 
 build_iso() {
 	# Only create an ISO if we have an INITRD and NOISO was not set
@@ -47,6 +52,9 @@ build_iso() {
 	install -d ${ISODIR}
 
 	syslinux_iso_populate
+	if [ "${EFI}" = "1" ]; then
+		grubefi_iso_populate
+	fi
 
 	mkisofs -V ${BOOTIMG_VOLUME_ID} \
 	        -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso \
@@ -63,6 +71,9 @@ build_hddimg() {
 	if [ "${NOHDD}" != "1" ] ; then
 		install -d ${HDDDIR}
 		syslinux_hddimg_populate
+		if [ "${EFI}" = "1" ]; then
+			grubefi_hddimg_populate
+		fi
 
 		# Determine the block count for the final image
 		BLOCKS=`du -bks ${HDDDIR} | cut -f 1`
@@ -83,6 +94,8 @@ build_hddimg() {
 
 python do_bootimg() {
 	bb.build.exec_func('build_syslinux_cfg', d)
+	if d.getVar("EFI", True) == "1":
+		bb.build.exec_func('build_grub_cfg', d)
 	bb.build.exec_func('build_hddimg', d)
 	bb.build.exec_func('build_iso', d)
 }
