@@ -2,7 +2,63 @@
 # Copyright (C) 2004-2006, Advanced Micro Devices, Inc.  All Rights Reserved
 # Released under the MIT license (see packages/COPYING)
 
-# This creates a configuration file suitable for use with syslinux.  
+# Provide syslinux specific functions for building bootable images.
+
+# External variables
+# ${INITRD} - indicates a filesystem image to use as an initrd (optional)
+# ${ROOTFS} - indicates a filesystem image to include as the root filesystem (optional)
+# ${AUTO_SYSLINUXMENU} - set this to 1 to enable creating an automatic menu
+# ${LABELS} - a list of targets for the automatic config
+# ${APPEND} - an override list of append strings for each label
+# ${SYSLINUX_OPTS} - additional options to add to the syslinux file ';' delimited
+
+do_bootimg[depends] += "syslinux:do_populate_sysroot \
+                        syslinux-native:do_populate_sysroot"
+
+SYSLINUXCFG  = "syslinux.cfg"
+SYSLINUXMENU = "menu"
+
+SYSLINUX_ISODIR = "${ISODIR}/isolinux"
+SYSLINUX_HDDDIR = "${HDDDIR}"
+ISO_BOOTIMG = "isolinux/isolinux.bin"
+ISO_BOOTCAT = "isolinux/boot.cat"
+MKISOFS_OPTIONS = "-no-emul-boot -boot-load-size 4 -boot-info-table"
+
+syslinux_populate() {
+	DEST=$1
+	CFGNAME=$2
+
+	install -d ${DEST}
+
+	# Install the kernel, initrd, and rootfs
+	install -m 0644 ${STAGING_DIR_HOST}/kernel/bzImage ${DEST}/vmlinuz
+	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ]; then
+		install -m 0644 ${INITRD} ${DEST}/initrd
+	fi
+	if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then
+		install -m 0644 ${ROOTFS} ${DEST}/rootfs.img
+	fi
+
+	# Install the config files
+	install -m 0644 ${SYSLINUXCFG} ${DEST}/${CFGNAME}
+	if [ -f ${SYSLINUXMENU} ]; then
+		install -m 0644 ${SYSLINUXMENU} ${DEST}
+	fi
+}
+
+syslinux_iso_populate() {
+	syslinux_populate ${SYSLINUX_ISODIR} isolinux.cfg
+	install -m 0644 ${STAGING_LIBDIR}/syslinux/isolinux.bin ${SYSLINUX_ISODIR}
+}
+
+syslinux_hddimg_populate() {
+	syslinux_populate ${SYSLINUX_HDDDIR} syslinux.cfg
+	install -m 0444 ${STAGING_LIBDIR}/syslinux/ldlinux.sys ${SYSLINUX_HDDDIR}/ldlinux.sys
+}
+
+syslinux_hddimg_install() {
+	syslinux ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
+}
 
 python build_syslinux_menu () {
 	import copy
@@ -26,10 +82,8 @@ python build_syslinux_menu () {
 	if not cfile:
 		raise bb.build.FuncFailed('Unable to read SYSLINUXMENU')
 
-	bb.mkdirhier(os.path.dirname(cfile))
-
 	try:
- 		cfgfile = file(cfile, 'w')
+		cfgfile = file(cfile, 'w')
 	except OSError:
 		raise bb.build.funcFailed('Unable to open %s' % (cfile))
 
@@ -85,10 +139,8 @@ python build_syslinux_cfg () {
 	if not cfile:
 		raise bb.build.FuncFailed('Unable to read SYSLINUXCFG')
 
-	bb.mkdirhier(os.path.dirname(cfile))
-
 	try:
- 		cfgfile = file(cfile, 'w')
+		cfgfile = file(cfile, 'w')
 	except OSError:
 		raise bb.build.funcFailed('Unable to open %s' % (cfile))
 
@@ -103,7 +155,7 @@ python build_syslinux_cfg () {
 	if opts:
 		for opt in opts.split(';'):
 			cfgfile.write('%s\n' % opt)
-		
+
 	cfgfile.write('ALLOWOPTIONS 1\n');
 	cfgfile.write('DEFAULT %s\n' % (labels.split()[0]))
 
