@@ -1,7 +1,6 @@
 #
 # Default preferred versions
 #
-PREFERRED_VERSION_pulseaudio ?= "0.9.23"
 
 # Force the python versions in one place
 PYTHON_BASEVERSION ?= "2.7"
