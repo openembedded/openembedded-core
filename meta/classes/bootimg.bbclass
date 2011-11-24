@@ -47,7 +47,47 @@ SYSLINUXMENU = "${HDDDIR}/menu"
 
 inherit syslinux
 		
-build_boot_bin() {
+build_iso() {
+	# Only create an ISO if we have an INITRD and NOISO was not set
+	if [ -z "${INITRD}" ] || [ ! -s "${INITRD}" ] || [ "${NOISO}" = "1" ]; then
+		bbnote "ISO image will not be created."
+		return
+	fi
+
+	install -d ${ISODIR}
+
+	# Install the kernel
+	install -m 0644 ${STAGING_DIR_HOST}/kernel/bzImage \
+	        ${ISODIR}/vmlinuz
+
+	# Install the configuration files
+	cp ${HDDDIR}/syslinux.cfg ${ISODIR}/isolinux.cfg
+
+	if [ -f ${SYSLINUXMENU} ]; then
+		cp ${SYSLINUXMENU} ${ISODIR}
+	fi
+
+	install -m 0644 ${INITRD} ${ISODIR}/initrd
+
+	if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then 
+		install -m 0644 ${ROOTFS} ${ISODIR}/rootfs.img
+	fi
+
+	# And install the syslinux stuff 
+	cp ${STAGING_LIBDIR}/syslinux/isolinux.bin ${ISODIR}
+
+	mkisofs -V ${BOOTIMG_VOLUME_ID} \
+	-o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso \
+	-b isolinux/isolinux.bin -c isolinux/boot.cat -r \
+	-no-emul-boot -boot-load-size 4 -boot-info-table \
+	${S}/cd/
+
+	cd ${DEPLOY_DIR_IMAGE}
+	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.iso
+	ln -s ${IMAGE_NAME}.iso ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.iso
+}
+
+build_hddimg() {
 	# Create an HDD image
 	if [ "${NOHDD}" != "1" ] ; then
 		install -d ${HDDDIR}
@@ -78,51 +118,12 @@ build_boot_bin() {
 		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hddimg
 		ln -s ${IMAGE_NAME}.hddimg ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hddimg
 	fi
-	
-	#Create an ISO if we have an INITRD
-	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ] && [ "${NOISO}" != "1" ] ; then
-		install -d ${ISODIR}
-
-		# Install the kernel
-
-		install -m 0644 ${STAGING_DIR_HOST}/kernel/bzImage \
-		        ${ISODIR}/vmlinuz
-
-		# Install the configuration files
-
-		cp ${HDDDIR}/syslinux.cfg ${ISODIR}/isolinux.cfg
-
-		if [ -f ${SYSLINUXMENU} ]; then
-			cp ${SYSLINUXMENU} ${ISODIR}
-		fi
-
-		install -m 0644 ${INITRD} ${ISODIR}/initrd
-
-		if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then 
-			install -m 0644 ${ROOTFS} ${ISODIR}/rootfs.img
-		fi
-
-		# And install the syslinux stuff 
-		cp ${STAGING_LIBDIR}/syslinux/isolinux.bin ${ISODIR}
-
-		mkisofs -V ${BOOTIMG_VOLUME_ID} \
-		-o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso \
-		-b isolinux/isolinux.bin -c isolinux/boot.cat -r \
-		-no-emul-boot -boot-load-size 4 -boot-info-table \
-		${S}/cd/
-
-		isohybrid ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso
-
-		cd ${DEPLOY_DIR_IMAGE}
-		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.iso
-		ln -s ${IMAGE_NAME}.iso ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.iso
-
-	fi
 } 
 
 python do_bootimg() {
 	bb.build.exec_func('build_syslinux_cfg', d)
-	bb.build.exec_func('build_boot_bin', d)
+	bb.build.exec_func('build_hddimg', d)
+	bb.build.exec_func('build_iso', d)
 }
 
 addtask bootimg before do_build
