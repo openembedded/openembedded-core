@@ -4,6 +4,8 @@ http://bugzilla.pokylinux.org/show_bug.cgi?id=1202
 Upstream-Status: Pending
 
 Signed-off-by: Kang Kai <kai.kang@windriver.com>
+
+RP: Tweaked to include lib.mak fixes
 --- ghostscript-9.02/base/unixhead.mak.orig	2011-07-27 17:06:17.749456100 +0800
 +++ ghostscript-9.02/base/unixhead.mak	2011-07-27 17:06:37.449456100 +0800
 @@ -54,7 +54,7 @@
@@ -15,3 +17,20 @@ Signed-off-by: Kang Kai <kai.kang@windriver.com>
  RM_=rm -f
  RMN_=rm -f
  
+Index: ghostscript-9.04/base/lib.mak
+===================================================================
+--- ghostscript-9.04.orig/base/lib.mak	2011-11-25 13:06:21.728502636 +0000
++++ ghostscript-9.04/base/lib.mak	2011-11-25 13:08:33.924504957 +0000
+@@ -592,10 +592,8 @@
+  $(gscdefs_h) $(gconf_h)\
+  $(gxdevice_h) $(gxiclass_h) $(gxiodev_h) $(gxiparam_h) $(TOP_MAKEFILES)\
+  $(MAKEDDIRS)
+-	$(RM_) $(GLGEN)gconfig.c
+-	$(RM_) $(GLGEN)gconfig.h
+-	$(CP_) $(gconfig_h) $(GLGEN)gconfig.h
+-	$(CP_) $(GLSRC)gconf.c $(GLGEN)gconfig.c
++	$(CP_) $(gconfig_h) $(GLGEN)gconfig.h || true
++	$(CP_) $(GLSRC)gconf.c $(GLGEN)gconfig.c || true
+ 	$(GLCC) $(GLO_)gconfig.$(OBJ) $(C_) $(GLGEN)gconfig.c
+ 
+ $(GLOBJ)gscdefs.$(OBJ) : $(GLSRC)gscdef.c\
