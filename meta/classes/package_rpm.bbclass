@@ -8,7 +8,7 @@ RPMBUILD="rpmbuild"
 PKGWRITEDIRRPM = "${WORKDIR}/deploy-rpms"
 
 python package_rpm_fn () {
-	bb.data.setVar('PKGFN', d.getVar('PKG'), d)
+	d.setVar('PKGFN', d.getVar('PKG'))
 }
 
 python package_rpm_install () {
@@ -467,7 +467,7 @@ python write_specfile () {
 							ver = ver.replace(pv, reppv)
 				newdeps_dict[dep] = ver
 			depends = bb.utils.join_deps(newdeps_dict)
-			bb.data.setVar(varname, depends.strip(), d)
+			d.setVar(varname, depends.strip())
 
 	# We need to change the style the dependency from BB to RPM
 	# This needs to happen AFTER the mapping_rename_hook
@@ -969,7 +969,7 @@ python () {
         deps = (d.getVarFlag('do_package_write_rpm', 'depends') or "").split()
         deps.append('rpm-native:do_populate_sysroot')
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
-        bb.data.setVarFlag('do_package_write_rpm', 'depends', " ".join(deps), d)
+        d.setVarFlag('do_package_write_rpm', 'depends', " ".join(deps))
         d.setVarFlag('do_package_write_rpm', 'fakeroot', 1)
         d.setVarFlag('do_package_write_rpm_setscene', 'fakeroot', 1)
 }

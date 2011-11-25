@@ -53,7 +53,7 @@ python() {
     if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('nativesdk', d) and not bb.data.inherits_class('cross', d):
        deps = (d.getVarFlag('do_setscene', 'depends') or "").split()
        deps.append('strace-native:do_populate_sysroot')
-       bb.data.setVarFlag('do_setscene', 'depends', " ".join(deps), d)
+       d.setVarFlag('do_setscene', 'depends', " ".join(deps))
        logdir = bb.data.expand("${TRACE_LOGDIR}", d)
        bb.utils.mkdirhier(logdir)
     else:

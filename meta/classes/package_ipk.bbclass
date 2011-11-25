@@ -11,7 +11,7 @@ PKGWRITEDIRIPK = "${WORKDIR}/deploy-ipks"
 OPKGBUILDCMD ??= "opkg-build"
 
 python package_ipk_fn () {
-	bb.data.setVar('PKGFN', d.getVar('PKG'), d)
+	d.setVar('PKGFN', d.getVar('PKG'))
 }
 
 python package_ipk_install () {
@@ -441,7 +441,7 @@ python () {
         deps = (d.getVarFlag('do_package_write_ipk', 'depends') or "").split()
         deps.append('opkg-utils-native:do_populate_sysroot')
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
-        bb.data.setVarFlag('do_package_write_ipk', 'depends', " ".join(deps), d)
+        d.setVarFlag('do_package_write_ipk', 'depends', " ".join(deps))
         d.setVarFlag('do_package_write_ipk', 'fakeroot', "1")
         d.setVarFlag('do_package_write_ipk_setscene', 'fakeroot', "1")
 }

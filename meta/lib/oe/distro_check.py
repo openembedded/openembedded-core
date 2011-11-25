@@ -284,19 +284,19 @@ def compare_in_distro_packages_list(distro_check_dir, d):
 
     if pn.find("-native") != -1:
         pnstripped = pn.split("-native")
-        bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+        localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
         bb.data.update_data(localdata)
         recipe_name = pnstripped[0]
 
     if pn.find("-cross") != -1:
         pnstripped = pn.split("-cross")
-        bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+        localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
         bb.data.update_data(localdata)
         recipe_name = pnstripped[0]
 
     if pn.find("-initial") != -1:
         pnstripped = pn.split("-initial")
-        bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+        localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
         bb.data.update_data(localdata)
         recipe_name = pnstripped[0]
 

@@ -43,14 +43,14 @@ python __anonymous () {
         pkg = d.getVar("QT_BASE_LIB", True) + name.lower().replace("qt", "").replace("_", "-") + "4"
         # NOTE: the headers for QtAssistantClient are different
         incname = name.replace("QtAssistantClient", "QtAssistant")
-        bb.data.setVar("FILES_%s" % pkg, "${libdir}/lib%(name)s${QT_LIBINFIX}.so.*" % locals(), d)
-        bb.data.setVar("FILES_%s-dev" % pkg, """${libdir}/lib%(name)s${QT_LIBINFIX}.prl
+        d.setVar("FILES_%s" % pkg, "${libdir}/lib%(name)s${QT_LIBINFIX}.so.*" % locals())
+        d.setVar("FILES_%s-dev" % pkg, """${libdir}/lib%(name)s${QT_LIBINFIX}.prl
                   ${libdir}/lib%(name)s${QT_LIBINFIX}.a
                   ${libdir}/lib%(name)s${QT_LIBINFIX}.la
                   ${libdir}/lib%(name)s${QT_LIBINFIX}.so
                   ${includedir}/${QT_DIR_NAME}/%(incname)s
-                  ${libdir}/pkgconfig/%(name)s${QT_LIBINFIX}.pc""" % locals(), d)
-        bb.data.setVar("FILES_%s-dbg" % pkg, "${libdir}/.debug/lib%(name)s${QT_LIBINFIX}.so*" % locals(), d)
+                  ${libdir}/pkgconfig/%(name)s${QT_LIBINFIX}.pc""" % locals())
+        d.setVar("FILES_%s-dbg" % pkg, "${libdir}/.debug/lib%(name)s${QT_LIBINFIX}.so*" % locals())
         d.setVar("RRECOMMENDS_%s-dbg" % pkg, "${PN}-dbg")
         lib_packages.append(pkg)
         dev_packages.append("%s-dev" % pkg)
@@ -60,22 +60,22 @@ python __anonymous () {
 
     for name in d.getVar("QT_EXTRA_LIBS", 1).split():
         pkg = d.getVar("QT_BASE_LIB", True) + name.lower().replace("qt", "").replace("_", "-") + "4"
-        bb.data.setVar("FILES_%s" % pkg, "${libdir}/lib%(name)s.so.*" % locals(), d)
-        bb.data.setVar("FILES_%s-dev" % pkg, """${libdir}/lib%(name)s.prl
+        d.setVar("FILES_%s" % pkg, "${libdir}/lib%(name)s.so.*" % locals())
+        d.setVar("FILES_%s-dev" % pkg, """${libdir}/lib%(name)s.prl
                   ${libdir}/lib%(name)s.a
                   ${libdir}/lib%(name)s.la
                   ${libdir}/lib%(name)s.so
                   ${includedir}/${QT_DIR_NAME}/%(incname)s
-                  ${libdir}/pkgconfig/%(name)s.pc""" % locals(), d)
-        bb.data.setVar("FILES_%s-dbg" % pkg, "${libdir}/.debug/lib%(name)s.so*" % locals(), d)
+                  ${libdir}/pkgconfig/%(name)s.pc""" % locals())
+        d.setVar("FILES_%s-dbg" % pkg, "${libdir}/.debug/lib%(name)s.so*" % locals())
         d.setVar("RRECOMMENDS_%s-dbg" % pkg, "${PN}-dbg")
         lib_packages.append(pkg)
         dev_packages.append("%s-dev" % pkg)
         dbg_packages.append("%s-dbg" % pkg)
 
-    bb.data.setVar("LIB_PACKAGES", " ".join(lib_packages), d)
-    bb.data.setVar("DEV_PACKAGES", " ".join(dev_packages), d)
-    bb.data.setVar("DBG_PACKAGES", " ".join(dbg_packages), d)
+    d.setVar("LIB_PACKAGES", " ".join(lib_packages))
+    d.setVar("DEV_PACKAGES", " ".join(dev_packages))
+    d.setVar("DBG_PACKAGES", " ".join(dbg_packages))
 }
 
 OTHER_PACKAGES = "\
@@ -261,7 +261,7 @@ python populate_packages_prepend() {
                         packages = "%s %s-dbg" % (packages, package)
                         file_name = os.path.join(plugin_dir_dbg, os.path.basename(file))
                         d.setVar("FILES_%s-dbg" % package, file_name)
-                        bb.data.setVar("DESCRIPTION_%s-dbg" % package, "${PN} %s for %s" % (name, package), d)
+                        d.setVar("DESCRIPTION_%s-dbg" % package, "${PN} %s for %s" % (name, package))
 
                 d.setVar('PACKAGES', packages)
 

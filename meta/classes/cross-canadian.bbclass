@@ -20,7 +20,7 @@ python () {
     sdkarchs = []
     for arch in archs:
         sdkarchs.append(arch + '-nativesdk')
-    bb.data.setVar('PACKAGE_ARCHS', " ".join(sdkarchs), d)
+    d.setVar('PACKAGE_ARCHS', " ".join(sdkarchs))
 }
 MULTIMACH_TARGET_SYS = "${PACKAGE_ARCH}${HOST_VENDOR}-${HOST_OS}"
 

@@ -437,7 +437,7 @@ python populate_packages_prepend () {
 		else:
 			rdepends = []
 		rdepends.extend(get_dependencies(file, pattern, format))
-		bb.data.setVar('RDEPENDS_' + pkg, ' '.join(rdepends), d)
+		d.setVar('RDEPENDS_' + pkg, ' '.join(rdepends))
 
 	module_deps = parse_depmod()
 	module_regex = '^(.*)\.k?o$'
@@ -464,10 +464,10 @@ python populate_packages_prepend () {
 	for pkg in packages[1:]:
 		if not pkg in blacklist and not pkg in metapkg_rdepends:
 			metapkg_rdepends.append(pkg)
-	bb.data.setVar('RDEPENDS_' + metapkg, ' '.join(metapkg_rdepends), d)
+	d.setVar('RDEPENDS_' + metapkg, ' '.join(metapkg_rdepends))
 	d.setVar('DESCRIPTION_' + metapkg, 'Kernel modules meta package')
 	packages.append(metapkg)
-	bb.data.setVar('PACKAGES', ' '.join(packages), d)
+	d.setVar('PACKAGES', ' '.join(packages))
 }
 
 # Support checking the kernel size since some kernels need to reside in partitions

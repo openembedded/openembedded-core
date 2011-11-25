@@ -45,7 +45,7 @@ python populate_packages_append () {
 					schemas.append(f)
 		if schemas != []:
 			bb.note("adding gconf postinst and prerm scripts to %s" % pkg)
-			bb.data.setVar('SCHEMA_FILES', " ".join(schemas), d)
+			d.setVar('SCHEMA_FILES', " ".join(schemas))
 			postinst = d.getVar('pkg_postinst_%s' % pkg, 1) or d.getVar('pkg_postinst', 1)
 			if not postinst:
 				postinst = '#!/bin/sh\n'

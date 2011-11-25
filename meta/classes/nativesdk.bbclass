@@ -15,7 +15,7 @@ python () {
     sdkarchs = []
     for arch in archs:
         sdkarchs.append(arch + '-nativesdk')
-    bb.data.setVar('PACKAGE_ARCHS', " ".join(sdkarchs), d)
+    d.setVar('PACKAGE_ARCHS', " ".join(sdkarchs))
 }
 
 STAGING_DIR_HOST = "${STAGING_DIR}/${MULTIMACH_HOST_SYS}"
@@ -66,7 +66,7 @@ python nativesdk_virtclass_handler () {
     if not pn.endswith("-nativesdk"):
         return
 
-    bb.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + ":virtclass-nativesdk", e.data)
+    e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + ":virtclass-nativesdk")
 }
 
 python () {
@@ -91,7 +91,7 @@ python () {
                 newdeps.append(dep.replace("-nativesdk", "") + "-nativesdk")
             else:
                 newdeps.append(dep)
-        bb.data.setVar(varname, " ".join(newdeps), d)
+        d.setVar(varname, " ".join(newdeps))
 
     map_dependencies("DEPENDS", d)
     #for pkg in (d.getVar("PACKAGES", True).split() + [""]):

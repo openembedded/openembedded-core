@@ -21,7 +21,7 @@ SRC_URI[sha256sum] = "7fe62180f08ef5f0a0062fb444591e349cae2ab5af6ad834599f5c654e
 DEPENDS += "bigreqsproto xproto xextproto xtrans libxau xcmiscproto \
             libxdmcp xf86bigfontproto kbproto inputproto xproto-native"
 
-FILESDIR = "${@os.path.dirname(bb.data.getVar('FILE',d,1))}/libx11"
+FILESDIR = "${@os.path.dirname(d.getVar('FILE', True))}/libx11"
 
 EXTRA_OECONF += "--without-xcb --disable-udc --disable-xcms --disable-xlocale --with-keysymdefdir=${STAGING_INCDIR}/X11"
 CFLAGS += "-D_GNU_SOURCE"

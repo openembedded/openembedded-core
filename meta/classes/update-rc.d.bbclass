@@ -45,7 +45,7 @@ python populate_packages_prepend () {
 		bb.debug(1, 'adding update-rc.d calls to postinst/postrm for %s' % pkg)
 		localdata = bb.data.createCopy(d)
 		overrides = localdata.getVar("OVERRIDES", 1)
-		bb.data.setVar("OVERRIDES", "%s:%s" % (pkg, overrides), localdata)
+		localdata.setVar("OVERRIDES", "%s:%s" % (pkg, overrides))
 		bb.data.update_data(localdata)
 
 		"""

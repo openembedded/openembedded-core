@@ -57,8 +57,8 @@ python __anonymous () {
             packages.append(pkg)
             if not d.getVar("FILES_%s" % pkg, 1):
                     d.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s*.so.*" % lib)
-    bb.data.setVar("BOOST_PACKAGES", " ".join(packages), d)
-    bb.data.setVar("BJAM_EXTRA", " ".join(extras), d)
+    d.setVar("BOOST_PACKAGES", " ".join(packages))
+    d.setVar("BJAM_EXTRA", " ".join(extras))
 }
 
 # Override the contents of specific packages

@@ -80,11 +80,11 @@ RDEPENDS_task-core-sdk = "\
 #                        rreclist.append('%s-dev' % name)
 #
 #            oldrrec = d.getVar('RRECOMMENDS_%s' % newpkg) or ''
-#            bb.data.setVar('RRECOMMENDS_%s' % newpkg, oldrrec + ' ' + ' '.join(rreclist), d)
+#            d.setVar('RRECOMMENDS_%s' % newpkg, oldrrec + ' ' + ' '.join(rreclist))
 #            # bb.note('RRECOMMENDS_%s = "%s"' % (newpkg, d.getVar('RRECOMMENDS_%s' % newpkg)))
 #
 #    # bb.note('pkgs is %s' % pkgs)
-#    bb.data.setVar('PACKAGES', ' '.join(pkgs), d)
+#    d.setVar('PACKAGES', ' '.join(pkgs))
 #}
 #
 #PACKAGES_DYNAMIC = "task-core-sdk-*"

@@ -31,31 +31,31 @@ python do_distrodata_np() {
 	if pn.find("-native") != -1:
 	    pnstripped = pn.split("-native")
 	    bb.note("Native Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
 	if pn.find("-nativesdk") != -1:
 	    pnstripped = pn.split("-nativesdk")
 	    bb.note("Native Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
 	if pn.find("-cross") != -1:
 	    pnstripped = pn.split("-cross")
 	    bb.note("cross Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
 	if pn.find("-crosssdk") != -1:
 	    pnstripped = pn.split("-crosssdk")
 	    bb.note("cross Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
 	if pn.find("-initial") != -1:
 	    pnstripped = pn.split("-initial")
 	    bb.note("initial Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
 	"""generate package information from .bb file"""
@@ -130,19 +130,19 @@ python do_distrodata() {
 	if pn.find("-native") != -1:
 	    pnstripped = pn.split("-native")
 	    bb.note("Native Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
 	if pn.find("-cross") != -1:
 	    pnstripped = pn.split("-cross")
 	    bb.note("cross Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
 	if pn.find("-initial") != -1:
 	    pnstripped = pn.split("-initial")
 	    bb.note("initial Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
 	"""generate package information from .bb file"""
@@ -308,8 +308,8 @@ python do_checkpkg() {
 		which is designed for check purpose but we override check command for our own purpose
 		"""
 		ld = bb.data.createCopy(d)
-		bb.data.setVar('CHECKCOMMAND_wget', "/usr/bin/env wget -t 1 --passive-ftp -O %s --user-agent=\"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12\" '${URI}'" \
-					% tmpf.name, d)
+		d.setVar('CHECKCOMMAND_wget', "/usr/bin/env wget -t 1 --passive-ftp -O %s --user-agent=\"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12\" '${URI}'" \
+					% tmpf.name)
 		bb.data.update_data(ld)
 
 		try:
@@ -452,19 +452,19 @@ python do_checkpkg() {
 	if pname.find("-native") != -1:
 	    pnstripped = pname.split("-native")
 	    bb.note("Native Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
 	if pname.find("-cross") != -1:
 	    pnstripped = pname.split("-cross")
 	    bb.note("cross Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
 	if pname.find("-initial") != -1:
 	    pnstripped = pname.split("-initial")
 	    bb.note("initial Split: %s" % pnstripped)
-	    bb.data.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True), localdata)
+	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
 	pdesc = localdata.getVar('DESCRIPTION', True)

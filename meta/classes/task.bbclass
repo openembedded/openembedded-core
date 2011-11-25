@@ -22,6 +22,6 @@ python () {
     for pkg in packages:
         for postfix in ['-dbg', '-dev']:
             genpackages.append(pkg+postfix)
-    bb.data.setVar('PACKAGES', ' '.join(packages+genpackages), d)
+    d.setVar('PACKAGES', ' '.join(packages+genpackages))
 }
 

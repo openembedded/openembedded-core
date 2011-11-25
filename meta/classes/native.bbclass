@@ -121,7 +121,7 @@ python native_virtclass_handler () {
                 newdeps.append(dep + "-native")
             else:
                 newdeps.append(dep)
-        bb.data.setVar(varname, " ".join(newdeps), d)
+        d.setVar(varname, " ".join(newdeps))
 
     map_dependencies("DEPENDS", e.data)
     for pkg in (e.data.getVar("PACKAGES", True).split() + [""]):
@@ -139,7 +139,7 @@ python native_virtclass_handler () {
             provides = provides.replace(prov, prov + "-native")
     e.data.setVar("PROVIDES", provides)
 
-    bb.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + ":virtclass-native", e.data)
+    e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + ":virtclass-native")
 }
 
 addhandler native_virtclass_handler

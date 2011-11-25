@@ -2,8 +2,8 @@ LIBV = "0.10"
 
 python populate_packages_prepend () {
 	gst_libdir = bb.data.expand('${libdir}/gstreamer-${LIBV}', d)
-	postinst = d.getVar('plugin_postinst', 1)
-	glibdir = bb.data.expand('${libdir}', d)
+	postinst = d.getVar('plugin_postinst', True)
+	glibdir = d.getVar('libdir', True)
 
 	do_split_packages(d, glibdir, '^lib(.*)\.so\.*', 'lib%s', 'gstreamer %s library', extra_depends='', allow_links=True)
 	do_split_packages(d, gst_libdir, 'libgst(.*)\.so$', bb.data.expand('${PN}-%s', d), 'GStreamer plugin for %s', postinst=postinst, extra_depends=bb.data.expand('${PN}',d))
@@ -19,7 +19,7 @@ python populate_packages_prepend () {
 	for pkg in packages[1:]:
 		if not pkg in blacklist and not pkg in metapkg_rdepends and not pkg.endswith('-dev') and not pkg.endswith('-dbg') and not pkg.count('locale') and not pkg.count('-static'):
 			metapkg_rdepends.append(pkg)
-	bb.data.setVar('RDEPENDS_' + metapkg, ' '.join(metapkg_rdepends), d)
+	d.setVar('RDEPENDS_' + metapkg, ' '.join(metapkg_rdepends))
 	d.setVar('DESCRIPTION_' + metapkg, pn + ' meta package')
 }
 

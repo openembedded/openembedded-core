@@ -11,7 +11,7 @@ DPKG_ARCH ?= "${TARGET_ARCH}"
 PKGWRITEDIRDEB = "${WORKDIR}/deploy-debs"
 
 python package_deb_fn () {
-    bb.data.setVar('PKGFN', d.getVar('PKG'), d)
+    d.setVar('PKGFN', d.getVar('PKG'))
 }
 
 addtask package_deb_install
@@ -409,7 +409,7 @@ python () {
         deps = (d.getVarFlag('do_package_write_deb', 'depends') or "").split()
         deps.append('dpkg-native:do_populate_sysroot')
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
-        bb.data.setVarFlag('do_package_write_deb', 'depends', " ".join(deps), d)
+        d.setVarFlag('do_package_write_deb', 'depends', " ".join(deps))
         d.setVarFlag('do_package_write_deb', 'fakeroot', "1")
         d.setVarFlag('do_package_write_deb_setscene', 'fakeroot', "1")
 

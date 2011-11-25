@@ -69,7 +69,7 @@ python do_package_tar () {
 		if not overrides:
 			raise bb.build.FuncFailed('OVERRIDES not defined')
 		overrides = bb.data.expand(overrides, localdata)
-		bb.data.setVar('OVERRIDES', '%s:%s' % (overrides, pkg), localdata)
+		localdata.setVar('OVERRIDES', '%s:%s' % (overrides, pkg))
 
 		bb.data.update_data(localdata)
 
@@ -95,7 +95,7 @@ python () {
         deps = (d.getVarFlag('do_package_write_tar', 'depends') or "").split()
         deps.append('tar-native:do_populate_sysroot')
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
-        bb.data.setVarFlag('do_package_write_tar', 'depends', " ".join(deps), d)
+        d.setVarFlag('do_package_write_tar', 'depends', " ".join(deps))
         d.setVarFlag('do_package_write_ipk', 'fakeroot', "1")
 }
 

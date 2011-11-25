@@ -141,11 +141,10 @@ python () {
   if "${OE_DEL}":
     d.setVar('configmangle_append', "${OE_DEL}" + "\n")
   if "${OE_FEATURES}":
-    bb.data.setVar('configmangle_append',
+    d.setVar('configmangle_append',
                    "/^### DISTRO FEATURES$/a\\\n%s\n\n" %
-                   ("\\n".join((bb.data.expand("${OE_FEATURES}", d).split("\n")))),
-                   d)
-  bb.data.setVar('configmangle_append',
+                   ("\\n".join((bb.data.expand("${OE_FEATURES}", d).split("\n")))))
+  d.setVar('configmangle_append',
                  "/^### CROSS$/a\\\n%s\n" %
                   ("\\n".join(["CROSS_COMPILER_PREFIX=\"${TARGET_PREFIX}\"",
                         "UCLIBC_EXTRA_CFLAGS=\"${UCLIBC_EXTRA_CFLAGS}\"",
@@ -154,22 +153,18 @@ python () {
                          "DEVEL_PREFIX=\"/${prefix}\"",
                          "SHARED_LIB_LOADER_PREFIX=\"/lib\"",
                         ])
-                  ),
-                 d)
-  bb.data.setVar('configmangle_append',
+                  ))
+  d.setVar('configmangle_append',
                  "/^### TGT$/a\\\nTARGET_ARCH=\"%s\"\\nTARGET_%s=y\n" %
-                        ("${UCLIBC_ARCH}", "${UCLIBC_ARCH}"),
-                 d)
-  bb.data.setVar('configmangle_append',
-    "/^### FPU$/a\\\n%s\n\n" % (["UCLIBC_HAS_FPU=y","# UCLIBC_HAS_FPU is not set"][d.getVar('TARGET_FPU', 1) in [ 'soft' ]]), d)
+                        ("${UCLIBC_ARCH}", "${UCLIBC_ARCH}"))
+  d.setVar('configmangle_append',
+    "/^### FPU$/a\\\n%s\n\n" % (["UCLIBC_HAS_FPU=y","# UCLIBC_HAS_FPU is not set"][d.getVar('TARGET_FPU', True) in [ 'soft' ]]))
   if "${UCLIBC_ENDIAN}":
-    bb.data.setVar('configmangle_append',
-                   "/^### ABI$/a\\\nARCH_WANTS_%s_ENDIAN=y\n\n" % ("${UCLIBC_ENDIAN}"),
-                   d)
+    d.setVar('configmangle_append',
+                   "/^### ABI$/a\\\nARCH_WANTS_%s_ENDIAN=y\n\n" % ("${UCLIBC_ENDIAN}"))
   if "${UCLIBC_ABI}":
-    bb.data.setVar('configmangle_append',
-                   "/^### ABI$/a\\\nCONFIG_%s=y\n\n" % ("${UCLIBC_ABI}"),
-                   d)
+    d.setVar('configmangle_append',
+                   "/^### ABI$/a\\\nCONFIG_%s=y\n\n" % ("${UCLIBC_ABI}"))
 }
 
 do_patch_append() {

@@ -151,7 +151,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 						the_files.append(fp % m.group(1))	
 				else:
 					the_files.append(aux_files_pattern_verbatim % m.group(1))
-			bb.data.setVar('FILES_' + pkg, " ".join(the_files), d)
+			d.setVar('FILES_' + pkg, " ".join(the_files))
 			if extra_depends != '':
 				the_depends = d.getVar('RDEPENDS_' + pkg, True)
 				if the_depends:
@@ -165,11 +165,11 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 			if postrm:
 				d.setVar('pkg_postrm_' + pkg, postrm)
 		else:
-			bb.data.setVar('FILES_' + pkg, oldfiles + " " + os.path.join(root, o), d)
+			d.setVar('FILES_' + pkg, oldfiles + " " + os.path.join(root, o))
 		if callable(hook):
 			hook(f, pkg, file_regex, output_pattern, m.group(1))
 
-	bb.data.setVar('PACKAGES', ' '.join(packages), d)
+	d.setVar('PACKAGES', ' '.join(packages))
 
 PACKAGE_DEPENDS += "file-native"
 
@@ -183,7 +183,7 @@ python () {
         deps = (d.getVarFlag('do_package', 'deptask') or "").split()
         # shlibs requires any DEPENDS to have already packaged for the *.list files
         deps.append("do_package")
-        bb.data.setVarFlag('do_package', 'deptask', " ".join(deps), d)
+        d.setVarFlag('do_package', 'deptask', " ".join(deps))
     elif not bb.data.inherits_class('image', d):
         d.setVar("PACKAGERDEPTASK", "")
 }
@@ -202,7 +202,7 @@ def splitfile(file, debugfile, debugsrcdir, d):
     pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
     objcopy = d.getVar("OBJCOPY", True)
     debugedit = bb.data.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit", d)
-    workdir = bb.data.expand("${WORKDIR}", d)
+    workdir = d.getVar("WORKDIR", True)
     workparentdir = os.path.dirname(workdir)
     sourcefile = bb.data.expand("${WORKDIR}/debugsources.list", d)
 
@@ -245,7 +245,7 @@ def splitfile2(debugsrcdir, d):
     strip = d.getVar("STRIP", True)
     objcopy = d.getVar("OBJCOPY", True)
     debugedit = bb.data.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit", d)
-    workdir = bb.data.expand("${WORKDIR}", d)
+    workdir = d.getVar("WORKDIR", True)
     workparentdir = os.path.dirname(workdir)
     workbasedir = os.path.basename(workdir)
     sourcefile = bb.data.expand("${WORKDIR}/debugsources.list", d)
@@ -341,7 +341,7 @@ def runtime_mapping_rename (varname, d):
 		else:
 			new_depends.append(new_depend)
 
-	bb.data.setVar(varname, " ".join(new_depends) or None, d)
+	d.setVar(varname, " ".join(new_depends) or None)
 
 	#bb.note("%s after: %s" % (varname, d.getVar(varname, True)))
 
@@ -399,15 +399,15 @@ python package_do_split_locales() {
 		ln = legitimize_package_name(l)
 		pkg = pn + '-locale-' + ln
 		packages.append(pkg)
-		bb.data.setVar('FILES_' + pkg, os.path.join(datadir, 'locale', l), d)
-		bb.data.setVar('RDEPENDS_' + pkg, '%s virtual-locale-%s' % (mainpkg, ln), d)
-		bb.data.setVar('RPROVIDES_' + pkg, '%s-locale %s-translation' % (pn, ln), d)
-		bb.data.setVar('SUMMARY_' + pkg, '%s - %s translations' % (summary, l), d)
-		bb.data.setVar('DESCRIPTION_' + pkg, '%s  This package contains language translation files for the %s locale.' % (description, l), d)
+		d.setVar('FILES_' + pkg, os.path.join(datadir, 'locale', l))
+		d.setVar('RDEPENDS_' + pkg, '%s virtual-locale-%s' % (mainpkg, ln))
+		d.setVar('RPROVIDES_' + pkg, '%s-locale %s-translation' % (pn, ln))
+		d.setVar('SUMMARY_' + pkg, '%s - %s translations' % (summary, l))
+		d.setVar('DESCRIPTION_' + pkg, '%s  This package contains language translation files for the %s locale.' % (description, l))
 		if locale_section:
 			d.setVar('SECTION_' + pkg, locale_section)
 
-	bb.data.setVar('PACKAGES', ' '.join(packages), d)
+	d.setVar('PACKAGES', ' '.join(packages))
 
 	# Disabled by RP 18/06/07
 	# Wildcards aren't supported in debian
@@ -417,7 +417,7 @@ python package_do_split_locales() {
 	# Probably breaks since virtual-locale- isn't provided anywhere
 	#rdep = (d.getVar('RDEPENDS_%s' % mainpkg, True) or d.getVar('RDEPENDS', True) or "").split()
 	#rdep.append('%s-locale*' % pn)
-	#bb.data.setVar('RDEPENDS_%s' % mainpkg, ' '.join(rdep), d)
+	#d.setVar('RDEPENDS_%s' % mainpkg, ' '.join(rdep))
 }
 
 python perform_packagecopy () {
@@ -1018,7 +1018,7 @@ python populate_packages () {
 						break
 			if found == False:
 				bb.note("%s contains dangling symlink to %s" % (pkg, l))
-		bb.data.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False), d)
+		d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
 }
 populate_packages[dirs] = "${D}"
 
@@ -1033,11 +1033,11 @@ python emit_pkgdata() {
 			c = codecs.getencoder("string_escape")
 			return c(str)[0]
 
-		val = bb.data.getVar('%s_%s' % (var, pkg), d, True)
+		val = d.getVar('%s_%s' % (var, pkg), True)
 		if val:
 			f.write('%s_%s: %s\n' % (var, pkg, encode(val)))
 			return
-		val = bb.data.getVar('%s' % (var), d, True)
+		val = d.getVar('%s' % (var), True)
 		if val:
 			f.write('%s: %s\n' % (var, encode(val)))
 		return
@@ -1159,12 +1159,12 @@ python package_do_filedeps() {
 		if len(provides) > 0:
 			provides_files.append(file)
 			key = "FILERPROVIDES_" + file + "_" + pkg
-			bb.data.setVar(key, " ".join(provides), d)
+			d.setVar(key, " ".join(provides))
 
 		if len(requires) > 0:
 			requires_files.append(file)
 			key = "FILERDEPENDS_" + file + "_" + pkg
-			bb.data.setVar(key, " ".join(requires), d)
+			d.setVar(key, " ".join(requires))
 
 	# Determine dependencies
 	for pkg in packages.split():
@@ -1181,8 +1181,8 @@ python package_do_filedeps() {
 
 				process_deps(dep_pipe, pkg, f, provides_files, requires_files)
 
-		bb.data.setVar("FILERDEPENDSFLIST_" + pkg, " ".join(requires_files), d)
-		bb.data.setVar("FILERPROVIDESFLIST_" + pkg, " ".join(provides_files), d)
+		d.setVar("FILERDEPENDSFLIST_" + pkg, " ".join(requires_files))
+		d.setVar("FILERPROVIDESFLIST_" + pkg, " ".join(provides_files))
 }
 
 SHLIBSDIR = "${STAGING_DIR_HOST}/shlibs"
@@ -1461,7 +1461,7 @@ python package_do_pkgconfig () {
 						if m:
 							name = m.group(1)
 							val = m.group(2)
-							bb.data.setVar(name, bb.data.expand(val, pd), pd)
+							pd.setVar(name, bb.data.expand(val, pd))
 							continue
 						m = field_re.match(l)
 						if m:
@@ -1519,7 +1519,7 @@ python package_do_pkgconfig () {
 python read_shlibdeps () {
 	packages = d.getVar('PACKAGES', True).split()
 	for pkg in packages:
-		rdepends = bb.utils.explode_dep_versions(d.getVar('RDEPENDS_' + pkg, 0) or d.getVar('RDEPENDS', 0) or "")
+		rdepends = bb.utils.explode_dep_versions(d.getVar('RDEPENDS_' + pkg, False) or d.getVar('RDEPENDS', False) or "")
 
 		for extension in ".shlibdeps", ".pcdeps", ".clilibdeps":
 			depsfile = bb.data.expand("${PKGDEST}/" + pkg + extension, d)
@@ -1529,7 +1529,7 @@ python read_shlibdeps () {
 				fd.close()
 				for l in lines:
 					rdepends[l.rstrip()] = ""
-		bb.data.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False), d)
+		d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
 }
 
 python package_depchains() {
@@ -1569,7 +1569,7 @@ python package_depchains() {
 				rreclist[pkgname] = ""
 
 		#bb.note('setting: RRECOMMENDS_%s=%s' % (pkg, ' '.join(rreclist)))
-		bb.data.setVar('RRECOMMENDS_%s' % pkg, bb.utils.join_deps(rreclist, commasep=False), d)
+		d.setVar('RRECOMMENDS_%s' % pkg, bb.utils.join_deps(rreclist, commasep=False))
 
 	def pkg_addrrecs(pkg, base, suffix, getname, rdepends, d):
 
@@ -1590,7 +1590,7 @@ python package_depchains() {
 				rreclist[pkgname] = ""
 
 		#bb.note('setting: RRECOMMENDS_%s=%s' % (pkg, ' '.join(rreclist)))
-		bb.data.setVar('RRECOMMENDS_%s' % pkg, bb.utils.join_deps(rreclist, commasep=False), d)
+		d.setVar('RRECOMMENDS_%s' % pkg, bb.utils.join_deps(rreclist, commasep=False))
 
 	def add_dep(list, dep):
 		dep = dep.split(' (')[0].strip()

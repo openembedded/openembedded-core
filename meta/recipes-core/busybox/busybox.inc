@@ -81,17 +81,15 @@ python () {
   if "${OE_DEL}":
     d.setVar('configmangle_append', "${OE_DEL}" + "\n")
   if "${OE_FEATURES}":
-    bb.data.setVar('configmangle_append',
+    d.setVar('configmangle_append',
                    "/^### DISTRO FEATURES$/a\\\n%s\n\n" %
-                   ("\\n".join((bb.data.expand("${OE_FEATURES}", d).split("\n")))),
-                   d)
-  bb.data.setVar('configmangle_append',
+                   ("\\n".join((bb.data.expand("${OE_FEATURES}", d).split("\n")))))
+  d.setVar('configmangle_append',
                  "/^### CROSS$/a\\\n%s\n" %
                   ("\\n".join(["CONFIG_CROSS_COMPILER_PREFIX=\"${TARGET_PREFIX}\"",
 			       "CONFIG_EXTRA_CFLAGS=\"${CFLAGS}\""
                         ])
-                  ),
-                 d)
+                  ))
 }
 
 do_prepare_config () {

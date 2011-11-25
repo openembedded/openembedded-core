@@ -29,13 +29,13 @@ python do_distribute_sources () {
 				if url.basename == '*':
 					import os.path
 					dest_dir = os.path.basename(os.path.dirname(os.path.abspath(url.localpath)))
-					bb.data.setVar('DEST', "%s_%s/" % (d.getVar('PF', 1), dest_dir), d)
+					d.setVar('DEST', "%s_%s/" % (d.getVar('PF', 1), dest_dir))
 				else:
-					bb.data.setVar('DEST', "%s_%s" % (d.getVar('PF', 1), url.basename), d)
+					d.setVar('DEST', "%s_%s" % (d.getVar('PF', 1), url.basename))
 			else:
 				d.setVar('DEST', '')
 
-			bb.data.setVar('SRC_DISTRIBUTEDIR', "%s/%s" % (sources_dir, license), d)
+			d.setVar('SRC_DISTRIBUTEDIR', "%s/%s" % (sources_dir, license))
 			bb.build.exec_func('SRC_DISTRIBUTECOMMAND', d)
 }
 
