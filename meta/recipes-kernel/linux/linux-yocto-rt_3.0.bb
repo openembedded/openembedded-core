@@ -11,12 +11,12 @@ KMACHINE_qemumips = "mti-malta32-be"
 KBRANCH = "yocto/standard/preempt-rt/base"
 KBRANCH_qemuppc = "yocto/standard/preempt-rt/qemu-ppc32"
 
-LINUX_VERSION ?= "3.0.4"
+LINUX_VERSION ?= "3.0.10"
 LINUX_KERNEL_TYPE = "preempt-rt"
 
-SRCREV_machine ?= "0936e13cc65d816f1759e2322c5e3fc82a5037f3"
-SRCREV_machine_qemuppc ?= "0936e13cc65d816f1759e2322c5e3fc82a5037f3"
-SRCREV_meta ?= "d05450e4aef02c1b7137398ab3a9f8f96da74f52"
+SRCREV_machine ?= "6196e0087445a92edf3c250983c5d320c668ae7c"
+SRCREV_machine_qemuppc ?= "5a1d026aeba3c34d2895a5aeda6a1479bbdf62fb"
+SRCREV_meta ?= "d386e09f316e03061c088d2b13a48605c20fb3a6"
 
 PR = "r2"
 PV = "${LINUX_VERSION}+git${SRCPV}"
