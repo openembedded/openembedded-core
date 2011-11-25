@@ -15,7 +15,7 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d151214b3131251dfc9d858593acbd24"
 
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "ghostscript-native tiff jpeg fontconfig cups"
 DEPENDS_virtclass-native = ""
@@ -44,18 +44,22 @@ BUILD_CFLAGS += "-DHAVE_SYS_TIME_H=1"
 
 inherit autotools
 
-do_configure () {
-    mkdir -p obj
-    mkdir -p soobj
-    cp ${WORKDIR}/objarch.h obj/arch.h
+do_configure_prepend () {
+	mkdir -p obj
+	mkdir -p soobj
+	if [ -e ${WORKDIR}/objarch.h ]; then
+		cp ${WORKDIR}/objarch.h obj/arch.h
+	fi
+}
 
-    oe_runconf
-
-    # copy tools from the native ghostscript build
-    mkdir -p obj/aux soobj
-    for i in genarch genconf mkromfs echogs gendev genht; do
-        cp ${STAGING_BINDIR_NATIVE}/ghostscript-${PV}/$i obj/aux/$i
-    done
+do_configure_append () {
+	# copy tools from the native ghostscript build
+	if [ "${PN}" != "ghostscript-native" ]; then
+		mkdir -p obj/aux soobj
+		for i in genarch genconf mkromfs echogs gendev genht; do
+			cp ${STAGING_BINDIR_NATIVE}/ghostscript-${PV}/$i obj/aux/$i
+		done
+	fi
 }
 
 do_install_append () {
@@ -70,10 +74,6 @@ do_install_append () {
 
 python do_patch_virtclass-native () {
     pass
-}
-
-do_configure_virtclass-native () {
-    oe_runconf
 }
 
 do_compile_virtclass-native () {
