@@ -40,6 +40,7 @@ EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec --without-j
 # http://bugs.ghostscript.com/show_bug.cgi?id=692443
 # http://bugs.ghostscript.com/show_bug.cgi?id=692426
 CFLAGS += "-DHAVE_SYS_TIME_H=1"
+BUILD_CFLAGS += "-DHAVE_SYS_TIME_H=1"
 
 inherit autotools
 
