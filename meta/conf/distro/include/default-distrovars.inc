@@ -46,4 +46,5 @@ NO32LIBS ??= "1"
 
 # Default to emitting logfiles if a build fails.
 BBINCLUDELOGS ??= "yes"
-
+SDK_VERSION ??= "oe-core.0"
+DISTRO_VERSION ??= "oe-core.0"
