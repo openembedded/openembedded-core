@@ -3,7 +3,7 @@ DESCRIPTION = "Mail user agent"
 #DEPENDS = "gtk+ gpgme libetpan libgnomeprint aspell openssl"
 DEPENDS = "gtk+ libetpan openssl libowl"
 LICENSE = "GPL"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "\
 	${SOURCEFORGE_MIRROR}/sylpheed-claws/claws-mail-${PV}.tar.bz2	\
