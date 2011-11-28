@@ -4,6 +4,9 @@ HOMEPAGE = "http://www.openssl.org/"
 BUGTRACKER = "http://www.openssl.org/news/vulnerabilities.html"
 SECTION = "libs/network"
 
+# Big Jump for OpenSSL 1.0 support with meta-oe
+INC_PR = "r15"
+
 # "openssl | SSLeay" dual license
 LICENSE = "openssl"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
@@ -32,10 +35,15 @@ export AS = "${CC} -c"
 
 inherit pkgconfig siteinfo
 
-PACKAGES =+ "libcrypto libssl"
+PACKAGES =+ "libcrypto libssl ${PN}-misc"
 FILES_libcrypto = "${libdir}/libcrypto.so.*"
 FILES_libssl = "${libdir}/libssl.so.*"
 FILES_${PN} =+ " ${libdir}/ssl/*"
+FILES_${PN}-misc = "${libdir}/ssl/misc ${libdir}/ssl/openssl.cnf"
+
+do_configure_prepend_darwin () {
+	sed -i -e '/version-script=openssl\.ld/d' Configure
+}
 
 do_configure () {
 	cd util
@@ -45,6 +53,10 @@ do_configure () {
 
 	os=${HOST_OS}
 	if [ "x$os" = "xlinux-uclibc" ]; then
+		os=linux
+	elif [ "x$os" = "xlinux-uclibceabi" ]; then
+		os=linux
+	elif [ "x$os" = "xlinux-gnueabi" ]; then
 		os=linux
 	fi
 	target="$os-${HOST_ARCH}"
@@ -64,7 +76,7 @@ do_configure () {
 	linux-i486)
 		target=debian-i386-i486
 		;;
-	linux-i586)
+	linux-i586 | linux-viac3)
 		target=debian-i386-i586
 		;;
 	linux-i686)
@@ -91,6 +103,9 @@ do_configure () {
 	linux-sparc)
 		target=linux-sparcv8
 		;;
+	darwin-i386)
+		target=darwin-i386-cc
+		;;
 	esac
 	# inject machine-specific flags
 	sed -i -e "s|^\(\"$target\",\s*\"[^:]\+\):\([^:]\+\)|\1:${CFLAG}|g" Configure
@@ -106,10 +121,25 @@ do_compile () {
 }
 
 do_install () {
-	install -m 0755 -d ${D}${libdir}/pkgconfig
 	oe_runmake INSTALL_PREFIX="${D}" MANDIR="${mandir}" install
-	chmod 644 ${D}${libdir}/pkgconfig/openssl.pc
+
+	# On x86_64, move lib/* to lib64
+	if [ "${libdir}" != "${prefix}/lib" ]
+	then
+		install -m 0755 ${D}${libdir} ${D}${libdir}/pkgconfig
+		mv ${D}${prefix}/lib/lib* ${D}${libdir}
+		mv ${D}${prefix}/lib/pkgconfig/*.pc ${D}${libdir}/pkgconfig
+		chmod 644 ${D}${libdir}/pkgconfig/openssl.pc
+	fi
+
 	oe_libinstall -so libcrypto ${D}${libdir}
 	oe_libinstall -so libssl ${D}${libdir}
+
+	install -d ${D}${includedir}
+	cp --dereference -R include/openssl ${D}${includedir}
 	sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${libdir}/ssl/misc/CA.pl
+
 }
+
+BBCLASSEXTEND = "native nativesdk"
+
