@@ -45,7 +45,7 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 DEPENDS = "bzip2 zlib db openssl elfutils expat libpcre attr acl popt ${extrarpmdeps}"
 extrarpmdeps = "python perl"
 extrarpmdeps_virtclass-native = "file-native"
-PR = "r24"
+PR = "r25"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -157,6 +157,7 @@ EXTRA_OECONF = "--verbose \
 		--with-build-extlibdep \
 		--with-build-maxextlibdep \
 		--without-valgrind \
+                --without-xz \
 		--disable-openmp \
 		--enable-build-pic \
 		--enable-build-versionscript \
