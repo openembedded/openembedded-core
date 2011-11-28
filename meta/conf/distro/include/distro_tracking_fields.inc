@@ -2944,9 +2944,9 @@ RECIPE_LAST_UPDATE_pn-sysprof = "Dec 8, 2010"
 RECIPE_MAINTAINER_pn-sysprof = "Tom Zanussi <tom.zanussi@intel.com>"
 
 RECIPE_STATUS_pn-binutils="green"
-RECIPE_LATEST_VERSION_pn-binutils="2.21.1a"
-RECIPE_LAST_UPDATE_pn-binutils = "Aug 29, 2011"
-RECIPE_MANUAL_CHECK_DATE_pn-binutils = "Aug 29, 2011"
+RECIPE_LATEST_VERSION_pn-binutils="2.22"
+RECIPE_LAST_UPDATE_pn-binutils = "Nov 23, 2011"
+RECIPE_MANUAL_CHECK_DATE_pn-binutils = "Nov 23, 2011"
 RECIPE_MAINTAINER_pn-binutils = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-ldconfig-native = "red"
@@ -3015,8 +3015,8 @@ RECIPE_MAINTAINER_pn-intltool = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-libtool="green" 
 RECIPE_LATEST_VERSION_pn-libtool="2.4.2"
-RECIPE_LAST_UPDATE_pn-libtool = "Nov 16, 2011"
-RECIPE_MANUAL_CHECK_DATE_pn-libtool = "Nov 16, 2011" 
+RECIPE_LAST_UPDATE_pn-libtool = "Nov 28, 2011"
+RECIPE_MANUAL_CHECK_DATE_pn-libtool = "Nov 28, 2011" 
 RECIPE_MAINTAINER_pn-libtool = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-linux-libc-headers="green" 
