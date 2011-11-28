@@ -27,9 +27,11 @@ exit 0
 Upstream-Status: Inappropriate [debian patch]
 
 @DPATCH@
---- binutils-2.16.91.0.1/ld/Makefile.am
-+++ binutils-2.16.91.0.1/ld/Makefile.am
-@@ -20,7 +20,7 @@
+Index: binutils-2.22/ld/Makefile.am
+===================================================================
+--- binutils-2.22.orig/ld/Makefile.am
++++ binutils-2.22/ld/Makefile.am
+@@ -37,7 +37,7 @@ endif
  # We put the scripts in the directory $(scriptdir)/ldscripts.
  # We can't put the scripts in $(datadir) because the SEARCH_DIR
  # directives need to be different for native and cross linkers.
@@ -38,9 +40,11 @@ Upstream-Status: Inappropriate [debian patch]
  
  EMUL = @EMUL@
  EMULATION_OFILES = @EMULATION_OFILES@
---- binutils-2.16.91.0.1/ld/Makefile.in
-+++ binutils-2.16.91.0.1/ld/Makefile.in
-@@ -268,7 +268,7 @@
+Index: binutils-2.22/ld/Makefile.in
+===================================================================
+--- binutils-2.22.orig/ld/Makefile.in
++++ binutils-2.22/ld/Makefile.in
+@@ -366,7 +366,7 @@ AM_CFLAGS = $(WARN_CFLAGS)
  # We put the scripts in the directory $(scriptdir)/ldscripts.
  # We can't put the scripts in $(datadir) because the SEARCH_DIR
  # directives need to be different for native and cross linkers.

@@ -1,28 +1,32 @@
 Upstream-Status: Pending
 
---- binutils-2.18.orig/configure
-+++ binutils-2.18/configure
-@@ -2206,7 +2206,7 @@
-   am33_2.0-*-linux*)
-     noconfigdirs="$noconfigdirs ${libgcj} target-newlib target-libgloss"
+Index: binutils-2.22/configure
+===================================================================
+--- binutils-2.22.orig/configure
++++ binutils-2.22/configure
+@@ -3130,7 +3130,7 @@ case "${target}" in
      ;;
--  sh-*-linux*)
-+  sh*-*-linux*)
-     noconfigdirs="$noconfigdirs ${libgcj} target-newlib target-libgloss"
+   s390-*-* | s390x-*-*)
      ;;
-   sh*-*-pe|mips*-*-pe|*arm-wince-pe)
-@@ -2504,7 +2504,7 @@
-   romp-*-*)
-     noconfigdirs="$noconfigdirs bfd binutils ld gas opcodes target-libgloss ${libgcj}"
+-  sh-*-* | sh[34]*-*-*)
++  sh*-*-* | sh[34]*-*-*)
+     ;;
+   sh64-*-* | sh5*-*-*)
+     ;;
+@@ -3570,7 +3570,7 @@ case "${target}" in
+   mips*-*-*)
+     noconfigdirs="$noconfigdirs gprof"
      ;;
 -  sh-*-* | sh64-*-*)
 +  sh*-*-* | sh64-*-*)
-     case "${host}" in
-       i[3456789]86-*-vsta) ;; # don't add gprof back in
-       i[3456789]86-*-go32*) ;; # don't add gprof back in
---- binutils-2.18.orig/gprof/configure
-+++ binutils-2.18/gprof/configure
-@@ -4124,6 +4124,11 @@
+     case "${target}" in
+       sh*-*-elf)
+          ;;
+Index: binutils-2.22/gprof/configure
+===================================================================
+--- binutils-2.22.orig/gprof/configure
++++ binutils-2.22/gprof/configure
+@@ -6103,6 +6103,11 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu)
    lt_cv_deplibs_check_method=pass_all
    ;;
  

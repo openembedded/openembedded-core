@@ -8,10 +8,11 @@ upstream.
 Fix suggested by Richard Purdie <richard.purdie@linuxfoundation.org> 
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 
-diff -urN binutils-2.21.orig//ltmain.sh binutils-2.21/ltmain.sh
---- binutils-2.21.orig//ltmain.sh	2011-01-18 11:50:40.821710085 -0800
-+++ binutils-2.21/ltmain.sh	2011-01-18 11:51:38.774952785 -0800
-@@ -8035,9 +8035,11 @@
+Index: binutils-2.22/ltmain.sh
+===================================================================
+--- binutils-2.22.orig/ltmain.sh
++++ binutils-2.22/ltmain.sh
+@@ -8035,9 +8035,11 @@ EOF
  	  test "$opt_mode" != relink && rpath="$compile_rpath$rpath"
  	  for libdir in $rpath; do
  	    if test -n "$hardcode_libdir_flag_spec"; then
@@ -25,7 +26,7 @@ diff -urN binutils-2.21.orig//ltmain.sh binutils-2.21/ltmain.sh
  		if test -z "$hardcode_libdirs"; then
  		  hardcode_libdirs="$libdir"
  		else
-@@ -8770,6 +8772,10 @@
+@@ -8770,6 +8772,10 @@ EOF
        hardcode_libdirs=
        for libdir in $compile_rpath $finalize_rpath; do
  	if test -n "$hardcode_libdir_flag_spec"; then

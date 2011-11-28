@@ -18,7 +18,6 @@ LIC_FILES_CHKSUM="\
 SRC_URI = "\
      ${GNU_MIRROR}/binutils/binutils-${PV}.tar.bz2 \
      file://binutils-uclibc-100-uclibc-conf.patch \
-     file://110-arm-eabi-conf.patch \
      file://binutils-uclibc-300-001_ld_makefile_patch.patch \
      file://binutils-uclibc-300-006_better_file_error.patch \
      file://binutils-uclibc-300-012_check_ldrunpath_length.patch \
@@ -33,10 +32,8 @@ SRC_URI = "\
      file://binutils-powerpc-e5500.patch \
      "
 
-SRC_URI[md5sum] = "bde820eac53fa3a8d8696667418557ad"
-SRC_URI[sha256sum] = "cdecfa69f02aa7b05fbcdf678e33137151f361313b2f3e48aba925f64eabf654"
+SRC_URI[md5sum] = "ee0f10756c84979622b992a4a61ea3f5"
+SRC_URI[sha256sum] = "6c7af8ed1c8cf9b4b9d6e6fe09a3e1d3d479fe63984ba8b9b26bf356b6313ca9"
 
-# 2.21.1a has a mismatched dir name within the tarball
-S = "${WORKDIR}/binutils-2.21.1"
 
 BBCLASSEXTEND = "native"

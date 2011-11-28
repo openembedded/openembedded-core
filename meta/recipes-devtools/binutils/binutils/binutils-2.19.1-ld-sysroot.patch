@@ -6,13 +6,13 @@ Signed-off-by: Sven Rebhan <odinshorse@googlemail.com>
 
 Always try to prepend the sysroot prefix to absolute filenames first.
 
-Index: binutils-2.21/ld/ldfile.c
+Index: binutils-2.22/ld/ldfile.c
 ===================================================================
---- binutils-2.21.orig/ld/ldfile.c
-+++ binutils-2.21/ld/ldfile.c
-@@ -372,18 +372,24 @@ ldfile_open_file_search (const char *arc
+--- binutils-2.22.orig/ld/ldfile.c
++++ binutils-2.22/ld/ldfile.c
+@@ -351,18 +351,24 @@ ldfile_open_file_search (const char *arc
       directory first.  */
-   if (! entry->is_archive)
+   if (! entry->maybe_archive)
      {
 -      if (entry->sysrooted && IS_ABSOLUTE_PATH (entry->filename))
 +      /* For absolute pathnames, try to always open the file in the
