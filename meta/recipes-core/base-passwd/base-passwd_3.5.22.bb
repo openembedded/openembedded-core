@@ -83,6 +83,8 @@ fi
 	d.setVar('pkg_preinst_${PN}', preinst)
 }
 
+addtask do_package after do_populate_sysroot
+
 pkg_postinst_${PN}-update () {
 #!/bin/sh
 if [ -n "$D" ]; then
