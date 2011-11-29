@@ -15,7 +15,7 @@ PE = "1"
 
 SRC_URI += "file://disable-xkb.patch"
 
-SRC_URI[md5sum] = "c52fda7bbc80e74b7839f29298cb1d77"
-SRC_URI[sha256sum] = "fe5bad498ecfbf21f9a2a18eee5ece9de5d52f68878f250db8f575c9b872b5ce"
+SRC_URI[md5sum] = "1ef08f4c8d0e669c2edd49e4a1bf650d"
+SRC_URI[sha256sum] = "23ee4944a32b5701b4379cb420729eb7a4dde54de2b5b006d4747855efd6d73f"
 
 EXTRA_OECONF = "--disable-xkb"
