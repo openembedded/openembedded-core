@@ -23,5 +23,5 @@ inherit autotools pkgconfig
 FILES_${PN} += " ${datadir}/dbus-1 \
                  ${datadir}/PolicyKit \
                "
-SRC_URI[md5sum] = "da6aaff473ed80f8958fd6f67a59defe"
-SRC_URI[sha256sum] = "f1452e37b6681a0ade2c0cbb3734e6f78c421b958ab4d4eb6a2cd3b9f50db8d0"
+SRC_URI[md5sum] = "f6b485ffd7bd605af815fd2747180481"
+SRC_URI[sha256sum] = "81caa6972e651e90ef4ac31d7ed41bc79543d46b850dbd5b14b40f8ef7107d11"
