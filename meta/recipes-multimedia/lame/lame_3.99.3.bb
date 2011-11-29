@@ -10,8 +10,8 @@ PR = "r0"
 SRC_URI = "${SOURCEFORGE_MIRROR}/lame/lame-${PV}.tar.gz \
            file://no-gtk1.patch"
 
-SRC_URI[md5sum] = "2576a7368b5c90a87adc9de6b9f0628c"
-SRC_URI[sha256sum] = "1eedcbe238f81cdef822f367f104a8ff918062727b61f0c62b24e9f79d941cf0"
+SRC_URI[md5sum] = "5ad31e33e70455eb3a7b79a5dd934fce"
+SRC_URI[sha256sum] = "d4ea3c8d00d2cc09338425a25dbfeb4d587942cb3c83a677c09aeb1e850c74cf"
 
 inherit autotools
 
