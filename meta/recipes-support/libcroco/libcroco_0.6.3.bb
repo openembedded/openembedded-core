@@ -15,5 +15,5 @@ inherit autotools pkgconfig gnome
 
 SRC_URI_append = " file://croco.patch;apply=yes "
 
-SRC_URI[archive.md5sum] = "1429c597aa4b75fc610ab3a542c99209"
-SRC_URI[archive.sha256sum] = "be24853f64c09b63d39e563fb0222e29bae1a33c3d9f6cbffc0bc27669371749"
+SRC_URI[archive.md5sum] = "e1e93eeff4367c896f3959af34ba20eb"
+SRC_URI[archive.sha256sum] = "746192d979263c74094d41e5ff0e19900b3d81eb2bd42c27c1c320dd94008034"
