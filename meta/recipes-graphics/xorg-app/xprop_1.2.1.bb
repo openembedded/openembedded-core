@@ -15,5 +15,5 @@ DEPENDS += " libxmu virtual/libx11"
 PR = "r0"
 PE = "1"
 
-SRC_URI[md5sum] = "e6d0673a1e1e469f0a6220a6868fb94b"
-SRC_URI[sha256sum] = "53508c082b03dbbfd68489cb21392023f3e62ca9c921e1fb39b92ad10fbe6b9c"
+SRC_URI[md5sum] = "d5529dc8d811efabd136ca2d8e857deb"
+SRC_URI[sha256sum] = "07907a189099b8a000406b5ca6c5346df238a9e1fe3b32dc59f48fe0ad12f1a3"
