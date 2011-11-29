@@ -60,4 +60,16 @@ do_siteconfig () {
 	:
 }
 
+SSTATEPOSTINSTFUNCS += "eglibcinitial_sstate_postinst"
+eglibcinitial_sstate_postinst() {
+	if [ "${BB_CURRENTTASK}" = "populate_sysroot" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
+	then
+		# Recreate the symlinks to ensure they point to the correct location
+		for t in linux asm asm-generic; do
+			rm -f ${STAGING_DIR_TCBOOTSTRAP}${includedir}/$t
+			ln -s ${STAGING_DIR_TARGET}${includedir}/$t ${STAGING_DIR_TCBOOTSTRAP}${includedir}/
+		done
+	fi
+}
+
 do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_TCBOOTSTRAP}"
