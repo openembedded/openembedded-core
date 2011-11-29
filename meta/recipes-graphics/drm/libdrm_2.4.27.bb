@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://xf86drm.c;beginline=9;endline=32;md5=c8a3b961af7667c5
 
 SRC_URI += "file://installtests.patch"
 
-SRC_URI[md5sum] = "062569426773f69b11a47a7712bba770"
-SRC_URI[sha256sum] = "b25b06ab5a077736044cbd9a3a05a9a23b873a0887ab1aaf93aa2b3218b2d3dc"
+SRC_URI[md5sum] = "0fba4f42735cd3d24dd7a8cde0023fbd"
+SRC_URI[sha256sum] = "ea6b04dd3298e36c7a43aadd5f80f48baeafe4caaabcf78b01dc919c5c757973"
 
-PR = "r1"
+PR = "r0"
