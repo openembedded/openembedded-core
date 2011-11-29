@@ -45,6 +45,8 @@ FILES_${PN}-symlinks = " \
 	${bindir}/size \
 	${bindir}/strip"
 
+FILES_${PN}-dbg += "${prefix}/${TARGET_SYS}/bin/.debug"
+
 B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
 
 EXTRA_OECONF = "--program-prefix=${TARGET_PREFIX} \
