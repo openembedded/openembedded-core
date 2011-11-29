@@ -13,8 +13,8 @@ PE = "1"
 
 SRC_URI += "file://disable-xkb.patch"
 
-SRC_URI[md5sum] = "4e0ce390394416c9e2c5cd4d7413ba87"
-SRC_URI[sha256sum] = "ec995f7d23109cfa6420ae87c38158f29a2a6f9d0b7df0a1be34e69e165292a1"
+SRC_URI[md5sum] = "d44e0057d6722b25d5a314e82e0b7e7c"
+SRC_URI[sha256sum] = "61371c140030b8b05075a1378b34a4d7c438ed9159496a95f10782c6f4aec1e8"
 
 CFLAGS += "-D_GNU_SOURCE"
 EXTRA_OECONF = "--disable-xkb"
