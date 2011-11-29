@@ -13,11 +13,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0d4b5eef75f1584ccbdc5e4a34314407"
 PR = "r2"
 PE = "1"
 
+SRC_URI[md5sum] = "ee234056d8a3dbf37b61b4bcb35b88e4"
+SRC_URI[sha256sum] = "c7468dfae94bdb42785d79623c27156dc4bf379d8372992830482cb04d8439b0"
+
 EXTRA_OECONF = "ac_cv_path_MCOOKIE=${bindir}/mcookie"
 
 RDEPENDS_${PN} += "util-linux-mcookie"
 
 FILES_${PN} += "${libdir}X11/xinit"
-
-SRC_URI[md5sum] = "bc4e8b7d1919597cc37a0d24aa149dda"
-SRC_URI[sha256sum] = "ba76e36e1a42a7cf76505b7e6fc4777f5d14f45ddff74341abfb7dd10d5fe04c"
