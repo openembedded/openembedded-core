@@ -25,6 +25,7 @@ SRC_URI[md5sum] = "0352932ea863bc02b056cda7c9ac5b79"
 SRC_URI[sha256sum] = "42b2368f786b05ed3be846838dce126b4e8e3dba8fb2e0ce83102df28c102fad"
 
 SRC_URI += "file://configure-targets.patch \
-            file://shared-libs.patch"
+            file://shared-libs.patch \
+            file://parallel-make-fix.patch"
 
 BBCLASSEXTEND = "native nativesdk"
