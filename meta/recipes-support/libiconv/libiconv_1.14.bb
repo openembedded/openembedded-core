@@ -13,8 +13,8 @@ SRC_URI = "${GNU_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
            file://autoconf.patch \
           "
 
-SRC_URI[md5sum] = "7ab33ebd26687c744a37264a330bbe9a"
-SRC_URI[sha256sum] = "55a36168306089009d054ccdd9d013041bfc3ab26be7033d107821f1c4949a49"
+SRC_URI[md5sum] = "e34509b1623cec449dfeb73d7ce9c6c6"
+SRC_URI[sha256sum] = "72b24ded17d687193c3366d0ebe7cde1e6b18f0df8c55438ac95be39e8a30613"
 
 S = "${WORKDIR}/libiconv-${PV}"
 
