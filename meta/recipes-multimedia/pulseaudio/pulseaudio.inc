@@ -90,13 +90,13 @@ pkg_postinst_${PN}-server() {
         if [ "x$D" != "x" ]; then
                 exit 1
         fi
-        grep -q pulse: /etc/group || addgroup pulse
-        grep -q pulse: /etc/passwd || \
+        grep -q pulse: ${sysconfdir}/group || addgroup pulse
+        grep -q pulse: ${sysconfdir}/passwd || \
             adduser --disabled-password --home=/var/run/pulse --system \
                     --ingroup pulse --no-create-home -g "Pulse audio daemon" pulse
         addgroup pulse audio
-        if [ -e /etc/init.d/populate-volatile.sh ] ; then
-            /etc/init.d/populate-volatile.sh update
+        if [ -e ${sysconfdir}/init.d/populate-volatile.sh ] ; then
+            ${sysconfdir}/init.d/populate-volatile.sh update
         fi
 }
 
