@@ -1,6 +1,6 @@
 require libtool-${PV}.inc
 
-PR = "r5"
+PR = "${INC_PR}.0"
 PACKAGES = ""
 SRC_URI += "file://prefix.patch"
 SRC_URI += "file://fixinstall.patch"

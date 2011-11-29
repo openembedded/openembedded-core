@@ -1,6 +1,6 @@
 require libtool-${PV}.inc
 
-PR = "r4"
+PR = "${INC_PR}.0"
 
 #
 # We want the results of libtool-cross preserved - don't stage anything ourselves.

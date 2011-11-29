@@ -8,15 +8,20 @@ LICENSE = "GPLv2 & LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
     file://libltdl/COPYING.LIB;md5=e3eda01d9815f8d24aae2dbd89b68b06"
 
+INC_PR = "r0"
+
 SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://trailingslash.patch \
            file://prefix-manpage-fix.patch \
            file://rename-with-sysroot.patch \
-           file://resolve-sysroot.patch \
            file://use-sysroot-in-libpath.patch \
            file://fix-final-rpath.patch \
            file://avoid_absolute_paths_for_general_utils.patch \
-           file://fix-rpath.patch "
+           file://fix-rpath.patch \
+          "
+
+SRC_URI[md5sum] = "d2f3b7d4627e69e13514a40e72a24d50"
+SRC_URI[sha256sum] = "b38de44862a987293cd3d8dfae1c409d514b6c4e794ebc93648febf9afc38918"
 
 do_compile_prepend () {
 	# Sometimes this file doesn't get rebuilt, force the issue
@@ -26,3 +31,13 @@ do_compile_prepend () {
 
 inherit autotools
 EXTRA_AUTORECONF = "--exclude=libtoolize"
+
+DEPENDS = "libtool-native"
+
+PACKAGES =+ "libltdl libltdl-dev libltdl-dbg"
+FILES_${PN} += "${datadir}/aclocal*"
+FILES_libltdl = "${libdir}/libltdl.so.*"
+FILES_libltdl-dev = "${libdir}/libltdl.* ${includedir}/ltdl.h"
+FILES_libltdl-dbg = "${libdir}/.debug/"
+
+EXTRA_OECONF = "--with-sysroot"

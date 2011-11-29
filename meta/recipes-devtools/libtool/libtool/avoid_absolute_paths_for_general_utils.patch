@@ -12,11 +12,11 @@ Nitin A Kamble <nitin.a.kamble@intel.com>
 2011/02/18
 
 
-Index: libtool-2.4/libltdl/config/general.m4sh
+Index: libtool-2.4.2/libltdl/config/general.m4sh
 ===================================================================
---- libtool-2.4.orig/libltdl/config/general.m4sh	2010-08-31 23:02:45.000000000 -0700
-+++ libtool-2.4/libltdl/config/general.m4sh	2011-02-18 09:59:09.482038240 -0800
-@@ -45,15 +45,15 @@
+--- libtool-2.4.2.orig/libltdl/config/general.m4sh
++++ libtool-2.4.2/libltdl/config/general.m4sh
+@@ -45,15 +45,15 @@ progpath="$0"
  M4SH_VERBATIM([[
  : ${CP="cp -f"}
  test "${ECHO+set}" = set || ECHO=${as_echo-'printf %s\n'}
