@@ -12,5 +12,5 @@ DEPENDS += "libxext libxmu"
 PR = "r0"
 PE = "0"
 
-SRC_URI[md5sum] = "7a7f44b826d877ba39c19cf5913978d7"
-SRC_URI[sha256sum] = "645a57be4870fb6aba459e7dc96f4d8eaafa3b31bbcd42c997ac4cb021a2343d"
+SRC_URI[md5sum] = "9e8b58c8aa6172e87ab4f9cf3612fedd"
+SRC_URI[sha256sum] = "8fa66c9ce02da257613fa428137ab9efc89c8f9939c074513dbc0f407dc9ac3a"
