@@ -1,6 +1,7 @@
 require recipes-graphics/clutter/clutter.inc
+require recipes-graphics/clutter/clutter-package.inc
 
-PR = "r2"
+PR = "r3"
 
 # Internal json-glib was removed in Clutter 1.5.2
 STDDEPENDS += "json-glib cogl atk"
