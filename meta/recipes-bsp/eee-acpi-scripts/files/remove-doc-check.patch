@@ -7,46 +7,12 @@
 
 Upstream-Status: Inappropriate [configuration]
 
-Index: git/eeepc-acpi-scripts/hotkey.sh
-===================================================================
---- git.orig/eeepc-acpi-scripts/hotkey.sh	2010-11-28 16:02:17.000000000 +0800
-+++ git/eeepc-acpi-scripts/hotkey.sh	2010-11-28 16:02:44.000000000 +0800
-@@ -1,12 +1,10 @@
- #!/bin/sh
- 
- test -d /sys/bus/platform/devices/eeepc || exit 0
--# do nothing if package is removed
- PKG=eeepc-acpi-scripts
- PKG_DIR=/usr/share/acpi-support/$PKG
- FUNC_LIB=$PKG_DIR/lib/functions.sh
- DEFAULT=/etc/default/$PKG
--[ -e "$FUNC_LIB" ] || exit 0
- 
- case $(runlevel) in
-     *0|*6)
-Index: git/eeepc-acpi-scripts/vga-toggle.sh
-===================================================================
---- git.orig/eeepc-acpi-scripts/vga-toggle.sh	2010-11-28 16:03:57.000000000 +0800
-+++ git/eeepc-acpi-scripts/vga-toggle.sh	2010-11-28 16:04:03.000000000 +0800
-@@ -1,12 +1,10 @@
- #!/bin/sh
- 
- test -d /sys/bus/platform/devices/eeepc || exit 0
--# do nothing if package is removed
- PKG=eeepc-acpi-scripts
- PKG_DIR=/usr/share/acpi-support/$PKG
- FUNC_LIB=$PKG_DIR/lib/functions.sh
- DEFAULT=/etc/default/$PKG
--[ -e "$FUNC_LIB" ] || exit 0
- 
- if [ -e "$DEFAULT" ]; then . "$DEFAULT"; fi
- . $FUNC_LIB
 Index: git/eeepc-acpi-scripts/volume.sh
 ===================================================================
---- git.orig/eeepc-acpi-scripts/volume.sh	2010-11-28 16:04:34.000000000 +0800
-+++ git/eeepc-acpi-scripts/volume.sh	2010-11-28 16:04:40.000000000 +0800
+--- git.orig/eeepc-acpi-scripts/volume.sh	2011-11-29 19:21:55.000000000 +0800
++++ git/eeepc-acpi-scripts/volume.sh	2011-11-29 19:41:36.000000000 +0800
 @@ -3,12 +3,10 @@
- test -d /sys/bus/platform/devices/eeepc || exit 0
+ [ -d /sys/devices/platform/eeepc ] || [ -d /sys/devices/platform/eeepc-wmi ] || exit 0
  # Volume controls
  
 -# do nothing if package is removed
@@ -58,3 +24,37 @@ Index: git/eeepc-acpi-scripts/volume.sh
  
  . $FUNC_LIB
  . $PKG_DIR/lib/sound.sh
+Index: git/eeepc-acpi-scripts/hotkey.sh
+===================================================================
+--- git.orig/eeepc-acpi-scripts/hotkey.sh	2011-11-29 19:21:55.000000000 +0800
++++ git/eeepc-acpi-scripts/hotkey.sh	2011-11-29 19:39:51.000000000 +0800
+@@ -1,12 +1,10 @@
+ #!/bin/sh
+ 
+ [ -d /sys/devices/platform/eeepc ] || [ -d /sys/devices/platform/eeepc-wmi ] || exit 0
+-# do nothing if package is removed
+ PKG=eeepc-acpi-scripts
+ PKG_DIR=/usr/share/acpi-support/$PKG
+ FUNC_LIB=$PKG_DIR/lib/functions.sh
+ DEFAULT=/etc/default/$PKG
+-[ -e "$FUNC_LIB" ] || exit 0
+ 
+ case $(runlevel) in
+     *0|*6)
+Index: git/eeepc-acpi-scripts/vga-toggle.sh
+===================================================================
+--- git.orig/eeepc-acpi-scripts/vga-toggle.sh	2011-11-29 19:21:55.000000000 +0800
++++ git/eeepc-acpi-scripts/vga-toggle.sh	2011-11-29 19:40:24.000000000 +0800
+@@ -1,12 +1,10 @@
+ #!/bin/sh
+ 
+ [ -d /sys/devices/platform/eeepc ] || [ -d /sys/devices/platform/eeepc-wmi ] || exit 0
+-# do nothing if package is removed
+ PKG=eeepc-acpi-scripts
+ PKG_DIR=/usr/share/acpi-support/$PKG
+ FUNC_LIB=$PKG_DIR/lib/functions.sh
+ DEFAULT=/etc/default/$PKG
+-[ -e "$FUNC_LIB" ] || exit 0
+ 
+ if [ -e "$DEFAULT" ]; then . "$DEFAULT"; fi
+ . $FUNC_LIB
