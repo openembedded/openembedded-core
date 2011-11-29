@@ -11,8 +11,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c475b6c7dca236740ace4bba553e8e1c \
 
 SRC_URI = "http://tukaani.org/xz/xz-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "03d139cc14294fd45504989b914335ff"
-SRC_URI[sha256sum] = "57e979baaa40147dde1bbb284e3618f8f18b6532c932648bd57b5aee674b98a7"
+SRC_URI[md5sum] = "fefe52f9ecd521de2a8ce38c21a27574"
+SRC_URI[sha256sum] = "10eb4df72dffb2fb14c3d2d82b450e72282ffcb9ee3908a8e5b392b8f09681bf"
 
 PR = "r0"
 
