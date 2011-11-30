@@ -5,6 +5,13 @@ to pass build
 Upstream-Status: Inappropriate [workaround]
 
 Signed-off-by: Qing He <qing.he@intel.com>
+
+
+
+Wed Nov 30 14:42:01 CST 2011
+Rebase to lzo-2.06.
+Signed-off-by: Dexuan Cui <dexuan.cui@intel.com>
+
 ---
 diff --git a/configure.ac b/configure.ac
 index 650749a..2a78845 100644
@@ -16,6 +23,6 @@ index 650749a..2a78845 100644
  
 -AC_PREREQ(2.67)
 +AC_PREREQ(2.65)
- AC_INIT([LZO],[2.05],[markus@oberhumer.com],[lzo],[http://www.oberhumer.com/opensource/lzo/])
+ AC_INIT([LZO],[2.06],[markus@oberhumer.com],[lzo],[http://www.oberhumer.com/opensource/lzo/])
  AC_MSG_NOTICE([Configuring LZO $PACKAGE_VERSION])
  AC_CONFIG_SRCDIR(src/lzo_init.c)
