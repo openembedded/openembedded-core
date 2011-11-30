@@ -40,5 +40,5 @@ FILES_libmissioncontrol-dbg = "${libdir}/.debug/libmissioncontrol.so.*"
 FILES_libmissioncontrol-config-dbg = "${libdir}/.debug/libmissioncontrol-config.so.*"
 FILES_libmissioncontrol-server-dbg = "${libdir}/.debug/libmissioncontrol-server.so.*"
 
-SRC_URI[md5sum] = "15fc8e560bc67a86393a3138d7ac38e3"
-SRC_URI[sha256sum] = "774af104627513e7881fa6695912c962ddedcc7628ec859e020fa30000e32cab"
+SRC_URI[md5sum] = "50594028ebb2dba0181fec99e6f56ff5"
+SRC_URI[sha256sum] = "e1d9ce7b8827c19bf2e5d522641ae86ff2476c605de2533d608721ea49023a10"
