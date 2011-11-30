@@ -200,6 +200,29 @@ def preferred_ml_updates(d):
             extramp.append(virt + pref + "-" + p)
     d.setVar("MULTI_PROVIDER_WHITELIST", " ".join(mp + extramp))
 
+
+def get_layers_branch_rev(d):
+	layers = (d.getVar("BBLAYERS", 1) or "").split()
+	layers_branch_rev = ["%-17s = \"%s:%s\"" % (os.path.basename(i), \
+		base_get_metadata_git_branch(i, None).strip(), \
+		base_get_metadata_git_revision(i, None)) \
+			for i in layers]
+	i = len(layers_branch_rev)-1
+	p1 = layers_branch_rev[i].find("=")
+	s1 = layers_branch_rev[i][p1:]
+	while i > 0:
+		p2 = layers_branch_rev[i-1].find("=")
+		s2= layers_branch_rev[i-1][p2:]
+		if s1 == s2:
+			layers_branch_rev[i-1] = layers_branch_rev[i-1][0:p2]
+			i -= 1
+		else:
+			i -= 1
+			p1 = layers_branch_rev[i].find("=")
+			s1= layers_branch_rev[i][p1:]
+	return layers_branch_rev
+
+
 addhandler base_eventhandler
 python base_eventhandler() {
 	from bb.event import getName
@@ -211,26 +234,7 @@ python base_eventhandler() {
 		statusvars = ['BB_VERSION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'DISTRO_VERSION','TUNE_FEATURES', 'TARGET_FPU']
 		statuslines = ["%-17s = \"%s\"" % (i, e.data.getVar(i, 1) or '') for i in statusvars]
 
-		layers = (e.data.getVar("BBLAYERS", 1) or "").split()
-		layers_branch_rev = ["%-17s = \"%s:%s\"" % (os.path.basename(i), \
-			base_get_metadata_git_branch(i, None).strip(), \
-			base_get_metadata_git_revision(i, None)) \
-				for i in layers]
-		i = len(layers_branch_rev)-1
-		p1 = layers_branch_rev[i].find("=")
-		s1= layers_branch_rev[i][p1:]
-		while i > 0:
-			p2 = layers_branch_rev[i-1].find("=")
-			s2= layers_branch_rev[i-1][p2:]
-			if s1 == s2:
-				layers_branch_rev[i-1] = layers_branch_rev[i-1][0:p2]
-				i -= 1
-			else:
-				i -= 1
-				p1 = layers_branch_rev[i].find("=")
-				s1= layers_branch_rev[i][p1:]
-
-		statuslines += layers_branch_rev
+		statuslines += get_layers_branch_rev(e.data)
 		statusmsg = "\nOE Build Configuration:\n%s\n" % '\n'.join(statuslines)
 		bb.plain(statusmsg)
 
