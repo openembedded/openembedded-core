@@ -16,7 +16,7 @@ RDEPENDS_${PN} = "diffutils freetype"
 PR = "r2"
 
 SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
-          file://grub-install.in.patch;apply=yes \
+          file://grub-install.in.patch \
           file://40_custom"
 
 SRC_URI[md5sum] = "ca9f2a2d571b57fc5c53212d1d22e2b5"
