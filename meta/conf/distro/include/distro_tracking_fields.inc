@@ -5788,9 +5788,24 @@ RECIPE_MAINTAINER_pn-lsbsetup = "Saul Wold <sgw@linux.intel.com>"
 
 RECIPE_LATEST_VERSION_pn-libxml-simple-perl = "2.18"
 RECIPE_LATEST_VERSION_pn-talloc = "2.0.5"
+
 RECIPE_STATUS_pn-gthumb = "red"
-RECIPE_LATEST_VERSION_pn-gthumb = "2.12.2"
-RECIPE_MAINTAINER_pn-gthumb = "Saul Wold <sgw@linux.intel.com>"
+RECIPE_LATEST_VERSION_pn-gthumb = "2.12.4"
+RECIPE_LAST_UPDATE_pn-gthumb = "Nov 30, 2011"
+RECIPE_MAINTAINER_pn-gthumb = "Joshua Lock <josh@linux.intel.com>"
+
+RECIPE_LATEST_VERSION_pn-mx = "1.3.2"
+RECIPE_LAST_UPDATE_pn-mx = "Nov 16, 2011"
+RECIPE_MAINTAINER_pn-mx = "Joshua Lock <josh@linux.intel.com>"
+
+RECIPE_LATEST_VERSION_pn-json-glib = "0.14.2"
+RECIPE_LAST_UPDATE_pn-json-glib = "Nov 16, 2011"
+RECIPE_MAINTAINER_pn-json-glib = "Joshua Lock <josh@linux.intel.com>"
+
+RECIPE_LATEST_VERSION_pn-xdg-utils = "1.0.2"
+RECIPE_LAST_UPDATE_pn-xdg-utils = "Nov 16, 2011"
+RECIPE_NO_UPDATE_REASON_pn-xdg-utils = "Latest release is a release candidate - 1.1.0rc1"
+RECIPE_MAINTAINER_pn-xdg-utils = "Joshua Lock <josh@linux.intel.com>"
 
 RECIPE_LATEST_VERSION_pn-libtheora = "1.2.0"
 RECIPE_NO_UPDATE_REASON_pn-libtheora = "1.1.1 is latest stable release not 1.2.0alpha1"
