@@ -7,7 +7,6 @@ inherit mirrors
 inherit utils
 inherit utility-tasks
 inherit metadata_scm
-inherit buildstats
 inherit logging
 
 OE_IMPORTS += "os sys time oe.path oe.utils oe.data oe.packagegroup"
