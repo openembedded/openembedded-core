@@ -10,7 +10,7 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 FIXEDSRCDATE = "${@bb.data.getVar('FILE', d, 1).split('_')[-1].split('.')[0]}"
 PV = "0.1+cvs${FIXEDSRCDATE}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "cvs://anonymous@cvs.sv.gnu.org/cvsroot/config;module=config;method=pserver;date=${FIXEDSRCDATE} \
 	   file://config-guess-uclibc.patch \
@@ -38,4 +38,4 @@ do_install () {
 PACKAGES = "${PN}"
 FILES_${PN} = "${bindir} ${datadir}/gnu-config"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
