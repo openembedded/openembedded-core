@@ -6,7 +6,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe\
 	file://examples/COPYING;md5=1d49bd61dc590f014cae7173b43e3e5c"
 
-PR = "r0"
+PR = "r1"
 SRC_URI = "${GNU_MIRROR}/m4/m4-${PV}.tar.gz \
 	file://fix_for_circular_dependency.patch "
 
@@ -16,3 +16,5 @@ SRC_URI[sha256sum] = "815ce53853fbf6493617f467389b799208b1ec98296b95be44a683f8bc
 inherit autotools
 
 EXTRA_OEMAKE += "'infodir=${infodir}'"
+
+BBCLASSEXTEND = "nativesdk"
