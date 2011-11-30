@@ -1,6 +1,6 @@
 require autoconf.inc
 
-PR = "r3"
+PR = "r4"
 
 PARALLEL_MAKE = ""
 
@@ -14,7 +14,7 @@ SRC_URI += "file://autoreconf-include.patch \
 	    file://autoreconf-foreign.patch \
 	    file://autoreconf-gnuconfigize.patch \
 	    file://autoheader-nonfatal-warnings.patch \
-	    ${@['file://path_prog_fixes.patch', ''][bb.data.inherits_class('native', d)]} \
+	    ${@['file://path_prog_fixes.patch', ''][bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d)]} \
             file://config_site.patch \
             file://remove-usr-local-lib-from-m4.patch \
            "
@@ -25,8 +25,11 @@ SRC_URI[sha256sum] = "c491fb273fd6d4ca925e26ceed3d177920233c76d542b150ff35e57145
 DEPENDS_virtclass-native = "m4-native gnu-config-native"
 RDEPENDS_${PN}_virtclass-native = "m4-native gnu-config-native"
 
+DEPENDS_virtclass-nativesdk = "m4-nativesdk gnu-config-nativesdk"
+RDEPENDS_${PN}_virtclass-nativesdk = "m4-nativesdk gnu-config-nativesdk"
+
 SRC_URI_append_virtclass-native = " file://fix_path_xtra.patch"
 
 EXTRA_OECONF += "ac_cv_path_M4=m4"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
