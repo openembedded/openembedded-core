@@ -70,11 +70,12 @@ CONFIGUREOPT_DEPTRACK = "--disable-dependency-tracking"
 
 
 oe_runconf () {
-	if [ -x ${S}/configure ] ; then
-		bbnote "Running ${S}/configure ${CONFIGUREOPTS} ${EXTRA_OECONF} $@"
-		${S}/configure ${CONFIGUREOPTS} ${EXTRA_OECONF} "$@" || bbfatal "oe_runconf failed"
+	cfgscript="${S}/configure"
+	if [ -x "$cfgscript" ] ; then
+		bbnote "Running $cfgscript ${CONFIGUREOPTS} ${EXTRA_OECONF} $@"
+		$cfgscript ${CONFIGUREOPTS} ${EXTRA_OECONF} "$@" || bbfatal "oe_runconf failed"
 	else
-		bbfatal "no configure script found"
+		bbfatal "no configure script found at $cfgscript"
 	fi
 }
 
