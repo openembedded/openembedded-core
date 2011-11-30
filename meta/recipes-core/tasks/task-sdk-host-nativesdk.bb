@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Host packages for the standalone SDK or external toolchain"
-PR = "r10"
+PR = "r11"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
@@ -22,6 +22,8 @@ RDEPENDS_${PN} = "\
     unfs-server-nativesdk \
     opkg-nativesdk \
     libtool-nativesdk \
+    autoconf-nativesdk \
+    automake-nativesdk \
     "
 
 RDEPENDS_${PN}_darwin8 = "\
