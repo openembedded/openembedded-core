@@ -31,6 +31,7 @@ RDEPENDS_automake-native = "autoconf-native perl-native-runtime"
 
 PATHFIXPATCH = "file://path_prog_fixes.patch"
 PATHFIXPATCH_virtclass-native = ""
+PATHFIXPATCH_virtclass-nativesdk = ""
 
 SRC_URI += "${PATHFIXPATCH} \
 	    file://prefer-cpio-over-pax-for-ustar-archives.patch \
@@ -44,4 +45,4 @@ do_install () {
 	install -d ${D}${datadir}
 }
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
