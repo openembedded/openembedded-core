@@ -233,7 +233,7 @@ python package_do_split_gconvs () {
 		encodings[locale].append(charset)
 
 	def output_locale_source(name, pkgname, locale, encoding):
-		setVar('RDEPENDS_%s' % pkgname, 'localedef %s-localedata-%s %s-charmap-%s' % \
+		d.setVar('RDEPENDS_%s' % pkgname, 'localedef %s-localedata-%s %s-charmap-%s' % \
 		(bpn, legitimize_package_name(locale), bpn, legitimize_package_name(encoding)))
 		d.setVar('pkg_postinst_%s' % pkgname, d.getVar('locale_base_postinst', True) \
 		% (locale, encoding, locale))
