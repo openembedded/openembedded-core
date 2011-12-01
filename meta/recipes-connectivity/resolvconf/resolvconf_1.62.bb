@@ -14,8 +14,8 @@ PR = "r0"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/r/resolvconf/resolvconf_${PV}.tar.gz"
 
-SRC_URI[md5sum] = "ac1cfa1abc7c690f1d8917f746ad80a5"
-SRC_URI[sha256sum] = "0eaa97fa29f8e30a541d549abe76766e5e4edfa841721529c85616d7c0089908"
+SRC_URI[md5sum] = "5d9656c9d7a2e1304d9d41ed13cf54a4"
+SRC_URI[sha256sum] = "cd00b3757fc73d2729be6e2532ca033ddd5542c4deff451929695bcc3af97c61"
 
 inherit allarch
 
@@ -24,7 +24,7 @@ do_compile () {
 }
 
 do_install () {
-	install -d ${D}${sysconfdir} ${D}${sbindir} ${D}${base_sbindir} ${D}${localstatedir}/volatile/run/resolvconf/interface
+	install -d ${D}${sysconfdir} ${D}${base_sbindir} ${D}${localstatedir}/volatile/run/resolvconf/interface
 	install -d ${D}${mandir}/man8 ${D}${docdir}/${P}
 	cp -pPR etc/* ${D}${sysconfdir}/
 	chown -R root:root ${D}${sysconfdir}/
