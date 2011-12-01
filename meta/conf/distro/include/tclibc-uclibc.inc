@@ -5,7 +5,8 @@
 LIBCEXTENSION = "-uclibc"
 
 # Add uclibc overrides to the overrides.
-OVERRIDES =. "libc-uclibc:"
+LIBCOVERRIDE = ":libc-uclibc"
+OVERRIDES .= "${LIBCOVERRIDE}"
 
 PREFERRED_PROVIDER_virtual/libc = "uclibc"
 PREFERRED_PROVIDER_virtual/libiconv ?= "libiconv"

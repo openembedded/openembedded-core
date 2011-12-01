@@ -92,6 +92,9 @@ EXTRA_NATIVE_PKGCONFIG_PATH ?= ""
 PKG_CONFIG_PATH .= "${EXTRA_NATIVE_PKGCONFIG_PATH}"
 PKG_CONFIG_SYSROOT_DIR = ""
 
+# we dont want libc-uclibc or libc-glibc to kick in for native recipes
+LIBCOVERRIDE = ""
+
 PATH =. "${COREBASE}/scripts/native-intercept:"
 
 python native_virtclass_handler () {

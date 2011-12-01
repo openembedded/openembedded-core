@@ -5,7 +5,8 @@
 LIBCEXTENSION = "${@['', '-gnu'][(d.getVar('ABIEXTENSION', True) or '') != '']}"
 
 # Add glibc overrides to the overrides for eglibc.
-OVERRIDES .= ":libc-glibc"
+LIBCOVERRIDE = ":libc-glibc"
+OVERRIDES .= "${LIBCOVERRIDE}"
 
 PREFERRED_PROVIDER_virtual/libiconv ?= "eglibc"
 PREFERRED_PROVIDER_virtual/libiconv-nativesdk ?= "eglibc-nativesdk"
