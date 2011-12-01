@@ -22,13 +22,16 @@ def get_gcc_mips_plt_setting(bb, d):
     return ""
 
 def get_gcc_multiarch_setting(bb, d):
-    if 'multiarch' in bb.data.getVar('DISTRO_FEATURES',d,1).split() :
-        if bb.data.getVar('TARGET_ARCH', d, 1) in [ 'i586', 'i686' ] :
-            return "--enable-targets=all"
-        if bb.data.getVar('TARGET_ARCH', d, 1) in [ 'powerpc' ] :
-            return "--enable-targets=powerpc64"
-        if bb.data.getVar('TARGET_ARCH', d, 1) in [ 'sparc' ] :
-            return "--enable-targets=all"
+    target_arch = d.getVar('TARGET_ARCH', True)
+    multiarch_options = {
+        "i586":    "--enable-targets=all",
+        "powerpc": "--enable-targets=powerpc64",
+        "sparc":   "--enable-targets=all",
+    }
+
+    if 'multiarch' in d.getVar('DISTRO_FEATURES', True).split() :
+        if target_arch in multiarch_options :
+            return multiarch_options[target_arch]
     return ""
 
 # We really need HOST_SYS here for some packages and TARGET_SYS for others.
