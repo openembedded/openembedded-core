@@ -16,7 +16,7 @@ SRC_URI = "http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-${PV}.tar.g
            file://gcc4-compile-fix.patch \
            file://volatiles.04_pulse"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig useradd
 
 EXTRA_OECONF = "\
 		--disable-lynx \
@@ -49,6 +49,12 @@ do_install_append() {
 	     sed -i -e s:\;\ resample-method\ =\ sinc-fastest:resample-method\ =\ trivial: ${D}${sysconfdir}/pulse/daemon.conf
 	fi
 }
+
+USERADD_PACKAGES = "pulseaudio-server"
+GROUPADD_PARAM_pulseaudio-server = "pulse"
+USERADD_PARAM_pulseaudio-server = "--system --home /var/run/pulse \
+                              --no-create-home --shell /bin/false \
+                              --groups audio,pulse --gid pulse pulse"
 
 PACKAGES =+ "libpulsecore libpulsecommon libpulsedsp libpulse libpulse-simple libpulse-browse libpulse-mainloop-glib \
              pulseaudio-server pulseaudio-misc pulseaudio-gconf-helper"
@@ -90,18 +96,10 @@ pkg_postinst_${PN}-server() {
         if [ "x$D" != "x" ]; then
                 exit 1
         fi
-        grep -q pulse: ${sysconfdir}/group || addgroup pulse
-        grep -q pulse: ${sysconfdir}/passwd || \
-            adduser --disabled-password --home=/var/run/pulse --system \
-                    --ingroup pulse --no-create-home -g "Pulse audio daemon" pulse
-        addgroup pulse audio
+
         if [ -e ${sysconfdir}/init.d/populate-volatile.sh ] ; then
             ${sysconfdir}/init.d/populate-volatile.sh update
         fi
-}
-
-pkg_postrm_${PN}-server() {
-        deluser pulse || true
 }
 
 python populate_packages_prepend() {
