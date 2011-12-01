@@ -1,0 +1,39 @@
+Upstream-Status: Backport [The fix is already in upstream cvs repo, but not in the stable release]
+
+When working on the self-hosted-image work, I found in the target
+"bitbake eglibc-initial -c install" always failed:
+
+make[1]: Entering directory `/raid/pe2/build/tmp/work/i586-poky-linux/eglibc-initial-2.13-r18+svnr14157/eglibc-2_13/libc'
+/usr/bin/install -c -m 644 include/limits.h /usr/include/limits.h
+/usr/bin/install: cannot remove `/usr/include/limits.h': Permission denied
+make[1]: *** [/usr/include/limits.h] Error 1
+make[1]: Leaving directory `/raid/pe2/build/tmp/work/i586-poky-linux/eglibc-initial-2.13-r18+svnr14157/eglibc-2_13/libc'
+make: *** [install-headers] Error 2
+ERROR: oe_runmake faile
+
+Debugging shows the install_root variable in eglibc's makefiles is strangely
+reset at some place.
+
+Further investigation shows this is a bug of make-3.82:
+
+http://savannah.gnu.org/bugs/?30723
+http://cvs.savannah.gnu.org/viewvc/make/main.c?root=make&r1=1.243&r2=1.244
+http://old.nabble.com/-bug--30723--implicit-re-executing-of-subdirs-breaks-$(origin)-with-make-3.82-td29394353.html
+
+The patch was got from the second link above(the upstream cvs repo of make).
+
+Thu Dec  1 16:05:59 CST 2011
+Signed-off-by: Dexuan Cui <dexuan.cui@intel.com>
+
+diff -Nru make-3.82.orig//main.c make-3.82/main.c
+--- make-3.82.orig//main.c	2010-07-19 15:10:53.000000000 +0800
++++ make-3.82/main.c	2011-12-01 16:04:11.818522186 +0800
+@@ -2093,7 +2093,7 @@
+             const char *pv = define_makeflags (1, 1);
+             char *p = alloca (sizeof ("MAKEFLAGS=") + strlen (pv) + 1);
+             sprintf (p, "MAKEFLAGS=%s", pv);
+-            putenv (p);
++            putenv (allocated_variable_expand (p));
+           }
+ 
+ 	  if (ISDB (DB_BASIC))
