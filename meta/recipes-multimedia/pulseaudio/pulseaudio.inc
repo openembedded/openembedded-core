@@ -112,6 +112,8 @@ python populate_packages_prepend() {
 
 RDEPENDS_pulseaudio-module-console-kit =+ "consolekit"
 RDEPENDS_pulseaudio-server = " \
+    pulseaudio-module-filter-apply \
+    pulseaudio-module-filter-heuristics \
     pulseaudio-module-udev-detect \
     pulseaudio-module-null-sink \
     pulseaudio-module-device-restore \
