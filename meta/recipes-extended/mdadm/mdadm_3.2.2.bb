@@ -8,10 +8,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://mdmon.c;beginline=4;endline=18;md5=af7d8444d9c4d3e5c7caac0d9d34039d \
                     file://mdadm.h;beglinlne=4;endline=22;md5=462bc9936ac0d3da110191a3f9994161"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.bz2 \
 	    file://0001-mdadm-fix-build-failures-ppc64.patch \
+	    file://mdadm-3.2.2_fix_for_x32.patch \
 	  "
 
 SRC_URI[md5sum] = "12ee2fbf3beddb60601fb7a4c4905651"
@@ -22,7 +23,6 @@ CFLAGS += "-fno-strict-aliasing"
 inherit autotools
 
 do_compile() {
-	export CROSS_COMPILE="${TARGET_PREFIX}"
 	oe_runmake
 }
 
