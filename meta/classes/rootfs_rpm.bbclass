@@ -160,47 +160,16 @@ remove_packaging_data_files() {
 	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
 }
 
-RPM_QUERY_CMD = '${RPM} --root ${IMAGE_ROOTFS} -D "_dbpath ${rpmlibdir}" \
-		-D "__dbi_txn create nofsync private"'
-
-list_installed_packages() {
-	${RPM_QUERY_CMD} -qa --qf "[%{NAME}\n]"
-}
-
-get_package_filename() {
-	resolve_package_rpm ${RPMCONF_TARGET_BASE}-base_archs.conf $1
-}
-
-list_package_depends() {
-	pkglist=`list_installed_packages`
-
-	for req in `${RPM_QUERY_CMD} -q --qf "[%{REQUIRES}\n]" $1`; do
-		if echo "$req" | grep -q "^rpmlib" ; then continue ; fi
-
-		realpkg=""
-		for dep in $pkglist; do
-			if [ "$dep" = "$req" ] ; then
-				realpkg="1"
-				echo $req
-				break
-			fi
-		done
-
-		if [ "$realdep" = "" ] ; then
-			${RPM_QUERY_CMD} -q --whatprovides $req --qf "%{NAME}\n"
-		fi
-	done
-}
-
-list_package_recommends() {
-	:
-}
 
 install_all_locales() {
 	PACKAGES_TO_INSTALL=""
 
 	# Generate list of installed packages...
-	INSTALLED_PACKAGES=`list_installed_packages | egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
+	INSTALLED_PACKAGES=$( \
+		${RPM} --root ${IMAGE_ROOTFS} -D "_dbpath ${rpmlibdir}" \
+		-D "__dbi_txn create nofsync private" \
+		-qa --qf "[%{NAME}\n]" | egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)" \
+	)
 
 	# This would likely be faster if we did it in one transaction
 	# but this should be good enough for the few users of this function...
