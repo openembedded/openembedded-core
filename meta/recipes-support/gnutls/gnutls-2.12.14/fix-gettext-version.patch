@@ -1,0 +1,20 @@
+
+Upstream-Status: Inappropriate [configuration]
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: gnutls-2.12.14/lib/po/Makefile.in.in
+===================================================================
+--- gnutls-2.12.14.orig/lib/po/Makefile.in.in	2011-11-28 20:15:56.000000000 -0800
++++ gnutls-2.12.14/lib/po/Makefile.in.in	2011-11-28 20:17:21.386078977 -0800
+@@ -8,8 +8,8 @@
+ # Please note that the actual code of GNU gettext is covered by the GNU
+ # General Public License and is *not* in the public domain.
+ #
+-# Origin: gettext-0.17
+-GETTEXT_MACRO_VERSION = 0.17
++# Origin: gettext-0.18
++GETTEXT_MACRO_VERSION = 0.18
+ 
+ PACKAGE = @PACKAGE@
+ VERSION = @VERSION@
