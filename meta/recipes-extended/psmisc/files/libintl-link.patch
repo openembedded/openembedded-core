@@ -6,25 +6,27 @@ default. The configure script correctly figures out if this is needed, but
 doesn't actually link to the libraries it decides on. This makes it link to
 them if they are needed:
 
---- psmisc-22.13/src/Makefile.am
-+++ psmisc-22.13/src/Makefile.am
-@@ -25,16 +25,17 @@ endif
+Index: psmisc-22.14/src/Makefile.am
+===================================================================
+--- psmisc-22.14.orig/src/Makefile.am	2011-06-20 04:59:44.000000000 -0700
++++ psmisc-22.14/src/Makefile.am	2011-12-01 10:19:55.792680654 -0800
+@@ -26,15 +26,17 @@
  
+ fuser_SOURCES = fuser.c comm.h signals.c signals.h i18n.h fuser.h lists.h
  
- fuser_SOURCES = fuser.c comm.h signals.c signals.h i18n.h fuser.h
 +fuser_LDADD = @INTLLIBS@
-
++
  killall_SOURCES = killall.c comm.h signals.c signals.h i18n.h
-
+ 
 -killall_LDADD = @SELINUX_LIB@
 +killall_LDADD = @SELINUX_LIB@ @INTLLIBS@
-
+ 
  peekfd_SOURCES = peekfd.c
-
+ 
  pstree_SOURCES = pstree.c comm.h i18n.h
-
+ 
 -pstree_LDADD = @TERMCAP_LIB@ @SELINUX_LIB@
 +pstree_LDADD = @TERMCAP_LIB@ @SELINUX_LIB@ @INTLLIBS@
-
+ 
  prtstat_SOURCES = prtstat.c prtstat.h
  

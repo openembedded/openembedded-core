@@ -1,4 +1,3 @@
-LICENSE = "GPL"
 SUMMARY = "Utilities for managing processes on your system"
 DESCRIPTION = "The psmisc package contains utilities for managing processes on your \
 system: pstree, killall and fuser.  The pstree command displays a tree \
@@ -8,6 +7,7 @@ processes identified by name.  The fuser command identifies the PIDs \
 of processes that are using specified files or filesystems."
 SECTION = "base"
 DEPENDS = "ncurses virtual/libintl"
+LICENSE = "GPLv2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/psmisc/psmisc-${PV}.tar.gz \
 	   file://libintl-link.patch"
@@ -17,7 +17,8 @@ inherit autotools gettext
 
 ALLOW_EMPTY = "1"
 
-PACKAGES =+ "fuser fuser-doc killall killall-doc pstree pstree-doc "
+PACKAGES =+ "fuser fuser-doc killall killall-doc pstree pstree-doc"
+PACKAGES += "psmisc-extras"
 
 FILES_${PN} = ""
 RDEPENDS_${PN} = "fuser killall pstree"
@@ -30,6 +31,9 @@ FILES_killall-doc = "${mandir}/man1/killall*"
 
 FILES_pstree = "${bindir}/pstree"
 FILES_pstree-doc = "${mandir}/man1/pstree*"
+
+FILES_psmisc-extras = "${bindir}"
+FILES_psmisc-extras-doc = "${mandir}"
 
 do_install_append() {
 	mv ${D}${bindir}/killall ${D}${bindir}/killall.${PN}

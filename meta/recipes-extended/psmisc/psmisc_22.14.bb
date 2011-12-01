@@ -1,0 +1,7 @@
+require psmisc.inc
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
+PR = "r0"
+
+SRC_URI[md5sum] = "ba3f4e971895c92bba7770d81c981503"
+SRC_URI[sha256sum] = "22bbf4561837af475c0d8d14e3b9cab453998c787212c107fac7faf2f281e26e"
