@@ -1,5 +1,5 @@
-MAJOR_VERSION = "2.19"
-PR = "r12"
+MAJOR_VERSION = "2.20"
+PR = "r0"
 require util-linux.inc
 
 # note that `lscpu' is under GPLv3+
@@ -8,11 +8,10 @@ LICENSE_util-linux-lscpu = "GPLv3+"
 SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             file://util-linux-ng-2.16-mount_lock_path.patch \
             file://uclibc-__progname-conflict.patch \      
-            file://remove_sigsetmark.patch \
 "
 
-SRC_URI[md5sum] = "3eab06f05163dfa65479c44e5231932c"
-SRC_URI[sha256sum] = "d3eac4afcc687b3ae1ffedcab2dc12df84c7ba7045cce31386d2b7040a011c7d"
+SRC_URI[md5sum] = "079b37517fd4e002a2e6e992e8b4e361"
+SRC_URI[sha256sum] = "d16ebcda3e64ab88ed363d9c1242cdb7ccfd5e1f56c83d0c3b0638c23793bbe0"
 
 # Only lscpu part is gplv3; rest of the code is not, 
 # so take out the lscpu parts while running non-gplv3 build.
@@ -42,7 +41,7 @@ addtask remove_lscpu before do_configure after do_patch
 
 # fallocate is glibc 2.10, fallocate64 is glibc 2.11
 # we need to disable it for older versions
-EXTRA_OECONF += "ac_cv_func_fallocate=no"
+EXTRA_OECONF += "ac_cv_func_fallocate=no scanf_cv_type_modifier=as"
 EXTRA_OECONF_virtclass-native += "--disable-fallocate --disable-use-tty-group"
 
 do_install_append () {
