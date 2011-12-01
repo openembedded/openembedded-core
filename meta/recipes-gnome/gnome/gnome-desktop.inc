@@ -11,7 +11,7 @@ do_configure_prepend () {
 
 FILES_${PN} += "${datadir}/gnome-about"
 
-PR = "r3"
+PR = "r4"
 
 inherit gnome pkgconfig
 
