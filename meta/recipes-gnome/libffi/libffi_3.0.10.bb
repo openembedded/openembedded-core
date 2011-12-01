@@ -5,15 +5,21 @@ time. FFI stands for Foreign Function Interface.  A foreign function interface i
 interface that allows code written in one language to call code written in another language.  The `libffi' \
 library really only provides the lowest, machine dependent layer of a fully featured foreign function interface.  \
 A layer must exist above `libffi' that handles type conversions for values passed between the two languages."
+
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=0caa055e49a3fb6c57780595e995e2ab"
+
+PR = "r0"
+
 SRC_URI = "ftp://sourceware.org/pub/libffi/${BPN}-${PV}.tar.gz"
 
-PR = "r2"
+SRC_URI[md5sum] = "79390673f5d07a8fb342bc09b5055b6f"
+SRC_URI[sha256sum] = "f01eb9027e9eb56aeaeef636649877756d475d714ef8b47f627f65bc5f3b492f"
 
-SRC_URI[md5sum] = "1f300a7a7f975d4046f51c3022fa5ff1"
-SRC_URI[sha256sum] = "589d25152318bc780cd8919b14670793f4971d9838dab46ed38c32b3ee92c452"
-LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=fa09cb778aaba64dc9eac37ab7e4e5d8"
+EXTRA_OECONF += "--disable-builddir"
+
 inherit autotools
 
 FILES_${PN}-dev += "${libdir}/libffi-${PV}"
+
 BBCLASSEXTEND = "native nativesdk"
