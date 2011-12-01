@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=08c553a87d4e51bbed50b20e0adcaede \
 
 DEPENDS = "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_PLUGINS}', '', d)}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "http://pkg-shadow.alioth.debian.org/releases/${BPN}-${PV}.tar.bz2 \
            file://login_defs_pam.sed \
@@ -88,7 +88,7 @@ do_install_append() {
 	sed -i '/^CREATE_MAIL_SPOOL/ s:^:#:' ${D}${sysconfdir}/default/useradd
 
 	install -d ${D}${sbindir} ${D}${base_sbindir} ${D}${base_bindir} 
-	for i in passwd chfn newgrp chsh ; do
+	for i in passwd chfn newgrp chsh groups ; do
 		mv ${D}${bindir}/$i ${D}${bindir}/$i.${PN}
 	done
 
@@ -123,6 +123,7 @@ pkg_postinst_${PN} () {
 	update-alternatives --install ${bindir}/chfn chfn chfn.${PN} 200
 	update-alternatives --install ${bindir}/newgrp newgrp newgrp.${PN} 200
 	update-alternatives --install ${bindir}/chsh chsh chsh.${PN} 200
+	update-alternatives --install ${bindir}/groups groups groups.${PN} 200
 	update-alternatives --install ${base_bindir}/login login login.${PN} 200
 	update-alternatives --install ${base_sbindir}/vipw vipw vipw.${PN} 200
 	update-alternatives --install ${base_sbindir}/vigr vigr vigr.${PN} 200
