@@ -53,8 +53,7 @@ do_patch() {
 }
 
 do_kernel_checkout() {
-	if [ -d $
-{WORKDIR}/git/.git/refs/remotes/origin ]; then
+	if [ -d ${WORKDIR}/git/.git/refs/remotes/origin ]; then
 		echo "Fixing up git directory for ${LINUX_KERNEL_TYPE}/${KMACHINE}"
 		rm -rf ${S}
 		mkdir ${S}
