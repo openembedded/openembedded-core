@@ -7,12 +7,12 @@ LICENSE = "Zlib"
 LIC_FILES_CHKSUM = "file://zlib.h;beginline=4;endline=23;md5=084e9c30e4e6272c3b057b13c6467f3d"
 
 DEPENDS = "libtool-cross"
-PR = "r1"
+PR = "r3"
 
 SRC_URI = "http://www.zlib.net/${BPN}-${PV}.tar.bz2 \
            file://configure.ac \
            file://Makefile.am \
-	   file://fix.inverted.LFS.logic.patch"
+           file://fix.inverted.LFS.logic.patch"
 
 SRC_URI[md5sum] = "be1e89810e66150f5b0327984d8625a0"
 SRC_URI[sha256sum] = "239aead2f22f16bfcfa6a6a5150dcbd6d6f2e4d1eaa8727b5769ea014120b307"
@@ -22,6 +22,20 @@ inherit autotools
 do_configure_prepend () {
 	cp ${WORKDIR}/configure.ac ${S}/
 	cp ${WORKDIR}/Makefile.am ${S}/
+}
+
+do_install_append () {
+	sed \
+		-e 's:@prefix@:${prefix}:' \
+		-e 's:@exec_prefix@:${exec_prefix}:' \
+		-e 's:@libdir@:${libdir}:' \
+		-e 's:@sharedlibdir@:${libdir}:' \
+		-e 's:@includedir@:${includedir}:' \
+		-e 's:@VERSION@:${PV}:' \
+		zlib.pc.in > zlib.pc
+
+	install -d ${D}${libdir}/pkgconfig
+	install -m 0644 zlib.pc ${D}${libdir}/pkgconfig/
 }
 
 BBCLASSEXTEND = "native nativesdk"
