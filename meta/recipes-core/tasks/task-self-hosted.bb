@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Create Basic Image Tasks"
-PR = "r0"
+PR = "r1"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
@@ -142,8 +142,8 @@ RDEPENDS_task-self-hosted-extended = "\
     rpm \
     screen \
     setserial \
-    strace \
     subversion \
+    sudo \
     sysstat \
     tar \
     gzip \
@@ -159,13 +159,19 @@ RDEPENDS_task-self-hosted-extended = "\
     zip \
     zlib \
     cpio \
+    iptables \
+    kernel-module-tun \
+    kernel-module-iptable-raw \
+    kernel-module-iptable-nat \
+    kernel-module-iptable-mangle \
+    kernel-module-iptable-filter \
     "
 
 
 RDEPENDS_task-self-hosted-graphics = "\
     python-pygtk \
-    mesa-dri \
-    mesa-dri-dev \
+    libgl \
+    libgl-dev \
     libglu \
     libglu-dev \
     libsdl \
