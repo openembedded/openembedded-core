@@ -2,7 +2,7 @@ DESCRIPTION = "Package maintenance system for Debian."
 LICENSE = "GPL"
 SECTION = "base"
 
-INC_PR = "r10"
+INC_PR = "r11"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.bz2 \
            file://ignore_extra_fields.patch"
@@ -19,6 +19,7 @@ PARALLEL_MAKE = ""
 inherit autotools gettext perlnative
 
 export PERL_LIBDIR = "${libdir}/perl"
+PERL_LIBDIR_virtclass-native = "${libdir}/perl-native/perl"
 
 EXTRA_OECONF = "--without-static-progs \
 		--without-dselect \
