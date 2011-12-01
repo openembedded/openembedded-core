@@ -1,29 +1,37 @@
-Upstream-Status: Pending
+trace-cmd: Cross-compile fixes for LDFLAGS and include path
 
 Add ability for the Makefile to respect LDFLAGS.
-
 Also remove hardcoded /usr/local/include include path.
 
-RP 7/5/2011
+Upstream-Status: Accepted [Post 1.2: 5f576e9af7ad706774d9764a9ae3989376797c0e]
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+
+---
+ Makefile |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 Index: git/Makefile
 ===================================================================
---- git.orig/Makefile	2011-07-05 11:58:11.699910550 +0100
-+++ git/Makefile	2011-07-05 23:30:12.319920617 +0100
-@@ -189,10 +189,11 @@
+--- git.orig/Makefile
++++ git/Makefile
+@@ -202,12 +202,13 @@ export Q VERBOSE
  TRACECMD_VERSION = $(TC_VERSION).$(TC_PATCHLEVEL).$(TC_EXTRAVERSION)
  KERNELSHARK_VERSION = $(KS_VERSION).$(KS_PATCHLEVEL).$(KS_EXTRAVERSION)
  
 -INCLUDES = -I. -I/usr/local/include $(CONFIG_INCLUDES)
 +INCLUDES = -I. $(CONFIG_INCLUDES)
  
+ include features.mk
+ 
  # Set compile option CFLAGS if not set elsewhere
  CFLAGS ?= -g -Wall
 +LDFLAGS ?=
  
- # Append required CFLAGS
- override CFLAGS += $(CONFIG_FLAGS) $(INCLUDES) $(PLUGIN_DIR_SQ)
-@@ -225,7 +226,7 @@
+ ifndef NO_PTRACE
+ ifneq ($(call try-cc,$(SOURCE_PTRACE),),y)
+@@ -251,7 +252,7 @@ do_fpic_compile =					\
  
  do_app_build =						\
  	($(print_app_build)				\
@@ -32,7 +40,7 @@ Index: git/Makefile
  
  do_compile_shared_library =			\
  	($(print_shared_lib_compile)		\
-@@ -237,7 +238,7 @@
+@@ -263,7 +264,7 @@ do_compile_plugin_obj =				\
  
  do_plugin_build =				\
  	($(print_plugin_build)			\

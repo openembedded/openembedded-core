@@ -1,0 +1,36 @@
+Disable building docs until we have asciidocs available as a recipe.
+
+Upstream-Status: Inappropriate [Account for missing dependency, the lazy way]
+
+Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+
+---
+ Makefile |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+Index: git/Makefile
+===================================================================
+--- git.orig/Makefile
++++ git/Makefile
+@@ -327,7 +327,9 @@ TARGETS = $(CMD_TARGETS) $(GUI_TARGETS)
+ #    If you want kernelshark, then do:  make gui
+ ###
+ 
+-all: all_cmd doc show_gui_make
++# Make doc optional
++#all: all_cmd doc show_gui_make
++all: all_cmd show_gui_make
+ 
+ all_cmd: $(CMD_TARGETS)
+ 
+@@ -503,7 +505,9 @@ install_python: $(PYTHON_SO_INSTALL) $(P
+ install_cmd: all_cmd install_plugins install_python
+ 	$(Q)$(call do_install,trace-cmd,$(bindir_SQ))
+ 
+-install: install_cmd install_doc
++# Make doc optional
++#install: install_cmd install_doc
++install: install_cmd
+ 	@echo "Note: to install the gui, type \"make install_gui\""
+ 
+ install_gui: install_cmd gui
