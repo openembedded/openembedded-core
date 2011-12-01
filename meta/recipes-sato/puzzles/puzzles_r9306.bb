@@ -2,7 +2,7 @@ DESCRIPTION="Simon Tatham's Portable Puzzle Collection"
 HOMEPAGE="http://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
 
 DEPENDS = "gtk+ libxt"
-PR = "r0"
+PR = "r1"
 MOD_PV = "${@d.getVar('PV',1)[1:]}"
 
 LICENSE = "MIT"
@@ -23,6 +23,7 @@ do_configure () {
 
 do_compile_prepend = " \
         export XLDFLAGS='${LDFLAGS} `${STAGING_BINDIR_NATIVE}/pkg-config gtk+-2.0 --libs`'; \
+        export XLFLAGS=-lm \
 	export CFLAGS='${CFLAGS} -I./ `${STAGING_BINDIR_NATIVE}/pkg-config gtk+-2.0 --cflags`'; "
 
 FILES_${PN} = "${prefix}/games/* ${datadir}/applications/*"
