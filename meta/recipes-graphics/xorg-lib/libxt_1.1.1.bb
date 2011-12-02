@@ -19,10 +19,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3239170e81427c5948287df07691f03f"
 DEPENDS += "util-linux libxcb libsm virtual/libx11 kbproto libxdmcp"
 PROVIDES = "xt"
 
-PR = "r0"
+PR = "r1"
 PE = "1"
 
 XORG_PN = "libXt"
+
+SRC_URI +=  "file://libxt_fix_for_x32.patch"
 
 BBCLASSEXTEND = "native"
 
