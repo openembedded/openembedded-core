@@ -327,7 +327,7 @@ python () {
 
     # If PRINC is set, try and increase the PR value by the amount specified
     princ = bb.data.getVar('PRINC', d, True)
-    if princ:
+    if princ and princ != "0":
         pr = bb.data.getVar('PR', d, True)
         pr_prefix = re.search("\D+",pr)
         prval = re.search("\d+",pr)
