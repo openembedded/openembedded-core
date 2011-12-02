@@ -8,8 +8,10 @@ System."
 LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b9e051107d5628966739a0b2e9b32676"
 
-PR = "r0"
+PR = "r1"
 PE = "1"
+
+SRC_URI += "file://xproto_fix_for_x32.patch"
 
 EXTRA_OECONF_append = " --enable-specs=no"
 BBCLASSEXTEND = "native nativesdk"
