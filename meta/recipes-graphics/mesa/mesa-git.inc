@@ -6,9 +6,9 @@ PV = "7.11+gitr${SRCPV}"
 LIC_FILES_CHKSUM = "file://docs/license.html;md5=03ccdc4c379c4289aecfb8892c546f67"
 FILESEXTRAPATHS_prepend := "${THISDIR}/mesa-git:"
 
-SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git"
-SRC_URI += "file://uclibc.patch \
-            file://crossfix.patch \
+SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git \
+           file://uclibc.patch \
+           file://crossfix.patch \
            "
 S = "${WORKDIR}/git"
 
