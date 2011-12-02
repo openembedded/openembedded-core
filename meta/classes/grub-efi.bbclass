@@ -16,7 +16,7 @@
 
 do_bootimg[depends] += "grub-efi-${TARGET_ARCH}-native:do_deploy"
 
-GRUBCFG = "grub.cfg"
+GRUBCFG = "${S}/grub.cfg"
 GRUB_TIMEOUT ?= "10"
 #FIXME: build this from the machine config
 GRUB_OPTS ?= "serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1"
@@ -56,7 +56,7 @@ grubefi_iso_populate() {
 
 	# FIXUP the <EFIDIR> token in the config
 	# FIXME: This can be dropped once mkdosfs is fixed
-	sed -i "s@<EFIDIR>@${EFIDIR}@g" ${GRUB_ISODIR}/${GRUBCFG}
+	sed -i "s@<EFIDIR>@${EFIDIR}@g" ${GRUB_ISODIR}/$(basename "${GRUBCFG}")
 }
 
 grubefi_hddimg_populate() {
@@ -64,7 +64,7 @@ grubefi_hddimg_populate() {
 
 	# FIXUP the <EFIDIR> token in the config
 	# FIXME: This can be dropped once mkdosfs is fixed
-	sed -i "s@<EFIDIR>@@g" ${GRUB_HDDDIR}/${GRUBCFG}
+	sed -i "s@<EFIDIR>@@g" ${GRUB_HDDDIR}/$(basename "${GRUBCFG}")
 }
 
 # FIXME: The <EFIDIR> token can be replaced with ${EFIDIR} once the
@@ -89,8 +89,6 @@ python build_grub_cfg() {
     cfile = d.getVar('GRUBCFG', True)
     if not cfile:
         raise bb.build.FuncFailed('Unable to read GRUBCFG')
-
-    #bb.mkdirhier(os.path.dirname(cfile))
 
     try:
          cfgfile = file(cfile, 'w')

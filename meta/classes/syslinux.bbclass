@@ -15,8 +15,8 @@
 do_bootimg[depends] += "syslinux:do_populate_sysroot \
                         syslinux-native:do_populate_sysroot"
 
-SYSLINUXCFG  = "syslinux.cfg"
-SYSLINUXMENU = "menu"
+SYSLINUXCFG  = "${S}/syslinux.cfg"
+SYSLINUXMENU = "${S}/menu"
 
 SYSLINUX_ISODIR = "${ISODIR}/isolinux"
 SYSLINUX_HDDDIR = "${HDDDIR}"
