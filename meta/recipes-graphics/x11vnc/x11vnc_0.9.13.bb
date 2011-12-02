@@ -5,18 +5,18 @@ SECTION = "x11/utils"
 AUTHOR = "Karl Runge"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=361b6b837cad26c6900a926b62aada5f \
-                    file://x11vnc/x11vnc.h;endline=33;md5=ee4946e57bb73ecf93d7d98a3d48c6be"
+                    file://x11vnc/x11vnc.h;endline=33;md5=6f95dc6535467d7ee1563fd434fb372e"
 
 DEPENDS = "openssl virtual/libx11 libxext avahi jpeg zlib"
 
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libvncserver/x11vnc/${PV}/x11vnc-${PV}.tar.gz\
            file://starting-fix.patch \
            file://endian-fix.patch "
 
-SRC_URI[md5sum] = "1498a68d02aa7b6c97bf746c073c8d00"
-SRC_URI[sha256sum] = "60a7cceee2c9a5f1c854340b2bae13f975ac55906237042f81f795b28a154a79"
+SRC_URI[md5sum] = "a372ec4fe8211221547b1c108cf56e4c"
+SRC_URI[sha256sum] = "f6829f2e629667a5284de62b080b13126a0736499fe47cdb447aedb07a59f13b"
 
 inherit autotools
 
