@@ -12,10 +12,9 @@ DEPENDS = "gtk+ menu-cache intltool-native"
 
 PR = "r0"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/libfm-${PV}.tar.gz \
-           file://configure_fix.patch"
+SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/libfm-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "c09bce415ff6dc2dd835e28aeddeabe3"
-SRC_URI[sha256sum] = "ed49365319b941757c155b3790a2adf73f5072227c578d9bcba7329c6f9fcd3b"
+SRC_URI[md5sum] = "a97e03d973e6ac727f28d0934d6c9ad5"
+SRC_URI[sha256sum] = "1740681cff4cd4c5a2eaa9805d8898269cfb6a49a0bda0acb242def15bc7131b"
 
 inherit autotools pkgconfig
