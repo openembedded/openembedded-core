@@ -24,8 +24,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.gz \
 
 SRC_URI_append_poky = " file://owl-window-menu.patch"
 
-SRC_URI[md5sum] = "f31ed6defb600f7046a456220d8efa3a"
-SRC_URI[sha256sum] = "bc48af4ade638b47e4207cc274f6e38c2bd3786a811d20da47c3df9907c6fb6c"
+SRC_URI[md5sum] = "d34a3530a6c5dcd674d23021d71c3e95"
+SRC_URI[sha256sum] = "f133c6f207f719d1fc69fe8bc07b2de6883c6937ffa87448df42e3b1a30e0298"
 
 inherit autotools pkgconfig
 
