@@ -82,6 +82,12 @@ do_configure () {
 	linux-i686)
 		target=debian-i386-i686/cmov
 		;;
+	linux-gnux32-x86_64)
+		target=linux-x32
+		;;
+	linux-gnu64-x86_64)
+		target=linux-x86_64
+		;;
 	linux-mips)
 		target=debian-mips
 		;;
@@ -122,15 +128,6 @@ do_compile () {
 
 do_install () {
 	oe_runmake INSTALL_PREFIX="${D}" MANDIR="${mandir}" install
-
-	# On x86_64, move lib/* to lib64
-	if [ "${libdir}" != "${prefix}/lib" ]
-	then
-		install -m 0755 ${D}${libdir} ${D}${libdir}/pkgconfig
-		mv ${D}${prefix}/lib/lib* ${D}${libdir}
-		mv ${D}${prefix}/lib/pkgconfig/*.pc ${D}${libdir}/pkgconfig
-		chmod 644 ${D}${libdir}/pkgconfig/openssl.pc
-	fi
 
 	oe_libinstall -so libcrypto ${D}${libdir}
 	oe_libinstall -so libssl ${D}${libdir}

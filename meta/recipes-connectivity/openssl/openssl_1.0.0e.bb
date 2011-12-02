@@ -6,7 +6,7 @@ DEPENDS += "ocf-linux"
 
 CFLAG += "-DHAVE_CRYPTODEV -DUSE_CRYPTODEV_DIGESTS"
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.2"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 
@@ -29,6 +29,7 @@ SRC_URI += "file://configure-targets.patch \
             file://debian/pkg-config.patch \
             file://debian/no-symbolic.patch \
             file://debian/debian-targets.patch \
+            file://openssl_fix_for_x32.patch \
            "
 
 SRC_URI[md5sum] = "7040b89c4c58c7a1016c0dfa6e821c86"
