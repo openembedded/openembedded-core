@@ -1,6 +1,6 @@
 DESCRIPTION = "Clutter Box2D"
 HOMEPAGE = "http://www.clutter-project.org/"
-LICENSE = "LGPL-2.1"
+LICENSE = "LGPLv2.1+"
 
 # The main clutter lib is machine specific so we need to be too
 PACKAGE_ARCH = "${MACHINE_ARCH}"

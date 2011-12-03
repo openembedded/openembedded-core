@@ -8,7 +8,7 @@ HOMEPAGE = "http://www.boost.org/"
 SECTION = "libs"
 DEPENDS = "boost-native zlib"
 DEPENDS_virtclass-native = ""
-LICENSE = "Boost"
+LICENSE = "BSL-1 & MIT & Python-2.0"
 
 ARM_INSTRUCTION_SET = "arm"
 
@@ -16,7 +16,7 @@ BOOST_VER = "${@"_".join(d.getVar("PV",1).split("."))}"
 BOOST_MAJ = "${@"_".join(d.getVar("PV",1).split(".")[0:2])}"
 BOOST_P = "boost_${BOOST_VER}"
 
-INC_PR = "r0"
+INC_PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BOOST_P}.tar.bz2"
 

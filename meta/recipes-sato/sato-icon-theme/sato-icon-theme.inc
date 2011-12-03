@@ -2,7 +2,7 @@ DESCRIPTION = "Sato Icon Theme"
 HOMEPAGE = "http://www.o-hand.com"
 BUGTRACKER = "http://bugzilla.openedhand.com/"
 
-LICENSE = "CCPL"
+LICENSE = "CC-BY-SA-3.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=56a830bbe6e4697fe6cbbae01bb7c2b2"
 
 SECTION = "x11"

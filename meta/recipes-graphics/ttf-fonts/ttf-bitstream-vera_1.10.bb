@@ -5,9 +5,9 @@ and bold).  In addition Fontconfig/Xft2 can artificially oblique the \
 serif faces for you: this loses hinting and distorts the faces slightly, \
 but is visibly different than normal and bold, and reasonably pleasing."
 SECTION = "x11/fonts"
-LICENSE = "Bitstream_Vera"
+LICENSE = "BitstreamVera"
 LIC_FILES_CHKSUM = "file://COPYRIGHT.TXT;md5=27d7484b1e18d0ee4ce538644a3f04be"
-PR = "r5"
+PR = "r6"
 RDEPENDS_${PN} = "fontconfig-utils"
 
 inherit allarch

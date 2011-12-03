@@ -3,9 +3,9 @@ DESCRIPTION = "This package contains utilities (mainly fig2dev) to \
 handle XFig (Facility for Interactive Generation of figures) files."
 HOMEPAGE = "http://www-epb.lbl.gov/xfig/"
 SECTION = "console/utils"
-LICENSE = "xfig"
+LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://fig2dev/fig2dev.c;endline=16;md5=6bab01e017409cf9ab21d3e953b793f7"
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "imake-native xorg-cf-files-native zlib-native jpeg-native libpng-native libxpm-native"
 

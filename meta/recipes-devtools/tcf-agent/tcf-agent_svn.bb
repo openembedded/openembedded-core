@@ -2,13 +2,13 @@ DESCRIPTION = "Target Communication Framework"
 HOMEPAGE = "http://wiki.eclipse.org/TCF"
 BUGTRACKER = "https://bugs.eclipse.org/bugs/"
 
-LICENSE = "EPL-1 | EDLv1.0"
+LICENSE = "EPL-1.0 | EDL-1.0"
 LIC_FILES_CHKSUM = "file://../epl-v10.html;md5=7aa4215a330a0a4f6a1cbf8da1a0879f \
                     file://edl-v10.html;md5=522a390a83dc186513f0500543ad3679"
 
 SRCREV = "1855"
 PV = "0.0+svnr${SRCPV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "svn://dev.eclipse.org/svnroot/dsdp/org.eclipse.tm.tcf/trunk;module=agent;proto=http \
            http://dev.eclipse.org/svnroot/dsdp/org.eclipse.tm.tcf/trunk/epl-v10.html;name=epl \

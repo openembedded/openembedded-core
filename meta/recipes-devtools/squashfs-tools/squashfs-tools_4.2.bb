@@ -2,12 +2,12 @@
 # and I don't think the kernel supports it any more.
 DESCRIPTION = "Tools to manipulate Squashfs filesystems."
 SECTION = "base"
-LICENSE = "GPLv2 & Public Domain"
+LICENSE = "GPL-2 & PD"
 LIC_FILES_CHKSUM = "file://../COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://../../7zC.txt;beginline=12;endline=16;md5=2056cd6d919ebc3807602143c7449a7c \
                    "
 DEPENDS = "attr zlib xz"
-PR = "r0"
+PR = "1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/squashfs/squashfs${PV}.tar.gz;name=squashfs \
            http://downloads.sourceforge.net/sevenzip/lzma465.tar.bz2;name=lzma \

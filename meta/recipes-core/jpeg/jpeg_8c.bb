@@ -3,7 +3,7 @@ DESCRIPTION = "libjpeg contains a library for handling the JPEG (JFIF) image for
 HOMEPAGE = "http://www.ijg.org/"
 BUGTRACKER = ""
 
-LICENSE ="jpeg"
+LICENSE ="BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://cdjpeg.h;endline=12;md5=78fa8dbac547bb5b2a0e6457a6cfe21d \
                     file://jpeglib.h;endline=14;md5=22f1e0f8fc71f6f7563146d3b210dbe5 \
                     file://djpeg.c;endline=13;md5=ca89254925da06fef47e4b6468233432"
@@ -13,7 +13,7 @@ SECTION = "libs"
 DEPENDS = "libtool-cross"
 DEPENDS_virtclass-native = "libtool-native"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://www.ijg.org/files/jpegsrc.v${PV}.tar.gz \
 	   file://debian-libjpeg7_7-1.diff;"

@@ -1,9 +1,15 @@
 SUMMARY = "Miscellaneous files for the base system."
 DESCRIPTION = "The base-files package creates the basic system directory structure and provides a small set of key configuration files for the system."
 SECTION = "base"
-PR = "r69"
+PR = "r70"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://licenses/GPL-2;md5=94d55d512a9ba36caa9b7df079bae19f"
+# Removed all license related tasks in this recipe as license.bbclass 
+# now deals with this. In order to get accurate licensing on to the image:
+# Set COPY_LIC_MANIFEST to just copy just the license.manifest to the image
+# For the manifest and the license text for each package:
+# Set COPY_LIC_MANIFEST and COPY_LIC_DIRS
+
 SRC_URI = "file://rotation \
            file://nsswitch.conf \
            file://motd \
@@ -18,14 +24,8 @@ SRC_URI = "file://rotation \
            file://usbd \
            file://share/dot.bashrc \
            file://share/dot.profile \
-           file://licenses/BSD \
            file://licenses/GPL-2 \
-           file://licenses/GPL-3 \
-           file://licenses/LGPL-2 \
-           file://licenses/LGPL-2.1 \
-           file://licenses/LGPL-3 \
-           file://licenses/GFDL-1.2 \
-           file://licenses/Artistic"
+           "
 S = "${WORKDIR}"
 
 INHIBIT_DEFAULT_DEPS = "1"
@@ -102,10 +102,6 @@ do_install () {
 	install -m 0644 ${WORKDIR}/nsswitch.conf ${D}${sysconfdir}/nsswitch.conf
 	install -m 0644 ${WORKDIR}/host.conf ${D}${sysconfdir}/host.conf
 	install -m 0644 ${WORKDIR}/motd ${D}${sysconfdir}/motd
-
-	for license in BSD GPL-2 LGPL-2 LGPL-2.1 Artistic GPL-3 LGPL-3 GFDL-1.2; do
-		install -m 0644 ${WORKDIR}/licenses/$license ${D}${datadir}/common-licenses/
-	done
 
 	ln -sf /proc/mounts ${D}${sysconfdir}/mtab
 }

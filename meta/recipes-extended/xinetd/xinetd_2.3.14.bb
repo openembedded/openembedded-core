@@ -2,11 +2,12 @@ DESCRIPTION = "Highly configurable, modular and secure inetd"
 HOMEPAGE = "http://www.xinetd.org"
 
 # xinetd is a BSD-like license
-LICENSE = "xinetd"
+# Apple and Gentoo say BSD here.
+LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=8ad8615198542444f84d28a6cf226dd8"
 
 DEPENDS = ""
-PR ="r0"
+PR ="r1"
 
 SRC_URI = "http://www.xinetd.org/xinetd-${PV}.tar.gz \
       file://xinetd.init \

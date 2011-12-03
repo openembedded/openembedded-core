@@ -1,5 +1,10 @@
 DESCRIPTION = "Firmware files for use with Linux kernel"
 SECTION = "kernel"
+# Notes:
+# This is kind of a mess. Each bit of firmware has their own license. Some free
+# some not. Leaving this as Proprietary for now, but this recipe should be probably
+# be rethought out a bit more around how it deals with licenses.
+
 LICENSE = "Proprietary"
 
 LIC_FILES_CHKSUM = "file://LICENSE.radeon_rlc;md5=4c243f7854d2884b483abda991adef43 \
