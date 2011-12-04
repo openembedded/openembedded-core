@@ -28,6 +28,11 @@ EXTRA_OECONF = "--enable-spincludedir=${STAGING_INCDIR}/OpenSP \
 # results in it being specified twice when configure is run.
 CONFIGUREOPTS := "${@d.getVar('CONFIGUREOPTS', True).replace('--datadir=${datadir}', '--datadir=${STAGING_DATADIR}/sgml/openjade-${PV}')}"
 
+# CONFIGUREOPTS has hard coded paths so we need to ignore it's vardeps
+# there are other bits in there too but they are picked up by other variable
+# dependencies so it all works out
+do_configure[vardepsexclude] += "CONNFIGUREOPTS"
+
 CFLAGS =+ "-I${S}/include"
 
 SSTATEPOSTINSTFUNCS += "openjade_sstate_postinst"
