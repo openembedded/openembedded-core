@@ -258,8 +258,13 @@ def write_latestlink(pkg, pe, pv, pr, d):
 		filedir = os.path.join(pkghistdir, pkg)
 	else:
 		filedir = pkghistdir
-	rm_link(os.path.join(filedir, "latest"))
-	shutil.copy(os.path.join(filedir, "%s:%s-%s" % (pe, pv, pr)), os.path.join(filedir, "latest"))
+	latest_file = os.path.join(filedir, "latest")
+	ver_file = os.path.join(filedir, "%s:%s-%s" % (pe, pv, pr))
+	rm_link(latest_file)
+	if d.getVar('BUILDHISTORY_KEEP_VERSIONS', True) == '1':
+		shutil.copy(ver_file, latest_file)
+	else:
+		shutil.move(ver_file, latest_file)
 
 
 buildhistory_get_image_installed() {
