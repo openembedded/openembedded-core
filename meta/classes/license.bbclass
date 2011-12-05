@@ -1,17 +1,17 @@
 # Populates LICENSE_DIRECTORY as set in distro config with the license files as set by
-# LIC_FILES_CHKSUM. 
+# LIC_FILES_CHKSUM.
 # TODO:
 # - We should also enable the ability to put the generated license directory onto the
 #  rootfs
 # - Gather up more generic licenses
-# - There is a real issue revolving around license naming standards. See license names 
+# - There is a real issue revolving around license naming standards. See license names
 #  licenses.conf and compare them to the license names in the recipes. You'll see some
 #  differences and that should be corrected.
 
 LICENSE_DIRECTORY ??= "${DEPLOY_DIR}/licenses"
 LICSSTATEDIR = "${WORKDIR}/license-destdir/"
 
-addtask populate_lic after do_patch before do_package 
+addtask populate_lic after do_patch before do_package
 do_populate_lic[dirs] = "${LICSSTATEDIR}/${PN}"
 do_populate_lic[cleandirs] = "${LICSSTATEDIR}"
 
@@ -20,7 +20,7 @@ do_populate_lic[cleandirs] = "${LICSSTATEDIR}"
 # break the non-standardized license names that we find in LICENSE, we'll set
 # up a bunch of VarFlags to accomodate non-SPDX license names.
 #
-# We should really discuss standardizing this field, but that's a longer term goal. 
+# We should really discuss standardizing this field, but that's a longer term goal.
 # For now, we can do this and it should grab the most common LICENSE naming variations.
 
 #GPL variations
@@ -57,37 +57,25 @@ python do_populate_lic() {
     import os
     import bb
     import shutil
-    import ast
+    import oe.license
 
-    class LicenseVisitor(ast.NodeVisitor):
-        def generic_visit(self, node):
-            ast.NodeVisitor.generic_visit(self, node)
-
+    class FindVisitor(oe.license.LicenseVisitor):
         def visit_Str(self, node):
             #
             # Until I figure out what to do with
             # the two modifiers I support (or greater = +
             # and "with exceptions" being *
-            # we'll just strip out the modifier and put 
+            # we'll just strip out the modifier and put
             # the base license.
             find_license(node.s.replace("+", "").replace("*", ""))
-            ast.NodeVisitor.generic_visit(self, node)
-
-        def visit_BinOp(self, node):
-            op = node.op
-            if isinstance(op, ast.BitOr): 
-                x = LicenseVisitor()
-                x.visit(node.left)
-                x.visit(node.right)
-            else:               
-                ast.NodeVisitor.generic_visit(self, node)
+            self.generic_visit(node)
 
     def copy_license(source, destination, file_name):
         try:
             bb.copyfile(os.path.join(source, file_name), os.path.join(destination, file_name))
         except:
             bb.warn("%s: No generic license file exists for: %s at %s" % (pn, file_name, source))
-            pass 
+            pass
 
     def link_license(source, destination, file_name):
         try:
@@ -108,8 +96,8 @@ python do_populate_lic() {
                 # Great, there is an SPDXLICENSEMAP. We can copy!
                 bb.note("We need to use a SPDXLICENSEMAP for %s" % (license_type))
                 spdx_generic = d.getVarFlag('SPDXLICENSEMAP', license_type)
-                copy_license(generic_directory, gen_lic_dest, spdx_generic)            
-                link_license(gen_lic_dest, destdir, spdx_generic)            
+                copy_license(generic_directory, gen_lic_dest, spdx_generic)
+                link_license(gen_lic_dest, destdir, spdx_generic)
             else:
                 # And here is where we warn people that their licenses are lousy
                 bb.warn("%s: No generic license file exists for: %s at %s" % (pn, license_type, generic_directory))
@@ -117,7 +105,7 @@ python do_populate_lic() {
                 pass
         elif os.path.isfile(os.path.join(generic_directory, license_type)):
             copy_license(generic_directory, gen_lic_dest, license_type)
-            link_license(gen_lic_dest, destdir, license_type)            
+            link_license(gen_lic_dest, destdir, license_type)
 
     # All the license types for the package
     license_types = d.getVar('LICENSE', True)
@@ -130,7 +118,7 @@ python do_populate_lic() {
     srcdir = d.getVar('S', True)
     # Directory we store the generic licenses as set in the distro configuration
     generic_directory = d.getVar('COMMON_LICENSE_DIR', True)
-    
+
     try:
         bb.mkdirhier(destdir)
     except:
@@ -153,21 +141,14 @@ python do_populate_lic() {
         # If the copy didn't occur, something horrible went wrong and we fail out
         if ret is False or ret == 0:
             bb.warn("%s could not be copied for some reason. It may not exist. WARN for now." % srclicfile)
- 
+
     gen_lic_dest = os.path.join(d.getVar('LICENSE_DIRECTORY', True), "common-licenses")
-    
-    clean_licenses = ""
 
-    for x in license_types.replace("(", " ( ").replace(")", " ) ").split():
-        if ((x != "(") and (x != ")") and (x != "&") and (x != "|")):
-            clean_licenses += "'" + x + "'"
-        else:
-            clean_licenses += " " + x + " "
-
-    # lstrip any possible indents, since ast needs python syntax.
-    node = ast.parse(clean_licenses.lstrip())
-    v = LicenseVisitor()
-    v.visit(node)
+    v = FindVisitor()
+    try:
+        v.visit_string(license_types)
+    except oe.license.InvalidLicense as exc:
+        bb.fatal("%s: %s" % (d.getVar('PF', True), exc))
 }
 
 SSTATETASKS += "do_populate_lic"
