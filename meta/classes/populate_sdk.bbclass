@@ -18,6 +18,13 @@ PID = "${@os.getpid()}"
 
 EXCLUDE_FROM_WORLD = "1"
 
+python () {
+    # If we don't do this we try and run the mapping hooks while parsing which is slow
+    # bitbake should really provide something to let us know this...
+    if bb.data.getVar('BB_WORKERCONTEXT', d, True) is not None:
+        runtime_mapping_rename("TOOLCHAIN_TARGET_TASK", d)
+}
+
 fakeroot do_populate_sdk() {
 	rm -rf ${SDK_OUTPUT}
 	mkdir -p ${SDK_OUTPUT}
