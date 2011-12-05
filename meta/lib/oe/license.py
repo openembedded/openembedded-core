@@ -30,3 +30,33 @@ class LicenseVisitor(ast.NodeVisitor):
             new_elements.append(element)
 
         self.visit(ast.parse(' '.join(new_elements)))
+
+class FlattenVisitor(LicenseVisitor):
+    """Flatten a license tree (parsed from a string) by selecting one of each
+    set of OR options, in the way the user specifies"""
+    def __init__(self, choose_licenses):
+        self.choose_licenses = choose_licenses
+        self.licenses = []
+        LicenseVisitor.__init__(self)
+
+    def visit_Str(self, node):
+        self.licenses.append(node.s)
+
+    def visit_BinOp(self, node):
+        if isinstance(node.op, ast.BitOr):
+            left = FlattenVisitor(self.choose_licenses)
+            left.visit(node.left)
+
+            right = FlattenVisitor(self.choose_licenses)
+            right.visit(node.right)
+
+            selected = self.choose_licenses(left.licenses, right.licenses)
+            self.licenses.extend(selected)
+        else:
+            self.generic_visit(node)
+
+def flattened_licenses(licensestr, choose_licenses):
+    """Given a license string and choose_licenses function, return a flat list of licenses"""
+    flatten = FlattenVisitor(choose_licenses)
+    flatten.visit_string(licensestr)
+    return flatten.licenses

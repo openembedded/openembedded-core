@@ -36,3 +36,33 @@ class TestSingleLicense(unittest.TestCase):
             with self.assertRaises(oe.license.InvalidLicense) as cm:
                 self.parse(license)
             self.assertEqual(cm.exception.license, license)
+
+class TestSimpleCombinations(unittest.TestCase):
+    tests = {
+        "FOO&BAR": ["FOO", "BAR"],
+        "BAZ & MOO": ["BAZ", "MOO"],
+        "ALPHA|BETA": ["ALPHA"],
+        "BAZ&MOO|FOO": ["FOO"],
+        "FOO&BAR|BAZ": ["FOO", "BAR"],
+    }
+    preferred = ["ALPHA", "FOO", "BAR"]
+
+    def test_tests(self):
+        def choose(a, b):
+            if all(lic in self.preferred for lic in b):
+                return b
+            else:
+                return a
+
+        for license, expected in self.tests.items():
+            licenses = oe.license.flattened_licenses(license, choose)
+            self.assertListEqual(licenses, expected)
+
+class TestComplexCombinations(TestSimpleCombinations):
+    tests = {
+        "FOO & (BAR | BAZ)&MOO": ["FOO", "BAR", "MOO"],
+        "(ALPHA|(BETA&THETA)|OMEGA)&DELTA": ["OMEGA", "DELTA"],
+        "((ALPHA|BETA)&FOO)|BAZ": ["BETA", "FOO"],
+        "(GPL-2.0|Proprietary)&BSD-4-clause&MIT": ["GPL-2.0", "BSD-4-clause", "MIT"],
+    }
+    preferred = ["BAR", "OMEGA", "BETA", "GPL-2.0"]
