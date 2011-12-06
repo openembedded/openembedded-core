@@ -23,10 +23,6 @@ EGLIBCVERSION ?= "2.13"
 UCLIBCVERSION ?= "0.9.32"
 LINUXLIBCVERSION ?= "3.1"
 
-# Temporary workaround for gcc 4.6.0 ICE with beagleboard
-# gcc bug: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=47719
-TARGET_CC_ARCH_arm_pn-mesa-xlib := "${@'${TARGET_CC_ARCH}'.replace('armv7-a','armv5')}"
-
 PREFERRED_VERSION_gcc ?= "${GCCVERSION}"
 PREFERRED_VERSION_gcc-cross ?= "${GCCVERSION}"
 PREFERRED_VERSION_gcc-cross-initial ?= "${GCCVERSION}"
