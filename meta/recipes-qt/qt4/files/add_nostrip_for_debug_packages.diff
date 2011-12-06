@@ -1,0 +1,23 @@
+author: Fathi Boudra <fabo@debian.org>
+
+Qt is built in release mode and strip files by default.
+Set CONFIG+=nostrip to avoid the stripping and
+let dh_strip do it to generate debug packages.
+
+Upstream-Status: Inappropriate [Configuration]
+
+---
+ configure |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/configure
++++ b/configure
+@@ -627,6 +627,8 @@ mkdir -p "$outpath/config.tests"
+ rm -f "$outpath/config.tests/.qmake.cache"
+ cp "$QMAKE_VARS_FILE" "$outpath/config.tests/.qmake.cache"
+ 
++QMakeVar add CONFIG nostrip
++
+ QMakeVar add styles "cde mac motif plastique cleanlooks windows"
+ QMakeVar add decorations "default windows styled"
+ QMakeVar add mouse-drivers "pc"

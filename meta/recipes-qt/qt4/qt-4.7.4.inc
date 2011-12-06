@@ -14,6 +14,7 @@ SRC_URI = "http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${PV}.
            file://0001-Added-Openembedded-crossarch-option.patch \
            file://blacklist-diginotar-certs.diff \
            file://fix-translations.patch \
+           file://add_nostrip_for_debug_packages.diff \
            file://g++.conf \
            file://linux.conf \
            file://fix-qtbug-20925.patch \
