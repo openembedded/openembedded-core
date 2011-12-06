@@ -4,10 +4,10 @@ get correct compiler options for x32 gcc.
 
 Received this patch from H.J. Lu <hjl.tools@gmail.com>
 
-Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com> 2011/12/01
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com> 2011/12/06
 
---- Mesa-7.11/bin/mklib.x32	2011-11-30 14:29:14.976465283 -0800
-+++ Mesa-7.11/bin/mklib	2011-11-30 14:32:48.591525193 -0800
+--- Mesa-7.11/bin/mklib.x32	2011-12-06 13:15:17.968695114 -0800
++++ Mesa-7.11/bin/mklib	2011-12-06 13:17:13.872152249 -0800
 @@ -335,7 +335,12 @@ case $ARCH in
  	    set ${OBJECTS}
  	    ABI32=`file $1 | grep 32-bit`
@@ -22,3 +22,17 @@ Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com> 2011/12/01
  	    fi
  
              if [ "${ALTOPTS}" ] ; then
+@@ -392,7 +397,12 @@ case $ARCH in
+ 	    set ${OBJECTS}
+ 	    ABI32=`file $1 | grep 32-bit`
+ 	    if [ "${ABI32}" -a `uname -m` = "x86_64" ] ; then
+-		OPTS="-m32 ${OPTS}"
++		ABIX32=`file $1 | grep x86-64`
++		if [ "${ABI32}" ]; then
++		    OPTS="-mx32 ${OPTS}"
++		else
++		    OPTS="-m32 ${OPTS}"
++		fi
+ 	    fi
+             if [ "${ALTOPTS}" ] ; then
+                 OPTS=${ALTOPTS}
