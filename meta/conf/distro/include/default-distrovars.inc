@@ -48,3 +48,6 @@ NO32LIBS ??= "1"
 BBINCLUDELOGS ??= "yes"
 SDK_VERSION ??= "oe-core.0"
 DISTRO_VERSION ??= "oe-core.0"
+
+# Missing checksums should raise an error
+BB_STRICT_CHECKSUM = "1"
