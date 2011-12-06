@@ -43,9 +43,6 @@ do_configure_prepend() {
     ${S}/configure
 }
 
-QT_GLFLAGS ?= ""
-QT_CONFIG_FLAGS += " -xmlpatterns -no-rpath -qt3support -reduce-relocations -silent ${QT_GLFLAGS}"
-
 do_compile() {
     # Fixup missing wsegl header in some SGX SDKs
     if ! [ -e ${STAGING_INCDIR}/wsegl.h ] ; then

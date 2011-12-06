@@ -31,7 +31,8 @@ EXTRA_OECONF = "-prefix ${prefix} \
                 -verbose -release \
                 -embedded -no-freetype -no-glib -no-iconv \
                 -exceptions -xmlpatterns \
-                -qt3support"
+                -qt3support \
+                -no-fast -silent -no-rpath"
 
 # yank default -e, otherwise we get the following error:
 # moc_qbuffer.cpp: No such file or directory

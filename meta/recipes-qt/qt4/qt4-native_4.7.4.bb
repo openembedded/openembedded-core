@@ -8,8 +8,6 @@ SRC_URI += "file://blacklist-diginotar-certs.diff \
 # Find the g++.conf/linux.conf in the right directory.
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt-${PV}:"
 
-EXTRA_OECONF += " -no-fast -silent -no-rpath"
-
 TOBUILD := "src/tools/bootstrap ${TOBUILD}"
 
 SRC_URI[md5sum] = "9831cf1dfa8d0689a06c2c54c5c65aaf"

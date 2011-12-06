@@ -11,12 +11,16 @@ QT_DISTRO_FLAGS_linuxstdbase = "-sm"
 
 QT_SQL_DRIVER_FLAGS ?= "-no-sql-ibase -no-sql-mysql -no-sql-psql -no-sql-odbc -plugin-sql-sqlite"
 
+QT_GLFLAGS ?= ""
+
 QT_CONFIG_FLAGS += "-release -no-cups -reduce-relocations \
                     -shared -no-nas-sound -no-nis \
                     -qt-gif -system-libjpeg -system-libpng -system-zlib \
                     -no-pch -qdbus -stl -glib -phonon -webkit \
+                    -xmlpatterns -no-rpath -qt3support -silent \
                     ${QT_SQL_DRIVER_FLAGS} \
-                    ${QT_DISTRO_FLAGS} "
+                    ${QT_DISTRO_FLAGS} \
+                    ${QT_GLFLAGS}"
 
 EXTRA_OEMAKE = "-e"
 
