@@ -1,13 +1,14 @@
-Add -s <directory> support to populate the image.
+Add -d <directory> support to populate the image.
 
 Upstream-Status: Inappropriate [licensing]
 We're tracking an old release of dosfstools due to licensing issues.
 
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 
-diff -urN dosfstools-2.10.orig/mkdosfs/mkdosfs.c dosfstools-2.10/mkdosfs/mkdosfs.c
---- dosfstools-2.10.orig/mkdosfs/mkdosfs.c	2004-08-02 20:48:45.000000000 -0700
-+++ dosfstools-2.10/mkdosfs/mkdosfs.c	2004-08-02 20:49:44.296953792 -0700
+Index: dosfstools-2.11/mkdosfs/mkdosfs.c
+===================================================================
+--- dosfstools-2.11.orig/mkdosfs/mkdosfs.c	2011-12-06 12:27:55.000000000 +0000
++++ dosfstools-2.11/mkdosfs/mkdosfs.c	2011-12-06 12:37:13.445950703 +0000
 @@ -18,6 +18,10 @@
     as a rule), and not the block.  For example the boot block does not
     occupy a full cluster.
@@ -26,18 +27,18 @@ diff -urN dosfstools-2.10.orig/mkdosfs/mkdosfs.c dosfstools-2.10/mkdosfs/mkdosfs
 +#include <libgen.h>
 +#include <dirent.h>
  
- #if __BYTE_ORDER == __BIG_ENDIAN
- 
-@@ -124,6 +130,8 @@
- }
- #endif
+ #include <linux/version.h>
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 0)
+@@ -110,6 +116,8 @@
+  * sufficient (or even better :) for 64 bit offsets in the meantime */
+ #define llseek lseek
  
 +#define ROUND_UP(value, divisor) (value + (divisor - (value % divisor))) / divisor
 +
  /* Constant definitions */
  
  #define TRUE 1			/* Boolean constants */
-@@ -163,7 +171,6 @@
+@@ -149,7 +157,6 @@
  #define ATTR_VOLUME  8		/* volume label */
  #define ATTR_DIR     16		/* directory */
  #define ATTR_ARCH    32		/* archived */
@@ -45,7 +46,7 @@ diff -urN dosfstools-2.10.orig/mkdosfs/mkdosfs.c dosfstools-2.10/mkdosfs/mkdosfs
  #define ATTR_NONE    0		/* no attribute bits */
  #define ATTR_UNUSED  (ATTR_VOLUME | ATTR_ARCH | ATTR_SYS | ATTR_HIDDEN)
  	/* attribute bits that are copied "as is" */
-@@ -258,6 +265,19 @@
+@@ -245,6 +252,19 @@
    __u32		reserved2[4];
  };
  
@@ -65,7 +66,7 @@ diff -urN dosfstools-2.10.orig/mkdosfs/mkdosfs.c dosfstools-2.10/mkdosfs/mkdosfs
  struct msdos_dir_entry
    {
      char	name[8], ext[3];	/* name and extension */
-@@ -306,6 +326,15 @@
+@@ -293,6 +313,15 @@
  
  #define MESSAGE_OFFSET 29	/* Offset of message in above code */
  
@@ -81,7 +82,7 @@ diff -urN dosfstools-2.10.orig/mkdosfs/mkdosfs.c dosfstools-2.10/mkdosfs/mkdosfs
  /* Global variables - the root of all evil :-) - see these and weep! */
  
  static char *template_boot_code;	/* Variable to store a full template boot sector in */
-@@ -339,6 +368,9 @@
+@@ -326,6 +355,9 @@
  static int size_root_dir;	/* Size of the root directory in bytes */
  static int sectors_per_cluster = 0;	/* Number of sectors per disk cluster */
  static int root_dir_entries = 0;	/* Number of root directory entries */
@@ -89,9 +90,9 @@ diff -urN dosfstools-2.10.orig/mkdosfs/mkdosfs.c dosfstools-2.10/mkdosfs/mkdosfs
 +static int last_cluster_written = 0;
 +
  static char *blank_sector;		/* Blank sector - all zeros */
+ static int hidden_sectors = 0;		/* Number of hidden sectors */
  
- 
-@@ -411,7 +443,6 @@
+@@ -399,7 +431,6 @@
    }
  }
  
@@ -99,7 +100,7 @@ diff -urN dosfstools-2.10.orig/mkdosfs/mkdosfs.c dosfstools-2.10/mkdosfs/mkdosfs
  /* Mark a specified sector as having a particular value in it's FAT entry */
  
  static void
-@@ -1262,6 +1293,9 @@
+@@ -1266,6 +1297,9 @@
        die ("unable to allocate space for root directory in memory");
      }
  
@@ -109,7 +110,7 @@ diff -urN dosfstools-2.10.orig/mkdosfs/mkdosfs.c dosfstools-2.10/mkdosfs/mkdosfs
    memset(root_dir, 0, size_root_dir);
    if ( memcmp(volume_name, "           ", 11) )
      {
-@@ -1310,11 +1344,11 @@
+@@ -1314,11 +1348,11 @@
    }
    
    if (!(blank_sector = malloc( sector_size )))
@@ -124,7 +125,7 @@ diff -urN dosfstools-2.10.orig/mkdosfs/mkdosfs.c dosfstools-2.10/mkdosfs/mkdosfs
  /* Write the new filesystem's data tables to wherever they're going to end up! */
  
  #define error(str)				\
-@@ -1336,7 +1370,7 @@
+@@ -1340,7 +1374,7 @@
    do {							\
      int __size = (size);				\
      if (write (dev, buf, __size) != __size)		\
@@ -133,7 +134,7 @@ diff -urN dosfstools-2.10.orig/mkdosfs/mkdosfs.c dosfstools-2.10/mkdosfs/mkdosfs
    } while(0)
  
  
-@@ -1407,6 +1441,452 @@
+@@ -1412,6 +1446,452 @@
    free (fat);  /* Free up the fat table space reserved during setup_tables */
  }
  
@@ -586,19 +587,16 @@ diff -urN dosfstools-2.10.orig/mkdosfs/mkdosfs.c dosfstools-2.10/mkdosfs/mkdosfs
  
  /* Report the command usage and return a failure error code */
  
-@@ -1418,9 +1898,9 @@
+@@ -1423,7 +1903,7 @@
         [-m boot-msg-file] [-n volume-name] [-i volume-id] [-B bootcode]\n\
         [-s sectors-per-cluster] [-S logical-sector-size] [-f number-of-FATs]\n\
-        [-F fat-size] [-r root-dir-entries] [-R reserved-sectors]\n\
+        [-h hidden-sectors] [-F fat-size] [-r root-dir-entries] [-R reserved-sectors]\n\
 -       /dev/name [blocks]\n");
 +       [-d directory] /dev/name [blocks]\n");
  }
--
-+	
+ 
  /*
-  * ++roman: On m68k, check if this is an Atari; if yes, turn on Atari variant
-  * of MS-DOS filesystem by default.
-@@ -1458,6 +1938,8 @@
+@@ -1463,6 +1943,8 @@
    int c;
    char *tmp;
    char *listfile = NULL;
@@ -607,27 +605,27 @@ diff -urN dosfstools-2.10.orig/mkdosfs/mkdosfs.c dosfstools-2.10/mkdosfs/mkdosfs
    FILE *msgfile;
    struct stat statbuf;
    int i = 0, pos, ch;
-@@ -1477,7 +1959,7 @@
+@@ -1483,7 +1965,7 @@
    printf ("%s " VERSION " (" VERSION_DATE ")\n",
  	   program_name);
  
--  while ((c = getopt (argc, argv, "AcCf:F:Ii:l:m:n:r:R:s:S:v:B:b")) != EOF)
-+  while ((c = getopt (argc, argv, "AcCd:f:F:Ii:l:m:n:r:R:s:S:v:B:b")) != EOF)
+-  while ((c = getopt (argc, argv, "AbcCf:F:Ii:l:m:n:r:R:s:S:v:B:")) != EOF)
++  while ((c = getopt (argc, argv, "AbcCd:f:F:Ii:l:m:n:r:R:s:S:v:B:")) != EOF)
      /* Scan the command line for options */
      switch (c)
        {
-@@ -1502,6 +1984,10 @@
+@@ -1508,6 +1990,10 @@
  	create = TRUE;
  	break;
  
-+      case 'd':
++  case 'd':
 +	dirname = optarg;
 +	break;
 +
        case 'f':		/* f : Choose number of FATs */
  	nr_fats = (int) strtol (optarg, &tmp, 0);
  	if (*tmp || nr_fats < 1 || nr_fats > 4)
-@@ -1796,8 +2282,10 @@
+@@ -1811,8 +2297,10 @@
    else if (listfile)
      get_list_blocks (listfile);
  
