@@ -13,8 +13,8 @@ SRC_URI = "http://source.clutter-project.org/sources/clutter-gst/1.4/clutter-gst
 
 S = "${WORKDIR}/clutter-gst-${PV}"
 
-SRC_URI[md5sum] = "fd6b2a54f43d04382748e9e4d8a335c5"
-SRC_URI[sha256sum] = "b0e7ff76ee14307b6d26856972ec9e718f62aec2bc8807fb3f2960e508e578b5"
+SRC_URI[md5sum] = "c660649907785ee96f6e84d97f19d574"
+SRC_URI[sha256sum] = "23cb10e7629696a696ca8619614c517ff0a341e89a701075f2a123a2e26999e9"
 
 do_configure_prepend () {
        # Disable DOLT
