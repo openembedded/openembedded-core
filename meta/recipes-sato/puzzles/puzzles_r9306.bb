@@ -8,12 +8,12 @@ MOD_PV = "${@d.getVar('PV',1)[1:]}"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=9928b60f3b78be315b7ab699c1b03ff5"
 
-SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
-
 # Upstream updates puzzles.tar.gz for the new release, so checksums seem to be changing regularly right now
-#SRC_URI[md5sum] = "e8b4c7e2341264789f3cd6733857bf1c"
-#SRC_URI[sha256sum] = "69f37e497e63b2f7ab44e7bbd50aee078269c16dbc2d78ec1b00257678f2cbd2"
 #SRC_URI = "svn://ixion.tartarus.org/main;module=puzzles;rev=${MOD_PV}"
+SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
+SRC_URI[md5sum] = "fd1b05c0e0cfb752c6136ce2e4562416"
+SRC_URI[sha256sum] = "512aa26a0d11867a815030449bb903861f75512725886a70eece387bd8240ddd"
+
 
 S = "${WORKDIR}/${BPN}-${PV}"
 
