@@ -76,7 +76,7 @@ def siteinfo_data(d):
         "x86_64-linux": "bit-64",
         "x86_64-linux-uclibc": "bit-64",
         "x86_64-linux-gnu": "bit-64 x86_64-linux",
-        "x86_64-linux-gnux32": "bit-32 ix86-common",
+        "x86_64-linux-gnux32": "bit-32 ix86-common x32-linux",
         "x86_64-mingw32": "bit-64",
     }
 
