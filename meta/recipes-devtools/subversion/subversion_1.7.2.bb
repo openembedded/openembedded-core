@@ -14,8 +14,8 @@ DEFAULT_PREFERENCE = "-1"
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libtool2.patch \
 "
-SRC_URI[md5sum] = "930e6644a1b6094efd268fde6a318f04"
-SRC_URI[sha256sum] = "64fd5f263a80e609717a3ca42f1f2625606a5c4a40a85716f82c866033780978"
+SRC_URI[md5sum] = "1e5dfffd27be080672e5a042564368a8"
+SRC_URI[sha256sum] = "7eb3e1ae2b0385e1cc20ca9e1839e0ef0ac98a7455dc52ba4cdf567547bfc517"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4a14fd2da3134e40a087eb4326a4ecd4"
 
@@ -32,6 +32,7 @@ acpaths = "-I build/ -I build/ac-macros/"
 
 do_configure_prepend () {
 	rm -f ${S}/libtool
-	rm -f ${S}/build/libtool.m4
+	rm -f ${S}/build/libtool.m4 ${S}/build/ltmain.sh ${S}/build/ltoptions.m4 ${S}/build/ltsugar.m4 ${S}/build/ltversion.m4 ${S}/build/lt~obsolete.m4
+	rm -f ${S}/aclocal.m4
 	sed -i -e 's:with_sasl="/usr/local":with_sasl="${STAGING_DIR}":' ${S}/build/ac-macros/sasl.m4
 }
