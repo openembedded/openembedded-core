@@ -3,7 +3,7 @@ SECTION = "console/network"
 LICENSE = "GPL"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-INC_PR = "r10"
+INC_PR = "r11"
 
 inherit autotools gettext update-alternatives
 
@@ -15,6 +15,6 @@ do_install_append () {
 }
 
 ALTERNATIVE_NAME = "wget"
-ALTERNATIVE_LINK = "${base_bindir}/wget"
-ALTERNATIVE_PATH = "${base_bindir}/wget.${PN}"
+ALTERNATIVE_LINK = "${bindir}/wget"
+ALTERNATIVE_PATH = "${bindir}/wget.${PN}"
 ALTERNATIVE_PRIORITY = "100"
