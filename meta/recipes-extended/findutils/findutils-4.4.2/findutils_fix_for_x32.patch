@@ -1,0 +1,40 @@
+UpstreamStatus: Pending
+
+Author: H.J. Lu <hjl.tools@gmail.com>
+
+Work around gnulib time_t assumption in findutils for x32
+
+time_t is 64bit and long int is 32bit on x32.  But gnulib used in
+findutils assumes time_t values fit into long int.  Such assumption is
+invalid for x32 and should be removed.
+
+This patch is a workaround to compile gnulib for x32.
+
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com> 2011/12/05
+
+
+Index: findutils-4.4.2/gnulib/lib/getdate.y
+===================================================================
+--- findutils-4.4.2.orig/gnulib/lib/getdate.y
++++ findutils-4.4.2/gnulib/lib/getdate.y
+@@ -114,7 +114,6 @@
+    wraps around, but there's no portable way to check for that at
+    compile-time.  */
+ verify (TYPE_IS_INTEGER (time_t));
+-verify (LONG_MIN <= TYPE_MINIMUM (time_t) && TYPE_MAXIMUM (time_t) <= LONG_MAX);
+ 
+ /* An integer value, and the number of digits in its textual
+    representation.  */
+Index: findutils-4.4.2/gnulib/lib/mktime.c
+===================================================================
+--- findutils-4.4.2.orig/gnulib/lib/mktime.c
++++ findutils-4.4.2/gnulib/lib/mktime.c
+@@ -166,7 +166,7 @@ ydhms_diff (long int year1, long int yda
+ {
+   verify (C99_integer_division, -1 / 2 == 0);
+   verify (long_int_year_and_yday_are_wide_enough,
+-	  INT_MAX <= LONG_MAX / 2 || TIME_T_MAX <= UINT_MAX);
++	  INT_MAX <= TIME_T_MAX / 2 || TIME_T_MAX <= UINT_MAX);
+ 
+   /* Compute intervening leap days correctly even if year is negative.
+      Take care to avoid integer overflow here.  */
