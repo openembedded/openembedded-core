@@ -10,10 +10,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4b0b674dfdc56daa3832d4069b820ea0 \
                     file://lib/vis.h;endline=40;md5=b283f759abd4a5ad7e014b80f51fc053"
 
 SECTION = "base"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "ftp://ftp.suse.com/pub/people/kukuk/pax/pax-${PV}.tar.bz2 \
-	file://fix_for_compile_with_gcc-4.6.0.patch"
+	file://fix_for_compile_with_gcc-4.6.0.patch \
+	file://pax-3.4_fix_for_x32.patch"
 
 SRC_URI[md5sum] = "fbd9023b590b45ac3ade95870702a0d6"
 SRC_URI[sha256sum] = "ac3c06048e02828077cf7757d3d142241429238893b91d529af29a2e8cc5623b"
