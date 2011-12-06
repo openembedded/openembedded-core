@@ -562,7 +562,7 @@ python do_checkpkg() {
 		if 'protocol' in parm:
 			gitproto = parm['protocol']
 		else:
-			gitproto = "rsync"
+			gitproto = "git"
 		gitcmd = "git ls-remote %s://%s%s%s *tag* 2>&1" % (gitproto, gituser, host, path)
 		gitcmd2 = "git ls-remote %s://%s%s%s HEAD 2>&1" % (gitproto, gituser, host, path)
 		tmp = os.popen(gitcmd).read()
