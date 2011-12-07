@@ -1,0 +1,46 @@
+Our pre/postinsts expect $D to be set when running in a sysroot and
+don't expect a chroot. This matches up our system expectations with
+what dpkg does.
+
+Upstream-Status: Inappropriate [OE Specific]
+
+RP 2011/12/07
+
+Index: dpkg-1.15.8.7/src/help.c
+===================================================================
+--- dpkg-1.15.8.7.orig/src/help.c	2010-12-20 01:25:36.000000000 +0000
++++ dpkg-1.15.8.7/src/help.c	2011-12-07 14:51:02.783461487 +0000
+@@ -181,30 +181,9 @@
+    * FIXME: none of the stuff here will work if admindir isn't inside
+    * instdir as expected.
+    */
+-  size_t instdirl;
+-
+-  if (*instdir) {
+-    if (chroot(instdir)) ohshite(_("failed to chroot to `%.250s'"),instdir);
+-    if (chdir("/"))
+-      ohshite(_("failed to chdir to `%.255s'"), "/");
+-  }
+-  if (f_debug & dbg_scripts) {
+-    struct varbuf args = VARBUF_INIT;
+-    const char **argv = cmd->argv;
+-
+-    while (*++argv) {
+-      varbufaddc(&args, ' ');
+-      varbufaddstr(&args, *argv);
+-    }
+-    varbufaddc(&args, '\0');
+-    debug(dbg_scripts, "fork/exec %s (%s )", cmd->filename, args.buf);
+-    varbuf_destroy(&args);
+-  }
+-  instdirl= strlen(instdir);
+-  if (!instdirl)
+-    return cmd->filename;
+-  assert(strlen(cmd->filename) >= instdirl);
+-  return cmd->filename + instdirl;
++  if (*instdir)
++    setenv("D", instdir, 1);
++  return cmd->filename;
+ }  
+ 
+ void
