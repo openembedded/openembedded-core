@@ -5,6 +5,7 @@ ARMPKGARCH ?= "armv6"
 TUNEVALID[armv6] = "Enable instructions for ARMv6"
 TUNE_CONFLICTS[armv6] = "armv4 armv5"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "armv6", "-march=armv6", "", d)}"
+MACHINEOVERRIDES .= "${@bb.utils.contains("TUNE_FEATURES", "armv6", ":armv6", "" ,d)}"
 
 require conf/machine/include/arm/arch-armv5-dsp.inc
 

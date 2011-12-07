@@ -5,6 +5,7 @@ ARMPKGARCH ?= "armv7"
 TUNEVALID[armv7] = "Enable instructions for ARMv7"
 TUNE_CONFLICTS[armv7] = "armv4 armv5 armv6"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "armv7", "-march=armv7", "", d)}"
+MACHINEOVERRIDES .= "${@bb.utils.contains("TUNE_FEATURES", "armv7", ":armv7", "" ,d)}"
 
 require conf/machine/include/arm/arch-armv6.inc
 require conf/machine/include/arm/feature-arm-neon.inc
