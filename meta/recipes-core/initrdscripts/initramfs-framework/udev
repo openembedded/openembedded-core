@@ -1,0 +1,22 @@
+#!/bin/sh
+# Copyright (C) 2011 O.S. Systems Software LTDA.
+# Licensed on MIT
+
+udev_enabled() {
+	if [ ! -e /sbin/udevd ]; then
+		debug "/sbin/udev doesn't exist"
+		return 1
+	fi
+
+	return 0
+}
+
+udev_run() {
+	mkdir -p /run
+
+	udevd --daemon > /dev/null
+	udevadm trigger --action=add
+	udevadm settle
+
+	killall udevd 2>/dev/null
+}
