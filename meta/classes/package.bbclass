@@ -1065,6 +1065,7 @@ python emit_pkgdata() {
 		write_if_exists(sf, pkg, 'PR')
 		write_if_exists(sf, pkg, 'PKGV')
 		write_if_exists(sf, pkg, 'PKGR')
+		write_if_exists(sf, pkg, 'LICENSE')
 		write_if_exists(sf, pkg, 'DESCRIPTION')
 		write_if_exists(sf, pkg, 'SUMMARY')
 		write_if_exists(sf, pkg, 'RDEPENDS')
