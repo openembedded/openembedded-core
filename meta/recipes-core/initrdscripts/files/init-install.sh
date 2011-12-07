@@ -23,6 +23,9 @@ for device in 'hda' 'hdb' 'sda' 'sdb'
 	  found="yes"
 
 	  while true; do
+	      # Try sleeping here to avoid getting kernel messages
+              # obscuring/confusing user
+	      sleep 5
 	      echo "Found drive at /dev/${device}. Do you want to install this image there ? [y/n]"
 	      read answer
 	      if [ "$answer" = "y" ] ; then
