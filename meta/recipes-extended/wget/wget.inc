@@ -2,13 +2,13 @@ DESCRIPTION = "A console URL download utility featuring HTTP, FTP, and more."
 SECTION = "console/network"
 LICENSE = "GPL"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
+DEPENDS = "openssl"
 
-INC_PR = "r11"
+INC_PR = "r12"
 
 inherit autotools gettext update-alternatives
 
-# Disable checking for SSL since that searches the system paths
-EXTRA_OECONF = "--with-libc --enable-ipv6 --without-ssl"
+EXTRA_OECONF = "--with-libc --enable-ipv6 --with-ssl=openssl"
 
 do_install_append () {
 	mv ${D}${bindir}/wget ${D}${bindir}/wget.${PN}
