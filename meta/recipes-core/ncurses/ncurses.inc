@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://ncurses/base/version.c;beginline=1;endline=27;md5=cbc
 SECTION = "libs"
 DEPENDS = "ncurses-native"
 DEPENDS_virtclass-native = ""
-INC_PR = "r2"
+INC_PR = "r3"
 
 inherit autotools binconfig multilib_header
 
@@ -161,6 +161,9 @@ do_install() {
                 echo '/* GNU ld script */'  >$f
                 echo "INPUT($i.so.5 AS_NEEDED(-ltinfo))" >>$f
         done
+	# Make sure that libcurses is linked so that it gets -ltinfo
+	# also, this should be addressed upstream really.
+	ln -sf libncurses.so ${D}${libdir}/libcurses.so
 
         # create libtermcap.so linker script for backward compatibility
         f=${D}${libdir}/libtermcap.so
