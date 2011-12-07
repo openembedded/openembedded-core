@@ -1,40 +1,19 @@
-Upstream-Status: Inappropriate [embedded specific]
+Enable blank password login function for new release dropbear.
 
-diff --git a/svr-auth.c b/svr-auth.c
-index 87e3c5e..3e78c1a 100644
---- a/svr-auth.c
-+++ b/svr-auth.c
-@@ -250,6 +250,7 @@ static int checkusername(unsigned char *username, unsigned int userlen) {
- 	}
+Upstream-Status: Inappropriate [configuration]
+
+Signed-off-by: Mei Lei <lei.mei@intel.com>
+
+diff --git a/options.h b/options.h
+index 73689ad..041ddaa 100644
+--- a/options.h
++++ b/options.h
+@@ -180,7 +180,7 @@ much traffic. */
+  * Public key logins are allowed for blank-password accounts regardless of this
+  * setting.  PAM is not affected by this setting, it uses the normal pam.d
+  * settings ('nullok' option) */
+-/* #define ALLOW_BLANK_PASSWORD */
++#define ALLOW_BLANK_PASSWORD
  
- 	/* check for an empty password */
-+#ifdef DISALLOW_EMPTY_PW
- 	if (ses.authstate.pw_passwd[0] == '\0') {
- 		TRACE(("leave checkusername: empty pword"))
- 		dropbear_log(LOG_WARNING, "User '%s' has blank password, rejected",
-@@ -257,6 +258,7 @@ static int checkusername(unsigned char *username, unsigned int userlen) {
- 		send_msg_userauth_failure(0, 1);
- 		return DROPBEAR_FAILURE;
- 	}
-+#endif
- 
- 	TRACE(("shell is %s", ses.authstate.pw_shell))
- 
-diff --git a/svr-authpasswd.c b/svr-authpasswd.c
-index a29fd63..6a3c7e9 100644
---- a/svr-authpasswd.c
-+++ b/svr-authpasswd.c
-@@ -64,9 +64,13 @@ void svr_auth_password() {
- 	 * since the shadow password may differ to that tested
- 	 * in auth.c */
- 	if (passwdcrypt[0] == '\0') {
-+#ifdef DISALLOW_EMPTY_PASSWD
- 		dropbear_log(LOG_WARNING, "User '%s' has blank password, rejected",
- 				ses.authstate.pw_name);
- 		send_msg_userauth_failure(0, 1);
-+#else
-+               send_msg_userauth_success();
-+#endif
- 		return;
- 	}
- 
+ #define ENABLE_CLI_PASSWORD_AUTH
+ #define ENABLE_CLI_PUBKEY_AUTH
