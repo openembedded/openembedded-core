@@ -108,15 +108,18 @@ fi
 
 
 # Verify the cover letter is complete and free of tokens
-CL="$PDIR/0000-cover-letter.patch"
-for TOKEN in SUBJECT BLURB; do
-	grep -q "*** $TOKEN HERE ***" "$CL"
-	if [ $? -eq 0 ]; then
-		echo "ERROR: Please edit $CL and try again (Look for '*** $TOKEN HERE ***')."
-		exit 1
-	fi
-done
-
+if [ -e $PDIR/0000-cover-letter.patch ]; then
+	CL="$PDIR/0000-cover-letter.patch"
+	for TOKEN in SUBJECT BLURB; do
+		grep -q "*** $TOKEN HERE ***" "$CL"
+		if [ $? -eq 0 ]; then
+			echo "ERROR: Please edit $CL and try again (Look for '*** $TOKEN HERE ***')."
+			exit 1
+		fi
+	done
+else
+	echo "WARNING: No cover letter will be send."
+fi
 
 # Harvest emails from the generated patches and populate AUTO_CC.
 if [ $AUTO_CL -eq 1 ]; then
