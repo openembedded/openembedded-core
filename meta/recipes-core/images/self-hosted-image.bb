@@ -4,8 +4,6 @@ POKY_EXTRA_INSTALL = "\
     task-self-hosted \
     "
 
-IMAGE_ROOTFS_EXTRA_SPACE = "1048576"
-
 inherit core-image
 
-PR = "r0"
+PR = "r1"
