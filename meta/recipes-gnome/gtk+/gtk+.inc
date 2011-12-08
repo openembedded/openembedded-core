@@ -15,7 +15,7 @@ DEPENDS = "glib-2.0 pango atk jpeg libpng libxext libxcursor \
 
 inherit autotools pkgconfig
 
-PACKAGES += "libgail"
+PACKAGES += "libgail gtk-demo"
 
 FILES_${PN} = "${bindir}/gtk-update-icon-cache \
 	${bindir}/gtk-query-immodules-2.0 \
@@ -39,6 +39,11 @@ FILES_${PN}-dbg += " \
 	${libdir}/gtk-2.0/${LIBV}/immodules/.debug/* \
 	${libdir}/gtk-2.0/${LIBV}/engines/.debug/* \
 	${libdir}/gtk-2.0/${LIBV}/printbackends/.debug/*"
+
+FILES_gtk-demo = " \
+ ${datadir}/gtk-2.0/demo/* \
+ ${bindir}/gtk-demo \
+ "
 
 FILES_libgail = " \
 	${libdir}/gtk-2.0/modules/libgail.so \
