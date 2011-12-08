@@ -13,7 +13,32 @@ LICENSE  = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
                     file://src/main.c;beginline=1;endline=20;md5=4b55b550fa6b33cc2055ef30dd262b3e"
 
-DEPENDS  = "libgdbus dbus glib-2.0 iptables"
+# we need to define the depends here, the dynamic stuff is too late
+DEPENDS  = "dbus glib-2.0 ppp iptables gnutls ntp \
+            ${@base_contains('DISTRO_FEATURES', 'bluetooth','bluez4', '', d)} \
+            ${@base_contains('DISTRO_FEATURES', 'wifi','wpa-supplicant', '', d)} \
+            "
+
+EXTRA_OECONF += "\
+    ac_cv_path_WPASUPPLICANT=${sbindir}/wpa_supplicant \
+    ac_cv_path_PPPD=${sbindir}/pppd \
+    --disable-gtk-doc \
+    --enable-debug \
+    --enable-threads \
+    --enable-loopback \
+    --enable-ethernet \
+    ${@base_contains('DISTRO_FEATURES', 'wifi','--enable-wifi', '--disable-wifi', d)} \
+    ${@base_contains('DISTRO_FEATURES', 'bluetooth','--enable-bluetooth', '--disable-bluetooth', d)} \
+    --enable-dnsproxy \
+    --enable-ofono \
+    --enable-tools \
+    --enable-test \
+    --disable-polkit \
+    --enable-client \
+    --enable-fake \
+    --enable-ntpd \
+    --with-ntpd=${bindir}/ntpd \
+"
 
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
@@ -25,44 +50,61 @@ USERADD_PARAM_${PN} = "--system --no-create-home \
 
 inherit autotools pkgconfig update-rc.d useradd
 
-do_install_append() {
-    install -d ${D}${sysconfdir}/init.d/
-    install -m 0755 ${WORKDIR}/connman ${D}${sysconfdir}/init.d/connman
+do_compile_append() {
+	sed -i -e s:deny:allow:g src/connman-dbus.conf
 }
 
-PACKAGES += "${PN}-scripts"
-RDEPENDS_${PN}-scripts += "python"
+do_install_append() {
+	install -d ${D}${sysconfdir}/init.d
+	install -m 0755 ${WORKDIR}/connman ${D}${sysconfdir}/init.d/connman
+
+	install -d ${D}${bindir}
+	install -m 0755 ${S}/tools/*-test ${D}${bindir}
+	install -m 0755 ${S}/tools/wispr ${D}${bindir}
+}
 
 PACKAGES_DYNAMIC = "${PN}-plugin-*"
+
+python populate_packages_prepend() {
+	depmap = dict( pppd="ppp",
+	               udhcp="busybox connman-scripts",
+	               dhclient="dhcp-client",
+	               wifi="wpa-supplicant",
+	               resolvconf="resolvconf",
+	               bluetooth="bluez4",
+	               ntpd="ntp",
+	               ofono="ofono" )
+	packages = []
+	multilib_prefix = (d.getVar("MLPREFIX", True) or "")
+	hook = lambda file,pkg,b,c,d:packages.append((file,pkg))
+	plugin_dir = bb.data.expand('${libdir}/connman/plugins/', d)
+	plugin_name = bb.data.expand('${PN}-plugin-%s', d)
+	do_split_packages(d, plugin_dir, '^(.*).so$', plugin_name, '${PN} plugin for %s', extra_depends='', hook=hook )
+	for (file, package) in packages:
+		plugintype = package.split( '-' )[-1]
+		if plugintype in depmap:
+			rdepends = map(lambda x: multilib_prefix + x,  depmap[plugintype].split())
+			bb.note( "Adding rdependency on %s to %s" % ( rdepends, package ) )
+			d.setVar("RDEPENDS_%s" % package, " ".join(rdepends))
+}
+
+PACKAGES =+ "${PN}-scripts ${PN}-tools ${PN}-tests"
+
+FILES_${PN}-tools = "${bindir}/wispr"
+
+FILES_${PN}-tests = "${bindir}/*-test"
+
+FILES_${PN}-scripts += "${libdir}/${PN}/test/* ${libdir}/connman/scripts"
+RDEPENDS_${PN}-scripts = "python"
+
 FILES_${PN} = "${bindir}/* ${sbindir}/* ${libexecdir}/* ${libdir}/lib*.so.* \
             ${sysconfdir} ${sharedstatedir} ${localstatedir} \
             ${base_bindir}/* ${base_sbindir}/* ${base_libdir}/*.so* ${datadir}/${PN} \
             ${datadir}/pixmaps ${datadir}/applications \
             ${datadir}/idl ${datadir}/omf ${datadir}/sounds \
             ${libdir}/bonobo/servers \
-            ${datadir}/dbus-1/system-services/* \
-            ${libdir}/connman/scripts/dhclient*"
-FILES_${PN}-dbg += "${libdir}/connman/plugins/.debug \
-                    ${libdir}/connman/scripts/.debug"
+            ${datadir}/dbus-1/system-services/*"
 
-FILES_${PN}-dev += "${libdir}/connman/plugins/*.la"
+FILES_${PN}-dbg += "${libdir}/connman/*/.debug"
 
-FILES_${PN}-scripts += "${libdir}/${PN}/test/*"
-
-python populate_packages_prepend() {
-	prefix = (d.getVar("MLPREFIX", True) or "")
-	depmap = dict( wifi=prefix+"wpa-supplicant", bluetooth=prefix+"bluez4", ofono=prefix+"ofono" )
-	packages = []
-	hook = lambda file,pkg,b,c,d:packages.append((file,pkg))
-
-	plugin_dir = bb.data.expand('${libdir}/connman/plugins/', d)
-	plugin_name = bb.data.expand('${PN}-plugin-%s', d)
-
-	do_split_packages(d, plugin_dir, '^(.*).so$', plugin_name, '${PN} plugin for %s', extra_depends='', hook=hook )
-
-	for (file, package) in packages:
-		plugintype = package.split( '-' )[-1]
-		if plugintype in depmap:
-			bb.note( "Adding rdependency on %s to package %s" % ( depmap[plugintype], package ) )
-			d.setVar("RDEPENDS_%s" % package, depmap[plugintype])
-}
+FILES_${PN}-dev += "${libdir}/connman/*/*.la"
