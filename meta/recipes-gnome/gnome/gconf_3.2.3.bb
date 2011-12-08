@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
 DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native polkit"
 DEPENDS_virtclass-native = "glib-2.0-native dbus-native dbus-glib-native libxml2-native intltool-native gnome-common-native"
 
-PR = "r2"
+PR = "r3"
 
 inherit gnomebase
 
@@ -37,7 +37,9 @@ do_install_append() {
 	rm ${D}${libdir}/gio/*/*.*a
 }
 
-RDEPENDS_${PN} += "dbus-x11"
+# disable dbus-x11 when x11 isn't in DISTRO_FEATURES
+RDEPENDS_${PN} += "${@base_contains('DISTRO_FEATURES', 'x11', 'dbus-x11', '', d)}"
+
 FILES_${PN} += "${libdir}/GConf/* \
 	        ${libdir}/gio/*/*.so \
 		${datadir}/polkit* \
