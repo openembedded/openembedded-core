@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
                     file://src/main.c;beginline=1;endline=20;md5=4b55b550fa6b33cc2055ef30dd262b3e"
 
 # we need to define the depends here, the dynamic stuff is too late
-DEPENDS  = "dbus glib-2.0 ppp iptables gnutls ntp \
+DEPENDS  = "dbus glib-2.0 ppp iptables gnutls \
             ${@base_contains('DISTRO_FEATURES', 'bluetooth','bluez4', '', d)} \
             ${@base_contains('DISTRO_FEATURES', 'wifi','wpa-supplicant', '', d)} \
             "
@@ -36,8 +36,7 @@ EXTRA_OECONF += "\
     --disable-polkit \
     --enable-client \
     --enable-fake \
-    --enable-ntpd \
-    --with-ntpd=${bindir}/ntpd \
+    --disable-ntpd \
 "
 
 INITSCRIPT_NAME = "connman"
@@ -72,7 +71,6 @@ python populate_packages_prepend() {
 	               wifi="wpa-supplicant",
 	               resolvconf="resolvconf",
 	               bluetooth="bluez4",
-	               ntpd="ntp",
 	               ofono="ofono" )
 	packages = []
 	multilib_prefix = (d.getVar("MLPREFIX", True) or "")
