@@ -3,7 +3,7 @@ require eglibc.inc
 SRCREV = "15870"
 
 DEPENDS += "gperf-native"
-PR = "r1"
+PR = "r2"
 PR_append = "+svnr${SRCPV}"
 
 EGLIBC_BRANCH="eglibc-2_14"
@@ -209,9 +209,11 @@ do_compile () {
 		done
 	)
 	echo "Adjust ldd script"
-	[ -z "${RTLDLIST}" ] && return
-	sed -i ${B}/elf/ldd -e 's#^\(RTLDLIST=\)"\(.*\)"$#\1\2#'
-	sed -i ${B}/elf/ldd -e 's#^\(RTLDLIST=\)\(.*\)$#\1"${RTLDLIST} \2"#'
+	if [ -n "${RTLDLIST}" ]
+	then
+		sed -i ${B}/elf/ldd -e 's#^\(RTLDLIST=\)"\(.*\)"$#\1\2#'
+		sed -i ${B}/elf/ldd -e 's#^\(RTLDLIST=\)\(.*\)$#\1"${RTLDLIST} \2"#'
+	fi
 
 }
 

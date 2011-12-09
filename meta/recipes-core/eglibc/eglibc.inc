@@ -1,5 +1,6 @@
 require eglibc-common.inc
 require eglibc-ld.inc
+require eglibc-testing.inc
 
 STAGINGCC = "gcc-cross-intermediate"
 STAGINGCC_virtclass-nativesdk = "gcc-crosssdk-intermediate"
