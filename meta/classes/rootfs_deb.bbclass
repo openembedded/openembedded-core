@@ -81,3 +81,26 @@ remove_packaging_data_files() {
 	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
 	rm -rf ${IMAGE_ROOTFS}/usr/dpkg/
 }
+
+DPKG_QUERY_COMMAND = "${STAGING_BINDIR_NATIVE}/dpkg --admindir=${IMAGE_ROOTFS}/var/lib/dpkg"
+
+list_installed_packages() {
+	${DPKG_QUERY_COMMAND} -l | grep ^ii | awk '{ print $2 }'
+}
+
+get_package_filename() {
+	fullname=`find ${DEPLOY_DIR_DEB} -name "$1_*.deb" || true`
+	if [ "$fullname" = "" ] ; then
+		echo $name
+	else
+		echo $fullname
+	fi
+}
+
+list_package_depends() {
+	${DPKG_QUERY_COMMAND} -s $1 | grep ^Depends | sed -e 's/^Depends: //' -e 's/,//g' -e 's:([=<>]* [0-9a-zA-Z.~\-]*)::g'
+}
+
+list_package_recommends() {
+	${DPKG_QUERY_COMMAND} -s $1 | grep ^Recommends | sed -e 's/^Recommends: //' -e 's/,//g' -e 's:([=<>]* [0-9a-zA-Z.~\-]*)::g'
+}
