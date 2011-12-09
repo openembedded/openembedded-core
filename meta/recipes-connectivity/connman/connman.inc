@@ -49,6 +49,14 @@ USERADD_PARAM_${PN} = "--system --no-create-home \
 
 inherit autotools pkgconfig update-rc.d useradd
 
+# alg-test doesn't build, so disable that and test
+# for if_alg.h as this header is only in 2.6.39
+do_configure_prepend() {
+	sed -i 's:tools/alg-test ::g' Makefile.am
+	sed -i 's:AC_CHECK_HEADERS(linux/if_alg.h, dummy=yes,::g;
+	        s:AC_MSG_ERROR(User-space algorithm header files are required))::g' configure.ac
+}
+
 do_compile_append() {
 	sed -i -e s:deny:allow:g src/connman-dbus.conf
 }
