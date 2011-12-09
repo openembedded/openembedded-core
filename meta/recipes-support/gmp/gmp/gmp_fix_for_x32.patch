@@ -8,7 +8,7 @@ Signed Off By: Nitin A Kamble <nitin.a.kamble@intel.com> 2011/11/21
 
 --- gmp-4.3.2/configure.in.x32	2011-08-12 15:03:06.143548291 -0700
 +++ gmp-4.3.2/configure.in	2011-08-12 15:06:20.580595316 -0700
-@@ -1499,6 +1499,25 @@ case $host in
+@@ -1499,6 +1499,21 @@ case $host in
  	    path_64="x86_64/atom x86_64"
  	    ;;
  	esac
@@ -16,19 +16,15 @@ Signed Off By: Nitin A Kamble <nitin.a.kamble@intel.com> 2011/11/21
 +	# X32 support.
 +	case x"$path_64" in
 +	  xx86_64*)
-+	    case x"$CC $CFLAGS" in
-+	      x*-mx32*)
-+		abilist="x32 64 32"
-+		path_x32="$path_64"
-+		limb_x32=longlong
-+		cclist_x32="gcc"
-+		gcc_x32_cflags="-O2 -mx32"
-+		any_x32_testlist="sizeof-long-4"
-+		CALLING_CONVENTIONS_OBJS_x32='amd64call.lo amd64check$U.lo'
-+		SPEED_CYCLECOUNTER_OBJ_x32=x86_64.lo
-+		cyclecounter_size_x32=2
-+		;;
-+	    esac
++	    abilist="x32 64 32"
++	    path_x32="$path_64"
++	    limb_x32=longlong
++	    cclist_x32="gcc"
++	    gcc_x32_cflags="-O2 -mx32"
++	    any_x32_testlist="sizeof-long-4"
++	    CALLING_CONVENTIONS_OBJS_x32='amd64call.lo amd64check$U.lo'
++	    SPEED_CYCLECOUNTER_OBJ_x32=x86_64.lo
++	    cyclecounter_size_x32=2
 +	    ;;
 +	esac
  	;;
