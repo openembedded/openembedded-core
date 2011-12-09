@@ -3,8 +3,6 @@ require qemu.inc
 LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
                     file://COPYING.LIB;endline=24;md5=c04def7ae38850e7d3ef548588159913"
 
-PR = "r1"
-
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}"
 FILESDIR = "${WORKDIR}"
 
@@ -39,7 +37,7 @@ SRC_URI_append_virtclass-nativesdk = "\
     ${QEMUGLPATCHES} \
     file://glflags.patch \
     "
-SRC_URI[md5sum] = "dbc55b014bcd21b98e347f6a90f7fb6d"
-SRC_URI[sha256sum] = "0197e52dba07aeb6dfe0343b0c2ae08ed374d2cb0af3bb9ec73fed5baa0cb74d"
+SRC_URI[md5sum] = "34f17737baaf1b3495c89cd6d4a607ed"
+SRC_URI[sha256sum] = "7705b14d9b8e4df4a0b1790980e618084261e8daef0672a1aa7a830a0f3db5ba"
 
 S = "${WORKDIR}/qemu-${PV}"
