@@ -48,6 +48,8 @@ def copyleft_should_include(d):
         licenses = oe.license.flattened_licenses(d.getVar('LICENSE', True), choose_licenses)
     except oe.license.InvalidLicense as exc:
         bb.fatal('%s: %s' % (d.getVar('PF', True), exc))
+    except SyntaxError:
+        bb.warn("%s: Failed to parse it's LICENSE field." % (d.getVar('PF', True)))
 
     return all(include_license(lic) for lic in licenses)
 

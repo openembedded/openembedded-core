@@ -231,7 +231,10 @@ python do_populate_lic() {
     try:
         v.visit_string(license_types)
     except oe.license.InvalidLicense as exc:
-        bb.fatal("%s: %s" % (d.getVar('PF', True), exc))
+        bb.fatal('%s: %s' % (d.getVar('PF', True), exc))
+    except SyntaxError:
+        bb.warn("%s: Failed to parse it's LICENSE field." % (d.getVar('PF', True)))
+
 }
 
 SSTATETASKS += "do_populate_lic"
