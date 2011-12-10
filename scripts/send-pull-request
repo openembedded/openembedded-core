@@ -118,7 +118,7 @@ if [ -e $PDIR/0000-cover-letter.patch ]; then
 		fi
 	done
 else
-	echo "WARNING: No cover letter will be send."
+	echo "WARNING: No cover letter will be sent."
 fi
 
 # Harvest emails from the generated patches and populate AUTO_CC.
