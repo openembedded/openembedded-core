@@ -88,7 +88,7 @@ license_create_manifest() {
                 # check to see if the package name exists in the manifest. if so, bail.
                 if ! grep -q "PACKAGE NAME: ${pkg}" ${filename}; then
                     # exclude local recipes
-                    if [ ! ${pkged_pn} == "*locale*" ]; then
+                    if [ ! "${pkged_pn}" = "*locale*" ]; then
                         echo "PACKAGE NAME:" ${pkg} >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
                         echo "RECIPE NAME:" ${pkged_pn} >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
                         echo "LICENSE: " >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
