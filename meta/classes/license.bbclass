@@ -77,34 +77,31 @@ license_create_manifest() {
     list_installed_packages | grep -v "locale" |sort > ${LICENSE_DIRECTORY}/${IMAGE_NAME}/package.manifest
     INSTALLED_PKGS=`cat ${LICENSE_DIRECTORY}/${IMAGE_NAME}/package.manifest`
     # list of installed packages is broken for deb
-    if [ ${IMAGE_PKGTYPE} != "deb" ]; then
-
-        for pkg in ${INSTALLED_PKGS}; do
-            # not the best way to do this but licenses are not arch dependant iirc
-            files=`find ${TMPDIR}/pkgdata/*/runtime -name ${pkg}| head -1`
-            for filename in $files; do
-                pkged_pn="$(sed -n 's/^PN: //p' ${filename})"
-                pkged_lic="$(sed -n '/^LICENSE: /{ s/^LICENSE: //; s/[+|&()*]/ /g; s/  */ /g; p }' ${filename})"
-                # check to see if the package name exists in the manifest. if so, bail.
-                if ! grep -q "PACKAGE NAME: ${pkg}" ${filename}; then
-                    # exclude local recipes
-                    if [ ! "${pkged_pn}" = "*locale*" ]; then
-                        echo "PACKAGE NAME:" ${pkg} >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
-                        echo "RECIPE NAME:" ${pkged_pn} >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
-                        echo "LICENSE: " >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
-                        for lic in ${pkged_lic}; do
-                            if [ -e "${LICENSE_DIRECTORY}/${pkged_pn}/generic_${lic}" ]; then
-                                echo ${lic}|sed s'/generic_//'g >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
-                            else
-                                echo "WARNING: The license listed, " ${lic} " was not in the licenses collected for " ${pkged_pn}>> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
-                            fi
-                        done
-                        echo "" >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
-                    fi
+    for pkg in ${INSTALLED_PKGS}; do
+        # not the best way to do this but licenses are not arch dependant iirc
+        files=`find ${TMPDIR}/pkgdata/*/runtime -name ${pkg}| head -1`
+        for filename in $files; do
+            pkged_pn="$(sed -n 's/^PN: //p' ${filename})"
+            pkged_lic="$(sed -n '/^LICENSE: /{ s/^LICENSE: //; s/[+|&()*]/ /g; s/  */ /g; p }' ${filename})"
+            # check to see if the package name exists in the manifest. if so, bail.
+            if ! grep -q "PACKAGE NAME: ${pkg}" ${filename}; then
+                # exclude local recipes
+                if [ ! "${pkged_pn}" = "*locale*" ]; then
+                    echo "PACKAGE NAME:" ${pkg} >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
+                    echo "RECIPE NAME:" ${pkged_pn} >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
+                    echo "LICENSE: " >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
+                    for lic in ${pkged_lic}; do
+                        if [ -e "${LICENSE_DIRECTORY}/${pkged_pn}/generic_${lic}" ]; then
+                            echo ${lic}|sed s'/generic_//'g >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
+                        else
+                            echo "WARNING: The license listed, " ${lic} " was not in the licenses collected for " ${pkged_pn}>> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
+                        fi
+                    done
+                    echo "" >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
                 fi
-            done
+            fi
         done
-    fi
+    done
 
     # Two options here:
     # - Just copy the manifest
