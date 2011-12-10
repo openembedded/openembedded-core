@@ -6,10 +6,13 @@ HOMEPAGE = "http://www.gnu.org/software/texinfo/"
 SECTION = "console/utils"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=adefda309052235aa5d1e99ce7557010"
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "zlib ncurses texinfo-native"
 DEPENDS_virtclass-native = "zlib-native ncurses-native"
+
+TARGET_PATCH = "file://use_host_makedoc.patch"
+TARGET_PATCH_virtclass-native = ""
 
 SRC_URI = "${GNU_MIRROR}/texinfo/texinfo-${PV}.tar.gz \
            file://texinfo-4.12-zlib.patch \
@@ -19,7 +22,8 @@ SRC_URI = "${GNU_MIRROR}/texinfo/texinfo-${PV}.tar.gz \
            file://texinfo-4.13a-help-index-segfault.patch \
            file://disable-native-tools.patch \
            file://link-zip.patch \
-           file://gettext-macros.patch"
+           file://gettext-macros.patch \
+           ${TARGET_PATCH}"
 
 SRC_URI[md5sum] = "71ba711519209b5fb583fed2b3d86fcb"
 SRC_URI[sha256sum] = "1303e91a1c752b69a32666a407e9fbdd6e936def4b09bc7de30f416301530d68"
@@ -38,6 +42,9 @@ do_compile_prepend() {
 do_install_append() {
 	mkdir -p ${D}${datadir}/${tex_texinfo}
 	install -p -m644 doc/texinfo.tex doc/txi-??.tex ${D}${datadir}/${tex_texinfo} 	
+}
+do_install_append_virtclass-native() {
+	install -m 755 info/makedoc ${D}${bindir}
 }
 
 PACKAGES += "info info-doc"
