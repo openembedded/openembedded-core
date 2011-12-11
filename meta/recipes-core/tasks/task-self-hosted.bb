@@ -28,13 +28,23 @@ RDEPENDS_task-self-hosted = "\
     "
 
 RDEPENDS_task-self-hosted-host-tools = "\
+    dhcp-client \
     e2fsprogs \
     e2fsprogs-e2fsck \
     e2fsprogs-fsck \
     e2fsprogs-mke2fs \
     e2fsprogs-tune2fs \
     genext2fs \
+    hdparm \
+    iptables \
+    kernel-module-tun \
+    kernel-module-iptable-raw \
+    kernel-module-iptable-nat \
+    kernel-module-iptable-mangle \
+    kernel-module-iptable-filter \
+    mc \
     parted \
+    screen \
     "
 
 # eglibc-utils: for rpcgen
@@ -88,7 +98,6 @@ RDEPENDS_task-self-hosted-extended = "\
     chrpath \
     cpio \
     curl \
-    dhcp-client \
     diffstat \
     diffutils \
     elfutils \
@@ -101,13 +110,6 @@ RDEPENDS_task-self-hosted-extended = "\
     grep \
     groff \
     gawk \
-    hdparm \
-    iptables \
-    kernel-module-tun \
-    kernel-module-iptable-raw \
-    kernel-module-iptable-nat \
-    kernel-module-iptable-mangle \
-    kernel-module-iptable-filter \
     libaio \
     libxml2 \
     libusb1 \
@@ -116,7 +118,6 @@ RDEPENDS_task-self-hosted-extended = "\
     lzo \
     man \
     man-pages \
-    mc \
     mdadm \
     minicom \
     mtools \
@@ -160,7 +161,6 @@ RDEPENDS_task-self-hosted-extended = "\
     quota \
     readline \
     rpm \
-    screen \
     setserial \
     subversion \
     sudo \
