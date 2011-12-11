@@ -14,6 +14,7 @@ PACKAGES = "\
     task-self-hosted-sdk \
     task-self-hosted-extended \
     task-self-hosted-graphics \
+    task-self-hosted-host-tools \
     "
 
 ALLOW_EMPTY = "1"
@@ -23,6 +24,17 @@ RDEPENDS_task-self-hosted = "\
     task-self-hosted-sdk \
     task-self-hosted-extended \
     task-self-hosted-graphics \
+    task-self-hosted-host-tools \
+    "
+
+RDEPENDS_task-self-hosted-host-tools = "\
+    e2fsprogs \
+    e2fsprogs-e2fsck \
+    e2fsprogs-fsck \
+    e2fsprogs-mke2fs \
+    e2fsprogs-tune2fs \
+    genext2fs \
+    parted \
     "
 
 # eglibc-utils: for rpcgen
