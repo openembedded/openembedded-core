@@ -116,8 +116,9 @@ RDEPENDS_task-self-hosted-extended = "\
     parted \
     patch \
     perl \
-    perl-modules \
     perl-dev \
+    perl-modules \
+    perl-pod \
     pth \
     python \
     python-compile \
