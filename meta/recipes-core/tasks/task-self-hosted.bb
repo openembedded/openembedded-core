@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Create Basic Image Tasks"
-PR = "r1"
+PR = "r2"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
@@ -27,9 +27,6 @@ RDEPENDS_task-self-hosted = "\
 
 # eglibc-utils: for rpcgen
 RDEPENDS_task-self-hosted-sdk = "\
-    sed \
-    mktemp \
-    eglibc-utils \
     autoconf \
     automake \
     binutils-symlinks \
@@ -37,27 +34,30 @@ RDEPENDS_task-self-hosted-sdk = "\
     cpp \
     cpp-symlinks \
     ccache \
+    coreutils \
+    diffutils \
+    distcc \
+    eglibc-utils \
+    file \
+    findutils \
     gcc \
     gcc-symlinks \
     g++ \
     g++-symlinks \
     gettext \
-    make \
     intltool \
+    ldd \
+    less \
     libstdc++ \
     libstdc++-dev \
     libtool \
+    make \
+    mktemp \
     perl-module-re \
     perl-module-text-wrap \
-    coreutils \
-    diffutils \
     pkgconfig \
-    findutils \
     quilt \
-    less \
-    distcc \
-    ldd \
-    file \
+    sed \
     tcl \
     "
 
@@ -74,6 +74,7 @@ RDEPENDS_task-self-hosted-extended = "\
     bzip2 \
     chkconfig \
     chrpath \
+    cpio \
     curl \
     dhcp-client \
     diffstat \
@@ -89,6 +90,12 @@ RDEPENDS_task-self-hosted-extended = "\
     groff \
     gawk \
     hdparm \
+    iptables \
+    kernel-module-tun \
+    kernel-module-iptable-raw \
+    kernel-module-iptable-nat \
+    kernel-module-iptable-mangle \
+    kernel-module-iptable-filter \
     libaio \
     libxml2 \
     libusb1 \
@@ -158,13 +165,6 @@ RDEPENDS_task-self-hosted-extended = "\
     xinetd \
     zip \
     zlib \
-    cpio \
-    iptables \
-    kernel-module-tun \
-    kernel-module-iptable-raw \
-    kernel-module-iptable-nat \
-    kernel-module-iptable-mangle \
-    kernel-module-iptable-filter \
     "
 
 
