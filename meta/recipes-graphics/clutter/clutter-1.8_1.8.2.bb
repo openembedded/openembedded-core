@@ -23,5 +23,5 @@ do_configure_prepend () {
 	sed -i -e 's/^DOLT//' ${S}/configure.ac
 }
 
-SRC_URI[md5sum] = "71454425366d9a49948cdd2af9eafc89"
-SRC_URI[sha256sum] = "79cd42c9a208b1bd2e2a0866ad7eb047a00835beabb401e99737af846812119c"
+SRC_URI[md5sum] = "29a238fa11da2f56c40de0eb04424aaf"
+SRC_URI[sha256sum] = "5e6abf6440e6be8130fd7a6b449e1789e4318f61b17f06323ba1b58dc143bc8b"
