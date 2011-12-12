@@ -94,7 +94,7 @@ if [ ! -x "$IPTABLES" ]; then
 fi
 
 n=$[ (`echo $TAP | sed 's/tap//'` * 2) + 1 ]
-$IFCONFIG $TAP 192.168.7.$n
+$IFCONFIG $TAP 192.168.7.$n netmask 255.255.255.255
 
 dest=$[ (`echo $TAP | sed 's/tap//'` * 2) + 2 ]
 $ROUTE add -host 192.168.7.$dest $TAP
