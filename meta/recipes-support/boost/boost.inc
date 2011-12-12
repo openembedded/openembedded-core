@@ -16,7 +16,7 @@ BOOST_VER = "${@"_".join(d.getVar("PV",1).split("."))}"
 BOOST_MAJ = "${@"_".join(d.getVar("PV",1).split(".")[0:2])}"
 BOOST_P = "boost_${BOOST_VER}"
 
-INC_PR = "r1"
+INC_PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BOOST_P}.tar.bz2"
 
@@ -127,6 +127,7 @@ BJAM_TOOLS   = "-sTOOLS=gcc \
 BJAM_OPTS    = '${BJAM_TOOLS} \
 		--builddir=${S}/${TARGET_SYS} \
 		--with-python-root=${PYTHON_ROOT} \
+		--without-icu \
 		${BJAM_EXTRA}'
 
 
