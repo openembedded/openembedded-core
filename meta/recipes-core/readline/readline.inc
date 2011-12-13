@@ -28,6 +28,8 @@ do_install_append () {
 	# Make install doesn't properly install these
 	oe_libinstall -so -C shlib libhistory ${D}${libdir}
 	oe_libinstall -so -C shlib libreadline ${D}${libdir}
+
+	rmdir ${D}${bindir}
 }
 
 BBCLASSEXTEND = "native nativesdk"
