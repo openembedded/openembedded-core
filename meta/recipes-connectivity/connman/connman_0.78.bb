@@ -1,6 +1,6 @@
 require connman.inc
 
-PR = "r4"
+PR = "r5"
 
 # 0.78 tag
 SRCREV = "02f5d5fe2d7c71514a6387ba2b772b42d8e8d297"

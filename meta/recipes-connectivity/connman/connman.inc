@@ -68,16 +68,16 @@ do_install_append() {
 	install -d ${D}${bindir}
 	install -m 0755 ${S}/tools/*-test ${D}${bindir}
 	install -m 0755 ${S}/tools/wispr ${D}${bindir}
+
+	# We don't need to package an empty directory
+	rmdir ${D}${libdir}/connman/scripts
 }
 
 PACKAGES_DYNAMIC = "${PN}-plugin-*"
 
 python populate_packages_prepend() {
 	depmap = dict( pppd="ppp",
-	               udhcp="busybox connman-scripts",
-	               dhclient="dhcp-client",
 	               wifi="wpa-supplicant",
-	               resolvconf="resolvconf",
 	               bluetooth="bluez4",
 	               ofono="ofono" )
 	packages = []
@@ -94,14 +94,12 @@ python populate_packages_prepend() {
 			d.setVar("RDEPENDS_%s" % package, " ".join(rdepends))
 }
 
-PACKAGES =+ "${PN}-scripts ${PN}-tools ${PN}-tests"
+PACKAGES =+ "${PN}-tools ${PN}-tests"
 
 FILES_${PN}-tools = "${bindir}/wispr"
 
-FILES_${PN}-tests = "${bindir}/*-test"
-
-FILES_${PN}-scripts += "${libdir}/${PN}/test/* ${libdir}/connman/scripts"
-RDEPENDS_${PN}-scripts = "python"
+FILES_${PN}-tests = "${bindir}/*-test ${libdir}/${PN}/test/*"
+RDEPENDS_${PN}-tests = "python-dbus"
 
 FILES_${PN} = "${bindir}/* ${sbindir}/* ${libexecdir}/* ${libdir}/lib*.so.* \
             ${sysconfdir} ${sharedstatedir} ${localstatedir} \
