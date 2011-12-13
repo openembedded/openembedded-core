@@ -6,6 +6,7 @@ DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
 PACKAGES = "\
   ${PN} \
   ${PN}-dev \
+  ${PN}-dbg \
   "
 
 FILES_${PN} = "${base_libdir}/libgcc*.so.*"
@@ -14,6 +15,8 @@ FILES_${PN}-dev = " \
   ${libdir}/${TARGET_SYS}/${BINV}/crt* \
   ${libdir}/${TARGET_SYS}/${BINV}/libgcov.a \
   ${libdir}/${TARGET_SYS}/${BINV}/libgcc*"
+
+FILES_${PN}-dbg += "${base_libdir}/.debug/"
 
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
