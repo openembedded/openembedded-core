@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=63e2cbac53863f60e2f43343fb34367f"
 DEPENDS += "virtual/libx11"
 
 SRCREV = "28c006c94e57ea71df11ec4fff79d7ffcfc4860f"
-PR = "${INC_PR}.5"
+PR = "${INC_PR}.6"
 PV = "0.1.1+gitr${SRCPV}"
 
 SRC_URI = "git://git.pingu.fi/xf86-video-omapfb;protocol=http \
