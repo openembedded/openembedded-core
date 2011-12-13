@@ -13,6 +13,9 @@ SRC_URI = "${GNU_MIRROR}/gzip/gzip-${PV}.tar.gz \
            file://m4-extensions-fix.patch \
            file://dup-def-fix.patch"
 
+SRC_URI[md5sum] = "b5bac2d21840ae077e0217bc5e4845b1"
+SRC_URI[sha256sum] = "3f565be05f7f3d1aff117c030eb7c738300510b7d098cedea796ca8e4cd587af"
+
 PR = "r0"
 
 inherit autotools
