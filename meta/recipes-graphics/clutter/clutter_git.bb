@@ -3,8 +3,9 @@ require clutter-package.inc
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
-SRCREV = "39db46123ed6bbbc3e6ad359a64d4d344ca9e11b"
-PV = "1.8.0+git${SRCPV}"
+# the 1.8.2 tag
+SRCREV = "9041ea42655dfc1422ce88eab931382dd400d13a"
+PV = "1.8.2+git${SRCPV}"
 PR = "r0"
 
 DEFAULT_PREFERENCE = "-1"
