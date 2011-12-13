@@ -18,6 +18,8 @@ SRC_URI = "http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.24/gdk-pixbuf-${
 SRC_URI[md5sum] = "d8ece3a4ade4a91c768328620e473ab8"
 SRC_URI[sha256sum] = "38d2630314e6d91976bffd833236f84fefa440a9038f86dc422820a39f2e3700"
 
+PR = "r2"
+
 inherit autotools pkgconfig gettext
 
 LIBV = "2.10.0"
@@ -65,8 +67,14 @@ python populate_packages_prepend () {
 
 do_install_append_virtclass-native() {
 #Use wrapper script rather than binary as required libtool library is not installed now
-	GDK_PIXBUF_MODULEDIR=${D}${libdir}/gdk-pixbuf-2.0/2.10.0/loaders ${S}/gdk-pixbuf/gdk-pixbuf-query-loaders > ${D}${libdir}/gdk-pixbuf-2.0/2.10.0/loaders.cache
-	sed -i -e 's#${D}##g' ${D}${libdir}/gdk-pixbuf-2.0/2.10.0/loaders.cache
+	GDK_PIXBUF_MODULEDIR=${D}${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders ${S}/gdk-pixbuf/gdk-pixbuf-query-loaders > ${D}${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
+	sed -i -e 's#${D}##g' ${D}${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
 	find ${D}${libdir} -name "libpixbufloader-*.la" -exec rm \{\} \;
+
+	create_wrapper ${D}/${bindir}/gdk-pixbuf-csource \
+		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
+		
+	create_wrapper ${D}/${bindir}/gdk-pixbuf-query-loaders \
+		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
 }
 BBCLASSEXTEND = "native"
