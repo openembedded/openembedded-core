@@ -194,6 +194,14 @@ while [ $i -le $# ]; do
     i=$((i + 1))
 done
 
+if [ ! -c /dev/net/tun ] ; then
+	echo "TUN control device /dev/net/tun is unavailable; you may need to enable TUN (e.g. sudo modprobe tun)"
+	exit 1
+elif [ ! -w /dev/net/tun ] ; then
+	echo "TUN control device /dev/net/tun is not writable, please fix (e.g. sudo chmod 666 /dev/net/tun)"
+	exit 1
+fi
+
 YOCTO_KVM_WIKI="https://wiki.yoctoproject.org/wiki/How_to_enable_KVM_for_Poky_qemu"
 # Detect KVM configuration
 if [[ "x$KVM_ENABLED" == "xyes" ]]; then
