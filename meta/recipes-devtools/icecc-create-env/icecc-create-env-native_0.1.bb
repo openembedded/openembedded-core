@@ -1,7 +1,6 @@
 DESCRIPTION = "This is a modified version of the icecc-create-env script in order to\
 make it work with OE."
 SECTION = "base"
-PRIORITY = "optional"
 # source file has just a "GPL" word, but upstream is GPLv2+.
 # most probably just GPL would be a mistake
 LICENSE = "GPLv2+"
