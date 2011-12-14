@@ -4,7 +4,6 @@ USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibc", "no", "", d )}'
 
 EXTRA_OECONF += " --enable-poison-system-directories \
 		  --with-headers=${STAGING_DIR_TARGET}${SYSTEMHEADERS} \
-                  --disable-nls \
 		"
 
 INHIBIT_DEFAULT_DEPS = "1"

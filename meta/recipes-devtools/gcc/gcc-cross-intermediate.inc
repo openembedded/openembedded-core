@@ -16,7 +16,6 @@ CROSS_TARGET_SYS_DIR_append = ".${PN}"
 # preferred linker.
 EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} \
 		--enable-shared \
-		--disable-nls \
 		--disable-multilib \
 		--disable-threads \
 		--enable-languages=c \
