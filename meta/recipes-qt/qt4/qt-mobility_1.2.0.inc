@@ -12,7 +12,7 @@ SRC_URI = "http://get.qt.nokia.com/qt/add-ons/qt-mobility-opensource-src-${PV}.t
 SRC_URI[md5sum]="ea5db5a8d3dd4709c2926dceda646bd8"
 SRC_URI[sha256sum]="ee3c88975e04139ac9589f76d4be646d44fcbc4c8c1cf2db621abc154cf0ba44"
 
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}/qt-mobility-opensource-src-${PV}"
 
@@ -60,7 +60,8 @@ do_install() {
 
 PACKAGES = "${PN}-dbg ${PN} ${PN}-dev"
 
-FILES_${PN}-dbg = "${qtm_bin}/.debug ${qtm_examples}/.debug ${qtm_demos}/.debug ${qtm_lib}/.debug ${qtm_plugins}/*/.debug \
-		${qtm_imports}/*/.debug ${qtm_imports}/*/*/.debug /usr/src/debug"
+FILES_${PN}-dbg = "${qtm_bin}/.debug ${qtm_examples}/.debug ${qtm_demos}/.debug \
+                   ${qtm_lib}/.debug ${qtm_plugins}/*/.debug  ${qtm_imports}/*/.debug \
+                   ${qtm_imports}/*/*/.debug ${bindir}/.debug /usr/src/debug"
 FILES_${PN} = "${qtm_bin} ${qtm_examples} ${qtm_demos} ${qtm_lib}/*.so.1* ${qtm_plugins} ${qtm_imports}"
-FILES_${PN}-dev = "/usr"
+FILES_${PN}-dev = "${exec_prefix}"
