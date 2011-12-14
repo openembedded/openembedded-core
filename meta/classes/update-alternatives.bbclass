@@ -3,7 +3,7 @@
 # command directly in your recipe, but in most cases this class simplifies
 # that job.
 #
-# There're two basic modes supported: 'single update' and 'batch update'
+# There are two basic modes supported: 'single update' and 'batch update'
 #
 # 'single update' is used for a single alternative command, and you're
 # expected to provide at least below keywords:
@@ -11,19 +11,19 @@
 #     ALTERNATIVE_NAME - the name that the alternative is registered
 #     ALTERNATIVE_PATH - the path of installed alternative
 #
-# ALTENATIVE_PRIORITY and ALTERNATIVE_LINK are optional which have defautls
+# ALTERNATIVE_PRIORITY and ALTERNATIVE_LINK are optional which have defaults
 # in this class.
 #
 # 'batch update' is used if you have multiple alternatives to be updated.
 # Unlike 'single update', 'batch update' in most times only require two
-# parameter:
+# parameters:
 #
-#     ALTERNATIVE_LINKS - a list of symbol links for which you'd like to
+#     ALTERNATIVE_LINKS - a list of symbolic links for which you'd like to
 #                         create alternatives, with space as delimiter, e.g:
 #
 #         ALTERNATIVE_LINKS = "${bindir}/cmd1 ${sbindir}/cmd2 ..."
 #
-#     ALTNERATIVE_PRIORITY - optional, applies to all
+#     ALTERNATIVE_PRIORITY - optional, applies to all
 #
 # To simplify the design, this class has the assumption that for a name
 # listed in ALTERNATIVE_LINKS, say /path/cmd:
@@ -49,7 +49,7 @@ update-alternatives --remove ${ALTERNATIVE_NAME} ${ALTERNATIVE_PATH}
 }
 
 # for batch alternatives, we use a simple approach to require only one parameter
-# with the rest info deduced implicitly
+# with the rest of the info deduced implicitly
 update_alternatives_batch_postinst() {
 for link in ${ALTERNATIVE_LINKS}
 do
