@@ -62,15 +62,14 @@ then
 fi
 
 # Set the system clock from hardware clock
-# If the timestamp is 1 day or more recent than the current time,
+# If the timestamp is more recent than the current time,
 # use the timestamp instead.
 /etc/init.d/hwclock.sh start
 if test -e /etc/timestamp
 then
-	SYSTEMDATE=`date  -u +%2m%2d%2H%2M%4Y`
+	SYSTEMDATE=`date -u +%4Y%2m%2d`
 	read TIMESTAMP < /etc/timestamp
-        NEEDUPDATE=`expr \( $TIMESTAMP \> $SYSTEMDATE + 10000 \)`
-        if [ $NEEDUPDATE -eq 1 ]; then 
+	if [ ${TIMESTAMP#????????}${TIMESTAMP%????????} -gt $SYSTEMDATE ]; then
 		date -u $TIMESTAMP
 		/etc/init.d/hwclock.sh stop
 	fi
