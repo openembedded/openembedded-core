@@ -9,7 +9,6 @@ or package anything, it only deploys a target-arch GRUB EFI image."
 
 HOMEPAGE = "http://www.gnu.org/software/grub/"
 SECTION = "bootloaders"
-PRIORITY = "optional"
 
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
