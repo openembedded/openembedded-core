@@ -7,7 +7,6 @@ standard, which allows for flexible loading of multiple boot images."
 
 HOMEPAGE = "http://www.gnu.org/software/grub/"
 SECTION = "bootloaders"
-PRIORITY = "optional"
 
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
