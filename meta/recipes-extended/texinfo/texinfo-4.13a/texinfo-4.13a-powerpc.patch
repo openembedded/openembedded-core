@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 diff -up texinfo-4.13/install-info/install-info.c.patch texinfo-4.13/install-info/install-info.c
 --- texinfo-4.13/install-info/install-info.c.patch	2010-01-11 14:46:32.000000000 +0100
 +++ texinfo-4.13/install-info/install-info.c	2010-01-11 14:48:47.162152695 +0100

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 --- SDL-1.2.14/configure.in.orig	2011-10-18 14:51:32.044167004 +0800
 +++ SDL-1.2.14/configure.in	2011-10-18 14:51:42.374167009 +0800
 @@ -48,9 +48,9 @@

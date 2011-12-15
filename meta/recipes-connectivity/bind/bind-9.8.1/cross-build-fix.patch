@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 11/30/2010
 gen.c should be build by ${BUILD_CC}
 

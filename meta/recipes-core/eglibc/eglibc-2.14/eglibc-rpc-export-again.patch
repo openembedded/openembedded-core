@@ -1,3 +1,6 @@
+
+Upstream-Status: Inappropriate [configuration]
+
 export the rpc symbols and headers again until we can get libtirpc sorted
 out as a proper and full replacement
 

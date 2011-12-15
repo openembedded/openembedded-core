@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 XORG_DEFAULT_OPTIONS pulls in the following dependency chains:
 
 XORG_CWARNFLAGS -> AC_PROG_CC_C99

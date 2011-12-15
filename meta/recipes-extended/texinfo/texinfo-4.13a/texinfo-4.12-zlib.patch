@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 diff -up texinfo-4.12/install-info/Makefile.in_old texinfo-4.12/install-info/Makefile.in
 --- texinfo-4.12/install-info/Makefile.in_old	2008-05-13 13:33:55.000000000 +0200
 +++ texinfo-4.12/install-info/Makefile.in	2008-05-13 13:52:35.000000000 +0200

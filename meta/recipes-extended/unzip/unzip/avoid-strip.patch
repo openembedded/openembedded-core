@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 unix/Makefile: remove hard coded strip commands
 
 Remove the hard coded strip commands, both LF2 (used in linking) and

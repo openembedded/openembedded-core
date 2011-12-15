@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 diff -up texinfo-4.13/info/indices.c.orig texinfo-4.13/info/indices.c
 --- texinfo-4.13/info/indices.c.orig	2010-08-31 12:04:38.317462471 +0200
 +++ texinfo-4.13/info/indices.c	2010-08-31 12:11:49.322624552 +0200

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Install example binary needed for poky-image-clutter
 
 Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>

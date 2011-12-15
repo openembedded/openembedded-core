@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 --- execute_cmd.c.orig	Fri Jun  3 13:34:42 2011
 +++ execute_cmd.c	Fri Jun  3 13:36:41 2011
 @@ -2202,7 +2202,11 @@

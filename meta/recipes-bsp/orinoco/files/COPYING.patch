@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [licensing]
+
 diff -ruN orinoco-conf-1.0-orig/COPYING orinoco-conf-1.0/COPYING
 --- orinoco-conf-1.0-orig/COPYING	1970-01-01 08:00:00.000000000 +0800
 +++ orinoco-conf-1.0/COPYING	2010-12-09 16:46:42.034965101 +0800

@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 We provide dummy implementation of iconv functionality if it does not find
 iconv which will be case with uclibc. We remove the check for iconv in configure
 
