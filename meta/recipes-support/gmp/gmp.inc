@@ -19,3 +19,5 @@ EXTRA_OECONF += " --enable-cxx=detect"
 
 PACKAGES =+ "libgmpxx"
 FILES_libgmpxx = "${libdir}/libgmpxx${SOLIBS}"
+
+SSTATE_SCAN_FILES += "gmp.h"
