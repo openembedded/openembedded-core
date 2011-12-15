@@ -54,3 +54,5 @@ FILES_libicutu = "${libdir}/libicutu.so.*"
 FILES_libicuio = "${libdir}/libicuio.so.*"
 
 BBCLASSEXTEND = "native"
+
+SSTATE_SCAN_FILES += "Makefile.inc"
