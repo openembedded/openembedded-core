@@ -7,7 +7,7 @@ core of text and font handling for GTK+-2.x."
 HOMEPAGE = "http://www.pango.org/"
 BUGTRACKER = "http://bugzilla.gnome.org"
 SECTION = "libs"
-LICENSE = "LGPL"
+LICENSE = "LGPLv2.0+"
 
 X11DEPENDS = "virtual/libx11 libxft"
 DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv gtk-doc-native cairo "
