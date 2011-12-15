@@ -1,5 +1,5 @@
 DESCRIPTION = "Matchbox Window Manager Desktop"
-LICENSE = "GPL"
+LICENSE = "GPLv2.0+"
 DEPENDS = "gtk+ startup-notification"
 SECTION = "x11/wm"
 PR = "r2"
