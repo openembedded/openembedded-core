@@ -1,0 +1,57 @@
+When we have an offline root and have specified force-postinstall, 
+attempt to run the postinstall but if it fails, just leave it in the
+status file as neeing to run. We can issue a NOTICE this is happened
+but supress errors. This means the OE class doesn't have to do any
+further post processing of the postinstalls itself.
+
+Upstream-Status: Pending
+
+RP 2011/12/15
+
+
+Index: trunk/libopkg/pkg.c
+===================================================================
+--- trunk.orig/libopkg/pkg.c	2011-12-15 15:58:39.000000000 +0000
++++ trunk/libopkg/pkg.c	2011-12-15 20:04:50.109992736 +0000
+@@ -1297,8 +1297,9 @@
+      free(cmd);
+ 
+      if (err) {
+-	  opkg_msg(ERROR, "package \"%s\" %s script returned status %d.\n", 
+-               pkg->name, script, err);
++          if (!conf->offline_root)
++	       opkg_msg(ERROR, "package \"%s\" %s script returned status %d.\n", 
++                    pkg->name, script, err);
+ 	  return err;
+      }
+ 
+Index: trunk/libopkg/opkg_cmd.c
+===================================================================
+--- trunk.orig/libopkg/opkg_cmd.c	2011-12-15 19:49:25.826014150 +0000
++++ trunk/libopkg/opkg_cmd.c	2011-12-15 19:50:52.346012148 +0000
+@@ -453,7 +453,8 @@
+ 		    pkg->state_flag &= ~SF_PREFER;
+ 		    opkg_state_changed++;
+ 	       } else {
+-		    err = -1;
++                    if (!conf->offline_root)
++		         err = -1;
+ 	       }
+ 	  }
+      }
+Index: trunk/libopkg/opkg_configure.c
+===================================================================
+--- trunk.orig/libopkg/opkg_configure.c	2011-12-15 19:50:11.586013081 +0000
++++ trunk/libopkg/opkg_configure.c	2011-12-15 19:52:15.082010347 +0000
+@@ -35,7 +35,10 @@
+ 
+     err = pkg_run_script(pkg, "postinst", "configure");
+     if (err) {
+-	opkg_msg(ERROR, "%s.postinst returned %d.\n", pkg->name, err);
++        if (!conf->offline_root)
++	     opkg_msg(ERROR, "%s.postinst returned %d.\n", pkg->name, err);
++        else
++	     opkg_msg(NOTICE, "%s.postinst returned %d, marking as unpacked only, configuration required on target.\n", pkg->name, err);
+ 	return err;
+     }
+ 

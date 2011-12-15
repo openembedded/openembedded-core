@@ -12,13 +12,16 @@ RREPLACES_${PN} = "opkg-nogpg"
 SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
            file://add_vercmp.patch \
            file://add_uname_support.patch \
+           file://fix_installorder.patch \
+           file://offline_postinstall.patch\
+           file://offlineroot_varname.patch \
 "
 
 S = "${WORKDIR}/trunk"
 
-SRCREV = "625"
+SRCREV = "633"
 PV = "0.1.8+svnr${SRCPV}"
-PR = "r4"
+PR = "r2"
 
 PACKAGES =+ "libopkg${PKGSUFFIX}-dev libopkg${PKGSUFFIX} update-alternatives-cworth${PKGSUFFIX}"
 
