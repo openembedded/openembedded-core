@@ -1,7 +1,7 @@
 SUMMARY = "/dev/ and hotplug management daemon"
 DESCRIPTION = "udev is a program which dynamically creates and removes device nodes from \
 /dev/. It responds to /sbin/hotplug device events and requires a 2.6 kernel."
-LICENSE = "GPL"
+LICENSE = "GPLv2.0+ & LGPLv2.1+"
 
 SRC_URI += " \
 	   file://udev.rules \
@@ -11,7 +11,7 @@ SRC_URI += " \
 	   file://mount.sh \
 	   file://network.sh \
 	   file://local.rules \
-       file://udev-cache \
+           file://udev-cache \
            file://init"
 
 UDEV_DEVFS_RULES ?= "0"
