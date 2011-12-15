@@ -1,5 +1,5 @@
 DESCRIPTION = "Package maintenance system for Debian."
-LICENSE = "GPL"
+LICENSE = "GPLv2.0+"
 SECTION = "base"
 
 INC_PR = "r15"
