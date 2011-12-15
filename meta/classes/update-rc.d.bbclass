@@ -3,6 +3,8 @@ UPDATERCPN ?= "${PN}"
 DEPENDS_append = " update-rc.d-native"
 UPDATERCD = "update-rc.d"
 UPDATERCD_virtclass-native = ""
+UPDATERCD_virtclass-nativesdk = ""
+
 RDEPENDS_${UPDATERCPN}_append = " ${UPDATERCD}"
 
 INITSCRIPT_PARAMS ?= "defaults"
