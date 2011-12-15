@@ -1,0 +1,20 @@
+OE uses D as the offline install directory in its scripts, not PKG_ROOT.
+
+Upstream-Status: Inappropriate [OE specific usage]
+
+RP 2011/12/15
+
+Index: trunk/libopkg/pkg.c
+===================================================================
+--- trunk.orig/libopkg/pkg.c	2011-12-15 15:58:39.000000000 +0000
++++ trunk/libopkg/pkg.c	2011-12-15 20:04:50.109992736 +0000
+@@ -1280,7 +1280,7 @@
+ 
+      opkg_msg(INFO, "Running script %s.\n", path);
+ 
+-     setenv("PKG_ROOT",
++     setenv("D",
+ 	    pkg->dest ? pkg->dest->root_dir : conf->default_dest->root_dir, 1);
+ 
+      if (! file_exists(path)) {
+

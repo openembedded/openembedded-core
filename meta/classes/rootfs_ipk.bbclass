@@ -60,13 +60,13 @@ fakeroot rootfs_ipk_do_rootfs () {
 	export INSTALL_CONF_IPK="${IPKGCONF_TARGET}"
 	export INSTALL_PACKAGES_IPK="${PACKAGE_INSTALL}"
 
-	package_install_internal_ipk
-
 	#post install
 	export D=${IMAGE_ROOTFS}
 	export OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export OPKG_OFFLINE_ROOT=${IPKG_OFFLINE_ROOT}
+
+	package_install_internal_ipk
 
 	# Distro specific packages should create this
 	#mkdir -p ${IMAGE_ROOTFS}/etc/opkg/
@@ -75,28 +75,8 @@ fakeroot rootfs_ipk_do_rootfs () {
 	${OPKG_POSTPROCESS_COMMANDS}
 	${ROOTFS_POSTINSTALL_COMMAND}
 	
-	runtime_script_required=0
-
-	# Base-passwd needs to run first to install /etc/passwd and friends
-	if [ -e ${IMAGE_ROOTFS}${opkglibdir}/info/base-passwd.preinst ] ; then
-		sh ${IMAGE_ROOTFS}${opkglibdir}/info/base-passwd.preinst
-	fi
-
-	for i in ${IMAGE_ROOTFS}${opkglibdir}/info/*.preinst; do
-		if [ -f $i ] && ! sh $i; then
-		     	runtime_script_required=1
-			opkg-cl ${IPKG_ARGS} flag unpacked `basename $i .preinst`
-		fi
-	done
-	for i in ${IMAGE_ROOTFS}${opkglibdir}/info/*.postinst; do
-		if [ -f $i ] && ! sh $i configure; then
-		     	runtime_script_required=1
-			opkg-cl ${IPKG_ARGS} flag unpacked `basename $i .postinst`
-		fi
-	done
-
 	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
-		if [ $runtime_script_required -eq 1 ]; then
+		if grep Status:.install.ok.unpacked ${IMAGE_ROOTFS}${opkglibdir}status; then
 			echo "Some packages could not be configured offline and rootfs is read-only."
 			exit 1
 		fi

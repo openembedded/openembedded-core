@@ -1,0 +1,174 @@
+There is a problem with dependency order when installing packages. The key 
+problem revolves around the satisfy_dependencies_for() function which is 
+called from opkg_install_pkg just before the installation (and preinst)
+happens.
+
+The satisfy_dependencies_for() function calls pkg_hash_fetch_unsatisfied_dependencies()
+which will only return packages which were previously not marked as 
+*going* to be installed at some point. For the purposes of 
+opkg_install_pkg() we really need to know which dependencies haven't been 
+installed yet.
+
+This patch adds pkg_hash_fetch_satisfied_dependencies() which returns a 
+list of package dependencies. We can then directly check the status of 
+these and ensure any hard dependencies (not suggestions or recommendations)
+are installed before returning.
+
+Consider the situation (where -> means 'depends on'):
+
+X -> A,E
+A -> B,E
+E -> B
+B -> C
+
+Currently X would install A and E. When installing A the packages B, E 
+and C would be marked as "to install". When the package B is considered
+the second time (as a dependency of E rather than A), it would install 
+straight away even though C was not currently installed, just marked
+as needing to be installed.
+
+The patch changes the behaviour so B can't install until C really is installed.
+
+This change is required to run the postinst scripts in the correct order.
+
+Upstream-Status: Pending
+
+RP 2011/12/15
+
+Index: trunk/libopkg/opkg_install.c
+===================================================================
+--- trunk.orig/libopkg/opkg_install.c	2011-12-15 15:58:39.000000000 +0000
++++ trunk/libopkg/opkg_install.c	2011-12-15 15:58:41.838334788 +0000
+@@ -76,6 +77,27 @@
+      }
+ 
+      if (ndepends <= 0) {
++	  pkg_vec_free(depends);      
++	  depends = pkg_hash_fetch_satisfied_dependencies(pkg);
++
++	  for (i = 0; i < depends->len; i++) {
++	       dep = depends->pkgs[i];
++	       /* The package was uninstalled when we started, but another
++	          dep earlier in this loop may have depended on it and pulled
++	          it in, so check first. */
++	       if ((dep->state_status != SS_INSTALLED) && (dep->state_status != SS_UNPACKED)) {
++		    opkg_msg(DEBUG2,"Calling opkg_install_pkg.\n");
++		    err = opkg_install_pkg(dep, 0);
++		    /* mark this package as having been automatically installed to
++		     * satisfy a dependancy */
++		    dep->auto_installed = 1;
++		    if (err) {
++			 pkg_vec_free(depends);
++			 return err;
++		    }
++	       }
++	  }
++
+ 	  pkg_vec_free(depends);
+ 	  return 0;
+      }
+Index: trunk/libopkg/pkg_depends.c
+===================================================================
+--- trunk.orig/libopkg/pkg_depends.c	2010-12-22 16:04:43.000000000 +0000
++++ trunk/libopkg/pkg_depends.c	2011-12-15 15:58:41.838334788 +0000
+@@ -259,6 +259,88 @@
+      return unsatisfied->len;
+ }
+ 
++
++pkg_vec_t *
++pkg_hash_fetch_satisfied_dependencies(pkg_t * pkg)
++{
++     pkg_vec_t *satisfiers;
++     int i, j, k;
++     int count;
++     abstract_pkg_t * ab_pkg;
++
++     satisfiers = pkg_vec_alloc();
++
++     /*
++      * this is a setup to check for redundant/cyclic dependency checks,
++      * which are marked at the abstract_pkg level
++      */
++     if (!(ab_pkg = pkg->parent)) {
++	  opkg_msg(ERROR, "Internal error, with pkg %s.\n", pkg->name);
++	  return satisfiers;
++     }
++
++     count = pkg->pre_depends_count + pkg->depends_count + pkg->recommends_count + pkg->suggests_count;
++     if (!count)
++	  return satisfiers;
++
++     /* foreach dependency */
++     for (i = 0; i < count; i++) {
++	  compound_depend_t * compound_depend = &pkg->depends[i];
++	  depend_t ** possible_satisfiers = compound_depend->possibilities;;
++
++          if (compound_depend->type == RECOMMEND || compound_depend->type == SUGGEST)
++              continue;
++
++	  if (compound_depend->type == GREEDY_DEPEND) {
++	       /* foreach possible satisfier */
++	       for (j = 0; j < compound_depend->possibility_count; j++) {
++		    /* foreach provided_by, which includes the abstract_pkg itself */
++		    abstract_pkg_t *abpkg = possible_satisfiers[j]->pkg;
++		    abstract_pkg_vec_t *ab_provider_vec = abpkg->provided_by;
++		    int nposs = ab_provider_vec->len;
++		    abstract_pkg_t **ab_providers = ab_provider_vec->pkgs;
++		    int l;
++		    for (l = 0; l < nposs; l++) {
++			 pkg_vec_t *test_vec = ab_providers[l]->pkgs;
++			 /* if no depends on this one, try the first package that Provides this one */
++			 if (!test_vec){   /* no pkg_vec hooked up to the abstract_pkg!  (need another feed?) */
++			      continue;
++			 }
++
++			 /* cruise this possiblity's pkg_vec looking for an installed version */
++			 for (k = 0; k < test_vec->len; k++) {
++			      pkg_t *pkg_scout = test_vec->pkgs[k];
++			      /* not installed, and not already known about? */
++			      if (pkg_scout->state_want == SW_INSTALL && pkg_scout != pkg)
++      			          pkg_vec_insert(satisfiers, pkg_scout);
++			 }
++		    }
++	       }
++
++	       continue;
++	  }
++
++	  /* foreach possible satisfier, look for installed package  */
++	  for (j = 0; j < compound_depend->possibility_count; j++) {
++	       /* foreach provided_by, which includes the abstract_pkg itself */
++	       depend_t *dependence_to_satisfy = possible_satisfiers[j];
++	       abstract_pkg_t *satisfying_apkg = possible_satisfiers[j]->pkg;
++	       pkg_t *satisfying_pkg =
++		    pkg_hash_fetch_best_installation_candidate(satisfying_apkg,
++							       pkg_installed_and_constraint_satisfied,
++							       dependence_to_satisfy, 1);
++               /* Being that I can't test constraing in pkg_hash, I will test it here */
++	       if (satisfying_pkg != NULL && satisfying_pkg != pkg) {
++                  if (pkg_constraint_satisfied(satisfying_pkg, dependence_to_satisfy) && satisfying_pkg->state_want == SW_INSTALL)
++	              pkg_vec_insert(satisfiers, satisfying_pkg);
++               }
++
++	  }
++     }
++     return satisfiers;
++}
++
++
+ /*checking for conflicts !in replaces
+   If a packages conflicts with another but is also replacing it, I should not consider it a
+   really conflicts
+Index: trunk/libopkg/pkg_depends.h
+===================================================================
+--- trunk.orig/libopkg/pkg_depends.h	2010-12-22 16:04:43.000000000 +0000
++++ trunk/libopkg/pkg_depends.h	2011-12-15 15:58:41.838334788 +0000
+@@ -82,6 +82,7 @@
+ void buildDependedUponBy(pkg_t * pkg, abstract_pkg_t * ab_pkg);
+ int version_constraints_satisfied(depend_t * depends, pkg_t * pkg);
+ int pkg_hash_fetch_unsatisfied_dependencies(pkg_t * pkg, pkg_vec_t *depends, char *** unresolved);
++pkg_vec_t * pkg_hash_fetch_satisfied_dependencies(pkg_t * pkg);
+ pkg_vec_t * pkg_hash_fetch_conflicts(pkg_t * pkg);
+ int pkg_dependence_satisfiable(depend_t *depend);
+ int pkg_dependence_satisfied(depend_t *depend);
