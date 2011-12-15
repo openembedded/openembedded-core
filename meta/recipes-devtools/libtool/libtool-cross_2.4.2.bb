@@ -1,6 +1,6 @@
 require libtool-${PV}.inc
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 PACKAGES = ""
 SRC_URI += "file://prefix.patch"
 SRC_URI += "file://fixinstall.patch"
@@ -34,3 +34,5 @@ libtoolcross_sysroot_preprocess () {
 	sysroot_stage_dir ${D}${bindir_crossscripts} ${SYSROOT_DESTDIR}${bindir_crossscripts}
 	sysroot_stage_dir ${D}${target_datadir} ${SYSROOT_DESTDIR}${target_datadir}
 }
+
+SSTATE_SCAN_FILES += "libtoolize *-libtool"
