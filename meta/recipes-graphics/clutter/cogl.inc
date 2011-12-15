@@ -1,6 +1,6 @@
-DESCRIPTION = "Clutter graphics library"
-HOMEPAGE = "http://www.clutter-project.org/"
-LICENSE = "LGPL"
+DESCRIPTION = "a modern 3D graphics API with associated utility APIs"
+HOMEPAGE = "http://wiki.clutter-project.org/wiki/Cogl"
+LICENSE = "LGPLv2.1+"
 
 STDDEPENDS = "virtual/libx11 gtk-doc-native pango glib-2.0 libxfixes gdk-pixbuf libxi"
 BASE_CONF = "--disable-gtk-doc ${@get_clutter_fpu_setting(bb, d)}"
