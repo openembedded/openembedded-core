@@ -1,5 +1,5 @@
 DESCRIPTION = "Advanced front-end for dpkg."
-LICENSE = "GPL"
+LICENSE = "GPLv2.0+"
 SECTION = "base"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/a/apt/apt_${PV}.tar.gz \
