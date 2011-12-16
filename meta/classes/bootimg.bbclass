@@ -103,13 +103,21 @@ build_hddimg() {
 			grubefi_hddimg_populate
 		fi
 
-		# Determine the block count for the final image
-		BLOCKS=`du -bks ${HDDDIR} | cut -f 1`
+		# Determine the 1024 byte block count for the final image.
+		BLOCKS=`du --apparent-size -ks ${HDDDIR} | cut -f 1`
 		SIZE=`expr $BLOCKS + ${BOOTIMG_EXTRA_SPACE}`
 
-		mkdosfs -n ${BOOTIMG_VOLUME_ID} -d ${HDDDIR} \
-		        -C ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg $SIZE
-		dosfsck -a -l ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg || true
+		# Ensure total sectors is an integral number of sectors per
+		# track or mcopy will complain. Sectors are 512 bytes, and and
+		# we generate images with 32 sectors per track. This calculation
+		# is done in blocks, which are twice the size of sectors, thus
+		# the 16 instead of 32.
+		SIZE=$(expr $SIZE + $(expr 16 - $(expr $SIZE % 16)))
+
+		IMG=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
+		mkdosfs -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${IMG} ${SIZE}
+		# Copy HDDDIR recursively into the image file directly
+		mcopy -i ${IMG} -s ${HDDDIR}/* ::/
 
 		if [ "${PCBIOS}" = "1" ]; then
 			syslinux_hddimg_install
