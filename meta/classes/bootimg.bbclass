@@ -109,6 +109,7 @@ build_hddimg() {
 
 		mkdosfs -n ${BOOTIMG_VOLUME_ID} -d ${HDDDIR} \
 		        -C ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg $SIZE
+		dosfsck -a -l ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg || true
 
 		if [ "${PCBIOS}" = "1" ]; then
 			syslinux_hddimg_install
