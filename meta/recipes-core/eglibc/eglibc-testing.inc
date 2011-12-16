@@ -66,10 +66,8 @@ fi
 	echo "# we test using cross compiler from real sysroot therefore override the" > ${B}/configparms
 	echo "# definitions that come from ${B}/config.make" >> ${B}/configparms
 
-	echo "CC = ${CC}" >> ${B}/configparms
-	echo "CXX = ${CXX}" >> ${B}/configparms
+	fgrep tcbootstrap ${B}/config.make > ${B}/configparms
 	sed -i -e "s/\-tcbootstrap//g" ${B}/configparms
-
 wrapper="${S}/scripts/cross-test-ssh.sh \$target"
 localedef="${STAGING_BINDIR_NATIVE}/cross-localedef --little-endian --uint32-align=4"
 make tests-clean

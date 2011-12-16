@@ -1,0 +1,36 @@
+build system of glibc currently adds the cxx headers path by detecting
+it using provided CXX and expects that they are installed w.r.t to standard
+installation location but in OE we install and use cxx headers from target
+sysroot therefore that code needs to be adapted for OE
+
+Upstream-Status: Inappropriate [OE-specific]
+
+-Khem
+
+
+--- a/configure.in
++++ b/configure.in
+@@ -1118,9 +1118,8 @@ if test -n "$sysheaders"; then
+   SYSINCLUDES="$SYSINCLUDES \
+ -isystem `echo $sysheaders | sed 's/:/ -isystem /g'`"
+   if test -n "$CXX"; then
+-    cxxversion=`$CXX -dumpversion 2>&AS_MESSAGE_LOG_FD` &&
+     cxxmachine=`$CXX -dumpmachine 2>&AS_MESSAGE_LOG_FD` &&
+-    cxxheaders=`$CXX -print-file-name=../../../../include/c++/`"$cxxversion" &&
++    cxxheaders=`$CXX -print-sysroot`"$prefix/include/c++" &&
+     CXX_SYSINCLUDES="-isystem $cxxheaders \
+ -isystem $cxxheaders/$cxxmachine -isystem $cxxheaders/backward"
+   fi
+--- a/configure
++++ b/configure
+@@ -5544,9 +5544,8 @@ if test -n "$sysheaders"; then
+   SYSINCLUDES="$SYSINCLUDES \
+ -isystem `echo $sysheaders | sed 's/:/ -isystem /g'`"
+   if test -n "$CXX"; then
+-    cxxversion=`$CXX -dumpversion 2>&5` &&
+     cxxmachine=`$CXX -dumpmachine 2>&5` &&
+-    cxxheaders=`$CXX -print-file-name=../../../../include/c++/`"$cxxversion" &&
++    cxxheaders=`$CXX -print-sysroot`"$prefix/include/c++" &&
+     CXX_SYSINCLUDES="-isystem $cxxheaders \
+ -isystem $cxxheaders/$cxxmachine -isystem $cxxheaders/backward"
+   fi
