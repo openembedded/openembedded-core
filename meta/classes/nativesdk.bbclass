@@ -53,11 +53,6 @@ prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
 exec_prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
 baselib = "lib"
 
-FILES_${PN} += "${prefix}"
-FILES_${PN}-dbg += "${prefix}/.debug \
-                    ${prefix}/bin/.debug \
-                   "
-
 export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${libdir}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 
