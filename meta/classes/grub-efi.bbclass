@@ -21,10 +21,8 @@ GRUB_TIMEOUT ?= "10"
 #FIXME: build this from the machine config
 GRUB_OPTS ?= "serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1"
 
-# FIXME: add EFI/BOOT to GRUB_HDDDIR once the mkdosfs subdir bug is resolved
-#        http://bugzilla.yoctoproject.org/show_bug.cgi?id=1783
 EFIDIR = "/EFI/BOOT"
-GRUB_HDDDIR = "${HDDDIR}"
+GRUB_HDDDIR = "${HDDDIR}${EFIDIR}"
 GRUB_ISODIR = "${ISODIR}${EFIDIR}"
 
 grubefi_populate() {
@@ -53,22 +51,12 @@ grubefi_populate() {
 
 grubefi_iso_populate() {
 	grubefi_populate ${GRUB_ISODIR}
-
-	# FIXUP the <EFIDIR> token in the config
-	# FIXME: This can be dropped once mkdosfs is fixed
-	sed -i "s@<EFIDIR>@${EFIDIR}@g" ${GRUB_ISODIR}/$(basename "${GRUBCFG}")
 }
 
 grubefi_hddimg_populate() {
 	grubefi_populate ${GRUB_HDDDIR}
-
-	# FIXUP the <EFIDIR> token in the config
-	# FIXME: This can be dropped once mkdosfs is fixed
-	sed -i "s@<EFIDIR>@@g" ${GRUB_HDDDIR}/$(basename "${GRUBCFG}")
 }
 
-# FIXME: The <EFIDIR> token can be replaced with ${EFIDIR} once the
-#        mkdosfs bug is resolved.
 python build_grub_cfg() {
     import sys
 
@@ -121,7 +109,7 @@ python build_grub_cfg() {
         bb.data.update_data(localdata)
 
         cfgfile.write('\nmenuentry \'%s\'{\n' % (label))
-        cfgfile.write('linux <EFIDIR>/vmlinuz LABEL=%s' % (label))
+        cfgfile.write('linux ${EFIDIR}/vmlinuz LABEL=%s' % (label))
 
         append = localdata.getVar('APPEND', True)
         initrd = localdata.getVar('INITRD', True)
@@ -131,7 +119,7 @@ python build_grub_cfg() {
         cfgfile.write('\n')
    
         if initrd:
-            cfgfile.write('initrd <EFIDIR>/initrd')
+            cfgfile.write('initrd ${EFIDIR}/initrd')
         cfgfile.write('\n}\n')
 
     cfgfile.close()
