@@ -120,7 +120,7 @@ license_create_manifest() {
                     # Really don't need to copy the generics as they're 
                     # represented in the manifest and in the actual pkg licenses
                     # Doing so would make your image quite a bit larger
-                    if [ ! ${lic} == "generic_*" ]; then
+                    if [ ! ${lic} = "generic_*" ]; then
                         cp ${LICENSE_DIRECTORY}/${pkged_pn}/${lic} ${IMAGE_ROOTFS}/usr/share/common-licenses/${pkg}/${lic}
                     fi
                 done
