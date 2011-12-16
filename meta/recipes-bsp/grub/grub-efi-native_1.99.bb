@@ -60,7 +60,7 @@ EXTRA_OECONF = "--with-platform=efi --disable-grub-mkfont \
 do_mkimage() {
 	./grub-mkimage -p / -d ./grub-core/ \
 		       -O ${GRUB_TARGET}-efi -o ./${GRUB_IMAGE} \
-	               boot linux fat serial part_msdos normal
+	               boot linux fat serial part_msdos normal efi_gop
 }
 addtask mkimage after do_compile before do_install
 
