@@ -1,0 +1,46 @@
+From b9a20c8eb61b600ced284646a1bea588fdd8a5ea Mon Sep 17 00:00:00 2001
+From: Otavio Salvador <otavio@ossystems.com.br>
+Date: Fri, 16 Dec 2011 19:31:59 -0200
+Subject: [PATCH] Disable building of alg-test
+
+alg-test utility depends on linux/if_alg.h header that is only
+available on kernels >= 2.6.39.
+
+Upstream Status: Inappropriate [configuration]
+
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+---
+ Makefile.am  |    2 +-
+ configure.ac |    3 ---
+ 2 files changed, 1 insertions(+), 4 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index d5a76f9..d42a766 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -144,7 +144,7 @@ noinst_PROGRAMS += tools/wispr tools/supplicant-test \
+ 			tools/dbus-test tools/polkit-test \
+ 			tools/iptables-test tools/tap-test tools/wpad-test \
+ 			tools/stats-tool tools/private-network-test \
+-			tools/alg-test unit/test-session
++			unit/test-session
+ 
+ tools_wispr_SOURCES = $(gweb_sources) tools/wispr.c
+ tools_wispr_LDADD = @GLIB_LIBS@ @GNUTLS_LIBS@ -lresolv
+diff --git a/configure.ac b/configure.ac
+index f63fea8..67bfe85 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -437,9 +437,6 @@ if (test "${enable_tools}" = "yes"); then
+ 				AC_MSG_ERROR(GnuTLS library is required))
+ 	AC_SUBST(GNUTLS_CFLAGS)
+ 	AC_SUBST(GNUTLS_LIBS)
+-
+-	AC_CHECK_HEADERS(linux/if_alg.h, dummy=yes,
+-		AC_MSG_ERROR(User-space algorithm header files are required))
+ fi
+ AM_CONDITIONAL(TOOLS, test "${enable_tools}" = "yes")
+ 
+-- 
+1.7.7.3
+
