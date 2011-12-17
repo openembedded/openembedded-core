@@ -127,7 +127,7 @@ python native_virtclass_handler () {
         d.setVar(varname, " ".join(newdeps))
 
     map_dependencies("DEPENDS", e.data)
-    for pkg in (e.data.getVar("PACKAGES", True).split() + [""]):
+    for pkg in [e.data.getVar("PN", True), "", "${PN}"]:
         map_dependencies("RDEPENDS", e.data, pkg)
         map_dependencies("RRECOMMENDS", e.data, pkg)
         map_dependencies("RSUGGESTS", e.data, pkg)

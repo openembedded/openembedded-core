@@ -3,7 +3,7 @@ LICENSE="GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe" 
 DEPENDS_virtclass-native = "autoconf-native"
 
-RDEPENDS_automake += "\
+RDEPENDS_${PN} += "\
     autoconf \
     perl \
     perl-module-bytes \
@@ -27,7 +27,8 @@ RDEPENDS_automake += "\
     perl-module-text-parsewords \
     perl-module-vars "
 
-RDEPENDS_automake-native = "autoconf-native perl-native-runtime"
+RDEPENDS_${PN}_virtclass-native = "autoconf-native perl-native-runtime"
+RDEPENDS_${PN}_virtclass-nativesdk = "autoconf-nativesdk"
 
 PATHFIXPATCH = "file://path_prog_fixes.patch"
 PATHFIXPATCH_virtclass-native = ""

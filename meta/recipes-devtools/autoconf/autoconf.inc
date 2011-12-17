@@ -6,6 +6,8 @@ LICENSE = "GPLv3"
 HOMEPAGE = "http://www.gnu.org/software/autoconf/"
 SECTION = "devel"
 DEPENDS += "m4-native"
+DEPENDS_virtclass-native = "m4-native gnu-config-native"
+DEPENDS_virtclass-nativesdk = "m4-nativesdk gnu-config-nativesdk"
 RDEPENDS_${PN} = "m4 gnu-config"
 
 SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.bz2 \
