@@ -15,7 +15,7 @@ PROVIDES = "virtual/libsdl"
 DEPENDS = "${@base_contains('DISTRO_FEATURES', 'opengl', 'virtual/libgl', '', d)} virtual/libx11 libxext libxrandr libxrender tslib"
 DEPENDS_virtclass-nativesdk = "libx11-nativesdk libxrandr-nativesdk libxrender-nativesdk libxext-nativesdk"
 
-PR = "r2"
+PR = "r4"
 
 SRC_URI = "http://www.libsdl.org/release/SDL-${PV}.tar.gz \
            file://configure_tweak.patch \
@@ -26,7 +26,7 @@ S = "${WORKDIR}/SDL-${PV}"
 SRC_URI[md5sum] = "e52086d1b508fa0b76c52ee30b55bec4"
 SRC_URI[sha256sum] = "5d927e287034cb6bb0ebccfa382cb1d185cb113c8ab5115a0759798642eed9b6"
 
-inherit autotools binconfig pkgconfig
+inherit autotools lib_package binconfig pkgconfig
 
 EXTRA_OECONF = "--disable-static --disable-debug --enable-cdrom --enable-threads --enable-timers --enable-endian \
                 --enable-file --disable-oss --disable-esd --disable-arts \
