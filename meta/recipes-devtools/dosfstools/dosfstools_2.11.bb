@@ -1,7 +1,7 @@
 # dosfstools OE build file
 # Copyright (C) 2004-2006, Advanced Micro Devices, Inc.  All Rights Reserved
 # Released under the MIT license (see packages/COPYING)
-
+SUMMARY = "DOS FAT Filesystem Utilities"
 DESCRIPTION = "DOS FAT Filesystem Utilities"
 
 SECTION = "base"

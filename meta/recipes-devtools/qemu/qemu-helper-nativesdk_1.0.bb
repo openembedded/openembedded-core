@@ -1,4 +1,5 @@
-DESCRIPTION = "Qemu helper scripts from Poky"
+SUMMARY = "Qemu helper scripts"
+DESCRIPTION = "Qemu helper scripts"
 LICENSE = "GPLv2"
 RDEPENDS_${PN} = "qemu-nativesdk"
 PR = "r9"

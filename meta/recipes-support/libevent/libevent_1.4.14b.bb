@@ -1,4 +1,5 @@
-DESCRIPTION = "an asynchronous event notification library"
+SUMMARY = "An asynchronous event notification library"
+DESCRIPTION = "An asynchronous event notification library"
 HOMEPAGE = "http://www.monkey.org/~provos/libevent/"
 SECTION = "libs"
 

@@ -1,3 +1,4 @@
+SUMMARY = "International Component for Unicode libraries"
 DESCRIPTION = "The International Component for Unicode (ICU) is a mature, portable set of C/C++ and Java libraries for Unicode support, software internationalization (I18N) and globalization (G11N), giving applications the same results on all platforms."
 HOMEPAGE = "http://www-01.ibm.com/software/globalization/icu/index.jsp"
 
