@@ -6,7 +6,7 @@ LICENSE = "GPLv2 & MIT"
 LIC_FILES_CHKSUM = "file://doc/COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://doc/LICENSING.txt;md5=607073e04548eac7d1f763e480477bab \
 		   "
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "http://www.hpl.hp.com/research/linux/atomic_ops/download/libatomic_ops-${PV}.tar.gz \
            file://fedora/libatomic_ops-1.2-ppclwzfix.patch \
@@ -26,5 +26,7 @@ ARM_INSTRUCTION_SET = "arm"
 inherit autotools pkgconfig
 
 do_install_append() {
-	mv ${D}${datadir}/libatomic_ops ${D}${datadir}/libatomic-ops || true
+	# those contain only docs, not necessary for now.
+	install -m 0755 -d ${D}${docdir}
+	mv ${D}${datadir}/libatomic_ops ${D}${docdir}/${PN}
 }
