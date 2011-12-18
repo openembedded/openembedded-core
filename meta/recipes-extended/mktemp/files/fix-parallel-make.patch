@@ -1,6 +1,7 @@
 This fixes the parallel make install failure
 
-Upstream-Status: Pending
+Upstream-Status: Accepted
+http://www.gratisoft.us/bugzilla/show_bug.cgi?id=528
 
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
