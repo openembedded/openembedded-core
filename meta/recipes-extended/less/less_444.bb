@@ -7,10 +7,10 @@ SECTION = "console/utils"
 
 # (GPLv2+ (<< 418), GPLv3+ (>= 418)) | less
 # less is a 2-clause BSD-like permissive license
-# Reading LICENSE and COPYING indicate that GPL-3+ is suffient.
-# openSuse .spec and Debian seem to agree here. setting to GPL-3+
+# Mark Nudelman (author of less) has given permission to utilize a generic 
+# 2-clause BSD
 
-LICENSE = "GPLv3+"
+LICENSE = "GPLv3+ | BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                     file://LICENSE;md5=1237c0f825bb36122b0b2b486ffbe6be"
 DEPENDS = "ncurses"
