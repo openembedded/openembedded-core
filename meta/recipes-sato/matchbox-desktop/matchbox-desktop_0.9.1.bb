@@ -3,7 +3,10 @@ LICENSE = "GPLv2.0+"
 DEPENDS = "libmatchbox startup-notification"
 SECTION = "x11/wm"
 
-SRC_URI = "http://projects.o-hand.com/matchbox/sources/matchbox-desktop/0.9/matchbox-desktop-${PV}.tar.bz2"
+SRC_URI = "http://downloads.yoctoproject.org/releases/matchbox/matchbox-desktop/0.9/matchbox-desktop-${PV}.tar.bz2"
+
+SRC_URI[md5sum] = "3335a30b1a1aacfb39f23b505254765c"
+SRC_URI[sha256sum] = "ecb025d3660d80a9850973111b4fdfffaa50b47cbf0c5467b508d28d65146793"
 
 EXTRA_OECONF = "--enable-startup-notification --enable-dnotify"
 
