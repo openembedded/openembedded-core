@@ -6,12 +6,15 @@ LICENSE = "LGPLv2 & LGPLv2+"
 
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup libglade"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://ftp.gnome.org/pub/GNOME/mobile/2.23/2.23.92/sources/evolution-data-server-dbus-${PV}.tar.gz  \
            file://oh-contact.patch;striplevel=0 \
            file://no_iconv_test.patch \
            file://iconv-detect.h"
+
+SRC_URI[md5sum] = "69dc1e4eed6041a91aec76eacf7f17fb"
+SRC_URI[sha256sum] = "aa537293c10153dad91aa31b50547e867946d7b937414f2ef734e40967e6ab0a"
 
 S = "${WORKDIR}/evolution-data-server-dbus-${PV}"
 
