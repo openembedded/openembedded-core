@@ -12,8 +12,9 @@ PR = "r0"
 inherit pkgconfig autotools gettext
 
 SRC_URI = "${GNU_MIRROR}/libidn/${BPN}-${PV}.tar.gz"
-SRC_URI[md5sum] = "893a1df0cf3b28b72d248382eaeaca71"
-SRC_URI[sha256sum] = "2f765e868795f5478900ec9f42cb0ecc6ca22e2a85a62763c0b13c7da2f588ed"
+
+SRC_URI[md5sum] = "f9a417270cc9b6bf763ae1f88e60191c"
+SRC_URI[sha256sum] = "25b42d75851ebae52e1c969353b74eefd3d6817f41c8d2a6db258f5ec60c5e6a"
 
 # command tool is under GPLv3+, while libidn itself is under LGPLv2.1+
 # so package command into a separate package
