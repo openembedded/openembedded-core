@@ -2,7 +2,7 @@ require libmatchbox.inc
 
 PR = "r8"
 
-SRC_URI = "http://projects.o-hand.com/matchbox/sources/${BPN}/${PV}/${BPN}-${PV}.tar.gz \
+SRC_URI = "http://downloads.yoctoproject.org/releases/matchbox/${BPN}/${PV}/${BPN}-${PV}.tar.gz \
            file://16bppfixes.patch \
            file://configure_fixes.patch \
            file://check.m4 \
