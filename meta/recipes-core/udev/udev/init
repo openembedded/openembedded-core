@@ -14,7 +14,18 @@ export TZ=/etc/localtime
 [ -d /sys/class ] || exit 1
 [ -r /proc/mounts ] || exit 1
 [ -x /sbin/udevd ] || exit 1
+[ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
 [ -f /etc/udev/udev.conf ] && . /etc/udev/udev.conf
+
+readfile () {
+   filename=$1
+   READDATA=""
+   if [ -r $filename ]; then
+       while read line; do
+           READDATA="$READDATA$line"
+       done < $filename
+   fi
+}
 
 kill_udevd() {
 	if [ -x /sbin/pidof ]; then
@@ -34,10 +45,26 @@ LANG=C awk '$2 == "/dev" && ($3 == "tmpfs" || $3 == "devtmpfs") { exit 1 }' /pro
 [ -e /dev/pts ] || mkdir -m 0755 /dev/pts
 [ -e /dev/shm ] || mkdir -m 1777 /dev/shm
 
+# cache handling
+if [ "$DEVCACHE" != "" ]; then
+	readfile /proc/version
+	VERSION="$READDATA"
+	readfile /proc/cmdline
+	CMDLINE="$READDATA"
+	readfile /proc/devices
+	DEVICES="$READDATA"
+	readfile /proc/atags
+	ATAGS="$READDATA"
 
-if [ -e /etc/dev.tar ]; then
-	(cd /; tar xf /etc/dev.tar 2>&1 | grep -v 'time stamp' || true)
-	not_first_boot=1
+	if [ -e $DEVCACHE ]; then
+		readfile /etc/udev/cache.data
+		if [ "$READDATA" = "$VERSION$CMDLINE$DEVICES$ATAGS" ]; then
+			(cd /; tar xf $DEVCACHE > /dev/null 2>&1)
+			not_first_boot=1
+		fi
+
+		echo "$VERSION$CMDLINE$DEVICES$ATAGS" > /dev/shm/udev.cache
+	fi
 fi
 
 # make_extra_nodes

@@ -9,12 +9,20 @@
 # Short-Description: cache /dev to speedup the udev next boot
 ### END INIT INFO
 
-[ -d /sys/class ] || exit 1
+export TZ=/etc/localtime
+
 [ -r /proc/mounts ] || exit 1
 [ -x /sbin/udevd ] || exit 1
+[ -d /sys/class ] || exit 1
 
-if [ ! -e /etc/dev.tar ]; then
-	(cd /; tar cf /etc/dev.tar dev)
+[ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
+
+if [ "$DEVCACHE" != "" ]; then
+	echo "Populating dev cache"
+	(cd /; tar cf "$DEVCACHE" dev)
+	mv /dev/shm/udev.cache /etc/udev/cache.data
+else
+	rm -f /dev/shm/udev.cache
 fi
 
 exit 0
