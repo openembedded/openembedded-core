@@ -1,0 +1,28 @@
+Upstream-Status: Pending
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: git/CMakeLists.txt
+===================================================================
+--- git.orig/CMakeLists.txt	2011-12-20 15:13:59.851209493 -0800
++++ git/CMakeLists.txt	2011-12-20 15:14:51.167211302 -0800
+@@ -25,6 +25,9 @@
+ PKG_CHECK_MODULES(RPM REQUIRED rpm)
+ INCLUDE_DIRECTORIES( ${RPM_INCLUDE_DIRS} )
+ 
++PKG_CHECK_MODULES(LIBXML REQUIRED libxml-2.0)
++INCLUDE_DIRECTORIES( ${LIBXML_INCLUDE_DIRS} )
++
+ FIND_PACKAGE( Zypp REQUIRED )
+ IF( ZYPP_FOUND )
+   INCLUDE_DIRECTORIES(${ZYPP_INCLUDE_DIR})
+@@ -70,6 +73,9 @@
+ INCLUDE(CTest)
+ ENABLE_TESTING()
+ 
++# New Augeas requires libxml now
++PKG_CHECK_MODULES(LIBXML REQUIRED libxml-2.0)
++INCLUDE_DIRECTORIES( ${LIBXML_INCLUDE_DIRS} )
+ 
+ # documentation too important to be hidden in doc:
+ INSTALL(
