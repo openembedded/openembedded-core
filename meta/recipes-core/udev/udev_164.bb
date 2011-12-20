@@ -1,4 +1,4 @@
-include udev-new.inc
+include udev.inc
 
 PR = "r7"
 
