@@ -110,10 +110,10 @@ license_create_manifest() {
     # if you are concerned about license compliance 
     # and delivery this should cover all your bases
 
-    if [ -n ${COPY_LIC_MANIFEST} ]; then
+    if [ -n "${COPY_LIC_MANIFEST}" ]; then
         mkdir -p ${IMAGE_ROOTFS}/usr/share/common-licenses/
         cp ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest ${IMAGE_ROOTFS}/usr/share/common-licenses/license.manifest
-        if [ -n ${COPY_LIC_DIRS} ]; then
+        if [ -n "${COPY_LIC_DIRS}" ]; then
             for pkg in ${INSTALLED_PKGS}; do
                 mkdir -p ${IMAGE_ROOTFS}/usr/share/common-licenses/${pkg}
                 for lic in `ls ${LICENSE_DIRECTORY}/${pkged_pn}`; do
