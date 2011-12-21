@@ -7,6 +7,10 @@ class ClassExtender(object):
     def extend_name(self, name):
         if name.startswith("kernel-module"):
             return name
+        if name.startswith("rtld"):
+            return name
+        if name.endswith("-" + self.extname):
+            name = name.replace("-" + self.extname, "")
         if name.startswith("virtual/"):
             subs = name.split("/", 1)[1]
             if not subs.startswith(self.extname):

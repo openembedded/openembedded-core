@@ -59,51 +59,28 @@ python nativesdk_virtclass_handler () {
         return
 
     pn = e.data.getVar("PN", True)
-    if not pn.endswith("-nativesdk"):
+    if not pn.endswith("-nativesdk") or pn.startswith("nativesdk-"):
         return
 
+    e.data.setVar("MLPREFIX", "nativesdk-")
+    e.data.setVar("PN", "nativesdk-" + e.data.getVar("PN", True).replace("-nativesdk", "").replace("nativesdk-", ""))
     e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + ":virtclass-nativesdk")
 }
 
 python () {
     pn = d.getVar("PN", True)
-    if not pn.endswith("-nativesdk"):
+    if not pn.startswith("nativesdk-"):
         return
 
-    def map_dependencies(varname, d, suffix = ""):
-        if suffix:
-            varname = varname + "_" + suffix
-        deps = d.getVar(varname, True)
-        if not deps:
-            return
-        deps = bb.utils.explode_deps(deps)
-        newdeps = []
-        for dep in deps:
-            if dep.endswith("-native") or dep.endswith("-cross"):
-                newdeps.append(dep)
-            elif dep.endswith("-gcc-intermediate") or dep.endswith("-gcc-initial") or dep.endswith("-gcc") or dep.endswith("-g++"):
-                newdeps.append(dep + "-crosssdk")
-            elif not dep.endswith("-nativesdk"):
-                newdeps.append(dep.replace("-nativesdk", "") + "-nativesdk")
-            else:
-                newdeps.append(dep)
-        d.setVar(varname, " ".join(newdeps))
+    import oe.classextend
 
-    map_dependencies("DEPENDS", d)
-    #for pkg in (d.getVar("PACKAGES", True).split() + [""]):
-    #    map_dependencies("RDEPENDS", d, pkg)
-    #    map_dependencies("RRECOMMENDS", d, pkg)
-    #    map_dependencies("RSUGGESTS", d, pkg)
-    #    map_dependencies("RPROVIDES", d, pkg)
-    #    map_dependencies("RREPLACES", d, pkg)
+    clsextend = oe.classextend.NativesdkClassExtender("nativesdk", d)
+    clsextend.rename_packages()
+    clsextend.rename_package_variables((d.getVar("PACKAGEVARS", True) or "").split())
 
-    provides = d.getVar("PROVIDES", True)
-    for prov in provides.split():
-        if prov.find(pn) != -1:
-            continue
-        if not prov.endswith("-nativesdk"):
-            provides = provides.replace(prov, prov + "-nativesdk")
-    d.setVar("PROVIDES", provides)
+    clsextend.map_depends_variable("DEPENDS")
+    clsextend.map_packagevars()
+    clsextend.map_variable("PROVIDES")
 }
 
 addhandler nativesdk_virtclass_handler
