@@ -19,7 +19,7 @@ CONFIG_SITE =+ "${WORKDIR}/config.cache"
 # Whether to enable separate widec libraries; must be 'true' or 'false'
 #
 # TODO: remove this variable when widec is supported in every setup?
-ENABLE_WIDEC = "true"
+ENABLE_WIDEC ?= "true"
 
 # _GNU_SOURCE is required for widec stuff and is detected automatically
 # for target objects.  But it must be set manually for native and sdk
