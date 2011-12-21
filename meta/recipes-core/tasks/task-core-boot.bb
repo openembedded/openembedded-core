@@ -17,14 +17,12 @@ PR = "r9"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS ?= ""
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS ?= ""
 
-# Distro can override dev_manager provider
+# Distro can override the following VIRTUAL-RUNTIME providers:
 VIRTUAL-RUNTIME_dev_manager ?= "udev"
-# Distro can override login_manager provider
 VIRTUAL-RUNTIME_login_manager ?= "tinylogin"
-# Distro can override init_manager provider
 VIRTUAL-RUNTIME_init_manager ?= "sysvinit"
-# Distro can override initscripts provider
 VIRTUAL-RUNTIME_initscripts ?= "initscripts"
+VIRTUAL-RUNTIME_keymaps ?= "keymaps"
 
 PACKAGES = "\
     task-core-boot \
@@ -37,7 +35,7 @@ RDEPENDS_task-core-boot = "\
     base-passwd \
     busybox \
     ${VIRTUAL-RUNTIME_initscripts} \
-    ${@base_contains("MACHINE_FEATURES", "keyboard", "keymaps", "", d)} \
+    ${@base_contains("MACHINE_FEATURES", "keyboard", "${VIRTUAL-RUNTIME_keymaps}", "", d)} \
     modutils-initscripts \
     netbase \
     ${VIRTUAL-RUNTIME_login_manager} \
