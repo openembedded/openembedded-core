@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+# Very simple session manager for Mini X
+#
+
+# Uncomment below to enable parsing of debian menu entrys
+# export MB_USE_DEB_MENUS=1 
+
+if [ -e $HOME/.mini_x/session ]
+then
+exec $HOME/.mini_x/session
+fi
+
+if [ -e /etc/mini_x/session ]
+then
+exec /etc/mini_x/session
+fi
+
+MINI_X_SESSION_DIR=/etc/mini_x/session.d
+
+# Execute session file on behalf of file owner
+for SESSIONFILE in $MINI_X_SESSION_DIR/*; do
+    set +e
+    USERNAME=`stat -c %U $SESSIONFILE`
+    sudo -b -i -u $USERNAME $SESSIONFILE& 
+    set -e
+done
+# Default files to run if $HOME/.mini_x/session or /etc/mini_x/session
+# dont exist. 
+
+matchbox-terminal&
+exec matchbox-window-manager
