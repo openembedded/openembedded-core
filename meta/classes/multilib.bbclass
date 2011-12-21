@@ -37,25 +37,14 @@ STAGINGCC_prepend = "${BBEXTENDVARIANT}-"
 python __anonymous () {
     variant = d.getVar("BBEXTENDVARIANT", True)
 
-    def map_dependencies(varname, d, suffix = ""):
-        if suffix:
-            varname = varname + "_" + suffix
-        deps = d.getVar(varname, True)
-        if not deps:
-            return
-        deps = bb.utils.explode_deps(deps)
-        newdeps = []
-        for dep in deps:
-            if dep.endswith(("-native", "-native-runtime")):
-                newdeps.append(dep)
-            else:
-                newdeps.append(multilib_extend_name(variant, dep))
-        d.setVar(varname, " ".join(newdeps))
+    import oe.classextend
+
+    clsextend = oe.classextend.ClassExtender(variant, d)
 
     if bb.data.inherits_class('image', d):
-        map_dependencies("PACKAGE_INSTALL", d)
-        map_dependencies("LINGUAS_INSTALL", d)
-        map_dependencies("RDEPENDS", d)
+        clsextend.map_depends_variable("PACKAGE_INSTALL")
+        clsextend.map_depends_variable("LINGUAS_INSTALL")
+        clsextend.map_depends_variable("RDEPENDS")
         pinstall = d.getVar("LINGUAS_INSTALL", True) + " " + d.getVar("PACKAGE_INSTALL", True)
         d.setVar("PACKAGE_INSTALL", pinstall)
         d.setVar("LINGUAS_INSTALL", "")
@@ -63,32 +52,13 @@ python __anonymous () {
         d.setVar("PACKAGE_INSTALL_ATTEMPTONLY", "")
         return
 
-    pkgs_mapping = []
-    for pkg in (d.getVar("PACKAGES", True) or "").split():
-        if pkg.startswith(variant):
-            pkgs_mapping.append([pkg.split(variant + "-")[1], pkg])
-            continue
-        pkgs_mapping.append([pkg, multilib_extend_name(variant, pkg)])
+    clsextend.rename_packages()
+    clsextend.rename_package_variables((d.getVar("PACKAGEVARS", True) or "").split())
 
-    d.setVar("PACKAGES", " ".join([row[1] for row in pkgs_mapping]))
-
-    vars = (d.getVar("PACKAGEVARS", True) or "").split()
-    for pkg_mapping in pkgs_mapping:
-        for subs in vars:
-            d.renameVar("%s_%s" % (subs, pkg_mapping[0]), "%s_%s" % (subs, pkg_mapping[1]))
-
-    map_dependencies("DEPENDS", d)
-    for pkg in (d.getVar("PACKAGES", True).split() + [""]):
-        map_dependencies("RDEPENDS", d, pkg)
-        map_dependencies("RRECOMMENDS", d, pkg)
-        map_dependencies("RSUGGESTS", d, pkg)
-        map_dependencies("RPROVIDES", d, pkg)
-        map_dependencies("RREPLACES", d, pkg)
-        map_dependencies("RCONFLICTS", d, pkg)
-        map_dependencies("PKG", d, pkg)
-
-    multilib_map_variable("PROVIDES", variant, d)
-    multilib_map_variable("PACKAGES_DYNAMIC", variant, d)
-    multilib_map_variable("PACKAGE_INSTALL", variant, d)
-    multilib_map_variable("INITSCRIPT_PACKAGES", variant, d)
+    clsextend.map_depends_variable("DEPENDS")
+    clsextend.map_packagevars()
+    clsextend.map_variable("PROVIDES")
+    clsextend.map_variable("PACKAGES_DYNAMIC")
+    clsextend.map_variable("PACKAGE_INSTALL")
+    clsextend.map_variable("INITSCRIPT_PACKAGES")
 }
