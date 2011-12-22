@@ -351,10 +351,17 @@ def runtime_mapping_rename (varname, d):
 
 python package_get_auto_pr() {
 	if d.getVar('USE_PR_SERV', True) != "0":
-		auto_pr=prserv_get_pr_auto(d)
-		if auto_pr is None:
-			bb.fatal("Can NOT get auto PR revision from remote PR service")
+		try:
+			auto_pr=prserv_get_pr_auto(d)
+		except Exception as e:
+			bb.fatal("Can NOT get PRAUTO, exception %s" %  str(e))
 			return
+		if auto_pr is None:
+			if d.getVar('PRSERV_LOCKDOWN', True):
+				bb.fatal("Can NOT get PRAUTO from lockdown exported file")
+			else:
+				bb.fatal("Can NOT get PRAUTO from remote PR service")
+			return 
 		d.setVar('PRAUTO',str(auto_pr))
 }
 
