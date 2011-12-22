@@ -1,6 +1,6 @@
 require recipes-graphics/clutter/clutter.inc
 
-PR = "r2"
+PR = "r3"
 
 # Internal json-glib was removed in Clutter 1.5.2
 STDDEPENDS += "json-glib"
@@ -10,7 +10,9 @@ FILES_${PN}-examples = "${bindir}/test-* ${pkgdatadir}/redhand.png"
 
 SRC_URI = "http://source.clutter-project.org/sources/clutter/1.6/clutter-${PV}.tar.bz2 \
            file://enable_tests-1.4.patch \
-           file://update_gettext_macro_version.patch"
+           file://update_gettext_macro_version.patch \
+	   file://fix_build_for_armv4t.patch \
+	   "
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 S = "${WORKDIR}/clutter-${PV}"

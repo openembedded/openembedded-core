@@ -1,0 +1,11 @@
+--- clutter-1.6.14/clutter/cogl/cogl/cogl-fixed.c.ORIG	2011-03-22 15:46:17.000000000 +0100
++++ clutter-1.6.14/clutter/cogl/cogl/cogl-fixed.c	2011-12-22 09:26:10.650427310 +0100
+@@ -626,7 +626,7 @@
+ 	/*
+ 	 * Find the highest bit set
+ 	 */
+-#if __arm__
++#if __arm__ && !defined(__ARM_ARCH_4T__)
+ 	/* This actually requires at least arm v5, but gcc does not seem
+ 	 * to set the architecture defines correctly, and it is I think
+ 	 * very unlikely that anyone will want to use clutter on anything
