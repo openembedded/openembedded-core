@@ -174,7 +174,9 @@ get_package_filename() {
 list_package_depends() {
 	pkglist=`list_installed_packages`
 
-	for req in `${RPM_QUERY_CMD} -q --qf "[%{REQUIRES}\n]" $1`; do
+	# REQUIRE* lists "soft" requirements (which we know as recommends and RPM refers to
+	# as "suggests") so filter these out with the help of awk
+	for req in `${RPM_QUERY_CMD} -q --qf "[%{REQUIRENAME} %{REQUIREFLAGS}\n]" $1 | awk '{ if( and($2, 0x80000) == 0) print $1 }'`; do
 		if echo "$req" | grep -q "^rpmlib" ; then continue ; fi
 
 		realpkg=""
@@ -193,7 +195,7 @@ list_package_depends() {
 }
 
 list_package_recommends() {
-	:
+	${RPM_QUERY_CMD} -q --suggests $1
 }
 
 install_all_locales() {
