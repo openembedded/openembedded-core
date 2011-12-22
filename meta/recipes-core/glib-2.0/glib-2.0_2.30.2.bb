@@ -1,6 +1,6 @@
 require glib.inc
 
-PR = "r1"
+PR = "r0"
 PE = "1"
 
 DEPENDS += "libffi python-argparse-native"
@@ -15,8 +15,8 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.bz2 \
            file://g_once_init_enter.patch \
            file://glib-2.0_fix_for_x32.patch \
           "
-SRC_URI[md5sum] = "921ef2e86e911feb5e21f656f1ac305b"
-SRC_URI[sha256sum] = "4e560319450f31d85b6cdb2b530c3324a510ca04817e360943d0774327d21804"
+SRC_URI[md5sum] = "b40f3889e8d24e1b367763673ca6deb5"
+SRC_URI[sha256sum] = "94b1f1a1456c67060ca868d299bef3f7268a2c1c5c360aabb7149d4d9b2fdcd3"
 
 # Only apply this patch for target recipe on uclibc
 SRC_URI_append_libc-uclibc = " ${@['', 'file://no-iconv.patch']['${PN}' == '${BPN}']}"
