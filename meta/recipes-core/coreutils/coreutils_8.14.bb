@@ -7,8 +7,8 @@ BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
                     file://src/ls.c;startline=5;endline=16;md5=e1a509558876db58fb6667ba140137ad"
-PR = "r2"
-DEPENDS = "gmp"
+PR = "r3"
+DEPENDS = "gmp libcap"
 DEPENDS_virtclass-native = ""
 
 inherit autotools gettext
