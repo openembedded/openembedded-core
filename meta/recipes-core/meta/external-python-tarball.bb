@@ -16,25 +16,25 @@ SDK_DEPLOY = "${TMPDIR}/deploy/sdk"
 IPKG_HOST = "opkg-cl -f ${IPKGCONF_SDK} -o ${SDK_OUTPUT}"
 
 TOOLCHAIN_HOST_TASK ?= "\
-    python-nativesdk-core \
-    python-nativesdk-textutils \
-    python-nativesdk-sqlite3 \
-    python-nativesdk-pickle \
-    python-nativesdk-logging \
-    python-nativesdk-elementtree \
-    python-nativesdk-curses \
-    python-nativesdk-compile \
-    python-nativesdk-compiler \
-    python-nativesdk-fcntl \
-    python-nativesdk-shell \
-    python-nativesdk-misc \
-    python-nativesdk-multiprocessing \
-    python-nativesdk-subprocess \
-    python-nativesdk-xmlrpc \
-    python-nativesdk-netclient \
-    python-nativesdk-netserver \
-    python-nativesdk-distutils \
-    chrpath-nativesdk \
+    nativesdk-python-core \
+    nativesdk-python-textutils \
+    nativesdk-python-sqlite3 \
+    nativesdk-python-pickle \
+    nativesdk-python-logging \
+    nativesdk-python-elementtree \
+    nativesdk-python-curses \
+    nativesdk-python-compile \
+    nativesdk-python-compiler \
+    nativesdk-python-fcntl \
+    nativesdk-python-shell \
+    nativesdk-python-misc \
+    nativesdk-python-multiprocessing \
+    nativesdk-python-subprocess \
+    nativesdk-python-xmlrpc \
+    nativesdk-python-netclient \
+    nativesdk-python-netserver \
+    nativesdk-python-distutils \
+    nativesdk-chrpath \
     "
 
 TOOLCHAIN_OUTPUTNAME ?= "python-nativesdk-standalone-${SDKMACHINE}"

@@ -43,4 +43,5 @@ SECTION_libbz2-staticdev = "devel"
 RDEPENDS_libbz2-staticdev = "libbz2-dev (= ${EXTENDPKGV})"
 
 PROVIDES_append_virtclass-native = " bzip2-replacement-native"
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
+

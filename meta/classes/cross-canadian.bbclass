@@ -52,7 +52,7 @@ LDFLAGS = "${BUILDSDK_LDFLAGS} \
            -Wl,-rpath-link,${STAGING_LIBDIR}/.. \
            -Wl,-rpath,${libdir}/.. "
 
-DEPENDS_GETTEXT = "gettext-native gettext-nativesdk"
+DEPENDS_GETTEXT = "gettext-native nativesdk-gettext"
 
 # Path mangling needed by the cross packaging
 # Note that we use := here to ensure that libdir and includedir are

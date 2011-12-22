@@ -8,7 +8,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://src/opkg-cl.c;beginline=1;endline=20;md5=321f658c3f6b6c832e25c8850b5dffba"
 DEPENDS_virtclass-native = "curl-native"
-DEPENDS_virtclass-nativesdk = "curl-nativesdk"
+DEPENDS_virtclass-nativesdk = "nativesdk-curl"
 
 PE = "1"
 INC_PR = "r10"
@@ -41,12 +41,12 @@ RDEPENDS_${PN}_virtclass-nativesdk = ""
 PACKAGE_ARCH_update-alternatives-cworth = "all"
 RREPLACES_${PN} = "opkg-nogpg"
 
-PACKAGES =+ "libopkg${PKGSUFFIX}-dev libopkg${PKGSUFFIX}-staticdev libopkg${PKGSUFFIX} update-alternatives-cworth${PKGSUFFIX}"
+PACKAGES =+ "libopkg-dev libopkg-staticdev libopkg update-alternatives-cworth"
 
-FILES_update-alternatives-cworth${PKGSUFFIX} = "${bindir}/update-alternatives"
-FILES_libopkg${PKGSUFFIX}-dev = "${libdir}/*.la ${libdir}/*.so"
-FILES_libopkg${PKGSUFFIX}-staticdev = "${libdir}/*.a"
-FILES_libopkg${PKGSUFFIX} = "${libdir}/*.so.* ${localstatedir}/lib/opkg/"
+FILES_update-alternatives-cworth = "${bindir}/update-alternatives"
+FILES_libopkg-dev = "${libdir}/*.la ${libdir}/*.so"
+FILES_libopkg-staticdev = "${libdir}/*.a"
+FILES_libopkg = "${libdir}/*.so.* ${localstatedir}/lib/opkg/"
 
 # We need to create the lock directory
 do_install_append() {
@@ -74,9 +74,6 @@ ALTERNATIVE_LINK_NAME[opkg] = "${bindir}/opkg"
 ALTERNATIVE_TARGET[opkg] = "${bindir}/opkg-cl"
 
 BBCLASSEXTEND = "native nativesdk"
-
-PKGSUFFIX = ""
-PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
 
 # Define a variable to allow distros to run configure earlier.
 # (for example, to enable loading of ethernet kernel modules before networking starts)

@@ -39,3 +39,4 @@ SRC_URI[patch009.sha256sum] = "e7ed5440b4c19765786e90e4f1ded43195d38b3e4d1c4b39f
 SRC_URI[patch010.md5sum] = "0a51602b535ef661ee707be6c8bdb373"
 SRC_URI[patch010.sha256sum] = "acfc5482c25e6923116fcf4b4f7f6345b80f75ad7299749db4b736ad67aa43dc"
 
+BBCLASSEXTEND = "nativesdk"

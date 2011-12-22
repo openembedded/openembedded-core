@@ -17,7 +17,7 @@ do_compile[noexec] = "1"
 
 # default to disabled 
 ENABLE_BINARY_LOCALE_GENERATION ?= "0"
-ENABLE_BINARY_LOCALE_GENERATION_pn-eglibc-locale-nativesdk = "0"
+ENABLE_BINARY_LOCALE_GENERATION_pn-nativesdk-eglibc-locale = "0"
 
 #enable locale generation on these arches
 # BINARY_LOCALE_ARCHES is a space separated list of regular expressions
@@ -29,16 +29,13 @@ LOCALE_GENERATION_WITH_CROSS-LOCALEDEF = "1"
 
 PR = "r22"
 
-PKGSUFFIX = ""
-PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
+PROVIDES = "virtual/libc-locale"
 
-PROVIDES = "virtual/libc-locale${PKGSUFFIX}"
-
-PACKAGES = "localedef${PKGSUFFIX} ${PN}-dbg"
+PACKAGES = "localedef ${PN}-dbg"
 
 PACKAGES_DYNAMIC = "locale-base-* \
                     eglibc-gconv-* eglibc-charmap-* eglibc-localedata-* eglibc-binary-localedata-* \
-                    glibc-gconv-*${PKGSUFFIX}  glibc-charmap-*  glibc-localedata-*  glibc-binary-localedata-*"
+                    glibc-gconv-*  glibc-charmap-*  glibc-localedata-*  glibc-binary-localedata-*"
 
 # Create a eglibc-binaries package
 ALLOW_EMPTY_${BPN}-binaries = "1"
@@ -67,7 +64,7 @@ DESCRIPTION_localedef = "eglibc: compile locale definition files"
 # Explicitly add ${MLPREFIX} for FILES_eglibc-gconv.
 FILES_${MLPREFIX}eglibc-gconv = "${libdir}/gconv/*"
 FILES_${PN}-dbg += "${libdir}/gconv/.debug/*"
-FILES_localedef${PKGSUFFIX} = "${bindir}/localedef"
+FILES_localedef = "${bindir}/localedef"
 
 LOCALETREESRC = "${STAGING_INCDIR}/eglibc-locale-internal-${MULTIMACH_TARGET_SYS}"
 
@@ -93,6 +90,6 @@ do_install () {
 
 inherit libc-package
 
-do_install[depends] += "virtual/${MLPREFIX}libc${PKGSUFFIX}:do_populate_sysroot"
+do_install[depends] += "virtual/${MLPREFIX}libc:do_populate_sysroot"
 
 BBCLASSEXTEND = "nativesdk"

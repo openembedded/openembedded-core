@@ -33,10 +33,10 @@ python do_distrodata_np() {
 	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
-	if pn.find("-nativesdk") != -1:
-	    pnstripped = pn.split("-nativesdk")
+	if pn.find("nativesdk-") != -1:
+	    pnstripped = pn.replace("nativesdk-", "")
 	    bb.note("Native Split: %s" % pnstripped)
-	    localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
+	    localdata.setVar('OVERRIDES', "pn-" + pnstripped + ":" + d.getVar('OVERRIDES', True))
 	    bb.data.update_data(localdata)
 
 	if pn.find("-cross") != -1:

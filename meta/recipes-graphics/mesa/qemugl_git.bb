@@ -25,7 +25,7 @@ DEFAULT_PREFERENCE = "-1"
 
 do_install () {
 	install -d ${D}${libdir}/
-    if [ "${PN}" != "qemugl-nativesdk" ]; then
+    if [ "${PN}" != "nativesdk-qemugl" ]; then
         install -m 0755 ${S}/libGL.so.1.2 ${D}${libdir}/libGL-qemu.so.1.2
     else
 	    install -m 0755 ${S}/libGL.so.1.2 ${D}${libdir}/libGL.so.1.2

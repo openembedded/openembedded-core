@@ -15,21 +15,21 @@ inherit nativesdk
 PACKAGES = "${PN}"
 
 RDEPENDS_${PN} = "\
-    pkgconfig-nativesdk \
-    qemu-nativesdk \
-    qemu-helper-nativesdk \
-    pseudo-nativesdk \
-    unfs-server-nativesdk \
-    opkg-nativesdk \
-    libtool-nativesdk \
-    autoconf-nativesdk \
-    automake-nativesdk \
+    nativesdk-pkgconfig \
+    nativesdk-qemu \
+    nativesdk-qemu-helper \
+    nativesdk-pseudo \
+    nativesdk-unfs-server \
+    nativesdk-opkg \
+    nativesdk-libtool \
+    nativesdk-autoconf \
+    nativesdk-automake \
     "
 
 RDEPENDS_${PN}_darwin8 = "\
     odcctools-cross-canadian \
     llvm-cross-canadian \
-    pkgconfig-nativesdk \
-    opkg-nativesdk \
-    libtool-nativesdk \
+    nativesdk-pkgconfig \
+    nativesdk-opkg \
+    nativesdk-libtool \
     "

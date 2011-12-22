@@ -195,7 +195,7 @@ def package_qa_check_dev(path, name, d, elf, messages):
     Check for ".so" library symlinks in non-dev packages
     """
 
-    if not name.endswith("-dev") and not name.endswith("-dbg") and not name.endswith("-nativesdk") and path.endswith(".so") and os.path.islink(path):
+    if not name.endswith("-dev") and not name.endswith("-dbg") and not name.startswith("nativesdk-") and path.endswith(".so") and os.path.islink(path):
         messages.append("non -dev/-dbg/-nativesdk package contains symlink .so: %s path '%s'" % \
                  (name, package_qa_clean_path(path,d)))
 
@@ -726,7 +726,7 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
         if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('nativesdk', d):
             gt = "gettext-native"
         elif bb.data.inherits_class('cross-canadian', d):
-            gt = "gettext-nativesdk"
+            gt = "nativesdk-gettext"
         else:
             gt = "virtual/" + ml + "gettext"
         deps = bb.utils.explode_deps(d.getVar('DEPENDS', True) or "")

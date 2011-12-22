@@ -28,7 +28,7 @@ do_install () {
 		sed -e 's,@gnu-configdir@,${datadir}/gnu-config,g' \
 		    -e 's,@autom4te_perllibdir@,${datadir}/autoconf,g' > ${D}${bindir}/gnu-configize
 	# In the native case we want the system perl as perl-native can't have built yet
-	if [ "${PN}" != "gnu-config-native" -a "${PN}" != "gnu-config-nativesdk" ]; then
+	if [ "${PN}" != "gnu-config-native" -a "${PN}" != "nativesdk-gnu-config" ]; then
 		sed -i -e 's,/usr/bin/env,${bindir}/env,g' ${D}${bindir}/gnu-configize
 	fi
 	chmod 755 ${D}${bindir}/gnu-configize

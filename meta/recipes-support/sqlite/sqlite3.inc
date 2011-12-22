@@ -17,17 +17,14 @@ export config_TARGET_LINK = "${CCLD}"
 export config_TARGET_CFLAGS = "${CFLAGS}"
 export config_TARGET_LFLAGS = "${LDFLAGS}"
 
-PKGSUFFIX = ""
-PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
-
-PACKAGES = "lib${BPN}${PKGSUFFIX} lib${BPN}${PKGSUFFIX}-dev lib${BPN}${PKGSUFFIX}-doc ${PN}-dbg lib${BPN}${PKGSUFFIX}-staticdev ${PN}"
+PACKAGES = "lib${BPN} lib${BPN}-dev lib${BPN}-doc ${PN}-dbg lib${BPN}-staticdev ${PN}"
 
 FILES_${PN} = "${bindir}/*"
-FILES_lib${BPN}${PKGSUFFIX} = "${libdir}/*.so.*"
-FILES_lib${BPN}${PKGSUFFIX}-dev = "${libdir}/*.la ${libdir}/*.so \
+FILES_lib${BPN} = "${libdir}/*.so.*"
+FILES_lib${BPN}-dev = "${libdir}/*.la ${libdir}/*.so \
 	                	   ${libdir}/pkgconfig ${includedir}"
-FILES_lib${BPN}${PKGSUFFIX}-doc = "${docdir} ${mandir} ${infodir}"
-FILES_lib${BPN}${PKGSUFFIX}-staticdev = "${libdir}/lib*.a"
-AUTO_LIBNAME_PKGS = "lib${BPN}${PKGSUFFIX}"
+FILES_lib${BPN}-doc = "${docdir} ${mandir} ${infodir}"
+FILES_lib${BPN}-staticdev = "${libdir}/lib*.a"
+AUTO_LIBNAME_PKGS = "lib${BPN}"
 
 BBCLASSEXTEND = "native nativesdk"

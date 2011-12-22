@@ -148,11 +148,11 @@ require python-${PYTHON_MAJMIN}-manifest.inc
 RPROVIDES_${PN}-core = "${PN}"
 RRECOMMENDS_${PN}-core = "${PN}-readline"
 RRECOMMENDS_${PN}-crypt = "openssl"
-RRECOMMENDS_${PN}-crypt_virtclass-nativesdk = "openssl-nativesdk"
+RRECOMMENDS_${PN}-crypt_virtclass-nativesdk = "nativesdk-openssl"
 
 # package libpython2
-PACKAGES =+ "lib${BPN}2${PKGSUFFIX}"
-FILES_lib${BPN}2${PKGSUFFIX} = "${libdir}/libpython*.so.*"
+PACKAGES =+ "lib${BPN}2"
+FILES_lib${BPN}2 = "${libdir}/libpython*.so.*"
 
 # catch debug extensions (isn't that already in python-core-dbg?)
 FILES_${PN}-dbg += "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/.debug"
@@ -166,6 +166,3 @@ PACKAGES += "${PN}-man"
 FILES_${PN}-man = "${datadir}/man"
 
 BBCLASSEXTEND = "nativesdk"
-
-PKGSUFFIX = ""
-PKGSUFFIX_virtclass-nativesdk = "-nativesdk"

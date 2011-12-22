@@ -52,8 +52,6 @@ baselib = "lib"
 export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${libdir}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 
-PKGSUFFIX = "-nativesdk"
-
 python nativesdk_virtclass_handler () {
     if not isinstance(e, bb.event.RecipePreFinalise):
         return

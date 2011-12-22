@@ -1,4 +1,4 @@
-Remove "const" usage that causes compile failure building qt4-tools-nativesdk
+Remove "const" usage that causes compile failure building nativesdk-qt4-tools
 
 Upstream-Status: Denied [possible retry]
 

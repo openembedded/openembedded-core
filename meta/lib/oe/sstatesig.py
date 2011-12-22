@@ -7,7 +7,7 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
     def isCross(x):
         return x.endswith("-cross") or x.endswith("-cross-initial") or x.endswith("-cross-intermediate")
     def isNativeSDK(x):
-        return x.endswith("-nativesdk")
+        return x.startswith("nativesdk-")
     def isKernel(fn):
         inherits = " ".join(dataCache.inherits[fn])
         return inherits.find("module-base.bbclass") != -1 or inherits.find("linux-kernel-base.bbclass") != -1

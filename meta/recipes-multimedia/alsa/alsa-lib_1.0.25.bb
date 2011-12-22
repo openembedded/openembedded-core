@@ -31,22 +31,19 @@ EXTRA_OECONF = "--with-cards=pdaudiocf --with-oss=yes --disable-python"
 
 EXTRA_OECONF_append_libc-uclibc = " --with-versioned=no "
 
-PKGSUFFIX = ""
-PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
-
-PACKAGES =+ "alsa-server${PKGSUFFIX} libasound${PKGSUFFIX} alsa-conf-base${PKGSUFFIX} alsa-conf${PKGSUFFIX} alsa-doc${PKGSUFFIX} alsa-dev${PKGSUFFIX}"
+PACKAGES =+ "alsa-server libasound alsa-conf-base alsa-conf alsa-doc alsa-dev"
 FILES_${PN} += "${libdir}/${BPN}/smixer/*.so"
 FILES_${PN}-dbg += "${libdir}/${BPN}/smixer/.debug"
 FILES_${PN}-dev += "${libdir}/${BPN}/smixer/*.la"
-FILES_libasound${PKGSUFFIX} = "${libdir}/libasound.so.*"
-FILES_alsa-server${PKGSUFFIX} = "${bindir}/*"
-FILES_alsa-conf${PKGSUFFIX} = "${datadir}/alsa/"
-FILES_alsa-dev${PKGSUFFIX} += "${libdir}/pkgconfig/ /usr/include/ ${datadir}/aclocal/*"
-FILES_alsa-conf-base${PKGSUFFIX} = "\
+FILES_libasound = "${libdir}/libasound.so.*"
+FILES_alsa-server = "${bindir}/*"
+FILES_alsa-conf = "${datadir}/alsa/"
+FILES_alsa-dev += "${libdir}/pkgconfig/ /usr/include/ ${datadir}/aclocal/*"
+FILES_alsa-conf-base = "\
 ${datadir}/alsa/alsa.conf \
 ${datadir}/alsa/cards/aliases.conf \
 ${datadir}/alsa/pcm/default.conf \
 ${datadir}/alsa/pcm/dmix.conf \
 ${datadir}/alsa/pcm/dsnoop.conf"
 
-RDEPENDS_libasound${PKGSUFFIX} = "alsa-conf-base${PKGSUFFIX}"
+RDEPENDS_libasound = "alsa-conf-base"

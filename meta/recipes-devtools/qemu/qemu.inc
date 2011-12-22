@@ -22,7 +22,7 @@ inherit autotools
 do_configure() {
     # Handle distros such as CentOS 5 32-bit that do not have kvm support
     KVMOPTS="--disable-kvm"
-    if [ "${PN}" != "qemu-native" -a "${PN}" != "qemu-nativesdk" ] \
+    if [ "${PN}" != "qemu-native" -a "${PN}" != "nativesdk-qemu" ] \
        || [ -f /usr/include/linux/kvm.h ] ; then
        KVMOPTS="--enable-kvm"
     fi
@@ -41,8 +41,8 @@ do_install () {
 PACKAGECONFIG ??= ""
 
 DEPENDS_virtclass-native = "zlib-native alsa-lib-native glib-2.0-native"
-DEPENDS_virtclass-nativesdk = "zlib-nativesdk libsdl-nativesdk glib-2.0-nativesdk"
-RDEPENDS_virtclass-nativesdk = "libsdl-nativesdk"
+DEPENDS_virtclass-nativesdk = "nativesdk-zlib nativesdk-libsdl nativesdk-glib-2.0"
+RDEPENDS_virtclass-nativesdk = "nativesdk-libsdl"
 EXTRA_OECONF_virtclass-nativesdk = "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls \
 				--disable-curl \
 				"
