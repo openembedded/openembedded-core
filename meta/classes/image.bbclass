@@ -255,6 +255,43 @@ multilib_sanity_check() {
   echo $@ | python ${MULTILIB_CHECK_FILE}
 }
 
+get_split_linguas() {
+    for translation in ${IMAGE_LINGUAS}; do
+        translation_split=$(echo ${translation} | awk -F '-' '{print $1}')
+        echo ${translation}
+        echo ${translation_split}
+    done | sort | uniq
+}
+
+rootfs_install_all_locales() {
+    # Generate list of installed packages for which additional locale packages might be available
+    INSTALLED_PACKAGES=`list_installed_packages | egrep -v -- "(-locale-|^locale-base-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
+
+    # Generate a list of locale packages that exist
+    SPLIT_LINGUAS=`get_split_linguas`
+    PACKAGES_TO_INSTALL=""
+    for lang in $SPLIT_LINGUAS; do
+        for pkg in $INSTALLED_PACKAGES; do
+            existing_pkg=`rootfs_check_package_exists $pkg-locale-$lang`
+            if [ "$existing_pkg" != "" ]; then
+                PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL $existing_pkg"
+            fi
+        done
+    done
+
+    # Install the packages, if any
+    if [ "$PACKAGES_TO_INSTALL" != "" ]; then
+        rootfs_install_packages $PACKAGES_TO_INSTALL
+    fi
+
+    # Workaround for broken shell function dependencies
+    if false ; then
+        get_split_linguas
+        list_installed_packages
+        rootfs_check_package_exists
+    fi
+}
+
 # set '*' as the root password so the images
 # can decide if they want it or not
 zap_root_password () {

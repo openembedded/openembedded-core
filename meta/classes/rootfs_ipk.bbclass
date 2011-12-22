@@ -16,7 +16,7 @@ IPKG_ARGS = "-f ${IPKGCONF_TARGET} -o ${IMAGE_ROOTFS} --force-overwrite"
 
 OPKG_PREPROCESS_COMMANDS = "package_update_index_ipk; package_generate_ipkg_conf"
 
-OPKG_POSTPROCESS_COMMANDS = "ipk_insert_feed_uris"
+OPKG_POSTPROCESS_COMMANDS = "ipk_insert_feed_uris; rootfs_install_all_locales; "
 
 opkglibdir = "${localstatedir}/lib/opkg"
 
@@ -148,26 +148,14 @@ list_package_recommends() {
 	opkg-cl ${IPKG_ARGS} info $1 | grep ^Recommends | sed -e 's/^Recommends: //' -e 's/,//g' -e 's:([=<>]* [0-9a-zA-Z.~\-]*)::g'
 }
 
-install_all_locales() {
+rootfs_check_package_exists() {
+	if [ `opkg-cl ${IPKG_ARGS} info $1 | wc -l` -gt 2 ]; then
+		echo $1
+	fi
+}
 
-    PACKAGES_TO_INSTALL=""
-
-    INSTALLED_PACKAGES=`list_installed_packages | egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
-
-    for pkg in $INSTALLED_PACKAGES
-    do
-        for lang in ${IMAGE_LOCALES}
-        do
-            if [ `opkg-cl ${IPKG_ARGS} info $pkg-locale-$lang | wc -l` -gt 2 ]
-            then
-                    PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL $pkg-locale-$lang"
-            fi
-        done
-    done
-    if [ "$PACKAGES_TO_INSTALL" != "" ]
-    then
-        opkg-cl ${IPKG_ARGS} install $PACKAGES_TO_INSTALL
-    fi
+rootfs_install_packages() {
+	opkg-cl ${IPKG_ARGS} install $PACKAGES_TO_INSTALL
 }
 
 ipk_insert_feed_uris () {

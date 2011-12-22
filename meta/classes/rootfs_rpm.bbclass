@@ -21,12 +21,7 @@ do_rootfs[depends] += "opkg-native:do_populate_sysroot"
 do_rootfs[recrdeptask] += "do_package_write_rpm"
 
 RPM_PREPROCESS_COMMANDS = "package_update_index_rpm; package_generate_rpm_conf; "
-RPM_POSTPROCESS_COMMANDS = ""
-
-# To test the install_all_locales.. enable the following...
-#RPM_POSTPROCESS_COMMANDS = "install_all_locales; "
-#
-#IMAGE_LOCALES="en-gb"
+RPM_POSTPROCESS_COMMANDS = "rootfs_install_all_locales; "
 
 # 
 # Allow distributions to alter when [postponed] package install scripts are run
@@ -198,24 +193,16 @@ list_package_recommends() {
 	${RPM_QUERY_CMD} -q --suggests $1
 }
 
-install_all_locales() {
-	PACKAGES_TO_INSTALL=""
+rootfs_check_package_exists() {
+	resolve_package_rpm ${RPMCONF_TARGET_BASE}-base_archs.conf $1
+}
 
-	# Generate list of installed packages...
-	INSTALLED_PACKAGES=`list_installed_packages | egrep -v -- "(-locale-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
-
-	# This would likely be faster if we did it in one transaction
-	# but this should be good enough for the few users of this function...
-	for pkg in $INSTALLED_PACKAGES; do
-		for lang in ${IMAGE_LOCALES}; do
-			pkg_name=$(resolve_package_rpm $pkg-locale-$lang ${RPMCONF_TARGET_BASE}.conf)
-			if [ -n "$pkg_name" ]; then
-				${RPM} --root ${IMAGE_ROOTFS} -D "_dbpath ${rpmlibdir}" \
-					-D "__dbi_txn create nofsync private" \
-					--noscripts --notriggers --noparentdirs --nolinktos \
-					-Uhv $pkg_name || true
-			fi
-		done
+rootfs_install_packages() {
+	for pkg in $@; do
+		${RPM} --root ${IMAGE_ROOTFS} -D "_dbpath ${rpmlibdir}" \
+			-D "__dbi_txn create nofsync private" \
+			--noscripts --notriggers --noparentdirs --nolinktos \
+			-Uhv $pkg || true
 	done
 }
 
