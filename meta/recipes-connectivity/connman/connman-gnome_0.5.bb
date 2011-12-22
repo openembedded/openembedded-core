@@ -8,10 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a \
 
 DEPENDS = "gtk+ dbus"
 
-PR = "r7"
+PR = "r8"
 
 SRCREV = "78d3c39db6f3f7977b466305110faa8ca5f74ec8"
-SRC_URI = "git://git.kernel.org/pub/scm/network/connman/connman-gnome.git;protocol=git \
+SRC_URI = "git://github.com/connectivity/connman-gnome.git;protocol=git \
            file://3g.patch \
            file://security-type.patch"
 
