@@ -9,4 +9,5 @@ EXTRA_OECONF += "\
                  --enable-glx-tls \
                  --with-pic \
                  --with-int10=x86emu \
+                 --without-xmlto \
 "
