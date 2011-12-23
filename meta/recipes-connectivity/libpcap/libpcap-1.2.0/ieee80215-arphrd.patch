@@ -9,10 +9,10 @@ Index: libpcap-1.0.0/pcap-linux.c
  		//handle->md.cooked = 1;
  		break;
 +#ifndef ARPHRD_IEEE80215
-+#define ARPHRD_IEEE80215 804
++#define ARPHRD_IEEE80215 805
 +#endif
 +#ifndef ARPHRD_IEEE80215_PHY
-+#define ARPHRD_IEEE80215_PHY 805
++#define ARPHRD_IEEE80215_PHY 806
 +#endif
 +
 +    case ARPHRD_IEEE80215:
