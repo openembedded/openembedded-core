@@ -24,9 +24,9 @@ OVERRIDES .= "${OVERRIDE_THUMB}${OVERRIDE_INTERWORK}"
 #    options ensure that the compiler has the correct settings for the selected
 #    instruction set and interworking.
 ARM_INTERWORK_M_OPT = "${@['-mno-thumb-interwork', '-mthumb-interwork'][d.getVar('THUMB_INTERWORK', 1) == 'yes']}"
-ARM_THUMB_M_OPT = "${@['-mno-thumb', '-mthumb'][d.getVar('ARM_INSTRUCTION_SET', 1) == 'thumb']}"
+ARM_THUMB_M_OPT = "${@['-marm', '-mthumb'][d.getVar('ARM_INSTRUCTION_SET', 1) == 'thumb']}"
 
 #
 TUNE_CCARGS +=  "${ARM_INTERWORK_M_OPT} ${ARM_THUMB_M_OPT}"
-TARGET_CC_KERNEL_ARCH  += "-mno-thumb-interwork -mno-thumb"
+TARGET_CC_KERNEL_ARCH  += "-mno-thumb-interwork -marm"
 
