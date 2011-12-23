@@ -325,7 +325,10 @@ buildhistory_get_imageinfo() {
 
 	# Add some configuration information
 	echo "${MACHINE}: ${IMAGE_BASENAME} configured for ${DISTRO} ${DISTRO_VERSION}" > ${BUILDHISTORY_DIR_IMAGE}/build-id
-	echo "${@buildhistory_get_layers(d)}" >> ${BUILDHISTORY_DIR_IMAGE}/build-id
+
+	cat >> ${BUILDHISTORY_DIR_IMAGE}/build-id <<END
+${@buildhistory_get_layers(d)}
+END
 }
 
 # By prepending we get in before the removal of packaging files
