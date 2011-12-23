@@ -7,8 +7,8 @@ PR = "r0"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-glib/${BPN}-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "5ea748c581db611b097c4926f0467c1e"
-SRC_URI[sha256sum] = "06f61e9a8b12e55ac8c62cad29baa5b14f2b75118a9b01f0874f8048ec33d845"
+SRC_URI[md5sum] = "2e1d583af92e7e88bd5478eab1755696"
+SRC_URI[sha256sum] = "bd9395178d2e11e6caaf14100bbfcb8bf3ceeb574538c670dbef68750dd24b3c"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e413d83db6ee8f2c8e6055719096a48e"
 
