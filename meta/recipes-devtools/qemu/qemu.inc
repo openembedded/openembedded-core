@@ -40,7 +40,7 @@ do_configure_prepend_virtclass-native() {
 
 do_configure() {
     # Handle distros such as CentOS 5 32-bit that do not have kvm support
-    KVMOPTS=""
+    KVMOPTS="--disable-kvm"
     if [ "${PN}" != "qemu-native" ] || [ -f /usr/include/linux/kvm.h ] ; then
         KVMOPTS="--enable-kvm"
     fi
