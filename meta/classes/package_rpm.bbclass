@@ -817,6 +817,12 @@ python write_specfile () {
 	except OSError:
 		raise bb.build.FuncFailed("unable to open spec file for writing.")
 
+	# RPMSPEC_PREAMBLE is a way to add arbitrary text to the top
+	# of the generated spec file
+	external_preamble = d.getVar("RPMSPEC_PREAMBLE", True)
+	if external_preamble:
+		specfile.write(external_preamble + "\n")
+
 	for line in spec_preamble_top:
 		specfile.write(line + "\n")
 
