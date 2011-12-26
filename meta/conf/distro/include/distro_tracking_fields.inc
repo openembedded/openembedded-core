@@ -87,7 +87,7 @@ RECIPE_LATEST_VERSION_pn-minicom = "2.5"
 RECIPE_NO_OF_PATCHES_pn-minicom = "1"
 RECIPE_LATEST_RELEASE_DATE_pn-minicom = "Jan 29, 2011"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-minicom = "22 months"
-RECIPE_LAST_UPDATE_pn-minicom = "Nov 24, 2010"
+RECIPE_LAST_UPDATE_pn-minicom = "Dec 27, 2011"
 RECIPE_MANUAL_CHECK_DATE_pn-minicom = "Dec 24, 2011"
 RECIPE_MAINTAINER_pn-minicom = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
@@ -2392,10 +2392,17 @@ RECIPE_MAINTAINER_pn-orinoco-conf = "Dongxiao Xu <dongxiao.xu@intel.com>"
 RECIPE_STATUS_pn-libical="green"
 RECIPE_LATEST_VERSION_pn-libical = "0.48"
 RECIPE_NO_OF_PATCHES_pn-libical = "0"
+<<<<<<< HEAD
 RECIPE_LATEST_RELEASE_DATE_pn-libical = "Dec 13, 2011"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libical = "2 months"
 RECIPE_LAST_UPDATE_pn-libical = "Nov 16, 2010"
 RECIPE_MANUAL_CHECK_DATE_pn-libical = "Dec 24, 2011"
+=======
+RECIPE_LATEST_RELEASE_DATE_pn-libical = "Oct 12, 2011"
+RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-libical = "11 months"
+RECIPE_LAST_UPDATE_pn-libical = "Dec 26, 2011"
+RECIPE_MANUAL_CHECK_DATE_pn-libical = "Nov 22, 2011"
+>>>>>>> 19d83a0... distro_tracking_fields: update the info for recipe upgrade.
 RECIPE_MAINTAINER_pn-libical = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-task-base="green"
@@ -2809,9 +2816,14 @@ DISTRO_PN_ALIAS_pn-libomxil = "OSPDT upstream=http://omxil.sourceforge.net/"
 RECIPE_STATUS_pn-libsamplerate0 = "green"
 DISTRO_PN_ALIAS_pn-libsamplerate0 = "Meego=libsamplerate Fedora=libsamplerate OpenSuSE=libsamplerate Ubuntu=libsamplerate Mandriva=libsamplerate Debian=libsamplerate"
 RECIPE_LATEST_VERSION_pn-libsamplerate0 = "0.1.8"
+<<<<<<< HEAD
 RECIPE_LATEST_RELEASE_DATE_pn-libsamplerate0 = "Aug 15, 2011"
 RECIPE_LAST_UPDATE_pn-libsamplerate0 = "Apr 26, 2011"
 RECIPE_MANUAL_CHECK_DATE_pn-libsamplerate0 = "Dec 24, 2011"
+=======
+RECIPE_LAST_UPDATE_pn-libsamplerate0 = "Dec 27, 2011"
+RECIPE_MANUAL_CHECK_DATE_pn-libsamplerate0 = "Nov 22, 2011"
+>>>>>>> 19d83a0... distro_tracking_fields: update the info for recipe upgrade.
 RECIPE_MAINTAINER_pn-libsamplerate0 = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-oprofileui = "green"
@@ -4649,8 +4661,13 @@ RECIPE_INTEL_SECTION_pn-freetype = "libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-freetype = "1+ months"
 RECIPE_LATEST_RELEASE_DATE_pn-freetype = "Nov 15, 2011"
 RECIPE_COMMENTS_pn-freetype = ""
+<<<<<<< HEAD
 RECIPE_LAST_UPDATE_pn-freetype = "Aug 16, 2011"
 RECIPE_MANUAL_CHECK_DATE_pn-freetype = "Dec 24, 2011"
+=======
+RECIPE_LAST_UPDATE_pn-freetype = "Dec 27, 2011"
+RECIPE_MANUAL_CHECK_DATE_pn-freetype = "Nov 17, 2011"
+>>>>>>> 19d83a0... distro_tracking_fields: update the info for recipe upgrade.
 RECIPE_MAINTAINER_pn-freetype = "Dexuan Cui <dexuan.cui@intel.com>"
 
 RECIPE_STATUS_pn-librsvg = "green"
