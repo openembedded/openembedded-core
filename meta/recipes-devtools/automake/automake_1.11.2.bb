@@ -37,8 +37,9 @@ SRC_URI += "${PATHFIXPATCH} \
 	    file://prefer-cpio-over-pax-for-ustar-archives.patch \
 	    file://python-libdir.patch"
 
-SRC_URI[md5sum] = "c2972c4d9b3e29c03d5f2af86249876f"
-SRC_URI[sha256sum] = "5b159d3c0e0a1f87de71b68bcb9f1a1c49e9e71749c9b723f17e2e1e0295c7ae"
+PR = "r0"
+SRC_URI[md5sum] = "18194e804d415767bae8f703c963d456"
+SRC_URI[sha256sum] = "4f46d1f9380c8a3506280750f630e9fc915cb1a435b724be56b499d016368718"
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
