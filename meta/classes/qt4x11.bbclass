@@ -2,6 +2,7 @@ DEPENDS_prepend = "${@["qt4-x11-free ", ""][(d.getVar('BPN', True)[:12] == 'qt4-
 
 inherit qmake2
 
+QT_BASE_NAME = "qt4"
 QT_DIR_NAME = "qt4"
 QT_LIBINFIX = ""
 
