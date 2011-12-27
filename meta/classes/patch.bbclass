@@ -7,61 +7,26 @@ PATCHDEPENDENCY = "${PATCHTOOL}-native:do_populate_sysroot"
 
 inherit terminal
 
-python patch_do_patch() {
-	import oe.patch
-
-	src_uri = (d.getVar('SRC_URI', 1) or '').split()
-	if not src_uri:
-		return
-
-	patchsetmap = {
-		"patch": oe.patch.PatchTree,
-		"quilt": oe.patch.QuiltTree,
-		"git": oe.patch.GitApplyTree,
-	}
-
-	cls = patchsetmap[d.getVar('PATCHTOOL', 1) or 'quilt']
-
-	resolvermap = {
-		"noop": oe.patch.NOOPResolver,
-		"user": oe.patch.UserResolver,
-	}
-
-	rcls = resolvermap[d.getVar('PATCHRESOLVE', 1) or 'user']
-
-	s = d.getVar('S', 1)
-
-	path = os.getenv('PATH')
-	os.putenv('PATH', d.getVar('PATH', 1))
-
-	classes = {}
-
-	workdir = d.getVar('WORKDIR', 1)
-	for url in src_uri:
-		(type, host, path, user, pswd, parm) = bb.decodeurl(url)
-
-		local = None
-		base, ext = os.path.splitext(os.path.basename(path))
-		if ext in ('.gz', '.bz2', '.Z'):
-			local = os.path.join(workdir, base)
-			ext = os.path.splitext(base)[1]
-
-		if "apply" in parm:
-			apply = parm["apply"]
-			if apply != "yes":
-				if apply != "no":
-					bb.msg.warn(None, "Unsupported value '%s' for 'apply' url param in '%s', please use 'yes' or 'no'" % (apply, url))
-				continue
-		#elif "patch" in parm:
-			#bb.msg.warn(None, "Deprecated usage of 'patch' url param in '%s', please use 'apply={yes,no}'" % url)
-		elif ext not in (".diff", ".patch"):
+def src_patches(d):
+	workdir = d.getVar('WORKDIR', True)
+	fetch = bb.fetch2.Fetch([], d)
+	patches = []
+	for url in fetch.urls:
+		local = patch_path(url, fetch, workdir)
+		if not local:
 			continue
 
-		if not local:
-			url = bb.encodeurl((type, host, path, user, pswd, []))
-			local = os.path.join('/', bb.fetch2.localpath(url, d))
-		local = bb.data.expand(local, d)
+		urldata = fetch.ud[url]
+		parm = urldata.parm
+		patchname = parm.get('pname') or os.path.basename(local)
 
+		apply, reason = should_apply(parm, d)
+		if not apply:
+			if reason:
+				bb.note("Patch %s %s" % (patchname, reason))
+			continue
+
+		patchparm = {'patchname': patchname}
 		if "striplevel" in parm:
 			striplevel = parm["striplevel"]
 		elif "pnum" in parm:
@@ -69,53 +34,104 @@ python patch_do_patch() {
 			striplevel = parm["pnum"]
 		else:
 			striplevel = '1'
+		patchparm['striplevel'] = striplevel
 
-		if "pname" in parm:
-			pname = parm["pname"]
-		else:
-			pname = os.path.basename(local)
+		patchdir = parm.get('patchdir')
+		if patchdir:
+			patchparm['patchdir'] = patchdir
 
-		if "mindate" in parm or "maxdate" in parm:
-			pn = d.getVar('PN', 1)
-			srcdate = d.getVar('SRCDATE_%s' % pn, 1)
-			if not srcdate:
-				srcdate = d.getVar('SRCDATE', 1)
+		localurl = bb.encodeurl(('file', '', local, '', '', patchparm))
+		patches.append(localurl)
 
-			if srcdate == "now":
-				srcdate = d.getVar('DATE', 1)
+	return patches
 
-			if "maxdate" in parm and parm["maxdate"] < srcdate:
-				bb.note("Patch '%s' is outdated" % pname)
-				continue
+def patch_path(url, fetch, workdir):
+	"""Return the local path of a patch, or None if this isn't a patch"""
 
-			if "mindate" in parm and parm["mindate"] > srcdate:
-				bb.note("Patch '%s' is predated" % pname)
-				continue
+	local = fetch.localpath(url)
+	base, ext = os.path.splitext(os.path.basename(local))
+	if ext in ('.gz', '.bz2', '.Z'):
+		local = os.path.join(workdir, base)
+		ext = os.path.splitext(base)[1]
+
+	urldata = fetch.ud[url]
+	if "apply" in urldata.parm:
+		apply = oe.types.boolean(urldata.parm["apply"])
+		if not apply:
+			return
+	elif ext not in (".diff", ".patch"):
+		return
+
+	return local
+
+def should_apply(parm, d):
+	"""Determine if we should apply the given patch"""
+
+	if "mindate" in parm or "maxdate" in parm:
+		pn = d.getVar('PN', True)
+		srcdate = d.getVar('SRCDATE_%s' % pn, True)
+		if not srcdate:
+			srcdate = d.getVar('SRCDATE', True)
+
+		if srcdate == "now":
+			srcdate = d.getVar('DATE', True)
+
+		if "maxdate" in parm and parm["maxdate"] < srcdate:
+			return False, 'is outdated'
+
+		if "mindate" in parm and parm["mindate"] > srcdate:
+			return False, 'is predated'
 
 
-		if "minrev" in parm:
-			srcrev = d.getVar('SRCREV', 1)
-			if srcrev and srcrev < parm["minrev"]:
-				bb.note("Patch '%s' applies to later revisions" % pname)
-				continue
+	if "minrev" in parm:
+		srcrev = d.getVar('SRCREV', True)
+		if srcrev and srcrev < parm["minrev"]:
+			return False, 'applies to later revisions'
 
-		if "maxrev" in parm:
-			srcrev = d.getVar('SRCREV', 1)		
-			if srcrev and srcrev > parm["maxrev"]:
-				bb.note("Patch '%s' applies to earlier revisions" % pname)
-				continue
+	if "maxrev" in parm:
+		srcrev = d.getVar('SRCREV', True)
+		if srcrev and srcrev > parm["maxrev"]:
+			return False, 'applies to earlier revisions'
 
-		if "rev" in parm:
-			srcrev = d.getVar('SRCREV', 1)		
-			if srcrev and parm["rev"] not in srcrev:
-				bb.note("Patch '%s' doesn't apply to revision" % pname)
-				continue
+	if "rev" in parm:
+		srcrev = d.getVar('SRCREV', True)
+		if srcrev and parm["rev"] not in srcrev:
+			return False, "doesn't apply to revision"
 
-		if "notrev" in parm:
-			srcrev = d.getVar('SRCREV', 1)		
-			if srcrev and parm["notrev"] in srcrev:
-				bb.note("Patch '%s' doesn't apply to revision" % pname)
-				continue
+	if "notrev" in parm:
+		srcrev = d.getVar('SRCREV', True)
+		if srcrev and parm["notrev"] in srcrev:
+			return False, "doesn't apply to revision"
+
+	return True, None
+
+python patch_do_patch() {
+	import oe.patch
+
+	patchsetmap = {
+		"patch": oe.patch.PatchTree,
+		"quilt": oe.patch.QuiltTree,
+		"git": oe.patch.GitApplyTree,
+	}
+
+	cls = patchsetmap[d.getVar('PATCHTOOL', True) or 'quilt']
+
+	resolvermap = {
+		"noop": oe.patch.NOOPResolver,
+		"user": oe.patch.UserResolver,
+	}
+
+	rcls = resolvermap[d.getVar('PATCHRESOLVE', True) or 'user']
+
+	classes = {}
+
+	s = d.getVar('S', True)
+
+	path = os.getenv('PATH')
+	os.putenv('PATH', d.getVar('PATH', True))
+
+	for patch in src_patches(d):
+		_, _, local, _, _, parm = bb.decodeurl(patch)
 
 		if "patchdir" in parm:
 			patchdir = parm["patchdir"]
@@ -132,12 +148,11 @@ python patch_do_patch() {
 		else:
 			patchset, resolver = classes[patchdir]
 
-		bb.note("Applying patch '%s' (%s)" % (pname, oe.path.format_display(local, d)))
+		bb.note("Applying patch '%s' (%s)" % (parm['patchname'], oe.path.format_display(local, d)))
 		try:
-			patchset.Import({"file":local, "remote":url, "strippath": striplevel}, True)
-		except Exception:
-			import sys
-			raise bb.build.FuncFailed(str(sys.exc_value))
+			patchset.Import({"file":local, "strippath": parm['striplevel']}, True)
+		except Exception as exc:
+			bb.fatal(str(exc))
 		resolver.Resolve()
 }
 patch_do_patch[vardepsexclude] = "DATE SRCDATE PATCHRESOLVE"
