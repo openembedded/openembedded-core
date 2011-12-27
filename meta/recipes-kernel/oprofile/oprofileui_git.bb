@@ -1,6 +1,6 @@
 require oprofileui.inc
 
-SRCREV = "b3116a4f80ae64bd280e6434d66f33ed492d449a"
+SRCREV = "82ecf8c6b53b84f80682a8312f9defa83a95f2a3"
 PV = "0.0+git${SRCPV}"
 PR = "r0"
 
