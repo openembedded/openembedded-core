@@ -1,0 +1,54 @@
+Upstream-Status: Pending
+
+automake version 1.11.2 has made use of dir variables more strict.
+the use of pkglibdir with SCRIPTS & DATA vars results in automake
+errors.
+  This commits uses pkgdatadir & pkgbindir vars instead of pkglibdir
+to avoid the strict check errors.
+
+  This change also works with automake-1.11.1
+
+Errors fixed:
+Makefile.am:103: error: `pkglibdir' is not a legitimate directory for `DATA'
+scripts/Makefile.am:47: error: `pkglibdir' is not a legitimate directory for `SCRIPTS'
+
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+2011/12/27
+
+Index: rpm-5.4.0/Makefile.am
+===================================================================
+--- rpm-5.4.0.orig/Makefile.am
++++ rpm-5.4.0/Makefile.am
+@@ -103,13 +103,13 @@ if WITH_PATH_VERSIONED
+ 	done
+ endif
+ 
+-pkglibdir =		@USRLIBRPM@
+-pkglib_DATA = rpmpopt macros/macros macros/macros.rpmbuild cpuinfo.yaml
++pkgdatadir =		@USRLIBRPM@
++pkgdata_DATA = rpmpopt macros/macros macros/macros.rpmbuild cpuinfo.yaml
+ 
+-pkgbindir =	$(pkglibdir)/bin
++pkgbindir =	$(pkgdatadir)/bin
+ pkgbin_SCRIPTS = install-sh mkinstalldirs
+ 
+-pkgcfgdir =	$(pkglibdir)/macros.d
++pkgcfgdir =	$(pkgdatadir)/macros.d
+ pkgcfg_DATA = \
+ 	macros/cmake macros/java macros/libtool macros/mandriva macros/mono \
+ 	macros/perl macros/pkgconfig macros/php macros/python macros/ruby \
+Index: rpm-5.4.0/scripts/Makefile.am
+===================================================================
+--- rpm-5.4.0.orig/scripts/Makefile.am
++++ rpm-5.4.0/scripts/Makefile.am
+@@ -45,8 +45,8 @@ all:
+ 
+ bin_SCRIPTS = gendiff
+ 
+-pkglibdir =		@USRLIBRPM@
+-pkglib_SCRIPTS = \
++pkgbindir =		@USRLIBRPM@
++pkgbin_SCRIPTS = \
+ 	brp-compress brp-python-bytecompile brp-java-gcjcompile \
+ 	brp-strip brp-strip-comment-note brp-nobuildrootpath \
+ 	brp-strip-shared brp-strip-static-archive brp-sparc64-linux \

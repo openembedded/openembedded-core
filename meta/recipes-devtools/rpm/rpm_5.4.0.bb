@@ -66,6 +66,7 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.0-0.20101229.src.rpm;ex
 	   file://rpm-canonarch.patch \
 	   file://rpm-no-loopmsg.patch \
 	   file://rpm-scriptletexechelper.patch \
+	   file://fix_for_automake_1.11.2.patch \
 	   file://pythondeps.sh \
 	  "
 
