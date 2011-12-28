@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=2d5025d4aa3495befef8f17206a5b0a1 \
 
 require avahi.inc
 
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 
 DEPENDS += "avahi gtk+ libglade"
 
@@ -50,7 +50,6 @@ do_install_append () {
 	rm ${D}${libdir}/libavahi-g*
 	rm ${D}${libdir}/pkgconfig/avahi-c*
 	rm ${D}${libdir}/pkgconfig/avahi-g*
-	rmdir ${D}${libdir}/avahi
 	rm ${D}${sbindir} -rf
 	rm ${D}${datadir}/avahi/a*
 	rm ${D}${datadir}/avahi/s*
