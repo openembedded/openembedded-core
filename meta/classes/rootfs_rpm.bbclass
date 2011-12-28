@@ -61,6 +61,9 @@ fakeroot rootfs_rpm_do_rootfs () {
 
 	mkdir -p ${INSTALL_ROOTFS_RPM}${rpmlibdir}
 	mkdir -p ${INSTALL_ROOTFS_RPM}${rpmlibdir}/log
+	# After change the __db.* cache size, log file will not be generated automatically,
+	# that will raise some warnings, so touch a bare log for rpm write into it.
+	touch ${INSTALL_ROOTFS_RPM}${rpmlibdir}/log/log.0000000001
 	cat > ${INSTALL_ROOTFS_RPM}${rpmlibdir}/DB_CONFIG << EOF
 # ================ Environment
 set_data_dir            .
