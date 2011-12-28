@@ -1,5 +1,5 @@
-DESCRIPTION = "U-boot bootloader"
-HOMEPAGE = "http://u-boot.sf.net"
+DESCRIPTION = "U-Boot - the Universal Boot Loader"
+HOMEPAGE = "http://www.denx.de/wiki/U-Boot/WebHome"
 SECTION = "bootloaders"
 PROVIDES = "virtual/bootloader"
 
