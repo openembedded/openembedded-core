@@ -1,6 +1,6 @@
 require python.inc
 DEPENDS = "openssl-native bzip2-full-native zlib-native readline-native sqlite3-native"
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 
 SRC_URI += "file://04-default-is-optimized.patch \
            file://05-enable-ctypes-cross-build.patch \
@@ -11,7 +11,9 @@ SRC_URI += "file://04-default-is-optimized.patch \
            file://debug.patch \
            file://unixccompiler.patch \
            file://nohostlibs.patch \
-           file://multilib.patch "
+           file://multilib.patch \
+           file://add-md5module-support.patch \
+           "
 S = "${WORKDIR}/Python-${PV}"
 
 inherit native
