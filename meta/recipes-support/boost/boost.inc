@@ -16,7 +16,7 @@ BOOST_VER = "${@"_".join(d.getVar("PV",1).split("."))}"
 BOOST_MAJ = "${@"_".join(d.getVar("PV",1).split(".")[0:2])}"
 BOOST_P = "boost_${BOOST_VER}"
 
-INC_PR = "r2"
+INC_PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BOOST_P}.tar.bz2"
 
@@ -119,15 +119,14 @@ BJAM_TOOLS   = "-sTOOLS=gcc \
 		'-sGCC_STDLIB_DIRECTORY=${STAGING_LIBDIR}' \
 		'-sNO_BZIP2=1' \
 		'-sNO_ZLIB=1' \
-		'-sBUILD=release <optimization>space <inlining>on <debug-symbols>off' \
+		'-sBUILD=release <optimization>space <threading>multi <inlining>on <debug-symbols>off' \
 		'-sPYTHON_VERSION=${PYTHON_VERSION}' \
 		'--layout=system' \
 		"
 
 BJAM_OPTS    = '${BJAM_TOOLS} \
 		--builddir=${S}/${TARGET_SYS} \
-		--with-python-root=${PYTHON_ROOT} \
-		--without-icu \
+                --disable-icu \
 		${BJAM_EXTRA}'
 
 
@@ -153,6 +152,15 @@ do_install() {
 		--libdir=${D}${libdir} \
 		--includedir=${D}${includedir} \
 		install
+	for lib in ${BOOST_LIBS}; do
+		if [ -e ${D}${libdir}/libboost_${lib}.a ]; then
+			ln -s libboost_${lib}.a ${D}${libdir}/libboost_${lib}-mt.a
+		fi
+		if [ -e ${D}${libdir}/libboost_${lib}.so ]; then
+			ln -s libboost_${lib}.so ${D}${libdir}/libboost_${lib}-mt.so
+		fi
+	done
+
 }
 
 BBCLASSEXTEND = "native"
