@@ -1,4 +1,4 @@
-UpstreamStatus: Pending
+Upstream-Status: Pending
 
 Don't always define LONG64 for AMD64
     

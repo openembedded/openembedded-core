@@ -1,4 +1,4 @@
-UpstreamStatus: Pending
+Upstream-Status: Pending
 
 Received from H J Liu @ Intel
 Make the assembly syntax compatible with x32 gcc. Othewise x32 gcc throws errors.

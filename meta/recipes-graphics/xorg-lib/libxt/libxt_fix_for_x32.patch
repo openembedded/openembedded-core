@@ -1,4 +1,4 @@
-UpstreamStatus: Pending
+Upstream-Status: Pending
 
 This fixes compilation with x32 toolchain.
 

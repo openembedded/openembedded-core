@@ -1,4 +1,4 @@
-UpstreamStatus: Pending
+Upstream-Status: Pending
 
 Pass CC & CFLAGS vars so that tune parameters get used.
 This fixes compilation with x32 toolchain.

@@ -1,4 +1,4 @@
-UpstreamStatus: pending
+Upstream-Status: pending
 
 By hardcoding CC's definition in the Makefile, all the gcc parameters 
 set by tune settings are lost. Causing compile failure with x32 toolchain

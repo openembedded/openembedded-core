@@ -1,4 +1,4 @@
-UpstreamStatus: Pending
+Upstream-Status: Pending
 
 This patch makes assembly syntax compatible to the x32 toolchain.
 
