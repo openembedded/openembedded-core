@@ -123,3 +123,10 @@
 # The following is a list of classes to import to use in the generation of images
 # currently an example class is image_types_uboot
 # IMAGE_CLASSES = " image_types_uboot"
+
+# Incremental rpm image generation, the rootfs would be totally removed
+# and re-created in the second generation by default, but with
+# INC_RPM_IMAGE_GEN = "1", the rpm based rootfs would be kept, and will
+# do update(remove/add some pkgs) on it.  NOTE: This is not suggested
+# when you want to create a productive rootfs
+#INC_RPM_IMAGE_GEN = "1"
