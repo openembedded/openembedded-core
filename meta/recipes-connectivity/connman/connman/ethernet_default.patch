@@ -3,7 +3,7 @@ will shut down all the networking when it starts without any configuration
 which is usualy not what the users expects. This is particularly
 problematic with our qemu images and runtime testing using qemu.
 
-Upstream Status: Inappropriate [Configuration]
+Upstream-Status: Inappropriate [Configuration]
 
 RP 2011/12/12
 

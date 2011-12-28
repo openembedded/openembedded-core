@@ -1,5 +1,7 @@
 Workaround for a memory leak in --showrc.
 
+Upstream-Status: Pending
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 diff -ur rpm-5.4.0.orig/lib/rpmrc.c rpm-5.4.0/lib/rpmrc.c

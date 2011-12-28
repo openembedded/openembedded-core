@@ -2,6 +2,8 @@ Allow LIB_INSTALL_DIR to be set by the the cmake configure invocation.  We dont
 easily have a way of determining something that patches ${LIB_SUFFIX} so we'll
 set LIB_INSTALL_DIR.
 
+Upstream-Status: Inappropriate [configuration]
+
 Signed-off-by: Kumar Gala <galak@kernel.crashing.org>
 
 Index: libmusicbrainz-3.0.3/CMakeLists.txt

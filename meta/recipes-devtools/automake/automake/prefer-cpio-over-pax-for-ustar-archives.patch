@@ -11,6 +11,8 @@ CDPATH="${ZSH_VERSION+.}:" && cd . && perllibdir="automake-1.11.1/lib:./lib" "au
 /bin/sh: automake-1.11.1/aclocal: No such file or directory
 make: *** [aclocal.m4] Error 127
 
+Upstream-Status: Pending
+
 Signed-off-by: Tom Rini <tom_rini@mentor.com>
 
 Index: automake-1.11.1/m4/tar.m4

@@ -1,5 +1,7 @@
 Fix up platform and related sysinfo file loading.
 
+Upstream-Status: Pending
+
 This ensures that RPM knows the compatible set of package types at all times.
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>

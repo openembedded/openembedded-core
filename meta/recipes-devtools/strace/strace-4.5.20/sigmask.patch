@@ -2,6 +2,7 @@ sigmask is a macro which is dropped if BSD compatibility is
 not enabled. So we check if the macro does not exist then
 we define it to __sigmask
 
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 Index: strace-4.5.20/signal.c

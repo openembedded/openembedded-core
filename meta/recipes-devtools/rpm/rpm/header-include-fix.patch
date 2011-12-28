@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 diff --git a/rpmdb/rpmdb.h b/rpmdb/rpmdb.h
 index 0e1bdd7..8b522bb 100644
 --- a/rpmdb/rpmdb.h

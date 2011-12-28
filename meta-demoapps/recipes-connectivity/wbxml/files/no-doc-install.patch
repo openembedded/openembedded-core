@@ -1,3 +1,5 @@
+
+Upstream-Status: Inappropriate [configuration]
 --- wbxml2-0.9.2/Makefile.am.old	2007-01-03 19:50:24.000000000 +0000
 +++ wbxml2-0.9.2/Makefile.am	2007-01-03 19:50:39.000000000 +0000
 @@ -24,9 +24,9 @@

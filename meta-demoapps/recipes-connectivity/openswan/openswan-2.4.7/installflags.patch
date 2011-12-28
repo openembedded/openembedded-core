@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: openswan-2.4.7/Makefile.inc
 ===================================================================
 --- openswan-2.4.7.orig/Makefile.inc	2006-12-25 18:05:40.608503250 +0100

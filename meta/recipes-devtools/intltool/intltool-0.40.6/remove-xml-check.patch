@@ -1,3 +1,6 @@
+
+Upstream-Status: Inappropriate [configuration]
+
 Index: intltool-0.40.6/intltool.m4
 ===================================================================
 --- intltool-0.40.6.orig/intltool.m4	2009-02-14 14:12:28.000000000 -0800

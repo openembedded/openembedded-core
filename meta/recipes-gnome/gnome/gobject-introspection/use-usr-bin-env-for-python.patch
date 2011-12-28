@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 Index: gobject-introspection-0.9.10/tools/g-ir-annotation-tool.in
 ===================================================================
 --- gobject-introspection-0.9.10.orig/tools/g-ir-annotation-tool.in

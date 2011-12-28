@@ -6,7 +6,7 @@ Subject: [PATCH] Disable building of alg-test
 alg-test utility depends on linux/if_alg.h header that is only
 available on kernels >= 2.6.39.
 
-Upstream Status: Inappropriate [configuration]
+Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 ---

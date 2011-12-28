@@ -7,6 +7,8 @@ Note: this is a temporary workaround.  Eventually we will want to have a way
 to seed per-file dependency and other information in order to generate a
 package from previously determined information.
 
+Upstream-Status: Pending
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 diff --git a/lib/rpmfc.c b/lib/rpmfc.c

@@ -1,3 +1,6 @@
+
+Upstream-Status: Inappropriate [configuration]
+
 Index: tools/perf/Makefile
 ===================================================================
 --- a/tools/perf/Makefile	2011-01-14 14:17:33.127008554 -0600

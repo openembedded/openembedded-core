@@ -3,6 +3,8 @@
  gcalctool/Makefile.am |    2 --
  2 files changed, 1 insertion(+), 3 deletions(-)
 
+Upstream-Status: Inappropriate [configuration]
+
 Index: gcalctool-5.8.17/gcalctool/Makefile.am
 ===================================================================
 --- gcalctool-5.8.17.orig/gcalctool/Makefile.am	2005-12-19 15:46:57.000000000 +0000

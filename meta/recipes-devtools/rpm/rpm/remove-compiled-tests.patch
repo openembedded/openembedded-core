@@ -1,3 +1,6 @@
+
+Upstream-Status: Inappropriate [configuration]
+
 Index: rpm-5.1.9/configure.ac
 ===================================================================
 --- rpm-5.1.9.orig/configure.ac	2009-04-18 17:47:02.000000000 +0100

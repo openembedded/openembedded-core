@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 --- trunk/libopkg/opkg_download.c	2011-03-10 16:41:29.000000000 +0800
 +++ trunk/libopkg/opkg_download.c	2011-03-10 16:42:33.000000000 +0800
 @@ -162,6 +162,7 @@

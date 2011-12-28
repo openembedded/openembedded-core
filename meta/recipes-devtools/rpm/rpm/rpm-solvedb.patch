@@ -4,6 +4,8 @@ Previously the max was set to 5, up this to 20... this should be more
 then enough for now.. also add an RPM_ERROR message in case we exceed the
 new maximum.
 
+Upstream-Status: Pending
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 diff -urN rpm-5.4.0.orig/rpmio/rpmbag.c rpm-5.4.0/rpmio/rpmbag.c

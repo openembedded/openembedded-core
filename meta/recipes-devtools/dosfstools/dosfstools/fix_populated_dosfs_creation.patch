@@ -1,4 +1,4 @@
-UpstreamStatus: Inappropriate
+Upstream-Status: Inappropriate
 
 This patch fixes populated dosfs image creation with directory 
 structures. Earlier it was causing segfault; and only image 

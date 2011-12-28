@@ -16,6 +16,9 @@ The python recipe building was failing because python-native
 could not handle sys.lib var. sys.lib var is defined in the 
 multilib patch hence added this multilib.patch for python-native 
 recipe.
+
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
 
 Index: Python-2.7.2/Include/pythonrun.h

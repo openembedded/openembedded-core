@@ -1,3 +1,6 @@
+
+Upstream-Status: Inappropriate [configuration]
+
 diff --git a/rpmdb/DB_CONFIG.in b/rpmdb/DB_CONFIG.in
 index 8b94c94..e0b4689 100644
 --- a/rpmdb/DB_CONFIG.in

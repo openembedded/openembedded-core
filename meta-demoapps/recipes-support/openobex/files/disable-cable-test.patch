@@ -1,7 +1,8 @@
 
 #
 # Patch managed by http://www.holgerschurig.de/patcher.html
-#
+# 
+Upstream-Status: Inappropriate [configuration]
 
 --- openobex-1.2/apps/Makefile.am~disable-cable-test
 +++ openobex-1.2/apps/Makefile.am

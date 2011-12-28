@@ -2,6 +2,8 @@ Remove the sanity checking from the rpm autogen.sh.  This is required because
 we may have slightly different, but yet compatible versions.  If we do end
 up breaking things, we'll deal with it at that time.
 
+Upstream-Status: Pending
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 diff -ur rpm-5.4.0.orig/autogen.sh rpm-5.4.0/autogen.sh

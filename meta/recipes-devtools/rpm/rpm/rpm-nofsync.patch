@@ -1,5 +1,7 @@
 Backport from RPM 5.4.1 CVS, disabled fsync.
 
+Upstream-Status: Backport
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 diff -ur rpm-5.4.0.orig/CHANGES rpm-5.4.0/CHANGES

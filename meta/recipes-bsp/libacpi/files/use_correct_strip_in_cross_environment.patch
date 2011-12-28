@@ -1,4 +1,4 @@
-UpstreamStatus: Pending
+Upstream-Status: Pending
 
 Used the cross strip instead of host strip to avoid this build error:
 

@@ -4,7 +4,7 @@ broken images with the -d option. It can still be enabled on the commandline
 at the users own risk. This changes us back to the 2.10 version's behaviour
 which was known to work well even with large images.
 
-Upstream Status: Inapprioriate [depends on other patches we apply]
+Upstream-Status: Inapproriate [depends on other patches we apply]
 
 RP 2011/12/13
 

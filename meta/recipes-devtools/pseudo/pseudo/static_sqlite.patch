@@ -1,6 +1,8 @@
 Due to disabling the LD_LIBRARY_PATH handling, we need to use a static
 libsqlite.
 
+Upstream-Status: Inappropriate [configuration]
+
 diff -ur git.orig/Makefile.in git/Makefile.in
 --- git.orig/Makefile.in
 +++ git/Makefile.in

@@ -4,6 +4,8 @@ configure.ac:11: error: m4_divert_push: cannot change diversion to `GROW' inside
 
 without this patch.
 
+Upstream-Status: Pending
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 diff -ur rpm-5.1.10.orig/configure.ac rpm-5.1.10/configure.ac

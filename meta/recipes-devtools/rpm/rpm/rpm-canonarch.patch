@@ -14,6 +14,8 @@ This patch changes the list of supported items to:
   <arch>-<vendor>-<os>
   <arch>-<vendor>-<os>-<extension>
 
+Upstream-Status: Pending
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 Index: rpm-5.4.0/lib/rpmrc.c
