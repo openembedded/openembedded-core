@@ -201,11 +201,15 @@ rootfs_check_package_exists() {
 }
 
 rootfs_install_packages() {
+    # The pkg to be installed here is not controlled by the
+    # package_install_internal_rpm, so it may have already been
+    # installed(e.g, installed in the first time when generate the
+    # rootfs), use '--replacepkgs' to always install them
 	for pkg in $@; do
 		${RPM} --root ${IMAGE_ROOTFS} -D "_dbpath ${rpmlibdir}" \
 			-D "__dbi_txn create nofsync private" \
 			--noscripts --notriggers --noparentdirs --nolinktos \
-			-Uhv $pkg || true
+			--replacepkgs -Uhv $pkg || true
 	done
 }
 

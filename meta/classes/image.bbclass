@@ -134,15 +134,22 @@ do_rootfs[umask] = 022
 
 fakeroot do_rootfs () {
 	#set -x
-	rm -rf ${IMAGE_ROOTFS}
+    # When use the rpm incremental image generation, don't remove the rootfs
+    if [ "${INC_RPM_IMAGE_GEN}" != "1" -o "${IMAGE_PKGTYPE}" != "rpm" ]; then
+        rm -rf ${IMAGE_ROOTFS}
+    fi
 	rm -rf ${MULTILIB_TEMP_ROOTFS}
 	mkdir -p ${IMAGE_ROOTFS}
 	mkdir -p ${DEPLOY_DIR_IMAGE}
 
 	cp ${COREBASE}/meta/files/deploydir_readme.txt ${DEPLOY_DIR_IMAGE}/README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt
 
-	if [ "${USE_DEVFS}" != "1" ]; then
+    # If "${IMAGE_ROOTFS}/dev" exists, then the device had been made by
+    # the previous build
+	if [ "${USE_DEVFS}" != "1" -a ! -r "${IMAGE_ROOTFS}/dev" ]; then
 		for devtable in ${@get_devtable_list(d)}; do
+            # Always return ture since there maybe already one when use the
+            # incremental image generation
 			makedevs -r ${IMAGE_ROOTFS} -D $devtable
 		done
 	fi

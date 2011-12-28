@@ -147,6 +147,67 @@ resolve_package_rpm () {
 	echo $pkg_name
 }
 
+# rpm common command and options
+rpm_common_comand () {
+
+    local target_rootfs="${INSTALL_ROOTFS_RPM}"
+    local extra_args="$@"
+
+    ${RPM} --root ${target_rootfs} \
+        --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+        --predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
+        -D "_var ${localstatedir}" \
+        -D "_dbpath ${rpmlibdir}" \
+        --noparentdirs --nolinktos \
+        -D "__dbi_txn create nofsync private" \
+        -D "_cross_scriptlet_wrapper ${WORKDIR}/scriptlet_wrapper" $extra_args
+}
+
+# install or remove the pkg
+rpm_update_pkg () {
+
+    local target_rootfs="${INSTALL_ROOTFS_RPM}"
+
+    # Save the rpm's build time for incremental image generation, and the file
+    # would be moved to ${T}
+    rm -f ${target_rootfs}/install/total_solution_bt.manifest
+    for i in `cat ${target_rootfs}/install/total_solution.manifest`; do
+        # Use "rpm" rather than "${RPM}" here, since we don't need the
+        # '--dbpath' option
+        echo "$i `rpm -qp --qf '%{BUILDTIME}\n' $i`" >> \
+            ${target_rootfs}/install/total_solution_bt.manifest
+    done
+
+    # Only install the different pkgs if incremental image generation is set
+    if [ "${INC_RPM_IMAGE_GEN}" = "1" -a -f ${T}/total_solution_bt.manifest -a \
+        "${IMAGE_PKGTYPE}" = "rpm" ]; then
+        cur_list="${target_rootfs}/install/total_solution_bt.manifest"
+        pre_list="${T}/total_solution_bt.manifest"
+        sort -u $cur_list -o $cur_list
+        sort -u $pre_list -o $pre_list
+        comm -1 -3 $cur_list $pre_list | sed 's#.*/\(.*\)\.rpm .*#\1#' > \
+            ${target_rootfs}/install/remove.manifest
+        comm -2 -3 $cur_list $pre_list | awk '{print $1}' > \
+            ${target_rootfs}/install/incremental.manifest
+
+        # Attempt to remove unwanted pkgs, the scripts(pre, post, etc.) has not
+        # been run by now, so don't have to run them(preun, postun, etc.) when
+        # erase the pkg
+        if [ -s ${target_rootfs}/install/remove.manifest ]; then
+            rpm_common_comand --noscripts --nodeps \
+                -e `cat ${target_rootfs}/install/remove.manifest`
+        fi
+
+        # Attempt to install the incremental pkgs
+        rpm_common_comand --nodeps --replacefiles --replacepkgs \
+            -Uvh ${target_rootfs}/install/incremental.manifest
+    else
+        # Attempt to install
+        rpm_common_comand --replacepkgs \
+            -Uhv ${target_rootfs}/install/total_solution.manifest
+    fi
+}
+
 #
 # install a bunch of packages using rpm
 # the following shell variables needs to be set before calling this func:
@@ -406,16 +467,8 @@ EOF
 
 	chmod 0755 ${WORKDIR}/scriptlet_wrapper
 
-	# Attempt install
-	${RPM} --root ${target_rootfs} \
-		--predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
-		--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
-		-D "_var ${localstatedir}" \
-		-D "_dbpath ${rpmlibdir}" \
-		--noparentdirs --nolinktos --replacepkgs \
-		-D "__dbi_txn create nofsync private" \
-		-D "_cross_scriptlet_wrapper ${WORKDIR}/scriptlet_wrapper" \
-		-Uhv ${target_rootfs}/install/total_solution.manifest
+    rpm_update_pkg
+
 }
 
 python write_specfile () {
