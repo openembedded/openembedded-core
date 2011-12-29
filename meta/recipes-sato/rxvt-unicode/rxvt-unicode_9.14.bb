@@ -1,13 +1,14 @@
 SECTION = "x11/utils"
-DEPENDS = "virtual/libx11 libxt libxft"
 DESCRIPTION = "rxvt-unicode is a clone of the well known \
 terminal emulator rxvt, modified to store text in Unicode \
 (either UCS-2 or UCS-4) and to use locale-correct input and \
 output. It also supports mixing multiple fonts at the \
 same time, including Xft fonts."
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://src/main.C;beginline=1;endline=31;md5=775485398a09fa7aee6f90464af88432"
+
+DEPENDS = "virtual/libx11 libxt libxft gdk-pixbuf"
 
 PR = "r0"
 
@@ -16,8 +17,8 @@ SRC_URI = "http://dist.schmorp.de/rxvt-unicode/Attic/rxvt-unicode-${PV}.tar.bz2 
 	   file://rxvt.desktop \
 	   file://rxvt.png"
 
-SRC_URI[md5sum] = "945af37d661c8c45a7cac292160e7c70"
-SRC_URI[sha256sum] = "1db334204bfb264b3134e01d9d3cf446c5ac7d47514909435f914f3906f37e7e"
+SRC_URI[md5sum] = "022235a9a8b012c29e72c49177be6ce4"
+SRC_URI[sha256sum] = "29928a33be6b3fb0edd126df2c3d35e1900f8268b546ce54430780c550fa1d52"
 
 inherit autotools update-alternatives
 
