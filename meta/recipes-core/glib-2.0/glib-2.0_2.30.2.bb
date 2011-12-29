@@ -3,7 +3,7 @@ require glib.inc
 PR = "r0"
 PE = "1"
 
-DEPENDS += "libffi python-argparse-native"
+DEPENDS += "libffi python-argparse-native zlib"
 DEPENDS_virtclass-native += "libffi-native python-argparse-native"
 DEPENDS_virtclass-nativesdk += "libffi-nativesdk python-argparse-native zlib-nativesdk"
 
