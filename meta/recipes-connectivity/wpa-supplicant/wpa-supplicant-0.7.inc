@@ -9,8 +9,11 @@ LIC_FILES_CHKSUM = "file://../COPYING;md5=c54ce9345727175ff66d17b67ff51f58 \
 DEPENDS = "gnutls dbus libnl"
 RRECOMMENDS_${PN} = "wpa-supplicant-passphrase wpa-supplicant-cli"
 
+# Check if GPLv3 build and select the correct file in configure
+require defconfig.inc
+
 SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
-           file://defconfig-gnutls \
+           file://defconfig-gnutls${@get_defconfig(bb, d)} \
            file://defaults-sane \
            file://wpa-supplicant.sh \
            file://wpa_supplicant.conf \
@@ -25,7 +28,7 @@ FILES_wpa-supplicant-cli = "${sbindir}/wpa_cli"
 FILES_${PN} += " ${datadir}/dbus-1/system-services/*
 
 do_configure () {
-	install -m 0755 ${WORKDIR}/defconfig-gnutls .config
+	install -m 0755 ${WORKDIR}/defconfig-gnutls${@get_defconfig(bb, d)} .config
 }
 
 export EXTRA_CFLAGS = "${CFLAGS}"
