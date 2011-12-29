@@ -19,9 +19,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.radeon_rlc;md5=4c243f7854d2884b483abda991adef
                     file://LICENCE.rtlwifi_firmware.txt;md5=00d06cfd3eddd5a2698948ead2ad54a5 \
                    "
 
-SRCREV = "d543c1d98fc240267ee59fff93f7a0f36d9e2fc3"
+SRCREV = "15888a2eab052ac3d3f49334e4f6f05f347a516e"
 PV = "0.0+git${SRCPV}"
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "git://git.infradead.org/users/dwmw2/linux-firmware.git;protocol=git"
 
