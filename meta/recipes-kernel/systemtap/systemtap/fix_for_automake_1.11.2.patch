@@ -1,0 +1,46 @@
+Upstream-Status: Pending
+
+automake version 1.11.2 has made use of dir variables more strict.
+The pkglibexec var can not have SCRIPTS suffix. Using pkgdata
+instead.
+
+Fixes this error:
+| Makefile.am:25: `pkglibexecdir' is not a legitimate directory for `SCRIPTS'
+| autoreconf: automake failed with exit status: 1
+| ERROR: autoreconf execution failed.
+NOTE: package systemtap-1.6+git1+820f2d22fc47fad6e09ba886efb9b91e1247cb39-r0: task do_configure: Failed
+
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+2011/12/29
+
+Index: git/Makefile.am
+===================================================================
+--- git.orig/Makefile.am
++++ git/Makefile.am
+@@ -22,7 +22,7 @@ dtrace.1 stap-merge.1\
+ stappaths.7
+ 
+ bin_SCRIPTS = stap-report
+-pkglibexec_SCRIPTS = stap-env
++pkgdata_SCRIPTS = stap-env
+ oldinclude_HEADERS = includes/sys/sdt.h includes/sys/sdt-config.h
+ 
+ bin_PROGRAMS =
+@@ -41,7 +41,7 @@ if BUILD_SERVER
+ man_MANS += stap-server.8
+ pkglibexec_PROGRAMS += stap-serverd stap-gen-cert
+ bin_SCRIPTS += stap-server
+-pkglibexec_SCRIPTS += stap-start-server stap-stop-server
++pkgdata_SCRIPTS += stap-start-server stap-stop-server
+ endif
+ endif
+ 
+@@ -127,7 +127,7 @@ install-scripts: install-binSCRIPTS inst
+ 	for f in $(bin_SCRIPTS); do \
+ 	   sed -i -e "s,\$${PKGLIBEXECDIR},$(pkglibexecdir)/," $(DESTDIR)$(bindir)/$$f; \
+ 	done
+-	for f in $(pkglibexec_SCRIPTS); do \
++	for f in $(pkgdata_SCRIPTS); do \
+ 	   sed -i -e "/INSTALL-HOOK/d;s,sysconfdir=.*,sysconfdir=$(sysconfdir),;s,pkglibexecdir=.*,pkglibexecdir=$(pkglibexecdir)/,;s,localstatedir=.*,localstatedir=$(localstatedir),;s,\$${PKGLIBEXECDIR},$(pkglibexecdir)/," $(DESTDIR)$(pkglibexecdir)/$$f; \
+ 	done
+ endif

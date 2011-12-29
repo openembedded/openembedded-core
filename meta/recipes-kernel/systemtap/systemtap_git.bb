@@ -5,10 +5,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 DEPENDS = "elfutils sqlite3"
 
 SRCREV = "820f2d22fc47fad6e09ba886efb9b91e1247cb39"
-PR = "r0"
+PR = "r1"
 PV = "1.6+git${SRCPV}"
 
 SRC_URI = "git://sources.redhat.com/git/systemtap.git;protocol=git \
+           file://fix_for_automake_1.11.2.patch \
           "
 
 EXTRA_OECONF += "--with-libelf=${STAGING_DIR_TARGET} --without-rpm \
