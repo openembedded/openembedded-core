@@ -2,7 +2,7 @@ DESCRIPTION="Simon Tatham's Portable Puzzle Collection"
 HOMEPAGE="http://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
 
 DEPENDS = "gtk+ libxt"
-PR = "r1"
+PR = "r0"
 MOD_PV = "${@d.getVar('PV',1)[1:]}"
 
 LICENSE = "MIT"
@@ -11,8 +11,8 @@ LIC_FILES_CHKSUM = "file://LICENCE;md5=9928b60f3b78be315b7ab699c1b03ff5"
 # Upstream updates puzzles.tar.gz for the new release, so checksums seem to be changing regularly right now
 #SRC_URI = "svn://ixion.tartarus.org/main;module=puzzles;rev=${MOD_PV}"
 SRC_URI = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-${PV}.tar.gz"
-SRC_URI[md5sum] = "fd1b05c0e0cfb752c6136ce2e4562416"
-SRC_URI[sha256sum] = "512aa26a0d11867a815030449bb903861f75512725886a70eece387bd8240ddd"
+SRC_URI[md5sum] = "35e85cefb59d39cd22bf232673857727"
+SRC_URI[sha256sum] = "ae94dc8a654582c0cab61ce4699e25027ed720c06b411e5202144a5114fd338b"
 
 
 S = "${WORKDIR}/${BPN}-${PV}"
