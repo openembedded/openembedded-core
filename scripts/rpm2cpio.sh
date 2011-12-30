@@ -27,13 +27,13 @@ o=`expr $o + $hdrsize`
 EXTRACTOR="dd if=$pkg ibs=$o skip=1"
 
 COMPRESSION=`($EXTRACTOR |file -) 2>/dev/null`
-if echo $COMPRESSION |grep -q gzip; then
+if echo $COMPRESSION |grep -iq gzip; then
 	DECOMPRESSOR=gunzip
-elif echo $COMPRESSION |grep -q bzip2; then
+elif echo $COMPRESSION |grep -iq bzip2; then
 	DECOMPRESSOR=bunzip2
-elif echo $COMPRESSION |grep -q xz; then
+elif echo $COMPRESSION |grep -iq xz; then
 	DECOMPRESSOR=unxz
-elif echo $COMPRESSION |grep -q cpio; then
+elif echo $COMPRESSION |grep -iq cpio; then
 	DECOMPRESSOR=cat
 else
 	# Most versions of file don't support LZMA, therefore we assume
