@@ -1,0 +1,51 @@
+Upstream-Status: Backport
+
+The below patch is from
+http://cgit.freedesktop.org/xorg/lib/libpciaccess/commit/?id=a798395a1bfd9d06d40e2d8d14377a156c94429a
+It would appear in the next .tar.bz2 release.
+
+------------------------------
+
+commit a798395a1bfd9d06d40e2d8d14377a156c94429a
+Author: Daniel Drake <dsd@laptop.org>
+Date:   Fri Nov 25 12:28:48 2011 -0600
+
+    delete_io_handle: fix deletion of last handle
+    
+    When num_ios goes from 1 to 0, a realloc(ios, 0); call is made.
+    This is equivalent to free(ios) and NULL is returned.
+    
+    However, the previous logic in the code incorrectly discards this NULL
+    return value. When we next call new_io_handle(), realloc(ios, X) is
+    called with "ios" pointing to freed memory. This causes glibc to abort.
+    
+    Correct this logic to detect the 1-to-0 case and handle it correctly.
+    Other cases are unchanged; there is still value in checking the
+    return value from realloc() as it also returns NULL on error.
+    
+    Signed-off-by: Daniel Drake <dsd@laptop.org>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+diff --git a/src/common_io.c b/src/common_io.c
+index f1319f8..5b35e07 100644
+--- a/src/common_io.c
++++ b/src/common_io.c
+@@ -64,10 +64,15 @@ delete_io_handle(struct pci_io_handle *handle)
+         }
+     }
+ 
+-    new = realloc(ios, sizeof(struct pci_io_handle) * (num_ios - 1));
+-    if (new)
+-        ios = new;
+     num_ios--;
++    if (num_ios) {
++        new = realloc(ios, sizeof(struct pci_io_handle) * num_ios);
++        if (new)
++            ios = new;
++    } else {
++        free(ios);
++        ios = NULL;
++    }
+ }
+ 
+ _pci_hidden void
