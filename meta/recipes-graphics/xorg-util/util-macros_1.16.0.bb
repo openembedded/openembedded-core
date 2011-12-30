@@ -16,5 +16,5 @@ RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "c7f0c94126443f6744328a92d2b94cff"
-SRC_URI[sha256sum] = "db05c59c0e7843c398ed2847ba4b5bf54292499e5fcadbb7c38a445bf4347ab8"
+SRC_URI[md5sum] = "3f77f0b6452c677d4b5ce9feaea7d15e"
+SRC_URI[sha256sum] = "1387cec5c2e655811e9a60afee7bda1652f8cd97be6c89418566bcf934ff6935"
