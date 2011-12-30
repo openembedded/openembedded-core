@@ -342,11 +342,24 @@ def buildhistory_get_layers(d):
 
 
 buildhistory_commit() {
+	if [ ! -d ${BUILDHISTORY_DIR} ] ; then
+		# Code above that creates this dir never executed, so there can't be anything to commit
+		exit
+	fi
+
 	( cd ${BUILDHISTORY_DIR}/
-		git add ${BUILDHISTORY_DIR}/*
-		git commit ${BUILDHISTORY_DIR}/ -m "Build ${BUILDNAME} for machine ${MACHINE} configured for ${DISTRO} ${DISTRO_VERSION}" --author "${BUILDHISTORY_COMMIT_AUTHOR}" > /dev/null
-		if [ "${BUILDHISTORY_PUSH_REPO}" != "" ] ; then
-			git push -q ${BUILDHISTORY_PUSH_REPO}
+		# Initialise the repo if necessary
+		if [ ! -d .git ] ; then
+			git init -q
+		fi
+		# Ensure there are new/changed files to commit
+		repostatus=`git status --porcelain`
+		if [ "$repostatus" != "" ] ; then
+			git add ${BUILDHISTORY_DIR}/*
+			git commit ${BUILDHISTORY_DIR}/ -m "Build ${BUILDNAME} for machine ${MACHINE} configured for ${DISTRO} ${DISTRO_VERSION}" --author "${BUILDHISTORY_COMMIT_AUTHOR}" > /dev/null
+			if [ "${BUILDHISTORY_PUSH_REPO}" != "" ] ; then
+				git push -q ${BUILDHISTORY_PUSH_REPO}
+			fi
 		fi) || true
 }
 
