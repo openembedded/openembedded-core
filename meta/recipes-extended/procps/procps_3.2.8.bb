@@ -1,12 +1,12 @@
 require procps.inc
 
-PR = "r3"
+PR = "r4"
 
 inherit update-alternatives
 
 ALTERNATIVE_LINKS = "${bindir}/top ${bindir}/uptime ${bindir}/free ${bindir}/pkill ${bindir}/pmap \
                      ${base_bindir}/kill ${base_sbindir}/sysctl ${base_bindir}/ps"
-ALTERNATIVE_PRIORITY = "90"
+ALTERNATIVE_PRIORITY = "110"
 
 SRC_URI += "file://procmodule.patch \
             file://psmodule.patch \
