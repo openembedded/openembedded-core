@@ -3,6 +3,7 @@ Bump gettext macro numbers as required by newer gettext built by OE.
 Upstream-Status: Pending
 
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
 Index: texinfo-4.13/configure.ac
 ===================================================================
@@ -32,3 +33,29 @@ Index: texinfo-4.13/po/Makefile.in.in
  
  PACKAGE = @PACKAGE@
  VERSION = @VERSION@
+Index: texinfo-4.13/gnulib/m4/gnulib-comp.m4
+===================================================================
+--- texinfo-4.13.orig/gnulib/m4/gnulib-comp.m4
++++ texinfo-4.13/gnulib/m4/gnulib-comp.m4
+@@ -56,7 +56,7 @@ AC_DEFUN([gl_INIT],
+   gl_EXITFAIL
+   gl_GETOPT
+   dnl you must add AM_GNU_GETTEXT([external]) or similar to configure.ac.
+-  AM_GNU_GETTEXT_VERSION([0.17])
++  AM_GNU_GETTEXT_VERSION([0.18])
+   AC_SUBST([LIBINTL])
+   AC_SUBST([LTLIBINTL])
+   gl_FUNC_GETTIMEOFDAY
+Index: texinfo-4.13/gnulib/m4/po.m4
+===================================================================
+--- texinfo-4.13.orig/gnulib/m4/po.m4
++++ texinfo-4.13/gnulib/m4/po.m4
+@@ -29,7 +29,7 @@ AC_DEFUN([AM_PO_SUBDIRS],
+ 
+   dnl Release version of the gettext macros. This is used to ensure that
+   dnl the gettext macros and po/Makefile.in.in are in sync.
+-  AC_SUBST([GETTEXT_MACRO_VERSION], [0.17])
++  AC_SUBST([GETTEXT_MACRO_VERSION], [0.18])
+ 
+   dnl Perform the following tests also if --disable-nls has been given,
+   dnl because they are needed for "make dist" to work.
