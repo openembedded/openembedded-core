@@ -1,0 +1,36 @@
+Upstream-Status: Pending
+
+Fix makefile for multithreaded (make -j ) building.
+
+btrfsctl.c
+| i586-poky-linux-gcc  -m32   -march=i586 --sysroot=/intel/poky/builds/world/tmp/sysroots/qemux86 -Wp,-MMD,./.btrfsctl.o.d,-MT,btrfsctl.o -Wall -D_FILE_OFFSET_BITS=64 -D_FORTIFY_SOURCE=2 -O2 -pipe -g -feliminate-unused-debug-types -c btrfsctl.c
+| btrfsctl.c:37:21: fatal error: version.h: No such file or directory
+| compilation terminated.
+| btrfslabel.c:40:21: fatal error: version.h: No such file or directory
+| compilation terminated.
+
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+2012/01/02
+
+Index: git/Makefile
+===================================================================
+--- git.orig/Makefile
++++ git/Makefile
+@@ -26,14 +26,13 @@ else
+ 	check = ls
+ endif
+ 
+-.c.o:
++%.o: %.c version.h
+ 	$(check) $<
+ 	$(CC) $(DEPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c $<
+ 
++all: $(progs) manpages
+ 
+-all: version $(progs) manpages
+-
+-version:
++version.h: version.sh
+ 	bash version.sh
+ 
+ btrfs: $(objects) btrfs.o btrfs_cmds.o scrub.o
