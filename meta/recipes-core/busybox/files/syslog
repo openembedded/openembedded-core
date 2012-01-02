@@ -10,8 +10,8 @@
 
 set -e
 
-if [ -f /etc/syslog.conf ]; then
-	. /etc/syslog.conf
+if [ -f /etc/syslog-startup.conf ]; then
+	. /etc/syslog-startup.conf
 	LOG_LOCAL=0
 	LOG_REMOTE=0
 	for D in $DESTINATION; do
