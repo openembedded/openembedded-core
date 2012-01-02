@@ -5,8 +5,8 @@ Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
 Index: gnutls-2.12.14/lib/po/Makefile.in.in
 ===================================================================
---- gnutls-2.12.14.orig/lib/po/Makefile.in.in	2009-11-01 01:43:00.000000000 -0800
-+++ gnutls-2.12.14/lib/po/Makefile.in.in	2011-12-05 12:09:34.349552489 -0800
+--- gnutls-2.12.14.orig/lib/po/Makefile.in.in
++++ gnutls-2.12.14/lib/po/Makefile.in.in
 @@ -8,8 +8,8 @@
  # Please note that the actual code of GNU gettext is covered by the GNU
  # General Public License and is *not* in the public domain.
@@ -20,9 +20,9 @@ Index: gnutls-2.12.14/lib/po/Makefile.in.in
  VERSION = @VERSION@
 Index: gnutls-2.12.14/lib/m4/po.m4
 ===================================================================
---- gnutls-2.12.14.orig/lib/m4/po.m4	2011-12-05 12:12:34.000000000 -0800
-+++ gnutls-2.12.14/lib/m4/po.m4	2011-12-05 12:12:49.429552465 -0800
-@@ -29,7 +29,7 @@
+--- gnutls-2.12.14.orig/lib/m4/po.m4
++++ gnutls-2.12.14/lib/m4/po.m4
+@@ -29,7 +29,7 @@ AC_DEFUN([AM_PO_SUBDIRS],
  
    dnl Release version of the gettext macros. This is used to ensure that
    dnl the gettext macros and po/Makefile.in.in are in sync.
@@ -31,3 +31,16 @@ Index: gnutls-2.12.14/lib/m4/po.m4
  
    dnl Perform the following tests also if --disable-nls has been given,
    dnl because they are needed for "make dist" to work.
+Index: gnutls-2.12.14/lib/configure.ac
+===================================================================
+--- gnutls-2.12.14.orig/lib/configure.ac
++++ gnutls-2.12.14/lib/configure.ac
+@@ -39,7 +39,7 @@ AC_PROG_LIBTOOL
+ LIBGNUTLS_HOOKS
+ 
+ AM_GNU_GETTEXT([external])
+-AM_GNU_GETTEXT_VERSION([0.17])
++AM_GNU_GETTEXT_VERSION([0.18])
+ 
+ AC_C_BIGENDIAN
+ 
