@@ -30,7 +30,7 @@ require qt4_arch.inc
 
 # FIXME: make it work with "${STAGING_BINDIR_NATIVE}/pkg-config --cflags dbus-1"
 EXTRA_OECONF = "-prefix ${prefix} \
-                -qt-libjpeg -qt-gif -system-zlib \
+                -qt-libjpeg -system-zlib \
                 -no-libjpeg -no-libpng -no-libmng -no-libtiff \
                 -no-accessibility \
                 -no-cups \

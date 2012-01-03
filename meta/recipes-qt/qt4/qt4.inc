@@ -15,7 +15,7 @@ QT_GLFLAGS ?= ""
 
 QT_CONFIG_FLAGS += "-release -no-cups -reduce-relocations \
                     -shared -no-nas-sound -no-nis \
-                    -qt-gif -system-libjpeg -system-libpng -system-zlib \
+                    -system-libjpeg -system-libpng -system-zlib \
                     -no-pch -qdbus -stl -glib -phonon -webkit \
                     -xmlpatterns -no-rpath -qt3support -silent \
                     ${QT_SQL_DRIVER_FLAGS} \
@@ -160,7 +160,7 @@ FILES_${QT_BASE_NAME}-fonts-ttf-vera       = "${libdir}/fonts/Vera*.ttf"
 FILES_${QT_BASE_NAME}-fonts-ttf-dejavu     = "${libdir}/fonts/DejaVu*.ttf"
 FILES_${QT_BASE_NAME}-fonts-pfa            = "${libdir}/fonts/*.pfa"
 FILES_${QT_BASE_NAME}-fonts-pfb            = "${libdir}/fonts/*.pfb"
-FILES_${QT_BASE_NAME}-fonts-qpf            = "${libdir}/fonts/*.qpf"
+FILES_${QT_BASE_NAME}-fonts-qpf            = "${libdir}/fonts/*.qpf*"
 FILES_${QT_BASE_NAME}-fonts                = "${libdir}/fonts/README ${libdir}/fonts/fontdir"
 FILES_${QT_BASE_NAME}-linguist             = "${bindir}/*linguist* ${bindir}/lrelease ${bindir}/lupdate ${bindir}/lconvert ${bindir}/qm2ts"
 FILES_${QT_BASE_NAME}-linguist-dbg         = "${bindir}/.debug/*linguist* ${bindir}/.debug/lrelease ${bindir}/.debug/lupdate ${bindir}/.debug/lconvert ${bindir}/.debug/qm2ts"
@@ -190,7 +190,13 @@ do_configure() {
 		ln -sf linux-g++ mkspecs/${TARGET_OS}-oe-g++
 	fi
 
-	cp -f ${WORKDIR}/g++.conf ${WORKDIR}/linux.conf mkspecs/common/
+	if [ -f mkspecs/common/g++-unix.conf ] ; then
+		# mkspecs were refactored for 4.8.0
+		cp -f ${WORKDIR}/g++.conf mkspecs/common/g++-unix.conf
+	else
+		cp -f ${WORKDIR}/g++.conf mkspecs/common/g++.conf
+	fi
+	cp -f ${WORKDIR}/linux.conf mkspecs/common/
 
 	echo "[Paths]"                                 > $QT_CONF_PATH
 	echo "Prefix=${prefix}/"                      >> $QT_CONF_PATH

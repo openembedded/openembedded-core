@@ -22,7 +22,7 @@ S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 EXTRA_OECONF = "-prefix ${prefix} \
                 -L ${STAGING_LIBDIR_NATIVE} \
                 -I ${STAGING_INCDIR_NATIVE} \
-                -qt-libjpeg -qt-gif -system-zlib \
+                -qt-libjpeg -system-zlib \
                 -no-libjpeg -no-libpng -no-libmng -no-libtiff \
                 -no-accessibility \
                 -no-cups \
@@ -39,6 +39,9 @@ EXTRA_OECONF = "-prefix ${prefix} \
 EXTRA_OEMAKE = " "
 
 do_configure() {
+	# Avoid problems with Qt 4.8.0 configure setting QMAKE_LINK from LD (since we want the linker to be g++)
+	unset LD
+
 	(echo o; echo yes) | ./configure ${EXTRA_OECONF} || die "Configuring qt failed. EXTRA_OECONF was ${EXTRA_OECONF}"
 }
 
@@ -78,7 +81,13 @@ do_install() {
 	install -d ${D}${datadir}/qt4/
 	cp -PfR mkspecs ${D}${datadir}/qt4/
 	ln -sf linux-g++ ${D}${datadir}/qt4/mkspecs/${BUILD_OS}-oe-g++
-	cp -f ${WORKDIR}/g++.conf ${WORKDIR}/linux.conf ${D}${datadir}/qt4/mkspecs/common/
+	if [ -f ${D}${datadir}/qt4/mkspecs/common/g++-unix.conf ] ; then
+		# mkspecs were refactored for 4.8.0
+		cp -f ${WORKDIR}/g++.conf ${D}${datadir}/qt4/mkspecs/common/g++-unix.conf
+	else
+		cp -f ${WORKDIR}/g++.conf ${D}${datadir}/qt4/mkspecs/common/g++.conf
+	fi
+	cp -f ${WORKDIR}/linux.conf ${D}${datadir}/qt4/mkspecs/common/
 
 	install -m 0644 tools/porting/src/q3porting.xml ${D}${datadir}/qt4/
 

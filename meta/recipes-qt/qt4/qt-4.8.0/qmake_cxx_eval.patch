@@ -1,0 +1,20 @@
+Allow expansion of $(...) references in QMAKE_CXX (currently its value
+is $(OE_QMAKE_CXX)) in order to allow compiler version check to succeed
+which allows WebKit to be enabled.
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+Index: qt-everywhere-opensource-src-4.8.0/configure
+===================================================================
+--- qt-everywhere-opensource-src-4.8.0.orig/configure
++++ qt-everywhere-opensource-src-4.8.0/configure
+@@ -3322,7 +3322,8 @@ else
+     CFG_FRAMEWORK=no
+ fi
+ 
+-QMAKE_CONF_COMPILER=`getQMakeConf "$XQMAKESPEC" | grep "^QMAKE_CXX[^_A-Z0-9]" | sed "s,.* *= *\(.*\)$,\1," | tail -1`
++QMAKE_CONF_COMPILER=`getQMakeConf "$XQMAKESPEC" | grep "^QMAKE_CXX[^_A-Z0-9]" | sed "s,.* *= *\(.*\)$,\1," | sed -n 's/$[(]\([0-9a-zA-Z_]*\)[)]/$\1/pg' | tail -1`
++QMAKE_CONF_COMPILER=`eval "echo $QMAKE_CONF_COMPILER"`
+ TEST_COMPILER="$CXX"
+ 
+ [ -z "$TEST_COMPILER" ] && TEST_COMPILER=$QMAKE_CONF_COMPILER
