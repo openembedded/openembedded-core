@@ -16,6 +16,7 @@ PREFERRED_PROVIDER_xf86-video-intel ?= "xf86-video-intel"
 #
 VIRTUAL-RUNTIME_update-alternatives ?= "update-alternatives-cworth"
 VIRTUAL-RUNTIME_apm ?= "apm"
+VIRTUAL-RUNTIME-alsa-state ?= "alsa-state"
 
 #
 # Default recipe providers
