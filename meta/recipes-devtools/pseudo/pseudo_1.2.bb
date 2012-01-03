@@ -1,6 +1,6 @@
 require pseudo.inc
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://www.yoctoproject.org/downloads/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://oe-config.patch \
