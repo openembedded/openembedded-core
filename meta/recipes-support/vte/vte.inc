@@ -6,9 +6,11 @@ RDEPENDS_libvte = "vte-termcap"
 
 inherit gnome
 
-EXTRA_OECONF = "--disable-gtk-doc --disable-python"
+SRC_URI += "file://introspection.patch"
+
+EXTRA_OECONF = "--disable-gtk-doc --disable-python --disable-introspection"
 
 PACKAGES =+ "libvte vte-termcap"
 FILES_libvte = "${libdir}/*.so.* ${libexecdir}/gnome-pty-helper"
 FILES_vte-dbg =+ ${libexecdir}/.debug"
-FILES_vte-termcap = "${datadir}/vte/termcap"
+FILES_vte-termcap = "${datadir}/vte/termcap-0.0"
