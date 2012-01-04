@@ -7,12 +7,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c46082167a314d785d012a244748d803 \
                     file://include/valgrind.h;beginline=1;endline=56;md5=aee56014c1dd64260a59fd4df38752f6 \
                     file://COPYING.DOCS;md5=8fdeb5abdb235a08e76835f8f3260215"
 DEPENDS = "virtual/libx11"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
 	   file://fix_issue_caused_by_ccache.patch \
            file://fix_unsupporting_kernel_3.patch \
            file://fixed-perl-path.patch \
+           file://fix_for_automake_1.11.2.patch \
            file://configure-fix.patch"
 
 SRC_URI[md5sum] = "a855fda56edf05614f099dca316d1775"

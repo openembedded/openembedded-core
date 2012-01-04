@@ -1,0 +1,45 @@
+Upstream-Status: Pending
+
+automake version 1.11.2 has made use of dir variables more strict.
+the use of pkglibdir with DATA var results in automake errors.
+
+This commits uses pkgdatadir var instead of pkglibdir to avoid 
+the strict check errors.
+
+RP 2012/1/4
+
+Index: valgrind-3.7.0/Makefile.am
+===================================================================
+--- valgrind-3.7.0.orig/Makefile.am	2012-01-04 15:55:07.034044860 +0000
++++ valgrind-3.7.0/Makefile.am	2012-01-04 15:55:55.034035120 +0000
+@@ -61,7 +61,7 @@
+ # default.supp, as it is built from the base .supp files at compile-time.
+ dist_noinst_DATA = $(SUPP_FILES)
+ 
+-pkglib_DATA = default.supp
++pkgdata_DATA = default.supp
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = valgrind.pc
+Index: valgrind-3.7.0/coregrind/Makefile.am
+===================================================================
+--- valgrind-3.7.0.orig/coregrind/Makefile.am	2012-01-04 15:55:02.090043851 +0000
++++ valgrind-3.7.0/coregrind/Makefile.am	2012-01-04 15:55:30.270044097 +0000
+@@ -495,7 +495,7 @@
+ 	m_gdbserver/powerpc-altivec64l.xml
+ 
+ # so as to make sure these get copied into the install tree
+-pkglib_DATA  = $(GDBSERVER_XML_FILES)
++pkgdata_DATA  = $(GDBSERVER_XML_FILES)
+ 
+ # so as to make sure these get copied into the tarball
+ EXTRA_DIST  += $(GDBSERVER_XML_FILES)
+@@ -506,7 +506,7 @@
+ 
+ all-local: inplace-noinst_PROGRAMS inplace-noinst_DSYMS
+ 	mkdir -p $(inplacedir); \
+-	for f in $(pkglib_DATA); do \
++	for f in $(pkgdata_DATA); do \
+ 	  rm -f $(inplacedir)/$$f; \
+ 	  ln -f -s ../$(subdir)/$$f $(inplacedir); \
+ 	done
