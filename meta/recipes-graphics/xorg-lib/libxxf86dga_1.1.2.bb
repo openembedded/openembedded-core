@@ -8,7 +8,10 @@ allows relative mouse reporting, et al.  It is mainly used by games and \
 emulators for games."
 
 DEPENDS += "libxext xf86dgaproto"
-PR = "r1"
+PR = "r2"
+
+SRC_URI += "file://libxxf86dga-1.1.2_fix_for_x32.patch"
+
 PE = "1"
 
 XORG_PN = "libXxf86dga"
