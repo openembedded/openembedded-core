@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f2e071ab72978431b294a0d696327421 \
 
 # cairo >= 1.8.8
 DEPENDS = "cairo"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://cairographics.org/releases/py2cairo-${PV}.tar.bz2"
 
@@ -21,11 +21,11 @@ S = "${WORKDIR}/py2cairo-${PV}"
 inherit distutils pkgconfig
 
 do_configure() {
-	BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} ./waf configure --prefix=${D}${prefix}
+	BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} ./waf configure --prefix=${D}${prefix} --libdir=${D}${libdir}
 }
 
 do_compile() {
-	./waf build
+	./waf build ${PARALLEL_MAKE}
 }
 
 do_install() {
