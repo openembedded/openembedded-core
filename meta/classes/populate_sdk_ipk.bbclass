@@ -20,6 +20,11 @@ populate_sdk_ipk() {
 	export INSTALL_CONF_IPK="${IPKGCONF_TARGET}"
 	export INSTALL_PACKAGES_IPK="${TOOLCHAIN_TARGET_TASK}"
 
+	export D=${INSTALL_ROOTFS_IPK}
+	export OFFLINE_ROOT=${INSTALL_ROOTFS_IPK}
+	export IPKG_OFFLINE_ROOT=${INSTALL_ROOTFS_IPK}
+	export OPKG_OFFLINE_ROOT=${IPKG_OFFLINE_ROOT}
+
 	package_install_internal_ipk
 
 	#install host
