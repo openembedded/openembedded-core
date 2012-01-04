@@ -1,0 +1,47 @@
+Upstream-Status: pending
+
+Pulled the patch from gentoo: from here:
+http://sources2.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/dev-libs/libevent/files/libevent-2.0.16-sysctl.patch?revision=1.1
+
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+2012/01/04
+
+From 358c745e5432f7648b6f8b3188f32b5551cbf9d6 Mon Sep 17 00:00:00 2001
+From: Mike Frysinger <vapier@gentoo.org>
+Date: Thu, 8 Dec 2011 11:39:48 -0500
+Subject: [PATCH] check for sysctl before we use it
+
+Not all C libraries under Linux support the sysctl() func.
+---
+ arc4random.c |    2 +-
+ configure.in |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arc4random.c b/arc4random.c
+index 4833169..ef10fa8 100644
+--- a/arc4random.c
++++ b/arc4random.c
+@@ -166,7 +166,7 @@ arc4_seed_win32(void)
+ }
+ #endif
+ 
+-#if defined(_EVENT_HAVE_SYS_SYSCTL_H)
++#if defined(_EVENT_HAVE_SYS_SYSCTL_H) && defined(_EVENT_HAVE_SYSCTL)
+ #if _EVENT_HAVE_DECL_CTL_KERN && _EVENT_HAVE_DECL_KERN_RANDOM && _EVENT_HAVE_DECL_RANDOM_UUID
+ #define TRY_SEED_SYSCTL_LINUX
+ static int
+diff --git a/configure.in b/configure.in
+index da08cf4..4e24444 100644
+--- a/configure.in
++++ b/configure.in
+@@ -267,7 +267,7 @@ AC_HEADER_TIME
+ 
+ dnl Checks for library functions.
+ AC_CHECK_FUNCS([gettimeofday vasprintf fcntl clock_gettime strtok_r strsep])
+-AC_CHECK_FUNCS([getnameinfo strlcpy inet_ntop inet_pton signal sigaction strtoll inet_aton pipe eventfd sendfile mmap splice arc4random arc4random_buf issetugid geteuid getegid getprotobynumber setenv unsetenv putenv])
++AC_CHECK_FUNCS([getnameinfo strlcpy inet_ntop inet_pton signal sigaction strtoll inet_aton pipe eventfd sendfile mmap splice arc4random arc4random_buf issetugid geteuid getegid getprotobynumber setenv unsetenv putenv sysctl])
+ 
+ AC_CACHE_CHECK(
+     [for getaddrinfo],
+-- 
+1.7.6.1
