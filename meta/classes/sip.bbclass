@@ -1,6 +1,8 @@
 # Build Class for Sip based Python Bindings
 # (C) Michael 'Mickey' Lauer <mickey@Vanille.de>
 #
+STAGING_SIPDIR ?= "${STAGING_DATADIR_NATIVE}/sip"
+
 DEPENDS  =+ "sip-native"
 RDEPENDS += "python-sip"
 
