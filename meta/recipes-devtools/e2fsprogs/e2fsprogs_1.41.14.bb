@@ -1,6 +1,6 @@
 require e2fsprogs.inc
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI += "file://quotefix.patch \
             file://acinclude.m4"
@@ -11,9 +11,9 @@ SRC_URI[sha256sum] = "3f8ac1fedd7c4bec480afcbe4acabdd4ac59ec0446a0fd50c8975cd0aa
 
 PARALLEL_MAKE = ""
 
-EXTRA_OECONF += " --sbindir=${base_sbindir} --enable-elf-shlibs --disable-libuuid --disable-uuidd"
-EXTRA_OECONF_darwin = "--sbindir=${base_sbindir} --enable-bsd-shlibs"
-EXTRA_OECONF_darwin8 = "--sbindir=${base_sbindir} --enable-bsd-shlibs"
+EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-elf-shlibs --disable-libuuid --disable-uuidd"
+EXTRA_OECONF_darwin = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-bsd-shlibs"
+EXTRA_OECONF_darwin8 = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-bsd-shlibs"
 
 do_configure_prepend () {
 	cp ${WORKDIR}/acinclude.m4 ${S}/
@@ -28,9 +28,16 @@ do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 	oe_runmake 'DESTDIR=${D}' install-libs
 	# We use blkid from util-linux now so remove from here
-	rm -f ${D}${libdir}/libblkid*
+	rm -f ${D}${base_libdir}/libblkid*
 	rm -rf ${D}${includedir}/blkid
-	rm -f ${D}${libdir}/pkgconfig/blkid.pc
+	rm -f ${D}${base_libdir}/pkgconfig/blkid.pc
+}
+
+do_install_append () {
+	# e2initrd_helper and the pkgconfig files belong in libdir
+	install -d ${D}${libdir}
+	mv ${D}${base_libdir}/e2initrd_helper ${D}${libdir}
+	mv ${D}${base_libdir}/pkgconfig ${D}${libdir}
 }
 
 # blkid used to be part of e2fsprogs but is useful outside, add it
@@ -47,10 +54,10 @@ FILES_e2fsprogs-e2fsck = "${base_sbindir}/e2fsck ${base_sbindir}/fsck.ext*"
 FILES_e2fsprogs-mke2fs = "${base_sbindir}/mke2fs ${base_sbindir}/mkfs.ext* ${sysconfdir}/mke2fs.conf"
 FILES_e2fsprogs-tune2fs = "${base_sbindir}/tune2fs ${base_sbindir}/e2label ${base_sbindir}/findfs"
 FILES_e2fsprogs-badblocks = "${base_sbindir}/badblocks"
-FILES_libcomerr = "${libdir}/libcom_err.so.*"
-FILES_libss = "${libdir}/libss.so.*"
-FILES_libe2p = "${libdir}/libe2p.so.*"
-FILES_libext2fs = "${libdir}/e2initrd_helper ${libdir}/libext2fs.so.*"
-FILES_${PN}-dev += "${datadir}/*/*.awk ${datadir}/*/*.sed"
+FILES_libcomerr = "${base_libdir}/libcom_err.so.*"
+FILES_libss = "${base_libdir}/libss.so.*"
+FILES_libe2p = "${base_libdir}/libe2p.so.*"
+FILES_libext2fs = "${base_libdir}/e2initrd_helper ${libdir}/libext2fs.so.*"
+FILES_${PN}-dev += "${datadir}/*/*.awk ${datadir}/*/*.sed ${base_libdir}/*.so"
 
 BBCLASSEXTEND = "native"
