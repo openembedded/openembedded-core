@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+
+# Report significant differences in the buildhistory repository since a specific revision
+#
+# Copyright (C) 2012 Intel Corporation
+# Author: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+import sys
+import os.path
+
+# Ensure PythonGit is installed (buildhistory_analysis needs it)
+try:
+    import git
+except ImportError:
+    print("Please install PythonGit 0.3.1 or later in order to use this script")
+    sys.exit(1)
+
+
+def main():
+    if (len(sys.argv) < 3):
+        print("Report significant differences in the buildhistory repository")
+        print("Syntax: %s <buildhistory-path> <since-revision> [to-revision]" % os.path.basename(sys.argv[0]))
+        print("If to-revision is not specified, it defaults to HEAD")
+        sys.exit(1)
+
+    # Set path to OE lib dir so we can import the buildhistory_analysis module
+    newpath = os.path.abspath(os.path.dirname(os.path.abspath(sys.argv[0])) + '/../meta/lib')
+    sys.path = sys.path + [newpath]
+    import oe.buildhistory_analysis
+
+    if len(sys.argv) > 3:
+        torev = sys.argv[3]
+    else:
+        torev = 'HEAD'
+    changes = oe.buildhistory_analysis.process_changes(sys.argv[1], sys.argv[2], torev)
+    for chg in changes:
+        print('%s' % chg)
+
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
