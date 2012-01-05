@@ -27,11 +27,14 @@ S = "${WORKDIR}/glib-${PV}"
 
 EXTRA_OECONF = "--disable-debug --enable-included-printf=no --disable-dtrace"
 EXTRA_OECONF_virtclass-native = "--disable-dtrace --disable-systemtap"
-EXTRA_OECONF_linuxstdbase = "--enable-included-printf=no"
+EXTRA_OECONF_linuxstdbase = "--enable-included-printf=no --disable-dtrace"
 
 FILES_${PN} = "${libdir}/lib*${SOLIBS} ${sysconfdir}/bash_completion.d ${datadir}/glib-2.0/schemas"
-FILES_${PN}-dev += "${libdir}/glib-2.0/include"
-FILES_${PN}-dbg += "${datadir}/glib-2.0/gdb ${datadir}/gdb"
+FILES_${PN}-dev += "${libdir}/glib-2.0/include \
+                    ${libdir}/gio/modules/lib*${SOLIBSDEV} \
+                    ${libdir}/gio/modules/*.la"
+FILES_${PN}-dbg += "${datadir}/glib-2.0/gdb ${datadir}/gdb \
+                    ${libdir}/gio/modules/.debug"
 
 ARM_INSTRUCTION_SET = "arm"
 USE_NLS = "yes"
