@@ -1,3 +1,11 @@
+Upstream-Status:  Inappropriate [configuration]
+
+Get this m4 file from introspection, so that we can configure without
+depending on the introspection package.
+
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+2011/01/03
+
 Index: vte-0.28.2/m4/introspection.m4
 ===================================================================
 --- /dev/null
