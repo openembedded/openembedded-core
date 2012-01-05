@@ -182,19 +182,8 @@ python buildhistory_emit_pkghistory() {
 
 		write_pkghistory(pkginfo, d)
 
-		if lastversion:
-			check_pkghistory(pkginfo, lastversion)
-
 		write_latestlink(pkg, pe, pv, pr, d)
 }
-
-
-def check_pkghistory(pkginfo, lastversion):
-
-	bb.debug(2, "Checking package history")
-	# RDEPENDS removed?
-	# PKG changed?
-	# Each file list of each package for file removals?
 
 
 def write_recipehistory(rcpinfo, d):
