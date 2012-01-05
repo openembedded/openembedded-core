@@ -4,6 +4,8 @@ which allows WebKit to be enabled.
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 
+Upstream-Status: Pending
+
 Index: qt-everywhere-opensource-src-4.8.0/configure
 ===================================================================
 --- qt-everywhere-opensource-src-4.8.0.orig/configure
