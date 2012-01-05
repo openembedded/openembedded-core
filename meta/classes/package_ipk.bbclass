@@ -72,8 +72,10 @@ package_tryout_install_multilib_ipk() {
 		local ipkg_args="-f ${INSTALL_CONF_IPK} -o ${target_rootfs} --force_overwrite"
 		local selected_pkg=""
 		local pkgname_prefix="${item}-"
+		local pkgname_len=${#pkgname_prefix}
 		for pkg in ${INSTALL_PACKAGES_MULTILIB_IPK}; do
-			if [ ${pkg:0:${#pkgname_prefix}} == ${pkgname_prefix} ]; then
+			local pkgname=$(echo $pkg | awk -v var=$pkgname_len '{ pkgname=substr($1, 1, var - 1); print pkgname; }' )
+			if [ ${pkgname} = ${pkgname_prefix} ]; then
 			    selected_pkg="${selected_pkg} ${pkg}"
 			fi
 		done
@@ -94,7 +96,9 @@ split_multilib_packages() {
 		is_multilib=0
 		for item in ${MULTILIB_VARIANTS}; do
 			local pkgname_prefix="${item}-"
-			if [ ${pkg:0:${#pkgname_prefix}} == ${pkgname_prefix} ]; then
+			local pkgname_len=${#pkgname_prefix}
+			local pkgname=$(echo $pkg | awk -v var=$pkgname_len '{ pkgname=substr($1, 1, var - 1); print pkgname; }' )
+			if [ ${pkgname} = ${pkgname_prefix} ]; then
 				is_multilib=1
 				break
 			fi

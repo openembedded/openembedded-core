@@ -60,7 +60,7 @@ mklibs_optimize_image_doit() {
 mklibs_optimize_image() {
 	for img in ${MKLIBS_OPTIMIZED_IMAGES}
 	do
-		if [ "${img}" == "${PN}" ] || [ "${img}" == "all" ]
+		if [ "${img}" = "${PN}" ] || [ "${img}" = "all" ]
 		then
 			mklibs_optimize_image_doit
 			break
