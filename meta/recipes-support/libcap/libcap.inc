@@ -21,6 +21,8 @@ do_configure() {
 	sed -e 's,BUILD_CFLAGS ?=,BUILD_CFLAGS := $(BUILD_CFLAGS),' -i Make.Rules
 }
 
+BUILD_LDFLAGS_virtclass_native += "-Wl,rpath=${base_libdir}"
+
 EXTRA_OEMAKE = " \
   LIBATTR=yes \
   PAM_CAP=${@base_contains('DISTRO_FEATURES', 'pam', 'yes', 'no', d)} \
@@ -42,8 +44,17 @@ do_install() {
 	oe_runmake install DESTDIR="${D}" prefix="${prefix}"
 }
 
+do_install_append() {
+	# Move the library to base_libdir
+	install -d ${D}${base_libdir}
+	mv ${D}${libdir}/* ${D}${base_libdir}
+	rmdir ${D}${libdir}
+}
+
+FILES_${PN}-dev += "${base_libdir}/*.so"
+
 # pam files
-FILES_${PN} += "${libdir}/security/*.so"
-FILES_${PN}-dbg += "${libdir}/security/.debug/*.so"
+FILES_${PN} += "${base_libdir}/security/*.so"
+FILES_${PN}-dbg += "${base_libdir}/security/.debug/*.so"
 
 BBCLASSEXTEND = "native"
