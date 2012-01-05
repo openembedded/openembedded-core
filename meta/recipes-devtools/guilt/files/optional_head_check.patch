@@ -25,6 +25,8 @@ Other modes such as pop or refresh can run into problems when
 the HEAD commit isn't tracked or expected, so they should remained 
 checked.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
 
 ---

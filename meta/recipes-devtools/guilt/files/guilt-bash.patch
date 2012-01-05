@@ -9,6 +9,8 @@ in as /bin/sh makes the problem go away.  So here we change the guilt
 scripts to explicitly call for bash to ensure we don't have a similar
 issue after deployment.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 
 ---

@@ -5,6 +5,8 @@ Some of the git commands that are always called will report errors
 unecesarility in this scenario. This adds a variable that will inhibit
 those problematic calls
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by <bruce.ashfield@windriver.com>
 
 ---

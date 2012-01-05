@@ -8,6 +8,8 @@ are generated.
 If patches cannot be exported, fall back to importing 
 commits via a more custom method.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
 
 ---

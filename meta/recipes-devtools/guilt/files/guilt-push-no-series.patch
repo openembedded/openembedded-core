@@ -4,6 +4,8 @@ If a series file becomes mangled and a patch name appears in there
 more than once, then the guilt-push will fail a horrible and
 incomprehensible death.  Make it fail in a sensible way.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 
 ---

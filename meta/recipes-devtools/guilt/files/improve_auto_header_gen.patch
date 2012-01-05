@@ -4,6 +4,8 @@ Patches that do not have a proper header are encountered when generating
 a tree. This improves the detection of these patches and generates a sane
 header so the eventual commit will be coherent
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
 
 ---

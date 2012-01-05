@@ -2,6 +2,8 @@ guilt: add support for pushing and tagging
 
 It can be handy to push AND tag at the same time.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
 
 ---

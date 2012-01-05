@@ -12,6 +12,8 @@ This change does three things:
   - enhances the header detection and creation of patches
     as they are pushed onto the tree.
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
 
 ---

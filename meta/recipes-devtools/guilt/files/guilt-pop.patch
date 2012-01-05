@@ -3,6 +3,8 @@ guilt: pop and delete tags
 Add support for popping to a tag and the ability to delete
 a tag while popping from the tree
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
 
 ---

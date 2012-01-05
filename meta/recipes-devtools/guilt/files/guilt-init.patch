@@ -1,5 +1,7 @@
 guilt: allow previously initialized branches to be re-initialized
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
 
 ---

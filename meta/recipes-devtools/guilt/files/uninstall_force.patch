@@ -1,5 +1,7 @@
 guilt: force removal when uninstalling
 
+Upstream-Status: Inappropriate [oe-specific]
+
 Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
 
 --- a/uninstall.orig
