@@ -158,7 +158,7 @@ python buildhistory_emit_pkghistory() {
 			last_pr = lastversion.pr
 			r = bb.utils.vercmp((pe, pv, pr), (last_pe, last_pv, last_pr))
 			if r < 0:
-				bb.fatal("Package version for package %s went backwards which would break package feeds from (%s:%s-%s to %s:%s-%s)" % (pkg, last_pe, last_pv, last_pr, pe, pv, pr))
+				bb.error("Package version for package %s went backwards which would break package feeds from (%s:%s-%s to %s:%s-%s)" % (pkg, last_pe, last_pv, last_pr, pe, pv, pr))
 
 		pkginfo = PackageInfo(pkg)
 		pkginfo.pe = pe
