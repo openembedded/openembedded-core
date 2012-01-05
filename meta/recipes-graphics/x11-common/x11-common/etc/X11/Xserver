@@ -18,14 +18,6 @@ fi
 
 . /etc/profile
 
-module_id() {
-    ## used to read from assets, but sometimes assets is corrupted
-    # grep "Module ID" /proc/hal/assets | sed "s/.*://"
-    ## used to read from /proc/hal/model, but that is removed in 2.6
-    # echo ' iPAQ' `cat /proc/hal/model`
-    awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
-}
-
 ARGS=" -br -pn"
 
 if [ "$XSERVER" != "/usr/bin/Xorg" ]; then
@@ -43,22 +35,6 @@ if [ "$XSERVER" != "/usr/bin/Xorg" ]; then
         if [ -n "$TSLIB_TSDEVICE" ]; then
           ARGS="$ARGS -mouse tslib"
         fi
-
-        # start off server in conventional location.
-        case `module_id` in
-                "Generic OMAP1510/1610/1710")
-                        ARGS="$ARGS -mouse /dev/input/event0" ;;
-                "Compulab CM-x270")
-                        #modprobe mbxfb
-                        #ARGS="$ARGS -fb /dev/fb1"
-                        ;;
-                "Nokia N800")
-                        ARGS="$ARGS -mouse tslib" ;;
-                "Nokia 770")
-                        ARGS="$ARGS -mouse tslib" ;;
-                *)
-                        ;;
-        esac
 
         ARGS="$ARGS -screen ${DISPLAY_WIDTH_PIXELS}x${DISPLAY_HEIGHT_PIXELS}@${DISPLAY_ORIENTATION}x${DISPLAY_BPP}"
 
