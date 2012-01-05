@@ -36,9 +36,10 @@ PATHFIXPATCH_virtclass-nativesdk = ""
 
 SRC_URI += "${PATHFIXPATCH} \
 	    file://prefer-cpio-over-pax-for-ustar-archives.patch \
-	    file://python-libdir.patch"
+	    file://python-libdir.patch \
+            file://automake_1.11.2_fix_for_pkglibexec_SCRIPTS.patch"
 
-PR = "r0"
+PR = "r1"
 SRC_URI[md5sum] = "18194e804d415767bae8f703c963d456"
 SRC_URI[sha256sum] = "4f46d1f9380c8a3506280750f630e9fc915cb1a435b724be56b499d016368718"
 
