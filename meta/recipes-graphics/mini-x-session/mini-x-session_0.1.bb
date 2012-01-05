@@ -16,7 +16,7 @@ inherit update-alternatives
 ALTERNATIVE_NAME = "x-session-manager"
 ALTERNATIVE_LINK = "${bindir}/x-session-manager"
 ALTERNATIVE_PATH = "${bindir}/mini-x-session"
-ALTERNATIVE_PRIORITY = "10"
+ALTERNATIVE_PRIORITY = "50"
 
 do_install() {
 	install -d ${D}/${bindir}

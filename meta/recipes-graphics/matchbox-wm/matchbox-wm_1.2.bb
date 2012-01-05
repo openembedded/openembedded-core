@@ -2,7 +2,7 @@ SECTION = "x11/wm"
 DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPLv2.0+"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxcomposite libxfixes xdamage libxrender startup-notification expat"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://matchbox-project.org/sources/matchbox-window-manager/1.2/matchbox-window-manager-${PV}.tar.bz2 \
            file://configure_fix.patch \
@@ -11,7 +11,7 @@ SRC_URI = "http://matchbox-project.org/sources/matchbox-window-manager/1.2/match
 
 S = "${WORKDIR}/matchbox-window-manager-${PV}"
 
-inherit autotools pkgconfig update-alternatives
+inherit autotools pkgconfig
 
 FILES_${PN} = "${bindir}/* \
 	       ${datadir}/matchbox \
@@ -19,11 +19,6 @@ FILES_${PN} = "${bindir}/* \
 	       ${datadir}/themes/blondie/matchbox \
 	       ${datadir}/themes/Default/matchbox \
 	       ${datadir}/themes/MBOpus/matchbox"
-
-ALTERNATIVE_NAME = "x-session-manager"
-ALTERNATIVE_LINK = "${bindir}/x-session-manager"
-ALTERNATIVE_PATH = "${bindir}/matchbox-session"
-ALTERNATIVE_PRIORITY = "10"
 
 EXTRA_OECONF = " --enable-startup-notification \
                  --disable-xrm \
