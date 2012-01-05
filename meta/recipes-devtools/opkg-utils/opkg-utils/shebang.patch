@@ -1,0 +1,46 @@
+Use python via the PATH, rather than hardcoding /usr/bin/python
+
+Upstream-Status: Pending
+
+Signed-off-by: Christopher Larson <kergoth@gmail.com>
+
+--- opkg-utils.orig/opkg-list-fields
++++ opkg-utils/opkg-list-fields
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/env python
+ 
+ import sys, opkg
+ 
+--- opkg-utils.orig/opkg-make-index
++++ opkg-utils/opkg-make-index
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/env python
+ 
+ import sys, os, posixpath
+ from glob import glob
+--- opkg-utils.orig/opkg-show-deps
++++ opkg-utils/opkg-show-deps
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/env python
+ 
+ import sys, os, posixpath
+ from glob import glob
+--- opkg-utils.orig/opkg-unbuild
++++ opkg-utils/opkg-unbuild
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/env python
+ 
+ import sys, os, re
+ 
+--- opkg-utils.orig/opkg-update-index
++++ opkg-utils/opkg-update-index
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2.1
++#!/usr/bin/env python
+ 
+ import sys, os
+ from glob import glob
