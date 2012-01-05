@@ -6,10 +6,9 @@ SECTION = "console/utils"
 DEPENDS = "ncurses glib-2.0"
 RDEPENDS_${PN} = "ncurses-terminfo"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2"
-SRC_URI += "file://fix_for_automake_1.11.2.patch"
 
 SRC_URI[md5sum] = "7d60c87d87b359831d976fa28034935e"
 SRC_URI[sha256sum] = "8f9bd09750c65a7786197a8f7e5a10a6dabf8c8737c564079ca393d8ecaf944d"
