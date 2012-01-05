@@ -2,12 +2,11 @@ Upstream-Status: Inappropriate [embedded specific]
 
 # The proper prefix is inside our staging area.
 # Signed-Off: Michael 'Mickey' Lauer <mickey@vanille-media.de>
+# Signed-off-by: Phil Blundell <philb@gnu.org>
 
-Index: Python-2.6.6/Lib/distutils/sysconfig.py
-===================================================================
---- Python-2.6.6.orig/Lib/distutils/sysconfig.py
-+++ Python-2.6.6/Lib/distutils/sysconfig.py
-@@ -19,8 +19,8 @@ import sys
+--- Python-2.6.6/Lib/distutils/sysconfig.py.orig	2012-01-03 14:02:03.027005296 +0000
++++ Python-2.6.6/Lib/distutils/sysconfig.py	2012-01-03 14:02:31.517601081 +0000
+@@ -19,8 +19,8 @@
  from distutils.errors import DistutilsPlatformError
  
  # These are needed in a couple of spots, so just compute them once.
@@ -18,19 +17,16 @@ Index: Python-2.6.6/Lib/distutils/sysconfig.py
  
  # Path to the base directory of the project. On Windows the binary may
  # live in project/PCBuild9.  If we're dealing with an x64 Windows build,
-@@ -70,7 +70,10 @@ def get_python_inc(plat_specific=0, pref
+@@ -70,7 +70,7 @@
      sys.exec_prefix -- i.e., ignore 'plat_specific'.
      """
      if prefix is None:
 -        prefix = plat_specific and EXEC_PREFIX or PREFIX
-+        if plat_specific:
-+            prefix = plat_specific and os.environ['STAGING_INCDIR'].rstrip('include')
-+        else:
-+            prefix = plat_specific and EXEC_PREFIX or PREFIX
++        prefix = os.environ['STAGING_INCDIR'].rstrip('include')
  
      if os.name == "posix":
          if python_build:
-@@ -115,12 +118,16 @@ def get_python_lib(plat_specific=0, stan
+@@ -115,12 +115,16 @@
      If 'prefix' is supplied, use it instead of sys.prefix or
      sys.exec_prefix -- i.e., ignore 'plat_specific'.
      """
@@ -49,7 +45,7 @@ Index: Python-2.6.6/Lib/distutils/sysconfig.py
          if standard_lib:
              return libpython
          else:
-@@ -216,7 +223,7 @@ def get_config_h_filename():
+@@ -216,7 +220,7 @@
      else:
          # The name of the config.h file changed in 2.2
          config_h = 'pyconfig.h'
@@ -58,7 +54,7 @@ Index: Python-2.6.6/Lib/distutils/sysconfig.py
  
  
  def get_makefile_filename():
-@@ -225,7 +232,7 @@ def get_makefile_filename():
+@@ -225,7 +229,7 @@
          return os.path.join(os.path.dirname(os.path.realpath(sys.executable)),
                              "Makefile")
      lib_dir = get_python_lib(plat_specific=1, standard_lib=1)
