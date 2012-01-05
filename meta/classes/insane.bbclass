@@ -227,16 +227,12 @@ def package_qa_check_unsafe_references_in_binaries(path, name, d, elf, messages)
 		sysroot_path_usr = sysroot_path + exec_prefix
 
 		try:
-			ldd_output = sub.check_output(["prelink-rtld", "--root", sysroot_path, path])
-		except sub.CalledProcessError as e:
-			if e.returncode != 127:
-				error_msg = pn + ": prelink-rtld aborted when processing %s" % path
-				package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
-				return False
-			else:
-				# Sometimes this is done deliberately (e.g, e2fsprogs), so only warn
-				bb.warn("%s has missing library dependencies" % path)
-				return
+			ldd_output = bb.process.Popen(["prelink-rtld", "--root", sysroot_path, path], stdout=sub.PIPE).stdout.read()
+		except bb.process.CmdError:
+			error_msg = pn + ": prelink-rtld aborted when processing %s" % path
+			package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
+			return False
+
 		if sysroot_path_usr in ldd_output:
 			error_msg = pn + ": %s links to something under exec_prefix" % path
 			package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
