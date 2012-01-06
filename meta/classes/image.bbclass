@@ -119,7 +119,7 @@ ROOTFS_POSTPROCESS_COMMAND ?= ""
 # some default locales
 IMAGE_LINGUAS ?= "de-de fr-fr en-gb"
 
-LINGUAS_INSTALL = "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('IMAGE_LINGUAS', 1).split()))}"
+LINGUAS_INSTALL ?= "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('IMAGE_LINGUAS', 1).split()))}"
 
 PSEUDO_PASSWD = "${IMAGE_ROOTFS}"
 
