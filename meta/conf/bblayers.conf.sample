@@ -3,6 +3,6 @@
 LCONF_VERSION = "4"
 
 BBFILES ?= ""
-BBLAYERS = " \
+BBLAYERS ?= " \
   ##COREBASE##/meta \
   "
