@@ -7,6 +7,8 @@ HOMEPAGE = "http://www.gnu.org/software/autoconf/"
 SECTION = "devel"
 DEPENDS += "m4-native"
 RDEPENDS_${PN} = "m4 gnu-config"
+RDEPENDS_${PN}_virtclass-native = "m4-native gnu-config-native"
+RDEPENDS_${PN}_virtclass-nativesdk = "m4-nativesdk gnu-config-nativesdk"
 
 SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.bz2 \
 	   file://program_prefix.patch"
