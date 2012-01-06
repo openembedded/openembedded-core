@@ -1,7 +1,8 @@
-minix
-fat
-vfat
-ext2
+ext4
 ext3
+ext2
+vfat
+fat
 btrfs
+minix
 *
