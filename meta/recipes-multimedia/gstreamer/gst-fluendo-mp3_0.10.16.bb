@@ -2,6 +2,7 @@ require gst-fluendo.inc
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=98326cbb1723a5a97e9b1db62e9faa05"
+LICENSE_FLAGS = "commercial"
 
 acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 

@@ -1,6 +1,7 @@
 DEPENDS = "gstreamer"
 RDEPENDS_${PN} = "libomxil"
 LICENSE = "LGPLv2.1"
+LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = "file://COPYING;md5=fbc093901857fcd118f065f900982c24 \
                     file://util/sem.h;beginline=1;endline=20;md5=accce5550d5583b839b441a0623f09fc"
 
