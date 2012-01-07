@@ -1,7 +1,7 @@
 PCMCIA_MANAGER = "pcmciautils"
 PREFERRED_PROVIDER_virtual/xserver ?= "xserver-kdrive"
 
-MACHINE_FEATURES = "kernel26 apm alsa pcmcia bluetooth irda usbgadget screen"
+MACHINE_FEATURES = "apm alsa pcmcia bluetooth irda usbgadget screen"
 
 IMAGE_FSTYPES ?= "tar.bz2 ext3"
 

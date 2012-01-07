@@ -3,8 +3,8 @@ SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
 
-RDEPENDS_${PN} = "${@base_contains("MACHINE_FEATURES", "kernel26",  "module-init-tools-depmod","modutils-depmod",d)} "
-PR = "r10"
+RDEPENDS_${PN} = "module-init-tools-depmod"
+PR = "r11"
 
 SRC_URI = "file://update-modules \
            file://COPYING.GPL"
