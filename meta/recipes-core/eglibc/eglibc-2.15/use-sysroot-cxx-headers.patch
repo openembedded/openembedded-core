@@ -10,27 +10,33 @@ Upstream-Status: Inappropriate [OE-specific]
 
 --- a/configure.in
 +++ b/configure.in
-@@ -1118,9 +1118,8 @@ if test -n "$sysheaders"; then
-   SYSINCLUDES="$SYSINCLUDES \
+@@ -1094,11 +1094,10 @@ if test -n "$sysheaders"; then
  -isystem `echo $sysheaders | sed 's/:/ -isystem /g'`"
    if test -n "$CXX"; then
+     CXX_SYSINCLUDES=
 -    cxxversion=`$CXX -dumpversion 2>&AS_MESSAGE_LOG_FD` &&
      cxxmachine=`$CXX -dumpmachine 2>&AS_MESSAGE_LOG_FD` &&
--    cxxheaders=`$CXX -print-file-name=../../../../include/c++/`"$cxxversion" &&
-+    cxxheaders=`$CXX -print-sysroot`"$prefix/include/c++" &&
-     CXX_SYSINCLUDES="-isystem $cxxheaders \
+     for d in include "$cxxmachine/include"; do
+-      i=../../../../$d/c++/$cxxversion
+-      cxxheaders=`$CXX -print-file-name="$i"` &&
++      i="$prefix/$d/c++"
++      cxxheaders=`$CXX -print-sysroot`"$i" &&
+       test "x$cxxheaders" != x && test "x$i" != "x$cxxheaders" &&
+       CXX_SYSINCLUDES="$CXX_SYSINCLUDES -isystem $cxxheaders \
  -isystem $cxxheaders/$cxxmachine -isystem $cxxheaders/backward"
-   fi
 --- a/configure
 +++ b/configure
-@@ -5544,9 +5544,8 @@ if test -n "$sysheaders"; then
-   SYSINCLUDES="$SYSINCLUDES \
+@@ -5618,11 +5618,10 @@ if test -n "$sysheaders"; then
  -isystem `echo $sysheaders | sed 's/:/ -isystem /g'`"
    if test -n "$CXX"; then
+     CXX_SYSINCLUDES=
 -    cxxversion=`$CXX -dumpversion 2>&5` &&
      cxxmachine=`$CXX -dumpmachine 2>&5` &&
--    cxxheaders=`$CXX -print-file-name=../../../../include/c++/`"$cxxversion" &&
-+    cxxheaders=`$CXX -print-sysroot`"$prefix/include/c++" &&
-     CXX_SYSINCLUDES="-isystem $cxxheaders \
+     for d in include "$cxxmachine/include"; do
+-      i=../../../../$d/c++/$cxxversion
+-      cxxheaders=`$CXX -print-file-name="$i"` &&
++      i="$prefix/$d/c++"
++      cxxheaders=`$CXX -print-sysroot`"$i" &&
+       test "x$cxxheaders" != x && test "x$i" != "x$cxxheaders" &&
+       CXX_SYSINCLUDES="$CXX_SYSINCLUDES -isystem $cxxheaders \
  -isystem $cxxheaders/$cxxmachine -isystem $cxxheaders/backward"
-   fi

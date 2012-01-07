@@ -1,12 +1,11 @@
 require eglibc.inc
 
-SRCREV = "15870"
+SRCREV = "16540"
 
 DEPENDS += "gperf-native"
-PR = "r3"
 PR_append = "+svnr${SRCPV}"
 
-EGLIBC_BRANCH="eglibc-2_14"
+EGLIBC_BRANCH="eglibc-2_15"
 SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};proto=http \
            file://eglibc-svn-arm-lowlevellock-include-tls.patch \
            file://IO-acquire-lock-fix.patch \
@@ -20,6 +19,8 @@ SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};proto=http
            file://eglibc-rpc-export-again.patch \
            file://glibc-2.14-libdl-crash.patch \
            file://use-sysroot-cxx-headers.patch \
+           file://x86_fenv.patch \
+           file://ppc-sqrt_finite.patch \
           "
 LIC_FILES_CHKSUM = "file://LICENSES;md5=98a1128c4b58120182cbea3b1752d8b9 \
       file://COPYING;md5=393a5ca445f6965873eca0259a17f833 \
@@ -87,6 +88,15 @@ do_patch_append() {
 	bb.build.exec_func('do_fix_ia_headers', d)
 	bb.build.exec_func('do_fix_readlib_c', d)
 }
+
+# for mips eglibc now builds syscall tables for all abi's
+# so we make sure that we choose right march option which is
+# compatible with o32,n32 and n64 abi's
+# e.g. -march=mips32 is not compatible with n32 and n64 therefore
+# we filter it out in such case -march=from-abi which will be
+# mips1 when using o32 and mips3 when using n32/n64
+
+TUNE_CCARGS_mips := "${@oe_filter_out('-march=mips32', '${TUNE_CCARGS}', d)}"
 
 # We need to ensure that all of the i386 and x86_64 headers are identical
 # to support the multilib case.  We do this by copying headers from x86_64
