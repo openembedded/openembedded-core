@@ -14,7 +14,7 @@ GDK_PIXBUF_MODULEDIR=${libdir}/gdk-pixbuf-2.0/2.10.0/loaders gdk-pixbuf-query-lo
 
 for icondir in /usr/share/icons/* ; do
     if [ -d $icondir ] ; then
-        gtk-update-icon-cache -qt  $icondir
+        gtk-update-icon-cache -fqt  $icondir
     fi
 done
 }
