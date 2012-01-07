@@ -1,6 +1,6 @@
 require dhcp.inc
 
-PR = "r4"
+PR = "r5"
 
 SRC_URI += "file://fixincludes.patch \
             file://dhcp-3.0.3-dhclient-dbus.patch;striplevel=0 \
