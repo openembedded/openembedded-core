@@ -181,7 +181,8 @@ fi
 mv "$MODCONFTMPFILE" "$MODCONFFILE"
 mv "$MODULESTMPFILE" "$MODULESFILE"
 
-if [ $first_time -eq 1 ]; then
+# Don't run modutils.sh if systemd is installed
+if [ $first_time -eq 1 ] && [ ! -e /bin/systemctl ]; then
   /etc/init.d/modutils.sh || true
 fi
 
