@@ -248,9 +248,6 @@ python package_do_split_gconvs () {
 			libc_name = name
 		d.setVar('RDEPENDS_%s' % pkgname, legitimize_package_name('%s-binary-localedata-%s' \
 			% (bpn, libc_name)))
-		rprovides = (d.getVar('RPROVIDES_%s' % pkgname, True) or "").split()
-		rprovides.append(legitimize_package_name('%s-binary-localedata-%s' % (bpn, libc_name)))
-		d.setVar('RPROVIDES_%s' % pkgname, " ".join(rprovides))
 
 	commands = {}
 
