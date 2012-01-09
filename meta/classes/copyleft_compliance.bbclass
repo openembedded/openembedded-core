@@ -39,8 +39,9 @@ def copyleft_should_include(d):
     import oe.license
     from fnmatch import fnmatchcase as fnmatch
 
-    if d.getVar('COPYLEFT_RECIPE_TYPE', True) not in oe.data.typed_value('COPYLEFT_RECIPE_TYPES', d):
-        return False
+    recipe_type = d.getVar('COPYLEFT_RECIPE_TYPE', True)
+    if recipe_type not in oe.data.typed_value('COPYLEFT_RECIPE_TYPES', d):
+        return False, 'recipe type "%s" is excluded' % recipe_type
 
     include = oe.data.typed_value('COPYLEFT_LICENSE_INCLUDE', d)
     exclude = oe.data.typed_value('COPYLEFT_LICENSE_EXCLUDE', d)
@@ -63,18 +64,27 @@ def copyleft_should_include(d):
         licenses = oe.license.flattened_licenses(d.getVar('LICENSE', True), choose_licenses)
     except oe.license.InvalidLicense as exc:
         bb.fatal('%s: %s' % (d.getVar('PF', True), exc))
-    except SyntaxError:
-        bb.warn("%s: Failed to parse it's LICENSE field." % (d.getVar('PF', True)))
-
-    return all(include_license(lic) for lic in licenses)
+    except SyntaxError as exc:
+        bb.warn('%s: error when parsing the LICENSE variable: %s' % (d.getVar('P', True), exc))
+    else:
+        excluded = filter(lambda lic: not include_license(lic), licenses)
+        if excluded:
+            return False, 'recipe has excluded licenses: %s' % ', '.join(excluded)
+        else:
+            return True, None
 
 python do_prepare_copyleft_sources () {
     """Populate a tree of the recipe sources and emit patch series files"""
     import os.path
     import shutil
 
-    if not copyleft_should_include(d):
+    p = d.getVar('P', True)
+    included, reason = copyleft_should_include(d)
+    if not included:
+        bb.debug(1, 'copyleft: %s is excluded: %s' % (p, reason))
         return
+    else:
+        bb.debug(1, 'copyleft: %s is included' % p)
 
     sources_dir = d.getVar('COPYLEFT_SOURCES_DIR', 1)
     src_uri = d.getVar('SRC_URI', 1).split()
