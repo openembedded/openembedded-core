@@ -5,13 +5,25 @@ import ast
 import re
 from fnmatch import fnmatchcase as fnmatch
 
-class InvalidLicense(StandardError):
-    def __init__(self, license):
-        self.license = license
-        StandardError.__init__(self)
+class LicenseError(StandardError):
+    pass
+
+class LicenseSyntaxError(LicenseError):
+    def __init__(self, licensestr, exc):
+        self.licensestr = licensestr
+        self.exc = exc
+        LicenseError.__init__(self)
 
     def __str__(self):
-        return "invalid license '%s'" % self.license
+        return "error in '%s': %s" % (self.licensestr, self.exc)
+
+class InvalidLicense(LicenseError):
+    def __init__(self, license):
+        self.license = license
+        LicenseError.__init__(self)
+
+    def __str__(self):
+        return "invalid characters in license '%s'" % self.license
 
 license_operator = re.compile('([&|() ])')
 license_pattern = re.compile('[a-zA-Z0-9.+_\-]+$')
@@ -59,7 +71,10 @@ class FlattenVisitor(LicenseVisitor):
 def flattened_licenses(licensestr, choose_licenses):
     """Given a license string and choose_licenses function, return a flat list of licenses"""
     flatten = FlattenVisitor(choose_licenses)
-    flatten.visit_string(licensestr)
+    try:
+        flatten.visit_string(licensestr)
+    except SyntaxError as exc:
+        raise LicenseSyntaxError(licensestr, exc)
     return flatten.licenses
 
 def is_included(licensestr, whitelist=None, blacklist=None):

@@ -48,10 +48,8 @@ def copyleft_should_include(d):
 
     try:
         is_included, excluded = oe.license.is_included(d.getVar('LICENSE', True), include, exclude)
-    except oe.license.InvalidLicense as exc:
+    except oe.license.LicenseError as exc:
         bb.fatal('%s: %s' % (d.getVar('PF', True), exc))
-    except SyntaxError as exc:
-        bb.warn('%s: error when parsing the LICENSE variable: %s' % (d.getVar('P', True), exc))
     else:
         if is_included:
             return True, None
