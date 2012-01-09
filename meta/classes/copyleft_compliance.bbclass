@@ -46,32 +46,17 @@ def copyleft_should_include(d):
     include = oe.data.typed_value('COPYLEFT_LICENSE_INCLUDE', d)
     exclude = oe.data.typed_value('COPYLEFT_LICENSE_EXCLUDE', d)
 
-    def include_license(license):
-        if any(fnmatch(license, pattern) for pattern in exclude):
-            return False
-        if any(fnmatch(license, pattern) for pattern in include):
-            return True
-        return False
-
-    def choose_licenses(a, b):
-        """Select the left option in an OR if all its licenses are to be included"""
-        if all(include_license(lic) for lic in a):
-            return a
-        else:
-            return b
-
     try:
-        licenses = oe.license.flattened_licenses(d.getVar('LICENSE', True), choose_licenses)
+        is_included, excluded = oe.license.is_included(d.getVar('LICENSE', True), include, exclude)
     except oe.license.InvalidLicense as exc:
         bb.fatal('%s: %s' % (d.getVar('PF', True), exc))
     except SyntaxError as exc:
         bb.warn('%s: error when parsing the LICENSE variable: %s' % (d.getVar('P', True), exc))
     else:
-        excluded = filter(lambda lic: not include_license(lic), licenses)
-        if excluded:
-            return False, 'recipe has excluded licenses: %s' % ', '.join(excluded)
-        else:
+        if is_included:
             return True, None
+        else:
+            return False, 'recipe has excluded licenses: %s' % ', '.join(excluded)
 
 python do_prepare_copyleft_sources () {
     """Populate a tree of the recipe sources and emit patch series files"""
