@@ -1,5 +1,5 @@
 MAJOR_VERSION = "2.20"
-PR = "r1"
+PR = "r2"
 require util-linux.inc
 
 # note that `lscpu' is under GPLv3+
@@ -39,9 +39,7 @@ do_remove_lscpu() {
 
 addtask remove_lscpu before do_configure after do_patch
 
-# fallocate is glibc 2.10, fallocate64 is glibc 2.11
-# we need to disable it for older versions
-EXTRA_OECONF += "ac_cv_func_fallocate=no scanf_cv_type_modifier=as"
+CACHED_CONFIGUREVARS += "scanf_cv_type_modifier=as"
 EXTRA_OECONF_virtclass-native += "--disable-fallocate --disable-use-tty-group"
 
 do_install_append () {
