@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=bbb461211a33b134d42ed5ee802b37ff"
 
 SRC_URI = "http://augeas.net/download/${BP}.tar.gz"
 
-DEPENDS = "readline"
+DEPENDS = "readline libxml2"
 
 inherit autotools
 
