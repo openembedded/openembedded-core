@@ -237,6 +237,51 @@ python do_populate_lic() {
 
 }
 
+def incompatible_license(d,dont_want_license):
+    """
+    This function checks if a package has only incompatible licenses. It also take into consideration 'or'
+    operand.
+    """
+    import re
+    import oe.license
+    from fnmatch import fnmatchcase as fnmatch
+
+    dont_want_licenses = []
+    dont_want_licenses.append(d.getVar('INCOMPATIBLE_LICENSE', 1))
+    if d.getVarFlag('SPDXLICENSEMAP', dont_want_license):
+	dont_want_licenses.append(d.getVarFlag('SPDXLICENSEMAP', dont_want_license))
+
+    def include_license(license):
+	if any(fnmatch(license, pattern) for pattern in dont_want_licenses):
+	    return False
+	else:
+	    spdx_license = d.getVarFlag('SPDXLICENSEMAP', license)
+	    if spdx_license and any(fnmatch(spdx_license, pattern) for pattern in dont_want_licenses):
+		return False
+	    else:
+		return True
+
+    def choose_licenses(a, b):
+        if all(include_license(lic) for lic in a):
+		return a
+        else:
+		return b
+
+    """
+    If you want to exlude license named generically 'X', we surely want to exlude 'X+' as well.
+    In consequence, we will exclude the '+' character from LICENSE in case INCOMPATIBLE_LICENSE
+    is not a 'X+' license.
+    """
+    if not re.search(r'[+]',dont_want_license):
+	licenses=oe.license.flattened_licenses(re.sub(r'[+]', '', d.getVar('LICENSE', True)), choose_licenses)
+    else:
+	licenses=oe.license.flattened_licenses(d.getVar('LICENSE', True), choose_licenses)
+
+    for onelicense in licenses:
+	if not include_license(onelicense):
+		return True
+    return False
+
 SSTATETASKS += "do_populate_lic"
 do_populate_lic[sstate-name] = "populate-lic"
 do_populate_lic[sstate-inputdirs] = "${LICSSTATEDIR}"

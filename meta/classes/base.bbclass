@@ -398,9 +398,8 @@ python () {
             dont_want_whitelist = (d.getVar('WHITELIST_%s' % dont_want_license, 1) or "").split()
             if pn not in hosttools_whitelist and pn not in lgplv2_whitelist and pn not in dont_want_whitelist:
 
-                import re
                 this_license = d.getVar('LICENSE', 1)
-                if this_license and re.search(dont_want_license, this_license):
+                if incompatible_license(d,dont_want_license):
                     bb.note("SKIPPING %s because it's %s" % (pn, this_license))
                     raise bb.parse.SkipPackage("incompatible with license %s" % this_license)
 
