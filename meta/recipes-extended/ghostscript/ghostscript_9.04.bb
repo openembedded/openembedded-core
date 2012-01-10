@@ -15,7 +15,7 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d151214b3131251dfc9d858593acbd24"
 
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "ghostscript-native tiff jpeg fontconfig cups"
 DEPENDS_virtclass-native = ""
@@ -34,7 +34,8 @@ SRC_URI_virtclass-native = "${SRC_URI_BASE}"
 SRC_URI[md5sum] = "9c2fb4af1eb609d09dba5bb0fa76173a"
 SRC_URI[sha256sum] = "f1e333738c41c3bf2b47ceb9806abb8045bcdc7353002c32736150425a7c1ef4"
 
-EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec --without-jasper --with-fontpath=${datadir}/fonts"
+EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec --without-jasper \
+                --with-fontpath=${datadir}/fonts --with-install-cups"
 
 # This has been fixed upstream but for now we need to subvert the check for time.h
 # http://bugs.ghostscript.com/show_bug.cgi?id=692443
@@ -60,6 +61,14 @@ do_configure_append () {
 			cp ${STAGING_BINDIR_NATIVE}/ghostscript-${PV}/$i obj/aux/$i
 		done
 	fi
+
+	# replace cups paths from sysroots/.../usr/bin/crossscripts/cups-config with target paths
+	# CUPSDATA is compiled into a utility, and CUPSSERVERBIN is used as an install path
+	CUPSSERVERBIN=${exec_prefix}/lib/cups          # /usr/lib NOT libdir
+	CUPSDATA=${datadir}/cups
+
+	sed -e "s#^CUPSSERVERBIN=.*#CUPSSERVERBIN=${CUPSSERVERBIN}#" -i Makefile
+	sed -e "s#^CUPSDATA=.*#CUPSDATA=${CUPSDATA}#" -i Makefile
 }
 
 do_install_append () {
@@ -67,9 +76,7 @@ do_install_append () {
     cp -r Resource ${D}${datadir}/ghostscript/${PV}/
     cp -r iccprofiles ${D}${datadir}/ghostscript/${PV}/
 
-    if [ -f ${D}${sysconfdir}/cups ]; then
-        chown -R root:lp ${D}${sysconfdir}/cups
-    fi
+    chown -R root:lp ${D}${sysconfdir}/cups
 }
 
 python do_patch_virtclass-native () {
@@ -95,3 +102,15 @@ BBCLASSEXTEND = "native"
 # Ghostscript install tool 'instcopy' tries to remove already created
 # directories during install and parallel make causes problems.
 PARALLEL_MAKEINST=""
+
+PACKAGES =+ "${PN}-cups"
+
+FILES_${PN}-dbg += "${exec_prefix}/lib/cups/filter/.debug"
+
+FILES_${PN}-cups += "${exec_prefix}/lib/cups/filter/gstoraster \
+                     ${exec_prefix}/lib/cups/filter/pstopxl \
+                     ${datadir}/cups \
+                     ${sysconfdir}/cups \
+                     "
+
+RDEPENDS_${PN}-cups = ${PN}
