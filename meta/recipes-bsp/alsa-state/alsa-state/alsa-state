@@ -9,9 +9,9 @@
 
 asound_restore(){
 	echo "ALSA: Restoring mixer settings..."
-	if test -x /usr/sbin/alsactl -a -e /etc/asound.state
+	if test -x /usr/sbin/alsactl -a -e #STATEDIR#/asound.state
 	then
-		/usr/sbin/alsactl -f /etc/asound.state restore &
+		/usr/sbin/alsactl -f #STATEDIR#/asound.state restore &
 	fi
 }
 
@@ -19,7 +19,7 @@ asound_store(){
 	echo "ALSA: Storing mixer settings..."
 	if test -x /usr/sbin/alsactl
 	then
-		/usr/sbin/alsactl -f /etc/asound.state store
+		/usr/sbin/alsactl -f #STATEDIR#/asound.state store
 	fi
 }
 
