@@ -2384,6 +2384,7 @@ RECIPE_NO_OF_PATCHES_pn-kexec-tools="1"
 RECIPE_LATEST_RELEASE_DATE_pn-kexec-tools="Jul 29, 2010"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-kexec-tools="1 year"
 RECIPE_LAST_UPDATE_pn-kexec-tools = "Nov 16, 2010"
+RECIPE_MANUAL_CHECK_DATE_pn-kexec-tools = "Jan 10, 2012"
 RECIPE_MAINTAINER_pn-kexec-tools = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-hostap-conf = "red"
