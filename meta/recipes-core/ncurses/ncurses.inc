@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://ncurses/base/version.c;beginline=1;endline=27;md5=cbc
 SECTION = "libs"
 DEPENDS = "ncurses-native"
 DEPENDS_virtclass-native = ""
-INC_PR = "r3"
+INC_PR = "r4"
 
 inherit autotools binconfig multilib_header
 
@@ -26,8 +26,8 @@ ENABLE_WIDEC ?= "true"
 # builds.
 BUILD_CPPFLAGS += "-D_GNU_SOURCE"
 
-# tic from the -native build cannot run without setting this explicitly
-BUILD_LDFLAGS_virtclass-native += "-Wl,-rpath,${base_libdir}"
+# natives don't generally look in base_libdir
+base_libdir_virtclass-native = "${libdir}"
 
 # Helper function for do_configure to allow multiple configurations
 # $1 the directory to run configure in
