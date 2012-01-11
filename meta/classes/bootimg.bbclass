@@ -103,19 +103,46 @@ build_hddimg() {
 			grubefi_hddimg_populate
 		fi
 
-		# Determine the 1024 byte block count for the final image.
-		BLOCKS=`du --apparent-size -ks ${HDDDIR} | cut -f 1`
-		SIZE=`expr $BLOCKS + ${BOOTIMG_EXTRA_SPACE}`
+		# Calculate the size required for the final image including the
+		# data and filesystem overhead.
+		# Sectors: 512 bytes
+		#  Blocks: 1024 bytes
+
+		# Determine the sector count just for the data
+		SECTORS=$(expr $(du --apparent-size -ks ${HDDDIR} | cut -f 1) \* 2)
+
+		# Account for the filesystem overhead. This includes directory
+		# entries in the clusters as well as the FAT itself.
+		# Assumptions:
+		#   < 16 entries per directory
+		#   8.3 filenames only
+
+		# 32 bytes per dir entry
+		DIR_BYTES=$(expr $(find ${HDDDIR} | tail -n +2 | wc -l) \* 32)
+		# 32 bytes for every end-of-directory dir entry
+		DIR_BYTES=$(expr $DIR_BYTES + $(expr $(find ${HDDDIR} -type d | tail -n +2 | wc -l) \* 32))
+		# 4 bytes per FAT entry per sector of data
+		FAT_BYTES=$(expr $SECTORS \* 4)
+		# 4 bytes per FAT entry per end-of-cluster list
+		FAT_BYTES=$(expr $FAT_BYTES + $(expr $(find ${HDDDIR} -type d | tail -n +2 | wc -l) \* 4))
+
+		# Use a ceiling function to determine FS overhead in sectors
+		DIR_SECTORS=$(expr $(expr $DIR_BYTES + 511) / 512)
+		# There are two FATs on the image
+		FAT_SECTORS=$(expr $(expr $(expr $FAT_BYTES + 511) / 512) \* 2)
+		SECTORS=$(expr $SECTORS + $(expr $DIR_SECTORS + $FAT_SECTORS))
+
+		# Determine the final size in blocks accounting for some padding
+		BLOCKS=$(expr $(expr $SECTORS \* 2) + ${BOOTIMG_EXTRA_SPACE})
 
 		# Ensure total sectors is an integral number of sectors per
-		# track or mcopy will complain. Sectors are 512 bytes, and and
-		# we generate images with 32 sectors per track. This calculation
-		# is done in blocks, which are twice the size of sectors, thus
-		# the 16 instead of 32.
-		SIZE=$(expr $SIZE + $(expr 16 - $(expr $SIZE % 16)))
+		# track or mcopy will complain. Sectors are 512 bytes, and we
+		# generate images with 32 sectors per track. This calculation is
+		# done in blocks, thus the mod by 16 instead of 32.
+		BLOCKS=$(expr $BLOCKS + $(expr 16 - $(expr $BLOCKS % 16)))
 
 		IMG=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
-		mkdosfs -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${IMG} ${SIZE}
+		mkdosfs -F 32 -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${IMG} ${BLOCKS}
 		# Copy HDDDIR recursively into the image file directly
 		mcopy -i ${IMG} -s ${HDDDIR}/* ::/
 
