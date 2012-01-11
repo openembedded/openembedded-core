@@ -40,6 +40,9 @@ if [ -f /etc/syslog-startup.conf ]; then
 	if [ "$REDUCE" = "yes" ]; then
 		SYSLOG_ARGS="$SYSLOG_ARGS -S"
 	fi
+	if [ "$DROPDUPLICATES" = "yes" ]; then
+	    SYSLOG_ARGS="$SYSLOG_ARGS -D"
+	fi
 	if [ -n "$LOGLEVEL" ]; then
 	    SYSLOG_ARGS="$SYSLOG_ARGS -l $LOGLEVEL"
 	fi
