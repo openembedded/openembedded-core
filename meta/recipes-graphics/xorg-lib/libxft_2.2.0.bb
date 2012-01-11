@@ -23,7 +23,7 @@ PE = "1"
 
 XORG_PN = "libXft"
 
-BBCLASSEXTEND = "native nativesdk"
+BBCLASSEXTEND = "native"
 
 python () {
         if d.getVar('DEBIAN_NAMES', 1):
