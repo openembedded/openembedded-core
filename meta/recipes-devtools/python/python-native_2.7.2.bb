@@ -18,7 +18,7 @@ S = "${WORKDIR}/Python-${PV}"
 
 inherit native
 
-RPROVIDES += "python-distutils-native python-compression-native python-textutils-native"
+RPROVIDES += "python-distutils-native python-compression-native python-textutils-native python-core-native"
 
 EXTRA_OEMAKE = '\
   BUILD_SYS="" \
