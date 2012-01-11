@@ -40,6 +40,9 @@ if [ -f /etc/syslog-startup.conf ]; then
 	if [ "$REDUCE" = "yes" ]; then
 		SYSLOG_ARGS="$SYSLOG_ARGS -S"
 	fi
+	if [ -n "$LOGLEVEL" ]; then
+	    SYSLOG_ARGS="$SYSLOG_ARGS -l $LOGLEVEL"
+	fi
 else
 	# default: log to 16K shm circular buffer
 	SYSLOG_ARGS="-C"
