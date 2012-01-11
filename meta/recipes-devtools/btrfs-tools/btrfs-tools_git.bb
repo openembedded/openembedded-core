@@ -12,11 +12,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=fcb02dc552a041dee27e4b85c7396067"
 SECTION = "base"
 DEPENDS = "util-linux attr"
 
-SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs.git;protocol=git;tag=13eced9a0c2b6bd6bc38e6f0f46a1977b1167e67;branch=master"
+SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs.git;protocol=git;tag=fdb6c0402337d9607c7a39155088eaf033742752;branch=master"
 
 S = "${WORKDIR}/git"
 
-PR = "r5"
+PR = "r6"
 
 SRC_URI += " file://fix_use_of_gcc.patch \
 	 file://weak-defaults.patch \
