@@ -331,7 +331,8 @@ def package_qa_check_arch(path,name,d, elf, messages):
         = package_qa_get_machine_dict()[target_os][target_arch]
 
     # Check the architecture and endiannes of the binary
-    if not machine == elf.machine():
+    if not ((machine == elf.machine()) or \
+	("virtual/kernel" in provides) and (target_os == "linux-gnux32")):
         messages.append("Architecture did not match (%d to %d) on %s" % \
                  (machine, elf.machine(), package_qa_clean_path(path,d)))
     elif not ((bits == elf.abiSize()) or  \
