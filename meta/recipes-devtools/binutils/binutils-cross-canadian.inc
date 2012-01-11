@@ -20,3 +20,5 @@ do_install () {
 	rm -f ${D}${libdir}/libopcodes*
 	rm -f ${D}${includedir}/*.h
 }
+
+BBCLASSEXTEND = ""
