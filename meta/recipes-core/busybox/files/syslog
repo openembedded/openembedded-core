@@ -37,9 +37,6 @@ if [ -f /etc/syslog-startup.conf ]; then
 	if [ "$LOG_LOCAL" = "1" -a "$LOG_REMOTE" = "1" ]; then
 		SYSLOG_ARGS="$SYSLOG_ARGS -L"
 	fi
-	if [ -n "$MARKINT" ]; then
-		SYSLOG_ARGS="$SYSLOG_ARGS -m $MARKINT"
-	fi
 	if [ "$REDUCE" = "yes" ]; then
 		SYSLOG_ARGS="$SYSLOG_ARGS -S"
 	fi
