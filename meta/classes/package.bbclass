@@ -1205,7 +1205,7 @@ SHLIBSDIR = "${STAGING_DIR_HOST}/shlibs"
 SHLIBSWORKDIR = "${WORKDIR}/shlibs"
 
 python package_do_shlibs() {
-	import re
+	import re, pipes
 
 	exclude_shlibs = d.getVar('EXCLUDE_FROM_SHLIBS', 0)
 	if exclude_shlibs:
@@ -1234,7 +1234,7 @@ python package_do_shlibs() {
 	lf = bb.utils.lockfile(bb.data.expand("${PACKAGELOCK}", d))
 
 	def linux_so(root, path, file):
-		cmd = d.getVar('OBJDUMP', True) + " -p " + os.path.join(root, file) + " 2>/dev/null"
+		cmd = d.getVar('OBJDUMP', True) + " -p " + pipes.quote(os.path.join(root, file)) + " 2>/dev/null"
 		cmd = "PATH=\"%s\" %s" % (d.getVar('PATH', True), cmd)
 		fd = os.popen(cmd)
 		lines = fd.readlines()
