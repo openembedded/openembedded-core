@@ -3,10 +3,10 @@ SECTION = "x11/gnome"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
 
-DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native polkit"
+DEPENDS = "glib-2.0 gtk+ dbus dbus-glib libxml2 intltool-native polkit"
 DEPENDS_virtclass-native = "glib-2.0-native dbus-native dbus-glib-native libxml2-native intltool-native gnome-common-native"
 
-PR = "r3"
+PR = "r5"
 
 inherit gnomebase
 
@@ -21,8 +21,10 @@ S = "${WORKDIR}/GConf-${PV}"
 
 POLKIT_OECONF = "--enable-defaults-service"
 POLKIT_OECONF_virtclass-native = "--disable-defaults-service"
-EXTRA_OECONF = "--disable-gtk-doc --disable-gtk --enable-shared --disable-static --enable-debug=yes \
-                --disable-introspection --disable-orbit --with-openldap=no ${POLKIT_OECONF}"
+GTKOECONF = "--with-gtk=2.0 --enable-gtk"
+GTKOECONF_virtclass-native = "--disable-gtk"
+EXTRA_OECONF = "--disable-gtk-doc --enable-shared --disable-static --enable-debug=yes \
+                --disable-introspection --disable-orbit --with-openldap=no ${POLKIT_OECONF} ${GTKOECONF}"
 
 do_configure_prepend () {
 	touch gtk-doc.make
@@ -42,11 +44,11 @@ RDEPENDS_${PN} += "${@base_contains('DISTRO_FEATURES', 'x11', 'dbus-x11', '', d)
 RDEPENDS_${PN}_virtclass-native = ""
 
 FILES_${PN} += "${libdir}/GConf/* \
-	        ${libdir}/gio/*/*.so \
-		${datadir}/polkit* \
-	       	${datadir}/dbus-1/services/*.service \
-	       	${datadir}/dbus-1/system-services/*.service \
-	        "
+                ${libdir}/gio/*/*.so \
+                ${datadir}/polkit* \
+                ${datadir}/dbus-1/services/*.service \
+                ${datadir}/dbus-1/system-services/*.service \
+               "
 FILES_${PN}-dbg += "${libdir}/*/*/.debug"
 FILES_${PN}-dev += "${datadir}/sgml/gconf/gconf-1.0.dtd"
 
