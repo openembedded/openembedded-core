@@ -1,7 +1,7 @@
 SUMMARY = "Linux-PAM (Pluggable Authentication Modules)"
-DESCRIPTION = "Linux-PAM (Pluggable Authentication Modules for Linux), Basically, it is a flexible mechanism for authenticating users"
-HOMEPAGE = "http://www.kernel.org/pub/linux/libs/pam/"
-BUGTRACKER = "http://sourceforge.net/projects/pam/support"
+DESCRIPTION = "Linux-PAM (Pluggable Authentication Modules for Linux), a flexible mechanism for authenticating users"
+HOMEPAGE = "https://fedorahosted.org/linux-pam/"
+BUGTRACKER = "https://fedorahosted.org/linux-pam/newticket"
 SECTION = "base"
 # PAM is dual licensed under GPL and BSD.
 # /etc/pam.d comes from Debian libpam-runtime in 2009-11 (at that time 
@@ -9,28 +9,25 @@ SECTION = "base"
 LICENSE = "GPLv2+ | BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ca0395de9a86191a078b8b79302e3083"
 
-PR = "r2"
+PR = "r0"
 
-DEPENDS = "bison flex flex-native cracklib"
-RDEPENDS_${PN}-runtime = "libpam pam-plugin-deny pam-plugin-permit pam-plugin-warn pam-plugin-unix"
-RDEPENDS_${PN}-xtests = "libpam pam-plugin-access pam-plugin-debug pam-plugin-cracklib pam-plugin-pwhistory \
-                        pam-plugin-succeed-if pam-plugin-time coreutils"
-RRECOMMENDS_${PN} = "libpam-runtime"
-
-SRC_URI = "${KERNELORG_MIRROR}/linux/libs/pam/library/Linux-PAM-${PV}.tar.bz2 \
+SRC_URI = "https://fedorahosted.org/releases/l/i/linux-pam/Linux-PAM-${PV}.tar.bz2 \
            file://99_pam \
            file://pam.d/* \
            file://libpam-xtests.patch"
 
 SRC_URI_append_libc-uclibc = " file://pam-no-innetgr.patch"
 
-SRC_URI[md5sum] = "e9af5fb27bb22edb55d077e2888b3ebc"
-SRC_URI[sha256sum] = "ccd89331914390b1e9e99c954471d65f19b660d81e15a46eeb96cee125d44056"
+SRC_URI[md5sum] = "927ee5585bdec5256c75117e9348aa47"
+SRC_URI[sha256sum] = "65def4df04254dc4c5156859d36c34ad6d7afbcf3adbf2780530ebc4dbf2a116"
+
+DEPENDS = "bison flex flex-native cracklib"
 
 EXTRA_OECONF = "--with-db-uniquename=_pam \
                 --includedir=${includedir}/security \
                 --libdir=${base_libdir} \
                 --disable-regenerate-docu"
+
 CFLAGS_append = " -fPIC "
 
 S = "${WORKDIR}/Linux-PAM-${PV}"
@@ -48,6 +45,10 @@ FILES_${PN}-runtime = "${sysconfdir}"
 FILES_${PN}-xtests = "${datadir}/Linux-PAM/xtests"
 
 PACKAGES_DYNAMIC += " pam-plugin-*"
+
+RDEPENDS_${PN}-runtime = "libpam pam-plugin-deny pam-plugin-permit pam-plugin-warn pam-plugin-unix"
+RDEPENDS_${PN}-xtests = "libpam pam-plugin-access pam-plugin-debug pam-plugin-cracklib pam-plugin-pwhistory pam-plugin-succeed-if pam-plugin-time coreutils"
+RRECOMMENDS_${PN} = "libpam-runtime"
 
 python populate_packages_prepend () {
 	import os.path
