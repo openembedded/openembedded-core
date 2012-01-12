@@ -15,7 +15,7 @@ DEPENDS = "glib-2.0 pango atk jpeg libpng gtk-doc-native gdk-pixbuf-native docbo
  libgcrypt cairo gdk-pixbuf"
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
- ${@base_contains('DISTRO_FEATURES', 'directfb', 'directfb', '', d)}"
+ ${@base_contains('DISTRO_FEATURES', 'gtk-directfb', 'gtk-directfb', '', d)}"
 
 # for gtk+ 2.x, have to pick either x11 or directfb not both
 # for gtk+ 3.x, PACKAGECONFIG[gtk-directfb] should be removed because directfb will not be support as
