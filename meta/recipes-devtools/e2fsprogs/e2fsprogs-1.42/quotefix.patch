@@ -1,0 +1,44 @@
+Upstream-Status: Pending
+
+These macros are underquoted and break with recent autoconf+automake
+combinations. - RP 2010-01-02
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
+diff -urN e2fsprogs-1.42.orig//configure.in e2fsprogs-1.42/configure.in
+--- e2fsprogs-1.42.orig//configure.in	2011-11-28 09:28:22.000000000 -0800
++++ e2fsprogs-1.42/configure.in	2012-01-12 14:42:54.820531407 -0800
+@@ -439,11 +439,11 @@
+ 		AC_MSG_ERROR([pkg-config not installed; please install it.])
+ 	fi
+ 
+-	AC_CHECK_LIB(uuid, uuid_generate,
++	[AC_CHECK_LIB(uuid, uuid_generate,
+ 		[LIBUUID=`$PKG_CONFIG --libs uuid`;
+ 		 STATIC_LIBUUID=`$PKG_CONFIG --static --libs uuid`],
+ 		[AC_MSG_ERROR([external uuid library not found])],
+-		[$LIBUUID])
++		[$LIBUUID])]
+ 	UUID_CMT=#
+ 	AC_MSG_RESULT([Disabling private uuid library])
+ else
+@@ -939,15 +939,15 @@
+ AH_TEMPLATE([HAVE_SEM_INIT], [Define to 1 if sem_init() exists])
+ SEM_INIT_LIB=''
+ AC_CHECK_FUNC(sem_init, ,
+-  AC_CHECK_LIB(pthread, sem_init,
++  [AC_CHECK_LIB(pthread, sem_init,
+   	AC_DEFINE(HAVE_SEM_INIT, 1)
+   	SEM_INIT_LIB=-lpthread,
+-  AC_CHECK_LIB(rt, sem_init,
++  [AC_CHECK_LIB(rt, sem_init,
+   	AC_DEFINE(HAVE_SEM_INIT, 1)
+   	SEM_INIT_LIB=-lrt,
+-  AC_CHECK_LIB(posix4, sem_init,
++  [AC_CHECK_LIB(posix4, sem_init,
+   	AC_DEFINE(HAVE_SEM_INIT, 1)
+-  	SEM_INIT_LIB=-lposix4))))dnl
++  	SEM_INIT_LIB=-lposix4)])])])dnl
+ AC_SUBST(SEM_INIT_LIB)
+ dnl
+ dnl Check for unified diff

@@ -21,7 +21,7 @@ SECTION = "base"
 DEPENDS = "util-linux"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/e2fsprogs/e2fsprogs-${PV}.tar.gz \
-           file://mkdir.patch;apply=yes"
+           file://mkdir.patch"
 
 inherit autotools gettext
 
