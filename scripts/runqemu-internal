@@ -472,8 +472,17 @@ EOM
 # Automatically use Ubuntu system's mesa libGL, other distro can add its own path
     if grep -i ubuntu /etc/lsb-release &> /dev/null
     then
+        GL_PATH=""
+        if test -e /usr/lib/libGL.so
+        then 
+            GL_PATH="/usr/lib/libGL.so"
+        elif test -e /usr/lib/x86_64-linux-gnu/libGL.so
+        then
+            GL_PATH="/usr/lib/x86_64-linux-gnu/libGL.so"
+        fi
+
         echo "Skip nVidia's libGL on Ubuntu!"
-        GL_LD_PRELOAD="/usr/lib/libGL.so $LD_PRELOAD"
+        GL_LD_PRELOAD="$GL_PATH $LD_PRELOAD"
     fi
 fi
 
