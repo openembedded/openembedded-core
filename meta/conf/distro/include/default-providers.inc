@@ -15,6 +15,7 @@ PREFERRED_PROVIDER_xf86-video-intel ?= "xf86-video-intel"
 # Default virtual runtime providers
 #
 VIRTUAL-RUNTIME_update-alternatives ?= "update-alternatives-cworth"
+VIRTUAL-RUNTIME_apm ?= "apm"
 
 #
 # Default recipe providers
