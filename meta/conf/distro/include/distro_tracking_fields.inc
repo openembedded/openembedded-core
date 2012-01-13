@@ -3105,9 +3105,9 @@ RECIPE_MANUAL_CHECK_DATE_pn-perl = "Nov 16, 2011"
 RECIPE_MAINTAINER_pn-perl = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-prelink="green" 
-RECIPE_LATEST_VERSION_pn-prelink="1.0+git0+0xbb1b660c5e3859b6c5a2ac8d739713e9989a4dd7"
-RECIPE_LAST_UPDATE_pn-prelink = "Dec 15, 2011"
-RECIPE_MANUAL_CHECK_DATE_pn-prelink = "Dec 15, 2011"
+RECIPE_LATEST_VERSION_pn-prelink="1.0+git0+0x7b47f2f8a15ed13b7905bc120bb2586f3e164f7d"
+RECIPE_LAST_UPDATE_pn-prelink = "Jan 13, 2012"
+RECIPE_MANUAL_CHECK_DATE_pn-prelink = "Jan 13, 2012"
 RECIPE_MAINTAINER_pn-prelink = "Mark Hatle <mark.hatle@windriver.com>"
 
 RECIPE_STATUS_pn-python-dbus="green" 
