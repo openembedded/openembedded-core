@@ -19,7 +19,9 @@ PACKAGECONFIG[gtk-directfb] = "--enable-directfb=yes,,directfb"
 
 #check for TARGET_FPU=soft and inform configure of the result so it can disable some floating points 
 require cairo-fpu.inc
-EXTRA_OECONF += "${@get_cairo_fpu_setting(bb, d)} "
+EXTRA_OECONF += "${@get_cairo_fpu_setting(bb, d)} \
+                 --enable-tee \
+                "
 
 
 inherit autotools pkgconfig
