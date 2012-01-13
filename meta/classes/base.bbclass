@@ -379,7 +379,7 @@ python () {
             import re
             this_host = d.getVar('HOST_SYS', 1)
             if not re.match(need_host, this_host):
-                raise bb.parse.SkipPackage("incompatible with host %s" % this_host)
+                raise bb.parse.SkipPackage("incompatible with host %s (not in COMPATIBLE_HOST)" % this_host)
 
         need_machine = d.getVar('COMPATIBLE_MACHINE', 1)
         if need_machine:
@@ -388,7 +388,7 @@ python () {
             if this_machine and not re.match(need_machine, this_machine):
                 this_soc_family = d.getVar('SOC_FAMILY', 1)
                 if (this_soc_family and not re.match(need_machine, this_soc_family)) or not this_soc_family:
-                    raise bb.parse.SkipPackage("incompatible with machine %s" % this_machine)
+                    raise bb.parse.SkipPackage("incompatible with machine %s (not in COMPATIBLE_MACHINE)" % this_machine)
 
 
         dont_want_license = d.getVar('INCOMPATIBLE_LICENSE', 1)
