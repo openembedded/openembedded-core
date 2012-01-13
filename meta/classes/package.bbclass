@@ -887,10 +887,7 @@ python populate_packages () {
 	package_list = []
 	for pkg in packages.split():
 		if pkg in package_list:
-			bb.error("-------------------")
 			bb.error("%s is listed in PACKAGES multiple times, this leads to packaging errors." % pkg)
-			bb.error("Please fix the metadata/report this as bug to OE bugtracker.")
-			bb.error("-------------------")
 		else:
 			package_list.append(pkg)
 
