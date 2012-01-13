@@ -105,6 +105,8 @@ def should_apply(parm, d):
 
 	return True, None
 
+should_apply[vardepsexclude] = "DATE SRCDATE"
+
 python patch_do_patch() {
 	import oe.patch
 
@@ -155,7 +157,7 @@ python patch_do_patch() {
 			bb.fatal(str(exc))
 		resolver.Resolve()
 }
-patch_do_patch[vardepsexclude] = "DATE SRCDATE PATCHRESOLVE"
+patch_do_patch[vardepsexclude] = "PATCHRESOLVE"
 
 addtask patch after do_unpack
 do_patch[dirs] = "${WORKDIR}"
