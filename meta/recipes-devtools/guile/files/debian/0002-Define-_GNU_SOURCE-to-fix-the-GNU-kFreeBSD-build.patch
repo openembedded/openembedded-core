@@ -1,0 +1,25 @@
+Upstream-Status: Inappropriate [debian patch]
+
+From 6614b8efc5a8d90a26a2b99308b909ac351b65e5 Mon Sep 17 00:00:00 2001
+From: Rob Browning <rlb@defaultvalue.org>
+Date: Sat, 23 Apr 2011 14:57:50 -0500
+Subject: Define _GNU_SOURCE to fix the GNU/kFreeBSD build.
+
+Author: Petr Salinger <Petr.Salinger@seznam.cz>
+Closes: #401168
+---
+ libguile/fports.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/libguile/fports.c b/libguile/fports.c
+index 1348b8b..3ac3ced 100644
+--- a/libguile/fports.c
++++ b/libguile/fports.c
+@@ -20,6 +20,7 @@
+ 
+ 
+ #define _LARGEFILE64_SOURCE      /* ask for stat64 etc */
++#define _GNU_SOURCE              /* ask for LONG_LONG_MAX/LONG_LONG_MIN */
+ 
+ #ifdef HAVE_CONFIG_H
+ #  include <config.h>

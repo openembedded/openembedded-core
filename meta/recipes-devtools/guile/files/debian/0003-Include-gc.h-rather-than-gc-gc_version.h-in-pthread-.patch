@@ -1,0 +1,26 @@
+Upstream-Status: Inappropriate [debian patch]
+
+From 0c91fa9270e86b20bfb8e62db5ac84617b2567d9 Mon Sep 17 00:00:00 2001
+From: Rob Browning <rlb@defaultvalue.org>
+Date: Thu, 10 Nov 2011 02:23:04 -0600
+Subject: Include gc.h rather than gc/gc_version.h in pthread test.
+
+See comments in recent gc_version.h.  It should never be included
+directly, and doing so was causing build failures.
+---
+ .../standalone/test-pthread-create-secondary.c     |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/test-suite/standalone/test-pthread-create-secondary.c b/test-suite/standalone/test-pthread-create-secondary.c
+index fe39c2a..d87fb33 100644
+--- a/test-suite/standalone/test-pthread-create-secondary.c
++++ b/test-suite/standalone/test-pthread-create-secondary.c
+@@ -27,7 +27,7 @@
+ #include <stdlib.h>
+ #include <libguile.h>
+ 
+-#include <gc/gc_version.h>
++#include <gc.h>
+ 
+ 
+ /* Up to GC 7.2alpha5, calling `GC_INIT' from a secondary thread would
