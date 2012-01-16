@@ -14,7 +14,8 @@ SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
            file://fix_unsupporting_kernel_3.patch \
            file://fixed-perl-path.patch \
            file://fix_for_automake_1.11.2.patch \
-           file://configure-fix.patch"
+           file://configure-fix.patch \
+           file://Added-support-for-PPC-instructions-mfatbu-mfatbl.patch"
 
 SRC_URI[md5sum] = "a855fda56edf05614f099dca316d1775"
 SRC_URI[sha256sum] = "5d62c0330f1481fe2c593249192fa68ff454c19c34343978cc9ce91aa324cbf6"
