@@ -20,7 +20,7 @@ PACKAGES_DYNAMIC = "pango-module-*"
 
 RRECOMMENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'x11', 'pango-module-basic-x', '', d)} pango-module-basic-fc" 
 
-inherit gnome
+inherit gnomebase
 # Create a pango-modules package
 ALLOW_EMPTY_${BPN}-modules = "1"
 PACKAGES += "${BPN}-modules"
