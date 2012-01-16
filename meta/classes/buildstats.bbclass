@@ -61,11 +61,13 @@ def set_device(e):
     # we do not collect diskstats as the method to collect meaningful statistics
     # for these fs types requires a bit more research. 
     ############################################################################
-    for line in open("/proc/diskstats", "r"):
-        if majordev == int(line.split()[0]) and minordev == int(line.split()[1]):
-           rdev=line.split()[2]
-        else:
-           rdev="NoLogicalDevice"
+    rdev="NoLogicalDevice"
+    try:
+        for line in open("/proc/diskstats", "r"):
+            if majordev == int(line.split()[0]) and minordev == int(line.split()[1]):
+               rdev=line.split()[2]
+    except:
+        pass
     file = open(e.data.getVar('DEVFILE', True), "w")
     file.write(rdev)
     file.close()
@@ -82,12 +84,15 @@ def get_diskstats(dev):
     # For info on what these are, see kernel doc file iostats.txt
     ############################################################################
     DSTAT_KEYS = ['ReadsComp', 'ReadsMerged', 'SectRead', 'TimeReads', 'WritesComp', 'SectWrite', 'TimeWrite', 'IOinProgress', 'TimeIO', 'WTimeIO']  
-    for x in open("/proc/diskstats", "r"):
-        if dev in x:
-            diskstats_val = x.rstrip().split()[4:]
-    diskstats = dict(itertools.izip(DSTAT_KEYS, diskstats_val))        
+    try:
+        for x in open("/proc/diskstats", "r"):
+            if dev in x:
+                diskstats_val = x.rstrip().split()[4:]
+    except IOError as e:
+        return
+    diskstats = dict(itertools.izip(DSTAT_KEYS, diskstats_val))
     return diskstats
-    
+
 def set_diskdata(var, dev, data):
     data.setVar(var, get_diskstats(dev))
 
