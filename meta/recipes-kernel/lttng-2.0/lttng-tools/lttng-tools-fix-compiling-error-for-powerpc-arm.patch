@@ -1,0 +1,27 @@
+Upstream-Status: Pending
+
+Fix compiling error on powerpc and arm
+
+For powerpc and arm, some MAP_ are defined asm/mman.h,
+so including it in header.
+
+Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
+---
+ common/runas.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/common/runas.c b/common/runas.c
+index f612ccc..62a2791 100644
+--- a/common/runas.c
++++ b/common/runas.c
+@@ -29,6 +29,7 @@
+ #include <fcntl.h>
+ #include <sched.h>
+ #include <sys/mman.h>
++#include <asm/mman.h>
+
+ #include <lttngerr.h>
+
+-- 
+1.7.5.4
+
