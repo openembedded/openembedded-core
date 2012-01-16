@@ -1,0 +1,41 @@
+Upstream-Status: Inappropriate [embedded specific]
+
+lttng-modules: replace KERNELDIR with KERNEL_SRC
+
+Since lttng-modules uses the default way of module.bbclass to
+build and install lttng-modules, we do this replacement for
+it as-is.
+
+Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
+---
+ Makefile |    7 +++----
+ 1 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 5ac13d7..25caad5 100644
+--- a/Makefile
++++ b/Makefile
+@@ -38,17 +38,16 @@ obj-m += lib/
+ endif
+
+ else
+-	KERNELDIR ?= /lib/modules/$(shell uname -r)/build
+ 	PWD := $(shell pwd)
+ 	CFLAGS = $(EXTCFLAGS)
+
+ default:
+-	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
++	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) modules
+
+ modules_install:
+-	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules_install
++	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) modules_install
+
+ clean:
+-	$(MAKE) -C $(KERNELDIR) M=$(PWD) clean
++	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) clean
+
+ endif
+-- 
+1.7.5.4
+
