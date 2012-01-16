@@ -16,8 +16,8 @@ PR = "r0"
 
 SRC_URI = "http://fedorahosted.org/releases/c/h/chkconfig/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "de562d5bff5116d1acf2d3191603096b"
-SRC_URI[sha256sum] = "ac5e8f6c5ed83f5b65a3dd9187f8c534f167193446082e6a6576a0d9f72ba968"
+SRC_URI[md5sum] = "35a2d0630f1cb5c251e749eefde70afd"
+SRC_URI[sha256sum] = "6a95472873984a0a8e99dca23ce9efe0ffe9db06d9990ce325575f8506babc1c"
 
 inherit autotools gettext
 
