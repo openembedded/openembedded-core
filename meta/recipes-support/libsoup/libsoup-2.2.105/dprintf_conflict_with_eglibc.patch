@@ -1,0 +1,1184 @@
+diff -rupN libsoup-2.2.105/tests/auth-test.c libsoup-2.2.105.new//tests/auth-test.c
+--- libsoup-2.2.105/tests/auth-test.c	2007-12-05 00:13:27.000000000 +0200
++++ libsoup-2.2.105.new//tests/auth-test.c	2012-01-16 20:12:09.000000000 +0200
+@@ -19,7 +19,7 @@ int errors = 0;
+ gboolean debug = FALSE;
+ 
+ static void
+-dprintf (const char *format, ...)
++dprintfsoup (const char *format, ...)
+ {
+ 	va_list args;
+ 
+@@ -216,18 +216,18 @@ handler (SoupMessage *msg, gpointer data
+ 
+ 	auth = identify_auth (msg);
+ 
+-	dprintf ("  %d %s (using %s)\n", msg->status_code, msg->reason_phrase,
++	dprintfsoup ("  %d %s (using %s)\n", msg->status_code, msg->reason_phrase,
+ 		 auths[auth]);
+ 
+ 	if (*expected) {
+ 		exp = *expected - '0';
+ 		if (auth != exp) {
+-			dprintf ("    expected %s!\n", auths[exp]);
++			dprintfsoup ("    expected %s!\n", auths[exp]);
+ 			errors++;
+ 		}
+ 		memmove (expected, expected + 1, strlen (expected));
+ 	} else {
+-		dprintf ("    expected to be finished\n");
++		dprintfsoup ("    expected to be finished\n");
+ 		errors++;
+ 	}
+ }
+@@ -266,10 +266,10 @@ bug271540_sent (SoupMessage *msg, gpoint
+ 	int auth = identify_auth (msg);
+ 
+ 	if (!*authenticated && auth) {
+-		dprintf ("    using auth on message %d before authenticating!!??\n", n);
++		dprintfsoup ("    using auth on message %d before authenticating!!??\n", n);
+ 		errors++;
+ 	} else if (*authenticated && !auth) {
+-		dprintf ("    sent unauthenticated message %d after authenticating!\n", n);
++		dprintfsoup ("    sent unauthenticated message %d after authenticating!\n", n);
+ 		errors++;
+ 	}
+ }
+@@ -287,12 +287,12 @@ bug271540_authenticate (SoupSession *ses
+ 		return;
+ 
+ 	if (!*authenticated) {
+-		dprintf ("    authenticating message %d\n", n);
++		dprintfsoup ("    authenticating message %d\n", n);
+ 		*username = g_strdup ("user1");
+ 		*password = g_strdup ("realm1");
+ 		*authenticated = TRUE;
+ 	} else {
+-		dprintf ("    asked to authenticate message %d after authenticating!\n", n);
++		dprintfsoup ("    asked to authenticate message %d after authenticating!\n", n);
+ 		errors++;
+ 	}
+ }
+@@ -304,7 +304,7 @@ bug271540_finished (SoupMessage *msg, gp
+ 	int n = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (msg), "#"));
+ 
+ 	if (!SOUP_STATUS_IS_SUCCESSFUL (msg->status_code)) {
+-		dprintf ("      got status '%d %s' on message %d!\n",
++		dprintfsoup ("      got status '%d %s' on message %d!\n",
+ 			msg->status_code, msg->reason_phrase, n);
+ 		errors++;
+ 	}
+@@ -350,10 +350,10 @@ main (int argc, char **argv)
+ 			  G_CALLBACK (reauthenticate), &i);
+ 
+ 	for (i = 0; i < ntests; i++) {
+-		dprintf ("Test %d: %s\n", i + 1, tests[i].explanation);
++		dprintfsoup ("Test %d: %s\n", i + 1, tests[i].explanation);
+ 
+ 		uri = g_strconcat (base_uri, tests[i].url, NULL);
+-		dprintf ("  GET %s\n", uri);
++		dprintfsoup ("  GET %s\n", uri);
+ 
+ 		msg = soup_message_new (SOUP_METHOD_GET, uri);
+ 		g_free (uri);
+@@ -372,21 +372,21 @@ main (int argc, char **argv)
+ 		soup_session_send_message (session, msg);
+ 		if (msg->status_code != SOUP_STATUS_UNAUTHORIZED &&
+ 		    msg->status_code != SOUP_STATUS_OK) {
+-			dprintf ("  %d %s !\n", msg->status_code,
++			dprintfsoup ("  %d %s !\n", msg->status_code,
+ 				msg->reason_phrase);
+ 			errors++;
+ 		}
+ 		if (*expected) {
+-			dprintf ("  expected %d more round(s)\n",
++			dprintfsoup ("  expected %d more round(s)\n",
+ 				(int)strlen (expected));
+ 			errors++;
+ 		}
+ 		g_free (expected);
+ 
+ 		if (msg->status_code != tests[i].final_status)
+-			dprintf ("  expected %d\n", tests[i].final_status);
++			dprintfsoup ("  expected %d\n", tests[i].final_status);
+ 
+-		dprintf ("\n");
++		dprintfsoup ("\n");
+ 
+ 		g_object_unref (msg);
+ 	}
+@@ -395,7 +395,7 @@ main (int argc, char **argv)
+ 
+ 	/* And now for a regression test */
+ 
+-	dprintf ("Regression test for bug 271540:\n");
++	dprintfsoup ("Regression test for bug 271540:\n");
+ 	session = soup_session_async_new ();
+ 
+ 	authenticated = FALSE;
+@@ -424,7 +424,7 @@ main (int argc, char **argv)
+ 
+ 	apache_cleanup ();
+ 
+-	dprintf ("\n");
++	dprintfsoup ("\n");
+ 	if (errors) {
+ 		printf ("auth-test: %d error(s). Run with '-d' for details\n",
+ 			errors);
+diff -rupN libsoup-2.2.105/tests/context-test.c libsoup-2.2.105.new//tests/context-test.c
+--- libsoup-2.2.105/tests/context-test.c	2007-12-05 00:13:27.000000000 +0200
++++ libsoup-2.2.105.new//tests/context-test.c	2012-01-16 20:11:27.000000000 +0200
+@@ -28,7 +28,7 @@ GThread *server_thread;
+ char *base_uri;
+ 
+ static void
+-dprintf (const char *format, ...)
++dprintfsoup (const char *format, ...)
+ {
+ 	va_list args;
+ 
+@@ -168,7 +168,7 @@ do_test1 (void)
+ {
+ 	GMainLoop *loop;
+ 
+-	dprintf ("Test 1: blocking the main thread does not block other thread\n");
++	dprintfsoup ("Test 1: blocking the main thread does not block other thread\n");
+ 
+ 	test1_cond = g_cond_new ();
+ 	test1_mutex = g_mutex_new ();
+@@ -196,7 +196,7 @@ idle_start_test1_thread (gpointer loop)
+ 	if (g_cond_timed_wait (test1_cond, test1_mutex, &time))
+ 		g_thread_join (thread);
+ 	else {
+-		dprintf ("  timeout!\n");
++		dprintfsoup ("  timeout!\n");
+ 		errors++;
+ 	}
+ 
+@@ -232,17 +232,17 @@ test1_thread (gpointer user_data)
+ 
+ 	uri = g_build_filename (base_uri, "slow", NULL);
+ 
+-	dprintf ("  send_message\n");
++	dprintfsoup ("  send_message\n");
+ 	msg = soup_message_new ("GET", uri);
+ 	soup_session_send_message (session, msg);
+ 	if (msg->status_code != SOUP_STATUS_OK) {
+-		dprintf ("    unexpected status: %d %s\n",
++		dprintfsoup ("    unexpected status: %d %s\n",
+ 			 msg->status_code, msg->reason_phrase);
+ 		errors++;
+ 	}
+ 	g_object_unref (msg);
+ 
+-	dprintf ("  queue_message\n");
++	dprintfsoup ("  queue_message\n");
+ 	msg = soup_message_new ("GET", uri);
+ 	loop = g_main_loop_new (async_context, FALSE);
+ 	g_object_ref (msg);
+@@ -250,7 +250,7 @@ test1_thread (gpointer user_data)
+ 	g_main_loop_run (loop);
+ 	g_main_loop_unref (loop);
+ 	if (msg->status_code != SOUP_STATUS_OK) {
+-		dprintf ("    unexpected status: %d %s\n",
++		dprintfsoup ("    unexpected status: %d %s\n",
+ 			 msg->status_code, msg->reason_phrase);
+ 		errors++;
+ 	}
+@@ -279,7 +279,7 @@ do_test2 (void)
+ 	char *uri;
+ 	SoupMessage *msg;
+ 
+-	dprintf ("Test 2: a session with its own context is independent of the main loop.\n");
++	dprintfsoup ("Test 2: a session with its own context is independent of the main loop.\n");
+ 
+ 	idle = g_idle_add_full (G_PRIORITY_HIGH, idle_test2_fail, NULL, NULL);
+ 
+@@ -291,11 +291,11 @@ do_test2 (void)
+ 
+ 	uri = g_build_filename (base_uri, "slow", NULL);
+ 
+-	dprintf ("  send_message\n");
++	dprintfsoup ("  send_message\n");
+ 	msg = soup_message_new ("GET", uri);
+ 	soup_session_send_message (session, msg);
+ 	if (msg->status_code != SOUP_STATUS_OK) {
+-		dprintf ("    unexpected status: %d %s\n",
++		dprintfsoup ("    unexpected status: %d %s\n",
+ 			 msg->status_code, msg->reason_phrase);
+ 		errors++;
+ 	}
+@@ -311,7 +311,7 @@ do_test2 (void)
+ static gboolean
+ idle_test2_fail (gpointer user_data)
+ {
+-	dprintf ("  idle ran!\n");
++	dprintfsoup ("  idle ran!\n");
+ 	errors++;
+ 	return FALSE;
+ }
+@@ -356,7 +356,7 @@ main (int argc, char **argv)
+ 	g_free (base_uri);
+ 	g_main_context_unref (g_main_context_default ());
+ 
+-	dprintf ("\n");
++	dprintfsoup ("\n");
+ 	if (errors) {
+ 		printf ("context-test: %d error(s). Run with '-d' for details\n",
+ 			errors);
+diff -rupN libsoup-2.2.105/tests/header-parsing.c libsoup-2.2.105.new//tests/header-parsing.c
+--- libsoup-2.2.105/tests/header-parsing.c	2007-10-28 19:57:03.000000000 +0200
++++ libsoup-2.2.105.new//tests/header-parsing.c	2012-01-16 20:11:54.000000000 +0200
+@@ -10,7 +10,7 @@
+ gboolean debug = FALSE;
+ 
+ static void
+-dprintf (const char *format, ...)
++dprintfsoup (const char *format, ...)
+ {
+ 	va_list args;
+ 
+@@ -455,7 +455,7 @@ static void
+ print_header (gpointer key, gpointer value, gpointer data)
+ {
+ 	GSList *values = value;
+-	dprintf ("              '%s': '%s'\n",
++	dprintfsoup ("              '%s': '%s'\n",
+ 		 (char *)key, (char*)values->data);
+ }
+ 
+@@ -480,11 +480,11 @@ do_request_tests (void)
+ 	SoupHttpVersion version;
+ 	GHashTable *headers;
+ 
+-	dprintf ("Request tests\n");
++	dprintfsoup ("Request tests\n");
+ 	for (i = 0; i < 1; i++) {
+ 		gboolean ok = TRUE;
+ 
+-		dprintf ("%2d. %s (%s): ", i + 1, reqtests[i].description,
++		dprintfsoup ("%2d. %s (%s): ", i + 1, reqtests[i].description,
+ 			 reqtests[i].method ? "should parse" : "should NOT parse");
+ 
+ 		headers = g_hash_table_new_full (g_str_hash, g_str_equal,
+@@ -519,34 +519,34 @@ do_request_tests (void)
+ 		}
+ 
+ 		if (ok)
+-			dprintf ("OK!\n");
++			dprintfsoup ("OK!\n");
+ 		else {
+-			dprintf ("BAD!\n");
++			dprintfsoup ("BAD!\n");
+ 			errors++;
+ 			if (reqtests[i].method) {
+-				dprintf ("    expected: '%s' '%s' 'HTTP/1.%d'\n",
++				dprintfsoup ("    expected: '%s' '%s' 'HTTP/1.%d'\n",
+ 					 reqtests[i].method, reqtests[i].path,
+ 					 reqtests[i].version);
+ 				for (h = 0; reqtests[i].headers[h].name; h++) {
+-					dprintf ("              '%s': '%s'\n",
++					dprintfsoup ("              '%s': '%s'\n",
+ 						 reqtests[i].headers[h].name,
+ 						 reqtests[i].headers[h].value);
+ 				}
+ 			} else
+-				dprintf ("    expected: parse error\n");
++				dprintfsoup ("    expected: parse error\n");
+ 			if (method) {
+-				dprintf ("         got: '%s' '%s' 'HTTP/1.%d'\n",
++				dprintfsoup ("         got: '%s' '%s' 'HTTP/1.%d'\n",
+ 					method, path, version);
+ 				g_hash_table_foreach (headers, print_header, NULL);
+ 			} else
+-				dprintf ("         got: parse error\n");
++				dprintfsoup ("         got: parse error\n");
+ 		}
+ 
+ 		g_free (method);
+ 		g_free (path);
+ 		g_hash_table_destroy (headers);
+ 	}
+-	dprintf ("\n");
++	dprintfsoup ("\n");
+ 
+ 	return errors;
+ }
+@@ -561,11 +561,11 @@ do_response_tests (void)
+ 	SoupHttpVersion version;
+ 	GHashTable *headers;
+ 
+-	dprintf ("Response tests\n");
++	dprintfsoup ("Response tests\n");
+ 	for (i = 0; i < num_resptests; i++) {
+ 		gboolean ok = TRUE;
+ 
+-		dprintf ("%2d. %s (%s): ", i + 1, resptests[i].description,
++		dprintfsoup ("%2d. %s (%s): ", i + 1, resptests[i].description,
+ 			 resptests[i].reason_phrase ? "should parse" : "should NOT parse");
+ 
+ 		headers = g_hash_table_new_full (g_str_hash, g_str_equal,
+@@ -600,34 +600,34 @@ do_response_tests (void)
+ 		}
+ 
+ 		if (ok)
+-			dprintf ("OK!\n");
++			dprintfsoup ("OK!\n");
+ 		else {
+-			dprintf ("BAD!\n");
++			dprintfsoup ("BAD!\n");
+ 			errors++;
+ 			if (resptests[i].reason_phrase) {
+-				dprintf ("    expected: 'HTTP/1.%d' '%03d' '%s'\n",
++				dprintfsoup ("    expected: 'HTTP/1.%d' '%03d' '%s'\n",
+ 					 resptests[i].version,
+ 					 resptests[i].status_code,
+ 					 resptests[i].reason_phrase);
+ 				for (h = 0; resptests[i].headers[h].name; h++) {
+-					dprintf ("              '%s': '%s'\n",
++					dprintfsoup ("              '%s': '%s'\n",
+ 						 resptests[i].headers[h].name,
+ 						 resptests[i].headers[h].value);
+ 				}
+ 			} else
+-				dprintf ("    expected: parse error\n");
++				dprintfsoup ("    expected: parse error\n");
+ 			if (reason_phrase) {
+-				dprintf ("         got: 'HTTP/1.%d' '%03d' '%s'\n",
++				dprintfsoup ("         got: 'HTTP/1.%d' '%03d' '%s'\n",
+ 					 version, status_code, reason_phrase);
+ 				g_hash_table_foreach (headers, print_header, NULL);
+ 			} else
+-				dprintf ("         got: parse error\n");
++				dprintfsoup ("         got: parse error\n");
+ 		}
+ 
+ 		g_free (reason_phrase);
+ 		g_hash_table_destroy (headers);
+ 	}
+-	dprintf ("\n");
++	dprintfsoup ("\n");
+ 
+ 	return errors;
+ }
+@@ -651,7 +651,7 @@ main (int argc, char **argv)
+ 	errors = do_request_tests ();
+ 	errors += do_response_tests ();
+ 
+-	dprintf ("\n");
++	dprintfsoup ("\n");
+ 	if (errors) {
+ 		printf ("header-parsing: %d error(s). Run with '-d' for details\n",
+ 			errors);
+diff -rupN libsoup-2.2.105/tests/ntlm-test.c libsoup-2.2.105.new//tests/ntlm-test.c
+--- libsoup-2.2.105/tests/ntlm-test.c	2007-12-05 00:13:27.000000000 +0200
++++ libsoup-2.2.105.new//tests/ntlm-test.c	2012-01-16 20:11:45.000000000 +0200
+@@ -29,7 +29,7 @@
+ gboolean debug = FALSE;
+ 
+ static void
+-dprintf (const char *format, ...)
++dprintfsoup (const char *format, ...)
+ {
+ 	va_list args;
+ 
+@@ -219,58 +219,58 @@ do_message (SoupSession *session, SoupUr
+ 			  G_CALLBACK (ntlm_response_check), &state);
+ 
+ 	soup_session_send_message (session, msg);
+-	dprintf ("  %-10s -> ", path);
++	dprintfsoup ("  %-10s -> ", path);
+ 
+ 	if (state.got_prompt) {
+-		dprintf (" PROMPT");
++		dprintfsoup (" PROMPT");
+ 		if (!get_prompt) {
+-			dprintf ("???");
++			dprintfsoup ("???");
+ 			errors++;
+ 		}
+ 	} else if (get_prompt) {
+-		dprintf (" no-prompt???");
++		dprintfsoup (" no-prompt???");
+ 		errors++;
+ 	}
+ 
+ 	if (state.sent_request) {
+-		dprintf (" REQUEST");
++		dprintfsoup (" REQUEST");
+ 		if (!do_ntlm) {
+-			dprintf ("???");
++			dprintfsoup ("???");
+ 			errors++;
+ 		}
+ 	} else if (do_ntlm) {
+-		dprintf (" no-request???");
++		dprintfsoup (" no-request???");
+ 		errors++;
+ 	}
+ 
+ 	if (state.got_challenge) {
+-		dprintf (" CHALLENGE");
++		dprintfsoup (" CHALLENGE");
+ 		if (!do_ntlm) {
+-			dprintf ("???");
++			dprintfsoup ("???");
+ 			errors++;
+ 		}
+ 	} else if (do_ntlm) {
+-		dprintf (" no-challenge???");
++		dprintfsoup (" no-challenge???");
+ 		errors++;
+ 	}
+ 
+ 	if (state.sent_response) {
+-		dprintf (" RESPONSE");
++		dprintfsoup (" RESPONSE");
+ 		if (!do_ntlm) {
+-			dprintf ("???");
++			dprintfsoup ("???");
+ 			errors++;
+ 		}
+ 	} else if (do_ntlm) {
+-		dprintf (" no-response???");
++		dprintfsoup (" no-response???");
+ 		errors++;
+ 	}
+ 
+-	dprintf (" -> %s", msg->reason_phrase);
++	dprintfsoup (" -> %s", msg->reason_phrase);
+ 	if (msg->status_code != status_code) {
+-		dprintf ("???");
++		dprintfsoup ("???");
+ 		errors++;
+ 	}
+-	dprintf ("\n");
++	dprintfsoup ("\n");
+ 
+ 	g_object_unref (msg);
+ 	return errors;
+@@ -327,11 +327,11 @@ do_ntlm_tests (SoupUri *base_uri)
+ {
+ 	int errors = 0;
+ 
+-	dprintf ("Round 1: Non-NTLM Connection\n");
++	dprintfsoup ("Round 1: Non-NTLM Connection\n");
+ 	errors += do_ntlm_round (base_uri, NULL);
+-	dprintf ("Round 2: NTLM Connection, user=alice\n");
++	dprintfsoup ("Round 2: NTLM Connection, user=alice\n");
+ 	errors += do_ntlm_round (base_uri, "alice");
+-	dprintf ("Round 3: NTLM Connection, user=bob\n");
++	dprintfsoup ("Round 3: NTLM Connection, user=bob\n");
+ 	errors += do_ntlm_round (base_uri, "bob");
+ 
+ 	return errors;
+@@ -397,7 +397,7 @@ main (int argc, char **argv)
+ 	g_hash_table_destroy (connections);
+ 	g_main_context_unref (g_main_context_default ());
+ 
+-	dprintf ("\n");
++	dprintfsoup ("\n");
+ 	if (errors) {
+ 		printf ("ntlm-test: %d error(s). Run with '-d' for details\n",
+ 			errors);
+diff -rupN libsoup-2.2.105/tests/proxy-test.c libsoup-2.2.105.new//tests/proxy-test.c
+--- libsoup-2.2.105/tests/proxy-test.c	2007-12-05 00:13:27.000000000 +0200
++++ libsoup-2.2.105.new//tests/proxy-test.c	2012-01-16 20:11:02.000000000 +0200
+@@ -14,7 +14,7 @@ int errors = 0;
+ gboolean debug = FALSE;
+ 
+ static void
+-dprintf (const char *format, ...)
++dprintfsoup (const char *format, ...)
+ {
+ 	va_list args;
+ 
+@@ -76,7 +76,7 @@ test_url (const char *url, int proxy, gu
+ 	SoupUri *proxy_uri;
+ 	SoupMessage *msg;
+ 
+-	dprintf ("  GET %s via %s\n", url, proxy_names[proxy]);
++	dprintfsoup ("  GET %s via %s\n", url, proxy_names[proxy]);
+ 	if (proxy == UNAUTH_PROXY && expected != SOUP_STATUS_FORBIDDEN)
+ 		expected = SOUP_STATUS_PROXY_UNAUTHORIZED;
+ 
+@@ -99,9 +99,9 @@ test_url (const char *url, int proxy, gu
+ 
+ 	soup_session_send_message (session, msg);
+ 
+-	dprintf ("  %d %s\n", msg->status_code, msg->reason_phrase);
++	dprintfsoup ("  %d %s\n", msg->status_code, msg->reason_phrase);
+ 	if (msg->status_code != expected) {
+-		dprintf ("  EXPECTED %d!\n", expected);
++		dprintfsoup ("  EXPECTED %d!\n", expected);
+ 		errors++;
+ 	}
+ 
+@@ -115,7 +115,7 @@ run_test (int i, gboolean sync)
+ {
+ 	char *http_url, *https_url;
+ 
+-	dprintf ("Test %d: %s (%s)\n", i + 1, tests[i].explanation,
++	dprintfsoup ("Test %d: %s (%s)\n", i + 1, tests[i].explanation,
+ 		 sync ? "sync" : "async");
+ 
+ 	if (!strncmp (tests[i].url, "http", 4)) {
+@@ -141,7 +141,7 @@ run_test (int i, gboolean sync)
+ 	g_free (http_url);
+ 	g_free (https_url);
+ 
+-	dprintf ("\n");
++	dprintfsoup ("\n");
+ }
+ 
+ int
+@@ -176,7 +176,7 @@ main (int argc, char **argv)
+ 	apache_cleanup ();
+ 	g_main_context_unref (g_main_context_default ());
+ 
+-	dprintf ("\n");
++	dprintfsoup ("\n");
+ 	if (errors) {
+ 		printf ("proxy-test: %d error(s). Run with '-d' for details\n",
+ 			errors);
+diff -rupN libsoup-2.2.105/tests/pull-api.c libsoup-2.2.105.new//tests/pull-api.c
+--- libsoup-2.2.105/tests/pull-api.c	2007-12-05 00:13:27.000000000 +0200
++++ libsoup-2.2.105.new//tests/pull-api.c	2012-01-16 20:11:14.000000000 +0200
+@@ -19,7 +19,7 @@ char *correct_response;
+ guint correct_response_len;
+ 
+ static void
+-dprintf (int level, const char *format, ...)
++dprintfsoup (int level, const char *format, ...)
+ {
+ 	va_list args;
+ 
+@@ -98,7 +98,7 @@ do_fully_async_test (SoupSession *sessio
+ 	loop = g_main_loop_new (NULL, FALSE);
+ 
+ 	uri = g_build_filename (base_uri, sub_uri, NULL);
+-	dprintf (1, "GET %s\n", uri);
++	dprintfsoup (1, "GET %s\n", uri);
+ 
+ 	msg = soup_message_new (SOUP_METHOD_GET, uri);
+ 	g_free (uri);
+@@ -152,10 +152,10 @@ fully_async_request_chunk (gpointer user
+ 	FullyAsyncData *ad = user_data;
+ 
+ 	if (!ad->did_first_timeout) {
+-		dprintf (1, "  first timeout\n");
++		dprintfsoup (1, "  first timeout\n");
+ 		ad->did_first_timeout = TRUE;
+ 	} else
+-		dprintf (2, "  timeout\n");
++		dprintfsoup (2, "  timeout\n");
+ 	ad->timeout = 0;
+ 
+ 	/* ad->chunks_ready and ad->chunk_wanted are used because
+@@ -180,14 +180,14 @@ fully_async_got_headers (SoupMessage *ms
+ {
+ 	FullyAsyncData *ad = user_data;
+ 
+-	dprintf (1, "  %d %s\n", msg->status_code, msg->reason_phrase);
++	dprintfsoup (1, "  %d %s\n", msg->status_code, msg->reason_phrase);
+ 	if (msg->status_code == SOUP_STATUS_UNAUTHORIZED) {
+ 		/* Let soup handle this one; this got_headers handler
+ 		 * will get called again next time around.
+ 		 */
+ 		return;
+ 	} else if (msg->status_code != SOUP_STATUS_OK) {
+-		dprintf (1, "  unexpected status: %d %s\n",
++		dprintfsoup (1, "  unexpected status: %d %s\n",
+ 			 msg->status_code, msg->reason_phrase);
+ 		errors++;
+ 		return;
+@@ -210,7 +210,7 @@ fully_async_got_chunk (SoupMessage *msg,
+ {
+ 	FullyAsyncData *ad = user_data;
+ 
+-	dprintf (2, "  got chunk from %lu - %lu\n",
++	dprintfsoup (2, "  got chunk from %lu - %lu\n",
+ 		 (unsigned long) ad->read_so_far,
+ 		 (unsigned long) ad->read_so_far + msg->response.length);
+ 
+@@ -227,13 +227,13 @@ fully_async_got_chunk (SoupMessage *msg,
+ 	 * somewhere.
+ 	 */
+ 	if (ad->read_so_far + msg->response.length > correct_response_len) {
+-		dprintf (1, "  read too far! (%lu > %lu)\n",
++		dprintfsoup (1, "  read too far! (%lu > %lu)\n",
+ 			 (unsigned long) (ad->read_so_far + msg->response.length),
+ 			 (unsigned long) correct_response_len);
+ 		errors++;
+ 	} else if (memcmp (msg->response.body, correct_response + ad->read_so_far,
+ 			   msg->response.length) != 0) {
+-		dprintf (1, "  data mismatch in block starting at %lu\n",
++		dprintfsoup (1, "  data mismatch in block starting at %lu\n",
+ 			 (unsigned long) ad->read_so_far);
+ 		errors++;
+ 	}
+@@ -257,7 +257,7 @@ fully_async_finished (SoupMessage *msg,
+ 	FullyAsyncData *ad = user_data;
+ 
+ 	if (msg->status_code != ad->expected_status) {
+-		dprintf (1, "  unexpected final status: %d %s !\n",
++		dprintfsoup (1, "  unexpected final status: %d %s !\n",
+ 			 msg->status_code, msg->reason_phrase);
+ 		errors++;
+ 	}
+@@ -300,7 +300,7 @@ do_synchronously_async_test (SoupSession
+ 	GByteArray *chunk;
+ 
+ 	uri = g_build_filename (base_uri, sub_uri, NULL);
+-	dprintf (1, "GET %s\n", uri);
++	dprintfsoup (1, "GET %s\n", uri);
+ 
+ 	msg = soup_message_new (SOUP_METHOD_GET, uri);
+ 	g_free (uri);
+@@ -314,11 +314,11 @@ do_synchronously_async_test (SoupSession
+ 	sync_async_send (session, msg);
+ 	if (msg->status == SOUP_MESSAGE_STATUS_FINISHED &&
+ 	    expected_status == SOUP_STATUS_OK) {
+-		dprintf (1, "  finished without reading response!\n");
++		dprintfsoup (1, "  finished without reading response!\n");
+ 		errors++;
+ 	} else if (msg->status != SOUP_MESSAGE_STATUS_FINISHED &&
+ 		   expected_status != SOUP_STATUS_OK) {
+-		dprintf (1, "  request failed to fail!\n");
++		dprintfsoup (1, "  request failed to fail!\n");
+ 		errors++;
+ 	}
+ 
+@@ -327,19 +327,19 @@ do_synchronously_async_test (SoupSession
+ 	 */
+ 	read_so_far = 0;
+ 	while ((chunk = sync_async_read_chunk (msg))) {
+-		dprintf (2, "  read chunk from %lu - %lu\n",
++		dprintfsoup (2, "  read chunk from %lu - %lu\n",
+ 			 (unsigned long) read_so_far,
+ 			 (unsigned long) read_so_far + chunk->len);
+ 
+ 		if (read_so_far + chunk->len > correct_response_len) {
+-			dprintf (1, "  read too far! (%lu > %lu)\n",
++			dprintfsoup (1, "  read too far! (%lu > %lu)\n",
+ 				 (unsigned long) read_so_far + chunk->len,
+ 				 (unsigned long) correct_response_len);
+ 			errors++;
+ 		} else if (memcmp (chunk->data,
+ 				   correct_response + read_so_far,
+ 				   chunk->len) != 0) {
+-			dprintf (1, "  data mismatch in block starting at %lu\n",
++			dprintfsoup (1, "  data mismatch in block starting at %lu\n",
+ 				 (unsigned long) read_so_far);
+ 			errors++;
+ 		}
+@@ -350,10 +350,10 @@ do_synchronously_async_test (SoupSession
+ 	if (msg->status != SOUP_MESSAGE_STATUS_FINISHED ||
+ 	    (msg->status_code == SOUP_STATUS_OK &&
+ 	     read_so_far != correct_response_len)) {
+-		dprintf (1, "  loop ended before message was fully read!\n");
++		dprintfsoup (1, "  loop ended before message was fully read!\n");
+ 		errors++;
+ 	} else if (msg->status_code != expected_status) {
+-		dprintf (1, "  unexpected final status: %d %s !\n",
++		dprintfsoup (1, "  unexpected final status: %d %s !\n",
+ 			 msg->status_code, msg->reason_phrase);
+ 		errors++;
+ 	}
+@@ -413,14 +413,14 @@ sync_async_got_headers (SoupMessage *msg
+ {
+ 	SyncAsyncData *ad = user_data;
+ 
+-	dprintf (1, "  %d %s\n", msg->status_code, msg->reason_phrase);
++	dprintfsoup (1, "  %d %s\n", msg->status_code, msg->reason_phrase);
+ 	if (msg->status_code == SOUP_STATUS_UNAUTHORIZED) {
+ 		/* Let soup handle this one; this got_headers handler
+ 		 * will get called again next time around.
+ 		 */
+ 		return;
+ 	} else if (msg->status_code != SOUP_STATUS_OK) {
+-		dprintf (1, "  unexpected status: %d %s\n",
++		dprintfsoup (1, "  unexpected status: %d %s\n",
+ 			 msg->status_code, msg->reason_phrase);
+ 		errors++;
+ 		return;
+@@ -526,7 +526,7 @@ main (int argc, char **argv)
+ 	base_uri = "http://localhost:47524/";
+ 	get_correct_response (base_uri);
+ 
+-	dprintf (1, "\nFully async, fast requests\n");
++	dprintfsoup (1, "\nFully async, fast requests\n");
+ 	session = soup_session_async_new ();
+ 	g_signal_connect (session, "authenticate",
+ 			  G_CALLBACK (authenticate), NULL);
+@@ -539,7 +539,7 @@ main (int argc, char **argv)
+ 	soup_session_abort (session);
+ 	g_object_unref (session);
+ 
+-	dprintf (1, "\nFully async, slow requests\n");
++	dprintfsoup (1, "\nFully async, slow requests\n");
+ 	session = soup_session_async_new ();
+ 	g_signal_connect (session, "authenticate",
+ 			  G_CALLBACK (authenticate), NULL);
+@@ -552,7 +552,7 @@ main (int argc, char **argv)
+ 	soup_session_abort (session);
+ 	g_object_unref (session);
+ 
+-	dprintf (1, "\nSynchronously async\n");
++	dprintfsoup (1, "\nSynchronously async\n");
+ 	session = soup_session_async_new ();
+ 	g_signal_connect (session, "authenticate",
+ 			  G_CALLBACK (authenticate), NULL);
+@@ -571,7 +571,7 @@ main (int argc, char **argv)
+ 	apache_cleanup ();
+ 	g_main_context_unref (g_main_context_default ());
+ 
+-	dprintf (1, "\n");
++	dprintfsoup (1, "\n");
+ 	if (errors) {
+ 		printf ("pull-api: %d error(s). Run with '-d' for details\n",
+ 			errors);
+diff -rupN libsoup-2.2.105/tests/uri-parsing.c libsoup-2.2.105.new//tests/uri-parsing.c
+--- libsoup-2.2.105/tests/uri-parsing.c	2007-10-28 19:57:03.000000000 +0200
++++ libsoup-2.2.105.new//tests/uri-parsing.c	2012-01-16 20:10:35.000000000 +0200
+@@ -10,7 +10,7 @@
+ gboolean debug = FALSE;
+ 
+ static void
+-dprintf (const char *format, ...)
++dprintfsoup (const char *format, ...)
+ {
+ 	va_list args;
+ 
+@@ -113,21 +113,21 @@ do_uri (SoupUri *base_uri, const char *b
+ 	char *uri_string;
+ 
+ 	if (base_uri) {
+-		dprintf ("<%s> + <%s> = <%s>? ", base_str, in_uri,
++		dprintfsoup ("<%s> + <%s> = <%s>? ", base_str, in_uri,
+ 			 out_uri ? out_uri : "ERR");
+ 		uri = soup_uri_new_with_base (base_uri, in_uri);
+ 	} else {
+-		dprintf ("<%s> => <%s>? ", in_uri,
++		dprintfsoup ("<%s> => <%s>? ", in_uri,
+ 			 out_uri ? out_uri : "ERR");
+ 		uri = soup_uri_new (in_uri);
+ 	}
+ 
+ 	if (!uri) {
+ 		if (out_uri) {
+-			dprintf ("ERR\n  Could not parse %s\n", in_uri);
++			dprintfsoup ("ERR\n  Could not parse %s\n", in_uri);
+ 			return FALSE;
+ 		} else {
+-			dprintf ("OK\n");
++			dprintfsoup ("OK\n");
+ 			return TRUE;
+ 		}
+ 	}
+@@ -136,18 +136,18 @@ do_uri (SoupUri *base_uri, const char *b
+ 	soup_uri_free (uri);
+ 
+ 	if (!out_uri) {
+-		dprintf ("ERR\n  Got %s\n", uri_string);
++		dprintfsoup ("ERR\n  Got %s\n", uri_string);
+ 		return FALSE;
+ 	}
+ 
+ 	if (strcmp (uri_string, out_uri) != 0) {
+-		dprintf ("NO\n  Unparses to <%s>\n", uri_string);
++		dprintfsoup ("NO\n  Unparses to <%s>\n", uri_string);
+ 		g_free (uri_string);
+ 		return FALSE;
+ 	}
+ 	g_free (uri_string);
+ 
+-	dprintf ("OK\n");
++	dprintfsoup ("OK\n");
+ 	return TRUE;
+ }
+ 
+@@ -169,14 +169,14 @@ main (int argc, char **argv)
+ 		}
+ 	}
+ 
+-	dprintf ("Absolute URI parsing\n");
++	dprintfsoup ("Absolute URI parsing\n");
+ 	for (i = 0; i < num_abs_tests; i++) {
+ 		if (!do_uri (NULL, NULL, abs_tests[i].uri_string,
+ 			     abs_tests[i].result))
+ 			errs++;
+ 	}
+ 
+-	dprintf ("\nRelative URI parsing\n");
++	dprintfsoup ("\nRelative URI parsing\n");
+ 	base_uri = soup_uri_new (base);
+ 	if (!base_uri) {
+ 		fprintf (stderr, "Could not parse %s!\n", base);
+@@ -198,7 +198,7 @@ main (int argc, char **argv)
+ 	}
+ 	soup_uri_free (base_uri);
+ 
+-	dprintf ("\n");
++	dprintfsoup ("\n");
+ 	if (errs) {
+ 		printf ("uri-parsing: %d error(s). Run with '-d' for details\n",
+ 			errs);
+diff -rupN libsoup-2.2.105/tests/xmlrpc-test.c libsoup-2.2.105.new//tests/xmlrpc-test.c
+--- libsoup-2.2.105/tests/xmlrpc-test.c	2008-02-08 04:19:00.000000000 +0200
++++ libsoup-2.2.105.new//tests/xmlrpc-test.c	2012-01-16 20:12:18.000000000 +0200
+@@ -19,7 +19,7 @@ static const char *uri = "http://localho
+ int debug;
+ 
+ static void
+-dprintf (int level, const char *format, ...)
++dprintfsoup (int level, const char *format, ...)
+ {
+ 	va_list args;
+ 
+@@ -54,13 +54,13 @@ do_xmlrpc (SoupXmlrpcMessage *xmsg, Soup
+ 	soup_xmlrpc_message_persist (xmsg);
+ 	status = soup_session_send_message (session, msg);
+ 
+-	dprintf (3, "\n%.*s\n%d %s\n%.*s\n",
++	dprintfsoup (3, "\n%.*s\n%d %s\n%.*s\n",
+ 		 msg->request.length, msg->request.body,
+ 		 msg->status_code, msg->reason_phrase,
+ 		 msg->response.length, msg->response.body);
+ 
+ 	if (!SOUP_STATUS_IS_SUCCESSFUL (status)) {
+-		dprintf (1, "ERROR: %d %s\n", status, msg->reason_phrase);
++		dprintfsoup (1, "ERROR: %d %s\n", status, msg->reason_phrase);
+ 		g_object_unref (msg);
+ 		return FALSE;
+ 	}
+@@ -69,9 +69,9 @@ do_xmlrpc (SoupXmlrpcMessage *xmsg, Soup
+ 	g_object_unref (msg);
+ 	if (!response || soup_xmlrpc_response_is_fault (response)) {
+ 		if (!response)
+-			dprintf (1, "ERROR: no response\n");
++			dprintfsoup (1, "ERROR: no response\n");
+ 		else {
+-			dprintf (1, "ERROR: fault\n");
++			dprintfsoup (1, "ERROR: fault\n");
+ 			g_object_unref (response);
+ 		}
+ 		return FALSE;
+@@ -79,11 +79,11 @@ do_xmlrpc (SoupXmlrpcMessage *xmsg, Soup
+ 
+ 	value = soup_xmlrpc_response_get_value (response);
+ 	if (!value) {
+-		dprintf (1, "ERROR: no value?\n");
++		dprintfsoup (1, "ERROR: no value?\n");
+ 		g_object_unref (response);
+ 		return NULL;
+ 	} else if (soup_xmlrpc_value_get_type (value) != type) {
+-		dprintf (1, "ERROR: wrong value type; expected %s, got %s\n",
++		dprintfsoup (1, "ERROR: wrong value type; expected %s, got %s\n",
+ 			 value_type[type], value_type[soup_xmlrpc_value_get_type (value)]);
+ 		g_object_unref (response);
+ 		return NULL;
+@@ -101,7 +101,7 @@ test_sum (void)
+ 	int i, val, sum;
+ 	long result;
+ 
+-	dprintf (1, "sum (array of int -> int): ");
++	dprintfsoup (1, "sum (array of int -> int): ");
+ 
+ 	msg = soup_xmlrpc_message_new (uri);
+ 	soup_xmlrpc_message_start_call (msg, "sum");
+@@ -109,11 +109,11 @@ test_sum (void)
+ 	soup_xmlrpc_message_start_array (msg);
+ 	for (i = sum = 0; i < 10; i++) {
+ 		val = rand () % 100;
+-		dprintf (2, "%s%d", i == 0 ? "[" : ", ", val);
++		dprintfsoup (2, "%s%d", i == 0 ? "[" : ", ", val);
+ 		soup_xmlrpc_message_write_int (msg, val);
+ 		sum += val;
+ 	}
+-	dprintf (2, "] -> ");
++	dprintfsoup (2, "] -> ");
+ 	soup_xmlrpc_message_end_array (msg);
+ 	soup_xmlrpc_message_end_param (msg);
+ 	soup_xmlrpc_message_end_call (msg);
+@@ -124,14 +124,14 @@ test_sum (void)
+ 	value = soup_xmlrpc_response_get_value (response);
+ 
+ 	if (!soup_xmlrpc_value_get_int (value, &result)) {
+-		dprintf (1, "wrong type?\n");
++		dprintfsoup (1, "wrong type?\n");
+ 		g_object_unref (response);
+ 		return FALSE;
+ 	}
+ 	g_object_unref (response);
+ 
+-	dprintf (2, "%ld: ", result);
+-	dprintf (1, "%s\n", result == sum ? "OK!" : "WRONG!");
++	dprintfsoup (2, "%ld: ", result);
++	dprintfsoup (1, "%s\n", result == sum ? "OK!" : "WRONG!");
+ 	return result == sum;
+ }
+ 
+@@ -146,7 +146,7 @@ test_countBools (void)
+ 	gboolean val, ok;
+ 	GHashTable *result;
+ 
+-	dprintf (1, "countBools (array of boolean -> struct of ints): ");
++	dprintfsoup (1, "countBools (array of boolean -> struct of ints): ");
+ 
+ 	msg = soup_xmlrpc_message_new (uri);
+ 	soup_xmlrpc_message_start_call (msg, "countBools");
+@@ -154,14 +154,14 @@ test_countBools (void)
+ 	soup_xmlrpc_message_start_array (msg);
+ 	for (i = trues = falses = 0; i < 10; i++) {
+ 		val = rand () > (RAND_MAX / 2);
+-		dprintf (2, "%s%c", i == 0 ? "[" : ", ", val ? 'T' : 'F');
++		dprintfsoup (2, "%s%c", i == 0 ? "[" : ", ", val ? 'T' : 'F');
+ 		soup_xmlrpc_message_write_boolean (msg, val);
+ 		if (val)
+ 			trues++;
+ 		else
+ 			falses++;
+ 	}
+-	dprintf (2, "] -> ");
++	dprintfsoup (2, "] -> ");
+ 	soup_xmlrpc_message_end_array (msg);
+ 	soup_xmlrpc_message_end_param (msg);
+ 	soup_xmlrpc_message_end_call (msg);
+@@ -172,19 +172,19 @@ test_countBools (void)
+ 	value = soup_xmlrpc_response_get_value (response);
+ 
+ 	if (!soup_xmlrpc_value_get_struct (value, &result)) {
+-		dprintf (1, "wrong type?\n");
++		dprintfsoup (1, "wrong type?\n");
+ 		g_object_unref (response);
+ 		return FALSE;
+ 	}
+ 
+ 	if (!soup_xmlrpc_value_get_int (g_hash_table_lookup (result, "true"), &ret_trues)) {
+-		dprintf (1, "NO 'true' value in response\n");
++		dprintfsoup (1, "NO 'true' value in response\n");
+ 		g_hash_table_destroy (result);
+ 		g_object_unref (response);
+ 		return FALSE;
+ 	}
+ 	if (!soup_xmlrpc_value_get_int (g_hash_table_lookup (result, "false"), &ret_falses)) {
+-		dprintf (1, "NO 'false' value in response\n");
++		dprintfsoup (1, "NO 'false' value in response\n");
+ 		g_hash_table_destroy (result);
+ 		g_object_unref (response);
+ 		return FALSE;
+@@ -192,9 +192,9 @@ test_countBools (void)
+ 	g_hash_table_destroy (result);
+ 	g_object_unref (response);
+ 
+-	dprintf (2, "{ true: %ld, false: %ld } ", ret_trues, ret_falses);
++	dprintfsoup (2, "{ true: %ld, false: %ld } ", ret_trues, ret_falses);
+ 	ok = (trues == ret_trues) && (falses == ret_falses);
+-	dprintf (1, "%s\n", ok ? "OK!" : "WRONG!");
++	dprintfsoup (1, "%s\n", ok ? "OK!" : "WRONG!");
+ 	return ok;
+ }
+ 
+@@ -211,7 +211,7 @@ test_md5sum (void)
+ 	guchar digest[16];
+ 	gboolean ok;
+ 
+-	dprintf (1, "md5sum (base64 -> base64): ");
++	dprintfsoup (1, "md5sum (base64 -> base64): ");
+ 
+ 	msg = soup_xmlrpc_message_new (uri);
+ 	soup_xmlrpc_message_start_call (msg, "md5sum");
+@@ -228,14 +228,14 @@ test_md5sum (void)
+ 	value = soup_xmlrpc_response_get_value (response);
+ 
+ 	if (!soup_xmlrpc_value_get_base64 (value, &result)) {
+-		dprintf (1, "wrong type?\n");
++		dprintfsoup (1, "wrong type?\n");
+ 		g_object_unref (response);
+ 		return FALSE;
+ 	}
+ 	g_object_unref (response);
+ 
+ 	if (result->len != 16) {
+-		dprintf (1, "result has WRONG length (%d)\n", result->len);
++		dprintfsoup (1, "result has WRONG length (%d)\n", result->len);
+ 		g_byte_array_free (result, TRUE);
+ 		return FALSE;
+ 	}
+@@ -245,7 +245,7 @@ test_md5sum (void)
+ 	soup_md5_final (&md5, digest);
+ 
+ 	ok = (memcmp (digest, result->data, 16) == 0);
+-	dprintf (1, "%s\n", ok ? "OK!" : "WRONG!");
++	dprintfsoup (1, "%s\n", ok ? "OK!" : "WRONG!");
+ 	g_byte_array_free (result, TRUE);
+ 	return ok;
+ }
+@@ -260,7 +260,7 @@ test_dateChange (void)
+ 	time_t when, result;
+ 	char timestamp[128];
+ 
+-	dprintf (1, "dateChange (struct of time and ints -> time): ");
++	dprintfsoup (1, "dateChange (struct of time and ints -> time): ");
+ 
+ 	msg = soup_xmlrpc_message_new (uri);
+ 	soup_xmlrpc_message_start_call (msg, "dateChange");
+@@ -281,53 +281,53 @@ test_dateChange (void)
+ 
+ 	strftime (timestamp, sizeof (timestamp),
+ 		  "%Y-%m-%dT%H:%M:%S", &tm);
+-	dprintf (2, "{ date: %s", timestamp);
++	dprintfsoup (2, "{ date: %s", timestamp);
+ 
+ 	if (rand () % 3) {
+ 		tm.tm_year = 70 + (rand () % 50);
+-		dprintf (2, ", tm_year: %d", tm.tm_year);
++		dprintfsoup (2, ", tm_year: %d", tm.tm_year);
+ 		soup_xmlrpc_message_start_member (msg, "tm_year");
+ 		soup_xmlrpc_message_write_int (msg, tm.tm_year);
+ 		soup_xmlrpc_message_end_member (msg);
+ 	}
+ 	if (rand () % 3) {
+ 		tm.tm_mon = rand () % 12;
+-		dprintf (2, ", tm_mon: %d", tm.tm_mon);
++		dprintfsoup (2, ", tm_mon: %d", tm.tm_mon);
+ 		soup_xmlrpc_message_start_member (msg, "tm_mon");
+ 		soup_xmlrpc_message_write_int (msg, tm.tm_mon);
+ 		soup_xmlrpc_message_end_member (msg);
+ 	}
+ 	if (rand () % 3) {
+ 		tm.tm_mday = 1 + (rand () % 28);
+-		dprintf (2, ", tm_mday: %d", tm.tm_mday);
++		dprintfsoup (2, ", tm_mday: %d", tm.tm_mday);
+ 		soup_xmlrpc_message_start_member (msg, "tm_mday");
+ 		soup_xmlrpc_message_write_int (msg, tm.tm_mday);
+ 		soup_xmlrpc_message_end_member (msg);
+ 	}
+ 	if (rand () % 3) {
+ 		tm.tm_hour = rand () % 24;
+-		dprintf (2, ", tm_hour: %d", tm.tm_hour);
++		dprintfsoup (2, ", tm_hour: %d", tm.tm_hour);
+ 		soup_xmlrpc_message_start_member (msg, "tm_hour");
+ 		soup_xmlrpc_message_write_int (msg, tm.tm_hour);
+ 		soup_xmlrpc_message_end_member (msg);
+ 	}
+ 	if (rand () % 3) {
+ 		tm.tm_min = rand () % 60;
+-		dprintf (2, ", tm_min: %d", tm.tm_min);
++		dprintfsoup (2, ", tm_min: %d", tm.tm_min);
+ 		soup_xmlrpc_message_start_member (msg, "tm_min");
+ 		soup_xmlrpc_message_write_int (msg, tm.tm_min);
+ 		soup_xmlrpc_message_end_member (msg);
+ 	}
+ 	if (rand () % 3) {
+ 		tm.tm_sec = rand () % 60;
+-		dprintf (2, ", tm_sec: %d", tm.tm_sec);
++		dprintfsoup (2, ", tm_sec: %d", tm.tm_sec);
+ 		soup_xmlrpc_message_start_member (msg, "tm_sec");
+ 		soup_xmlrpc_message_write_int (msg, tm.tm_sec);
+ 		soup_xmlrpc_message_end_member (msg);
+ 	}
+ 	when = soup_mktime_utc (&tm);
+ 
+-	dprintf (2, " } -> ");
++	dprintfsoup (2, " } -> ");
+ 
+ 	soup_xmlrpc_message_end_struct (msg);
+ 	soup_xmlrpc_message_end_param (msg);
+@@ -339,7 +339,7 @@ test_dateChange (void)
+ 	value = soup_xmlrpc_response_get_value (response);
+ 
+ 	if (!soup_xmlrpc_value_get_datetime (value, &result)) {
+-		dprintf (1, "wrong type?\n");
++		dprintfsoup (1, "wrong type?\n");
+ 		g_object_unref (response);
+ 		return FALSE;
+ 	}
+@@ -348,9 +348,9 @@ test_dateChange (void)
+ 	memset (&tm, 0, sizeof (tm));
+ 	soup_gmtime (&result, &tm);
+ 	strftime (timestamp, sizeof (timestamp), "%Y-%m-%dT%H:%M:%S", &tm);
+-	dprintf (2, "%s: ", timestamp);
++	dprintfsoup (2, "%s: ", timestamp);
+ 
+-	dprintf (1, "%s\n", (when == result) ? "OK!" : "WRONG!");
++	dprintfsoup (1, "%s\n", (when == result) ? "OK!" : "WRONG!");
+ 	return (when == result);
+ }
+ 
+@@ -372,17 +372,17 @@ test_echo (void)
+ 	char *echo;
+ 	int i;
+ 
+-	dprintf (1, "echo (array of string -> array of string): ");
++	dprintfsoup (1, "echo (array of string -> array of string): ");
+ 
+ 	msg = soup_xmlrpc_message_new (uri);
+ 	soup_xmlrpc_message_start_call (msg, "echo");
+ 	soup_xmlrpc_message_start_param (msg);
+ 	soup_xmlrpc_message_start_array (msg);
+ 	for (i = 0; i < N_ECHO_STRINGS; i++) {
+-		dprintf (2, "%s\"%s\"", i == 0 ? "[" : ", ", echo_strings[i]);
++		dprintfsoup (2, "%s\"%s\"", i == 0 ? "[" : ", ", echo_strings[i]);
+ 		soup_xmlrpc_message_write_string (msg, echo_strings[i]);
+ 	}
+-	dprintf (2, "] -> ");
++	dprintfsoup (2, "] -> ");
+ 	soup_xmlrpc_message_end_array (msg);
+ 	soup_xmlrpc_message_end_param (msg);
+ 	soup_xmlrpc_message_end_call (msg);
+@@ -393,25 +393,25 @@ test_echo (void)
+ 	value = soup_xmlrpc_response_get_value (response);
+ 
+ 	if (!soup_xmlrpc_value_array_get_iterator (value, &iter)) {
+-		dprintf (1, "wrong type?\n");
++		dprintfsoup (1, "wrong type?\n");
+ 		g_object_unref (response);
+ 		return FALSE;
+ 	}
+ 	i = 0;
+ 	while (iter) {
+ 		if (!soup_xmlrpc_value_array_iterator_get_value (iter, &elt)) {
+-			dprintf (1, " WRONG! Can't get result element %d\n", i + 1);
++			dprintfsoup (1, " WRONG! Can't get result element %d\n", i + 1);
+ 			g_object_unref (response);
+ 			return FALSE;
+ 		}
+ 		if (!soup_xmlrpc_value_get_string (elt, &echo)) {
+-			dprintf (1, " WRONG! Result element %d is not a string", i + 1);
++			dprintfsoup (1, " WRONG! Result element %d is not a string", i + 1);
+ 			g_object_unref (response);
+ 			return FALSE;
+ 		}
+-		dprintf (2, "%s\"%s\"", i == 0 ? "[" : ", ", echo);
++		dprintfsoup (2, "%s\"%s\"", i == 0 ? "[" : ", ", echo);
+ 		if (strcmp (echo_strings[i], echo) != 0) {
+-			dprintf (1, " WRONG! Mismatch at %d\n", i + 1);
++			dprintfsoup (1, " WRONG! Mismatch at %d\n", i + 1);
+ 			g_free (echo);
+ 			g_object_unref (response);
+ 			return FALSE;
+@@ -421,10 +421,10 @@ test_echo (void)
+ 		iter = soup_xmlrpc_value_array_iterator_next (iter);
+ 		i++;
+ 	}
+-	dprintf (2, "] ");
++	dprintfsoup (2, "] ");
+ 	g_object_unref (response);
+ 
+-	dprintf (1, "%s\n", i == N_ECHO_STRINGS ? "OK!" : "WRONG! Too few results");
++	dprintfsoup (1, "%s\n", i == N_ECHO_STRINGS ? "OK!" : "WRONG! Too few results");
+ 	return i == N_ECHO_STRINGS;
+ }
+ 
+@@ -480,7 +480,7 @@ main (int argc, char **argv)
+ 
+ 	apache_cleanup ();
+ 
+-	dprintf (1, "\n");
++	dprintfsoup (1, "\n");
+ 	if (errors) {
+ 		printf ("xmlrpc-test: %d error(s). Run with '-d' for details\n",
+ 			errors);
