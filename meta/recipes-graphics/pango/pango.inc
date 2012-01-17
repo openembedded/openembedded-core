@@ -46,11 +46,6 @@ fi
 
 }
 
-# Command "pango-querymodules > /etc/pango/pango.modules" needs this directory.
-do_install_prepend() {
-	install -d ${D}/${sysconfdir}/pango
-}
-
 python populate_packages_prepend () {
 	prologue = d.getVar("postinst_prologue", 1)
 
@@ -59,5 +54,6 @@ python populate_packages_prepend () {
 	do_split_packages(d, modules_root, '^pango-(.*)\.so$', 'pango-module-%s', 'Pango module %s', prologue + 'pango-querymodules > /etc/pango/pango.modules')
 }
 
+FILES_${PN} = "/etc/pango/* ${bindir}/* ${libdir}/libpango*${SOLIBS}"
 FILES_${PN}-dbg += "${libdir}/pango/${LIBV}/modules/.debug"
 FILES_${PN}-dev += "${libdir}/pango/${LIBV}/modules/*.la"
