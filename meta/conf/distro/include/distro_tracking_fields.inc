@@ -37,6 +37,27 @@ RECIPE_MANUAL_CHECK_DATE_pn-libpcre = "Jan 10, 2012"
 RECIPE_MAINTAINER_pn-libpcre = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 DISTRO_PN_ALIAS_pn-libpcre = "Mandriva=libpcre0 Fedora=pcre"
 
+RECIPE_LATEST_VERSION_pn-bdwgc = "20110107"
+RECIPE_LAST_UPDATE_pn-bdwgc = "Jan 17, 2012"
+RECIPE_MANUAL_CHECK_DATE_pn-bdwgc = "Jan 17, 2012"
+RECIPE_MAINTAINER_pn-bdwgc = "Nitin A Kamble <nitin.a.kamble@intel.com>"
+
+RECIPE_LATEST_VERSION_pn-libunistring = "0.9.3"
+RECIPE_LAST_UPDATE_pn-libunistring = "Jan 17, 2012"
+RECIPE_MANUAL_CHECK_DATE_pn-libunistring = "Jan 17, 2012"
+RECIPE_MAINTAINER_pn-libunistring = "Nitin A Kamble <nitin.a.kamble@intel.com>"
+
+RECIPE_LATEST_VERSION_pn-guile = "2.0.3"
+RECIPE_LAST_UPDATE_pn-guile = "Jan 17, 2012"
+RECIPE_MANUAL_CHECK_DATE_pn-guile = "Jan 17, 2012"
+RECIPE_MAINTAINER_pn-guile = "Nitin A Kamble <nitin.a.kamble@intel.com>"
+
+RECIPE_LATEST_VERSION_pn-autogen = "5.12"
+RECIPE_NO_UPDATE_REASON_pn-autogen = "newer versions are dumping core while building, and no distro has picked up the newer versions yet"
+RECIPE_LAST_UPDATE_pn-autogen = "Jan 17, 2012"
+RECIPE_MANUAL_CHECK_DATE_pn-autogen = "Jan 17, 2012"
+RECIPE_MAINTAINER_pn-autogen = "Nitin A Kamble <nitin.a.kamble@intel.com>"
+
 RECIPE_STATUS_pn-libsoup = "red"
 RECIPE_LATEST_VERSION_pn-libsoup = "check"
 RECIPE_LAST_UPDATE_pn-libsoup = "Sep 22, 2008"
