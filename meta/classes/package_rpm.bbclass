@@ -543,12 +543,12 @@ python write_specfile () {
 			path = rootpath.replace(walkpath, "")
 			for dir in dirs:
 				# All packages own the directories their files are in...
-				target.append("%dir " + path + "/" + dir)
+				target.append('%dir "' + path + '/' + dir + '"')
 			for file in files:
-				if conffiles.count(path + "/" + file):
-					target.append("%config " + path + "/" + file)
+				if conffiles.count(path + '/' + file):
+					target.append('%config "' + path + '/' + file + '"')
 				else:
-					target.append(path + "/" + file)
+					target.append('"' + path + '/' + file + '"')
 
 	# Prevent the prerm/postrm scripts from being run during an upgrade
 	def wrap_uninstall(scriptvar):
