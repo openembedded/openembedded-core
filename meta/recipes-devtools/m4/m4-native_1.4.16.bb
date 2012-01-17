@@ -1,4 +1,4 @@
-require m4.inc
+require m4-${PV}.inc
 
 inherit native
 

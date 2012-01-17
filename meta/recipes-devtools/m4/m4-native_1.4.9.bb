@@ -1,5 +1,4 @@
-require m4_${PV}.bb
-inherit native
+require m4-${PV}.inc
 
 INHIBIT_AUTOTOOLS_DEPS = "1"
 DEPENDS += "gnu-config-native"
@@ -10,3 +9,4 @@ do_configure()  {
 	oe_runconf
 }
 
+inherit native
