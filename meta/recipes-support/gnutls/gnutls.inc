@@ -1,7 +1,7 @@
 DESCRIPTION = "GNU Transport Layer Security Library"
 HOMEPAGE = "http://www.gnu.org/software/gnutls/"
 BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
-DEPENDS = "zlib lzo libtasn1 libgcrypt (>= 1.4.2) libcap"
+DEPENDS = "zlib lzo libtasn1 libgcrypt (>= 1.4.2) libcap readline"
 
 INC_PR = "r3"
 
@@ -24,6 +24,7 @@ EXTRA_OECONF="--with-included-opencdk --with-included-libcfg --disable-rpath \
               --with-libgcrypt --with-libgcrypt-prefix=${STAGING_DIR_HOST}${prefix} \
               --with-libdl-prefix=${STAGING_DIR_HOST}${prefix} \
               --with-libpthread-prefix=${STAGING_DIR_HOST}${prefix} \
+              --with-libreadline-prefix=${STAGING_DIR_HOST}${prefix} \
               --with-lzo --disable-guile \
               --without-p11-kit \
               "
