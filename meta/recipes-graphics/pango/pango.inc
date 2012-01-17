@@ -44,6 +44,9 @@ if [ "x$D" != "x" ]; then
   exit 1
 fi
 
+if ! [ -e $D${sysconfdir}/pango ] ; then
+	mkdir -p $D${sysconfdir}/pango
+fi
 }
 
 python populate_packages_prepend () {
