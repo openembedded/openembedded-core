@@ -91,11 +91,10 @@ def uclibc_cfg(feature, features, tokens, cnf, rem):
 	else:
 		cnf.extend(['# ' + token + ' is not set' for token in tokens])
 
-# Map distro and machine features to config settings
+# Map distro features to config settings
 def features_to_uclibc_settings(d):
 	cnf, rem = ([], [])
 	distro_features = d.getVar('DISTRO_FEATURES', True).split()
-	machine_features = d.getVar('MACHINE_FEATURES', True).split()
 	uclibc_cfg('ipv4',      distro_features, 'UCLIBC_HAS_IPV4', cnf, rem)
 	uclibc_cfg('ipv6',      distro_features, 'UCLIBC_HAS_IPV6', cnf, rem)
 	uclibc_cfg('largefile', distro_features, 'UCLIBC_HAS_LFS', cnf, rem)
@@ -104,7 +103,6 @@ def features_to_uclibc_settings(d):
 	uclibc_cfg('xattr',     distro_features, 'UCLIBC_HAS_XATTR', cnf, rem)
 	uclibc_cfg('ssp',       distro_features, 'UCLIBC_HAS_SSP', cnf, rem)
 	uclibc_cfg('argp',       distro_features, 'UCLIBC_HAS_ARGP', cnf, rem)
-	uclibc_cfg('kernel24',  machine_features,'UCLIBC_LINUX_MODULE_24', cnf, rem)
 	uclibc_cfg('libc-posix-clang-wchar',  distro_features,'UCLIBC_HAS_WCHAR', cnf, rem)
 	return "\n".join(cnf), "\n".join(rem)
 # X, Y = ${@features_to_uclibc_settings(d)}
