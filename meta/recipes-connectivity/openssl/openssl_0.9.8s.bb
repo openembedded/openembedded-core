@@ -1,6 +1,6 @@
 require openssl.inc
 
-PR = "r7"
+PR = "r0"
 SRC_URI += "file://debian/ca.patch \
             file://debian/config-hurd.patch;apply=no \
             file://debian/debian-targets.patch \
@@ -21,11 +21,11 @@ SRC_URI += "file://debian/ca.patch \
             file://debian/version-script.patch \
             file://debian/perl-path.diff"
 
-SRC_URI[md5sum] = "0352932ea863bc02b056cda7c9ac5b79"
-SRC_URI[sha256sum] = "42b2368f786b05ed3be846838dce126b4e8e3dba8fb2e0ce83102df28c102fad"
-
 SRC_URI += "file://configure-targets.patch \
             file://shared-libs.patch \
             file://parallel-make-fix.patch"
+
+SRC_URI[md5sum] = "fbf71e8e050bc1ec290b7468bab1a76e"
+SRC_URI[sha256sum] = "edc9639beaf2d5e239d8e5c9d2fe1959e6726a5d7f8ab8430613835f4623f9ba"
 
 BBCLASSEXTEND = "native nativesdk"
