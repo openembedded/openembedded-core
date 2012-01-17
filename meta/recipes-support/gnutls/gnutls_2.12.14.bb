@@ -1,9 +1,11 @@
 require gnutls.inc
 
-PR = "${INC_PR}.4"
+PR = "${INC_PR}.5"
 
 SRC_URI += "file://gnutls-openssl.patch \
-            file://configure-fix.patch"
+            file://correct_rpl_gettimeofday_signature.patch \
+            file://configure-fix.patch \
+           "
 
 python() {
     if not ((d.getVar("INCOMPATIBLE_LICENSE", True) or "").find("GPLv3") != -1):
