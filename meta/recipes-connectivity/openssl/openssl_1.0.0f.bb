@@ -6,7 +6,7 @@ DEPENDS += "ocf-linux"
 
 CFLAG += "-DHAVE_CRYPTODEV -DUSE_CRYPTODEV_DIGESTS"
 
-PR = "${INC_PR}.2"
+PR = "${INC_PR}.0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 
@@ -32,15 +32,15 @@ SRC_URI += "file://configure-targets.patch \
             file://openssl_fix_for_x32.patch \
            "
 
-SRC_URI[md5sum] = "7040b89c4c58c7a1016c0dfa6e821c86"
-SRC_URI[sha256sum] = "e361dc2775733fb84de7b5bf7b504778b772869e8f7bfac0b28b935cbf7380f7"
+SRC_URI[md5sum] = "e358705fb4a8827b5e9224a73f442025"
+SRC_URI[sha256sum] = "faf1eab0ef85fd6c3beca271c356b31b5cc831e2c6b7f23cf672e7ab4680fde1"
 
 PACKAGES =+ " \
 	${PN}-engines \
 	${PN}-engines-dbg \
 	"
 
-FILES_${PN}-engines = "${libdir}/ssl/engines/*.so"
+FILES_${PN}-engines = "${libdir}/ssl/engines/*.so ${libdir}/engines"
 FILES_${PN}-engines-dbg = "${libdir}/ssl/engines/.debug"
 
 PARALLEL_MAKEINST = ""
