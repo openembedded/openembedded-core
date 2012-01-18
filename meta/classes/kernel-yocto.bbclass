@@ -92,6 +92,8 @@ do_patch() {
 		fi
 	done
 
+	patch_dirs="${patch_dirs} ${WORKDIR}"
+
 	# add any explicitly referenced features onto the end of the feature
 	# list that is passed to the kernel build scripts.
 	if [ -n "${KERNEL_FEATURES}" ]; then
