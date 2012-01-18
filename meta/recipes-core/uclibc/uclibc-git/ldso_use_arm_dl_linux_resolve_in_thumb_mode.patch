@@ -1,3 +1,9 @@
+resolver code should always be in arm mode
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+
 Index: uClibc/ldso/ldso/arm/resolve.S
 ===================================================================
 --- uClibc.orig/ldso/ldso/arm/resolve.S	2009-03-20 12:03:32.000000000 -0700

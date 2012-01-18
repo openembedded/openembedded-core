@@ -1,3 +1,8 @@
+ftruncate64 has 4 args on arm
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
+
 Index: uclibc-0.9.29/libc/sysdeps/linux/arm/bits/uClibc_arch_features.h
 ===================================================================
 --- uclibc-0.9.29.orig/libc/sysdeps/linux/arm/bits/uClibc_arch_features.h

@@ -1,3 +1,8 @@
+Dont support localised optimizations this helps to have a global -O level
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
+
 Index: git/include/features.h
 ===================================================================
 --- git.orig/include/features.h

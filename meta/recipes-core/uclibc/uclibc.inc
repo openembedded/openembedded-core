@@ -8,7 +8,7 @@ features, at the cost of ABI differences for different configurations. \
 uClibc has been designed from the ground up to be a C library for \
 embedded Linux.  It is NOT compatible with binaries linked against glibc."
 
-LICENSE = "LGPL"
+LICENSE = "LGPLv2.1+"
 SECTION = "libs"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 		    file://COPYING.LIB.boilerplate;md5=aaddeadcddeb918297e0e4afc52ce46f \
