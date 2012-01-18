@@ -1,8 +1,9 @@
 require e2fsprogs.inc
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI += "file://quotefix.patch \
+            file://fallocate.patch \
             file://acinclude.m4"
 
 SRC_URI[md5sum] = "a3c4ffd7352310ab5e9412965d575610"
