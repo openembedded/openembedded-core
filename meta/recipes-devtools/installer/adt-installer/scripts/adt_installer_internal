@@ -91,18 +91,12 @@ check_result
 OPKG_INSTALL_CMD="$OPKG_CMD "
 OPKG_INSTALL_NATIVE_CMD="$OPKG_INSTALL_CMD  -f $OPKG_CONFIG_FILE -o $NATIVE_INSTALL_DIR install"
 
-echo_info "Installing pseudo nativesdk ...\n"
-$OPKG_INSTALL_NATIVE_CMD pseudo-nativesdk &>> $YOCTOADT_INSTALL_LOG_FILE
-check_result
-echo_info "Installing opkg nativesdk ...\n"
-$OPKG_INSTALL_NATIVE_CMD opkg-nativesdk &>> $YOCTOADT_INSTALL_LOG_FILE
-check_result
-echo_info "Installing pkgconfig nativesdk ...\n"
-$OPKG_INSTALL_NATIVE_CMD pkgconfig-nativesdk &>> $YOCTOADT_INSTALL_LOG_FILE
-check_result
-echo_info "Installing libtool nativesdk ...\n"
-$OPKG_INSTALL_NATIVE_CMD libtool-nativesdk &>> $YOCTOADT_INSTALL_LOG_FILE
-check_result
+BASE_HOSTSDK_PKGNAMES="pseudo opkg pkgconfig libtool autoconf automake"
+for pkg in $BASE_HOSTSDK_PKGNAMES; do
+  echo_info "Installing ${pkg} nativesdk ...\n"
+  $OPKG_INSTALL_NATIVE_CMD ${pkg}-nativesdk &>> $YOCTOADT_INSTALL_LOG_FILE
+  check_result
+done
 
 for native_target_type in $YOCTOADT_TARGETS; do
   native_target_type=`echo "$native_target_type" | sed -e 's/x86_64/x86-64/' -e 's/ppc/powerpc/'  -e 's/x86$/i586/'`
