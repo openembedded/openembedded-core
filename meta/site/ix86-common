@@ -1,6 +1,6 @@
 # general
 ac_cv_sizeof_char=${ac_cv_sizeof_char=1}
-ac_cv_sizeof_unsigned_char=${ac_cv_sizeof_unsigned_int=1}
+ac_cv_sizeof_unsigned_char=${ac_cv_sizeof_unsigned_char=1}
 ac_cv_sizeof_char_p=${ac_cv_sizeof_char_p=4}
 ac_cv_sizeof_unsigned_char_p=${ac_cv_sizeof_unsigned_char_p=4}
 ac_cv_sizeof_int=${ac_cv_sizeof_int=4}
