@@ -16,7 +16,7 @@ BOOST_VER = "${@"_".join(d.getVar("PV",1).split("."))}"
 BOOST_MAJ = "${@"_".join(d.getVar("PV",1).split(".")[0:2])}"
 BOOST_P = "boost_${BOOST_VER}"
 
-INC_PR = "r0"
+INC_PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BOOST_P}.tar.bz2"
 
@@ -68,8 +68,9 @@ FILES_boost-test = "${libdir}/libboost_prg_exec_monitor*.so.* \
 	${libdir}/libboost_unit_test_framework*.so.*"
 
 # -dev last to pick up the remaining stuff
-PACKAGES += "${PN}-dev"
-FILES_${PN}-dev = "${includedir} ${libdir}/libboost_*.so ${libdir}/libboost_*.a"
+PACKAGES += "${PN}-dev ${PN}-staticdev"
+FILES_${PN}-dev = "${includedir} ${libdir}/libboost_*.so"
+FILES_${PN}-staticdev = "${libdir}/libboost_*.a"
 
 # "boost" is a metapackage which pulls in all boost librabries
 PACKAGES += "${PN}"
