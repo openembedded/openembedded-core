@@ -17,17 +17,17 @@ do_install () {
 	oe_runmake install install-lib install-dev DIST_ROOT="${D}"
 }
 
-PACKAGES =+ "lib${BPN} lib${BPN}-dev lib${BPN}-doc"
+PACKAGES =+ "lib${BPN} lib${BPN}-dev lib${BPN}-staticdev lib${BPN}-doc"
 
-FILES_lib${BPN} = "${base_libdir}/lib*.so.*"
+FILES_lib${BPN} = "${base_libdir}/lib*${SOLIBS}"
 
 FILES_lib${BPN}-dev = "${includedir} \
-                      ${libdir}/lib*.so \
-                      ${libdir}/lib*.a \
+                      ${libdir}/lib*${SOLIBSDEV} \
                       ${libdir}/lib*.la \
-                      ${base_libdir}/lib*.so \
-                      ${base_libdir}/lib*.a \
+                      ${base_libdir}/lib*${SOLIBSDEV} \
                       ${base_libdir}/lib*.la"
+
+FILES_lib${BPN}-staticdev = "${libdir}/*.a ${base_libdir}/*.a"
 
 FILES_lib${BPN}-doc = "${mandir}/man2 \
                       ${mandir}/man3"
