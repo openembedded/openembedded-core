@@ -40,10 +40,13 @@ class ChangeRecord:
             added = list(set(bitems) - set(aitems))
             return '%s: %s:%s%s' % (self.path, self.fieldname, ' removed "%s"' % ' '.join(removed) if removed else '', ' added "%s"' % ' '.join(added) if added else '')
         elif self.fieldname in numeric_fields:
-            aval = int(self.oldvalue)
-            bval = int(self.newvalue)
-            percentchg = ((bval - aval) / float(aval)) * 100
-            return '%s: %s changed from %d to %d (%s%d%%)' % (self.path, self.fieldname, aval, bval, '+' if percentchg > 0 else '', percentchg)
+            aval = int(self.oldvalue or 0)
+            bval = int(self.newvalue or 0)
+            if aval != 0:
+                percentchg = ((bval - aval) / float(aval)) * 100
+            else:
+                percentchg = 100
+            return '%s: %s changed from %s to %s (%s%d%%)' % (self.path, self.fieldname, self.oldvalue or "''", self.newvalue or "''", '+' if percentchg > 0 else '', percentchg)
         elif self.fieldname in img_monitor_files:
             out = 'Changes to %s (%s):\n  ' % (self.path, self.fieldname)
             if self.filechanges:
@@ -194,16 +197,22 @@ def compare_dict_blobs(path, ablob, bblob, report_all):
     bdict = blob_to_dict(bblob)
 
     changes = []
-    for key in adict:
+    keys = list(set(adict.keys()) | set(bdict.keys()))
+    for key in keys:
         if report_all or key in monitor_fields:
-            if adict[key] != bdict[key]:
+            astr = adict.get(key, '')
+            bstr = bdict.get(key, '')
+            if astr != bstr:
                 if (not report_all) and key in numeric_fields:
-                    aval = int(adict[key])
-                    bval = int(bdict[key])
-                    percentchg = ((bval - aval) / float(aval)) * 100
+                    aval = int(astr or 0)
+                    bval = int(bstr or 0)
+                    if aval != 0:
+                        percentchg = ((bval - aval) / float(aval)) * 100
+                    else:
+                        percentchg = 100
                     if percentchg < monitor_numeric_threshold:
                         continue
-                chg = ChangeRecord(path, key, adict[key], bdict[key])
+                chg = ChangeRecord(path, key, astr, bstr)
                 changes.append(chg)
     return changes
 
