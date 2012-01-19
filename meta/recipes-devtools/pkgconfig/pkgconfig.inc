@@ -31,3 +31,5 @@ do_configure_prepend () {
 }
 
 BBCLASSEXTEND = "native nativesdk"
+
+FILES_${PN} += "${datadir}/aclocal/pkg.m4"
