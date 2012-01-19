@@ -12,10 +12,11 @@ inherit autotools
 
 EXTRA_OECONF += "--disable-valgrind"
 
-PR = "r2"
+PR = "r3"
 
 FILES_${PN} += "${libdir}/gstreamer-0.10/libgstomx.so"
-FILES_${PN}-dev += "${libdir}/gstreamer-0.10/libgstomx.*a"
+FILES_${PN}-dev += "${libdir}/gstreamer-0.10/libgstomx.la"
+FILES_${PN}-staticdev += "${libdir}/gstreamer-0.10/libgstomx.a"
 FILES_${PN}-dbg += "${libdir}/gstreamer-0.10/.debug/"
 
 SRC_URI[md5sum] = "4d0370bfe99dea20918c84347abadb4e"
