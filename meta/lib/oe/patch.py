@@ -2,14 +2,14 @@ import oe.path
 import os
 import bb.utils, bb.msg, bb.data, bb.fetch2
 
-class NotFoundError(Exception):
+class NotFoundError(bb.BBHandledException):
     def __init__(self, path):
         self.path = path
 
     def __str__(self):
         return "Error: %s not found." % self.path
 
-class CmdError(Exception):
+class CmdError(bb.BBHandledException):
     def __init__(self, exitstatus, output):
         self.status = exitstatus
         self.output = output
@@ -207,7 +207,7 @@ class QuiltTree(PatchSet):
         # read series -> self.patches
         seriespath = os.path.join(self.dir, 'patches', 'series')
         if not os.path.exists(self.dir):
-            raise Exception("Error: %s does not exist." % self.dir)
+            raise NotFoundError(self.dir)
         if os.path.exists(seriespath):
             series = file(seriespath, 'r')
             for line in series.readlines():
@@ -228,7 +228,7 @@ class QuiltTree(PatchSet):
                 if sys.exc_value.output.strip() == "No patches applied":
                     return
                 else:
-                    raise sys.exc_value
+                    raise
             output = [val for val in output.split('\n') if not val.startswith('#')]
             for patch in self.patches:
                 if os.path.basename(patch["quiltfile"]) == output[-1]:
@@ -336,7 +336,7 @@ class NOOPResolver(Resolver):
         except Exception:
             import sys
             os.chdir(olddir)
-            raise sys.exc_value
+            raise
 
 # Patch resolver which relies on the user doing all the work involved in the
 # resolution, with the exception of refreshing the remote copy of the patch

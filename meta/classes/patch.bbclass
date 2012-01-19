@@ -155,7 +155,10 @@ python patch_do_patch() {
 			patchset.Import({"file":local, "strippath": parm['striplevel']}, True)
 		except Exception as exc:
 			bb.fatal(str(exc))
-		resolver.Resolve()
+		try:
+			resolver.Resolve()
+		except bb.BBHandledException as e:
+			bb.fatal(str(e))
 }
 patch_do_patch[vardepsexclude] = "PATCHRESOLVE"
 
