@@ -1,6 +1,6 @@
 zypp/Arch.cc: Add room for additional architecture compatibilities
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Increase the size of the compatibility table from 9 to 30.  There are already
 existing checks within libzypp to ensure that we don't overflow the 64-bit

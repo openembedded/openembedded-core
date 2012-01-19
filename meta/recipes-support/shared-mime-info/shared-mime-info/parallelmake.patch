@@ -8,7 +8,7 @@ dependencies and stop itself racing itself.
 
 RP 10/10/2011
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Index: shared-mime-info-0.91/Makefile.am
 ===================================================================

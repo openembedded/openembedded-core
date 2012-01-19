@@ -9,7 +9,7 @@ doesn't support the BGR bit.
 
 RP 16/9/2011
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Index: qemu-0.14.0/hw/pl110.c
 ===================================================================

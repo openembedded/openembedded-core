@@ -4,7 +4,7 @@ filters libtools list and removes the ones we don't need.
 
 RP 23/9/2011
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Index: libtool-2.4.2/libltdl/config/ltmain.m4sh
 ===================================================================

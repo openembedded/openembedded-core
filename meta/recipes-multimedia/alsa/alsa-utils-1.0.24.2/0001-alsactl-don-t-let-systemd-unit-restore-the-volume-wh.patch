@@ -10,7 +10,7 @@ Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
 
 Filed as https://bugtrack.alsa-project.org/alsa-bug/view.php?id=5459
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
  alsactl/Makefile.am             |    2 +-
  alsactl/alsa-restore.service.in |    1 +

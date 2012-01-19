@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate
+
 diff -ur --exclude='*.lo' --exclude='config*' --exclude='Make*' --exclude='ac*' xorg-server-1.7.99.2.ORIG/dix/window.c xorg-server-1.7.99.2/dix/window.c
 --- xorg-server-1.7.99.2.ORIG/dix/window.c	2012-01-04 13:12:40.417640130 -0700
 +++ xorg-server-1.7.99.2/dix/window.c	2012-01-04 12:13:20.678605493 -0700
