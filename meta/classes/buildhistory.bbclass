@@ -312,6 +312,14 @@ buildhistory_get_imageinfo() {
 	# This awk script is somewhat messy, but handles where the size is not printed for device files under pseudo
 	( cd ${IMAGE_ROOTFS} && find . -ls | awk '{ if ( $7 ~ /[0-9]/ ) printf "%s %10-s %10-s %10s %s %s %s\n", $3, $5, $6, $7, $11, $12, $13 ; else printf "%s %10-s %10-s %10s %s %s %s\n", $3, $5, $6, 0, $10, $11, $12 }' > ${BUILDHISTORY_DIR_IMAGE}/files-in-image.txt )
 
+	# Record some machine-readable meta-information about the image
+	echo -n > ${BUILDHISTORY_DIR_IMAGE}/image-info.txt
+	cat >> ${BUILDHISTORY_DIR_IMAGE}/image-info.txt <<END
+${@buildhistory_get_imagevars(d)}
+END
+	imagesize=`du -ks ${IMAGE_ROOTFS} | awk '{ print $1 }'`
+	echo "IMAGESIZE = $imagesize" >> ${BUILDHISTORY_DIR_IMAGE}/image-info.txt
+
 	# Add some configuration information
 	echo "${MACHINE}: ${IMAGE_BASENAME} configured for ${DISTRO} ${DISTRO_VERSION}" > ${BUILDHISTORY_DIR_IMAGE}/build-id
 
@@ -328,6 +336,16 @@ IMAGE_POSTPROCESS_COMMAND += " buildhistory_get_imageinfo ; "
 def buildhistory_get_layers(d):
 	layertext = "Configured metadata layers:\n%s\n" % '\n'.join(get_layers_branch_rev(d))
 	return layertext
+
+
+def buildhistory_get_imagevars(d):
+	imagevars = "DISTRO DISTRO_VERSION USER_CLASSES IMAGE_CLASSES IMAGE_FEATURES IMAGE_LINGUAS IMAGE_INSTALL BAD_RECOMMENDATIONS ROOTFS_POSTPROCESS_COMMAND IMAGE_POSTPROCESS_COMMAND"
+
+	ret = ""
+	for var in imagevars.split():
+		value = d.getVar(var, True) or ""
+		ret += "%s = %s\n" % (var, value)
+	return ret.rstrip('\n')
 
 
 buildhistory_commit() {
