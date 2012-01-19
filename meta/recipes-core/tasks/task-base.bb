@@ -181,7 +181,7 @@ RRECOMMENDS_task-base-vfat = "\
 RDEPENDS_task-base-alsa = "\
     alsa-utils-alsactl \
     alsa-utils-alsamixer \
-    ${VIRTUAL-RUNTIME-alsa-state}"
+    ${VIRTUAL-RUNTIME_alsa-state}"
 
 RRECOMMENDS_task-base-alsa = "\
     kernel-module-snd-mixer-oss \
