@@ -34,8 +34,8 @@ class ChangeRecord:
 
     def __str__(self):
         if self.fieldname in list_fields:
-            aitems = self.oldvalue.split(' ')
-            bitems = self.newvalue.split(' ')
+            aitems = self.oldvalue.split()
+            bitems = self.newvalue.split()
             removed = list(set(aitems) - set(bitems))
             added = list(set(bitems) - set(aitems))
             return '%s: %s:%s%s' % (self.path, self.fieldname, ' removed "%s"' % ' '.join(removed) if removed else '', ' added "%s"' % ' '.join(added) if added else '')
