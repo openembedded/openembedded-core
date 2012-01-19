@@ -88,3 +88,20 @@ python workshared_clean () {
 	bb.note("Removing " + dir)
 	oe.path.remove(dir)
 }
+
+do_headerfix () {
+	# Change the default dynamic linker path, in case $base_liddir is non-standard
+	# (e.g. in multilib or sdk cases)
+	#
+	# We want something like the following:
+	# 	#define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux-x86-64.so.2"
+	# becomes
+	#	#define GLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-linux-x86-64.so.2"
+	#
+	sed -i ${S}/gcc/config/*/linux*.h -e \
+		's#\(GLIBC_DYNAMIC_LINKER[^ ]*\) \( *"/lib.*\)/\(.*\)#\1 SYSTEMLIBS_DIR "\3#'
+}
+
+addtask headerfix after do_unpack before do_patch
+
+do_headerfix[vardepvalue] = "PATH"
