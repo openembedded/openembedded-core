@@ -9,7 +9,7 @@ inherit utility-tasks
 inherit metadata_scm
 inherit logging
 
-OE_IMPORTS += "os sys time oe.path oe.utils oe.data oe.packagegroup"
+OE_IMPORTS += "os sys time oe.path oe.utils oe.data oe.packagegroup oe.sstatesig"
 OE_IMPORTS[type] = "list"
 
 def oe_import(d):
