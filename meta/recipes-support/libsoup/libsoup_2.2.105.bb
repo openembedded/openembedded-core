@@ -2,7 +2,7 @@ DESCRIPTION = "An HTTP library implementation in C"
 SECTION = "x11/gnome/libs"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "glib-2.0 gnutls libxml2"
 
@@ -14,6 +14,6 @@ SRC_URI[sha256sum] = "3760a127ee810cfd0fda257ff615d19a2dd8aeece199dad0d18690446d
 
 inherit autotools pkgconfig
 
-FILES_${PN} = "${libdir}/lib*.so.*"
-FILES_${PN}-dev = "${includedir}/ ${libdir}/"
-FILES_${PN}-doc = "${datadir}/"
+#FILES_${PN} = "${libdir}/lib*.so.*"
+#FILES_${PN}-dev = "${includedir}/ ${libdir}/"
+#FILES_${PN}-doc = "${datadir}/"
