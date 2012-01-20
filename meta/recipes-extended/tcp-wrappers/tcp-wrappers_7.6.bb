@@ -5,13 +5,14 @@ SECTION = "console/network"
 
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://DISCLAIMER;md5=071bd69cb78b18888ea5e3da5c3127fa"
-PR ="r8"
+PR ="r9"
 
 
-PACKAGES = "${PN}-dbg libwrap libwrap-doc libwrap-dev ${PN} ${PN}-doc"
-FILES_libwrap = "${base_libdir}/lib*.so.*"
+PACKAGES = "${PN}-dbg libwrap libwrap-doc libwrap-dev libwrap-staticdev ${PN} ${PN}-doc"
+FILES_libwrap = "${base_libdir}/lib*${SOLIBS}"
 FILES_libwrap-doc = "${mandir}/man3 ${mandir}/man5"
-FILES_libwrap-dev = "${libdir}/lib*.so ${libdir}/lib*.a ${includedir}"
+FILES_libwrap-dev = "${libdir}/lib*${SOLIBSDEV} ${includedir}"
+FILES_libwrap-staticdev = "${libdir}/lib*.a"
 FILES_${PN} = "${sbindir}"
 FILES_${PN}-doc = "${mandir}/man8"
 
