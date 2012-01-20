@@ -3,7 +3,7 @@ DESCRIPTION = "The Linux Test Project is a joint project with SGI, IBM, OSDL, an
 HOMEPAGE = "http://ltp.sourceforge.net"
 SECTION = "console/utils"
 
-PR = "r0"
+PR = "r1"
 
 LICENSE = "GPLv2 & GPLv2+ & LGPLv2+ & LGPLv2.1+ & BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
@@ -66,3 +66,7 @@ do_install(){
 	# We will add expect for enhancement in future
 	find ${D} -type f -print | xargs grep "\!.*\/usr\/bin\/expect" | awk -F":" '{print $1}' | xargs rm -f
 }
+
+# Avoid generated binaries stripping. Otherwise some of the ltp tests such as ldd01 & nm01 fails
+INHIBIT_PACKAGE_STRIP = "1"
+
