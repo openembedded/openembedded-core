@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 # If you really want to run syslinux, you need mtools.  We just want the
 # ldlinux.* stuff for now, so skip mtools-native
 DEPENDS = "nasm-native"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/4.xx/syslinux-${PV}.tar.bz2 \
            file://cross-build.patch"
@@ -56,6 +56,7 @@ FILES_${PN}-mbr = "${libdir}/${PN}/mbr.bin"
 FILES_${PN}-chain = "${libdir}/${PN}/chain.c32"
 FILES_${PN}-isolinux = "${libdir}/${PN}/isolinux.bin"
 FILES_${PN}-pxelinux = "${libdir}/${PN}/pxelinux.0"
-FILES_${PN}-dev += "${datadir}/${PN}/com32"
+FILES_${PN}-dev += "${datadir}/${PN}/com32/lib*${SOLIBS} ${datadir}/${PN}/com32/include ${datadir}/${PN}/com32/com32.ld"
+FILES_${PN}-staticdev += "${datadir}/${PN}/com32/lib*.a"
 
 BBCLASSEXTEND = "native"
