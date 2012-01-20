@@ -8,7 +8,7 @@ LICENSE_libsysfs = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3d06403ea54c7574a9e581c6478cc393 \
                     file://cmd/GPL;md5=d41d4e2e1e108554e0388ea4aecd8d27 \
                     file://lib/LGPL;md5=b75d069791103ffe1c0d6435deeff72e"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/linux-diag/sysfsutils-${PV}.tar.gz \
 	  file://sysfsutils-2.0.0-class-dup.patch \
@@ -20,6 +20,7 @@ S = "${WORKDIR}/sysfsutils-${PV}"
 
 inherit autotools
 
-PACKAGES_prepend = "libsysfs libsysfs-dev "
-FILES_libsysfs = "${libdir}/*.so.*"
-FILES_libsysfs-dev = "${libdir}/* ${includedir}"
+PACKAGES =+ "libsysfs libsysfs-dev libsysfs-staticdev"
+FILES_libsysfs = "${libdir}/lib*${SOLIBS}"
+FILES_libsysfs-dev = "${libdir}/lib*${SOLIBSDEV} ${includedir}"
+FILES_libsysfs-staticdev = "${libdir}/lib*.a"
