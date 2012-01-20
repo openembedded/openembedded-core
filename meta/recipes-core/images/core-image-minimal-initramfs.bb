@@ -1,4 +1,7 @@
 # Simple initramfs image. Mostly used for live images.
+DESCRIPTION = "A core-image-minimal image that has the Minimal RAM-based \
+Initial Root Filesystem (initramfs) as part of the kernel, which allows the \
+system to find the first 'init' program more efficiently."
 
 IMAGE_INSTALL = "initramfs-live-boot initramfs-live-install busybox udev base-passwd"
 

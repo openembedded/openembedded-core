@@ -1,6 +1,8 @@
 #
 # Copyright (C) 2007 OpenedHand Ltd.
 #
+DESCRIPTION = "A small image just capable of allowing a device to boot."
+
 IMAGE_INSTALL = "task-core-boot ${ROOTFS_PKGMANAGE_BOOTSTRAP} ${POKY_EXTRA_INSTALL}"
 
 IMAGE_LINGUAS = " "
