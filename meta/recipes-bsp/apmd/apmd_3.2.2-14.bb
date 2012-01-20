@@ -8,7 +8,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://apm.h;firstline=6;endline=18;md5=c9a1f79036ab14aa157e15ed75ffd769"
 DEPENDS = "libtool-cross"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/a/apmd/apmd_3.2.2.orig.tar.gz;name=tarball \
            ${DEBIAN_MIRROR}/main/a/apmd/apmd_${PV}.diff.gz;name=patch \
@@ -65,8 +65,9 @@ do_install() {
 	chmod 755 ${D}${sysconfdir}/init.d/apmd
 }
 
-PACKAGES =+ "libapm libapm-dev apm"
+PACKAGES =+ "libapm libapm-dev libapm-staticdev apm"
 
-FILES_libapm = "${libdir}/libapm.so.*"
-FILES_libapm-dev = "${libdir}/libapm.* ${includedir}"
+FILES_libapm = "${libdir}/libapm${SOLIBS}"
+FILES_libapm-dev = "${libdir}/libapm${SOLIBSDEV} ${includedir} ${libdir}/libapm.la"
+FILES_libapm-staticdev = "${libdir}/libapm.a"
 FILES_apm = "${bindir}/apm*"
