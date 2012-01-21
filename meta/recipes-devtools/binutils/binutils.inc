@@ -24,7 +24,6 @@ FILES_${PN} = " \
 
 FILES_${PN}-dev = " \
 	${includedir} \
-	${libdir}/*.a \
 	${libdir}/*.la \
 	${libdir}/libbfd.so \
 	${libdir}/libopcodes.so"
