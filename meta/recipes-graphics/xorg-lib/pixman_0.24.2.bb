@@ -18,6 +18,6 @@ PR = "r0"
 
 EXTRA_OECONF="--disable-gtk"
 
-SRC_URI[md5sum] = "db5ffcd50064421176e8afb7b85fd1a7"
-SRC_URI[sha256sum] = "744e8b36b29ba76bdfe8f7cbc45585fb237533ac8d716a27e306874dcfa1cf44"
+SRC_URI[md5sum] = "2ce7d12750664d2eebd51bf0a07b6205"
+SRC_URI[sha256sum] = "32f74f3e3c1feea33e6ad3e2fd66cb3eb816805c384b346ea1636a87c9057dbf"
 
