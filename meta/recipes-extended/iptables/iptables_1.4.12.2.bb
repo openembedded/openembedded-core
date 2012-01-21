@@ -21,10 +21,11 @@ RRECOMMENDS_${PN} = "kernel-module-x-tables \
 FILES_${PN} =+ "${libdir}/xtables/"
 FILES_${PN}-dbg =+ "${libdir}/xtables/.debug"
 
-SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2"
+SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
+           file://GNUmakefile.patch"
 
-SRC_URI[md5sum] = "b08a1195ec2c1ebeaf072db3c55fdf43"
-SRC_URI[sha256sum] = "77e6581f21f15946a814fa311236e5f3f7c6593180f9d695cea06aa95e464aba"
+SRC_URI[md5sum] = "212112389c7f10c72efb31a4ed193a4c"
+SRC_URI[sha256sum] = "09fff7dfe6af95675474fd5d0fc67622fac5a0f3d6e02ee614deae9a2e5dae13"
 
 inherit autotools
 

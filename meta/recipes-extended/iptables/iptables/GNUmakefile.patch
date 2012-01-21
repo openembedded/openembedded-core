@@ -1,0 +1,18 @@
+Don't check unknown symbols.
+
+Signed-off-by: Shane Wang <shane.wang@intel.com>
+
+Upstream-Status: Inappropriate [configuration]
+
+diff -r abb89394ce0c extensions/GNUmakefile.in
+--- a/extensions/GNUmakefile.in	Mon Jan 23 00:12:27 2012 +0800
++++ b/extensions/GNUmakefile.in	Mon Jan 23 00:38:32 2012 +0800
+@@ -68,7 +68,7 @@
+ 
+ .PHONY: all install clean distclean FORCE
+ 
+-all: ${targets} check
++all: ${targets}
+ 
+ check: ${targets}
+ 	@echo "  CHECK    unknown symbols in .so files"; \
