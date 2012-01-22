@@ -3,18 +3,18 @@ HOMEPAGE = "http://strace.sourceforge.net"
 SECTION = "console/utils"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=4535377ede62550fdeaf39f595fd550a"
-PR = "r2"
+PR = "r0"
 
 PACKAGES =+ "${PN}-graph "
 FILES_${PN}-graph = "${bindir}/strace-graph"
 RDEPENDS_${PN}-graph = "perl"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.bz2 \
+SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://sigmask.patch \
           "
 
-SRC_URI[md5sum] = "64dfe10d9db0c1e34030891695ffca4b"
-SRC_URI[sha256sum] = "ea8c059369eaa5ad90b246f34eab247d0ee48bfdee2670c7196320a4669ccabd"
+SRC_URI[md5sum] = "e537b2b1afeec70c0e6e27a0d0fd671e"
+SRC_URI[sha256sum] = "9ef9aa41b6118578e33ef4833b8a04209d6cc062546c28efd715f283b172c28a"
 inherit autotools
 
 export INCLUDES = "-I. -I./linux"
