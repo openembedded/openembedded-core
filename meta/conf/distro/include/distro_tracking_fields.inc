@@ -59,7 +59,7 @@ RECIPE_MANUAL_CHECK_DATE_pn-autogen = "Jan 17, 2012"
 RECIPE_MAINTAINER_pn-autogen = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-libsoup = "red"
-RECIPE_LATEST_VERSION_pn-libsoup = "check"
+RECIPE_LATEST_VERSION_pn-libsoup = "2.2.105"
 RECIPE_LAST_UPDATE_pn-libsoup = "Sep 22, 2008"
 RECIPE_MAINTAINER_pn-libsoup = "Zhai Edwin <edwin.zhai@intel.com>"
 
