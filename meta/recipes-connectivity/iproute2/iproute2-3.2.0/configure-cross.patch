@@ -7,14 +7,11 @@ According to Kevin Tian:
 Upstream-Status: Pending
 
 Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
----
- configure |   13 +++++++------
- 1 files changed, 7 insertions(+), 6 deletions(-)
+Signed-off-by: Shane Wang <shane.wang@intel.com>
 
-diff --git a/configure b/configure
-index f5c3d40..bcc1948 100755
---- a/configure
-+++ b/configure
+diff -r e4e1b14b9c4a configure
+--- a/configure	Sun Jan 22 15:26:47 2012 +0800
++++ b/configure	Sun Jan 22 15:29:38 2012 +0800
 @@ -2,6 +2,7 @@
  # This is not an autconf generated configure
  #
@@ -23,7 +20,7 @@ index f5c3d40..bcc1948 100755
  
  check_atm()
  {
-@@ -13,7 +14,7 @@ int main(int argc, char **argv) {
+@@ -13,7 +14,7 @@
  	return 0;
  }
  EOF
@@ -32,16 +29,16 @@ index f5c3d40..bcc1948 100755
  if [ $? -eq 0 ]
  then
      echo "TC_CONFIG_ATM:=y" >>Config
-@@ -47,7 +48,7 @@ int main(int argc, char **argv)
+@@ -47,7 +48,7 @@
  
  EOF
  
--if gcc -I$INCLUDE $IPTC -o /tmp/ipttest /tmp/ipttest.c $IPTL -ldl -lxtables >/dev/null 2>&1
-+if $CC -I$INCLUDE $IPTC -o /tmp/ipttest /tmp/ipttest.c $IPTL -ldl -lxtables >/dev/null 2>&1
+-if gcc -I$INCLUDE $IPTC -o /tmp/ipttest /tmp/ipttest.c $IPTL $(pkg-config xtables --cflags --libs) -ldl >/dev/null 2>&1
++if $CC -I$INCLUDE $IPTC -o /tmp/ipttest /tmp/ipttest.c $IPTL $(pkg-config xtables --cflags --libs) -ldl >/dev/null 2>&1
  then
  	echo "TC_CONFIG_XT:=y" >>Config
  	echo "using xtables"
-@@ -84,7 +85,7 @@ int main(int argc, char **argv) {
+@@ -84,7 +85,7 @@
  }
  
  EOF
@@ -50,7 +47,7 @@ index f5c3d40..bcc1948 100755
  
  if [ $? -eq 0 ]
  then
-@@ -124,7 +125,7 @@ int main(int argc, char **argv) {
+@@ -124,7 +125,7 @@
  }
  
  EOF
@@ -59,7 +56,7 @@ index f5c3d40..bcc1948 100755
  
  if [ $? -eq 0 ]
  then
-@@ -145,7 +146,7 @@ check_ipt()
+@@ -145,7 +146,7 @@
  check_ipt_lib_dir()
  {
  	IPT_LIB_DIR=""
@@ -68,7 +65,7 @@ index f5c3d40..bcc1948 100755
  	do
  		for file in $dir/{xtables,iptables}/lib*t_*so ; do
  			if [ -f $file ]; then
-@@ -168,7 +169,7 @@ int main(int argc, char **argv)
+@@ -168,7 +169,7 @@
  	return 0;
  }
  EOF
@@ -77,6 +74,3 @@ index f5c3d40..bcc1948 100755
  if [ $? -eq 0 ]
  then
  	echo "IP_CONFIG_SETNS:=y" >>Config
--- 
-1.7.2.5
-
