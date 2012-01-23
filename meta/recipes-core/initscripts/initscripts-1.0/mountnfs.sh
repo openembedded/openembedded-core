@@ -1,3 +1,4 @@
+#!/bin/sh
 ### BEGIN INIT INFO
 # Provides:          mountnfs
 # Required-Start:    $local_fs $network $portmap

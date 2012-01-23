@@ -1,3 +1,4 @@
+#!/bin/sh
 ### BEGIN INIT INFO
 # Provides:          bootmisc
 # Required-Start:    $local_fs mountvirtfs

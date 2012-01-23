@@ -1,3 +1,4 @@
+#!/bin/sh
 ### BEGIN INIT INFO
 # Provides:          mountall
 # Required-Start:    mountvirtfs
