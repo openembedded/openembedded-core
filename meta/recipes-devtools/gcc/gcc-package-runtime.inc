@@ -3,10 +3,12 @@ PACKAGES = "\
   libstdc++ \
   libstdc++-precompile-dev \
   libstdc++-dev \
+  libstdc++-staticdev \
   libg2c \
   libg2c-dev \
   libssp \
   libssp-dev \
+  libssp-staticdev \
   libgfortran \
   libgfortran-dev \
   libmudflap \
@@ -31,8 +33,9 @@ FILES_libstdc++-dev = "\
   ${includedir}/c++/ \
   ${libdir}/libstdc++.so \
   ${libdir}/libstdc++.la \
+  ${libdir}/libsupc++.la"
+FILES_libstdc++-staticdev = "\
   ${libdir}/libstdc++.a \
-  ${libdir}/libsupc++.la \
   ${libdir}/libsupc++.a"
 
 FILES_libstdc++-precompile-dev = "${includedir}/c++/${TARGET_SYS}/bits/*.gch"
@@ -40,9 +43,11 @@ FILES_libstdc++-precompile-dev = "${includedir}/c++/${TARGET_SYS}/bits/*.gch"
 FILES_libssp = "${libdir}/libssp.so.*"
 FILES_libssp-dev = " \
   ${libdir}/libssp*.so \
-  ${libdir}/libssp*.a \
+  ${libdir}/libssp*_nonshared.a \
   ${libdir}/libssp*.la \
   ${libdir}/gcc/${TARGET_SYS}/${BINV}/include/ssp"
+FILES_libssp-staticdev = " \
+  ${libdir}/libssp*.a"
 
 FILES_libgfortran = "${libdir}/libgfortran.so.*"
 FILES_libgfortran-dev = " \
