@@ -5567,8 +5567,8 @@ RECIPE_MAINTAINER_pn-clutter-gtk-1.8 = "Joshua Lock <josh@linux.intel.com>"
 
 RECIPE_STATUS_pn-clutter-gst-1.8 = "red"
 DISTRO_PN_ALIAS_pn-clutter-gst-1.8 = "Fedora=clutter-gst Debian=libclutter-gst"
-RECIPE_LATEST_VERSION_pn-clutter-gst-1.8 = "1.4.2"
-RECIPE_LAST_UPDATE_pn-clutter-gst-1.8 = "Nov 09, 2011"
+RECIPE_LATEST_VERSION_pn-clutter-gst-1.8 = "1.4.6"
+RECIPE_LAST_UPDATE_pn-clutter-gst-1.8 = "Jan 24, 2012"
 RECIPE_MAINTAINER_pn-clutter-gst-1.8 = "Joshua Lock <josh@linux.intel.com>"
 
 RECIPE_STATUS_pn-clutter-box2d = "red"
