@@ -8,13 +8,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=08c553a87d4e51bbed50b20e0adcaede \
                     file://src/passwd.c;firstline=8;endline=30;md5=2899a045e90511d0e043b85a7db7e2fe"
 
 DEPENDS = "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
-RDEPENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_PLUGINS}', '', d)}"
-PR = "r6"
+RDEPENDS_${PN} = "shadow-securetty ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_PLUGINS}', '', d)}"
+PR = "r7"
 
 SRC_URI = "http://pkg-shadow.alioth.debian.org/releases/${BPN}-${PV}.tar.bz2 \
            file://login_defs_pam.sed \
            ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
-           file://securetty \
            file://shadow.automake-1.11.patch \
            file://shadow-4.1.3-dots-in-usernames.patch \
            file://shadow-4.1.4.2-env-reset-keep-locale.patch \
@@ -26,9 +25,6 @@ SRC_URI[md5sum] = "b8608d8294ac88974f27b20f991c0e79"
 SRC_URI[sha256sum] = "633f5bb4ea0c88c55f3642c97f9d25cbef74f82e0b4cf8d54e7ad6f9f9caa778"
 
 inherit autotools gettext
-
-# Since we deduce our arch from ${SERIAL_CONSOLE}
-PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 EXTRA_OECONF += "--without-audit \
                  --without-libcrack \
@@ -101,20 +97,6 @@ do_install_append() {
 	# lead rpm failed dependencies.
 	ln -sf vipw.${PN} ${D}${base_sbindir}/vigr.${PN}
 	ln -sf newgrp.${PN} ${D}${bindir}/sg
-
-	# Ensure we add a suitable securetty file to the package that has
-	# most common embedded TTYs defined.
-	if [ ! -z "${SERIAL_CONSOLE}" ]; then
-		# Our SERIAL_CONSOLE contains a baud rate and sometimes a -L
-		# option as well. The following pearl :) takes that and converts
-		# it into newline-separated tty's and appends them into
-		# securetty. So if a machine has a weird looking console device
-		# node (e.g. ttyAMA0) that securetty does not know, it will get
-		# appended to securetty and root logins will be allowed on that
-		# console.
-		echo "${SERIAL_CONSOLE}" | sed -e 's/[0-9][0-9]\|\-L//g'|tr "[ ]" "[\n]"  >> ${WORKDIR}/securetty
-	fi
-	install -m 0400 ${WORKDIR}/securetty ${D}${sysconfdir}/securetty 
 }
 
 pkg_postinst_${PN} () {
