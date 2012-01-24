@@ -1,0 +1,78 @@
+Fix building disabled getcontext and profil01 tests for uclibc
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+
+Index: ltp-20110915/testcases/kernel/syscalls/getcontext/getcontext01.c
+===================================================================
+--- ltp-20110915.orig/testcases/kernel/syscalls/getcontext/getcontext01.c	2012-01-19 16:39:24.391012507 -0800
++++ ltp-20110915/testcases/kernel/syscalls/getcontext/getcontext01.c	2012-01-19 16:39:24.459012510 -0800
+@@ -34,6 +34,10 @@
+  **********************************************************/
+ 
+ #include <features.h>
++#include "test.h"
++#include "usctest.h"
++char *TCID = "getcontext01";	/* Test program identifier.    */
++
+ #if !defined(__UCLIBC__)
+ 
+ #include <stdio.h>
+@@ -41,13 +45,9 @@
+ #include <errno.h>
+ #include <ucontext.h>
+ 
+-#include "test.h"
+-#include "usctest.h"
+-
+ void setup();
+ void cleanup();
+ 
+-char *TCID = "getcontext01";	/* Test program identifier.    */
+ int TST_TOTAL = 1;		/* Total number of test cases. */
+ 
+ int exp_enos[] = { 0 };		/* must be a 0 terminated list */
+@@ -102,4 +102,4 @@
+ {
+ 	tst_brkm(TCONF, NULL, "system doesn't have getcontext support");
+ }
+-#endif
+\ No newline at end of file
++#endif
+Index: ltp-20110915/testcases/kernel/syscalls/profil/profil01.c
+===================================================================
+--- ltp-20110915.orig/testcases/kernel/syscalls/profil/profil01.c	2012-01-19 16:39:55.975014036 -0800
++++ ltp-20110915/testcases/kernel/syscalls/profil/profil01.c	2012-01-19 16:40:23.475015322 -0800
+@@ -41,6 +41,8 @@
+ #endif
+ 
+ #include <features.h>
++#include "test.h"
++char *TCID = "profil01";
+ #ifndef __UCLIBC__
+ 
+ #ifdef __arm__
+@@ -58,7 +60,6 @@
+ #include <errno.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
+-#include "test.h"
+ #include "usctest.h"
+ #define FAILED 0
+ #define PASSED 1
+@@ -73,7 +74,6 @@
+ //char progname[]= "profil1()";
+ 
+ /*****	LTP Port	*****/
+-char *TCID = "profil01";
+ int local_flag = PASSED;
+ int block_number;
+ FILE *temp;
+@@ -310,4 +310,4 @@
+ 	/* uClibc does not have profiling support */
+ 	tst_exit();
+ }
+-#endif
+\ No newline at end of file
++#endif

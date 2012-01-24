@@ -3,8 +3,6 @@ DESCRIPTION = "The Linux Test Project is a joint project with SGI, IBM, OSDL, an
 HOMEPAGE = "http://ltp.sourceforge.net"
 SECTION = "console/utils"
 
-PR = "r1"
-
 LICENSE = "GPLv2 & GPLv2+ & LGPLv2+ & LGPLv2.1+ & BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 		    file://testcases/kernel/mce-test/COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
@@ -21,10 +19,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 		    file://utils/benchmark/kernbench-0.42/COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 		"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/ltp/ltp-full-${PV}.bz2"
+SRC_URI = "${SOURCEFORGE_MIRROR}/ltp/ltp-full-${PV}.bz2 \
+           file://uclibc-getcontext.patch \
+          "
 
-SRC_URI[md5sum] = "582fb78d7bf78a624a4387f29327d166"
-SRC_URI[sha256sum] = "013f7f2f6fdf46b7d73216533c3d4c2d91f0a2cec522bf026f7c8920ede83d2c"
+SRC_URI[md5sum] = "ac183bbdac67139f049b3755fda37179"
+SRC_URI[sha256sum] = "11b149b821d709e3351ac66f028f1b0dd5337ee9073dc20019ccffdac42d5c2e"
 
 export prefix = "/opt/ltp"
 export exec_prefix = "/opt/ltp"
