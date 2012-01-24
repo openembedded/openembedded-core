@@ -1,3 +1,10 @@
+Without this patch it fails to inline that function
+since we do not have __SSE_MATH__ in OE build.
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Inappropriate [OE-specific]
+
 --- a/sysdeps/x86_64/fpu/bits/fenv.h
 +++ b/sysdeps/x86_64/fpu/bits/fenv.h
 @@ -112,16 +112,24 @@ __NTH (feraiseexcept (int __excepts))
