@@ -3,7 +3,7 @@ check this to turn off the use of 'clz' instructions, which otherwise would
 cause compile errors like "selected processor does not support ARM mode 
 `clz r3,r0'". 
 
-Upstream-Status: Submitted
+Upstream-Status: Accepted (should be in the next cogl stable release)
 
 Signed-off-by: Wolfgang Denk <wd@denx.de>
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
