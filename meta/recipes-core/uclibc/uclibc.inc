@@ -13,7 +13,7 @@ SECTION = "libs"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 		    file://COPYING.LIB.boilerplate;md5=aaddeadcddeb918297e0e4afc52ce46f \
 file://${S}/test/regex/testregex.c;startline=1;endline=31;md5=234efb227d0a40677f895e4a1e26e960"
-INC_PR = "r4"
+INC_PR = "r5"
 
 require uclibc-config.inc
 STAGINGCC = "gcc-cross-intermediate"
@@ -75,7 +75,6 @@ FILES_${PN}-dev_append = "\
         ${libdir}/*_nonshared.a \
         ${libdir}/[S]*crt[1in].o \
         ${libdir}/crtreloc*.o \
-        ${libdir}/lib*.a \
         ${includedir}/*.h ${includedir}/*/*.h \
        "
 FILES_uclibc-utils = "${bindir} ${sbindir}"
