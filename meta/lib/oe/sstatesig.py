@@ -26,6 +26,10 @@ def sstate_rundepfilter(fn, recipename, task, dep, depname):
     if isNative(depname) or isCross(depname) or isNativeSDK(depname):
         return False
 
+    # Exclude well defined machine specific configurations which don't change ABI
+    if depname in ['sysvinit-inittab', 'shadow-securetty', 'opkg-config-base', 'netbase', 'formfactor', 'xserver-xf86-config', 'pointercal', 'base-files']:
+        return False
+
     # Default to keep dependencies
     return True
 
