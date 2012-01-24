@@ -32,4 +32,4 @@ PREFERRED_PROVIDER_matchbox-panel ?= "matchbox-panel-2"
 PREFERRED_PROVIDER_opkg ?= "opkg"
 PREFERRED_PROVIDER_opkg-native ?= "opkg-native"
 PREFERRED_PROVIDER_opkg-nativesdk ?= "opkg-nativesdk"
-
+PREFERRED_PROVIDER_console-tools ?= "kbd"
