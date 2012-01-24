@@ -1,4 +1,4 @@
-SRCREV="a4421e60526d3420a9c0bd55bfa4a25a746cbc8e"
+SRCREV="eb72efd81e0d5be6c836c5a084cc65b9734f544d"
 
 require uclibc.inc
 
@@ -11,10 +11,9 @@ PROVIDES += "virtual/${TARGET_PREFIX}libc-for-gcc"
 
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/uclibc-git' ], d)}"
 
-SRC_URI = "git://busybox.osuosl.org/uClibc.git;branch=master;protocol=git \
+SRC_URI = "git://uclibc.org/uClibc.git;branch=master;protocol=git \
 	file://uClibc.machine \
 	file://uClibc.distro \
-	file://uclibc-arm-ftruncate64.patch \
 	file://uclibc_enable_log2_test.patch \
 	file://ldso_use_arm_dl_linux_resolve_in_thumb_mode.patch \
 	file://powerpc_copysignl.patch \
@@ -23,8 +22,7 @@ SRC_URI = "git://busybox.osuosl.org/uClibc.git;branch=master;protocol=git \
 	file://remove_attribute_optimize_Os.patch \
 	file://compile-arm-fork-with-O2.patch \
 	file://uclibc-execvpe.patch \
-	file://fix_libdl.patch \
-	file://cross_compile_check.patch \
+	file://orign_path.patch \
 	"
 
 S = "${WORKDIR}/git"

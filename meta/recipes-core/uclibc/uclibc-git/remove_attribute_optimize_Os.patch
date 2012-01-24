@@ -3,18 +3,6 @@ Dont support localised optimizations this helps to have a global -O level
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Upstream-Status: Pending
 
-Index: git/include/features.h
-===================================================================
---- git.orig/include/features.h
-+++ git/include/features.h
-@@ -186,7 +186,6 @@
- # define __need_uClibc_config_h
- # include <bits/uClibc_config.h>
- # undef __need_uClibc_config_h
--
- /* For uClibc, always optimize for size -- this should disable
-  * a lot of expensive inlining...
-  * TODO: this is wrong! __OPTIMIZE_SIZE__ is an indicator of
 Index: git/libpthread/nptl/pthread_mutex_timedlock.c
 ===================================================================
 --- git.orig/libpthread/nptl/pthread_mutex_timedlock.c
