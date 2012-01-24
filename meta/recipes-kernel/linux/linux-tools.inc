@@ -1,17 +1,27 @@
 # included by kernel recipes if they want to build/provide
 # perf functionality from their tree.
-do_compile_perf_libc-uclibc () {
-	:
-}
-do_install_perf_libc-uclibc () {
-	:
-}
-do_compile_perf() {
-	oe_runmake -C ${S}/tools/perf CC="${CC}" LD="${LD}" prefix=${prefix} NO_NEWT=1 NO_DWARF=1
+
+BUILDPERF = "yes"
+BUILDPERF_libc-uclibc = "no"
+# perf requires binutils which is GPLv3 licensed, don't prevent the entire kernel
+# being built if GPLv3 is in INCOMPATIBLE_LICENSE
+python () {
+    if ((d.getVar("INCOMPATIBLE_LICENSE", True) or "").find("GPLv3") != -1):
+       # GPLv3, drop perf
+       d.setVar("BUILDPERF", "no")
+       d.setVar("PERFDEPENDS", "")
 }
 
-fakeroot do_install_perf() {
+do_compile_perf () {
+    if [ "${BUILDPERF}" = "yes" ]; then
+	oe_runmake -C ${S}/tools/perf CC="${CC}" LD="${LD}" prefix=${prefix} NO_NEWT=1 NO_DWARF=1
+    fi
+}
+
+fakeroot do_install_perf () {
+    if [ "${BUILDPERF}" = "yes" ]; then
 	oe_runmake -C ${S}/tools/perf CC="${CC}" LD="${LD}" prefix=${prefix} DESTDIR=${D} install NO_NEWT=1 NO_DWARF=1
+    fi
 }
 
 
@@ -26,5 +36,6 @@ PERFDEPENDS = "virtual/${MLPREFIX}libc:do_populate_sysroot ${MLPREFIX}elfutils:d
 PERFDEPENDS_libc-uclibc = ""
 PERFRDEPENDS = "python perl elfutils"
 PERFRDEPENDS_libc-uclibc = ""
+
 do_compile_perf[depends] = "${PERFDEPENDS}"
 RDEPENDS_perf += "${PERFRDEPENDS}"

@@ -21,7 +21,7 @@ SRCREV_machine_qemux86-64 ?= "3551fd0412965b1f6b0b2f6ba35f7fecdaddb58a"
 SRCREV_machine ?= "6f5b11830deba4a6262c8c4abf67e608924f649e"
 SRCREV_meta ?= "665fea1c249b4f335cb1c9a46a9f2c138d611f1a"
 
-PR = "r2"
+PR = "r3"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.0;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
