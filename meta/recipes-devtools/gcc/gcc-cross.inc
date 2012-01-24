@@ -87,12 +87,12 @@ then
 	exit 1
 fi
 	echo "lappend boards_dir [pwd]/../../.." > ${B}/site.exp
-	echo "load_generic_config \"unix\"" > ${B}/${MACHINE_ARCH}.exp
-	echo "set_board_info username \$user" >> ${B}/${MACHINE_ARCH}.exp
-	echo "set_board_info rsh_prog ssh" >> ${B}/${MACHINE_ARCH}.exp
-	echo "set_board_info rcp_prog scp" >> ${B}/${MACHINE_ARCH}.exp
-	echo "set_board_info hostname \$target" >> ${B}/${MACHINE_ARCH}.exp
-	DEJAGNU=${B}/site.exp make -k check RUNTESTFLAGS="--target_board=${MACHINE_ARCH}\$@"
+	echo "load_generic_config \"unix\"" > ${B}/${PACKAGE_ARCH}.exp
+	echo "set_board_info username \$user" >> ${B}/${PACKAGE_ARCH}.exp
+	echo "set_board_info rsh_prog ssh" >> ${B}/${PACKAGE_ARCH}.exp
+	echo "set_board_info rcp_prog scp" >> ${B}/${PACKAGE_ARCH}.exp
+	echo "set_board_info hostname \$target" >> ${B}/${PACKAGE_ARCH}.exp
+	DEJAGNU=${B}/site.exp make -k check RUNTESTFLAGS="--target_board=${PACKAGE_ARCH}\$@"
 
 STOP
 
