@@ -1,0 +1,18 @@
+qt4-tools-native: set LFLAGS to pick up zlib from staging
+
+Original Author: Jeremy Lainé <jeremy.laine@m4x.org>
+Upstream-Status: Pending
+
+Index: qt-everywhere-opensource-src-4.8.0/configure
+===================================================================
+--- qt-everywhere-opensource-src-4.8.0.orig/configure
++++ qt-everywhere-opensource-src-4.8.0/configure
+@@ -611,7 +611,7 @@ fi
+ # initalize variables
+ #-------------------------------------------------------------------------------
+ 
+-SYSTEM_VARIABLES="RANLIB STRIP OBJDUMP LD CC CXX CFLAGS CXXFLAGS LDFLAGS"
++SYSTEM_VARIABLES="RANLIB STRIP OBJDUMP LD CC CXX CFLAGS CXXFLAGS LDFLAGS LFLAGS"
+ for varname in $SYSTEM_VARIABLES; do
+     qmakevarname="${varname}"
+     # use LDFLAGS for autoconf compat, but qmake uses QMAKE_LFLAGS
