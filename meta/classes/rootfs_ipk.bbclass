@@ -90,7 +90,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 	rm -f ${IMAGE_ROOTFS}${opkglibdir}/lists/*
 
 	if ${@base_contains("IMAGE_FEATURES", "package-management", "false", "true", d)}; then
-		if [ $runtime_script_required -eq 0 ]; then
+		if ! grep Status:.install.ok.unpacked ${IMAGE_ROOTFS}${opkglibdir}status; then
 			# All packages were successfully configured.
 			# update-rc.d, base-passwd are no further use, remove them now
 			opkg-cl ${IPKG_ARGS} --force-depends remove update-rc.d base-passwd || true
