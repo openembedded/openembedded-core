@@ -1,12 +1,13 @@
 SECTION = "base"
 SUMMARY = "Utilities and scripts for power management"
-DESCRIPTION = "Simple shell command line toos to suspect and hibernate."
+DESCRIPTION = "Simple shell command line tools to suspend and hibernate."
 HOMEPAGE = "http://pm-utils.freedesktop.org/wiki/"
 LICENSE="GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://src/pm-pmu.c;beginline=1;endline=22;md5=3c1ddbc54e735fb4a0386e14c78a3147"
 
-PR = "r0"
+PR = "r1"
+RDEPENDS_${PN} = "grep"
 
 SRC_URI = "http://pm-utils.freedesktop.org/releases/pm-utils-${PV}.tar.gz"
 
