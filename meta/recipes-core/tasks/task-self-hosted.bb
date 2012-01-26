@@ -28,6 +28,12 @@ RDEPENDS_task-self-hosted = "\
     "
 
 RDEPENDS_task-self-hosted-host-tools = "\
+    parted \
+    e2fsprogs \
+    e2fsprogs-mke2fs \
+    e2fsprogs-tune2fs \
+    e2fsprogs-e2fsck \
+    e2fsprogs-fsck \
     dhcp-client \
     e2fsprogs \
     e2fsprogs-e2fsck \
