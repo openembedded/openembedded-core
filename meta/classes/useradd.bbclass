@@ -90,7 +90,7 @@ useradd_sysroot () {
 }
 
 useradd_sysroot_sstate () {
-	if [ "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
+	if [ "${BB_CURRENTTASK}" = "package_setscene" ]
 	then
 		useradd_sysroot
 	fi
@@ -100,7 +100,7 @@ do_install[prefuncs] += "${SYSROOTFUNC}"
 SYSROOTFUNC = "useradd_sysroot"
 SYSROOTFUNC_virtclass-native = ""
 SYSROOTFUNC_virtclass-nativesdk = ""
-SSTATEPOSTINSTFUNCS += "${SYSROOTPOSTFUNC}"
+SSTATEPREINSTFUNCS += "${SYSROOTPOSTFUNC}"
 SYSROOTPOSTFUNC = "useradd_sysroot_sstate"
 SYSROOTPOSTFUNC_virtclass-native = ""
 SYSROOTPOSTFUNC_virtclass-nativesdk = ""
