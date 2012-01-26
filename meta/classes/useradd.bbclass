@@ -6,9 +6,13 @@ USERADDDEPENDS = " base-passwd shadow-native shadow-sysroot shadow"
 USERADDDEPENDS_virtclass-native = ""
 USERADDDEPENDS_virtclass-nativesdk = ""
 
-# This preinstall function will be run in two contexts: once for the
-# native sysroot (as invoked by the useradd_sysroot() wrapper), and
-# also as the preinst script in the target package.
+# This preinstall function can be run in four different contexts:
+#
+# a) Before do_install
+# b) At do_populate_sysroot_setscene when installing from sstate packages
+# c) As the preinst script in the target package at do_rootfs time
+# d) As the preinst script in the target package on device as a package upgrade
+#
 useradd_preinst () {
 OPT=""
 SYSROOT=""
@@ -80,8 +84,10 @@ fi
 }
 
 useradd_sysroot () {
-	export PSEUDO="${STAGING_DIR_NATIVE}${bindir}/pseudo"
-	export PSEUDO_LOCALSTATEDIR="${STAGING_DIR_TARGET}${localstatedir}/pseudo"
+	# Pseudo may (do_install) or may not (do_populate_sysroot_setscene) be running 
+	# at this point so we're explicit about the environment so pseudo can load if 
+	# not already present.
+	export PSEUDO="${FAKEROOTENV} PSEUDO_LOCALSTATEDIR=${STAGING_DIR_TARGET}${localstatedir}/pseudo ${STAGING_DIR_NATIVE}${bindir}/pseudo"
 
 	# Explicitly set $D since it isn't set to anything
 	# before do_install
