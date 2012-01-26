@@ -17,6 +17,7 @@ BB_HASHFILENAME = "${SSTATE_PKGNAME}"
 
 SSTATE_MANMACH ?= "${SSTATE_PKGARCH}"
 
+SSTATEPREINSTFUNCS ?= ""
 SSTATEPOSTINSTFUNCS ?= ""
 
 python () {
@@ -170,6 +171,10 @@ def sstate_installpkg(ss, d):
 
     d.setVar('SSTATE_INSTDIR', sstateinst)
     d.setVar('SSTATE_PKG', sstatepkg)
+
+    for preinst in (d.getVar('SSTATEPREINSTFUNCS', True) or '').split():
+        bb.build.exec_func(preinst, d)
+
     bb.build.exec_func('sstate_unpack_package', d)
 
     # Fixup hardcoded paths
