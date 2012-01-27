@@ -85,7 +85,7 @@ RECIPE_MAINTAINER_pn-logrotate = "Xiaofeng.Yan <xiaofeng@windriver.com>"
 
 RECIPE_STATUS_pn-loudmouth = "red"
 RECIPE_LATEST_VERSION_pn-loudmouth = "check"
-RECIPE_MAINTAINER_pn-loudmouth = "Dongxiao Xu <dongxiao.xu@intel.com"
+RECIPE_MAINTAINER_pn-loudmouth = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-makedepend = "green"
 RECIPE_LATEST_VERSION_pn-makedepend = "1.0.3"
@@ -127,7 +127,7 @@ RECIPE_MAINTAINER_pn-python-imaging = "Nitin A Kamble <nitin.a.kamble@intel.com>
 RECIPE_STATUS_pn-run-postinsts = "red"
 RECIPE_LATEST_VERSION_pn-run-postinsts = "check"
 RECIPE_LAST_UPDATE_pn-run-postinsts = "Nov 22, 2010"
-RECIPE_MAINTAINER_pn-run-postinsts = "Dongxiao Xu <dongxiao.xu@intel.com"
+RECIPE_MAINTAINER_pn-run-postinsts = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-subversion = "green"
 RECIPE_LATEST_VERSION_pn-subversion = "1.6.15"
@@ -782,7 +782,7 @@ RECIPE_LATEST_RELEASE_DATE_pn-opkg = "Feb 01, 2010"
 RECIPE_COMMENTS_pn-opkg = ""
 RECIPE_LAST_UPDATE_pn-opkg = "Jul 21, 2010"
 RECIPE_MANUAL_CHECK_DATE_pn-opkg = "Nov 22, 2011"
-RECIPE_MAINTAINER_pn-opkg = "Dongxiao Xu <dongxiao.xu@intel.com"
+RECIPE_MAINTAINER_pn-opkg = "Dongxiao Xu <dongxiao.xu@intel.com>"
 DISTRO_PN_ALIAS_pn-opkg = "OSPDT upstream=http://svn.openmoko.org/trunk/src/tar"
 
 
@@ -794,7 +794,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-opkg_nogpg = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-opkg_nogpg = "Feb 01, 2010"
 RECIPE_COMMENTS_pn-opkg_nogpg = ""
 RECIPE_LAST_UPDATE_pn-opkg_nogpg = "Jul 21, 2010"
-RECIPE_MAINTAINER_pn-opkg_nogpg = "Dongxiao Xu <dongxiao.xu@intel.com"
+RECIPE_MAINTAINER_pn-opkg_nogpg = "Dongxiao Xu <dongxiao.xu@intel.com>"
 DISTRO_PN_ALIAS_pn-opkg_nogpg = "OSPDT upstream=http://svn.openmoko.org/trunk/s
 
 
@@ -805,7 +805,7 @@ RECIPE_LATEST_RELEASE_DATE_pn-dpkg = "Nov 25, 2011"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-dpkg = "1 months"
 RECIPE_LAST_UPDATE_pn-dpkg = "Dec 30, 2010"
 RECIPE_MANUAL_CHECK_DATE_pn-dpkg = "Jan 18, 2012"
-RECIPE_MAINTAINER_pn-dpkg = "Joshua Lock <josh@linux.intel.com"
+RECIPE_MAINTAINER_pn-dpkg = "Joshua Lock <josh@linux.intel.com>"
 
 RECIPE_STATUS_pn-opkg-utils = "green"
 RECIPE_DEPENDENCY_CHECK_pn-opkg-utils = "not done"
@@ -815,7 +815,7 @@ RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-opkg-utils = "3 months"
 RECIPE_LATEST_RELEASE_DATE_pn-opkg-utils = "Nov 01, 2008"
 RECIPE_COMMENTS_pn-opkg-utils = ""
 RECIPE_LAST_UPDATE_pn-opkg-utils = "Jul 21, 2010"
-RECIPE_MAINTAINER_pn-opkg-utils = "Dongxiao Xu <dongxiao.xu@intel.com"
+RECIPE_MAINTAINER_pn-opkg-utils = "Dongxiao Xu <dongxiao.xu@intel.com>"
 DISTRO_PN_ALIAS_pn-opkg-utils = "OSPDT upstream=http://svn.openmoko.org/trunk/src/target/opkg/"
 
 RECIPE_STATUS_pn-polkit = "green"
@@ -3598,7 +3598,7 @@ RECIPE_LATEST_VERSION_pn-qt4-x11-free = "4.8.0"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-qt4-x11-free = "3 months"
 RECIPE_LATEST_RELEASE_DATE_pn-qt4-x11-free = "Dec 15, 2011"
 RECIPE_LAST_UPDATE_pn-qt4-x11-free = "Dec 15, 2011"
-RECIPE_MAINTAINER_pn-qt4-x11-free = "Paul Eggleton <paul.eggleton@linux.intel.com"
+RECIPE_MAINTAINER_pn-qt4-x11-free = "Paul Eggleton <paul.eggleton@linux.intel.com>"
 DISTRO_PN_ALIAS_pn-qt4-x11-free = "Ubuntu=qt-x11-free Debian=qt-x11-free"
 
 RECIPE_STATUS_pn-quicky = "green" # no update needed
