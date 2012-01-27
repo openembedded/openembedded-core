@@ -1,0 +1,35 @@
+
+This patch fixes up the computation of nbinodes which would go
+negative due to an int overflow issue when nbblocks > 2Meg for
+a 2Gig or greater filesystem.
+
+The computation is now done as a float equation, since both nbblocks
+and bytes_per_inode are no floats, and then cast to int by assignment.
+
+int tmp_nbinodes = nbblocks * BLOCKSIZE / bytes_per_inode;
+
+Upstream-Status: Submitted
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: genext2fs-1.4.1/genext2fs.c
+===================================================================
+--- genext2fs-1.4.1.orig/genext2fs.c
++++ genext2fs-1.4.1/genext2fs.c
+@@ -2447,7 +2447,7 @@ extern int optind, opterr, optopt;
+ int
+ main(int argc, char **argv)
+ {
+-	int nbblocks = -1;
++	float nbblocks = -1;
+ 	int nbinodes = -1;
+ 	int nbresrvd = -1;
+ 	float bytes_per_inode = -1;
+@@ -2609,7 +2609,7 @@ main(int argc, char **argv)
+ 		}
+ 		if(fs_timestamp == -1)
+ 			fs_timestamp = time(NULL);
+-		fs = init_fs(nbblocks, nbinodes, nbresrvd, holes, fs_timestamp);
++		fs = init_fs((int)nbblocks, nbinodes, nbresrvd, holes, fs_timestamp);
+ 	}
+ 	
+ 	populate_fs(fs, dopt, didx, squash_uids, squash_perms, fs_timestamp, NULL);
