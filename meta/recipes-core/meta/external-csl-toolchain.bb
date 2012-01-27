@@ -60,6 +60,11 @@ external_toolchain_sysroot_adjust() {
                rm -f ${SYSROOT_DESTDIR}/${CSL_TARGET_CORE}
                ln -s . ${SYSROOT_DESTDIR}/${CSL_TARGET_CORE}
        fi
+
+       if [ "${TUNE_PKGARCH}" = "i586" ]; then
+               rm -f ${SYSROOT_DESTDIR}/system32
+               ln -s . ${SYSROOT_DESTDIR}/system32
+       fi
 }
 
 GLIBC_INTERNAL_USE_BINARY_LOCALE ?= "compile"
