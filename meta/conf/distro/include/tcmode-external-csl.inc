@@ -108,3 +108,5 @@ def populate_toolchain_links(d):
             if exc.errno == errno.EEXIST:
                 break
             bb.fatal("Unable to populate toolchain binary symlink for %s: %s" % (newpath, exc))
+
+require conf/distro/include/csl-versions.inc
