@@ -25,23 +25,41 @@ PROVIDES = "\
 	virtual/linux-libc-headers "
 RPROVIDES = "glibc-utils libsegfault glibc-thread-db"
 PACKAGES_DYNAMIC = "glibc-gconv-*"
-PR = "r2"
+PR = "r3"
 
-#SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/${TARGET_SYS}/arm-${PV}-${TARGET_PREFIX}i686-pc-linux-gnu.tar.bz2"
+#SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/${CSL_TARGET_SYS}/arm-${PV}-${TARGET_PREFIX}i686-pc-linux-gnu.tar.bz2"
 
 SRC_URI = "file://SUPPORTED"
 
 do_install() {
 	install -d ${D}${sysconfdir} ${D}${bindir} ${D}${sbindir} ${D}${base_bindir} ${D}${libdir}
-	install -d ${D}${base_libdir} ${D}${base_sbindir} ${D}${datadir}
+	install -d ${D}${base_libdir} ${D}${base_sbindir} ${D}${datadir} ${D}/usr
 
-	cp -a ${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/libc/lib/*  ${D}${base_libdir}
-	cp -a ${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/libc/etc/*  ${D}${sysconfdir}
-	cp -a ${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/libc/sbin/* ${D}${base_sbindir}
-	cp -a ${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/libc/usr/*  ${D}/usr
+	if [ -d ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/${CSL_TARGET_CORE} ]; then
+		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/${CSL_TARGET_CORE}/lib/.  ${D}${base_libdir}
+		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/${CSL_TARGET_CORE}/etc/.  ${D}${sysconfdir}
+		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/${CSL_TARGET_CORE}/sbin/. ${D}${base_sbindir}
+		if [ ! -e ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/${CSL_TARGET_CORE}/usr/include ]; then
+			cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/usr/include  ${D}/usr/
+		fi
+		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/${CSL_TARGET_CORE}/usr/.  ${D}/usr/
+	else
+		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/lib/.  ${D}${base_libdir}
+		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/etc/.  ${D}${sysconfdir}
+		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/sbin/. ${D}${base_sbindir}
+		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/usr/.  ${D}/usr/
+	fi
 
 	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libc.so
 	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libpthread.so
+}
+
+SYSROOT_PREPROCESS_FUNCS += "external_toolchain_sysroot_adjust"
+external_toolchain_sysroot_adjust() {
+       if [ -n "${CSL_TARGET_CORE}" ]; then
+               rm -f ${SYSROOT_DESTDIR}/${CSL_TARGET_CORE}
+               ln -s . ${SYSROOT_DESTDIR}/${CSL_TARGET_CORE}
+       fi
 }
 
 GLIBC_INTERNAL_USE_BINARY_LOCALE ?= "compile"
