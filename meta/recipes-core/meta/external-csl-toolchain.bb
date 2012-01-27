@@ -10,13 +10,13 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 
 PROVIDES = "\
 	linux-libc-headers \
-	virtual/arm-none-linux-gnueabi-gcc \
-	virtual/arm-none-linux-gnueabi-g++ \
-	virtual/arm-none-linux-gnueabi-gcc-initial \
-	virtual/arm-none-linux-gnueabi-gcc-intermediate \
-	virtual/arm-none-linux-gnueabi-binutils \
-	virtual/arm-none-linux-gnueabi-libc-for-gcc \
-	virtual/arm-none-linux-gnueabi-compilerlibs \
+	virtual/${TARGET_PREFIX}gcc \
+	virtual/${TARGET_PREFIX}g++ \
+	virtual/${TARGET_PREFIX}gcc-initial \
+	virtual/${TARGET_PREFIX}gcc-intermediate \
+	virtual/${TARGET_PREFIX}binutils \
+	virtual/${TARGET_PREFIX}libc-for-gcc \
+	virtual/${TARGET_PREFIX}compilerlibs \
 	virtual/libc \
 	virtual/libintl \
 	virtual/libiconv \
@@ -27,7 +27,7 @@ RPROVIDES = "glibc-utils libsegfault glibc-thread-db"
 PACKAGES_DYNAMIC = "glibc-gconv-*"
 PR = "r2"
 
-#SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/arm-none-linux-gnueabi/arm-${PV}-arm-none-linux-gnueabi-i686-pc-linux-gnu.tar.bz2"
+#SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/${TARGET_SYS}/arm-${PV}-${TARGET_PREFIX}i686-pc-linux-gnu.tar.bz2"
 
 SRC_URI = "file://SUPPORTED"
 
@@ -35,10 +35,10 @@ do_install() {
 	install -d ${D}${sysconfdir} ${D}${bindir} ${D}${sbindir} ${D}${base_bindir} ${D}${libdir}
 	install -d ${D}${base_libdir} ${D}${base_sbindir} ${D}${datadir}
 
-	cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/lib/*  ${D}${base_libdir}
-	cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/etc/*  ${D}${sysconfdir}
-	cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/sbin/* ${D}${base_sbindir}
-	cp -a ${EXTERNAL_TOOLCHAIN}/arm-none-linux-gnueabi/libc/usr/*  ${D}/usr
+	cp -a ${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/libc/lib/*  ${D}${base_libdir}
+	cp -a ${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/libc/etc/*  ${D}${sysconfdir}
+	cp -a ${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/libc/sbin/* ${D}${base_sbindir}
+	cp -a ${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/libc/usr/*  ${D}/usr
 
 	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libc.so
 	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libpthread.so
