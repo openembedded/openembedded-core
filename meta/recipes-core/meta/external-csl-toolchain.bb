@@ -1,5 +1,4 @@
-inherit libc-common
-inherit libc-package
+require recipes-core/eglibc/eglibc-package.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 
@@ -8,7 +7,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
-PROVIDES = "\
+PROVIDES += "\
 	linux-libc-headers \
 	virtual/${TARGET_PREFIX}gcc \
 	virtual/${TARGET_PREFIX}g++ \
@@ -22,9 +21,8 @@ PROVIDES = "\
 	virtual/libiconv \
 	glibc-thread-db \
 	libgcc \
-	virtual/linux-libc-headers "
-RPROVIDES = "glibc-utils libsegfault glibc-thread-db"
-PACKAGES_DYNAMIC = "glibc-gconv-*"
+	virtual/linux-libc-headers \
+"
 PR = "r3"
 
 #SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/${CSL_TARGET_SYS}/arm-${PV}-${TARGET_PREFIX}i686-pc-linux-gnu.tar.bz2"
@@ -50,8 +48,23 @@ do_install() {
 		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/usr/.  ${D}/usr/
 	fi
 
+	if [ -e ${D}${prefix}/info ]; then
+		mv ${D}${prefix}/info ${D}${infodir}
+	fi
+	if [ -e ${D}${prefix}/man ]; then
+		mv ${D}${prefix}/man ${D}${mandir}
+	fi
+
+	rm ${D}${sysconfdir}/rpc
+	rm -r ${D}${datadir}/zoneinfo
+	rm -r ${D}${libdir}/bin
+
 	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libc.so
 	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libpthread.so
+}
+
+do_install_locale_append () {
+	rm -r ${D}${datadir}/locale ${D}${libdir}/locale
 }
 
 SYSROOT_PREPROCESS_FUNCS += "external_toolchain_sysroot_adjust"
@@ -67,9 +80,23 @@ external_toolchain_sysroot_adjust() {
        fi
 }
 
-GLIBC_INTERNAL_USE_BINARY_LOCALE ?= "compile"
+PACKAGES =+ "libgcc libgcc-dev libstdc++ libstdc++-dev linux-libc-headers linux-libc-headers-dev"
 
-PACKAGES += "libgcc libgcc-dev libstdc++ libstdc++-dev linux-libc-headers linux-libc-headers-dev"
+INSANE_SKIP_libgcc = "1"
+INSANE_SKIP_libstdc++ = "1"
+INSANE_SKIP_gdbserver = "1"
+
+PKG_${PN} = "eglibc"
+PKG_${PN}-dev = "eglibc-dev"
+PKG_${PN}-doc = "eglibc-doc"
+PKG_${PN}-dbg = "eglibc-dbg"
+PKG_${PN}-pic = "eglibc-pic"
+PKG_${PN}-utils = "eglibc-utils"
+PKG_${PN}-gconv = "eglibc-gconv"
+PKG_${PN}-extra-nss = "eglibc-extra-nss"
+PKG_${PN}-thread-db = "eglibc-thread-db"
+PKG_${PN}-pcprofile = "eglibc-pcprofile"
+
 FILES_libgcc = "${base_libdir}/libgcc_s.so.1"
 FILES_libgcc-dev = "${base_libdir}/libgcc_s.so"
 FILES_libstdc++ = "${libdir}/libstdc++.so.*"
