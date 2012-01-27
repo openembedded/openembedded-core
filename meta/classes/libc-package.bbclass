@@ -80,7 +80,7 @@ rm -rf ${TMP_LOCALE}
 
 
 TMP_LOCALE="/tmp/locale${libdir}/locale"
-LOCALETREESRC ?= "{PKGD}"
+LOCALETREESRC ?= "${PKGD}"
 
 do_prep_locale_tree() {
 	treedir=${WORKDIR}/locale-tree
