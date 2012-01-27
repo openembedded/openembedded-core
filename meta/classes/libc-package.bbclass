@@ -40,7 +40,9 @@ python __anonymous () {
 OVERRIDES_append = ":${TARGET_ARCH}-${TARGET_OS}"
 
 do_configure_prepend() {
-        sed -e "s#@BASH@#/bin/sh#" -i ${S}/elf/ldd.bash.in
+        if [ -e ${S}/elf/ldd.bash.in ]; then
+                sed -e "s#@BASH@#/bin/sh#" -i ${S}/elf/ldd.bash.in
+        fi
 }
 
 

@@ -4,21 +4,26 @@
 
 TARGET_VENDOR = "-none"
 
-EXTERNAL_TOOLCHAIN = "/usr/local/csl/arm-2008q3"
+EXTERNAL_TOOLCHAIN ?= "/usr/local/csl/arm-2008q3"
 
 PATH =. "${EXTERNAL_TOOLCHAIN}/bin:"
 
 PREFERRED_PROVIDER_linux-libc-headers = "external-csl-toolchain"
+PREFERRED_PROVIDER_linux-libc-headers-dev = "external-csl-toolchain"
 PREFERRED_PROVIDER_virtual/arm-none-linux-gnueabi-gcc = "external-csl-toolchain"
 PREFERRED_PROVIDER_virtual/arm-none-linux-gnueabi-gcc-initial = "external-csl-toolchain"
 PREFERRED_PROVIDER_virtual/arm-none-linux-gnueabi-gcc-intermediate = "external-csl-toolchain"
+PREFERRED_PROVIDER_virtual/arm-none-linux-gnueabi-g++ = "external-csl-toolchain"
 PREFERRED_PROVIDER_virtual/arm-none-linux-gnueabi-binutils = "external-csl-toolchain"
 PREFERRED_PROVIDER_virtual/arm-none-linux-gnueabi-libc-for-gcc = "external-csl-toolchain"
+PREFERRED_PROVIDER_virtual/arm-none-linux-gnueabi-compilerlibs = "external-csl-toolchain"
+PREFERRED_PROVIDER_libgcc = "external-csl-toolchain"
 PREFERRED_PROVIDER_virtual/libc = "external-csl-toolchain"
 PREFERRED_PROVIDER_virtual/libintl = "external-csl-toolchain"
 PREFERRED_PROVIDER_virtual/libiconv = "external-csl-toolchain"
 PREFERRED_PROVIDER_glibc-thread-db = "external-csl-toolchain"
 PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-csl-toolchain"
+
 
 PREFERRED_VERSION_external-csl-toolchain = "2008q3-72"
 
