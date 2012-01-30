@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=74579fab173e4c5e12aac0cd83ee98ec \
 SRC_URI = "http://hal.freedesktop.org/releases/polkit-gnome-${PV}.tar.bz2 \
           "
 
-PR = "r0"
+PR = "r1"
 
 EXTRA_OECONF = " --disable-scrollkeeper \
                  --disable-man-pages \

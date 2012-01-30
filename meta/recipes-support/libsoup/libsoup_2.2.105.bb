@@ -2,7 +2,7 @@ DESCRIPTION = "An HTTP library implementation in C"
 SECTION = "x11/gnome/libs"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "glib-2.0 gnutls libxml2"
 

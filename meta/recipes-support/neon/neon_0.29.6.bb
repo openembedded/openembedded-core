@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://src/COPYING.LIB;md5=f30a9716ef3762e3467a2f62bf790f0a 
 DEPENDS = "zlib libxml2 expat time gnutls libproxy"
 DEPENDS_virtclass-native = "zlib-native libxml2-native expat-native gnutls-native"
 
-PR = "r0"
+PR = "r1"
 
 BBCLASSEXTEND = "native"
 

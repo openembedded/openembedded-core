@@ -6,7 +6,7 @@ LICENSE = "LGPLv2 & LGPLv2+"
 
 DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libiconv zlib libsoup libglade"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://ftp.gnome.org/pub/GNOME/mobile/2.23/2.23.92/sources/evolution-data-server-dbus-${PV}.tar.gz  \
            file://oh-contact.patch;striplevel=0 \

@@ -14,7 +14,7 @@ RRECOMMENDS_${PN} = "gst-meta-audio gst-meta-video"
 
 SRCREV = "1379fd230a32509e94971961183f1031f469737a"
 PV = "0.1+git${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \

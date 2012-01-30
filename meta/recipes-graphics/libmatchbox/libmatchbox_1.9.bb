@@ -1,6 +1,6 @@
 require libmatchbox.inc
 
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "http://downloads.yoctoproject.org/releases/matchbox/${BPN}/${PV}/${BPN}-${PV}.tar.gz \
            file://16bppfixes.patch \
