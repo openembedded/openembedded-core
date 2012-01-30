@@ -67,13 +67,14 @@ fi
 # QEMU_MEMORY has 'M' appended to mem_size
 QEMU_MEMORY="$mem_size"M
 
-# Bug 433: qemuarm cannot use > 128 MB RAM
+# Bug 433: qemuarm cannot use > 256 MB RAM
 if [ "$MACHINE" = "qemuarm" ]; then
-    if [[ -z "$mem_size" || $mem_size -gt 128 ]]; then
-        echo "WARNING: qemuarm does not support > 128M of RAM."
-        echo "Changing QEMU_MEMORY to default of 128M."
-        QEMU_MEMORY="128M"
-        SCRIPT_QEMU_EXTRA_OPT=`echo $SCRIPT_QEMU_EXTRA_OPT | sed -e "s/$mem_set/-m 128/" `
+    if [[ -z "$mem_size" || $mem_size -gt 256 ]]; then
+        echo "WARNING: qemuarm does not support > 256M of RAM."
+        echo "Changing QEMU_MEMORY to default of 256M."
+        QEMU_MEMORY="256M"
+	mem_size="256"
+        SCRIPT_QEMU_EXTRA_OPT=`echo $SCRIPT_QEMU_EXTRA_OPT | sed -e "s/$mem_set/-m 256/" `
     fi
 fi
 
