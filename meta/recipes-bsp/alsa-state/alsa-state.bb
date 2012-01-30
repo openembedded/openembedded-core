@@ -10,15 +10,13 @@ sound state at system boot and save it at system shut down."
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PV = "0.2.0"
-PR = "r0"
+PR = "r2"
 
 SRC_URI = "\
   file://asound.conf \
   file://asound.state \
   file://alsa-state \
 "
-
-RDEPENDS = "alsa-utils-alsactl"
 
 inherit update-rc.d
 
@@ -39,6 +37,7 @@ PACKAGES += "alsa-states"
 
 RRECOMMENDS_alsa-state = "alsa-states"
 
+RDEPENDS_${PN} = "alsa-utils-alsactl"
 FILES_${PN} = "${sysconfdir}/init.d ${sysconfdir}/asound.conf"
 CONFFILES_${PN} = "${sysconfdir}/asound.conf"
 
