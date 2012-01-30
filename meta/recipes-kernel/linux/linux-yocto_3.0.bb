@@ -10,16 +10,15 @@ KMACHINE_qemuarm  = "yocto/standard/arm-versatile-926ejs"
 
 KBRANCH = ${KMACHINE}
 
-LINUX_VERSION ?= "3.0.14"
+LINUX_VERSION ?= "3.0.18"
 
-
-SRCREV_machine_qemuarm ?= "c0386e4195c685b0ff94b7e21581ec47008ab13b"
-SRCREV_machine_qemumips ?= "56e4361a1bfc10042d83a7d8a5f96932056e3f35"
-SRCREV_machine_qemuppc ?= "53e71af30e30162e17e32b2f57e4481f5bc0573e"
-SRCREV_machine_qemux86 ?= "9e73573b6b227ab2c62e66e63470866d136f8d76"
-SRCREV_machine_qemux86-64 ?= "3551fd0412965b1f6b0b2f6ba35f7fecdaddb58a"
-SRCREV_machine ?= "6f5b11830deba4a6262c8c4abf67e608924f649e"
-SRCREV_meta ?= "665fea1c249b4f335cb1c9a46a9f2c138d611f1a"
+SRCREV_machine_qemuarm ?= "48e68bd72da497a14200801140b3b87dae6d60e9"
+SRCREV_machine_qemumips ?= "9d86aeb43e5bbb0851cc4f105b64caab13bc71f3"
+SRCREV_machine_qemuppc ?= "15fd748017f0849138ff4b47d73f6866fa26cfe8"
+SRCREV_machine_qemux86 ?= "8f74a4339b3dc029fafff0ba7d88d6dc950d4b31"
+SRCREV_machine_qemux86-64 ?= "610c5a62daeda033755b0b7bfcb3e2cad5c76f3f"
+SRCREV_machine ?= "5df0b4c2538399aed543133b3855f809adf08ab8"
+SRCREV_meta ?= "59314a3523e360796419d76d78c6f7d8c5ef2593"
 
 PR = "r3"
 PV = "${LINUX_VERSION}+git${SRCPV}"
