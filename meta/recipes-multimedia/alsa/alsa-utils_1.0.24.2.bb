@@ -6,7 +6,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833 \
                     file://alsactl/utils.c;beginline=1;endline=20;md5=fe9526b055e246b5558809a5ae25c0b9"
 DEPENDS = "alsa-lib ncurses libsamplerate0"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://ncursesfix.patch \
@@ -78,5 +78,7 @@ DESCRIPTION_alsa-utils-aseqnet      = "network client/server on ALSA sequencer"
 DESCRIPTION_alsa-utils-alsactl      = "saves/restores ALSA-settings in /etc/asound.state"
 DESCRIPTION_alsa-utils-alsaconf     = "a bash script that creates ALSA configuration files"
 DESCRIPTION_alsa-utils-alsaucm      = "ALSA Use Case Manager"
+
+RRECOMMENDS_alsa-utils-alsactl = "alsa-states"
 
 ALLOW_EMPTY_alsa-utils = "1"
