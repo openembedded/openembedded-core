@@ -690,7 +690,7 @@ python split_and_strip_files () {
 		debuglibdir = "/usr/lib/debug"
 		debugsrcdir = "/usr/src/debug"
 	else:
-		# Original Poky, a.k.a. ".debug", style debug info
+		# Original OE-core, a.k.a. ".debug", style debug info
 		debugappend = ""
 		debugdir = "/.debug"
 		debuglibdir = ""

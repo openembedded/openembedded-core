@@ -359,7 +359,7 @@ package_install_internal_rpm () {
 		done
 	fi
 
-	#### Note: 'Recommends' is an arbitrary tag that means _SUGGESTS_ in Poky..
+	#### Note: 'Recommends' is an arbitrary tag that means _SUGGESTS_ in OE-core..
 	# Add any recommended packages to the image
 	# RPM does not solve for recommended packages because they are optional...
 	# So we query them and tree them like the ATTEMPTONLY packages above...
@@ -720,7 +720,7 @@ python write_specfile () {
 					splitrobsoletes = dep
 
 		print_deps(splitrdepends,	"Requires", spec_preamble_bottom, d)
-		# Suggests in RPM are like recommends in Poky!
+		# Suggests in RPM are like recommends in OE-core!
 		print_deps(splitrrecommends,	"Suggests", spec_preamble_bottom, d)
 		# While there is no analog for suggests... (So call them recommends for now)
 		print_deps(splitrsuggests, 	"Recommends", spec_preamble_bottom, d)
@@ -811,7 +811,7 @@ python write_specfile () {
 
 	print_deps(srcdepends,		"BuildRequires", spec_preamble_top, d)
 	print_deps(srcrdepends,		"Requires", spec_preamble_top, d)
-	# Suggests in RPM are like recommends in Poky!
+	# Suggests in RPM are like recommends in OE-core!
 	print_deps(srcrrecommends,	"Suggests", spec_preamble_top, d)
 	# While there is no analog for suggests... (So call them recommends for now)
 	print_deps(srcrsuggests, 	"Recommends", spec_preamble_top, d)
@@ -960,7 +960,7 @@ python do_package_rpm () {
 		outfile.write("\tprintf \"%s\\n\" ${line}\n")
 		outfile.write("done\n")
 
-	# Poky dependencies a.k.a. RPM requires
+	# OE-core dependencies a.k.a. RPM requires
 	outdepends = workdir + "/" + srcname + ".requires"
 
 	try:
@@ -974,7 +974,7 @@ python do_package_rpm () {
 	dependsfile.close()
 	os.chmod(outdepends, 0755)
 
-	# Poky / RPM Provides
+	# OE-core / RPM Provides
 	outprovides = workdir + "/" + srcname + ".provides"
 
 	try:

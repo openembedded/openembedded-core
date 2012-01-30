@@ -5,7 +5,7 @@
 SANITY_REQUIRED_UTILITIES ?= "patch diffstat texi2html makeinfo svn bzip2 tar gzip gawk chrpath wget cpio"
 
 def raise_sanity_error(msg):
-    bb.fatal(""" Poky's config sanity checker detected a potential misconfiguration.
+    bb.fatal(""" OE-core's config sanity checker detected a potential misconfiguration.
     Either fix the cause of this error or at your own risk disable the checker (see sanity.conf).
     Following is the list of potential problems / advisories:
     

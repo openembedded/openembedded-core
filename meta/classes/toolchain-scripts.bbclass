@@ -34,7 +34,7 @@ toolchain_create_sdk_env_script () {
 }
 
 # This function creates an environment-setup-script in the TMPDIR which enables
-# a Poky IDE to integrate with the build tree
+# a OE-core IDE to integrate with the build tree
 toolchain_create_tree_env_script () {
 	script=${TMPDIR}/environment-setup-${MULTIMACH_TARGET_SYS}
 	rm -f $script
