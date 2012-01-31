@@ -6,11 +6,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://opkg.py;beginline=1;endline=18;md5=15917491ad6bf7acc666ca5f7cc1e083"
 RDEPENDS_${PN} = "python"
 RDEPENDS_${PN}_virtclass-native = ""
-SRCREV = "4747"
-PV = "0.1.8+svnr${SRCPV}"
-PR = "r7"
+SRCREV = "002d29bc605d7c2d02e4cf20a43c5277c15f5597"
+PV = "0.1.8+git${SRCPV}"
+PR = "r0"
 
-SRC_URI = "svn://svn.openmoko.org/trunk/src/host/;module=opkg-utils;proto=http \
+SRC_URI = "git://git.yoctoproject.org/opkg-utils;protocol=git \
            file://index-ignore-filenotfound.patch \
            file://mtime-int.patch \
            file://add-license-field.patch \
@@ -18,7 +18,7 @@ SRC_URI = "svn://svn.openmoko.org/trunk/src/host/;module=opkg-utils;proto=http \
            file://shebang.patch \
            "
 
-S = "${WORKDIR}/opkg-utils"
+S = "${WORKDIR}/git"
 
 # Avoid circular dependencies from package_ipk.bbclass
 PACKAGES_virtclass-native = ""
