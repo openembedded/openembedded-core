@@ -114,6 +114,9 @@ build_hddimg() {
 		# Account for the filesystem overhead. This includes directory
 		# entries in the clusters as well as the FAT itself.
 		# Assumptions:
+		#   FAT32 (12 or 16 may be selected by mkdosfs, but the extra
+		#   padding will be minimal on those smaller images and not
+		#   worth the logic here to caclulate the smaller FAT sizes)
 		#   < 16 entries per directory
 		#   8.3 filenames only
 
@@ -142,7 +145,7 @@ build_hddimg() {
 		BLOCKS=$(expr $BLOCKS + $(expr 16 - $(expr $BLOCKS % 16)))
 
 		IMG=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
-		mkdosfs -F 32 -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${IMG} ${BLOCKS}
+		mkdosfs -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${IMG} ${BLOCKS}
 		# Copy HDDDIR recursively into the image file directly
 		mcopy -i ${IMG} -s ${HDDDIR}/* ::/
 
