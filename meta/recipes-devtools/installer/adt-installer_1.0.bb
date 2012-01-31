@@ -29,16 +29,13 @@ LICENSE = "MIT"
 ALLOW_EMPTY = "1"
 
 PACKAGES = ""
-PACKAGE_ARCH = "all"
 
-PR = "r5"
+PR = "r6"
 
 ADT_DEPLOY = "${TMPDIR}/deploy/sdk/"
 ADT_DIR = "${WORKDIR}/adt-installer/"
 YOCTOADT_VERSION = "${SDK_VERSION}"
 S = "${WORKDIR}/trunk"
-
-inherit deploy
 
 SRCREV = "596"
 PV = "0.1.8+svnr${SRCPV}"
@@ -56,9 +53,9 @@ SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
 
 ADTREPO = "http://adtrepo.yoctoproject.org/${SDK_VERSION}"
 
-do_deploy[umask] = 022
+do_populate_adt[umask] = 022
 
-fakeroot do_deploy () {
+fakeroot do_populate_adt () {
 	cd ${WORKDIR}
 	mkdir -p ${ADT_DEPLOY}
 	rm -f ${ADT_DEPLOY}/adt-installer.tar.bz2
@@ -74,13 +71,14 @@ fakeroot do_deploy () {
 	echo 'YOCTOADT_VERSION=${SDK_VERSION}' > ${ADT_DIR}/temp.conf
         cat ${ADT_DIR}/adt_installer.conf >> ${ADT_DIR}/temp.conf
         mv ${ADT_DIR}/temp.conf ${ADT_DIR}/adt_installer.conf
+	sed -i -e 's#YOCTOADT_VERSION#${SDK_VERSION}#' ${ADT_DIR}/adt_installer.conf
         echo 'SDK_VENDOR=${SDK_VENDOR}' >> ${ADT_DIR}/scripts/data_define
         echo 'INSTALL_FOLDER=${SDKPATH}' >> ${ADT_DIR}/scripts/data_define
 	tar cfj adt_installer.tar.bz2 adt-installer
 	cp ${WORKDIR}/adt_installer.tar.bz2 ${ADT_DEPLOY}
 }
 
-do_install[noexec] = "1"
+do_populate_adt[nostamp] = "1"
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_package[noexec] = "1"
@@ -90,4 +88,4 @@ do_package_write_rpm[noexec] = "1"
 do_package_write_deb[noexec] = "1"
 do_poplulate_sysroot[noexec] = "1"
 
-addtask deploy before do_populate_sysroot after do_patch
+addtask populate_adt before do_build after do_install
