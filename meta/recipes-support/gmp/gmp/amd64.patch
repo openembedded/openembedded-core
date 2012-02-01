@@ -1,8 +1,10 @@
 Upstream-Status: Pending
 
---- gmp-4.1.4/longlong.h.orig	2004-04-22 00:34:28.000000000 +0200
-+++ gmp-4.1.4/longlong.h	2005-07-18 01:13:06.000000000 +0200
-@@ -738,8 +738,10 @@
+Index: gmp-5.0.3/longlong.h
+===================================================================
+--- gmp-5.0.3.orig/longlong.h
++++ gmp-5.0.3/longlong.h
+@@ -994,8 +994,10 @@ extern UWtype __MPN(udiv_qrnnd) _PROTO (
     count is only an int. */
  #define count_trailing_zeros(count, x)					\
    do {									\
