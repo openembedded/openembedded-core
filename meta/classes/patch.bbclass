@@ -7,13 +7,17 @@ PATCHDEPENDENCY = "${PATCHTOOL}-native:do_populate_sysroot"
 
 inherit terminal
 
-def src_patches(d):
+def src_patches(d, all = False ):
 	workdir = d.getVar('WORKDIR', True)
 	fetch = bb.fetch2.Fetch([], d)
 	patches = []
+	sources = []
 	for url in fetch.urls:
 		local = patch_path(url, fetch, workdir)
 		if not local:
+			if all:
+				local = fetch.localpath(url)
+				sources.append(local)
 			continue
 
 		urldata = fetch.ud[url]
@@ -42,6 +46,9 @@ def src_patches(d):
 
 		localurl = bb.encodeurl(('file', '', local, '', '', patchparm))
 		patches.append(localurl)
+
+	if all:
+		return sources
 
 	return patches
 
