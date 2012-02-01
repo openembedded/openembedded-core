@@ -25,6 +25,9 @@ ttyUSB0
 ttyUSB1
 ttyUSB2
 
+# USB serial gadget
+ttyGS0
+
 # PowerMac
 ttyPZ0
 ttyPZ1
