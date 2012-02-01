@@ -46,12 +46,14 @@ do_install () {
 pkg_preinst_${PN} () {
 	# all this is needed to avoid sysmlink errors,
 	# because update-rc.d runs before pkg_postinst
-	if [ -e ${sysconfdir}/init.d/syslog -a ! -L ${sysconfdir}/init.d/syslog ]; then
+	ETC=$D${sysconfdir}
+
+	if [ -e $ETC/init.d/syslog -a ! -L $ETC/init.d/syslog ]; then
 		echo "WARNING:" "non symlink ${sysconfdir}/init.d/syslog exist -> backup to ${sysconfdir}/init.d/syslog.old"
-		mv ${sysconfdir}/init.d/syslog ${sysconfdir}/init.d/syslog.old
+		mv $ETC/init.d/syslog $ETC/init.d/syslog.old
 	fi
-	if [ ! -e ${sysconfdir}/init.d/syslog ]; then
-		ln -s dummy ${sysconfdir}/init.d/syslog
+	if [ ! -e $ETC/init.d/syslog ]; then
+		ln -s dummy $ETC/init.d/syslog
 	fi
 }
 

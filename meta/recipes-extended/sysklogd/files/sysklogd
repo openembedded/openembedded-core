@@ -15,7 +15,7 @@
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
 pidfile_syslogd=/var/run/syslogd.pid
-pidfile_klogd=/var/run/syslogd.pid
+pidfile_klogd=/var/run/klogd.pid
 binpath_syslogd=/sbin/syslogd
 binpath_klogd=/sbin/klogd
 
