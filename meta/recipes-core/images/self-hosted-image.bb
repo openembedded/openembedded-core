@@ -4,7 +4,7 @@ POKY_EXTRA_INSTALL = "\
     task-self-hosted \
     "
 
-IMAGE_FEATURES += "x11-mini"
+IMAGE_FEATURES += "x11-mini package-management"
 
 inherit core-image
 
