@@ -10,6 +10,16 @@ def find_patches(d):
 
 	return patch_list
 
+def find_sccs(d):
+	sources=src_patches(d, True)
+	sources_list=[]
+	for s in sources:
+		base, ext = os.path.splitext(os.path.basename(s))
+		if ext and ext in ('.scc'):
+			sources_list.append(s)
+
+	return sources_list
+
 do_patch() {
 	cd ${S}
 	if [ -f ${WORKDIR}/defconfig ]; then
@@ -42,6 +52,7 @@ do_patch() {
 	fi
 
 	patches="${@" ".join(find_patches(d))}"
+	sccs="${@" ".join(find_sccs(d))}"
 
 	# This loops through all patches, and looks for directories that do
 	# not already have feature descriptions. If a directory doesn't have
@@ -78,6 +89,16 @@ do_patch() {
 		echo ${patch_dirs} | grep -q ${suggested_dir}
 		if [ $? -ne 0 ]; then
 			patch_dirs="${patch_dirs} ${suggested_dir}"
+		fi
+	done
+
+	# look for any found scc files, and ensure they are added to the list
+	# of directories passsed to updateme
+	for s in ${sccs}; do
+		sdir=`dirname ${s}`
+		echo ${patch_dirs} | grep -q ${sdir}
+		if [ $? -ne 0 ]; then
+			patch_dirs="${patch_dirs} ${sdir}"
 		fi
 	done
 
