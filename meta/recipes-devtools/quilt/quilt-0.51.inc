@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 SRC_URI = "http://download.savannah.gnu.org/releases/quilt/quilt-${PV}.tar.gz \
         file://install.patch"
 
-SRC_URI[md5sum] = "ff5e1e041363c3af3c8fda4b968c9d1d"
-SRC_URI[sha256sum] = "fa4579628a98cf94472b36869e74f5cd0cb057d6fd13c1872a53f01c45aba8c3"
+SRC_URI[md5sum] = "d56d23d5212297d5777502e84dc0ee80"
+SRC_URI[sha256sum] = "05441399d36399b3f26cb12e29c98a8ce4d1287d036957fa22408807860af614"
 
 inherit autotools
 
