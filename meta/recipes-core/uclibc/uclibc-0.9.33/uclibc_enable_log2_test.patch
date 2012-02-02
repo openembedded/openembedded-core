@@ -1,3 +1,8 @@
+uclibc now has log2 so enable the tests
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
+
 Index: uClibc/test/math/libm-test.inc
 ===================================================================
 --- uClibc/test/math/libm-test.inc	(revision 23784)

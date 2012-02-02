@@ -1,0 +1,23 @@
+Avoid build warnings
+
+Upstream-Status: Pending
+
+Index: git/include/libc-symbols.h
+===================================================================
+--- git.orig/include/libc-symbols.h	2011-07-05 17:04:41.171219323 -0700
++++ git/include/libc-symbols.h	2011-07-05 22:50:36.851661478 -0700
+@@ -48,10 +48,12 @@
+ 
+    */
+ 
+-#include <bits/uClibc_arch_features.h>
+-
+ /* Enable declarations of GNU extensions, since we are compiling them.  */
+ #define _GNU_SOURCE	1
++#define __need_uClibc_config_h
++#include <bits/uClibc_config.h>
++#undef __need_uClibc_config_h
++#include <bits/uClibc_arch_features.h>
+ 
+ /* Prepare for the case that `__builtin_expect' is not available.  */
+ #if defined __GNUC__ && __GNUC__ == 2 && __GNUC_MINOR__ < 96

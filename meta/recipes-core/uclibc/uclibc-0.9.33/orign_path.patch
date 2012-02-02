@@ -3,16 +3,16 @@ http://lists.busybox.net/pipermail/uclibc/2011-March/045003.html
 
 Upstream-Status: Pending
 
-diff --git a/ldso/ldso/dl-elf.c b/ldso/ldso/dl-elf.c
-index 505247e..2b2d429 100644
---- a/ldso/ldso/dl-elf.c
-+++ b/ldso/ldso/dl-elf.c
-@@ -133,53 +133,60 @@ _dl_protect_relro (struct elf_resolve *l)
+Index: git/ldso/ldso/dl-elf.c
+===================================================================
+--- git.orig/ldso/ldso/dl-elf.c	2012-01-23 19:18:58.000000000 -0800
++++ git/ldso/ldso/dl-elf.c	2012-01-23 21:52:06.144646590 -0800
+@@ -133,53 +133,60 @@
   * in uClibc/ldso/util/ldd.c */
  static struct elf_resolve *
- search_for_named_library(const char *name, int secure, const char *path_list,
+ search_for_named_library(const char *name, unsigned rflags, const char *path_list,
 -	struct dyn_elf **rpnt)
-+	struct dyn_elf **rpnt, const char *origin)
++	struct dyn_elf **rpnt, const char* origin)
  {
 -	char *path, *path_n, *mylibname;
 +	char *mylibname;
@@ -47,18 +47,6 @@ index 505247e..2b2d429 100644
 -		if (*path == 0) {
 -			*path = ':';
 -			done = 1;
--		}
--		if (*path == ':') {
--			*path = 0;
--			if (*path_n)
--				_dl_strcpy(mylibname, path_n);
--			else
--				_dl_strcpy(mylibname, "."); /* Assume current dir if empty path */
--			_dl_strcat(mylibname, "/");
--			_dl_strcat(mylibname, name);
--			if ((tpnt = _dl_load_elf_shared_library(secure, rpnt, mylibname)) != NULL)
--				return tpnt;
--			path_n = path+1;
 +	for (p = path_list; p != NULL; p = pn) {
 +		pn = _dl_strchr(p + 1, ':');
 +		if (pn != NULL) {
@@ -69,7 +57,7 @@ index 505247e..2b2d429 100644
 +
 +		if (plen >= 7 && _dl_memcmp(p, "$ORIGIN", 7) == 0) {
 +			int olen;
-+			if (secure && plen != 7)
++			if (rflags && plen != 7)
 +				continue;
 +			if (origin == NULL)
 +				continue;
@@ -86,12 +74,24 @@ index 505247e..2b2d429 100644
 +		} else {
 +			_dl_strcpy(mylibname, ".");
  		}
+-		if (*path == ':') {
+-			*path = 0;
+-			if (*path_n)
+-				_dl_strcpy(mylibname, path_n);
+-			else
+-				_dl_strcpy(mylibname, "."); /* Assume current dir if empty path */
+-			_dl_strcat(mylibname, "/");
+-			_dl_strcat(mylibname, name);
+-			if ((tpnt = _dl_load_elf_shared_library(rflags, rpnt, mylibname)) != NULL)
+-				return tpnt;
+-			path_n = path+1;
+-		}
 -		path++;
 -	} while (!done);
 +		_dl_strcat(mylibname, "/");
 +		_dl_strcat(mylibname, name);
 +
-+		tpnt = _dl_load_elf_shared_library(secure, rpnt, mylibname);
++		tpnt = _dl_load_elf_shared_library(rflags, rpnt, mylibname);
 +		if (tpnt != NULL)
 +			return tpnt;
 +	}
@@ -99,44 +99,46 @@ index 505247e..2b2d429 100644
  	return NULL;
  }
  
-@@ -231,7 +238,8 @@ struct elf_resolve *_dl_load_shared_library(int secure, struct dyn_elf **rpnt,
+@@ -231,8 +238,10 @@
  	if (pnt) {
  		pnt += (unsigned long) tpnt->dynamic_info[DT_STRTAB];
  		_dl_if_debug_dprint("\tsearching RPATH='%s'\n", pnt);
--		if ((tpnt1 = search_for_named_library(libname, secure, pnt, rpnt)) != NULL)
-+		if ((tpnt1 = search_for_named_library(libname, secure, pnt, rpnt,
+-		if ((tpnt1 = search_for_named_library(libname, rflags, pnt, rpnt)) != NULL)
++		if ((tpnt1 = search_for_named_library(libname, rflags, pnt, rpnt,
 +						      tpnt->libname)) != NULL)
  			return tpnt1;
++
  	}
  #endif
-@@ -239,7 +247,7 @@ struct elf_resolve *_dl_load_shared_library(int secure, struct dyn_elf **rpnt,
+ 
+@@ -240,7 +249,7 @@
  	/* Check in LD_{ELF_}LIBRARY_PATH, if specified and allowed */
  	if (_dl_library_path) {
  		_dl_if_debug_dprint("\tsearching LD_LIBRARY_PATH='%s'\n", _dl_library_path);
--		if ((tpnt1 = search_for_named_library(libname, secure, _dl_library_path, rpnt)) != NULL)
-+		if ((tpnt1 = search_for_named_library(libname, secure, _dl_library_path, rpnt, NULL)) != NULL)
+-		if ((tpnt1 = search_for_named_library(libname, rflags, _dl_library_path, rpnt)) != NULL)
++		if ((tpnt1 = search_for_named_library(libname, rflags, _dl_library_path, rpnt, NULL)) != NULL)
  		{
  			return tpnt1;
  		}
-@@ -253,7 +261,7 @@ struct elf_resolve *_dl_load_shared_library(int secure, struct dyn_elf **rpnt,
+@@ -254,7 +263,7 @@
  	if (pnt) {
  		pnt += (unsigned long) tpnt->dynamic_info[DT_STRTAB];
  		_dl_if_debug_dprint("\tsearching RUNPATH='%s'\n", pnt);
--		if ((tpnt1 = search_for_named_library(libname, secure, pnt, rpnt)) != NULL)
-+		if ((tpnt1 = search_for_named_library(libname, secure, pnt, rpnt, NULL)) != NULL)
+-		if ((tpnt1 = search_for_named_library(libname, rflags, pnt, rpnt)) != NULL)
++		if ((tpnt1 = search_for_named_library(libname, rflags, pnt, rpnt, NULL)) != NULL)
  			return tpnt1;
  	}
  #endif
-@@ -287,7 +295,7 @@ struct elf_resolve *_dl_load_shared_library(int secure, struct dyn_elf **rpnt,
+@@ -288,7 +297,7 @@
  	/* Look for libraries wherever the shared library loader
  	 * was installed */
  	_dl_if_debug_dprint("\tsearching ldso dir='%s'\n", _dl_ldsopath);
--	tpnt1 = search_for_named_library(libname, secure, _dl_ldsopath, rpnt);
-+	tpnt1 = search_for_named_library(libname, secure, _dl_ldsopath, rpnt, NULL);
+-	tpnt1 = search_for_named_library(libname, rflags, _dl_ldsopath, rpnt);
++	tpnt1 = search_for_named_library(libname, rflags, _dl_ldsopath, rpnt, NULL);
  	if (tpnt1 != NULL)
  		return tpnt1;
- 
-@@ -300,7 +308,7 @@ struct elf_resolve *_dl_load_shared_library(int secure, struct dyn_elf **rpnt,
+ #endif
+@@ -301,7 +310,7 @@
  #ifndef __LDSO_CACHE_SUPPORT__
  					":" UCLIBC_RUNTIME_PREFIX "usr/X11R6/lib"
  #endif
@@ -145,12 +147,12 @@ index 505247e..2b2d429 100644
  	if (tpnt1 != NULL)
  		return tpnt1;
  
-diff --git a/ldso/ldso/ldso.c b/ldso/ldso/ldso.c
-index 7ee9257..9423670 100644
---- a/ldso/ldso/ldso.c
-+++ b/ldso/ldso/ldso.c
-@@ -272,6 +272,20 @@ static void __attribute__ ((destructor)) __attribute_used__ _dl_fini(void)
- 	}
+Index: git/ldso/ldso/ldso.c
+===================================================================
+--- git.orig/ldso/ldso/ldso.c	2012-01-23 19:18:58.000000000 -0800
++++ git/ldso/ldso/ldso.c	2012-01-23 21:34:11.152594621 -0800
+@@ -407,6 +407,20 @@
+ 	return p - list;
  }
  
 +static void _dl_setup_progname(const char *argv0)
@@ -167,10 +169,10 @@ index 7ee9257..9423670 100644
 +	}
 +}
 +
- void _dl_get_ready_to_run(struct elf_resolve *tpnt, DL_LOADADDR_TYPE load_addr,
- 			  ElfW(auxv_t) auxvt[AT_EGID + 1], char **envp,
- 			  char **argv
-@@ -321,9 +335,7 @@ void _dl_get_ready_to_run(struct elf_resolve *tpnt, DL_LOADADDR_TYPE load_addr,
+ void *_dl_get_ready_to_run(struct elf_resolve *tpnt, DL_LOADADDR_TYPE load_addr,
+ 			  ElfW(auxv_t) auxvt[AT_EGID + 1], char **envp, char **argv
+ 			  DL_GET_READY_TO_RUN_EXTRA_PARMS)
+@@ -458,9 +472,7 @@
  	 * been fixed up by now.  Still no function calls outside of this
  	 * library, since the dynamic resolver is not yet ready.
  	 */
@@ -179,5 +181,5 @@ index 7ee9257..9423670 100644
 -	}
 +	_dl_setup_progname(argv[0]);
  
+ #ifndef __LDSO_STANDALONE_SUPPORT__
  	if (_start == (void *) auxvt[AT_ENTRY].a_un.a_val) {
- 		_dl_dprintf(_dl_debug_file, "Standalone execution is not supported yet\n");

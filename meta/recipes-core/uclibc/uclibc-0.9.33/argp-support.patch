@@ -13,6 +13,9 @@ it doesn't need to link libuargp.so explicitely.
 Signed-off-by: Salvatore Cro <salvatore.cro at st.com>
 Signed-off-by: Filippo Arcidiacono <filippo.arcidiacono at st.com>
 Signed-off-by: Carmelo Amoroso <carmelo.amoroso at st.com>
+
+Upstream-Status: Pending
+
 ---
  Makefile.in                                 |    8 +
  Makerules                                   |    8 +-

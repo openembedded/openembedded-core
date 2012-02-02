@@ -1,0 +1,37 @@
+Implement dup3()
+
+Upstream-Status: Pending
+
+Index: git/libc/sysdeps/linux/common/dup3.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libc/sysdeps/linux/common/dup3.c	2012-01-27 07:40:52.802900849 -0800
+@@ -0,0 +1,15 @@
++/* vi: set sw=4 ts=4: */
++/*
++ * dup3() for uClibc
++ *
++ * Copyright (C) 2000-2006 Erik Andersen <andersen@uclibc.org>
++ *
++ * Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
++ */
++
++#include <sys/syscall.h>
++#include <unistd.h>
++
++
++_syscall3(int, dup3, int, oldfd, int, newfd, int, flags)
++libc_hidden_def(dup3)
+Index: git/include/unistd.h
+===================================================================
+--- git.orig/include/unistd.h	2012-01-27 01:19:17.521792781 -0800
++++ git/include/unistd.h	2012-01-27 07:40:03.106898447 -0800
+@@ -512,6 +512,8 @@
+ /* Duplicate FD to FD2, closing FD2 and making it open on the same file.  */
+ extern int dup2 (int __fd, int __fd2) __THROW;
+ libc_hidden_proto(dup2)
++extern int dup3 (int __fd, int __fd2, int __flags) __THROW;
++libc_hidden_proto(dup3)
+ 
+ /* NULL-terminated array of "NAME=VALUE" environment variables.  */
+ extern char **__environ;

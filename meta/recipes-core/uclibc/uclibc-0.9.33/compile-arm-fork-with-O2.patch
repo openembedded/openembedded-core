@@ -1,5 +1,5 @@
 When compiling in thumb mode for arm with -Os gcc gives up since it can not find registers
-to spill. So we use -O2 option for compiling fork.c It may be addressable is gcc.
+to spill. So we use -O2 option for compiling fork.c It may be addressable in gcc.
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
