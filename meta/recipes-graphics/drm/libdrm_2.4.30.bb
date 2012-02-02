@@ -6,5 +6,5 @@ PR = "r0"
 
 SRC_URI += "file://installtests.patch"
 
-SRC_URI[md5sum] = "96d5e3e9edd55f4b016fe3b5dd0a1953"
-SRC_URI[sha256sum] = "e2432dc93e933479132123a1dca382294c30f55bc895bb737b6bdd6f2b8c452e"
+SRC_URI[md5sum] = "9f57a68b2c0836b55ebcbc241f6ca175"
+SRC_URI[sha256sum] = "cacea9c157ec824ad278a06f4910659b2f3ae69686518ece8d6967843cddcd56"
