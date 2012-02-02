@@ -7,6 +7,9 @@ SRC_URI += "file://gnutls-openssl.patch \
             file://configure-fix.patch \
            "
 
+SRC_URI[md5sum] = "0414bba9760201f27d66787997cbadfb"
+SRC_URI[sha256sum] = "d04328857d9e420eca53f7f7fd615bc76d2f5d74984a9b90c0f2c5f7b5bf5b4a"
+
 python() {
     if not ((d.getVar("INCOMPATIBLE_LICENSE", True) or "").find("GPLv3") != -1):
         # if GPLv3 add patch
@@ -14,6 +17,3 @@ python() {
         src_uri.append("file://fix-gettext-version.patch")
         d.setVar("SRC_URI", " ".join(src_uri))
 }
-
-SRC_URI[md5sum] = "555687a7ffefba0bd9de1e71cb61402c"
-SRC_URI[sha256sum] = "5ee72ba6de7a23cf315792561954451e022dac8730149ca95f93c61e95be2ce3"
