@@ -18,42 +18,34 @@ do_bootimg[depends] += "syslinux:do_populate_sysroot \
 SYSLINUXCFG  = "${S}/syslinux.cfg"
 SYSLINUXMENU = "${S}/menu"
 
-SYSLINUX_ISODIR = "${ISODIR}/isolinux"
-SYSLINUX_HDDDIR = "${HDDDIR}"
+ISOLINUXDIR = "/isolinux"
+SYSLINUXDIR = "/"
 ISO_BOOTIMG = "isolinux/isolinux.bin"
 ISO_BOOTCAT = "isolinux/boot.cat"
 MKISOFS_OPTIONS = "-no-emul-boot -boot-load-size 4 -boot-info-table"
 
 syslinux_populate() {
 	DEST=$1
-	CFGNAME=$2
+	BOOTDIR=$2
+	CFGNAME=$3
 
-	install -d ${DEST}
-
-	# Install the kernel, initrd, and rootfs
-	install -m 0644 ${STAGING_DIR_HOST}/kernel/bzImage ${DEST}/vmlinuz
-	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ]; then
-		install -m 0644 ${INITRD} ${DEST}/initrd
-	fi
-	if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then
-		install -m 0644 ${ROOTFS} ${DEST}/rootfs.img
-	fi
+	install -d ${DEST}${BOOTDIR}
 
 	# Install the config files
-	install -m 0644 ${SYSLINUXCFG} ${DEST}/${CFGNAME}
+	install -m 0644 ${SYSLINUXCFG} ${DEST}${BOOTDIR}/${CFGNAME}
 	if [ -f ${SYSLINUXMENU} ]; then
-		install -m 0644 ${SYSLINUXMENU} ${DEST}
+		install -m 0644 ${SYSLINUXMENU} ${DEST}${BOOTDIR}
 	fi
 }
 
 syslinux_iso_populate() {
-	syslinux_populate ${SYSLINUX_ISODIR} isolinux.cfg
-	install -m 0644 ${STAGING_LIBDIR}/syslinux/isolinux.bin ${SYSLINUX_ISODIR}
+	syslinux_populate ${ISODIR} ${ISOLINUXDIR} isolinux.cfg
+	install -m 0644 ${STAGING_LIBDIR}/syslinux/isolinux.bin ${ISODIR}${ISOLINUXDIR}
 }
 
 syslinux_hddimg_populate() {
-	syslinux_populate ${SYSLINUX_HDDDIR} syslinux.cfg
-	install -m 0444 ${STAGING_LIBDIR}/syslinux/ldlinux.sys ${SYSLINUX_HDDDIR}/ldlinux.sys
+	syslinux_populate ${HDDDIR} ${SYSLINUXDIR} syslinux.cfg
+	install -m 0444 ${STAGING_LIBDIR}/syslinux/ldlinux.sys ${HDDDIR}${SYSLINUXDIR}/ldlinux.sys
 }
 
 syslinux_hddimg_install() {
@@ -187,7 +179,7 @@ python build_syslinux_cfg () {
 		localdata.setVar('OVERRIDES', label + ':' + overrides)
 		bb.data.update_data(localdata)
 	
-		cfgfile.write('LABEL %s\nKERNEL vmlinuz\n' % (label))
+		cfgfile.write('LABEL %s\nKERNEL /vmlinuz\n' % (label))
 
 		append = localdata.getVar('APPEND', 1)
 		initrd = localdata.getVar('INITRD', 1)
@@ -196,7 +188,7 @@ python build_syslinux_cfg () {
 			cfgfile.write('APPEND ')
 
 			if initrd:
-				cfgfile.write('initrd=initrd ')
+				cfgfile.write('initrd=/initrd ')
 
 			cfgfile.write('LABEL=%s '% (label))
 

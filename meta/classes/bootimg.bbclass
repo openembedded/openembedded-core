@@ -8,13 +8,13 @@
 # End result is two things:
 #
 # 1. A .hddimg file which is an msdos filesystem containing syslinux, a kernel,
-# an initrd and a rootfs image. These can be written to harddisks directly and 
+# an initrd and a rootfs image. These can be written to harddisks directly and
 # also booted on USB flash disks (write them there with dd).
 #
 # 2. A CD .iso image
 
-# Boot process is that the initrd will boot and process which label was selected 
-# in syslinux. Actions based on the label are then performed (e.g. installing to 
+# Boot process is that the initrd will boot and process which label was selected
+# in syslinux. Actions based on the label are then performed (e.g. installing to
 # an hdd)
 
 # External variables (also used by syslinux.bbclass)
@@ -29,8 +29,8 @@ do_bootimg[depends] += "dosfstools-native:do_populate_sysroot \
 PACKAGES = " "
 EXCLUDE_FROM_WORLD = "1"
 
-HDDDIR = "${S}/hdd/boot"
-ISODIR = "${S}/cd"
+HDDDIR = "${S}/hddimg"
+ISODIR = "${S}/iso"
 
 BOOTIMG_VOLUME_ID   ?= "boot"
 BOOTIMG_EXTRA_SPACE ?= "512"
@@ -58,6 +58,22 @@ PCBIOS_CLASS = ${@pcbios_class(d)}
 inherit ${PCBIOS_CLASS}
 inherit ${EFI_CLASS}
 
+populate() {
+	DEST=$1
+	install -d ${DEST}
+
+	# Install bzImage, initrd, and rootfs.img in DEST for all loaders to use.
+	install -m 0644 ${STAGING_DIR_HOST}/kernel/bzImage ${DEST}/vmlinuz
+
+	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ]; then
+		install -m 0644 ${INITRD} ${DEST}/initrd
+	fi
+
+	if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then
+		install -m 0644 ${ROOTFS} ${DEST}/rootfs.img
+	fi
+
+}
 
 build_iso() {
 	# Only create an ISO if we have an INITRD and NOISO was not set
@@ -66,7 +82,7 @@ build_iso() {
 		return
 	fi
 
-	install -d ${ISODIR}
+	populate ${ISODIR}
 
 	if [ "${PCBIOS}" = "1" ]; then
 		syslinux_iso_populate
@@ -95,7 +111,8 @@ build_iso() {
 build_hddimg() {
 	# Create an HDD image
 	if [ "${NOHDD}" != "1" ] ; then
-		install -d ${HDDDIR}
+		populate ${HDDDIR}
+
 		if [ "${PCBIOS}" = "1" ]; then
 			syslinux_hddimg_populate
 		fi

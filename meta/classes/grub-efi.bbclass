@@ -22,39 +22,29 @@ GRUB_TIMEOUT ?= "10"
 GRUB_OPTS ?= "serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1"
 
 EFIDIR = "/EFI/BOOT"
-GRUB_HDDDIR = "${HDDDIR}${EFIDIR}"
-GRUB_ISODIR = "${ISODIR}${EFIDIR}"
 
 grubefi_populate() {
+	# DEST must be the root of the image so that EFIDIR is not
+	# nested under a top level directory.
 	DEST=$1
 
-	install -d ${DEST}
-
-	install -m 0644 ${STAGING_DIR_HOST}/kernel/bzImage ${DEST}/vmlinuz
-
-	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ]; then 
-    		install -m 0644 ${INITRD} ${DEST}/initrd
-	fi
-
-	if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then 
-    		install -m 0644 ${ROOTFS} ${DEST}/rootfs.img
-	fi
+	install -d ${DEST}${EFIDIR}
 
 	GRUB_IMAGE="bootia32.efi"
 	if [ "${TARGET_ARCH}" = "x86_64" ]; then
 		GRUB_IMAGE="bootx64.efi"
 	fi
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/${GRUB_IMAGE} ${DEST}
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/${GRUB_IMAGE} ${DEST}${EFIDIR}
 
-	install -m 0644 ${GRUBCFG} ${DEST}
+	install -m 0644 ${GRUBCFG} ${DEST}${EFIDIR}
 }
 
 grubefi_iso_populate() {
-	grubefi_populate ${GRUB_ISODIR}
+	grubefi_populate ${ISODIR}
 }
 
 grubefi_hddimg_populate() {
-	grubefi_populate ${GRUB_HDDDIR}
+	grubefi_populate ${HDDDIR}
 }
 
 python build_grub_cfg() {
@@ -109,7 +99,7 @@ python build_grub_cfg() {
         bb.data.update_data(localdata)
 
         cfgfile.write('\nmenuentry \'%s\'{\n' % (label))
-        cfgfile.write('linux ${EFIDIR}/vmlinuz LABEL=%s' % (label))
+        cfgfile.write('linux /vmlinuz LABEL=%s' % (label))
 
         append = localdata.getVar('APPEND', True)
         initrd = localdata.getVar('INITRD', True)
@@ -119,7 +109,7 @@ python build_grub_cfg() {
         cfgfile.write('\n')
    
         if initrd:
-            cfgfile.write('initrd ${EFIDIR}/initrd')
+            cfgfile.write('initrd /initrd')
         cfgfile.write('\n}\n')
 
     cfgfile.close()
