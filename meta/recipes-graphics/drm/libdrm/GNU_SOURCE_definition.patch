@@ -1,0 +1,30 @@
+uclibc headers need to know if _GNU_SOURCE is defined or not and its defined
+in config.h so include it first to get the definition if its there fixed build
+problems on uclibc
+
+test_decode.c:107:2: error: implicit declaration of function 'open_memstream' [-Werror=implicit-function-declaration]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
+
+Index: libdrm-2.4.30/intel/test_decode.c
+===================================================================
+--- libdrm-2.4.30.orig/intel/test_decode.c	2012-02-03 14:28:46.409355918 -0800
++++ libdrm-2.4.30/intel/test_decode.c	2012-02-03 14:29:02.357356689 -0800
+@@ -21,6 +21,8 @@
+  * IN THE SOFTWARE.
+  */
+ 
++#include "config.h"
++
+ #include <string.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+@@ -31,7 +33,6 @@
+ #include <sys/mman.h>
+ #include <err.h>
+ 
+-#include "config.h"
+ #include "intel_bufmgr.h"
+ #include "intel_chipset.h"
+ 
