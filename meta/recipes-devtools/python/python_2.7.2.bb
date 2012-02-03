@@ -1,7 +1,7 @@
 require python.inc
 DEPENDS = "python-native db gdbm openssl readline sqlite3 zlib"
 DEPENDS_sharprom = "python-native db readline zlib gdbm openssl"
-PR = "${INC_PR}.5"
+PR = "${INC_PR}.6"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
 DISTRO_SRC_URI_linuxstdbase = ""
@@ -20,6 +20,7 @@ SRC_URI += "\
   file://remove_sqlite_rpath.patch \
   file://setup_py_skip_cross_import_check.patch \
   file://add-md5module-support.patch \
+  file://host_include_contamination.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"

@@ -1,0 +1,27 @@
+when building python for qemux86-64 on ubuntu 11.10/64bit
+it gropes into host includes and then mixes them with cross
+includes and as a result some modules fail to compile and link
+one of the modules is python-elementtree which is then not
+found during image creation
+
+Proble is that setup.py tries to add native includes that newer
+ubuntu has introduced for multiarch support. But that should
+only happen for native builds and not cross building python
+so we add a check here.
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
+
+Index: Python-2.7.2/setup.py
+===================================================================
+--- Python-2.7.2.orig/setup.py	2012-02-03 12:10:42.307057756 -0800
++++ Python-2.7.2/setup.py	2012-02-03 12:11:12.363059210 -0800
+@@ -360,6 +360,8 @@
+         # https://wiki.ubuntu.com/MultiarchSpec
+         if not find_executable('dpkg-architecture'):
+             return
++	if os.environ.get('CROSS_COMPILE') is not None:
++	    return
+         tmpfile = os.path.join(self.build_temp, 'multiarch')
+         if not os.path.exists(self.build_temp):
+             os.makedirs(self.build_temp)
