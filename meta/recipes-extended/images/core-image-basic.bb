@@ -8,6 +8,6 @@ IMAGE_INSTALL = "\
     task-core-basic \
     "
 
-#    ${POKY_BASE_INSTALL} 
+#    ${CORE_IMAGE_BASE_INSTALL} 
 
 inherit core-image

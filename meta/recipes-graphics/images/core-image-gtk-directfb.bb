@@ -15,7 +15,7 @@ RDEPENDS_${PN} += " \
 inherit core-image
 
 IMAGE_INSTALL += "\
-	${POKY_BASE_INSTALL} \
+	${CORE_IMAGE_BASE_INSTALL} \
 	task-core-basic \
 	module-init-tools \
 	task-core-gtk-directfb-base \

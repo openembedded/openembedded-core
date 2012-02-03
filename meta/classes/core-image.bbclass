@@ -47,18 +47,18 @@ PACKAGE_GROUP_ssh-server-openssh = "task-core-ssh-openssh"
 PACKAGE_GROUP_package-management = "${ROOTFS_PKGMANAGE}"
 PACKAGE_GROUP_qt4-pkgs = "task-core-qt-demos"
 
-POKY_BASE_INSTALL = '\
+CORE_IMAGE_BASE_INSTALL = '\
     task-core-boot \
     task-base-extended \
     \
     ${@base_contains("IMAGE_FEATURES", "package-management", "", "${ROOTFS_PKGMANAGE_BOOTSTRAP}",d)} \
     \
-    ${POKY_EXTRA_INSTALL} \
+    ${CORE_IMAGE_EXTRA_INSTALL} \
     '
 
-POKY_EXTRA_INSTALL ?= ""
+CORE_IMAGE_EXTRA_INSTALL ?= ""
 
-IMAGE_INSTALL ?= "${POKY_BASE_INSTALL}"
+IMAGE_INSTALL ?= "${CORE_IMAGE_BASE_INSTALL}"
 
 X11_IMAGE_FEATURES  = "x11-base apps-x11-core package-management"
 ENHANCED_IMAGE_FEATURES = "${X11_IMAGE_FEATURES} apps-x11-games apps-x11-pimlico package-management"
