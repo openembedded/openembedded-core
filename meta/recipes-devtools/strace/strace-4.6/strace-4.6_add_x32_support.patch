@@ -1,0 +1,1242 @@
+Upstream-Status: Pending
+Received this patch from H J Lu.
+2012/02/02
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+
+diff --git a/ChangeLog.hjl b/ChangeLog.hjl
+new file mode 100644
+index 0000000..4636de6
+--- /dev/null
++++ b/ChangeLog.hjl
+@@ -0,0 +1,34 @@
++2012-02-02  H.J. Lu  <hongjiu.lu@intel.com>
++
++	* resource.c (RLIM64_INFINITY): Define only if it isn't defined.
++
++2012-02-02  H.J. Lu  <hongjiu.lu@intel.com>
++
++	* count.c (call_summary_pers): Cast to long.
++	* ipc.c (sys_mq_open): Likewise.
++	(printmqattr): Likewise.
++	* quota.c (decode_cmd_data): Likewise.
++	* resource.c (sys_sysinfo): Likewise.
++	* time.c (tprint_timex): Likewise.
++
++2012-02-02  H.J. Lu  <hongjiu.lu@intel.com>
++
++	* syscall.c (dumpio): Check sys_pread64 and sys_pwrite64 only if
++	HAVE_LONG_LONG_OFF_T isn't defined.
++
++2012-02-02  H.J. Lu  <hongjiu.lu@intel.com>
++
++	* io.c (sys_sendfile): Check HAVE_LONG_LONG_OFF_T when printing
++	offset.
++
++2012-02-02  H.J. Lu  <hongjiu.lu@intel.com>
++
++	* file.c (convertoldstat): Define only if HAVE_LONG_LONG_OFF_T
++	isn't defined.
++	(sys_oldstat): Likewise.
++	(sys_oldfstat): Likewise.
++	(sys_oldlstat): Likewise.
++
++2012-02-02  H.J. Lu  <hongjiu.lu@intel.com>
++
++	* mem.c (sys_mmap64): Print NULL for zero address.
+diff --git a/ChangeLog.x32 b/ChangeLog.x32
+new file mode 100644
+index 0000000..512fc48
+--- /dev/null
++++ b/ChangeLog.x32
+@@ -0,0 +1,67 @@
++2012-02-02  H.J. Lu  <hongjiu.lu@intel.com>
++
++	* configure.ac: Support X32.
++
++	* defs.h (LINUX_X32): New.
++	 (SUPPORTED_PERSONALITIES): Set to 3 for X86_64.  Defined to 1
++	 for X32.
++	(PERSONALITY2_WORDSIZE): Set to 4 for X86_64.
++	(PERSONALITY0_WORDSIZE): Defined to 4 for X32.
++	(tcb): Add ext_arg for LINUX_X32.
++
++	* file.c (stat): New for X32.
++	(printstat64): Check current_personality != 1 for X86_64.
++
++	* io.c (sys_pread): Defined only if X32 isn't defined.
++	(sys_pwrite): Likewise.
++
++	* ipc.c (indirect_ipccall): Check current_personality == 1
++	for X86_64.
++
++	* mem.c (sys_mmap64): Also use tcp->u_arg for X32.  Print NULL
++	for zero address.  Call printllval for offset for X32.
++
++	* pathtrace.c (pathtrace_match): Don't check sys_old_mmap for
++	X32.
++
++	* process.c (ARG_FLAGS): Defined for X32.
++	(ARG_STACK): Likewise.
++	(ARG_PTID): Likewise.
++	(change_syscall): Handle X32.
++	(struct_user_offsets): Support X32.
++	(sys_arch_prctl): Likewise.
++
++	* signal.c: Include <asm/sigcontext.h> for X32.
++	(SA_RESTORER): Also define for X32.
++
++	* syscall.c (rax): Removed.
++	(x86_64_regs): New.
++	(__X32_SYSCALL_BIT): Define if not defined.
++	(__X32_SYSCALL_MASK): Likewise.
++	(get_scno): Use PTRACE_GETREGS for X86_64 and X32.  Check DS
++	register value for X32.  Use __X32_SYSCALL_MASK on X32 system
++	calls.
++	(syscall_fixup): Use x86_64_regs.rax and support X32.
++	(get_error): Likewise.
++	(force_result): Likewise.
++	(syscall_enter): Likewise.
++
++	* util.c (printllval): Use ext_arg for LINUX_X32.
++	(printcall): Support X32.
++	(arg0_offset): Likewise.
++	(arg1_offset): Likewise.
++
++	* Makefile.am (EXTRA_DIST): Add linux/x32/errnoent.h,
++	linux/x32/ioctlent.h.in, linux/x32/signalent.h,
++	linux/x32/syscallent.h, linux/x86_64/errnoent2.h,
++	linux/x86_64/ioctlent2.h, linux/x86_64/signalent2.h and
++	linux/x86_64/syscallent2.h.
++
++	* linux/x32/errnoent.h: New.
++	* linux/x32/ioctlent.h.in: Likewise.
++	* linux/x32/signalent.h: Likewise.
++	* linux/x32/syscallent.h: Likewise.
++	* linux/x86_64/errnoent2.h: Likewise.
++	* linux/x86_64/ioctlent2.h: Likewise.
++	* linux/x86_64/signalent2.h: Likewise.
++	* linux/x86_64/syscallent2.h: Likewise.
+diff --git a/Makefile.am b/Makefile.am
+index ba19a7d..cf26d78 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -78,10 +78,14 @@ EXTRA_DIST = $(man_MANS) errnoent.sh signalent.sh syscallent.sh ioctlsort.c \
+ 	     linux/sparc64/syscallent.h linux/sparc64/syscallent1.h \
+ 	     linux/sparc64/syscallent2.h \
+ 	     linux/tile/ioctlent.h.in linux/tile/syscallent.h \
++	     linux/x32/errnoent.h linux/x32/ioctlent.h.in \
++	     linux/x32/signalent.h linux/x32/syscallent.h \
+ 	     linux/x86_64/ioctlent.h.in linux/x86_64/syscallent.h \
+ 	     linux/x86_64/gentab.pl \
+ 	     linux/x86_64/errnoent1.h linux/x86_64/ioctlent1.h \
+ 	     linux/x86_64/signalent1.h linux/x86_64/syscallent1.h \
++	     linux/x86_64/errnoent2.h linux/x86_64/ioctlent2.h \
++	     linux/x86_64/signalent2.h linux/x86_64/syscallent2.h \
+ 	     freebsd/ioctlent.sh \
+ 	     freebsd/syscalls.cat freebsd/syscalls.pl freebsd/syscalls.print \
+ 	     freebsd/i386/errnoent.h freebsd/i386/ioctlent.h \
+diff --git a/configure.ac b/configure.ac
+index 402f088..1458c8e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -8,6 +8,8 @@ AM_INIT_AUTOMAKE([foreign check-news dist-xz no-dist-gzip silent-rules])
+ AM_MAINTAINER_MODE
+ AC_CANONICAL_HOST
+ 
++AC_PROG_CC
++
+ AC_MSG_CHECKING([for supported operating system])
+ case "$host_os" in
+ *linux*)
+@@ -112,8 +114,13 @@ sh*)
+ 	AC_DEFINE([SH], 1, [Define for the SH architecture.])
+ 	;;
+ x86?64*)
+-	arch=x86_64
+-	AC_DEFINE([X86_64], 1, [Define for the AMD x86-64 architecture.])
++	if echo __LP64__ | ${CC-cc} $CFLAGS $CPPFLAGS -E - | grep __LP64__ > /dev/null; then
++		arch=x32
++		AC_DEFINE([X32], 1, [Define for the 32bit AMD x86-64 architecture.])
++	else
++		arch=x86_64
++		AC_DEFINE([X86_64], 1, [Define for the 64bit AMD x86-64 architecture.])
++	fi
+ 	;;
+ cris|crisv10)
+ 	arch=crisv10
+@@ -144,11 +151,11 @@ AC_SUBST(arch)
+ AM_CONDITIONAL([LINUX], [test x$opsys = xlinux])
+ AM_CONDITIONAL([I386], [test x$arch = xi386])
+ AM_CONDITIONAL([X86_64], [test x$arch = xx86_64])
++AM_CONDITIONAL([X32], [test x$arch = xx32])
+ AM_CONDITIONAL([SUNOS4], [test x$opsys = xsunos4])
+ AM_CONDITIONAL([SVR4], [test x$opsys = xsvr4])
+ AM_CONDITIONAL([FREEBSD], [test x$opsys = xfreebsd])
+ 
+-AC_PROG_CC
+ AC_GNU_SOURCE
+ 
+ AC_INCLUDEDIR
+diff --git a/count.c b/count.c
+index 92f7849..401ca6b 100644
+--- a/count.c
++++ b/count.c
+@@ -211,7 +211,7 @@ call_summary_pers(FILE *outf)
+ 				   / tv_float(&tv_cum));
+ 			fprintf(outf, "%6.2f %11.6f %11ld %9d %9.9s %s\n",
+ 				percent, tv_float(&counts[j].time),
+-				(long) 1000000 * dtv.tv_sec + dtv.tv_usec,
++				(long) (1000000 * dtv.tv_sec + dtv.tv_usec),
+ 				counts[j].calls,
+ 				error_str, sysent[j].sys_name);
+ 		}
+diff --git a/defs.h b/defs.h
+index 8be668a..6f31164 100644
+--- a/defs.h
++++ b/defs.h
+@@ -103,6 +103,9 @@
+ #  if defined(X86_64)
+ #     define LINUX_X86_64
+ #  endif
++#  if defined(X32)
++#     define LINUX_X32
++#  endif
+ #  if defined(MIPS) && _MIPS_SIM == _MIPS_SIM_ABI32
+ #     define LINUX_MIPSO32
+ #  endif
+@@ -146,7 +149,8 @@
+ #include <sys/pioctl.h>
+ #endif /* FREEBSD */
+ #else /* !USE_PROCFS */
+-#if (defined(LINUXSPARC) || defined(LINUX_X86_64) || defined(LINUX_ARM) || defined(LINUX_AVR32)) && defined(__GLIBC__)
++#if (defined(LINUXSPARC) || defined(LINUX_X86_64) || defined(LINUX_X32) \
++     || defined(LINUX_ARM) || defined(LINUX_AVR32)) && defined(__GLIBC__)
+ #include <sys/ptrace.h>
+ #else
+ /* Work around awkward prototype in ptrace.h. */
+@@ -234,9 +238,16 @@ extern int ptrace(int, int, char *, int, ...);
+ 
+ #ifdef X86_64
+ #undef SUPPORTED_PERSONALITIES
+-#define SUPPORTED_PERSONALITIES 2
++#define SUPPORTED_PERSONALITIES 3
+ #define PERSONALITY0_WORDSIZE 8
+ #define PERSONALITY1_WORDSIZE 4
++#define PERSONALITY2_WORDSIZE 4
++#endif
++
++#ifdef X32
++#undef SUPPORTED_PERSONALITIES
++#define SUPPORTED_PERSONALITIES 1
++#define PERSONALITY0_WORDSIZE 4
+ #endif
+ 
+ #ifdef ARM
+@@ -346,7 +357,7 @@ struct tcb {
+ 	long scno;		/* System call number */
+ 	int u_nargs;		/* System call arguments */
+ 	long u_arg[MAX_ARGS];	/* System call arguments */
+-#if defined (LINUX_MIPSN32)
++#if defined (LINUX_MIPSN32) || defined(LINUX_X32)
+ 	long long ext_arg[MAX_ARGS];	/* System call arguments */
+ #endif
+ 	int u_error;		/* Error code */
+diff --git a/file.c b/file.c
+index 346f1e7..db09f7b 100644
+--- a/file.c
++++ b/file.c
+@@ -87,6 +87,29 @@ struct stat_sparc64 {
+ #    define stat kernel_stat
+ #    include <asm/stat.h>
+ #    undef stat
++#  elif defined(X32)
++struct stat {
++	unsigned long long	st_dev;
++	unsigned long long	st_ino;
++	unsigned long long	st_nlink;
++
++	unsigned int		st_mode;
++	unsigned int		st_uid;
++	unsigned int		st_gid;
++	unsigned int		__pad0;
++	unsigned long long	st_rdev;
++	long long		st_size;
++	long long		st_blksize;
++	long long		st_blocks;
++
++	unsigned long long	st_atime;
++	unsigned long long	st_atime_nsec;
++	unsigned long long	st_mtime;
++	unsigned long long	st_mtime_nsec;
++	unsigned long long	st_ctime;
++	unsigned long long	st_ctime_nsec;
++	long long		__unused[3];
++};
+ #  else
+ #    undef dev_t
+ #    undef ino_t
+@@ -1154,7 +1177,7 @@ printstat64(struct tcb *tcp, long addr)
+ #endif /* LINUXSPARC */
+ 
+ #if defined LINUX && defined X86_64
+-	if (current_personality == 0) {
++	if (current_personality != 1) {
+ 		printstat(tcp, addr);
+ 		return;
+ 	}
+@@ -1241,7 +1264,8 @@ printstat64(struct tcb *tcp, long addr)
+ }
+ #endif /* HAVE_STAT64 */
+ 
+-#if defined(LINUX) && defined(HAVE_STRUCT___OLD_KERNEL_STAT)
++#if defined(LINUX) && defined(HAVE_STRUCT___OLD_KERNEL_STAT) \
++    && !defined(HAVE_LONG_LONG_OFF_T)
+ static void
+ convertoldstat(const struct __old_kernel_stat *oldbuf, struct stat *newbuf)
+ {
+@@ -1358,7 +1382,8 @@ sys_newfstatat(struct tcb *tcp)
+ }
+ #endif
+ 
+-#if defined(LINUX) && defined(HAVE_STRUCT___OLD_KERNEL_STAT)
++#if defined(LINUX) && defined(HAVE_STRUCT___OLD_KERNEL_STAT) \
++    && !defined(HAVE_LONG_LONG_OFF_T)
+ int
+ sys_oldstat(struct tcb *tcp)
+ {
+@@ -1402,7 +1427,8 @@ sys_fstat64(struct tcb *tcp)
+ #endif
+ }
+ 
+-#if defined(LINUX) && defined(HAVE_STRUCT___OLD_KERNEL_STAT)
++#if defined(LINUX) && defined(HAVE_STRUCT___OLD_KERNEL_STAT) \
++    && !defined(HAVE_LONG_LONG_OFF_T)
+ int
+ sys_oldfstat(struct tcb *tcp)
+ {
+@@ -1446,7 +1472,8 @@ sys_lstat64(struct tcb *tcp)
+ #endif
+ }
+ 
+-#if defined(LINUX) && defined(HAVE_STRUCT___OLD_KERNEL_STAT)
++#if defined(LINUX) && defined(HAVE_STRUCT___OLD_KERNEL_STAT) \
++    && !defined(HAVE_LONG_LONG_OFF_T)
+ int
+ sys_oldlstat(struct tcb *tcp)
+ {
+diff --git a/io.c b/io.c
+index 3f8757c..27759bd 100644
+--- a/io.c
++++ b/io.c
+@@ -277,6 +277,7 @@ sys_sendfile(struct tcb *tcp)
+ #define PREAD_OFFSET_ARG 3
+ #endif
+ 
++#if !defined X32
+ int
+ sys_pread(struct tcb *tcp)
+ {
+@@ -306,6 +307,7 @@ sys_pwrite(struct tcb *tcp)
+ 	}
+ 	return 0;
+ }
++#endif
+ 
+ int
+ sys_sendfile(struct tcb *tcp)
+@@ -322,7 +324,11 @@ sys_sendfile(struct tcb *tcp)
+ 		else if (umove(tcp, tcp->u_arg[2], &offset) < 0)
+ 			tprintf("%#lx", tcp->u_arg[2]);
+ 		else
++#ifdef HAVE_LONG_LONG_OFF_T
++			tprintf("[%llu]", offset);
++#else
+ 			tprintf("[%lu]", offset);
++#endif
+ 		tprintf(", %lu", tcp->u_arg[3]);
+ 	}
+ 	return 0;
+diff --git a/ipc.c b/ipc.c
+index 4c902bf..7bbf07b 100644
+--- a/ipc.c
++++ b/ipc.c
+@@ -188,7 +188,7 @@ struct tcb *tcp;
+ {
+ #ifdef LINUX
+ #ifdef X86_64
+-	return current_personality > 0;
++	return current_personality == 1;
+ #endif
+ #if defined IA64
+ 	return tcp->scno < 1024; /* ia32 emulation syscalls are low */
+@@ -487,7 +487,8 @@ sys_mq_open(struct tcb *tcp)
+ 				tprintf("{ ??? }");
+ 			else
+ 				tprintf("{mq_maxmsg=%ld, mq_msgsize=%ld}",
+-					attr.mq_maxmsg, attr.mq_msgsize);
++					(long) attr.mq_maxmsg,
++					(long) attr.mq_msgsize);
+ # endif
+ 		}
+ 	}
+@@ -546,7 +547,8 @@ printmqattr(struct tcb *tcp, long addr)
+ 		tprintf("{mq_flags=");
+ 		tprint_open_modes(attr.mq_flags);
+ 		tprintf(", mq_maxmsg=%ld, mq_msgsize=%ld, mq_curmsg=%ld}",
+-			attr.mq_maxmsg, attr.mq_msgsize, attr.mq_curmsgs);
++			(long) attr.mq_maxmsg, (long) attr.mq_msgsize,
++			(long) attr.mq_curmsgs);
+ # endif
+ 	}
+ }
+diff --git a/linux/x32/errnoent.h b/linux/x32/errnoent.h
+new file mode 100644
+index 0000000..00de57b
+--- /dev/null
++++ b/linux/x32/errnoent.h
+@@ -0,0 +1,2 @@
++/* Our third set is for x32.  */
++#include "../errnoent.h"
+diff --git a/linux/x32/ioctlent.h.in b/linux/x32/ioctlent.h.in
+new file mode 100644
+index 0000000..52ac99b
+--- /dev/null
++++ b/linux/x32/ioctlent.h.in
+@@ -0,0 +1 @@
++#include "../i386/ioctlent.h.in"
+diff --git a/linux/x32/signalent.h b/linux/x32/signalent.h
+new file mode 100644
+index 0000000..6fbcab1
+--- /dev/null
++++ b/linux/x32/signalent.h
+@@ -0,0 +1,2 @@
++/* Our third set is for x32.  */
++#include "../signalent.h"
+diff --git a/linux/x32/syscallent.h b/linux/x32/syscallent.h
+new file mode 100644
+index 0000000..2e301fb
+--- /dev/null
++++ b/linux/x32/syscallent.h
+@@ -0,0 +1,333 @@
++	{ 3,	TD,	sys_read,		"read"		},  /* 0 */
++	{ 3,	TD,	sys_write,		"write"		},  /* 1 */
++	{ 3,	TD|TF,	sys_open,		"open"		},  /* 2 */
++	{ 1,	TD,	sys_close,		"close"		},  /* 3 */
++	{ 2,	TF,	sys_stat,		"stat"		},  /* 4 */
++	{ 2,	TD,	sys_fstat,		"fstat"		},  /* 5 */
++	{ 2,	TF,	sys_lstat,		"lstat"		},  /* 6 */
++	{ 3,	TD,	sys_poll,		"poll"		},  /* 7 */
++	{ 3,	TD,	sys_lseek,		"lseek"		},  /* 8 */
++	{ 6,	TD,	sys_mmap,		"mmap"		},  /* 9 */
++	{ 3,	0,	sys_mprotect,		"mprotect"	},  /* 10 */
++	{ 2,	0,	sys_munmap,		"munmap"	},  /* 11 */
++	{ 1,	0,	sys_brk,		"brk"		},  /* 12 */
++	{ },							    /* 13 */
++	{ },							    /* 14 */
++	{ },							    /* 15 */
++	{ },							    /* 16 */
++	{ 5,	TD,	sys_pread,		"pread"		},  /* 17 */
++	{ 5,	TD,	sys_pwrite,		"pwrite"	},  /* 18 */
++	{ },							    /* 19 */
++	{ },							    /* 20 */
++	{ 2,	TF,	sys_access,		"access"	},  /* 21 */
++	{ 1,	TD,	sys_pipe,		"pipe"		},  /* 22 */
++	{ 5,	TD,	sys_select,		"select"	},  /* 23 */
++	{ 0,	0,	sys_sched_yield,	"sched_yield"	},  /* 24 */
++	{ 5,	0,	sys_mremap,		"mremap"	},  /* 25 */
++	{ 3,	0,	sys_msync,		"msync"		},  /* 26 */
++	{ 3,	0,	sys_mincore,		"mincore"	},  /* 27 */
++	{ 3,	0,	sys_madvise,		"madvise"	},  /* 28 */
++	{ 4,	TI,	sys_shmget,		"shmget"	},  /* 29 */
++	{ 4,	TI,	sys_shmat,		"shmat"		},  /* 30 */
++	{ 4,	TI,	sys_shmctl,		"shmctl"	},  /* 31 */
++	{ 1,	TD,	sys_dup,		"dup"		},  /* 32 */
++	{ 2,	TD,	sys_dup2,		"dup2"		},  /* 33 */
++	{ 0,	TS,	sys_pause,		"pause"		},  /* 34 */
++	{ 2,	0,	sys_nanosleep,		"nanosleep"	},  /* 35 */
++	{ 2,	0,	sys_getitimer,		"getitimer"	},  /* 36 */
++	{ 1,	0,	sys_alarm,		"alarm"		},  /* 37 */
++	{ 3,	0,	sys_setitimer,		"setitimer"	},  /* 38 */
++	{ 0,	0,	sys_getpid,		"getpid"	},  /* 39 */
++	{ 4,	TD|TN,	sys_sendfile,		"sendfile"	},  /* 40 */
++	{ 3,	TN,	sys_socket,		"socket"	},  /* 41 */
++	{ 3,	TN,	sys_connect,		"connect"	},  /* 42 */
++	{ 3,	TN,	sys_accept,		"accept"	},  /* 43 */
++	{ 6,	TN,	sys_sendto,		"sendto"	},  /* 44 */
++	{ },							    /* 45 */
++	{ },							    /* 46 */
++	{ },							    /* 47 */
++	{ 2,	TN,	sys_shutdown,		"shutdown"	},  /* 48 */
++	{ 3,	TN,	sys_bind,		"bind"		},  /* 49 */
++	{ 2,	TN,	sys_listen,		"listen"	},  /* 50 */
++	{ 3,	TN,	sys_getsockname,	"getsockname"	},  /* 51 */
++	{ 3,	TN,	sys_getpeername,	"getpeername"	},  /* 52 */
++	{ 4,	TN,	sys_socketpair,		"socketpair"	},  /* 53 */
++	{ 5,	TN,	sys_setsockopt,		"setsockopt"	},  /* 54 */
++	{ 5,	TN,	sys_getsockopt,		"getsockopt"	},  /* 55 */
++	{ 5,	TP,	sys_clone,		"clone"		},  /* 56 */
++	{ 0,	TP,	sys_fork,		"fork"		},  /* 57 */
++	{ 0,	TP,	sys_vfork,		"vfork"		},  /* 58 */
++	{ },							    /* 47 */
++	{ 1,	TP,	sys_exit,		"_exit"		},  /* 60 */
++	{ 4,	TP,	sys_wait4,		"wait4"		},  /* 61 */
++	{ 2,	TS,	sys_kill,		"kill"		},  /* 62 */
++	{ 1,	0,	sys_uname,		"uname"		},  /* 63 */
++	{ 4,	TI,	sys_semget,		"semget"	},  /* 64 */
++	{ 4,	TI,	sys_semop,		"semop"		},  /* 65 */
++	{ 4,	TI,	sys_semctl,		"semctl"	},  /* 66 */
++	{ 4,	TI,	sys_shmdt,		"shmdt"		},  /* 67 */
++	{ 4,	TI,	sys_msgget,		"msgget"	},  /* 68 */
++	{ 4,	TI,	sys_msgsnd,		"msgsnd"	},  /* 69 */
++	{ 5,	TI,	sys_msgrcv,		"msgrcv"	},  /* 70 */
++	{ 3,	TI,	sys_msgctl,		"msgctl"	},  /* 71 */
++	{ 3,	TD,	sys_fcntl,		"fcntl"		},  /* 72 */
++	{ 2,	TD,	sys_flock,		"flock"		},  /* 73 */
++	{ 1,	TD,	sys_fsync,		"fsync"		},  /* 74 */
++	{ 1,	TD,	sys_fdatasync,		"fdatasync"	},  /* 75 */
++	{ 2,	TF,	sys_truncate,		"truncate"	},  /* 76 */
++	{ 2,	TD,	sys_ftruncate,		"ftruncate"	},  /* 77 */
++	{ },							    /* 78 */
++	{ 2,	TF,	sys_getcwd,		"getcwd"	},  /* 79 */
++	{ 1,	TF,	sys_chdir,		"chdir"		},  /* 80 */
++	{ 1,	TD,	sys_fchdir,		"fchdir"	},  /* 81 */
++	{ 2,	TF,	sys_rename,		"rename"	},  /* 82 */
++	{ 2,	TF,	sys_mkdir,		"mkdir"		},  /* 83 */
++	{ 1,	TF,	sys_rmdir,		"rmdir"		},  /* 84 */
++	{ 2,	TD|TF,	sys_creat,		"creat"		},  /* 85 */
++	{ 2,	TF,	sys_link,		"link"		},  /* 86 */
++	{ 1,	TF,	sys_unlink,		"unlink"	},  /* 87 */
++	{ 2,	TF,	sys_symlink,		"symlink"	},  /* 88 */
++	{ 3,	TF,	sys_readlink,		"readlink"	},  /* 89 */
++	{ 2,	TF,	sys_chmod,		"chmod"		},  /* 90 */
++	{ 2,	TD,	sys_fchmod,		"fchmod"	},  /* 91 */
++	{ 3,	TF,	sys_chown,		"chown"		},  /* 92 */
++	{ 3,	TD,	sys_fchown,		"fchown"	},  /* 93 */
++	{ 3,	TF,	sys_chown,		"lchown"	},  /* 94 */
++	{ 1,	0,	sys_umask,		"umask"		},  /* 95 */
++	{ 2,	0,	sys_gettimeofday,	"gettimeofday"	},  /* 96 */
++	{ 2,	0,	sys_getrlimit,		"getrlimit"	},  /* 97 */
++	{ 2,	0,	sys_getrusage,		"getrusage"	},  /* 98 */
++	{ 1,	0,	sys_sysinfo,		"sysinfo"	},  /* 99 */
++	{ },							    /* 100 */
++	{ 4,	0,	sys_ptrace,		"ptrace"	},  /* 101 */
++	{ 0,	NF,	sys_getuid,		"getuid"	},  /* 102 */
++	{ 3,	0,	sys_syslog,		"syslog"	},  /* 103 */
++	{ 0,	NF,	sys_getgid,		"getgid"	},  /* 104 */
++	{ 1,	0,	sys_setuid,		"setuid"	},  /* 105 */
++	{ 1,	0,	sys_setgid,		"setgid"	},  /* 106 */
++	{ 0,	NF,	sys_geteuid,		"geteuid"	},  /* 107 */
++	{ 0,	NF,	sys_getegid,		"getegid"	},  /* 108 */
++	{ 2,	0,	sys_setpgid,		"setpgid"	},  /* 109 */
++	{ 0,	0,	sys_getppid,		"getppid"	},  /* 110 */
++	{ 0,	0,	sys_getpgrp,		"getpgrp"	},  /* 111 */
++	{ 0,	0,	sys_setsid,		"setsid"	},  /* 112 */
++	{ 2,	0,	sys_setreuid,		"setreuid"	},  /* 113 */
++	{ 2,	0,	sys_setregid,		"setregid"	},  /* 114 */
++	{ 2,	0,	sys_getgroups,		"getgroups"	},  /* 115 */
++	{ 2,	0,	sys_setgroups,		"setgroups"	},  /* 116 */
++	{ 3,	0,	sys_setresuid,		"setresuid"	},  /* 117 */
++	{ 3,	0,	sys_getresuid,		"getresuid"	},  /* 118 */
++	{ 3,	0,	sys_setresgid,		"setresgid"	},  /* 119 */
++	{ 3,	0,	sys_getresgid,		"getresgid"	},  /* 120 */
++	{ 1,	0,	sys_getpgid,		"getpgid"	},  /* 121 */
++	{ 1,	NF,	sys_setfsuid,		"setfsuid"	},  /* 122 */
++	{ 1,	NF,	sys_setfsgid,		"setfsgid"	},  /* 123 */
++	{ 1,	0,	sys_getsid,		"getsid"	},  /* 124 */
++	{ 2,	0,	sys_capget,		"capget"	},  /* 125 */
++	{ 2,	0,	sys_capset,		"capset"	},  /* 126 */
++	{ },							    /* 127 */
++	{ },							    /* 128 */
++	{ },							    /* 129 */
++	{ 2,	TS,	sys_rt_sigsuspend,	"rt_sigsuspend"	},  /* 130 */
++	{ },							    /* 131 */
++	{ 2,	TF,	sys_utime,		"utime"		},  /* 132 */
++	{ 3,	TF,	sys_mknod,		"mknod"		},  /* 133 */
++	{ },							    /* 134 */
++	{ 1,	0,	sys_personality,	"personality"	},  /* 135 */
++	{ 2,	0,	sys_ustat,		"ustat"		},  /* 136 */
++	{ 2,	TF,	sys_statfs,		"statfs"	},  /* 137 */
++	{ 2,	TD,	sys_fstatfs,		"fstatfs"	},  /* 138 */
++	{ 3,	0,	sys_sysfs,		"sysfs"		},  /* 139 */
++	{ 2,	0,	sys_getpriority,	"getpriority"	},  /* 140 */
++	{ 3,	0,	sys_setpriority,	"setpriority"	},  /* 141 */
++	{ 0,	0,	sys_sched_setparam,	"sched_setparam"	},  /* 142 */
++	{ 2,	0,	sys_sched_getparam,	"sched_getparam"	},  /* 143 */
++	{ 3,	0,	sys_sched_setscheduler,	"sched_setscheduler"	},  /* 144 */
++	{ 1,	0,	sys_sched_getscheduler,	"sched_getscheduler"	},  /* 145 */
++	{ 1,	0,	sys_sched_get_priority_max,	"sched_get_priority_max"	},  /* 146 */
++	{ 1,	0,	sys_sched_get_priority_min,	"sched_get_priority_min"	},  /* 147 */
++	{ 2,	0,	sys_sched_rr_get_interval,	"sched_rr_get_interval"	},  /* 148 */
++	{ 2,	0,	sys_mlock,		"mlock"		},  /* 149 */
++	{ 2,	0,	sys_munlock,		"munlock"	},  /* 150 */
++	{ 1,	0,	sys_mlockall,		"mlockall"	},  /* 151 */
++	{ 0,	0,	sys_munlockall,		"munlockall"	},  /* 152 */
++	{ 0,	0,	sys_vhangup,		"vhangup"	},  /* 153 */
++	{ 3,	0,	sys_modify_ldt,		"modify_ldt"	},  /* 154 */
++	{ 2,	TF,	sys_pivotroot,		"pivot_root"	},  /* 155 */
++	{ },							    /* 156 */
++	{ 5,	0,	sys_prctl,		"prctl"		},  /* 157 */
++	{ 2,	TP,	sys_arch_prctl,		"arch_prctl"	},  /* 158 */
++	{ 1,	0,	sys_adjtimex,		"adjtimex"	},  /* 159 */
++	{ 2,	0,	sys_setrlimit,		"setrlimit"	},  /* 160 */
++	{ 1,	TF,	sys_chroot,		"chroot"	},  /* 161 */
++	{ 0,	0,	sys_sync,		"sync"		},  /* 162 */
++	{ 1,	TF,	sys_acct,		"acct"		},  /* 163 */
++	{ 2,	0,	sys_settimeofday,	"settimeofday"	},  /* 164 */
++	{ 5,	TF,	sys_mount,		"mount"		},  /* 165 */
++	{ 2,	TF,	sys_umount2,		"umount"	}, /* 166 */
++	{ 2,	TF,	sys_swapon,		"swapon"	},  /* 167 */
++	{ 1,	TF,	sys_swapoff,		"swapoff"	},  /* 168 */
++	{ 4,	0,	sys_reboot,		"reboot"	},  /* 169 */
++	{ 2,	0,	sys_sethostname,	"sethostname"	},  /* 170 */
++	{ 2,	0,	sys_setdomainname,	"setdomainname"	},  /* 171 */
++	{ 1,	0,	sys_iopl,		"iopl"		},  /* 172 */
++	{ 3,	0,	sys_ioperm,		"ioperm"	},  /* 173 */
++	{ 2,	0,	sys_create_module,	"create_module"	},  /* 174 */
++	{ 3,	0,	sys_init_module,	"init_module"	},  /* 175 */
++	{ 2,	0,	sys_delete_module,	"delete_module"	},  /* 176 */
++	{ },							    /* 177 */
++	{ },							    /* 178 */
++	{ 4,	0,	sys_quotactl,		"quotactl"	},  /* 179 */
++	{ },							    /* 180 */
++	{ },							    /* 181 */
++	{ },							    /* 182 */
++	{ },							    /* 183 */
++	{ },							    /* 184 */
++	{ },							    /* 185 */
++	{ 0,	0,	printargs,		"gettid"	}, /* 186 */
++	{ 4,	TD,	sys_readahead,		"readahead"	}, /* 187 */
++	{ 5,	TF,	sys_setxattr,		"setxattr"	}, /* 188 */
++	{ 5,	TF,	sys_setxattr,		"lsetxattr"	}, /* 189 */
++	{ 5,	TD,	sys_fsetxattr,		"fsetxattr"	}, /* 190 */
++	{ 4,	TF,	sys_getxattr,		"getxattr"	}, /* 191 */
++	{ 4,	TF,	sys_getxattr,		"lgetxattr"	}, /* 192 */
++	{ 4,	TD,	sys_fgetxattr,		"fgetxattr"	}, /* 193 */
++	{ 3,	TF,	sys_listxattr,		"listxattr"	}, /* 194 */
++	{ 3,	TF,	sys_listxattr,		"llistxattr"	}, /* 195 */
++	{ 3,	TD,	sys_flistxattr,		"flistxattr"	}, /* 196 */
++	{ 2,	TF,	sys_removexattr,	"removexattr"	}, /* 197 */
++	{ 2,	TF,	sys_removexattr,	"lremovexattr"	}, /* 198 */
++	{ 2,	TD,	sys_fremovexattr,	"fremovexattr"	}, /* 199 */
++	{ 2,	0,	sys_kill,		"tkill"		}, /* 200 */
++	{ 1,	0,	sys_time,		"time"		},  /* 201 */
++	{ 6,	0,	sys_futex,		"futex"		}, /* 202 */
++	{ 3,	0,	sys_sched_setaffinity,	"sched_setaffinity" },/* 203 */
++	{ 3,	0,	sys_sched_getaffinity,	"sched_getaffinity" },/* 204 */
++	{ },							    /* 205 */
++	{ 2,	0,	sys_io_setup,		"io_setup"	}, /* 206 */
++	{ 1,	0,	sys_io_destroy,		"io_destroy"	}, /* 207 */
++	{ 5,	0,	sys_io_getevents,	"io_getevents"	}, /* 208 */
++	{ 3,	0,	sys_io_submit,		"io_submit"	}, /* 209 */
++	{ 3,	0,	sys_io_cancel,		"io_cancel"	}, /* 210 */
++	{ },							    /* 211 */
++	{ 4,	0,	printargs,		"lookup_dcookie"}, /* 212 */
++	{ 1,	TD,	sys_epoll_create,	"epoll_create"	}, /* 213 */
++	{ },							    /* 214 */
++	{ },							    /* 215 */
++	{ 5,	0,	sys_remap_file_pages,	"remap_file_pages"}, /* 216 */
++	{ 3,	TD,	sys_getdents64,		"getdents64"	}, /* 217 */
++	{ 1,	0,	printargs,		"set_tid_address"}, /* 218 */
++	{ 0,	0,	sys_restart_syscall,	"restart_syscall"}, /* 219 */
++	{ 5,	TI,	sys_semtimedop,		"semtimedop"	}, /* 220 */
++	{ 4,	TD,	sys_fadvise64_64,	"fadvise64"	}, /* 221 */
++	{ },							    /* 222 */
++	{ 4,	0,	sys_timer_settime,	"timer_settime"	}, /* 223 */
++	{ 2,	0,	sys_timer_gettime,	"timer_gettime"	}, /* 224 */
++	{ 1,	0,	sys_timer_getoverrun,	"timer_getoverrun"}, /* 225 */
++	{ 1,	0,	sys_timer_delete,	"timer_delete"	}, /* 226 */
++	{ 2,	0,	sys_clock_settime,	"clock_settime"	}, /* 227 */
++	{ 2,	0,	sys_clock_gettime,	"clock_gettime"	}, /* 228 */
++	{ 2,	0,	sys_clock_getres,	"clock_getres"	}, /* 229 */
++	{ 4,	0,	sys_clock_nanosleep,	"clock_nanosleep"}, /* 230 */
++	{ 1,	TP,	sys_exit,		"exit_group"	}, /* 231 */
++	{ 4,	TD,	sys_epoll_wait,		"epoll_wait"	}, /* 232 */
++	{ 4,	TD,	sys_epoll_ctl,		"epoll_ctl"	}, /* 233 */
++	{ 3,	TS,	sys_tgkill,		"tgkill"	}, /* 234 */
++	{ 2,	TF,	sys_utimes,		"utimes"	}, /* 235 */
++	{ },							    /* 236 */
++	{ 6,	0,	sys_mbind,		"mbind"		}, /* 237 */
++	{ 3,	0,	sys_set_mempolicy,	"set_mempolicy"	}, /* 238 */
++	{ 5,	0,	sys_get_mempolicy,	"get_mempolicy"	}, /* 239 */
++	{ 4,	0,	sys_mq_open,		"mq_open"	}, /* 240 */
++	{ 1,	0,	sys_mq_unlink,		"mq_unlink"	}, /* 241 */
++	{ 5,	0,	sys_mq_timedsend,	"mq_timedsend"	}, /* 242 */
++	{ 5,	0,	sys_mq_timedreceive,	"mq_timedreceive" }, /* 243 */
++	{ },							    /* 244 */
++	{ 3,	0,	sys_mq_getsetattr,	"mq_getsetattr"	}, /* 245 */
++	{ },							    /* 246 */
++	{ },							    /* 247 */
++	{ 5,	0,	printargs,		"add_key"	}, /* 248 */
++	{ 4,	0,	printargs,		"request_key"	}, /* 249 */
++	{ 5,	0,	printargs,		"keyctl"	}, /* 250 */
++	{ 3,	0,	printargs,		"ioprio_set"	}, /* 251 */
++	{ 2,	0,	printargs,		"ioprio_get"	}, /* 252 */
++	{ 0,	TD,	printargs,		"inotify_init"	}, /* 253 */
++	{ 3,	TD,	sys_inotify_add_watch,	"inotify_add_watch" }, /* 254 */
++	{ 2,	TD,	sys_inotify_rm_watch,	"inotify_rm_watch" }, /* 255 */
++	{ 4,	0,	printargs,		"migrate_pages"	}, /* 256 */
++	{ 4,	TD|TF,	sys_openat,		"openat"	}, /* 257 */
++	{ 3,	TD|TF,	sys_mkdirat,		"mkdirat"	}, /* 258 */
++	{ 4,	TD|TF,	sys_mknodat,		"mknodat"	}, /* 259 */
++	{ 5,	TD|TF,	sys_fchownat,		"fchownat"	}, /* 260 */
++	{ 3,	TD|TF,	sys_futimesat,		"futimesat"	}, /* 261 */
++	{ 4,	TD|TF,	sys_newfstatat,		"newfstatat"	}, /* 262 */
++	{ 3,	TD|TF,	sys_unlinkat,		"unlinkat"	}, /* 263 */
++	{ 4,	TD|TF,	sys_renameat,		"renameat"	}, /* 264 */
++	{ 5,	TD|TF,	sys_linkat,		"linkat"	}, /* 265 */
++	{ 3,	TD|TF,	sys_symlinkat,		"symlinkat"	}, /* 266 */
++	{ 4,	TD|TF,	sys_readlinkat,		"readlinkat"	}, /* 267 */
++	{ 3,	TD|TF,	sys_fchmodat,		"fchmodat"	}, /* 268 */
++	{ 3,	TD|TF,	sys_faccessat,		"faccessat"	}, /* 269 */
++	{ 6,	TD,	sys_pselect6,		"pselect6"	}, /* 270 */
++	{ 5,	TD,	sys_ppoll,		"ppoll"		}, /* 271 */
++	{ 1,	TP,	sys_unshare,		"unshare"	}, /* 272 */
++	{ },							    /* 273 */
++	{ },							    /* 274 */
++	{ 6,	TD,	printargs,		"splice"	}, /* 275 */
++	{ 4,	TD,	printargs,		"tee"		}, /* 276 */
++	{ 4,	TD,	printargs,		"sync_file_range" }, /* 277 */
++	{ },							    /* 278 */
++	{ },							    /* 279 */
++	{ 4,	TD|TF,	sys_utimensat,		"utimensat"	}, /* 280 */
++	{ 6,	TD,	sys_epoll_pwait,	"epoll_pwait"	}, /* 281 */
++	{ 3,	TD|TS,	sys_signalfd,		"signalfd"	}, /* 282 */
++	{ 2,	TD,	sys_timerfd_create,	"timerfd_create"}, /* 283 */
++	{ 1,	TD,	sys_eventfd,		"eventfd"	}, /* 284 */
++	{ 6,	TD,	sys_fallocate,		"fallocate"	}, /* 285 */
++	{ 4,	TD,	sys_timerfd_settime,	"timerfd_settime"}, /* 286 */
++	{ 2,	TD,	sys_timerfd_gettime,	"timerfd_gettime"}, /* 287 */
++	{ 4,	TN,	sys_accept4,		"accept4"	}, /* 288 */
++	{ 4,	TD|TS,	sys_signalfd4,		"signalfd4"	}, /* 289 */
++	{ 2,	TD,	sys_eventfd2,		"eventfd2"	}, /* 290 */
++	{ 1,	TD,	sys_epoll_create1,	"epoll_create1"	}, /* 291 */
++	{ 3,	TD,	sys_dup3,		"dup3"		}, /* 292 */
++	{ 2,	TD,	sys_pipe2,		"pipe2"		}, /* 293 */
++	{ 1,	TD,	sys_inotify_init1,	"inotify_init1"	}, /* 294 */
++	{ },							    /* 295 */
++	{ },							    /* 296 */
++	{ },							    /* 297 */
++	{ 5,	TD,	printargs,		"perf_event_open"}, /* 298 */
++	{ },							    /* 299 */
++	{ 2,	TD,	printargs,		"fanotify_init"	}, /* 300 */
++	{ 5,	TD|TF,	printargs,		"fanotify_mark"	}, /* 301 */
++	{ 4,	0,	printargs,		"prlimit64"	}, /* 302 */
++
++	[302 ... 511] = {},
++
++	{ 4,	TS,	sys_rt_sigaction,	"rt_sigaction"	},  /* 512 */
++	{ 4,	TS,	sys_rt_sigprocmask,	"rt_sigprocmask"},  /* 513 */
++	{ 0,	TS,	printargs,		"rt_sigreturn"	},  /* 514 */
++	{ 3,	TD,	sys_ioctl,		"ioctl"		},  /* 515 */
++	{ 3,	TD,	sys_readv,		"readv"		},  /* 516 */
++	{ 3,	TD,	sys_writev,		"writev"	},  /* 517 */
++	{ 6,	TN,	sys_recvfrom,		"recvfrom"	},  /* 518 */
++	{ 3,	TN,	sys_sendmsg,		"sendmsg"	},  /* 519 */
++	{ 5,	TN,	sys_recvmsg,		"recvmsg"	},  /* 520 */
++	{ 3,	TF|TP,	sys_execve,		"execve"	},  /* 521 */
++	{ 1,	0,	sys_times,		"times"		},  /* 522 */
++	{ 2,	TS,	sys_rt_sigpending,	"rt_sigpending"	},  /* 523 */
++	{ 4,	TS,	sys_rt_sigtimedwait,	"rt_sigtimedwait" },  /* 524 */
++	{ 3,	TS,	sys_rt_sigqueueinfo,    "rt_sigqueueinfo" },  /* 525 */
++	{ 2,	TS,	sys_sigaltstack,	"sigaltstack"	},  /* 526 */
++	{ 3,	0,	sys_timer_create,	"timer_create"	}, /* 527 */
++	{ 5,	TP,	sys_waitid,		"waitid"	}, /* 528 */
++	{ 2,	0,	sys_mq_notify,		"mq_notify"	}, /* 529 */
++	{ 4,	0,	printargs,		"kexec_load"	}, /* 530 */
++	{ 2,	0,	printargs,		"set_robust_list" }, /* 531 */
++	{ 3,	0,	printargs,		"get_robust_list" }, /* 532 */
++	{ 4,	TD,	printargs,		"vmsplice"	}, /* 533 */
++	{ 6,	0,	sys_move_pages,		"move_pages"	}, /* 534 */
++	{ 5,	TD,	printargs,		"preadv"	}, /* 535 */
++	{ 5,	TD,	printargs,		"pwritev"	}, /* 536 */
++	{ 4,	TP|TS,	printargs,		"rt_tgsigqueueinfo"}, /* 537 */
++	{ 5,	TN,	sys_recvmmsg,		"recvmmsg"	}, /* 538 */
+diff --git a/linux/x86_64/errnoent2.h b/linux/x86_64/errnoent2.h
+new file mode 100644
+index 0000000..00de57b
+--- /dev/null
++++ b/linux/x86_64/errnoent2.h
+@@ -0,0 +1,2 @@
++/* Our third set is for x32.  */
++#include "../errnoent.h"
+diff --git a/linux/x86_64/ioctlent2.h b/linux/x86_64/ioctlent2.h
+new file mode 100644
+index 0000000..060003b
+--- /dev/null
++++ b/linux/x86_64/ioctlent2.h
+@@ -0,0 +1,2 @@
++/* Our third set is for x32.  */
++#include "linux/ioctlent.h"
+diff --git a/linux/x86_64/signalent2.h b/linux/x86_64/signalent2.h
+new file mode 100644
+index 0000000..6fbcab1
+--- /dev/null
++++ b/linux/x86_64/signalent2.h
+@@ -0,0 +1,2 @@
++/* Our third set is for x32.  */
++#include "../signalent.h"
+diff --git a/linux/x86_64/syscallent2.h b/linux/x86_64/syscallent2.h
+new file mode 100644
+index 0000000..33014af
+--- /dev/null
++++ b/linux/x86_64/syscallent2.h
+@@ -0,0 +1,3 @@
++/* Our third set is for x32.  */
++
++#include "x32/syscallent.h"
+diff --git a/mem.c b/mem.c
+index d4c223a..355027a 100644
+--- a/mem.c
++++ b/mem.c
+@@ -341,26 +341,29 @@ int
+ sys_mmap64(struct tcb *tcp)
+ {
+ #ifdef linux
+-#ifdef ALPHA
++#if defined ALPHA || defined X32
+ 	long *u_arg = tcp->u_arg;
+-#else /* !ALPHA */
++#else /* !ALPHA && !X32 */
+ 	long u_arg[7];
+-#endif /* !ALPHA */
++#endif /* !ALPHA && !X32 */
+ #else /* !linux */
+ 	long *u_arg = tcp->u_arg;
+ #endif /* !linux */
+ 
+ 	if (entering(tcp)) {
+ #ifdef linux
+-#ifndef ALPHA
++#if !defined ALPHA && !defined X32
+ 		if (umoven(tcp, tcp->u_arg[0], sizeof u_arg,
+ 				(char *) u_arg) == -1)
+ 			return 0;
+-#endif /* ALPHA */
++#endif /* !ALPHA && !X32 */
+ #endif /* linux */
+ 
+ 		/* addr */
+-		tprintf("%#lx, ", u_arg[0]);
++		if (!u_arg[0])
++			tprintf("NULL, ");
++		else
++			tprintf("%#lx, ", u_arg[0]);
+ 		/* len */
+ 		tprintf("%lu, ", u_arg[1]);
+ 		/* prot */
+diff --git a/process.c b/process.c
+index 6c1aa6b..7da30bc 100644
+--- a/process.c
++++ b/process.c
+@@ -606,7 +606,7 @@ extern void print_ldt_entry();
+ #  define ARG_PTID	2
+ #  define ARG_CTID	3
+ #  define ARG_TLS	4
+-# elif defined X86_64 || defined ALPHA
++# elif defined X86_64 || defined X32 || defined ALPHA
+ #  define ARG_FLAGS	0
+ #  define ARG_STACK	1
+ #  define ARG_PTID	2
+@@ -691,7 +691,7 @@ change_syscall(struct tcb *tcp, int new)
+ 	if (ptrace(PTRACE_POKEUSER, tcp->pid, (char*)(ORIG_EAX * 4), new) < 0)
+ 		return -1;
+ 	return 0;
+-#elif defined(X86_64)
++#elif defined(X86_64) || defined(X32)
+ 	/* Attempt to make vfork into fork, which we can follow. */
+ 	if (ptrace(PTRACE_POKEUSER, tcp->pid, (char*)(ORIG_RAX * 8), new) < 0)
+ 		return -1;
+@@ -2662,7 +2662,7 @@ const struct xlat struct_user_offsets[] = {
+ 	{ 4*EFL,		"4*EFL"					},
+ 	{ 4*UESP,		"4*UESP"				},
+ 	{ 4*SS,			"4*SS"					},
+-#   elif defined(X86_64)
++#   elif defined(X86_64) || defined(X32)
+ 	{ 8*R15, 		"8*R15"					},
+ 	{ 8*R14, 		"8*R14"					},
+ 	{ 8*R13, 		"8*R13"					},
+@@ -3197,7 +3197,7 @@ const struct xlat struct_user_offsets[] = {
+ #    if !defined(S390) && !defined(S390X) && !defined(MIPS) && !defined(SPARC64) && !defined(AVR32) && !defined(BFIN) && !defined(TILE)
+ 	{ uoff(u_fpvalid),	"offsetof(struct user, u_fpvalid)"	},
+ #    endif
+-#    if defined(I386) || defined(X86_64)
++#    if defined(I386) || defined(X86_64) || defined(X32)
+ 	{ uoff(i387),		"offsetof(struct user, i387)"		},
+ #    endif
+ #    if defined(M68K)
+@@ -3227,7 +3227,7 @@ const struct xlat struct_user_offsets[] = {
+ #    endif
+ 	{ uoff(magic),		"offsetof(struct user, magic)"		},
+ 	{ uoff(u_comm),		"offsetof(struct user, u_comm)"		},
+-#    if defined(I386) || defined(X86_64)
++#    if defined(I386) || defined(X86_64) || defined(X32)
+ 	{ uoff(u_debugreg),	"offsetof(struct user, u_debugreg)"	},
+ #    endif
+ #   endif /* !defined(many arches) */
+@@ -3681,7 +3681,7 @@ sys_sched_get_priority_min(struct tcb *tcp)
+ 	return 0;
+ }
+ 
+-# ifdef X86_64
++# if defined X86_64 || defined X32
+ # include <asm/prctl.h>
+ 
+ static const struct xlat archvals[] = {
+@@ -3715,7 +3715,7 @@ sys_arch_prctl(struct tcb *tcp)
+ 	}
+ 	return 0;
+ }
+-# endif /* X86_64 */
++# endif /* X86_64 || X32 */
+ 
+ 
+ int
+diff --git a/quota.c b/quota.c
+index f07d1a1..39ae33c 100644
+--- a/quota.c
++++ b/quota.c
+@@ -386,8 +386,8 @@ decode_cmd_data(struct tcb *tcp, u_int32_t cmd, unsigned long data)
+ 			tprintf("ihardlimit=%u, ", dq.dqb_ihardlimit);
+ 			tprintf("isoftlimit=%u, ", dq.dqb_isoftlimit);
+ 			tprintf("curinodes=%u, ", dq.dqb_curinodes);
+-			tprintf("btime=%lu, ", dq.dqb_btime);
+-			tprintf("itime=%lu}", dq.dqb_itime);
++			tprintf("btime=%lu, ", (long) dq.dqb_btime);
++			tprintf("itime=%lu}", (long) dq.dqb_itime);
+ 			break;
+ 		}
+ 		case Q_V2_GETQUOTA:
+@@ -411,8 +411,8 @@ decode_cmd_data(struct tcb *tcp, u_int32_t cmd, unsigned long data)
+ 			tprintf("bhardlimit=%u, ", dq.dqb_bhardlimit);
+ 			tprintf("bsoftlimit=%u, ", dq.dqb_bsoftlimit);
+ 			tprintf("curspace=%" PRIu64 ", ", dq.dqb_curspace);
+-			tprintf("btime=%lu, ", dq.dqb_btime);
+-			tprintf("itime=%lu}", dq.dqb_itime);
++			tprintf("btime=%lu, ", (long) dq.dqb_btime);
++			tprintf("itime=%lu}", (long) dq.dqb_itime);
+ 			break;
+ 		}
+ 		case Q_XGETQUOTA:
+diff --git a/resource.c b/resource.c
+index b9550b8..5beebbc 100644
+--- a/resource.c
++++ b/resource.c
+@@ -49,7 +49,9 @@
+ 
+ #define rlimit64 rlimit			/* Ugly hack */
+ #define rlim64_t rlim_t			/* Ugly hack */
++#ifndef RLIM64_INFINITY
+ #define RLIM64_INFINITY RLIM_INFINITY	/* You guessed it */
++#endif
+ 
+ #define sys_getrlimit64	sys_getrlimit
+ #define sys_setrlimit64	sys_setrlimit
+@@ -399,14 +401,15 @@ sys_sysinfo(struct tcb *tcp)
+ 			tprintf("{...}");
+ 		else {
+ 			tprintf("{uptime=%lu, loads=[%lu, %lu, %lu] ",
+-				si.uptime, si.loads[0], si.loads[1],
+-				si.loads[2]);
++				(long) si.uptime, (long) si.loads[0],
++				(long) si.loads[1], (long) si.loads[2]);
+ 			tprintf("totalram=%lu, freeram=%lu, ",
+-				si.totalram, si.freeram);
++				(long) si.totalram, (long) si.freeram);
+ 			tprintf("sharedram=%lu, bufferram=%lu} ",
+-				si.sharedram, si.bufferram);
++				(long) si.sharedram, (long) si.bufferram);
+ 			tprintf("totalswap=%lu, freeswap=%lu, procs=%hu}",
+-				si.totalswap, si.freeswap, si.procs);
++				(long) si.totalswap, (long) si.freeswap,
++				si.procs);
+ 		}
+ 	}
+ 	return 0;
+diff --git a/signal.c b/signal.c
+index b47b831..cc4887c 100644
+--- a/signal.c
++++ b/signal.c
+@@ -85,7 +85,7 @@ typedef struct {
+ 	int			si_mask;
+ } m_siginfo_t;
+ #elif defined HAVE_ASM_SIGCONTEXT_H
+-#if !defined(IA64) && !defined(X86_64)
++#if !defined(IA64) && !defined(X86_64) && !defined(X32)
+ #include <asm/sigcontext.h>
+ #endif /* !IA64 && !X86_64 */
+ #else /* !HAVE_ASM_SIGCONTEXT_H */
+@@ -176,7 +176,7 @@ static const struct xlat sigvec_flags[] = {
+ 
+ #ifdef HAVE_SIGACTION
+ 
+-#if defined LINUX && (defined I386 || defined X86_64)
++#if defined LINUX && (defined I386 || defined X86_64 || defined X32)
+ /* The libc headers do not define this constant since it should only be
+    used by the implementation.  So wwe define it here.  */
+ # ifndef SA_RESTORER
+diff --git a/syscall.c b/syscall.c
+index e66ac0a..12a50a2 100644
+--- a/syscall.c
++++ b/syscall.c
+@@ -482,7 +482,9 @@ dumpio(struct tcb *tcp)
+ 	if (qual_flags[tcp->u_arg[0]] & QUAL_READ) {
+ 		if (sysent[tcp->scno].sys_func == sys_read ||
+ 		    sysent[tcp->scno].sys_func == sys_pread ||
++#ifndef HAVE_LONG_LONG_OFF_T
+ 		    sysent[tcp->scno].sys_func == sys_pread64 ||
++#endif
+ 		    sysent[tcp->scno].sys_func == sys_recv ||
+ 		    sysent[tcp->scno].sys_func == sys_recvfrom)
+ 			dumpstr(tcp, tcp->u_arg[1], tcp->u_rval);
+@@ -493,7 +495,9 @@ dumpio(struct tcb *tcp)
+ 	if (qual_flags[tcp->u_arg[0]] & QUAL_WRITE) {
+ 		if (sysent[tcp->scno].sys_func == sys_write ||
+ 		    sysent[tcp->scno].sys_func == sys_pwrite ||
++#ifndef HAVE_LONG_LONG_OFF_T
+ 		    sysent[tcp->scno].sys_func == sys_pwrite64 ||
++#endif
+ 		    sysent[tcp->scno].sys_func == sys_send ||
+ 		    sysent[tcp->scno].sys_func == sys_sendto)
+ 			dumpstr(tcp, tcp->u_arg[1], tcp->u_arg[2]);
+@@ -715,8 +719,8 @@ internal_syscall(struct tcb *tcp)
+ 	static long r0;
+ #elif defined(SH64)
+ 	static long r9;
+-#elif defined(X86_64)
+-	static long rax;
++#elif defined(X86_64) || defined(X32)
++	static struct user_regs_struct x86_64_regs;
+ #elif defined(CRISV10) || defined(CRISV32)
+ 	static long r10;
+ #elif defined(MICROBLAZE)
+@@ -892,30 +896,45 @@ get_scno(struct tcb *tcp)
+ # elif defined (I386)
+ 	if (upeek(tcp, 4*ORIG_EAX, &scno) < 0)
+ 		return -1;
+-# elif defined (X86_64)
+-	if (upeek(tcp, 8*ORIG_RAX, &scno) < 0)
++# elif defined (X86_64) || defined(X32)
++#  ifndef __X32_SYSCALL_BIT
++#   define __X32_SYSCALL_BIT	0x40000000
++#  endif
++#  ifndef __X32_SYSCALL_MASK
++#   define __X32_SYSCALL_MASK	__X32_SYSCALL_BIT
++#  endif
++	if (ptrace(PTRACE_GETREGS, tcp->pid, NULL, (long) &x86_64_regs) < 0)
+ 		return -1;
++	scno = x86_64_regs.orig_rax;
+ 
++#  ifdef X32
++	scno &= ~__X32_SYSCALL_MASK;
++#  else
+ 	if (!(tcp->flags & TCB_INSYSCALL)) {
+ 		static int currpers = -1;
+-		long val;
+ 		int pid = tcp->pid;
+ 
+ 		/* Check CS register value. On x86-64 linux it is:
+ 		 * 	0x33	for long mode (64 bit)
+ 		 * 	0x23	for compatibility mode (32 bit)
++		 * Check DS register value. On x86-64 linux it is:
++		 *	0x2b	for x32 mode (x86-64 in 32 bit)
+ 		 * It takes only one ptrace and thus doesn't need
+ 		 * to be cached.
+ 		 */
+-		if (upeek(tcp, 8*CS, &val) < 0)
+-			return -1;
+-		switch (val) {
++		switch (x86_64_regs.cs) {
+ 			case 0x23: currpers = 1; break;
+-			case 0x33: currpers = 0; break;
++			case 0x33:
++				if (x86_64_regs.ds == 0x2b) {
++					currpers = 2;
++					scno &= ~__X32_SYSCALL_MASK;
++				} else
++					currpers = 0;
++				break;
+ 			default:
+ 				fprintf(stderr, "Unknown value CS=0x%02X while "
+ 					 "detecting personality of process "
+-					 "PID=%d\n", (int)val, pid);
++					 "PID=%d\n", (int)x86_64_regs.cs, pid);
+ 				currpers = current_personality;
+ 				break;
+ 		}
+@@ -952,12 +971,13 @@ get_scno(struct tcb *tcp)
+ 		}
+ #  endif
+ 		if (currpers != current_personality) {
+-			static const char *const names[] = {"64 bit", "32 bit"};
++			static const char *const names[] = {"64 bit", "32 bit", "x32"};
+ 			set_personality(currpers);
+ 			fprintf(stderr, "[ Process PID=%d runs in %s mode. ]\n",
+ 					pid, names[current_personality]);
+ 		}
+ 	}
++#  endif
+ # elif defined(IA64)
+ #	define IA64_PSR_IS	((long)1 << 34)
+ 	if (upeek (tcp, PT_CR_IPSR, &psr) >= 0)
+@@ -1419,9 +1439,8 @@ syscall_fixup(struct tcb *tcp)
+ 			fprintf(stderr, "stray syscall exit: eax = %ld\n", eax);
+ 		return 0;
+ 	}
+-#elif defined (X86_64)
+-	if (upeek(tcp, 8*RAX, &rax) < 0)
+-		return -1;
++#elif defined (X86_64) || defined (X32)
++	long rax = x86_64_regs.rax;
+ 	if (current_personality == 1)
+ 		rax = (long int)(int)rax; /* sign extend from 32 bits */
+ 	if (rax != -ENOSYS && !(tcp->flags & TCB_INSYSCALL)) {
+@@ -1550,14 +1569,17 @@ get_error(struct tcb *tcp)
+ 		tcp->u_rval = eax;
+ 		u_error = 0;
+ 	}
+-# elif defined(X86_64)
+-	if (check_errno && is_negated_errno(rax)) {
++# elif defined(X86_64) || defined(X32)
++	if (check_errno && is_negated_errno(x86_64_regs.rax)) {
+ 		tcp->u_rval = -1;
+-		u_error = -rax;
++		u_error = -x86_64_regs.rax;
+ 	}
+ 	else {
+-		tcp->u_rval = rax;
++		tcp->u_rval = x86_64_regs.rax;
+ 		u_error = 0;
++#  ifdef X32
++		tcp->u_lrval = x86_64_regs.rax;
++#  endif
+ 	}
+ # elif defined(IA64)
+ 	if (ia32) {
+@@ -1813,8 +1835,8 @@ force_result(tcp, error, rval)
+ 	eax = error ? -error : rval;
+ 	if (ptrace(PTRACE_POKEUSER, tcp->pid, (char*)(EAX * 4), eax) < 0)
+ 		return -1;
+-# elif defined(X86_64)
+-	rax = error ? -error : rval;
++# elif defined(X86_64) || defined(X32)
++	long rax = error ? -error : rval;
+ 	if (ptrace(PTRACE_POKEUSER, tcp->pid, (char*)(RAX * 8), rax) < 0)
+ 		return -1;
+ # elif defined(IA64)
+@@ -2214,22 +2236,34 @@ syscall_enter(struct tcb *tcp)
+ 		}
+ 	}
+ 
+-#elif defined(X86_64)
+-	{
+-		int i;
+-		static int argreg[SUPPORTED_PERSONALITIES][MAX_ARGS] = {
+-			{RDI,RSI,RDX,R10,R8,R9},	/* x86-64 ABI */
+-			{RBX,RCX,RDX,RSI,RDI,RBP}	/* i386 ABI */
+-		};
+-
+-		if (tcp->scno >= 0 && tcp->scno < nsyscalls && sysent[tcp->scno].nargs != -1)
+-			tcp->u_nargs = sysent[tcp->scno].nargs;
+-		else
+-			tcp->u_nargs = MAX_ARGS;
+-		for (i = 0; i < tcp->u_nargs; i++) {
+-			if (upeek(tcp, argreg[current_personality][i]*8, &tcp->u_arg[i]) < 0)
+-				return -1;
+-		}
++#elif defined(X86_64) || defined(X32)
++	if (tcp->scno >= 0 && tcp->scno < nsyscalls && sysent[tcp->scno].nargs != -1)
++		tcp->u_nargs = sysent[tcp->scno].nargs;
++	else
++		tcp->u_nargs = MAX_ARGS;
++	if (current_personality != 1) { /* x86-64 or x32 ABI */
++		tcp->u_arg[0] = x86_64_regs.rdi;
++		tcp->u_arg[1] = x86_64_regs.rsi;
++		tcp->u_arg[2] = x86_64_regs.rdx;
++		tcp->u_arg[3] = x86_64_regs.r10;
++		tcp->u_arg[4] = x86_64_regs.r8;
++		tcp->u_arg[5] = x86_64_regs.r9;
++#  ifdef X32
++		tcp->ext_arg[0] = x86_64_regs.rdi;
++		tcp->ext_arg[1] = x86_64_regs.rsi;
++		tcp->ext_arg[2] = x86_64_regs.rdx;
++		tcp->ext_arg[3] = x86_64_regs.r10;
++		tcp->ext_arg[4] = x86_64_regs.r8;
++		tcp->ext_arg[5] = x86_64_regs.r9;
++#  endif
++	} else { /* i386 ABI */
++		/* Zero-extend lower 32 bits */
++		tcp->u_arg[0] = (unsigned int)x86_64_regs.rbx;
++		tcp->u_arg[1] = (unsigned int)x86_64_regs.rcx;
++		tcp->u_arg[2] = (unsigned int)x86_64_regs.rdx;
++		tcp->u_arg[3] = (unsigned int)x86_64_regs.rsi;
++		tcp->u_arg[4] = (unsigned int)x86_64_regs.rdi;
++		tcp->u_arg[5] = (unsigned int)x86_64_regs.rbp;
+ 	}
+ #elif defined(MICROBLAZE)
+ 	{
+diff --git a/time.c b/time.c
+index b5fdc52..1bef5c8 100644
+--- a/time.c
++++ b/time.c
+@@ -626,19 +626,19 @@ tprint_timex(struct tcb *tcp, long addr)
+ 	tprintf("{modes=");
+ 	printflags(adjtimex_modes, tx.modes, "ADJ_???");
+ 	tprintf(", offset=%ld, freq=%ld, maxerror=%ld, ",
+-		tx.offset, tx.freq, tx.maxerror);
+-	tprintf("esterror=%lu, status=", tx.esterror);
++		(long) tx.offset, (long) tx.freq, (long) tx.maxerror);
++	tprintf("esterror=%lu, status=", (long) tx.esterror);
+ 	printflags(adjtimex_status, tx.status, "STA_???");
+ 	tprintf(", constant=%ld, precision=%lu, ",
+-		tx.constant, tx.precision);
+-	tprintf("tolerance=%ld, time=", tx.tolerance);
++		(long) tx.constant, (long) tx.precision);
++	tprintf("tolerance=%ld, time=", (long) tx.tolerance);
+ 	tprint_timeval(tcp, &tx.time);
+ 	tprintf(", tick=%ld, ppsfreq=%ld, jitter=%ld",
+-		tx.tick, tx.ppsfreq, tx.jitter);
++		(long) tx.tick, (long) tx.ppsfreq, (long) tx.jitter);
+ 	tprintf(", shift=%d, stabil=%ld, jitcnt=%ld",
+-		tx.shift, tx.stabil, tx.jitcnt);
++		tx.shift, (long) tx.stabil, (long) tx.jitcnt);
+ 	tprintf(", calcnt=%ld, errcnt=%ld, stbcnt=%ld",
+-		tx.calcnt, tx.errcnt, tx.stbcnt);
++		(long) tx.calcnt, (long) tx.errcnt, (long) tx.stbcnt);
+ #endif
+ 	tprintf("}");
+ 	return 0;
+diff --git a/util.c b/util.c
+index 711e614..56134a6 100644
+--- a/util.c
++++ b/util.c
+@@ -271,7 +271,7 @@ printllval(struct tcb *tcp, const char *format, int llarg)
+ # elif defined IA64 || defined ALPHA
+ 	tprintf(format, tcp->u_arg[llarg]);
+ 	llarg++;
+-# elif defined LINUX_MIPSN32
++# elif defined LINUX_MIPSN32 || defined LINUX_X32
+ 	tprintf(format, tcp->ext_arg[llarg]);
+ 	llarg++;
+ # else
+@@ -1091,7 +1091,7 @@ printcall(struct tcb *tcp)
+ 	tprintf("[%16lx] ", psw);
+ #  endif
+ 
+-# elif defined(X86_64)
++# elif defined(X86_64) || defined(X32)
+ 	long rip;
+ 
+ 	if (upeek(tcp, 8*RIP, &rip) < 0) {
+@@ -1414,9 +1414,9 @@ typedef struct pt_regs arg_setup_state;
+ #   elif defined (HPPA)
+ #    define arg0_offset	 PT_GR26
+ #    define arg1_offset	 (PT_GR26-4)
+-#   elif defined (X86_64)
+-#    define arg0_offset	((long)(8*(current_personality ? RBX : RDI)))
+-#    define arg1_offset	((long)(8*(current_personality ? RCX : RSI)))
++#   elif defined (X86_64) || defined(X32)
++#    define arg0_offset	((long)(8*(current_personality == 1 ? RBX : RDI)))
++#    define arg1_offset	((long)(8*(current_personality == 1 ? RCX : RSI)))
+ #   elif defined (SH)
+ #    define arg0_offset	(4*(REG_REG0+4))
+ #    define arg1_offset	(4*(REG_REG0+5))

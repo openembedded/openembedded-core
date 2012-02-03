@@ -3,7 +3,7 @@ HOMEPAGE = "http://strace.sourceforge.net"
 SECTION = "console/utils"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=4535377ede62550fdeaf39f595fd550a"
-PR = "r0"
+PR = "r1"
 
 PACKAGES =+ "${PN}-graph "
 FILES_${PN}-graph = "${bindir}/strace-graph"
@@ -11,6 +11,7 @@ RDEPENDS_${PN}-graph = "perl"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://sigmask.patch \
+	   file://strace-4.6_add_x32_support.patch \
           "
 
 SRC_URI[md5sum] = "e537b2b1afeec70c0e6e27a0d0fd671e"
