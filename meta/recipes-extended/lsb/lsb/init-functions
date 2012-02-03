@@ -30,3 +30,10 @@ log_warning_msg () {
 	/etc/core-lsb/lsb_log_message warning "$@"
 }
 
+log_begin_msg () {
+	/etc/core-lsb/lsb_log_message begin "$@"
+}
+
+log_end_msg () {
+	/etc/core-lsb/lsb_log_message end "$@"
+}
