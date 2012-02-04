@@ -1,0 +1,137 @@
+From 4a060f993bf676cf21ad9784e010f54134da7b40 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Mon, 17 Oct 2011 09:45:15 +1000
+Subject: [PATCH] Add _XGetRequest as substitute for GetReq/GetReqExtra
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+Reviewed-by: Jamey Sharp <jamey@minilop.net>
+---
+ include/X11/Xlibint.h |   49 ++++++++++++++++---------------------------------
+ src/XlibInt.c         |   31 +++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+), 33 deletions(-)
+
+Upstream-Status: Backport
+
+diff --git a/include/X11/Xlibint.h b/include/X11/Xlibint.h
+index 2ce356d..43d1f2a 100644
+--- a/include/X11/Xlibint.h
++++ b/include/X11/Xlibint.h
+@@ -420,6 +420,18 @@ extern LockInfoPtr _Xglobal_lock;
+ #define WORD64ALIGN
+ #endif /* WORD64 */
+ 
++/**
++ * Return a len-sized request buffer for the request type. This function may
++ * flush the output queue.
++ *
++ * @param dpy The display connection
++ * @param type The request type
++ * @param len Length of the request in bytes
++ *
++ * @returns A pointer to the request buffer with a few default values
++ * initialized.
++ */
++extern void *_XGetRequest(Display *dpy, CARD8 type, size_t len);
+ 
+ /*
+  * GetReq - Get the next available X request packet in the buffer and
+@@ -432,25 +444,10 @@ extern LockInfoPtr _Xglobal_lock;
+ 
+ #if !defined(UNIXCPP) || defined(ANSICPP)
+ #define GetReq(name, req) \
+-        WORD64ALIGN\
+-	if ((dpy->bufptr + SIZEOF(x##name##Req)) > dpy->bufmax)\
+-		_XFlush(dpy);\
+-	req = (x##name##Req *)(dpy->last_req = dpy->bufptr);\
+-	req->reqType = X_##name;\
+-	req->length = (SIZEOF(x##name##Req))>>2;\
+-	dpy->bufptr += SIZEOF(x##name##Req);\
+-	dpy->request++
+-
++	req = (x##name##Req *) _XGetRequest(dpy, X_##name, SIZEOF(x##name##Req))
+ #else  /* non-ANSI C uses empty comment instead of "##" for token concatenation */
+ #define GetReq(name, req) \
+-        WORD64ALIGN\
+-	if ((dpy->bufptr + SIZEOF(x/**/name/**/Req)) > dpy->bufmax)\
+-		_XFlush(dpy);\
+-	req = (x/**/name/**/Req *)(dpy->last_req = dpy->bufptr);\
+-	req->reqType = X_/**/name;\
+-	req->length = (SIZEOF(x/**/name/**/Req))>>2;\
+-	dpy->bufptr += SIZEOF(x/**/name/**/Req);\
+-	dpy->request++
++	req = (x/**/name/**/Req *) _XGetRequest(dpy, X_/**/name, SIZEOF(x/**/name/**/Req))
+ #endif
+ 
+ /* GetReqExtra is the same as GetReq, but allocates "n" additional
+@@ -458,24 +455,10 @@ extern LockInfoPtr _Xglobal_lock;
+ 
+ #if !defined(UNIXCPP) || defined(ANSICPP)
+ #define GetReqExtra(name, n, req) \
+-        WORD64ALIGN\
+-	if ((dpy->bufptr + SIZEOF(x##name##Req) + n) > dpy->bufmax)\
+-		_XFlush(dpy);\
+-	req = (x##name##Req *)(dpy->last_req = dpy->bufptr);\
+-	req->reqType = X_##name;\
+-	req->length = (SIZEOF(x##name##Req) + n)>>2;\
+-	dpy->bufptr += SIZEOF(x##name##Req) + n;\
+-	dpy->request++
++	req = (x##name##Req *) _XGetRequest(dpy, X_##name, SIZEOF(x##name##Req) + n)
+ #else
+ #define GetReqExtra(name, n, req) \
+-        WORD64ALIGN\
+-	if ((dpy->bufptr + SIZEOF(x/**/name/**/Req) + n) > dpy->bufmax)\
+-		_XFlush(dpy);\
+-	req = (x/**/name/**/Req *)(dpy->last_req = dpy->bufptr);\
+-	req->reqType = X_/**/name;\
+-	req->length = (SIZEOF(x/**/name/**/Req) + n)>>2;\
+-	dpy->bufptr += SIZEOF(x/**/name/**/Req) + n;\
+-	dpy->request++
++	req = (x/**/name/**/Req *) _XGetRequest(dpy, X_/**/name, SIZEOF(x/**/name/**/Req) + n)
+ #endif
+ 
+ 
+diff --git a/src/XlibInt.c b/src/XlibInt.c
+index 3db151e..a8f5d08 100644
+--- a/src/XlibInt.c
++++ b/src/XlibInt.c
+@@ -1956,6 +1956,37 @@ Screen *_XScreenOfWindow(Display *dpy, Window w)
+ }
+ 
+ 
++/*
++ * WARNING: This implementation's pre-conditions and post-conditions
++ * must remain compatible with the old macro-based implementations of
++ * GetReq, GetReqExtra, GetResReq, and GetEmptyReq. The portions of the
++ * Display structure affected by those macros are part of libX11's
++ * ABI.
++ */
++void *_XGetRequest(Display *dpy, CARD8 type, size_t len)
++{
++    xReq *req;
++
++    WORD64ALIGN
++
++    if (dpy->bufptr + len > dpy->bufmax)
++	_XFlush(dpy);
++
++    if (len % 4)
++	fprintf(stderr,
++		"Xlib: request %d length %zd not a multiple of 4.\n",
++		type, len);
++
++    dpy->last_req = dpy->bufptr;
++
++    req = (xReq*)dpy->bufptr;
++    req->reqType = type;
++    req->length = len / 4;
++    dpy->bufptr += len;
++    dpy->request++;
++    return req;
++}
++
+ #if defined(WIN32)
+ 
+ /*
+-- 
+1.7.8.3
+

@@ -1,6 +1,8 @@
 require libx11.inc
 inherit gettext
 
+PR = "r1"
+
 BBCLASSEXTEND = "native nativesdk"
 
 EXTRA_OECONF += "--with-keysymdefdir=${STAGING_INCDIR}/X11"
@@ -12,6 +14,7 @@ DEPENDS += "util-macros xtrans libxdmcp libxau \
 
 SRC_URI += " file://keysymdef_include.patch \
              file://x11_disable_makekeys.patch \
+             file://0001-Add-_XGetRequest-as-substitute-for-GetReq-GetReqExtr.patch \
              "
 
 SRC_URI[md5sum] = "ed7c382cbf8c13425b6a66bcac0ca5d9"
