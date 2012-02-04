@@ -65,11 +65,11 @@ then
 	exit 1;
 fi
 
-echo "\$target" | grep −q "@" >& /dev/null
+echo "\$target" | grep "@" >& /dev/null
 if [ "x\$?" = "x0" ]
 then
-   user=echo \$target | cut -d '@' -f 1
-   target=echo \$target | cut -d '@' -f 2
+   user=\$(echo \$target | cut -d '@' -f 1)
+   target=\$(echo \$target | cut -d '@' -f 2)
 else
    user=\$USER
 fi
