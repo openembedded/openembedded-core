@@ -58,7 +58,12 @@ do_install() {
 
 	rm ${D}${sysconfdir}/rpc
 	rm -r ${D}${datadir}/zoneinfo
-	rm -r ${D}${libdir}/bin
+
+	mv ${D}${libdir}/bin/* ${D}${bindir}/
+	if [ -e ${D}${libdir}/bin/.debug ]; then
+		install -d ${D}${bindir}/.debug
+		mv ${D}${libdir}/bin/.debug/* ${D}${bindir}/.debug/
+	fi
 
 	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libc.so
 	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libpthread.so
