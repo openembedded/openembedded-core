@@ -1,3 +1,11 @@
+
+From Openembedded-Classic
+
+    gnupg-1.4.10: Readd the ARM Thumb patch as debian has no thumb support
+
+
+Upstream-Status: Inappropriate [embedded-specific]
+
 Index: gnupg-1.4.10/mpi/longlong.h
 ===================================================================
 --- gnupg-1.4.10.orig/mpi/longlong.h	2008-12-11 17:39:43.000000000 +0100
