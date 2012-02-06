@@ -64,6 +64,7 @@ do_install() {
 		install -d ${D}${bindir}/.debug
 		mv ${D}${libdir}/bin/.debug/* ${D}${bindir}/.debug/
 	fi
+	ln -s ../../bin/gdbserver ${D}${libdir}/bin/sysroot-gdbserver
 
 	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libc.so
 	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libpthread.so
@@ -86,7 +87,7 @@ external_toolchain_sysroot_adjust() {
        fi
 }
 
-PACKAGES =+ "libgcc libgcc-dev libstdc++ libstdc++-dev linux-libc-headers linux-libc-headers-dev"
+PACKAGES =+ "libgcc libgcc-dev libstdc++ libstdc++-dev linux-libc-headers linux-libc-headers-dev gdbserver gdbserver-dbg"
 
 INSANE_SKIP_libgcc = "1"
 INSANE_SKIP_libstdc++ = "1"
@@ -126,7 +127,8 @@ PKGV_libstdc++ = "${CSL_VER_GCC}"
 PKGV_libstdc++-dev = "${CSL_VER_GCC}"
 PKGV_linux-libc-headers = "${CSL_VER_KERNEL}"
 PKGV_linux-libc-headers-dev = "${CSL_VER_KERNEL}"
-PKGV_gdbserver = "${CSL_VER_GDBSERVER}"
+PKGV_gdbserver = "${CSL_VER_GDB}"
+PKGV_gdbserver-dbg = "${CSL_VER_GDB}"
 
 FILES_libgcc = "${base_libdir}/libgcc_s.so.1"
 FILES_libgcc-dev = "${base_libdir}/libgcc_s.so"
@@ -145,3 +147,5 @@ FILES_linux-libc-headers = "${includedir}/asm* \
 	${includedir}/sound \
 	${includedir}/video \
 "
+FILES_gdbserver = "${bindir}/gdbserver ${libdir}/bin/sysroot-gdbserver"
+FILES_gdbserver-dbg = "${bindir}/.debug/gdbserver"
