@@ -19,10 +19,21 @@ python () {
 		raise bb.parse.SkipPackage("because UBOOT_MACHINE is not set")
 }
 
-UBOOT_IMAGE ?= "u-boot-${MACHINE}-${PV}-${PR}.bin"
-UBOOT_BINARY ?= "u-boot.bin"
-UBOOT_SYMLINK ?= "u-boot-${MACHINE}.bin"
+# Some versions of u-boot use .bin and others use .img.  By default use .bin
+# but enable individual recipes to change this value.
+UBOOT_SUFFIX ?= "bin"
+UBOOT_IMAGE ?= "u-boot-${MACHINE}-${PV}-${PR}.${UBOOT_SUFFIX}"
+UBOOT_BINARY ?= "u-boot.${UBOOT_SUFFIX}"
+UBOOT_SYMLINK ?= "u-boot-${MACHINE}.${UBOOT_SUFFIX}"
 UBOOT_MAKE_TARGET ?= "all"
+
+# Some versions of u-boot build an SPL (Second Program Loader) image that
+# should be packaged along with the u-boot binary as well as placed in the
+# deploy directory.  For those versions they can set the following variables
+# to allow packaging the SPL.
+SPL_BINARY ?= ""
+SPL_IMAGE ?= "${SPL_BINARY}-${PV}-${PR}"
+SPL_SYMLINK ?= "${SPL_BINARY}-${MACHINE}"
 
 do_compile () {
 	unset LDFLAGS
@@ -36,15 +47,31 @@ do_install () {
     install -d ${D}/boot
     install ${S}/${UBOOT_BINARY} ${D}/boot/${UBOOT_IMAGE}
     ln -sf ${UBOOT_IMAGE} ${D}/boot/${UBOOT_BINARY}
+
+    if [ "x${SPL_BINARY}" != "x" ]
+    then
+        install ${S}/${SPL_BINARY} ${D}/boot/${SPL_IMAGE}
+        ln -sf ${SPL_IMAGE} ${D}/boot/${SPL_BINARY}
+    fi
 }
 
 FILES_${PN} = "/boot"
 
 do_deploy () {
-	install ${S}/u-boot.bin ${DEPLOYDIR}/${UBOOT_IMAGE}
+    install -d ${DEPLOYDIR}
+	install ${S}/${UBOOT_BINARY} ${DEPLOYDIR}/${UBOOT_IMAGE}
 
 	cd ${DEPLOYDIR}
 	rm -f ${UBOOT_SYMLINK}
 	ln -sf ${UBOOT_IMAGE} ${UBOOT_SYMLINK}
+
+    if [ "x${SPL_BINARY}" != "x" ]
+    then
+        install ${S}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_IMAGE}
+        rm -f ${DEPLOYDIR}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_SYMLINK}
+        ln -sf ${SPL_IMAGE} ${DEPLOYDIR}/${SPL_BINARY}
+        ln -sf ${SPL_IMAGE} ${DEPLOYDIR}/${SPL_SYMLINK}
+    fi
 }
+
 addtask deploy before do_build after do_compile
