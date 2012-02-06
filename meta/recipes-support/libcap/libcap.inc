@@ -12,6 +12,8 @@ DEPENDS_virtclass-native = "perl-native-runtime"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/libs/security/linux-privs/libcap2/${BPN}-${PV}.tar.bz2"
 
+PR = "r1"
+
 inherit lib_package
 
 do_configure() {
@@ -47,8 +49,10 @@ do_install() {
 do_install_append() {
 	# Move the library to base_libdir
 	install -d ${D}${base_libdir}
-	mv ${D}${libdir}/* ${D}${base_libdir}
-	rmdir ${D}${libdir}
+	if [ ! ${D}${libdir} -ef ${D}${base_libdir} ]; then
+		mv ${D}${libdir}/* ${D}${base_libdir}
+		rmdir ${D}${libdir}
+	fi
 }
 
 FILES_${PN}-dev += "${base_libdir}/*.so"
