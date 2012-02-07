@@ -6,10 +6,10 @@ DESCRIPTION = "Mtools is a collection of utilities for accessing MS-DOS disks fr
 HOMEPAGE = "http://www.gnu.org/software/mtools/"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=92b58ec77696788ce278b044d2a8e9d3"
-PR = "r4"
+PR = "r5"
 
 #http://mtools.linux.lu/mtools-${PV}.tar.gz 
-SRC_URI = "http://autobuilder.yoctoproject.org/sources/mtools-${PV}.tar.gz \
+SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/mtools-${PV}.tar.gz \
 	file://mtools-makeinfo.patch \
 	file://mtools.patch \
 	file://no-x11.patch"
