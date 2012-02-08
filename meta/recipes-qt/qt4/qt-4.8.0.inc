@@ -14,6 +14,7 @@ SRC_URI = "http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${PV}.
            file://fix-translations.patch \
            file://add_nostrip_for_debug_packages.diff \
            file://qmake_cxx_eval.patch \
+           file://configure_oe_compiler.patch \
            file://g++.conf \
            file://linux.conf \
            "

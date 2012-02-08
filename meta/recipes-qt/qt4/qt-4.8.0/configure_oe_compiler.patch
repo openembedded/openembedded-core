@@ -1,0 +1,31 @@
+Ensure we identify the compiler as g++ in configure
+
+Our PLATFORM in OE is ${TARGET_OS}-oe-g++, and previously the configure
+script was interpreting from this that the compiler was "oe-g++" and thus
+g++ specific checks were not being run since this string did not match;
+among other things this resulted in a compiler version check in the
+QtWebKit build code not working, and hence the following error at build
+time:
+
+./wtf/NullPtr.h:48:1: error: identifier 'nullptr' will become a keyword in C++0x [-Werror=c++0x-compat]
+
+The easiest thing since our PLATFORM is entirely artificial is to just
+force COMPILER to "g++" in the configure script if it is detected as
+"oe-g++".
+
+Upstream-Status: Inappropriate [configuration]
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+--- qt-everywhere-opensource-src-4.8.0.orig/configure
++++ qt-everywhere-opensource-src-4.8.0/configure
+@@ -7444,6 +7444,9 @@ elif [ "$XPLATFORM" != "$PLATFORM" ]; th
+ else
+     COMPILER=`echo $PLATFORM | cut -f 2- -d-`
+ fi
++case $COMPILER in
++    *oe-g++) COMPILER="g++" ;;
++esac
+ if [ "$CFG_EXCEPTIONS" = "unspecified" -a "$PLATFORM_QWS" = "yes" ]; then
+     CFG_EXCEPTIONS=no
+ fi
