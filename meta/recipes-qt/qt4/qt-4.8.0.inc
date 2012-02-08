@@ -15,6 +15,8 @@ SRC_URI = "http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${PV}.
            file://add_nostrip_for_debug_packages.diff \
            file://qmake_cxx_eval.patch \
            file://configure_oe_compiler.patch \
+           file://target_qmake.patch \
+           file://qmake_pri_fixes.patch \
            file://g++.conf \
            file://linux.conf \
            "
@@ -50,13 +52,3 @@ do_configure_prepend() {
     unset LD
 }
 
-do_compile() {
-    # Fixup missing wsegl header in some SGX SDKs
-    if ! [ -e ${STAGING_INCDIR}/wsegl.h ] ; then
-        cp src/3rdparty/powervr/wsegl.h src/plugins/gfxdrivers/powervr/QWSWSEGL/
-    fi
-
-    unset CFLAGS CXXFLAGS
-
-    oe_runmake ${EXTRA_ENV}
-}

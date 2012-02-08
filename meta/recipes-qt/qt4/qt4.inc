@@ -142,8 +142,8 @@ RRECOMMENDS_${QT_BASE_NAME}-qmlviewer += " \
 RRECOMMENDS_${QT_BASE_NAME}-doc += " \
             ${QT_BASE_NAME}-demos-doc"
 
-FILES_${QT_BASE_NAME}-tools                = "${bindir}/qttracereplay ${bindir}/qdoc* ${bindir}/moc ${bindir}/uic* ${bindir}/rcc"
-FILES_${QT_BASE_NAME}-tools-dbg            = "${bindir}/.debug/qttracereplay ${bindir}/.debug/qdoc* ${bindir}/.debug/uic* ${bindir}/.debug/moc ${bindir}/.debug/rcc"
+FILES_${QT_BASE_NAME}-tools                = "${bindir}/qttracereplay ${bindir}/qdoc* ${bindir}/qmake ${bindir}/moc ${bindir}/uic* ${bindir}/rcc"
+FILES_${QT_BASE_NAME}-tools-dbg            = "${bindir}/.debug/qttracereplay ${bindir}/.debug/qdoc* ${bindir}/.debug/qmake ${bindir}/.debug/uic* ${bindir}/.debug/moc ${bindir}/.debug/rcc"
 FILES_${QT_BASE_NAME}-assistant            = "${bindir}/*assistant* ${bindir}/qcollectiongenerator ${bindir}/qhelpconverter ${bindir}/qhelpgenerator"
 FILES_${QT_BASE_NAME}-assistant-dbg        = "${bindir}/.debug/*assistant* ${bindir}/.debug/qcollectiongenerator ${bindir}/.debug/qhelpconverter ${bindir}/.debug/qhelpgenerator"
 FILES_${QT_BASE_NAME}-common               = "${bindir}/qtconfig"
@@ -172,7 +172,7 @@ FILES_${QT_BASE_NAME}-qmlviewer            = "${bindir}/qmlviewer"
 FILES_${QT_BASE_NAME}-qmlviewer-dbg        = "${bindir}/.debug/qmlviewer"
 FILES_${QT_BASE_NAME}-makeqpf              = "${bindir}/makeqpf"
 FILES_${QT_BASE_NAME}-makeqpf-dbg          = "${bindir}/.debug/makeqpf"
-FILES_${QT_BASE_NAME}-mkspecs              = "${datadir}/${QT_DIR_NAME}/mkspecs/*"
+FILES_${QT_BASE_NAME}-mkspecs              = "${datadir}/${QT_DIR_NAME}/mkspecs/* ${datadir}/${QT_DIR_NAME}/environment-setup"
 FILES_${QT_BASE_NAME}-xmlpatterns          = "${bindir}/xmlpatterns*"
 FILES_${QT_BASE_NAME}-xmlpatterns-dbg      = "${bindir}/.debug/xmlpatterns*"
 FILES_${QT_BASE_NAME}-qml-plugins          = "${libdir}/${QT_DIR_NAME}/imports/* ${libdir}/${QT_DIR_NAME}/plugins/qmltooling/*"
@@ -236,6 +236,24 @@ do_configure() {
 			-I${STAGING_INCDIR}/freetype2
 }
 
+do_compile() {
+    # Fixup missing wsegl header in some SGX SDKs
+    if ! [ -e ${STAGING_INCDIR}/wsegl.h ] ; then
+        cp src/3rdparty/powervr/wsegl.h src/plugins/gfxdrivers/powervr/QWSWSEGL/
+    fi
+
+    unset CFLAGS CXXFLAGS
+
+    oe_runmake ${EXTRA_ENV}
+
+    # Build target qmake
+    export QMAKESPEC="${S}/mkspecs/${TARGET_OS}-oe-g++"
+    cd ${S}/qmake
+    ${OE_QMAKE_QMAKE}
+    oe_runmake CC="${CC}" CXX="${CXX}"
+    cd ${S}
+}
+
 python populate_packages_prepend() {
         translation_dir = bb.data.expand('${datadir}/${QT_DIR_NAME}/translations/', d)
         translation_name = bb.data.expand('${QT_BASE_NAME}-translation-%s', d)
@@ -295,8 +313,9 @@ python populate_packages_prepend() {
 do_install() {
 	oe_runmake install INSTALL_ROOT=${D}
 
-	# These are host binaries, we should only use them in staging
+	# Install a proper target version of qmake
 	rm ${D}/${bindir}/qmake
+	install -m 0755 bin/qmake2 ${D}${bindir}/qmake
 
 	# fix pkgconfig, libtool and prl files
 	sed -i -e 's#-L${S}/lib/\?##g' \
@@ -333,4 +352,24 @@ do_install() {
 	if [ -n "${QT_LIBINFIX}" ] ; then
 		[ -f ${D}${bindir}/qtdemo ] && mv ${D}${bindir}/qtdemo ${D}${bindir}/qtdemo${QT_LIBINFIX}
 	fi
+
+	script="${D}/${datadir}/${QT_DIR_NAME}/environment-setup"
+	touch $script
+	echo 'export QT_DIR_NAME=${QT_DIR_NAME}' >> $script
+	echo 'export QT_LIBINFIX=${QT_LIBINFIX}' >> $script
+	echo 'export OE_QMAKE_AR=ar' >> $script
+	echo 'export OE_QMAKE_CC=gcc' >> $script
+	echo 'export OE_QMAKE_CXX=g++' >> $script
+	echo 'export OE_QMAKE_LINK=g++' >> $script
+	echo 'export OE_QMAKE_LIBDIR_QT=${libdir}' >> $script
+	echo 'export OE_QMAKE_INCDIR_QT=${includedir}/${QT_DIR_NAME}' >> $script
+	echo 'export OE_QMAKE_MOC=${bindir}/moc' >> $script
+	echo 'export OE_QMAKE_UIC=${bindir}/uic' >> $script
+	echo 'export OE_QMAKE_UIC3=${bindir}/uic3' >> $script
+	echo 'export OE_QMAKE_RCC=${bindir}/rcc' >> $script
+	echo 'export OE_QMAKE_QDBUSCPP2XML=${bindir}/qdbuscpp2xml' >> $script
+	echo 'export OE_QMAKE_QDBUSXML2CPP=${bindir}/qdbusxml2cpp' >> $script
+	echo 'export OE_QMAKE_QT_CONFIG=${datadir}/${QT_DIR_NAME}/mkspecs/qconfig.pri' >> $script
+	echo 'export QMAKESPEC=${datadir}/${QT_DIR_NAME}/mkspecs/linux-g++' >> $script
+	chmod 0755 $script
 }

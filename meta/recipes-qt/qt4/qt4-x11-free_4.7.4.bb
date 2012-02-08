@@ -1,7 +1,7 @@
 require qt4-x11-free.inc
 require qt-${PV}.inc
 
-PR = "${INC_PR}.6"
+PR = "${INC_PR}.7"
 
 QT_CONFIG_FLAGS_append_armv6 = " -no-neon "
 
