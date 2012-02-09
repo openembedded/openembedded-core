@@ -4,7 +4,7 @@ SECTION = "libs"
 HOMEPAGE = "http://qt.nokia.com"
 LICENSE = "LGPLv2.1 | GPLv3"
 
-INC_PR = "r8"
+INC_PR = "r9"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt-${PV}:"
 
@@ -59,9 +59,12 @@ do_configure() {
 
     cp ../g++.conf mkspecs/common
     cp ../linux.conf mkspecs/common
-    # don't use host g++ even during configure
-    sed -i -e "s#g++#${CXX}#" mkspecs/common/g++-base.conf
-    sed -i -e "s#gcc#${CC}#" mkspecs/common/g++-base.conf
+
+    if [ -f mkspecs/common/g++-base.conf ] ; then
+        # don't use host g++ even during configure (4.8.0+)
+        sed -i -e "s#g++#${CXX}#" mkspecs/common/g++-base.conf
+        sed -i -e "s#gcc#${CC}#" mkspecs/common/g++-base.conf
+    fi
 
     # first launch configure to get qmake compiled for the nativesdk
     (echo o; echo yes) | CC="${CC}" CXX="${CXX}" ./configure ${EXTRA_OECONF} || true
