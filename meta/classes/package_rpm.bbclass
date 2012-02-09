@@ -8,6 +8,10 @@ RPMBUILD="rpmbuild"
 PKGWRITEDIRRPM = "${WORKDIR}/deploy-rpms"
 PKGWRITEDIRSRPM = "${DEPLOY_DIR}/sources/deploy-srpm"
 
+# Maintaining the perfile dependencies has singificant overhead when writing the 
+# packages. When set, this value merges them for efficiency.
+MERGEPERFILEDEPS = "1"
+
 #
 # Update the packages indexes ${DEPLOY_DIR_RPM}
 #
@@ -460,6 +464,78 @@ EOF
 	fi
 }
 
+# Construct per file dependencies file
+def write_rpm_perfiledata(srcname, d):
+    workdir = d.getVar('WORKDIR', True)
+    packages = d.getVar('PACKAGES', True)
+    pkgd = d.getVar('PKGD', True)
+
+    def dump_filerdeps(varname, outfile, d):
+        outfile.write("#!/usr/bin/env python\n\n")
+        outfile.write("# Dependency table\n")
+        outfile.write('deps = {\n')
+        for pkg in packages.split():
+            dependsflist_key = 'FILE' + varname + 'FLIST' + "_" + pkg
+            dependsflist = (d.getVar(dependsflist_key, True) or "")
+            for dfile in dependsflist.split():
+                key = "FILE" + varname + "_" + dfile + "_" + pkg
+                depends_dict = bb.utils.explode_dep_versions(d.getVar(key, True) or "")
+                file = dfile.replace("@underscore@", "_")
+                file = file.replace("@closebrace@", "]")
+                file = file.replace("@openbrace@", "[")
+                file = file.replace("@tab@", "\t")
+                file = file.replace("@space@", " ")
+                file = file.replace("@at@", "@")
+                outfile.write('"' + pkgd + file + '" : "')
+                for dep in depends_dict:
+                    ver = depends_dict[dep]
+                    if dep and ver:
+                        ver = ver.replace("(","")
+                        ver = ver.replace(")","")
+                        outfile.write(dep + " " + ver + " ")
+                    else:
+                        outfile.write(dep + " ")
+                outfile.write('",\n')
+        outfile.write('}\n\n')
+        outfile.write("import sys\n")
+        outfile.write("while 1:\n")
+        outfile.write("\tline = sys.stdin.readline().strip()\n")
+        outfile.write("\tif not line:\n")
+        outfile.write("\t\tsys.exit(0)\n")
+        outfile.write("\tif line in deps:\n")
+        outfile.write("\t\tprint(deps[line] + '\\n')\n")
+
+    # OE-core dependencies a.k.a. RPM requires
+    outdepends = workdir + "/" + srcname + ".requires"
+
+    try:
+        from __builtin__ import file
+        dependsfile = file(outdepends, 'w')
+    except OSError:
+        raise bb.build.FuncFailed("unable to open spec file for writing.")
+
+    dump_filerdeps('RDEPENDS', dependsfile, d)
+
+    dependsfile.close()
+    os.chmod(outdepends, 0755)
+
+    # OE-core / RPM Provides
+    outprovides = workdir + "/" + srcname + ".provides"
+
+    try:
+        from __builtin__ import file
+        providesfile = file(outprovides, 'w')
+    except OSError:
+        raise bb.build.FuncFailed("unable to open spec file for writing.")
+
+    dump_filerdeps('RPROVIDES', providesfile, d)
+
+    providesfile.close()
+    os.chmod(outprovides, 0755)
+
+    return (outdepends, outprovides)
+
+
 python write_specfile () {
     import textwrap
     import oe.packagedata
@@ -576,6 +652,17 @@ python write_specfile () {
         scr = scr[:pos] + 'if [ "$1" = "0" ] ; then\n' + scr[pos:] + '\nfi'
         return scr
 
+    def get_perfile(varname, pkg, d):
+        deps = []
+        dependsflist_key = 'FILE' + varname + 'FLIST' + "_" + pkg
+        dependsflist = (d.getVar(dependsflist_key, True) or "")
+        for dfile in dependsflist.split():
+            key = "FILE" + varname + "_" + dfile + "_" + pkg
+            depends = d.getVar(key, True)
+            if depends:
+                deps.append(depends)
+        return " ".join(deps)
+
     packages = d.getVar('PACKAGES', True)
     if not packages or packages == '':
         bb.debug(1, "No packages; nothing to do")
@@ -625,6 +712,8 @@ python write_specfile () {
 
     spec_files_top = []
     spec_files_bottom = []
+
+    perfiledeps = (d.getVar("MERGEPERFILEDEPS", True) or "0") == "0"
 
     for pkg in packages.split():
         localdata = bb.data.createCopy(d)
@@ -678,6 +767,12 @@ python write_specfile () {
         splitrpostinst = localdata.getVar('pkg_postinst', True)
         splitrprerm    = localdata.getVar('pkg_prerm', True)
         splitrpostrm   = localdata.getVar('pkg_postrm', True)
+
+
+        if not perfiledeps:
+            # Add in summary of per file dependencies
+            splitrdepends = splitrdepends + " " + get_perfile('RDEPENDS', pkg, d)
+            splitrprovides = splitrprovides + " " + get_perfile('RPROVIDES', pkg, d)
 
         # Gather special src/first package data
         if srcname == splitname:
@@ -977,69 +1072,9 @@ python do_package_rpm () {
     d.setVar('OUTSPECFILE', outspecfile)
     bb.build.exec_func('write_specfile', d)
 
-    # Construct per file dependencies file
-    def dump_filerdeps(varname, outfile, d):
-        outfile.write("#!/usr/bin/env python\n\n")
-        outfile.write("# Dependency table\n")
-        outfile.write('deps = {\n')
-        for pkg in packages.split():
-            dependsflist_key = 'FILE' + varname + 'FLIST' + "_" + pkg
-            dependsflist = (d.getVar(dependsflist_key, True) or "")
-            for dfile in dependsflist.split():
-                key = "FILE" + varname + "_" + dfile + "_" + pkg
-                depends_dict = bb.utils.explode_dep_versions(d.getVar(key, True) or "")
-                file = dfile.replace("@underscore@", "_")
-                file = file.replace("@closebrace@", "]")
-                file = file.replace("@openbrace@", "[")
-                file = file.replace("@tab@", "\t")
-                file = file.replace("@space@", " ")
-                file = file.replace("@at@", "@")
-                outfile.write('"' + pkgd + file + '" : "')
-                for dep in depends_dict:
-                    ver = depends_dict[dep]
-                    if dep and ver:
-                        ver = ver.replace("(","")
-                        ver = ver.replace(")","")
-                        outfile.write(dep + " " + ver + " ")
-                    else:
-                        outfile.write(dep + " ")
-                outfile.write('",\n')
-        outfile.write('}\n\n')
-        outfile.write("import sys\n")
-        outfile.write("while 1:\n")
-        outfile.write("\tline = sys.stdin.readline().strip()\n")
-        outfile.write("\tif not line:\n")
-        outfile.write("\t\tsys.exit(0)\n")
-        outfile.write("\tif line in deps:\n")
-        outfile.write("\t\tprint(deps[line] + '\\n')\n")
-
-    # OE-core dependencies a.k.a. RPM requires
-    outdepends = workdir + "/" + srcname + ".requires"
-
-    try:
-        from __builtin__ import file
-        dependsfile = file(outdepends, 'w')
-    except OSError:
-        raise bb.build.FuncFailed("unable to open spec file for writing.")
-
-    dump_filerdeps('RDEPENDS', dependsfile, d)
-
-    dependsfile.close()
-    os.chmod(outdepends, 0755)
-
-    # OE-core / RPM Provides
-    outprovides = workdir + "/" + srcname + ".provides"
-
-    try:
-        from __builtin__ import file
-        providesfile = file(outprovides, 'w')
-    except OSError:
-        raise bb.build.FuncFailed("unable to open spec file for writing.")
-
-    dump_filerdeps('RPROVIDES', providesfile, d)
-
-    providesfile.close()
-    os.chmod(outprovides, 0755)
+    perfiledeps = (d.getVar("MERGEPERFILEDEPS", True) or "0") == "0"
+    if perfiledeps:
+        outdepends, outprovides = write_rpm_perfiledata(srcname, d)
 
     # Setup the rpmbuild arguments...
     rpmbuild = d.getVar('RPMBUILD', True)
@@ -1062,8 +1097,12 @@ python do_package_rpm () {
     cmd = cmd + " --define '_topdir " + workdir + "' --define '_rpmdir " + pkgwritedir + "'"
     cmd = cmd + " --define '_build_name_fmt %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm'"
     cmd = cmd + " --define '_use_internal_dependency_generator 0'"
-    cmd = cmd + " --define '__find_requires " + outdepends + "'"
-    cmd = cmd + " --define '__find_provides " + outprovides + "'"
+    if perfiledeps:
+        cmd = cmd + " --define '__find_requires " + outdepends + "'"
+        cmd = cmd + " --define '__find_provides " + outprovides + "'"
+    else:
+        cmd = cmd + " --define '__find_requires %{nil}'"
+        cmd = cmd + " --define '__find_provides %{nil}'"
     cmd = cmd + " --define '_unpackaged_files_terminate_build 0'"
     cmd = cmd + " --define 'debug_package %{nil}'"
     cmd = cmd + " --define '_rpmfc_magic_path " + magicfile + "'"
