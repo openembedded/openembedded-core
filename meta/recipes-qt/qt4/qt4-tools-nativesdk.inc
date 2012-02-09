@@ -1,21 +1,22 @@
 DESCRIPTION = "SDK tools for Qt/[X11|Mac|Embedded] version 4.x"
-DEPENDS = "zlib-nativesdk dbus-nativesdk libx11-nativesdk qt4-tools-native"
+DEPENDS = "zlib-nativesdk dbus-nativesdk libx11-nativesdk qt4-native"
 SECTION = "libs"
 HOMEPAGE = "http://qt.nokia.com"
 LICENSE = "LGPLv2.1 | GPLv3"
 
-INC_PR = "r9"
+INC_PR = "r10"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt-${PV}:"
 
 inherit nativesdk qmake2
 
 SRC_URI = "http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${PV}.tar.gz \
+           file://0004-no-qmake.patch \
            file://configure-lflags.patch \
            file://qt-config.patch \
-           file://qmake-exists-check.patch \
            file://configure-paths.patch \
            file://qt-dbus-const.patch \
+           file://target_qmake.patch \
            file://g++.conf \
            file://linux.conf"
 
@@ -66,11 +67,7 @@ do_configure() {
         sed -i -e "s#gcc#${CC}#" mkspecs/common/g++-base.conf
     fi
 
-    # first launch configure to get qmake compiled for the nativesdk
-    (echo o; echo yes) | CC="${CC}" CXX="${CXX}" ./configure ${EXTRA_OECONF} || true
-
-    # then backup the binary and start again with a qmake which can run on the build host
-    mv bin/qmake bin/qmake_nativesdk
+    # Use qmake from qt4-native for building
     if [ ! -e bin/qmake ]; then
         ln -sf ${STAGING_BINDIR_NATIVE}/qmake2 bin/qmake
     fi
@@ -99,11 +96,18 @@ do_compile() {
     for i in ${TOBUILD}; do
         cd ${S}/$i && oe_runmake CC="${CC}" CXX="${CXX}"
     done
+
+    # Build nativesdk qmake
+    export QMAKESPEC="${S}/mkspecs/${TARGET_OS}-oe-g++"
+    cd ${S}/qmake
+    ${OE_QMAKE_QMAKE}
+    oe_runmake CC="${CC}" CXX="${CXX}"
+    cd ${S}
 }
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 bin/qmake_nativesdk ${D}${bindir}/qmake2
+    install -m 0755 bin/qmake2 ${D}${bindir}/qmake2
     for i in moc uic uic3 rcc lrelease lupdate qdbuscpp2xml qdbusxml2cpp; do
         install -m 0755 bin/${i} ${D}${bindir}/${i}4
     done
