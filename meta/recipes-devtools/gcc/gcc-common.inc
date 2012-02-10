@@ -109,3 +109,4 @@ do_headerfix[vardepvalue] = "PATH"
 # We need to ensure that for the shared work directory, the do_patch singatures match
 # The real WORKDIR location isn't a dependency for the shared workdir.
 src_patches[vardepsexclude] = "WORKDIR"
+should_apply[vardepsexclude] = "PN"
