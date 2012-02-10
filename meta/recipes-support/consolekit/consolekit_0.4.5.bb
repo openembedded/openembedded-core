@@ -13,7 +13,7 @@ POLKIT_libc-uclibc = ""
 POLKITCONF = ""
 POLKITCONF_libc-uclibc = "--disable-policykit"
 
-DEPENDS = "glib-2.0 dbus ${POLKIT} ${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
+DEPENDS = "glib-2.0 dbus ${POLKIT} ${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)} virtual/libx11"
 RDEPENDS_${PN} += "base-files"
 
 inherit gnome
