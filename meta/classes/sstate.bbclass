@@ -317,19 +317,24 @@ def sstate_hardcode_path(d):
 	staging_host = d.getVar('STAGING_DIR_HOST', True)
 	sstate_builddir = d.getVar('SSTATE_BUILDDIR', True)
 
-	for i in file_list.split('\n'):
-		if not i:
-			continue           
-		if bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('cross-canadian', d):
-			cmd = "sed -i -e s:%s:FIXMESTAGINGDIR:g %s" % (staging, i)
-		elif bb.data.inherits_class('cross', d):
-			cmd = "sed -i -e s:%s:FIXMESTAGINGDIRTARGET:g %s \
-				sed -i -e s:%s:FIXMESTAGINGDIR:g %s" % (staging_target, i, staging, i)
-		else:
-			cmd = "sed -i -e s:%s:FIXMESTAGINGDIRHOST:g %s" % (staging_host, i)
+	files = " ".join(file_list.split('\n'))
 
+	if bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('cross-canadian', d):
+		cmd = "sed -i -e s:%s:FIXMESTAGINGDIR:g %s" % (staging, files)
+	elif bb.data.inherits_class('cross', d):
+		cmd = "sed -i -e s:%s:FIXMESTAGINGDIRTARGET:g %s \
+			sed -i -e s:%s:FIXMESTAGINGDIR:g %s" % (staging_target, files, staging, files)
+	else:
+		cmd = "sed -i -e s:%s:FIXMESTAGINGDIRHOST:g %s" % (staging_host, files)
+
+	if files:
 		os.system(cmd)
-		os.system("echo %s | sed -e 's:%s::' >> %sfixmepath" % (i, sstate_builddir, sstate_builddir))
+		fix = open("%sfixmepath" % (sstate_builddir), "w")
+		fixme = []
+		for f in file_list.split('\n'):
+			fixme.append(f.replace(sstate_builddir, ""))
+		fix.write("\n".join(fixme))
+		fix.close()
 	p.close()
 
 def sstate_package(ss, d):
