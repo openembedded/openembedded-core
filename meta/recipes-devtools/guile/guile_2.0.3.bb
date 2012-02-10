@@ -24,7 +24,7 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.gz \
 SRC_URI[md5sum] = "3b8b4e1083037f29d2c4704a6d55f2a8"
 SRC_URI[sha256sum] = "a53b21159befe3e89bbaca71e9e62cf00af0f49fcca297c407944b988d59eb08"
 
-PR = "r2"
+PR = "r3"
 
 inherit autotools gettext
 BBCLASSEXTEND = "native"
@@ -32,6 +32,8 @@ BBCLASSEXTEND = "native"
 DEPENDS = "libunistring bdwgc gmp libtool libffi"
 # add guile-native only to the target recipe's DEPENDS
 DEPENDS += "${@['guile-native', ''][d.getVar('PN', 1) != 'guile']}"
+
+EXTRA_OECONF += "${@['--without-libltdl-prefix --without-libgmp-prefix', ''][bb.data.inherits_class('native',d)]}"
 
 do_configure_prepend() {
 	mkdir -p po
