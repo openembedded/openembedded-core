@@ -149,7 +149,7 @@ autotools_do_configure() {
 			  else if grep "^[[:space:]]*AM_GNU_GETTEXT" $CONFIGURE_AC >/dev/null; then
                             # We'd call gettextize here if it wasn't so broken...
 			    cp ${STAGING_DATADIR}/gettext/config.rpath ${AUTOTOOLS_AUXDIR}/
-			    if [ ! -e ${S}/po/Makefile.in.in ]; then
+			    if [ -d ${S}/po/ -a ! -e ${S}/po/Makefile.in.in ]; then
 			      cp ${STAGING_DATADIR}/gettext/po/Makefile.in.in ${S}/po/
                             fi
 			  fi
