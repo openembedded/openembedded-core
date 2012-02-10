@@ -1,0 +1,57 @@
+From bbbb4fb9b7c85fde90608710dff09480696c6567 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Thu, 9 Feb 2012 16:01:56 -0800
+Subject: [PATCH] sat_xfopen.c: Forward port to zlib 1.2.6 gzFile
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+---
+ ext/sat_xfopen.c |   10 +++++-----
+ 1 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/ext/sat_xfopen.c b/ext/sat_xfopen.c
+index cf943cf..b3d458d 100644
+--- a/ext/sat_xfopen.c
++++ b/ext/sat_xfopen.c
+@@ -16,16 +16,16 @@
+ 
+ static ssize_t cookie_gzread(void *cookie, char *buf, size_t nbytes)
+ {
+-  return gzread((gzFile *)cookie, buf, nbytes);
++  return gzread((gzFile)cookie, buf, nbytes);
+ }
+ 
+ static int
+ cookie_gzclose(void *cookie)
+ {
+-  return gzclose((gzFile *)cookie);
++  return gzclose((gzFile)cookie);
+ }
+ 
+-static FILE *mygzfopen(gzFile* gzf)
++static FILE *mygzfopen(gzFile gzf)
+ {
+ #ifdef HAVE_FUNOPEN
+   return funopen(
+@@ -49,7 +49,7 @@ FILE *
+ sat_xfopen(const char *fn, const char *mode)
+ {
+   char *suf;
+-  gzFile *gzf;
++  gzFile gzf;
+ 
+   if (!fn)
+     return 0;
+@@ -68,7 +68,7 @@ FILE *
+ sat_xfopen_fd(const char *fn, int fd, const char *mode)
+ {
+   char *suf;
+-  gzFile *gzf;
++  gzFile gzf;
+ 
+   suf = fn ? strrchr(fn, '.') : 0;
+   if (!mode)
+-- 
+1.7.5.4
+

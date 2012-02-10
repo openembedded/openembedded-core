@@ -8,7 +8,7 @@ DEPENDS = "libcheck rpm zlib expat db"
 
 SRCREV = "0a7378d5f482f477a01cf1690d76871ab8bdcc32"
 PV = "0.0-git${SRCPV}"
-PR = "r12"
+PR = "r13"
 
 PARALLEL_MAKE=""
 
@@ -19,6 +19,7 @@ SRC_URI = "git://github.com/openSUSE/sat-solver.git;protocol=git \
            file://db5.patch \
            file://sat-solver_core.patch \
            file://fix_gcc-4.6.0_compile_issue.patch \
+           file://0001-sat_xfopen.c-Forward-port-to-zlib-1.2.6-gzFile.patch \
           "
 
 S = "${WORKDIR}/git"
