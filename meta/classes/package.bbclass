@@ -1125,7 +1125,7 @@ if [ x"$D" = "x" ]; then
 fi
 }
 
-RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/bin/rpmdeps --macros ${STAGING_LIBDIR_NATIVE}/rpm/macros --define '_rpmfc_magic_path ${STAGING_DIR_NATIVE}${datadir_native}/misc/magic.mgc' --rpmpopt ${STAGING_LIBDIR_NATIVE}/rpm/rpmpopt"
+RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/bin/rpmdeps-oecore --macros ${STAGING_LIBDIR_NATIVE}/rpm/macros --define '_rpmfc_magic_path ${STAGING_DIR_NATIVE}${datadir_native}/misc/magic.mgc' --rpmpopt ${STAGING_LIBDIR_NATIVE}/rpm/rpmpopt"
 
 # Collect perfile run-time dependency metadata
 # Output:
@@ -1136,7 +1136,7 @@ RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/bin/rpmdeps --macros ${STAGING_LIBDIR_NA
 #  FILERDEPENDS_filepath_pkg - per file dep
 
 python package_do_filedeps() {
-	import os, re
+	import re
 
 	pkgdest = d.getVar('PKGDEST', True)
 	packages = d.getVar('PACKAGES', True)
@@ -1145,39 +1145,49 @@ python package_do_filedeps() {
 	r = re.compile(r'[<>=]+ +[^ ]*')
 
 	# Quick routine to process the results of the rpmdeps call...
-	def process_deps(pipe, pkg, f, provides_files, requires_files):
-		provides = []
-		requires = []
-		file = f.replace(pkgdest + "/" + pkg, "")
-		file = file.replace("@", "@at@")
-		file = file.replace(" ", "@space@")
-		file = file.replace("\t", "@tab@")
-		file = file.replace("[", "@openbrace@")
-		file = file.replace("]", "@closebrace@")
-		file = file.replace("_", "@underscore@")
+	def process_deps(pipe, pkg, provides_files, requires_files):
+		provides = {}
+		requires = {}
 
 		for line in pipe:
+			f = line.split(" ", 1)[0].strip()
+			line = line.split(" ", 1)[1].strip()
+
 			if line.startswith("Requires:"):
 				i = requires
 			elif line.startswith("Provides:"):
 				i = provides
 			else:
 				continue
+
+			file = f.replace(pkgdest + "/" + pkg, "")
+			file = file.replace("@", "@at@")
+			file = file.replace(" ", "@space@")
+			file = file.replace("\t", "@tab@")
+			file = file.replace("[", "@openbrace@")
+			file = file.replace("]", "@closebrace@")
+			file = file.replace("_", "@underscore@")
 			value = line.split(":", 1)[1].strip()
 			value = r.sub(r'(\g<0>)', value)
+
 			if value.startswith("rpmlib("):
 				continue
-			i.append(value)
+			if file not in i:
+				i[file] = []
+			i[file].append(value)
 
-		if len(provides) > 0:
+		for file in provides:
 			provides_files.append(file)
 			key = "FILERPROVIDES_" + file + "_" + pkg
-			d.setVar(key, " ".join(provides))
+			d.setVar(key, " ".join(provides[file]))
 
-		if len(requires) > 0:
+		for file in requires:
 			requires_files.append(file)
 			key = "FILERDEPENDS_" + file + "_" + pkg
-			d.setVar(key, " ".join(requires))
+			d.setVar(key, " ".join(requires[file]))
+
+	def chunks(files, n):
+		return [files[i:i+n] for i in range(0, len(files), n)]
 
 	# Determine dependencies
 	for pkg in packages.split():
@@ -1186,13 +1196,15 @@ python package_do_filedeps() {
 
 		provides_files = []
 		requires_files = []
+		rpfiles = []
 		for root, dirs, files in os.walk(pkgdest + "/" + pkg):
 			for file in files:
-				f = os.path.join(root, file)
+				rpfiles.append(os.path.join(root, file))
 
-				dep_pipe = os.popen(rpmdeps + " --provides --requires -v " + f)
+		for files in chunks(rpfiles, 100):
+			dep_pipe = os.popen(rpmdeps + " " + " ".join(files))
 
-				process_deps(dep_pipe, pkg, f, provides_files, requires_files)
+			process_deps(dep_pipe, pkg, provides_files, requires_files)
 
 		d.setVar("FILERDEPENDSFLIST_" + pkg, " ".join(requires_files))
 		d.setVar("FILERPROVIDESFLIST_" + pkg, " ".join(provides_files))
