@@ -23,7 +23,7 @@ BRANCH = "gcc-4_6-branch"
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/gcc-4.6' ], d)}"
 
 DEPENDS =+ "mpfr gmp libmpc"
-NATIVEDEPS = "mpfr-native gmp-native libmpc-native"
+NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native"
 
 LICENSE="GPL-3.0-with-GCC-exception & GPLv3"
 
@@ -86,16 +86,12 @@ B = "${WORKDIR}/${BRANCH}/build.${HOST_SYS}.${TARGET_SYS}"
 FORTRAN = ""
 JAVA = ""
 
-#EXTRA_OECONF_BASE = "  --enable-cheaders=c_std \
-#			--enable-libssp \
-#			--disable-bootstrap \
-#			--disable-libgomp \
-#			--disable-libmudflap"
 EXTRA_OECONF_BASE = " --enable-lto \
 			--enable-libssp \
 			--disable-bootstrap \
 			--disable-libgomp \
 			--disable-libmudflap \
+			--with-system-zlib \
 			--with-linker-hash-style=${LINKER_HASH_STYLE} \
 			--enable-cheaders=c_global "
 
@@ -103,11 +99,17 @@ EXTRA_OECONF_INITIAL = "--disable-libmudflap \
 			--disable-libgomp \
 			--disable-libssp \
 			--disable-libquadmath \
+			--with-system-zlib \
+			--disable-lto \
+			--disable-plugin \
 			--enable-decimal-float=no"
 
 EXTRA_OECONF_INTERMEDIATE = "--disable-libmudflap \
 				--disable-libgomp \
 				--disable-libquadmath \
+				--with-system-zlib \
+				--disable-lto \
+				--disable-plugin \
 				--disable-libssp"
 
 EXTRA_OECONF_append_linux-uclibc = " --disable-decimal-float "
