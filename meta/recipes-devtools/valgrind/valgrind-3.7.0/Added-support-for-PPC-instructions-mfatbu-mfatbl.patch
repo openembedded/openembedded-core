@@ -3,6 +3,8 @@ From: Aneesh Bansal <aneesh.bansal@freescale.com>
 Date: Mon, 21 Nov 2011 17:31:39 +0530
 Subject: [PATCH] Added support for PPC instructions mfatbu, mfatbl.
 
+Upstream-Status: Pending
+
 Signed-off-by: Aneesh Bansal <aneesh.bansal@freescale.com>
 ---
 Currently Valgrind 3.7.0 does not have support for PPC instructions mfatbu and mfatbl. When we run a USDPAA application with VALGRIND, the following error is given by valgrind :
