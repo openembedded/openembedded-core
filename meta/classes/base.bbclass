@@ -1,4 +1,5 @@
 BB_DEFAULT_TASK ?= "build"
+CLASSOVERRIDE ?= "class-target"
 
 inherit patch
 inherit staging
