@@ -12,6 +12,7 @@ import sys
 import os.path
 import difflib
 import git
+import re
 
 
 # How to display fields
@@ -53,9 +54,18 @@ class ChangeRecord:
         else:
             prefix = ''
 
+        def pkglist_split(pkgs):
+            pkgit = re.finditer(r'[a-zA-Z0-9.+-]+( \([><=]+ [^ )]+\))?', pkgs, 0)
+            pkglist = [p.group(0) for p in pkgit]
+            return pkglist
+
         if self.fieldname in list_fields or self.fieldname in list_order_fields:
-            aitems = self.oldvalue.split()
-            bitems = self.newvalue.split()
+            if self.fieldname in ['RDEPENDS', 'RRECOMMENDS']:
+                aitems = pkglist_split(self.oldvalue)
+                bitems = pkglist_split(self.newvalue)
+            else:
+                aitems = self.oldvalue.split()
+                bitems = self.newvalue.split()
             removed = list(set(aitems) - set(bitems))
             added = list(set(bitems) - set(aitems))
             if removed or added:
