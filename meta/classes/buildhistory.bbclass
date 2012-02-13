@@ -186,6 +186,7 @@ python buildhistory_emit_pkghistory() {
 				fstat = os.lstat(os.path.join(root, f))
 				pkginfo.size += fstat.st_size
 				filelist.append(os.sep + os.path.join(relpth, f))
+		filelist.sort()
 		pkginfo.filelist = " ".join(filelist)
 
 		write_pkghistory(pkginfo, d)
