@@ -123,9 +123,6 @@ python buildhistory_emit_pkghistory() {
 		except EnvironmentError:
 			return None
 
-	def squashspaces(string):
-		return re.sub("\s+", " ", string)
-
 	def sortpkglist(string):
 		pkgiter = re.finditer(r'[a-zA-Z0-9.-]+( \([><=]+ [^ )]+\))?', string, 0)
 		pkglist = [p.group(0) for p in pkgiter]
@@ -349,12 +346,23 @@ def buildhistory_get_layers(d):
 	return layertext
 
 
+def squashspaces(string):
+	import re
+	return re.sub("\s+", " ", string).strip()
+
+
 def buildhistory_get_imagevars(d):
 	imagevars = "DISTRO DISTRO_VERSION USER_CLASSES IMAGE_CLASSES IMAGE_FEATURES IMAGE_LINGUAS IMAGE_INSTALL BAD_RECOMMENDATIONS ROOTFS_POSTPROCESS_COMMAND IMAGE_POSTPROCESS_COMMAND"
+	listvars = "USER_CLASSES IMAGE_CLASSES IMAGE_FEATURES IMAGE_LINGUAS IMAGE_INSTALL BAD_RECOMMENDATIONS"
 
+	imagevars = imagevars.split()
+	listvars = listvars.split()
 	ret = ""
-	for var in imagevars.split():
+	for var in imagevars:
 		value = d.getVar(var, True) or ""
+		if var in listvars:
+			# Squash out spaces
+			value = squashspaces(value)
 		ret += "%s = %s\n" % (var, value)
 	return ret.rstrip('\n')
 
