@@ -1,7 +1,7 @@
 SUMMARY = "/dev/ and hotplug management daemon"
 DESCRIPTION = "udev is a daemon which dynamically creates and removes device nodes from \
 /dev/, handles hotplug events and loads drivers at boot time."
-HOMEPAGE = "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
+HOMEPAGE = "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev/udev.html"
 LICENSE = "GPLv2.0+ & LGPLv2.1+"
 LICENSE_${PN} = "GPLv2.0+"
 LICENSE_libudev = "LGPLv2.1+"
