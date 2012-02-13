@@ -8,6 +8,8 @@ HOMEPAGE = "http://live.gnome.org/JsonGlib"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
+PR = "r1"
+
 DEPENDS = "glib-2.0"
 
 SRC_URI[archive.md5sum] = "5716a181a2b85268f53a1fb0c8024c4a"

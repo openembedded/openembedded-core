@@ -1,6 +1,6 @@
 require gnutls.inc
 
-PR = "${INC_PR}.5"
+PR = "${INC_PR}.6"
 
 SRC_URI += "file://gnutls-openssl.patch \
             file://correct_rpl_gettimeofday_signature.patch \

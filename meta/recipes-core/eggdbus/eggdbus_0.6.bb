@@ -4,7 +4,7 @@ HOMEPAGE = "http://cgit.freedesktop.org/~david/eggdbus"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=155db86cdbafa7532b41f390409283eb \
                     file://src/eggdbus/eggdbus.h;md5=6b312aef57ed8d738b3f131ad037d6c2"
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "dbus glib-2.0 dbus-glib eggdbus-native"
 DEPENDS_virtclass-native = "dbus-native glib-2.0-native dbus-glib-native"

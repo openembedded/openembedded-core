@@ -1,6 +1,6 @@
 require glib.inc
 
-PR = "r3"
+PR = "r4"
 PE = "1"
 
 DEPENDS += "libffi python-argparse-native zlib"

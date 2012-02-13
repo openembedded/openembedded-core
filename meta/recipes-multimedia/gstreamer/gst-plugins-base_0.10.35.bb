@@ -13,7 +13,7 @@ SRC_URI += " file://gst-plugins-base-tremor.patch"
 SRC_URI[md5sum] = "1d300983525f4f09030eb3ba47cb04b0"
 SRC_URI[sha256sum] = "cd24f01bb5258a1f400bc4f2c212bb7cee9ee23c9ffb80d537a24ef366d17103"
 
-PR = "r0"
+PR = "r1"
 
 inherit gettext
 
