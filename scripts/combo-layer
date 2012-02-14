@@ -79,7 +79,7 @@ class Configuration(object):
             logger.error("ERROR: patchutils package is missing, please install it (e.g. # apt-get install patchutils)")
             sys.exit(1)
 
-def runcmd(cmd,destdir=None):
+def runcmd(cmd,destdir=None,printerr=True):
     """
         execute command, raise CalledProcessError if fail
         return output if succeed
@@ -90,7 +90,8 @@ def runcmd(cmd,destdir=None):
         subprocess.check_call(cmd, stdout=out, stderr=out, cwd=destdir, shell=True)
     except subprocess.CalledProcessError,e:
         out.seek(0)
-        logger.error("%s" % out.read())
+        if printerr:
+            logger.error("%s" % out.read())
         raise e
 
     out.seek(0)
@@ -233,7 +234,7 @@ def action_update(conf, args):
     # Step 7: commit the updated config file if it's being tracked
     relpath = os.path.relpath(conf.conffile)
     try:
-        output = runcmd("git status --porcelain %s" % relpath)
+        output = runcmd("git status --porcelain %s" % relpath, printerr=False)
     except:
         # Outside the repository
         output = None
