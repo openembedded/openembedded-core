@@ -26,7 +26,7 @@ import logging
 import subprocess
 import ConfigParser
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 def logger_create():
     logger = logging.getLogger("")
@@ -159,7 +159,22 @@ def action_update(conf, args):
     patch_dir = "patch-%s" % uuid.uuid4()
     os.mkdir(patch_dir)
 
-    for name in conf.repos:
+    repos = []
+    if len(args) > 1:
+        for arg in args[1:]:
+            if arg.startswith('-'):
+                break
+            else:
+                repos.append(arg)
+        for repo in repos:
+            if not repo in conf.repos:
+                logger.error("Specified component '%s' not found in configuration" % repo)
+                sys.exit(0)
+
+    if not repos:
+        repos = conf.repos
+
+    for name in repos:
         repo = conf.repos[name]
         ldir = repo['local_repo_dir']
         dest_dir = repo['dest_dir']
@@ -228,7 +243,7 @@ def action_update(conf, args):
             sys.exit(0)
 
     # Step 6: apply the generated and revised patch
-    action_apply_patch(conf, args)
+    apply_patchlist(conf, repos)
     runcmd("rm -rf %s" % patch_dir)
 
     # Step 7: commit the updated config file if it's being tracked
@@ -243,11 +258,11 @@ def action_update(conf, args):
         if output.lstrip().startswith("M"):
             runcmd('git commit -m "Automatic commit to update last_revision" %s' % relpath)
 
-def action_apply_patch(conf, args):
+def apply_patchlist(conf, repos):
     """
         apply the generated patch list to combo repo
     """
-    for name in conf.repos:
+    for name in repos:
         repo = conf.repos[name]
         lastrev = repo["last_revision"]
         for line in open(repo['patchlist']):
@@ -327,9 +342,9 @@ def main():
 Create and update a combination layer repository from multiple component repositories.
 
 Action:
-  init              initialise the combo layer repo
-  update            get patches from component repos and apply them to the combo repo
-  splitpatch [commit] generate commit patch and split per component, default commit is HEAD""")
+  init                 initialise the combo layer repo
+  update [components]  get patches from component repos and apply them to the combo repo
+  splitpatch [commit]  generate commit patch and split per component, default commit is HEAD""")
 
     parser.add_option("-c", "--conf", help = "specify the config file (conf/combo-layer.conf is the default).",
                action = "store", dest = "conffile", default = "conf/combo-layer.conf")
