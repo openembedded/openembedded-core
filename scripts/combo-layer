@@ -268,7 +268,8 @@ def action_apply_patch(conf, args):
                     logger.info("After applying, run this tool again to apply the remaining patches")
                     conf.update(name, "last_revision", lastrev)
                     sys.exit(0)
-        conf.update(name, "last_revision", lastrev)
+        if lastrev != repo['last_revision']:
+            conf.update(name, "last_revision", lastrev)
 
 def action_splitpatch(conf, args):
     """
