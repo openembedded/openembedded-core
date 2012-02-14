@@ -23,4 +23,3 @@ do_install() {
 #	install -m 755 stat ${D}${bindir}
 #}
 
-NATIVE_INSTALL_WORKS = "1"
