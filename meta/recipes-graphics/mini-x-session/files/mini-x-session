@@ -25,6 +25,10 @@ for SESSIONFILE in $MINI_X_SESSION_DIR/*; do
     sudo -b -i -u $USERNAME $SESSIONFILE& 
     set -e
 done
+
+# This resolution is big enough for hob2's max window size.
+xrandr -s 1024x768
+
 # Default files to run if $HOME/.mini_x/session or /etc/mini_x/session
 # dont exist. 
 
