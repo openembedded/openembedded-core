@@ -5802,11 +5802,11 @@ DISTRO_PN_ALIAS_pn-aaina = "Intel"
 RECIPE_STATUS_pn-table = "red"
 DISTRO_PN_ALIAS_pn-table = "Intel"
 
-RECIPE_STATUS_pn-eds-tools = "red"
+RECIPE_STATUS_pn-eds-tools = "green"
 DISTRO_PN_ALIAS_pn-eds-tools = "OpenedHand"
 RECIPE_LATEST_VERSION_pn-eds-tools = "git"
 RECIPE_LAST_UPDATE_pn-eds-tools = "Oct 10, 2011"
-RECIPE_MANUAL_CHECK_DATE_pn-eds-tools = "Jan 12, 2012"
+RECIPE_MANUAL_CHECK_DATE_pn-eds-tools = "Feb 13, 2012"
 RECIPE_MAINTAINER_pn-eds-tools = "Wenzong Fan <wenzong.fan@windriver.com>"
 
 RECIPE_STATUS_pn-abiword-embedded = "red"
