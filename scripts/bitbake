@@ -4,6 +4,7 @@ export BBFETCH2=True
 export BB_ENV_EXTRAWHITE="PSEUDO_BUILD PSEUDO_DISABLED $BB_ENV_EXTRAWHITE"
 
 NO_BUILD_OPTS="--version -h --help -p --parse-only -s --show-versions -e --environment -g --graphviz"
+PASSTHROUGH_OPTS="-D -DD -DDD -DDDD -v"
 needpseudo="1"
 for opt in $@; do
 for key in $NO_BUILD_OPTS; do
@@ -69,7 +70,18 @@ if [ $buildpseudo = "1" ]; then
     if [ $needtar = "0" ]; then
         TARTARGET=""
     fi
-    bitbake pseudo-native $TARTARGET -c populate_sysroot
+    # Pass through debug options
+    additionalopts=""
+    for opt in $@; do
+        for key in $PASSTHROUGH_OPTS; do
+            if [ $opt = $key ]
+            then
+                additionalopts="$additionalopts $opt"
+                break
+            fi
+        done
+    done
+    bitbake pseudo-native $TARTARGET $additionalopts -c populate_sysroot
     ret=$?
     if [ "$ret" != "0" ]; then
         exit 1
