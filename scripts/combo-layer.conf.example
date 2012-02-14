@@ -14,13 +14,18 @@ local_repo_dir = /home/kyu3/src/test/bitbake
 dest_dir = bitbake
 
 # the last update revision.
-# "init" will set this automatically, however if it is empty when "update"
-# is run, the tool will start from the first commit.
+# "init" will set this to the latest revision automatically, however if it
+# is empty when "update" is run, the tool will start from the first commit.
+# Note that this value will get updated by "update" if the component repo's
+# latest revision changed and the operation completes successfully.
 last_revision =
 
-# optional options
+# optional options:
 
-# file_filter: only include the interested file
+# branch: specify the branch in the component repo to pull from
+# (master if not specified)
+
+# file_filter: only include the specified file(s)
 # file_filter = [path] [path] ...
 # example:
 #   file_filter = src/  : only include the subdir src
