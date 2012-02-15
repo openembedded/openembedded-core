@@ -91,7 +91,9 @@ do_install_locale () {
 		mv -f ${D}${libdir}/gconv ${dest}${libdir}
 	fi
 	cp -fpPR ${D}${libdir}/* ${dest}${libdir}
-        mv ${D}${datadir}/i18n ${dest}${datadir}
+	if [ -e ${D}${datadir}/i18n ]; then
+		mv ${D}${datadir}/i18n ${dest}${datadir}
+	fi
 	cp -fpPR ${D}${datadir}/* ${dest}${datadir}
 	cp -fpPR ${WORKDIR}/SUPPORTED ${dest}
 }

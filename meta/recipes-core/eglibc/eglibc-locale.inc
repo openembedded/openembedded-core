@@ -72,11 +72,21 @@ LOCALETREESRC = "${STAGING_INCDIR}/eglibc-locale-internal-${MULTIMACH_TARGET_SYS
 
 do_install () {
 	mkdir -p ${D}${bindir} ${D}${datadir} ${D}${libdir}
-	cp -fpPR ${LOCALETREESRC}/${bindir}/* ${D}${bindir}
-	cp -fpPR ${LOCALETREESRC}/${libdir}/locale ${D}${libdir}
-	cp -fpPR ${LOCALETREESRC}/${libdir}/gconv ${D}${libdir}
-	cp -fpPR ${LOCALETREESRC}/${datadir}/i18n ${D}${datadir}
-	cp -fpPR ${LOCALETREESRC}/${datadir}/locale ${D}${datadir}
+	if [ -n "$(ls ${LOCALETREESRC}/${bindir})" ]; then
+		cp -fpPR ${LOCALETREESRC}/${bindir}/* ${D}${bindir}
+	fi
+	if [ -e ${LOCALETREESRC}/${libdir}/locale ]; then
+		cp -fpPR ${LOCALETREESRC}/${libdir}/locale ${D}${libdir}
+	fi
+	if [ -e ${LOCALETREESRC}/${libdir}/gconv ]; then
+		cp -fpPR ${LOCALETREESRC}/${libdir}/gconv ${D}${libdir}
+	fi
+	if [ -e ${LOCALETREESRC}/${datadir}/i18n ]; then
+		cp -fpPR ${LOCALETREESRC}/${datadir}/i18n ${D}${datadir}
+	fi
+	if [ -e ${LOCALETREESRC}/${datadir}/locale ]; then
+		cp -fpPR ${LOCALETREESRC}/${datadir}/locale ${D}${datadir}
+	fi
 	cp -fpPR ${LOCALETREESRC}/SUPPORTED ${WORKDIR}
 }
 
