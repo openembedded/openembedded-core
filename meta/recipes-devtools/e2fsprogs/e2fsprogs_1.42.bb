@@ -1,6 +1,6 @@
 require e2fsprogs.inc
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI += "file://fallocate.patch \
             file://acinclude.m4 \
@@ -34,9 +34,11 @@ do_install () {
 
 do_install_append () {
 	# e2initrd_helper and the pkgconfig files belong in libdir
-	install -d ${D}${libdir}
-	mv ${D}${base_libdir}/e2initrd_helper ${D}${libdir}
-	mv ${D}${base_libdir}/pkgconfig ${D}${libdir}
+	if [ ! ${D}${libdir} -ef ${D}${base_libdir} ]; then
+		install -d ${D}${libdir}
+		mv ${D}${base_libdir}/e2initrd_helper ${D}${libdir}
+		mv ${D}${base_libdir}/pkgconfig ${D}${libdir}
+	fi
 }
 
 # blkid used to be part of e2fsprogs but is useful outside, add it
