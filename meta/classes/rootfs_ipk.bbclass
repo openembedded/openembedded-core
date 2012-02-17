@@ -76,7 +76,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 	${ROOTFS_POSTINSTALL_COMMAND}
 	
 	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
-		if grep Status:.install.ok.unpacked ${IMAGE_ROOTFS}${opkglibdir}status; then
+		if grep Status:.install.ok.unpacked ${STATUS}; then
 			echo "Some packages could not be configured offline and rootfs is read-only."
 			exit 1
 		fi
@@ -88,9 +88,8 @@ fakeroot rootfs_ipk_do_rootfs () {
 	${ROOTFS_POSTPROCESS_COMMAND}
 	
 	rm -f ${IMAGE_ROOTFS}${opkglibdir}/lists/*
-
 	if ${@base_contains("IMAGE_FEATURES", "package-management", "false", "true", d)}; then
-		if ! grep Status:.install.ok.unpacked ${IMAGE_ROOTFS}${opkglibdir}status; then
+		if ! grep Status:.install.ok.unpacked ${STATUS}; then
 			# All packages were successfully configured.
 			# update-rc.d, base-passwd are no further use, remove them now
 			opkg-cl ${IPKG_ARGS} --force-depends remove update-rc.d base-passwd || true
