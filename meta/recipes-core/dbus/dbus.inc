@@ -10,7 +10,7 @@ DEPENDS = "expat virtual/libintl ${@base_contains('DISTRO_FEATURES', 'x11', '${X
 DEPENDS_virtclass-native = "expat-native virtual/libintl-native"
 DEPENDS_virtclass-nativesdk = "expat-nativesdk virtual/libintl-nativesdk virtual/libx11"
 
-INC_PR = "r1"
+INC_PR = "r2"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch; \
@@ -90,6 +90,9 @@ do_install() {
 
 	# Remove Red Hat initscript
 	rm -rf ${D}${sysconfdir}/rc.d
+
+	# Remove empty testexec directory as we don't build tests
+	rm -rf ${D}${libdir}/dbus-1.0/test
 
 	# disable dbus-1 sysv script on systemd installs
 	# nearly all distros call the initscript plain 'dbus', but OE-core is different
