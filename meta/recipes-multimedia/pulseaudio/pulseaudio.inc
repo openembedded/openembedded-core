@@ -29,6 +29,7 @@ EXTRA_OECONF = "\
 		--with-oss \
 		--without-hal \
 		--disable-hal \
+		--disable-orc \
 		--with-access-group=audio \
 "
 
