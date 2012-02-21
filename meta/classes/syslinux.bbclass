@@ -23,6 +23,7 @@ SYSLINUXDIR = "/"
 ISO_BOOTIMG = "isolinux/isolinux.bin"
 ISO_BOOTCAT = "isolinux/boot.cat"
 MKISOFS_OPTIONS = "-no-emul-boot -boot-load-size 4 -boot-info-table"
+APPEND_prepend = " ${SYSLINUX_ROOT} "
 
 syslinux_populate() {
 	DEST=$1
