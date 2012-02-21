@@ -2,8 +2,8 @@
 AUTO_SYSLINUXCFG = "1"
 INITRD_IMAGE ?= "core-image-minimal-initramfs"
 INITRD ?= "${DEPLOY_DIR_IMAGE}/${INITRD_IMAGE}-${MACHINE}.cpio.gz"
-APPEND += "root=/dev/ram0 "
-TIMEOUT = "10"
+SYSLINUX_ROOT = "root=/dev/ram0 "
+SYSLINUX_TIMEOUT = "10"
 LABELS += "boot install"
 
 ROOTFS ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}-${MACHINE}.ext3"
