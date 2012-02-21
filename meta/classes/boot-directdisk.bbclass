@@ -38,8 +38,9 @@ BOOTDD_EXTRA_SPACE ?= "16384"
 
 AUTO_SYSLINUXCFG = "1"
 LABELS = "boot"
-APPEND = "root=/dev/sda2"
-TIMEOUT = "10"
+SYSLINUX_ROOT ?= "root=/dev/sda2"
+SYSLINUX_TIMEOUT = "10" # 1 second
+
 SYSLINUXCFG  = "${HDDDIR}/syslinux.cfg"
 SYSLINUXMENU = "${HDDDIR}/menu"
 
@@ -50,6 +51,7 @@ build_boot_dd() {
 
 	install -d ${HDDDIR}
 	install -m 0644 ${STAGING_DIR_HOST}/kernel/bzImage ${HDDDIR}/vmlinuz
+	install -m 0644 ${S}/syslinux.cfg ${HDDDIR}/syslinux.cfg
 	install -m 444 ${STAGING_LIBDIR}/syslinux/ldlinux.sys ${HDDDIR}/ldlinux.sys
 
 	BLOCKS=`du -bks ${HDDDIR} | cut -f 1`
