@@ -453,13 +453,15 @@ python () {
     # We always try to scan SRC_URI for urls with machine overrides
     # unless the package sets SRC_URI_OVERRIDES_PACKAGE_ARCH=0
     #
-    override = d.getVar('SRC_URI_OVERRIDES_PACKAGE_ARCH', 1)
+    override = d.getVar('SRC_URI_OVERRIDES_PACKAGE_ARCH', True)
     if override != '0':
         paths = []
-        for p in [ "${PF}", "${P}", "${PN}", "files", "" ]:
-            path = bb.data.expand(os.path.join("${FILE_DIRNAME}", p, "${MACHINE}"), d)
-            if os.path.isdir(path):
-                paths.append(path)
+        fpaths = (d.getVar('FILESPATH', True) or '').split(':')
+        machine = d.getVar('MACHINE', True)
+        for p in fpaths:
+            if os.path.basename(p) == machine and os.path.isdir(p):
+                paths.append(p)
+
         if len(paths) != 0:
             for s in srcuri.split():
                 if not s.startswith("file://"):
@@ -468,7 +470,7 @@ python () {
                 local = fetcher.localpath(s)
                 for mp in paths:
                     if local.startswith(mp):
-                        #bb.note("overriding PACKAGE_ARCH from %s to %s" % (pkg_arch, mach_arch))
+                        #bb.note("overriding PACKAGE_ARCH from %s to %s for %s" % (pkg_arch, mach_arch, pn))
                         d.setVar('PACKAGE_ARCH', "${MACHINE_ARCH}")
                         return
 
