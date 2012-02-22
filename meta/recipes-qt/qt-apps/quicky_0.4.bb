@@ -17,5 +17,5 @@ inherit qmake2 pkgconfig
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ${S}/${PN} ${D}${bindir}
+	install -m 0755 ${S}/${BPN} ${D}${bindir}
 }
