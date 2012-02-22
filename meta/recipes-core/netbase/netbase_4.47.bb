@@ -47,7 +47,3 @@ do_install () {
 }
 
 CONFFILES_${PN} = "${sysconfdir}/hosts ${sysconfdir}/network/interfaces"
-
-PACKAGE_ARCH_qemuarm = "${MACHINE_ARCH}"
-PACKAGE_ARCH_qemux86 = "${MACHINE_ARCH}"
-PACKAGE_ARCH_qemux86-64 = "${MACHINE_ARCH}"
