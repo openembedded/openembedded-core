@@ -23,7 +23,7 @@
 # The package.bbclass can help us here.
 #
 inherit package
-PACKAGE_DEPENDS += "pax-utils-native desktop-file-utils-native ${QADEPENDS}"
+PACKAGE_DEPENDS += "pax-utils-native ${QADEPENDS}"
 PACKAGEFUNCS += " do_package_qa "
 
 # unsafe-references-in-binaries requires prelink-rtld from
@@ -722,3 +722,9 @@ do_populate_sysroot[postfuncs] += "do_qa_staging "
 # have it in DEPENDS and for correct LIC_FILES_CHKSUM
 #addtask qa_configure after do_configure before do_compile
 do_configure[postfuncs] += "do_qa_configure "
+
+python () {
+    tests = d.getVar('WARN_QA', True) + " " + d.getVar('ERROR_QA', True)
+    if tests.find("desktop") != -1:
+        d.appendVar("PACKAGE_DEPENDS", "desktop-file-utils-native")
+}
