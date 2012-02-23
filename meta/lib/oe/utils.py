@@ -88,3 +88,23 @@ def param_bool(cfg, field, dflt = None):
 def inherits(d, *classes):
     """Return True if the metadata inherits any of the specified classes"""
     return any(bb.data.inherits_class(cls, d) for cls in classes)
+
+def distro_features_backfill(d):
+    # This construct allows the addition of new features to DISTRO_FEATURES
+    # that if not present would disable existing functionality, without
+    # disturbing distributions that have already set DISTRO_FEATURES.
+    # Distributions wanting to elide a value in DISTRO_FEATURES_BACKFILL should
+    # add the feature to DISTRO_FEATURES_BACKFILL_CONSIDERED
+
+    backfill = (d.getVar("DISTRO_FEATURES_BACKFILL", True) or "").split()
+    considered = (d.getVar("DISTRO_FEATURES_BACKFILL_CONSIDERED", True) or "").split()
+
+    addfeatures = []
+    for feature in backfill:
+        if feature not in considered:
+            addfeatures.append(feature)
+
+    if addfeatures:
+        return " %s" % (" ".join(addfeatures))
+    else:
+        return ""
