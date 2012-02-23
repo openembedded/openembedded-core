@@ -104,5 +104,6 @@ PACKAGE_PREPROCESS_FUNCS += "eglibc_package_preprocess"
 
 eglibc_package_preprocess () {
 	rm -rf ${PKGD}/${includedir}/eglibc-locale-internal-${MULTIMACH_TARGET_SYS}
+	rm -rf ${PKGD}/${libdir}/locale
 }
 
