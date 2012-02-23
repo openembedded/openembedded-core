@@ -53,20 +53,20 @@ RDEPENDS_task-self-hosted-host-tools = "\
 RDEPENDS_task-self-hosted-sdk = "\
     autoconf \
     automake \
-    binutils-symlinks \
     binutils \
-    cpp \
-    cpp-symlinks \
+    binutils-symlinks \
     ccache \
     coreutils \
+    cpp \
+    cpp-symlinks \
     distcc \
     eglibc-utils \
     file \
     findutils \
-    gcc \
-    gcc-symlinks \
     g++ \
     g++-symlinks \
+    gcc \
+    gcc-symlinks \
     intltool \
     ldd \
     less \
@@ -85,9 +85,9 @@ RDEPENDS_task-self-hosted-sdk = "\
 RDEPENDS_task-self-hosted-debug = " \
     gdb \
     gdbserver \
-    tcf-agent \
     rsync \
-    strace"
+    strace \
+    tcf-agent"
 
 
 RDEPENDS_task-self-hosted-extended = "\
@@ -101,16 +101,17 @@ RDEPENDS_task-self-hosted-extended = "\
     elfutils \
     expat \
     gamin \
+    gawk \
     gdbm \
-    git \
     gettext \
     gettext-runtime \
+    git \
     grep \
     groff \
-    gawk \
+    gzip \
     libaio \
-    libxml2 \
     libusb1 \
+    libxml2 \
     lrzsz \
     lsof \
     lzo \
@@ -133,11 +134,13 @@ RDEPENDS_task-self-hosted-extended = "\
     python \
     python-compile \
     python-compiler \
+    python-compression \
     python-core \
     python-curses \
     python-datetime \
     python-distutils \
     python-elementtree \
+    python-email \
     python-fcntl \
     python-logging \
     python-misc \
@@ -145,17 +148,15 @@ RDEPENDS_task-self-hosted-extended = "\
     python-netclient \
     python-netserver \
     python-pickle \
+    python-pkgutil \
     python-re \
     python-rpm \
     python-shell \
     python-sqlite3 \
     python-subprocess \
     python-textutils \
-    python-xmlrpc \
-    python-email \
     python-unixadmin \
-    python-compression \
-    python-pkgutil \
+    python-xmlrpc \
     quota \
     readline \
     rpm \
@@ -164,12 +165,11 @@ RDEPENDS_task-self-hosted-extended = "\
     sudo \
     sysstat \
     tar \
-    gzip \
     tcl \
     texi2html \
     texinfo \
-    usbutils \
     unzip \
+    usbutils \
     watchdog \
     wget \
     which \
@@ -180,7 +180,7 @@ RDEPENDS_task-self-hosted-extended = "\
 
 
 RDEPENDS_task-self-hosted-graphics = "\
-    python-pygtk \
+    builder \
     libgl \
     libgl-dev \
     libglu \
@@ -188,5 +188,5 @@ RDEPENDS_task-self-hosted-graphics = "\
     libsdl \
     libsdl-dev \
     libx11-dev \
-    builder \
+    python-pygtk \
     "
