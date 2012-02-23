@@ -6,7 +6,7 @@ SECTION = "libs"
 LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=fbc093901857fcd118f065f900982c24"
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.bz2"
 
@@ -27,4 +27,4 @@ do_install_append() {
 
 FILES_${PN} += "${base_libdir}/*.so.*"
 
-FILES_${PN}-dev += "${base_libdir}/*.so"
+FILES_${PN}-dev += "${base_libdir}/*.so ${base_libdir}/*.la"
