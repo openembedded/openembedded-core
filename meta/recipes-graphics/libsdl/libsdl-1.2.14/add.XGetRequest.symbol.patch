@@ -1,5 +1,8 @@
-_XGetRequest API was backported to libx11-1.4.4 in:
-http://git.openembedded.org/openembedded-core/commit/?id=e08604800fe1cb8f240f53c147ceb4ee08a29b91
+From e49fe9e2d75764d2d7ef79ab4252a1f6b99adcd3 Mon Sep 17 00:00:00 2001
+From: Martin Jansa <martin.jansa@gmail.com>
+Date: Thu, 23 Feb 2012 18:38:19 +0100
+Subject: [PATCH] _XGetRequest API was backported to libx11-1.4.4 in:
+ http://git.openembedded.org/openembedded-core/commit/?id=e08604800fe1cb8f240f53c147ceb4ee08a29b91
 
 This breaks e.g. libsdl-image build with:
 | /OE/shr-core/tmp-eglibc/sysroots/qemux86-64/usr/lib/libSDL.so: undefined reference to `_XGetRequest'
@@ -7,14 +10,15 @@ This breaks e.g. libsdl-image build with:
 For details see: https://bugzilla.redhat.com/show_bug.cgi?id=782251
 
 Upstream-Status: Accepted
-
-@@ -, +, @@ 
- added.
+---
  src/video/x11/SDL_x11dyn.c |   24 ++++++++++++++++++++++++
  src/video/x11/SDL_x11sym.h |    6 ++++++
  2 files changed, 30 insertions(+), 0 deletions(-)
---- a/src/video/x11/SDL_x11dyn.c	
-+++ a/src/video/x11/SDL_x11dyn.c	
+
+diff --git a/src/video/x11/SDL_x11dyn.c b/src/video/x11/SDL_x11dyn.c
+index 4e549b3..a7e800e 100644
+--- a/src/video/x11/SDL_x11dyn.c
++++ b/src/video/x11/SDL_x11dyn.c
 @@ -109,6 +109,21 @@ char *(*pXGetICValues)(XIC, ...) = NULL;
  #undef SDL_X11_SYM
  
@@ -53,8 +57,10 @@ Upstream-Status: Accepted
  		if (SDL_X11_HAVE_BASEXLIB) {  /* all required symbols loaded. */
  			SDL_ClearError();
  		} else {
---- a/src/video/x11/SDL_x11sym.h	
-+++ a/src/video/x11/SDL_x11sym.h	
+diff --git a/src/video/x11/SDL_x11sym.h b/src/video/x11/SDL_x11sym.h
+index 3dfa146..f1e7841 100644
+--- a/src/video/x11/SDL_x11sym.h
++++ b/src/video/x11/SDL_x11sym.h
 @@ -170,6 +170,12 @@ SDL_X11_SYM(void,_XRead32,(Display *dpy,register long *data,long len),(dpy,data,
  #endif
  
@@ -68,3 +74,6 @@ Upstream-Status: Accepted
   * These only show up on some variants of Unix.
   */
  #if defined(__osf__)
+-- 
+1.7.2.5
+
