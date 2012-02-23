@@ -100,6 +100,7 @@ do_install() {
 	fi
 }
 
+SSTATE_SCAN_FILES += "Makefile"
 PACKAGE_PREPROCESS_FUNCS += "py_package_preprocess"
 
 py_package_preprocess () {
