@@ -30,6 +30,4 @@ BASE_LIB_tune-powerpc-nf = "lib"
 PACKAGE_EXTRA_ARCHS_tune-powerpc-nf = "powerpc-nf"
 TUNE_FEATURES_tune-powerpc ?= "m32 fpu-hard"
 BASE_LIB_tune-powerpc = "lib"
-PACKAGE_EXTRA_ARCHS_tune-powerpc = "${PACKAGE_EXTRA_ARCHS_tune-powerpc-nf} powerpc"
-
-
+PACKAGE_EXTRA_ARCHS_tune-powerpc = "powerpc"
