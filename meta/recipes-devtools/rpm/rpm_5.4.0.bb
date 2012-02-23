@@ -39,13 +39,13 @@ DESCRIPTION_perl-modules-rpm-dev = "Development items such as man pages for use 
 language bindings."
 
 HOMEPAGE = "http://rpm5.org/"
-LICENSE = "LGPL 2.1"
+LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "bzip2 zlib db openssl elfutils expat libpcre attr acl popt ${extrarpmdeps}"
 extrarpmdeps = "python perl"
 extrarpmdeps_virtclass-native = "file-native"
-PR = "r30"
+PR = "r31"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
