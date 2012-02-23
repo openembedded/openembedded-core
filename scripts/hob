@@ -1,33 +1,5 @@
 #!/usr/bin/env bash
-if ! (test -r "$BUILDDIR/conf/hob-pre.conf"); then
-    cat <<EOM
-You had no conf/hob-pre.conf file. An initial version of this configuration
-file has therefore been created for you. This file will be used to store
-configuration values you set in hob.
-
-EOM
-touch conf/hob-pre.conf
-fi
-
-if ! (test -r "$BUILDDIR/conf/hob-post.conf"); then
-    cat <<EOM
-You had no conf/hob-post.conf file. An initial version of this configuration
-file has therefore been created for you. This file will be used to store
-configuration values you set in hob.
-
-EOM
-(cat <<EOF
-INHERIT += "image_types"
-EOF
-) > conf/hob-post.conf
-fi
-
-# Users don't like to launch GUI's and see a bunch of text whiz by, notify them
-if [ ! -e "$BUILDDIR/pseudodone" ]; then
-    echo "Before we can launch the GUI we need to build some native tools required for running"
-fi
-
-bitbake -r conf/hob-pre.conf -R conf/hob-post.conf -u hob
+bitbake -u hob
 
 ret=$?
 exit $ret
