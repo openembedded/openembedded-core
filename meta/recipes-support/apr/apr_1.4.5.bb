@@ -41,6 +41,8 @@ do_install_append() {
 	oe_multilib_header apr.h
 }
 
+SSTATE_SCAN_FILES += "apr_rules.mk"
+
 SYSROOT_PREPROCESS_FUNCS += "apr_sysroot_preprocess"
 
 apr_sysroot_preprocess () {
