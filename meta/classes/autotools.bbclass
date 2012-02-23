@@ -102,6 +102,8 @@ autotools_do_configure() {
 		if [ -e ${S}/configure.in -o -e ${S}/configure.ac ]; then
 			olddir=`pwd`
 			cd ${S}
+			# Remove any previous copy of the m4 macros
+			rm -rf ${B}/aclocal-copy/
 			if [ x"${acpaths}" = xdefault ]; then
 				acpaths=
 				for i in `find ${S} -maxdepth 2 -name \*.m4|grep -v 'aclocal.m4'| \
