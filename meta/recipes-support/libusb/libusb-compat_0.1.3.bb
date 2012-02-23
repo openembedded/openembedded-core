@@ -15,7 +15,7 @@ DEPENDS = "libusb1"
 PROVIDES = "libusb"
 
 PE = "1"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-compat-${PV}.tar.bz2 \
            file://0.1.0-beta1-gcc3.4-fix.patch"
@@ -34,4 +34,4 @@ do_install_append() {
 	fi
 }
 
-FILES_${PN}-dev += "${base_libdir}/*.so"
+FILES_${PN}-dev += "${base_libdir}/*.so ${base_libdir}/*.la"
