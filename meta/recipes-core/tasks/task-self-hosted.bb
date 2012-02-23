@@ -30,12 +30,6 @@ RDEPENDS_task-self-hosted = "\
 RDEPENDS_task-self-hosted-host-tools = "\
     connman \
     connman-plugin-ethernet \
-    parted \
-    e2fsprogs \
-    e2fsprogs-mke2fs \
-    e2fsprogs-tune2fs \
-    e2fsprogs-e2fsck \
-    e2fsprogs-fsck \
     dhcp-client \
     e2fsprogs \
     e2fsprogs-e2fsck \
@@ -65,7 +59,6 @@ RDEPENDS_task-self-hosted-sdk = "\
     cpp-symlinks \
     ccache \
     coreutils \
-    diffutils \
     distcc \
     eglibc-utils \
     file \
@@ -74,7 +67,6 @@ RDEPENDS_task-self-hosted-sdk = "\
     gcc-symlinks \
     g++ \
     g++-symlinks \
-    gettext \
     intltool \
     ldd \
     less \
@@ -88,7 +80,6 @@ RDEPENDS_task-self-hosted-sdk = "\
     pkgconfig \
     quilt \
     sed \
-    tcl \
     "
 
 RDEPENDS_task-self-hosted-debug = " \
@@ -100,7 +91,6 @@ RDEPENDS_task-self-hosted-debug = " \
 
 
 RDEPENDS_task-self-hosted-extended = "\
-    binutils \
     bzip2 \
     chkconfig \
     chrpath \
@@ -134,7 +124,6 @@ RDEPENDS_task-self-hosted-extended = "\
     openssl \
     opkg \
     opkg-utils \
-    parted \
     patch \
     perl \
     perl-dev \
