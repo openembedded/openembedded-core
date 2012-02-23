@@ -1,6 +1,6 @@
 require glib.inc
 
-PR = "r4"
+PR = "r5"
 PE = "1"
 
 DEPENDS += "libffi python-argparse-native zlib"
@@ -35,6 +35,9 @@ do_install_append() {
   # remove some unpackaged files
   rm -f ${D}${libdir}/gdbus-2.0/codegen/*.pyc
   rm -f ${D}${libdir}/gdbus-2.0/codegen/*.pyo
+  # and empty dirs
+  rmdir ${D}${libdir}/gio/modules/
+  rmdir ${D}${libdir}/gio/
 }
 
 PACKAGES += "${PN}-codegen"
