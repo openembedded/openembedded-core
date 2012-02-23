@@ -1,6 +1,6 @@
 import bb.siggen
 
-def sstate_rundepfilter(fn, recipename, task, dep, depname, dataCache):
+def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
     # Return True if we should keep the dependency, False to drop it
     def isNative(x):
         return x.endswith("-native")
@@ -30,7 +30,7 @@ def sstate_rundepfilter(fn, recipename, task, dep, depname, dataCache):
         return False
 
     # Exclude well defined machine specific configurations which don't change ABI
-    if depname in ['sysvinit-inittab', 'shadow-securetty', 'opkg-config-base', 'netbase', 'formfactor', 'xserver-xf86-config', 'pointercal', 'base-files']:
+    if depname in siggen.abisaferecipes:
         return False
 
     # Kernel modules are well namespaced. We don't want to depend on the kernel's checksum
@@ -50,16 +50,18 @@ def sstate_rundepfilter(fn, recipename, task, dep, depname, dataCache):
 class SignatureGeneratorOEBasic(bb.siggen.SignatureGeneratorBasic):
     name = "OEBasic"
     def init_rundepcheck(self, data):
+        self.abisaferecipes = (data.getVar("SIGGEN_EXCLUDERECIPES_ABISAFE", True) or "").split()
         pass
     def rundep_check(self, fn, recipename, task, dep, depname, dataCache = None):
-        return sstate_rundepfilter(fn, recipename, task, dep, depname, dataCache)
+        return sstate_rundepfilter(self, fn, recipename, task, dep, depname, dataCache)
 
 class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
     name = "OEBasicHash"
     def init_rundepcheck(self, data):
+        self.abisaferecipes = (data.getVar("SIGGEN_EXCLUDERECIPES_ABISAFE", True) or "").split()
         pass
     def rundep_check(self, fn, recipename, task, dep, depname, dataCache = None):
-        return sstate_rundepfilter(fn, recipename, task, dep, depname, dataCache)
+        return sstate_rundepfilter(self, fn, recipename, task, dep, depname, dataCache)
 
 # Insert these classes into siggen's namespace so it can see and select them
 bb.siggen.SignatureGeneratorOEBasic = SignatureGeneratorOEBasic
