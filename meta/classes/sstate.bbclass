@@ -304,38 +304,31 @@ python sstate_cleanall() {
 def sstate_hardcode_path(d):
 	# Need to remove hardcoded paths and fix these when we install the
 	# staging packages.
-	sstate_scan_cmd = d.getVar('SSTATE_SCAN_CMD', True)
-	p = os.popen("%s" % sstate_scan_cmd)
-	file_list = p.read()
-
-	if file_list == "":
-		p.close()
-		return
 
 	staging = d.getVar('STAGING_DIR', True)
 	staging_target = d.getVar('STAGING_DIR_TARGET', True)
 	staging_host = d.getVar('STAGING_DIR_HOST', True)
 	sstate_builddir = d.getVar('SSTATE_BUILDDIR', True)
 
-	files = " ".join(file_list.split('\n'))
-
 	if bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('cross-canadian', d):
-		cmd = "sed -i -e s:%s:FIXMESTAGINGDIR:g %s" % (staging, files)
+		sstate_sed_cmd = "sed -i -e 's:%s:FIXMESTAGINGDIR:g'" % (staging)
 	elif bb.data.inherits_class('cross', d):
-		cmd = "sed -i -e s:%s:FIXMESTAGINGDIRTARGET:g %s \
-			sed -i -e s:%s:FIXMESTAGINGDIR:g %s" % (staging_target, files, staging, files)
+		sstate_sed_cmd = "sed -i -e 's:%s:FIXMESTAGINGDIRTARGET:g; s:%s:FIXMESTAGINGDIR:g'" % (staging_target, staging)
 	else:
-		cmd = "sed -i -e s:%s:FIXMESTAGINGDIRHOST:g %s" % (staging_host, files)
+		sstate_sed_cmd = "sed -i -e 's:%s:FIXMESTAGINGDIRHOST:g'" % (staging_host)
+	
+	sstate_scan_cmd = d.getVar('SSTATE_SCAN_CMD', True)
+	sstate_filelist_cmd = "tee %sfixmepath" % (sstate_builddir)
 
-	if files:
-		os.system(cmd)
-		fix = open("%sfixmepath" % (sstate_builddir), "w")
-		fixme = []
-		for f in file_list.split('\n'):
-			fixme.append(f.replace(sstate_builddir, ""))
-		fix.write("\n".join(fixme))
-		fix.close()
-	p.close()
+	# fixmepath file needs relative paths, drop sstate_builddir prefix
+	sstate_filelist_relative_cmd = "sed -i -e 's:^%s::g' %sfixmepath" % (sstate_builddir, sstate_builddir)
+
+	sstate_hardcode_cmd = "%s | %s | xargs %s" % (sstate_scan_cmd, sstate_filelist_cmd, sstate_sed_cmd)
+
+	print "Removing hardcoded paths from sstate package: '%s'" % (sstate_hardcode_cmd)
+	os.system(sstate_hardcode_cmd)
+	print "Replacing absolute paths in fixmepath file: '%s'" % (sstate_filelist_relative_cmd)
+	os.system(sstate_filelist_relative_cmd)
 
 def sstate_package(ss, d):
     import oe.path
