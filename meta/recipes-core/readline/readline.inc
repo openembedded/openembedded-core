@@ -12,6 +12,7 @@ DEPENDS += "ncurses"
 
 SRC_URI = "${GNU_MIRROR}/readline/${BPN}-${PV}.tar.gz \
            file://configure-fix.patch \
+           file://norpath.patch \
            file://acinclude.m4"
 
 S = "${WORKDIR}/${BPN}-${PV}"
