@@ -139,33 +139,59 @@ do_patch() {
 }
 
 do_kernel_checkout() {
-	if [ -d ${WORKDIR}/git/.git/refs/remotes/origin ]; then
-		echo "Fixing up git directory for ${LINUX_KERNEL_TYPE}/${KMACHINE}"
-		rm -rf ${S}
-		mkdir ${S}
-		mv ${WORKDIR}/git/.git ${S}
-	
-		if [ -e ${S}/.git/packed-refs ]; then
-			cd ${S}
-			rm -f .git/refs/remotes/origin/HEAD
-IFS='
-';
-			for r in `git show-ref | grep remotes`; do
-				ref=`echo $r | cut -d' ' -f1`; 
-				b=`echo $r | cut -d' ' -f2 | sed 's%refs/remotes/origin/%%'`;
-				dir=`dirname $b`
-				mkdir -p .git/refs/heads/$dir
-				echo $ref > .git/refs/heads/$b
-			done
-			cd ..
-		else
-			cp -r ${S}/.git/refs/remotes/origin/* ${S}/.git/refs/heads
-			rmdir ${S}/.git/refs/remotes/origin
-		fi
-	fi
-	cd ${S}
+	# we build out of {S}, so ensure that ${S} is clean and present
+	rm -rf ${S}
+	mkdir -p ${S}/.git
 
 	set +e
+
+	# A linux yocto SRC_URI should use the bareclone option. That
+	# ensures that all the branches are available in the WORKDIR version
+	# of the repository. If it wasn't passed, we should detect it, and put
+	# out a useful error message
+	if [ -d "${WORKDIR}/git/.git" ]; then
+		echo "WARNING. ${WORKDIR}/git is not a bare clone."
+		echo "Ensure that the SRC_URI includes the 'bareclone=1' option."
+		
+		# we can fix up the kernel repository, but at the least the meta
+		# branch must be present. The machine branch may be created later.
+		mv ${WORKDIR}/git/.git ${S}
+		rm -rf ${WORKDIR}/git/
+		cd ${S}
+		git branch -a | grep -q ${KMETA}
+		if [ $? -ne 0 ]; then
+			echo "ERROR. The branch '${KMETA}' is required and was not"
+			echo "found. Ensure that the SRC_URI points to a valid linux-yocto"
+			echo "kernel repository"
+			exit 1
+		fi
+	 	if [ -z "${YOCTO_KERNEL_EXTERNAL_BRANCH}" ]; then
+			git branch -a | grep -q ${KBRANCH}
+			if [ $? -ne 0 ]; then
+				echo "ERROR. The branch '${KBRANCH}' is required and was not"
+				echo "found. Ensure that the SRC_URI points to a valid linux-yocto"
+				echo "kernel repository"
+				exit 1
+			fi
+		fi
+	else
+		mv ${WORKDIR}/git/* ${S}/.git
+		rm -rf ${WORKDIR}/git/
+		cd ${S}
+		git config core.bare false
+	fi
+	# end debare
+
+	# convert any remote branches to local tracking ones
+	for i in `git branch -a | grep remotes | grep -v HEAD`; do
+		b=`echo $i | cut -d' ' -f2 | sed 's%remotes/origin/%%'`;
+		git show-ref --quiet --verify -- "refs/heads/$b"
+		if [ $? -ne 0 ]; then
+			git branch $b $i > /dev/null
+		fi
+	done
+
+	# Create a working tree copy of the kernel by checkout out a branch
 	git show-ref --quiet --verify -- "refs/heads/${KBRANCH}"
 	if [ $? -eq 0 ]; then
 		# checkout and clobber and unimportant files
