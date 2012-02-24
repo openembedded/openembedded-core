@@ -5,18 +5,18 @@ SECTION = "console/utils"
 
 LICENSE = "GPLv2"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5="
+LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-${PV}.tar.bz2 \
            file://long-long-thumb.patch \
-           file://mips_gcc4.4.patch"
+           file://configure.patch \
+           file://mips_gcc4.4.patch \
+           file://curl_typeof_fix_backport.patch"
 
-SRC_URI[md5sum] = "dcf7ed712997888d616e029637bfc303"
-SRC_URI[sha256sum] = "a2907f4432d67894e425e48ae85785dd60ecb01658c9682bcd96f5e91043bb38"
-
-S = "${WORKDIR}/gnupg-${PV}"
+SRC_URI[md5sum] = "b06a141cca5cd1a55bbdd25ab833303c"
+SRC_URI[sha256sum] = "69d18b7d193f62ca27ed4febcb4c9044aa0c95305d3258fe902e2fae5fc6468d"
 
 inherit autotools gettext
 
@@ -73,7 +73,8 @@ EXTRA_OECONF = "--disable-ldap \
 		--with-bzip2=${STAGING_LIBDIR}/.. \
 		--disable-selinux-support \
                 --with-readline=${STAGING_LIBDIR}/.. \
-                ac_cv_sys_symbol_underscore=yes"
+                ac_cv_sys_symbol_underscore=no \
+		"
 
 do_install () {
 	autotools_do_install
