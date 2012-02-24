@@ -276,7 +276,7 @@ def splitfile2(debugsrcdir, d):
 
        # Also remove debugsrcdir if its empty
        for p in nosuchdir[::-1]:
-           if not os.listdir(p):
+           if os.path.exists(p) and not os.listdir(p):
                os.rmdir(p)
 
 def runstrip(file, elftype, d):
