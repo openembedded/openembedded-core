@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://login.defs_shadow-sysroot;md5=25e2f2de4dfc8f966ac5cdf
 
 DEPENDS = "base-passwd"
 
-PR = "r1"
+PR = "r2"
 
 # The sole purpose of this recipe is to provide the /etc/login.defs
 # file for the target sysroot - needed so the shadow-native utilities
@@ -28,3 +28,8 @@ do_install() {
 sysroot_stage_all() {
 	sysroot_stage_dir ${D} ${SYSROOT_DESTDIR}
 }
+
+# don't create any packages
+# otherwise: dbus-dev depends on shadow-sysroot-dev which depends on shadow-sysroot 
+# and this has another copy of /etc/login.defs already provided by shadow
+PACKAGES = ""
