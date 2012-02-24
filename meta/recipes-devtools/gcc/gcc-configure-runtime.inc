@@ -16,26 +16,32 @@ RUNTIMETARGET = "libssp libstdc++-v3"
 
 do_configure () {
 	export CXX="${CXX} -nostdinc++ -nostdlib++"
-	for d in ${RUNTIMETARGET}; do
+	mtarget=`echo ${MULTIMACH_TARGET_SYS} | sed -e s#-nativesdk##`
+	target=`echo ${TARGET_SYS} | sed -e s#-nativesdk##`
+	cp -fpPR ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$mtarget/* ${B}
+	for d in libgcc ${RUNTIMETARGET}; do
 		echo "Configuring $d"
-		mkdir -p ${B}/$d/
-		cd ${B}/$d/
+		rm -rf ${B}/$target/$d/
+		mkdir -p ${B}/$target/$d/
+		cd ${B}/$target/$d/
 		chmod a+x ${S}/$d/configure
 		${S}/$d/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
 	done
 }
 
 do_compile () {
-	for d in ${RUNTIMETARGET}; do
-		cd ${B}/$d/
-		oe_runmake
+	target=`echo ${TARGET_SYS} | sed -e s#-nativesdk##`
+	for d in libgcc ${RUNTIMETARGET}; do
+		cd ${B}/$target/$d/
+		oe_runmake MULTIBUILDTOP=${B}/$target/$d/
 	done
 }
 
 do_install () {
+	target=`echo ${TARGET_SYS} | sed -e s#-nativesdk##`
 	for d in ${RUNTIMETARGET}; do
-		cd ${B}/$d/
-		oe_runmake 'DESTDIR=${D}' install
+		cd ${B}/$target/$d/
+		oe_runmake 'DESTDIR=${D}' MULTIBUILDTOP=${B}/$target/$d/ install
 	done
 	chown -R root:root ${D}
 }
@@ -45,4 +51,3 @@ DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++ libgcc"
 PROVIDES = "virtual/${TARGET_PREFIX}compilerlibs"
 
 BBCLASSEXTEND = "nativesdk"
-

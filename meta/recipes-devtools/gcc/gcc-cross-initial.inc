@@ -25,5 +25,5 @@ EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} \
 		${@get_gcc_fpu_setting(bb, d)}"
 
 do_compile () {
-    oe_runmake
+    oe_runmake all-gcc all-target-libgcc
 }
