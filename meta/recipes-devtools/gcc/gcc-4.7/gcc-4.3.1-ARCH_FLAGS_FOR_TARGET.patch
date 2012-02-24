@@ -1,0 +1,33 @@
+Upstream-Status: Inappropriate [embedded specific]
+
+---
+ configure    |    2 +-
+ configure.ac |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+Index: gcc-4_7-branch/configure.ac
+===================================================================
+--- gcc-4_7-branch.orig/configure.ac	2012-04-10 10:19:50.923337154 -0700
++++ gcc-4_7-branch/configure.ac	2012-04-10 10:19:54.911337344 -0700
+@@ -2825,7 +2825,7 @@
+ # for target_alias and gcc doesn't manage it consistently.
+ target_configargs="--cache-file=./config.cache ${target_configargs}"
+ 
+-FLAGS_FOR_TARGET=
++FLAGS_FOR_TARGET="$ARCH_FLAGS_FOR_TARGET"
+ case " $target_configdirs " in
+  *" newlib "*)
+   case " $target_configargs " in
+Index: gcc-4_7-branch/configure
+===================================================================
+--- gcc-4_7-branch.orig/configure	2012-04-10 10:19:50.911337153 -0700
++++ gcc-4_7-branch/configure	2012-04-10 10:19:54.915337349 -0700
+@@ -7368,7 +7368,7 @@
+ # for target_alias and gcc doesn't manage it consistently.
+ target_configargs="--cache-file=./config.cache ${target_configargs}"
+ 
+-FLAGS_FOR_TARGET=
++FLAGS_FOR_TARGET="$ARCH_FLAGS_FOR_TARGET"
+ case " $target_configdirs " in
+  *" newlib "*)
+   case " $target_configargs " in

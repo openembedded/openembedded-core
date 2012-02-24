@@ -1,0 +1,31 @@
+Upstream-Status: Pending
+
+http://sourceforge.net/mailarchive/forum.php?thread_id=8959304&forum_id=5348
+http://gcc.gnu.org/bugzilla/show_bug.cgi?id=24836
+
+Index: gcc-4_7-branch/gcc/configure.ac
+===================================================================
+--- gcc-4_7-branch.orig/gcc/configure.ac	2012-04-10 10:22:05.787343661 -0700
++++ gcc-4_7-branch/gcc/configure.ac	2012-04-10 10:32:18.415373343 -0700
+@@ -3065,7 +3065,7 @@
+ 	tls_first_minor=14
+ 	tls_as_opt="-m64 -Aesame --fatal-warnings"
+ 	;;
+-  sh-*-* | sh[34]-*-*)
++  sh-*-* | sh[34]*-*-*)
+     conftest_s='
+ 	.section ".tdata","awT",@progbits
+ foo:	.long	25
+Index: gcc-4_7-branch/gcc/configure
+===================================================================
+--- gcc-4_7-branch.orig/gcc/configure	2012-04-10 10:22:05.803343691 -0700
++++ gcc-4_7-branch/gcc/configure	2012-04-10 10:32:18.419373328 -0700
+@@ -23481,7 +23481,7 @@
+ 	tls_first_minor=14
+ 	tls_as_opt="-m64 -Aesame --fatal-warnings"
+ 	;;
+-  sh-*-* | sh[34]-*-*)
++  sh-*-* | sh[34]*-*-*)
+     conftest_s='
+ 	.section ".tdata","awT",@progbits
+ foo:	.long	25
