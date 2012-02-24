@@ -18,5 +18,5 @@ EXTRA_OECONF = "--enable-malloc0returnsnull --with-fop=no --without-xmlto"
 python () {
         whitelist = [ "pixman" ]
         if not d.getVar('BPN', True) in whitelist and not oe.utils.contains ('DISTRO_FEATURES', 'x11', True, False, d):
-                raise bb.parse.SkipPackage("X11 not enabled for this DISTRO")
+                raise bb.parse.SkipPackage("'x11' not in DISTRO_FEATURES")
 }
