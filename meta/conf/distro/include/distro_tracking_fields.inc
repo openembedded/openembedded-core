@@ -5891,6 +5891,10 @@ RECIPE_MANUAL_CHECK_DATE_pn-lsbsetup = "Nov 28, 2011"
 DISTRO_PN_ALIAS_pn-lsbsetup = "Windriver"
 RECIPE_MAINTAINER_pn-lsbsetup = "Saul Wold <sgw@linux.intel.com>"
 
+RECIPE_LATEST_VERSION_pn-lsbtest = "1.0"
+RECIPE_LAST_UPDATE_pn-lsbtest = "Feb 17, 2012"
+RECIPE_MAINTAINER_pn-lsbtest = "Yi Zhao <yi.zhao@windriver.com>"
+
 RECIPE_LATEST_VERSION_pn-libxml-simple-perl = "2.18"
 RECIPE_LATEST_VERSION_pn-talloc = "2.0.5"
 
