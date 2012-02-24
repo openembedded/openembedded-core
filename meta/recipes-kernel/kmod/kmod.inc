@@ -17,6 +17,7 @@ inherit autotools
 
 SRC_URI = "git://git.profusion.mobi/kmod.git;protocol=git;branch=master \
            file://depmod-search.conf \
+           file://0001-man-disable-man-page-generation-because-we-don-t-hav.patch \
           "
 
 SRCREV = "02629fa02e96763db7460a930239cc93649a52f8"
