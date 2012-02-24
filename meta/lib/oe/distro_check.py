@@ -99,12 +99,12 @@ def get_source_package_list_from_url(url, section):
 
 def get_latest_released_fedora_source_package_list():
     "Returns list of all the name os packages in the latest fedora distro"
-    latest = find_latest_numeric_release("http://download.fedora.redhat.com/pub/fedora/linux/releases/")
+    latest = find_latest_numeric_release("http://archive.fedoraproject.org/pub/fedora/linux/releases/")
 
-    package_names = get_source_package_list_from_url("http://download.fedora.redhat.com/pub/fedora/linux/releases/%s/Fedora/source/SRPMS/" % latest, "main")
+    package_names = get_source_package_list_from_url("http://archive.fedoraproject.org/pub/fedora/linux/releases/%s/Fedora/source/SRPMS/" % latest, "main")
 
 #    package_names += get_source_package_list_from_url("http://download.fedora.redhat.com/pub/fedora/linux/releases/%s/Everything/source/SPRMS/" % latest, "everything")
-    package_names += get_source_package_list_from_url("http://download.fedora.redhat.com/pub/fedora/linux/updates/%s/SRPMS/" % latest, "updates")
+    package_names += get_source_package_list_from_url("http://archive.fedoraproject.org/pub/fedora/linux/updates/%s/SRPMS/" % latest, "updates")
 
     package_list=clean_package_list(package_names)
         
