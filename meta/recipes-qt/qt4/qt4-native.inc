@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
                     file://LICENSE.GPL3;md5=babc5b6b77441da277f5c06b2e547720 \
                     file://LGPL_EXCEPTION.txt;md5=411080a56ff917a5a1aa08c98acae354"
 
-INC_PR = "r13"
+INC_PR = "r14"
 
 inherit native
 
@@ -29,6 +29,7 @@ EXTRA_OECONF = "-prefix ${prefix} \
                 -no-nas-sound \
                 -no-nis -no-openssl \
                 -verbose -release \
+                -headerdir ${includedir}/qt4 \
                 -embedded -no-freetype -no-glib -no-iconv \
                 -exceptions -xmlpatterns \
                 -qt3support \
