@@ -23,7 +23,7 @@ test -f /etc/fstab && (
 #
 while read device mountpt fstype options
 do
-	if test "$fstype" = nfs ||  test "$fstype" = smbfs ||  test "$fstype" = ncpfs
+	if test "$fstype" = nfs ||  test "$fstype" = smbfs ||  test "$fstype" = ncpfs || test "$fstype" = cifs
 	then
 		umount -f $mountpt
 	fi
