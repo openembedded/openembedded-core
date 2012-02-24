@@ -140,8 +140,20 @@ python do_populate_lic() {
     import shutil
     import oe.license
 
-    # All the license types for the package
-    license_types = d.getVar('LICENSE', True)
+    pn = d.getVar('PN', True)
+    for package in d.getVar('PACKAGES', True):
+        if d.getVar('LICENSE_' + pn + '-' + package, True):
+            license_types = license_types + ' & ' + \
+                            d.getVar('LICENSE_' + pn + '-' + package, True)
+
+    #If we get here with no license types, then that means we have a recipe 
+    #level license. If so, we grab only those.
+    try:
+        license_types
+    except NameError:        
+        # All the license types at the recipe level
+        license_types = d.getVar('LICENSE', True)
+ 
     # All the license files for the package
     lic_files = d.getVar('LIC_FILES_CHKSUM', True)
     pn = d.getVar('PN', True)
