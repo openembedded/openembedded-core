@@ -46,7 +46,7 @@ do_install() {
 	install -m 644 ${S}/core/ldlinux.bss ${D}${libdir}/syslinux/
 }
 
-PACKAGES =+ "${PN}-extlinux ${PN}-mbr ${PN}-chain ${PN}-pxelinux ${PN}-isolinux"
+PACKAGES =+ "${PN}-extlinux ${PN}-mbr ${PN}-chain ${PN}-pxelinux ${PN}-isolinux ${PN}-misc"
 
 RDEPENDS_${PN} += "mtools"
 
@@ -58,5 +58,6 @@ FILES_${PN}-isolinux = "${libdir}/${PN}/isolinux.bin"
 FILES_${PN}-pxelinux = "${libdir}/${PN}/pxelinux.0"
 FILES_${PN}-dev += "${datadir}/${PN}/com32/lib*${SOLIBS} ${datadir}/${PN}/com32/include ${datadir}/${PN}/com32/com32.ld"
 FILES_${PN}-staticdev += "${datadir}/${PN}/com32/lib*.a"
+FILES_${PN}-misc = "${libdir}/${PN}/* ${bindir}/*"
 
 BBCLASSEXTEND = "native"
