@@ -1,6 +1,6 @@
 require glib.inc
 
-PR = "r5"
+PR = "r6"
 PE = "1"
 
 DEPENDS += "libffi python-argparse-native zlib"
@@ -14,6 +14,7 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.bz2 \
            file://60_wait-longer-for-threads-to-die.patch \
            file://g_once_init_enter.patch \
            file://glib-2.0_fix_for_x32.patch \
+           file://nodbus.patch \
           "
 SRC_URI[md5sum] = "b40f3889e8d24e1b367763673ca6deb5"
 SRC_URI[sha256sum] = "94b1f1a1456c67060ca868d299bef3f7268a2c1c5c360aabb7149d4d9b2fdcd3"
