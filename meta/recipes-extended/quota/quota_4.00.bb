@@ -13,7 +13,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/linuxquota/quota-tools/${PV}/quota-${PV
 SRC_URI[md5sum] = "975f587ff761a60ac25dbe6c00865925"
 SRC_URI[sha256sum] = "eb2b045f58b98299edc568b8607b95b10735b4a131fa5196f41c89b51fb409ba"
 
-S = ${WORKDIR}/quota-tools
+S = "${WORKDIR}/quota-tools"
 
 inherit autotools
 

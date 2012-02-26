@@ -8,7 +8,7 @@ KMACHINE_qemuppc  = "yocto/standard/qemu-ppc32"
 KMACHINE_qemumips = "yocto/standard/mti-malta32-be"
 KMACHINE_qemuarm  = "yocto/standard/arm-versatile-926ejs"
 
-KBRANCH = ${KMACHINE}
+KBRANCH = "${KMACHINE}"
 
 LINUX_VERSION ?= "3.0.18"
 
@@ -28,9 +28,9 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.0;protocol=git;nocheckout=1;
 COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64)"
 
 # Functionality flags
-KERNEL_FEATURES="features/netfilter"
-KERNEL_FEATURES_append=" features/taskstats"
-KERNEL_FEATURES_append_qemux86=" cfg/sound"
-KERNEL_FEATURES_append_qemux86-64=" cfg/sound"
+KERNEL_FEATURES = "features/netfilter"
+KERNEL_FEATURES_append = " features/taskstats"
+KERNEL_FEATURES_append_qemux86 = " cfg/sound"
+KERNEL_FEATURES_append_qemux86-64 = " cfg/sound"
 
 require linux-tools.inc

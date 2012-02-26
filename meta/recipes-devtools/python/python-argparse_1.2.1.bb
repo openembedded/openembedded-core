@@ -2,7 +2,7 @@ DESCRIPTION = "Python command-line parsing library"
 SECTION = "devel/python"
 LICENSE = "PSF"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=09d08bb5b7047e2688ea3faad6408aa8"
-SRCNAME = argparse
+SRCNAME = "argparse"
 PR = "r1"
 
 SRC_URI = "http://argparse.googlecode.com/files/${SRCNAME}-${PV}.tar.gz"

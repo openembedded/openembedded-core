@@ -34,7 +34,7 @@ S = "${WORKDIR}/grub-${PV}"
 
 # Determine the target arch for the grub modules before the native class
 # clobbers TARGET_ARCH.
-ORIG_TARGET_ARCH := ${TARGET_ARCH}
+ORIG_TARGET_ARCH := "${TARGET_ARCH}"
 python __anonymous () {
     import re
     target = d.getVar('ORIG_TARGET_ARCH', True)

@@ -3,7 +3,7 @@ require recipes-kernel/linux/linux-yocto.inc
 
 #KMACHINE = "yocto/standard/tiny/base"
 KMACHINE = "yocto/standard/base"
-KBRANCH = ${KMACHINE}
+KBRANCH = "${KMACHINE}"
 
 LINUX_VERSION ?= "3.0.12"
 
@@ -33,4 +33,4 @@ SRC_URI_append_qemux86 = " file://defconfig file://ata.cfg file://e1000.cfg"
 COMPATIBLE_MACHINE = "(qemux86)"
 
 # Functionality flags
-KERNEL_FEATURES=""
+KERNEL_FEATURES = ""

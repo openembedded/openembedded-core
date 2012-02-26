@@ -30,8 +30,8 @@ INITSCRIPT_NAME = "tcf-agent"
 INITSCRIPT_PARAMS = "start 999 3 5 . stop 20 0 1 2 6 ."
 
 # mangling needed for make
-MAKE_ARCH = `echo ${TARGET_ARCH} | sed s,i.86,i686,`
-MAKE_OS = `echo ${TARGET_OS} | sed s,^linux.*,GNU/Linux,`
+MAKE_ARCH = "`echo ${TARGET_ARCH} | sed s,i.86,i686,`"
+MAKE_OS = "`echo ${TARGET_OS} | sed s,^linux.*,GNU/Linux,`"
 
 EXTRA_OEMAKE = "MACHINE=${MAKE_ARCH} OPSYS=${MAKE_OS} 'CC=${CC}' 'AR=${AR}'"
 

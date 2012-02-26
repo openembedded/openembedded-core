@@ -160,6 +160,6 @@ do_install_append() {
     install -m 0755 ${TESTS} ${D}${libdir}/nspr/tests
 }
 
-FILES_${PN} = ${bindir}/*
+FILES_${PN} = "${bindir}/*"
 FILES_${PN}-dev += "${libdir}/nspr/tests/*"
 FILES_${PN}-dbg += "${libdir}/nspr/tests/.debug/*"

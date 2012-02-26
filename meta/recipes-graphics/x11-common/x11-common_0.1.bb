@@ -7,7 +7,7 @@ PR = "r44"
 SRC_URI = "file://etc \
            file://gplv2-license.patch"
 
-S = ${WORKDIR}
+S = "${WORKDIR}"
 
 inherit allarch
 

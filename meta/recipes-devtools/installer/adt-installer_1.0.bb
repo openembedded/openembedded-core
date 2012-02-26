@@ -53,7 +53,7 @@ SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
 
 ADTREPO = "http://adtrepo.yoctoproject.org/${SDK_VERSION}"
 
-do_populate_adt[umask] = 022
+do_populate_adt[umask] = "022"
 
 fakeroot do_populate_adt () {
 	cd ${WORKDIR}

@@ -9,7 +9,7 @@ SRC_URI = "file://xserver-nodm \
            file://Xusername \
            file://gplv2-license.patch"
 
-S = ${WORKDIR}
+S = "${WORKDIR}"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

@@ -51,7 +51,7 @@ STOP
     done
 }
 
-PACKAGES += ${PN}-extra
+PACKAGES += "${PN}-extra"
 RDEPENDS_${PN}-extra += "oh-puzzles"
 
 FILES_${PN} = "/usr/share/pixmaps /usr/share/oh-puzzles/"

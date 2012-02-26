@@ -113,4 +113,4 @@ FILES_${PN}-cups += "${exec_prefix}/lib/cups/filter/gstoraster \
                      ${sysconfdir}/cups \
                      "
 
-RDEPENDS_${PN}-cups = ${PN}
+RDEPENDS_${PN}-cups = "${PN}"

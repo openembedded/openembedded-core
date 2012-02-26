@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LSB_Setup.sh;beginline=3;endline=16;md5=97451c7c0786c
 
 SRC_URI = "file://LSB_Setup.sh"
 
-S=${WORKDIR}
+S = "${WORKDIR}"
 
 do_install() {
     # Only install file if it has a contents

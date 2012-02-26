@@ -95,7 +95,7 @@ RRECOMMENDS_${PN}_append_libc-glibc = "libnss-mdns"
 RRECOMMENDS_avahi-dev = "expat-dev libcap-dev libdaemon-dev dbus-dev glib-2.0-dev update-rc.d-dev"
 RRECOMMENDS_avahi-dev_append_libc-glibc = " gettext-dev"
 
-RRECOMMENDS_avahi-dev[nodeprrecs] = 1
+RRECOMMENDS_avahi-dev[nodeprrecs] = "1"
 
 CONFFILES_avahi-daemon = "${sysconfdir}/avahi/avahi-daemon.conf"
 

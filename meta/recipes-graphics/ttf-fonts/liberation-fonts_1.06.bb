@@ -16,7 +16,7 @@ FONTREV = "0.20100721"
 SRC_URI = "https://fedorahosted.org/releases/l/i/${BPN}/${BPN}-${PV}.${FONTREV}.tar.gz \
            file://30-liberation-aliases.conf"
 
-S = ${WORKDIR}/${BPN}-${PV}.${FONTREV}
+S = "${WORKDIR}/${BPN}-${PV}.${FONTREV}"
 
 inherit allarch
 

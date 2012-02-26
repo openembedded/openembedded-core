@@ -17,7 +17,7 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto-2.6.37;protocol=git;nocheckout
 
 # force this to empty to prevent installation failures, we aren't
 # building a device tree as part of kern headers
-KERNEL_DEVICETREE=
+KERNEL_DEVICETREE = ""
 
 set_arch() {
 	case ${TARGET_ARCH} in
