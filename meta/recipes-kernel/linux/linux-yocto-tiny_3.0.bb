@@ -5,10 +5,10 @@ require recipes-kernel/linux/linux-yocto.inc
 KMACHINE = "yocto/standard/base"
 KBRANCH = "${KMACHINE}"
 
-LINUX_VERSION ?= "3.0.12"
+LINUX_VERSION ?= "3.0.22"
 
-SRCREV_machine ?= "f389d310965a56091f688b28ea8be6d9cbb7fbbe"
-SRCREV_meta ?= "04a52a32cbdf0972033b97b83eaa83eb275dfdc9"
+SRCREV_machine ?= "c578f3a1f357142a6e02a1df4ae9aa16f45094d6"
+SRCREV_meta ?= "808b49474268040ab27c8ee687b60807a11547b4"
 
 PR = "r1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
