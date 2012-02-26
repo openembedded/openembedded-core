@@ -16,7 +16,7 @@ FILES_${PN}-dev = " \
   ${libdir}/${TARGET_SYS}/${BINV}/crt* \
   ${libdir}/${TARGET_SYS}/${BINV}/libgcc*"
 FILES_libgcov-dev = " \
-  ${libdir}/${TARGET_SYS}/${BINV}/libgcov.a \
+  ${libdir}/${TARGET_SYS}/${BINV}/libgcov.a"
 
 FILES_${PN}-dbg += "${base_libdir}/.debug/"
 

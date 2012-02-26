@@ -18,7 +18,7 @@ LANGUAGES ?= "c,c++${FORTRAN}${JAVA}"
 # when linking shared libraries further in the build like (gnutls)
 
 SPECIAL_ARCH_LIST = "powerpc"
-OPTSPACE = ${@base_contains("SPECIAL_ARCH_LIST", "${TARGET_ARCH}", "", "--enable-target-optspace",d)}
+OPTSPACE = '${@base_contains("SPECIAL_ARCH_LIST", "${TARGET_ARCH}", "", "--enable-target-optspace",d)}'
 
 EXTRA_OECONF_BASE ?= ""
 EXTRA_OECONF_PATHS ?= ""

@@ -18,7 +18,7 @@ PV = "4.6.2+svnr${SRCPV}"
 
 BINV = "4.6.3"
 
-SRCREV = 181430
+SRCREV = "181430"
 BRANCH = "gcc-4_6-branch"
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/gcc-4.6' ], d)}"
 
