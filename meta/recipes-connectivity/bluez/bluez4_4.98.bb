@@ -1,8 +1,10 @@
 require bluez4.inc
 
-PR = "r0"
+PR = "r1"
 
-SRC_URI += "file://bluetooth.conf"
+SRC_URI += "file://bluetooth.conf \
+            file://sbc_mmx.patch \
+           "
 
 SRC_URI[md5sum] = "362864b716950baa04797de735fc237b"
 SRC_URI[sha256sum] = "9a5b655bada7c7a1921cb3bac83b8a32bbe49893e4c7a1377cdc1b0d35f7d233"
