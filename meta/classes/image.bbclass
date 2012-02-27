@@ -75,9 +75,7 @@ inherit image-${IMAGE_TYPE}
 
 python () {
     deps = d.getVarFlag('do_rootfs', 'depends') or ""
-    for type in (d.getVar('IMAGE_FSTYPES', True) or "").split():
-        for dep in ((d.getVar('IMAGE_DEPENDS_%s' % type) or "").split() or []):
-            deps += " %s:do_populate_sysroot" % dep
+    deps += imagetypes_getdepends(d)
     for dep in (d.getVar('EXTRA_IMAGEDEPENDS', True) or "").split():
         deps += " %s:do_populate_sysroot" % dep
     d.setVarFlag('do_rootfs', 'depends', deps)
