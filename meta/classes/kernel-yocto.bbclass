@@ -165,7 +165,7 @@ do_kernel_checkout() {
 			echo "kernel repository"
 			exit 1
 		fi
-	 	if [ -z "${YOCTO_KERNEL_EXTERNAL_BRANCH}" ]; then
+	 	if [ -z "${YOCTO_KERNEL_EXTERNAL_BRANCH}" ] && [ -n "${KBRANCH}" ] ; then
 			git branch -a | grep -q ${KBRANCH}
 			if [ $? -ne 0 ]; then
 				echo "ERROR. The branch '${KBRANCH}' is required and was not"
