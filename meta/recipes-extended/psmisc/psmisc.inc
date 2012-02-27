@@ -9,8 +9,8 @@ SECTION = "base"
 DEPENDS = "ncurses virtual/libintl"
 LICENSE = "GPLv2"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/psmisc/psmisc-${PV}.tar.gz \
-	   file://libintl-link.patch"
+SRC_URI = "${SOURCEFORGE_MIRROR}/psmisc/psmisc-${PV}.tar.gz"
+
 S = "${WORKDIR}/psmisc-${PV}"
 
 inherit autotools gettext
