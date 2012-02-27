@@ -9,9 +9,11 @@ LICENSE = "GPLv2+ & LGPLv2.1+ & BSD"
 
 LIC_FILES_CHKSUM = "file://README.licensing;md5=9c920d811858a74b67a36ba23cbaa95f \
                     file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
-                    file://licenses/COPYING.GPL;md5=8ca43cbc842c2336e835926c2166c28b \
-                    file://licenses/COPYING.UCB;md5=263860f8968d8bafa5392cab74285262 \
-                    file://getopt/COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
+                    file://Documentation/licenses/COPYING.GPLv2;md5=8ca43cbc842c2336e835926c2166c28b \
+                    file://Documentation/licenses/COPYING.LGPLv2.1;md5=bbb461211a33b134d42ed5ee802b37ff \
+                    file://Documentation/licenses/COPYING.BSD-3;md5=58dcd8452651fc8b07d1f65ce07ca8af \
+                    file://Documentation/licenses/COPYING.UCB;md5=263860f8968d8bafa5392cab74285262 \
+                    file://getopt/COPYING;md5=c3a41733416fb80af7ba1b7e1f712551"
 
 inherit autotools gettext pkgconfig
 DEPENDS = "zlib ncurses"

@@ -1,0 +1,26 @@
+Upstream-Status: Pending
+
+Index: util-linux-2.21/login-utils/login.c
+===================================================================
+--- util-linux-2.21.orig/login-utils/login.c
++++ util-linux-2.21/login-utils/login.c
+@@ -1216,6 +1216,8 @@ int main(int argc, char **argv)
+ 	char *buff;
+ 	int childArgc = 0;
+ 	int retcode;
++	struct sigaction act;
++
+ 
+ 	char *pwdbuf = NULL;
+ 	struct passwd *pwd = NULL, _pwd;
+@@ -1229,7 +1231,9 @@ int main(int argc, char **argv)
+ 	timeout = getlogindefs_num("LOGIN_TIMEOUT", LOGIN_TIMEOUT);
+ 
+ 	signal(SIGALRM, timedout);
+-	siginterrupt(SIGALRM, 1);	/* we have to interrupt syscalls like ioclt() */
++	(void) sigaction(SIGALRM, NULL, &act);
++	act.sa_flags &= ~SA_RESTART;
++	sigaction(SIGALRM, &act, NULL);
+ 	alarm((unsigned int)timeout);
+ 	signal(SIGQUIT, SIG_IGN);
+ 	signal(SIGINT, SIG_IGN);
