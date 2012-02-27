@@ -14,8 +14,6 @@ PR = "${INC_PR}.0"
 DEPENDS += "virtual/libx11 libxvmc drm xf86driproto glproto \
 	    virtual/libgl xineramaproto xf86driproto libpciaccess"
 
-SRC_URI[md5sum] = "6d7b1f199dba5820f250888b136186ff"
-SRC_URI[sha256sum] = "8b8450f2a2cc52ef31a83414e2f290e748a956690e11b41759d5650aaedc4387"
 
 EXTRA_OECONF += "--disable-xvmc"
 
@@ -23,3 +21,6 @@ EXTRA_OECONF += "--disable-xvmc"
 EXTRA_OECONF += '${@base_conditional( "ROOTLESS_X", "1", " --enable-kms-only", "", d )}'
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
+
+SRC_URI[md5sum] = "34f3987ffe86e30c57abc33b7f8030e9"
+SRC_URI[sha256sum] = "dce63e33ccfada39ef1e1e6768dfd8edd4c525670dfe56d1c42b2f9570039ffc"
