@@ -18,7 +18,7 @@ S = "${WORKDIR}/git"
 SRCREV = "d888bbc723c00d197d34a39b5b7448660ec1b1c0"
 
 PV = "0.0+git${SRCPV}"
-PR = "r8"
+PR = "r9"
 
 DEFAULT_PREFERENCE = "-1"
 
