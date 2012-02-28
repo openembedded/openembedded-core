@@ -61,6 +61,10 @@ EXTRA_OECONF_append_mips64el    = " --with-abi=64 --with-arch-64=mips64 --with-t
 EXTRA_OECONF_FPU = "${@get_gcc_fpu_setting(bb, d)}"
 CPPFLAGS = ""
 
+# powerpc needs this to comply with the ABI
+EXTRA_OECONF_append_powerpc = " --with-long-double-128"
+EXTRA_OECONF_append_powerpc64 = " --with-long-double-128"
+
 # Used by configure to define additional values for FLAGS_FOR_TARGET -
 # passed to all the compilers.
 ARCH_FLAGS_FOR_TARGET = "${TARGET_CC_ARCH}"
