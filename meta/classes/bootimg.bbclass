@@ -35,8 +35,8 @@ ISODIR = "${S}/iso"
 BOOTIMG_VOLUME_ID   ?= "boot"
 BOOTIMG_EXTRA_SPACE ?= "512"
 
-EFI = ${@base_contains("MACHINE_FEATURES", "efi", "1", "0", d)}
-EFI_CLASS = ${@base_contains("MACHINE_FEATURES", "efi", "grub-efi", "dummy", d)}
+EFI = "${@base_contains("MACHINE_FEATURES", "efi", "1", "0", d)}"
+EFI_CLASS = "${@base_contains("MACHINE_FEATURES", "efi", "grub-efi", "dummy", d)}"
 
 # Include legacy boot if MACHINE_FEATURES includes "pcbios" or if it does not
 # contain "efi". This way legacy is supported by default if neither is
@@ -52,8 +52,8 @@ def pcbios_class(d):
 		return "syslinux"
 	return "dummy"
 
-PCBIOS = ${@pcbios(d)}
-PCBIOS_CLASS = ${@pcbios_class(d)}
+PCBIOS = "${@pcbios(d)}"
+PCBIOS_CLASS = "${@pcbios_class(d)}"
 
 inherit ${PCBIOS_CLASS}
 inherit ${EFI_CLASS}
