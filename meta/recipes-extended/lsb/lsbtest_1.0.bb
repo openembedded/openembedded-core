@@ -11,7 +11,7 @@ SRC_URI = "file://LSB_Test.sh \
 		   "
 RDEPENDS_${PN} = "rpm"
 
-S=${WORKDIR}
+S = "${WORKDIR}"
 
 do_install() {
 	install -d ${D}/usr/bin

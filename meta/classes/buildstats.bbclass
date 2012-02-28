@@ -1,6 +1,6 @@
-BUILDSTATS_BASE = ${TMPDIR}/buildstats/
-BNFILE = ${BUILDSTATS_BASE}/.buildname
-DEVFILE = ${BUILDSTATS_BASE}/.device
+BUILDSTATS_BASE = "${TMPDIR}/buildstats/"
+BNFILE = "${BUILDSTATS_BASE}/.buildname"
+DEVFILE = "${BUILDSTATS_BASE}/.device"
 
 ################################################################################
 # Build statistics gathering. 
