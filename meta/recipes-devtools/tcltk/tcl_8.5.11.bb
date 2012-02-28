@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://../license.terms;md5=a47a9be26d03f925fc1fbd2784f27e11
     file://../win/license.terms;md5=a47a9be26d03f925fc1fbd2784f27e11 \
     "
 
-PR = "r3"
+PR = "r4"
 
 BASE_SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl${PV}-src.tar.gz \
                 file://tcl-add-soname.patch"
@@ -57,12 +57,12 @@ do_install() {
 	done
 }
 
-PACKAGES =+ "${PN}-lib"
-FILES_${PN}-lib = "${libdir}/libtcl8.5.so*"
+PACKAGES =+ "tcl-lib"
+FILES_tcl-lib = "${libdir}/libtcl8.5.so*"
 FILES_${PN} += "${prefix}/lib/tcl8.5 ${prefix}/lib/tcl8"
 FILES_${PN}-dev += "${libdir}/tclConfig.sh"
 
 # isn't getting picked up by shlibs code
-RDEPENDS_${PN} += "${PN}-lib"
+RDEPENDS_${PN} += "tcl-lib"
 
 BBCLASSEXTEND = "native"
