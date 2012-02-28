@@ -9,16 +9,23 @@ help ()
     echo -e "\timport <file>: import the AUTOPR values from the exported file into the PR service."
 }
 
-export ()
+clean_cache()
+{
+    s=`bitbake -e | grep ^CACHE= | cut -f2 -d\"`
+    if [ "x${s}" != "x" ]; then
+        rm -rf ${s}
+    fi
+}
+
+do_export ()
 {
     file=$1
     [ "x${file}" == "x" ] && help && exit 1
     rm -f ${file}
 
-    touch dummy.inc
-    bitbake -R conf/prexport.conf -R dummy.inc -p
-    s=`bitbake -R conf/prexport.conf -R dummy.inc -e | grep ^PRSERV_DUMPFILE= | cut -f2 -d\"`
-    rm -f dummy.inc
+    clean_cache
+    bitbake -R conf/prexport.conf -p
+    s=`bitbake -R conf/prexport.conf -e | grep ^PRSERV_DUMPFILE= | cut -f2 -d\"`
     if [ "x${s}" != "x" ];
     then
        [ -e $s ] && mv -f $s $file && echo "Exporting to file $file succeeded!"
@@ -28,15 +35,14 @@ export ()
     return 1
 }
 
-import ()
+do_import ()
 {
     file=$1
     [ "x${file}" == "x" ] && help && exit 1
 
-    touch dummy.inc
-    bitbake -R conf/primport.conf -R dummy.inc -R $file -p
+    clean_cache
+    bitbake -R conf/primport.conf -R $file -p
     ret=$?
-    rm -f dummy.inc
     [ $ret -eq 0 ] && echo "Importing from file $file succeeded!" || echo "Importing from file $file failed!"
     return $ret
 }
@@ -45,10 +51,10 @@ import ()
 
 case $1 in
 export)
-    export $2
+    do_export $2
     ;;
 import)
-    import $2
+    do_import $2
     ;;
 *)
     help
