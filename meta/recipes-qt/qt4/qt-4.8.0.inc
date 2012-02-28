@@ -17,6 +17,7 @@ SRC_URI = "http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${PV}.
            file://configure_oe_compiler.patch \
            file://target_qmake.patch \
            file://qmake_pri_fixes.patch \
+           file://pulseaudio-config.patch \
            file://g++.conf \
            file://linux.conf \
            "
