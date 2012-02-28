@@ -64,5 +64,6 @@ FILES_${PN}-dev += "${libdir}/tclConfig.sh"
 
 # isn't getting picked up by shlibs code
 RDEPENDS_${PN} += "tcl-lib"
+RDEPENDS_${PN}_virtclass-native = ""
 
 BBCLASSEXTEND = "native"
