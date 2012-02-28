@@ -5,8 +5,8 @@ SECTION = "console/network"
 LICENSE = "ISC & BSD"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=0fbe2a3ab3c68ac3fea3cad13093877c"
 
-DEPENDS = "openssl"
-PR = "r2"
+DEPENDS = "openssl libcap"
+PR = "r3"
 
 SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://conf.patch \
