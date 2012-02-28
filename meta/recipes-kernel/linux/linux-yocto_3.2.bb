@@ -15,15 +15,15 @@ KBRANCH_qemuppc  = "standard/default/qemu-ppc32"
 KBRANCH_qemumips = "standard/default/mti-malta32-be"
 KBRANCH_qemuarm  = "standard/default/arm-versatile-926ejs"
 
-LINUX_VERSION ?= "3.2.7"
+LINUX_VERSION ?= "3.2.8"
 
 
-SRCREV_machine_qemuarm ?= "c2028a144fe035719af7c5e9989fedc62ccf3c2c"
-SRCREV_machine_qemumips ?= "7dfffd937d4755cba0fcf3f2b9b69a1c62262084"
-SRCREV_machine_qemuppc ?= "8fc0489fffe4c626f9a8053ad86014e75073a3d0"
-SRCREV_machine_qemux86 ?= "0fae9c2722039df3e93398d314ee10e3f4330b86"
-SRCREV_machine_qemux86-64 ?= "0fae9c2722039df3e93398d314ee10e3f4330b86"
-SRCREV_machine ?= "0fae9c2722039df3e93398d314ee10e3f4330b86"
+SRCREV_machine_qemuarm ?= "2fdc18ce2b9bf95519a02640cb45930ae7587dd4"
+SRCREV_machine_qemumips ?= "2b2a6bad57fe403f1180c4b9021210da87d02c20"
+SRCREV_machine_qemuppc ?= "eabeabc4c8a17822772895d3ba22989ae18a58c3"
+SRCREV_machine_qemux86 ?= "ea5bd45e564520ca4ecdb10f7af63263d5fe33f7"
+SRCREV_machine_qemux86-64 ?= "f54af84c64408a0259a919d1fd2405c0115c0a0b"
+SRCREV_machine ?= "21ab5dca134a6bf1316aa59f69f9ee9e091d5702"
 SRCREV_meta ?= "4c648bbbc7d2204d1b24f444aebb10f91c4ecae3"
 
 PR = "r0"
