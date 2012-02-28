@@ -139,17 +139,17 @@ do_patch() {
 }
 
 do_kernel_checkout() {
-	# we build out of {S}, so ensure that ${S} is clean and present
-	rm -rf ${S}
-	mkdir -p ${S}/.git
-
 	set +e
 
 	# A linux yocto SRC_URI should use the bareclone option. That
 	# ensures that all the branches are available in the WORKDIR version
 	# of the repository. If it wasn't passed, we should detect it, and put
 	# out a useful error message
-	if [ -d "${WORKDIR}/git/.git" ]; then
+	if [ -d "${WORKDIR}/git/" ] && [ -d "${WORKDIR}/git/.git" ]; then
+		# we build out of {S}, so ensure that ${S} is clean and present
+		rm -rf ${S}
+		mkdir -p ${S}/.git
+
 		echo "WARNING. ${WORKDIR}/git is not a bare clone."
 		echo "Ensure that the SRC_URI includes the 'bareclone=1' option."
 		
@@ -158,12 +158,14 @@ do_kernel_checkout() {
 		mv ${WORKDIR}/git/.git ${S}
 		rm -rf ${WORKDIR}/git/
 		cd ${S}
-		git branch -a | grep -q ${KMETA}
-		if [ $? -ne 0 ]; then
-			echo "ERROR. The branch '${KMETA}' is required and was not"
-			echo "found. Ensure that the SRC_URI points to a valid linux-yocto"
-			echo "kernel repository"
-			exit 1
+		if [ -n "${YOCTO_KERNEL_META_DATA}" ] && [ -n "${KMETA}" ]; then
+			git branch -a | grep -q ${KMETA}
+			if [ $? -ne 0 ]; then
+				echo "ERROR. The branch '${KMETA}' is required and was not"
+				echo "found. Ensure that the SRC_URI points to a valid linux-yocto"
+				echo "kernel repository"
+				exit 1
+			fi
 		fi
 	 	if [ -z "${YOCTO_KERNEL_EXTERNAL_BRANCH}" ] && [ -n "${KBRANCH}" ] ; then
 			git branch -a | grep -q ${KBRANCH}
@@ -174,10 +176,15 @@ do_kernel_checkout() {
 				exit 1
 			fi
 		fi
-	else
+	fi
+	if [ -d "${WORKDIR}/git/" ] && [ ! -d "${WORKDIR}/git/.git" ]; then
+		# we build out of {S}, so ensure that ${S} is clean and present
+		rm -rf ${S}
+		mkdir -p ${S}/.git
+
 		mv ${WORKDIR}/git/* ${S}/.git
 		rm -rf ${WORKDIR}/git/
-		cd ${S}
+		cd ${S}	
 		git config core.bare false
 	fi
 	# end debare
