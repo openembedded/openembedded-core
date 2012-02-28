@@ -8,7 +8,7 @@ DEPENDS = "pth libassuan libksba zlib bzip2 readline libgcrypt"
 
 inherit autotools gettext
 
-SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${PN}/${P}.tar.bz2"
+SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2"
 
 SRC_URI[md5sum] = "2f37e0722666a0fedbe4d9f9227ac4d7"
 SRC_URI[sha256sum] = "48aedd762ca443fb952a9e859efe3c66706d7c2c9c77c32dbdbac4fe962dae5b"
