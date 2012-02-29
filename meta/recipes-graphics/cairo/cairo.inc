@@ -27,4 +27,4 @@ EXTRA_OECONF += "${@get_cairo_fpu_setting(bb, d)} \
 inherit autotools pkgconfig
 
 # We don't depend on binutils so we need to disable this
-export ac_cv_lib_bfd_bfd_openr=no
+export ac_cv_lib_bfd_bfd_openr="no"

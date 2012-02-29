@@ -14,4 +14,4 @@ PACKAGES += "${PN}-tools"
 FILES_${PN}-tools = "${bindir}"
 FILES_${PN} = "${libdir}/*.so.*"
 
-export VERBOSE=1
+export VERBOSE="1"

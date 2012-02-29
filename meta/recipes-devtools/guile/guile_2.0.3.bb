@@ -39,7 +39,7 @@ do_configure_prepend() {
 	mkdir -p po
 }
 
-export GUILE_FOR_BUILD=${BUILD_SYS}-guile
+export GUILE_FOR_BUILD="${BUILD_SYS}-guile"
 
 do_compile_append() {
 	# just for target recipe
