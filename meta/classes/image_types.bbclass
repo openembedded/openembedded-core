@@ -11,11 +11,12 @@ def get_imagecmds(d):
     for type in types:
         for ctype in ctypes:
             if type.endswith("." + ctype):
-                basetype = type.rsplit(".", 1)[0]
+                basetype = type[:-len("." + ctype)]
                 types[types.index(type)] = basetype
-                if type not in cimages:
+                if basetype not in cimages:
                     cimages[basetype] = []
                 cimages[basetype].append(ctype)
+                break
 
     # Live images will be processed via inheriting bbclass and 
     # does not get processed here.
@@ -28,7 +29,7 @@ def get_imagecmds(d):
     if d.getVar('IMAGE_LINK_NAME', True):
         cmds += "	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.*"
 
-    for type in types:
+    for type in set(types):
         ccmd = []
         subimages = []
         localdata = bb.data.createCopy(d)
@@ -47,7 +48,7 @@ def get_imagecmds(d):
         localdata.setVar('subimages', " ".join(subimages))
         cmd = localdata.getVar("IMAGE_CMD", True)
         localdata.setVar('cmd', cmd)
-        cmds += localdata.getVar("runimagecmd", True)
+        cmds += "\n" + localdata.getVar("runimagecmd", True)
     return cmds
 
 runimagecmd () {
