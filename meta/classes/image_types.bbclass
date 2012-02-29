@@ -25,7 +25,9 @@ def get_imagecmds(d):
             types.append("ext3")
         types.remove("live")
 
-    cmds += "	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.*"
+    if d.getVar('IMAGE_LINK_NAME', True):
+        cmds += "	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.*"
+
     for type in types:
         ccmd = []
         subimages = []
@@ -55,10 +57,12 @@ runimagecmd () {
 	# Now create the needed compressed versions
 	cd ${DEPLOY_DIR_IMAGE}/
         ${ccmd}
-	# And create the symlinks
-        for type in ${subimages}; do
-		ln -s ${IMAGE_NAME}.rootfs.$type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
-	done
+        # And create the symlinks
+        if [ -n "${IMAGE_LINK_NAME}" ]; then
+            for type in ${subimages}; do
+                ln -s ${IMAGE_NAME}.rootfs.$type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
+            done
+        fi
 }
 
 def imagetypes_getdepends(d):
