@@ -5,28 +5,19 @@ oe_mkimage () {
         -d ${DEPLOY_DIR_IMAGE}/$1 ${DEPLOY_DIR_IMAGE}/$1.u-boot
 }
 
-IMAGE_DEPENDS_ext2.u-boot = "genext2fs-native e2fsprogs-native u-boot-mkimage-native"
-IMAGE_CMD_ext2.u-boot      = "${IMAGE_CMD_ext2} \
-                                 oe_mkimage ${IMAGE_NAME}.rootfs.ext2 none"
+COMPRESSIONTYPES += "gz.u-boot bz2.u-boot lzma.u-boot u-boot"
 
-IMAGE_DEPENDS_ext2.gz.u-boot = "genext2fs-native e2fsprogs-native u-boot-mkimage-native"
-IMAGE_CMD_ext2.gz.u-boot      = "${IMAGE_CMD_ext2.gz} \
-                                 oe_mkimage ${IMAGE_NAME}.rootfs.ext2.gz gzip"
+COMPRESS_DEPENDS_u-boot = "u-boot-mkimage-native"
+COMPRESS_CMD_u-boot      = "oe_mkimage ${IMAGE_NAME}.rootfs.${type} none"
 
-IMAGE_DEPENDS_ext2.bz2.u-boot = "genext2fs-native e2fsprogs-native u-boot-mkimage-native"
-IMAGE_CMD_ext2.bz2.u-boot      = "${IMAGE_CMD_ext2.bz2} \
-                                 oe_mkimage ${IMAGE_NAME}.rootfs.ext2.bz2 bzip2"
+COMPRESS_DEPENDS_gz.u-boot = "u-boot-mkimage-native"
+COMPRESS_CMD_gz.u-boot      = "${COMPRESS_CMD_gz}; oe_mkimage ${IMAGE_NAME}.rootfs.${type}.gz gzip"
 
-IMAGE_DEPENDS_ext2.lzma.u-boot = "genext2fs-native e2fsprogs-native u-boot-mkimage-native"
-IMAGE_CMD_ext2.lzma.u-boot      = "${IMAGE_CMD_ext2.lzma} \
-                                 oe_mkimage ${IMAGE_NAME}.rootfs.ext2.lzma lzma"
+COMPRESS_DEPENDS_bz2.u-boot = "u-boot-mkimage-native"
+COMPRESS_CMD_bz2.u-boot      = "${COMPRESS_CMD_bz2}; oe_mkimage ${IMAGE_NAME}.rootfs.${type}.bz2 bzip2"
 
-IMAGE_DEPENDS_ext3.gz.u-boot = "genext2fs-native e2fsprogs-native u-boot-mkimage-native"
-IMAGE_CMD_ext3.gz.u-boot      = "${IMAGE_CMD_ext3.gz} \
-                                 oe_mkimage ${IMAGE_NAME}.rootfs.ext3.gz gzip"
-
-IMAGE_DEPENDS_ext4.gz.u-boot = "genext2fs-native e2fsprogs-native u-boot-mkimage-native"
-IMAGE_CMD_ext4.gz.u-boot      = "${IMAGE_CMD_ext4.gz} \
-                                 oe_mkimage ${IMAGE_NAME}.rootfs.ext4.gz gzip"
+COMPRESS_DEPENDS_lzma.u-boot = "u-boot-mkimage-native"
+COMPRESS_CMD_lzma.u-boot      = "${COMPRESS_CMD_lzma}; oe_mkimage ${IMAGE_NAME}.rootfs.${type}.lzma lzma"
 
 IMAGE_TYPES += "ext2.u-boot ext2.gz.u-boot ext2.bz2.u-boot ext2.lzma.u-boot ext3.gz.u-boot ext4.gz.u-boot"
+
