@@ -127,6 +127,8 @@ toolchain_create_sdk_siteconfig () {
 		fi
 	done
 }
+# The immediate expansion above can result in unwanted path dependencies here
+toolchain_create_sdk_siteconfig[vardepsexclude] = "TOOLCHAIN_CONFIGSITE_SYSROOTCACHE"
 
 #This function create a version information file
 toolchain_create_sdk_version () {
@@ -138,6 +140,7 @@ toolchain_create_sdk_version () {
 	echo 'Metadata Revision: ${METADATA_REVISION}' >> $versionfile
 	echo 'Timestamp: ${DATETIME}' >> $versionfile
 }
+toolchain_create_sdk_version[vardepsexclude] = "DATETIME"
 
 python __anonymous () {
     deps = d.getVarFlag('do_configure', 'depends') or ""
