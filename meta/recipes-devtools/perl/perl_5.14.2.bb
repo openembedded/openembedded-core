@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db grep-native"
 DEPENDS += "gdbm zlib"
-PR = "r2"
+PR = "r3"
 
 # 5.10.1 has Module::Build built-in
 PROVIDES += "libmodule-build-perl"
@@ -190,8 +190,10 @@ do_install() {
 
         ln -sf perl ${D}/${libdir}/perl5
 
-        # Remove unwanted file
+        # Remove unwanted file and empty directories
         rm -f ${D}/${libdir}/perl/${PV}/.packlist
+	rmdir ${D}/${libdir}/perl/site_perl/${PV}
+	rmdir ${D}/${libdir}/perl/site_perl
 
         # Fix up shared library
         mv ${D}/${libdir}/perl/${PV}/CORE/libperl.so ${D}/${libdir}/libperl.so.${PV}
