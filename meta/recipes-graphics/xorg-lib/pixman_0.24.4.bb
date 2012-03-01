@@ -15,10 +15,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=14096c769ae0cbb5fcb94ec468be11b3 \
 DEPENDS += "zlib libpng"
 
 PE = "1"
-PR = "r1"
 
 EXTRA_OECONF="--disable-gtk"
 
-SRC_URI[md5sum] = "2ce7d12750664d2eebd51bf0a07b6205"
-SRC_URI[sha256sum] = "32f74f3e3c1feea33e6ad3e2fd66cb3eb816805c384b346ea1636a87c9057dbf"
-
+SRC_URI[md5sum] = "89eb7db8853681bbcea626b161de0488"
+SRC_URI[sha256sum] = "5f4b384aa39e82a582bdc8835e2e81b28176db851dd1f7ff32d682d026a23bb5"
