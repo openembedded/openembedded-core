@@ -70,8 +70,10 @@ LDCONFIGDEPEND_libc-uclibc = ""
 do_rootfs[depends] += "makedevs-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot ${LDCONFIGDEPEND}"
 do_rootfs[depends] += "virtual/update-alternatives-native:do_populate_sysroot update-rc.d-native:do_populate_sysroot"
 
-IMAGE_TYPE = '${@base_contains("IMAGE_FSTYPES", "live", "live", "empty", d)}'
-inherit image-${IMAGE_TYPE}
+IMAGE_TYPE_live = '${@base_contains("IMAGE_FSTYPES", "live", "live", "empty", d)}'
+inherit image-${IMAGE_TYPE_live}
+IMAGE_TYPE_vmdk = '${@base_contains("IMAGE_FSTYPES", "vmdk", "vmdk", "empty", d)}'
+inherit image-${IMAGE_TYPE_vmdk}
 
 python () {
     deps = d.getVarFlag('do_rootfs', 'depends') or ""

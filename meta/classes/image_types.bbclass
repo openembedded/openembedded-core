@@ -18,9 +18,13 @@ def get_imagecmds(d):
                 cimages[basetype].append(ctype)
                 break
 
-    # Live images will be processed via inheriting bbclass and 
-    # does not get processed here.
-    # live images also depend on ext3 so ensure its present
+    # Live and VMDK images will be processed via inheriting
+    # bbclass and does not get processed here.
+    # vmdk depend on live images also depend on ext3 so ensure its present
+    if "vmdk" in types:
+        if "ext3" not in types:
+            types.append("ext3")
+        types.remove("vmdk")
     if "live" in types:
         if "ext3" not in types:
             types.append("ext3")
@@ -75,6 +79,8 @@ def imagetypes_getdepends(d):
     deps = []
     ctypes = d.getVar('COMPRESSIONTYPES', True).split()
     for type in (d.getVar('IMAGE_FSTYPES', True) or "").split():
+        if type == "vmdk" or type == "live":
+            type = "ext3"
         basetype = type
         for ctype in ctypes:
             if type.endswith("." + ctype):
@@ -160,8 +166,6 @@ IMAGE_CMD_ubi () {
 }
 IMAGE_CMD_ubifs = "mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubifs ${MKUBIFS_ARGS}"
 
-IMAGE_CMD_vmdk = "qemu-img convert -O vmdk ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hdddirect ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.vmdk"
-
 EXTRA_IMAGECMD = ""
 EXTRA_IMAGECMD_jffs2 ?= "--pad --little-endian --eraseblock=0x40000"
 # Change these if you want default genext2fs behavior (i.e. create minimal inode number)
@@ -181,7 +185,6 @@ IMAGE_DEPENDS_squashfs = "squashfs-tools-native"
 IMAGE_DEPENDS_squashfs-lzma = "squashfs-lzma-tools-native"
 IMAGE_DEPENDS_ubi = "mtd-utils-native"
 IMAGE_DEPENDS_ubifs = "mtd-utils-native"
-IMAGE_DEPENDS_vmdk = "qemu-native"
 
 # This variable is available to request which values are suitable for IMAGE_FSTYPES
 IMAGE_TYPES = "jffs2 sum.jffs2 cramfs ext2 ext2.gz ext2.bz2 ext3 ext3.gz ext2.lzma btrfs live squashfs squashfs-lzma ubi tar tar.gz tar.bz2 tar.xz cpio cpio.gz cpio.xz cpio.lzma vmdk"
