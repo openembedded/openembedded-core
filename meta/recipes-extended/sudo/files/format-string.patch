@@ -1,0 +1,33 @@
+This patch, extracted from upstreams sudo-1.8.3p2.patch.gz addresses the
+recent Sudo format string vulnerability CVE 2012-0809.
+
+http://www.sudo.ws/sudo/alerts/sudo_debug.html
+
+Signed-off-by: Joshua Lock <josh@linux.intel.com>
+
+Upstream-Status: Backport
+
+diff -urNa sudo-1.8.3p1/src/sudo.c sudo-1.8.3p2/src/sudo.c
+--- sudo-1.8.3p1/src/sudo.c	Fri Oct 21 09:01:26 2011
++++ sudo-1.8.3p2/src/sudo.c	Tue Jan 24 15:59:03 2012
+@@ -1208,15 +1208,15 @@
+ sudo_debug(int level, const char *fmt, ...)
+ {
+     va_list ap;
+-    char *fmt2;
++    char *buf;
+ 
+     if (level > debug_level)
+ 	return;
+ 
+-    /* Backet fmt with program name and a newline to make it a single write */
+-    easprintf(&fmt2, "%s: %s\n", getprogname(), fmt);
++    /* Bracket fmt with program name and a newline to make it a single write */
+     va_start(ap, fmt);
+-    vfprintf(stderr, fmt2, ap);
++    evasprintf(&buf, fmt, ap);
+     va_end(ap);
+-    efree(fmt2);
++    fprintf(stderr, "%s: %s\n", getprogname(), buf);
++    efree(buf);
+ }
