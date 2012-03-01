@@ -98,7 +98,37 @@ class PatchSet(object):
 class PatchTree(PatchSet):
     def __init__(self, dir, d):
         PatchSet.__init__(self, dir, d)
+        self.patchdir = os.path.join(self.dir, 'patches')
+        self.seriespath = os.path.join(self.dir, 'patches', 'series')
+        bb.utils.mkdirhier(self.patchdir)
 
+    def _appendPatchFile(self, patch, strippath):
+        with open(self.seriespath, 'a') as f:
+            f.write(os.path.basename(patch) + "," + strippath + "\n")
+        shellcmd = ["cat", patch, ">" , self.patchdir + "/" + os.path.basename(patch)]
+        runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+
+    def _removePatch(self, p):
+        patch = {}
+        patch['file'] = p.split(",")[0]
+        patch['strippath'] = p.split(",")[1]
+        self._applypatch(patch, False, True)
+
+    def _removePatchFile(self, all = False):
+        if not os.path.exists(self.seriespath):
+            return
+        patches = open(self.seriespath, 'r+').readlines()
+        if all:
+            for p in reversed(patches):
+                self._removePatch(os.path.join(self.patchdir, p.strip()))
+            patches = []
+        else:
+            self._removePatch(os.path.join(self.patchdir, patches[-1].strip()))
+            patches.pop()
+        with open(self.seriespath, 'w') as f:
+            for p in patches:
+                f.write(p)
+         
     def Import(self, patch, force = None):
         """"""
         PatchSet.Import(self, patch, force)
@@ -127,6 +157,10 @@ class PatchTree(PatchSet):
 
         shellcmd.pop(len(shellcmd) - 1)
         output = runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+
+        if not reverse:
+            self._appendPatchFile(patch['file'], patch['strippath'])
+
         return output
 
     def Push(self, force = False, all = False, run = True):
@@ -134,30 +168,37 @@ class PatchTree(PatchSet):
         bb.note("patches is %s" % self.patches)
         if all:
             for i in self.patches:
-                if self._current is not None:
-                    self._current = self._current + 1
-                else:
-                    self._current = 0
                 bb.note("applying patch %s" % i)
                 self._applypatch(i, force)
+                self._current = i
         else:
             if self._current is not None:
-                self._current = self._current + 1
+                next = self._current + 1
             else:
-                self._current = 0
-            bb.note("applying patch %s" % self.patches[self._current])
-            return self._applypatch(self.patches[self._current], force)
+                next = 0
 
+            bb.note("applying patch %s" % self.patches[next])
+            ret = self._applypatch(self.patches[next], force)
+
+            self._current = next
+            return ret
 
     def Pop(self, force = None, all = None):
         if all:
-            for i in self.patches:
-                self._applypatch(i, force, True)
+            self._removePatchFile(True)
+            self._current = None
         else:
-            self._applypatch(self.patches[self._current], force, True)
+            self._removePatchFile(False)
+
+        if self._current == 0:
+            self._current = None
+
+        if self._current is not None:
+            self._current = self._current - 1
 
     def Clean(self):
         """"""
+        self.Pop(all=True)
 
 class GitApplyTree(PatchTree):
     def __init__(self, dir, d):
