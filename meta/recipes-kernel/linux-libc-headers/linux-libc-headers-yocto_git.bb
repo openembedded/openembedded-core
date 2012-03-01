@@ -8,12 +8,13 @@ DEPENDS += "unifdef-native"
 PROVIDES = "linux-libc-headers"
 RPROVIDES_${PN}-dev = "linux-libc-headers-dev"
 RPROVIDES_${PN}-dbg = "linux-libc-headers-dbg"
-SRCREV = "69cfbdf9f1ff461a75e5b77d6d7ba35e97db4cc3"
-PV = "2.6.37+git-${SRCPV}"
-PR = "r4"
+SRCREV = "21ab5dca134a6bf1316aa59f69f9ee9e091d5702"
+KBRANCH ?= "standard/base"
+KMETA ?= "meta"
+PV = "3.2+git-${SRCPV}"
+PR = "r5"
 
-SRCREV_FORMAT = "meta_machine"
-SRC_URI = "git://git.yoctoproject.org/linux-yocto-2.6.37;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
+SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.2;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
 
 # force this to empty to prevent installation failures, we aren't
 # building a device tree as part of kern headers
@@ -35,6 +36,16 @@ do_configure() {
 	oe_runmake allnoconfig ARCH=$ARCH
 }
 
+do_install() {
+	set_arch
+	oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix} ARCH=$ARCH
+
+        # The ..install.cmd conflicts between various configure runs
+        find ${D}${includedir} -name ..install.cmd | xargs rm -f
+}
+
+# The following tasks are not required when we just want
+# headers. So we override and stub them out.
 do_kernel_configme() {
 }
 
@@ -44,12 +55,10 @@ do_patch () {
 do_compile () {
 }
 
-do_install() {
-	set_arch
-	oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix} ARCH=$ARCH
+do_validate_branches () {
+}
 
-        # The ..install.cmd conflicts between various configure runs
-        find ${D}${includedir} -name ..install.cmd | xargs rm -f
+do_kernel_configcheck () {
 }
 
 BBCLASSEXTEND = "nativesdk"
