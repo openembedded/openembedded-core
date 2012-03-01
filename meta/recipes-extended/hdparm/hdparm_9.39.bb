@@ -16,8 +16,9 @@ FILES_${PN} = "${base_sbindir} ${mandir}"
 RDEPENDS_wiper = "bash gawk stat"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/hdparm/hdparm-${PV}.tar.gz "
-SRC_URI[md5sum] = "0bb94ddd1bedd5c02b1ca62f1caaf6de"
-SRC_URI[sha256sum] = "87ede0a7cb5b4de500748232e9d251b75acfccce078e1d42c8d125b9e5b4ccd3"
+
+SRC_URI[md5sum] = "2bc17b72403885d4faf959682944243b"
+SRC_URI[sha256sum] = "72d550af4526aa96f0841c79321a0ee39d636cbaf1f294e52193e90c054b3cea"
 
 do_install () {
 	install -d ${D}/${base_sbindir} ${D}/${mandir}/man8 ${D}/${bindir}
