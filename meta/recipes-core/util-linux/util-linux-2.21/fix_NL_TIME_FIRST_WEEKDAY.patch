@@ -1,0 +1,24 @@
+configure uses AC_CHECK_DECLS to check for _NL_TIME_WEEK_1STDAY
+which means we will get HAVE_DECL__NL_TIME_WEEK_1STDAY
+defined to 1 if symbol is declared, otherwise to 0 in config.h
+
+Therefore we cannot rely on conditionals which check for it
+being defined or not since it always will be defined so correct
+thing is to use #if instead of #ifdef
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+Index: util-linux-2.21/misc-utils/cal.c
+===================================================================
+--- util-linux-2.21.orig/misc-utils/cal.c	2012-02-29 23:41:54.413347665 -0800
++++ util-linux-2.21/misc-utils/cal.c	2012-02-29 23:42:44.573350057 -0800
+@@ -297,7 +297,7 @@
+  * the locale database, which can be overridden with the
+  * -s (Sunday) or -m (Monday) options.
+  */
+-#ifdef HAVE_DECL__NL_TIME_WEEK_1STDAY
++#if HAVE_DECL__NL_TIME_WEEK_1STDAY
+ 	/*
+ 	 * You need to use 2 locale variables to get the first day of the week.
+ 	 * This is needed to support first_weekday=2 and first_workday=1 for
