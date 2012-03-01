@@ -2,24 +2,39 @@ Upstream-Status: Inappropriate [distribution]
 
 Take out lscpu stuff from the code
 
-2011/03/17
-Saul Wold <saul.wold@intel.com>
-Nitin A Kamble <nitin.a.kamble@intel.com>
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
-Index: util-linux-2.20.1/sys-utils/Makefile.am
+Index: util-linux-2.21/configure.ac
 ===================================================================
---- util-linux-2.20.1.orig/sys-utils/Makefile.am
-+++ util-linux-2.20.1/sys-utils/Makefile.am
-@@ -17,12 +17,6 @@ usrsbin_exec_PROGRAMS += ldattach tunelp
- dist_man_MANS += dmesg.1 ctrlaltdel.8 cytune.8 setarch.8 \
- 		ldattach.8 tunelp.8 rtcwake.8 fsfreeze.8 fstrim.8
+--- util-linux-2.21.orig/configure.ac
++++ util-linux-2.21/configure.ac
+@@ -871,7 +871,7 @@ UL_REQUIRES_BUILD([lsblk], [libblkid])
+ AM_CONDITIONAL(BUILD_LSBLK, test "x$build_lsblk" = xyes)
  
--if HAVE_CPU_SET_T
+ 
+-UL_BUILD_INIT([lscpu], [check])
++UL_BUILD_INIT([lscpu], [no])
+ UL_REQUIRES_LINUX([lscpu])
+ UL_REQUIRES_HAVE([lscpu], [cpu_set_t], [cpu_set_t type])
+ AM_CONDITIONAL(BUILD_LSCPU, test "x$build_lscpu" = xyes)
+Index: util-linux-2.21/sys-utils/Makefile.am
+===================================================================
+--- util-linux-2.21.orig/sys-utils/Makefile.am
++++ util-linux-2.21/sys-utils/Makefile.am
+@@ -108,16 +108,6 @@ swapon_CFLAGS = $(AM_CFLAGS) -I$(ul_libb
+ swapon_LDADD = $(ul_libblkid_la)
+ endif
+ 
+-if BUILD_LSCPU
 -usrbin_exec_PROGRAMS += lscpu
--lscpu_SOURCES = lscpu.c $(top_srcdir)/lib/cpuset.c $(top_srcdir)/lib/strutils.c
+-lscpu_SOURCES = lscpu.c $(top_srcdir)/lib/cpuset.c \
+-			$(top_srcdir)/lib/strutils.c \
+-			$(top_srcdir)/lib/mbsalign.c \
+-			$(top_srcdir)/lib/tt.c \
+-			$(top_srcdir)/lib/path.c
 -dist_man_MANS += lscpu.1
 -endif
 -
- endif
- 
- cytune_SOURCES = cytune.c cyclades.h
+ if BUILD_CHCPU
+ sbin_PROGRAMS += chcpu
+ chcpu_SOURCES = chcpu.c $(top_srcdir)/lib/cpuset.c \
