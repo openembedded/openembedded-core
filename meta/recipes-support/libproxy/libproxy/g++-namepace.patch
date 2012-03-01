@@ -1,0 +1,22 @@
+include unistd.h to get prototypes of close() and read()
+otherwise g++ complains
+
+libproxy/url.cpp:439:13: error: 'close' was not declared in this scope
+libproxy/url.cpp:398:37: error: 'read' was not declared in this scope
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+
+Index: libproxy-0.4.7/libproxy/url.cpp
+===================================================================
+--- libproxy-0.4.7.orig/libproxy/url.cpp	2012-03-01 09:51:11.254156247 -0800
++++ libproxy-0.4.7/libproxy/url.cpp	2012-03-01 09:56:12.058171256 -0800
+@@ -33,6 +33,7 @@
+ #include <cstdlib>    // For atoi()
+ #include <sys/stat.h> // For stat()
+ #include <algorithm> // For transform()
++#include <unistd.h> // For close(), read()
+ 
+ #ifdef WIN32
+ #include <io.h>
