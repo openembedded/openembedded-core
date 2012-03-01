@@ -4,7 +4,7 @@ HOMEPAGE = "http://packages.debian.org/netbase"
 SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=3dd6192d306f582dee7687da3d8748ab"
-PR = "r0"
+PR = "r1"
 
 inherit update-rc.d
 
@@ -22,7 +22,6 @@ SRC_URI[sha256sum] = "a7e6525c9a09b00eff3395d09739b3c70a18bff8d13f7daa21fdf81989
 
 do_install () {
 	install -d ${D}${sysconfdir}/init.d \
-		   ${D}${sbindir} \
 		   ${D}${mandir}/man8 \
 		   ${D}${sysconfdir}/network/if-pre-up.d \
 		   ${D}${sysconfdir}/network/if-up.d \
