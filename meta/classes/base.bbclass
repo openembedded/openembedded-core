@@ -111,16 +111,17 @@ python base_do_unpack() {
             raise bb.build.FuncFailed(e)
 }
 
-GIT_CONFIG = "${STAGING_DIR_NATIVE}/usr/etc/gitconfig"
+GIT_CONFIG_PATH = "${STAGING_DIR_NATIVE}/etc"
+GIT_CONFIG = "${GIT_CONFIG_PATH}/gitconfig"
 
 def generate_git_config(e):
         from bb import data
 
         if data.getVar('GIT_CORE_CONFIG', e.data, True):
                 gitconfig_path = e.data.getVar('GIT_CONFIG', True)
-                proxy_command = "    gitproxy = %s\n" % data.getVar('GIT_PROXY_COMMAND', e.data, True)
+                proxy_command = "    gitProxy = %s\n" % data.getVar('OE_GIT_PROXY_COMMAND', e.data, True)
 
-                bb.mkdirhier(bb.data.expand("${STAGING_DIR_NATIVE}/usr/etc/", e.data))
+                bb.mkdirhier(bb.data.expand("${GIT_CONFIG_PATH}", e.data))
                 if (os.path.exists(gitconfig_path)):
                         os.remove(gitconfig_path)
 
@@ -128,7 +129,7 @@ def generate_git_config(e):
                 f.write("[core]\n")
                 ignore_hosts = data.getVar('GIT_PROXY_IGNORE', e.data, True).split()
                 for ignore_host in ignore_hosts:
-                        f.write("    gitproxy = none for %s\n" % ignore_host)
+                        f.write("    gitProxy = none for %s\n" % ignore_host)
                 f.write(proxy_command)
                 f.close
 
