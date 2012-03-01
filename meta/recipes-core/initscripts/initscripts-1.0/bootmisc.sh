@@ -71,7 +71,7 @@ then
 	SYSTEMDATE=`date -u +%4Y%2m%2d%2H%2M`
 	read TIMESTAMP < /etc/timestamp
 	if [ ${TIMESTAMP} -gt $SYSTEMDATE ]; then
-		date -u $TIMESTAMP
+		date -u ${TIMESTAMP#????}${TIMESTAMP%????????}
 		/etc/init.d/hwclock.sh stop
 	fi
 fi
