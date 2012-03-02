@@ -17,7 +17,8 @@ def get_imagecmds(d):
                     types.append(basetype)
                 if basetype not in cimages:
                     cimages[basetype] = []
-                cimages[basetype].append(ctype)
+                if ctype not in cimages[basetype]:
+                    cimages[basetype].append(ctype)
                 break
         if not basetype and type not in types:
             types.append(type)
