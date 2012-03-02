@@ -65,7 +65,7 @@ then
 	exit 1;
 fi
 
-echo "\$target" | grep "@" >& /dev/null
+echo "\$target" | grep "@" 2>&1 > /dev/null
 if [ "x\$?" = "x0" ]
 then
    user=\$(echo \$target | cut -d '@' -f 1)
@@ -73,7 +73,7 @@ then
 else
    user=\$USER
 fi
-ssh \$user@\$target date >& /dev/null
+ssh \$user@\$target date 2>&1 > /dev/null
 if [ "x\$?" != "x0" ]
 then
 	echo "Failed connecting to \$user@\$target it could be because"
