@@ -3,20 +3,24 @@ def get_imagecmds(d):
     old_overrides = d.getVar('OVERRIDES', 0)
 
     alltypes = d.getVar('IMAGE_FSTYPES', True).split()
-    types = d.getVar('IMAGE_FSTYPES', True).split()
+    types = []
     ctypes = d.getVar('COMPRESSIONTYPES', True).split()
     cimages = {}
 
     # Filter out all the compressed images from types
-    for type in types:
+    for type in alltypes:
+        basetype = None
         for ctype in ctypes:
             if type.endswith("." + ctype):
                 basetype = type[:-len("." + ctype)]
-                types[types.index(type)] = basetype
+                if basetype not in types:
+                    types.append(basetype)
                 if basetype not in cimages:
                     cimages[basetype] = []
                 cimages[basetype].append(ctype)
                 break
+        if not basetype and type not in types:
+            types.append(type)
 
     # Live and VMDK images will be processed via inheriting
     # bbclass and does not get processed here.
@@ -33,7 +37,7 @@ def get_imagecmds(d):
     if d.getVar('IMAGE_LINK_NAME', True):
         cmds += "	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.*"
 
-    for type in set(types):
+    for type in types:
         ccmd = []
         subimages = []
         localdata = bb.data.createCopy(d)
