@@ -47,7 +47,7 @@ then
 	echo "Please specify the target machine and remote user in form of user@target"
 	exit 1;
 fi
-ssh \$target ls \$PWD\ >& /dev/null
+ssh \$target ls \$PWD\  2>&1 > /dev/null
 if [ "x\$?" != "x0" ]
 then
 	echo "Failed connecting to \$target it could be because of:"
