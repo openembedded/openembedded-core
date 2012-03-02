@@ -5,14 +5,14 @@ PACKAGES = "\
   g77 g77-symlinks \
   gfortran gfortran-symlinks \
   gcov gcov-symlinks \
+  ${PN}-plugin-dev \
   ${PN}-doc \
   ${PN}-dev \
   ${PN}-dbg \
 "
 
 FILES_${PN} = "\
-  ${bindir}/${TARGET_PREFIX}gcc \
-  ${bindir}/${TARGET_PREFIX}gccbug \
+  ${bindir}/${TARGET_PREFIX}gcc* \
   ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/collect2 \
   ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/cc* \
   ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/lto* \
@@ -28,11 +28,16 @@ INSANE_SKIP_${PN} += "dev-so"
 
 FILES_${PN}-dbg += "\
   ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/.debug/ \
+  ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/plugin/.debug/ \
 "
 FILES_${PN}-dev = "\
-  ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/include/ \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/lib*${SOLIBSDEV} \
   ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/lib*${SOLIBSDEV} \
+"
+FILES_${PN}-plugin-dev = "\
+  ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/include/ \
+  ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/gengtype \
+  ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/gtype.state \
 "
 FILES_${PN}-symlinks = "\
   ${bindir}/cc \
