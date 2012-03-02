@@ -9,7 +9,7 @@ SECTION = "base"
 LICENSE = "GPLv2+ | BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ca0395de9a86191a078b8b79302e3083"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "https://fedorahosted.org/releases/l/i/linux-pam/Linux-PAM-${PV}.tar.bz2 \
            file://99_pam \
@@ -85,10 +85,7 @@ do_install() {
 
 	install -d ${D}${sysconfdir}/pam.d/     
 	install -m 0644 ${WORKDIR}/pam.d/* ${D}${sysconfdir}/pam.d/
-}
 
-pkg_postinst_pam-plugin-unix () {
-    # below is necessary to allow unix_chkpwd get user info from shadow file
-    # on lsb images
-    chmod 4755 ${sbindir}/unix_chkpwd
+    # The lsb requires unix_chkpwd has setuid permission
+    chmod 4755 ${D}${sbindir}/unix_chkpwd
 }
