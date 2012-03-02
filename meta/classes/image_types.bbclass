@@ -84,7 +84,7 @@ def imagetypes_getdepends(d):
         basetype = type
         for ctype in ctypes:
             if type.endswith("." + ctype):
-                basetype = type.rsplit(".", 1)[0]
+                basetype = type[:-len("." + ctype)]
                 adddep(d.getVar("COMPRESS_DEPENDS_%s" % ctype, True), deps)
                 break
         adddep(d.getVar('IMAGE_DEPENDS_%s' % basetype, True) , deps)
