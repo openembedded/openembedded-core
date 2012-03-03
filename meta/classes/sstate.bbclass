@@ -68,13 +68,13 @@ def sstate_state_fromvars(d, task = None):
             bb.fatal("sstate code running without task context?!")
         task = task.replace("_setscene", "")
 
-    name = bb.data.expand(d.getVarFlag("do_" + task, 'sstate-name'), d)
-    inputs = (bb.data.expand(d.getVarFlag("do_" + task, 'sstate-inputdirs') or "", d)).split()
-    outputs = (bb.data.expand(d.getVarFlag("do_" + task, 'sstate-outputdirs') or "", d)).split()
-    plaindirs = (bb.data.expand(d.getVarFlag("do_" + task, 'sstate-plaindirs') or "", d)).split()
-    lockfiles = (bb.data.expand(d.getVarFlag("do_" + task, 'sstate-lockfile') or "", d)).split()
-    lockfilesshared = (bb.data.expand(d.getVarFlag("do_" + task, 'sstate-lockfile-shared') or "", d)).split()
-    interceptfuncs = (bb.data.expand(d.getVarFlag("do_" + task, 'sstate-interceptfuncs') or "", d)).split()
+    name = d.getVarFlag("do_" + task, 'sstate-name', True)
+    inputs = (d.getVarFlag("do_" + task, 'sstate-inputdirs', True) or "").split()
+    outputs = (d.getVarFlag("do_" + task, 'sstate-outputdirs', True) or "").split()
+    plaindirs = (d.getVarFlag("do_" + task, 'sstate-plaindirs', True) or "").split()
+    lockfiles = (d.getVarFlag("do_" + task, 'sstate-lockfile', True) or "").split()
+    lockfilesshared = (d.getVarFlag("do_" + task, 'sstate-lockfile-shared', True) or "").split()
+    interceptfuncs = (d.getVarFlag("do_" + task, 'sstate-interceptfuncs', True) or "").split()
     if not name or len(inputs) != len(outputs):
         bb.fatal("sstate variables not setup correctly?!")
 
