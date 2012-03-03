@@ -46,12 +46,8 @@ python () {
     namemap = []
     for task in unique_tasks:
         namemap.append(d.getVarFlag(task, 'sstate-name'))
-        funcs = d.getVarFlag(task, 'prefuncs') or ""
-        funcs = "sstate_task_prefunc " + funcs
-        d.setVarFlag(task, 'prefuncs', funcs)
-        funcs = d.getVarFlag(task, 'postfuncs') or ""
-        funcs = funcs + " sstate_task_postfunc"
-        d.setVarFlag(task, 'postfuncs', funcs)
+        d.prependVarFlag(task, 'prefuncs', "sstate_task_prefunc ")
+        d.appendVarFlag(task, 'postfuncs', " sstate_task_postfunc")
     d.setVar('SSTATETASKNAMES', " ".join(namemap))
 }
 

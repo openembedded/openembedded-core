@@ -153,12 +153,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 					the_files.append(aux_files_pattern_verbatim % m.group(1))
 			d.setVar('FILES_' + pkg, " ".join(the_files))
 			if extra_depends != '':
-				the_depends = d.getVar('RDEPENDS_' + pkg, True)
-				if the_depends:
-					the_depends = '%s %s' % (the_depends, extra_depends)
-				else:
-					the_depends = extra_depends
-				d.setVar('RDEPENDS_' + pkg, the_depends)
+				d.appendVar('RDEPENDS_' + pkg, ' ' + extra_depends)
 			d.setVar('DESCRIPTION_' + pkg, description % on)
 			if postinst:
 				d.setVar('pkg_postinst_' + pkg, postinst)
@@ -175,15 +170,14 @@ PACKAGE_DEPENDS += "file-native"
 
 python () {
     if d.getVar('PACKAGES', True) != '':
-        deps = d.getVarFlag('do_package', 'depends') or ""
+        deps = ""
         for dep in (d.getVar('PACKAGE_DEPENDS', True) or "").split():
             deps += " %s:do_populate_sysroot" % dep
-        d.setVarFlag('do_package', 'depends', deps)
+        d.appendVarFlag('do_package', 'depends', deps)
 
-        deps = (d.getVarFlag('do_package', 'deptask') or "").split()
         # shlibs requires any DEPENDS to have already packaged for the *.list files
-        deps.append("do_package")
-        d.setVarFlag('do_package', 'deptask', " ".join(deps))
+        d.appendVarFlag('do_package', 'deptask', " do_package")
+
     elif not bb.data.inherits_class('image', d):
         d.setVar("PACKAGERDEPTASK", "")
 }

@@ -308,9 +308,7 @@ python () {
             if not appends:
                 return
             varname = bb.data.expand(varname, d)
-            content = d.getVar(varname, False) or ""
-            content = content + " " + " ".join(appends)
-            d.setVar(varname, content)
+            d.appendVar(varname, " " + " ".join(appends))
 
         extradeps = []
         extrardeps = []
@@ -363,14 +361,10 @@ python () {
     if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
         d.setVarFlag('do_configure', 'umask', 022)
         d.setVarFlag('do_compile', 'umask', 022)
-        deps = (d.getVarFlag('do_install', 'depends') or "").split()
-        deps.append('virtual/fakeroot-native:do_populate_sysroot')
-        d.setVarFlag('do_install', 'depends', " ".join(deps))
+        d.appendVarFlag('do_install', 'depends', ' virtual/fakeroot-native:do_populate_sysroot')
         d.setVarFlag('do_install', 'fakeroot', 1)
         d.setVarFlag('do_install', 'umask', 022)
-        deps = (d.getVarFlag('do_package', 'depends') or "").split()
-        deps.append('virtual/fakeroot-native:do_populate_sysroot')
-        d.setVarFlag('do_package', 'depends', " ".join(deps))
+        d.appendVarFlag('do_package', 'depends', ' virtual/fakeroot-native:do_populate_sysroot')
         d.setVarFlag('do_package', 'fakeroot', 1)
         d.setVarFlag('do_package', 'umask', 022)
         d.setVarFlag('do_package_setscene', 'fakeroot', 1)
@@ -408,40 +402,28 @@ python () {
     srcuri = d.getVar('SRC_URI', 1)
     # Svn packages should DEPEND on subversion-native
     if "svn://" in srcuri:
-        depends = d.getVarFlag('do_fetch', 'depends') or ""
-        depends = depends + " subversion-native:do_populate_sysroot"
-        d.setVarFlag('do_fetch', 'depends', depends)
+        d.appendVarFlag('do_fetch', 'depends', ' subversion-native:do_populate_sysroot')
 
     # Git packages should DEPEND on git-native
     if "git://" in srcuri:
-        depends = d.getVarFlag('do_fetch', 'depends') or ""
-        depends = depends + " git-native:do_populate_sysroot"
-        d.setVarFlag('do_fetch', 'depends', depends)
+        d.appendVarFlag('do_fetch', 'depends', ' git-native:do_populate_sysroot')
 
     # Mercurial packages should DEPEND on mercurial-native
     elif "hg://" in srcuri:
-        depends = d.getVarFlag('do_fetch', 'depends') or ""
-        depends = depends + " mercurial-native:do_populate_sysroot"
-        d.setVarFlag('do_fetch', 'depends', depends)
+        d.appendVarFlag('do_fetch', 'depends', ' mercurial-native:do_populate_sysroot')
 
     # OSC packages should DEPEND on osc-native
     elif "osc://" in srcuri:
-        depends = d.getVarFlag('do_fetch', 'depends') or ""
-        depends = depends + " osc-native:do_populate_sysroot"
-        d.setVarFlag('do_fetch', 'depends', depends)
+        d.appendVarFlag('do_fetch', 'depends', ' osc-native:do_populate_sysroot')
 
     # *.xz should depends on xz-native for unpacking
     # Not endswith because of "*.patch.xz;patch=1". Need bb.decodeurl in future
     if '.xz' in srcuri:
-        depends = d.getVarFlag('do_unpack', 'depends') or ""
-        depends = depends + " xz-native:do_populate_sysroot"
-        d.setVarFlag('do_unpack', 'depends', depends)
+        d.appendVarFlag('do_unpack', 'depends', ' xz-native:do_populate_sysroot')
 
     # unzip-native should already be staged before unpacking ZIP recipes
     if ".zip" in srcuri:
-        depends = d.getVarFlag('do_unpack', 'depends') or ""
-        depends = depends + " unzip-native:do_populate_sysroot"
-        d.setVarFlag('do_unpack', 'depends', depends)
+        d.appendVarFlag('do_unpack', 'depends', ' unzip-native:do_populate_sysroot')
 
     # 'multimachine' handling
     mach_arch = d.getVar('MACHINE_ARCH', 1)

@@ -406,10 +406,8 @@ addtask do_package_write_deb_setscene
 
 python () {
     if d.getVar('PACKAGES', True) != '':
-        deps = (d.getVarFlag('do_package_write_deb', 'depends') or "").split()
-        deps.append('dpkg-native:do_populate_sysroot')
-        deps.append('virtual/fakeroot-native:do_populate_sysroot')
-        d.setVarFlag('do_package_write_deb', 'depends', " ".join(deps))
+        deps = ' dpkg-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot'
+        d.appendVarFlag('do_package_write_deb', 'depends', deps)
         d.setVarFlag('do_package_write_deb', 'fakeroot', "1")
         d.setVarFlag('do_package_write_deb_setscene', 'fakeroot', "1")
 

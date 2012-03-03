@@ -143,10 +143,10 @@ toolchain_create_sdk_version () {
 toolchain_create_sdk_version[vardepsexclude] = "DATETIME"
 
 python __anonymous () {
-    deps = d.getVarFlag('do_configure', 'depends') or ""
+    deps = ""
     for dep in (d.getVar('TOOLCHAIN_NEED_CONFIGSITE_CACHE', True) or "").split():
         deps += " %s:do_populate_sysroot" % dep
     if d.getVar('TCLIBC', True) is "uclibc":
 	deps += "uclibc:do_populate_sysroot"
-    d.setVarFlag('do_configure', 'depends', deps)
+    d.appendVarFlag('do_configure', 'depends', deps)
 }
