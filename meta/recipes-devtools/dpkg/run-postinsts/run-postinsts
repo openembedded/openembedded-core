@@ -8,8 +8,8 @@
 PKGSYSTEM=/var/lib/dpkg
 
 if [ ! -e $PKGSYSTEM/status ]; then
-  if [ -e /usr/lib/opkg/status ]; then
-    PKGSYSTEM=/usr/lib/opkg
+  if [ -e /var/lib/opkg/status ]; then
+    PKGSYSTEM=/var/lib/opkg
   else
     echo "No package system found"
     exit 1

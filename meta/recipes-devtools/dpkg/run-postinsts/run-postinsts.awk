@@ -11,7 +11,7 @@ BEGIN {
   if (rc==0)
     pkgdir="/var/lib/dpkg/info"
   else
-    pkgdir="/usr/lib/opkg/info"
+    pkgdir="/var/lib/opkg/info"
   package=""
 }
 /Package:.*/ {
