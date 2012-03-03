@@ -42,9 +42,9 @@ do_install_prepend () {
 	# this happens at S98 where our good 'ole packages script used to run
 	printf "#!/bin/sh
 dpkg --configure -a
-rm -f ${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
-" > ${D}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
-	chmod 0755 ${D}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}configure
+rm -f ${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
+" > ${D}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
+	chmod 0755 ${D}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
 }
 
 do_install_append () {
