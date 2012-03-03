@@ -1,0 +1,76 @@
+Because the size of "unsigned long" is different between 32-bit
+and 64-bit, judge whether target is 32-bit or 64-bit and tell
+"makekey".
+
+The error information from LSB Test suite is as follow:
+VSW5TESTSUITE PURPOSE 7
+Assertion XStringToKeysym-7.(A)
+When the string argument is the name of a KeySym in the 
+table with the prefix XK_ removed, then a call to
+XStringToKeysym returns that KeySym.
+METH: For each KeySym name in table with code G:
+METH: Call XStringToKeysym to obtain the KeySym defined for that string.
+METH: Verify that XStringToKeysym did not return NoSymbol.
+METH: Verify that the returned string is correct.
+CHECK: XStringToKeysym-7 1, line 130 
+CHECK: XStringToKeysym-7 2, line 140 
+CHECK: XStringToKeysym-7 3, line 150 
+CHECK: XStringToKeysym-7 4, line 160 
+CHECK: XStringToKeysym-7 5, line 170 
+CHECK: XStringToKeysym-7 6, line 180 
+CHECK: XStringToKeysym-7 7, line 190 
+CHECK: XStringToKeysym-7 8, line 200 
+CHECK: XStringToKeysym-7 9, line 210 
+CHECK: XStringToKeysym-7 10, line 220 
+CHECK: XStringToKeysym-7 11, line 230 
+CHECK: XStringToKeysym-7 12, line 240 
+CHECK: XStringToKeysym-7 13, line 250 
+CHECK: XStringToKeysym-7 14, line 260 
+CHECK: XStringToKeysym-7 15, line 270 
+CHECK: XStringToKeysym-7 16, line 280 
+CHECK: XStringToKeysym-7 17, line 290 
+CHECK: XStringToKeysym-7 18, line 300 
+CHECK: XStringToKeysym-7 19, line 310 
+CHECK: XStringToKeysym-7 20, line 320
+
+Upstream-Status: Pending
+
+Signed-off-by: dbuitenh@windriver.com
+
+--- libX11-1.3.4.orig/src/util/makekeys.c	2010-01-15 09:11:36.000000000 +0800
++++ libX11-1.3.4/src/util/makekeys.c	2011-05-24 19:04:25.454774908 +0800
+@@ -33,6 +33,7 @@
+ #include <X11/keysymdef.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <stdint.h>
+ 
+ typedef unsigned long Signature;
+ 
+@@ -124,7 +125,12 @@
+ 	    name = info[i].name;
+ 	    sig = 0;
+ 	    while ((c = *name++))
+-		sig = (sig << 1) + c;
++#ifdef USE32
++		sig = (uint32_t)(sig << 1) + c;
++#else
++		sig = (uint64_t)(sig << 1) + c;
++#endif
++		
+ 	    first = j = sig % z;
+ 	    for (k = 0; tab[j]; k++) {
+ 		j += first + 1;
+@@ -163,7 +169,11 @@
+ 	name = info[i].name;
+ 	sig = 0;
+ 	while ((c = *name++))
+-	    sig = (sig << 1) + c;
++#ifdef USE32
++	    sig = (uint32_t)(sig << 1) + c;
++#else
++	    sig = (uint64_t)(sig << 1) + c;
++#endif
+ 	first = j = sig % z;
+ 	while (offsets[j]) {
+ 	    j += first + 1;
