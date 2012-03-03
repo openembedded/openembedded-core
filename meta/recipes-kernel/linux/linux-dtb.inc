@@ -5,11 +5,11 @@ KERNEL_DEVICETREE_FLAGS = "-R 8 -p 0x3000"
 python __anonymous () {
     import bb
 
-    devicetree = d.getVar("KERNEL_DEVICETREE", 1) or ''
+    devicetree = d.getVar("KERNEL_DEVICETREE", True) or ''
     if devicetree:
-	depends = d.getVar("DEPENDS", 1)
+	depends = d.getVar("DEPENDS", True)
 	d.setVar("DEPENDS", "%s dtc-native" % depends)
-	packages = d.getVar("PACKAGES", 1)
+	packages = d.getVar("PACKAGES", True)
 	d.setVar("PACKAGES", "%s kernel-devicetree" % packages)
 }
 

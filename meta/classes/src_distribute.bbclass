@@ -3,12 +3,12 @@ python do_distribute_sources () {
 	l = bb.data.createCopy(d)
 	bb.data.update_data(l)
 
-	sources_dir = d.getVar('SRC_DISTRIBUTEDIR', 1)
-	src_uri = d.getVar('SRC_URI', 1).split()
+	sources_dir = d.getVar('SRC_DISTRIBUTEDIR', True)
+	src_uri = d.getVar('SRC_URI', True).split()
 	fetcher = bb.fetch2.Fetch(src_uri, d)
 	ud = fetcher.ud
 
-	licenses = d.getVar('LICENSE', 1).replace('&', '|')
+	licenses = d.getVar('LICENSE', True).replace('&', '|')
 	licenses = licenses.replace('(', '').replace(')', '')
 	clean_licenses = ""
 	for x in licenses.split():
@@ -20,7 +20,7 @@ python do_distribute_sources () {
 
 	for license in clean_licenses.split('|'):
 		for url in ud.values():
-			cmd = d.getVar('SRC_DISTRIBUTECOMMAND', 1)
+			cmd = d.getVar('SRC_DISTRIBUTECOMMAND', True)
 			if not cmd:
 				raise bb.build.FuncFailed("Unable to distribute sources, SRC_DISTRIBUTECOMMAND not defined")
 			url.setup_localpath(d)
@@ -29,9 +29,9 @@ python do_distribute_sources () {
 				if url.basename == '*':
 					import os.path
 					dest_dir = os.path.basename(os.path.dirname(os.path.abspath(url.localpath)))
-					d.setVar('DEST', "%s_%s/" % (d.getVar('PF', 1), dest_dir))
+					d.setVar('DEST', "%s_%s/" % (d.getVar('PF', True), dest_dir))
 				else:
-					d.setVar('DEST', "%s_%s" % (d.getVar('PF', 1), url.basename))
+					d.setVar('DEST', "%s_%s" % (d.getVar('PF', True), url.basename))
 			else:
 				d.setVar('DEST', '')
 

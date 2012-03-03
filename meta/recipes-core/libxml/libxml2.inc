@@ -33,7 +33,7 @@ export LDFLAGS += "-ldl"
 
 python populate_packages_prepend () {
 	# autonamer would call this libxml2-2, but we don't want that
-	if d.getVar('DEBIAN_NAMES', 1):
+	if d.getVar('DEBIAN_NAMES', True):
 		d.setVar('PKG_libxml2', '${MLPREFIX}libxml2')
 }
 

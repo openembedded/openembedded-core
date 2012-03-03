@@ -17,7 +17,7 @@ PACKAGE_ARCH = "all"
 # to the list. Their dependencies (RRECOMMENDS) are handled as usual
 # by package_depchains in a following step.
 python () {
-    packages = d.getVar('PACKAGES', 1).split()
+    packages = d.getVar('PACKAGES', True).split()
     genpackages = []
     for pkg in packages:
         for postfix in ['-dbg', '-dev']:

@@ -23,7 +23,7 @@ inherit autotools
 
 python __anonymous () {
     import re
-    host = d.getVar('HOST_SYS', 1)
+    host = d.getVar('HOST_SYS', True)
     if not re.match('i.86.*-linux', host):
         raise bb.parse.SkipPackage("incompatible with host %s" % host)
 }

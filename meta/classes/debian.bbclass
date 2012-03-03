@@ -22,8 +22,8 @@ python () {
 python debian_package_name_hook () {
 	import glob, copy, stat, errno, re
 
-	pkgdest = d.getVar('PKGDEST', 1)
-	packages = d.getVar('PACKAGES', 1)
+	pkgdest = d.getVar('PKGDEST', True)
+	packages = d.getVar('PACKAGES', True)
 	bin_re = re.compile(".*/s?" + os.path.basename(d.getVar("bindir", True)) + "$")
 	lib_re = re.compile(".*/" + os.path.basename(d.getVar("libdir", True)) + "$")
 	so_re = re.compile("lib.*\.so")
@@ -60,7 +60,7 @@ python debian_package_name_hook () {
 				for f in files:
 					if so_re.match(f):
 						fp = os.path.join(root, f)
-						cmd = (d.getVar('BUILD_PREFIX', 1) or "") + "objdump -p " + fp + " 2>/dev/null"
+						cmd = (d.getVar('BUILD_PREFIX', True) or "") + "objdump -p " + fp + " 2>/dev/null"
 						fd = os.popen(cmd)
 						lines = fd.readlines()
 						fd.close()
@@ -74,7 +74,7 @@ python debian_package_name_hook () {
 		if len(sonames) == 1:
 			soname = sonames[0]
 		elif len(sonames) > 1:
-			lead = d.getVar('LEAD_SONAME', 1)
+			lead = d.getVar('LEAD_SONAME', True)
 			if lead:
 				r = re.compile(lead)
 				filtered = []
@@ -117,7 +117,7 @@ python debian_package_name_hook () {
 	# and later
 	# DEBUG: LIBNAMES: pkgname libtic5 devname libtic pkg ncurses-libticw orig_pkg ncurses-libtic debian_pn None newpkg libticw
 	# so we need to handle ncurses-libticw->libticw5 before ncurses-libtic->libtic5
-	for pkg in sorted((d.getVar('AUTO_LIBNAME_PKGS', 1) or "").split(), reverse=True):
+	for pkg in sorted((d.getVar('AUTO_LIBNAME_PKGS', True) or "").split(), reverse=True):
 		auto_libname(packages, pkg)
 }
 

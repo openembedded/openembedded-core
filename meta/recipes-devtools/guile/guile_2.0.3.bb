@@ -31,7 +31,7 @@ BBCLASSEXTEND = "native"
 
 DEPENDS = "libunistring bdwgc gmp libtool libffi"
 # add guile-native only to the target recipe's DEPENDS
-DEPENDS += "${@['guile-native', ''][d.getVar('PN', 1) != 'guile']}"
+DEPENDS += "${@['guile-native', ''][d.getVar('PN', True) != 'guile']}"
 
 EXTRA_OECONF += "${@['--without-libltdl-prefix --without-libgmp-prefix', ''][bb.data.inherits_class('native',d)]}"
 

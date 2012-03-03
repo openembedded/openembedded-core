@@ -1,4 +1,4 @@
-DEPENDS_prepend = "${@["qt4-embedded ", ""][(d.getVar('PN', 1)[:12] == 'qt4-embedded')]}"
+DEPENDS_prepend = "${@["qt4-embedded ", ""][(d.getVar('PN', True)[:12] == 'qt4-embedded')]}"
 
 inherit qmake2
 

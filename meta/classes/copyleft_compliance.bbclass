@@ -69,8 +69,8 @@ python do_prepare_copyleft_sources () {
     else:
         bb.debug(1, 'copyleft: %s is included' % p)
 
-    sources_dir = d.getVar('COPYLEFT_SOURCES_DIR', 1)
-    src_uri = d.getVar('SRC_URI', 1).split()
+    sources_dir = d.getVar('COPYLEFT_SOURCES_DIR', True)
+    src_uri = d.getVar('SRC_URI', True).split()
     fetch = bb.fetch2.Fetch(src_uri, d)
     ud = fetch.ud
 

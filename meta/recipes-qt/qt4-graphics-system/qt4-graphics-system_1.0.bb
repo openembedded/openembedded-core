@@ -9,7 +9,7 @@ QT_GRAPHICS_SYSTEM ?= "raster"
 VIRTUAL-RUNTIME_xserver_common ?= "x11-common"
 
 def _get_extra_rdepends(d):
-    gs = d.getVar('QT_GRAPHICS_SYSTEM', 1)
+    gs = d.getVar('QT_GRAPHICS_SYSTEM', True)
     if gs == "opengl":
         return "qt4-plugin-graphicssystems-glgraphicssystem"
 

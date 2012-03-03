@@ -57,12 +57,12 @@ python build_syslinux_menu () {
 	import copy
 	import sys
 
-	workdir = d.getVar('WORKDIR', 1)
+	workdir = d.getVar('WORKDIR', True)
 	if not workdir:
 		bb.error("WORKDIR is not defined")
 		return
 		
-	labels = d.getVar('LABELS', 1)
+	labels = d.getVar('LABELS', True)
 	if not labels:
 		bb.debug(1, "LABELS not defined, nothing to do")
 		return
@@ -71,7 +71,7 @@ python build_syslinux_menu () {
 		bb.debug(1, "No labels, nothing to do")
 		return
 
-	cfile = d.getVar('SYSLINUXMENU', 1)
+	cfile = d.getVar('SYSLINUXMENU', True)
 	if not cfile:
 		raise bb.build.FuncFailed('Unable to read SYSLINUXMENU')
 
@@ -100,7 +100,7 @@ python build_syslinux_menu () {
 		localdata.setVar('OVERRIDES', label + ':' + overrides)
 		bb.data.update_data(localdata)
 
-		usage = localdata.getVar('USAGE', 1)
+		usage = localdata.getVar('USAGE', True)
 		cfgfile.write('  \x0F\x30\x3E%16s\x0F\x30\x37: ' % (label))
 		cfgfile.write('%s\n' % (usage))
 
@@ -114,12 +114,12 @@ python build_syslinux_cfg () {
 	import copy
 	import sys
 
-	workdir = d.getVar('WORKDIR', 1)
+	workdir = d.getVar('WORKDIR', True)
 	if not workdir:
 		bb.error("WORKDIR not defined, unable to package")
 		return
 		
-	labels = d.getVar('LABELS', 1)
+	labels = d.getVar('LABELS', True)
 	if not labels:
 		bb.debug(1, "LABELS not defined, nothing to do")
 		return
@@ -128,7 +128,7 @@ python build_syslinux_cfg () {
 		bb.debug(1, "No labels, nothing to do")
 		return
 
-	cfile = d.getVar('SYSLINUXCFG', 1)
+	cfile = d.getVar('SYSLINUXCFG', True)
 	if not cfile:
 		raise bb.build.FuncFailed('Unable to read SYSLINUXCFG')
 
@@ -139,7 +139,7 @@ python build_syslinux_cfg () {
 
 	cfgfile.write('# Automatically created by OE\n')
 
-	opts = d.getVar('SYSLINUX_OPTS', 1)
+	opts = d.getVar('SYSLINUX_OPTS', True)
 
 	if opts:
 		for opt in opts.split(';'):
@@ -148,26 +148,26 @@ python build_syslinux_cfg () {
 	cfgfile.write('ALLOWOPTIONS 1\n');
 	cfgfile.write('DEFAULT %s\n' % (labels.split()[0]))
 
-	timeout = d.getVar('SYSLINUX_TIMEOUT', 1)
+	timeout = d.getVar('SYSLINUX_TIMEOUT', True)
 
 	if timeout:
 		cfgfile.write('TIMEOUT %s\n' % timeout)
 	else:
 		cfgfile.write('TIMEOUT 50\n')
 
-	prompt = d.getVar('SYSLINUX_PROMPT', 1)
+	prompt = d.getVar('SYSLINUX_PROMPT', True)
 	if prompt:
 		cfgfile.write('PROMPT %s\n' % prompt)
 	else:
 		cfgfile.write('PROMPT 1\n')
 
-	menu = d.getVar('AUTO_SYSLINUXMENU', 1)
+	menu = d.getVar('AUTO_SYSLINUXMENU', True)
 
 	# This is ugly.  My bad.
 
 	if menu:
 		bb.build.exec_func('build_syslinux_menu', d)
-		mfile = d.getVar('SYSLINUXMENU', 1)
+		mfile = d.getVar('SYSLINUXMENU', True)
 		cfgfile.write('DISPLAY %s\n' % (mfile.split('/')[-1]) )
 	
 	for label in labels.split():
@@ -182,8 +182,8 @@ python build_syslinux_cfg () {
 	
 		cfgfile.write('LABEL %s\nKERNEL /vmlinuz\n' % (label))
 
-		append = localdata.getVar('APPEND', 1)
-		initrd = localdata.getVar('INITRD', 1)
+		append = localdata.getVar('APPEND', True)
+		initrd = localdata.getVar('INITRD', True)
 
 		if append:
 			cfgfile.write('APPEND ')

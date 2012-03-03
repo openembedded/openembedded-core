@@ -1,8 +1,8 @@
 def autotools_dep_prepend(d):
-	if d.getVar('INHIBIT_AUTOTOOLS_DEPS', 1):
+	if d.getVar('INHIBIT_AUTOTOOLS_DEPS', True):
 		return ''
 
-	pn = d.getVar('PN', 1)
+	pn = d.getVar('PN', True)
 	deps = ''
 
 	if pn in ['autoconf-native', 'automake-native', 'help2man-native']:
@@ -13,7 +13,7 @@ def autotools_dep_prepend(d):
 		deps += 'libtool-native '
 		if not bb.data.inherits_class('native', d) \
                         and not bb.data.inherits_class('cross', d) \
-                        and not d.getVar('INHIBIT_DEFAULT_DEPS', 1):
+                        and not d.getVar('INHIBIT_DEFAULT_DEPS', True):
                     deps += 'libtool-cross '
 
 	return deps + 'gnu-config-native '

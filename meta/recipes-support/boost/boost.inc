@@ -51,11 +51,11 @@ python __anonymous () {
 
     packages = []
     extras = []
-    for lib in d.getVar('BOOST_LIBS', 1).split( ):
+    for lib in d.getVar('BOOST_LIBS', True).split( ):
             pkg = "boost-%s" % lib.replace("_", "-")
             extras.append("--with-%s" % lib)
             packages.append(pkg)
-            if not d.getVar("FILES_%s" % pkg, 1):
+            if not d.getVar("FILES_%s" % pkg, True):
                     d.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s*.so.*" % lib)
     d.setVar("BOOST_PACKAGES", " ".join(packages))
     d.setVar("BJAM_EXTRA", " ".join(extras))

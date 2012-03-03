@@ -42,7 +42,7 @@ def relative(src, dest):
 
 def format_display(path, metadata):
     """ Prepare a path for display to the user. """
-    rel = relative(metadata.getVar("TOPDIR", 1), path)
+    rel = relative(metadata.getVar("TOPDIR", True), path)
     if len(rel) > len(path):
         return path
     else:

@@ -126,8 +126,8 @@ python __anonymous () {
 
     import bb
 
-    distro_features = set(d.getVar("DISTRO_FEATURES", 1).split())
-    machine_features= set(d.getVar("MACHINE_FEATURES", 1).split())
+    distro_features = set(d.getVar("DISTRO_FEATURES", True).split())
+    machine_features= set(d.getVar("MACHINE_FEATURES", True).split())
 
     if "bluetooth" in distro_features and not "bluetooth" in machine_features and ("pcmcia" in machine_features or "pci" in machine_features or "usbhost" in machine_features):
 	d.setVar("ADD_BT", "task-base-bluetooth")

@@ -52,10 +52,10 @@ FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/eglibc-${PV}', '${FILE_DIR
 
 python __anonymous () {
     import bb, re
-    uc_os = (re.match('.*uclibc$', d.getVar('TARGET_OS', 1)) != None)
+    uc_os = (re.match('.*uclibc$', d.getVar('TARGET_OS', True)) != None)
     if uc_os:
         raise bb.parse.SkipPackage("incompatible with target %s" %
-                                   d.getVar('TARGET_OS', 1))
+                                   d.getVar('TARGET_OS', True))
 }
 
 export libc_cv_slibdir = "${base_libdir}"

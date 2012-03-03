@@ -1067,7 +1067,7 @@ python emit_pkgdata() {
 		return size
 
 	packages = d.getVar('PACKAGES', True)
-	pkgdest = d.getVar('PKGDEST', 1)
+	pkgdest = d.getVar('PKGDEST', True)
 	pkgdatadir = d.getVar('PKGDESTWORK', True)
 
 	# Take shared lock since we're only reading, not writing

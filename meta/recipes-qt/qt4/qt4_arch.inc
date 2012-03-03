@@ -4,7 +4,7 @@ ARM_INSTRUCTION_SET = "arm"
 
 def qt_arch(d):
     import bb, re
-    arch = d.getVar('TARGET_ARCH', 1)
+    arch = d.getVar('TARGET_ARCH', True)
     if re.match("^i.86$", arch):
         arch = "i386"
     elif re.match("^arm.*", arch):

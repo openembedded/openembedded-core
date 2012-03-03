@@ -41,7 +41,7 @@ PACKAGES_DYNAMIC += "gtk-immodule-* gtk-printbackend-*"
 python populate_packages_prepend () {
 	import os.path
 
-	prologue = d.getVar("postinst_prologue", 1)
+	prologue = d.getVar("postinst_prologue", True)
 
 	gtk_libdir = bb.data.expand('${libdir}/gtk-2.0/${LIBV}', d)
 	immodules_root = os.path.join(gtk_libdir, 'immodules')
@@ -50,6 +50,6 @@ python populate_packages_prepend () {
 	do_split_packages(d, immodules_root, '^im-(.*)\.so$', 'gtk-immodule-%s', 'GTK input module for %s', prologue + 'gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules')
 	do_split_packages(d, printmodules_root, '^libprintbackend-(.*)\.so$', 'gtk-printbackend-%s', 'GTK printbackend module for %s')
 
-        if (d.getVar('DEBIAN_NAMES', 1)):
+        if (d.getVar('DEBIAN_NAMES', True)):
                 d.setVar('PKG_${PN}', '${MLPREFIX}libgtk-2.0')
 }

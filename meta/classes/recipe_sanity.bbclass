@@ -1,5 +1,5 @@
 def __note(msg, d):
-    bb.note("%s: recipe_sanity: %s" % (d.getVar("P", 1), msg))
+    bb.note("%s: recipe_sanity: %s" % (d.getVar("P", True), msg))
 
 __recipe_sanity_badruntimevars = "RDEPENDS RPROVIDES RRECOMMENDS RCONFLICTS"
 def bad_runtime_vars(cfgdata, d):
@@ -7,7 +7,7 @@ def bad_runtime_vars(cfgdata, d):
        bb.data.inherits_class("cross", d):
         return
 
-    for var in d.getVar("__recipe_sanity_badruntimevars", 1).split():
+    for var in d.getVar("__recipe_sanity_badruntimevars", True).split():
         val = d.getVar(var, 0)
         if val and val != cfgdata.get(var):
             __note("%s should be %s_${PN}" % (var, var), d)
@@ -15,17 +15,17 @@ def bad_runtime_vars(cfgdata, d):
 __recipe_sanity_reqvars = "DESCRIPTION"
 __recipe_sanity_reqdiffvars = "LICENSE"
 def req_vars(cfgdata, d):
-    for var in d.getVar("__recipe_sanity_reqvars", 1).split():
+    for var in d.getVar("__recipe_sanity_reqvars", True).split():
         if not d.getVar(var, 0):
             __note("%s should be set" % var, d)
 
-    for var in d.getVar("__recipe_sanity_reqdiffvars", 1).split():
+    for var in d.getVar("__recipe_sanity_reqdiffvars", True).split():
         val = d.getVar(var, 0)
         cfgval = cfgdata.get(var)
 
         # Hardcoding is bad, but I'm lazy.  We don't care about license being
         # unset if the recipe has no sources!
-        if var == "LICENSE" and d.getVar("SRC_URI", 1) == cfgdata.get("SRC_URI"):
+        if var == "LICENSE" and d.getVar("SRC_URI", True) == cfgdata.get("SRC_URI"):
             continue
 
         if not val:
@@ -43,11 +43,11 @@ def var_renames_overwrite(cfgdata, d):
 def incorrect_nonempty_PACKAGES(cfgdata, d):
     if bb.data.inherits_class("native", d) or \
        bb.data.inherits_class("cross", d):
-        if d.getVar("PACKAGES", 1):
+        if d.getVar("PACKAGES", True):
             return True
 
 def can_use_autotools_base(cfgdata, d):
-    cfg = d.getVar("do_configure", 1)
+    cfg = d.getVar("do_configure", True)
     if not bb.data.inherits_class("autotools", d):
         return False
 
@@ -65,10 +65,10 @@ def can_use_autotools_base(cfgdata, d):
 
 def can_remove_FILESPATH(cfgdata, d):
     expected = cfgdata.get("FILESPATH")
-    #expected = "${@':'.join([os.path.normpath(os.path.join(fp, p, o)) for fp in d.getVar('FILESPATHBASE', 1).split(':') for p in d.getVar('FILESPATHPKG', 1).split(':') for o in (d.getVar('OVERRIDES', 1) + ':').split(':') if os.path.exists(os.path.join(fp, p, o))])}:${FILESDIR}"
+    #expected = "${@':'.join([os.path.normpath(os.path.join(fp, p, o)) for fp in d.getVar('FILESPATHBASE', True).split(':') for p in d.getVar('FILESPATHPKG', True).split(':') for o in (d.getVar('OVERRIDES', True) + ':').split(':') if os.path.exists(os.path.join(fp, p, o))])}:${FILESDIR}"
     expectedpaths = bb.data.expand(expected, d)
     unexpanded = d.getVar("FILESPATH", 0)
-    filespath = d.getVar("FILESPATH", 1).split(":")
+    filespath = d.getVar("FILESPATH", True).split(":")
     filespath = [os.path.normpath(f) for f in filespath if os.path.exists(f)]
     for fp in filespath:
         if not fp in expectedpaths:
@@ -79,13 +79,13 @@ def can_remove_FILESPATH(cfgdata, d):
 
 def can_remove_FILESDIR(cfgdata, d):
     expected = cfgdata.get("FILESDIR")
-    #expected = "${@bb.which(d.getVar('FILESPATH', 1), '.')}"
+    #expected = "${@bb.which(d.getVar('FILESPATH', True), '.')}"
     unexpanded = d.getVar("FILESDIR", 0)
     if unexpanded is None:
         return False
 
-    expanded = os.path.normpath(d.getVar("FILESDIR", 1))
-    filespath = d.getVar("FILESPATH", 1).split(":")
+    expanded = os.path.normpath(d.getVar("FILESDIR", True))
+    filespath = d.getVar("FILESPATH", True).split(":")
     filespath = [os.path.normpath(f) for f in filespath if os.path.exists(f)]
 
     return unexpanded != expected and \
@@ -103,7 +103,7 @@ def can_remove_others(p, cfgdata, d):
             continue
 
         try:
-            expanded = d.getVar(k, 1)
+            expanded = d.getVar(k, True)
             cfgexpanded = bb.data.expand(cfgunexpanded, d)
         except bb.fetch.ParameterError:
             continue
@@ -115,8 +115,8 @@ def can_remove_others(p, cfgdata, d):
                        (p, cfgunexpanded, unexpanded, expanded))
 
 python do_recipe_sanity () {
-    p = d.getVar("P", 1)
-    p = "%s %s %s" % (d.getVar("PN", 1), d.getVar("PV", 1), d.getVar("PR", 1))
+    p = d.getVar("P", True)
+    p = "%s %s %s" % (d.getVar("PN", True), d.getVar("PV", True), d.getVar("PR", True))
 
     sanitychecks = [
         (can_remove_FILESDIR, "candidate for removal of FILESDIR"),

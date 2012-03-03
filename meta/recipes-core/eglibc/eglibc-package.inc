@@ -8,10 +8,10 @@
 
 python __anonymous () {
     import bb, re
-    uc_os = (re.match('.*uclibc*', d.getVar('TARGET_OS', 1)) != None)
+    uc_os = (re.match('.*uclibc*', d.getVar('TARGET_OS', True)) != None)
     if uc_os:
         raise bb.parse.SkipPackage("incompatible with target %s" %
-                                   d.getVar('TARGET_OS', 1))
+                                   d.getVar('TARGET_OS', True))
 }
 
 # Set this to zero if you don't want ldconfig in the output package

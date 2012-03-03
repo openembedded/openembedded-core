@@ -27,7 +27,7 @@ def base_detect_branch(d):
 	return "<unknown>"	
 
 def base_get_scmbasepath(d):
-	return d.getVar( 'COREBASE', 1 )
+	return d.getVar( 'COREBASE', True)
 
 def base_get_metadata_monotone_branch(path, d):
 	monotone_branch = "<unknown>"

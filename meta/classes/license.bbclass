@@ -261,7 +261,7 @@ def incompatible_license(d,dont_want_license):
     from fnmatch import fnmatchcase as fnmatch
 
     dont_want_licenses = []
-    dont_want_licenses.append(d.getVar('INCOMPATIBLE_LICENSE', 1))
+    dont_want_licenses.append(d.getVar('INCOMPATIBLE_LICENSE', True))
     if d.getVarFlag('SPDXLICENSEMAP', dont_want_license):
 	dont_want_licenses.append(d.getVarFlag('SPDXLICENSEMAP', dont_want_license))
 

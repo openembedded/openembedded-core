@@ -13,8 +13,8 @@ SRC_URI[sha256sum] = "5e18bff75f01656c64f553412a8905527e1b85efaf3163c6fb81ea5aac
 
 # Strip ${prefix} from ${docdir}, set result into docdir_stripped
 python () {
-    prefix=d.getVar("prefix", 1)
-    docdir=d.getVar("docdir", 1)
+    prefix=d.getVar("prefix", True)
+    docdir=d.getVar("docdir", True)
 
     if not docdir.startswith(prefix):
 	raise bb.build.FuncFailed('docdir must contain prefix as its prefix')

@@ -24,7 +24,7 @@ python do_clean() {
 	bb.note("Removing " + dir)
 	oe.path.remove(dir)
 
-	for f in (d.getVar('CLEANFUNCS', 1) or '').split():
+	for f in (d.getVar('CLEANFUNCS', True) or '').split():
 		bb.build.exec_func(f, d)
 }
 

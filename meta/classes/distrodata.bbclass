@@ -372,7 +372,7 @@ python do_checkpkg() {
 
 		f.close()
 		if status != "ErrHostNoDir" and re.match("Err", status):
-			logpath = d.getVar('LOG_DIR', 1)
+			logpath = d.getVar('LOG_DIR', True)
 			os.system("cp %s %s/" % (f.name, logpath))
 		os.unlink(f.name)
 		return status

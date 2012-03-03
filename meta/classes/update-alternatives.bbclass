@@ -94,22 +94,22 @@ python __anonymous() {
 }
 
 python populate_packages_prepend () {
-	pkg = d.getVar('PN', 1)
+	pkg = d.getVar('PN', True)
 	bb.note('adding update-alternatives calls to postinst/postrm for %s' % pkg)
-	postinst = d.getVar('pkg_postinst_%s' % pkg, 1) or d.getVar('pkg_postinst', 1)
+	postinst = d.getVar('pkg_postinst_%s' % pkg, True) or d.getVar('pkg_postinst', True)
 	if not postinst:
 		postinst = '#!/bin/sh\n'
 	if d.getVar('ALTERNATIVE_LINKS') != None:
-		postinst += d.getVar('update_alternatives_batch_postinst', 1)
+		postinst += d.getVar('update_alternatives_batch_postinst', True)
 	else:
-		postinst += d.getVar('update_alternatives_postinst', 1)
+		postinst += d.getVar('update_alternatives_postinst', True)
 	d.setVar('pkg_postinst_%s' % pkg, postinst)
-	postrm = d.getVar('pkg_postrm_%s' % pkg, 1) or d.getVar('pkg_postrm', 1)
+	postrm = d.getVar('pkg_postrm_%s' % pkg, True) or d.getVar('pkg_postrm', True)
 	if not postrm:
 		postrm = '#!/bin/sh\n'
 	if d.getVar('ALTERNATIVE_LINKS') != None:
-		postrm += d.getVar('update_alternatives_batch_postrm', 1)
+		postrm += d.getVar('update_alternatives_batch_postrm', True)
 	else:
-		postrm += d.getVar('update_alternatives_postrm', 1)
+		postrm += d.getVar('update_alternatives_postrm', True)
 	d.setVar('pkg_postrm_%s' % pkg, postrm)
 }

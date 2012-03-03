@@ -10,9 +10,9 @@ inherit cpan-base
 # libmodule-build-perl)
 #
 def cpan_build_dep_prepend(d):
-	if d.getVar('CPAN_BUILD_DEPS', 1):
+	if d.getVar('CPAN_BUILD_DEPS', True):
 		return ''
-	pn = d.getVar('PN', 1)
+	pn = d.getVar('PN', True)
 	if pn in ['libmodule-build-perl', 'libmodule-build-perl-native']:
 		return ''
 	return 'libmodule-build-perl-native '

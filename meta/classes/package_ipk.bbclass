@@ -15,12 +15,12 @@ python package_ipk_fn () {
 }
 
 python package_ipk_install () {
-	pkg = d.getVar('PKG', 1)
-	pkgfn = d.getVar('PKGFN', 1)
-	rootfs = d.getVar('IMAGE_ROOTFS', 1)
-	ipkdir = d.getVar('DEPLOY_DIR_IPK', 1)
-	stagingdir = d.getVar('STAGING_DIR', 1)
-	tmpdir = d.getVar('TMPDIR', 1)
+	pkg = d.getVar('PKG', True)
+	pkgfn = d.getVar('PKGFN', True)
+	rootfs = d.getVar('IMAGE_ROOTFS', True)
+	ipkdir = d.getVar('DEPLOY_DIR_IPK', True)
+	stagingdir = d.getVar('STAGING_DIR', True)
+	tmpdir = d.getVar('TMPDIR', True)
 
 	if None in (pkg,pkgfn,rootfs):
 		raise bb.build.FuncFailed("missing variables (one or more of PKG, PKGFN, IMAGEROOTFS)")
@@ -289,7 +289,7 @@ python do_package_ipk () {
 
 		localdata.setVar('ROOT', '')
 		localdata.setVar('ROOT_%s' % pkg, root)
-		pkgname = localdata.getVar('PKG_%s' % pkg, 1)
+		pkgname = localdata.getVar('PKG_%s' % pkg, True)
 		if not pkgname:
 			pkgname = pkg
 		localdata.setVar('PKG', pkgname)
@@ -298,7 +298,7 @@ python do_package_ipk () {
 
 		bb.data.update_data(localdata)
 		basedir = os.path.join(os.path.dirname(root))
-		arch = localdata.getVar('PACKAGE_ARCH', 1)
+		arch = localdata.getVar('PACKAGE_ARCH', True)
 		pkgoutdir = "%s/%s" % (outdir, arch)
 		bb.mkdirhier(pkgoutdir)
 		os.chdir(root)
@@ -310,7 +310,7 @@ python do_package_ipk () {
 		except ValueError:
 			pass
 		if not g and localdata.getVar('ALLOW_EMPTY') != "1":
-			bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', 1), localdata.getVar('PKGR', 1)))
+			bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', True), localdata.getVar('PKGR', True)))
 			bb.utils.unlockfile(lf)
 			continue
 
@@ -323,7 +323,7 @@ python do_package_ipk () {
 			raise bb.build.FuncFailed("unable to open control file for writing.")
 
 		fields = []
-		pe = d.getVar('PKGE', 1)
+		pe = d.getVar('PKGE', True)
 		if pe and int(pe) > 0:
 			fields.append(["Version: %s:%s-%s\n", ['PKGE', 'PKGV', 'PKGR']])
 		else:
@@ -340,7 +340,7 @@ python do_package_ipk () {
 		def pullData(l, d):
 			l2 = []
 			for i in l:
-				l2.append(d.getVar(i, 1))
+				l2.append(d.getVar(i, True))
 			return l2
 
 		ctrlfile.write("Package: %s\n" % pkgname)
@@ -369,12 +369,12 @@ python do_package_ipk () {
 
 		bb.build.exec_func("mapping_rename_hook", localdata)
 
-		rdepends = bb.utils.explode_dep_versions(localdata.getVar("RDEPENDS", 1) or "")
-		rrecommends = bb.utils.explode_dep_versions(localdata.getVar("RRECOMMENDS", 1) or "")
-		rsuggests = bb.utils.explode_dep_versions(localdata.getVar("RSUGGESTS", 1) or "")
-		rprovides = bb.utils.explode_dep_versions(localdata.getVar("RPROVIDES", 1) or "")
-		rreplaces = bb.utils.explode_dep_versions(localdata.getVar("RREPLACES", 1) or "")
-		rconflicts = bb.utils.explode_dep_versions(localdata.getVar("RCONFLICTS", 1) or "")
+		rdepends = bb.utils.explode_dep_versions(localdata.getVar("RDEPENDS", True) or "")
+		rrecommends = bb.utils.explode_dep_versions(localdata.getVar("RRECOMMENDS", True) or "")
+		rsuggests = bb.utils.explode_dep_versions(localdata.getVar("RSUGGESTS", True) or "")
+		rprovides = bb.utils.explode_dep_versions(localdata.getVar("RPROVIDES", True) or "")
+		rreplaces = bb.utils.explode_dep_versions(localdata.getVar("RREPLACES", True) or "")
+		rconflicts = bb.utils.explode_dep_versions(localdata.getVar("RCONFLICTS", True) or "")
 
 		if rdepends:
 			ctrlfile.write("Depends: %s\n" % bb.utils.join_deps(rdepends))
@@ -388,14 +388,14 @@ python do_package_ipk () {
 			ctrlfile.write("Replaces: %s\n" % bb.utils.join_deps(rreplaces))
 		if rconflicts:
 			ctrlfile.write("Conflicts: %s\n" % bb.utils.join_deps(rconflicts))
-		src_uri = localdata.getVar("SRC_URI", 1)
+		src_uri = localdata.getVar("SRC_URI", True)
 		if src_uri:
 			src_uri = re.sub("\s+", " ", src_uri)
 			ctrlfile.write("Source: %s\n" % " ".join(src_uri.split()))
 		ctrlfile.close()
 
 		for script in ["preinst", "postinst", "prerm", "postrm"]:
-			scriptvar = localdata.getVar('pkg_%s' % script, 1)
+			scriptvar = localdata.getVar('pkg_%s' % script, True)
 			if not scriptvar:
 				continue
 			try:
@@ -407,7 +407,7 @@ python do_package_ipk () {
 			scriptfile.close()
 			os.chmod(os.path.join(controldir, script), 0755)
 
-		conffiles_str = localdata.getVar("CONFFILES", 1)
+		conffiles_str = localdata.getVar("CONFFILES", True)
 		if conffiles_str:
 			try:
 				conffiles = file(os.path.join(controldir, 'conffiles'), 'w')
@@ -419,7 +419,7 @@ python do_package_ipk () {
 			conffiles.close()
 
 		os.chdir(basedir)
-		ret = os.system("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH", 1), 
+		ret = os.system("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH", True), 
                                                           d.getVar("OPKGBUILDCMD",1), pkg, pkgoutdir))
 		if ret != 0:
 			bb.utils.unlockfile(lf)

@@ -50,7 +50,7 @@ RDEPENDS_task-core-sdk = "\
 
 #python generate_sdk_pkgs () {
 #    poky_pkgs = read_pkgdata('task-core', d)['PACKAGES']
-#    pkgs = d.getVar('PACKAGES', 1).split()
+#    pkgs = d.getVar('PACKAGES', True).split()
 #    for pkg in poky_pkgs.split():
 #        newpkg = pkg.replace('task-core', 'task-core-sdk')
 #

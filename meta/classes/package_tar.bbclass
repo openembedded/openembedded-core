@@ -9,9 +9,9 @@ python package_tar_fn () {
 }
 
 python package_tar_install () {
-	pkg = d.getVar('PKG', 1)
-	pkgfn = d.getVar('PKGFN', 1)
-	rootfs = d.getVar('IMAGE_ROOTFS', 1)
+	pkg = d.getVar('PKG', True)
+	pkgfn = d.getVar('PKGFN', True)
+	rootfs = d.getVar('IMAGE_ROOTFS', True)
 
 	if None in (pkg,pkgfn,rootfs):
 		bb.error("missing variables (one or more of PKG, PKGFN, IMAGEROOTFS)")
@@ -35,24 +35,24 @@ python package_tar_install () {
 }
 
 python do_package_tar () {
-	workdir = d.getVar('WORKDIR', 1)
+	workdir = d.getVar('WORKDIR', True)
 	if not workdir:
 		bb.error("WORKDIR not defined, unable to package")
 		return
 
-	outdir = d.getVar('DEPLOY_DIR_TAR', 1)
+	outdir = d.getVar('DEPLOY_DIR_TAR', True)
 	if not outdir:
 		bb.error("DEPLOY_DIR_TAR not defined, unable to package")
 		return
 	bb.mkdirhier(outdir)
 
-	dvar = d.getVar('D', 1)
+	dvar = d.getVar('D', True)
 	if not dvar:
 		bb.error("D not defined, unable to package")
 		return
 	bb.mkdirhier(dvar)
 
-	packages = d.getVar('PACKAGES', 1)
+	packages = d.getVar('PACKAGES', True)
 	if not packages:
 		bb.debug(1, "PACKAGES not defined, nothing to package")
 		return
@@ -79,11 +79,11 @@ python do_package_tar () {
 		pkgoutdir = outdir
 		bb.mkdirhier(pkgoutdir)
 		bb.build.exec_func('package_tar_fn', localdata)
-		tarfn = localdata.getVar('PKGFN', 1)
+		tarfn = localdata.getVar('PKGFN', True)
 		os.chdir(root)
 		from glob import glob
 		if not glob('*'):
-			bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', 1), localdata.getVar('PKGR', 1)))
+			bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', True), localdata.getVar('PKGR', True)))
 			continue
 		ret = os.system("tar -czf %s %s" % (tarfn, '.'))
 		if ret != 0:

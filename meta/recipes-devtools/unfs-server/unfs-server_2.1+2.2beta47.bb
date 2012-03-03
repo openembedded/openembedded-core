@@ -70,7 +70,7 @@ do_configure_prepend () {
 python __anonymous () {
     import re
 
-    pn = d.getVar("PN", 1)
+    pn = d.getVar("PN", True)
     if not pn.endswith('-native') and not pn.endswith('-nativesdk'):
         raise bb.parse.SkipPackage("unfs-server is intended for native/nativesdk builds only")
 }

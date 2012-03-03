@@ -35,7 +35,7 @@ def map_uclibc_arch(a, d):
 	"""Return the uClibc architecture for the given TARGET_ARCH."""
 	import re
 
-	valid_archs = d.getVar('valid_archs', 1).split()
+	valid_archs = d.getVar('valid_archs', True).split()
 
 	if   re.match('^(arm|sa110).*', a):	return 'arm'
 	elif re.match('^(i.86|athlon)$', a):	return 'i386'
@@ -50,14 +50,14 @@ def map_uclibc_arch(a, d):
 	else:
 		bb.error("cannot map '%s' to a uClibc architecture" % a)
 
-export UCLIBC_ARCH = "${@map_uclibc_arch(d.getVar('TARGET_ARCH', 1), d)}"
+export UCLIBC_ARCH = "${@map_uclibc_arch(d.getVar('TARGET_ARCH', True), d)}"
 
 def map_uclibc_abi(o, d):
 	"""Return the uClibc ABI for the given TARGET_OS."""
 	import re
 
-	arch = d.getVar('TARGET_ARCH', 1)
-	if   map_uclibc_arch(d.getVar('TARGET_ARCH', 1), d) == "arm":
+	arch = d.getVar('TARGET_ARCH', True)
+	if   map_uclibc_arch(d.getVar('TARGET_ARCH', True), d) == "arm":
 		if re.match('.*eabi$', o): return 'ARM_EABI'
 		else:                    return 'ARM_OABI'
 	# FIXME: This is inaccurate! Handle o32, n32, n64
@@ -65,7 +65,7 @@ def map_uclibc_abi(o, d):
 	elif re.match('^mips.*', arch):    return 'MIPS_O32_ABI'
 	return ""
 
-export UCLIBC_ABI = "${@map_uclibc_abi(d.getVar('TARGET_OS', 1), d)}"
+export UCLIBC_ABI = "${@map_uclibc_abi(d.getVar('TARGET_OS', True), d)}"
 
 def map_uclibc_endian(a, d):
 	"""Return the uClibc endianess for the given TARGET_ARCH."""
@@ -79,7 +79,7 @@ def map_uclibc_endian(a, d):
 		return 'BIG'
 	return 'LITTLE'
 
-export UCLIBC_ENDIAN = "${@map_uclibc_endian(d.getVar('TARGET_ARCH', 1), d)}"
+export UCLIBC_ENDIAN = "${@map_uclibc_endian(d.getVar('TARGET_ARCH', True), d)}"
 
 # internal helper
 def uclibc_cfg(feature, features, tokens, cnf, rem):

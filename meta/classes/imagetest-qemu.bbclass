@@ -35,12 +35,12 @@ def qemuimagetest_main(d):
     
     casestr = re.compile(r'(?P<scen>\w+\b):(?P<case>\S+$)')
     resultstr = re.compile(r'\s*(?P<case>\w+)\s*(?P<pass>\d+)\s*(?P<fail>\d+)\s*(?P<noresult>\d+)')
-    machine = d.getVar('MACHINE', 1)
-    pname = d.getVar('PN', 1)
+    machine = d.getVar('MACHINE', True)
+    pname = d.getVar('PN', True)
     
     """function to save test cases running status"""
     def teststatus(test, status, index, length):
-        test_status = d.getVar('TEST_STATUS', 1)
+        test_status = d.getVar('TEST_STATUS', True)
         if not os.path.exists(test_status):
             raise bb.build.FuncFailed("No test status file existing under TEST_TMP")
 
@@ -51,13 +51,13 @@ def qemuimagetest_main(d):
 
     """funtion to run each case under scenario"""
     def runtest(scen, case, fulltestpath):
-        resultpath = d.getVar('TEST_RESULT', 1)
-        tmppath = d.getVar('TEST_TMP', 1)
+        resultpath = d.getVar('TEST_RESULT', True)
+        tmppath = d.getVar('TEST_TMP', True)
 
         """initialize log file for testcase"""
-        logpath = d.getVar('TEST_LOG', 1)
+        logpath = d.getVar('TEST_LOG', True)
         bb.utils.mkdirhier("%s/%s" % (logpath, scen))
-        caselog = os.path.join(logpath, "%s/log_%s.%s" % (scen, case, d.getVar('DATETIME', 1)))
+        caselog = os.path.join(logpath, "%s/log_%s.%s" % (scen, case, d.getVar('DATETIME', True)))
         os.system("touch %s" % caselog)
         
         """export TEST_TMP, TEST_RESULT, DEPLOY_DIR and QEMUARCH"""
@@ -141,7 +141,7 @@ def qemuimagetest_main(d):
 
     """Clean tmp folder for testing"""
     def clean_tmp():
-        tmppath = d.getVar('TEST_TMP', 1)
+        tmppath = d.getVar('TEST_TMP', True)
 
         if os.path.isdir(tmppath):
             for f in os.listdir(tmppath):
@@ -155,28 +155,28 @@ def qemuimagetest_main(d):
     clean_tmp()
 
     """check testcase folder and create test log folder"""
-    testpath = d.getVar('TEST_DIR', 1)
+    testpath = d.getVar('TEST_DIR', True)
     bb.utils.mkdirhier(testpath)
     
-    logpath = d.getVar('TEST_LOG', 1)
+    logpath = d.getVar('TEST_LOG', True)
     bb.utils.mkdirhier(logpath)
 
-    tmppath = d.getVar('TEST_TMP', 1)
+    tmppath = d.getVar('TEST_TMP', True)
     bb.utils.mkdirhier(tmppath)
 
     """initialize test status file"""
-    test_status = d.getVar('TEST_STATUS', 1)
+    test_status = d.getVar('TEST_STATUS', True)
     if os.path.exists(test_status):
         os.remove(test_status)
     os.system("touch %s" % test_status)
 
     """initialize result file"""
-    resultpath = d.getVar('TEST_RESULT', 1)
+    resultpath = d.getVar('TEST_RESULT', True)
     bb.utils.mkdirhier(resultpath)
-    resultfile = os.path.join(resultpath, "testresult.%s" % d.getVar('DATETIME', 1))
+    resultfile = os.path.join(resultpath, "testresult.%s" % d.getVar('DATETIME', True))
     sresultfile = os.path.join(resultpath, "testresult.log")
 
-    machine = d.getVar('MACHINE', 1)
+    machine = d.getVar('MACHINE', True)
 
     if os.path.exists(sresultfile):
         os.remove(sresultfile)
@@ -188,7 +188,7 @@ def qemuimagetest_main(d):
     f.close()
     
     """generate pre-defined testcase list"""
-    testlist = d.getVar('TEST_SCEN', 1)
+    testlist = d.getVar('TEST_SCEN', True)
     fulllist = generate_list(testlist)
 
     """Begin testing"""

@@ -10,13 +10,13 @@ python populate_packages_prepend () {
 	do_split_packages(d, gst_libdir, 'libgst(.*)\.la$', bb.data.expand('${PN}-%s-dev', d), 'GStreamer plugin for %s (development files)', extra_depends=bb.data.expand('${PN}-dev',d))
 	do_split_packages(d, gst_libdir, 'libgst(.*)\.a$', bb.data.expand('${PN}-%s-staticdev', d), 'GStreamer plugin for %s (static development files)', extra_depends=bb.data.expand('${PN}-staticdev',d))
 	
-	pn = d.getVar('PN', 1)
+	pn = d.getVar('PN', True)
 	metapkg =  pn + '-meta'
 	d.setVar('ALLOW_EMPTY_' + metapkg, "1")
 	d.setVar('FILES_' + metapkg, "")
 	blacklist = [ pn + '-locale', pn + '-dev', pn + '-dbg', pn + '-doc' ]
 	metapkg_rdepends = []
-	packages = d.getVar('PACKAGES', 1).split()
+	packages = d.getVar('PACKAGES', True).split()
 	for pkg in packages[1:]:
 		if not pkg in blacklist and not pkg in metapkg_rdepends and not pkg.endswith('-dev') and not pkg.endswith('-dbg') and not pkg.count('locale') and not pkg.count('-staticdev'):
 			metapkg_rdepends.append(pkg)

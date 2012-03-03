@@ -98,15 +98,15 @@ python () {
 # is searched for in the BBPATH (same as the old version.)
 #
 def get_devtable_list(d):
-    devtable = d.getVar('IMAGE_DEVICE_TABLE', 1)
+    devtable = d.getVar('IMAGE_DEVICE_TABLE', True)
     if devtable != None:
         return devtable
     str = ""
-    devtables = d.getVar('IMAGE_DEVICE_TABLES', 1)
+    devtables = d.getVar('IMAGE_DEVICE_TABLES', True)
     if devtables == None:
         devtables = 'files/device_table-minimal.txt'
     for devtable in devtables.split():
-        str += " %s" % bb.which(d.getVar('BBPATH', 1), devtable)
+        str += " %s" % bb.which(d.getVar('BBPATH', True), devtable)
     return str
 
 IMAGE_CLASSES ?= "image_types"
@@ -119,7 +119,7 @@ ROOTFS_POSTPROCESS_COMMAND ?= ""
 # some default locales
 IMAGE_LINGUAS ?= "de-de fr-fr en-gb"
 
-LINGUAS_INSTALL ?= "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('IMAGE_LINGUAS', 1).split()))}"
+LINGUAS_INSTALL ?= "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('IMAGE_LINGUAS', True).split()))}"
 
 PSEUDO_PASSWD = "${IMAGE_ROOTFS}"
 
