@@ -26,15 +26,15 @@ def read_pkgdatafile(fn):
     return pkgdata
 
 def get_subpkgedata_fn(pkg, d):
-    archs = bb.data.expand("${PACKAGE_ARCHS}", d).split(" ")
+    archs = d.expand("${PACKAGE_ARCHS}").split(" ")
     archs.reverse()
-    pkgdata = bb.data.expand('${TMPDIR}/pkgdata/', d)
-    targetdir = bb.data.expand('${TARGET_VENDOR}-${TARGET_OS}/runtime/', d)
+    pkgdata = d.expand('${TMPDIR}/pkgdata/')
+    targetdir = d.expand('${TARGET_VENDOR}-${TARGET_OS}/runtime/')
     for arch in archs:
         fn = pkgdata + arch + targetdir + pkg
         if os.path.exists(fn):
             return fn
-    return bb.data.expand('${PKGDATA_DIR}/runtime/%s' % pkg, d)
+    return d.expand('${PKGDATA_DIR}/runtime/%s' % pkg)
 
 def has_subpkgdata(pkg, d):
     return os.access(get_subpkgedata_fn(pkg, d), os.R_OK)
@@ -43,11 +43,11 @@ def read_subpkgdata(pkg, d):
     return read_pkgdatafile(get_subpkgedata_fn(pkg, d))
 
 def has_pkgdata(pn, d):
-    fn = bb.data.expand('${PKGDATA_DIR}/%s' % pn, d)
+    fn = d.expand('${PKGDATA_DIR}/%s' % pn)
     return os.access(fn, os.R_OK)
 
 def read_pkgdata(pn, d):
-    fn = bb.data.expand('${PKGDATA_DIR}/%s' % pn, d)
+    fn = d.expand('${PKGDATA_DIR}/%s' % pn)
     return read_pkgdatafile(fn)
 
 #

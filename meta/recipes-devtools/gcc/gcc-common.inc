@@ -79,7 +79,7 @@ do_clean[lockfiles] = "${SW}.clean.lock"
 
 python workshared_clean () {
 	"""clear the source directory"""
-	dir = bb.data.expand("${SW}", d)
+	dir = d.expand("${SW}")
 	bb.note("Removing " + dir)
 	oe.path.remove(dir)
 

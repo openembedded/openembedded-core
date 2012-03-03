@@ -52,7 +52,7 @@ fi
 python populate_packages_prepend () {
 	prologue = d.getVar("postinst_prologue", True)
 
-	modules_root = bb.data.expand('${libdir}/pango/${LIBV}/modules', d)
+	modules_root = d.expand('${libdir}/pango/${LIBV}/modules')
 
 	do_split_packages(d, modules_root, '^pango-(.*)\.so$', 'pango-module-%s', 'Pango module %s', prologue + 'pango-querymodules > /etc/pango/pango.modules')
 }

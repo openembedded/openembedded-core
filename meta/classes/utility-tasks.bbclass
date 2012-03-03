@@ -16,7 +16,7 @@ addtask clean
 do_clean[nostamp] = "1"
 python do_clean() {
 	"""clear the build and temp directories"""
-	dir = bb.data.expand("${WORKDIR}", d)
+	dir = d.expand("${WORKDIR}")
 	bb.note("Removing " + dir)
 	oe.path.remove(dir)
 

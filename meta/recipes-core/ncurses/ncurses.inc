@@ -178,8 +178,8 @@ do_install() {
 }
 
 python populate_packages_prepend () {
-        base_libdir = bb.data.expand("${base_libdir}", d)
-        pnbase = bb.data.expand("${PN}-lib%s", d)
+        base_libdir = d.expand("${base_libdir}")
+        pnbase = d.expand("${PN}-lib%s")
         do_split_packages(d, base_libdir, '^lib(.*)\.so\..*', pnbase, 'ncurses %s library', prepend=True, extra_depends = '', allow_links=True)
 }
 

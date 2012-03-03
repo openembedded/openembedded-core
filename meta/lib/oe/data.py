@@ -7,7 +7,7 @@ def typed_value(key, d):
     var_type = d.getVarFlag(key, 'type')
     flags = d.getVarFlags(key)
     if flags is not None:
-        flags = dict((flag, bb.data.expand(value, d))
+        flags = dict((flag, d.expand(value))
                      for flag, value in flags.iteritems())
     else:
         flags = {}

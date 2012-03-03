@@ -61,9 +61,9 @@ python populate_packages_prepend () {
 		d.setVar('FILES_' + pn, nf)
 
 	dvar = bb.data.expand('${WORKDIR}/package', d, True)
-	pam_libdir = bb.data.expand('${base_libdir}/security', d)
-	pam_sbindir = bb.data.expand('${sbindir}', d)
-	pam_filterdir = bb.data.expand('${base_libdir}/security/pam_filter', d)
+	pam_libdir = d.expand('${base_libdir}/security')
+	pam_sbindir = d.expand('${sbindir}')
+	pam_filterdir = d.expand('${base_libdir}/security/pam_filter')
 
 	do_split_packages(d, pam_libdir, '^pam(.*)\.so$', 'pam-plugin%s', 'PAM plugin for %s', extra_depends='')
 	pam_plugin_append_file('pam-plugin-unix', pam_sbindir, 'unix_chkpwd')

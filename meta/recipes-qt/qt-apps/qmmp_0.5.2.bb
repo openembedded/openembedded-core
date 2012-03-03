@@ -31,8 +31,8 @@ PACKAGES_DYNAMIC = "qmmp-plugin-* "
 
 python populate_packages_prepend () {
 	import os
-	qmmp_libdir = bb.data.expand('${libdir}/qmmp', d)
-	gd = bb.data.expand('${D}/${libdir}/qmmp', d)
+	qmmp_libdir = d.expand('${libdir}/qmmp')
+	gd = d.expand('${D}/${libdir}/qmmp')
 	plug_dirs = os.listdir(gd)
 
 	for plug_dir in plug_dirs:

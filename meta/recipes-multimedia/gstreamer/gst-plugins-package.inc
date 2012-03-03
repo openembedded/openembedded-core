@@ -1,14 +1,14 @@
 LIBV = "0.10"
 
 python populate_packages_prepend () {
-	gst_libdir = bb.data.expand('${libdir}/gstreamer-${LIBV}', d)
+	gst_libdir = d.expand('${libdir}/gstreamer-${LIBV}')
 	postinst = d.getVar('plugin_postinst', True)
 	glibdir = d.getVar('libdir', True)
 
 	do_split_packages(d, glibdir, '^lib(.*)\.so\.*', 'lib%s', 'gstreamer %s library', extra_depends='', allow_links=True)
-	do_split_packages(d, gst_libdir, 'libgst(.*)\.so$', bb.data.expand('${PN}-%s', d), 'GStreamer plugin for %s', postinst=postinst, extra_depends=bb.data.expand('${PN}',d))
-	do_split_packages(d, gst_libdir, 'libgst(.*)\.la$', bb.data.expand('${PN}-%s-dev', d), 'GStreamer plugin for %s (development files)', extra_depends=bb.data.expand('${PN}-dev',d))
-	do_split_packages(d, gst_libdir, 'libgst(.*)\.a$', bb.data.expand('${PN}-%s-staticdev', d), 'GStreamer plugin for %s (static development files)', extra_depends=bb.data.expand('${PN}-staticdev',d))
+	do_split_packages(d, gst_libdir, 'libgst(.*)\.so$', d.expand('${PN}-%s'), 'GStreamer plugin for %s', postinst=postinst, extra_depends=d.expand('${PN}'))
+	do_split_packages(d, gst_libdir, 'libgst(.*)\.la$', d.expand('${PN}-%s-dev'), 'GStreamer plugin for %s (development files)', extra_depends=d.expand('${PN}-dev'))
+	do_split_packages(d, gst_libdir, 'libgst(.*)\.a$', d.expand('${PN}-%s-staticdev'), 'GStreamer plugin for %s (static development files)', extra_depends=d.expand('${PN}-staticdev'))
 	
 	pn = d.getVar('PN', True)
 	metapkg =  pn + '-meta'

@@ -39,7 +39,7 @@ def icecc_dep_prepend(d):
 DEPENDS_prepend += "${@icecc_dep_prepend(d)} "
 
 def get_cross_kernel_cc(bb,d):
-    kernel_cc = bb.data.expand('${KERNEL_CC}', d)
+    kernel_cc = d.expand('${KERNEL_CC}')
     kernel_cc = kernel_cc.replace('ccache', '').strip()
     kernel_cc = kernel_cc.split(' ')[0]
     kernel_cc = kernel_cc.strip()
@@ -49,7 +49,7 @@ def create_path(compilers, bb, d):
     """
     Create Symlinks for the icecc in the staging directory
     """
-    staging = os.path.join(bb.data.expand('${STAGING_BINDIR}', d), "ice")
+    staging = os.path.join(d.expand('${STAGING_BINDIR}'), "ice")
     if icc_is_kernel(bb, d):
         staging += "-kernel"
 
@@ -78,7 +78,7 @@ def create_path(compilers, bb, d):
     return staging
 
 def use_icc(bb,d):
-    package_tmp = bb.data.expand('${PN}', d)
+    package_tmp = d.expand('${PN}')
 
     system_class_blacklist = [ "none" ] 
     user_class_blacklist = (d.getVar('ICECC_USER_CLASS_BL') or "none").split()
@@ -101,7 +101,7 @@ def use_icc(bb,d):
             return "no"
 
     if d.getVar('PARALLEL_MAKE') == "":
-        bb.note(package_tmp, " ", bb.data.expand('${PV}', d), " has empty PARALLEL_MAKE, disable icecc")
+        bb.note(package_tmp, " ", d.expand('${PV}'), " has empty PARALLEL_MAKE, disable icecc")
         return "no"
 
     return "yes"
@@ -124,19 +124,19 @@ def icc_version(bb, d):
 
     if icc_is_native(bb, d):
         archive_name = "local-host-env"
-    elif bb.data.expand('${HOST_PREFIX}', d) == "":
-        bb.fatal(bb.data.expand("${PN}", d), " NULL prefix")
+    elif d.expand('${HOST_PREFIX}') == "":
+        bb.fatal(d.expand("${PN}"), " NULL prefix")
     else:
-        prefix = bb.data.expand('${HOST_PREFIX}' , d)
-        distro = bb.data.expand('${DISTRO}', d)
-        target_sys = bb.data.expand('${TARGET_SYS}', d)
+        prefix = d.expand('${HOST_PREFIX}' )
+        distro = d.expand('${DISTRO}')
+        target_sys = d.expand('${TARGET_SYS}')
         float = d.getVar('TARGET_FPU') or "hard"
         archive_name = prefix + distro + "-"        + target_sys + "-" + float
         if icc_is_kernel(bb, d):
             archive_name += "-kernel"
 
     import socket
-    ice_dir = bb.data.expand('${STAGING_DIR_NATIVE}${prefix_native}', d)
+    ice_dir = d.expand('${STAGING_DIR_NATIVE}${prefix_native}')
     tar_file = os.path.join(ice_dir, 'ice', archive_name + "-@VERSION@-" + socket.gethostname() + '.tar.gz')
 
     return tar_file
@@ -146,7 +146,7 @@ def icc_path(bb,d):
         return create_path( [get_cross_kernel_cc(bb,d), ], bb, d)
 
     else:
-        prefix = bb.data.expand('${HOST_PREFIX}', d)
+        prefix = d.expand('${HOST_PREFIX}')
         return create_path( [prefix+"gcc", prefix+"g++"], bb, d)      
 
 def icc_get_tool(bb, d, tool):
@@ -155,8 +155,8 @@ def icc_get_tool(bb, d, tool):
     elif icc_is_kernel(bb, d):
         return os.popen("which %s" % get_cross_kernel_cc(bb, d)).read()[:-1]
     else:
-        ice_dir = bb.data.expand('${STAGING_BINDIR_TOOLCHAIN}', d)
-        target_sys = bb.data.expand('${TARGET_SYS}',  d)
+        ice_dir = d.expand('${STAGING_BINDIR_TOOLCHAIN}')
+        target_sys = d.expand('${TARGET_SYS}')
         return os.path.join(ice_dir, "%s-%s" % (target_sys, tool))
 
 set_icecc_env() {

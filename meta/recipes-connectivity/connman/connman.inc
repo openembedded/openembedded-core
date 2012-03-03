@@ -75,8 +75,8 @@ python populate_packages_prepend() {
 	packages = []
 	multilib_prefix = (d.getVar("MLPREFIX", True) or "")
 	hook = lambda file,pkg,b,c,d:packages.append((file,pkg))
-	plugin_dir = bb.data.expand('${libdir}/connman/plugins/', d)
-	plugin_name = bb.data.expand('${PN}-plugin-%s', d)
+	plugin_dir = d.expand('${libdir}/connman/plugins/')
+	plugin_name = d.expand('${PN}-plugin-%s')
 	do_split_packages(d, plugin_dir, '^(.*).so$', plugin_name, '${PN} plugin for %s', extra_depends='', hook=hook )
 	for (file, package) in packages:
 		plugintype = package.split( '-' )[-1]

@@ -92,7 +92,7 @@ def populate_toolchain_links(d):
     d = d.createCopy()
     d.finalize()
 
-    pattern = bb.data.expand('${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}*', d)
+    pattern = d.expand('${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}*')
     files = glob(pattern)
     if not files:
         bb.fatal("Unable to populate toolchain binary symlinks")

@@ -20,7 +20,7 @@ python do_package_deb_install () {
     pkgfn = d.getVar('PKGFN', True)
     rootfs = d.getVar('IMAGE_ROOTFS', True)
     debdir = d.getVar('DEPLOY_DIR_DEB', True)
-    apt_config = bb.data.expand('${STAGING_ETCDIR_NATIVE}/apt/apt.conf', d)
+    apt_config = d.expand('${STAGING_ETCDIR_NATIVE}/apt/apt.conf')
     stagingbindir = d.getVar('STAGING_BINDIR_NATIVE', True)
     tmpdir = d.getVar('TMPDIR', True)
 

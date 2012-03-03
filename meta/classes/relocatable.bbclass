@@ -7,9 +7,9 @@ def process_dir (directory, d):
     import subprocess as sub
     import stat
 
-    cmd = bb.data.expand('${CHRPATH_BIN}', d)
+    cmd = d.expand('${CHRPATH_BIN}')
     tmpdir = d.getVar('TMPDIR')
-    basedir = bb.data.expand('${base_prefix}', d)
+    basedir = d.expand('${base_prefix}')
 
     #bb.debug("Checking %s for binaries to process" % directory)
     if not os.path.exists(directory):
@@ -82,7 +82,7 @@ def process_dir (directory, d):
                 os.chmod(fpath, perms)
 
 def rpath_replace (path, d):
-    bindirs = bb.data.expand("${bindir} ${sbindir} ${base_sbindir} ${base_bindir} ${libdir} ${base_libdir} ${libexecdir} ${PREPROCESS_RELOCATE_DIRS}", d).split()
+    bindirs = d.expand("${bindir} ${sbindir} ${base_sbindir} ${base_bindir} ${libdir} ${base_libdir} ${libexecdir} ${PREPROCESS_RELOCATE_DIRS}").split()
 
     for bindir in bindirs:
         #bb.note ("Processing directory " + bindir)
@@ -90,5 +90,5 @@ def rpath_replace (path, d):
         process_dir (directory, d)
 
 python relocatable_binaries_preprocess() {
-    rpath_replace(bb.data.expand('${SYSROOT_DESTDIR}', d), d)
+    rpath_replace(d.expand('${SYSROOT_DESTDIR}'), d)
 }

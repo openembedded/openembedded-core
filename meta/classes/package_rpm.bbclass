@@ -998,9 +998,9 @@ python do_package_rpm () {
 		d.setVar('PACKAGE_ARCH_EXTEND', ml_prefix + package_arch)
 	else:
 		d.setVar('PACKAGE_ARCH_EXTEND', package_arch)
-	pkgwritedir = bb.data.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH_EXTEND}', d)
-	pkgarch = bb.data.expand('${PACKAGE_ARCH_EXTEND}${TARGET_VENDOR}-${TARGET_OS}', d)
-	magicfile = bb.data.expand('${STAGING_DIR_NATIVE}${datadir_native}/misc/magic.mgc', d)
+	pkgwritedir = d.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH_EXTEND}')
+	pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}${TARGET_VENDOR}-${TARGET_OS}')
+	magicfile = d.expand('${STAGING_DIR_NATIVE}${datadir_native}/misc/magic.mgc')
 	bb.mkdirhier(pkgwritedir)
 	os.chmod(pkgwritedir, 0755)
 

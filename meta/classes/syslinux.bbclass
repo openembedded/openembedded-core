@@ -95,7 +95,7 @@ python build_syslinux_menu () {
 		overrides = localdata.getVar('OVERRIDES')
 		if not overrides:
 			raise bb.build.FuncFailed('OVERRIDES not defined')
-		overrides = bb.data.expand(overrides, localdata)
+		overrides = localdata.expand(overrides)
 	
 		localdata.setVar('OVERRIDES', label + ':' + overrides)
 		bb.data.update_data(localdata)

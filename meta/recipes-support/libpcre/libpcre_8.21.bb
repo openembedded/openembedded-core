@@ -46,7 +46,7 @@ do_compile () {
 }
 
 python populate_packages_prepend () {
-	pcre_libdir = bb.data.expand('${libdir}', d)
+	pcre_libdir = d.expand('${libdir}')
 	do_split_packages(d, pcre_libdir, '^lib(.*)\.so\.+', 'lib%s', 'libpcre %s library', extra_depends='', allow_links=True)
 }
 

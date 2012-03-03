@@ -17,7 +17,7 @@ def get_src_tree(d):
 		return
 
 	s_tree_raw = s.split('/')[1]
-	s_tree = bb.data.expand(s_tree_raw, d)
+	s_tree = d.expand(s_tree_raw)
 
 	src_tree_path = os.path.join(workdir, s_tree)
 	try:
@@ -59,7 +59,7 @@ python sourcepkg_do_dumpdata() {
 	distro = d.getVar('DISTRO', True)
 	s_tree = get_src_tree(d)
 	openembeddeddir = os.path.join(workdir, s_tree, distro)
-	dumpfile = os.path.join(openembeddeddir, bb.data.expand("${P}-${PR}.showdata.dump",d))
+	dumpfile = os.path.join(openembeddeddir, d.expand("${P}-${PR}.showdata.dump"))
 	
 	try:
 		os.mkdir(openembeddeddir)

@@ -18,7 +18,7 @@ python do_install_config () {
 	data = infile.read()
 	infile.close()
 
-	data = bb.data.expand(data, d)
+	data = d.expand(data)
 
 	outdir = os.path.join(d.getVar('D', True), d.getVar('sysconfdir', True), 'apt')
 	if not os.path.exists(outdir):

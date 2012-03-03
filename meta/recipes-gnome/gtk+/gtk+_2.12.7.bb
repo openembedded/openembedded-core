@@ -37,7 +37,7 @@ python populate_packages_prepend () {
 	prologue = d.getVar("postinst_prologue", True)
 	postinst_pixbufloader = d.getVar("postinst_pixbufloader", True)
 
-	gtk_libdir = bb.data.expand('${libdir}/gtk-2.0/${LIBV}', d)
+	gtk_libdir = d.expand('${libdir}/gtk-2.0/${LIBV}')
 	loaders_root = os.path.join(gtk_libdir, 'loaders')
 	immodules_root = os.path.join(gtk_libdir, 'immodules')
 	printmodules_root = os.path.join(gtk_libdir, 'printbackends');

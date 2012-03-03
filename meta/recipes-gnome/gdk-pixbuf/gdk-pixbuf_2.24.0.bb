@@ -60,7 +60,7 @@ PACKAGES_DYNAMIC_virtclass-native = ""
 python populate_packages_prepend () {
 	postinst_pixbufloader = d.getVar("postinst_pixbufloader", True)
 
-	loaders_root = bb.data.expand('${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders', d)
+	loaders_root = d.expand('${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders')
 
 	do_split_packages(d, loaders_root, '^libpixbufloader-(.*)\.so$', 'gdk-pixbuf-loader-%s', 'GDK pixbuf loader for %s', postinst_pixbufloader)
 }

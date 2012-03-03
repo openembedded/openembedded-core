@@ -43,7 +43,7 @@ python populate_packages_prepend () {
 
 	prologue = d.getVar("postinst_prologue", True)
 
-	gtk_libdir = bb.data.expand('${libdir}/gtk-2.0/${LIBV}', d)
+	gtk_libdir = d.expand('${libdir}/gtk-2.0/${LIBV}')
 	immodules_root = os.path.join(gtk_libdir, 'immodules')
 	printmodules_root = os.path.join(gtk_libdir, 'printbackends');
 

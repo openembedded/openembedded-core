@@ -63,10 +63,10 @@ python populate_packages_prepend() {
 	# time before the files from the package may be available, hence
 	# storing the data from the files in the preinst directly.
 
-	f = open(bb.data.expand("${STAGING_DATADIR}/base-passwd/passwd.master", d), 'r')
+	f = open(d.expand("${STAGING_DATADIR}/base-passwd/passwd.master"), 'r')
 	passwd = "".join(f.readlines())
 	f.close()
-	f = open(bb.data.expand("${STAGING_DATADIR}/base-passwd/group.master", d), 'r')
+	f = open(d.expand("${STAGING_DATADIR}/base-passwd/group.master"), 'r')
 	group = "".join(f.readlines())
 	f.close()
 

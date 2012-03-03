@@ -122,7 +122,7 @@ def generate_git_config(e):
                 gitconfig_path = e.data.getVar('GIT_CONFIG', True)
                 proxy_command = "    gitProxy = %s\n" % data.getVar('OE_GIT_PROXY_COMMAND', e.data, True)
 
-                bb.mkdirhier(bb.data.expand("${GIT_CONFIG_PATH}", e.data))
+                bb.mkdirhier(e.data.expand("${GIT_CONFIG_PATH}"))
                 if (os.path.exists(gitconfig_path)):
                         os.remove(gitconfig_path)
 
@@ -307,7 +307,7 @@ python () {
         def appendVar(varname, appends):
             if not appends:
                 return
-            varname = bb.data.expand(varname, d)
+            varname = d.expand(varname)
             d.appendVar(varname, " " + " ".join(appends))
 
         extradeps = []

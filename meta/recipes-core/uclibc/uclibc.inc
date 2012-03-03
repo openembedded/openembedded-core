@@ -142,7 +142,7 @@ python () {
   if "${OE_FEATURES}":
     d.setVar('configmangle_append',
                    "/^### DISTRO FEATURES$/a\\\n%s\n\n" %
-                   ("\\n".join((bb.data.expand("${OE_FEATURES}", d).split("\n")))))
+                   ("\\n".join((d.expand("${OE_FEATURES}").split("\n")))))
   d.setVar('configmangle_append',
                  "/^### CROSS$/a\\\n%s\n" %
                   ("\\n".join(["CROSS_COMPILER_PREFIX=\"${TARGET_PREFIX}\"",

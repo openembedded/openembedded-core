@@ -66,7 +66,7 @@ def can_use_autotools_base(cfgdata, d):
 def can_remove_FILESPATH(cfgdata, d):
     expected = cfgdata.get("FILESPATH")
     #expected = "${@':'.join([os.path.normpath(os.path.join(fp, p, o)) for fp in d.getVar('FILESPATHBASE', True).split(':') for p in d.getVar('FILESPATHPKG', True).split(':') for o in (d.getVar('OVERRIDES', True) + ':').split(':') if os.path.exists(os.path.join(fp, p, o))])}:${FILESDIR}"
-    expectedpaths = bb.data.expand(expected, d)
+    expectedpaths = d.expand(expected)
     unexpanded = d.getVar("FILESPATH", 0)
     filespath = d.getVar("FILESPATH", True).split(":")
     filespath = [os.path.normpath(f) for f in filespath if os.path.exists(f)]
@@ -91,7 +91,7 @@ def can_remove_FILESDIR(cfgdata, d):
     return unexpanded != expected and \
            os.path.exists(expanded) and \
            (expanded in filespath or
-            expanded == bb.data.expand(expected, d))
+            expanded == d.expand(expected))
 
 def can_remove_others(p, cfgdata, d):
     for k in ["S", "PV", "PN", "DESCRIPTION", "LICENSE", "DEPENDS",
@@ -104,7 +104,7 @@ def can_remove_others(p, cfgdata, d):
 
         try:
             expanded = d.getVar(k, True)
-            cfgexpanded = bb.data.expand(cfgunexpanded, d)
+            cfgexpanded = d.expand(cfgunexpanded)
         except bb.fetch.ParameterError:
             continue
 

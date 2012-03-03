@@ -132,7 +132,7 @@ def get_timedata(var, data):
 def write_task_data(status, logfile, dev, e):
     bn = get_bn(e)
     bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
-    taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
+    taskdir = os.path.join(bsdir, e.data.expand("${PF}"))
     file = open(os.path.join(logfile), "a")
     timedata = get_timedata("__timedata_task", e.data)
     if timedata:
@@ -205,7 +205,7 @@ python run_buildstats () {
         bn = get_bn(e)
         device = get_device(e)
         bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
-        taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
+        taskdir = os.path.join(bsdir, e.data.expand("${PF}"))
         build_time = os.path.join(bsdir, "build_stats")
         file = open(build_time, "a")
         ########################################################################
@@ -230,7 +230,7 @@ python run_buildstats () {
         bn = get_bn(e)
         device = get_device(e)
         bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
-        taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
+        taskdir = os.path.join(bsdir, e.data.expand("${PF}"))
         if device != "NoLogicalDevice":
             set_diskdata("__diskdata_task", device, e.data)
         set_timedata("__timedata_task", e.data)
@@ -248,7 +248,7 @@ python run_buildstats () {
         bn = get_bn(e)
         device = get_device(e)
         bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
-        taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
+        taskdir = os.path.join(bsdir, e.data.expand("${PF}"))
         write_task_data("passed", os.path.join(taskdir, e.task), device, e)
         if e.task == "do_rootfs":
             bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
@@ -263,7 +263,7 @@ python run_buildstats () {
         bn = get_bn(e)
         device = get_device(e)
         bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
-        taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
+        taskdir = os.path.join(bsdir, e.data.expand("${PF}"))
         write_task_data("failed", os.path.join(taskdir, e.task), device, e)
         ########################################################################
         # Lets make things easier and tell people where the build failed in 
@@ -272,7 +272,7 @@ python run_buildstats () {
         ########################################################################
         build_status = os.path.join(bsdir, "build_stats")
         file = open(build_status,"a")
-        file.write(bb.data.expand("Failed at: ${PF} at task: %s \n" % e.task, e.data))
+        file.write(e.data.expand("Failed at: ${PF} at task: %s \n" % e.task))
         file.close()
         
 }

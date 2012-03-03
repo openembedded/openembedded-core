@@ -4,7 +4,7 @@ IMAGE_PKGTYPE ?= "tar"
 
 python package_tar_fn () {
 	fn = os.path.join(d.getVar('DEPLOY_DIR_TAR'), "%s-%s-%s.tar.gz" % (d.getVar('PKG'), d.getVar('PKGV'), d.getVar('PKGR')))
-	fn = bb.data.expand(fn, d)
+	fn = d.expand(fn)
 	d.setVar('PKGFN', fn)
 }
 
@@ -68,7 +68,7 @@ python do_package_tar () {
 		overrides = localdata.getVar('OVERRIDES')
 		if not overrides:
 			raise bb.build.FuncFailed('OVERRIDES not defined')
-		overrides = bb.data.expand(overrides, localdata)
+		overrides = localdata.expand(overrides)
 		localdata.setVar('OVERRIDES', '%s:%s' % (overrides, pkg))
 
 		bb.data.update_data(localdata)

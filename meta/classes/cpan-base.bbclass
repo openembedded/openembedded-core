@@ -12,7 +12,7 @@ PERL_OWN_DIR = "${@["", "/perl-native"][(bb.data.inherits_class('native', d))]}"
 # Determine the staged version of perl from the perl configuration file
 def get_perl_version(d):
 	import re
-    	cfg = bb.data.expand('${STAGING_LIBDIR}${PERL_OWN_DIR}/perl/config.sh', d)
+    	cfg = d.expand('${STAGING_LIBDIR}${PERL_OWN_DIR}/perl/config.sh')
 	try:
 		f = open(cfg, 'r')
 	except IOError:

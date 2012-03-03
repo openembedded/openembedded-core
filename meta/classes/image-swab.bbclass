@@ -54,7 +54,7 @@ python() {
        deps = (d.getVarFlag('do_setscene', 'depends') or "").split()
        deps.append('strace-native:do_populate_sysroot')
        d.setVarFlag('do_setscene', 'depends', " ".join(deps))
-       logdir = bb.data.expand("${TRACE_LOGDIR}", d)
+       logdir = d.expand("${TRACE_LOGDIR}")
        bb.utils.mkdirhier(logdir)
     else:
        d.setVar('STRACEFUNC', '')
