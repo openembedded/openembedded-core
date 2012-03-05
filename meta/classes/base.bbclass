@@ -302,8 +302,9 @@ python () {
     #
     # PACKAGECONFIG ?? = "<default options>"
     # PACKAGECONFIG[foo] = "--enable-foo,--disable-foo,foo_depends,foo_runtime_depends"
-    pkgconfig = (d.getVar('PACKAGECONFIG', True) or "").split()
-    if pkgconfig:
+    pkgconfigflags = d.getVarFlags("PACKAGECONFIG") or {}
+    if pkgconfigflags:
+        pkgconfig = (d.getVar('PACKAGECONFIG', True) or "").split()
         def appendVar(varname, appends):
             if not appends:
                 return
@@ -313,7 +314,7 @@ python () {
         extradeps = []
         extrardeps = []
         extraconf = []
-        for flag, flagval in (d.getVarFlags("PACKAGECONFIG") or {}).items():
+        for flag, flagval in pkgconfigflags.items():
             if flag == "defaultval":
                 continue
             items = flagval.split(",")
