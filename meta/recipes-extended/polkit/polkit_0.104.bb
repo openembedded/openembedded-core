@@ -11,12 +11,14 @@ DEPENDS = "expat dbus-glib eggdbus intltool-native"
 PACKAGECONFIG = "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
 PACKAGECONFIG[pam] = "--with-authfw=pam,--with-authfw=none,libpam,libpam"
 
-PR = "r3"
+PR = "r4"
 
 PAM_SRC_URI = "file://polkit-1_pam.patch"
 SRC_URI = "http://hal.freedesktop.org/releases/polkit-${PV}.tar.gz \
            file://introspection.patch \
            ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
+           file://0001-PolkitUnixSession-Set-error-if-we-cannot-find-a-sess.patch \
+           file://0002-PolkitUnixSession-Actually-return-TRUE-if-a-session-.patch \
           "
 
 SRC_URI[md5sum] = "e380b4c6fb1e7bccf854e92edc0a8ce1"
