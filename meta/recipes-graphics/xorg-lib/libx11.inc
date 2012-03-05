@@ -8,6 +8,8 @@ require xorg-lib-common.inc
 
 inherit siteinfo
 
+PE = "1"
+
 PROVIDES = "virtual/libx11"
 
 XORG_PN = "libX11"

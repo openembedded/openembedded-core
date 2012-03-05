@@ -1,7 +1,7 @@
 require libx11.inc
 inherit gettext
 
-PR = "r2"
+PR = "r3"
 
 BBCLASSEXTEND = "native nativesdk"
 
