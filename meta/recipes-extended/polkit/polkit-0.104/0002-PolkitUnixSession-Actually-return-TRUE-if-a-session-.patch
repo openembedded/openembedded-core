@@ -9,7 +9,7 @@ boolean because that's just confusing.
 Signed-off-by: David Zeuthen <davidz@redhat.com>
 ---
 
-Upstream-status: Accepted
+Upstream-Status: Accepted
 
  src/polkit/polkitunixsession-systemd.c |   12 +++++-------
  1 files changed, 5 insertions(+), 7 deletions(-)

@@ -14,7 +14,7 @@ for more details.
 Signed-off-by: David Zeuthen <davidz@redhat.com>
 ---
 
-Upstream-status: Accepted
+Upstream-Status: Accepted
 
  src/polkit/polkitunixsession-systemd.c |   21 ++++++++++++++++-----
  1 files changed, 16 insertions(+), 5 deletions(-)
