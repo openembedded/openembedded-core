@@ -5,18 +5,20 @@ Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 
-diff -ruN connman-0.65-orig/src/connman-dbus.conf connman-0.65/src/connman-dbus.conf
---- connman-0.65-orig/src/connman-dbus.conf	2011-03-04 09:34:49.000000000 +0800
-+++ connman-0.65/src/connman-dbus.conf	2011-03-04 09:35:21.000000000 +0800
-@@ -7,6 +7,12 @@
-         <allow send_interface="net.connman.Agent"/>
+diff --git a/src/connman-dbus.conf b/src/connman-dbus.conf
+index 98a773e..cbe2ba3 100644
+--- a/src/connman-dbus.conf
++++ b/src/connman-dbus.conf
+@@ -8,6 +8,13 @@
          <allow send_interface="net.connman.Counter"/>
+         <allow send_interface="net.connman.Notification"/>
      </policy>
 +    <policy user="xuser">
 +        <allow own="net.connman"/>
 +        <allow send_destination="net.connman"/>
 +        <allow send_interface="net.connman.Agent"/>
 +        <allow send_interface="net.connman.Counter"/>
++        <allow send_interface="net.connman.Notification"/>
 +    </policy>
      <policy at_console="true">
          <allow send_destination="net.connman"/>
