@@ -60,9 +60,19 @@ def get_imagecmds(d):
         cmds += "\n" + localdata.getVar("runimagecmd", True)
     return cmds
 
+# The default aligment of the size of the rootfs is set to 1KiB. In case
+# you're using the SD card emulation of a QEMU system simulator you may
+# set this value to 2048 (2MiB alignment).
+IMAGE_ROOTFS_ALIGNMENT ?= "1"
+
 runimagecmd () {
 	# Image generation code for image type ${type}
-	ROOTFS_SIZE=`du -ks ${IMAGE_ROOTFS}|awk '{base_size = ($1 * ${IMAGE_OVERHEAD_FACTOR});  OFMT = "%.0f" ; print ((base_size > ${IMAGE_ROOTFS_SIZE} ? base_size : ${IMAGE_ROOTFS_SIZE}) + ${IMAGE_ROOTFS_EXTRA_SPACE}) }'`
+	# The base_size gets calculated:
+	#  - initial size determined by `du -ks` of the IMAGE_ROOTFS
+	#  - then multiplied by the IMAGE_OVERHEAD_FACTOR
+	#  - then rounded up to IMAGE_ROOTFS_ALIGNMENT
+	#  - finally tested against IMAGE_ROOTFS_SIZE
+	ROOTFS_SIZE=`du -ks ${IMAGE_ROOTFS}|awk '{base_size = $1 * ${IMAGE_OVERHEAD_FACTOR} + ${IMAGE_ROOTFS_ALIGNMENT} - 1; base_size -= base_size % ${IMAGE_ROOTFS_ALIGNMENT}; print ((base_size > ${IMAGE_ROOTFS_SIZE} ? base_size : ${IMAGE_ROOTFS_SIZE}) + ${IMAGE_ROOTFS_EXTRA_SPACE}) }'`
 	${cmd}
 	# Now create the needed compressed versions
 	cd ${DEPLOY_DIR_IMAGE}/
