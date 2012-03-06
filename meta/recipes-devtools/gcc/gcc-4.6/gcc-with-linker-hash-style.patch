@@ -21,8 +21,8 @@ Date:   Wed May 11 18:28:14 2011 +0000
 
 Index: gcc-4_6-branch/gcc/config.in
 ===================================================================
---- gcc-4_6-branch.orig/gcc/config.in	2011-09-09 08:26:10.000000000 -0700
-+++ gcc-4_6-branch/gcc/config.in	2011-09-09 08:27:14.142981164 -0700
+--- gcc-4_6-branch.orig/gcc/config.in	2012-03-04 09:30:04.000000000 -0800
++++ gcc-4_6-branch/gcc/config.in	2012-03-04 09:32:30.878646575 -0800
 @@ -1583,6 +1583,12 @@
  #endif
  
@@ -38,8 +38,8 @@ Index: gcc-4_6-branch/gcc/config.in
  #ifndef USED_FOR_TARGET
 Index: gcc-4_6-branch/gcc/configure
 ===================================================================
---- gcc-4_6-branch.orig/gcc/configure	2011-09-09 08:26:15.000000000 -0700
-+++ gcc-4_6-branch/gcc/configure	2011-09-09 08:27:42.793023181 -0700
+--- gcc-4_6-branch.orig/gcc/configure	2012-03-04 09:30:05.000000000 -0800
++++ gcc-4_6-branch/gcc/configure	2012-03-04 09:32:39.918647011 -0800
 @@ -915,6 +915,7 @@
  enable_poison_system_directories
  enable_plugin
@@ -57,25 +57,25 @@ Index: gcc-4_6-branch/gcc/configure
  
  Some influential environment variables:
    CC          C compiler command
-@@ -17511,7 +17514,7 @@
+@@ -17501,7 +17504,7 @@
    lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
    lt_status=$lt_dlunknown
    cat > conftest.$ac_ext <<_LT_EOF
--#line 17514 "configure"
-+#line 17517 "configure"
+-#line 17504 "configure"
++#line 17507 "configure"
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-@@ -17617,7 +17620,7 @@
+@@ -17607,7 +17610,7 @@
    lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
    lt_status=$lt_dlunknown
    cat > conftest.$ac_ext <<_LT_EOF
--#line 17620 "configure"
-+#line 17623 "configure"
+-#line 17610 "configure"
++#line 17613 "configure"
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-@@ -26434,6 +26437,36 @@
+@@ -26432,6 +26435,36 @@
  fi
  
  
@@ -114,9 +114,9 @@ Index: gcc-4_6-branch/gcc/configure
  
 Index: gcc-4_6-branch/gcc/configure.ac
 ===================================================================
---- gcc-4_6-branch.orig/gcc/configure.ac	2011-09-09 08:26:15.000000000 -0700
-+++ gcc-4_6-branch/gcc/configure.ac	2011-09-09 08:27:14.162981193 -0700
-@@ -4907,6 +4907,30 @@
+--- gcc-4_6-branch.orig/gcc/configure.ac	2012-03-04 09:30:05.000000000 -0800
++++ gcc-4_6-branch/gcc/configure.ac	2012-03-04 09:32:30.890646574 -0800
+@@ -4905,6 +4905,30 @@
  fi
  
  
@@ -149,8 +149,8 @@ Index: gcc-4_6-branch/gcc/configure.ac
  
 Index: gcc-4_6-branch/gcc/doc/install.texi
 ===================================================================
---- gcc-4_6-branch.orig/gcc/doc/install.texi	2011-06-24 08:13:00.000000000 -0700
-+++ gcc-4_6-branch/gcc/doc/install.texi	2011-09-09 08:27:14.172981215 -0700
+--- gcc-4_6-branch.orig/gcc/doc/install.texi	2012-03-03 00:46:39.000000000 -0800
++++ gcc-4_6-branch/gcc/doc/install.texi	2012-03-04 09:32:30.894646574 -0800
 @@ -1665,6 +1665,11 @@
  support @option{--build-id} option, a warning is issued and the
  @option{--enable-linker-build-id} option is ignored.  The default is off.
@@ -165,8 +165,8 @@ Index: gcc-4_6-branch/gcc/doc/install.texi
  Tells GCC to use the gnu_unique_object relocation for C++ template
 Index: gcc-4_6-branch/gcc/gcc.c
 ===================================================================
---- gcc-4_6-branch.orig/gcc/gcc.c	2011-09-09 08:26:14.000000000 -0700
-+++ gcc-4_6-branch/gcc/gcc.c	2011-09-09 08:27:14.172981215 -0700
+--- gcc-4_6-branch.orig/gcc/gcc.c	2012-03-04 09:30:04.000000000 -0800
++++ gcc-4_6-branch/gcc/gcc.c	2012-03-04 09:32:30.894646574 -0800
 @@ -1427,7 +1427,8 @@
    }
  #endif
