@@ -29,15 +29,15 @@ if [ -z "$DISPLAY_ORIENTATION" ]; then
 fi
 
 if [ -z "$DISPLAY_WIDTH_PIXELS" ]; then
-    DISPLAY_WIDTH_PIXELS=`fbset | grep geometry | awk '{ print $2 }'`
+    DISPLAY_WIDTH_PIXELS=`/usr/sbin/fbset | grep geometry | awk '{ print $2 }'`
 fi
 
 if [ -z "$DISPLAY_HEIGHT_PIXELS" ]; then
-    DISPLAY_HEIGHT_PIXELS=`fbset | grep geometry | awk '{ print $3 }'`
+    DISPLAY_HEIGHT_PIXELS=`/usr/sbin/fbset | grep geometry | awk '{ print $3 }'`
 fi
 
 if [ -z "$DISPLAY_BPP" ]; then
-    DISPLAY_BPP=`fbset | grep geometry | awk '{ print $6 }'`
+    DISPLAY_BPP=`/usr/sbin/fbset | grep geometry | awk '{ print $6 }'`
 fi
 
 # 
