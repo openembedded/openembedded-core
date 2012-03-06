@@ -18,10 +18,10 @@ SRCREV_machine ?= "03705f7f066d83b4cd3a6088781d47e3b9e45b71"
 SRCREV_machine_qemuppc ?= "c8b184e8171f6f5a8017be4c5bf1e7a38c3f3002"
 SRCREV_meta ?= "d7b46785d6781e2c23d754f35f09bebd3b74b5bb"
 
-PR = "r1"
+PR = "r2"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
-SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.0.git;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
+SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.0.git;protocol=git;bareclone=1;branch=${KBRANCH},meta;name=machine,meta"
 
 # Omit broken machines from COMPATIBLE_MACHINE
 #   qemuppc hangs at boot

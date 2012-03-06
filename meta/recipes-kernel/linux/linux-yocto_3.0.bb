@@ -20,10 +20,10 @@ SRCREV_machine_qemux86-64 ?= "14fe1742198bd5a85fbcf6e53d336838ff87b2ef"
 SRCREV_machine ?= "c578f3a1f357142a6e02a1df4ae9aa16f45094d6"
 SRCREV_meta ?= "d7b46785d6781e2c23d754f35f09bebd3b74b5bb"
 
-PR = "r3"
+PR = "r4"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
-SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.0;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
+SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.0;protocol=git;bareclone=1;branch=${KBRANCH},meta;name=machine,meta"
 
 COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64)"
 
