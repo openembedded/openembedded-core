@@ -68,7 +68,7 @@ S = "${WORKDIR}/git"
 inherit autotools pkgconfig update-rc.d
 
 python do_compile () {
-    import shutil
+    import shutil, commands
 
     # Build a separate executable for each splash image
     destfile = "%s/psplash-poky-img.h" % d.getVar('S', True)
