@@ -6,7 +6,7 @@ HOMEPAGE = "http://www.bzip.org/"
 SECTION = "console/utils"
 LICENSE = "BSD-4-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;beginline=8;endline=37;md5=40d9d1eb05736d1bfc86cfdd9106e6b2"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://www.bzip.org/${PV}/${BPN}-${PV}.tar.gz \
            file://configure.ac \
@@ -14,6 +14,8 @@ SRC_URI = "http://www.bzip.org/${PV}/${BPN}-${PV}.tar.gz \
 
 SRC_URI[md5sum] = "00b516f4704d4a7cb50a1d97e6e8e15b"
 SRC_URI[sha256sum] = "a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd"
+
+PACKAGES =+ "libbz2 libbz2-dev libbz2-staticdev"
 
 CFLAGS_append = " -fPIC -fpic -Winline -fno-strength-reduce -D_FILE_OFFSET_BITS=64"
 
@@ -27,6 +29,16 @@ do_configure_prepend () {
 	cp ${WORKDIR}/Makefile.am ${S}/
 	cp ${STAGING_DATADIR_NATIVE}/automake*/install-sh ${S}/
 }
+
+FILES_libbz2 = "${libdir}/lib*${SOLIBS}"
+
+FILES_libbz2-dev = "${includedir} ${libdir}/lib*${SOLIBSDEV}"
+SECTION_libbz2-dev = "devel"
+RDEPENDS_libbz2-dev = "libbz2 (= ${EXTENDPKGV})"
+
+FILES_libbz2-staticdev = "${libdir}/*.a"
+SECTION_libbz2-staticdev = "devel"
+RDEPENDS_libbz2-staticdev = "libbz2-dev (= ${EXTENDPKGV})"
 
 PROVIDES_append_virtclass-native = " bzip2-full-native"
 BBCLASSEXTEND = "native"
