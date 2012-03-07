@@ -21,11 +21,13 @@ python prexport_handler () {
             bb.fatal("prexport_handler: export failed!")
         (metainfo, datainfo) = retval
         if not datainfo:
-            bb.error("prexport_handler: No AUROPR values found for %s" % ver)
+            bb.warn("prexport_handler: No AUROPR values found for %s" % ver)
             return
         oe.prservice.prserv_export_tofile(e.data, None, datainfo, False)
     elif isinstance(e, bb.event.ParseStarted):
         import bb.utils
+        import oe.prservice
+        oe.prservice.prserv_check_avail(e.data)
         #remove dumpfile
         bb.utils.remove(e.data.getVar('PRSERV_DUMPFILE', True))
     elif isinstance(e, bb.event.ParseCompleted):

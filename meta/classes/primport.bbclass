@@ -12,6 +12,9 @@ python primport_handler () {
 
         for (version, pkgarch, checksum, value) in imported:
             bb.note("imported (%s,%s,%s,%d)" % (version, pkgarch, checksum, value))
+    elif isinstance(e, bb.event.ParseStarted):
+        import oe.prservice
+        oe.prservice.prserv_check_avail(e.data)
 }
 
 addhandler primport_handler

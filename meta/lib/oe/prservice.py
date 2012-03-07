@@ -1,12 +1,15 @@
 import bb
 
-def prserv_make_conn(d):
+def prserv_make_conn(d, check = False):
     import prserv.serv
     host = d.getVar("PRSERV_HOST",True)
     port = d.getVar("PRSERV_PORT",True)
     try:
         conn = None
         conn = prserv.serv.PRServerConnection(host,int(port))
+        if check:
+            if not conn.ping():
+                raise Exception('service not available')
         d.setVar("__PRSERV_CONN",conn)
     except Exception, exc:
         bb.fatal("Connecting to PR service %s:%s failed: %s" % (host, port, str(exc)))
@@ -111,3 +114,16 @@ def prserv_export_tofile(d, metainfo, datainfo, lockdown, nomax=False):
                 f.write("PRAUTO_%s_%s = \"%s\"\n" % (str(datainfo[idx[i]]['version']),str(datainfo[idx[i]]['pkgarch']),str(datainfo[idx[i]]['value'])))
     f.close()
     bb.utils.unlockfile(lf)
+
+def prserv_check_avail(d):
+    host = d.getVar("PRSERV_HOST",True)
+    port = d.getVar("PRSERV_PORT",True)
+    try:
+        if not host:
+            raise TypeError
+        else:
+            port = int(port)
+    except TypeError:
+        bb.fatal("Undefined or incorrect values of PRSERV_HOST or PRSERV_PORT")
+    else:
+        prserv_make_conn(d, True)
