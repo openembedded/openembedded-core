@@ -1,4 +1,6 @@
-Upstream-Status: Inappropriate [configuration]
+Upstream-Status: Pending
+https://bugzilla.gnome.org/show_bug.cgi?id=671515
+
 Signed-Off-By: Xiaofeng Yan <xiaofeng.yan@windriver.com>
 # Pick up ${NM} from the environment
 --- a/configure.in
