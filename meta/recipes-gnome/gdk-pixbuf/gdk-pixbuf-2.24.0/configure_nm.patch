@@ -1,0 +1,21 @@
+Pick up ${NM} from the environment.
+
+Upstream-Status: Pending
+https://bugzilla.gnome.org/show_bug.cgi?id=671516
+
+Signed-off-by: James Limbouris <james@digitalmatter.com.au>
+
+Index: gdk-pixbuf-2.24.0/configure.ac
+===================================================================
+diff -uNr gdk-pixbuf-2.24.0/configure.ac gdk-pixbuf-2.24.0.mod/configure.ac
+--- gdk-pixbuf-2.24.0/configure.ac	2011-08-27 11:27:52.000000000 +0800
++++ gdk-pixbuf-2.24.0.mod/configure.ac	2012-02-28 14:48:36.481126410 +0800
+@@ -147,7 +147,7 @@
+ AC_SYS_LARGEFILE
+ 
+ AM_PROG_AS
+-AC_PATH_PROG(NM, nm, nm)
++AC_CHECK_TOOLS(NM, [$NM nm], nm)
+ 
+ AC_MSG_CHECKING([for some Win32 platform])
+ AS_CASE(["$host"],
