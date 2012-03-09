@@ -388,7 +388,7 @@ python do_package_ipk () {
 			ctrlfile.write("Replaces: %s\n" % bb.utils.join_deps(rreplaces))
 		if rconflicts:
 			ctrlfile.write("Conflicts: %s\n" % bb.utils.join_deps(rconflicts))
-		src_uri = localdata.getVar("SRC_URI", True)
+		src_uri = localdata.getVar("SRC_URI", True) or "None"
 		if src_uri:
 			src_uri = re.sub("\s+", " ", src_uri)
 			ctrlfile.write("Source: %s\n" % " ".join(src_uri.split()))
