@@ -26,13 +26,19 @@ def get_imagecmds(d):
     # Live and VMDK images will be processed via inheriting
     # bbclass and does not get processed here.
     # vmdk depend on live images also depend on ext3 so ensure its present
+    # Note: we need to ensure ext3 is in alltypes, otherwise, subimages may
+    # not contain ext3 and the .rootfs.ext3 file won't be created.
     if "vmdk" in types:
         if "ext3" not in types:
             types.append("ext3")
+        if "ext3" not in alltypes:
+            alltypes.append("ext3")
         types.remove("vmdk")
     if "live" in types:
         if "ext3" not in types:
             types.append("ext3")
+        if "ext3" not in alltypes:
+            alltypes.append("ext3")
         types.remove("live")
 
     if d.getVar('IMAGE_LINK_NAME', True):
