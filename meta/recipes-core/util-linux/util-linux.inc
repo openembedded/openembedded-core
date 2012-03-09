@@ -38,7 +38,7 @@ EXTRA_OECONF = "--libdir=${base_libdir} --disable-use-tty-group \
                 --enable-kill --enable-last --enable-mesg --enable-partx \
                 --enable-raw --enable-rdev --enable-reset --disable-login-utils \
                 --enable-write --enable-arch --enable-mount --with-fsprobe=builtin \
-                --enable-libuuid --enable-libblkid --enable-fsck"
+                --enable-libuuid --enable-libblkid --enable-fsck --without-udev"
 
 FILES_${PN}-doc += "${datadir}/getopt/getopt-*.*"
 
