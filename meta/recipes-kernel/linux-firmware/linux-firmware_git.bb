@@ -21,7 +21,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.radeon_rlc;md5=4c243f7854d2884b483abda991adef
 
 SRCREV = "15888a2eab052ac3d3f49334e4f6f05f347a516e"
 PV = "0.0+git${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://git.infradead.org/users/dwmw2/linux-firmware.git;protocol=git"
 
@@ -35,7 +35,7 @@ do_compile() {
 
 do_install() {
 	install -d  ${D}/lib/firmware/
-	cp -RpP * ${D}/lib/firmware/
+	cp -r * ${D}/lib/firmware/
 
 	# Libertas sd8686
 	install -m 0644 libertas/sd8686_v9.bin ${D}/lib/firmware/sd8686.bin
