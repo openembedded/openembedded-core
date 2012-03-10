@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://ncurses/base/version.c;beginline=1;endline=27;md5=cbc
 SECTION = "libs"
 DEPENDS = "ncurses-native"
 DEPENDS_virtclass-native = ""
-INC_PR = "r4"
+INC_PR = "r5"
 
 inherit autotools binconfig multilib_header
 
@@ -44,7 +44,6 @@ ncurses_configure() {
 	        --enable-hard-tabs \
 	        --enable-xmc-glitch \
 	        --enable-colorfgbg \
-	        --libdir=${base_libdir} \
 	        --with-termpath='${sysconfdir}/termcap:${datadir}/misc/termcap' \
 	        --with-terminfo-dirs='${sysconfdir}/terminfo:${datadir}/terminfo' \
 	        --with-shared \
@@ -114,7 +113,12 @@ _install_opts = "\
   install.libs install.includes install.man \
 "
 
-do_install() {
+python do_install () {
+	bb.build.exec_func("shell_do_install", d)
+	oe.path.make_relative_symlink(d.expand("${D}${libdir}/libtinfo.so"))
+}
+
+shell_do_install() {
         # Order of installation is important; widec installs a 'curses.h'
         # header with more definitions and must be installed last hence.
         # Compatibility of these headers will be checked in 'do_test()'.
@@ -147,6 +151,8 @@ do_install() {
                 ln -sf xterm-color ${D}${sysconfdir}/terminfo/x/xterm
         fi
 
+        rm ${D}${libdir}/terminfo
+
         if [ "${PN}" = "ncurses" ]; then
                 mv ${D}${bindir}/clear ${D}${bindir}/clear.${PN}
                 mv ${D}${bindir}/reset ${D}${bindir}/reset.${PN}
@@ -158,7 +164,7 @@ do_install() {
         # else when '-Wl,--no-copy-dt-needed-entries' has been set in
         # linker flags.
         for i in libncurses libncursesw; do
-                f=${D}${base_libdir}/$i.so
+                f=${D}${libdir}/$i.so
                 test -h $f || continue
                 rm -f $f
                 echo '/* GNU ld script */'  >$f
@@ -167,20 +173,33 @@ do_install() {
 
         # Make sure that libcurses is linked so that it gets -ltinfo
         # also, this should be addressed upstream really.
-        ln -sf libncurses.so ${D}${base_libdir}/libcurses.so
+        ln -sf libncurses.so ${D}${libdir}/libcurses.so
 
         # create libtermcap.so linker script for backward compatibility
-        f=${D}${base_libdir}/libtermcap.so
+        f=${D}${libdir}/libtermcap.so
         echo '/* GNU ld script */' >$f
         echo 'INPUT(AS_NEEDED(-ltinfo))' >>$f
+
+        if [ ! -d "${D}${base_libdir}" ]; then
+            # Setting base_libdir to libdir as is done in the -native
+            # case will skip this code
+            mkdir ${D}${base_libdir}
+            mv ${D}${libdir}/libncurses.so.* ${D}${base_libdir}
+            mv ${D}${libdir}/libncursesw.so.* ${D}${base_libdir}
+
+            mv ${D}${libdir}/libtinfo.so.* ${D}${base_libdir}
+            rm ${D}${libdir}/libtinfo.so
+            # We'll turn this into a relative symlink after do_install returns
+            ln -sf ${D}${base_libdir}/libtinfo.so.5 ${D}${libdir}/libtinfo.so
+        fi
 
         oe_multilib_header curses.h
 }
 
 python populate_packages_prepend () {
-        base_libdir = d.expand("${base_libdir}")
+        libdir = d.expand("${libdir}")
         pnbase = d.expand("${PN}-lib%s")
-        do_split_packages(d, base_libdir, '^lib(.*)\.so\..*', pnbase, 'ncurses %s library', prepend=True, extra_depends = '', allow_links=True)
+        do_split_packages(d, libdir, '^lib(.*)\.so\..*', pnbase, 'ncurses %s library', prepend=True, extra_depends = '', allow_links=True)
 }
 
 
@@ -212,10 +231,7 @@ FILES_${PN} = "\
   ${bindir}/ncurses5-config \
   ${bindir}/ncursesw5-config \
   ${datadir}/tabset \
-"
-
-FILES_${PN}-dev += "\
- ${base_libdir}/*.so \
+  ${base_libdir}/* \
 "
 
 # This keeps only tput/tset in ncurses
