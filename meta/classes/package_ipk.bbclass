@@ -453,6 +453,7 @@ python do_package_write_ipk () {
 	bb.build.exec_func("do_package_ipk", d)
 }
 do_package_write_ipk[dirs] = "${PKGWRITEDIRIPK}"
+do_package_write_ipk[umask] = "022"
 addtask package_write_ipk before do_package_write after do_package
 
 PACKAGEINDEXES += "package_update_index_ipk;"

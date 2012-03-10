@@ -1103,6 +1103,7 @@ python do_package_write_rpm () {
 }
 
 do_package_write_rpm[dirs] = "${PKGWRITEDIRRPM}"
+do_package_write_rpm[umask] = "022"
 addtask package_write_rpm before do_package_write after do_package
 
 PACKAGEINDEXES += "package_update_index_rpm; createrepo ${DEPLOY_DIR_RPM};"

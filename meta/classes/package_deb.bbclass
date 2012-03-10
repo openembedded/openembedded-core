@@ -421,6 +421,7 @@ python do_package_write_deb () {
 	bb.build.exec_func("do_package_deb", d)
 }
 do_package_write_deb[dirs] = "${PKGWRITEDIRDEB}"
+do_package_write_deb[umask] = "022"
 addtask package_write_deb before do_package_write after do_package
 
 
