@@ -37,6 +37,17 @@ do_configure_prepend() {
 }
 
 do_compile() {
+        # regenerate platform specific files, because they depend on system headers
+        cd Lib/plat-linux2
+        include=${STAGING_INCDIR} ${STAGING_BINDIR_NATIVE}/python \
+                ${S}/Tools/scripts/h2py.py -i '(u_long)' \
+                ${STAGING_INCDIR}/dlfcn.h \
+                ${STAGING_INCDIR}/linux/cdrom.h \
+                ${STAGING_INCDIR}/netinet/in.h \
+                ${STAGING_INCDIR}/sys/types.h
+        sed -e 's,${STAGING_DIR_HOST},,g' -i *.py
+        cd -
+
 	#
 	# Copy config.h and an appropriate Makefile for distutils.sysconfig,
 	# which laters uses the information out of these to compile extensions
