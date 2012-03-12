@@ -3,12 +3,12 @@ DESCRIPTION = "Shadow utils requirements for useradd.bbclass"
 HOMEPAGE = "http://pkg-shadow.alioth.debian.org"
 BUGTRACKER = "https://alioth.debian.org/tracker/?group_id=30580"
 SECTION = "base utils"
-LICENSE = "BSD | Artistic"
+LICENSE = "BSD | Artistic-1.0"
 LIC_FILES_CHKSUM = "file://login.defs_shadow-sysroot;md5=25e2f2de4dfc8f966ac5cdfce45cd7d5"
 
 DEPENDS = "base-passwd"
 
-PR = "r2"
+PR = "r3"
 
 # The sole purpose of this recipe is to provide the /etc/login.defs
 # file for the target sysroot - needed so the shadow-native utilities
