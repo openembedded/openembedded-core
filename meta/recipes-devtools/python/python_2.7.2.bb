@@ -1,5 +1,5 @@
 require python.inc
-DEPENDS = "python-native db gdbm openssl readline sqlite3 zlib"
+DEPENDS = "python-native bzip2 db gdbm openssl readline sqlite3 zlib"
 DEPENDS_sharprom = "python-native db readline zlib gdbm openssl"
 PR = "${INC_PR}.7"
 
