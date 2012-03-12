@@ -14,6 +14,7 @@ SRC_URI += "file://x11_disable_makekeys.patch \
             file://makekeys_crosscompile.patch"
 
 RPROVIDES_${PN}-dev = "libx11-dev"
+RPROVIDES_${PN}-locale = "libx11-locale"
 
 SRC_URI[md5sum] = "ed7c382cbf8c13425b6a66bcac0ca5d9"
 SRC_URI[sha256sum] = "7fe62180f08ef5f0a0062fb444591e349cae2ab5af6ad834599f5c654e6c840d"
