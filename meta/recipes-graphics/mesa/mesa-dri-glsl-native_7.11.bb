@@ -17,7 +17,7 @@ inherit native
 
 # use default config for native build
 do_configure_prepend() {
-	ln -s ${S}/../../configs/default ${S}/../../configs/current
+	ln -sf ${S}/../../configs/default ${S}/../../configs/current
 }
 
 do_install() {
