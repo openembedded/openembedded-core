@@ -1,11 +1,11 @@
 DESCRIPTION = "Adds scripts to use distcc on the host system under qemu"
 
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
 
 COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemumips|qemuppc)"
 
-PR = "r23"
+PR = "r24"
 
 SRC_URI = "file://distcc.sh \
            file://anjuta-remote-run \
