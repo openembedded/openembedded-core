@@ -108,6 +108,7 @@ EXTRA_OECONF += "--with-fop=no \
                  --disable-xnest \
                  --disable-xvfb \
                  --enable-composite \
+                 --without-dtrace \
                  --sysconfdir=/etc/X11 \
                  --localstatedir=/var \
                  --with-fontdir=${datadir}/fonts/X11 \
