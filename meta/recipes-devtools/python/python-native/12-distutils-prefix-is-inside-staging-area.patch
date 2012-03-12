@@ -30,13 +30,13 @@ Upstream-Status: Inappropriate [embedded specific]
      If 'prefix' is supplied, use it instead of sys.prefix or
      sys.exec_prefix -- i.e., ignore 'plat_specific'.
      """
-+    lib_basename = os.getenv("libdir").split('/')[-1]
++    lib_basename = os.environ['STAGING_LIBDIR'].split('/')[-1]
      if prefix is None:
 -        prefix = plat_specific and EXEC_PREFIX or PREFIX
 +        if plat_specific:
-+            prefix = plat_specific and os.environ['STAGING_LIBDIR'].rstrip(lib_basename)
++            prefix = os.environ['STAGING_LIBDIR'].rstrip(lib_basename)
 +        else:
-+            prefix = plat_specific and EXEC_PREFIX or PREFIX
++            prefix = PREFIX
  
      if os.name == "posix":
          libpython = os.path.join(prefix,
