@@ -1,6 +1,5 @@
 DESCRIPTION = "Simple GTK+ Text Editor"
 HOMEPAGE = "http://tarot.freeshell.org/leafpad/"
-BUGTRACKER = ""
 
 LICENSE = "GPLv2 & GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
@@ -14,7 +13,7 @@ SRC_URI = "http://savannah.nongnu.org/download/${BPN}/${BPN}-${PV}.tar.gz \
 
 SRC_URI[md5sum] = "254a72fc67505e3aa52884c729cd7b97"
 SRC_URI[sha256sum] = "959d22ae07f22803bc66ff40d373a854532a6e4732680bf8a96a3fbcb9f80a2c"
-PR = "r1"
+PR = "r2"
 
 SRC_URI_append_poky += " file://owl-menu.patch;apply=yes "
 
@@ -29,3 +28,6 @@ do_install_append () {
 }
 
 FILES_${PN} += "${datadir}/applications/leafpad.desktop"
+
+PACKAGES += "leafpad-stock-icons"
+FILES_leafpad-stock-icons = "${datadir}/icons/hicolor/"
