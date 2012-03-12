@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco cairo libxml2 popt"
 
-PR = "r2"
+PR = "r3"
 
 inherit autotools pkgconfig gnome
 
@@ -23,6 +23,11 @@ SRC_URI[archive.sha256sum] = "91b98051f352fab8a6257688d6b2fd665b4648ed66144861f2
 do_configure_prepend () {
 	export GDK_PIXBUF_QUERYLOADERS="${libdir}/gtk-2.0/version/loaders"
 	echo "CLEANFILES=" > gtk-doc.make
+}
+
+do_install_append () {
+	rmdir ${D}${libdir}/gtk-3.0/engines/
+	rmdir ${D}${libdir}/gtk-3.0/
 }
 
 PACKAGES =+ "librsvg-gtk librsvg-gtk-dbg librsvg-gtk-dev rsvg"
