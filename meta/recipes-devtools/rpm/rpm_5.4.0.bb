@@ -45,7 +45,7 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 DEPENDS = "bzip2 zlib db openssl elfutils expat libpcre attr acl popt ${extrarpmdeps}"
 extrarpmdeps = "python perl"
 extrarpmdeps_virtclass-native = "file-native"
-PR = "r33"
+PR = "r34"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -261,6 +261,7 @@ FILES_${PN}-build = "${prefix}/src/rpm \
 		${libdir}/rpm/bin/rpmcache \
 		${libdir}/rpm/bin/rpmcmp \
 		${libdir}/rpm/bin/rpmdeps \
+		${libdir}/rpm/bin/rpmdeps-oecore \
 		${libdir}/rpm/bin/rpmdigest \
 		${libdir}/rpm/bin/abi-compliance-checker.pl \
 		${libdir}/rpm/bin/api-sanity-autotest.pl \
