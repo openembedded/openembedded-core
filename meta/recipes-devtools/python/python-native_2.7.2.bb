@@ -13,6 +13,7 @@ SRC_URI += "file://04-default-is-optimized.patch \
            file://nohostlibs.patch \
            file://multilib.patch \
            file://add-md5module-support.patch \
+           file://sys_platform_is_now_always_linux2.patch \
            "
 S = "${WORKDIR}/Python-${PV}"
 
