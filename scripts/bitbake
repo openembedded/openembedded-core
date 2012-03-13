@@ -47,6 +47,11 @@ float_test() {
 # but earlier versions do not
 float_test "$TARVERSION > 1.23" && needtar="0"
 
+if [ "`pwd`" != "$BUILDDIR" ] ; then
+    echo "BitBake must be run from your build directory: $BUILDDIR"
+    exit 1
+fi
+
 buildpseudo="1"
 if [ $needpseudo = "1" ] && [ -e "$BUILDDIR/pseudodone" ]; then
     PSEUDOBINDIR=`cat $BUILDDIR/pseudodone`
