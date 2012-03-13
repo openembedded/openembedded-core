@@ -12,7 +12,7 @@ RDEPENDS_${PN} = "formfactor dbus-wait"
 SECTION = "x11"
 SRCREV = "b38f24036cff3be6c2fbcf9ca9881803e69003ac"
 PV = "0.0+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
            file://configure_fix.patch;maxrev=1819 \
@@ -43,6 +43,9 @@ FILES_matchbox-keyboard-applet-dbg += "${libdir}/matchbox-panel/.debug"
 do_install_append () {
 	install -d ${D}/${sysconfdir}/X11/Xsession.d/
 	install -m 755 ${WORKDIR}/80matchboxkeyboard.shbg ${D}/${sysconfdir}/X11/Xsession.d/
+
+	rm -f ${D}${libdir}/gtk-2.0/*/immodules/*.la
+	rm -f ${D}${libdir}/matchbox-panel/*.la
 }
 
 pkg_postinst_matchbox-keyboard-im () {
