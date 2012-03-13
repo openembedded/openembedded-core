@@ -40,6 +40,33 @@ def relative(src, dest):
 
         return os.path.sep.join(relpath)
 
+def make_relative_symlink(path):
+    """ Convert an absolute symlink to a relative one """
+    if not os.path.islink(path):
+        return
+    link = os.readlink(path)
+    if not os.path.isabs(link):
+        return
+
+    # find the common ancestor directory
+    ancestor = path
+    depth = 0
+    while ancestor and not link.startswith(ancestor):
+        ancestor = ancestor.rpartition('/')[0]
+        depth += 1
+
+    if not ancestor:
+        print "make_relative_symlink() Error: unable to find the common ancestor of %s and its target" % path
+        return
+
+    base = link.partition(ancestor)[2].strip('/')
+    while depth > 1:
+        base = "../" + base
+        depth -= 1
+
+    os.remove(path)
+    os.symlink(base, path)
+
 def format_display(path, metadata):
     """ Prepare a path for display to the user. """
     rel = relative(metadata.getVar("TOPDIR", True), path)
