@@ -8,9 +8,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=2d5025d4aa3495befef8f17206a5b0a1 \
 
 PR = "${INC_PR}.0"
 
+SRC_URI[md5sum] = "2f22745b8f7368ad5a0a3fddac343f2d"
+SRC_URI[sha256sum] = "8372719b24e2dd75de6f59bb1315e600db4fd092805bd1201ed0cb651a2dab48"
+
 DEPENDS += "intltool-native"
 
 PACKAGES =+ "libavahi-gobject"
-
-SRC_URI[md5sum] = "e4db89a2a403ff4c47d66ac66fad1f43"
-SRC_URI[sha256sum] = "f9e4316c2339d0020726edd846d01bee0c39980906db0c247479e5807457ff1f"
