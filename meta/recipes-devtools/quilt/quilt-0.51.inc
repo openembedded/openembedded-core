@@ -16,7 +16,7 @@ PACKAGES += "guards guards-doc"
 FILES_${PN} = "${sysconfdir} ${datadir}/quilt \
                ${bindir}/quilt ${libdir}/quilt"
 FILES_guards = "${bindir}/guards"
-FILES_${PN}-doc = "${mandir}/man1/quilt.1 ${docdir}/${P}"
+FILES_${PN}-doc = "${mandir}/man1/quilt.1 ${docdir}/${BPN}"
 FILES_guards-doc = "${mandir}/man1/guards.1"
 
 RDEPENDS_${PN} = "bash"
