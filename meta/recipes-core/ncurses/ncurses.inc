@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://ncurses/base/version.c;beginline=1;endline=27;md5=cbc
 SECTION = "libs"
 DEPENDS = "ncurses-native"
 DEPENDS_virtclass-native = ""
-INC_PR = "r5"
+INC_PR = "r6"
 
 inherit autotools binconfig multilib_header
 
@@ -185,7 +185,8 @@ shell_do_install() {
             # case will skip this code
             mkdir ${D}${base_libdir}
             mv ${D}${libdir}/libncurses.so.* ${D}${base_libdir}
-            mv ${D}${libdir}/libncursesw.so.* ${D}${base_libdir}
+            ! ${ENABLE_WIDEC} || \
+                mv ${D}${libdir}/libncursesw.so.* ${D}${base_libdir}
 
             mv ${D}${libdir}/libtinfo.so.* ${D}${base_libdir}
             rm ${D}${libdir}/libtinfo.so
