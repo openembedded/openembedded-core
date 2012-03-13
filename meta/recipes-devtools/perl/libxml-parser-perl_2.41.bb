@@ -1,11 +1,11 @@
 DESCRIPTION = "XML::Parser - A perl module for parsing XML documents"
 SECTION = "libs"
-LICENSE = "Artistic"
+LICENSE = "Artistic-1.0 | GPL-1.0"
 LIC_FILES_CHKSUM = "file://README;beginline=2;endline=6;md5=c8767d7516229f07b26e42d1cf8b51f1"
 
 DEPENDS += "expat expat-native"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://www.cpan.org/modules/by-module/XML/XML-Parser-${PV}.tar.gz"
 SRC_URI[md5sum] = "c320d2ffa459e6cdc6f9f59c1185855e"

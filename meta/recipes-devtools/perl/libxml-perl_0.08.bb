@@ -4,8 +4,8 @@ works in combination with XML::Parser, PerlSAX, XML::DOM, \
 XML::Grove and others."
 SUMMARY = "Collection of Perl modules for working with XML."
 SECTION = "libs"
-LICENSE = "Artistic | GPLv1+"
-PR = "r2"
+LICENSE = "Artistic-1.0 | GPL-1.0+"
+PR = "r3"
 
 LIC_FILES_CHKSUM = "file://README;beginline=33;endline=35;md5=1705549eef7577a3d6ba71123a1f0ce8"
 

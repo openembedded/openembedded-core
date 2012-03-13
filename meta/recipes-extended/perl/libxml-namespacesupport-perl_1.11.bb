@@ -4,8 +4,8 @@ DESCRIPTION = "XML::NamespaceSupport offers a simple way to process namespace-ba
                 basic checks. "
 
 SECTION = "libs"
-LICENSE = "Artistic|GPLv1+"
-PR = "r1"
+LICENSE = "Artistic-1.0 | GPL-1.0+"
+PR = "r2"
 
 LIC_FILES_CHKSUM = "file://META.yml;beginline=22;endline=22;md5=3b2b564dae8b9af9e8896e85c07dcbe5"
 
