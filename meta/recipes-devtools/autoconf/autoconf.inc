@@ -16,3 +16,7 @@ SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.bz2 \
 	   file://program_prefix.patch"
 
 inherit autotools
+
+do_install_append() {
+	rm -rf ${D}${datadir}/emacs
+} 

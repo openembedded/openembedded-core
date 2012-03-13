@@ -1,6 +1,6 @@
 require autoconf.inc
 
-PR = "r5"
+PR = "r6"
 
 PARALLEL_MAKE = ""
 
