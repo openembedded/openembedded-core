@@ -52,7 +52,7 @@ do_install_append () {
 }
 
 CONFFILES_${PN} = "${sysconfdir}/ppp/pap-secrets ${sysconfdir}/ppp/chap-secrets ${sysconfdir}/ppp/options"
-PACKAGES =+ "ppp-oa ppp-oe ppp-radius ppp-winbind ppp-minconn ppp-password ppp-l2tp ppp-tools"
+PACKAGES =+ "${PN}-oa ${PN}-oe ${PN}-radius ${PN}-winbind ${PN}-minconn ${PN}-password ${PN}-l2tp ${PN}-tools"
 FILES_${PN}        = "${sysconfdir} ${bindir} ${sbindir}/chat ${sbindir}/pppd"
 FILES_${PN}_nylon  = "${sysconfdir} ${bindir} ${sbindir}/chat ${sbindir}/pppd ${sbindir}/tdbread"
 FILES_${PN}-dbg += "${libdir}/pppd/${PV}/.debug"
@@ -64,15 +64,14 @@ FILES_${PN}-minconn  = "${libdir}/pppd/${PV}/minconn.so"
 FILES_${PN}-password = "${libdir}/pppd/${PV}/pass*.so"
 FILES_${PN}-l2tp     = "${libdir}/pppd/${PV}/*l2tp.so"
 FILES_${PN}-tools    = "${sbindir}/pppstats ${sbindir}/pppdump"
-DESCRIPTION_ppp-oa       = "Plugin for PPP needed for PPP-over-ATM"
-DESCRIPTION_ppp-oe       = "Plugin for PPP needed for PPP-over-Ethernet"
-DESCRIPTION_ppp-radius   = "Plugin for PPP that are related to RADIUS"
-DESCRIPTION_ppp-winbind  = "Plugin for PPP to authenticate against Samba or Windows"
-DESCRIPTION_ppp-minconn  = "Plugin for PPP to specify a minimum connect time before the idle timeout applies"
-DESCRIPTION_ppp-password = "Plugin for PPP to get passwords via a pipe"
-DESCRIPTION_ppp-l2tp     = "Plugin for PPP for l2tp support"
-DESCRIPTION_ppp-tools    = "The pppdump and pppstats utitilities"
-RDEPENDS_ppp_minconn    += "libpcap0.8"
+DESCRIPTION_${PN}-oa       = "Plugin for PPP needed for PPP-over-ATM"
+DESCRIPTION_${PN}-oe       = "Plugin for PPP needed for PPP-over-Ethernet"
+DESCRIPTION_${PN}-radius   = "Plugin for PPP that are related to RADIUS"
+DESCRIPTION_${PN}-winbind  = "Plugin for PPP to authenticate against Samba or Windows"
+DESCRIPTION_${PN}-minconn  = "Plugin for PPP to specify a minimum connect time before the idle timeout applies"
+DESCRIPTION_${PN}-password = "Plugin for PPP to get passwords via a pipe"
+DESCRIPTION_${PN}-l2tp     = "Plugin for PPP for l2tp support"
+DESCRIPTION_${PN}-tools    = "The pppdump and pppstats utitilities"
 
 pkg_postinst_${PN}() {
 if test "x$D" != "x"; then
