@@ -10,7 +10,7 @@ DEPENDS = "libowl-av"
 
 SRCREV = "f133472318970796fae1ea3e98ac062156768baf"
 PV = "0.1+git${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}/git"
 
@@ -39,3 +39,5 @@ do_install_append () {
 	install -d ${D}/${datadir}/applications
 	install -m 0644 ${WORKDIR}/owl-video-widget.desktop ${D}/${datadir}/applications
 }
+
+FILES_${PN} += "${datadir}/video"
