@@ -120,3 +120,7 @@ PACKAGECONFIG ??= "udev"
 PACKAGECONFIG[hal] = "--enable-config-hal,--disable-config-hal,,hal"
 PACKAGECONFIG[udev] = "--enable-config-udev,--disable-config-udev,udev"
 
+do_install_append () {
+	# Its assumed base-files creates this for us
+	rmdir ${D}${localstatedir}/log/
+}
