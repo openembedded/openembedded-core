@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0d4b5eef75f1584ccbdc5e4a34314407"
 PR = "r0"
 PE = "1"
 
-RC_URI[md5sum] = "9c0943cbd83e489ad1b05221b97efd44"
+SRC_URI[md5sum] = "9c0943cbd83e489ad1b05221b97efd44"
 SRC_URI[sha256sum] = "a1867fdaa83f68750b12ba4305c3c62f5992d0f52cfeb98e96c27a8e690e0235"
 
 EXTRA_OECONF = "ac_cv_path_MCOOKIE=${bindir}/mcookie"
