@@ -3,7 +3,7 @@ LICENSE = "LGPLv2.1"
 
 PR = "r1"
 
-DEPENDS = "clutter-1.8 dbus-glib"
+DEPENDS = "clutter-1.8 dbus-glib libxrandr gdk-pixbuf startup-notification"
 
 inherit autotools gettext
 
