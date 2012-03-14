@@ -22,3 +22,8 @@ EXTRA_OECONF = "--disable-tests --disable-check"
 do_configure_prepend_libc-uclibc() {
         touch ${S}/config.rpath
 }
+
+do_install_append() {
+	# We don't package autopackage files
+	rm -rf ${D}${datadir}/autopackage
+}
