@@ -29,6 +29,11 @@ EXTRA_OECONF_virtclass-native = "\
 	--enable-default-search-path=${datadir}/sgml \
 	"
 
+do_configure_prepend () {
+	# Stale m4 macros cause a variety of problems
+	rm -rf ${S}/m4/*
+}
+
 do_install_append() {
 	# Set up symlinks to often-used alternate names. See
 	# http://www.linuxfromscratch.org/blfs/view/stable/pst/opensp.html
