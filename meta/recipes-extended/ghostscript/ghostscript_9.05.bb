@@ -15,7 +15,7 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c5326026692dbed183f0558f926580f8"
 
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "ghostscript-native tiff jpeg fontconfig cups"
 DEPENDS_virtclass-native = ""
@@ -27,7 +27,7 @@ SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.02-genarch.patch \
            file://objarch.h \
            file://ghostscript-9.02-parallel-make.patch \
-	   file://ghostscript-9.05-NOT-check-endian.patch \
+           file://ghostscript-9.05-NOT-check-endian.patch \
            "
 
 SRC_URI_virtclass-native = "${SRC_URI_BASE}"
