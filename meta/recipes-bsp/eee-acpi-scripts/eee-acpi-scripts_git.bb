@@ -2,7 +2,7 @@ DESCRIPTION = "eeePC specific ACPI scripts"
 HOMEPAGE = "http://alioth.debian.org/projects/debian-eeepc/"
 SECTION = "base"
 
-LICENSE="GPL"
+LICENSE="GPLv2"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=77ef83ab5f4af938a93edb61f7b74f2c"
 
 SRCREV = "9d4cdedca25b396405f8587f9c4fbf8229e041c2"
