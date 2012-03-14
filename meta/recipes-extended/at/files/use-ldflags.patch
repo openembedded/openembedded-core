@@ -1,8 +1,9 @@
 Upstream-Status: Pending
 
-# Ensure use of $LDFLAGS during build
-# Derived from an OE patch for at-3.1.8
+Ensure use of $LDFLAGS during build
+Derived from an OE patch for at-3.1.8
 
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 --- at-3.1.12.orig/Makefile.in	2009-11-23 07:11:52.000000000 -0800
 +++ at-3.1.12/Makefile.in	2010-07-20 16:28:04.000000000 -0700
 @@ -65,13 +65,13 @@

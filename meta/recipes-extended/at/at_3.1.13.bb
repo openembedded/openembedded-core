@@ -11,12 +11,11 @@ PAM_DEPS = "libpam libpam-runtime pam-plugin-env pam-plugin-limits"
 
 RCONFLICTS_${PN} = "atd"
 RREPLACES_${PN} = "atd"
-PR = "r7"
+PR = "r0"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
     file://configure.patch \
     file://use-ldflags.patch \
-    file://nonstripbinaries.patch \
     file://fix_parallel_build_error.patch \
     file://posixtm.c \
     file://posixtm.h \
@@ -27,8 +26,8 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
 PAM_SRC_URI = "file://pam.conf.patch \
                file://configure-add-enable-pam.patch"
 
-SRC_URI[md5sum] = "1e67991776148fb319fd77a2e599a765"
-SRC_URI[sha256sum] = "7c55c6ab4fbe8add9e68f31b2b0ebf3fe805c9a4e7cfb2623a3d8a4789cc18f3"
+SRC_URI[md5sum] = "1da61af6c29e323abaaf13ee1a8dad79"
+SRC_URI[sha256sum] = "3a8b90868d615d21a92f4986ea9a823886329af8fae8dd7ab4eed9b273bca072"
 
 EXTRA_OECONF += "ac_cv_path_SENDMAIL=/bin/true \
                  --with-daemon_username=root \
@@ -38,6 +37,8 @@ EXTRA_OECONF += "ac_cv_path_SENDMAIL=/bin/true \
                  ${@base_contains('DISTRO_FEATURES', 'pam', '--with-pam', '--without-pam', d)} "
 
 inherit autotools
+
+PARALLEL_MAKE = ""
 
 do_compile_prepend () {
 	cp -f ${WORKDIR}/posixtm.[ch] ${S}
@@ -49,7 +50,7 @@ do_install () {
 	install -d ${D}${sysconfdir}/init.d
 	install -d ${D}${sysconfdir}/rcS.d
 	install -m 0755    ${WORKDIR}/S99at		${D}${sysconfdir}/init.d/atd
-	ln -sf		../init.d/atd		${D}${sysconfdir}/rcS.d/S99at
+	ln -sf ../init.d/atd ${D}${sysconfdir}/rcS.d/S99at
 	cp -r ${D}/usr/doc/at ${D}${docdir}/
 	rm -rf ${D}/usr/doc
 
@@ -60,5 +61,3 @@ do_install () {
 		fi
 	done
 }
-
-PARALLEL_MAKE = ""
