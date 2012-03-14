@@ -1,0 +1,34 @@
+Disable the check for different filesystems
+
+The logrotate supports rotate log across different filesystems now, so
+disable the check for different filesystems.
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ config.c |    8 --------
+ 1 files changed, 0 insertions(+), 8 deletions(-)
+
+diff --git a/config.c b/config.c
+index a85d1df..24575b3 100644
+--- a/config.c
++++ b/config.c
+@@ -1453,14 +1453,6 @@ static int readConfigFile(const char *configFile, struct logInfo *defConfig)
+ 						dirName, strerror(errno));
+ 					goto error;
+ 					}
+-
+-					if (sb.st_dev != sb2.st_dev) {
+-					message(MESS_ERROR,
+-						"%s:%d olddir %s and log file %s "
+-						"are on different devices\n", configFile,
+-						lineNum, newlog->oldDir, newlog->files[i]);
+-					goto error;
+-					}
+ 				}
+ 				}
+ 
+-- 
+1.7.4.1
+

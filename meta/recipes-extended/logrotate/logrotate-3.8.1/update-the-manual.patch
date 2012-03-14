@@ -1,0 +1,42 @@
+Update the manual
+
+* Update the mannual
+* Fix a bug in the mannual(\f should be \fR)
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ logrotate.8 |    9 ++++-----
+ 1 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/logrotate.8 b/logrotate.8
+index 8b34167..5f15432 100644
+--- a/logrotate.8
++++ b/logrotate.8
+@@ -374,10 +374,9 @@ Do not rotate the log if it is empty (this overrides the \fBifempty\fR option).
+ .TP
+ \fBolddir \fIdirectory\fR
+ Logs are moved into \fIdirectory\fR for rotation. The \fIdirectory\fR
+-must be on the same physical device as the log file being rotated,
+-and is assumed to be relative to the directory holding the log file
+-unless an absolute path name is specified. When this option is used all
+-old versions of the log end up in \fIdirectory\fR.  This option may be
++is assumed to be relative to the directory holding the log file unless
++an absolute path name is specified. When this option is used all old
++versions of the log end up in \fIdirectory\fR. This option may be
+ overridden by the \fBnoolddir\fR option.
+ 
+ .TP
+@@ -435,7 +434,7 @@ Log files are rotated only if they grow bigger then \fIsize\fR bytes. If
+ \fIsize\fR is followed by \fIk\fR, the size is assumed to be in kilobytes.
+ If the \fIM\fR is used, the size is in megabytes, and if \fIG\fR is used, the
+ size is in gigabytes. So \fBsize 100\fR, \fIsize 100k\fR, \fIsize 100M\fR and
+-\fIsize 100G\f are all valid.
++\fIsize 100G\fR are all valid.
+ 
+ .TP
+ \fBsharedscripts\fR
+-- 
+1.7.4.1
+

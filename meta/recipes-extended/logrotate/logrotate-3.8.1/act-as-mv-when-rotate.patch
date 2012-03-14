@@ -1,67 +1,20 @@
-Allow rotate log across different filesystems
+Act as the "mv" command when rotate log
 
-* Remove the check for different filesystems
-* Act as the "mv" command when rotate log
-* Update the mannual
-* Fix a bug in the mannual(\f should be \fR)
+Act as the "mv" command when rotate log, first rename, if failed, then
+read and write.
 
 Upstream-Status: Pending
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- config.c    |    8 --------
- logrotate.8 |    9 ++++-----
  logrotate.c |   59 +++++++++++++++++++++++++++++++++++++++++++++++++++++------
- 3 files changed, 57 insertions(+), 19 deletions(-)
+ 1 files changed, 53 insertions(+), 6 deletions(-)
 
-diff --git a/config.c b/config.c
---- a/config.c
-+++ b/config.c
-@@ -1482,14 +1482,6 @@ duperror:
- 				dirName, strerror(errno));
- 			goto error;
- 		    }
--
--		    if (sb.st_dev != sb2.st_dev) {
--			message(MESS_ERROR,
--				"%s:%d olddir %s and log file %s "
--				"are on different devices\n", configFile,
--				lineNum, newlog->oldDir, newlog->files[i]);
--			goto error;
--		    }
- 		}
- 	    }
- 
-diff --git a/logrotate.8 b/logrotate.8
---- a/logrotate.8
-+++ b/logrotate.8
-@@ -354,10 +354,9 @@ Do not rotate the log if it is empty (this overrides the \fBifempty\fR option).
- .TP
- \fBolddir \fIdirectory\fR
- Logs are moved into \fIdirectory\fR for rotation. The \fIdirectory\fR
--must be on the same physical device as the log file being rotated,
--and is assumed to be relative to the directory holding the log file
--unless an absolute path name is specified. When this option is used all
--old versions of the log end up in \fIdirectory\fR.  This option may be
-+is assumed to be relative to the directory holding the log file unless
-+an absolute path name is specified. When this option is used all old
-+versions of the log end up in \fIdirectory\fR. This option may be
- overridden by the \fBnoolddir\fR option.
- 
- .TP
-@@ -415,7 +414,7 @@ Log files are rotated when they grow bigger than \fIsize\fR bytes. If
- \fIsize\fR is followed by \fIk\fR, the size is assumed to be in kilobytes.
- If the \fIM\fR is used, the size is in megabytes, and if \fIG\fR is used, the
- size is in gigabytes. So \fBsize 100\fR, \fIsize 100k\fR, \fIsize 100M\fR and
--\fIsize 100G\f are all valid.
-+\fIsize 100G\fR are all valid.
- 
- .TP
- \fBsharedscripts\fR
 diff --git a/logrotate.c b/logrotate.c
+index 537e8d6..b04482f 100644
 --- a/logrotate.c
 +++ b/logrotate.c
-@@ -625,6 +625,53 @@ int findNeedRotating(struct logInfo *log, int logNum)
+@@ -808,6 +808,53 @@ int findNeedRotating(struct logInfo *log, int logNum)
      return 0;
  }
  
@@ -115,7 +68,7 @@ diff --git a/logrotate.c b/logrotate.c
  int prerotateSingleLog(struct logInfo *log, int logNum, struct logState *state,
  		       struct logNames *rotNames)
  {
-@@ -958,15 +1005,15 @@ int prerotateSingleLog(struct logInfo *log, int logNum, struct logState *state,
+@@ -1148,15 +1195,15 @@ int prerotateSingleLog(struct logInfo *log, int logNum, struct logState *state,
  		    rotNames->baseName, i, fileext, compext);
  
  	    message(MESS_DEBUG,
@@ -134,18 +87,18 @@ diff --git a/logrotate.c b/logrotate.c
  			    oldName, newName, strerror(errno));
  		    hasErrors = 1;
  		}
-@@ -1082,11 +1129,11 @@ int rotateSingleLog(struct logInfo *log, int logNum, struct logState *state,
- 						log->files[logNum]);
+@@ -1286,11 +1333,11 @@ int rotateSingleLog(struct logInfo *log, int logNum, struct logState *state,
+ 			}
  		}
- #endif
+ #endif /* WITH_ACL */
 -		message(MESS_DEBUG, "renaming %s to %s\n", log->files[logNum],
-+		message(MESS_DEBUG, "moving %s to %s\n", log->files[logNum],
++        message(MESS_DEBUG, "moving %s to %s\n", log->files[logNum],
  		    rotNames->finalName);
  	    if (!debug && !hasErrors &&
 -		rename(log->files[logNum], rotNames->finalName)) {
 -		message(MESS_ERROR, "failed to rename %s to %s: %s\n",
-+		mvFile(log->files[logNum], rotNames->finalName, log)) {
-+		message(MESS_ERROR, "failed to move %s to %s: %s\n",
++        mvFile(log->files[logNum], rotNames->finalName, log)) {
++        message(MESS_ERROR, "failed to move %s to %s: %s\n",
  			log->files[logNum], rotNames->finalName,
  			strerror(errno));
  			hasErrors = 1;
