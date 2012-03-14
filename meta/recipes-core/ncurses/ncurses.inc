@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://ncurses/base/version.c;beginline=1;endline=27;md5=cbc
 SECTION = "libs"
 DEPENDS = "ncurses-native"
 DEPENDS_virtclass-native = ""
-INC_PR = "r6"
+INC_PR = "r7"
 
 inherit autotools binconfig multilib_header
 
@@ -199,8 +199,11 @@ shell_do_install() {
 
 python populate_packages_prepend () {
         libdir = d.expand("${libdir}")
+        base_libdir = d.expand("${base_libdir}")
         pnbase = d.expand("${PN}-lib%s")
         do_split_packages(d, libdir, '^lib(.*)\.so\..*', pnbase, 'ncurses %s library', prepend=True, extra_depends = '', allow_links=True)
+        if libdir is not base_libdir:
+            do_split_packages(d, base_libdir, '^lib(.*)\.so\..*', pnbase, 'ncurses %s library', prepend=True, extra_depends = '', allow_links=True)
 }
 
 
@@ -232,7 +235,6 @@ FILES_${PN} = "\
   ${bindir}/ncurses5-config \
   ${bindir}/ncursesw5-config \
   ${datadir}/tabset \
-  ${base_libdir}/* \
 "
 
 # This keeps only tput/tset in ncurses
