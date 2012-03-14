@@ -2,17 +2,20 @@ DESCRIPTION = "Rotates, compresses, removes and mails system log files"
 SECTION = "console/utils"
 HOMEPAGE = "https://fedorahosted.org/releases/l/o/logrotate"
 LICENSE = "GPLv2"
-PR = "r2"
+PR = "r0"
 
 DEPENDS="coreutils popt"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=18810669f13b87348459e611d31ab760"
 
 SRC_URI = "https://fedorahosted.org/releases/l/o/logrotate/logrotate-${PV}.tar.gz \
-           file://allow-across-different-filesystems.patch"
+           file://act-as-mv-when-rotate.patch \
+           file://disable-check-different-filesystems.patch \
+           file://update-the-manual.patch \
+            "
 
-SRC_URI[md5sum] = "eeba9dbca62a9210236f4b83195e4ea5"
-SRC_URI[sha256sum] = "080caf904e70e04da16b8dfa95a5a787ec7d722ee1af18ccea437d3ffdd6fec0"
+SRC_URI[md5sum] = "bd2e20d8dc644291b08f9215397d28a5"
+SRC_URI[sha256sum] = "c12471e70ae8bc923bd5c4f25e8fd6483b68c6301f3cd79f7cfe37bc5b370169"
 
 
 EXTRA_OEMAKE = "CC='${CC}'"
