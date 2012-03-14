@@ -1,6 +1,6 @@
 require procps.inc
 
-PR = "r4"
+PR = "r5"
 
 inherit update-alternatives
 
