@@ -19,10 +19,8 @@ do_install () {
 	dest=${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/
 	install -d $dest
 	for t in ar as ld nm objcopy objdump ranlib strip g77 gcc cpp gfortran; do
-        if [ -e ${BINRELPATH}/${TARGET_PREFIX}$t ]; then
-		    ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t $dest$t
-		    ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t ${dest}${TARGET_PREFIX}$t
-        fi
+		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t $dest$t
+		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t ${dest}${TARGET_PREFIX}$t
 	done
 
 	# Remove things we don't need but keep share/java
