@@ -13,9 +13,9 @@ HOMEPAGE = "http://www.ghostscript.com"
 SECTION = "console/utils"
 
 LICENSE = "GPLv3"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=d151214b3131251dfc9d858593acbd24"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=c5326026692dbed183f0558f926580f8"
 
-PR = "r3"
+PR = "r0"
 
 DEPENDS = "ghostscript-native tiff jpeg fontconfig cups"
 DEPENDS_virtclass-native = ""
@@ -27,12 +27,13 @@ SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.02-genarch.patch \
            file://objarch.h \
            file://ghostscript-9.02-parallel-make.patch \
+	   file://ghostscript-9.05-NOT-check-endian.patch \
            "
 
 SRC_URI_virtclass-native = "${SRC_URI_BASE}"
 
-SRC_URI[md5sum] = "9c2fb4af1eb609d09dba5bb0fa76173a"
-SRC_URI[sha256sum] = "f1e333738c41c3bf2b47ceb9806abb8045bcdc7353002c32736150425a7c1ef4"
+SRC_URI[md5sum] = "f7c6f0431ca8d44ee132a55d583212c1"
+SRC_URI[sha256sum] = "593f77f7584704bdf9de41598a084a4208c3ad3b940a1de1faaf8f59a15cc207"
 
 EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec --without-jasper \
                 --with-fontpath=${datadir}/fonts --with-install-cups"
