@@ -6207,9 +6207,9 @@ DISTRO_PN_ALIAS_pn-libsdl = "Fedora=SDL Opensuse=SDL"
 
 RECIPE_STATUS_pn-ccache = "green"
 RECIPE_MAINTAINER_pn-ccache = "Wenzong Fan <wenzong.fan@windriver.com>"
-RECIPE_LATEST_VERSION_pn-ccache = "3.1.6"
-RECIPE_LAST_UPDATE_pn-ccache = "Oct 19, 2011"
-RECIPE_MANUAL_CHECK_DATE_pn-ccache = "Oct 25, 2011"
+RECIPE_LATEST_VERSION_pn-ccache = "3.1.7"
+RECIPE_LAST_UPDATE_pn-ccache = "Mar 14, 2012"
+RECIPE_MANUAL_CHECK_DATE_pn-ccache = "Mar 14, 2012"
 
 RECIPE_STATUS_pn-chkconfig = "green"
 RECIPE_MAINTAINER_pn-chkconfig = "Wenzong Fan <wenzong.fan@windriver.com>"
