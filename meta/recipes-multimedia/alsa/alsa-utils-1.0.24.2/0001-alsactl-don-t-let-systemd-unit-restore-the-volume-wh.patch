@@ -24,8 +24,8 @@ index 5cfc415..c3768c4 100644
  endif
  
  edit = \
--	sed $(SED) -r 's,@sbindir\@,$(sbindir),g' < $< > $@ || rm $@
-+	sed $(SED) -e 's,@localstatedir\@,$(localstatedir),g' -e 's,@sbindir\@,$(sbindir),g' < $< > $@ || rm $@
+-	$(SED) -r 's,@sbindir\@,$(sbindir),g' < $< > $@ || rm $@
++	$(SED) -e 's,@localstatedir\@,$(localstatedir),g' -e 's,@sbindir\@,$(sbindir),g' < $< > $@ || rm $@
  
  alsa-store.service: alsa-store.service.in
  	$(edit)
