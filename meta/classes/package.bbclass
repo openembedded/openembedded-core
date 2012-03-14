@@ -234,17 +234,17 @@ def splitfile2(debugsrcdir, d):
 
     import commands, stat
 
-    dvar = d.getVar('PKGD', True)
-    pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
-    strip = d.getVar("STRIP", True)
-    objcopy = d.getVar("OBJCOPY", True)
-    debugedit = d.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit")
-    workdir = d.getVar("WORKDIR", True)
-    workparentdir = os.path.dirname(workdir)
-    workbasedir = os.path.basename(workdir)
     sourcefile = d.expand("${WORKDIR}/debugsources.list")
+    if debugsrcdir and os.path.isfile(sourcefile):
+       dvar = d.getVar('PKGD', True)
+       pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
+       strip = d.getVar("STRIP", True)
+       objcopy = d.getVar("OBJCOPY", True)
+       debugedit = d.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit")
+       workdir = d.getVar("WORKDIR", True)
+       workparentdir = os.path.dirname(workdir)
+       workbasedir = os.path.basename(workdir)
 
-    if debugsrcdir:
        nosuchdir = []
        basepath = dvar
        for p in debugsrcdir.split("/"):
