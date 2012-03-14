@@ -1,6 +1,6 @@
 require sudo.inc
 
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "http://ftp.sudo.ws/sudo/dist/sudo-${PV}.tar.gz \
            file://libtool.patch \
@@ -8,8 +8,8 @@ SRC_URI = "http://ftp.sudo.ws/sudo/dist/sudo-${PV}.tar.gz \
 
 PAM_SRC_URI = "file://sudo.pam"
 
-SRC_URI[md5sum] = "5a54dde137618bbc1dd46bb0ef725d7d"
-SRC_URI[sha256sum] = "17a91da1857954aa73445197e6f73d5d50cc8c48719f6db457723bb8badc32a5"
+SRC_URI[md5sum] = "b9be6df7ecefedff2263052ed9fc5e93"
+SRC_URI[sha256sum] = "bf965b09bde9b0cf7fd2355c53a81884d02d522af2d539cf40218436e9a5051e"
 
 DEPENDS += " ${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} += " ${@base_contains('DISTRO_FEATURES', 'pam', 'pam-plugin-limits pam-plugin-keyinit', '', d)}"
