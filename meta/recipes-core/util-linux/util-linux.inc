@@ -17,7 +17,7 @@ LIC_FILES_CHKSUM = "file://README.licensing;md5=9c920d811858a74b67a36ba23cbaa95f
 
 inherit autotools gettext pkgconfig
 DEPENDS = "zlib ncurses"
-DEPENDS_virtclass-native = " lzo-native"
+DEPENDS_append_virtclass-native = " lzo-native"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-linux-${PV}.tar.bz2 \
            file://MCONFIG \
