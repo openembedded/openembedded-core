@@ -1,13 +1,13 @@
 require bluez4.inc
 
-PR = "r2"
+PR = "r0"
 
 SRC_URI += "file://bluetooth.conf \
             file://sbc_mmx.patch \
            "
 
-SRC_URI[md5sum] = "362864b716950baa04797de735fc237b"
-SRC_URI[sha256sum] = "9a5b655bada7c7a1921cb3bac83b8a32bbe49893e4c7a1377cdc1b0d35f7d233"
+SRC_URI[md5sum] = "570aa10692ed890aa0a4297b37824912"
+SRC_URI[sha256sum] = "d884b9aa5d3d9653c076b7646ca14a3e43eb84bccfe8193c49690f802bbd827c"
 
 do_install_append() {
 	install -m 0644 ${S}/audio/audio.conf ${D}/${sysconfdir}/bluetooth/
