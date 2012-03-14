@@ -5,7 +5,7 @@ LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://asia;beginline=2;endline=3;md5=06468c0e84ef4d4c97045a4a29b08234"
 DEPENDS = "tzcode-native"
 
-PR = "r1"
+PR = "r0"
 
 RCONFLICTS= "timezones timezone-africa timezone-america timezone-antarctica \
              timezone-arctic timezone-asia timezone-atlantic \
@@ -14,8 +14,8 @@ RCONFLICTS= "timezones timezone-africa timezone-america timezone-antarctica \
 
 SRC_URI = "ftp://ftp.iana.org/tz/releases/tzdata${PV}.tar.gz;name=tzdata"
 
-SRC_URI[tzdata.md5sum] = "20dbfb28efa008ddbf6dd34601ea40fa"
-SRC_URI[tzdata.sha256sum] = "a343e542486b2b8ebdeca474eed79f1c04f69420ca943c2b9bdea1d2385e38cd"
+SRC_URI[tzdata.md5sum] = "0615fd29def380a917e528433c820368"
+SRC_URI[tzdata.sha256sum] = "2f9f8e2d1ae087be5917f60c3946e8dc3fe1068d7738c3395f2125135309e745"
 
 S = "${WORKDIR}"
 
