@@ -14,8 +14,8 @@ PR = "r0"
 
 SRC_URI = "http://downloads.xiph.org/releases/vorbis/libvorbis-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "c870b9bd5858a0ecb5275c14486d9554"
-SRC_URI[sha256sum] = "eeb4dcada143846dfba760d982954a02f82e08845cbc33871f5dac547b8b6124"
+SRC_URI[md5sum] = "6b1a36f0d72332fae5130688e65efe1f"
+SRC_URI[sha256sum] = "6d747efe7ac4ad249bf711527882cef79fb61d9194c45b5ca5498aa60f290762"
 
 inherit autotools pkgconfig
 
