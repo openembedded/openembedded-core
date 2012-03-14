@@ -10,5 +10,5 @@ EXTRA_OECONF += "\
     ${@base_contains('DISTRO_FEATURES', 'bluetooth','--enable-bluetooth', '--disable-bluetooth', d)} \
 "
 
-SRC_URI[md5sum] = "dbe381b739c0e7830e6c075f81c8e168"
-SRC_URI[sha256sum] = "02a9f1f7c1b8eeb8868290d119fe5dc90b0b5c0b6199bed5293dc06a8bf7ebeb"
+SRC_URI[md5sum] = "a54935a2a86b90300410c6c033284f6c"
+SRC_URI[sha256sum] = "3a70608c17f3dca34c1e057aacdf836021322dfdcaf9edc777119eafe48076b3"
