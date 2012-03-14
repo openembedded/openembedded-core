@@ -83,7 +83,10 @@ class MakefileMaker:
 
         packageLine = 'PACKAGES="${PN}-dbg '
         for name in sorted(self.packages):
-            if name != '${PN}-dbg':
+            if name.startswith("${PN}-distutils"):
+                if name == "${PN}-distutils":
+                    packageLine += "%s-staticdev %s " % (name, name)
+            elif name != '${PN}-dbg':
                 packageLine += "%s " % name
         packageLine += '${PN}-modules"'
 
@@ -128,7 +131,7 @@ class MakefileMaker:
         line = 'RDEPENDS_${PN}-modules="'
 
         for name, data in sorted(self.packages.iteritems()):
-            if name not in ['${PN}-dev']:
+            if name not in ['${PN}-dev', '${PN}-distutils-staticdev']:
                 line += "%s " % name
 
         self.out( "%s \"" % line )
@@ -234,6 +237,9 @@ if __name__ == "__main__":
 
     m.addPackage( "${PN}-difflib", "Python helpers for computing deltas between objects.", "${PN}-lang ${PN}-re",
     "difflib.*" )
+
+    m.addPackage( "${PN}-distutils-staticdev", "Python Distribution Utilities (Static Libraries)", "${PN}-distutils",
+    "config/lib*.a" ) # package
 
     m.addPackage( "${PN}-distutils", "Python Distribution Utilities", "${PN}-core",
     "config distutils" ) # package
