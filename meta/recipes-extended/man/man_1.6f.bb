@@ -3,7 +3,7 @@ DESCRIPTION = "A set of documentation tools: man, apropos and whatis"
 SECTION = "console/utils"
 HOMEPAGE = "http://primates.ximian.com/~flucifredi/man"
 LICENSE = "GPLv2"
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "groff less"
 
@@ -42,7 +42,7 @@ SRC_URI[sha256sum] = "9f208c7e1981371ad4481d6e6c2c566bc726a15778723f94136d220fb9
 
 
 do_configure () {
-        ${S}/configure -default -confdir ${D}/etc +sgid +fhs +lang all
+        ${S}/configure -default -confdir /etc +sgid +fhs +lang all
 }
 
 
