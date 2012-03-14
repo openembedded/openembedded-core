@@ -78,10 +78,10 @@ RECIPE_LAST_UPDATE_pn-linux-firmware = "Dec 30, 2011"
 RECIPE_MANUAL_CHECK_DATE_pn-linux-firmware = "Dec 30, 2011"
 RECIPE_MAINTAINER_pn-linux-firmware = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
-RECIPE_STATUS_pn-logrotate = "red"
+RECIPE_STATUS_pn-logrotate = "green"
 RECIPE_LATEST_VERSION_pn-logrotate = "check"
-RECIPE_LAST_UPDATE_pn-logrotate = "Sep 1, 2010"
-RECIPE_MAINTAINER_pn-logrotate = "Xiaofeng.Yan <xiaofeng@windriver.com>"
+RECIPE_LAST_UPDATE_pn-logrotate = "Mar 14, 2012"
+RECIPE_MAINTAINER_pn-logrotate = "Robert Yang <liezhi.yang@windriver.com>"
 
 RECIPE_STATUS_pn-loudmouth = "red"
 RECIPE_LATEST_VERSION_pn-loudmouth = "check"
