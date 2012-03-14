@@ -18,17 +18,16 @@ DEPENDS = "${@base_contains('DISTRO_FEATURES', 'directfb', 'directfb', '', d)} \
            tslib"
 DEPENDS_virtclass-nativesdk = "${@base_contains('DISTRO_FEATURES', 'x11', 'libx11-nativesdk libxrandr-nativesdk libxrender-nativesdk libxext-nativesdk', '', d)}"
 
-PR = "r7"
+PR = "r0"
 
 SRC_URI = "http://www.libsdl.org/release/SDL-${PV}.tar.gz \
            file://configure_tweak.patch \
-           file://add.XGetRequest.symbol.patch \
        "
 
 S = "${WORKDIR}/SDL-${PV}"
 
-SRC_URI[md5sum] = "e52086d1b508fa0b76c52ee30b55bec4"
-SRC_URI[sha256sum] = "5d927e287034cb6bb0ebccfa382cb1d185cb113c8ab5115a0759798642eed9b6"
+SRC_URI[md5sum] = "9d96df8417572a2afb781a7c4c811a85"
+SRC_URI[sha256sum] = "d6d316a793e5e348155f0dd93b979798933fb98aa1edebcc108829d6474aad00"
 
 inherit autotools lib_package binconfig pkgconfig
 
