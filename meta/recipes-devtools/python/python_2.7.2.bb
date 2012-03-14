@@ -21,6 +21,7 @@ SRC_URI += "\
   file://add-md5module-support.patch \
   file://host_include_contamination.patch \
   file://sys_platform_is_now_always_linux2.patch \
+  file://fix_for_using_different_libdir.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"
@@ -99,6 +100,7 @@ do_install() {
 	
 	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
 		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
+		CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ \
 		STAGING_LIBDIR=${STAGING_LIBDIR} \
 		STAGING_INCDIR=${STAGING_INCDIR} \
 		BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
