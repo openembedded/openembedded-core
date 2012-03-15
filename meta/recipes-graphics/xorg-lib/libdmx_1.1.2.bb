@@ -16,6 +16,6 @@ DEPENDS += "libxext dmxproto"
 PR = "r0"
 PE = "1"
 
-SRC_URI[md5sum] = "75fd328fab3bd4a55cccaa6d5dfff749"
-SRC_URI[sha256sum] = "a6de6e87470bc749de02056fa38758d0e633303789830fdafc56600e75b3de18"
+SRC_URI[md5sum] = "782ced3a9e754dfeb53a8a006a75eb1a"
+SRC_URI[sha256sum] = "a7870b648a8768d65432af76dd11581ff69f3955118540d5967eb1eef43838ba"
 
