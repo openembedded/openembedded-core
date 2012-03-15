@@ -12,10 +12,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=cba677ca25c42ad29ee8ff351b50ece8 \
 
 DEPENDS += "libxext recordproto inputproto libxi"
 PROVIDES = "xtst"
-PR = "r2"
+PR = "r0"
 PE = "1"
 
 XORG_PN = "libXtst"
 
-SRC_URI[md5sum] = "7c592c72da6676f8b0aeec9133b81686"
-SRC_URI[sha256sum] = "7a2e0912b521f6bd8c392189874ba4a3b8168b0bba4c2143e073de53d8e85408"
+SRC_URI[md5sum] = "e8abc5c00c666f551cf26aa53819d592"
+SRC_URI[sha256sum] = "7eea3e66e392aca3f9dad6238198753c28e1c32fa4903cbb7739607a2504e5e0"
