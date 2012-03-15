@@ -13,7 +13,7 @@ SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.gz \
 SRC_URI[md5sum] = "a94e84a9b9944715c4453f82ccc639bf"
 SRC_URI[sha256sum] = "8886eece015202f6bd5ce8414f4b68838452cef509f2e3389ad56128219837b7"
 
-EXTRA_OECONF = "--disable-Werror --disable-device-mapper"
+EXTRA_OECONF = "--disable-device-mapper"
 
 inherit autotools pkgconfig gettext
 
