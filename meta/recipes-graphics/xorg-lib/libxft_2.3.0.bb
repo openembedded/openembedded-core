@@ -18,7 +18,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=90b90b60eb30f65fc9c2673d7cf59e24"
 DEPENDS += "virtual/libx11 libxrender freetype fontconfig"
 PROVIDES = "xft"
 
-PR = "r3"
+PR = "r0"
 PE = "1"
 
 XORG_PN = "libXft"
@@ -30,5 +30,5 @@ python () {
             d.setVar('PKG_${PN}', '${MLPREFIX}libxft2')
 }
 
-SRC_URI[md5sum] = "cce3c327258116493b753f157e0360c7"
-SRC_URI[sha256sum] = "c8685ae56da0c1dcc2bc1e34607e7d76ae98b86a1a71baba3a6b76dbcf5ff9b2"
+SRC_URI[md5sum] = "bd0a8d8cace1dfbb963250bf3eb9a19a"
+SRC_URI[sha256sum] = "3426393ad72a5c47006536d474e396c7a21c33131bb28f495578e05a5858b044"
