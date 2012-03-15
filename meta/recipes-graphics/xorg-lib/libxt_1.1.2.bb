@@ -19,7 +19,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3239170e81427c5948287df07691f03f"
 DEPENDS += "util-linux libxcb libsm virtual/libx11 kbproto libxdmcp"
 PROVIDES = "xt"
 
-PR = "r1"
+PR = "r0"
 PE = "1"
 
 XORG_PN = "libXt"
@@ -41,5 +41,5 @@ do_compile() {
 	oe_runmake
 }
 
-SRC_URI[md5sum] = "eb22c0a1f172b06b97a3f5ae89768412"
-SRC_URI[sha256sum] = "a2a1c29c684e3c9082cdb920b5aea802b179d19107b9ab2170fda07575559da7"
+SRC_URI[md5sum] = "c4f7f149559320f378d93b835d38ad6f"
+SRC_URI[sha256sum] = "f041a7802b13630348072f5a609e0cc0e3df2382c0ddaae41d2769422eacc347"
