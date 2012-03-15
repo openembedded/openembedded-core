@@ -18,10 +18,6 @@ ${DEBIAN_MIRROR}	ftp://ftp.es.debian.org/debian/pool \n \
 ${DEBIAN_MIRROR}	ftp://ftp.se.debian.org/debian/pool \n \
 ${DEBIAN_MIRROR}	ftp://ftp.tr.debian.org/debian/pool \n \
 ${GNU_MIRROR}	ftp://mirrors.kernel.org/gnu \n \
-${GNU_MIRROR}	ftp://ftp.matrix.com.br/pub/gnu \n \
-${GNU_MIRROR}	ftp://ftp.cs.ubc.ca/mirror2/gnu \n \
-${GNU_MIRROR}	ftp://sunsite.ust.hk/pub/gnu \n \
-${GNU_MIRROR}	ftp://ftp.ayamura.org/pub/gnu \n \
 ${KERNELORG_MIRROR}	http://www.kernel.org/pub \n \
 ${KERNELORG_MIRROR}	ftp://ftp.us.kernel.org/pub \n \
 ${KERNELORG_MIRROR}	ftp://ftp.uk.kernel.org/pub \n \
