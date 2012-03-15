@@ -307,7 +307,7 @@ def process_changes(repopath, revision1, revision2 = 'HEAD', report_all = False)
                 if chg.path == chg2.path or os.path.dirname(chg.path) == chg2.path:
                     if chg2.fieldname in related_fields.get(chg.fieldname, []):
                         chg.related.append(chg2)
-                    elif chg.path.startswith('packages/') and chg2.fieldname in ['PE', 'PV', 'PR']:
+                    elif chg.path == chg2.path and chg.path.startswith('packages/') and chg2.fieldname in ['PE', 'PV', 'PR']:
                         chg.related.append(chg2)
 
     if report_all:
