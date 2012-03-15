@@ -11,7 +11,7 @@ extensions."
 require xorg-lib-common.inc
 
 LICENSE = "MIT-style"
-LIC_FILES_CHKSUM = "file://COPYING;md5=9b0eca8f3540b7e7f8b447154a20b05a"
+LIC_FILES_CHKSUM = "file://COPYING;md5=f69eb72f85ce548e12791d049d81bc52"
 
 DEPENDS += "xproto virtual/libx11 xextproto libxau libxdmcp"
 PROVIDES = "xext"
@@ -23,5 +23,5 @@ XORG_PN = "libXext"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "161d200b690ace818db1cc7537e70ba9"
-SRC_URI[sha256sum] = "e9daeb400855b9836e328500cec356b2769033174fc1b2be0df4a80f031debc0"
+SRC_URI[md5sum] = "71251a22bc47068d60a95f50ed2ec3cf"
+SRC_URI[sha256sum] = "56229c617eb7bfd6dec40d2805bc4dfb883dfe80f130d99b9a2beb632165e859"
