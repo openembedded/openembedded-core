@@ -6,12 +6,14 @@ SECTION = "console/tools"
 DEPENDS = "readline e2fsprogs"
 PR = "r0"
 
-SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.gz \
+SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.xz \
            file://no_check.patch \
-           file://syscalls.patch "
+           file://syscalls.patch \
+           file://fix-git-version-gen.patch \
+           file://fix-doc-mandir.patch"
 
-SRC_URI[md5sum] = "a94e84a9b9944715c4453f82ccc639bf"
-SRC_URI[sha256sum] = "8886eece015202f6bd5ce8414f4b68838452cef509f2e3389ad56128219837b7"
+SRC_URI[md5sum] = "5d89d64d94bcfefa9ce8f59f4b81bdcb"
+SRC_URI[sha256sum] = "5e9cc1f91eaf016e5033d85b9b893fd6d3ffaca532a48de1082df9b94225ca15"
 
 EXTRA_OECONF = "--disable-device-mapper"
 

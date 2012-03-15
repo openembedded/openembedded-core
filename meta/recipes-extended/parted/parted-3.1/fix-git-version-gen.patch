@@ -1,0 +1,24 @@
+Upstream-Status: Submitted [bug-parted@gnu.org]
+
+Initialize (version-)prefix to prevent inheritance from
+the build environment during autoreconf.
+
+| sed: -e expression #1, char 9: unknown option to `s'
+| configure.ac:55: error: AC_INIT should be called with package and version arguments
+| aclocal.m4:594: AM_INIT_AUTOMAKE is expanded from...
+| configure.ac:55: the top level
+| autom4te: /usr/bin/m4 failed with exit status: 1
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+
+--- parted-3.1/build-aux/git-version-gen.orig	2012-03-15 13:51:38.911841912 +0100
++++ parted-3.1/build-aux/git-version-gen	2012-03-15 13:51:50.171841800 +0100
+@@ -92,6 +92,8 @@
+ 
+ Running without arguments will suffice in most cases."
+ 
++prefix="v"
++
+ while test $# -gt 0; do
+   case $1 in
+     --help) echo "$usage"; exit 0;;
