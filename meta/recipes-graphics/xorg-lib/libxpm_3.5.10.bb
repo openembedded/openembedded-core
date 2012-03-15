@@ -10,7 +10,7 @@ protocol."
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3e07763d16963c3af12db271a31abaa5"
 DEPENDS += "libxext libsm libxt"
-PR = "r3"
+PR = "r0"
 PE = "1"
 
 XORG_PN = "libXpm"
@@ -19,7 +19,7 @@ PACKAGES =+ "sxpm cxpm"
 FILES_cxpm = "${bindir}/cxpm"
 FILES_sxpm = "${bindir}/sxpm"
 
-SRC_URI[md5sum] = "2de3a1b9541f4b3a6f9d84b69d25530e"
-SRC_URI[sha256sum] = "8add01029cab0598ca86e01a2f7781a636f74b757abe6b50ba61b2a6e2fd621e"
+SRC_URI[md5sum] = "7ae7eff7a14d411e84a67bd166bcec1a"
+SRC_URI[sha256sum] = "a6db7e234750e7d60330017972e31d8e1f29f0a8c1391e4ac82f6102d919a735"
 
 BBCLASSEXTEND = "native"
