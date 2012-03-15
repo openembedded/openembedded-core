@@ -4,7 +4,7 @@ SECTION     = "console/utils"
 LICENSE     = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI     = "http://download.savannah.gnu.org/releases/texi2html/${BPN}-${PV}.tar.bz2 \
                file://fix_gettext_version.patch"
@@ -23,3 +23,5 @@ do_configure_append() {
 	# Clean up the phony po directory
 	rm -rf ${S}/po
 }
+
+FILES_${PN}-doc += "${datadir}/texinfo"
