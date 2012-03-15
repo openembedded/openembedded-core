@@ -14,7 +14,7 @@ DEPENDS_virtclass-native = "util-macros-native"
 RDEPENDS_${PN} = "mkfontdir mkfontscale encodings"
 RDEPENDS_${PN}_virtclass-native = "mkfontdir-native mkfontscale-native"
 
-PR = "${INC_PR}.2"
+PR = "${INC_PR}.0"
 
 do_configure_prepend() {
         sed -i "s#MAPFILES_PATH=\`pkg-config#MAPFILES_PATH=\`PKG_CONFIG_PATH=\"${STAGING_LIBDIR_NATIVE}/pkg-config\" pkg-config#g" fontutil.m4.in
@@ -22,5 +22,5 @@ do_configure_prepend() {
 
 BBCLASSEXTEND = "native"
 
-SRC_URI[md5sum] = "1bdd8ed070e02b2165d7b0f0ed93280b"
-SRC_URI[sha256sum] = "dbbac617ae6cdf6f459e602361211d217f4bad5ad8bfb6adcede6196693f9712"
+SRC_URI[md5sum] = "ddfc8a89d597651408369d940d03d06b"
+SRC_URI[sha256sum] = "dfa9e55625a4e0250f32fabab1fd5c8ffcd2d1ff2720d6fcf0f74bc8a5929195"
