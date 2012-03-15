@@ -1,10 +1,15 @@
-When /etc/ld.so.cache is writeable by user running bitbake then it creates invalid cache
-(in my case libstdc++.so cannot be found after building zlib(-native) and I have to call
-touch */libstdc++.so && /sbin/ldconfig to fix it.
+When /etc/ld.so.cache is writeable by user running bitbake then it
+creates invalid cache (in my case libstdc++.so cannot be found after
+building zlib(-native) and I have to call touch */libstdc++.so &&
+/sbin/ldconfig to fix it.
 
 So remove ldconfig call from make install-libs
 
+Patch authored by Martin Jansa.
+
 Upstream-Status: Inappropriate [disable feature]
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 
 diff -uNr e2fsprogs-1.42.orig/lib/Makefile.elf-lib e2fsprogs-1.42/lib/Makefile.elf-lib
 --- e2fsprogs-1.42.orig/lib/Makefile.elf-lib	2010-06-14 05:07:36.000000000 +0200

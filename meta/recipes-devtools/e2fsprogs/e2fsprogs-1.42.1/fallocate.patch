@@ -3,9 +3,9 @@ but we need to check if we have fallocate()
 this problem shows up on uclibc systems since
 uclibc does not have fallocate() implemented
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
-
 Upstream-Status: Pending
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 Index: e2fsprogs-1.42/lib/ext2fs/unix_io.c
 ===================================================================

@@ -1,4 +1,5 @@
 Upstream-Status: Inappropriate [configuration]
+
 Signed-off-by: Mei Lei <lei.mei@intel.com>
 
 Index: e2fsprogs-1.41.5/po/Makefile.in.in
