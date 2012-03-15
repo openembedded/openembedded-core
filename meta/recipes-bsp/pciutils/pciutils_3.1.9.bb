@@ -33,6 +33,11 @@ do_configure () {
 	)
 }
 
+do_compile_prepend () {
+	# Avoid this error:  ln: failed to create symbolic link `libpci.so': File exists
+	rm -f ${S}/lib/libpci.so
+}
+
 export PREFIX = "${prefix}"
 export SBINDIR = "${sbindir}"
 export SHAREDIR = "${datadir}"
