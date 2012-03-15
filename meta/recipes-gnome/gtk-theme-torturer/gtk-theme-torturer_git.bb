@@ -2,7 +2,7 @@ DESCRIPTION = "Gtk+ Theme Benchmark Program"
 DEPENDS = "gtk+"
 HOMEPAGE = "http://wiki.laptop.org/go/GTK_for_OLPC"
 SECTION = "devel"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://appwindow.c;endline=13;md5=8c09920de460c7ea1f64ee56986aabd9"
 
 SRCREV = "99962ae39bb5aadb31929b25c58e1a053f9c9545"
