@@ -4717,7 +4717,7 @@ RECIPE_MAINTAINER_pn-libxkbfile = "Dexuan Cui <dexuan.cui@intel.com>"
 
 RECIPE_STATUS_pn-pixman = "green"
 RECIPE_DEPENDENCY_CHECK_pn-pixman = "not done"
-RECIPE_LATEST_VERSION_pn-pixman = "0.24.2"
+RECIPE_LATEST_VERSION_pn-pixman = "0.24.4"
 RECIPE_NO_OF_PATCHES_pn-pixman = "0"
 RECIPE_INTEL_SECTION_pn-pixman = "x11/libs"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-pixman = "2 months"
