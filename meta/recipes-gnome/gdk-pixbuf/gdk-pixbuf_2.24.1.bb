@@ -10,16 +10,16 @@ SECTION = "libs"
 
 DEPENDS = "libpng glib-2.0 jpeg"
 
-SRC_URI = "http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.24/gdk-pixbuf-${PV}.tar.bz2 \
+SRC_URI = "http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.24/gdk-pixbuf-${PV}.tar.xz \
            file://configure_nm.patch \
            file://hardcoded_libtool.patch \
            file://configure_fix.patch \
            "
 
-SRC_URI[md5sum] = "d8ece3a4ade4a91c768328620e473ab8"
-SRC_URI[sha256sum] = "38d2630314e6d91976bffd833236f84fefa440a9038f86dc422820a39f2e3700"
+SRC_URI[md5sum] = "72f39b34b20f68148c1609bd27415412"
+#SRC_URI[sha256sum] = "da7a3f00db360913716368e19e336402755cafa93769f3cfa28a969303e4bee1"
 
-PR = "r5"
+PR = "r0"
 
 inherit autotools pkgconfig gettext
 
@@ -75,7 +75,7 @@ do_install_append_virtclass-native() {
 
 	create_wrapper ${D}/${bindir}/gdk-pixbuf-csource \
 		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
-		
+
 	create_wrapper ${D}/${bindir}/gdk-pixbuf-query-loaders \
 		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
 }
