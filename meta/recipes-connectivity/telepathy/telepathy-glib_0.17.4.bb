@@ -3,7 +3,7 @@ DESCRIPTION = "Telepathy Framework: GLib-based helper library for connection man
 HOMEPAGE = "http://telepathy.freedesktop.org/wiki/"
 DEPENDS = "glib-2.0 dbus python-native-runtime dbus-native dbus-glib"
 LICENSE = "LGPLv2.1+"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-glib/${BPN}-${PV}.tar.gz"
 
@@ -17,3 +17,8 @@ inherit autotools pkgconfig gettext
 FILES_${PN} += "${datadir}/telepathy \
                 ${datadir}/dbus-1"
 
+do_install_append() {
+	rmdir ${D}${bindir}
+	rmdir ${D}${libexecdir}
+	rmdir ${D}${servicedir}
+}
