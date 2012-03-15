@@ -151,7 +151,7 @@ shell_do_install() {
                 ln -sf xterm-color ${D}${sysconfdir}/terminfo/x/xterm
         fi
 
-        rm ${D}${libdir}/terminfo
+        rm -f ${D}${libdir}/terminfo
 
         if [ "${PN}" = "ncurses" ]; then
                 mv ${D}${bindir}/clear ${D}${bindir}/clear.${PN}
