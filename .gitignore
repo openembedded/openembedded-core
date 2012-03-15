@@ -5,7 +5,7 @@ build*/conf/bblayers.conf
 build*/downloads
 build*/tmp/
 build*/sstate-cache
-build*/pyshtables.py
+pyshtables.py
 pstage/
 scripts/oe-git-proxy-socks
 sources/
