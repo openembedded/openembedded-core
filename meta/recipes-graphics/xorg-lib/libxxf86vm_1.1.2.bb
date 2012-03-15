@@ -8,7 +8,7 @@ xvidtune program in particular."
 require xorg-lib-common.inc
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=0fe722b85f452ce13ca763f323ff5da8"
+LIC_FILES_CHKSUM = "file://COPYING;md5=fa0b9c462d8f2f13eba26492d42ea63d"
 
 DEPENDS += "libxext xf86vidmodeproto"
 
@@ -17,5 +17,5 @@ PE = "1"
 
 XORG_PN = "libXxf86vm"
 
-SRC_URI[md5sum] = "34dc3df888c164378da89a7deeb245a0"
-SRC_URI[sha256sum] = "21cae9239aefd59353a4ddb0d6ed890402b681570ccd4bc977d80a75a020239e"
+SRC_URI[md5sum] = "ffd93bcedd8b2b5aeabf184e7b91f326"
+SRC_URI[sha256sum] = "a564172fb866b1b587bbccb7d041088931029845245e0d15c32ca7f1bb48fc84"
