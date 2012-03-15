@@ -45,6 +45,9 @@ LDFLAGS_build-darwin = "-L${STAGING_LIBDIR_NATIVE} "
 STAGING_BINDIR = "${STAGING_BINDIR_NATIVE}"
 STAGING_BINDIR_CROSS = "${STAGING_BINDIR_NATIVE}"
 
+# native pkg doesn't need the TOOLCHAIN_OPTIONS.
+TOOLCHAIN_OPTIONS = ""
+
 DEPENDS_GETTEXT = "gettext-native"
 
 # Don't use site files for native builds
