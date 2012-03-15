@@ -1,7 +1,7 @@
 SUMMARY = "Base system master password/group files."
 DESCRIPTION = "The master copies of the user database files (/etc/passwd and /etc/group).  The update-passwd tool is also provided to keep the system databases synchronized with these master files."
 SECTION = "base"
-PR = "r9"
+PR = "r0"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
@@ -9,17 +9,12 @@ SRC_URI = "${DEBIAN_MIRROR}/main/b/base-passwd/base-passwd_${PV}.tar.gz \
            file://nobash.patch \
            file://root-home.patch"
 
-SRC_URI[md5sum] = "47f22ab6b572d0133409ff6ad1fab402"
-SRC_URI[sha256sum] = "d34acb35a9f9f221e7e4f642b9ef4b22083dd77bb2fc7216756f445316d842fc"
+SRC_URI[md5sum] = "8f6b9420c50e90edaff41eb2fb7e9e16"
+SRC_URI[sha256sum] = "196083d6f675190d4e2cede0a5fa6b3c91088705c5386f76292fec8e74b6369e"
 
 S = "${WORKDIR}/base-passwd"
 
 inherit autotools
-
-PACKAGES =+ "${PN}-update"
-FILES_${PN}-update = "${sbindir}/* ${datadir}/${PN}"
-
-ALLOW_EMPTY_${PN} = "1"
 
 SSTATEPOSTINSTFUNCS += "base_passwd_sstate_postinst"
 
@@ -84,6 +79,11 @@ fi
 }
 
 addtask do_package after do_populate_sysroot
+
+ALLOW_EMPTY_${PN} = "1"
+
+PACKAGES =+ "${PN}-update"
+FILES_${PN}-update = "${sbindir}/* ${datadir}/${PN}"
 
 pkg_postinst_${PN}-update () {
 #!/bin/sh
