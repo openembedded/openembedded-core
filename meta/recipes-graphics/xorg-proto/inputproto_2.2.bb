@@ -17,6 +17,6 @@ inherit gettext
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "07d54ae098ed4e6dce472f6ef3de05ce"
-SRC_URI[sha256sum] = "64222a590ad4a62a3c8d57805379451769e3329cc5c8c5c1f1fc0d1529ebf005"
+SRC_URI[md5sum] = "13c8aedaf98a92e282b7e456c0a5bed9"
+SRC_URI[sha256sum] = "de7516ab25c299740da46c0f1af02f1831c5aa93b7283f512c0f35edaac2bcb0"
 
