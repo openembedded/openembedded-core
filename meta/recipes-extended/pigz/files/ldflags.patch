@@ -1,0 +1,17 @@
+Link using the bitbake LDFLAGS.
+
+Signed-off-by: Björn Stenberg <bjst@enea.com>
+
+Upstream-Status: Pending
+
+--- pigz-2.2.4/Makefile.orig	2012-01-01 02:46:58.000000000 +0100
++++ pigz-2.2.4/Makefile	2012-03-09 08:47:40.025094863 +0100
+@@ -2,7 +2,7 @@
+ CFLAGS=-O3 -Wall -Wextra
+ 
+ pigz: pigz.o yarn.o
+-	$(CC) -o pigz pigz.o yarn.o -lpthread -lz
++	$(CC) $(LDFLAGS) -o pigz pigz.o yarn.o -lpthread -lz
+ 	ln -f pigz unpigz
+ 
+ pigz.o: pigz.c yarn.h
