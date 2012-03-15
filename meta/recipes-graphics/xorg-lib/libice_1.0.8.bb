@@ -21,5 +21,5 @@ XORG_PN = "libICE"
 
 BBCLASSEXTEND = "native"
 
-SRC_URI[md5sum] = "bb72a732b15e9dc25c3036559387eed5"
-SRC_URI[sha256sum] = "a8b1692f151a473cee8733df9aefe98f7e5f64dfe6d4213cb6231d7bf855b901"
+SRC_URI[md5sum] = "471b5ca9f5562ac0d6eac7a0bf650738"
+SRC_URI[sha256sum] = "24a991284d02ff0c789bc8d11ad2e4dffe144cb70f24e28f9ce3e8b1ee08b71e"
