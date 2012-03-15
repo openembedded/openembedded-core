@@ -11,6 +11,7 @@ SRCREV = "5f1e84f8b015df3ff950056494134eca3f640d70"
 
 # git -> 0.83 needs a PE bump
 PE = "1"
+PR = "r1"
 
 SRC_URI = "git://github.com/clrkwllms/rt-tests.git"
 
@@ -25,3 +26,5 @@ do_install() {
         oe_runmake install DESTDIR=${D} SBINDIR=${sbindir} MANDIR=${mandir} \
                            INCLUDEDIR=${includedir}
 }
+
+FILES_${PN} += "${prefix}/src/backfire"
