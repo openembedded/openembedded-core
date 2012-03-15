@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7"
 SECTION = "libs"
 DEPENDS = "glib-2.0 gnutls intltool-native"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${GNOME_MIRROR}/${BPN}/2.28/${BPN}-${PV}.tar.bz2"
 
@@ -19,5 +19,7 @@ EXTRA_OECONF = "--without-ca-certificates"
 
 inherit autotools pkgconfig
 
-FILES_${PN} += "${libdir}/gio/modules/libgio* ${datadir}/dbus-1/services/"
+FILES_${PN} += "${libdir}/gio/modules/libgio*.so ${datadir}/dbus-1/services/"
 FILES_${PN}-dbg += "${libdir}/gio/modules/.debug/"
+FILES_${PN}-dev += "${libdir}/gio/modules/libgio*.la"
+FILES_${PN}-staticdev += "${libdir}/gio/modules/libgio*.a"
