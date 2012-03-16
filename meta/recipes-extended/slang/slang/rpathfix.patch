@@ -1,7 +1,7 @@
 Without this patch we see rpaths hardcoded into the build which results in QA
 warnings. These rpaths are not needed so lets turn this off.
 
-Upsteam-Status: Inappropriate
+Upstream-Status: Inappropriate
 (but could be turned into a proper configure option)
 
 RP 2012/03/14
