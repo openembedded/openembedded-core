@@ -8,7 +8,7 @@ INC_PR = "r13"
 
 inherit autotools gettext update-alternatives
 
-EXTRA_OECONF = "--with-libc --enable-ipv6 --with-libssl-prefix=${STAGING_DIR_HOST} --with-ssl=openssl"
+EXTRA_OECONF = "--with-libc --enable-ipv6 --with-libssl-prefix=${STAGING_DIR_HOST} --with-ssl=openssl --disable-rpath"
 
 do_install_append () {
 	mv ${D}${bindir}/wget ${D}${bindir}/wget.${PN}
