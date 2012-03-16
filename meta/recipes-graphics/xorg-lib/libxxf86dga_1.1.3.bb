@@ -7,16 +7,16 @@ allows direct graphics access to a framebuffer-like region, and also \
 allows relative mouse reporting, et al.  It is mainly used by games and \
 emulators for games."
 
-DEPENDS += "libxext xf86dgaproto"
-PR = "r2"
-
-SRC_URI += "file://libxxf86dga-1.1.2_fix_for_x32.patch"
-
-PE = "1"
-
-XORG_PN = "libXxf86dga"
-
 LIC_FILES_CHKSUM = "file://COPYING;md5=abb99ac125f84f424a4278153988e32f"
 
-SRC_URI[md5sum] = "bbd5fdf63d4c107c8cb710d4df2012b4"
-SRC_URI[sha256sum] = "1ba652f562ce3fb3fef092ce5485eb7ef15b521124c901977b56d6f324605a06"
+DEPENDS += "libxext xf86dgaproto"
+
+PE = "1"
+PR = "r2"
+
+SRC_URI += "file://libxxf86dga-1.1.3_fix_for_x32.patch"
+
+SRC_URI[md5sum] = "b7f38465c46e7145782d37dbb9da8c09"
+SRC_URI[sha256sum] = "551fa374dbef0f977de1f35d005fa9ffe92b7a87e82dbe62d6a4640f5b0b4994"
+
+XORG_PN = "libXxf86dga"
