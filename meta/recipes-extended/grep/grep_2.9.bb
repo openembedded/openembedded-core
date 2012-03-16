@@ -6,7 +6,7 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8006d9c814277c1bfc4ca22af94b59ee"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.gz"
 
@@ -27,6 +27,7 @@ do_install () {
 	mv ${D}${bindir}/grep ${D}${base_bindir}/grep.${PN}
 	mv ${D}${bindir}/egrep ${D}${base_bindir}/egrep.${PN}
 	mv ${D}${bindir}/fgrep ${D}${base_bindir}/fgrep.${PN}
+	rmdir ${D}${bindir}/
 }
 
 pkg_postinst_${PN} () {
