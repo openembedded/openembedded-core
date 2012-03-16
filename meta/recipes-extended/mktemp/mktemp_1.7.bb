@@ -5,7 +5,7 @@ SECTION = "console/utils"
 LICENSE = "ISC"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=430680f6322a1eb87199b5e01a82c0d4"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "ftp://ftp.mktemp.org/pub/mktemp/${BPN}-${PV}.tar.gz \
         file://disable-strip.patch \
@@ -22,6 +22,7 @@ EXTRA_OECONF = "--with-libc"
 do_install_append () {
 	mkdir ${D}${base_bindir}
 	mv ${D}${bindir}/mktemp ${D}${base_bindir}/mktemp.${PN}
+	rmdir ${D}${bindir}
 }
 
 ALTERNATIVE_NAME = "mktemp"
