@@ -311,7 +311,7 @@ FILES_perl-module-rpm = "${libdir}/perl/*/* \
 FILES_perl-module-rpm-dev = "${prefix}/share/man/man3/RPM* \
 		"
 
-FILE_${PN}-dev = "${includedir}/rpm \
+FILES_${PN}-dev = "${includedir}/rpm \
 		${libdir}/librpm.la \
 		${libdir}/librpm.so \
 		${libdir}/librpmconstant.la \
@@ -327,7 +327,7 @@ FILE_${PN}-dev = "${includedir}/rpm \
 		${libdir}/pkgconfig/rpm.pc \
 		"
 
-FILE_${PN}-staticdev = " \
+FILES_${PN}-staticdev = " \
 		${libdir}/librpm.a \
 		${libdir}/librpmconstant.a \
 		${libdir}/librpmdb.a \
