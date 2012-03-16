@@ -8,7 +8,7 @@ DEPENDS = "libtelepathy dbus-glib gconf"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-mission-control/telepathy-mission-control-${PV}.tar.gz"
 
-PR = "r0"
+PR = "r1"
 
 inherit autotools pkgconfig
 
@@ -24,7 +24,7 @@ PACKAGES =+ " \
 	libmissioncontrol-server-dbg \
 "
 
-FILES_${PN} += "${datadir}/dbus*"
+FILES_${PN} += "${datadir}/dbus* ${datadir}/glib-2.0/schemas"
 
 FILES_libmissioncontrol = "${libdir}/libmissioncontrol.so.*"
 FILES_libmissioncontrol-config = "${libdir}/libmissioncontrol-config.so.*"
