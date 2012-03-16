@@ -7,6 +7,7 @@
 # Copyright (C) 2007-2011 Koen Kooi <koen@openembedded.org>
 #
 
+BUILDHISTORY_FEATURES ?= "image package"
 BUILDHISTORY_DIR ?= "${TMPDIR}/buildhistory"
 BUILDHISTORY_DIR_IMAGE = "${BUILDHISTORY_DIR}/images/${MACHINE_ARCH}/${TCLIBC}/${IMAGE_BASENAME}"
 BUILDHISTORY_DIR_PACKAGE = "${BUILDHISTORY_DIR}/packages/${MULTIMACH_TARGET_SYS}/${PN}"
@@ -24,6 +25,9 @@ PACKAGEFUNCS += "buildhistory_emit_pkghistory"
 #
 python buildhistory_emit_pkghistory() {
 	import re
+
+	if not "package" in (d.getVar('BUILDHISTORY_FEATURES', True) or "").split():
+		return 0
 
 	pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
 
@@ -269,6 +273,10 @@ buildhistory_get_image_installed() {
 	# Anything requiring the use of the packaging system should be done in here
 	# in case the packaging files are going to be removed for this image
 
+	if [ "${@base_contains('BUILDHISTORY_FEATURES', 'image', '1', '0', d)}" = "0" ] ; then
+		return
+	fi
+
 	mkdir -p ${BUILDHISTORY_DIR_IMAGE}
 
 	# Get list of installed packages
@@ -317,6 +325,10 @@ buildhistory_get_image_installed() {
 }
 
 buildhistory_get_imageinfo() {
+	if [ "${@base_contains('BUILDHISTORY_FEATURES', 'image', '1', '0', d)}" = "0" ] ; then
+		return
+	fi
+
 	# List the files in the image, but exclude date/time etc.
 	# This awk script is somewhat messy, but handles where the size is not printed for device files under pseudo
 	( cd ${IMAGE_ROOTFS} && find . -ls | awk '{ if ( $7 ~ /[0-9]/ ) printf "%s %10-s %10-s %10s %s %s %s\n", $3, $5, $6, $7, $11, $12, $13 ; else printf "%s %10-s %10-s %10s %s %s %s\n", $3, $5, $6, 0, $10, $11, $12 }' | sort -k5 > ${BUILDHISTORY_DIR_IMAGE}/files-in-image.txt )
@@ -371,7 +383,7 @@ def buildhistory_get_imagevars(d):
 buildhistory_commit() {
 	if [ ! -d ${BUILDHISTORY_DIR} ] ; then
 		# Code above that creates this dir never executed, so there can't be anything to commit
-		exit
+		return
 	fi
 
 	( cd ${BUILDHISTORY_DIR}/
@@ -396,8 +408,9 @@ python buildhistory_eventhandler() {
 	import bb.event
 
 	if isinstance(e, bb.event.BuildCompleted):
-		if e.data.getVar("BUILDHISTORY_COMMIT", True) == "1":
-			bb.build.exec_func("buildhistory_commit", e.data)
+		if e.data.getVar('BUILDHISTORY_FEATURES', True).strip():
+			if e.data.getVar("BUILDHISTORY_COMMIT", True) == "1":
+				bb.build.exec_func("buildhistory_commit", e.data)
 }
 
 addhandler buildhistory_eventhandler
