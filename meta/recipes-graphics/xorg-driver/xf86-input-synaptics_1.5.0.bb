@@ -1,5 +1,7 @@
 require xorg-driver-input.inc
 
+#SRC_URI += "file://configurefix.patch"
+
 SUMMARY = "X.Org X server -- synaptics touchpad input driver"
 
 DESCRIPTION = "synaptics is an Xorg input driver for the touchpads from \
@@ -10,16 +12,11 @@ advanced features of the touchpad to become available."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e395e21f3c21d4fc3a243783e85e9ab5"
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.2"
 
 SRC_URI[md5sum] = "41ee749ecbfef98f7fba708cb2afae87"
 SRC_URI[sha256sum] = "95cc5399fc49c9a35b02c2272cd99b8438f4609b219278c66a79e74c916a1c4e"
 
 DEPENDS += "libxi"
 
-#
-# the xorg-synaptics.pc has hardcoded sdkdir=/usr/include/xorg, which is not correct
-# for cross compiling, so pass the correct sdkdir as include path
-#
-EXTRA_OEMAKE += " sdkdir=${STAGING_INCDIR}/xorg "
-
+FILES_${PN} += "${datadir}/X11/xorg.conf.d"
