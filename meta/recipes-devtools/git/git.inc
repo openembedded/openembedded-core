@@ -16,6 +16,7 @@ do_install () {
 	oe_runmake install DESTDIR="${D}" bindir=${bindir} \
 		template_dir=${datadir}/git-core/templates \
 		GIT_PYTHON_DIR=${D}${datadir}/git-core/python
+	rm -rf ${D}${libdir}/perl-native
 }
 
 do_install_append_virtclass-native() {
@@ -46,6 +47,7 @@ RDEPENDS_${PN}-perltools = "${PN} perl perl-module-file-path findutils"
 
 PACKAGES =+ "${PN}-python"
 FILES_${PN}-python = "${libdir}/python*"
+
 
 # git-tk package with gitk and git-gui
 PACKAGES =+ "${PN}-tk"
