@@ -4,7 +4,6 @@ program from the program's source files.  Make gets its knowledge of how to buil
 called the makefile, which lists each of the non-source files and how to compute it from other files."
 HOMEPAGE = "http://www.gnu.org/software/make/"
 SECTION = "devel"
-LICENSE = "GPL"
 
 SRC_URI = "${GNU_MIRROR}/make/make-${PV}.tar.bz2 \
            file://SCCS.patch"
