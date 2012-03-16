@@ -29,3 +29,7 @@ export STAGING_INCDIR
 export STAGING_LIBDIR
 
 BBCLASSEXTEND = "native"
+
+do_install_append() {
+	rm -rf ${D}${datadir}/share
+}
