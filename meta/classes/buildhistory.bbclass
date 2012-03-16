@@ -19,6 +19,11 @@ BUILDHISTORY_PUSH_REPO ?= ""
 inherit package
 PACKAGEFUNCS += "buildhistory_emit_pkghistory"
 
+# We don't want to force a rerun of do_package for everything
+# if the buildhistory_emit_pkghistory function or any of the
+# variables it refers to changes
+do_package[vardepsexclude] += "buildhistory_emit_pkghistory"
+
 #
 # Called during do_package to write out metadata about this package
 # for comparision when writing future packages
