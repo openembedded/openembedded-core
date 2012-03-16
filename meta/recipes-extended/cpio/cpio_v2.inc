@@ -18,6 +18,7 @@ do_install () {
     autotools_do_install
     install -d ${D}${base_bindir}/
     mv "${D}${bindir}/cpio" "${D}${base_bindir}/cpio.${PN}"
+    rmdir ${D}${bindir}/
     case ${TARGET_OS} in
         *-uclibc*) ;;
         *) mv "${D}${libexecdir}/rmt" "${D}${libexecdir}/rmt.${PN}" ;;
