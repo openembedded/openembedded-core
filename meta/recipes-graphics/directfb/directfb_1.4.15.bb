@@ -1,14 +1,9 @@
 require directfb.inc
 
 RV = "1.4-6"
-PR = "r1"
+PR = "r2"
 
 DEPENDS += "sysfsutils"
-
-SRC_URI = " \
-    http://directfb.org/downloads/Core/DirectFB-1.4/DirectFB-${PV}.tar.gz \
-    file://directfb-1.2.x-fix-pkgconfig-cflags.patch \
-    "
 
 EXTRA_OECONF = "\
   --enable-freetype=yes \

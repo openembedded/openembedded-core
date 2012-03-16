@@ -11,11 +11,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=dcf3c825659e82539645da41a7908589"
 HOMEPAGE = "http://directfb.org"
 DEPENDS = "jpeg libpng freetype zlib tslib"
 
-SRC_URI = " \
-    http://directfb.org/downloads/Core/DirectFB-1.4/DirectFB-${PV}.tar.gz \
-    file://directfb-1.2.x-fix-pkgconfig-cflags.patch \
-    file://dont-use-linux-config.patch \
-    "
+SRC_URI = "http://directfb.org/downloads/Core/DirectFB-1.4/DirectFB-${PV}.tar.gz \
+           file://directfb-1.2.x-fix-pkgconfig-cflags.patch \
+           file://configurefix.patch"
 
 S = "${WORKDIR}/DirectFB-${PV}"
 
