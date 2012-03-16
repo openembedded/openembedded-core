@@ -1,14 +1,14 @@
 require gnutls.inc
 
-PR = "${INC_PR}.6"
+PR = "${INC_PR}.0"
 
 SRC_URI += "file://gnutls-openssl.patch \
             file://correct_rpl_gettimeofday_signature.patch \
             file://configure-fix.patch \
            "
 
-SRC_URI[md5sum] = "0414bba9760201f27d66787997cbadfb"
-SRC_URI[sha256sum] = "d04328857d9e420eca53f7f7fd615bc76d2f5d74984a9b90c0f2c5f7b5bf5b4a"
+SRC_URI[md5sum] = "f08990f1afa4e1d0ee13e64e537c7854"
+SRC_URI[sha256sum] = "588ad6b0901c789f2f6afcec88ac4d688801bf1a024c9afa08706bb8d9868bf3"
 
 python() {
     if not ((d.getVar("INCOMPATIBLE_LICENSE", True) or "").find("GPLv3") != -1):
