@@ -10,7 +10,7 @@ format using a printer-specific, but spooler-independent PPD file. \
 "
 
 DEPENDS += "cups perl libxml2"
-PR = "r2"
+PR = "r3"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/foomatic-filters-${PV}/COPYING;md5=393a5ca445f6965873eca0259a17f833"
@@ -36,4 +36,4 @@ do_install_append_linuxstdbase() {
     ln -sf ${bindir}/foomatic-rip ${D}${exec_prefix}/lib/cups/filter
 }
 
-FILES_${PN}_append_linuxstdbase += "${exec_prefix}/lib/cups/filter/foomatic-rip"
+FILES_${PN} += "${exec_prefix}/lib/cups/ ${exec_prefix}/lib/ppr/"
