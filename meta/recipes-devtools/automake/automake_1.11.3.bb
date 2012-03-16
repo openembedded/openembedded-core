@@ -41,12 +41,13 @@ PERLPATH_virtclass-nativesdk = "/usr/bin/perl"
 SRC_URI += "${PATHFIXPATCH} \
 	    file://prefer-cpio-over-pax-for-ustar-archives.patch \
 	    file://python-libdir.patch \
-            file://automake_1.11.2_fix_for_pkglibexec_SCRIPTS.patch \
             file://py-compile-compile-only-optimized-byte-code.patch"
 
-PR = "r3"
-SRC_URI[md5sum] = "18194e804d415767bae8f703c963d456"
-SRC_URI[sha256sum] = "4f46d1f9380c8a3506280750f630e9fc915cb1a435b724be56b499d016368718"
+
+SRC_URI[md5sum] = "93ecb319f0365cb801990b00f658d026"
+SRC_URI[sha256sum] = "921b5188057e57bdd9c0ba06e21d0b0ea7dafa61a9bd08a2b041215bcff12f55"
+
+PR = "r0"
 
 do_install () {
     oe_runmake 'DESTDIR=${D}' install

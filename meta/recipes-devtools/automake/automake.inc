@@ -5,7 +5,7 @@ LICENSE = "GPLv2"
 HOMEPAGE = "http://www.gnu.org/software/automake/"
 SECTION = "devel"
 
-SRC_URI = "${GNU_MIRROR}/automake/automake-${PV}.tar.bz2 "
+SRC_URI = "${GNU_MIRROR}/automake/automake-${PV}.tar.gz"
 
 inherit autotools
 
