@@ -12,12 +12,14 @@ EXTRAINSTALL = "do_install_extra"
 
 do_install () {
     autotools_do_install
-    install -d ${D}${base_bindir}
     ${EXTRAINSTALL}
 }
 
 do_install_extra () {
+    install -d ${D}${base_bindir}
     mv ${D}${bindir}/tar ${D}${base_bindir}/tar.${PN}
+    rmdir ${D}${bindir}/
+    rmdir ${D}${sbindir}/
     mv ${D}${libexecdir}/rmt ${D}${libexecdir}/rmt.${PN}
 }
 
