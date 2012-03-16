@@ -4,10 +4,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 
 DEPENDS = "libaio"
 
-SRCREV = "0abccbcb5d1a538028ffcb3869d646d29bf5812b"
+SRCREV = "d6918c8832793b4205ed3bfede78c2f915c23385"
 
-PR = "r3"
-PV = "1.0.3+git${SRCPV}"
+PR = "r4"
+PV = "1.0.5+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.dk/blktrace.git;protocol=git \
            file://blktrace-makefile.patch"
