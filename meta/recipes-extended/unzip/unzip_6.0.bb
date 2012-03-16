@@ -4,7 +4,7 @@ SECTION = "console/utils"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=94caec5a51ef55ef711ee4e8b1c69e29"
 PE = "1"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "ftp://ftp.info-zip.org/pub/infozip/src/unzip60.tgz \
 	file://avoid-strip.patch"
@@ -26,6 +26,7 @@ do_install() {
         oe_runmake -f unix/Makefile install prefix=${D}${prefix}
 	install -d ${D}${mandir}
 	mv ${D}${prefix}/man/* ${D}${mandir}
+	rmdir ${D}${prefix}/man/
 }
 
 BBCLASSEXTEND = "native"
