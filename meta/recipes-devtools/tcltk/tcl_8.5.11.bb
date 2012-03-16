@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://../license.terms;md5=a47a9be26d03f925fc1fbd2784f27e11
     file://../win/license.terms;md5=a47a9be26d03f925fc1fbd2784f27e11 \
     "
 
-PR = "r4"
+PR = "r5"
 
 BASE_SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl${PV}-src.tar.gz \
                 file://tcl-add-soname.patch"
@@ -30,7 +30,7 @@ inherit autotools
 
 DEPENDS_virtclass-native = ""
 
-EXTRA_OECONF = "--enable-threads"
+EXTRA_OECONF = "--enable-threads --disable-rpath"
 
 do_configure() {
 	gnu-configize
