@@ -12,13 +12,14 @@ COMPATIBLE_HOST = '(x86_64.*|i.86.*)-(linux|freebsd.*)'
 SRC_URI = "git://git.yoctoproject.org/qemugl;protocol=git \
            file://versionfix.patch \
            file://remove-x11r6-lib-dir.patch \
-           file://call_opengl_fix.patch"
+           file://call_opengl_fix.patch \
+           file://extensions_emulation.patch"
 S = "${WORKDIR}/git"
 
 SRCREV = "d888bbc723c00d197d34a39b5b7448660ec1b1c0"
 
 PV = "0.0+git${SRCPV}"
-PR = "r9"
+PR = "r10"
 
 DEFAULT_PREFERENCE = "-1"
 

@@ -1,0 +1,34 @@
+Hide some GLX extensions by default to avoid guest call missing GLX API. It's
+hacky to implement these APIs, so hide these extensions as fix.
+
+Upstream-Status: Pending
+
+Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
+
+Index: git/opengl_client.c
+===================================================================
+--- git.orig/opengl_client.c	2012-03-16 18:22:27.000000000 +0800
++++ git/opengl_client.c	2012-03-16 18:52:06.000000000 +0800
+@@ -105,6 +105,12 @@
+   "NO_MOVE",                 /* default : set if TCP/IP communication */
+ };
+ 
++/* Hiding some GLX extensions from guest */
++static const char* hiding_extensions =
++  "GLX_MESA_copy_sub_buffer,\
++   GLX_MESA_multithread_makecurrent,\
++   GLX_MESA_swap_control,\
++  ";
+ 
+ #ifdef WIN32
+ 
+@@ -3516,7 +3522,8 @@
+ static void removeUnwantedExtensions(char* ret)
+ {
+   char* toBeRemoved = getenv("GL_REMOVE_EXTENSIONS");
+-  if (toBeRemoved == NULL) return;
++  if (toBeRemoved == NULL)
++    toBeRemoved = hiding_extensions;
+   toBeRemoved = strdup(toBeRemoved);
+   char* iterToBeRemoved = toBeRemoved;
+   while(*iterToBeRemoved)
