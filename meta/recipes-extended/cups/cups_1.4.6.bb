@@ -1,6 +1,6 @@
 require cups14.inc
 
-PR = "r2"
+PR = "r3"
 DEPENDS += "libusb \
        ${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
