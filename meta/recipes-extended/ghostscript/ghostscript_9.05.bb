@@ -15,7 +15,7 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c5326026692dbed183f0558f926580f8"
 
-PR = "r1"
+PR = "r0"
 
 DEPENDS = "ghostscript-native tiff jpeg fontconfig cups"
 DEPENDS_virtclass-native = ""
@@ -109,7 +109,7 @@ PACKAGES =+ "${PN}-cups"
 FILES_${PN}-dbg += "${exec_prefix}/lib/cups/filter/.debug"
 
 FILES_${PN}-cups += "${exec_prefix}/lib/cups/filter/gstoraster \
-                     ${exec_prefix}/lib/cups/filter/pstopxl \
+                     ${exec_prefix}/lib/cups/filter/gstopxl \
                      ${datadir}/cups \
                      ${sysconfdir}/cups \
                      "
