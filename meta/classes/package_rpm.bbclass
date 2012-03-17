@@ -151,7 +151,6 @@ resolve_package_rpm () {
 rpm_common_comand () {
 
     local target_rootfs="${INSTALL_ROOTFS_RPM}"
-    local extra_args="$@"
 
     ${RPM} --root ${target_rootfs} \
         --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
@@ -160,7 +159,7 @@ rpm_common_comand () {
         -D "_dbpath ${rpmlibdir}" \
         --noparentdirs --nolinktos \
         -D "__dbi_txn create nofsync private" \
-        -D "_cross_scriptlet_wrapper ${WORKDIR}/scriptlet_wrapper" $extra_args
+        -D "_cross_scriptlet_wrapper ${WORKDIR}/scriptlet_wrapper" $@
 }
 
 # install or remove the pkg
