@@ -12,7 +12,7 @@ SRC_URI = "http://zlib.net/pigz/pigz-${PV}.tar.gz \
 
 PROVIDES_virtclass-native += "gzip-native"
 
-DEPENDS_virtclass-native = "zlib-native"
+DEPENDS = "zlib"
 
 do_install () {
         install -d ${D}${bindir}
