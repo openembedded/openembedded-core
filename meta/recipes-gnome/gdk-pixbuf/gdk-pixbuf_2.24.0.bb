@@ -28,6 +28,7 @@ LIBV = "2.10.0"
 EXTRA_OECONF = "\
   --without-libtiff \
   --with-libpng \
+  --without-x11 \
   --disable-introspection \
 "
 
