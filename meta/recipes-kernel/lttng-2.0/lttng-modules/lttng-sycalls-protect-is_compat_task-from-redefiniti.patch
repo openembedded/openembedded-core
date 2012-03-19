@@ -1,0 +1,41 @@
+From 415a1a678cb2fcf603f9777f2c7b71c1e38f8101 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@windriver.com>
+Date: Mon, 19 Mar 2012 13:30:31 -0400
+Subject: [PATCH] lttng-sycalls: protect is_compat_task from redefinition
+
+recent -stable kernels have their own fallback definition of is_compat_task
+
+   #define is_compat_task() (0)
+
+To protect against this double definition of is_compat_task we can check
+to see if it is already defined, and skip the lttng variant.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
+---
+ lttng-syscalls.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/lttng-syscalls.c b/lttng-syscalls.c
+index 9de3c07..80d0f05 100644
+--- a/lttng-syscalls.c
++++ b/lttng-syscalls.c
+@@ -17,12 +17,16 @@
+ #include "ltt-events.h"
+ 
+ #ifndef CONFIG_COMPAT
++
++#ifndef is_compat_task
+ static inline int is_compat_task(void)
+ {
+ 	return 0;
+ }
+ #endif
+ 
++#endif
++
+ static
+ void syscall_entry_probe(void *__data, struct pt_regs *regs, long id);
+ 
+-- 
+1.7.5.4
+
