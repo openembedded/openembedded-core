@@ -26,14 +26,13 @@ SRC_URI += "file://configure-targets.patch \
             file://debian/no-rpath.patch \
             file://debian/man-dir.patch \
             file://debian/man-section.patch \
-            file://debian/pkg-config.patch \
             file://debian/no-symbolic.patch \
             file://debian/debian-targets.patch \
             file://openssl_fix_for_x32.patch \
            "
 
-SRC_URI[md5sum] = "07ecbe4324f140d157478637d6beccf1"
-SRC_URI[sha256sum] = "905106a1505e7d9f7c36ee81408d3aa3d41aac291a9603d0c290c9530c92fc2c"
+SRC_URI[md5sum] = "a5bc483c570f2ac3758ce5c19b667fab"
+SRC_URI[sha256sum] = "7e3dfc21aa57ed33ea673170053d1921322803b8a6a624a4f0d2e4c308bd418d"
 
 PACKAGES =+ " \
 	${PN}-engines \
