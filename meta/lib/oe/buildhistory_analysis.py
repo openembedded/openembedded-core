@@ -49,8 +49,8 @@ class ChangeRecord:
     def __str__(self):
         return self._str_internal(True)
 
-    def _str_internal(self, pathprefix):
-        if pathprefix:
+    def _str_internal(self, outer):
+        if outer:
             prefix = '%s: ' % self.path
         else:
             prefix = ''
@@ -91,7 +91,7 @@ class ChangeRecord:
                 percentchg = 100
             out = '%s changed from %s to %s (%s%d%%)' % (self.fieldname, self.oldvalue or "''", self.newvalue or "''", '+' if percentchg > 0 else '', percentchg)
         elif self.fieldname in img_monitor_files:
-            if pathprefix:
+            if outer:
                 prefix = 'Changes to %s ' % self.path
             out = '(%s):\n  ' % self.fieldname
             if self.filechanges:
@@ -107,6 +107,8 @@ class ChangeRecord:
 
         if self.related:
             for chg in self.related:
+                if not outer and chg.fieldname in ['PE', 'PV', 'PR']:
+                    continue
                 for line in chg._str_internal(False).splitlines():
                     out += '\n  * %s' % line
 
