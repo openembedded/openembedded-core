@@ -3,6 +3,7 @@ require eglibc.inc
 SRCREV = "16540"
 
 DEPENDS += "gperf-native"
+PR = "r1"
 PR_append = "+svnr${SRCPV}"
 
 EGLIBC_BRANCH="eglibc-2_15"
