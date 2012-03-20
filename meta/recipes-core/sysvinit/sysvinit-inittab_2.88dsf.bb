@@ -1,19 +1,14 @@
 DESCRIPTION = "Inittab for sysvinit"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
+LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0;md5=801f80980d171dd6425610833a22dbe6"
 
 PR = "r6"
 
-SRC_URI = "file://COPYING \
-           file://inittab"
+SRC_URI = "file://inittab"
 
 S = "${WORKDIR}/sysvinit-${PV}"
 
 INHIBIT_DEFAULT_DEPS = "1"
-
-do_configure() {
-	cp ${WORKDIR}/COPYING ${S}/
-}
 
 do_compile() {
 	:
