@@ -76,7 +76,10 @@ class ChangeRecord:
             added = list(set(bitems) - set(aitems))
 
             if removed or added:
-                out = '%s:%s%s' % (self.fieldname, ' removed "%s"' % ' '.join(removed) if removed else '', ' added "%s"' % ' '.join(added) if added else '')
+                if removed and not bitems:
+                    out = '%s: removed all items "%s"' % (self.fieldname, ' '.join(removed))
+                else:
+                    out = '%s:%s%s' % (self.fieldname, ' removed "%s"' % ' '.join(removed) if removed else '', ' added "%s"' % ' '.join(added) if added else '')
             else:
                 out = '%s changed order' % self.fieldname
         elif self.fieldname in numeric_fields:
