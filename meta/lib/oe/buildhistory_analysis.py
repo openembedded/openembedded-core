@@ -298,6 +298,8 @@ def compare_dict_blobs(path, ablob, bblob, report_all):
                 if percentchg < monitor_numeric_threshold:
                     continue
             elif (not report_all) and key in list_fields:
+                if key == "FILELIST" and path.endswith("-dbg") and bstr.strip() != '':
+                    continue
                 if key in ['RDEPENDS', 'RRECOMMENDS']:
                     (depvera, depverb) = compare_pkg_lists(astr, bstr)
                     if depvera == depverb:
