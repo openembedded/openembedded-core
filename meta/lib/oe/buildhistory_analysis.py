@@ -13,6 +13,7 @@ import os.path
 import difflib
 import git
 import re
+import bb.utils
 
 
 # How to display fields
@@ -55,8 +56,13 @@ class ChangeRecord:
             prefix = ''
 
         def pkglist_split(pkgs):
-            pkgit = re.finditer(r'[a-zA-Z0-9.+-]+( \([><=]+ [^ )]+\))?', pkgs, 0)
-            pkglist = [p.group(0) for p in pkgit]
+            depver = bb.utils.explode_dep_versions(pkgs)
+            pkglist = []
+            for k,v in depver.iteritems():
+                if v:
+                    pkglist.append("%s (%s)" % (k,v))
+                else:
+                    pkglist.append(k)
             return pkglist
 
         if self.fieldname in list_fields or self.fieldname in list_order_fields:
@@ -68,6 +74,7 @@ class ChangeRecord:
                 bitems = self.newvalue.split()
             removed = list(set(aitems) - set(bitems))
             added = list(set(bitems) - set(aitems))
+
             if removed or added:
                 out = '%s:%s%s' % (self.fieldname, ' removed "%s"' % ' '.join(removed) if removed else '', ' added "%s"' % ' '.join(added) if added else '')
             else:

@@ -6,7 +6,7 @@
 # Author: Paul Eggleton <paul.eggleton@linux.intel.com>
 
 import sys
-import os.path
+import os
 
 # Ensure PythonGit is installed (buildhistory_analysis needs it)
 try:
@@ -24,8 +24,23 @@ def main():
         sys.exit(1)
 
     # Set path to OE lib dir so we can import the buildhistory_analysis module
-    newpath = os.path.abspath(os.path.dirname(os.path.abspath(sys.argv[0])) + '/../meta/lib')
-    sys.path = sys.path + [newpath]
+    basepath = os.path.abspath(os.path.dirname(os.path.abspath(sys.argv[0])) + '/..')
+    newpath = basepath + '/meta/lib'
+    # Set path to bitbake lib dir so the buildhistory_analysis module can load bb.utils
+    if os.path.exists(basepath + '/bitbake/lib/bb'):
+        bitbakepath = basepath + '/bitbake'
+    else:
+        # look for bitbake/bin dir in PATH
+        bitbakepath = None
+        for pth in os.environ['PATH'].split(':'):
+            if os.path.exists(os.path.join(pth, '../lib/bb')):
+                bitbakepath = os.path.abspath(os.path.join(pth, '..'))
+                break
+        if not bitbakepath:
+            print("Unable to find bitbake by searching parent directory of this script or PATH")
+            sys.exit(1)
+
+    sys.path.extend([newpath, bitbakepath + '/lib'])
     import oe.buildhistory_analysis
 
     if len(sys.argv) > 3:
