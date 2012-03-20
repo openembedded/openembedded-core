@@ -46,6 +46,7 @@ RDEPENDS_task-self-hosted-host-tools = "\
     kernel-module-iptable-filter \
     mc \
     parted \
+    pseudo \
     screen \
     "
 
