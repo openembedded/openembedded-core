@@ -5,7 +5,7 @@ SECTION = "base"
 HOMEPAGE = "http://www.ngolde.de/libacpi.html"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=fec17f82f16630adf2dfb7d2a46f21c5"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://www.ngolde.de/download/libacpi-${PV}.tar.gz \
 	   file://makefile-fix.patch \
@@ -23,6 +23,7 @@ FILES_${PN}-bin = "${bindir}"
 COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 
 CFLAGS += "-fPIC"
+EXTRA_OEMAKE += 'STRIP="echo"'
 
 do_install() {
 	oe_runmake install DESTDIR=${D} PREFIX=${exec_prefix}
