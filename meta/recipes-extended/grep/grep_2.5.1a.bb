@@ -27,6 +27,7 @@ do_install () {
 	mv ${D}${bindir}/grep ${D}${base_bindir}/grep.${PN}
 	mv ${D}${bindir}/egrep ${D}${base_bindir}/egrep.${PN}
 	mv ${D}${bindir}/fgrep ${D}${base_bindir}/fgrep.${PN}
+	rmdir ${D}${bindir}/
 }
 
 pkg_postinst_${PN} () {

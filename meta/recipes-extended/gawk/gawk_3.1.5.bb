@@ -33,3 +33,8 @@ ALTERNATIVE_NAME = "awk"
 ALTERNATIVE_PATH = "gawk"
 ALTERNATIVE_LINK = "${bindir}/awk"
 ALTERNATIVE_PRIORITY = "100"
+
+do_install_append() {
+	# remove the link since we don't package it
+	rm ${D}${bindir}/awk
+}

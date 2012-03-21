@@ -31,7 +31,7 @@ PARALLEL_MAKE = ""
 
 inherit autotools
 
-EXTRA_OECONF += "--without-lisp --disable-csharp --disable-openmp"
+EXTRA_OECONF += "--without-lisp --disable-csharp --disable-openmp --without-emacs"
 acpaths = '-I ${S}/autoconf-lib-link/m4/ \
            -I ${S}/gettext-runtime/m4 \
            -I ${S}/gettext-tools/m4'
@@ -53,3 +53,7 @@ do_configure_prepend() {
 PACKAGES =+ "libgettextlib libgettextsrc"
 FILES_libgettextlib = "${libdir}/libgettextlib-*.so*"
 FILES_libgettextsrc = "${libdir}/libgettextsrc-*.so*"
+
+do_install_append() {
+	rm -f ${D}${libdir}/preloadable_libintl.so
+}

@@ -18,6 +18,7 @@ do_install () {
 	autotools_do_install
 	install -d ${D}${base_bindir}
 	mv ${D}${bindir}/sed ${D}${base_bindir}/sed.${PN}
+	rmdir ${D}${bindir}/
 }
 
 ALTERNATIVE_NAME = "sed"
