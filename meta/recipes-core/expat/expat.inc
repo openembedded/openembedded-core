@@ -7,7 +7,7 @@ LICENSE = "MIT"
 SRC_URI = "${SOURCEFORGE_MIRROR}/expat/expat-${PV}.tar.gz \
            file://autotools.patch"
 
-inherit autotools lib_package
+inherit autotools lib_package gzipnative
 
 # This package uses an archive format known to have issue with some
 # versions of gzip

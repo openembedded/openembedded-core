@@ -1,6 +1,8 @@
 require pigz.inc
 
-PR = "r0"
+PR = "r1"
+
+NATIVE_PACKAGE_PATH_SUFFIX = "/${PN}"
 
 BBCLASSEXTEND = "native"
 

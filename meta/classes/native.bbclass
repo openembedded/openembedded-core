@@ -77,7 +77,7 @@ baselib = "lib"
 # Libtool's default paths are correct for the native machine
 lt_cv_sys_lib_dlsearch_path_spec[unexport] = "1"
 
-NATIVE_PACKAGE_PATH_SUFFIX = ""
+NATIVE_PACKAGE_PATH_SUFFIX ?= ""
 bindir .= "${NATIVE_PACKAGE_PATH_SUFFIX}"
 libdir .= "${NATIVE_PACKAGE_PATH_SUFFIX}"
 libexecdir .= "${NATIVE_PACKAGE_PATH_SUFFIX}"
