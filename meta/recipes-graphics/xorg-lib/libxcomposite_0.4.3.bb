@@ -16,6 +16,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3f2907aad541f6f226fbc58cc1b3cdf1"
 
 DEPENDS += " compositeproto virtual/libx11 libxfixes libxext"
 PROVIDES = "xcomposite"
+BBCLASSEXTEND = "native"
 
 PE = "1"
 PR = "r0"

@@ -17,7 +17,7 @@ PE = "1"
 
 XORG_PN = "libXfixes"
 
-BBCLASSEXTEND = "nativesdk"
+BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI[md5sum] = "678071bd7f9f7467e2fc712d81022318"
 SRC_URI[sha256sum] = "537a2446129242737a35db40081be4bbcc126e56c03bf5f2b142b10a79cda2e3"

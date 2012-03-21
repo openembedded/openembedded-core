@@ -18,7 +18,7 @@ PE = "1"
 
 XORG_PN = "libXrandr"
 
-BBCLASSEXTEND = "nativesdk"
+BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI[md5sum] = "92473da2fccf5fac665be4fa4f2037fa"
 SRC_URI[sha256sum] = "7eaca216ab5233d7396119eb87c1989d350a3efead104d54b55f22cdd1d99b81"

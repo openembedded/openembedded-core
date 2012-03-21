@@ -14,7 +14,7 @@ CONFLICTS = "randrext"
 PR = "r0"
 PE = "1"
 
-BBCLASSEXTEND = "nativesdk"
+BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI[md5sum] = "597491c0d8055e2a66f11350c4985775"
 SRC_URI[sha256sum] = "d90d00612cc49292bd8d9dc19efb1c9187385fbe87590d7279a02e5e1066dc71"
