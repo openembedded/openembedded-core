@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.gnu.org/software/parted/parted.html"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2f31b266d3440dd7ee50f92cf67d8e6c"
 SECTION = "console/tools"
-DEPENDS = "readline e2fsprogs"
+DEPENDS = "ncurses readline util-linux"
 PR = "r0"
 
 SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.xz \
