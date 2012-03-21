@@ -8,6 +8,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=910a8a42c962d238619c75fdb78bdb24 \
                     file://wiper/GPLv2.txt;md5=fcb02dc552a041dee27e4b85c7396067 \
                     file://wiper/wiper.sh;beginline=7;endline=31;md5=b7bc642addc152ea307505bf1a296f09"
 
+PR = "r1"
+
 PACKAGES += "wiper"
 
 FILES_wiper = "${bindir}/wiper.sh"
@@ -19,6 +21,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/hdparm/hdparm-${PV}.tar.gz "
 
 SRC_URI[md5sum] = "2bc17b72403885d4faf959682944243b"
 SRC_URI[sha256sum] = "72d550af4526aa96f0841c79321a0ee39d636cbaf1f294e52193e90c054b3cea"
+
+EXTRA_OEMAKE += 'STRIP="echo"'
 
 do_install () {
 	install -d ${D}/${base_sbindir} ${D}/${mandir}/man8 ${D}/${bindir}
