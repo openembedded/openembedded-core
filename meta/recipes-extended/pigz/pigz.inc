@@ -15,7 +15,18 @@ PROVIDES_virtclass-native += "gzip-native"
 DEPENDS = "zlib"
 
 do_install () {
-        install -d ${D}${bindir}
-        install ${B}/pigz ${D}${bindir}/gzip
-        install ${B}/unpigz ${D}${bindir}/gunzip
+	if [ "${PN}" = "${BPN}" ] ; then
+		# Install files into /bin (FHS), which is typical place for gzip
+	        install -d ${D}${base_bindir}	        
+		install ${B}/pigz ${D}${base_bindir}/gzip
+	        install ${B}/unpigz ${D}${base_bindir}/gunzip
+	else
+	        install -d ${D}${bindir}
+	        install ${B}/pigz ${D}${bindir}/gzip
+	        install ${B}/unpigz ${D}${bindir}/gunzip
+	fi
 }
+
+ALTERNATIVE_LINKS = "${base_bindir}/gzip ${base_bindir}/gunzip"
+ALTERNATIVE_PRIORITY = "80"
+

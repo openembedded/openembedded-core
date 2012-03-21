@@ -1,6 +1,6 @@
 require pigz.inc
 
-PR = "r1"
+PR = "r2"
 
 NATIVE_PACKAGE_PATH_SUFFIX = "/${PN}"
 
