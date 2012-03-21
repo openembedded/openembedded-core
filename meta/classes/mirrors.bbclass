@@ -19,11 +19,6 @@ ${DEBIAN_MIRROR}	ftp://ftp.se.debian.org/debian/pool \n \
 ${DEBIAN_MIRROR}	ftp://ftp.tr.debian.org/debian/pool \n \
 ${GNU_MIRROR}	ftp://mirrors.kernel.org/gnu \n \
 ${KERNELORG_MIRROR}	http://www.kernel.org/pub \n \
-${KERNELORG_MIRROR}	ftp://ftp.us.kernel.org/pub \n \
-${KERNELORG_MIRROR}	ftp://ftp.uk.kernel.org/pub \n \
-${KERNELORG_MIRROR}	ftp://ftp.hk.kernel.org/pub \n \
-${KERNELORG_MIRROR}	ftp://ftp.au.kernel.org/pub \n \
-${KERNELORG_MIRROR}	ftp://ftp.jp.kernel.org/pub \n \
 ftp://ftp.gnupg.org/gcrypt/     ftp://ftp.franken.de/pub/crypt/mirror/ftp.gnupg.org/gcrypt/ \n \
 ftp://ftp.gnupg.org/gcrypt/     ftp://ftp.surfnet.nl/pub/security/gnupg/ \n \
 ftp://ftp.gnupg.org/gcrypt/     http://gulus.USherbrooke.ca/pub/appl/GnuPG/ \n \
