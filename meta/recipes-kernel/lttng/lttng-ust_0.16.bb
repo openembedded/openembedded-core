@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e647752e045a8c45b6f583771bd561ef \
 DEPENDS = "liburcu"
 
 PR = "r0"
+PE = "1"
 
 SRC_URI = "http://lttng.org/files/ust/releases/ust-${PV}.tar.gz"
 
