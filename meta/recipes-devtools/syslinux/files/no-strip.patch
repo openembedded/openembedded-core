@@ -1,0 +1,31 @@
+Disable stripping of binaries
+
+We don't want to strip these as this is handled separately at package
+time.
+
+Upstream-Status: Inappropriate [configuration]
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+--- syslinux-4.03.orig/mtools/Makefile
++++ syslinux-4.03/mtools/Makefile
+@@ -4,7 +4,7 @@ include $(topdir)/MCONFIG
+ OPTFLAGS = -g -Os
+ INCLUDES = -I. -I.. -I../libfat -I../libinstaller
+ CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES)
+-LDFLAGS	 = -s
++LDFLAGS	 =
+ 
+ SRCS     = syslinux.c \
+ 	   ../libinstaller/fat.c \
+--- syslinux-4.03.orig/utils/Makefile
++++ syslinux-4.03/utils/Makefile
+@@ -18,7 +18,7 @@ topdir = ..
+ include $(topdir)/MCONFIG
+ 
+ CFLAGS   = $(GCCWARN) -Os -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
+-LDFLAGS  = -O2 -s
++LDFLAGS  = -O2
+ 
+ TARGETS	 = mkdiskimage isohybrid gethostip memdiskfind
+ TARGETS += isohybrid.pl  # about to be obsoleted
