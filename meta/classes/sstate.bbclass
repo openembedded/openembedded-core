@@ -453,12 +453,14 @@ python sstate_task_postfunc () {
 #
 sstate_create_package () {
 	cd ${SSTATE_BUILDDIR}
+	TFILE=`mktemp ${SSTATE_PKG}.XXXXXXXX`
 	# Need to handle empty directories
 	if [ "$(ls -A)" ]; then
-		tar -czf ${SSTATE_PKG} *
+		tar -czf $TFILE *
 	else
-		tar -cz --file=${SSTATE_PKG} --files-from=/dev/null
+		tar -cz --file=$TFILE --files-from=/dev/null
 	fi
+	mv $TFILE ${SSTATE_PKG}
 
 	cd ${WORKDIR}
 	rm -rf ${SSTATE_BUILDDIR}
