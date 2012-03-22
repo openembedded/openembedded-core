@@ -150,15 +150,6 @@ def action_update(conf, args):
         generate the patch list
         apply the generated patches
     """
-    # make sure all repos are clean
-    for name in conf.repos:
-        check_repo_clean(conf.repos[name]['local_repo_dir'])
-    check_repo_clean(os.getcwd())
-
-    import uuid
-    patch_dir = "patch-%s" % uuid.uuid4()
-    os.mkdir(patch_dir)
-
     repos = []
     if len(args) > 1:
         for arg in args[1:]:
@@ -173,6 +164,15 @@ def action_update(conf, args):
 
     if not repos:
         repos = conf.repos
+
+    # make sure all repos are clean
+    for name in repos:
+        check_repo_clean(conf.repos[name]['local_repo_dir'])
+    check_repo_clean(os.getcwd())
+
+    import uuid
+    patch_dir = "patch-%s" % uuid.uuid4()
+    os.mkdir(patch_dir)
 
     for name in repos:
         repo = conf.repos[name]
