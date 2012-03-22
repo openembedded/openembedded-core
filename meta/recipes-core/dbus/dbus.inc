@@ -10,7 +10,7 @@ DEPENDS = "expat virtual/libintl ${@base_contains('DISTRO_FEATURES', 'x11', '${X
 DEPENDS_virtclass-native = "expat-native virtual/libintl-native"
 DEPENDS_virtclass-nativesdk = "expat-nativesdk virtual/libintl-nativesdk virtual/libx11"
 
-INC_PR = "r2"
+INC_PR = "r3"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch; \
@@ -36,7 +36,7 @@ PACKAGES =+ "${PN}-lib ${PN}-systemd ${@base_contains('DISTRO_FEATURES', 'x11', 
 FILES_${PN}-x11 = "${bindir}/dbus-launch"
 RDEPENDS_${PN}-x11 = "${PN}"
 
-FILES_${PN}-systemd = "${base_libdir}/systemd/system/"
+FILES_${PN}-systemd = "${systemd_unitdir}/system/"
 
 FILES_${PN} = "${bindir}/dbus-daemon* \
                ${bindir}/dbus-uuidgen \
@@ -67,7 +67,7 @@ EXTRA_OECONF = "--disable-tests \
                 --disable-doxygen-docs \
                 --disable-libaudit \
                 --with-xml=expat \
-                --with-systemdsystemunitdir=${base_libdir}/systemd/system/ \
+                --with-systemdsystemunitdir=${systemd_unitdir}/system/ \
                 ${EXTRA_OECONF_X}"
 
 do_install() {
@@ -96,7 +96,7 @@ do_install() {
 
 	# disable dbus-1 sysv script on systemd installs
 	# nearly all distros call the initscript plain 'dbus', but OE-core is different
-	ln -sf /dev/null ${D}/${base_libdir}/systemd/system/dbus-1.service
+	ln -sf /dev/null ${D}/${systemd_unitdir}/system/dbus-1.service
 }
 
 do_install_virtclass-native() {
