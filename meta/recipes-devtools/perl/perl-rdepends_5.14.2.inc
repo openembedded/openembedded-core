@@ -7,7 +7,7 @@
 #egrep -r "use|require" perl-module-* | grep ";" | egrep "\.pm:require | \.pm:use" | sed "s-/.*\.pm: *- += -g" | sed "s/[\"\']//g" | sed "s/;.*/\"/g" | sed "s/require */\"perl-module-/g" | sed "s/CPANPLUS::.*/cpanplus/g" | sed "s/CPAN::.*/cpan/g" | tr [:upper:] [:lower:] | sed "s/::/-/g" | grep -v perl-module-5 | sed "s/ [^+\"].*//g" | grep -v "\\$" | sed "s/_/-/g" | sed "s/\.pl\"$/\"/" | grep -v "\-vms\-" | sort -u > /tmp/1
 #find . -type f | sed "s-\./--" | sed "s-/.*--" | sort -u > /tmp/2
 #cat /tmp/1 | cut -f3 -d" " | sed "s/[\"\']//g" | sort -u > /tmp/3
-## these dependancies do not exist
+## these dependencies do not exist
 #diff -u /tmp/2 /tmp/3 | grep ^+perl-module
 
 

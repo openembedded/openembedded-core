@@ -5,7 +5,7 @@ make -j was failing sometimesa like this
 | make: *** [lex.yy.o] Error 1
 | make: *** Waiting for unfinished jobs....
 
-Fixed the issue by adding a dependancy in the makefile.
+Fixed the issue by adding a dependency in the makefile.
 Nitin <nitin.a.kamble@intel.com>
 2010/09/02
 

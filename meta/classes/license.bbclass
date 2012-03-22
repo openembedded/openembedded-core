@@ -79,7 +79,7 @@ license_create_manifest() {
     INSTALLED_PKGS=`cat ${LICENSE_DIRECTORY}/${IMAGE_NAME}/package.manifest`
     # list of installed packages is broken for deb
     for pkg in ${INSTALLED_PKGS}; do
-        # not the best way to do this but licenses are not arch dependant iirc
+        # not the best way to do this but licenses are not arch-dependent iirc
         files=`find ${TMPDIR}/pkgdata/*/runtime -name ${pkg}| head -1`
         for filename in $files; do
             pkged_pn="$(sed -n 's/^PN: //p' ${filename})"

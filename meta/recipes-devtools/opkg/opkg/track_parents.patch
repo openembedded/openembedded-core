@@ -23,7 +23,7 @@ Index: trunk/libopkg/opkg_install.c
 +     	                 pkg_vec_insert(dep->wanted_by, pkg);
  		    err = opkg_install_pkg(dep, 0);
  		    /* mark this package as having been automatically installed to
- 		     * satisfy a dependancy */
+ 		     * satisfy a dependency */
 @@ -115,6 +121,8 @@
  	  /* The package was uninstalled when we started, but another
  	     dep earlier in this loop may have depended on it and pulled

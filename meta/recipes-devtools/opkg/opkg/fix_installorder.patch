@@ -55,7 +55,7 @@ Index: trunk/libopkg/opkg_install.c
 +		    opkg_msg(DEBUG2,"Calling opkg_install_pkg.\n");
 +		    err = opkg_install_pkg(dep, 0);
 +		    /* mark this package as having been automatically installed to
-+		     * satisfy a dependancy */
++		     * satisfy a dependency */
 +		    dep->auto_installed = 1;
 +		    if (err) {
 +			 pkg_vec_free(depends);

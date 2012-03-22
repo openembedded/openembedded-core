@@ -899,7 +899,7 @@ Upstream-Status: Pending
 +    AvahiServiceResolver *resolver;
 +};
 +
-+/* A generic, system independant lock routine, similar to sys_lock,
++/* A generic, system-independent lock routine, similar to sys_lock,
 + * but more powerful:
 + *        rw:         if non-zero: r/w lock instead of r/o lock
 + *        enable:     lock or unlock

@@ -1,7 +1,7 @@
 SUMMARY = "Generic PCI access library for X"
 
 DESCRIPTION = "libpciaccess provides functionality for X to access the \
-PCI bus and devices in a platform-independant way."
+PCI bus and devices in a platform-independent way."
 
 require xorg-lib-common.inc
 
