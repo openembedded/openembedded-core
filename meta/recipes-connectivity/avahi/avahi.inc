@@ -14,7 +14,7 @@ SECTION = "network"
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-INC_PR = "r0"
+INC_PR = "r1"
 
 DEPENDS = "expat libcap libdaemon dbus glib-2.0"
 
@@ -41,7 +41,7 @@ EXTRA_OECONF = "--with-distro=debian \
              --disable-qt4 \
              --disable-python \
              --disable-doxygen-doc \
-             --with-systemdsystemunitdir=${base_libdir}/systemd/system/ \
+             --with-systemdsystemunitdir=${systemd_unitdir}/system/ \
              ${AVAHI_GTK} \
            "
 
@@ -57,7 +57,7 @@ do_configure_prepend() {
 
 PACKAGES =+ "avahi-systemd avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib libavahi-ui avahi-autoipd avahi-utils"
 
-FILES_avahi-systemd = "${base_libdir}/systemd"
+FILES_avahi-systemd = "${systemd_unitdir}"
 FILES_avahi-autoipd = "${sbindir}/avahi-autoipd \
                        ${sysconfdir}/avahi/avahi-autoipd.action \
                        ${sysconfdir}/dhcp3/*/avahi-autoipd"
