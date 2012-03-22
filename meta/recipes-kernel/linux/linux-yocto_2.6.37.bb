@@ -10,6 +10,8 @@ KMACHINE_qemuarm  = "yocto/standard/arm-versatile-926ejs"
 
 KBRANCH = "${KMACHINE}"
 
+KMETA = "meta"
+
 LINUX_VERSION ?= "2.6.37"
 
 SRCREV_machine_qemuarm = "b3e53a090eaa23aa82e64fa0a563a93a2b4dbb5d"

@@ -28,6 +28,8 @@ SRCREV_meta ?= "6b3d4e09aa2531e9649f3f03827b7efbccfcec03"
 PR = "r1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
+KMETA = "meta"
+
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.2;protocol=git;bareclone=1;branch=${KBRANCH},meta;name=machine,meta"
 
 COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64)"

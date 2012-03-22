@@ -1,14 +1,21 @@
 inherit kernel
 require recipes-kernel/linux/linux-yocto.inc
 
-KMACHINE = "yocto/standard/base"
-KMACHINE_qemux86  = "yocto/standard/common-pc/base"
-KMACHINE_qemux86-64  = "yocto/standard/common-pc-64/base"
-KMACHINE_qemuppc  = "yocto/standard/qemu-ppc32"
-KMACHINE_qemumips = "yocto/standard/mti-malta32-be"
-KMACHINE_qemuarm  = "yocto/standard/arm-versatile-926ejs"
+KBRANCH = "yocto/standard/base"
+KBRANCH_qemux86  = "yocto/standard/common-pc/base"
+KBRANCH_qemux86-64  = "yocto/standard/common-pc-64/base"
+KBRANCH_qemuppc  = "yocto/standard/qemu-ppc32"
+KBRANCH_qemumips = "yocto/standard/mti-malta32-be"
+KBRANCH_qemuarm  = "yocto/standard/arm-versatile-926ejs"
 
-KBRANCH = "${KMACHINE}"
+# Temporary until 3.0 kernel tree is updated with machine mappings
+KMACHINE_qemux86 = "common-pc"
+KMACHINE_qemux86-64 = "common-pc-64"
+KMACHINE_qemuppc = "qemu-ppc32"
+KMACHINE_qemumips = "mti-malta32-be"
+KMACHINE_qemuarm = "arm-versatile-926ejs"
+
+KMETA = "meta"
 
 LINUX_VERSION ?= "3.0.24"
 

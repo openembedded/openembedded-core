@@ -13,6 +13,7 @@ KBRANCH_qemuppc = "yocto/standard/preempt-rt/qemu-ppc32"
 
 LINUX_VERSION ?= "3.0.24"
 LINUX_KERNEL_TYPE = "preempt-rt"
+KMETA = "meta"
 
 SRCREV_machine ?= "cf280f1dc5877d4ca43d21307222326efa68bb27"
 SRCREV_machine_qemuppc ?= "afaa5baa6a9ca9c8a03a9a3eee2ba9fba089f416"
