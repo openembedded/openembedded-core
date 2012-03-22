@@ -19,6 +19,6 @@ do_install_append() {
 
 PACKAGES =+ "${PN}-tests"
 
-FILES_${PN} += "${base_libdir}/udev ${base_libdir}/systemd"
+FILES_${PN} += "${base_libdir}/udev ${systemd_unitdir}"
 FILES_${PN}-tests = "${libdir}/ofono"
 RDEPENDS_${PN}-tests = "python"
