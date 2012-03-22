@@ -144,6 +144,43 @@ def check_repo_clean(repodir):
         logger.error("git repo %s is dirty, please fix it first", repodir)
         sys.exit(1)
 
+def check_patch(patchfile):
+    f = open(patchfile)
+    ln = f.readline()
+    of = None
+    in_patch = False
+    beyond_msg = False
+    pre_buf = ''
+    while ln:
+        if not beyond_msg:
+            if ln == '---\n':
+                if not of:
+                    break
+                in_patch = False
+                beyond_msg = True
+            elif ln.startswith('--- '):
+                # We have a diff in the commit message
+                in_patch = True
+                if not of:
+                    print('WARNING: %s contains a diff in its commit message, indenting to avoid failure during apply' % patchfile)
+                    of = open(patchfile + '.tmp', 'w')
+                    of.write(pre_buf)
+                    pre_buf = ''
+            elif in_patch and not ln[0] in '+-@ \n\r':
+                in_patch = False
+        if of:
+            if in_patch:
+                of.write(' ' + ln)
+            else:
+                of.write(ln)
+        else:
+            pre_buf += ln
+        ln = f.readline()
+    f.close()
+    if of:
+        of.close()
+        os.rename(patchfile + '.tmp', patchfile)
+
 def action_update(conf, args):
     """
         update the component repos
@@ -227,6 +264,7 @@ def action_update(conf, args):
         count=len(revlist)-1
         for patch in patchlist:
             f.write("%s %s\n" % (patch, revlist[count]))
+            check_patch(os.path.join(patch_dir, patch))
             count=count-1
         f.close()
 
