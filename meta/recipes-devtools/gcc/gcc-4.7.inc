@@ -81,6 +81,7 @@ EXTRA_OECONF_BASE = " --enable-lto \
 			--with-linker-hash-style=${LINKER_HASH_STYLE} \
 			--with-ppl=no \
 			--with-cloog=no \
+			--enable-checking=release \
 			--enable-cheaders=c_global "
 
 EXTRA_OECONF_INITIAL = "--disable-libmudflap \
