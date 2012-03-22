@@ -11,13 +11,15 @@ SRCREV = "5f1e84f8b015df3ff950056494134eca3f640d70"
 
 # git -> 0.83 needs a PE bump
 PE = "1"
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "git://github.com/clrkwllms/rt-tests.git"
+SRC_URI = "git://github.com/clrkwllms/rt-tests.git \
+           file://makefile-support-user-cflags-ldflags.patch"
 
 S = "${WORKDIR}/git"
 
-CFLAGS += "-I${S}/src/include -D_GNU_SOURCE -Wall -Wno-nonnulli ${LDFLAGS}"
+# need to append rt-tests' default CFLAGS to ours
+CFLAGS += "-I${S}/src/include -D_GNU_SOURCE -Wall -Wno-nonnulli"
 
 # calling 'uname -m' is broken on crossbuilds
 EXTRA_OEMAKE = "NUMA=0"
