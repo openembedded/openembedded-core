@@ -612,19 +612,20 @@ python do_package_qa () {
     # Check the compile log for host contamination
     compilelog = os.path.join(logdir,"log.do_compile")
 
-    statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % compilelog
-    if os.system(statement) == 0:
-        bb.warn("%s: The compile log indicates that host include and/or library paths were used.  Please check the log '%s' for more information." % \
-                (pkg, compilelog))
-
+    if os.path.exists(compilelog):
+        statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % compilelog
+        if os.system(statement) == 0:
+            bb.warn("%s: The compile log indicates that host include and/or library paths were used.\n \
+        Please check the log '%s' for more information." % (pkg, compilelog))
 
     # Check the install log for host contamination
     installlog = os.path.join(logdir,"log.do_install")
 
-    statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % installlog
-    if os.system(statement) == 0:
-        bb.warn("%s: The install log indicates that host include and/or library paths were used.  Please check the log '%s' for more information." % \
-                (pkg, installlog))
+    if os.path.exists(installlog):
+        statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % installlog
+        if os.system(statement) == 0:
+            bb.warn("%s: The install log indicates that host include and/or library paths were used.\n \
+        Please check the log '%s' for more information." % (pkg, installlog))
 
     # Scan the packages...
     pkgdest = d.getVar('PKGDEST', True)
