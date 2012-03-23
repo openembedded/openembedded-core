@@ -1,6 +1,6 @@
 require sqlite3.inc
 
-PR = "r1"
+PR = "r2"
 
 LIC_FILES_CHKSUM = "file://sqlite3.h;endline=11;md5=65f0a57ca6928710b418c094b3570bb0"
 

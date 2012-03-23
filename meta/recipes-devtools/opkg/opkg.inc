@@ -11,7 +11,7 @@ DEPENDS_virtclass-native = "curl-native"
 DEPENDS_virtclass-nativesdk = "curl-nativesdk"
 
 PE = "1"
-INC_PR = "r8"
+INC_PR = "r9"
 
 FILESDIR = "${@os.path.dirname(d.getVar('FILE',1))}/opkg"
 
