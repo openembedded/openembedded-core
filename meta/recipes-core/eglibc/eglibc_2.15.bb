@@ -1,6 +1,6 @@
 require eglibc.inc
 
-SRCREV = "16540"
+SRCREV = "17386"
 
 DEPENDS += "gperf-native"
 PR = "r2"
@@ -12,7 +12,6 @@ SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};proto=http
            file://IO-acquire-lock-fix.patch \
            file://mips-rld-map-check.patch \
            file://stack-protector-test.patch \
-           file://armv4-eabi-compile-fix.patch \
            file://etc/ld.so.conf \
            file://generate-supported.mk \
            file://ppc-sqrt.patch \
@@ -22,6 +21,8 @@ SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};proto=http
            file://use-sysroot-cxx-headers.patch \
            file://x86_fenv.patch \
            file://ppc-sqrt_finite.patch \
+           file://GLRO_dl_debug_mask.patch \
+           file://initgroups_keys.patch \
           "
 LIC_FILES_CHKSUM = "file://LICENSES;md5=98a1128c4b58120182cbea3b1752d8b9 \
       file://COPYING;md5=393a5ca445f6965873eca0259a17f833 \
