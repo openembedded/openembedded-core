@@ -5,7 +5,7 @@ SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://COPYRIGHT;endline=15;md5=349c872e0066155e1818b786938876a4"
-PR = "r5"
+PR = "r6"
 
 RDEPENDS_${PN} = "${PN}-inittab"
 
@@ -66,9 +66,11 @@ do_install () {
 		ln -s ../init.d/stop-bootlogd ${D}${sysconfdir}/rc$level.d/S99stop-bootlogd
 	done
 	mv                 ${D}${base_sbindir}/init               ${D}${base_sbindir}/init.${BPN}
+	mv ${D}${base_bindir}/mountpoint ${D}${base_bindir}/mountpoint.${BPN}
 	mv ${D}${base_bindir}/pidof ${D}${base_bindir}/pidof.${BPN}
 	mv ${D}${base_sbindir}/halt ${D}${base_sbindir}/halt.${BPN}
 	mv ${D}${base_sbindir}/reboot ${D}${base_sbindir}/reboot.${BPN}
+	mv ${D}${base_sbindir}/runlevel ${D}${base_sbindir}/runlevel.${BPN}
 	mv ${D}${base_sbindir}/shutdown ${D}${base_sbindir}/shutdown.${BPN}
 	mv ${D}${base_sbindir}/poweroff ${D}${base_sbindir}/poweroff.${BPN}
 	mv ${D}${bindir}/last ${D}${bindir}/last.${BPN}
@@ -77,8 +79,10 @@ do_install () {
 }
 
 pkg_postinst_${PN} () {
+	update-alternatives --install ${base_bindir}/mountpoint mountpoint mountpoint.${BPN} 200
 	update-alternatives --install ${base_sbindir}/halt halt halt.${BPN} 200
 	update-alternatives --install ${base_sbindir}/reboot reboot reboot.${BPN} 200
+	update-alternatives --install ${base_sbindir}/runlevel runlevel runlevel.${BPN} 200
 	update-alternatives --install ${base_sbindir}/shutdown shutdown shutdown.${BPN} 200
 	update-alternatives --install ${base_sbindir}/poweroff poweroff poweroff.${BPN} 200
 	update-alternatives --install ${bindir}/last last last.${BPN} 200
@@ -87,8 +91,10 @@ pkg_postinst_${PN} () {
 }
 
 pkg_prerm_${PN} () {
+	update-alternatives --remove mountpoint mountpoint.${BPN}
 	update-alternatives --remove halt halt.${BPN}
 	update-alternatives --remove reboot reboot.${BPN}
+	update-alternatives --remove runlevel runlevel.${BPN}
 	update-alternatives --remove shutdown shutdown.${BPN}
 	update-alternatives --remove poweroff poweroff.${BPN}
 	update-alternatives --remove last last.${BPN}
