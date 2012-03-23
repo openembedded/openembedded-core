@@ -266,23 +266,23 @@ def incompatible_license(d,dont_want_license):
     dont_want_licenses = []
     dont_want_licenses.append(d.getVar('INCOMPATIBLE_LICENSE', True))
     if d.getVarFlag('SPDXLICENSEMAP', dont_want_license):
-	dont_want_licenses.append(d.getVarFlag('SPDXLICENSEMAP', dont_want_license))
+        dont_want_licenses.append(d.getVarFlag('SPDXLICENSEMAP', dont_want_license))
 
     def include_license(license):
-	if any(fnmatch(license, pattern) for pattern in dont_want_licenses):
-	    return False
-	else:
-	    spdx_license = d.getVarFlag('SPDXLICENSEMAP', license)
-	    if spdx_license and any(fnmatch(spdx_license, pattern) for pattern in dont_want_licenses):
-		return False
-	    else:
-		return True
+        if any(fnmatch(license, pattern) for pattern in dont_want_licenses):
+            return False
+    else:
+        spdx_license = d.getVarFlag('SPDXLICENSEMAP', license)
+        if spdx_license and any(fnmatch(spdx_license, pattern) for pattern in dont_want_licenses):
+            return False
+        else:
+            return True
 
     def choose_licenses(a, b):
         if all(include_license(lic) for lic in a):
-		return a
+            return a
         else:
-		return b
+            return b
 
     """
     If you want to exlude license named generically 'X', we surely want to exlude 'X+' as well.
@@ -290,13 +290,13 @@ def incompatible_license(d,dont_want_license):
     is not a 'X+' license.
     """
     if not re.search(r'[+]',dont_want_license):
-	licenses=oe.license.flattened_licenses(re.sub(r'[+]', '', d.getVar('LICENSE', True)), choose_licenses)
+        licenses=oe.license.flattened_licenses(re.sub(r'[+]', '', d.getVar('LICENSE', True)), choose_licenses)
     else:
-	licenses=oe.license.flattened_licenses(d.getVar('LICENSE', True), choose_licenses)
+        licenses=oe.license.flattened_licenses(d.getVar('LICENSE', True), choose_licenses)
 
     for onelicense in licenses:
-	if not include_license(onelicense):
-		return True
+        if not include_license(onelicense):
+            return True
     return False
 
 
@@ -360,7 +360,6 @@ def check_license_flags(d):
         if unmatched_flag:
             return unmatched_flag
     return None
-
 
 SSTATETASKS += "do_populate_lic"
 do_populate_lic[sstate-name] = "populate-lic"
