@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa
 
 RDEPENDS_${PN} = "module-init-tools-depmod"
 
-PR = "r12"
+PR = "r13"
 
 SRC_URI = "file://update-modules \
            file://COPYING.GPL"
