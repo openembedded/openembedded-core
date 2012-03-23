@@ -1,13 +1,17 @@
 require gcc-${PV}.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
+
 DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
+
+PKGSUFFIX = ""
+PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
 
 PACKAGES = "\
   ${PN} \
   ${PN}-dev \
   ${PN}-dbg \
-  libgcov-dev \
+  libgcov${PKGSUFFIX}-dev \
   "
 
 FILES_${PN} = "${base_libdir}/libgcc*.so.*"
@@ -15,7 +19,7 @@ FILES_${PN}-dev = " \
   ${base_libdir}/libgcc*.so \
   ${libdir}/${TARGET_SYS}/${BINV}/*crt* \
   ${libdir}/${TARGET_SYS}/${BINV}/libgcc*"
-FILES_libgcov-dev = " \
+FILES_libgcov${PKGSUFFIX}-dev = " \
   ${libdir}/${TARGET_SYS}/${BINV}/libgcov.a \
   "
 FILES_${PN}-dbg += "${base_libdir}/.debug/"
@@ -62,5 +66,6 @@ do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_package"
 
 BBCLASSEXTEND = "nativesdk"
 
-INSANE_SKIP_libgcc-dev = "staticdev"
-INSANE_SKIP_libgcov-dev = "staticdev"
+INSANE_SKIP_${PN}-dev = "staticdev"
+INSANE_SKIP_libgcov${PKGSUFFIX}-dev = "staticdev"
+
