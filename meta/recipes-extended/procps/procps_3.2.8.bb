@@ -1,11 +1,12 @@
 require procps.inc
 
-PR = "r5"
+PR = "r6"
 
 inherit update-alternatives
 
 ALTERNATIVE_LINKS = "${bindir}/top ${bindir}/uptime ${bindir}/free ${bindir}/pkill ${bindir}/pmap \
-                     ${base_bindir}/kill ${base_sbindir}/sysctl ${base_bindir}/ps"
+                     ${base_bindir}/kill ${base_sbindir}/sysctl ${base_bindir}/ps \
+                     ${bindir}/pgrep ${bindir}/pwdx ${bindir}/watch"
 ALTERNATIVE_PRIORITY = "110"
 
 SRC_URI += "file://procmodule.patch \
