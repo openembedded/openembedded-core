@@ -1,0 +1,32 @@
+close() is used without a protype therefore we include unistd.h
+Fixes compile errors like below
+
+/home/kraj/work/openembedded-core/build/tmp-eglibc/work/qemuppc-oe-linux/libzypp-0.0-git1+15b6c52260bbc52b3d8e585e271b67e10cc7c433-r18/git/zypp/ExternalProgram.h:239:47: error: '::close' has not been declared
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+Index: git/zypp/ExternalProgram.h
+===================================================================
+--- git.orig/zypp/ExternalProgram.h	2012-03-23 08:27:31.716438539 -0700
++++ git/zypp/ExternalProgram.h	2012-03-23 08:27:54.520439367 -0700
+@@ -16,6 +16,7 @@
+ #include <map>
+ #include <string>
+ #include <vector>
++#include <unistd.h>
+ 
+ #include "zypp/base/ExternalDataSource.h"
+ #include "zypp/Pathname.h"
+Index: git/zypp/base/Random.cc
+===================================================================
+--- git.orig/zypp/base/Random.cc	2012-03-23 08:31:09.732449118 -0700
++++ git/zypp/base/Random.cc	2012-03-23 08:31:36.240450324 -0700
+@@ -3,6 +3,7 @@
+ #include <cstdio>
+ #include <iostream>
+ #include <fcntl.h>
++#include <unistd.h>
+ #include "zypp/base/Random.h"
+ 
+ using namespace std;
