@@ -379,7 +379,14 @@ package_install_internal_rpm () {
 
 	fi
 
-	cat ${target_rootfs}/install/install_solution.manifest > ${target_rootfs}/install/total_solution.manifest
+	# If base-passwd or shadow are in the list of packages to install,
+	# ensure they are installed first to support later packages that
+	# may create custom users/groups (fixes Yocto bug #2127)
+	infile=${target_rootfs}/install/install_solution.manifest
+	outfile=${target_rootfs}/install/total_solution.manifest
+	cat $infile | grep /base-passwd-[0-9] > $outfile || true
+	cat $infile | grep /shadow-[0-9] >> $outfile || true
+	cat $infile | grep -v /shadow-[0-9] | grep -v /base-passwd-[0-9] >> $outfile
 	cat ${target_rootfs}/install/install_multilib_solution.manifest >> ${target_rootfs}/install/total_solution.manifest
 
 	# Construct install scriptlet wrapper
