@@ -22,7 +22,8 @@ FILES_${PN} =+ "${libdir}/xtables/"
 FILES_${PN}-dbg =+ "${libdir}/xtables/.debug"
 
 SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
-           file://GNUmakefile.patch"
+           file://GNUmakefile.patch \
+           file://types.h-add-defines-that-are-required-for-if_packet.patch"
 
 SRC_URI[md5sum] = "212112389c7f10c72efb31a4ed193a4c"
 SRC_URI[sha256sum] = "09fff7dfe6af95675474fd5d0fc67622fac5a0f3d6e02ee614deae9a2e5dae13"
