@@ -45,7 +45,23 @@ if test "x$GROUPADD_PARAM" != "x"; then
 		groupname=`echo "$opts" | awk '{ print $NF }'`
 		group_exists=`grep "^$groupname:" $SYSROOT/etc/group || true`
 		if test "x$group_exists" = "x"; then
-			eval $PSEUDO groupadd  $OPT $opts
+			count=1
+			while true; do
+				eval $PSEUDO groupadd $OPT $opts || true
+				group_exists=`grep "^$groupname:" $SYSROOT/etc/group || true`
+				if test "x$group_exists" = "x"; then
+					# File locking issues can require us to retry the command
+					echo "WARNING: groupadd command did not succeed. Retrying..."
+					sleep 1
+				else
+					break
+				fi
+				count=`expr $count + 1`
+				if test $count = 11; then
+					echo "ERROR: tried running groupadd command 10 times without success, giving up"
+					exit 1
+				fi
+			done		
 		else
 			echo "Note: group $groupname already exists, not re-creating it"
 		fi
@@ -70,7 +86,23 @@ if test "x$USERADD_PARAM" != "x"; then
 		username=`echo "$opts" | awk '{ print $NF }'`
 		user_exists=`grep "^$username:" $SYSROOT/etc/passwd || true`
 		if test "x$user_exists" = "x"; then
-			eval $PSEUDO useradd $OPT $opts
+			count=1
+			while true; do
+				eval $PSEUDO useradd $OPT $opts || true
+				user_exists=`grep "^$username:" $SYSROOT/etc/passwd || true`
+				if test "x$user_exists" = "x"; then
+					# File locking issues can require us to retry the command
+					echo "WARNING: useradd command did not succeed. Retrying..."
+					sleep 1
+				else
+					break
+				fi
+				count=`expr $count + 1`
+				if test $count = 11; then
+					echo "ERROR: tried running useradd command 10 times without success, giving up"
+					exit 1
+				fi
+			done
 		else
 			echo "Note: username $username already exists, not re-creating it"
 		fi
