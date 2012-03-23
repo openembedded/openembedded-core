@@ -3,7 +3,7 @@ PR = "r5"
 require util-linux.inc
 
 # note that `lscpu' is under GPLv3+
-LICENSE_util-linux-lscpu = "GPLv3+"
+LICENSE_${PN}-lscpu = "GPLv3+"
 
 SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             file://util-linux-ng-2.16-mount_lock_path.patch \
@@ -16,16 +16,14 @@ SRC_URI[sha256sum] = "2813ae6fe0449b60402e122c2baf97f26aa53e6e2dd05591c6cbcdf67f
 
 # Only lscpu part is gplv3; rest of the code is not, 
 # so take out the lscpu parts while running non-gplv3 build.
+# The removal of the package should now occur during
+# the build if INCOMPATIBLE_LICENSE is set to GPLv3
+
 python () {
     d.setVar("REMOVELSCPU", "no")
     if (d.getVar("INCOMPATIBLE_LICENSE", True) or "").find("GPLv3") != -1:
         # avoid GPLv3
         d.setVar("REMOVELSCPU", "yes")
-        packages = (d.getVar("PACKAGES", False) or "").split()
-        if "util-linux-lscpu" in packages:
-            packages.remove("util-linux-lscpu")
-        d.setVar("PACKAGES", " ".join(packages))
-
         src_uri = (d.getVar("SRC_URI", False) or "").split()
         src_uri.append("file://remove-lscpu.patch")
         d.setVar("SRC_URI", " ".join(src_uri))
