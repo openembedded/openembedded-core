@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://ncurses/base/version.c;beginline=1;endline=27;md5=cbc
 SECTION = "libs"
 DEPENDS = "ncurses-native"
 DEPENDS_virtclass-native = ""
-INC_PR = "r7"
+INC_PR = "r8"
 
 inherit autotools binconfig multilib_header
 
@@ -245,8 +245,8 @@ FILES_${PN}-tools = "\
   ${bindir}/infotocap \
   ${bindir}/captoinfo \
   ${bindir}/infocmp \
-  ${bindir}/clear.${PN} \
-  ${bindir}/reset.${PN} \
+  ${bindir}/clear${@['', '.${PN\x7d'][d.getVar('PN', 1) == 'ncurses']} \
+  ${bindir}/reset${@['', '.${PN\x7d'][d.getVar('PN', 1) == 'ncurses']} \
   ${bindir}/tack \
   ${bindir}/tabs \
 "
