@@ -2,7 +2,7 @@ require pseudo.inc
 
 SRCREV = "17c2233f93692f79684792750001ee6d13e03925"
 PV = "1.2+git${SRCPV}"
-PR = "r20"
+PR = "r21"
 
 DEFAULT_PREFERENCE = "-1"
 
