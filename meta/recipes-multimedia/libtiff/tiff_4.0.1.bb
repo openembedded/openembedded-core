@@ -22,3 +22,5 @@ FILES_tiffxx-staticdev = "${libdir}/libtiffxx.a"
 FILES_tiffxx-dbg += "${libdir}/.debug/libtiffxx.so*"
 FILES_tiff-utils = "${bindir}/*"
 FILES_tiff-utils-dbg += "${bindir}/.debug/"
+
+BBCLASSEXTEND = "native"
