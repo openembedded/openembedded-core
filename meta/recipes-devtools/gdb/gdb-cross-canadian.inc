@@ -23,3 +23,9 @@ exit 0
 EOF
         chmod +x ${WORKDIR}/python
 }
+
+# we don't want gdb to provide bfd/iberty/opcodes, which instead will override the
+# right bits installed by binutils.
+do_install_append() {
+	rm -rf ${D}${exec_prefix}/lib
+}
