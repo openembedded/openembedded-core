@@ -18,12 +18,14 @@ do_populate_lic[cleandirs] = "${LICSSTATEDIR}"
 # We should really discuss standardizing this field, but that's a longer term goal.
 # For now, we can do this and it should grab the most common LICENSE naming variations.
 #
-# Changing GPL mapping to GPL-2 as it's not very likely to be GPL-1
 # We should NEVER have a GPL/LGPL without a version!!!!
 # Any mapping to MPL/LGPL/GPL should be fixed
 # see: https://wiki.yoctoproject.org/wiki/License_Audit
 
 # GPL variations
+SPDXLICENSEMAP[GPL-1] = "GPL-1.0"
+SPDXLICENSEMAP[GPLv1] = "GPL-1.0"
+SPDXLICENSEMAP[GPLv1.0] = "GPL-1.0"
 SPDXLICENSEMAP[GPL-2] = "GPL-2.0"
 SPDXLICENSEMAP[GPLv2] = "GPL-2.0"
 SPDXLICENSEMAP[GPLv2.0] = "GPL-2.0"
