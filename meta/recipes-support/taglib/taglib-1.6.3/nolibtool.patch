@@ -1,10 +1,10 @@
 Upstream-Status: Inappropriate [configuration]
 
-Index: taglib-1.6.1/acinclude.m4
+Index: taglib-1.6.3/acinclude.m4
 ===================================================================
---- taglib-1.6.1.orig/acinclude.m4	2009-10-31 10:04:35.000000000 +0000
-+++ taglib-1.6.1/acinclude.m4	2010-02-01 15:25:38.887788993 +0000
-@@ -5997,5894 +5997,3 @@
+--- taglib-1.6.3.orig/acinclude.m4	2012-03-23 18:27:53.641984582 +0000
++++ taglib-1.6.3/acinclude.m4	2012-03-23 18:28:05.601985381 +0000
+@@ -5989,5894 +5989,3 @@
      KDE_USE_PIE="-pie"
    fi
  ])
@@ -1027,7 +1027,7 @@ Index: taglib-1.6.1/acinclude.m4
 -   test -n "$_LT_AC_TAGVAR(runpath_var $1)" || \
 -   test "X$_LT_AC_TAGVAR(hardcode_automatic, $1)"="Xyes" ; then
 -
--  # We can hardcode non-existent directories.
+-  # We can hardcode non-existant directories.
 -  if test "$_LT_AC_TAGVAR(hardcode_direct, $1)" != no &&
 -     # If the only mechanism to avoid hardcoding is shlibpath_var, we
 -     # have to relink, otherwise we might link with an installed library
@@ -5899,10 +5899,10 @@ Index: taglib-1.6.1/acinclude.m4
 -SED=$lt_cv_path_SED
 -AC_MSG_RESULT([$SED])
 -])
-Index: taglib-1.6.1/Makefile.am
+Index: taglib-1.6.3/Makefile.am
 ===================================================================
---- taglib-1.6.1.orig/Makefile.am	2010-02-01 16:47:11.687791360 +0000
-+++ taglib-1.6.1/Makefile.am	2010-02-01 16:47:33.217875703 +0000
+--- taglib-1.6.3.orig/Makefile.am	2010-04-12 17:43:03.000000000 +0000
++++ taglib-1.6.3/Makefile.am	2012-03-23 18:27:45.665984775 +0000
 @@ -8,8 +8,8 @@
  $(top_srcdir)/subdirs:
  	cd $(top_srcdir) && $(MAKE) -f admin/Makefile.common subdirs
