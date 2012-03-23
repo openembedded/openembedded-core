@@ -887,15 +887,20 @@ python populate_packages () {
 	bb.mkdirhier(outdir)
 	os.chdir(dvar)
 
-	# Sanity check PACKAGES for duplicates - should be moved to 
-	# sanity.bbclass once we have the infrastucture
+	# Sanity check PACKAGES for duplicates and for LICENSE_EXCLUSION 
+	# Sanity should be moved to sanity.bbclass once we have the infrastucture
 	package_list = []
-	for pkg in packages.split():
-		if pkg in package_list:
-			bb.error("%s is listed in PACKAGES multiple times, this leads to packaging errors." % pkg)
-		else:
-			package_list.append(pkg)
 
+	for pkg in packages.split():
+		if d.getVar('LICENSE_EXCLUSION-' + pkg, True):
+			bb.warn("%s has an incompatible license. Excluding from packaging." % pkg)
+			packages.remove(pkg)
+		else:
+			if pkg in package_list:
+				bb.error("%s is listed in PACKAGES multiple times, this leads to packaging errors." % pkg)
+			else:
+				package_list.append(pkg)
+	d.setVar('PACKAGES', ' '.join(package_list))
 	pkgdest = d.getVar('PKGDEST', True)
 	os.system('rm -rf %s' % pkgdest)
 

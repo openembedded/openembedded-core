@@ -81,7 +81,7 @@ license_create_manifest() {
     INSTALLED_PKGS=`cat ${LICENSE_DIRECTORY}/${IMAGE_NAME}/package.manifest`
     # list of installed packages is broken for deb
     for pkg in ${INSTALLED_PKGS}; do
-        # not the best way to do this but licenses are not arch-dependent iirc
+        # not the best way to do this but licenses are not arch dependant iirc
         files=`find ${TMPDIR}/pkgdata/*/runtime -name ${pkg}| head -1`
         for filename in $files; do
             pkged_pn="$(sed -n 's/^PN: //p' ${filename})"
@@ -134,7 +134,6 @@ license_create_manifest() {
     fi
 
 }
-
 
 python do_populate_lic() {
     """
@@ -254,26 +253,39 @@ python do_populate_lic() {
 
 }
 
-def incompatible_license(d,dont_want_license):
+def return_spdx(d, license):
     """
-    This function checks if a package has only incompatible licenses. It also take into consideration 'or'
+    This function returns the spdx mapping of a license.
+    """
+    if d.getVarFlag('SPDXLICENSEMAP', license) != None:
+        return license
+    else:
+        return d.getVarFlag('SPDXLICENSEMAP', license_type)
+
+def incompatible_license(d, dont_want_license, package=""):
+    """
+    This function checks if a recipe has only incompatible licenses. It also take into consideration 'or'
     operand.
     """
     import re
     import oe.license
     from fnmatch import fnmatchcase as fnmatch
-
+    pn = d.getVar('PN', True)
     dont_want_licenses = []
     dont_want_licenses.append(d.getVar('INCOMPATIBLE_LICENSE', True))
-    if d.getVarFlag('SPDXLICENSEMAP', dont_want_license):
-        dont_want_licenses.append(d.getVarFlag('SPDXLICENSEMAP', dont_want_license))
+    recipe_license = d.getVar('LICENSE', True)
+    if package != "":
+        if d.getVar('LICENSE_' + pn + '-' + package, True):
+            license = d.getVar('LICENSE_' + pn + '-' + package, True)
+        else:
+            license = recipe_license
+    else:
+        license = recipe_license
+    spdx_license = return_spdx(d, dont_want_license)
+    dont_want_licenses.append(spdx_license)
 
     def include_license(license):
         if any(fnmatch(license, pattern) for pattern in dont_want_licenses):
-            return False
-    else:
-        spdx_license = d.getVarFlag('SPDXLICENSEMAP', license)
-        if spdx_license and any(fnmatch(spdx_license, pattern) for pattern in dont_want_licenses):
             return False
         else:
             return True
@@ -290,15 +302,14 @@ def incompatible_license(d,dont_want_license):
     is not a 'X+' license.
     """
     if not re.search(r'[+]',dont_want_license):
-        licenses=oe.license.flattened_licenses(re.sub(r'[+]', '', d.getVar('LICENSE', True)), choose_licenses)
+        licenses=oe.license.flattened_licenses(re.sub(r'[+]', '', license), choose_licenses)
     else:
-        licenses=oe.license.flattened_licenses(d.getVar('LICENSE', True), choose_licenses)
+        licenses=oe.license.flattened_licenses(license, choose_licenses)
 
     for onelicense in licenses:
         if not include_license(onelicense):
             return True
     return False
-
 
 def check_license_flags(d):
     """

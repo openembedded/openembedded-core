@@ -389,16 +389,42 @@ python () {
 
 
         dont_want_license = d.getVar('INCOMPATIBLE_LICENSE', True)
-        if dont_want_license and not pn.endswith("-native") and not pn.endswith("-cross") and not pn.endswith("-cross-initial") and not pn.endswith("-cross-intermediate") and not pn.endswith("-crosssdk-intermediate") and not pn.endswith("-crosssdk") and not pn.endswith("-crosssdk-initial"):
-            hosttools_whitelist = (d.getVar('HOSTTOOLS_WHITELIST_%s' % dont_want_license, True) or "").split()
-            lgplv2_whitelist = (d.getVar('LGPLv2_WHITELIST_%s' % dont_want_license, True) or "").split()
-            dont_want_whitelist = (d.getVar('WHITELIST_%s' % dont_want_license, True) or "").split()
-            if pn not in hosttools_whitelist and pn not in lgplv2_whitelist and pn not in dont_want_whitelist:
 
+        if dont_want_license and not pn.endswith("-native") and not pn.endswith("-cross") and not pn.endswith("-cross-initial") and not pn.endswith("-cross-intermediate") and not pn.endswith("-crosssdk-intermediate") and not pn.endswith("-crosssdk") and not pn.endswith("-crosssdk-initial") and not pn.endswith("-nativesdk"):
+        # Internally, we'll use the license mapping. This way INCOMPATIBLE_LICENSE = "GPLv2" and
+        # INCOMPATIBLE_LICENSE = "GPLv2.0" will pick up all variations of GPL-2.0
+            spdx_license = return_spdx(d, dont_want_license)
+            hosttools_whitelist = (d.getVar('HOSTTOOLS_WHITELIST_%s' % dont_want_license, True) or d.getVar('HOSTTOOLS_WHITELIST_%s' % spdx_license, True) or "").split()
+            lgplv2_whitelist = (d.getVar('LGPLv2_WHITELIST_%s' % dont_want_license, True) or d.getVar('HOSTTOOLS_WHITELIST_%s' % spdx_license, True) or "").split()
+            dont_want_whitelist = (d.getVar('WHITELIST_%s' % dont_want_license, True) or d.getVar('HOSTTOOLS_WHITELIST_%s' % spdx_license, True) or "").split()
+            if pn not in hosttools_whitelist and pn not in lgplv2_whitelist and pn not in dont_want_whitelist:
                 this_license = d.getVar('LICENSE', True)
-                if incompatible_license(d,dont_want_license):
-                    bb.note("SKIPPING %s because it's %s" % (pn, this_license))
+                # At this point we know the recipe contains an INCOMPATIBLE_LICENSE, however it may contain packages that do not.
+                packages = d.getVar('PACKAGES', True).split()
+                dont_skip_recipe = False
+                skipped_packages = {}
+                unskipped_packages = []
+                for pkg in packages:
+                    if incompatible_license(d, dont_want_license, pkg):
+                            skipped_packages[pkg] = this_license
+                            dont_skip_recipe = True
+                    else:
+                        unskipped_packages.append(pkg)
+                if not unskipped_packages:
+                    # if we hit here and have excluded all packages, then we can just exclude the recipe
+                    dont_skip_recipe = False
+                elif skipped_packages and unskipped_packages:
+                    for pkg, license in skipped_packages.iteritems():
+                        bb.note("SKIPPING the package " + pkg + " at do_rootfs because it's " + this_license)
+                        d.setVar('LICENSE_EXCLUSION-' + pkg, 1)
+                    for index, pkg in enumerate(unskipped_packages):
+                        bb.note("INCLUDING the package " + pkg)
+
+                if dont_skip_recipe is False and incompatible_license(d, dont_want_license):
+                    bb.note("SKIPPING recipe %s because it's %s" % (pn, this_license))
                     raise bb.parse.SkipPackage("incompatible with license %s" % this_license)
+
+
 
     srcuri = d.getVar('SRC_URI', True)
     # Svn packages should DEPEND on subversion-native
