@@ -1,0 +1,29 @@
+Upstream-Status: Inappropriate [configuration]
+
+From f2372ab626a395d067704f4c318180fb6039de15 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Sat, 24 Mar 2012 17:36:48 +0100
+Subject: [PATCH] watch: move from /bin to /usr/bin for compatibility with
+ procps
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ include/applets.src.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/include/applets.src.h b/include/applets.src.h
+index 87d9cbb..c148a8c 100644
+--- a/include/applets.src.h
++++ b/include/applets.src.h
+@@ -404,7 +404,7 @@ IF_VLOCK(APPLET(vlock, BB_DIR_USR_BIN, BB_SUID_REQUIRE))
+ IF_VOLNAME(APPLET(volname, BB_DIR_USR_BIN, BB_SUID_DROP))
+ /* Needs to be run by root or be suid root - needs to write to /dev/TTY: */
+ IF_WALL(APPLET(wall, BB_DIR_USR_BIN, BB_SUID_REQUIRE))
+-IF_WATCH(APPLET(watch, BB_DIR_BIN, BB_SUID_DROP))
++IF_WATCH(APPLET(watch, BB_DIR_USR_BIN, BB_SUID_DROP))
+ IF_WATCHDOG(APPLET(watchdog, BB_DIR_SBIN, BB_SUID_DROP))
+ IF_WC(APPLET(wc, BB_DIR_USR_BIN, BB_SUID_DROP))
+ IF_WGET(APPLET(wget, BB_DIR_USR_BIN, BB_SUID_DROP))
+-- 
+1.7.5.4
+
