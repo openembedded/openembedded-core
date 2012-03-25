@@ -13,7 +13,7 @@ DELAYLOGIN=no
 # UTC=yes
 # Set VERBOSE to "no" if you would like a more quiet bootup.
 VERBOSE=no
-# Set EDITMOTD to "no" if you don't want /etc/motd to be editted automatically
+# Set EDITMOTD to "no" if you don't want /etc/motd to be edited automatically
 EDITMOTD=no
 # Whether to fsck root on boot
 ENABLE_ROOTFS_FSCK=no

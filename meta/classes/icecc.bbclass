@@ -9,7 +9,7 @@
 # ICECC_VERSION accordingly.
 #
 #The class now handles all 3 different compile 'stages' (i.e native ,cross-kernel and target) creating the
-#necessary enviroment tar.gz file to be used by the remote machines.
+#necessary environment tar.gz file to be used by the remote machines.
 #It also supports meta-toolchain generation
 #
 #If ICECC_PATH is not set in local.conf then the class will try to locate it using 'which'

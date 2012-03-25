@@ -6,7 +6,7 @@
 # INHERIT += "rm_work"
 #
 
-# Use the completion scheulder by default when rm_work is active
+# Use the completion scheduler by default when rm_work is active
 # to try and reduce disk usage
 BB_SCHEDULER ?= "completion"
 

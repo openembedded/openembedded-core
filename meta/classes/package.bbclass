@@ -2,7 +2,7 @@
 # Packaging process
 #
 # Executive summary: This class iterates over the functions listed in PACKAGEFUNCS
-# Taking D and spliting it up into the packages listed in PACKAGES, placing the 
+# Taking D and splitting it up into the packages listed in PACKAGES, placing the
 # resulting output in PKGDEST.
 #
 # There are the following default steps but PACKAGEFUNCS can be extended:
