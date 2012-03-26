@@ -37,6 +37,16 @@ if [ "$py_v26_check" != "True" ]; then
 	exit 1
 fi
 
+if [ ! -e conf/bblayers.conf ] ; then
+    BDPRINT=""
+    [ -n "$BUILDDIR" ] && BDPRINT=": $BUILDDIR"
+    echo "Unable to find conf/bblayers.conf"
+    echo "BitBake must be run from within your build directory$BDPRINT"
+    exit 1
+elif [ -z "$BUILDDIR" ] ; then
+    BUILDDIR="`pwd`"
+fi
+
 needtar="1"
 TARVERSION=`tar --version | head -n 1 | cut -d ' ' -f 4`
 float_test() {
@@ -46,11 +56,6 @@ float_test() {
 # Tar version 1.24 and onwards handle symlinks in sstate packages correctly
 # but earlier versions do not
 float_test "$TARVERSION > 1.23" && needtar="0"
-
-if [ "`pwd`" != "$BUILDDIR" ] ; then
-    echo "BitBake must be run from your build directory: $BUILDDIR"
-    exit 1
-fi
 
 buildpseudo="1"
 if [ $needpseudo = "1" ]; then
