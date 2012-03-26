@@ -12,10 +12,11 @@ DEPENDS = "libusb1"
 # so here libusb-0.1 is removed completely instead of adding virtual/libusb0.
 # Besides, libusb-0.1 uses a per 1ms polling that hurts a lot to power
 # consumption.
-PROVIDES = "libusb"
+PROVIDES = "libusb virtual/libusb0"
+BBCLASSEXTEND = "native nativesdk"
 
 PE = "1"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-compat-${PV}.tar.bz2 \
            file://0.1.0-beta1-gcc3.4-fix.patch"
@@ -23,7 +24,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-compat-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "570ac2ea085b80d1f74ddc7c6a93c0eb"
 SRC_URI[sha256sum] = "a590a03b6188030ee1ca1a0af55685fcde005ca807b963970f839be776031d94"
 
-inherit autotools pkgconfig binconfig
+inherit autotools pkgconfig binconfig lib_package
 
 EXTRA_OECONF = "--libdir=${base_libdir}"
 
