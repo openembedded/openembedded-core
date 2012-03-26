@@ -24,7 +24,7 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.gz \
 SRC_URI[md5sum] = "3b8b4e1083037f29d2c4704a6d55f2a8"
 SRC_URI[sha256sum] = "a53b21159befe3e89bbaca71e9e62cf00af0f49fcca297c407944b988d59eb08"
 
-PR = "r3"
+PR = "r4"
 
 inherit autotools gettext
 BBCLASSEXTEND = "native"
@@ -56,6 +56,11 @@ do_compile_append() {
 
 do_install_append_virtclass-native() {
 	install -m 0755  ${D}${bindir}/guile ${D}${bindir}/${HOST_SYS}-guile
+
+	create_wrapper ${D}/${bindir}/guile \
+		GUILE_LOAD_PATH=${STAGING_DATADIR_NATIVE}/guile/2.0
+	create_wrapper ${D}${bindir}/${HOST_SYS}-guile
+		GUILE_LOAD_PATH=${STAGING_DATADIR_NATIVE}/guile/2.0
 }
 
 SYSROOT_PREPROCESS_FUNCS = "guile_cross_config"
