@@ -33,7 +33,8 @@ do_configure_prepend_virtclass-native() {
 
     if [ "$libsdl" != 'yes' -o "$libgl" != 'yes' ]; then
        echo "You need libGL.so and libGLU.so to exist in your library path and the development headers for SDL installed to build qemu-native.
-       Ubuntu package names are: libgl1-mesa-dev, libglu1-mesa-dev and libsdl1.2-dev"
+       Ubuntu package names are: libgl1-mesa-dev, libglu1-mesa-dev and libsdl1.2-dev.
+       Fedora package names are: mesa-libGL mesa-libGLU SDL-devel."
        exit 1;
     fi
 }

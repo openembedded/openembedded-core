@@ -406,7 +406,8 @@ test -e /usr/lib/*-linux-gnu/libGL.so -a -e /usr/lib/*-linux-gnu/libGLU.so && li
 
 if [ "$libgl" != 'yes' ]; then
     echo "You need libGL.so and libGLU.so to exist in your library path to run the QEMU emulator.
-    Ubuntu package names are: libgl1-mesa-dev and libglu1-mesa-dev."
+    Ubuntu package names are: libgl1-mesa-dev and libglu1-mesa-dev.
+    Fedora package names are: mesa-libGL mesa-libGLU."
     exit 1;
 fi
 
