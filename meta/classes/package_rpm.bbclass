@@ -6,6 +6,7 @@ RPM="rpm"
 RPMBUILD="rpmbuild"
 
 PKGWRITEDIRRPM = "${WORKDIR}/deploy-rpms"
+PKGWRITEDIRSRPM = "${DEPLOY_DIR}/sources/deploy-srpm"
 
 python package_rpm_fn () {
 	d.setVar('PKGFN', d.getVar('PKG'))
@@ -481,6 +482,30 @@ python write_specfile () {
 	import textwrap
 	import oe.packagedata
 
+	# append information for logs and patches to %prep
+	def add_prep(d,spec_files_bottom):
+		if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+			spec_files_bottom.append('%%prep -n %s' % d.getVar('PN', True) )
+			spec_files_bottom.append('%s' % "echo \"include logs and patches, Please check them in SOURCES\"")
+			spec_files_bottom.append('')
+
+	# get the name of tarball for sources, patches and logs
+	def get_tarballs(d):
+		if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+			return get_package(d)
+    
+	# append the name of tarball to key word 'SOURCE' in xxx.spec.
+	def tail_source(d,source_list=[],patch_list=None):
+		if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+			source_number = 0
+			patch_number = 0
+			for source in source_list:
+				spec_preamble_top.append('Source' + str(source_number) + ': %s' % source)
+				source_number += 1
+			if patch_list:
+				for patch in patch_list:
+					print_deps(patch, "Patch" + str(patch_number), spec_preamble_top, d)
+					patch_number += 1
 	# We need a simple way to remove the MLPREFIX from the package name,
 	# and dependency information...
 	def strip_multilib(name, d):
@@ -791,7 +816,8 @@ python write_specfile () {
 
 		del localdata
 		bb.utils.unlockfile(lf)
-
+	
+	add_prep(d,spec_files_bottom)
 	spec_preamble_top.append('Summary: %s' % srcsummary)
 	spec_preamble_top.append('Name: %s' % srcname)
 	spec_preamble_top.append('Version: %s' % srcversion)
@@ -802,6 +828,8 @@ python write_specfile () {
 	spec_preamble_top.append('Group: %s' % srcsection)
 	spec_preamble_top.append('Packager: %s' % srcmaintainer)
 	spec_preamble_top.append('URL: %s' % srchomepage)
+	source_list = get_tarballs(d)
+	tail_source(d,source_list,None)
 
 	# Replaces == Obsoletes && Provides
 	if srcrreplaces and srcrreplaces.strip() != "":
@@ -823,7 +851,7 @@ python write_specfile () {
 	print_deps(srcrsuggests, 	"Recommends", spec_preamble_top, d)
 	print_deps(srcrprovides, 	"Provides", spec_preamble_top, d)
 	print_deps(srcrobsoletes, 	"Obsoletes", spec_preamble_top, d)
-
+    
 	# conflicts can not be in a provide!  We will need to filter it.
 	if srcrconflicts:
 		depends_dict = bb.utils.explode_dep_versions(srcrconflicts)
@@ -905,7 +933,16 @@ python write_specfile () {
 
 python do_package_rpm () {
 	import os
-
+	
+	def creat_srpm_dir(d):
+		if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+			clean_licenses = get_licenses(d)
+			pkgwritesrpmdir = bb.data.expand('${PKGWRITEDIRSRPM}/${PACKAGE_ARCH_EXTEND}', d)
+			pkgwritesrpmdir = pkgwritesrpmdir + '/' + clean_licenses
+			bb.mkdirhier(pkgwritesrpmdir)
+			os.chmod(pkgwritesrpmdir, 0755)
+			return pkgwritesrpmdir
+            
 	# We need a simple way to remove the MLPREFIX from the package name,
 	# and dependency information...
 	def strip_multilib(name, d):
@@ -1021,7 +1058,17 @@ python do_package_rpm () {
 	cmd = cmd + " --define 'debug_package %{nil}'"
 	cmd = cmd + " --define '_rpmfc_magic_path " + magicfile + "'"
 	cmd = cmd + " --define '_tmppath " + workdir + "'"
+	if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+		cmdsrpm = cmd + " --define '_sourcedir " + workdir + "' --define '_srcrpmdir " + creat_srpm_dir(d) + "'"
+		cmdsrpm = 'fakeroot ' + cmdsrpm + " -bs " + outspecfile
 	cmd = cmd + " -bb " + outspecfile
+
+    # Build the source rpm package !
+	if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+		d.setVar('SBUILDSPEC', cmdsrpm + "\n")
+		d.setVarFlag('SBUILDSPEC', 'func', '1')
+		bb.build.exec_func('SBUILDSPEC', d)
+
 
 	# Build the rpm package!
 	d.setVar('BUILDSPEC', cmd + "\n")
