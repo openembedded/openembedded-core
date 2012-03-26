@@ -46,6 +46,13 @@ do_install () {
 	rm -f ${D}${libdir}/../lib/libiberty.a
 	rm -f ${D}${libdir}/libiberty.a
 
+	# Cleanup empty directories which are not shipped
+	# we use rmdir instead of 'rm -f' to ensure the directories are empty
+	rmdir ${D}${libdir}/../lib
+	rmdir ${D}${prefix}/${TARGET_SYS}/lib
+	rmdir ${D}${prefix}/${TARGET_SYS}
+	rmdir ${D}${includedir}
+
 	# Insert symlinks into libexec so when tools without a prefix are searched for, the correct ones are
 	# found.
 	dest=${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/
