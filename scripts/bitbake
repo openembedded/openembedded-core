@@ -1,10 +1,20 @@
 #!/bin/sh
 
+# This is the bitbake wrapper script that ensures everything is set up
+# correctly in the environment, builds pseudo separately if it hasn't
+# already been built, and then runs bitbake within pseudo.
+
 export BBFETCH2=True
 export BB_ENV_EXTRAWHITE="PSEUDO_BUILD PSEUDO_DISABLED $BB_ENV_EXTRAWHITE"
 
+# For certain operations (i.e. that won't be actually running any tasks)
+# we don't need pseudo
 NO_BUILD_OPTS="--version -h --help -p --parse-only -s --show-versions -e --environment -g --graphviz"
+
+# Some options are useful to pass through to the initial pseudo build if
+# that needs to be run (for debugging)
 PASSTHROUGH_OPTS="-D -DD -DDD -DDDD -v"
+
 needpseudo="1"
 for opt in $@; do
 for key in $NO_BUILD_OPTS; do
@@ -29,7 +39,7 @@ if [ "$py_v3_check" != "" ]; then
 fi
 
 # Similarly, we now have code that doesn't parse correctly with older
-# versions of Python, and rather than fixing that and be eternally
+# versions of Python, and rather than fixing that and being eternally
 # vigilant for any other new feature use, just check the version here.
 py_v26_check=`python -c 'import sys; print sys.version_info >= (2,6,0)'`
 if [ "$py_v26_check" != "True" ]; then
@@ -53,8 +63,8 @@ float_test() {
      echo | awk 'END { exit ( !( '"$1"')); }'
 }
 
-# Tar version 1.24 and onwards handle symlinks in sstate packages correctly
-# but earlier versions do not
+# Tar version 1.24 and onwards handle overwriting symlinks correctly
+# but earlier versions do not; this needs to work properly for sstate
 float_test "$TARVERSION > 1.23" && needtar="0"
 
 buildpseudo="1"
