@@ -446,7 +446,7 @@ package_install_internal_rpm () {
 	outfile=${target_rootfs}/install/total_solution.manifest
 	cat $infile | grep /base-passwd-[0-9] > $outfile || true
 	cat $infile | grep /shadow-[0-9] >> $outfile || true
-	cat $infile | grep -v /shadow-[0-9] | grep -v /base-passwd-[0-9] >> $outfile
+	cat $infile | grep -v /shadow-[0-9] | grep -v /base-passwd-[0-9] >> $outfile || true
 	cat ${target_rootfs}/install/install_multilib_solution.manifest >> ${target_rootfs}/install/total_solution.manifest
 
 	# Construct install scriptlet wrapper
