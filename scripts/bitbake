@@ -55,21 +55,47 @@ fi
 buildpseudo="1"
 if [ $needpseudo = "1" ] && [ -e "$BUILDDIR/pseudodone" ]; then
     PSEUDOBINDIR=`cat $BUILDDIR/pseudodone`
-    if [ -e "$PSEUDOBINDIR/pseudo" -a -e "$PSEUDOBINDIR/tar" -a "$needtar" = "1" ]; then
+    if [ -e "$PSEUDOBINDIR/pseudo" ]; then
         buildpseudo="0"
     fi
-    if [ -e "$PSEUDOBINDIR/pseudo" -a $needtar = "0" ]; then
-        buildpseudo="0"
+
+    # Verify that the pseudo recipes are older then the pseudodone file
+    PSEUDO_RECIPE="`dirname $0`/../meta/recipes-devtools/pseudo"
+    if [ $buildpseudo -eq 0 ] && [ ! -d "$PSEUDO_RECIPE" ]; then
+        echo "Unable to verify if pseudo-native is up to date..." >&2
+    elif [ $buildpseudo -eq 0 ]; then
+	PSEUDO_NEWER=`find $PSEUDO_RECIPE -type f -newer $BUILDDIR/pseudodone`
+	if [ -n "$PSEUDO_NEWER" ]; then
+            buildpseudo="2"
+	fi
     fi
 fi
+
+# If tar is already built, we don't want to do it again...
+if [ -e "$PSEUDOBINDIR/tar" -a "$needtar" = "1" ]; then
+    needtar="0"
+fi
+
 if [ $needpseudo = "0" ]; then
     buildpseudo="0"
 fi
 
+# If pseudo-native is an argument, assume the user wants to build pseudo-native!
+if [ $needpseudo != "0" -a $buildpseudo -eq 0 ]; then
+    for opt in $@; do
+        if [ "$opt" = "pseudo-native" ]; then
+            buildpseudo="3"
+            break
+        fi
+    done
+fi
+
 OLDPATH=$PATH
 export PATH=`echo $PATH | sed s#[^:]*/scripts:##`
-if [ $buildpseudo = "1" ]; then
-    echo "Pseudo is not present but is required, building this first before the main build"
+if [ $buildpseudo -gt 0 ]; then
+    [ $buildpseudo -eq 1 ] && echo "Pseudo is not present but is required, building this first before the main build"
+    [ $buildpseudo -eq 2 ] && echo "Pseudo may be out of date, rebuilding pseudo before the main build"
+    [ $buildpseudo -eq 3 ] && echo "Building pseudo-native before main build"
     export PSEUDO_BUILD=1
     TARTARGET="tar-replacement-native"
     if [ $needtar = "0" ]; then
