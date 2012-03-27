@@ -133,12 +133,12 @@ IMAGE_CMD_ext2 () {
 }
 
 IMAGE_CMD_ext3 () {
-	genext2fs -b $ROOTFS_SIZE -i 4096 -d ${IMAGE_ROOTFS} ${EXTRA_IMAGECMD} ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ext3
+	genext2fs -b $ROOTFS_SIZE -d ${IMAGE_ROOTFS} ${EXTRA_IMAGECMD} ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ext3
 	tune2fs -j ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ext3
 }
 
 oe_mkext4fs () {
-	genext2fs -b $ROOTFS_SIZE -i 4096 -d ${IMAGE_ROOTFS} ${EXTRA_IMAGECMD} $1
+	genext2fs -b $ROOTFS_SIZE -d ${IMAGE_ROOTFS} ${EXTRA_IMAGECMD} $1
 	tune2fs -O extents,uninit_bg,dir_index,has_journal $1
 	e2fsck -yfDC0 $1 || chk=$?
 	case $chk in
@@ -192,6 +192,7 @@ EXTRA_IMAGECMD_jffs2 ?= "--pad --little-endian --eraseblock=0x40000"
 # Change these if you want default genext2fs behavior (i.e. create minimal inode number)
 EXTRA_IMAGECMD_ext2 ?= "-i 8192"
 EXTRA_IMAGECMD_ext3 ?= "-i 8192"
+EXTRA_IMAGECMD_ext4 ?= "-i 8192"
 EXTRA_IMAGECMD_btrfs ?= ""
 
 IMAGE_DEPENDS = ""
