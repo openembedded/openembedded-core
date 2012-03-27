@@ -5,10 +5,12 @@ LIC_FILES_CHKSUM = "file://configure.in;beginline=3;endline=40;md5=99d4d7d68bbc4
                     file://Makefile.in;beginline=4;endline=38;md5=c2b512182a334e1bfa1edc4d1c84a298 "
 SECTION = "libs/network"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${PV}/src/nspr-${PV}.tar.gz \
            file://remove-rpath-from-tests.patch \
+           file://fix-build-on-x86_64.patch \
+           file://trickly-fix-build-on-x86_64.patch \
           "
 
 SRC_URI += "file://nspr.pc.in"

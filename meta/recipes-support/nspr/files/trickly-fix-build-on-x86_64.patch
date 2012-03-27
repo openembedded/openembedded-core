@@ -1,0 +1,62 @@
+trickily fix build failure on x86_64
+
+It seems that we can not run the 'autoreconf -f -i' for the nspr, I met
+several strange problems while trying to do that, and the previous
+author seemed had noticed this, so he wrote:
+
+do_configure() {
+       oe_runconf
+}
+
+to avoid running the "autoreconf". But we must modify configure.in to
+fix the build failure on x86_64, so both modify configure and
+configure.in, once the "autoreconf" can work correctly, we can remove
+this patch.
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+
+Upstream-Status: Inappropriate [configuration]
+---
+ configure |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/configure b/configure
+--- a/configure
++++ b/configure
+@@ -4366,9 +4366,7 @@ EOF
+         PR_MD_ASFILES=os_Linux_ia64.s
+         ;;
+     x86_64)
+-        if test -n "$USE_64"; then
+-            PR_MD_ASFILES=os_Linux_x86_64.s
+-        else
++        if test -n "$USE_N32"; then
+             cat >> confdefs.h <<\EOF
+ #define i386 1
+ EOF
+@@ -4376,17 +4374,19 @@ EOF
+             PR_MD_ASFILES=os_Linux_x86.s
+             CC="$CC -m32"
+             CXX="$CXX -m32"
++        else
++            PR_MD_ASFILES=os_Linux_x86_64.s
+         fi
+         ;;
+     ppc|powerpc)
+         PR_MD_ASFILES=os_Linux_ppc.s
+         ;;
+     powerpc64)
+-        if test -n "$USE_64"; then
++        if test -n "$USE_N32"; then
++            PR_MD_ASFILES=os_Linux_ppc.s
++        else
+             CC="$CC -m64"
+             CXX="$CXX -m64"
+-        else
+-            PR_MD_ASFILES=os_Linux_ppc.s
+         fi
+         ;;
+     m68k)
+-- 
+1.7.1
+
