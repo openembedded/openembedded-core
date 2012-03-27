@@ -48,6 +48,7 @@ def csl_target_core(d):
         'i686': 'sgxx-glibc',
         'mips': 'mips32',
         'mipsel': 'el',
+        'powerpc-nf': 'nof',
         'ppce500': 'te500v1',
         'ppce500mc': 'te500mc',
         'ppce500v2': 'te500v2',
