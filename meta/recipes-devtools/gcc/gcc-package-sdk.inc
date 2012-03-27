@@ -47,11 +47,12 @@ do_install () {
 	rm -f ${D}${libdir}/libiberty.a
 
 	# Cleanup empty directories which are not shipped
-	# we use rmdir instead of 'rm -f' to ensure the directories are empty
-	rmdir ${D}${libdir}/../lib
-	rmdir ${D}${prefix}/${TARGET_SYS}/lib
-	rmdir ${D}${prefix}/${TARGET_SYS}
-	rmdir ${D}${includedir}
+	# we use rmdir instead of 'rm -f' to ensure the non empty directories are not deleted
+	# ${D}${libdir}/../lib only seems to appear with SDKMACHINE=i686
+	local empty_dirs="${D}${libdir}/../lib ${D}${prefix}/${TARGET_SYS}/lib ${D}${prefix}/${TARGET_SYS} ${D}${includedir}"
+	for i in $empty_dirs; do
+		[ -d $i ] && rmdir --ignore-fail-on-non-empty $i
+	done
 
 	# Insert symlinks into libexec so when tools without a prefix are searched for, the correct ones are
 	# found.
