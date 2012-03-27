@@ -1,14 +1,12 @@
 require pseudo.inc
 
-SRCREV = "17c2233f93692f79684792750001ee6d13e03925"
-PV = "1.2+git${SRCPV}"
-PR = "r21"
+SRCREV = "f0375c9aaefbccfd41aebbf6d332bb4d9e8f980c"
+PV = "1.3+git${SRCPV}"
+PR = "r22"
 
 DEFAULT_PREFERENCE = "-1"
 
-SRC_URI = "git://github.com/wrpseudo/pseudo.git;protocol=git \
-           file://oe-config.patch \
-           file://static_sqlite.patch"
+SRC_URI = "git://github.com/wrpseudo/pseudo.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
