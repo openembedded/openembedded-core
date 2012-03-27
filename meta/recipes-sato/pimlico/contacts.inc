@@ -27,6 +27,8 @@ FILES_${PN} += "${datadir}/pixmaps/stock_contact.png \
 		${datadir}/icons/hicolor"
 
 SRC_URI = "file://stock_contact.png \
-           file://stock_person.png"
+           file://stock_person.png \
+           file://contacts-conditionally-install-schema.patch \
+          "
 
 SRC_URI_append_poky = " file://contacts-owl-window-menu.patch;apply=yes "
