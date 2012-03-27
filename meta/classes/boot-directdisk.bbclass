@@ -37,9 +37,8 @@ BOOTDD_EXTRA_SPACE ?= "16384"
 # Get the build_syslinux_cfg() function from the syslinux class
 
 AUTO_SYSLINUXCFG = "1"
-LABELS = "boot"
 SYSLINUX_ROOT ?= "root=/dev/sda2"
-SYSLINUX_TIMEOUT = "10" # 1 second
+SYSLINUX_TIMEOUT ?= "10"
 
 SYSLINUXCFG  = "${HDDDIR}/syslinux.cfg"
 SYSLINUXMENU = "${HDDDIR}/menu"
@@ -55,15 +54,23 @@ build_boot_dd() {
 	install -m 444 ${STAGING_LIBDIR}/syslinux/ldlinux.sys ${HDDDIR}/ldlinux.sys
 
 	BLOCKS=`du -bks ${HDDDIR} | cut -f 1`
-	SIZE=`expr $BLOCKS + ${BOOTDD_EXTRA_SPACE}`
+	BLOCKS=`expr $BLOCKS + ${BOOTDD_EXTRA_SPACE}`
 
-	mkdosfs -n ${BOOTDD_VOLUME_ID} -d ${HDDDIR} -C ${HDDIMG} $SIZE 
+	# Ensure total sectors is an integral number of sectors per
+	# track or mcopy will complain. Sectors are 512 bytes, and we
+	# generate images with 32 sectors per track. This calculation is
+	# done in blocks, thus the mod by 16 instead of 32.
+	BLOCKS=$(expr $BLOCKS + $(expr 16 - $(expr $BLOCKS % 16)))
+
+	mkdosfs -n ${BOOTDD_VOLUME_ID} -S 512 -C ${HDDIMG} $BLOCKS 
+	mcopy -i ${HDDIMG} -s ${HDDDIR}/* ::/
+
 	syslinux ${HDDIMG}
 	chmod 644 ${HDDIMG}
 
 	ROOTFSBLOCKS=`du -Lbks ${ROOTFS} | cut -f 1`
-	TOTALSIZE=`expr $SIZE + $ROOTFSBLOCKS`
-	END1=`expr $SIZE \* 1024`
+	TOTALSIZE=`expr $BLOCKS + $ROOTFSBLOCKS`
+	END1=`expr $BLOCKS \* 1024`
 	END2=`expr $END1 + 512`
 	END3=`expr \( $ROOTFSBLOCKS \* 1024 \) + $END1`
 
