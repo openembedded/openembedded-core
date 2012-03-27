@@ -1,0 +1,44 @@
+Upstream-Status: Inappropriate [not author, no upstream]
+
+Imported from Debian.
+Source: http://anonscm.debian.org/gitweb/?p=collab-maint/procps.git;a=blob;f=debian/patches/gnu-kbsd-version.patch;h=fe5489fc772a3355ff8c0dcf9b953bf0c05aa9f8;hb=b460cfd726b019f8d918b380f78af4c19c5f3e50
+Bugtracker: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=632749
+
+Stops procps utilities from printing a warning when used with
+kernels having only two digit versions, e.g. 3.0.
+
+Author: <csmall@debian.org>
+Description: Rework version parsing so its ok with other OSes
+--- a/proc/version.c
++++ b/proc/version.c
+@@ -35,15 +35,23 @@
+ 
+ static void init_Linux_version(void) __attribute__((constructor));
+ static void init_Linux_version(void) {
+-    static struct utsname uts;
+-    int x = 0, y = 0, z = 0;	/* cleared in case sscanf() < 3 */
++    int x = 0, y = 0, z = 0;	/* cleared in case sscanf() < 2 */
++    FILE *fp;
++    char buf[256];
+     
+-    if (uname(&uts) == -1)	/* failure implies impending death */
+-	exit(1);
+-    if (sscanf(uts.release, "%d.%d.%d", &x, &y, &z) < 3)
++    if ( (fp=fopen("/proc/version","r")) == NULL) /* failure implies impending death */
++      exit(1);
++    if (fgets(buf, 256, fp) == NULL) {
++      fprintf(stderr, "Cannot read kernel version from /proc/version\n");
++      fclose(fp);
++      exit(1);
++    }
++    fclose(fp);
++    if (sscanf(buf, "Linux version %d.%d.%d", &x, &y, &z) < 2)
+ 	fprintf(stderr,		/* *very* unlikely to happen by accident */
+ 		"Non-standard uts for running kernel:\n"
+-		"release %s=%d.%d.%d gives version code %d\n",
+-		uts.release, x, y, z, LINUX_VERSION(x,y,z));
++        "release %s=%d.%d.%d gives version code %d\n",
++        buf,
++        x, y, z, LINUX_VERSION(x,y,z));
+     linux_version_code = LINUX_VERSION(x, y, z);
+ }

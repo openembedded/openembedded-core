@@ -1,6 +1,6 @@
 require procps.inc
 
-PR = "r6"
+PR = "r7"
 
 inherit update-alternatives
 
@@ -14,6 +14,7 @@ SRC_URI += "file://procmodule.patch \
             file://linux-limits.patch \
             file://sysctl.conf \
             file://procps-3.2.8+gmake-3.82.patch \
+            file://gnu-kbsd-version.patch \
            "
 
 SRC_URI[md5sum] = "9532714b6846013ca9898984ba4cd7e0"
