@@ -4,8 +4,12 @@
 #be put here
 
 # start hob here
-#cd /intel/poky/poky
-#. ./oe-init-build-env
-#../scripts/hob
+export PSEUDO_PREFIX=/usr
+export PSEUDO_LOCALSTATEDIR=/home/builder/pseudo
+export PSEUDO_LIBDIR=/usr/lib/pseudo/lib64
+
+cd /home/builder/poky
+. ./oe-init-build-env
+hob &
 
 matchbox-terminal&
