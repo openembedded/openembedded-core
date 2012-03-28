@@ -43,7 +43,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "bzip2 zlib db openssl elfutils expat libpcre attr acl popt ${extrarpmdeps}"
-extrarpmdeps = "python perl"
+extrarpmdeps = "python perl file"
 extrarpmdeps_virtclass-native = "file-native"
 PR = "r35"
 
