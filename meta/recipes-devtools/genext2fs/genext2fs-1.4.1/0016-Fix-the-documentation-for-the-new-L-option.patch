@@ -1,0 +1,29 @@
+Upstream-Status: inappropriate
+
+From 1b5007ee27b9dbf5e84341dceadb83b96e6530d5 Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard@mvista.com>
+Date: Mon, 6 Jun 2011 13:58:57 -0500
+Subject: [PATCH 16/19] Fix the documentation for the new -L option
+
+---
+ genext2fs.8 |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/genext2fs.8 b/genext2fs.8
+index 8b8db25..35e1588 100644
+--- a/genext2fs.8
++++ b/genext2fs.8
+@@ -61,8 +61,8 @@ Size of the image in blocks.
+ .BI "\-N, \-\-number\-of\-inodes inodes"
+ Maximum number of inodes.
+ .TP
+-.BI "\-L, \-\-volume\-id name"
+-Set the volume id (volume name) for the filesystem.
++.BI "\-L, \-\-volume\-label name"
++Set the volume label for the filesystem.
+ .TP
+ .BI "\-i, \-\-bytes\-per\-inode ratio"
+ Used to calculate the maximum number of inodes from the available blocks.
+-- 
+1.7.4.1
+

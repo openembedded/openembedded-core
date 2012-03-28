@@ -1,0 +1,119 @@
+See http://genext2fs.cvs.sourceforge.net/viewvc/genext2fs/genext2fs/genext2fs.c?view=log
+
+The latest version of genext2fs.c is the v1.95 in the cvs repo:
+http://genext2fs.cvs.sourceforge.net/viewvc/genext2fs/genext2fs/genext2fs.c?revision=1.95
+
+First let's upgrade to the version.
+
+Upstream-Status: inappropriate
+
+Signed-off-by: Dexuan Cui <dexuan.cui@intel.com>
+
+--- a/genext2fs.c	2007-03-26 22:19:59.000000000 +0800
++++ b/genext2fs.c	2012-03-28 22:15:03.678856820 +0800
+@@ -286,7 +286,9 @@
+ // older solaris. Note that this is still not very portable, in that
+ // the return value cannot be trusted.
+ 
+-#if SCANF_CAN_MALLOC
++#if 0 // SCANF_CAN_MALLOC
++// C99 define "a" for floating point, so you can have runtime surprise
++// according the library versions
+ # define SCANF_PREFIX "a"
+ # define SCANF_STRING(s) (&s)
+ #else
+@@ -778,7 +780,7 @@
+ 		if(hdlinks.hdl[i].src_inode == inode)
+ 			return i;
+ 	}
+-	return -1;		
++	return -1;
+ }
+ 
+ // printf helper macro
+@@ -1356,20 +1358,23 @@
+ 	return nod;
+ }
+ 
++// chmod an inode
++void
++chmod_fs(filesystem *fs, uint32 nod, uint16 mode, uint16 uid, uint16 gid)
++{
++	inode *node;
++	node = get_nod(fs, nod);
++	node->i_mode = (node->i_mode & ~FM_IMASK) | (mode & FM_IMASK);
++	node->i_uid = uid;
++	node->i_gid = gid;
++}
++
+ // create a simple inode
+ static uint32
+ mknod_fs(filesystem *fs, uint32 parent_nod, const char *name, uint16 mode, uint16 uid, uint16 gid, uint8 major, uint8 minor, uint32 ctime, uint32 mtime)
+ {
+ 	uint32 nod;
+ 	inode *node;
+-	if((nod = find_dir(fs, parent_nod, name)))
+-	{
+-		node = get_nod(fs, nod);
+-		if((node->i_mode & FM_IFMT) != (mode & FM_IFMT))
+-			error_msg_and_die("node '%s' already exists and isn't of the same type", name);
+-		node->i_mode = mode;
+-	}
+-	else
+ 	{
+ 		nod = alloc_nod(fs);
+ 		node = get_nod(fs, nod);
+@@ -1591,13 +1596,24 @@
+ 				dname = malloc(len + 1);
+ 				for(i = start; i < count; i++)
+ 				{
++					uint32 oldnod;
+ 					SNPRINTF(dname, len, "%s%lu", name, i);
+-					mknod_fs(fs, nod, dname, mode, uid, gid, major, minor + (i * increment - start), ctime, mtime);
++					oldnod = find_dir(fs, nod, dname);
++					if(oldnod)
++						chmod_fs(fs, oldnod, mode, uid, gid);
++					else
++						mknod_fs(fs, nod, dname, mode, uid, gid, major, minor + (i * increment - start), ctime, mtime);
+ 				}
+ 				free(dname);
+ 			}
+ 			else
+-				mknod_fs(fs, nod, name, mode, uid, gid, major, minor, ctime, mtime);
++			{
++				uint32 oldnod = find_dir(fs, nod, name);
++				if(oldnod)
++					chmod_fs(fs, oldnod, mode, uid, gid);
++				else
++					mknod_fs(fs, nod, name, mode, uid, gid, major, minor, ctime, mtime);
++			}
+ 		}
+ 	}
+ 	if (line)
+@@ -1664,6 +1680,17 @@
+ 			}
+ 		else
+ 		{
++			if((nod = find_dir(fs, this_nod, name)))
++			{
++				error_msg("ignoring duplicate entry %s", name);
++				if(S_ISDIR(st.st_mode)) {
++					if(chdir(dent->d_name) < 0)
++						perror_msg_and_die(name);
++					add2fs_from_dir(fs, nod, squash_uids, squash_perms, fs_timestamp, stats);
++					chdir("..");
++				}
++				continue;
++			}
+ 			save_nod = 0;
+ 			/* Check for hardlinks */
+ 			if (!S_ISDIR(st.st_mode) && !S_ISLNK(st.st_mode) && st.st_nlink > 1) {
+@@ -1994,7 +2021,7 @@
+ 		//system blocks
+ 		for(j = 1; j <= overhead_per_group; j++)
+ 			allocate(bbm, j); 
+-		
++
+ 		/* Inode bitmap */
+ 		ibm = get_blk(fs,fs->gd[i].bg_inode_bitmap);	
+ 		//non-filesystem inodes

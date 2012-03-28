@@ -1,0 +1,57 @@
+Upstream-Status: inappropriate
+
+From 34a2d139e3cbc9fec1b07171fd13684d4239aa6b Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard@mvista.com>
+Date: Mon, 6 Jun 2011 13:51:50 -0500
+Subject: [PATCH 15/19] Rework creating the lost+found directory
+
+For some reason the lost+found directory was being created with
+the size of the number of reserved blocks.  I can't find any rationale
+for that, mke2fs creates it with 16 blocks.  So just create it with
+16 blocks, too.
+---
+ genext2fs.c |   15 ++++++---------
+ 1 files changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/genext2fs.c b/genext2fs.c
+index b466a6d..fc7fe5f 100644
+--- a/genext2fs.c
++++ b/genext2fs.c
+@@ -2537,28 +2537,25 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes,
+ 	inode_pos_finish(fs, &ipos);
+ 	put_dir(&dw);
+ 
+-	// make lost+found directory and reserve blocks
++	// make lost+found directory
+ 	if(fs->sb->s_r_blocks_count)
+ 	{
+ 		inode *node;
+ 		uint8 *b;
+ 
+-		nod = mkdir_fs(fs, EXT2_ROOT_INO, "lost+found", FM_IRWXU, 0, 0, fs_timestamp, fs_timestamp);
++		nod = mkdir_fs(fs, EXT2_ROOT_INO, "lost+found", FM_IRWXU,
++			       0, 0, fs_timestamp, fs_timestamp);
+ 		b = get_workblk();
+ 		memset(b, 0, BLOCKSIZE);
+ 		((directory*)b)->d_rec_len = BLOCKSIZE;
+-		/* We run into problems with e2fsck if directory lost+found grows
+-		 * bigger than this. Need to find out why this happens - sundar
+-		 */
+-		if (fs->sb->s_r_blocks_count > fs->sb->s_blocks_count * MAX_RESERVED_BLOCKS )
+-			fs->sb->s_r_blocks_count = fs->sb->s_blocks_count * MAX_RESERVED_BLOCKS;
+ 		inode_pos_init(fs, &ipos, nod, INODE_POS_EXTEND, NULL);
+-		for(i = 1; i < fs->sb->s_r_blocks_count; i++)
++		// It is always 16 blocks to start out with
++		for(i = 0; i < 16; i++)
+ 			extend_inode_blk(fs, &ipos, b, 1);
+ 		inode_pos_finish(fs, &ipos);
+ 		free_workblk(b);
+ 		node = get_nod(fs, nod, &ni);
+-		node->i_size = fs->sb->s_r_blocks_count * BLOCKSIZE;
++		node->i_size = 16 * BLOCKSIZE;
+ 		put_nod(ni);
+ 	}
+ 
+-- 
+1.7.4.1
+

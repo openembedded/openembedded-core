@@ -1,0 +1,86 @@
+Upstream-Status: inappropriate
+
+From 3b9edc3e7c809f64dc164d73b64ab4a606ccfea1 Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard@mvista.com>
+Date: Fri, 3 Jun 2011 21:24:49 -0500
+Subject: [PATCH 13/19] Add volume id support.
+
+Add support for setting the volume id of the filesystem.  This is
+functionally the same as the patch from OpenEmbedded, but is built
+on previous changes in this patch set.
+---
+ genext2fs.8 |    3 +++
+ genext2fs.c |   12 ++++++++++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/genext2fs.8 b/genext2fs.8
+index 0f77e7c..8b8db25 100644
+--- a/genext2fs.8
++++ b/genext2fs.8
+@@ -61,6 +61,9 @@ Size of the image in blocks.
+ .BI "\-N, \-\-number\-of\-inodes inodes"
+ Maximum number of inodes.
+ .TP
++.BI "\-L, \-\-volume\-id name"
++Set the volume id (volume name) for the filesystem.
++.TP
+ .BI "\-i, \-\-bytes\-per\-inode ratio"
+ Used to calculate the maximum number of inodes from the available blocks.
+ .TP
+diff --git a/genext2fs.c b/genext2fs.c
+index e420bba..4d01bc4 100644
+--- a/genext2fs.c
++++ b/genext2fs.c
+@@ -3058,6 +3058,7 @@ main(int argc, char **argv)
+ 	int squash_perms = 0;
+ 	uint16 endian = 1;
+ 	int bigendian = !*(char*)&endian;
++	char *volumelabel = NULL;
+ 	filesystem *fs;
+ 	int i;
+ 	int c;
+@@ -3071,6 +3072,7 @@ main(int argc, char **argv)
+ 	  { "size-in-blocks",	required_argument,	NULL, 'b' },
+ 	  { "bytes-per-inode",	required_argument,	NULL, 'i' },
+ 	  { "number-of-inodes",	required_argument,	NULL, 'N' },
++	  { "volume-label",     required_argument,      NULL, 'L' },
+ 	  { "reserved-percentage", required_argument,	NULL, 'm' },
+ 	  { "block-map",	required_argument,	NULL, 'g' },
+ 	  { "fill-value",	required_argument,	NULL, 'e' },
+@@ -3087,11 +3089,11 @@ main(int argc, char **argv)
+ 
+ 	app_name = argv[0];
+ 
+-	while((c = getopt_long(argc, argv, "x:d:D:b:i:N:m:g:e:zfqUPhVv", longopts, NULL)) != EOF) {
++	while((c = getopt_long(argc, argv, "x:d:D:b:i:N:L:m:g:e:zfqUPhVv", longopts, NULL)) != EOF) {
+ #else
+ 	app_name = argv[0];
+ 
+-	while((c = getopt(argc, argv,      "x:d:D:b:i:N:m:g:e:zfqUPhVv")) != EOF) {
++	while((c = getopt(argc, argv,      "x:d:D:b:i:N:L:m:g:e:zfqUPhVv")) != EOF) {
+ #endif /* HAVE_GETOPT_LONG */
+ 		switch(c)
+ 		{
+@@ -3111,6 +3113,9 @@ main(int argc, char **argv)
+ 			case 'N':
+ 				nbinodes = SI_atof(optarg);
+ 				break;
++			case 'L':
++				volumelabel = optarg;
++				break;
+ 			case 'm':
+ 				reserved_frac = SI_atof(optarg) / 100;
+ 				break;
+@@ -3199,6 +3204,9 @@ main(int argc, char **argv)
+ 		fs = init_fs(nbblocks, nbinodes, nbresrvd, holes, fs_timestamp,
+ 			     bigendian, fsout);
+ 	}
++	if (volumelabel != NULL)
++		strncpy((char *)fs->sb->s_volume_name, volumelabel,
++			sizeof(fs->sb->s_volume_name));
+ 	
+ 	populate_fs(fs, dopt, didx, squash_uids, squash_perms, fs_timestamp, NULL);
+ 
+-- 
+1.7.4.1
+

@@ -1,0 +1,95 @@
+Upstream-Status: inappropriate
+
+From 797e8548e5857b7a0586b27a9bdcadbea1561d8d Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard@mvista.com>
+Date: Sun, 5 Jun 2011 14:53:57 -0500
+Subject: [PATCH 08/19] Separate out the creation of the filesystem structure.
+
+Consolidate some processing that occurs when allocating a filesystem
+structure.
+---
+ genext2fs.c |   49 +++++++++++++++++++++++++------------------------
+ 1 files changed, 25 insertions(+), 24 deletions(-)
+
+diff --git a/genext2fs.c b/genext2fs.c
+index d130362..497c9af 100644
+--- a/genext2fs.c
++++ b/genext2fs.c
+@@ -2240,6 +2240,29 @@ swap_badfs(filesystem *fs)
+ 	}
+ }
+ 
++// Allocate a new filesystem structure, allocate internal memory,
++// and initialize the contents.
++static filesystem *
++alloc_fs(uint32 nbblocks)
++{
++	filesystem *fs;
++
++	fs = malloc(sizeof(*fs));
++	if (!fs)
++		error_msg_and_die("not enough memory for filesystem");
++	memset(fs, 0, sizeof(*fs));
++	if(!(fs->data = calloc(nbblocks, BLOCKSIZE)))
++		error_msg_and_die("not enough memory for filesystem");
++	fs->hdlink_cnt = HDLINK_CNT;
++	fs->hdlinks.hdl = calloc(sizeof(struct hdlink_s), fs->hdlink_cnt);
++	if (!fs->hdlinks.hdl)
++		error_msg_and_die("Not enough memory");
++	fs->hdlinks.count = 0 ;
++	fs->sb = (superblock *) (fs->data + BLOCKSIZE);
++	fs->gd = (groupdescriptor *) (fs->sb + 1);
++	return fs;
++}
++
+ // initialize an empty filesystem
+ static filesystem *
+ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp)
+@@ -2290,21 +2313,10 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp
+ 	free_blocks = nbblocks - overhead_per_group*nbgroups - 1 /*boot block*/;
+ 	free_blocks_per_group = nbblocks_per_group - overhead_per_group;
+ 
+-	fs = malloc(sizeof(*fs));
+-	if (!fs)
+-		error_msg_and_die("not enough memory for filesystem");
++	fs = alloc_fs(nbblocks);
+ 	fs->nheadblocks = (((nbgroups * sizeof(groupdescriptor))
+ 			    + sizeof(superblock) + (BLOCKSIZE - 1))
+ 			   / BLOCKSIZE);
+-	if(!(fs->data = calloc(nbblocks, BLOCKSIZE)))
+-		error_msg_and_die("not enough memory for filesystem");
+-	fs->hdlink_cnt = HDLINK_CNT;
+-	fs->hdlinks.hdl = calloc(sizeof(struct hdlink_s), fs->hdlink_cnt);
+-	if (!fs->hdlinks.hdl)
+-		error_msg_and_die("Not enough memory");
+-	fs->hdlinks.count = 0 ;
+-	fs->sb = (superblock *) (fs->data + BLOCKSIZE);
+-	fs->gd = (groupdescriptor *) (fs->sb + 1);
+ 
+ 	// create the superblock for an empty filesystem
+ 	fs->sb->s_inodes_count = nbinodes_per_group * nbgroups;
+@@ -2442,20 +2454,9 @@ load_fs(FILE * fh, int swapit)
+ 	fssize = (fssize + BLOCKSIZE - 1) / BLOCKSIZE;
+ 	if(fssize < 16) // totally arbitrary
+ 		error_msg_and_die("too small filesystem");
+-	fs = malloc(sizeof(*fs));
+-	if (!fs)
+-		error_msg_and_die("not enough memory for filesystem");
+-	fs->hdlink_cnt = HDLINK_CNT;
+-	fs->hdlinks.hdl = calloc(sizeof(struct hdlink_s), fs->hdlink_cnt);
+-	if (!fs->hdlinks.hdl)
+-		error_msg_and_die("Not enough memory");
+-	fs->hdlinks.count = 0 ;
+-	if(!(fs->data = calloc(fssize, BLOCKSIZE)))
+-		error_msg_and_die("not enough memory for filesystem");
++	fs = alloc_fs(fssize);
+ 	if(fread(fs->data, BLOCKSIZE, fssize, fh) != fssize)
+ 		perror_msg_and_die("input filesystem image");
+-	fs->sb = (superblock *) (fs->data + BLOCKSIZE);
+-	fs->gd = (groupdescriptor *) (fs->sb + 1);
+ 
+ 	if(swapit)
+ 		swap_badfs(fs);
+-- 
+1.7.4.1
+

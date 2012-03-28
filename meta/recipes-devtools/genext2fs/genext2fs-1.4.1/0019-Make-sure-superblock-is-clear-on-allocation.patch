@@ -1,0 +1,42 @@
+Upstream-Status: inappropriate
+
+From a263cdabad01ba99581b26d1753cd459f2669413 Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard@mvista.com>
+Date: Tue, 7 Jun 2011 09:14:19 -0500
+Subject: [PATCH 19/19] Make sure superblock is clear on allocation
+
+Use calloc, not malloc, so the allocated superblock is zero-ed.  Also,
+get rid of some unnecessary casts.
+---
+ genext2fs.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/genext2fs.c b/genext2fs.c
+index 28ba94f..fab90be 100644
+--- a/genext2fs.c
++++ b/genext2fs.c
+@@ -2447,10 +2447,10 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes,
+ 	fs->nheadblocks = (((nbgroups * sizeof(groupdescriptor))
+ 			    + sizeof(superblock) + (BLOCKSIZE - 1))
+ 			   / BLOCKSIZE);
+-	fs->sb = (superblock *) malloc(BLOCKSIZE);
++	fs->sb = calloc(1, BLOCKSIZE);
+ 	if (!fs->sb)
+ 		error_msg_and_die("error allocating header memory");
+-	fs->gd = (groupdescriptor *) calloc(fs->nheadblocks - 1, BLOCKSIZE);
++	fs->gd = calloc(fs->nheadblocks - 1, BLOCKSIZE);
+ 	if (!fs->gd)
+ 		error_msg_and_die("error allocating header memory");
+ 
+@@ -2595,7 +2595,7 @@ load_fs(FILE * fh, int swapit, char *fname)
+ 
+ 	/* Read and check the superblock, then read the superblock
+ 	 * and all the group descriptors */
+-	fs->sb = malloc(BLOCKSIZE);
++	fs->sb = calloc(1, BLOCKSIZE);
+ 	if (!fs->sb)
+ 		error_msg_and_die("error allocating header memory");
+ 	if (fseek(fs->f, BLOCKSIZE, SEEK_SET))
+-- 
+1.7.4.1
+

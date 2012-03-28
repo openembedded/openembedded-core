@@ -1,0 +1,30 @@
+Upstream-Status: inappropriate
+
+From 33c92a0b663d16d2260b391d39aa745acd4b360e Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard@mvista.com>
+Date: Tue, 7 Jun 2011 07:23:23 -0500
+Subject: [PATCH 17/19] Fix "file same" comparison
+
+It's not enough to check the inode, you also have to check the device
+to make sure a file is the same.
+---
+ genext2fs.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/genext2fs.c b/genext2fs.c
+index fc7fe5f..485393c 100644
+--- a/genext2fs.c
++++ b/genext2fs.c
+@@ -2359,7 +2359,8 @@ alloc_fs(int swapit, char *fname, uint32 nbblocks, FILE *srcfile)
+ 			perror_msg_and_die("fstat srcfile");
+ 		if (stat(fname, &dststat))
+ 			perror_msg_and_die("stat-ing %s", fname);
+-		if (srcstat.st_ino == dststat.st_ino) {
++		if (srcstat.st_ino == dststat.st_ino
++		    && srcstat.st_dev == dststat.st_dev) {
+ 			// source and destination are the same file, don't
+ 			// truncate or copy, just use the file.
+ 			fs->f = fopen(fname, "r+b");
+-- 
+1.7.4.1
+

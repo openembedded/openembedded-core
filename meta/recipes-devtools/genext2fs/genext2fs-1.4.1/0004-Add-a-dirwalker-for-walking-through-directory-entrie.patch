@@ -1,0 +1,357 @@
+Upstream-Status: inappropriate
+
+From 3d47e37e21f6a2ced489d49e8bf5a5c24bb9baaf Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard@mvista.com>
+Date: Sun, 5 Jun 2011 09:36:11 -0500
+Subject: [PATCH 04/19] Add a dirwalker for walking through directory entries
+
+The code to walk directory items was messy, to say the least.  Write a
+clean structure to do this.
+
+Also, remove d_name[0].  This is bad style, and newer compilers will
+think it is really a zero-length array and will abort if trying to write
+any data to it, since the compiler thinks it has no contents.
+---
+ genext2fs.c |  210 +++++++++++++++++++++++++++++++++++++++++++----------------
+ 1 files changed, 154 insertions(+), 56 deletions(-)
+
+diff --git a/genext2fs.c b/genext2fs.c
+index 0b5ba6f..03d1b27 100644
+--- a/genext2fs.c
++++ b/genext2fs.c
+@@ -533,7 +533,6 @@ typedef struct
+ typedef struct
+ {
+ 	directory_decl
+-	char d_name[0];
+ } directory;
+ 
+ typedef uint8 block[BLOCKSIZE];
+@@ -795,6 +794,8 @@ static inline uint8 *
+ get_workblk(void)
+ {
+ 	unsigned char* b=calloc(1,BLOCKSIZE);
++	if (!b)
++		error_msg_and_die("get_workblk() failed, out of memory");
+ 	return b;
+ }
+ static inline void
+@@ -902,6 +903,126 @@ put_nod(nod_info *ni)
+ 	free(ni);
+ }
+ 
++// Used to hold state information while walking a directory inode.
++typedef struct
++{
++	directory d;
++	filesystem *fs;
++	uint32 nod;
++	directory *last_d;
++	uint8 *b;
++	blk_info *bi;
++} dirwalker;
++
++// Start a directory walk on the given inode.  You must pass in a
++// dirwalker structure, then use that dirwalker for future operations.
++// Call put_dir when you are done walking the directory.
++static inline directory *
++get_dir(filesystem *fs, uint32 nod, dirwalker *dw)
++{
++	dw->fs = fs;
++	dw->b = get_blk(fs, nod, &dw->bi);
++	dw->nod = nod;
++	dw->last_d = (directory *) dw->b;
++
++	memcpy(&dw->d, dw->last_d, sizeof(directory));
++	return &dw->d;
++}
++
++// Move to the next directory.
++static inline directory *
++next_dir(dirwalker *dw)
++{
++	directory *next_d = (directory *)((int8*)dw->last_d + dw->d.d_rec_len);
++
++	memcpy(dw->last_d, &dw->d, sizeof(directory));
++
++	if (((int8 *) next_d) >= ((int8 *) dw->b + BLOCKSIZE))
++		return NULL;
++
++	dw->last_d = next_d;
++	memcpy(&dw->d, next_d, sizeof(directory));
++	return &dw->d;
++}
++
++// Call then when you are done with the directory walk.
++static inline void
++put_dir(dirwalker *dw)
++{
++	memcpy(dw->last_d, &dw->d, sizeof(directory));
++
++	if (dw->nod == 0)
++		free_workblk(dw->b);
++	else
++		put_blk(dw->bi);
++}
++
++// Create a new directory block with the given inode as it's destination
++// and append it to the current dirwalker.
++static directory *
++new_dir(filesystem *fs, uint32 dnod, const char *name, int nlen, dirwalker *dw)
++{
++	directory *d;
++
++	dw->fs = fs;
++	dw->b = get_workblk();
++	dw->nod = 0;
++	dw->last_d = (directory *) dw->b;
++	d = &dw->d;
++	d->d_inode = dnod;
++	d->d_rec_len = BLOCKSIZE;
++	d->d_name_len = nlen;
++	strncpy(((char *) dw->last_d) + sizeof(directory), name, nlen);
++	return d;
++}
++
++// Shrink the current directory entry, make a new one with the free
++// space, and return the new directory entry (making it current).
++static inline directory *
++shrink_dir(dirwalker *dw, uint32 nod, const char *name, int nlen)
++{
++	int reclen, preclen;
++	directory *d = &dw->d;
++
++	reclen = d->d_rec_len;
++	d->d_rec_len = sizeof(directory) + rndup(d->d_name_len, 4);
++	preclen = d->d_rec_len;
++	reclen -= preclen;
++	memcpy(dw->last_d, &dw->d, sizeof(directory));
++
++	dw->last_d = (directory *) (((int8 *) dw->last_d) + preclen);
++	d->d_rec_len = reclen;
++	d->d_inode = nod;
++	d->d_name_len = nlen;
++	strncpy(((char *) dw->last_d) + sizeof(directory), name, nlen);
++
++	return d;
++}
++
++// Return the current block the directory is walking
++static inline uint8 *
++dir_data(dirwalker *dw)
++{
++	return dw->b;
++}
++
++// Return the pointer to the name for the current directory
++static inline char *
++dir_name(dirwalker *dw)
++{
++	return ((char *) dw->last_d) + sizeof(directory);
++}
++
++// Set the name for the current directory.  Note that this doesn't
++// verify that there is space for the directory name, you must do
++// that yourself.
++static void
++dir_set_name(dirwalker *dw, const char *name, int nlen)
++{
++	dw->d.d_name_len = nlen;
++	strncpy(((char *) dw->last_d) + sizeof(directory), name, nlen);
++}
++
+ // allocate a given block/inode in the bitmap
+ // allocate first free if item == 0
+ static uint32
+@@ -1354,11 +1475,10 @@ extend_blk(filesystem *fs, uint32 nod, block b, int amount)
+ static void
+ add2dir(filesystem *fs, uint32 dnod, uint32 nod, const char* name)
+ {
+-	blockwalker bw;
++	blockwalker bw, lbw;
+ 	uint32 bk;
+-	uint8 *b;
+-	blk_info *bi;
+ 	directory *d;
++	dirwalker dw;
+ 	int reclen, nlen;
+ 	inode *node;
+ 	inode *pnode;
+@@ -1376,55 +1496,46 @@ add2dir(filesystem *fs, uint32 dnod, uint32 nod, const char* name)
+ 	if(reclen > BLOCKSIZE)
+ 		error_msg_and_die("bad name '%s' (too long)", name);
+ 	init_bw(&bw);
++	lbw = bw;
+ 	while((bk = walk_bw(fs, dnod, &bw, 0, 0)) != WALK_END) // for all blocks in dir
+ 	{
+-		b = get_blk(fs, bk, &bi);
+ 		// for all dir entries in block
+-		for(d = (directory*)b; (int8*)d + sizeof(*d) < (int8*)b + BLOCKSIZE; d = (directory*)((int8*)d + d->d_rec_len))
++		for(d = get_dir(fs, bk, &dw); d; d = next_dir(&dw))
+ 		{
+ 			// if empty dir entry, large enough, use it
+ 			if((!d->d_inode) && (d->d_rec_len >= reclen))
+ 			{
+ 				d->d_inode = nod;
+ 				node = get_nod(fs, nod, &ni);
++				dir_set_name(&dw, name, nlen);
++				put_dir(&dw);
+ 				node->i_links_count++;
+-				d->d_name_len = nlen;
+-				strncpy(d->d_name, name, nlen);
+ 				put_nod(ni);
+ 				goto out;
+ 			}
+ 			// if entry with enough room (last one?), shrink it & use it
+ 			if(d->d_rec_len >= (sizeof(directory) + rndup(d->d_name_len, 4) + reclen))
+ 			{
+-				reclen = d->d_rec_len;
+-				d->d_rec_len = sizeof(directory) + rndup(d->d_name_len, 4);
+-				reclen -= d->d_rec_len;
+-				d = (directory*) (((int8*)d) + d->d_rec_len);
+-				d->d_rec_len = reclen;
+-				d->d_inode = nod;
+ 				node = get_nod(fs, nod, &ni);
++				d = shrink_dir(&dw, nod, name, nlen);
++				put_dir(&dw);
+ 				node->i_links_count++;
+-				d->d_name_len = nlen;
+-				strncpy(d->d_name, name, nlen);
+ 				put_nod(ni);
+ 				goto out;
+ 			}
+ 		}
++		put_dir(&dw);
++		lbw = bw;
+ 	}
+ 	// we found no free entry in the directory, so we add a block
+-	if(!(b = get_workblk()))
+-		error_msg_and_die("get_workblk() failed.");
+-	d = (directory*)b;
+-	d->d_inode = nod;
+ 	node = get_nod(fs, nod, &ni);
++	d = new_dir(fs, nod, name, nlen, &dw);
+ 	node->i_links_count++;
+ 	put_nod(ni);
+-	d->d_rec_len = BLOCKSIZE;
+-	d->d_name_len = nlen;
+-	strncpy(d->d_name, name, nlen);
+-	extend_blk(fs, dnod, b, 1);
++	next_dir(&dw); // Force the data into the buffer
++	extend_blk(fs, dnod, dir_data(&dw), 1);
++	put_dir(&dw);
+ 	pnode->i_size += BLOCKSIZE;
+-	free_workblk(b);
+ out:
+ 	put_nod(dni);
+ }
+@@ -1435,20 +1546,18 @@ find_dir(filesystem *fs, uint32 nod, const char * name)
+ {
+ 	blockwalker bw;
+ 	uint32 bk;
+-	blk_info *bi;
+ 	int nlen = strlen(name);
+ 	init_bw(&bw);
+ 	while((bk = walk_bw(fs, nod, &bw, 0, 0)) != WALK_END)
+ 	{
+ 		directory *d;
+-		uint8 *b;
+-		b = get_blk(fs, bk, &bi);
+-		for(d = (directory*)b; (int8*)d + sizeof(*d) < (int8*)b + BLOCKSIZE; d = (directory*)((int8*)d + d->d_rec_len))
+-			if(d->d_inode && (nlen == d->d_name_len) && !strncmp(d->d_name, name, nlen)) {
+-				put_blk(bi);
++		dirwalker dw;
++		for (d = get_dir(fs, bk, &dw); d; d=next_dir(&dw))
++			if(d->d_inode && (nlen == d->d_name_len) && !strncmp(dir_name(&dw), name, nlen)) {
++				put_dir(&dw);
+ 				return d->d_inode;
+ 			}
+-		put_blk(bi);
++		put_dir(&dw);
+ 	}
+ 	return 0;
+ }
+@@ -2090,8 +2199,7 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp
+ {
+ 	uint32 i;
+ 	filesystem *fs;
+-	directory *d;
+-	uint8 * b;
++	dirwalker dw;
+ 	uint32 nod, first_block;
+ 	uint32 nbgroups,nbinodes_per_group,overhead_per_group,free_blocks,
+ 		free_blocks_per_group,nbblocks_per_group,min_nbgroups;
+@@ -2217,26 +2325,20 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp
+ 	itab0->i_links_count = 2;
+ 	put_nod(ni);
+ 
+-	if(!(b = get_workblk()))
+-		error_msg_and_die("get_workblk() failed.");
+-	d = (directory*)b;
+-	d->d_inode = EXT2_ROOT_INO;
+-	d->d_rec_len = sizeof(directory)+4;
+-	d->d_name_len = 1;
+-	strcpy(d->d_name, ".");
+-	d = (directory*)(b + d->d_rec_len);
+-	d->d_inode = EXT2_ROOT_INO;
+-	d->d_rec_len = BLOCKSIZE - (sizeof(directory)+4);
+-	d->d_name_len = 2;
+-	strcpy(d->d_name, "..");
+-	extend_blk(fs, EXT2_ROOT_INO, b, 1);
++	new_dir(fs, EXT2_ROOT_INO, ".", 1, &dw);
++	shrink_dir(&dw, EXT2_ROOT_INO, "..", 2);
++	next_dir(&dw); // Force the data into the buffer
++	extend_blk(fs, EXT2_ROOT_INO, dir_data(&dw), 1);
++	put_dir(&dw);
+ 
+ 	// make lost+found directory and reserve blocks
+ 	if(fs->sb.s_r_blocks_count)
+ 	{
+ 		inode *node;
++		uint8 *b;
+ 
+ 		nod = mkdir_fs(fs, EXT2_ROOT_INO, "lost+found", FM_IRWXU, 0, 0, fs_timestamp, fs_timestamp);
++		b = get_workblk();
+ 		memset(b, 0, BLOCKSIZE);
+ 		((directory*)b)->d_rec_len = BLOCKSIZE;
+ 		/* We run into problems with e2fsck if directory lost+found grows
+@@ -2246,11 +2348,11 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp
+ 			fs->sb.s_r_blocks_count = fs->sb.s_blocks_count * MAX_RESERVED_BLOCKS;
+ 		for(i = 1; i < fs->sb.s_r_blocks_count; i++)
+ 			extend_blk(fs, nod, b, 1);
++		free_workblk(b);
+ 		node = get_nod(fs, nod, &ni);
+ 		node->i_size = fs->sb.s_r_blocks_count * BLOCKSIZE;
+ 		put_nod(ni);
+ 	}
+-	free_workblk(b);
+ 
+ 	// administrative info
+ 	fs->sb.s_state = 1;
+@@ -2368,19 +2470,15 @@ print_dir(filesystem *fs, uint32 nod)
+ 	while((bk = walk_bw(fs, nod, &bw, 0, 0)) != WALK_END)
+ 	{
+ 		directory *d;
+-		uint8 *b;
+-		blk_info *bi;
+-		b = get_blk(fs, bk, &bi);
+-		for(d = (directory*)b; (int8*)d + sizeof(*d) < (int8*)b + BLOCKSIZE; d = (directory*)((int8*)d + d->d_rec_len))
++		dirwalker dw;
++		for (d = get_dir(fs, bk, &dw); d; d = next_dir(&dw))
+ 			if(d->d_inode)
+ 			{
+-				int i;
+ 				printf("entry '");
+-				for(i = 0; i < d->d_name_len; i++)
+-					putchar(d->d_name[i]);
++				fwrite(dir_name(&dw), 1, d->d_name_len, stdout);
+ 				printf("' (inode %d): rec_len: %d (name_len: %d)\n", d->d_inode, d->d_rec_len, d->d_name_len);
+ 			}
+-		put_blk(bi);
++		put_dir(&dw);
+ 	}
+ }
+ 
+-- 
+1.7.4.1
+

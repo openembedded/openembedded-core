@@ -1,0 +1,175 @@
+Upstream-Status: inappropriate
+
+From 1ea2332c6cec1fb979a7cb4502360005bed50da4 Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard@mvista.com>
+Date: Sun, 5 Jun 2011 14:08:02 -0500
+Subject: [PATCH 07/19] Move hdlinks into the filesystem structure.
+
+Since the hard links structures are associated with a filesystem, put
+them in the filesystem structure since it can hold other stuff now.
+---
+ genext2fs.c |   71 +++++++++++++++++++++++++++++++---------------------------
+ 1 files changed, 38 insertions(+), 33 deletions(-)
+
+diff --git a/genext2fs.c b/genext2fs.c
+index e45e520..d130362 100644
+--- a/genext2fs.c
++++ b/genext2fs.c
+@@ -583,6 +583,18 @@ typedef struct
+ 	uint32 bptind;
+ } blockwalker;
+ 
++#define HDLINK_CNT   16
++struct hdlink_s
++{
++	uint32	src_inode;
++	uint32	dst_nod;
++};
++
++struct hdlinks_s
++{
++	int32 count;
++	struct hdlink_s *hdl;
++};
+ 
+ /* Filesystem structure that support groups */
+ #if BLOCKSIZE == 1024
+@@ -592,6 +604,8 @@ typedef struct
+ 	superblock *sb;
+ 	groupdescriptor *gd;
+ 	uint32 nheadblocks;
++	int32 hdlink_cnt;
++	struct hdlinks_s hdlinks;
+ } filesystem;
+ #else
+ #error UNHANDLED BLOCKSIZE
+@@ -615,22 +629,6 @@ typedef struct
+ #define udecl32(x) this->x = swab32(this->x);
+ #define utdecl32(x,n) { int i; for(i=0; i<n; i++) this->x[i] = swab32(this->x[i]); }
+ 
+-#define HDLINK_CNT   16
+-static int32 hdlink_cnt = HDLINK_CNT;
+-struct hdlink_s
+-{
+-	uint32	src_inode;
+-	uint32	dst_nod;
+-};
+-
+-struct hdlinks_s 
+-{
+-	int32 count;
+-	struct hdlink_s *hdl;
+-};
+-
+-static struct hdlinks_s hdlinks;
+-
+ static void
+ swap_sb(superblock *sb)
+ {
+@@ -787,12 +785,12 @@ xreadlink(const char *path)
+ }
+ 
+ int
+-is_hardlink(ino_t inode)
++is_hardlink(filesystem *fs, ino_t inode)
+ {
+ 	int i;
+ 
+-	for(i = 0; i < hdlinks.count; i++) {
+-		if(hdlinks.hdl[i].src_inode == inode)
++	for(i = 0; i < fs->hdlinks.count; i++) {
++		if(fs->hdlinks.hdl[i].src_inode == inode)
+ 			return i;
+ 	}
+ 	return -1;
+@@ -1989,9 +1987,9 @@ add2fs_from_dir(filesystem *fs, uint32 this_nod, int squash_uids, int squash_per
+ 			save_nod = 0;
+ 			/* Check for hardlinks */
+ 			if (!S_ISDIR(st.st_mode) && !S_ISLNK(st.st_mode) && st.st_nlink > 1) {
+-				int32 hdlink = is_hardlink(st.st_ino);
++				int32 hdlink = is_hardlink(fs, st.st_ino);
+ 				if (hdlink >= 0) {
+-					add2dir(fs, this_nod, hdlinks.hdl[hdlink].dst_nod, name);
++					add2dir(fs, this_nod, fs->hdlinks.hdl[hdlink].dst_nod, name);
+ 					continue;
+ 				} else {
+ 					save_nod = 1;
+@@ -2035,17 +2033,17 @@ add2fs_from_dir(filesystem *fs, uint32 this_nod, int squash_uids, int squash_per
+ 					error_msg("ignoring entry %s", name);
+ 			}
+ 			if (save_nod) {
+-				if (hdlinks.count == hdlink_cnt) {
+-					if ((hdlinks.hdl = 
+-						 realloc (hdlinks.hdl, (hdlink_cnt + HDLINK_CNT) *
++				if (fs->hdlinks.count == fs->hdlink_cnt) {
++					if ((fs->hdlinks.hdl =
++						 realloc (fs->hdlinks.hdl, (fs->hdlink_cnt + HDLINK_CNT) *
+ 								  sizeof (struct hdlink_s))) == NULL) {
+ 						error_msg_and_die("Not enough memory");
+ 					}
+-					hdlink_cnt += HDLINK_CNT;
++					fs->hdlink_cnt += HDLINK_CNT;
+ 				}
+-				hdlinks.hdl[hdlinks.count].src_inode = st.st_ino;
+-				hdlinks.hdl[hdlinks.count].dst_nod = nod;
+-				hdlinks.count++;
++				fs->hdlinks.hdl[fs->hdlinks.count].src_inode = st.st_ino;
++				fs->hdlinks.hdl[fs->hdlinks.count].dst_nod = nod;
++				fs->hdlinks.count++;
+ 			}
+ 		}
+ 	}
+@@ -2300,6 +2298,11 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp
+ 			   / BLOCKSIZE);
+ 	if(!(fs->data = calloc(nbblocks, BLOCKSIZE)))
+ 		error_msg_and_die("not enough memory for filesystem");
++	fs->hdlink_cnt = HDLINK_CNT;
++	fs->hdlinks.hdl = calloc(sizeof(struct hdlink_s), fs->hdlink_cnt);
++	if (!fs->hdlinks.hdl)
++		error_msg_and_die("Not enough memory");
++	fs->hdlinks.count = 0 ;
+ 	fs->sb = (superblock *) (fs->data + BLOCKSIZE);
+ 	fs->gd = (groupdescriptor *) (fs->sb + 1);
+ 
+@@ -2442,12 +2445,18 @@ load_fs(FILE * fh, int swapit)
+ 	fs = malloc(sizeof(*fs));
+ 	if (!fs)
+ 		error_msg_and_die("not enough memory for filesystem");
++	fs->hdlink_cnt = HDLINK_CNT;
++	fs->hdlinks.hdl = calloc(sizeof(struct hdlink_s), fs->hdlink_cnt);
++	if (!fs->hdlinks.hdl)
++		error_msg_and_die("Not enough memory");
++	fs->hdlinks.count = 0 ;
+ 	if(!(fs->data = calloc(fssize, BLOCKSIZE)))
+ 		error_msg_and_die("not enough memory for filesystem");
+ 	if(fread(fs->data, BLOCKSIZE, fssize, fh) != fssize)
+ 		perror_msg_and_die("input filesystem image");
+ 	fs->sb = (superblock *) (fs->data + BLOCKSIZE);
+ 	fs->gd = (groupdescriptor *) (fs->sb + 1);
++
+ 	if(swapit)
+ 		swap_badfs(fs);
+ 	if(fs->sb->s_rev_level || (fs->sb->s_magic != EXT2_MAGIC_NUMBER))
+@@ -2461,6 +2470,7 @@ load_fs(FILE * fh, int swapit)
+ static void
+ free_fs(filesystem *fs)
+ {
++	free(fs->hdlinks.hdl);
+ 	free(fs->data);
+ 	free(fs);
+ }
+@@ -2964,11 +2974,6 @@ main(int argc, char **argv)
+ 		error_msg_and_die("Not enough arguments. Try --help or else see the man page.");
+ 	fsout = argv[optind];
+ 
+-	hdlinks.hdl = (struct hdlink_s *)malloc(hdlink_cnt * sizeof(struct hdlink_s));
+-	if (!hdlinks.hdl)
+-		error_msg_and_die("Not enough memory");
+-	hdlinks.count = 0 ;
+-
+ 	if(fsin)
+ 	{
+ 		if(strcmp(fsin, "-"))
+-- 
+1.7.4.1
+

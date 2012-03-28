@@ -1,0 +1,72 @@
+Upstream-Status: inappropriate
+
+From 1399df7672ec309523bcd067da24d72aa624f783 Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard@mvista.com>
+Date: Wed, 1 Jun 2011 07:51:24 -0500
+Subject: [PATCH 01/19] Fix warnings, remove some unused macros.
+
+These are some annoying warnings with newer toolchains.  And NAMLEN is
+never used, so just get rid of it.
+---
+ genext2fs.c |   15 +++++++++------
+ 1 files changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/genext2fs.c b/genext2fs.c
+index f0d797d..284862d 100644
+--- a/genext2fs.c
++++ b/genext2fs.c
+@@ -107,10 +107,8 @@
+ 
+ #if HAVE_DIRENT_H
+ # include <dirent.h>
+-# define NAMLEN(dirent) strlen((dirent)->d_name)
+ #else
+ # define dirent direct
+-# define NAMLEN(dirent) (dirent)->d_namlen
+ # if HAVE_SYS_NDIR_H
+ #  include <sys/ndir.h>
+ # endif
+@@ -1441,7 +1439,8 @@ mkfile_fs(filesystem *fs, uint32 parent_nod, const char *name, uint32 mode, size
+ 		if(!(b = (uint8*)calloc(rndup(size, BLOCKSIZE), 1)))
+ 			error_msg_and_die("not enough mem to read file '%s'", name);
+ 		if(f)
+-			fread(b, size, 1, f); // FIXME: ugly. use mmap() ...
++			if (fread(b, size, 1, f) != 1) // FIXME: ugly. use mmap() ...
++				error_msg_and_die("fread failed");
+ 		extend_blk(fs, nod, b, rndup(size, BLOCKSIZE) / BLOCKSIZE);
+ 		free(b);
+ 	}
+@@ -1673,7 +1672,9 @@ add2fs_from_dir(filesystem *fs, uint32 this_nod, int squash_uids, int squash_per
+ 					if(chdir(dent->d_name) < 0)
+ 						perror_msg_and_die(dent->d_name);
+ 					add2fs_from_dir(fs, this_nod, squash_uids, squash_perms, fs_timestamp, stats);
+-					chdir("..");
++					if (chdir("..") == -1)
++						perror_msg_and_die("..");
++
+ 					break;
+ 				default:
+ 					break;
+@@ -1687,7 +1688,8 @@ add2fs_from_dir(filesystem *fs, uint32 this_nod, int squash_uids, int squash_per
+ 					if(chdir(dent->d_name) < 0)
+ 						perror_msg_and_die(name);
+ 					add2fs_from_dir(fs, nod, squash_uids, squash_perms, fs_timestamp, stats);
+-					chdir("..");
++					if (chdir("..") == -1)
++						perror_msg_and_die("..");
+ 				}
+ 				continue;
+ 			}
+@@ -1733,7 +1735,8 @@ add2fs_from_dir(filesystem *fs, uint32 this_nod, int squash_uids, int squash_per
+ 					if(chdir(dent->d_name) < 0)
+ 						perror_msg_and_die(name);
+ 					add2fs_from_dir(fs, nod, squash_uids, squash_perms, fs_timestamp, stats);
+-					chdir("..");
++					if (chdir("..") == -1)
++						perror_msg_and_die("..");
+ 					break;
+ 				default:
+ 					error_msg("ignoring entry %s", name);
+-- 
+1.7.4.1
+

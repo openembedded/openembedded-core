@@ -1,0 +1,839 @@
+Upstream-Status: inappropriate
+
+From 29a36b0b91ee009ee4219934c7a70278b1361834 Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard@mvista.com>
+Date: Sun, 5 Jun 2011 15:24:57 -0500
+Subject: [PATCH 10/19] Convert over to keeping the filesystem on disk
+
+This makes the actual filesystem be on disk and not in memory.  It
+adds caching of the filesystem data to help keep oft-accessed blocks
+in memory and byteswapped.
+---
+ cache.h     |  128 ++++++++++++++++++++
+ genext2fs.c |  377 +++++++++++++++++++++++++++++++++++++++++++++++++----------
+ list.h      |   78 ++++++++++++
+ 3 files changed, 521 insertions(+), 62 deletions(-)
+ create mode 100644 cache.h
+ create mode 100644 list.h
+
+diff --git a/cache.h b/cache.h
+new file mode 100644
+index 0000000..5275be6
+--- /dev/null
++++ b/cache.h
+@@ -0,0 +1,128 @@
++#ifndef __CACHE_H__
++#define __CACHE_H__
++
++#include "list.h"
++
++#define CACHE_LISTS 256
++
++typedef struct
++{
++	list_elem link;
++	list_elem lru_link;
++} cache_link;
++
++typedef struct
++{
++	/* LRU list holds unused items */
++	unsigned int lru_entries;
++	list_elem lru_list;
++	unsigned int max_free_entries;
++
++	unsigned int entries;
++	list_elem lists[CACHE_LISTS];
++	unsigned int (*elem_val)(cache_link *elem);
++	void (*freed)(cache_link *elem);
++} listcache;
++
++static inline void
++cache_add(listcache *c, cache_link *elem)
++{
++	unsigned int hash = c->elem_val(elem) % CACHE_LISTS;
++	int delcount = c->lru_entries - c->max_free_entries;
++
++	if (delcount > 0) {
++		/* Delete some unused items. */
++		list_elem *lru, *next;
++		cache_link *l;
++		list_for_each_elem_safe(&c->lru_list, lru, next) {
++			l = container_of(lru, cache_link, lru_link);
++			list_del(lru);
++			list_del(&l->link);
++			c->entries--;
++			c->lru_entries--;
++			c->freed(l);
++			delcount--;
++			if (delcount <= 0)
++				break;
++		}
++	}
++
++	c->entries++;
++	list_item_init(&elem->lru_link); /* Mark it not in the LRU list */
++	list_add_after(&c->lists[hash], &elem->link);
++}
++
++static inline void
++cache_item_set_unused(listcache *c, cache_link *elem)
++{
++	list_add_before(&c->lru_list, &elem->lru_link);
++	c->lru_entries++;
++}
++
++static inline cache_link *
++cache_find(listcache *c, unsigned int val)
++{
++	unsigned int hash = val % CACHE_LISTS;
++	list_elem *elem;
++
++	list_for_each_elem(&c->lists[hash], elem) {
++		cache_link *l = container_of(elem, cache_link, link);
++		if (c->elem_val(l) == val) {
++			if (!list_empty(&l->lru_link)) {
++				/* It's in the unused list, remove it. */
++				list_del(&l->lru_link);
++				list_item_init(&l->lru_link);
++				c->lru_entries--;
++			}
++			return l;
++		}
++	}
++	return NULL;
++}
++
++static inline int
++cache_flush(listcache *c)
++{
++	list_elem *elem, *next;
++	cache_link *l;
++	int i;
++
++	list_for_each_elem_safe(&c->lru_list, elem, next) {
++		l = container_of(elem, cache_link, lru_link);
++		list_del(elem);
++		list_del(&l->link);
++		c->entries--;
++		c->lru_entries--;
++		c->freed(l);
++	}
++
++	for (i = 0; i < CACHE_LISTS; i++) {
++		list_for_each_elem_safe(&c->lists[i], elem, next) {
++			l = container_of(elem, cache_link, link);
++			list_del(&l->link);
++			c->entries--;
++			c->freed(l);
++		}
++	}
++
++	return c->entries || c->lru_entries;
++}
++
++static inline void
++cache_init(listcache *c, unsigned int max_free_entries,
++	   unsigned int (*elem_val)(cache_link *elem),
++	   void (*freed)(cache_link *elem))
++{
++	int i;
++
++	c->entries = 0;
++	c->lru_entries = 0;
++	c->max_free_entries = max_free_entries;
++	list_init(&c->lru_list);
++	for (i = 0; i < CACHE_LISTS; i++)
++		list_init(&c->lists[i]);
++	c->elem_val = elem_val;
++	c->freed = freed;
++}
++
++#endif /* __CACHE_H__ */
+diff --git a/genext2fs.c b/genext2fs.c
+index 51403a2..f79438d 100644
+--- a/genext2fs.c
++++ b/genext2fs.c
+@@ -142,6 +142,8 @@
+ # include <limits.h>
+ #endif
+ 
++#include "cache.h"
++
+ struct stats {
+ 	unsigned long nblocks;
+ 	unsigned long ninodes;
+@@ -600,6 +602,7 @@ struct hdlinks_s
+ #if BLOCKSIZE == 1024
+ typedef struct
+ {
++	FILE *f;
+ 	uint8 *data;
+ 	superblock *sb;
+ 	groupdescriptor *gd;
+@@ -607,6 +610,10 @@ typedef struct
+ 	int swapit;
+ 	int32 hdlink_cnt;
+ 	struct hdlinks_s hdlinks;
++
++	listcache blks;
++	listcache inodes;
++	listcache blkmaps;
+ } filesystem;
+ #else
+ #error UNHANDLED BLOCKSIZE
+@@ -848,45 +855,150 @@ allocated(block b, uint32 item)
+ // by the user.
+ typedef struct
+ {
+-	int dummy;
++	cache_link link;
++
++	filesystem *fs;
++	uint32 blk;
++	uint8 *b;
++	uint32 usecount;
+ } blk_info;
+ 
++#define MAX_FREE_CACHE_BLOCKS 100
++
++static uint32
++blk_elem_val(cache_link *elem)
++{
++	blk_info *bi = container_of(elem, blk_info, link);
++	return bi->blk;
++}
++
++static void
++blk_freed(cache_link *elem)
++{
++	blk_info *bi = container_of(elem, blk_info, link);
++
++	if (fseeko(bi->fs->f, ((off_t) bi->blk) * BLOCKSIZE, SEEK_SET))
++		perror_msg_and_die("fseek");
++	if (fwrite(bi->b, BLOCKSIZE, 1, bi->fs->f) != 1)
++		perror_msg_and_die("get_blk: write");
++	free(bi->b);
++	free(bi);
++}
++
+ // Return a given block from a filesystem.  Make sure to call
+ // put_blk when you are done with it.
+ static inline uint8 *
+ get_blk(filesystem *fs, uint32 blk, blk_info **rbi)
+ {
+-	return fs->data + blk*BLOCKSIZE;
++	cache_link *curr;
++	blk_info *bi;
++
++	if (blk < fs->nheadblocks)
++		error_msg_and_die("Internal error, request for head block");
++	if (blk >= fs->sb->s_blocks_count)
++		error_msg_and_die("Internal error, block out of range");
++
++	curr = cache_find(&fs->blks, blk);
++	if (curr) {
++		bi = container_of(curr, blk_info, link);
++		bi->usecount++;
++		goto out;
++	}
++
++	bi = malloc(sizeof(*bi));
++	if (!bi)
++		error_msg_and_die("get_blk: out of memory");
++	bi->fs = fs;
++	bi->blk = blk;
++	bi->usecount = 1;
++	bi->b = malloc(BLOCKSIZE);
++	if (!bi->b)
++		error_msg_and_die("get_blk: out of memory");
++	cache_add(&fs->blks, &bi->link);
++	if (fseeko(fs->f, ((off_t) blk) * BLOCKSIZE, SEEK_SET))
++		perror_msg_and_die("fseek");
++	if (fread(bi->b, BLOCKSIZE, 1, fs->f) != 1) {
++		if (ferror(fs->f))
++			perror_msg_and_die("fread");
++		memset(bi->b, 0, BLOCKSIZE);
++	}
++
++out:
++	*rbi = bi;
++	return bi->b;
+ }
+ 
+ static inline void
+ put_blk(blk_info *bi)
+ {
++	if (bi->usecount == 0)
++		error_msg_and_die("Internal error: put_blk usecount zero");
++	bi->usecount--;
++	if (bi->usecount == 0)
++		/* Free happens in the cache code */
++		cache_item_set_unused(&bi->fs->blks, &bi->link);
+ }
+ 
+ // Used by get_blkmap/put_blkmap to hold information about an block map
+ // owned by the user.
+ typedef struct
+ {
++	cache_link link;
++
+ 	filesystem *fs;
++	uint32 blk;
+ 	uint8 *b;
+ 	blk_info *bi;
++	uint32 usecount;
+ } blkmap_info;
+ 
++#define MAX_FREE_CACHE_BLOCKMAPS 100
++
++static uint32
++blkmap_elem_val(cache_link *elem)
++{
++	blkmap_info *bmi = container_of(elem, blkmap_info, link);
++	return bmi->blk;
++}
++
++static void
++blkmap_freed(cache_link *elem)
++{
++	blkmap_info *bmi = container_of(elem, blkmap_info, link);
++
++	if (bmi->fs->swapit)
++		swap_block(bmi->b);
++	put_blk(bmi->bi);
++	free(bmi);
++}
++
+ // Return a given block map from a filesystem.  Make sure to call
+ // put_blkmap when you are done with it.
+ static inline uint32 *
+ get_blkmap(filesystem *fs, uint32 blk, blkmap_info **rbmi)
+ {
+ 	blkmap_info *bmi;
++	cache_link *curr;
++
++	curr = cache_find(&fs->blkmaps, blk);
++	if (curr) {
++		bmi = container_of(curr, blkmap_info, link);
++		bmi->usecount++;
++		goto out;
++	}
+ 
+ 	bmi = malloc(sizeof(*bmi));
+ 	if (!bmi)
+ 		error_msg_and_die("get_blkmap: out of memory");
+ 	bmi->fs = fs;
++	bmi->blk = blk;
+ 	bmi->b = get_blk(fs, blk, &bmi->bi);
+-	if (bmi->fs->swapit)
++	bmi->usecount = 1;
++	cache_add(&fs->blkmaps, &bmi->link);
++
++	if (fs->swapit)
+ 		swap_block(bmi->b);
++out:
+ 	*rbmi = bmi;
+ 	return (uint32 *) bmi->b;
+ }
+@@ -894,42 +1006,83 @@ get_blkmap(filesystem *fs, uint32 blk, blkmap_info **rbmi)
+ static inline void
+ put_blkmap(blkmap_info *bmi)
+ {
+-	if (bmi->fs->swapit)
+-		swap_block(bmi->b);
+-	put_blk(bmi->bi);
+-	free(bmi);
++	if (bmi->usecount == 0)
++		error_msg_and_die("Internal error: put_blkmap usecount zero");
++
++	bmi->usecount--;
++	if (bmi->usecount == 0)
++		/* Free happens in the cache code */
++		cache_item_set_unused(&bmi->fs->blkmaps, &bmi->link);
+ }
+ 
+ // Used by get_nod/put_nod to hold information about an inode owned
+ // by the user.
+ typedef struct
+ {
++	cache_link link;
++
+ 	filesystem *fs;
++	uint32 nod;
++	uint8 *b;
+ 	blk_info *bi;
+ 	inode *itab;
++	uint32 usecount;
+ } nod_info;
+ 
++#define MAX_FREE_CACHE_INODES 100
++
++static uint32
++inode_elem_val(cache_link *elem)
++{
++	nod_info *ni = container_of(elem, nod_info, link);
++	return ni->nod;
++}
++
++static void
++inode_freed(cache_link *elem)
++{
++	nod_info *ni = container_of(elem, nod_info, link);
++
++	if (ni->fs->swapit)
++		swap_nod(ni->itab);
++	put_blk(ni->bi);
++	free(ni);
++}
++
+ // Return a given inode from a filesystem.  Make sure to call put_nod()
+ // when you are done with the inode.
+ static inline inode *
+ get_nod(filesystem *fs, uint32 nod, nod_info **rni)
+ {
+ 	int grp, offset, boffset;
++	cache_link *curr;
+ 	nod_info *ni;
+-	uint8 *b;
+ 
+-	offset = GRP_IBM_OFFSET(fs,nod) - 1;
+-	boffset = offset / (BLOCKSIZE / sizeof(inode));
+-	offset %= BLOCKSIZE / sizeof(inode);
+-	grp = GRP_GROUP_OF_INODE(fs,nod);
++	curr = cache_find(&fs->inodes, nod);
++	if (curr) {
++		ni = container_of(curr, nod_info, link);
++		ni->usecount++;
++		goto out;
++	}
++
+ 	ni = malloc(sizeof(*ni));
+ 	if (!ni)
+ 		error_msg_and_die("get_nod: out of memory");
+ 	ni->fs = fs;
+-	b = get_blk(fs, fs->gd[grp].bg_inode_table + boffset, &ni->bi);
+-	ni->itab = ((inode *) b) + offset;
++	ni->nod = nod;
++	ni->usecount = 1;
++	cache_add(&fs->inodes, &ni->link);
++
++	offset = GRP_IBM_OFFSET(fs, nod) - 1;
++	boffset = offset / (BLOCKSIZE / sizeof(inode));
++	offset %= BLOCKSIZE / sizeof(inode);
++	grp = GRP_GROUP_OF_INODE(fs,nod);
++	ni->b = get_blk(fs, fs->gd[grp].bg_inode_table + boffset, &ni->bi);
++	ni->itab = ((inode *) ni->b) + offset;
+ 	if (fs->swapit)
+ 		swap_nod(ni->itab);
++
++out:
+ 	*rni = ni;
+ 	return ni->itab;
+ }
+@@ -937,10 +1090,13 @@ get_nod(filesystem *fs, uint32 nod, nod_info **rni)
+ static inline void
+ put_nod(nod_info *ni)
+ {
+-	if (ni->fs->swapit)
+-		swap_nod(ni->itab);
+-	put_blk(ni->bi);
+-	free(ni);
++	if (ni->usecount == 0)
++		error_msg_and_die("Internal error: put_nod usecount zero");
++
++	ni->usecount--;
++	if (ni->usecount == 0)
++		/* Free happens in the cache code */
++		cache_item_set_unused(&ni->fs->inodes, &ni->link);
+ }
+ 
+ // Used to hold state information while walking a directory inode.
+@@ -2090,40 +2246,61 @@ add2fs_from_dir(filesystem *fs, uint32 this_nod, int squash_uids, int squash_per
+ 	closedir(dh);
+ }
+ 
+-// endianness swap of the whole filesystem
+ static void
+-swap_goodfs(filesystem *fs)
++swap_gds(filesystem *fs)
+ {
+ 	uint32 i;
+-
+ 	for(i=0;i<GRP_NBGROUPS(fs);i++)
+ 		swap_gd(&(fs->gd[i]));
+-	swap_sb(fs->sb);
+ }
+ 
++// Copy size blocks from src to dst, putting holes in the output
++// file (if possible) if the input block is all zeros.
+ static void
+-swap_badfs(filesystem *fs)
++copy_file(filesystem *fs, FILE *dst, FILE *src, size_t size)
+ {
+-	uint32 i;
+-	swap_sb(fs->sb);
+-	for(i=0;i<GRP_NBGROUPS(fs);i++)
+-		swap_gd(&(fs->gd[i]));
++	uint8 *b;
++
++	b = malloc(BLOCKSIZE);
++	if (!b)
++		error_msg_and_die("copy_file: out of memory");
++	if (fseek(src, 0, SEEK_SET))
++		perror_msg_and_die("fseek");
++	if (ftruncate(fileno(dst), 0))
++		perror_msg_and_die("copy_file: ftruncate");
++	while (size > 0) {
++		if (fread(b, BLOCKSIZE, 1, src) != 1)
++			perror_msg_and_die("copy failed on read");
++		if ((dst != stdout) && is_blk_empty(b)) {
++			/* Empty block, just skip it */
++			if (fseek(dst, BLOCKSIZE, SEEK_CUR))
++				perror_msg_and_die("fseek");
++		} else {
++			if (fwrite(b, BLOCKSIZE, 1, dst) != 1)
++				perror_msg_and_die("copy failed on write");
++		}
++		size --;
++	}
+ }
+ 
+ // Allocate a new filesystem structure, allocate internal memory,
+ // and initialize the contents.
+ static filesystem *
+-alloc_fs(uint32 nbblocks, int swapit)
++alloc_fs(int swapit, char *fname, uint32 nbblocks, FILE *srcfile)
+ {
+ 	filesystem *fs;
++	struct stat srcstat, dststat;
+ 
+ 	fs = malloc(sizeof(*fs));
+ 	if (!fs)
+ 		error_msg_and_die("not enough memory for filesystem");
+ 	memset(fs, 0, sizeof(*fs));
+ 	fs->swapit = swapit;
+-	if(!(fs->data = calloc(nbblocks, BLOCKSIZE)))
+-		error_msg_and_die("not enough memory for filesystem");
++	cache_init(&fs->blks, MAX_FREE_CACHE_BLOCKS, blk_elem_val, blk_freed);
++	cache_init(&fs->blkmaps, MAX_FREE_CACHE_BLOCKMAPS,
++		   blkmap_elem_val, blkmap_freed);
++	cache_init(&fs->inodes, MAX_FREE_CACHE_INODES,
++		   inode_elem_val, inode_freed);
+ 	fs->hdlink_cnt = HDLINK_CNT;
+ 	fs->hdlinks.hdl = calloc(sizeof(struct hdlink_s), fs->hdlink_cnt);
+ 	if (!fs->hdlinks.hdl)
+@@ -2131,12 +2308,44 @@ alloc_fs(uint32 nbblocks, int swapit)
+ 	fs->hdlinks.count = 0 ;
+ 	fs->sb = (superblock *) (fs->data + BLOCKSIZE);
+ 	fs->gd = (groupdescriptor *) (fs->sb + 1);
++
++	if (strcmp(fname, "-") == 0)
++		fs->f = tmpfile();
++	else if (srcfile) {
++		if (fstat(fileno(srcfile), &srcstat))
++			perror_msg_and_die("fstat srcfile");
++		if (stat(fname, &dststat))
++			perror_msg_and_die("stat-ing %s", fname);
++		if (srcstat.st_ino == dststat.st_ino) {
++			// source and destination are the same file, don't
++			// truncate or copy, just use the file.
++			fs->f = fopen(fname, "r+b");
++		} else {
++			fs->f = fopen(fname, "w+b");
++			if (fs->f)
++				copy_file(fs, fs->f, srcfile,
++					  nbblocks * BLOCKSIZE);
++		}
++	} else
++		fs->f = fopen(fname, "w+b");
++	if (!fs->f)
++		perror_msg_and_die("opening %s", fname);
+ 	return fs;
+ }
+ 
++/* Make sure the output file is the right size */
++static void
++set_file_size(filesystem *fs)
++{
++	if (ftruncate(fileno(fs->f),
++		      ((off_t) fs->sb->s_blocks_count) * BLOCKSIZE))
++		perror_msg_and_die("set_file_size: ftruncate");
++}
++
+ // initialize an empty filesystem
+ static filesystem *
+-init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp, int swapit)
++init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes,
++	uint32 fs_timestamp, int swapit, char *fname)
+ {
+ 	uint32 i;
+ 	filesystem *fs;
+@@ -2184,10 +2393,16 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp
+ 	free_blocks = nbblocks - overhead_per_group*nbgroups - 1 /*boot block*/;
+ 	free_blocks_per_group = nbblocks_per_group - overhead_per_group;
+ 
+-	fs = alloc_fs(nbblocks, swapit);
++	fs = alloc_fs(swapit, fname, nbblocks, NULL);
+ 	fs->nheadblocks = (((nbgroups * sizeof(groupdescriptor))
+ 			    + sizeof(superblock) + (BLOCKSIZE - 1))
+ 			   / BLOCKSIZE);
++	fs->sb = (superblock *) malloc(BLOCKSIZE);
++	if (!fs->sb)
++		error_msg_and_die("error allocating header memory");
++	fs->gd = (groupdescriptor *) calloc(fs->nheadblocks - 1, BLOCKSIZE);
++	if (!fs->gd)
++		error_msg_and_die("error allocating header memory");
+ 
+ 	// create the superblock for an empty filesystem
+ 	fs->sb->s_inodes_count = nbinodes_per_group * nbgroups;
+@@ -2205,6 +2420,10 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp
+ 	fs->sb->s_magic = EXT2_MAGIC_NUMBER;
+ 	fs->sb->s_lastcheck = fs_timestamp;
+ 
++	fs->sb->s_reserved[200] = 0;
++
++	set_file_size(fs);
++
+ 	// set up groupdescriptors
+ 	for(i=0, bbmpos=gdsz+2, ibmpos=bbmpos+1, itblpos=ibmpos+1;
+ 		i<nbgroups;
+@@ -2315,27 +2534,49 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp
+ 
+ // loads a filesystem from disk
+ static filesystem *
+-load_fs(FILE * fh, int swapit)
++load_fs(FILE * fh, int swapit, char *fname)
+ {
+-	size_t fssize;
++	off_t fssize;
+ 	filesystem *fs;
+-	if((fseek(fh, 0, SEEK_END) < 0) || ((ssize_t)(fssize = ftell(fh)) == -1))
++
++	if((fseek(fh, 0, SEEK_END) < 0) || ((fssize = ftello(fh)) == -1))
+ 		perror_msg_and_die("input filesystem image");
+ 	rewind(fh);
+-	fssize = (fssize + BLOCKSIZE - 1) / BLOCKSIZE;
++	if ((fssize % BLOCKSIZE) != 0)
++		error_msg_and_die("Input file not a multiple of block size");
++	fssize /= BLOCKSIZE;
+ 	if(fssize < 16) // totally arbitrary
+ 		error_msg_and_die("too small filesystem");
+-	fs = alloc_fs(fssize, swapit);
+-	if(fread(fs->data, BLOCKSIZE, fssize, fh) != fssize)
+-		perror_msg_and_die("input filesystem image");
+-
++	fs = alloc_fs(swapit, fname, fssize, fh);
++
++	/* Read and check the superblock, then read the superblock
++	 * and all the group descriptors */
++	fs->sb = malloc(BLOCKSIZE);
++	if (!fs->sb)
++		error_msg_and_die("error allocating header memory");
++	if (fseek(fs->f, BLOCKSIZE, SEEK_SET))
++		perror_msg_and_die("fseek");
++	if (fread(fs->sb, BLOCKSIZE, 1, fs->f) != 1)
++		perror_msg_and_die("fread filesystem image superblock");
+ 	if(swapit)
+-		swap_badfs(fs);
++		swap_sb(fs->sb);
+ 	if(fs->sb->s_rev_level || (fs->sb->s_magic != EXT2_MAGIC_NUMBER))
+ 		error_msg_and_die("not a suitable ext2 filesystem");
+ 	fs->nheadblocks = (((GRP_NBGROUPS(fs) * sizeof(groupdescriptor))
+ 			    + sizeof(superblock) + (BLOCKSIZE - 1))
+ 			   / BLOCKSIZE);
++
++	fs->gd = calloc(fs->nheadblocks - 1, BLOCKSIZE);
++	if (!fs->gd)
++		error_msg_and_die("error allocating header memory");
++	if (fread(fs->gd, BLOCKSIZE, fs->nheadblocks - 1, fs->f)
++	    != (fs->nheadblocks - 1))
++		perror_msg_and_die("fread filesystem image group descriptors");
++
++	if(swapit)
++		swap_gds(fs);
++
++	set_file_size(fs);
+ 	return fs;
+ }
+ 
+@@ -2343,7 +2584,9 @@ static void
+ free_fs(filesystem *fs)
+ {
+ 	free(fs->hdlinks.hdl);
+-	free(fs->data);
++	fclose(fs->f);
++	free(fs->sb);
++	free(fs->gd);
+ 	free(fs);
+ }
+ 
+@@ -2631,16 +2874,30 @@ print_fs(filesystem *fs)
+ }
+ 
+ static void
+-dump_fs(filesystem *fs, FILE * fh, int swapit)
+-{
+-	uint32 nbblocks = fs->sb->s_blocks_count;
++finish_fs(filesystem *fs)
++{
++	if (cache_flush(&fs->inodes))
++		error_msg_and_die("entry mismatch on inode cache flush");
++	if (cache_flush(&fs->blkmaps))
++		error_msg_and_die("entry mismatch on blockmap cache flush");
++	if (cache_flush(&fs->blks))
++		error_msg_and_die("entry mismatch on block cache flush");
+ 	fs->sb->s_reserved[200] = 0;
+-	if(swapit)
+-		swap_goodfs(fs);
+-	if(fwrite(fs->data, BLOCKSIZE, nbblocks, fh) < nbblocks)
+-		perror_msg_and_die("output filesystem image");
+-	if(swapit)
+-		swap_badfs(fs);
++	if(fs->swapit) {
++		swap_sb(fs->sb);
++		swap_gds(fs);
++	}
++	if (fseek(fs->f, BLOCKSIZE, SEEK_SET))
++		perror_msg_and_die("fseek");
++	if(fwrite(fs->sb, BLOCKSIZE, 1, fs->f) != 1)
++		perror_msg_and_die("output filesystem superblock");
++	if(fwrite(fs->gd, BLOCKSIZE, fs->nheadblocks - 1, fs->f)
++	   != (fs->nheadblocks - 1))
++		perror_msg_and_die("output filesystem group descriptors");
++	if(fs->swapit) {
++		swap_sb(fs->sb);
++		swap_gds(fs);
++	}
+ }
+ 
+ static void
+@@ -2851,11 +3108,11 @@ main(int argc, char **argv)
+ 		if(strcmp(fsin, "-"))
+ 		{
+ 			FILE * fh = xfopen(fsin, "rb");
+-			fs = load_fs(fh, bigendian);
++			fs = load_fs(fh, bigendian, fsout);
+ 			fclose(fh);
+ 		}
+ 		else
+-			fs = load_fs(stdin, bigendian);
++			fs = load_fs(stdin, bigendian, fsout);
+ 	}
+ 	else
+ 	{
+@@ -2886,7 +3143,7 @@ main(int argc, char **argv)
+ 		if(fs_timestamp == -1)
+ 			fs_timestamp = time(NULL);
+ 		fs = init_fs(nbblocks, nbinodes, nbresrvd, holes, fs_timestamp,
+-			     bigendian);
++			     bigendian, fsout);
+ 	}
+ 	
+ 	populate_fs(fs, dopt, didx, squash_uids, squash_perms, fs_timestamp, NULL);
+@@ -2925,14 +3182,10 @@ main(int argc, char **argv)
+ 		flist_blocks(fs, nod, fh);
+ 		fclose(fh);
+ 	}
+-	if(strcmp(fsout, "-"))
+-	{
+-		FILE * fh = xfopen(fsout, "wb");
+-		dump_fs(fs, fh, bigendian);
+-		fclose(fh);
+-	}
+-	else
+-		dump_fs(fs, stdout, bigendian);
++	finish_fs(fs);
++	if(strcmp(fsout, "-") == 0)
++		copy_file(fs, stdout, fs->f, fs->sb->s_blocks_count);
++
+ 	free_fs(fs);
+ 	return 0;
+ }
+diff --git a/list.h b/list.h
+new file mode 100644
+index 0000000..52bb181
+--- /dev/null
++++ b/list.h
+@@ -0,0 +1,78 @@
++#ifndef __LIST_H__
++#define __LIST_H__
++
++#if STDC_HEADERS
++# include <stdlib.h>
++# include <stddef.h>
++#else
++# if HAVE_STDLIB_H
++#  include <stdlib.h>
++# endif
++# if HAVE_STDDEF_H
++#  include <stddef.h>
++# endif
++#endif
++
++#ifndef offsetof
++#define offsetof(st, m) \
++     ((size_t) ( (char *)&((st *)(0))->m - (char *)0 ))
++#endif
++
++#define container_of(ptr, type, member) ({ \
++                const typeof( ((type *)0)->member ) *__mptr = (ptr); \
++                (type *)( (char *)__mptr - offsetof(type,member) );})
++
++typedef struct list_elem
++{
++	struct list_elem *next;
++	struct list_elem *prev;
++} list_elem;
++
++static inline void list_init(list_elem *list)
++{
++	list->next = list;
++	list->prev = list;
++}
++
++static inline void list_add_after(list_elem *pos, list_elem *elem)
++{
++	elem->next = pos->next;
++	elem->prev = pos;
++	pos->next->prev = elem;
++	pos->next = elem;
++}
++
++static inline void list_add_before(list_elem *pos, list_elem *elem)
++{
++	elem->prev = pos->prev;
++	elem->next = pos;
++	pos->prev->next = elem;
++	pos->prev = elem;
++}
++
++static inline void list_del(list_elem *elem)
++{
++	elem->next->prev = elem->prev;
++	elem->prev->next = elem->next;
++}
++
++static inline void list_item_init(list_elem *elem)
++{
++	elem->next = elem;
++	elem->prev = elem;
++}
++
++static inline int list_empty(list_elem *elem)
++{
++	return elem->next == elem;
++}
++
++#define list_for_each_elem(list, curr)			\
++	for ((curr) = (list)->next; (curr) != (list); (curr) = (curr)->next)
++
++#define list_for_each_elem_safe(list, curr, next)	\
++	for ((curr) = (list)->next, (next) = (curr)->next;	\
++	     (curr) != (list);					\
++	     (curr) = (next), (next) = (curr)->next)
++
++#endif /* __LIST_H__ */
+-- 
+1.7.4.1
+

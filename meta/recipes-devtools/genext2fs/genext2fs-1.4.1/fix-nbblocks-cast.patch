@@ -11,11 +11,13 @@ int tmp_nbinodes = nbblocks * BLOCKSIZE / bytes_per_inode;
 Upstream-Status: Submitted
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
+Rebased by Dexuan Cui <dexuan.cui@intel.com>
+
 Index: genext2fs-1.4.1/genext2fs.c
 ===================================================================
---- genext2fs-1.4.1.orig/genext2fs.c
-+++ genext2fs-1.4.1/genext2fs.c
-@@ -2447,7 +2447,7 @@ extern int optind, opterr, optopt;
+--- a/genext2fs.c	2012-03-29 00:07:20.308856017 +0800
++++ b/genext2fs.c	2012-03-29 00:09:06.848856005 +0800
+@@ -3041,7 +3041,7 @@
  int
  main(int argc, char **argv)
  {
@@ -24,12 +26,12 @@ Index: genext2fs-1.4.1/genext2fs.c
  	int nbinodes = -1;
  	int nbresrvd = -1;
  	float bytes_per_inode = -1;
-@@ -2609,7 +2609,7 @@ main(int argc, char **argv)
+@@ -3203,7 +3203,7 @@
  		}
  		if(fs_timestamp == -1)
  			fs_timestamp = time(NULL);
--		fs = init_fs(nbblocks, nbinodes, nbresrvd, holes, fs_timestamp);
-+		fs = init_fs((int)nbblocks, nbinodes, nbresrvd, holes, fs_timestamp);
+-		fs = init_fs(nbblocks, nbinodes, nbresrvd, holes, fs_timestamp,
++		fs = init_fs((int)nbblocks, nbinodes, nbresrvd, holes, fs_timestamp,
+ 			     bigendian, fsout);
  	}
- 	
- 	populate_fs(fs, dopt, didx, squash_uids, squash_perms, fs_timestamp, NULL);
+ 	if (volumelabel != NULL)

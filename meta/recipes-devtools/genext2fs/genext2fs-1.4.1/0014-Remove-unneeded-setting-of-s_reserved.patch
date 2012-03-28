@@ -1,0 +1,28 @@
+Upstream-Status: inappropriate
+
+From d20116479700bdc8a3b63b0025562671292728d6 Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard@mvista.com>
+Date: Mon, 6 Jun 2011 13:39:50 -0500
+Subject: [PATCH 14/19] Remove unneeded setting of s_reserved.
+
+This was missed in the previous patch to remove OP_HOLES.
+---
+ genext2fs.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+diff --git a/genext2fs.c b/genext2fs.c
+index 4d01bc4..b466a6d 100644
+--- a/genext2fs.c
++++ b/genext2fs.c
+@@ -2463,8 +2463,6 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes,
+ 	fs->sb->s_magic = EXT2_MAGIC_NUMBER;
+ 	fs->sb->s_lastcheck = fs_timestamp;
+ 
+-	fs->sb->s_reserved[200] = 0;
+-
+ 	set_file_size(fs);
+ 
+ 	// set up groupdescriptors
+-- 
+1.7.4.1
+

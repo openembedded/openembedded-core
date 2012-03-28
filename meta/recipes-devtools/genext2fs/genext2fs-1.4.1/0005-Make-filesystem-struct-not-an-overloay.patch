@@ -1,0 +1,374 @@
+Upstream-Status: inappropriate
+
+From f2090608aef32f3012b1c5943b73314176bce832 Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard@mvista.com>
+Date: Sun, 5 Jun 2011 10:09:51 -0500
+Subject: [PATCH 05/19] Make filesystem struct not an overloay
+
+Having the filesystem structure just be a big overlay for the raw data
+means you can't easily carry along any useful metadata in it.  So
+modify the filesystem structure to not be an overlay, but allocate the
+data and various pieces to be components inside the structure.
+---
+ genext2fs.c |  150 +++++++++++++++++++++++++++++++++--------------------------
+ 1 files changed, 84 insertions(+), 66 deletions(-)
+
+diff --git a/genext2fs.c b/genext2fs.c
+index 03d1b27..46c9605 100644
+--- a/genext2fs.c
++++ b/genext2fs.c
+@@ -233,8 +233,8 @@ struct stats {
+ 
+ // Number of groups in the filesystem
+ #define GRP_NBGROUPS(fs) \
+-	(((fs)->sb.s_blocks_count - fs->sb.s_first_data_block + \
+-	  (fs)->sb.s_blocks_per_group - 1) / (fs)->sb.s_blocks_per_group)
++	(((fs)->sb->s_blocks_count - fs->sb->s_first_data_block + \
++	  (fs)->sb->s_blocks_per_group - 1) / (fs)->sb->s_blocks_per_group)
+ 
+ // Get/put group block bitmap (bbm) given the group number
+ #define GRP_GET_GROUP_BBM(fs,grp,bi) ( get_blk((fs),(fs)->gd[(grp)].bg_block_bitmap,(bi)) )
+@@ -245,7 +245,7 @@ struct stats {
+ #define GRP_PUT_GROUP_IBM(bi) ( put_blk((bi)) )
+ 		
+ // Given an inode number find the group it belongs to
+-#define GRP_GROUP_OF_INODE(fs,nod) ( ((nod)-1) / (fs)->sb.s_inodes_per_group)
++#define GRP_GROUP_OF_INODE(fs,nod) ( ((nod)-1) / (fs)->sb->s_inodes_per_group)
+ 
+ //Given an inode number get/put the inode bitmap that covers it
+ #define GRP_GET_INODE_BITMAP(fs,nod,bi)				\
+@@ -255,10 +255,10 @@ struct stats {
+ 
+ //Given an inode number find its offset within the inode bitmap that covers it
+ #define GRP_IBM_OFFSET(fs,nod) \
+-	( (nod) - GRP_GROUP_OF_INODE((fs),(nod))*(fs)->sb.s_inodes_per_group )
++	( (nod) - GRP_GROUP_OF_INODE((fs),(nod))*(fs)->sb->s_inodes_per_group )
+ 
+ // Given a block number find the group it belongs to
+-#define GRP_GROUP_OF_BLOCK(fs,blk) ( ((blk)-1) / (fs)->sb.s_blocks_per_group)
++#define GRP_GROUP_OF_BLOCK(fs,blk) ( ((blk)-1) / (fs)->sb->s_blocks_per_group)
+ 	
+ //Given a block number get/put the block bitmap that covers it
+ #define GRP_GET_BLOCK_BITMAP(fs,blk,bi)				\
+@@ -268,7 +268,7 @@ struct stats {
+ 
+ //Given a block number find its offset within the block bitmap that covers it
+ #define GRP_BBM_OFFSET(fs,blk) \
+-	( (blk) - GRP_GROUP_OF_BLOCK((fs),(blk))*(fs)->sb.s_blocks_per_group )
++	( (blk) - GRP_GROUP_OF_BLOCK((fs),(blk))*(fs)->sb->s_blocks_per_group )
+ 
+ 
+ // used types
+@@ -577,9 +577,10 @@ typedef struct
+ #if BLOCKSIZE == 1024
+ typedef struct
+ {
+-	block zero;            // The famous block 0
+-	superblock sb;         // The superblock
+-	groupdescriptor gd[0]; // The group descriptors
++	uint8 *data;
++	superblock *sb;
++	groupdescriptor *gd;
++	uint32 nheadblocks;
+ } filesystem;
+ #else
+ #error UNHANDLED BLOCKSIZE
+@@ -830,7 +831,7 @@ typedef struct
+ static inline uint8 *
+ get_blk(filesystem *fs, uint32 blk, blk_info **rbi)
+ {
+-	return (uint8*)fs + blk*BLOCKSIZE;
++	return fs->data + blk*BLOCKSIZE;
+ }
+ 
+ static inline void
+@@ -1079,9 +1080,9 @@ alloc_blk(filesystem *fs, uint32 nod)
+ 		error_msg_and_die("couldn't allocate a block (no free space)");
+ 	if(!(fs->gd[grp].bg_free_blocks_count--))
+ 		error_msg_and_die("group descr %d. free blocks count == 0 (corrupted fs?)",grp);
+-	if(!(fs->sb.s_free_blocks_count--))
++	if(!(fs->sb->s_free_blocks_count--))
+ 		error_msg_and_die("superblock free blocks count == 0 (corrupted fs?)");
+-	return fs->sb.s_blocks_per_group*grp + bk;
++	return fs->sb->s_blocks_per_group*grp + bk;
+ }
+ 
+ // free a block
+@@ -1091,12 +1092,12 @@ free_blk(filesystem *fs, uint32 bk)
+ 	uint32 grp;
+ 	blk_info *bi;
+ 
+-	grp = bk / fs->sb.s_blocks_per_group;
+-	bk %= fs->sb.s_blocks_per_group;
++	grp = bk / fs->sb->s_blocks_per_group;
++	bk %= fs->sb->s_blocks_per_group;
+ 	deallocate(get_blk(fs, fs->gd[grp].bg_block_bitmap, &bi), bk);
+ 	put_blk(bi);
+ 	fs->gd[grp].bg_free_blocks_count++;
+-	fs->sb.s_free_blocks_count++;
++	fs->sb->s_free_blocks_count++;
+ }
+ 
+ // allocate an inode
+@@ -1114,7 +1115,7 @@ alloc_nod(filesystem *fs)
+ 	/* find the one with the most free blocks and allocate node there     */
+ 	/* Idea from find_group_dir in fs/ext2/ialloc.c in 2.4.19 kernel      */
+ 	/* We do it for all inodes.                                           */
+-	avefreei  =  fs->sb.s_free_inodes_count / nbgroups;
++	avefreei  =  fs->sb->s_free_inodes_count / nbgroups;
+ 	for(grp=0; grp<nbgroups; grp++) {
+ 		if (fs->gd[grp].bg_free_inodes_count < avefreei ||
+ 		    fs->gd[grp].bg_free_inodes_count == 0)
+@@ -1129,9 +1130,9 @@ alloc_nod(filesystem *fs)
+ 	put_blk(bi);
+ 	if(!(fs->gd[best_group].bg_free_inodes_count--))
+ 		error_msg_and_die("group descr. free blocks count == 0 (corrupted fs?)");
+-	if(!(fs->sb.s_free_inodes_count--))
++	if(!(fs->sb->s_free_inodes_count--))
+ 		error_msg_and_die("superblock free blocks count == 0 (corrupted fs?)");
+-	return fs->sb.s_inodes_per_group*best_group+nod;
++	return fs->sb->s_inodes_per_group*best_group+nod;
+ }
+ 
+ // print a bitmap allocation
+@@ -1451,7 +1452,7 @@ extend_blk(filesystem *fs, uint32 nod, block b, int amount)
+ 		while(create)
+ 		{
+ 			int i, copyb = 0;
+-			if(!(fs->sb.s_reserved[200] & OP_HOLES))
++			if(!(fs->sb->s_reserved[200] & OP_HOLES))
+ 				copyb = 1;
+ 			else
+ 				for(i = 0; i < BLOCKSIZE / 4; i++)
+@@ -2133,7 +2134,7 @@ swap_goodfs(filesystem *fs)
+ 	uint32 i;
+ 	nod_info *ni;
+ 
+-	for(i = 1; i < fs->sb.s_inodes_count; i++)
++	for(i = 1; i < fs->sb->s_inodes_count; i++)
+ 	{
+ 		inode *nod = get_nod(fs, i, &ni);
+ 		if(nod->i_mode & FM_IFDIR)
+@@ -2158,17 +2159,17 @@ swap_goodfs(filesystem *fs)
+ 	}
+ 	for(i=0;i<GRP_NBGROUPS(fs);i++)
+ 		swap_gd(&(fs->gd[i]));
+-	swap_sb(&fs->sb);
++	swap_sb(fs->sb);
+ }
+ 
+ static void
+ swap_badfs(filesystem *fs)
+ {
+ 	uint32 i;
+-	swap_sb(&fs->sb);
++	swap_sb(fs->sb);
+ 	for(i=0;i<GRP_NBGROUPS(fs);i++)
+ 		swap_gd(&(fs->gd[i]));
+-	for(i = 1; i < fs->sb.s_inodes_count; i++)
++	for(i = 1; i < fs->sb->s_inodes_count; i++)
+ 	{
+ 		nod_info *ni;
+ 		inode *nod = get_nod(fs, i, &ni);
+@@ -2242,24 +2243,32 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp
+ 	free_blocks = nbblocks - overhead_per_group*nbgroups - 1 /*boot block*/;
+ 	free_blocks_per_group = nbblocks_per_group - overhead_per_group;
+ 
+-	if(!(fs = (filesystem*)calloc(nbblocks, BLOCKSIZE)))
++	fs = malloc(sizeof(*fs));
++	if (!fs)
+ 		error_msg_and_die("not enough memory for filesystem");
++	fs->nheadblocks = (((nbgroups * sizeof(groupdescriptor))
++			    + sizeof(superblock) + (BLOCKSIZE - 1))
++			   / BLOCKSIZE);
++	if(!(fs->data = calloc(nbblocks, BLOCKSIZE)))
++		error_msg_and_die("not enough memory for filesystem");
++	fs->sb = (superblock *) (fs->data + BLOCKSIZE);
++	fs->gd = (groupdescriptor *) (fs->sb + 1);
+ 
+ 	// create the superblock for an empty filesystem
+-	fs->sb.s_inodes_count = nbinodes_per_group * nbgroups;
+-	fs->sb.s_blocks_count = nbblocks;
+-	fs->sb.s_r_blocks_count = nbresrvd;
+-	fs->sb.s_free_blocks_count = free_blocks;
+-	fs->sb.s_free_inodes_count = fs->sb.s_inodes_count - EXT2_FIRST_INO + 1;
+-	fs->sb.s_first_data_block = first_block;
+-	fs->sb.s_log_block_size = BLOCKSIZE >> 11;
+-	fs->sb.s_log_frag_size = BLOCKSIZE >> 11;
+-	fs->sb.s_blocks_per_group = nbblocks_per_group;
+-	fs->sb.s_frags_per_group = nbblocks_per_group;
+-	fs->sb.s_inodes_per_group = nbinodes_per_group;
+-	fs->sb.s_wtime = fs_timestamp;
+-	fs->sb.s_magic = EXT2_MAGIC_NUMBER;
+-	fs->sb.s_lastcheck = fs_timestamp;
++	fs->sb->s_inodes_count = nbinodes_per_group * nbgroups;
++	fs->sb->s_blocks_count = nbblocks;
++	fs->sb->s_r_blocks_count = nbresrvd;
++	fs->sb->s_free_blocks_count = free_blocks;
++	fs->sb->s_free_inodes_count = fs->sb->s_inodes_count - EXT2_FIRST_INO + 1;
++	fs->sb->s_first_data_block = first_block;
++	fs->sb->s_log_block_size = BLOCKSIZE >> 11;
++	fs->sb->s_log_frag_size = BLOCKSIZE >> 11;
++	fs->sb->s_blocks_per_group = nbblocks_per_group;
++	fs->sb->s_frags_per_group = nbblocks_per_group;
++	fs->sb->s_inodes_per_group = nbinodes_per_group;
++	fs->sb->s_wtime = fs_timestamp;
++	fs->sb->s_magic = EXT2_MAGIC_NUMBER;
++	fs->sb->s_lastcheck = fs_timestamp;
+ 
+ 	// set up groupdescriptors
+ 	for(i=0, bbmpos=gdsz+2, ibmpos=bbmpos+1, itblpos=ibmpos+1;
+@@ -2301,7 +2310,7 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp
+ 		/* Inode bitmap */
+ 		ibm = get_blk(fs,fs->gd[i].bg_inode_bitmap, &bi);
+ 		//non-filesystem inodes
+-		for(j = fs->sb.s_inodes_per_group+1; j <= BLOCKSIZE * 8; j++)
++		for(j = fs->sb->s_inodes_per_group+1; j <= BLOCKSIZE * 8; j++)
+ 			allocate(ibm, j);
+ 
+ 		//system inodes
+@@ -2332,7 +2341,7 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp
+ 	put_dir(&dw);
+ 
+ 	// make lost+found directory and reserve blocks
+-	if(fs->sb.s_r_blocks_count)
++	if(fs->sb->s_r_blocks_count)
+ 	{
+ 		inode *node;
+ 		uint8 *b;
+@@ -2344,23 +2353,23 @@ init_fs(int nbblocks, int nbinodes, int nbresrvd, int holes, uint32 fs_timestamp
+ 		/* We run into problems with e2fsck if directory lost+found grows
+ 		 * bigger than this. Need to find out why this happens - sundar
+ 		 */
+-		if (fs->sb.s_r_blocks_count > fs->sb.s_blocks_count * MAX_RESERVED_BLOCKS ) 
+-			fs->sb.s_r_blocks_count = fs->sb.s_blocks_count * MAX_RESERVED_BLOCKS;
+-		for(i = 1; i < fs->sb.s_r_blocks_count; i++)
++		if (fs->sb->s_r_blocks_count > fs->sb->s_blocks_count * MAX_RESERVED_BLOCKS )
++			fs->sb->s_r_blocks_count = fs->sb->s_blocks_count * MAX_RESERVED_BLOCKS;
++		for(i = 1; i < fs->sb->s_r_blocks_count; i++)
+ 			extend_blk(fs, nod, b, 1);
+ 		free_workblk(b);
+ 		node = get_nod(fs, nod, &ni);
+-		node->i_size = fs->sb.s_r_blocks_count * BLOCKSIZE;
++		node->i_size = fs->sb->s_r_blocks_count * BLOCKSIZE;
+ 		put_nod(ni);
+ 	}
+ 
+ 	// administrative info
+-	fs->sb.s_state = 1;
+-	fs->sb.s_max_mnt_count = 20;
++	fs->sb->s_state = 1;
++	fs->sb->s_max_mnt_count = 20;
+ 
+ 	// options for me
+ 	if(holes)
+-		fs->sb.s_reserved[200] |= OP_HOLES;
++		fs->sb->s_reserved[200] |= OP_HOLES;
+ 	
+ 	return fs;
+ }
+@@ -2377,20 +2386,29 @@ load_fs(FILE * fh, int swapit)
+ 	fssize = (fssize + BLOCKSIZE - 1) / BLOCKSIZE;
+ 	if(fssize < 16) // totally arbitrary
+ 		error_msg_and_die("too small filesystem");
+-	if(!(fs = (filesystem*)calloc(fssize, BLOCKSIZE)))
++	fs = malloc(sizeof(*fs));
++	if (!fs)
++		error_msg_and_die("not enough memory for filesystem");
++	if(!(fs->data = calloc(fssize, BLOCKSIZE)))
+ 		error_msg_and_die("not enough memory for filesystem");
+-	if(fread(fs, BLOCKSIZE, fssize, fh) != fssize)
++	if(fread(fs->data, BLOCKSIZE, fssize, fh) != fssize)
+ 		perror_msg_and_die("input filesystem image");
++	fs->sb = (superblock *) (fs->data + BLOCKSIZE);
++	fs->gd = (groupdescriptor *) (fs->sb + 1);
+ 	if(swapit)
+ 		swap_badfs(fs);
+-	if(fs->sb.s_rev_level || (fs->sb.s_magic != EXT2_MAGIC_NUMBER))
++	if(fs->sb->s_rev_level || (fs->sb->s_magic != EXT2_MAGIC_NUMBER))
+ 		error_msg_and_die("not a suitable ext2 filesystem");
++	fs->nheadblocks = (((GRP_NBGROUPS(fs) * sizeof(groupdescriptor))
++			    + sizeof(superblock) + (BLOCKSIZE - 1))
++			   / BLOCKSIZE);
+ 	return fs;
+ }
+ 
+ static void
+ free_fs(filesystem *fs)
+ {
++	free(fs->data);
+ 	free(fs);
+ }
+ 
+@@ -2645,19 +2663,19 @@ print_fs(filesystem *fs)
+ 	uint8 *ibm;
+ 
+ 	printf("%d blocks (%d free, %d reserved), first data block: %d\n",
+-	       fs->sb.s_blocks_count, fs->sb.s_free_blocks_count,
+-	       fs->sb.s_r_blocks_count, fs->sb.s_first_data_block);
+-	printf("%d inodes (%d free)\n", fs->sb.s_inodes_count,
+-	       fs->sb.s_free_inodes_count);
++	       fs->sb->s_blocks_count, fs->sb->s_free_blocks_count,
++	       fs->sb->s_r_blocks_count, fs->sb->s_first_data_block);
++	printf("%d inodes (%d free)\n", fs->sb->s_inodes_count,
++	       fs->sb->s_free_inodes_count);
+ 	printf("block size = %d, frag size = %d\n",
+-	       fs->sb.s_log_block_size ? (fs->sb.s_log_block_size << 11) : 1024,
+-	       fs->sb.s_log_frag_size ? (fs->sb.s_log_frag_size << 11) : 1024);
++	       fs->sb->s_log_block_size ? (fs->sb->s_log_block_size << 11) : 1024,
++	       fs->sb->s_log_frag_size ? (fs->sb->s_log_frag_size << 11) : 1024);
+ 	printf("number of groups: %d\n",GRP_NBGROUPS(fs));
+ 	printf("%d blocks per group,%d frags per group,%d inodes per group\n",
+-	     fs->sb.s_blocks_per_group, fs->sb.s_frags_per_group,
+-	     fs->sb.s_inodes_per_group);
++	     fs->sb->s_blocks_per_group, fs->sb->s_frags_per_group,
++	     fs->sb->s_inodes_per_group);
+ 	printf("Size of inode table: %d blocks\n",
+-		(int)(fs->sb.s_inodes_per_group * sizeof(inode) / BLOCKSIZE));
++		(int)(fs->sb->s_inodes_per_group * sizeof(inode) / BLOCKSIZE));
+ 	for (i = 0; i < GRP_NBGROUPS(fs); i++) {
+ 		printf("Group No: %d\n", i+1);
+ 		printf("block bitmap: block %d,inode bitmap: block %d, inode table: block %d\n",
+@@ -2665,12 +2683,12 @@ print_fs(filesystem *fs)
+ 		     fs->gd[i].bg_inode_table);
+ 		printf("block bitmap allocation:\n");
+ 		print_bm(GRP_GET_GROUP_BBM(fs, i, &bi),
+-			 fs->sb.s_blocks_per_group);
++			 fs->sb->s_blocks_per_group);
+ 		GRP_PUT_GROUP_BBM(bi);
+ 		printf("inode bitmap allocation:\n");
+ 		ibm = GRP_GET_GROUP_IBM(fs, i, &bi);
+-		print_bm(ibm, fs->sb.s_inodes_per_group);
+-		for (i = 1; i <= fs->sb.s_inodes_per_group; i++)
++		print_bm(ibm, fs->sb->s_inodes_per_group);
++		for (i = 1; i <= fs->sb->s_inodes_per_group; i++)
+ 			if (allocated(ibm, i))
+ 				print_inode(fs, i);
+ 		GRP_PUT_GROUP_IBM(bi);
+@@ -2680,11 +2698,11 @@ print_fs(filesystem *fs)
+ static void
+ dump_fs(filesystem *fs, FILE * fh, int swapit)
+ {
+-	uint32 nbblocks = fs->sb.s_blocks_count;
+-	fs->sb.s_reserved[200] = 0;
++	uint32 nbblocks = fs->sb->s_blocks_count;
++	fs->sb->s_reserved[200] = 0;
+ 	if(swapit)
+ 		swap_goodfs(fs);
+-	if(fwrite(fs, BLOCKSIZE, nbblocks, fh) < nbblocks)
++	if(fwrite(fs->data, BLOCKSIZE, nbblocks, fh) < nbblocks)
+ 		perror_msg_and_die("output filesystem image");
+ 	if(swapit)
+ 		swap_badfs(fs);
+@@ -2944,7 +2962,7 @@ main(int argc, char **argv)
+ 
+ 	if(emptyval) {
+ 		uint32 b;
+-		for(b = 1; b < fs->sb.s_blocks_count; b++) {
++		for(b = 1; b < fs->sb->s_blocks_count; b++) {
+ 			blk_info *bi;
+ 			if(!allocated(GRP_GET_BLOCK_BITMAP(fs,b,&bi),
+ 				      GRP_BBM_OFFSET(fs,b))) {
+-- 
+1.7.4.1
+
