@@ -1,0 +1,20 @@
+Fix errors like below
+
+| /home/kraj/work/openembedded-core/build/tmp-eglibc/work/qemumips-oe-linux/zypper-1.5.3-git1+2c5bb6ceb99ecd950ef993e43d77bf0569ea0582-r1/git/src/utils/console.cc:55:8: error: '::isatty' has not been declared                                                                                                                                                  
+| /home/kraj/work/openembedded-core/build/tmp-eglibc/work/qemumips-oe-linux/zypper-1.5.3-git1+2c5bb6ceb99ecd950ef993e43d77bf0569ea0582-r1/git/src/utils/console.cc:55:17: error: 'STDOUT_FILENO' was not declared in this scope                                                                                                                                   
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+Index: git/src/utils/console.cc
+===================================================================
+--- git.orig/src/utils/console.cc	2012-03-27 19:12:06.171036356 -0700
++++ git/src/utils/console.cc	2012-03-27 19:12:52.887038622 -0700
+@@ -15,6 +15,7 @@
+ #include <readline/readline.h>
+ #include <readline/history.h>
+ #include <cstdlib>
++#include <unistd.h>
+ 
+ using namespace std;
+ 
