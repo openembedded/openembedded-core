@@ -1,5 +1,7 @@
 S = "${WORKDIR}/linux"
 
+# remove tasks that modify the source tree in case externalsrc is inherited
+SRCTREECOVEREDTASKS += "do_kernel_link_vmlinux do_kernel_configme do_validate_branches do_kernel_configcheck do_kernel_checkout do_patch"
 
 # returns local (absolute) path names for all valid patches in the
 # src_uri
