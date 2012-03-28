@@ -111,6 +111,10 @@ do_configure () {
 	# in the config.log files (which might not get generated until do_compile
 	# hence being missed by the insane do_configure check).
 	export gcc_cv_collect2_libs="none required"
+	export CFLAGS_FOR_TARGET="${TARGET_CFLAGS}"
+	export CPPFLAGS_FOR_TARGET="${TARGET_CPPFLAGS}"
+	export CXXFLAGS_FOR_TARGET="${TARGET_CXXFLAGS}"
+	export LDFLAGS_FOR_TARGET="${TARGET_LDFLAGS}"
 	(cd ${S} && gnu-configize) || die "failure running gnu-configize"
 
 	oe_runconf
