@@ -143,3 +143,24 @@
 #                           commercial_libomxil \
 #                           commercial_mpeg2dec \
 #                           commercial_qmmp"
+
+
+# Archiving source code configuration
+#
+# The following variables control which files to archive and the type to archive to generate.
+# There are three basic class defintions of common operations that might be desired and these
+# can be enabled by uncommenting one of the following lines:
+#
+# INHERIT += "archive-original-source"
+# INHERIT += "archive-patched-source"
+#INHERIT =+ "archive-configured-source"
+#
+# Type of archive:
+# SOURCE_ARCHIVE_PACKAGE_TYPE = 'srpm'
+#SOURCE_ARCHIVE_PACKAGE_TYPE ?= 'tar'
+#
+# Whether to include WORKDIR/temp, .bb and .inc files:
+# 'logs_with_scripts' include WORKDIR/temp directory and .bb and .inc files
+# 'logs' only include WORKDIR/temp
+# SOURCE_ARCHIVE_LOG_WITH_SCRIPTS ?= 'logs'
+#SOURCE_ARCHIVE_LOG_WITH_SCRIPTS ?= 'logs_with_scripts'
