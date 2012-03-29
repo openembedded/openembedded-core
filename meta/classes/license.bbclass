@@ -79,6 +79,10 @@ license_create_manifest() {
 	# Get list of installed packages
 	list_installed_packages | grep -v "locale" |sort > ${LICENSE_DIRECTORY}/${IMAGE_NAME}/package.manifest
 	INSTALLED_PKGS=`cat ${LICENSE_DIRECTORY}/${IMAGE_NAME}/package.manifest`
+	# remove existing license.manifest file
+	if [ -f ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest ]; then
+		rm ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
+	fi
 	# list of installed packages is broken for deb
 	for pkg in ${INSTALLED_PKGS}; do
 		# not the best way to do this but licenses are not arch dependant iirc
