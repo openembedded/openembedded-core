@@ -11,8 +11,8 @@ RP: Extended || true to all CP_ operations, they all can race e.g.:
 
 Index: ghostscript-9.05/base/unixhead.mak
 ===================================================================
---- ghostscript-9.05.orig/base/unixhead.mak	2012-03-28 10:55:23.804608117 +0000
-+++ ghostscript-9.05/base/unixhead.mak	2012-03-28 10:56:47.544606075 +0000
+--- ghostscript-9.05.orig/base/unixhead.mak	2012-03-29 08:27:46.458812172 +0000
++++ ghostscript-9.05/base/unixhead.mak	2012-03-29 08:27:52.526811946 +0000
 @@ -54,7 +54,7 @@
  
  # Define generic commands.
@@ -24,8 +24,8 @@ Index: ghostscript-9.05/base/unixhead.mak
  
 Index: ghostscript-9.05/base/lib.mak
 ===================================================================
---- ghostscript-9.05.orig/base/lib.mak	2012-03-28 10:55:23.816608117 +0000
-+++ ghostscript-9.05/base/lib.mak	2012-03-28 10:55:41.864605914 +0000
+--- ghostscript-9.05.orig/base/lib.mak	2012-03-29 08:27:46.470812164 +0000
++++ ghostscript-9.05/base/lib.mak	2012-03-29 08:27:52.526811946 +0000
 @@ -327,7 +327,7 @@
  $(GLOBJ)md5.$(OBJ) : $(GLSRC)md5.c $(AK) $(md5_h) $(std_h) $(MAKEDIRS) $(EXP)$(ECHOGS_XE)
  	$(EXP)$(ECHOGS_XE) -w $(GLGEN)md5.h -x 23 include -x 2022 memory_.h -x 22
@@ -43,8 +43,8 @@ Index: ghostscript-9.05/base/lib.mak
 -	$(RM_) $(GLGEN)gconfig.h
 -	$(CP_) $(gconfig_h) $(GLGEN)gconfig.h
 -	$(CP_) $(GLSRC)gconf.c $(GLGEN)gconfig.c
-+	$(CP_) $(gconfig_h) $(GLGEN)gconfig.h || true || true
-+	$(CP_) $(GLSRC)gconf.c $(GLGEN)gconfig.c || true || true
++	$(CP_) $(gconfig_h) $(GLGEN)gconfig.h || true
++	$(CP_) $(GLSRC)gconf.c $(GLGEN)gconfig.c || true
  	$(GLCC) $(GLO_)gconfig.$(OBJ) $(C_) $(GLGEN)gconfig.c
  
  $(GLOBJ)gscdefs.$(OBJ) : $(GLSRC)gscdef.c\
@@ -217,8 +217,8 @@ Index: ghostscript-9.05/base/lib.mak
  	$(GLCC) $(GLO_)gsromfs1.$(OBJ) $(C_) $(GLOBJ)gsromfs1.c
 Index: ghostscript-9.05/base/expat.mak
 ===================================================================
---- ghostscript-9.05.orig/base/expat.mak	2012-03-28 10:55:34.164607877 +0000
-+++ ghostscript-9.05/base/expat.mak	2012-03-28 10:55:41.852604931 +0000
+--- ghostscript-9.05.orig/base/expat.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/expat.mak	2012-03-29 08:27:52.554812021 +0000
 @@ -81,7 +81,7 @@
  # Copy the target definition we want
  $(EXPATGEN)expat.dev : $(TOP_MAKEFILES) $(EXPAT_MAK) \
@@ -230,8 +230,8 @@ Index: ghostscript-9.05/base/expat.mak
  $(EXPATGEN)expat_0.dev : $(EXPAT_MAK) $(ECHOGS_XE) $(expat_)
 Index: ghostscript-9.05/base/freetype.mak
 ===================================================================
---- ghostscript-9.05.orig/base/freetype.mak	2012-03-28 10:55:34.180607877 +0000
-+++ ghostscript-9.05/base/freetype.mak	2012-03-28 10:55:41.852604931 +0000
+--- ghostscript-9.05.orig/base/freetype.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/freetype.mak	2012-03-29 08:27:52.566812025 +0000
 @@ -193,7 +193,7 @@
  
  # instantiate the requested build option (shared or compiled in)
@@ -243,8 +243,8 @@ Index: ghostscript-9.05/base/freetype.mak
  $(FTGEN)freetype_1.dev : $(TOP_MAKEFILES) $(FT_MAK) $(ECHOGS_XE)
 Index: ghostscript-9.05/base/ijs.mak
 ===================================================================
---- ghostscript-9.05.orig/base/ijs.mak	2012-03-28 10:55:34.224607876 +0000
-+++ ghostscript-9.05/base/ijs.mak	2012-03-28 10:55:41.856605305 +0000
+--- ghostscript-9.05.orig/base/ijs.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/ijs.mak	2012-03-29 08:27:52.574812030 +0000
 @@ -64,7 +64,7 @@
  
  
@@ -256,8 +256,8 @@ Index: ghostscript-9.05/base/ijs.mak
  ijs_h=$(IJSSRC)ijs.h
 Index: ghostscript-9.05/base/jasper.mak
 ===================================================================
---- ghostscript-9.05.orig/base/jasper.mak	2012-03-28 10:55:34.240607876 +0000
-+++ ghostscript-9.05/base/jasper.mak	2012-03-28 10:55:41.856605305 +0000
+--- ghostscript-9.05.orig/base/jasper.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/jasper.mak	2012-03-29 08:27:52.582812027 +0000
 @@ -164,7 +164,7 @@
  
  # switch in the selected .dev
@@ -269,8 +269,8 @@ Index: ghostscript-9.05/base/jasper.mak
  $(JASGEN)jasper_1.dev : $(TOP_MAKEFILES) $(JASPER_MAK) $(ECHOGS_XE)
 Index: ghostscript-9.05/base/jbig2.mak
 ===================================================================
---- ghostscript-9.05.orig/base/jbig2.mak	2012-03-28 10:55:34.256607875 +0000
-+++ ghostscript-9.05/base/jbig2.mak	2012-03-28 10:55:41.856605305 +0000
+--- ghostscript-9.05.orig/base/jbig2.mak	2012-02-08 08:48:47.000000000 +0000
++++ ghostscript-9.05/base/jbig2.mak	2012-03-29 08:27:52.590812023 +0000
 @@ -96,7 +96,7 @@
  
  # switch in the version of libjbig2.dev we're actually using
@@ -282,8 +282,8 @@ Index: ghostscript-9.05/base/jbig2.mak
  $(JBIG2GEN)jbig2dec_1.dev : $(TOP_MAKEFILES) $(JBIG2_MAK) $(ECHOGS_XE)
 Index: ghostscript-9.05/base/jpeg.mak
 ===================================================================
---- ghostscript-9.05.orig/base/jpeg.mak	2012-03-28 10:55:34.272607875 +0000
-+++ ghostscript-9.05/base/jpeg.mak	2012-03-28 10:55:41.856605305 +0000
+--- ghostscript-9.05.orig/base/jpeg.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/jpeg.mak	2012-03-29 08:27:52.602812026 +0000
 @@ -94,7 +94,7 @@
  jmorecfg_h=$(GLGEN)jmorecfg.h
  
@@ -601,8 +601,8 @@ Index: ghostscript-9.05/base/jpeg.mak
  	$(RM_) $(GLGEN)jdarith.c
 Index: ghostscript-9.05/base/jpegxr.mak
 ===================================================================
---- ghostscript-9.05.orig/base/jpegxr.mak	2012-03-28 10:55:34.288607875 +0000
-+++ ghostscript-9.05/base/jpegxr.mak	2012-03-28 10:55:41.856605305 +0000
+--- ghostscript-9.05.orig/base/jpegxr.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/jpegxr.mak	2012-03-29 08:27:52.606812026 +0000
 @@ -100,7 +100,7 @@
  # Copy the target definition we want
  $(JPEGXR_GEN)jpegxr.dev : $(TOP_MAKEFILES) $(JPEGXR_MAK) \
@@ -614,8 +614,8 @@ Index: ghostscript-9.05/base/jpegxr.mak
  $(JPEGXR_GEN)jpegxr_0.dev : $(JPEGXR_MAK) $(ECHOGS_XE) $(jpegxr_objs)
 Index: ghostscript-9.05/base/lcms.mak
 ===================================================================
---- ghostscript-9.05.orig/base/lcms.mak	2012-03-28 10:55:34.320607874 +0000
-+++ ghostscript-9.05/base/lcms.mak	2012-03-28 10:55:41.856605305 +0000
+--- ghostscript-9.05.orig/base/lcms.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/lcms.mak	2012-03-29 08:27:52.614812023 +0000
 @@ -83,7 +83,7 @@
  
  # switch in the version of lcms.dev we're actually using
@@ -627,8 +627,8 @@ Index: ghostscript-9.05/base/lcms.mak
  $(LCMSGEN)lcms_1.dev : $(TOP_MAKEFILES) $(LCMS_MAK) $(ECHOGS_XE)
 Index: ghostscript-9.05/base/lcms2.mak
 ===================================================================
---- ghostscript-9.05.orig/base/lcms2.mak	2012-03-28 10:55:34.304607874 +0000
-+++ ghostscript-9.05/base/lcms2.mak	2012-03-28 10:55:41.856605305 +0000
+--- ghostscript-9.05.orig/base/lcms2.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/lcms2.mak	2012-03-29 08:27:52.626812023 +0000
 @@ -83,7 +83,7 @@
  
  # switch in the version of lcms2.dev we're actually using
@@ -640,8 +640,8 @@ Index: ghostscript-9.05/base/lcms2.mak
  $(LCMS2GEN)lcms2_1.dev : $(TOP_MAKEFILES) $(LCMS2_MAK) $(ECHOGS_XE)
 Index: ghostscript-9.05/base/lcups.mak
 ===================================================================
---- ghostscript-9.05.orig/base/lcups.mak	2012-03-28 10:55:34.352607873 +0000
-+++ ghostscript-9.05/base/lcups.mak	2012-03-28 10:55:41.856605305 +0000
+--- ghostscript-9.05.orig/base/lcups.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/lcups.mak	2012-03-29 08:27:52.630812023 +0000
 @@ -112,7 +112,7 @@
  
  # instantiate the requested build option (shared or compiled in)
@@ -687,8 +687,8 @@ Index: ghostscript-9.05/base/lcups.mak
  	$(LCUPS_CC) $(LCUPSO_)cups_util.$(OBJ) $(C_) $(LIBCUPSGEN)cups_util.c
 Index: ghostscript-9.05/base/lcupsi.mak
 ===================================================================
---- ghostscript-9.05.orig/base/lcupsi.mak	2012-03-28 10:55:34.336607873 +0000
-+++ ghostscript-9.05/base/lcupsi.mak	2012-03-28 10:55:41.856605305 +0000
+--- ghostscript-9.05.orig/base/lcupsi.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/lcupsi.mak	2012-03-29 08:27:52.642812024 +0000
 @@ -71,7 +71,7 @@
  
  # instantiate the requested build option (shared or compiled in)
@@ -700,8 +700,8 @@ Index: ghostscript-9.05/base/lcupsi.mak
  $(LIBCUPSIGEN)lcupsi_1.dev : $(TOP_MAKEFILES) $(LCUPSI_MAK) $(ECHOGS_XE)
 Index: ghostscript-9.05/base/ldf_jb2.mak
 ===================================================================
---- ghostscript-9.05.orig/base/ldf_jb2.mak	2012-03-28 10:55:34.368607873 +0000
-+++ ghostscript-9.05/base/ldf_jb2.mak	2012-03-28 10:55:41.860605619 +0000
+--- ghostscript-9.05.orig/base/ldf_jb2.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/ldf_jb2.mak	2012-03-29 08:27:52.650812024 +0000
 @@ -222,7 +222,7 @@
  
  # switch in the selected library .dev
@@ -713,8 +713,8 @@ Index: ghostscript-9.05/base/ldf_jb2.mak
  $(LDF_JB2_GEN)ldf_jb2_1.dev : $(TOP_MAKEFILES) $(LDF_JB2_MAK) $(ECHOGS_XE)
 Index: ghostscript-9.05/base/lwf_jp2.mak
 ===================================================================
---- ghostscript-9.05.orig/base/lwf_jp2.mak	2012-03-28 10:55:34.384607872 +0000
-+++ ghostscript-9.05/base/lwf_jp2.mak	2012-03-28 10:55:41.864605914 +0000
+--- ghostscript-9.05.orig/base/lwf_jp2.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/lwf_jp2.mak	2012-03-29 08:27:52.654812024 +0000
 @@ -175,7 +175,7 @@
  
  # switch in the selected library .dev
@@ -726,8 +726,8 @@ Index: ghostscript-9.05/base/lwf_jp2.mak
  $(LWF_JP2_GEN)lwf_jp2_1.dev : $(TOP_MAKEFILES) $(LWF_JP2_MAK) $(ECHOGS_XE)
 Index: ghostscript-9.05/base/macos-mcp.mak
 ===================================================================
---- ghostscript-9.05.orig/base/macos-mcp.mak	2012-03-28 10:55:34.416607872 +0000
-+++ ghostscript-9.05/base/macos-mcp.mak	2012-03-28 10:55:41.864605914 +0000
+--- ghostscript-9.05.orig/base/macos-mcp.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/macos-mcp.mak	2012-03-29 08:27:52.662812024 +0000
 @@ -384,11 +384,11 @@
  
  $(CWPROJ_XML): $(gconfigd_h)
@@ -746,8 +746,8 @@ Index: ghostscript-9.05/base/macos-mcp.mak
  $(GS_XE): $(ld_tr) $(ECHOGS_XE) $(XE_ALL) $(CWPROJ_XML) $(PSOBJ)gsromfs$(COMPILE_INITS).$(OBJ)
 Index: ghostscript-9.05/base/openjpeg.mak
 ===================================================================
---- ghostscript-9.05.orig/base/openjpeg.mak	2012-03-28 10:55:34.492607870 +0000
-+++ ghostscript-9.05/base/openjpeg.mak	2012-03-28 10:55:41.868606149 +0000
+--- ghostscript-9.05.orig/base/openjpeg.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/openjpeg.mak	2012-03-29 08:27:52.662812024 +0000
 @@ -86,11 +86,11 @@
  	$(OPEN_JPEG_SRC)tgt.h	\
  
@@ -764,8 +764,8 @@ Index: ghostscript-9.05/base/openjpeg.mak
  $(OPEN_JPEG_GEN)openjpeg_1.dev : $(TOP_MAKEFILES) $(OPEN_JPEG_MAK) $(ECHOGS_XE)
 Index: ghostscript-9.05/base/openvms.mak
 ===================================================================
---- ghostscript-9.05.orig/base/openvms.mak	2012-03-28 10:55:34.508607869 +0000
-+++ ghostscript-9.05/base/openvms.mak	2012-03-28 10:55:41.868606149 +0000
+--- ghostscript-9.05.orig/base/openvms.mak	2012-02-08 08:48:47.000000000 +0000
++++ ghostscript-9.05/base/openvms.mak	2012-03-29 08:27:52.674812022 +0000
 @@ -364,7 +364,7 @@
  
  # Define generic commands.
@@ -777,8 +777,8 @@ Index: ghostscript-9.05/base/openvms.mak
  
 Index: ghostscript-9.05/base/png.mak
 ===================================================================
---- ghostscript-9.05.orig/base/png.mak	2012-03-28 10:55:34.540607869 +0000
-+++ ghostscript-9.05/base/png.mak	2012-03-28 10:55:41.868606149 +0000
+--- ghostscript-9.05.orig/base/png.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/png.mak	2012-03-29 08:27:52.674812022 +0000
 @@ -123,7 +123,7 @@
  
  # Define the version of libpng.dev that we are actually using.
@@ -790,8 +790,8 @@ Index: ghostscript-9.05/base/png.mak
  # Note that it requires libz, which must be searched *after* libpng.
 Index: ghostscript-9.05/base/tiff.mak
 ===================================================================
---- ghostscript-9.05.orig/base/tiff.mak	2012-03-28 10:55:34.556607868 +0000
-+++ ghostscript-9.05/base/tiff.mak	2012-03-28 10:55:41.868606149 +0000
+--- ghostscript-9.05.orig/base/tiff.mak	2012-02-08 08:48:48.000000000 +0000
++++ ghostscript-9.05/base/tiff.mak	2012-03-29 08:27:52.674812022 +0000
 @@ -48,11 +48,11 @@
  
  $(TIFFSRC)libtiff$(D)tif_config.unix.h : $(TIFFSRC)libtiff$(D)tif_config.h.in
@@ -826,8 +826,8 @@ Index: ghostscript-9.05/base/tiff.mak
  # Define the shared version.
 Index: ghostscript-9.05/base/unix-aux.mak
 ===================================================================
---- ghostscript-9.05.orig/base/unix-aux.mak	2012-03-28 10:55:34.604607867 +0000
-+++ ghostscript-9.05/base/unix-aux.mak	2012-03-28 10:55:41.868606149 +0000
+--- ghostscript-9.05.orig/base/unix-aux.mak	2012-03-21 17:51:12.106037764 +0000
++++ ghostscript-9.05/base/unix-aux.mak	2012-03-29 08:27:52.674812022 +0000
 @@ -105,7 +105,7 @@
  #	$(CCAUX_) $(GENOPT) $(CFLAGS) $(I_)$(GLSRCDIR)$(_I) $(I_)$(GLOBJ)$(_I) $(I_)$(ZSRCDIR)$(_I) $(GLSRC)mkromfs.c $(O_)$(MKROMFS_XE)_1 $(MKROMFS_OBJS_1) -lm $(EXTRALIBS)
  #
@@ -839,8 +839,8 @@ Index: ghostscript-9.05/base/unix-aux.mak
  # The "else true;" is required because Ultrix's implementation of sh -e
 Index: ghostscript-9.05/base/zlib.mak
 ===================================================================
---- ghostscript-9.05.orig/base/zlib.mak	2012-03-28 10:55:34.744607864 +0000
-+++ ghostscript-9.05/base/zlib.mak	2012-03-28 10:55:41.872606358 +0000
+--- ghostscript-9.05.orig/base/zlib.mak	2012-02-08 08:48:47.000000000 +0000
++++ ghostscript-9.05/base/zlib.mak	2012-03-29 08:27:52.678812021 +0000
 @@ -82,7 +82,7 @@
  # Encoding (compression) code.
  
@@ -868,3 +868,45 @@ Index: ghostscript-9.05/base/zlib.mak
  
  $(ZGEN)zlibd_1.dev : $(TOP_MAKEFILES) $(ZLIB_MAK) $(ECHOGS_XE)
  	$(SETMOD) $(ZGEN)zlibd_1 -lib $(ZLIB_NAME)
+Index: ghostscript-9.05/psi/int.mak
+===================================================================
+--- ghostscript-9.05.orig/psi/int.mak	2012-03-29 08:28:53.942810602 +0000
++++ ghostscript-9.05/psi/int.mak	2012-03-29 08:29:05.814797444 +0000
+@@ -272,8 +272,8 @@
+  $(gconf_h) $(gconfigd_h) $(gsmemory_h) $(gstypes_h)\
+  $(iminst_h) $(iref_h) $(ivmspace_h) $(opdef_h) $(iplugin_h)
+ 	$(RM_) $(PSGEN)iconfig.c
+-	$(CP_) $(gconfig_h) $(PSGEN)gconfig.h
+-	$(CP_) $(PSSRC)iconf.c $(PSGEN)iconfig.c
++	$(CP_) $(gconfig_h) $(PSGEN)gconfig.h || true
++	$(CP_) $(PSSRC)iconf.c $(PSGEN)iconfig.c || true
+ 	$(PSCC) $(PSO_)iconfig.$(OBJ) $(C_) $(PSGEN)iconfig.c
+ 
+ $(PSOBJ)iinit.$(OBJ) : $(PSSRC)iinit.c $(GH) $(string__h)\
+@@ -605,7 +605,7 @@
+ 
+ # We keep the old name for backward compatibility.
+ $(PSD)level1.dev : $(PSD)psl1.dev
+-	$(CP_) $(PSD)psl1.dev $(PSD)level1.dev
++	$(CP_) $(PSD)psl1.dev $(PSD)level1.dev || true
+ 
+ $(PSD)psl1.dev : $(INT_MAK) $(ECHOGS_XE)\
+  $(PSD)psbase.dev $(PSD)bcp.dev $(PSD)path1.dev $(PSD)type1.dev
+@@ -931,7 +931,7 @@
+ 
+ # We keep the old name for backward compatibility.
+ $(PSD)level2.dev : $(PSD)psl2.dev
+-	$(CP_) $(PSD)psl2.dev $(PSD)level2.dev
++	$(CP_) $(PSD)psl2.dev $(PSD)level2.dev || true
+ 
+ # We -include dpsand2 first so that geninit will have access to the
+ # system name table as soon as possible.
+@@ -1205,7 +1205,7 @@
+ # this can be turned on and off with a FEATURE_DEV
+ 
+ $(PSD)jpx.dev : $(INT_MAK) $(ECHOGS_XE) $(PSD)jpx_$(JPX_LIB).dev
+-	$(CP_) $(PSD)jpx_$(JPX_LIB).dev $(PSD)jpx.dev
++	$(CP_) $(PSD)jpx_$(JPX_LIB).dev $(PSD)jpx.dev || true
+ 
+ fjpx_jasper=$(PSOBJ)zfjpx.$(OBJ)
+ 
