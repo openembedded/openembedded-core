@@ -20,7 +20,8 @@ SRC_URI[sha256sum] = "e556a529e0a8cf1cd0afd0cab2af5488c9524e7c3f409de29b5d82bb41
 
 inherit autotools pkgconfig gettext
 
-EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no --disable-examples --disable-tests --disable-valgrind --disable-debug"
+GSTREAMER_DEBUG ?= "--disable-debug"
+EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no --disable-examples --disable-tests --disable-valgrind ${GSTREAMER_DEBUG}"
 
 #do_compile_prepend () {
 #	mv ${WORKDIR}/gstregistrybinary.[ch] ${S}/gst/

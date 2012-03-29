@@ -25,7 +25,8 @@ SRC_URI[sha256sum] = "76fca05b08e00134e3cb92fa347507f42cbd48ddb08ed3343a912def18
 
 PR = "r1"
 
-EXTRA_OECONF = "--with-ffmpeg-extra-configure=\"--target-os=linux\" "
+GSTREAMER_DEBUG ?= "--disable-debug"
+EXTRA_OECONF = "--with-ffmpeg-extra-configure=\"--target-os=linux\" ${GSTREAMER_DEBUG}"
 
 # yasm not found, use --disable-yasm for a crippled build for libav
 EXTRA_OECONF_append_x86-64 = " --disable-yasm "
