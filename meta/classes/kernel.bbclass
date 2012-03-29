@@ -13,9 +13,9 @@ INITRAMFS_TASK ?= ""
 python __anonymous () {
     kerneltype = d.getVar('KERNEL_IMAGETYPE', True) or ''
     if kerneltype == 'uImage':
-    	depends = d.getVar("DEPENDS", True)
-    	depends = "%s u-boot-mkimage-native" % depends
-    	d.setVar("DEPENDS", depends)
+        depends = d.getVar("DEPENDS", True)
+        depends = "%s u-boot-mkimage-native" % depends
+        d.setVar("DEPENDS", depends)
 
     image = d.getVar('INITRAMFS_IMAGE', True)
     if image:
@@ -91,7 +91,7 @@ kernel_do_compile() {
 do_compile_kernelmodules() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
 	if (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
-		oe_runmake ${PARALLEL_MAKE} modules  CC="${KERNEL_CC}" LD="${KERNEL_LD}"
+		oe_runmake ${PARALLEL_MAKE} modules CC="${KERNEL_CC}" LD="${KERNEL_LD}"
 	else
 		bbnote "no modules to compile"
 	fi
@@ -115,7 +115,7 @@ kernel_do_install() {
 
 	#
 	# Install various kernel output (zImage, map file, config, module support files)
-	#	
+	#
 	install -d ${D}/${KERNEL_IMAGEDEST}
 	install -d ${D}/boot
 	install -m 0644 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
@@ -188,7 +188,7 @@ kernel_do_install() {
 	bin_files="arch/powerpc/boot/addnote arch/powerpc/boot/hack-coff \
 	           arch/powerpc/boot/mktree"
 	for entry in $bin_files; do
-	        rm -f $kerneldir/$entry
+		rm -f $kerneldir/$entry
 	done
 }
 
@@ -386,10 +386,10 @@ python populate_packages_prepend () {
 		return deps
 	
 	def get_dependencies(file, pattern, format):
-                # file no longer includes PKGD
+		# file no longer includes PKGD
 		file = file.replace(d.getVar('PKGD', True) or '', '', 1)
-                # instead is prefixed with /lib/modules/${KERNEL_VERSION}
-                file = file.replace("/lib/modules/%s/" % d.getVar('KERNEL_VERSION', True) or '', '', 1)
+		# instead is prefixed with /lib/modules/${KERNEL_VERSION}
+		file = file.replace("/lib/modules/%s/" % d.getVar('KERNEL_VERSION', True) or '', '', 1)
 
 		if module_deps.has_key(file):
 			import re
@@ -493,11 +493,11 @@ python populate_packages_prepend () {
 do_sizecheck() {
 	if [ ! -z "${KERNEL_IMAGE_MAXSIZE}" ]; then
 		size=`ls -l ${KERNEL_OUTPUT} | awk '{ print $5}'`
-        	if [ $size -ge ${KERNEL_IMAGE_MAXSIZE} ]; then
+		if [ $size -ge ${KERNEL_IMAGE_MAXSIZE} ]; then
 			rm ${KERNEL_OUTPUT}
-                	die  "This kernel (size=$size > ${KERNEL_IMAGE_MAXSIZE}) is too big for your device. Please reduce the size of the kernel by making more of it modular."
-        	fi
-    	fi
+			die "This kernel (size=$size > ${KERNEL_IMAGE_MAXSIZE}) is too big for your device. Please reduce the size of the kernel by making more of it modular."
+		fi
+	fi
 }
 
 addtask sizecheck before do_install after do_compile
