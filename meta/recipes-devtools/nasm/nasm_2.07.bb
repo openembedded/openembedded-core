@@ -13,11 +13,11 @@ SRC_URI[sha256sum] = "ac70ee451c73d742c9ff830502e5f8b1f648b2abffa8fd00944243283b
 
 inherit autotools
 
-do_patch_fixaclocal () {
-	mv aclocal.m4 acinclude.m4
+do_configure_prepend () {
+	if [ -f aclocal.m4 ] && [ ! -f acinclude.m4 ]; then
+		mv aclocal.m4 acinclude.m4
+	fi
 }
-
-addtask do_patch_fixaclocal after do_patch before do_configure
 
 do_install() {
 	install -d ${D}${bindir}
