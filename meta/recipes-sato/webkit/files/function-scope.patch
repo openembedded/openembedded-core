@@ -1,0 +1,21 @@
+we need to include unistd.h on all linux platforms therefore
+extend the conditional inclusion accordingly
+
+This gets proper declation of sleep() into the source file
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+Index: webkit-gtk-1.7.2+svnr101488-r3/Tools/DumpRenderTree/TestNetscapePlugIn/PluginTest.cpp
+===================================================================
+--- webkit-gtk-1.7.2+svnr101488-r3.orig/Tools/DumpRenderTree/TestNetscapePlugIn/PluginTest.cpp	2012-03-30 12:11:04.912613223 -0700
++++ webkit-gtk-1.7.2+svnr101488-r3/Tools/DumpRenderTree/TestNetscapePlugIn/PluginTest.cpp	2012-03-30 12:14:21.840622752 -0700
+@@ -29,7 +29,7 @@
+ #include <assert.h>
+ #include <string.h>
+ 
+-#if defined(ANDROID)
++#if defined(__linux__)
+ #include <unistd.h>
+ #endif
+ 
