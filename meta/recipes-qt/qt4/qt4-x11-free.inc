@@ -13,6 +13,9 @@ QT_GLFLAGS_qemuppc = "-opengl"
 QT_CONFIG_FLAGS += "-no-xinerama -no-xkb"
 QT_BASE_LIB  ?= "libqt"
 
+# required by kdelibs4
+QT_DISTRO_FLAGS = "-accessibility -sm"
+
 inherit qt4x11
 
 do_install_append() {
