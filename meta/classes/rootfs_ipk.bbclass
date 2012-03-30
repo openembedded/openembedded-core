@@ -127,10 +127,12 @@ list_installed_packages() {
 }
 
 get_package_filename() {
+	set +x
 	info=`opkg-cl ${IPKG_ARGS} info $1 | grep -B 7 -A 7 "^Status.* \(\(installed\)\|\(unpacked\)\)" || true`
 	name=`echo "${info}" | awk '/^Package/ {printf $2"_"}'`
 	name=$name`echo "${info}" | awk -F: '/^Version/ {printf $NF"_"}' | sed 's/^\s*//g'`
 	name=$name`echo "${info}" | awk '/^Archi/ {print $2".ipk"}'`
+	set -x
 
 	fullname=`find ${DEPLOY_DIR_IPK} -name "$name" || true`
 	if [ "$fullname" = "" ] ; then
