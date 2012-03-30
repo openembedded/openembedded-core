@@ -13,7 +13,7 @@ require conf/machine/include/arm/arch-armv4.inc
 require conf/machine/include/arm/feature-arm-vfp.inc
 
 # Little Endian
-AVAILTUNES += "armv5 armv5t armv5e armv5te"
+AVAILTUNES += "armv5 armv5t"
 TUNE_FEATURES_tune-armv5 ?= "armv5"
 TUNE_FEATURES_tune-armv5t ?= "armv5 thumb"
 PACKAGE_EXTRA_ARCHS_tune-armv5 = "${PACKAGE_EXTRA_ARCHS_tune-armv4} armv5"

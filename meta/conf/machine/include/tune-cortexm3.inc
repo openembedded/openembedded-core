@@ -11,5 +11,5 @@ TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "armv7m", "-march=armv7-m"
 
 AVAILTUNES += "cortexm3"
 TUNE_FEATURES_tune-cortexm3 = "armv7m vfp cortexm3"
-PACKAGE_EXTRA_ARCHS_tune-cortexm3 = "${PACKAGE_EXTRA_ARCHS_tune-armv7at} armv7m"
+PACKAGE_EXTRA_ARCHS_tune-cortexm3 = "${PACKAGE_EXTRA_ARCHS_tune-armv7at} armv7m-vfp"
 
