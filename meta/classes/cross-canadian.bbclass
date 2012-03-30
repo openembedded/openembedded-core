@@ -48,7 +48,9 @@ DPKG_ARCH = "${SDK_ARCH}"
 CPPFLAGS = "${BUILDSDK_CPPFLAGS}"
 CFLAGS = "${BUILDSDK_CFLAGS}"
 CXXFLAGS = "${BUILDSDK_CFLAGS}"
-LDFLAGS = "${BUILDSDK_LDFLAGS}"
+LDFLAGS = "${BUILDSDK_LDFLAGS} \
+           -Wl,-rpath-link,${STAGING_LIBDIR}/.. \
+           -Wl,-rpath,${libdir}/.. "
 
 DEPENDS_GETTEXT = "gettext-native gettext-nativesdk"
 
