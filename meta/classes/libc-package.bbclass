@@ -35,6 +35,14 @@ python __anonymous () {
                 d.setVar("DEPENDS", depends)
                 d.setVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", "compile")
                 break
+
+    distro_features = (d.getVar('DISTRO_FEATURES', True) or '').split()
+
+    # try to fix disable charsets/locales/locale-code compile fail
+    if 'libc-charsets' in distro_features and 'libc-locales' in distro_features and 'libc-locale-code' in distro_features:
+        d.setVar('PACKAGE_NO_GCONV', '0')
+    else:
+        d.setVar('PACKAGE_NO_GCONV', '1')
 }
 
 OVERRIDES_append = ":${TARGET_ARCH}-${TARGET_OS}"

@@ -126,10 +126,4 @@ def features_to_eglibc_settings(d):
         eglibc_cfg('libc-posix-regexp-glibc',      distro_features, 'OPTION_POSIX_REGEXP_GLIBC', cnf)
         eglibc_cfg('libc-posix-wchar-io',      distro_features, 'OPTION_POSIX_WIDE_CHAR_DEVICE_IO', cnf)
 
-        # try to fix disable charsets/locales/locale-code compile fail
-        if 'libc-charsets' in distro_features and 'libc-locales' in distro_features and 'libc-locale-code' in distro_features:
-            d.setVar('PACKAGE_NO_GCONV', '0')
-        else:
-            d.setVar('PACKAGE_NO_GCONV', '1')
-
         return "\n".join(cnf)
