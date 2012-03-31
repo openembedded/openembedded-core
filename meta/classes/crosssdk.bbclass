@@ -1,6 +1,11 @@
 inherit cross
 
 PACKAGE_ARCH = "${SDK_ARCH}"
+python () {
+	# set TUNE_PKGARCH to SDK_ARCH
+	d.setVar('TUNE_PKGARCH', d.getVar('SDK_ARCH', True))
+}
+
 STAGING_DIR_TARGET = "${STAGING_DIR}/${SDK_ARCH}-nativesdk${SDK_VENDOR}-${SDK_OS}"
 STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
 
