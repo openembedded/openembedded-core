@@ -12,6 +12,7 @@ def autotools_dep_prepend(d):
 	if not pn in ['libtool', 'libtool-native'] and not pn.endswith("libtool-cross"):
 		deps += 'libtool-native '
 		if not bb.data.inherits_class('native', d) \
+                        and not bb.data.inherits_class('nativesdk', d) \
                         and not bb.data.inherits_class('cross', d) \
                         and not d.getVar('INHIBIT_DEFAULT_DEPS', True):
                     deps += 'libtool-cross '
