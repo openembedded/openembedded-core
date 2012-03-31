@@ -401,7 +401,10 @@ buildhistory_commit() {
 		if [ "$repostatus" != "" ] ; then
 			git add ${BUILDHISTORY_DIR}/*
 			HOSTNAME=`hostname 2>/dev/null || echo unknown`
-			git commit ${BUILDHISTORY_DIR}/ -m "Build ${BUILDNAME} of ${DISTRO} ${DISTRO_VERSION} for machine ${MACHINE} on $HOSTNAME" --author "${BUILDHISTORY_COMMIT_AUTHOR}" > /dev/null
+			# porcelain output looks like "?? packages/foo/bar"
+			for entry in `echo $repostatus | awk '{print $2}' | awk -F/ '{print $1}' | sort | uniq` ; do
+				git commit ${BUILDHISTORY_DIR}/$entry -m "$entry: Build ${BUILDNAME} of ${DISTRO} ${DISTRO_VERSION} for machine ${MACHINE} on $HOSTNAME" --author "${BUILDHISTORY_COMMIT_AUTHOR}" > /dev/null
+			done
 			if [ "${BUILDHISTORY_PUSH_REPO}" != "" ] ; then
 				git push -q ${BUILDHISTORY_PUSH_REPO}
 			fi
