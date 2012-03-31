@@ -1,0 +1,67 @@
+Fix compiler errors e.g.
+
+| ../3rdparty/javascriptcore/JavaScriptCore/runtime/JSGlobalObject.h:270:100: error: invalid static_cast from type 'QTJSC::JSVariableObject::JSVariableObjectData* const' to type 'QTJSC::JSGlobalObject::JSGlobalObjectData*'
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+
+Index: qt-everywhere-opensource-src-4.7.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSGlobalObject.h
+===================================================================
+--- qt-everywhere-opensource-src-4.7.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSGlobalObject.h	2012-03-30 15:29:20.733188940 -0700
++++ qt-everywhere-opensource-src-4.7.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSGlobalObject.h	2012-03-30 15:29:46.525190187 -0700
+@@ -57,9 +57,8 @@
+     
+     class JSGlobalObject : public JSVariableObject {
+     protected:
+-        using JSVariableObject::JSVariableObjectData;
+ 
+-        struct JSGlobalObjectData : public JSVariableObjectData {
++        struct JSGlobalObjectData : public JSVariableObject::JSVariableObjectData {
+             // We use an explicit destructor function pointer instead of a
+             // virtual destructor because we want to avoid adding a vtable
+             // pointer to this struct. Adding a vtable pointer would force the
+Index: qt-everywhere-opensource-src-4.7.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSStaticScopeObject.h
+===================================================================
+--- qt-everywhere-opensource-src-4.7.4.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSStaticScopeObject.h	2012-03-30 15:31:40.713195714 -0700
++++ qt-everywhere-opensource-src-4.7.4/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSStaticScopeObject.h	2012-03-30 15:32:01.449196717 -0700
+@@ -32,8 +32,7 @@
+     
+     class JSStaticScopeObject : public JSVariableObject {
+     protected:
+-        using JSVariableObject::JSVariableObjectData;
+-        struct JSStaticScopeObjectData : public JSVariableObjectData {
++        struct JSStaticScopeObjectData : public JSVariableObject::JSVariableObjectData {
+             JSStaticScopeObjectData()
+                 : JSVariableObjectData(&symbolTable, &registerStore + 1)
+             {
+Index: qt-everywhere-opensource-src-4.7.4/src/3rdparty/webkit/JavaScriptCore/runtime/JSGlobalObject.h
+===================================================================
+--- qt-everywhere-opensource-src-4.7.4.orig/src/3rdparty/webkit/JavaScriptCore/runtime/JSGlobalObject.h	2012-03-30 15:46:29.841238746 -0700
++++ qt-everywhere-opensource-src-4.7.4/src/3rdparty/webkit/JavaScriptCore/runtime/JSGlobalObject.h	2012-03-30 15:47:19.525241150 -0700
+@@ -57,7 +57,7 @@
+     protected:
+         using JSVariableObject::JSVariableObjectData;
+ 
+-        struct JSGlobalObjectData : public JSVariableObjectData {
++        struct JSGlobalObjectData : public JSVariableObject::JSVariableObjectData {
+             // We use an explicit destructor function pointer instead of a
+             // virtual destructor because we want to avoid adding a vtable
+             // pointer to this struct. Adding a vtable pointer would force the
+Index: qt-everywhere-opensource-src-4.7.4/src/3rdparty/webkit/JavaScriptCore/runtime/JSStaticScopeObject.h
+===================================================================
+--- qt-everywhere-opensource-src-4.7.4.orig/src/3rdparty/webkit/JavaScriptCore/runtime/JSStaticScopeObject.h	2012-03-30 15:47:50.789242663 -0700
++++ qt-everywhere-opensource-src-4.7.4/src/3rdparty/webkit/JavaScriptCore/runtime/JSStaticScopeObject.h	2012-03-30 16:25:51.465353133 -0700
+@@ -32,10 +32,9 @@
+     
+     class JSStaticScopeObject : public JSVariableObject {
+     protected:
+-        using JSVariableObject::JSVariableObjectData;
+-        struct JSStaticScopeObjectData : public JSVariableObjectData {
++        struct JSStaticScopeObjectData : public JSVariableObject::JSVariableObjectData {
+             JSStaticScopeObjectData()
+-                : JSVariableObjectData(&symbolTable, &registerStore + 1)
++                : JSVariableObject::JSVariableObjectData(&symbolTable, &registerStore + 1)
+             {
+             }
+             SymbolTable symbolTable;
