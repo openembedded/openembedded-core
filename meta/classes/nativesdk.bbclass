@@ -13,13 +13,7 @@ LIBCOVERRIDE = ""
 # Update PACKAGE_ARCH and PACKAGE_ARCHS
 #
 PACKAGE_ARCH = "${SDK_ARCH}-nativesdk"
-python () {
-    archs = d.getVar('PACKAGE_ARCHS', True).split()
-    sdkarchs = []
-    for arch in archs:
-        sdkarchs.append(arch + '-nativesdk')
-    d.setVar('PACKAGE_ARCHS', " ".join(sdkarchs))
-}
+PACKAGE_ARCHS = "${SDK_PACKAGE_ARCHS}"
 
 STAGING_DIR_HOST = "${STAGING_DIR}/${MULTIMACH_HOST_SYS}"
 STAGING_DIR_TARGET = "${STAGING_DIR}/${MULTIMACH_TARGET_SYS}"
