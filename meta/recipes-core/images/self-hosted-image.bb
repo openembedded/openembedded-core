@@ -4,7 +4,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
-PR = "r7"
+PR = "r8"
 
 CORE_IMAGE_EXTRA_INSTALL = "\
     task-self-hosted \
@@ -25,7 +25,7 @@ IMAGE_FSTYPES = "vmdk"
 
 inherit core-image
 
-SRCREV = "26a46938d3ea1821e7bec4fa6cc8379babad238b"
+SRCREV = "8691a588267472eb5a32b978a0eb9ddfd0c91733"
 SRC_URI = "git://git.yoctoproject.org/poky;protocol=git"
 
 fakeroot do_populate_poky_src () {
