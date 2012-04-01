@@ -467,11 +467,15 @@ cat << EOM
 WARNING: nVidia proprietary OpenGL libraries detected.
 nVidia's OpenGL libraries are known to have compatibility issues with qemu,
 resulting in a segfault. Please uninstall these drivers or ensure the mesa libGL
-libraries precede nvidia's via LD_PRELOAD(Already do it on Ubuntu).
+libraries precede nvidia's via LD_PRELOAD(Already do it on Ubuntu 10).
 EOM
 
 # Automatically use Ubuntu system's mesa libGL, other distro can add its own path
-    if grep -i ubuntu /etc/lsb-release &> /dev/null
+if grep -i ubuntu /etc/lsb-release &> /dev/null
+then
+    # precede nvidia's driver on Ubuntu 10
+    UBUNTU_MAIN_VERSION=`cat /etc/lsb-release |grep DISTRIB_RELEASE |cut -d=  -f 2| cut -d. -f 1`
+    if [ $UBUNTU_MAIN_VERSION -eq 10 ];
     then
         GL_PATH=""
         if test -e /usr/lib/libGL.so
@@ -482,9 +486,10 @@ EOM
             GL_PATH="/usr/lib/x86_64-linux-gnu/libGL.so"
         fi
 
-        echo "Skip nVidia's libGL on Ubuntu!"
+        echo "Skip nVidia's libGL on Ubuntu 10!"
         GL_LD_PRELOAD="$GL_PATH $LD_PRELOAD"
     fi
+fi
 fi
 
 echo "Running $QEMU..."
