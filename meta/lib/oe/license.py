@@ -86,8 +86,10 @@ def is_included(licensestr, whitelist=None, blacklist=None):
     """
 
     def include_license(license):
-        return (any(fnmatch(license, pattern) for pattern in whitelist) and not
-                any(fnmatch(license, pattern) for pattern in blacklist))
+        return any(fnmatch(license, pattern) for pattern in whitelist)
+
+    def exclude_license(license):
+        return any(fnmatch(license, pattern) for pattern in blacklist)
 
     def choose_licenses(alpha, beta):
         """Select the option in an OR which is the 'best' (has the most
@@ -106,8 +108,9 @@ def is_included(licensestr, whitelist=None, blacklist=None):
         blacklist = []
 
     licenses = flattened_licenses(licensestr, choose_licenses)
-    excluded = filter(lambda lic: not include_license(lic), licenses)
+    excluded = filter(lambda lic: exclude_license(lic), licenses)
+    included = filter(lambda lic: include_license(lic), licenses)
     if excluded:
         return False, excluded
     else:
-        return True, None
+        return True, included
