@@ -2,7 +2,7 @@ DESCRIPTION = "gdb - GNU debugger"
 HOMEPAGE = "http://www.gnu.org/software/gdb/"
 LICENSE="GPLv3+"
 SECTION = "devel"
-DEPENDS = "ncurses readline ${LTTNGUST}"
+DEPENDS = "expat ncurses readline ${LTTNGUST}"
 
 LTTNGUST = "lttng-ust"
 LTTNGUST_libc-uclibc = ""
@@ -11,7 +11,7 @@ LTTNGUST_mipsel = ""
 LTTNGUST_mips64 = ""
 LTTNGUST_mips64el = ""
 
-INC_PR = "r6"
+INC_PR = "r7"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 		file://COPYING.LIB;md5=9f604d8a4f8e74f4f5140845a21b6674 \
@@ -36,7 +36,7 @@ B = "${WORKDIR}/build-${TARGET_SYS}"
 
 EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils'"
 
-EXPAT = "--without-expat"
+EXPAT = "--with-expat"
 
 EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x \
                 --with-curses --disable-multilib --with-system-readline --disable-sim \
@@ -63,4 +63,6 @@ do_install_append() {
 
 RRECOMMENDS_gdb_append_linux = " glibc-thread-db "
 RRECOMMENDS_gdb_append_linux-gnueabi = " glibc-thread-db "
+RRECOMMENDS_gdbserver_append_linux = " glibc-thread-db "
+RRECOMMENDS_gdbserver_append_linux-gnueabi = " glibc-thread-db "
 

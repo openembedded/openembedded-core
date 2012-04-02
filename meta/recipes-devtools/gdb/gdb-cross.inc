@@ -1,6 +1,6 @@
 require gdb-common.inc
 
-DEPENDS = "ncurses-native"
+DEPENDS = "expat-native ncurses-native"
 
 #EXTRA_OEMAKE += "LDFLAGS='${BUILD_LDFLAGS}'"
 
