@@ -47,14 +47,14 @@ def copyleft_should_include(d):
     exclude = oe.data.typed_value('COPYLEFT_LICENSE_EXCLUDE', d)
 
     try:
-        is_included, excluded = oe.license.is_included(d.getVar('LICENSE', True), include, exclude)
+        is_included, reason = oe.license.is_included(d.getVar('LICENSE', True), include, exclude)
     except oe.license.LicenseError as exc:
         bb.fatal('%s: %s' % (d.getVar('PF', True), exc))
     else:
         if is_included:
-            return True, None
+            return True, 'recipe has included licenses: %s' % ', '.join(reason)
         else:
-            return False, 'recipe has excluded licenses: %s' % ', '.join(excluded)
+            return False, 'recipe has excluded licenses: %s' % ', '.join(reason)
 
 python do_prepare_copyleft_sources () {
     """Populate a tree of the recipe sources and emit patch series files"""
@@ -67,7 +67,7 @@ python do_prepare_copyleft_sources () {
         bb.debug(1, 'copyleft: %s is excluded: %s' % (p, reason))
         return
     else:
-        bb.debug(1, 'copyleft: %s is included' % p)
+        bb.debug(1, 'copyleft: %s is included: %s' % (p, reason))
 
     sources_dir = d.getVar('COPYLEFT_SOURCES_DIR', True)
     src_uri = d.getVar('SRC_URI', True).split()
