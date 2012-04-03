@@ -1,6 +1,6 @@
 require binutils.inc
 
-PR = "r5"
+PR = "r6"
 
 LIC_FILES_CHKSUM="\
     file://src-release;endline=17;md5=4830a9ef968f3b18dd5e9f2c00db2d35\
@@ -30,6 +30,7 @@ SRC_URI = "\
      file://libtool-rpath-fix.patch \
      file://clone-shadow.patch \
      file://binutils-powerpc-e5500.patch \
+     file://binutils-armv5e.patch \
      "
 
 SRC_URI[md5sum] = "ee0f10756c84979622b992a4a61ea3f5"
