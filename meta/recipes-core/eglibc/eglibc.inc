@@ -50,3 +50,7 @@ do_configure_prepend() {
 	sed -e "s#@BASH@#/bin/sh#" -i ${S}/elf/ldd.bash.in
 	echo '${OE_FEATURES}' > ${B}/option-groups.config
 }
+
+GLIBC_ADDONS ?= "ports,nptl,libidn"
+SDK_GLIBC_ADDONS ?= "ports,nptl,libidn"
+GLIBC_ADDONS_virtclass-nativesdk = "${SDK_GLIBC_ADDONS}"
