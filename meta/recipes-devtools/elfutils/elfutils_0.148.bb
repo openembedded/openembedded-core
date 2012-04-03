@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3\
                     file://EXCEPTION;md5=570adcb0c1218ab57f2249c67d0ce417"
 DEPENDS = "libtool bzip2 zlib"
 
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/elfutils-${PV}.tar.bz2"
 
@@ -45,7 +45,8 @@ SRC_URI += "\
 "
 inherit autotools gettext
 
-EXTRA_OECONF = "--program-prefix=eu-"
+EXTRA_OECONF = "--program-prefix=eu- --without-lzma"
+EXTRA_OECONF_append_virtclass-native = " --without-bzlib"
 EXTRA_OECONF_append_libc-uclibc = " ${@['', '--enable-uclibc']['${PN}' == '${BPN}']}"
 
 do_configure_prepend() {
