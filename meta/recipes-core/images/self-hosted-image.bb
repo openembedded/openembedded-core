@@ -4,15 +4,12 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
-PR = "r8"
+PR = "r9"
 
 IMAGE_FEATURES += "x11-mini package-management"
 
-# Ensure there's enough space to do a core-image-minimal build, with rm_work enabled
-IMAGE_ROOTFS_EXTRA_SPACE = "1048576"
-#IMAGE_ROOTFS_EXTRA_SPACE = "2621440"
-#IMAGE_ROOTFS_EXTRA_SPACE = "20971520"
-#IMAGE_ROOTFS_EXTRA_SPACE = "5242880"
+# Ensure there's enough space to do a core-image-sato build, with rm_work enabled
+IMAGE_ROOTFS_EXTRA_SPACE = "41943040"
 
 # Do a quiet boot with limited console messages
 APPEND += "quiet"
@@ -50,6 +47,9 @@ fakeroot do_populate_poky_src () {
 	chown builder.builder ${IMAGE_ROOTFS}/home/builder/pseudo
 
 	chown -R builder.builder  ${IMAGE_ROOTFS}/home/builder/poky
+
+	# Allow builder to use sudo to setup tap/tun
+	echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 }
 
 IMAGE_PREPROCESS_COMMAND += "do_populate_poky_src; "
