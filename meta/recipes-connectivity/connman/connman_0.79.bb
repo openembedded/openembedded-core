@@ -7,6 +7,8 @@ SRC_URI  = "git://git.kernel.org/pub/scm/network/connman/connman.git \
             file://ethernet_default.patch \
             file://disable_alg-test.patch \
             file://0001-plugin.h-Change-visibility-to-default-for-debug-symb.patch \
+            file://test-set-ipv4-method-api-fix.patch \
+            file://test-set-ipv6-method-api-fix.patch \
             file://connman"
 S = "${WORKDIR}/git"
-PR = "r2"
+PR = "r3"
