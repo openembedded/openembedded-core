@@ -5,7 +5,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
-PR = "r9"
+PR = "r10"
 
 IMAGE_FEATURES += "x11-mini package-management"
 
@@ -21,6 +21,11 @@ inherit core-image
 
 SRCREV = "8691a588267472eb5a32b978a0eb9ddfd0c91733"
 SRC_URI = "git://git.yoctoproject.org/poky;protocol=git"
+
+IMAGE_CMD_ext3_append () {
+	# We don't need to reserve much space for root, 0.5% is more than enough
+	tune2fs -m 0.5 ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ext3
+}
 
 fakeroot do_populate_poky_src () {
 	# Because fetch2's git's unpack uses -s cloneflag, the unpacked git repo
