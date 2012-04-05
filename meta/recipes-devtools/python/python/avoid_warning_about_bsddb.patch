@@ -1,0 +1,23 @@
+_bsddb module can be built only with db version between 4.1 and 4.7.
+Avoid a warning by not adding this module to missing variable.
+
+Upstream-Status: Inappropriate [distribution]
+
+Signed-off-by: Andrei Gherzan <andrei@gherzan.ro>
+
+
+Index: Python-2.7.2/setup.py
+===================================================================
+--- Python-2.7.2.orig/setup.py	2012-04-05 23:16:49.268139840 +0300
++++ Python-2.7.2/setup.py	2012-04-05 23:17:30.912138622 +0300
+@@ -1024,7 +1024,9 @@
+             db_incs = None
+             dblibs = []
+             dblib_dir = None
+-            missing.append('_bsddb')
++            # We need db version between 4.1 and 4.7
++            # Avoid this warning
++            #missing.append('_bsddb')
+ 
+         # The sqlite interface
+         sqlite_setup_debug = False   # verbose debug prints from this script?
