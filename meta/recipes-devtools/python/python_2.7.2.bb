@@ -1,6 +1,6 @@
 require python.inc
 DEPENDS = "python-native bzip2 db gdbm openssl readline sqlite3 zlib"
-PR = "${INC_PR}.16"
+PR = "${INC_PR}.17"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
 DISTRO_SRC_URI_linuxstdbase = ""
@@ -23,6 +23,7 @@ SRC_URI += "\
   file://fix_for_using_different_libdir.patch \
   file://setuptweaks.patch \
   file://check-if-target-is-64b-not-host.patch \
+  file://search_db_h_in_inc_dirs_and_avoid_warning.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"

@@ -1,0 +1,40 @@
+python should search for db.h in inc_dirs and not in a hardcoded path.
+If db.h is found but HASHVERSION is not 2 we avoid a warning by not 
+adding this module to missing variable.
+
+Upstream-Status: Inappropriate [distribution]
+
+Signed-off-by: Andrei Gherzan <andrei@gherzan.ro>
+
+Index: Python-2.7.2/setup.py
+===================================================================
+--- Python-2.7.2.orig/setup.py	2012-04-05 22:27:22.437199989 +0300
++++ Python-2.7.2/setup.py	2012-04-05 22:26:38.000000000 +0300
+@@ -1141,12 +1141,12 @@
+         # the more recent berkeleydb's db.h file first in the include path
+         # when attempting to compile and it will fail.
+         f = "/usr/include/db.h"
+-
++        if len(inc_dirs) != 0:
++            f = os.path.join(inc_dirs[0], "db.h")
+         if sys.platform == 'darwin':
+             if is_macosx_sdk_path(f):
+                 sysroot = macosx_sdk_root()
+                 f = os.path.join(sysroot, f[1:])
+-
+         if os.path.exists(f) and not db_incs:
+             data = open(f).read()
+             m = re.search(r"#s*define\s+HASHVERSION\s+2\s*", data)
+@@ -1161,8 +1161,10 @@
+                                           libraries=libraries))
+                 else:
+                     exts.append(Extension('bsddb185', ['bsddbmodule.c']))
+-            else:
+-                missing.append('bsddb185')
++            # If a newer version is detected don't report an useless
++            # warning
++            #else:
++            #    missing.append('bsddb185')
+         else:
+             missing.append('bsddb185')
+ 
