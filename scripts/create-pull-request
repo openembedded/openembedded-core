@@ -34,8 +34,8 @@ RFC=0
 usage() {
 CMD=$(basename $0)
 cat <<EOM
-Usage: $CMD [-h] [-o output_dir] [-m msg_body_file] [-s subject] [-r relative_to] [-i commit_id] -u remote -b branch
-  -b branch           Branch name in the specified remote
+Usage: $CMD [-h] [-o output_dir] [-m msg_body_file] [-s subject] [-r relative_to] [-i commit_id] -u remote [-b branch]
+  -b branch           Branch name in the specified remote (default: current branch)
   -c                  Create an RFC (Request for Comment) patch series
   -h                  Display this help message
   -i commit_id        Ending commit (default: HEAD)
@@ -120,7 +120,12 @@ while getopts "b:chi:m:o:p:r:s:u:" OPT; do
 	esac
 done
 
-if [ -z "$BRANCH" ] || [ -z "$REMOTE_URL" ]; then
+if [ -z "$BRANCH" ]; then
+	BRANCH=$(git branch | grep -e "^\* " | cut -d' ' -f2)
+	echo "NOTE: Assuming remote branch '$BRANCH', use -b to override."
+fi
+	
+if [ -z "$REMOTE_URL" ]; then
 	usage
 	exit 1
 fi
