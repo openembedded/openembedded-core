@@ -38,8 +38,8 @@ do_install() {
 	cp -r * ${D}/lib/firmware/
 
 	# Libertas sd8686
-	install -m 0644 libertas/sd8686_v9.bin ${D}/lib/firmware/sd8686.bin
-	install -m 0644 libertas/sd8686_v9_helper.bin ${D}/lib/firmware/sd8686_helper.bin
+	ln -sf libertas/sd8686_v9.bin ${D}/lib/firmware/sd8686.bin
+	ln -sf libertas/sd8686_v9_helper.bin ${D}/lib/firmware/sd8686_helper.bin
 
 	# Realtek rtl8192* 
 	install -m 0644 LICENCE.rtlwifi_firmware.txt ${D}/lib/firmware/rtlwifi/LICENCE.rtlwifi_firmware.txt
@@ -51,7 +51,11 @@ do_install() {
 PACKAGES =+ "${PN}-sd8686 ${PN}-rtl8192cu linux-firmware-rtl8192ce linux-firmware-rtl8192su ${PN}-wl12xx"
 
 LICENSE_${PN}-sd8686 = "Firmware:LICENSE.libertas"
-FILES_${PN}-sd8686 = "/lib/firmware/sd8686* /lib/firmware/LICENCE.libertas"
+FILES_${PN}-sd8686 = " \
+  /lib/firmware/libertas/sd8686_v9* \
+  /lib/firmware/sd8686* \
+  /lib/firmware/LICENCE.libertas \
+"
 
 LICENSE_${PN}-rtl8192cu = "Firmware:LICENCE.rtlwifi_firmware"
 FILES_${PN}-rtl8192cu = " \
