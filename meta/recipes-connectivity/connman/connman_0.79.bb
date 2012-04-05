@@ -8,3 +8,4 @@ SRC_URI  = "git://git.kernel.org/pub/scm/network/connman/connman.git \
             file://disable_alg-test.patch \
             file://connman"
 S = "${WORKDIR}/git"
+PR = "r1"

@@ -90,7 +90,7 @@ PACKAGES =+ "${PN}-tools ${PN}-tests"
 
 FILES_${PN}-tools = "${bindir}/wispr"
 
-FILES_${PN}-tests = "${bindir}/*-test ${libdir}/${PN}/test/*"
+FILES_${PN}-tests = "${bindir}/*-test ${libdir}/${BPN}/test/*"
 RDEPENDS_${PN}-tests = "python-dbus"
 
 FILES_${PN} = "${bindir}/* ${sbindir}/* ${libexecdir}/* ${libdir}/lib*.so.* \
