@@ -5,7 +5,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
-PR = "r10"
+PR = "r11"
 
 IMAGE_FEATURES += "x11-mini package-management"
 
@@ -56,6 +56,10 @@ fakeroot do_populate_poky_src () {
 
 	# Allow builder to use sudo to setup tap/tun
 	echo "builder ALL=(ALL) NOPASSWD: ALL" >> ${IMAGE_ROOTFS}/etc/sudoers
+
+	# Use Clearlooks GTK+ theme
+	mkdir -p ${IMAGE_ROOTFS}/etc/gtk-2.0
+	echo 'gtk-theme-name = "Clearlooks"' > ${IMAGE_ROOTFS}/etc/gtk-2.0/gtkrc
 }
 
 IMAGE_PREPROCESS_COMMAND += "do_populate_poky_src; "
