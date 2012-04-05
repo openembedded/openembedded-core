@@ -50,7 +50,7 @@ fakeroot do_populate_poky_src () {
 	chown -R builder.builder  ${IMAGE_ROOTFS}/home/builder/poky
 
 	# Allow builder to use sudo to setup tap/tun
-	echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+	echo "builder ALL=(ALL) NOPASSWD: ALL" >> ${IMAGE_ROOTFS}/etc/sudoers
 }
 
 IMAGE_PREPROCESS_COMMAND += "do_populate_poky_src; "
