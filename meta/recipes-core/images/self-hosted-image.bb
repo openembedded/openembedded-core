@@ -1,3 +1,4 @@
+DESCRIPTION = "Version 1.0-r6 of the self-hosted image."
 IMAGE_INSTALL = "task-core-boot task-core-apps-console task-core-ssh-openssh task-self-hosted"
 
 LICENSE = "MIT"

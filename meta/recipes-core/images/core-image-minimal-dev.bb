@@ -1,7 +1,8 @@
 #
 # Copyright (C) 2007 OpenedHand Ltd.
 #
-DESCRIPTION = "A core-image-minimal image suitable for development work."
+DESCRIPTION = "A small image just capable of allowing a device to boot and \
+is suitable for development work."
 
 IMAGE_INSTALL = "task-core-boot ${ROOTFS_PKGMANAGE}"
 

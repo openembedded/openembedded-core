@@ -1,3 +1,4 @@
+DESCRIPTION = "Version 1.0-r1 of the qtr3-demo-image."
 LICENSE = "MIT"
 PR="r1"
 

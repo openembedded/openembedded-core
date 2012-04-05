@@ -1,6 +1,6 @@
-DESCRIPTION = "A core-image-lsb that includes everything in meta-toolchain \
-but also includes development headers and libraries to form a complete \
-standalone SDK."
+DESCRIPTION = "Basic image without X support suitable for development work. It \
+can be used for customization and implementations that conform to Linux \
+Standard Base (LSB)."
 
 IMAGE_FEATURES += "apps-console-core dev-pkgs ssh-server-openssh"
 
