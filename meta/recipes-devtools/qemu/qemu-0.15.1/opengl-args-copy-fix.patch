@@ -1,0 +1,66 @@
+This patch fix GL application failure from 64b target on 32b host
+
+64b target produce 64b args buffer, but qemu parse it as 32b and get wrong
+data. To avoid this, the type of args buffer in qemu should be same as target,
+that is, target_phys_addr_t. The only potential issue is that we need copy
+the data in buffer one by one, or else data corruption when 32b/64b for
+target/host combination. 
+
+Upstream-Status: Inappropriate [other] - depends on qemu gl patch
+
+Signed-off-by: Zhai Edwin <edwin.zhai@intel.com>
+
+Index: qemu-0.15.1/target-i386/opengl_func.h
+===================================================================
+--- qemu-0.15.1.orig/target-i386/opengl_func.h	2012-04-06 10:00:08.000000000 +0800
++++ qemu-0.15.1/target-i386/opengl_func.h	2012-04-06 10:47:38.000000000 +0800
+@@ -25,10 +25,10 @@
+ #include "mesa_gl.h"
+ #include "mesa_glext.h"
+ 
+-/* Argument list are internally of a type that can hold a target pointer
+- * or a host pointer. If 32b target runs on 64b host, it should be big enough
+- * to hold host pointer */
+-typedef long unsigned int arg_t;
++/* Argument list are internally of a type that point to a buffer passed from
++ * target. It should have same type as target, so that we can support 32b
++ * target on 64b host, and vice versa */
++typedef target_phys_addr_t arg_t;
+ 
+ enum {
+     TYPE_NONE,
+Index: qemu-0.15.1/Makefile.target
+===================================================================
+--- qemu-0.15.1.orig/Makefile.target	2012-04-06 10:00:08.000000000 +0800
++++ qemu-0.15.1/Makefile.target	2012-04-06 10:00:08.000000000 +0800
+@@ -128,7 +128,7 @@
+ gl_beginend.h: ../target-i386/beginend_funcs.sh
+ 	$< > $@
+ opengl_exec.o : opengl_exec.c server_stub.c gl_func.h opengl_func.h gl_beginend.h
+-	$(CC) $(GL_CFLAGS) $(DEFINES) -c -o $@ $< -I. -I../target-i386
++	$(CC) $(GL_CFLAGS) $(DEFINES) -c -o $@ $< -I.. -I. -I../fpu -I../target-i386 -DNEED_CPU_H
+ 
+ #########################################################
+ # Linux user emulator target
+Index: qemu-0.15.1/target-i386/opengl_exec.c
+===================================================================
+--- qemu-0.15.1.orig/target-i386/opengl_exec.c	2012-04-06 10:00:08.000000000 +0800
++++ qemu-0.15.1/target-i386/opengl_exec.c	2012-04-06 10:39:22.000000000 +0800
+@@ -37,16 +37,12 @@
+ #include <mesa_gl.h>
+ #include <mesa_glx.h>
+ 
+-// TODO
+-typedef long unsigned int target_phys_addr_t;
+-
++#include "exec.h"
+ #include "opengl_func.h"
+ 
+ #include "mesa_glu.h"
+ #include "mesa_mipmap.c"
+ 
+-#include "../qemu-common.h"
+-
+ //#define SYSTEMATIC_ERROR_CHECK
+ #define BUFFER_BEGINEND
+ #define glGetError() 0
