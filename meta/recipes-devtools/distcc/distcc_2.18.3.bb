@@ -4,11 +4,15 @@ compilation of C/C++/ObjC code across machines on a network."
 SECTION = "devel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
-PR = "r7"
+PR = "r8"
 
-DEPENDS = "avahi ${GTKDEP}"
-GTKDEP_libc-uclibc = ""
-GTKDEP = "gtk+"
+DEPENDS = "avahi"
+
+GTKCONFIG = "gtk"
+GTKCONFIG_libc-uclibc = ""
+
+PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', '${GTKCONFIG}', '', d)}"
+PACKAGECONFIG[gtk] = "--with-gtk,--without-gtk --without-gnome,gtk+"
 
 RRECOMMENDS_${PN} = "avahi-daemon"
 
@@ -28,8 +32,6 @@ inherit autotools pkgconfig update-rc.d
 
 INITSCRIPT_NAME = "distcc"
 
-EXTRA_OECONF = "--with-gtk"
-EXTRA_OECONF_libc-uclibc = "--without-gtk --without-gnome"
 do_install_append() {
     install -d ${D}${sysconfdir}/init.d/
     install -d ${D}${sysconfdir}/default
