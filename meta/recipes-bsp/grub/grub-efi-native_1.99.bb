@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 # FIXME: We should be able to optionally drop freetype as a dependency
 DEPENDS = "help2man-native autogen-native"
 RDEPENDS_${PN} = "diffutils freetype"
-PR = "r5"
+PR = "r6"
 
 # Native packages do not normally rebuild when the target changes.
 # Ensure this is built once per HOST-TARGET pair.
@@ -61,7 +61,7 @@ EXTRA_OECONF = "--with-platform=efi --disable-grub-mkfont \
 do_mkimage() {
 	./grub-mkimage -p /EFI/BOOT -d ./grub-core/ \
 		       -O ${GRUB_TARGET}-efi -o ./${GRUB_IMAGE} \
-	               boot linux fat serial part_msdos normal efi_gop
+	               boot linux ext2 fat serial part_msdos part_gpt normal efi_gop
 }
 addtask mkimage after do_compile before do_install
 
