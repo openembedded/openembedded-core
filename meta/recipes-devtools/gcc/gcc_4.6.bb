@@ -1,4 +1,4 @@
-require gcc-${PV}.inc
+require recipes-devtools/gcc/gcc-${PV}.inc
 require gcc-configure-target.inc
 require gcc-package-target.inc
 
