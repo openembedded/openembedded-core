@@ -1,6 +1,6 @@
 inherit cross-canadian
 
-require gcc-${PV}.inc
+require recipes-devtools/gcc/gcc-${PV}.inc
 require gcc-cross-canadian.inc
 require gcc-configure-sdk.inc
 require gcc-package-sdk.inc

@@ -1,4 +1,4 @@
-require gcc-${PV}.inc
+require recipes-devtools/gcc/gcc-${PV}.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 
