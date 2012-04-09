@@ -9,7 +9,12 @@ do_compile() {
 	archconf=${S}/${sysconfdir}/opkg/arch.conf
 
 	rm -f $archconf
-	ipkgarchs="${PACKAGE_ARCHS}"
+	multilibs="${@d.getVar('MULTILIBS',True)}"
+	if [ "X${multilibs}"  == "XNone" ]; then
+		ipkgarchs="${PACKAGE_ARCHS}"
+	else
+		ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS}"
+	fi
 	priority=1
 	for arch in $ipkgarchs; do 
 		echo "arch $arch $priority" >> $archconf
