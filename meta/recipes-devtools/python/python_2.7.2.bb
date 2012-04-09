@@ -25,7 +25,7 @@ SRC_URI += "\
 
 S = "${WORKDIR}/Python-${PV}"
 
-inherit autotools
+inherit autotools multilib_header
 
 # The 3 lines below are copied from the libffi recipe, ctypes ships its own copy of the libffi sources
 #Somehow gcc doesn't set __SOFTFP__ when passing -mfloatabi=softp :(
@@ -113,6 +113,8 @@ do_install() {
 	if [ -e ${WORKDIR}/sitecustomize.py ]; then
 		install -m 0644 ${WORKDIR}/sitecustomize.py ${D}/${libdir}/python${PYTHON_MAJMIN}
 	fi
+
+	oe_multilib_header python${PYTHON_MAJMIN}/pyconfig.h
 }
 
 SSTATE_SCAN_FILES += "Makefile"
