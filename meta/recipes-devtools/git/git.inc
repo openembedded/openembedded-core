@@ -12,6 +12,12 @@ EXTRA_OECONF = "--with-perl=${STAGING_BINDIR_NATIVE}/perl-native/perl --without-
 
 inherit autotools perlnative
 
+do_compile_prepend () {
+	# Remove perl/perl.mak to fix the out-of-date perl.mak error
+	# during rebuild
+	rm -f perl/perl.mak
+}
+
 do_install () {
 	oe_runmake install DESTDIR="${D}" bindir=${bindir} \
 		template_dir=${datadir}/git-core/templates \
