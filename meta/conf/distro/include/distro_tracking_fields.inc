@@ -1518,15 +1518,16 @@ RECIPE_COMMENTS_pn-bash = ""
 
 RECIPE_STATUS_pn-syslinux = "yellow"
 # need mangling on LDFLAGS
-RECIPE_LAST_UPDATE_pn-syslinux = "Nov 16, 2010"
+RECIPE_LAST_UPDATE_pn-syslinux = "Apr 4, 2012"
 RECIPE_MAINTAINER_pn-syslinux = "Darren Hart <dvhart@linux.intel.com>"
 RECIPE_DEPENDENCY_CHECK_pn-syslinux = "not done"
-RECIPE_LATEST_VERSION_pn-syslinux = "3.86"
+RECIPE_LATEST_VERSION_pn-syslinux = "4.03"
 RECIPE_PATCH_pn-syslinux+cross-build = "use poky toolchain instead of host"
 RECIPE_INTEL_SECTION_pn-syslinux = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-syslinux = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-syslinux = "Apr 01, 2010"
 RECIPE_COMMENTS_pn-syslinux = ""
+RECIPE_NO_UPDATE_REASON_pn-syslinux-"Waiting for 4.06 for 3.3 kernel headers support"
 
 RECIPE_STATUS_pn-sysvinit = "green"
 RECIPE_LAST_UPDATE_pn-sysvinit = "Jun 18, 2010"
