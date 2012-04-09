@@ -19,7 +19,7 @@ PE = "2"
 PROTO_DEPS = "xf86driproto glproto"
 LIB_DEPS = "virtual/libx11 libxext libxxf86vm libxdamage libxfixes libxml2-native"
 
-DEPENDS = "makedepend-native python-native ${PROTO_DEPS} ${LIB_DEPS}"
+DEPENDS = "makedepend-native python-native flex-native bison-native ${PROTO_DEPS} ${LIB_DEPS}"
 
 PROVIDES = "virtual/libgl"
 
