@@ -170,7 +170,7 @@ if [ ! -x "$LOCAL_OPKG_LOC/bin/opkg-cl" ]; then
   check_result
 
   echo_info "Configure opkg ...\n"
-  ./autogen.sh --prefix=$parent_folder/$LOCAL_OPKG_LOC --with-opkglibdir=$OPKG_LIBDIR --disable-curl --disable-ssl-curl --disable-gpg --disable-shave >> $parent_folder/$YOCTOADT_INSTALL_LOG_FILE
+  ./autogen.sh --prefix=$parent_folder/$LOCAL_OPKG_LOC --with-opkglibdir=$OPKG_LIBDIR --enable-shared=no --disable-curl --disable-ssl-curl --disable-gpg --disable-shave >> $parent_folder/$YOCTOADT_INSTALL_LOG_FILE
   check_result
 
   echo_info "Make opkg ...\n"
@@ -241,7 +241,7 @@ get_qemu_image()
 
   if [ "$1" == "x86" ] || [ "$1" == "x86_64" ]; then
     qemu_kernel="bzImage-qemu$target.bin"
-  elif [ "$1" == "mips" ]; then
+  elif [ "$1" == "ppc" ] || [ "$1" == "mips" ]; then
     qemu_kernel="vmlinux-qemu$target.bin"
   else
     qemu_kernel="zImage-qemu$target.bin"
