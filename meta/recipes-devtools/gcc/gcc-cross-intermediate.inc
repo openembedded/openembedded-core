@@ -14,8 +14,7 @@ CROSS_TARGET_SYS_DIR_append = ".${PN}"
 # Glibc won't compile with gold, and building glibc is the whole point of
 # this recipe.   So we select ld.bfd explicitly here if gold is the distro's 
 # preferred linker.
-EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} \
-		--enable-shared \
+EXTRA_OECONF = "--enable-shared \
 		--disable-multilib \
 		--disable-threads \
 		--enable-languages=c \

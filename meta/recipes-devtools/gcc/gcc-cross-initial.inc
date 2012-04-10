@@ -9,8 +9,7 @@ CROSS_TARGET_SYS_DIR_append = ".${PN}"
 
 # This is intended to be a -very- basic config
 # sysroot is needed in case we use libc-initial
-EXTRA_OECONF = "--with-local-prefix=${STAGING_DIR_TARGET}${target_prefix} \
-		--with-newlib \
+EXTRA_OECONF = "--with-newlib \
 		--without-headers \
 		--disable-shared \
 		--disable-threads \

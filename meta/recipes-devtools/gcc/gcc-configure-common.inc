@@ -38,6 +38,7 @@ EXTRA_OECONF = "${@['--enable-clocale=generic', ''][d.getVar('USE_NLS', True) !=
                 --enable-symvers=gnu \
                 --enable-libstdcxx-pch \
                 --program-prefix=${TARGET_PREFIX} \
+		--without-local-prefix \
                 ${OPTSPACE} \
                 ${EXTRA_OECONF_BASE} \
                 ${EXTRA_OECONF_FPU} \

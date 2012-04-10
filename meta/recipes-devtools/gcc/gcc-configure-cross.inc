@@ -8,7 +8,7 @@ EXTRA_OECONF += " --enable-poison-system-directories \
 
 INHIBIT_DEFAULT_DEPS = "1"
 
-EXTRA_OECONF_PATHS = "--with-local-prefix=${STAGING_DIR_TARGET}${target_exec_prefix} \
+EXTRA_OECONF_PATHS = " \
 		      --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++ \
                       --with-sysroot=${STAGING_DIR_TARGET} \
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
