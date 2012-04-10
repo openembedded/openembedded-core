@@ -83,7 +83,7 @@ package_update_index_deb () {
 			continue;
 		fi
 		cd ${DEPLOY_DIR_DEB}/$arch
-		dpkg-scanpackages . | bzip2 > Packages.bz2
+		dpkg-scanpackages . | gzip > Packages.gz
 		echo "Label: $arch" > Release
 	done
 }
