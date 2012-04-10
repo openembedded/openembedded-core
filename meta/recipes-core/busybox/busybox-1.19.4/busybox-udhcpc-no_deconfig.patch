@@ -1,4 +1,4 @@
-From 16c5fa61059f9862b2534c75dad75f7ece338208 Mon Sep 17 00:00:00 2001
+From 53626cd06a3ef05ed847daea802ef0aa9661caa7 Mon Sep 17 00:00:00 2001
 From: Anders Darander <anders@chargestorm.se>
 Date: Thu, 3 Nov 2011 08:51:31 +0100
 Subject: [PATCH] busybox-udhcpc-no_deconfig.patch
@@ -23,12 +23,16 @@ Signed-off-by: Qing He <qing.he@intel.com>
 Updated to Busybox 1.19.3
 
 Signed-off-by: Anders Darander <anders@chargestorm.se>
+
+Fixed options -b, -a and -P.
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
- networking/udhcp/dhcpc.c |   27 ++++++++++++++++++++-------
- 1 files changed, 20 insertions(+), 7 deletions(-)
+ networking/udhcp/dhcpc.c |   29 +++++++++++++++++++++--------
+ 1 files changed, 21 insertions(+), 8 deletions(-)
 
 diff --git a/networking/udhcp/dhcpc.c b/networking/udhcp/dhcpc.c
-index 4d755e6..eb80484 100644
+index 4d755e6..a21e2c6 100644
 --- a/networking/udhcp/dhcpc.c
 +++ b/networking/udhcp/dhcpc.c
 @@ -29,6 +29,9 @@
@@ -41,14 +45,17 @@ index 4d755e6..eb80484 100644
  /* struct client_config_t client_config is in bb_common_bufsiz1 */
  
  
-@@ -82,6 +85,7 @@ enum {
+@@ -82,8 +85,9 @@ enum {
  	OPT_x = 1 << 18,
  	OPT_f = 1 << 19,
  	OPT_B = 1 << 20,
 +	OPT_D = 1 << 21,
  /* The rest has variable bit positions, need to be clever */
- 	OPTBIT_B = 20,
+-	OPTBIT_B = 20,
++	OPTBIT_D = 21,
  	USE_FOR_MMU(             OPTBIT_b,)
+ 	IF_FEATURE_UDHCPC_ARPING(OPTBIT_a,)
+ 	IF_FEATURE_UDHCP_PORT(   OPTBIT_P,)
 @@ -899,7 +903,8 @@ static void perform_renew(void)
  		state = RENEW_REQUESTED;
  		break;
