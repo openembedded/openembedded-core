@@ -21,3 +21,6 @@ EXTRA_OECONF += "--disable-libunwind-exceptions --disable-libssp \
 # export LD_LIBRARY_PATH = "{STAGING_DIR_HOST}${layout_exec_prefix}"
 
 PARALLEL_MAKE = ""
+
+# gcc 4.7 needs -isystem
+export ARCH_FLAGS_FOR_TARGET = "--sysroot=${STAGING_DIR_TARGET} -isystem=${target_includedir}"
