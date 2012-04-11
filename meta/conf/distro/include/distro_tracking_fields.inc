@@ -1527,7 +1527,7 @@ RECIPE_INTEL_SECTION_pn-syslinux = "base utils"
 RECIPE_TIME_BETWEEN_LAST_TWO_RELEASES_pn-syslinux = "2 months"
 RECIPE_LATEST_RELEASE_DATE_pn-syslinux = "Apr 01, 2010"
 RECIPE_COMMENTS_pn-syslinux = ""
-RECIPE_NO_UPDATE_REASON_pn-syslinux-"Waiting for 4.06 for 3.3 kernel headers support"
+RECIPE_NO_UPDATE_REASON_pn-syslinux="Waiting for 4.06 for 3.3 kernel headers support"
 
 RECIPE_STATUS_pn-sysvinit = "green"
 RECIPE_LAST_UPDATE_pn-sysvinit = "Jun 18, 2010"
