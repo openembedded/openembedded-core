@@ -1263,6 +1263,7 @@ python package_do_shlibs() {
 	lf = bb.utils.lockfile(d.expand("${PACKAGELOCK}"))
 
 	def linux_so(root, path, file):
+		needs_ldconfig = False
 		cmd = d.getVar('OBJDUMP', True) + " -p " + pipes.quote(os.path.join(root, file)) + " 2>/dev/null"
 		cmd = "PATH=\"%s\" %s" % (d.getVar('PATH', True), cmd)
 		fd = os.popen(cmd)
@@ -1283,6 +1284,7 @@ python package_do_shlibs() {
 					needs_ldconfig = True
 				if snap_symlinks and (file != this_soname):
 					renames.append((os.path.join(root, file), os.path.join(root, this_soname)))
+		return needs_ldconfig
 
 	def darwin_so(root, path, file):
 		fullpath = os.path.join(root, file)
@@ -1382,7 +1384,8 @@ python package_do_shlibs() {
 				if targetos == "darwin" or targetos == "darwin8":
 					darwin_so(root, dirs, file)
 				elif os.access(path, os.X_OK) or lib_re.match(file):
-					linux_so(root, dirs, file)
+					ldconfig = linux_so(root, dirs, file)
+					needs_ldconfig = needs_ldconfig or ldconfig
 		for (old, new) in renames:
 		    	bb.note("Renaming %s to %s" % (old, new))
 			os.rename(old, new)
