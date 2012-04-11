@@ -237,7 +237,7 @@ python do_checkpkg() {
 	such as:
 		gnome-common-2.20.0.tar.gz (most common format)
 		gtk+-2.90.1.tar.gz
-		xf86-intput-synaptics-12.6.9.tar.gz
+		xf86-input-synaptics-12.6.9.tar.gz
 		dri2proto-2.3.tar.gz
 		blktool_4.orig.tar.gz
 		libid3tag-0.15.1b.tar.gz
