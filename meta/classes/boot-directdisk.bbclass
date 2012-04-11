@@ -40,9 +40,6 @@ AUTO_SYSLINUXCFG = "1"
 SYSLINUX_ROOT ?= "root=/dev/sda2"
 SYSLINUX_TIMEOUT ?= "10"
 
-SYSLINUXCFG  = "${HDDDIR}/syslinux.cfg"
-SYSLINUXMENU = "${HDDDIR}/menu"
-
 inherit syslinux
 		
 build_boot_dd() {
