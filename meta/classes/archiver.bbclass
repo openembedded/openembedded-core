@@ -173,6 +173,7 @@ def archive_sources(d,stage_name):
 	file = get_source_from_downloads(d,stage_name)
 	if file:
 		shutil.copy(file,work_dir)
+		file = os.path.basename(file)
 	else:
 		file = archive_sources_from_directory(d,stage_name)
 	return file
