@@ -62,13 +62,21 @@ build_boot_bin() {
 
 	install -m 444 ${STAGING_LIBDIR}/syslinux/ldlinux.sys ${HDDDIR}/ldlinux.sys
 
-	# Do a little math, bash style
-	#BLOCKS=`du -s ${HDDDIR} | cut -f 1`
-	BLOCKS=`du -bks ${HDDDIR} | cut -f 1`
-	SIZE=`expr $BLOCKS + ${BOOTIMG_EXTRA_SPACE}`	
+	# Determine the 1024 byte block count for the final image.
+	BLOCKS=`du --apparent-size -ks ${HDDDIR} | cut -f 1`
+	SIZE=`expr $BLOCKS + ${BOOTIMG_EXTRA_SPACE}`
 
-	mkdosfs -n ${BOOTIMG_VOLUME_ID} -d ${HDDDIR} \
-	-C ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg $SIZE 
+	# Ensure total sectors is an integral number of sectors per
+	# track or mcopy will complain. Sectors are 512 bytes, and and
+	# we generate images with 32 sectors per track. This calculation
+	# is done in blocks, which are twice the size of sectors, thus
+	# the 16 instead of 32.
+	SIZE=$(expr $SIZE + $(expr 16 - $(expr $SIZE % 16)))
+
+	IMG=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
+	mkdosfs -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${IMG} ${SIZE}
+	# Copy HDDDIR recursively into the image file directly
+	mcopy -i ${IMG} -s ${HDDDIR}/* ::/
 
 	syslinux ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
 	chmod 644 ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
