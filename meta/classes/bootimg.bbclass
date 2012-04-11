@@ -92,7 +92,8 @@ build_boot_bin() {
 	SECTORS=$(expr $SECTORS + $(expr $DIR_SECTORS + $FAT_SECTORS))
 
 	# Determine the final size in blocks accounting for some padding
-	BLOCKS=$(expr $(expr $SECTORS \* 2) + ${BOOTIMG_EXTRA_SPACE})
+	BLOCKS=$(expr $(expr $SECTORS / 2) + ${BOOTIMG_EXTRA_SPACE})
+
 
 	# Ensure total sectors is an integral number of sectors per
 	# track or mcopy will complain. Sectors are 512 bytes, and we
