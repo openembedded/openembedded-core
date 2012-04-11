@@ -8,6 +8,10 @@ memcpy into an 16bit aligned
 
     -zecke
 
+Upstream-Status: Inappropriate [licensing]
+We're tracking an old release of dosfstools due to licensing issues.
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 
 --- dosfstools/dosfsck/boot.c.orig	2003-05-15 19:32:23.000000000 +0200
 +++ dosfstools/dosfsck/boot.c	2003-06-13 17:44:25.000000000 +0200
