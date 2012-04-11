@@ -1,0 +1,42 @@
+int is not the same size as size_t.
+
+Signed-off-by: Manoj Srivastava <srivasta@debian.org>
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+
+Origin: Cherry picked from Debian
+Upstream-Status: Pending
+
+---
+ gen.c  |    2 +-
+ scan.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/gen.c b/gen.c
+index 848e2c5..5a5daef 100644
+--- a/gen.c
++++ b/gen.c
+@@ -1890,7 +1890,7 @@ void make_tables ()
+ 			outn ("\tif ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \\");
+ 			outn ("\t\t{ \\");
+ 			outn ("\t\tint c = '*'; \\");
+-			outn ("\t\tint n; \\");
++			outn ("\t\tsize_t n; \\");
+ 			outn ("\t\tfor ( n = 0; n < max_size && \\");
+ 			outn ("\t\t\t     (c = getc( yyin )) != EOF && c != '\\n'; ++n ) \\");
+ 			outn ("\t\t\tbuf[n] = (char) c; \\");
+diff --git a/scan.c b/scan.c
+index 44559b6..15e2058 100644
+--- a/scan.c
++++ b/scan.c
+@@ -2105,7 +2105,7 @@ static int input (void );
+ 	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \
+ 		{ \
+ 		int c = '*'; \
+-		int n; \
++		size_t n; \
+ 		for ( n = 0; n < max_size && \
+ 			     (c = getc( yyin )) != EOF && c != '\n'; ++n ) \
+ 			buf[n] = (char) c; \
+-- 
+1.7.9.5
+

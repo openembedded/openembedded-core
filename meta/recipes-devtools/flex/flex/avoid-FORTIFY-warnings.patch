@@ -1,0 +1,59 @@
+Wrap ECHO macro to avoid FORTIFY warnings
+
+This change will enable flex scanners to be compiled with
+-D_FORTIFY_SOURCE=2.
+
+Signed-off-by: Manoj Srivastava <srivasta@debian.org>
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+
+Origin: Cherry picked from Debian
+Upstream-Status: Pending
+
+---
+ flex.skl |    2 +-
+ scan.c   |    2 +-
+ skel.c   |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/flex.skl b/flex.skl
+index 6ebf2fd..eaa355e 100644
+--- a/flex.skl
++++ b/flex.skl
+@@ -1074,7 +1074,7 @@ m4_ifdef( [[M4_YY_NOT_IN_HEADER]],
+ /* This used to be an fputs(), but since the string might contain NUL's,
+  * we now use fwrite().
+  */
+-#define ECHO fwrite( yytext, yyleng, 1, yyout )
++#define ECHO do { if (fwrite( yytext, yyleng, 1, yyout )) {} } while (0)
+ %endif
+ %if-c++-only C++ definition
+ #define ECHO LexerOutput( yytext, yyleng )
+diff --git a/scan.c b/scan.c
+index d7f5db3..1a079bf 100644
+--- a/scan.c
++++ b/scan.c
+@@ -2093,7 +2093,7 @@ static int input (void );
+ /* This used to be an fputs(), but since the string might contain NUL's,
+  * we now use fwrite().
+  */
+-#define ECHO fwrite( yytext, yyleng, 1, yyout )
++#define ECHO do { if (fwrite( yytext, yyleng, 1, yyout )) {} } while (0)
+ #endif
+ 
+ /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
+diff --git a/skel.c b/skel.c
+index ee9f6ef..b8a2b4b 100644
+--- a/skel.c
++++ b/skel.c
+@@ -1141,7 +1141,7 @@ const char *skel[] = {
+   "/* This used to be an fputs(), but since the string might contain NUL's,",
+   " * we now use fwrite().",
+   " */",
+-  "#define ECHO fwrite( yytext, yyleng, 1, yyout )",
++  "#define ECHO do { if (fwrite( yytext, yyleng, 1, yyout )) {} } while (0)",
+   "%endif",
+   "%if-c++-only C++ definition",
+   "#define ECHO LexerOutput( yytext, yyleng )",
+-- 
+1.7.9.5
+
