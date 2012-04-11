@@ -23,10 +23,19 @@ LIBC_DEPENDENCIES = "libsegfault \
     		     eglibc-dev \
     		     eglibc-utils \
     		     eglibc-thread-db \
-    		     eglibc-localedata-i18n \
-    		     eglibc-gconv-ibm850 \
-    		     eglibc-gconv-cp1252 \
-    		     eglibc-gconv-iso8859-1 \
-    		     eglibc-gconv-iso8859-15 \
-    		     locale-base-en-us \
-    		     locale-base-en-gb "
+		     ${@get_libc_locales_dependencies(d)}"
+
+LIBC_LOCALE_DEPENDENCIES = "\
+	eglibc-localedata-i18n \
+	eglibc-gconv-ibm850 \
+	eglibc-gconv-cp1252 \
+	eglibc-gconv-iso8859-1 \
+	eglibc-gconv-iso8859-15 \
+	locale-base-en-us \
+	locale-base-en-gb"
+
+def get_libc_locales_dependencies(d):
+    if 'libc-locales' in (d.getVar('DISTRO_FEATURES', True) or '').split() :
+        return d.getVar('LIBC_LOCALE_DEPENDENCIES', True) or ''
+    else:
+        return ''
