@@ -166,22 +166,23 @@ rpm_common_comand () {
 # install or remove the pkg
 rpm_update_pkg () {
 
+    manifest=$1
+    btmanifest=$manifest.bt
     local target_rootfs="${INSTALL_ROOTFS_RPM}"
 
     # Save the rpm's build time for incremental image generation, and the file
     # would be moved to ${T}
-    rm -f ${target_rootfs}/install/total_solution_bt.manifest
-    for i in `cat ${target_rootfs}/install/total_solution.manifest`; do
+    rm -f $btmanifest
+    for i in `cat $manifest`; do
         # Use "rpm" rather than "${RPM}" here, since we don't need the
         # '--dbpath' option
-        echo "$i `rpm -qp --qf '%{BUILDTIME}\n' $i`" >> \
-            ${target_rootfs}/install/total_solution_bt.manifest
+        echo "$i `rpm -qp --qf '%{BUILDTIME}\n' $i`" >> $btmanifest
     done
 
     # Only install the different pkgs if incremental image generation is set
     if [ "${INC_RPM_IMAGE_GEN}" = "1" -a -f ${T}/total_solution_bt.manifest -a \
         "${IMAGE_PKGTYPE}" = "rpm" ]; then
-        cur_list="${target_rootfs}/install/total_solution_bt.manifest"
+        cur_list="$btmanifest"
         pre_list="${T}/total_solution_bt.manifest"
         sort -u $cur_list -o $cur_list
         sort -u $pre_list -o $pre_list
@@ -203,8 +204,7 @@ rpm_update_pkg () {
             -Uvh ${target_rootfs}/install/incremental.manifest
     else
         # Attempt to install
-        rpm_common_comand --replacepkgs \
-            -Uhv ${target_rootfs}/install/total_solution.manifest
+        rpm_common_comand --replacepkgs -Uhv $manifest
     fi
 }
 
@@ -440,14 +440,7 @@ package_install_internal_rpm () {
 
 	fi
 
-	# If base-passwd or shadow are in the list of packages to install,
-	# ensure they are installed first to support later packages that
-	# may create custom users/groups (fixes Yocto bug #2127)
-	infile=${target_rootfs}/install/install_solution.manifest
-	outfile=${target_rootfs}/install/total_solution.manifest
-	cat $infile | grep /base-passwd-[0-9] > $outfile || true
-	cat $infile | grep /shadow-[0-9] >> $outfile || true
-	cat $infile | grep -v /shadow-[0-9] | grep -v /base-passwd-[0-9] >> $outfile || true
+	cat ${target_rootfs}/install/install_solution.manifest > ${target_rootfs}/install/total_solution.manifest
 	cat ${target_rootfs}/install/install_multilib_solution.manifest >> ${target_rootfs}/install/total_solution.manifest
 
 	# Construct install scriptlet wrapper
@@ -474,8 +467,46 @@ EOF
 
 	chmod 0755 ${WORKDIR}/scriptlet_wrapper
 
-    rpm_update_pkg
+	# RPM is special. It can't handle dependencies and preinstall scripts correctly. Its
+	# probably a feature. The only way to convince rpm to actually run the preinstall scripts 
+	# for base-passwd and shadow first before installing packages that depend on these packages 
+	# is to do two image installs, installing one set of packages, then the other.
+	if [ "${INC_RPM_IMAGE_GEN}" = "1" -a -f ${T}/total_solution_bt.manifest ]; then
+		echo "Skipping pre install due to exisitng image"
+	else
+		echo "# Initial Install manifest" > ${target_rootfs}/install/initial_install.manifest
+		echo "Installing base dependencies first (base-passwd, base-files and shadow) since rpm is special"
+		grep /base-passwd-[0-9] ${target_rootfs}/install/total_solution.manifest >> ${target_rootfs}/install/initial_install.manifest || true
+		grep /base-files-[0-9] ${target_rootfs}/install/total_solution.manifest >> ${target_rootfs}/install/initial_install.manifest || true
+		grep /shadow-[0-9] ${target_rootfs}/install/total_solution.manifest >> ${target_rootfs}/install/initial_install.manifest || true
 
+		# Generate an install solution by doing a --justdb install, then recreate it with
+		# an actual package install!
+		mkdir -p ${target_rootfs}/initial
+
+		${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
+			--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
+			-D "_dbpath ${target_rootfs}/initial" -D "`cat ${confbase}-base_archs.macro`" \
+			-D "`cat ${confbase}-ml_archs.macro`" \
+			-D "__dbi_txn create nofsync" \
+			-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
+			${target_rootfs}/install/initial_install.manifest
+
+		${RPM} -D "_dbpath ${target_rootfs}/initial" -qa --yaml \
+			-D "__dbi_txn create nofsync private" \
+			| grep -i 'Packageorigin' | cut -d : -f 2 > ${target_rootfs}/install/initial_solution.manifest
+
+		rpm_update_pkg ${target_rootfs}/install/initial_solution.manifest
+		
+		grep -Fv -f ${target_rootfs}/install/initial_solution.manifest ${target_rootfs}/install/total_solution.manifest > ${target_rootfs}/install/total_solution.manifest.new
+		mv ${target_rootfs}/install/total_solution.manifest.new ${target_rootfs}/install/total_solution.manifest
+		
+		rm -rf ${target_rootfs}/initial
+	fi
+
+	echo "Installing main solution manifest (${target_rootfs}/install/total_solution.manifest)"
+
+	rpm_update_pkg ${target_rootfs}/install/total_solution.manifest
 }
 
 python write_specfile () {
