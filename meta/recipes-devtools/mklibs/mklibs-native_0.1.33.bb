@@ -5,11 +5,12 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=98d31037b13d896e33890738ef01af64"
 DEPENDS = "python-native"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://ftp.de.debian.org/debian/pool/main/m/mklibs/${BPN}_${PV}.tar.gz \
 	file://ac_init_fix.patch\
 	file://fix_STT_GNU_IFUNC.patch\
+	file://include-unistd.h-for-gcc47.patch \
 "
 
 SRC_URI[md5sum] = "a462d9b802164993d247c1193116d78b"

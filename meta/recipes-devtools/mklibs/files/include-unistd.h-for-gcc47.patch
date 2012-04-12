@@ -1,0 +1,43 @@
+include <unistd.h> to fix build on gcc 4.7
+
+Many of the standard C++ library include files have been edited to no
+longer include <unistd.h> to remove namespace pollution in gcc 4.7, so
+we need include <unistd.h> manually sometimes.
+
+mklibs (0.1.33+nmu1) UNRELEASED; urgency=low
+ * Non-maintainer upload
+ * Fix FTBFS with gcc 4.7 due to missing <unistd.h> include (Closes: #667282).
+
+-- Cyril Brulebois <kibi@debian.org>  Thu, 05 Apr 2012 00:15:27 +0000
+
+mklibs (0.1.33) unstable; urgency=low
+ 
+  * Adjust the libc_pic directory for multiarch as well.
+
+Upstream-Status: Backport 
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+
+[Added upstream information about patch]
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+---
+ src/mklibs-readelf/elf.cpp |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/mklibs-readelf/elf.cpp b/src/mklibs-readelf/elf.cpp
+index 444f330..654c46f 100644
+--- a/src/mklibs-readelf/elf.cpp
++++ b/src/mklibs-readelf/elf.cpp
+@@ -25,6 +25,7 @@
+ #include <fcntl.h>
+ #include <sys/mman.h>
+ #include <sys/stat.h>
++#include <unistd.h>
+ 
+ using namespace Elf;
+ 
+-- 
+1.7.10
+
