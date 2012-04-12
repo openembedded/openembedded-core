@@ -486,8 +486,7 @@ EOF
 
 		${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
 			--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
-			-D "_dbpath ${target_rootfs}/initial" -D "`cat ${confbase}-base_archs.macro`" \
-			-D "`cat ${confbase}-ml_archs.macro`" \
+			-D "_dbpath ${target_rootfs}/initial" -D "`cat ${confbase}.macro`" \
 			-D "__dbi_txn create nofsync" \
 			-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 			${target_rootfs}/install/initial_install.manifest
