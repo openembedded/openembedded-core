@@ -305,9 +305,32 @@ python () {
     pkgconfigflags = d.getVarFlags("PACKAGECONFIG") or {}
     if pkgconfigflags:
         pkgconfig = (d.getVar('PACKAGECONFIG', True) or "").split()
+        pn = d.getVar("PN", True)
+        mlprefix = d.getVar("MLPREFIX", True)
+
+        def expandFilter(appends, extension, prefix):
+            appends = bb.utils.explode_deps(d.expand(" ".join(appends)))
+            newappends = []
+            for a in appends:
+               if a.endswith("-native") or a.endswith("-cross"):
+                   newappends.append(a)
+               elif a.startswith("virtual/"):
+                   subs = a.split("/", 1)[1]
+                   newappends.append("virtual/" + prefix + subs + extension)
+               else:
+                   newappends.append(prefix + a + extension)
+            return newappends
+
         def appendVar(varname, appends):
             if not appends:
                 return
+            if varname.find("DEPENDS") != -1:
+                if pn.endswith("-nativesdk"):
+                    appends = expandFilter(appends, "-nativesdk", "")
+                if pn.endswith("-native"):
+                    appends = expandFilter(appends, "-native", "")
+                if mlprefix:
+                    appends = expandFilter(appends, "", mlprefix)
             varname = d.expand(varname)
             d.appendVar(varname, " " + " ".join(appends))
 
@@ -324,11 +347,14 @@ python () {
             elif len(items) == 4:
                 enable, disable, depend, rdepend = items
             if flag in pkgconfig:
-                extradeps.append(depend)
-                extrardeps.append(rdepend)
-                extraconf.append(enable)
-            else:
-                extraconf.append(disable)
+                if depend:
+                    extradeps.append(depend)
+                if rdepend:
+                    extrardeps.append(rdepend)
+                if enable:
+                    extraconf.append(enable)
+            elif disable:
+                    extraconf.append(disable)
         appendVar('DEPENDS', extradeps)
         appendVar('RDEPENDS_${PN}', extrardeps)
         appendVar('EXTRA_OECONF', extraconf)
