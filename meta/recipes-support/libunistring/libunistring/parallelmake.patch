@@ -1,0 +1,26 @@
+Fix a parallel make race where cdefs.h uses the unused-parameter.h header file
+but has no dependency listed. This can result in an empty cdefs.h file which 
+results in a build failure like:
+
+| In file included from striconveh.c:30:0:
+| unistr.h:193:48: error: expected ';', ',' or ')' before '_GL_UNUSED_PARAMETER'
+| In file included from striconveh.c:30:0:
+| unistr.h:263:54: error: expected ';', ',' or ')' before '_GL_UNUSED_PARAMETER'
+
+Upstream-Status: Pending
+
+RP 2012/4/12
+
+Index: libunistring-0.9.3/lib/Makefile.am
+===================================================================
+--- libunistring-0.9.3.orig/lib/Makefile.am	2012-04-12 07:45:41.450059820 +0000
++++ libunistring-0.9.3/lib/Makefile.am	2012-04-12 07:48:45.434055559 +0000
+@@ -157,7 +157,7 @@
+ 
+ # unistring/cdefs.h is not public, but is included by other header files.
+ nobase_nodist_include_HEADERS += unistring/cdefs.h
+-unistring/cdefs.h : unistring/cdefs.in.h
++unistring/cdefs.h : unistring/cdefs.in.h $(UNUSED_PARAMETER_H)
+ 	@MKDIR_P@ unistring
+ 	rm -f $@-t $@
+ 	sed -e '/definition of _GL_UNUSED_PARAMETER/r $(UNUSED_PARAMETER_H)' \

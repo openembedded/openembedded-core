@@ -17,12 +17,13 @@ LICENSE = "GPLv3&LGPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                     file://COPYING.LIB;md5=6a6a8e020838b23406c81b19c1d46df6" 
 
-SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz"
+SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz \
+           file://parallelmake.patch"
 
 SRC_URI[md5sum] = "db8eca3b64163abadf8c40e5cecc261f"
 SRC_URI[sha256sum] = "610d3ec724fbdaa654afe3cff20b9f4d504be3fd296fded2e0f7f764041006a3"
 
-PR = "r1"
+PR = "r2"
 
 inherit autotools
 BBCLASSEXTEND = "native nativesdk"
