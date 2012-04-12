@@ -158,6 +158,7 @@ rpm_common_comand () {
         --predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
         -D "_var ${localstatedir}" \
         -D "_dbpath ${rpmlibdir}" \
+        -D "_tmppath /install/tmp" \
         --noparentdirs --nolinktos \
         -D "__dbi_txn create nofsync private" \
         -D "_cross_scriptlet_wrapper ${WORKDIR}/scriptlet_wrapper" $@
