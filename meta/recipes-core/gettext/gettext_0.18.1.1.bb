@@ -5,7 +5,7 @@ SECTION = "libs"
 LICENSE = "GPLv3+ & LGPL-2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-PR = "r11"
+PR = "r12"
 DEPENDS = "libxml2-native gettext-native virtual/libiconv ncurses expat"
 DEPENDS_virtclass-native = "libxml2-native gettext-minimal-native"
 PROVIDES = "virtual/libintl virtual/gettext"
@@ -17,6 +17,7 @@ SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
 SRC_URI_append_libc-uclibc = " file://wchar-uclibc.patch \
                                file://gnulib-uclibc-sched_param-def.patch \
                              "
+LDFLAGS_prepend_libc-uclibc = " -lrt -lpthread "
 
 SRC_URI[md5sum] = "3dd55b952826d2b32f51308f2f91aa89"
 SRC_URI[sha256sum] = "93ac71a7afa5b70c1b1032516663658c51e653087f42a3fc8044752c026443e9"
@@ -72,8 +73,7 @@ FILES_gettext-runtime_append_libc-uclibc = " ${libdir}/libintl.so.* \
 FILES_gettext-runtime-dev += "${libdir}/libasprintf.a \
                       ${includedir}/autosprintf.h \
                      "
-FILES_gettext-runtime-dev_append_libc-uclibc = " ${libdir}/libintl.a \
-                                                 ${libdir}/libintl.so \
+FILES_gettext-runtime-dev_append_libc-uclibc = " ${libdir}/libintl.so \
                                                  ${includedir}/libintl.h \
                                                "
 FILES_gettext-runtime-doc = "${mandir}/man1/gettext.* \
