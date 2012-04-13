@@ -20,7 +20,9 @@ def find_sccs(d):
 	sources_list=[]
 	for s in sources:
 		base, ext = os.path.splitext(os.path.basename(s))
-		if ext and ext in ('.scc'):
+		if ext and ext in ('.scc' '.cfg' '.patch'):
+			sources_list.append(s)
+		elif base and base in 'defconfig':
 			sources_list.append(s)
 
 	return sources_list
@@ -73,72 +75,9 @@ do_patch() {
 	fi
 
 	sccs="${@" ".join(find_sccs(d))}"
-	patches_and_dirs="${@" ".join(find_urls(d))}"
+	patches="${@" ".join(find_patches(d))}"
 
-	# This loops through all patches, and looks for directories that do
-	# not already have feature descriptions. If a directory doesn't have
-	# a feature description, we switch to the ${WORKDIR} variant of the
-	# feature (so we can write to it) and generate a feature for those
-	# patches. The generated feature will respect the patch order.
-	#
-	# By leaving source patch directories that already have .scc files
-	# as-is it means that a SRC_URI can only contain a .scc file, and all
-	# patches that the .scc references will be picked up, without having
-	# to be repeated on the SRC_URI line .. which is more intutive
 	set +e
-	patch_dirs=
-	for pp in ${patches_and_dirs}; do
-	        p=`echo $pp | cut -f1 -d:`
-		wp=`echo $pp | cut -f2 -d:`
-		pdir=`dirname ${p}`
-		pname=`basename ${p}`
-		scc=`find ${pdir} -maxdepth 1 -name '*.scc'`
-		if [ -z "${scc}" ]; then
-			# there is no scc file. We need to switch to someplace that we know
-		        # we can create content (the workdir)
-			workdir_subdir=`dirname ${wp}`
-			suggested_dir="${WORKDIR}/${workdir_subdir}"
-			echo ${gen_feature_dirs} | grep -q ${suggested_dir}
-			if [ $? -ne 0 ]; then
-				gen_feature_dirs="${gen_feature_dirs} ${suggested_dir}"
-			fi
-			# we call the file *.scc_tmp, so the test above will continue to find
-			# that patches from a common subdirectory don't have a scc file and 
-			# they'll be placed in order, into this file. We'll rename it later.
-			gen_feature_name="gen_`echo ${workdir_subdir} | sed 's%/%%g'`_desc.scc_tmp"
-			echo "patch ${pname}" >> ${WORKDIR}/${workdir_subdir}/${gen_feature_name}
-		else
-			suggested_dir="${pdir}"
-		fi
-		echo ${patch_dirs} | grep -q ${suggested_dir}
-		if [ $? -ne 0 ]; then
-			patch_dirs="${patch_dirs} ${suggested_dir}"
-		fi
-	done
-
-	# look for any found scc files, and ensure they are added to the list
-	# of directories passsed to updateme
-	for s in ${sccs}; do
-		sdir=`dirname ${s}`
-		echo ${patch_dirs} | grep -q ${sdir}
-		if [ $? -ne 0 ]; then
-			patch_dirs="${patch_dirs} ${sdir}"
-		fi
-	done
-
-	# go through the patch directories and look for any scc feature files
-	# that were constructed above. If one is found, rename it to ".scc" so
-	# the kernel patching can see it.
-	for pdir in ${patch_dirs}; do
-		scc=`find ${pdir} -maxdepth 1 -name '*.scc_tmp'`
-                if [ -n "${scc}" ]; then
-			new_scc=`echo ${scc} | sed 's/_tmp//'`
-			mv -f ${scc} ${new_scc}
-		fi
-	done
-
-	patch_dirs="${patch_dirs} ${WORKDIR}"
-
 	# add any explicitly referenced features onto the end of the feature
 	# list that is passed to the kernel build scripts.
 	if [ -n "${KERNEL_FEATURES}" ]; then
@@ -146,9 +85,10 @@ do_patch() {
 			addon_features="$addon_features --feature $feat"
 		done
 	fi
+
 	# updates or generates the target description
 	updateme --branch ${kbranch} -DKDESC=${KMACHINE}:${LINUX_KERNEL_TYPE} \
-                           ${addon_features} ${ARCH} ${KMACHINE} ${patch_dirs}
+                           ${addon_features} ${ARCH} ${KMACHINE} ${sccs} ${patches}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not update ${kbranch}"
 		exit 1
