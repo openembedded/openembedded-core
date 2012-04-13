@@ -24,7 +24,7 @@ do_configure () {
 	:
 }
 
-NO32LIBS ??= "0"
+NO32LIBS ??= "1"
 
 # Compile for the local machine arch...
 do_compile () {
