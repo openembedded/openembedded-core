@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://configure.in;beginline=3;endline=40;md5=99d4d7d68bbc4
                     file://Makefile.in;beginline=4;endline=38;md5=c2b512182a334e1bfa1edc4d1c84a298 "
 SECTION = "libs/network"
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${PV}/src/nspr-${PV}.tar.gz \
            file://remove-rpath-from-tests.patch \
@@ -162,6 +162,7 @@ do_install_append() {
     install -m 0755 ${TESTS} ${D}${libdir}/nspr/tests
 }
 
-FILES_${PN} = "${bindir}/*"
-FILES_${PN}-dev += "${libdir}/nspr/tests/*"
+FILES_${PN} = "${bindir}/* ${libdir}/lib*.so"
+FILES_${PN}-dev = "${libdir}/nspr/tests/* ${libdir}/pkgconfig \
+                ${includedir}/* ${datadir}/aclocal/* "
 FILES_${PN}-dbg += "${libdir}/nspr/tests/.debug/*"
