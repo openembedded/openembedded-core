@@ -63,6 +63,7 @@ SRC_URI = "svn://gcc.gnu.org/svn/gcc/branches;module=${BRANCH};proto=http \
 	   file://pr32219.patch \
 	   file://fortran-cross-compile-hack.patch \
 	   file://libgcc-sjlj-check.patch \
+	   file://cpp-honor-sysroot.patch \
 	  "
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/${BRANCH}"
@@ -102,6 +103,11 @@ EXTRA_OECONF_INTERMEDIATE = "--disable-libmudflap \
 				--disable-libssp"
 
 EXTRA_OECONF_append_libc-uclibc = " --disable-decimal-float "
+
+EXTRA_OECONF_PATHS = " \ 
+                      --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++ \ 
+                      --with-sysroot=${STAGING_DIR_TARGET} \ 
+                      --with-build-sysroot=${STAGING_DIR_TARGET}"
 
 do_configure_prepend () {
         # teach gcc to find correct target includedir when checking libc ssp support
