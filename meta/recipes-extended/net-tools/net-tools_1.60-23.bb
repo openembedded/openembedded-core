@@ -5,7 +5,7 @@ BUGTRACKER = "http://bugs.debian.org/net-tools"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b \
                     file://ifconfig.c;startline=11;endline=15;md5=da4c7bb79a5d0798faa99ef869721f4a"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/n/net-tools/net-tools_1.60.orig.tar.gz;name=tarball \
            ${DEBIAN_MIRROR}/main/n/net-tools/${BPN}_${PV}.diff.gz;apply=no;name=patch \
@@ -67,26 +67,16 @@ do_compile() {
 	oe_runmake
 }
 
+inherit update-alternatives
+
+base_sbindir_progs = "arp ifconfig ipmaddr iptunnel mii-tool nameif plipconfig rarp route slattach"
+ALTERNATIVE_LINKS += "${base_sbindir}/${@' ${base_sbindir}/'.join((d.getVar('base_sbindir_progs', True)).split())}"
+
+base_bindir_progs  = "dnsdomainname domainname hostname netstat nisdomainname ypdomainname"
+ALTERNATIVE_LINKS += "${base_bindir}/${@' ${base_bindir}/'.join((d.getVar('base_bindir_progs', True)).split())}"
+
+ALTERNATIVE_PRIORITY = "100"
+
 do_install() {
 	oe_runmake 'BASEDIR=${D}' install
-
-	for app in ${D}/${base_sbindir}/* ${D}/${base_bindir}/*; do
-		mv $app $app.${PN}
-	done
-}
-
-pkg_postinst_${PN} () {
-	for app in arp ifconfig ipmaddr iptunnel mii-tool nameif plipconfig rarp route slattach ; do
-		update-alternatives --install ${base_sbindir}/$app $app $app.${PN} 100
-	done
-
-	for app in dnsdomainname domainname hostname netstat nisdomainname ypdomainname ; do
-		update-alternatives --install ${base_bindir}/$app $app $app.${PN} 100
-	done
-}
-
-pkg_prerm_${PN} () {
-	for app in arp ifconfig ipmaddr iptunnel mii-tool nameif plipconfig rarp route slattach dnsdomainname domainname hostname netstat nisdomainname ypdomainname ; do
-		update-alternatives --remove $app $app.${PN}
-	done
 }
