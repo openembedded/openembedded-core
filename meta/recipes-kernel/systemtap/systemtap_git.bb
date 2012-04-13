@@ -20,6 +20,10 @@ EXTRA_OECONF += "--with-libelf=${STAGING_DIR_TARGET} --without-rpm \
 	     ac_cv_file__usr_include_avahi_client=no \
 	     ac_cv_file__usr_include_avahi_common=no "
 
+STAP_DOCS ?= "--disable-docs --disable-publican --disable-refdocs"
+
+EXTRA_OECONF += "${STAP_DOCS} "
+
 inherit autotools gettext
 
 BBCLASSEXTEND = "native nativesdk"
