@@ -54,3 +54,5 @@ do_configure_prepend() {
 GLIBC_ADDONS ?= "ports,nptl,libidn"
 SDK_GLIBC_ADDONS ?= "ports,nptl,libidn"
 GLIBC_ADDONS_virtclass-nativesdk = "${SDK_GLIBC_ADDONS}"
+
+CACHED_CONFIGUREVARS = "ac_cv_path_PERL=${bindir}/perl"
