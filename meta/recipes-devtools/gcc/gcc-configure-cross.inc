@@ -3,12 +3,12 @@ require gcc-configure-common.inc
 USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibc", "no", "", d )}'
 
 EXTRA_OECONF += " --enable-poison-system-directories \
-		  --with-headers=${STAGING_DIR_TARGET}${SYSTEMHEADERS} \
 		"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
 EXTRA_OECONF_PATHS = " \
+		      --with-headers=${STAGING_DIR_TARGET}${SYSTEMHEADERS} \
 		      --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++ \
                       --with-sysroot=${STAGING_DIR_TARGET} \
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
