@@ -37,8 +37,6 @@ COMMON_LICENSE_DIR ??= "${COREBASE}/meta/files/common-licenses"
 
 BB_GENERATE_MIRROR_TARBALLS ??= "0"
 
-NO32LIBS ??= "1"
-
 # Default to emitting logfiles if a build fails.
 BBINCLUDELOGS ??= "yes"
 SDK_VERSION ??= "oe-core.0"
