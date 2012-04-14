@@ -69,15 +69,16 @@ done
 }
 
 update_alternatives_batch_doinstall() {
-if [ "${PN}" = "${BPN}" ] ; then
 	for link in ${ALTERNATIVE_LINKS}
 	do
 		mv ${D}${link} ${D}${link}.${PN}
 	done
-fi
 }
 
 def update_alternatives_after_parse(d):
+    if bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d):
+        return
+
     if d.getVar('ALTERNATIVE_LINKS') != None:
         doinstall = d.getVar('do_install', 0)
         doinstall += d.getVar('update_alternatives_batch_doinstall', 0)
