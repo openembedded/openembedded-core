@@ -1,0 +1,41 @@
+UpstreamStatus: Pending
+
+This patch quitens this error:
+
+| make[3]: Entering directory
+`/home/nitin/builds/build0/tmp/work/x86_64-linux/grub-efi-i586-native-1.99-r7/grub-1.99/grub-core'
+| gcc -DHAVE_CONFIG_H -I. -I..  -Wall -W -I../include -I../include 
+-DGRUB_MACHINE_EFI=1 -DGRUB_MACHINE=I386_EFI -nostdinc -isystem
+/usr/lib/gcc/x86_64-redhat-linux/4.7.0/include -DGRUB_FILE=\"fs/btrfs.c\" -I.
+-I. -I.. -I.. -I../include -I../include   
+-isystem/home/nitin/builds/build0/tmp/sysroots/x86_64-linux/usr/include -O2
+-pipe -g -feliminate-unused-debug-types -Wall -W -Wshadow -Wpointer-arith
+-Wmissing-prototypes -Wundef -Wstrict-prototypes -g -falign-jumps=1
+-falign-loops=1 -falign-functions=1 -mno-mmx -mno-sse -mno-sse2 -mno-3dnow
+-fno-dwarf2-cfi-asm -m32 -fno-stack-protector -mno-stack-arg-probe -Werror
+-Wno-trampolines          -ffreestanding 
+-isystem/home/nitin/builds/build0/tmp/sysroots/x86_64-linux/usr/include -O2
+-pipe -c -o fs/btrfs_module-btrfs.o `test -f 'fs/btrfs.c' || echo
+'./'`fs/btrfs.c
+| fs/btrfs.c: In function 'grub_btrfs_read_logical':
+| fs/btrfs.c:791:5: error: 'err' may be used uninitialized in this function
+[-Werror=maybe-uninitialized]
+| fs/btrfs.c:592:18: note: 'err' was declared here
+| cc1: all warnings being treated as errors
+| make[3]: *** [fs/btrfs_module-btrfs.o] Error 1
+
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+2012/04/13
+Index: grub-1.99/grub-core/fs/btrfs.c
+===================================================================
+--- grub-1.99.orig/grub-core/fs/btrfs.c
++++ grub-1.99/grub-core/fs/btrfs.c
+@@ -589,7 +589,7 @@ grub_btrfs_read_logical (struct grub_btr
+       struct grub_btrfs_key *key;
+       struct grub_btrfs_chunk_item *chunk;  
+       grub_uint64_t csize;
+-      grub_err_t err; 
++      grub_err_t err = 0; 
+       struct grub_btrfs_key key_out;
+       int challoc = 0;
+       grub_device_t dev;

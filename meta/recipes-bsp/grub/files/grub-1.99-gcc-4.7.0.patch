@@ -1,0 +1,34 @@
+Upstream-Status: backport from fedora 
+
+2012/04/13
+Signed-Off-by: Nitin A Kamble <nitin.a.kamble@intel.com>
+
+From b0f4ef523b69a497d69820c09bbb07484a6b09cc Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Wed, 7 Mar 2012 09:53:50 -0500
+Subject: [PATCH] Fix gcc error that kills build.
+
+---
+ conf/Makefile.common         |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/conf/Makefile.common b/conf/Makefile.common
+index 2040a2e..b3ba765 100644
+--- a/conf/Makefile.common
++++ b/conf/Makefile.common
+@@ -11,10 +11,10 @@ if COND_i386_pc
+   CFLAGS_PLATFORM += -mrtd -mregparm=3
+ endif
+ if COND_i386_efi
+-  LDFLAGS_PLATFORM = -melf_i386
++  LDFLAGS_PLATFORM = -m32
+ endif
+ if COND_x86_64_efi
+-  LDFLAGS_PLATFORM = -melf_x86_64
++  LDFLAGS_PLATFORM = -m64
+ endif
+ if COND_i386_qemu
+   CFLAGS_PLATFORM += -mrtd -mregparm=3
+-- 
+1.7.7.6
+

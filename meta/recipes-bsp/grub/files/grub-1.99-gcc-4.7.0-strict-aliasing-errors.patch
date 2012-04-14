@@ -1,0 +1,147 @@
+Upstream-Status: Pending
+
+This patch fixes these strick-aliasing errors with gcc 4.7
+
+
+| gcc -DHAVE_CONFIG_H -I. -I..  -Wall -W -I../include -I../include  -DGRUB_MACHINE_EFI=1 -DGRUB_MACHINE=I386_EFI -nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/4.7.0/include -DGRUB_FILE=\"fs/zfs/zfs.c\" -I. -I. -I.. -I.. -I../include -I../include    -isystem/home/nitin/builds/build0/tmp/sysroots/x86_64-linux/usr/include -O2 -pipe -g -feliminate-unused-debug-types -Wall -W -Wshadow -Wpointer-arith -Wmissing-prototypes -Wundef -Wstrict-prototypes -g -falign-jumps=1 -falign-loops=1 -falign-functions=1 -mno-mmx -mno-sse -mno-sse2 -mno-3dnow -fno-dwarf2-cfi-asm -m32 -fno-stack-protector -mno-stack-arg-probe -Werror -Wno-trampolines          -ffreestanding  -isystem/home/nitin/builds/build0/tmp/sysroots/x86_64-linux/usr/include -O2 -pipe -c -o fs/zfs/zfs_module-zfs.o `test -f 'fs/zfs/zfs.c' || echo './'`fs/zfs/zfs.c
+| fs/zfs/zfs.c: In function 'get_filesystem_dnode':
+| fs/zfs/zfs.c:1449:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:1449:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c: In function 'make_mdn':
+| fs/zfs/zfs.c:1478:3: error: dereferencing type-punned pointer will break strict-alERROR: Function failed: do_compile (see /home/nitin/builds/build0/tmp/work/x86_64-linux/grub-efi-i586-native-1.99-r7/temp/log.do_compile.9293 for further information)
+| iasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c: In function 'dnode_get_fullpath':
+| fs/zfs/zfs.c:1554:3: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:1554:3: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:1571:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:1571:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c: In function 'grub_zfs_open':
+| fs/zfs/zfs.c:2234:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:2234:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c: In function 'fill_fs_info':
+| fs/zfs/zfs.c:2362:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:2362:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:2395:3: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:2395:3: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c: In function 'iterate_zap':
+| fs/zfs/zfs.c:2420:5: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:2420:5: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c: In function 'grub_zfs_dir':
+| fs/zfs/zfs.c:2483:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:2483:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:2484:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:2484:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:2502:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| fs/zfs/zfs.c:2502:7: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+| cc1: all warnings being treated as errors
+| make[3]: *** [fs/zfs/zfs_module-zfs.o] Error 1
+
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+2012/04/13
+
+Index: grub-1.99/grub-core/fs/zfs/zfs.c
+===================================================================
+--- grub-1.99.orig/grub-core/fs/zfs/zfs.c
++++ grub-1.99/grub-core/fs/zfs/zfs.c
+@@ -1446,7 +1446,8 @@ get_filesystem_dnode (dnode_end_t * mosm
+       ch = *fsname;
+       *fsname = 0;
+ 
+-      childobj = grub_zfs_to_cpu64 ((((dsl_dir_phys_t *) DN_BONUS (&mdn->dn)))->dd_child_dir_zapobj, mdn->endian);
++      dsl_dir_phys_t * tmp =  DN_BONUS (&mdn->dn);
++      childobj = grub_zfs_to_cpu64 (tmp->dd_child_dir_zapobj, mdn->endian);
+       err = dnode_get (mosmdn, childobj,
+ 		       DMU_OT_DSL_DIR_CHILD_MAP, mdn, data);
+       if (err)
+@@ -1475,7 +1476,8 @@ make_mdn (dnode_end_t * mdn, struct grub
+ 
+   grub_dprintf ("zfs", "endian = %d\n", mdn->endian);
+ 
+-  bp = &(((dsl_dataset_phys_t *) DN_BONUS (&mdn->dn))->ds_bp);
++  dsl_dataset_phys_t * tmp = DN_BONUS(&mdn->dn);
++  bp = &(tmp->ds_bp);
+   err = zio_read (bp, mdn->endian, &osp, &ospsize, data);
+   if (err)
+     return err;
+@@ -1551,7 +1553,8 @@ dnode_get_fullpath (const char *fullpath
+ 
+   grub_dprintf ("zfs", "alive\n");
+ 
+-  headobj = grub_zfs_to_cpu64 (((dsl_dir_phys_t *) DN_BONUS (&dn->dn))->dd_head_dataset_obj, dn->endian);
++  dsl_dir_phys_t * tmp1 = DN_BONUS (&dn->dn);
++  headobj = grub_zfs_to_cpu64 (tmp1->dd_head_dataset_obj, dn->endian);
+ 
+   grub_dprintf ("zfs", "endian = %d\n", mdn->endian);
+ 
+@@ -1568,7 +1571,8 @@ dnode_get_fullpath (const char *fullpath
+     {
+       grub_uint64_t snapobj;
+ 
+-      snapobj = grub_zfs_to_cpu64 (((dsl_dataset_phys_t *) DN_BONUS (&mdn->dn))->ds_snapnames_zapobj, mdn->endian);
++      dsl_dataset_phys_t * tmp2 = DN_BONUS (&mdn->dn);
++      snapobj = grub_zfs_to_cpu64 (tmp2->ds_snapnames_zapobj, mdn->endian);
+ 
+       err = dnode_get (&(data->mos), snapobj, 
+ 		       DMU_OT_DSL_DS_SNAP_MAP, mdn, data);
+@@ -2231,7 +2235,8 @@ grub_zfs_open (struct grub_file *file, c
+     }
+   else
+     {
+-      file->size = grub_zfs_to_cpu64 (((znode_phys_t *) DN_BONUS (&data->dnode.dn))->zp_size, data->dnode.endian);
++      znode_phys_t * tmp =  DN_BONUS (&data->dnode.dn);
++      file->size = grub_zfs_to_cpu64 (tmp->zp_size, data->dnode.endian);
+     }
+ 
+   file->data = data;
+@@ -2359,7 +2364,8 @@ fill_fs_info (struct grub_dirhook_info *
+   
+   if (mdn.dn.dn_type == DMU_OT_DSL_DIR)
+     {
+-      headobj = grub_zfs_to_cpu64 (((dsl_dir_phys_t *) DN_BONUS (&mdn.dn))->dd_head_dataset_obj, mdn.endian);
++      dsl_dir_phys_t * tmp1 = DN_BONUS (&mdn.dn);
++      headobj = grub_zfs_to_cpu64 (tmp1->dd_head_dataset_obj, mdn.endian);
+ 
+       err = dnode_get (&(data->mos), headobj, DMU_OT_DSL_DATASET, &mdn, data);
+       if (err)
+@@ -2392,7 +2398,8 @@ fill_fs_info (struct grub_dirhook_info *
+     }
+   
+   info->mtimeset = 1;
+-  info->mtime = grub_zfs_to_cpu64 (((znode_phys_t *) DN_BONUS (&dn.dn))->zp_mtime[0], dn.endian);
++  znode_phys_t * tmp2 = DN_BONUS (&dn.dn);
++  info->mtime = grub_zfs_to_cpu64 (tmp2->zp_mtime[0], dn.endian);
+   return;
+ }
+ 
+@@ -2417,7 +2424,8 @@ grub_zfs_dir (grub_device_t device, cons
+ 
+     dnode_get (&(data->mdn), val, 0, &dn, data);
+     info.mtimeset = 1;
+-    info.mtime = grub_zfs_to_cpu64 (((znode_phys_t *) DN_BONUS (&dn.dn))->zp_mtime[0], dn.endian);
++    znode_phys_t * tmp1 = DN_BONUS (&dn.dn);
++    info.mtime = grub_zfs_to_cpu64 (tmp1->zp_mtime[0], dn.endian);
+     info.dir = (dn.dn.dn_type == DMU_OT_DIRECTORY_CONTENTS);
+     grub_dprintf ("zfs", "type=%d, name=%s\n", 
+ 		  (int)dn.dn.dn_type, (char *)name);
+@@ -2480,8 +2488,9 @@ grub_zfs_dir (grub_device_t device, cons
+       fill_fs_info (&info, data->dnode, data);
+       hook ("@", &info);
+       
+-      childobj = grub_zfs_to_cpu64 (((dsl_dir_phys_t *) DN_BONUS (&data->dnode.dn))->dd_child_dir_zapobj, data->dnode.endian);
+-      headobj = grub_zfs_to_cpu64 (((dsl_dir_phys_t *) DN_BONUS (&data->dnode.dn))->dd_head_dataset_obj, data->dnode.endian);
++      dsl_dir_phys_t * tmp2 = DN_BONUS (&data->dnode.dn);
++      childobj = grub_zfs_to_cpu64 (tmp2->dd_child_dir_zapobj, data->dnode.endian);
++      headobj = grub_zfs_to_cpu64 (tmp2->dd_head_dataset_obj, data->dnode.endian);
+       err = dnode_get (&(data->mos), childobj,
+ 		       DMU_OT_DSL_DIR_CHILD_MAP, &dn, data);
+       if (err)
+@@ -2499,7 +2508,8 @@ grub_zfs_dir (grub_device_t device, cons
+ 	  return err;
+ 	}
+ 
+-      snapobj = grub_zfs_to_cpu64 (((dsl_dataset_phys_t *) DN_BONUS (&dn.dn))->ds_snapnames_zapobj, dn.endian);
++      dsl_dataset_phys_t * tmp3 = DN_BONUS (&dn.dn);
++      snapobj = grub_zfs_to_cpu64 (tmp3->ds_snapnames_zapobj, dn.endian);
+ 
+       err = dnode_get (&(data->mos), snapobj,
+ 		       DMU_OT_DSL_DS_SNAP_MAP, &dn, data);
