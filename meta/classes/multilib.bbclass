@@ -20,6 +20,9 @@ python multilib_virtclass_handler () {
         val=e.data.getVar(name, True)
         if val:
             e.data.setVar(name + "_MULTILIB_ORIGINAL", val)
+
+    # Expand this since this won't work correctly once we set a multilib into place
+    e.data.setVar("ALL_MULTILIB_PACKAGE_ARCHS", e.data.getVar("ALL_MULTILIB_PACKAGE_ARCHS", True))
  
     override = ":virtclass-multilib-" + variant
 
