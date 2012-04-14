@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=08c553a87d4e51bbed50b20e0adcaede \
 
 DEPENDS = "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} = "shadow-securetty ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_PLUGINS}', '', d)}"
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "http://pkg-shadow.alioth.debian.org/releases/${BPN}-${PV}.tar.bz2 \
            file://login_defs_pam.sed \
@@ -84,32 +84,35 @@ do_install_append() {
 	sed -i '/^CREATE_MAIL_SPOOL/ s:^:#:' ${D}${sysconfdir}/default/useradd
 
 	install -d ${D}${sbindir} ${D}${base_sbindir} ${D}${base_bindir} 
-	for i in passwd chfn newgrp chsh groups ; do
-		mv ${D}${bindir}/$i ${D}${bindir}/$i.${PN}
-	done
 
-	mv ${D}${sbindir}/chpasswd ${D}${sbindir}/chpasswd.${PN}
-	mv ${D}${sbindir}/vigr ${D}${base_sbindir}/vigr.${PN}
-	mv ${D}${sbindir}/vipw ${D}${base_sbindir}/vipw.${PN}
-	mv ${D}${bindir}/login ${D}${base_bindir}/login.${PN}
+	# Move binaries to the locations we want
+	rm ${D}${sbindir}/vigr
+	ln -sf vipw.${PN} ${D}${base_sbindir}/vigr
+	mv ${D}${sbindir}/vipw ${D}${base_sbindir}/vipw
+	mv ${D}${bindir}/login ${D}${base_bindir}/login
 
 	# Handle link properly after rename, otherwise missing files would
 	# lead rpm failed dependencies.
-	ln -sf vipw.${PN} ${D}${base_sbindir}/vigr.${PN}
 	ln -sf newgrp.${PN} ${D}${bindir}/sg
 }
 
-pkg_postinst_${PN} () {
-	update-alternatives --install ${bindir}/passwd passwd passwd.${PN} 200
-	update-alternatives --install ${sbindir}/chpasswd chpasswd chpasswd.${PN} 200
-	update-alternatives --install ${bindir}/chfn chfn chfn.${PN} 200
-	update-alternatives --install ${bindir}/newgrp newgrp newgrp.${PN} 200
-	update-alternatives --install ${bindir}/chsh chsh chsh.${PN} 200
-	update-alternatives --install ${bindir}/groups groups groups.${PN} 200
-	update-alternatives --install ${base_bindir}/login login login.${PN} 200
-	update-alternatives --install ${base_sbindir}/vipw vipw vipw.${PN} 200
-	update-alternatives --install ${base_sbindir}/vigr vigr vigr.${PN} 200
+inherit update-alternatives
 
+ALTERNATIVE_PRIORITY = "200"
+
+bindir_progs = "passwd chfn newgrp chsh groups"
+ALTERNATIVE_LINKS += "${bindir}/${@' ${bindir}/'.join((d.getVar('bindir_progs', True)).split())}"
+
+sbindir_progs = "chpasswd"
+ALTERNATIVE_LINKS += "${sbindir}/${@' ${sbindir}/'.join((d.getVar('sbindir_progs', True)).split())}"
+
+base_bindir_progs = "login"
+ALTERNATIVE_LINKS += "${base_bindir}/${@' ${base_bindir}/'.join((d.getVar('base_bindir_progs', True)).split())}"
+
+base_sbindir_progs = "vipw vigr"
+ALTERNATIVE_LINKS += "${base_sbindir}/${@' ${base_sbindir}/'.join((d.getVar('base_sbindir_progs', True)).split())}"
+
+pkg_postinst_${PN} () {
 	if [ "x$D" != "x" ]; then
 	  rootarg="--root=$D"
 	else
@@ -118,10 +121,4 @@ pkg_postinst_${PN} () {
 
 	pwconv $rootarg
 	grpconv $rootarg
-}
-
-pkg_prerm_${PN} () {
-	for i in passwd chpasswd chfn newgrp chsh login vipw vigr ; do
-		update-alternatives --remove $i $i.${PN}
-	done
 }
