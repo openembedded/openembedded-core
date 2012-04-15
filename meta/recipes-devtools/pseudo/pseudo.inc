@@ -13,10 +13,7 @@ FILES_${PN} = "${libdir}/pseudo/lib*/libpseudo.so ${bindir}/* ${localstatedir}/p
 FILES_${PN}-dbg += "${libdir}/pseudo/lib*/.debug"
 PROVIDES += "virtual/fakeroot"
 
-# In the nativesdk case, we'll already search the searchpaths
-# pseudo tries to build in so override RPATH
 MAKEOPTS = ""
-MAKEOPTS_virtclass-nativesdk = "'RPATH='"
 
 inherit siteinfo
 
@@ -78,6 +75,8 @@ do_install_append_virtclass-nativesdk () {
 		mkdir -p ${D}${prefix}/lib/pseudo/lib
 		cp lib/pseudo/lib/libpseudo.so ${D}${prefix}/lib/pseudo/lib/.
 	fi
+
+	create_wrapper ${D}${bindir}/pseudo LD_LIBRARY_PATH=${base_libdir}:${libdir}
 }
 
 BBCLASSEXTEND = "native nativesdk"
