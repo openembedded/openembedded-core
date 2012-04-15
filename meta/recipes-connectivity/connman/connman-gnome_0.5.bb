@@ -8,12 +8,16 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a \
 
 DEPENDS = "gtk+ dbus"
 
-PR = "r8"
+PR = "r9"
 
-SRCREV = "78d3c39db6f3f7977b466305110faa8ca5f74ec8"
-SRC_URI = "git://github.com/connectivity/connman-gnome.git;protocol=git \
-           file://3g.patch \
-           file://security-type.patch"
+SRCREV = "42c652d123ea133d0a0930b96e8e39dbd0c597b5"
+SRC_URI = "git://git.kernel.org/pub/scm/network/connman/connman-gnome.git \
+           file://0001-Monitor-the-Manager-s-State-property.patch \
+           file://0002-Update-for-ConnMan-0.79-API-changes.patch \
+           file://0003-Fix-setting-IPv4-configuration.patch \
+           file://0004-Handle-WiFi-authentication-using-an-agent.patch \
+           file://0005-Remove-all-handling-of-Passphrase-property.patch \
+           file://0006-Fix-status-descriptions-in-properties-tree.patch"
 
 S = "${WORKDIR}/git"
 

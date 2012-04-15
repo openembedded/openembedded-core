@@ -1,0 +1,42 @@
+From ce510179cba98c906974bdbd6bda2b586b6058c1 Mon Sep 17 00:00:00 2001
+Message-Id: <ce510179cba98c906974bdbd6bda2b586b6058c1.1334369310.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1334369310.git.paul.eggleton@linux.intel.com>
+References: <cover.1334369310.git.paul.eggleton@linux.intel.com>
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Sat, 14 Apr 2012 02:39:15 +0100
+Subject: [PATCH 6/6] Fix status descriptions in properties tree
+
+* configurating -> configuring
+* connnected -> connected
+* Use i18n wrappers
+
+Upstream-Status: Submitted
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ properties/main.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/properties/main.c b/properties/main.c
+index e266f03..c05f443 100644
+--- a/properties/main.c
++++ b/properties/main.c
+@@ -332,12 +332,12 @@ static void device_to_text(GtkTreeViewColumn *column, GtkCellRenderer *cell,
+ 		/* Show the AP name */
+ 		title = N_(name);
+ 		if (g_str_equal(state, "association") == TRUE)
+-			state = "associating...";
++			state = _("associating...");
+ 		else if (g_str_equal(state, "configuration") == TRUE)
+-			state = "configurating...";
++			state = _("configuring...");
+ 		else if (g_str_equal(state, "ready") == TRUE ||
+ 				g_str_equal(state, "online") == TRUE)
+-			state = "connnected";
++			state = _("connected");
+ 		else
+ 			state = "";
+ 		markup = g_strdup_printf("  %s\n  %s", title, state);
+-- 
+1.7.5.4
+

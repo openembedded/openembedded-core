@@ -1,0 +1,865 @@
+From 8b8fd038474def8452354105b40738a402f28d19 Mon Sep 17 00:00:00 2001
+Message-Id: <8b8fd038474def8452354105b40738a402f28d19.1334369310.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1334369310.git.paul.eggleton@linux.intel.com>
+References: <cover.1334369310.git.paul.eggleton@linux.intel.com>
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Thu, 12 Apr 2012 00:35:00 +0100
+Subject: [PATCH 2/6] Update for ConnMan 0.79 API changes
+
+* Use Manager.GetServices method instead of Manager.Services property
+* Use Manager.GetTechnologies / Technology.Powered instead of
+  Manager.EnabledTechnologies method
+* Use Technology.Powered property instead of Manager.EnableTechnology
+  and Manager.DisableTechnology methods
+* Use Technology.Scan method instead of Manager.RequestScan method
+* Listen for ServicesAdded, ServicesRemoved, TechnologyAdded and
+  TechnologyRemoved signals instead of monitoring the old Services
+  and EnabledTechnologies properties
+
+Also remove unused code relating to the old API.
+
+Upstream-Status: Submitted
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ common/connman-client.c |   90 ++-----------
+ common/connman-client.h |   12 +-
+ common/connman-dbus.c   |  359 +++++++++++++++++++++++++++--------------------
+ common/connman-dbus.h   |    1 +
+ common/connman-dbus.xml |   17 +--
+ common/marshal.list     |    2 +
+ properties/cellular.c   |    6 +-
+ properties/ethernet.c   |    8 +-
+ properties/main.c       |   14 +--
+ properties/wifi.c       |    8 +-
+ 10 files changed, 245 insertions(+), 272 deletions(-)
+
+diff --git a/common/connman-client.c b/common/connman-client.c
+index 407aea0..9d755c4 100644
+--- a/common/connman-client.c
++++ b/common/connman-client.c
+@@ -112,9 +112,7 @@ static void connman_client_init(ConnmanClient *client)
+ 				G_TYPE_STRING,  /* address */
+ 				G_TYPE_STRING,  /* netmask */
+ 				G_TYPE_STRING,  /* gateway */
+-				G_TYPE_BOOLEAN, /* ethernet enabled */
+-				G_TYPE_BOOLEAN, /* wifi enabled */
+-				G_TYPE_BOOLEAN, /* cellular enabled */
++				G_TYPE_BOOLEAN, /* powered */
+ 				G_TYPE_BOOLEAN);/* offline */
+ 
+ 	g_object_set_data(G_OBJECT(priv->store),
+@@ -288,7 +286,7 @@ void connman_client_set_powered(ConnmanClient *client, const gchar *device,
+ 	DBusGProxy *proxy;
+ 	GValue value = { 0 };
+ 
+-	DBG("client %p", client);
++	DBG("client %p device %s", client, device);
+ 
+ 	if (device == NULL)
+ 		return;
+@@ -300,64 +298,34 @@ void connman_client_set_powered(ConnmanClient *client, const gchar *device,
+ 	g_value_init(&value, G_TYPE_BOOLEAN);
+ 	g_value_set_boolean(&value, powered);
+ 
+-	connman_set_property(proxy, "Powered", &value, NULL);
+-
+-	g_object_unref(proxy);
+-}
+-
+-static gboolean device_scan(GtkTreeModel *model, GtkTreePath *path,
+-					GtkTreeIter *iter, gpointer user_data)
+-{
+-	DBusGProxy *proxy;
+-
+-	gtk_tree_model_get(model, iter, CONNMAN_COLUMN_PROXY, &proxy, -1);
+-
+-	if (proxy == NULL)
+-		return FALSE;
+-
+-	if (g_str_equal(dbus_g_proxy_get_interface(proxy),
+-					CONNMAN_SERVICE_INTERFACE) == FALSE)
+-		return FALSE;
+-
+-	connman_propose_scan(proxy, NULL);
++	GError *error = NULL;
++	gboolean ret = connman_set_property(proxy, "Powered", &value, &error);
++	if( error )
++		fprintf (stderr, "error: %s\n", error->message);
+ 
+ 	g_object_unref(proxy);
+-
+-	return FALSE;
+ }
+ 
+-void connman_client_propose_scan(ConnmanClient *client, const gchar *device)
++void connman_client_scan(ConnmanClient *client, const gchar *device, 
++						connman_scan_reply callback, gpointer user_data)
+ {
+ 	ConnmanClientPrivate *priv = CONNMAN_CLIENT_GET_PRIVATE(client);
+ 	DBusGProxy *proxy;
+ 
+-	DBG("client %p", client);
++	DBG("client %p device %s", client, device);
+ 
+-	if (device == NULL) {
+-		gtk_tree_model_foreach(GTK_TREE_MODEL(priv->store),
+-							device_scan, NULL);
++	if (device == NULL)
+ 		return;
+-	}
+ 
+ 	proxy = connman_dbus_get_proxy(priv->store, device);
+ 	if (proxy == NULL)
+ 		return;
+ 
+-	connman_propose_scan(proxy, NULL);
++	connman_scan_async(proxy, callback, user_data);
+ 
+ 	g_object_unref(proxy);
+ }
+ 
+-void connman_client_request_scan(ConnmanClient *client, char *scantype,
+-				connman_request_scan_reply callback, gpointer userdata)
+-{
+-	ConnmanClientPrivate *priv = CONNMAN_CLIENT_GET_PRIVATE(client);
+-
+-	DBG("client %p", client);
+-
+-	connman_request_scan_async(priv->manager, scantype, callback, userdata);
+-}
+-
+ gboolean connman_client_get_offline_status(ConnmanClient *client)
+ {
+ 	GHashTable *hash;
+@@ -600,39 +568,3 @@ void connman_client_remove(ConnmanClient *client, const gchar *network)
+ 
+ 	g_object_unref(proxy);
+ }
+-
+-void connman_client_enable_technology(ConnmanClient *client, const char *network,
+-				      const gchar *technology)
+-{
+-	ConnmanClientPrivate *priv = CONNMAN_CLIENT_GET_PRIVATE(client);
+-	DBusGProxy *proxy;
+-	
+-	if (network== NULL)
+-		return;
+-
+-	proxy = connman_dbus_get_proxy(priv->store, network);
+-	if (proxy == NULL)
+-		return;
+-
+-	connman_enable_technology(proxy, technology, NULL);
+-
+-	g_object_unref(proxy);
+-}
+-
+-void connman_client_disable_technology(ConnmanClient *client, const char *network,
+-				      const gchar *technology)
+-{
+-	ConnmanClientPrivate *priv = CONNMAN_CLIENT_GET_PRIVATE(client);
+-	DBusGProxy *proxy;
+-
+-	if (network == NULL)
+-		return;
+-
+-	proxy = connman_dbus_get_proxy(priv->store, network);
+-	if (proxy == NULL)
+-		return;
+-
+-	connman_disable_technology(proxy, technology, NULL);
+-
+-	g_object_unref(proxy);
+-}
+diff --git a/common/connman-client.h b/common/connman-client.h
+index 15fa098..6fe772c 100644
+--- a/common/connman-client.h
++++ b/common/connman-client.h
+@@ -69,7 +69,8 @@ void connman_client_set_powered(ConnmanClient *client, const gchar *device,
+ 							gboolean powered);
+ gboolean connman_client_set_ipv4(ConnmanClient *client, const gchar *device,
+ 				struct ipv4_config *ipv4_config);
+-void connman_client_propose_scan(ConnmanClient *client, const gchar *device);
++void connman_client_scan(ConnmanClient *client, const gchar *device, 
++							connman_scan_reply callback, gpointer user_data);
+ 
+ void connman_client_connect(ConnmanClient *client, const gchar *network);
+ void connman_client_disconnect(ConnmanClient *client, const gchar *network);
+@@ -89,8 +90,6 @@ void connman_client_set_callback(ConnmanClient *client,
+ 
+ void connman_client_remove(ConnmanClient *client, const gchar *network);
+ 
+-void connman_client_request_scan(ConnmanClient *client, char *scantype,
+-				connman_request_scan_reply callback, gpointer userdata);
+ gboolean connman_client_get_offline_status(ConnmanClient *client);
+ void connman_client_set_offlinemode(ConnmanClient *client, gboolean status);
+ 
+@@ -114,11 +113,8 @@ enum {
+ 	CONNMAN_COLUMN_ADDRESS,		/* G_TYPE_STRING  */
+ 	CONNMAN_COLUMN_NETMASK,		/* G_TYPE_STRING  */
+ 	CONNMAN_COLUMN_GATEWAY,		/* G_TYPE_STRING  */
+-
+-	CONNMAN_COLUMN_ETHERNET_ENABLED,/* G_TYPE_STRING  */
+-	CONNMAN_COLUMN_WIFI_ENABLED,	/* G_TYPE_STRING  */
+-	CONNMAN_COLUMN_CELLULAR_ENABLED,/* G_TYPE_STRING  */
+-	CONNMAN_COLUMN_OFFLINEMODE,	/* G_TYPE_STRING  */
++	CONNMAN_COLUMN_POWERED,		/* G_TYPE_BOOLEAN  */
++	CONNMAN_COLUMN_OFFLINEMODE,	/* G_TYPE_BOOLEAN  */
+ 
+ 	_CONNMAN_NUM_COLUMNS
+ };
+diff --git a/common/connman-dbus.c b/common/connman-dbus.c
+index 6669749..4eb77b6 100644
+--- a/common/connman-dbus.c
++++ b/common/connman-dbus.c
+@@ -28,6 +28,8 @@
+ #include "connman-dbus.h"
+ #include "connman-dbus-glue.h"
+ 
++#include "marshal.h"
++
+ #ifdef DEBUG
+ #define DBG(fmt, arg...) printf("%s:%s() " fmt "\n", __FILE__, __FUNCTION__ , ## arg)
+ #else
+@@ -164,22 +166,6 @@ gboolean connman_dbus_get_iter(GtkTreeStore *store, const gchar *path,
+ 	return get_iter_from_path(store, iter, path);
+ }
+ 
+-static void iterate_list(const GValue *value, gpointer user_data)
+-{
+-	GSList **list = user_data;
+-	gchar *path = g_value_dup_boxed(value);
+-
+-	if (path == NULL)
+-		return;
+-
+-	*list = g_slist_append(*list, path);
+-}
+-
+-static gint compare_path(gconstpointer a, gconstpointer b)
+-{
+-	return g_strcmp0(a, b);
+-}
+-
+ static guint get_type(const GValue *value)
+ {
+ 	const char *type = value ? g_value_get_string(value) : NULL;
+@@ -217,95 +203,76 @@ static const gchar *type2icon(guint type)
+ 	return NULL;
+ }
+ 
+-static void enabled_technologies_changed(GtkTreeStore *store, GValue *value)
++static void tech_changed(DBusGProxy *proxy, const char *property,
++					GValue *value, gpointer user_data)
+ {
++	GtkTreeStore *store = user_data;
++	const char *path = dbus_g_proxy_get_path(proxy);
+ 	GtkTreeIter iter;
+-	gboolean ethernet_enabled_prev, ethernet_enabled = FALSE;
+-	gboolean wifi_enabled_prev, wifi_enabled = FALSE;
+-	gboolean cellular_enabled_prev, cellular_enabled = FALSE;
+-	gchar **tech = g_value_get_boxed (value);
+-	guint i;
+ 
+-	if (value == NULL)
+-		return;
+-
+-	for (i = 0; i < g_strv_length(tech); i++) {
+-		DBG("technology: %s", *(tech+i));
+-		if (g_str_equal("ethernet", *(tech + i)))
+-			ethernet_enabled = TRUE;
+-		else if (g_str_equal ("wifi", *(tech + i)))
+-			wifi_enabled = TRUE;
+-		else if (g_str_equal ("cellular", *(tech + i)))
+-			cellular_enabled = TRUE;
+-	}
++	DBG("store %p proxy %p property %s", store, proxy, property);
+ 
+-	get_iter_from_type(store, &iter, CONNMAN_TYPE_LABEL_ETHERNET);
+-	gtk_tree_model_get(GTK_TREE_MODEL(store), &iter,
+-			CONNMAN_COLUMN_ETHERNET_ENABLED, &ethernet_enabled_prev, -1);
+-	if (ethernet_enabled_prev != ethernet_enabled)
+-		gtk_tree_store_set(store, &iter,
+-					CONNMAN_COLUMN_ETHERNET_ENABLED, ethernet_enabled, -1);
++	if (property == NULL || value == NULL)
++		return;
+ 
+-	get_iter_from_type(store, &iter, CONNMAN_TYPE_LABEL_WIFI);
+-	gtk_tree_model_get(GTK_TREE_MODEL(store), &iter,
+-			CONNMAN_COLUMN_WIFI_ENABLED, &wifi_enabled_prev, -1);
+-	if (wifi_enabled_prev != wifi_enabled)
+-		gtk_tree_store_set(store, &iter,
+-					CONNMAN_COLUMN_WIFI_ENABLED, wifi_enabled, -1);
++	if (get_iter_from_path(store, &iter, path) == FALSE)
++		return;
+ 
+-	get_iter_from_type(store, &iter, CONNMAN_TYPE_LABEL_CELLULAR);
+-	gtk_tree_model_get(GTK_TREE_MODEL(store), &iter,
+-			CONNMAN_COLUMN_CELLULAR_ENABLED, &cellular_enabled_prev, -1);
+-	if (cellular_enabled_prev != cellular_enabled)
++	if (g_str_equal(property, "Powered") == TRUE) {
++		gboolean powered = g_value_get_boolean(value);
+ 		gtk_tree_store_set(store, &iter,
+-					CONNMAN_COLUMN_CELLULAR_ENABLED, cellular_enabled, -1);
++					CONNMAN_COLUMN_POWERED, powered, -1);
++	}
+ }
+ 
+-static void enabled_technologies_properties(GtkTreeStore *store, DBusGProxy *proxy, GValue *value)
++static void tech_properties(DBusGProxy *proxy, GHashTable *hash,
++					GError *error, gpointer user_data)
+ {
++	GtkTreeStore *store = user_data;
+ 	GtkTreeIter iter;
+-	gboolean ethernet_enabled = FALSE;
+-	gboolean wifi_enabled = FALSE;
+-	gboolean cellular_enabled = FALSE;
+-	gchar **tech = g_value_get_boxed (value);
+-	guint i;
+-
+-	for (i = 0; i < g_strv_length (tech); i++) {
+-		DBG("technology: %s", *(tech+i));
+-		if (g_str_equal("ethernet", *(tech + i)))
+-			ethernet_enabled = TRUE;
+-		else if (g_str_equal ("wifi", *(tech + i)))
+-			wifi_enabled = TRUE;
+-		else if (g_str_equal ("cellular", *(tech + i)))
+-			cellular_enabled = TRUE;
+-	}
++	gboolean powered = FALSE;
++	GValue *propval = 0;
++	const char *techtype = 0;
+ 
+-	if (get_iter_from_type(store, &iter, CONNMAN_TYPE_LABEL_ETHERNET) == FALSE)
+-		gtk_tree_store_append(store, &iter, NULL);
++	propval = g_hash_table_lookup(hash, "Type");
++	techtype = propval ? g_value_get_string(propval) : NULL;
+ 
+-	gtk_tree_store_set(store, &iter,
+-			CONNMAN_COLUMN_PROXY, proxy,
+-			CONNMAN_COLUMN_ETHERNET_ENABLED, ethernet_enabled,
+-			CONNMAN_COLUMN_TYPE, CONNMAN_TYPE_LABEL_ETHERNET,
+-			-1);
++	propval = g_hash_table_lookup(hash, "Powered");
++	powered = propval ? g_value_get_boolean(propval) : FALSE;
+ 
+-	if (get_iter_from_type(store, &iter, CONNMAN_TYPE_LABEL_WIFI) == FALSE)
+-		gtk_tree_store_append(store, &iter, NULL);
++	if (g_str_equal("ethernet", techtype))
++	{
++		if (get_iter_from_type(store, &iter, CONNMAN_TYPE_LABEL_ETHERNET) == FALSE)
++			gtk_tree_store_append(store, &iter, NULL);
+ 
+-	gtk_tree_store_set(store, &iter,
+-			CONNMAN_COLUMN_PROXY, proxy,
+-			CONNMAN_COLUMN_WIFI_ENABLED, wifi_enabled,
+-			CONNMAN_COLUMN_TYPE, CONNMAN_TYPE_LABEL_WIFI,
+-			-1);
++		gtk_tree_store_set(store, &iter,
++				CONNMAN_COLUMN_PROXY, proxy,
++				CONNMAN_COLUMN_POWERED, powered,
++				CONNMAN_COLUMN_TYPE, CONNMAN_TYPE_LABEL_ETHERNET,
++				-1);
++	}
++	else if (g_str_equal ("wifi", techtype))
++	{
++		if (get_iter_from_type(store, &iter, CONNMAN_TYPE_LABEL_WIFI) == FALSE)
++			gtk_tree_store_append(store, &iter, NULL);
+ 
+-	if (get_iter_from_type(store, &iter, CONNMAN_TYPE_LABEL_CELLULAR) == FALSE)
+-		gtk_tree_store_append(store, &iter, NULL);
++		gtk_tree_store_set(store, &iter,
++				CONNMAN_COLUMN_PROXY, proxy,
++				CONNMAN_COLUMN_POWERED, powered,
++				CONNMAN_COLUMN_TYPE, CONNMAN_TYPE_LABEL_WIFI,
++				-1);
++	}
++	else if (g_str_equal ("3g", techtype))
++	{
++		if (get_iter_from_type(store, &iter, CONNMAN_TYPE_LABEL_CELLULAR) == FALSE)
++			gtk_tree_store_append(store, &iter, NULL);
+ 
+-	gtk_tree_store_set(store, &iter,
+-			CONNMAN_COLUMN_PROXY, proxy,
+-			CONNMAN_COLUMN_CELLULAR_ENABLED, cellular_enabled,
+-			CONNMAN_COLUMN_TYPE, CONNMAN_TYPE_LABEL_CELLULAR,
+-			-1);
++		gtk_tree_store_set(store, &iter,
++				CONNMAN_COLUMN_PROXY, proxy,
++				CONNMAN_COLUMN_POWERED, powered,
++				CONNMAN_COLUMN_TYPE, CONNMAN_TYPE_LABEL_CELLULAR,
++				-1);
++	}
+ }
+ 
+ static void offline_mode_changed(GtkTreeStore *store, GValue *value)
+@@ -319,6 +286,39 @@ static void offline_mode_changed(GtkTreeStore *store, GValue *value)
+ 			-1);
+ }
+ 
++static void tech_added(DBusGProxy *proxy, DBusGObjectPath *path, 
++					GHashTable *hash, gpointer user_data)
++{
++	GtkTreeStore *store = user_data;
++	GtkTreeIter iter;
++	DBG("store %p proxy %p hash %p", store, proxy, hash);
++
++	if (!get_iter_from_path(store, &iter, path)) {
++		DBusGProxy *tech_proxy = dbus_g_proxy_new_for_name(connection,
++						CONNMAN_SERVICE, path,
++						CONNMAN_TECHNOLOGY_INTERFACE);
++		if (tech_proxy == NULL)
++			return;
++		
++		tech_properties(tech_proxy, hash, NULL, user_data);
++		
++		dbus_g_proxy_add_signal(tech_proxy, "PropertyChanged",
++				G_TYPE_STRING, G_TYPE_VALUE, G_TYPE_INVALID);
++		dbus_g_proxy_connect_signal(tech_proxy, "PropertyChanged",
++				G_CALLBACK(tech_changed), store, NULL);
++	}
++}
++
++static void tech_removed(DBusGProxy *proxy, DBusGObjectPath *path,
++					gpointer user_data)
++{
++	GtkTreeStore *store = user_data;
++	GtkTreeIter iter;
++
++	if (get_iter_from_path(store, &iter, path))
++		gtk_tree_store_remove(store, &iter);
++}
++
+ static void offline_mode_properties(GtkTreeStore *store, DBusGProxy *proxy, GValue *value)
+ {
+ 	GtkTreeIter iter;
+@@ -401,59 +401,8 @@ static void service_changed(DBusGProxy *proxy, const char *property,
+ 	}
+ }
+ 
+-static void property_update(GtkTreeStore *store, const GValue *value,
+-					connman_get_properties_reply callback)
+-{
+-	GSList *list, *link, *old_list, *new_list = NULL;
+-
+-	DBG("store %p", store);
+-
+-	old_list = g_object_get_data(G_OBJECT(store), "Services");
+-
+-	dbus_g_type_collection_value_iterate(value, iterate_list, &new_list);
+-
+-	g_object_set_data(G_OBJECT(store), "Services", new_list);
+-
+-	for (list = new_list; list; list = list->next) {
+-		gchar *path = list->data;
+-		DBusGProxy *proxy;
+-
+-		DBG("new path %s", path);
+-
+-		link = g_slist_find_custom(old_list, path, compare_path);
+-		if (link != NULL) {
+-			g_free(link->data);
+-			old_list = g_slist_delete_link(old_list, link);
+-		}
+-
+-		proxy = dbus_g_proxy_new_for_name(connection,
+-						CONNMAN_SERVICE, path,
+-						CONNMAN_SERVICE_INTERFACE);
+-		if (proxy == NULL)
+-			continue;
+-
+-		DBG("getting %s properties", "Services");
+-
+-		connman_get_properties_async(proxy, callback, store);
+-	}
+-
+-	for (list = old_list; list; list = list->next) {
+-		gchar *path = list->data;
+-		GtkTreeIter iter;
+-
+-		DBG("old path %s", path);
+-
+-		if (get_iter_from_path(store, &iter, path) == TRUE)
+-			gtk_tree_store_remove(store, &iter);
+-
+-		g_free(path);
+-	}
+-
+-	g_slist_free(old_list);
+-}
+-
+ static void service_properties(DBusGProxy *proxy, GHashTable *hash,
+-					GError *error, gpointer user_data)
++							gpointer user_data)
+ {
+ 	GtkTreeStore *store = user_data;
+ 	GValue *value;
+@@ -468,7 +417,7 @@ static void service_properties(DBusGProxy *proxy, GHashTable *hash,
+ 
+ 	DBG("store %p proxy %p hash %p", store, proxy, hash);
+ 
+-	if (error != NULL || hash == NULL)
++	if (hash == NULL)
+ 		goto done;
+ 
+ 	value = g_hash_table_lookup(hash, "Name");
+@@ -572,11 +521,7 @@ static void manager_changed(DBusGProxy *proxy, const char *property,
+ 	if (property == NULL || value == NULL)
+ 		return;
+ 
+-	if (g_str_equal(property, "Services") == TRUE)
+-		property_update(store, value, service_properties);
+-	else if (g_str_equal(property, "EnabledTechnologies") == TRUE)
+-		enabled_technologies_changed(store, value);
+-	else if (g_str_equal(property, "OfflineMode") == TRUE)
++	if (g_str_equal(property, "OfflineMode") == TRUE)
+ 		offline_mode_changed(store, value);
+ }
+ 
+@@ -591,23 +536,89 @@ static void manager_properties(DBusGProxy *proxy, GHashTable *hash,
+ 	if (error != NULL || hash == NULL)
+ 		return;
+ 
+-	value = g_hash_table_lookup(hash, "Services");
+-	if (value != NULL)
+-		property_update(store, value, service_properties);
+-
+-	value = g_hash_table_lookup(hash, "EnabledTechnologies");
+-	if (value != NULL)
+-		enabled_technologies_properties(store, proxy, value);
+-
+ 	value = g_hash_table_lookup(hash, "OfflineMode");
+ 	if (value != NULL)
+ 		offline_mode_properties(store, proxy, value);
+ }
+ 
++static void manager_services(DBusGProxy *proxy, GPtrArray *array,
++					GError *error, gpointer user_data)
++{
++	int i;
++
++	DBG("proxy %p array %p", proxy, array);
++
++	if (error != NULL || array == NULL)
++		return;
++
++	for (i = 0; i < array->len; i++)
++	{
++		GValueArray *item = g_ptr_array_index(array, i);
++
++		DBusGObjectPath *path = (DBusGObjectPath *)g_value_get_boxed(g_value_array_get_nth(item, 0));
++		DBusGProxy *service_proxy = dbus_g_proxy_new_for_name(connection,
++						CONNMAN_SERVICE, path,
++						CONNMAN_SERVICE_INTERFACE);
++		if (service_proxy == NULL)
++			continue;
++		
++		GHashTable *props = (GHashTable *)g_value_get_boxed(g_value_array_get_nth(item, 1));
++		service_properties(service_proxy, props, user_data);
++	}
++}
++
++static void manager_technologies(DBusGProxy *proxy, GPtrArray *array,
++					GError *error, gpointer user_data)
++{
++	int i;
++
++	DBG("proxy %p array %p", proxy, array);
++
++	if (error != NULL || array == NULL)
++		return;
++
++	for (i = 0; i < array->len; i++)
++	{
++		GValueArray *item = g_ptr_array_index(array, i);
++
++		DBusGObjectPath *path = (DBusGObjectPath *)g_value_get_boxed(g_value_array_get_nth(item, 0));
++		GHashTable *props = (GHashTable *)g_value_get_boxed(g_value_array_get_nth(item, 1));
++		
++		tech_added(proxy, path, props, user_data);
++	}
++}
++
++static void services_added(DBusGProxy *proxy, GPtrArray *array,
++					gpointer user_data)
++{
++	DBG("proxy %p array %p", proxy, array);
++
++	manager_services(proxy, array, NULL, user_data);
++}
++
++static void services_removed(DBusGProxy *proxy, GPtrArray *array,
++					gpointer user_data)
++{
++	GtkTreeStore *store = user_data;
++	GtkTreeIter iter;
++	int i;
++
++	DBG("store %p proxy %p array %p", store, proxy, array);
++	
++	for (i = 0; i < array->len; i++)
++	{
++		DBusGObjectPath *path = (DBusGObjectPath *)g_ptr_array_index(array, i);
++		
++		if (get_iter_from_path(store, &iter, path))
++			gtk_tree_store_remove(store, &iter);
++	}
++}
++
+ DBusGProxy *connman_dbus_create_manager(DBusGConnection *conn,
+ 						GtkTreeStore *store)
+ {
+ 	DBusGProxy *proxy;
++	GType otype;
+ 
+ 	connection = dbus_g_connection_ref(conn);
+ 
+@@ -620,11 +631,49 @@ DBusGProxy *connman_dbus_create_manager(DBusGConnection *conn,
+ 				G_TYPE_STRING, G_TYPE_VALUE, G_TYPE_INVALID);
+ 	dbus_g_proxy_connect_signal(proxy, "PropertyChanged",
+ 				G_CALLBACK(manager_changed), store, NULL);
+-
++	
++	otype = dbus_g_type_get_struct("GValueArray", DBUS_TYPE_G_OBJECT_PATH, DBUS_TYPE_G_DICTIONARY, G_TYPE_INVALID);
++	otype = dbus_g_type_get_collection("GPtrArray", otype);
++	dbus_g_object_register_marshaller(marshal_VOID__BOXED, G_TYPE_NONE, otype, G_TYPE_INVALID);
++
++	dbus_g_proxy_add_signal(proxy, "ServicesAdded",
++				otype, G_TYPE_INVALID);
++	dbus_g_proxy_connect_signal(proxy, "ServicesAdded",
++				G_CALLBACK(services_added), store, NULL);
++
++	otype = DBUS_TYPE_G_OBJECT_PATH_ARRAY;
++	dbus_g_object_register_marshaller(marshal_VOID__BOXED, G_TYPE_NONE, otype, G_TYPE_INVALID);
++	
++	dbus_g_proxy_add_signal(proxy, "ServicesRemoved",
++				otype, G_TYPE_INVALID);
++	dbus_g_proxy_connect_signal(proxy, "ServicesRemoved",
++				G_CALLBACK(services_removed), store, NULL);
++
++	dbus_g_object_register_marshaller(marshal_VOID__STRING_BOXED, G_TYPE_NONE, DBUS_TYPE_G_OBJECT_PATH, DBUS_TYPE_G_DICTIONARY, G_TYPE_INVALID);
++	dbus_g_proxy_add_signal(proxy, "TechnologyAdded",
++				DBUS_TYPE_G_OBJECT_PATH, DBUS_TYPE_G_DICTIONARY, G_TYPE_INVALID);
++	dbus_g_proxy_connect_signal(proxy, "TechnologyAdded",
++				G_CALLBACK(tech_added), store, NULL);
++
++	dbus_g_object_register_marshaller(marshal_VOID__STRING, G_TYPE_NONE, DBUS_TYPE_G_OBJECT_PATH, G_TYPE_INVALID);
++	dbus_g_proxy_add_signal(proxy, "TechnologyRemoved",
++				DBUS_TYPE_G_OBJECT_PATH, G_TYPE_INVALID);
++	dbus_g_proxy_connect_signal(proxy, "TechnologyRemoved",
++				G_CALLBACK(tech_removed), store, NULL);
++	
++	
+ 	DBG("getting manager properties");
+ 
+ 	connman_get_properties_async(proxy, manager_properties, store);
+ 
++	DBG("getting technologies");
++
++	connman_get_technologies_async(proxy, manager_technologies, store);
++
++	DBG("getting services");
++
++	connman_get_services_async(proxy, manager_services, store);
++
+ 	return proxy;
+ }
+ 
+diff --git a/common/connman-dbus.h b/common/connman-dbus.h
+index cfca50e..c1b5091 100644
+--- a/common/connman-dbus.h
++++ b/common/connman-dbus.h
+@@ -32,6 +32,7 @@
+ 
+ #define CONNMAN_PROFILE_INTERFACE	CONNMAN_SERVICE ".Profile"
+ #define CONNMAN_SERVICE_INTERFACE	CONNMAN_SERVICE ".Service"
++#define CONNMAN_TECHNOLOGY_INTERFACE	CONNMAN_SERVICE ".Technology"
+ 
+ DBusGProxy *connman_dbus_create_manager(DBusGConnection *connection,
+ 							GtkTreeStore *store);
+diff --git a/common/connman-dbus.xml b/common/connman-dbus.xml
+index e20cb3b..56b9582 100644
+--- a/common/connman-dbus.xml
++++ b/common/connman-dbus.xml
+@@ -5,26 +5,23 @@
+     <method name="GetProperties">
+       <arg type="a{sv}" direction="out"/>
+     </method>
++    <method name="GetServices">
++      <arg type="a(oa{sv})" direction="out"/>
++    </method>
++    <method name="GetTechnologies">
++      <arg type="a(oa{sv})" direction="out"/>
++    </method>
+     <method name="SetProperty">
+       <arg type="s"/>
+       <arg type="v"/>
+     </method>
+-    <method name="ProposeScan">
+-    </method>
+     <method name="Connect">
+     </method>
+     <method name="Disconnect">
+     </method>
+     <method name="Remove">
+     </method>
+-    <method name="RequestScan">
+-      <arg type="s"/>
+-    </method>
+-    <method name="EnableTechnology">
+-      <arg type="s"/>
+-    </method>
+-    <method name="DisableTechnology">
+-      <arg type="s"/>
++    <method name="Scan">
+     </method>
+   </interface>
+ </node>
+diff --git a/common/marshal.list b/common/marshal.list
+index e72aa4b..8b174d0 100644
+--- a/common/marshal.list
++++ b/common/marshal.list
+@@ -1 +1,3 @@
+ VOID:STRING,BOXED
++VOID:BOXED
++VOID:STRING
+diff --git a/properties/cellular.c b/properties/cellular.c
+index 7bbfb89..4d27e0e 100644
+--- a/properties/cellular.c
++++ b/properties/cellular.c
+@@ -59,9 +59,9 @@ static void switch_callback(GtkWidget *editable, gpointer user_data)
+ 	const gchar *label = gtk_button_get_label(GTK_BUTTON(data->cellular_button));
+ 
+ 	if (g_str_equal(label, "Disable"))
+-		connman_client_disable_technology(data->client, data->device, "cellular");
++		connman_client_set_powered(data->client, data->device, FALSE);
+ 	else
+-		connman_client_enable_technology(data->client, data->device, "cellular");
++		connman_client_set_powered(data->client, data->device, TRUE);
+ }
+ 
+ void add_cellular_switch_button(GtkWidget *mainbox, GtkTreeIter *iter,
+@@ -75,7 +75,7 @@ void add_cellular_switch_button(GtkWidget *mainbox, GtkTreeIter *iter,
+ 	gboolean cellular_enabled;
+ 
+ 	gtk_tree_model_get(data->model, iter,
+-			CONNMAN_COLUMN_CELLULAR_ENABLED, &cellular_enabled,
++			CONNMAN_COLUMN_POWERED, &cellular_enabled,
+ 			-1);
+ 
+ 	vbox = gtk_vbox_new(TRUE, 0);
+diff --git a/properties/ethernet.c b/properties/ethernet.c
+index d7f91d9..31db7a0 100644
+--- a/properties/ethernet.c
++++ b/properties/ethernet.c
+@@ -59,9 +59,9 @@ static void switch_callback(GtkWidget *editable, gpointer user_data)
+ 	struct config_data *data = user_data;
+ 	const gchar *label = gtk_button_get_label(GTK_BUTTON(data->ethernet_button));
+ 	if (g_str_equal(label, "Disable"))
+-		connman_client_disable_technology(data->client, data->device, "ethernet");
+-	else if (g_str_equal(label, "Enable"))
+-		connman_client_enable_technology(data->client, data->device, "ethernet");
++		connman_client_set_powered(data->client, data->device, FALSE);
++	else
++		connman_client_set_powered(data->client, data->device, TRUE);
+ }
+ 
+ void add_ethernet_switch_button(GtkWidget *mainbox, GtkTreeIter *iter,
+@@ -75,7 +75,7 @@ void add_ethernet_switch_button(GtkWidget *mainbox, GtkTreeIter *iter,
+ 	gboolean ethernet_enabled;
+ 
+ 	gtk_tree_model_get(data->model, iter,
+-			CONNMAN_COLUMN_ETHERNET_ENABLED, &ethernet_enabled,
++			CONNMAN_COLUMN_POWERED, &ethernet_enabled,
+ 			-1);
+ 
+ 	vbox = gtk_vbox_new(TRUE, 0);
+diff --git a/properties/main.c b/properties/main.c
+index 088684a..e266f03 100644
+--- a/properties/main.c
++++ b/properties/main.c
+@@ -40,18 +40,14 @@ static void status_update(GtkTreeModel *model, GtkTreePath  *path,
+ 	struct config_data *data = user_data;
+ 	guint type;
+ 	const char *name = NULL, *_name = NULL, *state = NULL;
+-	gboolean ethernet_enabled;
+-	gboolean wifi_enabled;
+-	gboolean cellular_enabled;
++	gboolean powered;
+ 	gboolean offline_mode;
+ 
+ 	gtk_tree_model_get(model, iter,
+ 			CONNMAN_COLUMN_STATE, &state,
+ 			CONNMAN_COLUMN_NAME, &name,
+ 			CONNMAN_COLUMN_TYPE, &type,
+-			CONNMAN_COLUMN_ETHERNET_ENABLED, &ethernet_enabled,
+-			CONNMAN_COLUMN_WIFI_ENABLED, &wifi_enabled,
+-			CONNMAN_COLUMN_CELLULAR_ENABLED, &cellular_enabled,
++			CONNMAN_COLUMN_POWERED, &powered,
+ 			CONNMAN_COLUMN_OFFLINEMODE, &offline_mode,
+ 			-1);
+ 
+@@ -103,14 +99,14 @@ static void status_update(GtkTreeModel *model, GtkTreePath  *path,
+ 	} else if (type == CONNMAN_TYPE_LABEL_ETHERNET) {
+ 		if (!data->ethernet_button)
+ 			return;
+-		if (ethernet_enabled)
++		if (powered)
+ 			gtk_button_set_label(GTK_BUTTON(data->ethernet_button), _("Disable"));
+ 		else
+ 			gtk_button_set_label(GTK_BUTTON(data->ethernet_button), _("Enable"));
+ 	} else if (type == CONNMAN_TYPE_LABEL_WIFI) {
+ 		if (!data->wifi_button)
+ 			return;
+-		if (wifi_enabled) {
++		if (powered) {
+ 			gtk_button_set_label(GTK_BUTTON(data->wifi_button), _("Disable"));
+ 			gtk_widget_set_sensitive(data->scan_button, 1);
+ 		} else {
+@@ -120,7 +116,7 @@ static void status_update(GtkTreeModel *model, GtkTreePath  *path,
+ 	} else if (type == CONNMAN_TYPE_LABEL_CELLULAR) {
+ 		if (!data->cellular_button)
+ 			return;
+-		if (cellular_enabled)
++		if (powered)
+ 			gtk_button_set_label(GTK_BUTTON(data->cellular_button), _("Disable"));
+ 		else
+ 			gtk_button_set_label(GTK_BUTTON(data->cellular_button), _("Enable"));
+diff --git a/properties/wifi.c b/properties/wifi.c
+index 85922a3..038d35a 100644
+--- a/properties/wifi.c
++++ b/properties/wifi.c
+@@ -96,9 +96,9 @@ static void switch_callback(GtkWidget *editable, gpointer user_data)
+ 	const gchar *label = gtk_button_get_label(GTK_BUTTON(data->wifi_button));
+ 
+ 	if (g_str_equal(label, "Disable"))
+-		connman_client_disable_technology(data->client, data->device, "wifi");
++		connman_client_set_powered(data->client, data->device, FALSE);
+ 	else
+-		connman_client_enable_technology(data->client, data->device, "wifi");
++		connman_client_set_powered(data->client, data->device, TRUE);
+ }
+ 
+ static void scan_reply_cb(DBusGProxy *proxy, GError *error,
+@@ -115,7 +115,7 @@ static void scan_callback(GtkWidget *button, gpointer user_data)
+ {
+ 	struct config_data *data = user_data;
+ 	gtk_widget_set_sensitive(button, 0);
+-	connman_client_request_scan(data->client, "", scan_reply_cb, button);
++	connman_client_scan(data->client, data->device, scan_reply_cb, button);
+ }
+ 
+ void add_wifi_switch_button(GtkWidget *mainbox, GtkTreeIter *iter,
+@@ -129,7 +129,7 @@ void add_wifi_switch_button(GtkWidget *mainbox, GtkTreeIter *iter,
+ 	gboolean wifi_enabled;
+ 
+ 	gtk_tree_model_get(data->model, iter,
+-			CONNMAN_COLUMN_WIFI_ENABLED, &wifi_enabled,
++			CONNMAN_COLUMN_POWERED, &wifi_enabled,
+ 			-1);
+ 
+ 	vbox = gtk_vbox_new(TRUE, 0);
+-- 
+1.7.5.4
+

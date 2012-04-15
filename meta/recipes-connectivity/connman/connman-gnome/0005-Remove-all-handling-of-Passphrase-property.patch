@@ -1,0 +1,249 @@
+From f24d6e26f81e205769cecf0dae7e6cf90b23f9e9 Mon Sep 17 00:00:00 2001
+Message-Id: <f24d6e26f81e205769cecf0dae7e6cf90b23f9e9.1334369310.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1334369310.git.paul.eggleton@linux.intel.com>
+References: <cover.1334369310.git.paul.eggleton@linux.intel.com>
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Sat, 14 Apr 2012 02:37:55 +0100
+Subject: [PATCH 5/6] Remove all handling of Passphrase property
+
+Services no longer have a Passphrase property in ConnMan 0.79 -
+credentials are handled entirely through the agent.
+
+Upstream-Status: Submitted
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ common/connman-client.c |   51 -----------------------------------------------
+ common/connman-client.h |    4 ---
+ common/connman-dbus.c   |   11 +---------
+ properties/advanced.h   |    1 -
+ properties/wifi.c       |   48 --------------------------------------------
+ 5 files changed, 1 insertions(+), 114 deletions(-)
+
+diff --git a/common/connman-client.c b/common/connman-client.c
+index e4441ad..dec9867 100644
+--- a/common/connman-client.c
++++ b/common/connman-client.c
+@@ -112,7 +112,6 @@ static void connman_client_init(ConnmanClient *client)
+ 				G_TYPE_BOOLEAN,	/* favorite */
+ 				G_TYPE_UINT,	/* strength */
+ 				G_TYPE_STRING,	/* security */
+-				G_TYPE_STRING,  /* passphrase */
+ 				G_TYPE_STRING,  /* method */
+ 				G_TYPE_STRING,  /* address */
+ 				G_TYPE_STRING,  /* netmask */
+@@ -501,56 +500,6 @@ gchar *connman_client_get_security(ConnmanClient *client, const gchar *network)
+ 	return security;
+ }
+ 
+-gchar *connman_client_get_passphrase(ConnmanClient *client, const gchar *network)
+-{
+-	ConnmanClientPrivate *priv = CONNMAN_CLIENT_GET_PRIVATE(client);
+-	GtkTreeIter iter;
+-	gchar *passphrase;
+-
+-	DBG("client %p", client);
+-
+-	if (network == NULL)
+-		return NULL;
+-
+-	if (connman_dbus_get_iter(priv->store, network, &iter) == FALSE)
+-		return NULL;
+-
+-	gtk_tree_model_get(GTK_TREE_MODEL(priv->store), &iter,
+-				CONNMAN_COLUMN_PASSPHRASE, &passphrase, -1);
+-
+-	return passphrase;
+-}
+-
+-gboolean connman_client_set_passphrase(ConnmanClient *client, const gchar *network,
+-						const gchar *passphrase)
+-{
+-	ConnmanClientPrivate *priv = CONNMAN_CLIENT_GET_PRIVATE(client);
+-	DBusGProxy *proxy;
+-	GValue value = { 0 };
+-	gboolean ret = FALSE;
+-
+-	DBG("client %p", client);
+-
+-	if (network == NULL)
+-		goto done;
+-
+-	proxy = connman_dbus_get_proxy(priv->store, network);
+-	if (proxy == NULL)
+-		goto done;
+-
+-	g_value_init(&value, G_TYPE_STRING);
+-	g_value_set_string(&value, passphrase);
+-
+-	ret = connman_set_property(proxy, "Passphrase", &value, NULL);
+-
+-	g_value_unset(&value);
+-
+-	g_object_unref(proxy);
+-
+-done:
+-	return ret;
+-}
+-
+ void connman_client_set_callback(ConnmanClient *client,
+ 			ConnmanClientCallback callback, gpointer user_data)
+ {
+diff --git a/common/connman-client.h b/common/connman-client.h
+index 6fe772c..bb36a2f 100644
+--- a/common/connman-client.h
++++ b/common/connman-client.h
+@@ -77,9 +77,6 @@ void connman_client_disconnect(ConnmanClient *client, const gchar *network);
+ gchar *connman_client_get_security(ConnmanClient *client, const gchar *network);
+ void connman_client_connect_async(ConnmanClient *client, const gchar *network,
+ 				connman_connect_reply callback, gpointer userdata);
+-gchar *connman_client_get_passphrase(ConnmanClient *client, const gchar *network);
+-gboolean connman_client_set_passphrase(ConnmanClient *client, const gchar *network,
+-						const gchar *passphrase);
+ void connman_client_set_remember(ConnmanClient *client, const gchar *network,
+ 							gboolean remember);
+ 
+@@ -108,7 +105,6 @@ enum {
+ 	CONNMAN_COLUMN_FAVORITE,	/* G_TYPE_BOOLEAN */
+ 	CONNMAN_COLUMN_STRENGTH,	/* G_TYPE_UINT    */
+ 	CONNMAN_COLUMN_SECURITY,	/* G_TYPE_STRING  */
+-	CONNMAN_COLUMN_PASSPHRASE,	/* G_TYPE_STRING  */
+ 	CONNMAN_COLUMN_METHOD,		/* G_TYPE_STRING  */
+ 	CONNMAN_COLUMN_ADDRESS,		/* G_TYPE_STRING  */
+ 	CONNMAN_COLUMN_NETMASK,		/* G_TYPE_STRING  */
+diff --git a/common/connman-dbus.c b/common/connman-dbus.c
+index 4eb77b6..f46a750 100644
+--- a/common/connman-dbus.c
++++ b/common/connman-dbus.c
+@@ -389,11 +389,6 @@ static void service_changed(DBusGProxy *proxy, const char *property,
+ 		gtk_tree_store_set(store, &iter,
+ 					CONNMAN_COLUMN_SECURITY, security,
+ 					-1);
+-	} else if (g_str_equal(property, "PassPhrase") == TRUE) {
+-		const char *passphrase = value ? g_value_get_string(value) : NULL;
+-		gtk_tree_store_set(store, &iter,
+-					CONNMAN_COLUMN_PASSPHRASE, passphrase,
+-					-1);
+ 	} else if (g_str_equal(property, "Strength") == TRUE) {
+ 		guint strength = g_value_get_uchar(value);
+ 		gtk_tree_store_set(store, &iter,
+@@ -406,7 +401,7 @@ static void service_properties(DBusGProxy *proxy, GHashTable *hash,
+ {
+ 	GtkTreeStore *store = user_data;
+ 	GValue *value;
+-	const gchar *name, *icon, *passphrase, *security, *state;
++	const gchar *name, *icon, *security, *state;
+ 	guint type, strength;
+ 	gboolean favorite;
+ 	GtkTreeIter iter;
+@@ -439,9 +434,6 @@ static void service_properties(DBusGProxy *proxy, GHashTable *hash,
+ 	value = g_hash_table_lookup(hash, "Security");
+ 	security = value ? g_strjoinv(" ", g_value_get_boxed(value)) : NULL;
+ 
+-	value = g_hash_table_lookup(hash, "PassPhrase");
+-	passphrase = value ? g_value_get_string(value) : NULL;
+-
+ 	DBG("name %s type %d icon %s", name, type, icon);
+ 
+ 	value = g_hash_table_lookup(hash, "IPv4.Configuration");
+@@ -499,7 +491,6 @@ static void service_properties(DBusGProxy *proxy, GHashTable *hash,
+ 				CONNMAN_COLUMN_STATE, state,
+ 				CONNMAN_COLUMN_FAVORITE, favorite,
+ 				CONNMAN_COLUMN_SECURITY, security,
+-				CONNMAN_COLUMN_PASSPHRASE, passphrase,
+ 				CONNMAN_COLUMN_STRENGTH, strength,
+ 				CONNMAN_COLUMN_METHOD, method,
+ 				CONNMAN_COLUMN_ADDRESS, addr,
+diff --git a/properties/advanced.h b/properties/advanced.h
+index d8f4117..553a15e 100644
+--- a/properties/advanced.h
++++ b/properties/advanced.h
+@@ -53,7 +53,6 @@ struct config_data {
+ 		GtkWidget *name;
+ 		GtkWidget *security;
+ 		GtkWidget *strength;
+-		GtkWidget *passphrase;
+ 		GtkWidget *connect_info;
+ 		GtkWidget *connect;
+ 		GtkWidget *disconnect;
+diff --git a/properties/wifi.c b/properties/wifi.c
+index 038d35a..bd325ef 100644
+--- a/properties/wifi.c
++++ b/properties/wifi.c
+@@ -57,17 +57,6 @@ static void connect_callback(GtkWidget *editable, gpointer user_data)
+ 	gboolean ret;
+ 	gint active;
+ 
+-	if (data->wifi.passphrase) {
+-		char *passphrase;
+-		passphrase = (gchar *)gtk_entry_get_text(GTK_ENTRY(data->wifi.passphrase));
+-		ret = connman_client_set_passphrase(data->client, data->device,
+-				passphrase);
+-
+-		if (ret == FALSE) {
+-			return;
+-		}
+-	}
+-
+ 	active = gtk_combo_box_get_active(GTK_COMBO_BOX(data->policy.config));
+ 	data->ipv4_config.method = active ? "manual" : "dhcp";
+ 	data->ipv4_config.address = active ? gtk_entry_get_text(GTK_ENTRY(data->ipv4.entry[0])) : NULL;
+@@ -250,22 +239,11 @@ static void wifi_ipconfig(GtkWidget *table, struct config_data *data, GtkTreeIte
+ 			G_CALLBACK(changed_callback), data);
+ }
+ 
+-static void toggled_callback(GtkWidget *button, gpointer user_data)
+-{
+-	GtkWidget *entry = user_data;
+-	gboolean mode;
+-
+-	mode = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
+-
+-	gtk_entry_set_visibility(GTK_ENTRY(entry), mode);
+-}
+-
+ void add_wifi_service(GtkWidget *mainbox, GtkTreeIter *iter, struct config_data *data)
+ {
+ 	GtkWidget *vbox;
+ 	GtkWidget *table;
+ 	GtkWidget *label;
+-	GtkWidget *entry;
+ 	GtkWidget *button;
+ 
+ 	const char *name, *security, *icon, *state;
+@@ -308,32 +286,6 @@ void add_wifi_service(GtkWidget *mainbox, GtkTreeIter *iter, struct config_data
+ 	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+ 	data->wifi.security = label;
+ 
+-	label = gtk_label_new(_("Passphrase:"));
+-	gtk_table_attach_defaults(GTK_TABLE(table), label, 1, 2, 2, 3);
+-
+-	if (g_str_equal(security, "none") != TRUE &&
+-			g_str_equal(security, "unknown") != TRUE) {
+-		entry = gtk_entry_new();
+-		gtk_entry_set_max_length (GTK_ENTRY (entry), 64);
+-		gtk_table_attach_defaults(GTK_TABLE(table), entry, 2, 4, 2, 3);
+-		gtk_entry_set_visibility(GTK_ENTRY(entry), 0);
+-		data->wifi.passphrase = entry;
+-
+-		button = gtk_check_button_new_with_label(_("Show input"));
+-		gtk_table_attach_defaults(GTK_TABLE(table), button, 4, 5, 2, 3);
+-
+-		g_signal_connect(G_OBJECT(button), "toggled",
+-				G_CALLBACK(toggled_callback), entry);
+-
+-
+-	} else {
+-		label = gtk_label_new(_("none"));
+-		gtk_table_attach_defaults(GTK_TABLE(table), label, 2, 4, 2, 3);
+-		gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_LEFT);
+-		gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+-		data->wifi.passphrase = NULL;
+-	}
+-
+ 	label = gtk_label_new(_(""));
+ 	gtk_table_attach_defaults(GTK_TABLE(table), label, 2, 3, 8, 9);
+ 	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.0);
+-- 
+1.7.5.4
+
