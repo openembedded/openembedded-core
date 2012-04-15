@@ -3,7 +3,7 @@ DESCRIPTION = "The Linux man-pages project documents the Linux kernel and C libr
 SECTION = "console/utils"
 HOMEPAGE = "http://www.kernel.org/pub/linux/docs/man-pages"
 LICENSE = "GPLv2+"
-PR = "r0"
+PR = "r1"
 
 LIC_FILES_CHKSUM = "file://README;md5=0422377a748010b2b738342e24f141c1"
 SRC_URI = "${KERNELORG_MIRROR}/linux/docs/man-pages/Archive/${BPN}-${PV}.tar.gz"
@@ -13,19 +13,15 @@ SRC_URI[sha256sum] = "c0575e31f73cd9dc2761c274217e06e7130fdfee510170957a9d72d012
 
 RDEPENDS_${PN} = "man"
 
-do_configure_prepend() {
-	rm -rf not_installed
-}
-
 do_configure () {
-      :
+	:
 }
 
 do_compile() {
-	oe_runmake -f Makefile DESTDIR=${D} MANDIR=${D}${mandir}
+	:
 }
 
-fakeroot do_install() {
+do_install() {
         oe_runmake install DESTDIR=${D}
 }
 
