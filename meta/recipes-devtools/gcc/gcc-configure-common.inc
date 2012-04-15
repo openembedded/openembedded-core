@@ -107,6 +107,10 @@ do_configure () {
 	export CXXFLAGS_FOR_BUILD="${BUILD_CXXFLAGS}"
 	export LDFLAGS_FOR_BUILD="${BUILD_LDFLAGS}"
 	export ARCH_FLAGS_FOR_TARGET="${ARCH_FLAGS_FOR_TARGET}"
+	# We need to set this else there is cross-compilation badness
+	# in the config.log files (which might not get generated until do_compile
+	# hence being missed by the insane do_configure check).
+	export gcc_cv_collect2_libs="none required"
 	(cd ${S} && gnu-configize) || die "failure running gnu-configize"
 
 	oe_runconf
