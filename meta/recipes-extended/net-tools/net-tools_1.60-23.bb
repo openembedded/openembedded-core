@@ -31,10 +31,18 @@ PARALLEL_MAKE = ""
 # up all previously applied patches in the start
 nettools_do_patch() {
 	cd ${S}
-	patch -p1 < ${WORKDIR}/${BPN}_${PV}.diff
+	quilt pop -a || true
+	if [ -d ${S}/.pc-nettools ]; then
+		mv ${S}/.pc-nettools ${S}/.pc
+		QUILT_PATCHES=${S}/debian/patches quilt pop -a
+		rm -rf ${S}/.pc ${S}/debian
+	fi
+	patch -p1 < ${WORKDIR}/${BPN}_${PV}.diff	
 	QUILT_PATCHES=${S}/debian/patches quilt push -a
-	rm -rf ${S}/patches ${S}/.pc
+	mv ${S}/.pc ${S}/.pc-nettools
 }
+
+do_unpack[cleandirs] += "${S}"
 
 # We invoke base do_patch at end, to incorporate any local patch
 python do_patch() {
