@@ -62,7 +62,9 @@ do_configure_prepend () {
     # 64-bit architectures:
     rm -f *_xdr.c
 
-    mv aclocal.m4 acinclude.m4
+    if [ ! -f ${S}/acinclude.m4 ]; then
+        mv ${S}/aclocal.m4 ${S}/acinclude.m4
+    fi
 }
 
 # This recipe is intended for -native and -nativesdk builds only,
