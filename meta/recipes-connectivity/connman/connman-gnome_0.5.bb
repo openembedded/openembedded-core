@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a \
 
 DEPENDS = "gtk+ dbus"
 
-PR = "r9"
+PR = "r10"
 
 SRCREV = "42c652d123ea133d0a0930b96e8e39dbd0c597b5"
 SRC_URI = "git://git.kernel.org/pub/scm/network/connman/connman-gnome.git \
@@ -17,7 +17,8 @@ SRC_URI = "git://git.kernel.org/pub/scm/network/connman/connman-gnome.git \
            file://0003-Fix-setting-IPv4-configuration.patch \
            file://0004-Handle-WiFi-authentication-using-an-agent.patch \
            file://0005-Remove-all-handling-of-Passphrase-property.patch \
-           file://0006-Fix-status-descriptions-in-properties-tree.patch"
+           file://0006-Fix-status-descriptions-in-properties-tree.patch \
+           file://0007-connman-gnome-fix-segfault-due-to-unchecked-null-val.patch"
 
 S = "${WORKDIR}/git"
 

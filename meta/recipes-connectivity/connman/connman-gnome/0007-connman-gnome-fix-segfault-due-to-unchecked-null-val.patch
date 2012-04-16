@@ -1,0 +1,30 @@
+From 7225bf8e8e9bee42d7d7d02ba754b9fb30a877b6 Mon Sep 17 00:00:00 2001
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Mon, 16 Apr 2012 19:15:35 +0100
+Subject: [PATCH] connman-gnome: fix segfault due to unchecked null value
+
+If value is NULL here we should not pass it to g_value_get_boxed().
+
+Upstream-Status: Submitted
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ common/connman-dbus.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/common/connman-dbus.c b/common/connman-dbus.c
+index 33ac623..822fc98 100644
+--- a/common/connman-dbus.c
++++ b/common/connman-dbus.c
+@@ -437,7 +437,7 @@ static void service_properties(DBusGProxy *proxy, GHashTable *hash,
+ 	DBG("name %s type %d icon %s", name, type, icon);
+ 
+ 	value = g_hash_table_lookup(hash, "IPv4.Configuration");
+-	ipv4 = g_value_get_boxed (value);
++	ipv4 = value ? g_value_get_boxed (value) : NULL;
+ 
+ 	if (!ipv4)
+ 		goto done;
+-- 
+1.7.5.4
+
