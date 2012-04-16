@@ -24,36 +24,40 @@ PROVIDES += "\
 	virtual/linux-libc-headers \
 "
 PV = "${CSL_VER_MAIN}"
-PR = "r3"
+PR = "r5"
 
 #SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/${CSL_TARGET_SYS}/arm-${PV}-${TARGET_PREFIX}i686-pc-linux-gnu.tar.bz2"
 
 SRC_URI = "file://SUPPORTED"
 
 do_install() {
-	install -d ${D}${sysconfdir} ${D}${bindir} ${D}${sbindir} ${D}${base_bindir} ${D}${libdir}
-	install -d ${D}${base_libdir} ${D}${base_sbindir} ${D}${datadir} ${D}/usr
+	# Use optimized files if available
+	sysroot="${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc"
+	if [ -d $sysroot/${CSL_TARGET_CORE} ]; then
+		sysroot="$sysroot/${CSL_TARGET_CORE}"
+	fi
 
-	if [ -d ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/${CSL_TARGET_CORE} ]; then
-		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/${CSL_TARGET_CORE}/lib/.  ${D}${base_libdir}
-		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/${CSL_TARGET_CORE}/etc/.  ${D}${sysconfdir}
-		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/${CSL_TARGET_CORE}/sbin/. ${D}${base_sbindir}
-		if [ ! -e ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/${CSL_TARGET_CORE}/usr/include ]; then
-			cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/usr/include  ${D}/usr/
+	cp -a $sysroot${base_libdir}/. ${D}${base_libdir}
+	cp -a $sysroot/etc/. ${D}${sysconfdir}
+	cp -a $sysroot/sbin/. ${D}${base_sbindir}
+
+	install -d ${D}/usr
+	for usr_element in bin libexec sbin share ${base_libdir}; do
+		usr_path=$sysroot/usr/$usr_element
+		cp -a $usr_path ${D}/usr/
+	done
+	for datadir_element in man info; do
+		datadir_path=$sysroot/usr/$datadir_element
+		if [ -e $datadir_path ]; then
+			cp -a $datadir_path ${D}${datadir}/
 		fi
-		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/${CSL_TARGET_CORE}/usr/.  ${D}/usr/
-	else
-		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/lib/.  ${D}${base_libdir}
-		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/etc/.  ${D}${sysconfdir}
-		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/sbin/. ${D}${base_sbindir}
-		cp -a ${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc/usr/.  ${D}/usr/
-	fi
+	done
 
-	if [ -e ${D}${prefix}/info ]; then
-		mv ${D}${prefix}/info ${D}${infodir}
-	fi
-	if [ -e ${D}${prefix}/man ]; then
-		mv ${D}${prefix}/man ${D}${mandir}
+	# Some toolchains have headers under the core specific area
+	if [ -e $sysroot/usr/include ]; then
+		cp -a $sysroot/usr/include/. ${D}${includedir}
+	else
+		cp -a $sysroot/../usr/include/. ${D}${includedir}
 	fi
 
 	rm ${D}${sysconfdir}/rpc
@@ -61,18 +65,13 @@ do_install() {
 
 	mv ${D}${libdir}/bin/* ${D}${bindir}/
 	if [ -e ${D}${libdir}/bin/.debug ]; then
-		install -d ${D}${bindir}/.debug
 		mv ${D}${libdir}/bin/.debug/* ${D}${bindir}/.debug/
 	fi
 	ln -s ../../bin/gdbserver ${D}${libdir}/bin/sysroot-gdbserver
 
 	sed -i -e 's/__packed/__attribute__ ((packed))/' ${D}${includedir}/mtd/ubi-user.h
-	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libc.so
-	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libpthread.so
-}
-
-do_install_locale_append () {
-	rm -r ${D}${datadir}/locale ${D}${libdir}/locale
+        sed -i -e "s# ${base_libdir}# ../..${base_libdir}#g" -e "s# ${libdir}# .#g" ${D}${libdir}/libc.so
+        sed -i -e "s# ${base_libdir}# ../..${base_libdir}#g" -e "s# ${libdir}# .#g" ${D}${libdir}/libpthread.so
 }
 
 SYSROOT_PREPROCESS_FUNCS += "external_toolchain_sysroot_adjust"
