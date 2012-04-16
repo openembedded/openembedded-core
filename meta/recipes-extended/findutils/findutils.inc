@@ -12,7 +12,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949"
 
 SRC_URI = "${GNU_MIRROR}/findutils/findutils-${PV}.tar.gz"
 
-inherit autotools gettext
+inherit autotools gettext update-alternatives
+
+ALTERNATIVE_LINKS = "${bindir}/find ${bindir}/xargs"
+ALTERNATIVE_PRIORITY = "100"
 
 # diffutils assumes non-glibc compilation with uclibc and
 # this causes it to generate its own implementations of
