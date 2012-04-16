@@ -90,9 +90,8 @@ external_toolchain_sysroot_adjust() {
 
 PACKAGES =+ "libgcc libgcc-dev libstdc++ libstdc++-dev libstdc++-staticdev linux-libc-headers linux-libc-headers-dev gdbserver gdbserver-dbg"
 
-INSANE_SKIP_libgcc = "1"
-INSANE_SKIP_libstdc++ = "1"
-INSANE_SKIP_gdbserver = "1"
+# This test should be fixed to ignore .a files in .debug dirs
+INSANE_SKIP_${PN}-dbg = "staticdev"
 
 PKG_${PN} = "eglibc"
 PKG_${PN}-dev = "eglibc-dev"
