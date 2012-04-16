@@ -103,3 +103,7 @@ python csl_version_handler () {
     d.setVar('CSL_VER_GDB', csl_get_gdb_version(ld))
 }
 addhandler csl_version_handler
+
+# Ensure that any variable which includes the --sysroot (CC, CXX, etc) also
+# depends on the toolchain version
+TOOLCHAIN_OPTIONS[vardeps] += "CSL_VER_MAIN CSL_VER_GCC"
