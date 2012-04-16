@@ -2,6 +2,7 @@ DESCRIPTION = "Base configuration files for opkg"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+PR = "r1"
 
 do_compile() {
 	mkdir -p ${S}/${sysconfdir}/opkg/
@@ -9,12 +10,7 @@ do_compile() {
 	archconf=${S}/${sysconfdir}/opkg/arch.conf
 
 	rm -f $archconf
-	multilibs="${@d.getVar('MULTILIBS',True)}"
-	if [ "X${multilibs}"  == "XNone" ]; then
-		ipkgarchs="${PACKAGE_ARCHS}"
-	else
-		ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS}"
-	fi
+	ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS}"
 	priority=1
 	for arch in $ipkgarchs; do 
 		echo "arch $arch $priority" >> $archconf
