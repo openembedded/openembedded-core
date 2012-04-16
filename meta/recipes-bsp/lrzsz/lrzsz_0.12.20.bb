@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 			file://src/lrz.c;beginline=1;endline=10;md5=5276956373ff7d8758837f6399a1045f"
 SECTION = "console/network"
 DEPENDS = ""
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://www.ohse.de/uwe/releases/lrzsz-${PV}.tar.gz \
 	   file://autotools.patch \
@@ -28,13 +28,19 @@ do_install() {
 }
 
 pkg_postinst_${PN}() {
-	for util in rz rx rb sz sx sb; do
+	for util in rz rx rb; do
 		update-alternatives --install ${bindir}/$util $util lrz 100
+	done
+	for util in sz sx sb; do
+		update-alternatives --install ${bindir}/$util $util lsz 100
 	done
 }
 
 pkg_postrm_${PN}() {
-	for util in rz rx rb sz sx sb; do
+	for util in rz rx rb; do
 		update-alternatives --remove $util ${bindir}/lrz
+	done
+	for util sz sx sb; do
+		update-alternatives --remove $util ${bindir}/lsz
 	done
 }
