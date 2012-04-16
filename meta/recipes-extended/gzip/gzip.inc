@@ -12,29 +12,15 @@ SRC_URI = "${GNU_MIRROR}/gzip/${BP}.tar.gz"
 
 inherit autotools
 
-do_install () {
-	autotools_do_install
-	if [ "${PN}" = "${BPN}" ] ; then
-		# Rename and move files into /bin (FHS), which is typical place for gzip
-		install -d ${D}${base_bindir}
-		mv ${D}${bindir}/gunzip ${D}${base_bindir}/gunzip.${PN}
-		mv ${D}${bindir}/gzip ${D}${base_bindir}/gzip.${PN}
-		mv ${D}${bindir}/zcat ${D}${base_bindir}/zcat.${PN}
-	fi
+do_install_append () {
+	# Rename and move files into /bin (FHS), which is typical place for gzip
+	install -d ${D}${base_bindir}
+	mv ${D}${bindir}/gunzip ${D}${base_bindir}/gunzip
+	mv ${D}${bindir}/gzip ${D}${base_bindir}/gzip
+	mv ${D}${bindir}/zcat ${D}${base_bindir}/zcat
 }
 
-pkg_postinst_${PN} () {
-	if [ "${PN}" = "${BPN}" ] ; then
-		update-alternatives --install ${base_bindir}/gunzip gunzip gunzip.${PN} 100
-		update-alternatives --install ${base_bindir}/gzip gzip gzip.${PN} 100
-		update-alternatives --install ${base_bindir}/zcat zcat zcat.${PN} 100
-	fi
-}
+inherit update-alternatives
 
-pkg_prerm_${PN} () {
-	if [ "${PN}" = "${BPN}" ] ; then
-		update-alternatives --remove gunzip gunzip.${PN}
-		update-alternatives --remove gzip gzip.${PN}
-		update-alternatives --remove zcat zcat.${PN}
-	fi
-}
+ALTERNATIVE_LINKS = "${base_bindir}/gunzip ${base_bindir}/gzip ${base_bindir}/zcat"
+ALTERNATIVE_PRIORITY = "100"

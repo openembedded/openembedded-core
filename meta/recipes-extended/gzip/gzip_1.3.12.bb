@@ -16,29 +16,21 @@ SRC_URI = "${GNU_MIRROR}/gzip/gzip-${PV}.tar.gz \
 SRC_URI[md5sum] = "b5bac2d21840ae077e0217bc5e4845b1"
 SRC_URI[sha256sum] = "3f565be05f7f3d1aff117c030eb7c738300510b7d098cedea796ca8e4cd587af"
 
-PR = "r0"
+PR = "r1"
 
 inherit autotools
 
-do_install () {
-	autotools_do_install
+do_install_append () {
 	# move files into /bin (FHS)
 	install -d ${D}${base_bindir}
-	mv ${D}${bindir}/gunzip ${D}${base_bindir}/gunzip.${PN}
-	mv ${D}${bindir}/gzip ${D}${base_bindir}/gzip.${PN}
-	mv ${D}${bindir}/zcat ${D}${base_bindir}/zcat.${PN}
+	mv ${D}${bindir}/gunzip ${D}${base_bindir}/gunzip
+	mv ${D}${bindir}/gzip ${D}${base_bindir}/gzip
+	mv ${D}${bindir}/zcat ${D}${base_bindir}/zcat
 }
 
-pkg_postinst_${PN} () {
-	update-alternatives --install ${base_bindir}/gunzip gunzip gunzip.${PN} 100
-	update-alternatives --install ${base_bindir}/gzip gzip gzip.${PN} 100
-	update-alternatives --install ${base_bindir}/zcat zcat zcat.${PN} 100
-}
+inherit update-alternatives
 
-pkg_prerm_${PN} () {
-	update-alternatives --remove gunzip gunzip.${PN}
-	update-alternatives --remove gzip gzip.${PN}
-	update-alternatives --remove zcat zcat.${PN}
-}
+ALTERNATIVE_LINKS = "${base_bindir}/gunzip ${base_bindir}/gzip ${base_bindir}/zcat"
+ALTERNATIVE_PRIORITY = "100"
 
 BBCLASSEXTEND = "native"
