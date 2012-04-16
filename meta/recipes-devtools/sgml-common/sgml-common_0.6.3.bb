@@ -26,7 +26,7 @@ inherit autotools
 
 do_compile_append() {
 	# install-catalog script contains hardcoded references to /etc/sgml
-	sed -i -e "s|/etc/sgml|${sysconfdir}/sgml|g" bin/install-catalog
+	sed -i -e 's|\([ "]\+\)/etc/sgml|\1${sysconfdir}/sgml|g' bin/install-catalog
 }
 
 FILES_sgml-common_append = " ${datadir}/sgml"
