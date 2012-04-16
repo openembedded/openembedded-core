@@ -14,17 +14,6 @@ Issue #12326: sys.platform is now always 'linux2' on Linux
 
 Even if Python is compiled on Linux 3.
 
-diff --git a/configure b/configure
---- a/configure
-+++ b/configure
-@@ -2995,6 +2995,7 @@ then
- 	MACHDEP="$ac_md_system$ac_md_release"
- 
- 	case $MACHDEP in
-+	linux*) MACHDEP="linux2";;
- 	cygwin*) MACHDEP="cygwin";;
- 	darwin*) MACHDEP="darwin";;
- 	atheos*) MACHDEP="atheos";;
 diff --git a/configure.in b/configure.in
 --- a/configure.in
 +++ b/configure.in
