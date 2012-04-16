@@ -6,12 +6,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=11fccc94d26293d78cb4996cb17e5fa7"
 
 inherit cmake gettext
 
-DEPENDS  = "rpm boost curl libxml2 zlib sat-solver expat openssl udev"
+DEPENDS  = "rpm boost curl libxml2 zlib sat-solver expat openssl udev libproxy"
 
 S = "${WORKDIR}/git"
 SRCREV = "15b6c52260bbc52b3d8e585e271b67e10cc7c433"
 PV = "0.0-git${SRCPV}"
-PR = "r19"
+PR = "r20"
 
 SRC_URI = "git://github.com/openSUSE/libzypp.git;protocol=git \
            file://no-doc.patch \
