@@ -257,7 +257,7 @@ python package_do_split_gconvs () {
 		else:
 			libc_name = name
 		d.setVar('RDEPENDS_%s' % pkgname, legitimize_package_name('%s-binary-localedata-%s' \
-			% (bpn, libc_name)))
+			% (d.getVar('MLPREFIX') + bpn, libc_name)))
 
 	commands = {}
 

@@ -201,7 +201,8 @@ fakeroot python populate_packages_prepend () {
 
 		# RDEPENDS setup
 		rdepends = d.getVar("RDEPENDS_%s" % pkg, True) or ""
-		rdepends += " base-passwd shadow"
+		rdepends += ' ' + d.getVar('MLPREFIX') + 'base-passwd'
+		rdepends += ' ' + d.getVar('MLPREFIX') + 'shadow'
 		d.setVar("RDEPENDS_%s" % pkg, rdepends)
 
 	# Add the user/group preinstall scripts and RDEPENDS requirements

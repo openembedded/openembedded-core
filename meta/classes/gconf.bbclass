@@ -57,7 +57,7 @@ python populate_packages_append () {
 			prerm += d.getVar('gconf_prerm', True)
 			d.setVar('pkg_prerm_%s' % pkg, prerm)
 			rdepends = d.getVar("RDEPENDS_%s" % pkg, True) or ""
-			rdepends += " gconf"
+			rdepends += ' ' + d.getVar('MLPREFIX') + 'gconf'
 			d.setVar("RDEPENDS_%s" % pkg, rdepends)
 
 }
