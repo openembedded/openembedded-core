@@ -19,7 +19,7 @@ S = "${WORKDIR}/git"
 SRCREV = "d888bbc723c00d197d34a39b5b7448660ec1b1c0"
 
 PV = "0.0+git${SRCPV}"
-PR = "r10"
+PR = "r11"
 
 DEFAULT_PREFERENCE = "-1"
 
@@ -34,11 +34,17 @@ do_install () {
     fi
 }
 
+# This cannot be converted to run at pacakge install time, because
+# it depends on being run after the libgl1 package is installed,
+# and RPM cannot guarantee the order of pacakge insallation.
 pkg_postinst_${PN} () {
-    if [ "${PN}" != "qemugl-nativesdk" ]; then
-        rm -f $D${libdir}/libGL.so.1.2
-        ln -s libGL-qemu.so.1.2 $D${libdir}/libGL.so.1.2
-    fi
+#!/bin/sh -e
+if [ x"$D" = "x" ]; then
+	rm -f ${libdir}/libGL.so.1.2
+	ln -s libGL-qemu.so.1.2 ${libdir}/libGL.so.1.2
+else
+	exit 1
+fi
 }
 
 BBCLASSEXTEND = "nativesdk"
