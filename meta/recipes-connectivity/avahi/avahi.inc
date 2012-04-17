@@ -14,7 +14,7 @@ SECTION = "network"
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-INC_PR = "r1"
+INC_PR = "r2"
 
 DEPENDS = "expat libcap libdaemon dbus glib-2.0"
 
@@ -123,17 +123,16 @@ do_install_avahi-autoipd() {
 }
 
 # At the time the postinst runs, dbus might not be setup so only restart if running 
+# Don't exit early, because update-rc.d needs to run subsequently.
 
 pkg_postinst_avahi-daemon () {
-	if [ "x$D" != "x" ]; then
-		exit 0
-	fi
-
+if [ -z "$D" ]; then
 	DBUSPID=`pidof dbus-daemon`
 
 	if [ "x$DBUSPID" != "x" ]; then
 		/etc/init.d/dbus-1 force-reload
 	fi
+fi
 }
 
 pkg_postinst_avahi-autoipd () {
