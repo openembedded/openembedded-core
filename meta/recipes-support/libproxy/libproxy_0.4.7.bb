@@ -29,3 +29,9 @@ do_configure_prepend() {
 	export HOST_SYS=${HOST_SYS}
 	export BUILD_SYS=${BUILD_SYS}
 }
+
+python() {
+    if (d.getVar("INCOMPATIBLE_LICENSE", True) or "").find("GPLv3") != -1:
+        d.setVar("EXTRA_OECMAKE", d.getVar("EXTRA_OECMAKE").replace("-DWITH_GNOME=yes", "-DWITH_GNOME=no"))
+        d.setVar("DEPENDS", " ".join(i for i in d.getVar("DEPENDS").split() if i != "gconf"))
+}
