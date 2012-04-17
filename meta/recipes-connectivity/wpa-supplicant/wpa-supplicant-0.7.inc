@@ -36,8 +36,10 @@ do_compile () {
 do_install () {
 	install -d ${D}${sbindir}
 	install -m 755 wpa_supplicant ${D}${sbindir}
-	install -m 755 wpa_passphrase ${D}${sbindir}
 	install -m 755 wpa_cli        ${D}${sbindir}
+
+	install -d ${D}${bindir}
+	install -m 755 wpa_passphrase ${D}${bindir}
 
 	install -d ${D}${docdir}/wpa_supplicant
 	install -m 644 README ${WORKDIR}/wpa_supplicant.conf ${D}${docdir}/wpa_supplicant
