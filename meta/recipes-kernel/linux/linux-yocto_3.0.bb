@@ -18,7 +18,7 @@ SRCREV_machine_qemuppc ?= "7528f1d06ef5665eed8c1498f62d5403b82bbbd6"
 SRCREV_machine_qemux86 ?= "f153b0eb8264dc1e69f59d4c9173619feb4d5bd9"
 SRCREV_machine_qemux86-64 ?= "aac580659dc0ce083f250fb05abf82e58d7f4531"
 SRCREV_machine ?= "da7c40006b08916ff3a3db104def82aaf9ac2716"
-SRCREV_meta ?= "bb4fff95b3d28c8ab87cd6905eaef86e1f46db6e"
+SRCREV_meta ?= "34e0d2b4b4e9778b31f9ea99ca43f0dc71a7ee23"
 
 PR = "r4"
 PV = "${LINUX_VERSION}+git${SRCPV}"
