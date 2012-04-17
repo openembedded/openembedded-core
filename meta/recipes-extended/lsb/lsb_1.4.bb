@@ -4,6 +4,8 @@ HOMEPAGE = "http://prdownloads.sourceforge.net/lsb"
 LICENSE = "GPLv2+"
 PR = "r2"
 
+DEPENDS="util-linux"
+
 LIC_FILES_CHKSUM = "file://README;md5=12da544b1a3a5a1795a21160b49471cf"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/lsb/lsb_release/${PV}/lsb-release-${PV}.tar.gz \
@@ -31,6 +33,9 @@ do_install(){
 		echo -n "core-4.1-${TARGET_ARCH}" >>  ${D}/etc/lsb-release
 	fi
 	echo "\"" >> ${D}/etc/lsb-release
+	echo "DISTRIB_ID=${DISTRO}" >> ${D}/etc/lsb-release
+	echo "DISTRIB_RELEASE=${DISTRO_VERSION}" >> ${D}/etc/lsb-release
+	echo "DISTRIB_DESCRIPTION=\"${DISTRO_NAME} ${DISTRO_VERSION}\"" >> ${D}/etc/lsb-release
 	
 	if [ "${TARGET_ARCH}" == "i586" ];then
 		mkdir -p ${D}/etc/lsb-release.d
