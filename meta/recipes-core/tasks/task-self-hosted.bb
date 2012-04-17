@@ -44,6 +44,7 @@ RDEPENDS_task-self-hosted-host-tools = "\
     kernel-module-iptable-nat \
     kernel-module-iptable-mangle \
     kernel-module-iptable-filter \
+    lsb \
     mc \
     parted \
     pseudo \
