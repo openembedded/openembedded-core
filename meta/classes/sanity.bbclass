@@ -378,7 +378,7 @@ def check_sanity(e):
         if last_sstate_dir != sstate_dir:
             messages = messages + check_sanity_sstate_dir_change(sstate_dir, e.data)
 
-    if os.path.exists("conf"):
+    if os.path.exists("conf") and not messages:
         f = file(sanityverfile, 'w')
         f.write("SANITY_VERSION %s\n" % sanity_version) 
         f.write("TMPDIR %s\n" % tmpdir) 
