@@ -7,7 +7,7 @@ DEPENDS = "virtual/libx11 libxext libxrender startup-notification expat gconf pa
 
 SRCREV = "01fa5465743c9ee43d040350f4405d35293e4869"
 PV = "0.1+git${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://git.yoctoproject.org/matchbox-window-manager-2;proto=git \
 	file://fix_makefile.patch \
@@ -22,7 +22,7 @@ inherit autotools pkgconfig update-alternatives
 # matchbox-window-manager-2.
 ALTERNATIVE_NAME = "x-window-manager"
 ALTERNATIVE_LINK = "${bindir}/x-window-manager"
-ALTERNATIVE_PATH = "${bindir}/matchbox-session"
+ALTERNATIVE_PATH = "${bindir}/matchbox-window-manager"
 ALTERNATIVE_PRIORITY = "10"
 
 PACKAGES =+ "libmatchbox2"
