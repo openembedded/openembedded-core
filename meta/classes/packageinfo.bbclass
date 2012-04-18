@@ -20,14 +20,25 @@ python packageinfo_handler () {
                         pkgrename = sdata['PKG_%s' % pkgname]
                         pkgv = sdata['PKGV'].replace('-', '+')
                         pkgr = sdata['PKGR']
+                        # We found there are some renaming issue with certain architecture.
+                        # For example, armv7a-vfp-neon, it will use armv7a in the rpm file. This is the workaround for it.
+                        arch_tmp = arch.split('-')[0]
                         if os.path.exists(deploy_dir + '/' + arch + '/' + \
                                           pkgname + '-' + pkgv + '-' + pkgr + '.' + arch + '.' + packaging) or \
                            os.path.exists(deploy_dir + '/' + arch + '/' + \
+                                          pkgname + '-' + pkgv + '-' + pkgr + '.' + arch_tmp + '.' + packaging) or \
+                           os.path.exists(deploy_dir + '/' + arch + '/' + \
                                           pkgrename + '-' + pkgv + '-' + pkgr + '.' + arch + '.' + packaging) or \
+                           os.path.exists(deploy_dir + '/' + arch + '/' + \
+                                          pkgrename + '-' + pkgv + '-' + pkgr + '.' + arch_tmp + '.' + packaging) or \
                            os.path.exists(deploy_dir + '/' + arch + '/' + \
                                           pkgname + '_' + pkgv + '-' + pkgr + '_' + arch + '.' + packaging) or \
                            os.path.exists(deploy_dir + '/' + arch + '/' + \
-                                          pkgrename + '_' + pkgv + '-' + pkgr + '_' + arch + '.' + packaging):
+                                          pkgname + '_' + pkgv + '-' + pkgr + '_' + arch_tmp + '.' + packaging) or \
+                           os.path.exists(deploy_dir + '/' + arch + '/' + \
+                                          pkgrename + '_' + pkgv + '-' + pkgr + '_' + arch + '.' + packaging) or \
+                           os.path.exists(deploy_dir + '/' + arch + '/' + \
+                                          pkgrename + '_' + pkgv + '-' + pkgr + '_' + arch_tmp + '.' + packaging):
                             pkginfolist.append(sdata)
         bb.event.fire(bb.event.PackageInfo(pkginfolist), e.data)
 }
