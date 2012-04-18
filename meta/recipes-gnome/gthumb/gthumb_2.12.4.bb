@@ -8,6 +8,8 @@ PR = "r2"
 
 EXTRA_OECONF = "--disable-gnome-keyring --disable-libsoup --disable-exiv2 --disable-clutter"
 
+PARALLEL_MAKEINST=""
+
 inherit gnome pkgconfig
 
 FILES_${PN} += "${datadir}/icons"
