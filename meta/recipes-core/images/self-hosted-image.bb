@@ -19,7 +19,7 @@ IMAGE_FSTYPES = "vmdk"
 
 inherit core-image
 
-SRCREV = "20ff9db92165e6d16897671d2b1d370661962712"
+SRCREV = "729e7f774c0328688ebf6092ca0780633a357ce9"
 SRC_URI = "git://git.yoctoproject.org/poky;protocol=git"
 
 IMAGE_CMD_ext3_append () {
