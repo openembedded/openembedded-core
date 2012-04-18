@@ -124,6 +124,7 @@ def check_supported_distro(e):
         finally:
             f.close()
     elif os.path.exists("/etc/SuSE-release"):
+        import re
         f = open("/etc/SuSE-release", "r")
         try:
             distro = f.readline()
