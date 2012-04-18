@@ -120,7 +120,7 @@ def check_supported_distro(e):
     if os.path.exists("/etc/redhat-release"):
         f = open("/etc/redhat-release", "r")
         try:
-            distro = f.readline()
+            distro = f.readline().strip()
         finally:
             f.close()
     elif os.path.exists("/etc/SuSE-release"):
