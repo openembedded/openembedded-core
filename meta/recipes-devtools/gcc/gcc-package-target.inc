@@ -1,5 +1,5 @@
 PACKAGES = "\
-  ${PN} ${PN}-symlinks \
+  ${PN} ${PN}-plugins ${PN}-symlinks \
   g++ g++-symlinks \
   cpp cpp-symlinks \
   g77 g77-symlinks \
@@ -39,6 +39,11 @@ FILES_${PN}-symlinks = "\
   ${bindir}/gcc \
   ${bindir}/gccbug \
 "
+
+FILES_${PN}-plugins = "\
+  ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin \
+"
+ALLOW_EMPTY_${PN}-plugins = "1"
 
 FILES_g77 = "\
   ${bindir}/${TARGET_PREFIX}g77 \
@@ -88,6 +93,7 @@ do_install () {
 	rm -r ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
 	rm -r ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
 	rm -rf ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/*.la
+	rmdir ${D}${includedir}
 
 	# Hack around specs file assumptions
 	test -f ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/specs && sed -i -e '/^*cross_compile:$/ { n; s/1/0/; }' ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/specs
