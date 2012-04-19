@@ -33,5 +33,7 @@ PR = "r1"
 
 S = "${WORKDIR}/bdwgc"
 
+ARM_INSTRUCTION_SET = "arm"
+
 inherit autotools
 BBCLASSEXTEND = "native nativesdk"
