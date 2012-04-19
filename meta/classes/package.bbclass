@@ -870,6 +870,14 @@ python split_and_strip_files () {
 				elf_file = int(file_list[file][5:])
 				#bb.note("Strip %s" % file)
 				runstrip(file, elf_file, d)
+
+
+	if (d.getVar('INHIBIT_PACKAGE_STRIP', True) != '1'):	
+		for root, dirs, files in os.walk(dvar):
+			for f in files:
+				if not f.endswith(".ko"):
+					continue
+				runstrip(os.path.join(root, f), None, d)
 	#
 	# End of strip
 	#
