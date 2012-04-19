@@ -32,6 +32,7 @@ FILES_${PN}-symlinks = " \
 	${bindir}/addr2line \
 	${bindir}/as \
 	${bindir}/c++filt \
+	${bindir}/embedspu \
 	${bindir}/gprof \
 	${bindir}/ld \
 	${bindir}/ld.bfd \
