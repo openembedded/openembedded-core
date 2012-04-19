@@ -24,11 +24,6 @@ RDEPENDS_${PN} = "bash"
 # quilt ignores DESTDIR
 do_install () {
 	oe_runmake 'BUILD_ROOT=${D}' install
-	if [ "${BUILD_ARCH}" == "${HOST_ARCH}" ]; then
-		# Dummy quiltrc file for patch.bbclass
-		install -d ${D}${bindir}/
-		touch ${D}${bindir}/quiltrc
-	fi
 	# cleanup unpackaged files
 	rm -rf ${D}/${datadir}/emacs
 }
