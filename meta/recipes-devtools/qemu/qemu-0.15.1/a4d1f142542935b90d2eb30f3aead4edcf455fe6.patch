@@ -1,0 +1,66 @@
+From a4d1f142542935b90d2eb30f3aead4edcf455fe6 Mon Sep 17 00:00:00 2001
+From: Aurelien Jarno <aurelien@aurel32.net>
+Date: Sat, 7 Jan 2012 15:20:11 +0100
+Subject: [PATCH 1/1] target-i386: fix {min,max}{pd,ps,sd,ss} SSE2 instructions
+
+minpd, minps, minsd, minss and maxpd, maxps, maxsd, maxss SSE2
+instructions have been broken when switching target-i386 to softfloat.
+It's not possible to use comparison instructions on float types anymore
+to softfloat, so use the floatXX_lt function instead, as the
+float_XX_min and float_XX_max functions can't be used due to the Intel
+specific behaviour.
+
+As it implements the correct NaNs behaviour, let's remove the
+corresponding entry from the TODO.
+
+It fixes GDM screen display on Debian Lenny.
+
+Thanks to Peter Maydell and Jason Wessel for their analysis of the
+problem.
+
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+---
+ target-i386/TODO      |    1 -
+ target-i386/ops_sse.h |    9 +++++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+This fixes scrollbar issues in matchbox-terminal/vte on qemux86-64 and
+files not appearing in pcmanfm, as well as glib/gobject errors to do with gdoubles
+on the console [YOCTO #1906]
+
+Upstream-Status: Backport
+
+Index: qemu-0.15.1/target-i386/TODO
+===================================================================
+--- qemu-0.15.1.orig/target-i386/TODO	2011-10-12 16:41:43.000000000 +0000
++++ qemu-0.15.1/target-i386/TODO	2012-04-19 07:30:38.704073075 +0000
+@@ -15,7 +15,6 @@
+ - DRx register support
+ - CR0.AC emulation
+ - SSE alignment checks
+-- fix SSE min/max with nans
+ 
+ Optimizations/Features:
+ 
+Index: qemu-0.15.1/target-i386/ops_sse.h
+===================================================================
+--- qemu-0.15.1.orig/target-i386/ops_sse.h	2011-10-12 16:41:43.000000000 +0000
++++ qemu-0.15.1/target-i386/ops_sse.h	2012-04-19 07:30:38.712073076 +0000
+@@ -584,10 +584,15 @@
+ #define FPU_SUB(size, a, b) float ## size ## _sub(a, b, &env->sse_status)
+ #define FPU_MUL(size, a, b) float ## size ## _mul(a, b, &env->sse_status)
+ #define FPU_DIV(size, a, b) float ## size ## _div(a, b, &env->sse_status)
+-#define FPU_MIN(size, a, b) (a) < (b) ? (a) : (b)
+-#define FPU_MAX(size, a, b) (a) > (b) ? (a) : (b)
+ #define FPU_SQRT(size, a, b) float ## size ## _sqrt(b, &env->sse_status)
+ 
++/* Note that the choice of comparison op here is important to get the
++ * special cases right: for min and max Intel specifies that (-0,0),
++ * (NaN, anything) and (anything, NaN) return the second argument.
++ */
++#define FPU_MIN(size, a, b) float ## size ## _lt(a, b, &env->sse_status) ? (a) : (b)
++#define FPU_MAX(size, a, b) float ## size ## _lt(b, a, &env->sse_status) ? (a) : (b)
++
+ SSE_HELPER_S(add, FPU_ADD)
+ SSE_HELPER_S(sub, FPU_SUB)
+ SSE_HELPER_S(mul, FPU_MUL)
