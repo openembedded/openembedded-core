@@ -7,11 +7,11 @@ RP 31/8/2011
 
 Upstream-Status: Inappropriate [OE specific]
 
-Index: intltool-0.40.6/configure.in
+Index: intltool-0.40.6/configure.ac
 ===================================================================
---- intltool-0.40.6.orig/configure.in	2011-08-31 11:21:13.061160535 +0100
-+++ intltool-0.40.6/configure.in	2011-08-31 11:22:44.991160885 +0100
-@@ -9,24 +9,10 @@
+--- intltool-0.40.6.orig/configure.ac	2011-08-31 11:21:13.061160535 +0100
++++ intltool-0.40.6/configure.ac	2011-08-31 11:22:44.991160885 +0100
+@@ -11,24 +11,10 @@
  aclocaldir='${datadir}'/aclocal
  AC_SUBST(aclocaldir)
  
