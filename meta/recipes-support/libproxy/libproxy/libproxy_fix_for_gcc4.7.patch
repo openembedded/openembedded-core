@@ -1,0 +1,30 @@
+Upstream-Status: Pending
+
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+2012/04/20
+Fixes this issue with gcc 4.7
+
+| cd /srv/home/nitin/builds/bERROR: Function failed: do_compile (see /srv/home/nitin/builds/build-gcc47/tmp/work/x86_64-poky-linux/libproxy-0.4.7-r3/temp/log.do_compile.7514 for further information)
+| uild-gcc47/tmp/work/x86_64-poky-linux/libproxy-0.4.7-r3/libproxy-0.4.7/libproxy && /srv/home/nitin/builds/build-gcc47/tmp/sysroots/x86_64-linux/usr/bin/x86_64-poky-linux/x86_64-poky-linux-g++   -Dlibproxy_EXPORTS -D_POSIX_C_SOURCE=1 -DLIBEXECDIR=\"/usr/libexec\" -DMM_MODULE_BUILTIN=config_sysconfig -fvisibility=hidden    -m64  --sysroot=/srv/home/nitin/builds/build-gcc47/tmp/sysroots/qemux86-64  -O2 -pipe -g -feliminate-unused-debug-types -fpermissive -fvisibility-inlines-hidden -fpermissive -O2 -g -fPIC -I/srv/home/nitin/builds/build-gcc47/tmp/work/x86_64-poky-linux/libproxy-0.4.7-r3/libproxy-0.4.7 -I/srv/home/nitin/builds/build-gcc47/tmp/sysroots/qemux86-64/usr/include/glib-2.0 -I/srv/home/nitin/builds/build-gcc47/tmp/sysroots/qemux86-64/usr/lib/glib-2.0/include    -o CMakeFiles/libproxy.dir/modules/config_sysconfig.cpp.o -c /srv/home/nitin/builds/build-gcc47/tmp/work/x86_64-poky-linux/libproxy-0.4.7-r3/libproxy-0.4.7/libproxy/modules/config_sysconfig.cpp
+| /srv/home/nitin/builds/build-gcc47/tmp/work/x86_64-poky-linux/libproxy-0.4.7-r3/libproxy-0.4.7/libproxy/modules/config_sysconfig.cpp: In function 'bool should_use_sysconfig()':
+| /srv/home/nitin/builds/build-gcc47/tmp/work/x86_64-poky-linux/libproxy-0.4.7-r3/libproxy-0.4.7/libproxy/modules/config_sysconfig.cpp:107:18: error: 'getuid' was not declared in this scope
+| make[2]: *** [libproxy/CMakeFiles/libproxy.dir/modules/config_sysconfig.cpp.o] Error 1
+| make[2]: Leaving directory `/srv/home/nitin/builds/build-gcc47/tmp/work/x86_64-poky-linux/libproxy-0.4.7-r3/libproxy-0.4.7'
+| make[1]: *** [libproxy/CMakeFiles/libproxy.dir/all] Error 2
+| make[1]: Leaving directory `/srv/home/nitin/builds/build-gcc47/tmp/work/x86_64-poky-linux/libproxy-0.4.7-r3/libproxy-0.4.7'
+| make: *** [all] Error 2
+| ERROR: oe_runmake failed
+NOTE: package libproxy-0.4.7-r3: task do_compile: Failed
+
+Index: libproxy-0.4.7/libproxy/modules/config_sysconfig.cpp
+===================================================================
+--- libproxy-0.4.7.orig/libproxy/modules/config_sysconfig.cpp
++++ libproxy-0.4.7/libproxy/modules/config_sysconfig.cpp
+@@ -21,6 +21,7 @@
+ #include <cstdlib>
+ #include <map>
+ #include <fstream>
++#include <unistd.h>
+ 
+ #include "../extension_config.hpp"
+ using namespace libproxy;
