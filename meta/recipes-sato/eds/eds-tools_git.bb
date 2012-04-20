@@ -1,11 +1,11 @@
 LICENSE = "GPLv2"
 SECTION = "x11"
-DEPENDS = "dbus-glib eds-dbus"
+DEPENDS = "dbus-glib evolution-data-server"
 RDEPENDS_${PN} = "libedata-book"
 DESCRIPTION = "Test applications for EDS"
 
 SRCREV = "5e9afbd22a021d1f0d0a0249d5995d19dd770584"
-PR = "r1"
+PR = "r3"
 
 SRC_URI = "git://github.com/rossburton/eds-tools.git;protocol=git"
 

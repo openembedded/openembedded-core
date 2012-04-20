@@ -180,5 +180,5 @@ lf_cv_sane_realloc=yes
 # xffm
 jm_cv_func_working_readdir=yes
 
-# eds-dbus
+# evolution-data-server
 ac_cv_libiconv_utf8=${ac_cv_libiconv_utf8=yes}

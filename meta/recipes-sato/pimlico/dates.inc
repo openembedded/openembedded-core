@@ -5,7 +5,7 @@ BUGTRACKER = "https://bugzilla.gnome.org/"
 LICENSE = "GPLv2 & GPLv2+ & LGPLv2+"
 
 SECTION = "x11"
-DEPENDS = "glib-2.0 gtk+ libglade eds-dbus"
+DEPENDS = "glib-2.0 gtk+ libglade evolution-data-server"
 RDEPENDS_${PN} = "libedata-cal"
 
 inherit autotools gettext pkgconfig gtk-icon-cache

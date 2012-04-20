@@ -7,7 +7,7 @@ SDK-GMAE = " \
     gconf-dev \
     avahi-dev \
     telepathy-glib-dev \
-    eds-dbus-dev \
+    evolution-data-server-dev \
     libecal-dev \
     libebook-dev \
     libxi-dev \
