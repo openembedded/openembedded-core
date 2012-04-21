@@ -112,7 +112,4 @@ EXTRA_OECONF_INTERMEDIATE = "--disable-libmudflap \
 				--disable-plugin \
 				--disable-libssp"
 
-EXTRA_OECONF_append_linux-uclibc = " --disable-decimal-float "
-EXTRA_OECONF_append_linux-uclibceabi = " --disable-decimal-float "
-EXTRA_OECONF_append_linux-uclibcspe = " --disable-decimal-float "
-
+EXTRA_OECONF_append_libc-uclibc = " --disable-decimal-float "
