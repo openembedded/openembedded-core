@@ -9,6 +9,8 @@ SECTION = "base"
 LICENSE = "LGPL2.1"
 DEPENDS = "sqlite3"
 
+SRC_URI_append_virtclass-nativesdk = " file://symver.patch"
+
 FILES_${PN} = "${libdir}/pseudo/lib*/libpseudo.so ${bindir}/* ${localstatedir}/pseudo ${prefix}/var/pseudo"
 FILES_${PN}-dbg += "${libdir}/pseudo/lib*/.debug"
 PROVIDES += "virtual/fakeroot"
@@ -75,8 +77,6 @@ do_install_append_virtclass-nativesdk () {
 		mkdir -p ${D}${prefix}/lib/pseudo/lib
 		cp lib/pseudo/lib/libpseudo.so ${D}${prefix}/lib/pseudo/lib/.
 	fi
-
-	create_wrapper ${D}${bindir}/pseudo LD_LIBRARY_PATH=${base_libdir}:${libdir}
 }
 
 BBCLASSEXTEND = "native nativesdk"

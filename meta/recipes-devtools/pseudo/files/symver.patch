@@ -1,0 +1,26 @@
+When running as pseudo-nativesdk, we might need to run host binaries 
+linked against the host libc. Having a 2.14 libc dependency from memcpy is
+problematic so instruct the linker to use older symbols.
+
+Upstream-Status: Pending
+
+RP 2012/4/22
+
+Index: pseudo-1.3/pseudo.h
+===================================================================
+--- pseudo-1.3.orig/pseudo.h	2012-04-22 12:17:59.078909060 +0000
++++ pseudo-1.3/pseudo.h	2012-04-22 12:32:42.954888587 +0000
+@@ -29,6 +29,13 @@
+ int pseudo_set_value(const char *key, const char *value);
+ char *pseudo_get_value(const char *key);
+ 
++#ifdef __amd64__   
++#define GLIBC_COMPAT_SYMBOL(SYM) __asm__(".symver " #SYM "," #SYM "@GLIBC_2.2.5")
++#else   
++#define GLIBC_COMPAT_SYMBOL(SYM) __asm__(".symver " #SYM "," #SYM "@GLIBC_2.0")
++#endif
++GLIBC_COMPAT_SYMBOL(memcpy);
++
+ #include "pseudo_tables.h"
+ 
+ extern void pseudo_debug_verbose(void);
