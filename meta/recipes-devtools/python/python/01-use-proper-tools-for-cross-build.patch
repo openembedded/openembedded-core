@@ -119,8 +119,8 @@ Index: Python-2.7.2/setup.py
  
          # XXX Omitted modules: gl, pure, dl, SGI-specific modules
  
-+        lib_dirs = [ os.getenv( "STAGING_LIBDIR" ) ]
-+        inc_dirs = [ os.getenv( "STAGING_INCDIR" ) ]
++        lib_dirs = [ os.getenv("STAGING_LIBDIR"),  os.getenv("STAGING_BASELIBDIR") ]
++        inc_dirs = [ os.getenv("STAGING_INCDIR") ]
 +
          #
          # The following modules are all pretty straightforward, and compile
