@@ -126,6 +126,8 @@ python package_do_split_gconvs () {
 	if not d.getVar('PACKAGES', True):
 		return
 
+	mlprefix = d.getVar("MLPREFIX", True) or ""
+
 	bpn = d.getVar('BPN', True)
 	libdir = d.getVar('libdir', True)
 	if not libdir:
@@ -149,7 +151,7 @@ python package_do_split_gconvs () {
 		for l in f.readlines():
 			m = c_re.match(l) or i_re.match(l)
 			if m:
-				dp = legitimize_package_name('%s-gconv-%s' % (bpn, m.group(1)))
+				dp = legitimize_package_name('%s%s-gconv-%s' % (mlprefix, bpn, m.group(1)))
 				if not dp in deps:
 					deps.append(dp)
 		f.close()
@@ -170,7 +172,7 @@ python package_do_split_gconvs () {
 		for l in f.readlines():
 			m = c_re.match(l) or i_re.match(l)
 			if m:
-				dp = legitimize_package_name('%s-charmap-%s' % (bpn, m.group(1)))
+				dp = legitimize_package_name('%s%s-charmap-%s' % (mlprefix, bpn, m.group(1)))
 				if not dp in deps:
 					deps.append(dp)
 		f.close()
@@ -190,7 +192,7 @@ python package_do_split_gconvs () {
 		for l in f.readlines():
 			m = c_re.match(l) or i_re.match(l)
 			if m:
-				dp = legitimize_package_name(bpn+'-localedata-%s' % m.group(1))
+				dp = legitimize_package_name(mlprefix+bpn+'-localedata-%s' % m.group(1))
 				if not dp in deps:
 					deps.append(dp)
 		f.close()
@@ -234,7 +236,7 @@ python package_do_split_gconvs () {
 
 	def output_locale_source(name, pkgname, locale, encoding):
 		d.setVar('RDEPENDS_%s' % pkgname, 'localedef %s-localedata-%s %s-charmap-%s' % \
-		(bpn, legitimize_package_name(locale), bpn, legitimize_package_name(encoding)))
+		(mlprefix+bpn, legitimize_package_name(locale), mlprefix+bpn, legitimize_package_name(encoding)))
 		d.setVar('pkg_postinst_%s' % pkgname, d.getVar('locale_base_postinst', True) \
 		% (locale, encoding, locale))
 		d.setVar('pkg_postrm_%s' % pkgname, d.getVar('locale_base_postrm', True) % \
@@ -247,7 +249,7 @@ python package_do_split_gconvs () {
 		else:
 			libc_name = name
 		d.setVar('RDEPENDS_%s' % pkgname, legitimize_package_name('%s-binary-localedata-%s' \
-			% (d.getVar('MLPREFIX') + bpn, libc_name)))
+			% (mlprefix+bpn, libc_name)))
 
 	commands = {}
 
