@@ -1,6 +1,6 @@
 require pseudo.inc
 
-PR = "r9"
+PR = "r10"
 
 SRC_URI = "http://www.yoctoproject.org/downloads/${BPN}/${BPN}-${PV}.tar.bz2"
 
