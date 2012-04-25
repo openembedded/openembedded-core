@@ -100,7 +100,8 @@ dest=$[ (`echo $TAP | sed 's/tap//'` * 2) + 2 ]
 $ROUTE add -host 192.168.7.$dest $TAP
 
 # setup NAT for tap0 interface to have internet access in QEMU
-$IPTABLES -A POSTROUTING -t nat -j MASQUERADE -s 192.168.7.0/24
+$IPTABLES -A POSTROUTING -t nat -j MASQUERADE -s 192.168.7.$n/32
+$IPTABLES -A POSTROUTING -t nat -j MASQUERADE -s 192.168.7.$dest/32
 echo 1 > /proc/sys/net/ipv4/ip_forward
 $IPTABLES -P FORWARD ACCEPT
 
