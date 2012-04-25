@@ -3,15 +3,15 @@ DESCRIPTION = "PNG Library"
 HOMEPAGE = "http://www.libpng.org/"
 SECTION = "libs"
 LICENSE = "Libpng"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=21b4b6e3523afa9f03f00b43b991dad0 \
-                    file://png.h;startline=172;endline=261;md5=996460063a9bf2de35b2d61d2776dabc"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=20110633230abd47fe8680afa75f1492 \
+                    file://png.h;startline=308;endline=422;md5=edd1c552386a8c3773d90e278ae30891"
 DEPENDS = "zlib"
-PR = "r4"
+PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/libpng/libpng12/${PV}/libpng-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "e8b43dc78ef95b3949af7f961d76874b"
-SRC_URI[sha256sum] = "a5e796e1802b2e221498bda09ff9850bc7ec9068b6788948cc2c42af213914d8"
+SRC_URI[md5sum] = "d5106b70b4f8b464a7da66bffe4565fb"
+SRC_URI[sha256sum] = "fbf8faa70ebca2ed2ee6df6f2249f4722517b581af5b6c3c71bbdaf925d5954e"
 
 inherit autotools binconfig pkgconfig
 
