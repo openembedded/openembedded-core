@@ -31,8 +31,8 @@ SRC_URI += "file://configure-targets.patch \
             file://openssl_fix_for_x32.patch \
            "
 
-SRC_URI[md5sum] = "a5bc483c570f2ac3758ce5c19b667fab"
-SRC_URI[sha256sum] = "7e3dfc21aa57ed33ea673170053d1921322803b8a6a624a4f0d2e4c308bd418d"
+SRC_URI[md5sum] = "b4df9c11af454fd68178c85a1d5f328f"
+SRC_URI[sha256sum] = "548262d15777c504be1ab9bb8fabef1e14a3de54837a6593c8f403dd843d5e57"
 
 PACKAGES =+ " \
 	${PN}-engines \
