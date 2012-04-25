@@ -266,10 +266,13 @@ python package_do_split_gconvs () {
 			target_arch = d.getVar('TARGET_ARCH', True)
 			locale_arch_options = { \
 				"arm":     " --uint32-align=4 --little-endian ", \
+				"sh4":     " --uint32-align=4 --big-endian ",    \
 				"powerpc": " --uint32-align=4 --big-endian ",    \
 				"powerpc64": " --uint32-align=4 --big-endian ",  \
 				"mips":    " --uint32-align=4 --big-endian ",    \
+				"mips64":  " --uint32-align=4 --big-endian ",    \
 				"mipsel":  " --uint32-align=4 --little-endian ", \
+				"mips64el":" --uint32-align=4 --little-endian ", \
 				"i586":    " --uint32-align=4 --little-endian ", \
 				"i686":    " --uint32-align=4 --little-endian ", \
 				"x86_64":  " --uint32-align=4 --little-endian "  }
