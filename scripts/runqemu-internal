@@ -51,11 +51,14 @@ else
         "qemuarm")
             mem_size=128
             ;;
-        "qemumips")
+        "qemumips"|"qemumips64")
             mem_size=128
             ;;
         "qemuppc")
             mem_size=128
+            ;;
+        "qemush4")
+            mem_size=1024
             ;;
         *)
             mem_size=64
@@ -233,6 +236,8 @@ fi
 case "$MACHINE" in
     "qemuarm") ;;
     "qemumips") ;;
+    "qemumips64") ;;
+    "qemush4") ;;
     "qemuppc") ;;
     "qemuarmv6") ;;
     "qemuarmv7") ;;
@@ -370,8 +375,12 @@ if [ "$MACHINE" = "spitz" ]; then
     fi
 fi
 
-if [ "$MACHINE" = "qemumips" ]; then
-    QEMU=qemu-system-mips
+if [ "$MACHINE" = "qemumips" -o "$MACHINE" = "qemumips64" ]; then
+    if [ "$MACHINE" = "qemumips64" ]; then
+	QEMU=qemu-system-mips64
+    else
+	QEMU=qemu-system-mips
+    fi
     MACHINE_SUBTYPE=malta
     QEMU_UI_OPTIONS="-vga cirrus $QEMU_UI_OPTIONS"
     if [ "$FSTYPE" = "ext3" -o "$FSTYPE" = "btrfs" ]; then
@@ -408,6 +417,26 @@ if [ "$MACHINE" = "qemuppc" ]; then
         fi
         KERNCMDLINE="root=/dev/nfs console=ttyS0 console=tty nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -cpu $CPU_SUBTYPE -M $MACHINE_SUBTYPE -no-reboot $QEMU_UI_OPTIONS"
+    fi
+fi
+
+if [ "$MACHINE" = "qemush4" ]; then
+    QEMU=qemu-system-sh4
+    MACHINE_SUBTYPE=r2d
+    QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS"
+    if [ "$FSTYPE" = "ext3" -o "$FSTYPE" = "btrfs" ]; then
+        #KERNCMDLINE="root=/dev/hda console=ttyS0 console=tty0 $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        KERNCMDLINE="root=/dev/hda rw console=ttySC1 noiotrap earlyprintk=sh-sci.1 console=tty $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M $MACHINE_SUBTYPE -hda $ROOTFS -no-reboot $QEMU_UI_OPTIONS -monitor null -serial vc -serial stdio"
+    fi
+    if [ "$FSTYPE" = "nfs" ]; then
+        if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
+            echo "Error: NFS mount point $ROOTFS doesn't exist"
+            cleanup
+            return
+        fi
+        KERNCMDLINE="root=/dev/nfs console=ttySC1 noiotrap earlyprintk=sh-sci.1 console=tty nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M $MACHINE_SUBTYPE -no-reboot $QEMU_UI_OPTIONS -monitor null -serial vc -serial stdio"
     fi
 fi
 
