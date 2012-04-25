@@ -1,0 +1,49 @@
+for mips64*-*-linux we change the default emulations to be
+N64 instead of N32
+
+Upstream-Status: Inappropriate [ OE configuration Specific]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: binutils-2.22/bfd/config.bfd
+===================================================================
+--- binutils-2.22.orig/bfd/config.bfd	2011-07-28 15:35:13.000000000 -0700
++++ binutils-2.22/bfd/config.bfd	2012-04-23 21:07:44.151578222 -0700
+@@ -970,13 +970,13 @@
+     ;;
+ #ifdef BFD64
+   mips64*el-*-linux*)
+-    targ_defvec=bfd_elf32_ntradlittlemips_vec
+-    targ_selvecs="bfd_elf32_ntradbigmips_vec bfd_elf32_tradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf64_tradlittlemips_vec bfd_elf64_tradbigmips_vec"
++    targ_defvec=bfd_elf64_tradlittlemips_vec
++    targ_selvecs="bfd_elf32_ntradbigmips_vec bfd_elf32_ntradlittlemips_vec bfd_elf32_tradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf64_tradbigmips_vec"
+     want64=true
+     ;;
+   mips64*-*-linux*)
+-    targ_defvec=bfd_elf32_ntradbigmips_vec
+-    targ_selvecs="bfd_elf32_ntradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf32_tradlittlemips_vec bfd_elf64_tradbigmips_vec bfd_elf64_tradlittlemips_vec"
++    targ_defvec=bfd_elf64_tradbigmips_vec
++    targ_selvecs="bfd_elf32_ntradbigmips_vec bfd_elf32_ntradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf32_tradlittlemips_vec bfd_elf64_tradlittlemips_vec"
+     want64=true
+     ;;
+ #endif
+Index: binutils-2.22/ld/configure.tgt
+===================================================================
+--- binutils-2.22.orig/ld/configure.tgt	2011-11-21 01:29:37.000000000 -0800
++++ binutils-2.22/ld/configure.tgt	2012-04-23 21:05:34.183571931 -0700
+@@ -395,11 +395,11 @@
+ mips*-*-vxworks*)	targ_emul=elf32ebmipvxworks
+ 		        targ_extra_emuls="elf32elmipvxworks" ;;
+ mips*-*-windiss)	targ_emul=elf32mipswindiss ;;
+-mips64*el-*-linux-*)	targ_emul=elf32ltsmipn32
+-			targ_extra_emuls="elf32btsmipn32 elf32ltsmip elf32btsmip elf64ltsmip elf64btsmip"
++mips64*el-*-linux-*)	targ_emul=elf64ltsmip
++			targ_extra_emuls="elf32btsmipn32 elf32ltsmipn32 elf32ltsmip elf32btsmip elf64btsmip"
+ 			targ_extra_libpath=$targ_extra_emuls ;;
+-mips64*-*-linux-*)	targ_emul=elf32btsmipn32
+-			targ_extra_emuls="elf32ltsmipn32 elf32btsmip elf32ltsmip elf64btsmip elf64ltsmip"
++mips64*-*-linux-*)	targ_emul=elf64btsmip
++			targ_extra_emuls="elf32btsmipn32 elf32ltsmipn32 elf32btsmip elf32ltsmip elf64ltsmip"
+ 			targ_extra_libpath=$targ_extra_emuls ;;
+ mips*el-*-linux-*)	targ_emul=elf32ltsmip
+ 			targ_extra_emuls="elf32btsmip elf32ltsmipn32 elf64ltsmip elf32btsmipn32 elf64btsmip"
