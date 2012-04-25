@@ -1,0 +1,19 @@
+MIPS64 defaults to n32 ABI, this patch makes it
+so that it defaults to N64 ABI
+
+Upstream-Status: Inappropriate [OE config specific]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Index: gcc-4_7-branch/gcc/config.gcc
+===================================================================
+--- gcc-4_7-branch.orig/gcc/config.gcc	2012-04-22 19:30:21.000000000 -0700
++++ gcc-4_7-branch/gcc/config.gcc	2012-04-22 21:09:57.783403173 -0700
+@@ -1750,7 +1750,7 @@
+ mips64*-*-linux* | mipsisa64*-*-linux*)
+ 	tm_file="dbxelf.h elfos.h gnu-user.h linux.h glibc-stdint.h ${tm_file} mips/gnu-user.h mips/gnu-user64.h mips/linux64.h"
+ 	tmake_file="${tmake_file} mips/t-linux64"
+-	tm_defines="${tm_defines} MIPS_ABI_DEFAULT=ABI_N32"
++	tm_defines="${tm_defines} MIPS_ABI_DEFAULT=ABI_64"
+ 	case ${target} in
+ 		mips64el-st-linux-gnu)
+ 			tm_file="${tm_file} mips/st.h"
