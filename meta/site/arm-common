@@ -76,6 +76,9 @@ glib_cv_sizeof_ptrdiff_t=${glib_cv_sizeof_ptrdiff_t=4}
 glib_cv_sizeof_size_t=${glib_cv_sizeof_size_t=4}
 glib_cv_sizeof_system_thread=${glib_cv_sizeof_system_thread=4}
 glib_cv_sys_use_pid_niceness_surrogate=${glib_cv_sys_use_pid_niceness_surrogate=yes}
+ac_cv_alignof_guint32=4
+ac_cv_alignof_guint64=8
+ac_cv_alignof_unsigned_long=4
 
 #gstreamer
 as_cv_unaligned_access=${as_cv_unaligned_access=no}
