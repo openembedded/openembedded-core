@@ -1004,8 +1004,9 @@ python do_package_rpm () {
 
 	# Construct per file dependencies file
 	def dump_filerdeps(varname, outfile, d):
-		outfile.write("#!/bin/sh\n")
-		outfile.write("\n# Dependency table\n")
+		outfile.write("#!/usr/bin/env python\n\n")
+		outfile.write("# Dependency table\n")
+		outfile.write('deps = {\n')
 		for pkg in packages.split():
 			dependsflist_key = 'FILE' + varname + 'FLIST' + "_" + pkg
 			dependsflist = (d.getVar(dependsflist_key, True) or "")
@@ -1018,7 +1019,7 @@ python do_package_rpm () {
 				file = file.replace("@tab@", "\t")
 				file = file.replace("@space@", " ")
 				file = file.replace("@at@", "@")
-				outfile.write("#" + pkgd + file + "\t")
+				outfile.write('"' + pkgd + file + '" : "')
 				for dep in depends_dict:
 					ver = depends_dict[dep]
 					if dep and ver:
@@ -1027,12 +1028,15 @@ python do_package_rpm () {
 						outfile.write(dep + " " + ver + " ")
 					else:
 						outfile.write(dep + " ")
-				outfile.write("\n")
-		outfile.write("\n\nwhile read file_name ; do\n")
-		outfile.write("\tlength=$(echo \"#${file_name}\t\" | wc -c )\n")
-		outfile.write("\tline=$(grep \"^#${file_name}\t\" $0 | cut -c ${length}- )\n")
-		outfile.write("\tprintf \"%s\\n\" ${line}\n")
-		outfile.write("done\n")
+				outfile.write('",\n')
+		outfile.write('}\n\n')
+		outfile.write("import sys\n")
+		outfile.write("while 1:\n")
+		outfile.write("\tline = sys.stdin.readline().strip()\n")
+		outfile.write("\tif not line:\n")
+		outfile.write("\t\tsys.exit(0)\n")
+		outfile.write("\tif line in deps:\n")
+		outfile.write("\t\tprint(deps[line] + '\\n')\n")
 
 	# OE-core dependencies a.k.a. RPM requires
 	outdepends = workdir + "/" + srcname + ".requires"
