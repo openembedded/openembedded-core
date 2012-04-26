@@ -1,2 +1,2 @@
-lists_dir ext /var/lib/ipkg
+lists_dir ext /var/lib/opkg
 

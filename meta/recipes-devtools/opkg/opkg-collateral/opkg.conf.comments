@@ -18,6 +18,9 @@
 #option proxy_username <username>
 #option proxy_password <password>
 
+# Enable GPGME signature
+# option check_signature 1
+
 # Offline mode (for use in constructing flash images offline)
 #option offline_root target
 
