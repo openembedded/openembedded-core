@@ -1,38 +1,40 @@
 Upstream-Status: Pending
 
-get correct compiler options for x32 gcc.
+Using uname like this when cross compiling is a really bad idea. We 
+provide the correct linker flags, lets just assume we can get this 
+right ourselves.
 
-Received this patch from H.J. Lu <hjl.tools@gmail.com>
+RP 2012/04/26
 
-Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com> 2011/12/06
-
---- Mesa-7.11/bin/mklib.x32	2011-12-06 13:15:17.968695114 -0800
-+++ Mesa-7.11/bin/mklib	2011-12-06 13:17:13.872152249 -0800
-@@ -335,7 +335,12 @@ case $ARCH in
+Index: Mesa-7.11/bin/mklib
+===================================================================
+--- Mesa-7.11.orig/bin/mklib	2012-04-26 19:43:20.729150109 +0000
++++ Mesa-7.11/bin/mklib	2012-04-26 20:30:22.421086163 +0000
+@@ -330,13 +330,7 @@
+ 	    ;;
+ 	    esac
+ 
+-	    # Check if objects are 32-bit and we're running in 64-bit
+-	    # environment.  If so, pass -m32 flag to linker.
  	    set ${OBJECTS}
- 	    ABI32=`file $1 | grep 32-bit`
- 	    if [ "${ABI32}" -a `uname -m` = "x86_64" ] ; then
+-	    ABI32=`file $1 | grep 32-bit`
+-	    if [ "${ABI32}" -a `uname -m` = "x86_64" ] ; then
 -		OPTS="-m32 ${OPTS}"
-+		ABIX32=`file $1 | grep x86-64`
-+		if [ "${ABI32}" ]; then
-+		    OPTS="-mx32 ${OPTS}"
-+		else
-+		    OPTS="-m32 ${OPTS}"
-+		fi
- 	    fi
+-	    fi
  
              if [ "${ALTOPTS}" ] ; then
-@@ -392,7 +397,12 @@ case $ARCH in
- 	    set ${OBJECTS}
- 	    ABI32=`file $1 | grep 32-bit`
- 	    if [ "${ABI32}" -a `uname -m` = "x86_64" ] ; then
--		OPTS="-m32 ${OPTS}"
-+		ABIX32=`file $1 | grep x86-64`
-+		if [ "${ABI32}" ]; then
-+		    OPTS="-mx32 ${OPTS}"
-+		else
-+		    OPTS="-m32 ${OPTS}"
-+		fi
+                 OPTS=${ALTOPTS}
+@@ -387,13 +381,7 @@
+ 		# exptmp is removed below
  	    fi
+ 
+-	    # Check if objects are 32-bit and we're running in 64-bit
+-	    # environment.  If so, pass -m32 flag to linker.
+ 	    set ${OBJECTS}
+-	    ABI32=`file $1 | grep 32-bit`
+-	    if [ "${ABI32}" -a `uname -m` = "x86_64" ] ; then
+-		OPTS="-m32 ${OPTS}"
+-	    fi
              if [ "${ALTOPTS}" ] ; then
                  OPTS=${ALTOPTS}
+             fi
