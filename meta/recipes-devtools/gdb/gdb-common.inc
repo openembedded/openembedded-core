@@ -10,6 +10,7 @@ LTTNGUST_mips = ""
 LTTNGUST_mipsel = ""
 LTTNGUST_mips64 = ""
 LTTNGUST_mips64el = ""
+LTTNGUST_sh4 = ""
 
 INC_PR = "r8"
 
