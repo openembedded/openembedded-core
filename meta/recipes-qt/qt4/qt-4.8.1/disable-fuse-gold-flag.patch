@@ -1,6 +1,10 @@
 Disable the -fuse-ld=gold flag. This option is a Debian/Ubuntu specific
 extension to the g++ and causes upstream GCC to throw an error.
 
+Upstream-Status: Pending
+
+Signed-off-by: Ken Werner <ken.werner@linaro.org>
+
 Index: qt-everywhere-opensource-src-4.8.0/src/3rdparty/webkit/Source/common.pri
 ===================================================================
 --- qt-everywhere-opensource-src-4.8.0.orig/src/3rdparty/webkit/Source/common.pri

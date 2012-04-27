@@ -1,5 +1,9 @@
 Fix compile error when using toolchains based on GCC 4.7.
 
+Upstream-Status: Pending
+
+Signed-off-by: Ken Werner <ken.werner@linaro.org>
+
 Index: qt-everywhere-opensource-src-4.8.0/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSGlobalObject.h
 ===================================================================
 --- qt-everywhere-opensource-src-4.8.0.orig/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSGlobalObject.h
