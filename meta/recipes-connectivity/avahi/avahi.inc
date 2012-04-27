@@ -14,7 +14,7 @@ SECTION = "network"
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-INC_PR = "r2"
+INC_PR = "r3"
 
 DEPENDS = "expat libcap libdaemon dbus glib-2.0"
 
@@ -112,7 +112,7 @@ do_install() {
 	# if /var/run become non-empty in the future, need to install it via volatile
 	rm -rf ${D}/var/run
 	rm -rf ${D}${datadir}/dbus-1/interfaces
-	rm -rf ${D}/usr/lib/avahi
+	rm -rf ${D}${libdir}/avahi
 }
 
 do_install_avahi-autoipd() {
