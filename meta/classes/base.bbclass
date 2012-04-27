@@ -248,12 +248,13 @@ def buildcfg_neededvars(d):
 
 addhandler base_eventhandler
 python base_eventhandler() {
-	from bb.event import getName
-
-	name = getName(e)
-
-	if name.startswith("BuildStarted"):
+        if isinstance(e, bb.event.ConfigParsed):
 		e.data.setVar('BB_VERSION', bb.__version__)
+                generate_git_config(e)
+                pkgarch_mapping(e.data)
+                preferred_ml_updates(e.data)
+
+	if isinstance(e, bb.event.BuildStarted):
 		statuslines = []
 		for func in oe.data.typed_value('BUILDCFG_FUNCS', e.data):
 			g = globals()
@@ -266,11 +267,6 @@ python base_eventhandler() {
 
 		statusheader = e.data.getVar('BUILDCFG_HEADER', True)
 		bb.plain('\n%s\n%s\n' % (statusheader, '\n'.join(statuslines)))
-
-        if name == "ConfigParsed":
-                generate_git_config(e)
-                pkgarch_mapping(e.data)
-                preferred_ml_updates(e.data)
 }
 
 addtask configure after do_patch
