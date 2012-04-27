@@ -19,10 +19,10 @@ CXXFLAGS += "-fvisibility-inlines-hidden"
 
 LIBC_DEPENDENCIES = "libsegfault \
 		     eglibc \
-    		     eglibc-dbg \
-    		     eglibc-dev \
-    		     eglibc-utils \
-    		     eglibc-thread-db \
+		     eglibc-dbg \
+		     eglibc-dev \
+		     eglibc-utils \
+		     eglibc-thread-db \
 		     ${@get_libc_locales_dependencies(d)}"
 
 LIBC_LOCALE_DEPENDENCIES = "\
@@ -30,9 +30,7 @@ LIBC_LOCALE_DEPENDENCIES = "\
 	eglibc-gconv-ibm850 \
 	eglibc-gconv-cp1252 \
 	eglibc-gconv-iso8859-1 \
-	eglibc-gconv-iso8859-15 \
-	locale-base-en-us \
-	locale-base-en-gb"
+	eglibc-gconv-iso8859-15"
 
 def get_libc_locales_dependencies(d):
     if 'libc-locales' in (d.getVar('DISTRO_FEATURES', True) or '').split() :
