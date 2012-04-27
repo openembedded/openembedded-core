@@ -3,8 +3,6 @@ require qt-${PV}.inc
 
 PR = "${INC_PR}.0"
 
-DEFAULT_PREFERENCE = "-1"
-
 QT_CONFIG_FLAGS_append_armv6 = " -no-neon "
 
 QT_CONFIG_FLAGS += " \
