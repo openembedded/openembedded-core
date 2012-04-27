@@ -225,6 +225,27 @@ def get_layers_branch_rev(d):
 	return layers_branch_rev
 
 
+BUILDCFG_FUNCS ??= "buildcfg_vars get_layers_branch_rev buildcfg_neededvars"
+BUILDCFG_FUNCS[type] = "list"
+
+def buildcfg_vars(d):
+	statusvars = oe.data.typed_value('BUILDCFG_VARS', d)
+	for var in statusvars:
+		value = d.getVar(var, True)
+		if value is not None:
+			yield '%-17s = "%s"' % (var, value)
+
+def buildcfg_neededvars(d):
+	needed_vars = oe.data.typed_value("BUILDCFG_NEEDEDVARS", d)
+	pesteruser = []
+	for v in needed_vars:
+		val = d.getVar(v, True)
+		if not val or val == 'INVALID':
+			pesteruser.append(v)
+
+	if pesteruser:
+		bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
+
 addhandler base_eventhandler
 python base_eventhandler() {
 	from bb.event import getName
@@ -232,22 +253,19 @@ python base_eventhandler() {
 	name = getName(e)
 
 	if name.startswith("BuildStarted"):
-		e.data.setVar( 'BB_VERSION', bb.__version__)
-		statusvars = ['BB_VERSION', 'TARGET_ARCH', 'TARGET_OS', 'MACHINE', 'DISTRO', 'DISTRO_VERSION','TUNE_FEATURES', 'TARGET_FPU']
-		statuslines = ["%-17s = \"%s\"" % (i, e.data.getVar(i, True) or '') for i in statusvars]
+		e.data.setVar('BB_VERSION', bb.__version__)
+		statuslines = []
+		for func in oe.data.typed_value('BUILDCFG_FUNCS', e.data):
+			g = globals()
+			if func not in g:
+				bb.warn("Build configuration function '%s' does not exist" % func)
+			else:
+				flines = g[func](e.data)
+				if flines:
+					statuslines.extend(flines)
 
-		statuslines += get_layers_branch_rev(e.data)
-		statusmsg = "\nOE Build Configuration:\n%s\n" % '\n'.join(statuslines)
-		bb.plain(statusmsg)
-
-		needed_vars = [ "TARGET_ARCH", "TARGET_OS" ]
-		pesteruser = []
-		for v in needed_vars:
-			val = e.data.getVar(v, True)
-			if not val or val == 'INVALID':
-				pesteruser.append(v)
-		if pesteruser:
-			bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
+		statusheader = e.data.getVar('BUILDCFG_HEADER', True)
+		bb.plain('\n%s\n%s\n' % (statusheader, '\n'.join(statuslines)))
 
         if name == "ConfigParsed":
                 generate_git_config(e)
