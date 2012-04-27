@@ -8,7 +8,7 @@ DEPENDS = "libtelepathy dbus-glib gconf"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-mission-control/telepathy-mission-control-${PV}.tar.gz"
 
-PR = "r1"
+PR = "r0"
 
 inherit autotools pkgconfig
 
@@ -40,5 +40,5 @@ FILES_libmissioncontrol-dbg = "${libdir}/.debug/libmissioncontrol.so.*"
 FILES_libmissioncontrol-config-dbg = "${libdir}/.debug/libmissioncontrol-config.so.*"
 FILES_libmissioncontrol-server-dbg = "${libdir}/.debug/libmissioncontrol-server.so.*"
 
-SRC_URI[md5sum] = "f7503d52cb432e03ba7b4ad5bb6165c6"
-SRC_URI[sha256sum] = "f5debdaf17c9dcb7299c95e8f9df427fb2e8fbb112f6c951b9a0e6ad330ddfa5"
+SRC_URI[md5sum] = "f39dcfef785a37dc21efa9af06be2e61"
+SRC_URI[sha256sum] = "660aeb65543e1b029dfde6a895934cb20b766644bae2a68c0030052aa6645e77"
