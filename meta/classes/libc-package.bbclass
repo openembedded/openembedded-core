@@ -207,40 +207,30 @@ python package_do_split_gconvs () {
 
 	dot_re = re.compile("(.*)\.(.*)")
 
-#GLIBC_GENERATE_LOCALES var specifies which locales to be supported, empty or "all" means all locales 
-	if use_bin != "precompiled":
-		supported = d.getVar('GLIBC_GENERATE_LOCALES', True)
-		if not supported or supported == "all":
-			f = open(base_path_join(d.getVar('WORKDIR', True), "SUPPORTED"), "r")
-			supported = f.readlines()
-			f.close()
-		else:
-			supported = supported.split()
-			supported = map(lambda s:s.replace(".", " ") + "\n", supported)
-	else:
-		supported = []
-		full_bin_path = d.getVar('PKGD', True) + binary_locales_dir
-		for dir in os.listdir(full_bin_path):
-			dbase = dir.split(".")
-			d2 = "  "
-			if len(dbase) > 1:
-				d2 = "." + dbase[1].upper() + "  "
-			supported.append(dbase[0] + d2)
+	# Read in supported locales and associated encodings
+	supported = {}
+	with open(base_path_join(d.getVar('WORKDIR', True), "SUPPORTED")) as f:
+		for line in f.readlines():
+			try:
+				locale, charset = line.rstrip().split()
+			except ValueError:
+				continue
+			supported[locale] = charset
 
-	# Collate the locales by base and encoding
-	utf8_only = int(d.getVar('LOCALE_UTF8_ONLY', True) or 0)
-	encodings = {}
-	for l in supported:
-		l = l[:-1]
-		(locale, charset) = l.split(" ")
-		if utf8_only and charset != 'UTF-8':
-			continue
-		m = dot_re.match(locale)
-		if m:
-			locale = m.group(1)
-		if not encodings.has_key(locale):
-			encodings[locale] = []
-		encodings[locale].append(charset)
+	# GLIBC_GENERATE_LOCALES var specifies which locales to be generated. empty or "all" means all locales
+	to_generate = d.getVar('GLIBC_GENERATE_LOCALES', True)
+	if not to_generate or to_generate == 'all':
+		to_generate = supported.keys()
+	else:
+		to_generate = to_generate.split()
+		for locale in to_generate:
+			if locale not in supported:
+				if '.' in locale:
+					charset = locale.split('.')[1]
+				else:
+					charset = 'UTF-8'
+					bb.warn("Unsupported locale '%s', assuming encoding '%s'" % (locale, charset))
+				supported[locale] = charset
 
 	def output_locale_source(name, pkgname, locale, encoding):
 		d.setVar('RDEPENDS_%s' % pkgname, 'localedef %s-localedata-%s %s-charmap-%s' % \
@@ -271,7 +261,7 @@ python package_do_split_gconvs () {
 
 		use_cross_localedef = d.getVar("LOCALE_GENERATION_WITH_CROSS-LOCALEDEF", True) or "0"
 		if use_cross_localedef == "1":
-	    		target_arch = d.getVar('TARGET_ARCH', True)
+			target_arch = d.getVar('TARGET_ARCH', True)
 			locale_arch_options = { \
 				"arm":     " --uint32-align=4 --little-endian ", \
 				"powerpc": " --uint32-align=4 --big-endian ",    \
@@ -334,25 +324,29 @@ python package_do_split_gconvs () {
 		bb.note("preparing tree for binary locale generation")
 		bb.build.exec_func("do_prep_locale_tree", d)
 
-	# Reshuffle names so that UTF-8 is preferred over other encodings
-	non_utf8 = []
-	for l in encodings.keys():
-		if len(encodings[l]) == 1:
-			output_locale(l, l, encodings[l][0])
-			if encodings[l][0] != "UTF-8":
-				non_utf8.append(l)
-		else:
-			if "UTF-8" in encodings[l]:
-				output_locale(l, l, "UTF-8")
-				encodings[l].remove("UTF-8")
-			else:
-				non_utf8.append(l)
-			for e in encodings[l]:
-				output_locale('%s.%s' % (l, e), l, e)
+	utf8_only = int(d.getVar('LOCALE_UTF8_ONLY', True) or 0)
+	encodings = {}
+	for locale in to_generate:
+		charset = supported[locale]
+		if utf8_only and charset != 'UTF-8':
+			continue
 
-	if non_utf8 != [] and use_bin != "precompiled":
-		bb.note("the following locales are supported only in legacy encodings:")
-		bb.note("  " + " ".join(non_utf8))
+		m = dot_re.match(locale)
+		if m:
+			base = m.group(1)
+		else:
+			base = locale
+
+		# Precompiled locales are kept as is, obeying SUPPORTED, while
+		# others are adjusted, ensuring that the non-suffixed locales
+		# are utf-8, while the suffixed are not.
+		if use_bin == "precompiled":
+			output_locale(locale, base, charset)
+		else:
+			if charset == 'UTF-8':
+				output_locale(base, base, charset)
+			else:
+				output_locale('%s.%s' % (base, charset), base, charset)
 
 	if use_bin == "compile":
 		makefile = base_path_join(d.getVar("WORKDIR", True), "locale-tree", "Makefile")
