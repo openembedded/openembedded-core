@@ -20,6 +20,8 @@ SRC_URI = "http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${PV}.
            file://pulseaudio-config.patch \
            file://g++.conf \
            file://linux.conf \
+           file://gcc47-fix.patch \
+           file://disable-fuse-gold-flag.patch \
            "
 
 SRC_URI[md5sum] = "7960ba8e18ca31f0c6e4895a312f92ff"
