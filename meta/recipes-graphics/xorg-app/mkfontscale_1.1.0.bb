@@ -10,6 +10,8 @@ is used by the mkfontdir program."
 
 DEPENDS += " zlib libfontenc freetype virtual/libx11"
 
+PR = "${INC_PR}.0"
+
 BBCLASSEXTEND = "native"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=2e0d129d05305176d1a790e0ac1acb7f"

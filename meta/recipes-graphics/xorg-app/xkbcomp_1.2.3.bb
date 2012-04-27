@@ -9,6 +9,8 @@ be read directly by XKB-capable X servers or utilities."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=08436e4f4476964e2e2dd7e7e41e076a"
 
+PR = "${INC_PR}.0"
+
 DEPENDS += "libxkbfile"
 
 SRC_URI[md5sum] = "35622a497894c1cff9182d42696c3e27"

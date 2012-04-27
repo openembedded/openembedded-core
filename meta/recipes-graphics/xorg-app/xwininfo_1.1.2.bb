@@ -9,7 +9,7 @@ and a number of other items."
 LIC_FILES_CHKSUM = "file://COPYING;md5=78976cd3115f6faf615accc4e094d90e"
 DEPENDS += "libxext libxmu"
 
-PR = "r0"
+PR = "${INC_PR}.0"
 PE = "0"
 
 SRC_URI[md5sum] = "9e8b58c8aa6172e87ab4f9cf3612fedd"

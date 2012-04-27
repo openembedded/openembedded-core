@@ -10,7 +10,7 @@ that are available."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=f3d09e6b9e203a1af489e16c708f4fb3"
 DEPENDS += "libxtst libxext libxxf86vm libxxf86dga libxxf86misc libxi libxrender libxinerama libdmx libxp libxau"
-PR = "r0"
+PR = "${INC_PR}.0"
 PE = "1"
 
 SRC_URI += "file://disable-xkb.patch"

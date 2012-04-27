@@ -9,7 +9,7 @@ The X server and font server use these files to find the available font \
 files."
 
 PE = "1"
-PR = "r0"
+PR = "${INC_PR}.0"
 
 RDEPENDS_${PN} += "mkfontscale"
 RDEPENDS_${PN}_virtclass-native += "mkfontscale-native"

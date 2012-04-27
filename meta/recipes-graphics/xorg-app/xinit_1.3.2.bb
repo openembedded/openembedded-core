@@ -10,7 +10,7 @@ then terminate."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=0d4b5eef75f1584ccbdc5e4a34314407"
 
-PR = "r0"
+PR = "${INC_PR}.0"
 PE = "1"
 
 SRC_URI[md5sum] = "9c0943cbd83e489ad1b05221b97efd44"

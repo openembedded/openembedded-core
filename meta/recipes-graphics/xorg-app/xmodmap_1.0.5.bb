@@ -11,7 +11,7 @@ according to personal tastes."
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eef098b27f09d0ac39268df0cc2c00b5"
 
-PR = "r0"
+PR = "${INC_PR}.0"
 PE = "1"
 
 SRC_URI[md5sum] = "b18850d373f3717dca569377c449d091"
