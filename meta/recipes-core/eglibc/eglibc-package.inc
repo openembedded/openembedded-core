@@ -77,6 +77,7 @@ PERLPATH_virtclass-nativesdk = "/usr/bin/env perl"
 
 do_install_append () {
 	rm -f ${D}${sysconfdir}/localtime
+	rm -rf ${D}${localstatedir}
 
 	oe_multilib_header bits/syscall.h
 
