@@ -12,12 +12,11 @@ SHRT_VER = "${@d.getVar('PV',1).split('.')[0]}.${@d.getVar('PV',1).split('.')[1]
 SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://configure-libtool.patch \
            file://60_wait-longer-for-threads-to-die.patch \
-           file://g_once_init_enter.patch \
            file://glib-2.0_fix_for_x32.patch \
            file://nodbus.patch \
           "
-SRC_URI[md5sum] = "0f9fa329c6c1012d0fd861ad3d8a4520"
-SRC_URI[sha256sum] = "e6cbb27c71c445993346e785e8609cc75cea2941e32312e544872feba572dd27"
+SRC_URI[md5sum] = "032c7cf9868c9aa186b490b155a41144"
+SRC_URI[sha256sum] = "484d5b7fc09f3fa398355adaf74b369768f5859866c299f229c99721990f8398"
 
 SRC_URI_append_virtclass-native = " file://glib-gettextize-dir.patch"
 BBCLASSEXTEND = "native nativesdk"
