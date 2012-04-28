@@ -45,7 +45,6 @@ do_compile () {
 	# append execution part of the script
 cat >> ${B}/${TARGET_PREFIX}testgcc << STOP
 target="\$1"
-shift
 usage () {
 	echo "Usage:"
 	echo "\$0 user@target 'extra options to dejagnu'"
@@ -60,10 +59,12 @@ usage () {
     }
 if [ "x\$target" = "x" ]
 then
-	echo "Please specify the target machine and remote user in form of user@target"
+	echo "Please specify the target machine and remote user in form of user@target\n"
 	usage
 	exit 1;
 fi
+
+shift
 
 echo "\$target" | grep "@" 2>&1 > /dev/null
 if [ "x\$?" = "x0" ]
