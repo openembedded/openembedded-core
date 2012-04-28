@@ -6,14 +6,14 @@ LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 
 SECTION = "x11/gnome/libs"
-PR = "r1"
 
 DEPENDS = "glib-2.0 gnutls libxml2 libproxy sqlite3 libgnome-keyring"
 
-SRC_URI = "${GNOME_MIRROR}/libsoup/2.36/libsoup-${PV}.tar.bz2"
+SHRT_VER = "${@bb.data.getVar('PV',d,1).split('.')[0]}.${@bb.data.getVar('PV',d,1).split('.')[1]}"
+SRC_URI = "${GNOME_MIRROR}/libsoup/${SHRT_VER}/libsoup-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "9c03fc033da61deaf5b403e9e9c884b8"
-SRC_URI[sha256sum] = "c387eefd8214c458965b1d6e3490cea33b5bb6c81798cac90cde96136dc19401"
+SRC_URI[md5sum] = "d13fb4968acea24c26b83268a308f580"
+SRC_URI[sha256sum] = "71b8923fc7a5fef9abc5420f7f3d666fdb589f43a8c50892d584d58b3c513f9a"
 
 S = "${WORKDIR}/libsoup-${PV}"
 
