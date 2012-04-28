@@ -1,11 +1,11 @@
-SRCREV="eb72efd81e0d5be6c836c5a084cc65b9734f544d"
+SRCREV="7bad8cf68b6e2434686bd80182f4a5bc22004416"
 
 require uclibc.inc
 
 # We prefer a release version so DP -1 for this
 DEFAULT_PREFERENCE = "-1"
 
-PV = "0.9.32+0.9.33-rc0"
+PV = "0.9.33+git${SRCPV}"
 PR = "${INC_PR}.1"
 PROVIDES += "virtual/${TARGET_PREFIX}libc-for-gcc"
 
