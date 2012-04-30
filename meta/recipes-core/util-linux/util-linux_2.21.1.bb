@@ -1,5 +1,5 @@
 MAJOR_VERSION = "2.21"
-PR = "r5"
+PR = "r0"
 require util-linux.inc
 
 # note that `lscpu' is under GPLv3+
@@ -11,8 +11,8 @@ SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             file://fix_NL_TIME_FIRST_WEEKDAY.patch \
 "
 
-SRC_URI[md5sum] = "3c7a26963f3921c1e775a80330321870"
-SRC_URI[sha256sum] = "2813ae6fe0449b60402e122c2baf97f26aa53e6e2dd05591c6cbcdf67ffdb6c6"
+SRC_URI[md5sum] = "3d9ad37bf8c5a8e6d0e165b020cf9ba5"
+SRC_URI[sha256sum] = "4bf9641fd58454106589be8a8d1cfd61e7694f0a6912d8095d17b1fb94b85abe"
 
 # Only lscpu part is gplv3; rest of the code is not, 
 # so take out the lscpu parts while running non-gplv3 build.
