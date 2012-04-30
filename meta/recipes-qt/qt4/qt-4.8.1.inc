@@ -21,6 +21,7 @@ SRC_URI = "http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${PV}.
            file://g++.conf \
            file://linux.conf \
            file://gcc47-fix.patch \
+           file://gcc47-fix2.patch \
            file://disable-fuse-gold-flag.patch \
            "
 

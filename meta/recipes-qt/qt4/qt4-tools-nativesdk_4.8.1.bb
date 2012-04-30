@@ -1,6 +1,6 @@
 require qt4-tools-nativesdk.inc
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
 SRC_URI += "file://qmake_pri_fixes.patch"
 
