@@ -89,8 +89,8 @@ RECIPE_LATEST_VERSION_pn-loudmouth = "check"
 RECIPE_MAINTAINER_pn-loudmouth = "Dongxiao Xu <dongxiao.xu@intel.com>"
 
 RECIPE_STATUS_pn-makedepend = "green"
-RECIPE_LATEST_VERSION_pn-makedepend = "1.0.3"
-RECIPE_LAST_UPDATE_pn-makedepend = "Nov 29, 2010"
+RECIPE_LATEST_VERSION_pn-makedepend = "1.0.4"
+RECIPE_LAST_UPDATE_pn-makedepend = "Apr 30, 2012"
 RECIPE_MAINTAINER_pn-makedepend = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 DISTRO_PN_ALIAS_pn-makedepend = "Mandriva=makedepend Ubuntu=xutils-dev"
 
@@ -2056,7 +2056,6 @@ DISTRO_PN_ALIAS_pn-ubootchart = "OSPDT upstream=http://code.google.com/p/ubootch
 
 RECIPE_STATUS_pn-tiff = "green"
 RECIPE_LATEST_VERSION_pn-tiff = "4.0.1"
-RECIPE_LATEST_RELEASE_DATE_pn-eggdbus = "Feb 18, 2012"
 RECIPE_LAST_UPDATE_pn-tiff = "Feb 27, 2012"
 RECIPE_MANUAL_CHECK_DATE_pn-tiff = "Feb 27, 2012"
 RECIPE_MAINTAINER_pn-tiff = "Saul Wold <sgw@linux.intel.com>"
@@ -3171,9 +3170,9 @@ RECIPE_MANUAL_CHECK_DATE_pn-fstests = "Jul 06, 2011"
 RECIPE_MAINTAINER_pn-fstests = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-gdb="green"
-RECIPE_LATEST_VERSION_pn-gdb="7.4"
-RECIPE_LAST_UPDATE_pn-gdb = "Feb 1, 2012"
-RECIPE_MANUAL_CHECK_DATE_pn-gdb = "Feb 01, 2012"
+RECIPE_LATEST_VERSION_pn-gdb="7.4.1"
+RECIPE_LAST_UPDATE_pn-gdb = "May 1, 2012"
+RECIPE_MANUAL_CHECK_DATE_pn-gdb = "May 01, 2012"
 RECIPE_MAINTAINER_pn-gdb = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-intltool="green"
@@ -3291,13 +3290,14 @@ DISTRO_PN_ALIAS_pn-python-scons = "Fedora=scons OpenSuSE=scons Ubuntu=scons Mand
 RECIPE_MAINTAINER_pn-python-scons = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-python="red"
-RECIPE_LATEST_VERSION_pn-python="2.7.1"
-RECIPE_LAST_UPDATE_pn-python = "Nov 8, 2010"
+RECIPE_LATEST_VERSION_pn-python="2.7.3"
+RECIPE_LAST_UPDATE_pn-python = "May 01, 2012"
+RECIPE_MANUAL_CHECK_DATE_pn-python = "May 01, 2012"
 RECIPE_MAINTAINER_pn-python = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-quilt="green"
-RECIPE_LATEST_VERSION_pn-quilt="0.51"
-RECIPE_LAST_UPDATE_pn-quilt = "Feb 01, 2012"
+RECIPE_LATEST_VERSION_pn-quilt="0.60"
+RECIPE_LAST_UPDATE_pn-quilt = "Apr 30, 2012"
 RECIPE_MAINTAINER_pn-quilt = "Nitin A Kamble <nitin.a.kamble@intel.com>"
 
 RECIPE_STATUS_pn-tcl="green"
