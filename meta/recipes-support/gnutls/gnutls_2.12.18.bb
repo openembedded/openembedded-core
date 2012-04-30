@@ -7,8 +7,8 @@ SRC_URI += "file://gnutls-openssl.patch \
             file://configure-fix.patch \
            "
 
-SRC_URI[md5sum] = "f08990f1afa4e1d0ee13e64e537c7854"
-SRC_URI[sha256sum] = "588ad6b0901c789f2f6afcec88ac4d688801bf1a024c9afa08706bb8d9868bf3"
+SRC_URI[md5sum] = "e9215d00d2930e09bc8f23f02b54f2d1"
+SRC_URI[sha256sum] = "780b12e3f05191316390611a3d9d982d29ca3f3abc234517b2fc542064b6f07a"
 
 python() {
     if not ((d.getVar("INCOMPATIBLE_LICENSE", True) or "").find("GPLv3") != -1):
