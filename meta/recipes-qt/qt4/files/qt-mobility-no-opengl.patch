@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [configuration]
+
 diff --git a/examples/declarative-camera/declarative-camera.pro b/examples/declarative-camera/declarative-camera.pro
 index 8164fbc..54fd8ad 100644
 --- a/examples/declarative-camera/declarative-camera.pro
