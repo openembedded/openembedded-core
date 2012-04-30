@@ -105,14 +105,6 @@ stop_nfsd(){
 	}
 	then
 		echo done
-		# This will remove, recursively, dependencies
-		echo -n 'removing nfsd kernel module: '
-		if modprobe -r nfsd
-		then
-			echo done
-		else
-			echo failed
-		fi
 	else
 		echo failed
 	fi
