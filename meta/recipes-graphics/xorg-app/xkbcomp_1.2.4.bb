@@ -13,8 +13,7 @@ PR = "${INC_PR}.0"
 
 DEPENDS += "libxkbfile"
 
-SRC_URI[md5sum] = "35622a497894c1cff9182d42696c3e27"
-SRC_URI[sha256sum] = "7598e8f44e2643c96d2e37aa44f344f6c48f1a262fc9207154353195b760cb16"
-
 BBCLASSEXTEND = "native"
 
+SRC_URI[md5sum] = "a0fc1ac3fc4fe479ade09674347c5aa0"
+SRC_URI[sha256sum] = "91d0c9ab445d21dfe1892dbae5ae5264f39bae68223dd092ffc547c9450b5a2d"
