@@ -67,5 +67,4 @@ do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_package"
 BBCLASSEXTEND = "nativesdk"
 
 INSANE_SKIP_${PN}-dev = "staticdev"
-INSANE_SKIP_libgcov${PKGSUFFIX}-dev = "staticdev"
-
+INSANE_SKIP_${MLPREFIX}libgcov${PKGSUFFIX}-dev = "staticdev"
