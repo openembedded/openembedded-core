@@ -18,3 +18,5 @@ sed -i 's/^#PARALLEL_MAKE =/PARALLEL_MAKE =/g' conf/local.conf
 hob &
 
 matchbox-terminal&
+
+/etc/mini_x/please_wait_dialog.py &
