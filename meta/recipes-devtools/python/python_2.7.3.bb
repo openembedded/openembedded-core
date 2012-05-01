@@ -1,6 +1,6 @@
 require python.inc
 DEPENDS = "python-native bzip2 db gdbm openssl readline sqlite3 zlib"
-PR = "${INC_PR}.20"
+PR = "${INC_PR}.0"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
 DISTRO_SRC_URI_linuxstdbase = ""
@@ -19,7 +19,6 @@ SRC_URI += "\
   file://setup_py_skip_cross_import_check.patch \
   file://add-md5module-support.patch \
   file://host_include_contamination.patch \
-  file://sys_platform_is_now_always_linux2.patch \
   file://fix_for_using_different_libdir.patch \
   file://setuptweaks.patch \
   file://check-if-target-is-64b-not-host.patch \

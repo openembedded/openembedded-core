@@ -7,10 +7,14 @@ in the install process of the host python.
 Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
 Date: 2012/03/14
 
-Index: Python-2.7.2/Lib/sysconfig.py
+Updated for python 2.7.3
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+Date: 2012/05/01
+
+Index: Python-2.7.3/Lib/sysconfig.py
 ===================================================================
---- Python-2.7.2.orig/Lib/sysconfig.py
-+++ Python-2.7.2/Lib/sysconfig.py
+--- Python-2.7.3.orig/Lib/sysconfig.py
++++ Python-2.7.3/Lib/sysconfig.py
 @@ -7,10 +7,10 @@ from os.path import pardir, realpath
  
  _INSTALL_SCHEMES = {
@@ -41,14 +45,14 @@ Index: Python-2.7.2/Lib/sysconfig.py
          'include': '{userbase}/include/python{py_version_short}',
          'scripts': '{userbase}/bin',
          'data'   : '{userbase}',
-Index: Python-2.7.2/Makefile.pre.in
+Index: Python-2.7.3/Makefile.pre.in
 ===================================================================
---- Python-2.7.2.orig/Makefile.pre.in
-+++ Python-2.7.2/Makefile.pre.in
-@@ -928,25 +928,25 @@ libinstall:	build_all $(srcdir)/Lib/$(PL
- 		done; \
- 	done
- 	$(INSTALL_DATA) $(srcdir)/LICENSE $(DESTDIR)$(LIBDEST)/LICENSE.txt
+--- Python-2.7.3.orig/Makefile.pre.in
++++ Python-2.7.3/Makefile.pre.in
+@@ -941,25 +941,25 @@ libinstall:	build_all $(srcdir)/Lib/$(PL
+ 		$(INSTALL_DATA) $(srcdir)/Modules/xxmodule.c \
+ 			$(DESTDIR)$(LIBDEST)/distutils/tests ; \
+ 	fi
 -	PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
 +	PYTHONPATH=$(DESTDIR)$(LIBDEST):${CROSSPYTHONPATH}  $(RUNSHARED) \
  		$(HOSTPYTHON) -Wi -tt $(DESTDIR)$(LIBDEST)/compileall.py \
@@ -56,7 +60,7 @@ Index: Python-2.7.2/Makefile.pre.in
  		-x 'bad_coding|badsyntax|site-packages|lib2to3/tests/data' \
  		$(DESTDIR)$(LIBDEST)
 -	PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED) \
-+	PYTHONPATH=$(DESTDIR)$(LIBDEST):${CROSSPYTHONPATH}  $(RUNSHARED) \
++	PYTHONPATH=$(DESTDIR)$(LIBDEST):${CROSSPYTHONPATH} $(RUNSHARED) \
  		$(HOSTPYTHON) -Wi -tt -O $(DESTDIR)$(LIBDEST)/compileall.py \
  		-d $(LIBDEST) -f \
  		-x 'bad_coding|badsyntax|site-packages|lib2to3/tests/data' \
@@ -67,12 +71,12 @@ Index: Python-2.7.2/Makefile.pre.in
  		-d $(LIBDEST)/site-packages -f \
  		-x badsyntax $(DESTDIR)$(LIBDEST)/site-packages
 -	-PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED) \
-+	-PYTHONPATH=$(DESTDIR)$(LIBDEST):${CROSSPYTHONPATH}  $(RUNSHARED) \
++	-PYTHONPATH=$(DESTDIR)$(LIBDEST):${CROSSPYTHONPATH} $(RUNSHARED) \
  		$(HOSTPYTHON) -Wi -t -O $(DESTDIR)$(LIBDEST)/compileall.py \
  		-d $(LIBDEST)/site-packages -f \
  		-x badsyntax $(DESTDIR)$(LIBDEST)/site-packages
 -	-PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED) \
-+	-PYTHONPATH=$(DESTDIR)$(LIBDEST):${CROSSPYTHONPATH}  $(RUNSHARED) \
++	-PYTHONPATH=$(DESTDIR)$(LIBDEST):${CROSSPYTHONPATH} $(RUNSHARED) \
  		$(HOSTPYTHON) -Wi -t -c "import lib2to3.pygram, lib2to3.patcomp;lib2to3.patcomp.PatternCompiler()"
  
  # Create the PLATDIR source directory, if one wasn't distributed..
