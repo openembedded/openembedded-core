@@ -36,7 +36,7 @@ FILES_${PN}-dev = "\
 "
 FILES_${PN}-plugin-dev = "\
   ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/include/ \
-  ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/gengtype \
+  ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/plugin/gengtype \
   ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/gtype.state \
 "
 FILES_${PN}-symlinks = "\
