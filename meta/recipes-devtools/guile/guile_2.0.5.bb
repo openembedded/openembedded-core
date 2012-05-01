@@ -14,17 +14,19 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504" 
 
 SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.gz \
-           file://debian/0001-Fix-the-SRFI-60-copy-bit-documentation.patch \
-           file://debian/0002-Define-_GNU_SOURCE-to-fix-the-GNU-kFreeBSD-build.patch \
-           file://debian/0003-Include-gc.h-rather-than-gc-gc_version.h-in-pthread-.patch \
+           file://debian/0002-Mark-Unused-modules-are-removed-gc-test-as-unresolve.patch \
+           file://debian/0003-Mark-mutex-with-owner-not-retained-threads-test-as-u.patch \
            file://opensuse/guile-64bit.patch \
-           file://opensuse/guile-turn-off-gc-test.patch \
+           file://guile_2.0.5_fix_sed_error.patch \
            "
 
-SRC_URI[md5sum] = "3b8b4e1083037f29d2c4704a6d55f2a8"
-SRC_URI[sha256sum] = "a53b21159befe3e89bbaca71e9e62cf00af0f49fcca297c407944b988d59eb08"
+#           file://debian/0001-Change-guile-to-guile-X.Y-for-info-pages.patch
+#           file://opensuse/guile-turn-off-gc-test.patch 
 
-PR = "r5"
+SRC_URI[md5sum] = "bcf70d54b44c99cb9acd3f63c5486b4b"
+SRC_URI[sha256sum] = "2a026ea6cdbc51ca71bcd9787839debfa45ac5db1e26dc00b30ca9b128b10956"
+
+PR = "r0"
 
 inherit autotools gettext
 BBCLASSEXTEND = "native"
