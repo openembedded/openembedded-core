@@ -11,6 +11,76 @@ def raise_sanity_error(msg):
     
     %s""" % msg)
 
+# Check a single tune for validity.
+def check_toolchain_tune(data, tune, multilib):
+    tune_errors = []
+    if not tune:
+        return "No tuning found for %s multilib." % multilib
+    bb.debug(2, "Sanity-checking tuning '%s' (%s) features:" % (tune, multilib))
+    features = (data.getVar("TUNE_FEATURES_tune-%s" % tune, True) or "").split()
+    if not features:
+        return "Tuning '%s' has no defined features, and cannot be used." % tune
+    valid_tunes = data.getVarFlags('TUNEVALID') or {}
+    conflicts = data.getVarFlags('TUNECONFLICTS') or {}
+    # [doc] is the documentation for the variable, not a real feature
+    if 'doc' in valid_tunes:
+        del valid_tunes['doc']
+    if 'doc' in conflicts:
+        del conflicts['doc']
+    for feature in features:
+        if feature in conflicts:
+            for conflict in conflicts[feature].split():
+                if conflict in features:
+                    tune_errors.append("Feature '%s' conflicts with '%s'." %
+                        (feature, conflict))
+        if feature in valid_tunes:
+            bb.debug(2, "  %s: %s" % (feature, valid_tunes[feature]))
+        else:
+            tune_errors.append("Feature '%s' is not defined." % feature)
+    whitelist = data.getVar("TUNEABI_WHITELIST", True) or ''
+    override = data.getVar("TUNEABI_OVERRIDE", True) or ''
+    if whitelist:
+        tuneabi = data.getVar("TUNEABI_tune-%s" % tune, True) or ''
+        if not tuneabi:
+            tuneabi = tune
+        if True not in [x in whitelist.split() for x in tuneabi.split()]:
+            tune_errors.append("Tuning '%s' (%s) cannot be used with any supported tuning/ABI." %
+                (tune, tuneabi))
+    if tune_errors:
+        return "Tuning '%s' has the following errors:\n" + '\n'.join(tune_errors)
+
+def check_toolchain(data):
+    tune_error_set = []
+    deftune = data.getVar("DEFAULTTUNE", True)
+    tune_errors = check_toolchain_tune(data, deftune, 'default')
+    if tune_errors:
+        tune_error_set.append(tune_errors)
+
+    multilibs = (data.getVar("MULTILIB_VARIANTS", True) or "").split()
+    if multilibs:
+        seen_libs = []
+        seen_tunes = []
+        for lib in multilibs:
+            if lib in seen_libs:
+                tune_error_set.append("The multilib '%s' appears more than once." % lib)
+            else:
+                seen_libs.append(lib)
+            tune = data.getVar("DEFAULTTUNE_virtclass-multilib-%s" % lib, True)
+            if tune in seen_tunes:
+                tune_error_set.append("The tuning '%s' appears in more than one multilib." % tune)
+            else:
+                seen_libs.append(tune)
+            if tune == deftune:
+                tune_error_set.append("Multilib '%s' (%s) is also the default tuning." % (lib, deftune))
+            else:
+                tune_errors = check_toolchain_tune(data, tune, lib)
+            if tune_errors:
+                tune_error_set.append(tune_errors)
+    if tune_error_set:
+        return "Toolchain tunings invalid:\n" + '\n'.join(tune_error_set)
+
+    return ""
+
 def check_conf_exists(fn, data):
     bbpath = []
     fn = data.expand(fn)
@@ -327,6 +397,9 @@ def check_sanity(e):
         messages = messages + pseudo_msg + '\n'
 
     check_supported_distro(e)
+    toolchain_msg = check_toolchain(e.data)
+    if toolchain_msg != "":
+        messages = messages + toolchain_msg + '\n'
 
     # Check if DISPLAY is set if IMAGETEST is set
     if not data.getVar( 'DISPLAY', e.data, True ) and data.getVar( 'IMAGETEST', e.data, True ) == 'qemu':
