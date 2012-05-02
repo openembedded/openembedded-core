@@ -24,6 +24,10 @@ TUNEVALID[feature] - The <feature> is defined with a human readable
 explanation for what it does.  All architectural, cpu, abi, etc tuning 
 features must be defined using TUNEVALID.
 
+TUNECONFLICTS[feature] - A list of features which conflict with <feature>.
+New sanity checks will try to reject combinations in which a single
+tuning ends up with features which conflict with each other.
+
 TUNE_FEATURES - This is automatically defined as TUNE_FEATURES_tune-<tune>.
 See TUNE_FEATURES_tune-<tune> for more information.
 

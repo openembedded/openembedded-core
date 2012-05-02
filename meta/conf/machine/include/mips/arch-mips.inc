@@ -12,15 +12,15 @@ TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "bigendian", "-meb", "-mel
 
 # ABI flags
 TUNEVALID[o32] = "MIPS o32 ABI"
-TUNECONFLICT[o32] = "n32 n64"
+TUNECONFLICTS[o32] = "n32 n64"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "o32", "-mabi=32", "", d)}"
 
 TUNEVALID[n32] = "MIPS64 n32 ABI"
-TUNECONFLICT[n32] = "o32 n64"
+TUNECONFLICTS[n32] = "o32 n64"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "n32", "-mabi=n32", "", d)}"
 
 TUNEVALID[n64] = "MIPS64 n64 ABI"
-TUNECONFLICT[n64] = "o32 n32"
+TUNECONFLICTS[n64] = "o32 n32"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "n64", "-mabi=64", "", d)}"
 
 # Floating point

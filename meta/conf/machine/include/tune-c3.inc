@@ -1,7 +1,7 @@
 require conf/machine/include/ia32/arch-ia32.inc
 
 TUNEVALID[c3] = "VIA Cyrix III or VIA C3 specific optimizations"
-TUNECONFLICT[c3] = "m64 mx32"
+TUNECONFLICTS[c3] = "m64 mx32"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "c3", "-march=c3 -mtune=c3", "", d)}"
 
 AVAILTUNES += "c3"
