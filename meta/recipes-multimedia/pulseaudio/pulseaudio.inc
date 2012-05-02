@@ -31,6 +31,7 @@ EXTRA_OECONF = "\
 		--without-hal \
 		--disable-hal \
 		--disable-orc \
+		--enable-tcpwrap=no \
 		--with-access-group=audio \
 "
 
