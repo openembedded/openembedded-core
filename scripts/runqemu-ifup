@@ -34,7 +34,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 usage() {
-	echo "sudo $(basename $0) <gid> <native-sysroot-basedir>"
+	echo "sudo $(basename $0) <uid> <gid> <native-sysroot-basedir>"
 }
 
 if [ $EUID -ne 0 ]; then
@@ -42,13 +42,14 @@ if [ $EUID -ne 0 ]; then
 	exit 1
 fi
 
-if [ $# -ne 2 ]; then
+if [ $# -ne 3 ]; then
 	usage
 	exit 1
 fi
 
-GROUP="-g $1"
-NATIVE_SYSROOT_DIR=$2
+USERID="-u $1"
+GROUP="-g $2"
+NATIVE_SYSROOT_DIR=$3
 
 TUNCTL=$NATIVE_SYSROOT_DIR/usr/bin/tunctl
 if [ ! -x "$TUNCTL" ]; then
@@ -59,9 +60,14 @@ fi
 TAP=`$TUNCTL -b $GROUP 2>&1`
 STATUS=$?
 if [ $STATUS -ne 0 ]; then
-	echo "tunctl failed:"
-	echo $TAP
-	exit 1
+# If tunctl -g fails, try using tunctl -u, for older host kernels 
+# which do not support the TUNSETGROUP ioctl
+	TAP=`$TUNCTL -b $USERID 2>&1`
+	STATUS=$?
+	if [ $STATUS -ne 0 ]; then
+		echo "tunctl failed:"
+		exit 1
+	fi
 fi
 
 IFCONFIG=`which ifconfig 2> /dev/null`

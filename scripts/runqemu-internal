@@ -173,13 +173,14 @@ if [ "$TAP" = "" ]; then
     fi
 
     GROUPID=`id -g`
+    USERID=`id -u`
     echo "Setting up tap interface under sudo"
     # Redirect stderr since we could see a LD_PRELOAD warning here if pseudo is loaded
     # but inactive. This looks scary but is harmless
-    tap=`sudo $QEMUIFUP $GROUPID $OECORE_NATIVE_SYSROOT 2> /dev/null`
+    tap=`sudo $QEMUIFUP $USERID $GROUPID $OECORE_NATIVE_SYSROOT 2> /dev/null`
     if [ $? -ne 0 ]; then
         # Re-run standalone to see verbose errors
-        sudo $QEMUIFUP $GROUPID $OECORE_NATIVE_SYSROOT
+        sudo $QEMUIFUP $USERID $GROUPID $OECORE_NATIVE_SYSROOT
         return
     fi
     LOCKFILE="$LOCKDIR/$tap"
