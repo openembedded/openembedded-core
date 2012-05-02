@@ -97,6 +97,9 @@ glib_cv_rtldglobal_broken=${glib_cv_rtldglobal_broken=yes}
 glib_cv_stack_grows=${glib_cv_stack_grows=no}
 utils_cv_sys_open_max=${utils_cv_sys_open_max=1015}
 glib_cv_use_pid_surrogate=${glib_cv_use_pid_surrogate=yes}
+ac_cv_alignof_guint32=4
+ac_cv_alignof_guint64=4
+ac_cv_alignof_unsigned_long=4
 
 # guile
 ac_cv_uchar=${ac_cv_uchar=no}
