@@ -91,10 +91,9 @@ process_filename() {
 # Parse command line args without requiring specific ordering. It's a
 # bit more complex, but offers a great user experience.
 KVM_ENABLED="no"
-i=1
-while [ $i -le $# ]; do
-    arg=${!i}
-    case $arg in
+while true; do
+    arg=${1}
+    case "$arg" in
         "qemux86" | "qemux86-64" | "qemuarm" | "qemumips" | "qemuppc")
             [ -z "$MACHINE" ] && MACHINE=$arg || \
                 error "conflicting MACHINE types [$MACHINE] and [$arg]"
@@ -152,6 +151,7 @@ while [ $i -le $# ]; do
             KVM_ENABLED="yes"
             KVM_CAPABLE=`grep -q 'vmx\|smx' /proc/cpuinfo && echo 1`
             ;;
+        "") break ;;
         *)
             # A directory name is an nfs rootfs
             if [ -d "$arg" ]; then
@@ -174,7 +174,7 @@ while [ $i -le $# ]; do
             fi
             ;;
     esac
-    i=$((i + 1))
+    shift
 done
 
 if [ ! -c /dev/net/tun ] ; then
@@ -391,6 +391,9 @@ if [ "$libgl" != 'yes' ]; then
     exit 1;
 fi
 
+INTERNAL_SCRIPT="$0-internal"
+if [ ! -f "$INTERNAL_SCRIPT" -o ! -r "$INTERNAL_SCRIPT" ]; then
 INTERNAL_SCRIPT=`which runqemu-internal`
+fi
 
 . $INTERNAL_SCRIPT

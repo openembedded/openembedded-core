@@ -69,7 +69,7 @@ QEMU_MEMORY="$mem_size"M
 
 # Bug 433: qemuarm cannot use > 256 MB RAM
 if [ "$MACHINE" = "qemuarm" ]; then
-    if [[ -z "$mem_size" || $mem_size -gt 256 ]]; then
+    if [ -z "$mem_size" -o $mem_size -gt 256 ]; then
         echo "WARNING: qemuarm does not support > 256M of RAM."
         echo "Changing QEMU_MEMORY to default of 256M."
         QEMU_MEMORY="256M"
@@ -111,7 +111,7 @@ acquire_lock() {
 
     if [ -e "$lockfile.lock" ]; then
         # Check that the lockfile is not stale
-        ps=`ps -ewwo pid | grep $(cat $lockfile.lock)`
+        ps=`ps -eo pid | grep $(cat $lockfile.lock)`
         if [ -z "$ps" ]; then
             echo "WARNING: Stale lock file detected, deleting $lockfile.lock."
             rm -f $lockfile.lock
@@ -212,8 +212,9 @@ cleanup() {
     stty sane
 }
 
-n1=$[ (`echo $TAP | sed 's/tap//'` * 2) + 1 ]
-n2=$[ (`echo $TAP | sed 's/tap//'` * 2) + 2 ]
+n0=$(echo $TAP | sed 's/tap//')
+n1=$(($n0 * 2 + 1))
+n2=$(($n1 + 1))
 
 KERNEL_NETWORK_CMD="ip=192.168.7.$n2::192.168.7.$n1:255.255.255.0"
 QEMU_TAP_CMD="-net tap,vlan=0,ifname=$TAP,script=no,downscript=no"
@@ -437,7 +438,7 @@ if [ ! -x "$QEMUBIN" ]; then
     return
 fi
 
-function _quit() {
+do_quit() {
     if [ -n "$PIDFILE" ]; then
         #echo kill `cat $PIDFILE`
         kill `cat $PIDFILE`
@@ -449,7 +450,7 @@ function _quit() {
 DISTCCD=`which distccd 2> /dev/null`
 PIDFILE=""
 
-trap _quit INT TERM QUIT
+trap do_quit INT TERM QUIT
 
 if [ -x "$DISTCCD" ]; then
     echo "Starting distccd..."
@@ -476,7 +477,7 @@ if grep -i ubuntu /etc/lsb-release &> /dev/null
 then
     # precede nvidia's driver on Ubuntu 10
     UBUNTU_MAIN_VERSION=`cat /etc/lsb-release |grep DISTRIB_RELEASE |cut -d=  -f 2| cut -d. -f 1`
-    if [ $UBUNTU_MAIN_VERSION -eq 10 ];
+    if [ "$UBUNTU_MAIN_VERSION" = "10" ];
     then
         GL_PATH=""
         if test -e /usr/lib/libGL.so
@@ -502,4 +503,3 @@ LD_PRELOAD="$GL_LD_PRELOAD" $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -n
 cleanup
 
 trap - INT TERM QUIT
-return
