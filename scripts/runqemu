@@ -62,28 +62,31 @@ process_filename() {
 
     # Extract the filename extension
     EXT=`echo $filename | awk -F . '{ print \$NF }'`
-    # A file ending in .bin is a kernel
-    if [ "x$EXT" = "xbin" ]; then
-        if [ -z "$KERNEL" ]; then
-            KERNEL=$filename
-        else
-            echo "Error: conflicting KERNEL args [$KERNEL] and [$filename]"
-            usage
-        fi
-    elif [ "x$EXT" = "xext2" -o "x$EXT" = "xext3" -o \
-            "x$EXT" = "xjffs2" -o "x$EXT" = "xbtrfs" ]; then
-        # A file ending in a supportted fs type is a rootfs image
-        if [ -z "$FSTYPE" -o "$FSTYPE" = "$EXT" ]; then
-            FSTYPE=$EXT
-            ROOTFS=$filename
-        else
-            echo "Error: conflicting FSTYPE types [$FSTYPE] and [$EXT]"
-            usage
-        fi
-    else
-       echo "Error: unknown file arg [$filename]"
-       usage
-    fi
+    case /$EXT/ in
+	/bin/)
+		# A file ending in .bin is a kernel
+		if [ -z "$KERNEL" ]; then
+		    KERNEL=$filename
+		else
+		    echo "Error: conflicting KERNEL args [$KERNEL] and [$filename]"
+		    usage
+		fi
+		;;
+	/ext[234]/|/jffs2/|/btrfs/)
+		# A file ending in a supportted fs type is a rootfs image
+		if [ -z "$FSTYPE" -o "$FSTYPE" = "$EXT" ]; then
+		    FSTYPE=$EXT
+		    ROOTFS=$filename
+		else
+		    echo "Error: conflicting FSTYPE types [$FSTYPE] and [$EXT]"
+		    usage
+		fi
+		;;
+	*)
+		echo "Error: unknown file arg [$filename]"
+		usage
+		;;
+    esac
 }
 
 # Parse command line args without requiring specific ordering. It's a
