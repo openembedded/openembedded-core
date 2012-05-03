@@ -9,11 +9,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605 \
 
 SECTION = "x11/utils"
 DEPENDS = "glib-2.0 libxml2 zlib"
-PR = "r2"
+PR = "r3"
 
 inherit autotools pkgconfig gnome
 
-SRC_URI_append = " file://croco.patch;apply=yes "
+SRC_URI_append = " file://croco.patch;apply=yes \
+                  file://libcroco_fix_for_automake-1.12.patch "
 
 SRC_URI[archive.md5sum] = "e1e93eeff4367c896f3959af34ba20eb"
 SRC_URI[archive.sha256sum] = "746192d979263c74094d41e5ff0e19900b3d81eb2bd42c27c1c320dd94008034"
