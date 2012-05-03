@@ -104,21 +104,19 @@ while [ $i -le $# ]; do
                 error "conflicting FSTYPE types [$FSTYPE] and [$arg]"
             ;;
         *-image*)
-            if [ -z "$ROOTFS" ]; then
-                if [ -f "$arg" ]; then
-                    process_filename $arg
-                elif [ -d "$arg" ]; then
-                    # Handle the case where the nfsroot dir has -image-
-                    # in the pathname
-                    echo "Assuming $arg is an nfs rootfs"
-                    FSTYPE=nfs
-                    ROOTFS=$arg
-                else
-                    ROOTFS=$arg
-                    LAZY_ROOTFS="true"
-                fi
+            [ -z "$ROOTFS" ] || \
+		error "conflicting ROOTFS args [$ROOTFS] and [$arg]"
+            if [ -f "$arg" ]; then
+                process_filename $arg
+            elif [ -d "$arg" ]; then
+                # Handle the case where the nfsroot dir has -image-
+                # in the pathname
+                echo "Assuming $arg is an nfs rootfs"
+                FSTYPE=nfs
+                ROOTFS=$arg
             else
-                error "conflicting ROOTFS args [$ROOTFS] and [$arg]"
+                ROOTFS=$arg
+                LAZY_ROOTFS="true"
             fi
             ;;
         "nographic")
@@ -144,14 +142,15 @@ while [ $i -le $# ]; do
             ;;
         "audio")
             if [ "x$MACHINE" = "xqemux86" -o "x$MACHINE" = "xqemux86-64" ]; then
-                echo "Enable audio on qemu. Pls. install snd_intel8x0 or snd_ens1370 driver in linux guest.";
+                echo "Enabling audio in qemu."
+                echo "Please install snd_intel8x0 or snd_ens1370 driver in linux guest."
                 QEMU_AUDIO_DRV="alsa"
                 SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -soundhw ac97,es1370"
             fi
             ;;
         "kvm")
             KVM_ENABLED="yes"
-            KVM_CAPABLE=`grep 'vmx\|smx' /proc/cpuinfo`
+            KVM_CAPABLE=`grep -q 'vmx\|smx' /proc/cpuinfo && echo 1`
             ;;
         *)
             # A directory name is an nfs rootfs
@@ -190,7 +189,8 @@ YOCTO_KVM_WIKI="https://wiki.yoctoproject.org/wiki/How_to_enable_KVM_for_Poky_qe
 # Detect KVM configuration
 if [ "x$KVM_ENABLED" = "xyes" ]; then
     if [ -z "$KVM_CAPABLE" ]; then
-        echo "You are tring to enable KVM on cpu without VT support. Remove kvm from the command-line, or refer";
+        echo "You are trying to enable KVM on a cpu without VT support."
+        echo "Remove kvm from the command-line, or refer"
         echo "$YOCTO_KVM_WIKI";
         exit 1;
     fi
@@ -199,14 +199,16 @@ if [ "x$KVM_ENABLED" = "xyes" ]; then
         exit 1;
     fi
     if [ ! -e /dev/kvm ]; then
-        echo "Missing KVM device. Have you inserted kvm modules? Pls. refer";
+        echo "Missing KVM device. Have you inserted kvm modules?"
+        echo "For further help see"
         echo "$YOCTO_KVM_WIKI";
         exit 1;
     fi
     if 9<>/dev/kvm ; then
         SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -enable-kvm"
     else
-        echo "You have no rights on /dev/kvm. Pls. change the owndership as described at";
+        echo "You have no rights on /dev/kvm."
+        echo "Please change the ownership of this file as described at"
         echo "$YOCTO_KVM_WIKI";
         exit 1;
     fi
