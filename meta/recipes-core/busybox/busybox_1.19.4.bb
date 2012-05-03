@@ -1,9 +1,7 @@
 require busybox.inc
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
-           file://udhcpscript.patch \
-           file://udhcpc-fix-nfsroot.patch \
            file://B921600.patch \
            file://get_header_tar.patch \
            file://busybox-appletlib-dependency.patch \
