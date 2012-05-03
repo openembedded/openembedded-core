@@ -19,7 +19,6 @@ do_install_extra () {
     install -d ${D}${base_bindir}
     mv ${D}${bindir}/tar ${D}${base_bindir}/tar
     rmdir ${D}${bindir}/
-    rmdir ${D}${sbindir}/
 }
 
 inherit update-alternatives
