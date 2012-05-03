@@ -6,6 +6,7 @@ PV = "1.7+git${SRCPV}"
 
 SRC_URI = "git://sources.redhat.com/git/systemtap.git;protocol=git \
            file://docproc-build-fix.patch \
+           file://systemtap_fix_for_automake_1.12.patch \
           "
 
 FILESPATH = "${FILE_DIRNAME}/systemtap"
