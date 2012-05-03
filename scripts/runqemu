@@ -55,11 +55,6 @@ SCRIPT_QEMU_OPT=""
 SCRIPT_QEMU_EXTRA_OPT=""
 SCRIPT_KERNEL_OPT=""
 
-# Don't use TMPDIR from the external environment, it may be a distro
-# variable pointing to /tmp (e.g. within X on OpenSUSE)
-# Instead, use OE_TMPDIR for passing this in externally.
-TMPDIR="$OE_TMPDIR"
-
 # Determine whether the file is a kernel or QEMU image, and set the
 # appropriate variables
 process_filename() {
@@ -273,8 +268,8 @@ SPITZ_DEFAULT_KERNEL=zImage-spitz.bin
 SPITZ_DEFAULT_FSTYPE=ext3
 
 setup_tmpdir() {
-    if [ -z "$TMPDIR" ]; then
-        # Try to get TMPDIR from bitbake
+    if [ -z "$OE_TMPDIR" ]; then
+        # Try to get OE_TMPDIR from bitbake
         type -P bitbake &>/dev/null || {
             echo "In order for this script to dynamically infer paths";
             echo "to kernels or filesystem images, you either need";
@@ -282,11 +277,11 @@ setup_tmpdir() {
             echo "before running this script" >&2;
             exit 1; }
 
-        # We have bitbake in PATH, get TMPDIR from bitbake
-        TMPDIR=`bitbake -e | grep ^TMPDIR=\" | cut -d '=' -f2 | cut -d '"' -f2`
-        if [ -z "$TMPDIR" ]; then
+        # We have bitbake in PATH, get OE_TMPDIR from bitbake
+        OE_TMPDIR=`bitbake -e | grep ^TMPDIR=\" | cut -d '=' -f2 | cut -d '"' -f2`
+        if [ -z "$OE_TMPDIR" ]; then
             echo "Error: this script needs to be run from your build directory,"
-            echo "or you need to explicitly set TMPDIR in your environment"
+            echo "or you need to explicitly set OE_TMPDIR in your environment"
             exit 1
         fi
     fi
@@ -303,7 +298,7 @@ setup_sysroot() {
         BUILD_OS=`uname | tr '[A-Z]' '[a-z]'`
         BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
 
-        OECORE_NATIVE_SYSROOT=$TMPDIR/sysroots/$BUILD_SYS
+        OECORE_NATIVE_SYSROOT=$OE_TMPDIR/sysroots/$BUILD_SYS
     fi 
 }
 
@@ -348,7 +343,7 @@ fi
 if [ -z "$KERNEL" ]; then
     setup_tmpdir
     eval kernel_file=\$${machine2}_DEFAULT_KERNEL
-    KERNEL=$TMPDIR/deploy/images/$kernel_file
+    KERNEL=$OE_TMPDIR/deploy/images/$kernel_file
 
     if [ -z "$KERNEL" ]; then
         echo "Error: Unable to determine default kernel for MACHINE [$MACHINE]"
@@ -372,13 +367,13 @@ fi
 # core-image-sato
 if [ "$LAZY_ROOTFS" = "true" ]; then
     setup_tmpdir
-    echo "Assuming $ROOTFS really means $TMPDIR/deploy/images/$ROOTFS-$MACHINE.$FSTYPE"
-    ROOTFS=$TMPDIR/deploy/images/$ROOTFS-$MACHINE.$FSTYPE
+    echo "Assuming $ROOTFS really means $OE_TMPDIR/deploy/images/$ROOTFS-$MACHINE.$FSTYPE"
+    ROOTFS=$OE_TMPDIR/deploy/images/$ROOTFS-$MACHINE.$FSTYPE
 fi
 
 if [ -z "$ROOTFS" ]; then
     setup_tmpdir
-    T=$TMPDIR/deploy/images
+    T=$OE_TMPDIR/deploy/images
     eval rootfs_list=\$${machine2}_DEFAULT_ROOTFS
     findimage $T $MACHINE $FSTYPE
 
