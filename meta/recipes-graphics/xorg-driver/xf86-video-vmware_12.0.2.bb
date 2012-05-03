@@ -15,8 +15,3 @@ SRC_URI[md5sum] = "0743ec7c479603fba60d118858fd5783"
 SRC_URI[sha256sum] = "c827875fd94805ec9b925fe09aaa973e7e3f9096c7ef311d449c3f134ae75147"
 
 COMPATIBLE_HOST = '(i.86.*-linux|x86_64.*-linux)'
-
-do_install_append () {
-	# Remove useless empty directory
-	rmdir ${D}${bindir}
-}
