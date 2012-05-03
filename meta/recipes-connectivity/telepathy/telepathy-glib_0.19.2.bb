@@ -16,9 +16,3 @@ inherit autotools pkgconfig gettext
 
 FILES_${PN} += "${datadir}/telepathy \
                 ${datadir}/dbus-1"
-
-do_install_append() {
-	rmdir ${D}${bindir}
-	rmdir ${D}${libexecdir}
-	rmdir ${D}${servicedir}
-}
