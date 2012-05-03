@@ -21,10 +21,5 @@ SRC_URI[sha256sum] = "1740681cff4cd4c5a2eaa9805d8898269cfb6a49a0bda0acb242def15b
 
 inherit autotools pkgconfig
 
-do_install_append () {
-	rmdir ${D}${libdir}/gio/modules/
-	rmdir ${D}${libdir}/gio/
-}
-
 PACKAGES += "${PN}-mime"
 FILES_${PN}-mime = "${datadir}/mime/"
