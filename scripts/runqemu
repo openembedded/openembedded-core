@@ -46,6 +46,11 @@ if [ "x$1" = "x" ]; then
     usage
 fi
 
+error() {
+    echo "Error: "$*
+    usage
+}
+
 MACHINE=${MACHINE:=""}
 KERNEL=""
 FSTYPE=""
@@ -65,12 +70,8 @@ process_filename() {
     case /$EXT/ in
 	/bin/)
 		# A file ending in .bin is a kernel
-		if [ -z "$KERNEL" ]; then
-		    KERNEL=$filename
-		else
-		    echo "Error: conflicting KERNEL args [$KERNEL] and [$filename]"
-		    usage
-		fi
+		[ -z "$KERNEL" ] && KERNEL=$filename || \
+		    error "conflicting KERNEL args [$KERNEL] and [$filename]"
 		;;
 	/ext[234]/|/jffs2/|/btrfs/)
 		# A file ending in a supportted fs type is a rootfs image
@@ -78,13 +79,11 @@ process_filename() {
 		    FSTYPE=$EXT
 		    ROOTFS=$filename
 		else
-		    echo "Error: conflicting FSTYPE types [$FSTYPE] and [$EXT]"
-		    usage
+		    error "conflicting FSTYPE types [$FSTYPE] and [$EXT]"
 		fi
 		;;
 	*)
-		echo "Error: unknown file arg [$filename]"
-		usage
+		error "unknown file arg [$filename]"
 		;;
     esac
 }
@@ -97,20 +96,12 @@ while [ $i -le $# ]; do
     arg=${!i}
     case $arg in
         "qemux86" | "qemux86-64" | "qemuarm" | "qemumips" | "qemuppc")
-            if [ -z "$MACHINE" ]; then
-                MACHINE=$arg
-            else
-                echo "Error: conflicting MACHINE types [$MACHINE] and [$arg]"
-                usage
-            fi
+            [ -z "$MACHINE" ] && MACHINE=$arg || \
+                error "conflicting MACHINE types [$MACHINE] and [$arg]"
             ;;
         "ext2" | "ext3" | "jffs2" | "nfs" | "btrfs")
-            if [ -z "$FSTYPE" -o "$FSTYPE" = "$arg" ]; then
-                FSTYPE=$arg
-            else
-                echo "Error: conflicting FSTYPE types [$FSTYPE] and [$arg]"
-                usage
-            fi
+            [ -z "$FSTYPE" -o "$FSTYPE" = "$arg" ] && FSTYPE=$arg || \
+                error "conflicting FSTYPE types [$FSTYPE] and [$arg]"
             ;;
         *-image*)
             if [ -z "$ROOTFS" ]; then
@@ -127,8 +118,7 @@ while [ $i -le $# ]; do
                     LAZY_ROOTFS="true"
                 fi
             else
-                echo "Error: conflicting ROOTFS args [$ROOTFS] and [$arg]"
-                usage
+                error "conflicting ROOTFS args [$ROOTFS] and [$arg]"
             fi
             ;;
         "nographic")
@@ -146,10 +136,8 @@ while [ $i -le $# ]; do
             # to use simplified options instead
             serial_option=`expr "$SCRIPT_QEMU_EXTRA_OPT" : '.*\(-serial\)'`
             kvm_option=`expr "$SCRIPT_QEMU_EXTRA_OPT" : '.*\(-enable-kvm\)'`
-            if [ ! -z "$serial_option" -o ! -z "$kvm_option" ]; then
-                echo "Error: Please use simplified serial or kvm options instead"
-                usage
-            fi
+            [ ! -z "$serial_option" -o ! -z "$kvm_option" ] && \
+                error "Please use simplified serial or kvm options instead"
             ;;
         "bootparams="*)
             SCRIPT_KERNEL_OPT="$SCRIPT_KERNEL_OPT ${arg##bootparams=}"
@@ -172,21 +160,18 @@ while [ $i -le $# ]; do
                 if [ -z "$FSTYPE" -o "$FSTYPE" = "nfs" ]; then
                     FSTYPE=nfs
                 else
-                    echo "Error: conflicting FSTYPE types [$arg] and nfs"
-                    usage
+                    error "conflicting FSTYPE types [$arg] and nfs"
                 fi
 
                 if [ -z "$ROOTFS" ]; then
                     ROOTFS=$arg
                 else
-                    echo "Error: conflicting ROOTFS args [$ROOTFS] and [$arg]"
-                    usage
+                    error "conflicting ROOTFS args [$ROOTFS] and [$arg]"
                 fi
             elif [ -f "$arg" ]; then
                 process_filename $arg
             else
-                echo "Error: unable to classify arg [$arg]"
-                usage
+                error "unable to classify arg [$arg]"
             fi
             ;;
     esac
@@ -229,19 +214,16 @@ fi
 
 # Report errors for missing combinations of options
 if [ -z "$MACHINE" -a -z "$KERNEL" ]; then
-    echo "Error: you must specify at least a MACHINE or KERNEL argument"
-    usage
+    error "you must specify at least a MACHINE or KERNEL argument"
 fi
 if [ "$FSTYPE" = "nfs" -a -z "$ROOTFS" ]; then
-    echo "Error: NFS booting without an explicit ROOTFS path is not yet supported"
-    usage
+    error "NFS booting without an explicit ROOTFS path is not yet supported"
 fi
 
 if [ -z "$MACHINE" ]; then
     MACHINE=`basename $KERNEL | sed 's/.*-\(qemux86-64\|qemux86\|qemuarm\|qemumips\|qemuppc\).*/\1/'`
     if [ -z "$MACHINE" ]; then
-        echo "Error: Unable to set MACHINE from kernel filename [$KERNEL]"
-        usage
+        error "Unable to set MACHINE from kernel filename [$KERNEL]"
     fi
     echo "Set MACHINE to [$MACHINE] based on kernel [$KERNEL]"
 fi
@@ -349,8 +331,7 @@ if [ -z "$KERNEL" ]; then
     KERNEL=$OE_TMPDIR/deploy/images/$kernel_file
 
     if [ -z "$KERNEL" ]; then
-        echo "Error: Unable to determine default kernel for MACHINE [$MACHINE]"
-        usage
+        error "Unable to determine default kernel for MACHINE [$MACHINE]"
     fi
 fi
 # KERNEL is now set for all cases
@@ -359,8 +340,7 @@ if [ -z "$FSTYPE" ]; then
     eval FSTYPE=\$${machine2}_DEFAULT_FSTYPE
 
     if [ -z "$FSTYPE" ]; then
-        echo "Error: Unable to determine default fstype for MACHINE [$MACHINE]"
-        usage
+        error "Unable to determine default fstype for MACHINE [$MACHINE]"
     fi
 fi
 
@@ -381,8 +361,7 @@ if [ -z "$ROOTFS" ]; then
     findimage $T $MACHINE $FSTYPE
 
     if [ -z "$ROOTFS" ]; then
-        echo "Error: Unable to determine default rootfs for MACHINE [$MACHINE]"
-        usage
+        error "Unable to determine default rootfs for MACHINE [$MACHINE]"
     fi
 fi
 # ROOTFS is now set for all cases
