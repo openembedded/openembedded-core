@@ -76,6 +76,8 @@ inherit image-${IMAGE_TYPE}
 python () {
     deps = bb.data.getVarFlag('do_rootfs', 'depends', d) or ""
     for type in (bb.data.getVar('IMAGE_FSTYPES', d, True) or "").split():
+        if type == "live":
+            type = "ext3"
         for dep in ((bb.data.getVar('IMAGE_DEPENDS_%s' % type, d) or "").split() or []):
             deps += " %s:do_populate_sysroot" % dep
     for dep in (bb.data.getVar('EXTRA_IMAGEDEPENDS', d, True) or "").split():
