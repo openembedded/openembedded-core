@@ -8,7 +8,7 @@ BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://src/ls.c;startline=4;endline=16;md5=482a96d4f25010a4e13f8743e0c3685e"
-PR = "r2"
+PR = "r3"
 DEPENDS = "coreutils-native-${PV}"
 DEPENDS_virtclass-native = "gettext-native"
 
@@ -22,7 +22,9 @@ SRC_URI_BASE = "${GNU_MIRROR}/coreutils/${BP}.tar.bz2 \
            file://coreutils-i18n.patch \
            file://coreutils-overflow.patch \
            file://coreutils-fix-install.patch \
-           file://man-touch.patch"
+           file://man-touch.patch \
+           file://coreutils_fix_for_automake-1.12.patch \
+           "
 
 SRC_URI = "${SRC_URI_BASE} file://fix_for_manpage_building.patch"
 SRC_URI_virtclass-native = "${SRC_URI_BASE}"
