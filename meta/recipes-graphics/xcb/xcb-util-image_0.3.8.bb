@@ -1,5 +1,7 @@
 require xcb-util.inc
 
+DEPENDS += "xcb-util"
+
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://image/xcb_image.c;endline=24;md5=eafdf965cfb89955fdedf75054223fb4 \
                     file://image/xcb_image.h;startline=4;endline=27;md5=4e4f1b0fae5694beed407dea01f38212"
