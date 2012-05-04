@@ -1,0 +1,48 @@
+Upstream-Status: Pending
+
+automake 1.12 has depricated automatic de-ANSI-fication support
+
+this patch avoids these kinds of errors:
+
+| stage1/Makefile.am:2: error: 'pkglibdir' is not a legitimate directory for 'DATA'
+| stage2/Makefile.am:35: error: 'pkglibdir' is not a legitimate directory for 'DATA'
+| stage2/Makefile.am:46: error: 'pkglibdir' is not a legitimate directory for 'DATA'
+| autoreconf: automake failed with exit status: 1
+| ERROR: autoreconf execution failed.
+
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+2012/05/04
+
+Index: grub-0.97/stage1/Makefile.am
+===================================================================
+--- grub-0.97.orig/stage1/Makefile.am
++++ grub-0.97/stage1/Makefile.am
+@@ -1,5 +1,5 @@
+ pkglibdir = $(libdir)/$(PACKAGE)/$(host_cpu)-$(host_vendor)
+-nodist_pkglib_DATA = stage1
++nodist_pkgdata_DATA = stage1
+ 
+ CLEANFILES = $(nodist_pkglib_DATA)
+ 
+Index: grub-0.97/stage2/Makefile.am
+===================================================================
+--- grub-0.97.orig/stage2/Makefile.am
++++ grub-0.97/stage2/Makefile.am
+@@ -32,7 +32,7 @@ pkglibdir = $(libdir)/$(PACKAGE)/$(host_
+ EXTRA_PROGRAMS = nbloader.exec pxeloader.exec diskless.exec
+ 
+ if DISKLESS_SUPPORT
+-pkglib_DATA = stage2 stage2_eltorito e2fs_stage1_5 fat_stage1_5 \
++pkgdata_DATA = stage2 stage2_eltorito e2fs_stage1_5 fat_stage1_5 \
+ 	ffs_stage1_5 iso9660_stage1_5 jfs_stage1_5 minix_stage1_5 \
+ 	reiserfs_stage1_5 ufs2_stage1_5 vstafs_stage1_5 xfs_stage1_5 \
+ 	nbgrub pxegrub
+@@ -43,7 +43,7 @@ noinst_PROGRAMS = pre_stage2.exec start.
+ 	reiserfs_stage1_5.exec ufs2_stage1_5.exec vstafs_stage1_5.exec \
+ 	xfs_stage1_5.exec nbloader.exec pxeloader.exec diskless.exec
+ else
+-pkglib_DATA = stage2 stage2_eltorito e2fs_stage1_5 fat_stage1_5 \
++pkgdata_DATA = stage2 stage2_eltorito e2fs_stage1_5 fat_stage1_5 \
+ 	ffs_stage1_5 iso9660_stage1_5 jfs_stage1_5 minix_stage1_5 \
+ 	reiserfs_stage1_5 ufs2_stage1_5 vstafs_stage1_5 xfs_stage1_5
+ noinst_DATA = pre_stage2 start start_eltorito
