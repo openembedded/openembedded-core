@@ -11,8 +11,8 @@ KCONFIG_MODE = "--allnoconfig"
 
 LINUX_VERSION ?= "3.2.11"
 
-SRCREV_machine ?= "ec236058dc254183dbfb3744bf21f110c37af30b"
-SRCREV_meta ?= "b14a08f5c7b469a5077c10942f4e1aec171faa9d"
+SRCREV_machine ?= "61960ba8e910d54b5525d5e9b6a7469bc399c246"
+SRCREV_meta ?= "6b3d4e09aa2531e9649f3f03827b7efbccfcec03"
 
 PR = "r0"
 PV = "${LINUX_VERSION}+git${SRCPV}"
