@@ -14,9 +14,9 @@ KBRANCH_qemuppc = "standard/preempt-rt/qemu-ppc32"
 LINUX_VERSION ?= "3.2.11"
 LINUX_KERNEL_TYPE = "preempt-rt"
 
-SRCREV_machine ?= "32ecb53e9ff759bbd297a10712b62a6575daaf86"
-SRCREV_machine_qemuppc ?= "0d5625bb868cc2471d5dd49eb7abe7eb5fe1044b"
-SRCREV_meta ?= "b14a08f5c7b469a5077c10942f4e1aec171faa9d"
+SRCREV_machine ?= "3ebf4d172cf4a41d2abf09e4036f0850e08064e7"
+SRCREV_machine_qemuppc ?= "7cebfe717987f4ffa9ae90558c28f45049847c1c"
+SRCREV_meta ?= "6b3d4e09aa2531e9649f3f03827b7efbccfcec03"
 
 PR = "r1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
