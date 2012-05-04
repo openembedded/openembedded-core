@@ -5,10 +5,12 @@ SECTION = "console/utils"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.bz2 \
-           file://uclibc-fix.patch"
+           file://uclibc-fix.patch \
+           file://grep_fix_for_automake-1.12.patch \
+           "
 
 SRC_URI[md5sum] = "52202fe462770fa6be1bb667bd6cf30c"
 SRC_URI[sha256sum] = "38c8a2bb9223d1fb1b10bdd607cf44830afc92fd451ac4cd07619bf92bdd3132"
@@ -17,6 +19,7 @@ inherit autotools gettext
 
 EXTRA_OECONF = "--disable-perl-regexp --disable-ncurses"
 
+CFLAGS += "-D PROTOTYPES"
 do_configure_prepend () {
 	rm -f ${S}/m4/init.m4
 }
