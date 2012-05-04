@@ -1,6 +1,6 @@
 require gcc-common.inc
 
-PR = "r25"
+PR = "r26"
 
 # Third digit in PV should be incremented after a minor release
 # happens from this branch on gcc e.g. currently its 4.6.0
@@ -93,6 +93,7 @@ EXTRA_OECONF_BASE = " --enable-lto \
 			--disable-libmudflap \
 			--with-system-zlib \
 			--with-linker-hash-style=${LINKER_HASH_STYLE} \
+			--without-ppl \
 			--enable-cheaders=c_global "
 
 EXTRA_OECONF_INITIAL = "--disable-libmudflap \
