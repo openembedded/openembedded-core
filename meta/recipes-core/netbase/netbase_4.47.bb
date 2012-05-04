@@ -4,7 +4,7 @@ HOMEPAGE = "http://packages.debian.org/netbase"
 SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=3dd6192d306f582dee7687da3d8748ab"
-PR = "r1"
+PR = "r2"
 
 inherit update-rc.d
 
@@ -37,7 +37,7 @@ do_install () {
 
 	# Disable network manager on machines that commonly do NFS booting
 	case "${MACHINE}" in
-		"qemuarm" | "qemux86" | "qemux86-64" | "qemumips" | "qemuppc" )
+		"qemuarm*" | "qemux86" | "qemux86-64" | "qemumips*" | "qemuppc" | "qemush*")
 			touch ${D}${sysconfdir}/network/nm-disabled-eth0
 			;;
 		*)
