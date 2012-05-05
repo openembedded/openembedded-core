@@ -1,0 +1,20 @@
+Fix for glib-2.0 version 2.32.2
+
+Upstream-Status: Pending
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+
+Index: git/src/debug.h
+===================================================================
+--- git.orig/src/debug.h
++++ git/src/debug.h
+@@ -19,7 +19,7 @@
+  *
+  */
+ 
+-#include <glib/gmessages.h>
++#include <glib.h>
+ 
+ //#define DBG(fmt, arg...)  g_debug("%s: " fmt, __FUNCTION__ , ## arg)
+ #define DBG(fmt, arg...)

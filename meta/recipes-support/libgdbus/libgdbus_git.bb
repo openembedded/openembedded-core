@@ -10,9 +10,10 @@ DEPENDS = "glib-2.0 dbus"
 
 SRCREV = "aeab6e3c0185b271ca343b439470491b99cc587f"
 PV = "0.0+git${SRCPV}"
-PR = "r0"
+PR = "r1"
 
-SRC_URI = "git://git.kernel.org/pub/scm/bluetooth/libgdbus.git;protocol=git"
+SRC_URI = "git://git.kernel.org/pub/scm/bluetooth/libgdbus.git;protocol=git \
+           file://fix-for-new-glib.patch"
 
 S = "${WORKDIR}/git"
 
