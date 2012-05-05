@@ -1,0 +1,85 @@
+Fix for glib-2.0 version 2.32.2
+
+Upstream-Status: Pending
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+
+Index: libsoup-2.2.105/libsoup/soup-date.h
+===================================================================
+--- libsoup-2.2.105.orig/libsoup/soup-date.h
++++ libsoup-2.2.105/libsoup/soup-date.h
+@@ -7,7 +7,7 @@
+ #define SOUP_DATE_H 1
+ 
+ #include <time.h>
+-#include <glib/gmacros.h>
++#include <glib.h>
+ 
+ G_BEGIN_DECLS
+ 
+Index: libsoup-2.2.105/libsoup/soup-method.h
+===================================================================
+--- libsoup-2.2.105.orig/libsoup/soup-method.h
++++ libsoup-2.2.105/libsoup/soup-method.h
+@@ -6,7 +6,7 @@
+ #ifndef SOUP_METHOD_H
+ #define SOUP_METHOD_H 1
+ 
+-#include <glib/gmacros.h>
++#include <glib.h>
+ 
+ G_BEGIN_DECLS
+ 
+Index: libsoup-2.2.105/libsoup/soup-portability.h
+===================================================================
+--- libsoup-2.2.105.orig/libsoup/soup-portability.h
++++ libsoup-2.2.105/libsoup/soup-portability.h
+@@ -6,7 +6,7 @@
+ #ifndef SOUP_PORTABILITY_H
+ #define SOUP_PORTABILITY_H
+ 
+-#include <glibconfig.h>
++#include <glib.h>
+ 
+ #ifdef G_OS_WIN32
+ 
+Index: libsoup-2.2.105/libsoup/soup-status.h
+===================================================================
+--- libsoup-2.2.105.orig/libsoup/soup-status.h
++++ libsoup-2.2.105/libsoup/soup-status.h
+@@ -8,7 +8,7 @@
+ #ifndef SOUP_STATUS_H
+ #define SOUP_STATUS_H 1
+ 
+-#include <glib/gmacros.h>
++#include <glib.h>
+ 
+ G_BEGIN_DECLS
+ 
+Index: libsoup-2.2.105/libsoup/soup-types.h
+===================================================================
+--- libsoup-2.2.105.orig/libsoup/soup-types.h
++++ libsoup-2.2.105/libsoup/soup-types.h
+@@ -6,7 +6,7 @@
+ #ifndef SOUP_TYPES_H
+ #define SOUP_TYPES_H 1
+ 
+-#include <glib/gtypes.h>
++#include <glib.h>
+ #include <glib-object.h>
+ 
+ #include <libsoup/soup-status.h>
+Index: libsoup-2.2.105/tests/revserver.c
+===================================================================
+--- libsoup-2.2.105.orig/tests/revserver.c
++++ libsoup-2.2.105/tests/revserver.c
+@@ -11,7 +11,7 @@
+ #include <libsoup/soup-address.h>
+ #include <libsoup/soup-socket.h>
+ 
+-#include <glib/gthread.h>
++#include <glib.h>
+ 
+ static void rev_read (SoupSocket *sock, GString *buf);
+ static void rev_write (SoupSocket *sock, GString *buf);
