@@ -14,7 +14,7 @@ make[5]: *** [libavcodec/x86/dsputil_mmx.o] Error 1
 
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
-Upstream-status: Backport
+Upstream-Status: Backport
 Index: gst-ffmpeg-0.10.13/gst-libs/ext/libav/libavcodec/x86/h264_qpel_mmx.c
 ===================================================================
 --- gst-ffmpeg-0.10.13.orig/gst-libs/ext/libav/libavcodec/x86/h264_qpel_mmx.c	2012-03-30 11:39:41.324522051 -0700
