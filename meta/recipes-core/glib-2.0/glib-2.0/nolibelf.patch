@@ -1,0 +1,37 @@
+Ideally there would be configureation option for this but there is not. We
+can't allow this code since it could detect the host system's libelf with
+disasterous effects when cross compiling.
+
+RP 2012/5/7
+
+Upstream-Status: Pending (would need to be made a configure option to disabe)
+
+Index: glib-2.32.2/configure.ac
+===================================================================
+--- glib-2.32.2.orig/configure.ac	2012-05-07 08:30:04.481149925 +0000
++++ glib-2.32.2/configure.ac	2012-05-07 08:31:02.185148588 +0000
+@@ -1816,23 +1816,7 @@
+ dnl *** check for libelf ***
+ dnl ************************
+ 
+-PKG_CHECK_MODULES([LIBELF], [libelf], [have_libelf=yes], [have_libelf=maybe])
+-
+-if test $have_libelf = maybe; then
+-  AC_CHECK_LIB([elf], [elf_begin], , [have_libelf=no])
+-  AC_CHECK_LIB([elf], [elf_getshdrstrndx], , [have_libelf=no])
+-  AC_CHECK_LIB([elf], [elf_getshdrnum], , [have_libelf=no])
+-  AC_CHECK_HEADER([libelf.h], , [have_libelf=no])
+-
+-  if test $have_libelf != no; then
+-    LIBELF_LIBS=-lelf
+-    have_libelf = yes
+-  fi
+-fi
+-
+-if test $have_libelf = yes; then
+-  AC_DEFINE(HAVE_LIBELF, 1, [Define if libelf is available])
+-fi
++have_libelf=no
+ 
+ dnl ****************************************
+ dnl *** platform dependent source checks ***

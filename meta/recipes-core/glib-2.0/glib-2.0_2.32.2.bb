@@ -1,6 +1,7 @@
 require glib.inc
 
 PE = "1"
+PR = "r1"
 
 DEPENDS += "libffi python-argparse-native zlib"
 DEPENDS_virtclass-native += "libffi-native python-argparse-native"
@@ -13,6 +14,7 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://60_wait-longer-for-threads-to-die.patch \
            file://glib-2.0_fix_for_x32.patch \
            file://nodbus.patch \
+           file://nolibelf.patch \
           "
 SRC_URI[md5sum] = "5bfdb6197afb90e4dbc7b1bb98f0eae0"
 SRC_URI[sha256sum] = "b1764abf00bac96e0e93e29fb9715ce75f3583579acac40648e18771d43d6136"
