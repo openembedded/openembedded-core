@@ -34,7 +34,8 @@ FULL_OPTIMIZATION_arm = "-O2"
 
 EXTRA_OECONF = "--disable-glibtest \
 		--enable-explicit-deps=no \
-	        --disable-debug"
+	        --disable-debug \
+	        --with-mlprefix=${MLPREFIX}"
 
 LEAD_SONAME = "libpango-1.0*"
 LIBV = "1.6.0"
@@ -49,12 +50,19 @@ if ! [ -e $D${sysconfdir}/pango ] ; then
 fi
 }
 
+do_install_append () {
+	if [ "${MLPREFIX}" != "" ]; then
+		mv ${D}/${bindir}/pango-querymodules ${D}/${bindir}/${MLPREFIX}pango-querymodules 
+	fi
+}
+
+
 python populate_packages_prepend () {
 	prologue = d.getVar("postinst_prologue", True)
 
 	modules_root = d.expand('${libdir}/pango/${LIBV}/modules')
 
-	do_split_packages(d, modules_root, '^pango-(.*)\.so$', 'pango-module-%s', 'Pango module %s', prologue + 'pango-querymodules > /etc/pango/pango.modules')
+	do_split_packages(d, modules_root, '^pango-(.*)\.so$', 'pango-module-%s', 'Pango module %s', prologue + '${bindir}/${MLPREFIX}pango-querymodules > /etc/pango/${MLPREFIX}pango.modules')
 }
 
 FILES_${PN} = "${sysconfdir}/pango/* ${bindir}/* ${libdir}/libpango*${SOLIBS}"
