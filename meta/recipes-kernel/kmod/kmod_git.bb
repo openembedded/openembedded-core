@@ -12,7 +12,7 @@ CONFLICTS_${PN} += "module-init-tools-insmod-static module-init-tools-depmod mod
 # autotools set prefix to /usr, however we want them in /bin and /sbin
 bindir = "${base_bindir}"
 sbindir = "${base_sbindir}"
-# libdir = "${base_libdir}"
+libdir = "${base_libdir}"
 
 do_install_append () {
         install -dm755 ${D}${base_bindir}
