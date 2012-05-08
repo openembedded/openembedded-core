@@ -3,11 +3,15 @@
 
 require kmod.inc
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
-PROVIDES_${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
+PROVIDES += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
 RPROVIDES_${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
-CONFLICTS_${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
+RCONFLICTS_${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
+RREPLACES_${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
+
+# to force user to remove old module-init-tools and replace them with kmod variants
+RCONFLICTS_libkmod2 += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
 
 # autotools set prefix to /usr, however we want them in /bin and /sbin
 bindir = "${base_bindir}"
