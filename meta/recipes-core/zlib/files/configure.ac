@@ -43,6 +43,11 @@ cat > zlibdefs.h << EOF
 #endif
 EOF
 
-AC_CONFIG_FILES([Makefile])
+AC_SUBST(sharedlibdir,$libdir)
+
+AC_CONFIG_FILES([
+Makefile
+zlib.pc
+])
 
 AC_OUTPUT
