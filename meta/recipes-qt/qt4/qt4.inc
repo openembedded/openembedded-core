@@ -4,8 +4,6 @@ DEPENDS += "qt4-tools-native freetype jpeg libpng zlib dbus openssl glib-2.0 gst
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)}"
 
 require qt4_arch.inc
-QT_ARCH := "${@qt_arch(d)}"
-QT_ENDIAN = "${@qt_endian(d)}"
 
 QT_DISTRO_FLAGS ?= "-no-accessibility -no-sm"
 QT_DISTRO_FLAGS_linuxstdbase = "-sm"
@@ -199,6 +197,9 @@ FILES_${QT_BASE_NAME}-qml-plugins-dbg      = "${libdir}/${QT_DIR_NAME}/imports/*
 do_configure() {
 	unset QMAKESPEC
 	unset QTDIR
+
+	set_arch
+	set_endian
 
 	if [ ! -e bin/qmake ]; then
 		ln -sf ${STAGING_BINDIR_NATIVE}/qmake2 bin/qmake
