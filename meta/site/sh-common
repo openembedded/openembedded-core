@@ -147,6 +147,10 @@ glib_cv_sizeof_system_thread=${glib_cv_sizeof_system_thread=4}
 glib_cv_sys_use_pid_niceness_surrogate=${glib_cv_sys_use_pid_niceness_surrogate=yes}
 
 glib_cv_strlcpy=${glib_cv_strlcpy=no}
+glib_cv_va_val_copy=${glib_cv_va_val_copy=yes}
+ac_cv_alignof_guint32=4
+ac_cv_alignof_guint64=8
+ac_cv_alignof_unsigned_long=4
 
 # httppc
 ac_cv_strerror_r_SUSv3=${ac_cv_strerror_r_SUSv3=no}
