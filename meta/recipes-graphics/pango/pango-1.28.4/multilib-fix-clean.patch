@@ -1,0 +1,40 @@
+Index: pango-1.28.4/configure.in
+===================================================================
+--- pango-1.28.4.orig/configure.in	2011-04-05 04:29:16.000000000 +0800
++++ pango-1.28.4/configure.in	2012-05-08 21:32:17.000000000 +0800
+@@ -205,6 +205,11 @@
+ 
+ AC_SUBST(PANGO_DEBUG_FLAGS)
+ 
++AC_ARG_WITH(mlprefix,
++            AC_HELP_STRING([--with-mlprefix=<ARG>], [multilib prefix]),
++            mlprefix_str=$withval, mlprefix_str="")
++AC_DEFINE_UNQUOTED([MLPREFIX], ["$mlprefix_str"], [multilib prefix.])
++
+ AC_ARG_ENABLE(rebuilds,
+               [AC_HELP_STRING([--disable-rebuilds],
+                               [disable all source autogeneration rules])],,
+Index: pango-1.28.4/pango/modules.c
+===================================================================
+--- pango-1.28.4.orig/pango/modules.c	2010-09-22 03:37:01.000000000 +0800
++++ pango-1.28.4/pango/modules.c	2012-05-08 21:21:02.000000000 +0800
+@@ -529,7 +529,8 @@
+ 
+   if (!file_str)
+     file_str = g_build_filename (pango_get_sysconf_subdirectory (),
+-				 "pango.modules",
++/* For multilib case, keep multiple config file for different libs */
++				 MLPREFIX "pango.modules",
+ 				 NULL);
+ 
+   files = pango_split_file_list (file_str);
+@@ -640,7 +641,8 @@
+       if (!no_module_warning)
+ 	{
+ 	  gchar *filename = g_build_filename (pango_get_sysconf_subdirectory (),
+-					      "pango.modules",
++/* For multilib case, keep multiple config file for different libs */
++					      MLPREFIX "pango.modules",
+ 					      NULL);
+ 	  g_critical ("No modules found:\n"
+ 		      "No builtin or dynamically loaded modules were found.\n"
