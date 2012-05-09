@@ -54,7 +54,11 @@ else
 fi
 unset BDIR
 
-BITBAKEDIR="$OEROOT/bitbake$BBEXTRA/"
+if [ "x$2" = "x" ]; then
+    BITBAKEDIR="$OEROOT/bitbake$BBEXTRA/"
+else
+    BITBAKEDIR="$2"
+fi
 
 BITBAKEDIR=`readlink -f "$BITBAKEDIR"`
 BUILDDIR=`readlink -f "$BUILDDIR"`
