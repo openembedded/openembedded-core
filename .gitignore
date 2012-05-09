@@ -1,3 +1,4 @@
+bitbake
 *.pyc
 *.pyo
 build*/conf/local.conf
