@@ -368,8 +368,9 @@ def check_sanity(e):
         if not check_app_exists("qemu-arm", e.data):
             messages = messages + "qemu-native was in ASSUME_PROVIDED but the QEMU binaries (qemu-arm) can't be found in PATH"
 
-    if "." in data.getVar('PATH', e.data, True).split(":"):
-        messages = messages + "PATH contains '.' which will break the build, please remove this"
+    paths = data.getVar('PATH', e.data, True).split(":")
+    if "." in paths or "" in paths:
+        messages = messages + "PATH contains '.' or '', which will break the build, please remove this."
 
     if data.getVar('TARGET_ARCH', e.data, True) == "arm":
         # This path is no longer user-readable in modern (very recent) Linux
