@@ -1,0 +1,19 @@
+
+Upstream-Status: Pending
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+
+Index: libc/Makeconfig
+===================================================================
+--- libc.orig/Makeconfig
++++ libc/Makeconfig
+@@ -293,7 +293,7 @@ inst_sysconfdir = $(install_root)$(sysco
+ 
+ # Directory for the database files and Makefile for nss_db.
+ ifndef vardbdir
+-vardbdir = /var/db
++vardbdir = $(prefix)/var/db
+ endif
+ inst_vardbdir = $(install_root)$(vardbdir)
+ 
