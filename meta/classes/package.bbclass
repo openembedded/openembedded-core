@@ -1788,7 +1788,7 @@ addtask package_write before do_build after do_package
 # Helper functions for the package writing classes
 #
 
-python package_mapping_rename_hook () {
+def mapping_rename_hook(d):
 	"""
 	Rewrite variables to account for package renaming in things
 	like debian.bbclass or manual PKG variable name changes
@@ -1799,6 +1799,4 @@ python package_mapping_rename_hook () {
 	runtime_mapping_rename("RPROVIDES", d)
 	runtime_mapping_rename("RREPLACES", d)
 	runtime_mapping_rename("RCONFLICTS", d)
-}
 
-EXPORT_FUNCTIONS mapping_rename_hook

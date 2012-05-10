@@ -330,7 +330,7 @@ python do_package_deb () {
             raise bb.build.FuncFailed("Missing field for deb generation: %s" % value)
         # more fields
 
-        bb.build.exec_func("mapping_rename_hook", localdata)
+        mapping_rename_hook(localdata)
 
         rdepends = bb.utils.explode_dep_versions(localdata.getVar("RDEPENDS", True) or "")
         for dep in rdepends:

@@ -700,7 +700,7 @@ python write_specfile () {
 		translate_vers('RCONFLICTS', localdata)
 
 		# Map the dependencies into their final form
-		bb.build.exec_func("mapping_rename_hook", localdata)
+		mapping_rename_hook(localdata)
 
 		splitrdepends    = strip_multilib(localdata.getVar('RDEPENDS', True), d) or ""
 		splitrrecommends = strip_multilib(localdata.getVar('RRECOMMENDS', True), d) or ""
