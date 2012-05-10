@@ -2,6 +2,7 @@
 SRC_URI += "file://crosscompile.patch \
             file://fix_open_max_preprocessor_error.patch \
             file://gcc-47-warning.patch \
+	    file://mips64-compiler.patch \
            "
 
 SRC_URI[md5sum] = "8796fff441e5435ee36a72579008af24"
