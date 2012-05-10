@@ -174,18 +174,29 @@ def sstate_installpkg(ss, d):
     bb.build.exec_func('sstate_unpack_package', d)
 
     # Fixup hardcoded paths
+    #
+    # Note: The logic below must match the reverse logic in
+    # sstate_hardcode_path(d)
+
     fixmefn =  sstateinst + "fixmepath"
     if os.path.isfile(fixmefn):
         staging = d.getVar('STAGING_DIR', True)
         staging_target = d.getVar('STAGING_DIR_TARGET', True)
         staging_host = d.getVar('STAGING_DIR_HOST', True)
-        fixmefd = open(fixmefn, "r")
-        fixmefiles = fixmefd.readlines()
-        fixmefd.close()
-        for file in fixmefiles:
-            os.system("sed -i -e s:FIXMESTAGINGDIRTARGET:%s:g %s" % (staging_target, sstateinst + file))
-            os.system("sed -i -e s:FIXMESTAGINGDIRHOST:%s:g %s" % (staging_host, sstateinst + file))
-            os.system("sed -i -e s:FIXMESTAGINGDIR:%s:g %s" % (staging, sstateinst + file))
+
+	if bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('cross-canadian', d):
+		sstate_sed_cmd = "sed -i -e 's:FIXMESTAGINGDIR:%s:g'" % (staging)
+	elif bb.data.inherits_class('cross', d):
+		sstate_sed_cmd = "sed -i -e 's:FIXMESTAGINGDIRTARGET:%s:g; s:FIXMESTAGINGDIR:%s:g'" % (staging_target, staging)
+	else:
+		sstate_sed_cmd = "sed -i -e 's:FIXMESTAGINGDIRHOST:%s:g'" % (staging_host)
+
+	# Add sstateinst to each filename in fixmepath, use xargs to efficiently call sed
+	sstate_hardcode_cmd = "sed -e 's:^:%s:g' %s | xargs %s" % (sstateinst, fixmefn, sstate_sed_cmd)
+
+	print "Replacing fixme paths in sstate package: %s" % (sstate_hardcode_cmd)
+	os.system(sstate_hardcode_cmd)
+
         # Need to remove this or we'd copy it into the target directory and may 
         # conflict with another writer
         os.remove(fixmefn)
@@ -300,6 +311,9 @@ python sstate_cleanall() {
 def sstate_hardcode_path(d):
 	# Need to remove hardcoded paths and fix these when we install the
 	# staging packages.
+	#
+	# Note: the logic in this function needs to match the reverse logic
+	# in sstate_installpkg(ss, d)
 
 	staging = d.getVar('STAGING_DIR', True)
 	staging_target = d.getVar('STAGING_DIR_TARGET', True)
