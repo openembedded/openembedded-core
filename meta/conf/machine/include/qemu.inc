@@ -1,6 +1,5 @@
 PCMCIA_MANAGER = "pcmciautils"
 PREFERRED_PROVIDER_virtual/xserver ?= "xserver-xorg"
-PREFERRED_PROVIDER_virtual/libgl ?= "mesa-xlib"
 
 XSERVER ?= "xserver-xorg \
             mesa-dri-driver-swrast \
