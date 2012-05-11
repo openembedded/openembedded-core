@@ -321,10 +321,13 @@ def sstate_hardcode_path(d):
 	sstate_builddir = d.getVar('SSTATE_BUILDDIR', True)
 
 	if bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('cross-canadian', d):
+		sstate_grep_cmd = "grep -l -e '%s'" % (staging)
 		sstate_sed_cmd = "sed -i -e 's:%s:FIXMESTAGINGDIR:g'" % (staging)
 	elif bb.data.inherits_class('cross', d):
+		sstate_grep_cmd = "grep -l -e '(%s|%s)'" % (staging_target, staging)
 		sstate_sed_cmd = "sed -i -e 's:%s:FIXMESTAGINGDIRTARGET:g; s:%s:FIXMESTAGINGDIR:g'" % (staging_target, staging)
 	else:
+		sstate_grep_cmd = "grep -l -e '%s'" % (staging_host)
 		sstate_sed_cmd = "sed -i -e 's:%s:FIXMESTAGINGDIRHOST:g'" % (staging_host)
 	
 	sstate_scan_cmd = d.getVar('SSTATE_SCAN_CMD', True)
@@ -333,7 +336,9 @@ def sstate_hardcode_path(d):
 	# fixmepath file needs relative paths, drop sstate_builddir prefix
 	sstate_filelist_relative_cmd = "sed -i -e 's:^%s::g' %sfixmepath" % (sstate_builddir, sstate_builddir)
 
-	sstate_hardcode_cmd = "%s | %s | xargs %s" % (sstate_scan_cmd, sstate_filelist_cmd, sstate_sed_cmd)
+	# Limit the fixpaths and sed operations based on the initial grep search
+	# This has the side effect of making sure the vfs cache is hot
+	sstate_hardcode_cmd = "%s | xargs %s | %s | xargs %s" % (sstate_scan_cmd, sstate_grep_cmd, sstate_filelist_cmd, sstate_sed_cmd)
 
 	print "Removing hardcoded paths from sstate package: '%s'" % (sstate_hardcode_cmd)
 	os.system(sstate_hardcode_cmd)
