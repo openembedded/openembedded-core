@@ -107,14 +107,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 					objs.append(relpath)
 
 	if extra_depends == None:
-		# This is *really* broken
-		mainpkg = packages[0]
-		# At least try and patch it up I guess...
-		if mainpkg.find('-dbg'):
-			mainpkg = mainpkg.replace('-dbg', '')
-		if mainpkg.find('-dev'):
-			mainpkg = mainpkg.replace('-dev', '')
-		extra_depends = mainpkg
+		extra_depends = d.getVar("PN", True)
 
 	for o in sorted(objs):
 		import re, stat
@@ -404,14 +397,6 @@ python package_do_split_locales() {
 
 	locales = os.listdir(localedir)
 
-	# This is *really* broken
-	mainpkg = packages[0]
-	# At least try and patch it up I guess...
-	if mainpkg.find('-dbg'):
-		mainpkg = mainpkg.replace('-dbg', '')
-	if mainpkg.find('-dev'):
-		mainpkg = mainpkg.replace('-dev', '')
-
 	summary = d.getVar('SUMMARY', True) or pn
 	description = d.getVar('DESCRIPTION', True) or "" 
         locale_section = d.getVar('LOCALE_SECTION', True)
@@ -420,7 +405,7 @@ python package_do_split_locales() {
 		pkg = pn + '-locale-' + ln
 		packages.append(pkg)
 		d.setVar('FILES_' + pkg, os.path.join(datadir, 'locale', l))
-		d.setVar('RDEPENDS_' + pkg, '%s virtual-locale-%s' % (mainpkg, ln))
+		d.setVar('RDEPENDS_' + pkg, '%s virtual-locale-%s' % (pn, ln))
 		d.setVar('RPROVIDES_' + pkg, '%s-locale %s-translation' % (pn, ln))
 		d.setVar('SUMMARY_' + pkg, '%s - %s translations' % (summary, l))
 		d.setVar('DESCRIPTION_' + pkg, '%s  This package contains language translation files for the %s locale.' % (description, l))
@@ -435,9 +420,9 @@ python package_do_split_locales() {
 	# glibc-localedata-translit* won't install as a dependency
 	# for some other package which breaks meta-toolchain
 	# Probably breaks since virtual-locale- isn't provided anywhere
-	#rdep = (d.getVar('RDEPENDS_%s' % mainpkg, True) or d.getVar('RDEPENDS', True) or "").split()
+	#rdep = (d.getVar('RDEPENDS_%s' % pn, True) or d.getVar('RDEPENDS', True) or "").split()
 	#rdep.append('%s-locale*' % pn)
-	#d.setVar('RDEPENDS_%s' % mainpkg, ' '.join(rdep))
+	#d.setVar('RDEPENDS_%s' % pn, ' '.join(rdep))
 }
 
 python perform_packagecopy () {
