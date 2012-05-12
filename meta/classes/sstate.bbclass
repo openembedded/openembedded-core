@@ -473,6 +473,7 @@ sstate_create_package () {
 	else
 		tar -cz --file=$TFILE --files-from=/dev/null
 	fi
+	chmod 0664 $TFILE 
 	mv $TFILE ${SSTATE_PKG}
 
 	cd ${WORKDIR}
