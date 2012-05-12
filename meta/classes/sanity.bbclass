@@ -96,10 +96,16 @@ def check_conf_exists(fn, data):
 def check_sanity_sstate_dir_change(sstate_dir, data):
     # Sanity checks to be done when the value of SSTATE_DIR changes
 
-    # Check that SSTATE_DIR isn't on a filesystem with limited filename length (eg. eCryptFS)
     testmsg = ""
     if sstate_dir != "":
-        testmsg = check_create_long_filename(sstate_dir, "SSTATE_DIR")
+        # Check that the user can read and write to SSTATE_DIR
+        sstatemsg = check_can_read_write_directory(sstate_dir) or None
+        if sstatemsg:
+            sstatemsg = sstatemsg + ". You could try using it as an SSTATE_MIRRORS instead of SSTATE_CACHE.\n"
+            testmsg = testmsg + sstatemsg
+        # Check that SSTATE_DIR isn't on a filesystem with limited filename length (eg. eCryptFS)
+        testmsg = testmsg + check_create_long_filename(sstate_dir, "SSTATE_DIR")
+
     return testmsg
 
 def check_sanity_tmpdir_change(tmpdir, data):
@@ -150,7 +156,12 @@ def check_create_long_filename(filepath, pathname):
         if errno == 36: # ENAMETOOLONG
             return "Failed to create a file with a long name in %s. Please use a filesystem that does not unreasonably limit filename length.\n" % pathname
         else:
-            return "Failed to create a file in %s: %s" % (pathname, strerror)
+            return "Failed to create a file in %s: %s\n" % (pathname, strerror)
+    return ""
+
+def check_can_read_write_directory(directory):
+    if not os.access(directory, os.R_OK|os.W_OK):
+       return "Insufficient permissions for %s" % directory
     return ""
 
 def check_connectivity(d):
