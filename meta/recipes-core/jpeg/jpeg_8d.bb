@@ -4,23 +4,20 @@ HOMEPAGE = "http://www.ijg.org/"
 BUGTRACKER = ""
 
 LICENSE ="BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://cdjpeg.h;endline=12;md5=78fa8dbac547bb5b2a0e6457a6cfe21d \
-                    file://jpeglib.h;endline=14;md5=22f1e0f8fc71f6f7563146d3b210dbe5 \
-                    file://djpeg.c;endline=13;md5=ca89254925da06fef47e4b6468233432"
+LIC_FILES_CHKSUM = "file://README;md5=4f46756b064c225fae088903300e5c98"
 
 SECTION = "libs"
 
 DEPENDS = "libtool-cross"
 DEPENDS_virtclass-native = "libtool-native"
 
-PR = "r3"
+PR = "r0"
 
 SRC_URI = "http://www.ijg.org/files/jpegsrc.v${PV}.tar.gz \
-	   file://debian-libjpeg7_7-1.diff \
-           file://fix_for_automake_1.11.2.patch"
+	   file://debian-libjpeg7_7-1.diff"
 
-SRC_URI[md5sum] = "a2c10c04f396a9ce72894beb18b4e1f9"
-SRC_URI[sha256sum] = "edfc0b3e004b2fe58ffeeec89f96e3a3c28972c46725ec127d01edf8a1cc7c9a"
+SRC_URI[md5sum] = "52654eb3b2e60c35731ea8fc87f1bd29"
+SRC_URI[sha256sum] = "00029b1473f0f0ea72fbca3230e8cb25797fbb27e58ae2e46bb8bf5a806fe0b3"
 
 inherit autotools 
 
