@@ -39,9 +39,6 @@ PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-csl-toolchain"
 GLIBC_INTERNAL_USE_BINARY_LOCALE = "precompiled"
 ENABLE_BINARY_LOCALE_GENERATION = ""
 
-TARGET_CPPFLAGS_prepend = " -isystem${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/include "
-TARGET_LDFLAGS_prepend = " -L${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/lib -Wl,-rpath-link,${EXTERNAL_TOOLCHAIN}/${TARGET_SYS}/lib "
-
 TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
 
 # Translate to CodeSourcery's names for their optimized files in the toolchain
