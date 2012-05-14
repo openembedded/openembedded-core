@@ -47,6 +47,7 @@ def csl_target_core(d):
         'armv7a-vfp-neon': 'armv7-a-neon',
         'i586': 'sgxx-glibc',
         'i686': 'sgxx-glibc',
+        'core2': 'sgxx-glibc',
         'mips': 'mips32',
         'mipsel': 'el',
         'powerpc-nf': 'nof',
