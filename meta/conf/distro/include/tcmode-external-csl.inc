@@ -70,7 +70,9 @@ python toolchain_metadata_setup () {
 
     d = e.data
 
-    if d.getVar('TUNE_PKGARCH', True) in ('i586', 'i686'):
+    l = d.createCopy()
+    l.finalize()
+    if os.path.exists(bb.data.expand('${EXTERNAL_TOOLCHAIN}/bin/gcc', l)):
         d.setVar('TOOLCHAIN_PATH_ADD', '')
 }
 addhandler toolchain_metadata_setup
@@ -81,7 +83,7 @@ python toolchain_setup () {
 
     d = e.data
 
-    if d.getVar('TUNE_PKGARCH', True) in ('i586', 'i686'):
+    if not d.getVar('TOOLCHAIN_PATH_ADD', True):
         populate_toolchain_links(d)
 }
 addhandler toolchain_setup
