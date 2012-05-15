@@ -100,7 +100,7 @@ def populate_toolchain_links(d):
     pattern = d.expand('${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}*')
     files = glob(pattern)
     if not files:
-        bb.fatal("Unable to populate toolchain binary symlinks")
+        bb.fatal("Unable to populate toolchain binary symlinks in %s" % pattern)
 
     bindir = d.getVar('STAGING_BINDIR_TOOLCHAIN', True)
     bb.mkdirhier(bindir)
