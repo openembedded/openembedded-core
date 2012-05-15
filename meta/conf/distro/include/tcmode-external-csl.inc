@@ -7,14 +7,14 @@ EXTERNAL_TOOLCHAIN ?= "/usr/local/csl/${TARGET_ARCH}"
 TOOLCHAIN_PATH_ADD = "${EXTERNAL_TOOLCHAIN}/bin:"
 PATH =. "${TOOLCHAIN_PATH_ADD}"
 
-CSL_TARGET_SYS_powerpc = "powerpc-linux-gnu"
-CSL_TARGET_SYS_powerpc64 = "powerpc-linux-gnu"
-CSL_TARGET_SYS_arm = "arm-none-linux-gnueabi"
-CSL_TARGET_SYS_mips = "mips-linux-gnu"
-CSL_TARGET_SYS_mipsel = "mips-linux-gnu"
-CSL_TARGET_SYS_mips64 = "mips-linux-gnu"
-CSL_TARGET_SYS_i686 = "i686-pc-linux-gnu"
-CSL_TARGET_SYS_i586 = "i686-pc-linux-gnu"
+CSL_TARGET_SYS_powerpc ?= "powerpc-linux-gnu"
+CSL_TARGET_SYS_powerpc64 ?= "powerpc-linux-gnu"
+CSL_TARGET_SYS_arm ?= "arm-none-linux-gnueabi"
+CSL_TARGET_SYS_mips ?= "mips-linux-gnu"
+CSL_TARGET_SYS_mipsel ?= "mips-linux-gnu"
+CSL_TARGET_SYS_mips64 ?= "mips-linux-gnu"
+CSL_TARGET_SYS_i686 ?= "i686-pc-linux-gnu"
+CSL_TARGET_SYS_i586 ?= "i686-pc-linux-gnu"
 CSL_TARGET_SYS = "${TARGET_SYS}"
 
 TARGET_PREFIX = "${CSL_TARGET_SYS}-"
@@ -58,7 +58,7 @@ def csl_target_core(d):
     }
     return coredata.get(d.getVar('TUNE_PKGARCH', True), '')
 
-CSL_TARGET_CORE = "${@csl_target_core(d)}"
+CSL_TARGET_CORE ?= "${@csl_target_core(d)}"
 
 # Unfortunately, the CSL ia32 toolchain has non-prefixed binaries in its
 # bindir (e.g. gcc, ld). To avoid this messing up our build, we avoid adding
