@@ -29,20 +29,16 @@ do_install() {
 	install -m 0755 src/lrz src/lsz ${D}${bindir}/
 }
 
-pkg_postinst_${PN}() {
-	for util in rz rx rb; do
-		update-alternatives --install ${bindir}/$util $util lrz 100
-	done
-	for util in sz sx sb; do
-		update-alternatives --install ${bindir}/$util $util lsz 100
-	done
-}
+inherit update-alternatives
 
-pkg_postrm_${PN}() {
-	for util in rz rx rb; do
-		update-alternatives --remove $util ${bindir}/lrz
-	done
-	for util sz sx sb; do
-		update-alternatives --remove $util ${bindir}/lsz
-	done
-}
+ALTERNATIVE_PRIORITY = "100"
+
+ALTERNATIVE_${PN} = "rz rx rb sz sx sb"
+
+ALTERNATIVE_TARGET[rz] = "${bindir}/lrz"
+ALTERNATIVE_TARGET[rx] = "${bindir}/lrz"
+ALTERNATIVE_TARGET[rb] = "${bindir}/lrz"
+
+ALTERNATIVE_TARGET[sz] = "${bindir}/lsz"
+ALTERNATIVE_TARGET[sx] = "${bindir}/lsz"
+ALTERNATIVE_TARGET[sb] = "${bindir}/lsz"
