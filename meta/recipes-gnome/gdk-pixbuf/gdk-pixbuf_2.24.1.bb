@@ -19,7 +19,7 @@ SRC_URI = "http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.24/gdk-pixbuf-${
 SRC_URI[md5sum] = "72f39b34b20f68148c1609bd27415412"
 SRC_URI[sha256sum] = "da7a3f00db360913716368e19e336402755cafa93769f3cfa28a969303e4bee1"
 
-PR = "r2"
+PR = "r3"
 
 inherit autotools pkgconfig gettext
 
@@ -37,6 +37,7 @@ X11DEPENDS_linuxstdbase = "${@base_contains('DISTRO_FEATURES', 'x11', '--with-x1
 PACKAGES =+ "${PN}-xlib"
 
 FILES_${PN}-xlib = "${libdir}/*pixbuf_xlib*${SOLIBS}"
+ALLOW_EMPTY_${PN}-xlib = "1"
 
 FILES_${PN} = "${bindir}/gdk-pixbuf-query-loaders \
 	${libdir}/lib*.so.*"
