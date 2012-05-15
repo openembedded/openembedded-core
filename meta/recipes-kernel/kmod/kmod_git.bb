@@ -3,7 +3,7 @@
 
 require kmod.inc
 
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 
 PROVIDES += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
 RPROVIDES_${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
@@ -16,7 +16,7 @@ RCONFLICTS_libkmod2 += "module-init-tools-insmod-static module-init-tools-depmod
 # autotools set prefix to /usr, however we want them in /bin and /sbin
 bindir = "${base_bindir}"
 sbindir = "${base_sbindir}"
-libdir = "${base_libdir}"
+# libdir = "${base_libdir}"
 
 do_install_append () {
         install -dm755 ${D}${base_bindir}
