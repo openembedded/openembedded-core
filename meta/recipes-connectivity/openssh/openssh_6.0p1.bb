@@ -7,7 +7,7 @@ SECTION = "console/network"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=e326045657e842541d3f35aada442507"
 
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "zlib openssl"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
@@ -29,7 +29,7 @@ PAM_SRC_URI = "file://sshd"
 SRC_URI[md5sum] = "3c9347aa67862881c5da3f3b1c08da7b"
 SRC_URI[sha256sum] = "589d48e952d6c017e667873486b5df63222f9133d417d0002bd6429d9bd882de"
 
-inherit useradd update-rc.d
+inherit useradd update-rc.d update-alternatives
 
 USERADD_PACKAGES = "${PN}-sshd"
 USERADD_PARAM_${PN}-sshd = "--system --no-create-home --home-dir /var/run/sshd --shell /bin/false --user-group sshd"
@@ -77,8 +77,6 @@ do_install_append () {
 	done
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/sshd
-	mv ${D}${bindir}/scp ${D}${bindir}/scp.${PN}
-	mv ${D}${bindir}/ssh ${D}${bindir}/ssh.${PN}
 	rm -f ${D}${bindir}/slogin ${D}${datadir}/Ssh.bin
 	rmdir ${D}/var/run/sshd ${D}/var/run ${D}/var
 }
@@ -86,8 +84,8 @@ do_install_append () {
 ALLOW_EMPTY_${PN} = "1"
 
 PACKAGES =+ "${PN}-keygen ${PN}-scp ${PN}-ssh ${PN}-sshd ${PN}-sftp ${PN}-misc ${PN}-sftp-server"
-FILES_${PN}-scp = "${bindir}/scp.${PN}"
-FILES_${PN}-ssh = "${bindir}/ssh.${PN} ${sysconfdir}/ssh/ssh_config"
+FILES_${PN}-scp = "${bindir}/scp.${BPN}"
+FILES_${PN}-ssh = "${bindir}/ssh.${BPN} ${sysconfdir}/ssh/ssh_config"
 FILES_${PN}-sshd = "${sbindir}/sshd ${sysconfdir}/init.d/sshd"
 FILES_${PN}-sshd += "${sysconfdir}/ssh/moduli ${sysconfdir}/ssh/sshd_config"
 FILES_${PN}-sftp = "${bindir}/sftp"
@@ -99,21 +97,14 @@ RDEPENDS_${PN} += "${PN}-scp ${PN}-ssh ${PN}-sshd ${PN}-keygen"
 DEPENDS_${PN}-sshd += "update-rc.d"
 RDEPENDS_${PN}-sshd += "update-rc.d ${PN}-keygen"
 
-pkg_postinst_${PN}-scp () {
-	update-alternatives --install ${bindir}/scp scp scp.${PN} 90
-}
-
-pkg_postinst_${PN}-ssh () {
-	update-alternatives --install ${bindir}/ssh ssh ssh.${PN} 90
-}
-
-pkg_postrm_${PN}-ssh () {
-	update-alternatives --remove ${bindir}/ssh ssh.${PN}
-}
-
-pkg_postrm_${PN}-scp () {
-	update-alternatives --remove ${bindir}/scp scp.${PN}
-}
-
 CONFFILES_${PN}-sshd = "${sysconfdir}/ssh/sshd_config"
 CONFFILES_${PN}-ssh = "${sysconfdir}/ssh/ssh_config"
+
+ALTERNATIVE_PRIORITY = "90"
+
+ALTERNATIVE_${PN}-scp = "scp"
+ALTERNATIVE_LINK_NAME[scp] = "${bindir}/scp"
+
+ALTERNATIVE_${PN}-ssh = "ssh"
+ALTERNATIVE_LINK_NAME[ssh] = "${bindir}/ssh"
+
