@@ -201,36 +201,36 @@ do_install () {
 	install -m 0644 ${S}/busybox.links ${D}${sysconfdir}
 }
 
-python package_do_filedeps_append () {
+inherit update-alternatives
+
+ALTERNATIVE_PRIORITY = "50"
+
+ALTERNATIVE_${PN}-syslog = "syslog-init syslog-startup-conf"
+
+ALTERNATIVE_LINK_NAME[syslog-init] = "${sysconfdir}/init.d/syslog"
+
+ALTERNATIVE_LINK_NAME[syslog-startup-conf] = "${sysconfdir}/syslog-startup.conf"
+
+ALTERNATIVE_TARGET = "/bin/busybox"
+
+python do_package_prepend () {
 	# We need to load the full set of busybox provides from the /etc/busybox.links
-	# The pkg_postinst_ is what creates the actual links
+	# Use this to see the update-alternatives with the right information
 
-	pkg = d.getVar('PN', True)
-	f_busybox = "/bin/busybox"
-	f_busybox_links = "/etc/busybox.links"
+	dvar = d.getVar('D', True)
+	pn = d.getVar('PN', True)
+	f = open('%s/etc/busybox.links' % (dvar), 'r')
 
-	requires_files = []
-	provides_files = []
+	for alt_link_name in f:
+		alt_link_name = alt_link_name.strip()
+		alt_name = os.path.basename(alt_link_name)
 
-	# Load/backup original set
-	filerprovides = d.getVar('FILERPROVIDES_%s_%s' % (f_busybox, pkg), True) or ""
+		# Match coreutils
+		if alt_name == '[':
+			alt_name = 'lbracket'
 
-	dep_pipe = os.popen('sed -e "s,^,%s/%s%s Provides: ," %s/%s%s' % (pkgdest, pkg, f_busybox, pkgdest, pkg, f_busybox_links))
-
-	process_deps(dep_pipe, pkg, provides_files, requires_files)
-
-	# Add the new set
-	filerprovides += d.getVar('FILERPROVIDES_%s_%s' % (f_busybox, pkg), True) or ""
-
-	# Make sure there is an entry for this item in the FILERPROVIDESFLIST...
-	filerprovidesflist = (d.getVar('FILERPROVIDESFLIST_%s' % pkg, True) or "").split()
-	for file in provides_files:
-		if file not in filerprovidesflist:
-			filerprovidesflist.append(file)
-	d.setVar('FILERPROVIDESFLIST_%s' % pkg, " ".join(filerprovidesflist))
-
-	# Store the new provides
-	d.setVar('FILERPROVIDES_%s_%s' % (f_busybox, pkg), filerprovides)
+		d.appendVar('ALTERNATIVE_%s' % (pn), ' ' + alt_name)
+		d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, alt_link_name)
 }
 
 pkg_postinst_${PN} () {
@@ -239,14 +239,6 @@ pkg_postinst_${PN} () {
 	# (update-alternatives have no problem replacing links later anyway)
 	test -n 2> /dev/null || alias test='busybox test'
 	if test "x$D" = "x"; then while read link; do if test ! -h "$link"; then case "$link" in /*/*/*) to="../../bin/busybox";; /bin/*) to="busybox";; /*/*) to="../bin/busybox";; esac; busybox ln -s $to $link; fi; done </etc/busybox.links; fi
-	
-	# This adds the links, remember that this has to work when building an image too, hence the $D
-	while read link; do case "$link" in /*/*/*) to="../../bin/busybox";; /bin/*) to="busybox";; /*/*) to="../bin/busybox";; esac; bn=`basename $link`; update-alternatives --install $link $bn $to 50; done <$D/etc/busybox.links
-}
-
-pkg_postinst_${PN}-syslog () {
-	update-alternatives --install ${sysconfdir}/init.d/syslog syslog-init syslog.${BPN} 50
-	update-alternatives --install ${sysconfdir}/syslog-startup.conf syslog-startup-conf syslog-startup.conf.${BPN} 50
 }
 
 pkg_prerm_${PN} () {
@@ -268,17 +260,6 @@ pkg_prerm_${PN} () {
 	ln -s /bin/busybox $tmpdir/sort
 	ln -s /bin/busybox $tmpdir/grep
 	export PATH=$PATH:$tmpdir
-
-	while read link
-	do
-		case "$link" in
-			/*/*/*) to="../../bin/busybox";;
-			/bin/*) to="busybox";;
-			/*/*) to="../bin/busybox";;
-		esac
-		bn=`basename $link`
-		sh /usr/bin/update-alternatives --remove $bn $to
-	done </etc/busybox.links
 }
 
 pkg_prerm_${PN}-syslog () {
@@ -288,7 +269,4 @@ pkg_prerm_${PN}-syslog () {
 			/etc/init.d/syslog stop
 		fi
 	fi
-
-	update-alternatives --remove syslog-init syslog.${BPN}
-	update-alternatives --remove syslog-startup-conf syslog-startup.conf.${BPN}
 }
