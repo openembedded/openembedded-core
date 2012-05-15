@@ -42,7 +42,7 @@
 # from ALTERNATIVE_LINK_NAME.
 #
 # NOTE: If the ALTERNATIVE_LINK_NAME and ALTERNATIVE_TARGET are the same,
-# ALTERNATIVE_TARGET will have '.{PN}' appended to it.  If the file
+# ALTERNATIVE_TARGET will have '.{BPN}' appended to it.  If the file
 # referenced has not been renamed, it will also be renamed.  (This avoids
 # the need to rename alternative files in the do_install step, but still
 # supports it if necessary for some reason.)
@@ -91,8 +91,8 @@
 # listed in ALTERNATIVE_LINKS, say /path/cmd:
 #
 #     the name of the alternative would be: cmd
-#     the path of installed alternative would be: /path/cmd.${PN}
-#     ${D}/path/cmd will be renamed to ${D}/path/cmd.{PN} automatically
+#     the path of installed alternative would be: /path/cmd.${BPN}
+#     ${D}/path/cmd will be renamed to ${D}/path/cmd.{BPN} automatically
 #     priority will be the same from ALTERNATIVE_PRIORITY
 #
 # If above assumption breaks your requirement, then you still need to use
@@ -107,7 +107,7 @@ def update_alternatives_after_parse(d):
         return
 
     # The following code is deprecated, but included for compatibility with older packages
-    pn = d.getVar('PN', True)
+    pn = d.getVar('BPN', True)
 
     if d.getVar('ALTERNATIVE_LINKS') != None:
         # Convert old format to new format...
@@ -200,7 +200,7 @@ populate_packages[vardeps] += "${UPDALTVARS} ${@gen_updatealternativesvars(d)}"
 # place.
 python perform_packagecopy_append () {
 	# Check for deprecated usage...
-	pn = d.getVar('PN', True)
+	pn = d.getVar('BPN', True)
 	if d.getVar('ALTERNATIVE_LINKS', True) != None:
 		bb.warn('%s: Use of ALTERNATIVE_LINKS is deprecated, see update-alternatives.bbclass for more info.' % pn)
 
@@ -210,7 +210,7 @@ python perform_packagecopy_append () {
 	# Do actual update alternatives processing
 	pkgdest = d.getVar('PKGD', True)
 	for pkg in (d.getVar('PACKAGES', True) or "").split():
-		# If the src == dest, we know we need to rename the dest by appending ${PN}
+		# If the src == dest, we know we need to rename the dest by appending ${BPN}
 		link_rename = {}
 		for alt_name in (d.getVar('ALTERNATIVE_%s' % pkg, True) or "").split():
 			alt_link     = d.getVarFlag('ALTERNATIVE_LINK_NAME', alt_name, True)
@@ -254,7 +254,7 @@ python perform_packagecopy_append () {
 				bb.note('%s: Rename (link) %s -> %s' % (pn, alt_target, link_rename[alt_target]))
 				os.rename(src, dest)
 			else:
-				# Try to resolve the broken link to link.${PN}
+				# Try to resolve the broken link to link.${BPN}
 				link_maybe = '%s.%s' % (os.readlink(src), pn)
 				if os.path.lexists(os.path.join(os.path.dirname(src), link_maybe)):
 					# Ok, the renamed link target exists.. create a new link, and remove the original
@@ -313,7 +313,7 @@ python populate_packages_prepend () {
 }
 
 python package_do_filedeps_append () {
-	pn = d.getVar('PN', True)
+	pn = d.getVar('BPN', True)
 	pkgdest = d.getVar('PKGDEST', True)
 
 	for pkg in packages.split():
