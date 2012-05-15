@@ -7,7 +7,7 @@ BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
                     file://src/ls.c;startline=5;endline=16;md5=e1a509558876db58fb6667ba140137ad"
-PR = "r3"
+PR = "r4"
 DEPENDS = "gmp libcap"
 DEPENDS_virtclass-native = ""
 
@@ -36,52 +36,45 @@ base_bindir_progs = "cat chgrp chmod chown cp date dd echo false kill ln ls mkdi
 sbindir_progs= "chroot"
 
 do_install_append() {
-	for i in ${bindir_progs} df mktemp base64; do mv ${D}${bindir}/$i ${D}${bindir}/$i.${PN}; done
+	for i in df mktemp base64; do mv ${D}${bindir}/$i ${D}${bindir}/$i.${BPN}; done
 
 	install -d ${D}${base_bindir}
-	for i in ${base_bindir_progs}; do mv ${D}${bindir}/$i ${D}${base_bindir}/$i.${PN}; done
+	[ "${base_bindir}" != "${bindir}" ] && for i in ${base_bindir_progs}; do mv ${D}${bindir}/$i ${D}${base_bindir}/$i.${BPN}; done
 
 	install -d ${D}${sbindir}
-	for i in ${sbindir_progs}; do mv ${D}${bindir}/$i ${D}${sbindir}/$i.${PN}; done
+	[ "${sbindir}" != "${bindir}" ] && for i in ${sbindir_progs}; do mv ${D}${bindir}/$i ${D}${sbindir}/$i.${BPN}; done
 
 	# [ requires special handling because [.coreutils will cause the sed stuff
 	# in update-alternatives to fail, therefore use lbracket - the name used
 	# for the actual source file.
-	mv ${D}${bindir}/[ ${D}${bindir}/lbracket.${PN}
+	mv ${D}${bindir}/[ ${D}${bindir}/lbracket.${BPN}
 	install -d ${D}${libdir}/coreutils
 	mv ${D}${libexecdir}/coreutils/libstdbuf.so ${D}${libdir}/coreutils
 }
 
-pkg_postinst_${PN} () {
-	for i in ${bindir_progs}; do update-alternatives --install ${bindir}/$i $i $i.${PN} 100; done
+inherit update-alternatives
 
-	for i in ${base_bindir_progs}; do update-alternatives --install ${base_bindir}/$i $i $i.${PN} 100; done
+ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_${PN} = "lbracket ${bindir_progs} ${base_bindir_progs} ${sbindir_progs} base64 mktemp df"
 
-	for i in ${sbindir_progs}; do update-alternatives --install ${sbindir}/$i $i $i.${PN} 100; done
+ALTERNATIVE_LINK_NAME[base64] = "${base_bindir}/base64"
+ALTERNATIVE_TARGET[base64] = "${bindir}/base64.${BPN}"
 
-	# Special cases. [ needs to be treated separately.
-	update-alternatives --install '${bindir}/[' '[' 'lbracket.${PN}' 100
-	
-	# Special cases. base64, mktemp and df need to be treated separately, because busybox have them in base_binding not bindir
-	update-alternatives --install ${base_bindir}/base64 base64 ${bindir}/base64.${PN} 100;
-	update-alternatives --install ${base_bindir}/mktemp mktemp ${bindir}/mktemp.${PN} 100;
-	update-alternatives --install ${base_bindir}/df df ${bindir}/df.${PN} 100;
-}
+ALTERNATIVE_LINK_NAME[mktemp] = "${base_bindir}/mktemp"
+ALTERNATIVE_TARGET[mktemp] = "${bindir}/mktemp.${BPN}"
 
-pkg_prerm_${PN} () {
-	for i in ${bindir_progs}; do update-alternatives --remove $i $i.${PN}; done
+ALTERNATIVE_LINK_NAME[df] = "${base_bindir}/df"
+ALTERNATIVE_TARGET[df] = "${bindir}/df.${BPN}"
 
-	for i in ${base_bindir_progs}; do update-alternatives --remove $i $i.${PN}; done
+ALTERNATIVE_LINK_NAME[lbracket] = "${bindir}/["
+ALTERNATIVE_TARGET[lbracket] = "${bindir}/lbracket.${BPN}"
 
-	for i in ${sbindir_progs}; do update-alternatives --remove $i $i.${PN}; done
+python __anonymous() {
+	for prog in d.getVar('base_bindir_progs', True).split():
+		d.setVarFlag('ALTERNATIVE_LINK_NAME', prog, '%s/%s' % (d.getVar('base_bindir', True), prog))
 
-	# The special cases
-	update-alternatives --remove hostname hostname.${PN}
-	update-alternatives --remove uptime uptime.${PN}
-	update-alternatives --remove '[' 'lbracket.${PN}'
-	update-alternatives --remove base64 ${bindir}/base64.${PN}
-	update-alternatives --remove mktemp ${bindir}/mktemp.${PN}
-	update-alternatives --remove df ${bindir}.df.${PN}
+	for prog in d.getVar('sbindir_progs', True).split():
+		d.setVarFlag('ALTERNATIVE_LINK_NAME', prog, '%s/%s' % (d.getVar('sbindir', True), prog))
 }
 
 BBCLASSEXTEND = "native"
