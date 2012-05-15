@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://psplash.h;md5=a87c39812c1e37f3451567cc29a29c8f"
 
 SRCREV = "e05374aae945bcfc6d962ed0d7b2774b77987e1d"
 PV = "0.1+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
            file://psplash-init \
@@ -52,12 +52,8 @@ python __anonymous() {
     d.prependVar("PACKAGES", "%s " % (" ".join(pkgs)))
     for p in pkgs:
         d.setVar("FILES_%s" % p, "${bindir}/%s" % p)
-        d.setVar("ALTERNATIVE_PATH", "${bindir}/%s" % p)
-        d.setVar("ALTERNATIVE_PRIORITY", "100")
-        postinst = d.getVar("psplash_alternatives_postinst", True)
-        d.setVar('pkg_postinst_%s' % p, postinst)
-        postrm = d.getVar("psplash_alternatives_postrm", True)
-        d.setVar('pkg_postrm_%s' % p, postrm)
+        d.setVar("ALTERNATIVE_%s" % p, 'psplash')
+        d.setVarFlag("ALTERNATIVE_TARGET_%s" % p, 'psplash', '${bindir}/%s' % p)
         d.appendVar("RDEPENDS_%s" % p, " ${PN}")
         if p == "psplash-default":
             d.appendVar("RRECOMMENDS_${PN}", " %s" % p)
@@ -65,7 +61,10 @@ python __anonymous() {
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig update-rc.d
+inherit autotools pkgconfig update-rc.d update-alternatives
+
+ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_LINK_NAME[psplash] = "${bindir}/psplash"
 
 python do_compile () {
     import shutil, commands
@@ -98,14 +97,6 @@ do_install_append() {
 		install -m 0755 $i ${D}${bindir}/$i
 	done
 	rm -f ${D}${bindir}/psplash
-}
-
-psplash_alternatives_postinst() {
-update-alternatives --install ${bindir}/psplash psplash ${ALTERNATIVE_PATH} ${ALTERNATIVE_PRIORITY}
-}
-
-psplash_alternatives_postrm() {
-update-alternatives --remove psplash ${ALTERNATIVE_PATH}
 }
 
 FILES_${PN} += "/mnt/.psplash"
