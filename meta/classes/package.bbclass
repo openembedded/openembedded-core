@@ -1156,6 +1156,15 @@ python package_do_filedeps() {
 	rpmdeps = d.expand("${RPMDEPS}")
 	r = re.compile(r'[<>=]+ +[^ ]*')
 
+	def file_translate(file):
+		ft = file.replace("@", "@at@")
+		ft = ft.replace(" ", "@space@")
+		ft = ft.replace("\t", "@tab@")
+		ft = ft.replace("[", "@openbrace@")
+		ft = ft.replace("]", "@closebrace@")
+		ft = ft.replace("_", "@underscore@")
+		return ft
+
 	# Quick routine to process the results of the rpmdeps call...
 	def process_deps(pipe, pkg, provides_files, requires_files):
 		provides = {}
@@ -1173,12 +1182,7 @@ python package_do_filedeps() {
 				continue
 
 			file = f.replace(pkgdest + "/" + pkg, "")
-			file = file.replace("@", "@at@")
-			file = file.replace(" ", "@space@")
-			file = file.replace("\t", "@tab@")
-			file = file.replace("[", "@openbrace@")
-			file = file.replace("]", "@closebrace@")
-			file = file.replace("_", "@underscore@")
+			file = file_translate(file)
 			value = line.split(":", 1)[1].strip()
 			value = r.sub(r'(\g<0>)', value)
 

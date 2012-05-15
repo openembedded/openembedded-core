@@ -706,10 +706,6 @@ python write_specfile () {
 		splitrconflicts  = strip_multilib(localdata.getVar('RCONFLICTS', True), d) or ""
 		splitrobsoletes  = []
 
-		# For now we need to manually supplement RPROVIDES with any update-alternatives links
-		if pkg == d.getVar("PN", True):
-			splitrprovides = splitrprovides + " " + (d.getVar('ALTERNATIVE_LINK', True) or '') + " " + (d.getVar('ALTERNATIVE_LINKS', True) or '')
-
 		# Gather special src/first package data
 		if srcname == splitname:
 			srcrdepends    = splitrdepends
