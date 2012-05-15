@@ -74,10 +74,12 @@ do_install() {
 
 }
 
-pkg_postinst_${PN} () {
-	update-alternatives --install ${bindir}/scp scp ${sbindir}/dropbearmulti 20
-	update-alternatives --install ${bindir}/ssh ssh ${sbindir}/dropbearmulti 20
-}
+inherit update-alternatives
+
+ALTERNATIVE_PRIORITY = "20"
+ALTERNATIVE_${PN} = "scp ssh"
+
+ALTERNATIVE_TARGET = "${sbindir}/dropbearmulti"
 
 pkg_postrm_append_${PN} () {
   if [ -f "${sysconfdir}/dropbear/dropbear_rsa_host_key" ]; then
@@ -86,6 +88,4 @@ pkg_postrm_append_${PN} () {
   if [ -f "${sysconfdir}/dropbear/dropbear_dss_host_key" ]; then
         rm ${sysconfdir}/dropbear/dropbear_dss_host_key
   fi
-  update-alternatives --remove ssh ${bindir}/dropbearmulti
-  update-alternatives --remove scp ${bindir}/dropbearmulti
 }
