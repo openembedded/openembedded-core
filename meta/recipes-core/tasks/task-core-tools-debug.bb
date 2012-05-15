@@ -17,10 +17,14 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 ALLOW_EMPTY = "1"
 
+MTRACE = ""
+MTRACE_libc-glibc = "libc-mtrace"
+
 RDEPENDS_${PN} = "\
     gdb \
     gdbserver \
     tcf-agent \
     rsync \
     strace \
+    ${MTRACE} \
     "
