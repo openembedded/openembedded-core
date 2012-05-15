@@ -21,4 +21,4 @@ PACKAGES =+ "${PN}-tests"
 
 FILES_${PN} += "${base_libdir}/udev ${systemd_unitdir}"
 FILES_${PN}-tests = "${libdir}/ofono"
-RDEPENDS_${PN}-tests = "python"
+RDEPENDS_${PN}-tests = "python python-pygobject"
