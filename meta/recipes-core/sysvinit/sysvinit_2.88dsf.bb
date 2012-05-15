@@ -5,7 +5,7 @@ SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://COPYRIGHT;endline=15;md5=349c872e0066155e1818b786938876a4"
-PR = "r6"
+PR = "r7"
 
 RDEPENDS_${PN} = "${PN}-inittab"
 
@@ -27,10 +27,22 @@ B = "${S}/src"
 
 inherit update-alternatives
 
-ALTERNATIVE_NAME = "init"
-ALTERNATIVE_LINK = "${base_sbindir}/init"
-ALTERNATIVE_PATH = "${base_sbindir}/init.sysvinit"
-ALTERNATIVE_PRIORITY = "50"
+ALTERNATIVE_${PN} = "init mountpoint halt reboot runlevel shutdown poweroff last mesg wall"
+
+ALTERNATIVE_PRIORITY = "200"
+
+ALTERNATIVE_LINK_NAME[init] = "${base_sbindir}/init"
+ALTERNATIVE_PRIORITY[init] = "50"
+
+ALTERNATIVE_LINK_NAME[mountpoint] = "${base_bindir}/mountpoint"
+ALTERNATIVE_LINK_NAME[halt] = "${base_sbindir}/halt"
+ALTERNATIVE_LINK_NAME[reboot] = "${base_sbindir}/reboot"
+ALTERNATIVE_LINK_NAME[runlevel] = "${base_sbindir}/runlevel"
+ALTERNATIVE_LINK_NAME[shutdown] = "${base_sbindir}/shutdown"
+ALTERNATIVE_LINK_NAME[poweroff] = "${base_sbindir}/poweroff"
+
+ALTERNATIVE_${PN}-pidof = "pidof"
+ALTERNATIVE_LINK_NAME[pidof] = "${base_bindir}/pidof"
 
 PACKAGES =+ "sysvinit-pidof sysvinit-sulogin"
 FILES_${PN} += "${base_sbindir}/* ${base_bindir}/*"
@@ -65,47 +77,4 @@ do_install () {
 		install -d ${D}${sysconfdir}/rc$level.d
 		ln -s ../init.d/stop-bootlogd ${D}${sysconfdir}/rc$level.d/S99stop-bootlogd
 	done
-	mv                 ${D}${base_sbindir}/init               ${D}${base_sbindir}/init.${BPN}
-	mv ${D}${base_bindir}/mountpoint ${D}${base_bindir}/mountpoint.${BPN}
-	mv ${D}${base_bindir}/pidof ${D}${base_bindir}/pidof.${BPN}
-	mv ${D}${base_sbindir}/halt ${D}${base_sbindir}/halt.${BPN}
-	mv ${D}${base_sbindir}/reboot ${D}${base_sbindir}/reboot.${BPN}
-	mv ${D}${base_sbindir}/runlevel ${D}${base_sbindir}/runlevel.${BPN}
-	mv ${D}${base_sbindir}/shutdown ${D}${base_sbindir}/shutdown.${BPN}
-	mv ${D}${base_sbindir}/poweroff ${D}${base_sbindir}/poweroff.${BPN}
-	mv ${D}${bindir}/last ${D}${bindir}/last.${BPN}
-	mv ${D}${bindir}/mesg ${D}${bindir}/mesg.${BPN}
-	mv ${D}${bindir}/wall ${D}${bindir}/wall.${BPN}
-}
-
-pkg_postinst_${PN} () {
-	update-alternatives --install ${base_bindir}/mountpoint mountpoint mountpoint.${BPN} 200
-	update-alternatives --install ${base_sbindir}/halt halt halt.${BPN} 200
-	update-alternatives --install ${base_sbindir}/reboot reboot reboot.${BPN} 200
-	update-alternatives --install ${base_sbindir}/runlevel runlevel runlevel.${BPN} 200
-	update-alternatives --install ${base_sbindir}/shutdown shutdown shutdown.${BPN} 200
-	update-alternatives --install ${base_sbindir}/poweroff poweroff poweroff.${BPN} 200
-	update-alternatives --install ${bindir}/last last last.${BPN} 200
-	update-alternatives --install ${bindir}/mesg mesg mesg.${BPN} 200
-	update-alternatives --install ${bindir}/wall wall wall.${BPN} 200
-}
-
-pkg_prerm_${PN} () {
-	update-alternatives --remove mountpoint mountpoint.${BPN}
-	update-alternatives --remove halt halt.${BPN}
-	update-alternatives --remove reboot reboot.${BPN}
-	update-alternatives --remove runlevel runlevel.${BPN}
-	update-alternatives --remove shutdown shutdown.${BPN}
-	update-alternatives --remove poweroff poweroff.${BPN}
-	update-alternatives --remove last last.${BPN}
-	update-alternatives --remove mesg mesg.${BPN}
-	update-alternatives --remove wall wall.${BPN}
-}
-
-pkg_postinst_sysvinit-pidof () {
-	update-alternatives --install ${base_bindir}/pidof pidof pidof.${BPN} 200
-}
-
-pkg_prerm_sysvinit-pidof () {
-	update-alternatives --remove pidof pidof.${BPN}
 }
