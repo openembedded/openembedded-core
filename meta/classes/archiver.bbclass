@@ -6,6 +6,8 @@ ARCHIVE_EXCLUDE_FROM ?= ".pc autom4te.cache"
 ARCHIVE_TYPE ?= "TAR SRPM"
 DISTRO ?= "poky"
 PATCHES_ARCHIVE_WITH_SERIES = 'TRUE'
+SOURCE_ARCHIVE_LOG_WITH_SCRIPTS ?= 'logs_with_scripts'
+SOURCE_ARCHIVE_PACKAGE_TYPE ?= 'tar'
 
 def get_bb_inc(d):
 	'''create a directory "script-logs" including .bb and .inc file in ${WORKDIR}'''
@@ -277,7 +279,7 @@ def get_package(d):
 	try:
 		f = open(tarpackage,'r')
 		line = list(set(f.readline().replace('\n','').split()))
-	except IOError:
+	except UnboundLocalError,IOError:
 		pass
 	f.close()
 	return line
