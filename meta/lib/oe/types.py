@@ -40,6 +40,31 @@ def choice(value, choices):
                          (value, choices))
     return value
 
+class NoMatch(object):
+    """Stub python regex pattern object which never matches anything"""
+    def findall(self, string, flags=0):
+        return None
+
+    def finditer(self, string, flags=0):
+        return None
+
+    def match(self, flags=0):
+        return None
+
+    def search(self, string, flags=0):
+        return None
+
+    def split(self, string, maxsplit=0):
+        return None
+
+    def sub(pattern, repl, string, count=0):
+        return None
+
+    def subn(pattern, repl, string, count=0):
+        return None
+
+NoMatch = NoMatch()
+
 def regex(value, regexflags=None):
     """OpenEmbedded 'regex' type
 
@@ -58,6 +83,12 @@ def regex(value, regexflags=None):
                 flagval |= getattr(re, flag)
             except AttributeError:
                 raise ValueError("Invalid regex flag '%s'" % flag)
+
+    if not value:
+        # Let's ensure that the default behavior for an undefined or empty
+        # variable is to match nothing. If the user explicitly wants to match
+        # anything, they can match '.*' instead.
+        return NoMatch
 
     try:
         return re.compile(value, flagval)
