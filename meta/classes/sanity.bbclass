@@ -124,7 +124,7 @@ def check_toolchain_tune(data, tune, multilib):
             tune_errors.append("Tuning '%s' (%s) cannot be used with any supported tuning/ABI." %
                 (tune, tuneabi))
     if tune_errors:
-        return "Tuning '%s' has the following errors:\n" + '\n'.join(tune_errors)
+        return "Tuning '%s' has the following errors:\n" % tune + '\n'.join(tune_errors)
 
 def check_toolchain(data):
     tune_error_set = []
