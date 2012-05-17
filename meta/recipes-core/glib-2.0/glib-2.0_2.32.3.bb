@@ -1,7 +1,6 @@
 require glib.inc
 
 PE = "1"
-PR = "r1"
 
 DEPENDS += "libffi python-argparse-native zlib"
 DEPENDS_virtclass-native += "libffi-native python-argparse-native"
@@ -16,11 +15,13 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://nodbus.patch \
            file://nolibelf.patch \
           "
-SRC_URI[md5sum] = "5bfdb6197afb90e4dbc7b1bb98f0eae0"
-SRC_URI[sha256sum] = "b1764abf00bac96e0e93e29fb9715ce75f3583579acac40648e18771d43d6136"
+SRC_URI[md5sum] = "9bd3ac535c24b6c162be13b2c43c5adc"
+SRC_URI[sha256sum] = "b65ceb462807e4a2f91c95e4293ce6bbefca308cb44a1407bcfdd9e40363ff4d"
 
 SRC_URI_append_virtclass-native = " file://glib-gettextize-dir.patch"
 BBCLASSEXTEND = "native nativesdk"
+
+EXTRA_OECONF = "--disable-libelf"
 
 PERLPATH = "${bindir}/env perl"
 PERLPATH_virtclass-native = "/usr/bin/env perl"
