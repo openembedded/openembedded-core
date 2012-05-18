@@ -66,3 +66,34 @@ python __anonymous () {
     clsextend.map_variable("PACKAGE_INSTALL")
     clsextend.map_variable("INITSCRIPT_PACKAGES")
 }
+
+PACKAGEFUNCS_append = "do_package_qa_multilib"
+
+python do_package_qa_multilib() {
+
+    def check_mlprefix(pkg, var, mlprefix):
+        values = bb.utils.explode_dep_versions(d.getVar('%s_%s' % (var, pkg), True) or d.getVar(var, True) or "")
+        candidates = []
+        for i in values.keys():
+            if i.startswith('virtual/'):
+                i = i[len('virtual/'):]
+            if (not i.startswith('kernel-module')) and (not i.startswith(mlprefix)):
+                candidates.append(i)
+        if len(candidates) > 0:
+            bb.warn("Multilib QA Issue: %s package %s - suspicious values '%s' in %s" 
+                   % (d.getVar('PN', True), pkg, ' '.join(candidates), var))
+
+    ml = d.getVar('MLPREFIX', True)
+    if not ml:
+        return
+
+    packages = d.getVar('PACKAGES', True)
+    for pkg in packages.split():
+        check_mlprefix(pkg, 'RDEPENDS', ml)
+        check_mlprefix(pkg, 'RPROVIDES', ml)
+        check_mlprefix(pkg, 'RRECOMMENDS', ml)
+        check_mlprefix(pkg, 'RSUGGESTS', ml)
+        check_mlprefix(pkg, 'RREPLACES', ml)
+        check_mlprefix(pkg, 'RCONFLICTS', ml)
+}
+
