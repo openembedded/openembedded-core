@@ -400,13 +400,14 @@ python package_do_split_locales() {
 	summary = d.getVar('SUMMARY', True) or pn
 	description = d.getVar('DESCRIPTION', True) or "" 
         locale_section = d.getVar('LOCALE_SECTION', True)
+	mlprefix = d.getVar('MLPREFIX', True) or ""
 	for l in sorted(locales):
 		ln = legitimize_package_name(l)
 		pkg = pn + '-locale-' + ln
 		packages.append(pkg)
 		d.setVar('FILES_' + pkg, os.path.join(datadir, 'locale', l))
-		d.setVar('RDEPENDS_' + pkg, '%s virtual-locale-%s' % (pn, ln))
-		d.setVar('RPROVIDES_' + pkg, '%s-locale %s-translation' % (pn, ln))
+		d.setVar('RDEPENDS_' + pkg, '%s %svirtual-locale-%s' % (pn, mlprefix, ln))
+		d.setVar('RPROVIDES_' + pkg, '%s-locale %s%s-translation' % (pn, mlprefix, ln))
 		d.setVar('SUMMARY_' + pkg, '%s - %s translations' % (summary, l))
 		d.setVar('DESCRIPTION_' + pkg, '%s  This package contains language translation files for the %s locale.' % (description, l))
 		if locale_section:

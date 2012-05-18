@@ -308,10 +308,10 @@ python package_do_split_gconvs () {
 		pkgname = d.getVar('MLPREFIX') + 'locale-base-' + legitimize_package_name(name)
 		d.setVar('ALLOW_EMPTY_%s' % pkgname, '1')
 		d.setVar('PACKAGES', '%s %s' % (pkgname, d.getVar('PACKAGES', True)))
-		rprovides = ' virtual-locale-%s' % legitimize_package_name(name)
+		rprovides = ' %svirtual-locale-%s' % (mlprefix, legitimize_package_name(name))
 		m = re.match("(.*)_(.*)", name)
 		if m:
-			rprovides += ' virtual-locale-%s' % m.group(1)
+			rprovides += ' %svirtual-locale-%s' % (mlprefix, m.group(1))
 		d.setVar('RPROVIDES_%s' % pkgname, rprovides)
 
 		if use_bin == "compile":
