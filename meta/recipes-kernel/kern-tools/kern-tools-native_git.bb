@@ -1,5 +1,5 @@
 DESCRIPTION = "Scripts and utilities for managing Yocto branched kernels."
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://git/tools/kgit;beginline=5;endline=9;md5=e2bf4415f3d843f43d2e22b0d91a6fee"
 
 DEPENDS = "git-native guilt-native"
