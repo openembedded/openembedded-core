@@ -330,20 +330,27 @@ def sstate_hardcode_path(d):
 		sstate_grep_cmd = "grep -l -e '%s'" % (staging_host)
 		sstate_sed_cmd = "sed -i -e 's:%s:FIXMESTAGINGDIRHOST:g'" % (staging_host)
 	
+	fixmefn =  sstate_builddir + "fixmepath"
+
 	sstate_scan_cmd = d.getVar('SSTATE_SCAN_CMD', True)
-	sstate_filelist_cmd = "tee %sfixmepath" % (sstate_builddir)
+	sstate_filelist_cmd = "tee %s" % (fixmefn)
 
 	# fixmepath file needs relative paths, drop sstate_builddir prefix
-	sstate_filelist_relative_cmd = "sed -i -e 's:^%s::g' %sfixmepath" % (sstate_builddir, sstate_builddir)
+	sstate_filelist_relative_cmd = "sed -i -e 's:^%s::g' %s" % (sstate_builddir, fixmefn)
 
 	# Limit the fixpaths and sed operations based on the initial grep search
 	# This has the side effect of making sure the vfs cache is hot
-	sstate_hardcode_cmd = "%s | xargs %s | %s | xargs %s" % (sstate_scan_cmd, sstate_grep_cmd, sstate_filelist_cmd, sstate_sed_cmd)
+	sstate_hardcode_cmd = "%s | xargs %s | %s | xargs --no-run-if-empty %s" % (sstate_scan_cmd, sstate_grep_cmd, sstate_filelist_cmd, sstate_sed_cmd)
 
 	print "Removing hardcoded paths from sstate package: '%s'" % (sstate_hardcode_cmd)
 	os.system(sstate_hardcode_cmd)
-	print "Replacing absolute paths in fixmepath file: '%s'" % (sstate_filelist_relative_cmd)
-	os.system(sstate_filelist_relative_cmd)
+
+        # If the fixmefn is empty, remove it..
+	if os.stat(fixmefn).st_size == 0:
+		os.remove(fixmefn)
+	else:
+		print "Replacing absolute paths in fixmepath file: '%s'" % (sstate_filelist_relative_cmd)
+		os.system(sstate_filelist_relative_cmd)
 
 def sstate_package(ss, d):
     import oe.path
