@@ -146,12 +146,14 @@ do_install_virtclass-native () {
 	rmdir ${D}/${libdir}64 || :
 }
 
-pkg_postinst_${PN}-symlinks () {
-	update-alternatives --install ${bindir}/ar ar ${TARGET_PREFIX}ar 100
-	update-alternatives --install ${bindir}/strings strings ${TARGET_PREFIX}strings 100
-}
+inherit update-alternatives
 
-pkg_prerm_${PN}-symlinks () {
-	update-alternatives --remove ar ${TARGET_PREFIX}ar
-	update-alternatives --remove strings ${TARGET_PREFIX}strings
-}
+ALTERNATIVE_PRIORITY = "100"
+
+ALTERNATIVE_${PN}-symlinks = "ar strings"
+
+ALTERNATIVE_LINK_NAME[ar] = "${bindir}/ar"
+ALTERNATIVE_TARGET[ar] = "${bindir}/${TARGET_PREFIX}ar"
+
+ALTERNATIVE_LINK_NAME[strings] = "${bindir}/strings"
+ALTERNATIVE_TARGET[strings] = "${bindir}/${TARGET_PREFIX}strings"
