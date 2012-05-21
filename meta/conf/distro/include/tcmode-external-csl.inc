@@ -34,6 +34,7 @@ PREFERRED_PROVIDER_virtual/libintl = "external-csl-toolchain"
 PREFERRED_PROVIDER_virtual/libiconv = "external-csl-toolchain"
 PREFERRED_PROVIDER_glibc-thread-db = "external-csl-toolchain"
 PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-csl-toolchain"
+PREFERRED_PROVIDER_gdbserver ??= "external-csl-toolchain"
 
 # No need to re-compile the locale files
 GLIBC_INTERNAL_USE_BINARY_LOCALE = "precompiled"
