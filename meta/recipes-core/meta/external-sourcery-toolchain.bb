@@ -92,6 +92,12 @@ PACKAGES =+ "libgcc libgcc-dev libstdc++ libstdc++-dev libstdc++-staticdev linux
 # This test should be fixed to ignore .a files in .debug dirs
 INSANE_SKIP_${PN}-dbg = "staticdev"
 
+# We don't care about GNU_HASH in prebuilt binaries
+INSANE_SKIP_${PN}-utils += "ldflags"
+INSANE_SKIP_libstdc++ += "ldflags"
+INSANE_SKIP_libgcc += "ldflags"
+INSANE_SKIP_gdbserver += "ldflags"
+
 PKG_${PN} = "eglibc"
 PKG_${PN}-dev = "eglibc-dev"
 PKG_${PN}-staticdev = "eglibc-staticdev"
