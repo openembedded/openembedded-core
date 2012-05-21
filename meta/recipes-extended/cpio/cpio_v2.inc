@@ -17,26 +17,17 @@ S = "${WORKDIR}/cpio-${PV}"
 do_install () {
     autotools_do_install
     install -d ${D}${base_bindir}/
-    mv "${D}${bindir}/cpio" "${D}${base_bindir}/cpio.${PN}"
+    mv "${D}${bindir}/cpio" "${D}${base_bindir}/cpio"
     rmdir ${D}${bindir}/
-    case ${TARGET_OS} in
-        *-uclibc*) ;;
-        *) mv "${D}${libexecdir}/rmt" "${D}${libexecdir}/rmt.${PN}" ;;
-    esac
 }
 
-pkg_postinst_${PN} () {
-    update-alternatives --install ${base_bindir}/cpio cpio cpio.${PN} 100
-    if [ -f ${libexecdir}/rmt.${PN} ]
-    then
-        update-alternatives --install ${libexecdir}/rmt rmt rmt.${PN} 50
-    fi
-}
+inherit update-alternatives
 
-pkg_prerm_${PN} () {
-    update-alternatives --remove cpio cpio.${PN}
-    if [ -f ${libexecdir}/rmt.${PN} ]
-    then
-        update-alternatives --remove rmt rmt.${PN}
-    fi
-}
+ALTERNATIVE_PRIORITY = "100"
+
+ALTERNATIVE_${PN} = "cpio rmt"
+
+ALTERNATIVE_LINK_NAME[cpio] = "${base_bindir}/cpio"
+
+ALTERNATIVE_PRIORITY[rmt] = "50"
+ALTERNATIVE_LINK_NAME[rmt] = "${libexecdir}/rmt"
