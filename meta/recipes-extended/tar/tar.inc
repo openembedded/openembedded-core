@@ -17,18 +17,16 @@ do_install () {
 
 do_install_extra () {
     install -d ${D}${base_bindir}
-    mv ${D}${bindir}/tar ${D}${base_bindir}/tar.${PN}
+    mv ${D}${bindir}/tar ${D}${base_bindir}/tar
     rmdir ${D}${bindir}/
     rmdir ${D}${sbindir}/
-    mv ${D}${libexecdir}/rmt ${D}${libexecdir}/rmt.${PN}
 }
 
-pkg_postinst_${PN} () {
-    update-alternatives --install ${base_bindir}/tar tar tar.${PN} 100
-    update-alternatives --install ${libexecdir}/rmt rmt rmt.${PN} 100
-}
+inherit update-alternatives
 
-pkg_prerm_${PN} () {
-    update-alternatives --remove tar tar.${PN}
-    update-alternatives --remove rmt rmt.${PN}
-}
+ALTERNATIVE_PRIORITY = "100"
+
+ALTERNATIVE_${PN} = "tar rmt"
+
+ALTERNATIVE_LINK_NAME[tar] = "${base_bindir}/tar"
+ALTERNATIVE_LINK_NAME[rmt] = "${libexecdir}/rmt"
