@@ -45,25 +45,4 @@ do_install_append() {
 	# Now we don't have a mail system. Disable mail creation for now.
 	sed -i 's:/bin/bash:/bin/sh:g' ${D}${sysconfdir}/default/useradd
 	sed -i '/^CREATE_MAIL_SPOOL/ s:^:#:' ${D}${sysconfdir}/default/useradd
-
-	install -d ${D}${sbindir} ${D}${base_sbindir} ${D}${base_bindir} 
-	for i in passwd chfn newgrp chsh ; do
-		mv ${D}${bindir}/$i ${D}${bindir}/$i.${PN}
-	done
-
-	mv ${D}${sbindir}/chpasswd ${D}${sbindir}/chpasswd.${PN}
-}
-
-pkg_postinst_${PN} () {
-	update-alternatives --install ${bindir}/passwd passwd passwd.${PN} 200
-	update-alternatives --install ${sbindir}/chpasswd chpasswd chpasswd.${PN} 200
-	update-alternatives --install ${bindir}/chfn chfn chfn.${PN} 200
-	update-alternatives --install ${bindir}/newgrp newgrp newgrp.${PN} 200
-	update-alternatives --install ${bindir}/chsh chsh chsh.${PN} 200
-}
-
-pkg_prerm_${PN} () {
-	for i in passwd chpasswd chfn newgrp chsh ; do
-		update-alternatives --remove $i $i.${PN}
-	done
 }
