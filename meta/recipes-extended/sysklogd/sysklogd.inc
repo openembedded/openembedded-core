@@ -25,7 +25,7 @@ SRC_URI = "http://www.infodrom.org/projects/sysklogd/download/sysklogd-${PV}.tar
 SRC_URI_append_e500v2 = " file://no-vectorization.patch"
 
 INITSCRIPT_NAME = "syslog"
-CONFFILES_${PN} = "${sysconfdir}/syslog.conf.${PN}"
+CONFFILES_${PN} = "${sysconfdir}/syslog.conf.${BPN}"
 
 CFLAGS_append = " -DSYSV"
 
@@ -35,12 +35,10 @@ do_install () {
 			${D}${base_sbindir}
 	oe_runmake 'BINDIR=${D}${base_sbindir}' \
 			'MANDIR=${D}${mandir}' install
-	mv ${D}${base_sbindir}/syslogd ${D}${base_sbindir}/syslogd.${PN}
-	mv ${D}${base_sbindir}/klogd ${D}${base_sbindir}/klogd.${PN}
 	install -d ${D}${sysconfdir}
-	install -m 644 ${WORKDIR}/syslog.conf ${D}${sysconfdir}/syslog.conf.${PN}
+	install -m 644 ${WORKDIR}/syslog.conf ${D}${sysconfdir}/syslog.conf
 	install -d ${D}${sysconfdir}/init.d
-	install -m 755 ${WORKDIR}/sysklogd ${D}${sysconfdir}/init.d/syslog.${PN}
+	install -m 755 ${WORKDIR}/sysklogd ${D}${sysconfdir}/init.d/syslog
 }
 
 pkg_preinst_${PN} () {
@@ -57,12 +55,18 @@ pkg_preinst_${PN} () {
 	fi
 }
 
-pkg_postinst_${PN} () {
-	update-alternatives --install ${base_sbindir}/syslogd syslogd syslogd.${PN} 100
-	update-alternatives --install ${base_sbindir}/klogd klogd klogd.${PN} 100
-	update-alternatives --install ${sysconfdir}/init.d/syslog syslog-init syslog.${PN} 100
-	update-alternatives --install ${sysconfdir}/syslog.conf syslog-conf syslog.conf.${PN} 100
+inherit update-alternatives
 
+ALTERNATIVE_PRIORITY = "100"
+
+ALTERNATIVE_${PN} = "syslogd klogd syslog-init syslog-conf"
+
+ALTERNATIVE_LINK_NAME[syslogd] = "${base_sbindir}/syslogd"
+ALTERNATIVE_LINK_NAME[klogd] = "${base_sbindir}/klogd"
+ALTERNATIVE_LINK_NAME[syslog-init] = "${sysconfdir}/init.d/syslog"
+ALTERNATIVE_LINK_NAME[syslog-conf] = "${sysconfdir}/syslog.conf"
+
+pkg_postinst_${PN} () {
 	if test "x$D" != "x"; then
 	OPT="-r $D"
 	else
@@ -72,16 +76,11 @@ pkg_postinst_${PN} () {
 }
 
 pkg_prerm_${PN} () {
-	update-alternatives --remove syslogd syslogd.${PN}
-	update-alternatives --remove klogd klogd.${PN}
-
 	if test "x$D" = "x"; then
 	if test "$1" = "upgrade" -o "$1" = "remove"; then
 		/etc/init.d/syslog stop
 	fi
 	fi
-	update-alternatives --remove syslog-init syslog.${PN}
-	update-alternatives --remove syslog-conf syslog.conf.${PN}
 }
 
 pkg_postrm_${PN} () {
