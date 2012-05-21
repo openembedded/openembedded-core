@@ -5,7 +5,7 @@ LICENSE = "PSF"
 LIC_FILES_CHKSUM = "file://setup.py;beginline=23;endline=23;md5=8a314270dd7a8dbca741775415f1716e"
 
 SRCNAME = "setuptools"
-PR = "ml3"
+PR = "ml4"
 DEPENDS += "python"
 DEPENDS_virtclass-native += "python-native"
 
