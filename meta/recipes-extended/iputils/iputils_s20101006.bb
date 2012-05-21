@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://ping.c;beginline=1;endline=35;md5=f9ceb201733e9a6cf8f
 
 DEPENDS = "sysfsutils openssl docbook-utils-native sgmlspl-native"
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://www.skbuff.net/iputils/${BPN}-${PV}.tar.bz2 \
            file://debian/fix-dead-host-ping-stats.diff \
@@ -34,8 +34,8 @@ do_compile () {
 do_install () {
 	install -m 0755 -d ${D}${base_bindir} ${D}${mandir}/man8
 	# SUID root programs
-	install -m 4555 ping ${D}${base_bindir}/ping.${PN}
-	install -m 4555 ping6 ${D}${base_bindir}/ping6.${PN}
+	install -m 4555 ping ${D}${base_bindir}/ping
+	install -m 4555 ping6 ${D}${base_bindir}/ping6
 	install -m 4555 traceroute6 ${D}${base_bindir}/
 	# Other programgs
 	for i in arping tracepath tracepath6; do
@@ -47,22 +47,22 @@ do_install () {
 	done
 }
 
-# Busybox also provides ping and ping6, so use update-alternatives
-# Also fixup SUID bit for applications that need it
+inherit update-alternatives
+
+ALTERNATIVE_PRIORITY = "100"
+
+ALTERNATIVE_${PN}-ping = "ping"
+ALTERNATIVE_LINK_NAME[ping] = "${base_bindir}/ping"
+
+ALTERNATIVE_${PN}-ping6 = "ping6"
+ALTERNATIVE_LINK_NAME[ping6] = "${base_bindir}/ping6"
+
 pkg_postinst_${PN}-ping () {
-	chmod 4555 ${base_bindir}/ping.${PN}
-	update-alternatives --install ${base_bindir}/ping ping ping.${PN} 100
-}
-pkg_prerm_${PN}-ping () {
-	update-alternatives --remove ping ping.${PN}
+       chmod 4555 ${base_bindir}/ping
 }
 
 pkg_postinst_${PN}-ping6 () {
-	chmod 4555 ${base_bindir}/ping6.${PN}
-	update-alternatives --install ${base_bindir}/ping6 ping6 ping6.${PN} 100
-}
-pkg_prerm_${PN}-ping6 () {
-	update-alternatives --remove ping6 ping6.${PN}
+       chmod 4555 ${base_bindir}/ping6
 }
 
 pkg_postinst_${PN}-traceroute6 () {
@@ -75,8 +75,8 @@ ALLOW_EMPTY_${PN} = "1"
 RDEPENDS_${PN} += "${PN}-ping ${PN}-ping6 ${PN}-arping ${PN}-tracepath ${PN}-tracepath6 ${PN}-traceroute6"
 
 FILES_${PN}	= ""
-FILES_${PN}-ping = "${base_bindir}/ping.${PN}"
-FILES_${PN}-ping6 = "${base_bindir}/ping6.${PN}"
+FILES_${PN}-ping = "${base_bindir}/ping.${BPN}"
+FILES_${PN}-ping6 = "${base_bindir}/ping6.${BPN}"
 FILES_${PN}-arping = "${base_bindir}/arping"
 FILES_${PN}-tracepath = "${base_bindir}/tracepath"
 FILES_${PN}-tracepath6 = "${base_bindir}/tracepath6"
