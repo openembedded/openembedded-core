@@ -23,10 +23,10 @@ PACKAGES += "psmisc-extras"
 FILES_${PN} = ""
 RDEPENDS_${PN} = "fuser killall pstree"
 
-FILES_fuser = "${bindir}/fuser.${PN}"
+FILES_fuser = "${bindir}/fuser.${BPN}"
 FILES_fuser-doc = "${mandir}/man1/fuser*"
 
-FILES_killall = "${bindir}/killall.${PN}"
+FILES_killall = "${bindir}/killall.${BPN}"
 FILES_killall-doc = "${mandir}/man1/killall*"
 
 FILES_pstree = "${bindir}/pstree"
@@ -35,24 +35,10 @@ FILES_pstree-doc = "${mandir}/man1/pstree*"
 FILES_psmisc-extras = "${bindir}"
 FILES_psmisc-extras-doc = "${mandir}"
 
-do_install_append() {
-	mv ${D}${bindir}/killall ${D}${bindir}/killall.${PN}
-	mv ${D}${bindir}/fuser ${D}${bindir}/fuser.${PN}
-}
+inherit update-alternatives
 
-pkg_postinst_killall() {
-	update-alternatives --install ${bindir}/killall killall killall.${PN} 90
-}
+ALTERNATIVE_PRIORITY = "90"
 
-pkg_postrm_killall() {
-	update-alternatives --remove ${bindir}/killall killall.${PN}
-}
+ALTERNATIVE_killall = "killall"
 
-pkg_postinst_fuser() {
-	update-alternatives --install ${bindir}/fuser fuser fuser.${PN} 90
-}
-
-pkg_postrm_fuser() {
-    update-alternatives --remove ${bindir}/fuser fuser.${PN}
-}
-
+ALTERNATIVE_fuser = "fuser"
