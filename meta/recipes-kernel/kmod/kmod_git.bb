@@ -3,7 +3,7 @@
 
 require kmod.inc
 
-PR = "${INC_PR}.2"
+PR = "${INC_PR}.3"
 
 PROVIDES += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
 RPROVIDES_${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
@@ -22,9 +22,9 @@ do_install_append () {
         install -dm755 ${D}${base_bindir}
         install -dm755 ${D}${base_sbindir}
         # add symlinks to kmod
-        ln -s ..${base_bindir}/kmod ${D}${base_bindir}/lsmod.kmod
+        ln -s ..${base_bindir}/kmod ${D}${base_bindir}/lsmod
         for tool in {ins,rm,dep}mod mod{info,probe}; do
-                ln -s ..${base_bindir}/kmod ${D}${base_sbindir}/${tool}.kmod
+                ln -s ..${base_bindir}/kmod ${D}${base_sbindir}/${tool}
         done
         # configuration directories
         install -dm755 ${D}${base_libdir}/depmod.d
@@ -36,25 +36,22 @@ do_install_append () {
         install -Dm644 "${WORKDIR}/depmod-search.conf" "${D}${base_libdir}/depmod.d/search.conf"
 }
 
-pkg_postinst_kmod() {
-        for f in sbin/insmod sbin/modprobe sbin/rmmod sbin/modinfo; do
-                bn=`basename $f`
-                update-alternatives --install /$f $bn /$f.kmod 60
-        done
-        update-alternatives --install /bin/lsmod bin-lsmod /bin/lsmod.kmod 60
-        update-alternatives --install /sbin/lsmod lsmod /bin/lsmod.kmod 60
-        update-alternatives --install /sbin/depmod depmod /sbin/depmod.kmod 60
-}
+inherit update-alternatives
 
-pkg_prerm_kmod() {
-        for f in sbin/insmod sbin/modprobe sbin/rmmod sbin/modinfo; do
-                bn=`basename $f`
-                update-alternatives --remove $bn /$f.kmod
-        done
-        update-alternatives --remove bin-lsmod /bin/lsmod.kmod
-        update-alternatives --remove lsmod /bin/lsmod.kmod
-        update-alternatives --remove depmod /sbin/depmod.kmod
-}
+ALTERNATIVE_PRIORITY = "60"
+
+ALTERNATIVE_kmod = "insmod modprobe rmmod modinfo bin-lsmod lsmod depmod"
+
+ALTERNATIVE_LINK_NAME[insmod] = "${base_sbindir}/insmod"
+ALTERNATIVE_LINK_NAME[modprobe] = "${base_sbindir}/modprobe"
+ALTERNATIVE_LINK_NAME[rmmod] = "${base_sbindir}/rmmod"
+ALTERNATIVE_LINK_NAME[modinfo] = "${base_sbindir}/modinfo"
+ALTERNATIVE_LINK_NAME[bin-lsmod] = "${base_bindir}/lsmod"
+
+ALTERNATIVE_LINK_NAME[lsmod] = "${base_sbindir}/lsmod"
+ALTERNATIVE_TARGET[lsmod] = "${base_bindir}/lsmod.${BPN}"
+
+ALTERNATIVE_LINK_NAME[depmod] = "${base_sbindir}/depmod"
 
 PACKAGES =+ "libkmod"
 
