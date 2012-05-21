@@ -6,7 +6,7 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8006d9c814277c1bfc4ca22af94b59ee"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.gz"
 
@@ -24,20 +24,18 @@ do_configure_prepend () {
 do_install () {
 	autotools_do_install
 	install -d ${D}${base_bindir}
-	mv ${D}${bindir}/grep ${D}${base_bindir}/grep.${PN}
-	mv ${D}${bindir}/egrep ${D}${base_bindir}/egrep.${PN}
-	mv ${D}${bindir}/fgrep ${D}${base_bindir}/fgrep.${PN}
+	mv ${D}${bindir}/grep ${D}${base_bindir}/grep
+	mv ${D}${bindir}/egrep ${D}${base_bindir}/egrep
+	mv ${D}${bindir}/fgrep ${D}${base_bindir}/fgrep
 	rmdir ${D}${bindir}/
 }
 
-pkg_postinst_${PN} () {
-	update-alternatives --install ${base_bindir}/grep grep grep.${PN} 100
-	update-alternatives --install ${base_bindir}/egrep egrep egrep.${PN} 100
-	update-alternatives --install ${base_bindir}/fgrep fgrep fgrep.${PN} 100
-}
+inherit update-alternatives
 
-pkg_prerm_${PN} () {
-	update-alternatives --remove grep grep.${PN}
-	update-alternatives --remove egrep egrep.${PN}
-	update-alternatives --remove fgrep fgrep.${PN}
-}
+ALTERNATIVE_PRIORITY = "100"
+
+ALTERNATIVE_${PN} = "grep egrep fgrep"
+ALTERNATIVE_LINK_NAME[grep] = "${base_bindir}/grep"
+ALTERNATIVE_LINK_NAME[egrep] = "${base_bindir}/egrep"
+ALTERNATIVE_LINK_NAME[fgrep] = "${base_bindir}/fgrep"
+
