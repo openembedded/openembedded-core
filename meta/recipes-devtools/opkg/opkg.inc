@@ -11,7 +11,7 @@ DEPENDS_virtclass-native = "curl-native"
 DEPENDS_virtclass-nativesdk = "curl-nativesdk"
 
 PE = "1"
-INC_PR = "r9"
+INC_PR = "r10"
 
 FILESDIR = "${@os.path.dirname(d.getVar('FILE',1))}/opkg"
 
@@ -64,15 +64,14 @@ rm -f /${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
 " > $D${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
 	chmod 0755 $D${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
 fi
-
-update-alternatives --install ${bindir}/opkg opkg ${bindir}/opkg-cl 100
 }
 
-pkg_postrm_${PN} () {
-#!/bin/sh
-update-alternatives --remove opkg ${bindir}/opkg-cl
-}
+inherit update-alternatives
 
+ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_${PN} = "opkg"
+ALTERNATIVE_LINK_NAME[opkg] = "${bindir}/opkg"
+ALTERNATIVE_TARGET[opkg] = "${bindir}/opkg-cl"
 
 BBCLASSEXTEND = "native nativesdk"
 
