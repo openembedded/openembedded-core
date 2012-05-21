@@ -65,10 +65,6 @@ distutils_do_install() {
         if test -e ${D}${datadir}/share; then
             mv -f ${D}${datadir}/share/* ${D}${datadir}/
         fi
-
-        # These are generated files, on really slow systems the storage/speed trade off
-        # might be worth it, but in general it isn't 
-        find ${D}${libdir}/${PYTHON_DIR}/site-packages -iname '*.pyo' -exec rm {} \;
 }
 
 EXPORT_FUNCTIONS do_compile do_install
