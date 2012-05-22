@@ -9,10 +9,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 inherit update-alternatives
 
 do_install_append () {
-        mv ${D}${bindir}/time ${D}${bindir}/time.${PN}
+        mv ${D}${bindir}/time ${D}${bindir}/time.${BPN}
 }
 
 ALTERNATIVE_NAME = "time"
 ALTERNATIVE_LINK = "${bindir}/time"
-ALTERNATIVE_PATH = "${bindir}/time.${PN}"
+ALTERNATIVE_PATH = "${bindir}/time.${BPN}"
 ALTERNATIVE_PRIORITY = "100"
