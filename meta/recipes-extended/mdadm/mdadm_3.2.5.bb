@@ -14,8 +14,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.bz2 \
 	    file://mdadm-3.2.2_fix_for_x32.patch \
 	  "
 
-SRC_URI[md5sum] = "d789d6ecb9c1d5ebcc64f0fc52bca92f"
-SRC_URI[sha256sum] = "0ff49a04c6250834ce1b5be5a1581532e70e2221a87e1eedec46d6656b37ab40"
+SRC_URI[md5sum] = "83ba4a6249ae24677e915e44c9cfcc58"
+SRC_URI[sha256sum] = "5ae2bfd241c88601c1ef9072806248491e025fa09a388c40230d72d65eabbd3c"
 
 CFLAGS += "-fno-strict-aliasing"
 
