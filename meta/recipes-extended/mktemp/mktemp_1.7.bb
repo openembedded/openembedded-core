@@ -21,11 +21,11 @@ EXTRA_OECONF = "--with-libc"
 
 do_install_append () {
 	mkdir ${D}${base_bindir}
-	mv ${D}${bindir}/mktemp ${D}${base_bindir}/mktemp.${PN}
+	mv ${D}${bindir}/mktemp ${D}${base_bindir}/mktemp.${BPN}
 	rmdir ${D}${bindir}
 }
 
 ALTERNATIVE_NAME = "mktemp"
 ALTERNATIVE_LINK = "${base_bindir}/mktemp"
-ALTERNATIVE_PATH = "${base_bindir}/mktemp.${PN}"
+ALTERNATIVE_PATH = "${base_bindir}/mktemp.${BPN}"
 ALTERNATIVE_PRIORITY = "100"
