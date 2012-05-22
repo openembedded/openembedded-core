@@ -24,9 +24,9 @@ do_configure_prepend() {
 
 do_install() {
 	autotools_do_install
-	mv ${D}${bindir}/which ${D}${bindir}/which.${PN}
+	mv ${D}${bindir}/which ${D}${bindir}/which.${BPN}
 }
 
 ALTERNATIVE_NAME = "which"
-ALTERNATIVE_PATH = "which.${PN}"
+ALTERNATIVE_PATH = "which.${BPN}"
 ALTERNATIVE_PRIORITY = "100"

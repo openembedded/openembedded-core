@@ -27,10 +27,10 @@ do_configure_prepend() {
 	sed -i "s#${OLD}#${NEW}#g" `grep -rl ${OLD} ${S}`
 }
 do_install_append() {
-	mv ${D}/${bindir}/which ${D}/${bindir}/which.${PN}
+	mv ${D}/${bindir}/which ${D}/${bindir}/which.${BPN}
 }
 
 ALTERNATIVE_NAME = "which"
-ALTERNATIVE_PATH = "which.${PN}"
+ALTERNATIVE_PATH = "which.${BPN}"
 ALTERNATIVE_PRIORITY = "100"
 
