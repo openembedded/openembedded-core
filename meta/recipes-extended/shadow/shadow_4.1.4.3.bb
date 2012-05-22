@@ -89,13 +89,13 @@ do_install_append() {
 
 	# Move binaries to the locations we want
 	rm ${D}${sbindir}/vigr
-	ln -sf vipw.${PN} ${D}${base_sbindir}/vigr
+	ln -sf vipw.${BPN} ${D}${base_sbindir}/vigr
 	mv ${D}${sbindir}/vipw ${D}${base_sbindir}/vipw
 	mv ${D}${bindir}/login ${D}${base_bindir}/login
 
 	# Handle link properly after rename, otherwise missing files would
 	# lead rpm failed dependencies.
-	ln -sf newgrp.${PN} ${D}${bindir}/sg
+	ln -sf newgrp.${BPN} ${D}${bindir}/sg
 }
 
 inherit update-alternatives
