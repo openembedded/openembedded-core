@@ -18,12 +18,12 @@ EXTRA_OECONF = "--disable-acl"
 do_install () {
 	autotools_do_install
 	install -d ${D}${base_bindir}
-	mv ${D}${bindir}/sed ${D}${base_bindir}/sed.${PN}
+	mv ${D}${bindir}/sed ${D}${base_bindir}/sed.${BPN}
 	rmdir ${D}${bindir}/
 }
 
 ALTERNATIVE_NAME = "sed"
-ALTERNATIVE_PATH = "sed.${PN}"
+ALTERNATIVE_PATH = "sed.${BPN}"
 ALTERNATIVE_LINK = "${base_bindir}/sed"
 ALTERNATIVE_PRIORITY = "100"
 
