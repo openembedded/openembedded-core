@@ -34,9 +34,9 @@ inherit autotools update-alternatives
 
 do_install () {
         oe_runmake 'bindir=${D}${bindir}' 'mandir=${D}${mandir}' install
-        mv ${D}${bindir}/less ${D}${bindir}/less.${PN}
+        mv ${D}${bindir}/less ${D}${bindir}/less.${BPN}
 }
 
 ALTERNATIVE_NAME = "less"
-ALTERNATIVE_PATH = "less.${PN}"
+ALTERNATIVE_PATH = "less.${BPN}"
 ALTERNATIVE_PRIORITY = "100"
