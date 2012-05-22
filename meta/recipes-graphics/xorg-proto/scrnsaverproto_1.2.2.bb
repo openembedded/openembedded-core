@@ -16,6 +16,5 @@ PE = "1"
 
 EXTRA_OECONF_append = " --enable-specs=no"
 
-SRC_URI[md5sum] = "6af0f2e3369f5f74e69345e214f5fd0d"
-SRC_URI[sha256sum] = "fad2f73cac136fcddd311d27a14ac7e519a9bec6ab272490d9c9b363556024f1"
-
+SRC_URI[md5sum] = "edd8a73775e8ece1d69515dd17767bfb"
+SRC_URI[sha256sum] = "8bb70a8da164930cceaeb4c74180291660533ad3cc45377b30a795d1b85bcd65"
