@@ -11,10 +11,10 @@ inherit autotools gettext update-alternatives
 EXTRA_OECONF = "--with-libc --enable-ipv6 --with-libssl-prefix=${STAGING_DIR_HOST} --with-ssl=openssl --disable-rpath"
 
 do_install_append () {
-	mv ${D}${bindir}/wget ${D}${bindir}/wget.${PN}
+	mv ${D}${bindir}/wget ${D}${bindir}/wget.${BPN}
 }
 
 ALTERNATIVE_NAME = "wget"
 ALTERNATIVE_LINK = "${bindir}/wget"
-ALTERNATIVE_PATH = "${bindir}/wget.${PN}"
+ALTERNATIVE_PATH = "${bindir}/wget.${BPN}"
 ALTERNATIVE_PRIORITY = "100"
