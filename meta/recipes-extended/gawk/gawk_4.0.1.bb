@@ -11,12 +11,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 RDEPENDS_gawk += "gawk-common"
 RDEPENDS_pgawk += "gawk-common"
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "51e417b71287629940051e6f652c6492"
-SRC_URI[sha256sum] = "c3a7cf7d976e05c6a1d8a9b3f14fa55d4304707408ddafb1396212653ea00be5"
+SRC_URI[md5sum] = "bab2bda483e9f32be65b43b8dab39fa5"
+SRC_URI[sha256sum] = "476dee8bea8bc3b04af5cae502b83ea16edd5b703d20418918f8773889d78c80"
 
 inherit autotools gettext update-alternatives
 
