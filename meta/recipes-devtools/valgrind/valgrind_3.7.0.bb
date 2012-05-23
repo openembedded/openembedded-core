@@ -23,13 +23,16 @@ SRC_URI[md5sum] = "a855fda56edf05614f099dca316d1775"
 SRC_URI[sha256sum] = "5d62c0330f1481fe2c593249192fa68ff454c19c34343978cc9ce91aa324cbf6"
 
 COMPATIBLE_HOST = '(i.86|x86_64|powerpc|powerpc64).*-linux'
+COMPATIBLE_HOST_armv7a = 'arm.*-linux'
 
 inherit autotools
 
 EXTRA_OECONF = "--enable-tls"
+EXTRA_OECONF_armv7a = "--enable-tls -host=armv7-none-linux-gnueabi"
 EXTRA_OEMAKE = "-w"
 PARALLEL_MAKE = ""
 
 FILES_${PN}-dbg += "${libdir}/${PN}/*/.debug/*"
 RRECOMMENDS_${PN}_powerpc += "${TCLIBC}-dbg"
 RRECOMMENDS_${PN}_powerpc64 += "${TCLIBC}-dbg"
+RRECOMMENDS_${PN}_armv7a += "${TCLIBC}-dbg"
