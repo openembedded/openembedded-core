@@ -150,7 +150,7 @@ def check_create_long_filename(filepath, pathname):
         if errno == 36: # ENAMETOOLONG
             return "Failed to create a file with a long name in %s. Please use a filesystem that does not unreasonably limit filename length.\n" % pathname
         else:
-            return "Failed to create a file in %s: %s" % (pathname, strerror)
+            return "Failed to create a file in %s: %s.\n" % (pathname, strerror)
     return ""
 
 def check_connectivity(d):
