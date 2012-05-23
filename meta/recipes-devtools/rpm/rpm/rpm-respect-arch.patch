@@ -1,0 +1,67 @@
+rpmts.c: respect to the arch priorities
+
+Let rpm respect to the priorities when choose alternatives rpm, the arch
+which comes first is preferred.
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ lib/rpmts.c |   14 ++++++++++++++
+ 1 files changed, 14 insertions(+), 0 deletions(-)
+
+diff --git a/lib/rpmts.c b/lib/rpmts.c
+index 3fbbc9e..40ec08e 100644
+--- a/lib/rpmts.c
++++ b/lib/rpmts.c
+@@ -353,6 +353,7 @@ int rpmtsSolve(rpmts ts, rpmds ds, /*@unused@*/ const void * data)
+     Header h = NULL;
+     size_t bhnamelen = 0;
+     time_t bhtime = 0;
++    const char *bharch = NULL;
+     rpmTag rpmtag;
+     const char * keyp;
+     size_t keylen = 0;
+@@ -409,6 +410,7 @@ fprintf(stderr, "--> %s(%p,%p,%p)\n", __FUNCTION__, ts, ds, data);
+ 	while ((h = rpmmiNext(mi)) != NULL) {
+ 	    size_t hnamelen;
+ 	    time_t htime;
++	    const char *harch = NULL;
+ 
+ 	    if (rpmtag == RPMTAG_PROVIDENAME && !rpmdsAnyMatchesDep(h, ds, 1))
+ 		continue;
+@@ -431,12 +433,23 @@ fprintf(stderr, "--> %s(%p,%p,%p)\n", __FUNCTION__, ts, ds, data);
+ 	    if (htime <= bhtime)
+ 		continue;
+ 
++	    /* XXX Respect to the arch priorities */
++	    he->tag = RPMTAG_ARCH;
++	    xx = headerGet(h, he, 0);
++	    harch = ((xx && he->p.str) ? xstrdup(he->p.str) : NULL);
++	    he->p.ptr = _free(he->p.ptr);
++	    if (bharch && (strcmp(bharch, harch) != 0))
++		continue;
++
+ 	    /* Save new "best" candidate. */
+ 	    (void)headerFree(bh);
+ 	    bh = NULL;
+ 	    bh = headerLink(h);
+ 	    bhtime = htime;
+ 	    bhnamelen = hnamelen;
++	    bharch = _free(bharch);
++	    bharch = xstrdup(harch);
++	    harch = _free(harch);
+ 	}
+ 	mi = rpmmiFree(mi);
+ 
+@@ -449,6 +462,7 @@ fprintf(stderr, "--> %s(%p,%p,%p)\n", __FUNCTION__, ts, ds, data);
+       } while (1);
+ 
+     }
++    bharch = _free(bharch);
+ 
+     /* Is there a suggested resolution? */
+     if (bh == NULL)
+-- 
+1.7.1
+
