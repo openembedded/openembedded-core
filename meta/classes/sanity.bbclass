@@ -100,6 +100,13 @@ def check_sanity_sstate_dir_change(sstate_dir, data):
     testmsg = ""
     if sstate_dir != "":
         testmsg = check_create_long_filename(sstate_dir, "SSTATE_DIR")
+        # If we don't have permissions to SSTATE_DIR, suggest the user set it as an SSTATE_MIRRORS
+        try:
+            err = testmsg.split(': ')[1].strip()
+            if err == "Permission denied.":
+                testmsg = testmsg + "You could try using %s in SSTATE_MIRRORS rather than as an SSTATE_CACHE.\n" % (sstate_dir)
+        except IndexError:
+            pass
     return testmsg
 
 def check_sanity_tmpdir_change(tmpdir, data):
