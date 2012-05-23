@@ -1,6 +1,6 @@
 require xorg-driver-video.inc
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=e5418e7a75e21268637984e70265e146"
+LIC_FILES_CHKSUM = "file://COPYING;md5=a1f0610ebdc6f314a9fa5102a8c5c1b0"
 
 EXTRA_OECONF += "--disable-xvmc"
 
@@ -20,5 +20,5 @@ COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
 RRECOMMENDS_${PN} += "xserver-xorg-module-libint10"
 
-SRC_URI[md5sum] = "07fa32958aff9b463dd3af5481ef6626"
-SRC_URI[sha256sum] = "8ed85a0e94523539d81d5ae6639fa22ceb1c1e3baf89128915db65d4d2900d7a"
+SRC_URI[md5sum] = "02e6eacc2d1e07ac893b62481905d6f0"
+SRC_URI[sha256sum] = "e4a1038d5bc8884de461737f68f963651ef91137976388e1db4efc3991d01573"
