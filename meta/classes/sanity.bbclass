@@ -158,6 +158,8 @@ def check_create_long_filename(filepath, pathname):
             return "Failed to create a file with a long name in %s. Please use a filesystem that does not unreasonably limit filename length.\n" % pathname
         else:
             return "Failed to create a file in %s: %s.\n" % (pathname, strerror)
+    except OSError as (errno, strerror):
+        return "Failed to create %s directory in which to run long name sanity check: %s.\n" % (pathname, strerror)
     return ""
 
 def check_connectivity(d):
