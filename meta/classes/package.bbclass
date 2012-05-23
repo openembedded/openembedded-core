@@ -1266,7 +1266,8 @@ python package_do_shlibs() {
 		for l in lines:
 			m = re.match("\s+NEEDED\s+([^\s]*)", l)
 			if m:
-				needed[pkg].append(m.group(1))
+				if m.group(1) not in needed[pkg]:
+					needed[pkg].append(m.group(1))
 			m = re.match("\s+SONAME\s+([^\s]*)", l)
 			if m:
 				this_soname = m.group(1)
@@ -1338,7 +1339,7 @@ python package_do_shlibs() {
 								name = dep.replace("-l", "lib")
 							if pkg not in needed:
 								needed[pkg] = []
-							if name:
+							if name and name not in needed[pkg]:
 								needed[pkg].append(name)
 								#bb.note("Adding %s for %s" % (name, pkg))
 
@@ -1442,6 +1443,8 @@ python package_do_shlibs() {
 		for n in needed[pkg]:
 			if n in shlib_provider.keys():
 				(dep_pkg, ver_needed) = shlib_provider[n]
+
+				bb.debug(2, '%s: Dependency %s requires package %s' % (pkg, n, dep_pkg))
 
 				if dep_pkg == pkg:
 					continue
