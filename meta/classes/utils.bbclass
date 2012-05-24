@@ -58,32 +58,6 @@ def is_machine_specific(d):
             if any(fetcher.localpath(url).startswith(mp + "/") for mp in machinepaths):
                 return True
 
-def oe_popen_env(d):
-    env = d.getVar("__oe_popen_env", False)
-    if env is None:
-        env = {}
-        for v in d.keys():
-            if d.getVarFlag(v, "export"):
-                env[v] = d.getVar(v, True) or ""
-        d.setVar("__oe_popen_env", env)
-    return env
-
-def oe_run(d, cmd, **kwargs):
-    import oe.process
-    kwargs["env"] = oe_popen_env(d)
-    return oe.process.run(cmd, **kwargs)
-
-def oe_popen(d, cmd, **kwargs):
-    import oe.process
-    kwargs["env"] = oe_popen_env(d)
-    return oe.process.Popen(cmd, **kwargs)
-
-def oe_system(d, cmd, **kwargs):
-    """ Popen based version of os.system. """
-    if not "shell" in kwargs:
-        kwargs["shell"] = True
-    return oe_popen(d, cmd, **kwargs).wait()
-
 oe_soinstall() {
 	# Purpose: Install shared library file and
 	#          create the necessary links
