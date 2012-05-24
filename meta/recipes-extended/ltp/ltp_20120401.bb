@@ -19,14 +19,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 		    file://utils/benchmark/kernbench-0.42/COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 		"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/ltp/ltp-full-${PV}.bz2 \
-           file://uclibc-getcontext.patch \
           "
 
-SRC_URI[md5sum] = "ac183bbdac67139f049b3755fda37179"
-SRC_URI[sha256sum] = "11b149b821d709e3351ac66f028f1b0dd5337ee9073dc20019ccffdac42d5c2e"
+SRC_URI[md5sum] = "e1d0acf1a6b6da0cb30dc1b0dcf5f26d"
+SRC_URI[sha256sum] = "f0f5845f9666f61332fdf0b7e396fc647f9372db0902a829af2cf9402b807bd1"
 
 export prefix = "/opt/ltp"
 export exec_prefix = "/opt/ltp"
