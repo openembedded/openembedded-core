@@ -5,6 +5,8 @@ DEPENDS = "freetype-native expat-native zlib-native"
 EXTRA_OEMAKE = ""
 EXTRA_OECONF = "${@[' --disable-docs',' --disable-docs --with-freetype-config=%s/freetype-config' % d.getVar('STAGING_BINDIR', True)][os.path.isfile('%s/freetype-config' % d.getVar('STAGING_BINDIR', True))]}"
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}-${PV}:"
+
 do_install_append () {
 	install -d ${D}${bindir}/
 	install fc-lang/fc-lang ${D}${bindir}/
