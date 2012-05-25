@@ -1,5 +1,6 @@
 require glib.inc
 
+PR = "r1"
 PE = "1"
 
 DEPENDS += "libffi python-argparse-native zlib"
@@ -20,8 +21,6 @@ SRC_URI[sha256sum] = "b65ceb462807e4a2f91c95e4293ce6bbefca308cb44a1407bcfdd9e403
 
 SRC_URI_append_virtclass-native = " file://glib-gettextize-dir.patch"
 BBCLASSEXTEND = "native nativesdk"
-
-EXTRA_OECONF = "--disable-libelf"
 
 PERLPATH = "${bindir}/env perl"
 PERLPATH_virtclass-native = "/usr/bin/env perl"
