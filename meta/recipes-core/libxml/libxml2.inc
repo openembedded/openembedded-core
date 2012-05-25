@@ -18,6 +18,11 @@ SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz \
 
 inherit autotools pkgconfig binconfig
 
+# We don't DEPEND on binutils for ansidecl.h so ensure we don't use the header
+do_configure_prepend () {
+	sed -i -e '/.*ansidecl.h.*/d' ${S}/configure.in
+}
+
 EXTRA_OECONF = "--without-python --without-debug --without-legacy --without-catalog --without-docbook --with-c14n"
 EXTRA_OECONF_virtclass-native = "--with-python=${STAGING_BINDIR}/python --without-legacy --with-catalog --without-docbook --with-c14n"
 EXTRA_OECONF_virtclass-nativesdk = "--with-python=${STAGING_BINDIR}/python --without-legacy --with-catalog --without-docbook --with-c14n"
