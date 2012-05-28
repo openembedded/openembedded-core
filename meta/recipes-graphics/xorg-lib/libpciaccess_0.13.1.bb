@@ -5,8 +5,6 @@ PCI bus and devices in a platform-independent way."
 
 require xorg-lib-common.inc
 
-SRC_URI += "file://fix_deletion_of_last_handle.patch"
-
 LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=de01cb89a769dc657d4c321c209ce4fc"
 
@@ -14,5 +12,5 @@ PR = "r0"
 
 DEPENDS += "xproto virtual/libx11"
 
-SRC_URI[md5sum] = "f1db198398a8a1143822acc230843e8c"
-SRC_URI[sha256sum] = "0861d5bf68b598baa307e5c9b06dfd38ae03096b46e36b236106517bcd14b63a"
+SRC_URI[md5sum] = "399a419ac6a54f0fc07c69c9bdf452dc"
+SRC_URI[sha256sum] = "27ab68f645691a4ca258dcc9d131040586e134f9233ce079794496f6264da084"
