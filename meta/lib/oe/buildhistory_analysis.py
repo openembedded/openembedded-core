@@ -272,7 +272,7 @@ def compare_pkg_lists(astr, bstr):
         if k in depverb:
             dva = depvera[k]
             dvb = depverb[k]
-            if dva != dvb:
+            if dva and dvb and dva != dvb:
                 if bb.utils.vercmp(split_version(dva), split_version(dvb)) < 0:
                     remove.append(k)
 
