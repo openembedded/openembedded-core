@@ -248,10 +248,6 @@ def check_sanity_validmachine(sanity_data):
     if sanity_data.getVar('TUNE_ARCH', True) == 'INVALID':
         messages = messages + 'TUNE_ARCH is unset. Please ensure your MACHINE configuration includes a valid tune configuration file which will set this correctly.\n'
 
-    # Check TARGET_ARCH is set correctly
-    if sanity_data.getVar('TARGE_ARCH', False) == '${TUNE_ARCH}':
-        messages = messages + 'TARGET_ARCH is being overwritten, likely by your MACHINE configuration files.\nPlease use a valid tune configuration file which should set this correctly automatically\nand avoid setting this in the machine configuration. See the OE-Core mailing list for more information.\n'
-    
     # Check TARGET_OS is set
     if sanity_data.getVar('TARGET_OS', True) == 'INVALID':
         messages = messages + 'Please set TARGET_OS directly, or choose a MACHINE or DISTRO that does so.\n'
