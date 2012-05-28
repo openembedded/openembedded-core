@@ -406,7 +406,7 @@ def check_sanity(sanity_data):
 
     if missing != "":
         missing = missing.rstrip(',')
-        messages = messages + "Please install following missing utilities: %s\n" % missing
+        messages = messages + "Please install the following missing utilities: %s\n" % missing
 
     pseudo_msg = check_pseudo_wrapper()
     if pseudo_msg != "":
@@ -428,7 +428,7 @@ def check_sanity(sanity_data):
 
     oes_bb_conf = sanity_data.getVar( 'OES_BITBAKE_CONF', True)
     if not oes_bb_conf:
-        messages = messages + 'You do not include OpenEmbeddeds version of conf/bitbake.conf. This means your environment is misconfigured, in particular check BBPATH.\n'
+        messages = messages + 'You do not include the OpenEmbedded version of conf/bitbake.conf. This means your environment is misconfigured, in particular check BBPATH.\n'
 
     nolibs = sanity_data.getVar('NO32LIBS', True)
     if not nolibs:
