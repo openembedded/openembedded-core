@@ -4,7 +4,16 @@
 
 SANITY_REQUIRED_UTILITIES ?= "patch diffstat texi2html makeinfo svn bzip2 tar gzip gawk chrpath wget cpio"
 
-def raise_sanity_error(msg):
+def raise_sanity_error(msg, d):
+    if d.getVar("SANITY_USE_EVENTS", True) == "1":
+        # FIXME: handle when BitBake version is too old to support bb.event.SanityCheckFailed
+        # We can just fire the event directly once the minimum version is bumped beyond 1.15.1
+        try:
+            bb.event.fire(bb.event.SanityCheckFailed(msg), d)
+            return
+        except AttributeError:
+            pass
+
     bb.fatal(""" OE-core's config sanity checker detected a potential misconfiguration.
     Either fix the cause of this error or at your own risk disable the checker (see sanity.conf).
     Following is the list of potential problems / advisories:
@@ -295,7 +304,7 @@ def check_sanity(sanity_data):
         return
 
     if 0 == os.getuid():
-        raise_sanity_error("Do not use Bitbake as root.")
+        raise_sanity_error("Do not use Bitbake as root.", sanity_data)
 
     messages = ""
 
@@ -529,7 +538,7 @@ def check_sanity(sanity_data):
         messages = messages + "Error, you have a space in your COREBASE directory path. Please move the installation to a directory which doesn't include a space."
 
     if messages != "":
-        raise_sanity_error(messages)
+        raise_sanity_error(messages, sanity_data)
 
 # Create a copy of the datastore and finalise it to ensure appends and 
 # overrides are set - the datastore has yet to be finalised at ConfigParsed
@@ -545,6 +554,7 @@ python check_sanity_eventhandler() {
         check_sanity(sanity_data)
     elif bb.event.getName(e) == "SanityCheck":
         sanity_data = copy_data(e)
+        sanity_data.setVar("SANITY_USE_EVENTS", "1")
         check_sanity(sanity_data)
         bb.event.fire(bb.event.SanityCheckPassed(), e.data)
 
