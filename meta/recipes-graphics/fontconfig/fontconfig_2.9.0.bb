@@ -12,22 +12,22 @@ HOMEPAGE = "http://www.fontconfig.org"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=fontconfig"
 
 LICENSE = "MIT-style & MIT & PD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=f3ad4145dea6ca7efa2f1bee8165a7a1 \
-                    file://src/fcfreetype.c;endline=45;md5=bc3dd139e2f7245a02fde5545b203a6f \
-                    file://src/fccache.c;beginline=1020;endline=1035;md5=0326cfeb4a7333dd4dd25fbbc4b9f27f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=dc5b39c592e47a22dbec44855988d2a0 \
+                    file://src/fcfreetype.c;endline=45;md5=5d9513e3196a1fbfdfa94051c09dfc84 \
+                    file://src/fccache.c;beginline=1077;endline=1092;md5=0326cfeb4a7333dd4dd25fbbc4b9f27f"
 
 SECTION = "libs"
 
 DEPENDS = "expat freetype zlib"
 
-PR = "r4"
+PR = "r0"
 
 SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
            file://fix-pkgconfig.patch \
            file://97_fontconfig"
 
-SRC_URI[md5sum] = "77e15a92006ddc2adbb06f840d591c0e"
-SRC_URI[sha256sum] = "fa2a1c6eea654d9fce7a4b1220f10c99cdec848dccaf1625c01f076b31382335"
+SRC_URI[md5sum] = "26c83855ed256b5c032baae032fadc4f"
+SRC_URI[sha256sum] = "ca7e25071cf044bdcdaf7c48845243c115b9269b4e369c6bd78a29e71f01b41a"
 
 PACKAGES =+ "fontconfig-utils-dbg fontconfig-utils "
 FILES_fontconfig-utils-dbg = "${bindir}/*.dbg"
@@ -66,22 +66,18 @@ do_configure_append () {
 	sed -i 's|LDFLAGS =.*|LDFLAGS =|' fc-case/Makefile
 	sed -i 's|LDFLAGS =.*|LDFLAGS =|' fc-glyphname/Makefile
 	sed -i 's|LDFLAGS =.*|LDFLAGS =|' fc-lang/Makefile
-	sed -i 's|LDFLAGS =.*|LDFLAGS =|' fc-arch/Makefile
 
 	sed -i 's|CFLAGS =.*|CFLAGS =${BUILD_CFLAGS}|' fc-case/Makefile
 	sed -i 's|CFLAGS =.*|CFLAGS =${BUILD_CFLAGS}|' fc-glyphname/Makefile
 	sed -i 's|CFLAGS =.*|CFLAGS =${BUILD_CFLAGS}|' fc-lang/Makefile
-	sed -i 's|CFLAGS =.*|CFLAGS =${BUILD_CFLAGS}|' fc-arch/Makefile
 
 	sed -i 's|CPPFLAGS =.*|CPPFLAGS =${BUILD_CPPFLAGS}|' fc-case/Makefile
 	sed -i 's|CPPFLAGS =.*|CPPFLAGS =${BUILD_CPPFLAGS}|' fc-glyphname/Makefile
 	sed -i 's|CPPFLAGS =.*|CPPFLAGS =${BUILD_CPPFLAGS}|' fc-lang/Makefile
-	sed -i 's|CPPFLAGS =.*|CPPFLAGS =${BUILD_CPPFLAGS}|' fc-arch/Makefile
 
 	sed -i 's|CXXFLAGS =.*|CFLAGS =${BUILD_CXXFLAGS}|' fc-case/Makefile
 	sed -i 's|CXXFLAGS =.*|CFLAGS =${BUILD_CXXFLAGS}|' fc-glyphname/Makefile
 	sed -i 's|CXXFLAGS =.*|CFLAGS =${BUILD_CXXFLAGS}|' fc-lang/Makefile
-	sed -i 's|CXXFLAGS =.*|CFLAGS =${BUILD_CXXFLAGS}|' fc-arch/Makefile
 
 }
 
