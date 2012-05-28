@@ -7,16 +7,20 @@
 
 import sys
 import os
+from distutils.version import LooseVersion
 
 # Ensure PythonGit is installed (buildhistory_analysis needs it)
 try:
     import git
 except ImportError:
-    print("Please install PythonGit 0.3.1 or later in order to use this script")
+    print("Please install GitPython (python-git) 0.3.1 or later in order to use this script")
     sys.exit(1)
 
-
 def main():
+    if LooseVersion(git.__version__) < '0.3.1':
+        print("Version of GitPython is too old, please install GitPython (python-git) 0.3.1 or later in order to use this script")
+        sys.exit(1)
+
     if (len(sys.argv) < 3):
         print("Report significant differences in the buildhistory repository")
         print("Syntax: %s <buildhistory-path> <since-revision> [to-revision]" % os.path.basename(sys.argv[0]))
