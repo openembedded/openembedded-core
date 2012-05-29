@@ -14,6 +14,7 @@
 import sys, os
 import hashlib
 import stat
+import subprocess
 
 if len(sys.argv) < 1:
     print("Error, rpm command not specified")
@@ -44,7 +45,7 @@ for path in paths:
         continue
 
     if os.path.exists(path + "/solvedb"):
-        os.system("rm -rf %s" % (path + "/solvedb"))
+        subprocess.call("rm -rf %s" % (path + "/solvedb"), shell=True)
     os.mkdir(path + "/solvedb")
     m = open(path + "/solvedb/manifest", "w")
     m.write("# Dynamically generated solve manifest\n")
@@ -56,7 +57,7 @@ for path in paths:
 			--noaid --nodeps --noorder --noscripts --notriggers --noparentdirs --nolinktos --stats \
 			--ignoresize --nosignature --nodigest -D "__dbi_txn create nofsync" \
 			' + path + '/solvedb/manifest'
-    os.system(cmd)
+    subprocess.call(cmd, shell=True)
 
     open(path + "/solvedb.checksum", "w").write(checksum)
     open(path + "/solvedb.done", "w")
