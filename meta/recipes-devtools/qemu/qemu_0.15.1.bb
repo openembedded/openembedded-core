@@ -3,7 +3,7 @@ require qemu.inc
 LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
                     file://COPYING.LIB;endline=24;md5=c04def7ae38850e7d3ef548588159913"
 
-PR = "r7"
+PR = "r8"
 
 FILESPATH = "${FILE_DIRNAME}/qemu-${PV}"
 FILESDIR = "${WORKDIR}"
@@ -19,6 +19,7 @@ SRC_URI = "\
     file://larger_default_ram_size.patch \
     file://arm-bgr.patch \
     file://a4d1f142542935b90d2eb30f3aead4edcf455fe6.patch \
+    file://dummy-gl-config.patch \
     "
 
 # Only use the GL passthrough patches for native/nativesdk versions
@@ -31,6 +32,7 @@ QEMUGLPATCHES = "\
     file://qemugl-fix.patch \
     file://opengl-sdl-fix.patch \
     file://opengl-args-copy-fix.patch \
+    file://opengl-disable-option.patch \
     "
 
 SRC_URI_append_virtclass-native = "\

@@ -19,26 +19,6 @@ EXTRA_OECONF += "--target-list=${@get_qemu_target_list(d)} --disable-werror --di
 
 inherit autotools
 
-# For our gl powered QEMU you need libGL and SDL headers
-do_configure_prepend_virtclass-native() {
-    libgl='no'
-    libsdl='no'
-
-    test -e /usr/lib/libGL.so -a -e /usr/lib/libGLU.so && libgl='yes'
-    test -e /usr/lib64/libGL.so -a -e /usr/lib64/libGLU.so && libgl='yes'
-    test -e /usr/lib/*-linux-gnu/libGL.so -a -e /usr/lib/*-linux-gnu/libGLU.so && libgl='yes'
-
-    test -e /usr/lib/pkgconfig/sdl.pc -o -e /usr/lib64/pkgconfig/sdl.pc -o -e /usr/include/SDL/SDL.h && libsdl='yes'
-
-
-    if [ "$libsdl" != 'yes' -o "$libgl" != 'yes' ]; then
-       echo "You need libGL.so and libGLU.so to exist in your library path and the development headers for SDL installed to build qemu-native.
-       Ubuntu package names are: libgl1-mesa-dev, libglu1-mesa-dev and libsdl1.2-dev.
-       Fedora package names are: mesa-libGL mesa-libGLU SDL-devel."
-       exit 1;
-    fi
-}
-
 do_configure() {
     # Handle distros such as CentOS 5 32-bit that do not have kvm support
     KVMOPTS="--disable-kvm"
@@ -56,6 +36,9 @@ do_install () {
 	install -d ${D}${datadir}/qemu
 	install -m 0755 ${WORKDIR}/powerpc_rom.bin ${D}${datadir}/qemu
 }
+
+PACKAGECONFIG ??= "gl"
+PACKAGECONFIG[gl] = "--enable-gl-accel,--disable-gl-accel,,"
 
 DEPENDS_virtclass-native = "zlib-native alsa-lib-native glib-2.0-native"
 DEPENDS_virtclass-nativesdk = "zlib-nativesdk libsdl-nativesdk glib-2.0-nativesdk \
