@@ -167,9 +167,10 @@ python () {
                    "/^### ABI$/a\\\nCONFIG_%s=y\n\n" % ("${UCLIBC_ABI}"))
 }
 
-do_patch_append() {
-        os.system("ln -sf ${STAGING_INCDIR}/linux ${S}/include/linux")
-        os.system("ln -sf ${STAGING_INCDIR}/asm ${S}/include/asm")
+python do_patch_append() {
+        import subprocess
+        subprocess.call("ln -sf ${STAGING_INCDIR}/linux ${S}/include/linux", shell=True)
+        subprocess.call("ln -sf ${STAGING_INCDIR}/asm ${S}/include/asm", shell=True)
 }
 
 do_configure() {

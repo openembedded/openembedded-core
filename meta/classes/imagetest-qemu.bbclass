@@ -28,6 +28,7 @@ def qemuimagetest_main(d):
     import re
     import os
     import shutil
+    import subprocess
     
     """
     Test Controller for automated testing.
@@ -58,7 +59,7 @@ def qemuimagetest_main(d):
         logpath = d.getVar('TEST_LOG', True)
         bb.utils.mkdirhier("%s/%s" % (logpath, scen))
         caselog = os.path.join(logpath, "%s/log_%s.%s" % (scen, case, d.getVar('DATETIME', True)))
-        os.system("touch %s" % caselog)
+        subprocess.call("touch %s" % caselog, shell=True)
         
         """export TEST_TMP, TEST_RESULT, DEPLOY_DIR and QEMUARCH"""
         os.environ["PATH"] = d.getVar("PATH", True)
@@ -78,7 +79,7 @@ def qemuimagetest_main(d):
 
         """run Test Case"""
         bb.note("Run %s test in scenario %s" % (case, scen))
-        os.system("%s" % fulltestpath)
+        subprocess.call("%s" % fulltestpath, shell=True)
     
     """function to check testcase list and remove inappropriate cases"""
     def check_list(list):
@@ -168,7 +169,7 @@ def qemuimagetest_main(d):
     test_status = d.getVar('TEST_STATUS', True)
     if os.path.exists(test_status):
         os.remove(test_status)
-    os.system("touch %s" % test_status)
+    subprocess.call("touch %s" % test_status, shell=True)
 
     """initialize result file"""
     resultpath = d.getVar('TEST_RESULT', True)
@@ -180,7 +181,7 @@ def qemuimagetest_main(d):
 
     if os.path.exists(sresultfile):
         os.remove(sresultfile)
-    os.system("touch %s" % resultfile)
+    subprocess.call("touch %s" % resultfile, shell=True)
     os.symlink(resultfile, sresultfile)
     f = open(sresultfile, "a")
     f.write("\tTest Result for %s %s\n" % (machine, pname))

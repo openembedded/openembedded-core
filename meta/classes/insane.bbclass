@@ -267,6 +267,7 @@ def package_qa_check_unsafe_references_in_scripts(path, name, d, elf, messages):
 
 	if not elf:
 		import stat
+		import subprocess
 		pn = d.getVar('PN', True)
 
 		# Ensure we're checking an executable script
@@ -275,7 +276,7 @@ def package_qa_check_unsafe_references_in_scripts(path, name, d, elf, messages):
 			# grep shell scripts for possible references to /exec_prefix/
 			exec_prefix = d.getVar('exec_prefix', True)
 			statement = "grep -e '%s/' %s > /dev/null" % (exec_prefix, path)
-			if os.system(statement) == 0:
+			if subprocess.call(statement, shell=True) == 0:
 				error_msg = pn + ": Found a reference to %s/ in %s" % (exec_prefix, path)
 				package_qa_handle_error("unsafe-references-in-scripts", error_msg, d)
 				error_msg = "Shell scripts in base_bindir and base_sbindir should not reference anything in exec_prefix"
@@ -609,6 +610,8 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, d):
 
 # The PACKAGE FUNC to scan each package
 python do_package_qa () {
+    import subprocess
+
     bb.note("DO PACKAGE QA")
 
     logdir = d.getVar('T', True)
@@ -619,7 +622,7 @@ python do_package_qa () {
 
     if os.path.exists(compilelog):
         statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % compilelog
-        if os.system(statement) == 0:
+        if subprocess.call(statement, shell=True) == 0:
             bb.warn("%s: The compile log indicates that host include and/or library paths were used.\n \
         Please check the log '%s' for more information." % (pkg, compilelog))
 
@@ -628,7 +631,7 @@ python do_package_qa () {
 
     if os.path.exists(installlog):
         statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % installlog
-        if os.system(statement) == 0:
+        if subprocess.call(statement, shell=True) == 0:
             bb.warn("%s: The install log indicates that host include and/or library paths were used.\n \
         Please check the log '%s' for more information." % (pkg, installlog))
 
@@ -684,6 +687,8 @@ python do_qa_staging() {
 }
 
 python do_qa_configure() {
+    import subprocess
+
     configs = []
     workdir = d.getVar('WORKDIR', True)
     bb.note("Checking autotools environment for common misconfiguration")
@@ -691,7 +696,7 @@ python do_qa_configure() {
         statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % \
                     os.path.join(root,"config.log")
         if "config.log" in files:
-            if os.system(statement) == 0:
+            if subprocess.call(statement, shell=True) == 0:
                 bb.fatal("""This autoconf log indicates errors, it looked at host include and/or library paths while determining system capabilities.
 Rerun configure task after fixing this. The path was '%s'""" % root)
 
@@ -713,7 +718,7 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
        if gt not in deps:
           for config in configs:
               gnu = "grep \"^[[:space:]]*AM_GNU_GETTEXT\" %s >/dev/null" % config
-              if os.system(gnu) == 0:
+              if subprocess.call(gnu, shell=True) == 0:
                  bb.fatal("""%s required but not in DEPENDS for file %s.
 Missing inherit gettext?""" % (gt, config))
 

@@ -343,6 +343,7 @@ def compare_in_distro_packages_list(distro_check_dir, d):
     return matching_distros
 
 def create_log_file(d, logname):
+    import subprocess
     logpath = d.getVar('LOG_DIR', True)
     bb.utils.mkdirhier(logpath)
     logfn, logsuffix = os.path.splitext(logname)
@@ -351,7 +352,7 @@ def create_log_file(d, logname):
             slogfile = os.path.join(logpath, logname)
             if os.path.exists(slogfile):
                     os.remove(slogfile)
-            os.system("touch %s" % logfile)
+            subprocess.call("touch %s" % logfile, shell=True)
             os.symlink(logfile, slogfile)
             d.setVar('LOG_FILE', logfile)
     return logfile

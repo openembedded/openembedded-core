@@ -145,6 +145,7 @@ def sstate_install(ss, d):
 
 def sstate_installpkg(ss, d):
     import oe.path
+    import subprocess
 
     def prepdir(dir):
         # remove dir if it exists, ensure any parent directories do exist
@@ -195,7 +196,7 @@ def sstate_installpkg(ss, d):
 	sstate_hardcode_cmd = "sed -e 's:^:%s:g' %s | xargs %s" % (sstateinst, fixmefn, sstate_sed_cmd)
 
 	print "Replacing fixme paths in sstate package: %s" % (sstate_hardcode_cmd)
-	os.system(sstate_hardcode_cmd)
+	subprocess.call(sstate_hardcode_cmd, shell=True)
 
         # Need to remove this or we'd copy it into the target directory and may 
         # conflict with another writer
@@ -309,6 +310,8 @@ python sstate_cleanall() {
 }
 
 def sstate_hardcode_path(d):
+	import subprocess
+
 	# Need to remove hardcoded paths and fix these when we install the
 	# staging packages.
 	#
@@ -343,14 +346,14 @@ def sstate_hardcode_path(d):
 	sstate_hardcode_cmd = "%s | xargs %s | %s | xargs --no-run-if-empty %s" % (sstate_scan_cmd, sstate_grep_cmd, sstate_filelist_cmd, sstate_sed_cmd)
 
 	print "Removing hardcoded paths from sstate package: '%s'" % (sstate_hardcode_cmd)
-	os.system(sstate_hardcode_cmd)
+	subprocess.call(sstate_hardcode_cmd, shell=True)
 
         # If the fixmefn is empty, remove it..
 	if os.stat(fixmefn).st_size == 0:
 		os.remove(fixmefn)
 	else:
 		print "Replacing absolute paths in fixmepath file: '%s'" % (sstate_filelist_relative_cmd)
-		os.system(sstate_filelist_relative_cmd)
+		subprocess.call(sstate_filelist_relative_cmd, shell=True)
 
 def sstate_package(ss, d):
     import oe.path

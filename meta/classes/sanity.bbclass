@@ -282,6 +282,7 @@ def check_sanity_validmachine(sanity_data):
 
 def check_sanity(sanity_data):
     from bb import note, error, data, __version__
+    import subprocess
 
     try:
         from distutils.version import LooseVersion
@@ -495,16 +496,16 @@ def check_sanity(sanity_data):
             f.write(current_abi)
         elif abi == "2" and current_abi == "3":
             bb.note("Converting staging from layout version 2 to layout version 3")
-            os.system(sanity_data.expand("mv ${TMPDIR}/staging ${TMPDIR}/sysroots"))
-            os.system(sanity_data.expand("ln -s sysroots ${TMPDIR}/staging"))
-            os.system(sanity_data.expand("cd ${TMPDIR}/stamps; for i in */*do_populate_staging; do new=`echo $i | sed -e 's/do_populate_staging/do_populate_sysroot/'`; mv $i $new; done"))
+            subprocess.call(sanity_data.expand("mv ${TMPDIR}/staging ${TMPDIR}/sysroots"), shell=True)
+            subprocess.call(sanity_data.expand("ln -s sysroots ${TMPDIR}/staging"), shell=True)
+            subprocess.call(sanity_data.expand("cd ${TMPDIR}/stamps; for i in */*do_populate_staging; do new=`echo $i | sed -e 's/do_populate_staging/do_populate_sysroot/'`; mv $i $new; done"), shell=True)
             f = file(abifile, "w")
             f.write(current_abi)
         elif abi == "3" and current_abi == "4":
             bb.note("Converting staging layout from version 3 to layout version 4")
             if os.path.exists(sanity_data.expand("${STAGING_DIR_NATIVE}${bindir_native}/${MULTIMACH_HOST_SYS}")):
-                os.system(sanity_data.expand("mv ${STAGING_DIR_NATIVE}${bindir_native}/${MULTIMACH_HOST_SYS} ${STAGING_BINDIR_CROSS}"))
-                os.system(sanity_data.expand("ln -s ${STAGING_BINDIR_CROSS} ${STAGING_DIR_NATIVE}${bindir_native}/${MULTIMACH_HOST_SYS}"))
+                subprocess.call(sanity_data.expand("mv ${STAGING_DIR_NATIVE}${bindir_native}/${MULTIMACH_HOST_SYS} ${STAGING_BINDIR_CROSS}"), shell=True)
+                subprocess.call(sanity_data.expand("ln -s ${STAGING_BINDIR_CROSS} ${STAGING_DIR_NATIVE}${bindir_native}/${MULTIMACH_HOST_SYS}"), shell=True)
 
             f = file(abifile, "w")
             f.write(current_abi)
@@ -512,7 +513,7 @@ def check_sanity(sanity_data):
             messages = messages + "Staging layout has changed. The cross directory has been deprecated and cross packages are now built under the native sysroot.\nThis requires a rebuild.\n"
         elif abi == "5" and current_abi == "6":
             bb.note("Converting staging layout from version 5 to layout version 6")
-            os.system(sanity_data.expand("mv ${TMPDIR}/pstagelogs ${SSTATE_MANIFESTS}"))
+            subprocess.call(sanity_data.expand("mv ${TMPDIR}/pstagelogs ${SSTATE_MANIFESTS}"), shell=True)
             f = file(abifile, "w")
             f.write(current_abi)
         elif abi == "7" and current_abi == "8":

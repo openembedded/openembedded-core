@@ -57,9 +57,10 @@ fakeroot do_install () {
 }
 
 python do_package_append() {
+	import subprocess
 	# Change permissions back the way they were, they probably had a reason...
 	workdir = d.getVar('WORKDIR', True)
-	os.system('chmod 0511 %s/install/cups/var/run/cups/certs' % workdir)
+	subprocess.call('chmod 0511 %s/install/cups/var/run/cups/certs' % workdir, shell=True)
 }
 
 PACKAGES =+ "${PN}-lib ${PN}-libimage"

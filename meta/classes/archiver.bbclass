@@ -362,6 +362,7 @@ def dumpdata(d):
 def create_diff_gz(d):
 	'''creating .diff.gz in ${DEPLOY_DIR_SRC}/${P}-${PR}.diff.g gz for mapping all content in 's' including patches to  xxx.diff.gz'''
 	import shutil
+	import subprocess
 
 	work_dir = d.getVar('WORKDIR', True)
 	exclude_from = d.getVar('ARCHIVE_EXCLUDE_FROM', True).split()
@@ -387,7 +388,7 @@ def create_diff_gz(d):
 			try:
 				shutil.copy(i, dest)
 			except IOError:
-				os.system('fakeroot cp -rf ' + i + " " + dest )
+				subprocess.call('fakeroot cp -rf ' + i + " " + dest, shell=True)
 	
 	bb.note("Creating .diff.gz in ${DEPLOY_DIR_SRC}/${P}-${PR}.diff.gz")
 	cmd = "LC_ALL=C TZ=UTC0 diff --exclude-from=" + work_dir + "/temp/exclude-from-file -Naur " + s + '.org' + ' ' +  s + " | gzip -c > " + diff_file

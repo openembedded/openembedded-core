@@ -183,7 +183,7 @@ def splitfile(file, debugfile, debugsrcdir, d):
     # The debug information is then processed for src references.  These
     # references are copied to debugsrcdir, if defined.
 
-    import commands, stat
+    import commands, stat, subprocess
 
     dvar = d.getVar('PKGD', True)
     pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
@@ -205,14 +205,14 @@ def splitfile(file, debugfile, debugsrcdir, d):
 
     # We need to extract the debug src information here...
     if debugsrcdir:
-	os.system("%s'%s' -b '%s' -d '%s' -i -l '%s' '%s'" % (pathprefix, debugedit, workparentdir, debugsrcdir, sourcefile, file))
+	subprocess.call("%s'%s' -b '%s' -d '%s' -i -l '%s' '%s'" % (pathprefix, debugedit, workparentdir, debugsrcdir, sourcefile, file), shell=True)
 
     bb.mkdirhier(os.path.dirname(debugfile))
 
-    os.system("%s'%s' --only-keep-debug '%s' '%s'" % (pathprefix, objcopy, file, debugfile))
+    subprocess.call("%s'%s' --only-keep-debug '%s' '%s'" % (pathprefix, objcopy, file, debugfile), shell=True)
 
     # Set the debuglink to have the view of the file path on the target
-    os.system("%s'%s' --add-gnu-debuglink='%s' '%s'" % (pathprefix, objcopy, debugfile, file))
+    subprocess.call("%s'%s' --add-gnu-debuglink='%s' '%s'" % (pathprefix, objcopy, debugfile, file), shell=True)
 
     if newmode:
         os.chmod(file, origmode)
@@ -225,7 +225,7 @@ def splitfile2(debugsrcdir, d):
     # The debug src information processed in the splitfile2 is further procecessed
     # and copied to the destination here.
 
-    import commands, stat
+    import commands, stat, subprocess
 
     sourcefile = d.expand("${WORKDIR}/debugsources.list")
     if debugsrcdir and os.path.isfile(sourcefile):
@@ -252,14 +252,14 @@ def splitfile2(debugsrcdir, d):
        processdebugsrc += "fgrep -z '%s' | "
        processdebugsrc += "(cd '%s' ; cpio -pd0mL --no-preserve-owner '%s%s' 2>/dev/null)"
 
-       os.system(processdebugsrc % (sourcefile, workbasedir, workparentdir, dvar, debugsrcdir))
+       subprocess.call(processdebugsrc % (sourcefile, workbasedir, workparentdir, dvar, debugsrcdir), shell=True)
 
        # The copy by cpio may have resulted in some empty directories!  Remove these
        for root, dirs, files in os.walk("%s%s" % (dvar, debugsrcdir)):
           for d in dirs:
               dir = os.path.join(root, d)
               #bb.note("rmdir -p %s" % dir)
-              os.system("rmdir -p %s 2>/dev/null" % dir)
+              subprocess.call("rmdir -p %s 2>/dev/null" % dir, shell=True)
 
        # Also remove debugsrcdir if its empty
        for p in nosuchdir[::-1]:
@@ -275,14 +275,14 @@ def runstrip(file, elftype, d):
     # 4 - executable
     # 8 - shared library
 
-    import commands, stat
+    import commands, stat, subprocess
 
     pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
     strip = d.getVar("STRIP", True)
 
     # Handle kernel modules specifically - .debug directories here are pointless
     if file.find("/lib/modules/") != -1 and file.endswith(".ko"):
-        return os.system("%s'%s' --strip-debug --remove-section=.comment --remove-section=.note --preserve-dates '%s'" % (pathprefix, strip, file))
+        return subprocess.call("%s'%s' --strip-debug --remove-section=.comment --remove-section=.note --preserve-dates '%s'" % (pathprefix, strip, file), shell=True)
 
     newmode = None
     if not os.access(file, os.W_OK) or os.access(file, os.R_OK):
@@ -301,7 +301,7 @@ def runstrip(file, elftype, d):
     stripcmd = "'%s' %s '%s'" % (strip, extraflags, file)
     bb.debug(1, "runstrip: %s" % stripcmd)
 
-    ret = os.system("%s%s" % (pathprefix, stripcmd))
+    ret = subprocess.call("%s%s" % (pathprefix, stripcmd), shell=True)
 
     if newmode:
         os.chmod(file, origmode)
@@ -427,6 +427,7 @@ python package_do_split_locales() {
 }
 
 python perform_packagecopy () {
+	import subprocess
 	dest = d.getVar('D', True)
 	dvar = d.getVar('PKGD', True)
 
@@ -434,9 +435,9 @@ python perform_packagecopy () {
 
 	# Start by package population by taking a copy of the installed 
 	# files to operate on
-	os.system('rm -rf %s/*' % (dvar))
+	subprocess.call('rm -rf %s/*' % (dvar), shell=True)
 	# Preserve sparse files and hard links
-	os.system('tar -cf - -C %s -ps . | tar -xf - -C %s' % (dest, dvar))
+	subprocess.call('tar -cf - -C %s -ps . | tar -xf - -C %s' % (dest, dvar), shell=True)
 }
 
 # We generate a master list of directories to process, we start by
@@ -668,7 +669,7 @@ python fixup_perms () {
 }
 
 python split_and_strip_files () {
-	import commands, stat, errno
+	import commands, stat, errno, subprocess
 
 	dvar = d.getVar('PKGD', True)
 	pn = d.getVar('PN', True)
@@ -838,7 +839,7 @@ python split_and_strip_files () {
 					os.unlink(fpath)
 					# This could leave an empty debug directory laying around
 					# take care of the obvious case...
-					os.system("rmdir %s 2>/dev/null" % os.path.dirname(fpath))
+					subprocess.call("rmdir %s 2>/dev/null" % os.path.dirname(fpath), shell=True)
 
 		# Process the debugsrcdir if requested...
 		# This copies and places the referenced sources for later debugging...
@@ -870,7 +871,7 @@ python split_and_strip_files () {
 }
 
 python populate_packages () {
-	import glob, stat, errno, re
+	import glob, stat, errno, re, subprocess
 
 	workdir = d.getVar('WORKDIR', True)
 	outdir = d.getVar('DEPLOY_DIR', True)
@@ -896,7 +897,7 @@ python populate_packages () {
 				package_list.append(pkg)
 	d.setVar('PACKAGES', ' '.join(package_list))
 	pkgdest = d.getVar('PKGDEST', True)
-	os.system('rm -rf %s' % pkgdest)
+	subprocess.call('rm -rf %s' % pkgdest, shell=True)
 
 	seen = []
 

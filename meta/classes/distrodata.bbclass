@@ -231,6 +231,7 @@ python do_checkpkg() {
 	import sys
 	import re
 	import tempfile
+	import subprocess
 
 	"""
 	sanity check to ensure same name and type. Match as many patterns as possible
@@ -373,7 +374,7 @@ python do_checkpkg() {
 		f.close()
 		if status != "ErrHostNoDir" and re.match("Err", status):
 			logpath = d.getVar('LOG_DIR', True)
-			os.system("cp %s %s/" % (f.name, logpath))
+			subprocess.call("cp %s %s/" % (f.name, logpath), shell=True)
 		os.unlink(f.name)
 		return status
 
@@ -432,7 +433,7 @@ python do_checkpkg() {
 		"""if host hasn't directory information, no need to save tmp file"""
 		if status != "ErrHostNoDir" and re.match("Err", status):
 			logpath = d.getVar('LOG_DIR', True)
-			os.system("cp %s %s/" % (f.name, logpath))
+			subprocess.call("cp %s %s/" % (f.name, logpath), shell=True)
 		os.unlink(f.name)
 		return status
 

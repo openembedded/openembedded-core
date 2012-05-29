@@ -15,6 +15,8 @@ python package_ipk_fn () {
 }
 
 python package_ipk_install () {
+	import subprocess
+
 	pkg = d.getVar('PKG', True)
 	pkgfn = d.getVar('PKGFN', True)
 	rootfs = d.getVar('IMAGE_ROOTFS', True)
@@ -52,14 +54,14 @@ python package_ipk_install () {
 
 
 	if not os.access(os.path.join(ipkdir,"Packages"), os.R_OK) or not os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"),os.R_OK):
-		ret = os.system('opkg-make-index -p %s %s ' % (os.path.join(ipkdir, "Packages"), ipkdir))
+		ret = subprocess.call('opkg-make-index -p %s %s ' % (os.path.join(ipkdir, "Packages"), ipkdir), shell=True)
 		if (ret != 0 ):
 			raise bb.build.FuncFailed
 		f = open(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"),"w")
 		f.close()
 
-	ret = os.system('opkg-cl  -o %s -f %s update' % (rootfs, conffile))
-	ret = os.system('opkg-cl  -o %s -f %s install %s' % (rootfs, conffile, pkgfn))
+	ret = subprocess.call('opkg-cl  -o %s -f %s update' % (rootfs, conffile), shell=True)
+	ret = subprocess.call('opkg-cl  -o %s -f %s install %s' % (rootfs, conffile, pkgfn), shell=True)
 	if (ret != 0 ):
 		raise bb.build.FuncFailed
 }
@@ -262,6 +264,7 @@ package_generate_archlist () {
 python do_package_ipk () {
 	import re, copy
 	import textwrap
+	import subprocess
 
 	workdir = d.getVar('WORKDIR', True)
 	outdir = d.getVar('PKGWRITEDIRIPK', True)
@@ -419,8 +422,8 @@ python do_package_ipk () {
 			conffiles.close()
 
 		os.chdir(basedir)
-		ret = os.system("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH", True), 
-                                                          d.getVar("OPKGBUILDCMD",1), pkg, pkgoutdir))
+		ret = subprocess.call("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH", True),
+                                                          d.getVar("OPKGBUILDCMD",1), pkg, pkgoutdir), shell=True)
 		if ret != 0:
 			bb.utils.unlockfile(lf)
 			raise bb.build.FuncFailed("opkg-build execution failed")

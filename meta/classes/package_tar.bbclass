@@ -9,6 +9,7 @@ python package_tar_fn () {
 }
 
 python package_tar_install () {
+	import subprocess
 	pkg = d.getVar('PKG', True)
 	pkgfn = d.getVar('PKGFN', True)
 	rootfs = d.getVar('IMAGE_ROOTFS', True)
@@ -29,12 +30,13 @@ python package_tar_install () {
 		bb.debug(1, "%s does not exist, skipping" % pkgfn)
 		raise bb.build.FuncFailed
 
-	ret = os.system('zcat %s | tar -xf -' % pkgfn)
+	ret = subprocess.call('zcat %s | tar -xf -' % pkgfn, shell=True)
 	if ret != 0:
 		raise bb.build.FuncFailed
 }
 
 python do_package_tar () {
+	import subprocess
 	workdir = d.getVar('WORKDIR', True)
 	if not workdir:
 		bb.error("WORKDIR not defined, unable to package")
@@ -85,7 +87,7 @@ python do_package_tar () {
 		if not glob('*'):
 			bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', True), localdata.getVar('PKGR', True)))
 			continue
-		ret = os.system("tar -czf %s %s" % (tarfn, '.'))
+		ret = subprocess.call("tar -czf %s %s" % (tarfn, '.'), shell=True)
 		if ret != 0:
 			bb.error("Creation of tar %s failed." % tarfn)
 }

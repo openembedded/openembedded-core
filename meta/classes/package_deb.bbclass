@@ -205,6 +205,7 @@ deb_log_check() {
 python do_package_deb () {
     import re, copy
     import textwrap
+    import subprocess
 
     workdir = d.getVar('WORKDIR', True)
     if not workdir:
@@ -384,7 +385,7 @@ python do_package_deb () {
             conffiles.close()
 
         os.chdir(basedir)
-        ret = os.system("PATH=\"%s\" dpkg-deb -b %s %s" % (localdata.getVar("PATH", True), root, pkgoutdir))
+        ret = subprocess.call("PATH=\"%s\" dpkg-deb -b %s %s" % (localdata.getVar("PATH", True), root, pkgoutdir), shell=True)
         if ret != 0:
             bb.utils.prunedir(controldir)
             bb.utils.unlockfile(lf)
