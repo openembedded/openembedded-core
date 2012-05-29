@@ -564,10 +564,10 @@ python do_checkpkg() {
 			gitproto = parm['protocol']
 		else:
 			gitproto = "git"
-		gitcmd = "git ls-remote %s://%s%s%s *tag* 2>&1" % (gitproto, gituser, host, path)
-		gitcmd2 = "git ls-remote %s://%s%s%s HEAD 2>&1" % (gitproto, gituser, host, path)
-		tmp = os.popen(gitcmd).read()
-		tmp2 = os.popen(gitcmd2).read()
+		gitcmd = "git ls-remote %s://%s%s%s *tag*" % (gitproto, gituser, host, path)
+		gitcmd2 = "git ls-remote %s://%s%s%s HEAD" % (gitproto, gituser, host, path)
+		tmp = bb.process.run(gitcmd)[0]
+		tmp2 = bb.process.run(gitcmd2)[0]
 		#This is for those repo have tag like: refs/tags/1.2.2
 		if tmp:
 			tmpline = tmp.split("\n")
@@ -613,9 +613,9 @@ python do_checkpkg() {
 		if 'rev' in parm:
 			pcurver = parm['rev']
 
-		svncmd = "svn info %s %s://%s%s/%s/ 2>&1" % (" ".join(options), svnproto, host, path, parm["module"])
+		svncmd = "svn info %s %s://%s%s/%s/" % (" ".join(options), svnproto, host, path, parm["module"])
 		print svncmd
-		svninfo = os.popen(svncmd).read()
+		svninfo = bb.process.run(svncmd)[0]
 		for line in svninfo.split("\n"):
 			if re.search("^Last Changed Rev:", line):
 				pupver = line.split(" ")[-1]

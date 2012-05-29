@@ -154,14 +154,29 @@ def package_qa_check_rpath(file,name, d, elf, messages):
     if not bad_dirs[0] in d.getVar('WORKDIR', True):
         bb.fatal("This class assumed that WORKDIR is ${TMPDIR}/work... Not doing any check")
 
-    output = os.popen("%s -B -F%%r#F '%s'" % (scanelf,file))
-    txt    = output.readline().split()
+    output, errors = bb.process.run("%s -B -F%%r#F '%s'" % (scanelf,file))
+    txt = output.split()
     for line in txt:
         for dir in bad_dirs:
             if dir in line:
                 messages.append("package %s contains bad RPATH %s in file %s" % (name, line, file))
 
 QAPATHTEST[useless-rpaths] = "package_qa_check_useless_rpaths"
+
+def package_qa_get_objdump(d, path):
+    """
+    Get the result of objdump, ignore the errors since not all files can be objdumped
+    """
+    env_path = d.getVar('PATH', True)
+    objdump = d.getVar('OBJDUMP', True)
+
+    try:
+        lines = ""
+        lines = bb.process.run("LC_ALL=C PATH=%s %s -p '%s'" % (env_path, objdump, path))[0]
+    except Exception:
+        sys.exc_clear()
+    return lines
+
 def package_qa_check_useless_rpaths(file, name, d, elf, messages):
     """
     Check for RPATHs that are useless but not dangerous
@@ -169,15 +184,12 @@ def package_qa_check_useless_rpaths(file, name, d, elf, messages):
     if not elf:
         return
 
-    objdump = d.getVar('OBJDUMP', True)
-    env_path = d.getVar('PATH', True)
-
     libdir = d.getVar("libdir", True)
     base_libdir = d.getVar("base_libdir", True)
 
     import re
     rpath_re = re.compile("\s+RPATH\s+(.*)")
-    for line in os.popen("LC_ALL=C PATH=%s %s -p '%s' 2> /dev/null" % (env_path, objdump, file), "r"):
+    for line in package_qa_get_objdump(d, file):
     	m = rpath_re.match(line)
 	if m:
 	   rpath = m.group(1)
@@ -369,7 +381,7 @@ def package_qa_check_desktop(path, name, d, elf, messages):
     """
     if path.endswith(".desktop"):
         desktop_file_validate = os.path.join(d.getVar('STAGING_BINDIR_NATIVE',True),'desktop-file-validate')
-        output = os.popen("%s %s" % (desktop_file_validate, path))
+        output, errors = bb.process.run("%s %s" % (desktop_file_validate, path))
         # This only produces output on errors
         for l in output:
             messages.append("Desktop file issue: " + l.strip())
@@ -392,14 +404,11 @@ def package_qa_hash_style(path, name, d, elf, messages):
     if not gnu_hash:
         return
 
-    objdump = d.getVar('OBJDUMP', True)
-    env_path = d.getVar('PATH', True)
-
     sane = False
     has_syms = False
 
     # If this binary has symbols, we expect it to have GNU_HASH too.
-    for line in os.popen("LC_ALL=C PATH=%s %s -p '%s' 2> /dev/null" % (env_path, objdump, path), "r"):
+    for line in package_qa_get_objdump(d, path):
         if "SYMTAB" in line:
             has_syms = True
         if "GNU_HASH" in line:

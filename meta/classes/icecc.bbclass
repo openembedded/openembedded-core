@@ -54,7 +54,7 @@ def create_path(compilers, bb, d):
         staging += "-kernel"
 
     #check if the icecc path is set by the user
-    icecc   = d.getVar('ICECC_PATH') or os.popen("which icecc").read()[:-1]
+    icecc = d.getVar('ICECC_PATH') or bb.process.run("which icecc")[0][:-1]
 
     # Create the dir if necessary
     try:
@@ -151,9 +151,9 @@ def icc_path(bb,d):
 
 def icc_get_tool(bb, d, tool):
     if icc_is_native(bb, d):
-        return os.popen("which %s" % tool).read()[:-1]
+        return bb.process.run("which %s" % tool)[0][:-1]
     elif icc_is_kernel(bb, d):
-        return os.popen("which %s" % get_cross_kernel_cc(bb, d)).read()[:-1]
+        return bb.process.run("which %s" % get_cross_kernel_cc(bb, d))[0][:-1]
     else:
         ice_dir = d.expand('${STAGING_BINDIR_TOOLCHAIN}')
         target_sys = d.expand('${TARGET_SYS}')

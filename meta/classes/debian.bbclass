@@ -60,10 +60,14 @@ python debian_package_name_hook () {
 				for f in files:
 					if so_re.match(f):
 						fp = os.path.join(root, f)
-						cmd = (d.getVar('BUILD_PREFIX', True) or "") + "objdump -p " + fp + " 2>/dev/null"
-						fd = os.popen(cmd)
-						lines = fd.readlines()
-						fd.close()
+						cmd = (d.getVar('BUILD_PREFIX', True) or "") + "objdump -p " + fp
+						try:
+							lines = ""
+							lines = bb.process.run(cmd)[0]
+						# Some ".so" maybe ascii text, e.g: /usr/lib64/libpthread.so,
+						# ingore those errors.
+						except Exception:
+							sys.exc_clear()
 						for l in lines:
 							m = re.match("\s+SONAME\s+([^\s]*)", l)
 							if m and not m.group(1) in sonames:
