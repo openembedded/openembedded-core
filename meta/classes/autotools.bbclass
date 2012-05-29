@@ -124,10 +124,9 @@ autotools_do_configure() {
 			# uninstalling data from the sysroot. See Yocto #861 for details.
 			# We avoid this by taking a copy here and then files cannot disappear.
 			if [ -d ${STAGING_DATADIR}/aclocal ]; then
-				mkdir -p ${B}/aclocal-copy/
 				# for scratch build this directory can be empty
 				# so avoid cp's no files to copy error
-				cp -r ${STAGING_DATADIR}/aclocal/. ${B}/aclocal-copy/
+				cp-noerror ${STAGING_DATADIR}/aclocal ${B}/aclocal-copy/
 				acpaths="$acpaths -I ${B}/aclocal-copy/"
 			fi
 			# autoreconf is too shy to overwrite aclocal.m4 if it doesn't look

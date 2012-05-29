@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+#
+# Allow copying of $1 to $2 but if files in $1 disappear during the copy operation,
+# don't error.
+#
+
+import sys
+import shutil
+
+try:
+    shutil.copytree(sys.argv[1], sys.argv[2])
+except shutil.Error:
+   pass
+
+
