@@ -271,7 +271,7 @@ python base_eventhandler() {
 }
 
 addtask configure after do_patch
-do_configure[dirs] = "${CCACHE_DIR} ${S} ${B}"
+do_configure[dirs] = "${S} ${B}"
 do_configure[deptask] = "do_populate_sysroot"
 base_do_configure() {
 	:
