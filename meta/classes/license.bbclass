@@ -90,11 +90,13 @@ license_create_manifest() {
 		for filename in $files; do
 			pkged_pn="$(sed -n 's/^PN: //p' ${filename})"
 			pkged_lic="$(sed -n '/^LICENSE: /{ s/^LICENSE: //; s/[+|&()*]/ /g; s/  */ /g; p }' ${filename})"
+			pkged_pv="$(sed -n 's/^PV: //p' ${filename})"
 			# check to see if the package name exists in the manifest. if so, bail.
 			if ! grep -q "PACKAGE NAME: ${pkg}" ${filename}; then
 				# exclude local recipes
 				if [ ! "${pkged_pn}" = "*locale*" ]; then
 					echo "PACKAGE NAME:" ${pkg} >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
+					echo "PACKAGE VERSION:" ${pkged_pv} >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
 					echo "RECIPE NAME:" ${pkged_pn} >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
 					echo "LICENSE: " >> ${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest
 					for lic in ${pkged_lic}; do
