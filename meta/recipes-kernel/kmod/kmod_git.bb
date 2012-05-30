@@ -23,7 +23,7 @@ do_install_append () {
         install -dm755 ${D}${base_sbindir}
         # add symlinks to kmod
         ln -s ..${base_bindir}/kmod ${D}${base_bindir}/lsmod
-        for tool in {ins,rm,dep}mod mod{info,probe}; do
+        for tool in insmod rmmod depmod modinfo modprobe; do
                 ln -s ..${base_bindir}/kmod ${D}${base_sbindir}/${tool}
         done
         # configuration directories
