@@ -149,7 +149,10 @@ class MakefileMaker:
 if __name__ == "__main__":
 
     if len( sys.argv ) > 1:
-        os.popen( "rm -f ./%s" % sys.argv[1] )
+        try:
+            os.unlink(sys.argv[1])
+        except Exception:
+            sys.exc_clear()
         outfile = file( sys.argv[1], "w" )
     else:
         outfile = sys.stdout
