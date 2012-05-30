@@ -6,8 +6,10 @@ ARCHIVE_EXCLUDE_FROM ?= ".pc autom4te.cache"
 ARCHIVE_TYPE ?= "TAR SRPM"
 DISTRO ?= "poky"
 PATCHES_ARCHIVE_WITH_SERIES = 'TRUE'
-SOURCE_ARCHIVE_LOG_WITH_SCRIPTS ?= 'logs_with_scripts'
-SOURCE_ARCHIVE_PACKAGE_TYPE ?= 'tar'
+SOURCE_ARCHIVE_LOG_WITH_SCRIPTS ?= '${@d.getVarFlag('ARCHIVER_MODE', 'log_type') \
+                                    if d.getVarFlag('ARCHIVER_MODE', 'log_type') != 'none' else 'logs_with_scripts'}'
+SOURCE_ARCHIVE_PACKAGE_TYPE ?= '${@d.getVarFlag('ARCHIVER_MODE','type') \
+                                 if d.getVarFlag('ARCHIVER_MODE', 'log_type')!= 'none' else 'tar'}'
 
 def get_bb_inc(d):
 	'''create a directory "script-logs" including .bb and .inc file in ${WORKDIR}'''
