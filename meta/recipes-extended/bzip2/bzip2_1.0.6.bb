@@ -22,7 +22,7 @@ CFLAGS_append = " -fPIC -fpic -Winline -fno-strength-reduce -D_FILE_OFFSET_BITS=
 inherit autotools update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
-ALTERNATIVE_LINKS = "${bindir}/bunzip2 ${bindir}/bzcat"
+ALTERNATIVE_${PN} = "bunzip2 bzcat"
 
 do_configure_prepend () {
 	cp ${WORKDIR}/configure.ac ${S}/
