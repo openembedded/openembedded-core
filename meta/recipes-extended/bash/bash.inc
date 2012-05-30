@@ -17,9 +17,9 @@ sbindir = "/sbin"
 EXTRA_OECONF = "--enable-job-control"
 export CC_FOR_BUILD = "${BUILD_CC}"
 
-ALTERNATIVE_NAME = "sh"
-ALTERNATIVE_PATH = "${base_bindir}/bash"
-ALTERNATIVE_LINK = "${base_bindir}/sh"
+ALTERNATIVE_${PN} = "sh"
+ALTERNATIVE_LINK_NAME[sh] = "${base_bindir}/sh"
+ALTERNATIVE_TARGET[sh] = "${base_bindir}/bash"
 ALTERNATIVE_PRIORITY = "100"
 
 export AUTOHEADER = "true"
