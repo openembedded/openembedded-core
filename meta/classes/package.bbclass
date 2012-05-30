@@ -1061,7 +1061,7 @@ python emit_pkgdata() {
 
 	def get_directory_size(dir):
 		if os.listdir(dir):
-			size = int(bb.process.run('du -sk %s' % dir)[0].split('\t')[0])
+			size = int(os.popen('du -sk %s' % dir).readlines()[0].split('\t')[0])
 		else:
 			size = 0
 		return size
@@ -1221,7 +1221,7 @@ python package_do_filedeps() {
 				rpfiles.append(os.path.join(root, file))
 
 		for files in chunks(rpfiles, 100):
-			dep_pipe = bb.process.Popen(rpmdeps + " " + " ".join(files), shell=True).stdout
+			dep_pipe = os.popen(rpmdeps + " " + " ".join(files))
 
 			process_deps(dep_pipe, pkg, provides_files, requires_files)
 
@@ -1263,15 +1263,11 @@ python package_do_shlibs() {
 
 	def linux_so(root, path, file):
 		needs_ldconfig = False
-		cmd = d.getVar('OBJDUMP', True) + " -p " + pipes.quote(os.path.join(root, file))
+		cmd = d.getVar('OBJDUMP', True) + " -p " + pipes.quote(os.path.join(root, file)) + " 2>/dev/null"
 		cmd = "PATH=\"%s\" %s" % (d.getVar('PATH', True), cmd)
-		try:
-			lines = ""
-			lines = bb.process.run(cmd)[0]
-		# Some ".so" maybe ascii text, e.g: /usr/lib64/libpthread.so,
-		# ingore those errors.
-		except Exception:
-			sys.exc_clear()
+		fd = os.popen(cmd)
+		lines = fd.readlines()
+		fd.close()
 		for l in lines:
 			m = re.match("\s+NEEDED\s+([^\s]*)", l)
 			if m:

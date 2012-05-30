@@ -349,7 +349,7 @@ python populate_packages_prepend () {
 		path = d.getVar("PATH", True)
 
 		cmd = "PATH=\"%s\" depmod -n -a -b %s -F %s/boot/System.map-%s %s" % (path, dvar, dvar, kernelver, kernelver_stripped)
-		f = bb.process.Popen(cmd, shell=True).stdout
+		f = os.popen(cmd, 'r')
 
 		deps = {}
 		pattern0 = "^(.*\.k?o):..*$"
