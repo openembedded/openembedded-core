@@ -10,12 +10,13 @@ LIC_FILES_CHKSUM = "file://Source/WebCore/rendering/RenderApplet.h;endline=22;md
 DEPENDS = "zlib enchant gnome-keyring libsoup-2.4 curl icu libxml2 cairo libxslt libxt libidn gnutls gtk+ gstreamer gst-plugins-base flex-native gperf-native perl-native-runtime sqlite3"
 DEPENDS += " ${@base_contains('DISTRO_FEATURES', 'opengl', 'virtual/libgl', '', d)}"
 DEPENDS_darwin8 = "curl icu libxml2 cairo libxslt libidn gnutls gtk+ gstreamer flex-native gperf-native perl-native-runtime sqlite3"
+DEPENDS_append_qemuppc += "pango"
 
 SRCREV_FORMAT = "source"
 
 SRCREV = "101488"
 PV = "1.7.2+svnr${SRCPV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "\
   svn://svn.webkit.org/repository/webkit/trunk/;module=Source;proto=http;name=source \
@@ -46,6 +47,13 @@ EXTRA_OECONF = "\
                 ${@base_contains('DISTRO_FEATURES', 'opengl', '--enable-webgl', '--disable-webgl', d)} \
                 UNICODE_CFLAGS=-D_REENTRANT \
                "
+
+#default unicode backend icu breaks in cross-compile when target and host owns different endian type
+EXTRA_OECONF_append_qemuppc += "--with-unicode-backend=glib"
+
+CPPFLAGS_append_qemuppc += "-I${STAGING_INCDIR}/pango-1.0 \
+                            -I${STAGING_LIBDIR}/glib-2.0/include \
+                            -I${STAGING_INCDIR}/glib-2.0"
 
 EXTRA_AUTORECONF = " -I Source/autotools "
 
