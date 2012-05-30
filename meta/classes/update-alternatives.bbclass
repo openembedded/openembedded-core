@@ -247,7 +247,11 @@ python perform_packagecopy_append () {
 		for alt_target in link_rename:
 			src = '%s/%s' % (pkgdest, alt_target)
 			dest = '%s/%s' % (pkgdest, link_rename[alt_target])
-			link_target = os.path.join(os.path.dirname(src), os.readlink(src))
+			link = os.readlink(src)
+			if os.path.isabs(link):
+				link_target = pkgdest + os.readlink(src)
+			else:
+				link_target = os.path.join(os.path.dirname(src), link)
 
 			if os.path.lexists(link_target):
 				# Ok, the link_target exists, we can rename
