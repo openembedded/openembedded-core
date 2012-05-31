@@ -1,0 +1,63 @@
+Define the x* wrappers for uclibc as well
+
+Upstream-Status: Pending
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: rpm-5.4.9/rpmio/rpmio.h
+===================================================================
+--- rpm-5.4.9.orig/rpmio/rpmio.h	2010-09-29 07:54:30.000000000 -0700
++++ rpm-5.4.9/rpmio/rpmio.h	2012-06-12 07:29:19.610745014 -0700
+@@ -23,7 +23,8 @@
+  */
+ /*@{*/
+ #if !defined(__LCLINT__) && !defined(__UCLIBC__) && defined(__GLIBC__) && \
+-	(__GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2))
++	(__GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2)) && \
++	!defined(__UCLIBC__)
+ #define USE_COOKIE_SEEK_POINTER 1
+ typedef _IO_off64_t 	_libio_off_t;
+ typedef _libio_off_t *	_libio_pos_t;
+Index: rpm-5.4.9/system.h
+===================================================================
+--- rpm-5.4.9.orig/system.h	2012-04-26 10:46:49.000000000 -0700
++++ rpm-5.4.9/system.h	2012-06-12 07:30:08.242747422 -0700
+@@ -410,7 +410,7 @@
+ #endif /* defined(__LCLINT__) */
+ 
+ /* Memory allocation via macro defs to get meaningful locations from mtrace() */
+-#if defined(__GNUC__)
++#if defined(__GNUC__) || defined(__UCLIBC__)
+ #define	xmalloc(_size) 		(malloc(_size) ? : vmefail(_size))
+ #define	xcalloc(_nmemb, _size)	(calloc((_nmemb), (_size)) ? : vmefail(_size))
+ #define	xrealloc(_ptr, _size)	(realloc((_ptr), (_size)) ? : vmefail(_size))
+Index: rpm-5.4.9/lib/librpm.vers
+===================================================================
+--- rpm-5.4.9.orig/lib/librpm.vers	2011-04-10 15:55:23.000000000 -0700
++++ rpm-5.4.9/lib/librpm.vers	2012-06-12 07:29:19.610745014 -0700
+@@ -405,6 +405,10 @@
+     specedit;
+     strict_erasures;
+     XrpmtsiInit;
++    xmalloc;
++    xrealloc;
++    xcalloc;
++    xstrdup;
+   local:
+     *;
+ };
+Index: rpm-5.4.9/rpmio/librpmio.vers
+===================================================================
+--- rpm-5.4.9.orig/rpmio/librpmio.vers	2012-05-07 07:38:23.000000000 -0700
++++ rpm-5.4.9/rpmio/librpmio.vers	2012-06-12 07:29:19.626745024 -0700
+@@ -994,6 +994,10 @@
+     mongo_simple_int_command;
+     mongo_simple_str_command;
+     mongo_update;
++    xmalloc;
++    xrealloc;
++    xcalloc;
++    xstrdup;
+   local:
+     *;
+ };
