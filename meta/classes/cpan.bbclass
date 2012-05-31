@@ -23,6 +23,7 @@ cpan_do_configure () {
 		# Use find since there can be a Makefile generated for each Makefile.PL
 		for f in `find -name Makefile.PL`; do
 			f2=`echo $f | sed -e 's/.PL//'`
+			test -f $f2 || continue
 			sed -i -e "s:\(PERL_ARCHLIB = \).*:\1${PERL_ARCHLIB}:" \
 				-e 's/perl.real/perl/' \
 				$f2
