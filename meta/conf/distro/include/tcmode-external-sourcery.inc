@@ -42,24 +42,39 @@ ENABLE_BINARY_LOCALE_GENERATION = ""
 
 TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
 
-# Translate to CodeSourcery's names for their optimized files in the toolchain
-def csl_target_core(d):
-    coredata = {
-        'armv7a-vfp-neon': 'armv7-a-neon',
-        'i586': 'sgxx-glibc',
-        'i686': 'sgxx-glibc',
-        'core2': 'sgxx-glibc',
-        'mips': 'mips32',
-        'mipsel': 'el',
-        'powerpc-nf': 'nof',
-        'ppce500': 'te500v1',
-        'ppce500mc': 'te500mc',
-        'ppce500v2': 'te500v2',
-        'ppce600': 'te600'
-    }
-    return coredata.get(d.getVar('TUNE_PKGARCH', True), '')
+# Point to the appropriate multilib sysroot from the external toolchain, whose
+# files will be extracted into the OE sysroot
+def exttc_run(d, cmd):
+    try:
+        return bb.process.run(cmd, shell=True, env={'PATH': d.getVar('PATH', True)})[0].rstrip()
+    except (OSError, bb.process.CmdError):
+        return ''
 
-CSL_TARGET_CORE ?= "${@csl_target_core(d)}"
+EXTERNAL_TOOLCHAIN_SYSROOT_CMD = "${TARGET_PREFIX}gcc ${TARGET_CC_ARCH} -print-sysroot"
+EXTERNAL_TOOLCHAIN_SYSROOT ??= "${@exttc_run(d, EXTERNAL_TOOLCHAIN_SYSROOT_CMD)}"
+
+# These bits are here temporarily to sidestep the need to use a separate set
+# of tune files to pass the appropriate multilib selection arguments to the
+# sourcery toolchain, as is needed to extract the sysroot content.
+CSL_MULTILIB_ARGS[i586] ?= "-msgxx-glibc"
+CSL_MULTILIB_ARGS[i686] ?= "-msgxx-glibc"
+CSL_MULTILIB_ARGS[core2] ?= "-msgxx-glibc"
+CSL_MULTILIB_ARGS[x86] ?= "-msgxx-glibc"
+CSL_MULTILIB_ARGS[x86-64] ?= "-msgxx-glibc"
+CSL_MULTILIB_ARGS[ppce500] ?= "-te500v1"
+CSL_MULTILIB_ARGS[ppce500mc] ?= "-te500mc"
+CSL_MULTILIB_ARGS[ppce500v2] ?= "-te500v2"
+CSL_MULTILIB_ARGS[ppce600] ?= "-te600"
+
+def csl_multilib_arg(d):
+    argument = d.getVarFlag('CSL_MULTILIB_ARGS', d.getVar('DEFAULTTUNE', True) or '')
+    if argument:
+        return argument
+    else:
+        return ''
+
+EXTERNAL_TOOLCHAIN_SYSROOT_CMD += "${@csl_multilib_arg(d)}"
+
 
 # Unfortunately, the CSL ia32 toolchain has non-prefixed binaries in its
 # bindir (e.g. gcc, ld). To avoid this messing up our build, we avoid adding

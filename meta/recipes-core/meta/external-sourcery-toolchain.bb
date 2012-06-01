@@ -24,7 +24,7 @@ PROVIDES += "\
 	virtual/linux-libc-headers \
 "
 PV = "${CSL_VER_MAIN}"
-PR = "r5"
+PR = "r6"
 
 #SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/${CSL_TARGET_SYS}/arm-${PV}-${TARGET_PREFIX}i686-pc-linux-gnu.tar.bz2"
 
@@ -32,10 +32,7 @@ SRC_URI = "file://SUPPORTED"
 
 do_install() {
 	# Use optimized files if available
-	sysroot="${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}/libc"
-	if [ -d $sysroot/${CSL_TARGET_CORE} ]; then
-		sysroot="$sysroot/${CSL_TARGET_CORE}"
-	fi
+	sysroot="${EXTERNAL_TOOLCHAIN_SYSROOT}"
 
 	cp -a $sysroot${base_libdir}/. ${D}${base_libdir}
 	cp -a $sysroot/etc/. ${D}${sysconfdir}
@@ -76,15 +73,11 @@ do_install() {
 
 SYSROOT_PREPROCESS_FUNCS += "external_toolchain_sysroot_adjust"
 external_toolchain_sysroot_adjust() {
-       if [ -n "${CSL_TARGET_CORE}" ]; then
-               rm -f ${SYSROOT_DESTDIR}/${CSL_TARGET_CORE}
-               ln -s . ${SYSROOT_DESTDIR}/${CSL_TARGET_CORE}
-       fi
-
-       if [ "${TUNE_PKGARCH}" = "i586" ]; then
-               rm -f ${SYSROOT_DESTDIR}/system32
-               ln -s . ${SYSROOT_DESTDIR}/system32
-       fi
+	dest_sysroot="$(${CC} -print-sysroot | sed -e's,^${STAGING_DIR_HOST},,; s,/$,,')"
+	if [ -n "$dest_sysroot" ]; then
+		rm -f ${SYSROOT_DESTDIR}/$dest_sysroot
+		ln -s . ${SYSROOT_DESTDIR}/$dest_sysroot
+	fi
 }
 
 PACKAGES =+ "libgcc libgcc-dev libstdc++ libstdc++-dev libstdc++-staticdev linux-libc-headers linux-libc-headers-dev gdbserver gdbserver-dbg"
