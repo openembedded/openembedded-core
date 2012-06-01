@@ -24,7 +24,7 @@ PROVIDES += "\
 	virtual/linux-libc-headers \
 "
 PV = "${CSL_VER_MAIN}"
-PR = "r6"
+PR = "r7"
 
 #SRC_URI = "http://www.codesourcery.com/public/gnu_toolchain/${CSL_TARGET_SYS}/arm-${PV}-${TARGET_PREFIX}i686-pc-linux-gnu.tar.bz2"
 
@@ -78,6 +78,10 @@ external_toolchain_sysroot_adjust() {
 		rm -f ${SYSROOT_DESTDIR}/$dest_sysroot
 		ln -s . ${SYSROOT_DESTDIR}/$dest_sysroot
 	fi
+
+	# If the usr/lib directory doesn't exist, the toolchain fails to even
+	# try to find crti.o in a completely different directory (usr/lib64)
+	install -d ${SYSROOT_DESTDIR}/usr/lib
 }
 
 PACKAGES =+ "libgcc libgcc-dev libstdc++ libstdc++-dev libstdc++-staticdev linux-libc-headers linux-libc-headers-dev gdbserver gdbserver-dbg"
