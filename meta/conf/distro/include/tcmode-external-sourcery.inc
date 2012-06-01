@@ -56,11 +56,8 @@ EXTERNAL_TOOLCHAIN_SYSROOT ??= "${@exttc_run(d, EXTERNAL_TOOLCHAIN_SYSROOT_CMD)}
 # These bits are here temporarily to sidestep the need to use a separate set
 # of tune files to pass the appropriate multilib selection arguments to the
 # sourcery toolchain, as is needed to extract the sysroot content.
-CSL_MULTILIB_ARGS[i586] ?= "-msgxx-glibc"
-CSL_MULTILIB_ARGS[i686] ?= "-msgxx-glibc"
-CSL_MULTILIB_ARGS[core2] ?= "-msgxx-glibc"
-CSL_MULTILIB_ARGS[x86] ?= "-msgxx-glibc"
-CSL_MULTILIB_ARGS[x86-64] ?= "-msgxx-glibc"
+TUNE_CCARGS_append_x86 = " -msgxx-glibc"
+
 CSL_MULTILIB_ARGS[ppce500] ?= "-te500v1"
 CSL_MULTILIB_ARGS[ppce500mc] ?= "-te500mc"
 CSL_MULTILIB_ARGS[ppce500v2] ?= "-te500v2"
