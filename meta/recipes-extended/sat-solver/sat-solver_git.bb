@@ -20,6 +20,7 @@ SRC_URI = "git://github.com/openSUSE/sat-solver.git;protocol=git \
            file://sat-solver_core.patch \
            file://fix_gcc-4.6.0_compile_issue.patch \
            file://0001-sat_xfopen.c-Forward-port-to-zlib-1.2.6-gzFile.patch \
+           file://futimes.patch \
           "
 
 S = "${WORKDIR}/git"
@@ -27,6 +28,8 @@ S = "${WORKDIR}/git"
 EXTRA_OECMAKE += "-DRPM5=RPM5 -DOE_CORE=OE_CORE"
 
 EXTRA_OECMAKE += " -DLIB=${@os.path.basename('${libdir}')}"
+
+TUNE_CCARGS_append_libc-uclibc = " -DUSE_OWN_QSORT=1 "
 
 inherit cmake pkgconfig
 
