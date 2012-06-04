@@ -1,0 +1,42 @@
+Upstream-Status:Pending
+
+Perl cannot cross build in a path containing a directory that has the
+name of "t".  As an example, you can make the perl build fail with
+"mkdir -p /tmp/build/t", go to the directory, unpack the sources,
+configure and cross build.
+
+You get an error like the following:
+    pod/buildtoc: no pods at pod/buildtoc line 305.
+    make[1]: *** [pod/perltoc.pod] Error 255
+
+The fix is to strip off the top directory that you are building in and
+then execute all the same logic as before against the path relative to
+the build directory.
+
+Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+---
+ pod/buildtoc |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/pod/buildtoc
++++ b/pod/buildtoc
+@@ -274,8 +274,10 @@ if ($Build{toc}) {
+   find \&getpods => abs_from_top('lib/');
+ 
+   sub getpods {
++    my $Top = $FindBin::Bin;
+     if (/\.p(od|m)$/) {
+       my $file = $File::Find::name;
++      $file =~ s!^$Top!!;
+       return if $file =~ qr!/lib/Pod/Functions.pm\z!; # Used only by pod itself
+       return if $file =~ m!(?:^|/)t/!;
+       return if $file =~ m!lib/Attribute/Handlers/demo/!;
+@@ -283,7 +285,7 @@ if ($Build{toc}) {
+       return if $file =~ m!lib/Math/BigInt/t/!;
+       return if $file =~ m!/Devel/PPPort/[Hh]arness|lib/Devel/Harness!i;
+       return if $file =~ m!XS/(?:APItest|Typemap)!;
+-      my $pod = $file;
++      my $pod = $file = $File::Find::name;
+       return if $pod =~ s/pm$/pod/ && -e $pod;
+       unless (open my $f, '<', $_) {
+ 	warn "$0: bogus <$file>: $!";
