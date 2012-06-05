@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 
 
 SECTION = "libs"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch"
@@ -18,11 +18,9 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "736a03daa9dc5873047d4eb4a9c22a16"
 SRC_URI[sha256sum] = "520629b4568b5c29b1991c8ffc267c8bdee5f223c7333c42a651b56f9b1c5431"
 
-# move libgpg-error-config into -dev package
-FILES_${PN} = "${libdir}/lib*.so.*"
-FILES_${PN}-dev += "${bindir}/*"
-
 inherit autotools binconfig pkgconfig gettext
+
+FILES_${PN}-dev += "${bindir}/gpg-error"
 
 do_install_append() {
 	# we don't have common lisp in OE
