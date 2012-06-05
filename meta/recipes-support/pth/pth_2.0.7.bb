@@ -26,6 +26,3 @@ do_configure() {
 	gnu-configize
 	oe_runconf
 }
-
-FILES_${PN} = "${libdir}/libpth.so.*"
-FILES_${PN}-dev += "${bindir}/pth-config"
