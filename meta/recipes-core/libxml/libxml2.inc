@@ -44,7 +44,7 @@ python populate_packages_prepend () {
 
 PACKAGES += "${PN}-utils"
 
-FILES_${PN}-dev += "${bindir}/*-config ${libdir}/xml2Conf.sh"
+FILES_${PN}-dev += "${libdir}/xml2Conf.sh"
 FILES_${PN}-utils += "${bindir}/*"
 
 BBCLASSEXTEND = "native nativesdk"
