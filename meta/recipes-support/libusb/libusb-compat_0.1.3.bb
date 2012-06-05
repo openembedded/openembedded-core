@@ -16,7 +16,7 @@ PROVIDES = "libusb virtual/libusb0"
 BBCLASSEXTEND = "native nativesdk"
 
 PE = "1"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-compat-${PV}.tar.bz2 \
            file://0.1.0-beta1-gcc3.4-fix.patch"
@@ -34,5 +34,3 @@ do_install_append() {
 		mv ${D}${base_libdir}/pkgconfig ${D}${libdir}
 	fi
 }
-
-FILES_${PN}-dev += "${base_libdir}/*.so ${base_libdir}/*.la"
