@@ -26,10 +26,8 @@ do_install_append() {
 	rmdir ${D}${sbindir}
 }
 
-ARM_INSTRUCTION_SET = "arm"
+FILES_${PN}-dev += "${bindir}/dumpsexp ${bindir}/hmac256"
 
-# move libgcrypt-config into -dev package
-FILES_${PN} = "${libdir}/lib*.so.*"
-FILES_${PN}-dev += "${bindir} ${libdir}/pkgconfig/*.pc"
+ARM_INSTRUCTION_SET = "arm"
 
 BBCLASSEXTEND = "native"
