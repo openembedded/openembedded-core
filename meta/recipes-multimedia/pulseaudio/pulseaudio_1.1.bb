@@ -8,7 +8,7 @@ inherit gettext perlnative
 
 SRC_URI = "http://freedesktop.org/software/pulseaudio/releases/pulseaudio-${PV}.tar.xz \
   file://volatiles.04_pulse \
-  file://pulseaudo_fix_for_x32.patch \
+  file://pulseaudio_fix_for_x32.patch \
 "
 
 SRC_URI[md5sum] = "17d21df798cee407b769c6355fae397a"
