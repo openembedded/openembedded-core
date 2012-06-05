@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3\
                     file://EXCEPTION;md5=570adcb0c1218ab57f2249c67d0ce417"
 DEPENDS = "libtool bzip2 zlib"
 
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/elfutils-${PV}.tar.bz2"
 
@@ -74,8 +74,12 @@ FILES_${PN}-binutils = "\
     ${bindir}/eu-readelf \
     ${bindir}/eu-size \
     ${bindir}/eu-strip"
-# Fix library issues
-FILES_${PN} =+ "${libdir}/*-${PV}.so"
 
-# The elfutils package contains symlinks that trip up insane
+# Some packages have the version preceeding the .so instead properly
+# versioned .so.<version>, so we need to reorder and repackage.
+FILES_${PN} += "${libdir}/*-${PV}.so ${base_libdir}/*-${PV}.so"
+FILES_SOLIBSDEV = "${libdir}/libasm.so ${libdir}/libdw.so ${libdir}/libelf.so"
+
+# The package contains symlinks that trip up insane
 INSANE_SKIP_${PN} = "dev-so"
+

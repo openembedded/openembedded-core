@@ -14,7 +14,7 @@ BBCLASSEXTEND = "native nativesdk"
 #FIXME: remove the following
 ARM_INSTRUCTION_SET = "arm"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2 \
            file://fix-tstamp-declaration.patch"
@@ -35,7 +35,9 @@ PKGSUFFIX = ""
 PKGSUFFIX_virtclass-nativesdk = "-nativesdk"
 
 PACKAGES =+ "alsa-server${PKGSUFFIX} libasound${PKGSUFFIX} alsa-conf-base${PKGSUFFIX} alsa-conf${PKGSUFFIX} alsa-doc${PKGSUFFIX} alsa-dev${PKGSUFFIX}"
-FILES_${PN}-dbg += "${libdir}/alsa-lib/*/.debu*"
+FILES_${PN} += "${libdir}/${BPN}/smixer/*.so"
+FILES_${PN}-dbg += "${libdir}/${BPN}/smixer/.debug"
+FILES_${PN}-dev += "${libdir}/${BPN}/smixer/*.la"
 FILES_libasound${PKGSUFFIX} = "${libdir}/libasound.so.*"
 FILES_alsa-server${PKGSUFFIX} = "${bindir}/*"
 FILES_alsa-conf${PKGSUFFIX} = "${datadir}/alsa/"
