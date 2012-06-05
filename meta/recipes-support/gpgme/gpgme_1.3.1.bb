@@ -17,7 +17,7 @@ DEPENDS = "libgpg-error libassuan ${PTH}"
 PTH_libc-uclibc = "npth"
 PTH = "pth"
 
-PR = "r2"
+PR = "r3"
 
 EXTRA_OECONF = "--with-pth=${STAGING_DIR_HOST} --without-pth-test \
                 --with-gpg=${bindir}/gpg --without-gpgsm"
@@ -27,8 +27,7 @@ inherit autotools binconfig
 PACKAGES =+ "${PN}-pth ${PN}-pthread"
 FILES_${PN}-pth = "${libdir}/libgpgme-pth.so.*"
 FILES_${PN}-pthread = "${libdir}/libgpgme-pthread.so.*"
-FILES_${PN} = "${libdir}/libgpgme.so.*"
-FILES_${PN}-dev += "${bindir}/gpgme-config ${datadir}/common-lisp/source/gpgme/*"
+FILES_${PN}-dev += "${datadir}/common-lisp/source/gpgme/*"
 
 do_install_append() {
 	rmdir ${D}/usr/libexec
