@@ -17,6 +17,8 @@ def _mk_options_parser():
 			  help="image format (...); default format ...")
 	parser.add_option("-o", "--output", dest="output", metavar="PATH", default=None,
 			  help="output path (file or directory) where charts are stored")
+	parser.add_option("-s", "--split", dest="num", type=int, default=1,
+			  help="split the output chart into <NUM> charts, only works with \"-o PATH\"")
 	parser.add_option("-n", "--no-prune", action="store_false", dest="prune", default=True,
 			  help="do not prune the process tree")
 	parser.add_option("-q", "--quiet", action="store_true", dest="quiet", default=False,
@@ -59,8 +61,16 @@ def main(argv=None):
 			gui.show(res)
 		else:
 			filename = _get_filename(args, options)
-			batch.render(res, options.format, filename)
-			print "bootchart written to", filename
+			res_list = parsing.split_res(res, options.num)
+			n = 1
+			for r in res_list:
+				if len(res_list) == 1:
+					f = filename + "." + options.format
+				else:
+					f = filename + "_" + str(n) + "." + options.format
+					n = n + 1
+				batch.render(r, options.format, f)
+				print "bootchart written to", f
 		return 0
 	except parsing.ParseError, ex:
 		print("Parse error: %s" % ex)

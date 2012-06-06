@@ -226,3 +226,39 @@ def parse(paths, prune):
     #monitored_app = state.headers.get("profile.process")
     #proc_tree = ProcessTree(state.ps_stats, monitored_app, prune)
     return state
+
+def split_res(res, n):
+    """ Split the res into n pieces """
+    res_list = []
+    if n > 1:
+        s_list = sorted(res.start.keys())
+        frag_size = len(s_list) / float(n)
+        # Need the top value
+        if frag_size > int(frag_size):
+            frag_size = int(frag_size + 1)
+        else:
+            frag_size = int(frag_size)
+
+        start = 0
+        end = frag_size
+        while start < end:
+            state = ParserState()
+            for i in range(start, end):
+                # Add these lines for reference
+                #state.processes[pn + ":" + task] = [start, end]
+                #state.start[start] = pn + ":" + task
+                #state.end[end] = pn + ":" + task
+                p = res.start[s_list[i]]
+                s = s_list[i]
+                e = res.processes[p][1]
+                state.processes[p] = [s, e]
+                state.start[s] = p
+                state.end[e] = p
+            start = end
+            end = end + frag_size
+            if end > len(s_list):
+                end = len(s_list)
+            res_list.append(state)
+    else:
+        res_list.append(res)
+    return res_list
