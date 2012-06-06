@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://docs/LICENSE.TXT;md5=28d5381b1bef2649c59f20c20bae4f39
 
 SECTION = "libs"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
            file://no-hardcode.patch"
@@ -48,9 +48,6 @@ do_configure_virtclass-native() {
 do_compile_prepend() {
 	${BUILD_CC} -o objs/apinames src/tools/apinames.c
 }
-
-FILES_${PN} = "${libdir}/lib*${SOLIBS}"
-FILES_${PN}-dev += "${bindir}"
 
 BBCLASSEXTEND = "native"
 
