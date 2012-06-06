@@ -54,6 +54,7 @@ fakeroot do_install () {
 
    # This directory gets installed with perms 511, which makes packaging fail
    chmod 0711 "${D}/${localstatedir}/run/cups/certs"
+   rmdir ${D}/${libdir}/${BPN}/driver
 }
 
 python do_package_append() {
