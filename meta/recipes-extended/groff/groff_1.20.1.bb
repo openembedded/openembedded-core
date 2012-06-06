@@ -62,5 +62,7 @@ do_install_append_virtclass-native() {
 		-M${STAGING_DIR_NATIVE}${datadir_native}/groff/${PV}/tmac
 }
 
+FILES_${PN} += "${libdir}/${BPN}/site-tmac \
+                ${libdir}/${BPN}/groffer/"
 
 BBCLASSEXTEND = "native"
