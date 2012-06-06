@@ -9,7 +9,7 @@ LICENSE = "GPLv2 & LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=f650d5f5af1e9648fe0b40e290d3adbb \
                     file://ltt/ltt.h;beginline=2;endline=18;md5=8b7da9190028c50396d97fc85bad0da9 \
                     file://lttv/lttv/traceset.c;beginline=2;endline=17;md5=bcab42863b64b41d153bf81bbe2490a6"
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "gtk+ pango popt"
 
@@ -28,6 +28,7 @@ inherit autotools
 
 LEAD_SONAME = "liblttvtraceread*"
 
+FILES_SOLIBSDEV = ""
 FILES_${PN} += "\
     ${libdir}/liblttvtraceread*.so \
     ${libdir}/lttv/plugins/*.so \
