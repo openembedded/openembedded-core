@@ -3,8 +3,9 @@ def gnome_verdir(v):
 	m = re.match("^([0-9]+)\.([0-9]+)", v)
 	return "%s.%s" % (m.group(1), m.group(2))
 
+GNOME_COMPRESS_TYPE ?= "bz2"
 SECTION ?= "x11/gnome"
-SRC_URI = "${GNOME_MIRROR}/${BPN}/${@gnome_verdir("${PV}")}/${BPN}-${PV}.tar.bz2;name=archive"
+SRC_URI = "${GNOME_MIRROR}/${BPN}/${@gnome_verdir("${PV}")}/${BPN}-${PV}.tar.${GNOME_COMPRESS_TYPE};name=archive"
 
 DEPENDS += "gnome-common"
 
