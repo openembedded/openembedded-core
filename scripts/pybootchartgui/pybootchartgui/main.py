@@ -8,13 +8,13 @@ import batch
 
 def _mk_options_parser():
 	"""Make an options parser."""
-	usage = "%prog [options] PATH, ..., PATH"
-	version = "%prog v0.0.0"
+	usage = "%prog [options] /path/to/tmp/buildstats/<recipe-machine>/<BUILDNAME>/"
+	version = "%prog v1.0.0"
 	parser = optparse.OptionParser(usage, version=version)
 	parser.add_option("-i", "--interactive", action="store_true", dest="interactive", default=False, 
 			  help="start in active mode")
-	parser.add_option("-f", "--format", dest="format", default = None,
-			  help="image format (...); default format ...")
+	parser.add_option("-f", "--format", dest="format", default="svg", choices=["svg", "pdf", "png"],
+			  help="image format: svg, pdf, png, [default: %default]")
 	parser.add_option("-o", "--output", dest="output", metavar="PATH", default=None,
 			  help="output path (file or directory) where charts are stored")
 	parser.add_option("-s", "--split", dest="num", type=int, default=1,
@@ -29,20 +29,15 @@ def _mk_options_parser():
 			  help="print all messages")
 	return parser
 
-def _get_filename(paths, options):
-	"""Construct a usable filename for outputs based on the paths and options given on the commandline."""
-	dir = ""
+def _get_filename(path):
+	"""Construct a usable filename for outputs"""
+	dir = "."
 	file = "bootchart"
-	if options.output != None and not(os.path.isdir(options.output)):
-		return options.output
-	if options.output != None:
-		dir = options.output
-	if len(paths) == 1:
-		if os.path.isdir(paths[0]):
-			file = os.path.split(paths[0])[-1]
-		elif os.path.splitext(paths[0])[1] in [".tar", ".tgz", ".tar.gz"]:
-			file = os.path.splitext(paths[0])[0]
-	return os.path.join(dir, file + "." + options.format)
+	if os.path.isdir(path):
+		dir = path
+	elif path != None:
+		file = path
+	return os.path.join(dir, file)
 
 def main(argv=None):
 	try:
@@ -57,10 +52,10 @@ def main(argv=None):
 			return 2
 
 		res = parsing.parse(args, options.prune)
-		if options.interactive or options.format == None:
+		if options.interactive or options.output == None:
 			gui.show(res)
 		else:
-			filename = _get_filename(args, options)
+			filename = _get_filename(options.output)
 			res_list = parsing.split_res(res, options.num)
 			n = 1
 			for r in res_list:
