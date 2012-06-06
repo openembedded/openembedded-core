@@ -14,10 +14,10 @@ def render(res, format, filename):
         return 10
 
     make_surface, write_surface = handlers[format]
-    w,h = draw.extents(*res)
+    w,h = draw.extents(res)
     w = max(w, draw.MIN_IMG_W)
     surface = make_surface(w,h)
     ctx = cairo.Context(surface)
-    draw.render(ctx, *res)
+    draw.render(ctx, res)
     write_surface(surface)
 

@@ -160,34 +160,39 @@ def get_num_cpus(headers):
 
 class ParserState:
     def __init__(self):
-        self.headers = None
-	self.disk_stats = None
-	self.ps_stats = None
-	self.cpu_stats = None
+        self.processes = {}
+        self.start = {}
+        self.end = {}
 
     def valid(self):
-        return self.headers != None and self.disk_stats != None and self.ps_stats != None and self.cpu_stats != None
+        return len(self.processes) != 0
 
 
 _relevant_files = set(["header", "proc_diskstats.log", "proc_ps.log", "proc_stat.log"])
 
-def _do_parse(state, name, file):
-    if name == "header":
-        state.headers = _parse_headers(file)
-    elif name == "proc_diskstats.log":
-        state.disk_stats = _parse_proc_disk_stat_log(file, get_num_cpus(state.headers))
-    elif name == "proc_ps.log":
-        state.ps_stats = _parse_proc_ps_log(file)
-    elif name == "proc_stat.log":
-        state.cpu_stats = _parse_proc_stat_log(file)
+def _do_parse(state, filename, file):
+    #print filename
+    #writer.status("parsing '%s'" % filename)
+    paths = filename.split("/")
+    task = paths[-1]
+    pn = paths[-2]
+    start = None
+    end = None
+    for line in file:
+        if line.startswith("Started:"):
+            start = int(float(line.split()[-1]))
+        elif line.startswith("Ended:"):
+            end = int(float(line.split()[-1]))
+    if start and end and (end - start) > 8:
+        state.processes[pn + ":" + task] = [start, end]
+        state.start[start] = pn + ":" + task
+        state.end[end] = pn + ":" + task
     return state
 
 def parse_file(state, filename):
     basename = os.path.basename(filename)
-    if not(basename in _relevant_files):
-        return state
     with open(filename, "rb") as file:
-        return _do_parse(state, basename, file)
+        return _do_parse(state, filename, file)
 
 def parse_paths(state, paths):
     for path in paths:
@@ -196,7 +201,7 @@ def parse_paths(state, paths):
             print "warning: path '%s' does not exist, ignoring." % path
             continue
         if os.path.isdir(path):
-            files = [ f for f in [os.path.join(path, f) for f in os.listdir(path)] if os.path.isfile(f) ]
+            files = [ f for f in [os.path.join(path, f) for f in os.listdir(path)] ]
             files.sort()
             state = parse_paths(state, files)
         elif extension in [".tar", ".tgz", ".tar.gz"]:
@@ -218,6 +223,6 @@ def parse(paths, prune):
     state = parse_paths(ParserState(), paths)
     if not state.valid():
         raise ParseError("empty state: '%s' does not contain a valid bootchart" % ", ".join(paths))
-    monitored_app = state.headers.get("profile.process")
-    proc_tree = ProcessTree(state.ps_stats, monitored_app, prune)
-    return (state.headers, state.cpu_stats, state.disk_stats, proc_tree)
+    #monitored_app = state.headers.get("profile.process")
+    #proc_tree = ProcessTree(state.ps_stats, monitored_app, prune)
+    return state
