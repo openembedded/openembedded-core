@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SECTION = "x11/gnome"
 
-PR = "r6"
+PR = "r7"
 
 inherit autotools gnome pkgconfig
 
@@ -38,6 +38,12 @@ pkg_postinst_${PN} () {
 	test -x ${bindir}/glib-compile-schemas && glib-compile-schemas  ${datadir}/glib-2.0/schemas
 }
 
-FILES_${PN} += "${datadir}/dbus-1/services ${datadir}/gcr ${base_libdir}/security/*.so"
-FILES_${PN}-dbg += "${libdir}/gnome-keyring/standalone/.debug/ ${base_libdir}/security/*.la"
-FILES_${PN}-dbg += "${libdir}/gnome-keyring/devel/.debug/ ${base_libdir}/security/.debug"
+FILES_${PN} += "${datadir}/dbus-1/services ${datadir}/gcr"
+                
+
+FILES_${PN}-dev += "${libdir}/${BPN}/devel/*.la \
+                    ${libdir}/${BPN}/devel/*${SOLIBSDEV} \
+                    ${libdir}/${BPN}/standalone/*.la"
+
+FILES_${PN}-dbg += "${libdir}/${BPN}/standalone/.debug/ \
+                    ${libdir}/${BPN}/devel/.debug/"
