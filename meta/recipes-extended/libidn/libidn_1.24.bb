@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=9c9d9d207a3468a696a03368913d360b \
                     file://COPYINGv3;md5=d32239bcb673463ab874e80d47fae504 \
                     file://lib/idna.h;endline=21;md5=7364f6a250728ffe16170f5e3ab37512 \
                     file://src/idn.c;endline=20;md5=7d7235e7951ac87d9dfac42e1b69d9cb"
-PR = "r1"
+PR = "r2"
 
 inherit pkgconfig autotools gettext
 
@@ -28,5 +28,6 @@ FILES_idn = "${bindir}/*"
 EXTRA_OECONF = " --disable-tld"
 
 do_install_append() {
+	rm -rf ${D}${libdir}/Libidn.dll
 	rm -rf ${D}${datadir}/emacs
 }

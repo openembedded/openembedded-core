@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a \
                     file://COPYING.LIB;md5=a6f89e2100d9b6cdffcea4f398e37343 \
                     file://lib/idna.h;firstline=6;endline=18;md5=6d9d5532eb28b99e860262281c540d02 \
                     file://src/idn.c;firstline=6;endline=18;md5=41b6aec531cc6a9d54a6c4deee251bf5"
-PR = "r0"
+PR = "r1"
 
 inherit pkgconfig autotools gettext
 
@@ -24,4 +24,8 @@ do_configure_prepend() {
 	# references to the latter here.
 	sed -i -e "/AC_REQUIRE(\[gl_USE_SYSTEM_EXTENSIONS/d" ${S}/lib/gl/m4/gnulib-comp.m4
 	rm -f ${S}/lib/gl/m4/extensions.m4
+}
+
+do_install_append() {
+	rm -rf ${D}${libdir}/Libidn.dll
 }
