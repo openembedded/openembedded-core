@@ -148,7 +148,6 @@ RDEPENDS_task-core-sys-services = "\
     nfs-utils \
     pciutils \
     libpcre \
-    portmap \
     rpcbind \
     sysfsutils \
     tcp-wrappers \
