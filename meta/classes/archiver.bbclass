@@ -225,17 +225,18 @@ def archive_logs(d,logdir,bbinc=False):
 
 def get_licenses(d):
 	'''get licenses for running .bb file'''
-	licenses = d.getVar('LICENSE', 1).replace('&', '|')
-	licenses = licenses.replace('(', '').replace(')', '') 
-	clean_licenses = ""
-	for x in licenses.split():
-		if x.strip() == '' or x == 'CLOSED':
-			continue
-		if x != "|":
-			clean_licenses += x
-	if '|' in clean_licenses:
-		clean_licenses = clean_licenses.replace('|','')
-	return clean_licenses
+	import oe.license
+
+	licenses_type = d.getVar('LICENSE', True) or ""
+	lics = oe.license.is_included(licenses_type)[1:][0]
+	lice = ''
+	for lic in lics:
+		licens = d.getVarFlag('SPDXLICENSEMAP', lic)
+		if licens != None:
+			lice += licens
+		else:
+			lice += lic
+	return lice
 	
 
 def move_tarball_deploy(d,tarball_list):
