@@ -19,7 +19,7 @@ SRCREV_FORMAT = "source"
 
 SRCREV = "101488"
 PV = "1.7.2+svnr${SRCPV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "\
   svn://svn.webkit.org/repository/webkit/trunk/;module=Source;proto=http;name=source \
@@ -88,6 +88,10 @@ do_configure_append() {
 
 do_install_prepend() {
 	cp ${S}/Programs/.libs/jsc ${S}/Programs/jsc-1 || true
+}
+
+do_install_append() {
+	rmdir ${D}${libexecdir}
 }
 
 PACKAGES =+ "${PN}-webinspector ${PN}launcher-dbg ${PN}launcher libjavascriptcore"
