@@ -251,10 +251,22 @@ def package_qa_check_unsafe_references_in_binaries(path, name, d, elf, messages)
 			return False
 
 		if sysroot_path_usr in ldd_output:
-			error_msg = pn + ": %s links to something under exec_prefix" % path
-			package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
-			error_msg = "ldd reports: %s" % ldd_output
-			package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
+			ldd_output = ldd_output.replace(sysroot_path, "")
+
+			pkgdest = d.getVar('PKGDEST', True)
+			packages = d.getVar('PACKAGES', True)
+
+			for package in packages.split():
+				short_path = path.replace('%s/%s' % (pkgdest, package), "", 1)
+				if (short_path != path):
+					break
+
+			base_err = pn + ": %s, installed in the base_prefix, requires a shared library under exec_prefix (%s)" % (short_path, exec_prefix)
+			for line in ldd_output.split('\n'):
+				if exec_prefix in line:
+					error_msg = "%s: %s" % (base_err, line.strip())
+					package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
+
 			return False
 
 QAPATHTEST[unsafe-references-in-scripts] = "package_qa_check_unsafe_references_in_scripts"
