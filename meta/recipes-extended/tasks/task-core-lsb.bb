@@ -70,7 +70,7 @@ RDEPENDS_task-core-sys-extended = "\
     minicom \
     neon \
     parted \
-    pth \
+    ${PTH} \
     quota \
     screen \
     setserial \
@@ -197,3 +197,7 @@ RDEPENDS_task-core-lsb-runtime-add = "\
     eglibc-pic \
     eglibc-utils \
 "
+
+PTH = "pth"
+PTH_libc-uclibc = ""
+

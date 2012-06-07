@@ -137,7 +137,7 @@ RDEPENDS_task-self-hosted-extended = "\
     perl-dev \
     perl-modules \
     perl-pod \
-    pth \
+    ${PTH} \
     python \
     python-compile \
     python-compiler \
@@ -199,3 +199,5 @@ RDEPENDS_task-self-hosted-graphics = "\
     python-pygtk \
     gtk-theme-clearlooks \
     "
+PTH = "pth"
+PTH_libc-uclibc = ""
