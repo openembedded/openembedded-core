@@ -1,13 +1,6 @@
 inherit kernel
 require recipes-kernel/linux/linux-yocto.inc
 
-KMACHINE = "common-pc"
-KMACHINE_qemux86  = "common-pc"
-KMACHINE_qemux86-64  = "common-pc-64"
-KMACHINE_qemuppc  = "qemu-ppc32"
-KMACHINE_qemumips = "mti-malta32-be"
-KMACHINE_qemuarm  = "arm-versatile-926ejs"
-
 KBRANCH = "standard/default/base"
 KBRANCH_qemux86  = "standard/default/common-pc/base"
 KBRANCH_qemux86-64  = "standard/default/common-pc-64/base"
@@ -23,7 +16,7 @@ SRCREV_machine_qemuppc ?= "466746d1fe6370957ba087f9ca6f2e31201b2162"
 SRCREV_machine_qemux86 ?= "c228cadee60f0ada73d11a36f6932f50a1c52d48"
 SRCREV_machine_qemux86-64 ?= "b95a0ae3773545fa0ed9a47088d0361527c42e6c"
 SRCREV_machine ?= "8b8cfaaab2b8d79ac56e8c9a85bad9ae7bca399c"
-SRCREV_meta ?= "49f931bc294d5b6be60502bbd448cff5aa766235"
+SRCREV_meta ?= "0a18db9fc89a0e030e8c7b8d01fe03c5ca4197e3"
 
 PR = "r1"
 PV = "${LINUX_VERSION}+git${SRCPV}"

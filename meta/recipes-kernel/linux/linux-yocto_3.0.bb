@@ -8,13 +8,6 @@ KBRANCH_qemuppc  = "yocto/standard/qemu-ppc32"
 KBRANCH_qemumips = "yocto/standard/mti-malta32-be"
 KBRANCH_qemuarm  = "yocto/standard/arm-versatile-926ejs"
 
-# Temporary until 3.0 kernel tree is updated with machine mappings
-KMACHINE_qemux86 = "common-pc"
-KMACHINE_qemux86-64 = "common-pc-64"
-KMACHINE_qemuppc = "qemu-ppc32"
-KMACHINE_qemumips = "mti-malta32-be"
-KMACHINE_qemuarm = "arm-versatile-926ejs"
-
 KMETA = "meta"
 
 LINUX_VERSION ?= "3.0.32"
@@ -25,7 +18,7 @@ SRCREV_machine_qemuppc ?= "bd9a3c4c066bd4b9f52b51aaaec9b029a7abe793"
 SRCREV_machine_qemux86 ?= "70342faea067476774eb55f4e3098af0bcc48782"
 SRCREV_machine_qemux86-64 ?= "cba836a545fbeb96f6f2392c3ecbac9d7735fa65"
 SRCREV_machine ?= "bd6ad607c754dea30d91502a237870b4c45e0f1b"
-SRCREV_meta ?= "34e0d2b4b4e9778b31f9ea99ca43f0dc71a7ee23"
+SRCREV_meta ?= "b040132c19d70b00fc49f3b7e08c2ed52ac59f92"
 
 PR = "r4"
 PV = "${LINUX_VERSION}+git${SRCPV}"
