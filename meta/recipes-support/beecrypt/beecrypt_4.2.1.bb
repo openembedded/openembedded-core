@@ -17,7 +17,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=9894370afd5dfe7d02b8d14319e729a1 \
 
 DEPENDS = "icu"
 
-PR = "r1"
+PR = "r2"
 
 inherit autotools multilib_header
 acpaths=""
@@ -26,7 +26,7 @@ do_install_append() {
 	oe_multilib_header beecrypt/gnu.h
 }
 
-EXTRA_OECONF="--without-python --enable-shared --enable-static --disable-openmp"
+EXTRA_OECONF="--without-python --enable-shared --enable-static --disable-openmp --with-java=no"
 
 FILES_${PN} = "${sysconfdir} ${libdir}/*.so.* ${libdir}/${BPN}/*.so.*"
 FILES_${PN}-dev += "${libdir}/${BPN}/*.so ${libdir}/${BPN}/*.la"
