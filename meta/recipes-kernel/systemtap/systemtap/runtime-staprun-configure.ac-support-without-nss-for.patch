@@ -1,0 +1,50 @@
+From fa81ccd4f92e5cb15a11a81a7e656bfe01745afb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@googlemail.com>
+Date: Tue, 5 Jun 2012 10:22:23 +0200
+Subject: [PATCH] runtime/staprun/configure.ac: support --without-nss for
+ staprun
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Upstream status: pending
+
+Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
+---
+ runtime/staprun/configure.ac |   20 +++++++++++++++-----
+ 1 files changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/runtime/staprun/configure.ac b/runtime/staprun/configure.ac
+index 8fd1b42..7b05f73 100644
+--- a/runtime/staprun/configure.ac
++++ b/runtime/staprun/configure.ac
+@@ -67,11 +67,21 @@ AS_IF([test "x$enable_sdt_probes" != xno], [
+             [Define to 1 to enable process.mark probes in staprun, stapio.])
+ ])
+ 
+-PKG_CHECK_MODULES([nss], [nss >= 3], [have_nss=yes], [have_nss=no])
+-AM_CONDITIONAL([HAVE_NSS], [test $have_nss = yes])
+-AS_IF([test $have_nss = yes], [
+-  AC_DEFINE([HAVE_NSS], [1], [Define to 1 if you have the nss libraries.])
+-])
++dnl See if we have the nss/nspr headers and libraries
++AC_ARG_WITH([nss],
++  AS_HELP_STRING([--without-nss],
++    [Do not use NSS even if present]))
++
++AS_IF([test "x$with_nss" != "xno"], [
++  PKG_CHECK_MODULES([nss], [nss >= 3],
++    [have_nss=yes
++     AC_DEFINE([HAVE_NSS], [1], [Define to 1 if you have the nss libraries.])
++    ], [have_nss=no])
++], [have_nss=no])
++
++AM_CONDITIONAL([HAVE_NSS], [test "${have_nss}" = "yes"])
++
++
+ AC_ARG_ENABLE([nls], [AS_HELP_STRING([--enable-nls], [enable translating program messages])])
+ AS_IF([test "x$enable_nls" != xno], [
+ AC_DEFINE([ENABLE_NLS], [1], [Define to 1 if program messages should be translated.])
+-- 
+1.7.6.5
+
