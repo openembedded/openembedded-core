@@ -49,8 +49,7 @@ FILES_${PN}-pkgmgt = "${bindir}/package-manager \
                      "
 
 EXTRA_OECMAKE += " -DLIB=${@os.path.basename('${libdir}')}"
-
-LDFLAGS += "-lpthread"
+OECMAKE_CXX_LINK_FLAGS_libc-uclibc += "-pthread"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
