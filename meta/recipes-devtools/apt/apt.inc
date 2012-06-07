@@ -7,6 +7,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/apt/apt_${PV}.tar.gz \
            file://use-host.patch \
            file://localefixes.patch \
            file://makerace.patch \
+           file://remove-redeclaration.patch \
            "
 
 inherit autotools gettext
