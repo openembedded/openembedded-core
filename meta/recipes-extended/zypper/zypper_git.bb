@@ -16,6 +16,7 @@ SRC_URI = "git://github.com/openSUSE/zypper.git;protocol=git \
            file://dso_linking_change_build_fix.patch \
            file://rpm5-flag.patch \
            file://gcc-scope.patch \
+           file://rpmatch.patch \
           "
 S = "${WORKDIR}/git"
 
@@ -25,3 +26,4 @@ RDEPENDS_${PN} = "rpm-libs"
 RRECOMMENDS_${PN} = "procps util-linux-uuidgen"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+OECMAKE_CXX_LINK_FLAGS_libc-uclibc += "-lintl"
