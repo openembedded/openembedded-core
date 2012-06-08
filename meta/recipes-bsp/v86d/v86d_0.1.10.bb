@@ -7,10 +7,11 @@ LIC_FILES_CHKSUM = "file://README;md5=94ac1971e4f2309dc322d598e7b1f7dd"
 
 DEPENDS = "virtual/kernel"
 RRECOMMENDS_${PN} = "kernel-module-uvesafb"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://dev.gentoo.org/~spock/projects/uvesafb/archive/v86d-${PV}.tar.bz2 \
-           file://fbsetup"
+           file://fbsetup \
+           file://ar-from-env.patch"
 
 SRC_URI[md5sum] = "51c792ba7b874ad8c43f0d3da4cfabe0"
 SRC_URI[sha256sum] = "634964ae18ef68c8493add2ce150e3b4502badeb0d9194b4bd81241d25e6735c"
