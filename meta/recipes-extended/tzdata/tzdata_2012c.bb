@@ -2,7 +2,7 @@ DESCRIPTION = "Timezone data"
 HOMEPAGE = "ftp://elsie.nci.nih.gov/pub/"
 SECTION = "base"
 LICENSE = "PD"
-LIC_FILES_CHKSUM = "file://asia;beginline=2;endline=3;md5=06468c0e84ef4d4c97045a4a29b08234"
+LIC_FILES_CHKSUM = "file://asia;beginline=3;endline=4;md5=06468c0e84ef4d4c97045a4a29b08234"
 DEPENDS = "tzcode-native"
 
 PR = "r0"
@@ -14,8 +14,8 @@ RCONFLICTS= "timezones timezone-africa timezone-america timezone-antarctica \
 
 SRC_URI = "ftp://ftp.iana.org/tz/releases/tzdata${PV}.tar.gz;name=tzdata"
 
-SRC_URI[tzdata.md5sum] = "0615fd29def380a917e528433c820368"
-SRC_URI[tzdata.sha256sum] = "2f9f8e2d1ae087be5917f60c3946e8dc3fe1068d7738c3395f2125135309e745"
+SRC_URI[tzdata.md5sum] = "cfdc2710bd05c26dbd624441d57028f6"
+SRC_URI[tzdata.sha256sum] = "33e19e1dd27bda5239812587d72971509a15b59baff7abd692b77ff66f168a82"
 
 S = "${WORKDIR}"
 
