@@ -4,6 +4,8 @@ In a multiple job build, Makefile can simultaneously
 be installing and removing libgettextlib.a.  We serialize
 the operations.
 
+Upstream-Status: Pending
+
 Signed-off-by: Joe Slater <jslater@windriver.com>
 
 --- a/gettext-tools/gnulib-lib/Makefile.am

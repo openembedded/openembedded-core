@@ -4,6 +4,8 @@ The definition of install-data-hook in Makefile.am leads
 to multiple, overlapping, executions of install-binPROGRAMS
 target.  We modify the definition to avoid that.
 
+Upstream-Status: Pending
+
 Signed-off-by: Joe Slater <jslater@windriver.com>
 
 --- a/Makefile.am
