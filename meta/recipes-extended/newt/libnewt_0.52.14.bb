@@ -17,11 +17,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
 # slang needs to be >= 2.2
 DEPENDS = "slang popt"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "https://fedorahosted.org/releases/n/e/newt/newt-${PV}.tar.gz \
            file://remove_slang_include.patch \
-           file://fix_SHAREDDIR.patch"
+           file://fix_SHAREDDIR.patch \
+           file://cross_ar.patch"
 
 SRC_URI[md5sum] = "eb78c6bb658b92ec7198908b5b8d0e37"
 SRC_URI[sha256sum] = "f70f4f58baa60388ddf2e39249ffb00898fb40f2b2767e42e2ab51fe4b40978e"
