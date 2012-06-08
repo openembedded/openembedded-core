@@ -1,5 +1,6 @@
 *.pyc
 *.pyo
+/*.patch
 build*/conf/local.conf
 build*/conf/bblayers.conf
 build*/downloads
