@@ -19,12 +19,12 @@ def get_gcc_fpu_setting(bb, d):
     return ""
 
 def get_gcc_mips_plt_setting(bb, d):
-    if d.getVar('TARGET_ARCH', True) in [ 'mips', 'mipsel' ] and 'mplt' in d.getVar('DISTRO_FEATURES',1).split() :
+    if d.getVar('TRANSLATED_TARGET_ARCH', True) in [ 'mips', 'mipsel' ] and 'mplt' in d.getVar('DISTRO_FEATURES',1).split() :
         return "--with-mips-plt"
     return ""
 
 def get_gcc_multiarch_setting(bb, d):
-    target_arch = d.getVar('TARGET_ARCH', True)
+    target_arch = d.getVar('TRANSLATED_TARGET_ARCH', True)
     multiarch_options = {
         "i586":    "--enable-targets=all",
         "powerpc": "--enable-targets=powerpc64",
