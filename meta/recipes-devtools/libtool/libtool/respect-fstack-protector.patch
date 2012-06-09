@@ -1,0 +1,53 @@
+Source: http://permalink.gmane.org/gmane.comp.gnu.libtool.bugs/7341
+
+Bug confirmed.  When code is compiled with -fstack-protector{,-all},
+GCC "emits extra code to check for buffer overflows, such as stack
+smashing attacks".  This extra code uses symbols from libssp, and
+therefore (at least) Cygwin's GCC specs contain:
+
+*link_ssp:
+%{fstack-protector|fstack-protector-all:-lssp_nonshared -lssp}
+
+Therefore, when libtool fails to pass -fstack-protector{,-all} at link
+stage, the link fails.
+
+Patch attached.  (Yes, I have a copyright assignment on file.)
+
+Yaakov
+Cygwin/X
+
+From b79f4e117b6f73cc461a2e232063e08481d33300 Mon Sep 17 00:00:00 2001
+From: Yaakov Selkowitz <yselkowitz <at> users.sourceforge.net>
+Date: Tue, 1 Jun 2010 22:18:51 -0500
+Subject: [PATCH] Fix linking with -fstack-protector
+
+* libltdl/config/ltmain.m4sh (func_mode_link): Pass -fstack-protector*
+to the linker as it is required at link time to resolve libssp symbols.
+
+Signed-off-by: Yaakov Selkowitz <yselkowitz <at> users.sourceforge.net>
+---
+ libltdl/config/ltmain.m4sh |    4 +++-
+ 1 files changed, 3 insertions(+), 1 deletions(-)
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
+Index: libtool-2.4.2/libltdl/config/ltmain.m4sh
+===================================================================
+--- libtool-2.4.2.orig/libltdl/config/ltmain.m4sh	2012-06-01 12:35:44.089638130 -0700
++++ libtool-2.4.2/libltdl/config/ltmain.m4sh	2012-06-01 12:37:25.789643055 -0700
+@@ -5067,13 +5067,14 @@
+       # -m*, -t[45]*, -txscale* architecture-specific flags for GCC
+       # -F/path              path to uninstalled frameworks, gcc on darwin
+       # -p, -pg, --coverage, -fprofile-*  profiling flags for GCC
++      # -fstack-protector*   stack protector flags for GCC
+       # @file                GCC response files
+       # -tp=*                Portland pgcc target processor selection
+       # --sysroot=*          for sysroot support
+       # -O*, -flto*, -fwhopr*, -fuse-linker-plugin GCC link-time optimization
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+-      -O*|-flto*|-fwhopr*|-fuse-linker-plugin)
++      -O*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*)
+         func_quote_for_eval "$arg"
+ 	arg="$func_quote_for_eval_result"
+         func_append compile_command " $arg"
