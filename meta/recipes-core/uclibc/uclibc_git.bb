@@ -1,4 +1,4 @@
-SRCREV="7bad8cf68b6e2434686bd80182f4a5bc22004416"
+SRCREV="e118373cbb58ba5ffa5fb6670957678d5b87cdb9"
 
 require uclibc.inc
 
