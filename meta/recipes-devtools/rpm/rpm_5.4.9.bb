@@ -42,8 +42,8 @@ HOMEPAGE = "http://rpm5.org/"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
-DEPENDS = "libpcre attr acl popt file"
-PR = "r40"
+DEPENDS = "libpcre attr acl popt ossp-uuid file"
+PR = "r41"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -69,6 +69,7 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;ex
 	   file://rpm-no-perl-urpm.patch \
 	   file://rpm-macros.patch \
 	   file://rpm-lua.patch \
+	   file://rpm-ossp-uuid.patch \
 	  "
 
 SRC_URI[md5sum] = "60d56ace884340c1b3fcac6a1d58e768"
@@ -145,7 +146,7 @@ EXTRA_OECONF += "--verbose \
 		--without-gnutls \
 		--with-pcre \
 		--enable-utf8 \
-		--without-uuid \
+		--with-uuid \
 		--with-attr \
 		--with-acl \
 		--with-popt=external \
@@ -329,6 +330,10 @@ do_configure() {
 	echo "all:" > tests/Makefile.am
 
 	./autogen.sh
+
+	# NASTY hack to make sure configure files the right pkg-config file...
+	sed -e 's/pkg-config --exists uuid/pkg-config --exists ossp-uuid/g' \
+	    -e 's/pkg-config uuid/pkg-config ossp-uuid/g' -i configure
 
 	export varprefix=${localstatedir}
 	export CC_FOR_BUILD="${BUILD_CC}"
