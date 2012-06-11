@@ -60,6 +60,9 @@ am_cv_func_working_getline=${am_cv_func_working_getline=yes}
 
 # glib-2.0
 glib_cv_use_pid_surrogate=${glib_cv_use_pid_surrogate=yes}
+ac_cv_alignof_guint32=4
+ac_cv_alignof_guint64=8
+ac_cv_alignof_unsigned_long=8
 
 # libidl
 libIDL_cv_long_long_format=${libIDL_cv_long_long_format=ll}
