@@ -42,14 +42,12 @@ HOMEPAGE = "http://rpm5.org/"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
-DEPENDS = "beecrypt bzip2 zlib db openssl elfutils expat libpcre attr acl popt ${extrarpmdeps}"
-extrarpmdeps = "python perl file"
-extrarpmdeps_virtclass-native = "python-native file-native"
-PR = "r39"
+DEPENDS = "libpcre attr acl popt file"
+PR = "r40"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
-SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.8-0.20120401.src.rpm;extract=rpm-5.4.8.tar.gz \
+SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;extract=rpm-5.4.9.tar.gz \
 	   file://rpm-log-auto-rm.patch \
 	   file://rpm-db-reduce.patch \
 	   file://perfile_rpmdeps.sh \
@@ -70,10 +68,11 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.8-0.20120401.src.rpm;ex
 	   file://rpm-respect-arch.patch \
 	   file://rpm-no-perl-urpm.patch \
 	   file://rpm-macros.patch \
+	   file://rpm-lua.patch \
 	  "
 
-SRC_URI[md5sum] = "424b60bf2e0a624a218440d943861644"
-SRC_URI[sha256sum] = "56eb5033d4de98c217475fb34d466d551f8912959389e7854a806e2bd9e13380"
+SRC_URI[md5sum] = "60d56ace884340c1b3fcac6a1d58e768"
+SRC_URI[sha256sum] = "bac7cc5bd9d0e8262fdc0099349924608da8f680f5cb243751f696552239dde8"
 
 inherit autotools gettext
 
@@ -83,63 +82,74 @@ acpaths = "-I ${S}/db/dist/aclocal -I ${S}/db/dist/aclocal_java"
 rpm_macros = "%{_usrlibrpm}/macros:%{_usrlibrpm}/poky/macros:%{_usrlibrpm}/poky/%{_target}/macros:%{_etcrpm}/macros.*:%{_etcrpm}/macros:%{_etcrpm}/%{_target}/macros:~/.oerpmmacros"
 rpm_macros_virtclass-native = "%{_usrlibrpm}/macros:%{_usrlibrpm}/poky/macros:%{_usrlibrpm}/poky/%{_target}/macros:~/.oerpmmacros"
 
-# Configure values taken from rpm.spec
-WITH_BZIP2 = "--with-bzip2"
+# sqlite lua tcl augeas nss gcrypt neon xz xar keyutils perl selinux
 
-WITH_XZ = "--with-xz=none"
+# Note: perl and sqlite w/o db specified does not currently work.
+#       tcl, augeas, nss, gcrypt, xar and keyutils support is untested.
+PACKAGECONFIG_virtclass-native ??= "db bzip2 zlib beecrypt openssl libelf python"
+PACKAGECONFIG ??= "db bzip2 zlib beecrypt openssl libelf python"
 
-WITH_Z = "--with-zlib $WITH_BZIP2 $WITH_XZ"
+PACKAGECONFIG[bzip2] = "--with-bzip2,--without-bzip2,bzip2,"
+PACKAGECONFIG[xz] = "--with-xz,--without-xz,xz,"
+PACKAGECONFIG[zlib] = "--with-zlib,--without-zlib,zlib,"
+PACKAGECONFIG[xar] = "--with-xar,--without-xar,xar,"
 
-WITH_PYTHON = "	--with-python=${PYTHON_BASEVERSION} \
+WITH_PYTHON = " --with-python=${PYTHON_BASEVERSION} \
 		--with-python-inc-dir=${STAGING_INCDIR}/python${PYTHON_BASEVERSION} \
 		--with-python-lib-dir=${libdir}/python${PYTHON_BASEVERSION} \
-		--without-pythonembed \
-	      "
+		--without-pythonembed"
+PACKAGECONFIG[python] = "${WITH_PYTHON},--without-python,python,"
 
 # Perl modules are not built, but they could be enabled fairly easily
 # the perl module creation and installation would need to be patched.
 # (currently has host perl contamination issues)
-#WITH_PERL = "	--with-perl --without-perlembed"
-WITH_PERL = "	--without-perl --without-perl-urpm"
+WITH_PERL = "--with-perl --without-perlembed --without-perl-urpm"
+WITHOUT_PERL = "--without-perl --without-perl-urpm"
+PACKAGECONFIG[perl] = "${WITH_PERL},${WITHOUT_PERL},perl,"
 
-WITH_PERL_virtclass-native = " --without-perl --without-perl-urpm"
+# The --with-dbsql will only tell RPM to check for support, db
+# may or may not be built w/ the dbsql support.
+WITH_DB = "--with-db --with-dbsql --without-db-tools-integrated"
+PACKAGECONFIG[db] = "${WITH_DB},--without-db,db,"
 
-WITH_DB = "--with-db --with-dbsql --without-db-tools-integrated --without-sqlite"
+PACKAGECONFIG[sqlite] = "--with-sqlite,--without-sqlite,sqlite3,"
 
-WITH_CRYPTO = "--with-beecrypt --with-openssl --without-nss --without-gcrypt"
+PACKAGECONFIG[beecrypt] = "--with-beecrypt,--without-beecrypt,beecrypt,"
+PACKAGECONFIG[openssl] = "--with-openssl,--without-openssl,openssl,"
+PACKAGECONFIG[nss] = "--with-nss,--without-nss,nss,"
+PACKAGECONFIG[gcrypt] = "--with-gcrypt,--without-gcrypt,gcrypt,"
+PACKAGECONFIG[keyutils] = "--with-keyutils,--without-keyutils,keyutils,"
+PACKAGECONFIG[libelf] = "--with-libelf,--without-libelf,elfutils,"
 
-WITH_KEYUTILS = "--without-keyutils"
-WITH_LIBELF = "--with-libelf"
-WITH_SELINUX = "--without-selinux --without-sepol --without-semanage"
-#WITH_NEON = "--with-neon=internal --without-libproxy --with-expat --without-gssapi"
-WITH_NEON = "--without-neon --without-libproxy --without-expat --without-gssapi"
+WITH_SELINUX = "--with-selinux --with-sepol --with-semanage"
+WITHOUT_SELINUX = "--without-selinux --without-sepol --without-semanage"
+PACKAGECONFIG[selinux] = "${WITH_SELINUX},${WITHOUT_SELINUX},selinux,"
 
-EXTRA_OECONF = "--verbose \
+WITH_NEON = "--with-neon --with-libproxy --with-expat --without-gssapi"
+WITHOUT_NEON = "--without-neon --without-libproxy --without-expat --without-gssapi"
+PACKAGECONFIG[neon] = "${WITH_NEON},${WITHOUT_NEON},neon,"
+
+PACKAGECONFIG[lua] = "--with-lua,--without-lua,"
+PACKAGECONFIG[tcl] = "--with-tcl,--without-tcl,tcl,"
+
+PACAKGECONFIG[augeas] = "--with-augeas,--without-augeas,augeas,"
+
+EXTRA_OECONF += "--verbose \
 		--sysconfdir=/etc \
-		${WITH_DB} \
-		${WITH_Z} \
 		--with-file \
 		--with-path-magic=%{_usrlibrpm}/../../share/misc/magic.mgc \
-		--without-lua \
-		--without-tcl \
 		--with-syck=internal \
 		--without-readline \
-		--without-augeas \
-		${WITH_CRYPTO} \
 		--without-libtasn1 \
 		--without-pakchois \
 		--without-gnutls \
-		${WITH_NEON} \
 		--with-pcre \
 		--enable-utf8 \
 		--without-uuid \
 		--with-attr \
 		--with-acl \
-		--without-xar \
 		--with-popt=external \
-		${WITH_KEYUTILS} \
 		--with-pthreads \
-		${WITH_LIBELF} \
 		--without-cudf \
 		--without-ficl \
 		--without-aterm \
@@ -148,14 +158,11 @@ EXTRA_OECONF = "--verbose \
 		--without-rc \
 		--without-js \
 		--without-gpsee \
-		${WITH_PYTHON} \
-		${WITH_PERL} \
 		--without-ruby \
 		--without-squirrel \
 		--with-build-extlibdep \
 		--with-build-maxextlibdep \
 		--without-valgrind \
-                --without-xz \
 		--disable-openmp \
 		--enable-build-pic \
 		--enable-build-versionscript \
@@ -167,7 +174,7 @@ EXTRA_OECONF = "--verbose \
 		--with-bugreport=http://bugzilla.yoctoproject.org \
 		--program-prefix="
 
-CFLAGS_append = " -DRPM_VENDOR_WINDRIVER -DRPM_VENDOR_POKY"
+CFLAGS_append = " -DRPM_VENDOR_WINDRIVER -DRPM_VENDOR_POKY -DRPM_VENDOR_OE"
 
 PACKAGES = "${PN}-dbg ${PN} ${PN}-doc ${PN}-libs ${PN}-dev ${PN}-staticdev ${PN}-common ${PN}-build python-rpm-dbg python-rpm-staticdev python-rpm perl-module-rpm perl-module-rpm-dev ${PN}-locale"
 
@@ -175,7 +182,7 @@ SOLIBS = "5.4.so"
 
 # Based on %files section in the rpm.spec
 
-FILES_${PN} = "${bindir}/rpm \
+FILES_${PN} =  "${bindir}/rpm \
 		${bindir}/rpmconstant \
 		${libdir}/rpm/rpm.* \
 		${libdir}/rpm/tgpg \
@@ -193,14 +200,9 @@ FILES_${PN} = "${bindir}/rpm \
 		${libdir}/rpm/bin/rpmspecdump \
 		${libdir}/rpm/bin/wget \
 		/var/lib/rpm \
+		/var/cache/rpm \
+		/var/volatile/cache/rpm \
 		"
-
-#		${libdir}/rpm/magic
-#		${libdir}/rpm/magic.mgc
-#		${libdir}/rpm/magic.mime
-#		${libdir}/rpm/magic.mime.mgc
-#		${libdir}/rpm/bin/db_*
-#		${libdir}/rpm/bin/grep
 
 FILES_${PN}-dbg += "${libdir}/rpm/.debug \
 		${libdir}/rpm/bin/.debug \
@@ -219,12 +221,6 @@ FILES_${PN}-libs = "${libdir}/librpm-*.so \
 		${libdir}/librpmmisc-*.so \
 		${libdir}/librpmbuild-*.so \
 		"
-
-###%{_rpmhome}/lib/libxar.so.*
-###%{_rpmhome}/lib/libjs.so.*
-###%{_rpmhome}/lib/librpmjsm.so.*
-###%{_rpmhome}/lib/rpmjsm.so
-
 
 FILES_${PN}-build = "${prefix}/src/rpm \
 		${bindir}/rpmbuild \
@@ -271,8 +267,6 @@ FILES_${PN}-build = "${prefix}/src/rpm \
 		${libdir}/rpm/bin/rpmlua \
 		${libdir}/rpm/bin/rpmluac \
 		${libdir}/rpm/bin/sqlite3 \
-		${libdir}/rpm/lib/liblua.a \
-		${libdir}/rpm/lib/liblua.la \
 		${libdir}/rpm/macros.d/cmake \
 		${libdir}/rpm/macros.d/java \
 		${libdir}/rpm/macros.d/libtool \
@@ -292,9 +286,6 @@ FILES_${PN}-build = "${prefix}/src/rpm \
 		${libdir}/rpm/perfile_rpmdeps.sh \
 		"
 RDEPENDS_${PN}-build = "file"
-
-#%rpmattr       %{_rpmhome}/gem_helper.rb
-#%rpmattr       %{_rpmhome}/symclash.*
 
 FILES_python-rpm-dbg = "${libdir}/python*/rpm/.debug/_*"
 FILES_python-rpm-staticdev = "${libdir}/python*/rpm/*.a"
@@ -319,6 +310,7 @@ FILES_${PN}-dev = "${includedir}/rpm \
 		${libdir}/librpmmisc.so \
 		${libdir}/librpmbuild.la \
 		${libdir}/librpmbuild.so \
+		${libdir}/rpm/lib/liblua.la \
 		${libdir}/pkgconfig/rpm.pc \
 		"
 
@@ -329,17 +321,8 @@ FILES_${PN}-staticdev = " \
 		${libdir}/librpmio.a \
 		${libdir}/librpmmisc.a \
 		${libdir}/librpmbuild.a \
+		${libdir}/rpm/lib/liblua.a \
 		"
-
-###%{_rpmhome}/lib/libxar.a
-###%{_rpmhome}/lib/libxar.la
-###%{_rpmhome}/lib/libxar.so
-###%{_rpmhome}/lib/libjs.a
-###%{_rpmhome}/lib/libjs.la
-###%{_rpmhome}/lib/libjs.so
-###%{_rpmhome}/lib/librpmjsm.a
-###%{_rpmhome}/lib/librpmjsm.la
-###%{_rpmhome}/lib/librpmjsm.so
 
 do_configure() {
 	# Disable tests!
@@ -348,6 +331,7 @@ do_configure() {
 	./autogen.sh
 
 	export varprefix=${localstatedir}
+	export CC_FOR_BUILD="${BUILD_CC}"
 	oe_runconf
 }
 
@@ -424,6 +408,8 @@ do_install_append() {
 	rm -f ${D}/${libdir}/rpm/bin/dbconvert
 	rm -f ${D}/${libdir}/rpm/bin/pom2spec
 
+	rm -rf ${D}/var/lib/wdj ${D}/var/cache/wdj
+	rm -f ${D}/usr/lib/rpm/bin/api-sanity-checker.pl
 }
 
 do_install_append_virtclass-native() {

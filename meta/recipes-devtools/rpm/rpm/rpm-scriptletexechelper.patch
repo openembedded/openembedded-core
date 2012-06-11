@@ -12,10 +12,11 @@ Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-diff -ur rpm-5.4.0.orig/lib/psm.c rpm-5.4.0/lib/psm.c
---- rpm-5.4.0.orig/lib/psm.c	2010-12-29 07:42:11.000000000 -0600
-+++ rpm-5.4.0/lib/psm.c	2011-11-08 13:38:48.132791154 -0600
-@@ -792,6 +792,10 @@
+Index: rpm-5.4.9/lib/psm.c
+===================================================================
+--- rpm-5.4.9.orig/lib/psm.c
++++ rpm-5.4.9/lib/psm.c
+@@ -801,6 +801,10 @@ static rpmRC runScript(rpmpsm psm, Heade
      int xx;
      int i;
  
@@ -26,23 +27,23 @@ diff -ur rpm-5.4.0.orig/lib/psm.c rpm-5.4.0/lib/psm.c
      if (psm->sstates != NULL && ix >= 0 && ix < RPMSCRIPT_MAX)
  	ssp = psm->sstates + ix;
      if (ssp != NULL)
-@@ -858,14 +862,29 @@
+@@ -867,14 +871,29 @@ assert(he->p.str != NULL);
  		(F_ISSET(psm, UNORDERED) ? "a" : ""));
  
      if (Phe->p.argv == NULL) {
--	argv = alloca(5 * sizeof(*argv));
+-	argv = (const char **) alloca(5 * sizeof(*argv));
 -	argv[0] = "/bin/sh";
 -	argc = 1;
-+	argv = alloca(7 * sizeof(*argv));
++	argv = (const char **) alloca(7 * sizeof(*argv));
 +	argc = 0;
 +    } else {
-+	argv = alloca((Phe->c + 6) * sizeof(*argv));
++	argv = (const char **) alloca((Phe->c + 6) * sizeof(*argv));
 +	argc = 0;
 +    }
 +
 +#ifdef RPM_VENDOR_POKY
 +    if (scriptletWrapper && *scriptletWrapper) {
-+        argv[argc++] = scriptletWrapper;
++	argv[argc++] = scriptletWrapper;
 +	argv[argc] = rpmtsRootDir(ts);
 +	if (!argv[argc] || !*argv[argc])
 +	   argv[argc] = "/";
@@ -51,10 +52,10 @@ diff -ur rpm-5.4.0.orig/lib/psm.c rpm-5.4.0/lib/psm.c
 +#endif
 +
 +    if (Phe->p.argv == NULL) {
-+        argv[argc++] = "/bin/sh";
++	argv[argc++] = "/bin/sh";
  	ldconfig_done = 0;
      } else {
--	argv = alloca((Phe->c + 4) * sizeof(*argv));
+-	argv = (const char **) alloca((Phe->c + 4) * sizeof(*argv));
 -	memcpy(argv, Phe->p.argv, Phe->c * sizeof(*argv));
 -	argc = Phe->c;
 +	memcpy((argv + argc), Phe->p.argv, Phe->c * sizeof(*argv));
@@ -62,7 +63,7 @@ diff -ur rpm-5.4.0.orig/lib/psm.c rpm-5.4.0/lib/psm.c
  	ldconfig_done = (ldconfig_path && !strcmp(argv[0], ldconfig_path)
  		? 1 : 0);
      }
-@@ -916,7 +935,12 @@
+@@ -925,7 +944,12 @@ assert(he->p.str != NULL);
  	    goto exit;
  
  	if (rpmIsDebug() &&
@@ -76,7 +77,7 @@ diff -ur rpm-5.4.0.orig/lib/psm.c rpm-5.4.0/lib/psm.c
  	{
  	    static const char set_x[] = "set -x\n";
  	    nw = Fwrite(set_x, sizeof(set_x[0]), sizeof(set_x)-1, fd);
-@@ -1051,12 +1075,22 @@
+@@ -1060,12 +1084,22 @@ assert(he->p.str != NULL);
  
  	{   const char * rootDir = rpmtsRootDir(ts);
  	    if (!rpmtsChrootDone(ts) && rootDir != NULL &&
@@ -99,7 +100,7 @@ diff -ur rpm-5.4.0.orig/lib/psm.c rpm-5.4.0/lib/psm.c
  	    xx = Chdir("/");
  	    rpmlog(RPMLOG_DEBUG, D_("%s: %s(%s)\texecv(%s) pid %d\n"),
  			psm->stepName, sln, NVRA,
-@@ -2961,6 +2995,13 @@
+@@ -2977,6 +3011,13 @@ assert(psm->te != NULL);
      case PSM_SCRIPT:	/* Run current package scriptlets. */
  	/* XXX running %verifyscript/%sanitycheck doesn't have psm->te */
      {	rpmtxn _parent = (psm && psm->te ? psm->te->txn : NULL);
@@ -113,7 +114,7 @@ diff -ur rpm-5.4.0.orig/lib/psm.c rpm-5.4.0/lib/psm.c
  	xx = rpmtxnBegin(rpmtsGetRdb(ts), _parent, NULL);
  	rc = runInstScript(psm);
  	if (rc)
-@@ -2968,11 +3009,24 @@
+@@ -2984,11 +3025,24 @@ assert(psm->te != NULL);
  	else
  	     xx = rpmtxnCommit(rpmtsGetRdb(ts)->db_txn);
  	rpmtsGetRdb(ts)->db_txn = NULL;
@@ -138,7 +139,7 @@ diff -ur rpm-5.4.0.orig/lib/psm.c rpm-5.4.0/lib/psm.c
  	break;
      case PSM_IMMED_TRIGGERS:
  	/* Run triggers in this package other package(s) set off. */
-@@ -2982,7 +3036,18 @@
+@@ -2998,7 +3052,18 @@ assert(psm->te != NULL);
  	    F_SET(psm, GOTTRIGGERS);
  	}
  	if (psm->triggers != NULL)
