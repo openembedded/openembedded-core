@@ -66,24 +66,26 @@ fakeroot rootfs_rpm_do_rootfs () {
 	touch ${INSTALL_ROOTFS_RPM}${rpmlibdir}/log/log.0000000001
 	cat > ${INSTALL_ROOTFS_RPM}${rpmlibdir}/DB_CONFIG << EOF
 # ================ Environment
-set_data_dir            .
-set_create_dir          .
-set_lg_dir              ./log
-set_tmp_dir             ./tmp
+set_data_dir .
+set_create_dir .
+set_lg_dir ./log
+set_tmp_dir ./tmp
+set_flags db_log_autoremove on
 
 # -- thread_count must be >= 8
-set_thread_count        64
+set_thread_count 64
 
 # ================ Logging
 
 # ================ Memory Pool
-set_mp_mmapsize         268435456
+set_cachesize 0 1048576 0
+set_mp_mmapsize 268435456
 
 # ================ Locking
-set_lk_max_locks        16384
-set_lk_max_lockers      16384
-set_lk_max_objects      16384
-mutex_set_max           163840
+set_lk_max_locks 16384
+set_lk_max_lockers 16384
+set_lk_max_objects 16384
+mutex_set_max 163840
 
 # ================ Replication
 EOF

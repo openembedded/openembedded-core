@@ -42,14 +42,14 @@ HOMEPAGE = "http://rpm5.org/"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
-DEPENDS = "bzip2 zlib db openssl elfutils expat libpcre attr acl popt ${extrarpmdeps}"
+DEPENDS = "beecrypt bzip2 zlib db openssl elfutils expat libpcre attr acl popt ${extrarpmdeps}"
 extrarpmdeps = "python perl file"
 extrarpmdeps_virtclass-native = "python-native file-native"
-PR = "r38"
+PR = "r39"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
-SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.0-0.20101229.src.rpm;extract=rpm-5.4.0.tar.gz \
+SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.8-0.20120401.src.rpm;extract=rpm-5.4.8.tar.gz \
 	   file://rpm-log-auto-rm.patch \
 	   file://rpm-db-reduce.patch \
 	   file://perfile_rpmdeps.sh \
@@ -58,28 +58,22 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.0-0.20101229.src.rpm;ex
 	   file://header-include-fix.patch \
 	   file://rpm-platform.patch \
 	   file://rpm-showrc.patch \
-	   file://rpm-nofsync.patch \
 	   file://rpm-solvedb.patch \
 	   file://rpm-tools-mtree-LDFLAGS.patch \
-	   file://fprint-pointer-fix.patch \
 	   file://rpm-fileclass.patch \
 	   file://rpm-canonarch.patch \
 	   file://rpm-no-loopmsg.patch \
 	   file://rpm-scriptletexechelper.patch \
-	   file://fix_for_automake_1.11.2.patch \
 	   file://pythondeps.sh \
 	   file://rpmdeps-oecore.patch \
 	   file://rpm-resolvedep.patch \
 	   file://rpm-respect-arch.patch \
-	   file://rpm_fix_for_automake-1.12.patch \
+	   file://rpm-no-perl-urpm.patch \
+	   file://rpm-macros.patch \
 	  "
 
-#	   file://rpm-autoconf.patch \
-#	   file://remove-compiled-tests.patch;apply=no \
-#	  "
-
-SRC_URI[md5sum] = "19c1a7f68d7765eeb7615c9c4e54e380"
-SRC_URI[sha256sum] = "887e76218308b570c33c8c2fb10b5298b3afd5d602860d281befc85357b3b923"
+SRC_URI[md5sum] = "424b60bf2e0a624a218440d943861644"
+SRC_URI[sha256sum] = "56eb5033d4de98c217475fb34d466d551f8912959389e7854a806e2bd9e13380"
 
 inherit autotools gettext
 
@@ -106,13 +100,13 @@ WITH_PYTHON = "	--with-python=${PYTHON_BASEVERSION} \
 # the perl module creation and installation would need to be patched.
 # (currently has host perl contamination issues)
 #WITH_PERL = "	--with-perl --without-perlembed"
-WITH_PERL = "	--without-perl"
+WITH_PERL = "	--without-perl --without-perl-urpm"
 
-WITH_PERL_virtclass-native = " --without-perl"
+WITH_PERL_virtclass-native = " --without-perl --without-perl-urpm"
 
 WITH_DB = "--with-db --with-dbsql --without-db-tools-integrated --without-sqlite"
 
-WITH_CRYPTO = "--with-beecrypt=internal --with-openssl --without-nss --without-gcrypt"
+WITH_CRYPTO = "--with-beecrypt --with-openssl --without-nss --without-gcrypt"
 
 WITH_KEYUTILS = "--without-keyutils"
 WITH_LIBELF = "--with-libelf"
@@ -411,6 +405,25 @@ do_install_append() {
 	rm -f ${D}/${libdir}/rpm/dbconvert.sh
 
 	rm -f ${D}/${libdir}/rpm/libsqldb.*
+
+	# We don't want, nor need the Mandriva multiarch items
+	rm -f ${D}/${bindir}/multiarch-dispatch
+	rm -f ${D}/${bindir}/multiarch-platform
+	rm -f ${D}/${libdir}/rpm/check-multiarch-files
+	rm -f ${D}/${libdir}/rpm/mkmultiarch
+	rm -f ${D}/${includedir}/multiarch-dispatch.h
+
+	rm -f ${D}/${libdir}/rpm/gstreamer.sh
+	rm -f ${D}/${libdir}/rpm/gem_helper.rb
+	rm -f ${D}/${libdir}/rpm/rubygems.rb
+	rm -f ${D}/${libdir}/rpm/kmod-deps.sh
+	rm -f ${D}/${libdir}/rpm/pythoneggs.py
+	rm -f ${D}/${libdir}/rpm/macros.d/kernel
+	rm -f ${D}/${libdir}/rpm/macros.d/gstreamer
+	rm -f ${D}/${libdir}/rpm/bin/mgo
+	rm -f ${D}/${libdir}/rpm/bin/dbconvert
+	rm -f ${D}/${libdir}/rpm/bin/pom2spec
+
 }
 
 do_install_append_virtclass-native() {

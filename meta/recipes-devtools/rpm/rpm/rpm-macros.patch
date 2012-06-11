@@ -1,0 +1,61 @@
+macros/macros.in: Revert settings to the same as RPM 5.4.0
+
+Enable a reasonable set of rpmdeps dependency helper macros.  These sets
+were used by RPM 5.4.0.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff -ur rpm-5.4.8.orig/macros/macros.in rpm-5.4.8/macros/macros.in
+--- rpm-5.4.8.orig/macros/macros.in	2012-03-21 19:04:06.000000000 -0500
++++ rpm-5.4.8/macros/macros.in	2012-06-07 17:02:53.903046624 -0500
+@@ -985,7 +985,7 @@
+ 
+ #==============================================================================
+ # ---- rpmbuild macros.
+-#%%{load:%{_usrlibrpm}/macros.rpmbuild}
++%{load:%{_usrlibrpm}/macros.rpmbuild}
+ 
+ #------------------------------------------------------------------------
+ # cmake(...) configuration
+@@ -997,15 +997,15 @@
+ 
+ #------------------------------------------------------------------------
+ # perl(...) configuration
+-#%%{load:%{_usrlibrpm}/macros.d/perl}
++%{load:%{_usrlibrpm}/macros.d/perl}
+ 
+ #------------------------------------------------------------------------
+ # python(...) configuration.
+-#%%{load:%{_usrlibrpm}/macros.d/python}
++%{load:%{_usrlibrpm}/macros.d/python}
+ 
+ #------------------------------------------------------------------------
+ # php(...) configuration.
+-#%%{load:%{_usrlibrpm}/macros.d/php}
++%{load:%{_usrlibrpm}/macros.d/php}
+ 
+ #------------------------------------------------------------------------
+ # java(...) configuration.
+@@ -1013,11 +1013,11 @@
+ 
+ #------------------------------------------------------------------------
+ # libtool(...) configuration.
+-#%%{load:%{_usrlibrpm}/macros.d/libtool}
++%{load:%{_usrlibrpm}/macros.d/libtool}
+ 
+ #------------------------------------------------------------------------
+ # pkgconfig(...) configuration.
+-#%%{load:%{_usrlibrpm}/macros.d/pkgconfig}
++%{load:%{_usrlibrpm}/macros.d/pkgconfig}
+ 
+ #------------------------------------------------------------------------
+ # mono(...) configuration.
+@@ -1029,7 +1029,7 @@
+ 
+ #------------------------------------------------------------------------
+ # tcl(...) configuration.
+-#%%{load:%{_usrlibrpm}/macros.d/tcl}
++%{load:%{_usrlibrpm}/macros.d/tcl}
+ 
+ # \endverbatim
+ #*/

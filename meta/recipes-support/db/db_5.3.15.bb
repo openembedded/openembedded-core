@@ -14,15 +14,15 @@ HOMEPAGE = "http://www.oracle.com/technology/products/berkeley-db/db/index.html"
 LICENSE = "Sleepycat"
 VIRTUAL_NAME ?= "virtual/db"
 CONFLICTS = "db3"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz"
 SRC_URI += "file://arm-thumb-mutex_db5.patch;patchdir=.."
 
-SRC_URI[md5sum] = "76fcbfeebfcd09ba0b4d96bfdf8d884d"
-SRC_URI[sha256sum] = "0194d4ca9266ba1a1c0bfbc233b18bfd05f63163453c81ebcdfdc7112d5ac850"
+SRC_URI[md5sum] = "5493fb5f7cc3915887c836b096f18773"
+SRC_URI[sha256sum] = "4f4f7d548984dde3584fcda0e4f96901cb8bafb08033a7781aec64ef2ea1f579"
 
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=86f9294f39f38ef9e89690bcd2320e7a"
+LIC_FILES_CHKSUM = "file://../LICENSE;md5=12cc3ff983ed4ecc6cc091370ee4dbc3"
 
 inherit autotools
 
