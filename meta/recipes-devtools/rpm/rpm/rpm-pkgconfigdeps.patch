@@ -1,0 +1,34 @@
+pkgconfigdeps.sh: Change to restricting pkgconfig to the local directory
+
+Using PKG_CONFIG_PATH will allow pkg-config to fall back to the system paths,
+we don't want this as it may lead to inaccurate results in some corner cases.
+
+PKG_CONFIG_LIBDIR will ensure pkg-config stays within the install directory.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff -ur rpm-5.4.9.orig/scripts/pkgconfigdeps.sh rpm-5.4.9/scripts/pkgconfigdeps.sh
+--- rpm-5.4.9.orig/scripts/pkgconfigdeps.sh	2009-02-13 08:13:37.000000000 -0600
++++ rpm-5.4.9/scripts/pkgconfigdeps.sh	2012-06-07 17:35:42.730003847 -0500
+@@ -18,8 +18,8 @@
+     *.pc)
+ 	# Query the dependencies of the package.
+ 	DIR=`dirname ${filename}`
+-	PKG_CONFIG_PATH="$DIR:$DIR/../../share/pkgconfig"
+-	export PKG_CONFIG_PATH
++	PKG_CONFIG_LIBDIR="$DIR:$DIR/../../share/pkgconfig"
++	export PKG_CONFIG_LIBDIR
+ 	$pkgconfig --print-provides "$filename" 2> /dev/null | while read n r v ; do
+ 	    [ -n "$n" ] || continue
+ 	    # We have a dependency.  Make a note that we need the pkgconfig
+@@ -42,8 +42,8 @@
+ 	[ -n "$oneshot" ] && echo "$oneshot"; oneshot=""
+ 	# Query the dependencies of the package.
+ 	DIR=`dirname ${filename}`
+-	PKG_CONFIG_PATH="$DIR:$DIR/../../share/pkgconfig"
+-	export PKG_CONFIG_PATH
++	PKG_CONFIG_LIBDIR="$DIR:$DIR/../../share/pkgconfig"
++	export PKG_CONFIG_LIBDIR
+ 	$pkgconfig --print-requires "$filename" 2> /dev/null | while read n r v ; do
+ 	    [ -n "$n" ] || continue
+ 	    if  [ -n "$r" ] && [ -n "$v" ]; then
