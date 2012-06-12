@@ -45,15 +45,16 @@ B = "${WORKDIR}/db-${PV}/build_unix"
 # The executables go in a separate package - typically there
 # is no need to install these unless doing real database
 # management on the system.
-PACKAGES += " ${PN}-bin"
+inherit lib_package
 
 # Package contents
-FILES_${PN} = "${libdir}/libdb-5*so*"
 FILES_${PN}-bin = "${bindir}/*"
 # The dev package has the .so link (as in db3) and the .a's -
 # it is therefore incompatible (cannot be installed at the
-# same time) as the db3 package, allow the default packaging
-# to sort out ${libdir}
+# same time) as the db3 package
+# sort out the .so since they do version prior to the .so
+SOLIBS = "-5*.so"
+FILES_SOLIBSDEV = "${libdir}/libdb.so"
 
 #configuration - set in local.conf to override
 # All the --disable-* options replace --enable-smallbuild, which breaks a bunch of stuff (eg. postfix)
