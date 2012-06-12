@@ -47,8 +47,8 @@ INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
 
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} = "--system --no-create-home \
-                       --shell /bin/false --groups video,tty,audio \
+USERADD_PARAM_${PN} = "--create-home \
+                       --groups video,tty,audio \
                        --user-group xuser"
 
 inherit autotools pkgconfig update-rc.d useradd
