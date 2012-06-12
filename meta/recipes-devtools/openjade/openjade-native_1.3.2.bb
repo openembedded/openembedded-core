@@ -14,6 +14,7 @@ RDEPENDS_${PN} = "sgml-common-native"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/openjade/openjade-${PV}.tar.gz \
            file://makefile.patch \
+           file://reautoconf.patch \
 	   file://user-declared-default-constructor.patch"
 
 SRC_URI[md5sum] = "7df692e3186109cc00db6825b777201e"
@@ -38,6 +39,10 @@ CFLAGS =+ "-I${S}/include"
 SSTATEPOSTINSTFUNCS += "openjade_sstate_postinst"
 SYSROOT_PREPROCESS_FUNCS += "openjade_sysroot_preprocess"
 
+# configure.in needs to be reloacted to trigger reautoconf
+do_configure_prepend () {
+	cp ${S}/config/configure.in ${S}/
+}
 
 # We need to do this else the source interdependencies aren't generated and
 # build failures can result (e.g. zero size style/Makefile.dep file)
