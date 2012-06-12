@@ -30,6 +30,8 @@ INITSCRIPT_PARAMS = "start 9 5 2 . stop 20 0 1 6 ."
 
 # Use fixed Xusername of xuser for now, this will need to be
 # fixed if the Xusername changes from xuser
+# IMPORTANT: because xuser is shared with connman, please make sure the
+# USERADD_PARAM is in sync with the one in connman.inc
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "--create-home \
                        --groups video,tty,audio \
