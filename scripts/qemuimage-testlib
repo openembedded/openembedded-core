@@ -83,7 +83,7 @@ Test_SCP()
 	local src=$2
 	local des=$3
 	local tmpfile=`mktemp`
-	local timeout=60
+	local time_out=60
 	local ret=0
 
 	# We use expect to interactive with target by ssh
@@ -109,7 +109,7 @@ Test_SSH()
 	shift
 	local command=$@
 	local tmpfile=`mktemp`
-	local timeout=60
+	local time_out=60
 	local ret=0
 	local exp_cmd=`cat << EOF
 eval spawn ssh -o UserKnownHostsFile=$tmpfile root@$ip_addr "$command"
