@@ -387,6 +387,17 @@ def check_sanity(sanity_data):
     if "." in paths or "" in paths:
         messages = messages + "PATH contains '.' or '', which will break the build, please remove this."
 
+    bbpaths = sanity_data.getVar('BBPATH', True).split(":")
+    if "." in bbpaths or "" in bbpaths:
+        # TODO: change the following message to fatal when all BBPATH issues
+        # are fixed
+        bb.warn("BBPATH references the current directory, either through "    \
+                "an empty entry, or a '.'.\n\t This is unsafe and means your "\
+                "layer configuration is adding empty elements to BBPATH.\n\t "\
+                "Please check your layer.conf files and other BBPATH "        \
+                "settings to remove the current working directory "           \
+                "references.");
+
     if sanity_data.getVar('TARGET_ARCH', True) == "arm":
         # This path is no longer user-readable in modern (very recent) Linux
         try:
