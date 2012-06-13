@@ -32,6 +32,8 @@ require eglibc-options.inc
 
 LEAD_SONAME = "libc.so"
 
+CACHED_CONFIGUREVARS += "ac_cv_path_KSH=${base_bindir}/bash \
+                       ac_cv_path_BASH_SHELL=${base_bindir}/bash"
 GLIBC_EXTRA_OECONF ?= ""
 GLIBC_EXTRA_OECONF_virtclass-nativesdk = ""
 INHIBIT_DEFAULT_DEPS = "1"
