@@ -81,11 +81,13 @@ IMAGE_TYPE_vmdk = '${@base_contains("IMAGE_FSTYPES", "vmdk", "vmdk", "empty", d)
 inherit image-${IMAGE_TYPE_vmdk}
 
 python () {
-    deps = d.getVarFlag('do_rootfs', 'depends') or ""
-    deps += imagetypes_getdepends(d)
+    deps = " " + imagetypes_getdepends(d)
+    d.appendVarFlag('do_rootfs', 'depends', deps)
+
+    deps = ""
     for dep in (d.getVar('EXTRA_IMAGEDEPENDS', True) or "").split():
         deps += " %s:do_populate_sysroot" % dep
-    d.setVarFlag('do_rootfs', 'depends', deps)
+    d.appendVarFlag('do_build', 'depends', deps)
 
     # If we don't do this we try and run the mapping hooks while parsing which is slow
     # bitbake should really provide something to let us know this...
