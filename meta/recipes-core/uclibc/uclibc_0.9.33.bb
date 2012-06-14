@@ -1,8 +1,8 @@
-SRCREV="f7c18471f1ff8f3e54e462df0e96e19739869c78"
+SRCREV="7810e4f8027b5c4c8ceec6fefec4eb779362ebb5"
 
 require uclibc.inc
 
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 PROVIDES += "virtual/${TARGET_PREFIX}libc-for-gcc"
 
 SRC_URI = "git://uclibc.org/uClibc.git;branch=${PV};protocol=git \
