@@ -214,6 +214,7 @@ ALTERNATIVE_LINK_NAME[syslog-init] = "${sysconfdir}/init.d/syslog"
 ALTERNATIVE_LINK_NAME[syslog-startup-conf] = "${sysconfdir}/syslog-startup.conf"
 
 ALTERNATIVE_TARGET = "/bin/busybox"
+ALTERNATIVE_TARGET[syslog-startup-conf] = "${sysconfdir}/syslog-startup.conf.${BPN}"
 
 python do_package_prepend () {
 	# We need to load the full set of busybox provides from the /etc/busybox.links
