@@ -65,8 +65,11 @@ def main():
     parser = optparse.OptionParser(
         usage = """%prog
 
-Remove the obsolete packages' build directories in WORKDIR.
-This script must be ran under BUILDDIR after source file \"oe-init-build-env\".""")
+%prog removes the obsolete packages' build directories in WORKDIR.
+This script must be ran under BUILDDIR after source file \"oe-init-build-env\".
+
+Any file or directory under WORKDIR which is not created by Yocto
+will be deleted. Be CAUTIOUS.""")
 
     options, args = parser.parse_args(sys.argv)
 
