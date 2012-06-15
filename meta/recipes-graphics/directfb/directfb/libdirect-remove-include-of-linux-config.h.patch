@@ -1,3 +1,5 @@
+Upstream-status: backport from 1.6.0-pre1
+
 From cd575a84f10d90759e069f5f2e6092251a1b84bd Mon Sep 17 00:00:00 2001
 From: Sven Neumann <s.neumann@raumfeld.com>
 Date: Fri, 23 Sep 2011 10:00:02 +0200
