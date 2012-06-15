@@ -47,6 +47,19 @@ def run_command(cmd):
         sys.exit(1)
     return output
 
+def get_cur_arch_dirs(workdir, arch_dirs):
+    pattern = workdir + '/(.*?)/'
+
+    # select thest 5 packages to get the dirs of current arch
+    pkgs = ['hicolor-icon-theme', 'base-files', 'acl-native', 'binutils-crosssdk', 'autoconf-nativesdk']
+
+    for pkg in pkgs:
+        cmd = "bitbake -e " + pkg + " | grep ^IMAGE_ROOTFS="
+        output = run_command(cmd)
+        output = output.split('"')[1]
+        m = re.match(pattern, output)
+        arch_dirs.append(m.group(1))
+
 def main():
     global parser
     parser = optparse.OptionParser(
@@ -87,14 +100,42 @@ This script must be ran under BUILDDIR after source file \"oe-init-build-env\"."
             version = parse_version(elems[2])
         pkg_cur_dirs.append(elems[0] + '-' + version)
 
-    cmd = "bitbake -e | grep ^TMPDIR"
+    cmd = "bitbake -e"
     output = run_command(cmd)
 
-    tmpdir = output.split('"')[1]
-    workdir = os.path.join(tmpdir, 'work')
-    if not os.path.exists(workdir):
-        print "WORKDIR %s does NOT exist. Quit." % workdir
+    tmpdir = None
+    image_rootfs = None
+    output = output.split('\n')
+    for line in output:
+        if tmpdir and image_rootfs:
+            break
+
+        if not tmpdir:
+            m = re.match('TMPDIR="(.*)"', line)
+            if m:
+                tmpdir = m.group(1)
+
+        if not image_rootfs:
+            m = re.match('IMAGE_ROOTFS="(.*)"', line)
+            if m:
+                image_rootfs = m.group(1)
+
+    # won't fail just in case
+    if not tmpdir or not image_rootfs:
+        print "Can't get TMPDIR or IMAGE_ROOTFS."
         return 1
+
+    pattern = tmpdir + '/(.*?)/(.*?)/'
+    m = re.match(pattern, image_rootfs)
+    if not m:
+        print "Can't get WORKDIR."
+        return 1
+
+    workdir = os.path.join(tmpdir, m.group(1))
+
+    # we only deal the dirs of current arch, total numbers of dirs are 6
+    cur_arch_dirs = [m.group(2)]
+    get_cur_arch_dirs(workdir, cur_arch_dirs)
 
     for workroot, dirs, files in os.walk(workdir):
         # For the files, they should NOT exist in WORKDIR. Romve them.
@@ -102,6 +143,9 @@ This script must be ran under BUILDDIR after source file \"oe-init-build-env\"."
             obsolete_dirs.append(os.path.join(workroot, f))
 
         for d in dirs:
+            if d not in cur_arch_dirs:
+                continue
+
             for pkgroot, pkgdirs, filenames in os.walk(os.path.join(workroot, d)):
                 for f in filenames:
                     obsolete_dirs.append(os.path.join(pkgroot, f))
