@@ -1,3 +1,6 @@
+Upstream-Status: Inappropriate [configuration]
+
+Signed-off-by: Xiaofeng Yan <xiaofeng.yan@windriver.com>
 --- a/rc.d/init.d/functions	2009-12-10 05:24:11.000000000 +0800
 +++ b/rc.d/init.d/functions.new	2012-06-01 16:57:12.651229387 +0800
 @@ -16,7 +16,7 @@
