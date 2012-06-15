@@ -22,7 +22,7 @@ import re
 import commands
 import shutil
 
-versions = {}
+pkg_cur_dirs = []
 obsolete_dirs = []
 parser = None
 
@@ -38,15 +38,6 @@ def parse_version(verstr):
         return elems[1]
     else:
         return epoch + '_' + elems[1]
-
-def parse_dir(match, pkgabsdir):
-    pkg_name = match.group(1)
-    pkg_version = match.group(2)
-    if pkg_name in versions:
-        if pkg_version != versions[pkg_name]:
-            obsolete_dirs.append(pkgabsdir)
-        return True
-    return False
 
 def main():
     global parser
@@ -89,7 +80,7 @@ This script must be ran under BUILDDIR after source file \"oe-init-build-env\"."
             version = parse_version(elems[1])
         else:
             version = parse_version(elems[2])
-        versions[elems[0]] = version
+        pkg_cur_dirs.append(elems[0] + '-' + version)
 
     cmd = "bitbake -e | grep ^TMPDIR"
     (ret, output) = commands.getstatusoutput(cmd)
@@ -103,31 +94,27 @@ This script must be ran under BUILDDIR after source file \"oe-init-build-env\"."
         print "WORKDIR %s does NOT exist. Quit." % workdir
         return 1
 
-    for archdir in os.listdir(workdir):
-        archdir = os.path.join(workdir, archdir)
-        if not os.path.isdir(archdir):
-            pass
+    for workroot, dirs, files in os.walk(workdir):
+        # For the files, they should NOT exist in WORKDIR. Romve them.
+        for f in files:
+            obsolete_dirs.append(os.path.join(workroot, f))
 
-        for pkgdir in sorted(os.listdir(archdir)):
-            pkgabsdir = os.path.join(archdir, pkgdir)
-            if not os.path.isdir(pkgabsdir):
-                pass
+        for d in dirs:
+            for pkgroot, pkgdirs, filenames in os.walk(os.path.join(workroot, d)):
+                for f in filenames:
+                    obsolete_dirs.append(os.path.join(pkgroot, f))
 
-            # parse the package directory names
-            # parse native/nativesdk packages first
-            match = re.match('(.*?-native.*?)-(.*)', pkgdir)
-            if match and parse_dir(match, pkgabsdir):
-                continue
+                for pkgdir in sorted(pkgdirs):
+                    if pkgdir not in pkg_cur_dirs:
+                        obsolete_dirs.append(os.path.join(pkgroot, pkgdir))
 
-            # parse package names which ends with numbers such as 'glib-2.0'
-            match = re.match('(.*?-[\.\d]+)-(\d.*)', pkgdir)
-            if match and parse_dir(match, pkgabsdir):
-                continue
+                # just process the top dir of every package under tmp/work/*/,
+                # then jump out of the above os.walk()
+                break
 
-            # other packages
-            match = re.match('(.*?)-(\d.*)', pkgdir)
-            if match and parse_dir(match, pkgabsdir):
-                continue
+        # it is convenient to use os.walk() to get dirs and files at same time
+        # both of them have been dealed in the loop, so jump out
+        break
 
     for d in obsolete_dirs:
         print "Deleleting %s" % d
