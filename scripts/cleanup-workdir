@@ -19,7 +19,7 @@ import os
 import sys
 import optparse
 import re
-import commands
+import subprocess
 import shutil
 
 pkg_cur_dirs = []
@@ -39,6 +39,14 @@ def parse_version(verstr):
     else:
         return epoch + '_' + elems[1]
 
+def run_command(cmd):
+    pipe = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    output = pipe.communicate()[0]
+    if pipe.returncode != 0:
+        print "Execute command '%s' failed." % cmd
+        sys.exit(1)
+    return output
+
 def main():
     global parser
     parser = optparse.OptionParser(
@@ -49,7 +57,7 @@ This script must be ran under BUILDDIR after source file \"oe-init-build-env\"."
 
     options, args = parser.parse_args(sys.argv)
 
-    builddir = commands.getoutput('echo $BUILDDIR')
+    builddir = run_command('echo $BUILDDIR').strip()
     if len(builddir) == 0:
         err_quit("Please source file \"oe-init-build-env\" first.\n")
 
@@ -58,10 +66,7 @@ This script must be ran under BUILDDIR after source file \"oe-init-build-env\"."
 
     print 'Updating bitbake caches...'
     cmd = "bitbake -s"
-    (ret, output) = commands.getstatusoutput(cmd)
-    if ret != 0:
-        print "Execute 'bitbake -s' failed. Can't get packages' versions."
-        return 1
+    output = run_command(cmd)
 
     output = output.split('\n')
     index = 0
@@ -83,10 +88,7 @@ This script must be ran under BUILDDIR after source file \"oe-init-build-env\"."
         pkg_cur_dirs.append(elems[0] + '-' + version)
 
     cmd = "bitbake -e | grep ^TMPDIR"
-    (ret, output) = commands.getstatusoutput(cmd)
-    if ret != 0:
-        print "Execute 'bitbke -e' failed. Can't get TMPDIR."
-        return 1
+    output = run_command(cmd)
 
     tmpdir = output.split('"')[1]
     workdir = os.path.join(tmpdir, 'work')
