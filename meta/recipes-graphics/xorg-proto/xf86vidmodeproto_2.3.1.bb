@@ -9,9 +9,9 @@ and set video mode timings."
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=499be2ff387a42f84628c35f311f1502"
 
-CONFLICTS = "xxf86vmext"
+RCONFLICTS_${PN} = "xxf86vmext"
 
-PR = "r0"
+PR = "r1"
 PE = "1"
 
 SRC_URI[md5sum] = "e793ecefeaecfeabd1aed6a01095174e"

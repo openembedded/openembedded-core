@@ -12,8 +12,8 @@ LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=262a7a87da56e66dd639bf7334a110c6 \
                     file://xfixesproto.h;endline=43;md5=c3a9ee6db3532ed0d44dea266cfc97f4"
 
-CONFLICTS = "fixesext"
-PR = "r0"
+RCONFLICTS_${PN} = "fixesext"
+PR = "r1"
 PE = "1"
 
 BBCLASSEXTEND = "native nativesdk"

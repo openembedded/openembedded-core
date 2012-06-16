@@ -9,9 +9,9 @@ see and monitor X resource usage of various clients."
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=604859305e662503077240fee8c77d97"
 
-CONFLICTS = "resourceext"
+RCONFLICTS_${PN} = "resourceext"
 
-PR = "r0"
+PR = "r1"
 PE = "1"
 
 SRC_URI[md5sum] = "cfdb57dae221b71b2703f8e2980eaaf4"
