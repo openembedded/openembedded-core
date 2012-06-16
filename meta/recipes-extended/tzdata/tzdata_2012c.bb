@@ -5,9 +5,9 @@ LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://asia;beginline=3;endline=4;md5=06468c0e84ef4d4c97045a4a29b08234"
 DEPENDS = "tzcode-native"
 
-PR = "r0"
+PR = "r1"
 
-RCONFLICTS= "timezones timezone-africa timezone-america timezone-antarctica \
+RCONFLICTS_${PN} = "timezones timezone-africa timezone-america timezone-antarctica \
              timezone-arctic timezone-asia timezone-atlantic \
              timezone-australia timezone-europe timezone-indian \
              timezone-iso3166.tab timezone-pacific timezone-zone.tab"

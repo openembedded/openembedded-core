@@ -2,13 +2,13 @@ DESCRIPTION = "Mini X session files for poky"
 HOMEPAGE = "http://www.yoctoproject.org"
 BUGTRACKER = "http://bugzilla.pokylinux.org"
 
-PR = "r1"
+PR = "r2"
 
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://mini-x-session;endline=5;md5=b6430bffbcf05f9760e72938826b7487"
 
 SECTION = "x11"
-RCONFLICTS = "matchbox-common"
+RCONFLICTS_${PN} = "matchbox-common"
 
 SRC_URI = "file://mini-x-session"
 S = "${WORKDIR}"
