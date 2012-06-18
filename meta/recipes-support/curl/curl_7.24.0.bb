@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e66
 DEPENDS = "zlib gnutls"
 DEPENDS_virtclass-native = "zlib-native openssl-native"
 DEPENDS_virtclass-nativesdk = "zlib-nativesdk"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://noldlibpath.patch \
@@ -35,25 +35,20 @@ do_configure_prepend() {
 	sed -i s:OPT_GNUTLS/bin:OPT_GNUTLS:g configure.ac
 }
 
-PACKAGES += "${PN}-certs libcurl libcurl-dev libcurl-doc"
-
-FILES_${PN} = "${bindir}/curl"
+PACKAGES =+ "${PN}-certs libcurl libcurl-dev libcurl-staticdev libcurl-doc"
 
 FILES_${PN}-certs = "${datadir}/curl/curl-*"
 PACKAGE_ARCH_${PN}-certs = "all"
-
-FILES_${PN}-doc = "${mandir}/man1/curl.1"
 
 FILES_lib${BPN} = "${libdir}/lib*.so.*"
 RRECOMMENDS_lib${BPN} += "${PN}-certs"
 FILES_lib${BPN}-dev = "${includedir} \
                       ${libdir}/lib*.so \
-                      ${libdir}/lib*.a \
                       ${libdir}/lib*.la \
                       ${libdir}/pkgconfig \
                       ${datadir}/aclocal \
                       ${bindir}/*-config"
-
+FILES_lib${BPN}-staticdev = "${libdir}/lib*.a"
 FILES_lib${BPN}-doc = "${mandir}/man3 \
                       ${mandir}/man1/curl-config.1"
 
