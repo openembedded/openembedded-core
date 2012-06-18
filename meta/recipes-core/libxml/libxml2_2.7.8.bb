@@ -1,6 +1,6 @@
 require libxml2.inc
 
-PR = "r8"
+PR = "r9"
 
 SRC_URI += "file://fix_version_info.patch \
             file://libxml2_fix_for_automake_1.12.patch"
