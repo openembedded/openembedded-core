@@ -60,7 +60,7 @@ python debian_package_name_hook () {
 				for f in files:
 					if so_re.match(f):
 						fp = os.path.join(root, f)
-						cmd = (d.getVar('BUILD_PREFIX', True) or "") + "objdump -p " + fp + " 2>/dev/null"
+						cmd = (d.getVar('TARGET_PREFIX', True) or "") + "objdump -p " + fp + " 2>/dev/null"
 						fd = os.popen(cmd)
 						lines = fd.readlines()
 						fd.close()
