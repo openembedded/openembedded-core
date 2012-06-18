@@ -70,7 +70,7 @@ fakeroot do_populate_sdk() {
 populate_sdk_log_check() {
 	for target in $*
 	do
-		lf_path="${WORKDIR}/temp/log.do_$target.${PID}"
+		lf_path="`dirname ${BB_LOGFILE}`/log.do_$target.${PID}"
 
 		echo "log_check: Using $lf_path as logfile"
 

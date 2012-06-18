@@ -157,7 +157,7 @@ package_install_internal_ipk() {
 	fi
 
 	if [ ! -z "${package_attemptonly}" ]; then
-		opkg-cl ${ipkg_args} install ${package_attemptonly} > "${WORKDIR}/temp/log.do_${task}_attemptonly.${PID}" || true
+		opkg-cl ${ipkg_args} install ${package_attemptonly} > "`dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}" || true
 	fi
 
 	package_tryout_install_multilib_ipk
