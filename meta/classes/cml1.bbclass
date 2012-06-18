@@ -15,7 +15,23 @@ HOSTLDFLAGS = "${BUILD_LDFLAGS}"
 HOST_LOADLIBES = "-lncurses"
 
 python do_menuconfig() {
+        try:
+            mtime = os.path.getmtime(".config")
+        except OSError:
+            mtime = 0
+
         oe_terminal("${SHELL} -c \"make menuconfig; echo 'Pausing for 5 seconds'; sleep 5\"", '${PN} Configuration', d)
+
+        # FIXME this check can be removed when the minimum bitbake version has been bumped
+        if hasattr(bb.build, 'write_taint'):
+            try:
+                newmtime = os.path.getmtime(".config")
+            except OSError:
+                newmtime = 0
+
+            if newmtime > mtime:
+                bb.note("Configuration changed, recompile will be forced")
+                bb.build.write_taint('do_compile', d)
 }
 do_menuconfig[depends] += "ncurses-native:do_populate_sysroot"
 do_menuconfig[nostamp] = "1"
