@@ -13,7 +13,6 @@ PR = "r2"
 PACKAGES += "wiper"
 
 FILES_wiper = "${bindir}/wiper.sh"
-FILES_${PN} = "${base_sbindir} ${mandir}"
 
 RDEPENDS_wiper = "bash gawk stat"
 
