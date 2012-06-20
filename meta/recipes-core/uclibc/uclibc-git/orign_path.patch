@@ -5,9 +5,9 @@ Upstream-Status: Pending
 
 Index: git/ldso/ldso/dl-elf.c
 ===================================================================
---- git.orig/ldso/ldso/dl-elf.c	2012-01-23 19:18:58.000000000 -0800
-+++ git/ldso/ldso/dl-elf.c	2012-01-23 21:52:06.144646590 -0800
-@@ -133,53 +133,60 @@
+--- git.orig/ldso/ldso/dl-elf.c	2012-06-19 18:29:08.629931662 -0700
++++ git/ldso/ldso/dl-elf.c	2012-06-19 21:21:14.798431393 -0700
+@@ -133,56 +133,60 @@
   * in uClibc/ldso/util/ldd.c */
  static struct elf_resolve *
  search_for_named_library(const char *name, unsigned rflags, const char *path_list,
@@ -16,9 +16,9 @@ Index: git/ldso/ldso/dl-elf.c
  {
 -	char *path, *path_n, *mylibname;
 +	char *mylibname;
-+	const char *p, *pn;
  	struct elf_resolve *tpnt;
 -	int done;
++	const char *p, *pn;
 +	int plen;
  
  	if (path_list==NULL)
@@ -82,24 +82,25 @@ Index: git/ldso/ldso/dl-elf.c
 -				_dl_strcpy(mylibname, "."); /* Assume current dir if empty path */
 -			_dl_strcat(mylibname, "/");
 -			_dl_strcat(mylibname, name);
--			if ((tpnt = _dl_load_elf_shared_library(rflags, rpnt, mylibname)) != NULL)
--				return tpnt;
++		_dl_strcat(mylibname, "/");
++		_dl_strcat(mylibname, name);
+ #ifdef __LDSO_SAFE_RUNPATH__
+-			if (*mylibname == '/')
++		if (*mylibname == '/')
+ #endif
+-				if ((tpnt = _dl_load_elf_shared_library(rflags, rpnt, mylibname)) != NULL)
+-					return tpnt;
 -			path_n = path+1;
 -		}
 -		path++;
 -	} while (!done);
-+		_dl_strcat(mylibname, "/");
-+		_dl_strcat(mylibname, name);
-+
-+		tpnt = _dl_load_elf_shared_library(rflags, rpnt, mylibname);
-+		if (tpnt != NULL)
++		if ((tpnt = _dl_load_elf_shared_library(rflags, rpnt, mylibname)) != NULL)
 +			return tpnt;
 +	}
-+
  	return NULL;
  }
  
-@@ -231,8 +238,10 @@
+@@ -234,8 +238,10 @@
  	if (pnt) {
  		pnt += (unsigned long) tpnt->dynamic_info[DT_STRTAB];
  		_dl_if_debug_dprint("\tsearching RPATH='%s'\n", pnt);
@@ -111,7 +112,7 @@ Index: git/ldso/ldso/dl-elf.c
  	}
  #endif
  
-@@ -240,7 +249,7 @@
+@@ -243,7 +249,7 @@
  	/* Check in LD_{ELF_}LIBRARY_PATH, if specified and allowed */
  	if (_dl_library_path) {
  		_dl_if_debug_dprint("\tsearching LD_LIBRARY_PATH='%s'\n", _dl_library_path);
@@ -120,7 +121,7 @@ Index: git/ldso/ldso/dl-elf.c
  		{
  			return tpnt1;
  		}
-@@ -254,7 +263,7 @@
+@@ -257,7 +263,7 @@
  	if (pnt) {
  		pnt += (unsigned long) tpnt->dynamic_info[DT_STRTAB];
  		_dl_if_debug_dprint("\tsearching RUNPATH='%s'\n", pnt);
@@ -129,7 +130,7 @@ Index: git/ldso/ldso/dl-elf.c
  			return tpnt1;
  	}
  #endif
-@@ -288,7 +297,7 @@
+@@ -291,7 +297,7 @@
  	/* Look for libraries wherever the shared library loader
  	 * was installed */
  	_dl_if_debug_dprint("\tsearching ldso dir='%s'\n", _dl_ldsopath);
@@ -138,7 +139,7 @@ Index: git/ldso/ldso/dl-elf.c
  	if (tpnt1 != NULL)
  		return tpnt1;
  #endif
-@@ -301,7 +310,7 @@
+@@ -304,7 +310,7 @@
  #ifndef __LDSO_CACHE_SUPPORT__
  					":" UCLIBC_RUNTIME_PREFIX "usr/X11R6/lib"
  #endif
@@ -149,9 +150,9 @@ Index: git/ldso/ldso/dl-elf.c
  
 Index: git/ldso/ldso/ldso.c
 ===================================================================
---- git.orig/ldso/ldso/ldso.c	2012-01-23 19:18:58.000000000 -0800
-+++ git/ldso/ldso/ldso.c	2012-01-23 21:34:11.152594621 -0800
-@@ -407,6 +407,20 @@
+--- git.orig/ldso/ldso/ldso.c	2012-06-19 18:29:08.633931663 -0700
++++ git/ldso/ldso/ldso.c	2012-06-19 18:29:10.197931738 -0700
+@@ -403,6 +403,20 @@
  	return p - list;
  }
  
@@ -172,7 +173,7 @@ Index: git/ldso/ldso/ldso.c
  void *_dl_get_ready_to_run(struct elf_resolve *tpnt, DL_LOADADDR_TYPE load_addr,
  			  ElfW(auxv_t) auxvt[AT_EGID + 1], char **envp, char **argv
  			  DL_GET_READY_TO_RUN_EXTRA_PARMS)
-@@ -458,9 +472,7 @@
+@@ -454,9 +468,7 @@
  	 * been fixed up by now.  Still no function calls outside of this
  	 * library, since the dynamic resolver is not yet ready.
  	 */
@@ -181,5 +182,5 @@ Index: git/ldso/ldso/ldso.c
 -	}
 +	_dl_setup_progname(argv[0]);
  
- #ifndef __LDSO_STANDALONE_SUPPORT__
- 	if (_start == (void *) auxvt[AT_ENTRY].a_un.a_val) {
+ #ifdef __DSBT__
+ 	_dl_ldso_dsbt = (void *)tpnt->dynamic_info[DT_DSBT_BASE_IDX];

@@ -74,9 +74,9 @@ Upstream-Status: Pending
 
 Index: git/Makefile.in
 ===================================================================
---- git.orig/Makefile.in
-+++ git/Makefile.in
-@@ -48,6 +48,7 @@ include $(top_srcdir)libresolv/Makefile.
+--- git.orig/Makefile.in	2012-06-18 13:10:12.000000000 -0700
++++ git/Makefile.in	2012-06-18 13:12:06.448829343 -0700
+@@ -48,6 +48,7 @@
  include $(top_srcdir)libutil/Makefile.in
  include $(top_srcdir)libpthread/Makefile.in
  include $(top_srcdir)librt/Makefile.in
@@ -84,7 +84,7 @@ Index: git/Makefile.in
  include $(top_srcdir)libubacktrace/Makefile.in
  include $(top_srcdir)extra/locale/Makefile.in
  
-@@ -230,6 +231,7 @@ HEADERS_RM- += sgtty.h
+@@ -250,6 +251,7 @@
  endif
  HEADERS_RM-$(HAVE_SHARED)                    += dlfcn.h bits/dlfcn.h
  HEADERS_RM-$(PTHREADS_DEBUG_SUPPORT)         += thread_db.h
@@ -92,10 +92,10 @@ Index: git/Makefile.in
  HEADERS_RM-$(UCLIBC_HAS_BSD_ERR)             += err.h
  HEADERS_RM-$(UCLIBC_HAS_CRYPT)               += crypt.h
  HEADERS_RM-$(UCLIBC_HAS_EPOLL)               += sys/epoll.h
-@@ -340,6 +342,12 @@ ifeq ($(UCLIBC_HAS_BACKTRACE),y)
- 		echo "GROUP ( $(UBACKTRACE_ASNEEDED) )" >> $(PREFIX)$(DEVEL_PREFIX)$(MULTILIB_DIR)/libc.so; \
- 	fi
+@@ -368,6 +370,12 @@
+ 	-$(INSTALL) -m 755 $(top_builddir)lib/libc.so $(PREFIX)$(DEVEL_PREFIX)$(MULTILIB_DIR)/
  endif
+ 	echo "$(UBACKTRACE_ASNEEDED)" >> $(PREFIX)$(DEVEL_PREFIX)$(MULTILIB_DIR)/libc.so
 +ifeq ($(UCLIBC_HAS_ARGP),y)
 +# Add the AS_NEEDED entry for libuargp.so
 +	if [ -f $(top_builddir)lib/libc.so -a -f $(PREFIX)$(RUNTIME_PREFIX)lib/$(SHARED_MAJORNAME) ] ; then \
@@ -107,9 +107,9 @@ Index: git/Makefile.in
  ifeq ($(HARDWIRED_ABSPATH),y)
 Index: git/Makerules
 ===================================================================
---- git.orig/Makerules
-+++ git/Makerules
-@@ -32,12 +32,12 @@ shared_objs = $(libc-y:.o=.os) $(libc-sh
+--- git.orig/Makerules	2012-06-18 13:10:12.000000000 -0700
++++ git/Makerules	2012-06-18 13:10:44.052825547 -0700
+@@ -32,12 +32,12 @@
  	$(libpthread-so-y) $(libpthread-nonshared-y) $(libthread_db-so-y) \
  	$(libresolv-so-y) $(librt-so-y) \
  	$(ldso-y) \
@@ -124,7 +124,7 @@ Index: git/Makerules
  ifeq ($(DOPIC),y)
  ar_objs := $(ar_objs:.o=.os)
  endif
-@@ -464,7 +464,7 @@ files.dep := $(libc-a-y) $(libc-so-y) $(
+@@ -472,7 +472,7 @@
  	$(librt-a-y) $(librt-so-y)  $(libresolv-a-y) $(libresolv-so-y) \
  	$(libcrypt-a-y) $(libcrypt-so-y) $(libutil-a-y) $(libutil-so-y) \
  	$(libnsl-a-y) $(libnsl-so-y) $(ldso-y) $(libdl-a-y) $(libdl-so-y) \
@@ -135,9 +135,9 @@ Index: git/Makerules
  	$(patsubst %.o,%.o.dep,$(filter %.o,$(files.dep))) \
 Index: git/Rules.mak
 ===================================================================
---- git.orig/Rules.mak
-+++ git/Rules.mak
-@@ -525,6 +525,13 @@ export UBACKTRACE_ASNEEDED:=$(shell $(LD
+--- git.orig/Rules.mak	2012-06-18 13:10:12.000000000 -0700
++++ git/Rules.mak	2012-06-18 13:10:44.056825544 -0700
+@@ -589,6 +589,13 @@
  else
  export UBACKTRACE_ASNEEDED:=""
  endif
@@ -153,9 +153,9 @@ Index: git/Rules.mak
  # Add a bunch of extra pedantic annoyingly strict checks
 Index: git/extra/Configs/Config.in
 ===================================================================
---- git.orig/extra/Configs/Config.in
-+++ git/extra/Configs/Config.in
-@@ -1814,6 +1814,23 @@ config UCLIBC_HAS_GNU_GETSUBOPT
+--- git.orig/extra/Configs/Config.in	2012-06-18 13:10:12.000000000 -0700
++++ git/extra/Configs/Config.in	2012-06-18 13:10:44.056825544 -0700
+@@ -1853,6 +1853,23 @@
  	  smaller SUSv3 compatible getsubopt().
  
  	  Most people will answer Y.
@@ -181,8 +181,8 @@ Index: git/extra/Configs/Config.in
  
 Index: git/libc/sysdeps/linux/common/bits/getopt_int.h
 ===================================================================
---- /dev/null
-+++ git/libc/sysdeps/linux/common/bits/getopt_int.h
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libc/sysdeps/linux/common/bits/getopt_int.h	2012-06-18 13:10:44.056825544 -0700
 @@ -0,0 +1,136 @@
 +/* Internal declarations for getopt.
 +   Copyright (C) 1989-1994,1996-1999,2001,2003,2004
@@ -322,9 +322,9 @@ Index: git/libc/sysdeps/linux/common/bits/getopt_int.h
 +#endif /* getopt_int.h */
 Index: git/libc/unistd/getopt.c
 ===================================================================
---- git.orig/libc/unistd/getopt.c
-+++ git/libc/unistd/getopt.c
-@@ -119,7 +119,7 @@
+--- git.orig/libc/unistd/getopt.c	2012-06-18 13:10:12.000000000 -0700
++++ git/libc/unistd/getopt.c	2012-06-18 13:10:44.056825544 -0700
+@@ -106,7 +106,7 @@
     they can distinguish the relative order of options and other arguments.  */
  
  #include <getopt.h>
@@ -333,7 +333,7 @@ Index: git/libc/unistd/getopt.c
  
  
  /* For communication from `getopt' to the caller.
-@@ -1183,6 +1183,15 @@ getopt_long (int argc, char *const *argv
+@@ -1170,6 +1170,15 @@
    return _getopt_internal (argc, argv, options, long_options, opt_index, 0);
  }
  
@@ -349,7 +349,7 @@ Index: git/libc/unistd/getopt.c
  /* Like getopt_long, but '-' as well as '--' can indicate a long option.
     If an option that starts with '-' (not '--') doesn't match a long option,
     but does match a short option, it is parsed as a short option
-@@ -1195,4 +1204,12 @@ getopt_long_only (int argc, char *const
+@@ -1182,4 +1191,12 @@
    return _getopt_internal (argc, argv, options, long_options, opt_index, 1);
  }
  
@@ -364,8 +364,8 @@ Index: git/libc/unistd/getopt.c
  #endif	/* Not ELIDE_CODE.  */
 Index: git/libuargp/Makefile
 ===================================================================
---- /dev/null
-+++ git/libuargp/Makefile
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libuargp/Makefile	2012-06-18 13:10:44.056825544 -0700
 @@ -0,0 +1,14 @@
 +# Makefile for uClibc (libuargp)
 +#
@@ -383,8 +383,8 @@ Index: git/libuargp/Makefile
 +include $(top_srcdir)Makerules
 Index: git/libuargp/Makefile.in
 ===================================================================
---- /dev/null
-+++ git/libuargp/Makefile.in
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libuargp/Makefile.in	2012-06-18 13:10:44.056825544 -0700
 @@ -0,0 +1,73 @@
 +# Makefile for uClibc (libuargp)
 +#
@@ -461,8 +461,8 @@ Index: git/libuargp/Makefile.in
 +	$(do_rm) $(addprefix $(libuargp_OUT)/*., o os oS a)
 Index: git/libuargp/argp-ba.c
 ===================================================================
---- /dev/null
-+++ git/libuargp/argp-ba.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libuargp/argp-ba.c	2012-06-18 13:10:44.056825544 -0700
 @@ -0,0 +1,26 @@
 +/* Default definition for ARGP_PROGRAM_BUG_ADDRESS.
 +   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
@@ -492,8 +492,8 @@ Index: git/libuargp/argp-ba.c
 +const char *argp_program_bug_address;
 Index: git/libuargp/argp-eexst.c
 ===================================================================
---- /dev/null
-+++ git/libuargp/argp-eexst.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libuargp/argp-eexst.c	2012-06-18 13:10:44.056825544 -0700
 @@ -0,0 +1,32 @@
 +/* Default definition for ARGP_ERR_EXIT_STATUS
 +   Copyright (C) 1997 Free Software Foundation, Inc.
@@ -529,8 +529,8 @@ Index: git/libuargp/argp-eexst.c
 +error_t argp_err_exit_status = EX_USAGE;
 Index: git/libuargp/argp-fmtstream.c
 ===================================================================
---- /dev/null
-+++ git/libuargp/argp-fmtstream.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libuargp/argp-fmtstream.c	2012-06-18 13:10:44.056825544 -0700
 @@ -0,0 +1,439 @@
 +/* Word-wrapping and line-truncating streams
 +   Copyright (C) 1997-1999,2001,2002,2003,2005 Free Software Foundation, Inc.
@@ -973,8 +973,8 @@ Index: git/libuargp/argp-fmtstream.c
 +#endif /* !ARGP_FMTSTREAM_USE_LINEWRAP */
 Index: git/libuargp/argp-fmtstream.h
 ===================================================================
---- /dev/null
-+++ git/libuargp/argp-fmtstream.h
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libuargp/argp-fmtstream.h	2012-06-18 13:10:44.056825544 -0700
 @@ -0,0 +1,314 @@
 +/* Word-wrapping and line-truncating streams.
 +   Copyright (C) 1997 Free Software Foundation, Inc.
@@ -1292,8 +1292,8 @@ Index: git/libuargp/argp-fmtstream.h
 +#endif /* argp-fmtstream.h */
 Index: git/libuargp/argp-fs-xinl.c
 ===================================================================
---- /dev/null
-+++ git/libuargp/argp-fs-xinl.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libuargp/argp-fs-xinl.c	2012-06-18 13:10:44.056825544 -0700
 @@ -0,0 +1,44 @@
 +/* Real definitions for extern inline functions in argp-fmtstream.h
 +   Copyright (C) 1997, 2003, 2004 Free Software Foundation, Inc.
@@ -1341,8 +1341,8 @@ Index: git/libuargp/argp-fs-xinl.c
 +#endif
 Index: git/libuargp/argp-help.c
 ===================================================================
---- /dev/null
-+++ git/libuargp/argp-help.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libuargp/argp-help.c	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,1882 @@
 +/* Hierarchial argument parsing help output
 +   Copyright (C) 1995-2003, 2004, 2005, 2006, 2007
@@ -3228,8 +3228,8 @@ Index: git/libuargp/argp-help.c
 +}
 Index: git/libuargp/argp-parse.c
 ===================================================================
---- /dev/null
-+++ git/libuargp/argp-parse.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libuargp/argp-parse.c	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,949 @@
 +/* Hierarchial argument parsing, layered over getopt
 +   Copyright (C) 1995-2000, 2002, 2003, 2004 Free Software Foundation, Inc.
@@ -4182,8 +4182,8 @@ Index: git/libuargp/argp-parse.c
 +}
 Index: git/libuargp/argp-pv.c
 ===================================================================
---- /dev/null
-+++ git/libuargp/argp-pv.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libuargp/argp-pv.c	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,25 @@
 +/* Default definition for ARGP_PROGRAM_VERSION.
 +   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
@@ -4212,8 +4212,8 @@ Index: git/libuargp/argp-pv.c
 +const char *argp_program_version;
 Index: git/libuargp/argp-pvh.c
 ===================================================================
---- /dev/null
-+++ git/libuargp/argp-pvh.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libuargp/argp-pvh.c	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,32 @@
 +/* Default definition for ARGP_PROGRAM_VERSION_HOOK.
 +   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
@@ -4249,8 +4249,8 @@ Index: git/libuargp/argp-pvh.c
 +void (*argp_program_version_hook) (FILE *stream, struct argp_state *state);
 Index: git/libuargp/argp-xinl.c
 ===================================================================
---- /dev/null
-+++ git/libuargp/argp-xinl.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libuargp/argp-xinl.c	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,35 @@
 +/* Real definitions for extern inline functions in argp.h
 +   Copyright (C) 1997, 1998, 2004 Free Software Foundation, Inc.
@@ -4289,8 +4289,8 @@ Index: git/libuargp/argp-xinl.c
 +#include <argp.h>
 Index: git/test/argp/Makefile
 ===================================================================
---- /dev/null
-+++ git/test/argp/Makefile
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/test/argp/Makefile	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,7 @@
 +# uClibc argp tests
 +# Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
@@ -4301,8 +4301,8 @@ Index: git/test/argp/Makefile
 +include ../Test.mak
 Index: git/test/argp/Makefile.in
 ===================================================================
---- /dev/null
-+++ git/test/argp/Makefile.in
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/test/argp/Makefile.in	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,12 @@
 +# uClibc argp tests
 +# Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
@@ -4318,8 +4318,8 @@ Index: git/test/argp/Makefile.in
 +
 Index: git/test/argp/argp-ex1.c
 ===================================================================
---- /dev/null
-+++ git/test/argp/argp-ex1.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/test/argp/argp-ex1.c	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,15 @@
 +/* Argp example #1 -- a minimal program using argp */
 +
@@ -4338,8 +4338,8 @@ Index: git/test/argp/argp-ex1.c
 +}
 Index: git/test/argp/argp-ex2.c
 ===================================================================
---- /dev/null
-+++ git/test/argp/argp-ex2.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/test/argp/argp-ex2.c	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,45 @@
 +/* Argp example #2 -- a pretty minimal program using argp */
 +
@@ -4388,8 +4388,8 @@ Index: git/test/argp/argp-ex2.c
 +}
 Index: git/test/argp/argp-ex3.c
 ===================================================================
---- /dev/null
-+++ git/test/argp/argp-ex3.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/test/argp/argp-ex3.c	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,153 @@
 +/* Argp example #3 -- a program with options and arguments using argp */
 +
@@ -4546,8 +4546,8 @@ Index: git/test/argp/argp-ex3.c
 +}
 Index: git/test/argp/argp-ex4.c
 ===================================================================
---- /dev/null
-+++ git/test/argp/argp-ex4.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/test/argp/argp-ex4.c	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,167 @@
 +/* Argp example #4 -- a program with somewhat more complicated options */
 +
@@ -4718,8 +4718,8 @@ Index: git/test/argp/argp-ex4.c
 +}
 Index: git/test/argp/argp-test.c
 ===================================================================
---- /dev/null
-+++ git/test/argp/argp-test.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/test/argp/argp-test.c	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,209 @@
 +/* Test program for argp argument parser
 +   Copyright (C) 1997 Free Software Foundation, Inc.
@@ -4932,8 +4932,8 @@ Index: git/test/argp/argp-test.c
 +}
 Index: git/test/argp/bug-argp1.c
 ===================================================================
---- /dev/null
-+++ git/test/argp/bug-argp1.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/test/argp/bug-argp1.c	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,26 @@
 +#include <argp.h>
 +
@@ -4963,8 +4963,8 @@ Index: git/test/argp/bug-argp1.c
 +#include "../test-skeleton.c"
 Index: git/test/argp/tst-argp1.c
 ===================================================================
---- /dev/null
-+++ git/test/argp/tst-argp1.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/test/argp/tst-argp1.c	2012-06-18 13:10:44.060825542 -0700
 @@ -0,0 +1,118 @@
 +/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 +   This file is part of the GNU C Library.
@@ -5086,8 +5086,8 @@ Index: git/test/argp/tst-argp1.c
 +#include "../test-skeleton.c"
 Index: git/test/argp/tst-argp2.c
 ===================================================================
---- /dev/null
-+++ git/test/argp/tst-argp2.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/test/argp/tst-argp2.c	2012-06-18 13:10:44.064825538 -0700
 @@ -0,0 +1,101 @@
 +/* Copyright (C) 2007 Free Software Foundation, Inc.
 +   This file is part of the GNU C Library.

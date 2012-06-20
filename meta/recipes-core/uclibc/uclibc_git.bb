@@ -1,4 +1,4 @@
-SRCREV="e118373cbb58ba5ffa5fb6670957678d5b87cdb9"
+SRCREV="0dcc13bf7a61b1d0708e5dd103d5515e0ffec79a"
 
 require uclibc.inc
 
@@ -15,7 +15,6 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master;protocol=git \
 	file://uClibc.machine \
 	file://uClibc.distro \
 	file://uclibc_enable_log2_test.patch \
-	file://ldso_use_arm_dl_linux_resolve_in_thumb_mode.patch \
 	file://powerpc_copysignl.patch \
 	file://argp-support.patch \
 	file://argp-headers.patch \
