@@ -20,7 +20,7 @@ DEPENDS  = "dbus glib-2.0 ppp iptables gnutls \
             ${@base_contains('DISTRO_FEATURES', '3g','ofono', '', d)} \
             "
 
-INC_PR = "r7"
+INC_PR = "r8"
 
 TIST = "--enable-tist"
 TIST_powerpc = ""
@@ -74,13 +74,26 @@ do_install_append() {
 	rmdir ${D}${libdir}/connman/scripts
 }
 
+# These used to be plugins, but now they are core
+RPROVIDES_${PN} = "\
+	connman-plugin-loopback \
+	connman-plugin-ethernet \
+	${@base_contains('DISTRO_FEATURES', 'bluetooth','connman-plugin-bluetooth', '', d)} \
+	${@base_contains('DISTRO_FEATURES', 'wifi','connman-plugin-wifi', '', d)} \
+	${@base_contains('DISTRO_FEATURES', '3g','connman-plugin-ofono', '', d)} \
+	"
+
+RDEPENDS_${PN} = "\
+	${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluez4', '', d)} \
+	${@base_contains('DISTRO_FEATURES', 'wifi','wpa-supplicant', '', d)} \
+	${@base_contains('DISTRO_FEATURES', '3g','ofono', '', d)} \
+	"
+
 PACKAGES_DYNAMIC = "${PN}-plugin-*"
 
 python populate_packages_prepend() {
 	depmap = dict( pppd="ppp",
-	               wifi="wpa-supplicant",
-	               bluetooth="bluez4",
-	               ofono="ofono" )
+				 )
 	packages = []
 	multilib_prefix = (d.getVar("MLPREFIX", True) or "")
 	hook = lambda file,pkg,b,c,d:packages.append((file,pkg))
