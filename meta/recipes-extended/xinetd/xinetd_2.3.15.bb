@@ -12,6 +12,7 @@ PR = "r0"
 SRC_URI = "http://www.xinetd.org/xinetd-${PV}.tar.gz \
       file://xinetd.init \
       file://xinetd.conf \
+      file://xinetd.default \
       file://Various-fixes-from-the-previous-maintainer.patch \
       file://Disable-services-from-inetd.conf-if-a-service-with-t.patch \
       file://xinetd-should-be-able-to-listen-on-IPv6-even-in-ine.patch \
@@ -40,8 +41,10 @@ do_install() {
 	install -d "${D}/usr/sbin"
 	install -d "${D}/etc/init.d"
 	install -d "${D}/etc/xinetd.d"
+	install -d "${D}/etc/default"
 	install -m 644 "${WORKDIR}/xinetd.conf" "${D}/etc"
 	install -m 755 "${WORKDIR}/xinetd.init" "${D}/etc/init.d/xinetd"
+	install -m 644 "${WORKDIR}/xinetd.default" "${D}/etc/default/xinetd"
 	install -m 755 "${S}/xinetd/xinetd" "${D}/usr/sbin"
 	install -m 755 "${S}/xinetd/itox" "${D}/usr/sbin"
 }
