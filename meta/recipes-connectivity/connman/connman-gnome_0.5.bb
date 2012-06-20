@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a \
 
 DEPENDS = "gtk+ dbus-glib"
 
-PR = "r11"
+PR = "r12"
 
 SRCREV = "42c652d123ea133d0a0930b96e8e39dbd0c597b5"
 SRC_URI = "git://git.kernel.org/pub/scm/network/connman/connman-gnome.git \
@@ -24,15 +24,4 @@ S = "${WORKDIR}/git"
 
 inherit autotools gtk-icon-cache
 
-RRECOMMENDS_${PN} = "python  \
-                     python-dbus \
-                     connman \
-                     connman-plugin-ethernet \
-                     connman-plugin-loopback \
-                     connman-plugin-udhcp \
-                     connman-plugin-wifi \
-                     connman-plugin-fake \
-                     connman-plugin-bluetooth \
-                     connman-plugin-dnsproxy \
-                     connman-plugin-ofono \
-                    "
+RDEPENDS_${PN} = "connman"
