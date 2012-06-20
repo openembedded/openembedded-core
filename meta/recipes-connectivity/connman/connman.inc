@@ -11,7 +11,7 @@ HOMEPAGE = "http://connman.net/"
 BUGTRACKER = "http://bugs.meego.com/buglist.cgi?quicksearch=connman"
 LICENSE  = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
-                    file://src/main.c;beginline=1;endline=20;md5=4b55b550fa6b33cc2055ef30dd262b3e"
+                    file://src/main.c;beginline=1;endline=20;md5=d6a1ac98a6791c5294e8a7f176ecd66d"
 
 # we need to define the depends here, the dynamic stuff is too late
 DEPENDS  = "dbus glib-2.0 ppp iptables gnutls \
@@ -20,7 +20,7 @@ DEPENDS  = "dbus glib-2.0 ppp iptables gnutls \
             ${@base_contains('DISTRO_FEATURES', '3g','ofono', '', d)} \
             "
 
-INC_PR = "r8"
+INC_PR = "r9"
 
 TIST = "--enable-tist"
 TIST_powerpc = ""
