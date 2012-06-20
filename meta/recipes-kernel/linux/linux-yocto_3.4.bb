@@ -34,5 +34,3 @@ KERNEL_REVISION_CHECKING=""
 KERNEL_FEATURES="features/netfilter"
 KERNEL_FEATURES_append_qemux86=" cfg/sound"
 KERNEL_FEATURES_append_qemux86-64=" cfg/sound"
-
-require recipes-kernel/linux/linux-tools.inc
