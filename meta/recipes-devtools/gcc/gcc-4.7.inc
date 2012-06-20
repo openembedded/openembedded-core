@@ -67,6 +67,7 @@ SRC_URI = "svn://gcc.gnu.org/svn/gcc/branches;module=${BRANCH};proto=http \
 	   file://mips64-default-n64.patch \
 	   file://arm-hard-float-loader.patch \
 	   file://gcc-argument-list-too-long.patch \
+	   file://fix-g++-sysroot.patch \
 	  "
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/${BRANCH}"
