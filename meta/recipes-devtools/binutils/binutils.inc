@@ -50,12 +50,9 @@ FILES_${PN}-dbg += "${prefix}/${TARGET_SYS}/bin/.debug"
 B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
 
 EXTRA_OECONF = "--program-prefix=${TARGET_PREFIX} \
-                --enable-install-libbfd \
-                --enable-shared \
                 --disable-werror \
+		${@base_contains('DISTRO_FEATURES', 'ld-is-gold', '--enable-gold=default', '', d)} \
                 ${@base_contains('DISTRO_FEATURES', 'multiarch', '--enable-64-bit-bfd', '', d)}"
-
-EXTRA_OECONF_virtclass-native = "--enable-target=all --enable-64-bit-bfd --enable-install-libbfd"
 
 # This is necessary due to a bug in the binutils Makefiles
 # EXTRA_OEMAKE = "configure-build-libiberty all"
@@ -122,28 +119,6 @@ do_install () {
 	rm -f ${D}${bindir}/ar ${D}${bindir}/strings
 
 	oe_multilib_header bfd.h
-}
-
-do_install_virtclass-native () {
-	autotools_do_install
-
-	# Install the libiberty header
-	install -d ${D}${includedir}
-	install -m 644 ${S}/include/ansidecl.h ${D}${includedir}
-	install -m 644 ${S}/include/libiberty.h ${D}${includedir}
-
-	# We only want libiberty, libbfd and libopcodes
-	rm -rf ${D}${bindir}
-	rm -rf ${D}${prefix}/${TARGET_SYS}
-	rm -rf ${D}${prefix}/lib/ldscripts
-	rm -rf ${D}${prefix}/share/info
-	rm -rf ${D}${prefix}/share/locale
-	rm -rf ${D}${prefix}/share/man
-	rmdir ${D}${prefix}/share || :
-	rmdir ${D}/${libdir}/gcc-lib || :
-	rmdir ${D}/${libdir}64/gcc-lib || :
-	rmdir ${D}/${libdir} || :
-	rmdir ${D}/${libdir}64 || :
 }
 
 inherit update-alternatives

@@ -4,14 +4,10 @@ PROVIDES = "virtual/${TARGET_PREFIX}binutils"
 INHIBIT_DEFAULT_DEPS = "1"
 INHIBIT_AUTOTOOLS_DEPS = "1"
 
-EXTRA_OECONF = "--with-sysroot=${STAGING_DIR_TARGET} \
-                --program-prefix=${TARGET_PREFIX} \
+EXTRA_OECONF += "--with-sysroot=${STAGING_DIR_TARGET} \
                 --disable-install-libbfd \
-                --disable-werror \
                 --enable-poison-system-directories \
-                ${@base_contains('DISTRO_FEATURES', 'ld-is-gold', '--enable-gold=default', '', d)} \
-                ${@base_contains('DISTRO_FEATURES', 'multiarch', '--enable-64-bit-bfd', '', d)}"
-
+                "
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 
