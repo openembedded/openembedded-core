@@ -182,14 +182,15 @@ rpm_update_pkg () {
         # been run by now, so don't have to run them(preun, postun, etc.) when
         # erase the pkg
         if [ -s ${target_rootfs}/install/remove.manifest ]; then
-            echo "# Remove manifest padding...." >> ${target_rootfs}/install/remove.manifest
             rpm_common_comand --noscripts --nodeps \
                 -e `cat ${target_rootfs}/install/remove.manifest`
         fi
 
         # Attempt to install the incremental pkgs
-        rpm_common_comand --nodeps --replacefiles --replacepkgs \
-            -Uvh ${target_rootfs}/install/incremental.manifest
+        if [ -s ${target_rootfs}/install/incremental.manifest ]; then
+            rpm_common_comand --nodeps --replacefiles --replacepkgs \
+               -Uvh ${target_rootfs}/install/incremental.manifest
+        fi
     else
         # Attempt to install
         rpm_common_comand --replacepkgs -Uhv $manifest
@@ -314,6 +315,7 @@ package_install_internal_rpm () {
 		echo "# Install manifest padding" >> ${target_rootfs}/install/install.manifest
 		${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
 			--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
+			--root "${target_rootfs}/install" \
 			-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}-base_archs.macro`" \
 			-D "__dbi_txn create nofsync" \
 			-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
@@ -343,6 +345,7 @@ package_install_internal_rpm () {
 			echo "Attempting $pkg_name..." >> "${WORKDIR}/temp/log.do_${task}_attemptonly.${PID}"
 			${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
 				--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
+				--root "${target_rootfs}/install" \
 				-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
 				-D "__dbi_txn create nofsync private" \
 				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
@@ -363,6 +366,7 @@ package_install_internal_rpm () {
 		# Dump the full set of recommends...
 		${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
 			--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
+			--root "${target_rootfs}/install" \
 			-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
 			-D "__dbi_txn create nofsync private" \
 			-qa --qf "[%{RECOMMENDS}\n]" | sort -u > ${target_rootfs}/install/recommend
@@ -392,6 +396,7 @@ package_install_internal_rpm () {
 			echo "Attempting $pkg_name..." >> "${WORKDIR}/temp/log.do_{task}_recommend.${PID}"
 			${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
 				--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
+				--root "${target_rootfs}/install" \
 				-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
 				-D "__dbi_txn create nofsync private" \
 				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
@@ -406,6 +411,7 @@ package_install_internal_rpm () {
 	# Now that we have a solution, pull out a list of what to install...
 	echo "Manifest: ${target_rootfs}/install/install.manifest"
 	${RPM} -D "_dbpath ${target_rootfs}/install" -qa --qf "%{packageorigin}\n" \
+		--root "${target_rootfs}/install" \
 		-D "__dbi_txn create nofsync private" \
 		> ${target_rootfs}/install/install_solution.manifest
 
@@ -419,6 +425,7 @@ package_install_internal_rpm () {
 		# an actual package install!
 		${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
 			--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
+			--root "${target_rootfs}/install" \
 			-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}-ml_archs.macro`" \
 			-D "__dbi_txn create nofsync" \
 			-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
@@ -427,6 +434,7 @@ package_install_internal_rpm () {
 		# Now that we have a solution, pull out a list of what to install...
 		echo "Manifest: ${target_rootfs}/install/install_multilib.manifest"
 		${RPM} -D "_dbpath ${target_rootfs}/install" -qa --qf "%{packageorigin}\n" \
+			--root "${target_rootfs}/install" \
 			-D "__dbi_txn create nofsync private" \
 			> ${target_rootfs}/install/install_multilib_solution.manifest
 
@@ -513,6 +521,7 @@ EOF
 
 			${RPM} --predefine "_rpmds_sysinfo_path ${target_rootfs}/etc/rpm/sysinfo" \
 				--predefine "_rpmrc_platform_path ${target_rootfs}/etc/rpm/platform" \
+				--root "${target_rootfs}/install" \
 				-D "_dbpath ${target_rootfs}/initial" -D "`cat ${confbase}.macro`" \
 				-D "__dbi_txn create nofsync" \
 				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
@@ -520,6 +529,7 @@ EOF
 
 			${RPM} -D "_dbpath ${target_rootfs}/initial" -qa --qf "%{packageorigin}\n" \
 				-D "__dbi_txn create nofsync private" \
+				--root "${target_rootfs}/install" \
 				> ${target_rootfs}/install/initial_solution.manifest
 
 			rpm_update_pkg ${target_rootfs}/install/initial_solution.manifest
