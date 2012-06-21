@@ -1,13 +1,11 @@
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRCREV = "83bd2699d8cff2f2d6b9eaf5ea254e4cb6b33e81"
-PV = "1.7+git${SRCPV}"
+SRCREV = "48fa6b5e1d3e636c34cbd5650370e6f634efc294"
+PV = "1.8+git${SRCPV}"
 
 SRC_URI = "git://sources.redhat.com/git/systemtap.git;protocol=git \
            file://docproc-build-fix.patch \
-           file://systemtap_fix_for_automake_1.12.patch \
-           file://runtime-staprun-configure.ac-support-without-nss-for.patch \
           "
 
 FILESPATH = "${FILE_DIRNAME}/systemtap"
