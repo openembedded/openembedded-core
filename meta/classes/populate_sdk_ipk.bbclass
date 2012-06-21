@@ -11,7 +11,6 @@ populate_sdk_ipk() {
 	package_update_index_ipk
 	package_generate_ipkg_conf
 
-	export INSTALL_PACKAGES_ATTEMPTONLY_IPK=""
 	export INSTALL_PACKAGES_LINGUAS_IPK=""
 	export INSTALL_TASK_IPK="populate_sdk"
 
@@ -19,6 +18,7 @@ populate_sdk_ipk() {
 	export INSTALL_ROOTFS_IPK="${SDK_OUTPUT}/${SDKTARGETSYSROOT}"
 	export INSTALL_CONF_IPK="${IPKGCONF_TARGET}"
 	export INSTALL_PACKAGES_IPK="${TOOLCHAIN_TARGET_TASK}"
+	export INSTALL_PACKAGES_ATTEMPTONLY_IPK="${TOOLCHAIN_TARGET_TASK_ATTEMPTONLY}"
 
 	export D=${INSTALL_ROOTFS_IPK}
 	export OFFLINE_ROOT=${INSTALL_ROOTFS_IPK}
@@ -31,6 +31,7 @@ populate_sdk_ipk() {
 	export INSTALL_ROOTFS_IPK="${SDK_OUTPUT}"
 	export INSTALL_CONF_IPK="${IPKGCONF_SDK}"
 	export INSTALL_PACKAGES_IPK="${TOOLCHAIN_HOST_TASK}"
+	export INSTALL_PACKAGES_ATTEMPTONLY_IPK="${TOOLCHAIN_HOST_TASK_ATTEMPTONLY}"
 
 	package_install_internal_ipk
 
