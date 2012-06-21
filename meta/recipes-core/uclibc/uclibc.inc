@@ -13,7 +13,7 @@ SECTION = "libs"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 		    file://COPYING.LIB.boilerplate;md5=aaddeadcddeb918297e0e4afc52ce46f \
 file://${S}/test/regex/testregex.c;startline=1;endline=31;md5=234efb227d0a40677f895e4a1e26e960"
-INC_PR = "r7"
+INC_PR = "r8"
 
 require uclibc-config.inc
 STAGINGCC = "gcc-cross-intermediate"
@@ -50,7 +50,7 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 # Ensure the uclibc-dev package is processed before uclibc-staticdev to allow
 # *_nonshared.a libraries to be packaged in the uclibc-dev package.
-PACKAGES = "${PN}-dbg ${PN}-dev ${PN}-staticdev ${PN} ${PN}-doc ldd uclibc-utils-dbg uclibc-utils uclibc-gconv uclibc-thread-db uclibc-argp uclibc-backtrace uclibc-libcrypt uclibc-libintl uclibc-libnsl uclibc-libresolv uclibc-libm uclibc-libdl uclibc-libutil uclibc-libpthread uclibc-librt"
+PACKAGES = "ldd uclibc-utils-dbg uclibc-utils uclibc-gconv uclibc-thread-db uclibc-argp uclibc-backtrace uclibc-libcrypt uclibc-libintl uclibc-libnsl uclibc-libresolv uclibc-libm uclibc-libdl uclibc-libutil uclibc-libpthread uclibc-librt ${PN}-dbg ${PN}-dev ${PN}-staticdev ${PN}-doc ${PN}"
 
 FILES_uclibc-libcrypt = "${base_libdir}/libcrypt*.so.* ${base_libdir}/libcrypt-*.so"
 FILES_uclibc-libintl = "${base_libdir}/libintl*.so.* ${base_libdir}/libintl-*.so"
@@ -62,21 +62,7 @@ FILES_uclibc-libutil = "${base_libdir}/libutil*.so.* ${base_libdir}/libutil-*.so
 FILES_uclibc-libpthread = "${base_libdir}/libpthread*.so.* ${base_libdir}/libpthread-*.so"
 FILES_uclibc-librt = "${base_libdir}/librt*.so.* ${base_libdir}/librt-*.so"
 
-# The last line (gdb and lib1) is for uclinux-uclibc builds
-uclibc_baselibs = "${base_libdir}/ld*.so.* ${base_libdir}/ld*.so \
-                   ${base_libdir}/libc*.so.* ${base_libdir}/libuClibc-*.so \
-                   ${libdir}/libc.gdb ${libdir}/libc ${base_libdir}/lib1.so \
-                  "
-FILES_${PN} = "${sysconfdir} ${uclibc_baselibs} /sbin/ldconfig \
-               ${libexecdir} ${datadir}/zoneinfo ${libdir}/locale"
 FILES_ldd = "${bindir}/ldd"
-FILES_${PN}-dev_append = "\
-        ${libdir}/lib*.so \
-        ${libdir}/*_nonshared.a \
-        ${libdir}/[S]*crt[1in].o \
-        ${libdir}/crtreloc*.o \
-        ${includedir}/*.h ${includedir}/*/*.h \
-       "
 FILES_uclibc-utils = "${bindir} ${sbindir}"
 FILES_uclibc-utils-dbg += "${bindir}/.debug ${sbindir}/.debug"
 FILES_uclibc-gconv = "${libdir}/gconv"
@@ -84,12 +70,28 @@ FILES_uclibc-thread-db = "${base_libdir}/libthread_db*"
 FILES_uclibc-argp = "${base_libdir}/libuargp-*.so ${base_libdir}/libuargp*.so.*"
 FILES_uclibc-backtrace = "${base_libdir}/libubacktrace-*.so ${base_libdir}/libubacktrace*.so.*"
 
+# The last line (gdb and lib1) is for uclinux-uclibc builds
+uclibc_baselibs = "${base_libdir}/ld*.so.* ${base_libdir}/ld*.so \
+                   ${base_libdir}/libc*.so.* ${base_libdir}/libuClibc-*.so \
+                   ${libdir}/libc.gdb ${libdir}/libc ${base_libdir}/lib1.so \
+                  "
+FILES_SOLIBSDEV = "${libdir}/lib*${SOLIBSDEV}"
+FILES_${PN}-dev += "\
+        ${libdir}/lib*.so \
+        ${libdir}/*_nonshared.a \
+        ${libdir}/[S]*crt[1in].o \
+        ${libdir}/crtreloc*.o \
+        ${includedir}/*.h ${includedir}/*/*.h \
+       "
+FILES_${PN} = "${sysconfdir} ${uclibc_baselibs} /sbin/ldconfig \
+               ${libexecdir} ${datadir}/zoneinfo ${libdir}/locale"
+
 RPROVIDES_${PN}-dev += "libc-dev virtual-libc-dev"
 # uclibc does not really have libsegfault but then using the one from glibc is also not
 # going to work. So we pretend that we have it to make bitbake not pull other recipes
 # to satisfy this dependency for the images/tasks
 
-RPROVIDES_uclibc += "libsegfault rtld(GNU_HASH)"
+RPROVIDES_${PN} += "libsegfault rtld(GNU_HASH)"
 
 SRC_URI = "\
         http://www.uclibc.org/downloads/uClibc-${PV}.tar.bz2;name=uClibc-${PV} \
