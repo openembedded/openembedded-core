@@ -612,7 +612,7 @@ python do_checkpkg() {
 		pstatus += ":%s%s" % (host, path)
 
 	"""Read from manual distro tracking fields as alternative"""
-	pmver = d.getVar("RECIPE_LATEST_VERSION", True)
+	pmver = d.getVar("RECIPE_UPSTREAM_VERSION", True)
 	if not pmver:
 		pmver = "N/A"
 		pmstatus = "ErrNoRecipeData"
