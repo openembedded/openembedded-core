@@ -6,7 +6,7 @@ SECTION = "console/utils"
 # change to GPLv3+ in 2007/07. Previous GPLv2 version is 1.3.12
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
-                    file://gzip.h;firstline=8;endline=20;md5=e2ec6b91fbe43a18f6081f3bbae46a01"
+                    file://gzip.h;firstline=8;endline=20;md5=d31380638987e6789f06bc96a29a9a16"
 
 SRC_URI = "${GNU_MIRROR}/gzip/${BP}.tar.gz"
 
@@ -22,5 +22,8 @@ do_install_append () {
 
 inherit update-alternatives
 
-ALTERNATIVE_LINKS = "${base_bindir}/gunzip ${base_bindir}/gzip ${base_bindir}/zcat"
 ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_${PN} = "gunzip gzip zcat"
+ALTERNATIVE_LINK_NAME[gunzip] = "${base_bindir}/gunzip"
+ALTERNATIVE_LINK_NAME[gzip] = "${base_bindir}/gzip"
+ALTERNATIVE_LINK_NAME[zcat] = "${base_bindir}/zcat"
