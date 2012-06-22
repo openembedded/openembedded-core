@@ -1,0 +1,20 @@
+make install invokes a gtk-doc tool without checking that we have gtk-doc.
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+Upstream-Status: Pending (https://bugs.webkit.org/show_bug.cgi?id=91239)
+
+Index: webkit-1.8.1/Tools/GNUmakefile.am
+===================================================================
+--- webkit-1.8.1.orig/Tools/GNUmakefile.am
++++ webkit-1.8.1/Tools/GNUmakefile.am
+@@ -330,7 +330,9 @@ if ENABLE_WEBKIT2
+ 	  fi; \
+ 	fi
+ endif
++if ENABLE_GTK_DOC
+ 	@$(AM_V_GEN)$(PYTHON) $(srcdir)/Tools/gtk/generate-gtkdoc --rebase --virtual-root=$${DESTDIR}
++endif
+ 
+ uninstall-local:
+ 	@DOC_MODULE_VERSION=`cat ./Documentation/webkitgtk/version.xml`; \
