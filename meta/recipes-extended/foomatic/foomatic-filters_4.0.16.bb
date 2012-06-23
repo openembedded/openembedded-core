@@ -17,8 +17,8 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/foomatic-filters-${PV}/COPYING;md5=393a5ca
 
 SRC_URI = "http://www.openprinting.org/download/foomatic/foomatic-filters-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "1b7efcdc57340915647daa5b5c15b0ef"
-SRC_URI[sha256sum] = "f5b7b67aacedec4c0294d242cbffbe0d7d3cd0fdd2b410c055e818f25ed3bc79"
+SRC_URI[md5sum] = "ec907d9ea17e03bccb91db66e9470586"
+SRC_URI[sha256sum] = "bedc61466c284c8ea0ae95c97d51a873411c6c55338e67831893772465f5434d"
 
 inherit autotools
 
