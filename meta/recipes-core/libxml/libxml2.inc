@@ -5,7 +5,7 @@ BUGTRACKER = "http://bugzilla.gnome.org/buglist.cgi?product=libxml2"
 SECTION = "libs"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://Copyright;md5=bb90c48926316d9af6e2d70ca7013ade \
-                    file://hash.c;beginline=6;endline=15;md5=ce702952bfddd7aee22639a2d6b54136 \
+                    file://hash.c;beginline=6;endline=15;md5=96f7296605eae807670fb08947829969 \
                     file://list.c;beginline=4;endline=13;md5=cdbfa3dee51c099edb04e39f762ee907 \
                     file://trio.c;beginline=5;endline=14;md5=6c025753c86d958722ec76e94cae932e"
 
