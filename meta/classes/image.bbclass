@@ -3,6 +3,11 @@ inherit rootfs_${IMAGE_PKGTYPE}
 IMAGETEST ?= "dummy"
 inherit imagetest-${IMAGETEST}
 
+inherit populate_sdk_base
+
+TOOLCHAIN_TARGET_TASK += "${PACKAGE_INSTALL}"
+TOOLCHAIN_TARGET_TASK_ATTEMPTONLY += "${PACKAGE_INSTALL_ATTEMPTONLY} ${PACKAGE_GROUP_dev-pkgs} ${PACKAGE_GROUP_dbg-pkgs}"
+
 inherit gzipnative
 
 LICENSE = "MIT"

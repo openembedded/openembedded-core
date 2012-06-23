@@ -8,6 +8,8 @@ ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 do_rootfs[depends] += "dpkg-native:do_populate_sysroot apt-native:do_populate_sysroot"
 do_rootfs[recrdeptask] += "do_package_write_deb"
 
+do_rootfs[lockfiles] += "${WORKDIR}/deb.lock"
+
 DEB_POSTPROCESS_COMMANDS = "rootfs_install_all_locales; "
 
 opkglibdir = "${localstatedir}/lib/opkg"
