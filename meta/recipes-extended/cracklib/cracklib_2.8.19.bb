@@ -5,13 +5,13 @@ LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=e3eda01d9815f8d24aae2dbd89b68b06"
 
 DEPENDS = "zlib"
-PR ="r4"
+PR ="r0"
 
 EXTRA_OECONF = "--without-python"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/cracklib/cracklib-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "79053ad8bc714a44cd660cb12116211b"
-SRC_URI[sha256sum] = "2b072f67f7267358459424c3ed70f7f5b70919118e6504a90d3bce37a67c1454"
+SRC_URI[md5sum] = "ca0ec168d9c6466612204e8dfb2df8a9"
+SRC_URI[sha256sum] = "7086b0ca23f875c9cd9ea2a993c262384b274dba9c4ea1da845ec8ac290748a9"
 
 inherit autotools gettext
