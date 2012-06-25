@@ -9,7 +9,7 @@ as well."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-PR = "r0"
+PR = "r1"
 
 BUILDPERF_libc-uclibc = "no"
 
@@ -23,6 +23,13 @@ RDEPENDS_${PN} += "elfutils perl python"
 PROVIDES = "virtual/perf"
 
 inherit kernel-arch
+
+# needed for building the tools/perf Python bindings
+inherit python-dir
+export STAGING_INCDIR
+export STAGING_LIBDIR
+export BUILD_SYS
+export HOST_SYS
 
 S = "${STAGING_KERNEL_DIR}"
 B = "${WORKDIR}/${BPN}-${PV}"
@@ -44,7 +51,10 @@ do_compile() {
 
 do_install() {
 	oe_runmake DESTDIR=${D} install
+	oe_runmake DESTDIR=${D} install-python_ext
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+FILES_${PN}-dbg += "${libdir}/python*/site-packages/.debug"
+FILES_${PN} += "${libdir}/python*/site-packages"
