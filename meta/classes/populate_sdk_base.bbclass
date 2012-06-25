@@ -13,8 +13,8 @@ TOOLCHAIN_TARGET_TASK ?= "task-core-standalone-sdk-target task-core-standalone-s
 TOOLCHAIN_TARGET_TASK_ATTEMPTONLY ?= ""
 TOOLCHAIN_OUTPUTNAME ?= "${SDK_NAME}-toolchain-${DISTRO_VERSION}"
 
-RDEPENDS = "${TOOLCHAIN_TARGET_TASK} ${TOOLCHAIN_HOST_TASK}"
-DEPENDS = "virtual/fakeroot-native sed-native"
+SDK_RDEPENDS = "${TOOLCHAIN_TARGET_TASK} ${TOOLCHAIN_HOST_TASK}"
+SDK_DEPENDS = "virtual/fakeroot-native sed-native"
 
 PID = "${@os.getpid()}"
 
@@ -87,5 +87,7 @@ populate_sdk_log_check() {
 }
 
 do_populate_sdk[nostamp] = "1"
+do_populate_sdk[depends] = "${@' '.join([x + ':do_populate_sysroot' for x in d.getVar('SDK_DEPENDS', True).split()])}"
+do_populate_sdk[rdepends] = "${@' '.join([x + ':do_populate_sysroot' for x in d.getVar('SDK_RDEPENDS', True).split()])}"
 do_populate_sdk[recrdeptask] = "do_package_write"
 addtask populate_sdk
