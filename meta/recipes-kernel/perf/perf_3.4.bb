@@ -18,7 +18,8 @@ DEPENDS = "virtual/kernel \
            ${MLPREFIX}elfutils \
            ${MLPREFIX}binutils \
           "
-RDEPENDS_${PN} += "elfutils perl python"
+
+RDEPENDS_${PN} += "elfutils perl perl-modules python"
 
 PROVIDES = "virtual/perf"
 
@@ -30,6 +31,14 @@ export STAGING_INCDIR
 export STAGING_LIBDIR
 export BUILD_SYS
 export HOST_SYS
+
+# needed for building the tools/perf Perl binding
+inherit perlnative cpan-base
+# Env var which tells perl if it should use host (no) or target (yes) settings
+export PERLCONFIGTARGET = "${@is_target(d)}"
+export PERL_INC = "${STAGING_LIBDIR}${PERL_OWN_DIR}/perl/${@get_perl_version(d)}/CORE"
+export PERL_LIB = "${STAGING_LIBDIR}${PERL_OWN_DIR}/perl/${@get_perl_version(d)}"
+export PERL_ARCHLIB = "${STAGING_LIBDIR}${PERL_OWN_DIR}/perl/${@get_perl_version(d)}"
 
 S = "${STAGING_KERNEL_DIR}"
 B = "${WORKDIR}/${BPN}-${PV}"
