@@ -65,5 +65,6 @@ do_install() {
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+FILES_${PN} += "${libexecdir}/perf-core"
 FILES_${PN}-dbg += "${libdir}/python*/site-packages/.debug"
 FILES_${PN} += "${libdir}/python*/site-packages"
