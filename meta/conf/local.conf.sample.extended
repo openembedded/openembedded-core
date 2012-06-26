@@ -162,5 +162,15 @@
 # Whether to include WORKDIR/temp, .bb and .inc files:
 # 'logs_with_scripts' include WORKDIR/temp directory and .bb and .inc files
 # 'logs' only include WORKDIR/temp
-# SOURCE_ARCHIVE_LOG_WITH_SCRIPTS ?= 'logs'
-#SOURCE_ARCHIVE_LOG_WITH_SCRIPTS ?= 'logs_with_scripts'
+# ARCHIVER_MODE[log_type] = "logs logs_with_scripts"
+# There are three basic class defintions of common operations 
+# that might be desired and these can be enabled by 
+# uncommenting five of the following lines:
+# ARCHIVER_MODE[filter] ?= "yes no"
+# Filter packages according to license
+#ARCHIVER_MODE ?= "original"
+#ARCHIVER_MODE[type] ?= "tar"
+#ARCHIVER_MODE[log_type] ?= "logs_with_scripts"
+#ARCHIVER_MODE[filter] ?= "no"
+#ARCHIVER_CLASS = "${@'archive-${ARCHIVER_MODE}-source' if ARCHIVER_MODE != 'none' else ''}"
+#INHERIT += "${ARCHIVER_CLASS}"
