@@ -11,13 +11,12 @@ DEPENDS = "glib-2.0 gtk+ webkit-gtk libowl"
 # To access https web pages
 RRECOMMENDS_${PN} += "glib-networking"
 
-SRCREV = "0f7019acd9db5383c732d0524c7c3a5eaec9be2b"
+SRCREV = "b0676c190f876cbdb1df202fbcec42f212374503"
 PV = "0.1+git${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
-           file://link-with-g++.patch \
-	   file://make-382.patch"
+           file://link-with-g++.patch"
 
 S = "${WORKDIR}/git"
 
