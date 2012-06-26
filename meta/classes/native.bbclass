@@ -99,7 +99,7 @@ PKG_CONFIG_SYSROOT_DIR = ""
 LIBCOVERRIDE = ""
 CLASSOVERRIDE = "class-native"
 
-PATH =. "${COREBASE}/scripts/native-intercept:"
+PATH_prepend = "${COREBASE}/scripts/native-intercept:"
 
 python native_virtclass_handler () {
     if not isinstance(e, bb.event.RecipePreFinalise):
