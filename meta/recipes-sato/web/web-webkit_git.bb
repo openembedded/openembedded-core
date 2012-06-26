@@ -6,7 +6,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
 SECTION = "x11"
-DEPENDS = "libxml2 glib-2.0 gtk+ libglade webkit-gtk curl gconf js libowl"
+DEPENDS = "glib-2.0 gtk+ webkit-gtk libowl"
 
 # To access https web pages
 RRECOMMENDS_${PN} += "glib-networking"
@@ -23,7 +23,7 @@ S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--enable-libowl"
 
-inherit autotools pkgconfig gconf
+inherit autotools pkgconfig
 
 do_configure_prepend() {
     touch ${S}/src/dummy.cpp
