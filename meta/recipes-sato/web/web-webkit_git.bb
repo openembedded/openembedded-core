@@ -13,19 +13,14 @@ RRECOMMENDS_${PN} += "glib-networking"
 
 SRCREV = "b0676c190f876cbdb1df202fbcec42f212374503"
 PV = "0.1+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
-           file://link-with-g++.patch"
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git"
 
 S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--enable-libowl"
 
 inherit autotools pkgconfig
-
-do_configure_prepend() {
-    touch ${S}/src/dummy.cpp
-}
 
 FILES_${PN} += "${datadir}/web2"
