@@ -1,8 +1,8 @@
 DESCRIPTION = "SysV init scripts which only is used in an LSB image"
 SECTION = "base"
 LICENSE = "GPLv2"
-DEPENDS = "popt"
-PR = "r0"
+DEPENDS = "popt glib-2.0"
+PR = "r1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=ebf4e8b49780ab187d51bd26aaa022c6"
 
