@@ -16,6 +16,7 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=${PV};protocol=git \
 	file://orign_path.patch \
 	file://dup3.patch \
 	file://define-MSG_CMSG_CLOEXEC.patch \
+	file://posix_fallocate.patch \
 	"
 
 S = "${WORKDIR}/git"
