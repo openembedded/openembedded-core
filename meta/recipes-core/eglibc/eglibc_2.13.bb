@@ -3,7 +3,7 @@ require eglibc.inc
 SRCREV = "15508"
 
 DEPENDS += "gperf-native"
-PR = "r28"
+PR = "r29"
 PR_append = "+svnr${SRCPV}"
 
 EGLIBC_BRANCH="eglibc-2_13"
@@ -14,6 +14,7 @@ SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};proto=http
            file://stack-protector-test.patch \
            file://armv4-eabi-compile-fix.patch \
            file://etc/ld.so.conf \
+           file://supported-tt-ru.patch \
            file://generate-supported.mk \
            file://ppc-sqrt.patch \
            file://multilib_readlib.patch \
