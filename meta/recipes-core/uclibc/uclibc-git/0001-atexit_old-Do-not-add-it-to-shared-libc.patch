@@ -1,0 +1,44 @@
+From 74667582526b39a1906228574d73a6528f4587eb Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 23 Jun 2012 13:26:30 -0700
+Subject: [PATCH] atexit_old: Do not add it to shared libc
+
+atexit should only be in either uclibc_nonshared.a
+shared libc case or libc.a in static build case
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+---
+ libc/stdlib/Makefile.in |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libc/stdlib/Makefile.in b/libc/stdlib/Makefile.in
+index 3166b8e..3d686d9 100644
+--- a/libc/stdlib/Makefile.in
++++ b/libc/stdlib/Makefile.in
+@@ -60,7 +60,6 @@ CSRC-$(if $(findstring yyy,$(UCLIBC_HAS_FLOATS)$(UCLIBC_HAS_WCHAR)$(UCLIBC_HAS_X
+ 
+ # multi source _atexit.c
+ CSRC-y += __cxa_atexit.c __cxa_finalize.c __exit_handler.c exit.c on_exit.c
+-CSRC-$(COMPAT_ATEXIT) += old_atexit.c
+ 
+ STDLIB_DIR := $(top_srcdir)libc/stdlib
+ STDLIB_OUT := $(top_builddir)libc/stdlib
+@@ -70,11 +69,12 @@ STDLIB_OBJ := $(patsubst %.c,$(STDLIB_OUT)/%.o,$(CSRC-y))
+ 
+ libc-y += $(STDLIB_OBJ)
+ libc-static-y += $(STDLIB_OUT)/atexit.o $(STDLIB_OUT)/system.o
++libc-static-$(COMPAT_ATEXIT) += $(STDLIB_OUT)/old_atexit.o
+ libc-shared-y += $(STDLIB_OUT)/system.oS
+ 
+ # this should always be the PIC version, because it could be used in shared libs
+ libc-nonshared-y += $(STDLIB_OUT)/atexit.os
+-
++libc-nonshared-$(COMPAT_ATEXIT) += $(STDLIB_OUT)/old_atexit.os
+ libc-nomulti-y += $(STDLIB_OUT)/labs.o $(STDLIB_OUT)/atol.o $(STDLIB_OUT)/_stdlib_strto_l.o $(STDLIB_OUT)/_stdlib_strto_ll.o
+ libc-nomulti-$(UCLIBC_HAS_XLOCALE) += $(STDLIB_OUT)/_stdlib_strto_l_l.o $(STDLIB_OUT)/_stdlib_strto_ll_l.o
+ 
+-- 
+1.7.9.5
+

@@ -1,0 +1,33 @@
+From 95f9b6f37152b8316735d3c86c0db963ff59e22d Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 23 Jun 2012 16:51:52 -0700
+Subject: [PATCH] librt: Use -nodefaultlibs instead of -nostdlib
+
+nostdlib disables linking in startup files too which is not
+what we want here since it needs to resolve __dso_handle
+which comes from crtbeginS.o, otherwise librt has this
+undefined reference to a weak undefined __dso_handle that
+shows up as error (with gold linker)
+when shared libraries are being built which are
+linking in librt
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
+---
+ librt/Makefile.in |    1 +
+ 1 file changed, 1 insertion(+)
+
+Index: git/librt/Makefile.in
+===================================================================
+--- git.orig/librt/Makefile.in	2012-06-24 10:32:59.512653237 -0700
++++ git/librt/Makefile.in	2012-06-24 11:31:00.660821666 -0700
+@@ -15,6 +15,9 @@
+ ifeq ($(UCLIBC_HAS_THREADS_NATIVE),y)
+ LIBS-librt.so += $(top_builddir)lib/libdl.so $(top_builddir)lib/libpthread.so
+ endif
++START_FILE-librt.so := $(SHARED_START_FILES)
++END_FILE-librt.so := $(SHARED_END_FILES)
++
+ 
+ librt_FULL_NAME := librt-$(VERSION).so
+ 
