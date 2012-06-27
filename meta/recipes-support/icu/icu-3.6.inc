@@ -3,11 +3,13 @@ DESCRIPTION = "The International Component for Unicode (ICU) is a mature, portab
 HOMEPAGE = "http://www-01.ibm.com/software/globalization/icu/index.jsp"
 
 BASE_SRC_URI = "ftp://ftp.software.ibm.com/software/globalization/icu/3.6/icu4c-3_6-src.tgz \
-           file://gccfix.patch;apply=yes \
+           file://gccfix.patch \
            file://fix-parallel-build.patch \
-           file://use-g++-for-linking.patch;apply=yes"
+           file://use-g++-for-linking.patch \
+           "
 SRC_URI = "${BASE_SRC_URI} \
-           file://noldlibpath.patch;apply=yes"
+           file://noldlibpath.patch \
+           "
 SRC_URI_virtclass-native = "${BASE_SRC_URI}"
 
 LICENSE = "ICU"
