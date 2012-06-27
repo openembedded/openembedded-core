@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db grep-native"
 DEPENDS += "gdbm zlib"
-PR = "r7"
+PR = "r8"
 
 # 5.10.1 has Module::Build built-in
 PROVIDES += "libmodule-build-perl"
@@ -200,6 +200,7 @@ do_install() {
         # Fix up shared library
         mv ${D}/${libdir}/perl/${PV}/CORE/libperl.so ${D}/${libdir}/libperl.so.${PV}
         ln -sf libperl.so.${PV} ${D}/${libdir}/libperl.so.5
+        ln -sf ../../../libperl.so.${PV} ${D}/${libdir}/perl/${PV}/CORE/libperl.so
 
         # target config, used by cpan.bbclass to extract version information
         install config.sh ${D}${libdir}/perl
