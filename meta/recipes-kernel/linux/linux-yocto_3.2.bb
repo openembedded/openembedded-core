@@ -1,4 +1,3 @@
-inherit kernel
 require recipes-kernel/linux/linux-yocto.inc
 
 KBRANCH = "standard/default/base"
@@ -18,7 +17,7 @@ SRCREV_machine_qemux86-64 ?= "dd488f551fa0f8e3bf1aadd78083b8547bba8bdf"
 SRCREV_machine ?= "76133a1cadf0de417c29ed15d6fbb12c41c0802b"
 SRCREV_meta ?= "ee78519365bdb25287703bbc31c06b193263c654"
 
-PR = "r1"
+PR = "${INC_PR}.0"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 KMETA = "meta"

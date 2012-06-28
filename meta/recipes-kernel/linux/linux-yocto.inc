@@ -4,6 +4,8 @@ LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+INC_PR = "r3"
+
 # A KMACHINE is the mapping of a yocto $MACHINE to what is built
 # by the kernel. This is typically the branch that should be built,
 # and it can be specific to the machine or shared
@@ -23,6 +25,7 @@ do_patch[depends] = "kern-tools-native:do_populate_sysroot"
 addtask kernel_configme before do_configure after do_patch
 
 # Pick up shared functions
+inherit kernel
 inherit kernel-yocto
 require linux-dtb.inc
 

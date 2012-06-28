@@ -1,4 +1,3 @@
-inherit kernel
 require recipes-kernel/linux/linux-yocto.inc
 
 KBRANCH = "standard/preempt-rt/base"
@@ -13,7 +12,7 @@ SRCREV_machine ?= "c413f23eafb3e91ff98653e578e771532fd71be9"
 SRCREV_machine_qemuppc ?= "d7020ba154df03cba5351011ff664f5e3e1ce678"
 SRCREV_meta ?= "ee78519365bdb25287703bbc31c06b193263c654"
 
-PR = "r1"
+PR = "${INC_PR}.0"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.2.git;protocol=git;bareclone=1;branch=${KBRANCH},meta;name=machine,meta"
