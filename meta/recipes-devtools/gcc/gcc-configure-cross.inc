@@ -1,7 +1,5 @@
 require gcc-configure-common.inc
 
-USE_NLS = '${@base_conditional( "TARGET_OS", "linux-uclibc", "no", "", d )}'
-
 EXTRA_OECONF += " --enable-poison-system-directories \
 		"
 
