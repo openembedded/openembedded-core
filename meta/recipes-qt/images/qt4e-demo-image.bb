@@ -1,4 +1,4 @@
-DESCRIPTION = "Version 1.0-r1 of the qtr3-demo-image."
+DESCRIPTION = "An image that will launch into the demo application for the embedded (not based on X11) version of Qt."
 LICENSE = "MIT"
 PR="r2"
 
