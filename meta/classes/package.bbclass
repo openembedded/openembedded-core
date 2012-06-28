@@ -1154,6 +1154,9 @@ RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/bin/rpmdeps-oecore --macros ${STAGING_LI
 python package_do_filedeps() {
 	import re
 
+	if d.getVar('SKIP_FILEDEPS', True) == '1':
+		return
+
 	pkgdest = d.getVar('PKGDEST', True)
 	packages = d.getVar('PACKAGES', True)
 
