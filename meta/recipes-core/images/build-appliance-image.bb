@@ -1,4 +1,4 @@
-DESCRIPTION = "Version 1.0-r6 of the self-hosted image."
+DESCRIPTION = "An image you can boot and run using either the VMware Player or VMware Workstation.  For more information, see the<a href='http://www.yoctoproject.org/documentation/build-appliance'>Build Appliance page</a>."
 IMAGE_INSTALL = "task-core-boot task-core-apps-console task-core-ssh-openssh task-self-hosted"
 
 LICENSE = "MIT"
