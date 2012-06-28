@@ -1,27 +1,22 @@
 SRCREV="0dcc13bf7a61b1d0708e5dd103d5515e0ffec79a"
 
 require uclibc.inc
+require uclibc-package.inc
+require uclibc-git.inc
 
-# We prefer a release version so DP -1 for this
-DEFAULT_PREFERENCE = "-1"
+STAGINGCC = "gcc-cross-intermediate"
+STAGINGCC_virtclass-nativesdk = "gcc-crosssdk-intermediate"
 
-PV = "0.9.33+git${SRCPV}"
-PR = "${INC_PR}.1"
-PROVIDES += "virtual/${TARGET_PREFIX}libc-for-gcc"
+PROVIDES += "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
 
-FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/uclibc-git' ], d)}"
+DEPENDS = "virtual/${TARGET_PREFIX}binutils \
+           virtual/${TARGET_PREFIX}gcc-intermediate \
+           linux-libc-headers ncurses-native"
 
-SRC_URI = "git://uclibc.org/uClibc.git;branch=master;protocol=git \
-	file://uClibc.machine \
-	file://uClibc.distro \
-	file://uclibc_enable_log2_test.patch \
-	file://powerpc_copysignl.patch \
-	file://argp-support.patch \
-	file://argp-headers.patch \
-	file://remove_attribute_optimize_Os.patch \
-	file://compile-arm-fork-with-O2.patch \
-	file://uclibc-execvpe.patch \
-	file://orign_path.patch \
-	"
+RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
+RPROVIDES_${PN}-dev += "libc-dev virtual-libc-dev"
+# uclibc does not really have libsegfault but then using the one from glibc is also not
+# going to work. So we pretend that we have it to make bitbake not pull other recipes
+# to satisfy this dependency for the images/tasks
 
-S = "${WORKDIR}/git"
+RPROVIDES_${PN} += "libsegfault rtld(GNU_HASH)"
