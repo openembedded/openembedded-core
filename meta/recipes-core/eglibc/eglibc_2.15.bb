@@ -101,6 +101,7 @@ do_patch_append() {
 # mips1 when using o32 and mips3 when using n32/n64
 
 TUNE_CCARGS_mips := "${@oe_filter_out('-march=mips32', '${TUNE_CCARGS}', d)}"
+TUNE_CCARGS_mipsel := "${@oe_filter_out('-march=mips32', '${TUNE_CCARGS}', d)}"
 
 # We need to ensure that all of the i386 and x86_64 headers are identical
 # to support the multilib case.  We do this by copying headers from x86_64
