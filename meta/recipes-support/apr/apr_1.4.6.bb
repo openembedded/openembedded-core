@@ -39,6 +39,8 @@ do_configure_append() {
 
 do_install_append() {
 	oe_multilib_header apr.h
+	install -d ${D}${datadir}/apr
+	cp ${S}/${HOST_SYS}-libtool ${D}${datadir}/build-1/libtool
 }
 
 SSTATE_SCAN_FILES += "apr_rules.mk"
