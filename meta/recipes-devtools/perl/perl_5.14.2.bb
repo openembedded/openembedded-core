@@ -147,6 +147,7 @@ do_configure() {
         sed -i -e 's,@DESTDIR@,${prefix},g' \
                -e 's,@ARCH@-thread-multi,,g' \
                -e 's,@ARCH@,${TARGET_ARCH}-${TARGET_OS},g' \
+               -e 's,@STAGINGDIR@,${STAGING_DIR_HOST},g' \
                -e "s%/usr/include%${STAGING_INCDIR}%g" \
 	       -e 's,/usr/lib/,${libdir}/,g' \
 	       -e 's,/usr/,${exec_prefix}/,g' \
