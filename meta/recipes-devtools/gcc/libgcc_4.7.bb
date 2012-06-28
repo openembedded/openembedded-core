@@ -58,6 +58,10 @@ do_install () {
 
 	mv ${D}${libdir}/gcc/* ${D}${libdir}
 	rm -rf ${D}${libdir}/gcc/
+	# unwind.h is installed here which is shipped in gcc-cross
+	# as well as target gcc and they are identical so we dont
+	# ship one with libgcc here
+	rm -rf ${D}${libdir}/${TARGET_SYS}/${BINV}/include
 }
 
 do_package_write_ipk[depends] += "virtual/${MLPREFIX}libc:do_package"
