@@ -79,8 +79,7 @@ FILES_${PN}-dbg += "${libexecdir}/pulse/.debug \
                     ${libdir}/pulse-${PV}/modules/.debug"
 FILES_${PN}-dev += "${libdir}/pulse-${PV}/modules/*.la ${datadir}/vala ${libdir}/cmake"		    
 FILES_${PN}-conf = "${sysconfdir}"
-FILES_${PN}-bin = "${bindir}/* \
-                   ${sysconfdir}/default/volatiles/volatiles.04_pulse"
+FILES_${PN}-bin += "${sysconfdir}/default/volatiles/volatiles.04_pulse"
 FILES_${PN}-server = "${bindir}/pulseaudio ${bindir}/start-* ${sysconfdir} ${bindir}/pactl ${base_libdir}/udev/rules.d/*.rules"
 FILES_${PN}-gconf-helper = "${libexecdir}/pulse/gconf-helper"
 FILES_${PN}-misc = "${bindir}/*"
