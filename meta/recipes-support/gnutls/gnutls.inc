@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.gnu.org/software/gnutls/"
 BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
 DEPENDS = "zlib lzo libtasn1 libgcrypt (>= 1.4.2) libcap readline"
 
-INC_PR = "r7"
+INC_PR = "r8"
 
 LICENSE = "GPLv3+ & LGPLv2.1+"
 LICENSE_${PN} = "LGPLv2.1+"
@@ -17,7 +17,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 
 SRC_URI = "${GNU_MIRROR}/gnutls/gnutls-${PV}.tar.bz2"
 
-inherit autotools binconfig pkgconfig gettext
+inherit autotools binconfig pkgconfig gettext lib_package
 
 EXTRA_OECONF="--with-included-opencdk --with-included-libcfg --disable-rpath \
               --with-libtasn1-prefix=${STAGING_DIR_HOST}${prefix} \
@@ -35,15 +35,7 @@ do_configure_prepend() {
 	done
 }
 
-PACKAGES =+ "${PN}-openssl ${PN}-extra ${PN}-bin ${PN}-xx"
-
-FILES_${PN}-bin = "${bindir}/gnutls-serv \
-                   ${bindir}/gnutls-cli \
-                   ${bindir}/srptool \
-                   ${bindir}/psktool \
-                   ${bindir}/p11tool \
-                   ${bindir}/certtool \
-                   ${bindir}/gnutls-srpcrypt"
+PACKAGES =+ "${PN}-openssl ${PN}-extra ${PN}-xx"
 
 FILES_${PN}-dev += "${bindir}/gnutls-cli-debug"
 FILES_${PN}-extra = "${libdir}/libgnutls-extra.so.*"
