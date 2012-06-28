@@ -29,7 +29,7 @@ python populate_packages_prepend () {
 		d.setVar('PKG_'+bpn+'-dev', 'libc6-dev')
 		d.setVar('PKG_'+bpn+'-dbg', 'libc6-dbg')
 		# For backward compatibility with old -dbg package
-		d.setVar('RPROVIDES_' + bpn + '-dbg', 'libc-dbg')
-		d.setVar('RCONFLICTS_' + bpn + '-dbg', 'libc-dbg')
-		d.setVar('RREPLACES_' + bpn + '-dbg', 'libc-dbg')
+		d.appendVar('RPROVIDES_' + bpn + '-dbg', ' libc-dbg')
+		d.appendVar('RCONFLICTS_' + bpn + '-dbg', ' libc-dbg')
+		d.appendVar('RREPLACES_' + bpn + '-dbg', ' libc-dbg')
 }
