@@ -6,6 +6,7 @@ BASE_SRC_URI = "ftp://ftp.software.ibm.com/software/globalization/icu/3.6/icu4c-
            file://gccfix.patch \
            file://fix-parallel-build.patch \
            file://use-g++-for-linking.patch \
+           file://larger-cmd-size.patch \
            "
 SRC_URI = "${BASE_SRC_URI} \
            file://noldlibpath.patch \
