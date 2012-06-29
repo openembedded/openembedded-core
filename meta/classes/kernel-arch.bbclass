@@ -8,7 +8,7 @@ valid_archs = "alpha cris ia64 \
                i386 x86 \
                m68knommu m68k ppc powerpc powerpc64 ppc64  \
 	       sparc sparc64 \
-               arm  arm26 \
+               arm \
                m32r mips \
 	       sh sh64 um h8300   \
 	       parisc s390  v850 \
@@ -21,7 +21,6 @@ def map_kernel_arch(a, d):
 	valid_archs = d.getVar('valid_archs', True).split()
 
 	if   re.match('(i.86|athlon|x86.64)$', a):	return 'x86'
-	elif re.match('arm26$', a):		        return 'arm26'
 	elif re.match('armeb$', a):		        return 'arm'
 	elif re.match('mips(el|64|64el)$', a):	        return 'mips'
 	elif re.match('p(pc|owerpc)(|64)', a):		return 'powerpc'
