@@ -187,7 +187,7 @@ deb_log_check() {
 	lf_path="$2"
 
 	lf_txt="`cat $lf_path`"
-	for keyword_die in "E:"
+	for keyword_die in "^E:"
 	do
 		if (echo "$lf_txt" | grep -v log_check | grep "$keyword_die") >/dev/null 2>&1
 		then
