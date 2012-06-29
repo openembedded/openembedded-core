@@ -394,7 +394,7 @@ libgl='no'
 if [ "$libgl" != 'yes' ]; then
     echo "You need libGL.so and libGLU.so to exist in your library path to run the QEMU emulator.
     Ubuntu package names are: libgl1-mesa-dev and libglu1-mesa-dev.
-    Fedora package names are: mesa-libGL mesa-libGLU."
+    Fedora package names are: mesa-libGL-devel mesa-libGLU-devel."
     exit 1;
 fi
 
