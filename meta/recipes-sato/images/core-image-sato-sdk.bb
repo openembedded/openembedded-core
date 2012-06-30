@@ -11,3 +11,6 @@ EXTRA_IMAGE_FEATURES += "tools-debug tools-profile tools-testapps debug-tweaks"
 LICENSE = "MIT"
 
 inherit core-image
+
+IMAGE_INSTALL += "kernel-dev"
+

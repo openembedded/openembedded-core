@@ -10,6 +10,7 @@ IMAGE_INSTALL = "\
     ${CORE_IMAGE_BASE_INSTALL} \
     task-core-basic \
     task-core-lsb \
+    kernel-dev \
     "
 
 inherit core-image

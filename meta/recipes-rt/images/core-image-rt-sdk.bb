@@ -11,6 +11,6 @@ DEPENDS = "linux-yocto-rt"
 IMAGE_FEATURES += "dev-pkgs tools-sdk"
 EXTRA_IMAGE_FEATURES += "tools-debug tools-profile tools-testapps debug-tweaks"
 
-IMAGE_INSTALL += "rt-tests"
+IMAGE_INSTALL += "rt-tests kernel-dev"
 
 LICENSE = "MIT"
