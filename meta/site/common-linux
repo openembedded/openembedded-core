@@ -1,5 +1,6 @@
 # apr
 ac_cv_file__dev_zero=${ac_cv_file__dev_zero=yes}
+ac_cv_sizeof_pid_t=${ac_cv_sizeof_pid_t=4}
 
 # samba
 samba_cv_HAVE_IFACE_AIX=${samba_cv_HAVE_IFACE_AIX=no}
