@@ -432,7 +432,7 @@ python () {
 
         dont_want_license = d.getVar('INCOMPATIBLE_LICENSE', True)
 
-        if dont_want_license and not pn.endswith("-native") and not pn.endswith("-cross") and not pn.endswith("-cross-initial") and not pn.endswith("-cross-intermediate") and not pn.endswith("-crosssdk-intermediate") and not pn.endswith("-crosssdk") and not pn.endswith("-crosssdk-initial") and not pn.endswith("-nativesdk"):
+        if dont_want_license and not pn.endswith("-native") and not pn.endswith("-cross") and not pn.endswith("-cross-initial") and not pn.endswith("-cross-intermediate") and not pn.endswith("-crosssdk-intermediate") and not pn.endswith("-crosssdk") and not pn.endswith("-crosssdk-initial") and not pn.endswith("-cross-canadian-%s" % d.getVar('TRANSLATED_TARGET_ARCH', True)) and not pn.endswith("-nativesdk"):
         # Internally, we'll use the license mapping. This way INCOMPATIBLE_LICENSE = "GPLv2" and
         # INCOMPATIBLE_LICENSE = "GPLv2.0" will pick up all variations of GPL-2.0
             spdx_license = return_spdx(d, dont_want_license)
