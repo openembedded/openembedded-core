@@ -9,10 +9,6 @@ BBCLASSEXTEND = "native"
 
 PR = "r1"
 
-# negative, because of new checkout format in 1.7.0 
-# and distro PREMIRRORs need to be in sync with users
-DEFAULT_PREFERENCE = "-1"
-
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libtool2.patch \
 "
