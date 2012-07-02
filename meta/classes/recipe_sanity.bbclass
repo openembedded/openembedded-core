@@ -136,11 +136,10 @@ python do_recipe_sanity () {
     bad_runtime_vars(cfgdata, d)
 }
 do_recipe_sanity[nostamp] = "1"
-#do_recipe_sanity[recrdeptask] = "do_recipe_sanity"
 addtask recipe_sanity
 
 do_recipe_sanity_all[nostamp] = "1"
-do_recipe_sanity_all[recrdeptask] = "do_recipe_sanity"
+do_recipe_sanity_all[recrdeptask] = "do_recipe_sanity_all do_recipe_sanity"
 do_recipe_sanity_all () {
     :
 }

@@ -46,20 +46,14 @@ python do_checkuri() {
 }
 
 addtask checkuriall after do_checkuri
-do_checkuriall[recrdeptask] = "do_checkuri"
+do_checkuriall[recrdeptask] = "do_checkuriall do_checkuri"
 do_checkuriall[nostamp] = "1"
 do_checkuriall() {
 	:
 }
 
 addtask fetchall after do_fetch
-do_fetchall[recrdeptask] = "do_fetch"
+do_fetchall[recrdeptask] = "do_fetchall do_fetch"
 do_fetchall() {
-	:
-}
-
-addtask buildall after do_build
-do_buildall[recrdeptask] = "do_build"
-do_buildall() {
 	:
 }
