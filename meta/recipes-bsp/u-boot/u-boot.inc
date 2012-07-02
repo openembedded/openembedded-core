@@ -5,8 +5,6 @@ PROVIDES = "virtual/bootloader"
 
 inherit deploy
 
-PARALLEL_MAKE=""
-
 EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX}"
 
 python () {
