@@ -7,6 +7,6 @@ LIC_FILES_CHKSUM = "file://image/xcb_image.c;endline=24;md5=eafdf965cfb89955fded
                     file://image/xcb_image.h;startline=4;endline=27;md5=4e4f1b0fae5694beed407dea01f38212"
 PR = "r0"
 
-SRC_URI[md5sum] = "245a96041f373b05764148e52d2e0211"
-SRC_URI[sha256sum] = "40390528c26e8231132540f16579b821de68bb2e9152918f72182d5a4038a6d9"
+SRC_URI[md5sum] = "fabb80b36490b00fc91289e2c7f66770"
+SRC_URI[sha256sum] = "d35a3c0eaae171f5081ec127fb9cec174b716ce5d78196a87f2785376da021df"
 
