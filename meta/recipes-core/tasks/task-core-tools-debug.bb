@@ -13,6 +13,8 @@ PACKAGES = "\
     ${PN}-dev \
     "
 
+PR = "r1"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 ALLOW_EMPTY = "1"
@@ -24,6 +26,7 @@ RDEPENDS_${PN} = "\
     gdb \
     gdbserver \
     tcf-agent \
+    openssh-sftp-server \
     rsync \
     strace \
     ${MTRACE} \
