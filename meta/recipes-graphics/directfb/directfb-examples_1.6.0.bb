@@ -16,5 +16,5 @@ S = "${WORKDIR}/DirectFB-examples-${PV}"
 
 inherit autotools
 
-SRC_URI[md5sum] = "f2a5dac3bf1eb8bc0f766525831ac467"
-SRC_URI[sha256sum] = "7ceb9539a39e4221d838a3b8e8a3834c0c254ecdb34afc27e9bbcf55027cbbb1"
+SRC_URI[md5sum] = "27619d31e8a647fdd3023a0c1779b63d"
+SRC_URI[sha256sum] = "b08293697c211b690856f76a25ad7acd4ca458b4132851e0a1e471d0bf23c821"
