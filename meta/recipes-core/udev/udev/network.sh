@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Do not run when pcmcia-cs is installed
-test -x /sbin/cardctl && exit 0
-
 # We get two "add" events for hostap cards due to wifi0
 echo "$INTERFACE" | grep -q wifi && exit 0
 
