@@ -8,5 +8,5 @@ LIC_FILES_CHKSUM = "file://ewmh/ewmh.c;endline=27;md5=63fd80552d7dc886f4eb267610
 					"
 PR = "r0"
 
-SRC_URI[md5sum] = "dda47289bc846a6a3e07824e9ec3aef8"
-SRC_URI[sha256sum] = "c557abbe4c7d45268f0541ee3d8f9a1a8799692fcc28aa33f39db93cc2e65007"
+SRC_URI[md5sum] = "c612aae7ffe2e70fe743efab9c5548e9"
+SRC_URI[sha256sum] = "038f9bdb917b1f6d98a164f57dfb32212a102d771ab6f03de49fef3786746030"
