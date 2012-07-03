@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://keysyms/keysyms.c;endline=30;md5=2f8de023ed823bb92f0b
 					"
 PR = "r0"
 
-SRC_URI[md5sum] = "c75bb20e709093580a67eaf263251b50"
-SRC_URI[sha256sum] = "913d32f7afe380c580da7636ee13f2728790237bb5c03def536363f552686121"
+SRC_URI[md5sum] = "64e4aad2d48cd4a92e2da13b9f35bfd2"
+SRC_URI[sha256sum] = "7be1acf053bd68a1910fc861b2cbcbad7637b5618590dd5484d43a96f7995c6e"
 
 
