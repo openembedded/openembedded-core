@@ -30,5 +30,5 @@ python () {
             d.setVar('PKG_${PN}', '${MLPREFIX}libxft2')
 }
 
-SRC_URI[md5sum] = "bd0a8d8cace1dfbb963250bf3eb9a19a"
-SRC_URI[sha256sum] = "3426393ad72a5c47006536d474e396c7a21c33131bb28f495578e05a5858b044"
+SRC_URI[md5sum] = "78d64dece560c9e8699199f3faa521c0"
+SRC_URI[sha256sum] = "7fce32b92dcb7b2869bed567af2abc7bbad0d5d6fcf471b8a3e137964a31bbbd"
