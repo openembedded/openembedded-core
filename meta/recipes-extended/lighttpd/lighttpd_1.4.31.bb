@@ -16,7 +16,7 @@ RDEPENDS_${PN} += " \
                lighttpd-module-staticfile \
 "
 
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.tar.bz2 \
         file://index.html.lighttpd \
@@ -25,8 +25,8 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
         file://lighttpd_fix_for_automake-1.12.patch \
         "
 
-SRC_URI[md5sum] = "63f9df52dcae0ab5689a95c99c54e48a"
-SRC_URI[sha256sum] = "0d795597e4666dbf6ffe44b4a42f388ddb44736ddfab0b1ac091e5bb35212c2d"
+SRC_URI[md5sum] = "c718cc27658240d307b8a1d1c7c4bb54"
+SRC_URI[sha256sum] = "5209e7a25d3044cb21b34d6a2bb3a6f6c216ba903ea486a803d070582e5e26ac"
 
 EXTRA_OECONF = " \
              --without-bzip2 \
