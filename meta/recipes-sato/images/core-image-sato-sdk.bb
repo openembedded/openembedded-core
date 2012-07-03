@@ -8,6 +8,8 @@ form a standalone SDK."
 IMAGE_FEATURES += "apps-console-core ${SATO_IMAGE_FEATURES} dev-pkgs tools-sdk qt4-pkgs"
 EXTRA_IMAGE_FEATURES += "tools-debug tools-profile tools-testapps debug-tweaks"
 
+SSHSERVER_IMAGE_FEATURES = "ssh-server-openssh"
+
 LICENSE = "MIT"
 
 inherit core-image

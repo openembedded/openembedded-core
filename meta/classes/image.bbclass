@@ -94,6 +94,23 @@ python () {
         deps += " %s:do_populate_sysroot" % dep
     d.appendVarFlag('do_build', 'depends', deps)
 
+    #process IMAGE_FEATURES, we must do this before runtime_mapping_rename
+    #Check for replaces image features
+    features = set(oe.data.typed_value('IMAGE_FEATURES', d))
+    remain_features = features.copy()
+    for feature in features:
+        replaces = set((d.getVar("IMAGE_FEATURES_REPLACES_%s" % feature, True) or "").split())
+        remain_features -= replaces
+
+    #Check for conflict image features
+    for feature in remain_features:
+        conflicts = set((d.getVar("IMAGE_FEATURES_CONFLICTS_%s" % feature, True) or "").split())
+        temp = conflicts & remain_features
+        if temp:
+            bb.fatal("%s contains conflicting IMAGE_FEATURES %s %s" % (d.getVar('PN', True), feature, ' '.join(list(temp))))
+
+    d.setVar('IMAGE_FEATURES', ' '.join(list(remain_features)))
+
     # If we don't do this we try and run the mapping hooks while parsing which is slow
     # bitbake should really provide something to let us know this...
     if d.getVar('BB_WORKERCONTEXT', True) is not None:

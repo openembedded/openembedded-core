@@ -47,6 +47,14 @@ PACKAGE_GROUP_ssh-server-openssh = "task-core-ssh-openssh"
 PACKAGE_GROUP_package-management = "${ROOTFS_PKGMANAGE}"
 PACKAGE_GROUP_qt4-pkgs = "task-core-qt-demos"
 
+
+# IMAGE_FEAETURES_REPLACES_foo = 'bar1 bar2'
+# Including image feature foo would replace the image features bar1 and bar2
+IMAGE_FEATURES_REPLACES_ssh-server-openssh = "ssh-server-dropbear"
+
+# IMAGE_FEATURES_CONFLICTS_foo = 'bar1 bar2'
+# An error exception would be raised if both image features foo and bar1(or bar2) are included
+
 CORE_IMAGE_BASE_INSTALL = '\
     task-core-boot \
     task-base-extended \
@@ -60,7 +68,8 @@ IMAGE_INSTALL ?= "${CORE_IMAGE_BASE_INSTALL}"
 
 X11_IMAGE_FEATURES  = "x11-base apps-x11-core package-management"
 ENHANCED_IMAGE_FEATURES = "${X11_IMAGE_FEATURES} apps-x11-games apps-x11-pimlico package-management"
-SATO_IMAGE_FEATURES = "${ENHANCED_IMAGE_FEATURES} x11-sato ssh-server-dropbear"
+SSHSERVER_IMAGE_FEATURES ??= "ssh-server-dropbear"
+SATO_IMAGE_FEATURES = "${ENHANCED_IMAGE_FEATURES} x11-sato ${SSHSERVER_IMAGE_FEATURES}"
 
 inherit image
 
