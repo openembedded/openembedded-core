@@ -84,9 +84,9 @@ disk_size=$(parted /dev/${device} unit mb print | grep Disk | cut -d" " -f 3 | s
 swap_size=$((disk_size*swap_ratio/100))
 rootfs_size=$((disk_size-boot_size-swap_size))
 
-rootfs_start=$((boot_size + 1))
+rootfs_start=$((boot_size))
 rootfs_end=$((rootfs_start+rootfs_size))
-swap_start=$((rootfs_end+1))
+swap_start=$((rootfs_end))
 
 # MMC devices are special in a couple of ways
 # 1) they use a partition prefix character 'p'
@@ -113,13 +113,13 @@ echo "Creating new partition table on /dev/${device} ..."
 parted /dev/${device} mklabel msdos
 
 echo "Creating boot partition on $bootfs"
-parted /dev/${device} mkpart primary 1 $boot_size
+parted /dev/${device} mkpart primary 0% $boot_size
 
 echo "Creating rootfs partition on $rootfs"
 parted /dev/${device} mkpart primary $rootfs_start $rootfs_end
 
 echo "Creating swap partition on $swap"
-parted /dev/${device} mkpart primary $swap_start $disk_size
+parted /dev/${device} mkpart primary $swap_start 100%
 
 parted /dev/${device} print
 
