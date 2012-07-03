@@ -988,9 +988,13 @@ python populate_packages () {
 				unshipped.append(path)
 
 	if unshipped != []:
-		bb.warn("For recipe %s, the following files/directories were installed but not shipped in any package:" % pn)
-		for f in unshipped:
-			bb.warn("  " + f)
+		msg = pn + ": Files/directories were installed but not shipped"
+		if "installed_vs_shipped" in (d.getVar('INSANE_SKIP_' + pn, True) or "").split():
+			bb.note("Package %s skipping QA tests: installed_vs_shipped" % pn)
+		else:
+			for f in unshipped:
+				msg = msg + "\n  " + f	
+			package_qa_handle_error("installed_vs_shipped", msg, d)
 
 	bb.build.exec_func("package_name_hook", d)
 
