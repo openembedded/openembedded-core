@@ -123,7 +123,7 @@ parted /dev/${device} mkpart primary $swap_start $disk_size
 
 parted /dev/${device} print
 
-echo "Formatting $bootfs to ext2..."
+echo "Formatting $bootfs to ext3..."
 mkfs.ext3 $bootfs
 
 echo "Formatting $rootfs to ext3..."
