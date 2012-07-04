@@ -1,10 +1,10 @@
 require bluez4.inc
 require recipes-multimedia/gstreamer/gst-plugins-package.inc
 
-PR = "r2"
+PR = "r0"
 
-SRC_URI[md5sum] = "570aa10692ed890aa0a4297b37824912"
-SRC_URI[sha256sum] = "d884b9aa5d3d9653c076b7646ca14a3e43eb84bccfe8193c49690f802bbd827c"
+SRC_URI[md5sum] = "fb42cb7038c380eb0e2fa208987c96ad"
+SRC_URI[sha256sum] = "59738410ade9f0e61a13c0f77d9aaffaafe49ba9418107e4ad75fe52846f7487"
 
 DEPENDS = "bluez4 gst-plugins-base"
 
@@ -35,5 +35,4 @@ FILES_${PN}-dev += "\
 FILES_${PN}-dbg += "\
   ${libdir}/*/.debug \
 "
-
 
