@@ -247,7 +247,7 @@ Index: libX11-1.3/src/X18NCMSstubs.c
 +    XRectangle         *max_ink_extents,
 +    XRectangle         *max_logical_extents)
 +{
-+  ;
++  return(XcmsFailure);
 +}
 +
 +int
