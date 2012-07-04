@@ -2,7 +2,7 @@ DESCRIPTION = "Package maintenance system for Debian."
 LICENSE = "GPLv2.0+"
 SECTION = "base"
 
-INC_PR = "r16"
+INC_PR = "r17"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.bz2 \
            file://ignore_extra_fields.patch"
@@ -54,6 +54,15 @@ do_install_append () {
 	else
 		mv ${D}${bindir}/update-alternatives ${D}${sbindir}
 	fi
+}
+
+# Create a wrapper for the perl script to avoid the "bad interpreter"
+# error when the tmpdir is longer than 150.
+do_install_append_virtclass-native () {
+	tmp=`find ${D}${bindir} -type f -exec grep -m 1 -l '#!/.*/perl-native/perl' {} \;`
+	for i in $tmp; do
+		create_wrapper $i ${STAGING_BINDIR_NATIVE}/perl-native/perl
+	done
 }
 
 PROV = "virtual/update-alternatives"
