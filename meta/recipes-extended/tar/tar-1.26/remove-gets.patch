@@ -1,0 +1,20 @@
+ISO C11 removes the specification of gets() from the C language, eglibc 2.16+ removed it
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+Index: tar-1.26/gnu/stdio.in.h
+===================================================================
+--- tar-1.26.orig/gnu/stdio.in.h	2011-03-12 01:14:33.000000000 -0800
++++ tar-1.26/gnu/stdio.in.h	2012-07-04 12:18:58.997081535 -0700
+@@ -163,8 +163,10 @@
+ /* It is very rare that the developer ever has full control of stdin,
+    so any use of gets warrants an unconditional warning.  Assume it is
+    always declared, since it is required by C89.  */
++#if defined gets
+ #undef gets
+ _GL_WARN_ON_USE (gets, "gets is a security hole - use fgets instead");
++#endif
+ 
+ #if @GNULIB_FOPEN@
+ # if @REPLACE_FOPEN@
