@@ -1,6 +1,6 @@
 require apt-native.inc
 
-PR = "r9"
+PR = "r10"
 
 SRC_URI += "file://nodoc.patch \
             file://noconfigure.patch \

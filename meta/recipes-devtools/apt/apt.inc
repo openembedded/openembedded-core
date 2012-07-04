@@ -9,6 +9,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/apt/apt_${PV}.tar.gz \
            file://makerace.patch \
            file://remove-redeclaration.patch \
            file://truncate-filename.patch \
+           file://allocate-larger-memory.patch \
            "
 
 inherit autotools gettext
