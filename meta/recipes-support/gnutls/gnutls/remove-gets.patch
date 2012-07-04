@@ -1,0 +1,42 @@
+eglibc 2.16 has removed gets completely
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Backported to gnutls 2.12.17 by Scott Garman <scott.a.garman@intel.com>
+
+Upstream-Status: Pending
+
+diff -urN gnutls-2.12.17.orig/gl/stdio.in.h gnutls-2.12.17/gl/stdio.in.h
+--- gnutls-2.12.17.orig/gl/stdio.in.h	2012-03-01 07:47:48.000000000 -0800
++++ gnutls-2.12.17/gl/stdio.in.h	2012-12-12 20:27:54.833297791 -0800
+@@ -710,11 +710,13 @@
+ _GL_CXXALIAS_SYS (gets, char *, (char *s));
+ #  undef gets
+ # endif
++# if defined gets
+ _GL_CXXALIASWARN (gets);
+ /* It is very rare that the developer ever has full control of stdin,
+    so any use of gets warrants an unconditional warning.  Assume it is
+    always declared, since it is required by C89.  */
+ _GL_WARN_ON_USE (gets, "gets is a security hole - use fgets instead");
++# endif
+ #endif
+ 
+ 
+diff -urN gnutls-2.12.17.orig/lib/gl/stdio.in.h gnutls-2.12.17/lib/gl/stdio.in.h
+--- gnutls-2.12.17.orig/lib/gl/stdio.in.h	2012-03-01 07:53:13.000000000 -0800
++++ gnutls-2.12.17/lib/gl/stdio.in.h	2012-12-12 20:29:09.669295717 -0800
+@@ -710,11 +710,13 @@
+ _GL_CXXALIAS_SYS (gets, char *, (char *s));
+ #  undef gets
+ # endif
++# if defined gets
+ _GL_CXXALIASWARN (gets);
+ /* It is very rare that the developer ever has full control of stdin,
+    so any use of gets warrants an unconditional warning.  Assume it is
+    always declared, since it is required by C89.  */
+ _GL_WARN_ON_USE (gets, "gets is a security hole - use fgets instead");
++# endif
+ #endif
+ 
+ 

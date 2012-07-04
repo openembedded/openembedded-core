@@ -1,10 +1,11 @@
 require gnutls.inc
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.2"
 
 SRC_URI += "file://gnutls-openssl.patch \
             file://correct_rpl_gettimeofday_signature.patch \
             file://configure-fix.patch \
+            file://remove-gets.patch \
            "
 
 SRC_URI[md5sum] = "f08990f1afa4e1d0ee13e64e537c7854"
