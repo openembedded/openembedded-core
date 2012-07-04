@@ -1,7 +1,7 @@
 require libx11.inc
 inherit gettext
 
-PR = "r3"
+PR = "r0"
 
 BBCLASSEXTEND = "native nativesdk"
 
@@ -14,9 +14,8 @@ DEPENDS += "util-macros xtrans libxdmcp libxau \
 
 SRC_URI += " file://keysymdef_include.patch \
              file://x11_disable_makekeys.patch \
-             file://0001-Add-_XGetRequest-as-substitute-for-GetReq-GetReqExtr.patch \
              file://makekeys_crosscompile.patch \
              "
 
-SRC_URI[md5sum] = "ed7c382cbf8c13425b6a66bcac0ca5d9"
-SRC_URI[sha256sum] = "7fe62180f08ef5f0a0062fb444591e349cae2ab5af6ad834599f5c654e6c840d"
+SRC_URI[md5sum] = "78b4b3bab4acbdf0abcfca30a8c70cc6"
+SRC_URI[sha256sum] = "c382efd7e92bfc3cef39a4b7f1ecf2744ba4414a705e3bc1e697f75502bd4d86"
