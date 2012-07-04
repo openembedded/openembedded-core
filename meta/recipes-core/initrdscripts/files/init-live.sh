@@ -116,11 +116,11 @@ case $label in
 	    fi
 	fi
 	;;
-    install)
+    install|install-efi)
 	if [ -f /media/$i/$ISOLINUX/$ROOT_IMAGE ] ; then
-	    ./install.sh $i/$ISOLINUX $ROOT_IMAGE $video_mode $vga_mode $console_params
+	    ./$label.sh $i/$ISOLINUX $ROOT_IMAGE $video_mode $vga_mode $console_params
 	else
-	    fatal "Could not find install script"
+	    fatal "Could not find $label script"
 	fi
 
 	# If we're getting here, we failed...
