@@ -4,8 +4,9 @@ SRC_URI  = "\
   ${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.bz2 \
   file://ofono \
 "
-SRC_URI[md5sum] = "d863b2b650a525cf75056085398bc8ef"
-SRC_URI[sha256sum] = "63e38ea1cf35b00ecbab7611c6caa2adcd33eb10495f7a9f72013d4ab7a14c98"
+
+SRC_URI[md5sum] = "e457ea13db22bb2de77767c867dcc4d3"
+SRC_URI[sha256sum] = "164b413068e810281a5e6c9bb90d5002d80f1c30bef2f3ffdbe70f963079524d"
 
 
 EXTRA_OECONF += "\
