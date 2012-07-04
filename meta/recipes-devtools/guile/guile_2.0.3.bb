@@ -19,12 +19,13 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.gz \
            file://debian/0003-Include-gc.h-rather-than-gc-gc_version.h-in-pthread-.patch \
            file://opensuse/guile-64bit.patch \
            file://opensuse/guile-turn-off-gc-test.patch \
+           file://remove-gets.patch \
            "
 
 SRC_URI[md5sum] = "3b8b4e1083037f29d2c4704a6d55f2a8"
 SRC_URI[sha256sum] = "a53b21159befe3e89bbaca71e9e62cf00af0f49fcca297c407944b988d59eb08"
 
-PR = "r5"
+PR = "r6"
 
 inherit autotools gettext
 BBCLASSEXTEND = "native"

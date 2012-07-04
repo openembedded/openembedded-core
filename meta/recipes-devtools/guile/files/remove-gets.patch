@@ -1,0 +1,25 @@
+ISO C11 removes the specification of gets() from the C language, eglibc 2.16+ removed it
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Backported to guile 2.0.3 by Scott Garman <scott.a.garman@intel.com>
+
+Upstream-Status: Pending
+
+diff -urN guile-2.0.3.orig/lib/stdio.in.h guile-2.0.3/lib/stdio.in.h
+--- guile-2.0.3.orig/lib/stdio.in.h	2011-10-22 07:19:35.000000000 -0700
++++ guile-2.0.3/lib/stdio.in.h	2012-12-12 20:47:06.397265942 -0800
+@@ -711,11 +711,13 @@
+ _GL_CXXALIAS_SYS (gets, char *, (char *s));
+ #  undef gets
+ # endif
++# if defined gets
+ _GL_CXXALIASWARN (gets);
+ /* It is very rare that the developer ever has full control of stdin,
+    so any use of gets warrants an unconditional warning.  Assume it is
+    always declared, since it is required by C89.  */
+ _GL_WARN_ON_USE (gets, "gets is a security hole - use fgets instead");
++# endif
+ #endif
+ 
+ 
