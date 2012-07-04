@@ -4,7 +4,7 @@ HOMEPAGE = "http://packages.debian.org/netbase"
 SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=3dd6192d306f582dee7687da3d8748ab"
-PR = "r3"
+PR = "r0"
 
 inherit update-rc.d
 
@@ -17,8 +17,8 @@ SRC_URI = "${DEBIAN_MIRROR}/main/n/netbase/netbase_${PV}.tar.gz \
            file://interfaces \
            file://nfsroot"
 
-SRC_URI[md5sum] = "fcd87a62f177592724a8066e3774ae97"
-SRC_URI[sha256sum] = "a7e6525c9a09b00eff3395d09739b3c70a18bff8d13f7daa21fdf81989387726"
+SRC_URI[md5sum] = "a379d9199d44d817543eddc211a29b70"
+SRC_URI[sha256sum] = "ac9424d3cb2bd3c07b6c5bc5875c434d3bc687a73cd7c54b7dc7122308afa9dc"
 
 do_install () {
 	install -d ${D}${sysconfdir}/init.d \
