@@ -1,0 +1,108 @@
+Its controlled by __OPTION_EGLIBC_RTLD_DEBUG
+so we should use GLRO_dl_debug_mask
+
+Singed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+Index: libc/elf/dl-open.c
+===================================================================
+--- libc.orig/elf/dl-open.c	2012-03-09 08:54:34.691443995 -0800
++++ libc/elf/dl-open.c	2012-03-09 08:55:31.275446730 -0800
+@@ -154,7 +154,7 @@
+ 	  ns->_ns_main_searchlist->r_list[new_nlist++] = map;
+ 
+ 	  /* We modify the global scope.  Report this.  */
+-	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
++	  if (__builtin_expect (GLRO_dl_debug_mask & DL_DEBUG_SCOPES, 0))
+ 	    _dl_debug_printf ("\nadd %s [%lu] to global scope\n",
+ 			      map->l_name, map->l_ns);
+ 	}
+@@ -294,7 +294,7 @@
+   _dl_debug_state ();
+ 
+   /* Print scope information.  */
+-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
++  if (__builtin_expect (GLRO_dl_debug_mask & DL_DEBUG_SCOPES, 0))
+     _dl_show_scope (new, 0);
+ 
+   /* Only do lazy relocation if `LD_BIND_NOW' is not set.  */
+@@ -438,7 +438,7 @@
+ 	}
+ 
+       /* Print scope information.  */
+-      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
++      if (__builtin_expect (GLRO_dl_debug_mask & DL_DEBUG_SCOPES, 0))
+ 	_dl_show_scope (imap, from_scope);
+     }
+ 
+Index: libc/ports/sysdeps/mips/dl-lookup.c
+===================================================================
+--- libc.orig/ports/sysdeps/mips/dl-lookup.c	2012-03-09 08:54:34.707443996 -0800
++++ libc/ports/sysdeps/mips/dl-lookup.c	2012-03-09 09:02:36.903467324 -0800
+@@ -111,7 +111,7 @@
+ 	continue;
+ 
+       /* Print some debugging info if wanted.  */
+-      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SYMBOLS, 0))
++      if (__builtin_expect (GLRO_dl_debug_mask & DL_DEBUG_SYMBOLS, 0))
+ 	_dl_debug_printf ("symbol=%s;  lookup in file=%s [%lu]\n",
+ 			  undef_name,
+ 			  map->l_name[0] ? map->l_name : rtld_progname,
+@@ -432,7 +432,7 @@
+ 		     hash table.  */
+ 		  if (__builtin_expect (tab->size, 0))
+ 		    {
+-		      assert (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK);
++		      assert (GLRO_dl_debug_mask & DL_DEBUG_PRELINK);
+ 		      __rtld_lock_unlock_recursive (tab->lock);
+ 		      goto success;
+ 		    }
+@@ -681,7 +681,7 @@
+ 	}
+ 
+       /* Display information if we are debugging.  */
+-      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
++      if (__builtin_expect (GLRO_dl_debug_mask & DL_DEBUG_FILES, 0))
+ 	_dl_debug_printf ("\
+ \nfile=%s [%lu];  needed by %s [%lu] (relocation dependency)\n\n",
+ 			  map->l_name[0] ? map->l_name : rtld_progname,
+@@ -860,7 +860,7 @@
+   if (__builtin_expect (current_value.m->l_used == 0, 0))
+     current_value.m->l_used = 1;
+ 
+-  if (__builtin_expect (GLRO(dl_debug_mask)
++  if (__builtin_expect (GLRO_dl_debug_mask
+ 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
+     _dl_debug_bindings (undef_name, undef_map, ref,
+ 			&current_value, version, type_class, protected);
+@@ -925,7 +925,7 @@
+ {
+   const char *reference_name = undef_map->l_name;
+ 
+-  if (GLRO(dl_debug_mask) & DL_DEBUG_BINDINGS)
++  if (GLRO_dl_debug_mask & DL_DEBUG_BINDINGS)
+     {
+       _dl_debug_printf ("binding file %s [%lu] to %s [%lu]: %s symbol `%s'",
+ 			(reference_name[0]
+@@ -941,7 +941,7 @@
+ 	_dl_debug_printf_c ("\n");
+     }
+ #ifdef SHARED
+-  if (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
++  if (GLRO_dl_debug_mask & DL_DEBUG_PRELINK)
+     {
+       int conflict = 0;
+       struct sym_val val = { NULL, NULL };
+Index: libc/elf/rtld.c
+===================================================================
+--- libc.orig/elf/rtld.c	2012-03-09 09:01:35.159464344 -0800
++++ libc/elf/rtld.c	2012-03-09 09:01:56.247465364 -0800
+@@ -2198,7 +2198,7 @@
+   GLRO(dl_init_all_dirs) = GL(dl_all_dirs);
+ 
+   /* Print scope information.  */
+-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
++  if (__builtin_expect (GLRO_dl_debug_mask & DL_DEBUG_SCOPES, 0))
+     {
+       _dl_debug_printf ("\nInitial object scopes\n");
+ 
