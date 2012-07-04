@@ -20,6 +20,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.radeon;md5=e56b405656593a0c97e478513051ea0e \
                    "
 
 SRCREV = "e98750f0d68d0037ce5a186f7f863a9c13bf773a"
+PE = "1"
 PV = "0.0+git${SRCPV}"
 PR = "r2"
 
