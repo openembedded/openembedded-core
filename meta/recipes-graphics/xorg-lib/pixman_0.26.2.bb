@@ -15,13 +15,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=14096c769ae0cbb5fcb94ec468be11b3 \
 DEPENDS += "zlib libpng"
 BBCLASSEXTEND = "native"
 
-PR = "r1"
+PR = "r0"
 
 PE = "1"
 
 IWMMXT = "--disable-arm-iwmmxt"
+LOONGSON_MMI = "--disable-loongson-mmi"
 
-EXTRA_OECONF="--disable-gtk ${IWMMXT}"
+EXTRA_OECONF="--disable-gtk ${IWMMXT} ${LOONGSON_MMI}"
 
-SRC_URI[md5sum] = "8d5722f6f61db50034303947a40f5e7b"
-SRC_URI[sha256sum] = "06d83ce5a5f2f8ab3761e88a2de1576b6596bb436190166a242b9d75a68bc1d8"
+SRC_URI[md5sum] = "6b3e4c5300adb893a2baa9631c23efb2"
+SRC_URI[sha256sum] = "193b651c8ba89ecfacb8dc62a34d2bd305245163910cdbdf907e5d5ece92647c"
