@@ -1,0 +1,99 @@
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+
+From c5fe9f7b723f949457263ef8e22ab807d5b549ce Mon Sep 17 00:00:00 2001
+From: Mike Frysinger <vapier@gentoo.org>
+Date: Fri, 06 Jul 2012 03:19:09 +0000
+Subject: include sys/resource.h where needed
+
+We use functions from sys/resource.h in misc applets, but don't include
+the header.  This breaks building with newer glibc versions, so add the
+include where needed.
+
+Signed-off-by: Mike Frysinger <vapier@gentoo.org>
+---
+Index: busybox-1.19.4/loginutils/passwd.c
+===================================================================
+--- busybox-1.19.4.orig/loginutils/passwd.c	2012-02-04 11:34:24.000000000 -0800
++++ busybox-1.19.4/loginutils/passwd.c	2012-07-06 17:48:27.388096092 -0700
+@@ -15,6 +15,7 @@
+ 
+ #include "libbb.h"
+ #include <syslog.h>
++#include <sys/resource.h> /* setrlimit */
+ 
+ static void nuke_str(char *str)
+ {
+Index: busybox-1.19.4/miscutils/time.c
+===================================================================
+--- busybox-1.19.4.orig/miscutils/time.c	2012-02-04 11:24:55.000000000 -0800
++++ busybox-1.19.4/miscutils/time.c	2012-07-06 17:48:27.388096092 -0700
+@@ -16,6 +16,7 @@
+ //usage:     "\n	-v	Verbose"
+ 
+ #include "libbb.h"
++#include <sys/resource.h> /* getrusage */
+ 
+ /* Information on the resources used by a child process.  */
+ typedef struct {
+Index: busybox-1.19.4/networking/inetd.c
+===================================================================
+--- busybox-1.19.4.orig/networking/inetd.c	2012-02-04 11:34:24.000000000 -0800
++++ busybox-1.19.4/networking/inetd.c	2012-07-06 17:48:54.852097259 -0700
+@@ -165,6 +165,7 @@
+ //usage:     "\n		(default: 0 - disabled)"
+ 
+ #include <syslog.h>
++#include <sys/resource.h> /* setrlimit */
+ #include <sys/un.h>
+ 
+ #include "libbb.h"
+Index: busybox-1.19.4/networking/ntpd.c
+===================================================================
+--- busybox-1.19.4.orig/networking/ntpd.c	2012-02-04 11:24:55.000000000 -0800
++++ busybox-1.19.4/networking/ntpd.c	2012-07-06 17:48:27.392096048 -0700
+@@ -46,6 +46,7 @@
+ #include "libbb.h"
+ #include <math.h>
+ #include <netinet/ip.h> /* For IPTOS_LOWDELAY definition */
++#include <sys/resource.h> /* setpriority */
+ #include <sys/timex.h>
+ #ifndef IPTOS_LOWDELAY
+ # define IPTOS_LOWDELAY 0x10
+Index: busybox-1.19.4/networking/ntpd_simple.c
+===================================================================
+--- busybox-1.19.4.orig/networking/ntpd_simple.c	2012-02-04 11:24:55.000000000 -0800
++++ busybox-1.19.4/networking/ntpd_simple.c	2012-07-06 17:48:27.400095949 -0700
+@@ -7,6 +7,7 @@
+  */
+ #include "libbb.h"
+ #include <netinet/ip.h> /* For IPTOS_LOWDELAY definition */
++#include <sys/resource.h> /* setpriority */
+ #ifndef IPTOS_LOWDELAY
+ # define IPTOS_LOWDELAY 0x10
+ #endif
+Index: busybox-1.19.4/runit/chpst.c
+===================================================================
+--- busybox-1.19.4.orig/runit/chpst.c	2012-02-04 11:34:24.000000000 -0800
++++ busybox-1.19.4/runit/chpst.c	2012-07-06 17:48:27.400095949 -0700
+@@ -91,6 +91,7 @@
+ //usage:     "\n			a SIGXCPU after N seconds"
+ 
+ #include "libbb.h"
++#include <sys/resource.h> /* getrlimit */
+ 
+ /*
+ Five applets here: chpst, envdir, envuidgid, setuidgid, softlimit.
+Index: busybox-1.19.4/shell/shell_common.c
+===================================================================
+--- busybox-1.19.4.orig/shell/shell_common.c	2012-02-04 11:34:24.000000000 -0800
++++ busybox-1.19.4/shell/shell_common.c	2012-07-06 17:48:27.400095949 -0700
+@@ -18,6 +18,7 @@
+  */
+ #include "libbb.h"
+ #include "shell_common.h"
++#include <sys/resource.h> /* getrlimit */
+ 
+ const char defifsvar[] ALIGN1 = "IFS= \t\n";
+ 
