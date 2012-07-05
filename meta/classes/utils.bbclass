@@ -351,6 +351,15 @@ def extend_variants(d, var, extend, delim=':'):
 			variants.append(eext[1])
 	return " ".join(variants)
 
+def multilib_pkg_extend(d, pkg):
+	variants = (d.getVar("MULTILIB_VARIANTS", True) or "").split()
+	if not variants:
+	    return pkg
+	pkgs = pkg
+	for v in variants:
+	    pkgs = pkgs + " " + v + "-" + pkg
+	return pkgs
+
 def all_multilib_tune_values(d, var, unique = True, need_split = True, delim = ' '):
 	"""Return a string of all ${var} in all multilib tune configuration"""
 	values = []
