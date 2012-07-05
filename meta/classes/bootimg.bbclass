@@ -63,7 +63,7 @@ populate() {
 	install -d ${DEST}
 
 	# Install bzImage, initrd, and rootfs.img in DEST for all loaders to use.
-	install -m 0644 ${STAGING_DIR_HOST}/kernel/bzImage ${DEST}/vmlinuz
+	install -m 0644 ${STAGING_KERNEL_DIR}/bzImage ${DEST}/vmlinuz
 
 	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ]; then
 		install -m 0644 ${INITRD} ${DEST}/initrd
