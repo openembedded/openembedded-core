@@ -60,7 +60,6 @@ do_compile() {
 
 do_install() {
 	oe_runmake DESTDIR=${D} install
-	oe_runmake DESTDIR=${D} install-python_ext
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
