@@ -171,6 +171,11 @@ def check_create_long_filename(filepath, pathname):
         return "Failed to create %s directory in which to run long name sanity check: %s.\n" % (pathname, strerror)
     return ""
 
+def check_path_length(filepath, pathname, limit):
+    if len(filepath) > limit:
+	return "The length of %s is longer than 410, this would cause unexpected errors, please use a shorter path.\n" % pathname
+    return ""
+
 def check_connectivity(d):
     # URI's to check can be set in the CONNECTIVITY_CHECK_URIS variable
     # using the same syntax as for SRC_URI. If the variable is not set
@@ -452,6 +457,9 @@ def check_sanity(sanity_data):
 
     tmpdir = sanity_data.getVar('TMPDIR', True)
     sstate_dir = sanity_data.getVar('SSTATE_DIR', True)
+
+    # The length of tmpdir can't be longer than 410
+    messages = messages + check_path_length(tmpdir, "TMPDIR", 410)
 
     # Check saved sanity info
     last_sanity_version = 0
