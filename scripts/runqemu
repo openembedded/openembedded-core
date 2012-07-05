@@ -98,7 +98,7 @@ while true; do
             [ -z "$MACHINE" ] && MACHINE=$arg || \
                 error "conflicting MACHINE types [$MACHINE] and [$arg]"
             ;;
-        "ext2" | "ext3" | "jffs2" | "nfs" | "btrfs")
+        "ext2" | "ext3" | "ext4" | "jffs2" | "nfs" | "btrfs")
             [ -z "$FSTYPE" -o "$FSTYPE" = "$arg" ] && FSTYPE=$arg || \
                 error "conflicting FSTYPE types [$FSTYPE] and [$arg]"
             ;;
