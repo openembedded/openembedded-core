@@ -80,8 +80,12 @@ do_patch() {
 		done
 	fi
 
+	if [ "${kbranch}" != "${KBRANCH_DEFAULT}" ]; then
+		updateme_flags="--branch ${kbranch}"
+	fi
+
 	# updates or generates the target description
-	updateme --branch ${kbranch} -DKDESC=${KMACHINE}:${LINUX_KERNEL_TYPE} \
+	updateme ${updateme_flags} -DKDESC=${KMACHINE}:${LINUX_KERNEL_TYPE} \
                            ${addon_features} ${ARCH} ${KMACHINE} ${sccs} ${patches}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not update ${kbranch}"
@@ -91,7 +95,19 @@ do_patch() {
 	# executes and modifies the source tree as required
 	patchme ${KMACHINE}
 	if [ $? -ne 0 ]; then
-		echo "ERROR. Could not modify ${kbranch}"
+		echo "ERROR. Could not apply updates for ${KMACHINE}"
+		exit 1
+	fi
+
+	# Perform a final check. If something other than the default kernel
+	# branch was requested, and that's not where we ended up, then we 
+	# should thrown an error, since we aren't building what was expected
+	final_branch="$(git symbolic-ref HEAD 2>/dev/null)"
+	final_branch=${final_branch##refs/heads/}
+	if [ "${kbranch}" != "${KBRANCH_DEFAULT}" ] &&
+	   [ "${final_branch}" != "${kbranch}" ]; then
+		echo "ERROR: branch ${kbranch} was requested, but was not properly"
+		echo "       configured to be built. The current branch is ${final_branch}"
 		exit 1
 	fi
 }
@@ -199,10 +215,9 @@ python do_kernel_configcheck() {
     bb.plain( "%s" % result )
 }
 
-
 # Ensure that the branches (BSP and meta) are on the locations specified by
 # their SRCREV values. If they are NOT on the right commits, the branches
-# are reset to the correct commit.
+# are corrected to the proper commit.
 do_validate_branches() {
 	cd ${S}
 
@@ -213,39 +228,57 @@ do_validate_branches() {
 		return
 	fi
 
-	# if the branches do not exist, then there's nothing to check either
+	# If something other than the default branch was requested, it must
+	# exist in the tree, and it's a hard error if it wasn't
 	git show-ref --quiet --verify -- "refs/heads/${KBRANCH}"
 	if [ $? -eq 1 ]; then
-		return
+		if [ -n "${KBRANCH_DEFAULT}" ] && 
+                      [ "${KBRANCH}" != "${KBRANCH_DEFAULT}" ]; then
+			echo "ERROR: branch ${KBRANCH} was set for kernel compilation, "
+			echo "       but it does not exist in the kernel repository."
+			echo "       Check the value of KBRANCH and ensure that it describes"
+			echo "       a valid banch in the source kernel repository"
+			exit 1
+		fi
 	fi
 
- 	branch_head=`git show-ref -s --heads ${KBRANCH}`
 	if [ -z "${SRCREV_machine}" ]; then
 		target_branch_head="${SRCREV}"
 	else
 	 	target_branch_head="${SRCREV_machine}"
 	fi
 
+	# $SRCREV could have also been AUTOINC, so check again
 	if [ "${target_branch_head}" = "AUTOINC" ]; then
 		return
 	fi
 
-	# We have SRCREVs and we have branches so validation can continue!
-	current=`git branch |grep \*|sed 's/^\* //'`
-	if [ -n "$target_branch_head" ] && [ "$branch_head" != "$target_branch_head" ] &&
-           [ "$target_branch_head" != "AUTOINC" ]; then
-		ref=`git show ${target_branch_head} 2>&1 | head -n1 || true`
-		if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
-			echo "ERROR ${target_branch_head} is not a valid commit ID."
-			echo "The kernel source tree may be out of sync"
-			exit 1
-		else
-			echo "Forcing branch $current to ${target_branch_head}"
-			git branch -m $current $current-orig
-			git checkout -b $current ${target_branch_head}
-		fi
+	containing_branches=`git branch --contains $target_branch_head | sed 's/^..//'`
+	if [ -z "$containing_branches" ]; then
+		echo "ERROR: SRCREV was set to \"$target_branch_head\", but no branches"
+		echo "       contain this commit"
+		exit 1
+	fi
+	ref=`git show ${target_branch_head} 2>&1 | head -n1 || true`
+	if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
+	    echo "ERROR ${target_branch_head} is not a valid commit ID."
+	    echo "The kernel source tree may be out of sync"
+	    exit 1
 	fi
 
+	# force the SRCREV in each branch that contains the specified
+	# SRCREV (if it isn't the current HEAD of that branch)
+	git checkout -q master
+	for b in $containing_branches; do
+		branch_head=`git show-ref -s --heads ${b}`
+		if [ "$branch_head" != "$target_branch_head" ]; then
+			echo "[INFO] Setting branch $b to ${target_branch_head}"	      
+			git branch -D $b > /dev/null
+			git branch $b $target_branch_head > /dev/null
+		fi
+	done
+
+	## KMETA branch validation
  	meta_head=`git show-ref -s --heads ${KMETA}`
  	target_meta_head="${SRCREV_meta}"
 	git show-ref --quiet --verify -- "refs/heads/${KMETA}"
@@ -264,18 +297,21 @@ do_validate_branches() {
 			echo "The kernel source tree may be out of sync"
 			exit 1
 		else
-			echo "Forcing branch meta to ${target_meta_head}"
+			echo "[INFO] Setting branch ${KMETA} to ${target_meta_head}"
 			git branch -m ${KMETA} ${KMETA}-orig
-			git checkout -b ${KMETA} ${target_meta_head}
+			git checkout -q -b ${KMETA} ${target_meta_head}
 			if [ $? -ne 0 ];then
-				echo "ERROR: could not checkout meta branch from known hash ${target_meta_head}"
+				echo "ERROR: could not checkout ${KMETA} branch from known hash ${target_meta_head}"
 				exit 1
 			fi
 		fi
 	fi
 
-	# restore the branch for builds
-	git checkout -f ${KBRANCH}
+	git show-ref --quiet --verify -- "refs/heads/${KBRANCH}"
+	if [ $? -eq 0 ]; then
+		# restore the branch for builds
+		git checkout -q -f ${KBRANCH}
+	fi
 }
 
 # Many scripts want to look in arch/$arch/boot for the bootable
