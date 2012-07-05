@@ -7,38 +7,10 @@ Upstream-Status: Inappropriate [embedded specific]
  automake.in |    6 ++++--
  4 files changed, 10 insertions(+), 6 deletions(-)
 
-Index: automake-1.10.1/Makefile.am
+Index: automake-1.12.1/aclocal.in
 ===================================================================
---- automake-1.10.1.orig/Makefile.am	2008-01-21 22:28:58.000000000 +0000
-+++ automake-1.10.1/Makefile.am	2008-10-10 17:21:20.000000000 +0100
-@@ -75,7 +75,8 @@
-   -e 's,[@]SHELL[@],$(SHELL),g' \
-   -e 's,[@]VERSION[@],$(VERSION),g' \
-   -e 's,[@]configure_input[@],Generated from $@.in; do not edit by hand.,g' \
--  -e 's,[@]datadir[@],$(datadir),g'
-+  -e 's,[@]datadir[@],$(datadir),g' \
-+  -e 's,[@]bindir[@],$(bindir),g'
- 
- ## These files depend on Makefile so they are rebuilt if $(VERSION),
- ## $(datadir) or other do_subst'ituted variables change.
-Index: automake-1.10.1/Makefile.in
-===================================================================
---- automake-1.10.1.orig/Makefile.in	2008-01-21 22:29:10.000000000 +0000
-+++ automake-1.10.1/Makefile.in	2008-10-10 17:22:21.000000000 +0100
-@@ -185,7 +185,8 @@
-   -e 's,[@]SHELL[@],$(SHELL),g' \
-   -e 's,[@]VERSION[@],$(VERSION),g' \
-   -e 's,[@]configure_input[@],Generated from $@.in; do not edit by hand.,g' \
--  -e 's,[@]datadir[@],$(datadir),g'
-+  -e 's,[@]datadir[@],$(datadir),g' \
-+  -e 's,[@]bindir[@],$(bindir),g'
- 
- WGET = wget
- WGET_SV_CVS = $(WGET) http://savannah.gnu.org/cgi-bin/viewcvs/~checkout~/
-Index: automake-1.10.1/aclocal.in
-===================================================================
---- automake-1.10.1.orig/aclocal.in	2008-01-21 22:11:41.000000000 +0000
-+++ automake-1.10.1/aclocal.in	2008-10-10 17:21:20.000000000 +0100
+--- automake-1.12.1.orig/aclocal.in
++++ automake-1.12.1/aclocal.in
 @@ -1,8 +1,8 @@
 -#!@PERL@ -w
 +#!@bindir@/env perl
@@ -50,10 +22,10 @@ Index: automake-1.10.1/aclocal.in
      if 0;
  
  # aclocal - create aclocal.m4 by scanning configure.ac
-Index: automake-1.10.1/automake.in
+Index: automake-1.12.1/automake.in
 ===================================================================
---- automake-1.10.1.orig/automake.in	2008-01-21 22:11:41.000000000 +0000
-+++ automake-1.10.1/automake.in	2008-10-10 17:21:20.000000000 +0100
+--- automake-1.12.1.orig/automake.in
++++ automake-1.12.1/automake.in
 @@ -1,8 +1,10 @@
 -#!@PERL@ -w
 +#!@bindir@/env perl
