@@ -25,7 +25,7 @@ usage() {
     echo "  QEMUARCH - the qemu machine architecture to use"
     echo "  KERNEL - the kernel image file to use"
     echo "  ROOTFS - the rootfs image file or nfsroot directory to use"
-    echo "  MACHINE=xyz - the machine name (optional, autodetected from KERNEL filename if unspecified)"
+    echo "  MACHINE - the machine name (optional, autodetected from KERNEL filename if unspecified)"
     echo "  Simplified QEMU command-line options can be passed with:"
     echo "    nographic - disables video console"
     echo "    serial - enables a serial console on /dev/ttyS0"
