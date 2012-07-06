@@ -43,7 +43,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "libpcre attr acl popt ossp-uuid file"
-PR = "r44"
+PR = "r45"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -129,13 +129,13 @@ PACKAGECONFIG[libelf] = "--with-libelf,--without-libelf,elfutils,"
 
 WITH_SELINUX = "--with-selinux --with-sepol --with-semanage"
 WITHOUT_SELINUX = "--without-selinux --without-sepol --without-semanage"
-PACKAGECONFIG[selinux] = "${WITH_SELINUX},${WITHOUT_SELINUX},selinux,"
+PACKAGECONFIG[selinux] = "${WITH_SELINUX},${WITHOUT_SELINUX},libselinux,"
 
 WITH_NEON = "--with-neon --with-libproxy --with-expat --without-gssapi"
 WITHOUT_NEON = "--without-neon --without-libproxy --without-expat --without-gssapi"
-PACKAGECONFIG[neon] = "${WITH_NEON},${WITHOUT_NEON},neon,"
+PACKAGECONFIG[neon] = "${WITH_NEON},${WITHOUT_NEON},neon expat,"
 
-PACKAGECONFIG[lua] = "--with-lua,--without-lua,"
+PACKAGECONFIG[lua] = "--with-lua,--without-lua,expat,"
 PACKAGECONFIG[tcl] = "--with-tcl,--without-tcl,tcl,"
 
 PACAKGECONFIG[augeas] = "--with-augeas,--without-augeas,augeas,"
