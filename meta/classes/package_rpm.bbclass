@@ -318,7 +318,7 @@ package_install_internal_rpm () {
 			--root "${target_rootfs}/install" \
 			-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}-base_archs.macro`" \
 			-D "__dbi_txn create nofsync" \
-			-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
+			-U --justdb --replacepkgs --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 			${target_rootfs}/install/install.manifest
 	fi
 
@@ -348,7 +348,7 @@ package_install_internal_rpm () {
 				--root "${target_rootfs}/install" \
 				-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
 				-D "__dbi_txn create nofsync private" \
-				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
+				-U --justdb --replacepkgs --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 			$pkg_name >> "`dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}" || true
 		done
 	fi
@@ -399,7 +399,7 @@ package_install_internal_rpm () {
 				--root "${target_rootfs}/install" \
 				-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}.macro`" \
 				-D "__dbi_txn create nofsync private" \
-				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
+				-U --justdb --replacepkgs --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 				$pkg_name >> "`dirname ${BB_LOGFILE}`/log.do_${task}_recommend.${PID}" 2>&1 || true
 		done
 		cat ${target_rootfs}/install/recommend.list ${target_rootfs}/install/recommend.new | sort -u > ${target_rootfs}/install/recommend.new.list
@@ -428,7 +428,7 @@ package_install_internal_rpm () {
 			--root "${target_rootfs}/install" \
 			-D "_dbpath ${target_rootfs}/install" -D "`cat ${confbase}-ml_archs.macro`" \
 			-D "__dbi_txn create nofsync" \
-			-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
+			-U --justdb --replacepkgs --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 			${target_rootfs}/install/install_multilib.manifest
 
 		# Now that we have a solution, pull out a list of what to install...
@@ -524,7 +524,7 @@ EOF
 				--root "${target_rootfs}/install" \
 				-D "_dbpath ${target_rootfs}/initial" -D "`cat ${confbase}.macro`" \
 				-D "__dbi_txn create nofsync" \
-				-U --justdb --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
+				-U --justdb --replacepkgs --noscripts --notriggers --noparentdirs --nolinktos --ignoresize \
 				${target_rootfs}/install/initial_install.manifest
 
 			${RPM} -D "_dbpath ${target_rootfs}/initial" -qa --qf "%{packageorigin}\n" \
