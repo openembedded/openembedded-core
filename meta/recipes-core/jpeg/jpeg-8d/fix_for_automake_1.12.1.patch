@@ -1,0 +1,44 @@
+Upstream-Status: Pending
+
+The support for automatic de-ANSI-fication has been deprecated in
+automake 1.11.2, and will be removed altogether in automake 1.12
+
+This avoids this error:
+| configure.ac:24: automatic de-ANSI-fication support is deprecated
+| autoreconf: automake failed with exit status: 1
+| ERROR: autoreconf execution failed.
+NOTE: package jpeg-native-8c-r2: task do_configure: Failed
+
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+2011/12/28
+
+
+Index: jpeg-8d/configure.ac
+===================================================================
+--- jpeg-8d.orig/configure.ac
++++ jpeg-8d/configure.ac
+@@ -21,7 +21,7 @@ AC_CANONICAL_TARGET
+ 
+ # Initialize Automake
+ # Don't require all the GNU mandated files
+-AM_INIT_AUTOMAKE([-Wall -Werror -Wno-obsolete ansi2knr no-dist foreign])
++AM_INIT_AUTOMAKE([-Wall -Werror -Wno-obsolete no-dist foreign])
+ 
+ # Make --enable-silent-rules the default.
+ # To get verbose build output you may configure
+@@ -29,7 +29,14 @@ AM_INIT_AUTOMAKE([-Wall -Werror -Wno-obs
+ AM_SILENT_RULES([yes])
+ 
+ # This is required when using the de-ANSI-fication feature.
+-AM_C_PROTOTYPES
++#AM_C_PROTOTYPES
++# add following to avoid this error:
++#| automake: warnings are treated as errors
++#| /srv/home/nitin/builds2/build0/tmp/sysroots/x86_64-linux/usr/share/automake-1.12/am/ltlibrary.am: warning: 'libjpeg.la': linking libtool libraries using a non-POSIX
++#| /srv/home/nitin/builds2/build0/tmp/sysroots/x86_64-linux/usr/share/automake-1.12/am/ltlibrary.am: archiver requires 'AM_PROG_AR' in 'configure.ac'
++#| Makefile.am:65:   while processing Libtool library 'libjpeg.la'
++#| autoreconf: automake failed with exit status: 1
++AM_PROG_AR
+ 
+ # Add configure option --enable-maintainer-mode which enables
+ # dependency checking and generation useful to package maintainers.

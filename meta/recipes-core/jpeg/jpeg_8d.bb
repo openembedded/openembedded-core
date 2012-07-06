@@ -11,10 +11,11 @@ SECTION = "libs"
 DEPENDS = "libtool-cross"
 DEPENDS_virtclass-native = "libtool-native"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://www.ijg.org/files/jpegsrc.v${PV}.tar.gz \
-	   file://debian-libjpeg7_7-1.diff"
+	   file://debian-libjpeg7_7-1.diff \
+           file://fix_for_automake_1.12.1.patch"
 
 SRC_URI[md5sum] = "52654eb3b2e60c35731ea8fc87f1bd29"
 SRC_URI[sha256sum] = "00029b1473f0f0ea72fbca3230e8cb25797fbb27e58ae2e46bb8bf5a806fe0b3"
