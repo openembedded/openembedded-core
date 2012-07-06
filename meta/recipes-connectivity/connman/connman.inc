@@ -20,7 +20,7 @@ DEPENDS  = "dbus glib-2.0 ppp iptables gnutls \
             ${@base_contains('DISTRO_FEATURES', '3g','ofono', '', d)} \
             "
 
-INC_PR = "r9"
+INC_PR = "r10"
 
 TIST = "--enable-tist"
 TIST_powerpc = ""
@@ -118,9 +118,6 @@ RDEPENDS_${PN}-tests = "python-dbus"
 FILES_${PN} = "${bindir}/* ${sbindir}/* ${libexecdir}/* ${libdir}/lib*.so.* \
             ${sysconfdir} ${sharedstatedir} ${localstatedir} \
             ${base_bindir}/* ${base_sbindir}/* ${base_libdir}/*.so* ${datadir}/${PN} \
-            ${datadir}/pixmaps ${datadir}/applications \
-            ${datadir}/idl ${datadir}/omf ${datadir}/sounds \
-            ${libdir}/bonobo/servers \
             ${datadir}/dbus-1/system-services/*"
 
 FILES_${PN}-dbg += "${libdir}/connman/*/.debug"
