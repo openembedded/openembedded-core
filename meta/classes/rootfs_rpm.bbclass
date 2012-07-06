@@ -198,6 +198,7 @@ python () {
         d.setVar('RPM_PREPROCESS_COMMANDS', '')
         d.setVar('RPM_POSTPROCESS_COMMANDS', '')
 
+    # The following code should be kept in sync w/ the populate_sdk_rpm version.
     ml_package_archs = ""
     ml_prefix_list = ""
     multilibs = d.getVar('MULTILIBS', True) or ""
