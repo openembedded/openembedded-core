@@ -20,7 +20,7 @@ DEPENDS  = "dbus glib-2.0 ppp iptables gnutls \
             ${@base_contains('DISTRO_FEATURES', '3g','ofono', '', d)} \
             "
 
-INC_PR = "r10"
+INC_PR = "r11"
 
 TIST = "--enable-tist"
 TIST_powerpc = ""
@@ -99,7 +99,7 @@ python populate_packages_prepend() {
 	hook = lambda file,pkg,b,c,d:packages.append((file,pkg))
 	plugin_dir = d.expand('${libdir}/connman/plugins/')
 	plugin_name = d.expand('${PN}-plugin-%s')
-	do_split_packages(d, plugin_dir, '^(.*).so$', plugin_name, '${PN} plugin for %s', extra_depends='', hook=hook )
+	do_split_packages(d, plugin_dir, '^(.*).so$', plugin_name, '${PN} plugin for %s', extra_depends='', hook=hook, prepend=True )
 	for (file, package) in packages:
 		plugintype = package.split( '-' )[-1]
 		if plugintype in depmap:
@@ -116,6 +116,7 @@ FILES_${PN}-tests = "${bindir}/*-test ${libdir}/${BPN}/test/*"
 RDEPENDS_${PN}-tests = "python-dbus"
 
 FILES_${PN} = "${bindir}/* ${sbindir}/* ${libexecdir}/* ${libdir}/lib*.so.* \
+            ${libdir}/connman/plugins \
             ${sysconfdir} ${sharedstatedir} ${localstatedir} \
             ${base_bindir}/* ${base_sbindir}/* ${base_libdir}/*.so* ${datadir}/${PN} \
             ${datadir}/dbus-1/system-services/*"
