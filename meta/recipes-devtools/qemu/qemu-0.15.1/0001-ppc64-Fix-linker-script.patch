@@ -1,0 +1,46 @@
+Upstream-Status: Backport
+
+From 7c0a3409627604c111d5c5e1ce4e0224c2b56315 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Date: Tue, 4 Oct 2011 05:14:52 +0000
+Subject: [PATCH] ppc64: Fix linker script
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Since commit 8733f609 (Fix linker scripts) linking on Linux/ppc64 fails:
+
+  LINK  ppc64-linux-user/qemu-ppc64
+/usr/lib64/gcc/powerpc64-suse-linux/4.3/../../../../powerpc64-suse-linux/bin/ld:/home/afaerber/qemu/ppc64.ld:84: syntax error
+collect2: ld gab 1 als Ende-Status zurück
+make[1]: *** [qemu-ppc64] Fehler 1
+make: *** [subdir-ppc64-linux-user] Fehler 2
+
+Fix by removing a leftover line in the ppc64 linker script.
+
+Cc: Gerd Hoffmann <kraxel@redhat.com>
+Cc: Blue Swirl <blauwirbel@gmail.com>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+Signed-off-by: Alexander Graf <agraf@suse.de>
+---
+ ppc64.ld |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ppc64.ld b/ppc64.ld
+index 0059ee5..0a7c0dd 100644
+--- a/ppc64.ld
++++ b/ppc64.ld
+@@ -81,8 +81,8 @@ SECTIONS
+   .sdata2         : { *(.sdata2 .sdata2.* .gnu.linkonce.s2.*) }
+   .sbss2          : { *(.sbss2 .sbss2.* .gnu.linkonce.sb2.*) }
+   .eh_frame_hdr : { *(.eh_frame_hdr) }
+-*(.gcc_except_table.*) } /* Adjust the address for the data segment.  We want to
+-adjust up to +     the same address within the page on the next page up.  */
++  /* Adjust the address for the data segment.  We want to adjust up to
++     the same address within the page on the next page up.  */
+   . = ALIGN (0x10000) - ((0x10000 - .) & (0x10000 - 1)); . = DATA_SEGMENT_ALIGN
+ (0x10000, 0x1000);   /* Exception handling  */
+   .eh_frame       : { KEEP (*(.eh_frame)) }
+-- 
+1.7.10
+
