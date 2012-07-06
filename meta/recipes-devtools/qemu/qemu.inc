@@ -38,7 +38,7 @@ do_install () {
 }
 
 PACKAGECONFIG ??= "gl"
-PACKAGECONFIG[gl] = "--enable-gl-accel,,,"
+PACKAGECONFIG[gl] = "--enable-gl-accel,--disable-gl-accel,,"
 
 DEPENDS_virtclass-native = "zlib-native alsa-lib-native glib-2.0-native"
 DEPENDS_virtclass-nativesdk = "zlib-nativesdk libsdl-nativesdk glib-2.0-nativesdk \
