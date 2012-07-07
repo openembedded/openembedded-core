@@ -1,6 +1,6 @@
 require gcc-common.inc
 
-PR = "r5"
+PR = "r6"
 
 # Third digit in PV should be incremented after a minor release
 # happens from this branch on gcc e.g. currently its 4.7.1
@@ -59,7 +59,10 @@ SRC_URI = "svn://gcc.gnu.org/svn/gcc/branches;module=${BRANCH};protocol=http \
 	   file://disable_relax_pic_calls_flag.patch \
 	   file://COLLECT_GCC_OPTIONS.patch \
            file://use-defaults.h-and-t-oe-in-B.patch \
-	   file://powerpc-e5500.patch \
+	   file://ppc_with_cpu.patch \
+	   file://ppce5500-e6500-support.patch \
+	   file://rs6000-tables.patch \
+	   file://define_insn_reservation.patch \
 	   file://pr32219.patch \
 	   file://fortran-cross-compile-hack.patch \
 	   file://libgcc-sjlj-check.patch \

@@ -1,0 +1,713 @@
+Upstream-Status: Backport
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+From b770074cee13445eba1bf4e99649c5ceac9a4b5a Mon Sep 17 00:00:00 2001
+From: edmarwjr <edmarwjr@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Tue, 5 Jun 2012 16:05:16 +0000
+Subject: [PATCH] 2012-06-01  Edmar Wienskoski  <edmar@freescale.com>
+
+	* config/rs6000/e5500.md: New file.
+	* config/rs6000/e6500.md: New file.
+	* config/rs6000/rs6000.c (processor_costs): Add new costs for
+	e5500 and e6500.
+	(rs6000_option_override_internal): Altivec and Spe options not
+	allowed with e5500. Spe options not allowed with e6500. Increase
+	move inline limit for e5500 and e6500. Disable string instructions
+	for e5500 and e6500. Enable branch targets alignment for e5500 and
+	e6500. Initialize rs6000_cost for e5500 and e6500.
+	(rs6000_adjust_cost): Add extra scheduling cycles between compare
+	and brnach for e5500 and e6500.
+	(rs6000_issue_rate): Set issue rate for e5500 and e6500.
+	* config/rs6000/rs6000-cpus.def: Add cpu definitions for e5500 and
+	e6500.
+	* config/rs6000/rs6000.h (ASM_CPU_SPEC): Add e5500 and e6500.
+	* config/rs6000/rs6000.md (define_attr "cpu"): Add ppce5500 and
+	ppce6500.
+	Include e5500.md and e6500.md.
+	* config/rs6000/rs6000-opt.h (processor_type): Add
+	PROCESSOR_PPCE5500 and PROCESSOR_PPCE6500.
+	* config.gcc (cpu_is_64bit): Add new cores e5500, e6500.
+	(powerpc*-*-*): Add new cores e5500, e6500.
+	* doc/invoke.texi: (item -mcpu): Add e5500 and e6500 to list of cpus.
+
+gcc/testsuite
+2012-06-01  Edmar Wienskoski  <edmar@freescale.com>
+
+	* gcc.dg/tree-ssa/vector-3.c: Adjust regular expression.
+
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/trunk@188244 138bc75d-0d04-0410-961f-82ee72b054a4
+---
+ gcc/ChangeLog                            |   26 ++++
+ gcc/config.gcc                           |    6 +-
+ gcc/config/rs6000/e5500.md               |  176 ++++++++++++++++++++++++
+ gcc/config/rs6000/e6500.md               |  213 ++++++++++++++++++++++++++++++
+ gcc/config/rs6000/rs6000-cpus.def        |    4 +
+ gcc/config/rs6000/rs6000-opts.h          |    2 +
+ gcc/config/rs6000/rs6000.c               |   68 +++++++++-
+ gcc/config/rs6000/rs6000.h               |    2 +
+ gcc/config/rs6000/rs6000.md              |    4 +-
+ gcc/doc/invoke.texi                      |   12 +-
+ gcc/testsuite/ChangeLog                  |    4 +
+ gcc/testsuite/gcc.dg/tree-ssa/vector-3.c |    2 +-
+ 12 files changed, 506 insertions(+), 13 deletions(-)
+ create mode 100644 gcc/config/rs6000/e5500.md
+ create mode 100644 gcc/config/rs6000/e6500.md
+
+Index: gcc-4_7-branch/gcc/config.gcc
+===================================================================
+--- gcc-4_7-branch.orig/gcc/config.gcc	2012-07-06 19:52:30.000000000 -0700
++++ gcc-4_7-branch/gcc/config.gcc	2012-07-06 19:53:26.350779999 -0700
+@@ -413,7 +413,7 @@
+ 	extra_headers="ppc-asm.h altivec.h spe.h ppu_intrinsics.h paired.h spu2vmx.h vec_types.h si2vmx.h"
+ 	need_64bit_hwint=yes
+ 	case x$with_cpu in
+-	    xpowerpc64|xdefault64|x6[23]0|x970|xG5|xpower[34567]|xpower6x|xrs64a|xcell|xa2|xe500mc64)
++	    xpowerpc64|xdefault64|x6[23]0|x970|xG5|xpower[34567]|xpower6x|xrs64a|xcell|xa2|xe500mc64|xe5500|Xe6500)
+ 		cpu_is_64bit=yes
+ 		;;
+ 	esac
+@@ -3361,8 +3361,8 @@
+ 			| 401 | 403 | 405 | 405fp | 440 | 440fp | 464 | 464fp \
+ 			| 476 | 476fp | 505 | 601 | 602 | 603 | 603e | ec603e \
+ 			| 604 | 604e | 620 | 630 | 740 | 750 | 7400 | 7450 \
+-			| a2 | e300c[23] | 854[08] | e500mc | e500mc64 | titan\
+-			| 801 | 821 | 823 | 860 | 970 | G3 | G4 | G5 | cell)
++			| a2 | e300c[23] | 854[08] | e500mc | e500mc64 | e5500 | e6500 \
++			| titan | 801 | 821 | 823 | 860 | 970 | G3 | G4 | G5 | cell)
+ 				# OK
+ 				;;
+ 			*)
+Index: gcc-4_7-branch/gcc/config/rs6000/e5500.md
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gcc-4_7-branch/gcc/config/rs6000/e5500.md	2012-07-06 19:53:26.350779999 -0700
+@@ -0,0 +1,176 @@
++;; Pipeline description for Freescale PowerPC e5500 core.
++;;   Copyright (C) 2012 Free Software Foundation, Inc.
++;;   Contributed by Edmar Wienskoski (edmar@freescale.com)
++;;
++;; This file is part of GCC.
++;;
++;; GCC is free software; you can redistribute it and/or modify it
++;; under the terms of the GNU General Public License as published
++;; by the Free Software Foundation; either version 3, or (at your
++;; option) any later version.
++;;
++;; GCC is distributed in the hope that it will be useful, but WITHOUT
++;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
++;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
++;; License for more details.
++;;
++;; You should have received a copy of the GNU General Public License
++;; along with GCC; see the file COPYING3.  If not see
++;; <http://www.gnu.org/licenses/>.
++;;
++;; e5500 64-bit SFX(2), CFX, LSU, FPU, BU
++;; Max issue 3 insns/clock cycle (includes 1 branch)
++
++(define_automaton "e5500_most,e5500_long")
++(define_cpu_unit "e5500_decode_0,e5500_decode_1" "e5500_most")
++
++;; SFX.
++(define_cpu_unit "e5500_sfx_0,e5500_sfx_1" "e5500_most")
++
++;; CFX.
++(define_cpu_unit "e5500_cfx_stage0,e5500_cfx_stage1" "e5500_most")
++
++;; Non-pipelined division.
++(define_cpu_unit "e5500_cfx_div" "e5500_long")
++
++;; LSU.
++(define_cpu_unit "e5500_lsu" "e5500_most")
++
++;; FPU.
++(define_cpu_unit "e5500_fpu" "e5500_long")
++
++;; BU.
++(define_cpu_unit "e5500_bu" "e5500_most")
++
++;; The following units are used to make the automata deterministic.
++(define_cpu_unit "present_e5500_decode_0" "e5500_most")
++(define_cpu_unit "present_e5500_sfx_0" "e5500_most")
++(presence_set "present_e5500_decode_0" "e5500_decode_0")
++(presence_set "present_e5500_sfx_0" "e5500_sfx_0")
++
++;; Some useful abbreviations.
++(define_reservation "e5500_decode"
++    "e5500_decode_0|e5500_decode_1+present_e5500_decode_0")
++(define_reservation "e5500_sfx"
++   "e5500_sfx_0|e5500_sfx_1+present_e5500_sfx_0")
++
++;; SFX.
++(define_insn_reservation "e5500_sfx" 1
++  (and (eq_attr "type" "integer,insert_word,insert_dword,delayed_compare,\
++	shift,cntlz,exts")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_sfx")
++
++(define_insn_reservation "e5500_sfx2" 2
++  (and (eq_attr "type" "cmp,compare,fast_compare,trap")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_sfx")
++
++(define_insn_reservation "e5500_delayed" 2
++  (and (eq_attr "type" "var_shift_rotate,var_delayed_compare")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_sfx*2")
++
++(define_insn_reservation "e5500_two" 2
++  (and (eq_attr "type" "two")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_decode+e5500_sfx,e5500_sfx")
++
++(define_insn_reservation "e5500_three" 3
++  (and (eq_attr "type" "three")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,(e5500_decode+e5500_sfx)*2,e5500_sfx")
++
++;; SFX - Mfcr.
++(define_insn_reservation "e5500_mfcr" 4
++  (and (eq_attr "type" "mfcr")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_sfx_0*4")
++
++;; SFX - Mtcrf.
++(define_insn_reservation "e5500_mtcrf" 1
++  (and (eq_attr "type" "mtcr")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_sfx_0")
++
++;; SFX - Mtjmpr.
++(define_insn_reservation "e5500_mtjmpr" 1
++  (and (eq_attr "type" "mtjmpr,mfjmpr")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_sfx")
++
++;; CFX - Multiply.
++(define_insn_reservation "e5500_multiply" 4
++  (and (eq_attr "type" "imul")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_cfx_stage0,e5500_cfx_stage1")
++
++(define_insn_reservation "e5500_multiply_i" 5
++  (and (eq_attr "type" "imul2,imul3,imul_compare")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_cfx_stage0,\
++   e5500_cfx_stage0+e5500_cfx_stage1,e5500_cfx_stage1")
++
++;; CFX - Divide.
++(define_insn_reservation "e5500_divide" 16
++  (and (eq_attr "type" "idiv")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_cfx_stage0+e5500_cfx_div,\
++   e5500_cfx_div*15")
++
++(define_insn_reservation "e5500_divide_d" 26
++  (and (eq_attr "type" "ldiv")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_cfx_stage0+e5500_cfx_div,\
++   e5500_cfx_div*25")
++
++;; LSU - Loads.
++(define_insn_reservation "e5500_load" 3
++  (and (eq_attr "type" "load,load_ext,load_ext_u,load_ext_ux,load_ux,load_u,\
++			load_l,sync")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_lsu")
++
++(define_insn_reservation "e5500_fpload" 4
++  (and (eq_attr "type" "fpload,fpload_ux,fpload_u")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_lsu")
++
++;; LSU - Stores.
++(define_insn_reservation "e5500_store" 3
++  (and (eq_attr "type" "store,store_ux,store_u,store_c")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_lsu")
++
++(define_insn_reservation "e5500_fpstore" 3
++  (and (eq_attr "type" "fpstore,fpstore_ux,fpstore_u")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_lsu")
++
++;; FP.
++(define_insn_reservation "e5500_float" 7
++  (and (eq_attr "type" "fpsimple,fp,fpcompare,dmul")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_fpu")
++
++(define_insn_reservation "e5500_sdiv" 20
++  (and (eq_attr "type" "sdiv")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_fpu*20")
++
++(define_insn_reservation "e5500_ddiv" 35
++  (and (eq_attr "type" "ddiv")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_fpu*35")
++
++;; BU.
++(define_insn_reservation "e5500_branch" 1
++  (and (eq_attr "type" "jmpreg,branch,isync")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_bu")
++
++;; BU - CR logical.
++(define_insn_reservation "e5500_cr_logical" 1
++  (and (eq_attr "type" "cr_logical,delayed_cr")
++       (eq_attr "cpu" "ppce5500"))
++  "e5500_decode,e5500_bu")
+Index: gcc-4_7-branch/gcc/config/rs6000/e6500.md
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gcc-4_7-branch/gcc/config/rs6000/e6500.md	2012-07-06 19:53:26.354779999 -0700
+@@ -0,0 +1,213 @@
++;; Pipeline description for Freescale PowerPC e6500 core.
++;;   Copyright (C) 2012 Free Software Foundation, Inc.
++;;   Contributed by Edmar Wienskoski (edmar@freescale.com)
++;;
++;; This file is part of GCC.
++;;
++;; GCC is free software; you can redistribute it and/or modify it
++;; under the terms of the GNU General Public License as published
++;; by the Free Software Foundation; either version 3, or (at your
++;; option) any later version.
++;;
++;; GCC is distributed in the hope that it will be useful, but WITHOUT
++;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
++;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
++;; License for more details.
++;;
++;; You should have received a copy of the GNU General Public License
++;; along with GCC; see the file COPYING3.  If not see
++;; <http://www.gnu.org/licenses/>.
++;;
++;; e6500 64-bit SFX(2), CFX, LSU, FPU, BU, VSFX, VCFX, VFPU, VPERM
++;; Max issue 3 insns/clock cycle (includes 1 branch)
++
++(define_automaton "e6500_most,e6500_long,e6500_vec")
++(define_cpu_unit "e6500_decode_0,e6500_decode_1" "e6500_most")
++
++;; SFX.
++(define_cpu_unit "e6500_sfx_0,e6500_sfx_1" "e6500_most")
++
++;; CFX.
++(define_cpu_unit "e6500_cfx_stage0,e6500_cfx_stage1" "e6500_most")
++
++;; Non-pipelined division.
++(define_cpu_unit "e6500_cfx_div" "e6500_long")
++
++;; LSU.
++(define_cpu_unit "e6500_lsu" "e6500_most")
++
++;; FPU.
++(define_cpu_unit "e6500_fpu" "e6500_long")
++
++;; BU.
++(define_cpu_unit "e6500_bu" "e6500_most")
++
++;; Altivec unit
++(define_cpu_unit "e6500_vec,e6500_vecperm" "e6500_vec")
++
++;; The following units are used to make the automata deterministic.
++(define_cpu_unit "present_e6500_decode_0" "e6500_most")
++(define_cpu_unit "present_e6500_sfx_0" "e6500_most")
++(presence_set "present_e6500_decode_0" "e6500_decode_0")
++(presence_set "present_e6500_sfx_0" "e6500_sfx_0")
++
++;; Some useful abbreviations.
++(define_reservation "e6500_decode"
++    "e6500_decode_0|e6500_decode_1+present_e6500_decode_0")
++(define_reservation "e6500_sfx"
++   "e6500_sfx_0|e6500_sfx_1+present_e6500_sfx_0")
++
++;; SFX.
++(define_insn_reservation "e6500_sfx" 1
++  (and (eq_attr "type" "integer,insert_word,insert_dword,delayed_compare,\
++	shift,cntlz,exts")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_sfx")
++
++(define_insn_reservation "e6500_sfx2" 2
++  (and (eq_attr "type" "cmp,compare,fast_compare,trap")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_sfx")
++
++(define_insn_reservation "e6500_delayed" 2
++  (and (eq_attr "type" "var_shift_rotate,var_delayed_compare")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_sfx*2")
++
++(define_insn_reservation "e6500_two" 2
++  (and (eq_attr "type" "two")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_decode+e6500_sfx,e6500_sfx")
++
++(define_insn_reservation "e6500_three" 3
++  (and (eq_attr "type" "three")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,(e6500_decode+e6500_sfx)*2,e6500_sfx")
++
++;; SFX - Mfcr.
++(define_insn_reservation "e6500_mfcr" 4
++  (and (eq_attr "type" "mfcr")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_sfx_0*4")
++
++;; SFX - Mtcrf.
++(define_insn_reservation "e6500_mtcrf" 1
++  (and (eq_attr "type" "mtcr")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_sfx_0")
++
++;; SFX - Mtjmpr.
++(define_insn_reservation "e6500_mtjmpr" 1
++  (and (eq_attr "type" "mtjmpr,mfjmpr")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_sfx")
++
++;; CFX - Multiply.
++(define_insn_reservation "e6500_multiply" 4
++  (and (eq_attr "type" "imul")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_cfx_stage0,e6500_cfx_stage1")
++
++(define_insn_reservation "e6500_multiply_i" 5
++  (and (eq_attr "type" "imul2,imul3,imul_compare")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_cfx_stage0,\
++   e6500_cfx_stage0+e6500_cfx_stage1,e6500_cfx_stage1")
++
++;; CFX - Divide.
++(define_insn_reservation "e6500_divide" 16
++  (and (eq_attr "type" "idiv")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_cfx_stage0+e6500_cfx_div,\
++   e6500_cfx_div*15")
++
++(define_insn_reservation "e6500_divide_d" 26
++  (and (eq_attr "type" "ldiv")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_cfx_stage0+e6500_cfx_div,\
++   e6500_cfx_div*25")
++
++;; LSU - Loads.
++(define_insn_reservation "e6500_load" 3
++  (and (eq_attr "type" "load,load_ext,load_ext_u,load_ext_ux,load_ux,load_u,\
++			load_l,sync")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_lsu")
++
++(define_insn_reservation "e6500_fpload" 4
++  (and (eq_attr "type" "fpload,fpload_ux,fpload_u")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_lsu")
++
++(define_insn_reservation "e6500_vecload" 4
++  (and (eq_attr "type" "vecload")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_lsu")
++
++;; LSU - Stores.
++(define_insn_reservation "e6500_store" 3
++  (and (eq_attr "type" "store,store_ux,store_u,store_c")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_lsu")
++
++(define_insn_reservation "e6500_fpstore" 3
++  (and (eq_attr "type" "fpstore,fpstore_ux,fpstore_u")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_lsu")
++
++(define_insn_reservation "e6500_vecstore" 4
++  (and (eq_attr "type" "vecstore")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_lsu")
++
++;; FP.
++(define_insn_reservation "e6500_float" 7
++  (and (eq_attr "type" "fpsimple,fp,fpcompare,dmul")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_fpu")
++
++(define_insn_reservation "e6500_sdiv" 20
++  (and (eq_attr "type" "sdiv")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_fpu*20")
++
++(define_insn_reservation "e6500_ddiv" 35
++  (and (eq_attr "type" "ddiv")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_fpu*35")
++
++;; BU.
++(define_insn_reservation "e6500_branch" 1
++  (and (eq_attr "type" "jmpreg,branch,isync")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_bu")
++
++;; BU - CR logical.
++(define_insn_reservation "e6500_cr_logical" 1
++  (and (eq_attr "type" "cr_logical,delayed_cr")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_bu")
++
++;; VSFX.
++(define_insn_reservation "e6500_vecsimple" 1
++  (and (eq_attr "type" "vecsimple,veccmp")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_vec")
++
++;; VCFX.
++(define_insn_reservation "e6500_veccomplex" 4
++  (and (eq_attr "type" "veccomplex")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_vec")
++
++;; VFPU.
++(define_insn_reservation "e6500_vecfloat" 6
++  (and (eq_attr "type" "vecfloat")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_vec")
++
++;; VPERM.
++(define_insn_reservation "e6500_vecperm" 2
++  (and (eq_attr "type" "vecperm")
++       (eq_attr "cpu" "ppce6500"))
++  "e6500_decode,e6500_vecperm")
+Index: gcc-4_7-branch/gcc/config/rs6000/rs6000-cpus.def
+===================================================================
+--- gcc-4_7-branch.orig/gcc/config/rs6000/rs6000-cpus.def	2012-07-06 19:52:30.000000000 -0700
++++ gcc-4_7-branch/gcc/config/rs6000/rs6000-cpus.def	2012-07-06 19:53:26.354779999 -0700
+@@ -87,6 +87,10 @@
+ 	    | MASK_ISEL)
+ RS6000_CPU ("e500mc64", PROCESSOR_PPCE500MC64,
+ 	    POWERPC_BASE_MASK | MASK_POWERPC64 | MASK_PPC_GFXOPT | MASK_ISEL)
++RS6000_CPU ("e5500", PROCESSOR_PPCE5500, POWERPC_BASE_MASK | MASK_POWERPC64
++	    | MASK_PPC_GFXOPT | MASK_ISEL)
++RS6000_CPU ("e6500", PROCESSOR_PPCE6500, POWERPC_7400_MASK | MASK_POWERPC64
++	    | MASK_MFCRF | MASK_ISEL)
+ RS6000_CPU ("860", PROCESSOR_MPCCORE, POWERPC_BASE_MASK | MASK_SOFT_FLOAT)
+ RS6000_CPU ("970", PROCESSOR_POWER4,
+ 	    POWERPC_7400_MASK | MASK_PPC_GPOPT | MASK_MFCRF | MASK_POWERPC64)
+Index: gcc-4_7-branch/gcc/config/rs6000/rs6000-opts.h
+===================================================================
+--- gcc-4_7-branch.orig/gcc/config/rs6000/rs6000-opts.h	2012-07-06 19:52:30.000000000 -0700
++++ gcc-4_7-branch/gcc/config/rs6000/rs6000-opts.h	2012-07-06 19:53:26.354779999 -0700
+@@ -54,6 +54,8 @@
+    PROCESSOR_PPCE300C3,
+    PROCESSOR_PPCE500MC,
+    PROCESSOR_PPCE500MC64,
++   PROCESSOR_PPCE5500,
++   PROCESSOR_PPCE6500,
+    PROCESSOR_POWER4,
+    PROCESSOR_POWER5,
+    PROCESSOR_POWER6,
+Index: gcc-4_7-branch/gcc/config/rs6000/rs6000.c
+===================================================================
+--- gcc-4_7-branch.orig/gcc/config/rs6000/rs6000.c	2012-07-06 19:52:30.000000000 -0700
++++ gcc-4_7-branch/gcc/config/rs6000/rs6000.c	2012-07-06 19:53:26.354779999 -0700
+@@ -755,6 +755,44 @@
+   1,			/* prefetch streams /*/
+ };
+ 
++/* Instruction costs on PPCE5500 processors.  */
++static const
++struct processor_costs ppce5500_cost = {
++  COSTS_N_INSNS (5),    /* mulsi */
++  COSTS_N_INSNS (5),    /* mulsi_const */
++  COSTS_N_INSNS (4),    /* mulsi_const9 */
++  COSTS_N_INSNS (5),    /* muldi */
++  COSTS_N_INSNS (14),   /* divsi */
++  COSTS_N_INSNS (14),   /* divdi */
++  COSTS_N_INSNS (7),    /* fp */
++  COSTS_N_INSNS (10),   /* dmul */
++  COSTS_N_INSNS (36),   /* sdiv */
++  COSTS_N_INSNS (66),   /* ddiv */
++  64,			/* cache line size */
++  32,			/* l1 cache */
++  128,			/* l2 cache */
++  1,			/* prefetch streams /*/
++};
++
++/* Instruction costs on PPCE6500 processors.  */
++static const
++struct processor_costs ppce6500_cost = {
++  COSTS_N_INSNS (5),    /* mulsi */
++  COSTS_N_INSNS (5),    /* mulsi_const */
++  COSTS_N_INSNS (4),    /* mulsi_const9 */
++  COSTS_N_INSNS (5),    /* muldi */
++  COSTS_N_INSNS (14),   /* divsi */
++  COSTS_N_INSNS (14),   /* divdi */
++  COSTS_N_INSNS (7),    /* fp */
++  COSTS_N_INSNS (10),   /* dmul */
++  COSTS_N_INSNS (36),   /* sdiv */
++  COSTS_N_INSNS (66),   /* ddiv */
++  64,			/* cache line size */
++  32,			/* l1 cache */
++  128,			/* l2 cache */
++  1,			/* prefetch streams /*/
++};
++
+ /* Instruction costs on AppliedMicro Titan processors.  */
+ static const
+ struct processor_costs titan_cost = {
+@@ -2741,13 +2779,19 @@
+     error ("target attribute or pragma changes SPE ABI");
+ 
+   if (rs6000_cpu == PROCESSOR_PPCE300C2 || rs6000_cpu == PROCESSOR_PPCE300C3
+-      || rs6000_cpu == PROCESSOR_PPCE500MC || rs6000_cpu == PROCESSOR_PPCE500MC64)
++      || rs6000_cpu == PROCESSOR_PPCE500MC || rs6000_cpu == PROCESSOR_PPCE500MC64
++      || rs6000_cpu == PROCESSOR_PPCE5500)
+     {
+       if (TARGET_ALTIVEC)
+ 	error ("AltiVec not supported in this target");
+       if (TARGET_SPE)
+ 	error ("SPE not supported in this target");
+     }
++  if (rs6000_cpu == PROCESSOR_PPCE6500)
++    {
++      if (TARGET_SPE)
++	error ("SPE not supported in this target");
++    }
+ 
+   /* Disable Cell microcode if we are optimizing for the Cell
+      and not optimizing for size.  */
+@@ -2842,7 +2886,9 @@
+      user's opinion, though.  */
+   if (rs6000_block_move_inline_limit == 0
+       && (rs6000_cpu == PROCESSOR_PPCE500MC
+-	  || rs6000_cpu == PROCESSOR_PPCE500MC64))
++	  || rs6000_cpu == PROCESSOR_PPCE500MC64
++	  || rs6000_cpu == PROCESSOR_PPCE5500
++	  || rs6000_cpu == PROCESSOR_PPCE6500))
+     rs6000_block_move_inline_limit = 128;
+ 
+   /* store_one_arg depends on expand_block_move to handle at least the
+@@ -2989,6 +3035,8 @@
+     case PROCESSOR_PPC8548:
+     case PROCESSOR_PPCE500MC:
+     case PROCESSOR_PPCE500MC64:
++    case PROCESSOR_PPCE5500:
++    case PROCESSOR_PPCE6500:
+ 
+       rs6000_single_float = TARGET_E500_SINGLE || TARGET_E500_DOUBLE;
+       rs6000_double_float = TARGET_E500_DOUBLE;
+@@ -3033,7 +3081,9 @@
+ 				 || rs6000_cpu == PROCESSOR_POWER6
+ 				 || rs6000_cpu == PROCESSOR_POWER7
+ 				 || rs6000_cpu == PROCESSOR_PPCE500MC
+-				 || rs6000_cpu == PROCESSOR_PPCE500MC64);
++				 || rs6000_cpu == PROCESSOR_PPCE500MC64
++				 || rs6000_cpu == PROCESSOR_PPCE5500
++				 || rs6000_cpu == PROCESSOR_PPCE6500);
+ 
+   /* Allow debug switches to override the above settings.  These are set to -1
+      in rs6000.opt to indicate the user hasn't directly set the switch.  */
+@@ -3256,6 +3306,14 @@
+ 	rs6000_cost = &ppce500mc64_cost;
+ 	break;
+ 
++      case PROCESSOR_PPCE5500:
++	rs6000_cost = &ppce5500_cost;
++	break;
++
++      case PROCESSOR_PPCE6500:
++	rs6000_cost = &ppce6500_cost;
++	break;
++
+       case PROCESSOR_TITAN:
+ 	rs6000_cost = &titan_cost;
+ 	break;
+@@ -22304,6 +22362,8 @@
+                  || rs6000_cpu_attr == CPU_PPC750
+                  || rs6000_cpu_attr == CPU_PPC7400
+                  || rs6000_cpu_attr == CPU_PPC7450
++                 || rs6000_cpu_attr == CPU_PPCE5500
++                 || rs6000_cpu_attr == CPU_PPCE6500
+                  || rs6000_cpu_attr == CPU_POWER4
+                  || rs6000_cpu_attr == CPU_POWER5
+ 		 || rs6000_cpu_attr == CPU_POWER7
+@@ -22849,6 +22909,8 @@
+   case CPU_PPCE300C3:
+   case CPU_PPCE500MC:
+   case CPU_PPCE500MC64:
++  case CPU_PPCE5500:
++  case CPU_PPCE6500:
+   case CPU_TITAN:
+     return 2;
+   case CPU_RIOS2:
+Index: gcc-4_7-branch/gcc/config/rs6000/rs6000.h
+===================================================================
+--- gcc-4_7-branch.orig/gcc/config/rs6000/rs6000.h	2012-07-06 19:52:30.000000000 -0700
++++ gcc-4_7-branch/gcc/config/rs6000/rs6000.h	2012-07-06 19:53:26.358779999 -0700
+@@ -168,6 +168,8 @@
+ %{mcpu=e300c3: -me300} \
+ %{mcpu=e500mc: -me500mc} \
+ %{mcpu=e500mc64: -me500mc64} \
++%{mcpu=e5500: -me5500} \
++%{mcpu=e6500: -me6500} \
+ %{maltivec: -maltivec} \
+ %{mvsx: -mvsx %{!maltivec: -maltivec} %{!mcpu*: %(asm_cpu_power7)}} \
+ -many"
+Index: gcc-4_7-branch/gcc/config/rs6000/rs6000.md
+===================================================================
+--- gcc-4_7-branch.orig/gcc/config/rs6000/rs6000.md	2012-07-06 19:52:32.000000000 -0700
++++ gcc-4_7-branch/gcc/config/rs6000/rs6000.md	2012-07-06 19:53:26.358779999 -0700
+@@ -166,7 +166,7 @@
+ ;; Processor type -- this attribute must exactly match the processor_type
+ ;; enumeration in rs6000.h.
+ 
+-(define_attr "cpu" "rios1,rios2,rs64a,mpccore,ppc403,ppc405,ppc440,ppc476,ppc601,ppc603,ppc604,ppc604e,ppc620,ppc630,ppc750,ppc7400,ppc7450,ppc8540,ppc8548,ppce300c2,ppce300c3,ppce500mc,ppce500mc64,power4,power5,power6,power7,cell,ppca2,titan"
++(define_attr "cpu" "rios1,rios2,rs64a,mpccore,ppc403,ppc405,ppc440,ppc476,ppc601,ppc603,ppc604,ppc604e,ppc620,ppc630,ppc750,ppc7400,ppc7450,ppc8540,ppc8548,ppce300c2,ppce300c3,ppce500mc,ppce500mc64,ppce5500,ppce6500,power4,power5,power6,power7,cell,ppca2,titan"
+   (const (symbol_ref "rs6000_cpu_attr")))
+ 
+ 
+@@ -194,6 +194,8 @@
+ (include "e300c2c3.md")
+ (include "e500mc.md")
+ (include "e500mc64.md")
++(include "e5500.md")
++(include "e6500.md")
+ (include "power4.md")
+ (include "power5.md")
+ (include "power6.md")
+Index: gcc-4_7-branch/gcc/doc/invoke.texi
+===================================================================
+--- gcc-4_7-branch.orig/gcc/doc/invoke.texi	2012-07-06 19:43:53.000000000 -0700
++++ gcc-4_7-branch/gcc/doc/invoke.texi	2012-07-06 19:53:26.362779999 -0700
+@@ -16565,11 +16565,13 @@
+ @samp{603e}, @samp{604}, @samp{604e}, @samp{620}, @samp{630}, @samp{740},
+ @samp{7400}, @samp{7450}, @samp{750}, @samp{801}, @samp{821}, @samp{823},
+ @samp{860}, @samp{970}, @samp{8540}, @samp{a2}, @samp{e300c2},
+-@samp{e300c3}, @samp{e500mc}, @samp{e500mc64}, @samp{ec603e}, @samp{G3},
+-@samp{G4}, @samp{G5}, @samp{titan}, @samp{power}, @samp{power2}, @samp{power3},
+-@samp{power4}, @samp{power5}, @samp{power5+}, @samp{power6}, @samp{power6x},
+-@samp{power7}, @samp{common}, @samp{powerpc}, @samp{powerpc64}, @samp{rios},
+-@samp{rios1}, @samp{rios2}, @samp{rsc}, and @samp{rs64}.
++@samp{e300c3}, @samp{e500mc}, @samp{e500mc64}, @samp{e5500},
++@samp{e6500}, @samp{ec603e}, @samp{G3}, @samp{G4}, @samp{G5},
++@samp{titan}, @samp{power}, @samp{power2}, @samp{power3},
++@samp{power4}, @samp{power5}, @samp{power5+}, @samp{power6},
++@samp{power6x}, @samp{power7}, @samp{common}, @samp{powerpc},
++@samp{powerpc64}, @samp{rios}, @samp{rios1}, @samp{rios2}, @samp{rsc},
++and @samp{rs64}.
+ 
+ @option{-mcpu=common} selects a completely generic processor.  Code
+ generated under this option will run on any POWER or PowerPC processor.
+Index: gcc-4_7-branch/gcc/testsuite/gcc.dg/tree-ssa/vector-3.c
+===================================================================
+--- gcc-4_7-branch.orig/gcc/testsuite/gcc.dg/tree-ssa/vector-3.c	2012-07-06 19:43:53.000000000 -0700
++++ gcc-4_7-branch/gcc/testsuite/gcc.dg/tree-ssa/vector-3.c	2012-07-06 19:53:26.362779999 -0700
+@@ -14,7 +14,7 @@
+ 
+ /* We should be able to optimize this to just "return 0.0;" */
+ /* { dg-final { scan-tree-dump-times "BIT_FIELD_REF" 0 "optimized"} } */
+-/* { dg-final { scan-tree-dump-times "0.0" 1 "optimized"} } */
++/* { dg-final { scan-tree-dump-times "0\\\.0" 1 "optimized"} } */
+ 
+ /* { dg-final { cleanup-tree-dump "optimized" } } */
+ 
