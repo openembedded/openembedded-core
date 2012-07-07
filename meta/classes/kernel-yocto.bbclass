@@ -45,6 +45,7 @@ def find_urls(d):
 
 do_patch() {
 	cd ${S}
+	export KMETA=${KMETA}
 
 	# if kernel tools are available in-tree, they are preferred
 	# and are placed on the path before any external tools. Unless
@@ -62,7 +63,7 @@ do_patch() {
 	if [ -n "${KMETA}" ]; then
 		createme_flags="--disable-meta-gen"
 	fi
-	createme ${createme_flags} ${ARCH} ${kbranch}
+	createme ${createme_flags} --meta ${KMETA} ${ARCH} ${kbranch}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not create ${kbranch}"
 		exit 1
@@ -180,6 +181,7 @@ addtask kernel_checkout before do_patch after do_unpack
 do_kernel_configme[dirs] = "${S} ${B}"
 do_kernel_configme() {
 	echo "[INFO] doing kernel configme"
+	export KMETA=${KMETA}
 
 	if [ -n ${KCONFIG_MODE} ]; then
 		configmeflags=${KCONFIG_MODE}
@@ -220,6 +222,7 @@ python do_kernel_configcheck() {
 # are corrected to the proper commit.
 do_validate_branches() {
 	cd ${S}
+	export KMETA=${KMETA}
 
 	set +e
 	# if SRCREV is AUTOREV it shows up as AUTOINC there's nothing to
