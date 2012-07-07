@@ -3,7 +3,7 @@ DEFAULTTUNE ?= "armv7a"
 ARMPKGARCH ?= "armv7a"
 
 TUNEVALID[armv7a] = "Enable instructions for ARMv7-a"
-TUNE_CONFLICTS[armv7a] = "armv4 armv5 armv6 armv7"
+TUNECONFLICTS[armv7a] = "armv4 armv5 armv6 armv7"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "armv7a", "-march=armv7-a -fno-tree-vectorize", "", d)}"
 MACHINEOVERRIDES .= "${@bb.utils.contains("TUNE_FEATURES", "armv7a", ":armv7a", "" ,d)}"
 
