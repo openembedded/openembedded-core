@@ -62,7 +62,6 @@ B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 SS = "${TMPDIR}/stamps/work-shared/gcc-${PV}-${PR}"
 do_fetch[stamp-base] = "${SS}"
 do_unpack[stamp-base] = "${SS}"
-do_headerfix[stamp-base] = "${SS}"
 do_patch[stamp-base] = "${SS}"
 
 # SW means Shared Work directory
@@ -90,23 +89,6 @@ python workshared_clean () {
 	bb.note("Removing " + dir)
 	oe.path.remove(dir)
 }
-
-do_headerfix () {
-	# Change the default dynamic linker path, in case $base_liddir is non-standard
-	# (e.g. in multilib or sdk cases)
-	#
-	# We want something like the following:
-	# 	#define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux-x86-64.so.2"
-	# becomes
-	#	#define GLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-linux-x86-64.so.2"
-	#
-	sed -i ${S}/gcc/config/*/linux*.h -e \
-		's#\(GLIBC_DYNAMIC_LINKER[^ ]*\) \( *"/lib.*\)/\(.*\)#\1 SYSTEMLIBS_DIR "\3#'
-}
-
-addtask headerfix after do_unpack before do_patch
-
-do_headerfix[vardepvalue] = "PATH"
 
 # We need to ensure that for the shared work directory, the do_patch singatures match
 # The real WORKDIR location isn't a dependency for the shared workdir.
