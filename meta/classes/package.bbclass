@@ -1141,7 +1141,7 @@ emit_pkgdata[dirs] = "${PKGDESTWORK}/runtime"
 
 ldconfig_postinst_fragment() {
 if [ x"$D" = "x" ]; then
-	[ -x /sbin/ldconfig ] && /sbin/ldconfig
+	if [ -x /sbin/ldconfig ]; then /sbin/ldconfig ; fi
 fi
 }
 
@@ -1251,7 +1251,7 @@ python package_do_shlibs() {
 		return
 		
 	lib_re = re.compile("^.*\.so")
-	libdir_re = re.compile(".*/lib$")
+	libdir_re = re.compile(".*/%s$" % d.getVar('baselib', True))
 
 	packages = d.getVar('PACKAGES', True)
 	targetos = d.getVar('TARGET_OS', True)
