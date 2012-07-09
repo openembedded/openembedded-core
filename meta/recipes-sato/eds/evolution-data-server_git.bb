@@ -13,7 +13,7 @@ DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libi
 SRCREV = "3ca578d968d09785933ebbb45b66b3bccdbd5832"
 
 PV = "2.30+git${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://git.gnome.org/evolution-data-server;protocol=git \
            file://oh-contact.patch;striplevel=0 \
@@ -22,6 +22,8 @@ SRC_URI = "git://git.gnome.org/evolution-data-server;protocol=git \
            file://new-contact-fix.patch \
            file://old-gdk-api.patch \
            file://depbuildfix.patch \
+           file://fix_for_automake-1.12.x.patch \
+           file://avoid_automake_errors.patch \
            file://iconv-detect.h"
 
 S = "${WORKDIR}/git"
