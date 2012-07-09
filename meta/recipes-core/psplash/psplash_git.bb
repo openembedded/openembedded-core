@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://psplash.h;beginline=1;endline=16;md5=840fb2356b10a85b
 
 SRCREV = "84764337a584002a92940323d374b0e417c573a6"
 PV = "0.1+git${SRCPV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
            file://psplash-init \
