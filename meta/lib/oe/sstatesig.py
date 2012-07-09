@@ -17,10 +17,8 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
         return True
 
     # Quilt (patch application) changing isn't likely to affect anything
-    if depname == "quilt-native" and recipename != "quilt-native":
-        return False
-    # Subversion also isn't likely to affect anything
-    if depname == "subversion-native" and recipename != "subversion-native":
+    excludelist = ['quilt-native', 'subversion-native', 'git-native']
+    if depname in excludelist and recipename != depname:
         return False
 
     # Don't change native/cross/nativesdk recipe dependencies any further
