@@ -9,7 +9,7 @@ as well."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-PR = "r1"
+PR = "r2"
 
 require perf.inc
 
@@ -21,7 +21,8 @@ DEPENDS = "virtual/kernel \
            ${MLPREFIX}binutils \
           "
 
-RDEPENDS_${PN} += "elfutils perl perl-modules python"
+SCRIPTING_RDEPENDS = "${@perf_feature_enabled('perf-scripting', 'perl perl-modules python', '',d)}"
+RDEPENDS_${PN} += "elfutils ${SCRIPTING_RDEPENDS}"
 
 PROVIDES = "virtual/perf"
 
@@ -45,6 +46,8 @@ export PERL_ARCHLIB = "${STAGING_LIBDIR}${PERL_OWN_DIR}/perl/${@get_perl_version
 S = "${STAGING_KERNEL_DIR}"
 B = "${WORKDIR}/${BPN}-${PV}"
 
+SCRIPTING_DEFINES = "${@perf_feature_enabled('perf-scripting', '', 'NO_LIBPERL=1 NO_LIBPYTHON=1',d)}"
+
 EXTRA_OEMAKE = \
 		'-C ${S}/tools/perf \
 		O=${B} \
@@ -53,7 +56,7 @@ EXTRA_OEMAKE = \
 		CC="${CC}" \
 		AR="${AR}" \
 		prefix=/usr \
-		NO_GTK2=1 NO_NEWT=1 NO_DWARF=1 \
+		NO_GTK2=1 NO_NEWT=1 NO_DWARF=1 ${SCRIPTING_DEFINES} \
 		'
 
 do_compile() {
@@ -62,6 +65,9 @@ do_compile() {
 
 do_install() {
 	oe_runmake DESTDIR=${D} install
+	if [ "${@perf_feature_enabled('perf-scripting', 1, 0, d)}" = "1" ]; then
+		oe_runmake DESTDIR=${D} install-python_ext
+	fi
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
