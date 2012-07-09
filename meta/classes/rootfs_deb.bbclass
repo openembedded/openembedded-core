@@ -111,7 +111,7 @@ list_package_recommends() {
 }
 
 rootfs_check_package_exists() {
-	if [ `apt-cache showpkg $1 | wc -l` -gt 2 ]; then
+	if [ `apt-cache policy $1 | wc -l` -gt 4 ]; then
 		echo $1
 	fi
 }
