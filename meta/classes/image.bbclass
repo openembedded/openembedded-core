@@ -35,7 +35,7 @@ NORMAL_FEATURE_INSTALL_OPTIONAL = "${@' '.join(oe.packagegroup.optional_packages
 
 def normal_groups(d):
     """Return all the IMAGE_FEATURES, with the exception of our special package groups"""
-    extras = set(['dev-pkgs', 'doc-pkgs', 'dbg-pkgs'])
+    extras = set(['dev-pkgs', 'staticdev-pkgs', 'doc-pkgs', 'dbg-pkgs'])
     features = set(oe.data.typed_value('IMAGE_FEATURES', d))
     return features.difference(extras)
 
@@ -47,6 +47,8 @@ def complementary_globs(featurevar, d):
     for feature in features:
         if feature == 'dev-pkgs':
             globs.append('*-dev')
+        elif feature == 'staticdev-pkgs':
+            globs.append('*-staticdev')
         elif feature == 'doc-pkgs':
             globs.append('*-doc')
         elif feature == 'dbg-pkgs':
