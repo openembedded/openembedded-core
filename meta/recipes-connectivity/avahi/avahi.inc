@@ -14,7 +14,7 @@ SECTION = "network"
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-INC_PR = "r4"
+INC_PR = "r5"
 
 DEPENDS = "expat libcap libdaemon dbus glib-2.0"
 
@@ -23,6 +23,7 @@ SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
           file://99avahi-autoipd \
           file://initscript.patch \
           file://avahi_fix_install_issue.patch \
+          file://fix_for_automake_1.12.x.patch \
           "
 
 USERADD_PACKAGES = "avahi-daemon"
