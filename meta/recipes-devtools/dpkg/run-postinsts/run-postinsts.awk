@@ -7,7 +7,7 @@
 #
 
 BEGIN {
-  rc=system("test -d /usr/dpkg/info/")
+  rc=system("test -d /var/lib/dpkg/info/")
   if (rc==0)
     pkgdir="/var/lib/dpkg/info"
   else
