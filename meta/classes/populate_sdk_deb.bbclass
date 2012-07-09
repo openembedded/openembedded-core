@@ -36,6 +36,8 @@ populate_sdk_deb () {
 
 	package_install_internal_deb
 
+	${POPULATE_SDK_POST_TARGET_COMMAND}
+
 	populate_sdk_post_deb ${INSTALL_ROOTFS_DEB}
 
 	populate_sdk_log_check populate_sdk

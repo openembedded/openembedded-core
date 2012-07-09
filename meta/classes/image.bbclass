@@ -6,7 +6,8 @@ inherit imagetest-${IMAGETEST}
 inherit populate_sdk_base
 
 TOOLCHAIN_TARGET_TASK += "${PACKAGE_INSTALL}"
-TOOLCHAIN_TARGET_TASK_ATTEMPTONLY += "${PACKAGE_INSTALL_ATTEMPTONLY} ${PACKAGE_GROUP_dev-pkgs} ${PACKAGE_GROUP_dbg-pkgs}"
+TOOLCHAIN_TARGET_TASK_ATTEMPTONLY += "${PACKAGE_INSTALL_ATTEMPTONLY}"
+POPULATE_SDK_POST_TARGET_COMMAND += "rootfs_install_complementary populate_sdk; "
 
 inherit gzipnative
 
@@ -38,25 +39,23 @@ def normal_groups(d):
     features = set(oe.data.typed_value('IMAGE_FEATURES', d))
     return features.difference(extras)
 
-def normal_pkgs_to_install(d):
-    import oe.packagedata
+# Wildcards specifying complementary packages to install for every package that has been explicitly
+# installed into the rootfs
+def complementary_globs(featurevar, d):
+    globs = []
+    features = set((d.getVar(featurevar, True) or '').split())
+    for feature in features:
+        if feature == 'dev-pkgs':
+            globs.append('*-dev')
+        elif feature == 'doc-pkgs':
+            globs.append('*-doc')
+        elif feature == 'dbg-pkgs':
+            globs.append('*-dbg')
+    return ' '.join(globs)
 
-    to_install = oe.data.typed_value('IMAGE_INSTALL', d)
-    features = normal_groups(d)
-    required = list(oe.packagegroup.required_packages(features, d))
-    optional = list(oe.packagegroup.optional_packages(features, d))
-    all_packages = to_install + required + optional
-
-    recipes = filter(None, [oe.packagedata.recipename(pkg, d) for pkg in all_packages])
-
-    return all_packages + recipes
-
-PACKAGE_GROUP_dbg-pkgs = "${@' '.join('%s-dbg' % pkg for pkg in normal_pkgs_to_install(d))}"
-PACKAGE_GROUP_dbg-pkgs[optional] = "1"
-PACKAGE_GROUP_dev-pkgs = "${@' '.join('%s-dev' % pkg for pkg in normal_pkgs_to_install(d))}"
-PACKAGE_GROUP_dev-pkgs[optional] = "1"
-PACKAGE_GROUP_doc-pkgs = "${@' '.join('%s-doc' % pkg for pkg in normal_pkgs_to_install(d))}"
-PACKAGE_GROUP_doc-pkgs[optional] = "1"
+IMAGE_INSTALL_COMPLEMENTARY = '${@complementary_globs("IMAGE_FEATURES", d)}'
+SDKIMAGE_FEATURES ??= "dev-pkgs dbg-pkgs"
+SDKIMAGE_INSTALL_COMPLEMENTARY = '${@complementary_globs("SDKIMAGE_FEATURES", d)}'
 
 # "export IMAGE_BASENAME" not supported at this time
 IMAGE_INSTALL ?= ""
@@ -306,32 +305,44 @@ get_split_linguas() {
     done | sort | uniq
 }
 
-rootfs_install_all_locales() {
-    # Generate list of installed packages for which additional locale packages might be available
-    INSTALLED_PACKAGES=`list_installed_packages | egrep -v -- "(-locale-|^locale-base-|-dev$|-doc$|^kernel|^glibc|^ttf|^task|^perl|^python)"`
+rootfs_install_complementary() {
+    # Install complementary packages based upon the list of currently installed packages
+    # e.g. locales, *-dev, *-dbg, etc. This will only attempt to install these packages,
+    # if they don't exist then no error will occur.
+    # Note: every backend needs to call this function explicitly after the normal
+    # package installation
 
-    # Generate a list of locale packages that exist
-    SPLIT_LINGUAS=`get_split_linguas`
-    PACKAGES_TO_INSTALL=""
-    for lang in $SPLIT_LINGUAS; do
-        for pkg in $INSTALLED_PACKAGES; do
-            existing_pkg=`rootfs_check_package_exists $pkg-locale-$lang`
-            if [ "$existing_pkg" != "" ]; then
-                PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL $existing_pkg"
-            fi
+    # Get list of installed packages
+    list_installed_packages arch > ${WORKDIR}/installed_pkgs.txt
+
+    # Apply the globs to all the packages currently installed
+    if [ "$1" = "populate_sdk" ] ; then
+        GLOBS="${SDKIMAGE_INSTALL_COMPLEMENTARY}"
+    else
+        GLOBS="${IMAGE_INSTALL_COMPLEMENTARY}"
+        # Add locales
+        SPLIT_LINGUAS=`get_split_linguas`
+        PACKAGES_TO_INSTALL=""
+        for lang in $SPLIT_LINGUAS ; do
+            GLOBS="$GLOBS *-locale-$lang"
         done
-    done
+    fi
 
-    # Install the packages, if any
-    if [ "$PACKAGES_TO_INSTALL" != "" ]; then
-        rootfs_install_packages $PACKAGES_TO_INSTALL
+    if [ "$GLOBS" != "" ] ; then
+        # Use the magic script to do all the work for us :)
+        oe-pkgdata-util glob ${TMPDIR}/pkgdata ${TARGET_VENDOR}-${TARGET_OS} ${WORKDIR}/installed_pkgs.txt "$GLOBS" > ${WORKDIR}/complementary_pkgs.txt
+
+        # Install the packages, if any
+        sed -i '/^$/d' ${WORKDIR}/complementary_pkgs.txt
+        if [ -s ${WORKDIR}/complementary_pkgs.txt ]; then
+            echo "Installing complementary packages"
+            rootfs_install_packages ${WORKDIR}/complementary_pkgs.txt
+        fi
     fi
 
     # Workaround for broken shell function dependencies
     if false ; then
         get_split_linguas
-        list_installed_packages
-        rootfs_check_package_exists
     fi
 }
 

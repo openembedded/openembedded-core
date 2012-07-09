@@ -29,6 +29,8 @@ populate_sdk_ipk() {
 
 	package_install_internal_ipk
 
+	${POPULATE_SDK_POST_TARGET_COMMAND}
+
 	#install host
 	export INSTALL_ROOTFS_IPK="${SDK_OUTPUT}"
 	export INSTALL_CONF_IPK="${IPKGCONF_SDK}"

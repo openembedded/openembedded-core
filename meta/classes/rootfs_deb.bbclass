@@ -10,7 +10,7 @@ do_rootfs[recrdeptask] += "do_package_write_deb"
 
 do_rootfs[lockfiles] += "${WORKDIR}/deb.lock"
 
-DEB_POSTPROCESS_COMMANDS = "rootfs_install_all_locales; "
+DEB_POSTPROCESS_COMMANDS = ""
 
 opkglibdir = "${localstatedir}/lib/opkg"
 
@@ -41,6 +41,8 @@ fakeroot rootfs_deb_do_rootfs () {
 
 	package_install_internal_deb
 	${DEB_POSTPROCESS_COMMANDS}
+
+	rootfs_install_complementary
 
 	export D=${IMAGE_ROOTFS}
 	export OFFLINE_ROOT=${IMAGE_ROOTFS}
@@ -87,10 +89,16 @@ remove_packaging_data_files() {
 	rm -rf ${IMAGE_ROOTFS}/usr/dpkg/
 }
 
-DPKG_QUERY_COMMAND = "${STAGING_BINDIR_NATIVE}/dpkg --admindir=${IMAGE_ROOTFS}/var/lib/dpkg"
+# This will of course only work after rootfs_deb_do_rootfs has been called
+DPKG_QUERY_COMMAND = "${STAGING_BINDIR_NATIVE}/dpkg-query --admindir=$INSTALL_ROOTFS_DEB/var/lib/dpkg"
 
 list_installed_packages() {
-	${DPKG_QUERY_COMMAND} -l | grep ^ii | awk '{ print $2 }'
+	if [ "$1" = "arch" ] ; then
+		# Here we want the PACKAGE_ARCH not the deb architecture
+		${DPKG_QUERY_COMMAND} -W -f='${Package} ${PackageArch}\n'
+	else
+		${DPKG_QUERY_COMMAND} -W -f='${Package}\n'
+	fi
 }
 
 get_package_filename() {
@@ -110,16 +118,9 @@ list_package_recommends() {
 	${DPKG_QUERY_COMMAND} -s $1 | grep ^Recommends | sed -e 's/^Recommends: //' -e 's/,//g' -e 's:([=<>]* [^ )]*)::g'
 }
 
-rootfs_check_package_exists() {
-	if [ `apt-cache policy $1 | wc -l` -gt 4 ]; then
-		echo $1
-	fi
-}
-
 rootfs_install_packages() {
-	${STAGING_BINDIR_NATIVE}/apt-get install $@ --force-yes --allow-unauthenticated
+	${STAGING_BINDIR_NATIVE}/apt-get install `cat $1` --force-yes --allow-unauthenticated
 
-	for pkg in $@ ; do
-		deb_package_setflag installed $pkg
-	done
+	# Mark all packages installed
+	sed -i -e "s/Status: install ok unpacked/Status: install ok installed/;" $INSTALL_ROOTFS_DEB/var/lib/dpkg/status
 }

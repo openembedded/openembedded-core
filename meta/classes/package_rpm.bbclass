@@ -248,6 +248,7 @@ process_pkg_list_rpm() {
 # INSTALL_PACKAGES_LINGUAS_RPM - additional packages for uclibc
 # INSTALL_PROVIDENAME_RPM - content for provide name
 # INSTALL_TASK_RPM - task name
+# INSTALL_COMPLEMENTARY_RPM - 1 to enable complementary package install mode
 
 package_install_internal_rpm () {
 
@@ -261,31 +262,35 @@ package_install_internal_rpm () {
 	local providename="${INSTALL_PROVIDENAME_RPM}"
 	local task="${INSTALL_TASK_RPM}"
 
-	# Setup base system configuration
-	mkdir -p ${target_rootfs}/etc/rpm/
-	echo "${platform}${TARGET_VENDOR}-${TARGET_OS}" > ${target_rootfs}/etc/rpm/platform
-	if [ ! -z "$platform_extra" ]; then
-		for pt in $platform_extra ; do
-			case $pt in
-				noarch | any | all)
-					os="`echo ${TARGET_OS} | sed "s,-.*,,"`.*"
-					;;
-				*)
-					os="${TARGET_OS}"
-					;;
-			esac
-			echo "$pt-.*-$os" >> ${target_rootfs}/etc/rpm/platform
-		done
-	fi
+	if [ "${INSTALL_COMPLEMENTARY_RPM}" != "1" ] ; then
+		# Setup base system configuration
+		mkdir -p ${target_rootfs}/etc/rpm/
+		echo "${platform}${TARGET_VENDOR}-${TARGET_OS}" > ${target_rootfs}/etc/rpm/platform
+		if [ ! -z "$platform_extra" ]; then
+			for pt in $platform_extra ; do
+				case $pt in
+					noarch | any | all)
+						os="`echo ${TARGET_OS} | sed "s,-.*,,"`.*"
+						;;
+					*)
+						os="${TARGET_OS}"
+						;;
+				esac
+				echo "$pt-.*-$os" >> ${target_rootfs}/etc/rpm/platform
+			done
+		fi
 
-	# Tell RPM that the "/" directory exist and is available
-	mkdir -p ${target_rootfs}/etc/rpm/sysinfo
-	echo "/" >${target_rootfs}/etc/rpm/sysinfo/Dirnames
-	if [ ! -z "$providename" ]; then
-		cat /dev/null > ${target_rootfs}/etc/rpm/sysinfo/Providename
-		for provide in $providename ; do
-			echo $provide >> ${target_rootfs}/etc/rpm/sysinfo/Providename
-		done
+		# Tell RPM that the "/" directory exist and is available
+		mkdir -p ${target_rootfs}/etc/rpm/sysinfo
+		echo "/" >${target_rootfs}/etc/rpm/sysinfo/Dirnames
+		if [ ! -z "$providename" ]; then
+			cat /dev/null > ${target_rootfs}/etc/rpm/sysinfo/Providename
+			for provide in $providename ; do
+				echo $provide >> ${target_rootfs}/etc/rpm/sysinfo/Providename
+			done
+		fi
+	else
+		mv ${target_rootfs}/install/total_solution.manifest ${target_rootfs}/install/original_solution.manifest
 	fi
 
 	# Setup manifest of packages to install...
@@ -480,13 +485,22 @@ mutex_set_max 163840
 # ================ Replication
 EOF
 
-	# RPM is special. It can't handle dependencies and preinstall scripts correctly. Its
-	# probably a feature. The only way to convince rpm to actually run the preinstall scripts 
-	# for base-passwd and shadow first before installing packages that depend on these packages 
-	# is to do two image installs, installing one set of packages, then the other.
-	if [ "${INC_RPM_IMAGE_GEN}" = "1" -a -f "$pre_btmanifest" ]; then
-		echo "Skipping pre install due to exisitng image"
+	if [ "${INSTALL_COMPLEMENTARY_RPM}" = "1" ] ; then
+		# Only install packages not already installed (dependency calculation will
+		# almost certainly have added some that have been)
+		sort ${target_rootfs}/install/original_solution.manifest > ${target_rootfs}/install/original_solution_sorted.manifest
+		sort ${target_rootfs}/install/total_solution.manifest > ${target_rootfs}/install/total_solution_sorted.manifest
+		comm -2 -3 ${target_rootfs}/install/total_solution_sorted.manifest \
+			${target_rootfs}/install/original_solution_sorted.manifest | awk '{print $1}' > \
+			${target_rootfs}/install/diff.manifest
+		mv ${target_rootfs}/install/diff.manifest ${target_rootfs}/install/total_solution.manifest
+	elif [ "${INC_RPM_IMAGE_GEN}" = "1" -a -f "$pre_btmanifest" ]; then
+		echo "Skipping pre install due to existing image"
 	else
+		# RPM is special. It can't handle dependencies and preinstall scripts correctly. Its
+		# probably a feature. The only way to convince rpm to actually run the preinstall scripts
+		# for base-passwd and shadow first before installing packages that depend on these packages
+		# is to do two image installs, installing one set of packages, then the other.
 		rm -f ${target_rootfs}/install/initial_install.manifest
 		echo "Installing base dependencies first (base-passwd, base-files and shadow) since rpm is special"
 		grep /base-passwd-[0-9] ${target_rootfs}/install/total_solution.manifest >> ${target_rootfs}/install/initial_install.manifest || true

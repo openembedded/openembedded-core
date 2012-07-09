@@ -37,6 +37,7 @@ populate_sdk_rpm () {
 	export INSTALL_PACKAGES_LINGUAS_RPM=""
 	export INSTALL_PROVIDENAME_RPM="/bin/sh /bin/bash /usr/bin/env /usr/bin/perl pkgconfig pkgconfig(pkg-config)"
 	export INSTALL_TASK_RPM="populate_sdk-target"
+	export INSTALL_COMPLEMENTARY_RPM=""
 
 	# Setup base system configuration
 	mkdir -p ${INSTALL_ROOTFS_RPM}/etc/rpm/
@@ -74,6 +75,7 @@ EOF
 	export INSTALL_PLATFORM_EXTRA_RPM
 
 	package_install_internal_rpm
+	${POPULATE_SDK_POST_TARGET_COMMAND}
 	populate_sdk_post_rpm ${INSTALL_ROOTFS_RPM}
 
 	## install nativesdk ##
@@ -86,6 +88,7 @@ EOF
 	export INSTALL_PACKAGES_LINGUAS_RPM=""
 	export INSTALL_PROVIDENAME_RPM="/bin/sh /bin/bash /usr/bin/env /usr/bin/perl pkgconfig libGL.so()(64bit) libGL.so"
 	export INSTALL_TASK_RPM="populate_sdk_rpm-nativesdk"
+	export INSTALL_COMPLEMENTARY_RPM=""
 
 	# List must be prefered to least preferred order
 	INSTALL_PLATFORM_EXTRA_RPM=""
