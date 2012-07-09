@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949 \
 DEPENDS = "${PTH} libassuan libksba zlib bzip2 readline libgcrypt"
 PTH = "pth"
 PTH_libc-uclibc = "npth"
-PR = "r3"
+PR = "r4"
 
 inherit autotools gettext
 
@@ -18,6 +18,7 @@ SRC_URI[sha256sum] = "efa23a8a925adb51c7d3b708c25b6d000300f5ce37de9bdec6453be7b4
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
+                --without-libcurl \
 		--with-zlib=${STAGING_LIBDIR}/.. \
 		--with-bzip2=${STAGING_LIBDIR}/.. \
                 --with-readline=${STAGING_LIBDIR}/.. \
