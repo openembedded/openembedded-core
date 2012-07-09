@@ -11,7 +11,7 @@ DEPENDS = "gtk+ libcroco cairo libxml2 popt"
 DEPENDS_virtclass-native = "cairo-native pango-native gdk-pixbuf-native"
 BBCLASSEXTEND = "native"
 
-PR = "r5"
+PR = "r6"
 
 inherit autotools pkgconfig gnome
 
@@ -25,11 +25,6 @@ SRC_URI[archive.sha256sum] = "91b98051f352fab8a6257688d6b2fd665b4648ed66144861f2
 do_configure_prepend () {
 	export GDK_PIXBUF_QUERYLOADERS="${libdir}/gtk-2.0/version/loaders"
 	echo "CLEANFILES=" > gtk-doc.make
-}
-
-do_install_append () {
-	rmdir ${D}${libdir}/gtk-3.0/engines/
-	rmdir ${D}${libdir}/gtk-3.0/
 }
 
 PACKAGES =+ "librsvg-gtk librsvg-gtk-dbg librsvg-gtk-dev rsvg"
@@ -65,3 +60,4 @@ fi
 test -x ${bindir}/gdk-pixbuf-query-loaders && gdk-pixbuf-query-loaders > ${sysconfdir}/gtk-2.0/gdk-pixbuf.loaders
 test -x ${bindir}/gtk-update-icon-cache && gtk-update-icon-cache  -q ${datadir}/icons/hicolor
 }
+PARALLEL_MAKE = ""
