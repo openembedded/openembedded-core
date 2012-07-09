@@ -54,6 +54,12 @@ python __anonymous () {
         d.setVar("LINGUAS_INSTALL", "")
         # FIXME, we need to map this to something, not delete it!
         d.setVar("PACKAGE_INSTALL_ATTEMPTONLY", "")
+
+    if bb.data.inherits_class('populate_sdk_base', d):
+        clsextend.map_depends_variable("TOOLCHAIN_TARGET_TASK")
+        clsextend.map_depends_variable("TOOLCHAIN_TARGET_TASK_ATTEMPTONLY")
+
+    if bb.data.inherits_class('image', d) or bb.data.inherits_class('populate_sdk_base', d):
         return
 
     clsextend.rename_packages()
