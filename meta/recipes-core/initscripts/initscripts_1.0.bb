@@ -3,7 +3,7 @@ DESCRIPTION = "Initscripts provide the basic system startup initialization scrip
 SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
-PR = "r134"
+PR = "r135"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
@@ -36,6 +36,12 @@ SRC_URI = "file://functions \
 SRC_URI_append_arm = " file://alignment.sh"
 
 KERNEL_VERSION = ""
+
+inherit update-alternatives
+
+ALTERNATIVE_PRIORITY = "90"
+ALTERNATIVE_${PN} = "functions"
+ALTERNATIVE_LINK_NAME[functions] = "${sysconfdir}/init.d/functions"
 
 HALTARGS ?= "-d -f"
 
