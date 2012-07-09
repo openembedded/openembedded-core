@@ -11,6 +11,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 PR = "r1"
 
+require perf.inc
+
 BUILDPERF_libc-uclibc = "no"
 
 DEPENDS = "virtual/kernel \
