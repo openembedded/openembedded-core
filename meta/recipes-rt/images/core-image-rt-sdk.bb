@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2011 Intel Corporation.
-#
 require recipes-core/images/core-image-minimal.bb
 
 DESCRIPTION = "Small image capable of booting a device with a test suite and \

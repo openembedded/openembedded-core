@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2010 Intel Corporation.
-#
 require recipes-core/images/core-image-minimal.bb
 
 DESCRIPTION = "A small image just capable of allowing a device to boot plus a \

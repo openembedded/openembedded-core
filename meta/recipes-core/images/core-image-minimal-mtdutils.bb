@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2008 OpenedHand Ltd.
-#
 require core-image-minimal.bb
 
 DESCRIPTION = "Small image capable of booting a device with support for the \
