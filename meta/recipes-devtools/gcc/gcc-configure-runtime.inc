@@ -9,6 +9,8 @@ EXTRA_OECONF_PATHS = " \
     --with-build-sysroot=${STAGING_DIR_TARGET}"
 
 RUNTIMETARGET = "libssp libstdc++-v3"
+RUNTIMETARGET_append_powerpc = " libgomp"
+RUNTIMETARGET_append_powerpc64 = " libgomp"
 #  ?
 # libiberty
 # libmudflap
@@ -36,6 +38,11 @@ do_install () {
 	for d in ${RUNTIMETARGET}; do
 		cd ${B}/$d/
 		oe_runmake 'DESTDIR=${D}' install
+		if [ "$d" = "libgomp" ]; then
+			rm -rf ${D}${datadir}/info/libgomp.info ${D}${datadir}/info/dir
+			rmdir --ignore-fail-on-non-empty -p ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/finclude
+			rmdir --ignore-fail-on-non-empty -p ${D}${datadir}/info
+		fi
 	done
 	chown -R root:root ${D}
 }
