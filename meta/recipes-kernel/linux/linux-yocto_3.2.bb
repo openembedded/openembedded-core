@@ -9,12 +9,12 @@ KBRANCH_qemuarm  = "standard/default/arm-versatile-926ejs"
 
 LINUX_VERSION ?= "3.2.18"
 
-SRCREV_machine_qemuarm ?= "50a1849ed5e180dc900471d12f41e76f6fe38fff"
-SRCREV_machine_qemumips  ?= "24a13cca4ace1cb16da0a6379514bdea82924c06"
-SRCREV_machine_qemuppc ?= "b4c41eb3dfedb80c253886451bb4c5120c547c57"
-SRCREV_machine_qemux86 ?= "0e2accb1b10421b7daac77144b11862a4bb47caa"
-SRCREV_machine_qemux86-64 ?= "6c62f352ad9ca61b0cb3e0ff9ae474d64c02e6ef"
-SRCREV_machine ?= "0ec416edf0b0cab3e919c0a1c167a883f8b344a2"
+SRCREV_machine_qemuarm ?= "2ea2477e2965569517671ec03fa9496214e8bff1"
+SRCREV_machine_qemumips  ?= "17eb00dec08ef91acfb6d7adca81cb6e344b6c68"
+SRCREV_machine_qemuppc ?= "14be92545abd339033570620e84ec2ae6780be29"
+SRCREV_machine_qemux86 ?= "34e76349ed6cb7cadbbf94a5b34712d139703c8a"
+SRCREV_machine_qemux86-64 ?= "f3625121d459b8e38f7528c2f5d2feb6078d0de9"
+SRCREV_machine ?= "7cc31a952f78b8f8e8469eed93c23e9675a8eeb5"
 SRCREV_meta ?= "07ee09b520579b9f29bd15fefb01fd28b34c6064"
 
 PR = "${INC_PR}.0"
