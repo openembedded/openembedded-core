@@ -1,0 +1,62 @@
+Upstream-Status: Pending
+
+automake 1.12 has deprecated use of mkdir_p, and it recommends
+use of MKDIR_P instead. Changed the code to avoid these kind 
+of warning-errors.
+
+./.deps/DerivedSources
+make[1]: ./.deps/DerivedSources: Command not found
+make[1]: *** [all-local] Error 127
+
+Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+2012/07/10
+
+Index: webkit-gtk-1.7.2+svnr101488-r6/GNUmakefile.am
+===================================================================
+--- webkit-gtk-1.7.2+svnr101488-r6.orig/GNUmakefile.am
++++ webkit-gtk-1.7.2+svnr101488-r6/GNUmakefile.am
+@@ -255,7 +255,7 @@ MAINTAINERCLEANFILES += \
+ # Older automake versions (1.7) place Plo files in a different place so we need
+ # to create the output directory manually.
+ all-local: stamp-po
+-	$(mkdir_p) $(top_builddir)/$(DEPDIR)/DerivedSources
++	$(MKDIR_P) $(top_builddir)/$(DEPDIR)/DerivedSources
+ 
+ # remove built sources and program directories
+ clean-local:
+Index: webkit-gtk-1.7.2+svnr101488-r6/Source/WebKit/gtk/po/GNUmakefile.am
+===================================================================
+--- webkit-gtk-1.7.2+svnr101488-r6.orig/Source/WebKit/gtk/po/GNUmakefile.am
++++ webkit-gtk-1.7.2+svnr101488-r6/Source/WebKit/gtk/po/GNUmakefile.am
+@@ -132,13 +132,13 @@ DISTCLEANFILES += \
+ 	$(top_builddir)/Source/WebKit/gtk/po/$(DOMAIN).pot
+ 
+ po-install-data-local: all
+-	$(mkdir_p) $(DESTDIR)$(datadir)
++	$(MKDIR_P) $(DESTDIR)$(datadir)
+ 	@catalogs='$(MOFILES)'; \
+ 	for cat in $$catalogs; do \
+ 	  cat=`basename $$cat`; \
+ 	  lang=`echo $$cat | sed -e 's/\.mo$$//'`; \
+ 	  dir=$(localedir)/$$lang/LC_MESSAGES; \
+-	  $(mkdir_p) $(DESTDIR)$$dir; \
++	  $(MKDIR_P) $(DESTDIR)$$dir; \
+ 	  if test -r Source/WebKit/gtk/po/$$cat; then realcat=Source/WebKit/gtk/po/$$cat; else realcat=$(srcdir)/$$cat; fi; \
+ 	  $(INSTALL_DATA) $$realcat $(DESTDIR)$$dir/$(DOMAIN).mo; \
+ 	  echo "installing $$realcat as $(DESTDIR)$$dir/$(DOMAIN).mo"; \
+@@ -173,13 +173,13 @@ po-install-data-local: all
+ 	done
+ 
+ po-installdirs-data-local:
+-	$(mkdir_p) $(DESTDIR)$(datadir)
++	$(MKDIR_P) $(DESTDIR)$(datadir)
+ 	@catalogs='$(MOFILES)'; \
+ 	for cat in $$catalogs; do \
+ 	  cat=`basename $$cat`; \
+ 	  lang=`echo $$cat | sed -e 's/\.gmo$$//'`; \
+ 	  dir=$(localedir)/$$lang/LC_MESSAGES; \
+-	  $(mkdir_p) $(DESTDIR)$$dir; \
++	  $(MKDIR_P) $(DESTDIR)$$dir; \
+ 	  for lc in '' $(EXTRA_LOCALE_CATEGORIES); do \
+ 	    if test -n "$$lc"; then \
+ 	      if (cd $(DESTDIR)$(localedir)/$$lang && LC_ALL=C ls -l -d $$lc 2>/dev/null) | grep ' -> ' >/dev/null; then \

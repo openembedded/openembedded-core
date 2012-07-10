@@ -33,6 +33,7 @@ SRC_URI = "\
   file://gtk-doc.make \
   file://nodolt.patch \
   file://function-scope.patch \
+  file://webgit-gtk_fix_build_with_automake_1.12.patch \
  "
 
 S = "${WORKDIR}/"
