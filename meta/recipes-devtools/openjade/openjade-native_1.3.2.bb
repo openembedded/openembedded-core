@@ -32,7 +32,7 @@ CONFIGUREOPTS := "${@d.getVar('CONFIGUREOPTS', True).replace('--datadir=${datadi
 # CONFIGUREOPTS has hard coded paths so we need to ignore it's vardeps
 # there are other bits in there too but they are picked up by other variable
 # dependencies so it all works out
-do_configure[vardepsexclude] += "CONNFIGUREOPTS"
+oe_runconf[vardepsexclude] += "CONFIGUREOPTS"
 
 CFLAGS =+ "-I${S}/include"
 
