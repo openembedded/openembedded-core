@@ -6,6 +6,7 @@ SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
            file://fix_installorder.patch \
            file://offline_postinstall.patch\
            file://track_parents.patch \
+           file://conf_override.patch \
 "
 
 S = "${WORKDIR}/trunk"
@@ -13,4 +14,4 @@ S = "${WORKDIR}/trunk"
 SRCREV = "633"
 PV = "0.1.8+svnr${SRCPV}"
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
