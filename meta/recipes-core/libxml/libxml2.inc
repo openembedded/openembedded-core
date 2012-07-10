@@ -13,7 +13,8 @@ DEPENDS_virtclass-native = "python-native"
 DEPENDS =+ "zlib"
 
 SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz \
-           file://libxml-64bit.patch"
+           file://libxml-64bit.patch \
+           file://ansidecl.patch"
 
 
 inherit autotools pkgconfig binconfig
