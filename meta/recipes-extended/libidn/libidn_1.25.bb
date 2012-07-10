@@ -10,12 +10,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=9c9d9d207a3468a696a03368913d360b \
                     file://COPYINGv3;md5=d32239bcb673463ab874e80d47fae504 \
                     file://lib/idna.h;endline=21;md5=7364f6a250728ffe16170f5e3ab37512 \
                     file://src/idn.c;endline=20;md5=7d7235e7951ac87d9dfac42e1b69d9cb"
-PR = "r0"
+PR = "r1"
 
 inherit pkgconfig autotools gettext
 
 SRC_URI = "${GNU_MIRROR}/libidn/${BPN}-${PV}.tar.gz \
-           file://libidn_fix_for_automake-1.12.patch "
+           file://libidn_fix_for_automake-1.12.patch \
+           file://avoid_AM_PROG_MKDIR_P_warning_error_with_automake_1.12.patch "
 
 SRC_URI[md5sum] = "45ffabce4b8ca87fe98fe4542668d33d"
 SRC_URI[sha256sum] = "7fe625328a6a5d837d723c462c1788affb84d9c9fc0ae5cd0ce9ac7724c34716"
