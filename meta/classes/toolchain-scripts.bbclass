@@ -14,9 +14,18 @@ toolchain_create_sdk_env_script () {
 	echo 'export PKG_CONFIG_SYSROOT_DIR=${SDKTARGETSYSROOT}' >> $script
 	echo 'export PKG_CONFIG_PATH=${SDKTARGETSYSROOT}${libdir}/pkgconfig' >> $script
 	echo 'export CONFIG_SITE=${SDKPATH}/site-config-${REAL_MULTIMACH_TARGET_SYS}' >> $script
-	echo 'export CC=${TARGET_PREFIX}gcc' >> $script
-	echo 'export CXX=${TARGET_PREFIX}g++' >> $script
+	echo 'export CC="${TARGET_PREFIX}gcc ${TARGET_CC_ARCH} --sysroot=${SDKTARGETSYSROOT}"' >> $script
+	echo 'export CXX="${TARGET_PREFIX}g++ ${TARGET_CC_ARCH} --sysroot=${SDKTARGETSYSROOT}"' >> $script
+	echo 'export CPP="${TARGET_PREFIX}gcc -E ${TARGET_CC_ARCH} --sysroot=${SDKTARGETSYSROOT}"' >> $script
+	echo 'export AS="${TARGET_PREFIX}as ${TARGET_AS_ARCH}"' >> $script
+	echo 'export LD="${TARGET_PREFIX}ld ${TARGET_LD_ARCH} --sysroot=${SDKTARGETSYSROOT}"' >> $script
 	echo 'export GDB=${TARGET_PREFIX}gdb' >> $script
+	echo 'export STRIP=${TARGET_PREFIX}strip' >> $script
+	echo 'export RANLIB=${TARGET_PREFIX}ranlib' >> $script
+	echo 'export OBJCOPY=${TARGET_PREFIX}objcopy' >> $script
+	echo 'export OBJDUMP=${TARGET_PREFIX}objdump' >> $script
+	echo 'export AR=${TARGET_PREFIX}-ar' >> $script
+	echo 'export NM=${TARGET_PREFIX}-nm' >> $script
 	echo 'export TARGET_PREFIX=${TARGET_PREFIX}' >> $script
 	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS} --build=${SDK_ARCH}-linux --with-libtool-sysroot=${SDKTARGETSYSROOT}"' >> $script
 	if [ "${TARGET_OS}" = "darwin8" ]; then
@@ -26,10 +35,10 @@ toolchain_create_sdk_env_script () {
 		cd ${SDK_OUTPUT}${SDKTARGETSYSROOT}/usr
 		ln -s /usr/local local
 	fi
-	echo 'export CFLAGS="${TARGET_CC_ARCH} --sysroot=${SDKTARGETSYSROOT}"' >> $script
-	echo 'export CXXFLAGS="${TARGET_CC_ARCH} --sysroot=${SDKTARGETSYSROOT}"' >> $script
-	echo 'export LDFLAGS="${TARGET_LD_ARCH} --sysroot=${SDKTARGETSYSROOT}"' >> $script
-	echo 'export CPPFLAGS="${TARGET_CC_ARCH} --sysroot=${SDKTARGETSYSROOT}"' >> $script
+	echo 'export CFLAGS="${TARGET_CFLAGS}"' >> $script
+	echo 'export CXXFLAGS="${TARGET_CXXFLAGS}"' >> $script
+	echo 'export LDFLAGS="${TARGET_LDFLAGS}"' >> $script
+	echo 'export CPPFLAGS="${TARGET_CPPFLAGS}"' >> $script
 	echo 'export OECORE_NATIVE_SYSROOT="${SDKPATHNATIVE}"' >> $script
 	echo 'export OECORE_TARGET_SYSROOT="${SDKTARGETSYSROOT}"' >> $script
 	echo 'export OECORE_ACLOCAL_OPTS="-I ${SDKPATHNATIVE}/usr/share/aclocal"' >> $script
@@ -49,9 +58,18 @@ toolchain_create_tree_env_script () {
 
 	echo 'export CONFIG_SITE="${@siteinfo_get_files(d)}"' >> $script
 
-	echo 'export CC=${TARGET_PREFIX}gcc' >> $script
-	echo 'export CXX=${TARGET_PREFIX}g++' >> $script
+	echo 'export CC="${TARGET_PREFIX}gcc ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"' >> $script
+	echo 'export CXX="${TARGET_PREFIX}g++ ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"' >> $script
+	echo 'export CPP="${TARGET_PREFIX}gcc -E ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"' >> $script
+	echo 'export AS="${TARGET_PREFIX}as ${TARGET_AS_ARCH}"' >> $script
+	echo 'export LD="${TARGET_PREFIX}ld ${TARGET_LD_ARCH} --sysroot=${STAGING_DIR_TARGET}"' >> $script
 	echo 'export GDB=${TARGET_PREFIX}gdb' >> $script
+	echo 'export STRIP=${TARGET_PREFIX}strip' >> $script
+	echo 'export RANLIB=${TARGET_PREFIX}ranlib' >> $script
+	echo 'export OBJCOPY=${TARGET_PREFIX}objcopy' >> $script
+	echo 'export OBJDUMP=${TARGET_PREFIX}objdump' >> $script
+	echo 'export AR=${TARGET_PREFIX}-ar' >> $script
+	echo 'export NM=${TARGET_PREFIX}-nm' >> $script
 	echo 'export TARGET_PREFIX=${TARGET_PREFIX}' >> $script
 	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS} --build=${BUILD_SYS} --with-libtool-sysroot=${STAGING_DIR_TARGET}"' >> $script
 	if [ "${TARGET_OS}" = "darwin8" ]; then
@@ -61,10 +79,10 @@ toolchain_create_tree_env_script () {
 		cd ${SDK_OUTPUT}${SDKTARGETSYSROOT}/usr
 		ln -s /usr/local local
 	fi
-	echo 'export CFLAGS="${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"' >> $script
-	echo 'export CXXFLAGS="${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"' >> $script
-	echo 'export LDFLAGS="${TARGET_LD_ARCH} --sysroot=${STAGING_DIR_TARGET}"' >> $script
-	echo 'export CPPFLAGS="${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"' >> $script
+	echo 'export CFLAGS="${TARGET_CFLAGS}"' >> $script
+	echo 'export CXXFLAGS="${TARGET_CXXFLAGS}"' >> $script
+	echo 'export LDFLAGS="${TARGET_LDFLAGS}"' >> $script
+	echo 'export CPPFLAGS="${TARGET_CPPFLAGS}"' >> $script
 	echo 'export OECORE_NATIVE_SYSROOT="${STAGING_DIR_NATIVE}"' >> $script
 	echo 'export OECORE_TARGET_SYSROOT="${STAGING_DIR_TARGET}"' >> $script
 	echo 'export OECORE_ACLOCAL_OPTS="-I ${STAGING_DIR_NATIVE}/usr/share/aclocal"' >> $script
@@ -83,9 +101,18 @@ toolchain_create_sdk_env_script_for_installer () {
 	echo 'export PKG_CONFIG_SYSROOT_DIR=##SDKTARGETSYSROOT##' >> $script
 	echo 'export PKG_CONFIG_PATH=##SDKTARGETSYSROOT##${target_libdir}/pkgconfig' >> $script
 	echo 'export CONFIG_SITE=${SDKPATH}/site-config-'"${multimach_target_sys}" >> $script
-	echo 'export CC=${TARGET_PREFIX}gcc' >> $script
-	echo 'export CXX=${TARGET_PREFIX}g++' >> $script
+	echo 'export CC="${TARGET_PREFIX}gcc ${TARGET_CC_ARCH} --sysroot=##SDKTARGETSYSROOT##"' >> $script
+	echo 'export CXX="${TARGET_PREFIX}g++ ${TARGET_CC_ARCH} --sysroot=##SDKTARGETSYSROOT##"' >> $script
+	echo 'export CPP="${TARGET_PREFIX}gcc -E ${TARGET_CC_ARCH} --sysroot=##SDKTARGETSYSROOT##"' >> $script
+	echo 'export AS="${TARGET_PREFIX}as ${TARGET_AS_ARCH}"' >> $script
+	echo 'export LD="${TARGET_PREFIX}ld ${TARGET_LD_ARCH} --sysroot=##SDKTARGETSYSROOT##"' >> $script
 	echo 'export GDB=${TARGET_PREFIX}gdb' >> $script
+	echo 'export STRIP=${TARGET_PREFIX}strip' >> $script
+	echo 'export RANLIB=${TARGET_PREFIX}ranlib' >> $script
+	echo 'export OBJCOPY=${TARGET_PREFIX}objcopy' >> $script
+	echo 'export OBJDUMP=${TARGET_PREFIX}objdump' >> $script
+	echo 'export AR=${TARGET_PREFIX}-ar' >> $script
+	echo 'export NM=${TARGET_PREFIX}-nm' >> $script
 	echo 'export TARGET_PREFIX=${TARGET_PREFIX}' >> $script
 	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS} --build=${SDK_ARCH}-linux --with-libtool-sysroot=##SDKTARGETSYSROOT##"' >> $script
 	if [ "${TARGET_OS}" = "darwin8" ]; then
@@ -95,10 +122,10 @@ toolchain_create_sdk_env_script_for_installer () {
 		cd ${SDK_OUTPUT}${SDKTARGETSYSROOT}/usr
 		ln -s /usr/local local
 	fi
-	echo 'export CFLAGS="${TARGET_CC_ARCH} --sysroot=##SDKTARGETSYSROOT##"' >> $script
-	echo 'export CXXFLAGS="${TARGET_CC_ARCH} --sysroot=##SDKTARGETSYSROOT##"' >> $script
-	echo 'export LDFLAGS="${TARGET_LD_ARCH} --sysroot=##SDKTARGETSYSROOT##"' >> $script
-	echo 'export CPPFLAGS="${TARGET_CC_ARCH} --sysroot=##SDKTARGETSYSROOT##"' >> $script
+	echo 'export CFLAGS="${TARGET_CFLAGS}"' >> $script
+	echo 'export CXXFLAGS="${TARGET_CXXFLAGS}"' >> $script
+	echo 'export LDFLAGS="${TARGET_LDFLAGS}"' >> $script
+	echo 'export CPPFLAGS="${TARGET_CPPFLAGS}"' >> $script
 	echo 'export OECORE_NATIVE_SYSROOT="${SDKPATHNATIVE}"' >> $script
 	echo 'export OECORE_TARGET_SYSROOT="##SDKTARGETSYSROOT##"' >> $script
         echo 'export OECORE_ACLOCAL_OPTS="-I ${SDKPATHNATIVE}/usr/share/aclocal"' >> $script
