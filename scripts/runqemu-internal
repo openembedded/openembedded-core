@@ -468,6 +468,23 @@ if [ ! -x "$QEMUBIN" ]; then
     return
 fi
 
+NEED_GL=`ldd $QEMUBIN/$QEMU 2>&1 | grep libGLU`
+# We can't run without a libGL.so
+if [ "$NEED_GL" != "" ]; then
+    libgl='no'
+
+    [ -e /usr/lib/libGL.so -a -e /usr/lib/libGLU.so ] && libgl='yes'
+    [ -e /usr/lib64/libGL.so -a -e /usr/lib64/libGLU.so ] && libgl='yes'
+    [ -e /usr/lib/*-linux-gnu/libGL.so -a -e /usr/lib/*-linux-gnu/libGLU.so ] && libgl='yes'
+
+    if [ "$libgl" != 'yes' ]; then
+        echo "You need libGL.so and libGLU.so to exist in your library path to run the QEMU emulator.
+        Ubuntu package names are: libgl1-mesa-dev and libglu1-mesa-dev.
+        Fedora package names are: mesa-libGL-devel mesa-libGLU-devel."
+        exit 1;
+    fi
+fi
+
 do_quit() {
     if [ -n "$PIDFILE" ]; then
         #echo kill `cat $PIDFILE`
