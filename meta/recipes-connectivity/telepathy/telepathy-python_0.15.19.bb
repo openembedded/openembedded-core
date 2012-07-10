@@ -8,9 +8,10 @@ RDEPENDS_${PN} += "python-dbus"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/${BPN}/${BPN}-${PV}.tar.gz \
            file://parallel_make.patch \
-           file://remove_duplicate_install.patch"
+           file://remove_duplicate_install.patch \
+           file://telepathy-python_fix_for_automake_1.12.patch"
 
-PR = "r4"
+PR = "r5"
 
 inherit autotools
 
