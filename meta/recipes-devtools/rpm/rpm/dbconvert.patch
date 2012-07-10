@@ -1,0 +1,27 @@
+Upstream-Status: Not applicable
+
+Hack to prevent unneeded demo app from building on older libc
+where it will break the build
+
+Index: rpm-5.4.9/tools/Makefile.am
+===================================================================
+--- rpm-5.4.9.orig/tools/Makefile.am
++++ rpm-5.4.9/tools/Makefile.am
+@@ -24,7 +24,7 @@ AM_CFLAGS = $(OPENMP_CFLAGS)
+ 
+ EXTRA_DIST =	hashtab.h bsdiff.1 bspatch.1 dotgraph.hh
+ 
+-EXTRA_PROGRAMS = augtool cudftool dbconvert debugedit \
++EXTRA_PROGRAMS = augtool cudftool debugedit \
+ 	nix-build nix-channel nix-collect-garbage nix-copy-closure \
+ 	nix-env nix-hash nix-install-package nix-instantiate \
+ 	nix-log2xml nix-prefetch-url nix-pull nix-push nix-store nix-worker \
+@@ -60,7 +60,7 @@ pkgbin_PROGRAMS =	\
+ 	rpmcache rpmdigest rpmrepo rpmspecdump \
+ 	rpmcmp rpmdeps rpmdeps-oecore sqlite3 @WITH_KEYUTILS_RPMKEY@ @WITH_LIBELF_DEBUGEDIT@
+ if WITH_DB
+-pkgbin_PROGRAMS +=	dbconvert
++pkgbin_PROGRAMS +=	
+ endif
+ dist_man_MANS =		rpmgrep.1
+ 
