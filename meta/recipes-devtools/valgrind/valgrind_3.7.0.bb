@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c46082167a314d785d012a244748d803 \
 
 X11DEPENDS = "virtual/libx11"
 DEPENDS = "${@base_contains('DISTRO_FEATURES', 'x11', '${X11DEPENDS}', '', d)}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
 	   file://fix_issue_caused_by_ccache.patch \
@@ -29,6 +29,10 @@ inherit autotools
 EXTRA_OECONF = "--enable-tls"
 EXTRA_OEMAKE = "-w"
 PARALLEL_MAKE = ""
+
+do_install_append () {
+    install -m 644 ${S}/default.supp ${D}/${libdir}/valgrind/
+}
 
 FILES_${PN}-dbg += "${libdir}/${PN}/*/.debug/*"
 RRECOMMENDS_${PN}_powerpc += "${TCLIBC}-dbg"
