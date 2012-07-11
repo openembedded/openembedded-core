@@ -236,6 +236,7 @@ fi
 case "$MACHINE" in
     "qemuarm") ;;
     "qemumips") ;;
+    "qemumipsel") ;;
     "qemumips64") ;;
     "qemush4") ;;
     "qemuppc") ;;
@@ -375,12 +376,12 @@ if [ "$MACHINE" = "spitz" ]; then
     fi
 fi
 
-if [ "$MACHINE" = "qemumips" -o "$MACHINE" = "qemumips64" ]; then
-    if [ "$MACHINE" = "qemumips64" ]; then
-	QEMU=qemu-system-mips64
-    else
-	QEMU=qemu-system-mips
-    fi
+if [ "$MACHINE" = "qemumips" -o "$MACHINE" = "qemumipsel" -o "$MACHINE" = "qemumips64" ]; then
+    case "$MACHINE" in
+       qemumips)   QEMU=qemu-system-mips ;;
+       qemumipsel) QEMU=qemu-system-mipsel ;;
+       qemumips64) QEMU=qemu-system-mips64 ;;
+    esac
     MACHINE_SUBTYPE=malta
     QEMU_UI_OPTIONS="-vga cirrus $QEMU_UI_OPTIONS"
     if [ "$FSTYPE" = "ext3" -o "$FSTYPE" = "btrfs" ]; then

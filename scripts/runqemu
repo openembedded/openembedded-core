@@ -94,7 +94,7 @@ KVM_ENABLED="no"
 while true; do
     arg=${1}
     case "$arg" in
-        "qemux86" | "qemux86-64" | "qemuarm" | "qemumips" | "qemumips64" | "qemush4"  | "qemuppc")
+        "qemux86" | "qemux86-64" | "qemuarm" | "qemumips" | "qemumipsel" | "qemumips64" | "qemush4"  | "qemuppc")
             [ -z "$MACHINE" ] && MACHINE=$arg || \
                 error "conflicting MACHINE types [$MACHINE] and [$arg]"
             ;;
@@ -244,6 +244,9 @@ QEMUARM_DEFAULT_FSTYPE=ext3
 
 QEMUMIPS_DEFAULT_KERNEL=vmlinux-qemumips.bin
 QEMUMIPS_DEFAULT_FSTYPE=ext3
+
+QEMUMIPSEL_DEFAULT_KERNEL=vmlinux-qemumipsel.bin
+QEMUMIPSEL_DEFAULT_FSTYPE=ext3
 
 QEMUMIPS64_DEFAULT_KERNEL=vmlinux-qemumips64.bin
 QEMUMIPS64_DEFAULT_FSTYPE=ext3
