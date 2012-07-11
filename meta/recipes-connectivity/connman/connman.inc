@@ -20,7 +20,7 @@ DEPENDS  = "dbus glib-2.0 ppp iptables gnutls \
             ${@base_contains('DISTRO_FEATURES', '3g','ofono', '', d)} \
             "
 
-INC_PR = "r11"
+INC_PR = "r12"
 
 TIST = "--enable-tist"
 TIST_powerpc = ""
@@ -72,6 +72,10 @@ do_install_append() {
 
 	# We don't need to package an empty directory
 	rmdir ${D}${libdir}/connman/scripts
+
+	# Automake 1.12 won't install empty directories, but we need the
+	# plugins directory to be present for ownership
+	mkdir -p ${D}${libdir}/connman/plugins
 }
 
 # These used to be plugins, but now they are core
