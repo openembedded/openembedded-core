@@ -10,8 +10,8 @@ SRC_URI = "git://www.jdl.com/software/dtc.git;protocol=git \
            file://make_install.patch \
 	  "
 
-EXTRA_OEMAKE='PREFIX="${prefix}"'
-INC_PR = "r2"
+EXTRA_OEMAKE='PREFIX="${prefix}" LIBDIR="${libdir}"'
+INC_PR = "r3"
 
 S = "${WORKDIR}/git"
 
