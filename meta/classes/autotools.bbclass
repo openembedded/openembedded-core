@@ -1,23 +1,23 @@
 def autotools_dep_prepend(d):
-	if d.getVar('INHIBIT_AUTOTOOLS_DEPS', True):
-		return ''
+    if d.getVar('INHIBIT_AUTOTOOLS_DEPS', True):
+        return ''
 
-	pn = d.getVar('PN', True)
-	deps = ''
+    pn = d.getVar('PN', True)
+    deps = ''
 
-	if pn in ['autoconf-native', 'automake-native', 'help2man-native']:
-		return deps
-	deps += 'autoconf-native automake-native '
+    if pn in ['autoconf-native', 'automake-native', 'help2man-native']:
+        return deps
+    deps += 'autoconf-native automake-native '
 
-	if not pn in ['libtool', 'libtool-native'] and not pn.endswith("libtool-cross"):
-		deps += 'libtool-native '
-		if not bb.data.inherits_class('native', d) \
+    if not pn in ['libtool', 'libtool-native'] and not pn.endswith("libtool-cross"):
+        deps += 'libtool-native '
+        if not bb.data.inherits_class('native', d) \
                         and not bb.data.inherits_class('nativesdk', d) \
                         and not bb.data.inherits_class('cross', d) \
                         and not d.getVar('INHIBIT_DEFAULT_DEPS', True):
-                    deps += 'libtool-cross '
+            deps += 'libtool-cross '
 
-	return deps + 'gnu-config-native '
+    return deps + 'gnu-config-native '
 
 EXTRA_OEMAKE = ""
 
@@ -35,15 +35,15 @@ EXTRA_AUTORECONF = "--exclude=autopoint"
 export lt_cv_sys_lib_dlsearch_path_spec = "${libdir} ${base_libdir}"
 
 def autotools_set_crosscompiling(d):
-	if not bb.data.inherits_class('native', d):
-		return " cross_compiling=yes"
-	return ""
+    if not bb.data.inherits_class('native', d):
+        return " cross_compiling=yes"
+    return ""
 
 def append_libtool_sysroot(d):
-	# Only supply libtool sysroot option for non-native packages
-	if not bb.data.inherits_class('native', d):
-		return '--with-libtool-sysroot=${STAGING_DIR_HOST}'
-	return ""
+    # Only supply libtool sysroot option for non-native packages
+    if not bb.data.inherits_class('native', d):
+        return '--with-libtool-sysroot=${STAGING_DIR_HOST}'
+    return ""
 
 # EXTRA_OECONF_append = "${@autotools_set_crosscompiling(d)}"
 

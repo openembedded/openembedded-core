@@ -42,15 +42,15 @@ EFI_CLASS = "${@base_contains("MACHINE_FEATURES", "efi", "grub-efi", "dummy", d)
 # contain "efi". This way legacy is supported by default if neither is
 # specified, maintaining the original behavior.
 def pcbios(d):
-	pcbios = base_contains("MACHINE_FEATURES", "pcbios", "1", "0", d)
-	if pcbios == "0":
-		pcbios = base_contains("MACHINE_FEATURES", "efi", "0", "1", d)
-	return pcbios
+    pcbios = base_contains("MACHINE_FEATURES", "pcbios", "1", "0", d)
+    if pcbios == "0":
+        pcbios = base_contains("MACHINE_FEATURES", "efi", "0", "1", d)
+    return pcbios
 
 def pcbios_class(d):
-	if d.getVar("PCBIOS", True) == "1":
-		return "syslinux"
-	return "dummy"
+    if d.getVar("PCBIOS", True) == "1":
+        return "syslinux"
+    return "dummy"
 
 PCBIOS = "${@pcbios(d)}"
 PCBIOS_CLASS = "${@pcbios_class(d)}"
@@ -181,12 +181,12 @@ build_hddimg() {
 }
 
 python do_bootimg() {
-	if d.getVar("PCBIOS", True) == "1":
-		bb.build.exec_func('build_syslinux_cfg', d)
-	if d.getVar("EFI", True) == "1":
-		bb.build.exec_func('build_grub_cfg', d)
-	bb.build.exec_func('build_hddimg', d)
-	bb.build.exec_func('build_iso', d)
+    if d.getVar("PCBIOS", True) == "1":
+        bb.build.exec_func('build_syslinux_cfg', d)
+    if d.getVar("EFI", True) == "1":
+        bb.build.exec_func('build_grub_cfg', d)
+    bb.build.exec_func('build_hddimg', d)
+    bb.build.exec_func('build_iso', d)
 }
 
 addtask bootimg before do_build

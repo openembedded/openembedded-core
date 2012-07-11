@@ -52,30 +52,30 @@ base_passwd_sstate_postinst() {
 }
 
 python populate_packages_prepend() {
-	# Add in the preinst function for ${PN}
-	# We have to do this here as prior to this, passwd/group.master
-	# would be unavailable. We need to create these files at preinst
-	# time before the files from the package may be available, hence
-	# storing the data from the files in the preinst directly.
+    # Add in the preinst function for ${PN}
+    # We have to do this here as prior to this, passwd/group.master
+    # would be unavailable. We need to create these files at preinst
+    # time before the files from the package may be available, hence
+    # storing the data from the files in the preinst directly.
 
-	f = open(d.expand("${STAGING_DATADIR}/base-passwd/passwd.master"), 'r')
-	passwd = "".join(f.readlines())
-	f.close()
-	f = open(d.expand("${STAGING_DATADIR}/base-passwd/group.master"), 'r')
-	group = "".join(f.readlines())
-	f.close()
+    f = open(d.expand("${STAGING_DATADIR}/base-passwd/passwd.master"), 'r')
+    passwd = "".join(f.readlines())
+    f.close()
+    f = open(d.expand("${STAGING_DATADIR}/base-passwd/group.master"), 'r')
+    group = "".join(f.readlines())
+    f.close()
 
-	preinst = """#!/bin/sh
+    preinst = """#!/bin/sh
 if [ ! -e $D${sysconfdir}/passwd ]; then
-	cat << EOF > $D${sysconfdir}/passwd
+\tcat << EOF > $D${sysconfdir}/passwd
 """ + passwd + """EOF
 fi
 if [ ! -e $D${sysconfdir}/group ]; then
-	cat << EOF > $D${sysconfdir}/group
+\tcat << EOF > $D${sysconfdir}/group
 """ + group + """EOF
 fi
 """
-	d.setVar('pkg_preinst_${PN}', preinst)
+    d.setVar('pkg_preinst_${PN}', preinst)
 }
 
 addtask do_package after do_populate_sysroot

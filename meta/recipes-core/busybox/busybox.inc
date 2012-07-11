@@ -218,23 +218,23 @@ ALTERNATIVE_TARGET[syslog-startup-conf] = "${sysconfdir}/syslog-startup.conf.${B
 ALTERNATIVE_TARGET = "/bin/busybox"
 
 python do_package_prepend () {
-	# We need to load the full set of busybox provides from the /etc/busybox.links
-	# Use this to see the update-alternatives with the right information
+    # We need to load the full set of busybox provides from the /etc/busybox.links
+    # Use this to see the update-alternatives with the right information
 
-	dvar = d.getVar('D', True)
-	pn = d.getVar('PN', True)
-	f = open('%s/etc/busybox.links' % (dvar), 'r')
+    dvar = d.getVar('D', True)
+    pn = d.getVar('PN', True)
+    f = open('%s/etc/busybox.links' % (dvar), 'r')
 
-	for alt_link_name in f:
-		alt_link_name = alt_link_name.strip()
-		alt_name = os.path.basename(alt_link_name)
+    for alt_link_name in f:
+        alt_link_name = alt_link_name.strip()
+        alt_name = os.path.basename(alt_link_name)
 
-		# Match coreutils
-		if alt_name == '[':
-			alt_name = 'lbracket'
+        # Match coreutils
+        if alt_name == '[':
+            alt_name = 'lbracket'
 
-		d.appendVar('ALTERNATIVE_%s' % (pn), ' ' + alt_name)
-		d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, alt_link_name)
+        d.appendVar('ALTERNATIVE_%s' % (pn), ' ' + alt_name)
+        d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, alt_link_name)
 }
 
 pkg_postinst_${PN} () {

@@ -274,59 +274,59 @@ do_compile() {
 }
 
 python populate_packages_prepend() {
-        translation_dir = d.expand('${datadir}/${QT_DIR_NAME}/translations/')
-        translation_name = d.expand('${QT_BASE_NAME}-translation-%s')
-        do_split_packages(d, translation_dir, '^(assistant|designer|linguist|qt|qtconfig|qvfb)_(.*)\.qm$', translation_name, '${PN} translation for %s', extra_depends='' )
+    translation_dir = d.expand('${datadir}/${QT_DIR_NAME}/translations/')
+    translation_name = d.expand('${QT_BASE_NAME}-translation-%s')
+    do_split_packages(d, translation_dir, '^(assistant|designer|linguist|qt|qtconfig|qvfb)_(.*)\.qm$', translation_name, '${PN} translation for %s', extra_depends='' )
  
-        phrasebook_dir = d.expand('${datadir}/${QT_DIR_NAME}/phrasebooks/')
-        phrasebook_name = d.expand('${QT_BASE_NAME}-phrasebook-%s')
-        import os;
-        if os.path.exists("%s%s" % (d.expand('${D}'), phrasebook_dir)):
-                do_split_packages(d, phrasebook_dir, '^(.*)\.qph$', phrasebook_name, '${PN} phrasebook for %s', extra_depends='' )
-        else:
-                bb.note("The path does not exist:", d.expand('${D}'), phrasebook_dir)
+    phrasebook_dir = d.expand('${datadir}/${QT_DIR_NAME}/phrasebooks/')
+    phrasebook_name = d.expand('${QT_BASE_NAME}-phrasebook-%s')
+    import os;
+    if os.path.exists("%s%s" % (d.expand('${D}'), phrasebook_dir)):
+        do_split_packages(d, phrasebook_dir, '^(.*)\.qph$', phrasebook_name, '${PN} phrasebook for %s', extra_depends='' )
+    else:
+        bb.note("The path does not exist:", d.expand('${D}'), phrasebook_dir)
  
-        # Package all the plugins and their -dbg version and create a meta package
-        def qtopia_split(path, name, glob):
-                """
-                Split the package into a normal and -dbg package and then add the
-                new packages to the meta package.
-                """
-                plugin_dir = d.expand('${libdir}/${QT_DIR_NAME}/plugins/%s/' % path)
-                if not os.path.exists("%s%s" % (d.expand('${D}'), plugin_dir)):
-                        bb.note("The path does not exist:", d.expand('${D}'), plugin_dir)
-                        return
+    # Package all the plugins and their -dbg version and create a meta package
+    def qtopia_split(path, name, glob):
+        """
+        Split the package into a normal and -dbg package and then add the
+        new packages to the meta package.
+        """
+        plugin_dir = d.expand('${libdir}/${QT_DIR_NAME}/plugins/%s/' % path)
+        if not os.path.exists("%s%s" % (d.expand('${D}'), plugin_dir)):
+            bb.note("The path does not exist:", d.expand('${D}'), plugin_dir)
+            return
  
-                plugin_name = d.expand('${QT_BASE_NAME}-plugin-%s-%%s' % name)
-                dev_packages = []
-                dev_hook = lambda file,pkg,b,c,d:dev_packages.append((file,pkg))
-                do_split_packages(d, plugin_dir, glob, plugin_name, '${PN} %s for %%s' % name, extra_depends='', hook=dev_hook)
-                # Create a -dbg package as well
-                plugin_dir_dbg = d.expand('${libdir}/${QT_DIR_NAME}/plugins/%s/.debug' % path)
-                packages = d.getVar('PACKAGES')
-                for (file,package) in dev_packages:
-                        packages = "%s %s-dbg" % (packages, package)
-                        file_name = os.path.join(plugin_dir_dbg, os.path.basename(file))
-                        d.setVar("FILES_%s-dbg" % package, file_name)
-                        d.setVar("DESCRIPTION_%s-dbg" % package, "${PN} %s for %s" % (name, package))
+        plugin_name = d.expand('${QT_BASE_NAME}-plugin-%s-%%s' % name)
+        dev_packages = []
+        dev_hook = lambda file,pkg,b,c,d:dev_packages.append((file,pkg))
+        do_split_packages(d, plugin_dir, glob, plugin_name, '${PN} %s for %%s' % name, extra_depends='', hook=dev_hook)
+        # Create a -dbg package as well
+        plugin_dir_dbg = d.expand('${libdir}/${QT_DIR_NAME}/plugins/%s/.debug' % path)
+        packages = d.getVar('PACKAGES')
+        for (file,package) in dev_packages:
+            packages = "%s %s-dbg" % (packages, package)
+            file_name = os.path.join(plugin_dir_dbg, os.path.basename(file))
+            d.setVar("FILES_%s-dbg" % package, file_name)
+            d.setVar("DESCRIPTION_%s-dbg" % package, "${PN} %s for %s" % (name, package))
 
-                d.setVar('PACKAGES', packages)
+        d.setVar('PACKAGES', packages)
 
-        qtopia_split('accessible',    'accessible',    '^libq(.*)\.so$')
-        qtopia_split('codecs',        'codec',         '^libq(.*)\.so$')
-        qtopia_split('decorations',   'decoration',    '^libqdecoration(.*)\.so$')
-        qtopia_split('designer',      'designer',      '^lib(.*)\.so$')
-        qtopia_split('gfxdrivers',    'gfxdriver',     '^libq(.*)\.so$')
-        qtopia_split('graphicssystems','graphicssystems', '^libq(.*)\.so$')
-        qtopia_split('mousedrivers',  'mousedriver',   '^libq(.*)mousedriver\.so$')
-        qtopia_split('iconengines',   'iconengine',    '^libq(.*)\.so$')
-        qtopia_split('imageformats',  'imageformat',   '^libq(.*)\.so$')
-        qtopia_split('inputmethods',  'inputmethod',   '^libq(.*)\.so$')
-        qtopia_split('sqldrivers',    'sqldriver',     '^libq(.*)\.so$')
-        qtopia_split('script',        'script',        '^libqtscript(.*)\.so$')
-        qtopia_split('styles',        'style',         '^libq(.*)\.so$')
-        qtopia_split('phonon_backend','phonon-backend','^libphonon_(.*)\.so$')
-        qtopia_split('bearer',        'bearer',        '^libq(.*)bearer\.so$')
+    qtopia_split('accessible',    'accessible',    '^libq(.*)\.so$')
+    qtopia_split('codecs',        'codec',         '^libq(.*)\.so$')
+    qtopia_split('decorations',   'decoration',    '^libqdecoration(.*)\.so$')
+    qtopia_split('designer',      'designer',      '^lib(.*)\.so$')
+    qtopia_split('gfxdrivers',    'gfxdriver',     '^libq(.*)\.so$')
+    qtopia_split('graphicssystems','graphicssystems', '^libq(.*)\.so$')
+    qtopia_split('mousedrivers',  'mousedriver',   '^libq(.*)mousedriver\.so$')
+    qtopia_split('iconengines',   'iconengine',    '^libq(.*)\.so$')
+    qtopia_split('imageformats',  'imageformat',   '^libq(.*)\.so$')
+    qtopia_split('inputmethods',  'inputmethod',   '^libq(.*)\.so$')
+    qtopia_split('sqldrivers',    'sqldriver',     '^libq(.*)\.so$')
+    qtopia_split('script',        'script',        '^libqtscript(.*)\.so$')
+    qtopia_split('styles',        'style',         '^libq(.*)\.so$')
+    qtopia_split('phonon_backend','phonon-backend','^libphonon_(.*)\.so$')
+    qtopia_split('bearer',        'bearer',        '^libq(.*)bearer\.so$')
 }
 
 do_install() {

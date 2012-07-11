@@ -28,31 +28,31 @@ done
 }
 
 python populate_packages_append () {
-	packages = d.getVar('PACKAGES', True).split()
-	pkgdest =  d.getVar('PKGDEST', True)
-	
-	for pkg in packages:
-		icon_dir = '%s/%s/%s/icons' % (pkgdest, pkg, d.getVar('datadir', True))
-		if not os.path.exists(icon_dir):
-			continue
+    packages = d.getVar('PACKAGES', True).split()
+    pkgdest =  d.getVar('PKGDEST', True)
+    
+    for pkg in packages:
+        icon_dir = '%s/%s/%s/icons' % (pkgdest, pkg, d.getVar('datadir', True))
+        if not os.path.exists(icon_dir):
+            continue
 
-		bb.note("adding hicolor-icon-theme dependency to %s" % pkg)	
-		rdepends = d.getVar('RDEPENDS_%s' % pkg, True)
-		rdepends = rdepends + ' ' + d.getVar('MLPREFIX') + "hicolor-icon-theme"
-		d.setVar('RDEPENDS_%s' % pkg, rdepends)
-	
-		bb.note("adding gtk-icon-cache postinst and postrm scripts to %s" % pkg)
-		
-		postinst = d.getVar('pkg_postinst_%s' % pkg, True) or d.getVar('pkg_postinst', True)
-		if not postinst:
-			postinst = '#!/bin/sh\n'
-		postinst += d.getVar('gtk_icon_cache_postinst', True)
-		d.setVar('pkg_postinst_%s' % pkg, postinst)
+        bb.note("adding hicolor-icon-theme dependency to %s" % pkg)
+        rdepends = d.getVar('RDEPENDS_%s' % pkg, True)
+        rdepends = rdepends + ' ' + d.getVar('MLPREFIX') + "hicolor-icon-theme"
+        d.setVar('RDEPENDS_%s' % pkg, rdepends)
+    
+        bb.note("adding gtk-icon-cache postinst and postrm scripts to %s" % pkg)
+        
+        postinst = d.getVar('pkg_postinst_%s' % pkg, True) or d.getVar('pkg_postinst', True)
+        if not postinst:
+            postinst = '#!/bin/sh\n'
+        postinst += d.getVar('gtk_icon_cache_postinst', True)
+        d.setVar('pkg_postinst_%s' % pkg, postinst)
 
-		postrm = d.getVar('pkg_postrm_%s' % pkg, True) or d.getVar('pkg_postrm', True)
-		if not postrm:
-			postrm = '#!/bin/sh\n'
-		postrm += d.getVar('gtk_icon_cache_postrm', True)
-		d.setVar('pkg_postrm_%s' % pkg, postrm)
+        postrm = d.getVar('pkg_postrm_%s' % pkg, True) or d.getVar('pkg_postrm', True)
+        if not postrm:
+            postrm = '#!/bin/sh\n'
+        postrm += d.getVar('gtk_icon_cache_postrm', True)
+        d.setVar('pkg_postrm_%s' % pkg, postrm)
 }
 

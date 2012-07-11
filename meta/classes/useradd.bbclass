@@ -154,61 +154,61 @@ do_package_setscene[depends] = "${USERADDSETSCENEDEPS}"
 
 # Recipe parse-time sanity checks
 def update_useradd_after_parse(d):
-	useradd_packages = d.getVar('USERADD_PACKAGES', True)
+    useradd_packages = d.getVar('USERADD_PACKAGES', True)
 
-	if not useradd_packages:
-		raise bb.build.FuncFailed, "%s inherits useradd but doesn't set USERADD_PACKAGES" % d.getVar('FILE')
+    if not useradd_packages:
+        raise bb.build.FuncFailed, "%s inherits useradd but doesn't set USERADD_PACKAGES" % d.getVar('FILE')
 
-	for pkg in useradd_packages.split():
-		if not d.getVar('USERADD_PARAM_%s' % pkg, True) and not d.getVar('GROUPADD_PARAM_%s' % pkg, True):
-			raise bb.build.FuncFailed, "%s inherits useradd but doesn't set USERADD_PARAM or GROUPADD_PARAM for package %s" % (d.getVar('FILE'), pkg)
+    for pkg in useradd_packages.split():
+        if not d.getVar('USERADD_PARAM_%s' % pkg, True) and not d.getVar('GROUPADD_PARAM_%s' % pkg, True):
+            raise bb.build.FuncFailed, "%s inherits useradd but doesn't set USERADD_PARAM or GROUPADD_PARAM for package %s" % (d.getVar('FILE'), pkg)
 
 python __anonymous() {
-	update_useradd_after_parse(d)
+    update_useradd_after_parse(d)
 }
 
 # Return a single [GROUP|USER]ADD_PARAM formatted string which includes the
 # [group|user]add parameters for all USERADD_PACKAGES in this recipe
 def get_all_cmd_params(d, cmd_type):
-	import string
-	
-	param_type = cmd_type.upper() + "ADD_PARAM_%s"
-	params = []
+    import string
+    
+    param_type = cmd_type.upper() + "ADD_PARAM_%s"
+    params = []
 
-	useradd_packages = d.getVar('USERADD_PACKAGES', True) or ""
-	for pkg in useradd_packages.split():
-		param = d.getVar(param_type % pkg, True)
-		if param:
-			params.append(param)
+    useradd_packages = d.getVar('USERADD_PACKAGES', True) or ""
+    for pkg in useradd_packages.split():
+        param = d.getVar(param_type % pkg, True)
+        if param:
+            params.append(param)
 
-	return string.join(params, "; ")
+    return string.join(params, "; ")
 
 # Adds the preinst script into generated packages
 fakeroot python populate_packages_prepend () {
-	def update_useradd_package(pkg):
-		bb.debug(1, 'adding user/group calls to preinst for %s' % pkg)
+    def update_useradd_package(pkg):
+        bb.debug(1, 'adding user/group calls to preinst for %s' % pkg)
 
-		"""
-		useradd preinst is appended here because pkg_preinst may be
-		required to execute on the target. Not doing so may cause
-		useradd preinst to be invoked twice, causing unwanted warnings.
-		"""
-		preinst = d.getVar('pkg_preinst_%s' % pkg, True) or d.getVar('pkg_preinst', True)
-		if not preinst:
-			preinst = '#!/bin/sh\n'
-		preinst += d.getVar('useradd_preinst', True)
-		d.setVar('pkg_preinst_%s' % pkg, preinst)
+        """
+        useradd preinst is appended here because pkg_preinst may be
+        required to execute on the target. Not doing so may cause
+        useradd preinst to be invoked twice, causing unwanted warnings.
+        """
+        preinst = d.getVar('pkg_preinst_%s' % pkg, True) or d.getVar('pkg_preinst', True)
+        if not preinst:
+            preinst = '#!/bin/sh\n'
+        preinst += d.getVar('useradd_preinst', True)
+        d.setVar('pkg_preinst_%s' % pkg, preinst)
 
-		# RDEPENDS setup
-		rdepends = d.getVar("RDEPENDS_%s" % pkg, True) or ""
-		rdepends += ' ' + d.getVar('MLPREFIX') + 'base-passwd'
-		rdepends += ' ' + d.getVar('MLPREFIX') + 'shadow'
-		d.setVar("RDEPENDS_%s" % pkg, rdepends)
+        # RDEPENDS setup
+        rdepends = d.getVar("RDEPENDS_%s" % pkg, True) or ""
+        rdepends += ' ' + d.getVar('MLPREFIX') + 'base-passwd'
+        rdepends += ' ' + d.getVar('MLPREFIX') + 'shadow'
+        d.setVar("RDEPENDS_%s" % pkg, rdepends)
 
-	# Add the user/group preinstall scripts and RDEPENDS requirements
-	# to packages specified by USERADD_PACKAGES
-	if not bb.data.inherits_class('nativesdk', d):
-		useradd_packages = d.getVar('USERADD_PACKAGES', True) or ""
-		for pkg in useradd_packages.split():
-			update_useradd_package(pkg)
+    # Add the user/group preinstall scripts and RDEPENDS requirements
+    # to packages specified by USERADD_PACKAGES
+    if not bb.data.inherits_class('nativesdk', d):
+        useradd_packages = d.getVar('USERADD_PACKAGES', True) or ""
+        for pkg in useradd_packages.split():
+            update_useradd_package(pkg)
 }

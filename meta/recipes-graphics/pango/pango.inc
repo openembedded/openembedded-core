@@ -61,11 +61,11 @@ do_install_append () {
 
 
 python populate_packages_prepend () {
-	prologue = d.getVar("postinst_prologue", True)
+    prologue = d.getVar("postinst_prologue", True)
 
-	modules_root = d.expand('${libdir}/pango/${LIBV}/modules')
+    modules_root = d.expand('${libdir}/pango/${LIBV}/modules')
 
-	do_split_packages(d, modules_root, '^pango-(.*)\.so$', 'pango-module-%s', 'Pango module %s', prologue + '${bindir}/${MLPREFIX}pango-querymodules > /etc/pango/${MLPREFIX}pango.modules')
+    do_split_packages(d, modules_root, '^pango-(.*)\.so$', 'pango-module-%s', 'Pango module %s', prologue + '${bindir}/${MLPREFIX}pango-querymodules > /etc/pango/${MLPREFIX}pango.modules')
 }
 
 FILES_${PN} = "${sysconfdir}/pango/* ${bindir}/* ${libdir}/libpango*${SOLIBS}"

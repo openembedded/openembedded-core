@@ -34,23 +34,23 @@ apt-utils-manpages="doc/apt-extracttemplates.1 \
 #		    doc/apt-ftparchive.1
 
 def get_files_apt_doc(d, bb, manpages):
-	import re
-	manpages = re.sub(r'\bdoc/(\S+)/(\S+)\.\1\.(.)\b', r'${mandir}/\1/man\3/\2.\3', manpages)
-	manpages = re.sub(r'\bdoc/(\S+)\.(.)\b', r'${mandir}/man\2/\1.\2', manpages)
-	return manpages
+    import re
+    manpages = re.sub(r'\bdoc/(\S+)/(\S+)\.\1\.(.)\b', r'${mandir}/\1/man\3/\2.\3', manpages)
+    manpages = re.sub(r'\bdoc/(\S+)\.(.)\b', r'${mandir}/man\2/\1.\2', manpages)
+    return manpages
 
 def get_commands_apt_doc(d, bb, manpages):
-	import os
-	s = list()
-	__dir_cache__ = list()
-	for m in manpages.split():
-		dest = get_files_apt_doc(d, bb, m)
-		dir = os.path.dirname(dest)
-		if not dir in __dir_cache__:
-			s.append("install -d ${D}/%s" % dir)
-			__dir_cache__.append(dir)
-		s.append("install -m 0644 %s ${D}/%s" % (m, dest))
-	return "\n".join(s)
+    import os
+    s = list()
+    __dir_cache__ = list()
+    for m in manpages.split():
+        dest = get_files_apt_doc(d, bb, m)
+        dir = os.path.dirname(dest)
+        if not dir in __dir_cache__:
+            s.append("install -d ${D}/%s" % dir)
+            __dir_cache__.append(dir)
+        s.append("install -m 0644 %s ${D}/%s" % (m, dest))
+    return "\n".join(s)
 
 PACKAGES += "${PN}-utils ${PN}-utils-doc"
 FILES_${PN} = "${bindir}/apt-cdrom ${bindir}/apt-get \

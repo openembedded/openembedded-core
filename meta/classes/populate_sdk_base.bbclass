@@ -32,29 +32,29 @@ python () {
 }
 
 fakeroot python do_populate_sdk() {
-	bb.build.exec_func("populate_sdk_image", d)
+    bb.build.exec_func("populate_sdk_image", d)
 
-	# Handle multilibs in the SDK environment, siteconfig, etc files...
-	localdata = bb.data.createCopy(d)
+    # Handle multilibs in the SDK environment, siteconfig, etc files...
+    localdata = bb.data.createCopy(d)
 
-	# make sure we only use the WORKDIR value from 'd', or it can change
-	localdata.setVar('WORKDIR', d.getVar('WORKDIR', True))
+    # make sure we only use the WORKDIR value from 'd', or it can change
+    localdata.setVar('WORKDIR', d.getVar('WORKDIR', True))
 
-	# make sure we only use the SDKTARGETSYSROOT value from 'd'
-	localdata.setVar('SDKTARGETSYSROOT', d.getVar('SDKTARGETSYSROOT', True))
+    # make sure we only use the SDKTARGETSYSROOT value from 'd'
+    localdata.setVar('SDKTARGETSYSROOT', d.getVar('SDKTARGETSYSROOT', True))
 
-	# Process DEFAULTTUNE
-	bb.build.exec_func("create_sdk_files", localdata)
+    # Process DEFAULTTUNE
+    bb.build.exec_func("create_sdk_files", localdata)
 
-	variants = d.getVar("MULTILIB_VARIANTS", True) or ""
-	for item in variants.split():
-		# Load overrides from 'd' to avoid having to reset the value...
-		overrides = d.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
-		localdata.setVar("OVERRIDES", overrides)
-		bb.data.update_data(localdata)
-		bb.build.exec_func("create_sdk_files", localdata)
+    variants = d.getVar("MULTILIB_VARIANTS", True) or ""
+    for item in variants.split():
+        # Load overrides from 'd' to avoid having to reset the value...
+        overrides = d.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
+        localdata.setVar("OVERRIDES", overrides)
+        bb.data.update_data(localdata)
+        bb.build.exec_func("create_sdk_files", localdata)
 
-	bb.build.exec_func("tar_sdk", d)
+    bb.build.exec_func("tar_sdk", d)
 }
 
 fakeroot populate_sdk_image() {

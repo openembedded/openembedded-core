@@ -46,8 +46,8 @@ do_unpack[cleandirs] += "${S}"
 
 # We invoke base do_patch at end, to incorporate any local patch
 python do_patch() {
-	bb.build.exec_func('nettools_do_patch', d)
-	bb.build.exec_func('patch_do_patch', d)
+    bb.build.exec_func('nettools_do_patch', d)
+    bb.build.exec_func('patch_do_patch', d)
 }
 
 do_configure() {

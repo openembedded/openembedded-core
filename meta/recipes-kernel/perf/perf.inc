@@ -18,5 +18,5 @@ def perf_feature_enabled(feature, trueval, falseval, d):
     """
     enabled_features = d.getVar("PERF_FEATURES_ENABLE", True) or ""
     if feature in enabled_features:
-		return trueval
+        return trueval
     return falseval

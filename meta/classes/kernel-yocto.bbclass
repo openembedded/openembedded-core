@@ -6,41 +6,41 @@ SRCTREECOVEREDTASKS += "do_kernel_link_vmlinux do_kernel_configme do_validate_br
 # returns local (absolute) path names for all valid patches in the
 # src_uri
 def find_patches(d):
-	patches=src_patches(d)
-	patch_list=[]
-	for p in patches:
-	    _, _, local, _, _, _ = bb.decodeurl(p)
- 	    patch_list.append(local)
+    patches = src_patches(d)
+    patch_list=[]
+    for p in patches:
+        _, _, local, _, _, _ = bb.decodeurl(p)
+        patch_list.append(local)
 
-	return patch_list
+    return patch_list
 
 # returns all the elements from the src uri that are .scc files
 def find_sccs(d):
-	sources=src_patches(d, True)
-	sources_list=[]
-	for s in sources:
-		base, ext = os.path.splitext(os.path.basename(s))
-		if ext and ext in ('.scc' '.cfg'):
-			sources_list.append(s)
-		elif base and base in 'defconfig':
-			sources_list.append(s)
+    sources=src_patches(d, True)
+    sources_list=[]
+    for s in sources:
+        base, ext = os.path.splitext(os.path.basename(s))
+        if ext and ext in ('.scc' '.cfg'):
+            sources_list.append(s)
+        elif base and base in 'defconfig':
+            sources_list.append(s)
 
-	return sources_list
+    return sources_list
 
 # this is different from find_patches, in that it returns a colon separated
 # list of <patches>:<subdir> instead of just a list of patches
 def find_urls(d):
-	patches=src_patches(d)
-	fetch = bb.fetch2.Fetch([], d)
-	patch_list=[]
-	for p in patches:
-		_, _, local, _, _, _ = bb.decodeurl(p)
-		for url in fetch.urls:
-			urldata = fetch.ud[url]
-			if urldata.localpath == local:
-				patch_list.append(local+':'+urldata.path)
+    patches=src_patches(d)
+    fetch = bb.fetch2.Fetch([], d)
+    patch_list=[]
+    for p in patches:
+        _, _, local, _, _, _ = bb.decodeurl(p)
+        for url in fetch.urls:
+            urldata = fetch.ud[url]
+            if urldata.localpath == local:
+                patch_list.append(local+':'+urldata.path)
 
-        return patch_list
+    return patch_list
 
 
 do_patch() {

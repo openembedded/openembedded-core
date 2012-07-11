@@ -109,7 +109,7 @@ do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_HOST}/"
 do_populate_sysroot[stamp-extra-info] = "${MACHINE}"
 
 python do_populate_sysroot_setscene () {
-	sstate_setscene(d)
+    sstate_setscene(d)
 }
 addtask do_populate_sysroot_setscene
 

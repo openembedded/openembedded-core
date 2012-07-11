@@ -292,77 +292,77 @@ END
 }
 
 def check_app_exists(app, d):
-	from bb import which, data
+    from bb import which, data
 
-	app = data.expand(app, d)
-	path = data.getVar('PATH', d, 1)
-	return bool(which(path, app))
+    app = data.expand(app, d)
+    path = data.getVar('PATH', d, 1)
+    return bool(which(path, app))
 
 def explode_deps(s):
-	return bb.utils.explode_deps(s)
+    return bb.utils.explode_deps(s)
 
 def base_set_filespath(path, d):
-	filespath = []
-	extrapaths = (d.getVar("FILESEXTRAPATHS", True) or "")
-	# Don't prepend empty strings to the path list
-	if extrapaths != "":
-		path = extrapaths.split(":") + path
-	# The ":" ensures we have an 'empty' override
-	overrides = (d.getVar("OVERRIDES", True) or "") + ":"
-	for p in path:
-		if p != "": 
-			for o in overrides.split(":"):
-				filespath.append(os.path.join(p, o))
-	return ":".join(filespath)
+    filespath = []
+    extrapaths = (d.getVar("FILESEXTRAPATHS", True) or "")
+    # Don't prepend empty strings to the path list
+    if extrapaths != "":
+        path = extrapaths.split(":") + path
+    # The ":" ensures we have an 'empty' override
+    overrides = (d.getVar("OVERRIDES", True) or "") + ":"
+    for p in path:
+        if p != "": 
+            for o in overrides.split(":"):
+                filespath.append(os.path.join(p, o))
+    return ":".join(filespath)
 
 def extend_variants(d, var, extend, delim=':'):
-	"""Return a string of all bb class extend variants for the given extend"""
-	variants = []
-	whole = d.getVar(var, True) or ""
-	for ext in whole.split():
-		eext = ext.split(delim)
-		if len(eext) > 1 and eext[0] == extend:
-			variants.append(eext[1])
-	return " ".join(variants)
+    """Return a string of all bb class extend variants for the given extend"""
+    variants = []
+    whole = d.getVar(var, True) or ""
+    for ext in whole.split():
+        eext = ext.split(delim)
+        if len(eext) > 1 and eext[0] == extend:
+            variants.append(eext[1])
+    return " ".join(variants)
 
 def multilib_pkg_extend(d, pkg):
-	variants = (d.getVar("MULTILIB_VARIANTS", True) or "").split()
-	if not variants:
-	    return pkg
-	pkgs = pkg
-	for v in variants:
-	    pkgs = pkgs + " " + v + "-" + pkg
-	return pkgs
+    variants = (d.getVar("MULTILIB_VARIANTS", True) or "").split()
+    if not variants:
+        return pkg
+    pkgs = pkg
+    for v in variants:
+        pkgs = pkgs + " " + v + "-" + pkg
+    return pkgs
 
 def all_multilib_tune_values(d, var, unique = True, need_split = True, delim = ' '):
-	"""Return a string of all ${var} in all multilib tune configuration"""
-	values = []
-	value = d.getVar(var, True) or ""
-	if value != "":
-		if need_split:
-			for item in value.split(delim):
-				values.append(item)
-		else:
-			values.append(value)
-	variants = d.getVar("MULTILIB_VARIANTS", True) or ""
-	for item in variants.split():
-		localdata = bb.data.createCopy(d)
-		overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
-		localdata.setVar("OVERRIDES", overrides)
-		bb.data.update_data(localdata)
-		value = localdata.getVar(var, True) or ""
-		if value != "":
-			if need_split:
-				for item in value.split(delim):
-					values.append(item)
-			else:
-				values.append(value)
-	if unique:
-		#we do this to keep order as much as possible
-		ret = []
-		for value in values:
-			if not value in ret:
-				ret.append(value)
-	else:
-		ret = values
-	return " ".join(ret)
+    """Return a string of all ${var} in all multilib tune configuration"""
+    values = []
+    value = d.getVar(var, True) or ""
+    if value != "":
+        if need_split:
+            for item in value.split(delim):
+                values.append(item)
+        else:
+            values.append(value)
+    variants = d.getVar("MULTILIB_VARIANTS", True) or ""
+    for item in variants.split():
+        localdata = bb.data.createCopy(d)
+        overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
+        localdata.setVar("OVERRIDES", overrides)
+        bb.data.update_data(localdata)
+        value = localdata.getVar(var, True) or ""
+        if value != "":
+            if need_split:
+                for item in value.split(delim):
+                    values.append(item)
+            else:
+                values.append(value)
+    if unique:
+        #we do this to keep order as much as possible
+        ret = []
+        for value in values:
+            if not value in ret:
+                ret.append(value)
+    else:
+        ret = values
+    return " ".join(ret)

@@ -53,28 +53,28 @@ RDEPENDS_${PN}-xtests = "libpam pam-plugin-access pam-plugin-debug pam-plugin-cr
 RRECOMMENDS_${PN} = "libpam-runtime"
 
 python populate_packages_prepend () {
-	import os.path
+    import os.path
 
-	def pam_plugin_append_file(pn, dir, file):
-		nf = os.path.join(dir, file)
-		of = d.getVar('FILES_' + pn, True)
-		if of:
-			nf = of + " " + nf
-		d.setVar('FILES_' + pn, nf)
+    def pam_plugin_append_file(pn, dir, file):
+        nf = os.path.join(dir, file)
+        of = d.getVar('FILES_' + pn, True)
+        if of:
+            nf = of + " " + nf
+        d.setVar('FILES_' + pn, nf)
 
-	dvar = bb.data.expand('${WORKDIR}/package', d, True)
-	pam_libdir = d.expand('${base_libdir}/security')
-	pam_sbindir = d.expand('${sbindir}')
-	pam_filterdir = d.expand('${base_libdir}/security/pam_filter')
+    dvar = bb.data.expand('${WORKDIR}/package', d, True)
+    pam_libdir = d.expand('${base_libdir}/security')
+    pam_sbindir = d.expand('${sbindir}')
+    pam_filterdir = d.expand('${base_libdir}/security/pam_filter')
 
-	do_split_packages(d, pam_libdir, '^pam(.*)\.so$', 'pam-plugin%s', 'PAM plugin for %s', extra_depends='')
-	pam_plugin_append_file('pam-plugin-unix', pam_sbindir, 'unix_chkpwd')
-	pam_plugin_append_file('pam-plugin-unix', pam_sbindir, 'unix_update')
-	pam_plugin_append_file('pam-plugin-tally', pam_sbindir, 'pam_tally')
-	pam_plugin_append_file('pam-plugin-tally2', pam_sbindir, 'pam_tally2')
-	pam_plugin_append_file('pam-plugin-timestamp', pam_sbindir, 'pam_timestamp_check')
-	pam_plugin_append_file('pam-plugin-mkhomedir', pam_sbindir, 'mkhomedir_helper')
-	do_split_packages(d, pam_filterdir, '^(.*)$', 'pam-filter-%s', 'PAM filter for %s', extra_depends='')
+    do_split_packages(d, pam_libdir, '^pam(.*)\.so$', 'pam-plugin%s', 'PAM plugin for %s', extra_depends='')
+    pam_plugin_append_file('pam-plugin-unix', pam_sbindir, 'unix_chkpwd')
+    pam_plugin_append_file('pam-plugin-unix', pam_sbindir, 'unix_update')
+    pam_plugin_append_file('pam-plugin-tally', pam_sbindir, 'pam_tally')
+    pam_plugin_append_file('pam-plugin-tally2', pam_sbindir, 'pam_tally2')
+    pam_plugin_append_file('pam-plugin-timestamp', pam_sbindir, 'pam_timestamp_check')
+    pam_plugin_append_file('pam-plugin-mkhomedir', pam_sbindir, 'mkhomedir_helper')
+    do_split_packages(d, pam_filterdir, '^(.*)$', 'pam-filter-%s', 'PAM filter for %s', extra_depends='')
 }
 
 do_install() {

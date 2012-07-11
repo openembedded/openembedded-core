@@ -23,13 +23,13 @@ def get_libc_fpu_setting(bb, d):
     return ""
 
 python populate_packages_prepend () {
-	if d.getVar('DEBIAN_NAMES', True):
-		bpn = d.getVar('BPN', True)
-		d.setVar('PKG_'+bpn, 'libc6')
-		d.setVar('PKG_'+bpn+'-dev', 'libc6-dev')
-		d.setVar('PKG_'+bpn+'-dbg', 'libc6-dbg')
-		# For backward compatibility with old -dbg package
-		d.appendVar('RPROVIDES_' + bpn + '-dbg', ' libc-dbg')
-		d.appendVar('RCONFLICTS_' + bpn + '-dbg', ' libc-dbg')
-		d.appendVar('RREPLACES_' + bpn + '-dbg', ' libc-dbg')
+    if d.getVar('DEBIAN_NAMES', True):
+        bpn = d.getVar('BPN', True)
+        d.setVar('PKG_'+bpn, 'libc6')
+        d.setVar('PKG_'+bpn+'-dev', 'libc6-dev')
+        d.setVar('PKG_'+bpn+'-dbg', 'libc6-dbg')
+        # For backward compatibility with old -dbg package
+        d.appendVar('RPROVIDES_' + bpn + '-dbg', ' libc-dbg')
+        d.appendVar('RCONFLICTS_' + bpn + '-dbg', ' libc-dbg')
+        d.appendVar('RREPLACES_' + bpn + '-dbg', ' libc-dbg')
 }

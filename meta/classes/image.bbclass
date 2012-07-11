@@ -164,28 +164,28 @@ do_rootfs[umask] = "022"
 
 fakeroot do_rootfs () {
 	#set -x
-    # When use the rpm incremental image generation, don't remove the rootfs
-    if [ "${INC_RPM_IMAGE_GEN}" != "1" -o "${IMAGE_PKGTYPE}" != "rpm" ]; then
-        rm -rf ${IMAGE_ROOTFS}
-    elif [ -d ${T}/saved_rpmlib/var/lib/rpm ]; then
-        # Move the rpmlib back
-        if [ ! -d ${IMAGE_ROOTFS}/var/lib/rpm ]; then
-                mkdir -p ${IMAGE_ROOTFS}/var/lib/
-                mv ${T}/saved_rpmlib/var/lib/rpm ${IMAGE_ROOTFS}/var/lib/
-        fi
-    fi
+	# When use the rpm incremental image generation, don't remove the rootfs
+	if [ "${INC_RPM_IMAGE_GEN}" != "1" -o "${IMAGE_PKGTYPE}" != "rpm" ]; then
+		rm -rf ${IMAGE_ROOTFS}
+	elif [ -d ${T}/saved_rpmlib/var/lib/rpm ]; then
+		# Move the rpmlib back
+		if [ ! -d ${IMAGE_ROOTFS}/var/lib/rpm ]; then
+			mkdir -p ${IMAGE_ROOTFS}/var/lib/
+			mv ${T}/saved_rpmlib/var/lib/rpm ${IMAGE_ROOTFS}/var/lib/
+		fi
+	fi
 	rm -rf ${MULTILIB_TEMP_ROOTFS}
 	mkdir -p ${IMAGE_ROOTFS}
 	mkdir -p ${DEPLOY_DIR_IMAGE}
 
 	cp ${COREBASE}/meta/files/deploydir_readme.txt ${DEPLOY_DIR_IMAGE}/README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt || true
 
-    # If "${IMAGE_ROOTFS}/dev" exists, then the device had been made by
-    # the previous build
+	# If "${IMAGE_ROOTFS}/dev" exists, then the device had been made by
+	# the previous build
 	if [ "${USE_DEVFS}" != "1" -a ! -r "${IMAGE_ROOTFS}/dev" ]; then
 		for devtable in ${@get_devtable_list(d)}; do
-            # Always return ture since there maybe already one when use the
-            # incremental image generation
+			# Always return ture since there maybe already one when use the
+			# incremental image generation
 			makedevs -r ${IMAGE_ROOTFS} -D $devtable
 		done
 	fi
@@ -398,7 +398,7 @@ rootfs_trim_schemas () {
 		# Need this in case no files exist
 		if [ -e $schema ]; then
 			oe-trim-schemas $schema > $schema.new
-        	        mv $schema.new $schema
+			mv $schema.new $schema
 		fi
 	done
 }

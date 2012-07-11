@@ -68,11 +68,11 @@ PACKAGES_DYNAMIC += "gdk-pixbuf-loader-*"
 PACKAGES_DYNAMIC_virtclass-native = ""
 
 python populate_packages_prepend () {
-	postinst_pixbufloader = d.getVar("postinst_pixbufloader", True)
+    postinst_pixbufloader = d.getVar("postinst_pixbufloader", True)
 
-	loaders_root = d.expand('${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders')
+    loaders_root = d.expand('${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders')
 
-	do_split_packages(d, loaders_root, '^libpixbufloader-(.*)\.so$', 'gdk-pixbuf-loader-%s', 'GDK pixbuf loader for %s', postinst_pixbufloader)
+    do_split_packages(d, loaders_root, '^libpixbufloader-(.*)\.so$', 'gdk-pixbuf-loader-%s', 'GDK pixbuf loader for %s', postinst_pixbufloader)
 }
 
 do_install_append_virtclass-native() {

@@ -119,8 +119,8 @@ _install_cfgs = "\
 "
 
 python do_install () {
-	bb.build.exec_func("shell_do_install", d)
-	oe.path.make_relative_symlink(d.expand("${D}${libdir}/libtinfo.so"))
+    bb.build.exec_func("shell_do_install", d)
+    oe.path.make_relative_symlink(d.expand("${D}${libdir}/libtinfo.so"))
 }
 
 shell_do_install() {
@@ -205,12 +205,12 @@ shell_do_install() {
 }
 
 python populate_packages_prepend () {
-        libdir = d.expand("${libdir}")
-        base_libdir = d.expand("${base_libdir}")
-        pnbase = d.expand("${PN}-lib%s")
-        do_split_packages(d, libdir, '^lib(.*)\.so\..*', pnbase, 'ncurses %s library', prepend=True, extra_depends = '', allow_links=True)
-        if libdir is not base_libdir:
-            do_split_packages(d, base_libdir, '^lib(.*)\.so\..*', pnbase, 'ncurses %s library', prepend=True, extra_depends = '', allow_links=True)
+    libdir = d.expand("${libdir}")
+    base_libdir = d.expand("${base_libdir}")
+    pnbase = d.expand("${PN}-lib%s")
+    do_split_packages(d, libdir, '^lib(.*)\.so\..*', pnbase, 'ncurses %s library', prepend=True, extra_depends = '', allow_links=True)
+    if libdir is not base_libdir:
+        do_split_packages(d, base_libdir, '^lib(.*)\.so\..*', pnbase, 'ncurses %s library', prepend=True, extra_depends = '', allow_links=True)
 }
 
 

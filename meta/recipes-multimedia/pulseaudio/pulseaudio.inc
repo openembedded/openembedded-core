@@ -74,10 +74,10 @@ FILES_libpulse = "${libdir}/libpulse.so.*"
 FILES_libpulse-simple = "${libdir}/libpulse-simple.so.*"
 FILES_libpulse-browse = "${libdir}/libpulse-browse.so.*"
 FILES_libpulse-mainloop-glib = "${libdir}/libpulse-mainloop-glib.so.*"
-				   	 
+
 FILES_${PN}-dbg += "${libexecdir}/pulse/.debug \
                     ${libdir}/pulse-${PV}/modules/.debug"
-FILES_${PN}-dev += "${libdir}/pulse-${PV}/modules/*.la ${datadir}/vala ${libdir}/cmake"		    
+FILES_${PN}-dev += "${libdir}/pulse-${PV}/modules/*.la ${datadir}/vala ${libdir}/cmake"   
 FILES_${PN}-conf = "${sysconfdir}"
 FILES_${PN}-bin += "${sysconfdir}/default/volatiles/volatiles.04_pulse"
 FILES_${PN}-server = "${bindir}/pulseaudio ${bindir}/start-* ${sysconfdir} ${bindir}/pactl ${base_libdir}/udev/rules.d/*.rules"
@@ -105,11 +105,11 @@ pkg_postinst_${PN}-server() {
 }
 
 python populate_packages_prepend() {
-        #d.setVar('PKG_pulseaudio', 'pulseaudio')
+    #d.setVar('PKG_pulseaudio', 'pulseaudio')
 
-        plugindir = d.expand('${libdir}/pulse-${PV}/modules/')
-        do_split_packages(d, plugindir, '^module-(.*)\.so$', 'pulseaudio-module-%s', 'PulseAudio module for %s', extra_depends='' )
-        do_split_packages(d, plugindir, '^lib(.*)\.so$', 'pulseaudio-lib-%s', 'PulseAudio library for %s', extra_depends='' )
+    plugindir = d.expand('${libdir}/pulse-${PV}/modules/')
+    do_split_packages(d, plugindir, '^module-(.*)\.so$', 'pulseaudio-module-%s', 'PulseAudio module for %s', extra_depends='' )
+    do_split_packages(d, plugindir, '^lib(.*)\.so$', 'pulseaudio-lib-%s', 'PulseAudio library for %s', extra_depends='' )
 }
 
 RDEPENDS_pulseaudio-module-console-kit =+ "consolekit"

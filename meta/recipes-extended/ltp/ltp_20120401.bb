@@ -49,7 +49,7 @@ FILES_${PN} += "/opt/ltp/* /opt/ltp/runtest/* /opt/ltp/scenario_groups/* /opt/lt
 TARGET_CC_ARCH += "${LDFLAGS}"
 
 do_unpack_append() {
-        bb.build.exec_func('do_extract_tarball', d)
+    bb.build.exec_func('do_extract_tarball', d)
 }
 
 do_extract_tarball() {

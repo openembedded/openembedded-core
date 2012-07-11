@@ -29,14 +29,14 @@ CFLAGS_prepend = "-DHAVE_ANIMATION "
 inherit gnome
 
 python populate_packages_prepend() {
-	import os.path
+    import os.path
 
-	engines_root = os.path.join(d.getVar('libdir', True), "gtk-2.0/2.10.0/engines")
-	themes_root = os.path.join(d.getVar('datadir', True), "themes")
+    engines_root = os.path.join(d.getVar('libdir', True), "gtk-2.0/2.10.0/engines")
+    themes_root = os.path.join(d.getVar('datadir', True), "themes")
 
-	do_split_packages(d, engines_root, '^lib(.*)\.so$', 'gtk-engine-%s', 'GTK %s theme engine', extra_depends='')
-	do_split_packages(d, themes_root, '(.*)', 'gtk-theme-%s', 'GTK theme %s', allow_dirs=True, extra_depends='')
-	# TODO: mark theme packages as arch all
+    do_split_packages(d, engines_root, '^lib(.*)\.so$', 'gtk-engine-%s', 'GTK %s theme engine', extra_depends='')
+    do_split_packages(d, themes_root, '(.*)', 'gtk-theme-%s', 'GTK theme %s', allow_dirs=True, extra_depends='')
+    # TODO: mark theme packages as arch all
 }
 
 SRC_URI += "file://glib-2.32.patch"

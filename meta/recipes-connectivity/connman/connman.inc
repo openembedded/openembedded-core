@@ -96,20 +96,19 @@ RDEPENDS_${PN} = "\
 PACKAGES_DYNAMIC = "${PN}-plugin-*"
 
 python populate_packages_prepend() {
-	depmap = dict( pppd="ppp",
-				 )
-	packages = []
-	multilib_prefix = (d.getVar("MLPREFIX", True) or "")
-	hook = lambda file,pkg,b,c,d:packages.append((file,pkg))
-	plugin_dir = d.expand('${libdir}/connman/plugins/')
-	plugin_name = d.expand('${PN}-plugin-%s')
-	do_split_packages(d, plugin_dir, '^(.*).so$', plugin_name, '${PN} plugin for %s', extra_depends='', hook=hook, prepend=True )
-	for (file, package) in packages:
-		plugintype = package.split( '-' )[-1]
-		if plugintype in depmap:
-			rdepends = map(lambda x: multilib_prefix + x,  depmap[plugintype].split())
-			bb.note( "Adding rdependency on %s to %s" % ( rdepends, package ) )
-			d.setVar("RDEPENDS_%s" % package, " ".join(rdepends))
+    depmap = dict(pppd="ppp")
+    packages = []
+    multilib_prefix = (d.getVar("MLPREFIX", True) or "")
+    hook = lambda file,pkg,b,c,d:packages.append((file,pkg))
+    plugin_dir = d.expand('${libdir}/connman/plugins/')
+    plugin_name = d.expand('${PN}-plugin-%s')
+    do_split_packages(d, plugin_dir, '^(.*).so$', plugin_name, '${PN} plugin for %s', extra_depends='', hook=hook, prepend=True )
+    for (file, package) in packages:
+        plugintype = package.split( '-' )[-1]
+        if plugintype in depmap:
+            rdepends = map(lambda x: multilib_prefix + x,  depmap[plugintype].split())
+            bb.note( "Adding rdependency on %s to %s" % ( rdepends, package ) )
+            d.setVar("RDEPENDS_%s" % package, " ".join(rdepends))
 }
 
 PACKAGES =+ "${PN}-tools ${PN}-tests"

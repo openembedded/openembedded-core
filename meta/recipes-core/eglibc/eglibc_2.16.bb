@@ -76,7 +76,7 @@ EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
 EXTRA_OECONF += "${@get_libc_fpu_setting(bb, d)}"
 
 do_unpack_append() {
-	bb.build.exec_func('do_move_ports', d)
+    bb.build.exec_func('do_move_ports', d)
 }
 
 do_move_ports() {
@@ -87,7 +87,7 @@ do_move_ports() {
 }
 
 do_patch_append() {
-	bb.build.exec_func('do_fix_readlib_c', d)
+    bb.build.exec_func('do_fix_readlib_c', d)
 }
 
 # for mips eglibc now builds syscall tables for all abi's

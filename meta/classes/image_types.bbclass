@@ -48,7 +48,7 @@ def get_imagecmds(d):
         types.remove("live")
 
     if d.getVar('IMAGE_LINK_NAME', True):
-        cmds += "	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.*"
+        cmds += "\trm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.*"
 
     for type in types:
         ccmd = []

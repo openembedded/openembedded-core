@@ -17,7 +17,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 S = "${WORKDIR}/git"
 
 do_unpack_append () {
-	bb.build.exec_func('do_remove_patches', d)
+    bb.build.exec_func('do_remove_patches', d)
 }
 
 do_remove_patches () {

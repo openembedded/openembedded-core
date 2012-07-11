@@ -8,26 +8,26 @@ USE_NLS = "yes"
 SRC_URI += "file://db_linking_hack.patch"
 
 python do_install () {
-	bb.build.exec_func('do_install_base', d)
-	bb.build.exec_func('do_install_config', d)
+    bb.build.exec_func('do_install_base', d)
+    bb.build.exec_func('do_install_config', d)
 }
 
 python do_install_config () {
-	indir = os.path.dirname(d.getVar('FILE',1))
-	infile = file(os.path.join(indir, 'files', 'apt.conf'), 'r')
-	data = infile.read()
-	infile.close()
+    indir = os.path.dirname(d.getVar('FILE',1))
+    infile = file(os.path.join(indir, 'files', 'apt.conf'), 'r')
+    data = infile.read()
+    infile.close()
 
-	data = d.expand(data)
+    data = d.expand(data)
 
-	outdir = os.path.join(d.getVar('D', True), d.getVar('sysconfdir', True), 'apt')
-	if not os.path.exists(outdir):
-		os.makedirs(outdir)
-	outpath = os.path.join(outdir, 'apt.conf.sample')
+    outdir = os.path.join(d.getVar('D', True), d.getVar('sysconfdir', True), 'apt')
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+        outpath = os.path.join(outdir, 'apt.conf.sample')
 
-	outfile = file(outpath, 'w')
-	outfile.write(data)
-	outfile.close()
+        outfile = file(outpath, 'w')
+        outfile.write(data)
+        outfile.close()
 }
 
 do_install_base () {

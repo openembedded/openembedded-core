@@ -385,6 +385,6 @@ do_populate_lic[sstate-outputdirs] = "${LICENSE_DIRECTORY}/"
 ROOTFS_POSTPROCESS_COMMAND_prepend = "license_create_manifest; "
 
 python do_populate_lic_setscene () {
-	sstate_setscene(d)
+    sstate_setscene(d)
 }
 addtask do_populate_lic_setscene

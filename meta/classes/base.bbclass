@@ -33,7 +33,7 @@ def oe_import(d):
 
 python oe_import_eh () {
     if isinstance(e, bb.event.ConfigParsed):
-	oe_import(e.data)
+        oe_import(e.data)
 }
 
 addhandler oe_import_eh
@@ -50,21 +50,20 @@ oe_runmake() {
 
 
 def base_dep_prepend(d):
-	#
-	# Ideally this will check a flag so we will operate properly in
-	# the case where host == build == target, for now we don't work in
-	# that case though.
-	#
+    #
+    # Ideally this will check a flag so we will operate properly in
+    # the case where host == build == target, for now we don't work in
+    # that case though.
+    #
 
-	deps = ""
-	# INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
-	# we need that built is the responsibility of the patch function / class, not
-	# the application.
-	if not d.getVar('INHIBIT_DEFAULT_DEPS'):
-		if (d.getVar('HOST_SYS', True) !=
-	     	    d.getVar('BUILD_SYS', True)):
-			deps += " virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}compilerlibs virtual/libc "
-	return deps
+    deps = ""
+    # INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
+    # we need that built is the responsibility of the patch function / class, not
+    # the application.
+    if not d.getVar('INHIBIT_DEFAULT_DEPS'):
+        if (d.getVar('HOST_SYS', True) != d.getVar('BUILD_SYS', True)):
+            deps += " virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}compilerlibs virtual/libc "
+    return deps
 
 BASEDEPENDS = "${@base_dep_prepend(d)}"
 
@@ -80,61 +79,61 @@ do_fetch[dirs] = "${DL_DIR}"
 do_fetch[file-checksums] = "${@bb.fetch.get_checksum_file_list(d)}"
 python base_do_fetch() {
 
-	src_uri = (d.getVar('SRC_URI', True) or "").split()
-	if len(src_uri) == 0:
-		return
+    src_uri = (d.getVar('SRC_URI', True) or "").split()
+    if len(src_uri) == 0:
+        return
 
-	localdata = bb.data.createCopy(d)
-	bb.data.update_data(localdata)
+    localdata = bb.data.createCopy(d)
+    bb.data.update_data(localdata)
 
-        try:
-            fetcher = bb.fetch2.Fetch(src_uri, localdata)
-            fetcher.download()
-        except bb.fetch2.BBFetchException, e:
-            raise bb.build.FuncFailed(e)
+    try:
+        fetcher = bb.fetch2.Fetch(src_uri, localdata)
+        fetcher.download()
+    except bb.fetch2.BBFetchException, e:
+        raise bb.build.FuncFailed(e)
 }
 
 addtask unpack after do_fetch
 do_unpack[dirs] = "${WORKDIR}"
 do_unpack[cleandirs] = "${S}/patches"
 python base_do_unpack() {
-	src_uri = (d.getVar('SRC_URI', True) or "").split()
-	if len(src_uri) == 0:
-		return
+    src_uri = (d.getVar('SRC_URI', True) or "").split()
+    if len(src_uri) == 0:
+        return
 
-	localdata = bb.data.createCopy(d)
-	bb.data.update_data(localdata)
+    localdata = bb.data.createCopy(d)
+    bb.data.update_data(localdata)
 
-	rootdir = localdata.getVar('WORKDIR', True)
+    rootdir = localdata.getVar('WORKDIR', True)
 
-        try:
-            fetcher = bb.fetch2.Fetch(src_uri, localdata)
-            fetcher.unpack(rootdir)
-        except bb.fetch2.BBFetchException, e:
-            raise bb.build.FuncFailed(e)
+    try:
+        fetcher = bb.fetch2.Fetch(src_uri, localdata)
+        fetcher.unpack(rootdir)
+    except bb.fetch2.BBFetchException, e:
+        raise bb.build.FuncFailed(e)
 }
 
 GIT_CONFIG_PATH = "${STAGING_DIR_NATIVE}/etc"
 GIT_CONFIG = "${GIT_CONFIG_PATH}/gitconfig"
 
 def generate_git_config(e):
-        from bb import data
+    from bb import data
 
-        if data.getVar('GIT_CORE_CONFIG', e.data, True):
-                gitconfig_path = e.data.getVar('GIT_CONFIG', True)
-                proxy_command = "    gitProxy = %s\n" % data.getVar('OE_GIT_PROXY_COMMAND', e.data, True)
+    if data.getVar('GIT_CORE_CONFIG', e.data, True):
+        gitconfig_path = e.data.getVar('GIT_CONFIG', True)
+        proxy_command = "    gitProxy = %s\n" % data.getVar('OE_GIT_PROXY_COMMAND', e.data, True)
 
-                bb.mkdirhier(e.data.expand("${GIT_CONFIG_PATH}"))
-                if (os.path.exists(gitconfig_path)):
-                        os.remove(gitconfig_path)
+        bb.mkdirhier(e.data.expand("${GIT_CONFIG_PATH}"))
+        if (os.path.exists(gitconfig_path)):
+            os.remove(gitconfig_path)
 
-                f = open(gitconfig_path, 'w')
-                f.write("[core]\n")
-                ignore_hosts = data.getVar('GIT_PROXY_IGNORE', e.data, True).split()
-                for ignore_host in ignore_hosts:
-                        f.write("    gitProxy = none for %s\n" % ignore_host)
-                f.write(proxy_command)
-                f.close
+        f = open(gitconfig_path, 'w')
+        f.write("[core]\n")
+        ignore_hosts = data.getVar('GIT_PROXY_IGNORE', e.data, True).split()
+        for ignore_host in ignore_hosts:
+            f.write("    gitProxy = none for %s\n" % ignore_host)
+        f.write(proxy_command)
+        f.close
 
 def pkgarch_mapping(d):
     # Compatibility mappings of TUNE_PKGARCH (opt in)
@@ -205,69 +204,69 @@ def preferred_ml_updates(d):
 
 
 def get_layers_branch_rev(d):
-	layers = (d.getVar("BBLAYERS", True) or "").split()
-	layers_branch_rev = ["%-17s = \"%s:%s\"" % (os.path.basename(i), \
-		base_get_metadata_git_branch(i, None).strip(), \
-		base_get_metadata_git_revision(i, None)) \
-			for i in layers]
-	i = len(layers_branch_rev)-1
-	p1 = layers_branch_rev[i].find("=")
-	s1 = layers_branch_rev[i][p1:]
-	while i > 0:
-		p2 = layers_branch_rev[i-1].find("=")
-		s2= layers_branch_rev[i-1][p2:]
-		if s1 == s2:
-			layers_branch_rev[i-1] = layers_branch_rev[i-1][0:p2]
-			i -= 1
-		else:
-			i -= 1
-			p1 = layers_branch_rev[i].find("=")
-			s1= layers_branch_rev[i][p1:]
-	return layers_branch_rev
+    layers = (d.getVar("BBLAYERS", True) or "").split()
+    layers_branch_rev = ["%-17s = \"%s:%s\"" % (os.path.basename(i), \
+        base_get_metadata_git_branch(i, None).strip(), \
+        base_get_metadata_git_revision(i, None)) \
+            for i in layers]
+    i = len(layers_branch_rev)-1
+    p1 = layers_branch_rev[i].find("=")
+    s1 = layers_branch_rev[i][p1:]
+    while i > 0:
+        p2 = layers_branch_rev[i-1].find("=")
+        s2= layers_branch_rev[i-1][p2:]
+        if s1 == s2:
+            layers_branch_rev[i-1] = layers_branch_rev[i-1][0:p2]
+            i -= 1
+        else:
+            i -= 1
+            p1 = layers_branch_rev[i].find("=")
+            s1= layers_branch_rev[i][p1:]
+    return layers_branch_rev
 
 
 BUILDCFG_FUNCS ??= "buildcfg_vars get_layers_branch_rev buildcfg_neededvars"
 BUILDCFG_FUNCS[type] = "list"
 
 def buildcfg_vars(d):
-	statusvars = oe.data.typed_value('BUILDCFG_VARS', d)
-	for var in statusvars:
-		value = d.getVar(var, True)
-		if value is not None:
-			yield '%-17s = "%s"' % (var, value)
+    statusvars = oe.data.typed_value('BUILDCFG_VARS', d)
+    for var in statusvars:
+        value = d.getVar(var, True)
+        if value is not None:
+            yield '%-17s = "%s"' % (var, value)
 
 def buildcfg_neededvars(d):
-	needed_vars = oe.data.typed_value("BUILDCFG_NEEDEDVARS", d)
-	pesteruser = []
-	for v in needed_vars:
-		val = d.getVar(v, True)
-		if not val or val == 'INVALID':
-			pesteruser.append(v)
+    needed_vars = oe.data.typed_value("BUILDCFG_NEEDEDVARS", d)
+    pesteruser = []
+    for v in needed_vars:
+        val = d.getVar(v, True)
+        if not val or val == 'INVALID':
+            pesteruser.append(v)
 
-	if pesteruser:
-		bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
+    if pesteruser:
+        bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
 
 addhandler base_eventhandler
 python base_eventhandler() {
-        if isinstance(e, bb.event.ConfigParsed):
-		e.data.setVar('BB_VERSION', bb.__version__)
-                generate_git_config(e)
-                pkgarch_mapping(e.data)
-                preferred_ml_updates(e.data)
+    if isinstance(e, bb.event.ConfigParsed):
+        e.data.setVar('BB_VERSION', bb.__version__)
+        generate_git_config(e)
+        pkgarch_mapping(e.data)
+        preferred_ml_updates(e.data)
 
-	if isinstance(e, bb.event.BuildStarted):
-		statuslines = []
-		for func in oe.data.typed_value('BUILDCFG_FUNCS', e.data):
-			g = globals()
-			if func not in g:
-				bb.warn("Build configuration function '%s' does not exist" % func)
-			else:
-				flines = g[func](e.data)
-				if flines:
-					statuslines.extend(flines)
+    if isinstance(e, bb.event.BuildStarted):
+        statuslines = []
+        for func in oe.data.typed_value('BUILDCFG_FUNCS', e.data):
+            g = globals()
+            if func not in g:
+                bb.warn("Build configuration function '%s' does not exist" % func)
+            else:
+                flines = g[func](e.data)
+                if flines:
+                    statuslines.extend(flines)
 
-		statusheader = e.data.getVar('BUILDCFG_HEADER', True)
-		bb.plain('\n%s\n%s\n' % (statusheader, '\n'.join(statuslines)))
+        statusheader = e.data.getVar('BUILDCFG_HEADER', True)
+        bb.plain('\n%s\n%s\n' % (statusheader, '\n'.join(statuslines)))
 }
 
 addtask configure after do_patch
@@ -546,18 +545,18 @@ python do_cleansstate() {
 
 addtask cleanall after do_cleansstate
 python do_cleanall() {
-        src_uri = (d.getVar('SRC_URI', True) or "").split()
-        if len(src_uri) == 0:
-            return
+    src_uri = (d.getVar('SRC_URI', True) or "").split()
+    if len(src_uri) == 0:
+        return
 
-	localdata = bb.data.createCopy(d)
-	bb.data.update_data(localdata)
+    localdata = bb.data.createCopy(d)
+    bb.data.update_data(localdata)
 
-        try:
-            fetcher = bb.fetch2.Fetch(src_uri, localdata)
-            fetcher.clean()
-        except bb.fetch2.BBFetchException, e:
-            raise bb.build.FuncFailed(e)
+    try:
+        fetcher = bb.fetch2.Fetch(src_uri, localdata)
+        fetcher.clean()
+    except bb.fetch2.BBFetchException, e:
+        raise bb.build.FuncFailed(e)
 }
 do_cleanall[nostamp] = "1"
 

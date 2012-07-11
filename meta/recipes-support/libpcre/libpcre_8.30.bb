@@ -46,8 +46,8 @@ do_compile () {
 }
 
 python populate_packages_prepend () {
-	pcre_libdir = d.expand('${libdir}')
-	do_split_packages(d, pcre_libdir, '^lib(.*)\.so\.+', 'lib%s', 'libpcre %s library', extra_depends='', allow_links=True, prepend=True)
+    pcre_libdir = d.expand('${libdir}')
+    do_split_packages(d, pcre_libdir, '^lib(.*)\.so\.+', 'lib%s', 'libpcre %s library', extra_depends='', allow_links=True, prepend=True)
 }
 
 BBCLASSEXTEND = "native"

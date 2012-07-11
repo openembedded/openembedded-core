@@ -30,23 +30,23 @@ PACKAGES_DYNAMIC = "qmmp-plugin-* "
 
 
 python populate_packages_prepend () {
-	import os
-	qmmp_libdir = d.expand('${libdir}/qmmp')
-	gd = d.expand('${D}/${libdir}/qmmp')
-	plug_dirs = os.listdir(gd)
+    import os
+    qmmp_libdir = d.expand('${libdir}/qmmp')
+    gd = d.expand('${D}/${libdir}/qmmp')
+    plug_dirs = os.listdir(gd)
 
-	for plug_dir in plug_dirs:
-		g_plug_dir = os.path.join(qmmp_libdir,plug_dir)
-		do_split_packages(d, g_plug_dir, '^lib(.*)\.so$', 'qmmp-plugin-' + plug_dir.lower() + '-%s', 'Qmmp' + plug_dir  + 'plugin for %s')
+    for plug_dir in plug_dirs:
+        g_plug_dir = os.path.join(qmmp_libdir,plug_dir)
+        do_split_packages(d, g_plug_dir, '^lib(.*)\.so$', 'qmmp-plugin-' + plug_dir.lower() + '-%s', 'Qmmp' + plug_dir  + 'plugin for %s')
 } 
 
 FILES_${PN} = "\
-		${bindir}/qmmp \
+                ${bindir}/qmmp \
                 ${libdir}/lib*${SOLIBS} \ 
-		${datadir}/icons/* \
+                ${datadir}/icons/* \
                 ${datadir}/qmmp/images/* \
                 ${datadir}/applications/* \
-		"
+                "
 
 FILES_${PN}-dbg += "\
                 ${libdir}/qmmp/*/.debug/* \
