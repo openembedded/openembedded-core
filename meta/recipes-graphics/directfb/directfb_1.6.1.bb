@@ -1,7 +1,7 @@
 require directfb.inc
 
 RV = "1.6-0"
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
 DEPENDS += "sysfsutils"
 
@@ -14,6 +14,7 @@ EXTRA_OECONF = "\
   --disable-sdl \
   --disable-vnc \
   --disable-x11 \
+  --disable-imlib2 \
 "
 
 LEAD_SONAME = "libdirectfb-1.6.so.0"
