@@ -190,7 +190,7 @@ def splitfile(file, debugfile, debugsrcdir, d):
     objcopy = d.getVar("OBJCOPY", True)
     debugedit = d.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit")
     workdir = d.getVar("WORKDIR", True)
-    workparentdir = os.path.dirname(workdir)
+    workparentdir = d.getVar("DEBUGSRC_OVERRIDE_PATH", True) or os.path.dirname(workdir)
     sourcefile = d.expand("${WORKDIR}/debugsources.list")
 
     # We ignore kernel modules, we don't generate debug info files.
