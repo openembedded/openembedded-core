@@ -9,7 +9,7 @@ SRCREV = "01fa5465743c9ee43d040350f4405d35293e4869"
 PV = "0.1+git${SRCPV}"
 PR = "r1"
 
-SRC_URI = "git://git.yoctoproject.org/matchbox-window-manager-2;proto=git \
+SRC_URI = "git://git.yoctoproject.org/matchbox-window-manager-2;protocol=git \
 	file://fix_makefile.patch \
 	  "
 

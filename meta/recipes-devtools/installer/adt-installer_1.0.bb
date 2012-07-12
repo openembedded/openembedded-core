@@ -39,7 +39,7 @@ S = "${WORKDIR}/trunk"
 
 SRCREV = "596"
 PV = "0.1.8+svnr${SRCPV}"
-SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
+SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;protocol=http \
            file://wget_cache.patch \
            file://adt_installer \
            file://scripts/adt_installer_internal \

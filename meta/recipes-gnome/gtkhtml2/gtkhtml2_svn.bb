@@ -8,7 +8,7 @@ SRCREV = "1161"
 PV = "2.11.0+svnr${SRCPV}"
 PR = "r3"
 
-SRC_URI = "svn://svn.gnome.org/svn/gtkhtml2/;module=trunk;proto=http \
+SRC_URI = "svn://svn.gnome.org/svn/gtkhtml2/;module=trunk;protocol=http \
            http://git.yoctoproject.org/cgit/cgit.cgi/web-patches/plain/css-stylesheet-user.patch;striplevel=0;name=patch2 \
            http://git.yoctoproject.org/cgit/cgit.cgi/web-patches/plain/css-media.patch;striplevel=0;name=patch3 \
            http://git.yoctoproject.org/cgit/cgit.cgi/web-patches/plain/add-end-element-signal.patch;striplevel=0;name=patch4 \

@@ -22,9 +22,9 @@ PV = "1.7.2+svnr${SRCPV}"
 PR = "r6"
 
 SRC_URI = "\
-  svn://svn.webkit.org/repository/webkit/trunk/;module=Source;proto=http;name=source \
-  svn://svn.webkit.org/repository/webkit/trunk/;module=WebKitLibraries;proto=http \
-  svn://svn.webkit.org/repository/webkit/trunk/;module=Tools;proto=http \
+  svn://svn.webkit.org/repository/webkit/trunk/;module=Source;protocol=http;name=source \
+  svn://svn.webkit.org/repository/webkit/trunk/;module=WebKitLibraries;protocol=http \
+  svn://svn.webkit.org/repository/webkit/trunk/;module=Tools;protocol=http \
   file://Makefile \
   file://Makefile.shared \
   file://autogen.sh \

@@ -1,6 +1,6 @@
 require opkg.inc
 
-SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;proto=http \
+SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;protocol=http \
            file://add_vercmp.patch \
            file://add_uname_support.patch \
            file://fix_installorder.patch \

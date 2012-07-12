@@ -10,7 +10,7 @@ SRCREV = "4ef94ecb927a8912c3d79ce137182247786cff8f"
 PV = "0.4.0+git${SRCPV}"
 PR = "r0"
 
-SRC_URI = "git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git;proto=git \
+SRC_URI = "git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git;protocol=git \
            http://www.eclipse.org/legal/epl-v10.html;name=epl \
            file://fix_ranlib.patch \
            file://fix_tcf-agent.init.patch \
