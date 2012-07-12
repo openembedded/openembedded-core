@@ -23,11 +23,11 @@ SSTATEPOSTINSTFUNCS ?= ""
 python () {
     if bb.data.inherits_class('native', d):
         d.setVar('SSTATE_PKGARCH', d.getVar('BUILD_ARCH'))
+    elif bb.data.inherits_class('crosssdk', d):
+        d.setVar('SSTATE_PKGARCH', d.expand("${BUILD_ARCH}_${SDK_ARCH}"))
     elif bb.data.inherits_class('cross', d):
         d.setVar('SSTATE_PKGARCH', d.expand("${BUILD_ARCH}_${TUNE_PKGARCH}"))
         d.setVar('SSTATE_MANMACH', d.expand("${BUILD_ARCH}_${MACHINE}"))
-    elif bb.data.inherits_class('crosssdk', d):
-        d.setVar('SSTATE_PKGARCH', d.expand("${BUILD_ARCH}_${PACKAGE_ARCH}"))
     elif bb.data.inherits_class('nativesdk', d):
         d.setVar('SSTATE_PKGARCH', d.expand("${SDK_ARCH}"))
     elif bb.data.inherits_class('cross-canadian', d):
