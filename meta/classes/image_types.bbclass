@@ -122,7 +122,7 @@ def imagetypes_getdepends(d):
     return depstr
 
 
-XZ_COMPRESSION_LEVEL ?= "-e -9"
+XZ_COMPRESSION_LEVEL ?= "-e -6"
 XZ_INTEGRITY_CHECK ?= "crc32"
 XZ_THREADS ?= "-T 0"
 
