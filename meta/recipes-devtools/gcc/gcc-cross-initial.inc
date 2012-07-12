@@ -21,7 +21,7 @@ EXTRA_OECONF = "--with-newlib \
 		--with-sysroot=${STAGING_DIR_TARGET} \
 		--with-build-sysroot=${STAGING_DIR_TARGET} \
 		${EXTRA_OECONF_INITIAL} \
-		${@get_gcc_fpu_setting(bb, d)}"
+		${EXTRA_OECONF_FPU}"
 
 do_compile () {
     oe_runmake all-gcc all-target-libgcc

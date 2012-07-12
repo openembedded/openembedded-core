@@ -23,7 +23,7 @@ EXTRA_OECONF = "--enable-shared \
 		--with-sysroot=${STAGING_DIR_TCBOOTSTRAP} \
 		--with-build-sysroot=${STAGING_DIR_TCBOOTSTRAP} \
 		${EXTRA_OECONF_INTERMEDIATE} \
-		${@get_gcc_fpu_setting(bb, d)} \
+		${EXTRA_OECONF_FPU} \
 		${@base_contains('DISTRO_FEATURES', 'ld-is-gold', '--with-ld=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld.bfd', '', d)}"
 
 do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR_HOST} ${SYSROOT_DESTDIR}/${STAGING_DIR_TARGET}/${target_base_libdir}"
