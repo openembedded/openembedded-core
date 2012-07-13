@@ -11,7 +11,7 @@ LICENSE = "MIT-X"
 
 SRC_URI = "http://xcb.freedesktop.org/dist/xcb-proto-${PV}.tar.bz2"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig pythonnative
 
 PACKAGES += "python-xcbgen"
 
