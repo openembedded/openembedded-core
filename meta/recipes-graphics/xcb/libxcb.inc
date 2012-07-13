@@ -49,7 +49,7 @@ FILES_libxcb-xtest = "${libdir}/libxcb-xtest.so.*"
 FILES_libxcb-xv = "${libdir}/libxcb-xv.so.*"
 FILES_libxcb-xvmc = "${libdir}/libxcb-xvmc.so.*"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig pythonnative
 
 # XCBPROTO_XCBINCLUDEDIR is setup based on `pkg-config --variable=xcbincludedir xcb-proto`
 # but the xcbincludedir variable doesn't point into the staging area, so it needs some
