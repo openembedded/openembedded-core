@@ -1,9 +1,12 @@
-From 0040842024725c0e74f84c1719ead6c79ba94aba Mon Sep 17 00:00:00 2001
+From e1252cbf65001487ff3b94bbc141acacf6e528b6 Mon Sep 17 00:00:00 2001
 From: Martin Jansa <Martin.Jansa@gmail.com>
 Date: Wed, 16 May 2012 20:03:34 +0200
 Subject: [PATCH] configure: add option to disable libelf support
 
-Upstream-Status: Pending
+Upstream-Status: Backport 
+Applied in master
+http://git.gnome.org/browse/glib/commit/?id=9e1d4da14d8e69fb60da1a9733ac1d58d0dcd8b2
+can be dropped when upgrading to 2.34.* or newer
 
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
@@ -11,7 +14,7 @@ Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
  1 files changed, 4 insertions(+), 0 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index aa65648..1bb49bf 100644
+index ed4c10e..210df90 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1815,6 +1815,9 @@ AC_SUBST(XATTR_LIBS)
@@ -22,7 +25,7 @@ index aa65648..1bb49bf 100644
 +              AC_HELP_STRING([--disable-libelf], [build without libelf support]))
 +if test "x$enable_libelf" != "xno"; then
  
- PKG_CHECK_MODULES([LIBELF], [libelf], [have_libelf=yes], [have_libelf=maybe])
+ PKG_CHECK_MODULES([LIBELF], [libelf >= 0.8.12], [have_libelf=yes], [have_libelf=maybe])
  
 @@ -1835,6 +1838,7 @@ fi
  if test $have_libelf = yes; then
