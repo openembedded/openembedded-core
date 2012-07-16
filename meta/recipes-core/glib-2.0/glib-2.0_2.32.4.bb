@@ -1,5 +1,6 @@
 require glib.inc
 
+PR = "r1"
 PE = "1"
 
 DEPENDS += "libffi python-argparse-native zlib"
@@ -46,7 +47,3 @@ do_install_append() {
     sed -i -e '1s,#!.*perl,#! ${PERLPATH},' ${D}${bindir}/glib-mkenums
   fi
 }
-
-PACKAGES += "${PN}-codegen"
-FILES_${PN}-codegen = "${libdir}/gdbus-2.0/codegen/*.py"
-FILES_${PN} += "${datadir}/glib-2.0/gettext/mkinstalldirs ${datadir}/glib-2.0/gettext/po/Makefile.in.in"
