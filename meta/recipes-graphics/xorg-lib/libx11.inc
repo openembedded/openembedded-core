@@ -35,9 +35,9 @@ do_compile_prepend() {
 		sed -i -e 's:MIN_REHASH 15:MIN_REHASH 16:g' makekeys.c
 		touch makekeys-makekeys.o;
 		if [ "${SITEINFO_BITS}" == "64" ]; then
-			${BUILD_CC} ${BUILD_CFLAGS} -I${STAGING_INCDIR_NATIVE} makekeys.c -o makekeys
+			${BUILD_CC} ${BUILD_CFLAGS} -I${STAGING_INCDIR_NATIVE} makekeys.c -I${S}/include -o makekeys
 		else
-			${BUILD_CC} ${BUILD_CFLAGS} -I${STAGING_INCDIR_NATIVE} -DUSE32 makekeys.c -o makekeys
+			${BUILD_CC} ${BUILD_CFLAGS} -I${STAGING_INCDIR_NATIVE} -DUSE32 makekeys.c -I${S}/include -o makekeys
 		fi
 	)
 	if [ "$?" != "0" ]; then
