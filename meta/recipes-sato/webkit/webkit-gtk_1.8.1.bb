@@ -29,11 +29,6 @@ inherit autotools lib_package pkgconfig
 
 S = "${WORKDIR}/webkit-${PV}/"
 
-# GNU Make 3.82 has a bug where it incorrectly prunes intermediate targets in
-# parallel builds.  See https://bugs.webkit.org/show_bug.cgi?id=79498 for the
-# WebKitGTK bug, and savannah.gnu.org/bugs/?30653 for the upstream bug.
-PARALLEL_MAKE = ""
-
 EXTRA_OECONF = "\
                 --enable-debug=no \
                 --enable-svg \
