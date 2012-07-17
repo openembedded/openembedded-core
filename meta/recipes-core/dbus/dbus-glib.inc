@@ -11,7 +11,9 @@ DEPENDS = "expat glib-2.0 virtual/libintl dbus-glib-native dbus"
 DEPENDS_virtclass-native = "glib-2.0-native dbus-native"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-${PV}.tar.gz \
-           file://no-examples.patch"
+           file://no-examples.patch \
+           file://test-service-glib-include-glib-only.patch \
+"
 
 inherit autotools pkgconfig gettext
 
