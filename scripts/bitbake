@@ -58,7 +58,9 @@ elif [ -z "$BUILDDIR" ] ; then
 fi
 
 needtar="1"
+needgit="1"
 TARVERSION=`tar --version | head -n 1 | cut -d ' ' -f 4`
+GITVERSION=`git --version | cut -d ' ' -f 3`
 float_test() {
      echo | awk 'END { exit ( !( '"$1"')); }'
 }
@@ -66,6 +68,10 @@ float_test() {
 # Tar version 1.24 and onwards handle overwriting symlinks correctly
 # but earlier versions do not; this needs to work properly for sstate
 float_test "$TARVERSION > 1.23" && needtar="0"
+
+# Need git >= 1.7.5 for git-remote --mirror=xxx syntax
+float_test "$GITVERSION >= 1.7.5" && needgit="0"
+
 
 buildpseudo="1"
 if [ $needpseudo = "1" ]; then
@@ -97,6 +103,10 @@ fi
 if [ -e "$PSEUDOBINDIR/tar" -a "$needtar" = "1" ]; then
     needtar="0"
 fi
+# If git is already built, we don't want to do it again...
+if [ -e "$PSEUDOBINDIR/git" -a "$needgit" = "1" ]; then
+    needgit="0"
+fi
 
 if [ $needpseudo = "0" ]; then
     buildpseudo="0"
@@ -123,6 +133,11 @@ if [ $buildpseudo -gt 0 ]; then
     if [ $needtar = "0" ]; then
         TARTARGET=""
     fi
+    GITTARGET="git-replacement-native"
+    if [ $needgit = "0" ]; then
+        GITTARGET=""
+    fi
+
     # Pass through debug options
     additionalopts=""
     for opt in $@; do
@@ -134,7 +149,7 @@ if [ $buildpseudo -gt 0 ]; then
             fi
         done
     done
-    bitbake pseudo-native $TARTARGET $additionalopts -c populate_sysroot
+    bitbake pseudo-native $TARTARGET $GITTARGET $additionalopts -c populate_sysroot
     ret=$?
     if [ "$ret" != "0" ]; then
         exit 1
