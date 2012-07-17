@@ -7,6 +7,7 @@ SRC_URI  = "git://git.kernel.org/pub/scm/network/connman/connman.git \
             file://add_xuser_dbus_permission.patch \
             file://connman \
             file://0002-storage.c-If-there-is-no-d_type-support-use-fstatat.patch \
-            file://0001-timezone.c-If-there-is-no-d_type-support-use-fstatat.patch"
+            file://0001-timezone.c-If-there-is-no-d_type-support-use-fstatat.patch \
+            file://0001-storage-check-that-the-string-isn-t-empty-before-spl.patch"
 S = "${WORKDIR}/git"
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
