@@ -26,12 +26,12 @@ do_install () {
 # There are only .so files in iproute2
 INSANE_SKIP_${PN} = "dev-so"
 
-FILES_${PN} += "${base_libdir}/tc"
-FILES_${PN}-dbg += "${base_libdir}/tc/.debug"
+FILES_${PN} += "${libdir}/tc"
+FILES_${PN}-dbg += "${libdir}/tc/.debug"
 
-ALTERNATIVE_NAME = "ip"
-ALTERNATIVE_PATH = "${base_sbindir}/ip.iproute2"
-ALTERNATIVE_LINK = "${base_bindir}/ip"
+ALTERNATIVE_${PN} = "ip"
+ALTERNATIVE_TARGET[ip] = "${base_sbindir}/ip.${BPN}"
+ALTERNATIVE_LINK_NAME[ip] = "${base_bindir}/ip"
 ALTERNATIVE_PRIORITY = "100"
 
 PARALLEL_MAKE = ""
