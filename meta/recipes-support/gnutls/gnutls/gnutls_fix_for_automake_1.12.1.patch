@@ -1,4 +1,4 @@
-Upsteam-Status: Pending
+Upstream-Status: Pending
 
 Avoids these kind of warnings:
 Warning: 'libgnutls.la': linking libtool libraries using a non-POSIX archiver requires 'AM_PROG_AR' in 'configure.ac'
