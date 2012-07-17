@@ -1,0 +1,49 @@
+From 7007ef32a959ac4717c19339a24fd90a68638a19 Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@gherzan.ro>
+Date: Tue, 17 Jul 2012 16:07:17 +0300
+Subject: [PATCH V3 2/2] storage.c: If there is no d_type support use
+ fstatat()
+
+This is useful for filesystems where d_type is always DT_UNKNOWN.
+In this case use fstatat() function.
+
+Signed-off-by: Andrei Gherzan <andrei.gherzan@windriver.com>
+Upstream-Status: Submitted
+ 
+---
+ src/storage.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/src/storage.c b/src/storage.c
+index 47bd0cb..0491a52 100644
+--- a/src/storage.c
++++ b/src/storage.c
+@@ -206,6 +206,25 @@ gchar **connman_storage_get_services()
+ 
+ 			g_string_append_printf(result, "%s/", d->d_name);
+ 			break;
++		case DT_UNKNOWN:
++			/*
++			 * If there is no d_type support use fstatat()
++			 * to check if directory
++			 */
++			ret = fstatat(dirfd(dir), d->d_name, &buf, 0);
++			if (ret < 0)
++				continue;
++			if (!(buf.st_mode & S_IFDIR))
++				continue;
++			str = g_strdup_printf("%s/%s/settings", STORAGEDIR,
++							d->d_name);
++			ret = stat(str, &buf);
++			g_free(str);
++			if (ret < 0)
++				continue;
++
++			g_string_append_printf(result, "%s/", d->d_name);
++			break;
+ 		}
+ 	}
+ 
+-- 
+1.7.9.5
+
