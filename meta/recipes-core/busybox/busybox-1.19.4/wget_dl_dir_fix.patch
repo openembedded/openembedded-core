@@ -1,0 +1,30 @@
+In cases where busybox wget is invoked with -P <...> and the url ends
+in "/", the download directory is ignored (ie the file index.html is
+implied), this change enables the -P option for those urls.
+
+Signed-off-by: Amy Fong <amy.fong@windriver.com>
+Upstream-Status: Submitted
+---
+ networking/wget.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+--- a/networking/wget.c
++++ b/networking/wget.c
+@@ -589,10 +589,14 @@
+ 	if (!(option_mask32 & WGET_OPT_OUTNAME)) {
+ 		G.fname_out = bb_get_last_path_component_nostrip(target.path);
+ 		/* handle "wget http://kernel.org//" */
+-		if (G.fname_out[0] == '/' || !G.fname_out[0])
+-			G.fname_out = (char*)"index.html";
++		if (G.fname_out[0] == '/' || !G.fname_out[0]) {
++			/* bug: if we provide a default name, we should still look at -P option */
++			if (G.dir_prefix)
++				G.fname_out = fname_out_alloc = concat_path_file(G.dir_prefix, "index.html");
++			else
++				G.fname_out = (char*)"index.html";
+ 		/* -P DIR is considered only if there was no -O FILE */
+-		else {
++		} else {
+ 			if (G.dir_prefix)
+ 				G.fname_out = fname_out_alloc = concat_path_file(G.dir_prefix, G.fname_out);
+ 			else {

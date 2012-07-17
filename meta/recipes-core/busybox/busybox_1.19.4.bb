@@ -1,5 +1,5 @@
 require busybox.inc
-PR = "r9"
+PR = "r10"
 
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://B921600.patch \
@@ -9,6 +9,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://watch.in.usr-bin.patch \
            file://busybox-udhcpc-no_deconfig.patch \
            file://sys_resource.patch \
+           file://wget_dl_dir_fix.patch \
            file://find-touchscreen.sh \
            file://busybox-cron \
            file://busybox-httpd \
