@@ -78,10 +78,6 @@ do_configure_append() {
 	done
 }
 
-do_install_prepend() {
-	cp ${S}/Programs/.libs/jsc ${S}/Programs/jsc-1 || true
-}
-
 do_install_append() {
 	rmdir ${D}${libexecdir}
 }
