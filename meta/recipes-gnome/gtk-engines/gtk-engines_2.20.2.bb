@@ -29,8 +29,6 @@ CFLAGS_prepend = "-DHAVE_ANIMATION "
 inherit gnome
 
 python populate_packages_prepend() {
-    import os.path
-
     engines_root = os.path.join(d.getVar('libdir', True), "gtk-2.0/2.10.0/engines")
     themes_root = os.path.join(d.getVar('datadir', True), "themes")
 

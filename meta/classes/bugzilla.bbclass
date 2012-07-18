@@ -72,7 +72,7 @@ def bugzilla_add_comment(debug_file, server, args, bug_number, text):
 
 addhandler bugzilla_eventhandler
 python bugzilla_eventhandler() {
-    import bb, os, glob
+    import glob
     import xmlrpclib, httplib
 
     class ProxiedTransport(xmlrpclib.Transport):

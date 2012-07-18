@@ -104,7 +104,6 @@ addhandler toolchain_setup
 
 def populate_toolchain_links(d):
     import errno
-    import os
     from glob import glob
 
     d = d.createCopy()

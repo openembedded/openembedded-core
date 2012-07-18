@@ -1,5 +1,4 @@
 import oe.maketype
-import bb.msg
 
 def typed_value(key, d):
     """Construct a value for the specified metadata variable, using its flags

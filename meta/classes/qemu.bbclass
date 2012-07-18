@@ -4,8 +4,6 @@
 #
 
 def qemu_target_binary(data):
-    import bb
-
     target_arch = data.getVar("TARGET_ARCH", True)
     if target_arch in ("i486", "i586", "i686"):
         target_arch = "i386"

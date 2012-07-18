@@ -254,8 +254,6 @@ def check_supported_distro(sanity_data):
 
 # Checks we should only make if MACHINE is set correctly
 def check_sanity_validmachine(sanity_data):
-    from bb import data
-
     messages = ""
 
     # Check TUNE_ARCH is set
@@ -291,7 +289,6 @@ def check_sanity_validmachine(sanity_data):
 
 
 def check_sanity(sanity_data):
-    from bb import note, error, data, __version__
     import subprocess
 
     try:
@@ -319,8 +316,8 @@ def check_sanity(sanity_data):
     if sys.hexversion < 0x020600F0:
         messages = messages + 'The system requires at least Python 2.6 to run. Please update your Python interpreter.\n'
 
-    if (LooseVersion(__version__) < LooseVersion(minversion)):
-        messages = messages + 'Bitbake version %s is required and version %s was found\n' % (minversion, __version__)
+    if (LooseVersion(bb.__version__) < LooseVersion(minversion)):
+        messages = messages + 'Bitbake version %s is required and version %s was found\n' % (minversion, bb.__version__)
 
     # Check that the MACHINE is valid, if it is set
     if sanity_data.getVar('MACHINE', True):

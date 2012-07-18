@@ -444,7 +444,7 @@ python perform_packagecopy () {
 # seeding this list with reasonable defaults, then load from
 # the fs-perms.txt files
 python fixup_perms () {
-    import os, pwd, grp
+    import pwd, grp
 
     # init using a string with the same format as a line as documented in
     # the fs-perms.txt file

@@ -414,9 +414,6 @@ buildhistory_commit() {
 }
 
 python buildhistory_eventhandler() {
-	import bb.build
-	import bb.event
-
 	if isinstance(e, bb.event.BuildCompleted):
 		if e.data.getVar('BUILDHISTORY_FEATURES', True).strip():
 			if e.data.getVar("BUILDHISTORY_COMMIT", True) == "1":

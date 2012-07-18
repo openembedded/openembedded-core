@@ -55,7 +55,6 @@ def can_use_autotools_base(cfgdata, d):
         if cfg.find(i) != -1:
             return False
 
-    import os
     for clsfile in d.getVar("__inherit_cache", 0):
         (base, _) = os.path.splitext(os.path.basename(clsfile))
         if cfg.find("%s_do_configure" % base) != -1:
@@ -146,9 +145,7 @@ do_recipe_sanity_all () {
 addtask recipe_sanity_all after do_recipe_sanity
 
 python recipe_sanity_eh () {
-    from bb.event import getName
-
-    if getName(e) != "ConfigParsed":
+    if bb.event.getName(e) != "ConfigParsed":
         return
 
     d = e.data

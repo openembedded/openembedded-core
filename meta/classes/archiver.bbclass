@@ -76,7 +76,6 @@ def tar_filter(d):
 def get_bb_inc(d):
 	'''create a directory "script-logs" including .bb and .inc file in ${WORKDIR}'''
 	import re
-	import os
 	import shutil
 	
 	bbinc = []
@@ -154,7 +153,6 @@ def get_series(d):
 
 def get_applying_patches(d):
 	"""only copy applying patches to a pointed directory which will be archived to tarball"""
-	import os
 	import shutil
 
 
@@ -174,7 +172,6 @@ def get_applying_patches(d):
 
 def not_tarball(d):
 	'''packages including key words 'work-shared','native', 'task-' will be passed'''
-	import os
 
 	workdir = d.getVar('WORKDIR',True)
 	s = d.getVar('S',True)

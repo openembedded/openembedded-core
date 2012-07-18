@@ -59,7 +59,6 @@ FILES_${PN}-dbg += "/usr/games/.debug/*"
 FILES_${PN}-extra = "/usr/games/ /usr/share/applications /etc/gconf/schemas"
 
 python __anonymous () {
-    import bb
     var = bb.data.expand("FILES_${PN}", d, 1)
     data = d.getVar(var, True)
     for name in ("bridges", "fifteen", "inertia", "map", "samegame", "slant"):

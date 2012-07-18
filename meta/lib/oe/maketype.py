@@ -5,7 +5,6 @@ variable.  Other flags may be utilized in the construction of the types.  See
 the arguments of the type's factory for details.
 """
 
-import bb
 import inspect
 import types
 

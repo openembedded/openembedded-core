@@ -143,8 +143,6 @@ python do_populate_lic() {
     """
     Populate LICENSE_DIRECTORY with licenses.
     """
-    import os
-    import bb
     import shutil
     import oe.license
 

@@ -1,5 +1,3 @@
-import os
-import bb.data
 import codecs
 
 def packaged(pkg, d):

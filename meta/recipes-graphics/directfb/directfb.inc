@@ -35,7 +35,6 @@ EXTRA_OECONF = "\
 #PACKAGES_DYNAMIC = "directfb-inputdrivers-*"
 #
 #python populate_packages_prepend () {
-#    import os.path
 #    inputdrivers_libdir = d.expand('${libdir}/directfb-${RV}/inputdrivers')
 #    do_split_packages(d, inputdrivers_libdir, '*.so$', 'directfb-inputdrivers-%s', 'Directfb plugin for %s')
 #}

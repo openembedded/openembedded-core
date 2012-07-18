@@ -14,7 +14,7 @@ OE_IMPORTS += "os sys time oe.path oe.utils oe.data oe.packagegroup oe.sstatesig
 OE_IMPORTS[type] = "list"
 
 def oe_import(d):
-    import os, sys
+    import sys
 
     bbpath = d.getVar("BBPATH", True).split(":")
     sys.path[0:0] = [os.path.join(dir, "lib") for dir in bbpath]
@@ -117,11 +117,9 @@ GIT_CONFIG_PATH = "${STAGING_DIR_NATIVE}/etc"
 GIT_CONFIG = "${GIT_CONFIG_PATH}/gitconfig"
 
 def generate_git_config(e):
-    from bb import data
-
-    if data.getVar('GIT_CORE_CONFIG', e.data, True):
+    if e.data.getVar('GIT_CORE_CONFIG', True):
         gitconfig_path = e.data.getVar('GIT_CONFIG', True)
-        proxy_command = "    gitProxy = %s\n" % data.getVar('OE_GIT_PROXY_COMMAND', e.data, True)
+        proxy_command = "    gitProxy = %s\n" % e.data.getVar('OE_GIT_PROXY_COMMAND', True)
 
         bb.mkdirhier(e.data.expand("${GIT_CONFIG_PATH}"))
         if (os.path.exists(gitconfig_path)):
@@ -129,7 +127,7 @@ def generate_git_config(e):
 
         f = open(gitconfig_path, 'w')
         f.write("[core]\n")
-        ignore_hosts = data.getVar('GIT_PROXY_IGNORE', e.data, True).split()
+        ignore_hosts = e.data.getVar('GIT_PROXY_IGNORE', True).split()
         for ignore_host in ignore_hosts:
             f.write("    gitProxy = none for %s\n" % ignore_host)
         f.write(proxy_command)

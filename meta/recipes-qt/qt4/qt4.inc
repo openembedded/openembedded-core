@@ -38,8 +38,6 @@ QT_LIB_NAMES = "Qt3Support QtAssistantClient QtCLucene QtCore QtDBus QtDesigner 
 QT_EXTRA_LIBS = "pvrQWSWSEGL"
 
 python __anonymous () {
-    import bb
-
     lib_packages = []
     dev_packages = []
     dbg_packages = []
@@ -280,7 +278,7 @@ python populate_packages_prepend() {
  
     phrasebook_dir = d.expand('${datadir}/${QT_DIR_NAME}/phrasebooks/')
     phrasebook_name = d.expand('${QT_BASE_NAME}-phrasebook-%s')
-    import os;
+
     if os.path.exists("%s%s" % (d.expand('${D}'), phrasebook_dir)):
         do_split_packages(d, phrasebook_dir, '^(.*)\.qph$', phrasebook_name, '${PN} phrasebook for %s', extra_depends='' )
     else:

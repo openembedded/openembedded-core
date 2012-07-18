@@ -654,7 +654,6 @@ do_distro_check[nostamp] = "1"
 python do_distro_check() {
     """checks if the package is present in other public Linux distros"""
     import oe.distro_check as dc
-    import bb
     import shutil
     if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('sdk', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('nativesdk',d):
         return
@@ -704,8 +703,6 @@ python checklicense_eventhandler() {
 addtask checklicense
 do_checklicense[nostamp] = "1"
 python do_checklicense() {
-    import os
-    import bb
     import shutil
     logpath = d.getVar('LOG_DIR', True)
     bb.utils.mkdirhier(logpath)

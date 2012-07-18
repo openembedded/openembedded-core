@@ -40,7 +40,6 @@ def get_files_apt_doc(d, bb, manpages):
     return manpages
 
 def get_commands_apt_doc(d, bb, manpages):
-    import os
     s = list()
     __dir_cache__ = list()
     for m in manpages.split():

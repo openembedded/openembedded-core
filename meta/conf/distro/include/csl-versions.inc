@@ -38,7 +38,6 @@ def csl_get_gcc_version(d):
 		return version
 
 def csl_get_libc_version(d):
-	import os,bb
 	syspath = d.expand('${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}')
 	if not syspath:
 	        return 'UNKNOWN'
@@ -54,7 +53,6 @@ def csl_get_libc_version(d):
 	return 'UNKNOWN'
 
 def csl_get_kernel_version(d):
-	import os,bb
 	syspath = d.expand('${EXTERNAL_TOOLCHAIN}/${CSL_TARGET_SYS}')
 	if not syspath:
 	        return 'UNKNOWN'

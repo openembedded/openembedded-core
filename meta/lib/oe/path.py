@@ -1,7 +1,5 @@
-import bb
 import errno
 import glob
-import os
 import shutil
 import subprocess
 

@@ -1,6 +1,4 @@
 import oe.path
-import os
-import bb.utils, bb.msg, bb.data, bb.fetch2
 
 class NotFoundError(bb.BBHandledException):
     def __init__(self, path):

@@ -3,8 +3,6 @@ FILES_kernel-devicetree = "/boot/devicetree*"
 KERNEL_DEVICETREE_FLAGS = "-R 8 -p 0x3000"
 
 python __anonymous () {
-    import bb
-
     devicetree = d.getVar("KERNEL_DEVICETREE", True) or ''
     if devicetree:
 	depends = d.getVar("DEPENDS", True)

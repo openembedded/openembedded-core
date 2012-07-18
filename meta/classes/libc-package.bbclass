@@ -118,7 +118,7 @@ do_collect_bins_from_locale_tree() {
 inherit qemu
 
 python package_do_split_gconvs () {
-    import os, re
+    import re
     if (d.getVar('PACKAGE_NO_GCONV', True) == '1'):
         bb.note("package requested not splitting gconvs")
         return

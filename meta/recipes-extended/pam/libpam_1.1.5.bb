@@ -53,8 +53,6 @@ RDEPENDS_${PN}-xtests = "libpam pam-plugin-access pam-plugin-debug pam-plugin-cr
 RRECOMMENDS_${PN} = "libpam-runtime"
 
 python populate_packages_prepend () {
-    import os.path
-
     def pam_plugin_append_file(pn, dir, file):
         nf = os.path.join(dir, file)
         of = d.getVar('FILES_' + pn, True)

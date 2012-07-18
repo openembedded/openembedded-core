@@ -47,8 +47,6 @@ BOOST_LIBS = "\
 # Make a package for each library, plus -dev
 PACKAGES = "${PN}-dbg ${BOOST_PACKAGES}"
 python __anonymous () {
-    import bb
-
     packages = []
     extras = []
     for lib in d.getVar('BOOST_LIBS', True).split( ):

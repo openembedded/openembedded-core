@@ -58,7 +58,6 @@ def copyleft_should_include(d):
 
 python do_prepare_copyleft_sources () {
     """Populate a tree of the recipe sources and emit patch series files"""
-    import os.path
     import shutil
 
     p = d.getVar('P', True)

@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=12;endline=15;md5=a48af114a80c222ca
 PR = "r2"
 
 python __anonymous () {
-    import bb, re
+    import re
     uc_os = (re.match('.*uclibc*', d.getVar('TARGET_OS', True)) != None)
     if uc_os:
         raise bb.parse.SkipPackage("incompatible with uClibc")

@@ -1,4 +1,3 @@
-import bb
 
 def prserv_make_conn(d, check = False):
     import prserv.serv

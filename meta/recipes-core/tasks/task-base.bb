@@ -124,8 +124,6 @@ python __anonymous () {
     # If Distro want wifi and machine feature wifi/pci/pcmcia/usbhost (one of them)
     # then include task-base-wifi in task-base
 
-    import bb
-
     distro_features = set(d.getVar("DISTRO_FEATURES", True).split())
     machine_features= set(d.getVar("MACHINE_FEATURES", True).split())
 

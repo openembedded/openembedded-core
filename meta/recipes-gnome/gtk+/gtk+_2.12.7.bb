@@ -32,8 +32,6 @@ LIBV = "2.10.0"
 PACKAGES_DYNAMIC += "gdk-pixbuf-loader-* gtk-immodule-* gtk-printbackend-*"
 
 python populate_packages_prepend () {
-    import os.path
-
     prologue = d.getVar("postinst_prologue", True)
     postinst_pixbufloader = d.getVar("postinst_pixbufloader", True)
 

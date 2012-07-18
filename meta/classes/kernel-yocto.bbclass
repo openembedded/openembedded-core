@@ -188,7 +188,7 @@ do_kernel_configme() {
 }
 
 python do_kernel_configcheck() {
-    import bb, re, string, sys, commands
+    import re, string, sys, commands
 
     bb.plain("NOTE: validating kernel configuration")
 

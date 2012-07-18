@@ -637,7 +637,6 @@ python write_specfile () {
                     array.append("%s: %s" % (tag, dep))
 
     def walk_files(walkpath, target, conffiles):
-        import os
         for rootpath, dirs, files in os.walk(walkpath):
             path = rootpath.replace(walkpath, "")
             for dir in dirs:
@@ -996,8 +995,6 @@ python write_specfile () {
 }
 
 python do_package_rpm () {
-    import os
-    
     def creat_srpm_dir(d):
         if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
             clean_licenses = get_licenses(d)

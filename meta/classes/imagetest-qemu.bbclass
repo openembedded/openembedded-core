@@ -26,7 +26,6 @@ do_qemuimagetest_standalone[depends] += "qemu-native:do_populate_sysroot"
 def qemuimagetest_main(d):
     import sys
     import re
-    import os
     import shutil
     import subprocess
     

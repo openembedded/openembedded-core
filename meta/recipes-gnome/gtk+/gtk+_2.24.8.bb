@@ -39,8 +39,6 @@ LIBV = "2.10.0"
 PACKAGES_DYNAMIC += "gtk-immodule-* gtk-printbackend-*"
 
 python populate_packages_prepend () {
-    import os.path
-
     prologue = d.getVar("postinst_prologue", True)
 
     gtk_libdir = d.expand('${libdir}/gtk-2.0/${LIBV}')
