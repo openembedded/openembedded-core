@@ -17,10 +17,6 @@ SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.bz2 \
 
 inherit autotools
 
-PERLPATH = "${bindir}/perl"
-PERLPATH_virtclass-native = "/usr/bin/perl"
-PERLPATH_virtclass-nativesdk = "/usr/bin/perl"
-
 do_install_append() {
     rm -rf ${D}${datadir}/emacs
 
@@ -28,8 +24,8 @@ do_install_append() {
     # for target as /usr/bin/perl, so fix it to /usr/bin/perl.
     for i in autoheader autom4te autoreconf autoscan autoupdate ifnames; do
         if [ -f ${D}${bindir}/$i ]; then
-            sed -i -e '1s,#!.*perl,#! ${PERLPATH},' \
-            -e 's,exec .*/bin/perl \(.*\) exec .*/bin/perl \(.*\),exec ${PERLPATH} \1 exec ${PERLPATH} \2,' \
+            sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/perl,' \
+            -e 's,exec .*/bin/perl \(.*\) exec .*/bin/perl \(.*\),exec ${USRBINPATH}/perl \1 exec ${USRBINPATH}/perl \2,' \
             ${D}${bindir}/$i
         fi
     done

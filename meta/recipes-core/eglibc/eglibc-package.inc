@@ -77,9 +77,6 @@ DESCRIPTION_libsotruss = "Library to support sotruss which traces calls through 
 
 inherit libc-common multilib_header
 
-PERLPATH = "${bindir}/env perl"
-PERLPATH_virtclass-nativesdk = "/usr/bin/env perl"
-
 do_install_append () {
 	rm -f ${D}${sysconfdir}/localtime
 	rm -rf ${D}${localstatedir}
@@ -87,7 +84,7 @@ do_install_append () {
 	oe_multilib_header bits/syscall.h
 
 	if [ -f ${D}${bindir}/mtrace ]; then
-		sed -i -e '1s,#!.*perl,#! ${PERLPATH},' -e '2s,exec.*perl,exec ${PERLPATH},' ${D}${bindir}/mtrace
+		sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' -e '2s,exec.*perl,exec ${USRBINPATH}/env perl,' ${D}${bindir}/mtrace
 	fi
 }
 

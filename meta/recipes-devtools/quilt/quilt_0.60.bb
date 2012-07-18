@@ -9,15 +9,12 @@ PR = "r1"
 
 CACHED_CONFIGUREVARS += "ac_cv_path_BASH=${base_bindir}/bash"
 
-PERLPATH = "${bindir}/env perl"
-PERLPATH_virtclass-nativesdk = "/usr/bin/env perl"
-
 # fix build-distro specific perl path in the target perl scripts
 do_install_append() {
 	for perlscript in ${D}${datadir}/quilt/scripts/remove-trailing-ws ${D}${datadir}/quilt/scripts/dependency-graph ${D}${datadir}/quilt/scripts/edmail ${D}${bindir}/guards
 	do
 		if [ -f $perlscript ]; then
-			sed -i -e '1s,#!.*perl,#! ${PERLPATH},' $perlscript
+			sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' $perlscript
 		fi
 	done
 }

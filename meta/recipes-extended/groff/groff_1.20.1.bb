@@ -18,10 +18,6 @@ DEPENDS_virtclass-native = ""
 
 inherit autotools
 
-PERLPATH = "${bindir}/perl"
-PERLPATH_virtclass-native = "/usr/bin/env perl"
-PERLPATH_virtclass-nativesdk = "/usr/bin/env perl"
-
 EXTRA_OECONF = "--without-x"
 PARALLEL_MAKE = ""
 
@@ -43,7 +39,7 @@ do_install_append() {
 	# for target as /usr/bin/perl, so fix it to /usr/bin/perl.
 	for i in afmtodit mmroff; do
 		if [ -f ${D}${bindir}/$i ]; then
-			sed -i -e '1s,#!.*perl,#! ${PERLPATH},' ${D}${bindir}/$i
+			sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/$i
 		fi
 	done
 }
@@ -53,7 +49,7 @@ do_install_append_virtclass-native() {
 	# for target as /usr/bin/perl, so fix it to /usr/bin/perl.
 	for i in afmtodit mmroff; do
 		if [ -f ${D}${bindir}/$i ]; then
-			sed -i -e '1s,#!.*perl,#! ${PERLPATH},' ${D}${bindir}/$i
+			sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/$i
 		fi
 	done
 

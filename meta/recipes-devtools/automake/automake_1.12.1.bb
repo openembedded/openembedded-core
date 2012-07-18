@@ -34,10 +34,6 @@ PATHFIXPATCH = "file://path_prog_fixes.patch"
 PATHFIXPATCH_virtclass-native = ""
 PATHFIXPATCH_virtclass-nativesdk = ""
 
-PERLPATH = "${bindir}/perl"
-PERLPATH_virtclass-native = "/usr/bin/perl"
-PERLPATH_virtclass-nativesdk = "/usr/bin/perl"
-
 SRC_URI += "${PATHFIXPATCH} \
 	    file://prefer-cpio-over-pax-for-ustar-archives.patch \
 	    file://python-libdir.patch \
@@ -56,8 +52,8 @@ do_install () {
     # for target as /usr/bin/perl, so fix it to /usr/bin/perl.
     for i in aclocal aclocal-1.11 automake automake-1.11; do
         if [ -f ${D}${bindir}/$i ]; then
-            sed -i -e '1s,#!.*perl,#! ${PERLPATH},' \
-            -e 's,exec .*/bin/perl \(.*\) exec .*/bin/perl \(.*\),exec ${PERLPATH} \1 exec ${PERLPATH} \2,' \
+            sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/perl,' \
+            -e 's,exec .*/bin/perl \(.*\) exec .*/bin/perl \(.*\),exec ${USRBINPATH}/perl \1 exec ${USRBINPATH}/perl \2,' \
             ${D}${bindir}/$i
         fi
     done
