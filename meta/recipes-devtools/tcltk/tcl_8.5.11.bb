@@ -46,8 +46,9 @@ do_install() {
 	autotools_do_install
 	oe_libinstall -so libtcl8.5 ${STAGING_LIBDIR}
 	ln -sf ./tclsh8.5 ${D}${bindir}/tclsh
-	sed -i "s+${WORKDIR}+${STAGING_INCDIR}+g" tclConfig.sh
-	sed -i "s,-L${libdir},," tclConfig.sh
+	#sed -i "s+${WORKDIR}+${STAGING_INCDIR}+g" tclConfig.sh
+	sed -i "s,-L${libdir},-L=${libdir},g" tclConfig.sh
+	sed -i "s,-I${includedir},-I=${includedir},g" tclConfig.sh 
 	install -d ${STAGING_BINDIR_CROSS}/
 	install -m 0755 tclConfig.sh ${STAGING_BINDIR_CROSS}
 	cd ..
