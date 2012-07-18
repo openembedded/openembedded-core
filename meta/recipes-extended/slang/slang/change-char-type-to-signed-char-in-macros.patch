@@ -1,3 +1,19 @@
+slang: change char type to signed char in macros
+
+C language has 3 distinct char types:
+         char
+         unsigned char
+         signed char
+A char has the same range of values as signed char on X86,
+but same as unsigned char on ARM which made Slang's typecast()
+and array_sort() unable to work for char value on ARM, since
+Slang is assuming "char" as "signed char".
+
+Now we change "char" as "signed char" explicitly in
+util/mkslarith2.sl, and use it to regenerate src/slarith2.inc
+
+Upstream-Status: Submitted
+Signed-off-by: Roy.Li <rongqing.li@windriver.com>
 ---
  src/slarith2.inc       |   72 ++++++++++++++++++++++++-------------------------
  src/util/mkslarith2.sl |    2 -
