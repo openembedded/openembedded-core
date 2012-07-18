@@ -26,3 +26,5 @@ do_install() {
 }
 
 BBCLASSEXTEND = "native"
+
+DEPENDS = "groff-native"
