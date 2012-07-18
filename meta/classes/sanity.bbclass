@@ -390,7 +390,8 @@ def check_sanity(sanity_data):
 
     paths = sanity_data.getVar('PATH', True).split(":")
     if "." in paths or "" in paths:
-        messages = messages + "PATH contains '.' or '', which will break the build, please remove this."
+        messages = messages + "PATH contains '.' or '' (empty element), which will break the build, please remove this.\n"
+        messages = messages + "Parsed PATH is " + str(paths) + "\n"
 
     bbpaths = sanity_data.getVar('BBPATH', True).split(":")
     if "." in bbpaths or "" in bbpaths:
