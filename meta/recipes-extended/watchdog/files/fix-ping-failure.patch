@@ -1,0 +1,74 @@
+Fix ping mode failure
+
+Upstream-Status: Pending  
+
+When watchdog works on ping mode, the system will be rebooted since
+watchdog can not receive the expected ECOREPLY on a setting interval.
+
+Ping mode uses a raw socket to send a ECO packet, then uses select()
+to wait and recvfrom() to receive the ECOREPLY packet, if select()
+shows the data is ready, and the data is not the expected ECOREPLY,
+and waiting time is not overdue, it will continue use select() and
+recvfrom().
+
+Problem is that the raw socket can receive any icmp packets, if we do
+not set filters, and there are many icmp packets on socket, this
+program will not find its interested ECOREPLY packet in a special
+interval, which makes the ping mode fail.
+
+
+Other program is that watchdog sometime can not reach the call of
+recvfrom to try to receive packets since tv_sec of struct timeval
+of select parameter is 0.
+
+The timeout of select() is the result of ping interval minusing the
+time of calling gettimeofday spending, when ping interval is 1 second,
+and the call of gettimeofday() spends several useconds, the tv_sec of
+struct timeval of select parameter must be 0, at that condition, we
+should it is valid of tv_sec of struct timeval of select parameter be 0 
+
+Signed-off-by: Roy.Li <rongqing.li@windriver.com>
+---
+ src/net.c      |    2 +-
+ src/watchdog.c |    5 ++++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+--- a/src/net.c
++++ b/src/net.c
+@@ -118,7 +118,7 @@ int check_net(char *target, int sock_fp,
+ 		    dtimeout.tv_usec -= 1000000;
+ 		    dtimeout.tv_sec++;
+ 		}
+-		if (dtimeout.tv_sec <= 0)
++		if (dtimeout.tv_sec < 0)
+ 		    break;
+ #if USE_SYSLOG
+ 		if (verbose && logtick && ticker == 1)
+--- a/src/watchdog.c
++++ b/src/watchdog.c
+@@ -28,6 +28,7 @@
+ #include <sys/types.h>
+ #include <sys/ioctl.h>
+ #include <linux/oom.h>
++#include <linux/icmp.h>
+ #include <linux/watchdog.h>
+ #include <string.h>
+ 
+@@ -567,6 +568,8 @@ int main(int argc, char *const argv[])
+     pid_t child_pid;
+     int oom_adjusted = 0;
+     struct stat s;
++    struct icmp_filter filt;
++    filt.data = ~(1<<ICMP_ECHOREPLY);
+ 
+ #if USE_SYSLOG
+     char *opts = "d:i:n:Ffsvbql:p:t:c:r:m:a:";
+@@ -703,7 +706,7 @@ int main(int argc, char *const argv[])
+ 		perror(progname);
+ 		exit(1);
+ 	    }
+-	    
++	    setsockopt(net->sock_fp, SOL_RAW, ICMP_FILTER, (char*)&filt, sizeof(filt));
+ 	    /* this is necessary for broadcast pings to work */
+ 	    (void) setsockopt(net->sock_fp, SOL_SOCKET, SO_BROADCAST, (char *)&hold, sizeof(hold));
+     
