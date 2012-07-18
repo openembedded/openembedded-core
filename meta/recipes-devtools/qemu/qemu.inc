@@ -22,8 +22,9 @@ inherit autotools
 do_configure() {
     # Handle distros such as CentOS 5 32-bit that do not have kvm support
     KVMOPTS="--disable-kvm"
-    if [ "${PN}" != "qemu-native" ] || [ -f /usr/include/linux/kvm.h ] ; then
-        KVMOPTS="--enable-kvm"
+    if [ "${PN}" != "qemu-native" -a "${PN}" != "qemu-nativesdk" ] \
+       || [ -f /usr/include/linux/kvm.h ] ; then
+       KVMOPTS="--enable-kvm"
     fi
 
     ${S}/configure --prefix=${prefix} --sysconfdir=${sysconfdir} --disable-strip ${EXTRA_OECONF} $KVMOPTS
