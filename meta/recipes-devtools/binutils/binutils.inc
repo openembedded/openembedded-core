@@ -36,6 +36,7 @@ FILES_${PN}-symlinks = " \
 	${bindir}/gprof \
 	${bindir}/ld \
 	${bindir}/ld.bfd \
+	${bindir}/ld.gold \
 	${bindir}/nm \
 	${bindir}/objcopy \
 	${bindir}/objdump \
