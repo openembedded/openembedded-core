@@ -4,6 +4,8 @@ DEFAULT_PREFERENCE = "-1"
 
 SRCREV = "3652e1f37e82b8e63983e30fda3482cd099a8cf5"
 PV = "0.8+git${SRCPV}"
+PR = "r1"
+
 S = "${WORKDIR}/git"
 
 LICENSE = "GPLv2+ & LGPLv2+"

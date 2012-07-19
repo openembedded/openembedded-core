@@ -16,7 +16,7 @@ DEPENDS = "glib-2.0 dbus bluez4 dbus-glib libxslt"
 SRC_URI = "http://gypsy.freedesktop.org/releases/gypsy-${PV}.tar.gz \
            file://fix-unused-but-set-variable-warning.patch \
           "
-PR = "r2"
+PR = "r3"
 
 inherit autotools pkgconfig
 
