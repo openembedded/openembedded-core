@@ -4,11 +4,11 @@ LICENSE = "LGPLv2.1+"
 DEPENDS = " glib-2.0 gtk+ intltool-native ncurses"
 RDEPENDS_libvte = "vte-termcap"
 
-inherit gnome
+inherit gnome gtk-doc
 
 SRC_URI += "file://introspection.patch"
 
-EXTRA_OECONF = "--disable-gtk-doc --disable-python --disable-introspection"
+EXTRA_OECONF = "--disable-python --disable-introspection"
 
 PACKAGES =+ "libvte vte-termcap"
 FILES_libvte = "${libdir}/*.so.* ${libexecdir}/gnome-pty-helper"
