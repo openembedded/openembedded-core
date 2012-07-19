@@ -1,6 +1,6 @@
 require python.inc
 DEPENDS = "python-native bzip2 db gdbm openssl readline sqlite3 zlib"
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
 DISTRO_SRC_URI_linuxstdbase = ""
@@ -30,7 +30,7 @@ SRC_URI += "\
 
 S = "${WORKDIR}/Python-${PV}"
 
-inherit autotools multilib_header
+inherit autotools multilib_header pythonnative
 
 # The 3 lines below are copied from the libffi recipe, ctypes ships its own copy of the libffi sources
 #Somehow gcc doesn't set __SOFTFP__ when passing -mfloatabi=softp :(
@@ -45,7 +45,7 @@ do_configure_prepend() {
 do_compile() {
         # regenerate platform specific files, because they depend on system headers
         cd Lib/plat-linux2
-        include=${STAGING_INCDIR} ${STAGING_BINDIR_NATIVE}/python \
+        include=${STAGING_INCDIR} ${STAGING_BINDIR_NATIVE}/python-native/python \
                 ${S}/Tools/scripts/h2py.py -i '(u_long)' \
                 ${STAGING_INCDIR}/dlfcn.h \
                 ${STAGING_INCDIR}/linux/cdrom.h \
@@ -89,8 +89,8 @@ do_compile() {
 
 	export CROSS_COMPILE="${TARGET_PREFIX}"
 
-	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
-		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
+	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen \
+		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
 		STAGING_LIBDIR=${STAGING_LIBDIR} \
 		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
 		STAGING_INCDIR=${STAGING_INCDIR} \
@@ -99,8 +99,8 @@ do_compile() {
 
 	oe_libinstall -so libpython${PYTHON_MAJMIN} ${STAGING_LIBDIR}
 
-	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
-		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
+	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen \
+		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
 		STAGING_LIBDIR=${STAGING_LIBDIR} \
 		STAGING_INCDIR=${STAGING_INCDIR} \
 		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
@@ -115,8 +115,8 @@ do_install() {
 
 	export CROSS_COMPILE="${TARGET_PREFIX}"
 	
-	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/pgen \
-		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python \
+	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen \
+		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
 		CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ \
 		STAGING_LIBDIR=${STAGING_LIBDIR} \
 		STAGING_INCDIR=${STAGING_INCDIR} \
