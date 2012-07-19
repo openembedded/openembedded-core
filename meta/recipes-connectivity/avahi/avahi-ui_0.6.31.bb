@@ -54,6 +54,7 @@ do_install_append () {
 	rm ${D}${sbindir} -rf
 	rm ${D}${datadir}/avahi/a*
 	rm ${D}${datadir}/avahi/s*
+	rm ${D}${datadir}/locale/ -rf
 	rm ${D}${datadir}/dbus* -rf
 	rm ${D}${mandir}/man1/a*
 	rm ${D}${mandir}/man5 -rf
