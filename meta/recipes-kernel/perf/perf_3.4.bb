@@ -31,7 +31,7 @@ RDEPENDS_${PN} += "elfutils ${SCRIPTING_RDEPENDS}"
 
 PROVIDES = "virtual/perf"
 
-inherit kernel-arch
+inherit kernel-arch pythonnative
 
 # needed for building the tools/perf Python bindings
 inherit python-dir
