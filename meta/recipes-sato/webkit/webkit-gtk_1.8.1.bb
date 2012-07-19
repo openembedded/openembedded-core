@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://Source/WebCore/rendering/RenderApplet.h;endline=22;md
                     file://Source/WebKit/gtk/webkit/webkit.h;endline=21;md5=b4fbe9f4a944f1d071dba1d2c76b3351 \
                     file://Source/JavaScriptCore/parser/Parser.h;endline=23;md5=b57c8a2952a8d0e655988fa0ecb2bf7f"
 
+PR = "r1"
+
 # Choice of language backends - icu has issues on Big Endian machines so use pango
 ICU_LIB = "icu"
 ICU_LIB_powerpc = "pango"
@@ -27,7 +29,7 @@ SRC_URI = "\
 SRC_URI[md5sum] = "f2f01b1fdc7262a2eede81ebed0970b2"
 SRC_URI[sha256sum] = "9a126a76b40ca61adb1f1626e1567f976740af2332948cc5189489dbd01e3b28"
 
-inherit autotools lib_package pkgconfig
+inherit autotools lib_package gtk-doc pkgconfig
 
 S = "${WORKDIR}/webkit-${PV}/"
 
@@ -40,7 +42,6 @@ EXTRA_OECONF = "\
                 --enable-link-prefetch \
                 --with-gtk=2.0 \
                 --disable-geolocation \
-                --disable-gtk-doc \
                 ${@base_contains('DISTRO_FEATURES', 'opengl', '--enable-webgl', '--disable-webgl', d)} \
                 UNICODE_CFLAGS=-D_REENTRANT \
                "
