@@ -1,6 +1,6 @@
 require python.inc
 DEPENDS = "openssl-native bzip2-full-native zlib-native readline-native sqlite3-native"
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
 SRC_URI += "file://04-default-is-optimized.patch \
            file://05-enable-ctypes-cross-build.patch \
@@ -20,6 +20,8 @@ inherit native
 
 RPROVIDES += "python-distutils-native python-compression-native python-textutils-native python-core-native"
 
+EXTRA_OECONF += " --bindir=${bindir}/${PN}"
+
 EXTRA_OEMAKE = '\
   BUILD_SYS="" \
   HOST_SYS="" \
@@ -34,11 +36,11 @@ do_configure_prepend() {
 
 do_install() {
 	oe_runmake 'DESTDIR=${D}' install
-	install -d ${D}${bindir}/
-	install -m 0755 Parser/pgen ${D}${bindir}/
+	install -d ${D}${bindir}/${PN}
+	install -m 0755 Parser/pgen ${D}${bindir}/${PN}
 
 	# Make sure we use /usr/bin/env python
-	for PYTHSCRIPT in `grep -rIl ${bindir}/python ${D}${bindir}`; do
+	for PYTHSCRIPT in `grep -rIl ${bindir}/${PN}/python ${D}${bindir}/${PN}`; do
 		sed -i -e '1s|^#!.*|#!/usr/bin/env python|' $PYTHSCRIPT
 	done
 }
