@@ -10,15 +10,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=74579fab173e4c5e12aac0cd83ee98ec \
 SRC_URI = "http://hal.freedesktop.org/releases/polkit-gnome-${PV}.tar.bz2 \
           "
 
-PR = "r1"
+PR = "r2"
 
 EXTRA_OECONF = " --disable-scrollkeeper \
                  --disable-man-pages \
                  --disable-examples \
-                 --disable-gtk-doc \
                  --disable-introspection "
 
-inherit autotools pkgconfig
+inherit autotools gtk-doc pkgconfig
 
 FILES_${PN} += " ${datadir}/dbus-1 \
                  ${datadir}/PolicyKit \
