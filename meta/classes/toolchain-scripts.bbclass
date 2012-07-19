@@ -24,8 +24,8 @@ toolchain_create_sdk_env_script () {
 	echo 'export RANLIB=${TARGET_PREFIX}ranlib' >> $script
 	echo 'export OBJCOPY=${TARGET_PREFIX}objcopy' >> $script
 	echo 'export OBJDUMP=${TARGET_PREFIX}objdump' >> $script
-	echo 'export AR=${TARGET_PREFIX}-ar' >> $script
-	echo 'export NM=${TARGET_PREFIX}-nm' >> $script
+	echo 'export AR=${TARGET_PREFIX}ar' >> $script
+	echo 'export NM=${TARGET_PREFIX}nm' >> $script
 	echo 'export TARGET_PREFIX=${TARGET_PREFIX}' >> $script
 	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS} --build=${SDK_ARCH}-linux --with-libtool-sysroot=${SDKTARGETSYSROOT}"' >> $script
 	if [ "${TARGET_OS}" = "darwin8" ]; then
@@ -111,8 +111,8 @@ toolchain_create_sdk_env_script_for_installer () {
 	echo 'export RANLIB=${TARGET_PREFIX}ranlib' >> $script
 	echo 'export OBJCOPY=${TARGET_PREFIX}objcopy' >> $script
 	echo 'export OBJDUMP=${TARGET_PREFIX}objdump' >> $script
-	echo 'export AR=${TARGET_PREFIX}-ar' >> $script
-	echo 'export NM=${TARGET_PREFIX}-nm' >> $script
+	echo 'export AR=${TARGET_PREFIX}ar' >> $script
+	echo 'export NM=${TARGET_PREFIX}nm' >> $script
 	echo 'export TARGET_PREFIX=${TARGET_PREFIX}' >> $script
 	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS} --build=${SDK_ARCH}-linux --with-libtool-sysroot=##SDKTARGETSYSROOT##"' >> $script
 	if [ "${TARGET_OS}" = "darwin8" ]; then
