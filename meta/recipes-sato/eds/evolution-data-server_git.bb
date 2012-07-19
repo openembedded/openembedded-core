@@ -13,7 +13,7 @@ DEPENDS = "intltool-native glib-2.0 gtk+ gconf dbus db gnome-common virtual/libi
 SRCREV = "3ca578d968d09785933ebbb45b66b3bccdbd5832"
 
 PV = "2.30+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://git.gnome.org/evolution-data-server;protocol=git \
            file://oh-contact.patch;striplevel=0 \
@@ -28,7 +28,7 @@ SRC_URI = "git://git.gnome.org/evolution-data-server;protocol=git \
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig
+inherit autotools gtk-doc pkgconfig
 
 # -ldb needs this on some platforms
 LDFLAGS += "-lpthread"
@@ -38,10 +38,6 @@ LDFLAGS += "-lpthread"
 # directories by make resulting in truncated/corrupt .la files
 #PARALLEL_MAKE = ""
 
-do_configure_prepend () {
-        echo "EXTRA_DIST = " > ${S}/gtk-doc.make
-}
-
 do_configure_append () {
         cp ${WORKDIR}/iconv-detect.h ${S}
         sed -i 's/-DG_DISABLE_DEPRECATED//g' ${S}/libedataserver/Makefile
@@ -49,7 +45,7 @@ do_configure_append () {
 
 EXTRA_OECONF = "--without-openldap --with-dbus --without-bug-buddy \
                 --with-soup --with-libdb=${STAGING_DIR_HOST}${prefix} \
-                --disable-smime --disable-ssl --disable-nntp --disable-gtk-doc --without-weather"
+                --disable-smime --disable-ssl --disable-nntp --without-weather"
 
 PACKAGES =+ "libcamel libcamel-dev libebook libebook-dev libecal libecal-dev \
              libedata-book libedata-book-dev libedata-cal libedata-cal-dev \
