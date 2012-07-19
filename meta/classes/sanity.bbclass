@@ -400,6 +400,7 @@ def check_sanity(sanity_data):
                 "Please check your layer.conf files and other BBPATH "        \
                 "settings to remove the current working directory "           \
                 "references.");
+        bb.warn("Parsed BBPATH is" + str(bbpaths));
 
     if sanity_data.getVar('TARGET_ARCH', True) == "arm":
         # This path is no longer user-readable in modern (very recent) Linux
