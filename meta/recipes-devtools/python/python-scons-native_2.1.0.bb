@@ -1,5 +1,5 @@
 require python-scons_${PV}.bb
-inherit native
+inherit native pythonnative
 DEPENDS = "python-native"
 RDEPENDS_${PN} = ""
-PR = "r1"
+PR = "r2"
