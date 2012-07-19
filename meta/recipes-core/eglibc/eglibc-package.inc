@@ -105,6 +105,7 @@ do_install_locale () {
 		mv ${D}${datadir}/i18n ${dest}${datadir}
 	fi
 	cp -fpPR ${D}${datadir}/* ${dest}${datadir}
+	rm -rf ${D}${datadir}/locale/
 	cp -fpPR ${WORKDIR}/SUPPORTED ${dest}
 }
 
