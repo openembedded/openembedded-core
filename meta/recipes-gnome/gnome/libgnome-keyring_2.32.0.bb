@@ -9,11 +9,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0914b9d3ebaba41ef2e3e0ae16f296cf \
                     file://egg/egg-dh.h;endline=22;md5=1626c16af2a8da1f88324cf3ced33f08"
 
 SECTION = "x11/gnome/libs"
-PR = "r1"
+PR = "r2"
 
 inherit gnome
 
-DEPENDS = "dbus eggdbus libgcrypt"
+DEPENDS = "dbus libgcrypt"
 
 EXTRA_OECONF = "--disable-gtk-doc"
 
