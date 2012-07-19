@@ -20,7 +20,7 @@ DEPENDS  = "dbus glib-2.0 ppp iptables gnutls \
             ${@base_contains('DISTRO_FEATURES', '3g','ofono', '', d)} \
             "
 
-INC_PR = "r14"
+INC_PR = "r15"
 
 TIST = "--enable-tist"
 TIST_powerpc = ""
@@ -28,7 +28,6 @@ TIST_powerpc = ""
 EXTRA_OECONF += "\
     ac_cv_path_WPASUPPLICANT=${sbindir}/wpa_supplicant \
     ac_cv_path_PPPD=${sbindir}/pppd \
-    --disable-gtk-doc \
     --enable-debug \
     --enable-threads \
     --enable-loopback \
@@ -53,7 +52,7 @@ USERADD_PARAM_${PN} = "--create-home \
                        --groups video,tty,audio \
                        --user-group xuser"
 
-inherit autotools pkgconfig update-rc.d useradd
+inherit autotools gtk-doc pkgconfig update-rc.d useradd
 
 # This allows *everyone* to access ConnMan over DBus, without any access
 # control.  Really the at_console flag should work, which would mean that
