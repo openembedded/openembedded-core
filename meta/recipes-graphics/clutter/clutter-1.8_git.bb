@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 # the 1.8.4 tag
 SRCREV = "f2183fa8df3d173afbee09cc4230ab8f4e03f459"
 PV = "1.8.4+git${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 DEFAULT_PREFERENCE = "-1"
 

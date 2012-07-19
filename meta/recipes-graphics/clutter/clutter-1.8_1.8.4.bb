@@ -1,6 +1,8 @@
 require recipes-graphics/clutter/clutter.inc
 require recipes-graphics/clutter/clutter-package.inc
 
+PR = "r1"
+
 # We're API/ABI compatible and this may make things easier for layers
 PROVIDES += "clutter-1.6"
 
