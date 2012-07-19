@@ -11,59 +11,59 @@ PKGWRITEDIRIPK = "${WORKDIR}/deploy-ipks"
 OPKGBUILDCMD ??= "opkg-build"
 
 python package_ipk_fn () {
-	d.setVar('PKGFN', d.getVar('PKG'))
+    d.setVar('PKGFN', d.getVar('PKG'))
 }
 
 python package_ipk_install () {
-	import subprocess
+    import subprocess
 
-	pkg = d.getVar('PKG', True)
-	pkgfn = d.getVar('PKGFN', True)
-	rootfs = d.getVar('IMAGE_ROOTFS', True)
-	ipkdir = d.getVar('DEPLOY_DIR_IPK', True)
-	stagingdir = d.getVar('STAGING_DIR', True)
-	tmpdir = d.getVar('TMPDIR', True)
+    pkg = d.getVar('PKG', True)
+    pkgfn = d.getVar('PKGFN', True)
+    rootfs = d.getVar('IMAGE_ROOTFS', True)
+    ipkdir = d.getVar('DEPLOY_DIR_IPK', True)
+    stagingdir = d.getVar('STAGING_DIR', True)
+    tmpdir = d.getVar('TMPDIR', True)
 
-	if None in (pkg,pkgfn,rootfs):
-		raise bb.build.FuncFailed("missing variables (one or more of PKG, PKGFN, IMAGEROOTFS)")
-	try:
-		bb.mkdirhier(rootfs)
-		os.chdir(rootfs)
-	except OSError:
-		import sys
-		(type, value, traceback) = sys.exc_info()
-		print value
-		raise bb.build.FuncFailed
+    if None in (pkg,pkgfn,rootfs):
+        raise bb.build.FuncFailed("missing variables (one or more of PKG, PKGFN, IMAGEROOTFS)")
+    try:
+        bb.mkdirhier(rootfs)
+        os.chdir(rootfs)
+    except OSError:
+        import sys
+        (type, value, traceback) = sys.exc_info()
+        print value
+        raise bb.build.FuncFailed
 
-	# Generate ipk.conf if it or the stamp doesnt exist
-	conffile = os.path.join(stagingdir,"ipkg.conf")
-	if not os.access(conffile, os.R_OK):
-		ipkg_archs = d.getVar('PACKAGE_ARCHS')
-		if ipkg_archs is None:
-			bb.error("PACKAGE_ARCHS missing")
-			raise FuncFailed
-		ipkg_archs = ipkg_archs.split()
-		arch_priority = 1
+    # Generate ipk.conf if it or the stamp doesnt exist
+    conffile = os.path.join(stagingdir,"ipkg.conf")
+    if not os.access(conffile, os.R_OK):
+        ipkg_archs = d.getVar('PACKAGE_ARCHS')
+        if ipkg_archs is None:
+            bb.error("PACKAGE_ARCHS missing")
+            raise FuncFailed
+        ipkg_archs = ipkg_archs.split()
+        arch_priority = 1
 
-		f = open(conffile,"w")
-		for arch in ipkg_archs:
-			f.write("arch %s %s\n" % ( arch, arch_priority ))
-			arch_priority += 1
-		f.write("src local file:%s" % ipkdir)
-		f.close()
+        f = open(conffile,"w")
+        for arch in ipkg_archs:
+            f.write("arch %s %s\n" % ( arch, arch_priority ))
+            arch_priority += 1
+        f.write("src local file:%s" % ipkdir)
+        f.close()
 
 
-	if not os.access(os.path.join(ipkdir,"Packages"), os.R_OK) or not os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"),os.R_OK):
-		ret = subprocess.call('opkg-make-index -p %s %s ' % (os.path.join(ipkdir, "Packages"), ipkdir), shell=True)
-		if (ret != 0 ):
-			raise bb.build.FuncFailed
-		f = open(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"),"w")
-		f.close()
+    if not os.access(os.path.join(ipkdir,"Packages"), os.R_OK) or not os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"),os.R_OK):
+        ret = subprocess.call('opkg-make-index -p %s %s ' % (os.path.join(ipkdir, "Packages"), ipkdir), shell=True)
+        if (ret != 0 ):
+            raise bb.build.FuncFailed
+        f = open(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"),"w")
+        f.close()
 
-	ret = subprocess.call('opkg-cl  -o %s -f %s update' % (rootfs, conffile), shell=True)
-	ret = subprocess.call('opkg-cl  -o %s -f %s install %s' % (rootfs, conffile, pkgfn), shell=True)
-	if (ret != 0 ):
-		raise bb.build.FuncFailed
+    ret = subprocess.call('opkg-cl  -o %s -f %s update' % (rootfs, conffile), shell=True)
+    ret = subprocess.call('opkg-cl  -o %s -f %s install %s' % (rootfs, conffile, pkgfn), shell=True)
+    if (ret != 0 ):
+        raise bb.build.FuncFailed
 }
 
 package_tryout_install_multilib_ipk() {
@@ -262,174 +262,174 @@ package_generate_archlist () {
 }
 
 python do_package_ipk () {
-	import re, copy
-	import textwrap
-	import subprocess
+    import re, copy
+    import textwrap
+    import subprocess
 
-	workdir = d.getVar('WORKDIR', True)
-	outdir = d.getVar('PKGWRITEDIRIPK', True)
-	tmpdir = d.getVar('TMPDIR', True)
-	pkgdest = d.getVar('PKGDEST', True)
-	if not workdir or not outdir or not tmpdir:
-		bb.error("Variables incorrectly set, unable to package")
-		return
+    workdir = d.getVar('WORKDIR', True)
+    outdir = d.getVar('PKGWRITEDIRIPK', True)
+    tmpdir = d.getVar('TMPDIR', True)
+    pkgdest = d.getVar('PKGDEST', True)
+    if not workdir or not outdir or not tmpdir:
+        bb.error("Variables incorrectly set, unable to package")
+        return
 
-	packages = d.getVar('PACKAGES', True)
-	if not packages or packages == '':
-		bb.debug(1, "No packages; nothing to do")
-		return
+    packages = d.getVar('PACKAGES', True)
+    if not packages or packages == '':
+        bb.debug(1, "No packages; nothing to do")
+        return
 
-	# We're about to add new packages so the index needs to be checked
-        # so remove the appropriate stamp file.
-	if os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"), os.R_OK):
-		os.unlink(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"))
+    # We're about to add new packages so the index needs to be checked
+    # so remove the appropriate stamp file.
+    if os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"), os.R_OK):
+        os.unlink(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"))
 
-	for pkg in packages.split():
-		localdata = bb.data.createCopy(d)
-		root = "%s/%s" % (pkgdest, pkg)
+    for pkg in packages.split():
+        localdata = bb.data.createCopy(d)
+        root = "%s/%s" % (pkgdest, pkg)
 
-		lf = bb.utils.lockfile(root + ".lock")
+        lf = bb.utils.lockfile(root + ".lock")
 
-		localdata.setVar('ROOT', '')
-		localdata.setVar('ROOT_%s' % pkg, root)
-		pkgname = localdata.getVar('PKG_%s' % pkg, True)
-		if not pkgname:
-			pkgname = pkg
-		localdata.setVar('PKG', pkgname)
+        localdata.setVar('ROOT', '')
+        localdata.setVar('ROOT_%s' % pkg, root)
+        pkgname = localdata.getVar('PKG_%s' % pkg, True)
+        if not pkgname:
+            pkgname = pkg
+        localdata.setVar('PKG', pkgname)
 
-		localdata.setVar('OVERRIDES', pkg)
+        localdata.setVar('OVERRIDES', pkg)
 
-		bb.data.update_data(localdata)
-		basedir = os.path.join(os.path.dirname(root))
-		arch = localdata.getVar('PACKAGE_ARCH', True)
-		pkgoutdir = "%s/%s" % (outdir, arch)
-		bb.mkdirhier(pkgoutdir)
-		os.chdir(root)
-		from glob import glob
-		g = glob('*')
-		try:
-			del g[g.index('CONTROL')]
-			del g[g.index('./CONTROL')]
-		except ValueError:
-			pass
-		if not g and localdata.getVar('ALLOW_EMPTY') != "1":
-			bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', True), localdata.getVar('PKGR', True)))
-			bb.utils.unlockfile(lf)
-			continue
+        bb.data.update_data(localdata)
+        basedir = os.path.join(os.path.dirname(root))
+        arch = localdata.getVar('PACKAGE_ARCH', True)
+        pkgoutdir = "%s/%s" % (outdir, arch)
+        bb.mkdirhier(pkgoutdir)
+        os.chdir(root)
+        from glob import glob
+        g = glob('*')
+        try:
+            del g[g.index('CONTROL')]
+            del g[g.index('./CONTROL')]
+        except ValueError:
+            pass
+        if not g and localdata.getVar('ALLOW_EMPTY') != "1":
+            bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', True), localdata.getVar('PKGR', True)))
+            bb.utils.unlockfile(lf)
+            continue
 
-		controldir = os.path.join(root, 'CONTROL')
-		bb.mkdirhier(controldir)
-		try:
-			ctrlfile = file(os.path.join(controldir, 'control'), 'w')
-		except OSError:
-			bb.utils.unlockfile(lf)
-			raise bb.build.FuncFailed("unable to open control file for writing.")
+        controldir = os.path.join(root, 'CONTROL')
+        bb.mkdirhier(controldir)
+        try:
+            ctrlfile = file(os.path.join(controldir, 'control'), 'w')
+        except OSError:
+            bb.utils.unlockfile(lf)
+            raise bb.build.FuncFailed("unable to open control file for writing.")
 
-		fields = []
-		pe = d.getVar('PKGE', True)
-		if pe and int(pe) > 0:
-			fields.append(["Version: %s:%s-%s\n", ['PKGE', 'PKGV', 'PKGR']])
-		else:
-			fields.append(["Version: %s-%s\n", ['PKGV', 'PKGR']])
-		fields.append(["Description: %s\n", ['DESCRIPTION']])
-		fields.append(["Section: %s\n", ['SECTION']])
-		fields.append(["Priority: %s\n", ['PRIORITY']])
-		fields.append(["Maintainer: %s\n", ['MAINTAINER']])
-		fields.append(["License: %s\n", ['LICENSE']])
-		fields.append(["Architecture: %s\n", ['PACKAGE_ARCH']])
-		fields.append(["OE: %s\n", ['PN']])
-		fields.append(["Homepage: %s\n", ['HOMEPAGE']])
+        fields = []
+        pe = d.getVar('PKGE', True)
+        if pe and int(pe) > 0:
+            fields.append(["Version: %s:%s-%s\n", ['PKGE', 'PKGV', 'PKGR']])
+        else:
+            fields.append(["Version: %s-%s\n", ['PKGV', 'PKGR']])
+        fields.append(["Description: %s\n", ['DESCRIPTION']])
+        fields.append(["Section: %s\n", ['SECTION']])
+        fields.append(["Priority: %s\n", ['PRIORITY']])
+        fields.append(["Maintainer: %s\n", ['MAINTAINER']])
+        fields.append(["License: %s\n", ['LICENSE']])
+        fields.append(["Architecture: %s\n", ['PACKAGE_ARCH']])
+        fields.append(["OE: %s\n", ['PN']])
+        fields.append(["Homepage: %s\n", ['HOMEPAGE']])
 
-		def pullData(l, d):
-			l2 = []
-			for i in l:
-				l2.append(d.getVar(i, True))
-			return l2
+        def pullData(l, d):
+            l2 = []
+            for i in l:
+                l2.append(d.getVar(i, True))
+            return l2
 
-		ctrlfile.write("Package: %s\n" % pkgname)
-		# check for required fields
-		try:
-			for (c, fs) in fields:
-				for f in fs:
-					if localdata.getVar(f) is None:
-						raise KeyError(f)
-				# Special behavior for description...
-				if 'DESCRIPTION' in fs:
-					summary = localdata.getVar('SUMMARY', True) or localdata.getVar('DESCRIPTION', True) or "."
-					description = localdata.getVar('DESCRIPTION', True) or "."
-					description = textwrap.dedent(description).strip()
-					ctrlfile.write('Description: %s\n' % summary)
-					ctrlfile.write('%s\n' % textwrap.fill(description, width=74, initial_indent=' ', subsequent_indent=' '))
-				else:
-					ctrlfile.write(c % tuple(pullData(fs, localdata)))
-		except KeyError:
-			import sys
-			(type, value, traceback) = sys.exc_info()
-			ctrlfile.close()
-			bb.utils.unlockfile(lf)
-			raise bb.build.FuncFailed("Missing field for ipk generation: %s" % value)
-		# more fields
+        ctrlfile.write("Package: %s\n" % pkgname)
+        # check for required fields
+        try:
+            for (c, fs) in fields:
+                for f in fs:
+                    if localdata.getVar(f) is None:
+                        raise KeyError(f)
+                # Special behavior for description...
+                if 'DESCRIPTION' in fs:
+                    summary = localdata.getVar('SUMMARY', True) or localdata.getVar('DESCRIPTION', True) or "."
+                    description = localdata.getVar('DESCRIPTION', True) or "."
+                    description = textwrap.dedent(description).strip()
+                    ctrlfile.write('Description: %s\n' % summary)
+                    ctrlfile.write('%s\n' % textwrap.fill(description, width=74, initial_indent=' ', subsequent_indent=' '))
+                else:
+                    ctrlfile.write(c % tuple(pullData(fs, localdata)))
+        except KeyError:
+            import sys
+            (type, value, traceback) = sys.exc_info()
+            ctrlfile.close()
+            bb.utils.unlockfile(lf)
+            raise bb.build.FuncFailed("Missing field for ipk generation: %s" % value)
+        # more fields
 
-		mapping_rename_hook(localdata)
+        mapping_rename_hook(localdata)
 
-		rdepends = bb.utils.explode_dep_versions(localdata.getVar("RDEPENDS", True) or "")
-		rrecommends = bb.utils.explode_dep_versions(localdata.getVar("RRECOMMENDS", True) or "")
-		rsuggests = bb.utils.explode_dep_versions(localdata.getVar("RSUGGESTS", True) or "")
-		rprovides = bb.utils.explode_dep_versions(localdata.getVar("RPROVIDES", True) or "")
-		rreplaces = bb.utils.explode_dep_versions(localdata.getVar("RREPLACES", True) or "")
-		rconflicts = bb.utils.explode_dep_versions(localdata.getVar("RCONFLICTS", True) or "")
+        rdepends = bb.utils.explode_dep_versions(localdata.getVar("RDEPENDS", True) or "")
+        rrecommends = bb.utils.explode_dep_versions(localdata.getVar("RRECOMMENDS", True) or "")
+        rsuggests = bb.utils.explode_dep_versions(localdata.getVar("RSUGGESTS", True) or "")
+        rprovides = bb.utils.explode_dep_versions(localdata.getVar("RPROVIDES", True) or "")
+        rreplaces = bb.utils.explode_dep_versions(localdata.getVar("RREPLACES", True) or "")
+        rconflicts = bb.utils.explode_dep_versions(localdata.getVar("RCONFLICTS", True) or "")
 
-		if rdepends:
-			ctrlfile.write("Depends: %s\n" % bb.utils.join_deps(rdepends))
-		if rsuggests:
-			ctrlfile.write("Suggests: %s\n" % bb.utils.join_deps(rsuggests))
-		if rrecommends:
-			ctrlfile.write("Recommends: %s\n" % bb.utils.join_deps(rrecommends))
-		if rprovides:
-			ctrlfile.write("Provides: %s\n" % bb.utils.join_deps(rprovides))
-		if rreplaces:
-			ctrlfile.write("Replaces: %s\n" % bb.utils.join_deps(rreplaces))
-		if rconflicts:
-			ctrlfile.write("Conflicts: %s\n" % bb.utils.join_deps(rconflicts))
-		src_uri = localdata.getVar("SRC_URI", True) or "None"
-		if src_uri:
-			src_uri = re.sub("\s+", " ", src_uri)
-			ctrlfile.write("Source: %s\n" % " ".join(src_uri.split()))
-		ctrlfile.close()
+        if rdepends:
+            ctrlfile.write("Depends: %s\n" % bb.utils.join_deps(rdepends))
+        if rsuggests:
+            ctrlfile.write("Suggests: %s\n" % bb.utils.join_deps(rsuggests))
+        if rrecommends:
+            ctrlfile.write("Recommends: %s\n" % bb.utils.join_deps(rrecommends))
+        if rprovides:
+            ctrlfile.write("Provides: %s\n" % bb.utils.join_deps(rprovides))
+        if rreplaces:
+            ctrlfile.write("Replaces: %s\n" % bb.utils.join_deps(rreplaces))
+        if rconflicts:
+            ctrlfile.write("Conflicts: %s\n" % bb.utils.join_deps(rconflicts))
+        src_uri = localdata.getVar("SRC_URI", True) or "None"
+        if src_uri:
+            src_uri = re.sub("\s+", " ", src_uri)
+            ctrlfile.write("Source: %s\n" % " ".join(src_uri.split()))
+        ctrlfile.close()
 
-		for script in ["preinst", "postinst", "prerm", "postrm"]:
-			scriptvar = localdata.getVar('pkg_%s' % script, True)
-			if not scriptvar:
-				continue
-			try:
-				scriptfile = file(os.path.join(controldir, script), 'w')
-			except OSError:
-				bb.utils.unlockfile(lf)
-				raise bb.build.FuncFailed("unable to open %s script file for writing." % script)
-			scriptfile.write(scriptvar)
-			scriptfile.close()
-			os.chmod(os.path.join(controldir, script), 0755)
+        for script in ["preinst", "postinst", "prerm", "postrm"]:
+            scriptvar = localdata.getVar('pkg_%s' % script, True)
+            if not scriptvar:
+                continue
+            try:
+                scriptfile = file(os.path.join(controldir, script), 'w')
+            except OSError:
+                bb.utils.unlockfile(lf)
+                raise bb.build.FuncFailed("unable to open %s script file for writing." % script)
+            scriptfile.write(scriptvar)
+            scriptfile.close()
+            os.chmod(os.path.join(controldir, script), 0755)
 
-		conffiles_str = localdata.getVar("CONFFILES", True)
-		if conffiles_str:
-			try:
-				conffiles = file(os.path.join(controldir, 'conffiles'), 'w')
-			except OSError:
-				bb.utils.unlockfile(lf)
-				raise bb.build.FuncFailed("unable to open conffiles for writing.")
-			for f in conffiles_str.split():
-				conffiles.write('%s\n' % f)
-			conffiles.close()
+        conffiles_str = localdata.getVar("CONFFILES", True)
+        if conffiles_str:
+            try:
+                conffiles = file(os.path.join(controldir, 'conffiles'), 'w')
+            except OSError:
+                bb.utils.unlockfile(lf)
+                raise bb.build.FuncFailed("unable to open conffiles for writing.")
+            for f in conffiles_str.split():
+                conffiles.write('%s\n' % f)
+            conffiles.close()
 
-		os.chdir(basedir)
-		ret = subprocess.call("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH", True),
+        os.chdir(basedir)
+        ret = subprocess.call("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH", True),
                                                           d.getVar("OPKGBUILDCMD",1), pkg, pkgoutdir), shell=True)
-		if ret != 0:
-			bb.utils.unlockfile(lf)
-			raise bb.build.FuncFailed("opkg-build execution failed")
+        if ret != 0:
+            bb.utils.unlockfile(lf)
+            raise bb.build.FuncFailed("opkg-build execution failed")
 
-		bb.utils.prunedir(controldir)
-		bb.utils.unlockfile(lf)
+        bb.utils.prunedir(controldir)
+        bb.utils.unlockfile(lf)
 
 }
 
@@ -439,7 +439,7 @@ do_package_write_ipk[sstate-inputdirs] = "${PKGWRITEDIRIPK}"
 do_package_write_ipk[sstate-outputdirs] = "${DEPLOY_DIR_IPK}"
 
 python do_package_write_ipk_setscene () {
-	sstate_setscene(d)
+    sstate_setscene(d)
 }
 addtask do_package_write_ipk_setscene
 
@@ -452,8 +452,8 @@ python () {
 }
 
 python do_package_write_ipk () {
-	bb.build.exec_func("read_subpackage_metadata", d)
-	bb.build.exec_func("do_package_ipk", d)
+    bb.build.exec_func("read_subpackage_metadata", d)
+    bb.build.exec_func("do_package_ipk", d)
 }
 do_package_write_ipk[dirs] = "${PKGWRITEDIRIPK}"
 do_package_write_ipk[umask] = "022"
