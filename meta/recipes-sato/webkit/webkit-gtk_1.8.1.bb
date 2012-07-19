@@ -15,6 +15,8 @@ DEPENDS = "zlib enchant gnome-keyring libsoup-2.4 curl libxml2 cairo libxslt lib
            gtk+ gstreamer gst-plugins-base flex-native gperf-native perl-native-runtime sqlite3 ${ICU_LIB}"
 DEPENDS += " ${@base_contains('DISTRO_FEATURES', 'opengl', 'virtual/libgl', '', d)}"
 
+PR = "r1"
+
 SRC_URI = "\
   http://www.webkitgtk.org/releases/webkit-${PV}.tar.xz \
   file://nodolt.patch \
