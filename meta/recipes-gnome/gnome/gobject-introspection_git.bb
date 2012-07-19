@@ -19,7 +19,7 @@ DEFAULT_PREFERENCE = "-1"
 
 S = "${WORKDIR}/git"
 
-inherit autotools gtk-doc
+inherit autotools gtk-doc pythonnative
 
 BBCLASSEXTEND = "native"
 
