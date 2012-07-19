@@ -24,9 +24,9 @@ SRC_URI = "http://hal.freedesktop.org/releases/polkit-${PV}.tar.gz \
 SRC_URI[md5sum] = "e380b4c6fb1e7bccf854e92edc0a8ce1"
 SRC_URI[sha256sum] = "6b0a13d8381e4a7b7e37c18a54595191b50757e0fcd186cd9918e9ad0f18c7f9"
 
-EXTRA_OECONF = "--with-os-type=moblin --disable-man-pages --disable-gtk-doc --disable-introspection"
+EXTRA_OECONF = "--with-os-type=moblin --disable-man-pages --disable-introspection"
 
-inherit autotools pkgconfig
+inherit autotools gtk-doc pkgconfig
 
 do_install_append() {
 	rm -f ${D}${libdir}/${PN}-1/extensions/*.a
