@@ -12,7 +12,7 @@ SECTION = "x11"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://docs/license.html;md5=7a3373c039b6b925c427755a4f779c1d"
 
-INC_PR = "r14"
+INC_PR = "r15"
 PE = "2"
 
 
@@ -26,7 +26,7 @@ PROVIDES = "virtual/libgl"
 # for mesa-dri and mesa-xlib
 FILESEXTRAPATHS_append := "${THISDIR}/mesa:"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig pythonnative
 
 EXTRA_OECONF = "--enable-glu \
                 --disable-glw \
