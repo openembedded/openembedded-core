@@ -9,9 +9,9 @@ POLKIT_libc-uclibc = ""
 DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native ${POLKIT}"
 DEPENDS_virtclass-native = "glib-2.0-native dbus-native dbus-glib-native libxml2-native intltool-native gnome-common-native"
 
-PR = "r9"
+PR = "r10"
 
-inherit gnomebase
+inherit gnomebase gtk-doc
 
 SRC_URI = "${GNOME_MIRROR}/GConf/${@gnome_verdir("${PV}")}/GConf-${PV}.tar.bz2;name=archive \
 	   file://nointro.patch \
@@ -28,10 +28,6 @@ POLKIT_OECONF_libc-uclibc = "--disable-default-service"
 
 EXTRA_OECONF = "--disable-gtk-doc --enable-shared --disable-static --enable-debug=yes \
                 --disable-introspection --disable-orbit --with-openldap=no ${POLKIT_OECONF} --disable-gtk"
-
-do_configure_prepend () {
-	touch gtk-doc.make
-}
 
 do_install_append() {
 	# this directory need to be created to avoid an Error 256 at gdm launch
