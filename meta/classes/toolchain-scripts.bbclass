@@ -68,8 +68,8 @@ toolchain_create_tree_env_script () {
 	echo 'export RANLIB=${TARGET_PREFIX}ranlib' >> $script
 	echo 'export OBJCOPY=${TARGET_PREFIX}objcopy' >> $script
 	echo 'export OBJDUMP=${TARGET_PREFIX}objdump' >> $script
-	echo 'export AR=${TARGET_PREFIX}-ar' >> $script
-	echo 'export NM=${TARGET_PREFIX}-nm' >> $script
+	echo 'export AR=${TARGET_PREFIX}ar' >> $script
+	echo 'export NM=${TARGET_PREFIX}nm' >> $script
 	echo 'export TARGET_PREFIX=${TARGET_PREFIX}' >> $script
 	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS} --build=${BUILD_SYS} --with-libtool-sysroot=${STAGING_DIR_TARGET}"' >> $script
 	if [ "${TARGET_OS}" = "darwin8" ]; then
