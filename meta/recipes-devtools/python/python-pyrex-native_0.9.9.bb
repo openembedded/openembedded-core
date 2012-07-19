@@ -1,5 +1,5 @@
 require python-pyrex_${PV}.bb
-inherit native
+inherit native pythonnative
 DEPENDS = "python-native"
 RDEPENDS_${PN} = ""
-PR = "r2"
+PR = "r3"
