@@ -156,6 +156,7 @@ if [ -f /ssd/etc/grub.d/40_custom ] ; then
     sed -i "s@__ROOTFS__@$rootfs $rootwait@g" /ssd/etc/grub.d/40_custom
     sed -i "s/__VIDEO_MODE__/$3/g" /ssd/etc/grub.d/40_custom
     sed -i "s/__VGA_MODE__/$4/g" /ssd/etc/grub.d/40_custom
+    sed -i "s/__CONSOLE__/$5/g" /ssd/etc/grub.d/40_custom
     mount $bootfs /bootmnt
     cp /ssd/etc/grub.d/40_custom /bootmnt/40_custom
     umount /bootmnt

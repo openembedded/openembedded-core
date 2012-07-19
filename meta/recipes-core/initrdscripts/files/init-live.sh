@@ -38,6 +38,12 @@ read_args() {
                 video_mode=$arg ;;
             vga=*)
                 vga_mode=$arg ;;
+            console=*)
+                if [ -z "${console_params}" ]; then
+                    console_params=$arg
+                else
+                    console_params="$console_params $arg"
+                fi
         esac
     done
 }
@@ -112,7 +118,7 @@ case $label in
 	;;
     install)
 	if [ -f /media/$i/$ISOLINUX/$ROOT_IMAGE ] ; then
-	    ./install.sh $i/$ISOLINUX $ROOT_IMAGE $video_mode $vga_mode
+	    ./install.sh $i/$ISOLINUX $ROOT_IMAGE $video_mode $vga_mode $console_params
 	else
 	    fatal "Could not find install script"
 	fi
