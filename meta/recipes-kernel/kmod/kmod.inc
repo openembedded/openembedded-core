@@ -8,12 +8,12 @@ LICENSE = "GPL-2.0+ & LGPL-2.1+"
 LICENSE_libkmod = "LGPL-2.1+"
 SECTION = "base"
 PV = "8"
-INC_PR = "r0"
-DEPENDS += "gnome-doc-utils-native"
+INC_PR = "r1"
+
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://libkmod/COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
                    "
-inherit autotools
+inherit autotools gtk-doc
 
 SRC_URI = "git://git.profusion.mobi/kmod.git;protocol=git;branch=master \
            file://depmod-search.conf \
