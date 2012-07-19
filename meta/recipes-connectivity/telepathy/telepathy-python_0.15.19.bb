@@ -11,9 +11,9 @@ SRC_URI = "http://telepathy.freedesktop.org/releases/${BPN}/${BPN}-${PV}.tar.gz 
            file://remove_duplicate_install.patch \
            file://telepathy-python_fix_for_automake_1.12.patch"
 
-PR = "r5"
+PR = "r6"
 
-inherit autotools
+inherit autotools pythonnative
 
 SRC_URI[md5sum] = "f7ca25ab3c88874015b7e9728f7f3017"
 SRC_URI[sha256sum] = "244c0e1bf4bbd78ae298ea659fe10bf3a73738db550156767cc2477aedf72376"
