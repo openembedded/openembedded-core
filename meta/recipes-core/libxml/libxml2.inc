@@ -17,7 +17,7 @@ SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz \
            file://ansidecl.patch"
 
 
-inherit autotools pkgconfig binconfig
+inherit autotools pkgconfig binconfig pythonnative
 
 # We don't DEPEND on binutils for ansidecl.h so ensure we don't use the header
 do_configure_prepend () {
