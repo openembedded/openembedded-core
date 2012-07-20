@@ -22,7 +22,7 @@ RPMCONF_HOST_BASE = "${DEPLOY_DIR_RPM}/solvedb-sdk"
 # Update the Packages depsolver db in ${DEPLOY_DIR_RPM}
 #
 package_update_index_rpm () {
-	if [ ! -z "${DEPLOY_KEEP_PACKAGES}" ]; then
+	if [ ! -z "${DEPLOY_KEEP_PACKAGES}" -o ! -e "${DEPLOY_DIR_RPM}" ]; then
 		return
 	fi
 
@@ -1171,6 +1171,6 @@ do_package_write_rpm[dirs] = "${PKGWRITEDIRRPM}"
 do_package_write_rpm[umask] = "022"
 addtask package_write_rpm before do_package_write after do_package
 
-PACKAGEINDEXES += "package_update_index_rpm; createrepo ${DEPLOY_DIR_RPM};"
+PACKAGEINDEXES += "package_update_index_rpm; [ ! -e ${DEPLOY_DIR_RPM} ] || createrepo ${DEPLOY_DIR_RPM};"
 PACKAGEINDEXDEPS += "rpm-native:do_populate_sysroot"
 PACKAGEINDEXDEPS += "createrepo-native:do_populate_sysroot"
