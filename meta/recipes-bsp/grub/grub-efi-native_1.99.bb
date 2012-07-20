@@ -14,7 +14,7 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 # FIXME: We should be able to optionally drop freetype as a dependency
-DEPENDS = "help2man-native autogen-native"
+DEPENDS = "autogen-native"
 RDEPENDS_${PN} = "diffutils freetype"
 PR = "r10"
 
