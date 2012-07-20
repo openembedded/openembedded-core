@@ -32,6 +32,9 @@ python () {
         d.setVar('SSTATE_PKGARCH', d.expand("${SDK_ARCH}"))
     elif bb.data.inherits_class('cross-canadian', d):
         d.setVar('SSTATE_PKGARCH', d.expand("${SDK_ARCH}_${PACKAGE_ARCH}"))
+    elif bb.data.inherits_class('allarch', d):
+        d.setVar('SSTATE_PKGARCH', "allarch")
+        d.setVar('SSTATE_MANMACH', d.expand("allarch_${MACHINE}"))
     else:
         d.setVar('SSTATE_MANMACH', d.expand("${MACHINE}"))
 
