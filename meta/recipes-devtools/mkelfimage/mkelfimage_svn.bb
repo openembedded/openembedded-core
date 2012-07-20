@@ -10,7 +10,7 @@ PR = "r1"
 
 DEPENDS += "zlib"
 
-SRC_URI = "svn://coreboot.org/coreboot/trunk/util;module=mkelfImage;protocol=http \
+SRC_URI = "svn://coreboot.org/coreboot/trunk/util;module=mkelfImage;protocol=svn \
            file://cross-compile.patch \
           "
 
