@@ -14,3 +14,7 @@ EXTRA_OECONF_append = "\
   --disable-gtk-doc-html \
   --disable-gtk-doc-pdf \
 "
+
+do_configure_prepend () {
+	gtkdocize
+}
