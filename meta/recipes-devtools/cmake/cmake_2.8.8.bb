@@ -4,12 +4,12 @@ inherit cmake
 
 DEPENDS += "curl expat zlib libarchive ncurses"
 
-PR = "${INC_PR}.3"
+PR = "${INC_PR}.0"
 
 SRC_URI += "file://dont-run-cross-binaries.patch"
 
-SRC_URI[md5sum] = "3c5d32cec0f4c2dc45f4c2e84f4a20c5"
-SRC_URI[sha256sum] = "5e18bff75f01656c64f553412a8905527e1b85efaf3163c6fb81ea5aaced0b91"
+SRC_URI[md5sum] = "ba74b22c788a0c8547976b880cd02b17"
+SRC_URI[sha256sum] = "2b59897864d6220ff20aa8eac64cac8994e004898a1c0f899c8cb4d7b7570b46"
 
 # Strip ${prefix} from ${docdir}, set result into docdir_stripped
 python () {
