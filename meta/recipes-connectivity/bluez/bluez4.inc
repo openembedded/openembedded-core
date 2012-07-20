@@ -10,8 +10,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
 DEPENDS = "udev libusb dbus-glib glib-2.0 libcheck"
 RDEPENDS_${PN}-dev = "bluez-hcidump"
 
-PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)}"
+PACKAGECONFIG ??= "\
+    ${@base_contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)}\
+    ${@base_contains('DISTRO_FEATURES', 'pie', 'pie', '', d)}\
+"
 PACKAGECONFIG[alsa] = "--enable-alsa,--disable-alsa,alsa-lib"
+PACKAGECONFIG[pie] = "--enable-pie,--disable-pie,"
 
 ASNEEDED = ""
 
