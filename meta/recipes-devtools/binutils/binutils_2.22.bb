@@ -1,5 +1,8 @@
 require binutils.inc
 require binutils-${PV}.inc
+
+DEPENDS += "flex bison zlib"
+
 EXTRA_OECONF += "--with-sysroot=/ \
                 --enable-install-libbfd \
                 --enable-shared \
