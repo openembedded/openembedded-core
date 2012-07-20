@@ -32,8 +32,8 @@ SRC_URI += "file://configure-targets.patch \
             file://find.pl \
            "
 
-SRC_URI[md5sum] = "b4df9c11af454fd68178c85a1d5f328f"
-SRC_URI[sha256sum] = "548262d15777c504be1ab9bb8fabef1e14a3de54837a6593c8f403dd843d5e57"
+SRC_URI[md5sum] = "cbe4ac0d8f598680f68a951e04b0996b"
+SRC_URI[sha256sum] = "626fb8fcb3eb7e966edbe71553ff993d137f6e8a87b05051a3695e621098b8af"
 
 PACKAGES =+ " \
 	${PN}-engines \
