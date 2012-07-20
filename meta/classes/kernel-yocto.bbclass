@@ -147,10 +147,10 @@ do_kernel_checkout() {
 		fi
 	done
 
-	# Create a working tree copy of the kernel by checkout out a branch
+	# Create a working tree copy of the kernel by checking out a branch
 	git show-ref --quiet --verify -- "refs/heads/${KBRANCH}"
 	if [ $? -eq 0 ]; then
-		# checkout and clobber and unimportant files
+		# checkout and clobber any unimportant files
 		git checkout -f ${KBRANCH}
 	else
 		echo "Not checking out ${KBRANCH}, it will be created later"
@@ -200,7 +200,7 @@ python do_kernel_configcheck() {
 }
 
 
-# Ensure that the branches (BSP and meta) are on the locatios specified by
+# Ensure that the branches (BSP and meta) are on the locations specified by
 # their SRCREV values. If they are NOT on the right commits, the branches
 # are reset to the correct commit.
 do_validate_branches() {
