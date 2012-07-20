@@ -42,7 +42,7 @@ mk_dir() {
 	[ -e "$1" ] && {
 	  [ "${VERBOSE}" != "no" ] && echo "Target already exists. Skipping."
 	} || {
-	  eval $EXEC &
+	  eval $EXEC
 	}
 }
 
@@ -153,7 +153,7 @@ apply_cfgfile() {
             create_file "${TNAME}" &
 	    ;;
       "d")  [ "${VERBOSE}" != "no" ] && echo "Creating directory -${TNAME}-."
-            mk_dir "${TNAME}" &
+            mk_dir "${TNAME}"
 	    # Add check to see if there's an entry in fstab to mount.
 	    ;;
       *)    [ "${VERBOSE}" != "no" ] && echo "Invalid type -${TTYPE}-."
