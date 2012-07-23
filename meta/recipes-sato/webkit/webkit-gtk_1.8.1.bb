@@ -47,9 +47,9 @@ EXTRA_OECONF = "\
                "
 
 #default unicode backend icu breaks in cross-compile when target and host are different endian type
-EXTRA_OECONF_append_powerpc += "--with-unicode-backend=glib"
+EXTRA_OECONF_append_powerpc = " --with-unicode-backend=glib"
 
-CPPFLAGS_append_powerpc += "-I${STAGING_INCDIR}/pango-1.0 \
+CPPFLAGS_append_powerpc = " -I${STAGING_INCDIR}/pango-1.0 \
                             -I${STAGING_LIBDIR}/glib-2.0/include \
                             -I${STAGING_INCDIR}/glib-2.0"
 
