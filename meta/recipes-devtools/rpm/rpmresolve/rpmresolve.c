@@ -204,10 +204,104 @@ int processPackages(rpmts *ts, int tscount, const char *packagelistfn, int ignor
     return rc;
 }
 
+int lookupProvider(rpmts ts, const char *req, char **provider)
+{
+    int rc = 0;
+    rpmmi provmi = rpmtsInitIterator(ts, RPMTAG_PROVIDENAME, req, 0);
+    if(provmi) {
+        Header h;
+        if ((h = rpmmiNext(provmi)) != NULL) {
+            HE_t he = (HE_t) memset(alloca(sizeof(*he)), 0, sizeof(*he));
+            he->tag = RPMTAG_NAME;
+            rc = (headerGet(h, he, 0) != 1);
+            if(rc==0)
+                *provider = strdup((char *)he->p.ptr);
+        }
+        (void)rpmmiFree(provmi);
+    }
+    else {
+        rc = -1;
+    }
+    return rc;
+}
+
+int printDepList(rpmts *ts, int tscount)
+{
+    int rc = 0;
+
+    if( tscount > 1 )
+        printf(">1 database specified with dependency list, using first only\n");
+
+    /* Get list of names */
+    rpmdb db = rpmtsGetRdb(ts[0]);
+    ARGV_t names = NULL;
+    rc = rpmdbMireApply(db, RPMTAG_NAME,
+                RPMMIRE_STRCMP, NULL, &names);
+    int nnames = argvCount(names);
+
+    /* Get list of NVRAs */
+    ARGV_t keys = NULL;
+    rc = rpmdbMireApply(db, RPMTAG_NVRA,
+                RPMMIRE_STRCMP, NULL, &keys);
+    if (keys) {
+        int i, j;
+        HE_t he = (HE_t) memset(alloca(sizeof(*he)), 0, sizeof(*he));
+        int nkeys = argvCount(keys);
+        for(i=0; i<nkeys; i++) {
+            rpmmi mi = rpmtsInitIterator(ts[0], RPMTAG_NVRA, keys[i], 0);
+            Header h;
+            if ((h = rpmmiNext(mi)) != NULL) {
+                /* Get name of package */
+                he->tag = RPMTAG_NAME;
+                rc = (headerGet(h, he, 0) != 1);
+                char *name = strdup((char *)he->p.ptr);
+                /* Get its requires */
+                he->tag = RPMTAG_REQUIRENAME;
+                rc = (headerGet(h, he, 0) != 1);
+                ARGV_t reqs = (ARGV_t)he->p.ptr;
+                /* Get its requireflags */
+                he->tag = RPMTAG_REQUIREFLAGS;
+                rc = (headerGet(h, he, 0) != 1);
+                rpmuint32_t *reqflags = (rpmuint32_t *)he->p.ui32p;
+                for(j=0; j<he->c; j++) {
+                    int k;
+                    char *prov = NULL;
+                    for(k=0; k<nnames; k++) {
+                        if(strcmp(names[k], reqs[j]) == 0) {
+                            prov = names[k];
+                            break;
+                        }
+                    }
+                    if(prov) {
+                        if((int)reqflags[j] & 0x80000)
+                            printf("%s|%s [REC]\n", name, prov);
+                        else
+                            printf("%s|%s\n", name, prov);
+                    }
+                    else {
+                        rc = lookupProvider(ts[0], reqs[j], &prov);
+                        if(rc==0 && prov) {
+                            if((int)reqflags[j] & 0x80000)
+                                printf("%s|%s [REC]\n", name, prov);
+                            else
+                                printf("%s|%s\n", name, prov);
+                            free(prov);
+                        }
+                    }
+                }
+                free(name);
+            }
+            (void)rpmmiFree(mi);
+        }
+    }
+
+    return rc;
+}
+
 void usage()
 {
     fprintf(stderr, "OpenEmbedded rpm resolver utility\n");
-    fprintf(stderr, "syntax: rpmresolve [-i] <dblistfile> <packagelistfile>\n");
+    fprintf(stderr, "syntax: rpmresolve [-i] [-d] <dblistfile> <packagelistfile>\n");
 }
 
 int main(int argc, char **argv)
@@ -218,12 +312,16 @@ int main(int argc, char **argv)
     int i;
     int c;
     int ignoremissing = 0;
+    int deplistmode = 0;
 
     opterr = 0;
-    while ((c = getopt (argc, argv, "i")) != -1) {
+    while ((c = getopt (argc, argv, "id")) != -1) {
         switch (c) {
             case 'i':
                 ignoremissing = 1;
+                break;
+            case 'd':
+                deplistmode = 1;
                 break;
             case '?':
                 if(isprint(optopt))
@@ -258,12 +356,17 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    if( argc - optind < 2 ) {
-        fprintf(stderr, "Please specify package list file\n");
-        return 1;
+    if(deplistmode) {
+        rc = printDepList(ts, tscount);
     }
-    const char *pkglistfn = argv[optind+1];
-    rc = processPackages(ts, tscount, pkglistfn, ignoremissing);
+    else {
+        if( argc - optind < 2 ) {
+            fprintf(stderr, "Please specify package list file\n");
+            return 1;
+        }
+        const char *pkglistfn = argv[optind+1];
+        rc = processPackages(ts, tscount, pkglistfn, ignoremissing);
+    }
 
     for(i=0; i<tscount; i++)
         (void) rpmtsCloseDB(ts[i]);

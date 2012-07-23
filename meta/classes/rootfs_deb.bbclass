@@ -96,26 +96,24 @@ list_installed_packages() {
 	if [ "$1" = "arch" ] ; then
 		# Here we want the PACKAGE_ARCH not the deb architecture
 		${DPKG_QUERY_COMMAND} -W -f='${Package} ${PackageArch}\n'
+	elif [ "$1" = "file" ] ; then
+		${DPKG_QUERY_COMMAND} -W -f='${Package} ${Package}_${Version}_${Architecture}.deb\n' | while read pkg pkgfile
+		do
+			fullpath=`find ${DEPLOY_DIR_DEB} -name "$pkgfile" || true`
+			if [ "$fullpath" = "" ] ; then
+				echo "$pkg $pkgfile"
+			else
+				echo "$pkg $fullpath"
+			fi
+		done
 	else
 		${DPKG_QUERY_COMMAND} -W -f='${Package}\n'
 	fi
 }
 
-get_package_filename() {
-	fullname=`find ${DEPLOY_DIR_DEB} -name "$1_*.deb" || true`
-	if [ "$fullname" = "" ] ; then
-		echo $name
-	else
-		echo $fullname
-	fi
-}
-
-list_package_depends() {
-	${DPKG_QUERY_COMMAND} -s $1 | grep ^Depends | sed -e 's/^Depends: //' -e 's/,//g' -e 's:([=<>]* [^ )]*)::g'
-}
-
-list_package_recommends() {
-	${DPKG_QUERY_COMMAND} -s $1 | grep ^Recommends | sed -e 's/^Recommends: //' -e 's/,//g' -e 's:([=<>]* [^ )]*)::g'
+rootfs_list_installed_depends() {
+	# Cheat here a little bit by using the opkg query helper util
+	${DPKG_QUERY_COMMAND} -W -f='Package: ${Package}\nDepends: ${Depends}\nRecommends: ${Recommends}\n\n' | opkg-query-helper.py
 }
 
 rootfs_install_packages() {

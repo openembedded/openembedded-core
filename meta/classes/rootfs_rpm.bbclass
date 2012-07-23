@@ -143,40 +143,15 @@ RPM_QUERY_CMD = '${RPM} --root $INSTALL_ROOTFS_RPM -D "_dbpath ${rpmlibdir}" \
 list_installed_packages() {
 	if [ "$1" = "arch" ] ; then
 		${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{ARCH}\n]"
+	elif [ "$1" = "file" ] ; then
+		${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{PACKAGEORIGIN}\n]"
 	else
 		${RPM_QUERY_CMD} -qa --qf "[%{NAME}\n]"
 	fi
 }
 
-get_package_filename() {
-	resolve_package_rpm ${RPMCONF_TARGET_BASE}-base_archs.conf $1
-}
-
-list_package_depends() {
-	pkglist=`list_installed_packages`
-
-	# REQUIRE* lists "soft" requirements (which we know as recommends and RPM refers to
-	# as "suggests") so filter these out with the help of awk
-	for req in `${RPM_QUERY_CMD} -q --qf "[%{REQUIRENAME} %{REQUIREFLAGS}\n]" $1 | awk '{ if( and($2, 0x80000) == 0) print $1 }'`; do
-		if echo "$req" | grep -q "^rpmlib" ; then continue ; fi
-
-		realpkg=""
-		for dep in $pkglist; do
-			if [ "$dep" = "$req" ] ; then
-				realpkg="1"
-				echo $req
-				break
-			fi
-		done
-
-		if [ "$realdep" = "" ] ; then
-			${RPM_QUERY_CMD} -q --whatprovides $req --qf "%{NAME}\n"
-		fi
-	done
-}
-
-list_package_recommends() {
-	${RPM_QUERY_CMD} -q --suggests $1
+rootfs_list_installed_depends() {
+	rpmresolve -d $INSTALL_ROOTFS_RPM/${rpmlibdir}
 }
 
 rootfs_install_packages() {

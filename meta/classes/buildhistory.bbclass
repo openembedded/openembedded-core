@@ -285,48 +285,43 @@ buildhistory_get_image_installed() {
 	mkdir -p ${BUILDHISTORY_DIR_IMAGE}
 
 	# Get list of installed packages
-	list_installed_packages | sort > ${BUILDHISTORY_DIR_IMAGE}/installed-package-names.txt
-	INSTALLED_PKGS=`cat ${BUILDHISTORY_DIR_IMAGE}/installed-package-names.txt`
+	pkgcache="${BUILDHISTORY_DIR_IMAGE}/installed-packages.tmp"
+	list_installed_packages file | sort > $pkgcache
 
-	# Produce installed package file and size lists and dependency graph
-	echo -n > ${BUILDHISTORY_DIR_IMAGE}/installed-packages.txt
-	echo -n > ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.tmp
+	cat $pkgcache | awk '{ print $1 }' > ${BUILDHISTORY_DIR_IMAGE}/installed-package-names.txt
+	cat $pkgcache | awk '{ print $2 }' | xargs -n1 basename > ${BUILDHISTORY_DIR_IMAGE}/installed-packages.txt
+
+	# Produce dependency graph
+	# First, filter out characters that cause issues for dot
+	rootfs_list_installed_depends | sed -e 's:-:_:g' -e 's:\.:_:g' -e 's:+::g' > ${BUILDHISTORY_DIR_IMAGE}/depends.tmp
+	# Change delimiter from pipe to -> and set style for recommend lines
+	sed -i -e 's:|: -> :' -e 's:\[REC\]:[style=dotted]:' -e 's:$:;:' ${BUILDHISTORY_DIR_IMAGE}/depends.tmp
+	# Add header, sorted and de-duped contents and footer and then delete the temp file
 	echo -e "digraph depends {\n    node [shape=plaintext]" > ${BUILDHISTORY_DIR_IMAGE}/depends.dot
-	for pkg in $INSTALLED_PKGS; do
-		pkgfile=`get_package_filename $pkg`
-		echo `basename $pkgfile` >> ${BUILDHISTORY_DIR_IMAGE}/installed-packages.txt
+	cat ${BUILDHISTORY_DIR_IMAGE}/depends.tmp | sort | uniq >> ${BUILDHISTORY_DIR_IMAGE}/depends.dot
+	echo "}" >>  ${BUILDHISTORY_DIR_IMAGE}/depends.dot
+	rm ${BUILDHISTORY_DIR_IMAGE}/depends.tmp
+
+	# Produce installed package sizes list
+	echo -n > ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.tmp
+	cat $pkgcache | while read pkg pkgfile
+	do
 		if [ -f $pkgfile ] ; then
 			pkgsize=`du -k $pkgfile | head -n1 | awk '{ print $1 }'`
 			echo $pkgsize $pkg >> ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.tmp
 		fi
-
-		deps=`list_package_depends $pkg`
-		for dep in $deps ; do
-			echo "$pkg OPP $dep;" | sed -e 's:-:_:g' -e 's:\.:_:g' -e 's:+::g' | sed 's:OPP:->:g'
-		done
-
-		recs=`list_package_recommends $pkg`
-		for rec in $recs ; do
-			echo "$pkg OPP $rec [style=dotted];" | sed -e 's:-:_:g' -e 's:\.:_:g' -e 's:+::g' | sed 's:OPP:->:g'
-		done
-	done | sort | uniq >> ${BUILDHISTORY_DIR_IMAGE}/depends.dot
-	echo "}" >>  ${BUILDHISTORY_DIR_IMAGE}/depends.dot
-
+	done
 	cat ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.tmp | sort -n -r | awk '{print $1 "\tKiB " $2}' > ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.txt
 	rm ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.tmp
+
+	# We're now done with the cache, delete it
+	rm $pkgcache
 
 	# Produce some cut-down graphs (for readability)
 	grep -v kernel_image ${BUILDHISTORY_DIR_IMAGE}/depends.dot | grep -v kernel_2 | grep -v kernel_3 > ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel.dot
 	grep -v libc6 ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel.dot | grep -v libgcc > ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel-nolibc.dot
 	grep -v update_ ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel-nolibc.dot > ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel-nolibc-noupdate.dot
 	grep -v kernel_module ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel-nolibc-noupdate.dot > ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel-nolibc-noupdate-nomodules.dot
-
-	# Workaround for broken shell function dependencies
-	if false ; then
-		get_package_filename
-		list_package_depends
-		list_package_recommends
-	fi
 }
 
 buildhistory_get_imageinfo() {

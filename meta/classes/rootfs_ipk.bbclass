@@ -131,33 +131,23 @@ remove_packaging_data_files() {
 list_installed_packages() {
 	if [ "$1" = "arch" ] ; then
 		opkg-cl ${IPKG_ARGS_POST} status | opkg-query-helper.py -a
+	elif [ "$1" = "file" ] ; then
+		opkg-cl ${IPKG_ARGS_POST} status | opkg-query-helper.py -f | while read pkg pkgfile
+		do
+			fullpath=`find ${DEPLOY_DIR_IPK} -name "$pkgfile" || true`
+			if [ "$fullpath" = "" ] ; then
+				echo "$pkg $pkgfile"
+			else
+				echo "$pkg $fullpath"
+			fi
+		done
 	else
 		opkg-cl ${IPKG_ARGS_POST} list_installed | awk '{ print $1 }'
 	fi
 }
 
-get_package_filename() {
-	set +x
-	info=`opkg-cl ${IPKG_ARGS_POST} info $1 | grep -B 7 -A 7 "^Status.* \(\(installed\)\|\(unpacked\)\)" || true`
-	name=`echo "${info}" | awk '/^Package/ {printf $2"_"}'`
-	name=$name`echo "${info}" | awk -F: '/^Version/ {printf $NF"_"}' | sed 's/^\s*//g'`
-	name=$name`echo "${info}" | awk '/^Archi/ {print $2".ipk"}'`
-	set -x
-
-	fullname=`find ${DEPLOY_DIR_IPK} -name "$name" || true`
-	if [ "$fullname" = "" ] ; then
-		echo $name
-	else
-		echo $fullname
-	fi
-}
-
-list_package_depends() {
-	opkg-cl ${IPKG_ARGS_POST} info $1 | grep ^Depends | sed -e 's/^Depends: //' -e 's/,//g' -e 's:([=<>]* [^ )]*)::g'
-}
-
-list_package_recommends() {
-	opkg-cl ${IPKG_ARGS_POST} info $1 | grep ^Recommends | sed -e 's/^Recommends: //' -e 's/,//g' -e 's:([=<>]* [^ )]*)::g'
+rootfs_list_installed_depends() {
+	opkg-cl ${IPKG_ARGS_POST} status | opkg-query-helper.py
 }
 
 rootfs_install_packages() {
