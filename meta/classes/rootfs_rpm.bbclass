@@ -11,6 +11,7 @@ IMAGE_ROOTFS_EXTRA_SPACE_append = "${@base_contains("PACKAGE_INSTALL", "zypper",
 ROOTFS_PKGMANAGE_BOOTSTRAP = ""
 
 do_rootfs[depends] += "rpm-native:do_populate_sysroot"
+do_rootfs[depends] += "rpmresolve-native:do_populate_sysroot"
 
 # Needed for update-alternatives
 do_rootfs[depends] += "opkg-native:do_populate_sysroot"
