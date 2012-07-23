@@ -290,6 +290,7 @@ python do_package_deb () {
         fields.append(["Maintainer: %s\n", ['MAINTAINER']])
         fields.append(["Architecture: %s\n", ['DPKG_ARCH']])
         fields.append(["OE: %s\n", ['PN']])
+        fields.append(["PackageArch: %s\n", ['PACKAGE_ARCH']])
         fields.append(["Homepage: %s\n", ['HOMEPAGE']])
 
         # Package, Version, Maintainer, Description - mandatory
