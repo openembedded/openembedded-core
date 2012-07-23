@@ -1124,6 +1124,10 @@ python emit_pkgdata() {
         sf.write('%s_%s: %s\n' % ('PKGSIZE', pkg, get_directory_size(pkgdest + "/%s" % pkg)))
         sf.close()
 
+        # Symlinks needed for reverse lookups (from the final package name)
+        pkgval = d.getVar('PKG_%s' % (pkg), True)
+        subdata_sym = pkgdatadir + "/runtime-reverse/%s" % pkgval
+        oe.path.symlink("../runtime/%s" % pkg, subdata_sym, True)
 
         allow_empty = d.getVar('ALLOW_EMPTY_%s' % pkg, True)
         if not allow_empty:
@@ -1137,7 +1141,7 @@ python emit_pkgdata() {
 
     bb.utils.unlockfile(lf)
 }
-emit_pkgdata[dirs] = "${PKGDESTWORK}/runtime"
+emit_pkgdata[dirs] = "${PKGDESTWORK}/runtime ${PKGDESTWORK}/runtime-reverse"
 
 ldconfig_postinst_fragment() {
 if [ x"$D" = "x" ]; then
