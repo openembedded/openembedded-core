@@ -23,12 +23,7 @@ SRC_URI[sha256sum] = "4e1d15d12dbd3e9208111d6b806ad5a9857ca8850c47877d36575b9045
 
 inherit autotools
 
-python __anonymous () {
-    import re
-    host = d.getVar('HOST_SYS', True)
-    if not re.match('i.86.*-linux', host):
-        raise bb.parse.SkipPackage("incompatible with host %s" % host)
-}
+COMPATIBLE_HOST = "i.86.*-linux"
 
 do_install_append_vmware() {
 	mkdir -p ${D}/boot/
