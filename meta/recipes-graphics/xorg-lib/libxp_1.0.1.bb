@@ -15,7 +15,7 @@ PE = "1"
 
 XORG_PN = "libXp"
 
-CFLAGS_append += " -I ${S}/include/X11/XprintUtil -I ${S}/include/X11/extensions"
+CFLAGS_append = " -I ${S}/include/X11/XprintUtil -I ${S}/include/X11/extensions"
 
 SRC_URI += "file://fix-cast-error.patch"
 
