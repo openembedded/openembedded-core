@@ -37,10 +37,6 @@ inherit gettext
 
 EXTRA_OECONF = "--with-platform=pc --disable-grub-mkfont --program-prefix="""
 
-do_configure() {
-    oe_runconf
-}
-
 do_install_append () {
     install -d ${D}${sysconfdir}/grub.d
     install -m 0755 ${WORKDIR}/40_custom ${D}${sysconfdir}/grub.d/40_custom
