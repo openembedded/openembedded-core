@@ -15,6 +15,8 @@ SRC_URI[sha256sum] = "eb2b045f58b98299edc568b8607b95b10735b4a131fa5196f41c89b51f
 
 S = "${WORKDIR}/quota-tools"
 
+DEPENDS = "gettext-native"
+
 inherit autotools
 
 EXTRA_OEMAKE += 'STRIP=""'
