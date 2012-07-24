@@ -1,12 +1,13 @@
 require mesa-dri-glsl-native.inc
 
-LIC_FILES_CHKSUM = "file://glsl_parser.cpp;beginline=3;endline=33;md5=d078f1cddc2fc355719c090482254bd9"
+LIC_FILES_CHKSUM = "file://../../docs/license.html;md5=03ccdc4c379c4289aecfb8892c546f67"
 
-SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2"
-SRC_URI[md5sum] = "d546f988adfdf986cff45b1efa2d8a46"
-SRC_URI[sha256sum] = "02ed19f4f5f6535dda03a9932a81438aa78ea723ebba1f39a3d49a70a4e1d07e"
+SRCREV = "c1f4867c89adb1a6b19d66ec8ad146115909f0a7"
+PV = "8.0.4+git${SRCPV}"
+DEFAULT_PREFERENCE = "-1"
 
-S = "${WORKDIR}/Mesa-${PV}/src/glsl/"
+SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git"
+S = "${WORKDIR}/git/src/glsl"
 
 inherit native
 
