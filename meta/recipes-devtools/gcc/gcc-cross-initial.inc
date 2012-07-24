@@ -27,3 +27,13 @@ EXTRA_OECONF = "--with-newlib \
 do_compile () {
     oe_runmake all-gcc all-target-libgcc
 }
+# fixed limits.h infact includes the so called real limits.h
+# which should come from libc but when we build libc-initial
+# then bunch of configure tests include fixed limits.h which in turn
+# includes real limits.h but this real limits.h is not staged yet
+# so we overwirte the generated include-fixed/limits.h for gcc-cross-initial
+# to get rid references to real limits.h
+
+do_install_append1() {
+    cp gcc/include-fixed/limits.h ${D}${gcclibdir}/${TARGET_SYS}/${BINV}/include-fixed/limits.h
+}
