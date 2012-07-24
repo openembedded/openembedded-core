@@ -19,5 +19,3 @@ SRC_URI[sha256sum] = "a1867fdaa83f68750b12ba4305c3c62f5992d0f52cfeb98e96c27a8e69
 EXTRA_OECONF = "ac_cv_path_MCOOKIE=${bindir}/mcookie"
 
 RDEPENDS_${PN} += "util-linux-mcookie"
-
-FILES_${PN} += "${libdir}X11/xinit"
