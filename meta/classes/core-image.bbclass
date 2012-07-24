@@ -16,7 +16,6 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 # - x11-mini            - minimal environment for X11 server 
 # - x11-base            - X11 server + minimal desktop	
 # - x11-sato            - OpenedHand Sato environment
-# - x11-netbook         - Metacity based environment for netbooks
 # - apps-x11-core       - X Terminal, file manager, file editor
 # - apps-x11-games
 # - apps-x11-pimlico    - OpenedHand Pimlico apps
@@ -33,7 +32,6 @@ PACKAGE_GROUP_apps-console-core = "task-core-apps-console"
 PACKAGE_GROUP_x11-mini = "task-core-x11-mini"
 PACKAGE_GROUP_x11-base = "task-core-x11-base"
 PACKAGE_GROUP_x11-sato = "task-core-x11-sato"
-PACKAGE_GROUP_x11-netbook = "task-core-x11-netbook"
 PACKAGE_GROUP_apps-x11-core = "task-core-apps-x11-core"
 PACKAGE_GROUP_apps-x11-games = "task-core-apps-x11-games"
 PACKAGE_GROUP_apps-x11-pimlico = "task-core-apps-x11-pimlico"
