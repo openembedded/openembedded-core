@@ -5,8 +5,8 @@ PR = "${INC_PR}.0"
 SRC_URI += "file://aclocal.patch \
             file://ieee80215-arphrd.patch"
 
-SRC_URI[md5sum] = "06046e0e81efc60566daf1cc96c77d46"
-SRC_URI[sha256sum] = "a135a6ef7e539729a57c7ed345bdb9b64159e13404174006a7972eb33f00debd"
+SRC_URI[md5sum] = "f78455a92622b7a3c05c58b6ad1cec7e"
+SRC_URI[sha256sum] = "41cbd9ed68383afd9f1fda279cb78427d36879d9e34ee707e31a16a1afd872b9"
 
 #
 # make install doesn't cover the shared lib
