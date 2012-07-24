@@ -6,7 +6,7 @@ SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://ftp.suse.com/pub/projects/init/${BPN}-${PV}.tar.bz2 \
            file://makefile.patch \
@@ -19,6 +19,11 @@ SRC_URI[sha256sum] = "89a0a093b1cf3d802ad40568e64b496b493f51ff9825905c8bd12738b3
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 	install -m0644 ${WORKDIR}/insserv.conf ${D}${sysconfdir}/insserv.conf
+}
+
+do_install_virtclass-native () {
+    oe_runmake 'DESTDIR=${D}/${STAGING_DIR_NATIVE}' install
+    install -m0644 ${WORKDIR}/insserv.conf ${D}${sysconfdir}/insserv.conf
 }
 
 BBCLASSEXTEND = "native"
