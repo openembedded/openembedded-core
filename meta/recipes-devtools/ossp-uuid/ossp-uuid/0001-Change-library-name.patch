@@ -12,6 +12,13 @@ uuid library.
  uuid.pc.in       |    4 ++--
  5 files changed, 13 insertions(+), 13 deletions(-)
 
+----
+Upstream-Status: Inappropriate [not author]
+
+This patch is from debian ossp-uuid 1.6.2 integration.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
 diff --git a/Makefile.in b/Makefile.in
 index d28f4be..c2ba99d 100644
 --- a/Makefile.in

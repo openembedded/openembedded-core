@@ -4,6 +4,8 @@ We need to avoid including the util-linux uuid library, instead
 we need ossp-uuid.  There is a related hack in do_configure to
 make sure that we use the right .pc file as well.
 
+Upstream-Status: Inappropriate [disable feature]
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 diff -ur rpm-5.4.9.orig/configure.ac rpm-5.4.9/configure.ac

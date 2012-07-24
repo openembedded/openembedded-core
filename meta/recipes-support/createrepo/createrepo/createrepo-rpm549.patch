@@ -3,6 +3,9 @@ dumpMetadata.py: Fix for RPM5 - 5.4.9 integration
 RPM5 no longer has a switch to disable signature validation.  (Due to security
 validation concerns.)
 
+Upstream-Status: Inappropriate [other]
+  createrepo does not support RPM5 upstream
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 diff -u createrepo-0.4.11.orig/dumpMetadata.py createrepo-0.4.11/dumpMetadata.py

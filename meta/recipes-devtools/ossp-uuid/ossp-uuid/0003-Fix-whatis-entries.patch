@@ -9,6 +9,13 @@ Fix whatis entry of uuid.1, uuid.3ossp and uuid++.3ossp manpages
  uuid_cli.pod |    2 +-
  3 files changed, 3 insertions(+), 3 deletions(-)
 
+----
+Upstream-Status: Inappropriate [not author]
+
+This patch is from debian ossp-uuid 1.6.2 integration.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
 diff --git a/uuid++.pod b/uuid++.pod
 index 8b5a4b1..89c5efb 100644
 --- a/uuid++.pod

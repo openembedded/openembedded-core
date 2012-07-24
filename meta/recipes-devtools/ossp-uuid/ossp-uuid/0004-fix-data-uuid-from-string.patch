@@ -4,6 +4,13 @@ Bug-Debian: http://bugs.debian.org/635607
 
 The module Data::GUID depends on Data::UUID supporting this behaviour.
 
+----
+Upstream-Status: Inappropriate [not author]
+
+This patch is from debian ossp-uuid 1.6.2 integration.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
 --- a/perl/uuid_compat.pm
 +++ b/perl/uuid_compat.pm
 @@ -93,7 +93,9 @@

@@ -1,5 +1,7 @@
 Add support for cross compiling lua
 
+Upstream-Status: Pending
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 diff -ur rpm-5.4.9.orig/configure.ac rpm-5.4.9/configure.ac

@@ -5,6 +5,8 @@ This causes a configure failure when perl-URPM is not used.
 | configure.ac:1159: required file `perl-URPM/Makefile.PL.in' not found
 | configure.ac:1159: required file `perl-URPM/Makefile.in' not found
 
+Upstream-Status: Inappropriate [disable feature]
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 --- rpm-5.4.8/configure.ac.orig	2012-04-24 09:10:01.856749153 -0500

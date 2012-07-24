@@ -5,6 +5,8 @@ we don't want this as it may lead to inaccurate results in some corner cases.
 
 PKG_CONFIG_LIBDIR will ensure pkg-config stays within the install directory.
 
+Upstream-Status: Inappropriate [configuration]
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 diff -ur rpm-5.4.9.orig/scripts/pkgconfigdeps.sh rpm-5.4.9/scripts/pkgconfigdeps.sh

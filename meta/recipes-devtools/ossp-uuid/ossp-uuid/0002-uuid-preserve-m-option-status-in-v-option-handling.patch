@@ -7,6 +7,13 @@ Bug: 531396
  uuid_cli.c |   19 ++++++++++---------
  1 files changed, 10 insertions(+), 9 deletions(-)
 
+----
+Upstream-Status: Inappropriate [not author]
+
+This patch is from debian ossp-uuid 1.6.2 integration.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
 diff --git a/uuid_cli.c b/uuid_cli.c
 index d1b0b11..14a67fe 100644
 --- a/uuid_cli.c

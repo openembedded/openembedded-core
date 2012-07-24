@@ -3,6 +3,8 @@ macros/macros.in: Revert settings to the same as RPM 5.4.0
 Enable a reasonable set of rpmdeps dependency helper macros.  These sets
 were used by RPM 5.4.0.
 
+Upstream-Status: Inappropriate [configuration]
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 diff -ur rpm-5.4.8.orig/macros/macros.in rpm-5.4.8/macros/macros.in

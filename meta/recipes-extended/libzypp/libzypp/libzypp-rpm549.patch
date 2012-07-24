@@ -6,6 +6,10 @@ Date:   Fri May 11 19:05:09 2012 -0500
     
     _RPMVSF_xxx - NODIGEST, NOSIGNATURES, NOHEADER, and NOPAYLOAD
     are now obsolete and no longer supported.
+
+    Upstream-Status: Inappropriate [other]
+      OE version is too old, when we uprev if this patch is still need it
+      should be sent upstream at that time.
     
     Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 

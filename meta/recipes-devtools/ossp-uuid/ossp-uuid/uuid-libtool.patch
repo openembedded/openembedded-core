@@ -1,5 +1,8 @@
 Remove hardcoded libtool name, fall back to generated name
 
+Upstream-Status: Inappropriate [no upstream]
+The project appears to no longer be accepting changes.
+
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
 diff -ur uuid-1.6.2.orig/Makefile.in uuid-1.6.2/Makefile.in
