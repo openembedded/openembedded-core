@@ -10,7 +10,8 @@ RESOLV_CONF="/etc/resolv.conf"
 
 # return 0 if root is mounted on a network filesystem
 root_is_nfs() {
-	grep -qe '^/dev/root.*\(nfs\|smbfs\|ncp\|coda\) .*' /proc/mounts
+	sed -n 's/^[^ ]* \([^ ]*\) \([^ ]*\) .*$/\1 \2/p' /proc/mounts |
+	grep -q "^/ \(nfs\|smbfs\|ncp\|coda\)$"
 }
 
 have_bin_ip=0
