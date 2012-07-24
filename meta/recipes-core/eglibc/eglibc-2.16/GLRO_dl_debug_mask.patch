@@ -6,9 +6,9 @@ Singed-off-by: Khem Raj <raj.khem@gmail.com>
 Upstream-Status: Pending
 Index: libc/elf/dl-open.c
 ===================================================================
---- libc.orig/elf/dl-open.c	2012-03-09 08:54:34.691443995 -0800
-+++ libc/elf/dl-open.c	2012-03-09 08:55:31.275446730 -0800
-@@ -154,7 +154,7 @@
+--- libc.orig/elf/dl-open.c	2012-07-04 18:26:34.000000000 -0700
++++ libc/elf/dl-open.c	2012-07-23 22:55:10.700072511 -0700
+@@ -153,7 +153,7 @@
  	  ns->_ns_main_searchlist->r_list[new_nlist++] = map;
  
  	  /* We modify the global scope.  Report this.  */
@@ -17,7 +17,7 @@ Index: libc/elf/dl-open.c
  	    _dl_debug_printf ("\nadd %s [%lu] to global scope\n",
  			      map->l_name, map->l_ns);
  	}
-@@ -294,7 +294,7 @@
+@@ -293,7 +293,7 @@
    _dl_debug_state ();
  
    /* Print scope information.  */
@@ -26,7 +26,7 @@ Index: libc/elf/dl-open.c
      _dl_show_scope (new, 0);
  
    /* Only do lazy relocation if `LD_BIND_NOW' is not set.  */
-@@ -438,7 +438,7 @@
+@@ -501,7 +501,7 @@
  	}
  
        /* Print scope information.  */
@@ -37,9 +37,9 @@ Index: libc/elf/dl-open.c
  
 Index: libc/ports/sysdeps/mips/dl-lookup.c
 ===================================================================
---- libc.orig/ports/sysdeps/mips/dl-lookup.c	2012-03-09 08:54:34.707443996 -0800
-+++ libc/ports/sysdeps/mips/dl-lookup.c	2012-03-09 09:02:36.903467324 -0800
-@@ -111,7 +111,7 @@
+--- libc.orig/ports/sysdeps/mips/dl-lookup.c	2012-07-04 18:25:46.000000000 -0700
++++ libc/ports/sysdeps/mips/dl-lookup.c	2012-07-24 00:04:45.496274559 -0700
+@@ -110,7 +110,7 @@
  	continue;
  
        /* Print some debugging info if wanted.  */
@@ -48,7 +48,7 @@ Index: libc/ports/sysdeps/mips/dl-lookup.c
  	_dl_debug_printf ("symbol=%s;  lookup in file=%s [%lu]\n",
  			  undef_name,
  			  map->l_name[0] ? map->l_name : rtld_progname,
-@@ -432,7 +432,7 @@
+@@ -431,7 +431,7 @@
  		     hash table.  */
  		  if (__builtin_expect (tab->size, 0))
  		    {
@@ -57,7 +57,7 @@ Index: libc/ports/sysdeps/mips/dl-lookup.c
  		      __rtld_lock_unlock_recursive (tab->lock);
  		      goto success;
  		    }
-@@ -681,7 +681,7 @@
+@@ -680,7 +680,7 @@
  	}
  
        /* Display information if we are debugging.  */
@@ -66,6 +66,15 @@ Index: libc/ports/sysdeps/mips/dl-lookup.c
  	_dl_debug_printf ("\
  \nfile=%s [%lu];  needed by %s [%lu] (relocation dependency)\n\n",
  			  map->l_name[0] ? map->l_name : rtld_progname,
+@@ -787,7 +787,7 @@
+     {
+       if ((*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
+ 	  && skip_map == NULL
+-	  && !(GLRO(dl_debug_mask) & DL_DEBUG_UNUSED))
++	  && !(GLRO_dl_debug_mask & DL_DEBUG_UNUSED))
+ 	{
+ 	  /* We could find no value for a strong reference.  */
+ 	  const char *reference_name = undef_map ? undef_map->l_name : "";
 @@ -860,7 +860,7 @@
    if (__builtin_expect (current_value.m->l_used == 0, 0))
      current_value.m->l_used = 1;
@@ -95,9 +104,9 @@ Index: libc/ports/sysdeps/mips/dl-lookup.c
        struct sym_val val = { NULL, NULL };
 Index: libc/elf/rtld.c
 ===================================================================
---- libc.orig/elf/rtld.c	2012-03-09 09:01:35.159464344 -0800
-+++ libc/elf/rtld.c	2012-03-09 09:01:56.247465364 -0800
-@@ -2198,7 +2198,7 @@
+--- libc.orig/elf/rtld.c	2012-07-04 18:26:34.000000000 -0700
++++ libc/elf/rtld.c	2012-07-23 22:55:10.700072511 -0700
+@@ -2214,7 +2214,7 @@
    GLRO(dl_init_all_dirs) = GL(dl_all_dirs);
  
    /* Print scope information.  */
@@ -106,3 +115,16 @@ Index: libc/elf/rtld.c
      {
        _dl_debug_printf ("\nInitial object scopes\n");
  
+Index: libc/elf/dl-lookup.c
+===================================================================
+--- libc.orig/elf/dl-lookup.c	2012-07-04 18:26:35.000000000 -0700
++++ libc/elf/dl-lookup.c	2012-07-24 00:04:14.680273070 -0700
+@@ -770,7 +770,7 @@
+     {
+       if ((*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
+ 	  && skip_map == NULL
+-	  && !(GLRO(dl_debug_mask) & DL_DEBUG_UNUSED))
++	  && !(GLRO_dl_debug_mask & DL_DEBUG_UNUSED))
+ 	{
+ 	  /* We could find no value for a strong reference.  */
+ 	  const char *reference_name = undef_map ? undef_map->l_name : "";
