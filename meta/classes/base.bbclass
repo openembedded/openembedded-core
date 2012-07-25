@@ -74,6 +74,15 @@ FILESPATH = "${@base_set_filespath([ "${FILE_DIRNAME}/${PF}", "${FILE_DIRNAME}/$
 # in the context of the location its used (:=)
 THISDIR = "${@os.path.dirname(d.getVar('FILE', True))}"
 
+def extra_path_elements(d):
+    path = ""
+    elements = (d.getVar('EXTRANATIVEPATH', True) or "").split()
+    for e in elements:
+        path = path + "${STAGING_BINDIR_NATIVE}/" + e + ":"
+    return path
+
+PATH_prepend = "${@extra_path_elements(d)}"
+
 addtask fetch
 do_fetch[dirs] = "${DL_DIR}"
 do_fetch[file-checksums] = "${@bb.fetch.get_checksum_file_list(d)}"

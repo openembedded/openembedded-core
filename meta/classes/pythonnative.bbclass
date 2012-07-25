@@ -1,3 +1,3 @@
 PYTHON="${STAGING_BINDIR_NATIVE}/python-native/python"
-PATH_prepend = "${STAGING_BINDIR_NATIVE}/python-native:"
+EXTRANATIVEPATH += "python-native"
 DEPENDS += " python-native "
