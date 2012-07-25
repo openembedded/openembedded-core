@@ -94,9 +94,11 @@ class Screen(Terminal):
     command = 'screen -D -m -t "{title}" -S devshell {command}'
 
     def __init__(self, sh_cmd, title=None, env=None):
+        s_id = "devshell_%i" % os.getpid()
+        self.command = "screen -D -m -t \"{title}\" -S %s {command}" % s_id
         Terminal.__init__(self, sh_cmd, title, env)
         logger.warn('Screen started. Please connect in another terminal with '
-                    '"screen -r devshell"')
+                    '"screen -r devshell %s"' % s_id)
 
 
 def prioritized():
