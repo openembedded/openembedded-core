@@ -6,7 +6,25 @@ DESCRIPTION = "Mtools is a collection of utilities for accessing MS-DOS disks fr
 HOMEPAGE = "http://www.gnu.org/software/mtools/"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=92b58ec77696788ce278b044d2a8e9d3"
-PR = "r5"
+PR = "r6"
+
+RDEPENDS_${PN} = "glibc-gconv-ibm850"
+RRECOMMENDS_${PN} = "\
+	glibc-gconv-ibm437 \
+	glibc-gconv-ibm737 \
+	glibc-gconv-ibm775 \
+	glibc-gconv-ibm851 \
+	glibc-gconv-ibm852 \
+	glibc-gconv-ibm855 \
+	glibc-gconv-ibm857 \
+	glibc-gconv-ibm860 \
+	glibc-gconv-ibm861 \
+	glibc-gconv-ibm862 \
+	glibc-gconv-ibm863 \
+	glibc-gconv-ibm865 \
+	glibc-gconv-ibm866 \
+	glibc-gconv-ibm869 \
+	"
 
 #http://mtools.linux.lu/mtools-${PV}.tar.gz 
 SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/mtools-${PV}.tar.gz \
