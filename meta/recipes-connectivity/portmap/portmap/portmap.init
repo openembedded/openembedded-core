@@ -40,14 +40,22 @@ case "$1" in
         $0 restart
 	;;
     restart)
-	pmap_dump >/var/run/portmap.state
+	# pmap_dump and pmap_set may be in a different package and not installed...
+	if [ -f /sbin/pmap_dump -a -f /sbin/pmap_set ]; then
+		do_state=1
+	else
+		do_state=0
+	fi
+	[ $do_state -eq 1 ] && pmap_dump >/var/run/portmap.state
         $0 stop
         $0 start
-	if [ ! -f /var/run/portmap.upgrade-state ]; then
-          sleep 1
-	  pmap_set </var/run/portmap.state
+	if [ $do_state -eq 1 ]; then
+	  if [ ! -f /var/run/portmap.upgrade-state ]; then
+            sleep 1
+	    pmap_set </var/run/portmap.state
+	  fi
+	  rm -f /var/run/portmap.state
 	fi
-	rm -f /var/run/portmap.state
 	;;
     *)
 	echo "Usage: /etc/init.d/portmap {start|stop|reload|restart}"
