@@ -78,10 +78,12 @@ do_configure[prefuncs] += "sysroot_cleansstate"
 
 BB_SETSCENE_VERIFY_FUNCTION = "sysroot_checkhashes"
 
-def sysroot_checkhashes(covered, tasknames, fnids, fns, d):
+def sysroot_checkhashes(covered, tasknames, fnids, fns, d, invalidtasks = None):
     problems = set()
     configurefnids = set()
-    for task in xrange(len(tasknames)):
+    if not invalidtasks:
+        invalidtasks = xrange(len(tasknames))
+    for task in invalidtasks:
         if tasknames[task] == "do_configure" and task not in covered:
             configurefnids.add(fnids[task])
     for task in covered:
