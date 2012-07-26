@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 DEPENDS = "virtual/libx11 libxt libxft gdk-pixbuf"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://dist.schmorp.de/rxvt-unicode/Attic/rxvt-unicode-${PV}.tar.bz2 \
 	   file://xwc.patch \
@@ -23,8 +23,8 @@ SRC_URI[sha256sum] = "ec1aa2932da844979ed8140bd92223defb12042aa5e877e05ac31139ca
 inherit autotools update-alternatives
 
 PROVIDES = "virtual/x-terminal-emulator"
-ALTERNATIVE_NAME = "x-terminal-emulator"
-ALTERNATIVE_PATH = "${bindir}/rxvt"
+ALTERNATIVE_${PN} = "x-terminal-emulator"
+ALTERNATIVE_TARGET[x-terminal-emulator] = "${bindir}/rxvt"
 
 CFLAGS_append = " -fpermissive"
 
