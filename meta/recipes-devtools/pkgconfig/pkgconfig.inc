@@ -32,4 +32,9 @@ do_configure_prepend () {
 
 BBCLASSEXTEND = "native nativesdk"
 
+# Set an empty dev package to ensure the base PN package gets
+# the pkg.m4 macros, pkgconfig does not deliver any other -dev
+# files.
+FILES_${PN}-dev = ""
 FILES_${PN} += "${datadir}/aclocal/pkg.m4"
+RREPLACES_${PN}-dev = "${PN}"
