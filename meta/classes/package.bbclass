@@ -1629,7 +1629,7 @@ python package_depchains() {
                 depend = depend.replace('-dbg', '')
             pkgname = getname(depend, suffix)
             #bb.note("Adding %s for %s" % (pkgname, depend))
-            if pkgname not in rreclist:
+            if pkgname not in rreclist and pkgname != pkg:
                 rreclist[pkgname] = ""
 
         #bb.note('setting: RRECOMMENDS_%s=%s' % (pkg, ' '.join(rreclist)))
@@ -1650,7 +1650,7 @@ python package_depchains() {
                 depend = depend.replace('-dbg', '')
             pkgname = getname(depend, suffix)
             #bb.note("Adding %s for %s" % (pkgname, depend))
-            if pkgname not in rreclist:
+            if pkgname not in rreclist and pkgname != pkg:
                 rreclist[pkgname] = ""
 
         #bb.note('setting: RRECOMMENDS_%s=%s' % (pkg, ' '.join(rreclist)))
