@@ -8,17 +8,11 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PR = "r1"
 
-PACKAGES = "\
-    packagegroup-core-x11-mini \
-    packagegroup-core-x11-mini-dbg \
-    packagegroup-core-x11-mini-dev \
-    "
+inherit packagegroup
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 XSERVER ?= "xserver-xorg xf86-video-fbdev xf86-input-evdev"
-
-ALLOW_EMPTY = "1"
 
 ROOTLESS_X = "1"
 

@@ -8,38 +8,21 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
+inherit packagegroup
+
 PACKAGES = "\
     packagegroup-core-basic \
     packagegroup-core-base-utils \
-    packagegroup-core-base-utils-dbg \
-    packagegroup-core-base-utils-dev \
     packagegroup-core-basic-libs \
-    packagegroup-core-basic-libs-dbg \
-    packagegroup-core-basic-libs-dev \
     packagegroup-core-basic-utils \
-    packagegroup-core-basic-utils-dbg \
-    packagegroup-core-basic-utils-dev \
     packagegroup-core-basic-extended \
-    packagegroup-core-basic-extended-dbg \
-    packagegroup-core-basic-extended-dev \
     packagegroup-core-dev-utils \
-    packagegroup-core-dev-utils-dbg \
-    packagegroup-core-dev-utils-dev \
     packagegroup-core-multiuser \
-    packagegroup-core-multiuser-dbg \
-    packagegroup-core-multiuser-dev \
     packagegroup-core-initscripts \
-    packagegroup-core-initscripts-dbg \
-    packagegroup-core-initscripts-dev \
     packagegroup-core-rpm \
-    packagegroup-core-rpm-dbg \
-    packagegroup-core-rpm-dev \
     packagegroup-core-sys-services \
-    packagegroup-core-sys-services-dbg \
-    packagegroup-core-sys-services-dev \
     "
 
-ALLOW_EMPTY = "1"
 
 RDEPENDS_packagegroup-core-basic = "\
     packagegroup-core-base-utils \

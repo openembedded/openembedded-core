@@ -8,23 +8,17 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PR = "r36"
 
+inherit packagegroup
+
 PACKAGES = "\
     packagegroup-core-apps-x11-core \
-    packagegroup-core-apps-x11-core-dbg \
-    packagegroup-core-apps-x11-core-dev \
     packagegroup-core-apps-x11-games \
-    packagegroup-core-apps-x11-games-dbg \
-    packagegroup-core-apps-x11-games-dev \
     packagegroup-core-x11-base \
-    packagegroup-core-x11-base-dbg \
-    packagegroup-core-x11-base-dev \
     "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 XSERVER ?= "xserver-xorg xf86-video-fbdev xf86-input-evdev"
-
-ALLOW_EMPTY = "1"
 
 # pcmanfm doesn't work on mips/powerpc
 FILEMANAGER ?= "pcmanfm"

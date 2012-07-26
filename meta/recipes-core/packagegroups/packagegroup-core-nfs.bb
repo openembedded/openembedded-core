@@ -8,15 +8,11 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PR = "r1"
 
-PACKAGES = "\
-    packagegroup-core-nfs-server \
-    packagegroup-core-nfs-server-dbg \
-    packagegroup-core-nfs-server-dev \
-    "
+inherit packagegroup
 
-ALLOW_EMPTY = "1"
+PACKAGES = "${PN}-server"
 
-RDEPENDS_packagegroup-core-nfs-server = "\
+RDEPENDS_${PN}-server = "\
     nfs-utils \
     nfs-utils-client \
     "

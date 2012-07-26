@@ -40,8 +40,6 @@ PACKAGES = ' \
             \
             '
 
-ALLOW_EMPTY = "1"
-
 #
 # packages which content depend on MACHINE_FEATURES need to be MACHINE_ARCH
 #

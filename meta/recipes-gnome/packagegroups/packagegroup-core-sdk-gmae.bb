@@ -8,11 +8,11 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PR = "r12"
 
-ALLOW_EMPTY = "1"
+inherit packagegroup
 
 require packagegroup-sdk-gmae.inc
 
-PACKAGES = "${PN}"
+PACKAGEGROUP_DISABLE_COMPLEMENTARY = "1"
 
 RDEPENDS_${PN} = "\
     packagegroup-core-sdk \

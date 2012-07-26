@@ -8,15 +8,10 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PR = "r3"
 
-PACKAGES = "\
-    packagegroup-core-qt-demos \
-    packagegroup-core-qt-demos-dbg \
-    packagegroup-core-qt-demos-dev \
-    "
+inherit packagegroup
 
-ALLOW_EMPTY = "1"
+PACKAGES = "${PN}-demos"
 
 QTDEMOS ?= "quicky ${COMMERCIAL_QT} fotowall"
-#QTDEMOS_disabled = "fotowall"
 
-RDEPENDS_packagegroup-core-qt-demos = "${QTDEMOS}"
+RDEPENDS_${PN}-demos = "${QTDEMOS}"

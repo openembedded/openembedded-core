@@ -8,26 +8,16 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
+inherit packagegroup
+
 PACKAGES = "\
     packagegroup-core-lsb \
     packagegroup-core-sys-extended \
-    packagegroup-core-sys-extended-dbg \
-    packagegroup-core-sys-extended-dev \
     packagegroup-core-db \
-    packagegroup-core-db-dbg \
-    packagegroup-core-db-dev \
     packagegroup-core-misc \
-    packagegroup-core-misc-dbg \
-    packagegroup-core-misc-dev \
     packagegroup-core-perl \
-    packagegroup-core-perl-dbg \
-    packagegroup-core-perl-dev \
     packagegroup-core-python \
-    packagegroup-core-python-dbg \
-    packagegroup-core-python-dev \
     packagegroup-core-tcl \
-    packagegroup-core-tcl-dbg \
-    packagegroup-core-tcl-dev \
     packagegroup-core-lsb-perl-add \
     packagegroup-core-lsb-python-add \
     packagegroup-core-lsb-graphic-add \
@@ -35,8 +25,6 @@ PACKAGES = "\
     packagegroup-core-lsb-command-add \
     "
 
-
-ALLOW_EMPTY = "1"
 
 RDEPENDS_packagegroup-core-lsb = "\
     packagegroup-core-sys-extended \

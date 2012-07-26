@@ -8,15 +8,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PR = "r32"
 
-PACKAGES = "\
-    packagegroup-core-x11-sato \
-    packagegroup-core-x11-sato-dbg \
-    packagegroup-core-x11-sato-dev \
-    "
+inherit packagegroup
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-
-ALLOW_EMPTY = "1"
 
 NETWORK_MANAGER ?= "connman-gnome"
 NETWORK_MANAGER_libc-uclibc = ""

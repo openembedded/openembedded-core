@@ -6,10 +6,12 @@ DESCRIPTION = "Task for OpenedHand Poky - minimal bootable image"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
 DEPENDS = "virtual/kernel"
-ALLOW_EMPTY = "1"
 PR = "r9"
+
+inherit packagegroup
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 #
 # Set by the machine configuration with packages essential for device bootup
@@ -24,13 +26,7 @@ VIRTUAL-RUNTIME_init_manager ?= "sysvinit"
 VIRTUAL-RUNTIME_initscripts ?= "initscripts"
 VIRTUAL-RUNTIME_keymaps ?= "keymaps"
 
-PACKAGES = "\
-    packagegroup-core-boot \
-    packagegroup-core-boot-dbg \
-    packagegroup-core-boot-dev \
-"
-
-RDEPENDS_packagegroup-core-boot = "\
+RDEPENDS_${PN} = "\
     base-files \
     base-passwd \
     busybox \
@@ -45,5 +41,5 @@ RDEPENDS_packagegroup-core-boot = "\
     ${VIRTUAL-RUNTIME_update-alternatives} \
     ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
 
-RRECOMMENDS_packagegroup-core-boot = "\
+RRECOMMENDS_${PN} = "\
     ${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS}"

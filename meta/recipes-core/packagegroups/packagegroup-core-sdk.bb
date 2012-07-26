@@ -9,13 +9,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 DEPENDS = "packagegroup-core-console"
 PR = "r8"
 
-ALLOW_EMPTY = "1"
-#PACKAGEFUNCS =+ 'generate_sdk_pkgs'
+inherit packagegroup
 
-PACKAGES = "\
-    packagegroup-core-sdk \
-    packagegroup-core-sdk-dbg \
-    packagegroup-core-sdk-dev"
+#PACKAGEFUNCS =+ 'generate_sdk_pkgs'
 
 RDEPENDS_packagegroup-core-sdk = "\
     autoconf \
