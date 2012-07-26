@@ -5,7 +5,7 @@ PROVIDES = "virtual/bootloader"
 
 inherit deploy
 
-EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX}"
+EXTRA_OEMAKE = 'CROSS_COMPILE=${TARGET_PREFIX} CC="${TARGET_PREFIX}gcc ${TOOLCHAIN_OPTIONS}"'
 
 python () {
 	if not d.getVar("UBOOT_MACHINE", True):
