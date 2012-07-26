@@ -1,5 +1,9 @@
 require findutils.inc
 
+# GPLv2+ (<< 4.2.32), GPLv3+ (>= 4.2.32)
+LICENSE = "GPLv3+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949"
+ 
 PR = "r6"
 
 SRC_URI += "file://01-27017.patch \
@@ -18,5 +22,3 @@ DEPENDS = "bison-native"
 CACHED_CONFIGUREVARS += "${@base_contains('DISTRO_FEATURES', 'libc-posix-clang-wchar', 'gl_cv_func_wcwidth_works=yes', '', d)}"
 
 EXTRA_OECONF += "ac_cv_path_SORT=${bindir}/sort"
-
-BBCLASSEXTEND = "native"
