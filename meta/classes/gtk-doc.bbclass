@@ -7,7 +7,6 @@
 # packages up any existing documentation (so from tarball builds).
 
 DEPENDS_append = " gtk-doc-stub-native"
-DEPENDS_virtclass-native_append = " gtk-doc-stub-native"
 
 EXTRA_OECONF_append = "\
   --disable-gtk-doc \
