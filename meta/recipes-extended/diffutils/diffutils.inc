@@ -4,7 +4,7 @@ sdiff, and cmp utilities. These programs are usually \
 used for creating patch files."
 SECTION = "base"
 
-INC_PR = "r6"
+INC_PR = "r7"
 
 SRC_URI = "${GNU_MIRROR}/diffutils/diffutils-${PV}.tar.gz"
 
@@ -17,6 +17,6 @@ inherit autotools update-alternatives gettext
 # see diffutils.mk in buildroot)
 EXTRA_OECONF_libc-uclibc = "--without-included-regex"
 
-ALTERNATIVE_LINKS = "${bindir}/diff ${bindir}/cmp"
+ALTERNATIVE_${PN} = "diff cmp"
 ALTERNATIVE_PRIORITY = "100"
 
