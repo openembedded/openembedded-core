@@ -11,7 +11,7 @@ SRC_URI = "${GNU_MIRROR}/findutils/findutils-${PV}.tar.gz"
 
 inherit autotools gettext update-alternatives
 
-ALTERNATIVE_LINKS = "${bindir}/find ${bindir}/xargs"
+ALTERNATIVE_${PN} = "find xargs"
 ALTERNATIVE_PRIORITY = "100"
 
 # diffutils assumes non-glibc compilation with uclibc and
