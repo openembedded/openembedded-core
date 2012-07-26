@@ -25,3 +25,6 @@ python () {
     d.setVar('PACKAGES', ' '.join(packages+genpackages))
 }
 
+# We don't want to look at shared library dependencies for the
+# dbg packages
+DEPCHAIN_DBGDEFAULTDEPS = "1"

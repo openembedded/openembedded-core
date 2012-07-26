@@ -1580,19 +1580,28 @@ python package_do_pkgconfig () {
     bb.utils.unlockfile(lf)
 }
 
-python read_shlibdeps () {
+def read_libdep_files(d):
+    pkglibdeps = {}
     packages = d.getVar('PACKAGES', True).split()
     for pkg in packages:
-        rdepends = bb.utils.explode_dep_versions(d.getVar('RDEPENDS_' + pkg, False) or d.getVar('RDEPENDS', False) or "")
-
+        pkglibdeps[pkg] = []
         for extension in ".shlibdeps", ".pcdeps", ".clilibdeps":
             depsfile = d.expand("${PKGDEST}/" + pkg + extension)
             if os.access(depsfile, os.R_OK):
                 fd = file(depsfile)
                 lines = fd.readlines()
                 fd.close()
-                for l in lines:
-                    rdepends[l.rstrip()] = ""
+                pkglibdeps[pkg].extend([l.rstrip() for l in lines])
+    return pkglibdeps
+
+python read_shlibdeps () {
+    pkglibdeps = read_libdep_files(d)
+
+    packages = d.getVar('PACKAGES', True).split()
+    for pkg in packages:
+        rdepends = bb.utils.explode_dep_versions(d.getVar('RDEPENDS_' + pkg, False) or d.getVar('RDEPENDS', False) or "")
+        for dep in pkglibdeps[pkg]:
+            rdepends[dep] = ""
         d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
 }
 
@@ -1694,6 +1703,15 @@ python package_depchains() {
                     pkgs[prefix] = {}
                 pkgs[prefix][pkg] = (pkg[:-len(prefix)], pre_getname)
 
+    if "-dbg" in pkgs:
+        pkglibdeps = read_libdep_files(d)
+        pkglibdeplist = []
+        for pkg in pkglibdeps:
+            for dep in pkglibdeps[pkg]:
+                add_dep(pkglibdeplist, dep)
+        # FIXME this should not look at PN once all task recipes inherit from task.bbclass
+        dbgdefaultdeps = ((d.getVar('DEPCHAIN_DBGDEFAULTDEPS', True) == '1') or (d.getVar('PN', True) or '').startswith('task-'))
+
     for suffix in pkgs:
         for pkg in pkgs[suffix]:
             if d.getVarFlag('RRECOMMENDS_' + pkg, 'nodeprrecs'):
@@ -1701,6 +1719,10 @@ python package_depchains() {
             (base, func) = pkgs[suffix][pkg]
             if suffix == "-dev":
                 pkg_adddeprrecs(pkg, base, suffix, func, depends, d)
+            elif suffix == "-dbg":
+                if not dbgdefaultdeps:
+                    pkg_addrrecs(pkg, base, suffix, func, pkglibdeplist, d)
+                    continue
             if len(pkgs[suffix]) == 1:
                 pkg_addrrecs(pkg, base, suffix, func, rdepends, d)
             else:
