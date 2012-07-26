@@ -2,7 +2,7 @@ DESCRIPTION = "Mini X session files for poky"
 HOMEPAGE = "http://www.yoctoproject.org"
 BUGTRACKER = "http://bugzilla.pokylinux.org"
 
-PR = "r2"
+PR = "r3"
 
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://mini-x-session;endline=5;md5=b6430bffbcf05f9760e72938826b7487"
@@ -15,9 +15,8 @@ S = "${WORKDIR}"
 
 inherit update-alternatives
 
-ALTERNATIVE_NAME = "x-session-manager"
-ALTERNATIVE_LINK = "${bindir}/x-session-manager"
-ALTERNATIVE_PATH = "${bindir}/mini-x-session"
+ALTERNATIVE_${PN} = "x-session-manager"
+ALTERNATIVE_TARGET[x-session-manager] = "${bindir}/mini-x-session"
 ALTERNATIVE_PRIORITY = "50"
 
 do_install() {
