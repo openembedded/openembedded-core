@@ -7,7 +7,7 @@ and groups on an embedded system."
 HOMEPAGE = "http://tinylogin.busybox.net/"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM="file://LICENSE;md5=f1060fa3a366f098b5b1d8c2077ba269"
-PR = "r8"
+PR = "r9"
 
 inherit update-alternatives
 
@@ -38,11 +38,6 @@ do_install () {
 	done
 }
 
-do_install_append () {
-        mv ${D}${base_sbindir}/getty ${D}${base_sbindir}/getty.${BPN}
-}
-
-ALTERNATIVE_NAME = "getty"
-ALTERNATIVE_LINK = "${base_sbindir}/getty"
-ALTERNATIVE_PATH = "${base_sbindir}/getty.${BPN}"
+ALTERNATIVE_${PN} = "getty"
+ALTERNATIVE_LINK_NAME[getty] = "${base_sbindir}/getty"
 ALTERNATIVE_PRIORITY = "80"
