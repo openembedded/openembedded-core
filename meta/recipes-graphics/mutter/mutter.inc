@@ -5,9 +5,8 @@ DEPENDS = "startup-notification gtk+ gconf clutter-1.8 gdk-pixbuf-native intltoo
 # gobject-introspection
 inherit gnome update-alternatives
 
-ALTERNATIVE_NAME = "x-window-manager"
-ALTERNATIVE_LINK = "${bindir}/x-window-manager"
-ALTERNATIVE_PATH = "${bindir}/mutter"
+ALTERNATIVE_${PN} = "x-window-manager"
+ALTERNATIVE_TARGET[x-window-manager] = "${bindir}/mutter"
 ALTERNATIVE_PRIORITY = "11"
 
 EXTRA_OECONF += "--disable-verbose	\
