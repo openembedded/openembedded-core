@@ -5,7 +5,7 @@ SECTION = "console/network"
 
 LICENSE = "GPLv3"
 DEPENDS = "zlib gnutls"
-PR = "r2"
+PR = "r3"
 
 
 #COPYING or Licence
@@ -21,7 +21,7 @@ inherit gettext autotools update-alternatives
 
 EXTRA_OECONF += "--without-gnome-keyring"
 
-ALTERNATIVE_NAME = "sendmail"
-ALTERNATIVE_PATH = "${bindir}/msmtp"
-ALTERNATIVE_LINK = "${sbindir}/sendmail"
+ALTERNATIVE_${PN} = "sendmail"
+ALTERNATIVE_TARGET[sendmail] = "${bindir}/msmtp"
+ALTERNATIVE_LINK_NAME[sendmail] = "${sbindir}/sendmail"
 ALTERNATIVE_PRIORITY = "100"
