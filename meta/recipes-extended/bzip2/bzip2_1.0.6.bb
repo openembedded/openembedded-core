@@ -24,6 +24,8 @@ inherit autotools update-alternatives
 ALTERNATIVE_PRIORITY = "100"
 ALTERNATIVE_${PN} = "bunzip2 bzcat"
 
+#install binaries to bzip2-native under sysroot for replacement-native
+EXTRA_OECONF_virtclass-native += "--bindir=${STAGING_BINDIR_NATIVE}/${PN}"
 do_configure_prepend () {
 	cp ${WORKDIR}/configure.ac ${S}/
 	cp ${WORKDIR}/Makefile.am ${S}/
@@ -40,5 +42,5 @@ FILES_libbz2-staticdev = "${libdir}/*.a"
 SECTION_libbz2-staticdev = "devel"
 RDEPENDS_libbz2-staticdev = "libbz2-dev (= ${EXTENDPKGV})"
 
-PROVIDES_append_virtclass-native = " bzip2-full-native"
+PROVIDES_append_virtclass-native = " bzip2-replacement-native"
 BBCLASSEXTEND = "native"

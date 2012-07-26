@@ -1,5 +1,7 @@
 require python.inc
-DEPENDS = "openssl-native bzip2-full-native zlib-native readline-native sqlite3-native"
+
+EXTRANATIVEPATH += "bzip2-native"
+DEPENDS = "openssl-native bzip2-replacement-native zlib-native readline-native sqlite3-native"
 PR = "${INC_PR}.1"
 
 SRC_URI += "file://04-default-is-optimized.patch \
