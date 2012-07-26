@@ -11,14 +11,17 @@ def generate_sstatefn(spec, hash, d):
 
 SSTATE_PKGARCH    = "${PACKAGE_ARCH}"
 SSTATE_PKGSPEC    = "sstate-${PN}-${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}-${PV}-${PR}-${SSTATE_PKGARCH}-${SSTATE_VERSION}-"
-SSTATE_PKGNAME    = "${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC', True), d.getVar('BB_TASKHASH', True), d)}"
+SSTATE_PKGNAME    = "${SSTATE_EXTRAPATH}${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC', True), d.getVar('BB_TASKHASH', True), d)}"
 SSTATE_PKG        = "${SSTATE_DIR}/${SSTATE_PKGNAME}"
-SSTATE_PATHSPEC   = "${SSTATE_DIR}/*/${SSTATE_PKGSPEC}"
+SSTATE_EXTRAPATH   = ""
+SSTATE_EXTRAPATHWILDCARD = ""
+SSTATE_PATHSPEC   = "${SSTATE_DIR}/${SSTATE_EXTRAPATHWILDCARD}*/${SSTATE_PKGSPEC}"
+
 
 SSTATE_SCAN_FILES ?= "*.la *-config *_config"
 SSTATE_SCAN_CMD ?= 'find ${SSTATE_BUILDDIR} \( -name "${@"\" -o -name \"".join(d.getVar("SSTATE_SCAN_FILES", True).split())}" \) -type f'
 
-BB_HASHFILENAME = "${SSTATE_PKGSPEC}"
+BB_HASHFILENAME = "${SSTATE_EXTRAPATH} ${SSTATE_PKGSPEC}"
 
 SSTATE_MANMACH ?= "${SSTATE_PKGARCH}"
 
@@ -42,6 +45,10 @@ python () {
         d.setVar('SSTATE_MANMACH', d.expand("allarch_${MACHINE}"))
     else:
         d.setVar('SSTATE_MANMACH', d.expand("${MACHINE}"))
+
+    if bb.data.inherits_class('native', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('cross', d):
+        d.setVar('SSTATE_EXTRAPATH', "${NATIVELSBSTRING}/")
+        d.setVar('SSTATE_EXTRAPATHWILDCARD', "*/")
 
     # These classes encode staging paths into their scripts data so can only be
     # reused if we manipulate the paths
@@ -524,7 +531,10 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
     }
 
     for task in range(len(sq_fn)):
-        sstatefile = d.expand("${SSTATE_DIR}/" + generate_sstatefn(sq_hashfn[task], sq_hash[task], d) + "_" + mapping[sq_task[task]] + ".tgz")
+        spec = sq_hashfn[task].split(" ")[1]
+        extrapath = sq_hashfn[task].split(" ")[0]
+
+        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + mapping[sq_task[task]] + ".tgz")
         if os.path.exists(sstatefile):
             bb.debug(2, "SState: Found valid sstate file %s" % sstatefile)
             ret.append(task)
@@ -548,7 +558,9 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
             if task in ret:
                 continue
 
-            sstatefile = d.expand(generate_sstatefn(sq_hashfn[task], sq_hash[task], d) + "_" + mapping[sq_task[task]] + ".tgz")
+            spec = sq_hashfn[task].split(" ")[1]
+            extrapath = sq_hashfn[task].split(" ")[0]
+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + mapping[sq_task[task]] + ".tgz")
 
             srcuri = "file://" + sstatefile
             localdata.setVar('SRC_URI', srcuri)
