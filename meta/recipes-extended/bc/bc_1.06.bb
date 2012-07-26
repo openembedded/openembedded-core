@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SECTION = "base"
 DEPENDS = "flex"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${GNU_MIRROR}/bc/bc-${PV}.tar.gz"
 
@@ -20,5 +20,5 @@ SRC_URI[sha256sum] = "4ef6d9f17c3c0d92d8798e35666175ecd3d8efac4009d6457b5c99cea7
 
 inherit autotools update-alternatives
 
-ALTERNATIVE_LINKS = "${bindir}/dc"
+ALTERNATIVE_${PN} = "dc"
 ALTERNATIVE_PRIORITY = "100"
