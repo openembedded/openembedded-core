@@ -8,7 +8,7 @@ inherit deploy
 PARALLEL_MAKE=""
 
 # GCC 4.5.1 builds unusable binaries using -Os, remove it from OPTFLAGS
-EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX} OPTFLAGS='-O2'"
+EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX} OPTFLAGS='-O2' CC='${TARGET_PREFIX}gcc ${TOOLCHAIN_OPTIONS}'"
 
 python () {
 	if not d.getVar("UBOOT_MACHINE", True):
