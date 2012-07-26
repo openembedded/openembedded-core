@@ -27,6 +27,8 @@ do_install () {
 	fi
 }
 
-ALTERNATIVE_LINKS = "${base_bindir}/gzip ${base_bindir}/gunzip"
+ALTERNARIVE_${PN} = "gzip gunzip"
+ALTERNATIVE_LINK_NAME[gzip] = "${base_bindir}/gzip"
+ALTERNATIVE_LINK_NAME[gunzip] = "${base_bindir}/gunzip"
 ALTERNATIVE_PRIORITY = "80"
 
