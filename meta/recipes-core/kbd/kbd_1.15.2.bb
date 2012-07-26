@@ -10,7 +10,7 @@ RREPLACES_${PN} = "console-tools"
 RPROVIDES_${PN} = "console-tools"
 RCONFLICTS_${PN} = "console-tools"
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI="${KERNELORG_MIRROR}/linux/utils/kbd/kbd-1.15.2.tar.bz2"
 SRC_URI[md5sum] = "e850eb91e4d3b94b194efe8e953204c5"
@@ -25,7 +25,6 @@ FILES_${PN}-unimaps = "${datadir}/unimaps"
 
 inherit update-alternatives
 
-ALTERNATIVE_PRIORITY = "100"
 
-bindir_progs = "chvt deallocvt fgconsole openvt"
-ALTERNATIVE_LINKS = "${bindir}/${@' ${bindir}/'.join((d.getVar('bindir_progs', True)).split())}"
+ALTERNATIVE_${PN} = "chvt deallocvt fgconsole openvt"
+ALTERNATIVE_PRIORITY = "100"
