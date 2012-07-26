@@ -266,12 +266,12 @@ import sys, os, os.path
 import re,filecmp
 
 allow_rep=re.compile(re.sub("\|$","","${MULTILIBRE_ALLOW_REP}"))
-error_promt="Multilib check error:"
+error_prompt="Multilib check error:"
 
 files={}
 dirs=raw_input()
 for dir in dirs.split():
-  for root, subfolers, subfiles in os.walk(dir):
+  for root, subfolders, subfiles in os.walk(dir):
     for file in subfiles:
       item=os.path.join(root,file)
       key=str(os.path.join("/",os.path.relpath(item,dir)))
@@ -284,7 +284,7 @@ for dir in dirs.split():
         else:
           if not filecmp.cmp(files[key],item):
              valid=False
-             print("%s duplicate files %s %s is not the same\n" % (error_promt, item, files[key]))
+             print("%s duplicate files %s %s is not the same\n" % (error_prompt, item, files[key]))
              sys.exit(1)
 
       #pass the check, add to list
