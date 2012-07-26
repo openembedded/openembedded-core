@@ -101,10 +101,6 @@ CONFFILES_${PN}-sshd = "${sysconfdir}/ssh/sshd_config"
 CONFFILES_${PN}-ssh = "${sysconfdir}/ssh/ssh_config"
 
 ALTERNATIVE_PRIORITY = "90"
-
 ALTERNATIVE_${PN}-scp = "scp"
-ALTERNATIVE_LINK_NAME[scp] = "${bindir}/scp"
-
 ALTERNATIVE_${PN}-ssh = "ssh"
-ALTERNATIVE_LINK_NAME[ssh] = "${bindir}/ssh"
 
