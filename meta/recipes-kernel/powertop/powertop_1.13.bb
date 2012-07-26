@@ -11,7 +11,7 @@ DEPENDS = "virtual/libintl ncurses"
 # powertop 1.13 needs lspci
 RDEPENDS_${PN} = "pciutils"
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://www.lesswatts.org/projects/powertop/download/powertop-${PV}.tar.gz \
            file://stub_out_the_ncurses_calls_in_dump_mode.patch \
@@ -25,12 +25,6 @@ EXTRA_OEMAKE = "VERSION=\"${PV}\" EXTRA_LIBS=${EXTRA_LIBS}"
 
 EXTRA_LIBS_libc-uclibc = "-lintl"
 
-inherit update-alternatives
-ALTERNATIVE_NAME = "powertop"
-ALTERNATIVE_PATH = "${bindir}/powertop"
-ALTERNATIVE_LINK = "${base_bindir}/powertop"
-ALTERNATIVE_PRIORITY = "100"
-
 do_configure() {
 	# We do not build ncurses with wide char support
 	sed -i -e 's:lncursesw:lncurses ${EXTRA_LIBS}:g' ${S}/Makefile
@@ -40,3 +34,8 @@ do_install() {
 	oe_runmake install DESTDIR=${D}
 }
 
+inherit update-alternatives
+ALTERNATIVE_${PN} = "powertop"
+ALTERNATIVE_TARGET[powertop] = "${bindir}/powertop"
+ALTERNATIVE_LINK_NAME[powertop] = "${base_bindir}/powertop"
+ALTERNATIVE_PRIORITY = "100"
