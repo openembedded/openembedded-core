@@ -244,8 +244,8 @@ FILES_${PN}-tools = "\
   ${bindir}/infotocap \
   ${bindir}/captoinfo \
   ${bindir}/infocmp \
-  ${bindir}/clear${@['', '.${BPN\x7d'][d.getVar('BPN', 1) == 'ncurses']} \
-  ${bindir}/reset${@['', '.${BPN\x7d'][d.getVar('BPN', 1) == 'ncurses']} \
+  ${bindir}/clear${@['', '.${BPN\x7d'][d.getVar('PN', 1) == 'ncurses']} \
+  ${bindir}/reset${@['', '.${BPN\x7d'][d.getVar('PN', 1) == 'ncurses']} \
   ${bindir}/tack \
   ${bindir}/tabs \
 "
