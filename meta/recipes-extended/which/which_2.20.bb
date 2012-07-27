@@ -8,7 +8,7 @@ DEPENDS     = "cwautomacros-native"
 
 inherit autotools update-alternatives
 
-PR = "r2"
+PR = "r3"
 
 EXTRA_OECONF = "--disable-iberty"
 
@@ -22,11 +22,5 @@ do_configure_prepend() {
 	sed -i -e 's%@ACLOCAL_CWFLAGS@%-I ${STAGING_DIR_NATIVE}/usr/share/cwautomacros/m4%g' ${S}/Makefile.am ${S}/tilde/Makefile.am
 }
 
-do_install() {
-	autotools_do_install
-	mv ${D}${bindir}/which ${D}${bindir}/which.${BPN}
-}
-
-ALTERNATIVE_NAME = "which"
-ALTERNATIVE_PATH = "which.${BPN}"
+ALTERNATIVE_${PN} = "which"
 ALTERNATIVE_PRIORITY = "100"

@@ -9,7 +9,7 @@ BUGTRACKER = "n/a"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://www.xs4all.nl/~carlo17/which/which-${PV}.tar.gz \
            file://fix_name_conflict_group_member.patch"
@@ -26,11 +26,7 @@ do_configure_prepend() {
 	NEW="-I ${STAGING_DIR_NATIVE}/${datadir}/cwautomacros/m4"
 	sed -i "s#${OLD}#${NEW}#g" `grep -rl ${OLD} ${S}`
 }
-do_install_append() {
-	mv ${D}/${bindir}/which ${D}/${bindir}/which.${BPN}
-}
 
-ALTERNATIVE_NAME = "which"
-ALTERNATIVE_PATH = "which.${BPN}"
+ALTERNATIVE_${PN} = "which"
 ALTERNATIVE_PRIORITY = "100"
 
