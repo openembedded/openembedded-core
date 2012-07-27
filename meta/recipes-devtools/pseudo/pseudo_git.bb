@@ -1,12 +1,12 @@
 require pseudo.inc
 
-SRCREV = "2e0189ba5368b1e88d509d0ab82bccb15cfb3653"
-PV = "1.3.1+git${SRCPV}"
-PR = "r26"
+SRCREV = "9b792e4cb91bc22374f47d0b0902dbc4ecd7d6dd"
+PV = "1.4+git${SRCPV}"
+PR = "r27"
 
 DEFAULT_PREFERENCE = "-1"
 
-SRC_URI = "git://github.com/wrpseudo/pseudo.git;protocol=git"
+SRC_URI = "git://git.yoctoproject.org/pseudo;protocol=git"
 
 S = "${WORKDIR}/git"
 
