@@ -371,6 +371,8 @@ python package_get_auto_pr() {
         d.setVar('PRAUTO',str(auto_pr))
 }
 
+LOCALEBASEPN ??= "${PN}"
+
 python package_do_split_locales() {
     if (d.getVar('PACKAGE_NO_LOCALE', True) == '1'):
         bb.debug(1, "package requested not splitting locales")
@@ -384,7 +386,7 @@ python package_do_split_locales() {
         return
 
     dvar = d.getVar('PKGD', True)
-    pn = d.getVar('PN', True)
+    pn = d.getVar('LOCALEBASEPN', True)
 
     if pn + '-locale' in packages:
         packages.remove(pn + '-locale')
