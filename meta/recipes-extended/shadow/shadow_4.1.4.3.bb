@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=08c553a87d4e51bbed50b20e0adcaede \
 
 DEPENDS = "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} = "shadow-securetty ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_PLUGINS}', '', d)}"
-PR = "r11"
+PR = "r12"
 
 SRC_URI = "http://pkg-shadow.alioth.debian.org/releases/${BPN}-${PV}.tar.bz2 \
            file://login_defs_pam.sed \
@@ -105,17 +105,11 @@ inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "200"
 
-bindir_progs = "passwd chfn newgrp chsh groups"
-ALTERNATIVE_LINKS += "${bindir}/${@' ${bindir}/'.join((d.getVar('bindir_progs', True)).split())}"
-
-sbindir_progs = "chpasswd"
-ALTERNATIVE_LINKS += "${sbindir}/${@' ${sbindir}/'.join((d.getVar('sbindir_progs', True)).split())}"
-
-base_bindir_progs = "login"
-ALTERNATIVE_LINKS += "${base_bindir}/${@' ${base_bindir}/'.join((d.getVar('base_bindir_progs', True)).split())}"
-
-base_sbindir_progs = "vipw vigr"
-ALTERNATIVE_LINKS += "${base_sbindir}/${@' ${base_sbindir}/'.join((d.getVar('base_sbindir_progs', True)).split())}"
+ALTERNATIVE_${PN} = "passwd chfn newgrp chsh groups chpasswd login vipw vigr"
+ALTERNATIVE_LINK_NAME[chpasswd] = "${sbindir}/chpasswd"
+ALTERNATIVE_LINK_NAME[login] = "${base_bindir}/login"
+ALTERNATIVE_LINK_NAME[vipw] = "${base_sbindir}/vipw"
+ALTERNATIVE_LINK_NAME[vigr] = "${base_sbindir}/vigr"
 
 pkg_postinst_${PN} () {
 	if [ "x$D" != "x" ]; then
