@@ -6,15 +6,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
 POLKIT = "polkit"
 POLKIT_libc-uclibc = ""
 
-DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native ${POLKIT}"
-DEPENDS_virtclass-native = "glib-2.0-native dbus-native dbus-glib-native libxml2-native intltool-native gnome-common-native"
+DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native ${POLKIT} gobject-introspection-stub"
+DEPENDS_virtclass-native = "glib-2.0-native dbus-native dbus-glib-native libxml2-native intltool-native gnome-common-native gobject-introspection-stub-native"
 
 PR = "r11"
 
 inherit gnomebase gtk-doc
 
 SRC_URI = "${GNOME_MIRROR}/GConf/${@gnome_verdir("${PV}")}/GConf-${PV}.tar.bz2;name=archive \
-	   file://nointro.patch \
 	   file://backenddir.patch"
 
 SRC_URI[archive.md5sum] = "f80329173cd9d134ad07e36002dd2a15"
