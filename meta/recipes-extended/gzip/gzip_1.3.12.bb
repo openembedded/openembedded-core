@@ -16,7 +16,7 @@ SRC_URI = "${GNU_MIRROR}/gzip/gzip-${PV}.tar.gz \
 SRC_URI[md5sum] = "b5bac2d21840ae077e0217bc5e4845b1"
 SRC_URI[sha256sum] = "3f565be05f7f3d1aff117c030eb7c738300510b7d098cedea796ca8e4cd587af"
 
-PR = "r1"
+PR = "r2"
 
 inherit autotools
 
@@ -30,7 +30,10 @@ do_install_append () {
 
 inherit update-alternatives
 
-ALTERNATIVE_LINKS = "${base_bindir}/gunzip ${base_bindir}/gzip ${base_bindir}/zcat"
+ALTERNATIVE_${PN} = "gzip gunzip zcat"
+ALTERNATIVE_LINK_NAME[gzip] = "${base_bindir}/gzip"
+ALTERNATIVE_LINK_NAME[gunzip] = "${base_bindir}/gunzip"
+ALTERNATIVE_LINK_NAME[zcat] = "${base_bindir}/zcat"
 ALTERNATIVE_PRIORITY = "100"
 
 BBCLASSEXTEND = "native"
