@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=910a8a42c962d238619c75fdb78bdb24 \
                     file://wiper/GPLv2.txt;md5=fcb02dc552a041dee27e4b85c7396067 \
                     file://wiper/wiper.sh;beginline=7;endline=31;md5=b7bc642addc152ea307505bf1a296f09"
 
-PR = "r2"
+PR = "r3"
 
 PACKAGES += "wiper"
 
@@ -25,7 +25,8 @@ EXTRA_OEMAKE += 'STRIP="echo"'
 
 inherit update-alternatives
 
-ALTERNATIVE_LINKS = "${base_sbindir}/hdparm"
+ALTERNATIVE_${PN} = "hdparm"
+ALTERNATIVE_LINK_NAME[hdparm] = "${base_sbindir}/hdparm"
 ALTERNATIVE_PRIORITY = "100"
 
 do_install () {
