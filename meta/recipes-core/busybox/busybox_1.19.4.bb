@@ -1,5 +1,5 @@
 require busybox.inc
-PR = "r11"
+PR = "r12"
 
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://B921600.patch \
@@ -14,7 +14,6 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://busybox-cron \
            file://busybox-httpd \
            file://busybox-udhcpd \
-           file://busybox-udhcpc \
            file://default.script \
            file://simple.script \
            file://hwclock.sh \
