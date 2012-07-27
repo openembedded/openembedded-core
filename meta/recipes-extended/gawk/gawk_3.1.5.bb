@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 
 RDEPENDS_gawk += "gawk-common"
 RDEPENDS_pgawk += "gawk-common"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
 	file://gawk-3.1.5_fix_for_automake-1.12.patch"
@@ -30,9 +30,8 @@ FILES_gawk-common += "${datadir}/awk/* ${libexecdir}/awk/*"
 FILES_pgawk = "${bindir}/pgawk*"
 FILES_${PN}-dbg += "${libexecdir}/awk/.debug"
 
-ALTERNATIVE_NAME = "awk"
-ALTERNATIVE_PATH = "gawk"
-ALTERNATIVE_LINK = "${bindir}/awk"
+ALTERNATIVE_${PN} = "awk"
+ALTERNATIVE_TARGET[awk] = "${bindir}/gawk"
 ALTERNATIVE_PRIORITY = "100"
 
 CFLAGS += "-D PROTOTYPES"

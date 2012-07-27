@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 RDEPENDS_gawk += "gawk-common"
 RDEPENDS_pgawk += "gawk-common"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz"
 
@@ -28,9 +28,8 @@ FILES_pgawk = "${bindir}/pgawk*"
 FILES_${PN}-dbg += "${libexecdir}/awk/.debug"
 FILES_dgawk = "${bindir}/dgawk*"
 
-ALTERNATIVE_NAME = "awk"
-ALTERNATIVE_PATH = "gawk"
-ALTERNATIVE_LINK = "${bindir}/awk"
+ALTERNATIVE_${PN} = "awk"
+ALTERNATIVE_TARGET[awk] = "${bindir}/gawk"
 ALTERNATIVE_PRIORITY = "100"
 
 do_install_append() {
