@@ -13,8 +13,13 @@ DEPENDS = "ncurses"
 SRC_URI = "http://procps.sourceforge.net/procps-${PV}.tar.gz \
            file://install.patch"
 
-inherit autotools
+inherit autotools update-alternatives
 
 FILES_${PN} += "${libdir}/*-${PV}.so ${base_libdir}/*-${PV}.so"
 FILES_SOLIBSDEV = ""
-FILES_${PN} += ""
+
+ALTERNATIVE_${PN} = "top uptime free pkill pmap kill sysctl ps pgrep pwdx watch"
+ALTERNATIVE_LINK_NAME[kill] = "${base_bindir}/kill"
+ALTERNATIVE_LINK_NAME[sysctl] = "${base_sbindir}/sysctl"
+ALTERNATIVE_LINK_NAME[ps] = "${base_bindir}/ps"
+ALTERNATIVE_PRIORITY = "110"
