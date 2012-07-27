@@ -7,10 +7,11 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 DEPENDS = "libusb zlib"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/usb/usbutils/usbutils-${PV}.tar.gz \
-           file://usb-devices-avoid-dependency-on-bash.patch"
+           file://usb-devices-avoid-dependency-on-bash.patch \
+           file://Fix-NULL-pointer-crash.patch"
 
 SRC_URI[md5sum] = "49de2403b40bf3a9863faaa8d3858deb"
 SRC_URI[sha256sum] = "c122346b0225121bcf159abf804116f826a4a3462c94ce7b8871f7559e6b3a46"
