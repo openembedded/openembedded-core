@@ -1795,6 +1795,7 @@ addtask package before do_build after do_install
 PACKAGELOCK = "${STAGING_DIR}/package-output.lock"
 SSTATETASKS += "do_package"
 do_package[sstate-name] = "package"
+do_package[cleandirs] = "${PKGDESTWORK}"
 do_package[sstate-plaindirs] = "${PKGD} ${PKGDEST}"
 do_package[sstate-inputdirs] = "${PKGDESTWORK} ${SHLIBSWORKDIR}"
 do_package[sstate-outputdirs] = "${PKGDATA_DIR} ${SHLIBSDIR}"
