@@ -200,7 +200,12 @@ rpm_update_pkg () {
 process_pkg_list_rpm() {
 	local insttype=$1
 	shift
-	local pkgs="$@"
+	# $@ is special POSIX linear array can not be assigned
+	# to a local variable directly in dash since its separated by
+	# space and dash expands it before assignment
+	# and local x=1 2 3 and not x="1 2 3"
+	local pkgs
+	pkgs="$@"
 	local confbase=${INSTALL_CONFBASE_RPM}
 
 	echo -n > ${target_rootfs}/install/base_archs.pkglist
