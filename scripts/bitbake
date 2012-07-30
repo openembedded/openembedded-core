@@ -64,13 +64,16 @@ GITVERSION=`git --version | cut -d ' ' -f 3`
 float_test() {
      echo | awk 'END { exit ( !( '"$1"')); }'
 }
+version_compare() {
+    python -c "from distutils.version import LooseVersion; import sys; sys.exit(not (LooseVersion('$1') $2 LooseVersion('$3')))"
+}
 
 # Tar version 1.24 and onwards handle overwriting symlinks correctly
 # but earlier versions do not; this needs to work properly for sstate
 float_test "$TARVERSION > 1.23" && needtar="0"
 
 # Need git >= 1.7.5 for git-remote --mirror=xxx syntax
-float_test "$GITVERSION >= 1.7.5" && needgit="0"
+version_compare $GITVERSION ">=" 1.7.5 && needgit="0"
 
 
 buildpseudo="1"
