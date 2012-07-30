@@ -21,6 +21,9 @@ QT_CONFIG_FLAGS += " \
 require qt4.inc
 
 do_install_append() {
+    install -d ${D}/${libdir}/fonts
+    touch ${D}/${libdir}/fonts/fontdir
+
     install -d ${D}${sysconfdir}/profile.d/
     install -m 0755 ${WORKDIR}/qte.sh ${D}${sysconfdir}/profile.d/
 }
@@ -30,6 +33,33 @@ do_install_append() {
 PACKAGES += " ${PN}-conf"
 FILES_${PN}-conf += " ${sysconfdir}/profile.d/qte.sh"
 RRECOMMENDS_${PN} += " ${PN}-conf"
+
+OTHER_PACKAGES += "\
+             ${QT_BASE_NAME}-fonts \
+             ${QT_BASE_NAME}-fonts-ttf-vera \
+             ${QT_BASE_NAME}-fonts-ttf-dejavu \
+             ${QT_BASE_NAME}-fonts-pfa \
+             ${QT_BASE_NAME}-fonts-pfb \
+             ${QT_BASE_NAME}-fonts-qpf"
+
+RRECOMMENDS_${QT_BASE_NAME}-fonts = " \
+             ${QT_BASE_NAME}-fonts-ttf-vera \
+             ${QT_BASE_NAME}-fonts-ttf-dejavu \
+             ${QT_BASE_NAME}-fonts-pfa \
+             ${QT_BASE_NAME}-fonts-pfb \
+             ${QT_BASE_NAME}-fonts-qpf"
+RRECOMMENDS_${QT_BASE_NAME}-demos += " \
+            ${QT_BASE_NAME}-fonts"
+
+ALLOW_EMPTY_${QT_BASE_NAME}-fonts = "1"
+PACKAGES_DYNAMIC += "${QT_BASE_NAME}-fonts-*"
+
+FILES_${QT_BASE_NAME}-fonts-ttf-vera       = "${libdir}/fonts/Vera*.ttf"
+FILES_${QT_BASE_NAME}-fonts-ttf-dejavu     = "${libdir}/fonts/DejaVu*.ttf"
+FILES_${QT_BASE_NAME}-fonts-pfa            = "${libdir}/fonts/*.pfa"
+FILES_${QT_BASE_NAME}-fonts-pfb            = "${libdir}/fonts/*.pfb"
+FILES_${QT_BASE_NAME}-fonts-qpf            = "${libdir}/fonts/*.qpf*"
+FILES_${QT_BASE_NAME}-fonts                = "${libdir}/fonts/README ${libdir}/fonts/fontdir"
 
 inherit qt4e
 

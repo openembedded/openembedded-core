@@ -93,12 +93,6 @@ OTHER_PACKAGES = "\
              ${QT_BASE_NAME}-demos \
              ${QT_BASE_NAME}-designer \
              ${QT_BASE_NAME}-examples \
-             ${QT_BASE_NAME}-fonts \
-             ${QT_BASE_NAME}-fonts-ttf-vera \
-             ${QT_BASE_NAME}-fonts-ttf-dejavu \
-             ${QT_BASE_NAME}-fonts-pfa \
-             ${QT_BASE_NAME}-fonts-pfb \
-             ${QT_BASE_NAME}-fonts-qpf \
              ${QT_BASE_NAME}-linguist \
              ${QT_BASE_NAME}-makeqpf \
              ${QT_BASE_NAME}-mkspecs \
@@ -117,10 +111,9 @@ PACKAGES += " \
              ${STATICDEV_PACKAGES} \
              ${OTHER_PACKAGES}"
 
-PACKAGES_DYNAMIC = "${QT_BASE_NAME}-plugin-* ${QT_BASE_NAME}-translation-* ${QT_BASE_NAME}-phrasebook-* ${QT_BASE_NAME}-fonts-*"
+PACKAGES_DYNAMIC = "${QT_BASE_NAME}-plugin-* ${QT_BASE_NAME}-translation-* ${QT_BASE_NAME}-phrasebook-*"
 
 ALLOW_EMPTY_${PN} = "1"
-ALLOW_EMPTY_${QT_BASE_NAME}-fonts = "1"
 FILES_${PN}     = ""
 FILES_${PN}-dev = "${includedir}/${QT_DIR_NAME}/Qt/*"
 FILES_${PN}-dbg = "${exec_prefix}/src/debug/"
@@ -128,14 +121,7 @@ FILES_${QT_BASE_NAME}-demos-doc = "${docdir}/qtopia/qch/qt.qch"
 RRECOMMENDS_${PN} = "${LIB_PACKAGES} ${OTHER_PACKAGES}"
 RRECOMMENDS_${PN}-dev = "${DEV_PACKAGES}"
 RRECOMMENDS_${PN}-dbg = "${DBG_PACKAGES}"
-RRECOMMENDS_${QT_BASE_NAME}-fonts = " \
-             ${QT_BASE_NAME}-fonts-ttf-vera \
-             ${QT_BASE_NAME}-fonts-ttf-dejavu \
-             ${QT_BASE_NAME}-fonts-pfa \
-             ${QT_BASE_NAME}-fonts-pfb \
-             ${QT_BASE_NAME}-fonts-qpf"
 RRECOMMENDS_${QT_BASE_NAME}-demos += " \
-            ${QT_BASE_NAME}-fonts \
             ${QT_BASE_NAME}-examples \
             ${QT_BASE_NAME}-plugin-sqldriver-sqlite \
             ${QT_BASE_NAME}-plugin-imageformat-jpeg \
@@ -170,12 +156,6 @@ FILES_${QT_BASE_NAME}-designer-dbg         = "${bindir}/.debug/*designer*"
 FILES_${QT_BASE_NAME}-examples             = "${bindir}/${QT_DIR_NAME}/examples/*"
 FILES_${QT_BASE_NAME}-examples-staticdev   = "${bindir}/${QT_DIR_NAME}/examples/tools/plugandpaint/plugins/libpnp_basictools.a"
 FILES_${QT_BASE_NAME}-examples-dbg         = "${bindir}/${QT_DIR_NAME}/examples/.debug ${bindir}/${QT_DIR_NAME}/examples/*/.debug ${bindir}/${QT_DIR_NAME}/examples/*/*/.debug ${bindir}/${QT_DIR_NAME}/examples/*/*/*/.debug ${bindir}/${QT_DIR_NAME}/examples/*/*/*/*/.debug ${bindir}/${QT_DIR_NAME}/examples/declarative/*/*/*/*/*/.debug/* ${bindir}/${QT_DIR_NAME}/examples/declarative/*/*/*/*/.debug/*"
-FILES_${QT_BASE_NAME}-fonts-ttf-vera       = "${libdir}/fonts/Vera*.ttf"
-FILES_${QT_BASE_NAME}-fonts-ttf-dejavu     = "${libdir}/fonts/DejaVu*.ttf"
-FILES_${QT_BASE_NAME}-fonts-pfa            = "${libdir}/fonts/*.pfa"
-FILES_${QT_BASE_NAME}-fonts-pfb            = "${libdir}/fonts/*.pfb"
-FILES_${QT_BASE_NAME}-fonts-qpf            = "${libdir}/fonts/*.qpf*"
-FILES_${QT_BASE_NAME}-fonts                = "${libdir}/fonts/README ${libdir}/fonts/fontdir"
 FILES_${QT_BASE_NAME}-linguist             = "${bindir}/*linguist* ${bindir}/lrelease ${bindir}/lupdate ${bindir}/lconvert ${bindir}/qm2ts"
 FILES_${QT_BASE_NAME}-linguist-dbg         = "${bindir}/.debug/*linguist* ${bindir}/.debug/lrelease ${bindir}/.debug/lupdate ${bindir}/.debug/lconvert ${bindir}/.debug/qm2ts"
 FILES_${QT_BASE_NAME}-pixeltool            = "${bindir}/pixeltool"
@@ -367,9 +347,6 @@ do_install() {
 		sed -i -e "s:prefix}include/${QT_DIR_NAME}/$(basename $pc .pc):prefix}/include:" \
 				-e 's:IP{:I${:g' $pc
 	done
-
-	install -d ${D}/${libdir}/fonts
-	touch ${D}/${libdir}/fonts/fontdir
 
 	#Append an E to the qtdemo file
 	if [ -n "${QT_LIBINFIX}" ] ; then
