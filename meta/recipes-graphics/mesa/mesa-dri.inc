@@ -1,5 +1,5 @@
-PROTO_DEPS += "dri2proto"
-LIB_DEPS += "libdrm expat udev"
+DEPENDS += "libdrm expat udev"
+X11_DEPS += "dri2proto"
 
 # most of our targets do not have DRI so will use mesa-xlib
 DEFAULT_PREFERENCE = "-1"

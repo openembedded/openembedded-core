@@ -1,0 +1,29 @@
+gross hack to prevent from install libgl
+
+This patch is not suitable for upstream. This is only needed for the 8.0.x
+branch, master (8.1.x) has a largely different build system (using automake)
+and does not need it. It is fully expected to drop the patch with the next bump
+to a stable version based on 8.1.x.
+
+Upstream-Status: Inappropriate
+
+---
+ src/mesa/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/mesa/Makefile b/src/mesa/Makefile
+index 0e15d61..a0a2cb5 100644
+--- a/src/mesa/Makefile
++++ b/src/mesa/Makefile
+@@ -166,7 +166,7 @@ install: default $(DRICORE_INSTALL_TARGET)
+ 	            else \
+ 	              $(MAKE) install-osmesa || exit 1 ; \
+ 	            fi ;; \
+-	    dri)    $(MAKE) install-libgl install-dri || exit 1 ;; \
++	    dri)    $(MAKE) install-dri || exit 1 ;; \
+ 	    *)      $(MAKE) install-libgl || exit 1 ;; \
+ 	  esac ; \
+ 	done
+-- 
+1.7.10.4
+
