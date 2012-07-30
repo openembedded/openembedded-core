@@ -112,6 +112,8 @@ def glob(args):
                     fwdfile = fwdpkgdata(mappedpkg)
                     if os.path.exists(fwdfile):
                         mappedpkg = readrenamed(fwdfile)
+                    if not os.path.exists(fwdfile + ".packaged"):
+                        mappedpkg = ""
                 else:
                     # That didn't work, so now get the PN, substitute that, then map in the other direction
                     revlink = revpkgdata(pkg)
@@ -121,6 +123,8 @@ def glob(args):
                         fwdfile = fwdpkgdata(newpkg)
                         if os.path.exists(fwdfile):
                             mappedpkg = readrenamed(fwdfile)
+                        if not os.path.exists(fwdfile + ".packaged"):
+                            mappedpkg = ""
                     else:
                         # Package doesn't even exist...
                         if debug:
