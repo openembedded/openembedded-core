@@ -24,7 +24,7 @@ numeric_fields = ['PKGSIZE', 'IMAGESIZE']
 # Fields to monitor
 monitor_fields = ['RDEPENDS', 'RRECOMMENDS', 'PACKAGES', 'FILELIST', 'PKGSIZE', 'IMAGESIZE', 'PKG', 'PKGE', 'PKGV', 'PKGR']
 # Percentage change to alert for numeric fields
-monitor_numeric_threshold = 20
+monitor_numeric_threshold = 10
 # Image files to monitor (note that image-info.txt is handled separately)
 img_monitor_files = ['installed-package-names.txt', 'files-in-image.txt']
 # Related context fields for reporting (note: PE, PV & PR are always reported for monitored package fields)
