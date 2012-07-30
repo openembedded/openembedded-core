@@ -1,11 +1,12 @@
 SUMMARY = "Extra machine specific configuration files"
 DESCRIPTION = "Extra machine specific configuration files for udev, specifically blacklist information."
-LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
+                    file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 inherit allarch
 
-PR = "r5"
+PR = "r6"
 
 SRC_URI = " \
        file://automount.rules \
@@ -14,7 +15,6 @@ SRC_URI = " \
        file://autonet.rules \
        file://network.sh \
        file://localextra.rules \
-       file://COPYING.GPL \
 "
 
 
