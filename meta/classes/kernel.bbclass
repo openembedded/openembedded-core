@@ -188,7 +188,9 @@ kernel_do_install() {
 	fi
 
 	# Necessary for building modules like compat-wireless.
-	cp include/generated/bounds.h $kerneldir/include/generated/bounds.h
+	if [ -f include/generated/bounds.h ]; then
+		cp include/generated/bounds.h $kerneldir/include/generated/bounds.h
+	fi
 
 	# Remove the following binaries which cause strip or arch QA errors
 	# during do_package for cross-compiled platforms
