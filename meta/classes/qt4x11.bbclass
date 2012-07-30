@@ -1,4 +1,4 @@
-DEPENDS_prepend = "${@["qt4-x11-free ", ""][(d.getVar('BPN', True)[:12] == 'qt4-x11-free')]}"
+DEPENDS_prepend = "${@base_contains("PROVIDES", "qt4-x11", "", "qt4-x11 ", d)}"
 
 inherit qmake2
 

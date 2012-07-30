@@ -4,8 +4,9 @@ DESCRIPTION = "Qt is a versatile cross-platform application framework -- this is
 HOMEPAGE = "http://qt.nokia.com"
 SECTION = "x11/libs"
 DEPENDS += "virtual/libgl virtual/libx11 fontconfig libxft libxext libxrender libxrandr libxcursor"
+PROVIDES += "qt4-x11"
 
-INC_PR = "r44"
+INC_PR = "r45"
 
 QT_GLFLAGS ?= "${@base_contains('DISTRO_FEATURES', 'opengl', '-opengl', '-no-opengl', d)} "
 QT_GLFLAGS_qemux86 = "-opengl"

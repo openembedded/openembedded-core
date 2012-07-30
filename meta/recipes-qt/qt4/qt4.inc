@@ -192,6 +192,10 @@ FILES_${QT_BASE_NAME}-xmlpatterns-dbg      = "${bindir}/.debug/xmlpatterns*"
 FILES_${QT_BASE_NAME}-qml-plugins          = "${libdir}/${QT_DIR_NAME}/imports/* ${libdir}/${QT_DIR_NAME}/plugins/qmltooling/*"
 FILES_${QT_BASE_NAME}-qml-plugins-dbg      = "${libdir}/${QT_DIR_NAME}/imports/*/*/*/.debug/* ${libdir}/${QT_DIR_NAME}/imports/*/.debug ${libdir}/${QT_DIR_NAME}/plugins/qmltooling/.debug"
 
+# License options, to be set by the recipe if different values are needed
+QT_LICENSE_FILE ?= ""
+QT_LICENSE_FLAGS ?= "-opensource"
+
 do_configure() {
 	unset QMAKESPEC
 	unset QTDIR
@@ -231,7 +235,7 @@ do_configure() {
 
 	${EXTRA_QMAKE_MUNGE}|| true
 
-	(echo o; echo yes) | ./configure -v \
+	echo yes | QT_LICENSE_FILE="${QT_LICENSE_FILE}" ./configure -v \
 			-prefix ${prefix}/ \
 			-bindir ${bindir} \
 			-libdir ${libdir} \
@@ -248,6 +252,7 @@ do_configure() {
 			-xplatform ${TARGET_OS}-oe-g++ \
 			${QT_ENDIAN} \
 			-crossarch ${QT_ARCH} \
+			${QT_LICENSE_FLAGS} \
 			${QT_CONFIG_FLAGS} -no-fast \
 			-L${STAGING_LIBDIR} -I${STAGING_INCDIR} \
 			-I${STAGING_INCDIR}/freetype2
