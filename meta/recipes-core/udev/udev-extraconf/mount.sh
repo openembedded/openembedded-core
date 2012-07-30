@@ -8,8 +8,7 @@
 MOUNT="/bin/mount"
 PMOUNT="/usr/bin/pmount"
 UMOUNT="/bin/umount"
-
-for line in `cat /etc/udev/mount.blacklist`
+for line in `grep -v ^# /etc/udev/mount.blacklist`
 do
 	if [ ` expr match "$DEVNAME" "$line" ` -gt 0 ];
 	then

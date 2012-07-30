@@ -3,6 +3,8 @@
 # We get two "add" events for hostap cards due to wifi0
 echo "$INTERFACE" | grep -q wifi && exit 0
 
+# udevd does clearenv(). Export shell PATH to children.
+export PATH
 
 # Check if /etc/init.d/network has been run yet to see if we are 
 # called by starting /etc/rcS.d/S03udev and not by hotplugging a device
