@@ -308,7 +308,7 @@ def compare_dict_blobs(path, ablob, bblob, report_all):
                     percentchg = ((bval - aval) / float(aval)) * 100
                 else:
                     percentchg = 100
-                if percentchg < monitor_numeric_threshold:
+                if abs(percentchg) < monitor_numeric_threshold:
                     continue
             elif (not report_all) and key in list_fields:
                 if key == "FILELIST" and path.endswith("-dbg") and bstr.strip() != '':
