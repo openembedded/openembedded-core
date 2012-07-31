@@ -3,7 +3,7 @@ require eglibc.inc
 SRCREV = "19294"
 
 DEPENDS += "gperf-native"
-PR = "r12"
+PR = "r13"
 PR_append = "+svnr${SRCPV}"
 
 EGLIBC_BRANCH="eglibc-2_15"
@@ -33,7 +33,9 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=98a1128c4b58120182cbea3b1752d8b9 \
       file://posix/rxspencer/COPYRIGHT;md5=dc5485bb394a13b2332ec1c785f5d83a \
       file://COPYING.LIB;md5=bbb461211a33b134d42ed5ee802b37ff "
 
-SRC_URI_append_virtclass-nativesdk = " file://ld-search-order.patch"
+SRC_URI_append_virtclass-nativesdk = " file://ld-search-order.patch \
+            file://relocatable_sdk.patch \
+            "
 S = "${WORKDIR}/${EGLIBC_BRANCH}/libc"
 B = "${WORKDIR}/build-${TARGET_SYS}"
 
