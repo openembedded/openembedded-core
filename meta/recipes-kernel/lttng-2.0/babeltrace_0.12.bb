@@ -10,8 +10,8 @@ inherit autotools
 
 DEPENDS = "gtk+ util-linux"
 
-SRCREV = "efc5077568403009493d1d72e94f292838825e51"
-PV = "0.8+git${SRCPV}"
+SRCREV = "0d8f8c2ea27df096269aa76b4baeab26b68b95d4"
+PV = "0.12+git${SRCPV}"
 PR = "r0"
 
 SRC_URI = "git://git.efficios.com/babeltrace.git;protocol=git"
