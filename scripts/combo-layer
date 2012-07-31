@@ -41,6 +41,9 @@ logger = logger_create()
 
 def get_current_branch(repodir=None):
     try:
+        if not os.path.exists(os.path.join(repodir if repodir else '', ".git")):
+            # Repo not created yet (i.e. during init) so just assume master
+            return "master"
         branchname = runcmd("git symbolic-ref HEAD 2>/dev/null", repodir).strip()
         if branchname.startswith("refs/heads/"):
             branchname = branchname[11:]
@@ -104,11 +107,13 @@ class Configuration(object):
                     if repo in self.repos:
                         readsection(self.localparser, section, repo)
 
-    def update(self, repo, option, value):
+    def update(self, repo, option, value, initmode=False):
         if self.localparser:
             parser = self.localparser
             section = "%s|%s" % (repo, self.combobranch)
             conffile = self.localconffile
+            if initmode and not parser.has_section(section):
+                parser.add_section(section)
         else:
             parser = self.parser
             section = repo
@@ -117,8 +122,10 @@ class Configuration(object):
         with open(conffile, "w") as f:
             parser.write(f)
 
-    def sanity_check(self):
+    def sanity_check(self, initmode=False):
         required_options=["src_uri", "local_repo_dir", "dest_dir", "last_revision"]
+        if initmode:
+            required_options.remove("last_revision")
         msg = ""
         missing_options = []
         for name in self.repos:
@@ -185,8 +192,19 @@ def action_init(conf, args):
             file_filter = repo.get('file_filter', "")
             runcmd("git archive %s | tar -x -C %s %s" % (branch, extract_dir, file_filter), ldir)
             lastrev = runcmd("git rev-parse HEAD", ldir).strip()
-            conf.update(name, "last_revision", lastrev)
+            conf.update(name, "last_revision", lastrev, initmode=True)
         runcmd("git add .")
+        if conf.localconffile:
+            localadded = True
+            try:
+                runcmd("git rm --cached %s" % conf.localconffile, printerr=False)
+            except subprocess.CalledProcessError:
+                localadded = False
+            if localadded:
+                localrelpath = os.path.relpath(conf.localconffile)
+                runcmd("grep -q %s .gitignore || echo %s >> .gitignore" % (localrelpath, localrelpath))
+                runcmd("git add .gitignore")
+                logger.info("Added local configuration file %s to .gitignore", localrelpath)
         logger.info("Initial combo layer repository data has been created; please make any changes if desired and then use 'git commit' to make the initial commit.")
     else:
         logger.info("Repository already initialised, nothing to do.")
@@ -552,7 +570,8 @@ Action:
         if options.debug:
             logger.setLevel(logging.DEBUG)
         confdata = Configuration(options)
-        confdata.sanity_check()
+        initmode = (args[1] == 'init')
+        confdata.sanity_check(initmode)
         actions.get(args[1], action_error)(confdata, args[1:])
 
 if __name__ == "__main__":
