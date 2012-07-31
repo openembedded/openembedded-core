@@ -15,24 +15,25 @@ garbage collector.
  1 files changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/test-suite/tests/gc.test b/test-suite/tests/gc.test
-index 97eeb19..58e4936 100644
+index a969752..8c8e13e 100644
 --- a/test-suite/tests/gc.test
 +++ b/test-suite/tests/gc.test
-@@ -80,11 +80,12 @@
-       (gc)   ;; thrice: because the test doesn't succeed with only
+@@ -84,11 +84,13 @@
        ;; one gc round. not sure why.
  
--      (= (let lp ((i 0))
--           (if (guard)
--               (lp (1+ i))
--               i))
--         total)))
-+      (or (= (let lp ((i 0))
-+               (if (guard)
-+                   (lp (1+ i))
-+                   i))
-+             total)
-+          (throw 'unresolved))))
+       (maybe-gc-flakiness
+-       (= (let lp ((i 0))
+-            (if (guard)
+-                (lp (1+ i))
+-                i))
+-          total))))
++       (or (= (let lp ((i 0))
++                (if (guard)
++                    (lp (1+ i))
++                    i))
++              total)
++           (throw 'unresolved)))))
++
  
    (pass-if "Lexical vars are collectable"
      (let ((l (compile

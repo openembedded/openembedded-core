@@ -22,18 +22,15 @@ Signed-off-by: Song.Li <Song.Li@windriver.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/meta/Makefile.am b/meta/Makefile.am
-index f26fc44..e603e5c 100644
+index a05730d..bd20784 100644
 --- a/meta/Makefile.am
 +++ b/meta/Makefile.am
-@@ -27,7 +27,7 @@ EXTRA_DIST= \
+@@ -28,7 +28,7 @@ EXTRA_DIST= \
    guild.in guile-config.in
  
  # What we now call `guild' used to be known as `guile-tools'.
 -install-data-hook:
 +install-exec-hook:
- 	cd $(DESTDIR)$(bindir) && rm -f guile-tools$(EXEEXT) && \
- 	$(LN_S) guild$(EXEEXT) guile-tools$(EXEEXT)
- 
--- 
-1.7.9.5
-
+ 	guild="`echo $(ECHO_N) guild				\
+ 	   | $(SED) -e '$(program_transform_name)'`$(EXEEXT)" ;	\
+ 	guile_tools="`echo $(ECHO_N) guile-tools		\
