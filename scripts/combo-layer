@@ -263,7 +263,7 @@ def action_update(conf, args):
         repo_patch_dir = os.path.join(os.getcwd(), patch_dir, name)
 
         # Step 2: generate the patch list and store to patch dir
-        logger.info("generating patches for %s" % name)
+        logger.info("Generating patches from %s..." % name)
         if dest_dir != ".":
             prefix = "--src-prefix=a/%s/ --dst-prefix=b/%s/" % (dest_dir, dest_dir)
         else:
@@ -337,27 +337,50 @@ def apply_patchlist(conf, repos):
         repo = conf.repos[name]
         lastrev = repo["last_revision"]
         prevrev = lastrev
-        for line in open(repo['patchlist']):
-            patchfile = line.split()[0]
-            lastrev = line.split()[1]
-            if os.path.getsize(patchfile) == 0:
-                logger.info("(skipping %s - no changes)", lastrev)
-            else:
-                cmd = "git am --keep-cr -s -p1 %s" % patchfile
-                logger.info("Apply %s" % patchfile )
-                try:
-                    runcmd(cmd)
-                except subprocess.CalledProcessError:
-                    logger.info('running "git am --abort" to cleanup repo')
-                    runcmd("git am --abort")
-                    logger.error('"%s" failed' % cmd)
-                    logger.info("please manually apply patch %s" % patchfile)
-                    logger.info("Note: if you exit and continue applying without manually applying the patch, it will be skipped")
-                    if not drop_to_shell():
-                        if prevrev != repo['last_revision']:
-                            conf.update(name, "last_revision", prevrev)
-                        sys.exit(0)
-            prevrev = lastrev
+
+        # Get non-blank lines from patch list file
+        patchlist = []
+        if os.path.exists(repo['patchlist']) or not conf.interactive:
+            # Note: we want this to fail here if the file doesn't exist and we're not in
+            # interactive mode since the file should exist in this case
+            with open(repo['patchlist']) as f:
+                for line in f:
+                    line = line.rstrip()
+                    if line:
+                        patchlist.append(line)
+
+        if patchlist:
+            logger.info("Applying patches from %s..." % name)
+            linecount = len(patchlist)
+            i = 1
+            for line in patchlist:
+                patchfile = line.split()[0]
+                lastrev = line.split()[1]
+                patchdisp = os.path.relpath(patchfile)
+                if os.path.getsize(patchfile) == 0:
+                    logger.info("(skipping %d/%d %s - no changes)" % (i, linecount, patchdisp))
+                else:
+                    cmd = "git am --keep-cr -s -p1 %s" % patchfile
+                    logger.info("Applying %d/%d: %s" % (i, linecount, patchdisp))
+                    try:
+                        runcmd(cmd)
+                    except subprocess.CalledProcessError:
+                        logger.info('Running "git am --abort" to cleanup repo')
+                        runcmd("git am --abort")
+                        logger.error('"%s" failed' % cmd)
+                        logger.info("Please manually apply patch %s" % patchdisp)
+                        logger.info("Note: if you exit and continue applying without manually applying the patch, it will be skipped")
+                        if not drop_to_shell():
+                            if prevrev != repo['last_revision']:
+                                conf.update(name, "last_revision", prevrev)
+                            sys.exit(0)
+                prevrev = lastrev
+                i += 1
+        else:
+            logger.info("No patches to apply from %s" % name)
+            ldir = conf.repos[name]['local_repo_dir']
+            lastrev = runcmd("git rev-parse HEAD", ldir).strip()
+
         if lastrev != repo['last_revision']:
             conf.update(name, "last_revision", lastrev)
 
