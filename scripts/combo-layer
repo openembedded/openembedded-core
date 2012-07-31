@@ -25,6 +25,7 @@ import optparse
 import logging
 import subprocess
 import ConfigParser
+import re
 
 __version__ = "0.2.1"
 
@@ -140,7 +141,9 @@ def check_repo_clean(repodir):
         exit if repo is dirty
     """
     output=runcmd("git status --porcelain", repodir)
-    if output:
+    r = re.compile('\?\? patch-.*/')
+    dirtyout = [item for item in output.splitlines() if not r.match(item)]
+    if dirtyout:
         logger.error("git repo %s is dirty, please fix it first", repodir)
         sys.exit(1)
 
