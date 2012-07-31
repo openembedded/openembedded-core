@@ -184,6 +184,19 @@ def check_patch(patchfile):
         of.close()
         os.rename(patchfile + '.tmp', patchfile)
 
+def drop_to_shell(workdir=None):
+    shell = os.environ.get('SHELL', 'bash')
+    print('Dropping to shell "%s"\n' \
+          'When you are finished, run the following to continue:\n' \
+          '       exit    -- continue to apply the patches\n' \
+          '       exit 1  -- abort\n' % shell);
+    ret = subprocess.call([shell], cwd=workdir)
+    if ret != 0:
+        print "Aborting"
+        return False
+    else:
+        return True
+
 def get_repos(conf, args):
     repos = []
     if len(args) > 1:
@@ -295,14 +308,9 @@ def action_update(conf, args):
 
     # Step 5: invoke bash for user to edit patch and patch list
     if conf.interactive:
-        print   'Edit the patch and patch list in %s\n' \
-                'For example, remove the unwanted patch entry from patchlist-*, so that it will be not applied later\n' \
-                'When you are finished, run the following to continue:\n' \
-                '       exit 0  -- exit and continue to apply the patch\n' \
-                '       exit 1  -- abort and do not apply the patch\n' % patch_dir
-        ret = subprocess.call(["bash"], cwd=patch_dir)
-        if ret != 0:
-            print "Aborting without applying the patch"
+        print('You may now edit the patch and patch list in %s\n' \
+              'For example, you can remove unwanted patch entries from patchlist-*, so that they will be not applied later' % patch_dir);
+        if not drop_to_shell(patch_dir):
             sys.exit(0)
 
     # Step 6: apply the generated and revised patch
@@ -328,6 +336,7 @@ def apply_patchlist(conf, repos):
     for name in repos:
         repo = conf.repos[name]
         lastrev = repo["last_revision"]
+        prevrev = lastrev
         for line in open(repo['patchlist']):
             patchfile = line.split()[0]
             lastrev = line.split()[1]
@@ -343,9 +352,12 @@ def apply_patchlist(conf, repos):
                     runcmd("git am --abort")
                     logger.error('"%s" failed' % cmd)
                     logger.info("please manually apply patch %s" % patchfile)
-                    logger.info("After applying, run this tool again to apply the remaining patches")
-                    conf.update(name, "last_revision", lastrev)
-                    sys.exit(0)
+                    logger.info("Note: if you exit and continue applying without manually applying the patch, it will be skipped")
+                    if not drop_to_shell():
+                        if prevrev != repo['last_revision']:
+                            conf.update(name, "last_revision", prevrev)
+                        sys.exit(0)
+            prevrev = lastrev
         if lastrev != repo['last_revision']:
             conf.update(name, "last_revision", lastrev)
 
