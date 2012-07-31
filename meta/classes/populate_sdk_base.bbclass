@@ -55,6 +55,8 @@ fakeroot python do_populate_sdk() {
         bb.build.exec_func("create_sdk_files", localdata)
 
     bb.build.exec_func("tar_sdk", d)
+
+    bb.build.exec_func("create_shar", d)
 }
 
 fakeroot populate_sdk_image() {
@@ -94,6 +96,13 @@ fakeroot create_sdk_files() {
 
 	# Add version information
 	toolchain_create_sdk_version ${SDK_OUTPUT}/${SDKPATH}/version-${REAL_MULTIMACH_TARGET_SYS}
+
+	cp ${COREBASE}/scripts/relocate_sdk.py ${SDK_OUTPUT}/${SDKPATH}/
+
+	# Replace the ##DEFAULT_INSTALL_DIR## with the correct pattern.
+	# Escape special characters like '+' and '.' in the SDKPATH
+	escaped_sdkpath=$(echo ${SDKPATH} |sed -e "s:[\+\.]:\\\\\\\\\0:g")
+	sed -i -e "s:##DEFAULT_INSTALL_DIR##:$escaped_sdkpath:" ${SDK_OUTPUT}/${SDKPATH}/relocate_sdk.py
 }
 
 fakeroot tar_sdk() {
@@ -101,6 +110,83 @@ fakeroot tar_sdk() {
 	mkdir -p ${SDK_DEPLOY}
 	cd ${SDK_OUTPUT}
 	tar --owner=root --group=root -cj --file=${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.tar.bz2 .
+}
+
+fakeroot create_shar() {
+	cat << "EOF" > ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh
+#!/bin/bash
+
+DEFAULT_INSTALL_DIR="${SDKPATH}"
+
+echo -n "Enter target directory for Poky SDK (default: $DEFAULT_INSTALL_DIR): "
+read target_sdk_dir
+
+if [ "$target_sdk_dir" = "" ]; then
+	target_sdk_dir=$DEFAULT_INSTALL_DIR
+fi
+
+eval target_sdk_dir=$target_sdk_dir
+target_sdk_dir=$(readlink -m $target_sdk_dir)
+
+echo -n "You are about to install Poky SDK to \"$target_sdk_dir\". Proceed[Y/n]?"
+read answer
+
+if [ "$answer" = "" ]; then
+	answer="y"
+fi
+
+if [ "$answer" != "Y" -a "$answer" != "y" ]; then
+	echo "Installation aborted!"
+	exit 1
+fi
+
+mkdir -p $target_sdk_dir >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+	echo "Error: Unable to create target directory. Do you have permissions?"
+	exit 1
+fi
+
+payload_offset=$(($(grep -na -m1 "^MARKER:$" $(basename $0)|cut -d':' -f1) + 1))
+
+echo -n "Extracting SDK..."
+tail -n +$payload_offset $(basename $0) | tar xj --strip-components=4 -C $target_sdk_dir
+echo "done"
+
+echo -n "Setting it up..."
+# fix environment paths
+env_setup_script=$(find $target_sdk_dir -name "environment-setup*")
+sed -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g" -i $env_setup_script
+
+# fix dynamic loader paths in all ELF SDK binaries
+native_sysroot=$(cat $env_setup_script |grep OECORE_NATIVE_SYSROOT|cut -d'=' -f2|tr -d '"')
+dl_path=$(find $native_sysroot/lib -name "ld-linux*")
+executable_files=$(find $native_sysroot -type f -perm +111)
+${env_setup_script%/*}/relocate_sdk.py $target_sdk_dir $dl_path $executable_files
+if [ $? -ne 0 ]; then
+	echo "SDK could not be set up. Relocate script failed. Abort!"
+	exit 1
+fi
+
+# replace ${SDKPATH} with the new prefix in all text files: configs/scripts/etc
+find $native_sysroot -type f -exec file '{}' \;|grep text|cut -d':' -f1|xargs sed -i -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g"
+
+echo done
+
+# delete the relocating script, so that user is forced to re-run the installer
+# if he/she wants another location for the sdk
+rm ${env_setup_script%/*}/relocate_sdk.py
+
+echo "SDK has been successfully set up and is ready to be used."
+
+exit 0
+
+MARKER:
+EOF
+	# append the SDK tarball
+	cat ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.tar.bz2 >> ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh
+
+	# delete the old tarball, we don't need it anymore
+	rm ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.tar.bz2
 }
 
 populate_sdk_log_check() {
