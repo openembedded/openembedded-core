@@ -40,6 +40,7 @@
 
 inherit packagedata
 inherit prserv
+inherit chrpath
 
 PKGD    = "${WORKDIR}/package"
 PKGDEST = "${WORKDIR}/packages-split"
@@ -444,6 +445,10 @@ python perform_packagecopy () {
     subprocess.call('rm -rf %s/*' % (dvar), shell=True)
     # Preserve sparse files and hard links
     subprocess.call('tar -cf - -C %s -ps . | tar -xf - -C %s' % (dest, dvar), shell=True)
+
+    # replace RPATHs for the nativesdk binaries, to make them relocatable
+    if bb.data.inherits_class('nativesdk', d):
+        rpath_replace (dvar, d)
 }
 
 # We generate a master list of directories to process, we start by
