@@ -23,7 +23,8 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 usage() {
-	echo "Usage: sudo $0 <gid> <num> <native-sysroot-basedir>"
+	echo "Usage: sudo $0 <uid> <gid> <num> <native-sysroot-basedir>"
+        echo "Where <uid> is the numeric user id the tap devices will be owned by"
 	echo "Where <gid> is the numeric group id the tap devices will be owned by"
 	echo "<num> is the number of tap devices to create (0 to remove all)"
 	echo "<native-sysroot-basedir> is the path to the build system's native sysroot"
@@ -35,14 +36,15 @@ if [ $EUID -ne 0 ]; then
 	exit
 fi
 
-if [ $# -ne 3 ]; then
+if [ $# -ne 4 ]; then
 	echo "Error: Incorrect number of arguments"
 	usage
 fi
 
-GID=$1
-COUNT=$2
-SYSROOT=$3
+TUID=$1
+GID=$2
+COUNT=$3
+SYSROOT=$4
 
 TUNCTL=$SYSROOT/usr/bin/tunctl
 if [[ ! -x "$TUNCTL" || -d "$TUNCTL" ]]; then
@@ -73,10 +75,10 @@ for tap in `$IFCONFIG | grep ^tap | awk '{ print \$1 }'`; do
 	$TUNCTL -d $tap
 done
 
-echo "Creating $COUNT tap devices for GID $GID..."
+echo "Creating $COUNT tap devices for UID: $TUID GID: $GID..."
 for ((index=0; index < $COUNT; index++)); do
 	echo "Creating tap$index"
-	ifup=`$RUNQEMU_IFUP $GID $SYSROOT 2>&1`
+	ifup=`$RUNQEMU_IFUP $TUID $GID $SYSROOT 2>&1`
 	if [ $? -ne 0 ]; then
 		echo "Error running tunctl: $ifup"
 		exit 1
