@@ -75,7 +75,7 @@ class Configuration(object):
             sys.exit(1)
 
         # filterdiff is required by action_splitpatch, so check its availability
-        if subprocess.call("which filterdiff &>/dev/null", shell=True) != 0:
+        if subprocess.call("which filterdiff > /dev/null 2>&1", shell=True) != 0:
             logger.error("ERROR: patchutils package is missing, please install it (e.g. # apt-get install patchutils)")
             sys.exit(1)
 
