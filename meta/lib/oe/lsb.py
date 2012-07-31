@@ -5,7 +5,7 @@ def release_dict():
     try:
         output, err = bb.process.run(['lsb_release', '-a'], stderr=PIPE)
     except bb.process.CmdError as exc:
-        return
+        return None
 
     data = {}
     for line in output.splitlines():
@@ -22,7 +22,13 @@ def distro_identifier(adjust_hook=None):
        with optional adjustment via a hook"""
 
     lsb_data = release_dict()
-    distro_id, release = lsb_data['Distributor ID'], lsb_data['Release']
+    if lsb_data:
+        distro_id, release = lsb_data['Distributor ID'], lsb_data['Release']
+    else:
+        distro_id, release = None, None
+        
     if adjust_hook:
         distro_id, release = adjust_hook(distro_id, release)
+    if not distro_id:
+        return "Unknown"
     return '{0}-{1}'.format(distro_id, release).replace(' ','-')
