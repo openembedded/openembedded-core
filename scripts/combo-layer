@@ -197,6 +197,25 @@ def drop_to_shell(workdir=None):
     else:
         return True
 
+def check_rev_branch(repodir, rev, branch):
+    try:
+        actualbranch = runcmd("git branch --contains %s" % rev, repodir, printerr=False).rstrip()
+    except subprocess.CalledProcessError as e:
+        if e.returncode == 129:
+            actualbranch = ""
+        else:
+            raise
+
+    if ' ' in actualbranch:
+        actualbranch = actualbranch.split(' ')[-1]
+    if not actualbranch:
+        logger.error("Specified revision %s is invalid!" % rev)
+        return False
+    elif actualbranch != branch:
+        logger.error("Specified revision %s is not on specified branch %s!" % (rev, branch))
+        return False
+    return True
+
 def get_repos(conf, args):
     repos = []
     if len(args) > 1:
@@ -273,6 +292,8 @@ def action_update(conf, args):
             patch_cmd_range = "--root %s" % branch
             rev_cmd_range = branch
         else:
+            if not check_rev_branch(ldir, repo['last_revision'], branch):
+                sys.exit(1)
             patch_cmd_range = "%s..%s" % (repo['last_revision'], branch)
             rev_cmd_range = patch_cmd_range
 
