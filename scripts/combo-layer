@@ -39,6 +39,15 @@ def logger_create():
 
 logger = logger_create()
 
+def get_current_branch(repodir=None):
+    try:
+        branchname = runcmd("git symbolic-ref HEAD 2>/dev/null", repodir).strip()
+        if branchname.startswith("refs/heads/"):
+            branchname = branchname[11:]
+        return branchname
+    except subprocess.CalledProcessError:
+        return ""
+
 class Configuration(object):
     """
     Manages the configuration
@@ -49,30 +58,78 @@ class Configuration(object):
     def __init__(self, options):
         for key, val in options.__dict__.items():
             setattr(self, key, val)
-        self.parser = ConfigParser.ConfigParser()
-        self.parser.readfp(open(self.conffile))
-        self.repos = {}
-        for repo in self.parser.sections():
-            self.repos[repo] = {}
-            for (name, value) in self.parser.items(repo):
+
+        def readsection(parser, section, repo):
+            for (name, value) in parser.items(section):
                 if value.startswith("@"):
                     self.repos[repo][name] = eval(value.strip("@"))
                 else:
                     self.repos[repo][name] = value
 
+        logger.debug("Loading config file %s" % self.conffile)
+        self.parser = ConfigParser.ConfigParser()
+        with open(self.conffile) as f:
+            self.parser.readfp(f)
+
+        self.repos = {}
+        for repo in self.parser.sections():
+            self.repos[repo] = {}
+            readsection(self.parser, repo, repo)
+
+        # Load local configuration, if available
+        self.localconffile = None
+        self.localparser = None
+        self.combobranch = None
+        if self.conffile.endswith('.conf'):
+            lcfile = self.conffile.replace('.conf', '-local.conf')
+            if os.path.exists(lcfile):
+                # Read combo layer branch
+                self.combobranch = get_current_branch()
+                logger.debug("Combo layer branch is %s" % self.combobranch)
+
+                self.localconffile = lcfile
+                logger.debug("Loading local config file %s" % self.localconffile)
+                self.localparser = ConfigParser.ConfigParser()
+                with open(self.localconffile) as f:
+                    self.localparser.readfp(f)
+
+                for section in self.localparser.sections():
+                    if '|' in section:
+                        sectionvals = section.split('|')
+                        repo = sectionvals[0]
+                        if sectionvals[1] != self.combobranch:
+                            continue
+                    else:
+                        repo = section
+                    if repo in self.repos:
+                        readsection(self.localparser, section, repo)
+
     def update(self, repo, option, value):
-        self.parser.set(repo, option, value)
-        self.parser.write(open(self.conffile, "w"))
+        if self.localparser:
+            parser = self.localparser
+            section = "%s|%s" % (repo, self.combobranch)
+            conffile = self.localconffile
+        else:
+            parser = self.parser
+            section = repo
+            conffile = self.conffile
+        parser.set(section, option, value)
+        with open(conffile, "w") as f:
+            parser.write(f)
 
     def sanity_check(self):
         required_options=["src_uri", "local_repo_dir", "dest_dir", "last_revision"]
         msg = ""
+        missing_options = []
         for name in self.repos:
             for option in required_options:
                 if option not in self.repos[name]:
                     msg = "%s\nOption %s is not defined for component %s" %(msg, option, name)
+                    missing_options.append(option)
         if msg != "":
             logger.error("configuration file %s has the following error: %s" % (self.conffile,msg))
+            if self.localconffile and 'last_revision' in missing_options:
+                logger.error("local configuration file %s may be missing configuration for combo branch %s" % (self.localconffile, self.combobranch))
             sys.exit(1)
 
         # filterdiff is required by action_splitpatch, so check its availability
