@@ -181,12 +181,7 @@ def check_patch(patchfile):
         of.close()
         os.rename(patchfile + '.tmp', patchfile)
 
-def action_update(conf, args):
-    """
-        update the component repos
-        generate the patch list
-        apply the generated patches
-    """
+def get_repos(conf, args):
     repos = []
     if len(args) > 1:
         for arg in args[1:]:
@@ -202,14 +197,47 @@ def action_update(conf, args):
     if not repos:
         repos = conf.repos
 
+    return repos
+
+def action_pull(conf, args):
+    """
+        update the component repos only
+    """
+    repos = get_repos(conf, args)
+
     # make sure all repos are clean
     for name in repos:
         check_repo_clean(conf.repos[name]['local_repo_dir'])
+
+    for name in repos:
+        repo = conf.repos[name]
+        ldir = repo['local_repo_dir']
+        branch = repo.get('branch', "master")
+        runcmd("git checkout %s" % branch, ldir)
+        logger.info("git pull for component repo %s in %s ..." % (name, ldir))
+        output=runcmd("git pull", ldir)
+        logger.info(output)
+
+def action_update(conf, args):
+    """
+        update the component repos
+        generate the patch list
+        apply the generated patches
+    """
+    repos = get_repos(conf, args)
+
+    # make sure combo repo is clean
     check_repo_clean(os.getcwd())
 
     import uuid
     patch_dir = "patch-%s" % uuid.uuid4()
     os.mkdir(patch_dir)
+
+    # Step 1: update the component repos
+    if conf.nopull:
+        logger.info("Skipping pull (-n)")
+    else:
+        action_pull(conf, args)
 
     for name in repos:
         repo = conf.repos[name]
@@ -217,12 +245,6 @@ def action_update(conf, args):
         dest_dir = repo['dest_dir']
         branch = repo.get('branch', "master")
         repo_patch_dir = os.path.join(os.getcwd(), patch_dir, name)
-
-        # Step 1: update the component repo
-        runcmd("git checkout %s" % branch, ldir)
-        logger.info("git pull for component repo %s in %s ..." % (name, ldir))
-        output=runcmd("git pull", ldir)
-        logger.info(output)
 
         # Step 2: generate the patch list and store to patch dir
         logger.info("generating patches for %s" % name)
@@ -369,6 +391,7 @@ def action_error(conf, args):
 actions = {
     "init": action_init,
     "update": action_update,
+    "pull": action_pull,
     "splitpatch": action_splitpatch,
 }
 
@@ -382,6 +405,7 @@ Create and update a combination layer repository from multiple component reposit
 Action:
   init                 initialise the combo layer repo
   update [components]  get patches from component repos and apply them to the combo repo
+  pull [components]    just pull component repos only
   splitpatch [commit]  generate commit patch and split per component, default commit is HEAD""")
 
     parser.add_option("-c", "--conf", help = "specify the config file (conf/combo-layer.conf is the default).",
@@ -392,6 +416,9 @@ Action:
 
     parser.add_option("-D", "--debug", help = "output debug information",
                action = "store_true", dest = "debug", default = False)
+
+    parser.add_option("-n", "--no-pull", help = "skip pulling component repos during update",
+               action = "store_true", dest = "nopull", default = False)
 
     options, args = parser.parse_args(sys.argv)
 
