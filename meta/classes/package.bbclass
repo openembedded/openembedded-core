@@ -298,12 +298,16 @@ def runstrip(file, elftype, d):
         os.chmod(file, newmode)
 
     extraflags = ""
-    # .so and shared library
-    if ".so" in file and elftype & 8:
-        extraflags = "--remove-section=.comment --remove-section=.note --strip-unneeded"
-    # shared or executable:
-    elif elftype & 8 or elftype & 4:
-        extraflags = "--remove-section=.comment --remove-section=.note"
+    
+    # split_and_strip_files is calling this with elf_type None, causing:
+    # TypeError: unsupported operand type(s) for &: 'NoneType' and 'int'
+    if elftype:
+        # .so and shared library
+        if ".so" in file and elftype & 8:
+            extraflags = "--remove-section=.comment --remove-section=.note --strip-unneeded"
+        # shared or executable:
+        elif elftype & 8 or elftype & 4:
+            extraflags = "--remove-section=.comment --remove-section=.note"
 
     stripcmd = "'%s' %s '%s'" % (strip, extraflags, file)
     bb.debug(1, "runstrip: %s" % stripcmd)
