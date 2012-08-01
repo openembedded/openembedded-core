@@ -5,7 +5,7 @@ LICENSE = "PSF"
 LIC_FILES_CHKSUM = "file://setup.py;beginline=23;endline=23;md5=8a314270dd7a8dbca741775415f1716e"
 
 SRCNAME = "setuptools"
-PR = "ml4"
+PR = "ml5"
 DEPENDS += "python"
 DEPENDS_virtclass-native += "python-native"
 
@@ -15,6 +15,8 @@ SRC_URI = "\
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 inherit distutils
+
+DISTUTILS_INSTALL_ARGS += "--install-lib=${D}${libdir}/${PYTHON_DIR}/site-packages"
 
 do_install_prepend() {
     install -d ${D}/${libdir}/${PYTHON_DIR}/site-packages
