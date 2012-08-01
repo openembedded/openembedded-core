@@ -71,8 +71,9 @@ harvest_recipients()
 while getopts "achp:t:" OPT; do
 	case $OPT in
 	a)
+		AUTO=1
+		GITSOBCC="--signed-off-by-cc"
 		AUTO_CL=1
-		# Fall through to include -c
 		;;
 	c)
 		AUTO=1
