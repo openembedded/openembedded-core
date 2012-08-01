@@ -17,7 +17,7 @@ do_rootfs[depends] += "rpmresolve-native:do_populate_sysroot"
 do_rootfs[depends] += "opkg-native:do_populate_sysroot"
 
 # Creating the repo info in do_rootfs
-#do_rootfs[depends] += "createrepo-native:do_populate_sysroot"
+do_rootfs[depends] += "createrepo-native:do_populate_sysroot"
 
 do_rootfs[recrdeptask] += "do_package_write_rpm"
 

@@ -6,12 +6,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=18810669f13b87348459e611d31ab760"
 
 RDEPENDS_${PN}_virtclass-native += "libxml2-native rpm-native"
 
-PR = "r4"
+PR = "r5"
 
 SRC_URI= "http://createrepo.baseurl.org/download/${BP}.tar.gz \
           file://fix-native-install.patch \
           file://python-scripts-should-use-interpreter-from-env.patch \
 	  file://createrepo-rpm549.patch \
+	  file://rpm-createsolvedb.py \
          "
 
 SRC_URI[md5sum] = "3e9ccf4abcffe3f49af078c83611eda2"
@@ -21,4 +22,5 @@ BBCLASSEXTEND = "native"
 
 do_install () {
 	oe_runmake -e 'DESTDIR=${D}' install
+	install -m 0755 ${WORKDIR}/rpm-createsolvedb.py ${D}${bindir}/
 }
