@@ -3,7 +3,7 @@
 
 require kmod.inc
 
-PR = "${INC_PR}.3"
+PR = "${INC_PR}.0"
 
 PROVIDES += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
 RPROVIDES_${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"

@@ -7,8 +7,8 @@ HOMEPAGE = "http://packages.profusion.mobi/kmod/"
 LICENSE = "GPL-2.0+ & LGPL-2.1+"
 LICENSE_libkmod = "LGPL-2.1+"
 SECTION = "base"
-PV = "8"
-INC_PR = "r1"
+PV = "9"
+INC_PR = "r0"
 
 DEPENDS += "pkgconfig-native"
 
@@ -22,7 +22,7 @@ SRC_URI = "git://git.profusion.mobi/kmod.git;protocol=git;branch=master \
            file://0001-man-disable-man-page-generation-because-we-don-t-hav.patch \
           "
 
-SRCREV = "819f79a24d58e3c8429f1631df2f8f85a2f95d4a"
+SRCREV = "62081c0f68905b22f375156d4532fd37fa5c8d33"
 
 S = "${WORKDIR}/git"
 
