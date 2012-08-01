@@ -82,29 +82,29 @@ def qemuimagetest_main(d):
     
     """function to check testcase list and remove inappropriate cases"""
     def check_list(list):
-	final_list = []
-	for test in list:
-	    (scen, case, fullpath) = test
+        final_list = []
+        for test in list:
+            (scen, case, fullpath) = test
 
-	    """Skip rpm/zypper if package_rpm not set for PACKAGE_CLASSES"""
-	    if case.find("zypper") != -1 or case.find("rpm") != -1:
-	        if d.getVar("PACKAGE_CLASSES", True).find("rpm", 0, 11) == -1:
-            	    bb.note("skip rpm/zypper cases since package_rpm not set in PACKAGE_CLASSES")
-	 	    continue
-	        else:
-		    final_list.append((scen, case, fullpath))
-	    else:
+            """Skip rpm/zypper if package_rpm not set for PACKAGE_CLASSES"""
+            if case.find("zypper") != -1 or case.find("rpm") != -1:
+                if d.getVar("PACKAGE_CLASSES", True).find("rpm", 0, 11) == -1:
+                    bb.note("skip rpm/zypper cases since package_rpm not set in PACKAGE_CLASSES")
+                    continue
+                else:
+                    final_list.append((scen, case, fullpath))
+            else:
                     final_list.append((scen, case, fullpath))
 
-	if not final_list:
-	    raise bb.build.FuncFailed("There is no suitable testcase for this target")
+        if not final_list:
+            raise bb.build.FuncFailed("There is no suitable testcase for this target")
 
-	return final_list
+        return final_list
 
     """Generate testcase list in runtime"""
     def generate_list(testlist):
         list = []
-	final_list = []
+        final_list = []
         if len(testlist) == 0:
             raise bb.build.FuncFailed("No testcase defined in TEST_SCEN")
 
@@ -136,7 +136,7 @@ def qemuimagetest_main(d):
                        if not os.path.isfile(fulltestcase):
                             raise bb.build.FuncFailed("Testcase %s not found" % fulltestcase)
                        list.append((item, casefile, fulltestcase))
-	final_list = check_list(list)
+        final_list = check_list(list)
         return final_list
 
     """Clean tmp folder for testing"""
@@ -146,7 +146,7 @@ def qemuimagetest_main(d):
         if os.path.isdir(tmppath):
             for f in os.listdir(tmppath):
                 tmpfile = os.path.join(tmppath, f)
-		if os.path.isfile(tmpfile):
+                if os.path.isfile(tmpfile):
                     os.remove(tmpfile)
                 elif os.path.isdir(tmpfile):
                     shutil.rmtree(tmpfile, True)
