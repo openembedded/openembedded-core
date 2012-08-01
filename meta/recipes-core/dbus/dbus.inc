@@ -33,9 +33,12 @@ DEBIANNAME_${PN} = "dbus-1"
 
 PACKAGES =+ "${PN}-lib ${PN}-systemd"
 
+OLDPKGNAME = "dbus-x11"
+OLDPKGNAME_virtclass-nativesdk = ""
+
 # for compatibility
-RPROVIDES_${PN} = "dbus-x11"
-RREPLACES_${PN} += "dbus-x11"
+RPROVIDES_${PN} = "${OLDPKGNAME}"
+RREPLACES_${PN} += "${OLDPKGNAME}"
 
 FILES_${PN}-systemd = "${systemd_unitdir}/system/"
 
