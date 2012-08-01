@@ -9,6 +9,9 @@ RDEPENDS += "python-sip"
 # default stuff, do not uncomment
 # EXTRA_SIPTAGS = "-tWS_X11 -tQt_4_3_0"
 
+# do_generate is before do_configure so ensure that sip_native is populated in sysroot before executing it
+do_generate[depends] += "sip-native:do_populate_sysroot"
+
 sip_do_generate() {
 	if [ -z "${SIP_MODULES}" ]; then 
 		MODULES="`ls sip/*mod.sip`"
