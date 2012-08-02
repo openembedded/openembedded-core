@@ -19,9 +19,10 @@ import bb.utils
 # How to display fields
 list_fields = ['DEPENDS', 'RDEPENDS', 'RRECOMMENDS', 'FILES', 'FILELIST', 'USER_CLASSES', 'IMAGE_CLASSES', 'IMAGE_FEATURES', 'IMAGE_LINGUAS', 'IMAGE_INSTALL', 'BAD_RECOMMENDATIONS']
 list_order_fields = ['PACKAGES']
+defaultval_fields = ['PKG', 'PKGE', 'PKGV', 'PKGR']
 numeric_fields = ['PKGSIZE', 'IMAGESIZE']
 # Fields to monitor
-monitor_fields = ['RDEPENDS', 'RRECOMMENDS', 'PACKAGES', 'FILELIST', 'PKGSIZE', 'IMAGESIZE']
+monitor_fields = ['RDEPENDS', 'RRECOMMENDS', 'PACKAGES', 'FILELIST', 'PKGSIZE', 'IMAGESIZE', 'PKG', 'PKGE', 'PKGV', 'PKGR']
 # Percentage change to alert for numeric fields
 monitor_numeric_threshold = 20
 # Image files to monitor (note that image-info.txt is handled separately)
@@ -90,6 +91,10 @@ class ChangeRecord:
             else:
                 percentchg = 100
             out = '%s changed from %s to %s (%s%d%%)' % (self.fieldname, self.oldvalue or "''", self.newvalue or "''", '+' if percentchg > 0 else '', percentchg)
+        elif self.fieldname in defaultval_fields:
+            out = '%s changed from %s to %s' % (self.fieldname, self.oldvalue, self.newvalue)
+            if self.fieldname == 'PKG' and '[default]' in self.newvalue:
+                out += ' - may indicate debian renaming failure'
         elif self.fieldname in ['pkg_preinst', 'pkg_postinst', 'pkg_prerm', 'pkg_postrm']:
             if self.oldvalue and self.newvalue:
                 out = '%s changed:\n  ' % self.fieldname
@@ -299,6 +304,14 @@ def compare_dict_blobs(path, ablob, bblob, report_all):
     adict = blob_to_dict(ablob)
     bdict = blob_to_dict(bblob)
 
+    defaultvals = {}
+    defaultvals['PKG'] = os.path.basename(path)
+    defaultvals['PKGE'] = adict.get('PE', '0')
+    defaultvals['PKGV'] = adict.get('PV', '')
+    defaultvals['PKGR'] = adict.get('PR', '')
+    for key in defaultvals:
+        defaultvals[key] = '%s [default]' % defaultvals[key]
+
     changes = []
     keys = list(set(adict.keys()) | set(bdict.keys()))
     for key in keys:
@@ -327,6 +340,13 @@ def compare_dict_blobs(path, ablob, bblob, report_all):
                 blist.sort()
                 if ' '.join(alist) == ' '.join(blist):
                     continue
+
+            if key in defaultval_fields:
+                if not astr:
+                    astr = defaultvals[key]
+                elif not bstr:
+                    bstr = defaultvals[key]
+
             chg = ChangeRecord(path, key, astr, bstr, key in monitor_fields)
             changes.append(chg)
     return changes
