@@ -214,63 +214,104 @@ python do_kernel_configcheck() {
     bb.plain( "%s" % result )
 }
 
-
-# Ensure that the branches (BSP and meta) are on the locatios specified by
+# Ensure that the branches (BSP and meta) are on the locations specified by
 # their SRCREV values. If they are NOT on the right commits, the branches
-# are reset to the correct commit.
+# are corrected to the proper commit.
 do_validate_branches() {
 	cd ${S}
+	export KMETA=${KMETA}
 
-	# nothing to do if bootstrapping
- 	if [ -n "${YOCTO_KERNEL_EXTERNAL_BRANCH}" ]; then
- 	 	return
- 	fi
-
-	# nothing to do if SRCREV is AUTOREV
+	set +e
+	# if SRCREV is AUTOREV it shows up as AUTOINC there's nothing to
+	# check and we can exit early
 	if [ "${SRCREV_machine}" = "AUTOINC" ]; then
-		# restore the branch for builds
-		git checkout -f ${KBRANCH}
 		return
 	fi
 
- 	branch_head=`git show-ref -s --heads ${KBRANCH}`
- 	meta_head=`git show-ref -s --heads ${KMETA}`
- 	target_branch_head="${SRCREV_machine}"
- 	target_meta_head="${SRCREV_meta}"
+	# If something other than the default branch was requested, it must
+	# exist in the tree, and it's a hard error if it wasn't
+	git show-ref --quiet --verify -- "refs/heads/${KBRANCH}"
+	if [ $? -eq 1 ]; then
+		if [ -n "${KBRANCH_DEFAULT}" ] && 
+                      [ "${KBRANCH}" != "${KBRANCH_DEFAULT}" ]; then
+			echo "ERROR: branch ${KBRANCH} was set for kernel compilation, "
+			echo "       but it does not exist in the kernel repository."
+			echo "       Check the value of KBRANCH and ensure that it describes"
+			echo "       a valid banch in the source kernel repository"
+			exit 1
+		fi
+	fi
 
-	current=`git branch |grep \*|sed 's/^\* //'`
-	if [ -n "$target_branch_head" ] && [ "$branch_head" != "$target_branch_head" ]; then
-		if [ -n "${KERNEL_REVISION_CHECKING}" ]; then
-			ref=`git show ${target_meta_head} 2>&1 | head -n1 || true`
-			if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
-				echo "ERROR ${target_branch_head} is not a valid commit ID."
-				echo "The kernel source tree may be out of sync"
+	if [ -z "${SRCREV_machine}" ]; then
+		target_branch_head="${SRCREV}"
+	else
+	 	target_branch_head="${SRCREV_machine}"
+	fi
+
+	# $SRCREV could have also been AUTOINC, so check again
+	if [ "${target_branch_head}" = "AUTOINC" ]; then
+		return
+	fi
+
+	containing_branches=`git branch --contains $target_branch_head | sed 's/^..//'`
+	if [ -z "$containing_branches" ]; then
+		echo "ERROR: SRCREV was set to \"$target_branch_head\", but no branches"
+		echo "       contain this commit"
+		exit 1
+	fi
+	ref=`git show ${target_branch_head} 2>&1 | head -n1 || true`
+	if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
+	    echo "ERROR ${target_branch_head} is not a valid commit ID."
+	    echo "The kernel source tree may be out of sync"
+	    exit 1
+	fi
+
+	# force the SRCREV in each branch that contains the specified
+	# SRCREV (if it isn't the current HEAD of that branch)
+	git checkout -q master
+	for b in $containing_branches; do
+		branch_head=`git show-ref -s --heads ${b}`
+		if [ "$branch_head" != "$target_branch_head" ]; then
+			echo "[INFO] Setting branch $b to ${target_branch_head}"	      
+			git branch -D $b > /dev/null
+			git branch $b $target_branch_head > /dev/null
+		fi
+	done
+
+	## KMETA branch validation
+ 	meta_head=`git show-ref -s --heads ${KMETA}`
+ 	target_meta_head="${SRCREV_meta}"
+	git show-ref --quiet --verify -- "refs/heads/${KMETA}"
+	if [ $? -eq 1 ]; then
+		return
+	fi
+
+	if [ "${target_meta_head}" = "AUTOINC" ]; then
+		return
+	fi
+
+	if [ "$meta_head" != "$target_meta_head" ]; then
+		ref=`git show ${target_meta_head} 2>&1 | head -n1 || true`
+		if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
+			echo "ERROR ${target_meta_head} is not a valid commit ID"
+			echo "The kernel source tree may be out of sync"
+			exit 1
+		else
+			echo "[INFO] Setting branch ${KMETA} to ${target_meta_head}"
+			git branch -m ${KMETA} ${KMETA}-orig
+			git checkout -q -b ${KMETA} ${target_meta_head}
+			if [ $? -ne 0 ];then
+				echo "ERROR: could not checkout ${KMETA} branch from known hash ${target_meta_head}"
 				exit 1
-			else
-				echo "Forcing branch $current to ${target_branch_head}"
-				git branch -m $current $current-orig
-				git checkout -b $current ${target_branch_head}
 			fi
 		fi
 	fi
 
-	if [ "$meta_head" != "$target_meta_head" ]; then
-		if [ -n "${KERNEL_REVISION_CHECKING}" ]; then
-			ref=`git show ${target_meta_head} 2>&1 | head -n1 || true`
-			if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
-				echo "ERROR ${target_meta_head} is not a valid commit ID"
-				echo "The kernel source tree may be out of sync"
-				exit 1
-			else
-				echo "Forcing branch meta to ${target_meta_head}"
-				git branch -m ${KMETA} ${KMETA}-orig
-				git checkout -b ${KMETA} ${target_meta_head}
-			fi	   
-		fi
+	git show-ref --quiet --verify -- "refs/heads/${KBRANCH}"
+	if [ $? -eq 0 ]; then
+		# restore the branch for builds
+		git checkout -q -f ${KBRANCH}
 	fi
-
-	# restore the branch for builds
-	git checkout -f ${KBRANCH}
 }
 
 # Many scripts want to look in arch/$arch/boot for the bootable
