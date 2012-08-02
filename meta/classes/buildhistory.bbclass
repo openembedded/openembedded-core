@@ -57,6 +57,8 @@ python buildhistory_emit_pkghistory() {
             self.rrecommends = ""
             self.files = ""
             self.filelist = ""
+            # Variables that need to be written to their own separate file
+            self.filevars = dict.fromkeys(['pkg_preinst', 'pkg_postinst', 'pkg_prerm', 'pkg_postrm'])
 
     # Should check PACKAGES here to see if anything removed
 
@@ -167,6 +169,8 @@ python buildhistory_emit_pkghistory() {
         pkginfo.rdepends = sortpkglist(squashspaces(getpkgvar(pkg, 'RDEPENDS') or ""))
         pkginfo.rrecommends = sortpkglist(squashspaces(getpkgvar(pkg, 'RRECOMMENDS') or ""))
         pkginfo.files = squashspaces(getpkgvar(pkg, 'FILES') or "")
+        for filevar in pkginfo.filevars:
+            pkginfo.filevars[filevar] = getpkgvar(pkg, filevar)
 
         # Gather information about packaged files
         pkgdestpkg = os.path.join(pkgdest, pkg)
@@ -191,16 +195,13 @@ def write_recipehistory(rcpinfo, d):
     pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
 
     infofile = os.path.join(pkghistdir, "latest")
-    f = open(infofile, "w")
-    try:
+    with open(infofile, "w") as f:
         if rcpinfo.pe != "0":
             f.write("PE = %s\n" %  rcpinfo.pe)
         f.write("PV = %s\n" %  rcpinfo.pv)
         f.write("PR = %s\n" %  rcpinfo.pr)
         f.write("DEPENDS = %s\n" %  rcpinfo.depends)
         f.write("PACKAGES = %s\n" %  rcpinfo.packages)
-    finally:
-        f.close()
 
 
 def write_pkghistory(pkginfo, d):
@@ -213,8 +214,7 @@ def write_pkghistory(pkginfo, d):
         os.makedirs(pkgpath)
 
     infofile = os.path.join(pkgpath, "latest")
-    f = open(infofile, "w")
-    try:
+    with open(infofile, "w") as f:
         if pkginfo.pe != "0":
             f.write("PE = %s\n" %  pkginfo.pe)
         f.write("PV = %s\n" %  pkginfo.pv)
@@ -224,8 +224,16 @@ def write_pkghistory(pkginfo, d):
         f.write("PKGSIZE = %d\n" %  pkginfo.size)
         f.write("FILES = %s\n" %  pkginfo.files)
         f.write("FILELIST = %s\n" %  pkginfo.filelist)
-    finally:
-        f.close()
+
+    for filevar in pkginfo.filevars:
+        filevarpath = os.path.join(pkgpath, "latest.%s" % filevar)
+        val = pkginfo.filevars[filevar]
+        if val:
+            with open(filevarpath, "w") as f:
+                f.write(val)
+        else:
+            if os.path.exists(filevarpath):
+                os.unlink(filevarpath)
 
 
 buildhistory_get_image_installed() {

@@ -90,6 +90,18 @@ class ChangeRecord:
             else:
                 percentchg = 100
             out = '%s changed from %s to %s (%s%d%%)' % (self.fieldname, self.oldvalue or "''", self.newvalue or "''", '+' if percentchg > 0 else '', percentchg)
+        elif self.fieldname in ['pkg_preinst', 'pkg_postinst', 'pkg_prerm', 'pkg_postrm']:
+            if self.oldvalue and self.newvalue:
+                out = '%s changed:\n  ' % self.fieldname
+            elif self.newvalue:
+                out = '%s added:\n  ' % self.fieldname
+            elif self.oldvalue:
+                out = '%s cleared:\n  ' % self.fieldname
+            alines = self.oldvalue.splitlines()
+            blines = self.newvalue.splitlines()
+            diff = difflib.unified_diff(alines, blines, self.fieldname, self.fieldname, lineterm='')
+            out += '\n  '.join(list(diff)[2:])
+            out += '\n  --'
         elif self.fieldname in img_monitor_files:
             if outer:
                 prefix = 'Changes to %s ' % self.path
@@ -330,7 +342,12 @@ def process_changes(repopath, revision1, revision2 = 'HEAD', report_all = False)
     for d in diff.iter_change_type('M'):
         path = os.path.dirname(d.a_blob.path)
         if path.startswith('packages/'):
-            changes.extend(compare_dict_blobs(path, d.a_blob, d.b_blob, report_all))
+            filename = os.path.basename(d.a_blob.path)
+            if filename == 'latest':
+                changes.extend(compare_dict_blobs(path, d.a_blob, d.b_blob, report_all))
+            elif filename.startswith('latest.'):
+                chg = ChangeRecord(path, filename, d.a_blob.data_stream.read(), d.b_blob.data_stream.read(), True)
+                changes.append(chg)
         elif path.startswith('images/'):
             filename = os.path.basename(d.a_blob.path)
             if filename in img_monitor_files:
@@ -355,6 +372,37 @@ def process_changes(repopath, revision1, revision2 = 'HEAD', report_all = False)
                     changes.append(chg)
             elif filename == 'image-info.txt':
                 changes.extend(compare_dict_blobs(path, d.a_blob, d.b_blob, report_all))
+
+    # Look for added preinst/postinst/prerm/postrm
+    # (without reporting newly added recipes)
+    addedpkgs = []
+    addedchanges = []
+    for d in diff.iter_change_type('A'):
+        path = os.path.dirname(d.b_blob.path)
+        if path.startswith('packages/'):
+            filename = os.path.basename(d.b_blob.path)
+            if filename == 'latest':
+                addedpkgs.append(path)
+            elif filename.startswith('latest.'):
+                chg = ChangeRecord(path, filename[7:], '', d.b_blob.data_stream.read(), True)
+                addedchanges.append(chg)
+    for chg in addedchanges:
+        found = False
+        for pkg in addedpkgs:
+            if chg.path.startswith(pkg):
+                found = True
+                break
+        if not found:
+            changes.append(chg)
+
+    # Look for cleared preinst/postinst/prerm/postrm
+    for d in diff.iter_change_type('D'):
+        path = os.path.dirname(d.a_blob.path)
+        if path.startswith('packages/'):
+            filename = os.path.basename(d.a_blob.path)
+            if filename != 'latest' and filename.startswith('latest.'):
+                chg = ChangeRecord(path, filename[7:], d.a_blob.data_stream.read(), '', True)
+                changes.append(chg)
 
     # Link related changes
     for chg in changes:
