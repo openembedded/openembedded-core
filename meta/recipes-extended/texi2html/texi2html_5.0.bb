@@ -4,7 +4,7 @@ SECTION     = "console/utils"
 LICENSE     = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI     = "http://download.savannah.gnu.org/releases/texi2html/${BPN}-${PV}.tar.bz2 \
                file://fix_gettext_version.patch"
@@ -22,6 +22,10 @@ do_configure_prepend() {
 do_configure_append() {
 	# Clean up the phony po directory
 	rm -rf ${S}/po
+}
+
+do_install_append () {
+	sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/texi2html
 }
 
 FILES_${PN}-doc += "${datadir}/texinfo"
