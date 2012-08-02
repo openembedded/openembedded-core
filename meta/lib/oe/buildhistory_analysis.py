@@ -286,8 +286,9 @@ def compare_dict_blobs(path, ablob, bblob, report_all):
     adict = blob_to_dict(ablob)
     bdict = blob_to_dict(bblob)
 
+    pkgname = os.path.basename(path)
     defaultvals = {}
-    defaultvals['PKG'] = os.path.basename(path)
+    defaultvals['PKG'] = pkgname
     defaultvals['PKGE'] = adict.get('PE', '0')
     defaultvals['PKGV'] = adict.get('PV', '')
     defaultvals['PKGR'] = adict.get('PR', '')
@@ -320,6 +321,9 @@ def compare_dict_blobs(path, ablob, bblob, report_all):
                 alist.sort()
                 blist = bstr.split()
                 blist.sort()
+                # We don't care about the removal of self-dependencies
+                if pkgname in alist and not pkgname in blist:
+                    alist.remove(pkgname)
                 if ' '.join(alist) == ' '.join(blist):
                     continue
 
