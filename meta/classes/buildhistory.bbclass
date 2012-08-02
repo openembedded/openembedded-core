@@ -68,28 +68,6 @@ python buildhistory_emit_pkghistory() {
 
         return val
 
-    def readRecipeInfo(pn, histfile):
-        rcpinfo = RecipeInfo(pn)
-        f = open(histfile, "r")
-        try:
-            for line in f:
-                lns = line.split('=')
-                name = lns[0].strip()
-                value = lns[1].strip(" \t\r\n").strip('"')
-                if name == "PE":
-                    rcpinfo.pe = value
-                elif name == "PV":
-                    rcpinfo.pv = value
-                elif name == "PR":
-                    rcpinfo.pr = value
-                elif name == "DEPENDS":
-                    rcpinfo.depends = value
-                elif name == "PACKAGES":
-                    rcpinfo.packages = value
-        finally:
-            f.close()
-        return rcpinfo
-
     def readPackageInfo(pkg, histfile):
         pkginfo = PackageInfo(pkg)
         f = open(histfile, "r")
@@ -117,13 +95,6 @@ python buildhistory_emit_pkghistory() {
         finally:
             f.close()
         return pkginfo
-
-    def getlastrecipeversion(pn):
-        try:
-            histfile = os.path.join(pkghistdir, "latest")
-            return readRecipeInfo(pn, histfile)
-        except EnvironmentError:
-            return None
 
     def getlastpkgversion(pkg):
         try:
