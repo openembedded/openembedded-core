@@ -261,24 +261,6 @@ def compare_lists(alines, blines):
     return filechanges
 
 
-def split_version(s):
-    """Split a version string into its constituent parts (PE, PV, PR)
-    FIXME: this is a duplicate of a new function in bitbake/lib/bb/utils -
-    we should switch to that once we can bump the minimum bitbake version
-    """
-    s = s.strip(" <>=")
-    e = 0
-    if s.count(':'):
-        e = int(s.split(":")[0])
-        s = s.split(":")[1]
-    r = ""
-    if s.count('-'):
-        r = s.rsplit("-", 1)[1]
-        s = s.rsplit("-", 1)[0]
-    v = s
-    return (e, v, r)
-
-
 def compare_pkg_lists(astr, bstr):
     depvera = bb.utils.explode_dep_versions(astr)
     depverb = bb.utils.explode_dep_versions(bstr)
@@ -290,7 +272,7 @@ def compare_pkg_lists(astr, bstr):
             dva = depvera[k]
             dvb = depverb[k]
             if dva and dvb and dva != dvb:
-                if bb.utils.vercmp(split_version(dva), split_version(dvb)) < 0:
+                if bb.utils.vercmp(bb.utils.split_version(dva), bb.utils.split_version(dvb)) < 0:
                     remove.append(k)
 
     for k in remove:
