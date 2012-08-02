@@ -156,7 +156,6 @@ python buildhistory_emit_pkghistory() {
     rcpinfo.depends = sortlist(squashspaces(d.getVar('DEPENDS', True) or ""))
     rcpinfo.packages = packages
     write_recipehistory(rcpinfo, d)
-    write_latestlink(None, pe, pv, pr, d)
 
     # Apparently the version can be different on a per-package basis (see Python)
     pkgdest = d.getVar('PKGDEST', True)
@@ -199,8 +198,6 @@ python buildhistory_emit_pkghistory() {
         pkginfo.filelist = " ".join(filelist)
 
         write_pkghistory(pkginfo, d)
-
-        write_latestlink(pkg, pe, pv, pr, d)
 }
 
 
@@ -212,8 +209,8 @@ def write_recipehistory(rcpinfo, d):
     if not os.path.exists(pkghistdir):
         os.makedirs(pkghistdir)
 
-    verfile = os.path.join(pkghistdir, "%s:%s-%s" % (rcpinfo.pe, rcpinfo.pv, rcpinfo.pr))
-    f = open(verfile, "w")
+    infofile = os.path.join(pkghistdir, "latest")
+    f = open(infofile, "w")
     try:
         if rcpinfo.pe != "0":
             f.write("PE = %s\n" %  rcpinfo.pe)
@@ -226,16 +223,16 @@ def write_recipehistory(rcpinfo, d):
 
 
 def write_pkghistory(pkginfo, d):
-    bb.debug(2, "Writing package history")
+    bb.debug(2, "Writing package history for package %s" % pkginfo.name)
 
     pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
 
-    verpath = os.path.join(pkghistdir, pkginfo.name)
-    if not os.path.exists(verpath):
-        os.makedirs(verpath)
+    pkgpath = os.path.join(pkghistdir, pkginfo.name)
+    if not os.path.exists(pkgpath):
+        os.makedirs(pkgpath)
 
-    verfile = os.path.join(verpath, "%s:%s-%s" % (pkginfo.pe, pkginfo.pv, pkginfo.pr))
-    f = open(verfile, "w")
+    infofile = os.path.join(pkgpath, "latest")
+    f = open(infofile, "w")
     try:
         if pkginfo.pe != "0":
             f.write("PE = %s\n" %  pkginfo.pe)
@@ -248,30 +245,6 @@ def write_pkghistory(pkginfo, d):
         f.write("FILELIST = %s\n" %  pkginfo.filelist)
     finally:
         f.close()
-
-
-def write_latestlink(pkg, pe, pv, pr, d):
-    import shutil
-
-    pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
-
-    def rm_link(path):
-        try:
-            os.unlink(path)
-        except OSError:
-            return
-
-    if pkg:
-        filedir = os.path.join(pkghistdir, pkg)
-    else:
-        filedir = pkghistdir
-    latest_file = os.path.join(filedir, "latest")
-    ver_file = os.path.join(filedir, "%s:%s-%s" % (pe, pv, pr))
-    rm_link(latest_file)
-    if d.getVar('BUILDHISTORY_KEEP_VERSIONS', True) == '1':
-        shutil.copy(ver_file, latest_file)
-    else:
-        shutil.move(ver_file, latest_file)
 
 
 buildhistory_get_image_installed() {
