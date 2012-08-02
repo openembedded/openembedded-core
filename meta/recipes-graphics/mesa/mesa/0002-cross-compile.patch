@@ -1,4 +1,7 @@
-This patch is ported from WindRiver linux and to fix cross compile failure.
+cross compile
+
+This patch is ported from WindRiver linux and to fix cross compile
+failure.
 
 And original commits are:
 commit 8d5ccc8113e1b51b0529a00c18a4aba956247e1b
@@ -7,10 +10,15 @@ commit 5c4212084b871a0c0fb7d174280ec9a634637deb
 Upstream-Status: Pending
 
 Signed-off-by: Kang Kai <kai.kang@windriver.com>
+---
+ bin/mklib |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
---- Mesa-7.10.2/bin/mklib.orig	2011-09-28 16:15:34.170000074 +0800
-+++ Mesa-7.10.2/bin/mklib	2011-09-28 16:15:42.370000073 +0800
-@@ -49,8 +49,8 @@
+diff --git a/bin/mklib b/bin/mklib
+index 9bac29e..b33aa90 100755
+--- a/bin/mklib
++++ b/bin/mklib
+@@ -49,8 +49,8 @@ expand_archives() {
                      /*) ;;
                      *)  FILE="$ORIG_DIR/$FILE" ;;
                  esac
@@ -21,7 +29,7 @@ Signed-off-by: Kang Kai <kai.kang@windriver.com>
                  for MEMBER in $MEMBERS ; do
                      NEWFILES="$NEWFILES $DIR/$MEMBER"
                  done
-@@ -77,7 +77,7 @@
+@@ -77,7 +77,7 @@ expand_archives() {
  make_ar_static_lib() {
      OPTS=$1
      shift;
@@ -30,7 +38,7 @@ Signed-off-by: Kang Kai <kai.kang@windriver.com>
      shift;
      LIBNAME=$1
      shift;
-@@ -87,11 +87,11 @@
+@@ -87,11 +87,11 @@ make_ar_static_lib() {
      rm -f ${LIBNAME}
  
      # make static lib
@@ -45,7 +53,7 @@ Signed-off-by: Kang Kai <kai.kang@windriver.com>
      fi
  
      echo ${LIBNAME}
-@@ -313,9 +313,9 @@
+@@ -313,9 +313,9 @@ case $ARCH in
  	if [ "x$LINK" = "x" ] ; then
  	    # -linker was not specified so set default link command now
              if [ $CPLUSPLUS = 1 ] ; then
@@ -57,7 +65,19 @@ Signed-off-by: Kang Kai <kai.kang@windriver.com>
              fi
  	fi
  
-@@ -531,9 +531,9 @@
+@@ -535,9 +535,9 @@ case $ARCH in
+ 	if [ "x$LINK" = "x" ] ; then
+ 	    # -linker was not specified so set default link command now
+             if [ $CPLUSPLUS = 1 ] ; then
+-                LINK=g++
++                LINK=$CXX
+             else
+-                LINK=gcc
++                LINK=$CC
+             fi
+ 	fi
+ 
+@@ -903,9 +903,9 @@ case $ARCH in
  	if [ "x$LINK" = "x" ] ; then
  	    # -linker was not specified so set default link command now
              if [ $CPLUSPLUS = 1 ] ; then
@@ -69,3 +89,6 @@ Signed-off-by: Kang Kai <kai.kang@windriver.com>
              fi
  	fi
  
+-- 
+1.7.10.4
+

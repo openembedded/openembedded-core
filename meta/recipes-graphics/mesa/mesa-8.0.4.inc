@@ -1,16 +1,15 @@
 DEPENDS += "mesa-dri-glsl-native"
 
-
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \ 
-           file://uclibc.patch \
-           file://crossfix.patch \
-           file://crossfix-mklib.patch \
-           file://mesa_fix_for_x32.patch \
+           file://0001-Compile-with-uclibc.patch \
+           file://0002-cross-compile.patch \
+           file://0003-fix-for-x32.patch \
            "
+
 S = "${WORKDIR}/Mesa-${PV}"
 
-SRC_URI[md5sum] = "ff03aca82d0560009a076a87c888cf13"
-SRC_URI[sha256sum] = "f8bf37a00882840a3e3d327576bc26a79ae7f4e18fe1f7d5f17a5b1c80dd7acf"
+SRC_URI[md5sum] = "d546f988adfdf986cff45b1efa2d8a46"
+SRC_URI[sha256sum] = "02ed19f4f5f6535dda03a9932a81438aa78ea723ebba1f39a3d49a70a4e1d07e"
 
 do_configure_prepend() {
   #check for python not python2, because python-native does not stage python2 binary/link

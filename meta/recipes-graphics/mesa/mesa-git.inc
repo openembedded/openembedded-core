@@ -1,14 +1,15 @@
 DEPENDS += "mesa-dri-glsl-native"
 
-SRCREV = "983fa4ad523535debf2e94cf6ac1fd4c5630c0d2"
-PV = "7.11+gitr${SRCPV}"
+SRCREV = "c1f4867c89adb1a6b19d66ec8ad146115909f0a7"
+PV = "8.0.4+git${SRCPV}"
 
 LIC_FILES_CHKSUM = "file://docs/license.html;md5=03ccdc4c379c4289aecfb8892c546f67"
 FILESEXTRAPATHS_prepend := "${THISDIR}/mesa-git:"
 
 SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git \
-           file://uclibc.patch \
-           file://crossfix.patch \
+           file://0001-Compile-with-uclibc.patch \
+           file://0002-cross-compile.patch \
+           file://0003-fix-for-x32.patch \
            "
 S = "${WORKDIR}/git"
 

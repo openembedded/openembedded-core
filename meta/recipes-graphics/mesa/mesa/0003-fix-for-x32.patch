@@ -1,16 +1,19 @@
 Upstream-Status: Pending
 
-Using uname like this when cross compiling is a really bad idea. We 
-provide the correct linker flags, lets just assume we can get this 
+Using uname like this when cross compiling is a really bad idea. We
+provide the correct linker flags, lets just assume we can get this
 right ourselves.
 
 RP 2012/04/26
+---
+ bin/mklib |   16 ----------------
+ 1 file changed, 16 deletions(-)
 
-Index: Mesa-7.11/bin/mklib
-===================================================================
---- Mesa-7.11.orig/bin/mklib	2012-04-26 19:43:20.729150109 +0000
-+++ Mesa-7.11/bin/mklib	2012-04-26 20:30:22.421086163 +0000
-@@ -330,13 +330,7 @@
+diff --git a/bin/mklib b/bin/mklib
+index b33aa90..16cb017 100755
+--- a/bin/mklib
++++ b/bin/mklib
+@@ -330,15 +330,7 @@ case $ARCH in
  	    ;;
  	    esac
  
@@ -18,13 +21,15 @@ Index: Mesa-7.11/bin/mklib
 -	    # environment.  If so, pass -m32 flag to linker.
  	    set ${OBJECTS}
 -	    ABI32=`file $1 | grep 32-bit`
--	    if [ "${ABI32}" -a `uname -m` = "x86_64" ] ; then
+-	    ARM=`file $1 | grep ARM`
+-	    # Do not add "-m32" option for arm.
+-            if [ -z "$ARM" -a "${ABI32}" -a `uname -m` = "x86_64" ] ; then
 -		OPTS="-m32 ${OPTS}"
 -	    fi
  
              if [ "${ALTOPTS}" ] ; then
                  OPTS=${ALTOPTS}
-@@ -387,13 +381,7 @@
+@@ -389,15 +381,7 @@ case $ARCH in
  		# exptmp is removed below
  	    fi
  
@@ -32,9 +37,14 @@ Index: Mesa-7.11/bin/mklib
 -	    # environment.  If so, pass -m32 flag to linker.
  	    set ${OBJECTS}
 -	    ABI32=`file $1 | grep 32-bit`
--	    if [ "${ABI32}" -a `uname -m` = "x86_64" ] ; then
+-            ARM=`file $1 | grep ARM`
+-	    # Do not add "-m32" option for arm.
+-            if [ -z "$ARM" -a "${ABI32}" -a `uname -m` = "x86_64" ] ; then
 -		OPTS="-m32 ${OPTS}"
 -	    fi
              if [ "${ALTOPTS}" ] ; then
                  OPTS=${ALTOPTS}
              fi
+-- 
+1.7.10.4
+
