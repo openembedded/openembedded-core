@@ -1,5 +1,5 @@
-include mesa-common.inc
-include mesa-${PV}.inc
-include mesa-xlib.inc
+require mesa-common.inc
+require mesa-${PV}.inc
+require mesa-xlib.inc
 PR = "${INC_PR}.2"
 
