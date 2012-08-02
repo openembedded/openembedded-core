@@ -11,12 +11,13 @@ do_configure_prepend () {
 
 FILES_${PN} += "${datadir}/gnome-about ${datadir}/libgnome-desktop/pnp.ids"
 
-PR = "r5"
+PR = "r6"
 
 inherit gnome pkgconfig
 
 do_install_append () {
 	sed -i -e's,${STAGING_BINDIR_NATIVE},${bindir},g' ${D}${bindir}/gnome-about
+	sed -i -e '1s,#!.*python,#! ${USRBINPATH}/env python,' ${D}${bindir}/gnome-about
 }
 
 
