@@ -7,19 +7,18 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 DEPENDS = "libusb zlib"
-PR = "r5"
+PR = "r0"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/usb/usbutils/usbutils-${PV}.tar.gz \
            file://usb-devices-avoid-dependency-on-bash.patch \
            file://Fix-NULL-pointer-crash.patch"
 
-SRC_URI[md5sum] = "49de2403b40bf3a9863faaa8d3858deb"
-SRC_URI[sha256sum] = "c122346b0225121bcf159abf804116f826a4a3462c94ce7b8871f7559e6b3a46"
+SRC_URI[md5sum] = "850790442f5eb487cdc7e35f8ee03e11"
+SRC_URI[sha256sum] = "553270b4030f0844cb70aed57e61c7f10a7ed6641c3bed20249201cec9bcf122"
 
 inherit autotools
 
 do_install_append() {
-	ln -s ../sbin/lsusb ${D}${bindir}/lsusb
 	# We only need the compressed copy, remove the uncompressed version
 	rm -f ${D}${datadir}/usb.ids
 }
