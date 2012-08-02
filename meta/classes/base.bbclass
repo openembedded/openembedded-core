@@ -34,10 +34,20 @@ def oe_import(d):
 python oe_import_eh () {
     if isinstance(e, bb.event.ConfigParsed):
         oe_import(e.data)
-        e.data.setVar("NATIVELSBSTRING", oe.lsb.distro_identifier())
+        e.data.setVar("NATIVELSBSTRING", lsb_distro_identifier(e.data))
 }
 
 addhandler oe_import_eh
+
+def lsb_distro_identifier(d):
+    adjust = d.getVar('LSB_DISTRO_ADJUST', True)
+    adjust_func = None
+    if adjust:
+        try:
+            adjust_func = globals()[adjust]
+        except KeyError:
+            pass
+    return oe.lsb.distro_identifier(adjust_func)
 
 die() {
 	bbfatal "$*"
