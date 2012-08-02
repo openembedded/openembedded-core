@@ -382,20 +382,19 @@ python () {
             if flag == "defaultval":
                 continue
             items = flagval.split(",")
-            if len(items) == 3:
-                enable, disable, depend = items
-                rdepend = ""
-            elif len(items) == 4:
-                enable, disable, depend, rdepend = items
+            num = len(items)
+            if num > 4:
+                bb.error("Only enable,disable,depend,rdepend can be specified!")
+
             if flag in pkgconfig:
-                if depend:
-                    extradeps.append(depend)
-                if rdepend:
-                    extrardeps.append(rdepend)
-                if enable:
-                    extraconf.append(enable)
-            elif disable:
-                    extraconf.append(disable)
+                if num >= 3 and items[2]:
+                    extradeps.append(items[2])
+                if num >= 4 and items[3]:
+                    extrardeps.append(items[3])
+                if num >= 1 and items[0]:
+                    extraconf.append(items[0])
+            elif num >= 2 and items[1]:
+                    extraconf.append(items[1])
         appendVar('DEPENDS', extradeps)
         appendVar('RDEPENDS_${PN}', extrardeps)
         appendVar('EXTRA_OECONF', extraconf)
