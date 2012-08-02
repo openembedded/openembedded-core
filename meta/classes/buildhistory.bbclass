@@ -354,6 +354,15 @@ def buildhistory_get_layers(d):
     layertext = "Configured metadata layers:\n%s\n" % '\n'.join(get_layers_branch_rev(d))
     return layertext
 
+def buildhistory_get_metadata_revs(d):
+    # We want an easily machine-readable format here, so get_layers_branch_rev isn't quite what we want
+    layers = (d.getVar("BBLAYERS", True) or "").split()
+    medadata_revs = ["%-17s = %s:%s" % (os.path.basename(i), \
+        base_get_metadata_git_branch(i, None).strip(), \
+        base_get_metadata_git_revision(i, None)) \
+            for i in layers]
+    return '\n'.join(medadata_revs)
+
 
 def squashspaces(string):
     import re
@@ -382,19 +391,25 @@ buildhistory_commit() {
 		return
 	fi
 
+	# Create a machine-readable list of metadata revisions for each layer
+	cat > ${BUILDHISTORY_DIR}/metadata-revs <<END
+${@buildhistory_get_metadata_revs(d)}
+END
+
 	( cd ${BUILDHISTORY_DIR}/
 		# Initialise the repo if necessary
 		if [ ! -d .git ] ; then
 			git init -q
 		fi
-		# Ensure there are new/changed files to commit
-		repostatus=`git status --porcelain`
+		# Check if there are new/changed files to commit (other than metadata-revs)
+		repostatus=`git status --porcelain | grep -v " metadata-revs$"`
 		if [ "$repostatus" != "" ] ; then
-			git add ${BUILDHISTORY_DIR}/*
+			git add .
 			HOSTNAME=`hostname 2>/dev/null || echo unknown`
 			# porcelain output looks like "?? packages/foo/bar"
+			# Ensure we commit metadata-revs with the first commit
 			for entry in `echo "$repostatus" | awk '{print $2}' | awk -F/ '{print $1}' | sort | uniq` ; do
-				git commit ${BUILDHISTORY_DIR}/$entry -m "$entry: Build ${BUILDNAME} of ${DISTRO} ${DISTRO_VERSION} for machine ${MACHINE} on $HOSTNAME" --author "${BUILDHISTORY_COMMIT_AUTHOR}" > /dev/null
+				git commit $entry metadata-revs -m "$entry: Build ${BUILDNAME} of ${DISTRO} ${DISTRO_VERSION} for machine ${MACHINE} on $HOSTNAME" --author "${BUILDHISTORY_COMMIT_AUTHOR}" > /dev/null
 			done
 			if [ "${BUILDHISTORY_PUSH_REPO}" != "" ] ; then
 				git push -q ${BUILDHISTORY_PUSH_REPO}
