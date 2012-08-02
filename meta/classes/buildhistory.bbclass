@@ -149,6 +149,19 @@ python buildhistory_emit_pkghistory() {
     pr = d.getVar('PR', True)
     packages = squashspaces(d.getVar('PACKAGES', True))
 
+    packagelist = packages.split()
+    if not os.path.exists(pkghistdir):
+        os.makedirs(pkghistdir)
+    else:
+        # Remove files for packages that no longer exist
+        for item in os.listdir(pkghistdir):
+            if item != "latest":
+                if item not in packagelist:
+                    subdir = os.path.join(pkghistdir, item)
+                    for subfile in os.listdir(subdir):
+                        os.unlink(os.path.join(subdir, subfile))
+                    os.rmdir(subdir)
+
     rcpinfo = RecipeInfo(pn)
     rcpinfo.pe = pe
     rcpinfo.pv = pv
@@ -159,7 +172,7 @@ python buildhistory_emit_pkghistory() {
 
     # Apparently the version can be different on a per-package basis (see Python)
     pkgdest = d.getVar('PKGDEST', True)
-    for pkg in packages.split():
+    for pkg in packagelist:
         pe = getpkgvar(pkg, 'PE') or "0"
         pv = getpkgvar(pkg, 'PV')
         pr = getpkgvar(pkg, 'PR')
@@ -205,9 +218,6 @@ def write_recipehistory(rcpinfo, d):
     bb.debug(2, "Writing recipe history")
 
     pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
-
-    if not os.path.exists(pkghistdir):
-        os.makedirs(pkghistdir)
 
     infofile = os.path.join(pkghistdir, "latest")
     f = open(infofile, "w")
