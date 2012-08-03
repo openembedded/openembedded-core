@@ -34,6 +34,6 @@ do_compile () {
 # so we overwirte the generated include-fixed/limits.h for gcc-cross-initial
 # to get rid references to real limits.h
 
-do_install_append1() {
+do_install_append () {
     cp gcc/include-fixed/limits.h ${D}${gcclibdir}/${TARGET_SYS}/${BINV}/include-fixed/limits.h
 }
