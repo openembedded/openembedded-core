@@ -1,0 +1,22 @@
+Remove the RPTH to avoid QA issue warning.
+
+Signed-off-by: Jackie Huang <jackie.huang@windriver.com>
+---
+ setup.py |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index 83b5e56..1fd5487 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1025,7 +1025,6 @@ class PyBuildExt(build_ext):
+             exts.append(Extension('_bsddb', ['_bsddb.c'],
+                                   depends = ['bsddb.h'],
+                                   library_dirs=dblib_dir,
+-                                  runtime_library_dirs=dblib_dir,
+                                   include_dirs=db_incs,
+                                   libraries=dblibs))
+         else:
+-- 
+1.7.4
+
