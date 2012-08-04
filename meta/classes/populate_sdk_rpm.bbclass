@@ -1,5 +1,6 @@
 do_populate_sdk[depends] += "rpm-native:do_populate_sysroot"
 do_populate_sdk[depends] += "rpmresolve-native:do_populate_sysroot"
+do_populate_sdk[depends] += "createrepo-native:do_populate_sysroot"
 do_populate_sdk[recrdeptask] += "do_package_write_rpm"
 
 rpmlibdir = "/var/lib/rpm"
