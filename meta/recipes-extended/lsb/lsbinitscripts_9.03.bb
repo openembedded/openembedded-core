@@ -2,7 +2,7 @@ DESCRIPTION = "SysV init scripts which only is used in an LSB image"
 SECTION = "base"
 LICENSE = "GPLv2"
 DEPENDS = "popt glib-2.0"
-PR = "r2"
+PR = "r3"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=ebf4e8b49780ab187d51bd26aaa022c6"
 
@@ -22,6 +22,6 @@ ALTERNATIVE_LINK_NAME[functions] = "${sysconfdir}/init.d/functions"
 do_configure[noexec] = "1" 
 
 do_install(){
-	install -d ${D}/etc/init.d/
-	install -m 0755 ${S}/rc.d/init.d/functions ${D}/etc/init.d/functions
+	install -d ${D}${sysconfdir}/init.d/
+	install -m 0755 ${S}/rc.d/init.d/functions ${D}${sysconfdir}/init.d/functions
 }
