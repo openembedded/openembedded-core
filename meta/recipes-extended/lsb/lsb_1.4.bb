@@ -2,7 +2,7 @@ DESCRIPTION = "LSB support for OpenEmbedded"
 SECTION = "console/utils"
 HOMEPAGE = "http://prdownloads.sourceforge.net/lsb"
 LICENSE = "GPLv2+"
-PR = "r3"
+PR = "r4"
 
 # lsb_release needs getopt
 RDEPENDS_${PN} += "util-linux"
@@ -23,54 +23,54 @@ S = "${WORKDIR}/lsb-release-${PV}"
 
 do_install(){
 	oe_runmake install prefix=${D}  mandir=${D}/${datadir}/man/ DESTDIR=${D} 
-	mkdir -p ${D}/bin
+	mkdir -p ${D}${base_bindir}
 	mkdir -p ${D}/${baselib}
-	mkdir -p ${D}/etc/lsb-release.d
-	echo -n "LSB_VERSION=\"core-4.1-noarch:" > ${D}/etc/lsb-release
+	mkdir -p ${D}${sysconfdir}/lsb-release.d
+	echo -n "LSB_VERSION=\"core-4.1-noarch:" > ${D}${sysconfdir}/lsb-release
 	
 	if [ "${TARGET_ARCH}" = "i586" ];then
-		echo -n "core-4.1-ia32" >>  ${D}/etc/lsb-release
+		echo -n "core-4.1-ia32" >>  ${D}${sysconfdir}/lsb-release
 	else
-		echo -n "core-4.1-${TARGET_ARCH}" >>  ${D}/etc/lsb-release
+		echo -n "core-4.1-${TARGET_ARCH}" >>  ${D}${sysconfdir}/lsb-release
 	fi
-	echo "\"" >> ${D}/etc/lsb-release
-	echo "DISTRIB_ID=${DISTRO}" >> ${D}/etc/lsb-release
-	echo "DISTRIB_RELEASE=${DISTRO_VERSION}" >> ${D}/etc/lsb-release
-	echo "DISTRIB_DESCRIPTION=\"${DISTRO_NAME} ${DISTRO_VERSION}\"" >> ${D}/etc/lsb-release
+	echo "\"" >> ${D}${sysconfdir}/lsb-release
+	echo "DISTRIB_ID=${DISTRO}" >> ${D}${sysconfdir}/lsb-release
+	echo "DISTRIB_RELEASE=${DISTRO_VERSION}" >> ${D}${sysconfdir}/lsb-release
+	echo "DISTRIB_DESCRIPTION=\"${DISTRO_NAME} ${DISTRO_VERSION}\"" >> ${D}${sysconfdir}/lsb-release
 	
 	if [ "${TARGET_ARCH}" = "i586" ];then
-		mkdir -p ${D}/etc/lsb-release.d
-		touch ${D}/etc/lsb-release.d/graphics-4.1-noarch
-		touch ${D}/etc/lsb-release.d/graphics-${PV}-noarch
-		touch ${D}/etc/lsb-release.d/desktop-${PV}-noarch
-		touch ${D}/etc/lsb-release.d/graphics-4.1-ia32
-		touch ${D}/etc/lsb-release.d/graphics-${PV}-ia32
-		touch ${D}/etc/lsb-release.d/desktop-${PV}-ia32
+		mkdir -p ${D}${sysconfdir}/lsb-release.d
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-4.1-noarch
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-noarch
+		touch ${D}${sysconfdir}/lsb-release.d/desktop-${PV}-noarch
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-4.1-ia32
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-ia32
+		touch ${D}${sysconfdir}/lsb-release.d/desktop-${PV}-ia32
 	elif [ "${TARGET_ARCH}" = "x86_64" ];then
-		touch ${D}/etc/lsb-release.d/graphics-4.1-noarch
-		touch ${D}/etc/lsb-release.d/graphics-4.1-amd64
-		touch ${D}/etc/lsb-release.d/graphics-${PV}-amd64
-		touch ${D}/etc/lsb-release.d/desktop-${PV}-amd64
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-4.1-noarch
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-4.1-amd64
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-amd64
+		touch ${D}${sysconfdir}/lsb-release.d/desktop-${PV}-amd64
 	fi
 	if [ "${TARGET_ARCH}" = "powerpc" ];then
-		touch ${D}/etc/lsb-release.d/graphics-4.1-noarch
-		touch ${D}/etc/lsb-release.d/graphics-4.1-ppc32
-		touch ${D}/etc/lsb-release.d/graphics-${PV}-ppc32
-		touch ${D}/etc/lsb-release.d/desktop-${PV}-ppc32
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-4.1-noarch
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-4.1-ppc32
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-ppc32
+		touch ${D}${sysconfdir}/lsb-release.d/desktop-${PV}-ppc32
 	elif [ "${TARGET_ARCH}" = "powerpc64" ];then
-		touch ${D}/etc/lsb-release.d/graphics-4.1-noarch
-		touch ${D}/etc/lsb-release.d/graphics-4.1-ppc64
-		touch ${D}/etc/lsb-release.d/graphics-${PV}-ppc64
-		touch ${D}/etc/lsb-release.d/desktop-${PV}-ppc64
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-4.1-noarch
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-4.1-ppc64
+		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-ppc64
+		touch ${D}${sysconfdir}/lsb-release.d/desktop-${PV}-ppc64
 	fi
 }
 
 do_install_append(){
-       install -d ${D}/etc/core-lsb
+       install -d ${D}${sysconfdir}/core-lsb
        install -d ${D}/${baselib}/lsb
        for i in lsb_killproc lsb_log_message lsb_pidofproc lsb_start_daemon
        do
-           install -m 0755 ${WORKDIR}/${i} ${D}/etc/core-lsb
+           install -m 0755 ${WORKDIR}/${i} ${D}${sysconfdir}/core-lsb
        done
        install -m 0755 ${WORKDIR}/init-functions ${D}/${baselib}/lsb
        if [ "${TARGET_ARCH}" = "x86_64" ];then
