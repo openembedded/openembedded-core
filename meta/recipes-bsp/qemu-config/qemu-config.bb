@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa
 
 COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemumips|qemuppc)"
 
-PR = "r24"
+PR = "r25"
 
 SRC_URI = "file://distcc.sh \
            file://anjuta-remote-run \
@@ -28,8 +28,8 @@ do_install() {
     install -d ${D}${datadir}/applications
     install -m 0644 shutdown.desktop ${D}${datadir}/applications/
 
-    install -d ${D}/etc/init.d
-    install qemu-autostart ${D}/etc/init.d/
+    install -d ${D}${sysconfdir}/init.d
+    install qemu-autostart ${D}${sysconfdir}/init.d/
 }
 
 pkg_postinst_${PN} () {
