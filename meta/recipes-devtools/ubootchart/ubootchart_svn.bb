@@ -4,7 +4,7 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8f0e2cd40e05189ec81232da84bd6e1a"
 SRCREV = "12"
 PV = "0.0+r${SRCPV}"
-PR = "r5"
+PR = "r6"
 
 #RRECOMMENDS_${PN} = "acct"
 
@@ -27,13 +27,13 @@ do_compile() {
 }
 
 do_install() {
-        install -m 0755 -d ${D}/sbin ${D}/etc/ubootchart ${D}/usr/share/applications
-        install -m 0755 ${S}/ubootchartd_bin ${D}/sbin
-        install -m 0755 ${S}/ubootchartd ${D}/sbin
-        install -m 0644 ${S}/ubootchart.conf ${D}/etc/ubootchart
-        install -m 0755 ${S}/start.sh ${D}/etc/ubootchart
-        install -m 0755 ${S}/finish.sh ${D}/etc/ubootchart
+        install -m 0755 -d ${D}${base_sbindir} ${D}${sysconfdir}/ubootchart ${D}${datadir}/applications
+        install -m 0755 ${S}/ubootchartd_bin ${D}${base_sbindir}
+        install -m 0755 ${S}/ubootchartd ${D}${base_sbindir}
+        install -m 0644 ${S}/ubootchart.conf ${D}${sysconfdir}/ubootchart
+        install -m 0755 ${S}/start.sh ${D}${sysconfdir}/ubootchart
+        install -m 0755 ${S}/finish.sh ${D}${sysconfdir}/ubootchart
         
-        install -m 0755 ${WORKDIR}/ubootchart-stop ${D}/sbin
-        install -m 0644 ${WORKDIR}/ubootchart.desktop ${D}/usr/share/applications
+        install -m 0755 ${WORKDIR}/ubootchart-stop ${D}${base_sbindir}
+        install -m 0644 ${WORKDIR}/ubootchart.desktop ${D}${datadir}/applications
 }
