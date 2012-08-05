@@ -18,7 +18,7 @@ DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_DEPS}', '', d)}"
 PAM_DEPS = "libpam libpam-runtime pam-plugin-access pam-plugin-loginuid"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "https://fedorahosted.org/releases/c/r/cronie/cronie-${PV}.tar.gz \
            file://crond.init \
@@ -61,14 +61,14 @@ do_install_append () {
 	# below setting is necessary to allow normal user using crontab
 
 	# setgid for crontab binary
-	chown root:crontab ${D}/usr/bin/crontab
-	chmod 2755 ${D}/usr/bin/crontab
+	chown root:crontab ${D}${bindir}/crontab
+	chmod 2755 ${D}${bindir}/crontab
 
 	# allow 'crontab' group write to /var/spool/cron
-	chown root:crontab ${D}/var/spool/cron
-	chmod 770 ${D}/var/spool/cron
+	chown root:crontab ${D}${localstatedir}/spool/cron
+	chmod 770 ${D}${localstatedir}/spool/cron
 
-	chmod 600 ${D}/etc/crontab
+	chmod 600 ${D}${sysconfdir}/crontab
 }
 
 FILES_${PN} += "${sysconfdir}/cron*"
