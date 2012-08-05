@@ -10,7 +10,7 @@ sound state at system boot and save it at system shut down."
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PV = "0.2.0"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "\
   file://asound.conf \
@@ -46,9 +46,9 @@ FILES_alsa-states = "${localstatedir}/lib/alsa/*.state"
 pkg_postinst_${PN}() {
 	if test -z "$D"
 	then
-		if test -x /usr/sbin/alsactl
+		if test -x ${sbindir}/alsactl
 		then
-			/usr/sbin/alsactl -f ${localstatedir}/lib/alsa/asound.state restore
+			${sbindir}/alsactl -f ${localstatedir}/lib/alsa/asound.state restore
 		fi
 		# INITSCRIPT_PARAMS changed, so remove the old and
 		# install the new setting.
