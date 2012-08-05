@@ -7,7 +7,7 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=8ad8615198542444f84d28a6cf226dd8"
 
 DEPENDS = ""
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://www.xinetd.org/xinetd-${PV}.tar.gz \
       file://xinetd.init \
@@ -38,15 +38,15 @@ do_install() {
 	# Same here, the Makefile does some really stupid things,
 	# but since we only want two files why not override
 	# do_install from autotools and doing it ourselfs?
-	install -d "${D}/usr/sbin"
-	install -d "${D}/etc/init.d"
-	install -d "${D}/etc/xinetd.d"
-	install -d "${D}/etc/default"
-	install -m 644 "${WORKDIR}/xinetd.conf" "${D}/etc"
-	install -m 755 "${WORKDIR}/xinetd.init" "${D}/etc/init.d/xinetd"
-	install -m 644 "${WORKDIR}/xinetd.default" "${D}/etc/default/xinetd"
-	install -m 755 "${S}/xinetd/xinetd" "${D}/usr/sbin"
-	install -m 755 "${S}/xinetd/itox" "${D}/usr/sbin"
+	install -d "${D}${sbindir}"
+	install -d "${D}${sysconfdir}/init.d"
+	install -d "${D}${sysconfdir}/xinetd.d"
+	install -d "${D}${sysconfdir}/default"
+	install -m 644 "${WORKDIR}/xinetd.conf" "${D}${sysconfdir}"
+	install -m 755 "${WORKDIR}/xinetd.init" "${D}${sysconfdir}/init.d/xinetd"
+	install -m 644 "${WORKDIR}/xinetd.default" "${D}${sysconfdir}/default/xinetd"
+	install -m 755 "${S}/xinetd/xinetd" "${D}${sbindir}"
+	install -m 755 "${S}/xinetd/itox" "${D}${sbindir}"
 }
 
 CONFFILES_${PN} = "${sysconfdir}/xinetd.conf"
