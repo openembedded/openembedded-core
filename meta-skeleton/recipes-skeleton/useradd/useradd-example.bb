@@ -1,7 +1,7 @@
 SUMMARY = "Example recipe for using inherit useradd"
 DESCRIPTION = "This recipe serves as an example for using features from useradd.bbclass"
 SECTION = "examples"
-PR = "r0"
+PR = "r1"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
@@ -43,32 +43,32 @@ GROUPADD_PARAM_${PN} = "-g 880 group1; -g 890 group2"
 GROUPADD_PARAM_${PN}-user3 = "-g 900 group3"
 
 do_install () {
-	install -d -m 755 ${D}/usr/share/user1
-	install -d -m 755 ${D}/usr/share/user2
-	install -d -m 755 ${D}/usr/share/user3
+	install -d -m 755 ${D}${datadir}/user1
+	install -d -m 755 ${D}${datadir}/user2
+	install -d -m 755 ${D}${datadir}/user3
 
-	install -p -m 644 file1 ${D}/usr/share/user1/
-	install -p -m 644 file2 ${D}/usr/share/user1/
+	install -p -m 644 file1 ${D}${datadir}/user1/
+	install -p -m 644 file2 ${D}${datadir}/user1/
 
-	install -p -m 644 file2 ${D}/usr/share/user2/
-	install -p -m 644 file3 ${D}/usr/share/user2/
+	install -p -m 644 file2 ${D}${datadir}/user2/
+	install -p -m 644 file3 ${D}${datadir}/user2/
 
-	install -p -m 644 file3 ${D}/usr/share/user3/
-	install -p -m 644 file4 ${D}/usr/share/user3/
+	install -p -m 644 file3 ${D}${datadir}/user3/
+	install -p -m 644 file4 ${D}${datadir}/user3/
 
 	# The new users and groups are created before the do_install
 	# step, so you are now free to make use of them:
-	chown -R user1 ${D}/usr/share/user1
-	chown -R user2 ${D}/usr/share/user2
-	chown -R user3 ${D}/usr/share/user3
+	chown -R user1 ${D}${datadir}/user1
+	chown -R user2 ${D}${datadir}/user2
+	chown -R user3 ${D}${datadir}/user3
 
-	chgrp -R group1 ${D}/usr/share/user1
-	chgrp -R group2 ${D}/usr/share/user2
-	chgrp -R group3 ${D}/usr/share/user3
+	chgrp -R group1 ${D}${datadir}/user1
+	chgrp -R group2 ${D}${datadir}/user2
+	chgrp -R group3 ${D}${datadir}/user3
 }
 
-FILES_${PN} = "/usr/share/user1/* /usr/share/user2/*"
-FILES_${PN}-user3 = "/usr/share/user3/*"
+FILES_${PN} = "${datadir}/user1/* ${datadir}/user2/*"
+FILES_${PN}-user3 = "${datadir}/user3/*"
 
 # Prevents do_package failures with:
 # debugsources.list: No such file or directory:
