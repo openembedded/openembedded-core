@@ -4,7 +4,7 @@ require systemtap_git.inc
 
 DEPENDS = "systemtap virtual/kernel"
 
-PR = "r0"
+PR = "r1"
 
 # On systems without CONFIG_UTRACE, this package is empty.
 ALLOW_EMPTY_${PN} = "1"
@@ -36,7 +36,7 @@ do_compile() {
 do_install() {
 	if [ -e "${S}/runtime/uprobes/uprobes.ko" ]
 	then
-		install -d ${D}/usr/share/systemtap/runtime/uprobes/
-		install -m 0644 ${S}/runtime/uprobes/uprobes.ko ${D}/usr/share/systemtap/runtime/uprobes/
+		install -d ${D}${datadir}/systemtap/runtime/uprobes/
+		install -m 0644 ${S}/runtime/uprobes/uprobes.ko ${D}${datadir}/systemtap/runtime/uprobes/
 	fi
 }
