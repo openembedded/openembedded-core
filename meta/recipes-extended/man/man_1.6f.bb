@@ -3,7 +3,7 @@ DESCRIPTION = "A set of documentation tools: man, apropos and whatis"
 SECTION = "console/utils"
 HOMEPAGE = "http://primates.ximian.com/~flucifredi/man"
 LICENSE = "GPLv2"
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "groff less"
 
@@ -51,10 +51,10 @@ fakeroot do_install() {
 }
 
 do_install_append(){
-	mkdir -p  ${D}/etc/
+	mkdir -p  ${D}${sysconfdir}
         mkdir -p ${D}${datadir}/man/man5
         mkdir -p ${D}${datadir}/man/man7
-	cp ${S}/src/man.conf ${D}/etc/
+	cp ${S}/src/man.conf ${D}${sysconfdir}
         cp ${WORKDIR}/man.1.gz ${D}${datadir}/man/man1/
         cp ${WORKDIR}/man.7.gz ${D}${datadir}/man/man7/
         cp ${WORKDIR}/manpath.5.gz ${D}${datadir}/man/man5/
