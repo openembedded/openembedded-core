@@ -109,10 +109,10 @@ kernel_do_install() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
 	if (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 		oe_runmake DEPMOD=echo INSTALL_MOD_PATH="${D}" modules_install
-		rm -f "${D}${base_libdir}/modules/${KERNEL_VERSION}/modules.order"
-		rm -f "${D}${base_libdir}/modules/${KERNEL_VERSION}/modules.builtin"
-		rm "${D}${base_libdir}/modules/${KERNEL_VERSION}/build"
-		rm "${D}${base_libdir}/modules/${KERNEL_VERSION}/source"
+		rm -f "${D}/lib/modules/${KERNEL_VERSION}/modules.order"
+		rm -f "${D}/lib/modules/${KERNEL_VERSION}/modules.builtin"
+		rm "${D}/lib/modules/${KERNEL_VERSION}/build"
+		rm "${D}/lib/modules/${KERNEL_VERSION}/source"
 	else
 		bbnote "no modules to install"
 	fi
