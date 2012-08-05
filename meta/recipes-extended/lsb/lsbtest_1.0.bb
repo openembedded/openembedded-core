@@ -1,7 +1,7 @@
 DESCRIPTION = "automate test for lsb"
 SECTION = "console/utils"
 LICENSE = "GPLv2"
-PR = "r0"
+PR = "r1"
 
 LIC_FILES_CHKSUM = "file://LSB_Test.sh;beginline=3;endline=16;md5=7063bb54b04719df0716b513447f4fc0"
 
@@ -14,8 +14,8 @@ RDEPENDS_${PN} = "rpm"
 S = "${WORKDIR}"
 
 do_install() {
-	install -d ${D}/usr/bin
-	install -m 0755 ${S}/LSB_Test.sh ${D}/usr/bin
+	install -d ${D}${bindir}
+	install -m 0755 ${S}/LSB_Test.sh ${D}${bindir}
 	install -d  ${D}/opt/lsb-test
 	install -m 0644 ${S}/packages_list ${D}/opt/lsb-test/packages_list
 	install -m 0644 ${S}/session ${D}/opt/lsb-test/session
