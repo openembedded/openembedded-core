@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5574c6965ae5f583e55880e397fbb018"
 
 DEPENDS = "libnewt popt"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://fedorahosted.org/releases/c/h/chkconfig/${BPN}-${PV}.tar.bz2"
 
@@ -24,6 +24,6 @@ inherit autotools gettext
 EXTRA_OEMAKE += 'MANDIR="${mandir}" BINDIR="${base_sbindir}" SBINDIR="${sbindir}"'
 
 do_install_append() {
-    mkdir -p ${D}/etc/chkconfig.d
+    mkdir -p ${D}${sysconfdir}/chkconfig.d
     rm -f ${D}${sbindir}/update-alternatives
 }
