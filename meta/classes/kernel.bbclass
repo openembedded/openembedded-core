@@ -109,10 +109,10 @@ kernel_do_install() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
 	if (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 		oe_runmake DEPMOD=echo INSTALL_MOD_PATH="${D}" modules_install
-		rm -f "${D}/lib/modules/${KERNEL_VERSION}/modules.order"
-		rm -f "${D}/lib/modules/${KERNEL_VERSION}/modules.builtin"
-		rm "${D}/lib/modules/${KERNEL_VERSION}/build"
-		rm "${D}/lib/modules/${KERNEL_VERSION}/source"
+		rm -f "${D}${base_libdir}/modules/${KERNEL_VERSION}/modules.order"
+		rm -f "${D}${base_libdir}/modules/${KERNEL_VERSION}/modules.builtin"
+		rm "${D}${base_libdir}/modules/${KERNEL_VERSION}/build"
+		rm "${D}${base_libdir}/modules/${KERNEL_VERSION}/source"
 	else
 		bbnote "no modules to install"
 	fi
@@ -127,8 +127,8 @@ kernel_do_install() {
 	install -m 0644 .config ${D}/boot/config-${KERNEL_VERSION}
 	install -m 0644 vmlinux ${D}/boot/vmlinux-${KERNEL_VERSION}
 	[ -e Module.symvers ] && install -m 0644 Module.symvers ${D}/boot/Module.symvers-${KERNEL_VERSION}
-	install -d ${D}/etc/modules-load.d
-	install -d ${D}/etc/modprobe.d
+	install -d ${D}${sysconfdir}/modules-load.d
+	install -d ${D}${sysconfdir}/modprobe.d
 
 	#
 	# Support for external module building - create a minimal copy of the
