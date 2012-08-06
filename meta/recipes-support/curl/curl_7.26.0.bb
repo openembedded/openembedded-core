@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e66
 DEPENDS = "zlib gnutls"
 DEPENDS_virtclass-native = "zlib-native openssl-native"
 DEPENDS_virtclass-nativesdk = "zlib-nativesdk"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://pkgconfig_fix.patch"
@@ -20,11 +20,13 @@ inherit autotools pkgconfig binconfig
 
 EXTRA_OECONF = "--with-zlib=${STAGING_LIBDIR}/../ \
                 --without-libssh2 \
-		--with-random=/dev/urandom \
-		--without-libidn \
-		--enable-crypto-auth \
+                --with-random=/dev/urandom \
+                --without-libidn \
+                --enable-crypto-auth \
+                --disable-ldap \
+                --disable-ldaps \
                 ${CURLGNUTLS} \
-		"
+                "
 
 CURLGNUTLS = " --with-gnutls=${STAGING_LIBDIR}/../ --without-ssl"
 CURLGNUTLS_virtclass-native = "--without-gnutls --with-ssl"
