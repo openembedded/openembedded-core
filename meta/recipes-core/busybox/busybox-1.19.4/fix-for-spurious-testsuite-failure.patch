@@ -1,0 +1,27 @@
+Backport the patch from:
+http://git.busybox.net/busybox/commit/?id=a5ee090e8651692545514a81a16c6cde3a2dc577
+
+From a5ee090e8651692545514a81a16c6cde3a2dc577 Mon Sep 17 00:00:00 2001
+From: Denys Vlasenko <vda.linux@googlemail.com>
+Date: Thu, 10 May 2012 19:26:37 +0200
+Subject: [PATCH] fix for spurious testsuite failure
+
+Upstream-Status: Backport
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+---
+ testsuite/du/du-k-works |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/testsuite/du/du-k-works b/testsuite/du/du-k-works
+index 229a948..36dcaa8 100644
+--- a/testsuite/du/du-k-works
++++ b/testsuite/du/du-k-works
+@@ -3,4 +3,5 @@ cd du.testdir
+ dd if=/dev/zero of=file1 bs=1k count=64 2>/dev/null
+ dd if=/dev/zero of=file2 bs=1k count=16 2>/dev/null
+ test x"`busybox du -k .`" = x"80	." \
++  -o x"`busybox du -k .`" = x"84	." \
+   -o x"`busybox du -k .`" = x"88	."
+-- 
+1.7.4.1
+
