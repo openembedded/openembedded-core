@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 # the 1.8.4 tag
 SRCREV = "f2183fa8df3d173afbee09cc4230ab8f4e03f459"
 PV = "1.8.4+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 DEFAULT_PREFERENCE = "-1"
 
@@ -18,8 +18,3 @@ S = "${WORKDIR}/git"
 BASE_CONF += "--disable-introspection"
 
 AUTOTOOLS_AUXDIR = "${S}/build"
-
-do_configure_prepend () {
-	# Disable DOLT
-	sed -i -e 's/^DOLT//' ${S}/configure.ac
-}
