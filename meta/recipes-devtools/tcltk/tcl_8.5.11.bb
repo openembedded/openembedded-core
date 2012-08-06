@@ -49,14 +49,19 @@ do_install() {
 	#sed -i "s+${WORKDIR}+${STAGING_INCDIR}+g" tclConfig.sh
 	sed -i "s,-L${libdir},-L=${libdir},g" tclConfig.sh
 	sed -i "s,-I${includedir},-I=${includedir},g" tclConfig.sh 
-	install -d ${STAGING_BINDIR_CROSS}/
-	install -m 0755 tclConfig.sh ${STAGING_BINDIR_CROSS}
+	install -d ${D}${bindir_crossscripts}
+	install -m 0755 tclConfig.sh ${D}${bindir_crossscripts}
 	cd ..
 	for dir in compat generic unix
 	do
 		install -d ${STAGING_INCDIR}/tcl${PV}/$dir
 		install -m 0644 $dir/*.h ${STAGING_INCDIR}/tcl${PV}/$dir/
 	done
+}
+
+SYSROOT_PREPROCESS_FUNCS += "tcl_sysroot_preprocess"
+tcl_sysroot_preprocess () {
+	sysroot_stage_dir ${D}${bindir_crossscripts} ${SYSROOT_DESTDIR}${bindir_crossscripts}
 }
 
 PACKAGES =+ "tcl-lib"
