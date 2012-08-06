@@ -1,17 +1,36 @@
 # linux-yocto-custom.bb:
 #
-#   Provides an example/minimal kernel recipe that uses the linux-yocto
-#   and oe-core kernel classes to apply a subset of yocto kernel 
-#   management to git managed kernel repositories.
+#   An example kernel recipe that uses the linux-yocto and oe-core
+#   kernel classes to apply a subset of yocto kernel management to git
+#   managed kernel repositories.
+#
+#   To use linux-yocto-custom in your layer, create a
+#   linux-yocto-custom.bbappend file containing at least the following
+#   lines:
+#
+#     FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+#     COMPATIBLE_MACHINE_yourmachine = "yourmachine"
+#
+#   You must also provide a Linux kernel configuration. The most direct
+#   method is to copy your .config to files/defconfig in your layer,
+#   in the same directory as the bbappend.
+#
+#   To use the yocto kernel tooling to generate a BSP configuration
+#   using modular configuration fragments, see the yocto-bsp and
+#   yocto-kernel tools documentation.
+#
+# Warning:
+#
+#   Building this example without providing a defconfig or BSP
+#   configuration will result in build or boot errors. This is not a
+#   bug.
+#
 #
 # Notes:
 #
-#   kconfig(s): the kernel must be configured with a defconfig, or via
-#               configuration fragment(s). Either of these can be added
-#               via bbappend.
-#   patches: patches can be merged into to the source git tree itself, added
-#            using standard bbappend syntax or controlled via .scc feature 
-#            descriptions (also via bbappends)
+#   patches: patches can be merged into to the source git tree itself,
+#            added via the SRC_URI, or controlled via a BSP
+#            configuration.
 #   
 #   example configuration addition:
 #            SRC_URI += "file://smp.cfg"
@@ -20,25 +39,25 @@
 #   example feature addition (for kernel v3.4 only):
 #            SRC_URI += "file://feature.scc"
 #
-# Warning:
-#
-#   Building the sample kernel tree (kernel.org) without providing any
-#   configuration will result in build or boot errors. This is not a bug
-#   it is a required element for creating a valid kernel.
-#    
 
 inherit kernel
 require recipes-kernel/linux/linux-yocto.inc
 
+# Override SRC_URI in a bbappend file to point at a different source
+# tree if you do not want to build from Linus' tree.
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git;protocol=git;nocheckout=1"
 
 LINUX_VERSION ?= "3.4"
 LINUX_VERSION_EXTENSION ?= "-custom"
 
+# Override SRCREV to point to a different commit in a bbappend file to
+# build a different release of the Linux kernel.
 # tag: v3.4 76e10d158efb6d4516018846f60c2ab5501900bc
 SRCREV="76e10d158efb6d4516018846f60c2ab5501900bc"
 
-PR = "r0"
+PR = "r1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
-COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemux86-64)"
+# Override COMPATIBLE_MACHINE to include your machine in a bbappend
+# file. Leaving it empty here ensures an early explicit build failure.
+COMPATIBLE_MACHINE = "(^$)"
