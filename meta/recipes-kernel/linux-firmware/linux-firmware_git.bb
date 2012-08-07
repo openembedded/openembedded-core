@@ -22,7 +22,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.radeon;md5=e56b405656593a0c97e478513051ea0e \
 SRCREV = "e98750f0d68d0037ce5a186f7f863a9c13bf773a"
 PE = "1"
 PV = "0.0+git${SRCPV}"
-PR = "r3"
+PR = "r2"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git;protocol=git"
 
@@ -35,50 +35,50 @@ do_compile() {
 }
 
 do_install() {
-	install -d  ${D}${base_libdir}/firmware/
-	cp -r * ${D}${base_libdir}/firmware/
+	install -d  ${D}/lib/firmware/
+	cp -r * ${D}/lib/firmware/
 
 	# Libertas sd8686
-	ln -sf libertas/sd8686_v9.bin ${D}${base_libdir}/firmware/sd8686.bin
-	ln -sf libertas/sd8686_v9_helper.bin ${D}${base_libdir}/firmware/sd8686_helper.bin
+	ln -sf libertas/sd8686_v9.bin ${D}/lib/firmware/sd8686.bin
+	ln -sf libertas/sd8686_v9_helper.bin ${D}/lib/firmware/sd8686_helper.bin
 
 	# Realtek rtl8192* 
-	install -m 0644 LICENCE.rtlwifi_firmware.txt ${D}${base_libdir}/firmware/rtlwifi/LICENCE.rtlwifi_firmware.txt
+	install -m 0644 LICENCE.rtlwifi_firmware.txt ${D}/lib/firmware/rtlwifi/LICENCE.rtlwifi_firmware.txt
 
 	# fixup wl12xx location, after 2.6.37 the kernel searches a different location for it
-	( cd ${D}${base_libdir}/firmware ; ln -sf ti-connectivity/* . )
+	( cd ${D}/lib/firmware ; ln -sf ti-connectivity/* . )
 }
 
 PACKAGES =+ "${PN}-sd8686 ${PN}-rtl8192cu linux-firmware-rtl8192ce linux-firmware-rtl8192su ${PN}-wl12xx"
 
 LICENSE_${PN}-sd8686 = "Firmware:LICENSE.libertas"
 FILES_${PN}-sd8686 = " \
-  ${base_libdir}/firmware/libertas/sd8686_v9* \
-  ${base_libdir}/firmware/sd8686* \
-  ${base_libdir}/firmware/LICENCE.libertas \
+  /lib/firmware/libertas/sd8686_v9* \
+  /lib/firmware/sd8686* \
+  /lib/firmware/LICENCE.libertas \
 "
 
 LICENSE_${PN}-rtl8192cu = "Firmware:LICENCE.rtlwifi_firmware"
 FILES_${PN}-rtl8192cu = " \
-  ${base_libdir}/firmware/rtlwifi/rtl8192cufw.bin \
-  ${base_libdir}/firmware/rtlwifi/LICENCE.rtlwifi_firmware.txt \
+  /lib/firmware/rtlwifi/rtl8192cufw.bin \
+  /lib/firmware/rtlwifi/LICENCE.rtlwifi_firmware.txt \
 "
 
 LICENSE_${PN}-rtl8192ce = "Firmware:LICENCE.rtlwifi_firmware"
 FILES_${PN}-rtl8192ce = " \
-  ${base_libdir}/firmware/rtlwifi/rtl8192cfw.bin \
+  /lib/firmware/rtlwifi/rtl8192cfw.bin \
 "
 
 LICENSE_${PN}-rtl8192su = "Firmware:LICENCE.rtlwifi_firmware"
 FILES_${PN}-rtl8192su = " \
-  ${base_libdir}/firmware/rtlwifi/rtl8712u.bin \
+  /lib/firmware/rtlwifi/rtl8712u.bin \
 "
 
 FILES_${PN}-wl12xx = " \
-  ${base_libdir}/firmware/wl12* \
-  ${base_libdir}/firmware/TI* \
-  ${base_libdir}/firmware/ti-connectivity \
+  /lib/firmware/wl12* \
+  /lib/firmware/TI* \
+  /lib/firmware/ti-connectivity \
 "
 
-FILES_${PN} += "${base_libdir}/firmware/*"
+FILES_${PN} += "/lib/firmware/*"
 
