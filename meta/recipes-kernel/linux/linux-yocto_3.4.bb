@@ -20,6 +20,8 @@ SRCREV_meta ?= "7ff48aa47c50b6455d60ca93bc81260ce8fe1a1b"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.4.git;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
 
+SRC_URI += "file://noslang.patch"
+
 LINUX_VERSION ?= "3.4.6"
 
 PR = "${INC_PR}.0"
