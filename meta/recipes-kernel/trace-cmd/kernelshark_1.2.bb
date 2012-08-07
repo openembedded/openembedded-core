@@ -10,7 +10,7 @@ PV = "1.2+git${SRCPV}"
 DEPENDS = "gtk+"
 RDEPENDS_${PN} = "trace-cmd"
 
-inherit pkgconfig
+inherit pkgconfig pythonnative
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/trace-cmd.git;protocol=git \
            file://addldflags.patch \
