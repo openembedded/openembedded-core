@@ -74,6 +74,7 @@ SRC_URI = "git://github.com/mirrors/gcc.git;branch=${BRANCH};protocol=git \
 	   file://arm-hard-float-loader.patch \
 	   file://gcc-argument-list-too-long.patch \
 	   file://fix-g++-sysroot.patch \
+	   file://disablesdt.patch \
 	  "
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/git"
