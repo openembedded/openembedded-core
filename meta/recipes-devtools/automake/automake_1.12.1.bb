@@ -42,7 +42,7 @@ SRC_URI += "${PATHFIXPATCH} \
 SRC_URI[md5sum] = "ec25c1855cacf47e4bdee76a776b96ba"
 SRC_URI[sha256sum] = "24bf1640679ba4a9cbe2d36422f39a81eced7f556b576a7a2ccfc70ca85a1e2f"
 
-PR = "r0"
+PR = "r1"
 
 do_install () {
     oe_runmake 'DESTDIR=${D}' install
@@ -50,7 +50,7 @@ do_install () {
 
     # Some distros have both /bin/perl and /usr/bin/perl, but we set perl location
     # for target as /usr/bin/perl, so fix it to /usr/bin/perl.
-    for i in aclocal aclocal-1.11 automake automake-1.11; do
+    for i in aclocal aclocal-1.12 automake automake-1.12; do
         if [ -f ${D}${bindir}/$i ]; then
             sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/perl,' \
             -e 's,exec .*/bin/perl \(.*\) exec .*/bin/perl \(.*\),exec ${USRBINPATH}/perl \1 exec ${USRBINPATH}/perl \2,' \
