@@ -38,6 +38,7 @@ mklibs_optimize_image_doit() {
 
 	mklibs -v \
 		--ldlib ${dynamic_loader} \
+		--libdir ${baselib} \
 		--sysroot ${PKG_CONFIG_SYSROOT_DIR} \
 		--root ${IMAGE_ROOTFS} \
 		--target `echo ${TARGET_PREFIX} | sed 's/-$//' ` \
