@@ -21,9 +21,6 @@ do_populate_sysroot[noexec] = "1"
 do_package_index[nostamp] = "1"
 do_package_index[depends] += "${PACKAGEINDEXDEPS}"
 
-# Force NATIVE python to use modules from STAGING_DIR_NATIVE
-export PYTHONHOME = "${STAGING_DIR_NATIVE}/usr"
-
 do_package_index() {
 	set -ex
 	${PACKAGEINDEXES}
