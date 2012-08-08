@@ -22,6 +22,7 @@ SRC_URI = "\
     file://dummy-gl-config.patch \
     file://0001-ppc64-Fix-linker-script.patch \
     file://ppc-s500-set-invalid-mask.patch \
+    file://hw-pl031-Actually-raise-interrupt-on-timer-expiry.patch \
     "
 
 # Only use the GL passthrough patches for native/nativesdk versions
