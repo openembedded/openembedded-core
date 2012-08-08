@@ -10,19 +10,19 @@ KBRANCH_qemumips64 = "standard/mti-malta64"
 KBRANCH_qemumips64el = "standard/mti-malta64"
 KBRANCH_qemuarm  = "standard/arm-versatile-926ejs"
 
-SRCREV_machine_qemuarm ?= "b57548a29e44655e27cfbdf3a0642d682401b835"
-SRCREV_machine_qemumips  ?= "633d487b0f6e5d328400b47f0d69d9dac7354c84"
-SRCREV_machine_qemuppc ?= "6229fc0f62283e0dc9f8b5d2be01b048a92867f3"
-SRCREV_machine_qemux86 ?= "19f7e43b54aef08d58135ed2a897d77b624b320a"
-SRCREV_machine_qemux86-64 ?= "19f7e43b54aef08d58135ed2a897d77b624b320a"
-SRCREV_machine ?= "19f7e43b54aef08d58135ed2a897d77b624b320a"
-SRCREV_meta ?= "7ff48aa47c50b6455d60ca93bc81260ce8fe1a1b"
+SRCREV_machine_qemuarm ?= "469cf6a66c720944adeaf8e43c044dfcb8d90599"
+SRCREV_machine_qemumips  ?= "0985f3076c1a5a2cc3a01054e8a0411ffe440395"
+SRCREV_machine_qemuppc ?= "e662bb66d9114c05919cd57ee4d620f4e67d2123"
+SRCREV_machine_qemux86 ?= "f01bddc9534f31b27b475b68d13b5897533a6fca"
+SRCREV_machine_qemux86-64 ?= "f01bddc9534f31b27b475b68d13b5897533a6fca"
+SRCREV_machine ?= "f01bddc9534f31b27b475b68d13b5897533a6fca"
+SRCREV_meta ?= "8d2012649516f3c489295a31fb9ea7afd1b464e4"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.4.git;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
 
 SRC_URI += "file://noslang.patch"
 
-LINUX_VERSION ?= "3.4.6"
+LINUX_VERSION ?= "3.4.7"
 
 PR = "${INC_PR}.0"
 PV = "${LINUX_VERSION}+git${SRCPV}"
