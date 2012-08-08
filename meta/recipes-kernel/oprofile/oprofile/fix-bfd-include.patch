@@ -1,0 +1,66 @@
+bfd.h now wants to include autotools generated config.h for reasoning read
+http://sourceware.org/bugzilla/show_bug.cgi?id=14243
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+Index: oprofile-0.9.7/libutil++/bfd_support.h
+===================================================================
+--- oprofile-0.9.7.orig/libutil++/bfd_support.h	2011-07-04 19:25:04.000000000 -0700
++++ oprofile-0.9.7/libutil++/bfd_support.h	2012-12-02 10:51:23.518784249 -0800
+@@ -11,6 +11,7 @@
+ #ifndef BFD_SUPPORT_H
+ #define BFD_SUPPORT_H
+ 
++#include "config.h"
+ #include "utility.h"
+ #include "op_types.h"
+ #include "locate_images.h"
+Index: oprofile-0.9.7/libopagent/opagent.c
+===================================================================
+--- oprofile-0.9.7.orig/libopagent/opagent.c	2011-07-04 19:25:04.000000000 -0700
++++ oprofile-0.9.7/libopagent/opagent.c	2012-12-02 10:58:10.954804150 -0800
+@@ -50,6 +50,7 @@
+  *   See libopagent/Makefile.am for more information.
+  *******************************************************************/
+ 
++#include "config.h"
+ #include <stdio.h>
+ #include <errno.h>
+ #include <string.h>
+Index: oprofile-0.9.7/libpp/symbol.h
+===================================================================
+--- oprofile-0.9.7.orig/libpp/symbol.h	2011-07-04 19:25:04.000000000 -0700
++++ oprofile-0.9.7/libpp/symbol.h	2012-12-02 10:59:59.434809273 -0800
+@@ -18,6 +18,7 @@
+ #include "format_flags.h"
+ #include "op_types.h"
+ 
++#include "config.h"
+ #include <bfd.h>
+ #include <stdint.h>
+ 
+Index: oprofile-0.9.7/opjitconv/debug_line.c
+===================================================================
+--- oprofile-0.9.7.orig/opjitconv/debug_line.c	2011-07-04 19:25:04.000000000 -0700
++++ oprofile-0.9.7/opjitconv/debug_line.c	2012-12-02 11:02:26.046816339 -0800
+@@ -8,6 +8,7 @@
+  * @author Philippe Elie
+  */
+ 
++#include "config.h"
+ #include <stdint.h>
+ #include <stdlib.h>
+ #include <string.h>
+Index: oprofile-0.9.7/opjitconv/opjitconv.h
+===================================================================
+--- oprofile-0.9.7.orig/opjitconv/opjitconv.h	2011-07-04 19:25:04.000000000 -0700
++++ oprofile-0.9.7/opjitconv/opjitconv.h	2012-12-02 11:01:25.558813373 -0800
+@@ -26,6 +26,7 @@
+ #define OP_JIT_CONV_ALREADY_DONE 5
+ #define OP_JIT_CONV_TMPDIR_NOT_REMOVED 6
+ 
++#include "config.h"
+ #include <bfd.h>
+ #include <stddef.h>
+ #include <sys/stat.h>
