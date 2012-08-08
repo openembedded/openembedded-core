@@ -1,0 +1,49 @@
+From f9fd8f72b070bfdc49c957f3968e6fcec34b57fc Mon Sep 17 00:00:00 2001
+From: Roland McGrath <roland@gnu.org>
+Date: Mon, 26 Nov 2012 17:50:04 +0000
+Subject: [PATCH 24/27] bfd/ 	* elf-nacl.c (nacl_modify_segment_map): Don't
+ crash when INFO is null.
+
+---
+ bfd/ChangeLog  |    4 ++++
+ bfd/elf-nacl.c |    5 ++---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index cf65838..5500b36 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,7 @@
++2012-11-26  Roland McGrath  <mcgrathr@google.com>
++
++	* elf-nacl.c (nacl_modify_segment_map): Don't crash when INFO is null.
++
+ 2012-11-21  Roland McGrath  <mcgrathr@google.com>
+ 
+ 	* elf-nacl.c (segment_nonexecutable_and_has_contents): Renamed to ...
+diff --git a/bfd/elf-nacl.c b/bfd/elf-nacl.c
+index 04659e7..ce401fa 100644
+--- a/bfd/elf-nacl.c
++++ b/bfd/elf-nacl.c
+@@ -75,7 +75,7 @@ nacl_modify_segment_map (bfd *abfd, struct bfd_link_info *info)
+   struct elf_segment_map **first_load = NULL;
+   struct elf_segment_map **last_load = NULL;
+   bfd_boolean moved_headers = FALSE;
+-  int sizeof_headers = bfd_sizeof_headers (abfd, info);
++  int sizeof_headers = info == NULL ? 0 : bfd_sizeof_headers (abfd, info);
+   bfd_vma maxpagesize = get_elf_backend_data (abfd)->maxpagesize;
+ 
+   if (info != NULL && info->user_phdrs)
+@@ -149,8 +149,7 @@ nacl_modify_segment_map (bfd *abfd, struct bfd_link_info *info)
+    proper order for the ELF rule that they must appear in ascending address
+    order.  So find the two segments we swapped before, and swap them back.  */
+ bfd_boolean
+-nacl_modify_program_headers (bfd *abfd,
+-                             struct bfd_link_info *info ATTRIBUTE_UNUSED)
++nacl_modify_program_headers (bfd *abfd, struct bfd_link_info *info)
+ {
+   struct elf_segment_map **m = &elf_tdata (abfd)->segment_map;
+   Elf_Internal_Phdr *phdr = elf_tdata (abfd)->phdr;
+-- 
+1.7.9.5
+

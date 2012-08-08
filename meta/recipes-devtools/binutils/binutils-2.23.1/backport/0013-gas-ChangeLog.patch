@@ -1,0 +1,43 @@
+From d4d8d22c6d0a859f617cf7d0a2e31056893c1d98 Mon Sep 17 00:00:00 2001
+From: Yufeng Zhang <yufeng.zhang@arm.com>
+Date: Tue, 20 Nov 2012 10:41:54 +0000
+Subject: [PATCH 13/27] gas/ChangeLog
+
+2012-11-20  Yufeng Zhang  <yufeng.zhang@arm.com>
+
+	* config/tc-aarch64.c (first_error_fmt): Add ATTRIBUTE_UNUSED to the
+	local variable "ret".
+---
+ gas/ChangeLog           |    5 +++++
+ gas/config/tc-aarch64.c |    2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/gas/ChangeLog b/gas/ChangeLog
+index 219c27e..bb9ef1c 100644
+--- a/gas/ChangeLog
++++ b/gas/ChangeLog
+@@ -1,3 +1,8 @@
++2012-11-20  Yufeng Zhang  <yufeng.zhang@arm.com>
++
++	* config/tc-aarch64.c (first_error_fmt): Add ATTRIBUTE_UNUSED to the
++	local variable "ret".
++
+ 2012-11-07  James Murray <jsm@jsm-net.demon.co.uk>
+ 
+ 	* config/tc-m68hc11.c: Fix R_M68HC12_16B relocation for movb/w
+diff --git a/gas/config/tc-aarch64.c b/gas/config/tc-aarch64.c
+index 843923b..a83a62e 100644
+--- a/gas/config/tc-aarch64.c
++++ b/gas/config/tc-aarch64.c
+@@ -643,7 +643,7 @@ first_error_fmt (const char *format, ...)
+ 
+   if (! error_p ())
+     {
+-      int ret;
++      int ret ATTRIBUTE_UNUSED;
+       va_start (args, format);
+       ret = vsnprintf (buffer, size, format, args);
+       know (ret <= size - 1 && ret >= 0);
+-- 
+1.7.9.5
+

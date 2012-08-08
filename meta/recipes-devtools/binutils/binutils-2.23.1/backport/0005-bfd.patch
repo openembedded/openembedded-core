@@ -1,0 +1,103 @@
+From e4b6d90dbcbf56c959eca8dcdf846fbe21c822e3 Mon Sep 17 00:00:00 2001
+From: Roland McGrath <roland@gnu.org>
+Date: Thu, 15 Nov 2012 00:33:27 +0000
+Subject: [PATCH 05/27] bfd/ 	* elf32-arm.c (elf32_arm_nacl_plt0_entry): Use
+ bic rather than bfc 	instruction for data
+ sandboxing.
+
+gold/
+	* arm.cc (Output_data_plt_arm_nacl::first_plt_entry): Use bic rather
+	than bfc instruction for data sandboxing.
+---
+ bfd/ChangeLog   |    5 +++++
+ bfd/elf32-arm.c |   18 +++++++++---------
+ gold/ChangeLog  |    5 +++++
+ gold/arm.cc     |    4 ++--
+ 4 files changed, 21 insertions(+), 11 deletions(-)
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 7aa83bf..981e05a 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,8 @@
++2012-11-14  Roland McGrath  <mcgrathr@google.com>
++
++	* elf32-arm.c (elf32_arm_nacl_plt0_entry): Use bic rather than bfc
++	instruction for data sandboxing.
++
+ 2012-11-13  Tristan Gingold  <gingold@adacore.com>
+ 
+ 	* Makefile.am (RELEASE): Unset.
+diff --git a/bfd/elf32-arm.c b/bfd/elf32-arm.c
+index a287fbb..3c541ca 100644
+--- a/bfd/elf32-arm.c
++++ b/bfd/elf32-arm.c
+@@ -2209,21 +2209,21 @@ static const bfd_vma elf32_arm_nacl_plt0_entry [] =
+   0xe08cc00f,		/* add	ip, ip, pc			*/
+   0xe52dc008,		/* str	ip, [sp, #-8]!			*/
+   /* Second bundle: */
+-  0xe7dfcf1f, 	/* bfc	ip, #30, #2			*/
+-  0xe59cc000, 	/* ldr	ip, [ip]			*/
++  0xe3ccc103,		/* bic	ip, ip, #0xc0000000		*/
++  0xe59cc000,		/* ldr	ip, [ip]			*/
+   0xe3ccc13f,		/* bic	ip, ip, #0xc000000f		*/
+-  0xe12fff1c, 	/* bx	ip				*/
++  0xe12fff1c,		/* bx	ip				*/
+   /* Third bundle: */
+-  0xe320f000, 	/* nop					*/
+-  0xe320f000, 	/* nop					*/
+-  0xe320f000, 	/* nop					*/
++  0xe320f000,		/* nop					*/
++  0xe320f000,		/* nop					*/
++  0xe320f000,		/* nop					*/
+   /* .Lplt_tail: */
+   0xe50dc004,		/* str	ip, [sp, #-4]			*/
+   /* Fourth bundle: */
+-  0xe7dfcf1f,		/* bfc	ip, #30, #2			*/
+-  0xe59cc000, 	/* ldr	ip, [ip]			*/
++  0xe3ccc103,		/* bic	ip, ip, #0xc0000000		*/
++  0xe59cc000,		/* ldr	ip, [ip]			*/
+   0xe3ccc13f,		/* bic	ip, ip, #0xc000000f		*/
+-  0xe12fff1c, 	/* bx	ip				*/
++  0xe12fff1c,		/* bx	ip				*/
+ };
+ #define ARM_NACL_PLT_TAIL_OFFSET	(11 * 4)
+ 
+diff --git a/gold/ChangeLog b/gold/ChangeLog
+index 0d3074a..9a1a9d3 100644
+--- a/gold/ChangeLog
++++ b/gold/ChangeLog
+@@ -1,3 +1,8 @@
++2012-11-14  Roland McGrath  <mcgrathr@google.com>
++
++	* arm.cc (Output_data_plt_arm_nacl::first_plt_entry): Use bic rather
++	than bfc instruction for data sandboxing.
++
+ 2012-11-07  Roland McGrath  <mcgrathr@google.com>
+ 
+ 	* i386.cc (Target_i386::relocate_for_relocatable): Remove extraneous
+diff --git a/gold/arm.cc b/gold/arm.cc
+index d434c9d..238cf32 100644
+--- a/gold/arm.cc
++++ b/gold/arm.cc
+@@ -12196,7 +12196,7 @@ const uint32_t Output_data_plt_arm_nacl<big_endian>::first_plt_entry[16] =
+   0xe08cc00f,                           // add	ip, ip, pc
+   0xe52dc008,                           // str	ip, [sp, #-8]!
+   // Second bundle:
+-  0xe7dfcf1f,                           // bfc	ip, #30, #2
++  0xe3ccc103,                           // bic	ip, ip, #0xc0000000
+   0xe59cc000,                           // ldr	ip, [ip]
+   0xe3ccc13f,                           // bic	ip, ip, #0xc000000f
+   0xe12fff1c,                           // bx	ip
+@@ -12207,7 +12207,7 @@ const uint32_t Output_data_plt_arm_nacl<big_endian>::first_plt_entry[16] =
+   // .Lplt_tail:
+   0xe50dc004,                           // str	ip, [sp, #-4]
+   // Fourth bundle:
+-  0xe7dfcf1f,                           // bfc	ip, #30, #2
++  0xe3ccc103,                           // bic	ip, ip, #0xc0000000
+   0xe59cc000,                           // ldr	ip, [ip]
+   0xe3ccc13f,                           // bic	ip, ip, #0xc000000f
+   0xe12fff1c,                           // bx	ip
+-- 
+1.7.9.5
+

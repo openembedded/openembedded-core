@@ -1,0 +1,65 @@
+From fdf71da8350a7c2b4050e09c5a08e7d42b7a4a4a Mon Sep 17 00:00:00 2001
+From: Roland McGrath <roland@gnu.org>
+Date: Tue, 27 Nov 2012 17:23:31 +0000
+Subject: [PATCH 26/27] ld/testsuite/ 	* ld-elf/flags1.d: Add *-*-nacl* to
+ xfail list. 	* ld-elf/orphan-region.d: Likewise.
+
+---
+ ld/testsuite/ChangeLog              |    5 +++++
+ ld/testsuite/ld-elf/flags1.d        |    7 ++++---
+ ld/testsuite/ld-elf/orphan-region.d |    5 +++--
+ 3 files changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/ld/testsuite/ChangeLog b/ld/testsuite/ChangeLog
+index aada077..c0558ac 100644
+--- a/ld/testsuite/ChangeLog
++++ b/ld/testsuite/ChangeLog
+@@ -1,3 +1,8 @@
++2012-11-27  Roland McGrath  <mcgrathr@google.com>
++
++	* ld-elf/flags1.d: Add *-*-nacl* to xfail list.
++	* ld-elf/orphan-region.d: Likewise.
++
+ 2012-11-21  Roland McGrath  <mcgrathr@google.com>
+ 
+ 	* ld-elf/comm-data.exp: Add XFAIL for arm*-*-* targets, referring
+diff --git a/ld/testsuite/ld-elf/flags1.d b/ld/testsuite/ld-elf/flags1.d
+index e6bb001..ab8facc 100644
+--- a/ld/testsuite/ld-elf/flags1.d
++++ b/ld/testsuite/ld-elf/flags1.d
+@@ -1,11 +1,12 @@
+ #name: --set-section-flags test 1 (sections)
+ #ld: -Tflags1.ld
+-#objcopy_linked_file: --set-section-flags .post_text_reserve=contents,alloc,load,readonly,code 
++#objcopy_linked_file: --set-section-flags .post_text_reserve=contents,alloc,load,readonly,code
+ #readelf: -l --wide
+ #xfail: "avr-*-*" "dlx-*-*" "h8300-*-*" "i960-*-*" "ip2k-*-*" "m32r-*-*"
+-#xfail: "moxie-*-*" "mt-*-*" "msp430-*-*"
++#xfail: "moxie-*-*" "mt-*-*" "msp430-*-*" "*-*-nacl*"
+ #xfail: "*-*-hpux*" "hppa*64*-*-*"
+-# Fails on the AVR, DLX, H8300, I960, IP2K, M32R, MOXIE, MT, and MSP430
++# Fails on the AVR, DLX, H8300, I960, IP2K, M32R, MOXIE, MT, and MSP430,
++#  and all NaCl targets,
+ #  because the two sections are not merged into one segment.
+ #  (There is no good reason why they have to be).
+ # Fails on HPUX systems because the .type pseudo-op behaves differently.
+diff --git a/ld/testsuite/ld-elf/orphan-region.d b/ld/testsuite/ld-elf/orphan-region.d
+index 9d6c90c..d63b1df 100644
+--- a/ld/testsuite/ld-elf/orphan-region.d
++++ b/ld/testsuite/ld-elf/orphan-region.d
+@@ -3,9 +3,10 @@
+ #readelf: -S -l --wide
+ #xfail: arc-*-* d30v-*-* dlx-*-* fr30-*-* frv-*-elf i860-*-* i960-*-*
+ #xfail: iq*-*-* mn10200-*-* moxie-*-* msp*-*-* mt-*-* or32-*-* pj*-*-*
+-#xfail: spu-*-* hppa*64*-*-* frv-*-*
++#xfail: spu-*-* hppa*64*-*-* frv-*-* *-*-nacl*
+ # if not using elf32.em, you don't get fancy orphan handling
+-# spu twiddles LOAD range, hppa64 adds PHDR, frv-linux adds GNU_STACK
++# spu twiddles LOAD range, hppa64 adds PHDR, frv-linux adds GNU_STACK,
++# nacl splits to two segments
+ 
+ #...
+   \[[ 0-9]+\] \.text[ \t]+PROGBITS[ \t]+0*40000000[ \t]+.*
+-- 
+1.7.9.5
+

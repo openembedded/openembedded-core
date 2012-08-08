@@ -1,0 +1,40 @@
+Upstream-Status: Pending
+
+Index: binutils-2.22/configure
+===================================================================
+--- binutils-2.22.orig/configure
++++ binutils-2.22/configure
+@@ -3130,7 +3130,7 @@ case "${target}" in
+     ;;
+   s390-*-* | s390x-*-*)
+     ;;
+-  sh-*-* | sh[34]*-*-*)
++  sh*-*-* | sh[34]*-*-*)
+     ;;
+   sh64-*-* | sh5*-*-*)
+     ;;
+@@ -3570,7 +3570,7 @@ case "${target}" in
+   mips*-*-*)
+     noconfigdirs="$noconfigdirs gprof"
+     ;;
+-  sh-*-* | sh64-*-*)
++  sh*-*-* | sh64-*-*)
+     case "${target}" in
+       sh*-*-elf)
+          ;;
+Index: binutils-2.22/gprof/configure
+===================================================================
+--- binutils-2.22.orig/gprof/configure
++++ binutils-2.22/gprof/configure
+@@ -6103,6 +6103,11 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
++linux-uclibc*)
++  lt_cv_deplibs_check_method=pass_all
++  lt_cv_file_magic_test_file=`echo /lib/libuClibc-*.so`
++  ;;
++
+ netbsd*)
+   if echo __ELF__ | $CC -E - | $GREP __ELF__ > /dev/null; then
+     lt_cv_deplibs_check_method='match_pattern /lib[^/]+(\.so\.[0-9]+\.[0-9]+|_pic\.a)$'

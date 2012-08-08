@@ -1,0 +1,58 @@
+From 7dbb7d8db8003ff73d80956bd3271f9588437aa7 Mon Sep 17 00:00:00 2001
+From: Tristan Gingold <gingold@adacore.com>
+Date: Tue, 13 Nov 2012 15:22:45 +0000
+Subject: [PATCH 01/27] bfd/ 2012-11-13  Tristan Gingold 
+ <gingold@adacore.com>
+
+	* Makefile.am (RELEASE): Unset.
+	* Makefile.in: Regenerate.
+---
+ bfd/ChangeLog   |    5 +++++
+ bfd/Makefile.am |    2 +-
+ bfd/Makefile.in |    2 +-
+ 3 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index bed5dca..7aa83bf 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,5 +1,10 @@
+ 2012-11-13  Tristan Gingold  <gingold@adacore.com>
+ 
++	* Makefile.am (RELEASE): Unset.
++	* Makefile.in: Regenerate.
++
++2012-11-13  Tristan Gingold  <gingold@adacore.com>
++
+ 	* configure.in: Bump version to 2.23.1
+ 	* Makefile.am (RELEASE): Set.
+ 	* configure, Makefile.in: Regenerate.
+diff --git a/bfd/Makefile.am b/bfd/Makefile.am
+index 9ab2aa9..49f9662 100644
+--- a/bfd/Makefile.am
++++ b/bfd/Makefile.am
+@@ -4,7 +4,7 @@ AUTOMAKE_OPTIONS = 1.11 no-dist foreign
+ ACLOCAL_AMFLAGS = -I . -I .. -I ../config
+ 
+ # Uncomment the following line when doing a release.
+-RELEASE=y
++# RELEASE=y
+ 
+ INCDIR = $(srcdir)/../include
+ CSEARCH = -I. -I$(srcdir) -I$(INCDIR)
+diff --git a/bfd/Makefile.in b/bfd/Makefile.in
+index 9990275..5718fab 100644
+--- a/bfd/Makefile.in
++++ b/bfd/Makefile.in
+@@ -320,7 +320,7 @@ AUTOMAKE_OPTIONS = 1.11 no-dist foreign
+ ACLOCAL_AMFLAGS = -I . -I .. -I ../config
+ 
+ # Uncomment the following line when doing a release.
+-RELEASE = y
++# RELEASE=y
+ INCDIR = $(srcdir)/../include
+ CSEARCH = -I. -I$(srcdir) -I$(INCDIR)
+ SUBDIRS = doc po
+-- 
+1.7.9.5
+

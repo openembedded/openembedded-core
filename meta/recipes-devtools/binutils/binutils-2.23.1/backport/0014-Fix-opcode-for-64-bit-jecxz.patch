@@ -1,0 +1,112 @@
+From adef1e82d241e22139c5edbba1efe9734cfdcace Mon Sep 17 00:00:00 2001
+From: "H.J. Lu" <hjl.tools@gmail.com>
+Date: Tue, 20 Nov 2012 14:30:48 +0000
+Subject: [PATCH 14/27] Fix opcode for 64-bit jecxz
+
+gas/testsuite/
+
+	PR gas/14859
+	* gas/i386/x86-64-opcode.s: Add jecxz.
+	* gas/i386/x86-64-opcode.d: Updated.
+
+opcodes/
+
+	PR gas/14859
+	* i386-opc.tbl: Fix opcode for 64-bit jecxz.
+	* i386-tbl.h: Regenerated.
+---
+ gas/ChangeLog                          |    6 ++++++
+ gas/testsuite/gas/i386/x86-64-opcode.d |    1 +
+ gas/testsuite/gas/i386/x86-64-opcode.s |    2 ++
+ opcodes/ChangeLog                      |    9 ++++++++-
+ opcodes/i386-opc.tbl                   |    2 +-
+ opcodes/i386-tbl.h                     |    2 +-
+ 6 files changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/gas/ChangeLog b/gas/ChangeLog
+index bb9ef1c..8a950ec 100644
+--- a/gas/ChangeLog
++++ b/gas/ChangeLog
+@@ -1,3 +1,9 @@
++2012-11-20  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR gas/14859
++	* gas/i386/x86-64-opcode.s: Add jecxz.
++	* gas/i386/x86-64-opcode.d: Updated.
++
+ 2012-11-20  Yufeng Zhang  <yufeng.zhang@arm.com>
+ 
+ 	* config/tc-aarch64.c (first_error_fmt): Add ATTRIBUTE_UNUSED to the
+diff --git a/gas/testsuite/gas/i386/x86-64-opcode.d b/gas/testsuite/gas/i386/x86-64-opcode.d
+index 7c6dd03..4b3003a 100644
+--- a/gas/testsuite/gas/i386/x86-64-opcode.d
++++ b/gas/testsuite/gas/i386/x86-64-opcode.d
+@@ -296,4 +296,5 @@ Disassembly of section .text:
+ [ 	]*[a-f0-9]+:	0f 07                	sysret 
+ [ 	]*[a-f0-9]+:	0f 01 f8             	swapgs 
+ [ 	]*[a-f0-9]+:	66 68 22 22          	pushw  \$0x2222
++[ 	]*[a-f0-9]+:	67 e3 ff             	jecxz  0x49d
+ #pass
+diff --git a/gas/testsuite/gas/i386/x86-64-opcode.s b/gas/testsuite/gas/i386/x86-64-opcode.s
+index cb9bbc1..96f624d 100644
+--- a/gas/testsuite/gas/i386/x86-64-opcode.s
++++ b/gas/testsuite/gas/i386/x86-64-opcode.s
+@@ -424,3 +424,5 @@
+         swapgs		              #  --  --	 -- --	 0F 01 f8
+ 
+ 	pushw $0x2222
++
++        jecxz .+2
+diff --git a/opcodes/ChangeLog b/opcodes/ChangeLog
+index ca0f49b..98450f9 100644
+--- a/opcodes/ChangeLog
++++ b/opcodes/ChangeLog
+@@ -1,3 +1,10 @@
++2012-11-20  Kirill Yukhin  <kirill.yukhin@intel.com>
++	    H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR gas/14859
++	* i386-opc.tbl: Fix opcode for 64-bit jecxz.
++	* i386-tbl.h: Regenerated.
++
+ 2012-10-09  Nagajyothi Eggone  <nagajyothi.eggone@amd.com>
+ 
+ 	* i386-gen.c (cpu_flag_init): Add CPU_BDVER3_FLAGS.
+@@ -9,7 +16,7 @@
+ 
+ 2012-09-18  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
+ 
+-        * arm-dis.c: Changed ldra and strl-form mnemonics
++	* arm-dis.c: Changed ldra and strl-form mnemonics
+ 	to lda and stl-form.
+ 
+ 2012-09-18  Chao-ying Fu  <fu@mips.com>
+diff --git a/opcodes/i386-opc.tbl b/opcodes/i386-opc.tbl
+index 8b08edc..482bd7b 100644
+--- a/opcodes/i386-opc.tbl
++++ b/opcodes/i386-opc.tbl
+@@ -390,7 +390,7 @@ jg, 1, 0x7f, None, 1, 0, Jump|No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf,
+ // jcxz vs. jecxz is chosen on the basis of the address size prefix.
+ jcxz, 1, 0xe3, None, 1, CpuNo64, JumpByte|Size16|No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf, { Disp8|Disp16|Disp32 }
+ jecxz, 1, 0xe3, None, 1, CpuNo64, JumpByte|Size32|No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf, { Disp8|Disp16|Disp32 }
+-jecxz, 1, 0x67e3, None, 2, Cpu64, JumpByte|Size32|No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf, { Disp8|Disp32|Disp32S }
++jecxz, 1, 0xe3, None, 1, Cpu64, JumpByte|Size32|No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf, { Disp8|Disp32|Disp32S }
+ jrcxz, 1, 0xe3, None, 1, Cpu64, JumpByte|Size64|No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf|NoRex64, { Disp8|Disp32|Disp32S }
+ 
+ // The loop instructions also use the address size prefix to select
+diff --git a/opcodes/i386-tbl.h b/opcodes/i386-tbl.h
+index 001a966..a3a3e64 100644
+--- a/opcodes/i386-tbl.h
++++ b/opcodes/i386-tbl.h
+@@ -3417,7 +3417,7 @@ const insn_template i386_optab[] =
+     { { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+ 	  1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+ 	  0, 0, 0, 0, 0, 0 } } } },
+-  { "jecxz", 1, 0x67e3, None, 2,
++  { "jecxz", 1, 0xe3, None, 1,
+     { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
+-- 
+1.7.9.5
+
