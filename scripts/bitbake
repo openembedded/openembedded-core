@@ -152,7 +152,12 @@ if [ $buildpseudo -gt 0 ]; then
             fi
         done
     done
-    bitbake pseudo-native $TARTARGET $GITTARGET $additionalopts -c populate_sysroot
+
+    if [ $needtar = "1" ]; then
+	bitbake $TARTARGET -c populate_sysroot
+    fi
+
+    bitbake pseudo-native $GITTARGET $additionalopts -c populate_sysroot
     ret=$?
     if [ "$ret" != "0" ]; then
         exit 1
