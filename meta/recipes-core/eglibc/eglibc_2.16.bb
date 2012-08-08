@@ -1,6 +1,6 @@
 require eglibc.inc
 
-SRCREV = "19383"
+SRCREV = "19922"
 
 DEPENDS += "gperf-native"
 PR = "r6"
