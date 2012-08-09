@@ -18,7 +18,6 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 # - x11-sato            - OpenedHand Sato environment
 # - apps-x11-core       - X Terminal, file manager, file editor
 # - apps-x11-games
-# - apps-x11-pimlico    - OpenedHand Pimlico apps
 # - tools-sdk           - SDK
 # - tools-debug         - debugging tools
 # - tools-profile       - profiling tools
@@ -34,7 +33,6 @@ PACKAGE_GROUP_x11-base = "task-core-x11-base"
 PACKAGE_GROUP_x11-sato = "task-core-x11-sato"
 PACKAGE_GROUP_apps-x11-core = "task-core-apps-x11-core"
 PACKAGE_GROUP_apps-x11-games = "task-core-apps-x11-games"
-PACKAGE_GROUP_apps-x11-pimlico = "task-core-apps-x11-pimlico"
 PACKAGE_GROUP_tools-debug = "task-core-tools-debug"
 PACKAGE_GROUP_tools-profile = "task-core-tools-profile"
 PACKAGE_GROUP_tools-testapps = "task-core-tools-testapps"
@@ -65,7 +63,7 @@ CORE_IMAGE_EXTRA_INSTALL ?= ""
 IMAGE_INSTALL ?= "${CORE_IMAGE_BASE_INSTALL}"
 
 X11_IMAGE_FEATURES  = "x11-base apps-x11-core package-management"
-ENHANCED_IMAGE_FEATURES = "${X11_IMAGE_FEATURES} apps-x11-games apps-x11-pimlico package-management"
+ENHANCED_IMAGE_FEATURES = "${X11_IMAGE_FEATURES} apps-x11-games package-management"
 SSHSERVER_IMAGE_FEATURES ??= "ssh-server-dropbear"
 SATO_IMAGE_FEATURES = "${ENHANCED_IMAGE_FEATURES} x11-sato ${SSHSERVER_IMAGE_FEATURES}"
 

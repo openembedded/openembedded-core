@@ -6,7 +6,7 @@ DESCRIPTION = "Sato Tasks for Poky"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-PR = "r31"
+PR = "r32"
 
 PACKAGES = "\
     task-core-x11-sato \
@@ -21,6 +21,9 @@ ALLOW_EMPTY = "1"
 NETWORK_MANAGER ?= "connman-gnome"
 NETWORK_MANAGER_libc-uclibc = ""
 
+WEB ?= ""
+#WEB = "web-webkit"
+
 RDEPENDS_task-core-x11-sato = "\
     matchbox-desktop \
     matchbox-session-sato \
@@ -34,4 +37,6 @@ RDEPENDS_task-core-x11-sato = "\
     gthumb \
     x11vnc \
     libsdl \
+    gaku \
+    ${WEB} \
     ${NETWORK_MANAGER}"
