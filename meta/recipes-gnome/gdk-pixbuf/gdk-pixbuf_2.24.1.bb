@@ -21,7 +21,7 @@ SRC_URI = "http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.24/gdk-pixbuf-${
 SRC_URI[md5sum] = "72f39b34b20f68148c1609bd27415412"
 SRC_URI[sha256sum] = "da7a3f00db360913716368e19e336402755cafa93769f3cfa28a969303e4bee1"
 
-PR = "r4"
+PR = "r5"
 
 inherit autotools pkgconfig gettext
 
@@ -62,7 +62,13 @@ fi
 
 GDK_PIXBUF_MODULEDIR=${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders gdk-pixbuf-query-loaders --update-cache
 
-test -x ${bindir}/gtk-update-icon-cache && gtk-update-icon-cache  -q ${datadir}/icons/hicolor
+if [ -x ${bindir}/gtk-update-icon-cache ] && [ -d ${datadir}/icons ]; then
+    for icondir in /usr/share/icons/*; do
+        if [ -d ${icondir} ]; then
+            gtk-update-icon-cache -q ${icondir}
+        fi
+    done
+fi
 }
 
 PACKAGES_DYNAMIC += "gdk-pixbuf-loader-*"
