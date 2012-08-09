@@ -8,9 +8,9 @@ BUGTRACKER = "http://sourceforge.net/tracker/?group_id=172030&atid=860194"
 LICENSE = "GPL-2.0+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ecc0551bf54ad97f6b541720f84d6569"
 
-PR = "r0"
+PR = "r1"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/watchdog/watchdog_${PV}.tar.gz \
+SRC_URI = "${SOURCEFORGE_MIRROR}/watchdog/watchdog-${PV}.tar.gz \
 	   file://fix-ping-failure.patch"
 
 SRC_URI[md5sum] = "cea28bea70e54f3625062bc808aef9af"
