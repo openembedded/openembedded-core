@@ -12,14 +12,12 @@ DEPENDS = "gtk+ gstreamer gst-plugins-base"
 RDEPENDS_${PN} = "gst-meta-base"
 RRECOMMENDS_${PN} = "gst-meta-audio gst-meta-video"
 
-SRCREV = "1379fd230a32509e94971961183f1031f469737a"
+SRCREV = "03030c41ea578cfa74a2ffceb875675b248318ae"
 PV = "0.1+git${SRCPV}"
-PR = "r2"
+PR = "r3"
 
 
-SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
-           file://gst_change_state.patch \
-	   file://make-382.patch"
+SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git"
 
 S = "${WORKDIR}/git"
 
