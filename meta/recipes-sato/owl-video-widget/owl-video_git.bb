@@ -8,22 +8,20 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ac14b7ca45afea5af040da54db270eb0 \
 SECTION = "x11"
 DEPENDS = "libowl-av"
 
-SRCREV = "f133472318970796fae1ea3e98ac062156768baf"
+SRCREV = "07ab48f331a5e6e0d169e4892c7eb1fc22dc0b9d"
 PV = "0.1+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}/git"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
-           file://gtk_multithread_safe.patch \
            file://owl-video-widget.png \
            file://stock_media-play.png \
            file://stock_volume-0.png \
            file://stock_volume-min.png \
            file://stock_volume-med.png \
            file://stock_volume-max.png \
-           file://owl-video-widget.desktop \
-	   file://make-382.patch"
+           file://owl-video-widget.desktop"
 
 inherit autotools pkgconfig
 
