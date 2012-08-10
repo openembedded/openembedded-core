@@ -161,7 +161,8 @@ def pkgarch_mapping(d):
 
 def preferred_ml_updates(d):
     # If any PREFERRED_PROVIDER or PREFERRED_VERSIONS are set,
-    # we need to mirror these variables in the multilib case
+    # we need to mirror these variables in the multilib case;
+    # likewise the PNBLACKLIST flags.
     multilibs = d.getVar('MULTILIBS', True) or ""
     if not multilibs:
         return
@@ -174,11 +175,18 @@ def preferred_ml_updates(d):
 
     versions = []
     providers = []
+    blacklists = d.getVarFlags('PNBLACKLIST') or []
     for v in d.keys():
         if v.startswith("PREFERRED_VERSION_"):
             versions.append(v)
         if v.startswith("PREFERRED_PROVIDER_"):
             providers.append(v)
+
+    for pkg, reason in blacklists.items():
+        for p in prefixes:
+            newpkg = p + "-" + pkg
+            if not d.getVarFlag('PNBLACKLIST', newpkg, True):
+                d.setVarFlag('PNBLACKLIST', newpkg, reason)
 
     for v in versions:
         val = d.getVar(v, False)
