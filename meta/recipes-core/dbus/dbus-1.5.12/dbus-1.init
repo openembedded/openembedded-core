@@ -18,9 +18,8 @@ set -e
 
 DAEMON=/usr/bin/dbus-daemon
 NAME=dbus
-DAEMONUSER=messagebus
-PIDDIR=/var/run/dbus
-PIDFILE=$PIDDIR/pid
+DAEMONUSER=messagebus           # must match /etc/dbus-1/system.conf
+PIDFILE=/var/run/messagebus.pid # must match /etc/dbus-1/system.conf
 UUIDDIR=/var/lib/dbus
 DESC="system message bus"
 EVENTDIR=/etc/dbus-1/event.d
@@ -38,11 +37,7 @@ test "$ENABLED" != "0" || exit 0
 
 start_it_up()
 {
-  if [ ! -d $PIDDIR ]; then
-    mkdir -p $PIDDIR
-    chown $DAEMONUSER $PIDDIR
-    chgrp $DAEMONUSER $PIDDIR
-  fi
+  mkdir -p "`dirname $PIDFILE`"
   if [ -e $PIDFILE ]; then
     PIDDIR=/proc/$(cat $PIDFILE)
     if [ -d ${PIDDIR} -a  "$(readlink -f ${PIDDIR}/exe)" = "${DAEMON}" ]; then 
