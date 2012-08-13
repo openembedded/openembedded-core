@@ -24,5 +24,5 @@ LOONGSON_MMI = "--disable-loongson-mmi"
 
 EXTRA_OECONF="--disable-gtk ${IWMMXT} ${LOONGSON_MMI}"
 
-SRC_URI[md5sum] = "6b3e4c5300adb893a2baa9631c23efb2"
-SRC_URI[sha256sum] = "193b651c8ba89ecfacb8dc62a34d2bd305245163910cdbdf907e5d5ece92647c"
+SRC_URI[md5sum] = "dd67154b23d88e6a75ad3a83f3052198"
+SRC_URI[sha256sum] = "cae9dc13727a84f11beb150c88d3a06ba114f82c52d68073c663c027e099123b"
