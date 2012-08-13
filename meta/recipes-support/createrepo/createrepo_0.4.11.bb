@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=18810669f13b87348459e611d31ab760"
 
 RDEPENDS_${PN}_virtclass-native += "libxml2-native rpm-native"
 
-PR = "r6"
+PR = "r7"
 
 SRC_URI= "http://createrepo.baseurl.org/download/${BP}.tar.gz \
           file://fix-native-install.patch \
@@ -36,4 +36,9 @@ do_install_append_virtclass-native () {
 		 ${D}${bindir}/rpm-createsolvedb.py ; do
 		create_wrapper $i ${STAGING_BINDIR_NATIVE}/python-native/python
 	done
+
+	create_wrapper ${D}/${bindir}/createrepo \
+			RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
+			RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
+			RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
 }
