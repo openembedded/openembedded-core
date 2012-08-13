@@ -4,7 +4,7 @@ DESCRIPTION = "OpenEmbedded RPM resolver - performs RPM database lookups in batc
 DEPENDS = "rpm"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0;md5=801f80980d171dd6425610833a22dbe6"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "file://rpmresolve.c"
 
@@ -17,6 +17,13 @@ do_compile() {
 do_install() {
 	install -d ${D}${bindir}
 	install -m 0755 rpmresolve ${D}${bindir}
+}
+
+do_install_append_virtclass-native() {
+	create_wrapper ${D}/${bindir}/rpmresolve \
+			RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
+			RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
+			RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
 }
 
 BBCLASSEXTEND = "native"
