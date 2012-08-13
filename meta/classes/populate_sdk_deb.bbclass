@@ -6,12 +6,13 @@ DEB_SDK_ARCH = "${@[d.getVar('SDK_ARCH', True), "i386"]\
                 [d.getVar('SDK_ARCH', True) in \
                 ["x86", "i486", "i586", "i686", "pentium"]]}"
 
-do_populate_sdk[lockfiles] += "${WORKDIR}/deb.lock"
+do_populate_sdk[lockfiles] += "${DEPLOY_DIR_DEB}/deb.lock"
 
 populate_sdk_post_deb () {
 
 	local target_rootfs=$1
 
+	mkdir -p ${target_rootfs}/etc
 	tar -cf - -C ${STAGING_ETCDIR_NATIVE} -ps apt | tar -xf - -C ${target_rootfs}/etc
 }
 
