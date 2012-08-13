@@ -453,6 +453,11 @@ if [ "$MACHINE" = "akita" ]; then
     fi
 fi
 
+if [ "x$RAMFS" = "xtrue" ]; then
+    QEMUOPTIONS="-initrd $ROOTFS -nographic"
+    KERNCMDLINE="root=/dev/ram0"
+fi
+
 if [ "x$QEMUOPTIONS" = "x" ]; then
     echo "Error: Unable to support this combination of options"
     cleanup
