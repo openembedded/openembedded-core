@@ -29,6 +29,8 @@ do_configure () {
 }
 
 export EXTRA_CFLAGS = "${CFLAGS}"
+export BINDIR = "${sbindir}"
+
 do_compile () {
 	unset CFLAGS CPPFLAGS CXXFLAGS
 	oe_runmake
