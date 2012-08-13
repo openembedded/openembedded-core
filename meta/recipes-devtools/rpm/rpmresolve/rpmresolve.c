@@ -36,6 +36,9 @@
 #include <argv.h>
 #include <mire.h>
 
+int debugmode;
+FILE *outf;
+
 int getPackageStr(rpmts ts, const char *NVRA, rpmTag tag, char **value)
 {
     int rc = -1;
@@ -69,6 +72,8 @@ int loadTs(rpmts **ts, int *tsct, const char *dblistfn)
         listfile = 0;
 
     if(listfile) {
+        if(debugmode)
+            printf("DEBUG: reading database list file '%s'\n", dblistfn);
         *ts = malloc(sz * sizeof(rpmts));
         FILE *f = fopen(dblistfn, "r" );
         if(f) {
@@ -87,6 +92,8 @@ int loadTs(rpmts **ts, int *tsct, const char *dblistfn)
                         *ts = (rpmts *)realloc(*ts, sz);
                     }
 
+                    if(debugmode)
+                        printf("DEBUG: opening database '%s'\n", line);
                     char *dbpathm = malloc(strlen(line) + 10);
                     sprintf(dbpathm, "_dbpath %s", line);
                     rpmDefineMacro(NULL, dbpathm, RMIL_CMDLINE);
@@ -113,6 +120,8 @@ int loadTs(rpmts **ts, int *tsct, const char *dblistfn)
         }
     }
     else {
+        if(debugmode)
+            printf("DEBUG: opening database '%s'\n", dblistfn);
         // Load from single database
         *ts = malloc(sizeof(rpmts));
         char *dbpathm = malloc(strlen(dblistfn) + 10);
@@ -164,13 +173,22 @@ int processPackages(rpmts *ts, int tscount, const char *packagelistfn, int ignor
                             char *value = NULL;
                             rc = getPackageStr(ts[i], keys[0], RPMTAG_PACKAGEORIGIN, &value);
                             if(rc == 0)
-                                printf("%s\n", value);
+                                fprintf(outf, "%s\n", value);
                             else
                                 fprintf(stderr, "Failed to get package origin for %s\n", line);
                             found = 1;
                         }
                         else if( nkeys > 1 ) {
-                            fprintf(stderr, "Multiple matches for %s!\n", line);
+                            int keyindex = 0;
+                            fprintf(stderr, "Multiple matches for %s:\n", line);
+                            for( keyindex=0; keyindex<nkeys; keyindex++) {
+                                char *value = NULL;
+                                rc = getPackageStr(ts[i], keys[keyindex], RPMTAG_PACKAGEORIGIN, &value);
+                                if(rc == 0)
+                                    fprintf(outf, "  %s\n", value);
+                                else
+                                    fprintf(stderr, "  (%s)\n", keys[keyindex]);
+                            }
                         }
                     }
                     if(found)
@@ -230,7 +248,7 @@ int printDepList(rpmts *ts, int tscount)
     int rc = 0;
 
     if( tscount > 1 )
-        printf(">1 database specified with dependency list, using first only\n");
+        fprintf(stderr, ">1 database specified with dependency list, using first only\n");
 
     /* Get list of names */
     rpmdb db = rpmtsGetRdb(ts[0]);
@@ -274,17 +292,17 @@ int printDepList(rpmts *ts, int tscount)
                     }
                     if(prov) {
                         if((int)reqflags[j] & 0x80000)
-                            printf("%s|%s [REC]\n", name, prov);
+                            fprintf(outf, "%s|%s [REC]\n", name, prov);
                         else
-                            printf("%s|%s\n", name, prov);
+                            fprintf(outf, "%s|%s\n", name, prov);
                     }
                     else {
                         rc = lookupProvider(ts[0], reqs[j], &prov);
                         if(rc==0 && prov) {
                             if((int)reqflags[j] & 0x80000)
-                                printf("%s|%s [REC]\n", name, prov);
+                                fprintf(outf, "%s|%s [REC]\n", name, prov);
                             else
-                                printf("%s|%s\n", name, prov);
+                                fprintf(outf, "%s|%s\n", name, prov);
                             free(prov);
                         }
                     }
@@ -301,7 +319,7 @@ int printDepList(rpmts *ts, int tscount)
 void usage()
 {
     fprintf(stderr, "OpenEmbedded rpm resolver utility\n");
-    fprintf(stderr, "syntax: rpmresolve [-i] [-d] <dblistfile> <packagelistfile>\n");
+    fprintf(stderr, "syntax: rpmresolve [-i] [-d] [-t] <dblistfile> <packagelistfile>\n");
 }
 
 int main(int argc, char **argv)
@@ -313,15 +331,25 @@ int main(int argc, char **argv)
     int c;
     int ignoremissing = 0;
     int deplistmode = 0;
+    char *outfile = NULL;
+
+    debugmode = 0;
+    outf = stdout;
 
     opterr = 0;
-    while ((c = getopt (argc, argv, "id")) != -1) {
+    while ((c = getopt (argc, argv, "itdo:")) != -1) {
         switch (c) {
             case 'i':
                 ignoremissing = 1;
                 break;
-            case 'd':
+            case 't':
                 deplistmode = 1;
+                break;
+            case 'd':
+                debugmode = 1;
+                break;
+            case 'o':
+                outfile = strdup(optarg);
                 break;
             case '?':
                 if(isprint(optopt))
@@ -341,11 +369,18 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    if( outfile ) {
+        if(debugmode)
+            printf("DEBUG: Using output file %s\n", outfile);
+        outf = fopen(outfile, "w");
+    }
+
     const char *dblistfn = argv[optind];
 
     rpmcliInit(argc, argv, NULL);
 
-    //rpmSetVerbosity(RPMLOG_DEBUG);
+    if(debugmode)
+        rpmSetVerbosity(RPMLOG_DEBUG);
 
     rpmDefineMacro(NULL, "__dbi_txn create nofsync", RMIL_CMDLINE);
 
@@ -363,15 +398,21 @@ int main(int argc, char **argv)
     else {
         if( argc - optind < 2 ) {
             fprintf(stderr, "Please specify package list file\n");
-            return 1;
         }
-        const char *pkglistfn = argv[optind+1];
-        rc = processPackages(ts, tscount, pkglistfn, ignoremissing);
+        else {
+            const char *pkglistfn = argv[optind+1];
+            rc = processPackages(ts, tscount, pkglistfn, ignoremissing);
+        }
     }
 
     for(i=0; i<tscount; i++)
         (void) rpmtsCloseDB(ts[i]);
     free(ts);
+
+    if( outfile ) {
+        fclose(outf);
+        free(outfile);
+    }
 
     return rc;
 }

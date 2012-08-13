@@ -151,7 +151,7 @@ list_installed_packages() {
 }
 
 rootfs_list_installed_depends() {
-	rpmresolve -d $INSTALL_ROOTFS_RPM/${rpmlibdir}
+	rpmresolve -t $INSTALL_ROOTFS_RPM/${rpmlibdir}
 }
 
 rootfs_install_packages() {

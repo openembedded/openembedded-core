@@ -235,9 +235,9 @@ process_pkg_list_rpm() {
 		extraopt="-i"
 	fi
 
-	rpmresolve $extraopt ${confbase}-base_archs.conf ${target_rootfs}/install/base_archs.pkglist >> ${target_rootfs}/install/${manifestpfx}.manifest
+	rpmresolve $extraopt ${confbase}-base_archs.conf ${target_rootfs}/install/base_archs.pkglist -o ${target_rootfs}/install/${manifestpfx}.manifest
 	if [ -s ${target_rootfs}/install/ml_archs.pkglist ] ; then
-		rpmresolve $extraopt ${confbase}-ml_archs.conf ${target_rootfs}/install/ml_archs.pkglist >> ${target_rootfs}/install/${manifestpfx}_multilib.manifest
+		rpmresolve $extraopt ${confbase}-ml_archs.conf ${target_rootfs}/install/ml_archs.pkglist -o ${target_rootfs}/install/${manifestpfx}_multilib.manifest
 	fi
 }
 
