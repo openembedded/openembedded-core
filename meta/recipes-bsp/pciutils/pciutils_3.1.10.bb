@@ -18,8 +18,8 @@ SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.bz2 \
            file://guess-fix.patch \
            file://makefile.patch"
 
-SRC_URI[md5sum] = "79cc1d0bff8603d3a550fa63802cd1db"
-SRC_URI[sha256sum] = "e4ce5d56ae4a9611d51ba0cc2ea45806f9539a18aceb4aa70b8ded50f6923c4f"
+SRC_URI[md5sum] = "3a5d8b2784c8571dc5557efda4a8c157"
+SRC_URI[sha256sum] = "f402c2051d9b027799a36f17c5e1750dcb4f07070ec46e79108901d03a83aa75"
 
 PARALLEL_MAKE = ""
 
