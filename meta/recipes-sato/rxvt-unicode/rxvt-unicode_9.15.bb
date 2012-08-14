@@ -28,10 +28,6 @@ ALTERNATIVE_PATH = "${bindir}/rxvt"
 
 CFLAGS_append = " -fpermissive"
 
-# This is necessary so that the "tic" command executed during the install can
-# link with the correct libary in staging.
-export LD_LIBRARY_PATH = "${STAGING_LIBDIR_NATIVE}"
-
 EXTRA_OECONF = "--enable-menubar --enable-xim \
 		--enable-utmp --enable-wtmp --enable-lastlog \
 		--disable-strings --with-term=rxvt --enable-keepscrolling \
