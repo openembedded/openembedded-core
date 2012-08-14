@@ -194,7 +194,6 @@ RDEPENDS_task-core-lsb-runtime-add = "\
     eglibc-localedata-posix \
     eglibc-extra-nss \
     eglibc-pcprofile \
-    eglibc-pic \
     eglibc-utils \
 "
 
