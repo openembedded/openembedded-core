@@ -343,9 +343,10 @@ int main(int argc, char **argv)
 
     const char *dblistfn = argv[optind];
 
+    rpmcliInit(argc, argv, NULL);
+
     //rpmSetVerbosity(RPMLOG_DEBUG);
 
-    rpmReadConfigFiles( NULL, NULL );
     rpmDefineMacro(NULL, "__dbi_txn create nofsync", RMIL_CMDLINE);
 
     rc = loadTs(&ts, &tscount, dblistfn);
