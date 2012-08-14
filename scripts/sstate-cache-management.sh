@@ -132,13 +132,12 @@ remove_duplicated () {
 
   sstate_suffixes="deploy-rpm deploy-ipk deploy-deb deploy package populate-lic populate-sysroot"
 
-  cd $cache_dir || exit 1
   # Save all the sstate files in a file
   sstate_list=`mktemp` || exit 1
-  ls sstate-*.tgz >$sstate_list
+  find $cache_dir -path '*/??/sstate-*.tgz' >$sstate_list
   echo -n "Figuring out the archs in the sstate cache dir ... "
   for arch in $all_archs; do
-      grep -q -w $arch $sstate_list
+      grep -q "\-$arch-" $sstate_list
       [ $? -eq 0 ] && ava_archs="$ava_archs $arch"
   done
   echo "Done"
@@ -151,24 +150,24 @@ remove_duplicated () {
 
   for suffix in $sstate_suffixes; do
       # Save the file list to a file, some suffix's file may not exist
-      ls *_$suffix.tgz >$list_suffix 2>/dev/null
+      grep "sstate-.*_$suffix.tgz" $sstate_list >$list_suffix 2>/dev/null
       local deleted=0
       echo -n "Figuring out the sstate-xxx_$suffix.tgz ... "
       # There are at list 6 dashes (-) after arch, use this to avoid the
       # greedy match of sed.
       file_names=`for arch in $ava_archs; do
-          sed -ne 's/^\(sstate-.*\)-'"$arch"'-.*-.*-.*-.*-.*-.*/\1/p' $list_suffix
+          sed -ne 's#.*/../\(sstate-.*\)-'"$arch"'-.*-.*-.*-.*-.*-.*#\1#p' $list_suffix
       done | sort -u`
 
       fn_tmp=`mktemp` || exit 1
       for fn in $file_names; do
           [ -z "$verbose" ] || echo "Analyzing $fn-xxx_$suffix.tgz"
           for arch in $ava_archs; do
-              grep -h "^$fn-$arch-" $list_suffix >>$fn_tmp
+              grep -h "/../$fn-$arch-" $list_suffix >>$fn_tmp
           done
           # Use the access time, also delete the .siginfo file
           to_del=$(ls -u $(cat $fn_tmp) | sed -n '1!p' | sed -e 'p' -e 's/$/.siginfo/')
-          echo $to_del >>$remove_listdir/sstate-xxx_$suffix
+          [ "$to_del" = "" ] || echo $to_del >>$remove_listdir/sstate-xxx_$suffix
           let deleted=$deleted+`echo $to_del | wc -w`
           rm -f $fn_tmp
       done
@@ -181,7 +180,10 @@ remove_duplicated () {
       if [ "$confirm" = "y" -o "$confirm" = "Y" ]; then
           for list in `ls $remove_listdir/`; do
               echo -n "Removing $list.tgz (`cat $remove_listdir/$list | wc -w` files) ... "
-              rm -f $verbose `cat $remove_listdir/$list`
+              # Remove them one by one to avoid the argument list too long error
+              for i in `cat $remove_listdir/$list`; do
+                  rm -f $verbose $i
+              done
               echo "Done"
           done
           echo "$total_deleted files have been removed!"
@@ -200,7 +202,7 @@ rm_by_stamps (){
 
   local cache_list=`mktemp` || exit 1
   local keep_list=`mktemp` || exit 1
-  local mv_to_dir=`mktemp -d -p $cache_dir` || exit 1
+  local rm_list=`mktemp` || exit 1
   local suffixes
   local sums
   local all_sums
@@ -218,7 +220,7 @@ rm_by_stamps (){
   echo "Done"
 
   # Save all the state file list to a file
-  ls $cache_dir/sstate-*.tgz >$cache_list
+  find $cache_dir -path '*/??/sstate-*.tgz' | sort -u -o $cache_list
 
   echo -n "Figuring out the files which will be removed ... "
   for i in $all_sums; do
@@ -227,21 +229,18 @@ rm_by_stamps (){
   echo "Done"
 
   if [ -s $keep_list ]; then
-      let total_deleted=(`cat $cache_list | wc -w` - `cat $keep_list | wc -l`)*2
+      sort -u $keep_list -o $keep_list
+      comm -1 -3 $keep_list $cache_list > $rm_list
+      let total_deleted=(`cat $rm_list | wc -w`)*2
 
       if [ $total_deleted -gt 0 ]; then
           read_confirm
           if [ "$confirm" = "y" -o "$confirm" = "Y" ]; then
               echo "Removing sstate cache files ... ($total_deleted files)"
-              # Save the file which needs to be kept, remove the others,
-              # then move it back
-              for i in `cat $keep_list`; do
-                  mv $i $mv_to_dir
-                  mv $i.siginfo $mv_to_dir || true
+              # Remove them one by one to avoid the argument list too long error
+              for i in `cat $rm_list`; do
+                  rm -f $verbose $i $i.siginfo
               done
-              rm -f $verbose $cache_dir/sstate-*.tgz
-              rm -f $verbose $cache_dir/sstate-*.tgz.siginfo
-              mv $mv_to_dir/* $cache_dir/
               echo "$total_deleted files have been removed"
           else
               do_nothing
@@ -255,7 +254,7 @@ rm_by_stamps (){
 
   rm -f $cache_list
   rm -f $keep_list
-  rmdir $mv_to_dir
+  rm -f $rm_list
 }
 
 # Parse arguments
