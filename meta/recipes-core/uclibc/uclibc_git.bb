@@ -4,13 +4,14 @@ require uclibc.inc
 require uclibc-package.inc
 require uclibc-git.inc
 
-STAGINGCC = "gcc-cross-intermediate"
-STAGINGCC_virtclass-nativesdk = "gcc-crosssdk-intermediate"
+STAGINGCC = "gcc-cross-initial"
+STAGINGCC_virtclass-nativesdk = "gcc-crosssdk-initial"
 
 PROVIDES += "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
 
 DEPENDS = "virtual/${TARGET_PREFIX}binutils \
-           virtual/${TARGET_PREFIX}gcc-intermediate \
+           virtual/${TARGET_PREFIX}gcc-initial \
+           virtual/${TARGET_PREFIX}libc-initial \
            linux-libc-headers ncurses-native"
 
 RDEPENDS_${PN}-dev = "linux-libc-headers-dev"

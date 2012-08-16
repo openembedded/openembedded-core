@@ -15,19 +15,15 @@ do_install() {
 	# Install initial headers into the cross dir
 	make PREFIX=${D} DEVEL_PREFIX=${prefix}/ RUNTIME_PREFIX=/ \
 		install_headers install_startfiles
-	${CC} -nostdlib -nostartfiles -shared -x c /dev/null \
-		-o lib/libc.so
-	${CC} -nostdlib -nostartfiles -shared -x c /dev/null \
-		-o lib/libm.so
-	install -d ${D}${libdir}
-	install -m 755 lib/lib[cm].so ${D}${libdir}
-	# add links to linux-libc-headers: gcc-{cross,crossdk}-intermediate need this.
+
+        # add links to linux-libc-headers: final uclibc build need this.
         for t in linux asm asm-generic; do
                 if [ -d ${D}${includedir}/$t ]; then
                     rm -rf ${D}${includedir}/$t
                 fi
                 ln -sf ${STAGING_DIR_TARGET}${includedir}/$t ${D}${includedir}/
         done
+
 }
 do_compile() {
 	:
