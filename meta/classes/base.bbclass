@@ -175,7 +175,7 @@ def preferred_ml_updates(d):
 
     versions = []
     providers = []
-    blacklists = d.getVarFlags('PNBLACKLIST') or []
+    blacklists = d.getVarFlags('PNBLACKLIST') or {}
     for v in d.keys():
         if v.startswith("PREFERRED_VERSION_"):
             versions.append(v)
