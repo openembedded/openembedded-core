@@ -83,13 +83,13 @@ configmangle = '/^KERNEL_HEADERS/d; \
 OE_FEATURES := "${@features_to_uclibc_conf(d)}"
 OE_DEL      := "${@features_to_uclibc_del(d)}"
 python () {
-  if "${OE_DEL}":
-    d.setVar('configmangle_append', "${OE_DEL}" + "\n")
-  if "${OE_FEATURES}":
-    d.setVar('configmangle_append',
+    if "${OE_DEL}":
+        d.setVar('configmangle_append', "${OE_DEL}" + "\n")
+    if "${OE_FEATURES}":
+        d.setVar('configmangle_append',
                    "/^### DISTRO FEATURES$/a\\\n%s\n\n" %
                    ("\\n".join((d.expand("${OE_FEATURES}").split("\n")))))
-  d.setVar('configmangle_append',
+    d.setVar('configmangle_append',
                  "/^### CROSS$/a\\\n%s\n" %
                   ("\\n".join(["CROSS_COMPILER_PREFIX=\"${TARGET_PREFIX}\"",
                         "UCLIBC_EXTRA_CFLAGS=\"${UCLIBC_EXTRA_CFLAGS}\"",
@@ -99,23 +99,23 @@ python () {
                          "SHARED_LIB_LOADER_PREFIX=\"/lib\"",
                         ])
                   ))
-  d.setVar('configmangle_append',
+    d.setVar('configmangle_append',
                  "/^### TGT$/a\\\nTARGET_ARCH=\"%s\"\\nTARGET_%s=y\n" %
                         ("${UCLIBC_ARCH}", "${UCLIBC_ARCH}"))
-  d.setVar('configmangle_append',
+    d.setVar('configmangle_append',
     "/^### FPU$/a\\\n%s\n\n" % (["UCLIBC_HAS_FPU=y","# UCLIBC_HAS_FPU is not set"][d.getVar('TARGET_FPU', True) in [ 'soft' ]]))
-  if "${UCLIBC_ENDIAN}":
-    d.setVar('configmangle_append',
+    if "${UCLIBC_ENDIAN}":
+        d.setVar('configmangle_append',
                    "/^### ABI$/a\\\nARCH_WANTS_%s_ENDIAN=y\n\n" % ("${UCLIBC_ENDIAN}"))
-  if "${UCLIBC_ABI}":
-    d.setVar('configmangle_append',
+    if "${UCLIBC_ABI}":
+        d.setVar('configmangle_append',
                    "/^### ABI$/a\\\nCONFIG_%s=y\n\n" % ("${UCLIBC_ABI}"))
 }
 
 python do_patch_append() {
-        import subprocess
-        subprocess.call("ln -sf ${STAGING_INCDIR}/linux ${S}/include/linux", shell=True)
-        subprocess.call("ln -sf ${STAGING_INCDIR}/asm ${S}/include/asm", shell=True)
+    import subprocess
+    subprocess.call("ln -sf ${STAGING_INCDIR}/linux ${S}/include/linux", shell=True)
+    subprocess.call("ln -sf ${STAGING_INCDIR}/asm ${S}/include/asm", shell=True)
 }
 
 do_configure() {
