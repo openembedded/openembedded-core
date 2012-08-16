@@ -24,8 +24,8 @@ FILES_${PN}-dbg =+ "${libdir}/xtables/.debug"
 SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://types.h-add-defines-that-are-required-for-if_packet.patch"
 
-SRC_URI[md5sum] = "5ab24ad683f76689cfe7e0c73f44855d"
-SRC_URI[sha256sum] = "9be675696f41cd4f35cc332b667d285fe9489ca93c8e1f77804bd04b3315a522"
+SRC_URI[md5sum] = "8bf564ea8348522fc1db727868828def"
+SRC_URI[sha256sum] = "867c144e60075e7bebe6fcecf0b65169d5e2d1fa5ceec2ebd9780cd5026123ea"
 
 inherit autotools
 
