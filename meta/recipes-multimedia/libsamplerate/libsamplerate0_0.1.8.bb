@@ -3,8 +3,8 @@ SECTION = "libs"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://src/samplerate.c;beginline=1;endline=17;md5=d0807c35fc906466d24a50463534815a"
-DEPENDS = "flac"
-PR = "r0"
+DEPENDS = "flac libsndfile1"
+PR = "r1"
 
 SRC_URI = "http://www.mega-nerd.com/SRC/libsamplerate-${PV}.tar.gz"
 
