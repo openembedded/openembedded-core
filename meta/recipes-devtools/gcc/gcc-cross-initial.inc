@@ -19,11 +19,10 @@ EXTRA_OECONF = "--with-newlib \
                 ${OPTSPACE} \
 		--program-prefix=${TARGET_PREFIX} \
 		--with-sysroot=${STAGING_DIR_TARGET} \
-		--with-build-sysroot=${GCCCROSS_BUILDSYSROOT} \
+		--with-build-sysroot=${STAGING_DIR_TARGET} \
 		${EXTRA_OECONF_INITIAL} \
 		${@base_contains('DISTRO_FEATURES', 'ld-is-gold', '--with-ld=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld.bfd', '', d)} \
 		${EXTRA_OECONF_FPU}"
-
 
 GCCCROSS_BUILDSYSROOT = "${B}/tmpsysroot"
 
@@ -39,13 +38,42 @@ do_configure_prepend () {
 do_compile () {
     oe_runmake all-gcc all-target-libgcc
 }
-# fixed limits.h infact includes the so called real limits.h
-# which should come from libc but when we build libc-initial
-# then bunch of configure tests include fixed limits.h which in turn
-# includes real limits.h but this real limits.h is not staged yet
-# so we overwirte the generated include-fixed/limits.h for gcc-cross-initial
-# to get rid references to real limits.h
+do_install () {
+	oe_runmake 'DESTDIR=${D}' install-gcc install-target-libgcc
 
-do_install_append () {
-    cp gcc/include-fixed/limits.h ${D}${gcclibdir}/${TARGET_SYS}/${BINV}/include-fixed/limits.h
+	# We don't really need this (here shares/ contains man/, info/, locale/).
+	rm -rf ${D}${datadir}/
+
+	# We use libiberty from binutils
+	find ${D}${exec_prefix}/lib -name libiberty.a | xargs rm -f
+	find ${D}${exec_prefix}/lib -name libiberty.h | xargs rm -f
+
+	# Insert symlinks into libexec so when tools without a prefix are searched for, the correct ones are
+	# found. These need to be relative paths so they work in different locations.
+	dest=${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/
+	install -d $dest
+	for t in ar as ld nm objcopy objdump ranlib strip g77 gcc cpp gfortran; do
+		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t $dest$t
+	done
+	# fixed limits.h infact includes the so called real limits.h
+	# which should come from libc but when we build libc-initial
+	# then bunch of configure tests include fixed limits.h which in turn
+	# includes real limits.h but this real limits.h is not staged yet
+	# so we overwirte the generated include-fixed/limits.h for gcc-cross-initial
+	# to get rid references to real limits.h
+	cp gcc/include-fixed/limits.h ${D}${gcclibdir}/${TARGET_SYS}/${BINV}/include-fixed/limits.h
 }
+#
+# Override the default sysroot staging copy since this won't look like a target system
+#
+sysroot_stage_all() {
+	sysroot_stage_dir ${D} ${SYSROOT_DESTDIR}
+	install -d ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${target_base_libdir}/
+	install -d ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${target_libdir}/
+	mv ${SYSROOT_DESTDIR}${target_base_libdir}/* ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${target_base_libdir}/ || true
+	mv ${SYSROOT_DESTDIR}${target_libdir}/* ${SYSROOT_DESTDIR}${STAGING_DIR_TARGET}${target_libdir}/ || true
+}
+
+do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR_HOST} ${SYSROOT_DESTDIR}/${STAGING_DIR_TARGET}/${target_base_libdir}"
+do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_HOST} ${STAGING_DIR_TCBOOTSTRAP}/${target_base_libdir}"
+
