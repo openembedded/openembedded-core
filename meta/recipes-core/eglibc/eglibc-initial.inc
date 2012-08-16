@@ -32,6 +32,9 @@ do_install () {
        install-bootstrap-headers=yes install-headers
 
        oe_runmake csu/subdir_lib
+       mkdir -p ${D}${libdir}/
+       install -m 644 csu/crt[1in].o ${D}${libdir}
+
        # Two headers -- stubs.h and features.h -- aren't installed by install-headers,
        # so do them by hand.  We can tolerate an empty stubs.h for the moment.
        # See e.g. http://gcc.gnu.org/ml/gcc/2002-01/msg00900.html
@@ -42,15 +45,10 @@ do_install () {
        if [ -e ${B}/bits/stdio_lim.h ]; then
                cp ${B}/bits/stdio_lim.h  ${D}${includedir}/bits/
        fi
-       mkdir -p ${D}${libdir}/
-       install -m 644 csu/crt[1in].o ${D}${libdir}
-       ${CC} -nostdlib -nostartfiles -shared -x c /dev/null \
-               -o ${D}${libdir}/libc.so
-
-	# add links to linux-libc-headers: gcc-{cross,crossdk}-intermediate need this.
-	for t in linux asm asm-generic; do
-		ln -s ${STAGING_DIR_TARGET}${includedir}/$t ${D}${includedir}/
-	done
+       # add links to linux-libc-headers: final eglibc build need this.
+       for t in linux asm asm-generic; do
+               ln -s ${STAGING_DIR_TARGET}${includedir}/$t ${D}${includedir}/
+       done
 }
 
 do_install_locale() {
