@@ -32,8 +32,10 @@ inherit autotools lib_package binconfig
 
 OE_BINCONFIG_EXTRA_MANGLE = " -e 's:location=source:location=installed:'"
 
-do_configure_prepend() {
-	cp ${STAGING_DATADIR}/apr/apr_rules.mk ${S}/build/rules.mk
+do_configure_append() {
+	if [ "${PN}" == "${BPN}" ]; then
+		cp ${STAGING_DATADIR}/apr/apr_rules.mk ${S}/build/rules.mk
+	fi
 }
 do_configure_prepend_virtclass-native() {
 	cp ${STAGING_DATADIR_NATIVE}/apr/apr_rules.mk ${S}/build/rules.mk
