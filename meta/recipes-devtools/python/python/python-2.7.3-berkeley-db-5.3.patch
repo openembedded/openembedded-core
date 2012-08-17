@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [not author]
+
 Fix to support db 5.3 for bsddb module in python 2.7.2
 
 This patch is made from the db5.1.diff in

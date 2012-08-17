@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [embedded specific]
+
 Remove the RPATH to avoid QA issue warning.
 
 RP: Added secondary unnecessary rpath to the list 2012/8/7
