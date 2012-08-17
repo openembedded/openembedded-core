@@ -332,6 +332,17 @@ if [ -f "$YOCTOADT_INSTALL_LOG_FILE" ]; then
   rm $YOCTOADT_INSTALL_LOG_FILE
 fi
 
+echo -n "Please enter the install location (default: $DEFAULT_INSTALL_FOLDER): "
+read INSTALL_FOLDER
+
+if [ "$INSTALL_FOLDER" = "" ]; then
+    INSTALL_FOLDER=$DEFAULT_INSTALL_FOLDER
+fi
+
+eval INSTALL_FOLDER=$INSTALL_FOLDER
+export INSTALL_FOLDER=$(readlink -m $INSTALL_FOLDER)
+
+clear
 
 usage
 

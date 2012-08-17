@@ -50,8 +50,8 @@ install_native_sdk()
 
 echo_info "\nStart installing selected native ADT for archs: $YOCTOADT_TARGETS..."
 
-# where the packages are installed. Currently only / is supported
-NATIVE_INSTALL_DIR="/"
+# where the packages are installed.
+NATIVE_INSTALL_DIR=$INSTALL_FOLDER
 
 if [ -d "$INSTALL_FOLDER" ]; then
   echo_info "\nNative ADT installation directory \"$INSTALL_FOLDER\" already exists! Continue installation will override its contents!"
@@ -59,28 +59,51 @@ if [ -d "$INSTALL_FOLDER" ]; then
 fi
 
 #Now begin to install native sdk and extract qemu rootfs which needs privilege rights
-echo_info "#######################################################################"
-echo_info "Please note from this point on installation requires sudo password ..."
-echo_info "#######################################################################"
-username='id -nu'
+#depending on the install location
+username=$(id -nu)
+
+# find the owner of the parent
+dir=$NATIVE_INSTALL_DIR
+while [ 1 ]; do
+    if [ -d $dir ]; then
+        owner=$(stat -c %U $dir)
+        break
+   else
+        dir=$(dirname $dir)
+   fi
+done
+
+if [ "$owner" = "$username" ]; then
+    SUDO=""
+else
+    echo_info "#######################################################################"
+    echo_info "Please note from this point on installation requires sudo password ..."
+    echo_info "#######################################################################"
+    SUDO=sudo
+fi
+
 #we need to make this directory firstly since opkg need to use it.
 OPKG_LOCK_DIR="$NATIVE_INSTALL_DIR/$OPKG_LIBDIR/opkg"
 if [ ! -d "$OPKG_LOCK_DIR" ]; then
-  sudo mkdir -p $OPKG_LOCK_DIR
+  $SUDO mkdir -p $OPKG_LOCK_DIR
   echo_info "Successfully create directory $OPKG_LOCK_DIR. "
 #if user delete /opt/xxx, while dangling folders there, report error
 elif [ ! -d "$INSTALL_FOLDER" ]; then
   echo_info "\nDangling opkg cache folder $OPKG_LOCK_DIR detected. Continue installation will remove the folder!"
   confirm_install $1
-  sudo rm -rf $OPKG_LOCK_DIR
-  sudo mkdir -p $OPKG_LOCK_DIR
+  $SUDO rm -rf $OPKG_LOCK_DIR
+  $SUDO mkdir -p $OPKG_LOCK_DIR
 #if user are updating installing, just let him/her go, give her/him prompt
 else
   echo_info "ADT has already been installed. Will update its contents..."
 fi
 
 #first update repository
-OPKG_CMD="sudo -E $LOCAL_OPKG_LOC/bin/opkg-cl"
+if [ "x$SUDO" = "x" ]; then
+    OPKG_CMD="$LOCAL_OPKG_LOC/bin/opkg-cl"
+else
+    OPKG_CMD="sudo -E $LOCAL_OPKG_LOC/bin/opkg-cl"
+fi
 
 echo_info "Updating opkg..."
 $OPKG_CMD -f $OPKG_CONFIG_FILE -o $NATIVE_INSTALL_DIR update &>> $YOCTOADT_INSTALL_LOG_FILE
@@ -117,13 +140,6 @@ for native_target_type in $YOCTOADT_TARGETS; do
 
 done
 
-# Link the ld.so.cache file into the hosts filesystem
-if [ ! -f "$OECORE_NATIVE_SYSROOT/etc/ld.so.cache" ]; then 
-echo_info "Link the ld.so.cache file into the host filesystem"
-sudo ln -s /etc/ld.so.cache $OECORE_NATIVE_SYSROOT/etc/ld.so.cache
-check_result
-fi
-
 if [ "$YOCTOADT_QEMU" == "Y" ] || [ "$YOCTOADT_QEMU" = "y" ]; then
   echo_info "\nInstalling qemu native ..."
   $OPKG_INSTALL_NATIVE_CMD qemu-nativesdk &>> $YOCTOADT_INSTALL_LOG_FILE
@@ -137,6 +153,65 @@ if [ "$YOCTOADT_NFS_UTIL" == "Y" ] || [ "$YOCTOADT_NFS_UTIL" == "y" ]; then
   $OPKG_INSTALL_NATIVE_CMD unfs-server-nativesdk &>> $YOCTOADT_INSTALL_LOG_FILE
   check_result
 fi
+
+# Lose the ./opt/${DISTRO}/${SDK_VERSION} part, we don't really need to keep
+# the entire directory structure. We could patch opkg to do that but it's far
+# simpler to do that here and achieve the same result.
+# This is done in two steps:
+# Step 1: copy ./opt/${DISTRO}/${SDK_VERSION} contents to $NATIVE_INSTALL_DIR.
+# We cannot use move if $NATIVE_INSTALL_DIR is not empty (for example: contains
+# another SDK)
+$SUDO cp -r $NATIVE_INSTALL_DIR/$DEFAULT_INSTALL_FOLDER/* $NATIVE_INSTALL_DIR
+
+# delete the source directory now
+$SUDO rm -rf $NATIVE_INSTALL_DIR/$DEFAULT_INSTALL_FOLDER/*
+
+# Step 2: Delete the ./opt/${DISTRO}/${SDK_VERSION} directories too, they should be empty
+dir=$NATIVE_INSTALL_DIR/$DEFAULT_INSTALL_FOLDER
+while [ "$dir" != "$NATIVE_INSTALL_DIR" ]; do
+    # if the user chose / as the install folder, then we should leave /opt in place
+    if [ "$dir" = "/opt" ]; then
+        break
+    fi
+
+    # try to delete the directory, only if it's empty
+    $SUDO rmdir $dir
+    if [ $? -ne 0 ]; then
+        break
+    fi
+
+    # go to the next directory
+    dir=$(dirname $dir)
+done
+
+# Link the ld.so.cache file into the hosts filesystem
+if [ ! -f "$OECORE_NATIVE_SYSROOT/etc/ld.so.cache" ]; then
+echo_info "Link the ld.so.cache file into the host filesystem"
+$SUDO ln -s /etc/ld.so.cache $OECORE_NATIVE_SYSROOT/etc/ld.so.cache
+check_result
+fi
+
+# relocate binaries
+echo_info "\nRelocating binaries ..."
+escaped_sdkpath=$(echo $DEFAULT_INSTALL_FOLDER |sed -e "s:[\+\.]:\\\\\\\\\0:g")
+
+# We don't change the script in-place since we may want the user to re-run
+# adt-installer script
+$SUDO sed -e "s:##DEFAULT_INSTALL_DIR##:$escaped_sdkpath:" scripts/relocate_sdk.py > scripts/relocate_sdk_tmp.py
+$SUDO chmod +x scripts/relocate_sdk_tmp.py
+
+dl_path=$(find $OECORE_NATIVE_SYSROOT/lib -name "ld-linux*")
+executable_files=$(find $OECORE_NATIVE_SYSROOT -type f -perm +111)
+
+$SUDO scripts/relocate_sdk_tmp.py $INSTALL_FOLDER $dl_path $executable_files
+check_result
+
+# replace /opt/${DISTRO}/${SDK_VERSION} with the install folder in all configs
+env_setup_script=$(find $NATIVE_INSTALL_DIR -name "environment-setup-*")
+$SUDO sed -i -e "s:$DEFAULT_INSTALL_FOLDER:$NATIVE_INSTALL_DIR:g" $env_setup_script
+
+find $OECORE_NATIVE_SYSROOT -type f -exec file '{}' \;|grep ":.*ASCII.*text"|cut -d':' -f1|\
+    xargs $SUDO sed -i -e "s:$DEFAULT_INSTALL_FOLDER:$NATIVE_INSTALL_DIR:g"
 
 echo_info "\nSuccessfully installed selected native ADT!"
 }
@@ -180,7 +255,7 @@ else
 fi
 
 if [ ! -z "$env_filename" ]; then
-  sudo sed -i -e "s%##SDKTARGETSYSROOT##%$target_sysroot%g" $env_filename
+  $SUDO sed -i -e "s%##SDKTARGETSYSROOT##%$target_sysroot%g" $env_filename
 else
   echo_info "[ADT_INST] Error: Failed to find environment script for arch: $1"
   return 1 
