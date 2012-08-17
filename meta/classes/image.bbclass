@@ -111,13 +111,20 @@ python () {
             bb.fatal("%s contains conflicting IMAGE_FEATURES %s %s" % (d.getVar('PN', True), feature, ' '.join(list(temp))))
 
     d.setVar('IMAGE_FEATURES', ' '.join(list(remain_features)))
+}
+
+python image_handler () {
+    if not isinstance(e, bb.event.RecipeParsed):
+        return
 
     # If we don't do this we try and run the mapping hooks while parsing which is slow
     # bitbake should really provide something to let us know this...
-    if d.getVar('BB_WORKERCONTEXT', True) is not None:
-        runtime_mapping_rename("PACKAGE_INSTALL", d)
-        runtime_mapping_rename("PACKAGE_INSTALL_ATTEMPTONLY", d)
+    if e.data.getVar('BB_WORKERCONTEXT', True) is not None:
+        runtime_mapping_rename("PACKAGE_INSTALL", e.data)
+        runtime_mapping_rename("PACKAGE_INSTALL_ATTEMPTONLY", e.data)
+
 }
+addhandler image_handler
 
 #
 # Get a list of files containing device tables to create.
