@@ -45,6 +45,12 @@ do_compile_prepend_virtclass-native () {
 		# We need the 32-bit libpseudo on a 64-bit machine...
                 # ... and we really, really, hope that the native host is
                 # x86, or else --bits may not work.
+
+		# if we're being rebuilt due to a dependency change, we need to make sure
+		# everything is clean before we configure and build -- if we haven't previously
+		# built this will fail and be ignored.
+		make ${MAKEOPTS} distclean || :
+
 		./configure --prefix=${prefix} --libdir=${prefix}/lib/pseudo/lib --with-sqlite=${STAGING_DIR_TARGET}${exec_prefix} --bits=32 --without-rpath
 		oe_runmake ${MAKEOPTS} libpseudo
 		# prevent it from removing the lib, but remove everything else
