@@ -448,7 +448,7 @@ python perform_packagecopy () {
     subprocess.call('tar -cf - -C %s -ps . | tar -xf - -C %s' % (dest, dvar), shell=True)
 
     # replace RPATHs for the nativesdk binaries, to make them relocatable
-    if bb.data.inherits_class('nativesdk', d):
+    if bb.data.inherits_class('nativesdk', d) or bb.data.inherits_class('cross-canadian', d):
         rpath_replace (dvar, d)
 }
 
