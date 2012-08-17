@@ -1,0 +1,42 @@
+libtool: normalize link paths before considering for RPATH
+
+Libtool may be passed link paths of the form "/usr/lib/../lib", which
+fool its detection code into thinking it should be included as an
+RPATH in the generated binary.  Normalize before comparision.
+
+Signed-off-by: Andy Ross <andy.ross@windriver.com>
+Upstream-Status: Pending
+
+diff -ru a/libltdl/config/ltmain.m4sh b/libltdl/config/ltmain.m4sh
+--- a/libltdl/config/ltmain.m4sh	2012-08-16 13:58:55.058900363 -0700
++++ b/libltdl/config/ltmain.m4sh	2012-08-16 16:34:54.616627821 -0700
+@@ -7288,8 +7288,13 @@
+ 	      else
+                 # We only want to hardcode in an rpath if it isn't in the
+                 # default dlsearch path.
++                libdir_norm=`echo $libdir \
++                  | sed 's/\/\+\.\(\/\+\|$\)/\//g' \
++                  | sed 's/[^\/]\+\/\+\.\.\(\/\+\|$\)//g' \
++                  | sed 's/\/\+/\//g' \
++                  | sed 's/\(.\)\/$/\1/g'`
+ 	        case " $sys_lib_dlsearch_path " in
+-	        *" $libdir "*) ;;
++	        *" $libdir_norm "*) ;;
+ 	        *) eval flag=\"$hardcode_libdir_flag_spec\"
+                    func_append dep_rpath " $flag"
+                    ;;
+@@ -8027,8 +8032,13 @@
+ 	  else
+             # We only want to hardcode in an rpath if it isn't in the
+             # default dlsearch path.
++            libdir_norm=`echo $libdir \
++              | sed 's/\/\+\.\(\/\+\|$\)/\//g' \
++              | sed 's/[^\/]\+\/\+\.\.\(\/\+\|$\)//g' \
++              | sed 's/\/\+/\//g' \
++              | sed 's/\(.\)\/$/\1/g'`
+ 	    case " $sys_lib_dlsearch_path " in
+-	    *" $libdir "*) ;;
++	    *" $libdir_norm "*) ;;
+ 	    *) eval flag=\"$hardcode_libdir_flag_spec\"
+                rpath+=" $flag"
+                ;;

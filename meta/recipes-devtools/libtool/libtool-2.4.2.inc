@@ -19,6 +19,7 @@ SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://avoid_absolute_paths_for_general_utils.patch \
            file://fix-rpath.patch \
 	   file://respect-fstack-protector.patch \
+           file://norm-rpath.patch \
           "
 
 SRC_URI[md5sum] = "d2f3b7d4627e69e13514a40e72a24d50"
