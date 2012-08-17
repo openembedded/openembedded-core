@@ -60,10 +60,12 @@ def process_dir (directory, d):
                 # NOTE: This will not work reliably for cross packages, particularly in the case
                 # where your TMPDIR is a short path (i.e. /usr/poky) as chrpath cannot insert an
                 # rpath longer than that which is already set.
-                else:
+                elif rpath.find(tmpdir) != -1:
                     depth = fpath.rpartition(tmpdir)[2].count('/')
                     libpath = rpath.partition(tmpdir)[2].strip()
-
+                else:
+                    new_rpaths.append(rpath.strip())
+                    continue
                 base = "$ORIGIN"
                 while depth > 1:
                     base += "/.."
