@@ -1,6 +1,6 @@
 require gcc-common.inc
 
-PR = "r11"
+PR = "r12"
 
 # Third digit in PV should be incremented after a minor release
 # happens from this branch on gcc e.g. currently its 4.7.1
@@ -75,6 +75,8 @@ SRC_URI = "git://github.com/mirrors/gcc.git;branch=${BRANCH};protocol=git \
 	   file://fix-g++-sysroot.patch \
 	   file://disablesdt.patch \
 	   file://libtool.patch \
+	   file://gcc-armv4-pass-fix-v4bx-to-ld.patch \
+	   file://ppc_no_crtsavres.patch \
 	  "
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/git"
