@@ -13,10 +13,15 @@ LIC_FILES_CHKSUM = "file://${LIC_DIR}/LICENSES;md5=98a1128c4b58120182cbea3b1752d
 inherit native
 inherit autotools
 
-PR = "r0"
+# pick up an eglibc-2.16 patch
+FILESPATH = "${FILE_DIRNAME}/eglibc-${PV}"
+
+PR = "r1"
 SRCREV="19383"
 EGLIBC_BRANCH="eglibc-2_16"
-SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};protocol=http "
+SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};protocol=http \
+	   file://fix_for_centos_5.8.patch;patchdir=.. \
+	  "
 S = "${WORKDIR}/${EGLIBC_BRANCH}/localedef"
 
 do_unpack_append() {
