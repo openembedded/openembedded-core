@@ -1,10 +1,10 @@
 SUMMARY = "Avahi IPv4LL network address configuration daemon"
-DESCRIPTION = "Avahi is a fully LGPL framework for Multicast DNS Service Discovery. It \
+DESCRIPTION = 'Avahi is a fully LGPL framework for Multicast DNS Service Discovery. It \
 allows programs to publish and discover services and hosts running on a local network \
 with no specific configuration. This tool implements IPv4LL, "Dynamic Configuration of \
 IPv4 Link-Local Addresses" (IETF RFC3927), a protocol for automatic IP address \
 configuration from the link-local 169.254.0.0/16 range without the need for a central \
-server."
+server.'
 AUTHOR = "Lennart Poettering <lennart@poettering.net>"
 HOMEPAGE = "http://avahi.org"
 BUGTRACKER = "http://avahi.org/report"
@@ -63,7 +63,9 @@ PACKAGES =+ "avahi-systemd avahi-daemon libavahi-common libavahi-core libavahi-c
 FILES_avahi-systemd = "${systemd_unitdir}"
 FILES_avahi-autoipd = "${sbindir}/avahi-autoipd \
                        ${sysconfdir}/avahi/avahi-autoipd.action \
-                       ${sysconfdir}/dhcp3/*/avahi-autoipd"
+                       ${sysconfdir}/dhcp/*/avahi-autoipd \
+                       ${sysconfdir}/udhcpc.d/00avahi-autoipd \
+                       ${sysconfdir}/udhcpc.d/99avahi-autoipd"
 FILES_libavahi-common = "${libdir}/libavahi-common.so.*"
 FILES_libavahi-core = "${libdir}/libavahi-core.so.*"
 FILES_avahi-daemon = "${sbindir}/avahi-daemon \
@@ -116,10 +118,7 @@ do_install() {
 	rm -rf ${D}/var/run
 	rm -rf ${D}${datadir}/dbus-1/interfaces
 	rm -rf ${D}${libdir}/avahi
-}
 
-do_install_avahi-autoipd() {
-	autotools_do_install
 	install -d ${D}${sysconfdir}/udhcpc.d
 	install ${WORKDIR}/00avahi-autoipd ${D}${sysconfdir}/udhcpc.d
 	install ${WORKDIR}/99avahi-autoipd ${D}${sysconfdir}/udhcpc.d
