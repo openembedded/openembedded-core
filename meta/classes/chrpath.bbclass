@@ -74,9 +74,11 @@ def process_dir (directory, d):
             if len(new_rpaths):
                 args = ":".join(new_rpaths)
                 #bb.note("Setting rpath for %s to %s" %(fpath, args))
-                ret = sub.call([cmd, '-r', args, fpath])
-                if ret != 0:
-                    bb.error("chrpath command failed with exit code %d" % ret)
+                p = sub.Popen([cmd, '-r', args, fpath],stdout=sub.PIPE,stderr=sub.PIPE)
+                out, err = p.communicate()
+                if p.returncode != 0:
+                    bb.error("%s: chrpath command failed with exit code %d:\n%s%s" % (d.getVar('PN', True), p.returncode, out, err))
+                    raise bb.build.FuncFailed
 
             if perms:
                 os.chmod(fpath, perms)
