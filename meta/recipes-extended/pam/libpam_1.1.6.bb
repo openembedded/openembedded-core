@@ -7,21 +7,17 @@ SECTION = "base"
 # /etc/pam.d comes from Debian libpam-runtime in 2009-11 (at that time 
 # libpam-runtime-1.0.1 is GPLv2+), by openembedded
 LICENSE = "GPLv2+ | BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=ca0395de9a86191a078b8b79302e3083"
+LIC_FILES_CHKSUM = "file://COPYING;md5=7eb5c1bf854e8881005d673599ee74d3"
 
-PR = "r6"
-
-SRC_URI = "https://fedorahosted.org/releases/l/i/linux-pam/Linux-PAM-${PV}.tar.bz2 \
+SRC_URI = "http://linux-pam.org/library/Linux-PAM-${PV}.tar.bz2 \
            file://99_pam \
            file://pam.d/* \
            file://libpam-xtests.patch \
-           file://include-sys-resource.patch \
           "
+SRC_URI[md5sum] = "7b73e58b7ce79ffa321d408de06db2c4"
+SRC_URI[sha256sum] = "bab887d6280f47fc3963df3b95735a27a16f0f663636163ddf3acab5f1149fc2"
 
 SRC_URI_append_libc-uclibc = " file://pam-no-innetgr.patch"
-
-SRC_URI[md5sum] = "927ee5585bdec5256c75117e9348aa47"
-SRC_URI[sha256sum] = "65def4df04254dc4c5156859d36c34ad6d7afbcf3adbf2780530ebc4dbf2a116"
 
 DEPENDS = "bison flex flex-native cracklib"
 
