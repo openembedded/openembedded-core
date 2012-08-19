@@ -1,0 +1,24 @@
+Avoid the failure:
+
+| mkdir -p /etc/security/namespace.d
+| mkdir: cannot create directory `/etc/security/namespace.d': Permission denied
+
+if /etc/security/namespace.d doesn't exist. The DESTDIR prefix is missing.
+
+RP 2012/8/19
+
+Upstream-Status: Pending
+
+Index: Linux-PAM-1.1.6/modules/pam_namespace/Makefile.am
+===================================================================
+--- Linux-PAM-1.1.6.orig/modules/pam_namespace/Makefile.am	2012-08-15 11:08:43.000000000 +0000
++++ Linux-PAM-1.1.6/modules/pam_namespace/Makefile.am	2012-08-19 12:25:32.311038943 +0000
+@@ -40,7 +40,7 @@
+   secureconf_SCRIPTS = namespace.init
+ 
+ install-data-local:
+-	mkdir -p $(namespaceddir)
++	mkdir -p $(DESTDIR)$(namespaceddir)
+ endif
+ 
+ 
