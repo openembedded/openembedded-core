@@ -3,7 +3,8 @@ require recipes-kernel/linux/linux-yocto.inc
 # We need lzma (as CONFIG_KERNEL_LZMA=y)
 DEPENDS += "xz-native"
 
-KBRANCH = "standard/tiny"
+KBRANCH_DEFAULT = "standard/tiny"
+KBRANCH = "${KBRANCH_DEFAULT}"
 LINUX_KERNEL_TYPE = "tiny"
 KCONFIG_MODE = "--allnoconfig"
 
