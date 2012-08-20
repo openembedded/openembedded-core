@@ -13,10 +13,7 @@ FILESDIR = "${WORKDIR}"
 
 SRC_URI = "\
     git://git.qemu.org/qemu.git;protocol=git \
-    file://qemu-git-qemugl-host.patch \
     file://no-strip.patch \
-    file://fix-nogl.patch \
-    file://qemugl-allow-glxcontext-release.patch \
     file://linker-flags.patch \
     file://qemu-vmware-vga-depth.patch \
     file://enable-i386-linux-user.patch"
