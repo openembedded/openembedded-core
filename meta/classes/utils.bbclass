@@ -246,49 +246,49 @@ oe_machinstall() {
 }
 
 create_cmdline_wrapper () {
-   # Create a wrapper script
-   #
-   # These are useful to work around relocation issues, by setting environment
-   # variables which point to paths in the filesystem.
-   #
-   # Usage: create_wrapper FILENAME [[VAR=VALUE]..]
+	# Create a wrapper script
+	#
+	# These are useful to work around relocation issues, by setting environment
+	# variables which point to paths in the filesystem.
+	#
+	# Usage: create_wrapper FILENAME [[VAR=VALUE]..]
 
-   cmd=$1
-   shift
+	cmd=$1
+	shift
 
-   echo "Generating wrapper script for $cmd"
+	echo "Generating wrapper script for $cmd"
 
-   mv $cmd $cmd.real
-   cmdname=`basename $cmd`.real
-   cat <<END >$cmd
+	mv $cmd $cmd.real
+	cmdname=`basename $cmd`.real
+	cat <<END >$cmd
 #!/bin/sh
 realpath=\`readlink -fn \$0\`
 exec \`dirname \$realpath\`/$cmdname $@ "\$@"
 END
-   chmod +x $cmd
+	chmod +x $cmd
 }
 
 create_wrapper () {
-   # Create a wrapper script
-   #
-   # These are useful to work around relocation issues, by setting environment
-   # variables which point to paths in the filesystem.
-   #
-   # Usage: create_wrapper FILENAME [[VAR=VALUE]..]
+	# Create a wrapper script
+	#
+	# These are useful to work around relocation issues, by setting environment
+	# variables which point to paths in the filesystem.
+	#
+	# Usage: create_wrapper FILENAME [[VAR=VALUE]..]
 
-   cmd=$1
-   shift
+	cmd=$1
+	shift
 
-   echo "Generating wrapper script for $cmd"
+	echo "Generating wrapper script for $cmd"
 
-   mv $cmd $cmd.real
-   cmdname=`basename $cmd`.real
-   cat <<END >$cmd
+	mv $cmd $cmd.real
+	cmdname=`basename $cmd`.real
+	cat <<END >$cmd
 #!/bin/sh
 realpath=\`readlink -fn \$0\`
 exec env $@ \`dirname \$realpath\`/$cmdname "\$@"
 END
-   chmod +x $cmd
+	chmod +x $cmd
 }
 
 def check_app_exists(app, d):

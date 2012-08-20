@@ -205,8 +205,8 @@ def preferred_ml_updates(d):
             continue
         virt = ""
         if pkg.startswith("virtual/"):
-             pkg = pkg.replace("virtual/", "")
-             virt = "virtual/"
+            pkg = pkg.replace("virtual/", "")
+            virt = "virtual/"
         for p in prefixes:
             newname = "PREFERRED_PROVIDER_" + virt + p + "-" + pkg
             if pkg != "kernel":
@@ -353,13 +353,13 @@ python () {
             appends = bb.utils.explode_deps(d.expand(" ".join(appends)))
             newappends = []
             for a in appends:
-               if a.endswith("-native") or a.endswith("-cross"):
-                   newappends.append(a)
-               elif a.startswith("virtual/"):
-                   subs = a.split("/", 1)[1]
-                   newappends.append("virtual/" + prefix + subs + extension)
-               else:
-                   newappends.append(prefix + a + extension)
+                if a.endswith("-native") or a.endswith("-cross"):
+                    newappends.append(a)
+                elif a.startswith("virtual/"):
+                    subs = a.split("/", 1)[1]
+                    newappends.append("virtual/" + prefix + subs + extension)
+                else:
+                    newappends.append(prefix + a + extension)
             return newappends
 
         def appendVar(varname, appends):

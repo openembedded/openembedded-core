@@ -174,7 +174,7 @@ def sstate_installpkg(ss, d):
     sstatepkg = d.getVar('SSTATE_PKG', True) + '_' + ss['name'] + ".tgz"
 
     if not os.path.exists(sstatepkg):
-       pstaging_fetch(sstatefetch, sstatepkg, d)
+        pstaging_fetch(sstatefetch, sstatepkg, d)
 
     if not os.path.isfile(sstatepkg):
         bb.note("Staging package %s does not exist" % sstatepkg)
@@ -259,10 +259,10 @@ def sstate_clean_manifest(manifest, d):
         # so we ignore errors here.
         try:
             if entry.endswith("/"):
-               if os.path.islink(entry[:-1]):
-                  os.remove(entry[:-1])
-               elif os.path.exists(entry) and len(os.listdir(entry)) == 0:
-                  os.rmdir(entry[:-1])
+                if os.path.islink(entry[:-1]):
+                    os.remove(entry[:-1])
+                elif os.path.exists(entry) and len(os.listdir(entry)) == 0:
+                    os.rmdir(entry[:-1])
             else:
                 oe.path.remove(entry)
         except OSError:
@@ -314,14 +314,14 @@ python sstate_cleanall() {
 
     for manifest in (os.listdir(manifest_dir)):
         if fnmatch.fnmatch(manifest, manifest_pattern):
-             name = manifest.replace(manifest_pattern[:-1], "")
-             namemap = d.getVar('SSTATETASKNAMES', True).split()
-             tasks = d.getVar('SSTATETASKS', True).split()
-             if name not in namemap:
-                  continue
-             taskname = tasks[namemap.index(name)]
-             shared_state = sstate_state_fromvars(d, taskname[3:])
-             sstate_clean(shared_state, d)
+            name = manifest.replace(manifest_pattern[:-1], "")
+            namemap = d.getVar('SSTATETASKNAMES', True).split()
+            tasks = d.getVar('SSTATETASKS', True).split()
+            if name not in namemap:
+                continue
+            taskname = tasks[namemap.index(name)]
+            shared_state = sstate_state_fromvars(d, taskname[3:])
+            sstate_clean(shared_state, d)
 }
 
 def sstate_hardcode_path(d):

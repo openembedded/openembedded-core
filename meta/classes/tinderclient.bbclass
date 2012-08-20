@@ -2,20 +2,20 @@ def tinder_http_post(server, selector, content_type, body):
     import httplib
     # now post it
     for i in range(0,5):
-       try:
-           h = httplib.HTTP(server)
-           h.putrequest('POST', selector)
-           h.putheader('content-type', content_type)
-           h.putheader('content-length', str(len(body)))
-           h.endheaders()
-           h.send(body)
-           errcode, errmsg, headers = h.getreply()
-           #print errcode, errmsg, headers
-           return (errcode,errmsg, headers, h.file)
-       except:
-           print "Error sending the report!"
-           # try again
-           pass
+        try:
+            h = httplib.HTTP(server)
+            h.putrequest('POST', selector)
+            h.putheader('content-type', content_type)
+            h.putheader('content-length', str(len(body)))
+            h.endheaders()
+            h.send(body)
+            errcode, errmsg, headers = h.getreply()
+            #print errcode, errmsg, headers
+            return (errcode,errmsg, headers, h.file)
+        except:
+            print "Error sending the report!"
+            # try again
+            pass
 
     # return some garbage
     return (-1, "unknown", "unknown", None)

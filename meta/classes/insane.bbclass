@@ -109,7 +109,7 @@ def package_qa_get_machine_dict():
             "linux-gnux32" :       {
                         "x86_64":     (62,     0,    0,          True,          32),
                       },
-       }
+        }
 
 
 # Currently not being used by default "desktop"
@@ -719,19 +719,19 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
 
     cnf = d.getVar('EXTRA_OECONF', True) or ""
     if "gettext" not in d.getVar('P', True) and "gcc-runtime" not in d.getVar('P', True) and "--disable-nls" not in cnf:
-       ml = d.getVar("MLPREFIX", True) or ""
-       if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('nativesdk', d):
-          gt = "gettext-native"
-       elif bb.data.inherits_class('cross-canadian', d):
-          gt = "gettext-nativesdk"
-       else:
-          gt = "virtual/" + ml + "gettext"
-       deps = bb.utils.explode_deps(d.getVar('DEPENDS', True) or "")
-       if gt not in deps:
-          for config in configs:
-              gnu = "grep \"^[[:space:]]*AM_GNU_GETTEXT\" %s >/dev/null" % config
-              if subprocess.call(gnu, shell=True) == 0:
-                 bb.fatal("""%s required but not in DEPENDS for file %s.
+        ml = d.getVar("MLPREFIX", True) or ""
+        if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('nativesdk', d):
+            gt = "gettext-native"
+        elif bb.data.inherits_class('cross-canadian', d):
+            gt = "gettext-nativesdk"
+        else:
+            gt = "virtual/" + ml + "gettext"
+        deps = bb.utils.explode_deps(d.getVar('DEPENDS', True) or "")
+        if gt not in deps:
+            for config in configs:
+                gnu = "grep \"^[[:space:]]*AM_GNU_GETTEXT\" %s >/dev/null" % config
+                if subprocess.call(gnu, shell=True) == 0:
+                    bb.fatal("""%s required but not in DEPENDS for file %s.
 Missing inherit gettext?""" % (gt, config))
 
     if not package_qa_check_license(workdir, d):

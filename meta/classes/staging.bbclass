@@ -70,8 +70,8 @@ SYSROOT_LOCK = "${STAGING_DIR}/staging.lock"
 
 # We clean out any existing sstate from the sysroot if we rerun configure
 python sysroot_cleansstate () {
-     ss = sstate_state_fromvars(d, "populate_sysroot")
-     sstate_clean(ss, d)
+    ss = sstate_state_fromvars(d, "populate_sysroot")
+    sstate_clean(ss, d)
 }
 do_configure[prefuncs] += "sysroot_cleansstate"
 

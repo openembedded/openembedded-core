@@ -65,7 +65,7 @@ def set_device(e):
     try:
         for line in open("/proc/diskstats", "r"):
             if majordev == int(line.split()[0]) and minordev == int(line.split()[1]):
-               rdev=line.split()[2]
+                rdev=line.split()[2]
     except:
         pass
     file = open(e.data.getVar('DEVFILE', True), "w")
@@ -100,10 +100,10 @@ def get_diskdata(var, dev, data):
     olddiskdata = data.getVar(var, False)
     diskdata = {}
     if olddiskdata is None:
-       return
+        return
     newdiskdata = get_diskstats(dev)
     for key in olddiskdata.iterkeys():
-        diskdata["Start"+key] = str(int(olddiskdata[key]))        
+        diskdata["Start"+key] = str(int(olddiskdata[key]))
         diskdata["End"+key] = str(int(newdiskdata[key]))    
     return diskdata
     

@@ -4,7 +4,7 @@ def __note(msg, d):
 __recipe_sanity_badruntimevars = "RDEPENDS RPROVIDES RRECOMMENDS RCONFLICTS"
 def bad_runtime_vars(cfgdata, d):
     if bb.data.inherits_class("native", d) or \
-       bb.data.inherits_class("cross", d):
+            bb.data.inherits_class("cross", d):
         return
 
     for var in d.getVar("__recipe_sanity_badruntimevars", True).split():
@@ -42,7 +42,7 @@ def var_renames_overwrite(cfgdata, d):
 
 def incorrect_nonempty_PACKAGES(cfgdata, d):
     if bb.data.inherits_class("native", d) or \
-       bb.data.inherits_class("cross", d):
+            bb.data.inherits_class("cross", d):
         if d.getVar("PACKAGES", True):
             return True
 

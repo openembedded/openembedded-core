@@ -172,23 +172,23 @@ package_install_internal_ipk() {
 }
 
 ipk_log_check() {
-       target="$1"
-       lf_path="$2"
+	target="$1"
+	lf_path="$2"
 
-       lf_txt="`cat $lf_path`"
-       for keyword_die in "exit 1" "Collected errors" ERR Fail
-       do
-               if (echo "$lf_txt" | grep -v log_check | grep "$keyword_die") >/dev/null 2>&1
-               then
-                       echo "log_check: There were error messages in the logfile"
-                       echo -e "log_check: Matched keyword: [$keyword_die]\n"
-                       echo "$lf_txt" | grep -v log_check | grep -C 5 -i "$keyword_die"
-                       echo ""
-                       do_exit=1
-               fi
-       done
-       test "$do_exit" = 1 && exit 1
-       true
+	lf_txt="`cat $lf_path`"
+	for keyword_die in "exit 1" "Collected errors" ERR Fail
+	do
+		if (echo "$lf_txt" | grep -v log_check | grep "$keyword_die") >/dev/null 2>&1
+		then
+			echo "log_check: There were error messages in the logfile"
+			echo -e "log_check: Matched keyword: [$keyword_die]\n"
+			echo "$lf_txt" | grep -v log_check | grep -C 5 -i "$keyword_die"
+			echo ""
+			do_exit=1
+		fi
+	done
+	test "$do_exit" = 1 && exit 1
+	true
 }
 
 #

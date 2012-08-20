@@ -105,8 +105,8 @@ python bugzilla_eventhandler() {
     data = e.data
     name = bb.event.getName(event)
     if name == "MsgNote":
-       # avoid recursion
-       return
+        # avoid recursion
+        return
 
     if name == "TaskFailed":
         xmlrpc  = data.getVar("BUGZILLA_XMLRPC", True)

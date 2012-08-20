@@ -150,22 +150,22 @@ def update_alternatives_after_parse(d):
 UPDALTVARS  = "ALTERNATIVE ALTERNATIVE_LINK_NAME ALTERNATIVE_TARGET ALTERNATIVE_PRIORITY"
 
 def gen_updatealternativesvardeps(d):
-   pkgs = (d.getVar("PACKAGES", True) or "").split()
-   vars = (d.getVar("UPDALTVARS", True) or "").split()
+    pkgs = (d.getVar("PACKAGES", True) or "").split()
+    vars = (d.getVar("UPDALTVARS", True) or "").split()
 
-   # First compute them for non_pkg versions
-   for v in vars:
-      for flag in (d.getVarFlags(v) or {}):
-         if flag == "doc" or flag == "vardeps" or flag == "vardepsexp":
-            continue
-         d.appendVar('%s_VARDEPS' % (v), ' %s:%s' % (flag, d.getVarFlag(v, flag, False)))
-
-   for p in pkgs:
-      for v in vars:
-         for flag in (d.getVarFlags("%s_%s" % (v,p)) or {}):
+    # First compute them for non_pkg versions
+    for v in vars:
+        for flag in (d.getVarFlags(v) or {}):
             if flag == "doc" or flag == "vardeps" or flag == "vardepsexp":
-               continue
-            d.appendVar('%s_VARDEPS_%s' % (v,p), ' %s:%s' % (flag, d.getVarFlag('%s_%s' % (v,p), flag, False)))
+                continue
+            d.appendVar('%s_VARDEPS' % (v), ' %s:%s' % (flag, d.getVarFlag(v, flag, False)))
+
+    for p in pkgs:
+        for v in vars:
+            for flag in (d.getVarFlags("%s_%s" % (v,p)) or {}):
+                if flag == "doc" or flag == "vardeps" or flag == "vardepsexp":
+                    continue
+                d.appendVar('%s_VARDEPS_%s' % (v,p), ' %s:%s' % (flag, d.getVarFlag('%s_%s' % (v,p), flag, False)))
 
 python __anonymous() {
     # deprecated stuff...
@@ -176,18 +176,18 @@ python __anonymous() {
 }
 
 def gen_updatealternativesvars(d):
-   ret = []
-   pkgs = (d.getVar("PACKAGES", True) or "").split()
-   vars = (d.getVar("UPDALTVARS", True) or "").split()
+    ret = []
+    pkgs = (d.getVar("PACKAGES", True) or "").split()
+    vars = (d.getVar("UPDALTVARS", True) or "").split()
 
-   for v in vars:
-      ret.append(v + "_VARDEPS")
+    for v in vars:
+        ret.append(v + "_VARDEPS")
 
-   for p in pkgs:
-      for v in vars:
-         ret.append(v + "_" + p)
-         ret.append(v + "_VARDEPS_" + p)
-   return " ".join(ret)
+    for p in pkgs:
+        for v in vars:
+            ret.append(v + "_" + p)
+            ret.append(v + "_VARDEPS_" + p)
+    return " ".join(ret)
 
 # First the deprecated items...
 populate_packages[vardeps] += "ALTERNATIVE_LINKS ALTERNATIVE_NAME ALTERNATIVE_PATH"

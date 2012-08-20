@@ -230,42 +230,42 @@ def splitfile2(debugsrcdir, d):
 
     sourcefile = d.expand("${WORKDIR}/debugsources.list")
     if debugsrcdir and os.path.isfile(sourcefile):
-       dvar = d.getVar('PKGD', True)
-       pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
-       strip = d.getVar("STRIP", True)
-       objcopy = d.getVar("OBJCOPY", True)
-       debugedit = d.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit")
-       workdir = d.getVar("WORKDIR", True)
-       workparentdir = os.path.dirname(workdir)
-       workbasedir = os.path.basename(workdir)
+        dvar = d.getVar('PKGD', True)
+        pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
+        strip = d.getVar("STRIP", True)
+        objcopy = d.getVar("OBJCOPY", True)
+        debugedit = d.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit")
+        workdir = d.getVar("WORKDIR", True)
+        workparentdir = os.path.dirname(workdir)
+        workbasedir = os.path.basename(workdir)
 
-       nosuchdir = []
-       basepath = dvar
-       for p in debugsrcdir.split("/"):
-           basepath = basepath + "/" + p
-           if not os.path.exists(basepath):
-               nosuchdir.append(basepath)
-       bb.mkdirhier(basepath)
+        nosuchdir = []
+        basepath = dvar
+        for p in debugsrcdir.split("/"):
+            basepath = basepath + "/" + p
+            if not os.path.exists(basepath):
+                nosuchdir.append(basepath)
+        bb.mkdirhier(basepath)
 
-       processdebugsrc =  "LC_ALL=C ; sort -z -u '%s' | egrep -v -z '(<internal>|<built-in>)$' | "
-       # We need to ignore files that are not actually ours
-       # we do this by only paying attention to items from this package
-       processdebugsrc += "fgrep -z '%s' | "
-       processdebugsrc += "(cd '%s' ; cpio -pd0mL --no-preserve-owner '%s%s' 2>/dev/null)"
+        processdebugsrc =  "LC_ALL=C ; sort -z -u '%s' | egrep -v -z '(<internal>|<built-in>)$' | "
+        # We need to ignore files that are not actually ours
+        # we do this by only paying attention to items from this package
+        processdebugsrc += "fgrep -z '%s' | "
+        processdebugsrc += "(cd '%s' ; cpio -pd0mL --no-preserve-owner '%s%s' 2>/dev/null)"
 
-       subprocess.call(processdebugsrc % (sourcefile, workbasedir, workparentdir, dvar, debugsrcdir), shell=True)
+        subprocess.call(processdebugsrc % (sourcefile, workbasedir, workparentdir, dvar, debugsrcdir), shell=True)
 
-       # The copy by cpio may have resulted in some empty directories!  Remove these
-       for root, dirs, files in os.walk("%s%s" % (dvar, debugsrcdir)):
-          for d in dirs:
-              dir = os.path.join(root, d)
-              #bb.note("rmdir -p %s" % dir)
-              subprocess.call("rmdir -p %s 2>/dev/null" % dir, shell=True)
+        # The copy by cpio may have resulted in some empty directories!  Remove these
+        for root, dirs, files in os.walk("%s%s" % (dvar, debugsrcdir)):
+            for d in dirs:
+                dir = os.path.join(root, d)
+                #bb.note("rmdir -p %s" % dir)
+                subprocess.call("rmdir -p %s 2>/dev/null" % dir, shell=True)
 
-       # Also remove debugsrcdir if its empty
-       for p in nosuchdir[::-1]:
-           if os.path.exists(p) and not os.listdir(p):
-               os.rmdir(p)
+        # Also remove debugsrcdir if its empty
+        for p in nosuchdir[::-1]:
+            if os.path.exists(p) and not os.listdir(p):
+                os.rmdir(p)
 
 def runstrip(file, elftype, d):
     # Function to strip a single file, called from split_and_strip_files below
@@ -735,7 +735,7 @@ python split_and_strip_files () {
     file_list = {}
     file_links = {}
     if (d.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT', True) != '1') and \
-       (d.getVar('INHIBIT_PACKAGE_STRIP', True) != '1'):
+            (d.getVar('INHIBIT_PACKAGE_STRIP', True) != '1'):
         for root, dirs, files in os.walk(dvar):
             for f in files:
                 file = os.path.join(root, f)
