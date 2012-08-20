@@ -10,7 +10,7 @@ DEPENDS = "expat virtual/libintl ${@base_contains('DISTRO_FEATURES', 'x11', '${X
 DEPENDS_virtclass-native = "expat-native virtual/libintl-native"
 DEPENDS_virtclass-nativesdk = "expat-nativesdk virtual/libintl-nativesdk virtual/libx11"
 
-INC_PR = "r3"
+INC_PR = "r4"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch; \
@@ -69,6 +69,8 @@ EXTRA_OECONF = "--disable-tests \
                 --with-xml=expat \
                 --with-systemdsystemunitdir=${systemd_unitdir}/system/ \
                 ${EXTRA_OECONF_X}"
+
+EXTRA_OECONF_append_virtclass-native = " --disable-selinux"
 
 do_install() {
 	autotools_do_install
