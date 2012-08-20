@@ -19,6 +19,7 @@
 # Global vars
 cache_dir=
 confirm=
+fsym=
 total_deleted=0
 verbose=
 
@@ -57,6 +58,9 @@ Options:
         --stamps-dir=build1/tmp/stamps,build2/tmp/stamps
 
         Conflicts with --remove-duplicated.
+
+  -L, --follow-symlink
+        Rmove both the symbol link and the destination file, default: no.
 
   -y, --yes
         Automatic yes to prompts; assume "yes" as answer to all prompts
@@ -104,6 +108,47 @@ echo_error () {
   exit 1
 }
 
+# Generate the remove list:
+#
+# * Add .done/.siginfo to the remove list
+# * Add destination of symlink to the remove list
+#
+# $1: output file, others: sstate cache file (.tgz)
+gen_rmlist (){
+  local rmlist_file="$1"
+  shift
+  local files="$@"
+  for i in $files; do
+      echo $i >> $rmlist_file
+      # Add the ".siginfo"
+      if [ -e $i.siginfo ]; then
+          echo $i.siginfo >> $rmlist_file
+      fi
+      # Add the destination of symlink
+      if [ -L "$i" ]; then
+          if [ "$fsym" = "y" ]; then
+              dest="`readlink -e $i`"
+              if [ -n "$dest" ]; then
+                  echo $dest >> $rmlist_file
+                  # Remove the .siginfo when .tgz is removed
+                  if [ -f "$dest.siginfo" ]; then
+                      echo $dest.siginfo >> $rmlist_file
+                  fi
+              fi
+          fi
+          # Add the ".tgz.done" and ".siginfo.done" (may exist in the future)
+          base_fn="${i##/*/}"
+          t_fn="$base_fn.done"
+          s_fn="$base_fn.siginfo.done"
+          for d in $t_fn $s_fn; do
+              if [ -f $cache_dir/$d ]; then
+                  echo $cache_dir/$d >> $rmlist_file
+              fi
+          done
+      fi
+  done
+}
+
 # Remove the duplicated cache files for the pkg, keep the newest one
 remove_duplicated () {
 
@@ -134,7 +179,7 @@ remove_duplicated () {
 
   # Save all the sstate files in a file
   sstate_list=`mktemp` || exit 1
-  find $cache_dir -path '*/??/sstate-*.tgz' >$sstate_list
+  find $cache_dir -name 'sstate-*.tgz' >$sstate_list
   echo -n "Figuring out the archs in the sstate cache dir ... "
   for arch in $all_archs; do
       grep -q "\-$arch-" $sstate_list
@@ -156,21 +201,22 @@ remove_duplicated () {
       # There are at list 6 dashes (-) after arch, use this to avoid the
       # greedy match of sed.
       file_names=`for arch in $ava_archs; do
-          sed -ne 's#.*/../\(sstate-.*\)-'"$arch"'-.*-.*-.*-.*-.*-.*#\1#p' $list_suffix
+          sed -ne 's#.*/\(sstate-.*\)-'"$arch"'-.*-.*-.*-.*-.*-.*#\1#p' $list_suffix
       done | sort -u`
 
       fn_tmp=`mktemp` || exit 1
+      rm_list="$remove_listdir/sstate-xxx_$suffix"
       for fn in $file_names; do
           [ -z "$verbose" ] || echo "Analyzing $fn-xxx_$suffix.tgz"
           for arch in $ava_archs; do
-              grep -h "/../$fn-$arch-" $list_suffix >>$fn_tmp
+              grep -h "/$fn-$arch-" $list_suffix >>$fn_tmp
           done
           # Use the access time, also delete the .siginfo file
-          to_del=$(ls -u $(cat $fn_tmp) | sed -n '1!p' | sed -e 'p' -e 's/$/.siginfo/')
-          [ "$to_del" = "" ] || echo $to_del >>$remove_listdir/sstate-xxx_$suffix
-          let deleted=$deleted+`echo $to_del | wc -w`
+          to_del=$(ls -t $(cat $fn_tmp) | sed -n '1!p')
           rm -f $fn_tmp
+          gen_rmlist $rm_list "$to_del"
       done
+      [ ! -s "$rm_list" ] || deleted=`cat $rm_list | wc -l`
       echo "($deleted files will be removed)"
       let total_deleted=$total_deleted+$deleted
   done
@@ -213,33 +259,37 @@ rm_by_stamps (){
   # Figure out all the md5sums in the stamps dir.
   echo -n "Figuring out all the md5sums in stamps dir ... "
   for i in $suffixes; do
-      sums=`find $stamps -maxdepth 2 -name "*\.do_$i\.sigdata.*" | \
-        sed 's#.*\.sigdata\.##' | sort -u`
+      # There is no "\.sigdata" but "_setcene" when it is mirrored
+      # from the SSTATE_MIRRORS, use them to figure out the sum.
+      sums=`find $stamps -maxdepth 2 -name "*.do_$i.*" \
+        -o -name "*.do_${i}_setscene.*" | \
+        sed -ne 's#.*_setscene\.##p' -e 's#.*\.sigdata\.##p' | \
+        sed -e 's#\..*##' | sort -u`
       all_sums="$all_sums $sums"
   done
   echo "Done"
 
   # Save all the state file list to a file
-  find $cache_dir -path '*/??/sstate-*.tgz' | sort -u -o $cache_list
+  find $cache_dir -name 'sstate-*.tgz' | sort -u -o $cache_list
 
   echo -n "Figuring out the files which will be removed ... "
   for i in $all_sums; do
-      grep ".*-$i.*" $cache_list >>$keep_list
+      grep ".*-${i}_*" $cache_list >>$keep_list
   done
   echo "Done"
 
   if [ -s $keep_list ]; then
       sort -u $keep_list -o $keep_list
-      comm -1 -3 $keep_list $cache_list > $rm_list
-      let total_deleted=(`cat $rm_list | wc -w`)*2
-
+      to_del=`comm -1 -3 $keep_list $cache_list`
+      gen_rmlist $rm_list "$to_del"
+      let total_deleted=(`cat $rm_list | wc -w`)
       if [ $total_deleted -gt 0 ]; then
           read_confirm
           if [ "$confirm" = "y" -o "$confirm" = "Y" ]; then
               echo "Removing sstate cache files ... ($total_deleted files)"
               # Remove them one by one to avoid the argument list too long error
               for i in `cat $rm_list`; do
-                  rm -f $verbose $i $i.siginfo
+                  rm -f $verbose $i
               done
               echo "$total_deleted files have been removed"
           else
@@ -271,6 +321,10 @@ while [ -n "$1" ]; do
         ;;
     --yes|-y)
       confirm="y"
+      shift
+        ;;
+    --follow-symlink|-L)
+      fsym="y"
       shift
         ;;
     --extra-layer=*)
