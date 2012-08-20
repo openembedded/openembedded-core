@@ -26,7 +26,7 @@ inherit autotools pkgconfig gettext
 S = "${WORKDIR}/glib-${PV}"
 
 EXTRA_OECONF = "--disable-debug --enable-included-printf=no --disable-dtrace --disable-fam"
-EXTRA_OECONF_virtclass-native = "--disable-dtrace --disable-systemtap --disable-fam"
+EXTRA_OECONF_virtclass-native = "--disable-dtrace --disable-systemtap --disable-fam --disable-selinux"
 EXTRA_OECONF_linuxstdbase = "--enable-included-printf=no --disable-dtrace --disable-fam"
 
 FILES_${PN} = "${libdir}/lib*${SOLIBS} ${sysconfdir}/bash_completion.d ${datadir}/glib-2.0/schemas"
