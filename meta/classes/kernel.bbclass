@@ -191,8 +191,10 @@ kernel_do_install() {
 	if [ -f include/generated/bounds.h ]; then
 		cp include/generated/bounds.h $kerneldir/include/generated/bounds.h
 	fi
-	mkdir -p $kerneldir/arch/${ARCH}/include/generated/
-	cp -fR arch/${ARCH}/include/generated/* $kerneldir/arch/${ARCH}/include/generated/
+	if [ -d arch/${ARCH}/include/generated ]; then
+		mkdir -p $kerneldir/arch/${ARCH}/include/generated/
+		cp -fR arch/${ARCH}/include/generated/* $kerneldir/arch/${ARCH}/include/generated/
+	fi
 
 	# Remove the following binaries which cause strip or arch QA errors
 	# during do_package for cross-compiled platforms
