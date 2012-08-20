@@ -166,6 +166,9 @@ def package_qa_check_useless_rpaths(file, name, d, elf, messages):
     """
     Check for RPATHs that are useless but not dangerous
     """
+    def rpath_eq(a, b):
+        return os.path.normpath(a) == os.path.normpath(b)
+
     if not elf:
         return
 
@@ -181,7 +184,7 @@ def package_qa_check_useless_rpaths(file, name, d, elf, messages):
     	m = rpath_re.match(line)
 	if m:
 	   rpath = m.group(1)
-	   if rpath == libdir or rpath == base_libdir:
+	   if rpath_eq(rpath, libdir) or rpath_eq(rpath, base_libdir):
 	      # The dynamic linker searches both these places anyway.  There is no point in
 	      # looking there again.
 	      messages.append("%s: %s contains probably-redundant RPATH %s" % (name, package_qa_clean_path(file, d), rpath))
