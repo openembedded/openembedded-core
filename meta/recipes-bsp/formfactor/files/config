@@ -28,16 +28,18 @@ if [ -z "$DISPLAY_ORIENTATION" ]; then
     DISPLAY_ORIENTATION=0
 fi
 
-if [ -z "$DISPLAY_WIDTH_PIXELS" ]; then
-    DISPLAY_WIDTH_PIXELS=`/usr/sbin/fbset | grep geometry | awk '{ print $2 }'`
-fi
+if [ -e "/dev/fb" ]; then
+    if [ -z "$DISPLAY_WIDTH_PIXELS" ]; then
+        DISPLAY_WIDTH_PIXELS=`/usr/sbin/fbset | grep geometry | awk '{ print $2 }'`
+    fi
 
-if [ -z "$DISPLAY_HEIGHT_PIXELS" ]; then
-    DISPLAY_HEIGHT_PIXELS=`/usr/sbin/fbset | grep geometry | awk '{ print $3 }'`
-fi
+    if [ -z "$DISPLAY_HEIGHT_PIXELS" ]; then
+        DISPLAY_HEIGHT_PIXELS=`/usr/sbin/fbset | grep geometry | awk '{ print $3 }'`
+    fi
 
-if [ -z "$DISPLAY_BPP" ]; then
-    DISPLAY_BPP=`/usr/sbin/fbset | grep geometry | awk '{ print $6 }'`
+    if [ -z "$DISPLAY_BPP" ]; then
+        DISPLAY_BPP=`/usr/sbin/fbset | grep geometry | awk '{ print $6 }'`
+    fi
 fi
 
 # 
