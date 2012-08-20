@@ -21,6 +21,11 @@ S = "${WORKDIR}/libiconv-${PV}"
 
 inherit autotools pkgconfig gettext
 
+python __anonymous() {
+    if d.getVar("TCLIBC", True) == "eglibc":
+        raise bb.parse.SkipPackage("libiconv is provided for use with uClibc only - eglibc already provides iconv")
+}
+
 EXTRA_OECONF += "--enable-shared --enable-static --enable-relocatable"
 
 LEAD_SONAME = "libiconv.so"
