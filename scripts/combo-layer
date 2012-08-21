@@ -191,7 +191,7 @@ def action_init(conf, args):
             branch = repo.get('branch', "master")
             file_filter = repo.get('file_filter', "")
             runcmd("git archive %s | tar -x -C %s %s" % (branch, extract_dir, file_filter), ldir)
-            lastrev = runcmd("git rev-parse HEAD", ldir).strip()
+            lastrev = runcmd("git rev-parse %s" % branch, ldir).strip()
             conf.update(name, "last_revision", lastrev, initmode=True)
         runcmd("git add .")
         if conf.localconffile:
@@ -475,7 +475,8 @@ def apply_patchlist(conf, repos):
         else:
             logger.info("No patches to apply from %s" % name)
             ldir = conf.repos[name]['local_repo_dir']
-            lastrev = runcmd("git rev-parse HEAD", ldir).strip()
+            branch = conf.repos[name].get('branch', "master")
+            lastrev = runcmd("git rev-parse %s" % branch, ldir).strip()
 
         if lastrev != repo['last_revision']:
             conf.update(name, "last_revision", lastrev)
