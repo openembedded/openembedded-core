@@ -13,24 +13,21 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 DEPENDS = "autogen-native flex-native"
 RDEPENDS_${PN} = "diffutils freetype"
-PR = "r12"
+PR = "r0"
 
 SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
           file://grub-install.in.patch \
-          file://grub-1.99_fix_for_automake_1.11.2.patch \
           file://grub-1.99-fpmath-sse-387-fix.patch \
-          file://grub-1.99-gcc-4.7.0.patch \
-          file://grub-1.99-gcc-4.7.0-uninitialized-var-errors.patch \
-          file://grub-1.99-gcc-4.7.0-strict-aliasing-errors.patch \
-          file://grub-1.99-fix-enable_execute_stack-check.patch \
           file://remove-gets.patch \
-          file://grub-1.99-lazy_stat.patch \
           file://40_custom"
 
-SRC_URI[md5sum] = "ca9f2a2d571b57fc5c53212d1d22e2b5"
-SRC_URI[sha256sum] = "b91f420f2c51f6155e088e34ff99bea09cc1fb89585cf7c0179644e57abd28ff"
+SRC_URI[md5sum] = "e927540b6eda8b024fb0391eeaa4091c"
+SRC_URI[sha256sum] = "65b39a0558f8c802209c574f4d02ca263a804e8a564bc6caf1cd0fd3b3cc11e3"
 
 COMPATIBLE_HOST = '(x86_64.*|i.86.*)-(linux|freebsd.*)'
+
+FILES_${PN}-dbg += "${libdir}/${BPN}/i386-pc/.debug"
+
 
 inherit autotools
 inherit gettext
@@ -43,3 +40,4 @@ do_install_append () {
 }
 
 INSANE_SKIP_${PN} = "arch"
+INSANE_SKIP_${PN}-dbg = "arch"
