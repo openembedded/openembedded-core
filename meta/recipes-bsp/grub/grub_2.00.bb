@@ -17,7 +17,7 @@ PR = "r0"
 
 SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
           file://grub-install.in.patch \
-          file://grub-1.99-fpmath-sse-387-fix.patch \
+          file://grub-2.00-fpmath-sse-387-fix.patch \
           file://remove-gets.patch \
           file://40_custom"
 
