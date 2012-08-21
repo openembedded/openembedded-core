@@ -2,7 +2,7 @@ DESCRIPTION = "Merge machine and distro options to create a basic machine task/p
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-PR = "r74"
+PR = "r75"
 
 inherit task
 
@@ -205,8 +205,9 @@ RRECOMMENDS_task-base-pcmcia = "\
 
 # Provide bluez-utils-compat utils for the time being, the binaries in that package will vanish soon from upstream releases, so beware! 
 
-RDEPENDS_task-base-bluetooth = "\ 
+RDEPENDS_task-base-bluetooth = "\
     bluez4 \
+    ${@base_contains('COMBINED_FEATURES', 'alsa', 'libasound-module-bluez', '',d)} \
     "
 
 RRECOMMENDS_task-base-bluetooth = "\
