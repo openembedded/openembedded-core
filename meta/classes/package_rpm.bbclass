@@ -158,38 +158,41 @@ rpm_common_comand () {
 rpm_update_pkg () {
 
     manifest=$1
-    btmanifest=$manifest.bt.manifest
-    pre_btmanifest=${T}/${btmanifest##/*/}
+    # The manifest filename, e.g. total_solution.manifest
+    m_name=${manifest##/*/}
     local target_rootfs="${INSTALL_ROOTFS_RPM}"
+    installdir=$target_rootfs/install
+    pre_btmanifest=$installdir/pre_bt.manifest
+    cur_btmanifest=$installdir/cur_bt.manifest
 
-    # Save the rpm's build time for incremental image generation, and the file
-    # would be moved to ${T}
-    for i in `cat $manifest`; do
-        # Use "rpm" rather than "${RPM}" here, since we don't need the
-        # '--dbpath' option
-        echo "$i `rpm -qp --qf '%{BUILDTIME}\n' $i`"
-    done | sort -u > $btmanifest
-
-    # Only install the different pkgs if incremental image generation is set
-    if [ "${INC_RPM_IMAGE_GEN}" = "1" -a -f "$pre_btmanifest" -a \
-        "${IMAGE_PKGTYPE}" = "rpm" ]; then
-        comm -1 -3 $btmanifest $pre_btmanifest | sed 's#.*/\(.*\)\.rpm .*#\1#' > \
-            ${target_rootfs}/install/remove.manifest
-        comm -2 -3 $btmanifest $pre_btmanifest | awk '{print $1}' > \
-            ${target_rootfs}/install/incremental.manifest
+    # Install/remove the different pkgs when total_solution.manifest is
+    # comming and incremental image generation is enabled.
+    if [ "${INC_RPM_IMAGE_GEN}" = "1" -a -d "${target_rootfs}${rpmlibdir}" \
+        -a "$m_name" = "total_solution.manifest" \
+        -a "${INSTALL_COMPLEMENTARY_RPM}" != "1" ]; then
+        # Get the previous installed list
+        rpm --root $target_rootfs --dbpath ${rpmlibdir} \
+            -qa --qf '%{PACKAGEORIGIN} %{BUILDTIME}\n' | sort -u -o $pre_btmanifest
+        # Get the current installed list (based on install/var/lib/rpm)
+        rpm --root $installdir -D "_dbpath $installdir" \
+            -qa --qf '%{PACKAGEORIGIN} %{BUILDTIME}\n' | sort -u -o $cur_btmanifest
+        comm -1 -3 $cur_btmanifest $pre_btmanifest | sed 's#.*/\(.*\)\.rpm .*#\1#' > \
+            $installdir/remove.manifest
+        comm -2 -3 $cur_btmanifest $pre_btmanifest | awk '{print $1}' > \
+            $installdir/incremental.manifest
 
         # Attempt to remove unwanted pkgs, the scripts(pre, post, etc.) has not
         # been run by now, so don't have to run them(preun, postun, etc.) when
         # erase the pkg
-        if [ -s ${target_rootfs}/install/remove.manifest ]; then
+        if [ -s $installdir/remove.manifest ]; then
             rpm_common_comand --noscripts --nodeps \
-                -e `cat ${target_rootfs}/install/remove.manifest`
+                -e `cat $installdir/remove.manifest`
         fi
 
         # Attempt to install the incremental pkgs
-        if [ -s ${target_rootfs}/install/incremental.manifest ]; then
+        if [ -s $installdir/incremental.manifest ]; then
             rpm_common_comand --nodeps --replacefiles --replacepkgs \
-               -Uvh ${target_rootfs}/install/incremental.manifest
+               -Uvh $installdir/incremental.manifest
         fi
     else
         # Attempt to install
@@ -242,7 +245,22 @@ process_pkg_list_rpm() {
 }
 
 #
-# install a bunch of packages using rpm
+# Install a bunch of packages using rpm.
+# There are 3 solutions in an image's FRESH generation:
+# 1) initial_solution
+# 2) total_solution
+# 3) COMPLEMENTARY solution
+#
+# It is different when incremental image generation is enabled in the
+# SECOND generation:
+# 1) The initial_solution is skipped.
+# 2) The incremental image generation takes action during the total_solution
+#    installation, the previous installed COMPLEMENTARY pkgs usually would be
+#    removed here, the new COMPLEMENTARY ones would be installed in the next
+#    step.
+# 3) The COMPLEMENTARY would always be installed since it is
+#    generated based on the second step's image.
+#
 # the following shell variables needs to be set before calling this func:
 # INSTALL_ROOTFS_RPM - install root dir
 # INSTALL_PLATFORM_RPM - main platform
@@ -496,10 +514,10 @@ EOF
 		sort ${target_rootfs}/install/original_solution.manifest > ${target_rootfs}/install/original_solution_sorted.manifest
 		sort ${target_rootfs}/install/total_solution.manifest > ${target_rootfs}/install/total_solution_sorted.manifest
 		comm -2 -3 ${target_rootfs}/install/total_solution_sorted.manifest \
-			${target_rootfs}/install/original_solution_sorted.manifest | awk '{print $1}' > \
+			${target_rootfs}/install/original_solution_sorted.manifest > \
 			${target_rootfs}/install/diff.manifest
 		mv ${target_rootfs}/install/diff.manifest ${target_rootfs}/install/total_solution.manifest
-	elif [ "${INC_RPM_IMAGE_GEN}" = "1" -a -f "$pre_btmanifest" ]; then
+	elif [ "${INC_RPM_IMAGE_GEN}" = "1" -a -d "${target_rootfs}${rpmlibdir}" ]; then
 		echo "Skipping pre install due to existing image"
 	else
 		# RPM is special. It can't handle dependencies and preinstall scripts correctly. Its
