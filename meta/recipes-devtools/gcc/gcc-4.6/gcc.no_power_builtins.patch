@@ -1,0 +1,30 @@
+Upstream-Status: Pending
+
+People are working to include this fixes upstream
+
+--- gcc-4.6.3/gcc/config/rs6000/rs6000-c.c-orig	2012-07-10 12:16:59.708254001 -0500
++++ gcc-4.6.3/gcc/config/rs6000/rs6000-c.c	2012-07-10 12:18:58.625254001 -0500
+@@ -272,19 +272,19 @@
+     builtin_define ("_ARCH_PPCGR");
+   if (TARGET_POWERPC64)
+     builtin_define ("_ARCH_PPC64");
+-  if (TARGET_MFCRF)
++  if (TARGET_MFCRF && rs6000_cpu != PROCESSOR_PPCE6500)
+     builtin_define ("_ARCH_PWR4");
+-  if (TARGET_POPCNTB)
++  if (TARGET_POPCNTB && rs6000_cpu != PROCESSOR_PPCE5500 && rs6000_cpu != PROCESSOR_PPCE6500)
+     builtin_define ("_ARCH_PWR5");
+   if (TARGET_FPRND)
+     builtin_define ("_ARCH_PWR5X");
+-  if (TARGET_CMPB)
++  if (TARGET_CMPB && rs6000_cpu != PROCESSOR_PPCE5500 && rs6000_cpu != PROCESSOR_PPCE6500)
+     builtin_define ("_ARCH_PWR6");
+   if (TARGET_MFPGPR)
+     builtin_define ("_ARCH_PWR6X");
+   if (! TARGET_POWER && ! TARGET_POWER2 && ! TARGET_POWERPC)
+     builtin_define ("_ARCH_COM");
+-  if (TARGET_POPCNTD)
++  if (TARGET_POPCNTD && rs6000_cpu != PROCESSOR_PPCE5500 && rs6000_cpu != PROCESSOR_PPCE6500)
+     builtin_define ("_ARCH_PWR7");
+   if (TARGET_ALTIVEC)
+     {

@@ -1,6 +1,6 @@
 require gcc-common.inc
 
-PR = "r28"
+PR = "r29"
 
 # Third digit in PV should be incremented after a minor release
 # happens from this branch on gcc e.g. currently its 4.6.0
@@ -64,7 +64,6 @@ SRC_URI = "svn://gcc.gnu.org/svn/gcc/branches;module=${BRANCH};proto=http \
 	   file://disable_relax_pic_calls_flag.patch \
 	   file://COLLECT_GCC_OPTIONS.patch \
            file://use-defaults.h-and-t-oe-in-B.patch \
-	   file://powerpc-e5500.patch \
            file://fix-for-ice-50099.patch \
 	   file://gcc-with-linker-hash-style.patch \
 	   file://pr46934.patch \
@@ -74,6 +73,8 @@ SRC_URI = "svn://gcc.gnu.org/svn/gcc/branches;module=${BRANCH};proto=http \
 	   file://GPLUSPLUS_INCLUDE_DIR_with_sysroot.patch \
 	   file://fortran-cross-compile-hack.patch \
 	   file://cpp-honour-sysroot.patch \
+	   file://gcc.e6500-FSF46.patch \
+	   file://gcc.no_power_builtins.patch \
 	  "
 
 SRC_URI_append_sh3  = " file://sh3-installfix-fixheaders.patch "
