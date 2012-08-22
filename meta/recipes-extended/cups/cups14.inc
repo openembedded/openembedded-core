@@ -21,6 +21,7 @@ EXTRA_OECONF = " \
                --without-perl \
                --without-python \
                --without-java \
+               --with-pdftops=none \
                "
 
 
