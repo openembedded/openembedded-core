@@ -270,11 +270,15 @@ do_validate_branches() {
 	# SRCREV (if it isn't the current HEAD of that branch)
 	git checkout -q master
 	for b in $containing_branches; do
-		branch_head=`git show-ref -s --heads ${b}`
+		branch_head=`git show-ref -s --heads ${b}`		
 		if [ "$branch_head" != "$target_branch_head" ]; then
-			echo "[INFO] Setting branch $b to ${target_branch_head}"	      
-			git branch -D $b > /dev/null
-			git branch $b $target_branch_head > /dev/null
+			echo "[INFO] Setting branch $b to ${target_branch_head}"
+			if [ "$b" == "master" ]; then
+				git reset --hard $target_branch_head > /dev/null
+			else
+				git branch -D $b > /dev/null
+				git branch $b $target_branch_head > /dev/null
+			fi
 		fi
 	done
 
