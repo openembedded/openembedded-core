@@ -573,7 +573,7 @@ python do_remove_tarball(){
         except (TypeError, OSError):
             pass
 }
-do_remove_taball[deptask] = "do_archive_scripts_logs"
+do_remove_tarball[deptask] = "do_archive_scripts_logs"
 do_package_write_rpm[postfuncs] += "do_remove_tarball "
 export get_licenses
 export get_package

@@ -585,11 +585,17 @@ python write_specfile () {
         if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
             source_number = 0
             patch_number = 0
+            workdir = d.getVar('WORKDIR', True)
             for source in source_list:
+                # The rpmbuild doesn't need the root permission, but it needs
+                # to know the file's user and group name, the only user and
+                # group in fakeroot is "root" when working in fakeroot.
+                os.chown("%s/%s" % (workdir, source), 0, 0)
                 spec_preamble_top.append('Source' + str(source_number) + ': %s' % source)
                 source_number += 1
             if patch_list:
                 for patch in patch_list:
+                    os.chown("%s/%s" % (workdir, patch), 0, 0)
                     print_deps(patch, "Patch" + str(patch_number), spec_preamble_top, d)
                     patch_number += 1
     # We need a simple way to remove the MLPREFIX from the package name,
@@ -1142,8 +1148,9 @@ python do_package_rpm () {
     cmd = cmd + " --define '_rpmfc_magic_path " + magicfile + "'"
     cmd = cmd + " --define '_tmppath " + workdir + "'"
     if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
-        cmdsrpm = cmd + " --define '_sourcedir " + workdir + "' --define '_srcrpmdir " + creat_srpm_dir(d) + "'"
-        cmdsrpm = 'fakeroot ' + cmdsrpm + " -bs " + outspecfile
+        cmd = cmd + " --define '_sourcedir " + workdir + "'"
+        cmdsrpm = cmd + " --define '_srcrpmdir " + creat_srpm_dir(d) + "'"
+        cmdsrpm = cmdsrpm + " -bs " + outspecfile
     cmd = cmd + " -bb " + outspecfile
 
     # Build the source rpm package !
