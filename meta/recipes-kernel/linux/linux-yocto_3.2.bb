@@ -17,14 +17,12 @@ SRCREV_machine_qemux86-64 ?= "f3625121d459b8e38f7528c2f5d2feb6078d0de9"
 SRCREV_machine ?= "7cc31a952f78b8f8e8469eed93c23e9675a8eeb5"
 SRCREV_meta ?= "486f7aec824b4127e91ef53228823e996b3696f0"
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 KMETA = "meta"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.2;protocol=git;bareclone=1;branch=${KBRANCH},meta;name=machine,meta"
-
-SRC_URI += "file://noslang.patch"
 
 COMPATIBLE_MACHINE = "qemuarm|qemux86|qemuppc|qemumips|qemux86-64"
 

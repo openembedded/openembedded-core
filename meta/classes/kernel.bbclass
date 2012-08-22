@@ -204,6 +204,9 @@ kernel_do_install() {
 	for entry in $bin_files; do
 		rm -f $kerneldir/$entry
 	done
+
+	# Fix SLANG_INC for slang.h
+	sed -i 's#-I/usr/include/slang#-I=/usr/include/slang#g' $kerneldir/tools/perf/Makefile
 }
 
 sysroot_stage_all_append() {
