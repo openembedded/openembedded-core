@@ -1,0 +1,48 @@
+install-neon-lib should depend on libsvn_delta's installation
+
+install-neon-lib needs libsvn_delta-1.la which will be regenerated
+during libsvn_delta-1.la's installation, if libsvn_delta-1.la is
+in regenerating and at the same time install-neon-lib links it, the
+error willl happen.
+
+Let install-neon-lib run after libsvn_delta-1.la is installed will fix
+the problem.
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ build-outputs.mk |    2 +-
+ build.conf       |    2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+--- subversion-1.7.6.orig/build-outputs.mk
++++ subversion-1.7.6/build-outputs.mk
+@@ -983,11 +983,11 @@ install-locale: subversion/po/de.mo subv
+ 	$(MKDIR) $(DESTDIR)$(localedir)/zh_CN/LC_MESSAGES
+ 	cd subversion/po ; $(INSTALL_LOCALE) zh_CN.mo $(DESTDIR)$(localedir)/zh_CN/LC_MESSAGES/$(PACKAGE_NAME).mo
+ 	$(MKDIR) $(DESTDIR)$(localedir)/zh_TW/LC_MESSAGES
+ 	cd subversion/po ; $(INSTALL_LOCALE) zh_TW.mo $(DESTDIR)$(localedir)/zh_TW/LC_MESSAGES/$(PACKAGE_NAME).mo
+ 
+-install-neon-lib: subversion/libsvn_ra_neon/libsvn_ra_neon-1.la 
++install-neon-lib: subversion/libsvn_ra_neon/libsvn_ra_neon-1.la $(SVN_FS_LIB_INSTALL_DEPS)
+ 	$(MKDIR) $(DESTDIR)$(neon_libdir)
+ 	cd subversion/libsvn_ra_neon ; $(INSTALL_NEON_LIB) libsvn_ra_neon-1.la $(DESTDIR)$(neon_libdir)/libsvn_ra_neon-1.la
+ 
+ install-ramod-lib: subversion/libsvn_fs/libsvn_fs-1.la subversion/libsvn_ra_svn/libsvn_ra_svn-1.la subversion/libsvn_repos/libsvn_repos-1.la subversion/libsvn_ra_local/libsvn_ra_local-1.la 
+ 	$(MKDIR) $(DESTDIR)$(ramod_libdir)
+--- subversion-1.7.6.orig/build.conf
++++ subversion-1.7.6/build.conf
+@@ -270,10 +270,12 @@ msvc-export = svn_ra.h private\svn_ra_pr
+ [libsvn_ra_neon]
+ type = ra-module
+ path = subversion/libsvn_ra_neon
+ install = neon-lib
+ libs = libsvn_delta libsvn_subr aprutil apriconv apr neon
++# conditionally add more dependencies
++add-install-deps = $(SVN_FS_LIB_INSTALL_DEPS)
+ msvc-static = yes
+ 
+ # Accessing repositories via DAV through serf
+ [libsvn_ra_serf]
+ type = ra-module

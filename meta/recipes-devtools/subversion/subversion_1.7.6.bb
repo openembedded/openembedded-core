@@ -7,21 +7,20 @@ HOMEPAGE = "http://subversion.tigris.org"
 
 BBCLASSEXTEND = "native"
 
-PR = "r5"
-
 inherit gettext
 
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libtool2.patch \
            file://fix-install-depends.patch \
+           file://subversion-1.7.6_mod_dontdothat_svnserve_only.patch \
 "
-SRC_URI[md5sum] = "1e5dfffd27be080672e5a042564368a8"
-SRC_URI[sha256sum] = "7eb3e1ae2b0385e1cc20ca9e1839e0ef0ac98a7455dc52ba4cdf567547bfc517"
+SRC_URI[md5sum] = "4baa434db7709bb059b05d02a2547663"
+SRC_URI[sha256sum] = "d1a4f13c5c992a1527a2aeac262c6f54e073963ce1d13abfabb2a90980fa7d05"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4a14fd2da3134e40a087eb4326a4ecd4"
 
 EXTRA_OECONF = " \
-                --without-berkeley-db --without-apxs --without-apache \
+                --without-berkeley-db --without-apxs \
                 --without-swig --with-apr=${STAGING_BINDIR_CROSS} \
                 --with-apr-util=${STAGING_BINDIR_CROSS} \
                 ac_cv_path_RUBY=none"
