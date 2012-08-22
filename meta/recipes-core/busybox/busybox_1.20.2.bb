@@ -1,5 +1,5 @@
 require busybox.inc
-PR = "r13"
+PR = "r0"
 
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://B921600.patch \
@@ -25,9 +25,10 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://umount.busybox \
            file://defconfig \
            file://busybox-mkfs-minix-tests_bigendian.patch \
-           file://fix-for-spurious-testsuite-failure.patch"
+           file://fix-for-spurious-testsuite-failure.patch \
+           file://busybox-1.20.2-kernel_ver.patch"
 
-SRC_URI[tarball.md5sum] = "9c0cae5a0379228e7b55e5b29528df8e"
-SRC_URI[tarball.sha256sum] = "9b853406da61ffb59eb488495fe99cbb7fb3dd29a31307fcfa9cf070543710ee"
+SRC_URI[tarball.md5sum] = "e025414bc6cd79579cc7a32a45d3ae1c"
+SRC_URI[tarball.sha256sum] = "eb13ff01dae5618ead2ef6f92ba879e9e0390f9583bd545d8789d27cf39b6882"
 
 EXTRA_OEMAKE += "V=1 ARCH=${TARGET_ARCH} CROSS_COMPILE=${TARGET_PREFIX} SKIP_STRIP=y"

@@ -31,10 +31,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  networking/udhcp/dhcpc.c |   29 +++++++++++++++++++++--------
  1 files changed, 21 insertions(+), 8 deletions(-)
 
-diff --git a/networking/udhcp/dhcpc.c b/networking/udhcp/dhcpc.c
-index 4d755e6..a21e2c6 100644
---- a/networking/udhcp/dhcpc.c
-+++ b/networking/udhcp/dhcpc.c
+Index: busybox-1.20.2/networking/udhcp/dhcpc.c
+===================================================================
+--- busybox-1.20.2.orig/networking/udhcp/dhcpc.c
++++ busybox-1.20.2/networking/udhcp/dhcpc.c
 @@ -29,6 +29,9 @@
  #include <netpacket/packet.h>
  #include <linux/filter.h>
@@ -42,10 +42,10 @@ index 4d755e6..a21e2c6 100644
 +/* option whether to down the interface when reconfiguring */
 +static int allow_deconfig = 1;
 +
- /* struct client_config_t client_config is in bb_common_bufsiz1 */
+ /* "struct client_config_t client_config" is in bb_common_bufsiz1 */
  
  
-@@ -82,8 +85,9 @@ enum {
+@@ -81,8 +84,9 @@ enum {
  	OPT_x = 1 << 18,
  	OPT_f = 1 << 19,
  	OPT_B = 1 << 20,
@@ -56,7 +56,7 @@ index 4d755e6..a21e2c6 100644
  	USE_FOR_MMU(             OPTBIT_b,)
  	IF_FEATURE_UDHCPC_ARPING(OPTBIT_a,)
  	IF_FEATURE_UDHCP_PORT(   OPTBIT_P,)
-@@ -899,7 +903,8 @@ static void perform_renew(void)
+@@ -1040,7 +1044,8 @@ static void perform_renew(void)
  		state = RENEW_REQUESTED;
  		break;
  	case RENEW_REQUESTED: /* impatient are we? fine, square 1 */
@@ -66,7 +66,7 @@ index 4d755e6..a21e2c6 100644
  	case REQUESTING:
  	case RELEASED:
  		change_listen_mode(LISTEN_RAW);
-@@ -923,7 +928,8 @@ static void perform_release(uint32_t requested_ip, uint32_t server_addr)
+@@ -1064,7 +1069,8 @@ static void perform_release(uint32_t ser
  		bb_info_msg("Unicasting a release of %s to %s",
  				inet_ntoa(temp_addr), buffer);
  		send_release(server_addr, requested_ip); /* unicast */
@@ -76,16 +76,16 @@ index 4d755e6..a21e2c6 100644
  	}
  	bb_info_msg("Entering released state");
  
-@@ -1083,7 +1089,7 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
- #endif
- 		;
+@@ -1215,7 +1221,7 @@ int udhcpc_main(int argc UNUSED_PARAM, c
+ 	/* O,x: list; -T,-t,-A take numeric param */
+ 	opt_complementary = "O::x::T+:t+:A+" IF_UDHCP_VERBOSE(":vv") ;
  	IF_LONG_OPTS(applet_long_options = udhcpc_longopts;)
 -	opt = getopt32(argv, "CV:H:h:F:i:np:qRr:s:T:t:SA:O:ox:fB"
 +	opt = getopt32(argv, "CV:H:h:F:i:np:qRr:s:T:t:SA:O:ox:fBD"
  		USE_FOR_MMU("b")
  		IF_FEATURE_UDHCPC_ARPING("a")
  		IF_FEATURE_UDHCP_PORT("P:")
-@@ -1175,6 +1181,9 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
+@@ -1316,6 +1322,9 @@ int udhcpc_main(int argc UNUSED_PARAM, c
  		logmode |= LOGMODE_SYSLOG;
  	}
  
@@ -95,7 +95,7 @@ index 4d755e6..a21e2c6 100644
  	/* Make sure fd 0,1,2 are open */
  	bb_sanitize_stdio();
  	/* Equivalent of doing a fflush after every \n */
-@@ -1189,7 +1198,8 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
+@@ -1330,7 +1339,8 @@ int udhcpc_main(int argc UNUSED_PARAM, c
  	srand(monotonic_us());
  
  	state = INIT_SELECTING;
@@ -105,7 +105,7 @@ index 4d755e6..a21e2c6 100644
  	change_listen_mode(LISTEN_RAW);
  	packet_num = 0;
  	timeout = 0;
-@@ -1341,7 +1351,8 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
+@@ -1484,7 +1494,8 @@ int udhcpc_main(int argc UNUSED_PARAM, c
  				}
  				/* Timed out, enter init state */
  				bb_info_msg("Lease lost, entering init state");
@@ -115,8 +115,8 @@ index 4d755e6..a21e2c6 100644
  				state = INIT_SELECTING;
  				client_config.first_secs = 0; /* make secs field count from 0 */
  				/*timeout = 0; - already is */
-@@ -1489,7 +1500,8 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
- 						send_decline(xid, server_addr, packet.yiaddr);
+@@ -1667,7 +1678,8 @@ int udhcpc_main(int argc UNUSED_PARAM, c
+ 						send_decline(/*xid,*/ server_addr, packet.yiaddr);
  
  						if (state != REQUESTING)
 -							udhcp_run_script(NULL, "deconfig");
@@ -125,7 +125,7 @@ index 4d755e6..a21e2c6 100644
  						change_listen_mode(LISTEN_RAW);
  						state = INIT_SELECTING;
  						client_config.first_secs = 0; /* make secs field count from 0 */
-@@ -1536,7 +1548,8 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
+@@ -1711,7 +1723,8 @@ int udhcpc_main(int argc UNUSED_PARAM, c
  				bb_info_msg("Received DHCP NAK");
  				udhcp_run_script(&packet, "nak");
  				if (state != REQUESTING)
@@ -135,6 +135,3 @@ index 4d755e6..a21e2c6 100644
  				change_listen_mode(LISTEN_RAW);
  				sleep(3); /* avoid excessive network traffic */
  				state = INIT_SELECTING;
--- 
-1.7.7.1
-
