@@ -73,6 +73,47 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
     """
     Used in .bb files to split up dynamically generated subpackages of a
     given package, usually plugins or modules.
+
+    Arguments:
+    root           -- the path in which to search
+    file_regex     -- regular expression to match searched files. Use
+                      parentheses () to mark the part of this expression
+                      that should be used to derive the module name (to be
+                      substituted where %s is used in other function
+                      arguments as noted below)
+    output_pattern -- pattern to use for the package names. Must include %s.
+    description    -- description to set for each package. Must include %s.
+    postinst       -- postinstall script to use for all packages (as a
+                      string)
+    recursive      -- True to perform a recursive search - default False
+    hook           -- a hook function to be called for every match. The
+                      function will be called with the following arguments
+                      (in the order listed):
+                        f: full path to the file/directory match
+                        pkg: the package name
+                        file_regex: as above
+                        output_pattern: as above
+                        modulename: the module name derived using file_regex
+    extra_depends  -- extra runtime dependencies (RDEPENDS) to be set for
+                      all packages. The default value of None causes a
+                      dependency on the main package (${PN}) - if you do
+                      not want this, pass '' for this parameter.
+    aux_files_pattern -- extra item(s) to be added to FILES for each
+                      package. Can be a single string item or a list of
+                      strings for multiple items.  Must include %s.
+    postrm         -- postrm script to use for all packages (as a string)
+    allow_dirs     -- True allow directories to be matched - default False
+    prepend        -- if True, prepend created packages to PACKAGES instead
+                      of the default False which appends them
+    match_path     -- match file_regex on the whole relative path to the
+                      root rather than just the file name
+    aux_files_pattern_verbatim -- extra item(s) to be added to FILES for
+                      each package, using the actual derived module name
+                      rather than converting it to something legal for a
+                      package name. Can be a single string item or a list
+                      of strings for multiple items. Must include %s.
+    allow_links    -- True to allow symlinks to be matched - default False
+
     """
 
     ml = d.getVar("MLPREFIX", True)
