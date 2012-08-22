@@ -29,6 +29,7 @@ DEPENDS = "${PROTO_DEPS} ${LIB_DEPS} font-util"
 # Split out some modules and extensions from the main package
 # These aren't needed for basic operations and only take up space:
 #  32.0k   libdri.so
+#  91.0k   libexa.so
 #  336.0k  libglx.so
 #  1360k   libint10.so
 #  180.0k  libwfb.so
@@ -58,6 +59,7 @@ PACKAGES =+ "${PN}-security-policy \
              ${PN}-module-libwfb  \
              ${PN}-module-libmfb \
              ${PN}-module-libcfb \
+             ${PN}-module-exa \
              ${PN}-module-xaa \
              ${PN}-module-libxf1bpp \
              ${PN}-module-libxf4bpp"
@@ -91,6 +93,7 @@ FILES_${PN}-module-libafb = "${libdir}/xorg/modules/libafb.so"
 FILES_${PN}-module-libwfb = "${libdir}/xorg/modules/libwfb.so"
 FILES_${PN}-module-libmfb = "${libdir}/xorg/modules/libmfb.so"
 FILES_${PN}-module-libcfb = "${libdir}/xorg/modules/libcfb.so"
+FILES_${PN}-module-exa = "${libdir}/xorg/modules/libexa.so"
 FILES_${PN}-module-xaa = "${libdir}/xorg/modules/libxaa.so"
 FILES_${PN}-module-libxf1bpp = "${libdir}/xorg/modules/libxf1bpp.so"
 FILES_${PN}-module-libxf4bpp = "${libdir}/xorg/modules/libxf4bpp.so"
