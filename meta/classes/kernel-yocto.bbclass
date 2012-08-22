@@ -61,9 +61,10 @@ do_patch() {
 	# if we have a defined/set meta branch we should not be generating
 	# any meta data. The passed branch has what we need.
 	if [ -n "${KMETA}" ]; then
-		createme_flags="--disable-meta-gen"
+		createme_flags="--disable-meta-gen --meta ${KMETA}"
 	fi
-	createme ${createme_flags} --meta ${KMETA} ${ARCH} ${kbranch}
+
+	createme ${createme_flags} ${ARCH} ${kbranch}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not create ${kbranch}"
 		exit 1
