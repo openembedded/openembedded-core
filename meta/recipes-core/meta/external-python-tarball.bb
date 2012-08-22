@@ -5,6 +5,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 
 DEPENDS = "opkg-native opkg-utils-native virtual/fakeroot-native sed-native"
 
+PR = "r1"
+
 inherit meta
 
 SDK_DIR = "${WORKDIR}/sdk"
@@ -91,3 +93,6 @@ do_populate_sdk[nostamp] = "1"
 do_populate_sdk[recrdeptask] = "do_package_write"
 addtask populate_sdk before do_build after do_install
 
+inherit blacklist
+
+PNBLACKLIST[external-python-tarball] = "${@base_contains('PACKAGE_CLASSES', 'package_ipk', '', 'This recipe requires \'package_ipk\' support to be enabled in PACKAGE_CLASSES.', d)}"
