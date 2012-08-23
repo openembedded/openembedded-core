@@ -4,6 +4,8 @@ DESCRIPTION = "X Event Viewer"
 LICENSE = "MIT"
 PE = "1"
 
+DEPENDS += "libxrandr xproto"
+
 SRC_URI += "file://diet-x11.patch"
 
 SRC_URI[md5sum] = "2727c72f3eba0c23f8f6b2e618d195a2"
