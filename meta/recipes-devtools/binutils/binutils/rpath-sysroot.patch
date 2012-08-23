@@ -1,0 +1,38 @@
+ld: -rpath must search under sysroot
+
+The -rpath argument would search the host filesystem for libraries,
+even when a sysroot was defined.  For cross toolchains with targets
+compatible with the host architecture this can find incorrect
+libraries.  Leave -rpath-link unmodified, as build systems in the wild
+are already using this to point to host directories.
+
+Signed-off-by: Andy Ross <andy.ross@windriver.com>
+Upstream-Status: submitted (binutils@sourceware.org 2012-08-22)
+---
+ ld/emultempl/elf32.em | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/ld/emultempl/elf32.em b/ld/emultempl/elf32.em
+index de51050..35e0e7e 100644
+--- a/ld/emultempl/elf32.em
++++ b/ld/emultempl/elf32.em
+@@ -1263,9 +1263,13 @@ fragment <<EOF
+ EOF
+ if [ "x${USE_LIBPATH}" = xyes ] ; then
+ fragment <<EOF
+-	  if (gld${EMULATION_NAME}_search_needed (command_line.rpath,
+-						  &n, force))
+-	    break;
++	  if (command_line.rpath) {
++	    char *tmprp = gld${EMULATION_NAME}_add_sysroot (command_line.rpath);
++	    found = gld${EMULATION_NAME}_search_needed (tmprp, &n, force);
++	    free(tmprp);
++	    if (found)
++	      break;
++	  }
+ EOF
+ fi
+ if [ "x${NATIVE}" = xyes ] ; then
+-- 
+1.7.11.2
+
