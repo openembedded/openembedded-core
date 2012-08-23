@@ -191,6 +191,22 @@ elif [ ! -w /dev/net/tun ] ; then
 	exit 1
 fi
 
+# Report errors for missing combinations of options
+if [ -z "$MACHINE" -a -z "$KERNEL" ]; then
+    error "you must specify at least a MACHINE or KERNEL argument"
+fi
+if [ "$FSTYPE" = "nfs" -a -z "$ROOTFS" ]; then
+    error "NFS booting without an explicit ROOTFS path is not yet supported"
+fi
+
+if [ -z "$MACHINE" ]; then
+    MACHINE=`basename $KERNEL | sed 's/.*\(qemux86-64\|qemux86\|qemuarm\|qemumips64\|qemumips\|qemuppc\|qemush4\).*/\1/'`
+    if [ -z "$MACHINE" ]; then
+        error "Unable to set MACHINE from kernel filename [$KERNEL]"
+    fi
+    echo "Set MACHINE to [$MACHINE] based on kernel [$KERNEL]"
+fi
+
 YOCTO_KVM_WIKI="https://wiki.yoctoproject.org/wiki/How_to_enable_KVM_for_Poky_qemu"
 # Detect KVM configuration
 if [ "x$KVM_ENABLED" = "xyes" ]; then
@@ -220,21 +236,6 @@ if [ "x$KVM_ENABLED" = "xyes" ]; then
     fi
 fi
 
-# Report errors for missing combinations of options
-if [ -z "$MACHINE" -a -z "$KERNEL" ]; then
-    error "you must specify at least a MACHINE or KERNEL argument"
-fi
-if [ "$FSTYPE" = "nfs" -a -z "$ROOTFS" ]; then
-    error "NFS booting without an explicit ROOTFS path is not yet supported"
-fi
-
-if [ -z "$MACHINE" ]; then
-    MACHINE=`basename $KERNEL | sed 's/.*\(qemux86-64\|qemux86\|qemuarm\|qemumips64\|qemumips\|qemuppc\|qemush4\).*/\1/'`
-    if [ -z "$MACHINE" ]; then
-        error "Unable to set MACHINE from kernel filename [$KERNEL]"
-    fi
-    echo "Set MACHINE to [$MACHINE] based on kernel [$KERNEL]"
-fi
 machine2=`echo $MACHINE | tr 'a-z' 'A-Z' | sed 's/-/_/'`
 # MACHINE is now set for all cases
 
