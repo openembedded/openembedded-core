@@ -1152,7 +1152,6 @@ python do_package_rpm () {
         d.setVarFlag('SBUILDSPEC', 'func', '1')
         bb.build.exec_func('SBUILDSPEC', d)
 
-
     # Build the rpm package!
     d.setVar('BUILDSPEC', cmd + "\n")
     d.setVarFlag('BUILDSPEC', 'func', '1')
