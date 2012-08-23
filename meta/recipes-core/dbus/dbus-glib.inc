@@ -12,7 +12,6 @@ DEPENDS_virtclass-native = "glib-2.0-native dbus-native"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-${PV}.tar.gz \
            file://no-examples.patch \
-           file://test-service-glib-include-glib-only.patch \
            file://test-install-makefile.patch \
 "
 
