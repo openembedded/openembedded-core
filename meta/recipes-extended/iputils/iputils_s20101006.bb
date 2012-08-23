@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://ping.c;beginline=1;endline=35;md5=f9ceb201733e9a6cf8f
 
 DEPENDS = "openssl docbook-utils-native sgmlspl-native"
 
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "http://www.skbuff.net/iputils/${BPN}-${PV}.tar.bz2 \
            file://debian/fix-dead-host-ping-stats.diff \
@@ -57,18 +57,6 @@ ALTERNATIVE_LINK_NAME[ping] = "${base_bindir}/ping"
 
 ALTERNATIVE_${PN}-ping6 = "ping6"
 ALTERNATIVE_LINK_NAME[ping6] = "${base_bindir}/ping6"
-
-pkg_postinst_${PN}-ping () {
-       chmod 4555 ${base_bindir}/ping
-}
-
-pkg_postinst_${PN}-ping6 () {
-       chmod 4555 ${base_bindir}/ping6
-}
-
-pkg_postinst_${PN}-traceroute6 () {
-	chmod 4555 ${base_bindir}/traceroute6
-}
 
 PACKAGES += "${PN}-ping ${PN}-ping6 ${PN}-arping ${PN}-tracepath ${PN}-tracepath6 ${PN}-traceroute6"
 
