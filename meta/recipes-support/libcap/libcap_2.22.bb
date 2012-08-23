@@ -2,5 +2,5 @@ require libcap.inc
 
 PR = "r3"
 
-SRC_URI[md5sum] = "ce64058bdb3f086ddbfca8ce6c919845"
-SRC_URI[sha256sum] = "73ebbd4877b5f69dd28b72098e510c5b318bc480f8201c4061ac98b78c04050f"
+SRC_URI[md5sum] = "b4896816b626bea445f0b3849bdd4077"
+SRC_URI[sha256sum] = "e1cae65d8febf2579be37c255d2e058715785ead481a4e6a4357a06aff84721f"
