@@ -570,19 +570,19 @@ python write_specfile () {
 
     # append information for logs and patches to %prep
     def add_prep(d,spec_files_bottom):
-        if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+        if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
             spec_files_bottom.append('%%prep -n %s' % d.getVar('PN', True) )
             spec_files_bottom.append('%s' % "echo \"include logs and patches, Please check them in SOURCES\"")
             spec_files_bottom.append('')
 
     # get the name of tarball for sources, patches and logs
     def get_tarballs(d):
-        if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+        if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
             return get_package(d)
     
     # append the name of tarball to key word 'SOURCE' in xxx.spec.
     def tail_source(d,source_list=[],patch_list=None):
-        if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+        if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
             source_number = 0
             patch_number = 0
             workdir = d.getVar('WORKDIR', True)
@@ -1020,7 +1020,7 @@ python write_specfile () {
 
 python do_package_rpm () {
     def creat_srpm_dir(d):
-        if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+        if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
             clean_licenses = get_licenses(d)
             pkgwritesrpmdir = bb.data.expand('${PKGWRITEDIRSRPM}/${PACKAGE_ARCH_EXTEND}', d)
             pkgwritesrpmdir = pkgwritesrpmdir + '/' + clean_licenses
@@ -1147,14 +1147,14 @@ python do_package_rpm () {
     cmd = cmd + " --define 'debug_package %{nil}'"
     cmd = cmd + " --define '_rpmfc_magic_path " + magicfile + "'"
     cmd = cmd + " --define '_tmppath " + workdir + "'"
-    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
         cmd = cmd + " --define '_sourcedir " + workdir + "'"
         cmdsrpm = cmd + " --define '_srcrpmdir " + creat_srpm_dir(d) + "'"
         cmdsrpm = cmdsrpm + " -bs " + outspecfile
     cmd = cmd + " -bb " + outspecfile
 
     # Build the source rpm package !
-    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) and d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
         d.setVar('SBUILDSPEC', cmdsrpm + "\n")
         d.setVarFlag('SBUILDSPEC', 'func', '1')
         bb.build.exec_func('SBUILDSPEC', d)

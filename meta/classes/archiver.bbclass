@@ -7,9 +7,9 @@
 #
 
 ARCHIVE_EXCLUDE_FROM ?= ".pc autom4te.cache"
-ARCHIVE_TYPE ?= "TAR SRPM"
+ARCHIVE_TYPE ?= "tar srpm"
 DISTRO ?= "poky"
-PATCHES_ARCHIVE_WITH_SERIES = 'TRUE'
+PATCHES_ARCHIVE_WITH_SERIES = 'yes'
 SOURCE_ARCHIVE_LOG_WITH_SCRIPTS ?= '${@d.getVarFlag('ARCHIVER_MODE', 'log_type') \
     if d.getVarFlag('ARCHIVER_MODE', 'log_type') != 'none' else 'logs_with_scripts'}'
 SOURCE_ARCHIVE_PACKAGE_TYPE ?= '${@d.getVarFlag('ARCHIVER_MODE', 'type') \
@@ -74,7 +74,7 @@ def tar_filter(d):
     and ignore the one in COPYLEFT_LICENSE_EXCLUDE. Don't exclude any
     packages when \"FILTER\" is \"no\"
     """
-    if d.getVar('FILTER', True).upper() == "YES":
+    if d.getVar('FILTER', True) == "yes":
         included, reason = copyleft_should_include(d)
         if not included:
             return False
@@ -235,7 +235,6 @@ def archive_sources_from_directory(d, stage_name):
     archive sources codes tree to tarball when tarball of $P doesn't
     exist in $DL_DIR
     """
-    import shutil
 
     s = d.getVar('S', True)
     work_dir=d.getVar('WORKDIR', True)
@@ -353,10 +352,7 @@ def move_tarball_deploy(d, tarball_list):
 
 def check_archiving_type(d):
     """check the type for archiving package('tar' or 'srpm')"""
-    try:
-        if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() not in d.getVar('ARCHIVE_TYPE', True).split():
-            raise AttributeError
-    except AttributeError:
+    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) not in d.getVar('ARCHIVE_TYPE', True).split():
         bb.fatal("\"SOURCE_ARCHIVE_PACKAGE_TYPE\" is \'tar\' or \'srpm\', no other types")
 
 def store_package(d, package_name):
@@ -399,16 +395,16 @@ def archive_sources_patches(d, stage_name):
 
     source_tar_name = archive_sources(d, stage_name)
     if stage_name == "prepatch":
-        if d.getVar('PATCHES_ARCHIVE_WITH_SERIES', True).upper() == 'TRUE':
+        if d.getVar('PATCHES_ARCHIVE_WITH_SERIES', True) == 'yes':
             patch_tar_name = select_archive_patches(d, "all")
-        elif d.getVar('PATCHES_ARCHIVE_WITH_SERIES', True).upper() == 'FALSE':
+        elif d.getVar('PATCHES_ARCHIVE_WITH_SERIES', True) == 'no':
             patch_tar_name = select_archive_patches(d, "applying")
         else:
-            bb.fatal("Please define 'PATCHES_ARCHIVE_WITH_SERIES' is strings 'True' or 'False' ")
+            bb.fatal("Please define 'PATCHES_ARCHIVE_WITH_SERIES' to 'yes' or 'no' ")
     else:
         patch_tar_name = ''
 
-    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() not in 'SRPM':
+    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) != 'srpm':
         move_tarball_deploy(d, [source_tar_name, patch_tar_name])
     else:
         tarpackage = os.path.join(d.getVar('WORKDIR', True), 'tar-package')
@@ -438,7 +434,7 @@ def archive_scripts_logs(d):
     else:
         return
 
-    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() not in 'SRPM':
+    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) != 'srpm':
         move_tarball_deploy(d, [tarlog])
 
     else:
@@ -556,14 +552,14 @@ python do_archive_linux_yocto(){
     s = d.getVar('S', True)
     if 'linux-yocto' in s:
         source_tar_name = archive_sources(d, '')
-    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() not in 'SRPM':
+    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) != 'srpm':
         move_tarball_deploy(d, [source_tar_name, ''])
 }
 do_kernel_checkout[postfuncs] += "do_archive_linux_yocto "
 
 # remove tarball for sources, patches and logs after creating srpm.
 python do_remove_tarball(){
-    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True).upper() == 'SRPM':
+    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
         work_dir = d.getVar('WORKDIR', True)
         try:
             for file in os.listdir(os.getcwd()):
