@@ -7,33 +7,27 @@ RPATH in the generated binary.  Normalize before comparision.
 Signed-off-by: Andy Ross <andy.ross@windriver.com>
 Upstream-Status: Pending
 
-diff -ru a/libltdl/config/ltmain.m4sh b/libltdl/config/ltmain.m4sh
+diff -ur a/libltdl/config/ltmain.m4sh b/libltdl/config/ltmain.m4sh
 --- a/libltdl/config/ltmain.m4sh	2012-08-16 13:58:55.058900363 -0700
-+++ b/libltdl/config/ltmain.m4sh	2012-08-16 16:34:54.616627821 -0700
-@@ -7288,8 +7288,13 @@
++++ b/libltdl/config/ltmain.m4sh	2012-08-22 11:01:34.191345989 -0700
+@@ -7288,8 +7288,10 @@
  	      else
                  # We only want to hardcode in an rpath if it isn't in the
                  # default dlsearch path.
-+                libdir_norm=`echo $libdir \
-+                  | sed 's/\/\+\.\(\/\+\|$\)/\//g' \
-+                  | sed 's/[^\/]\+\/\+\.\.\(\/\+\|$\)//g' \
-+                  | sed 's/\/\+/\//g' \
-+                  | sed 's/\(.\)\/$/\1/g'`
++                func_normal_abspath "$libdir"
++                libdir_norm=$func_normal_abspath_result
  	        case " $sys_lib_dlsearch_path " in
 -	        *" $libdir "*) ;;
 +	        *" $libdir_norm "*) ;;
  	        *) eval flag=\"$hardcode_libdir_flag_spec\"
                     func_append dep_rpath " $flag"
                     ;;
-@@ -8027,8 +8032,13 @@
+@@ -8027,8 +8029,10 @@
  	  else
              # We only want to hardcode in an rpath if it isn't in the
              # default dlsearch path.
-+            libdir_norm=`echo $libdir \
-+              | sed 's/\/\+\.\(\/\+\|$\)/\//g' \
-+              | sed 's/[^\/]\+\/\+\.\.\(\/\+\|$\)//g' \
-+              | sed 's/\/\+/\//g' \
-+              | sed 's/\(.\)\/$/\1/g'`
++            func_normal_abspath "$libdir"
++            libdir_norm=$func_normal_abspath_result
  	    case " $sys_lib_dlsearch_path " in
 -	    *" $libdir "*) ;;
 +	    *" $libdir_norm "*) ;;
