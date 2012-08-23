@@ -10,15 +10,15 @@ format using a printer-specific, but spooler-independent PPD file. \
 "
 
 DEPENDS += "cups perl libxml2"
-PR = "r1"
+PR = "r0"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/foomatic-filters-${PV}/COPYING;md5=393a5ca445f6965873eca0259a17f833"
 
 SRC_URI = "http://www.openprinting.org/download/foomatic/foomatic-filters-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "ec907d9ea17e03bccb91db66e9470586"
-SRC_URI[sha256sum] = "bedc61466c284c8ea0ae95c97d51a873411c6c55338e67831893772465f5434d"
+SRC_URI[md5sum] = "b05f5dcbfe359f198eef3df5b283d896"
+SRC_URI[sha256sum] = "a2e2e53e502571e88eeb9010c45a0d54671f15707ee104f5c9c22b59ea7a33e3"
 
 inherit autotools
 
