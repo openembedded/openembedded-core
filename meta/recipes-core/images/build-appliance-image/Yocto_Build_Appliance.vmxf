@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<Foundry>
+<VM>
+<VMId type="string">52 e4 0b df 7b 70 21 f8-88 56 a7 26 47 43 95 93</VMId>
+<ClientMetaData>
+<clientMetaDataAttributes/>
+<HistoryEventList/></ClientMetaData>
+<vmxPathName type="string">Yocto_Build_Appliance.vmx</vmxPathName></VM></Foundry>
