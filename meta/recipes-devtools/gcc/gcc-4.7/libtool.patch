@@ -1,0 +1,29 @@
+libstdc++ from gcc-runtime gets created with -rpath=/usr/lib/../lib for qemux86-64
+when running on am x86_64 build host.
+
+This patch stops this speading to libdir in the libstdc++.la file within libtool.
+Aguably, it shouldn't be passing this into libtool in the first place but
+for now this resolves the nastiest problems this causes.
+
+func_normal_abspath would resolve an empty path to `pwd` so we need
+to filter the zero case.
+
+RP 2012/8/24
+
+Upstream-Status: Pending
+
+Index: git/ltmain.sh
+===================================================================
+--- git.orig/ltmain.sh	2012-08-24 11:45:58.597087961 +0000
++++ git/ltmain.sh	2012-08-24 12:18:37.961042581 +0000
+@@ -6359,6 +6359,10 @@
+ 	func_warning "ignoring multiple \`-rpath's for a libtool library"
+ 
+       install_libdir="$1"
++      if test -n "$install_libdir"; then
++	func_normal_abspath "$install_libdir"
++	install_libdir=$func_normal_abspath_result
++      fi
+ 
+       oldlibs=
+       if test -z "$rpath"; then
