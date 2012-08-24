@@ -1,0 +1,17 @@
+Upstream-Status: Not applicable
+
+Index: git/libkmod/libkmod-private.h
+===================================================================
+--- git.orig/libkmod/libkmod-private.h
++++ git/libkmod/libkmod-private.h
+@@ -1,6 +1,10 @@
+ #ifndef _LIBKMOD_PRIVATE_H_
+ #define _LIBKMOD_PRIVATE_H_
+ 
++#ifndef O_CLOEXEC
++# define O_CLOEXEC 0
++#endif
++
+ #include <stdbool.h>
+ #include <stdio.h>
+ #include <syslog.h>
