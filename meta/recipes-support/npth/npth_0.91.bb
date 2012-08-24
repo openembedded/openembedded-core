@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "\
     "
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/npth/npth-${PV}.tar.bz2 \
           "
-SRC_URI[md5sum] = "701665669b371385a92817ff1f9215ca"
-SRC_URI[sha256sum] = "e24e99c9e90e7c2c2272fed3a939647fdcd3a7ee0c9efb2983eed553ab2b4568"
+SRC_URI[md5sum] = "87712f0cee656c390b49773923e26e7f"
+SRC_URI[sha256sum] = "caef86ced4a331e162897818a5b924860c8d6003e52da5bdf76da00e8e0dfae1"
 
 inherit autotools binconfig
 
