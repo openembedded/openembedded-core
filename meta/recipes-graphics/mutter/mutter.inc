@@ -12,6 +12,7 @@ ALTERNATIVE_PRIORITY = "11"
 EXTRA_OECONF += "--disable-verbose	\
 	         --disable-xinerama	\
 	         --without-introspection \
+	         --without-libcanberra \
 		 --with-clutter"
 
 #RDEPENDS_${PN} = "zenity"
