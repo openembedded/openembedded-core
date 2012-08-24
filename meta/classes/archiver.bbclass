@@ -359,26 +359,22 @@ def store_package(d, package_name):
     """
     store tarbablls name to file "tar-package"
     """
-    try:
-        f = open(os.path.join(d.getVar('WORKDIR', True), 'tar-package'), 'a')
-        f.write(package_name + ' ')
-        f.close()
-    except IOError:
-        pass
+    f = open(os.path.join(d.getVar('WORKDIR', True), 'tar-package'), 'a')
+    f.write(package_name + ' ')
+    f.close()
 
 def get_package(d):
     """
     get tarballs name from "tar-package"
     """
     work_dir = (d.getVar('WORKDIR', True))
-    tarpackage = os.path.join(work_dir, 'tar-package')
-    try:
-        f = open(tarpackage, 'r')
-        line = list(set(f.readline().replace('\n', '').split()))
-    except UnboundLocalError, IOError:
-        pass
-    f.close()
-    return line
+    tarlist = os.path.join(work_dir, 'tar-package')
+    if os.path.exists(tarlist):
+        f = open(tarlist, 'r')
+        line = f.readline().rstrip('\n').split()
+        f.close()
+        return line
+    return []
 
 
 def archive_sources_patches(d, stage_name):
@@ -407,9 +403,9 @@ def archive_sources_patches(d, stage_name):
     if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) != 'srpm':
         move_tarball_deploy(d, [source_tar_name, patch_tar_name])
     else:
-        tarpackage = os.path.join(d.getVar('WORKDIR', True), 'tar-package')
-        if os.path.exists(tarpackage):
-            os.remove(tarpackage)
+        tarlist = os.path.join(d.getVar('WORKDIR', True), 'tar-package')
+        if os.path.exists(tarlist):
+            os.remove(tarlist)
         for package in os.path.basename(source_tar_name), patch_tar_name:
             if package:
                 store_package(d, str(package) + ' ')
@@ -558,18 +554,11 @@ python do_archive_linux_yocto(){
 do_kernel_checkout[postfuncs] += "do_archive_linux_yocto "
 
 # remove tarball for sources, patches and logs after creating srpm.
-python do_remove_tarball(){
-    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
-        work_dir = d.getVar('WORKDIR', True)
-        try:
-            for file in os.listdir(os.getcwd()):
-                if file in get_package(d):
-                    os.remove(file)
-            os.remove(os.path.join(work_dir, 'tar-package'))
-        except (TypeError, OSError):
-            pass
+python do_remove_tarlist(){
+    work_dir = d.getVar('WORKDIR', True)
+    tarlist = os.path.join(work_dir, 'tar-package')
+    if os.path.exists(tarlist):
+        os.remove(tarlist)
 }
-do_remove_tarball[deptask] = "do_archive_scripts_logs"
-do_package_write_rpm[postfuncs] += "do_remove_tarball "
-export get_licenses
-export get_package
+do_remove_tarlist[deptask] = "do_archive_scripts_logs"
+do_package_write_rpm[postfuncs] += "do_remove_tarlist "
