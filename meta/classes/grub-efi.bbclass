@@ -14,7 +14,7 @@
 # ${GRUB_OPTS} - additional options to add to the config, ';' delimited # (optional)
 # ${GRUB_TIMEOUT} - timeout before executing the deault label (optional)
 
-do_bootimg[depends] += "grub-efi-${TARGET_ARCH}-native:do_deploy"
+do_bootimg[depends] += "grub-efi-${TRANSLATED_TARGET_ARCH}-native:do_deploy"
 
 GRUBCFG = "${S}/grub.cfg"
 GRUB_TIMEOUT ?= "10"
