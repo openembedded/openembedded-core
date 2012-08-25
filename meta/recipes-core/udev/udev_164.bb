@@ -1,6 +1,6 @@
 include udev.inc
 
-PR = "r15"
+PR = "r16"
 
 SRC_URI += "file://udev-166-v4l1-1.patch \
             file://include_resource.patch \
