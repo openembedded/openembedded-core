@@ -3,6 +3,7 @@ SSTATE_VERSION = "2"
 SSTATE_MANIFESTS ?= "${TMPDIR}/sstate-control"
 SSTATE_MANFILEBASE = "${SSTATE_MANIFESTS}/manifest-${SSTATE_MANMACH}-"
 SSTATE_MANFILEPREFIX = "${SSTATE_MANFILEBASE}${PN}"
+SSTATE_MASTERMANIFEST = "${SSTATE_MANIFESTS}/master.list"
 
 def generate_sstatefn(spec, hash, d):
     if not hash:
@@ -17,6 +18,7 @@ SSTATE_EXTRAPATH   = ""
 SSTATE_EXTRAPATHWILDCARD = ""
 SSTATE_PATHSPEC   = "${SSTATE_DIR}/${SSTATE_EXTRAPATHWILDCARD}*/${SSTATE_PKGSPEC}"
 
+SSTATE_DUPWHITELIST = "${DEPLOY_DIR_IMAGE}/ ${DEPLOY_DIR}/licenses/ ${DEPLOY_DIR_IPK}/all/ ${DEPLOY_DIR_RPM}/all ${DEPLOY_DIR_DEB}/all/"
 
 SSTATE_SCAN_FILES ?= "*.la *-config *_config"
 SSTATE_SCAN_CMD ?= 'find ${SSTATE_BUILDDIR} \( -name "${@"\" -o -name \"".join(d.getVar("SSTATE_SCAN_FILES", True).split())}" \) -type f'
@@ -125,7 +127,6 @@ def sstate_install(ss, d):
         locks.append(bb.utils.lockfile(lock))
 
     for state in ss['dirs']:
-        oe.path.copytree(state[1], state[2])
         for walkroot, dirs, files in os.walk(state[1]):
             bb.debug(2, "Staging files from %s to %s" % (state[1], state[2]))
             for file in files:
@@ -140,9 +141,35 @@ def sstate_install(ss, d):
                 if not dstdir.endswith("/"):
                     dstdir = dstdir + "/"
                 shareddirs.append(dstdir)
+
+    # Check the file list for conflicts against the master manifest
+    mastermanifest = d.getVar("SSTATE_MASTERMANIFEST", True)
+    whitelist = d.getVar("SSTATE_DUPWHITELIST", True)
+    lock = bb.utils.lockfile(mastermanifest + ".lock")
+    fileslist = [line.strip() for line in open(mastermanifest)]
+    bb.utils.unlockfile(lock)
+    match = []
+    for f in sharedfiles:
+        if f in fileslist:
+            realmatch = True
+            for w in whitelist:
+                if f.startswith(w):
+                    realmatch = False
+                    break
+            if realmatch:
+                match.append(f)
+    if match:
+        bb.warn("The recipe is trying to install files into a shared area when those files already exist. Those files are:\n   %s" % "\n   ".join(match))
+
+    # Write out the manifest and add to the task's manifest file
+    lock = bb.utils.lockfile(mastermanifest + ".lock")
+    mf = open(mastermanifest, "a")
     f = open(manifest, "w")
     for file in sharedfiles:
+        mf.write(file + "\n")
         f.write(file + "\n")
+    bb.utils.unlockfile(lock)
+
     # We want to ensure that directories appear at the end of the manifest
     # so that when we test to see if they should be deleted any contents
     # added by the task will have been removed first.
@@ -151,6 +178,10 @@ def sstate_install(ss, d):
     for di in reversed(dirs):
         f.write(di + "\n")
     f.close()
+
+    # Run the actual file install
+    for state in ss['dirs']:
+        oe.path.copytree(state[1], state[2])
 
     for postinst in (d.getVar('SSTATEPOSTINSTFUNCS', True) or '').split():
         bb.build.exec_func(postinst, d)
@@ -267,6 +298,18 @@ def sstate_clean_manifest(manifest, d):
                 oe.path.remove(entry)
         except OSError:
             pass
+
+    # Remove the entries from the master manifest
+    mastermanifest = d.getVar("SSTATE_MASTERMANIFEST", True)
+    lock = bb.utils.lockfile(mastermanifest + ".lock")
+    mf = open(mastermanifest + ".new", "w")
+    for line in open(mastermanifest, "r"):
+        if not line or line in entries:
+            continue
+        mf.write(line)
+    mf.close()
+    os.rename(mastermanifest + ".new", mastermanifest)
+    bb.utils.unlockfile(lock)
 
     oe.path.remove(manifest)
 
