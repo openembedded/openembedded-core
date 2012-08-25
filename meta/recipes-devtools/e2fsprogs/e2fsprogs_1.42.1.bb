@@ -1,6 +1,6 @@
 require e2fsprogs.inc
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI += "file://fallocate.patch \
             file://acinclude.m4 \
@@ -30,6 +30,7 @@ do_install () {
 	rm -f ${D}${base_libdir}/libblkid*
 	rm -rf ${D}${includedir}/blkid
 	rm -f ${D}${base_libdir}/pkgconfig/blkid.pc
+	rm -f ${D}${base_sbindir}/blkid
 }
 
 do_install_append () {
@@ -41,15 +42,11 @@ do_install_append () {
 	fi
 }
 
-# blkid used to be part of e2fsprogs but is useful outside, add it
-# as an RDEPENDS_${PN} so that anything relying on it being in e2fsprogs
-# still works
-RDEPENDS_e2fsprogs = "e2fsprogs-blkid e2fsprogs-badblocks"
+RDEPENDS_e2fsprogs = "e2fsprogs-badblocks"
 
-PACKAGES =+ "e2fsprogs-blkid e2fsprogs-e2fsck e2fsprogs-mke2fs e2fsprogs-fsck e2fsprogs-tune2fs e2fsprogs-badblocks"
+PACKAGES =+ "e2fsprogs-e2fsck e2fsprogs-mke2fs e2fsprogs-fsck e2fsprogs-tune2fs e2fsprogs-badblocks"
 PACKAGES =+ "libcomerr libss libe2p libext2fs"
 
-FILES_e2fsprogs-blkid = "${base_sbindir}/blkid"
 FILES_e2fsprogs-fsck = "${base_sbindir}/fsck"
 FILES_e2fsprogs-e2fsck = "${base_sbindir}/e2fsck ${base_sbindir}/fsck.ext*"
 FILES_e2fsprogs-mke2fs = "${base_sbindir}/mke2fs ${base_sbindir}/mkfs.ext* ${sysconfdir}/mke2fs.conf"
