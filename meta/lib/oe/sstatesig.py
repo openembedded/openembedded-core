@@ -74,3 +74,84 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
 # Insert these classes into siggen's namespace so it can see and select them
 bb.siggen.SignatureGeneratorOEBasic = SignatureGeneratorOEBasic
 bb.siggen.SignatureGeneratorOEBasicHash = SignatureGeneratorOEBasicHash
+
+
+def find_siginfo(pn, taskname, taskhashlist, d):
+    """ Find signature data files for comparison purposes """
+
+    import fnmatch
+
+    if taskhashlist:
+        hashfiles = {}
+
+    if not taskname:
+        # We have to derive pn and taskname
+        key = pn
+        splitit = key.split('.bb.')
+        taskname = splitit[1]
+        pn = os.path.basename(splitit[0]).split('_')[0]
+        if key.startswith('virtual:native:'):
+            pn = pn + '-native'
+
+    # First search in stamps dir
+    stampdir = d.getVar('TMPDIR', True) + '/stamps'
+    filespec = '%s-*.%s.sigdata.*' % (pn, taskname)
+    filedates = {}
+    foundall = False
+    for root, dirs, files in os.walk(stampdir):
+        for fn in files:
+            if fnmatch.fnmatch(fn, filespec):
+                fullpath = os.path.join(root, fn)
+                match = False
+                if taskhashlist:
+                    for taskhash in taskhashlist:
+                        if fn.endswith('.%s' % taskhash):
+                            hashfiles[taskhash] = fullpath
+                            if len(hashfiles) == len(taskhashlist):
+                                foundall = True
+                                break
+                else:
+                    filedates[fullpath] = os.stat(fullpath).st_mtime
+        if foundall:
+            break
+
+    if len(filedates) < 2 and not foundall:
+        # That didn't work, look in sstate-cache
+        hashes = taskhashlist or ['*']
+        localdata = bb.data.createCopy(d)
+        for hashval in hashes:
+            localdata.setVar('PACKAGE_ARCH', '*')
+            localdata.setVar('TARGET_VENDOR', '*')
+            localdata.setVar('TARGET_OS', '*')
+            localdata.setVar('PN', pn)
+            localdata.setVar('PV', '*')
+            localdata.setVar('PR', '*')
+            localdata.setVar('BB_TASKHASH', hashval)
+            if pn.endswith('-native') or pn.endswith('-crosssdk') or pn.endswith('-cross'):
+                localdata.setVar('SSTATE_EXTRAPATH', "${NATIVELSBSTRING}/")
+            sstatename = d.getVarFlag(taskname, "sstate-name")
+            if not sstatename:
+                sstatename = taskname
+            filespec = '%s_%s.*.siginfo' % (localdata.getVar('SSTATE_PKG', True), sstatename)
+
+            if hashval != '*':
+                sstatedir = "%s/%s" % (d.getVar('SSTATE_DIR', True), hashval[:2])
+            else:
+                sstatedir = d.getVar('SSTATE_DIR', True)
+
+            filedates = {}
+            for root, dirs, files in os.walk(sstatedir):
+                for fn in files:
+                    fullpath = os.path.join(root, fn)
+                    if fnmatch.fnmatch(fullpath, filespec):
+                        if taskhashlist:
+                            hashfiles[hashval] = fullpath
+                        else:
+                            filedates[fullpath] = os.stat(fullpath).st_mtime
+
+    if taskhashlist:
+        return hashfiles
+    else:
+        return filedates
+
+bb.siggen.find_siginfo = find_siginfo
