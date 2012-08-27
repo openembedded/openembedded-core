@@ -73,15 +73,18 @@ if [ ! -d "$SDK_ROOTFS_DIR" ]; then
 	mkdir -p "$SDK_ROOTFS_DIR"
 fi
 
-if [ -e "$SDK_ROOTFS_DIR/var/pseudo" ]; then
-	echo "Error: $SDK_ROOTFS_DIR/var/pseudo already exists!"
-	echo "Please delete the entire rootfs tree manually if this is really what you want"
+pseudo_state_dir="$SDK_ROOTFS_DIR/../$(basename "$SDK_ROOTFS_DIR").pseudo_state"
+
+if [ -e "$pseudo_state_dir" ]; then
+	echo "Error: $pseudo_state_dir already exists!"
+	echo "Please delete the rootfs tree and pseudo directory manually"
+        echo "if this is really what you want."
 	exit 1
 fi
 
-mkdir -p "$SDK_ROOTFS_DIR/var/pseudo"
-touch "$SDK_ROOTFS_DIR/var/pseudo/pseudo.pid"
-PSEUDO_LOCALSTATEDIR="$SDK_ROOTFS_DIR/var/pseudo"
+mkdir -p "$pseudo_state_dir"
+touch "$pseudo_state_dir/pseudo.pid"
+PSEUDO_LOCALSTATEDIR="$pseudo_state_dir"
 export PSEUDO_LOCALSTATEDIR
 
 echo "Extracting rootfs tarball using pseudo..."

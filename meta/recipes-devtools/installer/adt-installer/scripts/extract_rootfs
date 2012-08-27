@@ -28,7 +28,6 @@ extract_rootfs()
   native_sysroot=$3
   target_sysroot=$2
   PSEUDO_COMMAND="$native_sysroot/usr/bin/pseudo"
-  PSEUDO_OPTS="-P $natvie_sysroot/usr"
   TAR_OPTS="-xjf"
   PSEUDO_OPTS="-P $native_sysroot/usr"
 
@@ -46,9 +45,10 @@ extract_rootfs()
     mkdir -p "$target_sysroot"
   fi
 
-  mkdir -p "$target_sysroot/var/pseudo"
-  touch "$target_sysroot/var/pseudo/pseudo.pid"
-  PSEUDO_LOCALSTATEDIR="$target_sysroot/var/pseudo"
+  pseudo_state_dir="$target_sysroot/../$(basename "$target_sysroot").pseudo_state"
+  mkdir -p "$pseudo_state_dir"
+  touch "$pseudo_state_dir/pseudo.pid"
+  PSEUDO_LOCALSTATEDIR="$pseudo_state_dir"
   export PSEUDO_LOCALSTATEDIR
 
   echo_info "Extracting rootfs: $1, using pseudo..."
