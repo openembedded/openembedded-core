@@ -1,5 +1,8 @@
 require xorg-lib-common.inc
 
+# libxpm requires xgettext to build
+inherit gettext
+
 SUMMARY = "Xpm: X Pixmap extension library"
 
 DESCRIPTION = "libXpm provides support and common operation for the XPM \
