@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Create Basic Image Tasks"
-PR = "r10"
+PR = "r11"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
@@ -33,7 +33,6 @@ RDEPENDS_task-self-hosted-host-tools = "\
     dhcp-client \
     e2fsprogs \
     e2fsprogs-e2fsck \
-    e2fsprogs-fsck \
     e2fsprogs-mke2fs \
     e2fsprogs-tune2fs \
     genext2fs \
