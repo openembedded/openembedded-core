@@ -1,23 +1,28 @@
 Adapt to linux-wrs kernel version, which has character '_' inside.
+Remove the first-char-digit-check (as the 1.15.8.5 version does).
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
 
 Upstream-Status: Inappropriate [embedded specific]
 
-diff -ruN dpkg-1.15.8.5-orig/lib/dpkg/parsehelp.c dpkg-1.15.8.5/lib/dpkg/parsehelp.c
---- dpkg-1.15.8.5-orig/lib/dpkg/parsehelp.c	2010-10-08 12:27:15.058572774 +0800
-+++ dpkg-1.15.8.5/lib/dpkg/parsehelp.c	2010-10-09 11:18:15.484190771 +0800
-@@ -268,11 +268,11 @@
+Index: dpkg-1.16.8/lib/dpkg/parsehelp.c
+===================================================================
+--- dpkg-1.16.8.orig/lib/dpkg/parsehelp.c
++++ dpkg-1.16.8/lib/dpkg/parsehelp.c
+@@ -258,14 +258,12 @@ parseversion(struct dpkg_version *rversi
  
    /* XXX: Would be faster to use something like cisversion and cisrevision. */
-   for (ptr = rversion->version; *ptr; ptr++) {
+   ptr = rversion->version;
+-  if (*ptr && !cisdigit(*ptr++))
+-    return dpkg_put_warn(err, _("version number does not start with digit"));
+   for (; *ptr; ptr++) {
 -    if (!cisdigit(*ptr) && !cisalpha(*ptr) && strchr(".-+~:", *ptr) == NULL)
 +    if (!cisdigit(*ptr) && !cisalpha(*ptr) && strchr(".-+~:_", *ptr) == NULL)
-       return _("invalid character in version number");
+       return dpkg_put_warn(err, _("invalid character in version number"));
    }
    for (ptr = rversion->revision; *ptr; ptr++) {
--    if (!cisdigit(*ptr) && !cisalpha(*ptr) && strchr(".-+~", *ptr) == NULL)
+-    if (!cisdigit(*ptr) && !cisalpha(*ptr) && strchr(".+~", *ptr) == NULL)
 +    if (!cisdigit(*ptr) && !cisalpha(*ptr) && strchr(".-+~_", *ptr) == NULL)
-       return _("invalid character in revision number");
+       return dpkg_put_warn(err, _("invalid character in revision number"));
    }
- 

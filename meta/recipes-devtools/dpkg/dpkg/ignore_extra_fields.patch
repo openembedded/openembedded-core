@@ -1,22 +1,21 @@
 Upstream-Status: Inappropriate [workaround]
 
-diff -ruN dpkg-1.15.8.5-orig/dpkg-deb/build.c dpkg-1.15.8.5/dpkg-deb/build.c
---- dpkg-1.15.8.5-orig/dpkg-deb/build.c	2010-10-08 12:27:15.042083703 +0800
-+++ dpkg-1.15.8.5/dpkg-deb/build.c	2010-10-08 12:31:53.822534277 +0800
-@@ -275,14 +275,14 @@
-               controlfile, checkedinfo->otherpriority);
-       warns++;
-     }
--    for (field= checkedinfo->available.arbs; field; field= field->next) {
-+    /*for (field= checkedinfo->available.arbs; field; field= field->next) {
-       if (known_arbitrary_field(field))
-         continue;
+Index: dpkg-1.16.8/dpkg-deb/build.c
+===================================================================
+--- dpkg-1.16.8.orig/dpkg-deb/build.c
++++ dpkg-1.16.8/dpkg-deb/build.c
+@@ -340,13 +340,13 @@ check_new_pkg(const char *dir)
+   if (pkg->priority == pri_other)
+     warning(_("'%s' contains user-defined Priority value '%s'"),
+             controlfile, pkg->otherpriority);
+-  for (field = pkg->available.arbs; field; field = field->next) {
++  /*for (field = pkg->available.arbs; field; field = field->next) {
+     if (known_arbitrary_field(field))
+       continue;
  
-       warning(_("'%s' contains user-defined field '%s'"),
-               controlfile, field->name);
-       warns++;
--    }
-+    }*/
+     warning(_("'%s' contains user-defined field '%s'"), controlfile,
+             field->name);
+-  }
++  }*/
  
-     if (subdir) {
-       versionstring= versiondescribe(&checkedinfo->available.version,vdew_never);
+   free(controlfile);

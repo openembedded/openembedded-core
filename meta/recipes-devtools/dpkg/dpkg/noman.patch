@@ -12,4 +12,3 @@ diff -ruN dpkg-1.15.8.5-orig/Makefile.am dpkg-1.15.8.5/Makefile.am
 +	po
  
  ACLOCAL_AMFLAGS = -I m4
- 

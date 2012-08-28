@@ -1,0 +1,21 @@
+The lutimes function doesn't work properly for all systems.
+
+Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
+
+Upstream-Status: Inappropriate [embedded specific]
+
+Index: dpkg-1.16.8/src/archives.c
+===================================================================
+--- dpkg-1.16.8.orig/src/archives.c
++++ dpkg-1.16.8/src/archives.c
+@@ -440,8 +440,10 @@ tarobject_set_mtime(struct tar_entry *te
+ 
+   if (te->type == tar_filetype_symlink) {
+ #ifdef HAVE_LUTIMES
++/*
+     if (lutimes(path, tv) && errno != ENOSYS)
+       ohshite(_("error setting timestamps of `%.255s'"), path);
++*/
+ #endif
+   } else {
+     if (utimes(path, tv))
