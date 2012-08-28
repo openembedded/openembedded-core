@@ -5,7 +5,7 @@ HOMEPAGE = "http://primates.ximian.com/~flucifredi/man"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
-PR = "r3"
+PR = "r4"
 
 DEPENDS = "groff less"
 
@@ -54,7 +54,7 @@ do_install_append(){
 	mkdir -p  ${D}/etc/
         mkdir -p ${D}${datadir}/man/man5
         mkdir -p ${D}${datadir}/man/man7
-	cp ${S}/src/man.conf ${D}/etc/
+	cp ${WORKDIR}/man.conf ${D}/etc/man.config
         cp ${WORKDIR}/man.1.gz ${D}${datadir}/man/man1/
         cp ${WORKDIR}/man.7.gz ${D}${datadir}/man/man7/
         cp ${WORKDIR}/manpath.5.gz ${D}${datadir}/man/man5/
@@ -62,4 +62,4 @@ do_install_append(){
 
 
 RDEPENDS_${PN} = "less groff"
-FILES_${PN} += "${datadir}/locale ${sysconfdir}/man.conf"
+FILES_${PN} += "${datadir}/locale ${sysconfdir}/man.config"
