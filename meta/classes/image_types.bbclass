@@ -247,3 +247,6 @@ RUNNABLE_IMAGE_TYPES ?= "ext2 ext3"
 RUNNABLE_MACHINE_PATTERNS ?= "qemu"
 
 DEPLOYABLE_IMAGE_TYPES ?= "hddimg iso" 
+
+# Use IMAGE_EXTENSION_xxx to map image type 'xxx' with real image file extension name(s) for Hob
+IMAGE_EXTENSION_live = "hddimg iso"
