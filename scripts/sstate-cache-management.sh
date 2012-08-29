@@ -211,8 +211,25 @@ remove_duplicated () {
           for arch in $ava_archs; do
               grep -h "/$fn-$arch-" $list_suffix >>$fn_tmp
           done
-          # Use the access time, also delete the .siginfo file
+          # Use the modification time
           to_del=$(ls -t $(cat $fn_tmp) | sed -n '1!p')
+          # The sstate file which is downloaded from the SSTATE_MIRROR is
+          # put in SSTATE_DIR, and there is a symlink in SSTATE_DIR/??/ to
+          # it, so filter it out from the remove list if it should not be
+          # removed.
+          to_keep=$(ls -t $(cat $fn_tmp) | sed -n '1p')
+          for k in $to_keep; do
+              if [ -L "$k" ]; then
+                  # The symlink's destination
+                  k_dest="`readlink -e $k`"
+                  # Maybe it is the one in cache_dir
+                  k_maybe="$cache_dir/${k##/*/}"
+                  # Remove it from the remove list if they are the same.
+                  if [ "$k_dest" = "$k_maybe" ]; then
+                      to_del="`echo $to_del | sed 's#'\"$k_maybe\"'##g'`"
+                  fi
+              fi
+          done
           rm -f $fn_tmp
           gen_rmlist $rm_list "$to_del"
       done
@@ -221,6 +238,7 @@ remove_duplicated () {
       let total_deleted=$total_deleted+$deleted
   done
   rm -f $list_suffix
+  rm -f $sstate_list
   if [ $total_deleted -gt 0 ]; then
       read_confirm
       if [ "$confirm" = "y" -o "$confirm" = "Y" ]; then
