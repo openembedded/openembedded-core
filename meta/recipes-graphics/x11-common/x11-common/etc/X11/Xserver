@@ -1,52 +1,11 @@
 #!/bin/sh
 #
 
-# note xinit needs full server path
-XSERVER=/usr/bin/Xipaq
-if [ -f /usr/bin/Xfbdev ]; then
-  XSERVER=/usr/bin/Xfbdev
-fi
-if [ -f /usr/bin/Xepson ]; then
-  XSERVER=/usr/bin/Xepson
-fi
-if [ -f /usr/bin/Xorg ]; then
-  XSERVER=/usr/bin/Xorg
-fi
-if [ -f /usr/bin/Xomap ]; then
-  XSERVER=/usr/bin/Xomap
-fi
+XSERVER=/usr/bin/Xorg
 
 . /etc/profile
 
 ARGS=" -br -pn"
-
-if [ "$XSERVER" != "/usr/bin/Xorg" ]; then
-
-        . /etc/formfactor/config
-
-        ARGS="$ARGS -keybd keyboard"
-
-        # use usb mouse if present
-        if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/input/mice ]; then
-          ARGS="$ARGS -mouse mouse,/dev/input/mice"
-        fi
-
-        # kdrive 1.4 onwards needs -mouse args
-        if [ -n "$TSLIB_TSDEVICE" ]; then
-          ARGS="$ARGS -mouse tslib"
-        fi
-
-        ARGS="$ARGS -screen ${DISPLAY_WIDTH_PIXELS}x${DISPLAY_HEIGHT_PIXELS}@${DISPLAY_ORIENTATION}x${DISPLAY_BPP}"
-
-        if [ ! -z "$DISPLAY_DPI" ]; then
-                ARGS="$ARGS -dpi $DISPLAY_DPI"
-        fi
-
-        if [ ! -z "$DISPLAY_SUBPIXEL_ORDER" ]; then
-                ARGS="$ARGS -rgba $DISPLAY_SUBPIXEL_ORDER"
-        fi
-
-fi
 
 DISPLAY=':0'
 
