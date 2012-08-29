@@ -20,9 +20,3 @@ RDEPENDS_packagegroup-core-nfs-server = "\
     nfs-utils \
     nfs-utils-client \
     "
-
-# rpcinfo can be useful but only with glibc images
-GLIBC_DEPENDENCIES = "glibc-utils"
-
-RRECOMMENDS_packagegroup-core-nfs-server_append_libc-glibc = " ${GLIBC_DEPENDENCIES}"
-
