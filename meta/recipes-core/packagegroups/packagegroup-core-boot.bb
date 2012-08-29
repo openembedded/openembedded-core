@@ -25,12 +25,12 @@ VIRTUAL-RUNTIME_initscripts ?= "initscripts"
 VIRTUAL-RUNTIME_keymaps ?= "keymaps"
 
 PACKAGES = "\
-    task-core-boot \
-    task-core-boot-dbg \
-    task-core-boot-dev \
+    packagegroup-core-boot \
+    packagegroup-core-boot-dbg \
+    packagegroup-core-boot-dev \
 "
 
-RDEPENDS_task-core-boot = "\
+RDEPENDS_packagegroup-core-boot = "\
     base-files \
     base-passwd \
     busybox \
@@ -45,5 +45,5 @@ RDEPENDS_task-core-boot = "\
     ${VIRTUAL-RUNTIME_update-alternatives} \
     ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
 
-RRECOMMENDS_task-core-boot = "\
+RRECOMMENDS_packagegroup-core-boot = "\
     ${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS}"

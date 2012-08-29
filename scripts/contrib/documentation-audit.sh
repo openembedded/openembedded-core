@@ -42,7 +42,7 @@ for pkg in `bitbake -s | awk '{ print \$1 }'`; do
 		# Skip native/nativesdk/cross-canadian recipes
 		continue
 	fi
-	if [[ "$pkg" =~ ^meta- || "$pkg" =~ ^task- || "$pkg" =~ -image ]]; then
+	if [[ "$pkg" =~ ^meta- || "$pkg" =~ ^packagegroup- || "$pkg" =~ -image ]]; then
 		# Skip meta, task and image recipes
 		continue
 	fi

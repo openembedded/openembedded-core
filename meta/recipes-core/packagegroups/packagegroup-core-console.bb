@@ -9,9 +9,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 PR = "r35"
 
 PACKAGES = "\
-    task-core-apps-console \
-    task-core-apps-console-dbg \
-    task-core-apps-console-dev \
+    packagegroup-core-apps-console \
+    packagegroup-core-apps-console-dbg \
+    packagegroup-core-apps-console-dev \
     "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -20,7 +20,7 @@ ALLOW_EMPTY = "1"
 
 SPLASH ?= "psplash"
 
-RDEPENDS_task-core-apps-console = "\
+RDEPENDS_packagegroup-core-apps-console = "\
     avahi-daemon \
     dbus \
     portmap \

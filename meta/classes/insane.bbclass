@@ -591,7 +591,7 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, d):
         return True
 
     sane = True
-    if not "-dbg" in pkg and not "task-" in pkg and not "-image" in pkg:
+    if not "-dbg" in pkg and not "packagegroup-" in pkg and not "-image" in pkg:
         # Copied from package_ipk.bbclass
         # boiler plate to update the data
         localdata = bb.data.createCopy(d)

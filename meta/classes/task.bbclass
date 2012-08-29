@@ -1,30 +1,6 @@
-# Task packages are only used to pull in other packages
-# via their dependencies. They are empty.
-ALLOW_EMPTY = "1"
-
-# By default, only the task package itself is in PACKAGES.
-# -dbg and -dev flavours are handled by the anonfunc below.
-# This means that task recipes used to build multiple task
-# packages have to modify PACKAGES after inheriting task.bbclass.
-PACKAGES = "${PN}"
-
-# By default, task packages do not depend on a certain architecture.
-# Only if dependencies are modified by MACHINE_FEATURES, packages
-# need to be set to MACHINE_ARCH after inheriting task.bbclass
-PACKAGE_ARCH = "all"
-
-# This automatically adds -dbg and -dev flavours of all PACKAGES
-# to the list. Their dependencies (RRECOMMENDS) are handled as usual
-# by package_depchains in a following step.
-python () {
-    packages = d.getVar('PACKAGES', True).split()
-    genpackages = []
-    for pkg in packages:
-        for postfix in ['-dbg', '-dev']:
-            genpackages.append(pkg+postfix)
-    d.setVar('PACKAGES', ' '.join(packages+genpackages))
+python __anonymous() {
+    bb.warn("%s: task.bbclass is deprecated, please inherit packagegroup instead" % d.getVar("PN", True))
 }
 
-# We don't want to look at shared library dependencies for the
-# dbg packages
-DEPCHAIN_DBGDEFAULTDEPS = "1"
+inherit packagegroup
+

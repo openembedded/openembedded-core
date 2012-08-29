@@ -188,11 +188,11 @@ def get_applying_patches(d):
 
 def not_tarball(d):
     """
-    packages including key words 'work-shared', 'native', 'task-' will be passed
+    packages including key words 'work-shared', 'native', 'packagegroup-' will be passed
     """
     workdir = d.getVar('WORKDIR', True)
     s = d.getVar('S', True)
-    if 'work-shared' in s or 'task-' in workdir or 'native' in workdir:
+    if 'work-shared' in s or 'packagegroup-' in workdir or 'native' in workdir:
         return True
     else:
         return False

@@ -5,7 +5,7 @@ Configure distro version package
 We need to configure a package that the system can use to determine the
 system distribution version.
 
-Hack: for now set to task-core-rpm.
+Hack: for now set to packagegroup-core-rpm.
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
@@ -17,7 +17,7 @@ diff -ur git.orig/zypp/ZConfig.cc git/zypp/ZConfig.cc
  
    std::string ZConfig::distroverpkg() const
 -  { return "redhat-release"; }
-+  { return "task-core-rpm"; }
++  { return "packagegroup-core-rpm"; }
  
    ///////////////////////////////////////////////////////////////////
  

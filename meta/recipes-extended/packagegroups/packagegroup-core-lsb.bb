@@ -9,50 +9,50 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PACKAGES = "\
-    task-core-lsb \
-    task-core-sys-extended \
-    task-core-sys-extended-dbg \
-    task-core-sys-extended-dev \
-    task-core-db \
-    task-core-db-dbg \
-    task-core-db-dev \
-    task-core-misc \
-    task-core-misc-dbg \
-    task-core-misc-dev \
-    task-core-perl \
-    task-core-perl-dbg \
-    task-core-perl-dev \
-    task-core-python \
-    task-core-python-dbg \
-    task-core-python-dev \
-    task-core-tcl \
-    task-core-tcl-dbg \
-    task-core-tcl-dev \
-    task-core-lsb-perl-add \
-    task-core-lsb-python-add \
-    task-core-lsb-graphic-add \
-    task-core-lsb-runtime-add \
-    task-core-lsb-command-add \
+    packagegroup-core-lsb \
+    packagegroup-core-sys-extended \
+    packagegroup-core-sys-extended-dbg \
+    packagegroup-core-sys-extended-dev \
+    packagegroup-core-db \
+    packagegroup-core-db-dbg \
+    packagegroup-core-db-dev \
+    packagegroup-core-misc \
+    packagegroup-core-misc-dbg \
+    packagegroup-core-misc-dev \
+    packagegroup-core-perl \
+    packagegroup-core-perl-dbg \
+    packagegroup-core-perl-dev \
+    packagegroup-core-python \
+    packagegroup-core-python-dbg \
+    packagegroup-core-python-dev \
+    packagegroup-core-tcl \
+    packagegroup-core-tcl-dbg \
+    packagegroup-core-tcl-dev \
+    packagegroup-core-lsb-perl-add \
+    packagegroup-core-lsb-python-add \
+    packagegroup-core-lsb-graphic-add \
+    packagegroup-core-lsb-runtime-add \
+    packagegroup-core-lsb-command-add \
     "
 
 
 ALLOW_EMPTY = "1"
 
-RDEPENDS_task-core-lsb = "\
-    task-core-sys-extended \
-    task-core-db \
-    task-core-misc \
-    task-core-perl \
-    task-core-python \
-    task-core-tcl \
-    task-core-lsb-perl-add \
-    task-core-lsb-python-add \
-    task-core-lsb-graphic-add \
-    task-core-lsb-runtime-add \
-    task-core-lsb-command-add \
+RDEPENDS_packagegroup-core-lsb = "\
+    packagegroup-core-sys-extended \
+    packagegroup-core-db \
+    packagegroup-core-misc \
+    packagegroup-core-perl \
+    packagegroup-core-python \
+    packagegroup-core-tcl \
+    packagegroup-core-lsb-perl-add \
+    packagegroup-core-lsb-python-add \
+    packagegroup-core-lsb-graphic-add \
+    packagegroup-core-lsb-runtime-add \
+    packagegroup-core-lsb-command-add \
     "
 
-RDEPENDS_task-core-sys-extended = "\
+RDEPENDS_packagegroup-core-sys-extended = "\
     binutils \
     binutils-symlinks \
     chkconfig \
@@ -83,19 +83,19 @@ RDEPENDS_task-core-sys-extended = "\
     lsbinitscripts \
     "
 
-RDEPENDS_task-core-db = "\
+RDEPENDS_packagegroup-core-db = "\
     db \
     sqlite3 \
     "
 
-RDEPENDS_task-core-perl = "\
+RDEPENDS_packagegroup-core-perl = "\
     gdbm \
     perl \
     zlib \
     "
 
 
-RDEPENDS_task-core-python = "\
+RDEPENDS_packagegroup-core-python = "\
     expat \
     gdbm \
     gmp \
@@ -106,11 +106,11 @@ RDEPENDS_task-core-python = "\
     zip \
     "
 
-RDEPENDS_task-core-tcl = "\
+RDEPENDS_packagegroup-core-tcl = "\
     tcl \
     "
 
-RDEPENDS_task-core-misc = "\
+RDEPENDS_packagegroup-core-misc = "\
     elfutils \
     gettext \
     gettext-runtime \
@@ -128,7 +128,7 @@ RDEPENDS_task-core-misc = "\
     zlib \
     "
 
-RDEPENDS_task-core-lsb-command-add = "\
+RDEPENDS_packagegroup-core-lsb-command-add = "\
     localedef \
     fontconfig-utils \
     mailx \
@@ -140,18 +140,18 @@ RDEPENDS_task-core-lsb-command-add = "\
     ghostscript \
 "
 
-RDEPENDS_task-core-lsb-perl-add = "\
+RDEPENDS_packagegroup-core-lsb-perl-add = "\
     perl-modules \
     perl-misc \
     perl-pod \
 "
 
-RDEPENDS_task-core-lsb-python-add = "\
+RDEPENDS_packagegroup-core-lsb-python-add = "\
     python-modules \
     python-misc \
 "
 
-RDEPENDS_task-core-lsb-graphic-add = "\
+RDEPENDS_packagegroup-core-lsb-graphic-add = "\
     libqtcore4 \
     libqtgui4 \
     libqtsql4 \
@@ -178,7 +178,7 @@ RDEPENDS_task-core-lsb-graphic-add = "\
     ${@base_contains("DISTRO_FEATURES", "opengl", "libqtopengl4", "", d)} \
 "
 
-RDEPENDS_task-core-lsb-runtime-add = "\
+RDEPENDS_packagegroup-core-lsb-runtime-add = "\
     ldd \
     pam-plugin-wheel \
     e2fsprogs-mke2fs \

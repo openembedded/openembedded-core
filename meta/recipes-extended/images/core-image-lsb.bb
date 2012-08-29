@@ -6,8 +6,8 @@ IMAGE_FEATURES += "apps-console-core ssh-server-openssh"
 
 IMAGE_INSTALL = "\
     ${CORE_IMAGE_BASE_INSTALL} \
-    task-core-basic \
-    task-core-lsb \
+    packagegroup-core-basic \
+    packagegroup-core-lsb \
     "
 
 inherit core-image

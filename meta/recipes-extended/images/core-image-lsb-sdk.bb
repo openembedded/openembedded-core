@@ -8,8 +8,8 @@ IMAGE_FEATURES += "apps-console-core tools-sdk dev-pkgs ssh-server-openssh \
 
 IMAGE_INSTALL = "\
     ${CORE_IMAGE_BASE_INSTALL} \
-    task-core-basic \
-    task-core-lsb \
+    packagegroup-core-basic \
+    packagegroup-core-lsb \
     kernel-dev \
     "
 

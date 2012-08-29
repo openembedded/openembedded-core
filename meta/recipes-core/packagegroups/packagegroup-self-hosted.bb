@@ -9,25 +9,25 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PACKAGES = "\
-    task-self-hosted \
-    task-self-hosted-debug \
-    task-self-hosted-sdk \
-    task-self-hosted-extended \
-    task-self-hosted-graphics \
-    task-self-hosted-host-tools \
+    packagegroup-self-hosted \
+    packagegroup-self-hosted-debug \
+    packagegroup-self-hosted-sdk \
+    packagegroup-self-hosted-extended \
+    packagegroup-self-hosted-graphics \
+    packagegroup-self-hosted-host-tools \
     "
 
 ALLOW_EMPTY = "1"
 
-RDEPENDS_task-self-hosted = "\
-    task-self-hosted-debug \
-    task-self-hosted-sdk \
-    task-self-hosted-extended \
-    task-self-hosted-graphics \
-    task-self-hosted-host-tools \
+RDEPENDS_packagegroup-self-hosted = "\
+    packagegroup-self-hosted-debug \
+    packagegroup-self-hosted-sdk \
+    packagegroup-self-hosted-extended \
+    packagegroup-self-hosted-graphics \
+    packagegroup-self-hosted-host-tools \
     "
 
-RDEPENDS_task-self-hosted-host-tools = "\
+RDEPENDS_packagegroup-self-hosted-host-tools = "\
     connman \
     connman-plugin-ethernet \
     dhcp-client \
@@ -52,7 +52,7 @@ RDEPENDS_task-self-hosted-host-tools = "\
     "
 
 # eglibc-utils: for rpcgen
-RDEPENDS_task-self-hosted-sdk = "\
+RDEPENDS_packagegroup-self-hosted-sdk = "\
     autoconf \
     automake \
     binutils \
@@ -85,7 +85,7 @@ RDEPENDS_task-self-hosted-sdk = "\
     sed \
     "
 
-RDEPENDS_task-self-hosted-debug = " \
+RDEPENDS_packagegroup-self-hosted-debug = " \
     gdb \
     gdbserver \
     rsync \
@@ -93,7 +93,7 @@ RDEPENDS_task-self-hosted-debug = " \
     tcf-agent"
 
 
-RDEPENDS_task-self-hosted-extended = "\
+RDEPENDS_packagegroup-self-hosted-extended = "\
     bzip2 \
     chkconfig \
     chrpath \
@@ -186,7 +186,7 @@ RDEPENDS_task-self-hosted-extended = "\
     "
 
 
-RDEPENDS_task-self-hosted-graphics = "\
+RDEPENDS_packagegroup-self-hosted-graphics = "\
     builder \
     libgl \
     libgl-dev \

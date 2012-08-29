@@ -9,9 +9,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 PR = "r3"
 
 PACKAGES = "\
-    task-core-qt-demos \
-    task-core-qt-demos-dbg \
-    task-core-qt-demos-dev \
+    packagegroup-core-qt-demos \
+    packagegroup-core-qt-demos-dbg \
+    packagegroup-core-qt-demos-dev \
     "
 
 ALLOW_EMPTY = "1"
@@ -19,4 +19,4 @@ ALLOW_EMPTY = "1"
 QTDEMOS ?= "quicky ${COMMERCIAL_QT} fotowall"
 #QTDEMOS_disabled = "fotowall"
 
-RDEPENDS_task-core-qt-demos = "${QTDEMOS}"
+RDEPENDS_packagegroup-core-qt-demos = "${QTDEMOS}"

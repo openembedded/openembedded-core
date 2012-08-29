@@ -9,9 +9,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 PR = "r1"
 
 PACKAGES = "\
-    task-core-x11-mini \
-    task-core-x11-mini-dbg \
-    task-core-x11-mini-dev \
+    packagegroup-core-x11-mini \
+    packagegroup-core-x11-mini-dbg \
+    packagegroup-core-x11-mini-dev \
     "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -29,7 +29,7 @@ VIRTUAL-RUNTIME_xserver_common ?= "x11-common"
 VIRTUAL-RUNTIME_graphical_init_manager ?= "xserver-nodm-init"
 
 
-RDEPENDS_task-core-x11-mini = "\
+RDEPENDS_packagegroup-core-x11-mini = "\
     dbus \
     pointercal \
     matchbox-terminal \

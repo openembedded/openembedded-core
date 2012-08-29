@@ -7,8 +7,8 @@ LICENSE = "MIT"
 
 IMAGE_INSTALL = "\
     ${CORE_IMAGE_BASE_INSTALL} \
-    task-core-clutter-core \
-    task-core-clutter-tests \
-    task-core-clutter-apps"
+    packagegroup-core-clutter-core \
+    packagegroup-core-clutter-tests \
+    packagegroup-core-clutter-apps"
 
 inherit core-image

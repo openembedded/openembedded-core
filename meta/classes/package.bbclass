@@ -1763,7 +1763,7 @@ python package_depchains() {
             for dep in pkglibdeps[pkg]:
                 add_dep(pkglibdeplist, dep)
         # FIXME this should not look at PN once all task recipes inherit from task.bbclass
-        dbgdefaultdeps = ((d.getVar('DEPCHAIN_DBGDEFAULTDEPS', True) == '1') or (d.getVar('PN', True) or '').startswith('task-'))
+        dbgdefaultdeps = ((d.getVar('DEPCHAIN_DBGDEFAULTDEPS', True) == '1') or (d.getVar('PN', True) or '').startswith('packagegroup-'))
 
     for suffix in pkgs:
         for pkg in pkgs[suffix]:

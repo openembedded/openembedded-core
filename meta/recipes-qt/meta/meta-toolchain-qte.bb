@@ -1,7 +1,7 @@
 # Qt Embedded toolchain
 PR = "r5"
-TOOLCHAIN_HOST_TASK = "nativesdk-task-qte-toolchain-host task-cross-canadian-${TRANSLATED_TARGET_ARCH}"
-TOOLCHAIN_TARGET_TASK = "task-qte-toolchain-target"
+TOOLCHAIN_HOST_TASK = "nativesdk-packagegroup-qte-toolchain-host packagegroup-cross-canadian-${TRANSLATED_TARGET_ARCH}"
+TOOLCHAIN_TARGET_TASK = "packagegroup-qte-toolchain-target"
 TOOLCHAIN_OUTPUTNAME = "${SDK_NAME}-toolchain-qte-${DISTRO_VERSION}"
 
 require recipes-core/meta/meta-toolchain.bb

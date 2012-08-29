@@ -1,5 +1,5 @@
 DESCRIPTION = "Host SDK package for cross canadian toolchain" 
-PN = "task-cross-canadian-${TRANSLATED_TARGET_ARCH}"
+PN = "packagegroup-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 PR = "r0"
 LICENSE = "MIT"
 ALLOW_EMPTY = "1"

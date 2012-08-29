@@ -4,8 +4,8 @@ reasonably used for customization."
 IMAGE_FEATURES += "apps-console-core ssh-server-openssh"
 
 IMAGE_INSTALL = "\
-    task-core-boot \
-    task-core-basic \
+    packagegroup-core-boot \
+    packagegroup-core-basic \
     "
 
 #    ${CORE_IMAGE_BASE_INSTALL} 

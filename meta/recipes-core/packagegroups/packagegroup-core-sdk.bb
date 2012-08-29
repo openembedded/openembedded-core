@@ -6,18 +6,18 @@ DESCRIPTION = "Software Development Tasks for OpenedHand Poky"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-DEPENDS = "task-core-console"
+DEPENDS = "packagegroup-core-console"
 PR = "r8"
 
 ALLOW_EMPTY = "1"
 #PACKAGEFUNCS =+ 'generate_sdk_pkgs'
 
 PACKAGES = "\
-    task-core-sdk \
-    task-core-sdk-dbg \
-    task-core-sdk-dev"
+    packagegroup-core-sdk \
+    packagegroup-core-sdk-dbg \
+    packagegroup-core-sdk-dev"
 
-RDEPENDS_task-core-sdk = "\
+RDEPENDS_packagegroup-core-sdk = "\
     autoconf \
     automake \
     binutils \
@@ -48,15 +48,15 @@ RDEPENDS_task-core-sdk = "\
     file \
     tcl"
 
-RRECOMMENDS_task-core-sdk = "\
+RRECOMMENDS_packagegroup-core-sdk = "\
     libgomp \
     libgomp-dev"
 
 #python generate_sdk_pkgs () {
-#    poky_pkgs = read_pkgdata('task-core', d)['PACKAGES']
+#    poky_pkgs = read_pkgdata('packagegroup-core', d)['PACKAGES']
 #    pkgs = d.getVar('PACKAGES', True).split()
 #    for pkg in poky_pkgs.split():
-#        newpkg = pkg.replace('task-core', 'task-core-sdk')
+#        newpkg = pkg.replace('packagegroup-core', 'packagegroup-core-sdk')
 #
 #        # for each of the task packages, add a corresponding sdk task
 #        pkgs.append(newpkg)
@@ -91,4 +91,4 @@ RRECOMMENDS_task-core-sdk = "\
 #    d.setVar('PACKAGES', ' '.join(pkgs))
 #}
 #
-#PACKAGES_DYNAMIC = "task-core-sdk-*"
+#PACKAGES_DYNAMIC = "packagegroup-core-sdk-*"

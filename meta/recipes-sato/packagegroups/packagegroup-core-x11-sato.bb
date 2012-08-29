@@ -9,9 +9,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 PR = "r32"
 
 PACKAGES = "\
-    task-core-x11-sato \
-    task-core-x11-sato-dbg \
-    task-core-x11-sato-dev \
+    packagegroup-core-x11-sato \
+    packagegroup-core-x11-sato-dbg \
+    packagegroup-core-x11-sato-dev \
     "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -24,7 +24,7 @@ NETWORK_MANAGER_libc-uclibc = ""
 WEB ?= ""
 #WEB = "web-webkit"
 
-RDEPENDS_task-core-x11-sato = "\
+RDEPENDS_packagegroup-core-x11-sato = "\
     matchbox-desktop \
     matchbox-session-sato \
     matchbox-keyboard \
