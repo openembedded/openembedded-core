@@ -28,10 +28,9 @@ done
 
 do_start() {
 	EXTRA_PARAM=""
-	if test $nfsroot -eq 1 ; then
-		EXTRA_PARAM="-P ethernet"
+	if test $nfsroot -eq 0 ; then
+		$DAEMON $EXTRA_PARAM
 	fi
-	$DAEMON $EXTRA_PARAM
 }
 
 do_stop() {
