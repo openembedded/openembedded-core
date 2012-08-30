@@ -6,18 +6,12 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 
-DEPENDS += "packagegroup-core-gtk-directfb"
-
-RDEPENDS_${PN} += " \
-	packagegroup-core-gtk-directfb-base \
-	"
-
 inherit core-image
 
 IMAGE_INSTALL += "\
 	${CORE_IMAGE_BASE_INSTALL} \
 	packagegroup-core-basic \
-	packagegroup-core-gtk-directfb-base \
+	packagegroup-core-gtk-directfb \
 "
 
 python __anonymous () {

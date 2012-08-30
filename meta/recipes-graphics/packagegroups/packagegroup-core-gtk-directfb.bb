@@ -7,11 +7,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 
 inherit packagegroup
 
-PACKAGES = "${PN}-base"
-
 TOUCH = ' ${@base_contains("MACHINE_FEATURES", "touchscreen", "tslib tslib-calibrate tslib-tests", "",d)}'
 
-RDEPENDS_${PN}-base = " \
+RDEPENDS_${PN} = " \
 		directfb \
 		directfb-examples \
 		pango \
