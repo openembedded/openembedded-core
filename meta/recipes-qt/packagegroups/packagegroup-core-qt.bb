@@ -8,8 +8,8 @@ PR = "r3"
 
 inherit packagegroup
 
-PACKAGES = "${PN}-demos"
+PACKAGES = "${PN}-demoapps"
 
 QTDEMOS ?= "quicky ${COMMERCIAL_QT} fotowall"
 
-RDEPENDS_${PN}-demos = "${QTDEMOS}"
+RDEPENDS_${PN}-demoapps = "${QTDEMOS}"

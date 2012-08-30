@@ -37,7 +37,7 @@ PACKAGE_GROUP_nfs-server = "packagegroup-core-nfs-server"
 PACKAGE_GROUP_ssh-server-dropbear = "packagegroup-core-ssh-dropbear"
 PACKAGE_GROUP_ssh-server-openssh = "packagegroup-core-ssh-openssh"
 PACKAGE_GROUP_package-management = "${ROOTFS_PKGMANAGE}"
-PACKAGE_GROUP_qt4-pkgs = "packagegroup-core-qt-demos"
+PACKAGE_GROUP_qt4-pkgs = "packagegroup-core-qt-demoapps"
 
 
 # IMAGE_FEATURES_REPLACES_foo = 'bar1 bar2'
