@@ -19,6 +19,9 @@ PACKAGE_ARCH = "all"
 # to the list. Their dependencies (RRECOMMENDS) are handled as usual
 # by package_depchains in a following step.
 python () {
+    if d.getVar('PACKAGEGROUP_DISABLE_COMPLEMENTARY', True) == '1':
+        return
+
     packages = d.getVar('PACKAGES', True).split()
     genpackages = []
     for pkg in packages:
