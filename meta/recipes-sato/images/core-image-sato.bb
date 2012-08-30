@@ -7,3 +7,5 @@ IMAGE_FEATURES += "apps-console-core package-management x11-base x11-sato ssh-se
 LICENSE = "MIT"
 
 inherit core-image
+
+IMAGE_INSTALL += "packagegroup-core-x11-sato-games"

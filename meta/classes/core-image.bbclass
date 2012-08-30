@@ -13,8 +13,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 # Available IMAGE_FEATURES:
 #
 # - apps-console-core
-# - x11-mini            - minimal environment for X11 server 
-# - x11-base            - X11 server + minimal desktop	
+# - x11                 - X server
+# - x11-base            - X server with minimal environment
 # - x11-sato            - OpenedHand Sato environment
 # - tools-sdk           - SDK
 # - tools-debug         - debugging tools
@@ -26,7 +26,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 # - debug-tweaks        - makes an image suitable for development
 #
 PACKAGE_GROUP_apps-console-core = "packagegroup-core-apps-console"
-PACKAGE_GROUP_x11-mini = "packagegroup-core-x11-mini"
+PACKAGE_GROUP_x11 = "packagegroup-core-x11"
 PACKAGE_GROUP_x11-base = "packagegroup-core-x11-base"
 PACKAGE_GROUP_x11-sato = "packagegroup-core-x11-sato"
 PACKAGE_GROUP_tools-debug = "packagegroup-core-tools-debug"
