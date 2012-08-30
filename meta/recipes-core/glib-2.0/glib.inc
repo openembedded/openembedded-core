@@ -27,7 +27,7 @@ S = "${WORKDIR}/glib-${PV}"
 
 CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap"
 
-EXTRA_OECONF = "--disable-debug --enable-included-printf=no ${CORECONF}"
+EXTRA_OECONF = "--enable-included-printf=no ${CORECONF}"
 EXTRA_OECONF_virtclass-native = "${CORECONF}"
 EXTRA_OECONF_linuxstdbase = "--enable-included-printf=no ${CORECONF}"
 
