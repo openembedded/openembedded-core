@@ -4,9 +4,9 @@ SECTION = "base"
 LICENSE = "(GPL-2+ & Elfutils-Exception)"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3\
                     file://EXCEPTION;md5=570adcb0c1218ab57f2249c67d0ce417"
-DEPENDS = "libtool bzip2 zlib"
+DEPENDS = "libtool bzip2 zlib virtual/libintl"
 
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/elfutils-${PV}.tar.bz2"
 
@@ -33,7 +33,7 @@ SRC_URI += "\
 	file://dso-link-change.patch \
 "
 # Only apply when building uclibc based target recipe
-SRC_URI_append_libc-uclibc = " ${@['', 'file://uclibc-support.patch']['${PN}' == '${BPN}']}"
+SRC_URI_append_libc-uclibc = " file://uclibc-support.patch"
 
 # The buildsystem wants to generate 2 .h files from source using a binary it just built,
 # which can not pass the cross compiling, so let's work around it by adding 2 .h files
@@ -47,7 +47,7 @@ inherit autotools gettext
 
 EXTRA_OECONF = "--program-prefix=eu- --without-lzma"
 EXTRA_OECONF_append_virtclass-native = " --without-bzlib"
-EXTRA_OECONF_append_libc-uclibc = " ${@['', '--enable-uclibc']['${PN}' == '${BPN}']}"
+EXTRA_OECONF_append_libc-uclibc = " --enable-uclibc"
 
 do_configure_prepend() {
 	sed -i 's:./i386_gendis:echo\ \#:g' ${S}/libcpu/Makefile.am
