@@ -16,8 +16,6 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 # - x11-mini            - minimal environment for X11 server 
 # - x11-base            - X11 server + minimal desktop	
 # - x11-sato            - OpenedHand Sato environment
-# - apps-x11-core       - X Terminal, file manager, file editor
-# - apps-x11-games
 # - tools-sdk           - SDK
 # - tools-debug         - debugging tools
 # - tools-profile       - profiling tools
@@ -31,8 +29,6 @@ PACKAGE_GROUP_apps-console-core = "packagegroup-core-apps-console"
 PACKAGE_GROUP_x11-mini = "packagegroup-core-x11-mini"
 PACKAGE_GROUP_x11-base = "packagegroup-core-x11-base"
 PACKAGE_GROUP_x11-sato = "packagegroup-core-x11-sato"
-PACKAGE_GROUP_apps-x11-core = "packagegroup-core-apps-x11-core"
-PACKAGE_GROUP_apps-x11-games = "packagegroup-core-apps-x11-games"
 PACKAGE_GROUP_tools-debug = "packagegroup-core-tools-debug"
 PACKAGE_GROUP_tools-profile = "packagegroup-core-tools-profile"
 PACKAGE_GROUP_tools-testapps = "packagegroup-core-tools-testapps"

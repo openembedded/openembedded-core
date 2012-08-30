@@ -11,18 +11,12 @@ PR = "r36"
 inherit packagegroup
 
 PACKAGES = "\
-    packagegroup-core-apps-x11-core \
-    packagegroup-core-apps-x11-games \
     packagegroup-core-x11-base \
     "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 XSERVER ?= "xserver-xorg xf86-video-fbdev xf86-input-evdev"
-
-# pcmanfm doesn't work on mips/powerpc
-FILEMANAGER ?= "pcmanfm"
-FILEMANAGER_mips ?= ""
 
 # xserver-common, x11-common
 VIRTUAL-RUNTIME_xserver_common ?= "x11-common"
@@ -49,14 +43,3 @@ RDEPENDS_packagegroup-core-x11-base = "\
     xhost \
     xset \
     xrandr"
-
-
-RDEPENDS_packagegroup-core-apps-x11-core = "\
-    leafpad \
-    ${FILEMANAGER} \
-    matchbox-terminal \
-    sato-screenshot"
-
-
-RDEPENDS_packagegroup-core-apps-x11-games = "\
-    oh-puzzles"

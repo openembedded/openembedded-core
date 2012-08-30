@@ -1,7 +1,6 @@
-DESCRIPTION = "An X11 image with simple applications such as terminal, editor, \
-and file manager."
+DESCRIPTION = "A very basic X11 image with a terminal"
 
-IMAGE_FEATURES += "apps-console-core package-management x11-base apps-x11-core"
+IMAGE_FEATURES += "apps-console-core package-management x11-base"
 
 LICENSE = "MIT"
 
