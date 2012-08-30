@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db grep-native"
 DEPENDS += "gdbm zlib"
-PR = "r8"
+PR = "r9"
 
 # 5.10.1 has Module::Build built-in
 PROVIDES += "libmodule-build-perl"
@@ -90,6 +90,8 @@ export PERLHOSTLIB = "${STAGING_LIBDIR_NATIVE}/perl-native/perl/${PV}/"
 # LDFLAGS for shared libraries
 export LDDLFLAGS = "${LDFLAGS} -shared"
 
+LDFLAGS_append = " -fstack-protector"
+
 # We're almost Debian, aren't we?
 CFLAGS += "-DDEBIAN"
 
@@ -148,10 +150,10 @@ do_configure() {
                -e 's,@ARCH@-thread-multi,,g' \
                -e 's,@ARCH@,${TARGET_ARCH}-${TARGET_OS},g' \
                -e 's,@STAGINGDIR@,${STAGING_DIR_HOST},g' \
-               -e "s%/usr/include%${STAGING_INCDIR}%g" \
-	       -e 's,/usr/lib/,${libdir}/,g' \
-	       -e 's,/usr/,${exec_prefix}/,g' \
-	       -e 's,/perl5,/perl,g' \
+               -e "s%\([ \"^\',=]\+\)/usr/include%\1${STAGING_INCDIR}%g" \
+	       -e "s%\([ \"^\',=]\+\)/usr/lib/%\1${libdir}/%g" \
+	       -e "s%\([ \"^\',=]\+\)/usr/%\1${exec_prefix}/%g" \
+	       -e "s%/perl5%/perl%g" \
             config.sh-${TARGET_ARCH}-${TARGET_OS}
 
 	case "${TARGET_ARCH}" in
