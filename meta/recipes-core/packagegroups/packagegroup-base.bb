@@ -255,7 +255,7 @@ RRECOMMENDS_packagegroup-base-ppp = "\
     kernel-module-slhc"
 
 RDEPENDS_packagegroup-base-ipsec = "\
-    openswan"
+    "
 
 RRECOMMENDS_packagegroup-base-ipsec = "\
     kernel-module-ipsec"
