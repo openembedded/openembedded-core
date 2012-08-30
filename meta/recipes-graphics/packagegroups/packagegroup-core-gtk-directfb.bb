@@ -17,6 +17,5 @@ RDEPENDS_${PN} = " \
 		fontconfig \
 		gtk+ \
 		gtk-demo \
-		dropbear \
 		${TOUCH} \
 "
