@@ -1,9 +1,9 @@
-SRCREV="0dcc13bf7a61b1d0708e5dd103d5515e0ffec79a"
+SRCREV="555ae2e88cd16a83f854634b6c3f35715b11d3d4"
 
 DEFAULT_PREFERENCE = "-1"
 
 PV = "0.9.33+git${SRCPV}"
-PR = "${INC_PR}.2"
+PR = "${INC_PR}.3"
 
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/uclibc-git' ], d)}"
 
@@ -25,5 +25,6 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master;protocol=git \
 	file://0001-nptl-arm-Move-aeabi_read_tp-to-uclibc_nonshared.a.patch \
 	file://0001-nptl-atfork-Hide-pthread_atfork-in-shared-versions.patch \
 	file://0001-librt-Use-nodefaultlibs-instead-of-nostdlib.patch \
+	file://mount.h-update.patch \
 	"
 S = "${WORKDIR}/git"

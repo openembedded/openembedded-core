@@ -1,5 +1,3 @@
-SRCREV="0dcc13bf7a61b1d0708e5dd103d5515e0ffec79a"
-
 require uclibc.inc
 require uclibc-package.inc
 require uclibc-git.inc
