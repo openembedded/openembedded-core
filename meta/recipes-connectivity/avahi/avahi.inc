@@ -155,22 +155,3 @@ pkg_postrm_avahi-autoipd () {
 	deluser avahi-autoipd || true
 	delgroup avahi-autoipd || true
 }
-
-pkg_postinst_avahi-systemd() {
-	# can't do this offline
-	if [ "x$D" != "x" ]; then
-		exit 1
-	fi
-	
-	systemctl enable avahi-daemon.service
-}
-
-pkg_postrm_avahi-systemd() {
-	# can't do this offline
-	if [ "x$D" != "x" ]; then
-		exit 1
-	fi
-
-	systemctl disable avahi-daemon.service
-}
-
