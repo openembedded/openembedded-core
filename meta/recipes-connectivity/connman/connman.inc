@@ -20,7 +20,7 @@ DEPENDS  = "dbus glib-2.0 ppp iptables gnutls \
             ${@base_contains('DISTRO_FEATURES', '3g','ofono', '', d)} \
             "
 
-INC_PR = "r16"
+INC_PR = "r17"
 
 TIST = "--enable-tist"
 TIST_powerpc = ""
@@ -87,6 +87,7 @@ RPROVIDES_${PN} = "\
 	"
 
 RDEPENDS_${PN} = "\
+	dbus \
 	${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluez4', '', d)} \
 	${@base_contains('DISTRO_FEATURES', 'wifi','wpa-supplicant', '', d)} \
 	${@base_contains('DISTRO_FEATURES', '3g','ofono', '', d)} \
