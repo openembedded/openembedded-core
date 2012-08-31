@@ -22,7 +22,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 # - tools-debug         - debugging tools
 # - tools-profile       - profiling tools
 # - tools-testapps      - tools usable to make some device tests
-# - nfs-server          - NFS server (exports / over NFS to everybody)
+# - nfs-server          - NFS server
 # - ssh-server-dropbear - SSH server (dropbear)
 # - ssh-server-openssh  - SSH server (openssh)
 # - debug-tweaks        - makes an image suitable for development
