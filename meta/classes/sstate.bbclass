@@ -561,21 +561,19 @@ sstate_unpack_package () {
 	tar -xvzf ${SSTATE_PKG}
 }
 
+EXTRASSTATEMAPS = "do_deploy:deploy"
+
 BB_HASHCHECK_FUNCTION = "sstate_checkhashes"
 
 def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
 
     ret = []
-    # This needs to go away, FIXME
-    mapping = {
-        "do_populate_sysroot" : "populate-sysroot",
-        "do_populate_lic" : "populate-lic",
-        "do_package_write_ipk" : "deploy-ipk",
-        "do_package_write_deb" : "deploy-deb",
-        "do_package_write_rpm" : "deploy-rpm",
-        "do_package" : "package",
-        "do_deploy" : "deploy",
-    }
+    mapping = {}
+    for t in d.getVar("SSTATETASKS", True).split():
+        mapping[t] = d.getVarFlag(t, "sstate-name", True)
+    for extra in d.getVar("EXTRASSTATEMAPS", True).split():
+        e = extra.split(":")
+        mapping[e[0]] = e[1]
 
     for task in range(len(sq_fn)):
         spec = sq_hashfn[task].split(" ")[1]
