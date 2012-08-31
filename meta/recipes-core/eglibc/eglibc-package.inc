@@ -83,6 +83,7 @@ do_install_append () {
 	if [ -f ${D}${bindir}/mtrace ]; then
 		sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' -e '2s,exec.*perl,exec ${USRBINPATH}/env perl,' ${D}${bindir}/mtrace
 	fi
+	rm -rf ${D}${includedir}/rpcsvc/rquota*
 }
 
 do_install_locale () {
