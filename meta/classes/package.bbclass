@@ -917,7 +917,7 @@ python split_and_strip_files () {
             for f in files:
                 if not f.endswith(".ko"):
                     continue
-                runstrip(os.path.join(root, f), None, d)
+                runstrip(os.path.join(root, f), 0, d)
     #
     # End of strip
     #
