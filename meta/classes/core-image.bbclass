@@ -62,10 +62,6 @@ CORE_IMAGE_EXTRA_INSTALL ?= ""
 
 IMAGE_INSTALL ?= "${CORE_IMAGE_BASE_INSTALL}"
 
-X11_IMAGE_FEATURES  = "x11-base apps-x11-core package-management"
-ENHANCED_IMAGE_FEATURES = "${X11_IMAGE_FEATURES} apps-x11-games package-management"
-SATO_IMAGE_FEATURES = "${ENHANCED_IMAGE_FEATURES} x11-sato ssh-server-dropbear"
-
 inherit image
 
 # Create /etc/timestamp during image construction to give a reasonably sane default time setting

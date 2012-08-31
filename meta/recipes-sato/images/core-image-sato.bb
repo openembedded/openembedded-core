@@ -2,7 +2,7 @@ DESCRIPTION = "Image with Sato, a mobile environment and visual style for \
 mobile devices. The image supports X11 with a Sato theme, Pimlico \
 applications, and contains terminal, editor, and file manager."
 
-IMAGE_FEATURES += "apps-console-core ${SATO_IMAGE_FEATURES}"
+IMAGE_FEATURES += "apps-console-core package-management x11-base apps-x11-core apps-x11-games x11-sato ssh-server-dropbear"
 
 LICENSE = "MIT"
 
