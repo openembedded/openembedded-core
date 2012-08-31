@@ -146,6 +146,8 @@ def sstate_install(ss, d):
     mastermanifest = d.getVar("SSTATE_MASTERMANIFEST", True)
     whitelist = d.getVar("SSTATE_DUPWHITELIST", True)
     lock = bb.utils.lockfile(mastermanifest + ".lock")
+    if not os.path.exists(mastermanifest):
+        open(mastermanifest, "w").close()
     fileslist = [line.strip() for line in open(mastermanifest)]
     bb.utils.unlockfile(lock)
     match = []
@@ -302,6 +304,8 @@ def sstate_clean_manifest(manifest, d):
     # Remove the entries from the master manifest
     mastermanifest = d.getVar("SSTATE_MASTERMANIFEST", True)
     lock = bb.utils.lockfile(mastermanifest + ".lock")
+    if not os.path.exists(mastermanifest):
+        open(mastermanifest, "w").close()
     mf = open(mastermanifest + ".new", "w")
     for line in open(mastermanifest, "r"):
         if not line or line in entries:
