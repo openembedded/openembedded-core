@@ -2,7 +2,7 @@
 # Copyright (C) 2007 OpenedHand Ltd
 #
 
-DESCRIPTION = "Host packages for the standalone SDK or external toolchain"
+SUMMARY = "Host packages for the standalone SDK or external toolchain"
 PR = "r11"
 LICENSE = "MIT"
 

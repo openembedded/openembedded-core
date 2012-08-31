@@ -1,4 +1,4 @@
-DESCRIPTION = "gkt+ over directfb without x11"
+SUMMARY = "GTK+ over DirectFB without X11"
 PR = "r0"
 LICENSE = "MIT"
 

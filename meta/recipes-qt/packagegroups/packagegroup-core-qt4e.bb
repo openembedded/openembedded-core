@@ -1,4 +1,4 @@
-DESCRIPTION = "QT4 Embedded base Image Feed"
+SUMMARY = "Qt for Embedded Linux (Qt without X11)"
 PR = "r1"
 LICENSE = "MIT"
 

@@ -2,7 +2,7 @@
 # Copyright (C) 2008 OpenedHand Ltd.
 #
 
-DESCRIPTION = "Debug tools tasks for OE-Core"
+SUMMARY = "Debugging tools"
 LICENSE = "MIT"
 
 inherit packagegroup

@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenSSH SSH task for Poky"
+SUMMARY = "OpenSSH SSH client/server"
 LICENSE = "MIT"
 PR = "r0"
 

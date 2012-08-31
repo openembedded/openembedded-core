@@ -2,7 +2,7 @@
 # Copyright (C) 2008 OpenedHand Ltd.
 #
 
-DESCRIPTION = "Test apps task for OE-Core"
+SUMMARY = "Testing tools/applications"
 LICENSE = "MIT"
 
 inherit packagegroup

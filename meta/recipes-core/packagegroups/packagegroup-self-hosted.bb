@@ -2,7 +2,8 @@
 # Copyright (C) 2010 Intel Corporation
 #
 
-DESCRIPTION = "Create Basic Image Tasks"
+SUMMARY = "Self-hosting"
+DESCRIPTION = "Packages required to run the build system"
 PR = "r11"
 LICENSE = "MIT"
 

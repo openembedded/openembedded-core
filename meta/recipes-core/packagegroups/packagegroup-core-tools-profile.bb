@@ -2,7 +2,7 @@
 # Copyright (C) 2008 OpenedHand Ltd.
 #
 
-DESCRIPTION = "Profile tools tasks for OE-Core"
+SUMMARY = "Profiling tools"
 LICENSE = "MIT"
 
 inherit packagegroup

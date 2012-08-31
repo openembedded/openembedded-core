@@ -2,7 +2,7 @@
 # Copyright (C) 2010  Intel Corporation. All rights reserved
 #
 
-DESCRIPTION = "Qt Tasks for Poky"
+DESCRIPTION = "Qt package groups"
 LICENSE = "MIT"
 PR = "r3"
 
@@ -12,4 +12,5 @@ PACKAGES = "${PN}-demoapps"
 
 QTDEMOS ?= "quicky ${COMMERCIAL_QT} fotowall"
 
+SUMMARY_${PN}-demoapps = "Qt demo applications"
 RDEPENDS_${PN}-demoapps = "${QTDEMOS}"

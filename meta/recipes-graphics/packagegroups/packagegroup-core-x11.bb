@@ -2,7 +2,6 @@
 # Copyright (C) 2011 Intel Corporation
 #
 
-DESCRIPTION = "Tasks for core X11 applications"
 LICENSE = "MIT"
 PR = "r36"
 
@@ -20,15 +19,18 @@ VIRTUAL-RUNTIME_xserver_common ?= "x11-common"
 # elsa, xserver-nodm-init
 VIRTUAL-RUNTIME_graphical_init_manager ?= "xserver-nodm-init"
 
+SUMMARY = "X11 display server and basic utilities"
 RDEPENDS_${PN} = "\
     ${PN}-xserver \
     ${PN}-utils \
     "
 
+SUMMARY_${PN}-xserver = "X11 display server"
 RDEPENDS_${PN}-xserver = "\
     ${XSERVER} \
     "
 
+SUMMARY_${PN}-utils = "X11 basic utilities and init"
 RDEPENDS_${PN}-utils = "\
     ${VIRTUAL-RUNTIME_xserver_common} \
     ${VIRTUAL-RUNTIME_graphical_init_manager} \

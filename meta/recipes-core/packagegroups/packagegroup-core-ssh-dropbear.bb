@@ -1,4 +1,4 @@
-DESCRIPTION = "Dropbear SSH task for Poky"
+SUMMARY = "Dropbear SSH client/server"
 LICENSE = "MIT"
 PR = "r0"
 

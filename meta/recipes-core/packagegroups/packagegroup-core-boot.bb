@@ -2,7 +2,8 @@
 # Copyright (C) 2007 OpenedHand Ltd.
 #
 
-DESCRIPTION = "Task for OpenedHand Poky - minimal bootable image"
+SUMMARY = "Minimal boot requirements"
+DESCRIPTION = "The minimal set of packages required to boot the system"
 LICENSE = "MIT"
 DEPENDS = "virtual/kernel"
 PR = "r9"

@@ -2,7 +2,7 @@
 # Copyright (C) 2007-2008 OpenedHand Ltd.
 #
 
-DESCRIPTION = "Sato Tasks for Poky"
+SUMMARY = "Sato desktop"
 LICENSE = "MIT"
 PR = "r32"
 
@@ -21,6 +21,7 @@ RDEPENDS_${PN} = "\
 NETWORK_MANAGER ?= "connman-gnome"
 NETWORK_MANAGER_libc-uclibc = ""
 
+SUMMARY_${PN}-base = "Sato desktop - base packages"
 RDEPENDS_${PN}-base = "\
     matchbox-desktop \
     matchbox-session-sato \
@@ -44,6 +45,7 @@ FILEMANAGER_mips ?= ""
 WEB ?= ""
 #WEB = "web-webkit"
 
+SUMMARY_${PN}-apps = "Sato desktop - applications"
 RDEPENDS_${PN}-apps = "\
     gthumb \
     leafpad \
@@ -55,6 +57,7 @@ RDEPENDS_${PN}-apps = "\
     ${WEB} \
     "
 
+SUMMARY_${PN}-games = "Sato desktop - games"
 RDEPENDS_${PN}-games = "\
     oh-puzzles \
     "

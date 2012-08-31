@@ -2,7 +2,7 @@
 # Copyright (C) 2007 OpenedHand Ltd.
 #
 
-DESCRIPTION = "Software Development Tasks for OpenedHand Poky"
+SUMMARY = "Software development tools"
 LICENSE = "MIT"
 PR = "r8"
 

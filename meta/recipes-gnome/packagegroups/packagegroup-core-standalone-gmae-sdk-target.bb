@@ -2,7 +2,7 @@
 # Copyright (C) 2007 OpenedHand Ltd.
 #
 
-DESCRIPTION = "Gnome Mobile And Embedded Software Development Kit for OE-Core"
+SUMMARY = "GNOME Mobile And Embedded SDK (target tools)"
 LICENSE = "MIT"
 PR = "r14"
 

@@ -2,7 +2,8 @@
 # Copyright (C) 2010 Intel Corporation
 #
 
-DESCRIPTION = "Create Small Image Tasks"
+SUMMARY = "Linux Standard Base (LSB)"
+DESCRIPTION = "Packages required to satisfy the Linux Standard Base (LSB) specification"
 PR = "r9"
 LICENSE = "MIT"
 

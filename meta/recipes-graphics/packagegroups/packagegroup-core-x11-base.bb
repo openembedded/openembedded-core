@@ -1,4 +1,5 @@
-DESCRIPTION = "Tasks for core X11 applications"
+SUMMARY = "Basic X11 session"
+DESCRIPTION = "Packages required to set up a basic working X11 session"
 LICENSE = "MIT"
 PR = "r0"
 
