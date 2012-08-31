@@ -12,7 +12,6 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 #
 # Available IMAGE_FEATURES:
 #
-# - apps-console-core
 # - x11                 - X server
 # - x11-base            - X server with minimal environment
 # - x11-sato            - OpenedHand Sato environment
@@ -25,7 +24,6 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 # - ssh-server-openssh  - SSH server (openssh)
 # - debug-tweaks        - makes an image suitable for development
 #
-PACKAGE_GROUP_apps-console-core = "packagegroup-core-apps-console"
 PACKAGE_GROUP_x11 = "packagegroup-core-x11"
 PACKAGE_GROUP_x11-base = "packagegroup-core-x11-base"
 PACKAGE_GROUP_x11-sato = "packagegroup-core-x11-sato"
@@ -46,6 +44,14 @@ IMAGE_FEATURES_REPLACES_ssh-server-openssh = "ssh-server-dropbear"
 
 # IMAGE_FEATURES_CONFLICTS_foo = 'bar1 bar2'
 # An error exception would be raised if both image features foo and bar1(or bar2) are included
+
+python __anonymous() {
+    # Ensure we still have a splash screen for existing images
+    if base_contains("IMAGE_FEATURES", "apps-console-core", "1", "", d) == "1":
+        bb.warn("%s: apps-console-core in IMAGE_FEATURES is no longer supported; adding \"splash\" to enable splash screen" % d.getVar("PN", True))
+        d.appendVar("IMAGE_FEATURES", " splash")
+}
+
 
 CORE_IMAGE_BASE_INSTALL = '\
     packagegroup-core-boot \

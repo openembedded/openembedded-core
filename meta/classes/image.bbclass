@@ -39,6 +39,10 @@ def normal_groups(d):
     features = set(oe.data.typed_value('IMAGE_FEATURES', d))
     return features.difference(extras)
 
+# Define some very basic feature package groups
+SPLASH ?= "psplash"
+PACKAGE_GROUP_splash = "${SPLASH}"
+
 # Wildcards specifying complementary packages to install for every package that has been explicitly
 # installed into the rootfs
 def complementary_globs(featurevar, d):

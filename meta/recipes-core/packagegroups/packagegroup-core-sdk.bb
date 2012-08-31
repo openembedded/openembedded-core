@@ -4,7 +4,6 @@
 
 DESCRIPTION = "Software Development Tasks for OpenedHand Poky"
 LICENSE = "MIT"
-DEPENDS = "packagegroup-core-console"
 PR = "r8"
 
 inherit packagegroup
