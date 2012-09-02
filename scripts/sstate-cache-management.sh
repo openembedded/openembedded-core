@@ -167,7 +167,7 @@ remove_duplicated () {
   topdir=$(dirname $(dirname $(readlink -e $0)))
   tunedirs="`find $topdir/meta* $layers -path '*/meta*/conf/machine/include'`"
   [ -n "$tunedirs" ] || echo_error "Can't find the tune directory"
-  all_archs=`grep -r -h "^AVAILTUNES " $tunedirs | sed -e 's/.*=//' -e 's/\"//g'`
+  all_archs=`grep -r -h "^AVAILTUNES .*=" $tunedirs | sed -e 's/.*=//' -e 's/\"//g'`
   # Add the qemu and native archs
   # Use the "_" to substitute "-", e.g., x86-64 to x86_64
   # Sort to remove the duplicated ones
