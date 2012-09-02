@@ -292,7 +292,7 @@ rm_by_stamps (){
 
   echo -n "Figuring out the files which will be removed ... "
   for i in $all_sums; do
-      grep ".*-${i}_*" $cache_list >>$keep_list
+      grep ".*-${i}_.*" $cache_list >>$keep_list
   done
   echo "Done"
 
