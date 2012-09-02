@@ -156,6 +156,7 @@ remove_duplicated () {
   local oe_core_dir
   local tunedirs
   local all_archs
+  local all_machines
   local ava_archs
   local arch
   local file_names
@@ -169,11 +170,12 @@ remove_duplicated () {
   topdir=$(dirname $oe_core_dir)
   tunedirs="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/include'`"
   [ -n "$tunedirs" ] || echo_error "Can't find the tune directory"
+  all_machines="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/*' -name '*.conf' | sed -e 's/.*\///' -e 's/.conf$//'`"
   all_archs=`grep -r -h "^AVAILTUNES .*=" $tunedirs | sed -e 's/.*=//' -e 's/\"//g'`
   # Add the qemu and native archs
   # Use the "_" to substitute "-", e.g., x86-64 to x86_64
   # Sort to remove the duplicated ones
-  all_archs=$(echo $all_archs qemuarm qemux86 qemumips qemuppc qemux86_64 $(uname -m) \
+  all_archs=$(echo $all_archs $all_machines $(uname -m) \
           | sed -e 's/-/_/g' -e 's/ /\n/g' | sort -u)
   echo "Done"
 
