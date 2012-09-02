@@ -153,6 +153,7 @@ gen_rmlist (){
 remove_duplicated () {
 
   local topdir
+  local oe_core_dir
   local tunedirs
   local all_archs
   local ava_archs
@@ -164,8 +165,9 @@ remove_duplicated () {
 
   # Find out the archs in all the layers
   echo -n "Figuring out the archs in the layers ... "
-  topdir=$(dirname $(dirname $(readlink -e $0)))
-  tunedirs="`find $topdir/meta* $layers -path '*/meta*/conf/machine/include'`"
+  oe_core_dir=$(dirname $(dirname $(readlink -e $0)))
+  topdir=$(dirname $oe_core_dir)
+  tunedirs="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/include'`"
   [ -n "$tunedirs" ] || echo_error "Can't find the tune directory"
   all_archs=`grep -r -h "^AVAILTUNES .*=" $tunedirs | sed -e 's/.*=//' -e 's/\"//g'`
   # Add the qemu and native archs
