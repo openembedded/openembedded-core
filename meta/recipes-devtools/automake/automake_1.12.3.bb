@@ -39,10 +39,10 @@ SRC_URI += "${PATHFIXPATCH} \
 	    file://python-libdir.patch \
             file://py-compile-compile-only-optimized-byte-code.patch"
 
-SRC_URI[md5sum] = "ec25c1855cacf47e4bdee76a776b96ba"
-SRC_URI[sha256sum] = "24bf1640679ba4a9cbe2d36422f39a81eced7f556b576a7a2ccfc70ca85a1e2f"
+SRC_URI[md5sum] = "d2af8484de94cdee16d89c50aaa1c729"
+SRC_URI[sha256sum] = "095ffaa3ac887d1eb3511bf13d7f1fc9ec0503c6a06aeae05c93730cdda9a5a0"
 
-PR = "r1"
+PR = "r0"
 
 do_install () {
     oe_runmake 'DESTDIR=${D}' install
