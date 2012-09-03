@@ -8,16 +8,9 @@ SECTION = "x11"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
-DEPENDS = "glib-2.0 gtk+ libglade libxml2 avahi-ui gconf"
+DEPENDS = "glib-2.0 avahi"
 
-inherit autotools pkgconfig gtk-icon-cache
-
-PACKAGES =+ "oprofileui-server oprofileui-viewer"
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "--with-avahi"
 
-FILES_oprofileui-viewer = "${bindir}/oparchconv ${bindir}/oprofile-viewer ${datadir}/applications/ ${datadir}/oprofileui/"
-RDEPENDS_oprofile-viewer = "oprofile"
-
-FILES_oprofileui-server = "${bindir}/oprofile-server"
-RDEPENDS_oprofile-server = "oprofile"
