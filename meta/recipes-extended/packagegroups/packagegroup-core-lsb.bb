@@ -13,43 +13,39 @@ PACKAGES = "\
     packagegroup-core-lsb \
     packagegroup-core-sys-extended \
     packagegroup-core-db \
-    packagegroup-core-misc \
     packagegroup-core-perl \
     packagegroup-core-python \
     packagegroup-core-tcl \
-    packagegroup-core-lsb-perl-add \
-    packagegroup-core-lsb-python-add \
-    packagegroup-core-lsb-graphic-add \
+    packagegroup-core-lsb-misc \
+    packagegroup-core-lsb-core \
+    packagegroup-core-lsb-perl \
+    packagegroup-core-lsb-python \
+    packagegroup-core-lsb-desktop \
     packagegroup-core-lsb-runtime-add \
-    packagegroup-core-lsb-command-add \
     "
 
 
 RDEPENDS_packagegroup-core-lsb = "\
     packagegroup-core-sys-extended \
     packagegroup-core-db \
-    packagegroup-core-misc \
     packagegroup-core-perl \
     packagegroup-core-python \
     packagegroup-core-tcl \
-    packagegroup-core-lsb-perl-add \
-    packagegroup-core-lsb-python-add \
-    packagegroup-core-lsb-graphic-add \
+    packagegroup-core-lsb-misc \
+    packagegroup-core-lsb-core \
+    packagegroup-core-lsb-perl \
+    packagegroup-core-lsb-python \
+    packagegroup-core-lsb-desktop \
     packagegroup-core-lsb-runtime-add \
-    packagegroup-core-lsb-command-add \
     "
 
+
 RDEPENDS_packagegroup-core-sys-extended = "\
-    binutils \
-    binutils-symlinks \
-    chkconfig \
     curl \
     dhcp-client \
-    diffutils \
     gamin \
     hdparm \
     libaio \
-    libxml2 \
     lrzsz \
     lzo \
     mc \
@@ -67,7 +63,6 @@ RDEPENDS_packagegroup-core-sys-extended = "\
     which \
     xinetd \
     zip \
-    lsbinitscripts \
     "
 
 RDEPENDS_packagegroup-core-db = "\
@@ -97,48 +92,98 @@ RDEPENDS_packagegroup-core-tcl = "\
     tcl \
     "
 
-RDEPENDS_packagegroup-core-misc = "\
-    elfutils \
+# Miscellaneous packages required by LSB (or LSB tests)
+RDEPENDS_packagegroup-core-lsb-misc = "\
+    chkconfig \
     gettext \
     gettext-runtime \
     groff \
-    lsb \
+    lsbinitscripts \
     lsbsetup \
     lsbtest \
     lsof \
-    man \
-    man-pages \
-    ncurses \
     strace \
     libusb1 \
     usbutils \
-    zlib \
+    rpm \
     "
 
-RDEPENDS_packagegroup-core-lsb-command-add = "\
-    localedef \
-    fontconfig-utils \
-    mailx \
-    msmtp \
-    chkconfig \
-    xdg-utils \
-    foomatic-filters \
+SUMMARY_packagegroup-core-lsb-core = "LSB Core"
+DESCRIPTION_packagegroup-core-lsb-core = "Packages required to support commands/libraries \
+    specified in the LSB Core specification"
+RDEPENDS_packagegroup-core-lsb-core = "\
+    at \
+    bash \
+    bc \
+    binutils \
+    binutils-symlinks \
+    coreutils \
+    cpio \
+    cronie \
     cups \
+    diffutils \
+    ed \
+    eglibc-utils \
+    elfutils \
+    file \
+    findutils \
+    fontconfig-utils \
+    foomatic-filters \
+    gawk \
     ghostscript \
+    grep \
+    gzip \
+    localedef \
+    lsb \
+    m4 \
+    mailx \
+    make \
+    man \
+    man-pages \
+    mktemp \
+    msmtp \
+    patch \
+    pax \
+    procps \
+    psmisc \
+    sed \
+    shadow \
+    tar \
+    time \
+    util-linux \
+    xdg-utils \
+    \
+    eglibc \
+    libgcc \
+    libpam \
+    libxml2 \
+    ncurses \
+    zlib \
 "
 
-RDEPENDS_packagegroup-core-lsb-perl-add = "\
+SUMMARY_packagegroup-core-lsb-perl = "LSB Runtime Languages (Perl)"
+DESCRIPTION_packagegroup-core-lsb-perl = "Packages required to support libraries \
+    specified in the LSB Runtime languages specification (Perl parts)"
+RDEPENDS_packagegroup-core-lsb-perl = "\
+    perl \
     perl-modules \
     perl-misc \
     perl-pod \
 "
 
-RDEPENDS_packagegroup-core-lsb-python-add = "\
+SUMMARY_packagegroup-core-lsb-python = "LSB Runtime Languages (Python)"
+DESCRIPTION_packagegroup-core-lsb-python = "Packages required to support libraries \
+    specified in the LSB Runtime languages specification (Python parts)"
+RDEPENDS_packagegroup-core-lsb-python = "\
+    python \
     python-modules \
     python-misc \
 "
 
-RDEPENDS_packagegroup-core-lsb-graphic-add = "\
+SUMMARY_packagegroup-core-lsb-desktop = "LSB Desktop"
+DESCRIPTION_packagegroup-core-lsb-desktop = "Packages required to support libraries \
+    specified in the LSB Desktop specification"
+RDEPENDS_packagegroup-core-lsb-desktop = "\
     libqtcore4 \
     libqtgui4 \
     libqtsql4 \
@@ -181,7 +226,6 @@ RDEPENDS_packagegroup-core-lsb-runtime-add = "\
     eglibc-localedata-posix \
     eglibc-extra-nss \
     eglibc-pcprofile \
-    eglibc-utils \
 "
 
 PTH = "pth"
