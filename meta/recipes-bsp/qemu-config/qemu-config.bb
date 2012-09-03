@@ -10,8 +10,7 @@ COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemumips|qemuppc)"
 PR = "r25"
 
 SRC_URI = "file://distcc.sh \
-           file://exports \
-           file://shutdown.desktop"
+           file://exports"
 
 S = "${WORKDIR}"
 
@@ -20,14 +19,6 @@ do_install() {
 
     install -m 0755 distcc.sh ${D}${sysconfdir}/profile.d/
     install -m 0644 exports ${D}${sysconfdir}/
-    
-    install -d ${D}${datadir}/applications
-    install -m 0644 shutdown.desktop ${D}${datadir}/applications/
-}
-
-pkg_postinst_${PN} () {
-    grep -q qemuarm $D${sysconfdir}/hostname && \
-        sed -i $D${datadir}/applications/shutdown.desktop -e 's/^Exec=halt/Exec=reboot/'
 }
 
 RDEPENDS_${PN} = "distcc packagegroup-core-nfs-server oprofileui-server bash"

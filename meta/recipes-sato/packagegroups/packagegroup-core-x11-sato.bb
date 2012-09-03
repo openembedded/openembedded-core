@@ -37,6 +37,7 @@ RDEPENDS_${PN}-base = "\
     sato-icon-theme \
     settings-daemon \
     gtk-sato-engine \
+    shutdown-desktop \
     libsdl \
     ${NETWORK_MANAGER} \
     "
