@@ -217,33 +217,35 @@ remove_duplicated () {
       for fn in $file_names; do
           [ -z "$verbose" ] || echo "Analyzing $fn-xxx_$suffix.tgz"
           for arch in $ava_archs; do
-              grep -h "/$fn-$arch-" $list_suffix >>$fn_tmp
-          done
-          [ $debug -gt 1 ] && echo "Available files for $fn with suffix $suffix:" && cat $fn_tmp
-          # Use the modification time
-          to_del=$(ls -t $(cat $fn_tmp) | sed -n '1!p')
-          [ $debug -gt 2 ] && echo "Considering to delete: $to_del"
-          # The sstate file which is downloaded from the SSTATE_MIRROR is
-          # put in SSTATE_DIR, and there is a symlink in SSTATE_DIR/??/ to
-          # it, so filter it out from the remove list if it should not be
-          # removed.
-          to_keep=$(ls -t $(cat $fn_tmp) | sed -n '1p')
-          [ $debug -gt 2 ] && echo "Considering to keep: $to_keep"
-          for k in $to_keep; do
-              if [ -L "$k" ]; then
-                  # The symlink's destination
-                  k_dest="`readlink -e $k`"
-                  # Maybe it is the one in cache_dir
-                  k_maybe="$cache_dir/${k##/*/}"
-                  # Remove it from the remove list if they are the same.
-                  if [ "$k_dest" = "$k_maybe" ]; then
-                      to_del="`echo $to_del | sed 's#'\"$k_maybe\"'##g'`"
-                  fi
+              grep -h "/$fn-$arch-" $list_suffix >$fn_tmp
+              if [ -s $fn_tmp ] ; then
+                  [ $debug -gt 1 ] && echo "Available files for $fn-$arch- with suffix $suffix:" && cat $fn_tmp
+                  # Use the modification time
+                  to_del=$(ls -t $(cat $fn_tmp) | sed -n '1!p')
+                  [ $debug -gt 2 ] && echo "Considering to delete: $to_del"
+                  # The sstate file which is downloaded from the SSTATE_MIRROR is
+                  # put in SSTATE_DIR, and there is a symlink in SSTATE_DIR/??/ to
+                  # it, so filter it out from the remove list if it should not be
+                  # removed.
+                  to_keep=$(ls -t $(cat $fn_tmp) | sed -n '1p')
+                  [ $debug -gt 2 ] && echo "Considering to keep: $to_keep"
+                  for k in $to_keep; do
+                      if [ -L "$k" ]; then
+                          # The symlink's destination
+                          k_dest="`readlink -e $k`"
+                          # Maybe it is the one in cache_dir
+                          k_maybe="$cache_dir/${k##/*/}"
+                          # Remove it from the remove list if they are the same.
+                          if [ "$k_dest" = "$k_maybe" ]; then
+                              to_del="`echo $to_del | sed 's#'\"$k_maybe\"'##g'`"
+                          fi
+                      fi
+                  done
+                  rm -f $fn_tmp
+                  [ $debug -gt 2 ] && echo "Decided to delete: $to_del"
+                  gen_rmlist $rm_list "$to_del"
               fi
           done
-          rm -f $fn_tmp
-          [ $debug -gt 2 ] && echo "Decided to delete: $to_del"
-          gen_rmlist $rm_list "$to_del"
       done
       [ ! -s "$rm_list" ] || deleted=`cat $rm_list | wc -l`
       [ -s "$rm_list" -a $debug -gt 0 ] && cat $rm_list
