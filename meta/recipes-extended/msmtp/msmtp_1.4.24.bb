@@ -5,7 +5,7 @@ SECTION = "console/network"
 
 LICENSE = "GPLv3"
 DEPENDS = "zlib gnutls"
-PR = "r3"
+PR = "r4"
 
 
 #COPYING or Licence
@@ -19,7 +19,7 @@ SRC_URI[sha256sum] = "f19f3fcc67da448420b3adbd5add09f8fe110664dd64f3c2cd693ef0cb
 
 inherit gettext autotools update-alternatives
 
-EXTRA_OECONF += "--without-gnome-keyring"
+EXTRA_OECONF += "--without-gnome-keyring --without-libidn"
 
 ALTERNATIVE_${PN} = "sendmail"
 ALTERNATIVE_TARGET[sendmail] = "${bindir}/msmtp"
