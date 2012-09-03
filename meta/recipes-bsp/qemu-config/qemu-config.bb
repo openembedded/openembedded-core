@@ -11,8 +11,7 @@ PR = "r25"
 
 SRC_URI = "file://distcc.sh \
            file://exports \
-           file://shutdown.desktop \
-           file://qemu-autostart"
+           file://shutdown.desktop"
 
 S = "${WORKDIR}"
 
@@ -24,9 +23,6 @@ do_install() {
     
     install -d ${D}${datadir}/applications
     install -m 0644 shutdown.desktop ${D}${datadir}/applications/
-
-    install -d ${D}${sysconfdir}/init.d
-    install qemu-autostart ${D}${sysconfdir}/init.d/
 }
 
 pkg_postinst_${PN} () {
@@ -36,7 +32,4 @@ pkg_postinst_${PN} () {
 
 RDEPENDS_${PN} = "distcc packagegroup-core-nfs-server oprofileui-server bash"
 
-inherit update-rc.d allarch
-
-INITSCRIPT_NAME = "qemu-autostart"
-INITSCRIPT_PARAMS = "start 999 5 2 . stop 20 0 1 6 ."
+inherit allarch

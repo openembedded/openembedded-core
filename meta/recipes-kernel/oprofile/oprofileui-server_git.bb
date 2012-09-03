@@ -6,8 +6,19 @@ PR = "r0"
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://git.yoctoproject.org/oprofileui;protocol=git"
+SRC_URI = "git://git.yoctoproject.org/oprofileui;protocol=git \
+           file://init"
 
 EXTRA_OECONF += "--disable-client --enable-server"
 
 RDEPENDS_${PN} = "oprofile"
+
+do_install_append() {
+	install -d ${D}${sysconfdir}/init.d
+	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/oprofileui-server
+}
+
+INITSCRIPT_NAME = "oprofileui-server"
+INITSCRIPT_PARAMS = "start 999 5 2 . stop 20 0 1 6 ."
+
+inherit update-rc.d

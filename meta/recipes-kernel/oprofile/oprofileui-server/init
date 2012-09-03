@@ -1,11 +1,11 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          hddtemp
+# Provides:          oprofile-server
 # Required-Start:    $network
 # Required-Stop:     $network
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: OProfile server
+# Short-Description: OProfileUI server
 # Description:       
 ### END INIT INFO
 
@@ -13,13 +13,13 @@
 
 case "$1" in
   start)
-        echo "Starting automatic qemu services"
+        echo "Starting OProfileUI server"
 	. /etc/profile
 	/usr/bin/oprofile-server &
   ;;
 
   stop)
-        echo "Stopping qemu services"
+        echo "Stopping OProfileUI server"
         killproc oprofile-server
   ;;
 
