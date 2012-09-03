@@ -22,6 +22,7 @@ confirm=
 fsym=
 total_deleted=0
 verbose=
+debug=0
 
 usage () {
   cat << EOF
@@ -68,6 +69,9 @@ Options:
 
   -v, --verbose
         explain what is being done
+
+  -d, --debug
+        show debug info, repeat for more debug info
 
 EOF
 }
@@ -215,13 +219,16 @@ remove_duplicated () {
           for arch in $ava_archs; do
               grep -h "/$fn-$arch-" $list_suffix >>$fn_tmp
           done
+          [ $debug -gt 1 ] && echo "Available files for $fn with suffix $suffix:" && cat $fn_tmp
           # Use the modification time
           to_del=$(ls -t $(cat $fn_tmp) | sed -n '1!p')
+          [ $debug -gt 2 ] && echo "Considering to delete: $to_del"
           # The sstate file which is downloaded from the SSTATE_MIRROR is
           # put in SSTATE_DIR, and there is a symlink in SSTATE_DIR/??/ to
           # it, so filter it out from the remove list if it should not be
           # removed.
           to_keep=$(ls -t $(cat $fn_tmp) | sed -n '1p')
+          [ $debug -gt 2 ] && echo "Considering to keep: $to_keep"
           for k in $to_keep; do
               if [ -L "$k" ]; then
                   # The symlink's destination
@@ -235,9 +242,11 @@ remove_duplicated () {
               fi
           done
           rm -f $fn_tmp
+          [ $debug -gt 2 ] && echo "Decided to delete: $to_del"
           gen_rmlist $rm_list "$to_del"
       done
       [ ! -s "$rm_list" ] || deleted=`cat $rm_list | wc -l`
+      [ -s "$rm_list" -a $debug -gt 0 ] && cat $rm_list
       echo "($deleted files will be removed)"
       let total_deleted=$total_deleted+$deleted
   done
@@ -306,6 +315,7 @@ rm_by_stamps (){
       gen_rmlist $rm_list "$to_del"
       let total_deleted=(`cat $rm_list | wc -w`)
       if [ $total_deleted -gt 0 ]; then
+          [ $debug -gt 0 ] && cat $rm_list
           read_confirm
           if [ "$confirm" = "y" -o "$confirm" = "Y" ]; then
               echo "Removing sstate cache files ... ($total_deleted files)"
@@ -372,6 +382,11 @@ while [ -n "$1" ]; do
         ;;
     --verbose|-v)
       verbose="-v"
+      shift
+        ;;
+    --debug)
+      debug=`expr $debug + 1`
+      echo "Debug level $debug"
       shift
         ;;
     --help|-h)
