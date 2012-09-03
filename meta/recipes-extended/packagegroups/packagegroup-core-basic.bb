@@ -10,32 +10,24 @@ inherit packagegroup
 
 PACKAGES = "\
     packagegroup-core-basic \
-    packagegroup-core-base-utils \
     packagegroup-core-basic-libs \
     packagegroup-core-basic-utils \
     packagegroup-core-basic-extended \
     packagegroup-core-dev-utils \
     packagegroup-core-multiuser \
     packagegroup-core-initscripts \
-    packagegroup-core-rpm \
     packagegroup-core-sys-services \
     "
 
 
 RDEPENDS_packagegroup-core-basic = "\
-    packagegroup-core-base-utils \
     packagegroup-core-basic-libs \
     packagegroup-core-basic-utils \
     packagegroup-core-basic-extended \
     packagegroup-core-dev-utils \
     packagegroup-core-multiuser \
     packagegroup-core-initscripts \
-    packagegroup-core-rpm \
     packagegroup-core-sys-services \
-    "
-
-RDEPENDS_packagegroup-core-base-utils = "\
-    busybox \
     "
 
 RDEPENDS_packagegroup-core-basic-libs = "\
@@ -104,12 +96,6 @@ RDEPENDS_packagegroup-core-multiuser = "\
     libpam \
     shadow \
     sudo \
-    "
-
-RDEPENDS_packagegroup-core-rpm = "\
-    beecrypt \
-    rpm \
-    zypper \
     "
 
 RDEPENDS_packagegroup-core-sys-services = "\
