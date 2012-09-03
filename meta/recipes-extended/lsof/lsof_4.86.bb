@@ -3,17 +3,17 @@ DESCRIPTION = "Lsof is a Unix-specific diagnostic tool. \
 Its name stands for LiSt Open Files, and it does just that."
 SECTION = "devel"
 LICENSE = "BSD"
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/lsof_${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "102ee2081172bbe76dccaa6cceda8573"
-SRC_URI[sha256sum] = "49aa58e63539c45bada514a6a2e5a1c9f946ada1f4137dc9154cf4bf6054a1c1"
+SRC_URI[md5sum] = "9f1cda41f35add068c7b81f873fa56b5"
+SRC_URI[sha256sum] = "13e52b8e87dddf1b2e219004e315d755c659217ce6ffc6a5f1102969f1c4dd0c"
 
 LOCALSRC = "file://${WORKDIR}/lsof_${PV}/lsof_${PV}_src.tar"
 S = "${WORKDIR}/lsof_${PV}_src"
 
-LIC_FILES_CHKSUM = "file://${S}/00README;beginline=645;endline=679;md5=e0108f7811919035515a97f872eb8ee2"
+LIC_FILES_CHKSUM = "file://${S}/00README;beginline=645;endline=679;md5=964df275d26429ba3b39dbb9f205172a"
 
 python do_unpack () {
     bb.build.exec_func('base_do_unpack', d)
