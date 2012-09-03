@@ -13,14 +13,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
 SECTION = "x11"
 DEPENDS = "glib-2.0 dbus bluez4 dbus-glib libxslt"
 
-SRC_URI = "http://gypsy.freedesktop.org/releases/gypsy-${PV}.tar.gz \
-           file://fix-unused-but-set-variable-warning.patch \
-          "
-PR = "r3"
+SRC_URI = "http://gypsy.freedesktop.org/releases/gypsy-${PV}.tar.gz"
+PR = "r0"
 
 inherit autotools pkgconfig
 
 FILES_${PN} += "/usr/share/dbus-1/system-services/"
 
-SRC_URI[md5sum] = "32b8db24db86d2dac87b391dd255f4bf"
-SRC_URI[sha256sum] = "1986a58189614a950725c3bc7d05faa3b84695f35cb696326f340ef87fc3acaa"
+SRC_URI[md5sum] = "e2d186df9c2cc3b70a027043e22acf1a"
+SRC_URI[sha256sum] = "14e1cbe17351f408538e033ca370b4bf51ccf9c88744e236ddfb271904f154d6"
