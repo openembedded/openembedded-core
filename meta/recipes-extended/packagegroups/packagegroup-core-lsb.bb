@@ -25,6 +25,7 @@ PACKAGES = "\
     "
 
 
+RPROVIDES_packagegroup-core-lsb = "task-core-lsb"
 RDEPENDS_packagegroup-core-lsb = "\
     packagegroup-core-sys-extended \
     packagegroup-core-db \

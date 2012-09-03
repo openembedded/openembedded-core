@@ -12,6 +12,9 @@ require packagegroup-sdk-gmae.inc
 
 PACKAGEGROUP_DISABLE_COMPLEMENTARY = "1"
 
+# For backwards compatibility after rename
+RPROVIDES_${PN} = "task-core-sdk-gmae"
+
 RDEPENDS_${PN} = "\
     packagegroup-core-sdk \
     libglade-dev \

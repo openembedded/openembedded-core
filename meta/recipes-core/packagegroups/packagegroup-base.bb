@@ -114,6 +114,15 @@ python __anonymous () {
 
     if "3g" in distro_features and not "3g" in machine_features and ("pcmcia" in machine_features or "pci" in machine_features or "usbhost" in machine_features):
         d.setVar("ADD_3G", "packagegroup-base-3g")
+
+    # For backwards compatibility after rename
+    packages = d.getVar("PACKAGES", True).split()
+    packages.remove("packagegroup-distro-base")
+    packages.remove("packagegroup-machine-base")
+    for pkg in packages:
+        d.appendVar("RPROVIDES_%s" % pkg, pkg.replace("packagegroup-base", "task-base"))
+    d.appendVar("RPROVIDES_packagegroup-distro-base", "task-distro-base")
+    d.appendVar("RPROVIDES_packagegroup-machine-base", "task-machine-base")
 }
 
 #

@@ -4,6 +4,9 @@ LICENSE = "MIT"
 
 inherit packagegroup
 
+# For backwards compatibility after rename
+RPROVIDES_${PN} = "task-core-gtk-directfb-base"
+
 TOUCH = ' ${@base_contains("MACHINE_FEATURES", "touchscreen", "tslib tslib-calibrate tslib-tests", "",d)}'
 
 RDEPENDS_${PN} = " \

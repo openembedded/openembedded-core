@@ -19,6 +19,13 @@ PACKAGES = "\
     packagegroup-core-sys-services \
     "
 
+python __anonymous () {
+    # For backwards compatibility after rename
+    packages = d.getVar("PACKAGES", True).split()
+    for pkg in packages:
+        d.appendVar("RPROVIDES_%s" % pkg, pkg.replace("packagegroup-core", "task-core"))
+}
+
 
 RDEPENDS_packagegroup-core-basic = "\
     packagegroup-core-basic-libs \

@@ -9,6 +9,9 @@ inherit packagegroup
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+# For backwards compatibility after rename
+RPROVIDES_${PN} = "task-core-tools-profile"
+
 RRECOMMENDS_${PN} = "\
     perf \
     trace-cmd \

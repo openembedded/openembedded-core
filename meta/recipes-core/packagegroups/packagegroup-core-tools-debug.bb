@@ -11,6 +11,9 @@ PR = "r1"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+# For backwards compatibility after rename
+RPROVIDES_${PN} = "task-core-tools-debug"
+
 MTRACE = ""
 MTRACE_libc-glibc = "libc-mtrace"
 
