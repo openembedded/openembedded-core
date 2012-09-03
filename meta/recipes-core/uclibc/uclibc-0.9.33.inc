@@ -1,6 +1,6 @@
-SRCREV="7810e4f8027b5c4c8ceec6fefec4eb779362ebb5"
+SRCREV = "fec308fdfaf9f557ef5fb17c308c48259012b825"
 
-PR = "${INC_PR}.2"
+PR = "${INC_PR}.3"
 
 SRC_URI = "git://uclibc.org/uClibc.git;branch=${PV};protocol=git \
 	file://uClibc.machine \
@@ -17,6 +17,7 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=${PV};protocol=git \
 	file://dup3.patch \
 	file://define-MSG_CMSG_CLOEXEC.patch \
 	file://posix_fallocate.patch \
+	file://mount.h-update.patch \
 	"
 
 S = "${WORKDIR}/git"

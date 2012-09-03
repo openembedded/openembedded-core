@@ -101,8 +101,8 @@ Upstream-Status: Pending
 
 Index: git/include/fcntl.h
 ===================================================================
---- git.orig/include/fcntl.h	2012-06-26 14:51:04.000000000 -0700
-+++ git/include/fcntl.h	2012-06-26 14:51:36.361767240 -0700
+--- git.orig/include/fcntl.h	2012-09-02 17:00:26.000000000 -0700
++++ git/include/fcntl.h	2012-09-02 17:01:51.567076705 -0700
 @@ -210,9 +210,7 @@
  
  #endif
@@ -116,22 +116,21 @@ Index: git/include/fcntl.h
  
 Index: git/libc/sysdeps/linux/common/Makefile.in
 ===================================================================
---- git.orig/libc/sysdeps/linux/common/Makefile.in	2012-06-26 14:51:04.000000000 -0700
-+++ git/libc/sysdeps/linux/common/Makefile.in	2012-06-26 14:52:33.153769997 -0700
-@@ -81,7 +81,8 @@
+--- git.orig/libc/sysdeps/linux/common/Makefile.in	2012-09-02 17:00:26.000000000 -0700
++++ git/libc/sysdeps/linux/common/Makefile.in	2012-09-02 17:03:02.739079369 -0700
+@@ -81,7 +81,7 @@
  	sched_get_priority_max.c sched_get_priority_min.c sched_getscheduler.c \
  	sched_rr_get_interval.c sched_setparam.c sched_setscheduler.c sigqueue.c
  # clock_getcpuclockid|clock_nanosleep|mq_timedreceive|mq_timedsend|posix_fadvise|posix_fallocate|posix_madvise|posix_memalign|posix_mem_offset|posix_spawnattr_destroy|posix_spawnattr_init|posix_spawnattr_getflags|posix_spawnattr_setflags|posix_spawnattr_getpgroup|posix_spawnattr_setpgroup|posix_spawnattr_getschedparam|posix_spawnattr_setschedparam|posix_spawnattr_getschedpolicy|posix_spawnattr_setschedpolicy|posix_spawnattr_getsigdefault|posix_spawnattr_setsigdefault|posix_spawnattr_getsigmask|posix_spawnattr_setsigmask|posix_spawnattr_init|posix_spawnattr_setflags|posix_spawnattr_setpgroup|posix_spawnattr_setschedparam|posix_spawnattr_setschedpolicy|posix_spawnattr_setsigdefault|posix_spawnattr_setsigmask|posix_spawn_file_actions_addclose|posix_spawn_file_actions_addopen|posix_spawn_file_actions_adddup2|posix_spawn_file_actions_addopen|posix_spawn_file_actions_destroy|posix_spawn_file_actions_init|posix_spawn_file_actions_init|posix_spawn|posix_spawnp|posix_spawnp|posix_typed_mem_get_info|pthread_mutex_timedlock|sem_timedwait
--CSRC-$(UCLIBC_HAS_ADVANCED_REALTIME) += posix_fadvise64.c posix_fadvise.c
-+CSRC-$(UCLIBC_HAS_ADVANCED_REALTIME) += posix_fadvise64.c posix_fadvise.c \
-+	posix_fallocate.c posix_fallocate64.c
+-CSRC-$(UCLIBC_HAS_ADVANCED_REALTIME) += posix_fadvise64.c posix_fadvise.c posix_madvise.c
++CSRC-$(UCLIBC_HAS_ADVANCED_REALTIME) += posix_fadvise64.c posix_fadvise.c posix_madvise.c posix_fallocate.c posix_fallocate64.c
  CSRC-$(UCLIBC_SUSV4_LEGACY) += utime.c
  CSRC-$(UCLIBC_HAS_EPOLL) += epoll.c
  CSRC-$(UCLIBC_HAS_XATTR) += xattr.c
 Index: git/libc/sysdeps/linux/common/bits/kernel-features.h
 ===================================================================
---- git.orig/libc/sysdeps/linux/common/bits/kernel-features.h	2012-06-26 14:51:04.000000000 -0700
-+++ git/libc/sysdeps/linux/common/bits/kernel-features.h	2012-06-26 14:51:36.361767240 -0700
+--- git.orig/libc/sysdeps/linux/common/bits/kernel-features.h	2012-09-02 17:00:26.000000000 -0700
++++ git/libc/sysdeps/linux/common/bits/kernel-features.h	2012-09-02 17:01:51.567076705 -0700
 @@ -494,6 +494,14 @@
  # define __ASSUME_PRIVATE_FUTEX	1
  #endif
@@ -150,7 +149,7 @@ Index: git/libc/sysdeps/linux/common/bits/kernel-features.h
 Index: git/libc/sysdeps/linux/common/posix_fallocate.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ git/libc/sysdeps/linux/common/posix_fallocate.c	2012-06-26 14:51:36.373767243 -0700
++++ git/libc/sysdeps/linux/common/posix_fallocate.c	2012-09-02 17:01:51.579076667 -0700
 @@ -0,0 +1,43 @@
 +/* vi: set sw=4 ts=4: */
 +/*
@@ -198,7 +197,7 @@ Index: git/libc/sysdeps/linux/common/posix_fallocate.c
 Index: git/libc/sysdeps/linux/common/posix_fallocate64.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ git/libc/sysdeps/linux/common/posix_fallocate64.c	2012-06-26 14:51:36.373767243 -0700
++++ git/libc/sysdeps/linux/common/posix_fallocate64.c	2012-09-02 17:01:51.579076667 -0700
 @@ -0,0 +1,39 @@
 +/* vi: set sw=4 ts=4: */
 +/*
@@ -241,8 +240,8 @@ Index: git/libc/sysdeps/linux/common/posix_fallocate64.c
 +#endif
 Index: git/libc/sysdeps/linux/common/stubs.c
 ===================================================================
---- git.orig/libc/sysdeps/linux/common/stubs.c	2012-06-26 14:51:04.000000000 -0700
-+++ git/libc/sysdeps/linux/common/stubs.c	2012-06-26 14:53:48.997773660 -0700
+--- git.orig/libc/sysdeps/linux/common/stubs.c	2012-09-02 17:00:26.000000000 -0700
++++ git/libc/sysdeps/linux/common/stubs.c	2012-09-02 17:01:51.579076667 -0700
 @@ -209,6 +209,10 @@
  make_stub(madvise)
  #endif
@@ -256,8 +255,8 @@ Index: git/libc/sysdeps/linux/common/stubs.c
  #endif
 Index: git/test/.gitignore
 ===================================================================
---- git.orig/test/.gitignore	2012-06-26 14:51:04.000000000 -0700
-+++ git/test/.gitignore	2012-06-26 14:51:36.373767243 -0700
+--- git.orig/test/.gitignore	2012-09-02 17:00:26.000000000 -0700
++++ git/test/.gitignore	2012-09-02 17:01:51.579076667 -0700
 @@ -302,6 +302,7 @@
  unistd/getopt
  unistd/getopt_long
@@ -268,8 +267,8 @@ Index: git/test/.gitignore
  unistd/vfork
 Index: git/test/unistd/Makefile.in
 ===================================================================
---- git.orig/test/unistd/Makefile.in	2012-06-26 14:51:05.000000000 -0700
-+++ git/test/unistd/Makefile.in	2012-06-26 14:51:36.373767243 -0700
+--- git.orig/test/unistd/Makefile.in	2012-09-02 17:00:26.000000000 -0700
++++ git/test/unistd/Makefile.in	2012-09-02 17:01:51.579076667 -0700
 @@ -4,6 +4,9 @@
  ifeq ($(UCLIBC_HAS_LFS),)
  TESTS_DISABLED := tst-preadwrite64
@@ -283,7 +282,7 @@ Index: git/test/unistd/Makefile.in
 Index: git/test/unistd/tst-posix_fallocate.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ git/test/unistd/tst-posix_fallocate.c	2012-06-26 14:51:36.373767243 -0700
++++ git/test/unistd/tst-posix_fallocate.c	2012-09-02 17:01:51.579076667 -0700
 @@ -0,0 +1,121 @@
 +#include <fcntl.h>
 +#include <sys/stat.h>
