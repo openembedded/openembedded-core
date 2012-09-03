@@ -120,7 +120,6 @@ EXTRA_OECONF += "--with-fop=no \
 "
 
 PACKAGECONFIG ??= "udev"
-PACKAGECONFIG[hal] = "--enable-config-hal,--disable-config-hal,,hal"
 PACKAGECONFIG[udev] = "--enable-config-udev,--disable-config-udev,udev"
 
 do_install_append () {
