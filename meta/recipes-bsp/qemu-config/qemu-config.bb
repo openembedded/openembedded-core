@@ -9,18 +9,15 @@ COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemumips|qemuppc)"
 
 PR = "r25"
 
-SRC_URI = "file://distcc.sh \
-           file://exports"
+SRC_URI = "file://distcc.sh"
 
 S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}${sysconfdir}/profile.d
-
     install -m 0755 distcc.sh ${D}${sysconfdir}/profile.d/
-    install -m 0644 exports ${D}${sysconfdir}/
 }
 
-RDEPENDS_${PN} = "distcc packagegroup-core-nfs-server oprofileui-server bash"
+RDEPENDS_${PN} = "distcc oprofileui-server bash"
 
 inherit allarch
