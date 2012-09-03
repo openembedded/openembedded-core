@@ -10,7 +10,6 @@ COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemumips|qemuppc)"
 PR = "r25"
 
 SRC_URI = "file://distcc.sh \
-           file://anjuta-remote-run \
            file://exports \
            file://shutdown.desktop \
            file://qemu-autostart"
@@ -22,9 +21,6 @@ do_install() {
 
     install -m 0755 distcc.sh ${D}${sysconfdir}/profile.d/
     install -m 0644 exports ${D}${sysconfdir}/
-    
-    install -d ${D}${bindir}
-    install -m 0755 anjuta-remote-run ${D}${bindir}/
     
     install -d ${D}${datadir}/applications
     install -m 0644 shutdown.desktop ${D}${datadir}/applications/
@@ -38,7 +34,7 @@ pkg_postinst_${PN} () {
         sed -i $D${datadir}/applications/shutdown.desktop -e 's/^Exec=halt/Exec=reboot/'
 }
 
-RDEPENDS_${PN} = "distcc ${@base_contains('DISTRO_FEATURES', 'x11', 'dbus-x11', '', d)} packagegroup-core-nfs-server oprofileui-server rsync bash"
+RDEPENDS_${PN} = "distcc packagegroup-core-nfs-server oprofileui-server bash"
 
 inherit update-rc.d allarch
 
