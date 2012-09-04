@@ -97,7 +97,8 @@ do_patch() {
 	# executes and modifies the source tree as required
 	patchme ${KMACHINE}
 	if [ $? -ne 0 ]; then
-		echo "ERROR. Could not apply updates for ${KMACHINE}"
+		echo "ERROR. Could not apply patches for ${KMACHINE}."
+		echo "       Patch failures can be resolved in the devshell (bitbake -c devshell ${PN})"
 		exit 1
 	fi
 
