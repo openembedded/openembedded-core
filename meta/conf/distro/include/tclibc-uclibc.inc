@@ -11,6 +11,8 @@ OVERRIDES .= "${LIBCOVERRIDE}"
 PREFERRED_PROVIDER_virtual/libc = "uclibc"
 PREFERRED_PROVIDER_virtual/libiconv ?= "libiconv"
 PREFERRED_PROVIDER_virtual/libintl ?= "gettext"
+PREFERRED_PROVIDER_virtual/nativesdk-libintl ?= "nativesdk-eglibc"
+PREFERRED_PROVIDER_virtual/nativesdk-libiconv ?= "nativesdk-eglibc"
 
 USE_NLS ?= "no"
 

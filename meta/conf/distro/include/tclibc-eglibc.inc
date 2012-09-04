@@ -10,6 +10,7 @@ OVERRIDES .= "${LIBCOVERRIDE}"
 
 PREFERRED_PROVIDER_virtual/libiconv ?= "eglibc"
 PREFERRED_PROVIDER_virtual/nativesdk-libiconv ?= "nativesdk-eglibc"
+PREFERRED_PROVIDER_virtual/nativesdk-libintl ?= "nativesdk-eglibc"
 PREFERRED_PROVIDER_virtual/libintl ?= "eglibc"
 PREFERRED_PROVIDER_virtual/libc ?= "eglibc"
 PREFERRED_PROVIDER_virtual/nativesdk-libc ?= "nativesdk-eglibc"
