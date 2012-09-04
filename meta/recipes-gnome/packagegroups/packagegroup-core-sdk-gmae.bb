@@ -4,7 +4,7 @@
 
 SUMMARY = "GNOME Mobile And Embedded SDK (host tools)"
 LICENSE = "MIT"
-PR = "r12"
+PR = "r13"
 
 inherit packagegroup
 
@@ -14,6 +14,8 @@ PACKAGEGROUP_DISABLE_COMPLEMENTARY = "1"
 
 # For backwards compatibility after rename
 RPROVIDES_${PN} = "task-core-sdk-gmae"
+RREPLACES_${PN} = "task-core-sdk-gmae"
+RCONFLICTS_${PN} = "task-core-sdk-gmae"
 
 RDEPENDS_${PN} = "\
     packagegroup-core-sdk \

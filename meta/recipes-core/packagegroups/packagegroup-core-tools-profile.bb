@@ -5,12 +5,16 @@
 SUMMARY = "Profiling tools"
 LICENSE = "MIT"
 
+PR = "r1"
+
 inherit packagegroup
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 # For backwards compatibility after rename
 RPROVIDES_${PN} = "task-core-tools-profile"
+RREPLACES_${PN} = "task-core-tools-profile"
+RCONFLICTS_${PN} = "task-core-tools-profile"
 
 RRECOMMENDS_${PN} = "\
     perf \

@@ -4,7 +4,7 @@
 
 SUMMARY = "Software development tools"
 LICENSE = "MIT"
-PR = "r8"
+PR = "r9"
 
 inherit packagegroup
 
@@ -12,6 +12,8 @@ inherit packagegroup
 
 # For backwards compatibility after rename
 RPROVIDES_packagegroup-core-sdk = "task-core-sdk"
+RREPLACES_packagegroup-core-sdk = "task-core-sdk"
+RCONFLICTS_packagegroup-core-sdk = "task-core-sdk"
 
 RDEPENDS_packagegroup-core-sdk = "\
     autoconf \

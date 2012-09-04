@@ -4,7 +4,7 @@
 
 SUMMARY = "Sato desktop"
 LICENSE = "MIT"
-PR = "r32"
+PR = "r33"
 
 inherit packagegroup
 
@@ -14,6 +14,8 @@ PACKAGES = "${PN} ${PN}-base ${PN}-apps ${PN}-games"
 
 # For backwards compatibility after rename
 RPROVIDES_${PN} = "task-core-x11-sato"
+RREPLACES_${PN} = "task-core-x11-sato"
+RCONFLICTS_${PN} = "task-core-x11-sato"
 
 RDEPENDS_${PN} = "\
     ${PN}-base \

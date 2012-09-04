@@ -6,7 +6,7 @@ SUMMARY = "Minimal boot requirements"
 DESCRIPTION = "The minimal set of packages required to boot the system"
 LICENSE = "MIT"
 DEPENDS = "virtual/kernel"
-PR = "r9"
+PR = "r10"
 
 inherit packagegroup
 
@@ -20,6 +20,8 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS ?= ""
 
 # For backwards compatibility after rename
 RPROVIDES_${PN} = "task-core-boot"
+RREPLACES_${PN} = "task-core-boot"
+RCONFLICTS_${PN} = "task-core-boot"
 
 # Distro can override the following VIRTUAL-RUNTIME providers:
 VIRTUAL-RUNTIME_dev_manager ?= "udev"

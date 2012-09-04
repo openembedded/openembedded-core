@@ -1,11 +1,13 @@
 SUMMARY = "Qt for Embedded Linux (Qt without X11)"
-PR = "r1"
+PR = "r2"
 LICENSE = "MIT"
 
 inherit packagegroup
 
 # For backwards compatibility after rename
 RPROVIDES_${PN} = "task-qt4e-base"
+RREPLACES_${PN} = "task-qt4e-base"
+RCONFLICTS_${PN} = "task-qt4e-base"
 
 TOUCH = ' ${@base_contains("MACHINE_FEATURES", "touchscreen", "tslib tslib-calibrate tslib-tests", "",d)}'
 

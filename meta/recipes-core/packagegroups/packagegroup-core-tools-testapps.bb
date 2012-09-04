@@ -5,12 +5,16 @@
 SUMMARY = "Testing tools/applications"
 LICENSE = "MIT"
 
+PR = "r1"
+
 inherit packagegroup
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 # For backwards compatibility after rename
 RPROVIDES_${PN} = "task-core-tools-testapps"
+RREPLACES_${PN} = "task-core-tools-testapps"
+RCONFLICTS_${PN} = "task-core-tools-testapps"
 
 # kexec-tools doesn't work on Mips
 KEXECTOOLS ?= "kexec"
