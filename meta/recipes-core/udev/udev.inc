@@ -21,8 +21,6 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
            file://devfs-udev.rules \
            file://links.conf \
            file://permissions.rules \
-           file://mount.sh \
-           file://network.sh \
            file://local.rules \
            file://udev-cache \
            file://udev-cache.default \
@@ -82,11 +80,6 @@ do_install_append () {
 
 	install -m 0644 ${WORKDIR}/local.rules         ${D}${sysconfdir}/udev/rules.d/local.rules
 
-	install -d ${D}${sysconfdir}/udev/scripts/
-
-	install -m 0755 ${WORKDIR}/mount.sh ${D}${sysconfdir}/udev/scripts/mount.sh
-	install -m 0755 ${WORKDIR}/network.sh ${D}${sysconfdir}/udev/scripts
-	
 	# hid2hci has moved to bluez4. removed in udev as of version 169
 	rm -f ${D}${base_libdir}/udev/hid2hci
 }
