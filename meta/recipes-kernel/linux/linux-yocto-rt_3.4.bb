@@ -8,8 +8,8 @@ LINUX_KERNEL_TYPE = "preempt-rt"
 
 KMETA = "meta"
 
-SRCREV_machine ?= "52518e60a7220385f31cdd09b83dacd84581c88c"
-SRCREV_machine_qemuppc ?= "e6db5e91e1a5b31d26ac67778df7fb1fd5e42aa5"
+SRCREV_machine ?= "9032b1e9daf5b4396f939981c3be95f67802d18c"
+SRCREV_machine_qemuppc ?= "08ce190232f89303772b6591ca7daaf2820eb74e"
 SRCREV_meta ?= "463299bc2e533e1bd38b0053ae7b210980f269c3"
 
 PR = "${INC_PR}.0"
