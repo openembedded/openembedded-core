@@ -51,7 +51,7 @@ def get_cur_arch_dirs(workdir, arch_dirs):
     pattern = workdir + '/(.*?)/'
 
     # select thest 5 packages to get the dirs of current arch
-    pkgs = ['hicolor-icon-theme', 'base-files', 'acl-native', 'binutils-crosssdk', 'autoconf-nativesdk']
+    pkgs = ['hicolor-icon-theme', 'base-files', 'acl-native', 'binutils-crosssdk', 'nativesdk-autoconf']
 
     for pkg in pkgs:
         cmd = "bitbake -e " + pkg + " | grep ^IMAGE_ROOTFS="
