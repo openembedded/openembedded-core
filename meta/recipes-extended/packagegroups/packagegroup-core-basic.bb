@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Create Basic Image Tasks"
-PR = "r4"
+PR = "r5"
 LICENSE = "MIT"
 
 inherit packagegroup
@@ -24,6 +24,8 @@ python __anonymous () {
     packages = d.getVar("PACKAGES", True).split()
     for pkg in packages:
         d.appendVar("RPROVIDES_%s" % pkg, pkg.replace("packagegroup-core", "task-core"))
+        d.appendVar("RREPLACES_%s" % pkg, pkg.replace("packagegroup-core", "task-core"))
+        d.appendVar("RCONFLICTS_%s" % pkg, pkg.replace("packagegroup-core", "task-core"))
 }
 
 

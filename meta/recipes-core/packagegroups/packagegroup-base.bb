@@ -1,6 +1,6 @@
 DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
 LICENSE = "MIT"
-PR = "r75"
+PR = "r76"
 
 inherit packagegroup
 
@@ -117,12 +117,10 @@ python __anonymous () {
 
     # For backwards compatibility after rename
     packages = d.getVar("PACKAGES", True).split()
-    packages.remove("packagegroup-distro-base")
-    packages.remove("packagegroup-machine-base")
     for pkg in packages:
-        d.appendVar("RPROVIDES_%s" % pkg, pkg.replace("packagegroup-base", "task-base"))
-    d.appendVar("RPROVIDES_packagegroup-distro-base", "task-distro-base")
-    d.appendVar("RPROVIDES_packagegroup-machine-base", "task-machine-base")
+        d.appendVar("RPROVIDES_%s" % pkg, pkg.replace("packagegroup-", "task-"))
+        d.appendVar("RREPLACES_%s" % pkg, pkg.replace("packagegroup-", "task-"))
+        d.appendVar("RCONFLICTS_%s" % pkg, pkg.replace("packagegroup-", "task-"))
 }
 
 #
