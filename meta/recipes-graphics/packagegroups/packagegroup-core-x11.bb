@@ -3,7 +3,7 @@
 #
 
 LICENSE = "MIT"
-PR = "r36"
+PR = "r37"
 
 inherit packagegroup
 
@@ -39,3 +39,14 @@ RDEPENDS_${PN}-utils = "\
     xset \
     xrandr \
     "
+
+# Allow replacing task-x11* in meta-oe
+RPROVIDES_${PN} = "task-x11"
+RREPLACES_${PN} = "task-x11"
+RCONFLICTS_${PN} = "task-x11"
+RPROVIDES_${PN}-xserver = "task-x11-server task-xserver"
+RREPLACES_${PN}-xserver = "task-x11-server"
+RCONFLICTS_${PN}-xserver = "task-x11-server"
+RPROVIDES_${PN}-utils = "task-x11-utils"
+RREPLACES_${PN}-utils = "task-x11-utils"
+RCONFLICTS_${PN}-utils = "task-x11-utils"
