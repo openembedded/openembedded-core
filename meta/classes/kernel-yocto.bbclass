@@ -258,17 +258,18 @@ do_validate_branches() {
 		return
 	fi
 
-	containing_branches=`git branch --contains $target_branch_head | sed 's/^..//'`
-	if [ -z "$containing_branches" ]; then
-		echo "ERROR: SRCREV was set to \"$target_branch_head\", but no branches"
-		echo "       contain this commit"
-		exit 1
-	fi
 	ref=`git show ${target_branch_head} 2>&1 | head -n1 || true`
 	if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
 	    echo "ERROR ${target_branch_head} is not a valid commit ID."
 	    echo "The kernel source tree may be out of sync"
 	    exit 1
+	fi
+
+	containing_branches=`git branch --contains $target_branch_head | sed 's/^..//'`
+	if [ -z "$containing_branches" ]; then
+		echo "ERROR: SRCREV was set to \"$target_branch_head\", but no branches"
+		echo "       contain this commit"
+		exit 1
 	fi
 
 	# force the SRCREV in each branch that contains the specified
@@ -278,7 +279,7 @@ do_validate_branches() {
 		branch_head=`git show-ref -s --heads ${b}`		
 		if [ "$branch_head" != "$target_branch_head" ]; then
 			echo "[INFO] Setting branch $b to ${target_branch_head}"
-			if [ "$b" == "master" ]; then
+			if [ "$b" = "master" ]; then
 				git reset --hard $target_branch_head > /dev/null
 			else
 				git branch -D $b > /dev/null
