@@ -138,5 +138,5 @@ RDEPENDS_pulseaudio-server = " \
     pulseaudio-module-suspend-on-idle \
     pulseaudio-module-console-kit \
     pulseaudio-module-position-event-sounds \
-    pulseaudio-module-cork-music-on-phone "
+    pulseaudio-module-role-cork "
 
