@@ -21,12 +21,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 
 DEPENDS = "attr libaio"
 
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/ltp/ltp-full-${PV}.bz2"
 
-SRC_URI[md5sum] = "1078160b1f962a22f1598edad17293c5"
-SRC_URI[sha256sum] = "cbc00dd63226a4cde06fa506be4c71ddedcaf20dde474681db7ebeea1c1fb643"
+SRC_URI[md5sum] = "3c885047b137a6955e087ad20807a018"
+SRC_URI[sha256sum] = "41d2f4cd88619aa7b5cdad93cb7691b69166f7751bc9f2f72558937cbef581c2"
 
 export prefix = "/opt/ltp"
 export exec_prefix = "/opt/ltp"
