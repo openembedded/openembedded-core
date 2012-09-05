@@ -191,7 +191,7 @@ rpm_update_pkg () {
 
         # Attempt to install the incremental pkgs
         if [ -s $installdir/incremental.manifest ]; then
-            rpm_common_comand --nodeps --replacefiles --replacepkgs \
+            rpm_common_comand --replacefiles --replacepkgs \
                -Uvh $installdir/incremental.manifest
         fi
     else
@@ -517,7 +517,7 @@ EOF
 			${target_rootfs}/install/original_solution_sorted.manifest > \
 			${target_rootfs}/install/diff.manifest
 		mv ${target_rootfs}/install/diff.manifest ${target_rootfs}/install/total_solution.manifest
-	elif [ "${INC_RPM_IMAGE_GEN}" = "1" -a -d "${target_rootfs}${rpmlibdir}" ]; then
+	elif [ "${INC_RPM_IMAGE_GEN}" = "1" -a -f "${target_rootfs}/etc/passwd" ]; then
 		echo "Skipping pre install due to existing image"
 	else
 		# RPM is special. It can't handle dependencies and preinstall scripts correctly. Its
