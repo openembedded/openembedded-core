@@ -1,6 +1,6 @@
 # Yocto ADT Installer bb file
 #
-# Copyright 2010-2011 by Intel Corp.
+# Copyright 2010-2012 by Intel Corp.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy 
 # of this software and associated documentation files (the "Software"), to deal 
@@ -30,7 +30,7 @@ ALLOW_EMPTY = "1"
 
 PACKAGES = ""
 
-PR = "r10"
+PR = "r11"
 
 ADT_DEPLOY = "${TMPDIR}/deploy/sdk/"
 ADT_DIR = "${WORKDIR}/adt-installer/"
@@ -51,14 +51,14 @@ SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;protocol=http \
            file://opkg/conf/opkg-sdk-i686.conf \
 	  "
 
-ADTREPO = "http://adtrepo.yoctoproject.org/${SDK_VERSION}"
+ADTREPO ?= "http://adtrepo.yoctoproject.org/${SDK_VERSION}"
 
 do_populate_adt[umask] = "022"
 
 fakeroot do_populate_adt () {
 	cd ${WORKDIR}
 	mkdir -p ${ADT_DEPLOY}
-	rm -f ${ADT_DEPLOY}/adt-installer.tar.bz2
+	rm -f ${ADT_DEPLOY}/adt_installer.tar.bz2
 	rm -rf ${ADT_DIR}
 	mkdir -p ${ADT_DIR}/opkg/build
 	cp -r opkg ${ADT_DIR}/
@@ -69,6 +69,7 @@ fakeroot do_populate_adt () {
 	cp adt_installer ${ADT_DIR}
 	cp adt_installer.conf ${ADT_DIR}
 	sed -i -e 's#YOCTOADT_VERSION#${SDK_VERSION}#' ${ADT_DIR}/adt_installer.conf
+	sed -i -e 's#ADTREPO#${ADTREPO}#' ${ADT_DIR}/adt_installer.conf
 	echo 'SDK_VENDOR=${SDK_VENDOR}' >> ${ADT_DIR}/scripts/data_define
 	echo 'DEFAULT_INSTALL_FOLDER=${SDKPATH}' >> ${ADT_DIR}/scripts/data_define
 	cp ${COREBASE}/scripts/relocate_sdk.py ${ADT_DIR}/scripts/
