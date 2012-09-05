@@ -7,9 +7,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 
 DEPENDS += "gst-plugins-base gconf cairo jpeg libpng zlib libid3tag flac \
 	    speex libsoup-2.4 pulseaudio"
-PR = "r3"
+PR = "r4"
 
 inherit gettext gconf
+
+SRC_URI += "file://0001-v4l2-fix-build-with-recent-kernels-the-v4l2_buffer-i.patch"
 
 EXTRA_OECONF += "--disable-aalib --disable-esd --disable-shout2 --disable-libcaca --disable-hal --without-check \
                  --disable-orc --disable-examples"
