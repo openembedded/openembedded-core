@@ -15,14 +15,21 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=14096c769ae0cbb5fcb94ec468be11b3 \
 DEPENDS += "zlib libpng"
 BBCLASSEXTEND = "native"
 
-PR = "r0"
+PR = "r1"
 
 PE = "1"
 
 IWMMXT = "--disable-arm-iwmmxt"
 LOONGSON_MMI = "--disable-loongson-mmi"
+NEON = " --disable-arm-neon "
+NEON_armv7a = " "
+NEON_armv7a-vfp-neon = " "
 
-EXTRA_OECONF="--disable-gtk ${IWMMXT} ${LOONGSON_MMI}"
+EXTRA_OECONF="--disable-gtk ${IWMMXT} ${LOONGSON_MMI} ${NEON}"
 
+SRC_URI += "\
+            file://0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch \
+            file://0002-Generic-C-implementation-of-pixman_blt-with-overlapp.patch \
+"
 SRC_URI[md5sum] = "dd67154b23d88e6a75ad3a83f3052198"
 SRC_URI[sha256sum] = "cae9dc13727a84f11beb150c88d3a06ba114f82c52d68073c663c027e099123b"
