@@ -7,16 +7,16 @@ PROVIDES = "python-pygtk2"
 SRCNAME = "pygtk"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7"
-PR = "ml10"
 
-SRC_URI = "ftp://ftp.gnome.org/pub/gnome/sources/pygtk/2.17/${SRCNAME}-${PV}.tar.bz2 \
+SRC_URI = "ftp://ftp.gnome.org/pub/gnome/sources/pygtk/2.24/${SRCNAME}-${PV}.tar.bz2 \
            file://fix-gtkunixprint.patch \
            file://prevent_to_get_display_during_import.patch \
            file://nodocs.patch \
            file://acinclude.m4"
 
-SRC_URI[md5sum] = "43d704343d7ca04a6e4ddd4fa73a3c55"
-SRC_URI[sha256sum] = "6a61817a2e765c6209c72ecdf44389ec134c1ebed1d842408bf001c9321f1400"
+SRC_URI[md5sum] = "a1051d5794fd7696d3c1af6422d17a49"
+SRC_URI[sha256sum] = "cd1c1ea265bd63ff669e92a2d3c2a88eb26bcd9e5363e0f82c896e649f206912"
+
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 EXTRA_OECONF = "--disable-docs --with-python-includes=${STAGING_INCDIR}/../"
