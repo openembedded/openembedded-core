@@ -15,14 +15,19 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 # - x11                 - X server
 # - x11-base            - X server with minimal environment
 # - x11-sato            - OpenedHand Sato environment
-# - tools-sdk           - SDK
 # - tools-debug         - debugging tools
 # - tools-profile       - profiling tools
 # - tools-testapps      - tools usable to make some device tests
+# - tools-sdk           - SDK (C/C++ compiler, autotools, etc.)
 # - nfs-server          - NFS server
 # - ssh-server-dropbear - SSH server (dropbear)
 # - ssh-server-openssh  - SSH server (openssh)
-# - debug-tweaks        - makes an image suitable for development
+# - qt4-pkgs            - Qt4/X11 and demo applications
+# - package-management  - installs package management tools and preserves the package manager database
+# - debug-tweaks        - makes an image suitable for development, e.g. allowing passwordless root logins
+# - dev-pkgs            - development packages (headers, etc.) for all installed packages in the rootfs
+# - dbg-pkgs            - debug symbol packages for all installed packages in the rootfs
+# - doc-pkgs            - documentation packages for all installed packages in the rootfs
 #
 PACKAGE_GROUP_x11 = "packagegroup-core-x11"
 PACKAGE_GROUP_x11-base = "packagegroup-core-x11-base"
