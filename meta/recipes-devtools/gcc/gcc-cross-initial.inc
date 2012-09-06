@@ -19,7 +19,7 @@ EXTRA_OECONF = "--with-newlib \
                 ${OPTSPACE} \
 		--program-prefix=${TARGET_PREFIX} \
 		--with-sysroot=${STAGING_DIR_TARGET} \
-		--with-build-sysroot=${STAGING_DIR_TARGET} \
+		--with-build-sysroot=${GCCCROSS_BUILDSYSROOT} \
 		${EXTRA_OECONF_INITIAL} \
 		${@base_contains('DISTRO_FEATURES', 'ld-is-gold', '--with-ld=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld.bfd', '', d)} \
 		${EXTRA_OECONF_FPU}"
