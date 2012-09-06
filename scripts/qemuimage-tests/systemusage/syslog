@@ -1,0 +1,54 @@
+#!/bin/bash
+# syslog Check test Case for function test
+# boot up the Qemu target with `runqemu qemuxxx`.
+# then check if syslog service is working fine or not target.
+#
+# Author: veera <veerabrahmamvr@huawei.com>
+#
+# This file is licensed under the GNU General Public License,
+# Version 2.
+#
+
+. $COREBASE/scripts/qemuimage-testlib
+
+TIMEOUT=400
+RET=1
+
+# Start qemu and check its network
+Test_Create_Qemu ${TIMEOUT}
+
+
+
+# If qemu network is up, check ssh service in qemu
+if [ $? -eq 0 ];then
+ Test_Info "Begin to Test SSH Service in Qemu"
+ Test_SSH_UP ${TARGET_IPADDR} ${TIMEOUT}
+ RET=$?
+else
+ RET=1
+fi
+
+# Check if syslog is working fine or not
+if [ $RET -eq 0 -a -f $TOOLS/syslog.sh ]; then
+ # Copy syslog.sh into target
+ Test_Target_Pre ${TARGET_IPADDR} $TOOLS/syslog.sh
+ if [ $? -eq 0 ]; then
+  # Run syslog.sh to check if syslog service is working fine or not on the qemuxxx target
+  Test_SSH ${TARGET_IPADDR} "sh $TARGET_TEST_DIR/syslog.sh"
+  RET=$?
+ else
+  RET=1
+ fi
+fi
+
+if [ ${RET} -eq 0 ]; then
+ Test_Info "syslog Test PASS"
+ Test_Kill_Qemu
+ Test_Print_Result "syslog" 0
+ exit 0
+else
+ Test_Info "syslog Test FAIL, Pls. check above syslog"
+ Test_Kill_Qemu
+ Test_Print_Result "syslog" 1
+ exit 1
+fi
