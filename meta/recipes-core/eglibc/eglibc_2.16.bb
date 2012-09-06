@@ -3,7 +3,7 @@ require eglibc.inc
 SRCREV = "20393"
 
 DEPENDS += "gperf-native"
-PR = "r7"
+PR = "r8"
 PR_append = "+svnr${SRCPV}"
 
 EGLIBC_BRANCH="eglibc-2_16"
@@ -26,6 +26,9 @@ SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};protocol=h
            file://add_resource_h_to_wait_h.patch \
            file://0001-Avoid-use-of-libgcc_s-and-libgcc_eh-when-building-gl.patch \
            file://0001-Add-ARM-specific-static-stubs.c.patch \
+           file://0001-eglibc-menuconfig-support.patch \
+           file://0002-eglibc-menuconfig-hex-string-options.patch \
+           file://0003-eglibc-menuconfig-build-instructions.patch \
           "
 LIC_FILES_CHKSUM = "file://LICENSES;md5=98a1128c4b58120182cbea3b1752d8b9 \
       file://COPYING;md5=393a5ca445f6965873eca0259a17f833 \
