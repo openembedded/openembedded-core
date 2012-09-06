@@ -1,0 +1,93 @@
+From b78f422ee83d279a83c62491b252cfec5b94e92a Mon Sep 17 00:00:00 2001
+From: jsm28 <jsm28@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Wed, 22 Aug 2012 08:36:23 +0000
+Subject: [PATCH] 	* Makefile.in (vis_hide, gen-hide-list): Do not make
+ definitions 	depend on --enable-shared. 
+ ($(lib1asmfuncs-o)): Use %.vis files independent of 
+ --enable-shared. 	* static-object.mk
+ ($(base)$(objext), $(base).vis) 
+ ($(base)_s$(objext)): Use same rules for visibility
+ handling as in 	shared-object.mk.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/trunk@190588 138bc75d-0d04-0410-961f-82ee72b054a4
+---
+ libgcc/ChangeLog        |   10 ++++++++++
+ libgcc/Makefile.in      |   16 ++++------------
+ libgcc/static-object.mk |   10 ++++++++--
+ 3 files changed, 22 insertions(+), 14 deletions(-)
+
+Upstream-Status: Backport
+
+-Khem 
+05-Sep-2012
+
+Index: gcc-4_7-branch/libgcc/Makefile.in
+===================================================================
+--- gcc-4_7-branch.orig/libgcc/Makefile.in	2012-08-21 22:33:20.000000000 -0700
++++ gcc-4_7-branch/libgcc/Makefile.in	2012-09-05 17:30:28.572998745 -0700
+@@ -362,6 +362,7 @@
+   ifneq ($(LIBUNWIND),)
+     install-libunwind = install-libunwind
+   endif
++endif
+ 
+ # For -fvisibility=hidden.  We need both a -fvisibility=hidden on
+ # the command line, and a #define to prevent libgcc2.h etc from
+@@ -385,11 +386,8 @@
+ gen-hide-list = echo > $@
+ endif
+ 
+-else
+-# Not enable_shared.
++ifneq ($(enable_shared),yes)
+ iterator = $(srcdir)/empty.mk $(patsubst %,$(srcdir)/static-object.mk,$(iter-items))
+-vis_hide =
+-gen-hide-list = echo > \$@
+ endif
+ 
+ LIB2ADD += enable-execute-stack.c
+@@ -438,7 +436,6 @@
+ 		       $(LIB2_DIVMOD_FUNCS))
+ 
+ # Build "libgcc1" (assembly) components.
+-ifeq ($(enable_shared),yes)
+ 
+ lib1asmfuncs-o = $(patsubst %,%$(objext),$(LIB1ASMFUNCS))
+ $(lib1asmfuncs-o): %$(objext): $(srcdir)/config/$(LIB1ASMSRC) %.vis
+@@ -450,14 +447,9 @@
+ lib1asmfuncs-s-o = $(patsubst %,%_s$(objext),$(LIB1ASMFUNCS))
+ $(lib1asmfuncs-s-o): %_s$(objext): $(srcdir)/config/$(LIB1ASMSRC)
+ 	$(gcc_s_compile) -DL$* -xassembler-with-cpp -c $<
+-libgcc-s-objects += $(lib1asmfuncs-s-o)
+-
+-else
++ifeq ($(enable_shared),yes)
+ 
+-lib1asmfuncs-o = $(patsubst %,%$(objext),$(LIB1ASMFUNCS))
+-$(lib1asmfuncs-o): %$(objext): $(srcdir)/config/$(LIB1ASMSRC)
+-	$(gcc_compile) -DL$* -xassembler-with-cpp -c $<
+-libgcc-objects += $(lib1asmfuncs-o)
++libgcc-s-objects += $(lib1asmfuncs-s-o)
+ 
+ endif
+ 
+Index: gcc-4_7-branch/libgcc/static-object.mk
+===================================================================
+--- gcc-4_7-branch.orig/libgcc/static-object.mk	2012-08-21 22:33:20.000000000 -0700
++++ gcc-4_7-branch/libgcc/static-object.mk	2012-09-05 17:30:28.572998745 -0700
+@@ -24,7 +24,13 @@
+ endif
+ endif
+ 
+-$(base)$(objext): $o
+-	$(gcc_compile) -c -xassembler-with-cpp $<
++$(base)$(objext): $o $(base).vis
++	$(gcc_compile) -c -xassembler-with-cpp -include $*.vis $<
++
++$(base).vis: $(base)_s$(objext)
++	$(gen-hide-list)
++
++$(base)_s$(objext): $o
++	$(gcc_s_compile) -c -xassembler-with-cpp $<
+ 
+ endif
