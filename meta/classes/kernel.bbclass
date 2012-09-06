@@ -546,4 +546,5 @@ EXPORT_FUNCTIONS do_deploy
 PACKAGES =+ "perf-dbg perf"
 FILES_perf = "${bindir}/* \
               ${libexecdir}"
-FILES_perf-dbg = "${FILES_${PN}-dbg}"
+FILES_perf-dbg = "${FILES_${PN}-dbg} \
+                  ${KERNEL_SRC_PATH}/tools/perf/.debug"
