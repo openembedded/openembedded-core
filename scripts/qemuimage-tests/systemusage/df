@@ -1,0 +1,54 @@
+#!/bin/bash
+# df -h check test case for function test
+# boot up the qemu target with `runqemu qemuxxx`,
+# then check if df space is fine or not target.
+#
+# Author: veera <veerabrahmamvr@huawei.com>
+#
+# This file is licensed under the GNU General Public License,
+# Version 2.
+#
+
+. $COREBASE/scripts/qemuimage-testlib
+
+TIMEOUT=400
+RET=1
+
+# Start qemu and check its network
+Test_Create_Qemu ${TIMEOUT}
+
+
+
+#If qemu network is up, check ssh service in qemu
+if [ $? -eq 0 ];then
+ Test_Info "Begin to Test SSH Service in Qemu"
+ Test_SSH_UP ${TARGET_IPADDR} ${TIMEOUT}
+ RET=$?
+else
+ RET=1
+fi
+
+# Check if disk spcae  space is enough or not(using df command)
+if [ $RET -eq 0 -a -f $TOOLS/df.sh ]; then
+ # Copy df.sh into target
+ Test_Target_Pre ${TARGET_IPADDR} $TOOLS/df.sh
+ if [ $? -eq 0 ]; then
+  # Run df.sh to check if df space is fine or not on the qemuxxx target
+  Test_SSH ${TARGET_IPADDR} "sh $TARGET_TEST_DIR/df.sh"
+  RET=$?
+ else
+  RET=1
+ fi
+fi
+
+if [ ${RET} -eq 0 ]; then
+ Test_Info "df Test PASS"
+ Test_Kill_Qemu
+ Test_Print_Result "df" 0
+ exit 0
+else
+ Test_Info "df Test FAIL, Pls. check above df"
+ Test_Kill_Qemu
+ Test_Print_Result "df" 1
+ exit 1
+fi
