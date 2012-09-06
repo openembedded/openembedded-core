@@ -56,6 +56,10 @@ do_configure_prepend() {
 	echo '${OE_FEATURES}' > ${B}/option-groups.config
 }
 
+do_configure_append() {
+	oe_runmake config
+}
+
 GLIBC_ADDONS ?= "ports,nptl,libidn"
 SDK_GLIBC_ADDONS ?= "ports,nptl,libidn"
 GLIBC_ADDONS_virtclass-nativesdk = "${SDK_GLIBC_ADDONS}"

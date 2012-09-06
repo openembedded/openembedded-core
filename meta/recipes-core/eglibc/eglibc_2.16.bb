@@ -2,7 +2,7 @@ require eglibc.inc
 
 SRCREV = "20393"
 
-DEPENDS += "gperf-native"
+DEPENDS += "gperf-native kconfig-frontends-native"
 PR = "r8"
 PR_append = "+svnr${SRCPV}"
 
@@ -79,6 +79,7 @@ EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
                 --with-headers=${STAGING_INCDIR} \
                 --without-selinux \
                 --enable-obsolete-rpc \
+                --with-kconfig=${STAGING_BINDIR_NATIVE} \
                 ${GLIBC_EXTRA_OECONF}"
 
 EXTRA_OECONF += "${@get_libc_fpu_setting(bb, d)}"

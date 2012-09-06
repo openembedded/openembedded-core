@@ -2,10 +2,10 @@ def eglibc_cfg(feature, features, tokens, cnf):
     if type(tokens) == type(""):
         tokens = [tokens]
     if type(features) == type([]) and feature in features:
-        cnf.extend([token + ' = y' for token in tokens])
+        cnf.extend([token + '=y' for token in tokens])
     else:
         for token in tokens:
-            cnf.extend([token + ' = n'])
+            cnf.extend([token + '=n'])
             if token == 'OPTION_EGLIBC_NSSWITCH':
                 cnf.extend(["OPTION_EGLIBC_NSSWITCH_FIXED_CONFIG = ${S}/nss/nsswitch.conf"])
                 cnf.extend(["OPTION_EGLIBC_NSSWITCH_FIXED_FUNCTIONS = ${S}/nss/fixed-nsswitch.functions"])
