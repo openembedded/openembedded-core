@@ -18,11 +18,6 @@ KERNEL_IMAGETYPE ?= "bzImage"
 SERIAL_CONSOLE ?= "115200 ttyS0"
 
 #
-# glibc-related variables
-#
-GLIBC_ADDONS ?= "nptl"
-
-#
 # kernel-related variables
 #
 PREFERRED_PROVIDER_virtual/kernel ??= "linux-yocto"
