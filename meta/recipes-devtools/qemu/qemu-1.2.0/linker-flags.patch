@@ -10,14 +10,14 @@ JL - 15/06/10
 
 Upstream-Status: Inappropriate [configuration]
 
-Index: qemu-0.14.0/Makefile.target
+Index: qemu-1.2.0/Makefile.target
 ===================================================================
---- qemu-0.14.0.orig/Makefile.target
-+++ qemu-0.14.0/Makefile.target
-@@ -218,7 +218,7 @@ obj-$(CONFIG_REALLY_VIRTFS) += virtio-9p
- obj-y += rwhandler.o
- obj-$(CONFIG_KVM) += kvm.o kvm-all.o
- obj-$(CONFIG_NO_KVM) += kvm-stub.o
+--- qemu-1.2.0.orig/Makefile.target	2012-09-05 07:03:06.000000000 -0700
++++ qemu-1.2.0/Makefile.target	2012-09-06 13:42:24.819764288 -0700
+@@ -130,7 +130,7 @@
+ obj-$(CONFIG_HAVE_CORE_DUMP) += dump.o
+ obj-$(CONFIG_NO_GET_MEMORY_MAPPING) += memory_mapping-stub.o
+ obj-$(CONFIG_NO_CORE_DUMP) += dump-stub.o
 -LIBS+=-lz
 +LIBS+=-lz -lX11 -ldl
  

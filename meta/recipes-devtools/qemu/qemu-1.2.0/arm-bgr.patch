@@ -11,20 +11,20 @@ RP 16/9/2011
 
 Upstream-Status: Pending
 
-Index: qemu-0.14.0/hw/pl110.c
+Index: qemu-1.2.0/hw/pl110.c
 ===================================================================
---- qemu-0.14.0.orig/hw/pl110.c	2011-09-16 14:45:34.228668514 +0100
-+++ qemu-0.14.0/hw/pl110.c	2011-09-16 15:17:22.458671206 +0100
-@@ -141,7 +141,11 @@
+--- qemu-1.2.0.orig/hw/pl110.c	2012-09-06 14:07:27.619821133 -0700
++++ qemu-1.2.0/hw/pl110.c	2012-09-06 14:12:07.699829648 -0700
+@@ -168,7 +168,11 @@
          fprintf(stderr, "pl110: Bad color depth\n");
          exit(1);
      }
 -    if (s->cr & PL110_CR_BGR)
 +
-+    if (s->versatile && s->bpp == BPP_16)
++    if (s->version && s->bpp == BPP_16)
 +        /* Code assumes BPP_16 == 565 and BGR is never set on the versatile in 565 mode */
 +        bpp_offset = 0;
 +    else if (s->cr & PL110_CR_BGR)
          bpp_offset = 0;
      else
-         bpp_offset = 18;
+         bpp_offset = 24;
