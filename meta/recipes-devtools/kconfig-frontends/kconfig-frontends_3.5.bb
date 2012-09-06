@@ -11,7 +11,7 @@ LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9b8cf60ff39767ff04b671fca8302408"
 SECTION = "devel"
 DEPENDS += "ncurses flex bison gperf"
-PR = "r0"
+PR = "r1"
 PV = "3.5.0"
 SPIN = "0"
 SRC_URI = "http://ymorin.is-a-geek.org/download/${BPN}/${BPN}-${PV}-${SPIN}.tar.xz"
@@ -24,6 +24,12 @@ inherit autotools
 do_configure_prepend () {
 	mkdir -p scripts/.autostuff/m4
 }
+
+do_install_append() {
+	ln -s kconfig-conf ${D}${bindir}/conf
+	ln -s kconfig-mconf ${D}${bindir}/mconf
+}
+
 EXTRA_OECONF += "--disable-gconf --disable-qconf"
 
 # Some packages have the version preceeding the .so instead properly
