@@ -1,0 +1,53 @@
+#!/bin/bash
+# on the target, check bash prompt is available or not
+# boot up the qemu target with `runqemu qemuxxx`,
+# then check  bash.
+#
+# Author: veera <veerabrahmamvr@huawei.com>
+#
+# This file is licensed under the GNU General Public License,
+# Version 2.
+#
+
+. $COREBASE/scripts/qemuimage-testlib
+
+TIMEOUT=400
+RET=1
+# Start qemu and check its network
+Test_Create_Qemu ${TIMEOUT}
+
+
+
+# If qemu network is up, check ssh service in qemu
+if [ $? -eq 0 ];then
+ Test_Info "Begin to Test SSH Service in Qemu"
+ Test_SSH_UP ${TARGET_IPADDR} ${TIMEOUT}
+ RET=$?
+else
+ RET=1
+fi
+
+# Check bash is working fine or not
+if [ $RET -eq 0 -a -f $TOOLS/bash.sh ]; then
+ # Copy bash.sh into target
+ Test_Target_Pre ${TARGET_IPADDR} $TOOLS/bash.sh
+ if [ $? -eq 0 ]; then
+  # Run bash.sh to check if bash command available or not on the qemuxxx target
+  Test_SSH ${TARGET_IPADDR} "sh $TARGET_TEST_DIR/bash.sh"
+  RET=$?
+ else
+  RET=1
+ fi
+fi
+
+if [ ${RET} -eq 0 ]; then
+ Test_Info "bash Test PASS"
+ Test_Kill_Qemu
+ Test_Print_Result "bash" 0
+ exit 0
+else
+ Test_Info "bash Test FAIL, Pls. check above bash"
+ Test_Kill_Qemu
+ Test_Print_Result "bash" 1
+ exit 1
+fi
