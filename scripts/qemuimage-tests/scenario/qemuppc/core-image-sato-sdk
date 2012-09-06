@@ -7,3 +7,6 @@ sanity rpm_query
 sanity compiler
 sanity connman
 sanity shutdown
+systemusage bash
+systemusage df
+systemusage syslog

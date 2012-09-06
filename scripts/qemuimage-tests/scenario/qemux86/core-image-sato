@@ -6,3 +6,6 @@ sanity zypper_search
 sanity rpm_query
 sanity connman
 sanity shutdown
+systemusage bash
+systemusage df
+systemusage syslog
