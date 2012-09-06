@@ -61,6 +61,7 @@ RDEPENDS_packagegroup-core-sys-extended = "\
     sysstat \
     unzip \
     watchdog \
+    wget \
     which \
     xinetd \
     zip \
@@ -170,6 +171,8 @@ RDEPENDS_packagegroup-core-lsb-perl = "\
     perl-modules \
     perl-misc \
     perl-pod \
+    perl-dev \
+    perl-doc \
 "
 
 SUMMARY_packagegroup-core-lsb-python = "LSB Runtime Languages (Python)"
@@ -227,6 +230,12 @@ RDEPENDS_packagegroup-core-lsb-runtime-add = "\
     eglibc-localedata-posix \
     eglibc-extra-nss \
     eglibc-pcprofile \
+    libclass-isa-perl \
+    libenv-perl \
+    libdumpvalue-perl \
+    libfile-checktree-perl \
+    libi18n-collate-perl \
+    libpod-plainer-perl \
 "
 
 PTH = "pth"
