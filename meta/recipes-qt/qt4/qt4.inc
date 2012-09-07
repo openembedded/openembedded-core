@@ -61,7 +61,7 @@ python __anonymous () {
         staticdev_packages.append("%s-staticdev" % pkg)
     for name in d.getVar("OTHER_PACKAGES", True).split():
         dbg_packages.append("%s-dbg" % name)
-        dbg_packages.append("%s-staticdev" % name)
+        staticdev_packages.append("%s-staticdev" % name)
 
     for name in d.getVar("QT_EXTRA_LIBS", True).split():
         pkg = d.getVar("QT_BASE_LIB", True) + name.lower().replace("qt", "").replace("_", "-") + "4"
