@@ -10,6 +10,9 @@ SRC_URI = "http://rsync.samba.org/ftp/rsync/src/rsync-${PV}.tar.gz \
            file://rsync-2.6.9-fname-obo.patch \
            file://rsyncd.conf"
 
+SRC_URI[md5sum] = "996d8d8831dbca17910094e56dcb5942"
+SRC_URI[sha256sum] = "ca437301becd890e73300bc69a39189ff1564baa761948ff149b3dd7bde633f9"
+
 inherit autotools
 
 do_install_append() {
