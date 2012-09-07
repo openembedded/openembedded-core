@@ -123,21 +123,13 @@ EXTRA_OECONF += "--with-fop=no \
                  ac_cv_file__usr_share_sgml_X11_defs_ent=no \
 "
 
-PACKAGECONFIG ??= "udev"
+PACKAGECONFIG ??= "udev ${@base_contains('DISTRO_FEATURES', 'opengl', 'glx', '', d)}"
 PACKAGECONFIG[udev] = "--enable-config-udev,--disable-config-udev,udev"
+PACKAGECONFIG[glx] = "--enable-dri --enable-dri2 --enable-glx --enable-glx-tls,\
+                      --disable-dri --disable-glx,\
+                      xf86driproto dri2proto mesa-dri"
 
 do_install_append () {
 	# Its assumed base-files creates this for us
 	rmdir ${D}${localstatedir}/log/
 }
-
-
-# Mesa/GLX/DRI
-PROTO_DEPS += "xf86driproto dri2proto"
-LIB_DEPS += "mesa-dri"
-
-EXTRA_OECONF += "\
-                 --enable-dri \
-                 --enable-dri2 \
-                 --enable-glx-tls \
-"
