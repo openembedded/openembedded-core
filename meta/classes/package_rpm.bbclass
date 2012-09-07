@@ -313,7 +313,14 @@ package_install_internal_rpm () {
 			done
 		fi
 	else
-		mv ${target_rootfs}/install/total_solution.manifest ${target_rootfs}/install/original_solution.manifest
+		# We may run through the complementary installs multiple times.  For each time
+		# we should add the previous solution manifest to the full "original" set to
+		# avoid duplicate install steps.
+		echo "Update original solution..."
+		cat ${target_rootfs}/install/initial_solution.manifest >> ${target_rootfs}/install/original_solution.manifest
+		cat ${target_rootfs}/install/total_solution.manifest >> ${target_rootfs}/install/original_solution.manifest
+		rm ${target_rootfs}/install/initial_solution.manifest
+		rm ${target_rootfs}/install/total_solution.manifest
 	fi
 
 	# Setup manifest of packages to install...
