@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://rsvg.h;beginline=3;endline=24;md5=20b4113c4909bbf0d67e006778302bc6"
 
 SECTION = "x11/utils"
-DEPENDS = "gtk+ libcroco cairo libxml2"
+DEPENDS = "gtk+ cairo libxml2"
 DEPENDS_virtclass-native = "cairo-native pango-native gdk-pixbuf-native"
 BBCLASSEXTEND = "native"
 
@@ -15,7 +15,13 @@ PR = "r10"
 
 inherit autotools pkgconfig gnome gtk-doc
 
-EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco"
+EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz"
+
+PACKAGECONFIG ??= "croco"
+# When native we can manage without croco, as it's only for GTK+
+PACKAGECONFIG_virtclass-native = ""
+
+PACKAGECONFIG[croco] = "--with-croco,--without-croco,libcroco"
 
 SRC_URI += "file://doc_Makefile.patch"
 
