@@ -56,7 +56,14 @@ PAM_SRC_URI = "file://pam.d/chfn \
                file://pam.d/passwd \
                file://pam.d/su"
 
-do_install_append() {
+do_install() {
+	oe_runmake DESTDIR="${D}" sbindir="${base_sbindir}" usbindir="${sbindir}" install
+
+	# Info dir listing isn't interesting at this point so remove it if it exists.
+	if [ -e "${D}${infodir}/dir" ]; then
+		rm -f ${D}${infodir}/dir
+	fi
+
 	# Ensure that the image has as a /var/spool/mail dir so shadow can
 	# put mailboxes there if the user reconfigures shadow to its
 	# defaults (see sed below).
@@ -93,8 +100,12 @@ do_install_append() {
 	# Move binaries to the locations we want
 	rm ${D}${sbindir}/vigr
 	ln -sf vipw.${BPN} ${D}${base_sbindir}/vigr
-	mv ${D}${sbindir}/vipw ${D}${base_sbindir}/vipw
-	mv ${D}${bindir}/login ${D}${base_bindir}/login
+	if [ "${sbindir}" != "${base_sbindir}" ]; then
+		mv ${D}${sbindir}/vipw ${D}${base_sbindir}/vipw
+	fi
+	if [ "${bindir}" != "${base_bindir}" ]; then
+		mv ${D}${bindir}/login ${D}${base_bindir}/login
+	fi
 
 	# Handle link properly after rename, otherwise missing files would
 	# lead rpm failed dependencies.
