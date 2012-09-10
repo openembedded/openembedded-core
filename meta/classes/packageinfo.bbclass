@@ -14,32 +14,14 @@ python packageinfo_handler () {
                 for root, dirs, files in os.walk(pkgdata_dir):
                     for pkgname in files:
                         if pkgname.endswith('.packaged'):
-                            continue
-                        sdata = oe.packagedata.read_pkgdatafile(root + pkgname)
-                        sdata['PKG'] = pkgname
-                        pkgrename = sdata['PKG_%s' % pkgname]
-                        pkgv = sdata['PKGV'].replace('-', '+')
-                        pkgr = sdata['PKGR']
-                        # We found there are some renaming issue with certain architecture.
-                        # For example, armv7a-vfp-neon, it will use armv7a in the rpm file. This is the workaround for it.
-                        arch_tmp = arch.split('-')[0]
-                        if os.path.exists(deploy_dir + '/' + arch + '/' + \
-                                          pkgname + '-' + pkgv + '-' + pkgr + '.' + arch + '.' + packaging) or \
-                           os.path.exists(deploy_dir + '/' + arch + '/' + \
-                                          pkgname + '-' + pkgv + '-' + pkgr + '.' + arch_tmp + '.' + packaging) or \
-                           os.path.exists(deploy_dir + '/' + arch + '/' + \
-                                          pkgrename + '-' + pkgv + '-' + pkgr + '.' + arch + '.' + packaging) or \
-                           os.path.exists(deploy_dir + '/' + arch + '/' + \
-                                          pkgrename + '-' + pkgv + '-' + pkgr + '.' + arch_tmp + '.' + packaging) or \
-                           os.path.exists(deploy_dir + '/' + arch + '/' + \
-                                          pkgname + '_' + pkgv + '-' + pkgr + '_' + arch + '.' + packaging) or \
-                           os.path.exists(deploy_dir + '/' + arch + '/' + \
-                                          pkgname + '_' + pkgv + '-' + pkgr + '_' + arch_tmp + '.' + packaging) or \
-                           os.path.exists(deploy_dir + '/' + arch + '/' + \
-                                          pkgrename + '_' + pkgv + '-' + pkgr + '_' + arch + '.' + packaging) or \
-                           os.path.exists(deploy_dir + '/' + arch + '/' + \
-                                          pkgrename + '_' + pkgv + '-' + pkgr + '_' + arch_tmp + '.' + packaging):
-                            pkginfolist.append(sdata)
+                            pkgname = pkgname[:-9]
+                            pkgdatafile = root + pkgname
+                            try:
+                                sdata = oe.packagedata.read_pkgdatafile(pkgdatafile)
+                                sdata['PKG'] = pkgname
+                                pkginfolist.append(sdata)
+                            except Exception as e:
+                                bb.warn("Failed to read pkgdata file %s: %s: %s" % (pkgdatafile, e.__class__, str(e)))
         bb.event.fire(bb.event.PackageInfo(pkginfolist), e.data)
 }
 
