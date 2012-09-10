@@ -3,7 +3,7 @@ Upstream-Status: Pending
 Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
 --- a/extensions/Makefile.am
 +++ b/extensions/Makefile.am
-@@ -37,12 +37,12 @@ _gen/all.xml: all.xml $(wildcard $(srcdi
+@@ -37,8 +37,8 @@ _gen/all.xml: all.xml $(wildcard $(srcdi
  		--xinclude $(tools_dir)/identity.xsl \
  		$< > $@
  
@@ -13,25 +13,3 @@ Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
  		$(tools_dir)/doc-generator.xsl \
  		$< > $@
  
--_gen/svc.c _gen/svc.h _gen/svc-gtk-doc.h: _gen/all.xml \
-+_gen/svc.c _gen/svc.h: _gen/all.xml \
- 	$(tools_dir)/glib-ginterface-gen.py
- 	$(AM_V_GEN)$(PYTHON) $(tools_dir)/glib-ginterface-gen.py \
- 		--filename=_gen/svc --signal-marshal-prefix=_idle_ext \
---- a/extensions/Makefile.in
-+++ b/extensions/Makefile.in
-@@ -585,12 +585,12 @@ _gen/all.xml: all.xml $(wildcard $(srcdi
- 		--xinclude $(tools_dir)/identity.xsl \
- 		$< > $@
- 
--extensions.html: _gen/all.xml $(tools_dir)/doc-generator.xsl
-+extensions.html _gen/svc-gtk-doc.h: _gen/all.xml $(tools_dir)/doc-generator.xsl
- 	$(AM_V_GEN)$(XSLTPROC) $(XSLTPROCFLAGS) \
- 		$(tools_dir)/doc-generator.xsl \
- 		$< > $@
- 
--_gen/svc.c _gen/svc.h _gen/svc-gtk-doc.h: _gen/all.xml \
-+_gen/svc.c _gen/svc.h: _gen/all.xml \
- 	$(tools_dir)/glib-ginterface-gen.py
- 	$(AM_V_GEN)$(PYTHON) $(tools_dir)/glib-ginterface-gen.py \
- 		--filename=_gen/svc --signal-marshal-prefix=_idle_ext \
