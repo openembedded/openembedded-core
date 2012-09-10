@@ -27,12 +27,12 @@ package_update_index_rpm () {
 	fi
 
 	# Update target packages
-	base_archs="${PACKAGE_ARCHS}"
-	ml_archs="${MULTILIB_PACKAGE_ARCHS}"
+	base_archs="`echo ${PACKAGE_ARCHS} | sed 's/-/_/g'`"
+	ml_archs="`echo ${MULTILIB_PACKAGE_ARCHS} | sed 's/-/_/g'`"
 	package_update_index_rpm_common "${RPMCONF_TARGET_BASE}" base_archs ml_archs
 
 	# Update SDK packages
-	base_archs="${SDK_PACKAGE_ARCHS}"
+	base_archs="`echo ${SDK_PACKAGE_ARCHS} | sed 's/-/_/g'`"
 	package_update_index_rpm_common "${RPMCONF_HOST_BASE}" base_archs
 }
 
@@ -1113,8 +1113,8 @@ python do_package_rpm () {
     rpmbuild = d.getVar('RPMBUILD', True)
     targetsys = d.getVar('TARGET_SYS', True)
     targetvendor = d.getVar('TARGET_VENDOR', True)
-    package_arch = d.getVar('PACKAGE_ARCH', True) or ""
-    if package_arch not in "all any noarch".split() and not package_arch.endswith("-nativesdk"):
+    package_arch = (d.getVar('PACKAGE_ARCH', True) or "").replace("-", "_")
+    if package_arch not in "all any noarch".split() and not package_arch.endswith("_nativesdk"):
         ml_prefix = (d.getVar('MLPREFIX', True) or "").replace("-", "_")
         d.setVar('PACKAGE_ARCH_EXTEND', ml_prefix + package_arch)
     else:
