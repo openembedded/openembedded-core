@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://Source/WebCore/rendering/RenderApplet.h;endline=22;md
                     file://Source/WebKit/gtk/webkit/webkit.h;endline=21;md5=b4fbe9f4a944f1d071dba1d2c76b3351 \
                     file://Source/JavaScriptCore/parser/Parser.h;endline=23;md5=b57c8a2952a8d0e655988fa0ecb2bf7f"
 
+PR = "r1"
+
 # Choice of language backends - icu has issues on Big Endian machines so use pango
 ICU_LIB = "icu"
 ICU_LIB_powerpc = "pango"
@@ -75,6 +77,26 @@ do_configure_append() {
 	for makefile in $(find ${S} -name "GNUmakefile") ; do
 		sed -i s:-I/usr/include::g $makefile
 	done
+}
+
+# A dirty hack for GNU make 3.82 bug which means it drops required
+# dependencies. https://bugs.webkit.org/show_bug.cgi?id=79498 is the WebKitGTK+
+# bug, and http://savannah.gnu.org/bugs/?30653 is the GNU Make bug.  This is
+# fixed in Make CVS, so 3.83 won't have this problem.
+do_compile() {
+    if [ x"$MAKE" = x ]; then MAKE=make; fi
+    bbnote ${MAKE} ${EXTRA_OEMAKE} "$@"
+    for error_count in 1 2 3; do
+        bbnote "Attempt $error_count of 3"
+        exit_code=0
+        ${MAKE} ${EXTRA_OEMAKE} "$@" || exit_code=1
+        if [ $exit_code = 0 ]; then
+            break
+        fi
+    done
+    if [ ! $exit_code = 0 ]; then
+        die "oe_runmake failed"
+    fi
 }
 
 do_install_append() {
