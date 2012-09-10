@@ -3,13 +3,11 @@
 #
 
 LICENSE = "MIT"
-PR = "r38"
+PR = "r39"
 
 inherit packagegroup
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-
-PACKAGES = "${PN}"
 
 XSERVER ?= "xserver-xorg xf86-video-fbdev xf86-input-evdev"
 
