@@ -19,6 +19,8 @@ TUNEVALID[fpu-soft] = "Use software FPU."
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "fpu-soft", "-msoft-float", "", d)}"
 TARGET_FPU .= "${@bb.utils.contains("TUNE_FEATURES", "fpu-soft", "soft", "", d)}"
 
+TUNEVALID[altivec] = "Altivec"
+
 # Basic tune definitions
 AVAILTUNES += "powerpc powerpc-nf" 
 TUNE_FEATURES_tune-powerpc-nf = "m32 fpu-soft"
