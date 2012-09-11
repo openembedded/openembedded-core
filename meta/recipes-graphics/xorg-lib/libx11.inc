@@ -9,15 +9,13 @@ require xorg-lib-common.inc
 inherit siteinfo
 
 PE = "1"
-INC_PR = "r1"
+INC_PR = "r2"
 
 PROVIDES = "virtual/libx11"
 
 XORG_PN = "libX11"
 LICENSE = "MIT & MIT-style & BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=172255dee66bb0151435b2d5d709fcf7"
-
-EXTRA_OECONF += "--with-groff=no --with-ps2pdf=no --with-fop=no --disable-specs"
 
 PACKAGES =+ "${PN}-xcb"
 
