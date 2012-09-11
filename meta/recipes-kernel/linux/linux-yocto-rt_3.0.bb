@@ -22,7 +22,7 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.0.git;protocol=git;bareclone
 COMPATIBLE_MACHINE = "(qemux86|qemux86-64|qemuarm)"
 
 # Functionality flags
-KERNEL_FEATURES = "features/netfilter"
+KERNEL_FEATURES_append = " features/netfilter"
 KERNEL_FEATURES_append = " features/taskstats"
 KERNEL_FEATURES_append_qemux86 = " cfg/sound"
 KERNEL_FEATURES_append_qemux86-64 = " cfg/sound"
