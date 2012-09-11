@@ -90,26 +90,32 @@ license_create_manifest() {
 		# not the best way to do this but licenses are not arch dependant iirc
 		filename=`ls ${TMPDIR}/pkgdata/*/runtime-reverse/${pkg}| head -1`
 		pkged_pn="$(sed -n 's/^PN: //p' ${filename})"
+
+		# exclude locale recipes
+		if [ "${pkged_pn}" = "*locale*" ]; then
+			continue
+		fi
+
+		# check to see if the package name exists in the manifest. if so, bail.
+		if grep -q "^PACKAGE NAME: ${pkg}" ${LICENSE_MANIFEST}; then
+			continue
+		fi
+
 		pkged_lic="$(sed -n '/^LICENSE: /{ s/^LICENSE: //; s/[+|&()*]/ /g; s/  */ /g; p }' ${filename})"
 		pkged_pv="$(sed -n 's/^PV: //p' ${filename})"
-		# check to see if the package name exists in the manifest. if so, bail.
-		if ! grep -q "^PACKAGE NAME: ${pkg}" ${LICENSE_MANIFEST}; then
-			# exclude local recipes
-			if [ ! "${pkged_pn}" = "*locale*" ]; then
-				echo "PACKAGE NAME:" ${pkg} >> ${LICENSE_MANIFEST}
-				echo "PACKAGE VERSION:" ${pkged_pv} >> ${LICENSE_MANIFEST}
-				echo "RECIPE NAME:" ${pkged_pn} >> ${LICENSE_MANIFEST}
-				echo "LICENSE: " >> ${LICENSE_MANIFEST}
-				for lic in ${pkged_lic}; do
-					if [ -e "${LICENSE_DIRECTORY}/${pkged_pn}/generic_${lic}" ]; then
-						echo ${lic}|sed s'/generic_//'g >> ${LICENSE_MANIFEST}
-					else
-						echo "WARNING: The license listed, " ${lic} " was not in the licenses collected for " ${pkged_pn} >> ${LICENSE_MANIFEST}
-					fi
-				done
-				echo "" >> ${LICENSE_MANIFEST}
+
+		echo "PACKAGE NAME:" ${pkg} >> ${LICENSE_MANIFEST}
+		echo "PACKAGE VERSION:" ${pkged_pv} >> ${LICENSE_MANIFEST}
+		echo "RECIPE NAME:" ${pkged_pn} >> ${LICENSE_MANIFEST}
+		echo "LICENSE: " >> ${LICENSE_MANIFEST}
+		for lic in ${pkged_lic}; do
+			if [ -e "${LICENSE_DIRECTORY}/${pkged_pn}/generic_${lic}" ]; then
+				echo ${lic}|sed s'/generic_//'g >> ${LICENSE_MANIFEST}
+			else
+				echo "WARNING: The license listed, " ${lic} " was not in the licenses collected for " ${pkged_pn} >> ${LICENSE_MANIFEST}
 			fi
-		fi
+		done
+		echo "" >> ${LICENSE_MANIFEST}
 	done
 
 	# Two options here:
