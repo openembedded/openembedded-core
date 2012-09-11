@@ -7,14 +7,14 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=2ac251558de685c6b9478d89be3149c2"
 
 DEPENDS = "virtual/libx11 virtual/libgl libxext libxi libxmu"
 
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/glew/glew/${PV}/glew-${PV}.tgz \
            file://autotools.patch \
            file://glew_fix_for_automake-1.12.patch \
           "
 
-SRC_URI[md5sum] = "fb7a8bb79187ac98a90b57f0f27a3e84"
-SRC_URI[sha256sum] = "1653a63fb1e1a518c4b5ccbaf1a617f1a0b4c1c29d39ae4e2583844d98365c09"
+SRC_URI[md5sum] = "69ce911decef6249d24742497e6ad06a"
+SRC_URI[sha256sum] = "9b36530e414c95d6624be9d6815a5be1531d1986300ae5903f16977ab8aeb787"
 
 inherit autotools lib_package
