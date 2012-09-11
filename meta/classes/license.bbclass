@@ -112,16 +112,16 @@ license_create_manifest() {
 		echo "PACKAGE NAME:" ${pkg} >> ${LICENSE_MANIFEST}
 		echo "PACKAGE VERSION:" ${pkged_pv} >> ${LICENSE_MANIFEST}
 		echo "RECIPE NAME:" ${pkged_pn} >> ${LICENSE_MANIFEST}
-		echo "LICENSE: " >> ${LICENSE_MANIFEST}
+		echo -n "LICENSE:" >> ${LICENSE_MANIFEST}
 		for lic in ${pkged_lic}; do
 			# to reference a license file trim trailing + symbol
 			if [ -e "${LICENSE_DIRECTORY}/${pkged_pn}/generic_${lic%+}" ]; then
-				echo ${lic} >> ${LICENSE_MANIFEST}
+				echo -n " ${lic}" >> ${LICENSE_MANIFEST}
 			else
-				echo "WARNING: The license listed, " ${lic} " was not in the licenses collected for " ${pkged_pn} >> ${LICENSE_MANIFEST}
+				echo "WARNING: The license listed ${lic} was not in the licenses collected for ${pkged_pn}"
 			fi
 		done
-		echo "" >> ${LICENSE_MANIFEST}
+		echo -e "\n" >> ${LICENSE_MANIFEST}
 	done
 
 	# Two options here:
