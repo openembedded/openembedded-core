@@ -3,10 +3,9 @@ require libx11.inc
 DESCRIPTION += " Support for XCMS and XLOCALE is disabled in \
 this version."
 
-PR = "${INC_PR}.3"
+PR = "${INC_PR}.4"
 
-SRC_URI += "file://x11_disable_makekeys.patch \
-            file://X18NCMSstubs.diff \
+SRC_URI += "file://X18NCMSstubs.diff \
             file://keysymdef_include.patch \
             file://fix-disable-xlocale.diff \
             file://fix-utf8-wrong-define.patch \
