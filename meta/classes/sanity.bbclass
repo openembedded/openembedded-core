@@ -320,13 +320,16 @@ def check_sanity(sanity_data):
         messages = messages + 'Bitbake version %s is required and version %s was found\n' % (minversion, bb.__version__)
 
     # Check that the MACHINE is valid, if it is set
+    machinevalid = True
     if sanity_data.getVar('MACHINE', True):
         if not check_conf_exists("conf/machine/${MACHINE}.conf", sanity_data):
             messages = messages + 'Please set a valid MACHINE in your local.conf or environment\n'
+            machinevalid = False
         else:
             messages = messages + check_sanity_validmachine(sanity_data)
     else:
         messages = messages + 'Please set a MACHINE in your local.conf or environment\n'
+        machinevalid = False
 
     # Check we are using a valid lacal.conf
     current_conf  = sanity_data.getVar('CONF_VERSION', True)
@@ -428,9 +431,10 @@ def check_sanity(sanity_data):
         messages = messages + pseudo_msg + '\n'
 
     check_supported_distro(sanity_data)
-    toolchain_msg = check_toolchain(sanity_data)
-    if toolchain_msg != "":
-        messages = messages + toolchain_msg + '\n'
+    if machinevalid:
+        toolchain_msg = check_toolchain(sanity_data)
+        if toolchain_msg != "":
+            messages = messages + toolchain_msg + '\n'
 
     # Check if DISPLAY is set if IMAGETEST is set
     if not sanity_data.getVar( 'DISPLAY', True ) and sanity_data.getVar( 'IMAGETEST', True ) == 'qemu':
