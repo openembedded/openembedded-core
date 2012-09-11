@@ -93,3 +93,5 @@ FILES_gettext-runtime-doc = "${mandir}/man1/gettext.* \
 do_install_append() {
 	rm -f ${D}${libdir}/preloadable_libintl.so
 }
+
+BBCLASSEXTEND = "native nativesdk"
