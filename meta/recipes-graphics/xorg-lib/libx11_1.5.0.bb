@@ -1,13 +1,12 @@
 require libx11.inc
 inherit gettext
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
 BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI += " file://keysymdef_include.patch \
              file://x11_disable_makekeys.patch \
-             file://makekeys_crosscompile.patch \
              "
 
 SRC_URI[md5sum] = "78b4b3bab4acbdf0abcfca30a8c70cc6"
