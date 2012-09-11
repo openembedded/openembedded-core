@@ -5,8 +5,6 @@ PR = "${INC_PR}.0"
 
 BBCLASSEXTEND = "native nativesdk"
 
-EXTRA_OECONF += "--with-keysymdefdir=${STAGING_INCDIR}/X11"
-
 DEPENDS += "util-macros xtrans libxdmcp libxau \
             bigreqsproto xproto xextproto xcmiscproto \
             xf86bigfontproto kbproto inputproto libxcb \

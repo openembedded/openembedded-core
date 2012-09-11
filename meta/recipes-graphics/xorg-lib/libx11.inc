@@ -9,7 +9,7 @@ require xorg-lib-common.inc
 inherit siteinfo
 
 PE = "1"
-INC_PR = "r3"
+INC_PR = "r4"
 
 PROVIDES = "virtual/libx11"
 
@@ -22,6 +22,8 @@ PACKAGES =+ "${PN}-xcb"
 FILES_${PN} += "${datadir}/X11/XKeysymDB ${datadir}/X11/XErrorDB ${libdir}/X11/Xcms.txt"
 FILES_${PN}-xcb += "${libdir}/libX11-xcb.so.*"
 FILES_${PN}-locale += "${datadir}/X11/locale ${libdir}/X11/locale"
+
+EXTRA_OECONF += "--with-keysymdefdir=${STAGING_INCDIR}/X11/"
 
 # Almost nothing uses XCMS
 PACKAGECONFIG ??= ""
