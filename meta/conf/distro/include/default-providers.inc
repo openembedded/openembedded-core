@@ -10,7 +10,7 @@ PREFERRED_PROVIDER_virtual/libgles1 ?= "mesa-dri"
 PREFERRED_PROVIDER_virtual/libgles2 ?= "mesa-dri"
 PREFERRED_PROVIDER_virtual/update-alternatives ?= "update-alternatives-cworth"
 PREFERRED_PROVIDER_virtual/update-alternatives-native ?= "opkg-native"
-PREFERRED_PROVIDER_virtual/libx11 ?= "libx11-trim"
+PREFERRED_PROVIDER_virtual/libx11 ?= "libx11"
 PREFERRED_PROVIDER_xf86-video-intel ?= "xf86-video-intel"
 
 #
