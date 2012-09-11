@@ -1,0 +1,34 @@
+Upstream-Status: Inappropriate [SDK specific]
+
+In order to be able to change the dynamic loader path when relocating
+binaries, the interp section has to be made big enough to accomodate
+the new path (4096 is the maximum path length in Linux).
+
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+
+Index: qemu-1.2.0/i386.ld
+===================================================================
+--- qemu-1.2.0.orig/i386.ld
++++ qemu-1.2.0/i386.ld
+@@ -8,7 +8,7 @@ SECTIONS
+ {
+   /* Read-only sections, merged into text segment: */
+   . = 0x60000000 + SIZEOF_HEADERS;
+-  .interp     : { *(.interp) 	}
++  .interp     : { *(.interp); . = 0x1000; }
+   .hash          : { *(.hash)		}
+   .dynsym        : { *(.dynsym)		}
+   .dynstr        : { *(.dynstr)		}
+Index: qemu-1.2.0/x86_64.ld
+===================================================================
+--- qemu-1.2.0.orig/x86_64.ld
++++ qemu-1.2.0/x86_64.ld
+@@ -6,7 +6,7 @@ SECTIONS
+ {
+   /* Read-only sections, merged into text segment: */
+   . = 0x60000000 + SIZEOF_HEADERS;
+-  .interp         : { *(.interp) }
++  .interp         : { *(.interp); . = 0x1000; }
+   .hash           : { *(.hash) }
+   .dynsym         : { *(.dynsym) }
+   .dynstr         : { *(.dynstr) }
