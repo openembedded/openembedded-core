@@ -11,13 +11,16 @@ inherit siteinfo
 FILESPATH = "${FILE_DIRNAME}/libx11"
 
 PE = "1"
-INC_PR = "r5"
+INC_PR = "r6"
 
 PROVIDES = "virtual/libx11"
 
 XORG_PN = "libX11"
 LICENSE = "MIT & MIT-style & BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=172255dee66bb0151435b2d5d709fcf7"
+
+DEPENDS += "xproto xextproto xtrans libxcb kbproto inputproto"
+DEPENDS += "xf86bigfontproto xproto-native"
 
 PACKAGES =+ "${PN}-xcb"
 

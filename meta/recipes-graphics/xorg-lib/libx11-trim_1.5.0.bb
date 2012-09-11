@@ -4,8 +4,6 @@ DESCRIPTION += " Support for XCMS is disabled in this version."
 
 PR = "${INC_PR}.0"
 
-DEPENDS += "libxcb xproto xextproto xtrans libxau kbproto inputproto xf86bigfontproto xproto-native"
-
 SRC_URI += "file://x11_disable_makekeys.patch \
             file://keysymdef_include.patch \
             file://makekeys_crosscompile.patch"

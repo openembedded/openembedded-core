@@ -5,11 +5,6 @@ PR = "${INC_PR}.0"
 
 BBCLASSEXTEND = "native nativesdk"
 
-DEPENDS += "util-macros xtrans libxdmcp libxau \
-            bigreqsproto xproto xextproto xcmiscproto \
-            xf86bigfontproto kbproto inputproto libxcb \
-            xproto-native"
-
 SRC_URI += " file://keysymdef_include.patch \
              file://x11_disable_makekeys.patch \
              file://makekeys_crosscompile.patch \
