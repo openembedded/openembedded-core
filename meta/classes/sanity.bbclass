@@ -6,13 +6,8 @@ SANITY_REQUIRED_UTILITIES ?= "patch diffstat makeinfo git bzip2 tar gzip gawk ch
 
 def raise_sanity_error(msg, d):
     if d.getVar("SANITY_USE_EVENTS", True) == "1":
-        # FIXME: handle when BitBake version is too old to support bb.event.SanityCheckFailed
-        # We can just fire the event directly once the minimum version is bumped beyond 1.15.1
-        try:
-            bb.event.fire(bb.event.SanityCheckFailed(msg), d)
-            return
-        except AttributeError:
-            pass
+        bb.event.fire(bb.event.SanityCheckFailed(msg), d)
+        return
 
     bb.fatal(""" OE-core's config sanity checker detected a potential misconfiguration.
     Either fix the cause of this error or at your own risk disable the checker (see sanity.conf).
