@@ -3,8 +3,6 @@ require libx11.inc
 DESCRIPTION += " Support for XCMS and XLOCALE is disabled in \
 this version."
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=172255dee66bb0151435b2d5d709fcf7"
-
 PR = "${INC_PR}.2"
 
 SRC_URI += "file://x11_disable_makekeys.patch \
