@@ -9,7 +9,7 @@ SRCREV_machine_qemuppc ?= "b9a720ca38d298ed457f37d099c85771f9164b19"
 SRCREV_machine_qemux86 ?= "46d8c757b3be1953f30d6745505d24436e2d6844"
 SRCREV_machine_qemux86-64 ?= "46d8c757b3be1953f30d6745505d24436e2d6844"
 SRCREV_machine ?= "46d8c757b3be1953f30d6745505d24436e2d6844"
-SRCREV_meta ?= "a82db2f0fc3ceebf3cb47e9dd05e4856ff9966ab"
+SRCREV_meta ?= "e0374ce012e7e6fc8e5bb8b957addb0478950898"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.4.git;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
 
@@ -27,3 +27,4 @@ KERNEL_REVISION_CHECKING=""
 KERNEL_FEATURES_append = " features/netfilter"
 KERNEL_FEATURES_append_qemux86=" cfg/sound"
 KERNEL_FEATURES_append_qemux86-64=" cfg/sound"
+KERNEL_FEATURES_append = " ${@bb.utils.contains("TUNE_FEATURES", "mx32", " cfg/x32", "" ,d)}"

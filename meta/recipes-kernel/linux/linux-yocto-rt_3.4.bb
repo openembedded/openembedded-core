@@ -10,7 +10,7 @@ KMETA = "meta"
 
 SRCREV_machine ?= "a35693b1287c0e50cdca33a1b95af0ff48b43cd0"
 SRCREV_machine_qemuppc ?= "85a1190530cb5749f5f831670976b163438dc301"
-SRCREV_meta ?= "d9d5fc63d8b38705036e946ea77d971d95de11ad"
+SRCREV_meta ?= "e0374ce012e7e6fc8e5bb8b957addb0478950898"
 
 PR = "${INC_PR}.0"
 PV = "${LINUX_VERSION}+git${SRCPV}"
@@ -27,3 +27,4 @@ KERNEL_FEATURES_append = " features/netfilter"
 KERNEL_FEATURES_append = " features/taskstats"
 KERNEL_FEATURES_append_qemux86 = " cfg/sound"
 KERNEL_FEATURES_append_qemux86-64 = " cfg/sound"
+KERNEL_FEATURES_append = " ${@bb.utils.contains("TUNE_FEATURES", "mx32", " cfg/x32", "" ,d)}"
