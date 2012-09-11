@@ -8,8 +8,10 @@ require xorg-lib-common.inc
 
 inherit siteinfo
 
+FILESPATH = "${FILE_DIRNAME}/libx11"
+
 PE = "1"
-INC_PR = "r4"
+INC_PR = "r5"
 
 PROVIDES = "virtual/libx11"
 
