@@ -1,23 +1,47 @@
-Upstream-Status: Inappropriate [configuration]
+From 547937d82084f2cce7e3f0849b5112a20c467146 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Tue, 11 Sep 2012 17:39:12 +0100
+Subject: [PATCH] Allow overriding location of keysymdef.h
 
-Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+Currently keysymdef.h is found by using the includedir of xproto.  This doesn't
+work when cross-compiling with a sysroot as that ends up being /usr/include/X11,
+not a path into the cross-build environment.
 
-diff -uNr libX11-1.3.6.orig//configure.ac libX11-1.3.6/configure.ac
---- libX11-1.3.6.orig//configure.ac	2010-09-20 08:04:16.000000000 +0200
-+++ libX11-1.3.6/configure.ac	2010-09-28 16:29:26.000000000 +0200
-@@ -355,7 +355,14 @@
+So, add an option to allow explicitly specifying the location of keysymdef.h,
+and verify that the specified or found path exists.
+
+(original patch by Martin Jansa <martin.jansa@gmail.com>, revised by myself)
+
+Upstream-Status: Submitted [xorg-devel]
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ configure.ac |   13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 48a0c8a..200db15 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -306,7 +306,18 @@ AC_CHECK_FUNC(poll, [AC_DEFINE(USE_POLL, 1, [poll() function is available])], )
  # Find keysymdef.h
  #
  AC_MSG_CHECKING([keysym definitions])
 -KEYSYMDEFDIR=`$PKG_CONFIG --variable=includedir xproto`/X11
 +AC_ARG_WITH(keysymdefdir,
-+        AC_HELP_STRING([--with-keysymdefdir=DIR], [The location of keysymdef.h]),
++        AC_HELP_STRING([--with-keysymdefdir=DIR], [The location of keysymdef.h (defaults to xproto include dir)]),
 +        KEYSYMDEFDIR=$withval, KEYSYMDEFDIR="")
 +
 +if test x$KEYSYMDEFDIR = x; then
 +	KEYSYMDEFDIR=`$PKG_CONFIG --variable=includedir xproto`/X11
 +fi
 +
++if test ! -d $KEYSYMDEFDIR; then
++	AC_MSG_ERROR([$KEYSYMDEFDIR doesn't exist or isn't a directory])
++fi
++
  FILES="keysymdef.h XF86keysym.h Sunkeysym.h DECkeysym.h HPkeysym.h"
  for i in $FILES; do
      if test -f "$KEYSYMDEFDIR/$i"; then
+-- 
+1.7.10.4
+
