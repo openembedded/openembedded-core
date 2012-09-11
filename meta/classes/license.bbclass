@@ -101,8 +101,13 @@ license_create_manifest() {
 			continue
 		fi
 
-		pkged_lic="$(sed -n '/^LICENSE: /{ s/^LICENSE: //; s/[+|&()*]/ /g; s/  */ /g; p }' ${filename})"
 		pkged_pv="$(sed -n 's/^PV: //p' ${filename})"
+		pkged_name="$(basename $(readlink ${filename}))"
+		pkged_lic="$(sed -n "/^LICENSE_${pkged_name}: /{ s/^LICENSE_${pkged_name}: //; s/[+|&()*]/ /g; s/  */ /g; p }" ${filename})"
+		if [ -z ${pkged_lic} ]; then
+			# fallback checking value of LICENSE
+			pkged_lic="$(sed -n "/^LICENSE: /{ s/^LICENSE: //; s/[+|&()*]/ /g; s/  */ /g; p }" ${filename})"
+		fi
 
 		echo "PACKAGE NAME:" ${pkg} >> ${LICENSE_MANIFEST}
 		echo "PACKAGE VERSION:" ${pkged_pv} >> ${LICENSE_MANIFEST}
