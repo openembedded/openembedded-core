@@ -9,6 +9,7 @@ require xorg-lib-common.inc
 inherit siteinfo
 
 PE = "1"
+INC_PR = "r1"
 
 PROVIDES = "virtual/libx11"
 
