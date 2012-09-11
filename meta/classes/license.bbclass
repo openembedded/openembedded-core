@@ -103,10 +103,10 @@ license_create_manifest() {
 
 		pkged_pv="$(sed -n 's/^PV: //p' ${filename})"
 		pkged_name="$(basename $(readlink ${filename}))"
-		pkged_lic="$(sed -n "/^LICENSE_${pkged_name}: /{ s/^LICENSE_${pkged_name}: //; s/[+|&()*]/ /g; s/  */ /g; p }" ${filename})"
+		pkged_lic="$(sed -n "/^LICENSE_${pkged_name}: /{ s/^LICENSE_${pkged_name}: //; s/[|&()*]/ /g; s/  */ /g; p }" ${filename})"
 		if [ -z ${pkged_lic} ]; then
 			# fallback checking value of LICENSE
-			pkged_lic="$(sed -n "/^LICENSE: /{ s/^LICENSE: //; s/[+|&()*]/ /g; s/  */ /g; p }" ${filename})"
+			pkged_lic="$(sed -n "/^LICENSE: /{ s/^LICENSE: //; s/[|&()*]/ /g; s/  */ /g; p }" ${filename})"
 		fi
 
 		echo "PACKAGE NAME:" ${pkg} >> ${LICENSE_MANIFEST}
@@ -114,8 +114,9 @@ license_create_manifest() {
 		echo "RECIPE NAME:" ${pkged_pn} >> ${LICENSE_MANIFEST}
 		echo "LICENSE: " >> ${LICENSE_MANIFEST}
 		for lic in ${pkged_lic}; do
-			if [ -e "${LICENSE_DIRECTORY}/${pkged_pn}/generic_${lic}" ]; then
-				echo ${lic}|sed s'/generic_//'g >> ${LICENSE_MANIFEST}
+			# to reference a license file trim trailing + symbol
+			if [ -e "${LICENSE_DIRECTORY}/${pkged_pn}/generic_${lic%+}" ]; then
+				echo ${lic} >> ${LICENSE_MANIFEST}
 			else
 				echo "WARNING: The license listed, " ${lic} " was not in the licenses collected for " ${pkged_pn} >> ${LICENSE_MANIFEST}
 			fi
