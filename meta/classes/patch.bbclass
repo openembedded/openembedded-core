@@ -139,6 +139,13 @@ python patch_do_patch() {
     path = os.getenv('PATH')
     os.putenv('PATH', d.getVar('PATH', True))
 
+    import shutil
+    process_tmpdir = os.path.join('/tmp', str(os.getpid()))
+    if os.path.exists(process_tmpdir):
+        shutil.rmtree(process_tmpdir)
+    os.makedirs(process_tmpdir)
+    os.environ['TMPDIR'] = process_tmpdir
+
     for patch in src_patches(d):
         _, _, local, _, _, parm = bb.decodeurl(patch)
 
@@ -161,11 +168,15 @@ python patch_do_patch() {
         try:
             patchset.Import({"file":local, "strippath": parm['striplevel']}, True)
         except Exception as exc:
+            shutil.rmtree(process_tmpdir)
             bb.fatal(str(exc))
         try:
             resolver.Resolve()
         except bb.BBHandledException as e:
+            shutil.rmtree(process_tmpdir)
             bb.fatal(str(e))
+
+    shutil.rmtree(process_tmpdir)
 }
 patch_do_patch[vardepsexclude] = "PATCHRESOLVE"
 
