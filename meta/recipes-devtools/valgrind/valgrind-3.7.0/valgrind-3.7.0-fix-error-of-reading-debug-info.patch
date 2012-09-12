@@ -1,0 +1,33 @@
+Upstream-Status: Pending
+
+fix debug info reading error when do memcheck on ppc targets
+    following is the error message:
+        --2263-- WARNING: Serious error when reading debug info
+        --2263-- When reading debug info from /lib/ld-2.13.so:
+        --2263-- Can't make sense of .got section mapping
+        --2263-- WARNING: Serious error when reading debug info
+        --2263-- When reading debug info from /home/root/lzh:
+        --2263-- Can't make sense of .data section mapping
+        --2263-- WARNING: Serious error when reading debug info
+        --2263-- When reading debug info from /usr/lib/valgrind/vgpreload_core-ppc32-linux.so:
+        --2263-- Can't make sense of .data section mapping
+        --2263-- WARNING: Serious error when reading debug info
+        --2263-- When reading debug info from /usr/lib/valgrind/vgpreload_memcheck-ppc32-linux.so:
+        --2263-- Can't make sense of .data section mapping
+        --2263-- WARNING: Serious error when reading debug info
+        --2263-- When reading debug info from /lib/libc-2.13.so:
+        --2263-- Can't make sense of .data section mapping
+
+Signed-off-by: Zhenhua Luo <b19537@freescale.com>
+
+--- a/coregrind/m_debuginfo/readelf.c	2012-09-11 21:45:36.696462313 -0500
++++ b/coregrind/m_debuginfo/readelf.c	2012-09-11 21:45:49.913463615 -0500
+@@ -1539,7 +1539,7 @@
+                 && phdr->p_offset < di->fsm.rw_map_foff + di->fsm.rw_map_size
+                 && phdr->p_offset + phdr->p_filesz 
+                    <= di->fsm.rw_map_foff + di->fsm.rw_map_size
+-                && (phdr->p_flags & (PF_R | PF_W | PF_X)) == (PF_R | PF_W)) {
++                && (phdr->p_flags & (PF_R | PF_W | PF_X)) >= (PF_R | PF_W)) {
+                if (n_rw == N_RX_RW_AREAS) {
+                   ML_(symerr)(di, True,
+                               "N_RX_RW_AREAS is too low; "
