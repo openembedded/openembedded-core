@@ -561,7 +561,8 @@ sstate_unpack_package () {
 	tar -xvzf ${SSTATE_PKG}
 }
 
-EXTRASSTATEMAPS = "do_deploy:deploy"
+# Need to inject information about classes not in the global configuration scope
+EXTRASSTATEMAPS += "do_deploy:deploy"
 
 BB_HASHCHECK_FUNCTION = "sstate_checkhashes"
 
