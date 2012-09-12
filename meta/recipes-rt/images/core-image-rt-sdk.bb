@@ -7,6 +7,6 @@ DEPENDS = "linux-yocto-rt"
 
 IMAGE_FEATURES += "dev-pkgs tools-sdk tools-debug tools-profile tools-testapps debug-tweaks"
 
-IMAGE_INSTALL += "rt-tests kernel-dev"
+IMAGE_INSTALL += "rt-tests hwlatdetect kernel-dev"
 
 LICENSE = "MIT"
