@@ -1,9 +1,6 @@
 DEPENDS += "libdrm expat udev"
 X11_DEPS += "dri2proto"
 
-# most of our targets do not have DRI so will use mesa-xlib
-DEFAULT_PREFERENCE = "-1"
-
 DRIDRIVERS = "swrast"
 DRIDRIVERS_append_x86 = ",i915,i965"
 DRIDRIVERS_append_x86-64 = ",i915,i965"
