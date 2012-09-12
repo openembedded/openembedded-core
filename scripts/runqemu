@@ -281,7 +281,7 @@ setup_tmpdir() {
             exit 1; }
 
         # We have bitbake in PATH, get OE_TMPDIR from bitbake
-        OE_TMPDIR=`bitbake -e | grep ^TMPDIR=\" | cut -d '=' -f2 | cut -d '"' -f2`
+        OE_TMPDIR=`MACHINE=$MACHINE bitbake -e | grep ^TMPDIR=\" | cut -d '=' -f2 | cut -d '"' -f2`
         if [ -z "$OE_TMPDIR" ]; then
             echo "Error: this script needs to be run from your build directory,"
             echo "or you need to explicitly set OE_TMPDIR in your environment"
