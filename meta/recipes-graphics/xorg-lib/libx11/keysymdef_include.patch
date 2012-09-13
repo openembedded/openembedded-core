@@ -1,7 +1,7 @@
-From 547937d82084f2cce7e3f0849b5112a20c467146 Mon Sep 17 00:00:00 2001
+From d45b3fc19fbe95c41afc4e51d768df6d42332010 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
-Date: Tue, 11 Sep 2012 17:39:12 +0100
-Subject: [PATCH] Allow overriding location of keysymdef.h
+Date: Wed, 12 Sep 2012 13:39:40 +0000
+Subject: Allow overriding location of keysymdef.h
 
 Currently keysymdef.h is found by using the includedir of xproto.  This doesn't
 work when cross-compiling with a sysroot as that ends up being /usr/include/X11,
@@ -12,36 +12,31 @@ and verify that the specified or found path exists.
 
 (original patch by Martin Jansa <martin.jansa@gmail.com>, revised by myself)
 
-Upstream-Status: Submitted [xorg-devel]
+Upstream-Status: Backport
 Signed-off-by: Ross Burton <ross.burton@intel.com>
+Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+Reviewed-by: Daniel Stone <daniel@fooishbar.org>
 ---
- configure.ac |   13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
 diff --git a/configure.ac b/configure.ac
-index 48a0c8a..200db15 100644
+index 48a0c8a..a45f9d9 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -306,7 +306,18 @@ AC_CHECK_FUNC(poll, [AC_DEFINE(USE_POLL, 1, [poll() function is available])], )
+@@ -306,7 +306,15 @@ AC_CHECK_FUNC(poll, [AC_DEFINE(USE_POLL, 1, [poll() function is available])], )
  # Find keysymdef.h
  #
  AC_MSG_CHECKING([keysym definitions])
 -KEYSYMDEFDIR=`$PKG_CONFIG --variable=includedir xproto`/X11
-+AC_ARG_WITH(keysymdefdir,
-+        AC_HELP_STRING([--with-keysymdefdir=DIR], [The location of keysymdef.h (defaults to xproto include dir)]),
-+        KEYSYMDEFDIR=$withval, KEYSYMDEFDIR="")
++AC_ARG_WITH([keysymdefdir],
++        [AC_HELP_STRING([--with-keysymdefdir=DIR], [The location of keysymdef.h (defaults to xproto include dir)])],
++        [KEYSYMDEFDIR=$withval],
++        [KEYSYMDEFDIR=`$PKG_CONFIG --variable=includedir xproto`/X11])
 +
-+if test x$KEYSYMDEFDIR = x; then
-+	KEYSYMDEFDIR=`$PKG_CONFIG --variable=includedir xproto`/X11
-+fi
-+
-+if test ! -d $KEYSYMDEFDIR; then
++if test ! -d "$KEYSYMDEFDIR"; then
 +	AC_MSG_ERROR([$KEYSYMDEFDIR doesn't exist or isn't a directory])
 +fi
 +
  FILES="keysymdef.h XF86keysym.h Sunkeysym.h DECkeysym.h HPkeysym.h"
  for i in $FILES; do
      if test -f "$KEYSYMDEFDIR/$i"; then
--- 
-1.7.10.4
-
+--
+cgit v0.9.0.2-2-gbebe
