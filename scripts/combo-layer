@@ -183,6 +183,9 @@ def action_init(conf, args):
             lastrev = repo.get('last_revision', None)
             if lastrev and lastrev != "HEAD":
                 initialrev = lastrev
+                if branch:
+                    if not check_rev_branch(name, ldir, lastrev, branch):
+                        sys.exit(1)
                 logger.info("Copying data from %s at specified revision %s..." % (name, lastrev))
             else:
                 lastrev = None
@@ -278,7 +281,7 @@ def drop_to_shell(workdir=None):
     else:
         return True
 
-def check_rev_branch(repodir, rev, branch):
+def check_rev_branch(component, repodir, rev, branch):
     try:
         actualbranch = runcmd("git branch --contains %s" % rev, repodir, printerr=False).rstrip()
     except subprocess.CalledProcessError as e:
@@ -290,10 +293,10 @@ def check_rev_branch(repodir, rev, branch):
     if ' ' in actualbranch:
         actualbranch = actualbranch.split(' ')[-1]
     if not actualbranch:
-        logger.error("Specified revision %s is invalid!" % rev)
+        logger.error("%s: specified revision %s is invalid!" % (component, rev))
         return False
     elif actualbranch != branch:
-        logger.error("Specified revision %s is not on specified branch %s!" % (rev, branch))
+        logger.error("%s: specified revision %s is not on specified branch %s!" % (component, rev, branch))
         return False
     return True
 
@@ -373,7 +376,7 @@ def action_update(conf, args):
             patch_cmd_range = "--root %s" % branch
             rev_cmd_range = branch
         else:
-            if not check_rev_branch(ldir, repo['last_revision'], branch):
+            if not check_rev_branch(name, ldir, repo['last_revision'], branch):
                 sys.exit(1)
             patch_cmd_range = "%s..%s" % (repo['last_revision'], branch)
             rev_cmd_range = patch_cmd_range
