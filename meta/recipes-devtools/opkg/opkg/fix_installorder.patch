@@ -147,7 +147,7 @@ Index: trunk/libopkg/pkg_depends.c
 +							       dependence_to_satisfy, 0);
 +               /* Being that I can't test constraing in pkg_hash, I will test it here */
 +	       if (satisfying_pkg != NULL && satisfying_pkg != pkg) {
-+                  if (pkg_constraint_satisfied(satisfying_pkg, dependence_to_satisfy) && satisfying_pkg->state_want == SW_INSTALL)
++                  if (pkg_constraint_satisfied(satisfying_pkg, dependence_to_satisfy) && (satisfying_pkg->state_want == SW_INSTALL || satisfying_pkg->state_want == SW_UNKNOWN))
 +	              pkg_vec_insert(satisfiers, satisfying_pkg);
 +               }
 +
