@@ -174,25 +174,31 @@ def action_init(conf, args):
         if not os.path.exists(ldir):
             logger.info("cloning %s to %s" %(conf.repos[name]['src_uri'], ldir))
             subprocess.check_call("git clone %s %s" % (conf.repos[name]['src_uri'], ldir), shell=True)
-        branch = conf.repos[name].get('branch', "master")
-        runcmd("git checkout %s" % branch, ldir)
     if not os.path.exists(".git"):
         runcmd("git init")
         for name in conf.repos:
             repo = conf.repos[name]
             ldir = repo['local_repo_dir']
-            logger.info("copying data from %s..." % name)
+            branch = repo.get('branch', "master")
+            lastrev = repo.get('last_revision', None)
+            if lastrev and lastrev != "HEAD":
+                initialrev = lastrev
+                logger.info("Copying data from %s at specified revision %s..." % (name, lastrev))
+            else:
+                lastrev = None
+                initialrev = branch
+                logger.info("Copying data from %s..." % name)
             dest_dir = repo['dest_dir']
             if dest_dir and dest_dir != ".":
                 extract_dir = os.path.join(os.getcwd(), dest_dir)
                 os.makedirs(extract_dir)
             else:
                 extract_dir = os.getcwd()
-            branch = repo.get('branch', "master")
             file_filter = repo.get('file_filter', "")
-            runcmd("git archive %s | tar -x -C %s %s" % (branch, extract_dir, file_filter), ldir)
-            lastrev = runcmd("git rev-parse %s" % branch, ldir).strip()
-            conf.update(name, "last_revision", lastrev, initmode=True)
+            runcmd("git archive %s | tar -x -C %s %s" % (initialrev, extract_dir, file_filter), ldir)
+            if not lastrev:
+                lastrev = runcmd("git rev-parse %s" % initialrev, ldir).strip()
+                conf.update(name, "last_revision", lastrev, initmode=True)
         runcmd("git add .")
         if conf.localconffile:
             localadded = True
