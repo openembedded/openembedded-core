@@ -212,8 +212,13 @@ python do_kernel_configcheck() {
 
     bb.plain("NOTE: validating kernel configuration")
 
+    # if KMETA isn't set globally by a recipe using this routine, we need to
+    # set the default to 'meta'. Otherwise, kconf_check is not passed a valid
+    # meta-series for processing
+    kmeta = d.getVar( "KMETA", True ) or "meta"
+
     pathprefix = "export PATH=%s:%s; " % (d.getVar('PATH', True), "${S}/scripts/util/")
-    cmd = d.expand("cd ${S}; kconf_check -config- ${KMETA}/meta-series ${S} ${B}")
+    cmd = d.expand("cd ${S}; kconf_check -config- %s/meta-series ${S} ${B}" % kmeta)
     ret, result = commands.getstatusoutput("%s%s" % (pathprefix, cmd))
 
     bb.plain( "%s" % result )
