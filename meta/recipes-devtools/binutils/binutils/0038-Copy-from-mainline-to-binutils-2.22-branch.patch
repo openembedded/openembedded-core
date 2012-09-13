@@ -1,0 +1,1944 @@
+Upstream-Status: Backport
+
+From 624da0376264205e399bc14fe2fa7b6fa659d0ee Mon Sep 17 00:00:00 2001
+From: Ian Lance Taylor <ian@airs.com>
+Date: Mon, 19 Dec 2011 21:14:39 +0000
+Subject: [PATCH 038/262] 	Copy from mainline to binutils 2.22 branch:
+
+	2011-12-17  Cary Coutant  <ccoutant@google.com>
+
+	* dwarf_reader.cc (Sized_dwarf_line_info::read_lines): Add casts.
+	* resolve.cc (Symbol_table::resolve): Likewise.
+	* i386.cc (Target_i386::do_code_fill): Use char constants for nop
+	arrays.
+	* x86_64.cc (Target_x86_64::do_code_fill): Likewise.
+
+	2011-10-31  Cary Coutant  <ccoutant@google.com>
+
+	PR gold/13023
+	* expression.cc (Expression::eval_with_dot): Add
+	is_section_dot_assignment parameter.
+	(Expression::eval_maybe_dot): Likewise.  Adjust value when rhs is
+	absolute and assigning to dot within a section.
+	* script-sections.cc
+	(Output_section_element_assignment::set_section_addresses): Pass
+	dot_section to set_if_absolute.
+	(Output_section_element_dot_assignment::finalize_symbols): Pass TRUE
+	as is_section_dot_assignment flag to eval_with_dot.
+	(Output_section_element_dot_assignment::set_section_addresses):
+	Likewise.
+	* script.cc (Symbol_assignment::set_if_absolute): Add dot_section
+	parameter.  Also set value if relative to dot_section; set the
+	symbol's output_section.
+	* script.h (Expression::eval_with_dot): Add is_section_dot_assignment
+	parameter.  Adjust all callers.
+	(Expression::eval_maybe_dot): Likewise.
+	(Symbol_assignment::set_if_absolute): Add dot_section parameter.
+	Adjust all callers.
+	* testsuite/script_test_2.t: Test assignment of an absolute value
+	to dot within an output section element.
+
+	2011-10-31  Cary Coutant  <ccoutant@google.com>
+
+	* options.h (class General_options): Add --[no-]gnu-unique options.
+	* symtab.cc (Symbol_table::sized_write_globals): Convert
+	STB_GNU_UNIQUE to STB_GLOBAL if --no-gnu-unique.
+
+	2011-10-31  Cary Coutant  <ccoutant@google.com>
+
+	PR gold/13359
+	* i386.cc (Target_i386::Relocate::relocate_tls): Remove
+	unnecessary assertion.
+	* x86_64.cc (Target_x86_64::Relocate::relocate_tls): Likewise.
+
+	2011-10-31 Sriraman Tallam  <tmsriram@google.com>
+
+	* symtab.h (Symbol_table::gc_mark_symbol_for_shlib): Rename to
+	gc_mark_symbol.
+	* symtab.cc (Symbol_table::gc_mark_symbol_for_shlib): Rename to
+	gc_mark_symbol.
+	Change to just keep the section associated with symbol.
+	(Symbol_table::add_from_relobj): Mark symbols as not garbage when
+	they are externally visible and --export-dynamic is turned on.
+	(Symbol_table::gc_mark_dyn_syms): Call gc_mark_symbol.
+
+	2011-10-19  Ian Lance Taylor  <iant@google.com>
+
+	PR gold/13163
+	* script-sections.cc
+	(Output_section_element_dot_assignment::needs_output_section): New
+	function.
+
+	2011-10-19  Ian Lance Taylor  <iant@google.com>
+
+	PR gold/13204
+	* layout.cc (Layout::segment_precedes): Don't assert failure if a
+	--section-start option was seen.
+	* options.h (General_options::any_section_start): New function.
+
+	2011-10-18  Cary Coutant  <ccoutant@google.com>
+
+	* output.cc (posix_fallocate): Return 0 on success, errno on failure.
+	(Output_file::map_no_anonymous): Check for non-zero
+	return code from posix_fallocate.
+
+	2011-10-17  Cary Coutant  <ccoutant@google.com>
+
+	PR gold/13245
+	* plugin.cc (is_visible_from_outside): Check for symbols
+	referenced from dynamic objects.
+	* resolve.cc (Symbol_table::resolve): Don't count references
+	from dynamic objects as references from real ELF files.
+	* testsuite/plugin_test_2.sh: Adjust expected result.
+
+	2011-10-17  Cary Coutant  <ccoutant@google.com>
+
+	* readsyms.cc (Read_symbols::run): Don't queue an unblocker
+	task for members of lib groups.
+
+	2011-10-17  Cary Coutant  <ccoutant@google.com>
+
+	PR gold/13288
+	* fileread.cc (File_read::find_view): Add assert.
+	(File_read::make_view): Move bounds check (replace with assert)...
+	(File_read::find_or_make_view): ... to here.
+
+	2011-10-12  Cary Coutant  <ccoutant@google.com>
+
+	* output.cc (Output_file::open_base_file): Handle case where
+	::read returns less than requested size.
+
+	2011-10-10  Cary Coutant  <ccoutant@google.com>
+
+	* incremental.cc (Sized_relobj_incr::Sized_relobj_incr):
+	Initialize defined_count_.
+	(Sized_relobj_incr::do_add_symbols): Count defined symbols.
+	(Sized_relobj_incr::do_get_global_symbol_counts): Rewrite.
+	(Sized_incr_dynobj::Sized_incr_dynobj): Initialize defined_count_.
+	(Sized_incr_dynobj::do_add_symbols): Count defined symbols.
+	(Sized_incr_dynobj::do_get_global_symbol_counts): Rewrite.
+	* incremental.h (Sized_relobj_incr::defined_count_): New data
+	member.
+	(Sized_incr_dynobj::defined_count_): New data member.
+	* plugin.cc (Sized_pluginobj::do_get_global_symbol_counts):
+	Return zeroes instead of internal error.
+
+	2011-10-10  Cary Coutant  <ccoutant@google.com>
+
+	PR gold/13249
+	* output.cc (Output_reloc::Output_reloc): Add use_plt_offset flag.
+	(Output_reloc::symbol_value): Return PLT offset if flag is set.
+	* output.h (class Output_reloc): Add use_plt_offset flag.
+	(Output_reloc::type_): Adjust size of bit field.
+	(Output_reloc::use_plt_offset_): New bit field.
+	(class Output_data_reloc): Adjust all calls to Output_reloc_type.
+	(Output_data_reloc::add_local_relative): (RELA only) Add use_plt_offset
+	flag.  Adjust all callers.
+	* x86_64.cc (Target_x86_64::Scan::local): Check for IFUNC when
+	creating RELATIVE relocations.
+
+	2011-10-03   Diego Novillo  <dnovillo@google.com>
+
+	* options.cc (parse_uint): Fix dereference of RETVAL.
+
+	2011-09-29  Cary Coutant  <ccoutant@google.com>
+
+	* incremental.cc (Sized_incremental_binary::do_process_got_plt):
+	Check for NULL.
+	* symtab.cc (Symbol_table::add_from_relobj): Ignore version
+	symbols during incremental update.
+	(Symbol_table::add_from_dynobj): Likewise.
+
+	2011-09-26  Cary Coutant  <ccoutant@google.com>
+
+	* gold.cc (queue_initial_tasks): Move option checks ...
+	* options.cc (General_options::finalize): ... to here. Disable
+	some options; make others fatal.
+
+	2011-09-23  Simon Baldwin  <simonb@google.com>
+
+	* configure.ac: Add new --with-gold-ldadd and --with-gold-ldflags
+	configuration options.
+	* configure: Regenerate.
+	* Makefile.am: Handle GOLD_LDADD and GOLD_LDFLAGS.
+	* Makefile.in: Regenerate.
+	* testsuite/Makefile.in: Regenerate.
+---
+ gold/ChangeLog                  |  163 +++++++++++++++++++++++++++++++++++++++
+ gold/dwarf_reader.cc            |    8 +-
+ gold/expression.cc              |   45 +++++++----
+ gold/fileread.cc                |   27 ++++---
+ gold/gold.cc                    |   55 +++++--------
+ gold/i386.cc                    |   87 +++++++++++----------
+ gold/incremental.cc             |   50 +++++++++---
+ gold/incremental.h              |    4 +
+ gold/layout.cc                  |    5 +-
+ gold/options.cc                 |   33 +++++++-
+ gold/options.h                  |    9 +++
+ gold/output.cc                  |   78 ++++++++++++-------
+ gold/output.h                   |   64 +++++++++------
+ gold/plugin.cc                  |   18 +++--
+ gold/powerpc.cc                 |    4 +-
+ gold/readsyms.cc                |    6 +-
+ gold/resolve.cc                 |    6 +-
+ gold/script-sections.cc         |   47 +++++++----
+ gold/script.cc                  |   17 ++--
+ gold/script.h                   |   24 ++++--
+ gold/sparc.cc                   |    4 +-
+ gold/symtab.cc                  |   65 +++++++++-------
+ gold/symtab.h                   |    5 +-
+ gold/testsuite/Makefile.in      |    2 +
+ gold/testsuite/plugin_test_2.sh |    2 +-
+ gold/testsuite/script_test_2.t  |    2 +-
+ gold/x86_64.cc                  |   99 ++++++++++++------------
+ 27 files changed, 636 insertions(+), 293 deletions(-)
+
+diff --git a/gold/dwarf_reader.cc b/gold/dwarf_reader.cc
+index 3dc33e4..2b47a28 100644
+--- a/gold/dwarf_reader.cc
++++ b/gold/dwarf_reader.cc
+@@ -1,6 +1,6 @@
+ // dwarf_reader.cc -- parse dwarf2/3 debug information
+ 
+-// Copyright 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
++// Copyright 2007, 2008, 2009, 2010, 2011 Free Software Foundation, Inc.
+ // Written by Ian Lance Taylor <iant@google.com>.
+ 
+ // This file is part of gold.
+@@ -491,8 +491,10 @@ Sized_dwarf_line_info<size, big_endian>::read_lines(unsigned const char* lineptr
+               && (shndx == -1U || lsm.shndx == -1U || shndx == lsm.shndx))
+             {
+               Offset_to_lineno_entry entry
+-                  = { lsm.address, this->current_header_index_,
+-                      lsm.file_num, true, lsm.line_num };
++                  = { static_cast<off_t>(lsm.address),
++		      this->current_header_index_,
++		      static_cast<unsigned int>(lsm.file_num),
++		      true, lsm.line_num };
+ 	      std::vector<Offset_to_lineno_entry>&
+ 		map(this->line_number_map_[lsm.shndx]);
+ 	      // If we see two consecutive entries with the same
+diff --git a/gold/expression.cc b/gold/expression.cc
+index e527b5e..e31c151 100644
+--- a/gold/expression.cc
++++ b/gold/expression.cc
+@@ -1,6 +1,6 @@
+ // expression.cc -- expressions in linker scripts for gold
+ 
+-// Copyright 2006, 2007, 2008 Free Software Foundation, Inc.
++// Copyright 2006, 2007, 2008, 2009, 2010, 2011 Free Software Foundation, Inc.
+ // Written by Ian Lance Taylor <iant@google.com>.
+ 
+ // This file is part of gold.
+@@ -77,7 +77,7 @@ Expression::eval(const Symbol_table* symtab, const Layout* layout,
+ 		 bool check_assertions)
+ {
+   return this->eval_maybe_dot(symtab, layout, check_assertions,
+-			      false, 0, NULL, NULL, NULL);
++			      false, 0, NULL, NULL, NULL, false);
+ }
+ 
+ // Evaluate an expression which may refer to the dot symbol.
+@@ -87,11 +87,13 @@ Expression::eval_with_dot(const Symbol_table* symtab, const Layout* layout,
+ 			  bool check_assertions, uint64_t dot_value,
+ 			  Output_section* dot_section,
+ 			  Output_section** result_section_pointer,
+-			  uint64_t* result_alignment_pointer)
++			  uint64_t* result_alignment_pointer,
++			  bool is_section_dot_assignment)
+ {
+   return this->eval_maybe_dot(symtab, layout, check_assertions, true,
+ 			      dot_value, dot_section, result_section_pointer,
+-			      result_alignment_pointer);
++			      result_alignment_pointer,
++			      is_section_dot_assignment);
+ }
+ 
+ // Evaluate an expression which may or may not refer to the dot
+@@ -102,7 +104,8 @@ Expression::eval_maybe_dot(const Symbol_table* symtab, const Layout* layout,
+ 			   bool check_assertions, bool is_dot_available,
+ 			   uint64_t dot_value, Output_section* dot_section,
+ 			   Output_section** result_section_pointer,
+-			   uint64_t* result_alignment_pointer)
++			   uint64_t* result_alignment_pointer,
++			   bool is_section_dot_assignment)
+ {
+   Expression_eval_info eei;
+   eei.symtab = symtab;
+@@ -113,14 +116,24 @@ Expression::eval_maybe_dot(const Symbol_table* symtab, const Layout* layout,
+   eei.dot_section = dot_section;
+ 
+   // We assume the value is absolute, and only set this to a section
+-  // if we find a section relative reference.
++  // if we find a section-relative reference.
+   if (result_section_pointer != NULL)
+     *result_section_pointer = NULL;
+   eei.result_section_pointer = result_section_pointer;
+ 
+   eei.result_alignment_pointer = result_alignment_pointer;
+ 
+-  return this->value(&eei);
++  uint64_t val = this->value(&eei);
++
++  // If this is an assignment to dot within a section, and the value
++  // is absolute, treat it as a section-relative offset.
++  if (is_section_dot_assignment && *result_section_pointer == NULL)
++    {
++      gold_assert(dot_section != NULL);
++      val += dot_section->address();
++      *result_section_pointer = dot_section;
++    }
++  return val;
+ }
+ 
+ // A number.
+@@ -257,7 +270,8 @@ class Unary_expression : public Expression
+ 				      eei->dot_value,
+ 				      eei->dot_section,
+ 				      arg_section_pointer,
+-				      eei->result_alignment_pointer);
++				      eei->result_alignment_pointer,
++				      false);
+   }
+ 
+   void
+@@ -336,7 +350,8 @@ class Binary_expression : public Expression
+ 				       eei->dot_value,
+ 				       eei->dot_section,
+ 				       section_pointer,
+-				       alignment_pointer);
++				       alignment_pointer,
++				       false);
+   }
+ 
+   uint64_t
+@@ -350,7 +365,8 @@ class Binary_expression : public Expression
+ 					eei->dot_value,
+ 					eei->dot_section,
+ 					section_pointer,
+-					alignment_pointer);
++					alignment_pointer,
++					false);
+   }
+ 
+   void
+@@ -500,7 +516,8 @@ class Trinary_expression : public Expression
+ 				       eei->dot_value,
+ 				       eei->dot_section,
+ 				       section_pointer,
+-				       NULL);
++				       NULL,
++				       false);
+   }
+ 
+   uint64_t
+@@ -514,7 +531,8 @@ class Trinary_expression : public Expression
+ 				       eei->dot_value,
+ 				       eei->dot_section,
+ 				       section_pointer,
+-				       alignment_pointer);
++				       alignment_pointer,
++				       false);
+   }
+ 
+   uint64_t
+@@ -528,7 +546,8 @@ class Trinary_expression : public Expression
+ 				       eei->dot_value,
+ 				       eei->dot_section,
+ 				       section_pointer,
+-				       alignment_pointer);
++				       alignment_pointer,
++				       false);
+   }
+ 
+   void
+diff --git a/gold/fileread.cc b/gold/fileread.cc
+index 80ddfbc..c5dc320 100644
+--- a/gold/fileread.cc
++++ b/gold/fileread.cc
+@@ -329,6 +329,10 @@ inline File_read::View*
+ File_read::find_view(off_t start, section_size_type size,
+ 		     unsigned int byteshift, File_read::View** vshifted) const
+ {
++  gold_assert(start <= this->size_
++	      && (static_cast<unsigned long long>(size)
++		  <= static_cast<unsigned long long>(this->size_ - start)));
++
+   if (vshifted != NULL)
+     *vshifted = NULL;
+ 
+@@ -456,16 +460,9 @@ File_read::make_view(off_t start, section_size_type size,
+ 		     unsigned int byteshift, bool cache)
+ {
+   gold_assert(size > 0);
+-
+-  // Check that start and end of the view are within the file.
+-  if (start > this->size_
+-      || (static_cast<unsigned long long>(size)
+-          > static_cast<unsigned long long>(this->size_ - start)))
+-    gold_fatal(_("%s: attempt to map %lld bytes at offset %lld exceeds "
+-                 "size of file; the file may be corrupt"),
+-		   this->filename().c_str(),
+-		   static_cast<long long>(size),
+-		   static_cast<long long>(start));
++  gold_assert(start <= this->size_
++	      && (static_cast<unsigned long long>(size)
++		  <= static_cast<unsigned long long>(this->size_ - start)));
+ 
+   off_t poff = File_read::page_offset(start);
+ 
+@@ -523,6 +520,16 @@ File_read::View*
+ File_read::find_or_make_view(off_t offset, off_t start,
+ 			     section_size_type size, bool aligned, bool cache)
+ {
++  // Check that start and end of the view are within the file.
++  if (start > this->size_
++      || (static_cast<unsigned long long>(size)
++          > static_cast<unsigned long long>(this->size_ - start)))
++    gold_fatal(_("%s: attempt to map %lld bytes at offset %lld exceeds "
++                 "size of file; the file may be corrupt"),
++		   this->filename().c_str(),
++		   static_cast<long long>(size),
++		   static_cast<long long>(start));
++
+   unsigned int byteshift;
+   if (offset == 0)
+     byteshift = 0;
+diff --git a/gold/gold.cc b/gold/gold.cc
+index 12f25b7..693ff79 100644
+--- a/gold/gold.cc
++++ b/gold/gold.cc
+@@ -197,46 +197,29 @@ queue_initial_tasks(const General_options& options,
+   // For incremental links, the base output file.
+   Incremental_binary* ibase = NULL;
+ 
+-  if (parameters->incremental())
+-    {
+-      if (options.relocatable())
+-	gold_error(_("incremental linking is incompatible with -r"));
+-      if (options.emit_relocs())
+-	gold_error(_("incremental linking is incompatible with --emit-relocs"));
+-      if (options.gc_sections())
+-	gold_error(_("incremental linking is incompatible with --gc-sections"));
+-      if (options.icf_enabled())
+-	gold_error(_("incremental linking is incompatible with --icf"));
+-      if (options.has_plugins())
+-	gold_error(_("incremental linking is incompatible with --plugin"));
+-      if (strcmp(options.compress_debug_sections(), "none") != 0)
+-	gold_error(_("incremental linking is incompatible with "
+-		     "--compress-debug-sections"));
+-
+-      if (parameters->incremental_update())
++  if (parameters->incremental_update())
++    {
++      Output_file* of = new Output_file(options.output_file_name());
++      if (of->open_base_file(options.incremental_base(), true))
+ 	{
+-	  Output_file* of = new Output_file(options.output_file_name());
+-	  if (of->open_base_file(options.incremental_base(), true))
+-	    {
+-	      ibase = open_incremental_binary(of);
+-	      if (ibase != NULL
+-		  && ibase->check_inputs(cmdline, layout->incremental_inputs()))
+-		ibase->init_layout(layout);
+-	      else
+-		{
+-		  delete ibase;
+-		  ibase = NULL;
+-		  of->close();
+-		}
+-	    }
+-	  if (ibase == NULL)
++	  ibase = open_incremental_binary(of);
++	  if (ibase != NULL
++	      && ibase->check_inputs(cmdline, layout->incremental_inputs()))
++	    ibase->init_layout(layout);
++	  else
+ 	    {
+-	      if (set_parameters_incremental_full())
+-		gold_info(_("linking with --incremental-full"));
+-	      else
+-		gold_fallback(_("restart link with --incremental-full"));
++	      delete ibase;
++	      ibase = NULL;
++	      of->close();
+ 	    }
+ 	}
++      if (ibase == NULL)
++	{
++	  if (set_parameters_incremental_full())
++	    gold_info(_("linking with --incremental-full"));
++	  else
++	    gold_fallback(_("restart link with --incremental-full"));
++	}
+     }
+ 
+   // Read the input files.  We have to add the symbols to the symbol
+diff --git a/gold/i386.cc b/gold/i386.cc
+index 445bc68..efb6248 100644
+--- a/gold/i386.cc
++++ b/gold/i386.cc
+@@ -2709,12 +2709,6 @@ Target_i386::Relocate::relocate_tls(const Relocate_info<32, false>* relinfo,
+             }
+           if (optimized_type == tls::TLSOPT_TO_IE)
+ 	    {
+-	      if (tls_segment == NULL)
+-		{
+-		  gold_assert(parameters->errors()->error_count() > 0
+-			      || issue_undefined_symbol_error(gsym));
+-		  return;
+-		}
+ 	      this->tls_gd_to_ie(relinfo, relnum, tls_segment, rel, r_type,
+                                  got_offset, view, view_size);
+               break;
+@@ -3480,42 +3474,51 @@ Target_i386::do_code_fill(section_size_type length) const
+     }
+ 
+   // Nop sequences of various lengths.
+-  const char nop1[1] = { 0x90 };                   // nop
+-  const char nop2[2] = { 0x66, 0x90 };             // xchg %ax %ax
+-  const char nop3[3] = { 0x8d, 0x76, 0x00 };       // leal 0(%esi),%esi
+-  const char nop4[4] = { 0x8d, 0x74, 0x26, 0x00};  // leal 0(%esi,1),%esi
+-  const char nop5[5] = { 0x90, 0x8d, 0x74, 0x26,   // nop
+-                         0x00 };                   // leal 0(%esi,1),%esi
+-  const char nop6[6] = { 0x8d, 0xb6, 0x00, 0x00,   // leal 0L(%esi),%esi
+-                         0x00, 0x00 };
+-  const char nop7[7] = { 0x8d, 0xb4, 0x26, 0x00,   // leal 0L(%esi,1),%esi
+-                         0x00, 0x00, 0x00 };
+-  const char nop8[8] = { 0x90, 0x8d, 0xb4, 0x26,   // nop
+-                         0x00, 0x00, 0x00, 0x00 }; // leal 0L(%esi,1),%esi
+-  const char nop9[9] = { 0x89, 0xf6, 0x8d, 0xbc,   // movl %esi,%esi
+-                         0x27, 0x00, 0x00, 0x00,   // leal 0L(%edi,1),%edi
+-                         0x00 };
+-  const char nop10[10] = { 0x8d, 0x76, 0x00, 0x8d, // leal 0(%esi),%esi
+-                           0xbc, 0x27, 0x00, 0x00, // leal 0L(%edi,1),%edi
+-                           0x00, 0x00 };
+-  const char nop11[11] = { 0x8d, 0x74, 0x26, 0x00, // leal 0(%esi,1),%esi
+-                           0x8d, 0xbc, 0x27, 0x00, // leal 0L(%edi,1),%edi
+-                           0x00, 0x00, 0x00 };
+-  const char nop12[12] = { 0x8d, 0xb6, 0x00, 0x00, // leal 0L(%esi),%esi
+-                           0x00, 0x00, 0x8d, 0xbf, // leal 0L(%edi),%edi
+-                           0x00, 0x00, 0x00, 0x00 };
+-  const char nop13[13] = { 0x8d, 0xb6, 0x00, 0x00, // leal 0L(%esi),%esi
+-                           0x00, 0x00, 0x8d, 0xbc, // leal 0L(%edi,1),%edi
+-                           0x27, 0x00, 0x00, 0x00,
+-                           0x00 };
+-  const char nop14[14] = { 0x8d, 0xb4, 0x26, 0x00, // leal 0L(%esi,1),%esi
+-                           0x00, 0x00, 0x00, 0x8d, // leal 0L(%edi,1),%edi
+-                           0xbc, 0x27, 0x00, 0x00,
+-                           0x00, 0x00 };
+-  const char nop15[15] = { 0xeb, 0x0d, 0x90, 0x90, // jmp .+15
+-                           0x90, 0x90, 0x90, 0x90, // nop,nop,nop,...
+-                           0x90, 0x90, 0x90, 0x90,
+-                           0x90, 0x90, 0x90 };
++  const char nop1[1] = { '\x90' };                   // nop
++  const char nop2[2] = { '\x66', '\x90' };           // xchg %ax %ax
++  const char nop3[3] = { '\x8d', '\x76', '\x00' };   // leal 0(%esi),%esi
++  const char nop4[4] = { '\x8d', '\x74', '\x26',     // leal 0(%esi,1),%esi
++			 '\x00'};
++  const char nop5[5] = { '\x90', '\x8d', '\x74',     // nop
++  			 '\x26', '\x00' };           // leal 0(%esi,1),%esi
++  const char nop6[6] = { '\x8d', '\xb6', '\x00',     // leal 0L(%esi),%esi
++  			 '\x00', '\x00', '\x00' };
++  const char nop7[7] = { '\x8d', '\xb4', '\x26',     // leal 0L(%esi,1),%esi
++  			 '\x00', '\x00', '\x00',
++			 '\x00' };
++  const char nop8[8] = { '\x90', '\x8d', '\xb4',     // nop
++  			 '\x26', '\x00', '\x00',     // leal 0L(%esi,1),%esi
++			 '\x00', '\x00' };
++  const char nop9[9] = { '\x89', '\xf6', '\x8d',     // movl %esi,%esi
++  			 '\xbc', '\x27', '\x00',     // leal 0L(%edi,1),%edi
++			 '\x00', '\x00', '\x00' };
++  const char nop10[10] = { '\x8d', '\x76', '\x00',   // leal 0(%esi),%esi
++  			   '\x8d', '\xbc', '\x27',   // leal 0L(%edi,1),%edi
++			   '\x00', '\x00', '\x00',
++			   '\x00' };
++  const char nop11[11] = { '\x8d', '\x74', '\x26',   // leal 0(%esi,1),%esi
++  			   '\x00', '\x8d', '\xbc',   // leal 0L(%edi,1),%edi
++			   '\x27', '\x00', '\x00',
++			   '\x00', '\x00' };
++  const char nop12[12] = { '\x8d', '\xb6', '\x00',   // leal 0L(%esi),%esi
++  			   '\x00', '\x00', '\x00',   // leal 0L(%edi),%edi
++			   '\x8d', '\xbf', '\x00',
++			   '\x00', '\x00', '\x00' };
++  const char nop13[13] = { '\x8d', '\xb6', '\x00',   // leal 0L(%esi),%esi
++  			   '\x00', '\x00', '\x00',   // leal 0L(%edi,1),%edi
++			   '\x8d', '\xbc', '\x27',
++			   '\x00', '\x00', '\x00',
++                           '\x00' };
++  const char nop14[14] = { '\x8d', '\xb4', '\x26',   // leal 0L(%esi,1),%esi
++  			   '\x00', '\x00', '\x00',   // leal 0L(%edi,1),%edi
++			   '\x00', '\x8d', '\xbc',
++			   '\x27', '\x00', '\x00',
++                           '\x00', '\x00' };
++  const char nop15[15] = { '\xeb', '\x0d', '\x90',   // jmp .+15
++  			   '\x90', '\x90', '\x90',   // nop,nop,nop,...
++			   '\x90', '\x90', '\x90',
++			   '\x90', '\x90', '\x90',
++                           '\x90', '\x90', '\x90' };
+ 
+   const char* nops[16] = {
+     NULL,
+diff --git a/gold/incremental.cc b/gold/incremental.cc
+index b422827..75e44c5 100644
+--- a/gold/incremental.cc
++++ b/gold/incremental.cc
+@@ -685,7 +685,7 @@ Sized_incremental_binary<size, big_endian>::do_process_got_plt(
+       gold_assert(plt_desc >= first_global && plt_desc < symtab_count);
+       Symbol* sym = this->global_symbol(plt_desc - first_global);
+       // Add the PLT entry only if the symbol is still referenced.
+-      if (sym->in_reg())
++      if (sym != NULL && sym->in_reg())
+ 	{
+ 	  gold_debug(DEBUG_INCREMENTAL,
+ 		     "PLT entry %d: %s",
+@@ -1966,8 +1966,9 @@ Sized_relobj_incr<size, big_endian>::Sized_relobj_incr(
+     input_reader_(ibase->inputs_reader().input_file(input_file_index)),
+     local_symbol_count_(0), output_local_dynsym_count_(0),
+     local_symbol_index_(0), local_symbol_offset_(0), local_dynsym_offset_(0),
+-    symbols_(), incr_reloc_offset_(-1U), incr_reloc_count_(0),
+-    incr_reloc_output_index_(0), incr_relocs_(NULL), local_symbols_()
++    symbols_(), defined_count_(0), incr_reloc_offset_(-1U),
++    incr_reloc_count_(0), incr_reloc_output_index_(0), incr_relocs_(NULL),
++    local_symbols_()
+ {
+   if (this->input_reader_.is_in_system_directory())
+     this->set_is_in_system_directory();
+@@ -2120,6 +2121,9 @@ Sized_relobj_incr<size, big_endian>::do_add_symbols(
+ 
+       Symbol* res = symtab->add_from_incrobj(this, name, NULL, &sym);
+ 
++      if (shndx != elfcpp::SHN_UNDEF)
++        ++this->defined_count_;
++
+       // If this is a linker-defined symbol that hasn't yet been defined,
+       // define it now.
+       if (input_shndx == -1U && !res->is_defined())
+@@ -2283,9 +2287,21 @@ Sized_relobj_incr<size, big_endian>::do_initialize_xindex()
+ template<int size, bool big_endian>
+ void
+ Sized_relobj_incr<size, big_endian>::do_get_global_symbol_counts(
+-    const Symbol_table*, size_t*, size_t*) const
+-{
+-  gold_unreachable();
++    const Symbol_table*,
++    size_t* defined,
++    size_t* used) const
++{
++  *defined = this->defined_count_;
++  size_t count = 0;
++  for (typename Symbols::const_iterator p = this->symbols_.begin();
++       p != this->symbols_.end();
++       ++p)
++    if (*p != NULL
++	&& (*p)->source() == Symbol::FROM_OBJECT
++	&& (*p)->object() == this
++	&& (*p)->is_defined())
++      ++count;
++  *used = count;
+ }
+ 
+ // Read the relocs.
+@@ -2579,7 +2595,7 @@ Sized_incr_dynobj<size, big_endian>::Sized_incr_dynobj(
+   : Dynobj(name, NULL), ibase_(ibase),
+     input_file_index_(input_file_index),
+     input_reader_(ibase->inputs_reader().input_file(input_file_index)),
+-    symbols_()
++    symbols_(), defined_count_(0)
+ {
+   if (this->input_reader_.is_in_system_directory())
+     this->set_is_in_system_directory();
+@@ -2677,6 +2693,7 @@ Sized_incr_dynobj<size, big_endian>::do_add_symbols(
+ 	  // is meaningless, as long as it's not SHN_UNDEF.
+ 	  shndx = 1;
+ 	  v = gsym.get_st_value();
++	  ++this->defined_count_;
+ 	}
+ 
+       osym.put_st_name(0);
+@@ -2845,9 +2862,22 @@ Sized_incr_dynobj<size, big_endian>::do_initialize_xindex()
+ template<int size, bool big_endian>
+ void
+ Sized_incr_dynobj<size, big_endian>::do_get_global_symbol_counts(
+-    const Symbol_table*, size_t*, size_t*) const
+-{
+-  gold_unreachable();
++    const Symbol_table*,
++    size_t* defined,
++    size_t* used) const
++{
++  *defined = this->defined_count_;
++  size_t count = 0;
++  for (typename Symbols::const_iterator p = this->symbols_.begin();
++       p != this->symbols_.end();
++       ++p)
++    if (*p != NULL
++	&& (*p)->source() == Symbol::FROM_OBJECT
++	&& (*p)->object() == this
++	&& (*p)->is_defined()
++	&& (*p)->dynsym_index() != -1U)
++      ++count;
++  *used = count;
+ }
+ 
+ // Allocate an incremental object of the appropriate size and endianness.
+diff --git a/gold/incremental.h b/gold/incremental.h
+index e6732df..56fc52b 100644
+--- a/gold/incremental.h
++++ b/gold/incremental.h
+@@ -1996,6 +1996,8 @@ class Sized_relobj_incr : public Sized_relobj<size, big_endian>
+   unsigned int local_dynsym_offset_;
+   // The entries in the symbol table for the external symbols.
+   Symbols symbols_;
++  // Number of symbols defined in object file itself.
++  size_t defined_count_;
+   // The offset of the first incremental relocation for this object.
+   unsigned int incr_reloc_offset_;
+   // The number of incremental relocations for this object.
+@@ -2127,6 +2129,8 @@ class Sized_incr_dynobj : public Dynobj
+   Input_entry_reader input_reader_;
+   // The entries in the symbol table for the external symbols.
+   Symbols symbols_;
++  // Number of symbols defined in object file itself.
++  size_t defined_count_;
+ };
+ 
+ // Allocate an incremental object of the appropriate size and endianness.
+diff --git a/gold/layout.cc b/gold/layout.cc
+index 1c32bcf..9d8a43a 100644
+--- a/gold/layout.cc
++++ b/gold/layout.cc
+@@ -2975,8 +2975,9 @@ Layout::segment_precedes(const Output_segment* seg1,
+ 
+   // We shouldn't get here--we shouldn't create segments which we
+   // can't distinguish.  Unless of course we are using a weird linker
+-  // script.
+-  gold_assert(this->script_options_->saw_phdrs_clause());
++  // script or overlapping --section-start options.
++  gold_assert(this->script_options_->saw_phdrs_clause()
++	      || parameters->options().any_section_start());
+   return false;
+ }
+ 
+diff --git a/gold/options.cc b/gold/options.cc
+index be32645..dcf6ba7 100644
+--- a/gold/options.cc
++++ b/gold/options.cc
+@@ -198,7 +198,7 @@ parse_uint(const char* option_name, const char* arg, int* retval)
+ {
+   char* endptr;
+   *retval = strtol(arg, &endptr, 0);
+-  if (*endptr != '\0' || retval < 0)
++  if (*endptr != '\0' || *retval < 0)
+     gold_fatal(_("%s: invalid option value (expected an integer): %s"),
+                option_name, arg);
+ }
+@@ -1224,6 +1224,37 @@ General_options::finalize()
+     gold_fatal(_("Options --incremental-changed, --incremental-unchanged, "
+                  "--incremental-unknown require the use of --incremental"));
+ 
++  // Check for options that are not compatible with incremental linking.
++  // Where an option can be disabled without seriously changing the semantics
++  // of the link, we turn the option off; otherwise, we issue a fatal error.
++
++  if (this->incremental_mode_ != INCREMENTAL_OFF)
++    {
++      if (this->relocatable())
++	gold_fatal(_("incremental linking is not compatible with -r"));
++      if (this->emit_relocs())
++	gold_fatal(_("incremental linking is not compatible with "
++		     "--emit-relocs"));
++      if (this->has_plugins())
++	gold_fatal(_("incremental linking is not compatible with --plugin"));
++      if (this->gc_sections())
++	{
++	  gold_warning(_("ignoring --gc-sections for an incremental link"));
++	  this->set_gc_sections(false);
++	}
++      if (this->icf_enabled())
++	{
++	  gold_warning(_("ignoring --icf for an incremental link"));
++	  this->set_icf_status(ICF_NONE);
++	}
++      if (strcmp(this->compress_debug_sections(), "none") != 0)
++	{
++	  gold_warning(_("ignoring --compress-debug-sections for an "
++			 "incremental link"));
++	  this->set_compress_debug_sections("none");
++	}
++    }
++
+   // FIXME: we can/should be doing a lot more sanity checking here.
+ }
+ 
+diff --git a/gold/options.h b/gold/options.h
+index 768df9c..8876a1e 100644
+--- a/gold/options.h
++++ b/gold/options.h
+@@ -791,6 +791,10 @@ class General_options
+   DEFINE_bool(g, options::EXACTLY_ONE_DASH, '\0', false,
+ 	      N_("Ignored"), NULL);
+ 
++  DEFINE_bool(gnu_unique, options::TWO_DASHES, '\0', true,
++	      N_("Enable STB_GNU_UNIQUE symbol binding (default)"),
++	      N_("Disable STB_GNU_UNIQUE symbol binding"));
++
+   DEFINE_string(soname, options::ONE_DASH, 'h', NULL,
+                 N_("Set shared library name"), N_("FILENAME"));
+ 
+@@ -1385,6 +1389,11 @@ class General_options
+   bool
+   section_start(const char* secname, uint64_t* paddr) const;
+ 
++  // Return whether any --section-start option was used.
++  bool
++  any_section_start() const
++  { return !this->section_starts_.empty(); }
++
+   enum Fix_v4bx
+   {
+     // Leave original instruction.
+diff --git a/gold/output.cc b/gold/output.cc
+index 29d8e3d..a7e1e9a 100644
+--- a/gold/output.cc
++++ b/gold/output.cc
+@@ -119,7 +119,9 @@ extern "C" void *gold_mremap(void *, size_t, size_t, int);
+ static int
+ posix_fallocate(int o, off_t offset, off_t len)
+ {
+-  return ftruncate(o, offset + len);
++  if (ftruncate(o, offset + len) < 0)
++    return errno;
++  return 0;
+ }
+ #endif // !defined(HAVE_POSIX_FALLOCATE)
+ 
+@@ -706,7 +708,7 @@ Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>::Output_reloc(
+     bool is_symbolless)
+   : address_(address), local_sym_index_(GSYM_CODE), type_(type),
+     is_relative_(is_relative), is_symbolless_(is_symbolless),
+-    is_section_symbol_(false), shndx_(INVALID_CODE)
++    is_section_symbol_(false), use_plt_offset_(false), shndx_(INVALID_CODE)
+ {
+   // this->type_ is a bitfield; make sure TYPE fits.
+   gold_assert(this->type_ == type);
+@@ -727,7 +729,7 @@ Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>::Output_reloc(
+     bool is_symbolless)
+   : address_(address), local_sym_index_(GSYM_CODE), type_(type),
+     is_relative_(is_relative), is_symbolless_(is_symbolless),
+-    is_section_symbol_(false), shndx_(shndx)
++    is_section_symbol_(false), use_plt_offset_(false), shndx_(shndx)
+ {
+   gold_assert(shndx != INVALID_CODE);
+   // this->type_ is a bitfield; make sure TYPE fits.
+@@ -749,10 +751,12 @@ Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>::Output_reloc(
+     Address address,
+     bool is_relative,
+     bool is_symbolless,
+-    bool is_section_symbol)
++    bool is_section_symbol,
++    bool use_plt_offset)
+   : address_(address), local_sym_index_(local_sym_index), type_(type),
+     is_relative_(is_relative), is_symbolless_(is_symbolless),
+-    is_section_symbol_(is_section_symbol), shndx_(INVALID_CODE)
++    is_section_symbol_(is_section_symbol), use_plt_offset_(use_plt_offset),
++    shndx_(INVALID_CODE)
+ {
+   gold_assert(local_sym_index != GSYM_CODE
+               && local_sym_index != INVALID_CODE);
+@@ -773,10 +777,12 @@ Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>::Output_reloc(
+     Address address,
+     bool is_relative,
+     bool is_symbolless,
+-    bool is_section_symbol)
++    bool is_section_symbol,
++    bool use_plt_offset)
+   : address_(address), local_sym_index_(local_sym_index), type_(type),
+     is_relative_(is_relative), is_symbolless_(is_symbolless),
+-    is_section_symbol_(is_section_symbol), shndx_(shndx)
++    is_section_symbol_(is_section_symbol), use_plt_offset_(use_plt_offset),
++    shndx_(shndx)
+ {
+   gold_assert(local_sym_index != GSYM_CODE
+               && local_sym_index != INVALID_CODE);
+@@ -799,7 +805,7 @@ Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>::Output_reloc(
+     Address address)
+   : address_(address), local_sym_index_(SECTION_CODE), type_(type),
+     is_relative_(false), is_symbolless_(false),
+-    is_section_symbol_(true), shndx_(INVALID_CODE)
++    is_section_symbol_(true), use_plt_offset_(false), shndx_(INVALID_CODE)
+ {
+   // this->type_ is a bitfield; make sure TYPE fits.
+   gold_assert(this->type_ == type);
+@@ -820,7 +826,7 @@ Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>::Output_reloc(
+     Address address)
+   : address_(address), local_sym_index_(SECTION_CODE), type_(type),
+     is_relative_(false), is_symbolless_(false),
+-    is_section_symbol_(true), shndx_(shndx)
++    is_section_symbol_(true), use_plt_offset_(false), shndx_(shndx)
+ {
+   gold_assert(shndx != INVALID_CODE);
+   // this->type_ is a bitfield; make sure TYPE fits.
+@@ -842,7 +848,7 @@ Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>::Output_reloc(
+     Address address)
+   : address_(address), local_sym_index_(0), type_(type),
+     is_relative_(false), is_symbolless_(false),
+-    is_section_symbol_(false), shndx_(INVALID_CODE)
++    is_section_symbol_(false), use_plt_offset_(false), shndx_(INVALID_CODE)
+ {
+   // this->type_ is a bitfield; make sure TYPE fits.
+   gold_assert(this->type_ == type);
+@@ -858,7 +864,7 @@ Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>::Output_reloc(
+     Address address)
+   : address_(address), local_sym_index_(0), type_(type),
+     is_relative_(false), is_symbolless_(false),
+-    is_section_symbol_(false), shndx_(shndx)
++    is_section_symbol_(false), use_plt_offset_(false), shndx_(shndx)
+ {
+   gold_assert(shndx != INVALID_CODE);
+   // this->type_ is a bitfield; make sure TYPE fits.
+@@ -877,7 +883,7 @@ Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>::Output_reloc(
+     Address address)
+   : address_(address), local_sym_index_(TARGET_CODE), type_(type),
+     is_relative_(false), is_symbolless_(false),
+-    is_section_symbol_(false), shndx_(INVALID_CODE)
++    is_section_symbol_(false), use_plt_offset_(false), shndx_(INVALID_CODE)
+ {
+   // this->type_ is a bitfield; make sure TYPE fits.
+   gold_assert(this->type_ == type);
+@@ -894,7 +900,7 @@ Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>::Output_reloc(
+     Address address)
+   : address_(address), local_sym_index_(TARGET_CODE), type_(type),
+     is_relative_(false), is_symbolless_(false),
+-    is_section_symbol_(false), shndx_(shndx)
++    is_section_symbol_(false), use_plt_offset_(false), shndx_(shndx)
+ {
+   gold_assert(shndx != INVALID_CODE);
+   // this->type_ is a bitfield; make sure TYPE fits.
+@@ -1121,6 +1127,12 @@ Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>::symbol_value(
+   Sized_relobj_file<size, big_endian>* relobj =
+       this->u1_.relobj->sized_relobj();
+   gold_assert(relobj != NULL);
++  if (this->use_plt_offset_)
++    {
++      uint64_t plt_address =
++	  parameters->target().plt_address_for_local(relobj, lsi);
++      return plt_address + relobj->local_plt_offset(lsi);
++    }
+   const Symbol_value<size>* symval = relobj->local_symbol(lsi);
+   return symval->value(relobj, addend);
+ }
+@@ -4880,17 +4892,27 @@ Output_file::open_base_file(const char* base_name, bool writable)
+   if (use_base_file)
+     {
+       this->open(s.st_size);
+-      ssize_t len = ::read(o, this->base_, s.st_size);
+-      if (len < 0)
+-        {
+-	  gold_info(_("%s: read failed: %s"), base_name, strerror(errno));
+-	  return false;
+-        }
+-      if (len < s.st_size)
+-        {
+-	  gold_info(_("%s: file too short"), base_name);
+-	  return false;
+-        }
++      ssize_t bytes_to_read = s.st_size;
++      unsigned char* p = this->base_;
++      while (bytes_to_read > 0)
++	{
++	  ssize_t len = ::read(o, p, bytes_to_read);
++	  if (len < 0)
++	    {
++	      gold_info(_("%s: read failed: %s"), base_name, strerror(errno));
++	      return false;
++	    }
++	  if (len == 0)
++	    {
++	      gold_info(_("%s: file too short: read only %lld of %lld bytes"),
++			base_name,
++			static_cast<long long>(s.st_size - bytes_to_read),
++			static_cast<long long>(s.st_size));
++	      return false;
++	    }
++	  p += len;
++	  bytes_to_read -= len;
++	}
+       ::close(o);
+       return true;
+     }
+@@ -5052,8 +5074,12 @@ Output_file::map_no_anonymous(bool writable)
+   // output file will wind up incomplete, but we will have already
+   // exited.  The alternative to fallocate would be to use fdatasync,
+   // but that would be a more significant performance hit.
+-  if (writable && ::posix_fallocate(o, 0, this->file_size_) < 0)
+-    gold_fatal(_("%s: %s"), this->name_, strerror(errno));
++  if (writable)
++    {
++      int err = ::posix_fallocate(o, 0, this->file_size_);
++      if (err != 0)
++       gold_fatal(_("%s: %s"), this->name_, strerror(err));
++    }
+ 
+   // Map the file into memory.
+   int prot = PROT_READ;
+diff --git a/gold/output.h b/gold/output.h
+index 1bec2c0..e2d35e2 100644
+--- a/gold/output.h
++++ b/gold/output.h
+@@ -1033,12 +1033,14 @@ class Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>
+   Output_reloc(Sized_relobj<size, big_endian>* relobj,
+ 	       unsigned int local_sym_index, unsigned int type,
+ 	       Output_data* od, Address address, bool is_relative,
+-               bool is_symbolless, bool is_section_symbol);
++               bool is_symbolless, bool is_section_symbol,
++               bool use_plt_offset);
+ 
+   Output_reloc(Sized_relobj<size, big_endian>* relobj,
+ 	       unsigned int local_sym_index, unsigned int type,
+ 	       unsigned int shndx, Address address, bool is_relative,
+-               bool is_symbolless, bool is_section_symbol);
++               bool is_symbolless, bool is_section_symbol,
++               bool use_plt_offset);
+ 
+   // A reloc against the STT_SECTION symbol of an output section.
+ 
+@@ -1216,7 +1218,7 @@ class Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>
+   // input file.
+   unsigned int local_sym_index_;
+   // The reloc type--a processor specific code.
+-  unsigned int type_ : 29;
++  unsigned int type_ : 28;
+   // True if the relocation is a RELATIVE relocation.
+   bool is_relative_ : 1;
+   // True if the relocation is one which should not use
+@@ -1224,6 +1226,10 @@ class Output_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>
+   bool is_symbolless_ : 1;
+   // True if the relocation is against a section symbol.
+   bool is_section_symbol_ : 1;
++  // True if the addend should be the PLT offset.  This is used only
++  // for RELATIVE relocations to local symbols.
++  // (Used only for RELA, but stored here for space.)
++  bool use_plt_offset_ : 1;
+   // If the reloc address is an input section in an object, the
+   // section index.  This is INVALID_CODE if the reloc address is
+   // specified in some other way.
+@@ -1268,9 +1274,10 @@ class Output_reloc<elfcpp::SHT_RELA, dynamic, size, big_endian>
+ 	       unsigned int local_sym_index, unsigned int type,
+ 	       Output_data* od, Address address,
+ 	       Addend addend, bool is_relative,
+-	       bool is_symbolless, bool is_section_symbol)
++	       bool is_symbolless, bool is_section_symbol,
++	       bool use_plt_offset)
+     : rel_(relobj, local_sym_index, type, od, address, is_relative,
+-           is_symbolless, is_section_symbol),
++           is_symbolless, is_section_symbol, use_plt_offset),
+       addend_(addend)
+   { }
+ 
+@@ -1278,9 +1285,10 @@ class Output_reloc<elfcpp::SHT_RELA, dynamic, size, big_endian>
+ 	       unsigned int local_sym_index, unsigned int type,
+ 	       unsigned int shndx, Address address,
+ 	       Addend addend, bool is_relative,
+-	       bool is_symbolless, bool is_section_symbol)
++	       bool is_symbolless, bool is_section_symbol,
++	       bool use_plt_offset)
+     : rel_(relobj, local_sym_index, type, shndx, address, is_relative,
+-           is_symbolless, is_section_symbol),
++           is_symbolless, is_section_symbol, use_plt_offset),
+       addend_(addend)
+   { }
+ 
+@@ -1571,7 +1579,7 @@ class Output_data_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>
+ 	    Output_data* od, Address address)
+   {
+     this->add(od, Output_reloc_type(relobj, local_sym_index, type, od,
+-                                    address, false, false, false));
++                                    address, false, false, false, false));
+   }
+ 
+   void
+@@ -1580,7 +1588,7 @@ class Output_data_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>
+ 	    Output_data* od, unsigned int shndx, Address address)
+   {
+     this->add(od, Output_reloc_type(relobj, local_sym_index, type, shndx,
+-				    address, false, false, false));
++				    address, false, false, false, false));
+   }
+ 
+   // Add a RELATIVE reloc against a local symbol.
+@@ -1591,7 +1599,7 @@ class Output_data_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>
+ 	             Output_data* od, Address address)
+   {
+     this->add(od, Output_reloc_type(relobj, local_sym_index, type, od,
+-                                    address, true, true, false));
++                                    address, true, true, false, false));
+   }
+ 
+   void
+@@ -1600,7 +1608,7 @@ class Output_data_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>
+ 	             Output_data* od, unsigned int shndx, Address address)
+   {
+     this->add(od, Output_reloc_type(relobj, local_sym_index, type, shndx,
+-				    address, true, true, false));
++				    address, true, true, false, false));
+   }
+ 
+   // Add a local relocation which does not use a symbol for the relocation,
+@@ -1612,7 +1620,7 @@ class Output_data_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>
+ 			      Output_data* od, Address address)
+   {
+     this->add(od, Output_reloc_type(relobj, local_sym_index, type, od,
+-                                    address, false, true, false));
++                                    address, false, true, false, false));
+   }
+ 
+   void
+@@ -1622,7 +1630,7 @@ class Output_data_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>
+ 			      Address address)
+   {
+     this->add(od, Output_reloc_type(relobj, local_sym_index, type, shndx,
+-				    address, false, true, false));
++				    address, false, true, false, false));
+   }
+ 
+   // Add a reloc against a local section symbol.  This will be
+@@ -1635,7 +1643,7 @@ class Output_data_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>
+                     Output_data* od, Address address)
+   {
+     this->add(od, Output_reloc_type(relobj, input_shndx, type, od,
+-                                    address, false, false, true));
++                                    address, false, false, true, false));
+   }
+ 
+   void
+@@ -1644,7 +1652,7 @@ class Output_data_reloc<elfcpp::SHT_REL, dynamic, size, big_endian>
+                     Output_data* od, unsigned int shndx, Address address)
+   {
+     this->add(od, Output_reloc_type(relobj, input_shndx, type, shndx,
+-                                    address, false, false, true));
++                                    address, false, false, true, false));
+   }
+ 
+   // A reloc against the STT_SECTION symbol of an output section.
+@@ -1767,7 +1775,7 @@ class Output_data_reloc<elfcpp::SHT_RELA, dynamic, size, big_endian>
+ 	    Output_data* od, Address address, Addend addend)
+   {
+     this->add(od, Output_reloc_type(relobj, local_sym_index, type, od, address,
+-				    addend, false, false, false));
++				    addend, false, false, false, false));
+   }
+ 
+   void
+@@ -1777,7 +1785,8 @@ class Output_data_reloc<elfcpp::SHT_RELA, dynamic, size, big_endian>
+ 	    Addend addend)
+   {
+     this->add(od, Output_reloc_type(relobj, local_sym_index, type, shndx,
+-                                    address, addend, false, false, false));
++                                    address, addend, false, false, false,
++                                    false));
+   }
+ 
+   // Add a RELATIVE reloc against a local symbol.
+@@ -1785,20 +1794,23 @@ class Output_data_reloc<elfcpp::SHT_RELA, dynamic, size, big_endian>
+   void
+   add_local_relative(Sized_relobj<size, big_endian>* relobj,
+ 	             unsigned int local_sym_index, unsigned int type,
+-	             Output_data* od, Address address, Addend addend)
++	             Output_data* od, Address address, Addend addend,
++	             bool use_plt_offset)
+   {
+     this->add(od, Output_reloc_type(relobj, local_sym_index, type, od, address,
+-				    addend, true, true, false));
++				    addend, true, true, false,
++				    use_plt_offset));
+   }
+ 
+   void
+   add_local_relative(Sized_relobj<size, big_endian>* relobj,
+ 	             unsigned int local_sym_index, unsigned int type,
+ 	             Output_data* od, unsigned int shndx, Address address,
+-	             Addend addend)
++	             Addend addend, bool use_plt_offset)
+   {
+     this->add(od, Output_reloc_type(relobj, local_sym_index, type, shndx,
+-                                    address, addend, true, true, false));
++                                    address, addend, true, true, false,
++                                    use_plt_offset));
+   }
+ 
+   // Add a local relocation which does not use a symbol for the relocation,
+@@ -1810,7 +1822,7 @@ class Output_data_reloc<elfcpp::SHT_RELA, dynamic, size, big_endian>
+ 			      Output_data* od, Address address, Addend addend)
+   {
+     this->add(od, Output_reloc_type(relobj, local_sym_index, type, od, address,
+-				    addend, false, true, false));
++				    addend, false, true, false, false));
+   }
+ 
+   void
+@@ -1820,7 +1832,8 @@ class Output_data_reloc<elfcpp::SHT_RELA, dynamic, size, big_endian>
+ 			      Address address, Addend addend)
+   {
+     this->add(od, Output_reloc_type(relobj, local_sym_index, type, shndx,
+-                                    address, addend, false, true, false));
++                                    address, addend, false, true, false,
++                                    false));
+   }
+ 
+   // Add a reloc against a local section symbol.  This will be
+@@ -1833,7 +1846,7 @@ class Output_data_reloc<elfcpp::SHT_RELA, dynamic, size, big_endian>
+                     Output_data* od, Address address, Addend addend)
+   {
+     this->add(od, Output_reloc_type(relobj, input_shndx, type, od, address,
+-				    addend, false, false, true));
++				    addend, false, false, true, false));
+   }
+ 
+   void
+@@ -1843,7 +1856,8 @@ class Output_data_reloc<elfcpp::SHT_RELA, dynamic, size, big_endian>
+ 		    Addend addend)
+   {
+     this->add(od, Output_reloc_type(relobj, input_shndx, type, shndx,
+-                                    address, addend, false, false, true));
++                                    address, addend, false, false, true,
++                                    false));
+   }
+ 
+   // A reloc against the STT_SECTION symbol of an output section.
+diff --git a/gold/plugin.cc b/gold/plugin.cc
+index 3ccd8d0..b4e68f8 100644
+--- a/gold/plugin.cc
++++ b/gold/plugin.cc
+@@ -818,7 +818,9 @@ Pluginobj::Pluginobj(const std::string& name, Input_file* input_file,
+ }
+ 
+ // Return TRUE if a defined symbol is referenced from outside the
+-// universe of claimed objects.
++// universe of claimed objects.  Only references from relocatable,
++// non-IR (unclaimed) objects count as a reference.  References from
++// dynamic objects count only as "visible".
+ 
+ static inline bool
+ is_referenced_from_outside(Symbol* lsym)
+@@ -838,6 +840,8 @@ is_referenced_from_outside(Symbol* lsym)
+ static inline bool
+ is_visible_from_outside(Symbol* lsym)
+ {
++  if (lsym->in_dyn())
++    return true;
+   if (parameters->options().export_dynamic() || parameters->options().shared())
+     return lsym->is_externally_visible();
+   return false;
+@@ -1244,14 +1248,18 @@ Sized_pluginobj<size, big_endian>::do_initialize_xindex()
+   return NULL;
+ }
+ 
+-// Get symbol counts.  Not used for plugin objects.
++// Get symbol counts.  Don't count plugin objects; the replacement
++// files will provide the counts.
+ 
+ template<int size, bool big_endian>
+ void
+-Sized_pluginobj<size, big_endian>::do_get_global_symbol_counts(const Symbol_table*,
+-                                                   size_t*, size_t*) const
++Sized_pluginobj<size, big_endian>::do_get_global_symbol_counts(
++    const Symbol_table*,
++    size_t* defined,
++    size_t* used) const
+ {
+-  gold_unreachable();
++  *defined = 0;
++  *used = 0;
+ }
+ 
+ // Get symbols.  Not used for plugin objects.
+diff --git a/gold/powerpc.cc b/gold/powerpc.cc
+index 45783c3..62a17ca 100644
+--- a/gold/powerpc.cc
++++ b/gold/powerpc.cc
+@@ -1329,7 +1329,7 @@ Target_powerpc<size, big_endian>::Scan::local(
+               rela_dyn->add_local_relative(object, r_sym, r_type,
+ 					   output_section, data_shndx,
+ 					   reloc.get_r_offset(),
+-					   reloc.get_r_addend());
++					   reloc.get_r_addend(), false);
+             }
+         }
+       break;
+@@ -1372,7 +1372,7 @@ Target_powerpc<size, big_endian>::Scan::local(
+ 		object->set_local_got_offset(r_sym, GOT_TYPE_STANDARD, off);
+ 		rela_dyn->add_local_relative(object, r_sym,
+ 					     elfcpp::R_POWERPC_RELATIVE,
+-					     got, off, 0);
++					     got, off, 0, false);
+ 	      }
+           }
+ 	else
+diff --git a/gold/readsyms.cc b/gold/readsyms.cc
+index 1e50942..9974722 100644
+--- a/gold/readsyms.cc
++++ b/gold/readsyms.cc
+@@ -161,8 +161,10 @@ void
+ Read_symbols::run(Workqueue* workqueue)
+ {
+   // If we didn't queue a new task, then we need to explicitly unblock
+-  // the token.
+-  if (!this->do_read_symbols(workqueue))
++  // the token. If the object is a member of a lib group, however,
++  // the token was already added to the list of locks for the task,
++  // and it will be unblocked automatically at the end of the task.
++  if (!this->do_read_symbols(workqueue) && this->member_ == NULL)
+     workqueue->queue_soon(new Unblock_token(this->this_blocker_,
+ 					    this->next_blocker_));
+ }
+diff --git a/gold/resolve.cc b/gold/resolve.cc
+index 03288ec..780038a 100644
+--- a/gold/resolve.cc
++++ b/gold/resolve.cc
+@@ -296,7 +296,7 @@ Symbol_table::resolve(Sized_symbol<size>* to,
+ 
+   // Record if we've seen this symbol in a real ELF object (i.e., the
+   // symbol is referenced from outside the world known to the plugin).
+-  if (object->pluginobj() == NULL)
++  if (object->pluginobj() == NULL && !object->is_dynamic())
+     to->set_in_real_elf();
+ 
+   // If we're processing replacement files, allow new symbols to override
+@@ -336,9 +336,9 @@ Symbol_table::resolve(Sized_symbol<size>* to,
+       && to->name()[0] == '_' && to->name()[1] == 'Z')
+     {
+       Symbol_location fromloc
+-          = { object, orig_st_shndx, sym.get_st_value() };
++          = { object, orig_st_shndx, static_cast<off_t>(sym.get_st_value()) };
+       Symbol_location toloc = { to->object(), to->shndx(&to_is_ordinary),
+-				to->value() };
++				static_cast<off_t>(to->value()) };
+       this->candidate_odr_violations_[to->name()].insert(fromloc);
+       this->candidate_odr_violations_[to->name()].insert(toloc);
+     }
+diff --git a/gold/script-sections.cc b/gold/script-sections.cc
+index 1fad88d..f90c0b3 100644
+--- a/gold/script-sections.cc
++++ b/gold/script-sections.cc
+@@ -680,7 +680,7 @@ class Sections_element_assignment : public Sections_element
+   set_section_addresses(Symbol_table* symtab, Layout* layout,
+ 			uint64_t* dot_value, uint64_t*, uint64_t*)
+   {
+-    this->assignment_.set_if_absolute(symtab, layout, true, *dot_value);
++    this->assignment_.set_if_absolute(symtab, layout, true, *dot_value, NULL);
+   }
+ 
+   // Print for debugging.
+@@ -714,7 +714,7 @@ class Sections_element_dot_assignment : public Sections_element
+     // output section definition the dot symbol is always considered
+     // to be absolute.
+     *dot_value = this->val_->eval_with_dot(symtab, layout, true, *dot_value,
+-					   NULL, NULL, NULL);
++					   NULL, NULL, NULL, false);
+   }
+ 
+   // Update the dot symbol while setting section addresses.
+@@ -724,7 +724,7 @@ class Sections_element_dot_assignment : public Sections_element
+ 			uint64_t* load_address)
+   {
+     *dot_value = this->val_->eval_with_dot(symtab, layout, false, *dot_value,
+-					   NULL, NULL, dot_alignment);
++					   NULL, NULL, dot_alignment, false);
+     *load_address = *dot_value;
+   }
+ 
+@@ -866,9 +866,11 @@ class Output_section_element_assignment : public Output_section_element
+   void
+   set_section_addresses(Symbol_table* symtab, Layout* layout, Output_section*,
+ 			uint64_t, uint64_t* dot_value, uint64_t*,
+-			Output_section**, std::string*, Input_section_list*)
++			Output_section** dot_section, std::string*,
++			Input_section_list*)
+   {
+-    this->assignment_.set_if_absolute(symtab, layout, true, *dot_value);
++    this->assignment_.set_if_absolute(symtab, layout, true, *dot_value,
++				      *dot_section);
+   }
+ 
+   // Print for debugging.
+@@ -892,20 +894,28 @@ class Output_section_element_dot_assignment : public Output_section_element
+     : val_(val)
+   { }
+ 
++  // An assignment to dot within an output section is enough to force
++  // the output section to exist.
++  bool
++  needs_output_section() const
++  { return true; }
++
+   // Finalize the symbol.
+   void
+   finalize_symbols(Symbol_table* symtab, const Layout* layout,
+ 		   uint64_t* dot_value, Output_section** dot_section)
+   {
+     *dot_value = this->val_->eval_with_dot(symtab, layout, true, *dot_value,
+-					   *dot_section, dot_section, NULL);
++					   *dot_section, dot_section, NULL,
++					   true);
+   }
+ 
+   // Update the dot symbol while setting section addresses.
+   void
+   set_section_addresses(Symbol_table* symtab, Layout* layout, Output_section*,
+ 			uint64_t, uint64_t* dot_value, uint64_t*,
+-			Output_section**, std::string*, Input_section_list*);
++			Output_section** dot_section, std::string*,
++			Input_section_list*);
+ 
+   // Print for debugging.
+   void
+@@ -936,7 +946,8 @@ Output_section_element_dot_assignment::set_section_addresses(
+ {
+   uint64_t next_dot = this->val_->eval_with_dot(symtab, layout, false,
+ 						*dot_value, *dot_section,
+-						dot_section, dot_alignment);
++						dot_section, dot_alignment,
++						true);
+   if (next_dot < *dot_value)
+     gold_error(_("dot may not move backward"));
+   if (next_dot > *dot_value && output_section != NULL)
+@@ -1037,7 +1048,8 @@ Output_data_expression::do_write_to_buffer(unsigned char* buf)
+ {
+   uint64_t val = this->val_->eval_with_dot(this->symtab_, this->layout_,
+ 					   true, this->dot_value_,
+-					   this->dot_section_, NULL, NULL);
++					   this->dot_section_, NULL, NULL,
++					   false);
+ 
+   if (parameters->target().is_big_endian())
+     this->endian_write_to_buffer<true>(val, buf);
+@@ -1187,7 +1199,7 @@ class Output_section_element_fill : public Output_section_element
+     Output_section* fill_section;
+     uint64_t fill_val = this->val_->eval_with_dot(symtab, layout, false,
+ 						  *dot_value, *dot_section,
+-						  &fill_section, NULL);
++						  &fill_section, NULL, false);
+     if (fill_section != NULL)
+       gold_warning(_("fill value is not absolute"));
+     // FIXME: The GNU linker supports fill values of arbitrary length.
+@@ -2108,13 +2120,13 @@ Output_section_definition::finalize_symbols(Symbol_table* symtab,
+ 	{
+ 	  address = this->address_->eval_with_dot(symtab, layout, true,
+ 						  *dot_value, NULL,
+-						  NULL, NULL);
++						  NULL, NULL, false);
+ 	}
+       if (this->align_ != NULL)
+ 	{
+ 	  uint64_t align = this->align_->eval_with_dot(symtab, layout, true,
+ 						       *dot_value, NULL,
+-						       NULL, NULL);
++						       NULL, NULL, false);
+ 	  address = align_address(address, align);
+ 	}
+       *dot_value = address;
+@@ -2303,7 +2315,7 @@ Output_section_definition::set_section_addresses(Symbol_table* symtab,
+   else
+     address = this->address_->eval_with_dot(symtab, layout, true,
+ 					    *dot_value, NULL, NULL,
+-					    dot_alignment);
++					    dot_alignment, false);
+   uint64_t align;
+   if (this->align_ == NULL)
+     {
+@@ -2316,7 +2328,7 @@ Output_section_definition::set_section_addresses(Symbol_table* symtab,
+     {
+       Output_section* align_section;
+       align = this->align_->eval_with_dot(symtab, layout, true, *dot_value,
+-					  NULL, &align_section, NULL);
++					  NULL, &align_section, NULL, false);
+       if (align_section != NULL)
+ 	gold_warning(_("alignment of section %s is not absolute"),
+ 		     this->name_.c_str());
+@@ -2401,7 +2413,7 @@ Output_section_definition::set_section_addresses(Symbol_table* symtab,
+       laddr = this->load_address_->eval_with_dot(symtab, layout, true,
+ 						 *dot_value,
+ 						 this->output_section_,
+-						 NULL, NULL);
++						 NULL, NULL, false);
+       if (this->output_section_ != NULL)
+         this->output_section_->set_load_address(laddr);
+     }
+@@ -2416,7 +2428,8 @@ Output_section_definition::set_section_addresses(Symbol_table* symtab,
+       Output_section* subalign_section;
+       subalign = this->subalign_->eval_with_dot(symtab, layout, true,
+ 						*dot_value, NULL,
+-						&subalign_section, NULL);
++						&subalign_section, NULL,
++						false);
+       if (subalign_section != NULL)
+ 	gold_warning(_("subalign of section %s is not absolute"),
+ 		     this->name_.c_str());
+@@ -2431,7 +2444,7 @@ Output_section_definition::set_section_addresses(Symbol_table* symtab,
+       uint64_t fill_val = this->fill_->eval_with_dot(symtab, layout, true,
+ 						     *dot_value,
+ 						     NULL, &fill_section,
+-						     NULL);
++						     NULL, false);
+       if (fill_section != NULL)
+ 	gold_warning(_("fill of section %s is not absolute"),
+ 		     this->name_.c_str());
+diff --git a/gold/script.cc b/gold/script.cc
+index 7df0c9e..b471cf9 100644
+--- a/gold/script.cc
++++ b/gold/script.cc
+@@ -983,18 +983,20 @@ Symbol_assignment::sized_finalize(Symbol_table* symtab, const Layout* layout,
+   uint64_t final_val = this->val_->eval_maybe_dot(symtab, layout, true,
+ 						  is_dot_available,
+ 						  dot_value, dot_section,
+-						  &section, NULL);
++						  &section, NULL, false);
+   Sized_symbol<size>* ssym = symtab->get_sized_symbol<size>(this->sym_);
+   ssym->set_value(final_val);
+   if (section != NULL)
+     ssym->set_output_section(section);
+ }
+ 
+-// Set the symbol value if the expression yields an absolute value.
++// Set the symbol value if the expression yields an absolute value or
++// a value relative to DOT_SECTION.
+ 
+ void
+ Symbol_assignment::set_if_absolute(Symbol_table* symtab, const Layout* layout,
+-				   bool is_dot_available, uint64_t dot_value)
++				   bool is_dot_available, uint64_t dot_value,
++				   Output_section* dot_section)
+ {
+   if (this->sym_ == NULL)
+     return;
+@@ -1002,8 +1004,9 @@ Symbol_assignment::set_if_absolute(Symbol_table* symtab, const Layout* layout,
+   Output_section* val_section;
+   uint64_t val = this->val_->eval_maybe_dot(symtab, layout, false,
+ 					    is_dot_available, dot_value,
+-					    NULL, &val_section, NULL);
+-  if (val_section != NULL)
++					    dot_section, &val_section, NULL,
++					    false);
++  if (val_section != NULL && val_section != dot_section)
+     return;
+ 
+   if (parameters->target().get_size() == 32)
+@@ -1026,6 +1029,8 @@ Symbol_assignment::set_if_absolute(Symbol_table* symtab, const Layout* layout,
+     }
+   else
+     gold_unreachable();
++  if (val_section != NULL)
++    this->sym_->set_output_section(val_section);
+ }
+ 
+ // Print for debugging.
+@@ -1215,7 +1220,7 @@ Script_options::set_section_addresses(Symbol_table* symtab, Layout* layout)
+   for (Symbol_assignments::iterator p = this->symbol_assignments_.begin();
+        p != this->symbol_assignments_.end();
+        ++p)
+-    (*p)->set_if_absolute(symtab, layout, false, 0);
++    (*p)->set_if_absolute(symtab, layout, false, 0, NULL);
+ 
+   return this->script_sections_.set_section_addresses(symtab, layout);
+ }
+diff --git a/gold/script.h b/gold/script.h
+index 73079a4..f41f438 100644
+--- a/gold/script.h
++++ b/gold/script.h
+@@ -90,20 +90,28 @@ class Expression
+   // the section address.  If RESULT_ALIGNMENT is not NULL, this sets
+   // *RESULT_ALIGNMENT to the alignment of the value of that alignment
+   // is larger than *RESULT_ALIGNMENT; this will only be non-zero if
+-  // this is an ALIGN expression.
++  // this is an ALIGN expression.  If IS_SECTION_DOT_ASSIGMENT is true,
++  // we are evaluating an assignment to dot within an output section,
++  // and an absolute value should be interpreted as an offset within
++  // the section.
+   uint64_t
+   eval_with_dot(const Symbol_table*, const Layout*, bool check_assertions,
+ 		uint64_t dot_value, Output_section* dot_section,
+-		Output_section** result_section, uint64_t* result_alignment);
++		Output_section** result_section, uint64_t* result_alignment,
++		bool is_section_dot_assignment);
+ 
+   // Return the value of an expression which may or may not be
+   // permitted to refer to the dot symbol, depending on
+-  // is_dot_available.
++  // is_dot_available.  If IS_SECTION_DOT_ASSIGMENT is true,
++  // we are evaluating an assignment to dot within an output section,
++  // and an absolute value should be interpreted as an offset within
++  // the section.
+   uint64_t
+   eval_maybe_dot(const Symbol_table*, const Layout*, bool check_assertions,
+ 		 bool is_dot_available, uint64_t dot_value,
+ 		 Output_section* dot_section,
+-		 Output_section** result_section, uint64_t* result_alignment);
++		 Output_section** result_section, uint64_t* result_alignment,
++		 bool is_section_dot_assignment);
+ 
+   // Print the expression to the FILE.  This is for debugging.
+   virtual void
+@@ -339,12 +347,12 @@ class Symbol_assignment
+   finalize_with_dot(Symbol_table*, const Layout*, uint64_t dot_value,
+ 		    Output_section* dot_section);
+ 
+-  // Set the symbol value, but only if the value is absolute.  This is
+-  // used while processing a SECTIONS clause.  We assume that dot is
+-  // an absolute value here.  We do not check assertions.
++  // Set the symbol value, but only if the value is absolute or relative to
++  // DOT_SECTION.  This is used while processing a SECTIONS clause.
++  // We assume that dot is an absolute value here.  We do not check assertions.
+   void
+   set_if_absolute(Symbol_table*, const Layout*, bool is_dot_available,
+-		  uint64_t dot_value);
++		  uint64_t dot_value, Output_section* dot_section);
+ 
+   const std::string&
+   name() const
+diff --git a/gold/sparc.cc b/gold/sparc.cc
+index 5f67a4e..12e1dee 100644
+--- a/gold/sparc.cc
++++ b/gold/sparc.cc
+@@ -1855,7 +1855,7 @@ Target_sparc<size, big_endian>::Scan::local(
+           rela_dyn->add_local_relative(object, r_sym, elfcpp::R_SPARC_RELATIVE,
+ 				       output_section, data_shndx,
+ 				       reloc.get_r_offset(),
+-				       reloc.get_r_addend());
++				       reloc.get_r_addend(), false);
+         }
+       break;
+ 
+@@ -1946,7 +1946,7 @@ Target_sparc<size, big_endian>::Scan::local(
+ 		object->set_local_got_offset(r_sym, GOT_TYPE_STANDARD, off);
+ 		rela_dyn->add_local_relative(object, r_sym,
+ 					     elfcpp::R_SPARC_RELATIVE,
+-					     got, off, 0);
++					     got, off, 0, false);
+ 	      }
+ 	  }
+ 	else
+diff --git a/gold/symtab.cc b/gold/symtab.cc
+index ff1b5ca..f0ba1d5 100644
+--- a/gold/symtab.cc
++++ b/gold/symtab.cc
+@@ -602,20 +602,16 @@ Symbol_table::gc_mark_undef_symbols(Layout* layout)
+ }
+ 
+ void
+-Symbol_table::gc_mark_symbol_for_shlib(Symbol* sym)
++Symbol_table::gc_mark_symbol(Symbol* sym)
+ {
+-  if (!sym->is_from_dynobj() 
+-      && sym->is_externally_visible())
++  // Add the object and section to the work list.
++  Relobj* obj = static_cast<Relobj*>(sym->object());
++  bool is_ordinary;
++  unsigned int shndx = sym->shndx(&is_ordinary);
++  if (is_ordinary && shndx != elfcpp::SHN_UNDEF)
+     {
+-      //Add the object and section to the work list.
+-      Relobj* obj = static_cast<Relobj*>(sym->object());
+-      bool is_ordinary;
+-      unsigned int shndx = sym->shndx(&is_ordinary);
+-      if (is_ordinary && shndx != elfcpp::SHN_UNDEF)
+-        {
+-          gold_assert(this->gc_!= NULL);
+-          this->gc_->worklist().push(Section_id(obj, shndx));
+-        }
++      gold_assert(this->gc_!= NULL);
++      this->gc_->worklist().push(Section_id(obj, shndx));
+     }
+ }
+ 
+@@ -626,16 +622,7 @@ Symbol_table::gc_mark_dyn_syms(Symbol* sym)
+ {
+   if (sym->in_dyn() && sym->source() == Symbol::FROM_OBJECT
+       && !sym->object()->is_dynamic())
+-    {
+-      Relobj* obj = static_cast<Relobj*>(sym->object()); 
+-      bool is_ordinary;
+-      unsigned int shndx = sym->shndx(&is_ordinary);
+-      if (is_ordinary && shndx != elfcpp::SHN_UNDEF)
+-        {
+-          gold_assert(this->gc_ != NULL);
+-          this->gc_->worklist().push(Section_id(obj, shndx));
+-        }
+-    }
++    this->gc_mark_symbol(sym);
+ }
+ 
+ // Make TO a symbol which forwards to FROM.
+@@ -1143,6 +1130,14 @@ Symbol_table::add_from_relobj(
+       bool is_default_version = false;
+       bool is_forced_local = false;
+ 
++      // FIXME: For incremental links, we don't store version information,
++      // so we need to ignore version symbols for now.
++      if (parameters->incremental_update() && ver != NULL)
++	{
++	  namelen = ver - name;
++	  ver = NULL;
++	}
++
+       if (ver != NULL)
+         {
+           // The symbol name is of the form foo@VERSION or foo@@VERSION
+@@ -1243,11 +1238,16 @@ Symbol_table::add_from_relobj(
+       if (is_forced_local)
+ 	this->force_local(res);
+ 
+-      // If building a shared library using garbage collection, do not 
+-      // treat externally visible symbols as garbage.
+-      if (parameters->options().gc_sections() 
+-          && parameters->options().shared())
+-        this->gc_mark_symbol_for_shlib(res);
++      // Do not treat this symbol as garbage if this symbol will be
++      // exported to the dynamic symbol table.  This is true when
++      // building a shared library or using --export-dynamic and
++      // the symbol is externally visible.
++      if (parameters->options().gc_sections()
++	  && res->is_externally_visible()
++	  && !res->is_from_dynobj()
++          && (parameters->options().shared()
++	      || parameters->options().export_dynamic()))
++        this->gc_mark_symbol(res);
+ 
+       if (is_defined_in_discarded_section)
+ 	res->set_is_defined_in_discarded_section();
+@@ -1346,6 +1346,11 @@ Symbol_table::add_from_dynobj(
+       return;
+     }
+ 
++  // FIXME: For incremental links, we don't store version information,
++  // so we need to ignore version symbols for now.
++  if (parameters->incremental_update())
++    versym = NULL;
++
+   if (versym != NULL && versym_size / 2 < count)
+     {
+       dynobj->error(_("too few symbol versions"));
+@@ -2809,6 +2814,12 @@ Symbol_table::sized_write_globals(const Stringpool* sympool,
+       typename elfcpp::Elf_types<size>::Elf_Addr sym_value = sym->value();
+       typename elfcpp::Elf_types<size>::Elf_Addr dynsym_value = sym_value;
+       elfcpp::STB binding = sym->binding();
++
++      // If --no-gnu-unique is set, change STB_GNU_UNIQUE to STB_GLOBAL.
++      if (binding == elfcpp::STB_GNU_UNIQUE
++	  && !parameters->options().gnu_unique())
++	binding = elfcpp::STB_GLOBAL;
++
+       switch (sym->source())
+ 	{
+ 	case Symbol::FROM_OBJECT:
+diff --git a/gold/symtab.h b/gold/symtab.h
+index b9b9e00..427f72f 100644
+--- a/gold/symtab.h
++++ b/gold/symtab.h
+@@ -1308,10 +1308,9 @@ class Symbol_table
+   void
+   gc_mark_undef_symbols(Layout*);
+ 
+-  // During garbage collection, this ensures externally visible symbols
+-  // are not treated as garbage while building shared objects.
++  // This tells garbage collection that this symbol is referenced.
+   void
+-  gc_mark_symbol_for_shlib(Symbol* sym);
++  gc_mark_symbol(Symbol* sym);
+ 
+   // During garbage collection, this keeps sections that correspond to 
+   // symbols seen in dynamic objects.
+diff --git a/gold/testsuite/Makefile.in b/gold/testsuite/Makefile.in
+index 67149fb..785dcdd 100644
+--- a/gold/testsuite/Makefile.in
++++ b/gold/testsuite/Makefile.in
+@@ -1844,6 +1844,8 @@ EGREP = @EGREP@
+ EXEEXT = @EXEEXT@
+ GENCAT = @GENCAT@
+ GMSGFMT = @GMSGFMT@
++GOLD_LDADD = @GOLD_LDADD@
++GOLD_LDFLAGS = @GOLD_LDFLAGS@
+ GREP = @GREP@
+ INCINTL = @INCINTL@
+ INSTALL = @INSTALL@
+diff --git a/gold/testsuite/plugin_test_2.sh b/gold/testsuite/plugin_test_2.sh
+index a47d22a..293b1f0 100755
+--- a/gold/testsuite/plugin_test_2.sh
++++ b/gold/testsuite/plugin_test_2.sh
+@@ -45,7 +45,7 @@ check plugin_test_2.err "two_file_test_main.o: claim file hook called"
+ check plugin_test_2.err "two_file_test_1.syms: claim file hook called"
+ check plugin_test_2.err "two_file_test_1b.syms: claim file hook called"
+ check plugin_test_2.err "two_file_shared_2.so: claim file hook called"
+-check plugin_test_2.err "two_file_test_1.syms: _Z4f13iv: PREVAILING_DEF_REG"
++check plugin_test_2.err "two_file_test_1.syms: _Z4f13iv: PREVAILING_DEF_IRONLY_EXP"
+ check plugin_test_2.err "two_file_test_1.syms: _Z2t2v: PREVAILING_DEF_REG"
+ check plugin_test_2.err "two_file_test_1.syms: v2: RESOLVED_DYN"
+ check plugin_test_2.err "two_file_test_1.syms: t17data: RESOLVED_DYN"
+diff --git a/gold/testsuite/script_test_2.t b/gold/testsuite/script_test_2.t
+index 73d39df..6a0188f 100644
+--- a/gold/testsuite/script_test_2.t
++++ b/gold/testsuite/script_test_2.t
+@@ -49,7 +49,7 @@ SECTIONS
+     /* This should match the remaining sections.  */
+     *(.gold_test)
+ 
+-    . = . + 4;
++    . = 60;
+     start_data = .;
+     BYTE(1)
+     SHORT(2)
+diff --git a/gold/x86_64.cc b/gold/x86_64.cc
+index e6b0021..e7c981b 100644
+--- a/gold/x86_64.cc
++++ b/gold/x86_64.cc
+@@ -1549,7 +1549,7 @@ Target_x86_64::reserve_local_got_entry(
+     case GOT_TYPE_STANDARD:
+       if (parameters->options().output_is_position_independent())
+ 	rela_dyn->add_local_relative(obj, r_sym, elfcpp::R_X86_64_RELATIVE,
+-				     this->got_, got_offset, 0);
++				     this->got_, got_offset, 0, false);
+       break;
+     case GOT_TYPE_TLS_OFFSET:
+       rela_dyn->add_local(obj, r_sym, elfcpp::R_X86_64_TPOFF64,
+@@ -1953,8 +1953,8 @@ Target_x86_64::Scan::local(Symbol_table* symtab,
+                            const elfcpp::Sym<64, false>& lsym)
+ {
+   // A local STT_GNU_IFUNC symbol may require a PLT entry.
+-  if (lsym.get_st_type() == elfcpp::STT_GNU_IFUNC
+-      && this->reloc_needs_plt_for_ifunc(object, r_type))
++  bool is_ifunc = lsym.get_st_type() == elfcpp::STT_GNU_IFUNC;
++  if (is_ifunc && this->reloc_needs_plt_for_ifunc(object, r_type))
+     {
+       unsigned int r_sym = elfcpp::elf_r_sym<64>(reloc.get_r_info());
+       target->make_local_ifunc_plt_entry(symtab, layout, object, r_sym);
+@@ -1982,7 +1982,7 @@ Target_x86_64::Scan::local(Symbol_table* symtab,
+ 				       elfcpp::R_X86_64_RELATIVE,
+ 				       output_section, data_shndx,
+ 				       reloc.get_r_offset(),
+-				       reloc.get_r_addend());
++				       reloc.get_r_addend(), is_ifunc);
+         }
+       break;
+ 
+@@ -2058,7 +2058,7 @@ Target_x86_64::Scan::local(Symbol_table* symtab,
+ 	// lets function pointers compare correctly with shared
+ 	// libraries.  Otherwise we would need an IRELATIVE reloc.
+ 	bool is_new;
+-	if (lsym.get_st_type() == elfcpp::STT_GNU_IFUNC)
++	if (is_ifunc)
+ 	  is_new = got->add_local_plt(object, r_sym, GOT_TYPE_STANDARD);
+ 	else
+ 	  is_new = got->add_local(object, r_sym, GOT_TYPE_STANDARD);
+@@ -2076,7 +2076,7 @@ Target_x86_64::Scan::local(Symbol_table* symtab,
+ 		      object->local_got_offset(r_sym, GOT_TYPE_STANDARD);
+ 		    rela_dyn->add_local_relative(object, r_sym,
+ 						 elfcpp::R_X86_64_RELATIVE,
+-						 got, got_offset, 0);
++						 got, got_offset, 0, is_ifunc);
+ 		  }
+                 else
+                   {
+@@ -3181,12 +3181,6 @@ Target_x86_64::Relocate::relocate_tls(const Relocate_info<64, false>* relinfo,
+             }
+           if (optimized_type == tls::TLSOPT_TO_IE)
+             {
+-	      if (tls_segment == NULL)
+-		{
+-		  gold_assert(parameters->errors()->error_count() > 0
+-			      || issue_undefined_symbol_error(gsym));
+-		  return;
+-		}
+               value = target->got_plt_section()->address() + got_offset;
+               this->tls_gd_to_ie(relinfo, relnum, tls_segment, rela, r_type,
+                                  value, view, address, view_size);
+@@ -3867,42 +3861,51 @@ Target_x86_64::do_code_fill(section_size_type length) const
+     }
+ 
+   // Nop sequences of various lengths.
+-  const char nop1[1] = { 0x90 };                   // nop
+-  const char nop2[2] = { 0x66, 0x90 };             // xchg %ax %ax
+-  const char nop3[3] = { 0x0f, 0x1f, 0x00 };       // nop (%rax)
+-  const char nop4[4] = { 0x0f, 0x1f, 0x40, 0x00};  // nop 0(%rax)
+-  const char nop5[5] = { 0x0f, 0x1f, 0x44, 0x00,   // nop 0(%rax,%rax,1)
+-                         0x00 };
+-  const char nop6[6] = { 0x66, 0x0f, 0x1f, 0x44,   // nopw 0(%rax,%rax,1)
+-                         0x00, 0x00 };
+-  const char nop7[7] = { 0x0f, 0x1f, 0x80, 0x00,   // nopl 0L(%rax)
+-                         0x00, 0x00, 0x00 };
+-  const char nop8[8] = { 0x0f, 0x1f, 0x84, 0x00,   // nopl 0L(%rax,%rax,1)
+-                         0x00, 0x00, 0x00, 0x00 };
+-  const char nop9[9] = { 0x66, 0x0f, 0x1f, 0x84,   // nopw 0L(%rax,%rax,1)
+-                         0x00, 0x00, 0x00, 0x00,
+-                         0x00 };
+-  const char nop10[10] = { 0x66, 0x2e, 0x0f, 0x1f, // nopw %cs:0L(%rax,%rax,1)
+-                           0x84, 0x00, 0x00, 0x00,
+-                           0x00, 0x00 };
+-  const char nop11[11] = { 0x66, 0x66, 0x2e, 0x0f, // data16
+-                           0x1f, 0x84, 0x00, 0x00, // nopw %cs:0L(%rax,%rax,1)
+-                           0x00, 0x00, 0x00 };
+-  const char nop12[12] = { 0x66, 0x66, 0x66, 0x2e, // data16; data16
+-                           0x0f, 0x1f, 0x84, 0x00, // nopw %cs:0L(%rax,%rax,1)
+-                           0x00, 0x00, 0x00, 0x00 };
+-  const char nop13[13] = { 0x66, 0x66, 0x66, 0x66, // data16; data16; data16
+-                           0x2e, 0x0f, 0x1f, 0x84, // nopw %cs:0L(%rax,%rax,1)
+-                           0x00, 0x00, 0x00, 0x00,
+-                           0x00 };
+-  const char nop14[14] = { 0x66, 0x66, 0x66, 0x66, // data16; data16; data16
+-                           0x66, 0x2e, 0x0f, 0x1f, // data16
+-                           0x84, 0x00, 0x00, 0x00, // nopw %cs:0L(%rax,%rax,1)
+-                           0x00, 0x00 };
+-  const char nop15[15] = { 0x66, 0x66, 0x66, 0x66, // data16; data16; data16
+-                           0x66, 0x66, 0x2e, 0x0f, // data16; data16
+-                           0x1f, 0x84, 0x00, 0x00, // nopw %cs:0L(%rax,%rax,1)
+-                           0x00, 0x00, 0x00 };
++  const char nop1[1] = { '\x90' };                 // nop
++  const char nop2[2] = { '\x66', '\x90' };         // xchg %ax %ax
++  const char nop3[3] = { '\x0f', '\x1f', '\x00' }; // nop (%rax)
++  const char nop4[4] = { '\x0f', '\x1f', '\x40',   // nop 0(%rax)
++  			 '\x00'};
++  const char nop5[5] = { '\x0f', '\x1f', '\x44',   // nop 0(%rax,%rax,1)
++			 '\x00', '\x00' };
++  const char nop6[6] = { '\x66', '\x0f', '\x1f',   // nopw 0(%rax,%rax,1)
++  			 '\x44', '\x00', '\x00' };
++  const char nop7[7] = { '\x0f', '\x1f', '\x80',   // nopl 0L(%rax)
++  			 '\x00', '\x00', '\x00',
++			 '\x00' };
++  const char nop8[8] = { '\x0f', '\x1f', '\x84',   // nopl 0L(%rax,%rax,1)
++  			 '\x00', '\x00', '\x00',
++			 '\x00', '\x00' };
++  const char nop9[9] = { '\x66', '\x0f', '\x1f',   // nopw 0L(%rax,%rax,1)
++  			 '\x84', '\x00', '\x00',
++			 '\x00', '\x00', '\x00' };
++  const char nop10[10] = { '\x66', '\x2e', '\x0f', // nopw %cs:0L(%rax,%rax,1)
++  			   '\x1f', '\x84', '\x00',
++			   '\x00', '\x00', '\x00',
++			   '\x00' };
++  const char nop11[11] = { '\x66', '\x66', '\x2e', // data16
++  			   '\x0f', '\x1f', '\x84', // nopw %cs:0L(%rax,%rax,1)
++			   '\x00', '\x00', '\x00',
++			   '\x00', '\x00' };
++  const char nop12[12] = { '\x66', '\x66', '\x66', // data16; data16
++  			   '\x2e', '\x0f', '\x1f', // nopw %cs:0L(%rax,%rax,1)
++			   '\x84', '\x00', '\x00',
++			   '\x00', '\x00', '\x00' };
++  const char nop13[13] = { '\x66', '\x66', '\x66', // data16; data16; data16
++  			   '\x66', '\x2e', '\x0f', // nopw %cs:0L(%rax,%rax,1)
++			   '\x1f', '\x84', '\x00',
++			   '\x00', '\x00', '\x00',
++                           '\x00' };
++  const char nop14[14] = { '\x66', '\x66', '\x66', // data16; data16; data16
++  			   '\x66', '\x66', '\x2e', // data16
++			   '\x0f', '\x1f', '\x84', // nopw %cs:0L(%rax,%rax,1)
++			   '\x00', '\x00', '\x00',
++                           '\x00', '\x00' };
++  const char nop15[15] = { '\x66', '\x66', '\x66', // data16; data16; data16
++  			   '\x66', '\x66', '\x66', // data16; data16
++			   '\x2e', '\x0f', '\x1f', // nopw %cs:0L(%rax,%rax,1)
++			   '\x84', '\x00', '\x00',
++                           '\x00', '\x00', '\x00' };
+ 
+   const char* nops[16] = {
+     NULL,
+-- 
+1.7.9.5
+

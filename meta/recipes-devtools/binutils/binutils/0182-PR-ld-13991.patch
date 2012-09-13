@@ -1,0 +1,1617 @@
+Upstream-Status: Backport
+
+From e827844b6119ff7e0c2de167f2b261c6c06226c8 Mon Sep 17 00:00:00 2001
+From: Nick Clifton <nickc@redhat.com>
+Date: Fri, 11 May 2012 12:24:12 +0000
+Subject: [PATCH 182/262]     PR ld/13991     bfd/     * bfd/elf-bfd.h
+ (_bfd_elf_link_just_syms): Define as    
+ _bfd_generic_link_just_syms.     * bfd/elflink.c
+ (_bfd_elf_link_just_syms): Delete.     *
+ bfd/linker.c (_bfd_generic_link_just_syms): Set
+ sec_info_type.
+
+    * bfd/bfd-in.h (discarded_section): Renamed from elf_discarded_section.
+    * bfd/section.c (SEC_INFO_TYPE_NONE, SEC_INFO_TYPE_STABS,
+    SEC_INFO_TYPE_MERGE, SEC_INFO_TYPE_EH_FRAME,
+    SEC_INFO_TYPE_JUST_SYMS): Renamed from corresponding ELF_INFO_TYPE.
+    * bfd/elf-eh-frame.c, * bfd/elf-m10200.c, * bfd/elf-m10300.c,
+    * bfd/elf.c, * bfd/elf32-arm.c, * bfd/elf32-avr.c, * bfd/elf32-bfin.c,
+    * bfd/elf32-cr16.c, * bfd/elf32-cr16c.c, * bfd/elf32-cris.c,
+    * bfd/elf32-crx.c, * bfd/elf32-d10v.c, * bfd/elf32-epiphany.c,
+    * bfd/elf32-fr30.c, * bfd/elf32-frv.c, * bfd/elf32-h8300.c,
+    * bfd/elf32-hppa.c, * bfd/elf32-i370.c, * bfd/elf32-i386.c,
+    * bfd/elf32-i860.c, * bfd/elf32-ip2k.c, * bfd/elf32-iq2000.c,
+    * bfd/elf32-lm32.c, * bfd/elf32-m32c.c, * bfd/elf32-m32r.c,
+    * bfd/elf32-m68hc1x.c, * bfd/elf32-m68k.c, * bfd/elf32-mcore.c,
+    * bfd/elf32-mep.c, * bfd/elf32-moxie.c, * bfd/elf32-msp430.c,
+    * bfd/elf32-mt.c, * bfd/elf32-openrisc.c, * bfd/elf32-ppc.c,
+    * bfd/elf32-rl78.c, * bfd/elf32-rx.c, * bfd/elf32-s390.c,
+    * bfd/elf32-score.c, * bfd/elf32-score7.c, * bfd/elf32-sh.c,
+    * bfd/elf32-spu.c, * bfd/elf32-tic6x.c, * bfd/elf32-tilepro.c,
+    * bfd/elf32-v850.c, * bfd/elf32-vax.c, * bfd/elf32-xc16x.c,
+    * bfd/elf32-xstormy16.c, * bfd/elf32-xtensa.c, * bfd/elf64-alpha.c,
+    * bfd/elf64-hppa.c, * bfd/elf64-ia64-vms.c, * bfd/elf64-mmix.c,
+    * bfd/elf64-ppc.c, * bfd/elf64-s390.c, * bfd/elf64-sh64.c,
+    * bfd/elf64-x86-64.c, * bfd/elflink.c, * bfd/elfnn-ia64.c,
+    * bfd/elfxx-mips.c, * bfd/elfxx-sparc.c, * bfd/elfxx-tilegx.c,
+    * bfd/reloc.c: Update all references.
+    * bfd/bfd-in2.h: Regenerate.
+    ld/
+    * ld/ldlang.c (size_input_section): Use sec_info_type rather than
+    usrdata->flags.just_syms.
+    * ld/ldwrite.c (build_link_order): Likewise.
+    * ld/emultempl/hppaelf.em (build_section_lists): Likewise.
+    * ld/emultempl/ppc64elf.em (build_toc_list): Likewise.
+    * ld/emultempl/armelf.em (build_section_lists): Likewise.
+    (after_allocation): Update for renamed sec_info_type value.
+    * ld/emultempl/tic6xdsbt.em: Likewise.
+---
+ bfd/ChangeLog             |   38 +++++++++++++++++++++++++++++++++
+ bfd/bfd-in.h              |    6 +++---
+ bfd/bfd-in2.h             |   16 +++++++-------
+ bfd/elf-bfd.h             |    3 +--
+ bfd/elf-eh-frame.c        |   10 ++++-----
+ bfd/elf-m10200.c          |    2 +-
+ bfd/elf-m10300.c          |    4 ++--
+ bfd/elf.c                 |   10 ++++-----
+ bfd/elf32-arm.c           |    6 +++---
+ bfd/elf32-avr.c           |    2 +-
+ bfd/elf32-bfin.c          |    6 +++---
+ bfd/elf32-cr16.c          |    2 +-
+ bfd/elf32-cr16c.c         |    2 +-
+ bfd/elf32-cris.c          |    2 +-
+ bfd/elf32-crx.c           |    2 +-
+ bfd/elf32-d10v.c          |    2 +-
+ bfd/elf32-fr30.c          |    2 +-
+ bfd/elf32-frv.c           |    4 ++--
+ bfd/elf32-h8300.c         |    2 +-
+ bfd/elf32-hppa.c          |    2 +-
+ bfd/elf32-i370.c          |    2 +-
+ bfd/elf32-i386.c          |    4 ++--
+ bfd/elf32-i860.c          |    2 +-
+ bfd/elf32-ip2k.c          |    2 +-
+ bfd/elf32-iq2000.c        |    2 +-
+ bfd/elf32-lm32.c          |    6 +++---
+ bfd/elf32-m32c.c          |    2 +-
+ bfd/elf32-m32r.c          |    2 +-
+ bfd/elf32-m68hc1x.c       |    2 +-
+ bfd/elf32-m68k.c          |    2 +-
+ bfd/elf32-mcore.c         |    2 +-
+ bfd/elf32-mep.c           |    2 +-
+ bfd/elf32-moxie.c         |    2 +-
+ bfd/elf32-msp430.c        |    2 +-
+ bfd/elf32-mt.c            |    2 +-
+ bfd/elf32-openrisc.c      |    2 +-
+ bfd/elf32-ppc.c           |    6 +++---
+ bfd/elf32-rx.c            |    4 ++--
+ bfd/elf32-s390.c          |    2 +-
+ bfd/elf32-score.c         |    2 +-
+ bfd/elf32-score7.c        |    2 +-
+ bfd/elf32-sh.c            |    4 ++--
+ bfd/elf32-spu.c           |    2 +-
+ bfd/elf32-tic6x.c         |    2 +-
+ bfd/elf32-tilepro.c       |    2 +-
+ bfd/elf32-v850.c          |    2 +-
+ bfd/elf32-vax.c           |    2 +-
+ bfd/elf32-xc16x.c         |    2 +-
+ bfd/elf32-xstormy16.c     |    2 +-
+ bfd/elf32-xtensa.c        |    8 +++----
+ bfd/elf64-alpha.c         |    8 +++----
+ bfd/elf64-hppa.c          |    2 +-
+ bfd/elf64-mmix.c          |    2 +-
+ bfd/elf64-ppc.c           |   20 +++++++++---------
+ bfd/elf64-s390.c          |    2 +-
+ bfd/elf64-sh64.c          |    4 ++--
+ bfd/elf64-x86-64.c        |    4 ++--
+ bfd/elflink.c             |   51 ++++++++++++++++++---------------------------
+ bfd/elfnn-ia64.c          |    6 +++---
+ bfd/elfxx-mips.c          |    2 +-
+ bfd/elfxx-sparc.c         |    2 +-
+ bfd/elfxx-tilegx.c        |    2 +-
+ bfd/linker.c              |    3 ++-
+ bfd/reloc.c               |    2 +-
+ bfd/section.c             |   10 ++++-----
+ ld/ChangeLog              |   15 +++++++++++++
+ ld/emultempl/armelf.em    |    4 ++--
+ ld/emultempl/hppaelf.em   |    2 +-
+ ld/emultempl/ppc64elf.em  |    4 ++--
+ ld/emultempl/tic6xdsbt.em |    2 +-
+ ld/ldlang.c               |    2 +-
+ ld/ldwrite.c              |    4 ++--
+ 72 files changed, 199 insertions(+), 157 deletions(-)
+
+diff --git a/bfd/bfd-in.h b/bfd/bfd-in.h
+index a477b49..7c5298a 100644
+--- a/bfd/bfd-in.h
++++ b/bfd/bfd-in.h
+@@ -295,11 +295,11 @@ typedef struct bfd_section *sec_ptr;
+     ? (sec)->rawsize : (sec)->size) / bfd_octets_per_byte (bfd))
+ 
+ /* Return TRUE if input section SEC has been discarded.  */
+-#define elf_discarded_section(sec)				\
++#define discarded_section(sec)					\
+   (!bfd_is_abs_section (sec)					\
+    && bfd_is_abs_section ((sec)->output_section)		\
+-   && (sec)->sec_info_type != ELF_INFO_TYPE_MERGE		\
+-   && (sec)->sec_info_type != ELF_INFO_TYPE_JUST_SYMS)
++   && (sec)->sec_info_type != SEC_INFO_TYPE_MERGE		\
++   && (sec)->sec_info_type != SEC_INFO_TYPE_JUST_SYMS)
+ 
+ /* Forward define.  */
+ struct stat;
+diff --git a/bfd/bfd-in2.h b/bfd/bfd-in2.h
+index cd90740..34f9628 100644
+--- a/bfd/bfd-in2.h
++++ b/bfd/bfd-in2.h
+@@ -302,11 +302,11 @@ typedef struct bfd_section *sec_ptr;
+     ? (sec)->rawsize : (sec)->size) / bfd_octets_per_byte (bfd))
+ 
+ /* Return TRUE if input section SEC has been discarded.  */
+-#define elf_discarded_section(sec)				\
++#define discarded_section(sec)					\
+   (!bfd_is_abs_section (sec)					\
+    && bfd_is_abs_section ((sec)->output_section)		\
+-   && (sec)->sec_info_type != ELF_INFO_TYPE_MERGE		\
+-   && (sec)->sec_info_type != ELF_INFO_TYPE_JUST_SYMS)
++   && (sec)->sec_info_type != SEC_INFO_TYPE_MERGE		\
++   && (sec)->sec_info_type != SEC_INFO_TYPE_JUST_SYMS)
+ 
+ /* Forward define.  */
+ struct stat;
+@@ -1384,11 +1384,11 @@ typedef struct bfd_section
+ 
+   /* Type of sec_info information.  */
+   unsigned int sec_info_type:3;
+-#define ELF_INFO_TYPE_NONE      0
+-#define ELF_INFO_TYPE_STABS     1
+-#define ELF_INFO_TYPE_MERGE     2
+-#define ELF_INFO_TYPE_EH_FRAME  3
+-#define ELF_INFO_TYPE_JUST_SYMS 4
++#define SEC_INFO_TYPE_NONE      0
++#define SEC_INFO_TYPE_STABS     1
++#define SEC_INFO_TYPE_MERGE     2
++#define SEC_INFO_TYPE_EH_FRAME  3
++#define SEC_INFO_TYPE_JUST_SYMS 4
+ 
+   /* Nonzero if this section uses RELA relocations, rather than REL.  */
+   unsigned int use_rela_p:1;
+diff --git a/bfd/elf-bfd.h b/bfd/elf-bfd.h
+index d6e2ab2..2cfe2ba 100644
+--- a/bfd/elf-bfd.h
++++ b/bfd/elf-bfd.h
+@@ -1807,8 +1807,7 @@ extern void bfd_elf_set_group_contents
+   (bfd *, asection *, void *);
+ extern asection *_bfd_elf_check_kept_section
+   (asection *, struct bfd_link_info *);
+-extern void _bfd_elf_link_just_syms
+-  (asection *, struct bfd_link_info *);
++#define _bfd_elf_link_just_syms _bfd_generic_link_just_syms
+ extern void _bfd_elf_copy_link_hash_symbol_type
+   (bfd *, struct bfd_link_hash_entry *, struct bfd_link_hash_entry *);
+ extern bfd_boolean _bfd_elf_size_group_sections
+diff --git a/bfd/elf-eh-frame.c b/bfd/elf-eh-frame.c
+index 54142b2..7b5cf7a 100644
+--- a/bfd/elf-eh-frame.c
++++ b/bfd/elf-eh-frame.c
+@@ -491,7 +491,7 @@ _bfd_elf_parse_eh_frame (bfd *abfd, struct bfd_link_info *info,
+     return;
+ 
+   if (sec->size == 0
+-      || sec->sec_info_type != ELF_INFO_TYPE_NONE)
++      || sec->sec_info_type != SEC_INFO_TYPE_NONE)
+     {
+       /* This file does not contain .eh_frame information.  */
+       return;
+@@ -904,7 +904,7 @@ _bfd_elf_parse_eh_frame (bfd *abfd, struct bfd_link_info *info,
+   BFD_ASSERT (cie_count == num_cies);
+ 
+   elf_section_data (sec)->sec_info = sec_info;
+-  sec->sec_info_type = ELF_INFO_TYPE_EH_FRAME;
++  sec->sec_info_type = SEC_INFO_TYPE_EH_FRAME;
+   if (hdr_info->merge_cies)
+     {
+       sec_info->cies = local_cies;
+@@ -1137,7 +1137,7 @@ _bfd_elf_discard_section_eh_frame
+   struct eh_frame_hdr_info *hdr_info;
+   unsigned int ptr_size, offset;
+ 
+-  if (sec->sec_info_type != ELF_INFO_TYPE_EH_FRAME)
++  if (sec->sec_info_type != SEC_INFO_TYPE_EH_FRAME)
+     return FALSE;
+ 
+   sec_info = (struct eh_frame_sec_info *) elf_section_data (sec)->sec_info;
+@@ -1307,7 +1307,7 @@ _bfd_elf_eh_frame_section_offset (bfd *output_bfd ATTRIBUTE_UNUSED,
+   struct eh_frame_sec_info *sec_info;
+   unsigned int lo, hi, mid;
+ 
+-  if (sec->sec_info_type != ELF_INFO_TYPE_EH_FRAME)
++  if (sec->sec_info_type != SEC_INFO_TYPE_EH_FRAME)
+     return offset;
+   sec_info = (struct eh_frame_sec_info *) elf_section_data (sec)->sec_info;
+ 
+@@ -1395,7 +1395,7 @@ _bfd_elf_write_section_eh_frame (bfd *abfd,
+   unsigned int ptr_size;
+   struct eh_cie_fde *ent;
+ 
+-  if (sec->sec_info_type != ELF_INFO_TYPE_EH_FRAME)
++  if (sec->sec_info_type != SEC_INFO_TYPE_EH_FRAME)
+     /* FIXME: octets_per_byte.  */
+     return bfd_set_section_contents (abfd, sec->output_section, contents,
+ 				     sec->output_offset, sec->size);
+diff --git a/bfd/elf-m10200.c b/bfd/elf-m10200.c
+index a38f4db..d58c75c 100644
+--- a/bfd/elf-m10200.c
++++ b/bfd/elf-m10200.c
+@@ -401,7 +401,7 @@ mn10200_elf_relocate_section (output_bfd, info, input_bfd, input_section,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf-m10300.c b/bfd/elf-m10300.c
+index 8276a2f..876ff4a 100644
+--- a/bfd/elf-m10300.c
++++ b/bfd/elf-m10300.c
+@@ -1509,7 +1509,7 @@ mn10300_elf_relocate_section (bfd *output_bfd,
+ 	       h->root.root.root.string);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+@@ -2763,7 +2763,7 @@ mn10300_elf_relax_section (bfd *abfd,
+ 						      isym->st_name);
+ 
+ 	  if ((sym_sec->flags & SEC_MERGE)
+-	      && sym_sec->sec_info_type == ELF_INFO_TYPE_MERGE)
++	      && sym_sec->sec_info_type == SEC_INFO_TYPE_MERGE)
+ 	    {
+ 	      symval = isym->st_value;
+ 
+diff --git a/bfd/elf.c b/bfd/elf.c
+index aa40c33..9e23bee 100644
+--- a/bfd/elf.c
++++ b/bfd/elf.c
+@@ -3071,7 +3071,7 @@ assign_section_numbers (bfd *abfd, struct bfd_link_info *link_info)
+ 	      if (link_info != NULL)
+ 		{
+ 		  /* Check discarded linkonce section.  */
+-		  if (elf_discarded_section (s))
++		  if (discarded_section (s))
+ 		    {
+ 		      asection *kept;
+ 		      (*_bfd_error_handler)
+@@ -9390,7 +9390,7 @@ _bfd_elf_rela_local_sym (bfd *abfd,
+ 		+ sym->st_value);
+   if ((sec->flags & SEC_MERGE)
+       && ELF_ST_TYPE (sym->st_info) == STT_SECTION
+-      && sec->sec_info_type == ELF_INFO_TYPE_MERGE)
++      && sec->sec_info_type == SEC_INFO_TYPE_MERGE)
+     {
+       rel->r_addend =
+ 	_bfd_merged_section_offset (abfd, psec,
+@@ -9421,7 +9421,7 @@ _bfd_elf_rel_local_sym (bfd *abfd,
+ {
+   asection *sec = *psec;
+ 
+-  if (sec->sec_info_type != ELF_INFO_TYPE_MERGE)
++  if (sec->sec_info_type != SEC_INFO_TYPE_MERGE)
+     return sym->st_value + addend;
+ 
+   return _bfd_merged_section_offset (abfd, psec,
+@@ -9437,10 +9437,10 @@ _bfd_elf_section_offset (bfd *abfd,
+ {
+   switch (sec->sec_info_type)
+     {
+-    case ELF_INFO_TYPE_STABS:
++    case SEC_INFO_TYPE_STABS:
+       return _bfd_stab_section_offset (sec, elf_section_data (sec)->sec_info,
+ 				       offset);
+-    case ELF_INFO_TYPE_EH_FRAME:
++    case SEC_INFO_TYPE_EH_FRAME:
+       return _bfd_elf_eh_frame_section_offset (abfd, info, sec, offset);
+     default:
+       if ((sec->flags & SEC_ELF_REVERSE_COPY) != 0)
+diff --git a/bfd/elf32-arm.c b/bfd/elf32-arm.c
+index 1f6c1a0..9355f66 100644
+--- a/bfd/elf32-arm.c
++++ b/bfd/elf32-arm.c
+@@ -4485,7 +4485,7 @@ cortex_a8_erratum_scan (bfd *input_bfd,
+       if (elf_section_type (section) != SHT_PROGBITS
+           || (elf_section_flags (section) & SHF_EXECINSTR) == 0
+           || (section->flags & SEC_EXCLUDE) != 0
+-          || (section->sec_info_type == ELF_INFO_TYPE_JUST_SYMS)
++          || (section->sec_info_type == SEC_INFO_TYPE_JUST_SYMS)
+           || (section->output_section == bfd_abs_section_ptr))
+         continue;
+ 
+@@ -6556,7 +6556,7 @@ bfd_elf32_arm_vfp11_erratum_scan (bfd *abfd, struct bfd_link_info *link_info)
+       if (elf_section_type (sec) != SHT_PROGBITS
+           || (elf_section_flags (sec) & SHF_EXECINSTR) == 0
+           || (sec->flags & SEC_EXCLUDE) != 0
+-	  || sec->sec_info_type == ELF_INFO_TYPE_JUST_SYMS
++	  || sec->sec_info_type == SEC_INFO_TYPE_JUST_SYMS
+ 	  || sec->output_section == bfd_abs_section_ptr
+           || strcmp (sec->name, VFP11_ERRATUM_VENEER_SECTION_NAME) == 0)
+         continue;
+@@ -10305,7 +10305,7 @@ elf32_arm_relocate_section (bfd *                  output_bfd,
+ 	  sym_type = h->type;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-avr.c b/bfd/elf32-avr.c
+index a7f9217..97dc268 100644
+--- a/bfd/elf32-avr.c
++++ b/bfd/elf32-avr.c
+@@ -1189,7 +1189,7 @@ elf32_avr_relocate_section (bfd *output_bfd ATTRIBUTE_UNUSED,
+ 	  name = h->root.root.string;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-bfin.c b/bfd/elf32-bfin.c
+index b112dfc..4941f40 100644
+--- a/bfd/elf32-bfin.c
++++ b/bfd/elf32-bfin.c
+@@ -1444,7 +1444,7 @@ bfin_relocate_section (bfd * output_bfd,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+@@ -2663,7 +2663,7 @@ bfinfdpic_relocate_section (bfd * output_bfd,
+ 	  osec = sec;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+@@ -4429,7 +4429,7 @@ bfinfdpic_elf_discard_info (bfd *ibfd,
+ 
+   /* Account for relaxation of .eh_frame section.  */
+   for (s = ibfd->sections; s; s = s->next)
+-    if (s->sec_info_type == ELF_INFO_TYPE_EH_FRAME)
++    if (s->sec_info_type == SEC_INFO_TYPE_EH_FRAME)
+       {
+ 	if (!_bfinfdpic_check_discarded_relocs (ibfd, s, info, &changed))
+ 	  return FALSE;
+diff --git a/bfd/elf32-cr16.c b/bfd/elf32-cr16.c
+index 0118131..38af05f 100644
+--- a/bfd/elf32-cr16.c
++++ b/bfd/elf32-cr16.c
+@@ -1431,7 +1431,7 @@ elf32_cr16_relocate_section (bfd *output_bfd, struct bfd_link_info *info,
+                                    unresolved_reloc, warned);
+         }
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-cr16c.c b/bfd/elf32-cr16c.c
+index ca2d7cb..109936b 100644
+--- a/bfd/elf32-cr16c.c
++++ b/bfd/elf32-cr16c.c
+@@ -723,7 +723,7 @@ elf32_cr16c_relocate_section (bfd *output_bfd,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-cris.c b/bfd/elf32-cris.c
+index 310f6d1..ec23f03 100644
+--- a/bfd/elf32-cris.c
++++ b/bfd/elf32-cris.c
+@@ -1180,7 +1180,7 @@ cris_elf_relocate_section (bfd *output_bfd ATTRIBUTE_UNUSED,
+ 	    }
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-crx.c b/bfd/elf32-crx.c
+index d48932d..fd13447 100644
+--- a/bfd/elf32-crx.c
++++ b/bfd/elf32-crx.c
+@@ -873,7 +873,7 @@ elf32_crx_relocate_section (bfd *output_bfd, struct bfd_link_info *info,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-d10v.c b/bfd/elf32-d10v.c
+index 7d65395..e39a9b5 100644
+--- a/bfd/elf32-d10v.c
++++ b/bfd/elf32-d10v.c
+@@ -463,7 +463,7 @@ elf32_d10v_relocate_section (bfd *output_bfd,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-fr30.c b/bfd/elf32-fr30.c
+index 97b0d29..57be6ae 100644
+--- a/bfd/elf32-fr30.c
++++ b/bfd/elf32-fr30.c
+@@ -577,7 +577,7 @@ fr30_elf_relocate_section (output_bfd, info, input_bfd, input_section,
+ 	  name = h->root.root.string;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-frv.c b/bfd/elf32-frv.c
+index 7f3c4dd..513f811 100644
+--- a/bfd/elf32-frv.c
++++ b/bfd/elf32-frv.c
+@@ -2812,7 +2812,7 @@ elf32_frv_relocate_section (output_bfd, info, input_bfd, input_section,
+ 	  name = h->root.root.string;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+@@ -5678,7 +5678,7 @@ frvfdpic_elf_discard_info (bfd *ibfd,
+ 
+   /* Account for relaxation of .eh_frame section.  */
+   for (s = ibfd->sections; s; s = s->next)
+-    if (s->sec_info_type == ELF_INFO_TYPE_EH_FRAME)
++    if (s->sec_info_type == SEC_INFO_TYPE_EH_FRAME)
+       {
+ 	if (!_frvfdpic_check_discarded_relocs (ibfd, s, info, &changed))
+ 	  return FALSE;
+diff --git a/bfd/elf32-h8300.c b/bfd/elf32-h8300.c
+index 95d3983..ff1ee70 100644
+--- a/bfd/elf32-h8300.c
++++ b/bfd/elf32-h8300.c
+@@ -460,7 +460,7 @@ elf32_h8_relocate_section (bfd *output_bfd, struct bfd_link_info *info,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-hppa.c b/bfd/elf32-hppa.c
+index dcf6df0..044b6fa 100644
+--- a/bfd/elf32-hppa.c
++++ b/bfd/elf32-hppa.c
+@@ -3741,7 +3741,7 @@ elf32_hppa_relocate_section (bfd *output_bfd,
+ 	  hh = hppa_elf_hash_entry (eh);
+ 	}
+ 
+-      if (sym_sec != NULL && elf_discarded_section (sym_sec))
++      if (sym_sec != NULL && discarded_section (sym_sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rela, relend,
+ 					 elf_hppa_howto_table + r_type,
+diff --git a/bfd/elf32-i370.c b/bfd/elf32-i370.c
+index 8082927..516511f 100644
+--- a/bfd/elf32-i370.c
++++ b/bfd/elf32-i370.c
+@@ -1138,7 +1138,7 @@ i370_elf_relocate_section (bfd *output_bfd,
+ 	    }
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-i386.c b/bfd/elf32-i386.c
+index d518d01..b925ca6 100644
+--- a/bfd/elf32-i386.c
++++ b/bfd/elf32-i386.c
+@@ -3178,7 +3178,7 @@ elf_i386_relocate_section (bfd *output_bfd,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+@@ -4846,7 +4846,7 @@ elf_i386_finish_dynamic_sections (bfd *output_bfd,
+ 			     + PLT_FDE_START_OFFSET);
+ 	}
+       if (htab->plt_eh_frame->sec_info_type
+-	  == ELF_INFO_TYPE_EH_FRAME)
++	  == SEC_INFO_TYPE_EH_FRAME)
+ 	{
+ 	  if (! _bfd_elf_write_section_eh_frame (output_bfd, info,
+ 						 htab->plt_eh_frame,
+diff --git a/bfd/elf32-i860.c b/bfd/elf32-i860.c
+index 00c8ca7..88f4265 100644
+--- a/bfd/elf32-i860.c
++++ b/bfd/elf32-i860.c
+@@ -1128,7 +1128,7 @@ elf32_i860_relocate_section (bfd *output_bfd ATTRIBUTE_UNUSED,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-ip2k.c b/bfd/elf32-ip2k.c
+index 0a251b8..43c7b1c 100644
+--- a/bfd/elf32-ip2k.c
++++ b/bfd/elf32-ip2k.c
+@@ -1436,7 +1436,7 @@ ip2k_elf_relocate_section (bfd *output_bfd ATTRIBUTE_UNUSED,
+ 	  name = h->root.root.string;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-iq2000.c b/bfd/elf32-iq2000.c
+index 63ef3dc..3954616 100644
+--- a/bfd/elf32-iq2000.c
++++ b/bfd/elf32-iq2000.c
+@@ -633,7 +633,7 @@ iq2000_elf_relocate_section (bfd *		     output_bfd ATTRIBUTE_UNUSED,
+ 	  name = h->root.root.string;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-lm32.c b/bfd/elf32-lm32.c
+index 07add20..a2b1003 100644
+--- a/bfd/elf32-lm32.c
++++ b/bfd/elf32-lm32.c
+@@ -893,7 +893,7 @@ lm32_elf_relocate_section (bfd *output_bfd,
+ 	  name = h->root.root.string;
+         }
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+@@ -2372,7 +2372,7 @@ lm32_elf_size_dynamic_sections (bfd *output_bfd,
+                           /* Don't generate entries for weak symbols.  */
+                           if (!h || (h && h->root.type != bfd_link_hash_undefweak))
+                             {
+-                              if (!elf_discarded_section (s) && !((bfd_get_section_flags (ibfd, s) & SEC_ALLOC) == 0))
++                              if (!discarded_section (s) && !((bfd_get_section_flags (ibfd, s) & SEC_ALLOC) == 0))
+                                 {
+                                   switch (ELF32_R_TYPE (internal_relocs->r_info))
+                                     {
+@@ -2394,7 +2394,7 @@ lm32_elf_size_dynamic_sections (bfd *output_bfd,
+                                   if (!strcmp (current->name, h->root.root.string))
+                                     break;
+                                 }
+-                              if (!current && !elf_discarded_section (s) && (bfd_get_section_flags (ibfd, s) & SEC_ALLOC))
++                              if (!current && !discarded_section (s) && (bfd_get_section_flags (ibfd, s) & SEC_ALLOC))
+                                 {
+                                   /* Will this have an entry in the GOT.  */
+                                   if (ELF32_R_TYPE (internal_relocs->r_info) == R_LM32_16_GOT)
+diff --git a/bfd/elf32-m32c.c b/bfd/elf32-m32c.c
+index cf7ad99..bcdb55d 100644
+--- a/bfd/elf32-m32c.c
++++ b/bfd/elf32-m32c.c
+@@ -434,7 +434,7 @@ m32c_elf_relocate_section
+ 	    }
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-m32r.c b/bfd/elf32-m32r.c
+index 51ef61e..b151a8a 100644
+--- a/bfd/elf32-m32r.c
++++ b/bfd/elf32-m32r.c
+@@ -2616,7 +2616,7 @@ m32r_elf_relocate_section (bfd *output_bfd ATTRIBUTE_UNUSED,
+ 	    }
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-m68hc1x.c b/bfd/elf32-m68hc1x.c
+index 961dce4..4b9a1c0 100644
+--- a/bfd/elf32-m68hc1x.c
++++ b/bfd/elf32-m68hc1x.c
+@@ -970,7 +970,7 @@ elf32_m68hc11_relocate_section (bfd *output_bfd ATTRIBUTE_UNUSED,
+ 	  is_far = (h && (h->other & STO_M68HC12_FAR));
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-m68k.c b/bfd/elf32-m68k.c
+index 3e9ada9..518a41a 100644
+--- a/bfd/elf32-m68k.c
++++ b/bfd/elf32-m68k.c
+@@ -3717,7 +3717,7 @@ elf_m68k_relocate_section (output_bfd, info, input_bfd, input_section,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-mcore.c b/bfd/elf32-mcore.c
+index 31cc095..02aef53 100644
+--- a/bfd/elf32-mcore.c
++++ b/bfd/elf32-mcore.c
+@@ -466,7 +466,7 @@ mcore_elf_relocate_section (bfd * output_bfd,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-mep.c b/bfd/elf32-mep.c
+index 6fecb25..e5104b3 100644
+--- a/bfd/elf32-mep.c
++++ b/bfd/elf32-mep.c
+@@ -500,7 +500,7 @@ mep_elf_relocate_section
+ 	  name = h->root.root.string;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-moxie.c b/bfd/elf32-moxie.c
+index 8463599..c340826 100644
+--- a/bfd/elf32-moxie.c
++++ b/bfd/elf32-moxie.c
+@@ -250,7 +250,7 @@ moxie_elf_relocate_section (bfd *output_bfd,
+ 	  name = h->root.root.string;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-msp430.c b/bfd/elf32-msp430.c
+index 9a5fb2a..2fa70d9 100644
+--- a/bfd/elf32-msp430.c
++++ b/bfd/elf32-msp430.c
+@@ -454,7 +454,7 @@ elf32_msp430_relocate_section (bfd * output_bfd ATTRIBUTE_UNUSED,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-mt.c b/bfd/elf32-mt.c
+index 1be5d00..b87995e 100644
+--- a/bfd/elf32-mt.c
++++ b/bfd/elf32-mt.c
+@@ -354,7 +354,7 @@ mt_elf_relocate_section
+ 	  name = h->root.root.string;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-openrisc.c b/bfd/elf32-openrisc.c
+index ada738e..e441f4d 100644
+--- a/bfd/elf32-openrisc.c
++++ b/bfd/elf32-openrisc.c
+@@ -373,7 +373,7 @@ openrisc_elf_relocate_section (bfd *output_bfd,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-ppc.c b/bfd/elf32-ppc.c
+index 574cd98..d3925af 100644
+--- a/bfd/elf32-ppc.c
++++ b/bfd/elf32-ppc.c
+@@ -6231,7 +6231,7 @@ ppc_elf_relax_section (bfd *abfd,
+ 	 attribute for a code section, and we are only looking at
+ 	 branches.  However, implement it correctly here as a
+ 	 reference for other target relax_section functions.  */
+-      if (0 && tsec->sec_info_type == ELF_INFO_TYPE_MERGE)
++      if (0 && tsec->sec_info_type == SEC_INFO_TYPE_MERGE)
+ 	{
+ 	  /* At this stage in linking, no SEC_MERGE symbol has been
+ 	     adjusted, so all references to such symbols need to be
+@@ -6886,7 +6886,7 @@ ppc_elf_relocate_section (bfd *output_bfd,
+ 	  sym_name = h->root.root.string;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	{
+ 	  /* For relocs against symbols from removed linkonce sections,
+ 	     or sections discarded by a linker script, we just want the
+@@ -9054,7 +9054,7 @@ ppc_elf_finish_dynamic_sections (bfd *output_bfd,
+       BFD_ASSERT ((bfd_vma) ((p + 3 - htab->glink_eh_frame->contents) & -4)
+ 		  == htab->glink_eh_frame->size);
+ 
+-      if (htab->glink_eh_frame->sec_info_type == ELF_INFO_TYPE_EH_FRAME
++      if (htab->glink_eh_frame->sec_info_type == SEC_INFO_TYPE_EH_FRAME
+ 	  && !_bfd_elf_write_section_eh_frame (output_bfd, info,
+ 					       htab->glink_eh_frame,
+ 					       htab->glink_eh_frame->contents))
+diff --git a/bfd/elf32-rx.c b/bfd/elf32-rx.c
+index f049f6e..32820b4 100644
+--- a/bfd/elf32-rx.c
++++ b/bfd/elf32-rx.c
+@@ -510,7 +510,7 @@ rx_elf_relocate_section
+ 	  name = h->root.root.string;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+@@ -1588,7 +1588,7 @@ rx_offset_for_reloc (bfd *                    abfd,
+ 	  if (ssec)
+ 	    {
+ 	      if ((ssec->flags & SEC_MERGE)
+-		  && ssec->sec_info_type == ELF_INFO_TYPE_MERGE)
++		  && ssec->sec_info_type == SEC_INFO_TYPE_MERGE)
+ 		symval = _bfd_merged_section_offset (abfd, & ssec,
+ 						     elf_section_data (ssec)->sec_info,
+ 						     symval);
+diff --git a/bfd/elf32-s390.c b/bfd/elf32-s390.c
+index 98437d0..11fb072 100644
+--- a/bfd/elf32-s390.c
++++ b/bfd/elf32-s390.c
+@@ -2282,7 +2282,7 @@ elf_s390_relocate_section (output_bfd, info, input_bfd, input_section,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-score.c b/bfd/elf32-score.c
+index b437624..ef849aa 100644
+--- a/bfd/elf32-score.c
++++ b/bfd/elf32-score.c
+@@ -2672,7 +2672,7 @@ s3_bfd_score_elf_relocate_section (bfd *output_bfd,
+             }
+         }
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-score7.c b/bfd/elf32-score7.c
+index 3e98bfc..3d228f3 100644
+--- a/bfd/elf32-score7.c
++++ b/bfd/elf32-score7.c
+@@ -2443,7 +2443,7 @@ s7_bfd_score_elf_relocate_section (bfd *output_bfd,
+             }
+         }
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-sh.c b/bfd/elf32-sh.c
+index ca2c4af..e56c3b5 100644
+--- a/bfd/elf32-sh.c
++++ b/bfd/elf32-sh.c
+@@ -4048,7 +4048,7 @@ sh_elf_relocate_section (bfd *output_bfd, struct bfd_link_info *info,
+ 	      _("Unexpected STO_SH5_ISA32 on local symbol is not handled"),
+ 	      input_bfd, input_section, rel->r_offset));
+ 
+-	  if (sec != NULL && elf_discarded_section (sec))
++	  if (sec != NULL && discarded_section (sec))
+ 	    /* Handled below.  */
+ 	    ;
+ 	  else if (info->relocatable)
+@@ -4236,7 +4236,7 @@ sh_elf_relocate_section (bfd *output_bfd, struct bfd_link_info *info,
+ 	    }
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-spu.c b/bfd/elf32-spu.c
+index ae3ed10..40a9da2 100644
+--- a/bfd/elf32-spu.c
++++ b/bfd/elf32-spu.c
+@@ -4895,7 +4895,7 @@ spu_elf_relocate_section (bfd *output_bfd,
+ 	  sym_name = h->root.root.string;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-tic6x.c b/bfd/elf32-tic6x.c
+index 44042eb..a879d3c 100644
+--- a/bfd/elf32-tic6x.c
++++ b/bfd/elf32-tic6x.c
+@@ -2334,7 +2334,7 @@ elf32_tic6x_relocate_section (bfd *output_bfd,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-tilepro.c b/bfd/elf32-tilepro.c
+index f2aed9c..a4e565d 100644
+--- a/bfd/elf32-tilepro.c
++++ b/bfd/elf32-tilepro.c
+@@ -2594,7 +2594,7 @@ tilepro_elf_relocate_section (bfd *output_bfd, struct bfd_link_info *info,
+ 	    }
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-v850.c b/bfd/elf32-v850.c
+index 9e6f77d..0fbe080 100644
+--- a/bfd/elf32-v850.c
++++ b/bfd/elf32-v850.c
+@@ -2093,7 +2093,7 @@ v850_elf_relocate_section (bfd *output_bfd,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-vax.c b/bfd/elf32-vax.c
+index 643381c..fc3cb7c 100644
+--- a/bfd/elf32-vax.c
++++ b/bfd/elf32-vax.c
+@@ -1450,7 +1450,7 @@ elf_vax_relocate_section (bfd *output_bfd,
+ 	    relocation = 0;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-xc16x.c b/bfd/elf32-xc16x.c
+index 11d9840..00c7841 100644
+--- a/bfd/elf32-xc16x.c
++++ b/bfd/elf32-xc16x.c
+@@ -381,7 +381,7 @@ elf32_xc16x_relocate_section (bfd *output_bfd,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	{
+ 	  /* For relocs against symbols from removed linkonce sections,
+ 	     or sections discarded by a linker script, we just want the
+diff --git a/bfd/elf32-xstormy16.c b/bfd/elf32-xstormy16.c
+index 6141783..86e1d5b 100644
+--- a/bfd/elf32-xstormy16.c
++++ b/bfd/elf32-xstormy16.c
+@@ -825,7 +825,7 @@ xstormy16_elf_relocate_section (bfd *                   output_bfd ATTRIBUTE_UNU
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf32-xtensa.c b/bfd/elf32-xtensa.c
+index c6e4fb4..5a51eae 100644
+--- a/bfd/elf32-xtensa.c
++++ b/bfd/elf32-xtensa.c
+@@ -1712,7 +1712,7 @@ elf_xtensa_size_dynamic_sections (bfd *output_bfd ATTRIBUTE_UNUSED,
+ 	    continue;
+ 	  for (s = abfd->sections; s != NULL; s = s->next)
+ 	    {
+-	      if (! elf_discarded_section (s)
++	      if (! discarded_section (s)
+ 		  && xtensa_is_littable_section (s)
+ 		  && s != spltlittbl)
+ 		sgotloc->size += s->size;
+@@ -2656,7 +2656,7 @@ elf_xtensa_relocate_section (bfd *output_bfd,
+ 	  sym_type = h->type;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+@@ -8960,9 +8960,9 @@ relax_section (bfd *abfd, asection *sec, struct bfd_link_info *link_info)
+ 	     that here and adjust things accordingly.  */
+ 	  if (! elf_xtensa_ignore_discarded_relocs (sec)
+ 	      && elf_xtensa_action_discarded (sec) == PRETEND
+-	      && sec->sec_info_type != ELF_INFO_TYPE_STABS
++	      && sec->sec_info_type != SEC_INFO_TYPE_STABS
+ 	      && target_sec != NULL
+-	      && elf_discarded_section (target_sec))
++	      && discarded_section (target_sec))
+ 	    {
+ 	      /* It would be natural to call _bfd_elf_check_kept_section
+ 		 here, but it's not exported from elflink.c.  It's also a
+diff --git a/bfd/elf64-alpha.c b/bfd/elf64-alpha.c
+index 6076709..ddb1cd7 100644
+--- a/bfd/elf64-alpha.c
++++ b/bfd/elf64-alpha.c
+@@ -4106,7 +4106,7 @@ elf64_alpha_relocate_section_r (bfd *output_bfd ATTRIBUTE_UNUSED,
+ 	  sec = h->root.u.def.section;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend,
+ 					 elf64_alpha_howto_table + r_type,
+@@ -4263,7 +4263,7 @@ elf64_alpha_relocate_section (bfd *output_bfd, struct bfd_link_info *info,
+ 	     unless it has been done already.  */
+ 	  if ((sec->flags & SEC_MERGE)
+ 	      && ELF_ST_TYPE (sym->st_info) == STT_SECTION
+-	      && sec->sec_info_type == ELF_INFO_TYPE_MERGE
++	      && sec->sec_info_type == SEC_INFO_TYPE_MERGE
+ 	      && gotent
+ 	      && !gotent->reloc_xlated)
+ 	    {
+@@ -4315,7 +4315,7 @@ elf64_alpha_relocate_section (bfd *output_bfd, struct bfd_link_info *info,
+ 	  gotent = h->got_entries;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+@@ -4717,7 +4717,7 @@ elf64_alpha_relocate_section (bfd *output_bfd, struct bfd_link_info *info,
+ 
+ 	    if (r_symndx < symtab_hdr->sh_info
+ 		&& sec != NULL && howto->pc_relative
+-		&& elf_discarded_section (sec))
++		&& discarded_section (sec))
+ 	      break;
+ 
+ 	    if (h != NULL)
+diff --git a/bfd/elf64-hppa.c b/bfd/elf64-hppa.c
+index 057a92d..9d2dfcf 100644
+--- a/bfd/elf64-hppa.c
++++ b/bfd/elf64-hppa.c
+@@ -3919,7 +3919,7 @@ elf64_hppa_relocate_section (bfd *output_bfd,
+             }
+ 	}
+ 
+-      if (sym_sec != NULL && elf_discarded_section (sym_sec))
++      if (sym_sec != NULL && discarded_section (sym_sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf64-mmix.c b/bfd/elf64-mmix.c
+index ecc9ad0..9cc407f 100644
+--- a/bfd/elf64-mmix.c
++++ b/bfd/elf64-mmix.c
+@@ -1475,7 +1475,7 @@ mmix_elf_relocate_section (output_bfd, info, input_bfd, input_section,
+ 	  name = h->root.root.string;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf64-ppc.c b/bfd/elf64-ppc.c
+index 32a3430..52e9ce9 100644
+--- a/bfd/elf64-ppc.c
++++ b/bfd/elf64-ppc.c
+@@ -6852,7 +6852,7 @@ adjust_opd_syms (struct elf_link_hash_entry *h, void *inf ATTRIBUTE_UNUSED)
+ 	  if (dsec == NULL)
+ 	    {
+ 	      for (dsec = sym_sec->owner->sections; dsec; dsec = dsec->next)
+-		if (elf_discarded_section (dsec))
++		if (discarded_section (dsec))
+ 		  {
+ 		    ppc64_elf_tdata (sym_sec->owner)->deleted_section = dsec;
+ 		    break;
+@@ -7033,7 +7033,7 @@ ppc64_elf_edit_opd (struct bfd_link_info *info, bfd_boolean non_overlapping)
+       if (sec == NULL || sec->size == 0)
+ 	continue;
+ 
+-      if (sec->sec_info_type == ELF_INFO_TYPE_JUST_SYMS)
++      if (sec->sec_info_type == SEC_INFO_TYPE_JUST_SYMS)
+ 	continue;
+ 
+       if (sec->output_section == bfd_abs_section_ptr)
+@@ -8077,8 +8077,8 @@ ppc64_elf_edit_toc (struct bfd_link_info *info)
+       toc = bfd_get_section_by_name (ibfd, ".toc");
+       if (toc == NULL
+ 	  || toc->size == 0
+-	  || toc->sec_info_type == ELF_INFO_TYPE_JUST_SYMS
+-	  || elf_discarded_section (toc))
++	  || toc->sec_info_type == SEC_INFO_TYPE_JUST_SYMS
++	  || discarded_section (toc))
+ 	continue;
+ 
+       toc_relocs = NULL;
+@@ -8091,7 +8091,7 @@ ppc64_elf_edit_toc (struct bfd_link_info *info)
+       for (sec = ibfd->sections; sec != NULL; sec = sec->next)
+ 	{
+ 	  if (sec->reloc_count == 0
+-	      || !elf_discarded_section (sec)
++	      || !discarded_section (sec)
+ 	      || get_opd_info (sec)
+ 	      || (sec->flags & SEC_ALLOC) == 0
+ 	      || (sec->flags & SEC_DEBUGGING) != 0)
+@@ -8201,7 +8201,7 @@ ppc64_elf_edit_toc (struct bfd_link_info *info)
+ 		goto error_ret;
+ 
+ 	      if (sym_sec == NULL
+-		  || elf_discarded_section (sym_sec))
++		  || discarded_section (sym_sec))
+ 		continue;
+ 
+ 	      if (!SYMBOL_CALLS_LOCAL (info, h))
+@@ -8281,7 +8281,7 @@ ppc64_elf_edit_toc (struct bfd_link_info *info)
+ 	  int repeat;
+ 
+ 	  if (sec->reloc_count == 0
+-	      || elf_discarded_section (sec)
++	      || discarded_section (sec)
+ 	      || get_opd_info (sec)
+ 	      || (sec->flags & SEC_ALLOC) == 0
+ 	      || (sec->flags & SEC_DEBUGGING) != 0)
+@@ -8503,7 +8503,7 @@ ppc64_elf_edit_toc (struct bfd_link_info *info)
+ 	  for (sec = ibfd->sections; sec != NULL; sec = sec->next)
+ 	    {
+ 	      if (sec->reloc_count == 0
+-		  || elf_discarded_section (sec))
++		  || discarded_section (sec))
+ 		continue;
+ 
+ 	      relstart = _bfd_elf_link_read_relocs (ibfd, sec, NULL, NULL,
+@@ -12036,7 +12036,7 @@ ppc64_elf_relocate_section (bfd *output_bfd,
+ 	}
+       h = (struct ppc_link_hash_entry *) h_elf;
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend,
+ 					 ppc64_elf_howto_table[r_type],
+@@ -13865,7 +13865,7 @@ ppc64_elf_finish_dynamic_sections (bfd *output_bfd,
+ 
+ 
+   if (htab->glink_eh_frame != NULL
+-      && htab->glink_eh_frame->sec_info_type == ELF_INFO_TYPE_EH_FRAME
++      && htab->glink_eh_frame->sec_info_type == SEC_INFO_TYPE_EH_FRAME
+       && !_bfd_elf_write_section_eh_frame (output_bfd, info,
+ 					   htab->glink_eh_frame,
+ 					   htab->glink_eh_frame->contents))
+diff --git a/bfd/elf64-s390.c b/bfd/elf64-s390.c
+index 9884da0..e9138a6 100644
+--- a/bfd/elf64-s390.c
++++ b/bfd/elf64-s390.c
+@@ -2270,7 +2270,7 @@ elf_s390_relocate_section (bfd *output_bfd,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf64-sh64.c b/bfd/elf64-sh64.c
+index bbef2a2..d8f2120 100644
+--- a/bfd/elf64-sh64.c
++++ b/bfd/elf64-sh64.c
+@@ -1514,7 +1514,7 @@ sh_elf64_relocate_section (bfd *output_bfd ATTRIBUTE_UNUSED,
+ 	      _("Unexpected STO_SH5_ISA32 on local symbol is not handled"),
+ 	      input_bfd, input_section, rel->r_offset));
+ 
+-	  if (sec != NULL && elf_discarded_section (sec))
++	  if (sec != NULL && discarded_section (sec))
+ 	    /* Handled below.  */
+ 	    ;
+ 	  else if (info->relocatable)
+@@ -1657,7 +1657,7 @@ sh_elf64_relocate_section (bfd *output_bfd ATTRIBUTE_UNUSED,
+ 	    }
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elf64-x86-64.c b/bfd/elf64-x86-64.c
+index bdb3ae6..9d826e7 100644
+--- a/bfd/elf64-x86-64.c
++++ b/bfd/elf64-x86-64.c
+@@ -3062,7 +3062,7 @@ elf_x86_64_relocate_section (bfd *output_bfd,
+ 				   unresolved_reloc, warned);
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+@@ -4625,7 +4625,7 @@ elf_x86_64_finish_dynamic_sections (bfd *output_bfd,
+ 			     + PLT_FDE_START_OFFSET);
+ 	}
+       if (htab->plt_eh_frame->sec_info_type
+-	  == ELF_INFO_TYPE_EH_FRAME)
++	  == SEC_INFO_TYPE_EH_FRAME)
+ 	{
+ 	  if (! _bfd_elf_write_section_eh_frame (output_bfd, info,
+ 						 htab->plt_eh_frame,
+diff --git a/bfd/elflink.c b/bfd/elflink.c
+index 8556cec..da6be48 100644
+--- a/bfd/elflink.c
++++ b/bfd/elflink.c
+@@ -1,6 +1,6 @@
+ /* ELF linking support for BFD.
+    Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
+-   2005, 2006, 2007, 2008, 2009, 2010, 2011
++   2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
+    Free Software Foundation, Inc.
+ 
+    This file is part of BFD, the Binary File Descriptor library.
+@@ -937,7 +937,7 @@ _bfd_elf_merge_symbol (bfd *abfd,
+   /* Silently discard TLS symbols from --just-syms.  There's no way to
+      combine a static TLS block with a new TLS block for this executable.  */
+   if (ELF_ST_TYPE (sym->st_info) == STT_TLS
+-      && sec->sec_info_type == ELF_INFO_TYPE_JUST_SYMS)
++      && sec->sec_info_type == SEC_INFO_TYPE_JUST_SYMS)
+     {
+       *skip = TRUE;
+       return TRUE;
+@@ -2708,7 +2708,7 @@ _bfd_elf_link_sec_merge_syms (struct elf_link_hash_entry *h, void *data)
+   if ((h->root.type == bfd_link_hash_defined
+        || h->root.type == bfd_link_hash_defweak)
+       && ((sec = h->root.u.def.section)->flags & SEC_MERGE)
+-      && sec->sec_info_type == ELF_INFO_TYPE_MERGE)
++      && sec->sec_info_type == SEC_INFO_TYPE_MERGE)
+     {
+       bfd *output_bfd = (bfd *) data;
+ 
+@@ -3499,7 +3499,7 @@ elf_link_add_object_symbols (bfd *abfd, struct bfd_link_info *info)
+       /* ld --just-symbols and dynamic objects don't mix very well.
+ 	 ld shouldn't allow it.  */
+       if ((s = abfd->sections) != NULL
+-	  && s->sec_info_type == ELF_INFO_TYPE_JUST_SYMS)
++	  && s->sec_info_type == SEC_INFO_TYPE_JUST_SYMS)
+ 	abort ();
+ 
+       /* If this dynamic lib was specified on the command line with
+@@ -3896,7 +3896,7 @@ error_free_dyn:
+ 	  sec = bfd_section_from_elf_index (abfd, isym->st_shndx);
+ 	  if (sec == NULL)
+ 	    sec = bfd_abs_section_ptr;
+-	  else if (elf_discarded_section (sec))
++	  else if (discarded_section (sec))
+ 	    {
+ 	      /* Symbols from discarded section are undefined.  We keep
+ 		 its visibility.  */
+@@ -4861,7 +4861,7 @@ error_free_dyn:
+ 					       &string_offset))
+ 		  goto error_return;
+ 		if (secdata->sec_info)
+-		  stab->sec_info_type = ELF_INFO_TYPE_STABS;
++		  stab->sec_info_type = SEC_INFO_TYPE_STABS;
+ 	    }
+ 	}
+     }
+@@ -6644,25 +6644,14 @@ bfd_elf_size_dynsym_hash_dynstr (bfd *output_bfd, struct bfd_link_info *info)
+   return TRUE;
+ }
+ 
+-/* Indicate that we are only retrieving symbol values from this
+-   section.  */
+-
+-void
+-_bfd_elf_link_just_syms (asection *sec, struct bfd_link_info *info)
+-{
+-  if (is_elf_hash_table (info->hash))
+-    sec->sec_info_type = ELF_INFO_TYPE_JUST_SYMS;
+-  _bfd_generic_link_just_syms (sec, info);
+-}
+-
+ /* Make sure sec_info_type is cleared if sec_info is cleared too.  */
+ 
+ static void
+ merge_sections_remove_hook (bfd *abfd ATTRIBUTE_UNUSED,
+ 			    asection *sec)
+ {
+-  BFD_ASSERT (sec->sec_info_type == ELF_INFO_TYPE_MERGE);
+-  sec->sec_info_type = ELF_INFO_TYPE_NONE;
++  BFD_ASSERT (sec->sec_info_type == SEC_INFO_TYPE_MERGE);
++  sec->sec_info_type = SEC_INFO_TYPE_NONE;
+ }
+ 
+ /* Finish SHF_MERGE section merging.  */
+@@ -6690,7 +6679,7 @@ _bfd_elf_merge_sections (bfd *abfd, struct bfd_link_info *info)
+ 					  sec, &secdata->sec_info))
+ 	      return FALSE;
+ 	    else if (secdata->sec_info)
+-	      sec->sec_info_type = ELF_INFO_TYPE_MERGE;
++	      sec->sec_info_type = SEC_INFO_TYPE_MERGE;
+ 	  }
+ 
+   if (elf_hash_table (info)->merge_info != NULL)
+@@ -8708,7 +8697,7 @@ elf_link_output_extsym (struct bfd_hash_entry *bh, void *data)
+   else if ((h->root.type == bfd_link_hash_defined
+ 	    || h->root.type == bfd_link_hash_defweak)
+ 	   && ((finfo->info->strip_discarded
+-		&& elf_discarded_section (h->root.u.def.section))
++		&& discarded_section (h->root.u.def.section))
+ 	       || (h->root.u.def.section->owner != NULL
+ 		   && (h->root.u.def.section->owner->flags & BFD_PLUGIN) != 0)))
+     strip = TRUE;
+@@ -9007,8 +8996,8 @@ elf_section_ignore_discarded_relocs (asection *sec)
+ 
+   switch (sec->sec_info_type)
+     {
+-    case ELF_INFO_TYPE_STABS:
+-    case ELF_INFO_TYPE_EH_FRAME:
++    case SEC_INFO_TYPE_STABS:
++    case SEC_INFO_TYPE_EH_FRAME:
+       return TRUE;
+     default:
+       break;
+@@ -9193,7 +9182,7 @@ elf_link_input_bfd (struct elf_final_link_info *finfo, bfd *input_bfd)
+ 	      *ppsection = NULL;
+ 	      continue;
+ 	    }
+-	  else if (isec->sec_info_type == ELF_INFO_TYPE_MERGE
++	  else if (isec->sec_info_type == SEC_INFO_TYPE_MERGE
+ 		   && ELF_ST_TYPE (isym->st_info) != STT_SECTION)
+ 	    isym->st_value =
+ 	      _bfd_merged_section_offset (output_bfd, &isec,
+@@ -9537,7 +9526,7 @@ elf_link_input_bfd (struct elf_final_link_info *finfo, bfd *input_bfd)
+ 		{
+ 		  /* Complain if the definition comes from a
+ 		     discarded section.  */
+-		  if ((sec = *ps) != NULL && elf_discarded_section (sec))
++		  if ((sec = *ps) != NULL && discarded_section (sec))
+ 		    {
+ 		      BFD_ASSERT (r_symndx != STN_UNDEF);
+ 		      if (action_discarded & COMPLAIN)
+@@ -9874,19 +9863,19 @@ elf_link_input_bfd (struct elf_final_link_info *finfo, bfd *input_bfd)
+ 	}
+       else switch (o->sec_info_type)
+ 	{
+-	case ELF_INFO_TYPE_STABS:
++	case SEC_INFO_TYPE_STABS:
+ 	  if (! (_bfd_write_section_stabs
+ 		 (output_bfd,
+ 		  &elf_hash_table (finfo->info)->stab_info,
+ 		  o, &elf_section_data (o)->sec_info, contents)))
+ 	    return FALSE;
+ 	  break;
+-	case ELF_INFO_TYPE_MERGE:
++	case SEC_INFO_TYPE_MERGE:
+ 	  if (! _bfd_write_merged_section (output_bfd, o,
+ 					   elf_section_data (o)->sec_info))
+ 	    return FALSE;
+ 	  break;
+-	case ELF_INFO_TYPE_EH_FRAME:
++	case SEC_INFO_TYPE_EH_FRAME:
+ 	  {
+ 	    if (! _bfd_elf_write_section_eh_frame (output_bfd, finfo->info,
+ 						   o, contents))
+@@ -12415,7 +12404,7 @@ bfd_elf_reloc_symbol_deleted_p (bfd_vma offset, void *cookie)
+ 
+ 	  if ((h->root.type == bfd_link_hash_defined
+ 	       || h->root.type == bfd_link_hash_defweak)
+-	      && elf_discarded_section (h->root.u.def.section))
++	      && discarded_section (h->root.u.def.section))
+ 	    return TRUE;
+ 	  else
+ 	    return FALSE;
+@@ -12431,7 +12420,7 @@ bfd_elf_reloc_symbol_deleted_p (bfd_vma offset, void *cookie)
+ 	  /* Need to: get the symbol; get the section.  */
+ 	  isym = &rcookie->locsyms[r_symndx];
+ 	  isec = bfd_section_from_elf_index (rcookie->abfd, isym->st_shndx);
+-	  if (isec != NULL && elf_discarded_section (isec))
++	  if (isec != NULL && discarded_section (isec))
+ 	    return TRUE;
+ 	}
+       return FALSE;
+@@ -12482,7 +12471,7 @@ bfd_elf_discard_info (bfd *output_bfd, struct bfd_link_info *info)
+       if (stab != NULL
+ 	  && (stab->size == 0
+ 	      || bfd_is_abs_section (stab->output_section)
+-	      || stab->sec_info_type != ELF_INFO_TYPE_STABS))
++	      || stab->sec_info_type != SEC_INFO_TYPE_STABS))
+ 	stab = NULL;
+ 
+       if (stab == NULL
+diff --git a/bfd/elfnn-ia64.c b/bfd/elfnn-ia64.c
+index 3e2ee0b..0f6b720 100644
+--- a/bfd/elfnn-ia64.c
++++ b/bfd/elfnn-ia64.c
+@@ -530,7 +530,7 @@ elfNN_ia64_relax_section (bfd *abfd, asection *sec,
+ 	  symtype = h->type;
+ 	}
+ 
+-      if (tsec->sec_info_type == ELF_INFO_TYPE_MERGE)
++      if (tsec->sec_info_type == SEC_INFO_TYPE_MERGE)
+ 	{
+ 	  /* At this stage in linking, no SEC_MERGE symbol has been
+ 	     adjusted, so all references to such symbols need to be
+@@ -3861,7 +3861,7 @@ elfNN_ia64_relocate_section (bfd *output_bfd,
+ 	  if (!info->relocatable
+ 	      && (sym_sec->flags & SEC_MERGE) != 0
+ 	      && ELF_ST_TYPE (sym->st_info) == STT_SECTION
+-	      && sym_sec->sec_info_type == ELF_INFO_TYPE_MERGE)
++	      && sym_sec->sec_info_type == SEC_INFO_TYPE_MERGE)
+ 	    {
+ 	      struct elfNN_ia64_local_hash_entry *loc_h;
+ 
+@@ -3919,7 +3919,7 @@ elfNN_ia64_relocate_section (bfd *output_bfd,
+ 	    continue;
+ 	}
+ 
+-      if (sym_sec != NULL && elf_discarded_section (sym_sec))
++      if (sym_sec != NULL && discarded_section (sym_sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elfxx-mips.c b/bfd/elfxx-mips.c
+index fa906cd..7911050 100644
+--- a/bfd/elfxx-mips.c
++++ b/bfd/elfxx-mips.c
+@@ -9385,7 +9385,7 @@ _bfd_mips_elf_relocate_section (bfd *output_bfd, struct bfd_link_info *info,
+ 	    sec = h->root.u.def.section;
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elfxx-sparc.c b/bfd/elfxx-sparc.c
+index 9a15124..f3c631e 100644
+--- a/bfd/elfxx-sparc.c
++++ b/bfd/elfxx-sparc.c
+@@ -2970,7 +2970,7 @@ _bfd_sparc_elf_relocate_section (bfd *output_bfd,
+ 	    }
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/elfxx-tilegx.c b/bfd/elfxx-tilegx.c
+index c484562..e1c8946 100644
+--- a/bfd/elfxx-tilegx.c
++++ b/bfd/elfxx-tilegx.c
+@@ -2908,7 +2908,7 @@ tilegx_elf_relocate_section (bfd *output_bfd, struct bfd_link_info *info,
+ 	    }
+ 	}
+ 
+-      if (sec != NULL && elf_discarded_section (sec))
++      if (sec != NULL && discarded_section (sec))
+ 	RELOC_AGAINST_DISCARDED_SECTION (info, input_bfd, input_section,
+ 					 rel, relend, howto, contents);
+ 
+diff --git a/bfd/linker.c b/bfd/linker.c
+index 7a01e11..e5d20b2 100644
+--- a/bfd/linker.c
++++ b/bfd/linker.c
+@@ -1,6 +1,6 @@
+ /* linker.c -- BFD linker routines
+    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+-   2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
++   2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
+    Free Software Foundation, Inc.
+    Written by Steve Chamberlain and Ian Lance Taylor, Cygnus Support
+ 
+@@ -810,6 +810,7 @@ void
+ _bfd_generic_link_just_syms (asection *sec,
+ 			     struct bfd_link_info *info ATTRIBUTE_UNUSED)
+ {
++  sec->sec_info_type = SEC_INFO_TYPE_JUST_SYMS;
+   sec->output_section = bfd_abs_section_ptr;
+   sec->output_offset = sec->vma;
+ }
+diff --git a/bfd/reloc.c b/bfd/reloc.c
+index ef55cc3..e3f0343 100644
+--- a/bfd/reloc.c
++++ b/bfd/reloc.c
+@@ -6235,7 +6235,7 @@ bfd_generic_get_relocated_section_contents (bfd *abfd,
+ 	  bfd_reloc_status_type r;
+ 
+ 	  symbol = *(*parent)->sym_ptr_ptr;
+-	  if (symbol->section && elf_discarded_section (symbol->section))
++	  if (symbol->section && discarded_section (symbol->section))
+ 	    {
+ 	      bfd_byte *p;
+ 	      static reloc_howto_type none_howto
+diff --git a/bfd/section.c b/bfd/section.c
+index 7c1f750..e60f247 100644
+--- a/bfd/section.c
++++ b/bfd/section.c
+@@ -382,11 +382,11 @@ CODE_FRAGMENT
+ .
+ .  {* Type of sec_info information.  *}
+ .  unsigned int sec_info_type:3;
+-.#define ELF_INFO_TYPE_NONE      0
+-.#define ELF_INFO_TYPE_STABS     1
+-.#define ELF_INFO_TYPE_MERGE     2
+-.#define ELF_INFO_TYPE_EH_FRAME  3
+-.#define ELF_INFO_TYPE_JUST_SYMS 4
++.#define SEC_INFO_TYPE_NONE      0
++.#define SEC_INFO_TYPE_STABS     1
++.#define SEC_INFO_TYPE_MERGE     2
++.#define SEC_INFO_TYPE_EH_FRAME  3
++.#define SEC_INFO_TYPE_JUST_SYMS 4
+ .
+ .  {* Nonzero if this section uses RELA relocations, rather than REL.  *}
+ .  unsigned int use_rela_p:1;
+diff --git a/ld/emultempl/armelf.em b/ld/emultempl/armelf.em
+index d29da59..7631474 100644
+--- a/ld/emultempl/armelf.em
++++ b/ld/emultempl/armelf.em
+@@ -240,7 +240,7 @@ build_section_lists (lang_statement_union_type *statement)
+     {
+       asection *i = statement->input_section.section;
+ 
+-      if (!((lang_input_statement_type *) i->owner->usrdata)->just_syms_flag
++      if (i->sec_info_type != SEC_INFO_TYPE_JUST_SYMS
+ 	  && (i->flags & SEC_EXCLUDE) == 0
+ 	  && i->output_section != NULL
+ 	  && i->output_section->owner == link_info.output_bfd)
+@@ -299,7 +299,7 @@ gld${EMULATION_NAME}_after_allocation (void)
+ 		  && elf_section_type (sec) == SHT_PROGBITS
+ 		  && (elf_section_flags (sec) & SHF_EXECINSTR) != 0
+ 		  && (sec->flags & SEC_EXCLUDE) == 0
+-		  && sec->sec_info_type != ELF_INFO_TYPE_JUST_SYMS
++		  && sec->sec_info_type != SEC_INFO_TYPE_JUST_SYMS
+ 		  && out_sec != bfd_abs_section_ptr)
+ 		{
+ 		  if (sec_count == list_size)
+diff --git a/ld/emultempl/hppaelf.em b/ld/emultempl/hppaelf.em
+index 1137ba2..6258bf4 100644
+--- a/ld/emultempl/hppaelf.em
++++ b/ld/emultempl/hppaelf.em
+@@ -229,7 +229,7 @@ build_section_lists (lang_statement_union_type *statement)
+     {
+       asection *i = statement->input_section.section;
+ 
+-      if (!((lang_input_statement_type *) i->owner->usrdata)->just_syms_flag
++      if (i->sec_info_type != SEC_INFO_TYPE_JUST_SYMS
+ 	  && (i->flags & SEC_EXCLUDE) == 0
+ 	  && i->output_section != NULL
+ 	  && i->output_section->owner == link_info.output_bfd)
+diff --git a/ld/emultempl/ppc64elf.em b/ld/emultempl/ppc64elf.em
+index 92a468f..52b9f05 100644
+--- a/ld/emultempl/ppc64elf.em
++++ b/ld/emultempl/ppc64elf.em
+@@ -428,7 +428,7 @@ build_toc_list (lang_statement_union_type *statement)
+     {
+       asection *i = statement->input_section.section;
+ 
+-      if (!((lang_input_statement_type *) i->owner->usrdata)->just_syms_flag
++      if (i->sec_info_type != SEC_INFO_TYPE_JUST_SYMS
+ 	  && (i->flags & SEC_EXCLUDE) == 0
+ 	  && i->output_section == toc_section)
+ 	{
+@@ -446,7 +446,7 @@ build_section_lists (lang_statement_union_type *statement)
+     {
+       asection *i = statement->input_section.section;
+ 
+-      if (!((lang_input_statement_type *) i->owner->usrdata)->just_syms_flag
++      if (i->sec_info_type != SEC_INFO_TYPE_JUST_SYMS
+ 	  && (i->flags & SEC_EXCLUDE) == 0
+ 	  && i->output_section != NULL
+ 	  && i->output_section->owner == link_info.output_bfd)
+diff --git a/ld/emultempl/tic6xdsbt.em b/ld/emultempl/tic6xdsbt.em
+index e287005..fd7a12b 100644
+--- a/ld/emultempl/tic6xdsbt.em
++++ b/ld/emultempl/tic6xdsbt.em
+@@ -122,7 +122,7 @@ gld${EMULATION_NAME}_after_allocation (void)
+ 		  && elf_section_type (sec) == SHT_PROGBITS
+ 		  && (elf_section_flags (sec) & SHF_EXECINSTR) != 0
+ 		  && (sec->flags & SEC_EXCLUDE) == 0
+-		  && sec->sec_info_type != ELF_INFO_TYPE_JUST_SYMS
++		  && sec->sec_info_type != SEC_INFO_TYPE_JUST_SYMS
+ 		  && out_sec != bfd_abs_section_ptr)
+ 		{
+ 		  if (sec_count == list_size)
+diff --git a/ld/ldlang.c b/ld/ldlang.c
+index 2c56b56..7ecbae2 100644
+--- a/ld/ldlang.c
++++ b/ld/ldlang.c
+@@ -4648,7 +4648,7 @@ size_input_section
+   lang_input_section_type *is = &((*this_ptr)->input_section);
+   asection *i = is->section;
+ 
+-  if (!((lang_input_statement_type *) i->owner->usrdata)->just_syms_flag
++  if (i->sec_info_type != SEC_INFO_TYPE_JUST_SYMS
+       && (i->flags & SEC_EXCLUDE) == 0)
+     {
+       unsigned int alignment_needed;
+diff --git a/ld/ldwrite.c b/ld/ldwrite.c
+index b7a1469..2503d1f 100644
+--- a/ld/ldwrite.c
++++ b/ld/ldwrite.c
+@@ -1,6 +1,6 @@
+ /* ldwrite.c -- write out the linked file
+    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000, 2002,
+-   2003, 2004, 2005, 2006, 2007, 2008, 2010
++   2003, 2004, 2005, 2006, 2007, 2008, 2010, 2012
+    Free Software Foundation, Inc.
+    Written by Steve Chamberlain sac@cygnus.com
+ 
+@@ -240,7 +240,7 @@ build_link_order (lang_statement_union_type *statement)
+ 	   attached */
+ 	asection *i = statement->input_section.section;
+ 
+-	if (!((lang_input_statement_type *) i->owner->usrdata)->just_syms_flag
++	if (i->sec_info_type != SEC_INFO_TYPE_JUST_SYMS
+ 	    && (i->flags & SEC_EXCLUDE) == 0)
+ 	  {
+ 	    asection *output_section = i->output_section;
+-- 
+1.7.9.5
+

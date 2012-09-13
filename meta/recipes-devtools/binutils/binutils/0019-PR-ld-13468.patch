@@ -1,0 +1,46 @@
+Upstream-Status: Backport
+
+From 4c362e4511c4046e230fc9e330bf086753f04338 Mon Sep 17 00:00:00 2001
+From: Alan Modra <amodra@bigpond.net.au>
+Date: Sat, 3 Dec 2011 10:29:17 +0000
+Subject: [PATCH 019/262] 	PR ld/13468 	* elflink.c
+ (bfd_elf_final_link): Don't segfault when checking 
+ for DT_TEXTREL and .dynamic does not exist.
+
+---
+ bfd/ChangeLog |    6 ++++++
+ bfd/elflink.c |    9 +++------
+ 2 files changed, 9 insertions(+), 6 deletions(-)
+
+ 2011-12-03  Alan Modra  <amodra@gmail.com>
+ 
+	PR ld/13468
+	* elflink.c (bfd_elf_final_link): Don't segfault when checking
+	for DT_TEXTREL and .dynamic does not exist.
+
+diff --git a/bfd/elflink.c b/bfd/elflink.c
+index fc4266b..8556cec 100644
+--- a/bfd/elflink.c
++++ b/bfd/elflink.c
+@@ -11188,15 +11188,12 @@ bfd_elf_final_link (bfd *abfd, struct bfd_link_info *info)
+ 	goto error_return;
+ 
+       /* Check for DT_TEXTREL (late, in case the backend removes it).  */
+-      if ((info->warn_shared_textrel && info->shared)
+-	  || info->error_textrel)
++      if (((info->warn_shared_textrel && info->shared)
++	   || info->error_textrel)
++	  && (o = bfd_get_section_by_name (dynobj, ".dynamic")) != NULL)
+ 	{
+ 	  bfd_byte *dyncon, *dynconend;
+ 
+-	  /* Fix up .dynamic entries.  */
+-	  o = bfd_get_section_by_name (dynobj, ".dynamic");
+-	  BFD_ASSERT (o != NULL);
+-
+ 	  dyncon = o->contents;
+ 	  dynconend = o->contents + o->size;
+ 	  for (; dyncon < dynconend; dyncon += bed->s->sizeof_dyn)
+-- 
+1.7.9.5
+

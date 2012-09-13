@@ -1,4 +1,4 @@
-PR = "r15"
+PR = "r16"
 
 LIC_FILES_CHKSUM="\
     file://src-release;endline=17;md5=4830a9ef968f3b18dd5e9f2c00db2d35\
@@ -32,6 +32,20 @@ SRC_URI = "\
      file://mips64-default-ld-emulation.patch \
      file://0001-PR-ld-13470.patch \
      file://rpath-sysroot.patch \
+     file://0006-mips-dis.c-print_insn_micromips-Rename-local-variabl.patch \
+     file://0019-PR-ld-13468.patch \
+     file://0028-Backport-from-mainline.patch \
+     file://0035-2011-12-19-Chung-Lin-Tang-cltang-codesourcery.com.patch \
+     file://0036-2011-12-19-Chung-Lin-Tang-cltang-codesourcery.com.patch \
+     file://0037-2011-12-19-Chung-Lin-Tang-cltang-codesourcery.com.patch \
+     file://0038-Copy-from-mainline-to-binutils-2.22-branch.patch \
+     file://0039-emulparams-elf32bmip.sh-OTHER_SECTIONS-Put-.mdebug.-.patch \
+     file://0052-gas.patch \
+     file://0055-Remove-ABI_64_P-check-on-R_X86_64_PCXX.patch \
+     file://0078-PR-binutils-13622.patch \
+     file://0144-timer.cc-include-unistd.h.patch \
+     file://0166-2012-04-27-Doug-Kwan-dougkwan-google.com.patch \
+     file://0182-PR-ld-13991.patch \
      "
 
 SRC_URI[md5sum] = "ee0f10756c84979622b992a4a61ea3f5"
