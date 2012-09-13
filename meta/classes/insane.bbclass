@@ -140,6 +140,20 @@ def package_qa_handle_error(error_class, error_msg, d):
         bb.warn("QA Issue: %s" % error_msg)
         return True
 
+QAPATHTEST[libexec] = "package_qa_check_libexec"
+def package_qa_check_libexec(path,name, d, elf, messages):
+
+    # Skip the case where the default is explicitly /usr/libexec
+    libexec = d.getVar('libexecdir', True)
+    if libexec == "/usr/libexec":
+        return True
+
+    if 'libexec' in path.split(os.path.sep):
+        messages.append("%s: %s is using libexec please relocate to %s" % (name, package_qa_clean_path(path, d), libexec))
+        return False
+
+    return True
+
 QAPATHTEST[rpaths] = "package_qa_check_rpath"
 def package_qa_check_rpath(file,name, d, elf, messages):
     """
