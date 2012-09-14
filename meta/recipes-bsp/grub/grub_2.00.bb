@@ -13,12 +13,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 DEPENDS = "autogen-native flex-native"
 RDEPENDS_${PN} = "diffutils freetype"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
           file://grub-install.in.patch \
           file://grub-2.00-fpmath-sse-387-fix.patch \
           file://remove-gets.patch \
+          file://check-if-liblzma-is-disabled.patch \
           file://40_custom"
 
 SRC_URI[md5sum] = "e927540b6eda8b024fb0391eeaa4091c"
@@ -32,7 +33,8 @@ FILES_${PN}-dbg += "${libdir}/${BPN}/i386-pc/.debug"
 inherit autotools
 inherit gettext
 
-EXTRA_OECONF = "--with-platform=pc --disable-grub-mkfont --program-prefix="""
+EXTRA_OECONF = "--with-platform=pc --disable-grub-mkfont --program-prefix="" \
+               --enable-liblzma=no --enable-device-mapper=no --enable-libzfs=no"
 
 do_install_append () {
     install -d ${D}${sysconfdir}/grub.d

@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 # FIXME: We should be able to optionally drop freetype as a dependency
 DEPENDS = "autogen-native"
 RDEPENDS_${PN} = "diffutils freetype"
-PR = "r0"
+PR = "r1"
 
 # Native packages do not normally rebuild when the target changes.
 # Ensure this is built once per HOST-TARGET pair.
@@ -26,6 +26,7 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
            file://grub-2.00-fpmath-sse-387-fix.patch \
 	   file://grub-2.00-fix-enable_execute_stack-check.patch \
            file://grub-2.00-disable-help2man.patch \
+           file://check-if-liblzma-is-disabled.patch \
 	   file://grub-no-unused-result.patch \
           "
 SRC_URI[md5sum] = "e927540b6eda8b024fb0391eeaa4091c"
@@ -59,7 +60,8 @@ inherit native
 inherit deploy
 
 EXTRA_OECONF = "--with-platform=efi --disable-grub-mkfont \
-                --target=${GRUB_TARGET} --enable-efiemu=no --program-prefix=''"
+                --target=${GRUB_TARGET} --enable-efiemu=no --program-prefix='' \
+                --enable-liblzma=no --enable-device-mapper=no --enable-libzfs=no"
 
 do_mkimage() {
 	./grub-mkimage -p /EFI/BOOT -d ./grub-core/ \
