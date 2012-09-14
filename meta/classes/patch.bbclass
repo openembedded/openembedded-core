@@ -139,11 +139,11 @@ python patch_do_patch() {
     path = os.getenv('PATH')
     os.putenv('PATH', d.getVar('PATH', True))
 
-    import shutil
-    process_tmpdir = os.path.join('/tmp', str(os.getpid()))
-    if os.path.exists(process_tmpdir):
-        shutil.rmtree(process_tmpdir)
-    os.makedirs(process_tmpdir)
+    # We must use one TMPDIR per process so that the "patch" processes
+    # don't generate the same temp file name.
+
+    import tempfile
+    process_tmpdir = tempfile.mkdtemp()
     os.environ['TMPDIR'] = process_tmpdir
 
     for patch in src_patches(d):
@@ -168,15 +168,15 @@ python patch_do_patch() {
         try:
             patchset.Import({"file":local, "strippath": parm['striplevel']}, True)
         except Exception as exc:
-            shutil.rmtree(process_tmpdir)
+            bb.utils.remove(process_tmpdir, True)
             bb.fatal(str(exc))
         try:
             resolver.Resolve()
         except bb.BBHandledException as e:
-            shutil.rmtree(process_tmpdir)
+            bb.utils.remove(process_tmpdir, True)
             bb.fatal(str(e))
 
-    shutil.rmtree(process_tmpdir)
+    bb.utils.remove(process_tmpdir, True)
 }
 patch_do_patch[vardepsexclude] = "PATCHRESOLVE"
 
