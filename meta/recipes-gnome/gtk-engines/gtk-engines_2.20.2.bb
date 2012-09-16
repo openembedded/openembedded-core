@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=2d5025d4aa3495befef8f17206a5b0a1"
 SECTION = "x11/base"
 DEPENDS = "gtk+"
 
-PR = "r2"
+PR = "r3"
 
 PACKAGES_DYNAMIC = "gtk-engine-* gtk-theme-*"
 

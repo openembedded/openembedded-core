@@ -14,7 +14,7 @@ SECTION = "x11"
 DEPENDS = "glib-2.0 dbus bluez4 dbus-glib libxslt"
 
 SRC_URI = "http://gypsy.freedesktop.org/releases/gypsy-${PV}.tar.gz"
-PR = "r0"
+PR = "r1"
 
 inherit autotools pkgconfig
 

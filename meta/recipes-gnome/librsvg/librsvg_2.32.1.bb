@@ -11,7 +11,7 @@ DEPENDS = "gtk+ libcroco cairo libxml2"
 DEPENDS_virtclass-native = "cairo-native pango-native gdk-pixbuf-native"
 BBCLASSEXTEND = "native"
 
-PR = "r9"
+PR = "r10"
 
 inherit autotools pkgconfig gnome gtk-doc
 
