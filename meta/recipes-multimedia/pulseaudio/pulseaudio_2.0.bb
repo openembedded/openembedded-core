@@ -1,6 +1,6 @@
 require pulseaudio.inc
 
-PR = "r9"
+PR = "r0"
 
 DEPENDS += "libjson gdbm speex libxml-parser-perl-native"
 
@@ -8,11 +8,10 @@ inherit gettext perlnative
 
 SRC_URI = "http://freedesktop.org/software/pulseaudio/releases/pulseaudio-${PV}.tar.xz \
   file://volatiles.04_pulse \
-  file://pulseaudio_fix_for_x32.patch \
 "
 
-SRC_URI[md5sum] = "17d21df798cee407b769c6355fae397a"
-SRC_URI[sha256sum] = "6fe531136f6ebce2d35872a2d2c914278cdc5dcdd5eea516dc52c81f9001f5ee"
+SRC_URI[md5sum] = "9bbde657c353fe675c3b693054175a8e"
+SRC_URI[sha256sum] = "28b42edd42f4879a6884af5f0ec11801ac001eb7582881215b36649aa37e2061"
 
 do_compile_prepend() {
     cd ${S}
