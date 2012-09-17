@@ -63,6 +63,10 @@ SS = "${TMPDIR}/stamps/work-shared/gcc-${PV}-${PR}"
 do_fetch[stamp-base] = "${SS}"
 do_unpack[stamp-base] = "${SS}"
 do_patch[stamp-base] = "${SS}"
+SSCLEAN = "${TMPDIR}/stamps/work-shared/gcc-*-*"
+do_fetch[stamp-base-clean] = "${SSCLEAN}"
+do_unpack[stamp-base-clean] = "${SSCLEAN}"
+do_patch[stamp-base-clean] = "${SSCLEAN}"
 
 # SW means Shared Work directory
 SW = "${TMPDIR}/work-shared/gcc-${PV}-${PR}"
