@@ -10,7 +10,7 @@ SRC_URI = "http://gupnp.org/sites/all/files/sources/${BPN}-${PV}.tar.gz"
 SRC_URI[md5sum] = "021bb237741532af4bca50157ff326e4"
 SRC_URI[sha256sum] = "f01a1f4fd36ce161a3df29fa83e1a0a2fb40d3c9f30f6b403e7791688ad24cfe"
 
-PR = "r1"
+PR = "r2"
 
 EXTRA_OECONF = "--disable-introspection"
 

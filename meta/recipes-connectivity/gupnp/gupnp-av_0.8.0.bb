@@ -7,7 +7,7 @@ DEPENDS = "gupnp"
 
 SRC_URI = "http://gupnp.org/sites/all/files/sources/${BPN}-${PV}.tar.gz"
 
-PR = "r1"
+PR = "r2"
 
 inherit autotools pkgconfig
 
