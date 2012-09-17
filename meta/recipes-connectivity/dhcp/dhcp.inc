@@ -56,6 +56,8 @@ do_install_append () {
 PACKAGES += "dhcp-server dhcp-server-config dhcp-client dhcp-relay dhcp-omshell"
 
 FILES_${PN} = ""
+RDEPENDS_${PN}-dev = ""
+RDEPENDS_${PN}-staticdev = ""
 
 FILES_dhcp-server = "${sbindir}/dhcpd ${sysconfdir}/init.d/dhcp-server"
 RRECOMMENDS_dhcp-server = "dhcp-server-config"
