@@ -27,7 +27,7 @@ class Registry(oe.classutils.ClassRegistry):
 class Terminal(Popen):
     __metaclass__ = Registry
 
-    def __init__(self, sh_cmd, title=None, env=None):
+    def __init__(self, sh_cmd, title=None, env=None, d=None):
         fmt_sh_cmd = self.format_command(sh_cmd, title)
         try:
             Popen.__init__(self, fmt_sh_cmd, env=env)
@@ -46,7 +46,7 @@ class Terminal(Popen):
             return [element.format(**fmt) for element in self.command]
 
 class XTerminal(Terminal):
-    def __init__(self, sh_cmd, title=None, env=None):
+    def __init__(self, sh_cmd, title=None, env=None, d=None):
         Terminal.__init__(self, sh_cmd, title, env)
         if not os.environ.get('DISPLAY'):
             raise UnsupportedTerminal(self.name)
@@ -59,7 +59,7 @@ class Xfce(XTerminal):
     command = 'Terminal -T "{title}" -e "{command}"'
     priority = 2
 
-    def __init__(self, command, title=None, env=None):
+    def __init__(self, command, title=None, env=None, d=None):
         # Upstream binary name is Terminal but Debian/Ubuntu use
         # xfce4-terminal to avoid possible(?) conflicts
         distro = distro_name()
@@ -67,20 +67,20 @@ class Xfce(XTerminal):
             cmd = 'xfce4-terminal -T "{title}" -e "{command}"'
         else:
             cmd = command
-        XTerminal.__init__(self, cmd, title, env)
+        XTerminal.__init__(self, cmd, title, env, d)
 
 class Konsole(XTerminal):
     command = 'konsole -T "{title}" -e {command}'
     priority = 2
 
-    def __init__(self, sh_cmd, title=None, env=None):
+    def __init__(self, sh_cmd, title=None, env=None, d=None):
         # Check version
         vernum = check_konsole_version("konsole")
         if vernum:
             if vernum.split('.')[0] == "2":
                 logger.debug(1, 'Konsole from KDE 4.x will not work as devshell, skipping')
                 raise UnsupportedTerminal(self.name)
-        XTerminal.__init__(self, sh_cmd, title, env)
+        XTerminal.__init__(self, sh_cmd, title, env, d)
 
 class XTerm(XTerminal):
     command = 'xterm -T "{title}" -e {command}'
@@ -93,7 +93,7 @@ class Rxvt(XTerminal):
 class Screen(Terminal):
     command = 'screen -D -m -t "{title}" -S devshell {command}'
 
-    def __init__(self, sh_cmd, title=None, env=None):
+    def __init__(self, sh_cmd, title=None, env=None, d=None):
         s_id = "devshell_%i" % os.getpid()
         self.command = "screen -D -m -t \"{title}\" -S %s {command}" % s_id
         Terminal.__init__(self, sh_cmd, title, env)
@@ -104,18 +104,18 @@ class Screen(Terminal):
 def prioritized():
     return Registry.prioritized()
 
-def spawn_preferred(sh_cmd, title=None, env=None):
+def spawn_preferred(sh_cmd, title=None, env=None, d=None):
     """Spawn the first supported terminal, by priority"""
     for terminal in prioritized():
         try:
-            spawn(terminal.name, sh_cmd, title, env)
+            spawn(terminal.name, sh_cmd, title, env, d)
             break
         except UnsupportedTerminal:
             continue
     else:
         raise NoSupportedTerminals()
 
-def spawn(name, sh_cmd, title=None, env=None):
+def spawn(name, sh_cmd, title=None, env=None, d=None):
     """Spawn the specified terminal, by name"""
     logger.debug(1, 'Attempting to spawn terminal "%s"', name)
     try:
@@ -123,7 +123,7 @@ def spawn(name, sh_cmd, title=None, env=None):
     except KeyError:
         raise UnsupportedTerminal(name)
 
-    pipe = terminal(sh_cmd, title, env)
+    pipe = terminal(sh_cmd, title, env, d)
     output = pipe.communicate()[0]
     if pipe.returncode != 0:
         raise ExecutionError(sh_cmd, pipe.returncode, output)

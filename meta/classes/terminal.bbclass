@@ -25,7 +25,7 @@ def oe_terminal(command, title, d):
         bb.fatal('Devshell usage disabled with OE_TERMINAL')
     elif terminal != 'auto':
         try:
-            oe.terminal.spawn(terminal, command, title)
+            oe.terminal.spawn(terminal, command, title, None, d)
             return
         except oe.terminal.UnsupportedTerminal:
             bb.warn('Unsupported terminal "%s", defaulting to "auto"' %
@@ -34,7 +34,7 @@ def oe_terminal(command, title, d):
             bb.fatal('Unable to spawn terminal %s: %s' % (terminal, exc))
 
     try:
-        oe.terminal.spawn_preferred(command, title)
+        oe.terminal.spawn_preferred(command, title, None, d)
     except oe.terminal.NoSupportedTerminals:
         bb.fatal('No valid terminal found, unable to open devshell')
     except oe.terminal.ExecutionError as exc:
