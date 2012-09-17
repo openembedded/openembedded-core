@@ -12,11 +12,12 @@ DEPENDS = "libcap libnfsidmap libevent util-linux tcp-wrappers"
 RDEPENDS_${PN} = "portmap"
 RRECOMMENDS_${PN} = "kernel-module-nfsd"
 
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/nfs/nfs-utils-${PV}.tar.bz2 \
            file://nfs-utils-1.0.6-uclibc.patch \
            file://nfs-utils-1.2.3-uclibc-libio.h.patch \
+           file://nfs-utils-nfsctl-x32-fix.patch \
            file://nfsserver"
 
 SRC_URI[md5sum] = "1131dc5f27c4f3905a6e7ee0d594fd4d"

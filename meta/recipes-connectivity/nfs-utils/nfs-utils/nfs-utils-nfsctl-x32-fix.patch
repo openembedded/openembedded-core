@@ -1,0 +1,30 @@
+
+Upstream-Status: Pending
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+
+--- nfs-utils-1.2.3/support/nfs/nfsctl.c.x32	2010-09-28 05:24:16.000000000 -0700
++++ nfs-utils-1.2.3/support/nfs/nfsctl.c	2011-11-30 13:34:09.369917161 -0800
+@@ -12,15 +12,22 @@
+ 
+ #include <unistd.h>
+ #include <asm/unistd.h>
++#include <errno.h>
+ #include "nfslib.h"
+ 
+ /* compatibility hack... */
+ #ifndef __NR_nfsctl
++#ifdef __NR_nfsservctl
+ #define __NR_nfsctl	__NR_nfsservctl
+ #endif
++#endif
+ 
+ int
+ nfsctl (int cmd, struct nfsctl_arg * argp, union nfsctl_res * resp)
+ {
++#ifdef __NR_nfsctl
+   return syscall (__NR_nfsctl, cmd, argp, resp);
++#else
++  return -ENOSYS;
++#endif
+ }
