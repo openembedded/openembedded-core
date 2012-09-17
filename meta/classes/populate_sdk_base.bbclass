@@ -126,7 +126,11 @@ if [ "$target_sdk_dir" = "" ]; then
 fi
 
 eval target_sdk_dir=$target_sdk_dir
-target_sdk_dir=$(readlink -m $target_sdk_dir)
+if [ -d $target_sdk_dir ]; then
+	target_sdk_dir=$(cd $target_sdk_dir; pwd)
+else
+	target_sdk_dir=$(readlink -m $target_sdk_dir)
+fi
 
 printf "You are about to install Poky SDK to \"$target_sdk_dir\". Proceed[Y/n]?"
 read answer
@@ -154,7 +158,7 @@ echo "done"
 
 printf "Setting it up..."
 # fix environment paths
-env_setup_script=$(find $target_sdk_dir -name "environment-setup-${REAL_MULTIMACH_TARGET_SYS}")
+env_setup_script=$(find $target_sdk_dir/ -name "environment-setup-${REAL_MULTIMACH_TARGET_SYS}")
 sed -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g" -i $env_setup_script
 
 # fix dynamic loader paths in all ELF SDK binaries

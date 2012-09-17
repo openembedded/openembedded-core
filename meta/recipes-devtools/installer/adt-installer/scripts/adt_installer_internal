@@ -207,7 +207,7 @@ $SUDO scripts/relocate_sdk_tmp.py $INSTALL_FOLDER $dl_path $executable_files
 check_result
 
 # replace /opt/${DISTRO}/${SDK_VERSION} with the install folder in all configs
-env_setup_script=$(find $NATIVE_INSTALL_DIR -name "environment-setup-*")
+env_setup_script=$(find $NATIVE_INSTALL_DIR/ -name "environment-setup-*")
 $SUDO sed -i -e "s:$DEFAULT_INSTALL_FOLDER:$NATIVE_INSTALL_DIR:g" $env_setup_script
 
 find $OECORE_NATIVE_SYSROOT -type f -exec file '{}' \;|grep ":.*ASCII.*text"|cut -d':' -f1|\
