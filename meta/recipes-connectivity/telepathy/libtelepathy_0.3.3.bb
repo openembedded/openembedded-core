@@ -8,7 +8,7 @@ DEPENDS = "glib-2.0 dbus dbus-glib telepathy-glib"
 LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
                     file://src/tp-conn.c;beginline=1;endline=19;md5=4c58069f77d601cc59200bce5396c7cb"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/libtelepathy/libtelepathy-${PV}.tar.gz \
            file://prefer_python_2.5.patch \
