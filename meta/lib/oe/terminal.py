@@ -96,9 +96,14 @@ class Screen(Terminal):
     def __init__(self, sh_cmd, title=None, env=None, d=None):
         s_id = "devshell_%i" % os.getpid()
         self.command = "screen -D -m -t \"{title}\" -S %s {command}" % s_id
-        Terminal.__init__(self, sh_cmd, title, env)
-        logger.warn('Screen started. Please connect in another terminal with '
-                    '"screen -r devshell %s"' % s_id)
+        Terminal.__init__(self, sh_cmd, title, env, d)
+        msg = 'Screen started. Please connect in another terminal with ' \
+            '"screen -r %s"' % s_id
+        if (d):
+            bb.event.fire(bb.event.LogExecTTY(msg, "screen -r %s" % s_id,
+                                              0.5, 10), d)
+        else:
+            logger.warn(msg)
 
 
 def prioritized():
