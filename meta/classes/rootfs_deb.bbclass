@@ -48,6 +48,8 @@ fakeroot rootfs_deb_do_rootfs () {
 	export OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export IPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
 	export OPKG_OFFLINE_ROOT=${IMAGE_ROOTFS}
+	export INTERCEPT_DIR=${WORKDIR}/intercept_scripts
+	export NATIVE_ROOT=${STAGING_DIR_NATIVE}
 
 	# Attempt to run preinsts
 	# Mark packages with preinst failures as unpacked

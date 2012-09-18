@@ -475,6 +475,8 @@ export D="${target_rootfs}"
 export OFFLINE_ROOT="\$D"
 export IPKG_OFFLINE_ROOT="\$D"
 export OPKG_OFFLINE_ROOT="\$D"
+export INTERCEPT_DIR="${WORKDIR}/intercept_scripts"
+export NATIVE_ROOT=${STAGING_DIR_NATIVE}
 
 \$2 \$1/\$3 \$4
 if [ \$? -ne 0 ]; then
