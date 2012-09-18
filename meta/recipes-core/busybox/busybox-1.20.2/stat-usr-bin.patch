@@ -1,0 +1,21 @@
+busybox: move /bin/stat to /usr/bin/stat to match coreutils
+
+The coreutils stat binary lives in /usr/bin, fix busybox to use the same path so
+they can be properly tracked by alternatives.
+
+Upstream-Status: Inappropriate [embedded]
+Signed-off-by: Andy Ross <andy.ross@windriver.com>
+
+diff --git a/include/applets.src.h b/include/applets.src.h
+index 0d33bfc..30ae3ad 100644
+--- a/include/applets.src.h
++++ b/include/applets.src.h
+@@ -340,7 +340,7 @@ IF_SOFTLIMIT(APPLET_ODDNAME(softlimit, chpst, BB_DIR_USR_BIN, BB_SUID_DROP, soft
+ IF_SORT(APPLET_NOEXEC(sort, sort, BB_DIR_USR_BIN, BB_SUID_DROP, sort))
+ IF_SPLIT(APPLET(split, BB_DIR_USR_BIN, BB_SUID_DROP))
+ IF_START_STOP_DAEMON(APPLET_ODDNAME(start-stop-daemon, start_stop_daemon, BB_DIR_SBIN, BB_SUID_DROP, start_stop_daemon))
+-IF_STAT(APPLET(stat, BB_DIR_BIN, BB_SUID_DROP))
++IF_STAT(APPLET(stat, BB_DIR_USR_BIN, BB_SUID_DROP))
+ IF_STRINGS(APPLET(strings, BB_DIR_USR_BIN, BB_SUID_DROP))
+ IF_STTY(APPLET(stty, BB_DIR_BIN, BB_SUID_DROP))
+ /* Needs to be run by root or be suid root - needs to change uid and gid: */
