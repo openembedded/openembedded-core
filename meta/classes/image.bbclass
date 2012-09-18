@@ -156,7 +156,7 @@ inherit ${IMAGE_CLASSES}
 
 IMAGE_POSTPROCESS_COMMAND ?= ""
 MACHINE_POSTPROCESS_COMMAND ?= ""
-ROOTFS_POSTPROCESS_COMMAND ?= ""
+ROOTFS_POSTPROCESS_COMMAND_prepend = "run_intercept_scriptlets; "
 
 # some default locales
 IMAGE_LINGUAS ?= "de-de fr-fr en-gb"
@@ -166,14 +166,28 @@ LINGUAS_INSTALL ?= "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('IM
 PSEUDO_PASSWD = "${IMAGE_ROOTFS}"
 
 do_rootfs[nostamp] = "1"
-do_rootfs[dirs] = "${TOPDIR}"
+do_rootfs[dirs] = "${TOPDIR} ${WORKDIR}/intercept_scripts"
 do_rootfs[lockfiles] += "${IMAGE_ROOTFS}.lock"
-do_rootfs[cleandirs] += "${S}"
+do_rootfs[cleandirs] += "${S} ${WORKDIR}/intercept_scripts"
 do_build[nostamp] = "1"
 
 # Must call real_do_rootfs() from inside here, rather than as a separate
 # task, so that we have a single fakeroot context for the whole process.
 do_rootfs[umask] = "022"
+
+
+run_intercept_scriptlets () {
+	if [ -d ${WORKDIR}/intercept_scripts ]; then
+		cd ${WORKDIR}/intercept_scripts
+		echo "Running intercept scripts:"
+		for script in *; do
+			if [ "$script" = "*" ]; then break; fi
+			echo "> Executing $script"
+			chmod +x $script
+			./$script
+		done
+	fi
+}
 
 fakeroot do_rootfs () {
 	#set -x
