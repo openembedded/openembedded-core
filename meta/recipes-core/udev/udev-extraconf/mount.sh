@@ -49,8 +49,12 @@ if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ]; then
     		$MOUNT $DEVNAME 2> /dev/null
 	fi
 	
-	# If the device isn't mounted at this point, it isn't configured in fstab
-	grep -q "^$DEVNAME " /proc/mounts || automount
+	# If the device isn't mounted at this point, it isn't
+	# configured in fstab (note the root filesystem can show up as
+	# /dev/root in /proc/mounts, so check the device number too)
+	if expr $MAJOR "*" 256 + $MINOR != `stat -c %d /`; then
+		grep -q "^$DEVNAME " /proc/mounts || automount
+	fi
 fi
 
 
