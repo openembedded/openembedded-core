@@ -42,8 +42,8 @@ HOMEPAGE = "http://rpm5.org/"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
-DEPENDS = "libpcre attr acl popt ossp-uuid file"
-PR = "r46"
+DEPENDS = "libpcre attr acl popt ossp-uuid file bison-native"
+PR = "r47"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
