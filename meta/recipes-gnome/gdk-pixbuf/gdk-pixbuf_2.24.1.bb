@@ -58,9 +58,21 @@ FILES_${PN}-dbg += " \
 
 postinst_pixbufloader () {
 if [ "x$D" != "x" ]; then
-    exit 1
+# Update the target's pixbuf loader's cache. Since the native binary will
+# throw an error if the shared objects do not belong to the same ELF class,
+# we trick the gdk-pixbuf-query-loaders into scanning the native shared
+# objects and then we remove the NATIVE_ROOT prefix from the paths in
+# loaders.cache.
+gdk-pixbuf-query-loaders $(find $D/${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders \
+        -name *.so | sed -e "s:$D:$NATIVE_ROOT:g") > \
+        $D/${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.cache || exit 1
+
+sed -i -e "s:$NATIVE_ROOT:/:g" $D/${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
+
+exit 0
 fi
 
+# Update the pixbuf loaders in case they haven't been registered yet
 GDK_PIXBUF_MODULEDIR=${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders gdk-pixbuf-query-loaders --update-cache
 
 if [ -x ${bindir}/gtk-update-icon-cache ] && [ -d ${datadir}/icons ]; then
@@ -93,6 +105,7 @@ do_install_append_class-native() {
 		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
 
 	create_wrapper ${D}/${bindir}/gdk-pixbuf-query-loaders \
-		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
+		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache \
+		GDK_PIXBUF_MODULEDIR=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders
 }
 BBCLASSEXTEND = "native"
