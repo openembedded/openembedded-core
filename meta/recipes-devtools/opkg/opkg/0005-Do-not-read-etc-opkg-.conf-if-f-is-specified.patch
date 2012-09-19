@@ -1,17 +1,19 @@
-From 45d0468f7f9e9be633b2819aa43ab9b6287b8e6a Mon Sep 17 00:00:00 2001
+From 541b6b7bd80dc321493e42955d93b277af0c9221 Mon Sep 17 00:00:00 2001
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 Date: Mon, 9 Jul 2012 11:01:15 +0100
-Subject: [PATCH] Do not read /etc/opkg/*.conf if -f is specified
+Subject: [PATCH 5/7] Do not read /etc/opkg/*.conf if -f is specified
 
 If a configuration file is specified on the command line, we should
 assume it contains all of the configuration and not try to read the
 configuration in /etc/opkg.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted
+http://code.google.com/p/opkg/issues/detail?id=93
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
- libopkg/opkg_conf.c |   55 ++++++++++++++++++++++++++-------------------------
+ libopkg/opkg_conf.c | 55 +++++++++++++++++++++++++++--------------------------
  1 file changed, 28 insertions(+), 27 deletions(-)
 
 diff --git a/libopkg/opkg_conf.c b/libopkg/opkg_conf.c
@@ -87,5 +89,5 @@ index 4711ce7..1e65bad 100644
  	if (conf->offline_root)
  		sprintf_alloc (&lock_file, "%s/%s", conf->offline_root, OPKGLOCKFILE);
 -- 
-1.7.9.5
+1.7.12
 

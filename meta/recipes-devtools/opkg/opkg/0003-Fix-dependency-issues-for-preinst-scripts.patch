@@ -1,16 +1,21 @@
-There is a problem with dependency order when installing packages. The key 
-problem revolves around the satisfy_dependencies_for() function which is 
+From 6a294b6dad681b0e95aa061bc368d801d2ddc781 Mon Sep 17 00:00:00 2001
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Thu, 15 Dec 2011 21:08:49 +0000
+Subject: [PATCH 3/7] Fix dependency issues for preinst scripts
+
+There is a problem with dependency order when installing packages. The key
+problem revolves around the satisfy_dependencies_for() function which is
 called from opkg_install_pkg just before the installation (and preinst)
 happens.
 
 The satisfy_dependencies_for() function calls pkg_hash_fetch_unsatisfied_dependencies()
-which will only return packages which were previously not marked as 
-*going* to be installed at some point. For the purposes of 
-opkg_install_pkg() we really need to know which dependencies haven't been 
+which will only return packages which were previously not marked as
+*going* to be installed at some point. For the purposes of
+opkg_install_pkg() we really need to know which dependencies haven't been
 installed yet.
 
-This patch adds pkg_hash_fetch_satisfied_dependencies() which returns a 
-list of package dependencies. We can then directly check the status of 
+This patch adds pkg_hash_fetch_satisfied_dependencies() which returns a
+list of package dependencies. We can then directly check the status of
 these and ensure any hard dependencies (not suggestions or recommendations)
 are installed before returning.
 
@@ -21,9 +26,9 @@ A -> B,E
 E -> B
 B -> C
 
-Currently X would install A and E. When installing A the packages B, E 
+Currently X would install A and E. When installing A the packages B, E
 and C would be marked as "to install". When the package B is considered
-the second time (as a dependency of E rather than A), it would install 
+the second time (as a dependency of E rather than A), it would install
 straight away even though C was not currently installed, just marked
 as needing to be installed.
 
@@ -31,15 +36,21 @@ The patch changes the behaviour so B can't install until C really is installed.
 
 This change is required to run the postinst scripts in the correct order.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted
+http://code.google.com/p/opkg/issues/detail?id=93
 
-RP 2011/12/15
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ libopkg/opkg_install.c | 21 +++++++++++++
+ libopkg/pkg_depends.c  | 82 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ libopkg/pkg_depends.h  |  1 +
+ 3 files changed, 104 insertions(+)
 
-Index: trunk/libopkg/opkg_install.c
-===================================================================
---- trunk.orig/libopkg/opkg_install.c	2011-12-15 15:58:39.000000000 +0000
-+++ trunk/libopkg/opkg_install.c	2011-12-15 15:58:41.838334788 +0000
-@@ -76,6 +77,27 @@
+diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
+index 3925f58..1632066 100644
+--- a/libopkg/opkg_install.c
++++ b/libopkg/opkg_install.c
+@@ -76,6 +76,27 @@ satisfy_dependencies_for(pkg_t *pkg)
       }
  
       if (ndepends <= 0) {
@@ -67,11 +78,11 @@ Index: trunk/libopkg/opkg_install.c
  	  pkg_vec_free(depends);
  	  return 0;
       }
-Index: trunk/libopkg/pkg_depends.c
-===================================================================
---- trunk.orig/libopkg/pkg_depends.c	2010-12-22 16:04:43.000000000 +0000
-+++ trunk/libopkg/pkg_depends.c	2011-12-15 15:58:41.838334788 +0000
-@@ -259,6 +259,88 @@
+diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
+index 1e14d1f..36c76aa 100644
+--- a/libopkg/pkg_depends.c
++++ b/libopkg/pkg_depends.c
+@@ -259,6 +259,88 @@ pkg_hash_fetch_unsatisfied_dependencies(pkg_t * pkg, pkg_vec_t *unsatisfied,
       return unsatisfied->len;
  }
  
@@ -160,11 +171,11 @@ Index: trunk/libopkg/pkg_depends.c
  /*checking for conflicts !in replaces
    If a packages conflicts with another but is also replacing it, I should not consider it a
    really conflicts
-Index: trunk/libopkg/pkg_depends.h
-===================================================================
---- trunk.orig/libopkg/pkg_depends.h	2010-12-22 16:04:43.000000000 +0000
-+++ trunk/libopkg/pkg_depends.h	2011-12-15 15:58:41.838334788 +0000
-@@ -82,6 +82,7 @@
+diff --git a/libopkg/pkg_depends.h b/libopkg/pkg_depends.h
+index 5d1f074..b8072e2 100644
+--- a/libopkg/pkg_depends.h
++++ b/libopkg/pkg_depends.h
+@@ -82,6 +82,7 @@ char *pkg_depend_str(pkg_t *pkg, int index);
  void buildDependedUponBy(pkg_t * pkg, abstract_pkg_t * ab_pkg);
  int version_constraints_satisfied(depend_t * depends, pkg_t * pkg);
  int pkg_hash_fetch_unsatisfied_dependencies(pkg_t * pkg, pkg_vec_t *depends, char *** unresolved);
@@ -172,3 +183,6 @@ Index: trunk/libopkg/pkg_depends.h
  pkg_vec_t * pkg_hash_fetch_conflicts(pkg_t * pkg);
  int pkg_dependence_satisfiable(depend_t *depend);
  int pkg_dependence_satisfied(depend_t *depend);
+-- 
+1.7.12
+

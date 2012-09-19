@@ -1,17 +1,27 @@
+From 254780ab3b0db398447150251332916598d3b9f4 Mon Sep 17 00:00:00 2001
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Fri, 11 Nov 2011 17:17:01 +0000
+Subject: [PATCH 2/7] Ensure we use the uname/gname fields when extracting
+ tarballs
 
-When updating packages on the target device we ideally want to match 
+When updating packages on the target device we ideally want to match
 user and group numbers from the existing file system. This patch encourages
 opkg to lookup the uname/gname fields first and only use the hardcoded
 numerical values if that fails.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted
+http://code.google.com/p/opkg/issues/detail?id=93
 
-RP 11/11/11
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ libbb/unarchive.c | 49 +++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 47 insertions(+), 2 deletions(-)
 
-Index: trunk/libbb/unarchive.c
-===================================================================
---- trunk.orig/libbb/unarchive.c	2011-11-11 15:52:59.761674091 +0000
-+++ trunk/libbb/unarchive.c	2011-11-11 17:04:56.501574419 +0000
+diff --git a/libbb/unarchive.c b/libbb/unarchive.c
+index 5d4464f..d583767 100644
+--- a/libbb/unarchive.c
++++ b/libbb/unarchive.c
 @@ -22,10 +22,13 @@
  #include <stdio.h>
  #include <errno.h>
@@ -26,7 +36,7 @@ Index: trunk/libbb/unarchive.c
  
  #include "libbb.h"
  
-@@ -436,6 +439,42 @@
+@@ -436,6 +439,42 @@ free_header_ar(file_header_t *ar_entry)
  	free(ar_entry);
  }
  
@@ -69,7 +79,7 @@ Index: trunk/libbb/unarchive.c
  
  static file_header_t *
  get_header_tar(FILE *tar_stream)
-@@ -515,8 +554,14 @@
+@@ -515,8 +554,14 @@ get_header_tar(FILE *tar_stream)
  */
          tar_entry->mode = 07777 & strtol(tar.formated.mode, NULL, 8);
  
@@ -86,3 +96,6 @@ Index: trunk/libbb/unarchive.c
  	tar_entry->size  = strtol(tar.formated.size, NULL, 8);
  	tar_entry->mtime = strtol(tar.formated.mtime, NULL, 8);
  
+-- 
+1.7.12
+

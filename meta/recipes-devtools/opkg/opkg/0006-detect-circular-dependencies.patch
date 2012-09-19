@@ -1,15 +1,30 @@
-Add logic to detect circular dependencies. If we see any dependency from any
-given parent twice, ignore it the second time and print a notice message
+From f434078a342435ae8a666b599d989c30d4c6a7f5 Mon Sep 17 00:00:00 2001
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Sun, 18 Dec 2011 23:54:30 +0000
+Subject: [PATCH 6/7] detect circular dependencies
+
+Add logic to detect circular dependencies. If we see any dependency from
+any given parent twice, ignore it the second time and print a notice message
 that we did so.
 
-Upstream-Status: Pending
-RP 2011/12/18
+Upstream-Status: Submitted
+http://code.google.com/p/opkg/issues/detail?id=93
 
-Index: trunk/libopkg/opkg_install.c
-===================================================================
---- trunk.orig/libopkg/opkg_install.c	2011-12-18 11:15:17.320725365 +0000
-+++ trunk/libopkg/opkg_install.c	2011-12-18 12:38:54.980609225 +0000
-@@ -84,8 +84,14 @@
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ libopkg/opkg_install.c | 8 ++++++++
+ libopkg/pkg.c          | 2 ++
+ libopkg/pkg.h          | 1 +
+ libopkg/pkg_depends.c  | 3 +--
+ libopkg/pkg_depends.h  | 1 +
+ 5 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
+index 1632066..0216914 100644
+--- a/libopkg/opkg_install.c
++++ b/libopkg/opkg_install.c
+@@ -84,8 +84,14 @@ satisfy_dependencies_for(pkg_t *pkg)
  	       /* The package was uninstalled when we started, but another
  	          dep earlier in this loop may have depended on it and pulled
  	          it in, so check first. */
@@ -24,7 +39,7 @@ Index: trunk/libopkg/opkg_install.c
  		    err = opkg_install_pkg(dep, 0);
  		    /* mark this package as having been automatically installed to
  		     * satisfy a dependency */
-@@ -115,6 +121,8 @@
+@@ -115,6 +121,8 @@ satisfy_dependencies_for(pkg_t *pkg)
  	  /* The package was uninstalled when we started, but another
  	     dep earlier in this loop may have depended on it and pulled
  	     it in, so check first. */
@@ -33,11 +48,11 @@ Index: trunk/libopkg/opkg_install.c
  	  if ((dep->state_status != SS_INSTALLED)
  	      && (dep->state_status != SS_UNPACKED)) {
                 opkg_msg(DEBUG2,"Calling opkg_install_pkg.\n");
-Index: trunk/libopkg/pkg.c
-===================================================================
---- trunk.orig/libopkg/pkg.c	2011-12-18 11:12:39.976729002 +0000
-+++ trunk/libopkg/pkg.c	2011-12-18 11:22:34.528715535 +0000
-@@ -86,6 +86,7 @@
+diff --git a/libopkg/pkg.c b/libopkg/pkg.c
+index 6ccbde2..be486ee 100644
+--- a/libopkg/pkg.c
++++ b/libopkg/pkg.c
+@@ -86,6 +86,7 @@ pkg_init(pkg_t *pkg)
       pkg->section = NULL;
       pkg->description = NULL;
       pkg->state_want = SW_UNKNOWN;
@@ -45,7 +60,7 @@ Index: trunk/libopkg/pkg.c
       pkg->state_flag = SF_OK;
       pkg->state_status = SS_NOT_INSTALLED;
       pkg->depends_str = NULL;
-@@ -191,6 +192,7 @@
+@@ -191,6 +192,7 @@ pkg_deinit(pkg_t *pkg)
  	pkg->description = NULL;
  
  	pkg->state_want = SW_UNKNOWN;
@@ -53,11 +68,11 @@ Index: trunk/libopkg/pkg.c
  	pkg->state_flag = SF_OK;
  	pkg->state_status = SS_NOT_INSTALLED;
  
-Index: trunk/libopkg/pkg.h
-===================================================================
---- trunk.orig/libopkg/pkg.h	2011-12-18 11:12:37.120728742 +0000
-+++ trunk/libopkg/pkg.h	2011-12-18 11:15:39.080725150 +0000
-@@ -129,6 +129,7 @@
+diff --git a/libopkg/pkg.h b/libopkg/pkg.h
+index 775b656..5d468cb 100644
+--- a/libopkg/pkg.h
++++ b/libopkg/pkg.h
+@@ -129,6 +129,7 @@ struct pkg
       char *description;
       char *tags;
       pkg_state_want_t state_want;
@@ -65,11 +80,11 @@ Index: trunk/libopkg/pkg.h
       pkg_state_flag_t state_flag;
       pkg_state_status_t state_status;
       char **depends_str;
-Index: trunk/libopkg/pkg_depends.c
-===================================================================
---- trunk.orig/libopkg/pkg_depends.c	2011-12-18 11:14:24.464726569 +0000
-+++ trunk/libopkg/pkg_depends.c	2011-12-18 11:30:32.516704127 +0000
-@@ -30,7 +30,6 @@
+diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
+index 36c76aa..a72eed7 100644
+--- a/libopkg/pkg_depends.c
++++ b/libopkg/pkg_depends.c
+@@ -30,7 +30,6 @@ static int parseDepends(compound_depend_t *compound_depend, char * depend_str);
  static depend_t * depend_init(void);
  static char ** add_unresolved_dep(pkg_t * pkg, char ** the_lost, int ref_ndx);
  static char ** merge_unresolved(char ** oldstuff, char ** newstuff);
@@ -77,7 +92,7 @@ Index: trunk/libopkg/pkg_depends.c
  
  static int pkg_installed_and_constraint_satisfied(pkg_t *pkg, void *cdata)
  {
-@@ -531,7 +530,7 @@
+@@ -531,7 +530,7 @@ int pkg_dependence_satisfied(depend_t *depend)
       return 0;
  }
  
@@ -86,14 +101,17 @@ Index: trunk/libopkg/pkg_depends.c
  {
      int i;
      pkg_t ** pkgs = vec->pkgs;
-Index: trunk/libopkg/pkg_depends.h
-===================================================================
---- trunk.orig/libopkg/pkg_depends.h	2011-12-18 11:28:51.960706484 +0000
-+++ trunk/libopkg/pkg_depends.h	2011-12-18 11:29:19.400705862 +0000
-@@ -87,5 +87,6 @@
+diff --git a/libopkg/pkg_depends.h b/libopkg/pkg_depends.h
+index b8072e2..ca0801f 100644
+--- a/libopkg/pkg_depends.h
++++ b/libopkg/pkg_depends.h
+@@ -87,5 +87,6 @@ pkg_vec_t * pkg_hash_fetch_conflicts(pkg_t * pkg);
  int pkg_dependence_satisfiable(depend_t *depend);
  int pkg_dependence_satisfied(depend_t *depend);
  const char* constraint_to_str(enum version_constraint c);
 +int is_pkg_in_pkg_vec(pkg_vec_t * vec, pkg_t * pkg);
  
  #endif
+-- 
+1.7.12
+

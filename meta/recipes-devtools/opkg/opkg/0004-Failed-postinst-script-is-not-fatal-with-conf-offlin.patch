@@ -1,0 +1,71 @@
+From 1f709b4540e12cf7e08592aae0ad7e3e35322cab Mon Sep 17 00:00:00 2001
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Thu, 15 Dec 2011 21:08:49 +0000
+Subject: [PATCH 4/7] Failed postinst script is not fatal with
+ conf->offline_root
+
+When we have an offline root and have specified force-postinstall,
+attempt to run the postinstall but if it fails, just leave it in the
+status file as needing to run. We can issue a NOTICE this is happened
+but supress errors. This means the OE class doesn't have to do any
+further post processing of the postinstalls itself.
+
+Upstream-Status: Submitted
+http://code.google.com/p/opkg/issues/detail?id=93
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ libopkg/opkg_cmd.c       | 3 ++-
+ libopkg/opkg_configure.c | 5 ++++-
+ libopkg/pkg.c            | 5 +++--
+ 3 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/libopkg/opkg_cmd.c b/libopkg/opkg_cmd.c
+index 11e7867..36ff8eb 100644
+--- a/libopkg/opkg_cmd.c
++++ b/libopkg/opkg_cmd.c
+@@ -453,7 +453,8 @@ opkg_configure_packages(char *pkg_name)
+ 		    pkg->state_flag &= ~SF_PREFER;
+ 		    opkg_state_changed++;
+ 	       } else {
+-		    err = -1;
++                    if (!conf->offline_root)
++		         err = -1;
+ 	       }
+ 	  }
+      }
+diff --git a/libopkg/opkg_configure.c b/libopkg/opkg_configure.c
+index 719da5a..169828d 100644
+--- a/libopkg/opkg_configure.c
++++ b/libopkg/opkg_configure.c
+@@ -35,7 +35,10 @@ opkg_configure(pkg_t *pkg)
+ 
+     err = pkg_run_script(pkg, "postinst", "configure");
+     if (err) {
+-	opkg_msg(ERROR, "%s.postinst returned %d.\n", pkg->name, err);
++        if (!conf->offline_root)
++	     opkg_msg(ERROR, "%s.postinst returned %d.\n", pkg->name, err);
++        else
++	     opkg_msg(NOTICE, "%s.postinst returned %d, marking as unpacked only, configuration required on target.\n", pkg->name, err);
+ 	return err;
+     }
+ 
+diff --git a/libopkg/pkg.c b/libopkg/pkg.c
+index d8c3984..6ccbde2 100644
+--- a/libopkg/pkg.c
++++ b/libopkg/pkg.c
+@@ -1297,8 +1297,9 @@ pkg_run_script(pkg_t *pkg, const char *script, const char *args)
+      free(cmd);
+ 
+      if (err) {
+-	  opkg_msg(ERROR, "package \"%s\" %s script returned status %d.\n", 
+-               pkg->name, script, err);
++          if (!conf->offline_root)
++	       opkg_msg(ERROR, "package \"%s\" %s script returned status %d.\n", 
++                    pkg->name, script, err);
+ 	  return err;
+      }
+ 
+-- 
+1.7.12
+

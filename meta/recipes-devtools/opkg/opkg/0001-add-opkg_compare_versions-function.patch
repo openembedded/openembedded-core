@@ -1,0 +1,54 @@
+From 029cf99fd44645b5fe1b6491355c631da3096e09 Mon Sep 17 00:00:00 2001
+From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Sat, 17 Dec 2011 12:51:07 +0100
+Subject: [PATCH 1/7] add opkg_compare_versions function
+
+* not used in opkg but can be usefull, e.g. instead of
+  opkg-utils/opkg-compare-versions.c
+
+Upstream-Status: Submitted
+http://code.google.com/p/opkg/issues/detail?id=93
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ libopkg/opkg.c | 15 +++++++++++++++
+ libopkg/opkg.h |  2 ++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/libopkg/opkg.c b/libopkg/opkg.c
+index 92f61f4..eaea529 100644
+--- a/libopkg/opkg.c
++++ b/libopkg/opkg.c
+@@ -870,3 +870,18 @@ opkg_repository_accessibility_check(void)
+ 
+ 	return ret;
+ }
++
++int
++opkg_compare_versions (const char *ver1, const char *ver2)
++{
++  pkg_t *pkg1, *pkg2;
++
++  pkg1 = pkg_new();
++  pkg2 = pkg_new();
++
++  parse_version(pkg1, ver1);
++  parse_version(pkg2, ver2);
++
++  return pkg_compare_versions(pkg1, pkg2);
++}
++
+diff --git a/libopkg/opkg.h b/libopkg/opkg.h
+index 4fbd404..7aa86eb 100644
+--- a/libopkg/opkg.h
++++ b/libopkg/opkg.h
+@@ -58,4 +58,6 @@ pkg_t* opkg_find_package (const char *name, const char *version, const char *arc
+ 
+ int opkg_repository_accessibility_check(void);
+ 
++int opkg_compare_versions (const char *ver1, const char *ver2);
++
+ #endif /* OPKG_H */
+-- 
+1.7.12
+

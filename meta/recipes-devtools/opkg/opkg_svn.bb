@@ -1,12 +1,12 @@
 require opkg.inc
 
 SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;protocol=http \
-           file://add_vercmp.patch \
-           file://add_uname_support.patch \
-           file://fix_installorder.patch \
-           file://offline_postinstall.patch\
-           file://track_parents.patch \
-           file://conf_override.patch \
+  file://0001-add-opkg_compare_versions-function.patch \
+  file://0002-Ensure-we-use-the-uname-gname-fields-when-extracting.patch \
+  file://0003-Fix-dependency-issues-for-preinst-scripts.patch \
+  file://0004-Failed-postinst-script-is-not-fatal-with-conf-offlin.patch \
+  file://0005-Do-not-read-etc-opkg-.conf-if-f-is-specified.patch \
+  file://0006-detect-circular-dependencies.patch \
 "
 
 S = "${WORKDIR}/trunk"
