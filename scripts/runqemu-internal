@@ -221,7 +221,15 @@ n2=$(($n1 + 1))
 
 KERNEL_NETWORK_CMD="ip=192.168.7.$n2::192.168.7.$n1:255.255.255.0"
 QEMU_TAP_CMD="-net tap,vlan=0,ifname=$TAP,script=no,downscript=no"
-QEMU_NETWORK_CMD="-net nic,vlan=0 $QEMU_TAP_CMD"
+if [ "$KVM_ACTIVE" = "yes" ]; then
+    QEMU_NETWORK_CMD="-net nic,model=virtio $QEMU_TAP_CMD,vhost=on"
+    DROOT="/dev/vda"
+    ROOTFS_OPTIONS="-drive file=$ROOTFS,if=virtio"
+else
+    QEMU_NETWORK_CMD="-net nic,vlan=0 $QEMU_TAP_CMD"
+    DROOT="/dev/hda"
+    ROOTFS_OPTIONS="-hda $ROOTFS"
+fi
 KERNCMDLINE="mem=$QEMU_MEMORY"
 QEMU_UI_OPTIONS="-show-cursor -usb -usbdevice wacom-tablet"
 
@@ -321,8 +329,8 @@ if [ "$MACHINE" = "qemux86" ]; then
     QEMU=qemu-system-i386
     QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS -vga vmware"
     if [ "$FSTYPE" = "ext2" -o "$FSTYPE" = "ext3" -o "$FSTYPE" = "btrfs" ]; then
-        KERNCMDLINE="vga=0 root=/dev/hda rw mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD"
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -hda $ROOTFS $QEMU_UI_OPTIONS"
+        KERNCMDLINE="vga=0 root=$DROOT rw mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD $ROOTFS_OPTIONS $QEMU_UI_OPTIONS"
     fi
     if [ "$FSTYPE" = "nfs" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then

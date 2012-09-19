@@ -208,6 +208,7 @@ if [ -z "$MACHINE" ]; then
 fi
 
 YOCTO_KVM_WIKI="https://wiki.yoctoproject.org/wiki/How_to_enable_KVM_for_Poky_qemu"
+YOCTO_PARAVIRT_KVM_WIKI="https://wiki.yoctoproject.org/wiki/Running_an_x86_Yocto_Linux_image_under_QEMU_KVM"
 # Detect KVM configuration
 if [ "x$KVM_ENABLED" = "xyes" ]; then
     if [ -z "$KVM_CAPABLE" ]; then
@@ -226,12 +227,25 @@ if [ "x$KVM_ENABLED" = "xyes" ]; then
         echo "$YOCTO_KVM_WIKI";
         exit 1;
     fi
+    if [ ! -e /dev/vhost-net ]; then
+        echo "Missing virtio net device. Have you inserted vhost-net module?"
+        echo "For further help see"
+        echo "$YOCTO_PARAVIRT_KVM_WIKI";
+        exit 1;
+    fi
     if 9<>/dev/kvm ; then
-        SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -enable-kvm"
+        SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -enable-kvm -cpu host"
+        KVM_ACTIVE="yes"
     else
         echo "You have no rights on /dev/kvm."
         echo "Please change the ownership of this file as described at"
         echo "$YOCTO_KVM_WIKI";
+        exit 1;
+    fi
+    if [ ! -w /dev/vhost-net -a -r /dev/vhost-net ]; then
+        echo "You have no rights on /dev/vhost-net."
+        echo "Please change the ownership of this file as described at"
+        echo "$YOCTO_PARAVIRT_KVM_WIKI";
         exit 1;
     fi
 fi
