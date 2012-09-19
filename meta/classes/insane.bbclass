@@ -113,7 +113,7 @@ def package_qa_get_machine_dict():
 
 
 # Currently not being used by default "desktop"
-WARN_QA ?= "ldflags useless-rpaths rpaths unsafe-references-in-binaries unsafe-references-in-scripts staticdev"
+WARN_QA ?= "ldflags useless-rpaths rpaths unsafe-references-in-binaries unsafe-references-in-scripts staticdev libdir"
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch la2 pkgconfig la perms"
 
 def package_qa_clean_path(path,d):
@@ -211,6 +211,40 @@ def package_qa_check_staticdev(path, name, d, elf, messages):
     if not name.endswith("-pic") and not name.endswith("-staticdev") and path.endswith(".a") and not path.endswith("_nonshared.a"):
         messages.append("non -staticdev package contains static .a library: %s path '%s'" % \
                  (name, package_qa_clean_path(path,d)))
+
+def package_qa_check_libdir(d):
+    """
+    Check for wrong library installation paths. For instance, catch
+    recipes installing /lib/bar.so when ${base_libdir}="lib32" or
+    installing in /usr/lib64 when ${libdir}="/usr/lib"
+    """
+    import re
+
+    pkgd = d.getVar('PKGD', True)
+    base_libdir = d.getVar("base_libdir",True) + os.sep
+    libdir = d.getVar("libdir", True) + os.sep
+    exec_prefix = d.getVar("exec_prefix", True) + os.sep
+
+    messages = []
+    my_files = []
+
+    for root, dirs, files in os.walk(pkgd):
+        for file in files:
+            full_path = os.path.join(root,file)
+            my_files.append(full_path[len(pkgd):])
+
+    lib_re = re.compile("^/lib.*\.so")
+    exec_re = re.compile("^%s.*/lib*.\.so" % exec_prefix)
+
+    for file in my_files:
+        if lib_re.match(file):
+            if base_libdir not in file:
+                messages.append("Found library in wrong location: %s" % file)
+        if exec_re.match(file):
+            if libdir not in file:
+                messages.append("Found library in wrong location: %s" % file)
+    if messages:
+        package_qa_handle_error("libdir", "\n".join(messages), d)
 
 QAPATHTEST[debug-files] = "package_qa_check_dbg"
 def package_qa_check_dbg(path, name, d, elf, messages):
@@ -687,6 +721,9 @@ python do_package_qa () {
         if not package_qa_check_rdepends(package, pkgdest, skip, d):
             rdepends_sane = False
 
+
+    if 'libdir' in (d.getVar("WARN_QA", True) or "").split():
+        package_qa_check_libdir(d)
 
     if not walk_sane or not rdepends_sane:
         bb.fatal("QA run found fatal errors. Please consider fixing them.")
