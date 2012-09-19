@@ -15,7 +15,7 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.4.git;protocol=git;nocheckou
 
 LINUX_VERSION ?= "3.4.10"
 
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.3"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 KMETA = "meta"
@@ -28,4 +28,5 @@ KERNEL_FEATURES_append = " features/netfilter"
 KERNEL_FEATURES_append_qemux86=" cfg/sound"
 KERNEL_FEATURES_append_qemux86-64=" cfg/sound"
 KERNEL_FEATURES_append_qemux86=" cfg/paravirt_kvm"
+KERNEL_FEATURES_append_qemux86-64=" cfg/paravirt_kvm"
 KERNEL_FEATURES_append = " ${@bb.utils.contains("TUNE_FEATURES", "mx32", " cfg/x32", "" ,d)}"
