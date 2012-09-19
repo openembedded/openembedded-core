@@ -12,7 +12,7 @@ LTTNGUST_mips64 = ""
 LTTNGUST_mips64el = ""
 LTTNGUST_sh4 = ""
 
-INC_PR = "r1"
+INC_PR = "r0"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 		file://COPYING.LIB;md5=9f604d8a4f8e74f4f5140845a21b6674 \
@@ -21,10 +21,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 inherit autotools
 
 SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.gz \
-           file://no-werror.patch"
-
-SRC_URI[md5sum] = "5fb7fca9ef7a9e3cfee0e2f2c0e52051"
-SRC_URI[sha256sum] = "f99d2be831ead324712ae4f11868e07e545272f10aac4186060f1386f2629b38"
+          "
+SRC_URI[md5sum] = "c9f5ed81008194f8f667f131234f3ef0"
+SRC_URI[sha256sum] = "8dcf38dd04f7f031b51d0672050d6b14626302ddc24d74e486b4666335de2df3"
 
 export CC_FOR_BUILD = "${BUILD_CC}"
 export CXX_FOR_BUILD = "${BUILD_CXX}"
@@ -39,7 +38,7 @@ EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils'"
 
 EXPAT = "--with-expat --with-libexpat-prefix=${STAGING_DIR_HOST}"
 
-EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x \
+EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x --disable-werror \
                 --with-curses --disable-multilib --with-system-readline --disable-sim \
                 ${GDBPROPREFIX} ${EXPAT} \
                 ${@base_contains('DISTRO_FEATURES', 'multiarch', '--enable-64-bit-bfd', '', d)} \
