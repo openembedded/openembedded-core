@@ -141,12 +141,21 @@ RPM_QUERY_CMD = '${RPM} --root $INSTALL_ROOTFS_RPM -D "_dbpath ${rpmlibdir}" \
 		-D "__dbi_txn create nofsync private"'
 
 list_installed_packages() {
+	GET_LIST=$(${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{ARCH} %{PACKAGEORIGIN} %{Platform}\n]")
+
+	# Use awk to find the multilib prefix and compare it
+	# with the platform RPM thinks it is part of
+	for prefix in `echo ${MULTILIB_PREFIX_LIST}`; do
+		GET_LIST=$(echo "$GET_LIST" | awk -v prefix="$prefix" '$0 ~ prefix {printf("%s-%s\n", prefix, $0); } $0 !~ prefix {print $0}')
+	done
+
+	# print the info, need to different return counts
 	if [ "$1" = "arch" ] ; then
-		${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{ARCH}\n]"
-	elif [ "$1" = "file" ] ; then
-		${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{PACKAGEORIGIN}\n]"
-	else
-		${RPM_QUERY_CMD} -qa --qf "[%{NAME}\n]"
+		echo "$GET_LIST" | awk '{print $1, $2}'
+        elif [ "$1" = "file" ] ; then
+		echo "$GET_LIST" | awk '{print $1, $3}'
+        else
+		echo "$GET_LIST" | awk '{print $1}' 
 	fi
 }
 
