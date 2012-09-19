@@ -27,7 +27,7 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.24/gtk+-${PV}.tar.bz2 \
 #        file://combo-arrow-size.patch;striplevel=0
 #            file://configurefix.patch
 
-PR = "r6"
+PR = "r7"
 
 SRC_URI[md5sum] = "0413187f7e596aef00ccd1b54776ff03"
 SRC_URI[sha256sum] = "ac2325a65312922a6722a7c02a389f3f4072d79e13131485cc7b7226e2537043"
@@ -37,6 +37,9 @@ EXTRA_OECONF = "--without-libtiff --without-libjasper --enable-xkb --disable-gli
 LIBV = "2.10.0"
 
 PACKAGES_DYNAMIC += "gtk-immodule-* gtk-printbackend-*"
+BBCLASSEXTEND = "native"
+RRECOMMENDS_${PN}_virtclass-native = ""
+DEPENDS_virtclass-native = "glib-2.0-native atk-native pango-native cairo-native gdk-pixbuf-native"
 
 python populate_packages_prepend () {
     prologue = d.getVar("postinst_prologue", True)
