@@ -2,9 +2,6 @@ DESCRIPTION = "An sh-compatible command language interpreter."
 HOMEPAGE = "http://cnswww.cns.cwru.edu/~chet/bash/bashtop.html"
 SECTION = "base/shell"
 
-# GPLv2+ (< 4.0), GPLv3+ (>= 4.0)
-LICENSE = "GPLv3+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 DEPENDS = "ncurses bison-native"
 
 inherit autotools gettext update-alternatives

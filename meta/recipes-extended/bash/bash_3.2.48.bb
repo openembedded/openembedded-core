@@ -1,12 +1,9 @@
-DESCRIPTION = "An sh-compatible command language interpreter."
-HOMEPAGE = "http://cnswww.cns.cwru.edu/~chet/bash/bashtop.html"
-SECTION = "base/shell"
+require bash.inc
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=fd5d9bcabd8ed5a54a01ce8d183d592a"
-DEPENDS = "ncurses"
 
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "${GNU_MIRROR}/bash/bash-${PV}.tar.gz;name=tarball \
            ${GNU_MIRROR}/bash/bash-3.2-patches/bash32-049;apply=yes;striplevel=0;name=patch001 \
@@ -24,27 +21,3 @@ SRC_URI[patch003.sha256sum] = "354886097cd95b4def77028f32ee01e2e088d58a98184fede
 
 SRC_URI[md5sum] = "338dcf975a93640bb3eaa843ca42e3f8"
 SRC_URI[sha256sum] = "128d281bd5682ba5f6953122915da71976357d7a76490d266c9173b1d0426348"
-
-inherit autotools gettext
-
-PARALLEL_MAKE = ""
-
-bindir = "/bin"
-sbindir = "/sbin"
-
-EXTRA_OECONF = "--with-ncurses"
-export CC_FOR_BUILD = "${BUILD_CC}"
-
-export AUTOHEADER = "true"
-
-do_configure_prepend () {
-	if [ ! -e acinclude.m4 ]; then
-		cat aclocal.m4 > acinclude.m4
-	fi
-}
-
-pkg_postinst_${PN} () {
-	touch $D${sysconfdir}/shells
-	grep -q "bin/bash" $D${sysconfdir}/shells || echo /bin/bash >> $D${sysconfdir}/shells
-	grep -q "bin/sh" $D${sysconfdir}/shells || echo /bin/sh >> $D${sysconfdir}/shells
-}
