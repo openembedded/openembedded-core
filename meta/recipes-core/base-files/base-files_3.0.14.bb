@@ -117,11 +117,11 @@ do_install_basefilesissue () {
 
 	install -m 644 ${WORKDIR}/issue*  ${D}${sysconfdir}  
         if [ -n "${DISTRO_NAME}" ]; then
-		echo -n "${DISTRO_NAME} " >> ${D}${sysconfdir}/issue
-		echo -n "${DISTRO_NAME} " >> ${D}${sysconfdir}/issue.net
+		printf "${DISTRO_NAME} " >> ${D}${sysconfdir}/issue
+		printf "${DISTRO_NAME} " >> ${D}${sysconfdir}/issue.net
 		if [ -n "${DISTRO_VERSION}" ]; then
-			echo -n "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue
-			echo -n "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue.net
+			printf "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue
+			printf "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue.net
 		fi
 		echo "\n \l" >> ${D}${sysconfdir}/issue
 		echo >> ${D}${sysconfdir}/issue

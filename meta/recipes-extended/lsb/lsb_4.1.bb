@@ -31,12 +31,12 @@ do_install(){
 	mkdir -p ${D}${base_bindir}
 	mkdir -p ${D}/${baselib}
 	mkdir -p ${D}${sysconfdir}/lsb-release.d
-	echo -n "LSB_VERSION=\"core-4.1-noarch:" > ${D}${sysconfdir}/lsb-release
+	printf "LSB_VERSION=\"core-4.1-noarch:" > ${D}${sysconfdir}/lsb-release
 
 	if [ "${TARGET_ARCH}" = "i586" ];then
-		echo -n "core-4.1-ia32" >>  ${D}${sysconfdir}/lsb-release
+		printf "core-4.1-ia32" >>  ${D}${sysconfdir}/lsb-release
 	else
-		echo -n "core-4.1-${TARGET_ARCH}" >>  ${D}${sysconfdir}/lsb-release
+		printf "core-4.1-${TARGET_ARCH}" >>  ${D}${sysconfdir}/lsb-release
 	fi
 	echo "\"" >> ${D}${sysconfdir}/lsb-release
 	echo "DISTRIB_ID=${DISTRO}" >> ${D}${sysconfdir}/lsb-release

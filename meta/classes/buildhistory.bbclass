@@ -293,13 +293,13 @@ buildhistory_get_image_installed() {
 	# Change delimiter from pipe to -> and set style for recommend lines
 	sed -i -e 's:|: -> :' -e 's:\[REC\]:[style=dotted]:' -e 's:$:;:' ${BUILDHISTORY_DIR_IMAGE}/depends.tmp
 	# Add header, sorted and de-duped contents and footer and then delete the temp file
-	echo -e "digraph depends {\n    node [shape=plaintext]" > ${BUILDHISTORY_DIR_IMAGE}/depends.dot
+	printf "digraph depends {\n    node [shape=plaintext]\n" > ${BUILDHISTORY_DIR_IMAGE}/depends.dot
 	cat ${BUILDHISTORY_DIR_IMAGE}/depends.tmp | sort | uniq >> ${BUILDHISTORY_DIR_IMAGE}/depends.dot
 	echo "}" >>  ${BUILDHISTORY_DIR_IMAGE}/depends.dot
 	rm ${BUILDHISTORY_DIR_IMAGE}/depends.tmp
 
 	# Produce installed package sizes list
-	echo -n > ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.tmp
+	printf "" > ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.tmp
 	cat $pkgcache | while read pkg pkgfile
 	do
 		if [ -f $pkgfile ] ; then
@@ -330,7 +330,7 @@ buildhistory_get_imageinfo() {
 	( cd ${IMAGE_ROOTFS} && find . -ls | awk '{ if ( $7 ~ /[0-9]/ ) printf "%s %10-s %10-s %10s %s %s %s\n", $3, $5, $6, $7, $11, $12, $13 ; else printf "%s %10-s %10-s %10s %s %s %s\n", $3, $5, $6, 0, $10, $11, $12 }' | sort -k5 > ${BUILDHISTORY_DIR_IMAGE}/files-in-image.txt )
 
 	# Record some machine-readable meta-information about the image
-	echo -n > ${BUILDHISTORY_DIR_IMAGE}/image-info.txt
+	printf ""  > ${BUILDHISTORY_DIR_IMAGE}/image-info.txt
 	cat >> ${BUILDHISTORY_DIR_IMAGE}/image-info.txt <<END
 ${@buildhistory_get_imagevars(d)}
 END

@@ -110,7 +110,7 @@ rpm_log_check() {
 		if (echo "$lf_txt" | grep -v log_check | grep "$keyword_die") >/dev/null 2>&1
 		then
 			echo "log_check: There were error messages in the logfile"
-			echo -e "log_check: Matched keyword: [$keyword_die]\n"
+			printf "log_check: Matched keyword: [$keyword_die]\n\n"
 			echo "$lf_txt" | grep -v log_check | grep -C 5 -i "$keyword_die"
 			echo ""
 			do_exit=1
@@ -211,8 +211,8 @@ process_pkg_list_rpm() {
 	pkgs="$@"
 	local confbase=${INSTALL_CONFBASE_RPM}
 
-	echo -n > ${target_rootfs}/install/base_archs.pkglist
-	echo -n > ${target_rootfs}/install/ml_archs.pkglist
+	printf "" > ${target_rootfs}/install/base_archs.pkglist
+	printf "" > ${target_rootfs}/install/ml_archs.pkglist
 
 	for pkg in $pkgs; do
 		echo "Processing $pkg..."

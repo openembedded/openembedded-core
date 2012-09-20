@@ -75,7 +75,7 @@ fi
 image_details $IMAGE
 device_details $(basename $DEVICE)
 
-echo -n "Write $IMAGE to $DEVICE [y/N]? "
+printf "Write $IMAGE to $DEVICE [y/N]? "
 read RESPONSE
 if [ "$RESPONSE" != "y" ]; then
 	echo "Write aborted"

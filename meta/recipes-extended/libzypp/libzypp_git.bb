@@ -106,10 +106,10 @@ do_archgen () {
 				continue;;
 		esac
 		if [ "${AVOID_CONSTRUCTOR}" != "true" ]; then
-		  echo -n "  const Arch Arch_${each_arch} " | tr - _		>> zypp/oe-arch.h
+		  printf "  const Arch Arch_${each_arch} " | tr - _		>> zypp/oe-arch.h
 		  echo "(_${each_arch});" | tr - _				>> zypp/oe-arch.h
 		else
-		  echo -n "  const Arch Arch_${each_arch} " | tr - _		>> zypp/oe-arch.h
+		  printf "  const Arch Arch_${each_arch} " | tr - _		>> zypp/oe-arch.h
 		  echo "( IdString ( \"${each_arch}\" ) );" | tr - _		>> zypp/oe-arch.h
 		fi
 	done
