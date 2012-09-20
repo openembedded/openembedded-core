@@ -13,5 +13,7 @@ BBCLASSEXTEND = "native"
 inherit autotools
 
 do_configure() {
+	install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.guess ${S}
+	install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.sub ${S}
 	oe_runconf
 }
