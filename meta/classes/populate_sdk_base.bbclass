@@ -150,10 +150,10 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-payload_offset=$(($(grep -na -m1 "^MARKER:$" $(basename $0)|cut -d':' -f1) + 1))
+payload_offset=$(($(grep -na -m1 "^MARKER:$" $0|cut -d':' -f1) + 1))
 
 printf "Extracting SDK..."
-tail -n +$payload_offset $(basename $0) | tar xj --strip-components=4 -C $target_sdk_dir
+tail -n +$payload_offset $0| tar xj --strip-components=4 -C $target_sdk_dir
 echo "done"
 
 printf "Setting it up..."
