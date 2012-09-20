@@ -215,6 +215,11 @@ $SUDO sed -i -e "s:$DEFAULT_INSTALL_FOLDER:$NATIVE_INSTALL_DIR:g" $env_setup_scr
 find $OECORE_NATIVE_SYSROOT -type f -exec file '{}' \;|grep ":.*ASCII.*text"|cut -d':' -f1|\
     xargs $SUDO sed -i -e "s:$DEFAULT_INSTALL_FOLDER:$NATIVE_INSTALL_DIR:g"
 
+# change all symlinks pointing to /opt/${DISTRO}/${SDK_VERSION}
+for l in $(find $NATIVE_INSTALL_DIR -type l); do
+	ln -sf $(readlink $l|sed -e "s:$DEFAULT_INSTALL_FOLDER:$NATIVE_INSTALL_DIR:") $l
+done
+
 echo_info "\nSuccessfully installed selected native ADT!"
 }
 
