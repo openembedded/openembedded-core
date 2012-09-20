@@ -9,7 +9,7 @@ SRCREV_machine_qemuppc ?= "cf4bad14983753ad4b592c40fb36466b202b24a4"
 SRCREV_machine_qemux86 ?= "59c3ff750831338d05ab67d5efd7fc101c451aff"
 SRCREV_machine_qemux86-64 ?= "59c3ff750831338d05ab67d5efd7fc101c451aff"
 SRCREV_machine ?= "59c3ff750831338d05ab67d5efd7fc101c451aff"
-SRCREV_meta ?= "7c50e572635d356f0b66d9ab90823f127f835744"
+SRCREV_meta ?= "594994cb4c19bb4f2e8100ffe0599aef8b2e8b4c"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.4.git;protocol=git;nocheckout=1;branch=${KBRANCH},meta;name=machine,meta"
 
