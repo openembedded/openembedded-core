@@ -6,10 +6,10 @@ Upstream-Status: Pending
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Index: gcc-4_7-branch/gcc/configure.ac
+Index: gcc-4.7.2/gcc/configure.ac
 ===================================================================
---- gcc-4_7-branch.orig/gcc/configure.ac	2012-06-20 00:21:52.182955919 -0700
-+++ gcc-4_7-branch/gcc/configure.ac	2012-06-20 00:28:01.386973785 -0700
+--- gcc-4.7.2.orig/gcc/configure.ac	2012-09-20 07:42:30.284941174 -0700
++++ gcc-4.7.2/gcc/configure.ac	2012-09-20 07:55:23.148970564 -0700
 @@ -118,6 +118,72 @@
  	local_prefix=/usr/local
  fi
@@ -163,10 +163,10 @@ Index: gcc-4_7-branch/gcc/configure.ac
  AC_ARG_WITH(specs,
    [AS_HELP_STRING([--with-specs=SPECS],
                    [add SPECS to driver command-line processing])],
-Index: gcc-4_7-branch/gcc/configure
+Index: gcc-4.7.2/gcc/configure
 ===================================================================
---- gcc-4_7-branch.orig/gcc/configure	2012-06-20 00:27:18.778971725 -0700
-+++ gcc-4_7-branch/gcc/configure	2012-06-20 00:28:06.634974041 -0700
+--- gcc-4.7.2.orig/gcc/configure	2012-09-20 07:42:30.284941174 -0700
++++ gcc-4.7.2/gcc/configure	2012-09-20 07:55:31.788970893 -0700
 @@ -757,10 +757,6 @@
  REPORT_BUGS_TO
  PKGVERSION
@@ -408,21 +408,21 @@ Index: gcc-4_7-branch/gcc/configure
  # Check whether --with-specs was given.
  if test "${with_specs+set}" = set; then :
    withval=$with_specs; CONFIGURE_SPECS=$withval
-@@ -17973,7 +17979,7 @@
+@@ -18013,7 +18019,7 @@
    lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
    lt_status=$lt_dlunknown
    cat > conftest.$ac_ext <<_LT_EOF
--#line 17976 "configure"
-+#line 17982 "configure"
+-#line 18016 "configure"
++#line 18022 "configure"
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-@@ -18079,7 +18085,7 @@
+@@ -18119,7 +18125,7 @@
    lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
    lt_status=$lt_dlunknown
    cat > conftest.$ac_ext <<_LT_EOF
--#line 18082 "configure"
-+#line 18088 "configure"
+-#line 18122 "configure"
++#line 18128 "configure"
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H

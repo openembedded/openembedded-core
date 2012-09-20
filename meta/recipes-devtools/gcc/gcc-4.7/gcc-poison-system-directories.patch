@@ -27,10 +27,10 @@ Upstream-Status: Inappropriate [distribution: codesourcery]
        ENABLE_POISON_SYSTEM_DIRECTORIES defined, warn for use of
        /usr/include, /usr/local/include or /usr/X11R6/include.
 
-Index: gcc-4_7-branch/gcc/common.opt
+Index: gcc-4.7.2/gcc/common.opt
 ===================================================================
---- gcc-4_7-branch.orig/gcc/common.opt	2012-04-10 10:54:04.000000000 -0700
-+++ gcc-4_7-branch/gcc/common.opt	2012-04-10 10:56:02.259442274 -0700
+--- gcc-4.7.2.orig/gcc/common.opt	2012-08-06 07:34:27.000000000 -0700
++++ gcc-4.7.2/gcc/common.opt	2012-09-20 07:40:54.708937540 -0700
 @@ -582,6 +582,10 @@
  Common Var(warn_padded) Warning
  Warn when padding is required to align structure members
@@ -42,10 +42,10 @@ Index: gcc-4_7-branch/gcc/common.opt
  Wshadow
  Common Var(warn_shadow) Warning
  Warn when one local variable shadows another
-Index: gcc-4_7-branch/gcc/config.in
+Index: gcc-4.7.2/gcc/config.in
 ===================================================================
---- gcc-4_7-branch.orig/gcc/config.in	2012-04-10 10:54:04.000000000 -0700
-+++ gcc-4_7-branch/gcc/config.in	2012-04-10 10:56:02.259442274 -0700
+--- gcc-4.7.2.orig/gcc/config.in	2012-09-20 00:23:55.000000000 -0700
++++ gcc-4.7.2/gcc/config.in	2012-09-20 07:40:54.708937540 -0700
 @@ -144,6 +144,12 @@
  #endif
  
@@ -59,11 +59,11 @@ Index: gcc-4_7-branch/gcc/config.in
  /* Define if you want all operations on RTL (the basic data structure of the
     optimizer and back end) to be checked for dynamic type safety at runtime.
     This is quite expensive. */
-Index: gcc-4_7-branch/gcc/configure.ac
+Index: gcc-4.7.2/gcc/configure.ac
 ===================================================================
---- gcc-4_7-branch.orig/gcc/configure.ac	2012-04-10 10:55:32.000000000 -0700
-+++ gcc-4_7-branch/gcc/configure.ac	2012-04-10 10:56:02.259442274 -0700
-@@ -4959,6 +4959,16 @@
+--- gcc-4.7.2.orig/gcc/configure.ac	2012-09-20 07:30:27.000000000 -0700
++++ gcc-4.7.2/gcc/configure.ac	2012-09-20 07:40:54.708937540 -0700
+@@ -4989,6 +4989,16 @@
                  [specify that runtime libraries should be
                   installed in a compiler-specific directory])])
  
@@ -80,10 +80,10 @@ Index: gcc-4_7-branch/gcc/configure.ac
  # Substitute configuration variables
  AC_SUBST(subdirs)
  AC_SUBST(srcdir)
-Index: gcc-4_7-branch/gcc/doc/invoke.texi
+Index: gcc-4.7.2/gcc/doc/invoke.texi
 ===================================================================
---- gcc-4_7-branch.orig/gcc/doc/invoke.texi	2012-04-10 10:54:04.000000000 -0700
-+++ gcc-4_7-branch/gcc/doc/invoke.texi	2012-04-10 10:56:02.263442231 -0700
+--- gcc-4.7.2.orig/gcc/doc/invoke.texi	2012-09-14 13:45:27.000000000 -0700
++++ gcc-4.7.2/gcc/doc/invoke.texi	2012-09-20 07:40:54.712937541 -0700
 @@ -260,6 +260,7 @@
  -Woverlength-strings  -Wpacked  -Wpacked-bitfield-compat  -Wpadded @gol
  -Wparentheses  -Wpedantic-ms-format -Wno-pedantic-ms-format @gol
@@ -92,7 +92,7 @@ Index: gcc-4_7-branch/gcc/doc/invoke.texi
  -Wredundant-decls @gol
  -Wreturn-type  -Wsequence-point  -Wshadow @gol
  -Wsign-compare  -Wsign-conversion  -Wstack-protector @gol
-@@ -3878,6 +3879,14 @@
+@@ -3879,6 +3880,14 @@
   for most targets, it is made up of code and thus requires the stack
   to be made executable in order for the program to work properly.
  
@@ -107,10 +107,10 @@ Index: gcc-4_7-branch/gcc/doc/invoke.texi
  @item -Wfloat-equal
  @opindex Wfloat-equal
  @opindex Wno-float-equal
-Index: gcc-4_7-branch/gcc/gcc.c
+Index: gcc-4.7.2/gcc/gcc.c
 ===================================================================
---- gcc-4_7-branch.orig/gcc/gcc.c	2012-04-10 10:54:04.000000000 -0700
-+++ gcc-4_7-branch/gcc/gcc.c	2012-04-10 10:56:02.267442207 -0700
+--- gcc-4.7.2.orig/gcc/gcc.c	2012-08-06 07:34:27.000000000 -0700
++++ gcc-4.7.2/gcc/gcc.c	2012-09-20 07:40:54.716937541 -0700
 @@ -673,6 +673,8 @@
      %{flto} %{flto=*} %l " LINK_PIE_SPEC \
     "%X %{o*} %{e*} %{N} %{n} %{r}\
@@ -120,10 +120,10 @@ Index: gcc-4_7-branch/gcc/gcc.c
      %{static:} %{L*} %(mfwrap) %(link_libgcc) %o\
      %{fopenmp|ftree-parallelize-loops=*:%:include(libgomp.spec)%(link_gomp)}\
      %{fgnu-tm:%:include(libitm.spec)%(link_itm)}\
-Index: gcc-4_7-branch/gcc/incpath.c
+Index: gcc-4.7.2/gcc/incpath.c
 ===================================================================
---- gcc-4_7-branch.orig/gcc/incpath.c	2012-04-10 10:54:04.000000000 -0700
-+++ gcc-4_7-branch/gcc/incpath.c	2012-04-10 10:56:02.267442207 -0700
+--- gcc-4.7.2.orig/gcc/incpath.c	2012-01-26 15:34:58.000000000 -0800
++++ gcc-4.7.2/gcc/incpath.c	2012-09-20 07:40:54.716937541 -0700
 @@ -361,6 +361,24 @@
  	}
        fprintf (stderr, _("End of search list.\n"));
@@ -149,10 +149,10 @@ Index: gcc-4_7-branch/gcc/incpath.c
  }
  
  /* Use given -I paths for #include "..." but not #include <...>, and
-Index: gcc-4_7-branch/gcc/Makefile.in
+Index: gcc-4.7.2/gcc/Makefile.in
 ===================================================================
---- gcc-4_7-branch.orig/gcc/Makefile.in	2012-04-10 10:54:05.000000000 -0700
-+++ gcc-4_7-branch/gcc/Makefile.in	2012-04-10 10:56:02.267442207 -0700
+--- gcc-4.7.2.orig/gcc/Makefile.in	2012-08-06 07:34:27.000000000 -0700
++++ gcc-4.7.2/gcc/Makefile.in	2012-09-20 07:40:54.716937541 -0700
 @@ -2065,7 +2065,7 @@
  
  incpath.o: incpath.c incpath.h $(CONFIG_H) $(SYSTEM_H) $(CPPLIB_H) \
@@ -162,10 +162,10 @@ Index: gcc-4_7-branch/gcc/Makefile.in
  
  CFLAGS-prefix.o += -DPREFIX=\"$(prefix)\" -DBASEVER=$(BASEVER_s)
  prefix.o: prefix.c $(CONFIG_H) $(SYSTEM_H) coretypes.h prefix.h \
-Index: gcc-4_7-branch/gcc/configure
+Index: gcc-4.7.2/gcc/configure
 ===================================================================
---- gcc-4_7-branch.orig/gcc/configure	2012-04-10 10:55:32.000000000 -0700
-+++ gcc-4_7-branch/gcc/configure	2012-04-10 10:56:12.183442720 -0700
+--- gcc-4.7.2.orig/gcc/configure	2012-09-20 07:30:27.000000000 -0700
++++ gcc-4.7.2/gcc/configure	2012-09-20 07:41:08.548938066 -0700
 @@ -914,6 +914,7 @@
  with_system_zlib
  enable_maintainer_mode
@@ -183,25 +183,25 @@ Index: gcc-4_7-branch/gcc/configure
    --enable-plugin         enable plugin support
    --disable-libquadmath-support
                            disable libquadmath support for Fortran
-@@ -17970,7 +17973,7 @@
+@@ -18010,7 +18013,7 @@
    lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
    lt_status=$lt_dlunknown
    cat > conftest.$ac_ext <<_LT_EOF
--#line 17973 "configure"
-+#line 17976 "configure"
+-#line 18013 "configure"
++#line 18016 "configure"
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-@@ -18076,7 +18079,7 @@
+@@ -18116,7 +18119,7 @@
    lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
    lt_status=$lt_dlunknown
    cat > conftest.$ac_ext <<_LT_EOF
--#line 18079 "configure"
-+#line 18082 "configure"
+-#line 18119 "configure"
++#line 18122 "configure"
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-@@ -27075,6 +27078,19 @@
+@@ -27129,6 +27132,19 @@
  fi
  
  

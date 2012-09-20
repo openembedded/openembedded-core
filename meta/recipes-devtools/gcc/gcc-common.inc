@@ -43,10 +43,11 @@ SHLIBSDIR = "${STAGING_DIR_TARGET}/shlibs"
 DEBIANNAME_libgcc = "libgcc1"
 
 MIRRORS =+ "\
-${GNU_MIRROR}/gcc/releases/    ftp://gcc.gnu.org/pub/gcc/releases/ \n \
-${GNU_MIRROR}/gcc/	http://mirrors.rcn.net/pub/sourceware/gcc/releases/ \n \
-${GNU_MIRROR}/gcc/releases/    http://gcc.get-software.com/releases/ \n \
-${GNU_MIRROR}/gcc/	http://gcc.get-software.com/releases/ \n \
+${GNU_MIRROR}/gcc    ftp://gcc.gnu.org/pub/gcc/releases/ \n \
+${GNU_MIRROR}/gcc	ftp://gd.tuwien.ac.at/gnu/gcc/ \n \
+${GNU_MIRROR}/gcc	http://mirrors.rcn.net/pub/sourceware/gcc/releases/ \n \
+${GNU_MIRROR}/gcc   http://gcc.get-software.com/releases/ \n \
+${GNU_MIRROR}/gcc	http://gcc.get-software.com/releases/ \n \
 "
 
 #
