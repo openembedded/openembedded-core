@@ -12,7 +12,7 @@
 export TZ=/etc/localtime
 
 [ -r /proc/mounts ] || exit 1
-[ -x /sbin/udevd ] || exit 1
+[ -x /lib/udev/udevd ] || exit 1
 [ -d /sys/class ] || exit 1
 
 [ -f /etc/default/udev-cache ] && . /etc/default/udev-cache

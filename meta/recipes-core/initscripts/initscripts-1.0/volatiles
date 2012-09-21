@@ -36,4 +36,4 @@ f root root 0664 /var/log/wtmp none
 f root root 0664 /var/run/utmp none
 l root root 0644 /etc/resolv.conf /var/run/resolv.conf
 f root root 0644 /var/run/resolv.conf none
-
+l root root 0755 /run /var/run

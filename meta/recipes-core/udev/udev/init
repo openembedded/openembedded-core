@@ -13,7 +13,7 @@ export TZ=/etc/localtime
 
 [ -d /sys/class ] || exit 1
 [ -r /proc/mounts ] || exit 1
-[ -x /sbin/udevd ] || exit 1
+[ -x /lib/udev/udevd ] || exit 1
 [ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
 [ -f /etc/udev/udev.conf ] && . /etc/udev/udev.conf
 
@@ -70,15 +70,15 @@ kill_udevd > "/dev/null" 2>&1
 
 # trigger the sorted events
 echo -e '\000\000\000\000' > /proc/sys/kernel/hotplug
-/sbin/udevd -d
+/lib/udev/udevd -d
 
-/sbin/udevadm control --env=STARTUP=1
+/usr/bin/udevadm control --env=STARTUP=1
 if [ "$not_first_boot" != "" ];then
-	/sbin/udevadm trigger --action=add --subsystem-nomatch=tty --subsystem-nomatch=mem --subsystem-nomatch=vc --subsystem-nomatch=vtconsole --subsystem-nomatch=misc --subsystem-nomatch=dcon --subsystem-nomatch=pci_bus  --subsystem-nomatch=graphics	 --subsystem-nomatch=backlight --subsystem-nomatch=video4linux	--subsystem-nomatch=platform
-	(/sbin/udevadm settle --timeout=3; /sbin/udevadm control --env=STARTUP=)&
+	/usr/bin/udevadm trigger --action=add --subsystem-nomatch=tty --subsystem-nomatch=mem --subsystem-nomatch=vc --subsystem-nomatch=vtconsole --subsystem-nomatch=misc --subsystem-nomatch=dcon --subsystem-nomatch=pci_bus  --subsystem-nomatch=graphics	 --subsystem-nomatch=backlight --subsystem-nomatch=video4linux	--subsystem-nomatch=platform
+	(/usr/bin/udevadm settle --timeout=3; /usr/bin/udevadm control --env=STARTUP=)&
 else
-	/sbin/udevadm trigger --action=add
-	/sbin/udevadm settle
+	/usr/bin/udevadm trigger --action=add
+	/usr/bin/udevadm settle
 fi
 
 exit 0

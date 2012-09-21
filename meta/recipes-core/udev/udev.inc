@@ -6,16 +6,18 @@ LICENSE = "GPLv2.0+ & LGPLv2.1+"
 LICENSE_${PN} = "GPLv2.0+"
 LICENSE_libudev = "LGPLv2.1+"
 LICENSE_libgudev = "LGPLv2.1+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
-                    file://libudev/COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
-                    file://extras/gudev/COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+                    file://src/COPYING;md5=17c4e5fb495e6707ac92a3864926f979 \
+                    file://src/gudev/COPYING;md5=fb494485a7d0505308cb68e4997cc266"
+                    
 
-DEPENDS = "acl glib-2.0 libusb usbutils pciutils gperf-native libxslt-native"
+DEPENDS = "acl glib-2.0 libusb usbutils pciutils gperf-native libxslt-native util-linux"
 RPROVIDES_${PN} = "hotplug"
 RRECOMMENDS_${PN} += "udev-extraconf usbutils-ids pciutils-ids"
 RDEPENDS_libudev = "${PN} (= ${EXTENDPKGV})"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
+           file://0001-Fixing-keyboard_force_release.sh-shell-script-path.patch \
            file://run.rules \
            file://udev.rules \
            file://devfs-udev.rules \
@@ -30,9 +32,18 @@ inherit autotools pkgconfig update-rc.d
 
 # udevd/udevadm -> /sbin/, libudev.so.* -> /lib/
 sbindir = "${base_sbindir}"
-libexecdir = "${base_libdir}/udev"
-EXTRA_OECONF = "--disable-introspection --with-rootlibdir=${base_libdir} \
-                --with-pci-ids-path=${datadir}/pci.ids"
+libexecdir = "${base_libdir}" 
+EXTRA_OECONF = "--disable-introspection \
+                --with-rootlibdir=${base_libdir} \
+                --with-pci-ids-path=${datadir}/pci.ids \
+                ac_cv_file__usr_share_pci_ids=no \
+                ac_cv_file__usr_share_hwdata_pci_ids=no \
+                ac_cv_file__usr_share_misc_pci_ids=yes \
+                --sbindir=${base_sbindir} \
+                --libexecdir=${base_libdir} \
+                --with-rootlibdir=${base_libdir} \
+                --with-rootprefix= \
+               "
 
 PACKAGES =+ "udev-acl udev-consolekit udev-utils"
 PACKAGES =+ "udev-cache libudev libudev-dev libudev-dbg"
@@ -48,6 +59,8 @@ FILES_${PN} += "${libexecdir} ${libdir}/ConsoleKit"
 RRECOMMENDS_${PN} += "udev-utils"
 
 FILES_${PN}-dbg += "${libexecdir}/.debug"
+FILES_${PN}-dbg += "${base_libdir}/udev/.debug/"
+FILES_${PN}-dbg += "${base_libdir}/udev/.debug/*"
 FILES_${PN}-dev = "${datadir}/pkgconfig/udev.pc"
 FILES_libudev = "${base_libdir}/libudev.so.*"
 FILES_libudev-dbg = "${base_libdir}/.debug/libudev.so.*"
@@ -82,4 +95,6 @@ do_install_append () {
 
 	# hid2hci has moved to bluez4. removed in udev as of version 169
 	rm -f ${D}${base_libdir}/udev/hid2hci
+
+	echo 'run_path="/var/run/udev"' >> ${D}${sysconfdir}/udev/udev.conf
 }
