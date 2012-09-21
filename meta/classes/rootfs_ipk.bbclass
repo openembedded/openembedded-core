@@ -97,8 +97,18 @@ fakeroot rootfs_ipk_do_rootfs () {
 	if ${@base_contains("IMAGE_FEATURES", "package-management", "false", "true", d)}; then
 		if ! grep Status:.install.ok.unpacked ${STATUS}; then
 			# All packages were successfully configured.
-			# update-rc.d, base-passwd are no further use, remove them now
-			opkg-cl ${IPKG_ARGS} --force-depends remove update-rc.d base-passwd || true
+			# update-rc.d, base-passwd, run-postinsts are no further use, remove them now
+			remove_run_postinsts=false
+			if [ -e ${IMAGE_ROOTFS}${sysconfdir}/init.d/run-postinsts ]; then
+				remove_run_postinsts=true
+			fi
+			opkg-cl ${IPKG_ARGS} --force-depends remove update-rc.d base-passwd ${ROOTFS_BOOTSTRAP_INSTALL} || true
+
+			# Need to remove rc.d files for run-postinsts by hand since opkg won't
+			# call postrm scripts in offline root mode.
+			if $remove_run_postinsts; then
+				update-rc.d -f -r ${IMAGE_ROOTFS} run-postinsts remove
+			fi
 
 			# Also delete the status files
 			rm -rf ${IMAGE_ROOTFS}${opkglibdir}
