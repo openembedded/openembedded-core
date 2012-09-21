@@ -17,3 +17,7 @@ fi
 if [ -e /sys ] && grep -q sysfs /proc/filesystems && ! [ -e /sys/class ]; then
   mount -t sysfs sysfs /sys
 fi
+
+if [ -e /sys/kernel/debug ] && grep -q debugfs /proc/filesystems; then
+  mount -t debugfs debugfs /sys/kernel/debug
+fi
