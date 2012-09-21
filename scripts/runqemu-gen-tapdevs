@@ -70,7 +70,7 @@ if [ ! -x "$IFCONFIG" ]; then
 fi
 
 # Ensure we start with a clean slate
-for tap in `$IFCONFIG | grep ^tap | awk '{ print \$1 }'`; do
+for tap in `$IFCONFIG | grep ^tap | awk '{ print \$1 }' | sed s/://`; do
 	echo "Note: Destroying pre-existing tap interface $tap..."
 	$TUNCTL -d $tap
 done

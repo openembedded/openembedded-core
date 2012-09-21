@@ -154,7 +154,7 @@ if [ ! -x "$IFCONFIG" ]; then
        exit 1
 fi
 
-POSSIBLE=`$IFCONFIG -a | grep '^tap' | awk '{print $1}'`
+POSSIBLE=`$IFCONFIG -a | grep '^tap' | awk '{print $1}' | sed s/://`
 TAP=""
 LOCKFILE=""
 for tap in $POSSIBLE; do
