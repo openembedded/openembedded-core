@@ -116,6 +116,8 @@ def package_qa_get_machine_dict():
 WARN_QA ?= "ldflags useless-rpaths rpaths unsafe-references-in-binaries unsafe-references-in-scripts staticdev libdir"
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch la2 pkgconfig la perms"
 
+ALL_QA = "${WARN_QA} ${ERROR_QA}"
+
 def package_qa_clean_path(path,d):
     """ Remove the common prefix from the path. In this case it is the TMPDIR"""
     return path.replace(d.getVar('TMPDIR',True),"")
@@ -722,7 +724,7 @@ python do_package_qa () {
             rdepends_sane = False
 
 
-    if 'libdir' in (d.getVar("WARN_QA", True) or "").split():
+    if 'libdir' in d.getVar("ALL_QA", True).split():
         package_qa_check_libdir(d)
 
     if not walk_sane or not rdepends_sane:
@@ -787,7 +789,7 @@ do_populate_sysroot[postfuncs] += "do_qa_staging "
 do_configure[postfuncs] += "do_qa_configure "
 
 python () {
-    tests = d.getVar('WARN_QA', True) + " " + d.getVar('ERROR_QA', True)
-    if tests.find("desktop") != -1:
+    tests = d.getVar('ALL_QA', True).split()
+    if "desktop" in tests:
         d.appendVar("PACKAGE_DEPENDS", "desktop-file-utils-native")
 }
