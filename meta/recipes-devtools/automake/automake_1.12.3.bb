@@ -42,7 +42,7 @@ SRC_URI += "${PATHFIXPATCH} \
 SRC_URI[md5sum] = "d2af8484de94cdee16d89c50aaa1c729"
 SRC_URI[sha256sum] = "095ffaa3ac887d1eb3511bf13d7f1fc9ec0503c6a06aeae05c93730cdda9a5a0"
 
-PR = "r0"
+PR = "r1"
 
 do_install () {
     oe_runmake 'DESTDIR=${D}' install

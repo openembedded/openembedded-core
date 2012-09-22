@@ -17,6 +17,10 @@ SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.gz \
 
 inherit autotools
 
+do_configure() {
+	oe_runconf
+}
+
 do_install_append() {
     rm -rf ${D}${datadir}/emacs
 

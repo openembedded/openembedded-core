@@ -9,6 +9,10 @@ SRC_URI = "${GNU_MIRROR}/automake/automake-${PV}.tar.gz"
 
 inherit autotools
 
+do_configure() {
+	oe_runconf
+}
+
 export AUTOMAKE = "${@bb.which('automake', d.getVar('PATH', True))}"
 
 FILES_${PN} += "${datadir}/automake* ${datadir}/aclocal*"
