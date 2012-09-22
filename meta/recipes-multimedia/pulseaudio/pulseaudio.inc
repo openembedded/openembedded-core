@@ -37,6 +37,7 @@ EXTRA_OECONF = "\
 		--disable-orc \
 		--enable-tcpwrap=no \
 		--with-access-group=audio \
+		--disable-openssl \
 "
 
 PARALLEL_MAKE = ""
