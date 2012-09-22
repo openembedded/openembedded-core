@@ -16,7 +16,7 @@
 
 set -e
 
-DAEMON=/usr/bin/dbus-daemon
+DAEMON=@bindir@/dbus-daemon
 NAME=dbus
 DAEMONUSER=messagebus           # must match /etc/dbus-1/system.conf
 PIDFILE=/var/run/messagebus.pid # must match /etc/dbus-1/system.conf
