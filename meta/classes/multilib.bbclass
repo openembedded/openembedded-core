@@ -19,6 +19,9 @@ python multilib_virtclass_handler () {
     if bb.data.inherits_class('native', e.data):
         raise bb.parse.SkipPackage("We can't extend native recipes")
 
+    if bb.data.inherits_class('nativesdk', e.data):
+        raise bb.parse.SkipPackage("We can't extend nativesdk recipes")
+
     save_var_name=e.data.getVar("MULTILIB_SAVE_VARNAME", True) or ""
     for name in save_var_name.split():
         val=e.data.getVar(name, True)
