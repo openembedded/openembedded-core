@@ -17,6 +17,10 @@ export config_TARGET_LINK = "${CCLD}"
 export config_TARGET_CFLAGS = "${CFLAGS}"
 export config_TARGET_LFLAGS = "${LDFLAGS}"
 
+# pread() is in POSIX.1-2001 so any reasonable system must surely support it
+BUILD_CFLAGS += "-DUSE_PREAD"
+TARGET_CFLAGS += "-DUSE_PREAD"
+
 PACKAGES = "lib${BPN} lib${BPN}-dev lib${BPN}-doc ${PN}-dbg lib${BPN}-staticdev ${PN}"
 
 FILES_${PN} = "${bindir}/*"
