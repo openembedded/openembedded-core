@@ -12,6 +12,7 @@ python multilib_virtclass_handler () {
         raise bb.parse.SkipPackage("We shouldn't have multilib variants for the kernel")
 
     if bb.data.inherits_class('image', e.data):
+        e.data.setVar("MLPREFIX", variant + "-")
         e.data.setVar("PN", variant + "-" + e.data.getVar("PN", False))
         return
 
