@@ -17,7 +17,7 @@ SRC_URI = "\
 SRC_URI[md5sum] = "78eb1e984f4532aa9f2bdd3c127b5b61"
 SRC_URI[sha256sum] = "c8b84420d9f4869397f84cad2dabd9a475b7723d619a924a873740353e9df936"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI_append_virtclass-nativesdk = "\
     file://relocatable_sdk.patch \
@@ -28,5 +28,9 @@ do_configure_prepend_virtclass-nativesdk() {
 		# Undo the -lX11 added by linker-flags.patch
 		sed -i 's/-lX11//g' Makefile.target
 	fi
+}
+do_configure_prepend_virtclass-native() {
+	# Undo the -lX11 added by linker-flags.patch, don't assume that host has libX11 installed
+	sed -i 's/-lX11//g' Makefile.target
 }
 
