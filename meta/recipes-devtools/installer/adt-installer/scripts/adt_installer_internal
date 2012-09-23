@@ -217,7 +217,7 @@ find $OECORE_NATIVE_SYSROOT -type f -exec file '{}' \;|grep ":.*ASCII.*text"|cut
 
 # change all symlinks pointing to /opt/${DISTRO}/${SDK_VERSION}
 for l in $(find $NATIVE_INSTALL_DIR -type l); do
-	ln -sf $(readlink $l|sed -e "s:$DEFAULT_INSTALL_FOLDER:$NATIVE_INSTALL_DIR:") $l
+    $SUDO ln -sf $(readlink $l|sed -e "s:$DEFAULT_INSTALL_FOLDER:$NATIVE_INSTALL_DIR:") $l
 done
 
 echo_info "\nSuccessfully installed selected native ADT!"
