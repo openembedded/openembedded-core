@@ -3,7 +3,7 @@ From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
 Date: Wed, 12 Sep 2012 17:42:29 +0300
 Subject: [PATCH] libffi update for 3.0.11
 
-Upstream status : Pending
+Upstream-Status : Pending
 
 Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
 ---

@@ -12,7 +12,7 @@ that will cause error sometimes.
 
 [YOCTO #2796]
 
-Upstream Status:Submitted
+Upstream-Status:Submitted
 Upstream Bugid :12015 email:12015@debbugs.gnu.org
 guile bug maillist: bug-guile@gnu.org
 
