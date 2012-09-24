@@ -18,6 +18,13 @@ python multilib_virtclass_handler () {
         e.data.setVar("PN", variant + "-" + e.data.getVar("PN", False))
         return
 
+    if bb.data.inherits_class('cross-canadian', e.data):
+        e.data.setVar("MLPREFIX", variant + "-")
+        override = ":virtclass-multilib-" + variant
+        e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + override)
+        bb.data.update_data(e.data)
+        return
+
     if bb.data.inherits_class('native', e.data):
         raise bb.parse.SkipPackage("We can't extend native recipes")
 
@@ -69,12 +76,16 @@ python __anonymous () {
     if bb.data.inherits_class('image', d) or bb.data.inherits_class('populate_sdk_base', d):
         return
 
+    clsextend.map_depends_variable("DEPENDS")
+    clsextend.map_variable("PROVIDES")
+
+    if bb.data.inherits_class('cross-canadian', d):
+        return
+
     clsextend.rename_packages()
     clsextend.rename_package_variables((d.getVar("PACKAGEVARS", True) or "").split())
 
-    clsextend.map_depends_variable("DEPENDS")
     clsextend.map_packagevars()
-    clsextend.map_variable("PROVIDES")
     clsextend.map_regexp_variable("PACKAGES_DYNAMIC")
     clsextend.map_variable("PACKAGE_INSTALL")
     clsextend.map_variable("INITSCRIPT_PACKAGES")
@@ -90,7 +101,7 @@ python do_package_qa_multilib() {
         for i in values:
             if i.startswith('virtual/'):
                 i = i[len('virtual/'):]
-            if (not i.startswith('kernel-module')) and (not i.startswith(mlprefix)):
+            if (not i.startswith('kernel-module')) and (not i.startswith(mlprefix)) and (not 'cross-canadian' in i):
                 candidates.append(i)
         if len(candidates) > 0:
             bb.warn("Multilib QA Issue: %s package %s - suspicious values '%s' in %s" 
@@ -109,4 +120,3 @@ python do_package_qa_multilib() {
         check_mlprefix(pkg, 'RREPLACES', ml)
         check_mlprefix(pkg, 'RCONFLICTS', ml)
 }
-

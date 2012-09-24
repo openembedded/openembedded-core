@@ -183,6 +183,8 @@ def preferred_ml_updates(d):
             providers.append(v)
 
     for pkg, reason in blacklists.items():
+        if pkg.endswith("-native") or pkg.startswith("nativesdk-") or 'cross-canadian' in pkg:
+            continue
         for p in prefixes:
             newpkg = p + "-" + pkg
             if not d.getVarFlag('PNBLACKLIST', newpkg, True):
@@ -192,6 +194,17 @@ def preferred_ml_updates(d):
         val = d.getVar(v, False)
         pkg = v.replace("PREFERRED_VERSION_", "")
         if pkg.endswith("-native") or pkg.startswith("nativesdk-"):
+            continue
+        if 'cross-canadian' in pkg:
+            for p in prefixes:
+                localdata = bb.data.createCopy(d)
+                override = ":virtclass-multilib-" + p
+                localdata.setVar("OVERRIDES", localdata.getVar("OVERRIDES", False) + override)
+                bb.data.update_data(localdata)
+                newname = localdata.expand(v)
+                if newname != v:
+                    newval = localdata.getVar(v, True)
+                    d.setVar(newname, newval)
             continue
         for p in prefixes:
             newname = "PREFERRED_VERSION_" + p + "-" + pkg
@@ -203,14 +216,36 @@ def preferred_ml_updates(d):
         pkg = prov.replace("PREFERRED_PROVIDER_", "")
         if pkg.endswith("-native") or pkg.startswith("nativesdk-"):
             continue
+        if 'cross-canadian' in pkg:
+            for p in prefixes:
+                localdata = bb.data.createCopy(d)
+                override = ":virtclass-multilib-" + p
+                localdata.setVar("OVERRIDES", localdata.getVar("OVERRIDES", False) + override)
+                bb.data.update_data(localdata)
+                newname = localdata.expand(prov)
+                if newname != prov:
+                    newval = localdata.expand(val)
+                    d.setVar(newname, newval)
+            continue
         virt = ""
         if pkg.startswith("virtual/"):
             pkg = pkg.replace("virtual/", "")
             virt = "virtual/"
         for p in prefixes:
-            newname = "PREFERRED_PROVIDER_" + virt + p + "-" + pkg
             if pkg != "kernel":
                 val = p + "-" + val
+
+            # implement variable keys
+            localdata = bb.data.createCopy(d)
+            override = ":virtclass-multilib-" + p
+            localdata.setVar("OVERRIDES", localdata.getVar("OVERRIDES", False) + override)
+            bb.data.update_data(localdata)
+            newname = localdata.expand(prov)
+            if newname != prov:
+                d.setVar(newname, localdata.expand(val))
+
+            # implement alternative multilib name
+            newname = localdata.expand("PREFERRED_PROVIDER_" + virt + p + "-" + pkg)
             if not d.getVar(newname, False):
                 d.setVar(newname, val)
 
@@ -218,7 +253,7 @@ def preferred_ml_updates(d):
     mp = (d.getVar("MULTI_PROVIDER_WHITELIST", True) or "").split()
     extramp = []
     for p in mp:
-        if p.endswith("-native") or p.startswith("nativesdk-"):
+        if p.endswith("-native") or p.startswith("nativesdk-") or 'cross-canadian' in p:
             continue
         virt = ""
         if p.startswith("virtual/"):
