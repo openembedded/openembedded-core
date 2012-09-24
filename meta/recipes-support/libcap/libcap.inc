@@ -43,7 +43,7 @@ do_compile() {
 }
 
 do_install() {
-	oe_runmake install DESTDIR="${D}" prefix="${prefix}" SBINDIR="${D}${base_sbindir}"
+	oe_runmake install DESTDIR="${D}" prefix="${prefix}" SBINDIR="${D}${sbindir}"
 }
 
 do_install_append() {
