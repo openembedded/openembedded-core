@@ -25,6 +25,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://MCONFIG \
            file://defines.h \
            file://make_include \
+           file://swapargs.h \
            "
 
 PACKAGES =+ "util-linux-agetty util-linux-fdisk util-linux-cfdisk util-linux-sfdisk \
@@ -32,7 +33,7 @@ PACKAGES =+ "util-linux-agetty util-linux-fdisk util-linux-cfdisk util-linux-sfd
              util-linux-mount util-linux-readprofile util-linux-libblkid \
              util-linux-libblkid-dev util-linux-libuuid util-linux-libuuid-dev \
              util-linux-uuidgen util-linux-lscpu util-linux-fsck util-linux-blkid \
-             util-linux-mkfs util-linux-mcookie"
+             util-linux-mkfs util-linux-mcookie util-linux-systemd"
 
 EXTRA_OECONF = "--libdir=${base_libdir} --disable-use-tty-group \
                 --disable-makeinstall-chown --enable-elvtune --enable-init \
@@ -44,7 +45,7 @@ EXTRA_OECONF = "--libdir=${base_libdir} --disable-use-tty-group \
 		usrsbin_execdir='${sbindir}' \
 "
 
-EXTRA_OECONF_class-native += "--disable-login --disable-su"
+EXTRA_OECONF_append_class-native = " --disable-login --disable-su"
 
 FILES_${PN}-doc += "${datadir}/getopt/getopt-*.*"
 
@@ -74,6 +75,8 @@ FILES_util-linux-blkid = "${base_sbindir}/blkid*"
 RCONFLICTS_util-linux-blkid = "e2fsprogs-blkid"
 RREPLACES_util-linux-blkid = "e2fsprogs-blkid"
 
+FILES_${PN}-systemd = "${systemd_unitdir}/system/"
+
 RDEPENDS_${PN} = "util-linux-umount util-linux-swaponoff util-linux-losetup"
 RRECOMMENDS_${PN} = "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-mount util-linux-readprofile util-linux-mkfs "
 
@@ -84,6 +87,7 @@ do_compile () {
 	set -e
 	install ${WORKDIR}/MCONFIG ${S}/MCONFIG
 	install ${WORKDIR}/make_include ${S}/make_include
+	install ${WORKDIR}/swapargs.h ${S}/mount-deprecated/swapargs.h
 	install ${WORKDIR}/defines.h ${S}/defines.h
 	oe_runmake ARCH=${TARGET_ARCH} CPU= CPUOPT= 'OPT=${CFLAGS}' 
 }
