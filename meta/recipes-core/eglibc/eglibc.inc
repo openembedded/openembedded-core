@@ -34,6 +34,7 @@ LEAD_SONAME = "libc.so"
 
 CACHED_CONFIGUREVARS += "ac_cv_path_KSH=${base_bindir}/bash \
                        ac_cv_path_BASH_SHELL=${base_bindir}/bash \
+                       libc_cv_localedir=${localedir} \
 		       libc_cv_ssp=no \
 		       "
 

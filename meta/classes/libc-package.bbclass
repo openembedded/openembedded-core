@@ -65,12 +65,12 @@ fi
 
 rm -rf ${TMP_LOCALE}
 mkdir -p ${TMP_LOCALE}
-if [ -f ${libdir}/locale/locale-archive ]; then
-        cp ${libdir}/locale/locale-archive ${TMP_LOCALE}/
+if [ -f ${localedir}/locale-archive ]; then
+        cp ${localedir}/locale-archive ${TMP_LOCALE}/
 fi
 localedef --inputfile=${datadir}/i18n/locales/%s --charmap=%s --prefix=/tmp/locale %s
-mkdir -p ${libdir}/locale/
-mv ${TMP_LOCALE}/locale-archive ${libdir}/locale/
+mkdir -p ${localedir}/
+mv ${TMP_LOCALE}/locale-archive ${localedir}/
 rm -rf ${TMP_LOCALE}
 }
 
@@ -80,22 +80,22 @@ locale_base_postrm() {
 
 rm -rf ${TMP_LOCALE}
 mkdir -p ${TMP_LOCALE}
-if [ -f ${libdir}/locale/locale-archive ]; then
-	cp ${libdir}/locale/locale-archive ${TMP_LOCALE}/
+if [ -f ${localedir}/locale-archive ]; then
+	cp ${localedir}/locale-archive ${TMP_LOCALE}/
 fi
 localedef --delete-from-archive --inputfile=${datadir}/locales/%s --charmap=%s --prefix=/tmp/locale %s
-mv ${TMP_LOCALE}/locale-archive ${libdir}/locale/
+mv ${TMP_LOCALE}/locale-archive ${localedir}/
 rm -rf ${TMP_LOCALE}
 }
 
 
-TMP_LOCALE="/tmp/locale${libdir}/locale"
+TMP_LOCALE="/tmp/locale${localedir}"
 LOCALETREESRC ?= "${PKGD}"
 
 do_prep_locale_tree() {
 	treedir=${WORKDIR}/locale-tree
 	rm -rf $treedir
-	mkdir -p $treedir/${base_bindir} $treedir/${base_libdir} $treedir/${datadir} $treedir/${libdir}/locale
+	mkdir -p $treedir/${base_bindir} $treedir/${base_libdir} $treedir/${datadir} $treedir/${localedir}
 	tar -cf - -C ${LOCALETREESRC}${datadir} -ps i18n | tar -xf - -C $treedir/${datadir}
 	# unzip to avoid parsing errors
 	for i in $treedir/${datadir}/i18n/charmaps/*gz; do 
@@ -111,8 +111,9 @@ do_prep_locale_tree() {
 do_collect_bins_from_locale_tree() {
 	treedir=${WORKDIR}/locale-tree
 
-	mkdir -p ${PKGD}${libdir}
-	tar -cf - -C $treedir/${libdir} -ps locale | tar -xf - -C ${PKGD}${libdir}
+	parent=$(dirname ${localedir})
+	mkdir -p ${PKGD}/$parent
+	tar -cf - -C $treedir/$parent -ps $(basename ${localedir}) | tar -xf - -C ${PKGD}$parent
 }
 
 inherit qemu
@@ -141,7 +142,7 @@ python package_do_split_gconvs () {
     gconv_libdir = base_path_join(libdir, "gconv")
     charmap_dir = base_path_join(datadir, "i18n", "charmaps")
     locales_dir = base_path_join(datadir, "i18n", "locales")
-    binary_locales_dir = base_path_join(libdir, "locale")
+    binary_locales_dir = d.getVar('localedir', True)
 
     def calc_gconv_deps(fn, pkg, file_regex, output_pattern, group):
         deps = []
@@ -259,7 +260,7 @@ python package_do_split_gconvs () {
         path = d.getVar("PATH", True)
         i18npath = base_path_join(treedir, datadir, "i18n")
         gconvpath = base_path_join(treedir, "iconvdata")
-        outputpath = base_path_join(treedir, libdir, "locale")
+        outputpath = base_path_join(treedir, binary_locales_dir)
 
         use_cross_localedef = d.getVar("LOCALE_GENERATION_WITH_CROSS-LOCALEDEF", True) or "0"
         if use_cross_localedef == "1":

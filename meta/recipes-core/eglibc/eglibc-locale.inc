@@ -69,12 +69,12 @@ FILES_localedef = "${bindir}/localedef"
 LOCALETREESRC = "${STAGING_INCDIR}/eglibc-locale-internal-${MULTIMACH_TARGET_SYS}"
 
 do_install () {
-	mkdir -p ${D}${bindir} ${D}${datadir} ${D}${libdir}
+	mkdir -p ${D}${bindir} ${D}${datadir} ${D}${libdir} ${D}${localedir}
 	if [ -n "$(ls ${LOCALETREESRC}/${bindir})" ]; then
 		cp -fpPR ${LOCALETREESRC}/${bindir}/* ${D}${bindir}
 	fi
-	if [ -e ${LOCALETREESRC}/${libdir}/locale ]; then
-		cp -fpPR ${LOCALETREESRC}/${libdir}/locale ${D}${libdir}
+	if [ -n "$(ls ${LOCALETREESRC}/${localedir})" ]; then
+		cp -fpPR ${LOCALETREESRC}/${localedir}/* ${D}${localedir}
 	fi
 	if [ -e ${LOCALETREESRC}/${libdir}/gconv ]; then
 		cp -fpPR ${LOCALETREESRC}/${libdir}/gconv ${D}${libdir}

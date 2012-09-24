@@ -98,7 +98,9 @@ do_install_locale () {
 	if [ -e ${D}${libdir}/gconv ]; then
 		mv -f ${D}${libdir}/gconv ${dest}${libdir}
 	fi
-	cp -fpPR ${D}${libdir}/* ${dest}${libdir}
+	if [ -e ${D}${exec_prefix}/lib ]; then
+		cp -fpPR ${D}${exec_prefix}/lib ${dest}${exec_prefix}
+	fi
 	if [ -e ${D}${datadir}/i18n ]; then
 		mv ${D}${datadir}/i18n ${dest}${datadir}
 	fi
@@ -113,6 +115,9 @@ PACKAGE_PREPROCESS_FUNCS += "eglibc_package_preprocess"
 
 eglibc_package_preprocess () {
 	rm -rf ${PKGD}/${includedir}/eglibc-locale-internal-${MULTIMACH_TARGET_SYS}
-	rm -rf ${PKGD}/${libdir}/locale
+	rm -rf ${PKGD}/${localedir}
+	if [ "${libdir}" != "${exec_prefix}/lib" ]; then
+		# This dir only exists to hold locales
+		rm -rf ${PKGD}${exec_prefix}/lib
+	fi
 }
-
