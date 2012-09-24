@@ -5,7 +5,7 @@ LICENSE = "LGPLv2.1+"
 STDDEPENDS = "virtual/libx11 pango glib-2.0 libxfixes gdk-pixbuf libxi"
 BASE_CONF = "${@get_clutter_fpu_setting(bb, d)}"
 
-DEPENDS = "${STDDEPENDS} virtual/libgl libxcomposite"
+DEPENDS = "${STDDEPENDS} virtual/libgl libxcomposite libxdamage"
 EXTRA_OECONF = "${BASE_CONF} --with-flavour=glx"
 
 FILESPATH = "${FILE_DIRNAME}/cogl"
