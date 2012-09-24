@@ -1,0 +1,70 @@
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+commit 41d903918a5721e53ed694880eab44170f9717cc
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Wed Sep 14 13:45:18 2011 -0500
+
+    xorg-server.pc.in: Remove libpciaccess and pixman-1 from Requires
+    
+    Every module building against xorg-server does not *Require* pixman nor
+    libpciaccess.  If such modules need pixman or pciaccess, they should be
+    depending on them directly rather than inheriting a dependency from
+    xorg-server.  To do this, they should use PKG_CHECK_MODULES in configure.ac
+    to check for pixman-1 or pciaccess and include the apporpriate _LIBS variable
+    to the appropriate _LDFLAGS variable in Makefile.am
+    
+    This also moves pixman-1 to Requires.private, so CPPFLAGS is set right to
+    to satisfy include dependencies but avoid linking needlessly.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Reviewed-by: Gaetan Nadon <memsize@videotron.ca>
+
+diff --git a/configure.ac b/configure.ac
+index 50beb01..4bfa82c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -780,11 +780,6 @@ VIDMODEPROTO="xf86vidmodeproto >= 2.2.99.1"
+ WINDOWSWMPROTO="windowswmproto"
+ APPLEWMPROTO="applewmproto >= 1.4"
+ 
+-dnl Core modules for most extensions, et al.
+-SDK_REQUIRED_MODULES="[xproto >= 7.0.22] [randrproto >= 1.2.99.3] [renderproto >= 0.11] [xextproto >= 7.1.99] [inputproto >= 1.9.99.902] [kbproto >= 1.0.3] fontsproto"
+-# Make SDK_REQUIRED_MODULES available for inclusion in xorg-server.pc
+-AC_SUBST(SDK_REQUIRED_MODULES)
+-
+ dnl List of libraries that require a specific version
+ LIBAPPLEWM="applewm >= 1.4"
+ LIBDMX="dmx >= 1.0.99.1"
+@@ -806,6 +801,11 @@ dnl specific modules against it
+ PKG_CHECK_MODULES(PIXMAN, $LIBPIXMAN)
+ REQUIRED_LIBS="$REQUIRED_LIBS $LIBPIXMAN $LIBXFONT xau"
+ 
++dnl Core modules for most extensions, et al.
++SDK_REQUIRED_MODULES="[xproto >= 7.0.22] [randrproto >= 1.2.99.3] [renderproto >= 0.11] [xextproto >= 7.1.99] [inputproto >= 1.99.99.902] [kbproto >= 1.0.3] fontsproto $LIBPIXMAN"
++# Make SDK_REQUIRED_MODULES available for inclusion in xorg-server.pc
++AC_SUBST(SDK_REQUIRED_MODULES)
++
+ REQUIRED_MODULES="[fixesproto >= 5.0] [damageproto >= 1.1] [xcmiscproto >= 1.2.0] [xtrans >= 1.2.2] [bigreqsproto >= 1.1.0] $SDK_REQUIRED_MODULES"
+ 
+ if test "x$CONFIG_UDEV" = xyes &&
+@@ -1583,6 +1583,7 @@ if test "x$XORG" = xyes; then
+ 	if test "x$PCI" = xyes; then
+ 
+ 	PKG_CHECK_MODULES([PCIACCESS], $LIBPCIACCESS)
++	SDK_REQUIRED_MODULES="$SDK_REQUIRED_MODULES $LIBPCIACCESS"
+	SAVE_LIBS=$LIBS
+	SAVE_CFLAGS=$CFLAGS
+	CFLAGS=$PCIACCESS_CFLAGS
+diff --git a/xorg-server.pc.in b/xorg-server.pc.in
+index fb238b5..a98eca8 100644
+--- a/xorg-server.pc.in
++++ b/xorg-server.pc.in
+@@ -15,7 +15,6 @@ abi_extension=@abi_extension@
+ Name: xorg-server
+ Description: Modular X.Org X Server
+ Version: @PACKAGE_VERSION@
+-Requires: pixman-1 pciaccess
+ Requires.private: @SDK_REQUIRED_MODULES@
+ Cflags: -I${sdkdir} @symbol_visibility@
+ Libs: -L${libdir}
