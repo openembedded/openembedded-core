@@ -1,0 +1,18 @@
+util-linux: take ${sbindir} from the environment if it is set there
+
+Signed-off-by: Phil Blundell <pb@pbcl.net>
+Upstream-Status: Inappropriate [configuration]
+
+--- util-linux-2.21.2/configure.ac~	2012-09-22 09:29:12.354215377 +0100
++++ util-linux-2.21.2/configure.ac	2012-09-22 16:47:14.713628946 +0100
+@@ -67,7 +67,9 @@
+ usrbin_execdir='${exec_prefix}/bin'
+ AC_SUBST([usrbin_execdir])
+ 
+-usrsbin_execdir='${exec_prefix}/sbin'
++if [ -z "$usrsbin_execdir" ]; then
++   usrsbin_execdir='${exec_prefix}/sbin'
++fi
+ AC_SUBST([usrsbin_execdir])
+ 
+ usrlib_execdir='${exec_prefix}/'$libdirname
