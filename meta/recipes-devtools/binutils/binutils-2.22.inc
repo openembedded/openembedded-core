@@ -1,4 +1,4 @@
-PR = "r16"
+PR = "r17"
 
 LIC_FILES_CHKSUM="\
     file://src-release;endline=17;md5=4830a9ef968f3b18dd5e9f2c00db2d35\
@@ -38,7 +38,6 @@ SRC_URI = "\
      file://0035-2011-12-19-Chung-Lin-Tang-cltang-codesourcery.com.patch \
      file://0036-2011-12-19-Chung-Lin-Tang-cltang-codesourcery.com.patch \
      file://0037-2011-12-19-Chung-Lin-Tang-cltang-codesourcery.com.patch \
-     file://0038-Copy-from-mainline-to-binutils-2.22-branch.patch \
      file://0039-emulparams-elf32bmip.sh-OTHER_SECTIONS-Put-.mdebug.-.patch \
      file://0052-gas.patch \
      file://0055-Remove-ABI_64_P-check-on-R_X86_64_PCXX.patch \
