@@ -40,7 +40,7 @@ def get_gcc_multiarch_setting(bb, d):
 # For now, libgcc is most important so we fix for that - RP.
 SHLIBSDIR = "${STAGING_DIR_TARGET}/shlibs"
 
-DEBIANNAME_libgcc = "libgcc1"
+DEBIANNAME_${MLPREFIX}libgcc = "libgcc1"
 
 MIRRORS =+ "\
 ${GNU_MIRROR}/gcc    ftp://gcc.gnu.org/pub/gcc/releases/ \n \
