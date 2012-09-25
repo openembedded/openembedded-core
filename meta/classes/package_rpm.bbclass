@@ -276,8 +276,8 @@ process_pkg_list_rpm() {
 package_install_internal_rpm () {
 
 	local target_rootfs="${INSTALL_ROOTFS_RPM}"
-	local platform="${INSTALL_PLATFORM_RPM}"
-	local platform_extra="${INSTALL_PLATFORM_EXTRA_RPM}"
+	local platform="`echo ${INSTALL_PLATFORM_RPM} | sed 's#-#_#g'`"
+	local platform_extra="`echo ${INSTALL_PLATFORM_EXTRA_RPM} | sed 's#-#_#g'`"
 	local confbase="${INSTALL_CONFBASE_RPM}"
 	local package_to_install="${INSTALL_PACKAGES_RPM}"
 	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_RPM}"
