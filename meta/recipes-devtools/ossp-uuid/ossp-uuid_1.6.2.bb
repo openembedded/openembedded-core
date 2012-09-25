@@ -11,10 +11,11 @@ Unique Identifiers (UUID) from the command-line."
 HOMEPAGE = "http://www.ossp.org/pkg/lib/uuid/"
 SECTION = "libs"
 
-LICENSE = "ossp_uuid"
-LIC_FILES_CHKSUM = "file://README;beginline=30;endline=55;md5=b394fadb039bbfca6ad9d9d769ee960e"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://README;beginline=30;endline=55;md5=b394fadb039bbfca6ad9d9d769ee960e \
+	   file://uuid_md5.c;beginline=1;endline=28;md5=9c1f4b2218546deae24c91be1dcf00dd"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz \
 	   file://0001-Change-library-name.patch \
