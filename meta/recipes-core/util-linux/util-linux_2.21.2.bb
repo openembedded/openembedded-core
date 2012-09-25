@@ -1,5 +1,5 @@
 MAJOR_VERSION = "2.21"
-PR = "r3"
+PR = "r4"
 require util-linux.inc
 
 # note that `lscpu' is under GPLv3+
@@ -40,7 +40,3 @@ addtask remove_lscpu before do_configure after do_patch
 
 CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=as"
 EXTRA_OECONF_virtclass-native += "--disable-fallocate --disable-use-tty-group"
-
-do_install_append () {
-	sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${bindir}/chkdupexe
-}
