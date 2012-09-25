@@ -26,3 +26,14 @@ KERNEL_AR = "${HOST_PREFIX}ar${KERNEL_ARSUFFIX} ${HOST_AR_KERNEL_ARCH}"
 
 # kernel modules are generally machine specific
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+#
+# Ensure the hostprogs are available for module compilation. Modules that
+# inherit this recipe and override do_compile() should be sure to call
+# do_make_scripts() or ensure the scripts are built independently.
+#
+do_make_scripts() {
+	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS 
+	oe_runmake CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${KERNEL_AR}" \
+	           -C ${STAGING_KERNEL_DIR} scripts
+}
