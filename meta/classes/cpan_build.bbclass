@@ -23,8 +23,9 @@ cpan_build_do_configure () {
 	if [ ${@is_target(d)} == "yes" ]; then
 		# build for target
 		. ${STAGING_LIBDIR}/perl/config.sh
+	fi
 
-			perl Build.PL --installdirs vendor \
+	perl Build.PL --installdirs vendor \
 				--destdir ${D} \
 				--install_path lib="${datadir}/perl" \
 				--install_path arch="${libdir}/perl" \
@@ -32,10 +33,6 @@ cpan_build_do_configure () {
 				--install_path bin=${bindir} \
 				--install_path bindoc=${mandir}/man1 \
 				--install_path libdoc=${mandir}/man3
-	else
-		# build for host
-		perl Build.PL --installdirs site --destdir ${D}
-	fi
 }
 
 cpan_build_do_compile () {
