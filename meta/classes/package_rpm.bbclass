@@ -317,10 +317,13 @@ package_install_internal_rpm () {
 		# we should add the previous solution manifest to the full "original" set to
 		# avoid duplicate install steps.
 		echo "Update original solution..."
-		cat ${target_rootfs}/install/initial_solution.manifest >> ${target_rootfs}/install/original_solution.manifest
-		cat ${target_rootfs}/install/total_solution.manifest >> ${target_rootfs}/install/original_solution.manifest
-		rm ${target_rootfs}/install/initial_solution.manifest
-		rm ${target_rootfs}/install/total_solution.manifest
+		for m in ${target_rootfs}/install/initial_solution.manifest \
+			${target_rootfs}/install/total_solution.manifest; do
+			if [ -s $m ]; then
+				cat $m >> ${target_rootfs}/install/original_solution.manifest
+				rm -f $m
+			fi
+		done
 	fi
 
 	# Setup manifest of packages to install...
