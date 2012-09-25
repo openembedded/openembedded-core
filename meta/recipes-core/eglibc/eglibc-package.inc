@@ -17,7 +17,7 @@ python __anonymous () {
 # Set this to zero if you don't want ldconfig in the output package
 USE_LDCONFIG ?= "1"
 
-PACKAGES = "${PN}-dbg catchsegv sln nscd ldd ${PN}-mtrace ${PN}-utils eglibc-thread-db ${PN}-pic libcidn libmemusage libsegfault ${PN}-pcprofile libsotruss ${PN} eglibc-extra-nss ${PN}-dev ${PN}-staticdev ${PN}-doc"
+PACKAGES = "${PN}-dbg catchsegv sln nscd ldd ${PN}-utils eglibc-thread-db ${PN}-pic libcidn libmemusage libsegfault ${PN}-pcprofile libsotruss ${PN} eglibc-extra-nss ${PN}-dev ${PN}-staticdev ${PN}-doc"
 
 # The ld.so in this eglibc supports the GNU_HASH
 RPROVIDES_${PN} = "glibc rtld(GNU_HASH)"
@@ -51,8 +51,6 @@ FILES_${PN}-utils = "${bindir}/* ${sbindir}/*"
 FILES_${PN}-dbg += "${libexecdir}/*/.debug ${libdir}/audit/.debug"
 FILES_catchsegv = "${bindir}/catchsegv"
 RDEPENDS_catchsegv = "libsegfault"
-RDEPENDS_${PN}-utils += "bash"
-RDEPENDS_${PN}-mtrace += "perl"
 FILES_${PN}-pcprofile = "${base_libdir}/libpcprofile.so"
 FILES_eglibc-thread-db = "${base_libdir}/libthread_db.so.* ${base_libdir}/libthread_db-*.so"
 RPROVIDES_${PN}-dev += "libc-dev"
@@ -65,11 +63,9 @@ DESCRIPTION_nscd = "nscd, name service cache daemon, caches name service lookups
 SUMMARY_eglibc-extra-nss = "hesiod, NIS and NIS+ nss libraries"
 DESCRIPTION_eglibc-extra-nss = "eglibc: nis, nisplus and hesiod search services."
 SUMMARY_ldd = "print shared library dependencies"
-DESCRIPTION_ldd = "/usr/bin/ldd prints shared library dependencies for each program or shared library specified on the command line."
+DESCRIPTION_ldd = "${bindir}/ldd prints shared library dependencies for each program or shared library specified on the command line."
 SUMMARY_${PN}-utils = "Miscellaneous utilities provided by eglibc"
 DESCRIPTION_${PN}-utils = "Miscellaneous utilities including getconf, iconf, locale, gencat, tzselect, zic, rpcinfo, ..."
-SUMMARY_${PN}-mtrace = "mtrace utility provided by eglibc"
-DESCRIPTION_${PN}-mtrace = "mtrace utility provided by eglibc"
 DESCRIPTION_libsotruss = "Library to support sotruss which traces calls through PLTs"
 
 inherit libc-common multilib_header
@@ -111,10 +107,26 @@ do_install_locale () {
 
 addtask do_install_locale after do_install before do_populate_sysroot do_package
 
+bashscripts = "mtrace sotruss xtrace"
+
+do_evacuate_scripts () {
+	target=${D}${includedir}/eglibc-scripts-internal-${MULTIMACH_TARGET_SYS}
+	mkdir -p $target
+	for i in ${bashscripts}; do
+		cp ${D}${bindir}/$i $target/
+	done
+}
+
+addtask evacuate_scripts after do_install before do_populate_sysroot do_package
+
 PACKAGE_PREPROCESS_FUNCS += "eglibc_package_preprocess"
 
 eglibc_package_preprocess () {
 	rm -rf ${PKGD}/${includedir}/eglibc-locale-internal-${MULTIMACH_TARGET_SYS}
+	rm -rf ${PKGD}/${includedir}/eglibc-scripts-internal-${MULTIMACH_TARGET_SYS}
+	for i in ${bashscripts}; do
+	    rm -f ${PKGD}${bindir}/$i
+	done
 	rm -rf ${PKGD}/${localedir}
 	if [ "${libdir}" != "${exec_prefix}/lib" ]; then
 		# This dir only exists to hold locales
