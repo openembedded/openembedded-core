@@ -29,6 +29,7 @@ import sys
 import stat
 import os
 import re
+import errno
 
 old_prefix = re.compile("##DEFAULT_INSTALL_DIR##")
 
@@ -171,7 +172,7 @@ def change_dl_sysdirs():
 
 # MAIN
 if len(sys.argv) < 4:
-    exit(1)
+    exit(-1)
 
 new_prefix = sys.argv[1]
 new_dl_path = sys.argv[2]
@@ -184,7 +185,16 @@ for e in executables_list:
     else:
         os.chmod(e, perms|stat.S_IRWXU)
 
-    f = open(e, "r+b")
+    try:
+        f = open(e, "r+b")
+    except IOError as ioex:
+        if ioex.errno == errno.ETXTBSY:
+            print("Could not open %s. File used by another process.\nPlease "\
+                  "make sure you exit all processes that might use any SDK "\
+                  "binaries." % e)
+        else:
+            print("Could not open %s: %s(%d)" % (e, ioex.strerror, ioex.errno))
+        exit(-1)
 
     arch = get_arch()
     if arch:
