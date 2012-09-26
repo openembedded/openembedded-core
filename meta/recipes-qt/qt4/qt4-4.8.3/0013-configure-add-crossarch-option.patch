@@ -1,0 +1,47 @@
+From 8785f376533ffdcf4c32b53274e8c40f567d7fd5 Mon Sep 17 00:00:00 2001
+From: Michael Lauer <mickey@vanille-media.de>
+Date: Wed, 26 Sep 2012 20:41:32 +0200
+Subject: [PATCH 13/20] configure: add "-crossarch" option
+
+Upstream-Status: Pending
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ configure | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/configure b/configure
+index cd66d05..f2c0725 100755
+--- a/configure
++++ b/configure
+@@ -1141,7 +1141,7 @@ while [ "$#" -gt 0 ]; do
+         shift
+         VAL=$1
+         ;;
+-    -prefix|-docdir|-headerdir|-plugindir|-importdir|-datadir|-libdir|-bindir|-translationdir|-sysconfdir|-examplesdir|-demosdir|-depths|-make|-nomake|-platform|-xplatform|-device-option|-buildkey|-sdk|-arch|-host-arch|-mysql_config|-sysroot)
++    -prefix|-docdir|-headerdir|-plugindir|-importdir|-datadir|-libdir|-bindir|-translationdir|-sysconfdir|-examplesdir|-demosdir|-depths|-make|-nomake|-platform|-xplatform|-device-option|-buildkey|-sdk|-arch|-host-arch|-mysql_config|-sysroot|-crossarch)
+         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
+         shift
+         VAL="$1"
+@@ -1697,6 +1697,9 @@ while [ "$#" -gt 0 ]; do
+         DEV_VAL=`echo $VAL | sed "s,^.*=\(.*\),\1,"`
+         DeviceVar set $DEV_VAR $DEV_VAL
+         ;;
++	crossarch)
++		CROSSARCH="$VAL"
++		;;
+     debug-and-release)
+         if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
+             CFG_DEBUG_RELEASE="$VAL"
+@@ -3297,6 +3300,8 @@ arm*)
+     ;;
+ esac
+ 
++CFG_ARCH="$CROSSARCH"
++
+ if [ -d "$relpath/src/corelib/arch/$CFG_ARCH" ]; then
+     if [ "$OPT_VERBOSE" = "yes" ]; then
+         echo "    '$CFG_ARCH' is supported"
+-- 
+1.7.12
+
