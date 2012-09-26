@@ -7,7 +7,7 @@ umask 077
 
 start() {
 	echo -n "Starting atd: "
-	start-stop-daemon --start --quiet --make-pidfile --pidfile /var/run/atd.pid --background --exec /usr/sbin/atd -- -f
+	start-stop-daemon --start --quiet --pidfile /var/run/atd.pid --background --exec /usr/sbin/atd -- -f
 	echo "OK"
 }
 stop() {
