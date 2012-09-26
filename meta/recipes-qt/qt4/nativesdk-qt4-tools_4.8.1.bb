@@ -1,4 +1,4 @@
-require qt4-tools-nativesdk.inc
+require nativesdk-qt4-tools.inc
 
 PR = "${INC_PR}.1"
 
