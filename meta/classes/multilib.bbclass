@@ -28,7 +28,7 @@ python multilib_virtclass_handler () {
     if bb.data.inherits_class('native', e.data):
         raise bb.parse.SkipPackage("We can't extend native recipes")
 
-    if bb.data.inherits_class('nativesdk', e.data):
+    if bb.data.inherits_class('nativesdk', e.data) or bb.data.inherits_class('crosssdk', e.data):
         raise bb.parse.SkipPackage("We can't extend nativesdk recipes")
 
     save_var_name=e.data.getVar("MULTILIB_SAVE_VARNAME", True) or ""
@@ -101,7 +101,7 @@ python do_package_qa_multilib() {
         for i in values:
             if i.startswith('virtual/'):
                 i = i[len('virtual/'):]
-            if (not i.startswith('kernel-module')) and (not i.startswith(mlprefix)) and (not 'cross-canadian' in i):
+            if (not i.startswith('kernel-module')) and (not i.startswith(mlprefix)) and (not 'cross-canadian' in i) and (not i.startswith("nativesdk-")):
                 candidates.append(i)
         if len(candidates) > 0:
             bb.warn("Multilib QA Issue: %s package %s - suspicious values '%s' in %s" 
