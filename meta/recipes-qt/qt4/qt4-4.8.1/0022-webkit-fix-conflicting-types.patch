@@ -1,0 +1,39 @@
+From 5cc08e33ea7ab5d32b6a14ccb23a366d56e50ea1 Mon Sep 17 00:00:00 2001
+From: Nitin A Kamble <nitin.a.kamble@intel.com>
+Date: Wed, 26 Sep 2012 20:56:33 +0200
+Subject: [PATCH 22/22] webkit: fix conflicting types
+
+This patch fixes the type mismatch fixing this compile issue:
+
+|
+/srv/home/nitin/builds/build-gcc47/tmp/sysroots/qemux86/usr/include/glib-2.0/glib/gthread.h:58:7:
+error: 'union' tag used in naming 'struct _GMutex' [-Werror=permissive]
+| In file included from ./wtf/Platform.h:1217:0,
+|                  from ./config.h:30,
+|                  from wtf/gobject/GOwnPtr.cpp:19:
+| wtf/gobject/GTypedefs.h:55:16: note: 'struct _GMutex' was previously
+declared here
+
+Upstream-Status: Pending
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ src/3rdparty/webkit/Source/JavaScriptCore/wtf/gobject/GTypedefs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/3rdparty/webkit/Source/JavaScriptCore/wtf/gobject/GTypedefs.h b/src/3rdparty/webkit/Source/JavaScriptCore/wtf/gobject/GTypedefs.h
+index c7f7ac4..f00e9cf 100644
+--- a/src/3rdparty/webkit/Source/JavaScriptCore/wtf/gobject/GTypedefs.h
++++ b/src/3rdparty/webkit/Source/JavaScriptCore/wtf/gobject/GTypedefs.h
+@@ -52,7 +52,7 @@ typedef struct _GFile GFile;
+ typedef struct _GHashTable GHashTable;
+ typedef struct _GInputStream GInputStream;
+ typedef struct _GList GList;
+-typedef struct _GMutex GMutex;
++typedef union _GMutex GMutex;
+ typedef struct _GPatternSpec GPatternSpec;
+ typedef struct _GPollableOutputStream GPollableOutputStream;
+ typedef struct _GSocketClient GSocketClient;
+-- 
+1.7.12
+

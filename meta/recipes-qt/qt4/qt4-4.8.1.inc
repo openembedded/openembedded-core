@@ -6,25 +6,25 @@ LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt4-${PV}:"
 
 SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${PV}.tar.gz \
-           file://0004-no-qmake.patch \
-           file://hack-out-pg2-4.7.0.patch \
-           file://0006-freetype-host-includes.patch \
-           file://0009-support-2bpp.patch \
-           file://0001-Added-Openembedded-crossarch-option.patch \
-           file://fix-translations.patch \
-           file://add_nostrip_for_debug_packages.diff \
-           file://qmake_cxx_eval.patch \
-           file://configure_oe_compiler.patch \
-           file://target_qmake.patch \
-           file://qmake_pri_fixes.patch \
-           file://pulseaudio-config.patch \
+           file://0003-webkit2-set-OUTPUT_DIR-value-if-empty.patch \
+           file://0004-configure-qmake-is-already-built-in-qt4-tools-native.patch \
+           file://0008-qmake.pro-Allow-building-a-separate-qmake-for-the-ta.patch \
+           file://0009-qmake-fix-source-file-references-in-qmake.pri.patch \
+           file://0010-configure-Hack-to-not-use-the-pg_config-of-the-host-.patch \
+           file://0011-freetype-host-includes.patch \
+           file://0012-Add-2bpp-support.patch \
+           file://0013-configure-add-crossarch-option.patch \
+           file://0014-translations-fix-phony-translation-linking-error.patch \
+           file://0015-configure-add-nostrip-for-debug-packages.patch \
+           file://0016-configure-eval-QMAKE_CXX.patch \
+           file://0017-configure-ensure-we-identify-the-compiler-as-g-in-co.patch \
+           file://0018-configure-make-pulseaudio-a-configurable-option.patch \
+           file://0019-javascriptcore-Fix-compile-error-when-using-toolchai.patch \
+           file://0020-Fixes-for-gcc-4.7.0-particularly-on-qemux86.patch \
+           file://0021-webkit-disable-the-fuse-ld-gold-flag.patch \
+           file://0022-webkit-fix-conflicting-types.patch \
            file://g++.conf \
            file://linux.conf \
-           file://gcc47-fix.patch \
-           file://gcc47-fix2.patch \
-           file://disable-fuse-gold-flag.patch \
-           file://fix_conflicting_types.patch \
-           file://set-OUTPUT_DIR-if-empty.patch \
            "
 
 SRC_URI[md5sum] = "7960ba8e18ca31f0c6e4895a312f92ff"

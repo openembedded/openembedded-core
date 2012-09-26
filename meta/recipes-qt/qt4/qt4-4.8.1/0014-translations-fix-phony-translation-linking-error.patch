@@ -1,4 +1,7 @@
-fix phony translation linking error
+From 306e0987cfdc67db11abc7071c48b0d196e84c8e Mon Sep 17 00:00:00 2001
+From: Otavio Salvador <otavio@ossystems.com.br>
+Date: Wed, 26 Sep 2012 20:45:10 +0200
+Subject: [PATCH 14/22] translations: fix phony translation linking error
 
   | .../usr/lib/crt1.o: In function `_start':
   | .../../sysdeps/i386/elf/start.S:115: undefined reference to `main'
@@ -6,13 +9,16 @@ fix phony translation linking error
 
 Upstream-Status: Pending
 
-Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ translations/translations.pro | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/translations/translations.pro b/translations/translations.pro
-index cdaf04a..24fa668 100644
+index dc99beb..0d98829 100644
 --- a/translations/translations.pro
 +++ b/translations/translations.pro
-@@ -20,7 +20,7 @@ updateqm.name = LRELEASE ${QMAKE_FILE_IN}
+@@ -101,7 +101,7 @@ updateqm.name = LRELEASE ${QMAKE_FILE_IN}
  updateqm.CONFIG += no_link
  QMAKE_EXTRA_COMPILERS += updateqm
  
@@ -21,7 +27,7 @@ index cdaf04a..24fa668 100644
      QMAKE_LINK = @: IGNORE THIS LINE
      OBJECTS_DIR =
      win32:CONFIG -= embed_manifest_exe
-@@ -30,7 +30,7 @@ isEmpty(vcproj) {
+@@ -111,7 +111,7 @@ isEmpty(vcproj) {
      phony_src.input = PHONY_DEPS
      phony_src.output = phony.c
      phony_src.variable_out = GENERATED_SOURCES
@@ -30,3 +36,6 @@ index cdaf04a..24fa668 100644
      phony_src.name = CREATE phony.c
      phony_src.CONFIG += combine
      QMAKE_EXTRA_COMPILERS += phony_src
+-- 
+1.7.12
+

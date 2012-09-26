@@ -1,7 +1,7 @@
-From 677f5b4bec03972c8cada19d2e4530252c9ac4ef Mon Sep 17 00:00:00 2001
+From d93ea994bf2ecee4775c68de645eac0cab248ac2 Mon Sep 17 00:00:00 2001
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 Date: Tue, 28 Feb 2012 15:10:24 +0000
-Subject: [PATCH] configure: make pulseaudio a configurable option
+Subject: [PATCH 18/22] configure: make pulseaudio a configurable option
 
 Allows disabling pulseaudio support within phonon at configure time.
 (This is the Qt 4.8.0 version.)
@@ -9,15 +9,16 @@ Allows disabling pulseaudio support within phonon at configure time.
 Upstream-Status: Pending
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
- configure |    9 ++++++++-
- 1 files changed, 8 insertions(+), 1 deletions(-)
+ configure | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/configure b/configure
-index 5a5ef1d..e43b920 100755
+index 0edaad9..3a63734 100755
 --- a/configure
 +++ b/configure
-@@ -1043,7 +1043,7 @@ while [ "$#" -gt 0 ]; do
+@@ -1045,7 +1045,7 @@ while [ "$#" -gt 0 ]; do
          VAL=no
          ;;
      #Qt style yes options
@@ -26,7 +27,7 @@ index 5a5ef1d..e43b920 100755
          VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
          VAL=yes
          ;;
-@@ -2000,6 +2000,13 @@ while [ "$#" -gt 0 ]; do
+@@ -2005,6 +2005,13 @@ while [ "$#" -gt 0 ]; do
              UNKNOWN_OPT=yes
          fi
          ;;
@@ -41,5 +42,5 @@ index 5a5ef1d..e43b920 100755
          if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
              CFG_QGTKSTYLE="$VAL"
 -- 
-1.7.5.4
+1.7.12
 

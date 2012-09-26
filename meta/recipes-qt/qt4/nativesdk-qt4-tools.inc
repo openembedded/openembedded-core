@@ -11,12 +11,12 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt4-${PV}:"
 inherit nativesdk qmake2
 
 SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${PV}.tar.gz \
-           file://0004-no-qmake.patch \
-           file://configure-lflags.patch \
-           file://qt-config.patch \
-           file://configure-paths.patch \
-           file://qt-dbus-const.patch \
-           file://target_qmake.patch \
+           file://0001-qlibraryinfo-allow-to-set-qt.conf-from-the-outside-u.patch \
+           file://0004-configure-qmake-is-already-built-in-qt4-tools-native.patch \
+           file://0005-configure-set-LFLAGS-to-pick-up-zlib-from-staging.patch \
+           file://0006-configure-Use-OE_QMAKE_-values-to-specify-Qt-utility.patch \
+           file://0007-dbus-Remove-const-usage-that-causes-compile-failure-.patch \
+           file://0008-qmake.pro-Allow-building-a-separate-qmake-for-the-ta.patch \
            file://g++.conf \
            file://linux.conf"
 

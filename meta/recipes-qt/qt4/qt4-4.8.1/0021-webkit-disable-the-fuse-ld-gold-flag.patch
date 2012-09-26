@@ -1,0 +1,41 @@
+From 3a74f5cf7f92ff6bf6b69c7cf76f54516573abb7 Mon Sep 17 00:00:00 2001
+From: Ken Werner <ken.werner@linaro.org>
+Date: Wed, 26 Sep 2012 20:55:21 +0200
+Subject: [PATCH 21/22] webkit: disable the -fuse-ld=gold flag
+
+This option is a Debian/Ubuntu specific extension to the g++ and causes upstream GCC to throw an error.
+
+Upstream-Status: Pending
+
+Signed-off-by: Ken Werner <ken.werner@linaro.org>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ src/3rdparty/webkit/Source/common.pri | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/3rdparty/webkit/Source/common.pri b/src/3rdparty/webkit/Source/common.pri
+index 0f62e14..d81a1f0 100644
+--- a/src/3rdparty/webkit/Source/common.pri
++++ b/src/3rdparty/webkit/Source/common.pri
+@@ -3,12 +3,12 @@
+ contains(JAVASCRIPTCORE_JIT,yes): DEFINES+=ENABLE_JIT=1
+ contains(JAVASCRIPTCORE_JIT,no): DEFINES+=ENABLE_JIT=0
+ 
+-linux-g++ {
+-isEmpty($$(SBOX_DPKG_INST_ARCH)):exists(/usr/bin/ld.gold) {
+-    message(Using gold linker)
+-    QMAKE_LFLAGS+=-fuse-ld=gold
+-}
+-}
++#linux-g++ {
++#isEmpty($$(SBOX_DPKG_INST_ARCH)):exists(/usr/bin/ld.gold) {
++#    message(Using gold linker)
++#    QMAKE_LFLAGS+=-fuse-ld=gold
++#}
++#}
+ 
+ # We use this flag on production branches
+ # See https://bugs.webkit.org/show_bug.cgi?id=60824
+-- 
+1.7.12
+

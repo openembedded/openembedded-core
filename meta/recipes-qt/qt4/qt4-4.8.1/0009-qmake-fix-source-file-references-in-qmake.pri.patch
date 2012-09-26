@@ -1,7 +1,7 @@
-From c56ed5f64a5f47cf8d539aa4ca9bedbe1fea2264 Mon Sep 17 00:00:00 2001
+From e863f35a80b130d8b520cdb7c81112a601157c44 Mon Sep 17 00:00:00 2001
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
-Date: Fri, 10 Feb 2012 15:32:12 +0000
-Subject: [PATCH] qmake: fix source file references in qmake.pri
+Date: Wed, 26 Sep 2012 20:33:49 +0200
+Subject: [PATCH 09/22] qmake: fix source file references in qmake.pri
 
 Fix duplicate entries in SOURCES and HEADERS, and fix the source file
 list for the split of qlocale.cpp.
@@ -9,9 +9,10 @@ list for the split of qlocale.cpp.
 Upstream-Status: Pending
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
- qmake/qmake.pri |    8 ++++----
- 1 files changed, 4 insertions(+), 4 deletions(-)
+ qmake/qmake.pri | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/qmake/qmake.pri b/qmake/qmake.pri
 index f2a3705..2d4e94c 100644
@@ -47,5 +48,5 @@ index f2a3705..2d4e94c 100644
          qmap.cpp \
          qmetatype.cpp \
 -- 
-1.7.5.4
+1.7.12
 

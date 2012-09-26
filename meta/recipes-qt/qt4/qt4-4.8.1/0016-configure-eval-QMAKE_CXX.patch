@@ -1,16 +1,25 @@
+From 3893ad264f85e4a0eec64017d515dddf9ee9ef88 Mon Sep 17 00:00:00 2001
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Wed, 26 Sep 2012 20:47:08 +0200
+Subject: [PATCH 16/22] configure: eval QMAKE_CXX
+
 Allow expansion of $(...) references in QMAKE_CXX (currently its value
 is $(OE_QMAKE_CXX)) in order to allow compiler version check to succeed
 which allows WebKit to be enabled.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-
 Upstream-Status: Pending
 
-Index: qt-everywhere-opensource-src-4.8.0/configure
-===================================================================
---- qt-everywhere-opensource-src-4.8.0.orig/configure
-+++ qt-everywhere-opensource-src-4.8.0/configure
-@@ -3322,7 +3322,8 @@ else
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ configure | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/configure b/configure
+index 5cc755e..1e6c910 100755
+--- a/configure
++++ b/configure
+@@ -3329,7 +3329,8 @@ else
      CFG_FRAMEWORK=no
  fi
  
@@ -20,3 +29,6 @@ Index: qt-everywhere-opensource-src-4.8.0/configure
  TEST_COMPILER="$CXX"
  
  [ -z "$TEST_COMPILER" ] && TEST_COMPILER=$QMAKE_CONF_COMPILER
+-- 
+1.7.12
+

@@ -1,4 +1,7 @@
-Upstream-Status: Pending
+From 419b6a19d3d506880fa705682613eaaeb7dcd9cf Mon Sep 17 00:00:00 2001
+From: Wenzong Fan <wenzong.fan@windriver.com>
+Date: Wed, 26 Sep 2012 20:18:08 +0200
+Subject: [PATCH 02/22] qkbdtty_qws: fix build with old kernel headers
 
 This issue is that with C++ compiler process an old version of kernel
 header file, coincidently that file has a variable named 'new':
@@ -9,11 +12,18 @@ header file, coincidently that file has a variable named 'new':
 
 On mostly hosts it has been changed to: new -> newev.
 
+Upstream-Status: Pending
+
 Signed-off-by: Wenzong Fan <wenzong.fan@windriver.com>
-=======================================
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ src/gui/embedded/qkbdtty_qws.cpp | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
 diff --git a/src/gui/embedded/qkbdtty_qws.cpp b/src/gui/embedded/qkbdtty_qws.cpp
---- a/src/gui/embedded/qkbdtty_qws.cpp	2012-07-27 13:16:58.420198350 +0800
-+++ b/src/gui/embedded/qkbdtty_qws.cpp	2012-07-27 13:24:43.924191127 +0800
+index f4b8461..4cee2e7 100644
+--- a/src/gui/embedded/qkbdtty_qws.cpp
++++ b/src/gui/embedded/qkbdtty_qws.cpp
 @@ -54,8 +54,20 @@
  
  #if defined Q_OS_LINUX
@@ -35,3 +45,6 @@ diff --git a/src/gui/embedded/qkbdtty_qws.cpp b/src/gui/embedded/qkbdtty_qws.cpp
  #  include "qscreen_qws.h"
  #  include "qwindowsystem_qws.h"
  #  include "qapplication.h"
+-- 
+1.7.12
+

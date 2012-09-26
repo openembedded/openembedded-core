@@ -1,13 +1,22 @@
-Use OE_QMAKE_* values to specify Qt utility paths
+From 074881d57e5d7ad23a7a784a75f4ffebf091e543 Mon Sep 17 00:00:00 2001
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Wed, 26 Sep 2012 20:29:09 +0200
+Subject: [PATCH 06/22] configure: Use OE_QMAKE_* values to specify Qt utility
+ paths
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 Upstream-Status: Inappropriate [configuration]
 
-Index: qt-everywhere-opensource-src-4.6.3/configure
-===================================================================
---- qt-everywhere-opensource-src-4.6.3.orig/configure	2011-01-10 15:47:37.100607001 +0000
-+++ qt-everywhere-opensource-src-4.6.3/configure	2011-01-10 15:49:14.576606999 +0000
-@@ -7198,11 +7198,11 @@
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ configure | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/configure b/configure
+index b1ba542..0231b7d 100755
+--- a/configure
++++ b/configure
+@@ -8517,11 +8517,11 @@ QMAKE_ABSOLUTE_SOURCE_ROOT = \$\$QT_SOURCE_TREE
  QMAKE_MOC_SRC    = \$\$QT_BUILD_TREE/src/moc
  
  #local paths that cannot be queried from the QT_INSTALL_* properties while building QTDIR
@@ -24,3 +33,6 @@ Index: qt-everywhere-opensource-src-4.6.3/configure
  QMAKE_INCDIR_QT  = \$\$QT_BUILD_TREE/include
  QMAKE_LIBDIR_QT  = \$\$QT_BUILD_TREE/lib
  
+-- 
+1.7.12
+

@@ -1,16 +1,25 @@
-Add 2bpp support
+From 69ff4de0f06ba112a5ca531957937dd860d0f3f8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jeremy=20Lain=C3=A9?= <jeremy.laine@m4x.org>
+Date: Wed, 26 Sep 2012 20:39:21 +0200
+Subject: [PATCH 12/22] Add 2bpp support
 
 Submitted upstream but rejected as being "out of scope":
 http://bugreports.qt.nokia.com/browse/QTBUG-3468
 
 Upstream-Status: Denied
-Original author: Jeremy Lainé <jeremy.laine@m4x.org>
-Ported from OE by: Yu Ke <ke.yu@intel.com>
 
-diff -urN qt-embedded-linux-opensource-src-4.4.3.orig/configure qt-embedded-linux-opensource-src-4.4.3/configure
---- qt-embedded-linux-opensource-src-4.4.3.orig/configure	2008-09-27 11:01:23.000000000 +0200
-+++ qt-embedded-linux-opensource-src-4.4.3/configure	2009-01-14 14:30:53.000000000 +0100
-@@ -5045,6 +5045,7 @@
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ configure                               |   5 +-
+ src/gui/embedded/qscreen_qws.cpp        | 211 ++++++++++++++++++++++++++++++++
+ src/gui/embedded/qscreenlinuxfb_qws.cpp |   4 +-
+ 3 files changed, 216 insertions(+), 4 deletions(-)
+
+diff --git a/configure b/configure
+index 9650199f6..7028ecf 100755
+--- a/configure
++++ b/configure
+@@ -6917,6 +6917,7 @@ if [ "$CFG_QWS_DEPTHS" = "prompted" -a "$PROMPT_FOR_DEPTHS" = "yes" ]; then
      echo "Choose pixel-depths to support:"
      echo
      echo "   1. 1bpp, black/white"
@@ -18,7 +27,7 @@ diff -urN qt-embedded-linux-opensource-src-4.4.3.orig/configure qt-embedded-linu
      echo "   4. 4bpp, grayscale"
      echo "   8. 8bpp, paletted"
      echo "  12. 12bpp, rgb 4-4-4"
-@@ -5063,11 +5064,11 @@
+@@ -6935,11 +6936,11 @@ if [ "$CFG_QWS_DEPTHS" = "prompted" -a "$PROMPT_FOR_DEPTHS" = "yes" ]; then
  fi
  if [ -n "$CFG_QWS_DEPTHS" -a "$PLATFORM_QWS" = "yes" ]; then
      if [ "$CFG_QWS_DEPTHS" = "all" ]; then
@@ -32,24 +41,11 @@ diff -urN qt-embedded-linux-opensource-src-4.4.3.orig/configure qt-embedded-linu
  	    generic) QCONFIG_FLAGS="$QCONFIG_FLAGS QT_QWS_DEPTH_GENERIC";;
  	esac
      done
-diff -urN qt-embedded-linux-opensource-src-4.4.3.orig/src/gui/embedded/qscreenlinuxfb_qws.cpp qt-embedded-linux-opensource-src-4.4.3/src/gui/embedded/qscreenlinuxfb_qws.cpp
---- qt-embedded-linux-opensource-src-4.4.3.orig/src/gui/embedded/qscreenlinuxfb_qws.cpp	2008-09-27 11:01:28.000000000 +0200
-+++ qt-embedded-linux-opensource-src-4.4.3/src/gui/embedded/qscreenlinuxfb_qws.cpp	2009-01-14 17:22:34.000000000 +0100
-@@ -404,8 +404,8 @@
-         setupOffScreen();
- 
-     // Now read in palette
--    if((vinfo.bits_per_pixel==8) || (vinfo.bits_per_pixel==4)) {
--        screencols= (vinfo.bits_per_pixel==8) ? 256 : 16;
-+    if((vinfo.bits_per_pixel==8) || (vinfo.bits_per_pixel==4) || (vinfo.bits_per_pixel==2)) {
-+        screencols= 1 << vinfo.bits_per_pixel;
-         int loopc;
-         fb_cmap startcmap;
-         startcmap.start=0;
-diff -urN qt-embedded-linux-opensource-src-4.4.3.orig/src/gui/embedded/qscreen_qws.cpp qt-embedded-linux-opensource-src-4.4.3/src/gui/embedded/qscreen_qws.cpp
---- qt-embedded-linux-opensource-src-4.4.3.orig/src/gui/embedded/qscreen_qws.cpp	2008-09-27 11:01:28.000000000 +0200
-+++ qt-embedded-linux-opensource-src-4.4.3/src/gui/embedded/qscreen_qws.cpp	2009-01-14 17:22:44.000000000 +0100
-@@ -444,6 +444,58 @@
+diff --git a/src/gui/embedded/qscreen_qws.cpp b/src/gui/embedded/qscreen_qws.cpp
+index d6c614d..504f3d3 100644
+--- a/src/gui/embedded/qscreen_qws.cpp
++++ b/src/gui/embedded/qscreen_qws.cpp
+@@ -469,6 +469,58 @@ static void solidFill_gray4(QScreen *screen, const QColor &color,
  }
  #endif // QT_QWS_DEPTH_4
  
@@ -108,7 +104,7 @@ diff -urN qt-embedded-linux-opensource-src-4.4.3.orig/src/gui/embedded/qscreen_q
  #ifdef QT_QWS_DEPTH_1
  static inline void qt_rectfill_mono(quint8 *dest, quint8 value,
                                      int x, int y, int width, int height,
-@@ -551,6 +603,11 @@
+@@ -576,6 +628,11 @@ void qt_solidFill_setup(QScreen *screen, const QColor &color,
          screen->d_ptr->solidFill = solidFill_gray4;
          break;
  #endif
@@ -120,7 +116,7 @@ diff -urN qt-embedded-linux-opensource-src-4.4.3.orig/src/gui/embedded/qscreen_q
  #ifdef QT_QWS_DEPTH_1
      case 1:
          screen->d_ptr->solidFill = solidFill_mono;
-@@ -958,6 +1015,149 @@
+@@ -1006,6 +1063,149 @@ static void blit_4(QScreen *screen, const QImage &image,
  }
  #endif // QT_QWS_DEPTH_4
  
@@ -270,7 +266,7 @@ diff -urN qt-embedded-linux-opensource-src-4.4.3.orig/src/gui/embedded/qscreen_q
  #ifdef QT_QWS_DEPTH_1
  
  struct qmono { quint8 dummy; } Q_PACKED;
-@@ -1206,6 +1406,11 @@
+@@ -1259,6 +1459,11 @@ void qt_blit_setup(QScreen *screen, const QImage &image,
          screen->d_ptr->blit = blit_4;
          break;
  #endif
@@ -282,7 +278,7 @@ diff -urN qt-embedded-linux-opensource-src-4.4.3.orig/src/gui/embedded/qscreen_q
  #ifdef QT_QWS_DEPTH_1
      case 1:
          screen->d_ptr->blit = blit_1;
-@@ -2056,6 +2261,8 @@
+@@ -2146,6 +2351,8 @@ int QScreen::alloc(unsigned int r,unsigned int g,unsigned int b)
          }
      } else if (d == 4) {
          ret = qGray(r, g, b) >> 4;
@@ -291,7 +287,7 @@ diff -urN qt-embedded-linux-opensource-src-4.4.3.orig/src/gui/embedded/qscreen_q
      } else if (d == 1) {
          ret = qGray(r, g, b) >= 128;
      } else {
-@@ -2126,6 +2333,10 @@
+@@ -2216,6 +2423,10 @@ bool QScreen::supportsDepth(int d) const
      } else if(d==1) {
          return true;
  #endif
@@ -302,3 +298,21 @@ diff -urN qt-embedded-linux-opensource-src-4.4.3.orig/src/gui/embedded/qscreen_q
  #ifdef QT_QWS_DEPTH_4
      } else if(d==4) {
          return true;
+diff --git a/src/gui/embedded/qscreenlinuxfb_qws.cpp b/src/gui/embedded/qscreenlinuxfb_qws.cpp
+index 3fe9713..933f489 100644
+--- a/src/gui/embedded/qscreenlinuxfb_qws.cpp
++++ b/src/gui/embedded/qscreenlinuxfb_qws.cpp
+@@ -466,8 +466,8 @@ bool QLinuxFbScreen::connect(const QString &displaySpec)
+         setupOffScreen();
+ 
+     // Now read in palette
+-    if((vinfo.bits_per_pixel==8) || (vinfo.bits_per_pixel==4)) {
+-        screencols= (vinfo.bits_per_pixel==8) ? 256 : 16;
++    if((vinfo.bits_per_pixel==8) || (vinfo.bits_per_pixel==4) || (vinfo.bits_per_pixel==2)) {
++        screencols= 1 << vinfo.bits_per_pixel;
+         int loopc;
+         ::fb_cmap startcmap;
+         startcmap.start=0;
+-- 
+1.7.12
+

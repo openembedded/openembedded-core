@@ -1,4 +1,7 @@
-author: Fathi Boudra <fabo@debian.org>
+From c7ee6896f4894626986956cc8892a13fa9f7c2aa Mon Sep 17 00:00:00 2001
+From: Fathi Boudra <fabo@debian.org>
+Date: Wed, 26 Sep 2012 20:46:14 +0200
+Subject: [PATCH 15/22] configure: add nostrip for debug packages
 
 Qt is built in release mode and strip files by default.
 Set CONFIG+=nostrip to avoid the stripping and
@@ -6,13 +9,16 @@ let dh_strip do it to generate debug packages.
 
 Upstream-Status: Inappropriate [Configuration]
 
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
- configure |    2 ++
+ configure | 2 ++
  1 file changed, 2 insertions(+)
 
+diff --git a/configure b/configure
+index 8eb138f..5cc755e 100755
 --- a/configure
 +++ b/configure
-@@ -627,6 +627,8 @@ mkdir -p "$outpath/config.tests"
+@@ -631,6 +631,8 @@ mkdir -p "$outpath/config.tests"
  rm -f "$outpath/config.tests/.qmake.cache"
  cp "$QMAKE_VARS_FILE" "$outpath/config.tests/.qmake.cache"
  
@@ -21,3 +27,6 @@ Upstream-Status: Inappropriate [Configuration]
  QMakeVar add styles "cde mac motif plastique cleanlooks windows"
  QMakeVar add decorations "default windows styled"
  QMakeVar add mouse-drivers "pc"
+-- 
+1.7.12
+

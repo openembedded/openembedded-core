@@ -1,20 +1,20 @@
-From b1ba119f6a824dc01bd42ee00dba4a1653867b72 Mon Sep 17 00:00:00 2001
-From: Matthias Günther <matgnt@gmail.com>
-Date: Wed, 12 May 2010 16:52:45 +0200
-Subject: [PATCH 1/9] Added Openembedded "-crossarch" option
+From 8ddc1820a8678fda3a9bf3da4fc256c22fbd9b51 Mon Sep 17 00:00:00 2001
+From: Michael Lauer <mickey@vanille-media.de>
+Date: Wed, 26 Sep 2012 20:41:32 +0200
+Subject: [PATCH 13/22] configure: add "-crossarch" option
 
-Original Author: Michael Lauer <mickey@vanille-media.de>
 Upstream-Status: Pending
 
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
- configure |    7 ++++++-
- 1 files changed, 6 insertions(+), 1 deletions(-)
+ configure | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/configure b/configure
-index facd192..9d15136 100755
+index 7028ecf..8eb138f 100755
 --- a/configure
 +++ b/configure
-@@ -954,7 +954,7 @@ while [ "$#" -gt 0 ]; do
+@@ -1059,7 +1059,7 @@ while [ "$#" -gt 0 ]; do
          shift
          VAL=$1
          ;;
@@ -23,9 +23,9 @@ index facd192..9d15136 100755
          VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
          shift
          VAL="$1"
-@@ -1443,6 +1443,9 @@ while [ "$#" -gt 0 ]; do
-     xplatform)
-         XPLATFORM="$VAL"
+@@ -1601,6 +1601,9 @@ while [ "$#" -gt 0 ]; do
+         case "$XPLATFORM" in *symbian*) XPLATFORM_SYMBIAN=yes;; esac
+         case "$XPLATFORM" in symbian-sbsv2) XPLATFORM_SYMBIAN_SBSV2=yes;; esac
          ;;
 +	crossarch)
 +		CROSSARCH="$VAL"
@@ -33,9 +33,9 @@ index facd192..9d15136 100755
      debug-and-release)
          if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
              CFG_DEBUG_RELEASE="$VAL"
-@@ -2918,6 +2921,8 @@ elif [ "$PLATFORM_MAC" = "yes" ] || [ -z "$CFG_ARCH" ]; then
-     CFG_ARCH=$CFG_HOST_ARCH
- fi
+@@ -3200,6 +3203,8 @@ arm*)
+     ;;
+ esac
  
 +CFG_ARCH="$CROSSARCH"
 +
@@ -43,5 +43,5 @@ index facd192..9d15136 100755
      if [ "$OPT_VERBOSE" = "yes" ]; then
          echo "    '$CFG_ARCH' is supported"
 -- 
-1.7.0.4
+1.7.12
 

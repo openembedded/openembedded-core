@@ -14,11 +14,11 @@ INC_PR = "r16"
 inherit native
 
 SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${PV}.tar.gz \
-           file://qt-config.patch \
+           file://0001-qlibraryinfo-allow-to-set-qt.conf-from-the-outside-u.patch \
+           file://0002-qkbdtty_qws-fix-build-with-old-kernel-headers.patch \
+           file://0003-webkit2-set-OUTPUT_DIR-value-if-empty.patch \
            file://g++.conf \
            file://linux.conf \
-           file://fix_qkbdtty_qws.patch \
-           file://set-OUTPUT_DIR-if-empty.patch \
 	"
 S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 
