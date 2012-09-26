@@ -23,21 +23,39 @@ def read_pkgdatafile(fn):
 
     return pkgdata
 
+def all_pkgdatadirs(d):
+    archs = []
+    tos = []
+    tvs = []
+
+    archs.append(d.getVar("PACKAGE_ARCHS", True).split())
+    tos.append(d.getVar("TARGET_OS", True))
+    tvs.append(d.getVar("TARGET_VENDOR", True))
+
+    variants = d.getVar("MULTILIB_VARIANTS", True) or ""
+    for item in variants.split():
+        localdata = bb.data.createCopy(d)
+        overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
+        localdata.setVar("OVERRIDES", overrides)
+        bb.data.update_data(localdata)
+
+        archs.append(localdata.getVar("PACKAGE_ARCHS", True).split())
+        tos.append(localdata.getVar("TARGET_OS", True))
+        tvs.append(localdata.getVar("TARGET_VENDOR", True))
+
+    dirs = []
+    for i in range(len(archs)):
+        for arch in archs[i]:
+            dirs.append(arch + tvs[i] + "-" + tos[i] + "/runtime/")
+    dirs.reverse()
+    return dirs 
+ 
 def get_subpkgedata_fn(pkg, d):
-    archs = d.expand("${PACKAGE_ARCHS}").split(" ")
-    mlarchs = d.getVar("MULTILIB_PACKAGE_ARCHS", d) or None
+    dirs = all_pkgdatadirs(d)
 
-    if mlarchs:
-        for mlarch in mlarchs.split(" "):
-            if "_" in mlarch:
-                prefix, split, new_arch = mlarch.partition("_")
-                archs.append(new_arch)
-
-    archs.reverse()
     pkgdata = d.expand('${TMPDIR}/pkgdata/')
-    targetdir = d.expand('${TARGET_VENDOR}-${TARGET_OS}/runtime/')
-    for arch in archs:
-        fn = pkgdata + arch + targetdir + pkg
+    for dir in dirs:
+        fn = pkgdata + dir + pkg
         if os.path.exists(fn):
             return fn
     return d.expand('${PKGDATA_DIR}/runtime/%s' % pkg)
