@@ -160,8 +160,9 @@ echo "done"
 
 printf "Setting it up..."
 # fix environment paths
-env_setup_script=$(find $target_sdk_dir/ -name "environment-setup-${REAL_MULTIMACH_TARGET_SYS}")
-sed -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g" -i $env_setup_script
+for env_setup_script in `ls $target_sdk_dir/environment-setup-*`; do
+  sed -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g" -i $env_setup_script
+done
 
 # fix dynamic loader paths in all ELF SDK binaries
 native_sysroot=$(cat $env_setup_script |grep OECORE_NATIVE_SYSROOT|cut -d'=' -f2|tr -d '"')
