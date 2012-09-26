@@ -16,9 +16,9 @@ ChangeLog
  
 Index: libc/sysdeps/powerpc/powerpc32/603e/fpu/e_sqrt.c
 ===================================================================
---- libc.orig/sysdeps/powerpc/powerpc32/603e/fpu/e_sqrt.c	2012-01-06 18:07:42.296909187 -0800
-+++ libc/sysdeps/powerpc/powerpc32/603e/fpu/e_sqrt.c	2012-01-06 18:09:22.572914856 -0800
-@@ -39,14 +39,8 @@
+--- libc.orig/sysdeps/powerpc/powerpc32/603e/fpu/e_sqrt.c
++++ libc/sysdeps/powerpc/powerpc32/603e/fpu/e_sqrt.c
+@@ -39,14 +39,8 @@ static const float half = 0.5;
     We find the actual square root and half of its reciprocal
     simultaneously.  */
  
@@ -33,16 +33,16 @@ Index: libc/sysdeps/powerpc/powerpc32/603e/fpu/e_sqrt.c
  {
    if (__builtin_expect (b > 0, 1))
      {
-@@ -132,3 +126,4 @@
+@@ -132,3 +126,4 @@ __ieee754_sqrt (b)
      }
    return f_wash (b);
  }
 +strong_alias (__ieee754_sqrt, __sqrt_finite)
 Index: libc/sysdeps/powerpc/powerpc32/603e/fpu/e_sqrtf.c
 ===================================================================
---- libc.orig/sysdeps/powerpc/powerpc32/603e/fpu/e_sqrtf.c	2012-01-06 18:10:37.068917644 -0800
-+++ libc/sysdeps/powerpc/powerpc32/603e/fpu/e_sqrtf.c	2012-01-06 18:11:33.408920635 -0800
-@@ -37,14 +37,8 @@
+--- libc.orig/sysdeps/powerpc/powerpc32/603e/fpu/e_sqrtf.c
++++ libc/sysdeps/powerpc/powerpc32/603e/fpu/e_sqrtf.c
+@@ -37,14 +37,8 @@ static const float threehalf = 1.5;
     We find the reciprocal square root and use that to compute the actual
     square root.  */
  
@@ -57,16 +57,16 @@ Index: libc/sysdeps/powerpc/powerpc32/603e/fpu/e_sqrtf.c
  {
    if (__builtin_expect (b > 0, 1))
      {
-@@ -99,3 +93,4 @@
+@@ -99,3 +93,4 @@ __ieee754_sqrtf (b)
      }
    return f_washf (b);
  }
 +strong_alias (__ieee754_sqrtf, __sqrtf_finite)
 Index: libc/sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrt.c
 ===================================================================
---- libc.orig/sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrt.c	2012-01-06 18:11:51.460925644 -0800
-+++ libc/sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrt.c	2012-01-06 18:12:39.344924405 -0800
-@@ -39,14 +39,8 @@
+--- libc.orig/sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrt.c
++++ libc/sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrt.c
+@@ -39,14 +39,8 @@ static const float half = 0.5;
     We find the actual square root and half of its reciprocal
     simultaneously.  */
  
@@ -81,16 +81,16 @@ Index: libc/sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrt.c
  {
    if (__builtin_expect (b > 0, 1))
      {
-@@ -132,3 +126,4 @@
+@@ -132,3 +126,4 @@ __ieee754_sqrt (b)
      }
    return f_wash (b);
  }
 +strong_alias (__ieee754_sqrt, __sqrt_finite)
 Index: libc/sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrtf.c
 ===================================================================
---- libc.orig/sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrtf.c	2012-01-06 18:13:00.892924586 -0800
-+++ libc/sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrtf.c	2012-01-06 18:15:27.992931106 -0800
-@@ -37,14 +37,8 @@
+--- libc.orig/sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrtf.c
++++ libc/sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrtf.c
+@@ -37,14 +37,8 @@ static const float threehalf = 1.5;
     We find the reciprocal square root and use that to compute the actual
     square root.  */
  
@@ -105,7 +105,79 @@ Index: libc/sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrtf.c
  {
    if (__builtin_expect (b > 0, 1))
      {
-@@ -99,3 +93,4 @@
+@@ -99,3 +93,4 @@ __ieee754_sqrtf (b)
+     }
+   return f_washf (b);
+ }
++strong_alias (__ieee754_sqrtf, __sqrtf_finite)
+Index: libc/sysdeps/powerpc/powerpc32/e500mc/fpu/e_sqrt.c
+===================================================================
+--- libc.orig/sysdeps/powerpc/powerpc32/e500mc/fpu/e_sqrt.c
++++ libc/sysdeps/powerpc/powerpc32/e500mc/fpu/e_sqrt.c
+@@ -132,3 +132,4 @@ __ieee754_sqrt (b)
+     }
+   return f_wash (b);
+ }
++strong_alias (__ieee754_sqrt, __sqrt_finite)
+Index: libc/sysdeps/powerpc/powerpc32/e500mc/fpu/e_sqrtf.c
+===================================================================
+--- libc.orig/sysdeps/powerpc/powerpc32/e500mc/fpu/e_sqrtf.c
++++ libc/sysdeps/powerpc/powerpc32/e500mc/fpu/e_sqrtf.c
+@@ -99,3 +99,4 @@ __ieee754_sqrtf (b)
+     }
+   return f_washf (b);
+ }
++strong_alias (__ieee754_sqrtf, __sqrtf_finite)
+Index: libc/sysdeps/powerpc/powerpc32/e5500/fpu/e_sqrt.c
+===================================================================
+--- libc.orig/sysdeps/powerpc/powerpc32/e5500/fpu/e_sqrt.c
++++ libc/sysdeps/powerpc/powerpc32/e5500/fpu/e_sqrt.c
+@@ -132,3 +132,4 @@ __ieee754_sqrt (b)
+     }
+   return f_wash (b);
+ }
++strong_alias (__ieee754_sqrt, __sqrt_finite)
+Index: libc/sysdeps/powerpc/powerpc32/e5500/fpu/e_sqrtf.c
+===================================================================
+--- libc.orig/sysdeps/powerpc/powerpc32/e5500/fpu/e_sqrtf.c
++++ libc/sysdeps/powerpc/powerpc32/e5500/fpu/e_sqrtf.c
+@@ -99,3 +99,4 @@ __ieee754_sqrtf (b)
+     }
+   return f_washf (b);
+ }
++strong_alias (__ieee754_sqrtf, __sqrtf_finite)
+Index: libc/sysdeps/powerpc/powerpc64/e6500/fpu/e_sqrt.c
+===================================================================
+--- libc.orig/sysdeps/powerpc/powerpc64/e6500/fpu/e_sqrt.c
++++ libc/sysdeps/powerpc/powerpc64/e6500/fpu/e_sqrt.c
+@@ -132,3 +132,4 @@ __ieee754_sqrt (b)
+     }
+   return f_wash (b);
+ }
++strong_alias (__ieee754_sqrt, __sqrt_finite)
+Index: libc/sysdeps/powerpc/powerpc64/e6500/fpu/e_sqrtf.c
+===================================================================
+--- libc.orig/sysdeps/powerpc/powerpc64/e6500/fpu/e_sqrtf.c
++++ libc/sysdeps/powerpc/powerpc64/e6500/fpu/e_sqrtf.c
+@@ -99,3 +99,4 @@ __ieee754_sqrtf (b)
+     }
+   return f_washf (b);
+ }
++strong_alias (__ieee754_sqrtf, __sqrtf_finite)
+Index: libc/sysdeps/powerpc/powerpc32/e6500/fpu/e_sqrt.c
+===================================================================
+--- libc.orig/sysdeps/powerpc/powerpc32/e6500/fpu/e_sqrt.c
++++ libc/sysdeps/powerpc/powerpc32/e6500/fpu/e_sqrt.c
+@@ -132,3 +132,4 @@ __ieee754_sqrt (b)
+     }
+   return f_wash (b);
+ }
++strong_alias (__ieee754_sqrt, __sqrt_finite)
+Index: libc/sysdeps/powerpc/powerpc32/e6500/fpu/e_sqrtf.c
+===================================================================
+--- libc.orig/sysdeps/powerpc/powerpc32/e6500/fpu/e_sqrtf.c
++++ libc/sysdeps/powerpc/powerpc32/e6500/fpu/e_sqrtf.c
+@@ -99,3 +99,4 @@ __ieee754_sqrtf (b)
      }
    return f_washf (b);
  }
