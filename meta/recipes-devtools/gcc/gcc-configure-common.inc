@@ -26,12 +26,13 @@ EXTRA_OECONF_INITIAL ?= ""
 EXTRA_OECONF_INTERMEDIATE ?= ""
 
 GCCMULTILIB = "--disable-multilib"
+GCCTHREADS ?= "posix"
 
 EXTRA_OECONF = "${@['--enable-clocale=generic', ''][d.getVar('USE_NLS', True) != 'no']} \
                 --with-gnu-ld \
                 --enable-shared \
                 --enable-languages=${LANGUAGES} \
-                --enable-threads=posix \
+                --enable-threads=${GCCTHREADS} \
                 ${GCCMULTILIB} \
                 --enable-c99 \
                 --enable-long-long \
