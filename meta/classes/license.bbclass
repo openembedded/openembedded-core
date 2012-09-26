@@ -186,7 +186,7 @@ python do_populate_lic() {
     license_source_dirs = []
     license_source_dirs.append(generic_directory)
     try:
-        additional_lic_dirs = d.getVar('LICENSE_DIR', True).split()
+        additional_lic_dirs = d.getVar('LICENSE_PATH', True).split()
         for lic_dir in additional_lic_dirs:
             license_source_dirs.append(lic_dir)
     except:
