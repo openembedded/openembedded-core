@@ -9,8 +9,8 @@ Upstream-Status: Pending
 
 Index: libc/sysdeps/powerpc/fpu/math_private.h
 ===================================================================
---- libc.orig/sysdeps/powerpc/fpu/math_private.h	2012-09-03 22:37:58.000000000 -0700
-+++ libc/sysdeps/powerpc/fpu/math_private.h	2012-09-17 09:35:09.709124003 -0700
+--- libc.orig/sysdeps/powerpc/fpu/math_private.h
++++ libc/sysdeps/powerpc/fpu/math_private.h
 @@ -25,10 +25,12 @@
  #include <dl-procinfo.h>
  #include_next <math_private.h>
@@ -30,8 +30,8 @@ Index: libc/sysdeps/powerpc/fpu/math_private.h
  extern double __slow_ieee754_sqrt (double);
 Index: libc/ports/sysdeps/powerpc/powerpc64/e5500/fpu/math_private.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ libc/ports/sysdeps/powerpc/powerpc64/e5500/fpu/math_private.h	2012-09-17 09:56:59.129124074 -0700
+--- /dev/null
++++ libc/ports/sysdeps/powerpc/powerpc64/e5500/fpu/math_private.h
 @@ -0,0 +1,9 @@
 +#ifndef _E5500_MATH_PRIVATE_H_
 +#define _E5500_MATH_PRIVATE_H_ 1
@@ -42,3 +42,59 @@ Index: libc/ports/sysdeps/powerpc/powerpc64/e5500/fpu/math_private.h
 +#include_next <math_private.h>
 +
 +#endif /* _E5500_MATH_PRIVATE_H_ */
+Index: libc/ports/sysdeps/powerpc/powerpc64/e6500/fpu/math_private.h
+===================================================================
+--- /dev/null
++++ libc/ports/sysdeps/powerpc/powerpc64/e6500/fpu/math_private.h
+@@ -0,0 +1,9 @@
++#ifndef _E6500_MATH_PRIVATE_H_
++#define _E6500_MATH_PRIVATE_H_ 1
++/* E6500 core FPU does not implement
++   fsqrt */
++
++#define __CPU_HAS_FSQRT 0
++#include_next <math_private.h>
++
++#endif /* _E6500_MATH_PRIVATE_H_ */
+Index: libc/ports/sysdeps/powerpc/powerpc32/e500mc/fpu/math_private.h
+===================================================================
+--- /dev/null
++++ libc/ports/sysdeps/powerpc/powerpc32/e500mc/fpu/math_private.h
+@@ -0,0 +1,9 @@
++#ifndef _E500MC_MATH_PRIVATE_H_
++#define _E500MC_MATH_PRIVATE_H_ 1
++/* E500MC core FPU does not implement
++   fsqrt */
++
++#define __CPU_HAS_FSQRT 0
++#include_next <math_private.h>
++
++#endif /* _E500MC_MATH_PRIVATE_H_ */
+Index: libc/ports/sysdeps/powerpc/powerpc32/e5500/fpu/math_private.h
+===================================================================
+--- /dev/null
++++ libc/ports/sysdeps/powerpc/powerpc32/e5500/fpu/math_private.h
+@@ -0,0 +1,9 @@
++#ifndef _E5500_MATH_PRIVATE_H_
++#define _E5500_MATH_PRIVATE_H_ 1
++/* E5500 core FPU does not implement
++   fsqrt */
++
++#define __CPU_HAS_FSQRT 0
++#include_next <math_private.h>
++
++#endif /* _E5500_MATH_PRIVATE_H_ */
+Index: libc/ports/sysdeps/powerpc/powerpc32/e6500/fpu/math_private.h
+===================================================================
+--- /dev/null
++++ libc/ports/sysdeps/powerpc/powerpc32/e6500/fpu/math_private.h
+@@ -0,0 +1,9 @@
++#ifndef _E6500_MATH_PRIVATE_H_
++#define _E6500_MATH_PRIVATE_H_ 1
++/* E6500 core FPU does not implement
++   fsqrt */
++
++#define __CPU_HAS_FSQRT 0
++#include_next <math_private.h>
++
++#endif /* _E6500_MATH_PRIVATE_H_ */
