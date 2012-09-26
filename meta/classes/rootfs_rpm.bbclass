@@ -81,7 +81,9 @@ fakeroot rootfs_rpm_do_rootfs () {
 
 	# Report delayed package scriptlets
 	for i in ${IMAGE_ROOTFS}/etc/rpm-postinsts/*; do
-		echo "Delayed package scriptlet: `head -n 3 $i | tail -n 1`"
+		if [ -f $i ]; then
+			echo "Delayed package scriptlet: `head -n 3 $i | tail -n 1`"
+		fi
 	done
 
 	install -d ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d
