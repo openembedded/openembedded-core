@@ -5,6 +5,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
 		    file://LGPL_EXCEPTION.txt;md5=411080a56ff917a5a1aa08c98acae354"
 
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt-mobility-${PV}:"
 SRC_URI = "http://get.qt.nokia.com/qt/add-ons/qt-mobility-opensource-src-${PV}.tar.gz \
            file://qt-mobility-configure.patch \
            file://0001-gstvideoconnector-fixed-buffers-allocation.patch \
