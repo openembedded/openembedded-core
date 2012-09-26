@@ -3,7 +3,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
                     file://LICENSE.GPL3;md5=babc5b6b77441da277f5c06b2e547720 \
                     file://LGPL_EXCEPTION.txt;md5=411080a56ff917a5a1aa08c98acae354"
 
-FILESPATH =. "${FILE_DIRNAME}/qt-${PV}:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt4-${PV}:"
 
 SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${PV}.tar.gz \
            file://0004-no-qmake.patch \

@@ -6,7 +6,7 @@ LICENSE = "LGPLv2.1 | GPLv3"
 
 INC_PR = "r11"
 
-FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt-${PV}:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt4-${PV}:"
 
 inherit nativesdk qmake2
 

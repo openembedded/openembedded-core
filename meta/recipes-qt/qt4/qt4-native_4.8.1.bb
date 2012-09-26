@@ -3,7 +3,7 @@ require qt4-native.inc
 PR = "${INC_PR}.1"
 
 # Find the g++.conf/linux.conf in the right directory.
-FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt-${PV}:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt4-${PV}:"
 
 TOBUILD := "src/tools/bootstrap ${TOBUILD}"
 

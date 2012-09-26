@@ -1,5 +1,5 @@
 require qt4-x11-free.inc
-require qt-${PV}.inc
+require qt4-${PV}.inc
 
 PR = "${INC_PR}.1"
 
