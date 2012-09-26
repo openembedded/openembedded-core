@@ -182,7 +182,7 @@ ipk_log_check() {
 		then
 			echo "log_check: There were error messages in the logfile"
 			printf "log_check: Matched keyword: [$keyword_die]\n\n"
-			echo "$lf_txt" | grep -v log_check | grep -C 5 -i "$keyword_die"
+			echo "$lf_txt" | grep -v log_check | grep -C 5 "$keyword_die"
 			echo ""
 			do_exit=1
 		fi
