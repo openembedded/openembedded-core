@@ -1,4 +1,4 @@
-RDEPENDS += "kernel-image update-modules"
+RDEPENDS_${PN} += "kernel-image ${@oe.utils.contains('DISTRO_FEATURES', 'update-modules', 'update-modules', '', d)}"
 DEPENDS += "virtual/kernel"
 
 inherit module-base

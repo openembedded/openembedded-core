@@ -398,10 +398,12 @@ python populate_packages_prepend () {
 
         dvar = d.getVar('PKGD', True)
 
+        use_update_modules = oe.utils.contains('DISTRO_FEATURES', 'update-modules', True, False, d)
+
         # If autoloading is requested, output /etc/modules-load.d/<name>.conf and append
         # appropriate modprobe commands to the postinst
         autoload = d.getVar('module_autoload_%s' % basename, True)
-        if autoload:
+        if autoload and use_update_modules:
             name = '%s/etc/modules-load.d/%s.conf' % (dvar, basename)
             f = open(name, 'w')
             for m in autoload.split():
@@ -415,15 +417,16 @@ python populate_packages_prepend () {
 
         # Write out any modconf fragment
         modconf = d.getVar('module_conf_%s' % basename, True)
-        if modconf:
+        if modconf and use_update_modules:
             name = '%s/etc/modprobe.d/%s.conf' % (dvar, basename)
             f = open(name, 'w')
             f.write("%s\n" % modconf)
             f.close()
 
-        files = d.getVar('FILES_%s' % pkg, True)
-        files = "%s /etc/modules-load.d/%s.conf /etc/modprobe.d/%s.conf" % (files, basename, basename)
-        d.setVar('FILES_%s' % pkg, files)
+        if use_update_modules:
+            files = d.getVar('FILES_%s' % pkg, True)
+            files = "%s /etc/modules-load.d/%s.conf /etc/modprobe.d/%s.conf" % (files, basename, basename)
+            d.setVar('FILES_%s' % pkg, files)
 
         if vals.has_key("description"):
             old_desc = d.getVar('DESCRIPTION_' + pkg, True) or ""
@@ -439,12 +442,17 @@ python populate_packages_prepend () {
     module_regex = '^(.*)\.k?o$'
     module_pattern = 'kernel-module-%s'
 
-    postinst = d.getVar('pkg_postinst_modules', True)
-    postrm = d.getVar('pkg_postrm_modules', True)
+    use_update_modules = oe.utils.contains('DISTRO_FEATURES', 'update-modules', True, False, d)
+    if use_update_modules:
+        postinst = d.getVar('pkg_postinst_modules', True)
+        postrm = d.getVar('pkg_postrm_modules', True)
+    else:
+        postinst = None
+        postrm = None
     do_split_packages(d, root='/lib/firmware', file_regex='^(.*)\.bin$', output_pattern='kernel-firmware-%s', description='Firmware for %s', recursive=True, extra_depends='')
     do_split_packages(d, root='/lib/firmware', file_regex='^(.*)\.fw$', output_pattern='kernel-firmware-%s', description='Firmware for %s', recursive=True, extra_depends='')
     do_split_packages(d, root='/lib/firmware', file_regex='^(.*)\.cis$', output_pattern='kernel-firmware-%s', description='Firmware for %s', recursive=True, extra_depends='')
-    do_split_packages(d, root='/lib/modules', file_regex=module_regex, output_pattern=module_pattern, description='%s kernel module', postinst=postinst, postrm=postrm, recursive=True, hook=frob_metadata, extra_depends='update-modules kernel-%s' % d.getVar("KERNEL_VERSION", True))
+    do_split_packages(d, root='/lib/modules', file_regex=module_regex, output_pattern=module_pattern, description='%s kernel module', postinst=postinst, postrm=postrm, recursive=True, hook=frob_metadata, extra_depends='%skernel-%s' % (['', 'update-modules '][use_update_modules], d.getVar("KERNEL_VERSION", True)))
 
     # If modules-load.d and modprobe.d are empty at this point, remove them to
     # avoid warnings. removedirs only raises an OSError if an empty
