@@ -13,7 +13,7 @@ INC_PR = "r16"
 
 inherit native
 
-SRC_URI = "http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${PV}.tar.gz \
+SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${PV}.tar.gz \
            file://qt-config.patch \
            file://g++.conf \
            file://linux.conf \
