@@ -12,12 +12,25 @@ QT_SQL_DRIVER_FLAGS ?= "-no-sql-ibase -no-sql-mysql -no-sql-psql -no-sql-odbc -p
 
 QT_GLFLAGS ?= ""
 
+  
+QT_QT3SUPPORT ?= "-qt3support"
+QT_XML ?= "-xmlpatterns"
+QT_WEBKIT ?= "-webkit"
+QT_PHONON ?= "-phonon"
+QT_DBUS ?= "-qdbus"
+QT_MULTIMEDIA ?= "${@base_contains('DISTRO_FEATURES', 'pulseaudio', '-pulseaudio', '-no-pulseaudio', d)}"
+ 
 QT_CONFIG_FLAGS += "-release -no-cups -reduce-relocations \
                     -shared -no-nas-sound -no-nis \
                     -system-libjpeg -system-libpng -system-libtiff -system-zlib \
-                    -no-pch -qdbus -stl -glib -phonon -webkit \
-                    -xmlpatterns -no-rpath -qt3support -silent \
-                    ${@base_contains('DISTRO_FEATURES', 'pulseaudio', '--enable-pulseaudio', '--disable-pulseaudio', d)} \
+                    -no-pch -stl -glib \
+                    -no-rpath -silent \
+                    ${QT_DBUS} \
+                    ${QT_QT3SUPPORT} \
+                    ${QT_WEBKIT} \
+                    ${QT_PHONON} \
+                    ${QT_XML} \
+                    ${QT_MULTIMEDIA} \
                     ${QT_SQL_DRIVER_FLAGS} \
                     ${QT_DISTRO_FLAGS} \
                     ${QT_GLFLAGS}"
