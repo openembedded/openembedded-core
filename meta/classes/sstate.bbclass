@@ -144,7 +144,7 @@ def sstate_install(ss, d):
 
     # Check the file list for conflicts against the master manifest
     mastermanifest = d.getVar("SSTATE_MASTERMANIFEST", True)
-    whitelist = d.getVar("SSTATE_DUPWHITELIST", True)
+    whitelist = (d.getVar("SSTATE_DUPWHITELIST", True) or "").split()
     lock = bb.utils.lockfile(mastermanifest + ".lock")
     if not os.path.exists(mastermanifest):
         open(mastermanifest, "w").close()
