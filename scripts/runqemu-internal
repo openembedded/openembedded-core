@@ -472,7 +472,11 @@ if [ "x$QEMUOPTIONS" = "x" ]; then
     return
 fi
 
-PATH=$CROSSPATH:$OECORE_NATIVE_SYSROOT/usr/bin:$PATH
+if [ "x$CROSSPATH" = "x" ]; then
+    PATH=$OECORE_NATIVE_SYSROOT/usr/bin:$PATH
+else
+    PATH=$CROSSPATH:$OECORE_NATIVE_SYSROOT/usr/bin:$PATH
+fi
 
 QEMUBIN=`which $QEMU 2> /dev/null`
 if [ ! -x "$QEMUBIN" ]; then
