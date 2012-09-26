@@ -30,29 +30,38 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-if [ -z "$OECORE_NATIVE_SYSROOT" ]; then
+if [ "x$OECORE_NATIVE_SYSROOT" = "x" ]; then
     BITBAKE=`which bitbake 2> /dev/null`
     if [ "x$BITBAKE" != "x" ]; then
-	if [ "$UID" = "0" ]; then
+        if [ "$UID" = "0" ]; then
             # Root cannot run bitbake unless sanity checking is disabled
             if [ ! -d "./conf" ]; then
-		echo "Error: root cannot run bitbake by default, and I cannot find a ./conf directory to be able to disable sanity checking"
-		exit 1
+                echo "Error: root cannot run bitbake by default, and I cannot find a ./conf directory to be able to disable sanity checking"
+                exit 1
             fi
             touch conf/sanity.conf
             OECORE_NATIVE_SYSROOT=`bitbake -e | grep ^STAGING_DIR_NATIVE | cut -d '=' -f2 | cut -d '"' -f2`
             rm -f conf/sanity.conf
-	else
+        else
             OECORE_NATIVE_SYSROOT=`bitbake -e | grep ^STAGING_DIR_NATIVE | cut -d '=' -f2 | cut -d '"' -f2`
-	fi
+        fi
     else
-	echo "Error: Unable to locate your native sysroot."
-	echo "Did you forget to source the build environment setup script?"
+        echo "Error: Unable to locate bitbake command."
+        echo "Did you forget to source the build environment setup script?"
 
-	if [ -z "$SKIP_STRICT_SYSROOT_CHECK" ]; then
+        if [ -z "$SKIP_STRICT_SYSROOT_CHECK" ]; then
             exit 1
-	fi
+        fi
     fi
+fi
+
+if [ "x$OECORE_NATIVE_SYSROOT" = "x" ]; then
+    # This indicates that there was an error running bitbake -e that
+    # the user needs to be informed of
+    echo "There was an error running bitbake to determine STAGING_DIR_NATIVE"
+    echo "Here is the output from bitbake -e"
+    bitbake -e
+    exit 1
 fi
 
 # Set up pseudo command
