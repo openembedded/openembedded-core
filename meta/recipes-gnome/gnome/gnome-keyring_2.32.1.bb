@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SECTION = "x11/gnome"
 
-PR = "r9"
+PR = "r10"
 
 inherit autotools gnome gtk-doc pkgconfig
 
@@ -43,7 +43,10 @@ FILES_${PN} += "${datadir}/dbus-1/services ${datadir}/gcr"
 
 FILES_${PN}-dev += "${libdir}/${BPN}/devel/*.la \
                     ${libdir}/${BPN}/devel/*${SOLIBSDEV} \
-                    ${libdir}/${BPN}/standalone/*.la"
+                    ${libdir}/${BPN}/standalone/*.la \
+                    ${base_libdir}/security/*.la \
+                    ${base_libdir}/security/*${SOLIBSDEV}"
 
 FILES_${PN}-dbg += "${libdir}/${BPN}/standalone/.debug/ \
-                    ${libdir}/${BPN}/devel/.debug/"
+                    ${libdir}/${BPN}/devel/.debug/ \
+                    ${base_libdir}/security/.debug/"
