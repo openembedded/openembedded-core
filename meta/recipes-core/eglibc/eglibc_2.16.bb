@@ -43,7 +43,8 @@ SRC_URI_append_virtclass-nativesdk = " file://ld-search-order.patch \
 S = "${WORKDIR}/${EGLIBC_BRANCH}/libc"
 B = "${WORKDIR}/build-${TARGET_SYS}"
 
-PACKAGES_DYNAMIC = "libc6*"
+PACKAGES_DYNAMIC = ""
+
 RPROVIDES_${PN}-dev = "libc6-dev virtual-libc-dev"
 PROVIDES_${PN}-dbg = "glibc-dbg"
 
