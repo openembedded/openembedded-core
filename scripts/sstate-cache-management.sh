@@ -174,7 +174,7 @@ remove_duplicated () {
   topdir=$(dirname $oe_core_dir)
   tunedirs="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/include'`"
   [ -n "$tunedirs" ] || echo_error "Can't find the tune directory"
-  all_machines="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/*' -name '*.conf' | sed -e 's/.*\///' -e 's/.conf$//'`"
+  all_machines="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/*' -name '*.conf' 2>/dev/null | sed -e 's/.*\///' -e 's/.conf$//'`"
   all_archs=`grep -r -h "^AVAILTUNES .*=" $tunedirs | sed -e 's/.*=//' -e 's/\"//g'`
   # Add the qemu and native archs
   # Use the "_" to substitute "-", e.g., x86-64 to x86_64
