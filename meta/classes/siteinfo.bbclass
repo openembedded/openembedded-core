@@ -18,6 +18,7 @@
 def siteinfo_data(d):
     archinfo = {
         "allarch": "endian-little bit-32", # bogus, but better than special-casing the checks below for allarch
+        "aarch64": "endian-little bit-64 arm-common",
         "arm": "endian-little bit-32 arm-common",
         "armeb": "endian-big bit-32 arm-common",
         "avr32": "endian-big bit-32 avr32-common",
@@ -60,6 +61,7 @@ def siteinfo_data(d):
         "mingw32": "common-mingw",
     }
     targetinfo = {
+        "aarch64-linux-gnu": "aarch64-linux",
         "arm-linux-gnueabi": "arm-linux",
         "arm-linux-uclibceabi": "arm-linux-uclibc",
         "armeb-linux-gnueabi": "armeb-linux",
