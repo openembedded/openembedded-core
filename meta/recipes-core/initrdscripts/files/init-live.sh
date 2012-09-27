@@ -21,15 +21,15 @@ ISOLINUX=""
 UNIONFS="no"
 
 early_setup() {
-    mkdir /proc
-    mkdir /sys
+    mkdir -p /proc
+    mkdir -p /sys
     mount -t proc proc /proc
     mount -t sysfs sysfs /sys
 
     # support modular kernel
     modprobe isofs 2> /dev/null
 
-    mkdir /run
+    mkdir -p /run
     udevd --daemon
     udevadm trigger --action=add
 }
