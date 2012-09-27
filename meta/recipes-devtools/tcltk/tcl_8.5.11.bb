@@ -44,7 +44,7 @@ do_compile_prepend() {
 
 do_install() {
 	autotools_do_install
-	oe_libinstall -so libtcl8.5 ${STAGING_LIBDIR}
+	oe_libinstall -so libtcl8.5 ${D}${libdir}
 	ln -sf ./tclsh8.5 ${D}${bindir}/tclsh
 	sed -i "s+${WORKDIR}+${STAGING_INCDIR}+g" tclConfig.sh
 	sed -i "s,-L${libdir},-L=${libdir},g" tclConfig.sh
@@ -54,8 +54,8 @@ do_install() {
 	cd ..
 	for dir in compat generic unix
 	do
-		install -d ${STAGING_INCDIR}/tcl${PV}/$dir
-		install -m 0644 $dir/*.h ${STAGING_INCDIR}/tcl${PV}/$dir/
+		install -d ${D}${includedir}/tcl${PV}/$dir
+		install -m 0644 $dir/*.h ${D}${includedir}/tcl${PV}/$dir/
 	done
 }
 
