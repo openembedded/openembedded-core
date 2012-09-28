@@ -2,7 +2,7 @@ require flex.inc
 PR = "r3"
 LICENSE="BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e4742cf92e89040b39486a6219b68067"
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI += "file://avoid-FORTIFY-warnings.patch \
             file://int-is-not-the-same-size-as-size_t.patch"

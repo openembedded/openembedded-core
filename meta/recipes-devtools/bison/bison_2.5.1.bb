@@ -33,4 +33,4 @@ do_install_append_virtclass-native() {
 		BISON_PKGDATADIR=${STAGING_DATADIR_NATIVE}/bison
 }
 #bison-native encodes the staging M4 path
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
