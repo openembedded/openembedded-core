@@ -146,14 +146,14 @@ do_configure() {
 	${@base_contains('DISTRO_FEATURES', 'largefile', '', 'do_nolargefile', d)}
 
         # Update some paths in the configuration
-        sed -i -e 's,@DESTDIR@,${prefix},g' \
-               -e 's,@ARCH@-thread-multi,,g' \
+        sed -i -e 's,@ARCH@-thread-multi,,g' \
                -e 's,@ARCH@,${TARGET_ARCH}-${TARGET_OS},g' \
                -e 's,@STAGINGDIR@,${STAGING_DIR_HOST},g' \
-               -e "s%\([ \"^\',=]\+\)/usr/include\([ \"^\',=]\+\)%\1${STAGING_INCDIR}\2%g" \
-	       -e "s%\([ \"^\',=]\+\)/usr/lib/\([ \"^\',=]\+\)%\1${libdir}/\2%g" \
-	       -e "s%\([ \"^\',=]\+\)/usr/\([ \"^\',=]\+\)%\1${exec_prefix}/\2%g" \
-	       -e "s%/perl5%/perl%g" \
+               -e "s,@INCLUDEDIR@,${STAGING_INCDIR},g" \
+               -e "s,@LIBDIR@,${libdir},g" \
+               -e "s,@BASELIBDIR@,${base_libdir},g" \
+               -e "s,@EXECPREFIX@,${exec_prefix},g" \
+               -e 's,@USRBIN@,${bindir},g' \
             config.sh-${TARGET_ARCH}-${TARGET_OS}
 
 	case "${TARGET_ARCH}" in
