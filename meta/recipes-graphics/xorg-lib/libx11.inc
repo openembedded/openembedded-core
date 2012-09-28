@@ -11,7 +11,7 @@ inherit siteinfo
 FILESPATH = "${FILE_DIRNAME}/libx11"
 
 PE = "1"
-INC_PR = "r8"
+INC_PR = "r9"
 
 PROVIDES = "virtual/libx11"
 
@@ -23,6 +23,7 @@ DEPENDS += "xproto xextproto xtrans libxcb kbproto inputproto"
 DEPENDS += "xproto-native"
 
 EXTRA_OECONF += "--with-keysymdefdir=${STAGING_INCDIR}/X11/"
+EXTRA_OEMAKE += 'CWARNFLAGS=""'
 
 # Let people with incredibly archaic requirements enable Xcms and BigFont, but
 # disable them by default.
@@ -33,7 +34,7 @@ PACKAGECONFIG[bigfont] = "--enable-xf86bigfont,--disable-xf86bigfont,xf86bigfont
 # src/util/makekeys needs to be compiled natively, so tell it what compiler to
 # use.
 export CC_FOR_BUILD = "${BUILD_CC}"
-export CFLAGS_FOR_BUILD = "${BUILD_CFLAGS}"
+export CFLAGS_FOR_BUILD = "${BUILD_CFLAGS} -D_GNU_SOURCE"
 export CPPFLAGS_FOR_BUILD = "${BUILD_CPPFLAGS}"
 export LDFLAGS_FOR_BUILD = "${BUILD_LDFLAGS}"
 
