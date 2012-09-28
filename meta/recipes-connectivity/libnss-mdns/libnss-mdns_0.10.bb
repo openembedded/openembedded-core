@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "avahi"
 RDEPENDS_${PN} = "avahi-daemon"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "http://0pointer.de/lennart/projects/nss-mdns/nss-mdns-${PV}.tar.gz"
 
@@ -24,13 +24,13 @@ DEBIANNAME_${PN} = "libnss-mdns"
 EXTRA_OECONF = "--libdir=${base_libdir} --disable-lynx --enable-avahi"
 
 pkg_postinst_${PN} () {
-if ! grep -q '^hosts:.*\<mdns4\>' $D/etc/nsswitch.conf; then
-	sed -e 's/^hosts:.*/& mdns4/' -i $D/etc/nsswitch.conf
-fi
+	sed -e '/^hosts:/s/\s*\<mdns4\>//' \
+		-e 's/\(^hosts:.*\)\(\<files\>\)\(.*\)\(\<dns\>\)\(.*\)/\1\2 mdns4_minimal [NOTFOUND=return]\3\4 mdns4\5/' \
+		-i $D/etc/nsswitch.conf
 }
 
 pkg_prerm_${PN} () {
-if grep -q '^hosts:.*\<mdns4\>' /etc/nsswitch.conf; then
-	sed -e '/^hosts:/s/\s\<mdns4\>//' -i /etc/nsswitch.conf
-fi
+	sed -e '/^hosts:/s/\s*\<mdns4\>//' \
+		-e '/^hosts:/s/\s*mdns4_minimal\s\+\[NOTFOUND=return\]//' \
+		-i /etc/nsswitch.conf
 }
