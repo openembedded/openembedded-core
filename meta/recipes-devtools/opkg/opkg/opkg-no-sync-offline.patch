@@ -1,0 +1,18 @@
+When installing into an offline root, calling sync() is pointless and just 
+hurts performance.  Don't let's do that.
+
+Signed-off-by: Phil Blundell <philb@gnu.org>
+Upstream-Status: Pending
+
+--- a/libopkg/opkg_cmd.c	2011-09-08 10:53:07.000000000 +0100
++++ b/libopkg/opkg_cmd.c	2011-10-04 10:45:22.278615584 +0100
+@@ -64,7 +64,8 @@ write_status_files_if_changed(void)
+ 	  opkg_msg(INFO, "Writing status file.\n");
+ 	  opkg_conf_write_status_files();
+ 	  pkg_write_changed_filelists();
+-	  sync();
++	  if (!conf->offline_root)
++	      sync();
+      } else {
+ 	  opkg_msg(DEBUG, "Nothing to be done.\n");
+      }
