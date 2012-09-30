@@ -7,6 +7,8 @@ HOMEPAGE = "http://zlib.net/pigz/"
 SECTION = "console/utils"
 LICENSE = "Zlib"
 
+PR = "r1"
+
 SRC_URI = "http://zlib.net/pigz/pigz-${PV}.tar.gz \
            file://ldflags.patch"
 
@@ -15,7 +17,7 @@ PROVIDES_virtclass-native += "gzip-native"
 DEPENDS = "zlib"
 
 do_install () {
-	if [ "${PN}" = "${BPN}" ] ; then
+	if [ "${CLASSOVERRIDE}" = "class-target" ] ; then
 		# Install files into /bin (FHS), which is typical place for gzip
 	        install -d ${D}${base_bindir}	        
 		install ${B}/pigz ${D}${base_bindir}/gzip
