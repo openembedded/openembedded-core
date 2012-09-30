@@ -1,0 +1,60 @@
+git: fix: stud-out git_strerror when --without-git
+
+Patch taken from the cvs repo,http://www.mail-archive.com/rpm-cvs@rpm5.org/msg08907.html. 
+
+Upstream-status: Backport
+
+Signed-off-by: Morgan Little <morgan.little@windriver.com>
+
+Server: rpm5.org                         Name:   Jeff Johnson
+Root:   /v/rpm/cvs                       Email:  j...@rpm5.org
+Module: rpm                              Date:   07-Jun-2012 16:17:02
+Branch: rpm-5_4                          Handle: 2012060714165803
+
+Modified files:           (Branch: rpm-5_4)
+  rpm                     CHANGES
+  rpm/rpmio               rpmgit.c tgit.c
+
+Log:
+  - git: fix: stub-out git_strerror when --without-git.
+
+Summary:
+  Revision    Changes     Path
+  2.1.2.11    +3  -1      rpm/rpmio/rpmgit.c
+  1.1.2.7     +0  -1      rpm/rpmio/tgit.c
+____________________________________________________________________________
+Index: rpm/rpmio/rpmgit.c
+============================================================================
+--- rpm/rpmio/rpmgit.c
++++ rpm/rpmio/rpmgit.c
+@@ -145,6 +145,9 @@
+ #endif       /* defined(WITH_LIBGT2) */
+ 
+ /*==============================================================*/
++#if !defined(WITH_LIBGIT2)
++#define      git_strerror(_rc) ""
++#endif
+ 
+ static int Xchkgit(/*@unused@*/ rpmgit git, const char * msg,
+                 int error, int printit,
+@@ -157,7 +157,6 @@
+     int rc = error;
+ 
+     if (printit && rc) {
+-	/* XXX git_strerror? */
+         rpmlog(RPMLOG_ERR, "%s:%s:%u: %s(%d): %s\n",
+                 func, fn, ln, msg, rc, git_strerror(rc));
+     }
+Index: rpm/rpmio/tgit.c
+============================================================================
+--- rpm/rpmio/tgit.c
++++ rpm/rpmio/tgit.c
+@@ -34,7 +34,6 @@
+     int rc = error;
+ 
+     if (printit && rc) {
+-	/* XXX git_strerror? */
+         rpmlog(RPMLOG_ERR, "%s:%s:%u: %s(%d): %s\n",
+                 func, fn, ln, msg, rc, git_strerror(rc));
+     }
+
