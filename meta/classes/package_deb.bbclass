@@ -334,18 +334,36 @@ python do_package_deb () {
 
         mapping_rename_hook(localdata)
 
+        def debian_cmp_remap(var):
+            # In debian '>' and '<' do not mean what it appears they mean
+            #   '<' = less or equal
+            #   '>' = greater or equal
+            # adjust these to the '<<' and '>>' equivalents
+            #
+            for dep in var:
+                if (var[dep] or "").startswith("< "):
+                    var[dep] = var[dep].replace("< ", "<< ")
+                elif (var[dep] or "").startswith("> "):
+                    var[dep] = var[dep].replace("> ", ">> ")
+
         rdepends = bb.utils.explode_dep_versions(localdata.getVar("RDEPENDS", True) or "")
+        debian_cmp_remap(rdepends)
         for dep in rdepends:
                 if '*' in dep:
                         del rdepends[dep]
         rrecommends = bb.utils.explode_dep_versions(localdata.getVar("RRECOMMENDS", True) or "")
+        debian_cmp_remap(rrecommends)
         for dep in rrecommends:
                 if '*' in dep:
                         del rrecommends[dep]
         rsuggests = bb.utils.explode_dep_versions(localdata.getVar("RSUGGESTS", True) or "")
+        debian_cmp_remap(rsuggests)
         rprovides = bb.utils.explode_dep_versions(localdata.getVar("RPROVIDES", True) or "")
+        debian_cmp_remap(rprovides)
         rreplaces = bb.utils.explode_dep_versions(localdata.getVar("RREPLACES", True) or "")
+        debian_cmp_remap(rreplaces)
         rconflicts = bb.utils.explode_dep_versions(localdata.getVar("RCONFLICTS", True) or "")
+        debian_cmp_remap(rconflicts)
         if rdepends:
             ctrlfile.write("Depends: %s\n" % unicode(bb.utils.join_deps(rdepends)))
         if rsuggests:
