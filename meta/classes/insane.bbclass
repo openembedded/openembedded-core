@@ -628,33 +628,20 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, d):
 
     sane = True
     if not "-dbg" in pkg and not "packagegroup-" in pkg and not "-image" in pkg:
-        # Copied from package_ipk.bbclass
-        # boiler plate to update the data
         localdata = bb.data.createCopy(d)
-        root = "%s/%s" % (pkgdest, pkg)
-
-        localdata.setVar('ROOT', '') 
-        localdata.setVar('ROOT_%s' % pkg, root)
-        pkgname = localdata.getVar('PKG_%s' % pkg, True)
-        if not pkgname:
-            pkgname = pkg
-        localdata.setVar('PKG', pkgname)
-
         localdata.setVar('OVERRIDES', pkg)
-
         bb.data.update_data(localdata)
 
         # Now check the RDEPENDS
         rdepends = bb.utils.explode_deps(localdata.getVar('RDEPENDS', True) or "")
 
-
         # Now do the sanity check!!!
         for rdepend in rdepends:
             if "-dbg" in rdepend and "debug-deps" not in skip:
-                error_msg = "%s rdepends on %s" % (pkgname,rdepend)
+                error_msg = "%s rdepends on %s" % (pkg,rdepend)
                 sane = package_qa_handle_error("debug-deps", error_msg, d)
             if (not "-dev" in pkg and not "-staticdev" in pkg) and rdepend.endswith("-dev") and "dev-deps" not in skip:
-                error_msg = "%s rdepends on %s" % (pkgname, rdepend)
+                error_msg = "%s rdepends on %s" % (pkg, rdepend)
                 sane = package_qa_handle_error("dev-deps", error_msg, d)
 
     return sane
