@@ -9,9 +9,9 @@ Infrastructure (DRI)."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
-DEPENDS += "virtual/libx11 libxvmc drm xf86driproto glproto \
+DEPENDS += "virtual/libx11 drm xf86driproto glproto \
 	    virtual/libgl xineramaproto xf86driproto libpciaccess"
 
 
