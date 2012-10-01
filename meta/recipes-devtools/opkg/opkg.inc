@@ -7,8 +7,6 @@ BUGTRACKER = "http://code.google.com/p/opkg/issues/list"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://src/opkg-cl.c;beginline=1;endline=20;md5=321f658c3f6b6c832e25c8850b5dffba"
-DEPENDS_virtclass-native = "curl-native"
-DEPENDS_virtclass-nativesdk = "nativesdk-curl"
 
 PE = "1"
 INC_PR = "r10"
