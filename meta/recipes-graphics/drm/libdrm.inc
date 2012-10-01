@@ -9,9 +9,9 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://xf86drm.c;beginline=9;endline=32;md5=c8a3b961af7667c530816761e949dc71"
 SRC_URI = "http://dri.freedesktop.org/libdrm/libdrm-${PV}.tar.bz2"
 PROVIDES = "drm"
-DEPENDS = "libpthread-stubs udev cairo"
+DEPENDS = "libpthread-stubs udev"
 
-INC_PR = "r2"
+INC_PR = "r3"
 
 #libpciaccess is required starting from libdrm 2.4.26
 DEPENDS += " libpciaccess"
