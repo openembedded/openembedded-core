@@ -17,13 +17,8 @@
 #   files under exec_prefix
 
 
-#
-# We need to have the scanelf utility as soon as
-# possible and this is contained within the pax-utils-native.
-# The package.bbclass can help us here.
-#
 inherit package
-PACKAGE_DEPENDS += "pax-utils-native ${QADEPENDS}"
+PACKAGE_DEPENDS += "${QADEPENDS}"
 PACKAGEFUNCS += " do_package_qa "
 
 # unsafe-references-in-binaries requires prelink-rtld from
@@ -162,21 +157,23 @@ def package_qa_check_rpath(file,name, d, elf, messages):
     if not elf:
         return
 
-    scanelf = os.path.join(d.getVar('STAGING_BINDIR_NATIVE',True),'scanelf')
     bad_dirs = [d.getVar('TMPDIR', True) + "/work", d.getVar('STAGING_DIR_TARGET', True)]
     bad_dir_test = d.getVar('TMPDIR', True)
-    if not os.path.exists(scanelf):
-        bb.fatal("Can not check RPATH, scanelf (part of pax-utils-native) not found")
 
     if not bad_dirs[0] in d.getVar('WORKDIR', True):
         bb.fatal("This class assumed that WORKDIR is ${TMPDIR}/work... Not doing any check")
 
-    output = os.popen("%s -B -F%%r#F '%s'" % (scanelf,file))
-    txt    = output.readline().split()
-    for line in txt:
-        for dir in bad_dirs:
-            if dir in line:
-                messages.append("package %s contains bad RPATH %s in file %s" % (name, line, file))
+    phdrs = elf.run_objdump("-p", d)
+
+    import re
+    rpath_re = re.compile("\s+RPATH\s+(.*)")
+    for line in phdrs.split("\n"):
+    	m = rpath_re.match(line)
+	if m:
+	    rpath = m.group(1)
+	    for dir in bad_dirs:
+                if dir in rpath:
+                    messages.append("package %s contains bad RPATH %s in file %s" % (name, rpath, file))
 
 QAPATHTEST[useless-rpaths] = "package_qa_check_useless_rpaths"
 def package_qa_check_useless_rpaths(file, name, d, elf, messages):
@@ -189,15 +186,14 @@ def package_qa_check_useless_rpaths(file, name, d, elf, messages):
     if not elf:
         return
 
-    objdump = d.getVar('OBJDUMP', True)
-    env_path = d.getVar('PATH', True)
-
     libdir = d.getVar("libdir", True)
     base_libdir = d.getVar("base_libdir", True)
 
+    phdrs = elf.run_objdump("-p", d)
+
     import re
     rpath_re = re.compile("\s+RPATH\s+(.*)")
-    for line in os.popen("LC_ALL=C PATH=%s %s -p '%s' 2> /dev/null" % (env_path, objdump, file), "r"):
+    for line in phdrs.split("\n"):
     	m = rpath_re.match(line)
 	if m:
 	   rpath = m.group(1)
@@ -458,14 +454,13 @@ def package_qa_hash_style(path, name, d, elf, messages):
     if not gnu_hash:
         return
 
-    objdump = d.getVar('OBJDUMP', True)
-    env_path = d.getVar('PATH', True)
-
     sane = False
     has_syms = False
 
+    phdrs = elf.run_objdump("-p", d)
+
     # If this binary has symbols, we expect it to have GNU_HASH too.
-    for line in os.popen("LC_ALL=C PATH=%s %s -p '%s' 2> /dev/null" % (env_path, objdump, path), "r"):
+    for line in phdrs.split("\n"):
         if "SYMTAB" in line:
             has_syms = True
         if "GNU_HASH" in line:
