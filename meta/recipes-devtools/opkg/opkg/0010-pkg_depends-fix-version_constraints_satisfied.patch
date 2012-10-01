@@ -1,0 +1,37 @@
+From e9add8fe4a63ef14aba8bd238ddde84d5470b611 Mon Sep 17 00:00:00 2001
+From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Sat, 29 Sep 2012 18:56:01 +0200
+Subject: [PATCH 10/10] pkg_depends: fix version_constraints_satisfied
+
+* with
+  Package: a
+  Version: 1
+  and
+  Conflicts: a (<< 1)
+  we have comparison == 0, but constraint EARLIER is not satisfied!
+
+Upstream-Status: Submitted
+http://code.google.com/p/opkg/issues/detail?id=94
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ libopkg/pkg_depends.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
+index 3dd8240..be81b7f 100644
+--- a/libopkg/pkg_depends.c
++++ b/libopkg/pkg_depends.c
+@@ -464,7 +464,8 @@ int version_constraints_satisfied(depend_t * depends, pkg_t * pkg)
+     else if((depends->constraint == LATER) &&
+ 	    (comparison > 0))
+ 	return 1;
+-    else if(comparison == 0)
++    else if((depends->constraint == EQUAL) && 
++	    (comparison == 0))
+ 	return 1;
+     else if((depends->constraint == LATER_EQUAL) &&
+ 	    (comparison >= 0))
+-- 
+1.7.12
+
