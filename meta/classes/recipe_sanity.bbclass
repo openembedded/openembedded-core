@@ -13,7 +13,7 @@ def bad_runtime_vars(cfgdata, d):
             __note("%s should be %s_${PN}" % (var, var), d)
 
 __recipe_sanity_reqvars = "DESCRIPTION"
-__recipe_sanity_reqdiffvars = "LICENSE"
+__recipe_sanity_reqdiffvars = ""
 def req_vars(cfgdata, d):
     for var in d.getVar("__recipe_sanity_reqvars", True).split():
         if not d.getVar(var, 0):
@@ -22,11 +22,6 @@ def req_vars(cfgdata, d):
     for var in d.getVar("__recipe_sanity_reqdiffvars", True).split():
         val = d.getVar(var, 0)
         cfgval = cfgdata.get(var)
-
-        # Hardcoding is bad, but I'm lazy.  We don't care about license being
-        # unset if the recipe has no sources!
-        if var == "LICENSE" and d.getVar("SRC_URI", True) == cfgdata.get("SRC_URI"):
-            continue
 
         if not val:
             __note("%s should be set" % var, d)
@@ -93,7 +88,7 @@ def can_remove_FILESDIR(cfgdata, d):
             expanded == d.expand(expected))
 
 def can_remove_others(p, cfgdata, d):
-    for k in ["S", "PV", "PN", "DESCRIPTION", "LICENSE", "DEPENDS",
+    for k in ["S", "PV", "PN", "DESCRIPTION", "DEPENDS",
               "SECTION", "PACKAGES", "EXTRA_OECONF", "EXTRA_OEMAKE"]:
     #for k in cfgdata:
         unexpanded = d.getVar(k, 0)
