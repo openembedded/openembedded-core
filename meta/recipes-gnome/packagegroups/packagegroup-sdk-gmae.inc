@@ -12,7 +12,6 @@ SDK-GMAE = " \
     libebook-dev \
     libxi-dev \
     libsqlite3-dev \
-    galago-daemon \
     gnome-desktop \
     gssdp \
     gupnp \
@@ -20,7 +19,6 @@ SDK-GMAE = " \
     gupnp-tools \
     gypsy \
     libart-lgpl \
-    libgalago \
     libtelepathy \
     pulseaudio \
     telepathy-glib \
