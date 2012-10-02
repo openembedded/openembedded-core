@@ -608,6 +608,13 @@ python write_specfile () {
                 name = "".join(name.split(eext[1] + '-'))
         return name
 
+    def strip_multilib_deps(deps, d):
+        depends = bb.utils.explode_dep_versions2(deps or "")
+        newdeps = {}
+        for dep in depends:
+            newdeps[strip_multilib(dep, d)] = depends[dep]
+        return bb.utils.join_deps(newdeps)
+
 #        ml = d.getVar("MLPREFIX", True)
 #        if ml and name and len(ml) != 0 and name.find(ml) == 0:
 #            return ml.join(name.split(ml, 1)[1:])
@@ -630,18 +637,20 @@ python write_specfile () {
     def translate_vers(varname, d):
         depends = d.getVar(varname, True)
         if depends:
-            depends_dict = bb.utils.explode_dep_versions(depends)
+            depends_dict = bb.utils.explode_dep_versions2(depends)
             newdeps_dict = {}
             for dep in depends_dict:
-                ver = depends_dict[dep]
-                if dep and ver:
+                verlist = []
+                for ver in depends_dict[dep]:
                     if '-' in ver:
                         subd = oe.packagedata.read_subpkgdata_dict(dep, d)
                         if 'PKGV' in subd:
                             pv = subd['PKGV']
                             reppv = pv.replace('-', '+')
-                            ver = ver.replace(pv, reppv)
-                newdeps_dict[dep] = ver
+                            verlist.append(ver.replace(pv, reppv))
+                    else:
+                        verlist.append(ver)
+                newdeps_dict[dep] = verlist
             depends = bb.utils.join_deps(newdeps_dict)
             d.setVar(varname, depends.strip())
 
@@ -650,14 +659,13 @@ python write_specfile () {
     def print_deps(variable, tag, array, d):
         depends = variable
         if depends:
-            depends_dict = bb.utils.explode_dep_versions(depends)
+            depends_dict = bb.utils.explode_dep_versions2(depends)
             for dep in depends_dict:
-                ver = depends_dict[dep]
-                if dep and ver:
+                for ver in depends_dict[dep]:
                     ver = ver.replace('(', '')
                     ver = ver.replace(')', '')
                     array.append("%s: %s %s" % (tag, dep, ver))
-                else:
+                if not len(depends_dict[dep]):
                     array.append("%s: %s" % (tag, dep))
 
     def walk_files(walkpath, target, conffiles):
@@ -709,7 +717,7 @@ python write_specfile () {
     srchomepage    = d.getVar('HOMEPAGE', True)
     srcdescription = d.getVar('DESCRIPTION', True) or "."
 
-    srcdepends     = strip_multilib(d.getVar('DEPENDS', True), d)
+    srcdepends     = strip_multilib_deps(d.getVar('DEPENDS', True), d)
     srcrdepends    = []
     srcrrecommends = []
     srcrsuggests   = []
@@ -772,12 +780,12 @@ python write_specfile () {
         # Map the dependencies into their final form
         mapping_rename_hook(localdata)
 
-        splitrdepends    = strip_multilib(localdata.getVar('RDEPENDS', True), d) or ""
-        splitrrecommends = strip_multilib(localdata.getVar('RRECOMMENDS', True), d) or ""
-        splitrsuggests   = strip_multilib(localdata.getVar('RSUGGESTS', True), d) or ""
-        splitrprovides   = strip_multilib(localdata.getVar('RPROVIDES', True), d) or ""
-        splitrreplaces   = strip_multilib(localdata.getVar('RREPLACES', True), d) or ""
-        splitrconflicts  = strip_multilib(localdata.getVar('RCONFLICTS', True), d) or ""
+        splitrdepends    = strip_multilib_deps(localdata.getVar('RDEPENDS', True), d)
+        splitrrecommends = strip_multilib_deps(localdata.getVar('RRECOMMENDS', True), d)
+        splitrsuggests   = strip_multilib_deps(localdata.getVar('RSUGGESTS', True), d)
+        splitrprovides   = strip_multilib_deps(localdata.getVar('RPROVIDES', True), d)
+        splitrreplaces   = strip_multilib_deps(localdata.getVar('RREPLACES', True), d)
+        splitrconflicts  = strip_multilib_deps(localdata.getVar('RCONFLICTS', True), d)
         splitrobsoletes  = []
 
         # Gather special src/first package data
@@ -826,16 +834,16 @@ python write_specfile () {
         spec_preamble_bottom.append('Group: %s' % splitsection)
 
         # Replaces == Obsoletes && Provides
-        if splitrreplaces and splitrreplaces.strip() != "":
-            for dep in splitrreplaces.split(','):
-                if splitrprovides:
-                    splitrprovides = splitrprovides + ", " + dep
-                else:
-                    splitrprovides = dep
-                if splitrobsoletes:
-                    splitrobsoletes = splitrobsoletes + ", " + dep
-                else:
-                    splitrobsoletes = dep
+        robsoletes = bb.utils.explode_dep_versions2(splitrobsoletes or "")
+        rprovides = bb.utils.explode_dep_versions2(splitrprovides or "")
+        rreplaces = bb.utils.explode_dep_versions2(splitrreplaces or "")
+        for dep in rreplaces:
+            if not dep in robsoletes:
+                robsoletes[dep] = rreplaces[dep]
+            if not dep in rprovides:
+                rprovides[dep] = rreplaces[dep]
+        splitrobsoletes = bb.utils.join_deps(robsoletes, commasep=False)
+        splitrprovides = bb.utils.join_deps(rprovides, commasep=False)
 
         print_deps(splitrdepends, "Requires", spec_preamble_bottom, d)
         # Suggests in RPM are like recommends in OE-core!
@@ -847,7 +855,7 @@ python write_specfile () {
 
         # conflicts can not be in a provide!  We will need to filter it.
         if splitrconflicts:
-            depends_dict = bb.utils.explode_dep_versions(splitrconflicts)
+            depends_dict = bb.utils.explode_dep_versions2(splitrconflicts)
             newdeps_dict = {}
             for dep in depends_dict:
                 if dep not in splitrprovides:
@@ -918,16 +926,16 @@ python write_specfile () {
     tail_source(d)
 
     # Replaces == Obsoletes && Provides
-    if srcrreplaces and srcrreplaces.strip() != "":
-        for dep in srcrreplaces.split(','):
-            if srcrprovides:
-                srcrprovides = srcrprovides + ", " + dep
-            else:
-                srcrprovides = dep
-            if srcrobsoletes:
-                srcrobsoletes = srcrobsoletes + ", " + dep
-            else:
-                srcrobsoletes = dep
+    robsoletes = bb.utils.explode_dep_versions2(srcrobsoletes or "")
+    rprovides = bb.utils.explode_dep_versions2(srcrprovides or "")
+    rreplaces = bb.utils.explode_dep_versions2(srcrreplaces or "")
+    for dep in rreplaces:
+        if not dep in robsoletes:
+            robsoletes[dep] = rreplaces[dep]
+        if not dep in rprovides:
+            rprovides[dep] = rreplaces[dep]
+    srcrobsoletes = bb.utils.join_deps(robsoletes, commasep=False)
+    srcrprovides = bb.utils.join_deps(rprovides, commasep=False)
 
     print_deps(srcdepends, "BuildRequires", spec_preamble_top, d)
     print_deps(srcrdepends, "Requires", spec_preamble_top, d)
@@ -940,7 +948,7 @@ python write_specfile () {
     
     # conflicts can not be in a provide!  We will need to filter it.
     if srcrconflicts:
-        depends_dict = bb.utils.explode_dep_versions(srcrconflicts)
+        depends_dict = bb.utils.explode_dep_versions2(srcrconflicts)
         newdeps_dict = {}
         for dep in depends_dict:
             if dep not in srcrprovides:

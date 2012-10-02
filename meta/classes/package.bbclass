@@ -375,17 +375,13 @@ def get_package_mapping (pkg, d):
 def runtime_mapping_rename (varname, d):
     #bb.note("%s before: %s" % (varname, d.getVar(varname, True)))
 
-    new_depends = []
-    deps = bb.utils.explode_dep_versions(d.getVar(varname, True) or "")
+    new_depends = {}
+    deps = bb.utils.explode_dep_versions2(d.getVar(varname, True) or "")
     for depend in deps:
-        # Have to be careful with any version component of the depend
         new_depend = get_package_mapping(depend, d)
-        if deps[depend]:
-            new_depends.append("%s (%s)" % (new_depend, deps[depend]))
-        else:
-            new_depends.append(new_depend)
+        new_depends[new_depend] = deps[depend]
 
-    d.setVar(varname, " ".join(new_depends) or None)
+    d.setVar(varname, bb.utils.join_deps(new_depends, commasep=False))
 
     #bb.note("%s after: %s" % (varname, d.getVar(varname, True)))
 
@@ -1078,7 +1074,7 @@ python populate_packages () {
                     dangling_links[pkg].append(os.path.normpath(target))
 
     for pkg in package_list:
-        rdepends = bb.utils.explode_dep_versions(d.getVar('RDEPENDS_' + pkg, True) or d.getVar('RDEPENDS', True) or "")
+        rdepends = bb.utils.explode_dep_versions2(d.getVar('RDEPENDS_' + pkg, True) or d.getVar('RDEPENDS', True) or "")
 
         for l in dangling_links[pkg]:
             found = False
@@ -1091,7 +1087,7 @@ python populate_packages () {
                         if p == pkg:
                             break
                         if p not in rdepends:
-                            rdepends[p] = ""
+                            rdepends[p] = []
                         break
             if found == False:
                 bb.note("%s contains dangling symlink to %s" % (pkg, l))
@@ -1637,14 +1633,19 @@ def read_libdep_files(d):
     pkglibdeps = {}
     packages = d.getVar('PACKAGES', True).split()
     for pkg in packages:
-        pkglibdeps[pkg] = []
+        pkglibdeps[pkg] = {}
         for extension in ".shlibdeps", ".pcdeps", ".clilibdeps":
             depsfile = d.expand("${PKGDEST}/" + pkg + extension)
             if os.access(depsfile, os.R_OK):
                 fd = file(depsfile)
                 lines = fd.readlines()
                 fd.close()
-                pkglibdeps[pkg].extend([l.rstrip() for l in lines])
+                for l in lines:
+                    l.rstrip()
+                    deps = bb.utils.explode_dep_versions2(l)
+                    for dep in deps:
+                        if not dep in pkglibdeps[pkg]:
+                            pkglibdeps[pkg][dep] = deps[dep]
     return pkglibdeps
 
 python read_shlibdeps () {
@@ -1652,9 +1653,14 @@ python read_shlibdeps () {
 
     packages = d.getVar('PACKAGES', True).split()
     for pkg in packages:
-        rdepends = bb.utils.explode_dep_versions(d.getVar('RDEPENDS_' + pkg, False) or d.getVar('RDEPENDS', False) or "")
+        rdepends = bb.utils.explode_dep_versions2(d.getVar('RDEPENDS_' + pkg, False) or d.getVar('RDEPENDS', False) or "")
         for dep in pkglibdeps[pkg]:
-            rdepends[dep] = ""
+            # Add the dep if it's not already there, or if no comparison is set
+            if dep not in rdepends:
+                rdepends[dep] = []
+            for v in pkglibdeps[pkg][dep]:
+                if v not in rdepends[dep]:
+                    rdepends[dep].append(v)
         d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
 }
 
@@ -1679,7 +1685,7 @@ python package_depchains() {
     def pkg_adddeprrecs(pkg, base, suffix, getname, depends, d):
 
         #bb.note('depends for %s is %s' % (base, depends))
-        rreclist = bb.utils.explode_dep_versions(d.getVar('RRECOMMENDS_' + pkg, True) or d.getVar('RRECOMMENDS', True) or "")
+        rreclist = bb.utils.explode_dep_versions2(d.getVar('RRECOMMENDS_' + pkg, True) or d.getVar('RRECOMMENDS', True) or "")
 
         for depend in depends:
             if depend.find('-native') != -1 or depend.find('-cross') != -1 or depend.startswith('virtual/'):
@@ -1692,7 +1698,7 @@ python package_depchains() {
             pkgname = getname(depend, suffix)
             #bb.note("Adding %s for %s" % (pkgname, depend))
             if pkgname not in rreclist and pkgname != pkg:
-                rreclist[pkgname] = ""
+                rreclist[pkgname] = []
 
         #bb.note('setting: RRECOMMENDS_%s=%s' % (pkg, ' '.join(rreclist)))
         d.setVar('RRECOMMENDS_%s' % pkg, bb.utils.join_deps(rreclist, commasep=False))
@@ -1700,7 +1706,7 @@ python package_depchains() {
     def pkg_addrrecs(pkg, base, suffix, getname, rdepends, d):
 
         #bb.note('rdepends for %s is %s' % (base, rdepends))
-        rreclist = bb.utils.explode_dep_versions(d.getVar('RRECOMMENDS_' + pkg, True) or d.getVar('RRECOMMENDS', True) or "")
+        rreclist = bb.utils.explode_dep_versions2(d.getVar('RRECOMMENDS_' + pkg, True) or d.getVar('RRECOMMENDS', True) or "")
 
         for depend in rdepends:
             if depend.find('virtual-locale-') != -1:
@@ -1713,13 +1719,12 @@ python package_depchains() {
             pkgname = getname(depend, suffix)
             #bb.note("Adding %s for %s" % (pkgname, depend))
             if pkgname not in rreclist and pkgname != pkg:
-                rreclist[pkgname] = ""
+                rreclist[pkgname] = []
 
         #bb.note('setting: RRECOMMENDS_%s=%s' % (pkg, ' '.join(rreclist)))
         d.setVar('RRECOMMENDS_%s' % pkg, bb.utils.join_deps(rreclist, commasep=False))
 
     def add_dep(list, dep):
-        dep = dep.split(' (')[0].strip()
         if dep not in list:
             list.append(dep)
 
@@ -1758,10 +1763,7 @@ python package_depchains() {
 
     if "-dbg" in pkgs:
         pkglibdeps = read_libdep_files(d)
-        pkglibdeplist = []
-        for pkg in pkglibdeps:
-            for dep in pkglibdeps[pkg]:
-                add_dep(pkglibdeplist, dep)
+        pkglibdeplist = pkglibdeps.keys()
         # FIXME this should not look at PN once all task recipes inherit from task.bbclass
         dbgdefaultdeps = ((d.getVar('DEPCHAIN_DBGDEFAULTDEPS', True) == '1') or (d.getVar('PN', True) or '').startswith('packagegroup-'))
 

@@ -85,9 +85,9 @@ PACKAGEFUNCS_append = "do_package_qa_multilib"
 python do_package_qa_multilib() {
 
     def check_mlprefix(pkg, var, mlprefix):
-        values = bb.utils.explode_dep_versions(d.getVar('%s_%s' % (var, pkg), True) or d.getVar(var, True) or "")
+        values = bb.utils.explode_deps(d.getVar('%s_%s' % (var, pkg), True) or d.getVar(var, True) or "")
         candidates = []
-        for i in values.keys():
+        for i in values:
             if i.startswith('virtual/'):
                 i = i[len('virtual/'):]
             if (not i.startswith('kernel-module')) and (not i.startswith(mlprefix)):

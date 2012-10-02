@@ -429,13 +429,11 @@ python populate_packages_prepend () {
             old_desc = d.getVar('DESCRIPTION_' + pkg, True) or ""
             d.setVar('DESCRIPTION_' + pkg, old_desc + "; " + vals["description"])
 
-        rdepends_str = d.getVar('RDEPENDS_' + pkg, True)
-        if rdepends_str:
-            rdepends = rdepends_str.split()
-        else:
-            rdepends = []
-        rdepends.extend(get_dependencies(file, pattern, format))
-        d.setVar('RDEPENDS_' + pkg, ' '.join(rdepends))
+        rdepends = bb.utils.explode_dep_versions2(d.getVar('RDEPENDS_' + pkg, True) or "")
+        for dep in get_dependencies(file, pattern, format):
+            if not dep in rdepends:
+                rdepends[dep] = []
+        d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
 
     module_deps = parse_depmod()
     module_regex = '^(.*)\.k?o$'

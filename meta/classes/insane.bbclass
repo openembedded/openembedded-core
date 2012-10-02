@@ -114,7 +114,7 @@ def package_qa_get_machine_dict():
 
 # Currently not being used by default "desktop"
 WARN_QA ?= "ldflags useless-rpaths rpaths unsafe-references-in-binaries unsafe-references-in-scripts staticdev libdir"
-ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch la2 pkgconfig la perms"
+ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch la2 pkgconfig la perms dep-cmp"
 
 ALL_QA = "${WARN_QA} ${ERROR_QA}"
 
@@ -646,6 +646,43 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, d):
 
     return sane
 
+def package_qa_check_deps(pkg, pkgdest, skip, d):
+    sane = True
+
+    localdata = bb.data.createCopy(d)
+    localdata.setVar('OVERRIDES', pkg)
+    bb.data.update_data(localdata)
+
+    def check_valid_deps(var):
+        sane = True
+        try:
+            rvar = bb.utils.explode_dep_versions2(localdata.getVar(var, True) or "")
+        except ValueError as e:
+            bb.fatal("%s_%s: %s" % (var, pkg, e))
+            raise e
+        for dep in rvar:
+            for v in rvar[dep]:
+                if v and not v.startswith(('< ', '= ', '> ', '<= ', '>=')):
+                    error_msg = "%s_%s is invalid: %s (%s)   only comparisons <, =, >, <=, and >= are allowed" % (var, pkg, dep, v)
+                    sane = package_qa_handle_error("dep-cmp", error_msg, d)
+        return sane
+
+    sane = True
+    if not check_valid_deps('RDEPENDS'):
+        sane = False
+    if not check_valid_deps('RRECOMMENDS'):
+        sane = False
+    if not check_valid_deps('RSUGGESTS'):
+        sane = False
+    if not check_valid_deps('RPROVIDES'):
+        sane = False
+    if not check_valid_deps('RREPLACES'):
+        sane = False
+    if not check_valid_deps('RCONFLICTS'):
+        sane = False
+
+    return sane
+
 # The PACKAGE FUNC to scan each package
 python do_package_qa () {
     import subprocess
@@ -686,6 +723,7 @@ python do_package_qa () {
     g = globals()
     walk_sane = True
     rdepends_sane = True
+    deps_sane = True
     for package in packages.split():
         skip = (d.getVar('INSANE_SKIP_' + package, True) or "").split()
         if skip:
@@ -709,12 +747,14 @@ python do_package_qa () {
             walk_sane  = False
         if not package_qa_check_rdepends(package, pkgdest, skip, d):
             rdepends_sane = False
+        if not package_qa_check_deps(package, pkgdest, skip, d):
+            deps_sane = False
 
 
     if 'libdir' in d.getVar("ALL_QA", True).split():
         package_qa_check_libdir(d)
 
-    if not walk_sane or not rdepends_sane:
+    if not walk_sane or not rdepends_sane or not deps_sane:
         bb.fatal("QA run found fatal errors. Please consider fixing them.")
     bb.note("DONE with PACKAGE QA")
 }
