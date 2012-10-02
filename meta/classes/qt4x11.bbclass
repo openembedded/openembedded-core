@@ -1,4 +1,5 @@
-DEPENDS_prepend = "${@base_contains("PROVIDES", "qt4-x11", "", "qt4-x11 ", d)}"
+QT4DEPENDS ?= "qt4-x11 "
+DEPENDS_prepend = "${QT4DEPENDS}"
 
 inherit qmake2
 
