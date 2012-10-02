@@ -20,4 +20,7 @@ inherit autotools
 # relocatable, so use the one we've just built
 CHRPATH_BIN_virtclass-native = "${S}/chrpath"
 
+PROVIDES_append_virtclass-native = " chrpath-replacement-native"
+NATIVE_PACKAGE_PATH_SUFFIX = "/${PN}"
+
 BBCLASSEXTEND = "native nativesdk"
