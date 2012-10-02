@@ -2,6 +2,7 @@ require gzip.inc
 
 PR = "r0"
 
+PROVIDES_append_virtclass-native = " gzip-replacement-native"
 NATIVE_PACKAGE_PATH_SUFFIX = "/${PN}"
 
 BBCLASSEXTEND = "native"
