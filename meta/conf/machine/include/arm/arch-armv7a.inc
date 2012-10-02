@@ -1,7 +1,5 @@
 DEFAULTTUNE ?= "armv7a"
 
-ARMPKGARCH ?= "armv7a"
-
 TUNEVALID[armv7a] = "Enable instructions for ARMv7-a"
 TUNECONFLICTS[armv7a] = "armv4 armv5 armv6 armv7"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "armv7a", "-march=armv7-a", "", d)}"
@@ -12,6 +10,10 @@ require conf/machine/include/arm/feature-arm-neon.inc
 
 # Little Endian base configs
 AVAILTUNES += "armv7a armv7at armv7a-neon armv7at-neon"
+ARMPKGARCH_tune-armv7a ?= "armv7a"
+ARMPKGARCH_tune-armv7at ?= "armv7a"
+ARMPKGARCH_tune-armv7a-neon?= "armv7a"
+ARMPKGARCH_tune-armv7at-neon ?= "armv7a"
 TUNE_FEATURES_tune-armv7a ?= "armv7a vfp"
 TUNE_FEATURES_tune-armv7at ?= "armv7a vfp thumb"
 TUNE_FEATURES_tune-armv7a-neon ?= "armv7a vfp neon"
@@ -23,6 +25,10 @@ PACKAGE_EXTRA_ARCHS_tune-armv7at-neon = "${PACKAGE_EXTRA_ARCHS_tune-armv7at} arm
 
 # VFP Tunes
 AVAILTUNES += "armv7ahf armv7athf armv7ahf-neon armv7athf-neon"
+ARMPKGARCH_tune-armv7ahf ?= "armv7a"
+ARMPKGARCH_tune-armv7athf ?= "armv7a"
+ARMPKGARCH_tune-armv7ahf-neon?= "armv7a"
+ARMPKGARCH_tune-armv7athf-neon ?= "armv7a"
 TUNE_FEATURES_tune-armv7ahf ?= "${TUNE_FEATURES_tune-armv7a} callconvention-hard"
 TUNE_FEATURES_tune-armv7athf ?= "${TUNE_FEATURES_tune-armv7at} callconvention-hard"
 TUNE_FEATURES_tune-armv7ahf-neon ?= "${TUNE_FEATURES_tune-armv7a-neon} callconvention-hard"
@@ -34,6 +40,10 @@ PACKAGE_EXTRA_ARCHS_tune-armv7athf-neon = "${PACKAGE_EXTRA_ARCHS_tune-armv7athf}
 
 # Big Endian
 AVAILTUNES += "armv7ab armv7atb armv7ab-neon armv7atb-neon"
+ARMPKGARCH_tune-armv7ab ?= "armv7a"
+ARMPKGARCH_tune-armv7atb ?= "armv7a"
+ARMPKGARCH_tune-armv7ab-neon?= "armv7a"
+ARMPKGARCH_tune-armv7atb-neon ?= "armv7a"
 TUNE_FEATURES_tune-armv7ab ?= "${TUNE_FEATURES_tune-armv7a} bigendian"
 TUNE_FEATURES_tune-armv7atb ?= "${TUNE_FEATURES_tune-armv7at} bigendian"
 TUNE_FEATURES_tune-armv7ab-neon ?= "${TUNE_FEATURES_tune-armv7a-neon} bigendian"
@@ -45,6 +55,10 @@ PACKAGE_EXTRA_ARCHS_tune-armv7atb-neon = "${PACKAGE_EXTRA_ARCHS_tune-armv7at} ar
 
 # Big Endian + VFP
 AVAILTUNES += "armv7ahfb armv7athfb armv7ahfb-neon armv7athfb-neon"
+ARMPKGARCH_tune-armv7ahfb ?= "armv7a"
+ARMPKGARCH_tune-armv7athfb ?= "armv7a"
+ARMPKGARCH_tune-armv7ahfb-neon?= "armv7a"
+ARMPKGARCH_tune-armv7athfb-neon ?= "armv7a"
 TUNE_FEATURES_tune-armv7ahfb ?= "${TUNE_FEATURES_tune-armv7ab} callconvention-hard"
 TUNE_FEATURES_tune-armv7athfb ?= "${TUNE_FEATURES_tune-armv7atb} callconvention-hard"
 TUNE_FEATURES_tune-armv7ahfb-neon ?= "${TUNE_FEATURES_tune-armv7ab-neon} callconvention-hard"

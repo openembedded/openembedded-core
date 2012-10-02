@@ -1,7 +1,5 @@
 DEFAULTTUNE ?= "armv6"
 
-ARMPKGARCH ?= "armv6"
-
 TUNEVALID[armv6] = "Enable instructions for ARMv6"
 TUNECONFLICTS[armv6] = "armv4 armv5"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "armv6", "-march=armv6", "", d)}"
@@ -11,6 +9,10 @@ require conf/machine/include/arm/arch-armv5-dsp.inc
 
 # Little Endian
 AVAILTUNES += "armv6 armv6t armv6hf armv6thf"
+ARMPKGARCH_tune-armv6 ?= "armv6"
+ARMPKGARCH_tune-armv6t ?= "armv6"
+ARMPKGARCH_tune-armv6hf ?= "armv6"
+ARMPKGARCH_tune-armv6thf ?= "armv6"
 TUNE_FEATURES_tune-armv6 ?= "armv6 vfp"
 TUNE_FEATURES_tune-armv6t ?= "armv6 vfp thumb"
 TUNE_FEATURES_tune-armv6hf ?= "${TUNE_FEATURES_tune-armv6} callconvention-hard"
@@ -22,6 +24,10 @@ PACKAGE_EXTRA_ARCHS_tune-armv6thf = "${PACKAGE_EXTRA_ARCHS_tune-armv5tehf-vfp} a
 
 # Big Endian
 AVAILTUNES += "armv6b armv6tb armv6hfb armv6thfb"
+ARMPKGARCH_tune-armv6b ?= "armv6"
+ARMPKGARCH_tune-armv6tb ?= "armv6"
+ARMPKGARCH_tune-armv6hfb ?= "armv6"
+ARMPKGARCH_tune-armv6thfb ?= "armv6"
 TUNE_FEATURES_tune-armv6b ?= "${TUNE_FEATURES_tune-armv6} bigendian"
 TUNE_FEATURES_tune-armv6tb ?= "${TUNE_FEATURES_tune-armv6t} bigendian"
 TUNE_FEATURES_tune-armv6hfb ?= "${TUNE_FEATURES_tune-armv6b} callconvention-hard"
