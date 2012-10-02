@@ -16,6 +16,13 @@ CLASSOVERRIDE = "class-nativesdk"
 PACKAGE_ARCH = "${SDK_ARCH}-nativesdk"
 PACKAGE_ARCHS = "${SDK_PACKAGE_ARCHS}"
 
+#
+# We need chrpath >= 0.14 to ensure we can deal with 32 and 64 bit
+# binaries
+#
+DEPENDS_append = " chrpath-replacement-native"
+EXTRANATIVEPATH += "chrpath-native"
+
 STAGING_DIR_HOST = "${STAGING_DIR}/${MULTIMACH_HOST_SYS}"
 STAGING_DIR_TARGET = "${STAGING_DIR}/${MULTIMACH_TARGET_SYS}"
 
