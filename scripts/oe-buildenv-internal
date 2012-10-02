@@ -24,6 +24,11 @@ if [ -z "$OEROOT" ]; then
     return 1
 fi
 
+if [ ! -z "$OECORE_SDK_VERSION" ]; then
+    echo >&2 "Error: The OE SDK/ADT was detected as already being present in this shell environment. Please use a clean shell when sourcing this environment script."
+    return 1
+fi
+
 if [ "x$BDIR" = "x" ]; then
     if [ "x$1" = "x" ]; then
         BDIR="build"
