@@ -2,17 +2,6 @@
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
-emergency_shell()
-{
-    echo "Bug in initramfs /init detected. Dropping to a shell. Good luck!"
-    echo
-    sh
-}
-trap "emergency_shell" 0 2
-
-# exit immediately if a command fails
-set -e
-
 ROOT_MOUNT="/rootfs/"
 ROOT_IMAGE="rootfs.img"
 MOUNT="/bin/mount"
