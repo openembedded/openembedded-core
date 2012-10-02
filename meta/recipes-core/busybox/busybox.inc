@@ -5,8 +5,7 @@ BUGTRACKER = "https://bugs.busybox.net/"
 
 # bzip2 applet in busybox is based on lightly-modified bzip2 source
 # the GPL is version 2 only
-# bzip2 is not a bzip2 license (no such thing)
-LICENSE = "GPLv2 & BSD-4-Clause"
+LICENSE = "GPLv2 & bzip2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=de10de48642ab74318e893a61105afbb"
 
 SECTION = "base"
