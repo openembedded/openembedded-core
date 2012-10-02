@@ -1,4 +1,4 @@
-DEFAULTTUNE ?= "arm920t"
+DEFAULTTUNE ?= "armv4t"
 
 require conf/machine/include/arm/arch-armv4.inc
 

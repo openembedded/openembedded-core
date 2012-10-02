@@ -1,4 +1,4 @@
-DEFAULTTUNE ?= "arm926ejs"
+DEFAULTTUNE ?= "armv5te"
 
 require conf/machine/include/arm/arch-armv5-dsp.inc
 

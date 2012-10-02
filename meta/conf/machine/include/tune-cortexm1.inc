@@ -1,4 +1,4 @@
-DEFAULTTUNE ?= "cortexm1"
+DEFAULTTUNE ?= "armv7a"
 
 require conf/machine/include/arm/arch-armv7a.inc
 

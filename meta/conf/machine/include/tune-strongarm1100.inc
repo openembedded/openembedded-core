@@ -1,4 +1,4 @@
-DEFAULTTUNE ?= "strongarm"
+DEFAULTTUNE ?= "armv4"
 
 require conf/machine/include/arm/arch-armv4.inc
 
