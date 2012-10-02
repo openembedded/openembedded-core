@@ -174,7 +174,7 @@ def check_sanity_tmpdir_change(tmpdir, data):
     # Check that we can fetch from various network transports
     errmsg = check_connectivity(data)
     testmsg = testmsg + check_connectivity(data)
-    return testmsg, errmsg == ""
+    return testmsg, errmsg != ""
         
 def check_sanity_version_change(data):
     # Sanity checks to be done when SANITY_VERSION changes
