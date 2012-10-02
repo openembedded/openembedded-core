@@ -1,6 +1,6 @@
 require e2fsprogs.inc
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI += "file://fallocate.patch \
             file://acinclude.m4 \
@@ -32,6 +32,7 @@ do_install () {
 	rm -f ${D}${base_libdir}/pkgconfig/blkid.pc
 	rm -f ${D}${base_sbindir}/blkid
 	rm -f ${D}${base_sbindir}/fsck
+	rm -f ${D}${base_sbindir}/findfs
 }
 
 do_install_append () {
@@ -50,7 +51,7 @@ PACKAGES =+ "libcomerr libss libe2p libext2fs"
 
 FILES_e2fsprogs-e2fsck = "${base_sbindir}/e2fsck ${base_sbindir}/fsck.ext*"
 FILES_e2fsprogs-mke2fs = "${base_sbindir}/mke2fs ${base_sbindir}/mkfs.ext* ${sysconfdir}/mke2fs.conf"
-FILES_e2fsprogs-tune2fs = "${base_sbindir}/tune2fs ${base_sbindir}/e2label ${base_sbindir}/findfs"
+FILES_e2fsprogs-tune2fs = "${base_sbindir}/tune2fs ${base_sbindir}/e2label"
 FILES_e2fsprogs-badblocks = "${base_sbindir}/badblocks"
 FILES_libcomerr = "${base_libdir}/libcom_err.so.*"
 FILES_libss = "${base_libdir}/libss.so.*"
