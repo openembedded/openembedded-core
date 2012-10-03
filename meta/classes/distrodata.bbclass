@@ -33,12 +33,6 @@ python do_distrodata_np() {
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
             bb.data.update_data(localdata)
 
-        if pn.find("nativesdk-") != -1:
-            pnstripped = pn.replace("nativesdk-", "")
-            bb.note("Native Split: %s" % pnstripped)
-            localdata.setVar('OVERRIDES', "pn-" + pnstripped + ":" + d.getVar('OVERRIDES', True))
-            bb.data.update_data(localdata)
-
         if pn.find("-cross") != -1:
             pnstripped = pn.split("-cross")
             bb.note("cross Split: %s" % pnstripped)
@@ -50,6 +44,13 @@ python do_distrodata_np() {
             bb.note("cross Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
             bb.data.update_data(localdata)
+
+        if pn.startswith("nativesdk-"):
+            pnstripped = pn.replace("nativesdk-", "")
+            bb.note("NativeSDK Split: %s" % pnstripped)
+            localdata.setVar('OVERRIDES', "pn-" + pnstripped + ":" + d.getVar('OVERRIDES', True))
+            bb.data.update_data(localdata)
+
 
         if pn.find("-initial") != -1:
             pnstripped = pn.split("-initial")
@@ -119,8 +120,20 @@ python do_distrodata() {
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
             bb.data.update_data(localdata)
 
+        if pn.startswith("nativesdk-"):
+            pnstripped = pn.replace("nativesdk-", "")
+            bb.note("NativeSDK Split: %s" % pnstripped)
+            localdata.setVar('OVERRIDES', "pn-" + pnstripped + ":" + d.getVar('OVERRIDES', True))
+            bb.data.update_data(localdata)
+
         if pn.find("-cross") != -1:
             pnstripped = pn.split("-cross")
+            bb.note("cross Split: %s" % pnstripped)
+            localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
+            bb.data.update_data(localdata)
+
+        if pn.find("-crosssdk") != -1:
+            pnstripped = pn.split("-crosssdk")
             bb.note("cross Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
             bb.data.update_data(localdata)

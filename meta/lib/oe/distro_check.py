@@ -288,6 +288,12 @@ def compare_in_distro_packages_list(distro_check_dir, d):
         bb.data.update_data(localdata)
         recipe_name = pnstripped[0]
 
+    if pn.startswith("nativesdk-"):
+        pnstripped = pn.split("nativesdk-")
+        localdata.setVar('OVERRIDES', "pn-" + pnstripped[1] + ":" + d.getVar('OVERRIDES', True))
+        bb.data.update_data(localdata)
+        recipe_name = pnstripped[1]
+
     if pn.find("-cross") != -1:
         pnstripped = pn.split("-cross")
         localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
