@@ -13,7 +13,8 @@
 #
 #   You must also provide a Linux kernel configuration. The most direct
 #   method is to copy your .config to files/defconfig in your layer,
-#   in the same directory as the bbappend.
+#   in the same directory as the bbappend and add file://defconfig to
+#   your SRC_URI.
 #
 #   To use the yocto kernel tooling to generate a BSP configuration
 #   using modular configuration fragments, see the yocto-bsp and
