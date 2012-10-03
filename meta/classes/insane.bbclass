@@ -113,7 +113,7 @@ def package_qa_get_machine_dict():
 
 
 # Currently not being used by default "desktop"
-WARN_QA ?= "ldflags useless-rpaths rpaths unsafe-references-in-binaries unsafe-references-in-scripts staticdev libdir xorg-driver-abi"
+WARN_QA ?= "ldflags useless-rpaths rpaths unsafe-references-in-binaries unsafe-references-in-scripts staticdev libdir xorg-driver-abi textrel"
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch la2 pkgconfig la perms dep-cmp"
 
 ALL_QA = "${WARN_QA} ${ERROR_QA}"
@@ -445,6 +445,30 @@ def package_qa_check_desktop(path, name, d, elf, messages):
         # This only produces output on errors
         for l in output:
             messages.append("Desktop file issue: " + l.strip())
+
+QAPATHTEST[textrel] = "package_qa_textrel"
+def package_qa_textrel(path, name, d, elf, messages):
+    """
+    Check if the binary contains relocations in .text
+    """
+
+    if not elf:
+        return
+
+    if os.path.islink(path):
+        return
+
+    phdrs = elf.run_objdump("-p", d)
+    sane = True
+
+    import re
+    textrel_re = re.compile("\s+TEXTREL\s+")
+    for line in phdrs.split("\n"):
+        if textrel_re.match(line):
+	   sane = False
+
+    if not sane:
+        messages.append("ELF binary '%s' has relocations in .text" % path)
 
 QAPATHTEST[ldflags] = "package_qa_hash_style"
 def package_qa_hash_style(path, name, d, elf, messages):
