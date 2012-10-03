@@ -262,8 +262,8 @@ def compare_lists(alines, blines):
 
 
 def compare_pkg_lists(astr, bstr):
-    depvera = bb.utils.explode_dep_versions(astr)
-    depverb = bb.utils.explode_dep_versions(bstr)
+    depvera = bb.utils.explode_dep_versions2(astr)
+    depverb = bb.utils.explode_dep_versions2(bstr)
 
     # Strip out changes where the version has increased
     remove = []
@@ -271,8 +271,23 @@ def compare_pkg_lists(astr, bstr):
         if k in depverb:
             dva = depvera[k]
             dvb = depverb[k]
-            if dva and dvb and dva != dvb:
-                if bb.utils.vercmp(bb.utils.split_version(dva), bb.utils.split_version(dvb)) < 0:
+            if dva and dvb and len(dva) == len(dvb):
+                # Since length is the same, sort so that prefixes (e.g. >=) will line up
+                dva.sort()
+                dvb.sort()
+                removeit = True
+                for dvai, dvbi in zip(dva, dvb):
+                    if dvai != dvbi:
+                        aiprefix = dvai.split(' ')[0]
+                        biprefix = dvbi.split(' ')[0]
+                        if aiprefix == biprefix and aiprefix in ['>=', '=']:
+                            if bb.utils.vercmp(bb.utils.split_version(dvai), bb.utils.split_version(dvbi)) > 0:
+                                removeit = False
+                                break
+                        else:
+                            removeit = False
+                            break
+                if removeit:
                     remove.append(k)
 
     for k in remove:
