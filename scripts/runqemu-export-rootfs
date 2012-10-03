@@ -100,6 +100,21 @@ fi
 # See how we were called.
 case "$1" in
   start)
+	PORTMAP_RUNNING=`ps -ef | grep portmap | grep -v grep`
+	RPCBIND_RUNNING=`ps -ef | grep rpcbind | grep -v grep`
+	if [[ "x$PORTMAP_RUNNING" = "x" && "x$RPCBIND_RUNNING" = "x" ]]; then
+		echo "======================================================="
+		echo "Error: neither rpcbind nor portmap appear to be running"
+		echo "Please install and start one of these services first"
+		echo "======================================================="
+		echo "Tip: for recent Ubuntu hosts, run:"
+		echo "  sudo apt-get install rpcbind"
+		echo "Then add OPTIONS=\"-i -w\"  to /etc/default/rpcbind and run"
+		echo "  sudo service portmap restart"
+
+		exit 1
+	fi
+
 	echo "Starting User Mode rpc.mountd"
 	echo "  $PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.mountd $MOUNTD_OPTS"
 	$PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.mountd $MOUNTD_OPTS
@@ -107,25 +122,25 @@ case "$1" in
 		echo "====================="
 		echo "Error starting MOUNTD"
 		echo "====================="
-		ps -ef | grep -v grep | grep rpcbind 2>&1 > /dev/null
-		if [ $? = 0 ] ; then
+		if [ ! "x$RPCBIND_RUNNING" = "x" ] ; then
 			echo "  If you see an error above that says:"
 			echo "    RPC: Authentication error; why = Client credential too weak"
-			echo "  You need to change the startup of rpcbind"
-			echo "  on your host by doing the following as root:"
+			echo "  You need to add the -i option when running rpcbind"
 			echo "==============================================="
-			echo "  According to /etc/sysconfig/rpcbind, then "
-			echo "    echo RPCBIND_ARGS=-i >> /etc/sysconfig/rpcbind"
+			echo "For recent Fedora/RedHat hosts:"
+			echo "Add RPCBIND_ARGS=-i to /etc/sysconfig/rpcbind"
 			echo "  or"
-			echo "    echo RPCBIND_OPTIONS=-i >> /etc/sysconfig/rpcbind"
-			echo "    /etc/init.d/rpcbind restart"
+			echo "Add RPCBIND_OPTIONS=-i to /etc/sysconfig/rpcbind"
+			echo "Then run as root: /etc/init.d/rpcbind restart"
 			echo "==============================================="
-			echo "For Ubuntu 11.10 hosts"
+			echo "For recent Debian/Ubuntu hosts:"
 			echo "Add OPTIONS=\"-i -w\"  to /etc/default/rpcbind"
 			echo "sudo service portmap restart"
 		fi
+
 		exit 1
 	fi
+
 	echo "Starting User Mode nfsd"
 	echo "  $PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.nfsd $NFSD_OPTS"
 	$PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.nfsd $NFSD_OPTS
