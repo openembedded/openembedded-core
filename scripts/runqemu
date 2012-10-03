@@ -223,28 +223,28 @@ if [ "x$KVM_ENABLED" = "xyes" ]; then
     fi
     if [ ! -e /dev/kvm ]; then
         echo "Missing KVM device. Have you inserted kvm modules?"
-        echo "For further help see"
+        echo "For further help see:"
         echo "$YOCTO_KVM_WIKI";
         exit 1;
     fi
     if [ ! -e /dev/vhost-net ]; then
         echo "Missing virtio net device. Have you inserted vhost-net module?"
-        echo "For further help see"
+        echo "For further help see:"
         echo "$YOCTO_PARAVIRT_KVM_WIKI";
         exit 1;
     fi
-    if 9<>/dev/kvm ; then
+    if [ -w /dev/kvm -a -r /dev/kvm ]; then
         SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -enable-kvm -cpu host"
         KVM_ACTIVE="yes"
     else
         echo "You have no rights on /dev/kvm."
-        echo "Please change the ownership of this file as described at"
+        echo "Please change the ownership of this file as described at:"
         echo "$YOCTO_KVM_WIKI";
         exit 1;
     fi
-    if [ ! -w /dev/vhost-net -a -r /dev/vhost-net ]; then
+    if [ ! -w /dev/vhost-net -o ! -r /dev/vhost-net ]; then
         echo "You have no rights on /dev/vhost-net."
-        echo "Please change the ownership of this file as described at"
+        echo "Please change the ownership of this file as described at:"
         echo "$YOCTO_PARAVIRT_KVM_WIKI";
         exit 1;
     fi
