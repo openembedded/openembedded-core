@@ -40,9 +40,9 @@ NFS_EXPORT_DIR=$(cd "$2" && pwd)
 
 SYSROOT_SETUP_SCRIPT=`which oe-find-native-sysroot 2> /dev/null`
 if [ -z "$SYSROOT_SETUP_SCRIPT" ]; then
-    echo "Error: Unable to find the oe-find-native-sysroot script"
-    echo "Did you forget to source your build environment setup script?"
-    exit 1
+	echo "Error: Unable to find the oe-find-native-sysroot script"
+	echo "Did you forget to source your build environment setup script?"
+	exit 1
 fi
 . $SYSROOT_SETUP_SCRIPT
 
@@ -50,9 +50,9 @@ if [ ! -e "$OECORE_NATIVE_SYSROOT/usr/sbin/rpc.mountd" ]; then
 	echo "Error: Unable to find rpc.mountd binary in $OECORE_NATIVE_SYSROOT/usr/sbin/"
 
 	if [ "x$OECORE_DISTRO_VERSION" = "x" ]; then
-	    echo "Have you run 'bitbake meta-ide-support'?"
+		echo "Have you run 'bitbake meta-ide-support'?"
 	else
-	    echo "This shouldn't happen - something is missing from your toolchain installation"
+		echo "This shouldn't happen - something is missing from your toolchain installation"
 	fi
 	exit 1
 fi
@@ -104,53 +104,53 @@ case "$1" in
 	echo "  $PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.mountd $MOUNTD_OPTS"
 	$PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.mountd $MOUNTD_OPTS
 	if [ ! $? = 0 ]; then
-	    echo "====================="
-	    echo "Error starting MOUNTD"
-	    echo "====================="
-	    ps -ef | grep -v grep | grep rpcbind 2>&1 > /dev/null
-	    if [ $? = 0 ] ; then
-		echo "  If you see an error above that says:"
-		echo "    RPC: Authentication error; why = Client credential too weak"
-		echo "  You need to change the startup of rpcbind"
-		echo "  on your host by doing the following as root:"
-		echo "==============================================="
-		echo "  According to /etc/sysconfig/rpcbind, then "
-		echo "    echo RPCBIND_ARGS=-i >> /etc/sysconfig/rpcbind"
-		echo "  or"
-		echo "    echo RPCBIND_OPTIONS=-i >> /etc/sysconfig/rpcbind"
-		echo "    /etc/init.d/rpcbind restart"
-		echo "==============================================="
-		echo "For Ubuntu 11.10 hosts"
-		echo "Add OPTIONS=\"-i -w\"  to /etc/default/rpcbind"
-		echo "sudo service portmap restart"
-	    fi
-	    exit 1
+		echo "====================="
+		echo "Error starting MOUNTD"
+		echo "====================="
+		ps -ef | grep -v grep | grep rpcbind 2>&1 > /dev/null
+		if [ $? = 0 ] ; then
+			echo "  If you see an error above that says:"
+			echo "    RPC: Authentication error; why = Client credential too weak"
+			echo "  You need to change the startup of rpcbind"
+			echo "  on your host by doing the following as root:"
+			echo "==============================================="
+			echo "  According to /etc/sysconfig/rpcbind, then "
+			echo "    echo RPCBIND_ARGS=-i >> /etc/sysconfig/rpcbind"
+			echo "  or"
+			echo "    echo RPCBIND_OPTIONS=-i >> /etc/sysconfig/rpcbind"
+			echo "    /etc/init.d/rpcbind restart"
+			echo "==============================================="
+			echo "For Ubuntu 11.10 hosts"
+			echo "Add OPTIONS=\"-i -w\"  to /etc/default/rpcbind"
+			echo "sudo service portmap restart"
+		fi
+		exit 1
 	fi
 	echo "Starting User Mode nfsd"
 	echo "  $PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.nfsd $NFSD_OPTS"
 	$PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.nfsd $NFSD_OPTS
 	if [ ! $? = 0 ]; then
-	    echo "Error starting nfsd"
-	    exit 1
+		echo "Error starting nfsd"
+		exit 1
 	fi
 	# Check to make sure everything started ok.
 	if [ ! -f $MOUNTPID ]; then
-	    echo "rpc.mountd did not start correctly"
-	    exit 1
+		echo "rpc.mountd did not start correctly"
+		exit 1
 	fi
 	if [ ! -f $NFSPID ]; then
-	    echo "rpc.nfsd did not start correctly"
-	    exit 1
+		echo "rpc.nfsd did not start correctly"
+		exit 1
 	fi
 	ps -fp `cat $MOUNTPID` > /dev/null 2> /dev/null
 	if [ ! $? = 0 ]; then
-	    echo "rpc.mountd did not start correctly"
-	    exit 1
+		echo "rpc.mountd did not start correctly"
+		exit 1
 	fi
 	ps -fp `cat $NFSPID` > /dev/null 2> /dev/null
 	if [ ! $? = 0 ]; then
-	    echo "rpc.nfsd did not start correctly"
-	    exit 1
+		echo "rpc.nfsd did not start correctly"
+		exit 1
 	fi
 	echo " "
 	echo "On your target please remember to add the following options for NFS"
@@ -158,29 +158,29 @@ case "$1" in
 	;;
   stop)
 	if [ -f "$MOUNTPID" ]; then
-	    echo "Stopping rpc.mountd"
-	    kill `cat $MOUNTPID`
-	    rm -f $MOUNTPID
+		echo "Stopping rpc.mountd"
+		kill `cat $MOUNTPID`
+		rm -f $MOUNTPID
 	else
-	    echo "No PID file, not stopping rpc.mountd"
+		echo "No PID file, not stopping rpc.mountd"
 	fi
 	if [ -f "$NFSPID" ]; then
-	    echo "Stopping rpc.nfsd"
-	    kill `cat $NFSPID`
-	    rm -f $NFSPID
+		echo "Stopping rpc.nfsd"
+		kill `cat $NFSPID`
+		rm -f $NFSPID
 	else
-	    echo "No PID file, not stopping rpc.nfsd"
+		echo "No PID file, not stopping rpc.nfsd"
 	fi
 	if [ -f "$EXPORTS" ]; then
-        echo "Removing exports file"
-        rm -f $EXPORTS
+		echo "Removing exports file"
+		rm -f $EXPORTS
 	fi
 	;;
   restart)
 	$0 stop $NFS_EXPORT_DIR
 	$0 start $NFS_EXPORT_DIR 
 	if [ ! $? = 0 ]; then
-	    exit 1
+		exit 1
 	fi
 	;;
   *)
