@@ -185,7 +185,7 @@ int processPackages(rpmts *ts, int tscount, const char *packagelistfn, int ignor
                                 char *value = NULL;
                                 rc = getPackageStr(ts[i], keys[keyindex], RPMTAG_PACKAGEORIGIN, &value);
                                 if(rc == 0)
-                                    fprintf(outf, "  %s\n", value);
+                                    fprintf(stderr, "  %s\n", value);
                                 else
                                     fprintf(stderr, "  (%s)\n", keys[keyindex]);
                             }
@@ -197,10 +197,10 @@ int processPackages(rpmts *ts, int tscount, const char *packagelistfn, int ignor
 
                 if( !found ) {
                     if( ignoremissing ) {
-                        fprintf(stderr, "unable to find package %s - ignoring\n", line);
+                        fprintf(stderr, "Unable to resolve package %s - ignoring\n", line);
                     }
                     else {
-                        fprintf(stderr, "unable to find package %s\n", line);
+                        fprintf(stderr, "Unable to resolve package %s\n", line);
                         missing = 1;
                     }
                 }
