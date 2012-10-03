@@ -22,6 +22,7 @@ KEXECTOOLS_mips ?= ""
 KEXECTOOLS_mipsel ?= ""
 KEXECTOOLS_powerpc ?= ""
 KEXECTOOLS_e5500-64b ?= ""
+KEXECTOOLS_aarch64 ?= ""
 
 RDEPENDS_${PN} = "\
     blktool \

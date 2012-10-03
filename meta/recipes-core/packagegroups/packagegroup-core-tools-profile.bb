@@ -37,6 +37,7 @@ PROFILETOOLS = "\
 SYSTEMTAP = "systemtap"
 SYSTEMTAP_libc-uclibc = ""
 SYSTEMTAP_mips = ""
+SYSTEMTAP_aarch64 = ""
 
 # lttng-ust uses sched_getcpu() which is not there on uclibc
 # for some of the architectures it can be patched to call the
@@ -47,6 +48,7 @@ SYSTEMTAP_mips = ""
 LTTNGUST = "lttng-ust"
 LTTNGUST_libc-uclibc = ""
 LTTNGUST_mips = ""
+LTTNGUST_aarch64 = ""
 
 # valgrind does not work on mips
 
@@ -54,6 +56,7 @@ VALGRIND = "valgrind"
 VALGRIND_libc-uclibc = ""
 VALGRIND_mips = ""
 VALGRIND_arm = ""
+VALGRIND_aarch64 = ""
 
 #    exmap-console
 #    exmap-server
