@@ -277,8 +277,8 @@ if [ "$FSTYPE" = "nfs" ]; then
     NFS_DIR=`echo $ROOTFS | sed 's/^[^:]*:\(.*\)/\1/'`
     MOUNTD_RPCPORT=$[ 21111 + $NFS_INSTANCE ]
     NFSD_RPCPORT=$[ 11111 + $NFS_INSTANCE ]
-    NFSD_PORT=$[ 3049 + $NFS_INSTANCE ]
-    MOUNTD_PORT=$[ 3048 + $NFS_INSTANCE ]
+    NFSD_PORT=$[ 3049 + 2 * $NFS_INSTANCE ]
+    MOUNTD_PORT=$[ 3048 + 2 * $NFS_INSTANCE ]
     UNFS_OPTS="nfsvers=2,mountprog=$MOUNTD_RPCPORT,nfsprog=$NFSD_RPCPORT,udp,port=$NFSD_PORT,mountport=$MOUNTD_PORT"
 
     PSEUDO_LOCALSTATEDIR=~/.runqemu-sdk/pseudo

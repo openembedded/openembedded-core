@@ -82,9 +82,9 @@ NFS_MOUNTPROG=$[ 21111 + $NFS_INSTANCE ]
 # rpc.nfsd RPC port
 NFS_NFSPROG=$[ 11111 + $NFS_INSTANCE ]
 # NFS port number
-NFS_PORT=$[ 3049 + $NFS_INSTANCE ]
+NFS_PORT=$[ 3049 + 2 * $NFS_INSTANCE ]
 # mountd port number
-MOUNT_PORT=$[ 3048 + $NFS_INSTANCE ]
+MOUNT_PORT=$[ 3048 + 2 * $NFS_INSTANCE ]
 
 ## For debugging you would additionally add
 ## --debug all
