@@ -17,7 +17,6 @@ SDK-GMAE = " \
     gupnp \
     gupnp-av \
     gupnp-tools \
-    gypsy \
     libart-lgpl \
     libtelepathy \
     pulseaudio \
