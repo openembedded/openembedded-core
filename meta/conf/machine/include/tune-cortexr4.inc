@@ -7,7 +7,7 @@ TUNEVALID[cortexr4] = "Enable Cortex-R4 specific processor optimizations"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "cortexr4", "-mtune=cortex-r4", "", d)}"
 
 TUNEVALID[armv7r] = "Enable Cortex-R4 specific processor optimizations"
-TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "armv7r", "-march=armv7-m", "", d)}"
+TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "armv7r", "-march=armv7-r", "", d)}"
 
 AVAILTUNES += "cortexr4"
 TUNE_FEATURES_tune-cortexr4 = "armv7r vfp cortexr4"
