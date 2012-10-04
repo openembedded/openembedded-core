@@ -5,6 +5,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 
 SRC_URI = "file://shutdown.desktop"
 
+PR = "r1"
+
 S = "${WORKDIR}"
 
 do_install() {
@@ -14,7 +16,8 @@ do_install() {
 
 pkg_postinst_${PN} () {
     grep -q qemuarm $D${sysconfdir}/hostname && \
-        sed -i $D${datadir}/applications/shutdown.desktop -e 's/^Exec=halt/Exec=reboot/'
+        sed -i $D${datadir}/applications/shutdown.desktop -e 's/^Exec=halt/Exec=reboot/' \
+        || true
 }
 
 inherit allarch
