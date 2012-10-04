@@ -13,7 +13,7 @@ DEPENDS_append_poky = " libowl"
 
 PR = "r1"
 
-COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|mips.*|powerpc.*|sh.*)-(linux|freebsd.*)'
+COMPATIBLE_HOST = '(x86_64.*|i.86.*|aarch64.*|arm.*|mips.*|powerpc.*|sh.*)-(linux|freebsd.*)'
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.gz \
 	   file://gnome-fs-directory.png \
