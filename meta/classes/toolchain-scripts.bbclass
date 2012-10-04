@@ -26,6 +26,7 @@ toolchain_create_sdk_env_script () {
 	echo 'export OBJDUMP=${TARGET_PREFIX}objdump' >> $script
 	echo 'export AR=${TARGET_PREFIX}ar' >> $script
 	echo 'export NM=${TARGET_PREFIX}nm' >> $script
+	echo 'export M4=m4' >> $script
 	echo 'export TARGET_PREFIX=${TARGET_PREFIX}' >> $script
 	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS} --build=${SDK_ARCH}-linux --with-libtool-sysroot=${SDKTARGETSYSROOT}"' >> $script
 	if [ "${TARGET_OS}" = "darwin8" ]; then
