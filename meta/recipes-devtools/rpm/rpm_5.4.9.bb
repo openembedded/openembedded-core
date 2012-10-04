@@ -43,7 +43,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "libpcre attr acl popt ossp-uuid file bison-native"
-PR = "r52"
+PR = "r53"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -80,6 +80,7 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;ex
 	   file://makefile-am-exec-hook.patch \
 	   file://rpm-stub-out-git_strerror.patch \
 	   file://rpm-db_buffer_small.patch \
+	   file://rpm-py-init.patch \
 	  "
 
 SRC_URI[md5sum] = "60d56ace884340c1b3fcac6a1d58e768"
@@ -107,7 +108,7 @@ PACKAGECONFIG[xar] = "--with-xar,--without-xar,xar,"
 
 WITH_PYTHON = " --with-python=${PYTHON_BASEVERSION} \
 		--with-python-inc-dir=${STAGING_INCDIR}/python${PYTHON_BASEVERSION} \
-		--with-python-lib-dir=${libdir}/python${PYTHON_BASEVERSION} \
+		--with-python-lib-dir=${libdir}/python${PYTHON_BASEVERSION}/site-packages \
 		--without-pythonembed"
 PACKAGECONFIG[python] = "${WITH_PYTHON},--without-python,python,"
 
@@ -189,7 +190,7 @@ CFLAGS_append = " -DRPM_VENDOR_WINDRIVER -DRPM_VENDOR_POKY -DRPM_VENDOR_OE"
 
 LDFLAGS_append_libc-uclibc = "-lrt -lpthread"
 
-PACKAGES = "${PN}-dbg ${PN} ${PN}-doc ${PN}-libs ${PN}-dev ${PN}-staticdev ${PN}-common ${PN}-build python-rpm-dbg python-rpm-staticdev python-rpm perl-module-rpm perl-module-rpm-dev ${PN}-locale"
+PACKAGES = "${PN}-dbg ${PN} ${PN}-doc ${PN}-libs ${PN}-dev ${PN}-staticdev ${PN}-common ${PN}-build python-rpm-dbg python-rpm-staticdev python-rpm-dev python-rpm perl-module-rpm perl-module-rpm-dev ${PN}-locale"
 
 SOLIBS = "5.4.so"
 
@@ -302,9 +303,12 @@ RDEPENDS_${PN} = "base-files"
 RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN}-build = "file"
 
-FILES_python-rpm-dbg = "${libdir}/python*/rpm/.debug/_*"
-FILES_python-rpm-staticdev = "${libdir}/python*/rpm/*.a"
-FILES_python-rpm = "${libdir}/python*/rpm"
+RDEPENDS_python-rpm = "${PN}"
+
+FILES_python-rpm-dbg = "${libdir}/python*/site-packages/rpm/.debug/_*"
+FILES_python-rpm-dev = "${libdir}/python*/site-packages/rpm/*.la"
+FILES_python-rpm-staticdev = "${libdir}/python*/site-packages/rpm/*.a"
+FILES_python-rpm = "${libdir}/python*/site-packages/rpm"
 
 FILES_perl-module-rpm = "${libdir}/perl/*/* \
 		"
