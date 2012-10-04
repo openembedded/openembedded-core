@@ -1,0 +1,46 @@
+RPM5 has removed support for RPMVSF_NOSIGNATURES
+
+Patch smart to no longer use this flag
+
+Upstream-Status: Pending
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff -ur smart-1.4.1.orig/smart/backends/rpm/base.py smart-1.4.1/smart/backends/rpm/base.py
+--- smart-1.4.1.orig/smart/backends/rpm/base.py	2012-10-04 11:22:11.229351164 -0500
++++ smart-1.4.1/smart/backends/rpm/base.py	2012-10-04 11:22:44.820170786 -0500
+@@ -53,8 +53,8 @@
+         if sysconf.get("rpm-dbpath"):
+             rpm.addMacro('_dbpath', "/" + sysconf.get("rpm-dbpath"))
+         getTS.ts = rpm.ts(getTS.root)
+-        if not sysconf.get("rpm-check-signatures", False):
+-            getTS.ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
++        #if not sysconf.get("rpm-check-signatures", False):
++        #    getTS.ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
+         rpm_dbpath = sysconf.get("rpm-dbpath", "var/lib/rpm")
+         dbdir = os.path.join(getTS.root, rpm_dbpath)
+         if not os.path.isdir(dbdir):
+@@ -82,8 +82,8 @@
+         if sysconf.get("rpm-dbpath"):
+             rpm.addMacro('_dbpath', "/" + sysconf.get("rpm-dbpath"))
+         ts = rpm.ts(getTS.root)
+-        if not sysconf.get("rpm-check-signatures", False):
+-            ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
++        #if not sysconf.get("rpm-check-signatures", False):
++        #    ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
+         return ts
+     else:
+         return getTS.ts
+diff -ur smart-1.4.1.orig/smart/plugins/yumchannelsync.py smart-1.4.1/smart/plugins/yumchannelsync.py
+--- smart-1.4.1.orig/smart/plugins/yumchannelsync.py	2010-12-06 03:11:05.000000000 -0600
++++ smart-1.4.1/smart/plugins/yumchannelsync.py	2012-10-04 11:23:09.799350924 -0500
+@@ -56,7 +56,8 @@
+ 
+     rpmroot = sysconf.get("rpm-root", "/")
+     ts = rpmUtils.transaction.initReadOnlyTransaction(root=rpmroot)
+-    ts.pushVSFlags(~(rpm._RPMVSF_NOSIGNATURES|rpm._RPMVSF_NODIGESTS))
++    #ts.pushVSFlags(~(rpm._RPMVSF_NOSIGNATURES|rpm._RPMVSF_NODIGESTS))
++    ts.pushVSFlags(~(rpm._RPMVSF_NODIGESTS))
+     releasever = None
+     # HACK: we're hard-coding the most used distros, will add more if needed
+     idx = ts.dbMatch('provides', 'fedora-release')

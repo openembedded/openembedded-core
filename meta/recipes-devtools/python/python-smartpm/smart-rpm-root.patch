@@ -1,0 +1,80 @@
+Fix smart RPM backend to handle rpm-dbpath/rpm-root properly
+
+Don't assume that if the dbpath starts with / that it is an absolute
+path. This matches the behaviour of rpm itself. (If the root path is
+specified and does not start with /, rpm will prepend the root path
+twice and fail).
+
+Upstream-Status: Pending
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+diff --git a/smart/backends/rpm/base.py b/smart/backends/rpm/base.py
+index 7092332..0489e11 100644
+--- a/smart/backends/rpm/base.py
++++ b/smart/backends/rpm/base.py
+@@ -46,6 +46,12 @@ __all__ = ["RPMPackage", "RPMProvides", "RPMNameProvides", "RPMPreRequires",
+            "rpm", "getTS", "getArchScore", "getArchColor", "system_provides",
+            "collapse_libc_requires"]
+ 
++def rpm_join_dbpath(root, dbpath):
++    if dbpath.startswith('/') and root:
++        return os.path.join(root, dbpath[1:])
++    else:
++        return os.path.join(root, dbpath)
++
+ def getTS(new=False):
+     rpm_root = os.path.abspath(sysconf.get("rpm-root", "/"))
+     if not hasattr(getTS, "ts") or getTS.root != rpm_root:
+@@ -56,7 +62,7 @@ def getTS(new=False):
+         #if not sysconf.get("rpm-check-signatures", False):
+         #    getTS.ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
+         rpm_dbpath = sysconf.get("rpm-dbpath", "var/lib/rpm")
+-        dbdir = os.path.join(getTS.root, rpm_dbpath)
++        dbdir = rpm_join_dbpath(getTS.root, rpm_dbpath)
+         if not os.path.isdir(dbdir):
+             try:
+                 os.makedirs(dbdir)
+diff --git a/smart/channels/rpm_sys.py b/smart/channels/rpm_sys.py
+index efcb10e..b9fda27 100644
+--- a/smart/channels/rpm_sys.py
++++ b/smart/channels/rpm_sys.py
+@@ -20,7 +20,7 @@
+ # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ #
+ from smart.backends.rpm.header import RPMDBLoader
+-from smart.backends.rpm.base import getTS
++from smart.backends.rpm.base import getTS, rpm_join_dbpath
+ from smart.channel import PackageChannel
+ from smart import *
+ import os
+@@ -32,9 +32,9 @@ class RPMSysChannel(PackageChannel):
+ 
+     def fetch(self, fetcher, progress):
+         getTS() # Make sure the db exists.
+-        path = os.path.join(sysconf.get("rpm-root", "/"),
+-                            sysconf.get("rpm-dbpath", "var/lib/rpm"),
+-                            "Packages")
++        dbdir = rpm_join_dbpath(sysconf.get("rpm-root", "/"),
++                            sysconf.get("rpm-dbpath", "var/lib/rpm"))
++        path = os.path.join(dbdir, "Packages")
+         digest = os.path.getmtime(path)
+         if digest == self._digest:
+             return True
+diff --git a/smart/plugins/detectsys.py b/smart/plugins/detectsys.py
+index 2cd49ad..3959d07 100644
+--- a/smart/plugins/detectsys.py
++++ b/smart/plugins/detectsys.py
+@@ -20,10 +20,11 @@
+ # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ #
+ from smart import *
++from smart.backends.rpm.base import rpm_join_dbpath
+ import os
+ 
+ def detectRPMSystem():
+-    dir = os.path.join(sysconf.get("rpm-root", "/"),
++    dir = rpm_join_dbpath(sysconf.get("rpm-root", "/"),
+                        sysconf.get("rpm-dbpath", "var/lib/rpm"))
+     file = os.path.join(dir, "Packages")
+     if os.path.exists(file):
