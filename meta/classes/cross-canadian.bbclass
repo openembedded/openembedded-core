@@ -54,6 +54,13 @@ LDFLAGS = "${BUILDSDK_LDFLAGS} \
 
 DEPENDS_GETTEXT = "gettext-native nativesdk-gettext"
 
+#
+# We need chrpath >= 0.14 to ensure we can deal with 32 and 64 bit
+# binaries
+#
+DEPENDS_append = " chrpath-replacement-native"
+EXTRANATIVEPATH += "chrpath-native"
+
 # Path mangling needed by the cross packaging
 # Note that we use := here to ensure that libdir and includedir are
 # target paths.
