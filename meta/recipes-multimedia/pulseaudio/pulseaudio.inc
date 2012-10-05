@@ -27,7 +27,7 @@ EXTRA_OECONF = "\
 		--disable-lynx \
 		${@base_contains('DISTRO_FEATURES', 'bluetooth', '--enable-bluez', '--disable-bluez', d)} \
 		--disable-polkit \
-		${@base_contains('DISTRO_FEATURES', 'x11', '--with-x', '--without-x', d)} \
+		${@base_contains('DISTRO_FEATURES', 'x11', '--enable-x11', '--disable-x11 --disable-gtk2', d)} \
 		--without-jack \
 		--with-glib \
 		--with-alsa \
@@ -117,7 +117,6 @@ python populate_packages_prepend() {
     do_split_packages(d, plugindir, '^lib(.*)\.so$', 'pulseaudio-lib-%s', 'PulseAudio library for %s', extra_depends='' )
 }
 
-RDEPENDS_pulseaudio-module-console-kit =+ "consolekit"
 RDEPENDS_pulseaudio-server = " \
     pulseaudio-module-filter-apply \
     pulseaudio-module-filter-heuristics \
@@ -137,7 +136,9 @@ RDEPENDS_pulseaudio-server = " \
     pulseaudio-module-rescue-streams \
     pulseaudio-module-always-sink \
     pulseaudio-module-suspend-on-idle \
-    pulseaudio-module-console-kit \
     pulseaudio-module-position-event-sounds \
     pulseaudio-module-role-cork "
 
+RDEPENDS_pulseaudio-module-console-kit =+ "consolekit"
+RDEPENDS_pulseaudio-server += "\
+        ${@base_contains('DISTRO_FEATURES', 'x11', 'pulseaudio-module-console-kit', '', d)}"
