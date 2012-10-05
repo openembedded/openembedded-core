@@ -324,11 +324,15 @@ package_install_internal_rpm () {
 				rm -f $m
 			fi
 		done
+		sort -u ${target_rootfs}/install/original_solution.manifest -o ${target_rootfs}/install/original_solution.manifest.new
+		mv ${target_rootfs}/install/original_solution.manifest.new ${target_rootfs}/install/original_solution.manifest
 	fi
 
 	# Setup manifest of packages to install...
 	mkdir -p ${target_rootfs}/install
 	rm -f ${target_rootfs}/install/install.manifest
+	rm -f ${target_rootfs}/install/install_multilib.manifest
+	rm -f ${target_rootfs}/install/install_attemptonly.manifest
 
 	# Uclibc builds don't provide this stuff...
 	if [ x${TARGET_OS} = "xlinux" ] || [ x${TARGET_OS} = "xlinux-gnueabi" ] ; then
@@ -428,7 +432,7 @@ package_install_internal_rpm () {
 	fi
 
 	# Now that we have a solution, pull out a list of what to install...
-	echo "Manifest: ${target_rootfs}/install/install.manifest"
+	echo "Manifest: ${target_rootfs}/install/install_solution.manifest"
 	${RPM} -D "_dbpath ${target_rootfs}/install" -qa --qf "%{packageorigin}\n" \
 		--root "${target_rootfs}/install" \
 		-D "__dbi_txn create nofsync private" \
@@ -459,8 +463,8 @@ package_install_internal_rpm () {
 
 	fi
 
-	cat ${target_rootfs}/install/install_solution.manifest > ${target_rootfs}/install/total_solution.manifest
-	cat ${target_rootfs}/install/install_multilib_solution.manifest >> ${target_rootfs}/install/total_solution.manifest
+	cat ${target_rootfs}/install/install_solution.manifest \
+	    ${target_rootfs}/install/install_multilib_solution.manifest | sort -u > ${target_rootfs}/install/total_solution.manifest
 
 	# Construct install scriptlet wrapper
 	cat << EOF > ${WORKDIR}/scriptlet_wrapper
@@ -521,8 +525,8 @@ EOF
 	if [ "${INSTALL_COMPLEMENTARY_RPM}" = "1" ] ; then
 		# Only install packages not already installed (dependency calculation will
 		# almost certainly have added some that have been)
-		sort ${target_rootfs}/install/original_solution.manifest > ${target_rootfs}/install/original_solution_sorted.manifest
-		sort ${target_rootfs}/install/total_solution.manifest > ${target_rootfs}/install/total_solution_sorted.manifest
+		sort -u ${target_rootfs}/install/original_solution.manifest > ${target_rootfs}/install/original_solution_sorted.manifest
+		sort -u ${target_rootfs}/install/total_solution.manifest > ${target_rootfs}/install/total_solution_sorted.manifest
 		comm -2 -3 ${target_rootfs}/install/total_solution_sorted.manifest \
 			${target_rootfs}/install/original_solution_sorted.manifest > \
 			${target_rootfs}/install/diff.manifest
