@@ -150,6 +150,7 @@ def sstate_install(ss, d):
     match = []
     for f in sharedfiles:
         if os.path.exists(f):
+            f = os.path.normpath(f)
             realmatch = True
             for w in whitelist:
                 if f.startswith(w):
