@@ -6,7 +6,7 @@ S = "${WORKDIR}/git"
 
 DEFAULT_PREFERENCE = "-1"
 
-SRCREV = "1b1a4f0a779f7ab2ba5673b9c9fe2a37047fe765"
-PV = "2.4.37+git${SRCPV}"
+SRCREV = "14db948127e549ea9234e02d8e112de3871f8f9f"
+PV = "2.4.39+git${SRCPV}"
 PR = "${INC_PR}.0"
 
