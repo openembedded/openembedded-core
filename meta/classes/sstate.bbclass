@@ -27,7 +27,7 @@ SSTATE_DUPWHITELIST += "${STAGING_LIBDIR_NATIVE}/${MULTIMACH_TARGET_SYS} ${STAGI
 # Also avoid python issues until we fix the python recipe
 SSTATE_DUPWHITELIST += "${STAGING_LIBDIR}/python2.7/config/Makefile ${STAGING_LIBDIR}/libpython2.7 ${STAGING_INCDIR}/python2.7/pyconfig.h"
 # Avoid docbook/sgml catalog warnings for now
-SSTATE_DUPWHITELIST += "${STAGING_ETCDIR_NATIVE}/sgml"
+SSTATE_DUPWHITELIST += "${STAGING_ETCDIR_NATIVE}/sgml ${STAGING_DATADIR_NATIVE}/sgml"
 
 SSTATE_SCAN_FILES ?= "*.la *-config *_config"
 SSTATE_SCAN_CMD ?= 'find ${SSTATE_BUILDDIR} \( -name "${@"\" -o -name \"".join(d.getVar("SSTATE_SCAN_FILES", True).split())}" \) -type f'
