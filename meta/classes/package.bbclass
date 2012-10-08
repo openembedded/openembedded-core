@@ -451,7 +451,7 @@ python package_do_split_locales() {
         pkg = pn + '-locale-' + ln
         packages.append(pkg)
         d.setVar('FILES_' + pkg, os.path.join(datadir, 'locale', l))
-        d.setVar('RDEPENDS_' + pkg, '%s%svirtual-locale-%s' % (pndep, mlprefix, ln))
+        d.setVar('RRECOMMENDS_' + pkg, '%s%svirtual-locale-%s' % (pndep, mlprefix, ln))
         d.setVar('RPROVIDES_' + pkg, '%s-locale %s%s-translation' % (pn, mlprefix, ln))
         d.setVar('SUMMARY_' + pkg, '%s - %s translations' % (summary, l))
         d.setVar('DESCRIPTION_' + pkg, '%s  This package contains language translation files for the %s locale.' % (description, l))
