@@ -1,0 +1,74 @@
+commit c81d1df4926072d24b4dad1b488e618e57eff1c6
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Oct 4 10:26:37 2012 +1000
+
+    configure.ac: Allow forcible disabling of Cairo support
+    
+    We don't want to build libdrm tests with Cairo support under Poky, since
+    they're never used and also cause a build loop from libdrm -> cairo ->
+    mesa-dri -> libdrm.
+    
+    To avoid variance in build results, introduce a --disable-cairo-tests
+    switch.
+    
+    Upstream-Status: Backport
+    
+    Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+
+diff --git a/configure.ac b/configure.ac
+index 290362c..8c28107 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -222,11 +222,23 @@ if test "x$EXYNOS" = xyes; then
+ 	AC_DEFINE(HAVE_EXYNOS, 1, [Have EXYNOS support])
+ fi
+ 
++AC_ARG_ENABLE([cairo-tests],
++              [AS_HELP_STRING([--enable-cairo-tests],
++                              [Enable support for Cairo rendering in tests (default: auto)])],
++              [CAIRO=$enableval], [CAIRO=auto])
+ PKG_CHECK_MODULES(CAIRO, cairo, [HAVE_CAIRO=yes], [HAVE_CAIRO=no])
+-if test "x$HAVE_CAIRO" = xyes; then
+-	AC_DEFINE(HAVE_CAIRO, 1, [Have cairo support])
++AC_MSG_CHECKING([whether to enable Cairo tests])
++if test "x$CAIRO" = xauto; then
++	CAIRO="$HAVE_CAIRO"
+ fi
+-AM_CONDITIONAL(HAVE_CAIRO, [test "x$HAVE_CAIRO" = xyes])
++if test "x$CAIRO" = xyes; then
++	if ! test "x$HAVE_CAIRO" = xyes; then
++		AC_MSG_ERROR([Cairo support required but not present])
++	fi
++	AC_DEFINE(HAVE_CAIRO, 1, [Have Cairo support])
++fi
++AC_MSG_RESULT([$CAIRO])
++AM_CONDITIONAL(HAVE_CAIRO, [test "x$CAIRO" = xyes])
+ 
+ # For enumerating devices in test case
+ PKG_CHECK_MODULES(LIBUDEV, libudev, [HAVE_LIBUDEV=yes], [HAVE_LIBUDEV=no])
+diff --git a/tests/modetest/Makefile.am b/tests/modetest/Makefile.am
+index b5ec771..065ae13 100644
+--- a/tests/modetest/Makefile.am
++++ b/tests/modetest/Makefile.am
+@@ -1,8 +1,7 @@
+ AM_CFLAGS = \
+ 	-I$(top_srcdir)/include/drm \
+ 	-I$(top_srcdir)/libkms/ \
+-	-I$(top_srcdir) \
+-	$(CAIRO_CFLAGS)
++	-I$(top_srcdir)
+ 
+ noinst_PROGRAMS = \
+ 	modetest
+@@ -12,5 +11,9 @@ modetest_SOURCES = \
+ 
+ modetest_LDADD = \
+ 	$(top_builddir)/libdrm.la \
+-	$(top_builddir)/libkms/libkms.la \
+-	$(CAIRO_LIBS)
++	$(top_builddir)/libkms/libkms.la
++
++if HAVE_CAIRO
++AM_CFLAGS += $(CAIRO_CFLAGS)
++modetest_LDADD += $(CAIRO_LIBS)
++endif

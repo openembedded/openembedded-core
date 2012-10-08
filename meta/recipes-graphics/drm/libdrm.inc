@@ -18,7 +18,7 @@ DEPENDS += " libpciaccess"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF += "--disable-cairo"
+EXTRA_OECONF += "--disable-cairo-tests"
 
 PACKAGES =+ "${PN}-tests ${PN}-drivers ${PN}-kms"
 FILES_${PN}-tests = "${bindir}/dr* ${bindir}/mode*"
