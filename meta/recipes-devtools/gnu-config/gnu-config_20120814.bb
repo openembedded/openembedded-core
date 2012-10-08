@@ -2,20 +2,20 @@ SUMMARY = "gnu-configize"
 DESCRIPTION = "Tool that installs the GNU config.guess / config.sub into a directory tree"
 SECTION = "devel"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://config.guess;endline=39;md5=a3669d051b3a8408d69751e53b2e1cc1"
+LIC_FILES_CHKSUM = "file://config.guess;endline=39;md5=b79a4663475f4d724846463277817e0d"
 
 DEPENDS_virtclass-native = "perl-native-runtime"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
-PR = "r1"
+PR = "r0"
 
-SRC_URI = "http://downloads.yoctoproject.org/releases/gnu-config/gnu-config-yocto-${PV}.tgz \
+SRC_URI = "http://downloads.yoctoproject.org/releases/gnu-config/gnu-config-${PV}.tar.bz2 \
 	   file://config-guess-uclibc.patch \
            file://gnu-configize.in"
 
-SRC_URI[md5sum] = "30be385c919a25cd9522205ef49e5328"
-SRC_URI[sha256sum] = "0750afa8d8ee988b6ead1c2d02b565597f809e2e3ad14886ed7803d3bbc8b0cd"
+SRC_URI[md5sum] = "bcfca5a2bb39edad4aae5a65efc84094"
+SRC_URI[sha256sum] = "44f99a8e76f3e8e4fec0bb5ad4762f8e44366168554ce66cb85afbe2ed3efd8b"
 
 do_compile() {
 	:
