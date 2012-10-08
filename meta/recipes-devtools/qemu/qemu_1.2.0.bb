@@ -37,8 +37,10 @@ do_configure_prepend_virtclass-nativesdk() {
 # the qemu-mips works fine.
 # IMPORTANT: This piece needs to be removed once the root cause is fixed!
 do_install_append() {
-	create_wrapper ${D}/${bindir}/qemu-mips \
-		QEMU_RESERVED_VA=0x0
+	if [ -e "${D}/${bindir}/qemu-mips" ]; then
+		create_wrapper ${D}/${bindir}/qemu-mips \
+			QEMU_RESERVED_VA=0x0
+	fi
 }
 # END of qemu-mips workaround
 
