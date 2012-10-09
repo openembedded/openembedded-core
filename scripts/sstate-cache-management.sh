@@ -172,7 +172,7 @@ remove_duplicated () {
   echo -n "Figuring out the archs in the layers ... "
   oe_core_dir=$(dirname $(dirname $(readlink -e $0)))
   topdir=$(dirname $oe_core_dir)
-  tunedirs="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/include'`"
+  tunedirs="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/include' 2>/dev/null`"
   [ -n "$tunedirs" ] || echo_error "Can't find the tune directory"
   all_machines="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/*' -name '*.conf' 2>/dev/null | sed -e 's/.*\///' -e 's/.conf$//'`"
   all_archs=`grep -r -h "^AVAILTUNES .*=" $tunedirs | sed -e 's/.*=//' -e 's/\"//g'`
