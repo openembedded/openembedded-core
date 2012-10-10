@@ -51,6 +51,11 @@ EXTRA_OEMAKE[vardepsexclude] += "EGLIBCPARALLELISM"
 EXTRA_OEMAKE += "${EGLIBCPARALLELISM}"
 PARALLEL_MAKE = ""
 
+# eglibc make-syscalls.sh has a number of issues with /bin/dash and
+# it's output which make calls via the SHELL also has issues, so 
+# ensure make uses /bin/bash
+EXTRA_OEMAKE += "SHELL=/bin/bash"
+
 OE_FEATURES = "${@features_to_eglibc_settings(d)}"
 do_configure_prepend() {
 	sed -e "s#@BASH@#/bin/sh#" -i ${S}/elf/ldd.bash.in
