@@ -4,7 +4,7 @@
 
 SUMMARY = "Self-hosting"
 DESCRIPTION = "Packages required to run the build system"
-PR = "r11"
+PR = "r12"
 LICENSE = "MIT"
 
 inherit packagegroup
@@ -37,11 +37,6 @@ RDEPENDS_packagegroup-self-hosted-host-tools = "\
     genext2fs \
     hdparm \
     iptables \
-    kernel-module-tun \
-    kernel-module-iptable-raw \
-    kernel-module-iptable-nat \
-    kernel-module-iptable-mangle \
-    kernel-module-iptable-filter \
     lsb \
     mc \
     parted \
@@ -49,6 +44,14 @@ RDEPENDS_packagegroup-self-hosted-host-tools = "\
     screen \
     vte \
     "
+
+RRECOMMENDS_packagegroup-self-hosted-host-tools = "\
+    kernel-module-tun \
+    kernel-module-iptable-raw \
+    kernel-module-iptable-nat \
+    kernel-module-iptable-mangle \
+    kernel-module-iptable-filter \
+	"
 
 # eglibc-utils: for rpcgen
 RDEPENDS_packagegroup-self-hosted-sdk = "\
