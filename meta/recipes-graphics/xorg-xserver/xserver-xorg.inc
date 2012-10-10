@@ -13,7 +13,7 @@ PROVIDES = "virtual/xserver-xf86"
 PROVIDES += "virtual/xserver"
 
 PE = "2"
-INC_PR = "r0"
+INC_PR = "r1"
 
 XORG_PN = "xorg-server"
 SRC_URI = "${XORG_MIRROR}/individual/xserver/${XORG_PN}-${PV}.tar.bz2"
@@ -44,7 +44,6 @@ DEPENDS = "${PROTO_DEPS} ${LIB_DEPS} font-util"
 PACKAGES =+ "${PN}-security-policy \
              ${PN}-sdl \
              ${PN}-fbdev \
-             ${PN}-xprint \
              ${PN}-xvfb \
              ${PN}-utils \
              ${PN}-xephyr \
@@ -79,7 +78,6 @@ FILES_${PN}-dbg += "${libdir}/xorg/modules/.debug \
 FILES_${PN}-security-policy += "${libdir}/xserver/SecurityPolicy"
 FILES_${PN}-sdl = "${bindir}/Xsdl"
 FILES_${PN}-fbdev = "${bindir}/Xfbdev"
-FILES_${PN}-xprint = "${libdir}/X11/xserver/*/print"
 FILES_${PN}-xvfb = "${bindir}/Xvfb"
 FILES_${PN}-utils = "${bindir}/scanpci ${bindir}/pcitweak ${bindir}/ioport ${bindir}/in[bwl] ${bindir}/out[bwl] ${bindir}/mmap[rw] ${bindir}/gtf ${bindir}/getconfig ${bindir}/getconfig.pl"
 FILES_${PN}-xephyr = "${bindir}/Xephyr"
