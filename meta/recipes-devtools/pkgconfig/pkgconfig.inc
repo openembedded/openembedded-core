@@ -37,4 +37,3 @@ BBCLASSEXTEND = "native nativesdk"
 # files.
 FILES_${PN}-dev = ""
 FILES_${PN} += "${datadir}/aclocal/pkg.m4"
-RREPLACES_${PN}-dev = "${PN}"
