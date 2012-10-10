@@ -16,6 +16,9 @@ inherit autotools gettext lib_package
 # Needed for dbm python module
 EXTRA_OECONF = "-enable-libgdbm-compat"
 
+# Stop presence of dbm/nbdm on the host contaminating builds
+CACHED_CONFIGUREVARS += "ac_cv_lib_ndbm_main=no ac_cv_lib_dbm_main=no"
+
 BBCLASSEXTEND = "native nativesdk"
 
 do_install_append () {
