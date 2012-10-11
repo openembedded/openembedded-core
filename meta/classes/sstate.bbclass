@@ -544,7 +544,7 @@ sstate_create_package () {
 sstate_unpack_package () {
 	mkdir -p ${SSTATE_INSTDIR}
 	cd ${SSTATE_INSTDIR}
-	tar -xvzf ${SSTATE_PKG}
+	tar -xmvzf ${SSTATE_PKG}
 }
 
 # Need to inject information about classes not in the global configuration scope
