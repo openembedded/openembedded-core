@@ -166,21 +166,24 @@ autotools_do_configure() {
 		else
 			CONFIGURE_AC=configure.ac
 		fi
-		if ! echo ${EXTRA_OECONF} | grep -q "\-\-disable-nls"; then
-			if grep "^[[:space:]]*AM_GLIB_GNU_GETTEXT" $CONFIGURE_AC >/dev/null; then
-				if grep "sed.*POTFILES" $CONFIGURE_AC >/dev/null; then
-					: do nothing -- we still have an old unmodified configure.ac
-		    		else
-					bbnote Executing glib-gettextize --force --copy
-					echo "no" | glib-gettextize --force --copy
+		if grep "^[[:space:]]*AM_GLIB_GNU_GETTEXT" $CONFIGURE_AC >/dev/null; then
+			if grep "sed.*POTFILES" $CONFIGURE_AC >/dev/null; then
+				: do nothing -- we still have an old unmodified configure.ac
+	    		else
+				bbnote Executing glib-gettextize --force --copy
+				echo "no" | glib-gettextize --force --copy
+			fi
+		else if grep "^[[:space:]]*AM_GNU_GETTEXT" $CONFIGURE_AC >/dev/null; then
+			# We'd call gettextize here if it wasn't so broken...
+				cp ${STAGING_DATADIR}/gettext/config.rpath ${AUTOTOOLS_AUXDIR}/
+				if [ -d ${S}/po/ ]; then
+					cp ${STAGING_DATADIR}/gettext/po/Makefile.in.in ${S}/po/
 				fi
-			else if grep "^[[:space:]]*AM_GNU_GETTEXT" $CONFIGURE_AC >/dev/null; then
-				# We'd call gettextize here if it wasn't so broken...
-					cp ${STAGING_DATADIR}/gettext/config.rpath ${AUTOTOOLS_AUXDIR}/
-					if [ -d ${S}/po/ -a ! -e ${S}/po/Makefile.in.in ]; then
-						cp ${STAGING_DATADIR}/gettext/po/Makefile.in.in ${S}/po/
-					fi
-				fi
+				for i in gettext.m4 iconv.m4 lib-ld.m4 lib-link.m4 lib-prefix.m4 nls.m4 po.m4 progtest.m4; do
+					for j in `find ${S} -name $i | grep -v aclocal-copy`; do
+						rm $j
+					done
+				done
 			fi
 		fi
 		mkdir -p m4
