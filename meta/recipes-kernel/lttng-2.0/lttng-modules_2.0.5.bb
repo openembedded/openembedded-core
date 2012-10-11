@@ -12,7 +12,7 @@ inherit module
 
 SRCREV = "4d3e89e379fc66480d729abe8daa5c86eb585400"
 PV = "2.0.pre11+git${SRCREV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://git.lttng.org/lttng-modules.git;protocol=git \
            file://lttng-modules-replace-KERNELDIR-with-KERNEL_SRC.patch \
@@ -27,4 +27,4 @@ S = "${WORKDIR}/git"
 # Due to liburcu not building for MIPS currently this recipe needs to
 # be limited also.
 # So here let us first suppport x86/arm/powerpc platforms now.
-COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|powerpc.*)-linux'
+COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|powerpc.*)-linux.*'
