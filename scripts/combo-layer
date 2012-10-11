@@ -283,19 +283,23 @@ def drop_to_shell(workdir=None):
 
 def check_rev_branch(component, repodir, rev, branch):
     try:
-        actualbranch = runcmd("git branch --contains %s" % rev, repodir, printerr=False).rstrip()
+        actualbranch = runcmd("git branch --contains %s" % rev, repodir, printerr=False)
     except subprocess.CalledProcessError as e:
         if e.returncode == 129:
             actualbranch = ""
         else:
             raise
 
-    if ' ' in actualbranch:
-        actualbranch = actualbranch.split(' ')[-1]
     if not actualbranch:
         logger.error("%s: specified revision %s is invalid!" % (component, rev))
         return False
-    elif actualbranch != branch:
+
+    branches = []
+    branchlist = actualbranch.split("\n")
+    for b in branchlist:
+        branches.append(b.strip().split(' ')[-1])
+
+    if branch not in branches:
         logger.error("%s: specified revision %s is not on specified branch %s!" % (component, rev, branch))
         return False
     return True
