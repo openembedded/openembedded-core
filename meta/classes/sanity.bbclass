@@ -639,6 +639,9 @@ python check_sanity_eventhandler() {
         sanity_data.setVar("SANITY_USE_EVENTS", "1")
         check_sanity(sanity_data)
         bb.event.fire(bb.event.SanityCheckPassed(), e.data)
+    elif bb.event.getName(e) == "NetworkTest":
+        sanity_data = copy_data(e)
+        bb.event.fire(bb.event.NetworkTestFailed() if check_connectivity(sanity_data) else bb.event.NetworkTestPassed(), e.data)
 
     return
 }
