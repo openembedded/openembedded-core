@@ -25,6 +25,9 @@ SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
 SRC_URI[md5sum] = "d2f3b7d4627e69e13514a40e72a24d50"
 SRC_URI[sha256sum] = "b38de44862a987293cd3d8dfae1c409d514b6c4e794ebc93648febf9afc38918"
 
+# Don't want paths to sed-native (or anything else) encoded
+CACHED_CONFIGUREVARS += "ac_cv_path_SED=sed"
+
 do_compile_prepend () {
 	# Sometimes this file doesn't get rebuilt, force the issue
 	rm -f ${S}/libltdl/config/ltmain.sh
