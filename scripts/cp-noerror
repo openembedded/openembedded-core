@@ -21,7 +21,15 @@ def copytree(src, dst, symlinks=False, ignore=None):
         srcname = os.path.join(src, name)
         dstname = os.path.join(dst, name)
         try:
-            shutil.copy2(srcname, dstname)
+            d = dstname
+            if os.path.isdir(dstname):
+                d = os.path.join(dstname, os.path.basename(srcname))
+            if os.path.exists(d):
+                continue
+            try:
+                os.link(srcname, dstname)
+            except OSError:
+                shutil.copy2(srcname, dstname)
         # catch the Error from the recursive copytree so that we can
         # continue with other files
         except shutil.Error, err:
