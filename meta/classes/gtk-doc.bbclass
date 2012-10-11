@@ -15,5 +15,5 @@ EXTRA_OECONF_append = "\
 "
 
 do_configure_prepend () {
-	gtkdocize
+	( cd ${S} && gtkdocize )
 }
