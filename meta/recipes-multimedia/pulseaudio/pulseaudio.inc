@@ -137,7 +137,8 @@ RDEPENDS_pulseaudio-server = " \
     pulseaudio-module-always-sink \
     pulseaudio-module-suspend-on-idle \
     pulseaudio-module-position-event-sounds \
-    pulseaudio-module-role-cork "
+    pulseaudio-module-role-cork \
+    pulseaudio-module-switch-on-port-available"
 
 RDEPENDS_pulseaudio-module-console-kit =+ "consolekit"
 RDEPENDS_pulseaudio-server += "\
