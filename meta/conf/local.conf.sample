@@ -194,9 +194,12 @@ PATCHRESOLVE = "noop"
 # would contain the sstate-cache results from previous builds (possibly from other 
 # machines). This variable works like fetcher MIRRORS/PREMIRRORS and points to the 
 # cache locations to check for the shared objects.
+# NOTE: if the mirror uses the same structure as SSTATE_DIR, you need to add PATH
+# at the end as shown in the examples below. This will be substituted with the
+# correct path within the directory structure.
 #SSTATE_MIRRORS ?= "\
-#file://.* http://someserver.tld/share/sstate/ \n \
-#file://.* file:///some/local/dir/sstate/"
+#file://.* http://someserver.tld/share/sstate/PATH \n \
+#file://.* file:///some/local/dir/sstate/PATH"
 
 # CONF_VERSION is increased each time build/conf/ changes incompatibly and is used to
 # track the version of this file when it was generated. This can safely be ignored if
