@@ -12,11 +12,13 @@ INC_PR = "r47"
 QT_GLFLAGS ?= "${@base_contains('DISTRO_FEATURES', 'opengl', '-opengl', '-no-opengl', d)} "
 QT_GLFLAGS_qemux86 = "-opengl"
 QT_GLFLAGS_qemuppc = "-opengl"
-QT_CONFIG_FLAGS += "-no-xinerama -no-xkb"
+QT_X11_FLAGS ?= "-no-xinerama -no-xkb"
+QT_CONFIG_FLAGS += "${QT_X11_FLAGS}"
 QT_BASE_LIB  ?= "libqt"
 
 # required by kdelibs4
-QT_DISTRO_FLAGS = "-accessibility -sm"
+QT_KDE_FLAGS ?= "-accessibility -sm"
+QT_DISTRO_FLAGS ?= "${QT_KDE_FLAGS}"
 
 inherit qt4x11
 
