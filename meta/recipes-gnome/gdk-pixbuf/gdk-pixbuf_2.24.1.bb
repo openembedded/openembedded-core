@@ -72,7 +72,7 @@ if [ -x ${bindir}/gtk-update-icon-cache ] && [ -d ${datadir}/icons ]; then
 fi
 }
 
-PACKAGES_DYNAMIC += "gdk-pixbuf-loader-*"
+PACKAGES_DYNAMIC += "^gdk-pixbuf-loader-.*"
 PACKAGES_DYNAMIC_virtclass-native = ""
 
 python populate_packages_prepend () {

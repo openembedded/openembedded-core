@@ -93,7 +93,7 @@ RDEPENDS_${PN} = "\
 	${@base_contains('DISTRO_FEATURES', '3g','ofono', '', d)} \
 	"
 
-PACKAGES_DYNAMIC = "${PN}-plugin-*"
+PACKAGES_DYNAMIC = "^${PN}-plugin-.*"
 
 python populate_packages_prepend() {
     depmap = dict(pppd="ppp")

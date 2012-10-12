@@ -59,7 +59,7 @@ RRECOMMENDS_${QT_BASE_NAME}-demos += " \
             ${QT_BASE_NAME}-fonts"
 
 ALLOW_EMPTY_${QT_BASE_NAME}-fonts = "1"
-PACKAGES_DYNAMIC += "${QT_BASE_NAME}-fonts-*"
+PACKAGES_DYNAMIC += "^${QT_BASE_NAME}-fonts-.*"
 
 FILES_${QT_BASE_NAME}-fonts-ttf-vera       = "${libdir}/fonts/Vera*.ttf"
 FILES_${QT_BASE_NAME}-fonts-ttf-dejavu     = "${libdir}/fonts/DejaVu*.ttf"

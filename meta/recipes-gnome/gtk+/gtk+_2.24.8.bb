@@ -36,7 +36,7 @@ EXTRA_OECONF = "--without-libtiff --without-libjasper --enable-xkb --disable-gli
 
 LIBV = "2.10.0"
 
-PACKAGES_DYNAMIC += "gtk-immodule-* gtk-printbackend-*"
+PACKAGES_DYNAMIC += "^gtk-immodule-.* ^gtk-printbackend-.*"
 BBCLASSEXTEND = "native"
 RRECOMMENDS_${PN}_virtclass-native = ""
 DEPENDS_virtclass-native = "glib-2.0-native atk-native pango-native cairo-native gdk-pixbuf-native"

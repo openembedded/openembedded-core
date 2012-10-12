@@ -46,7 +46,7 @@ FILES_${PN}-dev += "${base_libdir}/security/*.la ${base_libdir}/*.la ${base_libd
 FILES_${PN}-runtime = "${sysconfdir}"
 FILES_${PN}-xtests = "${datadir}/Linux-PAM/xtests"
 
-PACKAGES_DYNAMIC += " pam-plugin-*"
+PACKAGES_DYNAMIC += "^pam-plugin-.*"
 
 RDEPENDS_${PN}-runtime = "libpam pam-plugin-deny pam-plugin-permit pam-plugin-warn pam-plugin-unix"
 RDEPENDS_${PN}-xtests = "libpam pam-plugin-access pam-plugin-debug pam-plugin-cracklib pam-plugin-pwhistory pam-plugin-succeed-if pam-plugin-time coreutils"

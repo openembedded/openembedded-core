@@ -70,7 +70,7 @@ PACKAGES =+ "libpulsecore libpulsecommon libpulsedsp libpulse libpulse-simple li
 #upgrade path:
 RREPLACES_pulseaudio-server = "libpulse-bin libpulse-conf"
 
-PACKAGES_DYNAMIC = "pulseaudio-lib* pulseaudio-module* libpulse-lib* libpulse-module* "
+PACKAGES_DYNAMIC = "^pulseaudio-lib.* ^pulseaudio-module.* ^libpulse-lib.* ^libpulse-module.* "
 
 FILES_libpulsecore = "${libdir}/libpulsecore*.so"
 FILES_libpulsecommon = "${libdir}/libpulsecommon*.so"

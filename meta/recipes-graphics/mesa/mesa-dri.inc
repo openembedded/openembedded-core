@@ -21,7 +21,7 @@ python populate_packages_prepend() {
     do_split_packages(d, dri_drivers_root, '^(.*)_dri\.so$', 'mesa-dri-driver-%s', 'Mesa %s DRI driver', extra_depends='')
 }
 
-PACKAGES_DYNAMIC = "mesa-dri-driver-*"
+PACKAGES_DYNAMIC = "^mesa-dri-driver-.*"
 
 FILES_${PN}-dbg += "${libdir}/dri/.debug/*"
 

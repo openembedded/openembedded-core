@@ -32,7 +32,7 @@ EXTRA_OECONF = "\
   --disable-x11 \
 "
 
-#PACKAGES_DYNAMIC = "directfb-inputdrivers-*"
+#PACKAGES_DYNAMIC = "^directfb-inputdrivers-.*"
 #
 #python populate_packages_prepend () {
 #    inputdrivers_libdir = d.expand('${libdir}/directfb-${RV}/inputdrivers')

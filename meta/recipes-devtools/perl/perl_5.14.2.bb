@@ -310,8 +310,8 @@ python populate_packages_prepend () {
     d.setVar("RRECOMMENDS_${PN}-modules", d.getVar('PACKAGES', True).replace('${PN}-modules ', '').replace('${PN}-dbg ', '').replace('${PN}-misc ', '').replace('${PN}-dev ', '').replace('${PN}-pod ', '').replace('${PN}-doc ', ''))
 }
 
-PACKAGES_DYNAMIC = "perl-module-*"
-PACKAGES_DYNAMIC_virtclass-nativesdk = "nativesdk-perl-module-*"
+PACKAGES_DYNAMIC = "^perl-module-.*"
+PACKAGES_DYNAMIC_virtclass-nativesdk = "^nativesdk-perl-module-.*"
 
 RPROVIDES_perl-lib = "perl-lib"
 

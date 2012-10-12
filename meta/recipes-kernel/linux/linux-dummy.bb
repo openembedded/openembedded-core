@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa
 
 PROVIDES += "virtual/kernel"
 
-PACKAGES_DYNAMIC += "kernel-module-*"
-PACKAGES_DYNAMIC += "kernel-image-*"
+PACKAGES_DYNAMIC += "^kernel-module-.*"
+PACKAGES_DYNAMIC += "^kernel-image-.*"
 
 #COMPATIBLE_MACHINE = "your_machine"
 

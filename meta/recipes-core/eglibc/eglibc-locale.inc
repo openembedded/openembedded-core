@@ -33,9 +33,9 @@ PROVIDES = "virtual/libc-locale"
 
 PACKAGES = "localedef ${PN}-dbg"
 
-PACKAGES_DYNAMIC = "locale-base-* \
-                    eglibc-gconv-* eglibc-charmap-* eglibc-localedata-* eglibc-binary-localedata-* \
-                    glibc-gconv-*  glibc-charmap-*  glibc-localedata-*  glibc-binary-localedata-*"
+PACKAGES_DYNAMIC = "^locale-base-.* \
+                    ^eglibc-gconv-.* ^eglibc-charmap-.* ^eglibc-localedata-.* ^eglibc-binary-localedata-.* \
+                    ^glibc-gconv-.*  ^glibc-charmap-.*  ^glibc-localedata-.*  ^glibc-binary-localedata-.*"
 
 # Create a eglibc-binaries package
 ALLOW_EMPTY_${BPN}-binaries = "1"

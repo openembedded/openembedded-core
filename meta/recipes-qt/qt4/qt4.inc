@@ -124,7 +124,7 @@ PACKAGES += " \
              ${STATICDEV_PACKAGES} \
              ${OTHER_PACKAGES}"
 
-PACKAGES_DYNAMIC = "${QT_BASE_NAME}-plugin-* ${QT_BASE_NAME}-translation-* ${QT_BASE_NAME}-phrasebook-*"
+PACKAGES_DYNAMIC = "^${QT_BASE_NAME}-plugin-.* ^${QT_BASE_NAME}-translation-.* ^${QT_BASE_NAME}-phrasebook-.*"
 
 ALLOW_EMPTY_${PN} = "1"
 FILES_${PN}     = ""

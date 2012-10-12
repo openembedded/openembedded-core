@@ -24,9 +24,9 @@ python __anonymous () {
 
 inherit kernel-arch deploy
 
-PACKAGES_DYNAMIC += "kernel-module-*"
-PACKAGES_DYNAMIC += "kernel-image-*"
-PACKAGES_DYNAMIC += "kernel-firmware-*"
+PACKAGES_DYNAMIC += "^kernel-module-.*"
+PACKAGES_DYNAMIC += "^kernel-image-.*"
+PACKAGES_DYNAMIC += "^kernel-firmware-.*"
 
 export OS = "${TARGET_OS}"
 export CROSS_COMPILE = "${TARGET_PREFIX}"
