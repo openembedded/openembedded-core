@@ -26,7 +26,7 @@ export EXTRA_OECMAKE = "-DQT_QMAKE_EXECUTABLE=${OE_QMAKE_QMAKE} \
                         -DQT_HEADERS_DIR=${OE_QMAKE_INCDIR_QT} \
                         -DQT_QTCORE_INCLUDE_DIR=${OE_QMAKE_INCDIR_QT}/QtCore \
                         "
-PACKAGES_DYNAMIC = "^qmmp-plugin-.* "
+PACKAGES_DYNAMIC += "^qmmp-plugin-.* "
 
 
 python populate_packages_prepend () {

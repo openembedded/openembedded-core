@@ -10,7 +10,7 @@ DEPENDS = "gtk+"
 
 PR = "r3"
 
-PACKAGES_DYNAMIC = "^gtk-engine-.* ^gtk-theme-.*"
+PACKAGES_DYNAMIC += "^gtk-engine-.* ^gtk-theme-.*"
 
 RDEPENDS_gtk-theme-redmond = "gtk-engine-redmond95"
 RDEPENDS_gtk-theme-metal = "gtk-engine-metal"

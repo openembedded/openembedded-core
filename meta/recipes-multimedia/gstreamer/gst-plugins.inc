@@ -17,5 +17,5 @@ acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 
 require gst-plugins-package.inc
 
-PACKAGES_DYNAMIC = "^${PN}-.*"
+PACKAGES_DYNAMIC += "^${PN}-.*"
 

@@ -56,7 +56,7 @@ FILES_${PN} += "${sysconfdir} /www"
 
 CONFFILES_${PN} = "${sysconfdir}/lighttpd.conf"
 
-PACKAGES_DYNAMIC = "^lighttpd-module-.*"
+PACKAGES_DYNAMIC += "^lighttpd-module-.*"
 
 python populate_packages_prepend () {
     lighttpd_libdir = d.expand('${libdir}')

@@ -18,7 +18,7 @@ PACKAGECONFIG[x11] = "--with-x,--without-x,${X11DEPENDS}"
 BBCLASSEXTEND = "native"
 DEPENDS_virtclass-native = "glib-2.0-native cairo-native"
 
-PACKAGES_DYNAMIC = "^pango-module-.*"
+PACKAGES_DYNAMIC += "^pango-module-.*"
 
 RRECOMMENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'x11', 'pango-module-basic-x', '', d)} pango-module-basic-fc" 
 
