@@ -157,6 +157,9 @@ def package_qa_check_rpath(file,name, d, elf, messages):
     if not elf:
         return
 
+    if os.path.islink(file):
+        return
+
     bad_dirs = [d.getVar('TMPDIR', True) + "/work", d.getVar('STAGING_DIR_TARGET', True)]
     bad_dir_test = d.getVar('TMPDIR', True)
 
@@ -184,6 +187,9 @@ def package_qa_check_useless_rpaths(file, name, d, elf, messages):
         return os.path.normpath(a) == os.path.normpath(b)
 
     if not elf:
+        return
+
+    if os.path.islink(file):
         return
 
     libdir = d.getVar("libdir", True)
