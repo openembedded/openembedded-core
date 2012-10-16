@@ -119,6 +119,7 @@ fakeroot create_shar() {
 #!/bin/bash
 
 DEFAULT_INSTALL_DIR="${SDKPATH}"
+COMPONENTS_LEN=$(echo ".${SDKPATH}" | sed "s/\// /g" | wc -w)
 
 printf "Enter target directory for SDK (default: $DEFAULT_INSTALL_DIR): "
 read target_sdk_dir
@@ -155,7 +156,7 @@ fi
 payload_offset=$(($(grep -na -m1 "^MARKER:$" $0|cut -d':' -f1) + 1))
 
 printf "Extracting SDK..."
-tail -n +$payload_offset $0| tar xj --strip-components=4 -C $target_sdk_dir
+tail -n +$payload_offset $0| tar xj --strip-components=$COMPONENTS_LEN -C $target_sdk_dir
 echo "done"
 
 printf "Setting it up..."
