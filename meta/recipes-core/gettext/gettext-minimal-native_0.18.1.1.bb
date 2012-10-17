@@ -1,4 +1,6 @@
 SRC_URI = "file://aclocal.tgz \
+           file://config.rpath \
+           file://Makefile.in.in \
            file://COPYING"
 
 INHIBIT_DEFAULT_DEPS = "1"
@@ -9,11 +11,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0854da868a929923087141d9d7aba7d5"
 
 inherit native
 
-PR = "r3"
+PR = "r4"
 
 S = "${WORKDIR}"
 
 do_install () {
 	install -d ${D}${datadir}/aclocal/
 	cp ${WORKDIR}/*.m4 ${D}${datadir}/aclocal/
+	install -d ${D}${datadir}/gettext/po/
+	cp ${WORKDIR}/config.rpath ${D}${datadir}/gettext/
+	cp ${WORKDIR}/Makefile.in.in ${D}${datadir}/gettext/po/
 }

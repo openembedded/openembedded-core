@@ -102,6 +102,8 @@ do_install_append() {
 
 do_install_append_virtclass-native () {
 	rm ${D}${datadir}/aclocal/*
+	rm ${D}${datadir}/gettext/config.rpath
+	rm ${D}${datadir}/gettext/po/Makefile.in.in
 }
 
 BBCLASSEXTEND = "native nativesdk"
