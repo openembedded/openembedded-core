@@ -63,7 +63,7 @@ EXTRA_OEMAKE = \
 		ARCH=${ARCH} \
 		CC="${CC}" \
 		AR="${AR}" \
-		prefix=/usr \
+		perfexecdir=${libexecdir} \
 		NO_GTK2=1 ${TUI_DEFINES} NO_DWARF=1 ${SCRIPTING_DEFINES} \
 		'
 
