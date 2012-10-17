@@ -11,23 +11,18 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/lct/console-tools-${PV}.tar.gz \
            file://compile.patch \
            file://kbdrate.patch \
            file://uclibc-fileno.patch \
-           file://config"
+           file://nodocs.patch \
+           file://lcmessage.m4 \
+           file://Makevars"
 
 SRC_URI[md5sum] = "bf21564fc38b3af853ef724babddbacd"
 SRC_URI[sha256sum] = "eea6b441672dacd251079fc85ed322e196282e0e66c16303ec64c3a2b1c126c2"
 
-export SUBDIRS = "fontfiletools vttools kbdtools screenfonttools contrib \
-		  examples po intl compat"
-
-acpaths = "-I config"
 do_configure_prepend () {
-	mkdir -p config
-	cp ${WORKDIR}/config/*.m4 config/
-}
-
-do_compile () {
-	oe_runmake -C lib
-	oe_runmake 'SUBDIRS=${SUBDIRS}'
+	mkdir -p ${S}/m4
+	cp ${WORKDIR}/lcmessage.m4 ${S}/m4/
+	rm -f ${S}/acinclude.m4
+	cp ${WORKDIR}/Makevars ${S}/po/
 }
 
 inherit autotools gettext update-alternatives
