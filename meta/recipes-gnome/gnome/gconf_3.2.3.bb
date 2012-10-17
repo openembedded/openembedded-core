@@ -33,8 +33,8 @@ do_install_append() {
 	install -d ${D}${sysconfdir}/gconf/gconf.xml.system
 
 	# this stuff is unusable
-	rm ${D}${libdir}/GConf/*/*.*a
-	rm ${D}${libdir}/gio/*/*.*a
+	rm -f ${D}${libdir}/GConf/*/*.*a
+	rm -f ${D}${libdir}/gio/*/*.*a
 }
 
 # disable dbus-x11 when x11 isn't in DISTRO_FEATURES
