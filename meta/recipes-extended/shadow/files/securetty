@@ -8,6 +8,12 @@ ttyS1
 ttyS2
 ttyS3
 
+# ARM AMBA SoCs
+ttyAMA0
+ttyAMA1
+ttyAMA2
+ttyAMA3
+
 # Samsung ARM SoCs
 ttySAC0
 ttySAC1
