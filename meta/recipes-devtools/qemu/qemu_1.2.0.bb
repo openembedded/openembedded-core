@@ -13,11 +13,12 @@ SRC_URI = "\
     file://fallback-to-safe-mmap_min_addr.patch \
     file://larger_default_ram_size.patch \
     file://arm-bgr.patch \
+    file://remove-hardcoded-libexec.patch \
     "
 SRC_URI[md5sum] = "78eb1e984f4532aa9f2bdd3c127b5b61"
 SRC_URI[sha256sum] = "c8b84420d9f4869397f84cad2dabd9a475b7723d619a924a873740353e9df936"
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI_append_virtclass-nativesdk = "\
     file://relocatable_sdk.patch \

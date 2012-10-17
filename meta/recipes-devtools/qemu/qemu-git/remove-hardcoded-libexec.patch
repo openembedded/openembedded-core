@@ -1,0 +1,41 @@
+This will allow the libexecdir to be set on the command line
+and have the files installed and used from the correct location
+
+Upstream-Status: Inappropriate [oe-core specific]
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: qemu-1.2.0/configure
+===================================================================
+--- qemu-1.2.0.orig/configure
++++ qemu-1.2.0/configure
+@@ -183,6 +183,7 @@ datadir="\${prefix}/share"
+ qemu_docdir="\${prefix}/share/doc/qemu"
+ bindir="\${prefix}/bin"
+ libdir="\${prefix}/lib"
++libexecdir="\${prefix}/libexec"
+ includedir="\${prefix}/include"
+ sysconfdir="\${prefix}/etc"
+ confsuffix="/qemu"
+@@ -644,7 +645,9 @@ for opt do
+   ;;
+   --sysconfdir=*) sysconfdir="$optarg"
+   ;;
+-  --sbindir=*|--libexecdir=*|--sharedstatedir=*|--localstatedir=*|\
++  --libexecdir=*) libexecdir="$optarg"
++  ;;
++  --sbindir=*|--sharedstatedir=*|--localstatedir=*|\
+   --oldincludedir=*|--datarootdir=*|--infodir=*|--localedir=*|\
+   --htmldir=*|--dvidir=*|--pdfdir=*|--psdir=*)
+     # These switches are silently ignored, for compatibility with
+@@ -3190,8 +3193,8 @@ echo "sysconfdir=$sysconfdir" >> $config
+ echo "qemu_confdir=$qemu_confdir" >> $config_host_mak
+ echo "qemu_datadir=$qemu_datadir" >> $config_host_mak
+ echo "qemu_docdir=$qemu_docdir" >> $config_host_mak
+-echo "libexecdir=\${prefix}/libexec" >> $config_host_mak
+-echo "CONFIG_QEMU_HELPERDIR=\"$prefix/libexec\"" >> $config_host_mak
++echo "libexecdir=$libexecdir" >> $config_host_mak
++echo "CONFIG_QEMU_HELPERDIR=$libexecdir" >> $config_host_mak
+ 
+ echo "ARCH=$ARCH" >> $config_host_mak
+ if test "$debug_tcg" = "yes" ; then
