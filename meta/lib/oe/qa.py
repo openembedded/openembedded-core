@@ -102,5 +102,10 @@ class ELFFile:
         env = os.environ
         env["LC_ALL"] = "C"
 
-        self.objdump_output[cmd] = bb.process.run([ os.path.join(staging_dir, objdump), cmd, self.name ], env=env, shell=False)[0]
-        return self.objdump_output[cmd]
+        try:
+            bb.note("%s %s %s" % (objdump, cmd, self.name))
+            self.objdump_output[cmd] = bb.process.run([ os.path.join(staging_dir, objdump), cmd, self.name ], env=env, shell=False)[0]
+            return self.objdump_output[cmd]
+        except Exception, e:
+            bb.note("%s %s %s failed: %s" % (objdump, cmd, self.name, e))
+            return ""
