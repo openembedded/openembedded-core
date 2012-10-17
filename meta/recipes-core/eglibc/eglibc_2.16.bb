@@ -1,13 +1,9 @@
 require eglibc.inc
 
-SRCREV = "20393"
-
 DEPENDS += "gperf-native kconfig-frontends-native"
-PR = "r16"
-PR_append = "+svnr${SRCPV}"
+PR = "r17"
 
-EGLIBC_BRANCH="eglibc-2_16"
-SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};protocol=http \
+SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr21224.tar.bz2 \
            file://eglibc-svn-arm-lowlevellock-include-tls.patch \
            file://IO-acquire-lock-fix.patch \
            file://mips-rld-map-check.patch \
@@ -21,7 +17,6 @@ SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};protocol=h
            file://initgroups_keys.patch \
            file://eglibc_fix_findidx_parameters.patch \
            file://ppc_slow_ieee754_sqrt.patch \
-           file://e500-math_private.patch \
            file://fileops-without-wchar-io.patch \
            file://add_resource_h_to_wait_h.patch \
            file://0001-Avoid-use-of-libgcc_s-and-libgcc_eh-when-building-gl.patch \
@@ -33,6 +28,10 @@ SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};protocol=h
            file://fsl-ppc-no-fsqrt.patch \
            file://0001-R_ARM_TLS_DTPOFF32.patch \
           "
+
+SRC_URI[md5sum] = "88894fa6e10e58e85fbd8134b8e486a8"
+SRC_URI[sha256sum] = "460a45f422da6eb1fd909baab6a64b5ae4c8ba18ea05a1491ed1024c8b98eeaa"
+
 LIC_FILES_CHKSUM = "file://LICENSES;md5=98a1128c4b58120182cbea3b1752d8b9 \
       file://COPYING;md5=393a5ca445f6965873eca0259a17f833 \
       file://posix/rxspencer/COPYRIGHT;md5=dc5485bb394a13b2332ec1c785f5d83a \
@@ -41,7 +40,7 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=98a1128c4b58120182cbea3b1752d8b9 \
 SRC_URI_append_virtclass-nativesdk = " file://ld-search-order.patch \
             file://relocatable_sdk.patch \
             "
-S = "${WORKDIR}/${EGLIBC_BRANCH}/libc"
+S = "${WORKDIR}/eglibc-${PV}/libc"
 B = "${WORKDIR}/build-${TARGET_SYS}"
 
 PACKAGES_DYNAMIC = ""
@@ -93,9 +92,9 @@ do_unpack_append() {
 }
 
 do_move_ports() {
-        if test -d ${WORKDIR}/${EGLIBC_BRANCH}/ports ; then
+        if test -d ${WORKDIR}/eglibc-${PV}/ports ; then
 	    rm -rf ${S}/ports
-	    mv ${WORKDIR}/${EGLIBC_BRANCH}/ports ${S}/
+	    mv ${WORKDIR}/eglibc-${PV}/ports ${S}/
 	fi
 }
 
