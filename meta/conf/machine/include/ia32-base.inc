@@ -31,7 +31,6 @@ XSERVER_IA32_BASE = "xserver-xorg \
            xf86-input-keyboard \
            xf86-input-evdev \
            xf86-input-synaptics \
-           mesa-dri \
            "
 
 XSERVER_IA32_EXT = "xserver-xorg-extension-dri \
