@@ -16,7 +16,9 @@ inherit autotools gettext
 
 do_configure_prepend() {
 	# Make a directory for the old gettext setup
-	mkdir ${S}/po
+	if [ ! -d ${S}/po ]; then
+		mkdir ${S}/po
+	fi
 }
 
 do_configure_append() {
