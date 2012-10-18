@@ -24,30 +24,10 @@ def read_pkgdatafile(fn):
     return pkgdata
 
 def all_pkgdatadirs(d):
-    archs = []
-    tos = []
-    tvs = []
-
-    archs.append(d.getVar("PACKAGE_ARCHS", True).split())
-    tos.append(d.getVar("TARGET_OS", True))
-    tvs.append(d.getVar("TARGET_VENDOR", True))
-
-    variants = d.getVar("MULTILIB_VARIANTS", True) or ""
-    for item in variants.split():
-        localdata = bb.data.createCopy(d)
-        overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
-        localdata.setVar("OVERRIDES", overrides)
-        bb.data.update_data(localdata)
-
-        archs.append(localdata.getVar("PACKAGE_ARCHS", True).split())
-        tos.append(localdata.getVar("TARGET_OS", True))
-        tvs.append(localdata.getVar("TARGET_VENDOR", True))
-
     dirs = []
-    for i in range(len(archs)):
-        for arch in archs[i]:
-            dirs.append(arch + tvs[i] + "-" + tos[i] + "/runtime/")
-    dirs.reverse()
+    triplets = (d.getVar("PKGMLTRIPLETS") or "").split()
+    for t in triplets:
+        dirs.append(t + "/runtime/")
     return dirs 
  
 def get_subpkgedata_fn(pkg, d):
