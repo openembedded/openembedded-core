@@ -88,7 +88,6 @@ do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_NATIVE}"
 # Since we actually install these into situ there is no staging prefix
 STAGING_DIR_HOST = ""
 STAGING_DIR_TARGET = ""
-SHLIBSDIR = "${STAGING_DIR_NATIVE}/shlibs"
 PKG_CONFIG_DIR = "${libdir}/pkgconfig"
 
 EXTRA_NATIVE_PKGCONFIG_PATH ?= ""
