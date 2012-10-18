@@ -39,8 +39,13 @@ def is_target(d):
         return "yes"
     return "no"
 
-PERLLIBDIRS = "${@perl_get_libdirs(d)}"
+PERLLIBDIRS := "${@perl_get_libdirs(d)}"
+PERLVERSION := "${@get_perl_version(d)}"
 
 FILES_${PN}-dbg += "${PERLLIBDIRS}/auto/*/.debug \
                     ${PERLLIBDIRS}/auto/*/*/.debug \
-                    ${PERLLIBDIRS}/auto/*/*/*/.debug"
+                    ${PERLLIBDIRS}/auto/*/*/*/.debug \
+                    ${PERLLIBDIRS}/vendor_perl/${PERLVERSION}/auto/*/.debug \
+                    ${PERLLIBDIRS}/vendor_perl/${PERLVERSION}/auto/*/*/.debug \
+                    ${PERLLIBDIRS}/vendor_perl/${PERLVERSION}/auto/*/*/*/.debug \
+                    "
