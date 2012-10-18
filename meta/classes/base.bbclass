@@ -334,6 +334,38 @@ do_build () {
 	:
 }
 
+def set_packagetriplet(d):
+    archs = []
+    tos = []
+    tvs = []
+
+    archs.append(d.getVar("PACKAGE_ARCHS", True).split())
+    tos.append(d.getVar("TARGET_OS", True))
+    tvs.append(d.getVar("TARGET_VENDOR", True))
+
+    def settriplet(d, varname, archs, tos, tvs):
+        triplets = []
+        for i in range(len(archs)):
+            for arch in archs[i]:
+                triplets.append(arch + tvs[i] + "-" + tos[i])
+        triplets.reverse()
+        d.setVar(varname, " ".join(triplets))
+
+    settriplet(d, "PKGTRIPLETS", archs, tos, tvs)
+
+    variants = d.getVar("MULTILIB_VARIANTS", True) or ""
+    for item in variants.split():
+        localdata = bb.data.createCopy(d)
+        overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
+        localdata.setVar("OVERRIDES", overrides)
+        bb.data.update_data(localdata)
+
+        archs.append(localdata.getVar("PACKAGE_ARCHS", True).split())
+        tos.append(localdata.getVar("TARGET_OS", True))
+        tvs.append(localdata.getVar("TARGET_VENDOR", True))
+
+    settriplet(d, "PKGMLTRIPLETS", archs, tos, tvs)
+
 python () {
     import exceptions, string, re
 
@@ -520,6 +552,8 @@ python () {
     # unzip-native should already be staged before unpacking ZIP recipes
     if ".zip" in srcuri:
         d.appendVarFlag('do_unpack', 'depends', ' unzip-native:do_populate_sysroot')
+
+    set_packagetriplet(d)
 
     # 'multimachine' handling
     mach_arch = d.getVar('MACHINE_ARCH', True)
