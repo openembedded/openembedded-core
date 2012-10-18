@@ -165,7 +165,7 @@ def sstate_install(ss, d):
             if realmatch:
                 match.append(f)
     if match:
-        bb.warn("The recipe is trying to install files into a shared area when those files already exist. Those files are:\n   %s" % "\n   ".join(match))
+        bb.warn("The recipe %s is trying to install files into a shared area when those files already exist. Those files are:\n   %s" % (d.getVar("PN", True), "\n   ".join(match)))
 
     # Write out the manifest
     f = open(manifest, "w")
