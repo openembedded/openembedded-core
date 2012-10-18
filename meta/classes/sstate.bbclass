@@ -116,6 +116,7 @@ def sstate_add(ss, source, dest, d):
 
 def sstate_install(ss, d):
     import oe.path
+    import subprocess
 
     sharedfiles = []
     shareddirs = []
@@ -163,8 +164,13 @@ def sstate_install(ss, d):
                     break
             if realmatch:
                 match.append(f)
+                sstate_search_cmd = "grep -rl %s %s --exclude=master.list | sed -e 's:^.*/::' -e 's:\.populate-sysroot::'" % (f, d.expand("${SSTATE_MANIFESTS}"))
+                cmd_array = sstate_search_cmd.split(' ')
+                search_output = subprocess.Popen(cmd_array, stdout=subprocess.PIPE).communicate()[0]
+                if search_output != None:
+                    match.append("Matched in %s" % search_output.rstrip())
     if match:
-        bb.warn("The recipe %s is trying to install files into a shared area when those files already exist. Those files are:\n   %s" % (d.getVar("PN", True), "\n   ".join(match)))
+        bb.warn("The recipe %s is trying to install files into a shared area when those files already exist. Those files and their manifest location are:\n   %s\nPlease verify which package should provide the above files." % (d.getVar('PN', True), "\n   ".join(match)))
 
     # Write out the manifest
     f = open(manifest, "w")
