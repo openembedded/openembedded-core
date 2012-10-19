@@ -25,6 +25,11 @@ SRC_URI_virtclass-native = "${BASE_SRC_URI}"
 inherit autotools gettext
 acpaths = "-I ${S}/m4"
 
+do_configure_prepend () {
+	rm -f ${S}/m4/*gl.m4
+	cp ${STAGING_DATADIR_NATIVE}/gettext/po/Makefile.in.in ${S}/runtime-po/
+}
+
 do_install_append_virtclass-native() {
 	create_wrapper ${D}/${bindir}/bison \
 		M4=${STAGING_BINDIR_NATIVE}/m4 \
