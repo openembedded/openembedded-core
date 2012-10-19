@@ -10,6 +10,8 @@ PR = "r2"
 SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.bz2 \
            file://uclibc-fix.patch \
            file://grep_fix_for_automake-1.12.patch \
+           file://gettext.patch \
+           file://Makevars \
            "
 
 SRC_URI[md5sum] = "52202fe462770fa6be1bb667bd6cf30c"
@@ -22,6 +24,7 @@ EXTRA_OECONF = "--disable-perl-regexp --disable-ncurses"
 CFLAGS += "-D PROTOTYPES"
 do_configure_prepend () {
 	rm -f ${S}/m4/init.m4
+	cp -f ${WORKDIR}/Makevars ${S}/po/
 }
 
 do_install () {
