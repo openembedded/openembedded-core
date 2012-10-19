@@ -1,5 +1,8 @@
 The docs need tools we don't have to build so disable them.
 
+Also remove intl since the Makefile doesn't work with 3.82 and we
+don't want to build libintl anyway.
+
 Upstream-Status: Inappropriate [configuration]
 RP 2012/10/17
 
@@ -14,6 +17,6 @@ Index: console-tools-0.3.2/Makefile.am
 -SUBDIRS = lib fontfiletools vttools kbdtools screenfonttools contrib doc \
 -	compat include examples po intl
 +SUBDIRS = lib fontfiletools vttools kbdtools screenfonttools contrib \
-+	compat include examples po intl
++	compat include examples po
  
  EXTRA_DIST = BUGS RELEASE CREDITS COPYING.kbd local-scripts/* debian/* *.lsm
