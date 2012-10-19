@@ -47,7 +47,7 @@ class Terminal(Popen):
 
 class XTerminal(Terminal):
     def __init__(self, sh_cmd, title=None, env=None, d=None):
-        Terminal.__init__(self, sh_cmd, title, env)
+        Terminal.__init__(self, sh_cmd, title, env, d)
         if not os.environ.get('DISPLAY'):
             raise UnsupportedTerminal(self.name)
 
@@ -104,6 +104,21 @@ class Screen(Terminal):
                                               0.5, 10), d)
         else:
             logger.warn(msg)
+
+class Custom(Terminal):
+    command = 'false' # This is a placeholder
+    priority = 3
+
+    def __init__(self, sh_cmd, title=None, env=None, d=None):
+        self.command = d and d.getVar('OE_TERMINAL_CUSTOMCMD', True)
+        if self.command:
+            if not '{command}' in self.command:
+                self.command += ' {command}'
+            Terminal.__init__(self, sh_cmd, title, env, d)
+            logger.warn('Custom terminal was started.')
+        else:
+            logger.debug(1, 'No custom terminal (OE_TERMINAL_CUSTOMCMD) set')
+            raise UnsupportedTerminal('OE_TERMINAL_CUSTOMCMD not set')
 
 
 def prioritized():
