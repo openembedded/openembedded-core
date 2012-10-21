@@ -12,6 +12,7 @@ SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;protocol=http \
   file://0009-pkg_depends-fix-version-constraints.patch \
   file://0010-pkg_depends-fix-version_constraints_satisfied.patch \
   file://opkg-no-sync-offline.patch \
+  file://don-t-add-recommends-pkgs-to-depended-upon-by.patch \
 "
 
 S = "${WORKDIR}/trunk"
