@@ -111,7 +111,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 			fi
 
 			# Also delete the status files
-			rm -rf ${IMAGE_ROOTFS}${opkglibdir}
+			remove_packaging_data_files
 		fi
 	fi
 	set +x
