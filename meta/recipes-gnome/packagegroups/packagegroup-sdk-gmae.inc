@@ -7,9 +7,6 @@ SDK-GMAE = " \
     gconf-dev \
     avahi-dev \
     telepathy-glib-dev \
-    evolution-data-server-dev \
-    libecal-dev \
-    libebook-dev \
     libxi-dev \
     libsqlite3-dev \
     gnome-desktop \
