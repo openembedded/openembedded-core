@@ -5,7 +5,7 @@ SECTION = "x11/drivers"
 LICENSE = "MIT-X"
 
 PE = "2"
-INC_PR = "r17"
+INC_PR = "r18"
 
 DEPENDS = "virtual/xserver xproto randrproto util-macros"
 
@@ -31,3 +31,18 @@ do_configure_prepend () {
 do_install_append() {
 	find ${D}${libdir}/xorg/modules -regex ".*\.la$" | xargs rm -f --
 }
+
+# Function to add the relevant ABI dependency to drivers, which should be called
+# from a populate_packages append/prepend.
+def add_abi_depends(d, name):
+    # Map of ABI names exposed in the dependencies to pkg-config variables
+    abis = {
+      "video": "abi_videodrv",
+      "input": "abi_xinput"
+    }
+
+    output = os.popen("pkg-config xorg-server --variable=%s" % abis[name]).read()
+    abi = "xorg-abi-%s-%s" % (name, output.split(".")[0])
+
+    pn = d.getVar("PN", True)
+    d.appendVar('RDEPENDS_' + pn, ' ' + abi)
