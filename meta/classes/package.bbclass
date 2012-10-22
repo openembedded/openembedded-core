@@ -1298,6 +1298,7 @@ def getshlibsdirs(d):
     for t in triplets:
         dirs.append("${TMPDIR}/pkgdata/" + t + "/shlibs/")
     return " ".join(dirs)
+getshlibsdirs[vardepsexclude] = "PKGTRIPLETS"
 
 SHLIBSDIRS = "${@getshlibsdirs(d)}"
 SHLIBSDIR = "${TMPDIR}/pkgdata/${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}/shlibs"
