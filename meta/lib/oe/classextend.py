@@ -33,6 +33,22 @@ class ClassExtender(object):
             self.d.setVar(varname, newdata)
         return newdata
 
+    def map_regexp_variable(self, varname, setvar = True):
+        var = self.d.getVar(varname, True)
+        if not var:
+            return ""
+        var = var.split()
+        newvar = []
+        for v in var:
+            if v.startswith("^"):
+                newvar.append("^" + self.extname + "-" + v[1:])
+            else:
+                newvar.append(self.extend_name(v))
+        newdata =  " ".join(newvar)
+        if setvar:
+            self.d.setVar(varname, newdata)
+        return newdata
+
     def map_depends(self, dep):
         if dep.endswith(("-native", "-native-runtime")):
             return dep
