@@ -13,7 +13,7 @@ PROVIDES = "virtual/xserver-xf86"
 PROVIDES += "virtual/xserver"
 
 PE = "2"
-INC_PR = "r2"
+INC_PR = "r3"
 
 XORG_PN = "xorg-server"
 SRC_URI = "${XORG_MIRROR}/individual/xserver/${XORG_PN}-${PV}.tar.bz2"
@@ -131,4 +131,29 @@ PACKAGECONFIG[glx] = "--enable-dri --enable-dri2 --enable-glx --enable-glx-tls,\
 do_install_append () {
 	# Its assumed base-files creates this for us
 	rmdir ${D}${localstatedir}/log/
+}
+
+# Add runtime provides for the ABI versions of the video and input subsystems,
+# so that drivers can depend on the relevant version.
+python populate_packages_prepend() {
+    import subprocess
+
+    # Set PKG_CONFIG_PATH so pkg-config looks at the .pc files that are going
+    # into the new package, not the staged ones.
+    newenv = dict(os.environ)
+    newenv["PKG_CONFIG_PATH"] = d.expand("${PKGD}${libdir}/pkgconfig/")
+
+    def get_abi(name):
+        abis = {
+          "video": "abi_videodrv",
+          "input": "abi_xinput"
+        }
+        p = subprocess.Popen(args="pkg-config --variable=%s xorg-server" % abis[name],
+                             shell=True, env=newenv, stdout=subprocess.PIPE)
+        output = p.communicate()[0]
+        return "xorg-abi-%s-%s" % (name, output.split(".")[0])
+
+    pn = d.getVar("PN", True)
+    d.appendVar("RPROVIDES_" + pn, " " + get_abi("input"))
+    d.appendVar("RPROVIDES_" + pn, " " + get_abi("video"))
 }
