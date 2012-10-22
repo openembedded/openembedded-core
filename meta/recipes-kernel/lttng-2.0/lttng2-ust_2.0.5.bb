@@ -12,9 +12,9 @@ inherit autotools
 
 DEPENDS = "liburcu util-linux"
 
-SRCREV = "a367ee66aad3ffd21ef64d1b24efc6f862e09562"
-PV = "2.0.2+git${SRCPV}"
-PR = "r1"
+SRCREV = "5fbf75f52c808b648feebea1ed4874c5f6264b05"
+PV = "2.0.5"
+PR = "r0"
 
 SRC_URI = "git://git.lttng.org/lttng-ust.git;protocol=git"
 
