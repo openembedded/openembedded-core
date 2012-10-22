@@ -75,7 +75,7 @@ python __anonymous () {
     clsextend.map_depends_variable("DEPENDS")
     clsextend.map_packagevars()
     clsextend.map_variable("PROVIDES")
-    clsextend.map_variable("PACKAGES_DYNAMIC")
+    clsextend.map_regexp_variable("PACKAGES_DYNAMIC")
     clsextend.map_variable("PACKAGE_INSTALL")
     clsextend.map_variable("INITSCRIPT_PACKAGES")
 }
