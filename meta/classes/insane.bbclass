@@ -109,7 +109,7 @@ def package_qa_get_machine_dict():
 
 
 # Currently not being used by default "desktop"
-WARN_QA ?= "ldflags useless-rpaths rpaths unsafe-references-in-binaries unsafe-references-in-scripts staticdev libdir"
+WARN_QA ?= "ldflags useless-rpaths rpaths unsafe-references-in-binaries unsafe-references-in-scripts staticdev libdir xorg-driver-abi"
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch la2 pkgconfig la perms dep-cmp"
 
 ALL_QA = "${WARN_QA} ${ERROR_QA}"
@@ -495,6 +495,24 @@ def package_qa_check_buildpaths(path, name, d, elf, messages):
     file_content = open(path).read()
     if tmpdir in file_content:
         messages.append("File %s in package contained reference to tmpdir" % package_qa_clean_path(path,d))
+
+
+QAPATHTEST[xorg-driver-abi] = "package_qa_check_xorg_driver_abi"
+def package_qa_check_xorg_driver_abi(path, name, d, elf, messages):
+    """
+    Check that all packages containing Xorg drivers have ABI dependencies
+    """
+
+    # Skip dev, dbg or nativesdk packages
+    if name.endswith("-dev") or name.endswith("-dbg") or name.startswith("nativesdk-"):
+        return
+
+    driverdir = d.expand("${libdir}/xorg/modules/drivers/")
+    if driverdir in path and path.endswith(".so"):
+        for rdep in bb.utils.explode_deps(d.getVar('RDEPENDS_' + name, True) or ""):
+            if rdep.startswith("xorg-abi-"):
+                return
+        messages.append("Package %s contains Xorg driver (%s) but no xorg-abi- dependencies" % (name, os.path.basename(path)))
 
 def package_qa_check_license(workdir, d):
     """
