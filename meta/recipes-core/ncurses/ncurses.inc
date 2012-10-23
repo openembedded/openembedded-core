@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://ncurses/base/version.c;beginline=1;endline=27;md5=cbc
 SECTION = "libs"
 DEPENDS = "ncurses-native"
 DEPENDS_virtclass-native = ""
-INC_PR = "r11"
+INC_PR = "r12"
 
 inherit autotools binconfig multilib_header
 
@@ -218,7 +218,7 @@ inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
 
-ALTERNATIVE_ncurses-tools = "clear reset"
+ALTERNATIVE_ncurses-tools_class-target = "clear reset"
 
 BBCLASSEXTEND = "native nativesdk"
 
