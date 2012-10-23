@@ -17,6 +17,7 @@ TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "o32", "-mabi=32", "", d)}
 
 TUNEVALID[n32] = "MIPS64 n32 ABI"
 TUNECONFLICTS[n32] = "o32 n64"
+ABIEXTENSION .= "${@bb.utils.contains("TUNE_FEATURES", "n32", "n32", "" ,d)}"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "n32", "-mabi=n32", "", d)}"
 
 TUNEVALID[n64] = "MIPS64 n64 ABI"
