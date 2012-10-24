@@ -7,28 +7,14 @@ RDEPENDS_${PN} += "\
     autoconf \
     perl \
     perl-module-bytes \
-    perl-module-constant \
-    perl-module-cwd \
     perl-module-data-dumper \
-    perl-module-dynaloader \
-    perl-module-errno \
-    perl-module-exporter-heavy \
-    perl-module-file-basename \
-    perl-module-file-compare \
-    perl-module-file-copy \
-    perl-module-file-glob \
-    perl-module-file-spec-unix \
-    perl-module-file-stat \
-    perl-module-getopt-long \
-    perl-module-io \
-    perl-module-io-file \
-    perl-module-posix \
     perl-module-strict \
     perl-module-text-parsewords \
+    perl-module-thread-queue \
+    perl-module-threads \
     perl-module-vars "
 
 RDEPENDS_${PN}_virtclass-native = "autoconf-native perl-native-runtime"
-RDEPENDS_${PN}_virtclass-nativesdk = "nativesdk-autoconf"
 
 PATHFIXPATCH = "file://path_prog_fixes.patch"
 PATHFIXPATCH_virtclass-native = ""
@@ -42,7 +28,7 @@ SRC_URI += "${PATHFIXPATCH} \
 SRC_URI[md5sum] = "d2af8484de94cdee16d89c50aaa1c729"
 SRC_URI[sha256sum] = "095ffaa3ac887d1eb3511bf13d7f1fc9ec0503c6a06aeae05c93730cdda9a5a0"
 
-PR = "r1"
+PR = "r2"
 
 do_install () {
     oe_runmake 'DESTDIR=${D}' install
