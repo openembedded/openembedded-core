@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=56a830bbe6e4697fe6cbbae01bb7c2b2"
 SECTION = "x11"
 DEPENDS = ""
 
-inherit autotools pkgconfig allarch gtk-icon-cache
+inherit autotools pkgconfig allarch gtk-icon-cache perlnative
 
 FILES_${PN} += "${datadir}"
 

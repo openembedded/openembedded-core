@@ -1,8 +1,8 @@
 require sato-icon-theme.inc
 
-DEPENDS += "icon-naming-utils-native"
+DEPENDS += "icon-naming-utils-native libxml-simple-perl-native"
 
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://pokylinux.org/releases/sato/${BPN}-${PV}.tar.gz \
            file://iconpath-option.patch \
