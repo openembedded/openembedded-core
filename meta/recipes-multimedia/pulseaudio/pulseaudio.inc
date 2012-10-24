@@ -64,7 +64,7 @@ USERADD_PARAM_pulseaudio-server = "--system --home /var/run/pulse \
                               --no-create-home --shell /bin/false \
                               --groups audio,pulse --gid pulse pulse"
 
-PACKAGES =+ "libpulsecore libpulsecommon libpulsedsp libpulse libpulse-simple libpulse-browse libpulse-mainloop-glib \
+PACKAGES =+ "libpulsecore libpulsecommon libpulse libpulse-simple libpulse-browse libpulse-mainloop-glib \
              pulseaudio-server pulseaudio-misc"
 
 #upgrade path:
@@ -73,8 +73,7 @@ RREPLACES_pulseaudio-server = "libpulse-bin libpulse-conf"
 PACKAGES_DYNAMIC += "^pulseaudio-lib.* ^pulseaudio-module.* ^libpulse-lib.* ^libpulse-module.* "
 
 FILES_libpulsecore = "${libdir}/libpulsecore*.so"
-FILES_libpulsecommon = "${libdir}/libpulsecommon*.so"
-FILES_libpulsedsp = "${libdir}/libpulsedsp*.so"
+FILES_libpulsecommon = "${libdir}/pulseaudio/libpulsecommon*.so"
 FILES_libpulse = "${libdir}/libpulse.so.*"
 FILES_libpulse-simple = "${libdir}/libpulse-simple.so.*"
 FILES_libpulse-browse = "${libdir}/libpulse-browse.so.*"
@@ -86,7 +85,7 @@ FILES_${PN}-dev += "${libdir}/pulse-${PV}/modules/*.la ${datadir}/vala ${libdir}
 FILES_${PN}-conf = "${sysconfdir}"
 FILES_${PN}-bin += "${sysconfdir}/default/volatiles/volatiles.04_pulse"
 FILES_${PN}-server = "${bindir}/pulseaudio ${bindir}/start-* ${sysconfdir} ${bindir}/pactl ${base_libdir}/udev/rules.d/*.rules"
-FILES_${PN}-misc = "${bindir}/*"
+FILES_${PN}-misc = "${bindir}/* ${libdir}/pulseaudio/libpulsedsp.so"
 
 # Allow the pulseaudio package to be created empty as a placeholder (-dbg and -dev depend on it)
 ALLOW_EMPTY_${PN} = "1"
