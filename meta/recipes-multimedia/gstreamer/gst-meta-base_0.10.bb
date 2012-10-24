@@ -5,10 +5,11 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 
-PR = "r10"
+PR = "r11"
 
 PACKAGES = "\
     gst-meta-base \
+    gst-meta-x11-base \
     gst-meta-audio \
     gst-meta-debug \
     gst-meta-video"
@@ -23,7 +24,6 @@ RDEPENDS_gst-meta-base = "\
     gst-plugins-base-gio \
     gst-plugins-base-alsa \
     gst-plugins-base-volume \
-    gst-plugins-base-ximagesink \
     gst-plugins-base-audioconvert \
     gst-plugins-base-audioresample \
     gst-plugins-base-typefindfunctions \
@@ -32,6 +32,7 @@ RDEPENDS_gst-meta-base = "\
     gst-plugins-good-autodetect \
     gst-plugins-good-souphttpsrc"
 
+RDEPENDS_gst-meta-x11-base = "${@base_contains('DISTRO_FEATURES', 'x11', 'gst-plugins-base-ximagesink', '', d)}"
 
 RDEPENDS_gst-meta-audio = "\
     gst-meta-base \
