@@ -64,7 +64,7 @@ USERADD_PARAM_pulseaudio-server = "--system --home /var/run/pulse \
                               --no-create-home --shell /bin/false \
                               --groups audio,pulse --gid pulse pulse"
 
-PACKAGES =+ "libpulsecore libpulsecommon libpulse libpulse-simple libpulse-browse libpulse-mainloop-glib \
+PACKAGES =+ "libpulsecore libpulsecommon libpulse libpulse-simple libpulse-mainloop-glib \
              pulseaudio-server pulseaudio-misc"
 
 #upgrade path:
@@ -76,7 +76,6 @@ FILES_libpulsecore = "${libdir}/libpulsecore*.so"
 FILES_libpulsecommon = "${libdir}/pulseaudio/libpulsecommon*.so"
 FILES_libpulse = "${libdir}/libpulse.so.*"
 FILES_libpulse-simple = "${libdir}/libpulse-simple.so.*"
-FILES_libpulse-browse = "${libdir}/libpulse-browse.so.*"
 FILES_libpulse-mainloop-glib = "${libdir}/libpulse-mainloop-glib.so.*"
 
 FILES_${PN}-dbg += "${libexecdir}/pulse/.debug \
