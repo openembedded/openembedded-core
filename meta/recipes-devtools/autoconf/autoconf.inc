@@ -8,9 +8,24 @@ SECTION = "devel"
 DEPENDS += "m4-native"
 DEPENDS_virtclass-native = "m4-native gnu-config-native"
 DEPENDS_virtclass-nativesdk = "nativesdk-m4 nativesdk-gnu-config"
-RDEPENDS_${PN} = "m4 gnu-config"
+RDEPENDS_${PN} = "m4 gnu-config \
+		  perl \
+		  perl-module-carp \
+		  perl-module-constant \
+		  perl-module-errno \
+		  perl-module-exporter \
+		  perl-module-file \
+		  perl-module-file-basename \
+		  perl-module-file-compare \
+		  perl-module-file-copy \
+		  perl-module-file-glob \
+		  perl-module-file-path \
+		  perl-module-file-stat \
+		  perl-module-getopt-long \
+		  perl-module-io-file \
+		  perl-module-posix \
+		 "
 RDEPENDS_${PN}_virtclass-native = "m4-native gnu-config-native"
-RDEPENDS_${PN}_virtclass-nativesdk = "nativesdk-m4 nativesdk-gnu-config"
 
 SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.gz \
 	   file://program_prefix.patch"
