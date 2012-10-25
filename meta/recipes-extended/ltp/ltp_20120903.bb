@@ -21,7 +21,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 
 DEPENDS = "attr libaio libcap"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/ltp/ltp-full-${PV}.bz2"
 
@@ -32,6 +32,8 @@ export prefix = "/opt/ltp"
 export exec_prefix = "/opt/ltp"
 
 inherit autotools
+
+RDEPENDS_${PN} = "perl"
 
 FILES_${PN}-dbg += "/opt/ltp/runtest/.debug"
 FILES_${PN}-dbg += "/opt/ltp/testcases/bin/.debug"
