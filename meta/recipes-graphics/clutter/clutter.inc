@@ -6,7 +6,7 @@ LICENSE = "LGPLv2.1+"
 STDDEPENDS = "virtual/libx11 pango glib-2.0 libxfixes libxi json-glib cogl atk"
 BASE_CONF = "${@get_clutter_fpu_setting(bb, d)}"
 
-DEPENDS = "${STDDEPENDS} virtual/libgl"
+DEPENDS = "${STDDEPENDS} virtual/libgl libdrm"
 EXTRA_OECONF = "${BASE_CONF} --with-flavour=glx"
 
 FILESPATH = "${FILE_DIRNAME}/clutter"
