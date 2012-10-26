@@ -31,4 +31,4 @@ def distro_identifier(adjust_hook=None):
         distro_id, release = adjust_hook(distro_id, release)
     if not distro_id:
         return "Unknown"
-    return '{0}-{1}'.format(distro_id, release).replace(' ','-')
+    return '{0}-{1}'.format(distro_id, release).replace(' ','-').replace('/','-')
