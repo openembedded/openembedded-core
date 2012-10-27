@@ -1,6 +1,6 @@
 LICENSE = "GPLv2 & LGPLv2.1"
 DEPENDS = "libxml2 libxslt libxslt-native gnome-doc-utils-native glib-2.0"
-DEPENDS_virtclass-native = "libxml2-native libxslt-native intltool-native glib-2.0-native"
+DEPENDS_class-native = "libxml2-native libxslt-native intltool-native glib-2.0-native"
 
 inherit gnome gettext python-dir pythonnative
 
@@ -20,6 +20,6 @@ do_install_append_class-native () {
 FILES_${PN} += "${datadir}/xml* ${PYTHON_SITEPACKAGES_DIR}/*"
 
 RDEPENDS_${PN} = "bash"
-RDEPENDS_${PN}_virtclass-native = ""
+RDEPENDS_${PN}_class-native = ""
 
 BBCLASSEXTEND = "native"

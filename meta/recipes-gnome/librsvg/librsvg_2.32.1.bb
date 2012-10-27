@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SECTION = "x11/utils"
 DEPENDS = "gtk+ cairo libxml2"
-DEPENDS_virtclass-native = "cairo-native pango-native gdk-pixbuf-native"
+DEPENDS_class-native = "cairo-native pango-native gdk-pixbuf-native"
 BBCLASSEXTEND = "native"
 
 PR = "r10"
@@ -19,7 +19,7 @@ EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz"
 
 PACKAGECONFIG ??= "croco"
 # When native we can manage without croco, as it's only for GTK+
-PACKAGECONFIG_virtclass-native = ""
+PACKAGECONFIG_class-native = ""
 
 PACKAGECONFIG[croco] = "--with-croco,--without-croco,libcroco"
 

@@ -38,8 +38,8 @@ LIBV = "2.10.0"
 
 PACKAGES_DYNAMIC += "^gtk-immodule-.* ^gtk-printbackend-.*"
 BBCLASSEXTEND = "native"
-RRECOMMENDS_${PN}_virtclass-native = ""
-DEPENDS_virtclass-native = "glib-2.0-native atk-native pango-native cairo-native gdk-pixbuf-native"
+RRECOMMENDS_${PN}_class-native = ""
+DEPENDS_class-native = "glib-2.0-native atk-native pango-native cairo-native gdk-pixbuf-native"
 
 python populate_packages_prepend () {
     prologue = d.getVar("postinst_prologue", True)
