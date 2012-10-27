@@ -5,7 +5,7 @@ require uclibc-package.inc
 require uclibc-${PV}.inc
 
 STAGINGCC = "gcc-cross-initial"
-STAGINGCC_virtclass-nativesdk = "gcc-crosssdk-initial"
+STAGINGCC_class-nativesdk = "gcc-crosssdk-initial"
 
 DEPENDS = "virtual/${TARGET_PREFIX}binutils \
            virtual/${TARGET_PREFIX}gcc-initial \

@@ -3,7 +3,7 @@ require eglibc-ld.inc
 require eglibc-testing.inc
 
 STAGINGCC = "gcc-cross-initial"
-STAGINGCC_virtclass-nativesdk = "gcc-crosssdk-initial"
+STAGINGCC_class-nativesdk = "gcc-crosssdk-initial"
 PATH_prepend = "${STAGING_BINDIR_TOOLCHAIN}.${STAGINGCC}:"
 
 TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_TCBOOTSTRAP}"
@@ -39,7 +39,7 @@ CACHED_CONFIGUREVARS += "ac_cv_path_KSH=${base_bindir}/bash \
 		       "
 
 GLIBC_EXTRA_OECONF ?= ""
-GLIBC_EXTRA_OECONF_virtclass-nativesdk = ""
+GLIBC_EXTRA_OECONF_class-nativesdk = ""
 INHIBIT_DEFAULT_DEPS = "1"
 
 ARM_INSTRUCTION_SET = "arm"
@@ -68,4 +68,4 @@ do_configure_append() {
 
 GLIBC_ADDONS ?= "ports,nptl,libidn"
 SDK_GLIBC_ADDONS ?= "ports,nptl,libidn"
-GLIBC_ADDONS_virtclass-nativesdk = "${SDK_GLIBC_ADDONS}"
+GLIBC_ADDONS_class-nativesdk = "${SDK_GLIBC_ADDONS}"

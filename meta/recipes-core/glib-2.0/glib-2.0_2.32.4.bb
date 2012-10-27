@@ -4,8 +4,8 @@ PR = "r6"
 PE = "1"
 
 DEPENDS += "libffi python-argparse-native zlib"
-DEPENDS_virtclass-native += "libffi-native python-argparse-native"
-DEPENDS_virtclass-nativesdk += "nativesdk-libffi python-argparse-native nativesdk-zlib ${BPN}-native"
+DEPENDS_class-native += "libffi-native python-argparse-native"
+DEPENDS_class-nativesdk += "nativesdk-libffi python-argparse-native nativesdk-zlib ${BPN}-native"
 
 SHRT_VER = "${@d.getVar('PV',1).split('.')[0]}.${@d.getVar('PV',1).split('.')[1]}"
 
@@ -19,7 +19,7 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
 SRC_URI[md5sum] = "bf84fefd9c1a5b5a7a38736f4ddd674a"
 SRC_URI[sha256sum] = "a5d742a4fda22fb6975a8c0cfcd2499dd1c809b8afd4ef709bda4d11b167fae2"
 
-SRC_URI_append_virtclass-native = " file://glib-gettextize-dir.patch"
+SRC_URI_append_class-native = " file://glib-gettextize-dir.patch"
 BBCLASSEXTEND = "native nativesdk"
 
 do_configure_prepend() {

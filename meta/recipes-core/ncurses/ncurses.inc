@@ -5,7 +5,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://ncurses/base/version.c;beginline=1;endline=27;md5=cbc180a8c44ca642e97c35452fab5f66"
 SECTION = "libs"
 DEPENDS = "ncurses-native"
-DEPENDS_virtclass-native = ""
+DEPENDS_class-native = ""
 INC_PR = "r12"
 
 inherit autotools binconfig multilib_header
@@ -27,7 +27,7 @@ ENABLE_WIDEC ?= "true"
 BUILD_CPPFLAGS += "-D_GNU_SOURCE"
 
 # natives don't generally look in base_libdir
-base_libdir_virtclass-native = "${libdir}"
+base_libdir_class-native = "${libdir}"
 
 # Helper function for do_configure to allow multiple configurations
 # $1 the directory to run configure in

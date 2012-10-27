@@ -7,9 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 PR = "r18"
 DEPENDS = "gettext-native virtual/libiconv ncurses expat"
-DEPENDS_virtclass-native = "gettext-minimal-native"
+DEPENDS_class-native = "gettext-minimal-native"
 PROVIDES = "virtual/libintl virtual/gettext"
-PROVIDES_virtclass-native = "virtual/gettext-native"
+PROVIDES_class-native = "virtual/gettext-native"
 RCONFLICTS_${PN} = "proxy-libintl"
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
 	   file://parallel.patch \
@@ -100,7 +100,7 @@ do_install_append() {
     rm -f ${D}${libdir}/preloadable_libintl.so
 }
 
-do_install_append_virtclass-native () {
+do_install_append_class-native () {
 	rm ${D}${datadir}/aclocal/*
 	rm ${D}${datadir}/gettext/config.rpath
 	rm ${D}${datadir}/gettext/po/Makefile.in.in

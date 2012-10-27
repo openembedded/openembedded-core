@@ -3,7 +3,7 @@ require uclibc-package.inc
 require uclibc-git.inc
 
 STAGINGCC = "gcc-cross-initial"
-STAGINGCC_virtclass-nativesdk = "gcc-crosssdk-initial"
+STAGINGCC_class-nativesdk = "gcc-crosssdk-initial"
 
 PROVIDES += "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
 

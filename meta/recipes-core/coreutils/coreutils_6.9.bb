@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://src/ls.c;startline=4;endline=16;md5=482a96d4f25010a4e13f8743e0c3685e"
 PR = "r3"
 DEPENDS = "coreutils-native-${PV}"
-DEPENDS_virtclass-native = "gettext-native"
+DEPENDS_class-native = "gettext-native"
 
 inherit autotools gettext
 
@@ -28,7 +28,7 @@ SRC_URI_BASE = "${GNU_MIRROR}/coreutils/${BP}.tar.bz2 \
            "
 
 SRC_URI = "${SRC_URI_BASE} file://fix_for_manpage_building.patch"
-SRC_URI_virtclass-native = "${SRC_URI_BASE}"
+SRC_URI_class-native = "${SRC_URI_BASE}"
 
 SRC_URI[md5sum] = "c9607d8495f16e98906e7ed2d9751a06"
 SRC_URI[sha256sum] = "89c2895ad157de50e53298b22d91db116ee4e1dd3fdf4019260254e2e31497b0"

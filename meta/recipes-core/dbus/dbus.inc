@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=10dded3b58148f3f1fd804b26354af3e \
                     file://dbus/dbus.h;firstline=6;endline=20;md5=6eea2e0c7750dd8e620dcb1437312fa5"
 X11DEPENDS = "virtual/libx11 libsm"
 DEPENDS = "expat virtual/libintl ${@base_contains('DISTRO_FEATURES', 'x11', '${X11DEPENDS}', '', d)}"
-DEPENDS_virtclass-native = "expat-native virtual/libintl-native"
-DEPENDS_virtclass-nativesdk = "nativesdk-expat virtual/nativesdk-libintl virtual/libx11"
+DEPENDS_class-native = "expat-native virtual/libintl-native"
+DEPENDS_class-nativesdk = "nativesdk-expat virtual/nativesdk-libintl virtual/libx11"
 
 INC_PR = "r5"
 
@@ -34,7 +34,7 @@ DEBIANNAME_${PN} = "dbus-1"
 PACKAGES =+ "${PN}-lib ${PN}-systemd"
 
 OLDPKGNAME = "dbus-x11"
-OLDPKGNAME_virtclass-nativesdk = ""
+OLDPKGNAME_class-nativesdk = ""
 
 # for compatibility
 RPROVIDES_${PN} = "${OLDPKGNAME}"
@@ -64,7 +64,7 @@ pkg_postinst_dbus() {
 }
 
 EXTRA_OECONF_X = "${@base_contains('DISTRO_FEATURES', 'x11', '--with-x', '--without-x', d)}"
-EXTRA_OECONF_X_virtclass-native = "--without-x --disable-x11-autolaunch"
+EXTRA_OECONF_X_class-native = "--without-x --disable-x11-autolaunch"
 
 EXTRA_OECONF = "--disable-tests \
                 --disable-checks \
@@ -105,7 +105,7 @@ do_install() {
 	ln -sf /dev/null ${D}/${systemd_unitdir}/system/dbus-1.service
 }
 
-do_install_virtclass-native() {
+do_install_class-native() {
 	autotools_do_install
 
 	# for dbus-glib-native introspection generation
@@ -117,7 +117,7 @@ do_install_virtclass-native() {
 	./bus/dbus-daemon --introspect > ${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml
 }
 
-do_install_virtclass-nativesdk() {
+do_install_class-nativesdk() {
 	autotools_do_install
 }
 BBCLASSEXTEND = "native nativesdk"

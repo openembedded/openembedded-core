@@ -9,7 +9,7 @@ PACKAGES = ""
 PACKAGES_DYNAMIC = ""
 
 STAGINGCC = "gcc-cross-initial"
-STAGINGCC_virtclass-nativesdk = "gcc-crosssdk-initial"
+STAGINGCC_class-nativesdk = "gcc-crosssdk-initial"
 
 do_install() {
 	# Install initial headers into the cross dir
