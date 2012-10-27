@@ -18,7 +18,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c5326026692dbed183f0558f926580f8"
 PR = "r3"
 
 DEPENDS = "ghostscript-native tiff jpeg fontconfig cups"
-DEPENDS_virtclass-native = ""
+DEPENDS_class-native = ""
 
 SRC_URI_BASE = "http://downloads.ghostscript.com/public/ghostscript-${PV}.tar.gz"
 
@@ -30,7 +30,7 @@ SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.05-NOT-check-endian.patch \
            "
 
-SRC_URI_virtclass-native = "${SRC_URI_BASE}"
+SRC_URI_class-native = "${SRC_URI_BASE}"
 
 SRC_URI[md5sum] = "f7c6f0431ca8d44ee132a55d583212c1"
 SRC_URI[sha256sum] = "593f77f7584704bdf9de41598a084a4208c3ad3b940a1de1faaf8f59a15cc207"
@@ -80,18 +80,18 @@ do_install_append () {
     chown -R root:lp ${D}${sysconfdir}/cups
 }
 
-python do_patch_virtclass-native () {
+python do_patch_class-native () {
     pass
 }
 
-do_compile_virtclass-native () {
+do_compile_class-native () {
     mkdir -p obj
     for i in genarch genconf mkromfs echogs gendev genht; do
         oe_runmake obj/aux/$i
     done
 }
 
-do_install_virtclass-native () {
+do_install_class-native () {
     install -d ${D}${bindir}/ghostscript-${PV}
     for i in genarch genconf mkromfs echogs gendev genht; do
         install -m 755 obj/aux/$i ${D}${bindir}/ghostscript-${PV}/$i

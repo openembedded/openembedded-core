@@ -16,7 +16,7 @@ S = "${WORKDIR}/unzip60"
 EXTRA_OEMAKE += "STRIP=true LF2=''"
 
 export LD = "${CC}"
-LD_virtclass-native = "${CC}"
+LD_class-native = "${CC}"
 
 do_compile() {
         oe_runmake -f unix/Makefile generic

@@ -18,7 +18,7 @@ do_install() {
 	install -m 644 stat.1 ${D}${mandir}/man1
 }
 
-#do_install_virtclass-native() {
+#do_install_class-native() {
 #	install -d ${D}${bindir}
 #	install -m 755 stat ${D}${bindir}
 #}

@@ -13,7 +13,7 @@ inherit cpan allarch
 
 BBCLASSEXTEND = "native"
 
-RDEPENDS_${PN}_virtclass-native = ""
+RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN} += "perl-module-carp perl-module-exporter perl-module-strict perl-module-time-local"
 
 SRC_URI[md5sum] = "7da7452bce4c684e4238e6d09b390200"

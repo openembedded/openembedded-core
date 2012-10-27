@@ -9,10 +9,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=adefda309052235aa5d1e99ce7557010"
 PR = "r5"
 
 DEPENDS = "zlib ncurses texinfo-native"
-DEPENDS_virtclass-native = "zlib-native ncurses-native"
+DEPENDS_class-native = "zlib-native ncurses-native"
 
 TARGET_PATCH = "file://use_host_makedoc.patch"
-TARGET_PATCH_virtclass-native = ""
+TARGET_PATCH_class-native = ""
 
 SRC_URI = "${GNU_MIRROR}/texinfo/texinfo-${PV}.tar.gz \
            file://texinfo-4.12-zlib.patch \
@@ -44,7 +44,7 @@ do_install_append() {
 	mkdir -p ${D}${datadir}/${tex_texinfo}
 	install -p -m644 doc/texinfo.tex doc/txi-??.tex ${D}${datadir}/${tex_texinfo} 	
 }
-do_install_append_virtclass-native() {
+do_install_append_class-native() {
 	install -m 755 info/makedoc ${D}${bindir}
 }
 

@@ -12,7 +12,7 @@ PR = "r1"
 SRC_URI = "http://zlib.net/pigz/pigz-${PV}.tar.gz \
            file://ldflags.patch"
 
-PROVIDES_virtclass-native += "gzip-native"
+PROVIDES_class-native += "gzip-native"
 
 DEPENDS = "zlib"
 

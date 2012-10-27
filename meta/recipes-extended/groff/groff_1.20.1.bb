@@ -14,7 +14,7 @@ SRC_URI[md5sum] = "48fa768dd6fdeb7968041dd5ae8e2b02"
 SRC_URI[sha256sum] = "b645878135cb620c6c417c5601bfe96172245af12045540d7344938b4c2cd805"
 
 DEPENDS = "groff-native"
-DEPENDS_virtclass-native = ""
+DEPENDS_class-native = ""
 
 inherit autotools
 
@@ -44,7 +44,7 @@ do_install_append() {
 	done
 }
 
-do_install_append_virtclass-native() {
+do_install_append_class-native() {
 	# Some distros have both /bin/perl and /usr/bin/perl, but we set perl location
 	# for target as /usr/bin/perl, so fix it to /usr/bin/perl.
 	for i in afmtodit mmroff; do
