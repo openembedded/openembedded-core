@@ -23,7 +23,7 @@ CFLAG = "${@base_conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_END
 
 # Avoid binaries being marked as requiring an executable stack (which causes 
 # issues with SELinux on the host)
-CFLAG_append_virtclass-native = " -Wa,--noexecstack"
+CFLAG_append_class-native = " -Wa,--noexecstack"
 
 # -02 does not work on mipsel: ssh hangs when it tries to read /dev/urandom
 CFLAG_mtx-1 := "${@'${CFLAG}'.replace('-O2', '')}"
