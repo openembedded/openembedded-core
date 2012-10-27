@@ -9,7 +9,7 @@ inherit autotools gettext
 # overwritten by autoheader
 export AUTOHEADER = "true"
 EXTRA_OECONF = "INSTALL_USER=root INSTALL_GROUP=root"
-EXTRA_OECONF_append_virtclass-native = " --enable-gettext=no"
+EXTRA_OECONF_append_class-native = " --enable-gettext=no"
 
 EXTRA_OEMAKE = "PKG_LIB_DIR=${base_libdir} PKG_DEVLIB_DIR=${libdir}"
 
@@ -55,4 +55,4 @@ fix_symlink () {
 		ln -sf ${libdir}/lib${BPN}.la ${base_libdir}/lib${BPN}.la
 	fi
 }
-SSTATEPOSTINSTFUNCS_virtclass-native += "fix_symlink"
+SSTATEPOSTINSTFUNCS_class-native += "fix_symlink"

@@ -6,7 +6,7 @@ LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS = "libxml2 intltool-native glib-2.0 shared-mime-info-native"
-DEPENDS_virtclass-native = "libxml2-native intltool-native glib-2.0-native"
+DEPENDS_class-native = "libxml2-native intltool-native glib-2.0-native"
 
 SRC_URI = "http://freedesktop.org/~hadess/shared-mime-info-${PV}.tar.xz"
 
@@ -29,7 +29,7 @@ do_install () {
 	update-mime-database ${D}${datadir}/mime
 }
 
-do_install_virtclass-native () {
+do_install_class-native () {
 	autotools_do_install
 }
 

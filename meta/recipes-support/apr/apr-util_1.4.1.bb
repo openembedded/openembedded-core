@@ -37,10 +37,10 @@ do_configure_append() {
 		cp ${STAGING_DATADIR}/apr/apr_rules.mk ${S}/build/rules.mk
 	fi
 }
-do_configure_prepend_virtclass-native() {
+do_configure_prepend_class-native() {
 	cp ${STAGING_DATADIR_NATIVE}/apr/apr_rules.mk ${S}/build/rules.mk
 }
-do_configure_append_virtclass-native() {
+do_configure_append_class-native() {
 	sed -i "s#LIBTOOL=\$(SHELL) \$(apr_builddir)#LIBTOOL=\$(SHELL) ${STAGING_BINDIR_NATIVE}#" ${S}/build/rules.mk
 	# sometimes there isn't SHELL
 	sed -i "s#LIBTOOL=\$(apr_builddir)#LIBTOOL=${STAGING_BINDIR_NATIVE}#" ${S}/build/rules.mk

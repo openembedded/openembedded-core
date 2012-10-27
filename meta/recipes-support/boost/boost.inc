@@ -7,7 +7,7 @@ DESCRIPTION = "Free peer-reviewed portable C++ source libraries"
 HOMEPAGE = "http://www.boost.org/"
 SECTION = "libs"
 DEPENDS = "boost-native zlib"
-DEPENDS_virtclass-native = ""
+DEPENDS_class-native = ""
 LICENSE = "BSL-1.0 & MIT & Python-2.0"
 
 ARM_INSTRUCTION_SET = "arm"
@@ -73,7 +73,7 @@ FILES_${PN}-staticdev = "${libdir}/libboost_*.a"
 # "boost" is a metapackage which pulls in all boost librabries
 PACKAGES += "${PN}"
 RRECOMMENDS_${PN} += "${BOOST_PACKAGES}"
-RRECOMMENDS_${PN}_virtclass-native = ""
+RRECOMMENDS_${PN}_class-native = ""
 ALLOW_EMPTY_${PN} = "1"
 
 # to avoid GNU_HASH QA errors added LDFLAGS to ARCH; a little bit dirty but at least it works
@@ -176,15 +176,15 @@ do_install() {
 
 BBCLASSEXTEND = "native"
 
-do_configure_virtclass-native() {
+do_configure_class-native() {
 	:
 }
 
-do_boostconfig_virtclass-native() {
+do_boostconfig_class-native() {
 	:
 }
 
-do_compile_virtclass-native() {
+do_compile_class-native() {
 	set -ex
 	cd ${S}/tools/build/v2/engine
 	rm -rf bin.*
@@ -194,7 +194,7 @@ do_compile_virtclass-native() {
 # This is too terrible - the build script doesn't give any good
 # way I can see to find out where the binaries are placed, so
 # rely on only one bin.foo directory being created.
-do_install_virtclass-native () {
+do_install_class-native () {
 	set -ex
 	cd ${S}/tools/build/v2/engine
 	install -d ${D}${bindir}/

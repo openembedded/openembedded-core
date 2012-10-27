@@ -4,7 +4,7 @@ HOMEPAGE = "http://createrepo.baseurl.org/"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=18810669f13b87348459e611d31ab760"
 
-RDEPENDS_${PN}_virtclass-native += "libxml2-native rpm-native"
+RDEPENDS_${PN}_class-native += "libxml2-native rpm-native"
 
 PR = "r7"
 
@@ -28,7 +28,7 @@ do_install () {
 # Wrap the python script since the native python is
 # ${bindir}/python-native/python, and the "#! /usr/bin/env python" can't
 # find it since it is not in PATH.
-do_install_append_virtclass-native () {
+do_install_append_class-native () {
 	# Not all the python scripts should be wrapped since some of
 	# them are modules (be imported).
 	for i in ${D}${datadir}/createrepo/genpkgmetadata.py \

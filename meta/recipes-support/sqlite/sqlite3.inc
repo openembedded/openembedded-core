@@ -2,13 +2,13 @@ DESCRIPTION = "An Embeddable SQL Database Engine"
 HOMEPAGE = "http://www.sqlite.org"
 SECTION = "libs"
 DEPENDS = "readline ncurses"
-DEPENDS_virtclass-native = ""
+DEPENDS_class-native = ""
 LICENSE = "PD"
 
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-tcl --enable-shared --enable-threadsafe"
-EXTRA_OECONF_virtclass-native = "--disable-tcl --enable-shared --enable-threadsafe --disable-readline --enable-tempstore"
+EXTRA_OECONF_class-native = "--disable-tcl --enable-shared --enable-threadsafe --disable-readline --enable-tempstore"
 export config_BUILD_CC = "${BUILD_CC}"
 export config_BUILD_CFLAGS = "${BUILD_CFLAGS}"
 export config_BUILD_LIBS = "${BUILD_LDFLAGS}"

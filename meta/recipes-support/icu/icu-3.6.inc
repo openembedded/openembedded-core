@@ -11,12 +11,12 @@ BASE_SRC_URI = "ftp://ftp.software.ibm.com/software/globalization/icu/3.6/icu4c-
 SRC_URI = "${BASE_SRC_URI} \
            file://noldlibpath.patch \
            "
-SRC_URI_virtclass-native = "${BASE_SRC_URI}"
+SRC_URI_class-native = "${BASE_SRC_URI}"
 
 LICENSE = "ICU"
 LIC_FILES_CHKSUM = "file://../license.html;md5=5c94767cedb5d6987c902ac850ded2c6"
 DEPENDS = "icu-native"
-DEPENDS_virtclass-native = ""
+DEPENDS_class-native = ""
 
 S = "${WORKDIR}/icu/source"
 
