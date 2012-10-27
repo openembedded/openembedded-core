@@ -13,7 +13,7 @@ SRC_URI += "file://nocompiler.patch"
 
 DEPENDS = "util-macros-native"
 RDEPENDS_${PN} = "encodings font-util"
-RDEPENDS_${PN}_virtclass-native = "font-util-native"
+RDEPENDS_${PN}_class-native = "font-util-native"
 
 inherit allarch
 

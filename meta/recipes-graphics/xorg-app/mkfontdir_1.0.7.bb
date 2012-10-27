@@ -12,7 +12,7 @@ PE = "1"
 PR = "${INC_PR}.0"
 
 RDEPENDS_${PN} += "mkfontscale"
-RDEPENDS_${PN}_virtclass-native += "mkfontscale-native"
+RDEPENDS_${PN}_class-native += "mkfontscale-native"
 
 BBCLASSEXTEND = "native"
 

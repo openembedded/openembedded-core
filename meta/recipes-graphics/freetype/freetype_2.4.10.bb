@@ -27,7 +27,7 @@ inherit autotools pkgconfig binconfig
 
 LIBTOOL = "${S}/builds/unix/${HOST_SYS}-libtool"
 EXTRA_OEMAKE = "'LIBTOOL=${LIBTOOL}'"
-EXTRA_OEMAKE_virtclass-native = ""
+EXTRA_OEMAKE_class-native = ""
 EXTRA_OECONF = "--without-zlib --without-bzip2"
 
 do_configure() {
@@ -40,7 +40,7 @@ do_configure() {
 	oe_runconf
 }
 
-do_configure_virtclass-native() {
+do_configure_class-native() {
 	(cd builds/unix && gnu-configize) || die "failure running gnu-configize"
 	oe_runconf
 }

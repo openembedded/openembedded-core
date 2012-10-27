@@ -21,5 +21,5 @@ FILES_python-xcbgen = "${libdir}/python*"
 RDEPENDS_${PN}-dev = ""
 RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"
 
-DEPENDS_append_virtclass-native = " python-native"
+DEPENDS_append_class-native = " python-native"
 BBCLASSEXTEND = "native nativesdk"
