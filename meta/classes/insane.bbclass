@@ -24,8 +24,8 @@ PACKAGEFUNCS += " do_package_qa "
 # unsafe-references-in-binaries requires prelink-rtld from
 # prelink-native, but we don't want this DEPENDS for -native builds
 QADEPENDS = "prelink-native"
-QADEPENDS_virtclass-native = ""
-QADEPENDS_virtclass-nativesdk = ""
+QADEPENDS_class-native = ""
+QADEPENDS_class-nativesdk = ""
 
 #
 # dictionary for elf headers

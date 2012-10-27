@@ -3,8 +3,8 @@ UPDATERCPN ?= "${PN}"
 DEPENDS_append = " update-rc.d-native"
 UPDATERCD = "update-rc.d"
 UPDATERCD_virtclass-cross = ""
-UPDATERCD_virtclass-native = ""
-UPDATERCD_virtclass-nativesdk = ""
+UPDATERCD_class-native = ""
+UPDATERCD_class-nativesdk = ""
 
 RDEPENDS_${UPDATERCPN}_append = " ${UPDATERCD}"
 

@@ -4,8 +4,8 @@
 DEPENDS_append = "${USERADDDEPENDS}"
 USERADDDEPENDS = " base-passwd shadow-native shadow-sysroot shadow"
 USERADDDEPENDS_virtclass-cross = ""
-USERADDDEPENDS_virtclass-native = ""
-USERADDDEPENDS_virtclass-nativesdk = ""
+USERADDDEPENDS_class-native = ""
+USERADDDEPENDS_class-nativesdk = ""
 
 # This preinstall function can be run in four different contexts:
 #
@@ -138,18 +138,18 @@ useradd_sysroot_sstate () {
 do_install[prefuncs] += "${SYSROOTFUNC}"
 SYSROOTFUNC = "useradd_sysroot"
 SYSROOTFUNC_virtclass-cross = ""
-SYSROOTFUNC_virtclass-native = ""
-SYSROOTFUNC_virtclass-nativesdk = ""
+SYSROOTFUNC_class-native = ""
+SYSROOTFUNC_class-nativesdk = ""
 SSTATEPREINSTFUNCS += "${SYSROOTPOSTFUNC}"
 SYSROOTPOSTFUNC = "useradd_sysroot_sstate"
 SYSROOTPOSTFUNC_virtclass-cross = ""
-SYSROOTPOSTFUNC_virtclass-native = ""
-SYSROOTPOSTFUNC_virtclass-nativesdk = ""
+SYSROOTPOSTFUNC_class-native = ""
+SYSROOTPOSTFUNC_class-nativesdk = ""
 
 USERADDSETSCENEDEPS = "${MLPREFIX}base-passwd:do_populate_sysroot_setscene shadow-native:do_populate_sysroot_setscene ${MLPREFIX}shadow-sysroot:do_populate_sysroot_setscene"
 USERADDSETSCENEDEPS_virtclass-cross = ""
-USERADDSETSCENEDEPS_virtclass-native = ""
-USERADDSETSCENEDEPS_virtclass-nativesdk = ""
+USERADDSETSCENEDEPS_class-native = ""
+USERADDSETSCENEDEPS_class-nativesdk = ""
 do_package_setscene[depends] = "${USERADDSETSCENEDEPS}"
 
 # Recipe parse-time sanity checks

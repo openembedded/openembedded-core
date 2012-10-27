@@ -6,14 +6,14 @@ inherit relocatable
 EXCLUDE_FROM_WORLD = "1"
 
 PACKAGES = ""
-PACKAGES_virtclass-native = ""
+PACKAGES_class-native = ""
 PACKAGES_DYNAMIC = ""
-PACKAGES_DYNAMIC_virtclass-native = ""
+PACKAGES_DYNAMIC_class-native = ""
 PACKAGE_ARCH = "${BUILD_ARCH}"
 
 # used by cmake class
 OECMAKE_RPATH = "${libdir}"
-OECMAKE_RPATH_virtclass-native = "${libdir}"
+OECMAKE_RPATH_class-native = "${libdir}"
 
 # When this class has packaging enabled, setting 
 # RPROVIDES becomes unnecessary.
