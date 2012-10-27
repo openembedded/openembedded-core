@@ -13,7 +13,7 @@ SRC_URI += "file://intltool-nowarn-0.50.0.patch \
 # in the intltool.m4 via the remove-xml-check.patch
 NATIVEPATCHES = "file://noperlcheck.patch \
                  file://remove-xml-check.patch"
-NATIVEPATCHES_virtclass-native = "file://use-nativeperl.patch" 
+NATIVEPATCHES_class-native = "file://use-nativeperl.patch" 
 
 SRC_URI[md5sum] = "0da9847a60391ca653df35123b1f7cc0"
 SRC_URI[sha256sum] = "dccfb0b7dd35a170130e8934bfd30c29da6ae73bcd3ca4ba71317c977b2893d6"

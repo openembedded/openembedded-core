@@ -21,7 +21,7 @@ SRC_URI += "file://autoreconf-include.patch \
 SRC_URI[md5sum] = "82d05e03b93e45f5a39b828dc9c6c29b"
 SRC_URI[sha256sum] = "954bd69b391edc12d6a4a51a2dd1476543da5c6bbf05a95b59dc0dd6fd4c2969"
 
-SRC_URI_append_virtclass-native = " file://fix_path_xtra.patch"
+SRC_URI_append_class-native = " file://fix_path_xtra.patch"
 
 EXTRA_OECONF += "ac_cv_path_M4=m4"
 

@@ -9,9 +9,9 @@ SECTION = "base"
 LICENSE = "LGPL2.1"
 DEPENDS = "sqlite3"
 
-SRC_URI_append_virtclass-nativesdk = " file://symver.patch"
+SRC_URI_append_class-nativesdk = " file://symver.patch"
 
-SRC_URI_append_virtclass-native = " file://symver.patch"
+SRC_URI_append_class-native = " file://symver.patch"
 
 FILES_${PN} = "${libdir}/pseudo/lib*/libpseudo.so ${bindir}/* ${localstatedir}/pseudo ${prefix}/var/pseudo"
 FILES_${PN}-dbg += "${libdir}/pseudo/lib*/.debug"
@@ -40,7 +40,7 @@ do_compile () {
 # Two below are the same
 # If necessary compile for the alternative machine arch.  This is only 
 # necessary in a native build.
-do_compile_prepend_virtclass-native () {
+do_compile_prepend_class-native () {
 	if [ "${SITEINFO_BITS}" = "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" = "pseudo-native" -a "${NO32LIBS}" != "1" ]; then
 		# We need the 32-bit libpseudo on a 64-bit machine...
                 # ... and we really, really, hope that the native host is
@@ -58,7 +58,7 @@ do_compile_prepend_virtclass-native () {
 	fi
 }
 
-do_compile_prepend_virtclass-nativesdk () {
+do_compile_prepend_class-nativesdk () {
 	if [ "${SITEINFO_BITS}" = "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" = "pseudo-native" -a "${NO32LIBS}" != "1" ]; then
 		# We need the 32-bit libpseudo on a 64-bit machine...
                 # ... and we really, really, hope that the native host is
@@ -77,14 +77,14 @@ do_install () {
 # Two below are the same
 # If necessary install for the alternative machine arch.  This is only 
 # necessary in a native build.
-do_install_append_virtclass-native () {
+do_install_append_class-native () {
 	if [ "${SITEINFO_BITS}" = "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" = "pseudo-native" -a "${NO32LIBS}" != "1" ]; then
 		mkdir -p ${D}${prefix}/lib/pseudo/lib
 		cp lib/pseudo/lib/libpseudo.so ${D}${prefix}/lib/pseudo/lib/.
 	fi
 }
 
-do_install_append_virtclass-nativesdk () {
+do_install_append_class-nativesdk () {
 	if [ "${SITEINFO_BITS}" = "64" -a -e "/usr/include/gnu/stubs-32.h" -a "${PN}" = "pseudo-native" -a "${NO32LIBS}" != "1" ]; then
 		mkdir -p ${D}${prefix}/lib/pseudo/lib
 		cp lib/pseudo/lib/libpseudo.so ${D}${prefix}/lib/pseudo/lib/.

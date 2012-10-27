@@ -21,13 +21,13 @@ SRC_URI[md5sum] = "8fedf916f1aa2c4a31441d8f8bbc603c"
 SRC_URI[sha256sum] = "48dc3649231b75ac160d73528000ec89b6cd8d3b87cb7d0713f72ef4610442d4"
 
 LDFLAGS_prepend_libc-uclibc = " -lrt "
-DEPENDS_virtclass-native = "gettext-minimal-native"
-SRC_URI_virtclass-native = "${BASE_SRC_URI}"
+DEPENDS_class-native = "gettext-minimal-native"
+SRC_URI_class-native = "${BASE_SRC_URI}"
 
 inherit autotools gettext
 acpaths = "-I ${S}/m4"
 
-do_install_append_virtclass-native() {
+do_install_append_class-native() {
 	create_wrapper ${D}/${bindir}/bison \
 		M4=${STAGING_BINDIR_NATIVE}/m4 \
 		BISON_PKGDATADIR=${STAGING_DATADIR_NATIVE}/bison

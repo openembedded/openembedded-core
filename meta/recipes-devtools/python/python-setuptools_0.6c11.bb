@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://setup.py;beginline=23;endline=23;md5=8a314270dd7a8dbc
 SRCNAME = "setuptools"
 PR = "ml5"
 DEPENDS += "python"
-DEPENDS_virtclass-native += "python-native"
+DEPENDS_class-native += "python-native"
 
 SRC_URI = "\
   http://cheeseshop.python.org/packages/source/s/setuptools/${SRCNAME}-${PV}.tar.gz\

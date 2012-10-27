@@ -148,7 +148,7 @@ require python-${PYTHON_MAJMIN}-manifest.inc
 RPROVIDES_${PN}-core = "${PN}"
 RRECOMMENDS_${PN}-core = "${PN}-readline"
 RRECOMMENDS_${PN}-crypt = "openssl"
-RRECOMMENDS_${PN}-crypt_virtclass-nativesdk = "nativesdk-openssl"
+RRECOMMENDS_${PN}-crypt_class-nativesdk = "nativesdk-openssl"
 
 # package libpython2
 PACKAGES =+ "lib${BPN}2"

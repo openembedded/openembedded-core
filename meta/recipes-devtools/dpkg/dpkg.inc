@@ -8,9 +8,9 @@ SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.xz \
            file://ignore_extra_fields.patch"
 
 DEPENDS = "zlib bzip2 perl"
-DEPENDS_virtclass-native = "bzip2-native zlib-native virtual/update-alternatives-native gettext-native perl-native-runtime"
+DEPENDS_class-native = "bzip2-native zlib-native virtual/update-alternatives-native gettext-native perl-native-runtime"
 RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives}"
-RDEPENDS_${PN}_virtclass-native = ""
+RDEPENDS_${PN}_class-native = ""
 
 S = "${WORKDIR}/${BPN}-${PV}"
 
@@ -19,7 +19,7 @@ PARALLEL_MAKE = ""
 inherit autotools gettext perlnative
 
 export PERL_LIBDIR = "${libdir}/perl"
-PERL_LIBDIR_virtclass-native = "${libdir}/perl-native/perl"
+PERL_LIBDIR_class-native = "${libdir}/perl-native/perl"
 
 EXTRA_OECONF = "--without-static-progs \
 		--without-dselect \
@@ -58,7 +58,7 @@ do_install_append () {
 
 # Create a wrapper for the perl script to avoid the "bad interpreter"
 # error when the tmpdir is longer than 150.
-do_install_append_virtclass-native () {
+do_install_append_class-native () {
 	tmp=`find ${D}${bindir} -type f -exec grep -m 1 -l '#!/.*/perl-native/perl' {} \;`
 	for i in $tmp; do
 		create_wrapper $i ${STAGING_BINDIR_NATIVE}/perl-native/perl
@@ -66,7 +66,7 @@ do_install_append_virtclass-native () {
 }
 
 PROV = "virtual/update-alternatives"
-PROV_virtclass-native = ""
+PROV_class-native = ""
 
 PROVIDES += "${PROV}"
 

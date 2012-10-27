@@ -312,7 +312,7 @@ python populate_packages_prepend () {
 }
 
 PACKAGES_DYNAMIC += "^perl-module-.*"
-PACKAGES_DYNAMIC_virtclass-nativesdk += "^nativesdk-perl-module-.*"
+PACKAGES_DYNAMIC_class-nativesdk += "^nativesdk-perl-module-.*"
 
 RPROVIDES_perl-lib = "perl-lib"
 

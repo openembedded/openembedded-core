@@ -8,11 +8,11 @@ S = "${WORKDIR}/intltool-${PV}"
 
 DEPENDS = "libxml-parser-perl-native"
 RDEPENDS_${PN} = "gettext-dev libxml-parser-perl"
-DEPENDS_virtclass-native = "libxml-parser-perl-native"
+DEPENDS_class-native = "libxml-parser-perl-native"
 # gettext is assumed to exist on the host
-RDEPENDS_${PN}_virtclass-native = "libxml-parser-perl-native"
+RDEPENDS_${PN}_class-native = "libxml-parser-perl-native"
 RRECOMMENDS_${PN} = "perl-modules"
-RRECOMMENDS_${PN}_virtclass-native = ""
+RRECOMMENDS_${PN}_class-native = ""
 
 FILES_${PN}-dev = ""
 FILES_${PN} += "${datadir}/aclocal"
@@ -22,6 +22,6 @@ INSANE_SKIP_${PN} += "dev-deps"
 inherit autotools pkgconfig perlnative
 
 export PERL = "${bindir}/env perl"
-PERL_virtclass-native = "/usr/bin/env nativeperl"
+PERL_class-native = "/usr/bin/env nativeperl"
 
 BBCLASSEXTEND = "native"

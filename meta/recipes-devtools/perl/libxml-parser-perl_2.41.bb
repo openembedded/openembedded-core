@@ -29,7 +29,7 @@ do_compile() {
 	cpan_do_compile
 }
 
-do_compile_virtclass-native() {
+do_compile_class-native() {
 	cpan_do_compile
 }
 

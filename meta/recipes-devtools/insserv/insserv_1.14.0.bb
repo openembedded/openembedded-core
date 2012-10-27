@@ -21,7 +21,7 @@ do_install () {
 	install -m0644 ${WORKDIR}/insserv.conf ${D}${sysconfdir}/insserv.conf
 }
 
-do_install_virtclass-native () {
+do_install_class-native () {
     oe_runmake 'DESTDIR=${D}/${STAGING_DIR_NATIVE}' install
     install -m0644 ${WORKDIR}/insserv.conf ${D}${sysconfdir}/insserv.conf
 }

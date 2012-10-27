@@ -1,7 +1,7 @@
 require automake.inc
 LICENSE="GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe" 
-DEPENDS_virtclass-native = "autoconf-native"
+DEPENDS_class-native = "autoconf-native"
 
 RDEPENDS_${PN} += "\
     autoconf \
@@ -14,11 +14,11 @@ RDEPENDS_${PN} += "\
     perl-module-threads \
     perl-module-vars "
 
-RDEPENDS_${PN}_virtclass-native = "autoconf-native perl-native-runtime"
+RDEPENDS_${PN}_class-native = "autoconf-native perl-native-runtime"
 
 PATHFIXPATCH = "file://path_prog_fixes.patch"
-PATHFIXPATCH_virtclass-native = ""
-PATHFIXPATCH_virtclass-nativesdk = ""
+PATHFIXPATCH_class-native = ""
+PATHFIXPATCH_class-nativesdk = ""
 
 SRC_URI += "${PATHFIXPATCH} \
 	    file://prefer-cpio-over-pax-for-ustar-archives.patch \

@@ -46,7 +46,7 @@ SRC_URI += "\
 inherit autotools gettext
 
 EXTRA_OECONF = "--program-prefix=eu- --without-lzma"
-EXTRA_OECONF_append_virtclass-native = " --without-bzlib"
+EXTRA_OECONF_append_class-native = " --without-bzlib"
 EXTRA_OECONF_append_libc-uclibc = " --enable-uclibc"
 
 do_configure_prepend() {
@@ -60,8 +60,8 @@ do_configure_prepend() {
 # build only libelf for uclibc case
 
 EXTRA_OEMAKE_libc-uclibc = "-C libelf"
-EXTRA_OEMAKE_virtclass-native = ""
-EXTRA_OEMAKE_virtclass-nativesdk = ""
+EXTRA_OEMAKE_class-native = ""
+EXTRA_OEMAKE_class-nativesdk = ""
 
 BBCLASSEXTEND = "native nativesdk"
 

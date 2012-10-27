@@ -23,13 +23,13 @@ SRC_URI = "${BASE_SRC_URI} \
 SRC_URI[md5sum] = "b01a9691c83990b3db0ce62d1012ca67"
 SRC_URI[sha256sum] = "8addc385fa6b5be4605e6d68fbdc4c0e674c5af1dc1c95ec5420390c4b08042a"
 
-SRC_URI_virtclass-native = "${BASE_SRC_URI}"
+SRC_URI_class-native = "${BASE_SRC_URI}"
 
 S = "${WORKDIR}/tcl${PV}/unix"
 
 inherit autotools
 
-DEPENDS_virtclass-native = ""
+DEPENDS_class-native = ""
 
 EXTRA_OECONF = "--enable-threads --disable-rpath"
 
@@ -71,6 +71,6 @@ FILES_${PN}-dev += "${libdir}/tclConfig.sh"
 
 # isn't getting picked up by shlibs code
 RDEPENDS_${PN} += "tcl-lib"
-RDEPENDS_${PN}_virtclass-native = ""
+RDEPENDS_${PN}_class-native = ""
 
 BBCLASSEXTEND = "native"

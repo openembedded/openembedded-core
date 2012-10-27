@@ -20,11 +20,11 @@ SRC_URI[sha256sum] = "c8b84420d9f4869397f84cad2dabd9a475b7723d619a924a873740353e
 
 PR = "r4"
 
-SRC_URI_append_virtclass-nativesdk = "\
+SRC_URI_append_class-nativesdk = "\
     file://relocatable_sdk.patch \
     "
 
-do_configure_prepend_virtclass-nativesdk() {
+do_configure_prepend_class-nativesdk() {
 	if [ "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}" = "" ] ; then
 		# Undo the -lX11 added by linker-flags.patch
 		sed -i 's/-lX11//g' Makefile.target
@@ -45,7 +45,7 @@ do_install_append() {
 }
 # END of qemu-mips workaround
 
-do_configure_prepend_virtclass-native() {
+do_configure_prepend_class-native() {
 	# Undo the -lX11 added by linker-flags.patch, don't assume that host has libX11 installed
 	sed -i 's/-lX11//g' Makefile.target
 }

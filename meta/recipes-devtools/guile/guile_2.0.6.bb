@@ -56,7 +56,7 @@ do_compile_append() {
 	fi
 }
 
-do_install_append_virtclass-native() {
+do_install_append_class-native() {
 	install -m 0755  ${D}${bindir}/guile ${D}${bindir}/${HOST_SYS}-guile
 
 	create_wrapper ${D}/${bindir}/guile \

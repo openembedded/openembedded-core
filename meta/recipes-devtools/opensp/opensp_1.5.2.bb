@@ -22,7 +22,7 @@ inherit autotools gettext
 
 EXTRA_OECONF = "--disable-doc-build"
 
-EXTRA_OECONF_virtclass-native = "\
+EXTRA_OECONF_class-native = "\
 	--disable-doc-build \
 	--enable-default-catalog=${sysconfdir}/sgml/catalog \
 	--enable-default-search-path=${datadir}/sgml \
@@ -41,7 +41,7 @@ do_install_append() {
 	ln -sf osx sgml2xml
 }
 
-do_install_append_virtclass-native() {
+do_install_append_class-native() {
 	for util in nsgmls sgmlnorm spam spcat spent sx; do
 		create_cmdline_wrapper ${D}/${bindir}/$util \
 		    -D ${sysconfdir}/sgml

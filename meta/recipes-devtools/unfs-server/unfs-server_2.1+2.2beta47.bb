@@ -4,8 +4,8 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
 RDEPENDS_${PN} = "pseudo"
-RDEPENDS_${PN}_virtclass-native = "pseudo-native"
-RDEPENDS_${PN}_virtclass-nativesdk = "nativesdk-pseudo"
+RDEPENDS_${PN}_class-native = "pseudo-native"
+RDEPENDS_${PN}_class-nativesdk = "nativesdk-pseudo"
 BASEPV = "2.2beta47"
 PR = "r1"
 

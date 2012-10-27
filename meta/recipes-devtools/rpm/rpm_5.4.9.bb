@@ -91,13 +91,13 @@ acpaths = "-I ${S}/db/dist/aclocal -I ${S}/db/dist/aclocal_java"
 
 # Specify the default rpm macros in terms of adjustable variables
 rpm_macros = "%{_usrlibrpm}/macros:%{_usrlibrpm}/poky/macros:%{_usrlibrpm}/poky/%{_target}/macros:%{_etcrpm}/macros.*:%{_etcrpm}/macros:%{_etcrpm}/%{_target}/macros:~/.oerpmmacros"
-rpm_macros_virtclass-native = "%{_usrlibrpm}/macros:%{_usrlibrpm}/poky/macros:%{_usrlibrpm}/poky/%{_target}/macros:~/.oerpmmacros"
+rpm_macros_class-native = "%{_usrlibrpm}/macros:%{_usrlibrpm}/poky/macros:%{_usrlibrpm}/poky/%{_target}/macros:~/.oerpmmacros"
 
 # sqlite lua tcl augeas nss gcrypt neon xz xar keyutils perl selinux
 
 # Note: perl and sqlite w/o db specified does not currently work.
 #       tcl, augeas, nss, gcrypt, xar and keyutils support is untested.
-PACKAGECONFIG_virtclass-native ??= "db bzip2 zlib beecrypt openssl libelf python"
+PACKAGECONFIG_class-native ??= "db bzip2 zlib beecrypt openssl libelf python"
 PACKAGECONFIG ??= "db bzip2 zlib beecrypt openssl libelf python"
 
 PACKAGECONFIG[bzip2] = "--with-bzip2,--without-bzip2,bzip2,"
@@ -431,7 +431,7 @@ do_install_append() {
 	rm -f ${D}/usr/lib/rpm/bin/api-sanity-checker.pl
 }
 
-do_install_append_virtclass-native() {
+do_install_append_class-native() {
         create_wrapper ${D}/${bindir}/rpm \
 		RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
 		RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \

@@ -6,8 +6,8 @@ LICENSE = "GPLv3"
 HOMEPAGE = "http://www.gnu.org/software/autoconf/"
 SECTION = "devel"
 DEPENDS += "m4-native"
-DEPENDS_virtclass-native = "m4-native gnu-config-native"
-DEPENDS_virtclass-nativesdk = "nativesdk-m4 nativesdk-gnu-config"
+DEPENDS_class-native = "m4-native gnu-config-native"
+DEPENDS_class-nativesdk = "nativesdk-m4 nativesdk-gnu-config"
 RDEPENDS_${PN} = "m4 gnu-config \
 		  perl \
 		  perl-module-carp \
@@ -25,7 +25,7 @@ RDEPENDS_${PN} = "m4 gnu-config \
 		  perl-module-io-file \
 		  perl-module-posix \
 		 "
-RDEPENDS_${PN}_virtclass-native = "m4-native gnu-config-native"
+RDEPENDS_${PN}_class-native = "m4-native gnu-config-native"
 
 SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.gz \
 	   file://program_prefix.patch"
