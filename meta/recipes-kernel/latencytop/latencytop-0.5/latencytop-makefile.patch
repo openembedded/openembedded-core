@@ -1,8 +1,9 @@
-Upstream-Status: Inappropriate [configuration]
-
---- a/Makefile	2010-07-20 18:51:32.000000000 +0800
-+++ b/Makefile	2010-07-20 18:54:54.000000000 +0800
-@@ -4,7 +4,8 @@
+--- a/Makefile 2010-07-20 18:51:32.000000000 +0800
++++ b/Makefile 2010-07-20 18:54:54.000000000 +0800
+@@ -1,10 +1,8 @@
+-# FIXME: Use autoconf ?
+-HAS_GTK_GUI = 1
+-
  DESTDIR =
  SBINDIR = /usr/sbin
  XCFLAGS = -W  -g `pkg-config --cflags glib-2.0` -D_FORTIFY_SOURCE=2 -Wno-sign-compare
@@ -12,7 +13,7 @@ Upstream-Status: Inappropriate [configuration]
  
  OBJS= latencytop.o text_display.o translate.o fsync.o
  
-@@ -26,16 +27,17 @@
+@@ -26,16 +24,17 @@
  
  # We write explicity this "implicit rule"
  %.o : %.c
