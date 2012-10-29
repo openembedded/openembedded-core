@@ -8,11 +8,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=8d1a03b3c17bdd158b3cbb34813b1423"
 
 inherit autotools
 
-DEPENDS = "gtk+ util-linux"
+DEPENDS = "glib-2.0 util-linux popt"
 
 SRCREV = "0d8f8c2ea27df096269aa76b4baeab26b68b95d4"
 PV = "0.12+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://git.efficios.com/babeltrace.git;protocol=git"
 
