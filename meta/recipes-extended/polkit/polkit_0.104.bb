@@ -3,8 +3,7 @@ DESCRIPTION = "The polkit package is an application-level toolkit for defining a
 HOMEPAGE = "http://code.google.com/p/polkit/"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=155db86cdbafa7532b41f390409283eb \
-                    file://src/polkit/polkit.h;beginline=1;endline=20;md5=0a8630b0133176d0504c87a0ded39db4 \
-                    file://docs/polkit/html/license.html;md5=d85a36709a446c10f4ee123f9dda0e38"
+                    file://src/polkit/polkit.h;beginline=1;endline=20;md5=0a8630b0133176d0504c87a0ded39db4"
 
 DEPENDS = "expat glib-2.0 intltool-native gobject-introspection-stub"
 
