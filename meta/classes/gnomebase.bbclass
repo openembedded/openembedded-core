@@ -7,7 +7,7 @@ GNOME_COMPRESS_TYPE ?= "bz2"
 SECTION ?= "x11/gnome"
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${@gnome_verdir("${PV}")}/${BPN}-${PV}.tar.${GNOME_COMPRESS_TYPE};name=archive"
 
-DEPENDS += "gnome-common"
+DEPENDS += "gnome-common-native"
 
 FILES_${PN} += "${datadir}/application-registry  \
 	${datadir}/mime-info \
