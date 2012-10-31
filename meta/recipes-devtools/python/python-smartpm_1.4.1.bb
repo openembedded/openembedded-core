@@ -11,13 +11,14 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=393a5ca445f6965873eca0259a17f833"
 
 DEPENDS = "python rpm"
-PR = "r0"
+PR = "r1"
 SRCNAME = "smart"
 
 SRC_URI = "\
           http://launchpad.net/smart/trunk/${PV}/+download/${SRCNAME}-${PV}.tar.bz2 \
           file://smartpm-rpm5-nodig.patch \
           file://smart-rpm-root.patch \
+          file://smart-missingok.patch \
           "
 
 SRC_URI[md5sum] = "573ef32ba177a6b3c4bf7ef04873fcb6"

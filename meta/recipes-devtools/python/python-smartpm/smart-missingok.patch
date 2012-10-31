@@ -1,0 +1,43 @@
+backends/rpm: Identify recommended packages
+
+We identify and store recommended packages (and later throw that data away.)
+
+This is indended to be the starting work to add support for recommended
+packages to smart.
+
+Upstream-status: Inappropriate [ Code isn't finished! ]
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+Index: smart-1.4.1/smart/backends/rpm/header.py
+===================================================================
+--- smart-1.4.1.orig/smart/backends/rpm/header.py
++++ smart-1.4.1/smart/backends/rpm/header.py
+@@ -292,6 +292,7 @@ class RPMHeaderLoader(Loader):
+                     f = [0]
+                 elif type(f) != list:
+                     f = [f]
++                recdict = {}
+                 reqdict = {}
+                 for i in range(len(n)):
+                     ni = n[i]
+@@ -308,10 +309,17 @@ class RPMHeaderLoader(Loader):
+                             # RPMSENSE_SCRIPT_PREUN |
+                             # RPMSENSE_SCRIPT_POST |
+                             # RPMSENSE_SCRIPT_POSTUN == 7744
+-                            reqdict[(f[i]&7744 and PreReq or Req,
+-                                     intern(ni), r, vi)] = True
++                            if (f[i]&rpm.RPMSENSE_MISSINGOK):
++                                print "Ignoring Recommend Dependency: %s" % (ni)
++                                recdict[(f[i]&7744 and PreReq or Req,
++                                         intern(ni), r, vi)] = True
++                            else:
++                                reqdict[(f[i]&7744 and PreReq or Req,
++                                         intern(ni), r, vi)] = True
++                recargs = collapse_libc_requires(recdict.keys())
+                 reqargs = collapse_libc_requires(reqdict.keys())
+             else:
++                recargs = None
+                 reqargs = None
+ 
+             n = h[1054] # RPMTAG_CONFLICTNAME
