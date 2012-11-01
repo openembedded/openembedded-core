@@ -35,7 +35,8 @@ use File::Basename qw(basename dirname);
 
 
 my $name = "";
-my $version = "TO BE FILLED IN";
+my $predef_version = "TO BE FILLED IN";
+my $version = $predef_version;
 my $description = "";
 my $summary = "";
 my $url = "";
@@ -809,7 +810,7 @@ sub process_configure_ac
 #					$name = $1;
 				}
 			}
-			if (defined($acinit[1])) {
+			if (defined($acinit[1]) and $version eq $predef_version) {
 				my $ver = $acinit[1];
 				$ver =~ s/\[//g;
 				$ver =~ s/\]//g;
@@ -835,7 +836,7 @@ sub process_configure_ac
 #					$name = $1;
 				}
 			}
-			if (defined($acinit[1])) {
+			if (defined($acinit[1]) and $version eq $predef_version) {
 				my $ver = $acinit[1];
 				$ver =~ s/\[//g;
 				$ver =~ s/\]//g;
@@ -1536,7 +1537,7 @@ sub guess_name_from_url {
 	}
 	my $tarfile = $spliturl[0];
 	
-	if ($tarfile =~ /(.*?)\-([0-9\.\-\~]+)[-\.].*?\.tar/) {
+	if ($tarfile =~ /(.*?)\-([0-9\.\-\~]+.*?)\.tar/) {
 		$name = $1;
 		$version = $2;
                 $version =~ s/\-/\_/g;
@@ -1687,8 +1688,8 @@ sub write_bbfile
 	print BBFILE "\"\n\n";
 
 	if (@license <= 0) {
-		print "Can NOT get license from package itself.\n";
-		print "Please update the license and license file manually.\n";
+		print "Can NOT get license from package source files.\n";
+		print "Please update the LICENSE and LIC_FILES_CHKSUM manually.\n";
 	}
 
 	if (@buildreqs > 0) {
@@ -1704,7 +1705,7 @@ sub write_bbfile
 	}
 	print BBFILE "\"\n\n";
 	print BBFILE "SRC_URI[md5sum] = \"$md5sum\"\n";
-	print BBFILE "SRC_URI[sha256sum] = \"$sha256sum\"\n";
+	print BBFILE "SRC_URI[sha256sum] = \"$sha256sum\"\n\n";
 
 	if (@inherits) {
 		print BBFILE "inherit ";
@@ -1800,9 +1801,17 @@ foreach (@tgzfiles) {
 # this is a step backwards in time that is just silly.
 #
 
+my @sourcetars = <$orgdir/$outputdir/*\.tar\.bz2 $orgdir/$outputdir/*\.tar\.gz>;
+if ( length @sourcetars == 0) {
+	print "Can NOT find source tarball. Exiting...\n";
+	exit (1);
+}
+if (defined($sourcetars[0]) and $sourcetars[0] =~ ".*\.tar\.bz2") {
+	system("cd $tmpdir; tar -jxf $sourcetars[0] &>/dev/null");
+} elsif (defined($sourcetars[0]) and $sourcetars[0] =~ ".*\.tar\.gz") {
+	system("cd $tmpdir; tar -zxf $sourcetars[0] &>/dev/null");
+}
 
-system("cd $tmpdir; tar -jxf $orgdir/$outputdir/*\.tar\.bz2 &>/dev/null");
-system("cd $tmpdir; tar -zxf $orgdir/$outputdir/*\.tar\.gz &>/dev/null");
 print "Parsing content    ....\n";
 my @dirs = <$tmpdir/*>;
 foreach (@dirs) {
@@ -1827,7 +1836,7 @@ if ( -e "$dir/configure" ) {
 	$configure = "";
 }
 
-my @files = <$dir/configure.*>;
+my @files = <$dir/configure\.*>;
 
 my $findoutput = `find $dir -name "configure.ac" 2>/dev/null`;
 my @findlist = split(/\n/, $findoutput);
