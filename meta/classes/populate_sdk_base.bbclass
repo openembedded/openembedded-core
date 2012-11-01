@@ -118,6 +118,14 @@ fakeroot create_shar() {
 	cat << "EOF" > ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh
 #!/bin/bash
 
+INST_ARCH=$(uname -m | sed -e "s/i[3-6]86/ix86/" -e "s/x86[-_]64/x86_64/")
+SDKMACHINE=$(echo ${SDKMACHINE} | sed -e "s/i[5-6]86/ix86/")
+
+if [ "$INST_ARCH" != "$SDKMACHINE" ]; then
+	echo "Error: Installation machine not supported!"
+	exit -1
+fi
+
 DEFAULT_INSTALL_DIR="${SDKPATH}"
 COMPONENTS_LEN=$(echo ".${SDKPATH}" | sed "s/\// /g" | wc -w)
 
