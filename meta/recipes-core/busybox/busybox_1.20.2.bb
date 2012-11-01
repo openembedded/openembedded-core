@@ -1,5 +1,5 @@
 require busybox.inc
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://B921600.patch \

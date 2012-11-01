@@ -9,8 +9,8 @@ SULOGIN=no
 # Set to no if you want to be able to login over telnet/rlogin
 # before system startup is complete (as soon as inetd is started)
 DELAYLOGIN=no
-# Set UTC=yes if your system clock is set to UTC (GMT), and UTC=no if not.
-# UTC=yes
+# Assume that the BIOS clock is set to UTC time (recommended)
+UTC=yes
 # Set VERBOSE to "no" if you would like a more quiet bootup.
 VERBOSE=no
 # Set EDITMOTD to "no" if you don't want /etc/motd to be edited automatically
