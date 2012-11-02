@@ -6,7 +6,7 @@ DEPENDS = "gconf libxrandr virtual/libx11 gtk+ glib-2.0 gnome-doc-utils startup-
 EXTRA_OECONF = "--disable-scrollkeeper --disable-desktop-docs"
 
 do_configure_prepend () {
-	cp ${STAGING_DATADIR}/gnome-common/data/omf.make ${S}
+	cp ${STAGING_DATADIR_NATIVE}/gnome-common/data/omf.make ${S}
 }
 
 FILES_${PN} += "${datadir}/gnome-about ${datadir}/libgnome-desktop/pnp.ids"
