@@ -17,6 +17,9 @@ def oe_terminal(command, title, d):
 
     env = dict()
 
+    for v in os.environ:
+        env[v] = os.environ[v]
+
     for export in oe.data.typed_value('OE_TERMINAL_EXPORTS', d):
         value = d.getVar(export, True)
         if value is not None:
