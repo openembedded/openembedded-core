@@ -72,7 +72,7 @@ eglibcinitial_sstate_postinst() {
 	fi
 }
 
-do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_TCBOOTSTRAP}"
+do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_TCBOOTSTRAP}/"
 
 # We don't install any scripts so there is nothing to evacuate
 do_evacuate_scripts () {

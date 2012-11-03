@@ -54,7 +54,7 @@ base_sbindir = "${bindir}"
 libdir = "${exec_prefix}/lib/${CROSS_TARGET_SYS_DIR}"
 libexecdir = "${exec_prefix}/libexec/${CROSS_TARGET_SYS_DIR}"
 
-do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR_NATIVE}"
+do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR_NATIVE}/"
 
 python cross_virtclass_handler () {
     if not isinstance(e, bb.event.RecipePreFinalise):
