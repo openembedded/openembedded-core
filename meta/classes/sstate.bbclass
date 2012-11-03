@@ -111,6 +111,10 @@ def sstate_state_fromvars(d, task = None):
 
 def sstate_add(ss, source, dest, d):
     srcbase = os.path.basename(source)
+    if not source.endswith:
+         source = source + "/"
+    if not dest.endswith:
+         dest = dest + "/"
     ss['dirs'].append([srcbase, source, dest])
     return ss
 
