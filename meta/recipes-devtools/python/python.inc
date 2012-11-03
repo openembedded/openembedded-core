@@ -16,6 +16,9 @@ PYTHON_MAJMIN = "2.7"
 
 inherit autotools
 
+PYTHONLSBOPTS = "--with-wctype-functions"
+PYTHONLSBOPTS_linuxstdbase = "ac_cv_sizeof_off_t=8"
+
 EXTRA_OECONF = "\
   --with-threads \
   --with-pymalloc \
@@ -24,14 +27,5 @@ EXTRA_OECONF = "\
   --with-signal-module \
   --with-wctype-functions \
   --enable-shared \
-"
-
-EXTRA_OECONF_linuxstdbase = "\
-  --with-threads \
-  --with-pymalloc \
-  --with-cyclic-gc \
-  --without-cxx \
-  --with-signal-module \
-  --enable-shared \
-  ac_cv_sizeof_off_t=8 \
+  ${PYTHONLSBOPTS} \
 "
