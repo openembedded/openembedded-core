@@ -25,7 +25,7 @@ inherit autotools gettext gtk-doc pkgconfig
 
 S = "${WORKDIR}/glib-${PV}"
 
-CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap"
+CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap --disable-modular-tests"
 
 EXTRA_OECONF = "--enable-included-printf=no ${CORECONF}"
 EXTRA_OECONF_class-native = "${CORECONF}"
