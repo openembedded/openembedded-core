@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
 BUGTRACKER = "http://bugzilla.gnome.org"
 SECTION = "libs"
 
-DEPENDS = "glib-2.0-native zip virtual/libiconv"
+DEPENDS = "glib-2.0-native virtual/libiconv"
 DEPENDS_class-native = "pkgconfig-native gettext-native"
 DEPENDS_class-nativesdk = "nativesdk-libtool"
 PACKAGES =+ "${PN}-utils ${PN}-bash-completion ${PN}-codegen"
