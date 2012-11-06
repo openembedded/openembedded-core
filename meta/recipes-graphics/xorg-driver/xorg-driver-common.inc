@@ -5,7 +5,7 @@ SECTION = "x11/drivers"
 LICENSE = "MIT-X"
 
 PE = "2"
-INC_PR = "r18"
+INC_PR = "r19"
 
 DEPENDS = "virtual/xserver xproto randrproto util-macros"
 
@@ -17,14 +17,6 @@ FILES_${PN} += " ${libdir}/xorg/modules/drivers/*.so"
 FILES_${PN}-dbg += " ${libdir}/xorg/modules/drivers/.debug"
 
 inherit autotools pkgconfig
-
-# AC_CHECK_FILE doesn't work when cross compiling, so we create a replacement
-# macro that simply assumes the test succeeds. 
-do_configure_prepend () {
-    echo 'AC_DEFUN(CC_AC_CHECK_FILE, $2)' > configure.ac.new
-    sed 's/AC_CHECK_FILE/CC_AC_CHECK_FILE/g' configure.ac >> configure.ac.new
-    mv configure.ac.new configure.ac
-}
 
 # FIXME: We don't want to include the libtool archives (*.la) from modules
 # directory, as they serve no useful purpose. Upstream should fix Makefile.am
