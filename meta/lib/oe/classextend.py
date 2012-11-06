@@ -40,7 +40,9 @@ class ClassExtender(object):
         var = var.split()
         newvar = []
         for v in var:
-            if v.startswith("^"):
+            if v.startswith("^" + self.extname):
+                newvar.append(v)
+            elif v.startswith("^"):
                 newvar.append("^" + self.extname + "-" + v[1:])
             else:
                 newvar.append(self.extend_name(v))
