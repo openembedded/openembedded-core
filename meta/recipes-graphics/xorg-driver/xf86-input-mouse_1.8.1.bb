@@ -8,9 +8,10 @@ functions as a pointer input device, and may be used as the X server's \
 core pointer. Multiple mice are supported by multiple instances of this \
 driver."
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=237eb1d1a602d29ef2af62d8fba60f19"
+LIC_FILES_CHKSUM = "file://COPYING;md5=90ea9f90d72b6d9327dede5ffdb2a510"
 
 PR = "${INC_PR}.0"
 
-SRC_URI[md5sum] = "871c828b88e9c973f1457724b35576fb"
-SRC_URI[sha256sum] = "332b7357c18e6b9daba51c8ed48ce118e9b51fb5990b6a2a68637be62da7413b"
+SRC_URI[md5sum] = "f314c56e4ac6c8fc0cc2710892d5776e"
+SRC_URI[sha256sum] = "f5b97aac9aab8fa8b933e960631441ae23b18681c8bf3d5007c00da838f9c9c8"
+
