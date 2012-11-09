@@ -34,6 +34,21 @@ EXTRA_AUTORECONF = "--exclude=autopoint"
 
 export lt_cv_sys_lib_dlsearch_path_spec = "${libdir} ${base_libdir}"
 
+# When building tools for use at build-time it's recommended for the build
+# system to use these variables when cross-compiling.
+# (http://sources.redhat.com/autobook/autobook/autobook_270.html)
+export CPP_FOR_BUILD = "${BUILD_CPP}"
+export CPPFLAGS_FOR_BUILD = "${BUILD_CPPFLAGS}"
+
+export CC_FOR_BUILD = "${BUILD_CC}"
+export CFLAGS_FOR_BUILD = "${BUILD_CFLAGS}"
+
+export CXX_FOR_BUILD = "${BUILD_CXX}"
+export CXXFLAGS_FOR_BUILD="${BUILD_CXXFLAGS}"
+
+export LD_FOR_BUILD = "${BUILD_LD}"
+export LDFLAGS_FOR_BUILD = "${BUILD_LDFLAGS}"
+
 def autotools_set_crosscompiling(d):
     if not bb.data.inherits_class('native', d):
         return " cross_compiling=yes"
