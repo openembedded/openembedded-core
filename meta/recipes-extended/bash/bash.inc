@@ -9,7 +9,6 @@ inherit autotools gettext update-alternatives
 PARALLEL_MAKE = ""
 
 EXTRA_OECONF = "--enable-job-control"
-export CC_FOR_BUILD = "${BUILD_CC}"
 
 ALTERNATIVE_${PN} = "sh"
 ALTERNATIVE_LINK_NAME[sh] = "${base_bindir}/sh"

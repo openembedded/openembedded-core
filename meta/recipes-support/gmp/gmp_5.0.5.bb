@@ -8,7 +8,5 @@ SRC_URI_append = " file://use-includedir.patch \
                    file://gmp_fix_for_automake-1.12.patch \
                    "
 
-export CC_FOR_BUILD = "${BUILD_CC}"
-
 SRC_URI[md5sum] = "041487d25e9c230b0c42b106361055fe"
 SRC_URI[sha256sum] = "1f588aaccc41bb9aed946f9fe38521c26d8b290d003c5df807f65690f2aadec9"

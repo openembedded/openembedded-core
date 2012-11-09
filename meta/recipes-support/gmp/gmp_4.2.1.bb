@@ -16,6 +16,4 @@ SRC_URI = "${GNU_MIRROR}/gmp/${BP}.tar.bz2 \
 SRC_URI[md5sum] = "091c56e0e1cca6b09b17b69d47ef18e3"
 SRC_URI[sha256sum] = "d07ffcb37eecec35c5ec72516d10b35fdf6e6fef1fcf1dcd37e30b8cbf8bf941"
 
-export CC_FOR_BUILD = "${BUILD_CC}"
-
 inherit autotools

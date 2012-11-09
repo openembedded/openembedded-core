@@ -20,9 +20,8 @@ EXTRA_OECONF += "--disable-verbose	\
 FILES_${PN} += "${datadir}/themes ${libdir}/mutter/plugins/*.so ${datadir}/gnome/wm-properties/"
 FILES_${PN}-dbg += "${libdir}/mutter/plugins/.debug/*"
 
-export CC_FOR_BUILD = "${BUILD_CC}"
-export CFLAGS_FOR_BUILD = "${BUILD_CFLAGS} -I${STAGING_INCDIR_NATIVE}/glib-2.0 -I${STAGING_INCDIR_NATIVE}/glib-2.0/include"
-export LDFLAGS_FOR_BUILD = "${BUILD_LDFLAGS} -L${STAGING_LIBDIR_NATIVE} -lglib-2.0"
+CFLAGS_FOR_BUILD += "-I${STAGING_INCDIR_NATIVE}/glib-2.0 -I${STAGING_INCDIR_NATIVE}/glib-2.0/include"
+LDFLAGS_FOR_BUILD += "-L${STAGING_LIBDIR_NATIVE} -lglib-2.0"
 
 do_configure_prepend () {
         echo "EXTRA_DIST=" > ${S}/gnome-doc-utils.make

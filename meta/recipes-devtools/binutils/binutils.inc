@@ -76,9 +76,9 @@ export RANLIB_FOR_TARGET = "${TARGET_PREFIX}ranlib"
 export CC_FOR_HOST = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
 export CXX_FOR_HOST = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
 
+# autotools.bbclass sets the _FOR_BUILD variables, but for some reason we need
+# to unset LD_LIBRARY_PATH.
 export CC_FOR_BUILD = "LD_LIBRARY_PATH= ${BUILD_CC}"
-export CPP_FOR_BUILD = "${BUILD_CPP}"
-export CFLAGS_FOR_BUILD = "${BUILD_CFLAGS}"
 
 MULTIARCH := "${@bb.utils.contains("DISTRO_FEATURES", "multiarch", "yes", "no", d)}"
 do_configure[vardeps] += "MULTIARCH"

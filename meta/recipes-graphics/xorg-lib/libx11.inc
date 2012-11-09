@@ -30,12 +30,8 @@ EXTRA_OEMAKE += 'CWARNFLAGS=""'
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[xcms] = "--enable-xcms,--disable-xcms"
 
-# src/util/makekeys needs to be compiled natively, so tell it what compiler to
-# use.
-export CC_FOR_BUILD = "${BUILD_CC}"
-export CFLAGS_FOR_BUILD = "${BUILD_CFLAGS} -D_GNU_SOURCE"
-export CPPFLAGS_FOR_BUILD = "${BUILD_CPPFLAGS}"
-export LDFLAGS_FOR_BUILD = "${BUILD_LDFLAGS}"
+# src/util/makekeys is built natively but needs -D_GNU_SOURCE defined.
+CPPFLAGS_FOR_BUILD += "-D_GNU_SOURCE"
 
 PACKAGES =+ "${PN}-xcb"
 

@@ -350,7 +350,6 @@ do_configure() {
 	    -e 's/pkg-config uuid/pkg-config ossp-uuid/g' -i configure
 
 	export varprefix=${localstatedir}
-	export CC_FOR_BUILD="${BUILD_CC}"
 	oe_runconf
 }
 

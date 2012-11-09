@@ -8,10 +8,6 @@ DEPENDS_class-nativesdk = "nativesdk-elfutils nativesdk-sqlite3 nativesdk-gettex
 
 PR = "r0"
 
-export CC_FOR_BUILD = "${BUILD_CC}"
-export CFLAGS_FOR_BUILD = "${BUILD_CFLAGS}"
-export LDFLAGS_FOR_BUILD = "${BUILD_LDFLAGS}"
-
 EXTRA_OECONF += "--with-libelf=${STAGING_DIR_TARGET} --without-rpm \
             --without-nss --without-avahi \
             --disable-server --disable-grapher "
