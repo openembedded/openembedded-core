@@ -246,12 +246,12 @@ oe_machinstall() {
 }
 
 create_cmdline_wrapper () {
-	# Create a wrapper script
+	# Create a wrapper script where commandline options are needed
 	#
-	# These are useful to work around relocation issues, by setting environment
-	# variables which point to paths in the filesystem.
+	# These are useful to work around relocation issues, by passing extra options 
+	# to a program
 	#
-	# Usage: create_wrapper FILENAME [[VAR=VALUE]..]
+	# Usage: create_cmdline_wrapper FILENAME <extra-options>
 
 	cmd=$1
 	shift
@@ -269,7 +269,7 @@ END
 }
 
 create_wrapper () {
-	# Create a wrapper script
+	# Create a wrapper script where extra environment variables are needed
 	#
 	# These are useful to work around relocation issues, by setting environment
 	# variables which point to paths in the filesystem.
