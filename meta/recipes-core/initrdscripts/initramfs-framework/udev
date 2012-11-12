@@ -3,8 +3,8 @@
 # Licensed on MIT
 
 udev_enabled() {
-	if [ ! -e /sbin/udevd ]; then
-		debug "/sbin/udev doesn't exist"
+	if [ ! -e /lib/udev/udevd ]; then
+		debug "/lib/udev/udev doesn't exist"
 		return 1
 	fi
 
@@ -14,7 +14,7 @@ udev_enabled() {
 udev_run() {
 	mkdir -p /run
 
-	udevd --daemon > /dev/null
+	/lib/udev/udevd --daemon > /dev/null
 	udevadm trigger --action=add
 	udevadm settle
 
