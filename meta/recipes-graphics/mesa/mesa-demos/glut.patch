@@ -1,0 +1,46 @@
+Correctly implement with AC_WITH(glut) so that --without-glut works.
+
+Upstream-Status: Submitted [https://bugs.freedesktop.org/show_bug.cgi?id=57013]
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+Index: mesa-demos-8.0.1/configure.ac
+===================================================================
+--- mesa-demos-8.0.1.orig/configure.ac	2010-07-13 19:52:41.000000000 +0100
++++ mesa-demos-8.0.1/configure.ac	2012-11-12 12:49:54.940054571 +0000
+@@ -65,21 +65,25 @@
+ DEMO_LIBS="$DEMO_LIBS $GL_LIBS"
+ 
+ dnl Check for GLUT
+-GLUT_CFLAGS=""
+-GLUT_LIBS=-lglut
+-glut_enabled=yes
++glut_enabled=no
+ AC_ARG_WITH([glut],
+ 	[AS_HELP_STRING([--with-glut=DIR],
+ 			[glut install directory])],
+ 	[GLUT_CFLAGS="-I$withval/include"
+-	 GLUT_LIBS="-L$withval/lib -lglut"])
+-AC_CHECK_HEADER([GL/glut.h],
+-		[],
+-		[glut_enabled=no])
+-AC_CHECK_LIB([glut],
+-		[glutInit],
+-		[],
+-		[glut_enabled=no])
++	 GLUT_LIBS="-L$withval/lib -lglut"],
++	[GLUT_CFLAGS=""
++	 GLUT_LIBS="-lglut"]
++        )
++AS_IF([test "x$with_glut" != xno],
++      [AC_CHECK_HEADER([GL/glut.h],
++                       [],
++                       [glut_enabled=no])
++       AC_CHECK_LIB([glut],
++                    [glutInit],
++                    [],
++                    [glut_enabled=no])
++       glut_enabled=yes
++])
+ 
+ GLEW_CFLAGS=""
+ GLEW_LIBS="-lGLEW"
