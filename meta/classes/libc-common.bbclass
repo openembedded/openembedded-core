@@ -4,6 +4,7 @@ do_install() {
 		h=`echo $r|sed -e's,\.x$,.h,'`
 		install -m 0644 ${S}/sunrpc/rpcsvc/$h ${D}/${includedir}/rpcsvc/
 	done
+	install -d ${D}/${sysconfdir}/ 
 	install -m 0644 ${WORKDIR}/etc/ld.so.conf ${D}/${sysconfdir}/
 	install -d ${D}${localedir}
 	make -f ${WORKDIR}/generate-supported.mk IN="${S}/localedata/SUPPORTED" OUT="${WORKDIR}/SUPPORTED"
