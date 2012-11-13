@@ -4,11 +4,11 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b6f3400dc1a01cebafe8a52b3f344135"
 
 PV = "0.33"
-PR = "r1"
+PR = "r2"
 
 inherit native
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/kernel/people/jsipek/guilt/guilt-${PV}.tar.gz\
+SRC_URI = "http://ftp.de.debian.org/debian/pool/main/g/guilt/guilt_${PV}.orig.tar.gz\
            file://guilt-push.patch \
 	   file://guilt-pop.patch \
 	   file://guilt.patch \
