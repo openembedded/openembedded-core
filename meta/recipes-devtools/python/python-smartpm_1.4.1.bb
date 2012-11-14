@@ -18,7 +18,7 @@ SRC_URI = "\
           http://launchpad.net/smart/trunk/${PV}/+download/${SRCNAME}-${PV}.tar.bz2 \
           file://smartpm-rpm5-nodig.patch \
           file://smart-rpm-root.patch \
-          file://smart-missingok.patch \
+          file://smart-recommends.patch \
           "
 
 SRC_URI[md5sum] = "573ef32ba177a6b3c4bf7ef04873fcb6"

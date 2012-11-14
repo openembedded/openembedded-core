@@ -1,0 +1,1362 @@
+Handle recommended packages in core and rpm backends
+
+Identify and store recommended packages in the cache, add a query option
+to read them and ignore them if they are not present when installing.
+
+Initial identification code from Mark Hatle <mark.hatle@windriver.com>.
+
+Upstream-Status: Pending
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+diff --git a/smart/backends/rpm/base.py b/smart/backends/rpm/base.py
+index 0489e11..b9e9cb2 100644
+--- a/smart/backends/rpm/base.py
++++ b/smart/backends/rpm/base.py
+@@ -198,6 +198,29 @@ class RPMPackage(Package):
+                         break
+                 else:
+                     return False
++        srecs = fk(self.recommends)
++        orecs = fk(other.recommends)
++        if srecs != orecs:
++            for srec in srecs:
++                if srec.name[0] == "/" or srec in orecs:
++                    continue
++                for orec in orecs:
++                    if (srec.name == orec.name and
++                        srec.relation == orec.relation and
++                        checkver(srec.version, orec.version)):
++                        break
++                else:
++                    return False
++            for orec in orecs:
++                if orec.name[0] == "/" or orec in srecs:
++                    continue
++                for srec in srecs:
++                    if (srec.name == orec.name and
++                        srec.relation == orec.relation and
++                        checkver(srec.version, orec.version)):
++                        break
++                else:
++                    return False
+         return True
+ 
+     def coexists(self, other):
+diff --git a/smart/backends/rpm/header.py b/smart/backends/rpm/header.py
+index 31786cc..4880f43 100644
+--- a/smart/backends/rpm/header.py
++++ b/smart/backends/rpm/header.py
+@@ -292,6 +292,7 @@ class RPMHeaderLoader(Loader):
+                     f = [0]
+                 elif type(f) != list:
+                     f = [f]
++                recdict = {}
+                 reqdict = {}
+                 for i in range(len(n)):
+                     ni = n[i]
+@@ -308,10 +309,16 @@ class RPMHeaderLoader(Loader):
+                             # RPMSENSE_SCRIPT_PREUN |
+                             # RPMSENSE_SCRIPT_POST |
+                             # RPMSENSE_SCRIPT_POSTUN == 7744
+-                            reqdict[(f[i]&7744 and PreReq or Req,
+-                                     intern(ni), r, vi)] = True
++                            if (f[i]&rpm.RPMSENSE_MISSINGOK):
++                                recdict[(f[i]&7744 and PreReq or Req,
++                                         intern(ni), r, vi)] = True
++                            else:
++                                reqdict[(f[i]&7744 and PreReq or Req,
++                                         intern(ni), r, vi)] = True
++                recargs = collapse_libc_requires(recdict.keys())
+                 reqargs = collapse_libc_requires(reqdict.keys())
+             else:
++                recargs = None
+                 reqargs = None
+ 
+             n = h[1054] # RPMTAG_CONFLICTNAME
+@@ -365,7 +372,7 @@ class RPMHeaderLoader(Loader):
+                 versionarch = "%s@%s" % (distversion, arch)
+ 
+             pkg = self.buildPackage((Pkg, name, versionarch),
+-                                    prvargs, reqargs, upgargs, cnfargs)
++                                    prvargs, reqargs, upgargs, cnfargs, recargs)
+             pkg.loaders[self] = offset
+             self._offsets[offset] = pkg
+             self._groups[pkg] = intern(h[rpm.RPMTAG_GROUP])
+@@ -583,8 +590,8 @@ class URPMILoader(RPMHeaderListLoader):
+     def setErrataFlags(self, flagdict):
+         self._flagdict = flagdict
+     
+-    def buildPackage(self, pkgargs, prvargs, reqargs, upgargs, cnfargs):
+-        pkg = Loader.buildPackage(self, pkgargs, prvargs, reqargs, upgargs, cnfargs)
++    def buildPackage(self, pkgargs, prvargs, reqargs, upgargs, cnfargs, recargs):
++        pkg = Loader.buildPackage(self, pkgargs, prvargs, reqargs, upgargs, cnfargs, recargs)
+         name = pkgargs[1]
+         if hasattr(self, '_flagdict') and self._flagdict and name in self._flagdict:
+             if sysconf.getReadOnly():
+diff --git a/smart/backends/rpm/metadata.py b/smart/backends/rpm/metadata.py
+index 2c54f39..568fe06 100644
+--- a/smart/backends/rpm/metadata.py
++++ b/smart/backends/rpm/metadata.py
+@@ -165,6 +165,7 @@ class RPMMetaDataLoader(Loader):
+         distepoch = None
+         info = {}
+         reqdict = {}
++        recdict = {}
+         prvdict = {}
+         upgdict = {}
+         cnfdict = {}
+@@ -287,12 +288,16 @@ class RPMMetaDataLoader(Loader):
+ 
+                     lasttag = queue[-1].tag
+                     if lasttag == REQUIRES:
+-                        if elem.get("pre") == "1":
+-                            reqdict[(RPMPreRequires,
+-                                     ename, erelation, eversion)] = True
++                        if elem.get("missingok") == "1":
++                            recdict[(RPMRequires,
++                                    ename, erelation, eversion)] = True
+                         else:
+-                            reqdict[(RPMRequires,
+-                                     ename, erelation, eversion)] = True
++                            if elem.get("pre") == "1":
++                                reqdict[(RPMPreRequires,
++                                        ename, erelation, eversion)] = True
++                            else:
++                                reqdict[(RPMRequires,
++                                        ename, erelation, eversion)] = True
+ 
+                     elif lasttag == PROVIDES:
+                         if ename[0] == "/":
+@@ -328,6 +333,12 @@ class RPMMetaDataLoader(Loader):
+                                        (RPMProvides, x[1], x[3]) in prvdict or
+                                        system_provides.match(*x[:3]))]
+                     reqargs = collapse_libc_requires(reqargs)
++
++                    recargs = [x for x in recdict
++                               if not ((x[2] is None or "=" in x[2]) and
++                                       (RPMProvides, x[1], x[3]) in prvdict or
++                                       system_provides.match(*x[:3]))]
++
+                     prvargs = prvdict.keys()
+                     cnfargs = cnfdict.keys()
+                     upgargs = upgdict.keys()
+@@ -339,7 +350,7 @@ class RPMMetaDataLoader(Loader):
+                         versionarch = "%s@%s" % (distversion, arch)
+ 
+                     pkg = self.buildPackage((RPMPackage, name, versionarch),
+-                                            prvargs, reqargs, upgargs, cnfargs)
++                                            prvargs, reqargs, upgargs, cnfargs, recargs)
+                     pkg.loaders[self] = info
+ 
+                     # Store the provided files for future usage.
+@@ -362,6 +373,7 @@ class RPMMetaDataLoader(Loader):
+                     distepoch = None
+                     pkgid = None
+                     reqdict.clear()
++                    recdict.clear()
+                     prvdict.clear()
+                     upgdict.clear()
+                     cnfdict.clear()
+diff --git a/smart/cache.py b/smart/cache.py
+index b829825..cec8bb3 100644
+--- a/smart/cache.py
++++ b/smart/cache.py
+@@ -32,7 +32,8 @@ class Package(object):
+         self.name = name
+         self.version = version
+         self.provides = ()
+-        self.requires = ()
++        self.requires = []
++        self.recommends = []
+         self.upgrades = ()
+         self.conflicts = ()
+         self.installed = False
+@@ -55,7 +56,9 @@ class Package(object):
+             fk([x for x in self.provides if x.name[0] != "/"]) !=
+             fk([x for x in other.provides if x.name[0] != "/"]) or
+             fk([x for x in self.requires if x.name[0] != "/"]) !=
+-            fk([x for x in other.requires if x.name[0] != "/"])):
++            fk([x for x in other.requires if x.name[0] != "/"]) or
++            fk([x for x in self.recommends if x.name[0] != "/"]) !=
++            fk([x for x in other.recommends if x.name[0] != "/"])):
+             return False
+         return True
+ 
+@@ -110,6 +113,7 @@ class Package(object):
+                 self.version,
+                 self.provides,
+                 self.requires,
++                self.recommends,
+                 self.upgrades,
+                 self.conflicts,
+                 self.installed,
+@@ -122,6 +126,7 @@ class Package(object):
+          self.version,
+          self.provides,
+          self.requires,
++         self.recommends,
+          self.upgrades,
+          self.conflicts,
+          self.installed,
+@@ -274,6 +279,7 @@ class Provides(object):
+         self.version = version
+         self.packages = []
+         self.requiredby = ()
++        self.recommendedby = ()
+         self.upgradedby = ()
+         self.conflictedby = ()
+ 
+@@ -401,7 +407,7 @@ class Loader(object):
+     def loadFileProvides(self, fndict):
+         pass
+ 
+-    def buildPackage(self, pkgargs, prvargs, reqargs, upgargs, cnfargs):
++    def buildPackage(self, pkgargs, prvargs, reqargs, upgargs, cnfargs, recargs = None):
+         cache = self._cache
+         pkg = pkgargs[0](*pkgargs[1:])
+         relpkgs = []
+@@ -427,6 +433,17 @@ class Loader(object):
+                 relpkgs.append(req.packages)
+                 pkg.requires.append(req)
+ 
++        if recargs:
++            pkg.recommends = []
++            for args in recargs:
++                rec = cache._objmap.get(args)
++                if not rec:
++                    rec = args[0](*args[1:])
++                    cache._objmap[args] = rec
++                    cache._recommends.append(rec)
++                relpkgs.append(rec.packages)
++                pkg.recommends.append(rec)
++
+         if upgargs:
+             pkg.upgrades = []
+             for args in upgargs:
+@@ -572,6 +589,7 @@ class Cache(object):
+         self._packages = []
+         self._provides = []
+         self._requires = []
++        self._recommends = []
+         self._upgrades = []
+         self._conflicts = []
+         self._objmap = {}
+@@ -581,6 +599,8 @@ class Cache(object):
+             del prv.packages[:]
+             if prv.requiredby:
+                 del prv.requiredby[:]
++            if prv.recommendedby:
++                del prv.recommendedby[:]
+             if prv.upgradedby:
+                 del prv.upgradedby[:]
+             if prv.conflictedby:
+@@ -589,6 +609,10 @@ class Cache(object):
+             del req.packages[:]
+             if req.providedby:
+                 del req.providedby[:]
++        for rec in self._recommends:
++            del rec.packages[:]
++            if rec.providedby:
++                del rec.providedby[:]
+         for upg in self._upgrades:
+             del upg.packages[:]
+             if upg.providedby:
+@@ -600,6 +624,7 @@ class Cache(object):
+         del self._packages[:]
+         del self._provides[:]
+         del self._requires[:]
++        del self._recommends[:]
+         del self._upgrades[:]
+         del self._conflicts[:]
+         self._objmap.clear()
+@@ -621,6 +646,7 @@ class Cache(object):
+         packages = {}
+         provides = {}
+         requires = {}
++        recommends = {}
+         upgrades = {}
+         conflicts = {}
+         objmap = self._objmap
+@@ -646,6 +672,11 @@ class Cache(object):
+                         if req not in requires:
+                             objmap[req.getInitArgs()] = req
+                             requires[req] = True
++                    for rec in pkg.recommends[:]:
++                        rec.packages.append(pkg)
++                        if rec not in recommends:
++                            objmap[rec.getInitArgs()] = rec
++                            recommends[rec] = True
+                     for upg in pkg.upgrades:
+                         upg.packages.append(pkg)
+                         if upg not in upgrades:
+@@ -659,6 +690,7 @@ class Cache(object):
+         self._packages[:] = packages.keys()
+         self._provides[:] = provides.keys()
+         self._requires[:] = requires.keys()
++        self._recommends[:] = recommends.keys()
+         self._upgrades[:] = upgrades.keys()
+         self._conflicts[:] = conflicts.keys()
+ 
+@@ -710,6 +742,14 @@ class Cache(object):
+                     lst.append(req)
+                 else:
+                     reqnames[name] = [req]
++        recnames = {}
++        for rec in self._recommends:
++            for name in rec.getMatchNames():
++                lst = recnames.get(name)
++                if lst:
++                    lst.append(rec)
++                else:
++                    recnames[name] = [rec]
+         upgnames = {}
+         for upg in self._upgrades:
+             for name in upg.getMatchNames():
+@@ -739,6 +779,18 @@ class Cache(object):
+                             prv.requiredby.append(req)
+                         else:
+                             prv.requiredby = [req]
++            lst = recnames.get(prv.name)
++            if lst:
++                for rec in lst:
++                    if rec.matches(prv):
++                        if rec.providedby:
++                            rec.providedby.append(prv)
++                        else:
++                            rec.providedby = [prv]
++                        if prv.recommendedby:
++                            prv.recommendedby.append(rec)
++                        else:
++                            prv.recommendedby = [rec]
+             lst = upgnames.get(prv.name)
+             if lst:
+                 for upg in lst:
+@@ -782,6 +834,12 @@ class Cache(object):
+         else:
+             return [x for x in self._requires if x.name == name]
+ 
++    def getRecommends(self, name=None):
++        if not name:
++            return self._recommends
++        else:
++            return [x for x in self._recommends if x.name == name]
++
+     def getUpgrades(self, name=None):
+         if not name:
+             return self._upgrades
+@@ -807,6 +865,12 @@ class Cache(object):
+                 for req in self._requires:
+                     if prvname in req.getMatchNames() and req.matches(prv):
+                         searcher.addResult(req)
++        if searcher.recommends:
++            for prv in searcher.recommends:
++                prvname = prv.name
++                for req in self._recommends:
++                    if prvname in req.getMatchNames() and req.matches(prv):
++                        searcher.addResult(req)
+         if searcher.upgrades:
+             for prv in searcher.upgrades:
+                 prvname = prv.name
+@@ -839,6 +903,7 @@ class Cache(object):
+         self._packages = state["_packages"]
+         provides = {}
+         requires = {}
++        recommends = {}
+         upgrades = {}
+         conflicts = {}
+         for pkg in self._packages:
+@@ -848,6 +913,9 @@ class Cache(object):
+             for req in pkg.requires:
+                 req.packages.append(pkg)
+                 requires[req] = True
++            for rec in pkg.recommends:
++                rec.packages.append(pkg)
++                recommends[rec] = True
+             for upg in pkg.upgrades:
+                 upg.packages.append(pkg)
+                 upgrades[upg] = True
+@@ -856,6 +924,7 @@ class Cache(object):
+                 conflicts[cnf] = True
+         self._provides = provides.keys()
+         self._requires = requires.keys()
++        self._recommends = recommends.keys()
+         self._upgrades = upgrades.keys()
+         self._conflicts = conflicts.keys()
+         self._objmap = {}
+diff --git a/smart/ccache.c b/smart/ccache.c
+index 7541e26..7193185 100644
+--- a/smart/ccache.c
++++ b/smart/ccache.c
+@@ -82,6 +82,7 @@ typedef struct {
+     PyObject *version;
+     PyObject *provides;
+     PyObject *requires;
++    PyObject *recommends;
+     PyObject *upgrades;
+     PyObject *conflicts;
+     PyObject *installed;
+@@ -96,6 +97,7 @@ typedef struct {
+     PyObject *version;
+     PyObject *packages;
+     PyObject *requiredby;
++    PyObject *recommendedby;
+     PyObject *upgradedby;
+     PyObject *conflictedby;
+ } ProvidesObject;
+@@ -123,6 +125,7 @@ typedef struct {
+     PyObject *_packages;
+     PyObject *_provides;
+     PyObject *_requires;
++    PyObject *_recommends;
+     PyObject *_upgrades;
+     PyObject *_conflicts;
+     PyObject *_objmap;
+@@ -211,7 +214,8 @@ Package_init(PackageObject *self, PyObject *args)
+     Py_INCREF(self->name);
+     Py_INCREF(self->version);
+     self->provides = PyTuple_New(0);
+-    self->requires = PyTuple_New(0);
++    self->requires = PyList_New(0);
++    self->recommends = PyList_New(0);
+     self->upgrades = PyTuple_New(0);
+     self->conflicts = PyTuple_New(0);
+     Py_INCREF(Py_False);
+@@ -228,6 +232,7 @@ Package_traverse(PackageObject *self, visitproc visit, void *arg)
+ {
+     Py_VISIT(self->provides);
+     Py_VISIT(self->requires);
++    Py_VISIT(self->recommends);
+     Py_VISIT(self->upgrades);
+     Py_VISIT(self->conflicts);
+     Py_VISIT(self->loaders);
+@@ -239,6 +244,7 @@ Package_clear(PackageObject *self)
+ {
+     Py_CLEAR(self->provides);
+     Py_CLEAR(self->requires);
++    Py_CLEAR(self->recommends);
+     Py_CLEAR(self->upgrades);
+     Py_CLEAR(self->conflicts);
+     Py_CLEAR(self->loaders);
+@@ -252,6 +258,7 @@ Package_dealloc(PackageObject *self)
+     Py_XDECREF(self->version);
+     Py_XDECREF(self->provides);
+     Py_XDECREF(self->requires);
++    Py_XDECREF(self->recommends);
+     Py_XDECREF(self->upgrades);
+     Py_XDECREF(self->conflicts);
+     Py_XDECREF(self->installed);
+@@ -453,6 +460,46 @@ Package_equals(PackageObject *self, PackageObject *other)
+         }
+     }
+ 
++    ilen = 0;
++    jlen = 0;
++    for (i = 0; i != PyList_GET_SIZE(self->recommends); i++) {
++        PyObject *item = PyList_GET_ITEM(self->recommends, i);
++        if (!PyObject_IsInstance(item, (PyObject *)&Depends_Type)) {
++            PyErr_SetString(PyExc_TypeError, "Depends instance expected");
++            return NULL;
++        }
++        if (STR(((DependsObject *)item)->name)[0] != '/')
++            ilen += 1;
++    }
++    for (j = 0; j != PyList_GET_SIZE(other->recommends); j++) {
++        PyObject *item = PyList_GET_ITEM(other->recommends, j);
++        if (!PyObject_IsInstance(item, (PyObject *)&Depends_Type)) {
++            PyErr_SetString(PyExc_TypeError, "Depends instance expected");
++            return NULL;
++        }
++        if (STR(((DependsObject *)item)->name)[0] != '/')
++            jlen += 1;
++    }
++    if (ilen != jlen) {
++        ret = Py_False;
++        goto exit;
++    }
++
++    ilen = PyList_GET_SIZE(self->recommends);
++    jlen = PyList_GET_SIZE(other->recommends);
++    for (i = 0; i != ilen; i++) {
++        PyObject *item = PyList_GET_ITEM(self->recommends, i);
++        if (STR(((DependsObject *)item)->name)[0] != '/') {
++            for (j = 0; j != jlen; j++)
++                if (item == PyList_GET_ITEM(other->recommends, j))
++                    break;
++            if (j == jlen) {
++                ret = Py_False;
++                goto exit;
++            }
++        }
++    }
++
+ exit:
+     Py_INCREF(ret);
+     return ret;
+@@ -606,13 +653,14 @@ Package_getPriority(PackageObject *self, PyObject *args)
+ static PyObject *
+ Package__getstate__(PackageObject *self, PyObject *args)
+ {
+-    PyObject *state = PyTuple_New(10);
++    PyObject *state = PyTuple_New(11);
+     if (!state) return NULL;
+ 
+     Py_INCREF(self->name);
+     Py_INCREF(self->version);
+     Py_INCREF(self->provides);
+     Py_INCREF(self->requires);
++    Py_INCREF(self->recommends);
+     Py_INCREF(self->upgrades);
+     Py_INCREF(self->conflicts);
+     Py_INCREF(self->installed);
+@@ -620,16 +668,17 @@ Package__getstate__(PackageObject *self, PyObject *args)
+     Py_INCREF(self->priority);
+     Py_INCREF(self->loaders);
+ 
+-    PyTuple_SET_ITEM(state, 0, self->name);
+-    PyTuple_SET_ITEM(state, 1, self->version);
+-    PyTuple_SET_ITEM(state, 2, self->provides);
+-    PyTuple_SET_ITEM(state, 3, self->requires);
+-    PyTuple_SET_ITEM(state, 4, self->upgrades);
+-    PyTuple_SET_ITEM(state, 5, self->conflicts);
+-    PyTuple_SET_ITEM(state, 6, self->installed);
+-    PyTuple_SET_ITEM(state, 7, self->essential);
+-    PyTuple_SET_ITEM(state, 8, self->priority);
+-    PyTuple_SET_ITEM(state, 9, self->loaders);
++    PyTuple_SET_ITEM(state,  0, self->name);
++    PyTuple_SET_ITEM(state,  1, self->version);
++    PyTuple_SET_ITEM(state,  2, self->provides);
++    PyTuple_SET_ITEM(state,  3, self->requires);
++    PyTuple_SET_ITEM(state,  4, self->recommends);
++    PyTuple_SET_ITEM(state,  5, self->upgrades);
++    PyTuple_SET_ITEM(state,  6, self->conflicts);
++    PyTuple_SET_ITEM(state,  7, self->installed);
++    PyTuple_SET_ITEM(state,  8, self->essential);
++    PyTuple_SET_ITEM(state,  9, self->priority);
++    PyTuple_SET_ITEM(state, 10, self->loaders);
+ 
+     return state;
+ }
+@@ -637,7 +686,7 @@ Package__getstate__(PackageObject *self, PyObject *args)
+ static PyObject *
+ Package__setstate__(PackageObject *self, PyObject *state)
+ {
+-    if (!PyTuple_Check(state) || PyTuple_GET_SIZE(state) != 10) {
++    if (!PyTuple_Check(state) || PyTuple_GET_SIZE(state) != 11) {
+         PyErr_SetString(StateVersionError, "");
+         return NULL;
+     }
+@@ -645,18 +694,20 @@ Package__setstate__(PackageObject *self, PyObject *state)
+     self->version = PyTuple_GET_ITEM(state, 1);
+     self->provides = PyTuple_GET_ITEM(state, 2);
+     self->requires = PyTuple_GET_ITEM(state, 3);
+-    self->upgrades = PyTuple_GET_ITEM(state, 4);
+-    self->conflicts = PyTuple_GET_ITEM(state, 5);
+-    self->installed = PyTuple_GET_ITEM(state, 6);
+-    self->essential = PyTuple_GET_ITEM(state, 7);
+-    self->priority = PyTuple_GET_ITEM(state, 8);
+-    self->loaders = PyTuple_GET_ITEM(state, 9);
++    self->recommends = PyTuple_GET_ITEM(state, 4);
++    self->upgrades = PyTuple_GET_ITEM(state, 5);
++    self->conflicts = PyTuple_GET_ITEM(state, 6);
++    self->installed = PyTuple_GET_ITEM(state, 7);
++    self->essential = PyTuple_GET_ITEM(state, 8);
++    self->priority = PyTuple_GET_ITEM(state, 9);
++    self->loaders = PyTuple_GET_ITEM(state, 10);
+ 
+ 
+     Py_INCREF(self->name);
+     Py_INCREF(self->version);
+     Py_INCREF(self->provides);
+     Py_INCREF(self->requires);
++    Py_INCREF(self->recommends);
+     Py_INCREF(self->upgrades);
+     Py_INCREF(self->conflicts);
+     Py_INCREF(self->installed);
+@@ -686,6 +737,7 @@ static PyMemberDef Package_members[] = {
+     {"version", T_OBJECT, OFF(version), 0, 0},
+     {"provides", T_OBJECT, OFF(provides), 0, 0},
+     {"requires", T_OBJECT, OFF(requires), 0, 0},
++    {"recommends", T_OBJECT, OFF(recommends), 0, 0},
+     {"upgrades", T_OBJECT, OFF(upgrades), 0, 0},
+     {"conflicts", T_OBJECT, OFF(conflicts), 0, 0},
+     {"installed", T_OBJECT, OFF(installed), 0, 0},
+@@ -750,6 +802,7 @@ Provides_init(ProvidesObject *self, PyObject *args)
+     Py_INCREF(self->version);
+     self->packages = PyList_New(0);
+     self->requiredby = PyTuple_New(0);
++    self->recommendedby = PyTuple_New(0);
+     self->upgradedby = PyTuple_New(0);
+     self->conflictedby = PyTuple_New(0);
+     return 0;
+@@ -760,6 +813,7 @@ Provides_traverse(ProvidesObject *self, visitproc visit, void *arg)
+ {
+     Py_VISIT(self->packages);
+     Py_VISIT(self->requiredby);
++    Py_VISIT(self->recommendedby);
+     Py_VISIT(self->upgradedby);
+     Py_VISIT(self->conflictedby);
+     return 0;
+@@ -770,6 +824,7 @@ Provides_clear(ProvidesObject *self)
+ {
+     Py_CLEAR(self->packages);
+     Py_CLEAR(self->requiredby);
++    Py_CLEAR(self->recommendedby);
+     Py_CLEAR(self->upgradedby);
+     Py_CLEAR(self->conflictedby);
+     return 0;
+@@ -782,6 +837,7 @@ Provides_dealloc(ProvidesObject *self)
+     Py_XDECREF(self->version);
+     Py_XDECREF(self->packages);
+     Py_XDECREF(self->requiredby);
++    Py_XDECREF(self->recommendedby);
+     Py_XDECREF(self->upgradedby);
+     Py_XDECREF(self->conflictedby);
+     self->ob_type->tp_free((PyObject *)self);
+@@ -960,6 +1016,7 @@ static PyMemberDef Provides_members[] = {
+     {"version", T_OBJECT, OFF(version), 0, 0},
+     {"packages", T_OBJECT, OFF(packages), 0, 0},
+     {"requiredby", T_OBJECT, OFF(requiredby), 0, 0},
++    {"recommendedby", T_OBJECT, OFF(recommendedby), 0, 0},
+     {"upgradedby", T_OBJECT, OFF(upgradedby), 0, 0},
+     {"conflictedby", T_OBJECT, OFF(conflictedby), 0, 0},
+     {NULL}
+@@ -1555,6 +1612,7 @@ Loader_buildPackage(LoaderObject *self, PyObject *args)
+     PyObject *reqargs;
+     PyObject *upgargs;
+     PyObject *cnfargs;
++    PyObject *recargs = NULL;
+     PyObject *callargs;
+     
+     PyObject *pkg;
+@@ -1574,9 +1632,10 @@ Loader_buildPackage(LoaderObject *self, PyObject *args)
+ 
+     cache = (CacheObject *)self->_cache;
+ 
+-    if (!PyArg_ParseTuple(args, "O!O&O&O&O&", &PyTuple_Type, &pkgargs,
++    if (!PyArg_ParseTuple(args, "O!O&O&O&O&|O&", &PyTuple_Type, &pkgargs,
+                           mylist, &prvargs, mylist, &reqargs,
+-                          mylist, &upgargs, mylist, &cnfargs))
++                          mylist, &upgargs, mylist, &cnfargs,
++                          mylist, &recargs))
+         return NULL;
+ 
+     if (PyTuple_GET_SIZE(pkgargs) < 2) {
+@@ -1701,6 +1760,59 @@ Loader_buildPackage(LoaderObject *self, PyObject *args)
+         }
+     }
+ 
++    /* if recargs: */
++    if (recargs) {
++        int i = 0;
++        int len = PyList_GET_SIZE(recargs);
++        /* pkg.recommends = [] */
++        Py_DECREF(pkgobj->recommends);
++        pkgobj->recommends = PyList_New(len);
++        /* for args in recargs: */
++        for (; i != len; i++) {
++            PyObject *args = PyList_GET_ITEM(recargs, i);
++            DependsObject *recobj;
++            PyObject *rec;
++            
++            if (!PyTuple_Check(args)) {
++                PyErr_SetString(PyExc_TypeError,
++                                "Item in recargs is not a tuple");
++                return NULL;
++            }
++
++            /* rec = cache._objmap.get(args) */
++            rec = PyDict_GetItem(cache->_objmap, args);
++            recobj = (DependsObject *)rec;
++
++            /* if not rec: */
++            if (!rec) {
++                if (!PyTuple_Check(args) || PyTuple_GET_SIZE(args) < 2) {
++                    PyErr_SetString(PyExc_ValueError, "Invalid recargs tuple");
++                    return NULL;
++                }
++                /* rec = args[0](*args[1:]) */
++                callargs = PyTuple_GetSlice(args, 1, PyTuple_GET_SIZE(args));
++                rec = PyObject_CallObject(PyTuple_GET_ITEM(args, 0), callargs);
++                Py_DECREF(callargs);
++                if (!rec) return NULL;
++                recobj = (DependsObject *)rec;
++
++                /* cache._objmap[args] = rec */
++                PyDict_SetItem(cache->_objmap, args, rec);
++                Py_DECREF(rec);
++
++                /* cache._recommends.append(rec) */
++                PyList_Append(cache->_recommends, rec);
++            }
++
++            /* relpkgs.append(rec.packages) */
++            PyList_Append(relpkgs, recobj->packages);
++
++            /* pkg.recommends.append(rec) */
++            Py_INCREF(rec);
++            PyList_SET_ITEM(pkgobj->recommends, i, rec);
++        }
++    }
++
+     /* if upgargs: */
+     if (upgargs) {
+         int i = 0;
+@@ -2391,6 +2503,7 @@ Cache_init(CacheObject *self, PyObject *args)
+     self->_packages = PyList_New(0);
+     self->_provides = PyList_New(0);
+     self->_requires = PyList_New(0);
++    self->_recommends = PyList_New(0);
+     self->_upgrades = PyList_New(0);
+     self->_conflicts = PyList_New(0);
+     self->_objmap = PyDict_New();
+@@ -2404,6 +2517,7 @@ Cache_traverse(CacheObject *self, visitproc visit, void *arg)
+     Py_VISIT(self->_packages);
+     Py_VISIT(self->_provides);
+     Py_VISIT(self->_requires);
++    Py_VISIT(self->_recommends);
+     Py_VISIT(self->_upgrades);
+     Py_VISIT(self->_conflicts);
+     Py_VISIT(self->_objmap);
+@@ -2417,6 +2531,7 @@ Cache_clear(CacheObject *self)
+     Py_CLEAR(self->_packages);
+     Py_CLEAR(self->_provides);
+     Py_CLEAR(self->_requires);
++    Py_CLEAR(self->_recommends);
+     Py_CLEAR(self->_upgrades);
+     Py_CLEAR(self->_conflicts);
+     Py_CLEAR(self->_objmap);
+@@ -2430,6 +2545,7 @@ Cache_dealloc(CacheObject *self)
+     Py_XDECREF(self->_packages);
+     Py_XDECREF(self->_provides);
+     Py_XDECREF(self->_requires);
++    Py_XDECREF(self->_recommends);
+     Py_XDECREF(self->_upgrades);
+     Py_XDECREF(self->_conflicts);
+     Py_XDECREF(self->_objmap);
+@@ -2449,6 +2565,8 @@ Cache_reset(CacheObject *self, PyObject *args)
+         LIST_CLEAR(prvobj->packages);
+         if (PyList_Check(prvobj->requiredby))
+             LIST_CLEAR(prvobj->requiredby);
++        if (PyList_Check(prvobj->recommendedby))
++            LIST_CLEAR(prvobj->recommendedby);
+         if (PyList_Check(prvobj->upgradedby))
+             LIST_CLEAR(prvobj->upgradedby);
+         if (PyList_Check(prvobj->conflictedby))
+@@ -2464,6 +2582,16 @@ Cache_reset(CacheObject *self, PyObject *args)
+         if (PyList_Check(reqobj->providedby))
+             LIST_CLEAR(reqobj->providedby);
+     }
++    len = PyList_GET_SIZE(self->_recommends);
++    for (i = 0; i != len; i++) {
++        DependsObject *reqobj;
++        PyObject *req;
++        req = PyList_GET_ITEM(self->_recommends, i);
++        reqobj = (DependsObject *)req;
++        LIST_CLEAR(reqobj->packages);
++        if (PyList_Check(reqobj->providedby))
++            LIST_CLEAR(reqobj->providedby);
++    }
+     len = PyList_GET_SIZE(self->_upgrades);
+     for (i = 0; i != len; i++) {
+         DependsObject *upgobj;
+@@ -2487,6 +2615,7 @@ Cache_reset(CacheObject *self, PyObject *args)
+     LIST_CLEAR(self->_packages);
+     LIST_CLEAR(self->_provides);
+     LIST_CLEAR(self->_requires);
++    LIST_CLEAR(self->_recommends);
+     LIST_CLEAR(self->_upgrades);
+     LIST_CLEAR(self->_conflicts);
+     PyDict_Clear(self->_objmap);
+@@ -2534,6 +2663,7 @@ Cache__reload(CacheObject *self, PyObject *args)
+       packages = {}
+       provides = {}
+       requires = {}
++      recommends = {}
+       upgrades = {}
+       conflicts = {}
+       objmap = self._objmap
+@@ -2541,11 +2671,12 @@ Cache__reload(CacheObject *self, PyObject *args)
+     PyObject *packages = PyDict_New();
+     PyObject *provides = PyDict_New();
+     PyObject *requires = PyDict_New();
++    PyObject *recommends = PyDict_New();
+     PyObject *upgrades = PyDict_New();
+     PyObject *conflicts = PyDict_New();
+     PyObject *objmap = self->_objmap;
+     int i, ilen;
+-    if (!packages || !provides || !requires || !conflicts)
++    if (!packages || !provides || !requires || !recommends || !conflicts )
+         return NULL;
+ 
+     /* for loader in loaders: */
+@@ -2679,6 +2810,30 @@ Cache__reload(CacheObject *self, PyObject *args)
+                 }
+ 
+                 /*
++                   for rec in pkg.recommends:
++                       rec.packages.append(pkg)
++                       if rec not in recommends:
++                           recommends[rec] = True
++                           objmap[rec.getInitArgs()] = rec
++                */
++                if (PyList_Check(pkg->recommends)) {
++                    klen = PyList_GET_SIZE(pkg->recommends);
++                    for (k = 0; k != klen; k++) {
++                        PyObject *rec = PyList_GET_ITEM(pkg->recommends, k);
++                        PyList_Append(((DependsObject *)rec)->packages,
++                                      (PyObject *)pkg);
++                        if (!PyDict_GetItem(recommends, rec)) {
++                            PyDict_SetItem(recommends, rec, Py_True);
++                            args = PyObject_CallMethod(rec, "getInitArgs",
++                                                       NULL);
++                            if (!args) return NULL;
++                            PyDict_SetItem(objmap, args, rec);
++                            Py_DECREF(args);
++                        }
++                    }
++                }
++
++                /*
+                    for upg in pkg.upgrades:
+                        upg.packages.append(pkg)
+                        if upg not in upgrades:
+@@ -2747,6 +2902,11 @@ Cache__reload(CacheObject *self, PyObject *args)
+     self->_requires = PyDict_Keys(requires);
+     Py_DECREF(requires);
+ 
++    /* self._recommends[:] = recommends.keys() */
++    Py_DECREF(self->_recommends);
++    self->_recommends = PyDict_Keys(recommends);
++    Py_DECREF(recommends);
++
+     /* self._upgrades[:] = upgrades.keys() */
+     Py_DECREF(self->_upgrades);
+     self->_upgrades = PyDict_Keys(upgrades);
+@@ -2852,7 +3012,7 @@ PyObject *
+ Cache_linkDeps(CacheObject *self, PyObject *args)
+ {
+     int i, j, len;
+-    PyObject *reqnames, *upgnames, *cnfnames;
++    PyObject *reqnames, *recnames, *upgnames, *cnfnames;
+     PyObject *lst;
+ 
+     /* reqnames = {} */
+@@ -2896,6 +3056,47 @@ Cache_linkDeps(CacheObject *self, PyObject *args)
+         Py_DECREF(seq);
+     }
+ 
++    /* recnames = {} */
++    recnames = PyDict_New();
++    /* for rec in self._recommends: */
++    len = PyList_GET_SIZE(self->_recommends);
++    for (i = 0; i != len; i++) {
++        PyObject *rec = PyList_GET_ITEM(self->_recommends, i);
++
++        /* for name in rec.getMatchNames(): */
++        PyObject *names = PyObject_CallMethod(rec, "getMatchNames", NULL);
++        PyObject *seq = PySequence_Fast(names, "getMatchNames() returned "
++                                               "non-sequence object");
++        int nameslen;
++        if (!seq) return NULL;
++        nameslen = PySequence_Fast_GET_SIZE(seq);
++        for (j = 0; j != nameslen; j++) {
++            PyObject *name = PySequence_Fast_GET_ITEM(seq, j);
++            
++            /* lst = recnames.get(name) */
++            lst = PyDict_GetItem(recnames, name);
++
++            /* 
++               if lst:
++                   lst.append(rec)
++               else:
++                   recnames[name] = [rec]
++            */
++            if (lst) {
++                PyList_Append(lst, rec);
++            } else {
++                lst = PyList_New(1);
++                Py_INCREF(rec);
++                PyList_SET_ITEM(lst, 0, rec);
++                PyDict_SetItem(recnames, name, lst);
++                Py_DECREF(lst);
++            }
++        }
++
++        Py_DECREF(names);
++        Py_DECREF(seq);
++    }
++
+     /* upgnames = {} */
+     upgnames = PyDict_New();
+     /* for upg in self._upgrades: */
+@@ -3035,6 +3236,56 @@ Cache_linkDeps(CacheObject *self, PyObject *args)
+             }
+         }
+ 
++        /* lst = recnames.get(prv.name) */
++        lst = PyDict_GetItem(recnames, prv->name);
++
++        /* if lst: */
++        if (lst) {
++            /* for rec in lst: */
++            int reclen = PyList_GET_SIZE(lst);
++            for (j = 0; j != reclen; j++) {
++                DependsObject *rec = (DependsObject *)PyList_GET_ITEM(lst, j);
++                /* if rec.matches(prv): */
++                PyObject *ret = PyObject_CallMethod((PyObject *)rec, "matches",
++                                                    "O", (PyObject *)prv);
++                if (!ret) return NULL;
++                if (PyObject_IsTrue(ret)) {
++                    /*
++                       if rec.providedby:
++                           rec.providedby.append(prv)
++                       else:
++                           rec.providedby = [prv]
++                    */
++                    if (PyList_Check(rec->providedby)) {
++                        PyList_Append(rec->providedby, (PyObject *)prv);
++                    } else {
++                        PyObject *_lst = PyList_New(1);
++                        Py_INCREF(prv);
++                        PyList_SET_ITEM(_lst, 0, (PyObject *)prv);
++                        Py_DECREF(rec->providedby);
++                        rec->providedby = _lst;
++                    }
++
++                    /*
++                       if prv.recommendedby:
++                           prv.recommendedby.append(prv)
++                       else:
++                           prv.recommendedby = [prv]
++                    */
++                    if (PyList_Check(prv->recommendedby)) {
++                        PyList_Append(prv->recommendedby, (PyObject *)rec);
++                    } else {
++                        PyObject *_lst = PyList_New(1);
++                        Py_INCREF(rec);
++                        PyList_SET_ITEM(_lst, 0, (PyObject *)rec);
++                        Py_DECREF(prv->recommendedby);
++                        prv->recommendedby = _lst;
++                    }
++                }
++                Py_DECREF(ret);
++            }
++        }
++
+         /* lst = upgnames.get(prv.name) */
+         lst = PyDict_GetItem(upgnames, prv->name);
+ 
+@@ -3139,6 +3390,7 @@ Cache_linkDeps(CacheObject *self, PyObject *args)
+     }
+ 
+     Py_DECREF(reqnames);
++    Py_DECREF(recnames);
+     Py_DECREF(upgnames);
+     Py_DECREF(cnfnames);
+ 
+@@ -3215,6 +3467,29 @@ Cache_getRequires(CacheObject *self, PyObject *args)
+ }
+ 
+ PyObject *
++Cache_getRecommends(CacheObject *self, PyObject *args)
++{
++    const char *name = NULL;
++    PyObject *lst;
++    int i, len;
++    if (!PyArg_ParseTuple(args, "|s", &name))
++        return NULL;
++    if (!name) {
++        Py_INCREF(self->_recommends);
++        return self->_recommends;
++    }
++    lst = PyList_New(0);
++    len = PyList_GET_SIZE(self->_recommends);
++    for (i = 0; i != len; i++) {
++        DependsObject *rec =
++            (DependsObject*)PyList_GET_ITEM(self->_recommends, i);
++        if (strcmp(STR(rec->name), name) == 0)
++            PyList_Append(lst, (PyObject *)rec);
++    }
++    return lst;
++}
++
++PyObject *
+ Cache_getUpgrades(CacheObject *self, PyObject *args)
+ {
+     const char *name = NULL;
+@@ -3324,6 +3599,38 @@ Cache_search(CacheObject *self, PyObject *searcher)
+     }
+     Py_DECREF(lst);
+ 
++    lst = PyObject_GetAttrString(searcher, "recommends");
++    if (lst == NULL || !PyList_Check(lst)) {
++        PyErr_SetString(PyExc_TypeError, "Invalid recommends attribute");
++        return NULL;
++    }
++    for (i = 0; i != PyList_GET_SIZE(lst); i++) {
++        ProvidesObject *prv = (ProvidesObject *)PyList_GET_ITEM(lst, i);
++        for (j = 0; j != PyList_GET_SIZE(self->_recommends); j++) {
++            PyObject *rec = PyList_GET_ITEM(self->_recommends, j);
++            PyObject *names = PyObject_CallMethod(rec, "getMatchNames", NULL);
++            PyObject *seq = PySequence_Fast(names, "getMatchNames() returned "
++                                                   "non-sequence object");
++            if (seq == NULL) return NULL;
++            for (k = 0; k != PySequence_Fast_GET_SIZE(seq); k++) {
++                if (strcmp(PyString_AS_STRING(PySequence_Fast_GET_ITEM(seq, k)),
++                           PyString_AS_STRING(prv->name)) == 0) {
++                    res = PyObject_CallMethod(rec, "matches", "O", prv);
++                    if (res == NULL)
++                        return NULL;
++                    if (PyObject_IsTrue(res))
++                        CALLMETHOD(searcher, "addResult", "O", rec);
++                    Py_DECREF(res);
++                    break;
++                }
++            }
++
++            Py_DECREF(names);
++            Py_DECREF(seq);
++        }
++    }
++    Py_DECREF(lst);
++
+     lst = PyObject_GetAttrString(searcher, "upgrades");
+     if (lst == NULL || !PyList_Check(lst)) {
+         PyErr_SetString(PyExc_TypeError, "Invalid upgrades attribute");
+@@ -3420,7 +3727,7 @@ Cache__getstate__(CacheObject *self, PyObject *args)
+ static PyObject *
+ Cache__setstate__(CacheObject *self, PyObject *state)
+ {
+-    PyObject *provides, *requires, *upgrades, *conflicts;
++    PyObject *provides, *requires, *recommends, *upgrades, *conflicts;
+     int i, ilen;
+     int j, jlen;
+     
+@@ -3452,11 +3759,13 @@ Cache__setstate__(CacheObject *self, PyObject *state)
+     /*
+        provides = {}
+        requires = {}
++       recommends = {}
+        upgrades = {}
+        conflicts = {}
+     */
+     provides = PyDict_New();
+     requires = PyDict_New();
++    recommends = PyDict_New();
+     upgrades = PyDict_New();
+     conflicts = PyDict_New();
+ 
+@@ -3497,6 +3806,21 @@ Cache__setstate__(CacheObject *self, PyObject *state)
+         }
+ 
+         /*
++           for rec in pkg.recommends:
++               rec.packages.append(pkg)
++               recommends[rec] = True
++        */
++        if (PyList_Check(pkgobj->recommends)) {
++            jlen = PyList_GET_SIZE(pkgobj->recommends);
++            for (j = 0; j != jlen; j++) {
++                PyObject *rec = PyList_GET_ITEM(pkgobj->recommends, j);
++                DependsObject *recobj = (DependsObject *)rec;
++                PyList_Append(recobj->packages, pkg);
++                PyDict_SetItem(recommends, rec, Py_True);
++            }
++        }
++
++        /*
+            for upg in pkg.upgrades:
+                upg.packages.append(pkg)
+                upgrades[upg] = True
+@@ -3525,6 +3849,7 @@ Cache__setstate__(CacheObject *self, PyObject *state)
+                 PyDict_SetItem(conflicts, cnf, Py_True);
+             }
+         }
++
+     }
+ 
+     /* self._provides = provides.keys() */
+@@ -3535,6 +3860,10 @@ Cache__setstate__(CacheObject *self, PyObject *state)
+     self->_requires = PyDict_Keys(requires);
+     Py_DECREF(requires);
+ 
++    /* self._recommends = recommends.keys() */
++    self->_recommends = PyDict_Keys(recommends);
++    Py_DECREF(recommends);
++
+     /* self._upgrades = upgrades.keys() */
+     self->_upgrades = PyDict_Keys(upgrades);
+     Py_DECREF(upgrades);
+@@ -3562,6 +3891,7 @@ static PyMethodDef Cache_methods[] = {
+     {"getPackages", (PyCFunction)Cache_getPackages, METH_VARARGS, NULL},
+     {"getProvides", (PyCFunction)Cache_getProvides, METH_VARARGS, NULL},
+     {"getRequires", (PyCFunction)Cache_getRequires, METH_VARARGS, NULL},
++    {"getRecommends", (PyCFunction)Cache_getRecommends, METH_VARARGS, NULL},
+     {"getUpgrades", (PyCFunction)Cache_getUpgrades, METH_VARARGS, NULL},
+     {"getConflicts", (PyCFunction)Cache_getConflicts, METH_VARARGS, NULL},
+     {"search", (PyCFunction)Cache_search, METH_O, NULL},
+@@ -3576,6 +3906,7 @@ static PyMemberDef Cache_members[] = {
+     {"_packages", T_OBJECT, OFF(_packages), RO, 0},
+     {"_provides", T_OBJECT, OFF(_provides), RO, 0},
+     {"_requires", T_OBJECT, OFF(_requires), RO, 0},
++    {"_recommends", T_OBJECT, OFF(_recommends), RO, 0},
+     {"_upgrades", T_OBJECT, OFF(_upgrades), RO, 0},
+     {"_conflicts", T_OBJECT, OFF(_conflicts), RO, 0},
+     {"_objmap", T_OBJECT, OFF(_objmap), RO, 0},
+diff --git a/smart/commands/query.py b/smart/commands/query.py
+index 808e53a..9265cd9 100644
+--- a/smart/commands/query.py
++++ b/smart/commands/query.py
+@@ -107,6 +107,8 @@ def option_parser(**kwargs):
+                       help=_("show requires for the given packages"))
+     parser.add_option("--show-prerequires", action="store_true",
+                       help=_("show requires selecting only pre-dependencies"))
++    parser.add_option("--show-recommends", action="store_true",
++                      help=_("show recommends for the given packages"))
+     parser.add_option("--show-upgrades", action="store_true",
+                       help=_("show upgrades for the given packages"))
+     parser.add_option("--show-conflicts", action="store_true",
+@@ -488,6 +490,19 @@ def main(ctrl, opts, reloadchannels=True):
+                                 continue
+                             output.showRequiresProvidedBy(pkg, req,
+                                                           prv, prvpkg)
++        if pkg.recommends and (opts.show_recommends):
++            pkg.recommends.sort()
++            first = True
++            for req in pkg.recommends:
++                output.showRecommends(pkg, req)
++                if opts.show_providedby and req.providedby:
++                    for prv in req.providedby:
++                        prv.packages.sort()
++                        for prvpkg in prv.packages:
++                            if opts.installed and not prvpkg.installed:
++                                continue
++                            output.showRecommendsProvidedBy(pkg, req,
++                                                          prv, prvpkg)
+         if pkg.upgrades and (opts.show_upgrades or whoupgrades):
+             pkg.upgrades.sort()
+             first = True
+@@ -594,6 +609,12 @@ class NullOutput(object):
+     def showRequiresProvidedBy(self, pkg, req, prv, prvpkg):
+         pass
+ 
++    def showRecommends(self, pkg, req):
++        pass
++
++    def showRecommendsProvidedBy(self, pkg, req, prv, prvpkg):
++        pass
++
+     def showUpgrades(self, pkg, upg):
+         pass
+ 
+@@ -619,6 +640,8 @@ class TextOutput(NullOutput):
+         self._firstconflictedby = True
+         self._firstrequires = True
+         self._firstrequiresprovidedby = True
++        self._firstrecommends = True
++        self._firstrecommendsprovidedby = True
+         self._firstupgrades = True
+         self._firstupgradesprovidedby = True
+         self._firstconflicts = True
+@@ -711,6 +734,22 @@ class TextOutput(NullOutput):
+             name = str(prvpkg)
+         print "       ", "%s (%s)" % (name, prv)
+ 
++    def showRecommends(self, pkg, rec):
++        if self._firstrecommends:
++            self._firstrecommends = False
++            print " ", _("Recommends:")
++        print "   ", rec
++
++    def showRecommendsProvidedBy(self, pkg, req, prv, prvpkg):
++        if self._firstrecommendsprovidedby:
++            self._firstrecommendsprovidedby = False
++            print "     ", _("Provided By:")
++        if self.opts.hide_version:
++            name = prvpkg.name
++        else:
++            name = str(prvpkg)
++        print "       ", "%s (%s)" % (name, prv)
++
+     def showUpgrades(self, pkg, upg):
+         if self._firstupgrades:
+             self._firstupgrades = False
+@@ -797,6 +836,18 @@ class GraphVizOutput(NullOutput):
+             self._shown[req, prv] = True
+             print '    "Requires: %s" -> "Provides: %s";' % (req, prv)
+ 
++    def showRecommends(self, pkg, req):
++        if (pkg, req) not in self._shown:
++            self._shown[pkg, req] = True
++            print '    "%s" -> "Recommends: %s";' % (pkg, req)
++
++    def showRecommendsProvidedBy(self, pkg, req, prv, prvpkg):
++        self.showPackage(prvpkg)
++        self.showProvides(prvpkg, prv)
++        if (req, prv) not in self._shown:
++            self._shown[req, prv] = True
++            print '    "Recommends: %s" -> "Provides: %s";' % (req, prv)
++
+     def showUpgrades(self, pkg, upg):
+         if (pkg, upg) not in self._shown:
+             self._shown[pkg, upg] = True
+diff --git a/smart/control.py b/smart/control.py
+index fd7083a..d44abe7 100644
+--- a/smart/control.py
++++ b/smart/control.py
+@@ -447,7 +447,7 @@ class Control(object):
+         queue = marked.keys()
+         while queue:
+             pkg = queue.pop(0)
+-            for req in pkg.requires:
++            for req in pkg.requires + pkg.recommends:
+                 for prv in req.providedby:
+                     for prvpkg in prv.packages:
+                         if (prvpkg.installed and
+@@ -794,7 +794,7 @@ class Control(object):
+         pkglst = []
+         for pkg in changeset:
+             n = 0
+-            for req in pkg.requires:
++            for req in pkg.requires + pkg.recommends:
+                 for prv in req.providedby:
+                     for prvpkg in prv.packages:
+                         if changeset.get(prvpkg) is INSTALL:
+diff --git a/smart/searcher.py b/smart/searcher.py
+index 216f4ce..32eb825 100644
+--- a/smart/searcher.py
++++ b/smart/searcher.py
+@@ -45,9 +45,9 @@ class Searcher(object):
+ 
+     - provides is matched in Provides.search(), for the same reason.
+ 
+-    - requires, upgrades, and conflicts don't have special searching
+-      methods. Instead, their usual match() method is given an instance
+-      of the Provides type.
++    - requires, recommends, upgrades, and conflicts don't have special
++      searching methods. Instead, their usual match() method is given
++      an instance of the Provides type.
+ 
+     - group, path, url, and other information which is found by
+       PackageInfo, is searched by the Loader.search() method and
+@@ -62,6 +62,7 @@ class Searcher(object):
+         self.nameversion = []
+         self.provides = []
+         self.requires = []
++        self.recommends = []
+         self.upgrades = []
+         self.conflicts = []
+         self.path = []
+@@ -76,6 +77,7 @@ class Searcher(object):
+         del self.nameversion[:]
+         del self.provides[:]
+         del self.requires[:]
++        del self.recommends[:]
+         del self.upgrades[:]
+         del self.conflicts[:]
+         del self.path[:]
+@@ -122,6 +124,8 @@ class Searcher(object):
+             self.addProvides(s[9:], cutoff)
+         elif s.startswith("requires:"):
+             self.addRequires(s[9:])
++        elif s.startswith("recommends:"):
++            self.addRecommends(s[11:])
+         elif s.startswith("upgrades:"):
+             self.addUpgrades(s[9:])
+         elif s.startswith("conflicts:"):
+@@ -151,6 +155,7 @@ class Searcher(object):
+         return s and (
+                 s.startswith("provides:") or
+                 s.startswith("requires:") or
++                s.startswith("recommends:") or
+                 s.startswith("upgrades:") or
+                 s.startswith("conflicts:") or
+                 s.startswith("url:") or
+@@ -182,6 +187,9 @@ class Searcher(object):
+     def addRequires(self, s):
+         self.requires.append(self._buildProvides(s))
+ 
++    def addRecommends(self, s):
++        self.recommends.append(self._buildProvides(s))
++
+     def addUpgrades(self, s):
+         self.upgrades.append(self._buildProvides(s))
+ 
+diff --git a/smart/transaction.py b/smart/transaction.py
+index eb320d2..300b9cc 100644
+--- a/smart/transaction.py
++++ b/smart/transaction.py
+@@ -573,7 +573,7 @@ class Transaction(object):
+                 self._remove(namepkg, changeset, locked, pending, depth)
+ 
+         # Install packages required by this one.
+-        for req in pkg.requires:
++        for req in pkg.requires + pkg.recommends:
+ 
+             # Check if someone is already providing it.
+             prvpkgs = {}
+@@ -596,8 +596,12 @@ class Transaction(object):
+ 
+             if not prvpkgs:
+                 # No packages provide it at all. Give up.
+-                raise Failed, _("Can't install %s: no package provides %s") % \
+-                              (pkg, req)
++                if req in pkg.requires:
++                    raise Failed, _("Can't install %s: no package provides %s") % \
++                                (pkg, req)
++                else:
++                    # It's only a recommend, skip
++                    continue
+ 
+             if len(prvpkgs) == 1:
+                 # Don't check locked here. prvpkgs was
+@@ -1359,7 +1363,7 @@ class ChangeSetSplitter(object):
+         set = self._changeset
+ 
+         # Check all dependencies needed by this package.
+-        for req in pkg.requires:
++        for req in pkg.requires + pkg.recommends:
+ 
+             # Check if any already installed or to be installed
+             # package will solve the problem.
+@@ -1424,8 +1428,9 @@ class ChangeSetSplitter(object):
+ 
+             # There are no solutions for the problem.
+             # Should we really care about it?
+-            if (self._forcerequires or
+-                isinstance(req, PreRequires)):
++            if ((self._forcerequires or
++                isinstance(req, PreRequires))
++                and req in pkg.requires):
+                 raise Error, _("No providers for '%s', "
+                                "required by '%s'") % (req, pkg)
+ 
+@@ -1625,7 +1630,7 @@ def recursiveInternalRequires(pkgmap, pkg, numrel, done=None):
+     return n
+ 
+ def forwardRequires(pkg, map):
+-    for req in pkg.requires:
++    for req in pkg.requires + pkg.recommends:
+         if req not in map:
+             map[req] = True
+             for prv in req.providedby:
+@@ -1794,6 +1799,15 @@ def checkPackages(cache, checkset, relateset, report=False):
+                 iface.info(_("Unsatisfied dependency: %s requires %s") %
+                            (pkg, req))
+ 
++        for req in pkg.recommends:
++            for prv in req.providedby:
++                for prvpkg in prv.packages:
++                    if prvpkg in relateset:
++                        break
++                else:
++                    continue
++                break
++
+         if not pkg.installed:
+             continue
+ 
+-- 
+1.7.9.5
+
