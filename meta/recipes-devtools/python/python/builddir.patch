@@ -1,0 +1,55 @@
+When cross compiling python, we used to need to install the Makefile, pyconfig.h 
+and the python library to their final location before being able to compile the 
+rest of python. This change allows us to point python at its own source when
+building, avoiding a variety of sysroot staging issues and simplifying the main
+python recipe.
+
+Upstream-Status: Inappropriate
+RP 2012/11/13
+
+Index: Python-2.7.3/Lib/sysconfig.py
+===================================================================
+--- Python-2.7.3.orig/Lib/sysconfig.py	2012-11-13 14:36:08.429167199 +0000
++++ Python-2.7.3/Lib/sysconfig.py	2012-11-13 21:58:31.788551800 +0000
+@@ -93,6 +93,7 @@
+ _EXEC_PREFIX = os.path.normpath(sys.exec_prefix)
+ _CONFIG_VARS = None
+ _USER_BASE = None
++_PYTHONBUILDDIR = os.environ.get("PYTHONBUILDDIR", None)
+ 
+ def _safe_realpath(path):
+     try:
+@@ -100,7 +102,9 @@
+     except OSError:
+         return path
+ 
+-if sys.executable:
++if _PYTHONBUILDDIR:
++    _PROJECT_BASE = _PYTHONBUILDDIR
++elif sys.executable:
+     _PROJECT_BASE = os.path.dirname(_safe_realpath(sys.executable))
+ else:
+     # sys.executable can be empty if argv[0] has been changed and Python is
+Index: Python-2.7.3/Lib/distutils/sysconfig.py
+===================================================================
+--- Python-2.7.3.orig/Lib/distutils/sysconfig.py	2012-11-13 14:36:08.005167209 +0000
++++ Python-2.7.3/Lib/distutils/sysconfig.py	2012-11-13 22:07:05.644540695 +0000
+@@ -26,6 +26,9 @@
+ # live in project/PCBuild9.  If we're dealing with an x64 Windows build,
+ # it'll live in project/PCbuild/amd64.
+ project_base = os.path.dirname(os.path.abspath(sys.executable))
++_PYTHONBUILDDIR = os.environ.get("PYTHONBUILDDIR", None)
++if _PYTHONBUILDDIR:
++    project_base = _PYTHONBUILDDIR
+ if os.name == "nt" and "pcbuild" in project_base[-8:].lower():
+     project_base = os.path.abspath(os.path.join(project_base, os.path.pardir))
+ # PC/VS7.1
+@@ -247,7 +250,7 @@
+ def get_makefile_filename():
+     """Return full pathname of installed Makefile from the Python build."""
+     if python_build:
+-        return os.path.join(os.path.dirname(sys.executable), "Makefile")
++        return os.path.join(project_base, "Makefile")
+     lib_dir = get_python_lib(plat_specific=1, standard_lib=1)
+     return os.path.join(lib_dir, "config", "Makefile")
+ 

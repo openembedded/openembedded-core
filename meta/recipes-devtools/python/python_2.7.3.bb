@@ -27,6 +27,7 @@ SRC_URI += "\
   file://avoid_warning_for_sunos_specific_module.patch \
   file://python-2.7.3-berkeley-db-5.3.patch \
   file://python-2.7.3-remove-bsdb-rpath.patch \
+  file://builddir.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"
@@ -55,17 +56,6 @@ do_compile() {
         sed -e 's,${STAGING_DIR_HOST},,g' -i *.py
         cd -
 
-	#
-	# Copy config.h and an appropriate Makefile for distutils.sysconfig,
-	# which laters uses the information out of these to compile extensions
-	#
-	# The following part (until python compilation) should probably moved to an
-	# -initial recipe to handle staging better
-	#
-	install -d ${STAGING_INCDIR}/python${PYTHON_MAJMIN}/
-	install -d ${STAGING_LIBDIR}/python${PYTHON_MAJMIN}/config/
-	install -m 0644 pyconfig.h ${STAGING_INCDIR}/python${PYTHON_MAJMIN}/
-
 	# remove hardcoded ccache, see http://bugs.openembedded.net/show_bug.cgi?id=4144
 	sed -i -e s,ccache,'$(CCACHE)', Makefile
 
@@ -83,22 +73,12 @@ do_compile() {
 		-e 's,^INCLUDEDIR=.*,INCLUDE=${STAGING_INCDIR},g' \
 		-e 's,^CONFINCLUDEDIR=.*,CONFINCLUDE=${STAGING_INCDIR},g' \
 		Makefile
-	install -m 0644 Makefile ${STAGING_LIBDIR}/python${PYTHON_MAJMIN}/config/
 	# save copy of it now, because if we do it in do_install and 
 	# then call do_install twice we get Makefile.orig == Makefile.sysroot
 	install -m 0644 Makefile Makefile.sysroot
 
 	export CROSS_COMPILE="${TARGET_PREFIX}"
-
-	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen \
-		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
-		STAGING_LIBDIR=${STAGING_LIBDIR} \
-		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
-		STAGING_INCDIR=${STAGING_INCDIR} \
-		BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} \
-		OPT="${CFLAGS}" libpython${PYTHON_MAJMIN}.so
-
-	oe_libinstall -so libpython${PYTHON_MAJMIN} ${STAGING_LIBDIR}
+	export PYTHONBUILDDIR="${S}"
 
 	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen \
 		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
@@ -115,6 +95,7 @@ do_install() {
 	install -m 0644 Makefile.orig Makefile
 
 	export CROSS_COMPILE="${TARGET_PREFIX}"
+	export PYTHONBUILDDIR="${S}"
 	
 	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen \
 		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
