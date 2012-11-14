@@ -4,7 +4,7 @@
 
 SUMMARY = "Self-hosting"
 DESCRIPTION = "Packages required to run the build system"
-PR = "r12"
+PR = "r13"
 LICENSE = "MIT"
 
 inherit packagegroup
@@ -131,6 +131,7 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     nfs-utils \
     nfs-utils-client \
     openssl \
+    openssh-sftp-server \
     opkg \
     opkg-utils \
     patch \
