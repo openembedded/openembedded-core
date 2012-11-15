@@ -14,6 +14,8 @@ inherit autotools gettext
 
 S = "${WORKDIR}/cpio-${PV}"
 
+EXTRA_OECONF += "DEFAULT_RMT_DIR=${base_sbindir}"
+
 do_install () {
     autotools_do_install
     install -d ${D}${base_bindir}/
@@ -21,13 +23,18 @@ do_install () {
     rmdir ${D}${bindir}/
 }
 
+PACKAGES =+ "${PN}-rmt"
+
+FILES_${PN}-rmt = "${base_sbindir}/rmt*"
+
 inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
 
-ALTERNATIVE_${PN} = "cpio rmt"
+ALTERNATIVE_${PN} = "cpio"
+ALTERNATIVE_${PN}-rmt = "rmt"
 
 ALTERNATIVE_LINK_NAME[cpio] = "${base_bindir}/cpio"
 
 ALTERNATIVE_PRIORITY[rmt] = "50"
-ALTERNATIVE_LINK_NAME[rmt] = "${libexecdir}/rmt"
+ALTERNATIVE_LINK_NAME[rmt] = "${base_sbindir}/rmt"
