@@ -241,7 +241,7 @@ diff -urN bind-9.3.1.orig/conf/zones.rfc1918 bind-9.3.1/conf/zones.rfc1918
 diff -urN bind-9.3.1.orig/init.d bind-9.3.1/init.d
 --- bind-9.3.1.orig/init.d	1970-01-01 01:00:00.000000000 +0100
 +++ bind-9.3.1/init.d	2005-07-10 23:09:58.000000000 +0200
-@@ -0,0 +1,63 @@
+@@ -0,0 +1,70 @@
 +#!/bin/sh
 +
 +PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -259,9 +259,16 @@ diff -urN bind-9.3.1.orig/init.d bind-9.3.1/init.d
 +	echo -n "Starting domain name service: named"
 +
 +	modprobe capability >/dev/null 2>&1 || true
++	if [ ! -f /etc/bind/rndc.key ]; then
++	    /usr/sbin/rndc-confgen -a -b 512 -r /dev/urandom
++	    chown 0640 /etc/bind/rndc.key
++	fi
++	if [ -f /var/run/named/named.pid ]; then
++	    ps `cat /var/run/named/named.pid` > /dev/null && exit 1
++	fi
 +
 +	# dirs under /var/run can go away on reboots.
-+	mkdir -p /var/run/bind/run
++	mkdir -p /var/run/named
 +	mkdir -p /var/cache/bind
 +	chmod 775 /var/run/bind/run
 +	chown root:bind /var/run/bind/run >/dev/null 2>&1 || true
@@ -271,7 +278,7 @@ diff -urN bind-9.3.1.orig/init.d bind-9.3.1/init.d
 +	    exit 1
 +	fi
 +	if start-stop-daemon --start --quiet --exec /usr/sbin/named \
-+		--pidfile /var/run/bind/run/named.pid -- $OPTIONS; then
++		--pidfile /var/run/named/named.pid -- $OPTIONS; then
 +	    if [ -x /sbin/resolvconf ] ; then
 +		echo "nameserver 127.0.0.1" | /sbin/resolvconf -a lo
 +	    fi
@@ -284,7 +291,7 @@ diff -urN bind-9.3.1.orig/init.d bind-9.3.1/init.d
 +	if [ -x /sbin/resolvconf ]; then
 +	    /sbin/resolvconf -d lo
 +	fi
-+	/usr/sbin/rndc stop
++	/usr/sbin/rndc stop >/dev/null 2>&1
 +	echo "."	
 +    ;;
 +
