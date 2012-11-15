@@ -730,10 +730,10 @@ python write_specfile () {
     srcrconflicts  = []
     srcrobsoletes  = []
 
-    srcpreinst  = []
-    srcpostinst = []
-    srcprerm    = []
-    srcpostrm   = []
+    srcrpreinst  = []
+    srcrpostinst = []
+    srcrprerm    = []
+    srcrpostrm   = []
 
     spec_preamble_top = []
     spec_preamble_bottom = []
@@ -792,6 +792,11 @@ python write_specfile () {
         splitrconflicts  = strip_multilib_deps(localdata.getVar('RCONFLICTS', True), d)
         splitrobsoletes  = []
 
+        splitrpreinst  = localdata.getVar('pkg_preinst', True)
+        splitrpostinst = localdata.getVar('pkg_postinst', True)
+        splitrprerm    = localdata.getVar('pkg_prerm', True)
+        splitrpostrm   = localdata.getVar('pkg_postrm', True)
+
         # Gather special src/first package data
         if srcname == splitname:
             srcrdepends    = splitrdepends
@@ -801,10 +806,10 @@ python write_specfile () {
             srcrreplaces   = splitrreplaces
             srcrconflicts  = splitrconflicts
 
-            srcpreinst  = localdata.getVar('pkg_preinst', True)
-            srcpostinst = localdata.getVar('pkg_postinst', True)
-            srcprerm    = localdata.getVar('pkg_prerm', True)
-            srcpostrm   = localdata.getVar('pkg_postrm', True)
+            srcrpreinst    = splitrpreinst
+            srcrpostinst   = splitrpostinst
+            srcrprerm      = splitrprerm
+            srcrpostrm     = splitrpostrm
 
             file_list = []
             walk_files(root, file_list, conffiles)
@@ -850,6 +855,15 @@ python write_specfile () {
         splitrprovides = bb.utils.join_deps(rprovides, commasep=False)
 
         print_deps(splitrdepends, "Requires", spec_preamble_bottom, d)
+        if splitrpreinst:
+            print_deps(splitrdepends, "Requires(pre)", spec_preamble_bottom, d)
+        if splitrpostinst:
+            print_deps(splitrdepends, "Requires(post)", spec_preamble_bottom, d)
+        if splitrprerm:
+            print_deps(splitrdepends, "Requires(preun)", spec_preamble_bottom, d)
+        if splitrpostrm:
+            print_deps(splitrdepends, "Requires(postun)", spec_preamble_bottom, d)
+
         # Suggests in RPM are like recommends in OE-core!
         print_deps(splitrrecommends, "Suggests", spec_preamble_bottom, d)
         # While there is no analog for suggests... (So call them recommends for now)
@@ -880,21 +894,22 @@ python write_specfile () {
         spec_preamble_bottom.append('')
 
         # Now process scriptlets
-        for script in ["preinst", "postinst", "prerm", "postrm"]:
-            scriptvar = localdata.getVar('pkg_%s' % script, True)
-            if not scriptvar:
-                continue
-            if script == 'preinst':
-                spec_scriptlets_bottom.append('%%pre -n %s' % splitname)
-            elif script == 'postinst':
-                spec_scriptlets_bottom.append('%%post -n %s' % splitname)
-            elif script == 'prerm':
-                spec_scriptlets_bottom.append('%%preun -n %s' % splitname)
-                scriptvar = wrap_uninstall(scriptvar)
-            elif script == 'postrm':
-                spec_scriptlets_bottom.append('%%postun -n %s' % splitname)
-                scriptvar = wrap_uninstall(scriptvar)
-            spec_scriptlets_bottom.append('# %s - %s' % (splitname, script))
+        if splitrpreinst:
+            spec_scriptlets_bottom.append('%%pre -n %s' % splitname)
+            spec_scriptlets_bottom.append(splitrpreinst)
+            spec_scriptlets_bottom.append('')
+        if splitrpostinst:
+            spec_scriptlets_bottom.append('%%post -n %s' % splitname)
+            spec_scriptlets_bottom.append(splitrpostinst)
+            spec_scriptlets_bottom.append('')
+        if splitrprerm:
+            spec_scriptlets_bottom.append('%%preun -n %s' % splitname)
+            scriptvar = wrap_uninstall(splitrprerm)
+            spec_scriptlets_bottom.append(scriptvar)
+            spec_scriptlets_bottom.append('')
+        if splitrpostrm:
+            spec_scriptlets_bottom.append('%%postun -n %s' % splitname)
+            scriptvar = wrap_uninstall(splitrpostrm)
             spec_scriptlets_bottom.append(scriptvar)
             spec_scriptlets_bottom.append('')
 
@@ -943,6 +958,15 @@ python write_specfile () {
 
     print_deps(srcdepends, "BuildRequires", spec_preamble_top, d)
     print_deps(srcrdepends, "Requires", spec_preamble_top, d)
+    if srcrpreinst:
+        print_deps(srcrdepends, "Requires(pre)", spec_preamble_top, d)
+    if srcrpostinst:
+        print_deps(srcrdepends, "Requires(post)", spec_preamble_top, d)
+    if srcrprerm:
+        print_deps(srcrdepends, "Requires(preun)", spec_preamble_top, d)
+    if srcrpostrm:
+        print_deps(srcrdepends, "Requires(postun)", spec_preamble_top, d)
+
     # Suggests in RPM are like recommends in OE-core!
     print_deps(srcrrecommends, "Suggests", spec_preamble_top, d)
     # While there is no analog for suggests... (So call them recommends for now)
@@ -972,26 +996,26 @@ python write_specfile () {
 
     spec_preamble_top.append('')
 
-    if srcpreinst:
+    if srcrpreinst:
         spec_scriptlets_top.append('%pre')
         spec_scriptlets_top.append('# %s - preinst' % srcname)
-        spec_scriptlets_top.append(srcpreinst)
+        spec_scriptlets_top.append(srcrpreinst)
         spec_scriptlets_top.append('')
-    if srcpostinst:
+    if srcrpostinst:
         spec_scriptlets_top.append('%post')
         spec_scriptlets_top.append('# %s - postinst' % srcname)
-        spec_scriptlets_top.append(srcpostinst)
+        spec_scriptlets_top.append(srcrpostinst)
         spec_scriptlets_top.append('')
-    if srcprerm:
+    if srcrprerm:
         spec_scriptlets_top.append('%preun')
         spec_scriptlets_top.append('# %s - prerm' % srcname)
-        scriptvar = wrap_uninstall(srcprerm)
+        scriptvar = wrap_uninstall(srcrprerm)
         spec_scriptlets_top.append(scriptvar)
         spec_scriptlets_top.append('')
-    if srcpostrm:
+    if srcrpostrm:
         spec_scriptlets_top.append('%postun')
         spec_scriptlets_top.append('# %s - postrm' % srcname)
-        scriptvar = wrap_uninstall(srcpostrm)
+        scriptvar = wrap_uninstall(srcrpostrm)
         spec_scriptlets_top.append(scriptvar)
         spec_scriptlets_top.append('')
 
