@@ -4,10 +4,9 @@ require xserver-xorg.inc
 SRC_URI += "file://crosscompile.patch \
             file://fix_open_max_preprocessor_error.patch \
             file://mips64-compiler.patch \
-            file://pkgconfig-deps.patch \
            "
 
-SRC_URI[md5sum] = "256325e9b17dff479d92bed97f6b0adb"
-SRC_URI[sha256sum] = "3e2935bc400612df58d5b5e6840829e2c63af02c2e7d2893092500358a4366fc"
+SRC_URI[md5sum] = "bde3d178b756597d2ec2a19ef60d2e1f"
+SRC_URI[sha256sum] = "548b91cb01087ad4f892428e7ac4955251cf12393e86c70420436b33848ef28a"
 
 PR = "${INC_PR}.0"

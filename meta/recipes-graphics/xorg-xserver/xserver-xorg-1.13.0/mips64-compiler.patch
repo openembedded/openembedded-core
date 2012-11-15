@@ -1,0 +1,29 @@
+on mips64/n64 pointers are 64bit therefore the pointer conversions to int dont work well
+so we end up with incompatible conversion errors
+
+This patch choses the right values for mips64
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+Index: xorg-server-1.13.0/hw/xfree86/common/compiler.h
+===================================================================
+--- xorg-server-1.13.0-orig/hw/xfree86/common/compiler.h	2012-06-14 23:04:29.000000000 +0300
++++ xorg-server-1.13.0/hw/xfree86/common/compiler.h	2012-11-08 10:06:50.865831783 +0200
+@@ -101,6 +101,7 @@
+ #if defined(NO_INLINE) || defined(DO_PROTOTYPES)
+ #if !defined(__arm__)
+ #if !defined(__sparc__) && !defined(__sparc) && !defined(__arm32__) && !defined(__nds32__) \
++      && !defined(__mips64) \
+       && !(defined(__alpha__) && defined(linux)) \
+       && !(defined(__ia64__) && defined(linux)) \
+ 
+@@ -721,7 +722,7 @@
+ }
+ 
+ #elif defined(__mips__) || (defined(__arm32__) && !defined(__linux__))
+-#ifdef __arm32__
++#if defined (__arm32__) || defined (__mips64)
+ #define PORT_SIZE long
+ #else
+ #define PORT_SIZE short
