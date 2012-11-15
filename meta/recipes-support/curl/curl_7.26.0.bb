@@ -8,10 +8,15 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e66
 DEPENDS = "zlib gnutls"
 DEPENDS_class-native = "zlib-native openssl-native"
 DEPENDS_class-nativesdk = "nativesdk-zlib"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://pkgconfig_fix.patch"
+
+# curl likes to set -g0 in CFLAGS, so we stop it
+# from mucking around with debug options
+#
+SRC_URI += " file://configure_ac.patch"
 
 SRC_URI[md5sum] = "bfa80f01b3d300359cfb4d409b6136a3"
 SRC_URI[sha256sum] = "fced262f16eb6bfcdcea15e04a7905ffcb5ff04b14a19ca35b9df86d6720d26a"
