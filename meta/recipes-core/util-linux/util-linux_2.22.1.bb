@@ -1,5 +1,5 @@
-MAJOR_VERSION = "2.21"
-PR = "r6"
+MAJOR_VERSION = "2.22"
+PR = "r0"
 require util-linux.inc
 
 # note that `lscpu' is under GPLv3+
@@ -9,11 +9,11 @@ SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             file://util-linux-ng-2.16-mount_lock_path.patch \
             file://uclibc-__progname-conflict.patch \
 	    file://configure-sbindir.patch \
-	    file://add-aarch64-support.patch \
+	    file://fix-configure.patch \
 "
 
-SRC_URI[md5sum] = "b75b3cfecb943f74338382fde693c2c3"
-SRC_URI[sha256sum] = "066f9d8e51bfabd809d266edcd54eefba1cdca57725b95c074fd47fe6fba3d30"
+SRC_URI[md5sum] = "cad23c41a014af766d467b86628bd0fd"
+SRC_URI[sha256sum] = "4297ea2a560f8839d7b3cde72a5955d1458dbad38fe0e3d99ccb1fde3df751b2"
 
 # Only lscpu part is gplv3; rest of the code is not, 
 # so take out the lscpu parts while running non-gplv3 build.

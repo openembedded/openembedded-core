@@ -8,12 +8,14 @@ SECTION = "base"
 LICENSE = "GPLv2+ & LGPLv2.1+ & BSD"
 
 LIC_FILES_CHKSUM = "file://README.licensing;md5=9c920d811858a74b67a36ba23cbaa95f \
-                    file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
-                    file://Documentation/licenses/COPYING.GPLv2;md5=8ca43cbc842c2336e835926c2166c28b \
-                    file://Documentation/licenses/COPYING.LGPLv2.1;md5=bbb461211a33b134d42ed5ee802b37ff \
+                    file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+                    file://Documentation/licenses/COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+                    file://Documentation/licenses/COPYING.LGPLv2.1;md5=4fbd65380cdd255951079008b364516c \
                     file://Documentation/licenses/COPYING.BSD-3;md5=58dcd8452651fc8b07d1f65ce07ca8af \
                     file://Documentation/licenses/COPYING.UCB;md5=263860f8968d8bafa5392cab74285262 \
-                    file://getopt/COPYING;md5=c3a41733416fb80af7ba1b7e1f712551"
+                    file://libuuid/COPYING;md5=aa3ac5b4a5bcb707f714f78794011b80 \
+                    file://libmount/COPYING;md5=152f98bc301a5ea649769ede7203ac82 \
+                    file://libblkid/COPYING;md5=152f98bc301a5ea649769ede7203ac82"
 
 inherit autotools gettext pkgconfig
 DEPENDS = "zlib ncurses"
@@ -21,7 +23,6 @@ DEPENDS_append_class-native = " lzo-native"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-linux-${PV}.tar.bz2 \
            file://MCONFIG \
-           file://swapargs.h \
            file://defines.h \
            file://make_include \
            "
@@ -36,11 +37,14 @@ PACKAGES =+ "util-linux-agetty util-linux-fdisk util-linux-cfdisk util-linux-sfd
 EXTRA_OECONF = "--libdir=${base_libdir} --disable-use-tty-group \
                 --disable-makeinstall-chown --enable-elvtune --enable-init \
                 --enable-kill --enable-last --enable-mesg --enable-partx \
-                --enable-raw --enable-rdev --enable-reset --disable-login-utils \
+                --enable-raw --enable-rdev --enable-reset --disable-login \
+                --disable-vipw --disable-newgrp --disable-chfn-chsh --disable-su \
                 --enable-write --enable-arch --enable-mount --with-fsprobe=builtin \
                 --enable-libuuid --enable-libblkid --enable-fsck --without-udev \
 		usrsbin_execdir='${sbindir}' \
 "
+
+EXTRA_OECONF_class-native += "--disable-login --disable-su"
 
 FILES_${PN}-doc += "${datadir}/getopt/getopt-*.*"
 
@@ -80,7 +84,6 @@ do_compile () {
 	set -e
 	install ${WORKDIR}/MCONFIG ${S}/MCONFIG
 	install ${WORKDIR}/make_include ${S}/make_include
-	install ${WORKDIR}/swapargs.h ${S}/mount/swapargs.h
 	install ${WORKDIR}/defines.h ${S}/defines.h
 	oe_runmake ARCH=${TARGET_ARCH} CPU= CPUOPT= 'OPT=${CFLAGS}' 
 }
@@ -97,7 +100,7 @@ do_install () {
 
         sbinprogs="agetty ctrlaltdel cfdisk vipw vigr"
         sbinprogs_a="pivot_root hwclock mkswap mkfs.minix fsck.minix losetup swapon fdisk readprofile fsck blkid blockdev"
-        usrbinprogs_a="chfn chsh hexdump last logger mesg newgrp renice wall setsid chrt flock"
+        usrbinprogs_a="chfn chsh hexdump last logger mesg newgrp renice utmpdump wall setsid chrt flock"
         binprogs_a="dmesg kill more umount mount login reset"
 
         if [ "${base_sbindir}" != "${sbindir}" ]; then
@@ -133,7 +136,7 @@ ALTERNATIVE_PRIORITY = "100"
 
 ALTERNATIVE_${PN}  = "dmesg kill more reset mkswap blockdev pivot_root"
 ALTERNATIVE_${PN} += "mkfs.minix hexdump last logger mesg renice wall"
-ALTERNATIVE_${PN} += "setsid chrt flock hwclock"
+ALTERNATIVE_${PN} += "setsid chrt flock hwclock utmpdump"
 
 ALTERNATIVE_LINK_NAME[dmesg] = "${base_bindir}/dmesg"
 ALTERNATIVE_LINK_NAME[kill] = "${base_bindir}/kill"
