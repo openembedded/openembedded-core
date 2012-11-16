@@ -84,6 +84,7 @@ LDCONFIGDEPEND_libc-uclibc = ""
 
 do_rootfs[depends] += "makedevs-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot ${LDCONFIGDEPEND}"
 do_rootfs[depends] += "virtual/update-alternatives-native:do_populate_sysroot update-rc.d-native:do_populate_sysroot"
+do_rootfs[recrdeptask] += "do_package"
 
 IMAGE_TYPE_live = '${@base_contains("IMAGE_FSTYPES", "live", "live", "empty", d)}'
 inherit image-${IMAGE_TYPE_live}
