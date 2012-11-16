@@ -10,8 +10,8 @@ PR = "r0"
 
 SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "a8edb8226cb25869f925ecce043faf1e"
-SRC_URI[sha256sum] = "917f32a6ce0b8e3ec893bb18af73e64c246d79066322041608352623a579234b"
+SRC_URI[md5sum] = "323706aa5e77698bed7b0b6faa7c1530"
+SRC_URI[sha256sum] = "17034d16cf5e86ed15e0f5de95238afb0a8c6069b1f0a29397042451c1b75877"
 
 inherit autotools gettext
 
