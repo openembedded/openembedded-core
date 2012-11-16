@@ -1,4 +1,4 @@
-DEPENDS += " cmake-native "
+DEPENDS_prepend = "cmake-native "
 
 # We need to unset CCACHE otherwise cmake gets too confused
 CCACHE = ""
