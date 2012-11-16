@@ -8,8 +8,8 @@ PR = "r0"
 SRC_URI = "ftp://ftp.remotesensing.org/pub/libtiff/tiff-${PV}.tar.gz \
            file://libtool2.patch"
 
-SRC_URI[md5sum] = "04a08fa1e07e696e820a0c3f32465a13"
-SRC_URI[sha256sum] = "aa29f1f5bfe3f443c3eb4dac472ebde15adc8ff0464b83376f35e3b2fef935da"
+SRC_URI[md5sum] = "051c1068e6a0627f461948c365290410"
+SRC_URI[sha256sum] = "ea1aebe282319537fb2d4d7805f478dd4e0e05c33d0928baba76a7c963684872"
 
 inherit autotools
 
