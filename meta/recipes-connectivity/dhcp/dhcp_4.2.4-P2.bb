@@ -8,6 +8,5 @@ SRC_URI += "file://fixincludes.patch \
             file://link-with-lcrypto.patch \
            "
 
-SRC_URI[md5sum] = "0ca7181024651f6323951d5498c8020b"
-SRC_URI[sha256sum] = "d3baabef27fc006e1ce1c4e3d03d7e5c4b6a34d5a2f45fa47d69235ed25ad420"
-
+SRC_URI[md5sum] = "fe36056f2d274fa4b82a5422f192e65f"
+SRC_URI[sha256sum] = "0f75170e323cd9573e6e09a5d9236725f3e56e3cac5a70a01fe2a9d76b436499"
