@@ -363,6 +363,17 @@ def get_package_mapping (pkg, basepkg, d):
 
     return pkg
 
+def get_package_additional_metadata (pkg_type, d):
+    base_key = "PACKAGE_ADD_METADATA"
+    for key in ("%s_%s" % (base_key, pkg_type.upper()), base_key):
+        if d.getVar(key) is None:
+            continue
+        d.setVarFlag(key, "type", "list")
+        if d.getVarFlag(key, "separator") is None:
+            d.setVarFlag(key, "separator", "\\n")
+        metadata_fields = [field.strip() for field in oe.data.typed_value(key, d)]
+        return "\n".join(metadata_fields).strip()
+
 def runtime_mapping_rename (varname, pkg, d):
     #bb.note("%s before: %s" % (varname, d.getVar(varname, True)))
 
