@@ -14,8 +14,8 @@ SRC_URI = "${GNU_MIRROR}/libtasn1/libtasn1-${PV}.tar.gz \
            file://libtasn1_fix_for_automake_1.12.patch \
            "
 
-SRC_URI[md5sum] = "df27eaddcc46172377e6b907e33ddc83"
-SRC_URI[sha256sum] = "a56e46483d1d42fe44ba58c9758620844042468d7c2d75f6318cdf3222745a91"
+SRC_URI[md5sum] = "a08c5936f9672da9b05691785499bcc3"
+SRC_URI[sha256sum] = "bc2936cd20267859278145e563427c274d27aaae30ecdf50a04cdd4ec0153d54"
 
 inherit autotools binconfig lib_package
 
