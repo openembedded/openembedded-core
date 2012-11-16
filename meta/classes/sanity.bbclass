@@ -605,6 +605,8 @@ def check_sanity(sanity_data):
             f.write(current_abi)
         elif abi == "7" and current_abi == "8":
             messages = messages + "Your configuration is using stamp files including the sstate hash but your build directory was built with stamp files that do not include this.\nTo continue, either rebuild or switch back to the OEBasic signature handler with BB_SIGNATURE_HANDLER = 'OEBasic'.\n"
+        elif (abi != current_abi and current_abi == "9"):
+            messages = messages + "The layout of the TMPDIR STAMPS directory has changed. Please clean out TMPDIR and rebuild (sstate will be still be valid and reused)\n"
         elif (abi != current_abi):
             # Code to convert from one ABI to another could go here if possible.
             messages = messages + "Error, TMPDIR has changed its layout version number (%s to %s) and you need to either rebuild, revert or adjust it at your own risk.\n" % (abi, current_abi)
