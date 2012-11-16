@@ -318,6 +318,11 @@ python do_package_deb () {
             raise bb.build.FuncFailed("Missing field for deb generation: %s" % value)
         # more fields
 
+        custom_fields_chunk = get_package_additional_metadata("deb", localdata)
+        if custom_fields_chunk is not None:
+            ctrlfile.write(unicode(custom_fields_chunk))
+            ctrlfile.write("\n")
+
         mapping_rename_hook(localdata)
 
         def debian_cmp_remap(var):

@@ -331,6 +331,11 @@ python do_package_ipk () {
             raise bb.build.FuncFailed("Missing field for ipk generation: %s" % value)
         # more fields
 
+        custom_fields_chunk = get_package_additional_metadata("ipk", localdata)
+        if custom_fields_chunk is not None:
+            ctrlfile.write(custom_fields_chunk)
+            ctrlfile.write("\n")
+
         mapping_rename_hook(localdata)
 
         def debian_cmp_remap(var):
