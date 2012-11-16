@@ -10,6 +10,5 @@ SRC_URI += "file://gnutls-openssl.patch \
             ${@['', 'file://fix-gettext-version.patch'][bb.data.inherits_class('native', d) or (not ((d.getVar("INCOMPATIBLE_LICENSE", True) or "").find("GPLv3") != -1))]} \
             file://remove-gets.patch \
            "
-
-SRC_URI[md5sum] = "f1dea97da5d4dcdbc675720c9aad9ee3"
-SRC_URI[sha256sum] = "4884eafcc8383ed23209199bbc72ad04f4eb94955a50a594125ff34c6889c564"
+SRC_URI[md5sum] = "93ffac7507dd39a4c6a672ca6976d397"
+SRC_URI[sha256sum] = "2bd020665951f38a230d6b6d98630f8c47ca6977d7d86977d356ccf17756fbf3"
