@@ -1,5 +1,5 @@
-# Version v0.84
-SRCREV = "857cdd5320ce1f293f5dbcbec79cc8fe22b0bebf"
+# Version v0.85
+SRCREV = "210e625227d21e0b589b8eaa36cd81f1cb981819"
 
 PR = "r0"
 
