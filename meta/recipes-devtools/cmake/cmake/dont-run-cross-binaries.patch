@@ -7,16 +7,17 @@ Upstream-Status: Inappropriate [embedded specific]
 
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 
-diff -ru cmake-2.8.2.orig/CMakeLists.txt cmake-2.8.2/CMakeLists.txt
---- cmake-2.8.2.orig/CMakeLists.txt	2010-07-28 00:48:42.000000000 +0200
-+++ cmake-2.8.2/CMakeLists.txt	2010-07-28 01:05:17.000000000 +0200
-@@ -518,7 +518,8 @@
+Index: cmake-2.8.10.1/CMakeLists.txt
+===================================================================
+--- cmake-2.8.10.1.orig/CMakeLists.txt
++++ cmake-2.8.10.1/CMakeLists.txt
+@@ -588,7 +588,8 @@ mark_as_advanced(CMAKE_STRICT)
  
  # build the remaining subdirectories
- ADD_SUBDIRECTORY(Source)
--ADD_SUBDIRECTORY(Utilities)
+ add_subdirectory(Source)
+-add_subdirectory(Utilities)
 +# Come on! Running the cross-binaries on host is not a good idea.
-+#ADD_SUBDIRECTORY(Utilities)
- ADD_SUBDIRECTORY(Tests)
++#add_subdirectory(Utilities)
+ add_subdirectory(Tests)
  
- # add a test
+ if(BUILD_TESTING)
