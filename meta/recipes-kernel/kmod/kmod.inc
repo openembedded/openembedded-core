@@ -17,7 +17,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                    "
 inherit autotools gtk-doc
 
-SRC_URI = "git://git.profusion.mobi/kmod.git;protocol=git;branch=master \
+SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
            file://depmod-search.conf \
            file://0001-man-disable-man-page-generation-because-we-don-t-hav.patch \
           "
