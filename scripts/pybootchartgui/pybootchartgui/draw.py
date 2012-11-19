@@ -287,32 +287,33 @@ def render(ctx, res):
 
         offset = min(res.start.keys())
         for s in sorted(res.start.keys()):
-            task = res.start[s].split(":")[1]
-            #print res.start[s]
-            #print res.processes[res.start[s]][1]
-            #print s
-            x = (s - offset) * sec_w
-            w = ((res.processes[res.start[s]][1] - s) * sec_w)
+            for val in sorted(res.start[s]):
+                task = val.split(":")[1]
+                #print val
+                #print res.processes[val][1]
+                #print s
+                x = (s - offset) * sec_w
+                w = ((res.processes[val][1] - s) * sec_w)
 
-            #print "proc at %s %s %s %s" % (x, y, w, proc_h)
-            col = None
-            if task == "do_compile":
-                col = TASK_COLOR_COMPILE
-            elif task == "do_configure":
-                col = TASK_COLOR_CONFIGURE
-            elif task == "do_install":
-                col = TASK_COLOR_INSTALL
-            elif task == "do_package":
-                col = TASK_COLOR_PACKAGE
-            elif task == "do_populate_sysroot":
-                col = TASK_COLOR_SYSROOT
+                #print "proc at %s %s %s %s" % (x, y, w, proc_h)
+                col = None
+                if task == "do_compile":
+                    col = TASK_COLOR_COMPILE
+                elif task == "do_configure":
+                    col = TASK_COLOR_CONFIGURE
+                elif task == "do_install":
+                    col = TASK_COLOR_INSTALL
+                elif task == "do_package":
+                    col = TASK_COLOR_PACKAGE
+                elif task == "do_populate_sysroot":
+                    col = TASK_COLOR_SYSROOT
 
-            draw_rect(ctx, PROC_BORDER_COLOR, (x, y, w, proc_h))
-            if col:
-                draw_fill_rect(ctx, col, (x, y, w, proc_h))
+                draw_rect(ctx, PROC_BORDER_COLOR, (x, y, w, proc_h))
+                if col:
+                    draw_fill_rect(ctx, col, (x, y, w, proc_h))
 
-            draw_label_in_box(ctx, PROC_TEXT_COLOR, res.start[s], x, y + proc_h - 4, w, proc_h)
-            y = y + proc_h
+                draw_label_in_box(ctx, PROC_TEXT_COLOR, val, x, y + proc_h - 4, w, proc_h)
+                y = y + proc_h
 
 	# draw process boxes
 	#draw_process_bar_chart(ctx, proc_tree, curr_y + bar_h, w, h)

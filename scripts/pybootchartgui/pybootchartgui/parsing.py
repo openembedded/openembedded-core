@@ -184,9 +184,16 @@ def _do_parse(state, filename, file):
         elif line.startswith("Ended:"):
             end = int(float(line.split()[-1]))
     if start and end and (end - start) > 8:
+        k = pn + ":" + task
         state.processes[pn + ":" + task] = [start, end]
-        state.start[start] = pn + ":" + task
-        state.end[end] = pn + ":" + task
+        if start not in state.start:
+            state.start[start] = []
+        if k not in state.start[start]:
+            state.start[start].append(pn + ":" + task)
+        if end not in state.end:
+            state.end[end] = []
+        if k not in state.end[end]:
+            state.end[end].append(pn + ":" + task)
     return state
 
 def parse_file(state, filename):
@@ -248,12 +255,18 @@ def split_res(res, n):
                 #state.processes[pn + ":" + task] = [start, end]
                 #state.start[start] = pn + ":" + task
                 #state.end[end] = pn + ":" + task
-                p = res.start[s_list[i]]
-                s = s_list[i]
-                e = res.processes[p][1]
-                state.processes[p] = [s, e]
-                state.start[s] = p
-                state.end[e] = p
+                for p in res.start[s_list[i]]:
+                    s = s_list[i]
+                    e = res.processes[p][1]
+                    state.processes[p] = [s, e]
+                    if s not in state.start:
+                        state.start[s] = []
+                    if p not in state.start[s]:
+                        state.start[s].append(p)
+                    if e not in state.end:
+                        state.end[e] = []
+                    if p not in state.end[e]:
+                        state.end[e].append(p)
             start = end
             end = end + frag_size
             if end > len(s_list):
