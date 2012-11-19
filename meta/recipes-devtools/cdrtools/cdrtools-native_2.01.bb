@@ -20,6 +20,8 @@ inherit native
 
 STAGE_TEMP = "${WORKDIR}/image-temp"
 
+FILESPATH = "${FILE_DIRNAME}/cdrtools-native/"
+
 do_install() {
 	install -d ${STAGE_TEMP}
 	make install INS_BASE=${STAGE_TEMP}

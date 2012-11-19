@@ -17,6 +17,8 @@ SRC_URI = "${DEBIAN_MIRROR}/main/l/linuxdoc-tools/linuxdoc-tools_${PV}.tar.gz \
 SRC_URI[md5sum] = "f214e79b0dd084689cd04f18722bd563"
 SRC_URI[sha256sum] = "128cabb52ef8fb2f370ee488ea92bf4d8e49859200c7c8cae807abfe860a62ec"
 
+FILESPATH = "${FILE_DIRNAME}/linuxdoc-tools-native/"
+
 inherit autotools native
 
 do_configure () {

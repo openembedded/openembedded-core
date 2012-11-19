@@ -19,6 +19,8 @@ SRC_URI += "file://04-default-is-optimized.patch \
            "
 S = "${WORKDIR}/Python-${PV}"
 
+FILESPATH = "${FILE_DIRNAME}/python-native/:${FILE_DIRNAME}/python/"
+
 inherit native
 
 RPROVIDES += "python-distutils-native python-compression-native python-textutils-native python-core-native"
