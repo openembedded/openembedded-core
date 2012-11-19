@@ -14,7 +14,7 @@ inherit pkgconfig pythonnative
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/trace-cmd.git;protocol=git \
            file://addldflags.patch \
            file://make-docs-optional.patch \
-           file://trace-cmd/blktrace-api-compatibility.patch"
+           file://blktrace-api-compatibility.patch"
 S = "${WORKDIR}/git"
 
 EXTRA_OEMAKE = "'prefix=${prefix}'"
