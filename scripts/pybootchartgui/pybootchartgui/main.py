@@ -19,6 +19,8 @@ def _mk_options_parser():
 			  help="output path (file or directory) where charts are stored")
 	parser.add_option("-s", "--split", dest="num", type=int, default=1,
 			  help="split the output chart into <NUM> charts, only works with \"-o PATH\"")
+	parser.add_option("-m", "--mintime", dest="mintime", type=int, default=8,
+			  help="only tasks longer than this time will be displayed")
 	parser.add_option("-n", "--no-prune", action="store_false", dest="prune", default=True,
 			  help="do not prune the process tree")
 	parser.add_option("-q", "--quiet", action="store_true", dest="quiet", default=False,
@@ -51,7 +53,7 @@ def main(argv=None):
 			parser.error("insufficient arguments, expected at least one path.")
 			return 2
 
-		res = parsing.parse(args, options.prune)
+		res = parsing.parse(args, options.prune, options.mintime)
 		if options.interactive or options.output == None:
 			gui.show(res)
 		else:

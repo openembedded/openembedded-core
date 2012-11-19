@@ -170,7 +170,7 @@ class ParserState:
 
 _relevant_files = set(["header", "proc_diskstats.log", "proc_ps.log", "proc_stat.log"])
 
-def _do_parse(state, filename, file):
+def _do_parse(state, filename, file, mintime):
     #print filename
     #writer.status("parsing '%s'" % filename)
     paths = filename.split("/")
@@ -183,7 +183,7 @@ def _do_parse(state, filename, file):
             start = int(float(line.split()[-1]))
         elif line.startswith("Ended:"):
             end = int(float(line.split()[-1]))
-    if start and end and (end - start) > 8:
+    if start and end and (end - start) >= mintime:
         k = pn + ":" + task
         state.processes[pn + ":" + task] = [start, end]
         if start not in state.start:
@@ -196,12 +196,12 @@ def _do_parse(state, filename, file):
             state.end[end].append(pn + ":" + task)
     return state
 
-def parse_file(state, filename):
+def parse_file(state, filename, mintime):
     basename = os.path.basename(filename)
     with open(filename, "rb") as file:
-        return _do_parse(state, filename, file)
+        return _do_parse(state, filename, file, mintime)
 
-def parse_paths(state, paths):
+def parse_paths(state, paths, mintime):
     for path in paths:
         root,extension = os.path.splitext(path)
         if not(os.path.exists(path)):
@@ -210,7 +210,7 @@ def parse_paths(state, paths):
         if os.path.isdir(path):
             files = [ f for f in [os.path.join(path, f) for f in os.listdir(path)] ]
             files.sort()
-            state = parse_paths(state, files)
+            state = parse_paths(state, files, mintime)
         elif extension in [".tar", ".tgz", ".tar.gz"]:
             tf = None
             try:
@@ -223,11 +223,11 @@ def parse_paths(state, paths):
                 if tf != None:
                     tf.close()
         else:
-            state = parse_file(state, path)
+            state = parse_file(state, path, mintime)
     return state
 
-def parse(paths, prune):   
-    state = parse_paths(ParserState(), paths)
+def parse(paths, prune, mintime):   
+    state = parse_paths(ParserState(), paths, mintime)
     if not state.valid():
         raise ParseError("empty state: '%s' does not contain a valid bootchart" % ", ".join(paths))
     #monitored_app = state.headers.get("profile.process")
