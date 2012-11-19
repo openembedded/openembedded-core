@@ -41,13 +41,13 @@ EXCLUDE_FROM_WORLD = "1"
 # Remove the mesa-dri dependency on mesa-dri-dev, as mesa-dri is empty
 RDEPENDS_${PN}-dev = ""
 
-PACKAGES =+ "libegl libegl-dev \
+PACKAGES =+ "libegl-mesa libegl-mesa-dev \
              libosmesa libosmesa-dev \
-             libgl libgl-dev \
+             libgl-mesa libgl-mesa-dev \
              libglapi libglapi-dev \
              libgbm libgbm-dev \
-             libgles1 libgles1-dev \
-             libgles2 libgles2-dev \
+             libgles1-mesa libgles1-mesa-dev \
+             libgles2-mesa libgles2-mesa-dev \
             "
 
 do_install_append () {
@@ -55,20 +55,42 @@ do_install_append () {
     rm -f ${D}${includedir}/GL/glu*
 }
 
-FILES_libegl = "${libdir}/libEGL.so.* ${libdir}/egl/*.so"
+# For the packages that make up the OpenGL interfaces, inject variables so that
+# they don't get Debian-renamed (which would remove the -mesa suffix), and
+# RPROVIDEs/RCONFLICTs on the generic libgl name.
+python __anonymous() {
+    for p in (("libegl", "libegl1"), ("libgl", "libgl1"),
+              ("libgles1", "libglesv1-cm1"), ("libgles2", "libglesv2-2")):
+        fullp = p[0] + "-mesa"
+        pkgs = " ".join(p)
+        d.setVar("DEBIAN_NOAUTONAME_" + fullp, "1")
+        d.appendVar("RREPLACES_" + fullp, pkgs)
+        d.appendVar("RPROVIDES_" + fullp, pkgs)
+        d.appendVar("RCONFLICTS_" + fullp, pkgs)
+        
+        # For -dev, the first element is both the Debian and original name
+        fullp += "-dev"
+        pkgs = p[0]
+        d.setVar("DEBIAN_NOAUTONAME_" + fullp, "1")
+        d.appendVar("RREPLACES_" + fullp, pkgs)
+        d.appendVar("RPROVIDES_" + fullp, pkgs)
+        d.appendVar("RCONFLICTS_" + fullp, pkgs)
+}
+
+FILES_libegl-mesa = "${libdir}/libEGL.so.* ${libdir}/egl/*.so"
 FILES_libgbm = "${libdir}/libgbm.so.*"
-FILES_libgles1 = "${libdir}/libGLESv1*.so.*"
-FILES_libgles2 = "${libdir}/libGLESv2.so.*"
-FILES_libgl = "${libdir}/libGL.so.*"
+FILES_libgles1-mesa = "${libdir}/libGLESv1*.so.*"
+FILES_libgles2-mesa = "${libdir}/libGLESv2.so.*"
+FILES_libgl-mesa = "${libdir}/libGL.so.*"
 FILES_libglapi = "${libdir}/libglapi.so.*"
 FILES_libosmesa = "${libdir}/libOSMesa.so.*"
 
-FILES_libegl-dev = "${libdir}/libEGL.* ${includedir}/EGL ${includedir}/KHR ${libdir}/pkgconfig/egl.pc"
+FILES_libegl-mesa-dev = "${libdir}/libEGL.* ${includedir}/EGL ${includedir}/KHR ${libdir}/pkgconfig/egl.pc"
 FILES_libgbm-dev = "${libdir}/libgbm* ${libdir}/pkgconfig/gbm.pc ${includedir}/gbm.h"
-FILES_libgl-dev = "${libdir}/libGL.* ${includedir}/GL ${libdir}/pkgconfig/gl.pc"
+FILES_libgl-mesa-dev = "${libdir}/libGL.* ${includedir}/GL ${libdir}/pkgconfig/gl.pc"
 FILES_libglapi-dev = "${libdir}/libglapi.*"
-FILES_libgles1-dev = "${libdir}/libGLESv1*.* ${includedir}/GLES ${libdir}/pkgconfig/glesv1*.pc"
-FILES_libgles2-dev = "${libdir}/libGLESv2.* ${includedir}/GLES2 ${libdir}/pkgconfig/glesv2.pc"
+FILES_libgles1-mesa-dev = "${libdir}/libGLESv1*.* ${includedir}/GLES ${libdir}/pkgconfig/glesv1*.pc"
+FILES_libgles2-mesa-dev = "${libdir}/libGLESv2.* ${includedir}/GLES2 ${libdir}/pkgconfig/glesv2.pc"
 FILES_libosmesa-dev = "${libdir}/libOSMesa.* ${includedir}/osmesa.h"
 
 FILES_${PN}-dbg += "${libdir}/dri/.debug/* ${libdir}/egl/.debug/*"
