@@ -308,10 +308,10 @@ def base_set_filespath(path, d):
     if extrapaths != "":
         path = extrapaths.split(":") + path
     # The ":" ensures we have an 'empty' override
-    overrides = (d.getVar("OVERRIDES", True) or "") + ":"
+    overrides = ((d.getVar("OVERRIDES", True) or "") + ":").split(":")
     for p in path:
         if p != "": 
-            for o in overrides.split(":"):
+            for o in overrides:
                 filespath.append(os.path.join(p, o))
     return ":".join(filespath)
 
