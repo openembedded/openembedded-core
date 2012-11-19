@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://ncurses/base/version.c;beginline=1;endline=27;md5=cbc
 SECTION = "libs"
 DEPENDS = "ncurses-native"
 DEPENDS_class-native = ""
-INC_PR = "r12"
+INC_PR = "r13"
 
 inherit autotools binconfig multilib_header
 
@@ -68,6 +68,7 @@ do_configure() {
         # not the case for /dev/null redirections)
         export cf_cv_working_poll=yes
 
+	gnu-configize --force
 	ncurses_configure "narrowc" || \
 		return 1
 	! ${ENABLE_WIDEC} || \
