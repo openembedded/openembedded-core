@@ -1,7 +1,5 @@
 require nativesdk-qt4-tools.inc
 
-DEFAULT_PREFERENCE = "-1"
-
 PR = "${INC_PR}.0"
 
 SRC_URI += "file://0009-qmake-fix-source-file-references-in-qmake.pri.patch"

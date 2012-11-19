@@ -1,7 +1,5 @@
 require qt4-native.inc
 
-DEFAULT_PREFERENCE = "-1"
-
 PR = "${INC_PR}.0"
 
 TOBUILD := "src/tools/bootstrap ${TOBUILD}"
