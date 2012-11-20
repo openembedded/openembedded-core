@@ -97,9 +97,9 @@ python do_populate_lic() {
 
     pn = d.getVar('PN', True)
     for package in d.getVar('PACKAGES', True):
-        if d.getVar('LICENSE_' + pn + '-' + package, True):
+        if d.getVar('LICENSE_' + package, True):
             license_types = license_types + ' & ' + \
-                            d.getVar('LICENSE_' + pn + '-' + package, True)
+                            d.getVar('LICENSE_' + package, True)
 
     #If we get here with no license types, then that means we have a recipe 
     #level license. If so, we grab only those.
