@@ -91,4 +91,3 @@ python () {
 addhandler nativesdk_virtclass_handler
 
 do_populate_sysroot[stamp-extra-info] = ""
-do_package[stamp-extra-info] = ""
