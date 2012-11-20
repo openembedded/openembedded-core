@@ -33,7 +33,7 @@ XSERVER_IA32_BASE = "xserver-xorg \
            xf86-input-synaptics \
            "
 
-XSERVER_IA32_EXT = "
+XSERVER_IA32_EXT = " \
            xserver-xorg-extension-glx \
            xserver-xorg-module-libint10 \
            "
