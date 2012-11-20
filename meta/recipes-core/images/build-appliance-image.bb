@@ -68,11 +68,11 @@ fakeroot do_populate_poky_src () {
 
 IMAGE_PREPROCESS_COMMAND += "do_populate_poky_src; "
 
-python do_get_poky_src () {
-    bb.build.exec_func('base_do_fetch', d)
-    bb.build.exec_func('base_do_unpack', d)
+python () {
+	# Ensure we run these usually noexec tasks
+	d.delVarFlag("do_fetch", "noexec")
+	d.delVarFlag("do_unpack", "noexec")
 }
-addtask do_get_poky_src before do_rootfs
 
 create_bundle_files () {
 	cd ${WORKDIR}
