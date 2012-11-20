@@ -1,0 +1,391 @@
+Upstream-Status: Backport
+
+From 7943966f6cd137e44f27d56aaf21b023fb1fae63 Mon Sep 17 00:00:00 2001
+From: "Dmitry V. Levin" <ldv@altlinux.org>
+Date: Fri, 26 Oct 2012 23:43:13 +0000
+Subject: [PATCH 28/31] Enhance quotactl decoding
+
+* quota.c (sys_quotactl): Decode 2nd syscall argument using printpath.
+* pathtrace.c (pathtrace_match): Add quotactl support.
+* linux/*/syscallent.h: Add TF flag to quotactl entry.
+---
+ linux/aarch64/syscallent.h    |  2 +-
+ linux/alpha/syscallent.h      |  2 +-
+ linux/arm/syscallent.h        |  2 +-
+ linux/avr32/syscallent.h      |  2 +-
+ linux/bfin/syscallent.h       |  2 +-
+ linux/hppa/syscallent.h       |  2 +-
+ linux/i386/syscallent.h       |  2 +-
+ linux/ia64/syscallent.h       |  2 +-
+ linux/m68k/syscallent.h       |  2 +-
+ linux/microblaze/syscallent.h |  2 +-
+ linux/mips/syscallent.h       | 16 ++++++++--------
+ linux/powerpc/syscallent.h    |  2 +-
+ linux/s390/syscallent.h       |  2 +-
+ linux/s390x/syscallent.h      |  2 +-
+ linux/sh/syscallent.h         |  2 +-
+ linux/sh64/syscallent.h       |  2 +-
+ linux/sparc/syscallent.h      |  2 +-
+ linux/tile/syscallent.h       |  2 +-
+ linux/x32/syscallent.h        |  2 +-
+ linux/x86_64/syscallent.h     |  2 +-
+ pathtrace.c                   |  6 ++++++
+ quota.c                       |  2 +-
+ 22 files changed, 34 insertions(+), 28 deletions(-)
+
+diff --git a/linux/aarch64/syscallent.h b/linux/aarch64/syscallent.h
+index eeda429..b712c9f 100644
+--- a/linux/aarch64/syscallent.h
++++ b/linux/aarch64/syscallent.h
+@@ -58,7 +58,7 @@
+ 	{ 1,	TD,	sys_close,			"close"				}, /*   57 */
+ 	{ 0,	0,	sys_vhangup,			"vhangup"			}, /*   58 */
+ 	{ 2,	TD,	sys_pipe2,			"pipe2"				}, /*   59 */
+-	{ 4,	0,	sys_quotactl,			"quotactl"			}, /*   60 */
++	{ 4,	TF,	sys_quotactl,			"quotactl"			}, /*   60 */
+ 	{ 3,	TD,	sys_getdents64,			"getdents64"			}, /*   61 */
+ 	{ 3,	TD,	sys_lseek,			"lseek"				}, /*   62 */
+ 	{ 3,	TD,	sys_read,			"read"				}, /*   63 */
+diff --git a/linux/alpha/syscallent.h b/linux/alpha/syscallent.h
+index aa76a43..dde7017 100644
+--- a/linux/alpha/syscallent.h
++++ b/linux/alpha/syscallent.h
+@@ -174,7 +174,7 @@
+ 	{ 2,	0,	sys_setrlimit,		"setrlimit"		}, /* 145 */
+ 	{ 5,	0,	printargs,		"osf_old_killpg"	}, /* 146, not implemented */
+ 	{ 0,	0,	sys_setsid,		"setsid"		}, /* 147 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"		}, /* 148 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"		}, /* 148 */
+ 	{ 5,	0,	printargs,		"osf_oldquota"		}, /* 149, not implemented */
+ 	{ 3,	TN,	sys_getsockname,	"getsockname"		}, /* 150 */
+ 	{ 5,	0,	NULL,			NULL			}, /* 151 */
+diff --git a/linux/arm/syscallent.h b/linux/arm/syscallent.h
+index 9b8da02..123b910 100644
+--- a/linux/arm/syscallent.h
++++ b/linux/arm/syscallent.h
+@@ -157,7 +157,7 @@
+ 	{ 3,	0,	sys_init_module,	"init_module"	}, /* 128 */
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	}, /* 129 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"}, /* 130 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 131 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 131 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"	}, /* 132 */
+ 	{ 1,	0,	sys_fchdir,		"fchdir"	}, /* 133 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"	}, /* 134 */
+diff --git a/linux/avr32/syscallent.h b/linux/avr32/syscallent.h
+index 6076fca..b215cc1 100644
+--- a/linux/avr32/syscallent.h
++++ b/linux/avr32/syscallent.h
+@@ -142,7 +142,7 @@
+ 	{ 0,	TP,	sys_vfork,		"vfork"		}, /* 114 */
+ 	{ 3,	0,	sys_init_module,	"init_module"	}, /* 115 */
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	}, /* 116 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 117 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 117 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"	}, /* 118 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"	}, /* 119 */
+ 	{ 3,	0,	sys_sysfs,		"sysfs"		}, /* 120 */
+diff --git a/linux/bfin/syscallent.h b/linux/bfin/syscallent.h
+index 7a9e618..05194fb 100644
+--- a/linux/bfin/syscallent.h
++++ b/linux/bfin/syscallent.h
+@@ -157,7 +157,7 @@
+ 	{ 3,	0,	sys_init_module,	"init_module"	}, /* 128 */
+ 	{ 1,	0,	sys_delete_module,	"delete_module"	}, /* 129 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"	}, /* 130 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 131 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 131 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"	}, /* 132 */
+ 	{ 1,	TD,	sys_fchdir,		"fchdir"	}, /* 133 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"	}, /* 134 */
+diff --git a/linux/hppa/syscallent.h b/linux/hppa/syscallent.h
+index f21d0c3..dc12299 100644
+--- a/linux/hppa/syscallent.h
++++ b/linux/hppa/syscallent.h
+@@ -133,7 +133,7 @@
+ 	{ 4,	0,	sys_init_module,	"init_module"		}, /* 128 */
+ 	{ 2,	0,	sys_delete_module,	"delete_module"		}, /* 129 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"	}, /* 130 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"		}, /* 131 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"		}, /* 131 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"		}, /* 132 */
+ 	{ 1,	TF,	sys_fchdir,		"fchdir"		}, /* 133 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"		}, /* 134 */
+diff --git a/linux/i386/syscallent.h b/linux/i386/syscallent.h
+index dd76244..1b7feb5 100644
+--- a/linux/i386/syscallent.h
++++ b/linux/i386/syscallent.h
+@@ -157,7 +157,7 @@
+ 	{ 3,	0,	sys_init_module,	"init_module"	}, /* 128 */
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	}, /* 129 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"}, /* 130 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 131 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 131 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"	}, /* 132 */
+ 	{ 1,	TD,	sys_fchdir,		"fchdir"	}, /* 133 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"	}, /* 134 */
+diff --git a/linux/ia64/syscallent.h b/linux/ia64/syscallent.h
+index bbdfc36..8e130ad 100644
+--- a/linux/ia64/syscallent.h
++++ b/linux/ia64/syscallent.h
+@@ -925,7 +925,7 @@
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	}, /* 1134 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"}, /* 1135 */
+ 	{ 5,	0,	sys_query_module,	"query_module"	}, /* 1136 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 1137 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 1137 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"	}, /* 1138 */
+ 	{ 3,	0,	sys_sysfs,		"sysfs"		}, /* 1139 */
+ 	{ 1,	0,	sys_personality,	"personality"	}, /* 1140 */
+diff --git a/linux/m68k/syscallent.h b/linux/m68k/syscallent.h
+index f95cf8d..184f01c 100644
+--- a/linux/m68k/syscallent.h
++++ b/linux/m68k/syscallent.h
+@@ -157,7 +157,7 @@
+ 	{ 3,	0,	sys_init_module,	"init_module"	}, /* 128 */
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	}, /* 129 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"}, /* 130 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 131 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 131 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"	}, /* 132 */
+ 	{ 1,	0,	sys_fchdir,		"fchdir"	}, /* 133 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"	}, /* 134 */
+diff --git a/linux/microblaze/syscallent.h b/linux/microblaze/syscallent.h
+index 51c5e6c..c5a52fa 100644
+--- a/linux/microblaze/syscallent.h
++++ b/linux/microblaze/syscallent.h
+@@ -157,7 +157,7 @@
+ 	{ 3,	0,	sys_init_module,	"init_module"	}, /* 128 */
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	}, /* 129 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"}, /* 130 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 131 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 131 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"	}, /* 132 */
+ 	{ 1,	0,	sys_fchdir,		"fchdir"	}, /* 133 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"	}, /* 134 */
+diff --git a/linux/mips/syscallent.h b/linux/mips/syscallent.h
+index 4c72763..df206ec 100644
+--- a/linux/mips/syscallent.h
++++ b/linux/mips/syscallent.h
+@@ -1141,7 +1141,7 @@
+ 	{ 0,	TM,	printargs,		"sysv_madvise"	}, /* 1138 */
+ 	{ 0,	0,	printargs,		"sysv_pagelock"	}, /* 1139 */
+ 	{ 0,	0,	printargs,		"sysv_getpagesize"	}, /* 1140 */
+-	{ 0,	0,	printargs,		"sysv_quotactl"	}, /* 1141 */
++	{ 0,	TF,	printargs,		"sysv_quotactl"	}, /* 1141 */
+ 	{ 0,	0,	printargs,		"sysv_libdetach"	}, /* 1142 */
+ 	{ 0,	0,	printargs,		"sysv_BSDgetpgrp"	}, /* 1143 */
+ 	{ 0,	0,	printargs,		"sysv_BSDsetpgrp"	}, /* 1144 */
+@@ -2168,7 +2168,7 @@
+ 	{ 0,	0,	printargs,		"bsd43_getdomainname"	}, /* 2165 */
+ 	{ 0,	0,	printargs,		"bsd43_setdomainname"	}, /* 2166 */
+ 	{ 0,	0,	printargs,		"bsd43_pcfs_mount"	}, /* 2167 */
+-	{ 0,	0,	printargs,		"bsd43_quotactl"	}, /* 2168 */
++	{ 0,	TF,	printargs,		"bsd43_quotactl"	}, /* 2168 */
+ 	{ 0,	0,	printargs,		"bsd43_oldexportfs"	}, /* 2169 */
+ 	{ 0,	0,	printargs,		"bsd43_smount"	}, /* 2170 */
+ 	{ 0,	0,	printargs,		"bsd43_mipshwconf"	}, /* 2171 */
+@@ -4133,7 +4133,7 @@
+ 	{ 3,	0,	sys_init_module,	"init_module"	}, /* 4128 */
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	}, /* 4129 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"}, /* 4130 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 4131 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 4131 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"	}, /* 4132 */
+ 	{ 1,	TF,	sys_fchdir,		"fchdir"	}, /* 4133 */
+ 	{ 2,	0,	sys_bdflush,		"bdflush"	}, /* 4134 */
+@@ -4481,7 +4481,7 @@
+ 	{ 0,	0,	printargs,		"o32_init_module"	}, /* 4128 */
+ 	{ 0,	0,	printargs,		"o32_delete_module"	}, /* 4129 */
+ 	{ 0,	0,	printargs,		"o32_get_kernel_syms"}, /* 4130 */
+-	{ 0,	0,	printargs,		"o32_quotactl"	}, /* 4131 */
++	{ 0,	TF,	printargs,		"o32_quotactl"	}, /* 4131 */
+ 	{ 0,	0,	printargs,		"o32_getpgid"	}, /* 4132 */
+ 	{ 0,	0,	printargs,		"o32_fchdir"	}, /* 4133 */
+ 	{ 0,	0,	printargs,		"o32_bdflush"	}, /* 4134 */
+@@ -5525,7 +5525,7 @@
+ 	{ 1,	0,	sys_delete_module,	"delete_module"	}, /* 5169 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"}, /* 5170 */
+ 	{ 5,	0,	sys_query_module,	"query_module"	}, /* 5171 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 5172 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 5172 */
+ 	{ 3,	0,	sys_nfsservctl,		"nfsservctl"	}, /* 5173 */
+ 	{ 5,	TN,	printargs,		"getpmsg"	}, /* 5174 */
+ 	{ 5,	TN,	printargs,		"putpmsg"	}, /* 5175 */
+@@ -5832,7 +5832,7 @@
+ 	{ 0,	0,	printargs,		"n64_delete_module"	}, /* 5169 */
+ 	{ 0,	0,	printargs,		"n64_get_kernel_syms"	}, /* 5170 */
+ 	{ 0,	0,	printargs,		"n64_query_module"	}, /* 5171 */
+-	{ 0,	0,	printargs,		"n64_quotactl"		}, /* 5172 */
++	{ 0,	TF,	printargs,		"n64_quotactl"		}, /* 5172 */
+ 	{ 0,	0,	printargs,		"n64_nfsservctl"	}, /* 5173 */
+ 	{ 0,	0,	printargs,		"n64_getpmsg"		}, /* 5174 */
+ 	{ 0,	0,	printargs,		"n64_putpmsg"		}, /* 5175 */
+@@ -6836,7 +6836,7 @@
+ 	{ 1,	0,	sys_delete_module,	"delete_module"	}, /* 6169 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"}, /* 6170 */
+ 	{ 5,	0,	sys_query_module,	"query_module"	}, /* 6171 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 6172 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 6172 */
+ 	{ 3,	0,	sys_nfsservctl,		"nfsservctl"	}, /* 6173 */
+ 	{ 5,	TN,	printargs,		"getpmsg"	}, /* 6174 */
+ 	{ 5,	TN,	printargs,		"putpmsg"	}, /* 6175 */
+@@ -7149,7 +7149,7 @@
+ 	{ 0,	0,	printargs,		"n32_delete_module"	}, /* 6169 */
+ 	{ 0,	0,	printargs,		"n32_get_kernel_syms"	}, /* 6170 */
+ 	{ 0,	0,	printargs,		"n32_query_module"	}, /* 6171 */
+-	{ 0,	0,	printargs,		"n32_quotactl"		}, /* 6172 */
++	{ 0,	TF,	printargs,		"n32_quotactl"		}, /* 6172 */
+ 	{ 0,	0,	printargs,		"n32_nfsservctl"	}, /* 6173 */
+ 	{ 0,	0,	printargs,		"n32_getpmsg"		}, /* 6174 */
+ 	{ 0,	0,	printargs,		"n32_putpmsg"		}, /* 6175 */
+diff --git a/linux/powerpc/syscallent.h b/linux/powerpc/syscallent.h
+index 3228f97..e61946e 100644
+--- a/linux/powerpc/syscallent.h
++++ b/linux/powerpc/syscallent.h
+@@ -157,7 +157,7 @@
+ 	{ 3,	0,	sys_init_module,	"init_module"		}, /* 128 */
+ 	{ 2,	0,	sys_delete_module,	"delete_module"		}, /* 129 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"	}, /* 130 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"		}, /* 131 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"		}, /* 131 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"		}, /* 132 */
+ 	{ 1,	TF,	sys_fchdir,		"fchdir"		}, /* 133 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"		}, /* 134 */
+diff --git a/linux/s390/syscallent.h b/linux/s390/syscallent.h
+index 1ce0fe2..94f4d25 100644
+--- a/linux/s390/syscallent.h
++++ b/linux/s390/syscallent.h
+@@ -159,7 +159,7 @@
+ 	{ 3,	0,	sys_init_module,	"init_module"	}, /* 128 */
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	}, /* 129 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"}, /* 130 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 131 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 131 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"	}, /* 132 */
+ 	{ 1,	TD,	sys_fchdir,		"fchdir"	}, /* 133 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"	}, /* 134 */
+diff --git a/linux/s390x/syscallent.h b/linux/s390x/syscallent.h
+index 7fa8ff5..ebf35d4 100644
+--- a/linux/s390x/syscallent.h
++++ b/linux/s390x/syscallent.h
+@@ -158,7 +158,7 @@
+ 	{ 3,	0,	sys_init_module,	"init_module"	}, /* 128 */
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	}, /* 129 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"}, /* 130 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 131 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 131 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"	}, /* 132 */
+ 	{ 1,	TD,	sys_fchdir,		"fchdir"	}, /* 133 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"	}, /* 134 */
+diff --git a/linux/sh/syscallent.h b/linux/sh/syscallent.h
+index d9228b4..1546ff6 100644
+--- a/linux/sh/syscallent.h
++++ b/linux/sh/syscallent.h
+@@ -159,7 +159,7 @@
+ 	{ 3,	0,	sys_init_module,	"init_module"	}, /* 128 */
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	}, /* 129 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"}, /* 130 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 131 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 131 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"	}, /* 132 */
+ 	{ 1,	TD,	sys_fchdir,		"fchdir"	}, /* 133 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"	}, /* 134 */
+diff --git a/linux/sh64/syscallent.h b/linux/sh64/syscallent.h
+index 39c13e0..4e20c47 100644
+--- a/linux/sh64/syscallent.h
++++ b/linux/sh64/syscallent.h
+@@ -157,7 +157,7 @@
+ 	{ 3,	0,	sys_init_module,	"init_module"	}, /* 128 */
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	}, /* 129 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"}, /* 130 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	}, /* 131 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	}, /* 131 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid"	}, /* 132 */
+ 	{ 1,	TD,	sys_fchdir,		"fchdir"	}, /* 133 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush"	}, /* 134 */
+diff --git a/linux/sparc/syscallent.h b/linux/sparc/syscallent.h
+index d6b518a..fe3a940 100644
+--- a/linux/sparc/syscallent.h
++++ b/linux/sparc/syscallent.h
+@@ -163,7 +163,7 @@
+ 	{ 2,	0,	printargs,	"getdomainname" },	/* 162 */
+ 	{ 2,	0,	sys_setdomainname,"setdomainname" },	/* 163 */
+ 	{ 5,	0,	printargs,	"utrap_install" },	/* 164 */
+-	{ 4,	0,	sys_quotactl,	"quotactl" },		/* 165 */
++	{ 4,	TF,	sys_quotactl,	"quotactl" },		/* 165 */
+ 	{ 1,	0,	sys_set_tid_address,"set_tid_address" },	/* 166 */
+ 	{ 5,	TF,	sys_mount,	"mount" },		/* 167 */
+ 	{ 2,	0,	sys_ustat,	"ustat" },		/* 168 */
+diff --git a/linux/tile/syscallent.h b/linux/tile/syscallent.h
+index 89205e3..3bf59ae 100644
+--- a/linux/tile/syscallent.h
++++ b/linux/tile/syscallent.h
+@@ -131,7 +131,7 @@
+ 	{ 3,	TS,	sys_sigprocmask,	"sigprocmask" }, /* 130 */
+ 	{ 3,	0,	sys_init_module,	"init_module" }, /* 131 */
+ 	{ 1,	0,	sys_delete_module,	"delete_module" }, /* 132 */
+-	{ 4,	0,	sys_quotactl,		"quotactl" }, /* 133 */
++	{ 4,	TF,	sys_quotactl,		"quotactl" }, /* 133 */
+ 	{ 1,	0,	sys_getpgid,		"getpgid" }, /* 134 */
+ 	{ 1,	TD,	sys_fchdir,		"fchdir" }, /* 135 */
+ 	{ 0,	0,	sys_bdflush,		"bdflush" }, /* 136 */
+diff --git a/linux/x32/syscallent.h b/linux/x32/syscallent.h
+index 924164e..cfe546c 100644
+--- a/linux/x32/syscallent.h
++++ b/linux/x32/syscallent.h
+@@ -177,7 +177,7 @@
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	},  /* 176 */
+ 	{ 1,	0,	printargs,		"64:get_kernel_syms"	},  /* 177 */
+ 	{ 5,	0,	printargs,		"64:query_module"	},  /* 178 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	},  /* 179 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	},  /* 179 */
+ 	{ 3,	0,	printargs,		"64:nfsservctl"	},  /* 180 */
+ 	{ 5,	0,	sys_getpmsg,		"getpmsg"	}, /* 181 */
+ 	{ 5,	0,	sys_putpmsg,		"putpmsg"	}, /* 182 */
+diff --git a/linux/x86_64/syscallent.h b/linux/x86_64/syscallent.h
+index 2ce663f..f98cd37 100644
+--- a/linux/x86_64/syscallent.h
++++ b/linux/x86_64/syscallent.h
+@@ -177,7 +177,7 @@
+ 	{ 2,	0,	sys_delete_module,	"delete_module"	},  /* 176 */
+ 	{ 1,	0,	sys_get_kernel_syms,	"get_kernel_syms"},  /* 177 */
+ 	{ 5,	0,	sys_query_module,	"query_module"	},  /* 178 */
+-	{ 4,	0,	sys_quotactl,		"quotactl"	},  /* 179 */
++	{ 4,	TF,	sys_quotactl,		"quotactl"	},  /* 179 */
+ 	{ 3,	0,	sys_nfsservctl,		"nfsservctl"	},  /* 180 */
+ 	{ 5,	0,	sys_getpmsg,		"getpmsg"	}, /* 181 */
+ 	{ 5,	0,	sys_putpmsg,		"putpmsg"	}, /* 182 */
+diff --git a/pathtrace.c b/pathtrace.c
+index c000c83..12e47e9 100644
+--- a/pathtrace.c
++++ b/pathtrace.c
+@@ -213,6 +213,12 @@ pathtrace_match(struct tcb *tcp)
+ 			upathmatch(tcp, tcp->u_arg[1]);
+ 	}
+ 
++	if (s->sys_func == sys_quotactl)
++	{
++		/* x, path */
++		return upathmatch(tcp, tcp->u_arg[1]);
++	}
++
+ 	if (s->sys_func == sys_renameat ||
+ 	    s->sys_func == sys_linkat)
+ 	{
+diff --git a/quota.c b/quota.c
+index a1fd92d..780abf9 100644
+--- a/quota.c
++++ b/quota.c
+@@ -617,7 +617,7 @@ sys_quotactl(struct tcb *tcp)
+ 		tprints("|");
+ 		printxval(quotatypes, type, "???QUOTA");
+ 		tprints(", ");
+-		printstr(tcp, tcp->u_arg[1], -1);
++		printpath(tcp, tcp->u_arg[1]);
+ 		tprints(", ");
+ 		switch (cmd) {
+ 			case Q_V1_QUOTAON:
+-- 
+1.8.0
+

@@ -1,0 +1,36 @@
+Upstream-Status: Backport
+
+From d6dbd998b723087f933f88a9e10843c6a7682fa2 Mon Sep 17 00:00:00 2001
+From: Steve McIntyre <steve.mcintyre@linaro.org>
+Date: Wed, 24 Oct 2012 14:49:20 +0100
+Subject: [PATCH 26/31] linux: add new errno values for EPROBE_DEFER and
+ EOPENSTALE
+
+New definitions match updates in Linux 3.4 and Linux 3.5 respectively.
+
+* linux/errnoent.h (ERRNO_517): Change to EPROBE_DEFER.
+(ERRNO_518): Change to EOPENSTALE.
+
+Signed-off-by: Steve McIntyre <steve.mcintyre@linaro.org>
+---
+ linux/errnoent.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/linux/errnoent.h b/linux/errnoent.h
+index e43bff5..c2ac683 100644
+--- a/linux/errnoent.h
++++ b/linux/errnoent.h
+@@ -519,8 +519,8 @@
+ 	"ERESTARTNOHAND", /* 514 */
+ 	"ENOIOCTLCMD", /* 515 */
+ 	"ERESTART_RESTARTBLOCK", /* 516 */
+-	"ERRNO_517", /* 517 */
+-	"ERRNO_518", /* 518 */
++	"EPROBE_DEFER", /* 517 */
++	"EOPENSTALE", /* 518 */
+ 	"ERRNO_519", /* 519 */
+ 	"ERRNO_520", /* 520 */
+ 	"EBADHANDLE", /* 521 */
+-- 
+1.8.0
+

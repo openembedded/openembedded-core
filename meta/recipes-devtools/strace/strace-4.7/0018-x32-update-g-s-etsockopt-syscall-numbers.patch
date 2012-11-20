@@ -1,0 +1,43 @@
+Upstream-Status: Backport
+
+From f04b5de5a5a743f0b3ca0895379dd2ba702ea174 Mon Sep 17 00:00:00 2001
+From: Mike Frysinger <vapier@gentoo.org>
+Date: Wed, 22 Aug 2012 11:56:15 -0400
+Subject: [PATCH 18/31] x32: update {g,s}etsockopt syscall numbers
+
+Starting with linux 3.6 (and backported to earlier kernels), these two
+syscalls have changed numbers (moving from native to compat entry points).
+Update the strace syscall list accordingly.
+
+* linux/x32/syscallent.h: Move setsockopt from 54 to 541, and move
+getsockopt from 55 to 542.
+
+Signed-off-by: Mike Frysinger <vapier@gentoo.org>
+---
+ linux/x32/syscallent.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/linux/x32/syscallent.h b/linux/x32/syscallent.h
+index ee4c4ce..6385d45 100644
+--- a/linux/x32/syscallent.h
++++ b/linux/x32/syscallent.h
+@@ -52,8 +52,8 @@
+ 	{ 3,	TN,	sys_getsockname,	"getsockname"	},  /* 51 */
+ 	{ 3,	TN,	sys_getpeername,	"getpeername"	},  /* 52 */
+ 	{ 4,	TN,	sys_socketpair,		"socketpair"	},  /* 53 */
+-	{ 5,	TN,	sys_setsockopt,		"setsockopt"	},  /* 54 */
+-	{ 5,	TN,	sys_getsockopt,		"getsockopt"	},  /* 55 */
++	{ },							    /* 54 */
++	{ },							    /* 55 */
+ 	{ 5,	TP,	sys_clone,		"clone"		},  /* 56 */
+ 	{ 0,	TP,	sys_fork,		"fork"		},  /* 57 */
+ 	{ 0,	TP,	sys_vfork,		"vfork"		},  /* 58 */
+@@ -342,3 +342,5 @@
+ 	{ 4,	TN,	sys_sendmmsg,		"sendmmsg"	}, /* 538 */
+ 	{ 6,	0,	sys_process_vm_readv,	"process_vm_readv" }, /* 539 */
+ 	{ 6,	0,	sys_process_vm_writev,	"process_vm_writev" }, /* 540 */
++	{ 5,	TN,	sys_setsockopt,		"setsockopt"	},  /* 541 */
++	{ 5,	TN,	sys_getsockopt,		"getsockopt"	},  /* 542 */
+-- 
+1.8.0
+

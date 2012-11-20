@@ -1,11 +1,10 @@
 Upstream-Status: Backport
 
-https://bugs.gentoo.org/414637
-
-From 302e8ec6cd62912a3cd6494ce6702f4ad8dae0e2 Mon Sep 17 00:00:00 2001
+From 24ee60b836ad33bb4ac694ca99d6c94a8cc5ff92 Mon Sep 17 00:00:00 2001
 From: Mike Frysinger <vapier@gentoo.org>
-Date: Fri, 4 May 2012 19:30:59 -0400
-Subject: [PATCH] util: fix building when glibc has a stub process_vm_readv
+Date: Fri, 4 May 2012 19:37:29 -0400
+Subject: [PATCH 03/31] util: fix building when glibc has a stub
+ process_vm_readv
 
 If you have a newer glibc which provides process_vm_readv, but it is built
 against older kernel headers which lack __NR_process_vm_readv, the library
@@ -25,14 +24,14 @@ callers all hit the right place.
 
 Signed-off-by: Mike Frysinger <vapier@gentoo.org>
 ---
- util.c |    4 +++-
+ util.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Index: strace-4.7/util.c
-===================================================================
---- strace-4.7.orig/util.c	2012-04-28 05:58:35.000000000 -0700
-+++ strace-4.7/util.c	2012-07-11 11:07:47.869825001 -0700
-@@ -735,7 +735,8 @@
+diff --git a/util.c b/util.c
+index d347bd8..f27acdf 100644
+--- a/util.c
++++ b/util.c
+@@ -735,7 +735,8 @@ static bool process_vm_readv_not_supported = 0;
  
  #if defined(__NR_process_vm_readv)
  static bool process_vm_readv_not_supported = 0;
@@ -42,7 +41,7 @@ Index: strace-4.7/util.c
  		 const struct iovec *lvec,
  		 unsigned long liovcnt,
  		 const struct iovec *rvec,
-@@ -744,6 +745,7 @@
+@@ -744,6 +745,7 @@ static ssize_t process_vm_readv(pid_t pid,
  {
  	return syscall(__NR_process_vm_readv, (long)pid, lvec, liovcnt, rvec, riovcnt, flags);
  }
@@ -50,3 +49,6 @@ Index: strace-4.7/util.c
  #else
  static bool process_vm_readv_not_supported = 1;
  # define process_vm_readv(...) (errno = ENOSYS, -1)
+-- 
+1.8.0
+
