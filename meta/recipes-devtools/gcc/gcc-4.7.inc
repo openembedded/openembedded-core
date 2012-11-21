@@ -92,6 +92,7 @@ EXTRA_OECONF_BASE = " --enable-lto \
 			--disable-libmudflap \
 			--with-system-zlib \
 			--with-linker-hash-style=${LINKER_HASH_STYLE} \
+			--enable-linker-build-id \
 			--with-ppl=no \
 			--with-cloog=no \
 			--enable-checking=release \
