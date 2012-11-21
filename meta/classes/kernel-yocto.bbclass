@@ -130,8 +130,9 @@ do_kernel_checkout() {
 		echo "WARNING. ${WORKDIR}/git is not a bare clone."
 		echo "Ensure that the SRC_URI includes the 'bareclone=1' option."
 		
-		# we can fix up the kernel repository, but at the least the meta
-		# branch must be present. The machine branch may be created later.
+		# We can fix up the kernel repository even if it wasn't a bare clone.
+		# If KMETA is defined, the branch must exist, but a machine branch
+		# can be missing since it may be created later by the tools.
 		mv ${WORKDIR}/git/.git ${S}
 		rm -rf ${WORKDIR}/git/
 		cd ${S}
