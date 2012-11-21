@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5574c6965ae5f583e55880e397fbb018"
 
 DEPENDS = "libnewt popt"
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://fedorahosted.org/releases/c/h/chkconfig/${BPN}-${PV}.tar.bz2"
 
@@ -30,3 +30,11 @@ do_install_append() {
     mkdir -p ${D}${sysconfdir}/chkconfig.d
     rm -f ${D}${sbindir}/update-alternatives
 }
+
+do_install_append_linuxstdbase() {
+	install -d ${D}${libdir}/lsb/
+	ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/install_initd
+	ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/remove_initd
+}
+
+FILES_${PN}_append_linuxstdbase += "${libdir}/lsb"
