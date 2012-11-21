@@ -73,7 +73,7 @@ python __anonymous () {
         clsextend.map_depends_variable("TOOLCHAIN_TARGET_TASK")
         clsextend.map_depends_variable("TOOLCHAIN_TARGET_TASK_ATTEMPTONLY")
 
-    if bb.data.inherits_class('image', d) or bb.data.inherits_class('populate_sdk_base', d):
+    if bb.data.inherits_class('image', d):
         return
 
     clsextend.map_depends_variable("DEPENDS")
