@@ -5,7 +5,7 @@ SECTION = "devel"
 LICENSE  = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING.LESSER;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/check/check-${PV}.tar.gz \
            file://libcheck_fix_for_automake-1.12.patch \
@@ -18,4 +18,7 @@ S = "${WORKDIR}/check-${PV}"
 
 inherit autotools pkgconfig
 
+CACHED_CONFIGUREVARS += "ac_cv_path_AWK_PATH=${bindir}/gawk"
+
 RREPLACES_${PN} = "check (<= 0.9.5)"
+RDEPENDS_${PN} += "gawk"
