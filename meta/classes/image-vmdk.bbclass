@@ -8,7 +8,7 @@ SYSLINUX_LABELS = "boot"
 LABELS_append = " ${SYSLINUX_LABELS} "
 
 # need to define the dependency and the ROOTFS for directdisk
-do_bootdirectdisk[depends] += "${IMAGE_BASENAME}:do_rootfs"
+do_bootdirectdisk[depends] += "${PN}:do_rootfs"
 ROOTFS ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}-${MACHINE}.ext3"
 
 # creating VMDK relies on having a live hddimg so ensure we
