@@ -94,14 +94,13 @@ PACKAGES += "python-smartpm"
 
 RDEPENDS_smartpm = 'python-smartpm'
 
-RDEPENDS_python-smartpm_append = " virtual/python-smartpm-backend python-codecs python-textutils python-xml"
+RDEPENDS_python-smartpm_append = " python-smartpm-backend-rpm python-codecs python-textutils python-xml"
 RDEPENDS_python-smartpm_append += " python-fcntl python-pickle python-crypt python-compression python-shell"
 RDEPENDS_python-smartpm_append += " python-resource python-netclient python-threading python-unixadmin"
 
 #RDEPENDS_python-smartpm_append += " python-modules"
 
 RDEPENDS_python-smartpm-backend-rpm = 'python-rpm'
-RPROVIDES_python-smartpm-backend-rpm = 'virtual/python-smartpm-backend'
 
 RDEPENDS_python-smartpm-interface-qt4 = 'qt4-x11 python-smartpm-interface-images'
 RDEPENDS_python-smartpm-interface-gtk = 'gtk+ python-smartpm-interface-images'
