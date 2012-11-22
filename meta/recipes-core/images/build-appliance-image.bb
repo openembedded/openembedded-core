@@ -68,6 +68,8 @@ fakeroot do_populate_poky_src () {
 
 IMAGE_PREPROCESS_COMMAND += "do_populate_poky_src; "
 
+addtask rootfs after do_unpack
+
 python () {
 	# Ensure we run these usually noexec tasks
 	d.delVarFlag("do_fetch", "noexec")
