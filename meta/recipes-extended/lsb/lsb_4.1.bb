@@ -2,7 +2,7 @@ DESCRIPTION = "LSB support for OpenEmbedded"
 SECTION = "console/utils"
 HOMEPAGE = "http://prdownloads.sourceforge.net/lsb"
 LICENSE = "GPLv2+"
-PR = "r0"
+PR = "r1"
 
 # lsb_release needs getopt
 RDEPENDS_${PN} += "util-linux"
@@ -73,6 +73,13 @@ do_install_append(){
            install -m 0755 ${WORKDIR}/${i} ${D}${sysconfdir}/core-lsb
        done
        install -m 0755 ${WORKDIR}/init-functions ${D}/${baselib}/lsb
+
+       # creat links for LSB test
+       install -d ${D}/${libdir}/lsb
+       ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/install_initd
+       ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/remove_initd
+       ln -sf ${sbindir}/sendmail ${D}/${libdir}/sendmail
+
        if [ "${TARGET_ARCH}" = "x86_64" ];then
 	       cd ${D}
                if [ "${baselib}" != "lib64" ]; then
@@ -105,4 +112,5 @@ do_install_append(){
 }
 FILES_${PN} += "/lib64 \
                 ${base_libdir}/lsb/* \
+		${libdir}/sendmail \
                "
