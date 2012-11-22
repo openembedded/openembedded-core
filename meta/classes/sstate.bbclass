@@ -633,7 +633,7 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
     def isNativeCross(x):
         return x.endswith("-native") or x.endswith("-cross") or x.endswith("-cross-initial")
     def isSafeDep(x):
-        if x in ["quilt-native", "autoconf-native", "automake-native", "gnu-config-native", "libtool-native", "pkgconfig-native", "gcc-cross", "binutils-cross"]:
+        if x in ["quilt-native", "autoconf-native", "automake-native", "gnu-config-native", "libtool-native", "pkgconfig-native", "gcc-cross", "binutils-cross", "gcc-cross-initial"]:
             return True
         return False
 
@@ -660,16 +660,23 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
         # Native/Cross packages don't exist and are noexec anyway
         if isNativeCross(taskdependees[dep][0]) and taskdependees[dep][1] in ['do_package_write_deb', 'do_package_write_ipk', 'do_package_write_rpm']:
             continue
-        # Native/Cross populate_sysroot need their dependencies
-        if isNativeCross(taskdependees[task][0]) and isNativeCross(taskdependees[dep][0]) and taskdependees[task][1] == 'do_populate_sysroot' and taskdependees[dep][1] == 'do_populate_sysroot':
-            return False
-        # Target populate_sysroot depended on by cross tools need to be installed
-        if taskdependees[task][1] == 'do_populate_sysroot' and taskdependees[dep][1] == 'do_populate_sysroot' and isNativeCross(taskdependees[dep][0]):
-            return False
 
-        # Target populate_sysroot do not need their dependencies
+        # Consider sysroot depending on sysroot tasks
         if taskdependees[task][1] == 'do_populate_sysroot' and taskdependees[dep][1] == 'do_populate_sysroot':
-            continue
+            # Nothing need depend on libc-initial/gcc-cross-initial
+            if taskdependees[task][0].endswith("-initial"):
+                continue
+            # Native/Cross populate_sysroot need their dependencies
+            if isNativeCross(taskdependees[task][0]) and isNativeCross(taskdependees[dep][0]):
+                return False
+            # Target populate_sysroot depended on by cross tools need to be installed
+            if isNativeCross(taskdependees[dep][0]):
+                return False
+            # Native/cross tools depended upon by target sysroot are not needed
+            if isNativeCross(taskdependees[task][0]):
+                continue
+            # Target populate_sysroot need their dependencies
+            return False
 
         # Safe fallthrough default
         bb.debug(2, " Default setscene dependency fall through due to dependency: %s" % (str(taskdependees[dep])))
