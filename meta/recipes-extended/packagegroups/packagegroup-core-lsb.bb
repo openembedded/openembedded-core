@@ -4,7 +4,7 @@
 
 SUMMARY = "Linux Standard Base (LSB)"
 DESCRIPTION = "Packages required to satisfy the Linux Standard Base (LSB) specification"
-PR = "r9"
+PR = "r10"
 LICENSE = "MIT"
 
 inherit packagegroup
@@ -101,7 +101,6 @@ RDEPENDS_packagegroup-core-lsb-misc = "\
     gettext-runtime \
     groff \
     lsbinitscripts \
-    lsbsetup \
     lsbtest \
     lsof \
     strace \
