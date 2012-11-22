@@ -663,6 +663,10 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
         # Native/Cross populate_sysroot need their dependencies
         if isNativeCross(taskdependees[task][0]) and isNativeCross(taskdependees[dep][0]) and taskdependees[task][1] == 'do_populate_sysroot' and taskdependees[dep][1] == 'do_populate_sysroot':
             return False
+        # Target populate_sysroot depended on by cross tools need to be installed
+        if taskdependees[task][1] == 'do_populate_sysroot' and taskdependees[dep][1] == 'do_populate_sysroot' and isNativeCross(taskdependees[dep][0]):
+            return False
+
         # Target populate_sysroot do not need their dependencies
         if taskdependees[task][1] == 'do_populate_sysroot' and taskdependees[dep][1] == 'do_populate_sysroot':
             continue
