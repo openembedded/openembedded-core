@@ -8,7 +8,6 @@
 
 ARCHIVE_EXCLUDE_FROM ?= ".pc autom4te.cache"
 ARCHIVE_TYPE ?= "tar srpm"
-DISTRO ?= "poky"
 PATCHES_ARCHIVE_WITH_SERIES = 'yes'
 SOURCE_ARCHIVE_LOG_WITH_SCRIPTS ?= '${@d.getVarFlag('ARCHIVER_MODE', 'log_type') \
     if d.getVarFlag('ARCHIVER_MODE', 'log_type') != 'none' else 'logs_with_scripts'}'
@@ -491,7 +490,7 @@ def create_diff_gz(d):
     f.close()
 
     s=d.getVar('S', True)
-    distro = d.getVar('DISTRO',True)
+    distro = d.getVar('DISTRO',True) or ""
     dest = s + '/' + distro + '/files'
     if not os.path.exists(dest):
         bb.mkdirhier(dest)
