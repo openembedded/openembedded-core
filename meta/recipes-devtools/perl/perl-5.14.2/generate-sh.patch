@@ -3,10 +3,10 @@ Upstream-Status:Inappropriate [embedded specific]
 Use the ld flags from the supplied configuration file. For sh we need the
 flags that specify to build PIC code so that the shared libraries work.
 
-Index: perl-5.8.8/Cross/generate_config_sh
+Index: perl-5.14.2/Cross/generate_config_sh
 ===================================================================
---- perl-5.8.8.orig/Cross/generate_config_sh	2003-09-05 18:31:08.000000000 +1000
-+++ perl-5.8.8/Cross/generate_config_sh	2007-05-30 09:12:50.000000000 +1000
+--- perl-5.14.2.orig/Cross/generate_config_sh	2010-12-30 04:07:14.000000000 +0200
++++ perl-5.14.2/Cross/generate_config_sh	2012-11-22 15:58:49.852852805 +0200
 @@ -19,10 +19,10 @@
  $callbacks->{'ar'} = [\&simple_process, ["AR", "arm-linux-ar"]];
  $callbacks->{'archname'} = [\&simple_process, ["SYS", "armv4l-linux"]];
@@ -22,7 +22,15 @@ Index: perl-5.8.8/Cross/generate_config_sh
  $callbacks->{'ccname'} = [\&simple_process, ["CC", "arm-linux-gcc"]];
  $callbacks->{'cpp'} = [\&simple_process, ["CCP", "arm-linux-cpp"]];
  $callbacks->{'cppflags'} = [\&simple_process, ["CCPFLAGS", "-fno-strict-aliasing"]];
-@@ -105,6 +105,23 @@
+@@ -30,6 +30,7 @@
+ $callbacks->{'cppstdin'} = [\&simple_process_append, ["CC", "arm-linux-gcc -E", "-E"]];
+ $callbacks->{'full_ar'} = [\&backtick, ["AR", "which $ENV{AR}", "/usr/local/arm/2.95.3/bin/arm-linux-ar"]];
+ $callbacks->{'ld'} = [\&simple_process, ["LD", "arm-linux-ld"]];
++$callbacks->{'lddlflags'} = [\&simple_process, ["LDDLFLAGS", ""]];
+ $callbacks->{'ldflags'} = [\&simple_process, ["LDFLAGS", ""]];
+ $callbacks->{'ldflags_uselargefiles'} = [\&simple_process, ["LDFLAGS", ""]];
+ $callbacks->{'myarchname'} = [\&simple_process, ["SYS", "armv4l-linux"]];
+@@ -105,6 +106,23 @@
  
  }
  
