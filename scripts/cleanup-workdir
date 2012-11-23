@@ -22,7 +22,7 @@ import re
 import subprocess
 import shutil
 
-pkg_cur_dirs = []
+pkg_cur_dirs = {}
 obsolete_dirs = []
 parser = None
 
@@ -101,7 +101,7 @@ will be deleted. Be CAUTIOUS.""")
             version = parse_version(elems[1])
         else:
             version = parse_version(elems[2])
-        pkg_cur_dirs.append(elems[0] + '-' + version)
+        pkg_cur_dirs[elems[0]] = version
 
     cmd = "bitbake -e"
     output = run_command(cmd)
@@ -156,6 +156,14 @@ will be deleted. Be CAUTIOUS.""")
                 for pkgdir in sorted(pkgdirs):
                     if pkgdir not in pkg_cur_dirs:
                         obsolete_dirs.append(os.path.join(pkgroot, pkgdir))
+                    else:
+                        for verroot, verdirs, verfiles in os.walk(os.path.join(pkgroot, pkgdir)):
+                            for f in verfiles:
+                                obsolete_dirs.append(os.path.join(pkgroot, f))
+                            for v in sorted(verdirs):
+                               if v not in pkg_cur_dirs[pkgdir]:
+                                   obsolete_dirs.append(os.path.join(pkgroot, pkgdir, v))
+                            break
 
                 # just process the top dir of every package under tmp/work/*/,
                 # then jump out of the above os.walk()
