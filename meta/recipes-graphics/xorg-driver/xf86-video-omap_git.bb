@@ -24,12 +24,8 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=10ce5de3b111315ea652a5f74ec0c602"
 DEPENDS += "virtual/libx11 libdrm xf86driproto"
 
-RPROVIDES = "xf86-video-omapfb"
-RCONFLICTS = "xf86-video-omapfb"
-RREPLACES = "xf86-video-omapfb"
-
 SRCREV = "ae0394e687f1a77e966cf72f895da91840dffb8f"
-PR = "${INC_PR}.2"
+PR = "${INC_PR}.3"
 PV = "0.4.2+gitr${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/xorg/driver/xf86-video-omap;protocol=git \
