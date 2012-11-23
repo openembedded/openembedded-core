@@ -1,5 +1,5 @@
 # Qt Embedded toolchain
-PR = "r5"
+PR = "r6"
 TOOLCHAIN_HOST_TASK = "nativesdk-packagegroup-qte-toolchain-host packagegroup-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 TOOLCHAIN_TARGET_TASK = "packagegroup-qte-toolchain-target"
 TOOLCHAIN_OUTPUTNAME = "${SDK_NAME}-toolchain-qte-${DISTRO_VERSION}"
@@ -13,10 +13,10 @@ toolchain_create_sdk_env_script_append() {
     echo 'export OE_QMAKE_CFLAGS="$CFLAGS"' >> $script
     echo 'export OE_QMAKE_CXXFLAGS="$CXXFLAGS"' >> $script
     echo 'export OE_QMAKE_LDFLAGS="$LDFLAGS"' >> $script
-    echo 'export OE_QMAKE_CC=${TARGET_PREFIX}gcc' >> $script
-    echo 'export OE_QMAKE_CXX=${TARGET_PREFIX}g++' >> $script
-    echo 'export OE_QMAKE_LINK=${TARGET_PREFIX}g++' >> $script
-    echo 'export OE_QMAKE_AR=${TARGET_PREFIX}ar' >> $script
+    echo 'export OE_QMAKE_CC=$CC' >> $script
+    echo 'export OE_QMAKE_CXX=$CXX' >> $script
+    echo 'export OE_QMAKE_LINK=$LD' >> $script
+    echo 'export OE_QMAKE_AR=$AR' >> $script
     echo 'export OE_QMAKE_LIBDIR_QT=${SDKTARGETSYSROOT}/${libdir}' >> $script
     echo 'export OE_QMAKE_INCDIR_QT=${SDKTARGETSYSROOT}/${includedir}/${QT_DIR_NAME}' >> $script
     echo 'export OE_QMAKE_MOC=${QT_TOOLS_PREFIX}/moc4' >> $script
