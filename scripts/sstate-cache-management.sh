@@ -294,7 +294,7 @@ rm_by_stamps (){
   for i in $suffixes; do
       # There is no "\.sigdata" but "_setcene" when it is mirrored
       # from the SSTATE_MIRRORS, use them to figure out the sum.
-      sums=`find $stamps -maxdepth 2 -name "*.do_$i.*" \
+      sums=`find $stamps -maxdepth 3 -name "*.do_$i.*" \
         -o -name "*.do_${i}_setscene.*" | \
         sed -ne 's#.*_setscene\.##p' -e 's#.*\.sigdata\.##p' | \
         sed -e 's#\..*##' | sort -u`
