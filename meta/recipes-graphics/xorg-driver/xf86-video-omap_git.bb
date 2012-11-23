@@ -2,19 +2,34 @@ require xorg-driver-video.inc
 
 SUMMARY = "X.Org X server -- Texas Instruments OMAP framebuffer driver"
 
-DESCRIPTION = "omap driver supports the basic Texas Instruments OMAP \
-framebuffer."
+SUMMARY = "X.Org X server -- TI OMAP integrated graphics chipsets driver"
+
+DESCRIPTION = "Open-source X.org graphics driver for TI OMAP graphics \
+Currently relies on a closed-source submodule for EXA acceleration on \
+the following chipsets: \
+  + OMAP3430 \
+  + OMAP3630 \
+  + OMAP4430 \
+  + OMAP4460 \
+  + OMAP5430 \
+  + OMAP5432 \
+\
+NOTE: this driver is work in progress..  you probably don't want to try \
+and use it yet.  The API/ABI between driver and kernel, and driver and \
+acceleration submodules is not stable yet.  This driver requires the \
+omapdrm kernel driver w/ GEM support. \
+"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=10ce5de3b111315ea652a5f74ec0c602"
-DEPENDS += "virtual/libx11 libdrm"
+DEPENDS += "virtual/libx11 libdrm xf86driproto"
 
 RPROVIDES = "xf86-video-omapfb"
 RCONFLICTS = "xf86-video-omapfb"
 RREPLACES = "xf86-video-omapfb"
 
 SRCREV = "ae0394e687f1a77e966cf72f895da91840dffb8f"
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 PV = "0.4.2+gitr${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/xorg/driver/xf86-video-omap;protocol=git \
@@ -23,7 +38,6 @@ SRC_URI = "git://anongit.freedesktop.org/xorg/driver/xf86-video-omap;protocol=gi
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF_armv7a = " --enable-neon "
 CFLAGS += " -I${STAGING_INCDIR}/xorg "
 
 # Use overlay 2 on omap3 to enable other apps to use overlay 1 (e.g. dmai or omapfbplay)
