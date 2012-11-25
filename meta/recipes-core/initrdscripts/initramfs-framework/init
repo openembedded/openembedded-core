@@ -68,8 +68,11 @@ MODULE_PRE_HOOKS=""  # functions to call before running each module
 MODULE_POST_HOOKS="" # functions to call after running each module
 MODULES_DIR=/init.d  # place to look for modules
 
-# initialize /proc and /sys
-mkdir -p /proc /sys
+# make mount stop complaining about missing /etc/fstab
+touch /etc/fstab
+
+# initialize /proc, /sys and /var/lock
+mkdir -p /proc /sys /var/lock
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 
