@@ -143,11 +143,20 @@ else
 	target_sdk_dir=$(readlink -m $target_sdk_dir)
 fi
 
-printf "You are about to install the SDK to \"$target_sdk_dir\". Proceed[Y/n]?"
+if [ -e "$target_sdk_dir/environment-setup-${REAL_MULTIMACH_TARGET_SYS}" ]; then
+	echo "The directory \"$target_sdk_dir\" already contains a SDK for this architecture."
+	printf "If you continue, existing files will be overwritten! Proceed[y/N]?"
+
+	default_answer="n"
+else
+	printf "You are about to install the SDK to \"$target_sdk_dir\". Proceed[Y/n]?"
+
+	default_answer="y"
+fi
 read answer
 
 if [ "$answer" = "" ]; then
-	answer="y"
+	answer="$default_answer"
 fi
 
 if [ "$answer" != "Y" -a "$answer" != "y" ]; then
@@ -188,7 +197,7 @@ find $native_sysroot -type f -exec file '{}' \;|grep ":.*ASCII.*text"|cut -d':' 
 
 # change all symlinks pointing to ${SDKPATH}
 for l in $(find $native_sysroot -type l); do
-	ln -sf $(readlink $l|sed -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:") $l
+	ln -sfn $(readlink $l|sed -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:") $l
 done
 
 echo done
