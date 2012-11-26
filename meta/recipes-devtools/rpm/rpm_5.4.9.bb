@@ -43,7 +43,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "libpcre attr acl popt ossp-uuid file bison-native"
-PR = "r55"
+PR = "r56"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -203,7 +203,6 @@ FILES_${PN} =  "${bindir}/rpm \
 		${libdir}/rpm/tgpg \
 		${libdir}/rpm/macros \
 		${libdir}/rpm/rpmpopt \
-		${libdir}/rpm/rpmdb_loadcvt \
 		${libdir}/rpm/rpm2cpio \
 		${libdir}/rpm/vcheck \
 		${libdir}/rpm/helpers \
@@ -236,6 +235,8 @@ FILES_${PN}-libs = "${libdir}/librpm-*.so \
 		${libdir}/librpmmisc-*.so \
 		${libdir}/librpmbuild-*.so \
 		"
+
+RDEPENDS_${PN}-build += "bash"
 
 FILES_${PN}-build = "${prefix}/src/rpm \
 		${bindir}/rpmbuild \
@@ -317,6 +318,8 @@ FILES_perl-module-rpm = "${libdir}/perl/*/* \
 FILES_perl-module-rpm-dev = "${prefix}/share/man/man3/RPM* \
 		"
 
+RDEPENDS_${PN}-dev += "bash"
+
 FILES_${PN}-dev = "${includedir}/rpm \
 		${libdir}/librpm.la \
 		${libdir}/librpm.so \
@@ -332,6 +335,7 @@ FILES_${PN}-dev = "${includedir}/rpm \
 		${libdir}/librpmbuild.so \
 		${libdir}/rpm/lib/liblua.la \
 		${libdir}/pkgconfig/rpm.pc \
+		${libdir}/rpm/rpmdb_loadcvt \
 		"
 
 FILES_${PN}-staticdev = " \
