@@ -15,6 +15,7 @@ SRC_URI = "git://git.gnome.org/sysprof;protocol=git \
 
 SRC_URI_append_arm  = " file://rmb-arm.patch"
 SRC_URI_append_mips = " file://rmb-mips.patch"
+SRC_URI_append_mips64 = " file://rmb-mips.patch"
 
 S = "${WORKDIR}/git"
 
