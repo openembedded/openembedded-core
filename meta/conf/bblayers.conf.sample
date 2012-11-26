@@ -8,3 +8,8 @@ BBFILES ?= ""
 BBLAYERS ?= " \
   ##COREBASE##/meta \
   "
+
+BBLAYERS_NON_REMOVABLE ?= " \
+  ##COREBASE##/meta \
+  "
+
