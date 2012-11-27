@@ -8,12 +8,13 @@ SECTION = "devel"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504" 
 
-SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz"
+SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
+           file://guile.patch"
 
 SRC_URI[md5sum] = "6c6671b76021fb30dd43b0d5fdb7180b"
 SRC_URI[sha256sum] = "37e885d6c8a58f33ab198d38bb972fa4c14236f951d628161dde6e20527d0df2"
 
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "guile-native libtool-native libxml2-native"
 RDEPENDS = "automake pkgconfig"
