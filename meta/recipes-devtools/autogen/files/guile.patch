@@ -1,0 +1,177 @@
+Disable the autoconf macros that use dpkg (!) and guile-config to determine what
+version and where guile is installed, and just use pkg-config directly (guile-config is a deprecated wrapper around pkg-config).
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+Upstream-Status: Pending (should be submitted)
+
+Index: a/config/ag_macros.m4
+===================================================================
+--- a/config/ag_macros.m4	2012-11-27 14:53:24.336205621 +0000
++++ b/config/ag_macros.m4	2012-11-27 16:16:42.968271120 +0000
+@@ -163,146 +162,20 @@
+ 
+ 
+ AC_DEFUN([AG_WITHLIB_GUILE],[
+-  AC_ARG_WITH([libguile],
+-    AS_HELP_STRING([--with-libguile], [libguile installation prefix]),
+-    [ag_cv_with_libguile_root=${with_libguile}],
+-    AC_CACHE_CHECK([whether with-libguile was specified], ag_cv_with_libguile_root,
+-      ag_cv_with_libguile_root=no)
+-  ) # end of AC_ARG_WITH libguile
+-
+-  if test "${with_libguile+set}" = set && \
+-     test "${withval}" = no
+-  then ## disabled by request
+-    ag_cv_with_libguile_root=no
+-    ag_cv_with_libguile_cflags=no
+-    ag_cv_with_libguile_libs=no
+-  else
+-
+-  AC_ARG_WITH([libguile-cflags],
+-    AS_HELP_STRING([--with-libguile-cflags], [libguile compile flags]),
+-    [ag_cv_with_libguile_cflags=${with_guile_cflags}],
+-    AC_CACHE_CHECK([whether with-libguile-cflags was specified], ag_cv_with_libguile_cflags,
+-      ag_cv_with_libguile_cflags=no)
+-  ) # end of AC_ARG_WITH libguile-cflags
+-
+-  AC_ARG_WITH([libguile-libs],
+-    AS_HELP_STRING([--with-libguile-libs], [libguile link command arguments]),
+-    [ag_cv_with_libguile_libs=${with_guile_libs}],
+-    AC_CACHE_CHECK([whether with-libguile-libs was specified], ag_cv_with_libguile_libs,
+-      ag_cv_with_libguile_libs=no)
+-  ) # end of AC_ARG_WITH libguile-libs
+-
+-  case "X${ag_cv_with_libguile_cflags}" in
+-  Xyes|Xno|X )
+-    case "X${ag_cv_with_libguile_root}" in
+-    Xyes|Xno|X ) ag_cv_with_libguile_cflags=no ;;
+-    * )        ag_cv_with_libguile_cflags=-I${ag_cv_with_libguile_root}/include ;;
+-    esac
+-  esac
+-  case "X${ag_cv_with_libguile_libs}" in
+-  Xyes|Xno|X )
+-    case "X${ag_cv_with_libguile_root}" in
+-    Xyes|Xno|X ) ag_cv_with_libguile_libs=no ;;
+-    * )        ag_cv_with_libguile_libs="-L${ag_cv_with_libguile_root}/lib -lguile";;
+-    esac
+-  esac
+-  ag_save_CPPFLAGS="${CPPFLAGS}"
+-  ag_save_LIBS="${LIBS}"
+-  case "X${ag_cv_with_libguile_cflags}" in
+-  Xyes|Xno|X )
+-    f=`guile-config compile 2>/dev/null` || f=''
+-    test -n "${f}" && ag_cv_with_libguile_cflags="${f}" && \
+-      AC_MSG_NOTICE([guile-config used for CFLAGS: $f]) ;;
+-  esac
+-  case "X${ag_cv_with_libguile_libs}" in
+-  Xyes|Xno|X )
+-    f=`guile-config link 2>/dev/null` || f=''
+-    test -n "${f}" && ag_cv_with_libguile_libs="${f}" && \
+-      AC_MSG_NOTICE([guile-config used for LIBS: $f]) ;;
+-  esac
+-  fi ## disabled by request
+-
+-  case "X${ag_cv_with_libguile_cflags}" in
+-  Xyes|Xno|X )
+-    ag_cv_with_libguile_cflags="" ;;
+-  * ) CPPFLAGS="${CPPFLAGS} ${ag_cv_with_libguile_cflags}" ;;
+-  esac
+-  case "X${ag_cv_with_libguile_libs}" in
+-  Xyes|Xno|X )
+-    LIBS="${LIBS} -lguile"
+-    ag_cv_with_libguile_libs="-lguile" ;;
+-  * )
+-    LIBS="${LIBS} ${ag_cv_with_libguile_libs}" ;;
+-  esac
+-  LIBGUILE_CFLAGS=""
+-  LIBGUILE_LIBS=""
+-  AC_MSG_CHECKING([whether libguile can be linked with])
+-  AC_CACHE_VAL([ag_cv_with_libguile],[
+-  AC_LINK_IFELSE(
+-    [AC_LANG_SOURCE([[@%:@include <libguile.h>
+-@%:@if ((SCM_MAJOR_VERSION * 100) + SCM_MINOR_VERSION) > 200
+-This has not been tested with Guile 2.1.  Remove this line to proceed.
+-@%:@endif
+-int main () {
+-  SCM fumble = SCM_UNDEFINED;
+-  SCM bumble = SCM_UNDEFINED;
+-  SCM stumble= SCM_UNDEFINED;
+-  long lstumble;
+-  stumble = scm_cons( fumble, bumble );
+-  stumble = scm_display( fumble, bumble );
+-  lstumble = scm_ilength( fumble );
+-  /* stumble = scm_c_make_string( 1, SCM_UNDEFINED); */
+-  stumble = scm_c_eval_string( "stumble" );
+-  scm_misc_error( "oops", "bad", bumble );
+-  stumble = scm_num_eq_p( fumble, bumble );
+-  scm_wrong_type_arg( "oops", 1, bumble );
+-  return 0; }]])],
+-    [ag_cv_with_libguile=yes],
+-    [ag_cv_with_libguile=no]) # end of AC_LINK_IFELSE 
+-  ]) # end of AC_CACHE_VAL for ag_cv_with_libguile
+-  AC_MSG_RESULT([${ag_cv_with_libguile}])
+-    AC_SUBST([LIBGUILE_CFLAGS])
+-    AC_SUBST([LIBGUILE_LIBS])
+-    AC_SUBST([LIBGUILE_PATH])
+-  if test "X${ag_cv_with_libguile}" != Xno
+-  then[
+-      LIBGUILE_CFLAGS="${ag_cv_with_libguile_cflags}"
+-      LIBGUILE_LIBS="${ag_cv_with_libguile_libs}"
+-      case "${LIBGUILE_LIBS}" in *-L* )
+-        LIBGUILE_PATH=`echo ,${LIBGUILE_LIBS} |           sed 's/.*[, ]-L[ 	]*//;s/[ 	].*//'`
+-      ;; * ) LIBGUILE_PATH='' ;; esac]
+-      CPPFLAGS="@S|@{ag_save_CPPFLAGS}"
+-  LIBS="@S|@{ag_save_LIBS}"
+-  else
+-    CPPFLAGS="${ag_save_CPPFLAGS}"
+-    LIBS="${ag_save_LIBS}"
+-      LIBGUILE_CFLAGS=''
+-      LIBGUILE_LIBS=''
+-      LIBGUILE_PATH=''
+-      AC_MSG_ERROR([Cannot find libguile.  libguile is required.])
+-  fi
++  PKG_PROG_PKG_CONFIG
++  PKG_CHECK_MODULES(LIBGUILE, [guile-2.0])
++  case "${LIBGUILE_LIBS}" in *-L* )
++    LIBGUILE_PATH=`echo ,${LIBGUILE_LIBS} |           sed 's/.*[, ]-L[ 	]*//;s/[ 	].*//'`
++  ;; * ) LIBGUILE_PATH='' ;; esac
+   AC_SUBST([AG_GUILE])
+-  
+ ]) # end of AC_DEFUN of AG_WITHLIB_GUILE
+ 
+ 
+ AC_DEFUN([AG_TEST_GUILE_VERSION],[
+-  AC_MSG_CHECKING([whether the guile version])
++  PKG_PROG_PKG_CONFIG
++  AC_MSG_CHECKING([the guile version])
+   AC_CACHE_VAL([ag_cv_test_guile_version],[
+-    ag_cv_test_guile_version=`exec 2> /dev/null
+-pkginfo=\`dpkg --list 2>/dev/null | egrep 'guile-[0-9.]-dev'\`
+-if test -n "${pkginfo}"
+-then echo ${pkginfo} | sed -e 's/.*guile-//' -e 's/-dev.*//'
+-else
+-  v=\`( guile-config --version 2>&1 ) | sed 's/.*Guile version *//'\`
+-  test -z "${v}" && v=\`guile --version | sed 's/.*Guile *//;1q'\`
+-  test -z "${v}" && exit 1
+-  echo ${v}
+-fi`
+-    if test $? -ne 0 || test -z "$ag_cv_test_guile_version"
+-    then ag_cv_test_guile_version=no
+-    fi
+-  ]) # end of CACHE_VAL of ag_cv_test_guile_version
++    ag_cv_test_guile_version=`exec $PKG_CONFIG --modversion guile-2.0`])
+   AC_MSG_RESULT([${ag_cv_test_guile_version}])
+   if test "X${ag_cv_test_guile_version}" != Xno
+   then
+@@ -324,9 +197,9 @@
+   AC_MSG_CHECKING([whether scm_primitive_eval_x links])
+   AC_CACHE_VAL([ag_cv_link_eval_string],[
+     ag_save_CPPFLAGS="${CPPFLAGS}"
+-    CPPFLAGS="${ag_cv_with_libguile_cflags} ${CPPFLAGS}"
++    CPPFLAGS="${LIBGUILE_CFLAGS} ${CPPFLAGS}"
+     ag_save_LIBS="${LIBS}"
+-    LIBS="${ag_cv_with_libguile_libs} ${LIBS}"
++    LIBS="${LIBGUILE_LIBS} ${LIBS}"
+   AC_TRY_LINK([@%:@include <libguile.h>],
+     [SCM res = scm_primitive_eval_x( SCM_UNDEFINED );],
+     [ag_cv_link_eval_string=yes],[ag_cv_link_eval_string=no]
