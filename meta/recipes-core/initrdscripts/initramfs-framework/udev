@@ -1,10 +1,25 @@
 #!/bin/sh
-# Copyright (C) 2011 O.S. Systems Software LTDA.
+# Copyright (C) 2011, 2012 O.S. Systems Software LTDA.
 # Licensed on MIT
 
+udev_daemon() {
+	OPTIONS="/sbin/udevd /lib/udev/udevd /lib/systemd/systemd-udevd"
+
+	for o in $OPTIONS; do
+		if [ -x "$o" ]; then
+			echo $o
+			return 0
+		fi
+	done
+
+	return 1
+}
+
+_UDEV_DAEMON=`udev_daemon`
+
 udev_enabled() {
-	if [ ! -e /lib/udev/udevd ]; then
-		debug "/lib/udev/udev doesn't exist"
+	if [ -z "$_UDEV_DAEMON" ]; then
+		msg "WARNING: Cannot find the udev daemon; daemon will not be started in initramfs."
 		return 1
 	fi
 
@@ -14,9 +29,9 @@ udev_enabled() {
 udev_run() {
 	mkdir -p /run
 
-	/lib/udev/udevd --daemon > /dev/null
+	$_UDEV_DAEMON --daemon
 	udevadm trigger --action=add
 	udevadm settle
 
-	killall udevd 2>/dev/null
+	killall `basename $_UDEV_DAEMON` 2>/dev/null
 }
