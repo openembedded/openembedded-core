@@ -7,7 +7,7 @@ HOMEPAGE = "http://ccache.samba.org"
 SECTION = "devel"
 LICENSE = "GPLv3+"
 
-SRC_URI = "http://samba.org/ftp/ccache/ccache-${PV}.tar.gz"
+SRC_URI = "http://samba.org/ftp/ccache/ccache-${PV}.tar.xz"
 
 inherit autotools
 
