@@ -11,7 +11,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=393a5ca445f6965873eca0259a17f833"
 
 DEPENDS = "python rpm"
-PR = "r2"
+PR = "r3"
 SRCNAME = "smart"
 
 SRC_URI = "\
@@ -23,6 +23,7 @@ SRC_URI = "\
           file://smart-dflags.patch \
           file://smart-rpm-md-parse.patch \
           file://smart-tmpdir.patch \
+          file://smart-metadata-match.patch \
           "
 
 SRC_URI[md5sum] = "573ef32ba177a6b3c4bf7ef04873fcb6"
