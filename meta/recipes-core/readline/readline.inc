@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 DEPENDS += "ncurses"
 
-SRC_URI = "${GNU_MIRROR}/readline/${BPN}-${PV}.tar.gz \
+SRC_URI = "${GNU_MIRROR}/readline/${BPN}-${PV}.tar.gz;name=archive \
            file://configure-fix.patch \
            file://norpath.patch \
            file://acinclude.m4"
