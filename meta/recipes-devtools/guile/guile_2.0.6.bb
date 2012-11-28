@@ -28,7 +28,7 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.gz \
 SRC_URI[md5sum] = "3438cd4415c0c43ca93a20e845eba7e2"
 SRC_URI[sha256sum] = "3ece055145a5020dd36b84f5fbccd4b3846a671960dd5ee55931555f03200950"
 
-PR = "r1"
+PR = "r2"
 
 inherit autotools gettext
 BBCLASSEXTEND = "native"
@@ -88,5 +88,16 @@ guile_cross_config() {
 	        echo '))' >> guile-config.cross
 	        cat meta/guile-config >> guile-config.cross
 	        install guile-config.cross ${STAGING_BINDIR_CROSS}/guile-config
+	fi
+}
+
+# Guile needs the compiled files to be newer than the source, and it won't
+# auto-compile into the prefix even if it can write there, so touch them here as
+# sysroot is managed.
+SSTATEPOSTINSTFUNCS += "guile_sstate_postinst"
+guile_sstate_postinst() {
+	if [ "${BB_CURRENTTASK}" = "populate_sysroot" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
+	then
+                find ${STAGING_DIR_TARGET}/${libdir}/guile/2.0/ccache -type f | xargs touch
 	fi
 }
