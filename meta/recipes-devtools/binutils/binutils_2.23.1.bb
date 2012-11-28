@@ -8,9 +8,9 @@ EXTRA_OECONF += "--with-sysroot=/ \
                 --enable-shared \
                 "
 
-EXTRA_OECONF_virtclass-native = "--enable-target=all --enable-64-bit-bfd --enable-install-libbfd"
+EXTRA_OECONF_class-native = "--enable-targets=all --enable-64-bit-bfd --enable-install-libbfd"
 
-do_install_virtclass-native () {
+do_install_class-native () {
 	autotools_do_install
 
 	# Install the libiberty header
