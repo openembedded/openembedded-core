@@ -28,6 +28,8 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.gz \
 SRC_URI[md5sum] = "3438cd4415c0c43ca93a20e845eba7e2"
 SRC_URI[sha256sum] = "3ece055145a5020dd36b84f5fbccd4b3846a671960dd5ee55931555f03200950"
 
+PR = "r1"
+
 inherit autotools gettext
 BBCLASSEXTEND = "native"
 
@@ -45,7 +47,7 @@ export GUILE_FOR_BUILD="${BUILD_SYS}-guile"
 
 do_compile_append() {
 	# just for target recipe
-	if [ "${PN}" == "guile" ]
+	if [ "${PN}" = "guile" ]
 	then
 		sed -i -e s:${STAGING_DIR_TARGET}::g \
 	               -e s:/${TARGET_SYS}::g \
@@ -71,7 +73,7 @@ SYSROOT_PREPROCESS_FUNCS = "guile_cross_config"
 
 guile_cross_config() {
 	# this is only for target recipe
-	if [ "${PN}" == "guile" ]
+	if [ "${PN}" = "guile" ]
 	then
 	        # Create guile-config returning target values instead of native values
 	        install -d ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}
