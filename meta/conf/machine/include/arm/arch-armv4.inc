@@ -13,7 +13,7 @@ AVAILTUNES += "armv4 armv4t"
 ARMPKGARCH_tune-armv4 ?= "armv4"
 ARMPKGARCH_tune-armv4t ?= "armv4"
 TUNE_FEATURES_tune-armv4 ?= "armv4"
-TUNE_FEATURES_tune-armv4t ?= "armv4 thumb"
+TUNE_FEATURES_tune-armv4t ?= "${TUNE_FEATURES_tune-armv4} thumb"
 PACKAGE_EXTRA_ARCHS_tune-armv4 = "arm armv4"
 PACKAGE_EXTRA_ARCHS_tune-armv4t = "${PACKAGE_EXTRA_ARCHS_tune-armv4} armv4t"
 
