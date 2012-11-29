@@ -3,7 +3,7 @@ SECTION = "libs"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
-PR = "r1"
+PR = "r2"
 
 inherit autotools pkgconfig
 
@@ -24,4 +24,4 @@ FILES_${PN}-dbg += "${base_libdir}/security/.debug"
 FILES_${PN}-dev += "${base_libdir}/security/*.la"
 
 # We really need the symlink so :(
-INSANE_SKIP_${PN} = "dev-so"
+INSANE_SKIP_cgroups-pam-plugin = "dev-so"
