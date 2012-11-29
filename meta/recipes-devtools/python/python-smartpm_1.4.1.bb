@@ -20,6 +20,7 @@ SRC_URI = "\
           file://smart-rpm-root.patch \
           file://smart-recommends.patch \
           file://smart-rpm-md-parse.patch \
+          file://smart-tmpdir.patch \
           "
 
 SRC_URI[md5sum] = "573ef32ba177a6b3c4bf7ef04873fcb6"

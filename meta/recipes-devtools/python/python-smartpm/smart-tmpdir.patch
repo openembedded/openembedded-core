@@ -1,0 +1,30 @@
+backends/rpm: remove creation of /var/tmp
+
+This doesn't appear to be needed, and breaks installation of base-files
+in OpenEmbedded (since that is a symlink installed as part of the
+package).
+
+Upstream-Status: Pending
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+diff --git a/smart/backends/rpm/base.py b/smart/backends/rpm/base.py
+index 234c844..127354d 100644
+--- a/smart/backends/rpm/base.py
++++ b/smart/backends/rpm/base.py
+@@ -82,12 +82,6 @@ def getTS(new=False):
+             else:
+                 iface.warning(_("Initialized new rpm database at %s")
+                               % getTS.root)
+-        tmpdir = os.path.join(getTS.root, "var/tmp")
+-        if not os.path.isdir(tmpdir):
+-            try:
+-                os.makedirs(tmpdir)
+-            except OSError:
+-                pass
+     if new:
+         if sysconf.get("rpm-dbpath"):
+             rpm.addMacro('_dbpath', "/" + sysconf.get("rpm-dbpath"))
+-- 
+1.7.9.5
+
