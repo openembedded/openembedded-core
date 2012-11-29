@@ -5,7 +5,7 @@ SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://COPYRIGHT;endline=15;md5=349c872e0066155e1818b786938876a4"
-PR = "r8"
+PR = "r9"
 
 RDEPENDS_${PN} = "${PN}-inittab"
 
@@ -27,7 +27,7 @@ B = "${S}/src"
 
 inherit update-alternatives
 
-ALTERNATIVE_${PN} = "init mountpoint halt reboot runlevel shutdown poweroff last mesg wall"
+ALTERNATIVE_${PN} = "init mountpoint halt reboot runlevel shutdown poweroff last mesg utmpdump wall"
 
 ALTERNATIVE_PRIORITY = "200"
 
