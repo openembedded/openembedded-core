@@ -7,11 +7,15 @@ ROOTFS_PKGMANAGE = "rpm zypper"
 # Add 50Meg of extra space for zypper database space
 IMAGE_ROOTFS_EXTRA_SPACE_append = "${@base_contains("PACKAGE_INSTALL", "zypper", " + 51200", "" ,d)}"
 
+# Smart is python based, so be sure python-native is available to us.
+EXTRANATIVEPATH += "python-native"
+
 # Postinstalls on device are handled within this class at present
 ROOTFS_PKGMANAGE_BOOTSTRAP = ""
 
 do_rootfs[depends] += "rpm-native:do_populate_sysroot"
 do_rootfs[depends] += "rpmresolve-native:do_populate_sysroot"
+do_rootfs[depends] += "python-smartpm-native:do_populate_sysroot"
 
 # Needed for update-alternatives
 do_rootfs[depends] += "opkg-native:do_populate_sysroot"
@@ -21,8 +25,8 @@ do_rootfs[depends] += "createrepo-native:do_populate_sysroot"
 
 do_rootfs[recrdeptask] += "do_package_write_rpm"
 
-RPM_PREPROCESS_COMMANDS = "package_update_index_rpm; package_generate_rpm_conf; "
-RPM_POSTPROCESS_COMMANDS = ""
+RPM_PREPROCESS_COMMANDS = "package_update_index_rpm; "
+RPM_POSTPROCESS_COMMANDS = "rpm_setup_smart_target_config; "
 
 # 
 # Allow distributions to alter when [postponed] package install scripts are run
@@ -32,7 +36,7 @@ POSTINSTALL_INITPOSITION ?= "98"
 rpmlibdir = "/var/lib/rpm"
 opkglibdir = "${localstatedir}/lib/opkg"
 
-RPMOPTS="--dbpath ${rpmlibdir} --define='_openall_before_chroot 1'"
+RPMOPTS="--dbpath ${rpmlibdir}"
 RPM="rpm ${RPMOPTS}"
 
 # RPM doesn't work with multiple rootfs generation at once due to collisions in the use of files 
@@ -42,13 +46,10 @@ do_rootfs[lockfiles] += "${DEPLOY_DIR_RPM}/rpm.lock"
 fakeroot rootfs_rpm_do_rootfs () {
 	${RPM_PREPROCESS_COMMANDS}
 
-	#createrepo "${DEPLOY_DIR_RPM}"
-
 	# install packages
 	# This needs to work in the same way as populate_sdk_rpm.bbclass!
 	export INSTALL_ROOTFS_RPM="${IMAGE_ROOTFS}"
 	export INSTALL_PLATFORM_RPM="${TARGET_ARCH}"
-	export INSTALL_CONFBASE_RPM="${RPMCONF_TARGET_BASE}"
 	export INSTALL_PACKAGES_RPM="${PACKAGE_INSTALL}"
 	export INSTALL_PACKAGES_ATTEMPTONLY_RPM="${PACKAGE_INSTALL_ATTEMPTONLY}"
 	export INSTALL_PACKAGES_LINGUAS_RPM="${LINGUAS_INSTALL}"
@@ -114,18 +115,10 @@ EOF
 	# remove lock files
 	rm -f ${IMAGE_ROOTFS}${rpmlibdir}/__db.*
 
-	# Move manifests into the directory with the logs
-	mv ${IMAGE_ROOTFS}/install/*.manifest ${T}/
-
 	# Remove all remaining resolver files
 	rm -rf ${IMAGE_ROOTFS}/install
 
 	log_check rootfs
-
-	# Workaround so the parser knows we need the resolve_package function!
-	if false ; then
-		resolve_package_rpm foo ${RPMCONF_TARGET_BASE}.conf || true
-	fi
 }
 
 remove_packaging_data_files() {
@@ -135,10 +128,19 @@ remove_packaging_data_files() {
 	mkdir -p $t
 	mv ${IMAGE_ROOTFS}${rpmlibdir} $t
 	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
+	rm -rf ${IMAGE_ROOTFS}/var/lib/smart
 }
 
-RPM_QUERY_CMD = '${RPM} --root $INSTALL_ROOTFS_RPM -D "_dbpath ${rpmlibdir}" \
-		-D "__dbi_txn create nofsync private"'
+rpm_setup_smart_target_config() {
+	# Set up smart configuration for the target
+	rm -rf ${IMAGE_ROOTFS}/var/lib/smart
+	smart --data-dir=${IMAGE_ROOTFS}/var/lib/smart channel --add rpmsys type=rpm-sys -y
+	smart --data-dir=${IMAGE_ROOTFS}/var/lib/smart config --set rpm-nolinktos=1
+	smart --data-dir=${IMAGE_ROOTFS}/var/lib/smart config --set rpm-noparentdirs=1
+	rm -f ${IMAGE_ROOTFS}/var/lib/smart/config.old
+}
+
+RPM_QUERY_CMD = '${RPM} --root $INSTALL_ROOTFS_RPM -D "_dbpath ${rpmlibdir}"'
 
 list_installed_packages() {
 	GET_LIST=$(${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{ARCH} %{PACKAGEORIGIN} %{Platform}\n]")
