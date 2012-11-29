@@ -212,7 +212,6 @@ ac_cv_socklen_t=${ac_cv_socklen_t=yes}
 ac_cv_struct_rlimit=${ac_cv_struct_rlimit=yes}
 ac_cv_negative_eai=${ac_cv_negative_eai=yes}
 apr_cv_gai_addrconfig=${apr_cv_gai_addrconfig=no}
-ac_cv_o_nonblock_inherited=${ac_cv_o_nonblock_inherited=no}
 apr_cv_tcp_nodelay_with_cork=${apr_cv_tcp_nodelay_with_cork=yes}
 
 # binutils (libiberty)
