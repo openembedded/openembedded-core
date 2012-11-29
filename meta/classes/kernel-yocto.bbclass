@@ -326,6 +326,8 @@ do_validate_branches() {
 	if [ $? -eq 0 ]; then
 		# restore the branch for builds
 		git checkout -q -f ${KBRANCH}
+        else
+	        git checkout -q master
 	fi
 }
 
