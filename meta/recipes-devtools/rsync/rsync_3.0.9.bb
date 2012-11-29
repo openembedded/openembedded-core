@@ -14,6 +14,12 @@ EXTRA_OECONF += "--disable-xattr-support --disable-acl-support"
 do_configure_prepend () {
 	rm -f configure configure.sh
 	cp -f ${WORKDIR}/acinclude.m4 ${S}/
+
+	# by default, if crosscompiling, rsync                                                           
+	# disables a number of capabilities, hardlinking                                                 
+	# symlinks and special files (ie devices)
+	export rsync_cv_can_hardlink_special=yes
+	export rsync_cv_can_hardlink_symlink=yes 
 }
 
 do_configure_append () {
