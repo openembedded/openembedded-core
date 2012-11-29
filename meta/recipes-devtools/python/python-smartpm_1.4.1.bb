@@ -19,6 +19,7 @@ SRC_URI = "\
           file://smartpm-rpm5-nodig.patch \
           file://smart-rpm-root.patch \
           file://smart-recommends.patch \
+          file://smart-rpm-extra-macros.patch \
           file://smart-dflags.patch \
           file://smart-rpm-md-parse.patch \
           file://smart-tmpdir.patch \

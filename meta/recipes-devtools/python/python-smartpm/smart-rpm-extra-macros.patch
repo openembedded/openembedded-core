@@ -1,0 +1,27 @@
+backends/rpm: implement rpm-extra-macros option
+
+Allow defining extra macros in the smart configuration to be passed
+to rpm before opening the database.
+
+Upstream-Status: Pending
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+diff --git a/smart/backends/rpm/base.py b/smart/backends/rpm/base.py
+index b9e9cb2..234c844 100644
+--- a/smart/backends/rpm/base.py
++++ b/smart/backends/rpm/base.py
+@@ -53,6 +53,10 @@ def rpm_join_dbpath(root, dbpath):
+         return os.path.join(root, dbpath)
+ 
+ def getTS(new=False):
++    if sysconf.get("rpm-extra-macros"):
++        for key, value in sysconf.get("rpm-extra-macros").items():
++            rpm.addMacro(key, str(value))
++
+     rpm_root = os.path.abspath(sysconf.get("rpm-root", "/"))
+     if not hasattr(getTS, "ts") or getTS.root != rpm_root:
+         getTS.root = rpm_root
+-- 
+1.7.9.5
+
