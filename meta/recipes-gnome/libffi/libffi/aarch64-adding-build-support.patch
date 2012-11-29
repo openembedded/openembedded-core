@@ -1,0 +1,63 @@
+Upstream-Status: merged
+
+From 92f009a706c643d49e8d6e5ae6c9fb94ae5b2e9b Mon Sep 17 00:00:00 2001
+From: Ricardo Salveti de Araujo <ricardo.salveti@linaro.org>
+Date: Sat, 29 Sep 2012 01:07:56 -0300
+Subject: [PATCH] aarch64: adding build support
+
+Signed-off-by: Ricardo Salveti de Araujo <ricardo.salveti@linaro.org>
+---
+ Makefile.am  |    6 +++++-
+ configure.ac |    5 +++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 16f32a6..e11050d 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -36,7 +36,8 @@ EXTRA_DIST = LICENSE ChangeLog.v1 ChangeLog.libgcj configure.host \
+ 	msvcc.sh generate-ios-source-and-headers.py \
+ 	generate-osx-source-and-headers.py \
+         libffi.xcodeproj/project.pbxproj \
+-	src/arm/trampoline.S
++	src/arm/trampoline.S src/aarch64/ffi.c \
++	src/aarch64/ffitarget.h src/aarch64/sysv.S
+ 
+ info_TEXINFOS = doc/libffi.texi
+ 
+@@ -157,6 +158,9 @@ if FFI_EXEC_TRAMPOLINE_TABLE
+ nodist_libffi_la_SOURCES += src/arm/trampoline.S
+ endif
+ endif
++if AARCH64
++nodist_libffi_la_SOURCES += src/aarch64/sysv.S src/aarch64/ffi.c
++endif
+ if AVR32
+ nodist_libffi_la_SOURCES += src/avr32/sysv.S src/avr32/ffi.c
+ endif
+diff --git a/configure.ac b/configure.ac
+index 9b946a2..9205391 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -63,6 +63,10 @@ case "$host" in
+ 	TARGET=ARM; TARGETDIR=arm
+ 	;;
+ 
++  aarch64*-*-*)
++	TARGET=AARCH64; TARGETDIR=aarch64
++	;;
++
+   amd64-*-freebsd* | amd64-*-openbsd*)
+ 	TARGET=X86_64; TARGETDIR=x86
+   	;;
+@@ -234,6 +238,7 @@ AM_CONDITIONAL(POWERPC_AIX, test x$TARGET = xPOWERPC_AIX)
+ AM_CONDITIONAL(POWERPC_DARWIN, test x$TARGET = xPOWERPC_DARWIN)
+ AM_CONDITIONAL(POWERPC_FREEBSD, test x$TARGET = xPOWERPC_FREEBSD)
+ AM_CONDITIONAL(ARM, test x$TARGET = xARM)
++AM_CONDITIONAL(AARCH64, test x$TARGET = xAARCH64)
+ AM_CONDITIONAL(AVR32, test x$TARGET = xAVR32)
+ AM_CONDITIONAL(LIBFFI_CRIS, test x$TARGET = xLIBFFI_CRIS)
+ AM_CONDITIONAL(FRV, test x$TARGET = xFRV)
+-- 
+1.7.10.4
+
