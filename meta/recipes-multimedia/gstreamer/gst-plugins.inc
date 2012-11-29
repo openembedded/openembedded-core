@@ -23,5 +23,7 @@ PACKAGES_DYNAMIC += "^${PN}-.*"
 # ${STAGING_DATADIR_NATIVE}/gettext/po/Makefile.in.in, but before configure is executed 
 # http://lists.linuxtogo.org/pipermail/openembedded-core/2012-November/032233.html
 oe_runconf_prepend() {                                                                                                                                      
-	sed -i -e "1a\\" -e 'GETTEXT_PACKAGE = @GETTEXT_PACKAGE@' ${S}/po/Makefile.in.in
+	if [ -e ${S}/po/Makefile.in.in ]; then
+		sed -i -e "1a\\" -e 'GETTEXT_PACKAGE = @GETTEXT_PACKAGE@' ${S}/po/Makefile.in.in
+	fi
 }                                                                                                                                                           
