@@ -5,7 +5,7 @@ DESCRIPTION = "XML::NamespaceSupport offers a simple way to process namespace-ba
 
 SECTION = "libs"
 LICENSE = "Artistic-1.0 | GPL-1.0+"
-PR = "r2"
+PR = "r3"
 
 LIC_FILES_CHKSUM = "file://META.yml;beginline=22;endline=22;md5=3b2b564dae8b9af9e8896e85c07dcbe5"
 
@@ -16,7 +16,7 @@ SRC_URI[sha256sum] = "6d8151f0a3f102313d76b64bfd1c2d9ed46bfe63a16f038e7d860fda28
 
 S = "${WORKDIR}/XML-NamespaceSupport-${PV}"
 
-inherit cpan
+inherit cpan allarch
 
 BBCLASSEXTEND="native"
 

@@ -10,8 +10,8 @@ javaness."
 SECTION = "libs"
 LICENSE = "Artistic-1.0 | GPL-1.0+"
 DEPENDS += "libxml-namespacesupport-perl-native"
-RDEPENDS_${PN} += "libxml-namespacesupport-perl perl-module-file-temp"
-PR = "r1"
+RDEPENDS_${PN} += "libxml-namespacesupport-perl libxml-sax-base-perl perl-module-file-temp"
+PR = "r2"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=65c4cd8f39c24c7135ed70dacbcb09e3"
 
@@ -22,6 +22,6 @@ SRC_URI[sha256sum] = "32b04b8e36b6cc4cfc486de2d859d87af5386dd930f2383c49347050d6
 
 S = "${WORKDIR}/XML-SAX-${PV}"
 
-inherit cpan
+inherit cpan allarch
 
 BBCLASSEXTEND = "native"
