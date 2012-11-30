@@ -1,0 +1,48 @@
+From d1f7a894674dfdd6769f1bbae31eb1a69e451a5c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@googlemail.com>
+Date: Fri, 16 Nov 2012 22:07:28 +0100
+Subject: [PATCH] GtkButton: do not prelight in touchscreen mode
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Code was copied from GtkToggleButton.
+
+Upstream-Status: submitted [1]
+
+[1] https://bugzilla.gnome.org/show_bug.cgi?id=689138
+
+Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
+---
+ gtk/gtkbutton.c |    8 ++++++--
+ 1 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/gtk/gtkbutton.c b/gtk/gtkbutton.c
+index f472007..1beb1b6 100644
+--- a/gtk/gtkbutton.c
++++ b/gtk/gtkbutton.c
+@@ -2079,15 +2079,19 @@ _gtk_button_set_depressed (GtkButton *button,
+ static void
+ gtk_button_update_state (GtkButton *button)
+ {
+-  gboolean depressed;
++  gboolean depressed, touchscreen;
+   GtkStateType new_state;
+ 
++  g_object_get (gtk_widget_get_settings (GTK_WIDGET (button)),
++                "gtk-touchscreen-mode", &touchscreen,
++                NULL);
++
+   if (button->activate_timeout)
+     depressed = button->depress_on_activate;
+   else
+     depressed = button->in_button && button->button_down;
+ 
+-  if (button->in_button && (!button->button_down || !depressed))
++  if (!touchscreen && button->in_button && (!button->button_down || !depressed))
+     new_state = GTK_STATE_PRELIGHT;
+   else
+     new_state = depressed ? GTK_STATE_ACTIVE : GTK_STATE_NORMAL;
+-- 
+1.7.6.5
+
