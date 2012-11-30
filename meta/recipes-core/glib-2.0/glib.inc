@@ -4,11 +4,11 @@ DESCRIPTION = "GLib is a general-purpose utility library, which provides many us
 # docs/reference/COPYING is with a 'public domai'-like license!
 LICENSE = "LGPLv2+ & BSD & PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
-                    file://glib/glib.h;startline=4;endline=17;md5=a4332fe58b076f29d07c9c066d2967b6 \
+                    file://glib/glib.h;beginline=4;endline=17;md5=62b7bd0d17b98573dfb87495ac1c5b4c \
                     file://gmodule/COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
-                    file://gmodule/gmodule.h;startline=4;endline=17;md5=76ab161b37202cd004073c42fac276ed \
+                    file://gmodule/gmodule.h;beginline=4;endline=17;md5=62b7bd0d17b98573dfb87495ac1c5b4c \
                     file://glib/pcre/COPYING;md5=266ebc3ff74ee9ce6fad65577667c0f4 \
-                    file://glib/pcre/pcre.h;startline=11;endline=35;md5=2ffb79f0a0933f282f4f36cda635683d \
+                    file://glib/pcre/pcre.h;beginline=11;endline=35;md5=de27f2bf633d20a2b7af0b1983423283 \
                     file://docs/reference/COPYING;md5=f51a5100c17af6bae00735cd791e1fcc"
 BUGTRACKER = "http://bugzilla.gnome.org"
 SECTION = "libs"
