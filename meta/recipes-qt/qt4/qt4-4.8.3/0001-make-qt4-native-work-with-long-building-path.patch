@@ -1,0 +1,82 @@
+Upstream-Status: Inappropriate [configuration]
+
+Make qt4-native work with long building path.
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+
+Index: configure
+=====================================================================
+--- a/configure
++++ b/configure
+@@ -4764,8 +4764,8 @@ DEMOS_PATH_STR=`"$relpath/config.tests/unix/padstring" 268 "qt_demopath=$QT_INST
+ TODAY=`date +%Y-%m-%d`
+ cat > "$outpath/src/corelib/global/qconfig.cpp.new" <<EOF
+ /* License Info */
+-static const char qt_configure_licensee_str          [256 + 12] = "$LICENSE_USER_STR";
+-static const char qt_configure_licensed_products_str [256 + 12] = "$LICENSE_PRODUCTS_STR";
++static const char qt_configure_licensee_str          [512 + 12] = "$LICENSE_USER_STR";
++static const char qt_configure_licensed_products_str [512 + 12] = "$LICENSE_PRODUCTS_STR";
+ 
+ /* Installation date */
+ static const char qt_configure_installation          [12+11]    = "qt_instdate=$TODAY";
+@@ -4790,36 +4790,36 @@ if [ ! -z "$QT_HOST_PREFIX" ]; then
+ 
+ #if defined(QT_BOOTSTRAPPED) || defined(QT_BUILD_QMAKE)
+ /* Installation Info */
+-static const char qt_configure_prefix_path_str       [256 + 12] = "$HOSTPREFIX_PATH_STR";
+-static const char qt_configure_documentation_path_str[256 + 12] = "$HOSTDOCUMENTATION_PATH_STR";
+-static const char qt_configure_headers_path_str      [256 + 12] = "$HOSTHEADERS_PATH_STR";
+-static const char qt_configure_libraries_path_str    [256 + 12] = "$HOSTLIBRARIES_PATH_STR";
+-static const char qt_configure_binaries_path_str     [256 + 12] = "$HOSTBINARIES_PATH_STR";
+-static const char qt_configure_plugins_path_str      [256 + 12] = "$HOSTPLUGINS_PATH_STR";
+-static const char qt_configure_imports_path_str      [256 + 12] = "$HOSTIMPORTS_PATH_STR";
+-static const char qt_configure_data_path_str         [256 + 12] = "$HOSTDATA_PATH_STR";
+-static const char qt_configure_translations_path_str [256 + 12] = "$HOSTTRANSLATIONS_PATH_STR";
+-static const char qt_configure_settings_path_str     [256 + 12] = "$HOSTSETTINGS_PATH_STR";
+-static const char qt_configure_examples_path_str     [256 + 12] = "$HOSTEXAMPLES_PATH_STR";
+-static const char qt_configure_demos_path_str        [256 + 12] = "$HOSTDEMOS_PATH_STR";
++static const char qt_configure_prefix_path_str       [512 + 12] = "$HOSTPREFIX_PATH_STR";
++static const char qt_configure_documentation_path_str[512 + 12] = "$HOSTDOCUMENTATION_PATH_STR";
++static const char qt_configure_headers_path_str      [512 + 12] = "$HOSTHEADERS_PATH_STR";
++static const char qt_configure_libraries_path_str    [512 + 12] = "$HOSTLIBRARIES_PATH_STR";
++static const char qt_configure_binaries_path_str     [512 + 12] = "$HOSTBINARIES_PATH_STR";
++static const char qt_configure_plugins_path_str      [512 + 12] = "$HOSTPLUGINS_PATH_STR";
++static const char qt_configure_imports_path_str      [512 + 12] = "$HOSTIMPORTS_PATH_STR";
++static const char qt_configure_data_path_str         [512 + 12] = "$HOSTDATA_PATH_STR";
++static const char qt_configure_translations_path_str [512 + 12] = "$HOSTTRANSLATIONS_PATH_STR";
++static const char qt_configure_settings_path_str     [512 + 12] = "$HOSTSETTINGS_PATH_STR";
++static const char qt_configure_examples_path_str     [512 + 12] = "$HOSTEXAMPLES_PATH_STR";
++static const char qt_configure_demos_path_str        [512 + 12] = "$HOSTDEMOS_PATH_STR";
+ #else // QT_BOOTSTRAPPED
+ EOF
+ fi
+ 
+ cat >> "$outpath/src/corelib/global/qconfig.cpp.new" <<EOF
+ /* Installation Info */
+-static const char qt_configure_prefix_path_str       [256 + 12] = "$PREFIX_PATH_STR";
+-static const char qt_configure_documentation_path_str[256 + 12] = "$DOCUMENTATION_PATH_STR";
+-static const char qt_configure_headers_path_str      [256 + 12] = "$HEADERS_PATH_STR";
+-static const char qt_configure_libraries_path_str    [256 + 12] = "$LIBRARIES_PATH_STR";
+-static const char qt_configure_binaries_path_str     [256 + 12] = "$BINARIES_PATH_STR";
+-static const char qt_configure_plugins_path_str      [256 + 12] = "$PLUGINS_PATH_STR";
+-static const char qt_configure_imports_path_str      [256 + 12] = "$IMPORTS_PATH_STR";
+-static const char qt_configure_data_path_str         [256 + 12] = "$DATA_PATH_STR";
+-static const char qt_configure_translations_path_str [256 + 12] = "$TRANSLATIONS_PATH_STR";
+-static const char qt_configure_settings_path_str     [256 + 12] = "$SETTINGS_PATH_STR";
+-static const char qt_configure_examples_path_str     [256 + 12] = "$EXAMPLES_PATH_STR";
+-static const char qt_configure_demos_path_str        [256 + 12] = "$DEMOS_PATH_STR";
++static const char qt_configure_prefix_path_str       [512 + 12] = "$PREFIX_PATH_STR";
++static const char qt_configure_documentation_path_str[512 + 12] = "$DOCUMENTATION_PATH_STR";
++static const char qt_configure_headers_path_str      [512 + 12] = "$HEADERS_PATH_STR";
++static const char qt_configure_libraries_path_str    [512 + 12] = "$LIBRARIES_PATH_STR";
++static const char qt_configure_binaries_path_str     [512 + 12] = "$BINARIES_PATH_STR";
++static const char qt_configure_plugins_path_str      [512 + 12] = "$PLUGINS_PATH_STR";
++static const char qt_configure_imports_path_str      [512 + 12] = "$IMPORTS_PATH_STR";
++static const char qt_configure_data_path_str         [512 + 12] = "$DATA_PATH_STR";
++static const char qt_configure_translations_path_str [512 + 12] = "$TRANSLATIONS_PATH_STR";
++static const char qt_configure_settings_path_str     [512 + 12] = "$SETTINGS_PATH_STR";
++static const char qt_configure_examples_path_str     [512 + 12] = "$EXAMPLES_PATH_STR";
++static const char qt_configure_demos_path_str        [512 + 12] = "$DEMOS_PATH_STR";
+ EOF
+ 
+ if [ ! -z "$QT_HOST_PREFIX" ]; then
