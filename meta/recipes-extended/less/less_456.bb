@@ -27,8 +27,8 @@ PR = "r0"
 
 SRC_URI = "http://www.greenwoodsoftware.com/${BPN}/${BPN}-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "765f082658002b2b46b86af4a0da1842"
-SRC_URI[sha256sum] = "9fe8287c647afeafb4149c5dedaeacfd20971ed7c26c7553794bb750536b5f57"
+SRC_URI[md5sum] = "5dd335f9d77646e047de05c64eb152b8"
+SRC_URI[sha256sum] = "fa3ec8a2b790ea369cb1994571e909c3bb39426f375ab5803233b961ff004677"
 
 inherit autotools update-alternatives
 
