@@ -1,0 +1,19 @@
+Upstream-Status: Inappropriate [distribution]
+
+Make ghost script work with long building directory
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+
+Index: base/genconf.c
+==============================================================
+--- a/base/genconf.c
++++ b/base/genconf.c
+@@ -682,7 +682,7 @@ read_dev(config_t * pconf, const char *arg)
+     string_item_t *item;
+     const char *in;
+ 
+-#define MAX_TOKEN 256
++#define MAX_TOKEN 512
+     char *token = malloc(MAX_TOKEN + 1);
+     char *category = malloc(MAX_TOKEN + 1);
+     int file_index;
