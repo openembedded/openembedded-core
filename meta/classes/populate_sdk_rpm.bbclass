@@ -54,8 +54,16 @@ populate_sdk_rpm () {
 
 	# List must be prefered to least preferred order
 	INSTALL_PLATFORM_EXTRA_RPM=""
-	for each_arch in ${MULTILIB_PACKAGE_ARCHS} ${PACKAGE_ARCHS} ; do
-		INSTALL_PLATFORM_EXTRA_RPM="$each_arch $INSTALL_PLATFORM_EXTRA_RPM"
+	for i in ${MULTILIB_PREFIX_LIST} ; do
+		old_IFS="$IFS"
+		IFS=":"
+		set $i
+		IFS="$old_IFS"
+		shift #remove mlib
+		while [ -n "$1" ]; do
+			INSTALL_PLATFORM_EXTRA_RPM="$INSTALL_PLATFORM_EXTRA_RPM $1"
+			shift
+		done
 	done
 	export INSTALL_PLATFORM_EXTRA_RPM
 
@@ -81,7 +89,7 @@ populate_sdk_rpm () {
 	done
 	export INSTALL_PLATFORM_EXTRA_RPM
 
-	package_install_internal_rpm
+	package_install_internal_rpm --sdk
 	populate_sdk_post_rpm ${INSTALL_ROOTFS_RPM}
 
 	# move host RPM library data
@@ -98,8 +106,11 @@ populate_sdk_rpm () {
 
 python () {
     # The following code should be kept in sync w/ the rootfs_rpm version.
-    ml_package_archs = ""
-    ml_prefix_list = ""
+
+    # package_arch order is reversed.  This ensures the -best- match is listed first!
+    package_archs = d.getVar("PACKAGE_ARCHS", True) or ""
+    package_archs = ":".join(package_archs.split()[::-1])
+    ml_prefix_list = "%s:%s" % ('default', package_archs)
     multilibs = d.getVar('MULTILIBS', True) or ""
     for ext in multilibs.split():
         eext = ext.split(':')
@@ -109,11 +120,8 @@ python () {
             if default_tune:
                 localdata.setVar("DEFAULTTUNE", default_tune)
             package_archs = localdata.getVar("PACKAGE_ARCHS", True) or ""
-            package_archs = " ".join([i in "all noarch any".split() and i or eext[1]+"_"+i for i in package_archs.split()])
-            ml_package_archs += " " + package_archs
-            ml_prefix_list += " " + eext[1]
-            #bb.note("ML_PACKAGE_ARCHS %s %s %s" % (eext[1], localdata.getVar("PACKAGE_ARCHS", True) or "(none)", overrides))
-    d.setVar('MULTILIB_PACKAGE_ARCHS', ml_package_archs)
+            package_archs = ":".join([i in "all noarch any".split() and i or eext[1]+"_"+i for i in package_archs.split()][::-1])
+            ml_prefix_list += " %s:%s" % (eext[1], package_archs)
     d.setVar('MULTILIB_PREFIX_LIST', ml_prefix_list)
 }
 

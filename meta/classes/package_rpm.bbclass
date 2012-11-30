@@ -24,11 +24,24 @@ package_update_index_rpm () {
 		return
 	fi
 
-	base_archs="`echo ${PACKAGE_ARCHS} | sed 's/-/_/g'`"
-	ml_archs="`echo ${MULTILIB_PACKAGE_ARCHS} | sed 's/-/_/g'`"
-	sdk_archs="`echo ${SDK_PACKAGE_ARCHS} | sed 's/-/_/g'`"
+	sdk_archs=`echo "${SDK_PACKAGE_ARCHS}" | tr - _`
 
-	archs=`for arch in $base_archs $ml_archs $sdk_archs ; do
+	target_archs=""
+	for i in ${MULTILIB_PREFIX_LIST} ; do
+		old_IFS="$IFS"
+		IFS=":"
+		set $i
+		IFS="$old_IFS"
+		shift # remove mlib
+		while [ -n "$1" ]; do
+			target_archs="$target_archs $1"
+			shift
+		done
+	done
+
+	target_archs=`echo "$target_archs" | tr - _`
+
+	archs=`for arch in $target_archs $sdk_archs ; do
 		echo $arch
 	done | sort | uniq`
 
@@ -57,6 +70,143 @@ rpm_log_check() {
 	done
 	test "$do_exit" = 1 && exit 1
 	true
+}
+
+# Translate the RPM/Smart format names to the OE multilib format names
+# Input via stdin (only the first item per line is converted!)
+# Output via stdout
+translate_smart_to_oe() {
+	arg1="$1"
+
+	# Dump installed packages
+	while read pkg arch other ; do
+		if [ -z "$pkg" ]; then
+			continue
+		fi
+		new_pkg=$pkg
+		fixed_arch=`echo "$arch" | tr _ -`
+		for i in ${MULTILIB_PREFIX_LIST} ; do
+			old_IFS="$IFS"
+			IFS=":"
+			set $i
+			IFS="$old_IFS"
+			mlib="$1"
+			shift
+			while [ -n "$1" ]; do
+				cmp_arch=$1
+				shift
+				if [ "$arch" = "$cmp_arch" -o "$fixed_arch" = "$cmp_arch" ]; then
+					if [ "$mlib" = "default" ]; then
+						new_pkg="$pkg"
+					else
+						new_pkg="$mlib-$pkg"
+					fi
+					break
+				fi
+			done
+			if [ "$arch" = "$cmp_arch" -o "$fixed_arch" = "$cmp_arch" ]; then
+				break
+			fi
+		done
+
+		#echo "$pkg -> $new_pkg" >&2
+		if [ "$arg1" = "arch" ]; then
+			echo $new_pkg $cmp_arch $other
+		else
+			echo $new_pkg $other
+		fi
+	done
+}		
+
+# Translate the OE multilib format names to the RPM/Smart format names
+# Input via arguments
+# Ouput via pkgs_to_install
+translate_oe_to_smart() {
+	default_archs=""
+	sdk_mode=""
+	if [ "$1" = "--sdk" ]; then
+		shift
+		sdk_mode="true"
+		# Need to reverse the order of the SDK_ARCHS highest -> lowest priority
+		archs=`echo "${SDK_PACKAGE_ARCHS}" | tr - _`
+		for arch in $archs ; do
+		        default_archs="$arch $default_archs"
+		done
+	fi
+
+	attemptonly="Error"
+	if [ "$1" = "--attemptonly" ]; then
+		attemptonly="Warning"
+		shift
+	fi
+
+	# Dump a list of all available packages
+	[ ! -e ${target_rootfs}/install/tmp/fullpkglist.query ] && smart --data-dir=${target_rootfs}/var/lib/smart query --output ${target_rootfs}/install/tmp/fullpkglist.query
+
+	pkgs_to_install=""
+	for pkg in "$@" ; do
+		new_pkg="$pkg"
+		if [ -z "$sdk_mode" ]; then
+			for i in ${MULTILIB_PREFIX_LIST} ; do
+				old_IFS="$IFS"
+				IFS=":"
+				set $i
+				IFS="$old_IFS"
+				mlib="$1"
+				shift
+				if [ "$mlib" = "default" ]; then
+					if [ -z "$default_archs" ]; then
+						default_archs=$@
+					fi
+					continue
+				fi
+				subst=${pkg#${mlib}-}
+				if [ "$subst" != "$pkg" ]; then
+					feeds=$@
+					while [ -n "$1" ]; do
+						arch="$1"
+						arch=`echo "$arch" | tr - _`
+						shift
+						if grep -q '^'$subst'-[^-]*-[^-]*@'$arch'$' ${target_rootfs}/install/tmp/fullpkglist.query ; then
+							new_pkg="$subst@$arch"
+							# First found is best match
+							break
+						fi
+					done
+					if [ "$pkg" = "$new_pkg" ]; then
+						# Failed to translate, package not found!
+						echo "$attemptonly: $pkg not found in the $mlib feeds ($feeds)." >&2
+						if [ "$attemptonly" = "Error" ]; then
+							exit 1
+						fi
+						continue
+					fi
+				fi
+			done
+		fi
+		# Apparently not a multilib package...
+		if [ "$pkg" = "$new_pkg" ]; then
+			default_archs_fixed=`echo "$default_archs" | tr - _`
+			for arch in $default_archs_fixed ; do
+				if grep -q '^'$pkg'-[^-]*-[^-]*@'$arch'$' ${target_rootfs}/install/tmp/fullpkglist.query ; then
+					new_pkg="$pkg@$arch"
+					# First found is best match
+					break
+				fi
+			done
+			if [ "$pkg" = "$new_pkg" ]; then
+				# Failed to translate, package not found!
+				echo "$attemptonly: $pkg not found in the base feeds ($default_archs)." >&2
+				if [ "$attemptonly" = "Error" ]; then
+					exit 1
+				fi
+				continue
+			fi
+		fi
+		#echo "$pkg -> $new_pkg" >&2
+		pkgs_to_install="${pkgs_to_install} ${new_pkg}"
+	done
+	export pkgs_to_install
 }
 
 
@@ -96,18 +246,26 @@ package_install_internal_rpm () {
 	local providename="$INSTALL_PROVIDENAME_RPM"
 	local task="$INSTALL_TASK_RPM"
 
+	local sdk_mode=""
+	if [ "$1" = "--sdk" ]; then
+		sdk_mode="--sdk"
+	fi
+
 	# Configure internal RPM environment when using Smart
 	export RPM_ETCRPM=${target_rootfs}/etc/rpm
 
 	# Setup temporary directory -- install...
-	mkdir -p ${target_rootfs}/install
+	rm -rf ${target_rootfs}/install
+	mkdir -p ${target_rootfs}/install/tmp
 
+	channel_priority=5
 	if [ "${INSTALL_COMPLEMENTARY_RPM}" != "1" ] ; then
 		# Setup base system configuration
 		mkdir -p ${target_rootfs}/etc/rpm/
 		echo "${platform}${TARGET_VENDOR}-${TARGET_OS}" > ${target_rootfs}/etc/rpm/platform
 		if [ ! -z "$platform_extra" ]; then
 			for pt in $platform_extra ; do
+				channel_priority=$(expr $channel_priority + 5)
 				case $pt in
 					noarch | any | all)
 						os="`echo ${TARGET_OS} | sed "s,-.*,,"`.*"
@@ -178,11 +336,14 @@ EOF
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._tmppath=/install/tmp
 		smart --data-dir=${target_rootfs}/var/lib/smart channel --add rpmsys type=rpm-sys -y
 
-		for arch in $platform_extra ; do
+		platform_extra_fixed=`echo "$platform_extra" | tr - _`
+		for arch in $platform_extra_fixed ; do
 			if [ -d ${DEPLOY_DIR_RPM}/$arch -a ! -e ${target_rootfs}/install/channel.$arch.stamp ] ; then
 				smart --data-dir=${target_rootfs}/var/lib/smart channel --add $arch type=rpm-md type=rpm-md baseurl=${DEPLOY_DIR_RPM}/$arch -y
+				smart --data-dir=${target_rootfs}/var/lib/smart channel --set $arch priority=$channel_priority
 				touch ${target_rootfs}/install/channel.$arch.stamp
 			fi
+			channel_priority=$(expr $channel_priority - 5)
 		done
 	fi
 
@@ -218,14 +379,15 @@ EOF
 	chmod 0755 ${WORKDIR}/scriptlet_wrapper
 	smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._cross_scriptlet_wrapper=${WORKDIR}/scriptlet_wrapper
 
-	smart --data-dir=${target_rootfs}/var/lib/smart install -y ${package_to_install} ${package_linguas}
+	# Determine what to install
+	translate_oe_to_smart ${sdk_mode} ${package_to_install} ${package_linguas}
 
-	if [ ! -z "${package_attemptonly}" ]; then
-		echo "Installing attempt only packages..."
-		for pkg_name in ${package_attemptonly} ; do
-			echo "Attempting $pkg_name..." >> "`dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}"
-			smart --data-dir=${target_rootfs}/var/lib/smart install -y $pkg_name >> "`dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}" 2>&1 || true
-		done
+	[ -n "$pkgs_to_install" ] && smart --data-dir=${target_rootfs}/var/lib/smart install -y ${pkgs_to_install}
+
+	if [ -n "${package_attemptonly}" ]; then
+		translate_oe_to_smart ${sdk_mode} --attemptonly $package_attemptonly
+		echo "Attempting $pkgs_to_install"
+		smart --data-dir=${target_rootfs}/var/lib/smart install -y $pkgs_to_install >> "`dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}" 2>&1 || true
 	fi
 }
 

@@ -62,8 +62,16 @@ fakeroot rootfs_rpm_do_rootfs () {
 
 	# List must be prefered to least preferred order
 	INSTALL_PLATFORM_EXTRA_RPM=""
-	for each_arch in ${MULTILIB_PACKAGE_ARCHS} ${PACKAGE_ARCHS}; do
-		INSTALL_PLATFORM_EXTRA_RPM="$each_arch $INSTALL_PLATFORM_EXTRA_RPM"
+	for i in ${MULTILIB_PREFIX_LIST} ; do
+		old_IFS="$IFS"
+		IFS=":"
+		set $i
+		IFS="$old_IFS"
+		shift #remove mlib
+		while [ -n "$1" ]; do  
+			INSTALL_PLATFORM_EXTRA_RPM="$INSTALL_PLATFORM_EXTRA_RPM $1"
+			shift
+		done
 	done
 	export INSTALL_PLATFORM_RPM
 
@@ -143,21 +151,12 @@ rpm_setup_smart_target_config() {
 RPM_QUERY_CMD = '${RPM} --root $INSTALL_ROOTFS_RPM -D "_dbpath ${rpmlibdir}"'
 
 list_installed_packages() {
-	GET_LIST=$(${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{ARCH} %{PACKAGEORIGIN} %{Platform}\n]")
-
-	# Use awk to find the multilib prefix and compare it
-	# with the platform RPM thinks it is part of
-	for prefix in `echo ${MULTILIB_PREFIX_LIST}`; do
-		GET_LIST=$(echo "$GET_LIST" | awk -v prefix="$prefix" '$0 ~ prefix {printf("%s-%s\n", prefix, $0); } $0 !~ prefix {print $0}')
-	done
-
-	# print the info, need to different return counts
-	if [ "$1" = "arch" ] ; then
-		echo "$GET_LIST" | awk -v archs="${PACKAGE_ARCHS}" '{if(!index(archs, $2)) {gsub("_", "-", $2)} print $1, $2}'
-        elif [ "$1" = "file" ] ; then
-		echo "$GET_LIST" | awk '{print $1, $3}'
-        else
-		echo "$GET_LIST" | awk '{print $1}' 
+	if [ "$1" = "arch" ]; then
+		${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{ARCH}\n]" | translate_smart_to_oe arch | tee /tmp/arch_list
+	elif [ "$1" = "file" ]; then
+		${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{ARCH} %{PACKAGEORIGIN}\n]" | translate_smart_to_oe | tee /tmp/file_list
+	else
+		${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{ARCH}\n]" | translate_smart_to_oe | tee /tmp/default_list
 	fi
 }
 
@@ -187,8 +186,11 @@ python () {
         d.setVar('RPM_POSTPROCESS_COMMANDS', '')
 
     # The following code should be kept in sync w/ the populate_sdk_rpm version.
-    ml_package_archs = ""
-    ml_prefix_list = ""
+
+    # package_arch order is reversed.  This ensures the -best- match is listed first!
+    package_archs = d.getVar("PACKAGE_ARCHS", True) or ""
+    package_archs = ":".join(package_archs.split()[::-1])
+    ml_prefix_list = "%s:%s" % ('default', package_archs)
     multilibs = d.getVar('MULTILIBS', True) or ""
     for ext in multilibs.split():
         eext = ext.split(':')
@@ -198,10 +200,7 @@ python () {
             if default_tune:
                 localdata.setVar("DEFAULTTUNE", default_tune)
             package_archs = localdata.getVar("PACKAGE_ARCHS", True) or ""
-            package_archs = " ".join([i in "all noarch any".split() and i or eext[1]+"_"+i for i in package_archs.split()])
-            ml_package_archs += " " + package_archs
-            ml_prefix_list += " " + eext[1]
-            #bb.note("ML_PACKAGE_ARCHS %s %s %s" % (eext[1], localdata.getVar("PACKAGE_ARCHS", True) or "(none)", overrides))
-    d.setVar('MULTILIB_PACKAGE_ARCHS', ml_package_archs)
+            package_archs = ":".join([i in "all noarch any".split() and i or eext[1]+"_"+i for i in package_archs.split()][::-1])
+            ml_prefix_list += " %s:%s" % (eext[1], package_archs)
     d.setVar('MULTILIB_PREFIX_LIST', ml_prefix_list)
 }
