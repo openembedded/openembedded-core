@@ -1,5 +1,5 @@
 require xorg-app-common.inc
-LIC_FILES_CHKSUM = "file://xev.c;startline=0;endline=35;md5=2f39a0038b59269c1e62efae64cfd056"
+LIC_FILES_CHKSUM = "file://xev.c;beginline=1;endline=35;md5=2f39a0038b59269c1e62efae64cfd056"
 DESCRIPTION = "X Event Viewer"
 LICENSE = "MIT"
 PE = "1"
