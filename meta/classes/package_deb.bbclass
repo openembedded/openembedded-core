@@ -335,11 +335,21 @@ python do_package_deb () {
         mapping_rename_hook(localdata)
 
         def debian_cmp_remap(var):
+            # dpkg does not allow for '(' or ')' in a dependency name
+            # replace these instances with '__' and '__'
+            #
             # In debian '>' and '<' do not mean what it appears they mean
             #   '<' = less or equal
             #   '>' = greater or equal
             # adjust these to the '<<' and '>>' equivalents
             #
+            for dep in var:
+                if '(' in dep:
+                    newdep = dep.replace('(', '__')
+                    newdep = newdep.replace(')', '__')
+                    if newdep != dep:
+                        var[newdep] = var[dep]
+                        del var[dep]
             for dep in var:
                 for i, v in enumerate(var[dep]):
                     if (v or "").startswith("< "):
