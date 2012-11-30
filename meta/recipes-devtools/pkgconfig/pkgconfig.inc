@@ -37,3 +37,8 @@ BBCLASSEXTEND = "native nativesdk"
 # files.
 FILES_${PN}-dev = ""
 FILES_${PN} += "${datadir}/aclocal/pkg.m4"
+
+# When using the RPM generated automatic package dependencies, some packages
+# will end up requiring 'pkgconfig(pkg-config)'.  Allow this behavior by
+# specifying an appropriate provide.
+RPROVIDES_${PN} += "pkgconfig(pkg-config) (= ${PV})"
