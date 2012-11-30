@@ -8,12 +8,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=fbc093901857fcd118f065f900982c24"
 
 BBCLASSEXTEND = "native nativesdk"
 
-PR = "r4"
+PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "37d34e6eaa69a4b645a19ff4ca63ceef"
-SRC_URI[sha256sum] = "21d0d3a5710f7f4211c595102c6b9eccb42435a17a4f5bd2c3f4166ab1badba9"
+SRC_URI[md5sum] = "7f5a02375ad960d4e33a6dae7d63cfcb"
+SRC_URI[sha256sum] = "e920eedc2d06b09606611c99ec7304413c6784cba6e33928e78243d323195f9b"
+
 S = "${WORKDIR}/libusb-${PV}"
 
 inherit autotools pkgconfig
