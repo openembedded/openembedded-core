@@ -13,6 +13,7 @@ PR = "r5"
 SRC_URI = "http://libproxy.googlecode.com/files/libproxy-${PV}.tar.gz \
            file://g++-namepace.patch \
            file://libproxy_fix_for_gcc4.7.patch \
+           file://libproxy-0.4.7-CVE-2012-4504.patch \
           "
 
 SRC_URI[md5sum] = "509e03a488a61cd62bfbaf3ab6a2a7a5"
