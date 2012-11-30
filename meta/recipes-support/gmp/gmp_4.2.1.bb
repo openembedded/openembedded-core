@@ -5,7 +5,7 @@ BUGTRACKER = "http://gmplib.org/mailman/listinfo/gmp-bugs"
 LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=892f569a555ba9c07a568a7c0c4fa63a \
                     file://COPYING.LIB;md5=fbc093901857fcd118f065f900982c24 \
-                    file://gmp-h.in;startline=6;endline=21;md5=5e25ffd16996faba8c1cd27b04b16099"
+                    file://gmp-h.in;beginline=6;endline=21;md5=e056f74a12c3277d730dbcfb85d2ca34"
 PR = "r2"
 
 SRC_URI = "${GNU_MIRROR}/gmp/${BP}.tar.bz2 \
