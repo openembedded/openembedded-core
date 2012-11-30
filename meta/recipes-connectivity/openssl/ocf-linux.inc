@@ -1,7 +1,7 @@
 DESCRIPTION = "Install required headers to enable OCF Linux support"
 LICENSE = "BSD"
 
-LIC_FILES_CHKSUM = "file://README;md5=b02a793c9b7893b4ce1f39f0b231ccd7"
+LIC_FILES_CHKSUM = "file://README;md5=493ffe65655667614cf24567adf22f11"
  
 INC_PR = "r3"
 
@@ -16,7 +16,6 @@ S = "${WORKDIR}/ocf-linux-${PV}"
 # the README file.
 do_install() {
     cd ${S}
-    tar xzf ocf-linux.tar.gz
     install -d ${D}${includedir}/crypto
     install -m 0644 ${S}/ocf/*.h ${D}${includedir}/crypto/
 }
