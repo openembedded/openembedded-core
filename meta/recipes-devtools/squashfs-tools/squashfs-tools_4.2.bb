@@ -3,6 +3,7 @@
 DESCRIPTION = "Tools to manipulate Squashfs filesystems."
 SECTION = "base"
 LICENSE = "GPL-2 & PD"
+FILESEXTRAPATHS_prepend := "${THISDIR}/patches:"
 LIC_FILES_CHKSUM = "file://../COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://../../7zC.txt;beginline=12;endline=16;md5=2056cd6d919ebc3807602143c7449a7c \
                    "
@@ -12,6 +13,8 @@ PR = "1"
 SRC_URI = "${SOURCEFORGE_MIRROR}/squashfs/squashfs${PV}.tar.gz;name=squashfs \
            http://downloads.sourceforge.net/sevenzip/lzma465.tar.bz2;name=lzma \
           "
+SRC_URI += "file://squashfs-4.2-fix-CVE-2012-4024.patch \
+           " 
 SRC_URI[squashfs.md5sum] = "1b7a781fb4cf8938842279bd3e8ee852"
 SRC_URI[squashfs.sha256sum] = "d9e0195aa922dbb665ed322b9aaa96e04a476ee650f39bbeadb0d00b24022e96"
 SRC_URI[lzma.md5sum] = "29d5ffd03a5a3e51aef6a74e9eafb759"
