@@ -2,10 +2,10 @@
 # Creates a root filesystem out of rpm packages
 #
 
-ROOTFS_PKGMANAGE = "rpm zypper"
+ROOTFS_PKGMANAGE = "rpm smartpm"
 
-# Add 50Meg of extra space for zypper database space
-IMAGE_ROOTFS_EXTRA_SPACE_append = "${@base_contains("PACKAGE_INSTALL", "zypper", " + 51200", "" ,d)}"
+# Add 50Meg of extra space for Smart
+IMAGE_ROOTFS_EXTRA_SPACE_append = "${@base_contains("PACKAGE_INSTALL", "smartpm", " + 51200", "" ,d)}"
 
 # Smart is python based, so be sure python-native is available to us.
 EXTRANATIVEPATH += "python-native"
