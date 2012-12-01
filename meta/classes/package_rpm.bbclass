@@ -348,7 +348,8 @@ EOF
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-noparentdirs=1
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._var=${localstatedir}
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._tmppath=/install/tmp
-		smart --data-dir=${target_rootfs}/var/lib/smart channel --add rpmsys type=rpm-sys -y
+		# Delay this until later...
+		#smart --data-dir=${target_rootfs}/var/lib/smart channel --add rpmsys type=rpm-sys -y
 
 		platform_extra_fixed=`echo "$platform_extra" | tr - _`
 		for arch in $platform_extra_fixed ; do
@@ -397,6 +398,51 @@ EOF
 
 	# Determine what to install
 	translate_oe_to_smart ${sdk_mode} ${package_to_install} ${package_linguas}
+
+	# If incremental install, we need to determine what we've got,
+	# what we need to add, and what to remove...
+	if [ "${INC_RPM_IMAGE_GEN}" = "1" -a "${INSTALL_COMPLEMENTARY_RPM}" != "1" ]; then
+		# Dump the new solution
+		echo "Note: creating install solution for incremental install"
+		smart --data-dir=${target_rootfs}/var/lib/smart install -y --dump ${pkgs_to_install} 2> ${target_rootfs}/../solution.manifest
+	fi
+
+	if [ "${INSTALL_COMPLEMENTARY_RPM}" != "1" ]; then
+		echo "Note: adding Smart RPM DB channel"
+		smart --data-dir=${target_rootfs}/var/lib/smart channel --add rpmsys type=rpm-sys -y
+	fi
+
+	# If incremental install, we need to determine what we've got,
+	# what we need to add, and what to remove...
+	if [ "${INC_RPM_IMAGE_GEN}" = "1" -a "${INSTALL_COMPLEMENTARY_RPM}" != "1" ]; then
+		# First upgrade everything that was previously installed to the latest version
+		echo "Note: incremental update -- upgrade packages in place"
+		smart --data-dir=${target_rootfs}/var/lib/smart upgrade
+
+		# Dump what is already installed
+		echo "Note: dump installed packages for incremental update"
+		smart --data-dir=${target_rootfs}/var/lib/smart query --installed --output ${target_rootfs}/../installed.manifest
+
+		sort ${target_rootfs}/../installed.manifest > ${target_rootfs}/../installed.manifest.sorted
+		sort ${target_rootfs}/../solution.manifest > ${target_rootfs}/../solution.manifest.sorted
+		
+		comm -1 -3 ${target_rootfs}/../solution.manifest.sorted ${target_rootfs}/../installed.manifest.sorted \
+			> ${target_rootfs}/../remove.list
+		comm -2 -3 ${target_rootfs}/../solution.manifest.sorted ${target_rootfs}/../installed.manifest.sorted \
+			> ${target_rootfs}/../install.list
+		
+		pkgs_to_remove=`cat ${target_rootfs}/../remove.list | xargs echo`
+		pkgs_to_install=`cat ${target_rootfs}/../install.list | xargs echo`
+		
+		echo "Note: to be removed: ${pkgs_to_remove}"
+
+		for pkg in ${pkgs_to_remove}; do
+			echo "Debug: What required: $pkg"
+			smart --data-dir=${target_rootfs}/var/lib/smart query $pkg --show-requiredby
+		done
+
+		[ -n "$pkgs_to_remove" ] && smart --data-dir=${target_rootfs}/var/lib/smart remove -y ${pkgs_to_remove}
+	fi
 
 	echo "Note: to be installed: ${pkgs_to_install}"
 	[ -n "$pkgs_to_install" ] && smart --data-dir=${target_rootfs}/var/lib/smart install -y ${pkgs_to_install}
