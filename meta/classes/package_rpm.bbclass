@@ -261,6 +261,7 @@ package_install_internal_rpm () {
 	channel_priority=5
 	if [ "${INSTALL_COMPLEMENTARY_RPM}" != "1" ] ; then
 		# Setup base system configuration
+		echo "Note: configuring RPM platform settings"
 		mkdir -p ${target_rootfs}/etc/rpm/
 		if [ -n "${sdk_mode}" ]; then
 			platform_vendor="${SDK_VENDOR}"
@@ -289,6 +290,7 @@ package_install_internal_rpm () {
 		fi
 
 		# Tell RPM that the "/" directory exist and is available
+		echo "Note: configuring RPM system provides"
 		mkdir -p ${target_rootfs}/etc/rpm/sysinfo
 		echo "/" >${target_rootfs}/etc/rpm/sysinfo/Dirnames
 
@@ -300,6 +302,7 @@ package_install_internal_rpm () {
 		fi
 
 		# Configure RPM... we enforce these settings!
+		echo "Note: configuring RPM DB settings"
 		mkdir -p ${target_rootfs}${rpmlibdir}
 		mkdir -p ${target_rootfs}${rpmlibdir}/log
 		# After change the __db.* cache size, log file will not be generated automatically,
@@ -337,6 +340,7 @@ EOF
 		rpm --root $target_rootfs --dbpath /var/lib/rpm -qa > /dev/null
 
 		# Configure smart
+		echo "Note: configuring Smart settings"
 		rm -rf ${target_rootfs}/var/lib/smart
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-root=${target_rootfs}
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-dbpath=${rpmlibdir}
@@ -349,6 +353,7 @@ EOF
 		platform_extra_fixed=`echo "$platform_extra" | tr - _`
 		for arch in $platform_extra_fixed ; do
 			if [ -d ${DEPLOY_DIR_RPM}/$arch -a ! -e ${target_rootfs}/install/channel.$arch.stamp ] ; then
+				echo "Note: adding Smart channel $arch ($channel_priority)"
 				smart --data-dir=${target_rootfs}/var/lib/smart channel --add $arch type=rpm-md type=rpm-md baseurl=${DEPLOY_DIR_RPM}/$arch -y
 				smart --data-dir=${target_rootfs}/var/lib/smart channel --set $arch priority=$channel_priority
 				touch ${target_rootfs}/install/channel.$arch.stamp
@@ -386,15 +391,19 @@ if [ \$? -ne 0 ]; then
 fi
 EOF
 
+	echo "Note: configuring RPM cross-install scriptlet_wrapper"
 	chmod 0755 ${WORKDIR}/scriptlet_wrapper
 	smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._cross_scriptlet_wrapper=${WORKDIR}/scriptlet_wrapper
 
 	# Determine what to install
 	translate_oe_to_smart ${sdk_mode} ${package_to_install} ${package_linguas}
 
+	echo "Note: to be installed: ${pkgs_to_install}"
 	[ -n "$pkgs_to_install" ] && smart --data-dir=${target_rootfs}/var/lib/smart install -y ${pkgs_to_install}
 
 	if [ -n "${package_attemptonly}" ]; then
+		echo "Note: installing attempt only packages..."
+		echo "Note: see `dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}"
 		translate_oe_to_smart ${sdk_mode} --attemptonly $package_attemptonly
 		echo "Attempting $pkgs_to_install"
 		smart --data-dir=${target_rootfs}/var/lib/smart install -y $pkgs_to_install >> "`dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}" 2>&1 || true
