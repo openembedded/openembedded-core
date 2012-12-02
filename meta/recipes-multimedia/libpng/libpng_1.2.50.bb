@@ -4,7 +4,7 @@ HOMEPAGE = "http://www.libpng.org/"
 SECTION = "libs"
 LICENSE = "Libpng"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c3d807a85c09ebdff087f18b4969ff96 \
-                    file://png.h;startline=310;endline=424;md5=62968b88b0425ceeb919de3fd21b03e5"
+                    file://png.h;beginline=310;endline=424;md5=b87b5e9252a3e14808a27b92912d268d"
 DEPENDS = "zlib"
 PR = "r0"
 
