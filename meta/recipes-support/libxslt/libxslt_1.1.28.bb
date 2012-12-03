@@ -12,8 +12,8 @@ PR = "r0"
 SRC_URI = "ftp://xmlsoft.org/libxslt//libxslt-${PV}.tar.gz \
            file://pkgconfig_fix.patch"
 
-SRC_URI[md5sum] = "4d01ff464b9ea7236925a1adf147c7f8"
-SRC_URI[sha256sum] = "b6a8d9a421f2630999ca91d9f8c091ee8ea2d580e6be84c1d21b2a45e11e7e26"
+SRC_URI[md5sum] = "9667bf6f9310b957254fdcf6596600b7"
+SRC_URI[sha256sum] = "5fc7151a57b89c03d7b825df5a0fae0a8d5f05674c0e7cf2937ecec4d54a028c"
 S = "${WORKDIR}/libxslt-${PV}"
 
 inherit autotools pkgconfig binconfig lib_package
