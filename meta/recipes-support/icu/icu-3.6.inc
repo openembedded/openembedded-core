@@ -7,6 +7,7 @@ BASE_SRC_URI = "ftp://ftp.software.ibm.com/software/globalization/icu/3.6/icu4c-
            file://fix-parallel-build.patch \
            file://use-g++-for-linking.patch \
            file://larger-cmd-size.patch \
+	   file://icu-add-pkgconfig-support.patch \
            "
 SRC_URI = "${BASE_SRC_URI} \
            file://noldlibpath.patch \
@@ -28,6 +29,12 @@ inherit autotools pkgconfig binconfig
 do_configure() {
 	libtoolize --force
 	gnu-configize --force
+	if [ "${PN}" != "icu-native" ]; then
+		OLD=`pwd`
+		cd ${S}
+		autoconf
+		cd ${OLD}
+	fi
 	oe_runconf
 	if [ "${PN}" != "icu-native" ]; then
 		# In the non-native case we need to make substitutions to use
@@ -45,6 +52,10 @@ do_compile() {
 
 do_install_append() {
         chmod +x ${D}${libdir}/lib*
+	if [ "${PN}" != "icu-native" ]; then
+		install -d ${D}/${libdir}/pkgconfig
+        	install -m 0644 ${S}/icu.pc ${D}/${libdir}/pkgconfig
+	fi
 }
 
 PACKAGES =+ "libicudata libicuuc libicui18n libicule libiculx libicutu libicuio"

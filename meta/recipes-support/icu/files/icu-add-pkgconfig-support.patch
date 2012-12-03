@@ -1,0 +1,43 @@
+Upstream-Status: Inappropriate [version]
+ICU-3.6 has no pkgconfig, so I add it here. 
+But ICU has had pkgconfig support since 4.6.
+So this patch is inappropriate to upstream.
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+
+Index: configure.in
+=============================================================
+--- a/configure.in
++++ b/configure.in
+@@ -1057,4 +1057,7 @@ echo "This may cause ICU to fail to build. Please make sure that GNU make"
+ echo "is in your PATH so that this configure script can detect its location."
+ fi
+ 
++AC_CONFIG_FILES([icu.pc])
++AC_OUTPUT
++
+ $as_unset _CXX_CXXSUFFIX
+
+Index: icu.pc.in
+=============================================================
+--- /dev/null
++++ b/icu.pc.in
+@@ -0,0 +1,15 @@
++# Process this file with autoconf to produce a pkg-config metadata file.
++
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++unicode_version=@UNICODE_VERSION@
++
++Name: ICU
++Description: International Component for Unicode libraries
++Requires:
++Version: @VERSION@
++Libs: -L${libdir} -licui18n -licuuc -licudata
++Libs.private: -L{libdir} -lpthread -lm
++Cflags: -I${includedir} -O2 -pipe -g -feliminate-unused-debug-types
+-- 
+1.7.11.2
+
