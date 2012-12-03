@@ -219,7 +219,7 @@ done
 native_sysroot=$($SUDO_EXEC cat $env_setup_script |grep OECORE_NATIVE_SYSROOT|cut -d'=' -f2|tr -d '"')
 dl_path=$($SUDO_EXEC find $native_sysroot/lib -name "ld-linux*")
 if [ "$dl_path" = "" ] ; then
-	echo "SDK could not be set up. Relocate script to find ld-linux.so. Abort!"
+	echo "SDK could not be set up. Relocate script unable to find ld-linux.so. Abort!"
 	exit 1
 fi
 executable_files=$($SUDO_EXEC find $native_sysroot -type f -perm +111)
