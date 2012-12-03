@@ -22,11 +22,10 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
         file://index.html.lighttpd \
         file://lighttpd.conf \
         file://lighttpd \
-        file://lighttpd_fix_for_automake-1.12.patch \
         "
 
-SRC_URI[md5sum] = "c718cc27658240d307b8a1d1c7c4bb54"
-SRC_URI[sha256sum] = "5209e7a25d3044cb21b34d6a2bb3a6f6c216ba903ea486a803d070582e5e26ac"
+SRC_URI[md5sum] = "8e2d4ae8e918d4de1aeb9842584d170b"
+SRC_URI[sha256sum] = "60691b2dcf3ad2472c06b23d75eb0c164bf48a08a630ed3f308f61319104701f"
 
 EXTRA_OECONF = " \
              --without-bzip2 \
