@@ -1,0 +1,59 @@
+Upstream-Status: Rejected
+
+Add pkgconfig support to libksba.
+This patch is rejected by upstream for the reason below:
+They think pkgconfig adds no portability and maintaining them is not worthwhile.
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+
+Index: Makefile.am
+===============================================================
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -21,6 +21,9 @@
+ ACLOCAL_AMFLAGS = -I m4 -I gl/m4
+ AUTOMAKE_OPTIONS = dist-bzip2 no-dist-gzip
+ 
++pkgconfigdir = ${libdir}/pkgconfig
++pkgconfig_DATA = ksba.pc
++
+ # (A suitable gitlog-to-changelog script can be found in GnuPG master.)
+ GITLOG_TO_CHANGELOG=gitlog-to-changelog
+ 
+Index: configure.ac
+===============================================================
+--- a/configure.ac
++++ b/configure.ac
+@@ -399,6 +399,7 @@ m4/Makefile
+ gl/Makefile
+ src/Makefile
+ src/ksba-config
+ src/versioninfo.rc
++ksba.pc
+ tests/Makefile
+ doc/Makefile
+
+Index: src/ksba.pc.in
+===============================================================
+--- /dev/null
++++ b/ksba.pc.in
+@@ -0,0 +1,16 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++# API info
++api_version=@KSBA_CONFIG_API_VERSION@
++
++Name: ksba
++Description: Libksba provides an easy API to create and parse X.509 and CMS related objects
++Requires:
++Version: @VERSION@
++Libs: -L${libdir} -lksba
++Libs.private: -L{libdir} -lgpg-error
++Cflags: -I${includedir}
++
+-- 
+1.7.5.4
+

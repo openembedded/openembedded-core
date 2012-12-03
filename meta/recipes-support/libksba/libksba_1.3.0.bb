@@ -6,13 +6,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=fd541d83f75d038c4e0617b672ed8bda \
                     file://COPYING.GPLv3;md5=2f31b266d3440dd7ee50f92cf67d8e6c \
                     file://COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02 \
                    "
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "libgpg-error"
 
-inherit autotools binconfig
+inherit autotools binconfig pkgconfig
 
-SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2"
+SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
+           file://ksba-add-pkgconfig-support.patch"
 
 SRC_URI[md5sum] = "cd86fad9c9d360b2cf80449f8a4a4075"
 SRC_URI[sha256sum] = "5a61eed50550d4d0dcb47457ce7b6a90f8e719d42a3b25f7e79333e8cd721971"
+
