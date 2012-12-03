@@ -9,5 +9,5 @@ DEPENDS += "libxdmcp"
 
 PACKAGES =+ "libxcb-xinerama"
 
-SRC_URI[md5sum] = "9da03df9e2f4c048202920d9f6a7e123"
-SRC_URI[sha256sum] = "d2f46811e950710e7e79e45615d24f2c7ec318b9de9dc717972723da58bffa0d"
+SRC_URI[md5sum] = "2b05856e9d1cb37836aae7406f2f4ce2"
+SRC_URI[sha256sum] = "8857e62b3aae2976c7e10043643e45a85964fd1dcb4469dfde0d04d3d1b12c96"
