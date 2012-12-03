@@ -10,9 +10,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949 \
 
 DEPENDS = "libgpg-error"
 
-SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libassuan/libassuan-${PV}.tar.bz2"
+SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libassuan/libassuan-${PV}.tar.bz2 \
+	   file://libassuan-add-pkgconfig-support.patch"
 
 SRC_URI[md5sum] = "179d1918325fdb928c7bd90b8a514fc7"
 SRC_URI[sha256sum] = "bad5682374c76bcc0abb1a7a34c9557af6874a477500748e64a7d3def79cac1b"
 
-inherit autotools binconfig
+inherit autotools binconfig pkgconfig
