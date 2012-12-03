@@ -39,6 +39,7 @@ EXTRA_OECONF = "\
 		--with-access-group=audio \
 		--disable-openssl \
 		--disable-xen \
+		--with-database=simple \
 "
 
 PARALLEL_MAKE = ""
