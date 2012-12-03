@@ -6,7 +6,7 @@ PR = "r0"
 MOD_PV = "${@d.getVar('PV',1)[1:]}"
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENCE;md5=87478fe5bc9ea8f356c5479a5617324a"
+LIC_FILES_CHKSUM = "file://LICENCE;md5=31790deb1e1aac4626e7d1bc04587eb0"
 
 # Upstream updates puzzles.tar.gz for the new release, so checksums seem to be changing regularly right now
 SRC_URI = "svn://svn.tartarus.org/sgt;module=puzzles;rev=${MOD_PV};protocol=svn"
