@@ -97,14 +97,14 @@ class ELFFile:
             return self.objdump_output[cmd]
 
         objdump = d.getVar('OBJDUMP', True)
-        staging_dir = d.getVar('STAGING_BINDIR_TOOLCHAIN', True)
 
         env = os.environ.copy()
         env["LC_ALL"] = "C"
+        env["PATH"] = d.getVar('PATH', True)
 
         try:
             bb.note("%s %s %s" % (objdump, cmd, self.name))
-            self.objdump_output[cmd] = bb.process.run([ os.path.join(staging_dir, objdump), cmd, self.name ], env=env, shell=False)[0]
+            self.objdump_output[cmd] = bb.process.run([objdump, cmd, self.name], env=env, shell=False)[0]
             return self.objdump_output[cmd]
         except Exception, e:
             bb.note("%s %s %s failed: %s" % (objdump, cmd, self.name, e))
