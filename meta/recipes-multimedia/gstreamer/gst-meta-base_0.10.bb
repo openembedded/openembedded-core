@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 
-PR = "r11"
+PR = "r12"
 
 PACKAGES = "\
     gst-meta-base \
@@ -17,6 +17,7 @@ PACKAGES = "\
 ALLOW_EMPTY = "1"
 
 RDEPENDS_gst-meta-base = "\
+    ${@base_contains('DISTRO_FEATURES', 'x11', 'gst-meta-x11-base', '', d)} \
     gstreamer \
     gst-plugins-base-playbin \
     gst-plugins-base-decodebin \
@@ -32,7 +33,9 @@ RDEPENDS_gst-meta-base = "\
     gst-plugins-good-autodetect \
     gst-plugins-good-souphttpsrc"
 
-RDEPENDS_gst-meta-x11-base = "${@base_contains('DISTRO_FEATURES', 'x11', 'gst-plugins-base-ximagesink', '', d)}"
+RDEPENDS_gst-meta-x11-base = "\
+    gst-plugins-base-ximagesink \
+    gst-plugins-base-xvimagesink"
 
 RDEPENDS_gst-meta-audio = "\
     gst-meta-base \
