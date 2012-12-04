@@ -15,13 +15,16 @@ export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL = "1"
 
 gconf_postinst() {
 if [ "x$D" != "x" ]; then
-	exit 1
+	export GCONF_BACKEND_DIR=${STAGING_LIBDIR_NATIVE}/GConf/2
+	export GCONF_CONFIG_SOURCE="xml::$D${sysconfdir}/gconf/gconf.xml.defaults"
+else
+	export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 fi
-SCHEMA_LOCATION=/etc/gconf/schemas
+
+SCHEMA_LOCATION=$D/etc/gconf/schemas
 for SCHEMA in ${SCHEMA_FILES}; do
 	if [ -e $SCHEMA_LOCATION/$SCHEMA ]; then
-		HOME=/root GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
-			gconftool-2 \
+		HOME=$D/root gconftool-2 \
 			--makefile-install-rule $SCHEMA_LOCATION/$SCHEMA > /dev/null
 	fi
 done
