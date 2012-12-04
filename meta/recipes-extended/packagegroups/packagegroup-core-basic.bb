@@ -3,7 +3,7 @@
 #
 
 DESCRIPTION = "Create Basic Image Tasks"
-PR = "r5"
+PR = "r6"
 LICENSE = "MIT"
 
 inherit packagegroup
@@ -90,9 +90,11 @@ RDEPENDS_packagegroup-core-dev-utils = "\
     patch \
     "
 
+VIRTUAL-RUNTIME_initscripts ?= "initscripts"
+VIRTUAL-RUNTIME_init_manager ?= "sysvinit"
 RDEPENDS_packagegroup-core-initscripts = "\
-    initscripts \
-    sysvinit \
+    ${VIRTUAL-RUNTIME_initscripts} \
+    ${VIRTUAL-RUNTIME_init_manager} \
     ethtool \
     mingetty \
     sysklogd \
