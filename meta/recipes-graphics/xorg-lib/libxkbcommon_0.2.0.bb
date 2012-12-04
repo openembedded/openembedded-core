@@ -13,6 +13,8 @@ SRC_URI[sha256sum] = "74eb0a121ca3998015fd687591426bb15c524645a72cf602831b2e7291
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=9c0b824e72a22f9d2c40b9c93b1f0ddc"
 
-PR = "r0"
+PR = "r1"
+
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-docs"
