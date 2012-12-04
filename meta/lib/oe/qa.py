@@ -99,7 +99,7 @@ class ELFFile:
         objdump = d.getVar('OBJDUMP', True)
         staging_dir = d.getVar('STAGING_BINDIR_TOOLCHAIN', True)
 
-        env = os.environ
+        env = os.environ.copy()
         env["LC_ALL"] = "C"
 
         try:
