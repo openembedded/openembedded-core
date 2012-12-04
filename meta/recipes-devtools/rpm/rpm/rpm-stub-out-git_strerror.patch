@@ -2,7 +2,7 @@ git: fix: stud-out git_strerror when --without-git
 
 Patch taken from the cvs repo,http://www.mail-archive.com/rpm-cvs@rpm5.org/msg08907.html. 
 
-Upstream-status: Backport
+Upstream-Status: Backport
 
 Signed-off-by: Morgan Little <morgan.little@windriver.com>
 

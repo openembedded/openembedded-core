@@ -7,6 +7,8 @@ use the one in ossp which solves the issue.
 The recipe already depends on ossp so ossp/uuid.h will be there when rpm-native
 is built.
 
+Upstream-Status: Pending
+
 Signed-off-by: Morgan Little <morgan.little@windriver.com>
 
 

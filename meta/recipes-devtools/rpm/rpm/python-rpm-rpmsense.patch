@@ -4,7 +4,7 @@ We want to see the RPMSENSE_SCRIPT values for use with SMART.  We also
 want to see the MISSINGOK value so we can avoid recommended packages causing
 failures.
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
