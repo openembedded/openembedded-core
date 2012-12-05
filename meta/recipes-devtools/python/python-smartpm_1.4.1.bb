@@ -11,7 +11,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=393a5ca445f6965873eca0259a17f833"
 
 DEPENDS = "python rpm"
-PR = "r3"
+PR = "r4"
 SRCNAME = "smart"
 
 SRC_URI = "\
@@ -48,9 +48,6 @@ PACKAGECONFIG[gtk] = ",,gtk+,${GTK_RDEP}"
 inherit distutils
 
 do_install_append() {
-   # Cleanup unused item...
-   rmdir ${D}${datadir}/share
-
    # We don't support the following items
    rm -rf ${D}${libdir}/python*/site-packages/smart/backends/slack
    rm -rf ${D}${libdir}/python*/site-packages/smart/backends/arch
