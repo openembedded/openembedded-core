@@ -411,6 +411,10 @@ python package_get_auto_pr() {
                 bb.fatal("Can NOT get PRAUTO from remote PR service")
             return
         d.setVar('PRAUTO',str(auto_pr))
+    else:
+        pv = d.getVar("PV", True)
+        if 'AUTOINC' in pv:
+            d.setVar("PKGV", pv.replace("AUTOINC", "0"))
 }
 
 LOCALEBASEPN ??= "${PN}"
