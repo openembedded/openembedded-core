@@ -4,15 +4,15 @@ HOMEPAGE = "http://www.efficios.com/babeltrace/"
 BUGTRACKER = "n/a"
 
 LICENSE = "MIT & GPLv2"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=8d1a03b3c17bdd158b3cbb34813b1423"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=76ba15dd76a248e1dd526bca0e2125fa"
 
 inherit autotools
 
 DEPENDS = "glib-2.0 util-linux popt"
 
-SRCREV = "0d8f8c2ea27df096269aa76b4baeab26b68b95d4"
-PV = "0.12+git${SRCPV}"
-PR = "r2"
+SRCREV = "f6ed7fa4636ff22e08f57721dcd312828547aa66"
+PV = "1.0+git${SRCPV}"
+PR = "r0"
 
 SRC_URI = "git://git.efficios.com/babeltrace.git;protocol=git"
 
