@@ -1,7 +1,7 @@
-From 1c42c9c5f02845ea4c5b82638b7b2ed4d3dca0ff Mon Sep 17 00:00:00 2001
+From 9250fed086a4a8a645a972764a9bf34e4566ec2e Mon Sep 17 00:00:00 2001
 From: Fathi Boudra <fabo@debian.org>
 Date: Wed, 26 Sep 2012 20:46:14 +0200
-Subject: [PATCH 15/20] configure: add nostrip for debug packages
+Subject: [PATCH 15/21] configure: add nostrip for debug packages
 
 Qt is built in release mode and strip files by default.
 Set CONFIG+=nostrip to avoid the stripping and
@@ -15,7 +15,7 @@ Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/configure b/configure
-index f2c0725..d1a0dfd 100755
+index 7983c3d..d02824b 100755
 --- a/configure
 +++ b/configure
 @@ -710,6 +710,8 @@ mkdir -p "$outpath/config.tests"
@@ -28,5 +28,5 @@ index f2c0725..d1a0dfd 100755
  QMakeVar add decorations "default windows styled"
  QMakeVar add mouse-drivers "pc"
 -- 
-1.7.12
+1.8.0
 

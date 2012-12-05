@@ -1,7 +1,7 @@
 LICENSE = "LGPLv2.1 | GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
-                    file://LICENSE.GPL3;md5=babc5b6b77441da277f5c06b2e547720 \
-                    file://LGPL_EXCEPTION.txt;md5=411080a56ff917a5a1aa08c98acae354"
+                    file://LICENSE.GPL3;md5=6e1694ee338db410417517884918d4d2 \
+                    file://LGPL_EXCEPTION.txt;md5=0145c4d1b6f96a661c2c139dfb268fb6"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt4-${PV}:"
 
@@ -25,8 +25,8 @@ SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-sr
            file://linux.conf \
            "
 
-SRC_URI[md5sum] = "a663b6c875f8d7caa8ac9c30e4a4ec3b"
-SRC_URI[sha256sum] = "f1f72974f924861be04019f49f07cd43ab3c95056db2ba8f34b283487cccc728"
+SRC_URI[md5sum] = "89c5ecba180cae74c66260ac732dc5cb"
+SRC_URI[sha256sum] = "33b0e38ba4c54a0cf8a4be8ca5a4584f1c2e0adfecb57b21d9d1d267b0093270"
 
 S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 

@@ -1,7 +1,7 @@
-From 851eb73f7c2d3fa8dc017c3fb4f448b522cd9873 Mon Sep 17 00:00:00 2001
+From 21af8f6d21b28a53041affb11b58d6316023fa92 Mon Sep 17 00:00:00 2001
 From: Otavio Salvador <otavio@ossystems.com.br>
 Date: Wed, 26 Sep 2012 20:45:10 +0200
-Subject: [PATCH 14/20] translations: fix phony translation linking error
+Subject: [PATCH 14/21] translations: fix phony translation linking error
 
   | .../usr/lib/crt1.o: In function `_start':
   | .../../sysdeps/i386/elf/start.S:115: undefined reference to `main'
@@ -37,5 +37,5 @@ index dc99beb..0d98829 100644
      phony_src.CONFIG += combine
      QMAKE_EXTRA_COMPILERS += phony_src
 -- 
-1.7.12
+1.8.0
 

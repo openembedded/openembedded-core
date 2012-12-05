@@ -1,7 +1,7 @@
-From dacee47b11fc7cf89cdb8ddeeac9e6b64320ec8b Mon Sep 17 00:00:00 2001
+From 64ce5d0e7c19436b928a2a0d9d192f56be3c9bb2 Mon Sep 17 00:00:00 2001
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 Date: Wed, 26 Sep 2012 20:32:41 +0200
-Subject: [PATCH 08/20] qmake.pro: Allow building a separate qmake for the
+Subject: [PATCH 08/21] qmake.pro: Allow building a separate qmake for the
  target
 
 Upstream-Status: Inappropriate [config]
@@ -25,5 +25,5 @@ index 38e0fce..53b1ffb 100644
  OBJECTS_DIR = .
  MOC_DIR = .
 -- 
-1.7.12
+1.8.0
 

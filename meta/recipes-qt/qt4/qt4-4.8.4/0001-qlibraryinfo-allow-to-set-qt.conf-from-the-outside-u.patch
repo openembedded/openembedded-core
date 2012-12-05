@@ -1,7 +1,7 @@
-From 89349d565cf03f3a2c09fe235ac6c75e415859bd Mon Sep 17 00:00:00 2001
+From 55097d27e8b746b3d5ff437939caf1fa43c0d62b Mon Sep 17 00:00:00 2001
 From: Holger Freyther <zecke@selfish.org>
 Date: Wed, 26 Sep 2012 17:22:30 +0200
-Subject: [PATCH 01/20] qlibraryinfo: allow to set qt.conf from the outside
+Subject: [PATCH 01/21] qlibraryinfo: allow to set qt.conf from the outside
  using the environment
 
 Allow to set a qt.conf from the outside using the environment. This allows
@@ -16,7 +16,7 @@ Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
  1 file changed, 5 insertions(+)
 
 diff --git a/src/corelib/global/qlibraryinfo.cpp b/src/corelib/global/qlibraryinfo.cpp
-index 91d2dfc..41045b3 100644
+index 180dc39..4adad35 100644
 --- a/src/corelib/global/qlibraryinfo.cpp
 +++ b/src/corelib/global/qlibraryinfo.cpp
 @@ -54,6 +54,7 @@
@@ -39,5 +39,5 @@ index 91d2dfc..41045b3 100644
      if (!QFile::exists(qtconfig) && QCoreApplication::instance()) {
  #ifdef Q_OS_MAC
 -- 
-1.7.12
+1.8.0
 

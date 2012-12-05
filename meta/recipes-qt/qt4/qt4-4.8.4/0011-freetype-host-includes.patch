@@ -1,7 +1,7 @@
-From 95cbbdaaf543bb5747b535b5e4b02114f3d821d6 Mon Sep 17 00:00:00 2001
+From 3fcffa79e6a5f0448cbfe2bb33fe1218f5dae61d Mon Sep 17 00:00:00 2001
 From: Michael Krelin <hacker@klever.net>
 Date: Mon, 4 Jun 2007 14:48:50 +0200
-Subject: [PATCH 11/20] freetype host includes
+Subject: [PATCH 11/21] freetype host includes
 
 Host include path should not be used in cross compiling case.
 
@@ -25,5 +25,5 @@ index 7ef1cf9..b362fcd 100644
      linux-lsb-g++:TRY_INCLUDEPATHS = $$QMAKE_INCDIR $$QMAKE_INCDIR_X11 $$INCLUDEPATH
      for(p, TRY_INCLUDEPATHS) {
 -- 
-1.7.12
+1.8.0
 

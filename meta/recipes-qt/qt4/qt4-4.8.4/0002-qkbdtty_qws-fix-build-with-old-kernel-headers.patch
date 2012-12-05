@@ -1,7 +1,7 @@
-From fe15b966616cc2d2f2f071474a3414fd03ee473e Mon Sep 17 00:00:00 2001
+From 5e6b1051afa3099a02a758b0596236759d70670e Mon Sep 17 00:00:00 2001
 From: Wenzong Fan <wenzong.fan@windriver.com>
 Date: Wed, 26 Sep 2012 20:18:08 +0200
-Subject: [PATCH 02/20] qkbdtty_qws: fix build with old kernel headers
+Subject: [PATCH 02/21] qkbdtty_qws: fix build with old kernel headers
 
 This issue is that with C++ compiler process an old version of kernel
 header file, coincidently that file has a variable named 'new':
@@ -21,7 +21,7 @@ Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
  1 file changed, 12 insertions(+)
 
 diff --git a/src/gui/embedded/qkbdtty_qws.cpp b/src/gui/embedded/qkbdtty_qws.cpp
-index c629fa3..47fd3f7 100644
+index a46811b..762138f 100644
 --- a/src/gui/embedded/qkbdtty_qws.cpp
 +++ b/src/gui/embedded/qkbdtty_qws.cpp
 @@ -54,8 +54,20 @@
@@ -46,5 +46,5 @@ index c629fa3..47fd3f7 100644
  #  include "qwindowsystem_qws.h"
  #  include "qapplication.h"
 -- 
-1.7.12
+1.8.0
 

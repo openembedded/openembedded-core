@@ -1,7 +1,7 @@
-From 5945025c96fd25880565819881b8ef48e1baa3ce Mon Sep 17 00:00:00 2001
+From d2bb701b551402f0befddd0e906423596bdc0df7 Mon Sep 17 00:00:00 2001
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 Date: Wed, 26 Sep 2012 20:48:37 +0200
-Subject: [PATCH 17/20] configure: ensure we identify the compiler as g++ in
+Subject: [PATCH 17/21] configure: ensure we identify the compiler as g++ in
  configure
 
 Our PLATFORM in OE is ${TARGET_OS}-oe-g++, and previously the configure
@@ -28,10 +28,10 @@ Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
  1 file changed, 3 insertions(+)
 
 diff --git a/configure b/configure
-index 9f59e1a..6989962 100755
+index 891d6e7..7031898 100755
 --- a/configure
 +++ b/configure
-@@ -7527,6 +7527,9 @@ elif [ "$XPLATFORM" != "$PLATFORM" ]; then
+@@ -7592,6 +7592,9 @@ elif [ "$XPLATFORM" != "$PLATFORM" ]; then
  else
      COMPILER=`echo $PLATFORM | cut -f 2- -d-`
  fi
@@ -42,5 +42,5 @@ index 9f59e1a..6989962 100755
      CFG_EXCEPTIONS=no
  fi
 -- 
-1.7.12
+1.8.0
 

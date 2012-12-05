@@ -1,7 +1,7 @@
-From d9544b4a079f3c66d15f973c5d1526df2fe49d40 Mon Sep 17 00:00:00 2001
+From 4888791d1899f781af710dd8813887dea52fda59 Mon Sep 17 00:00:00 2001
 From: Holger Freyther <zecke@selfish.org>
 Date: Wed, 26 Sep 2012 20:36:38 +0200
-Subject: [PATCH 10/20] configure: Hack to not use the pg_config of the host
+Subject: [PATCH 10/21] configure: Hack to not use the pg_config of the host
  system which will add /usr/include
 
 pg_config is a native binary so using that when cross compiling
@@ -19,10 +19,10 @@ Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/configure b/configure
-index 958b884..24cbb2a 100755
+index db4d044..35a8fe7 100755
 --- a/configure
 +++ b/configure
-@@ -5441,10 +5441,10 @@ for _SQLDR in $CFG_SQL_AVAILABLE; do
+@@ -5511,10 +5511,10 @@ for _SQLDR in $CFG_SQL_AVAILABLE; do
          psql)
              if [ "$CFG_SQL_psql" != "no" ]; then
                  # Be careful not to use native pg_config when cross building.
@@ -38,5 +38,5 @@ index 958b884..24cbb2a 100755
                  [ -z "$QT_LFLAGS_PSQL" ] || QT_LFLAGS_PSQL="-L$QT_LFLAGS_PSQL"
                  # But, respect PSQL_LIBS if set
 -- 
-1.7.12
+1.8.0
 

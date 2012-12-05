@@ -1,7 +1,7 @@
-From a8233fddb36592361910d967664e5b546ac4cc3e Mon Sep 17 00:00:00 2001
+From 8744273fc452eb54bbeeb7d15823009ce926c6fa Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Jeremy=20Lain=C3=A9?= <jeremy.laine@m4x.org>
 Date: Wed, 26 Sep 2012 20:39:21 +0200
-Subject: [PATCH 12/20] Add 2bpp support
+Subject: [PATCH 12/21] Add 2bpp support
 
 Submitted upstream but rejected as being "out of scope":
 http://bugreports.qt.nokia.com/browse/QTBUG-3468
@@ -16,10 +16,10 @@ Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
  3 files changed, 216 insertions(+), 4 deletions(-)
 
 diff --git a/configure b/configure
-index 24cbb2a..cd66d05 100755
+index 35a8fe7..79c1c7b 100755
 --- a/configure
 +++ b/configure
-@@ -6999,6 +6999,7 @@ if [ "$CFG_QWS_DEPTHS" = "prompted" -a "$PROMPT_FOR_DEPTHS" = "yes" ]; then
+@@ -7063,6 +7063,7 @@ if [ "$CFG_QWS_DEPTHS" = "prompted" -a "$PROMPT_FOR_DEPTHS" = "yes" ]; then
      echo "Choose pixel-depths to support:"
      echo
      echo "   1. 1bpp, black/white"
@@ -27,7 +27,7 @@ index 24cbb2a..cd66d05 100755
      echo "   4. 4bpp, grayscale"
      echo "   8. 8bpp, paletted"
      echo "  12. 12bpp, rgb 4-4-4"
-@@ -7017,11 +7018,11 @@ if [ "$CFG_QWS_DEPTHS" = "prompted" -a "$PROMPT_FOR_DEPTHS" = "yes" ]; then
+@@ -7081,11 +7082,11 @@ if [ "$CFG_QWS_DEPTHS" = "prompted" -a "$PROMPT_FOR_DEPTHS" = "yes" ]; then
  fi
  if [ -n "$CFG_QWS_DEPTHS" -a "$PLATFORM_QWS" = "yes" ]; then
      if [ "$CFG_QWS_DEPTHS" = "all" ]; then
@@ -42,7 +42,7 @@ index 24cbb2a..cd66d05 100755
  	esac
      done
 diff --git a/src/gui/embedded/qscreen_qws.cpp b/src/gui/embedded/qscreen_qws.cpp
-index d2ad851..d25fc87 100644
+index b307bf2..88950b3 100644
 --- a/src/gui/embedded/qscreen_qws.cpp
 +++ b/src/gui/embedded/qscreen_qws.cpp
 @@ -469,6 +469,58 @@ static void solidFill_gray4(QScreen *screen, const QColor &color,
@@ -299,7 +299,7 @@ index d2ad851..d25fc87 100644
      } else if(d==4) {
          return true;
 diff --git a/src/gui/embedded/qscreenlinuxfb_qws.cpp b/src/gui/embedded/qscreenlinuxfb_qws.cpp
-index 04abcd4..06dea6d 100644
+index 6f3caad..14159ee 100644
 --- a/src/gui/embedded/qscreenlinuxfb_qws.cpp
 +++ b/src/gui/embedded/qscreenlinuxfb_qws.cpp
 @@ -466,8 +466,8 @@ bool QLinuxFbScreen::connect(const QString &displaySpec)
@@ -314,5 +314,5 @@ index 04abcd4..06dea6d 100644
          ::fb_cmap startcmap;
          startcmap.start=0;
 -- 
-1.7.12
+1.8.0
 

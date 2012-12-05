@@ -1,7 +1,7 @@
-From 915ea240e03f04c6ae788cf369b13afe5d9bfc45 Mon Sep 17 00:00:00 2001
+From 1f1da2f24d3028b250dbc2e98e2b7e37862b3771 Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Wed, 26 Sep 2012 20:54:38 +0200
-Subject: [PATCH 19/20] Fixes for gcc 4.7.0, particularly on qemux86
+Subject: [PATCH 19/21] Fixes for gcc 4.7.0, particularly on qemux86
 
 Origin: upstream, http://trac.webkit.org/changeset/93631
 Origin: upstream, http://trac.webkit.org/changeset/113848
@@ -59,5 +59,5 @@ index 6087ec3..6d748f6 100644
      virtual void tiledBackingStorePaint(GraphicsContext*, const IntRect&) = 0;
      virtual void tiledBackingStorePaintEnd(const Vector<IntRect>& paintedArea) = 0;
 -- 
-1.7.12
+1.8.0
 

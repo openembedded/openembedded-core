@@ -1,7 +1,7 @@
-From f7eb6d336d30da7b8193f1d1ab6142293e3966da Mon Sep 17 00:00:00 2001
+From b6805e883c078f7647d9234aca4e3513ebd1c9bf Mon Sep 17 00:00:00 2001
 From: Martin Jansa <Martin.Jansa@gmail.com>
 Date: Tue, 1 May 2012 07:48:15 +0200
-Subject: [PATCH 03/20] webkit2: set OUTPUT_DIR value if empty
+Subject: [PATCH 03/21] webkit2: set OUTPUT_DIR value if empty
 
 Without this do_configure was trying to create /include/WebCore/libdummy.prl in root of build host filesystem
 now it's in proper place ${WORKDIR}/qt-everywhere-opensource-src-4.8.1/src/3rdparty/webkit/include/WebCore/libdummy.prl
@@ -30,5 +30,5 @@ index 006a88c..5e17193 100644
      isEmpty(WEBKIT2_GENERATED_SOURCES_DIR):WEBKIT2_GENERATED_SOURCES_DIR = $$PWD/generated
      isEmpty(WC_GENERATED_SOURCES_DIR):WC_GENERATED_SOURCES_DIR = $$PWD/../WebCore/generated
 -- 
-1.7.12
+1.8.0
 

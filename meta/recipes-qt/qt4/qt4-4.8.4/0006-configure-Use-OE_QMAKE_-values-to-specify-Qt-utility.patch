@@ -1,7 +1,7 @@
-From fa9e376ff72f488608c8fc635ec669fc00c3c1ea Mon Sep 17 00:00:00 2001
+From 0bc0db83812b5900dc4e6ffa96bdeab46b6adcae Mon Sep 17 00:00:00 2001
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 Date: Wed, 26 Sep 2012 20:29:09 +0200
-Subject: [PATCH 06/20] configure: Use OE_QMAKE_* values to specify Qt utility
+Subject: [PATCH 06/21] configure: Use OE_QMAKE_* values to specify Qt utility
  paths
 
 Upstream-Status: Inappropriate [configuration]
@@ -13,10 +13,10 @@ Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/configure b/configure
-index cc08b71..958b884 100755
+index 5a7c4ee..db4d044 100755
 --- a/configure
 +++ b/configure
-@@ -8612,11 +8612,11 @@ QMAKE_ABSOLUTE_SOURCE_ROOT = \$\$QT_SOURCE_TREE
+@@ -8683,11 +8683,11 @@ QMAKE_ABSOLUTE_SOURCE_ROOT = \$\$QT_SOURCE_TREE
  QMAKE_MOC_SRC    = \$\$QT_BUILD_TREE/src/moc
  
  #local paths that cannot be queried from the QT_INSTALL_* properties while building QTDIR
@@ -34,5 +34,5 @@ index cc08b71..958b884 100755
  QMAKE_LIBDIR_QT  = \$\$QT_BUILD_TREE/lib
  
 -- 
-1.7.12
+1.8.0
 

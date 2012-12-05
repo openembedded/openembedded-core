@@ -1,7 +1,7 @@
-From 8785f376533ffdcf4c32b53274e8c40f567d7fd5 Mon Sep 17 00:00:00 2001
+From 549342fa380ed2a9ad41be3d04ee2f0585f6a465 Mon Sep 17 00:00:00 2001
 From: Michael Lauer <mickey@vanille-media.de>
 Date: Wed, 26 Sep 2012 20:41:32 +0200
-Subject: [PATCH 13/20] configure: add "-crossarch" option
+Subject: [PATCH 13/21] configure: add "-crossarch" option
 
 Upstream-Status: Pending
 
@@ -11,10 +11,10 @@ Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/configure b/configure
-index cd66d05..f2c0725 100755
+index 79c1c7b..7983c3d 100755
 --- a/configure
 +++ b/configure
-@@ -1141,7 +1141,7 @@ while [ "$#" -gt 0 ]; do
+@@ -1153,7 +1153,7 @@ while [ "$#" -gt 0 ]; do
          shift
          VAL=$1
          ;;
@@ -23,7 +23,7 @@ index cd66d05..f2c0725 100755
          VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
          shift
          VAL="$1"
-@@ -1697,6 +1697,9 @@ while [ "$#" -gt 0 ]; do
+@@ -1709,6 +1709,9 @@ while [ "$#" -gt 0 ]; do
          DEV_VAL=`echo $VAL | sed "s,^.*=\(.*\),\1,"`
          DeviceVar set $DEV_VAR $DEV_VAL
          ;;
@@ -33,7 +33,7 @@ index cd66d05..f2c0725 100755
      debug-and-release)
          if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
              CFG_DEBUG_RELEASE="$VAL"
-@@ -3297,6 +3300,8 @@ arm*)
+@@ -3324,6 +3327,8 @@ arm*)
      ;;
  esac
  
@@ -43,5 +43,5 @@ index cd66d05..f2c0725 100755
      if [ "$OPT_VERBOSE" = "yes" ]; then
          echo "    '$CFG_ARCH' is supported"
 -- 
-1.7.12
+1.8.0
 

@@ -1,7 +1,7 @@
-From a10ba547001f4a4ba0ae313a4e9c2c0b5bb36a09 Mon Sep 17 00:00:00 2001
+From d90b496f9ffdc828928ef84afad43260ea67ec1f Mon Sep 17 00:00:00 2001
 From: Ken Werner <ken.werner@linaro.org>
 Date: Wed, 26 Sep 2012 20:55:21 +0200
-Subject: [PATCH 20/20] webkit: disable the -fuse-ld=gold flag
+Subject: [PATCH 20/21] webkit: disable the -fuse-ld=gold flag
 
 This option is a Debian/Ubuntu specific extension to the g++ and causes upstream GCC to throw an error.
 
@@ -37,5 +37,5 @@ index 0f62e14..d81a1f0 100644
  # We use this flag on production branches
  # See https://bugs.webkit.org/show_bug.cgi?id=60824
 -- 
-1.7.12
+1.8.0
 

@@ -1,7 +1,7 @@
-From db3c7b5710ee14280b51c355487dabe21eff60b4 Mon Sep 17 00:00:00 2001
+From 2011bb8029480af1d1266f258e5a5f5cef7392d3 Mon Sep 17 00:00:00 2001
 From: Pavel Heimlich <tropikhajma@gmail.com>
 Date: Wed, 26 Sep 2012 20:31:10 +0200
-Subject: [PATCH 07/20] dbus: Remove "const" usage that causes compile failure
+Subject: [PATCH 07/21] dbus: Remove "const" usage that causes compile failure
  building nativesdk-qt4-tools
 
 Patch has apparently been rejected upstream, not because it is invalid
@@ -17,10 +17,10 @@ Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/dbus/qdbusintegrator.cpp b/src/dbus/qdbusintegrator.cpp
-index 0bf62de..e53620f 100644
+index 0f0b647..aa4cbab 100644
 --- a/src/dbus/qdbusintegrator.cpp
 +++ b/src/dbus/qdbusintegrator.cpp
-@@ -72,7 +72,7 @@ QT_BEGIN_NAMESPACE
+@@ -73,7 +73,7 @@ QT_BEGIN_NAMESPACE
  static bool isDebugging;
  #define qDBusDebug              if (!::isDebugging); else qDebug
  
@@ -30,5 +30,5 @@ index 0bf62de..e53620f 100644
  static inline QString dbusServiceString()
  { return *orgFreedesktopDBusString(); }
 -- 
-1.7.12
+1.8.0
 

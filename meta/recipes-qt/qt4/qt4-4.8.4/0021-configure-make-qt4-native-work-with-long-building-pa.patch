@@ -1,15 +1,24 @@
+From 6742ac7ea6fd1e9c82ecb5305f84e721242f857d Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Wed, 5 Dec 2012 07:48:15 +0200
+Subject: [PATCH 21/21] configure: make qt4-native work with long building
+ path.
+
 Upstream-Status: Submitted
 
-Make qt4-native work with long building path.
 Reference: https://bugreports.qt-project.org/browse/QTBUG-28292
 
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ configure | 52 ++++++++++++++++++++++++++--------------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
-Index: configure
-=====================================================================
+diff --git a/configure b/configure
+index a4a42f1..2358563 100755
 --- a/configure
 +++ b/configure
-@@ -4764,8 +4764,8 @@ DEMOS_PATH_STR=`"$relpath/config.tests/unix/padstring" 268 "qt_demopath=$QT_INST
+@@ -4779,8 +4779,8 @@ DEMOS_PATH_STR=`"$relpath/config.tests/unix/padstring" 268 "qt_demopath=$QT_INST
  TODAY=`date +%Y-%m-%d`
  cat > "$outpath/src/corelib/global/qconfig.cpp.new" <<EOF
  /* License Info */
@@ -20,7 +29,7 @@ Index: configure
  
  /* Installation date */
  static const char qt_configure_installation          [12+11]    = "qt_instdate=$TODAY";
-@@ -4790,36 +4790,36 @@ if [ ! -z "$QT_HOST_PREFIX" ]; then
+@@ -4805,36 +4805,36 @@ if [ ! -z "$QT_HOST_PREFIX" ]; then
  
  #if defined(QT_BOOTSTRAPPED) || defined(QT_BUILD_QMAKE)
  /* Installation Info */
@@ -81,3 +90,6 @@ Index: configure
  EOF
  
  if [ ! -z "$QT_HOST_PREFIX" ]; then
+-- 
+1.8.0
+
