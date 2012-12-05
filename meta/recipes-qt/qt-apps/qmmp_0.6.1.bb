@@ -5,7 +5,7 @@ LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 SECTION = "multimedia"
 
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "taglib libmad libvorbis libogg alsa-lib"
 
@@ -14,8 +14,7 @@ SRC_URI = "http://qmmp.ylsoftware.com/files/${BPN}-${PV}.tar.bz2"
 SRC_URI[md5sum] = "23a1a3aa924da901ebc8327ea76135d4"
 SRC_URI[sha256sum] = "b48be8c0e3882088919a77ce7b619cfc99d32af29cc688ba8749a58cbb25fb6f"
 
-
-inherit qmake2 cmake qt4x11
+inherit cmake qt4x11
 
 export EXTRA_OECMAKE = "-DQT_QMAKE_EXECUTABLE=${OE_QMAKE_QMAKE} \
                         -DQT_LRELEASE_EXECUTABLE=${OE_QMAKE_LRELEASE} \
