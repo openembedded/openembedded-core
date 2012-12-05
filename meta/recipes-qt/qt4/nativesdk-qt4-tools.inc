@@ -63,8 +63,8 @@ do_configure() {
 
     if [ -f mkspecs/common/g++-base.conf ] ; then
         # don't use host g++ even during configure (4.8.0+)
-        sed -i -e "s#g++#${CXX}#" mkspecs/common/g++-base.conf
-        sed -i -e "s#gcc#${CC}#" mkspecs/common/g++-base.conf
+        sed -i -e "s#= g++#= ${CXX}#" mkspecs/common/g++-base.conf
+        sed -i -e "s#= gcc#= ${CC}#" mkspecs/common/g++-base.conf
     fi
 
     # Use qmake from qt4-native for building
