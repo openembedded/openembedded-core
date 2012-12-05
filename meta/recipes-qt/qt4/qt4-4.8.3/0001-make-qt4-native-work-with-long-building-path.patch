@@ -1,6 +1,7 @@
-Upstream-Status: Inappropriate [configuration]
+Upstream-Status: Submitted
 
 Make qt4-native work with long building path.
+Reference: https://bugreports.qt-project.org/browse/QTBUG-28292
 
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 

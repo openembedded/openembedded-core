@@ -1,6 +1,9 @@
-Upstream-Status: Inappropriate [distribution]
+Upstream-Status: Accepted
 
 Make ghost script work with long building directory
+
+This patch has been accepted by upstream and should be removed
+at the next update of ghostscript.
 
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 
