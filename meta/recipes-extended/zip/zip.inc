@@ -12,6 +12,8 @@ EXTRA_OEMAKE = "'CC=${CC}' 'BIND=${CC}' 'AS=${CC} -c' 'CPP=${CPP}' \
 		'BINFLAGS=0755' 'INSTALL_D=install -d'"
 
 do_compile() {
+	oe_runmake -f unix/Makefile flags
+	sed -i 's#LFLAGS1=""#LFLAGS1="${LDFLAGS}"#' flags
 	oe_runmake -f unix/Makefile generic
 }
 
