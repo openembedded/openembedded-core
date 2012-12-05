@@ -80,6 +80,7 @@ def find_siginfo(pn, taskname, taskhashlist, d):
     """ Find signature data files for comparison purposes """
 
     import fnmatch
+    import glob
 
     if taskhashlist:
         hashfiles = {}
@@ -93,27 +94,30 @@ def find_siginfo(pn, taskname, taskhashlist, d):
         if key.startswith('virtual:native:'):
             pn = pn + '-native'
 
-    # First search in stamps dir
-    stampdir = d.getVar('TMPDIR', True) + '/stamps'
-    filespec = '%s-*.%s.sigdata.*' % (pn, taskname)
     filedates = {}
+
+    # First search in stamps dir
+    localdata = d.createCopy()
+    localdata.setVar('MULTIMACH_TARGET_SYS', '*')
+    localdata.setVar('PN', pn)
+    localdata.setVar('PV', '*')
+    localdata.setVar('PR', '*')
+    localdata.setVar('EXTENDPE', '')
+    stamp = localdata.getVar('STAMP', True)
+    filespec = '%s.%s.sigdata.*' % (stamp, taskname)
     foundall = False
-    for root, dirs, files in os.walk(stampdir):
-        for fn in files:
-            if fnmatch.fnmatch(fn, filespec):
-                fullpath = os.path.join(root, fn)
-                match = False
-                if taskhashlist:
-                    for taskhash in taskhashlist:
-                        if fn.endswith('.%s' % taskhash):
-                            hashfiles[taskhash] = fullpath
-                            if len(hashfiles) == len(taskhashlist):
-                                foundall = True
-                                break
-                else:
-                    filedates[fullpath] = os.stat(fullpath).st_mtime
-        if foundall:
-            break
+    import glob
+    for fullpath in glob.glob(filespec):
+	match = False
+	if taskhashlist:
+	    for taskhash in taskhashlist:
+		if fullpath.endswith('.%s' % taskhash):
+		    hashfiles[taskhash] = fullpath
+		    if len(hashfiles) == len(taskhashlist):
+			foundall = True
+			break
+	else:
+	    filedates[fullpath] = os.stat(fullpath).st_mtime
 
     if len(filedates) < 2 and not foundall:
         # That didn't work, look in sstate-cache
