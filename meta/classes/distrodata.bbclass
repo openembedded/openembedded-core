@@ -1,4 +1,4 @@
-
+include conf/distro/include/upstream_tracking.inc
 addhandler distro_eventhandler
 python distro_eventhandler() {
 
@@ -237,11 +237,12 @@ python do_checkpkg() {
         prefix2 = "[a-zA-Z]+"                        # a loose pattern such as for unzip552.tar.gz
         prefix3 = "[0-9a-zA-Z]+"                        # a loose pattern such as for 80325-quicky-0.4.tar.gz
         prefix = "(%s|%s|%s)" % (prefix1, prefix2, prefix3)
-        suffix = "(tar\.gz|tgz|tar\.bz2|zip|xz|rpm)"
-        suffixtuple = ("tar.gz", "tgz", "zip", "tar.bz2", "tar.xz", "src.rpm")
+        #ver_regex = "((\d+[\.\-_]*[a-z]*)+)"#"((\d+[\.\-_[a-z]])+)"
+        suffix = "(tar\.gz|tgz|tar\.bz2|zip|xz|rpm|bz2|orig\.tar\.gz|tar\.xz)"
 
+        suffixtuple = ("tar.gz", "tgz", "zip", "tar.bz2", "tar.xz", "src.rpm", "bz2", "orig.tar.gz")
         sinterstr = "(?P<name>%s?)(?P<ver>.*)" % prefix
-        sdirstr = "(?P<name>%s)(?P<ver>.*)\.(?P<type>%s$)" % (prefix, suffix)
+        sdirstr = "(?P<name>%s)\.?(?P<ver>.*)\.(?P<type>%s$)" % (prefix, suffix)
 
         def parse_inter(s):
                 m = re.search(sinterstr, s)
@@ -271,6 +272,13 @@ python do_checkpkg() {
                 ev = re.search("[\d|\.]+[^a-zA-Z]+", ev).group()
                 return bb.utils.vercmp(("0", ov, ""), ("0", ev, ""))
 
+        def __vercmp2(old,new):
+                (on,ov,ot) = old
+                (en,ev,et) = new
+                #bb.plain("old n = %s" %(str(ov)))
+                if on != en or (et and et not in suffixtuple):
+                        return False
+                return ov < ev
         """
         wrapper for fetch upstream directory info
                 'url'        - upstream link customized by regular expression
@@ -376,6 +384,7 @@ python do_checkpkg() {
                 if not re.search("\d+", curname):
                         return pcurver
                 pn = d.getVar('PN', True)
+                newver_regex = d.getVar('RECIPE_NEWVER_REGEX',True)
                 f = tempfile.NamedTemporaryFile(delete=False, prefix="%s-2-" % pn)
                 status = internal_fetch_wget(url, d, f)
                 fhtml = f.read()
@@ -383,25 +392,45 @@ python do_checkpkg() {
                 if status == "SUCC" and len(fhtml):
                         newver = parse_dir(curname)
 
-                        """match "{PN}-5.21.1.tar.gz">{PN}-5.21.1.tar.gz """
-                        pn1 = re.search("^%s" % prefix, curname).group()
-                        
-                        s = "[^\"]*%s[^\d\"]*?(\d+[\.\-_])+[^\"]*" % pn1
-                        searchstr = "[hH][rR][eE][fF]=\"%s\".*[>\"]" % s
-                        reg = re.compile(searchstr)
-        
+                        if not newver_regex:
+                                """this is the default matching pattern, if recipe does not """
+                                """provide a regex expression """
+                                """match "{PN}-5.21.1.tar.gz">{PN}-5.21.1.tar.gz """
+                                pn1 = re.search("^%s" % prefix, curname).group()
+                                s = "[^\"]*%s[^\d\"]*?(\d+[\.\-_])+[^\"]*" % pn1
+                                searchstr = "[hH][rR][eE][fF]=\"%s\".*[>\"]" % s
+                                reg = searchstr
+                        else:
+                                reg = newver_regex
                         valid = 0
+                        count = 0
                         for line in fhtml.split("\n"):
-                                m = reg.search(line)
+                                count += 1
+                                m = re.search(reg, line)
                                 if m:
                                         valid = 1
-                                        ver = m.group().split("\"")[1].split("/")[-1]
-                                        if ver == "download":
-                                                ver = m.group().split("\"")[1].split("/")[-2]
-                                        ver = parse_dir(ver)
-                                        if ver and __vercmp(newver, ver) < 0:
-                                                newver = ver
-        
+                                        if not newver_regex:
+                                                ver = m.group().split("\"")[1].split("/")[-1]
+                                                if ver == "download":
+                                                        ver = m.group().split("\"")[1].split("/")[-2]
+                                                ver = parse_dir(ver)
+                                        else:
+                                                """ we cheat a little here, but we assume that the
+                                                regular expression in the recipe will extract exacly
+                                                the version """
+                                                (on, ov, oe) = newver
+                                                #HARDCODED MESS
+                                                if pn == 'remake':
+                                                        ver = (on, m.group(1)+m.group(3), oe)
+                                                else:
+                                                        ver = (on, m.group(1), oe)
+                                        pkg_problem = ['jpeg','dhcp','remake','blktool','apmd','nativesdk-openssl','valgrind','net-tools']
+                                        if pn in pkg_problem:
+                                                if ver and __vercmp2(newver,ver) == True:
+                                                        newver = ver
+                                        else:
+                                                if ver and __vercmp(newver, ver) < 0:
+                                                        newver = ver
                         """Expect a match for curver in directory list, or else it indicates unknown format"""
                         if not valid:
                                 status = "ErrParseDir"
@@ -454,6 +483,9 @@ python do_checkpkg() {
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES', True))
             bb.data.update_data(localdata)
 
+        chk_uri = d.getVar('RECIPE_NEWVER_URI',True)
+        if not chk_uri:
+               chk_uri = src_uri
         pdesc = localdata.getVar('DESCRIPTION', True)
         pgrp = localdata.getVar('SECTION', True)
         pversion = localdata.getVar('PV', True)
@@ -505,12 +537,15 @@ python do_checkpkg() {
         
                         """use new path and remove param. for wget only param is md5sum"""
                         alturi = bb.encodeurl([type, host, altpath, user, pswd, {}])
-        
-                        newver = check_new_dir(alturi, dirver, d)
+                        my_uri = d.getVar('RECIPE_NEWVER_URI',True)
+                        if my_uri:
+                            newver = d.getVar('PV', True)
+                        else:
+                            newver = check_new_dir(alturi, dirver, d)
                         altpath = path
                         if not re.match("Err", newver) and dirver != newver:
-                                altpath = altpath.replace(dirver, newver, True)
-                                
+                                altpath = altpath.replace(dirver, newver, True)                 
+                # For folder in folder cases - try to enter the folder again and then try parsing
                 """Now try to acquire all remote files in current directory"""
                 if not re.match("Err", newver):
                         curname = altpath.split("/")[-1]
@@ -521,8 +556,11 @@ python do_checkpkg() {
                                 altpath = "/"
                         else:
                                 altpath = m.group()
-        
-                        alturi = bb.encodeurl([type, host, altpath, user, pswd, {}])
+                        chk_uri = d.getVar('RECIPE_NEWVER_URI',True)
+                        if not chk_uri:
+                                alturi = bb.encodeurl([type, host, altpath, user, pswd, {}])
+                        else:
+                                alturi = chk_uri
                         newver = check_new_version(alturi, curname, d)
                         while(newver == "ErrHostNoDir"):
                                 if alturi == "/download":
