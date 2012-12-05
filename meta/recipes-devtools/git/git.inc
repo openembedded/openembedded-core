@@ -14,9 +14,9 @@ EXTRA_OECONF = "--with-perl=${STAGING_BINDIR_NATIVE}/perl-native/perl \
 		--without-tcltk \
 "
 
-EXTRA_OEMAKE = "NO_PYTHON=1"
-
 inherit autotools perlnative
+
+EXTRA_OEMAKE = "NO_PYTHON=1"
 
 do_compile_prepend () {
 	# Remove perl/perl.mak to fix the out-of-date perl.mak error

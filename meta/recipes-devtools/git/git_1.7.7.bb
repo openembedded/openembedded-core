@@ -1,6 +1,6 @@
 require git.inc
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://git-core.googlecode.com/files/git-${PV}.tar.gz"
 SRC_URI[md5sum] = "5d645884e688921e773186783b65ce33"
