@@ -187,6 +187,9 @@ if [ "$answer" != "Y" -a "$answer" != "y" ]; then
 	exit 1
 fi
 
+# Try to create the directory (this will not succeed if user doesn't have rights)
+mkdir -p $target_sdk_dir >/dev/null 2>&1
+
 # if don't have the right to access dir, gain by sudo 
 if [ ! -x $target_sdk_dir -o ! -w $target_sdk_dir -o ! -r $target_sdk_dir ]; then 
 	SUDO_EXEC=$(which "sudo")
@@ -198,10 +201,10 @@ if [ ! -x $target_sdk_dir -o ! -w $target_sdk_dir -o ! -r $target_sdk_dir ]; the
 	# test sudo could gain root right
 	$SUDO_EXEC pwd >/dev/null 2>&1
 	[ $? -ne 0 ] && echo "Sorry, you are not allowed to execute as root." && exit 1
-fi
 
-# create dir and don't care about the result.
-$SUDO_EXEC mkdir -p $target_sdk_dir >/dev/null 2>&1
+	# now that we have sudo rights, create the directory
+	$SUDO_EXEC mkdir -p $target_sdk_dir >/dev/null 2>&1
+fi
 
 payload_offset=$(($(grep -na -m1 "^MARKER:$" $0|cut -d':' -f1) + 1))
 
