@@ -36,7 +36,7 @@ BOOTIMG_VOLUME_ID   ?= "boot"
 BOOTIMG_EXTRA_SPACE ?= "512"
 
 EFI = "${@base_contains("MACHINE_FEATURES", "efi", "1", "0", d)}"
-EFI_CLASS = "${@base_contains("MACHINE_FEATURES", "efi", "grub-efi", "dummy", d)}"
+EFI_CLASS = "${@base_contains("MACHINE_FEATURES", "efi", "grub-efi", "", d)}"
 
 # Include legacy boot if MACHINE_FEATURES includes "pcbios" or if it does not
 # contain "efi". This way legacy is supported by default if neither is
@@ -50,7 +50,7 @@ def pcbios(d):
 def pcbios_class(d):
     if d.getVar("PCBIOS", True) == "1":
         return "syslinux"
-    return "dummy"
+    return ""
 
 PCBIOS = "${@pcbios(d)}"
 PCBIOS_CLASS = "${@pcbios_class(d)}"
