@@ -185,7 +185,7 @@ def blob_to_dict(blob):
     adict = {}
     for line in alines:
         splitv = [i.strip() for i in line.split('=',1)]
-        if splitv.count > 1:
+        if len(splitv) > 1:
             adict[splitv[0]] = splitv[1]
     return adict
 
@@ -231,7 +231,7 @@ def compare_file_lists(alines, blines):
                 filechanges.append(FileChange(path, FileChange.changetype_ownergroup, oldvalue, newvalue))
             # Check symlink target
             if newsplitv[0][0] == 'l':
-                if splitv.count > 3:
+                if len(splitv) > 3:
                     oldvalue = splitv[3]
                 else:
                     oldvalue = None
