@@ -1,6 +1,6 @@
 DEPENDS += "mesa-dri-glsl-native"
 
-SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \ 
+SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \
            file://0001-Compile-with-uclibc.patch \
            file://0002-cross-compile.patch \
            file://0003-fix-for-x32.patch \
@@ -9,8 +9,8 @@ SRC_URI += "${@base_contains('DISTRO_FEATURES', 'x11', '', 'file://0004-gross-ha
 
 S = "${WORKDIR}/Mesa-${PV}"
 
-SRC_URI[md5sum] = "d546f988adfdf986cff45b1efa2d8a46"
-SRC_URI[sha256sum] = "02ed19f4f5f6535dda03a9932a81438aa78ea723ebba1f39a3d49a70a4e1d07e"
+SRC_URI[md5sum] = "01305591073a76b65267f69f27d635a3"
+SRC_URI[sha256sum] = "511b8da34f8e69ed24caf422964fb7ae747f3b1d8093f6b8aa2602164a475a5e"
 
 do_configure_prepend() {
   # We need builtin_compiler built for buildhost arch instead of target (is provided by mesa-dri-glsl-native)"
