@@ -217,7 +217,7 @@ def sstate_installpkg(ss, d):
     if not os.path.exists(sstatepkg):
         pstaging_fetch(sstatefetch, sstatepkg, d)
     if not os.path.exists(sstagepkg + ".siginfo"):
-        pstaging_fetch(sstatefetch + ".siginfo", ssstatepkg + ".siginfo", d)
+        pstaging_fetch(sstatefetch + ".siginfo", sstatepkg + ".siginfo", d)
 
     if not os.path.isfile(sstatepkg):
         bb.note("Staging package %s does not exist" % sstatepkg)
