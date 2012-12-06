@@ -304,6 +304,12 @@ python populate_packages_prepend () {
             alt_remove_links += '\tupdate-alternatives --remove  %s %s\n' % (alt_name, alt_target)
 
         if alt_setup_links:
+            # RDEPENDS setup
+            provider = d.getVar('VIRTUAL-RUNTIME_update-alternatives', True)
+            if provider:
+                #bb.note('adding runtime requirement for update-alternatives for %s' % pkg)
+                d.appendVar('RDEPENDS_%s' % pkg, ' ' + d.getVar('MLPREFIX') + provider)
+
             bb.note('adding update-alternatives calls to postinst/postrm for %s' % pkg)
             bb.note('%s' % alt_setup_links)
             postinst = (d.getVar('pkg_postinst_%s' % pkg, True) or d.getVar('pkg_postinst', True)) or '#!/bin/sh\n'
