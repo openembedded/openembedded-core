@@ -10,6 +10,8 @@ PKGWRITEDIRIPK = "${WORKDIR}/deploy-ipks"
 # Program to be used to build opkg packages
 OPKGBUILDCMD ??= "opkg-build"
 
+OPKG_ARGS = "-f $INSTALL_CONF_IPK -o $INSTALL_ROOTFS_IPK --force_postinstall --prefer-arch-to-version"
+
 python package_ipk_fn () {
     d.setVar('PKGFN', d.getVar('PKG'))
 }
@@ -71,7 +73,7 @@ package_tryout_install_multilib_ipk() {
 	multilib_tryout_dirs=""
 	for item in ${MULTILIB_VARIANTS}; do
 		local target_rootfs="${MULTILIB_TEMP_ROOTFS}/${item}"
-		local ipkg_args="-f ${INSTALL_CONF_IPK} -o ${target_rootfs} --force_overwrite"
+		local ipkg_args="${OPKG_ARGS}"
 		local selected_pkg=""
 		local pkgname_prefix="${item}-"
 		local pkgname_len=${#pkgname_prefix}
@@ -127,7 +129,6 @@ split_multilib_packages() {
 package_install_internal_ipk() {
 
 	local target_rootfs="${INSTALL_ROOTFS_IPK}"
-	local conffile="${INSTALL_CONF_IPK}"
 	local package_attemptonly="${INSTALL_PACKAGES_ATTEMPTONLY_IPK}"
 	local package_linguas="${INSTALL_PACKAGES_LINGUAS_IPK}"
 	local task="${INSTALL_TASK_IPK}"
@@ -139,7 +140,7 @@ package_install_internal_ipk() {
 
 	mkdir -p ${target_rootfs}${localstatedir}/lib/opkg/
 
-	local ipkg_args="-f ${conffile} -o ${target_rootfs} --force_postinstall --prefer-arch-to-version"
+	local ipkg_args="${OPKG_ARGS}"
 
 	opkg-cl ${ipkg_args} update
 

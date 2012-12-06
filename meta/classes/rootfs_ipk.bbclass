@@ -14,10 +14,6 @@ do_rootfs[recrdeptask] += "do_package_write_ipk"
 
 do_rootfs[lockfiles] += "${WORKDIR}/ipk.lock"
 
-IPKG_ARGS = "-f ${IPKGCONF_TARGET} -o ${IMAGE_ROOTFS} --force_postinstall --prefer-arch-to-version"
-# The _POST version also works when constructing the matching SDK
-IPKG_ARGS_POST = "-f ${IPKGCONF_TARGET} -o $INSTALL_ROOTFS_IPK --force_postinstall --prefer-arch-to-version"
-
 OPKG_PREPROCESS_COMMANDS = "package_update_index_ipk; package_generate_ipkg_conf"
 
 OPKG_POSTPROCESS_COMMANDS = "ipk_insert_feed_uris; "
@@ -38,14 +34,16 @@ fakeroot rootfs_ipk_do_rootfs () {
 
 	mkdir -p ${T}/
  
+	export INSTALL_CONF_IPK="${IPKGCONF_TARGET}"
+	export INSTALL_ROOTFS_IPK="${IMAGE_ROOTFS}"
 	STATUS=${IMAGE_ROOTFS}${opkglibdir}/status
 	mkdir -p ${IMAGE_ROOTFS}${opkglibdir}
 
-	opkg-cl ${IPKG_ARGS} update
+	opkg-cl ${OPKG_ARGS} update
 
 	# prime the status file with bits that we don't want
 	for i in ${BAD_RECOMMENDATIONS}; do
-		pkginfo="`opkg-cl ${IPKG_ARGS} info $i`"
+		pkginfo="`opkg-cl ${OPKG_ARGS} info $i`"
 		if [ ! -z "$pkginfo" ]; then
 			echo "$pkginfo" | grep -e '^Package:' -e '^Architecture:' -e '^Version:' >> $STATUS
 			echo "Status: deinstall hold not-installed" >> $STATUS
@@ -60,8 +58,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 	export INSTALL_PACKAGES_LINGUAS_IPK="${LINGUAS_INSTALL}"
 	export INSTALL_TASK_IPK="rootfs"
 
-	export INSTALL_ROOTFS_IPK="${IMAGE_ROOTFS}"
-	export INSTALL_CONF_IPK="${IPKGCONF_TARGET}"
+	
 	export INSTALL_PACKAGES_IPK="${PACKAGE_INSTALL}"
 
 	#post install
@@ -104,7 +101,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 			if [ -e ${IMAGE_ROOTFS}${sysconfdir}/init.d/run-postinsts ]; then
 				remove_run_postinsts=true
 			fi
-			opkg-cl ${IPKG_ARGS} --force-depends remove update-rc.d base-passwd ${ROOTFS_BOOTSTRAP_INSTALL} || true
+			opkg-cl ${OPKG_ARGS} --force-depends remove update-rc.d base-passwd ${ROOTFS_BOOTSTRAP_INSTALL} || true
 
 			# Need to remove rc.d files for run-postinsts by hand since opkg won't
 			# call postrm scripts in offline root mode.
@@ -142,9 +139,9 @@ remove_packaging_data_files() {
 
 list_installed_packages() {
 	if [ "$1" = "arch" ] ; then
-		opkg-cl ${IPKG_ARGS_POST} status | opkg-query-helper.py -a
+		opkg-cl ${OPKG_ARGS} status | opkg-query-helper.py -a
 	elif [ "$1" = "file" ] ; then
-		opkg-cl ${IPKG_ARGS_POST} status | opkg-query-helper.py -f | while read pkg pkgfile
+		opkg-cl ${OPKG_ARGS} status | opkg-query-helper.py -f | while read pkg pkgfile
 		do
 			fullpath=`find ${DEPLOY_DIR_IPK} -name "$pkgfile" || true`
 			if [ "$fullpath" = "" ] ; then
@@ -154,16 +151,16 @@ list_installed_packages() {
 			fi
 		done
 	else
-		opkg-cl ${IPKG_ARGS_POST} list_installed | awk '{ print $1 }'
+		opkg-cl ${OPKG_ARGS} list_installed | awk '{ print $1 }'
 	fi
 }
 
 rootfs_list_installed_depends() {
-	opkg-cl ${IPKG_ARGS_POST} status | opkg-query-helper.py
+	opkg-cl ${OPKG_ARGS} status | opkg-query-helper.py
 }
 
 rootfs_install_packages() {
-	opkg-cl ${IPKG_ARGS_POST} install `cat $1`
+	opkg-cl ${OPKG_ARGS} install `cat $1`
 }
 
 ipk_insert_feed_uris () {
