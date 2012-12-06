@@ -13,7 +13,7 @@ do_populate_lic[cleandirs] = "${LICSSTATEDIR}"
 license_create_manifest() {
 	mkdir -p ${LICENSE_DIRECTORY}/${IMAGE_NAME}
 	# Get list of installed packages
-	list_installed_packages | grep -v "locale" | sort > ${LICENSE_DIRECTORY}/${IMAGE_NAME}/package.manifest
+	list_installed_packages |sort > ${LICENSE_DIRECTORY}/${IMAGE_NAME}/package.manifest
 	INSTALLED_PKGS=`cat ${LICENSE_DIRECTORY}/${IMAGE_NAME}/package.manifest`
 	LICENSE_MANIFEST="${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest"
 	# remove existing license.manifest file
@@ -26,11 +26,6 @@ license_create_manifest() {
 		# not the best way to do this but licenses are not arch dependant iirc
 		filename=`ls ${TMPDIR}/pkgdata/*/runtime-reverse/${pkg}| head -1`
 		pkged_pn="$(sed -n 's/^PN: //p' ${filename})"
-
-		# exclude locale recipes
-		if [ "${pkged_pn}" = "*locale*" ]; then
-			continue
-		fi
 
 		# check to see if the package name exists in the manifest. if so, bail.
 		if grep -q "^PACKAGE NAME: ${pkg}" ${LICENSE_MANIFEST}; then
