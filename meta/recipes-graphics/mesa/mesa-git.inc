@@ -1,21 +1,14 @@
-DEPENDS += "mesa-dri-glsl-native"
+# Current pre-9.1 commit
+SRCREV = "1665af3066f3d58c42e9d5b13098f13615a7672c"
+PV = "9.1~git${SRCPV}"
 
-SRCREV = "c1f4867c89adb1a6b19d66ec8ad146115909f0a7"
-PV = "8.0.4+git${SRCPV}"
-
-LIC_FILES_CHKSUM = "file://docs/license.html;md5=03ccdc4c379c4289aecfb8892c546f67"
+LIC_FILES_CHKSUM = "file://docs/license.html;md5=42d77d95cba529a3637129be87d6555d"
 FILESEXTRAPATHS_prepend := "${THISDIR}/mesa-git:"
 
 SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git \
-           file://0001-Compile-with-uclibc.patch \
            file://0002-cross-compile.patch \
-           file://0003-fix-for-x32.patch \
            "
+
 SRC_URI += "${@base_contains('DISTRO_FEATURES', 'x11', '', 'file://0004-gross-hack-to-prevent-from-install-libgl.patch', d)}"
 
 S = "${WORKDIR}/git"
-
-do_configure_prepend() {
-  # We need builtin_compiler built for buildhost arch instead of target (is provided by mesa-dri-glsl-native)"
-  sed -i "s#\./builtin_compiler#${STAGING_BINDIR_NATIVE}/glsl/builtin_compiler#g" ${S}/src/glsl/Makefile
-}
