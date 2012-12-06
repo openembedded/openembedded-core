@@ -123,7 +123,7 @@ SDK_ARCH=$(echo ${SDK_ARCH} | sed -e "s/i[5-6]86/ix86/")
 
 if [ "$INST_ARCH" != "$SDK_ARCH" ]; then
 	echo "Error: Installation machine not supported!"
-	exit -1
+	exit 1
 fi
 
 DEFAULT_INSTALL_DIR="${SDKPATH}"
@@ -233,7 +233,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # replace ${SDKPATH} with the new prefix in all text files: configs/scripts/etc
-$SUDO_EXEC find $native_sysroot -type f -exec file '{}' \;|$SUDO_EXEC grep ":.*ASCII.*text"|cut -d':' -f1|$SUDO_EXEC xargs sed -i -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g"
+$SUDO_EXEC find $native_sysroot -type f -exec file '{}' \;|grep ":.*\(ASCII\|script\).*text"|cut -d':' -f1|$SUDO_EXEC xargs sed -i -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g"
 
 # change all symlinks pointing to ${SDKPATH}
 for l in $($SUDO_EXEC find $native_sysroot -type l); do
