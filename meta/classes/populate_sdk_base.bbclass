@@ -1,6 +1,9 @@
 inherit meta toolchain-scripts
 inherit populate_sdk_${IMAGE_PKGTYPE}
 
+IMAGETESTCLASS = "${@oe.utils.ifelse(d.getVar('IMAGETEST'),'imagetest-' + (d.getVar('IMAGETEST') or ""),'')}"
+inherit ${IMAGETESTCLASS}
+
 SDK_DIR = "${WORKDIR}/sdk"
 SDK_OUTPUT = "${SDK_DIR}/image"
 SDK_DEPLOY = "${TMPDIR}/deploy/sdk"

@@ -1,8 +1,5 @@
 inherit rootfs_${IMAGE_PKGTYPE}
 
-IMAGETEST ?= "dummy"
-inherit imagetest-${IMAGETEST}
-
 inherit populate_sdk_base
 
 TOOLCHAIN_TARGET_TASK += "${PACKAGE_INSTALL}"
