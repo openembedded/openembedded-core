@@ -6,12 +6,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ea5bed2f60d357618ca161ad539f7c0a"
 
 SRCREV = "6637"
 PV = "1.0.0+svn${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 DEPENDS += "zlib"
 
 SRC_URI = "svn://coreboot.org/coreboot/trunk/util;module=mkelfImage;protocol=svn \
            file://cross-compile.patch \
+           file://fix-makefile-to-find-libz.patch \
           "
 
 S = "${WORKDIR}/mkelfImage"
