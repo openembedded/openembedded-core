@@ -30,9 +30,10 @@ echo " you'll get false positives.  For example, LICENSE_FLAGS_WHITELIST = \"Com
 
 for pkg in `bitbake -s | awk '{ print \$1 }'`; do
 	if [[ "$pkg" == "Loading" || "$pkg" == "Loaded" ||
+	  "$pkg" == "Recipe"  ||
           "$pkg" == "Parsing" || "$pkg" == "Package" ||
           "$pkg" == "NOTE:"   || "$pkg" == "WARNING:" ||
-          "$pkg" == "done."   || "$pkg" == "============" ]]
+          "$pkg" == "done."   || "$pkg" == "===========" ]]
 	then
 		# Skip initial bitbake output
 		continue
