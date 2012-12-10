@@ -86,10 +86,10 @@ def qemuimagetest_main(d):
         for test in list:
             (scen, case, fullpath) = test
 
-            """Skip rpm/zypper if package_rpm not set for PACKAGE_CLASSES"""
-            if case.find("zypper") != -1 or case.find("rpm") != -1:
+            """Skip rpm/smart if package_rpm not set for PACKAGE_CLASSES"""
+            if case.find("smart") != -1 or case.find("rpm") != -1:
                 if d.getVar("PACKAGE_CLASSES", True).find("rpm", 0, 11) == -1:
-                    bb.note("skip rpm/zypper cases since package_rpm not set in PACKAGE_CLASSES")
+                    bb.note("skip rpm/smart cases since package_rpm not set in PACKAGE_CLASSES")
                     continue
                 else:
                     final_list.append((scen, case, fullpath))

@@ -1,7 +1,7 @@
 #!/bin/bash
-# Zypper Check Test Case for Sanity Test
+# Smart Check Test Case for Sanity Test
 # The case boot up the Qemu target with `runqemu qemuxxx`.
-# Then check if zypper command can work in target.
+# Then check if smart command can work in target.
 #
 # Author: Jiajun Xu <jiajun.xu@intel.com>
 #
@@ -26,13 +26,13 @@ else
 	RET=1
 fi
 
-# Check if zypper help can work in target
-if [ $RET -eq 0 -a -f $TOOLS/zypper_test.sh ]; then
-	# Copy zypper_test.sh into target
-	Test_Target_Pre ${TARGET_IPADDR} $TOOLS/zypper_test.sh
+# Check if smart --help can work in target
+if [ $RET -eq 0 -a -f $TOOLS/smart_test.sh ]; then
+	# Copy smart_test.sh into target
+	Test_Target_Pre ${TARGET_IPADDR} $TOOLS/smart_test.sh
 	if [ $? -eq 0 ]; then
-		# Run zypper_test.sh to check if zypper help can work in target
-		Test_SSH ${TARGET_IPADDR} "sh $TARGET_TEST_DIR/zypper_test.sh help"
+		# Run smart_test.sh to check if smart --help can work in target
+		Test_SSH ${TARGET_IPADDR} "sh $TARGET_TEST_DIR/smart_test.sh --help"
 		RET=$?
 	else
 		RET=1
@@ -40,13 +40,13 @@ if [ $RET -eq 0 -a -f $TOOLS/zypper_test.sh ]; then
 fi
 
 if [ ${RET} -eq 0 ]; then
-	Test_Info "zypper help Test PASS"
+	Test_Info "smart --help Test PASS"
 	Test_Kill_Qemu
-	Test_Print_Result "zypper_help" 0
+	Test_Print_Result "smart_help" 0
 	exit 0
 else
-	Test_Info "zypper help FAIL, Pls. check above error log"
+	Test_Info "smart --help FAIL, Pls. check above error log"
 	Test_Kill_Qemu
-	Test_Print_Result "zypper_help" 1
+	Test_Print_Result "smart_help" 1
 	exit 1
 fi

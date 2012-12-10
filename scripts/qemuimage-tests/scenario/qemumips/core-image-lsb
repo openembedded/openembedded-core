@@ -1,7 +1,7 @@
 sanity ssh
 sanity scp
 sanity dmesg
-sanity zypper_help
-sanity zypper_search
+sanity smart_help
+sanity smart_query
 sanity rpm_query
 sanity shutdown
