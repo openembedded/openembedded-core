@@ -1,9 +1,9 @@
-DESCRIPTION = "Perl-compatible regular expression library. PCRE has its own native \
-API, but a set of 'wrapper' functions that are based on the POSIX API \
-are also supplied in the library libpcreposix. Note that this just \
-provides a POSIX calling interface to PCRE; the regular expressions \
-themselves still follow Perl syntax and semantics. The header file for \
-the POSIX-style functions is called pcreposix.h."
+DESCRIPTION = "The PCRE library is a set of functions that implement regular \
+expression pattern matching using the same syntax and semantics as Perl 5. PCRE \
+has its own native API, as well as a set of wrapper functions that correspond \
+to the POSIX regular expression API."
+SUMMARY = "Perl Compatible Regular Expressions"
+HOMEPAGE = "http://www.pcre.org"
 SECTION = "devel"
 PR = "r0"
 LICENSE = "BSD"
@@ -12,8 +12,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/pcre/pcre/${PV}/pcre-${PV}.tar.bz2 \
            file://pcre-cross.patch \
            file://fix-pcre-name-collision.patch"
 
-SRC_URI[md5sum] = "1c9a276af932b5599157f96e945391f0"
-SRC_URI[sha256sum] = "5778a02535473c7ee7838ea598c19f451e63cf5eec0bf0307a688301c9078c3c"
+SRC_URI[md5sum] = "62f02a76bb57a40bc66681760ed511d5"
+SRC_URI[sha256sum] = "a913fb9bd058ef380a2d91847c3c23fcf98e92dc3b47cd08a53c021c5cde0f55"
 
 S = "${WORKDIR}/pcre-${PV}"
 
