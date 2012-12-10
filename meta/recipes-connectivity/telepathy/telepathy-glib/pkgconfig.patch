@@ -1,0 +1,41 @@
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 4acc51d5b848359211bb8a00f0daa8e0bc44eb65 Mon Sep 17 00:00:00 2001
+From: Will Thompson <will.thompson@collabora.co.uk>
+Date: Mon, 10 Dec 2012 14:11:05 +0000
+Subject: Remove pkg-config dependency from .pc files
+
+This causes problems for Yocto, since they use pc files when choosing
+package dependencies. It doesn't make a huge amount of sense for a
+.pc file to depend on pkg-config: by the time you've parsed the file,
+you've got pkg-config. And the versioned dependency is checked by
+configure, as commit 1154794 (which added this) mentions, so if you've
+compiled telepathy-glib, your pkg-config is new enough.
+---
+diff --git a/telepathy-glib/telepathy-glib-uninstalled.pc.in b/telepathy-glib/telepathy-glib-uninstalled.pc.in
+index 932983c..3dbefb2 100644
+--- a/telepathy-glib/telepathy-glib-uninstalled.pc.in
++++ b/telepathy-glib/telepathy-glib-uninstalled.pc.in
+@@ -6,7 +6,6 @@ abs_top_builddir=@abs_top_builddir@
+ Name: Telepathy-GLib (uninstalled copy)
+ Description: GLib utility library for the Telepathy framework
+ Version: @VERSION@
+-Requires: pkg-config >= 0.21
+ Requires.private: dbus-1 >= 0.95, dbus-glib-1 >= 0.90, glib-2.0 >= 2.30, gobject-2.0 >= 2.30, gio-2.0 >= 2.30
+ Libs: ${abs_top_builddir}/telepathy-glib/libtelepathy-glib.la
+ Cflags: -I${abs_top_srcdir} -I${abs_top_builddir}
+diff --git a/telepathy-glib/telepathy-glib.pc.in b/telepathy-glib/telepathy-glib.pc.in
+index 1c5f4b6..75ac275 100644
+--- a/telepathy-glib/telepathy-glib.pc.in
++++ b/telepathy-glib/telepathy-glib.pc.in
+@@ -6,7 +6,6 @@ includedir=@includedir@
+ Name: Telepathy-GLib
+ Description: GLib utility library for the Telepathy framework
+ Version: @VERSION@
+-Requires: pkg-config >= 0.21
+ Requires.private: dbus-1 >= 0.95, dbus-glib-1 >= 0.90, glib-2.0 >= 2.30, gobject-2.0 >= 2.30, gio-2.0 >= 2.30
+ Libs: -L${libdir} -ltelepathy-glib
+ Cflags: -I${includedir}/telepathy-1.0
+--
+cgit v0.9.0.2-2-gbebe
