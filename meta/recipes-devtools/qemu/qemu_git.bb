@@ -1,19 +1,14 @@
 require qemu.inc
 
-SRCREV = "6e4c0d1f03d6ab407509c32fab7cb4b8230f57ff"
+SRCREV = "6d6c9f59ca1b1a76ade7ad868bef191818f58819"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
                     file://COPYING.LIB;endline=24;md5=c04def7ae38850e7d3ef548588159913"
 
-PV = "1.2+git"
+PV = "1.3.0+git${SRCPV}"
 PR = "r0"
 
-FILESPATH = "${FILE_DIRNAME}/qemu-${PV}/:${FILE_DIRNAME}/qemu-git/"
-
-SRC_URI = "\
-    git://git.qemu.org/qemu.git;protocol=git \
-    file://powerpc_rom.bin \
-    "
+SRC_URI_prepend = "git://git.qemu.org/qemu.git;protocol=git"
 S = "${WORKDIR}/git"
 
 DEFAULT_PREFERENCE = "-1"

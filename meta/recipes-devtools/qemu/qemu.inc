@@ -1,23 +1,54 @@
 DESCRIPTION = "open source processor emulator"
 HOMEPAGE = "http://qemu.org"
 LICENSE = "GPLv2 & LGPLv2.1"
-DEPENDS = "glib-2.0 zlib alsa-lib virtual/libx11"
+DEPENDS = "glib-2.0 zlib alsa-lib virtual/libx11 pixman"
+DEPENDS_class-native = "zlib-native alsa-lib-native glib-2.0-native pixman-native"
+DEPENDS_class-nativesdk = "nativesdk-zlib nativesdk-libsdl nativesdk-glib-2.0 nativesdk-pixman"
+RDEPENDS_class-nativesdk = "nativesdk-libsdl"
+
+require qemu-targets.inc
+inherit autotools
+BBCLASSEXTEND = "native nativesdk"
 
 # QEMU_TARGETS is overridable variable
 QEMU_TARGETS ?= "arm i386 mips mipsel mips64 mips64el ppc sh4 x86_64"
-
-require qemu-targets.inc
 
 SDL ?= "--disable-sdl"
 SDL_class-native ?= ""
 SDL_class-nativesdk ?= ""
 
-EXTRA_OECONF += "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls --audio-drv-list=oss,alsa --audio-card-list=ac97,es1370 ${SDL} --disable-curl --disable-vnc-jpeg --disable-bluez"
+SRC_URI = "\
+    file://powerpc_rom.bin \
+    file://no-strip.patch \
+    file://linker-flags.patch \
+    file://fix-configure-checks.patch \
+    file://fallback-to-safe-mmap_min_addr.patch \
+    file://larger_default_ram_size.patch \
+    file://arm-bgr.patch \
+    file://Revert-vmware_vga-Add-back-some-info-in-local-state-.patch \
+    "
 
-#EXTRA_OECONF += "--disable-sdl"
+SRC_URI_append_class-nativesdk = "\
+    file://relocatable_sdk.patch \
+    "
 
+EXTRA_OECONF += "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls --audio-drv-list=oss,alsa --audio-card-list=ac97,es1370 ${SDL} --disable-curl --disable-vnc-jpeg --disable-bluez --with-system-pixman"
 
-inherit autotools
+EXTRA_OECONF_class-nativesdk = "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls \
+				--disable-curl \
+				"
+
+do_configure_prepend_class-native() {
+	# Undo the -lX11 added by linker-flags.patch, don't assume that host has libX11 installed
+	sed -i 's/-lX11//g' Makefile.target
+}
+
+do_configure_prepend_class-nativesdk() {
+	if [ "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}" = "" ] ; then
+		# Undo the -lX11 added by linker-flags.patch
+		sed -i 's/-lX11//g' Makefile.target
+	fi
+}
 
 do_configure() {
     # Handle distros such as CentOS 5 32-bit that do not have kvm support
@@ -38,16 +69,21 @@ do_install () {
 	install -m 0755 ${WORKDIR}/powerpc_rom.bin ${D}${datadir}/qemu
 }
 
+# The following fragment will create a wrapper for qemu-mips user emulation
+# binary in order to work around a segmentation fault issue. Basically, by
+# default, the reserved virtual address space for 32-on-64 bit is set to 4GB.
+# This will trigger a MMU access fault in the virtual CPU. With this change,
+# the qemu-mips works fine.
+# IMPORTANT: This piece needs to be removed once the root cause is fixed!
+do_install_append() {
+	if [ -e "${D}/${bindir}/qemu-mips" ]; then
+		create_wrapper ${D}/${bindir}/qemu-mips \
+			QEMU_RESERVED_VA=0x0
+	fi
+}
+# END of qemu-mips workaround
+
 PACKAGECONFIG ??= ""
-
-DEPENDS_class-native = "zlib-native alsa-lib-native glib-2.0-native"
-DEPENDS_class-nativesdk = "nativesdk-zlib nativesdk-libsdl nativesdk-glib-2.0"
-RDEPENDS_class-nativesdk = "nativesdk-libsdl"
-EXTRA_OECONF_class-nativesdk = "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls \
-				--disable-curl \
-				"
-
-BBCLASSEXTEND = "native nativesdk"
 
 # Qemu target will not build in world build for ARM or Mips
 BROKEN_qemuarm = "1"
