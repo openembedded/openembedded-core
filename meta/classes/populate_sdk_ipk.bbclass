@@ -26,6 +26,8 @@ populate_sdk_ipk() {
 	export OFFLINE_ROOT=${INSTALL_ROOTFS_IPK}
 	export IPKG_OFFLINE_ROOT=${INSTALL_ROOTFS_IPK}
 	export OPKG_OFFLINE_ROOT=${IPKG_OFFLINE_ROOT}
+	export INTERCEPT_DIR=${WORKDIR}/intercept_scripts
+	export NATIVE_ROOT=${STAGING_DIR_NATIVE}
 
 	package_install_internal_ipk
 
