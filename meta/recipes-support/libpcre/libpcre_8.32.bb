@@ -5,7 +5,7 @@ to the POSIX regular expression API."
 SUMMARY = "Perl Compatible Regular Expressions"
 HOMEPAGE = "http://www.pcre.org"
 SECTION = "devel"
-PR = "r0"
+PR = "r1"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=115e2bee152e2e23e838a29136094877"
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/pcre/pcre/${PV}/pcre-${PV}.tar.bz2 \
@@ -17,37 +17,42 @@ SRC_URI[sha256sum] = "a913fb9bd058ef380a2d91847c3c23fcf98e92dc3b47cd08a53c021c5c
 
 S = "${WORKDIR}/pcre-${PV}"
 
-PROVIDES = "pcre"
-DEPENDS = "bzip2 zlib readline"
+FILESPATH .= ":${@base_set_filespath([bb.which(BBPATH, 'recipes-support/libpcre/files', direction=True)], d)}"
+
+PROVIDES += "pcre"
+DEPENDS += "bzip2 zlib readline"
 
 inherit autotools binconfig
 
 PARALLEL_MAKE = ""
 
-CFLAGS_append = " -D_REENTRANT"
-CXXFLAGS_powerpc += "-lstdc++"
-EXTRA_OECONF = " --with-link-size=2 --enable-newline-is-lf --with-match-limit=10000000 --enable-rebuild-chartables --enable-utf8"
+EXTRA_OECONF = "\
+    --enable-newline-is-lf \
+    --enable-rebuild-chartables \
+    --enable-utf8 \
+    --with-link-size=2 \
+    --with-match-limit=10000000 \
+"
 
-do_compile () {
-	# stop libtool from trying to link with host libraries - fix from #33
-	# this resolve build problem on amd64 - #1015
-	if [ -e ${S}/${HOST_SYS}-libtool ] ; then
-		sed -i 's:-L\$:-L${STAGING_LIBDIR} -L\$:' ${S}/${HOST_SYS}-libtool
-	else
-		ln -sf ${S}/libtool ${S}/${HOST_SYS}-libtool
-		sed -i 's:-L\$:-L${STAGING_LIBDIR} -L\$:' ${S}/${HOST_SYS}-libtool
-	fi
+BUILD_CPPFLAGS += "-DLINK_SIZE=2"
+BUILD_CFLAGS =+ "-I${S}/include"
+CFLAGS += "-D_REENTRANT"
+CXXFLAGS_append_powerpc = " -lstdc++"
 
-	# The generation of dftables can lead to timestamp problems with ccache
-	# because the generated config.h seems newer.  It is sufficient to ensure that the
-	# attempt to build dftables inside make will actually work (foo_FOR_BUILD is
-	# only used for this).
-	oe_runmake CC_FOR_BUILD="${BUILD_CC}" CFLAGS_FOR_BUILD="-DLINK_SIZE=2 -I${S}/include" LINK_FOR_BUILD="${BUILD_CC} -L${S}/lib"
-}
+PACKAGES =+ "libpcrecpp libpcreposix pcregrep pcregrep-doc pcretest pcretest-doc"
 
-python populate_packages_prepend () {
-    pcre_libdir = d.expand('${libdir}')
-    do_split_packages(d, pcre_libdir, '^lib(.*)\.so\.+', 'lib%s', 'libpcre %s library', extra_depends='', allow_links=True, prepend=True)
-}
+SUMMARY_libpcrecpp = "${SUMMARY} - C++ wrapper functions"
+SUMMARY_libpcreposix = "${SUMMARY} - C wrapper functions based on the POSIX regex API"
+SUMMARY_pcregrep = "grep utility that uses perl 5 compatible regexes"
+SUMMARY_pcregrep-doc = "grep utility that uses perl 5 compatible regexes - docs"
+SUMMARY_pcretest = "program for testing Perl-comatible regular expressions"
+SUMMARY_pcretest-doc = "program for testing Perl-comatible regular expressions - docs"
 
-BBCLASSEXTEND = "native"
+FILES_libpcrecpp = "${libdir}/libpcrecpp.so.*"
+FILES_libpcreposix = "${libdir}/libpcreposix.so.*"
+FILES_pcregrep = "${bindir}/pcregrep"
+FILES_pcregrep-doc = "${mandir}/man1/pcregrep.1"
+FILES_pcretest = "${bindir}/pcretest"
+FILES_pcretest-doc = "${mandir}/man1/pcretest.1"
+
+BBCLASSEXTEND = "native nativesdk"
