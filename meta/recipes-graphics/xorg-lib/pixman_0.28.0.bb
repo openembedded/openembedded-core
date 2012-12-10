@@ -13,9 +13,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=14096c769ae0cbb5fcb94ec468be11b3 \
                     file://pixman/pixman-arm-neon-asm.h;endline=24;md5=9a9cc1e51abbf1da58f4d9528ec9d49b \
                    "
 DEPENDS += "zlib libpng"
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
 
-PR = "r2"
+PR = "r0"
 
 PE = "1"
 
@@ -30,7 +30,7 @@ EXTRA_OECONF_class-native = "--disable-gtk"
 
 SRC_URI += "\
             file://0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch \
-            file://0002-Generic-C-implementation-of-pixman_blt-with-overlapp.patch \
+            file://Generic-C-implementation-of-pixman_blt-with-overlapp.patch \
 "
-SRC_URI[md5sum] = "dd67154b23d88e6a75ad3a83f3052198"
-SRC_URI[sha256sum] = "cae9dc13727a84f11beb150c88d3a06ba114f82c52d68073c663c027e099123b"
+SRC_URI[md5sum] = "703c3f62437b161c610056e076560570"
+SRC_URI[sha256sum] = "6056f9aa0e0578a0492e34fc2ce6dd7bfb181090ed687993c03b969c8cec4828"

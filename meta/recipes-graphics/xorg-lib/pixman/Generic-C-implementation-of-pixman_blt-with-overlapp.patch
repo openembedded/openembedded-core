@@ -1,0 +1,124 @@
+Generic C implementation of pixman_blt with overlapping support
+
+This was ported from meta-oe's patch [1]:
+Uses memcpy/memmove functions to copy pixels, can handle the
+case when both source and destination areas are in the same
+image (this is useful for scrolling).
+
+It is assumed that copying direction is only important when
+using the same image for both source and destination (and
+src_stride == dst_stride). Copying direction is undefined
+for the images with different source and destination stride
+which happen to be in the overlapped areas (but this is an
+unrealistic case anyway).
+
+[1] http://cgit.openembedded.org/meta-openembedded/tree/meta-oe/recipes-graphics/xorg-lib/pixman-0.26.2/0008-Generic-C-implementation-of-pixman_blt-with-overlapp.patch
+
+Upstream-Status: Pending
+Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
+Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
+
+Index: pixman-0.28.0/pixman/pixman-general.c
+===================================================================
+--- pixman-0.28.0.orig/pixman/pixman-general.c
++++ pixman-0.28.0/pixman/pixman-general.c
+@@ -214,6 +214,41 @@ static const pixman_fast_path_t general_
+     { PIXMAN_OP_NONE }
+ };
+ 
++static pixman_bool_t
++general_blt (pixman_implementation_t *imp,
++             uint32_t *               src_bits,
++             uint32_t *               dst_bits,
++             int                      src_stride,
++             int                      dst_stride,
++             int                      src_bpp,
++             int                      dst_bpp,
++             int                      src_x,
++             int                      src_y,
++             int                      dest_x,
++             int                      dest_y,
++             int                      width,
++             int                      height)
++{
++    uint8_t *dst_bytes = (uint8_t *)dst_bits;
++    uint8_t *src_bytes = (uint8_t *)src_bits;
++    int bpp;
++
++    if (src_bpp != dst_bpp || src_bpp & 7)
++        return FALSE;
++
++    bpp = src_bpp >> 3;
++    width *= bpp;
++    src_stride *= 4;
++    dst_stride *= 4;
++    pixman_blt_helper (src_bytes + src_y * src_stride + src_x * bpp,
++                       dst_bytes + dest_y * dst_stride + dest_x * bpp,
++                       src_stride,
++                       dst_stride,
++                       width,
++                       height);
++    return TRUE;
++}
++
+ pixman_implementation_t *
+ _pixman_implementation_create_general (void)
+ {
+@@ -222,6 +257,7 @@ _pixman_implementation_create_general (v
+     _pixman_setup_combiner_functions_32 (imp);
+     _pixman_setup_combiner_functions_float (imp);
+ 
++    imp->blt = general_blt;
+     imp->src_iter_init = general_src_iter_init;
+     imp->dest_iter_init = general_dest_iter_init;
+ 
+Index: pixman-0.28.0/pixman/pixman-private.h
+===================================================================
+--- pixman-0.28.0.orig/pixman/pixman-private.h
++++ pixman-0.28.0/pixman/pixman-private.h
+@@ -1109,6 +1109,45 @@ void pixman_timer_register (pixman_timer
+ 
+ #endif /* PIXMAN_TIMERS */
+ 
++/* a helper function, can blit 8-bit images with src/dst overlapping support */
++static inline void
++pixman_blt_helper (uint8_t *src_bytes,
++                   uint8_t *dst_bytes,
++                   int      src_stride,
++                   int      dst_stride,
++                   int      width,
++                   int      height)
++{
++    /*
++     * The second part of this check is not strictly needed, but it prevents
++     * unnecessary upside-down processing of areas which belong to different
++     * images. Upside-down processing can be slower with fixed-distance-ahead
++     * prefetch and perceived as having more tearing.
++     */
++    if (src_bytes < dst_bytes + width &&
++        src_bytes + src_stride * height > dst_bytes) {
++        src_bytes += src_stride * height - src_stride;
++        dst_bytes += dst_stride * height - dst_stride;
++        dst_stride = -dst_stride;
++        src_stride = -src_stride;
++
++        /* Horizontal scrolling to the left needs memmove */
++        if (src_bytes + width > dst_bytes) {
++            while (--height >= 0) {
++                memmove (dst_bytes, src_bytes, width);
++                dst_bytes += dst_stride;
++                src_bytes += src_stride;
++            }
++            return;
++        }
++    }
++    while (--height >= 0) {
++        memcpy (dst_bytes, src_bytes, width);
++        dst_bytes += dst_stride;
++        src_bytes += src_stride;
++    }
++}
++
+ #endif /* __ASSEMBLER__ */
+ 
+ #endif /* PIXMAN_PRIVATE_H */
