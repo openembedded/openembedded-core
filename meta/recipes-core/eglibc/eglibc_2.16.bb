@@ -1,7 +1,7 @@
 require eglibc.inc
 
 DEPENDS += "gperf-native kconfig-frontends-native"
-PR = "r17"
+PR = "r18"
 
 SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr21224.tar.bz2 \
            file://eglibc-svn-arm-lowlevellock-include-tls.patch \
@@ -9,7 +9,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr21
            file://mips-rld-map-check.patch \
            file://etc/ld.so.conf \
            file://generate-supported.mk \
-	   file://glibc.fix_sqrt2.patch \
+           file://glibc.fix_sqrt2.patch \
            file://multilib_readlib.patch \
            file://use-sysroot-cxx-headers.patch \
            file://ppc-sqrt_finite.patch \
@@ -27,6 +27,9 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr21
            file://0001-Add-name_to_handle_at-open_by_handle-etc.-to-PowerPC.patch \
            file://fsl-ppc-no-fsqrt.patch \
            file://0001-R_ARM_TLS_DTPOFF32.patch \
+           http://people.linaro.org/~toolchain/openembedded/patches/eglibc/aarch64-0001-glibc-fsf-v1-eaf6f205.patch \
+           http://people.linaro.org/~toolchain/openembedded/patches/eglibc/aarch64-0002-Synchronize-with-linux-elf.h.patch \
+           http://people.linaro.org/~toolchain/openembedded/patches/eglibc/aarch64-0003-Adding-AArch64-support-to-elf-elf.h.patch \
           "
 
 SRC_URI[md5sum] = "88894fa6e10e58e85fbd8134b8e486a8"
