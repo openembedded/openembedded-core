@@ -20,4 +20,4 @@ PACKAGES =+ "${PN}12"
 FILES_${PN}12 = "${libdir}/libpng12${SOLIBS}"
 RPROVIDES_${PN}-dev += "${PN}12-dev"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
