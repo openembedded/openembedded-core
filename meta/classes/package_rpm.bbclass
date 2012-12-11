@@ -348,6 +348,9 @@ EOF
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-noparentdirs=1
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._var=${localstatedir}
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._tmppath=/install/tmp
+		# Optional debugging
+		#smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-log-level=debug
+
 		# Delay this until later...
 		#smart --data-dir=${target_rootfs}/var/lib/smart channel --add rpmsys type=rpm-sys -y
 
