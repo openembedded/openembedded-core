@@ -80,6 +80,7 @@ translate_smart_to_oe() {
 
 	# Dump installed packages
 	while read pkg arch other ; do
+		found=0
 		if [ -z "$pkg" ]; then
 			continue
 		fi
@@ -101,10 +102,19 @@ translate_smart_to_oe() {
 					else
 						new_pkg="$mlib-$pkg"
 					fi
-					break
+					# Workaround for bug 3565
+					# Simply look to see if we know of a package with that name, if not try again!
+					filename=`ls ${TMPDIR}/pkgdata/*/runtime-reverse/$new_pkg 2>/dev/null | head -n 1`
+					if [ -n "$filename" ] ; then
+						found=1
+						break
+					fi
+					# 'real' code
+					# found=1
+					# break
 				fi
 			done
-			if [ "$arch" = "$cmp_arch" -o "$fixed_arch" = "$cmp_arch" ]; then
+			if [ "$found" = "1" ] && [ "$arch" = "$cmp_arch" -o "$fixed_arch" = "$cmp_arch" ]; then
 				break
 			fi
 		done
