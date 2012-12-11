@@ -40,7 +40,7 @@ diff -ur rpm-5.4.0.orig/lib/depends.c rpm-5.4.0/lib/depends.c
      return rc;
  }
  
-+#if defined(RPM_VENDOR_WINDRIVER)
++#if defined(RPM_VENDOR_WINDRIVER) || defined(RPM_VENDOR_POKY)
 +#define _ETC_RPM_SYSINFO        "%{_etcrpm}/sysinfo"
 +#else
 +#define _ETC_RPM_SYSINFO        SYSCONFIGDIR "/sysinfo"

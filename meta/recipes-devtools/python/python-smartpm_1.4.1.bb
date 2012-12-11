@@ -11,7 +11,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=393a5ca445f6965873eca0259a17f833"
 
 DEPENDS = "python rpm"
-PR = "r4"
+PR = "r5"
 SRCNAME = "smart"
 
 SRC_URI = "\
@@ -85,6 +85,21 @@ do_install_append() {
    if [ -z "${@base_contains('PACKAGECONFIG', 'gtk+', 'gtk', '', d)}" ]; then
       rm -rf ${D}${libdir}/python*/site-packages/smart/interfaces/gtk
    fi
+}
+
+add_native_wrapper() {
+        create_wrapper ${D}/${bindir}/smart \
+		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir', True), d.getVar('bindir', True))}/rpm \
+		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir', True), d.getVar('bindir', True))}/rpm} \
+		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir', True), d.getVar('bindir', True))}/locale
+}
+
+do_install_append_class-native() {
+        add_native_wrapper
+}
+
+do_install_append_class-nativesdk() {
+        add_native_wrapper
 }
 
 PACKAGES = "${PN}-dev ${PN}-dbg ${PN}-doc smartpm \

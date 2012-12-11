@@ -43,7 +43,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "libpcre attr acl popt ossp-uuid file bison-native"
-PR = "r58"
+PR = "r59"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -85,6 +85,11 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;ex
 	   file://rpm-reloc-macros.patch \
 	   file://rpm-platform2.patch \
 	  "
+
+# Uncomment the following line to enable platform score debugging
+# This is useful when identifying issues with Smart being unable
+# to process certain package feeds.
+#SRC_URI += "file://rpm-debug-platform.patch"
 
 SRC_URI[md5sum] = "60d56ace884340c1b3fcac6a1d58e768"
 SRC_URI[sha256sum] = "bac7cc5bd9d0e8262fdc0099349924608da8f680f5cb243751f696552239dde8"
@@ -150,7 +155,7 @@ PACKAGECONFIG[tcl] = "--with-tcl,--without-tcl,tcl,"
 PACAKGECONFIG[augeas] = "--with-augeas,--without-augeas,augeas,"
 
 EXTRA_OECONF += "--verbose \
-		--sysconfdir=/etc \
+		--sysconfdir=${sysconfdir} \
 		--with-file \
 		--with-path-magic=%{_usrlibrpm}/../../share/misc/magic.mgc \
 		--with-syck=internal \
@@ -226,7 +231,7 @@ FILES_${PN}-dbg += "${libdir}/rpm/.debug \
 
 FILES_${PN}-common = "${bindir}/rpm2cpio \
 		${bindir}/gendiff \
-		/etc/rpm \
+		${sysconfdir}/rpm \
 		/var/spool/repackage \
 		"
 
@@ -444,30 +449,30 @@ do_install_append() {
 
 do_install_append_class-native() {
         create_wrapper ${D}/${bindir}/rpm \
-		RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
-		RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
-		RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
+		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir', True), d.getVar('bindir', True))}/rpm \
+		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir', True), d.getVar('bindir', True))}/rpm} \
+		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir', True), d.getVar('bindir', True))}/locale
 
         create_wrapper ${D}/${bindir}/rpm2cpio \
-		RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
-		RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
-		RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
+		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir', True), d.getVar('bindir', True))}/rpm \
+		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir', True), d.getVar('bindir', True))}/rpm} \
+		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir', True), d.getVar('bindir', True))}/locale
 
         create_wrapper ${D}/${bindir}/rpmbuild \
-		RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
-		RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
-		RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
+		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir', True), d.getVar('bindir', True))}/rpm \
+		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir', True), d.getVar('bindir', True))}/rpm} \
+		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir', True), d.getVar('bindir', True))}/locale
 
         create_wrapper ${D}/${bindir}/rpmconstant \
-		RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
-		RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
-		RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
+		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir', True), d.getVar('bindir', True))}/rpm \
+		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir', True), d.getVar('bindir', True))}/rpm} \
+		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir', True), d.getVar('bindir', True))}/locale
 
 	for rpm_binary in ${D}/${libdir}/rpm/bin/rpm*; do
         	create_wrapper $rpm_binary
-			RPM_USRLIBRPM=${STAGING_LIBDIR_NATIVE}/rpm \
-			RPM_ETCRPM=${STAGING_ETCDIR_NATIVE}/rpm \
-			RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
+			RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir', True), d.getVar('bindir', True))}/rpm \
+			RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir', True), d.getVar('bindir', True))}/rpm} \
+			RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir', True), d.getVar('bindir', True))}/locale
 	done
 
 	# Adjust popt macros to match...
