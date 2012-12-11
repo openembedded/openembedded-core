@@ -257,6 +257,9 @@ exit 0
 
 MARKER:
 EOF
+	# add execution permission
+	chmod +x ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh
+
 	# append the SDK tarball
 	cat ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.tar.bz2 >> ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh
 
