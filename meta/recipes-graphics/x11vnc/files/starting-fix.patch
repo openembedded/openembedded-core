@@ -15,7 +15,7 @@ Index: x11vnc-0.9.12/x11vnc/x11vnc.desktop
  Name=X11VNC Server
  Comment=Share this desktop by VNC
 -Exec=x11vnc -gui tray=setpass -rfbport PROMPT -bg -o %%HOME/.x11vnc.log.%%VNCDISPLAY
-+Exec=x11vnc -bg -o %%HOME/.x11vnc.log.%%VNCDISPLAY
++Exec=x11vnc -bg -rfbport 5900 -o %%HOME/.x11vnc.log.%%VNCDISPLAY
  Icon=computer
  Terminal=false
  Type=Application
