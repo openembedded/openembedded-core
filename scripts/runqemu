@@ -27,6 +27,7 @@ usage() {
     echo "  ROOTFS - the rootfs image file or nfsroot directory to use"
     echo "  MACHINE - the machine name (optional, autodetected from KERNEL filename if unspecified)"
     echo "  RAMFS - boot a ramfs-based image"
+    echo "  VM - boot a vmdk image"
     echo "  Simplified QEMU command-line options can be passed with:"
     echo "    nographic - disables video console"
     echo "    serial - enables a serial console on /dev/ttyS0"
@@ -41,6 +42,7 @@ usage() {
     echo "  $MYNAME qemux86 ramfs"
     echo "  $MYNAME qemux86 qemuparams=\"-m 256\""
     echo "  $MYNAME qemux86 bootparams=\"psplash=false\""
+    echo "  $MYNAME path/to/<image>-<machine>.vmdk"
     exit 1
 }
 
@@ -56,6 +58,7 @@ error() {
 MACHINE=${MACHINE:=""}
 KERNEL=${KERNEL:=""}
 ROOTFS=${ROOTFS:=""}
+VM=${VM:=""}
 FSTYPE=""
 LAZY_ROOTFS=""
 SCRIPT_QEMU_OPT=""
@@ -83,6 +86,10 @@ process_filename() {
 		else
 		    error "conflicting FSTYPE types [$FSTYPE] and [$EXT]"
 		fi
+		;;
+	/vmdk/)
+		FSTYPE=$EXT
+		VM=$filename
 		;;
 	*)
 		error "unknown file arg [$filename]"
@@ -192,19 +199,27 @@ elif [ ! -w /dev/net/tun ] ; then
 fi
 
 # Report errors for missing combinations of options
-if [ -z "$MACHINE" -a -z "$KERNEL" ]; then
-    error "you must specify at least a MACHINE or KERNEL argument"
+if [ -z "$MACHINE" -a -z "$KERNEL" -a -z "$VM" ]; then
+    error "you must specify at least a MACHINE, VM, or KERNEL argument"
 fi
 if [ "$FSTYPE" = "nfs" -a -z "$ROOTFS" ]; then
     error "NFS booting without an explicit ROOTFS path is not yet supported"
 fi
 
 if [ -z "$MACHINE" ]; then
-    MACHINE=`basename $KERNEL | sed 's/.*\(qemux86-64\|qemux86\|qemuarm\|qemumips64\|qemumips\|qemuppc\|qemush4\).*/\1/'`
-    if [ -z "$MACHINE" ]; then
-        error "Unable to set MACHINE from kernel filename [$KERNEL]"
+    if [ "x$FSTYPE" = "xvmdk" ]; then
+        MACHINE=`basename $VM | sed 's/.*\(qemux86-64\|qemux86\|qemuarm\|qemumips64\|qemumips\|qemuppc\|qemush4\).*/\1/'`
+        if [ -z "$MACHINE" ]; then
+            error "Unable to set MACHINE from vmdk filename [$VM]"
+        fi
+        echo "Set MACHINE to [$MACHINE] based on vmdk [$VM]"
+    else
+        MACHINE=`basename $KERNEL | sed 's/.*\(qemux86-64\|qemux86\|qemuarm\|qemumips64\|qemumips\|qemuppc\|qemush4\).*/\1/'`
+        if [ -z "$MACHINE" ]; then
+            error "Unable to set MACHINE from kernel filename [$KERNEL]"
+        fi
+        echo "Set MACHINE to [$MACHINE] based on kernel [$KERNEL]"
     fi
-    echo "Set MACHINE to [$MACHINE] based on kernel [$KERNEL]"
 fi
 
 YOCTO_KVM_WIKI="https://wiki.yoctoproject.org/wiki/How_to_enable_KVM_for_Poky_qemu"
@@ -366,7 +381,7 @@ if [ -e "$ROOTFS" -a -z "$FSTYPE" ]; then
     fi
 fi
 
-if [ -z "$KERNEL" ]; then
+if [ -z "$KERNEL" -a "x$FSTYPE" != "xvmdk" ]; then
     setup_tmpdir
     eval kernel_file=\$${machine2}_DEFAULT_KERNEL
     KERNEL=$OE_TMPDIR/deploy/images/$kernel_file
@@ -395,7 +410,7 @@ if [ "$LAZY_ROOTFS" = "true" ]; then
     ROOTFS=$OE_TMPDIR/deploy/images/$ROOTFS-$MACHINE.$FSTYPE
 fi
 
-if [ -z "$ROOTFS" ]; then
+if [ -z "$ROOTFS" -a "x$FSTYPE" != "xvmdk" ]; then
     setup_tmpdir
     T=$OE_TMPDIR/deploy/images
     eval rootfs_list=\$${machine2}_DEFAULT_ROOTFS
@@ -409,8 +424,12 @@ fi
 
 echo ""
 echo "Continuing with the following parameters:"
-echo "KERNEL: [$KERNEL]"
-echo "ROOTFS: [$ROOTFS]"
+if [ "x$FSTYPE" != "xvmdk" ]; then
+    echo "KERNEL: [$KERNEL]"
+    echo "ROOTFS: [$ROOTFS]"
+else
+    echo "VMDK:   [$VM]"
+fi
 echo "FSTYPE: [$FSTYPE]"
 
 setup_sysroot
