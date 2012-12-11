@@ -7,6 +7,7 @@
 export PSEUDO_PREFIX=/usr
 export PSEUDO_LOCALSTATEDIR=/home/builder/pseudo
 export PSEUDO_LIBDIR=/usr/lib/pseudo/lib64
+export GIT_PROXY_COMMAND=/home/builder/poky/scripts/oe-git-proxy-socks-command
 
 cd /home/builder/poky
 . ./oe-init-build-env
