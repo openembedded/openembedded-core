@@ -1,0 +1,215 @@
+Upstream-Status: Backport
+
+unsquashfs: fix open file limit
+
+Previously Unsquashfs relied on the to_writer queue being
+set to 1000 to limit the amount of open file read-ahead to a
+maximum of 500.  For the default process limit of 1024 open files
+this was perhaps acceptable, but it obviously breaks if ulimit has
+been used to set the open file limit to below 504 (this includes
+stdin, stdout, stderr and the Squashfs filesystem being unsquashed).
+
+More importantly setting the to_writer queue to 1000 to limit
+the amount of files open has always been an inherent performance
+hit because the to_writer queue queues blocks.  It limits the
+block readhead to 1000 blocks, irrespective of how many files
+that represents.  A single file containing more than 1000 blocks
+will still be limited to a 1000 block readahead even though the
+data block cache typically can buffer more than this (at the
+default data cache size of 256 Mbytes and the default block size
+of 128 Kbytes, it can buffer 2048 blocks).  Obviously the
+caches serve more than just a read-ahead role (they also
+cache decompressed blocks in case they're referenced later e.g.
+by duplicate files), but the artificial limit imposed on
+the read-ahead due to setting the to_writer queue to 1000 is
+unnecessary.
+
+This commit does away with the need to limit the to_writer queue,
+by introducing open_wait() and close_wake() calls which correctly
+track the amount of open files.
+
+Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
+
+Signed-off-by: yanjun.zhu <yanjun.zhu@windriver.com> 
+
+diff -urpN a/unsquashfs.c b/unsquashfs.c
+--- a/unsquashfs.c	2012-11-30 15:31:29.000000000 +0800
++++ b/unsquashfs.c	2012-11-30 15:32:03.000000000 +0800
+@@ -31,6 +31,8 @@
+ 
+ #include <sys/sysinfo.h>
+ #include <sys/types.h>
++#include <sys/time.h>
++#include <sys/resource.h>
+ 
+ struct cache *fragment_cache, *data_cache;
+ struct queue *to_reader, *to_deflate, *to_writer, *from_writer;
+@@ -784,6 +786,46 @@ failure:
+ }
+ 
+ 
++pthread_mutex_t open_mutex = PTHREAD_MUTEX_INITIALIZER;
++pthread_cond_t open_empty = PTHREAD_COND_INITIALIZER;
++int open_unlimited, open_count;
++#define OPEN_FILE_MARGIN 10
++
++
++void open_init(int count)
++{
++	open_count = count;
++	open_unlimited = count == -1;
++}
++
++
++int open_wait(char *pathname, int flags, mode_t mode)
++{
++	if (!open_unlimited) {
++		pthread_mutex_lock(&open_mutex);
++		while (open_count == 0)
++			pthread_cond_wait(&open_empty, &open_mutex);
++		open_count --;
++		pthread_mutex_unlock(&open_mutex);
++	}
++
++	return open(pathname, flags, mode);
++}
++
++
++void close_wake(int fd)
++{
++	close(fd);
++
++	if (!open_unlimited) {
++		pthread_mutex_lock(&open_mutex);
++		open_count ++;
++		pthread_cond_signal(&open_empty);
++		pthread_mutex_unlock(&open_mutex);
++	}
++}
++
++
+ int write_file(struct inode *inode, char *pathname)
+ {
+ 	unsigned int file_fd, i;
+@@ -794,8 +836,8 @@ int write_file(struct inode *inode, char
+ 
+ 	TRACE("write_file: regular file, blocks %d\n", inode->blocks);
+ 
+-	file_fd = open(pathname, O_CREAT | O_WRONLY | (force ? O_TRUNC : 0),
+-		(mode_t) inode->mode & 0777);
++	file_fd = open_wait(pathname, O_CREAT | O_WRONLY |
++		(force ? O_TRUNC : 0), (mode_t) inode->mode & 0777);
+ 	if(file_fd == -1) {
+ 		ERROR("write_file: failed to create file %s, because %s\n",
+ 			pathname, strerror(errno));
+@@ -1712,7 +1754,7 @@ void *writer(void *arg)
+ 			}
+ 		}
+ 
+-		close(file_fd);
++		close_wake(file_fd);
+ 		if(failed == FALSE)
+ 			set_attributes(file->pathname, file->mode, file->uid,
+ 				file->gid, file->time, file->xattr, force);
+@@ -1803,9 +1845,9 @@ void *progress_thread(void *arg)
+ 
+ void initialise_threads(int fragment_buffer_size, int data_buffer_size)
+ {
+-	int i;
++	struct rlimit rlim;
++	int i, max_files, res;
+ 	sigset_t sigmask, old_mask;
+-	int all_buffers_size = fragment_buffer_size + data_buffer_size;
+ 
+ 	sigemptyset(&sigmask);
+ 	sigaddset(&sigmask, SIGINT);
+@@ -1841,10 +1883,86 @@ void initialise_threads(int fragment_buf
+ 		EXIT_UNSQUASH("Out of memory allocating thread descriptors\n");
+ 	deflator_thread = &thread[3];
+ 
+-	to_reader = queue_init(all_buffers_size);
+-	to_deflate = queue_init(all_buffers_size);
+-	to_writer = queue_init(1000);
++	/*
++	 * dimensioning the to_reader and to_deflate queues.  The size of
++	 * these queues is directly related to the amount of block
++	 * read-ahead possible.  To_reader queues block read requests to
++	 * the reader thread and to_deflate queues block decompression
++	 * requests to the deflate thread(s) (once the block has been read by
++	 * the reader thread).  The amount of read-ahead is determined by
++	 * the combined size of the data_block and fragment caches which
++	 * determine the total number of blocks which can be "in flight"
++	 * at any one time (either being read or being decompressed)
++	 *
++	 * The maximum file open limit, however, affects the read-ahead
++	 * possible, in that for normal sizes of the fragment and data block
++	 * caches, where the incoming files have few data blocks or one fragment
++	 * only, the file open limit is likely to be reached before the
++	 * caches are full.  This means the worst case sizing of the combined
++	 * sizes of the caches is unlikely to ever be necessary.  However, is is
++	 * obvious read-ahead up to the data block cache size is always possible
++	 * irrespective of the file open limit, because a single file could
++	 * contain that number of blocks.
++	 *
++	 * Choosing the size as "file open limit + data block cache size" seems
++	 * to be a reasonable estimate.  We can reasonably assume the maximum
++	 * likely read-ahead possible is data block cache size + one fragment
++	 * per open file.
++	 *
++	 * dimensioning the to_writer queue.  The size of this queue is
++	 * directly related to the amount of block read-ahead possible.
++	 * However, unlike the to_reader and to_deflate queues, this is
++	 * complicated by the fact the to_writer queue not only contains
++	 * entries for fragments and data_blocks but it also contains
++	 * file entries, one per open file in the read-ahead.
++	 *
++	 * Choosing the size as "2 * (file open limit) +
++	 * data block cache size" seems to be a reasonable estimate.
++	 * We can reasonably assume the maximum likely read-ahead possible
++	 * is data block cache size + one fragment per open file, and then
++	 * we will have a file_entry for each open file.
++	 */
++	res = getrlimit(RLIMIT_NOFILE, &rlim);
++	if (res == -1) {
++		ERROR("failed to get open file limit!  Defaulting to 1\n");
++		rlim.rlim_cur = 1;
++	}
++
++	if (rlim.rlim_cur != RLIM_INFINITY) {
++		/*
++		 * leave OPEN_FILE_MARGIN free (rlim_cur includes fds used by
++		 * stdin, stdout, stderr and filesystem fd
++		 */
++		if (rlim.rlim_cur <= OPEN_FILE_MARGIN)
++			/* no margin, use minimum possible */
++			max_files = 1;
++		else
++			max_files = rlim.rlim_cur - OPEN_FILE_MARGIN;
++	} else
++		max_files = -1;
++
++	/* set amount of available files for use by open_wait and close_wake */
++	open_init(max_files);
++
++	/*
++	 * allocate to_reader, to_deflate and to_writer queues.  Set based on
++	 * open file limit and cache size, unless open file limit is unlimited,
++	 * in which case set purely based on cache limits
++	 */
++	if (max_files != -1) {
++		to_reader = queue_init(max_files + data_buffer_size);
++		to_deflate = queue_init(max_files + data_buffer_size);
++		to_writer = queue_init(max_files * 2 + data_buffer_size);
++	} else {
++		int all_buffers_size = fragment_buffer_size + data_buffer_size;
++
++		to_reader = queue_init(all_buffers_size);
++		to_deflate = queue_init(all_buffers_size);
++		to_writer = queue_init(all_buffers_size * 2);
++	}
++
+ 	from_writer = queue_init(1);
++
+ 	fragment_cache = cache_init(block_size, fragment_buffer_size);
+ 	data_cache = cache_init(block_size, data_buffer_size);
+ 	pthread_create(&thread[0], NULL, reader, NULL);
