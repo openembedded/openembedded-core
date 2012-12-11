@@ -262,16 +262,26 @@ package_install_internal_rpm () {
 	if [ "${INSTALL_COMPLEMENTARY_RPM}" != "1" ] ; then
 		# Setup base system configuration
 		mkdir -p ${target_rootfs}/etc/rpm/
-		echo "${platform}${TARGET_VENDOR}-${TARGET_OS}" > ${target_rootfs}/etc/rpm/platform
+		if [ -n "${sdk_mode}" ]; then
+			platform_vendor="${SDK_VENDOR}"
+			platform_os="${SDK_OS}"
+		else
+			platform_vendor="${TARGET_VENDOR}"
+			platform_os="${TARGET_OS}"
+		fi
+
+		echo "${platform}${platform_vendor}-${platform_os}" > ${target_rootfs}/etc/rpm/platform
+
+
 		if [ ! -z "$platform_extra" ]; then
 			for pt in $platform_extra ; do
 				channel_priority=$(expr $channel_priority + 5)
 				case $pt in
 					noarch | any | all)
-						os="`echo ${TARGET_OS} | sed "s,-.*,,"`.*"
+						os="`echo ${platform_os} | sed "s,-.*,,"`.*"
 						;;
 					*)
-						os="${TARGET_OS}"
+						os="${platform_os}"
 						;;
 				esac
 				echo "$pt-.*-$os" >> ${target_rootfs}/etc/rpm/platform
