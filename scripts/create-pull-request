@@ -229,3 +229,11 @@ Review their content, especially the summary mail:
 When you are satisfied, you can send them with:
     send-pull-request -a -p $ODIR
 EOM
+
+# Check the patches for trailing white space
+egrep -q -e "^\+.*\s+$" $ODIR/*
+if [ $? -ne 1 ]; then
+	echo
+	echo "WARNING: Trailing white space detected at these locations"
+	egrep -nH --color -e "^\+.*\s+$" $ODIR/*
+fi
