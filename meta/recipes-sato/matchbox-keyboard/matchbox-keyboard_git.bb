@@ -12,12 +12,13 @@ RDEPENDS_${PN} = "formfactor dbus-wait"
 SECTION = "x11"
 SRCREV = "b38f24036cff3be6c2fbcf9ca9881803e69003ac"
 PV = "0.0+git${SRCPV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
            file://configure_fix.patch;maxrev=1819 \
            file://single-instance.patch \
-	   file://80matchboxkeyboard.shbg"
+           file://80matchboxkeyboard.shbg \
+           file://png-fix.patch"
 
 S = "${WORKDIR}/git"
 

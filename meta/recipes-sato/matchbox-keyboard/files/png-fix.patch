@@ -1,0 +1,49 @@
+Change matchbox-keyboard to look for "libpng" instead of "libpng12", and fix the
+code so that it works with the 1.2 and 1.5 API.
+
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+diff --git a/configure.ac b/configure.ac
+index 9678cf7..9bbbd76 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -171,24 +171,7 @@ dnl ------ Expat ------------------------------------------------------------
+ 
+ dnl ------ Check for PNG ---------------------------------------------------
+ 
+-AC_MSG_CHECKING(for libpng12)
+-
+-if $PKG_CONFIG --exists libpng12; then
+-        AC_MSG_RESULT(yes)
+-        PNG_LIBS=`$PKG_CONFIG --libs libpng12`
+-        PNG_CFLAGS=`$PKG_CONFIG --cflags libpng12`
+-else
+-        AC_MSG_RESULT(no)
+-        AC_CHECK_LIB([png], [png_create_read_struct],
+-                      [have_png="yes"], [have_png="no"])
+-
+-        if test x$have_png=xyes && test x$have_png_h=xyes; then
+-            PNG_LIBS="-lpng -lz"
+-        else
+-            AC_MSG_ERROR([*** Cannot find libpng12 ****])
+-        fi
+-fi
+-
++PKG_CHECK_MODULES(PNG, libpng)
+ 
+ dnl ------ Debug Build ------------------------------------------------------
+ 
+diff --git a/src/matchbox-keyboard-image.c b/src/matchbox-keyboard-image.c
+index 8accc3e..6b4b0e8 100644
+--- a/src/matchbox-keyboard-image.c
++++ b/src/matchbox-keyboard-image.c
+@@ -65,7 +65,7 @@ png_file_load (const char *file,
+     return NULL;
+   }
+ 
+-  if ( setjmp( png_ptr->jmpbuf ) ) {
++  if (setjmp (png_jmpbuf (png_ptr))) {
+     png_destroy_read_struct( &png_ptr, &info_ptr, NULL);
+     fclose(fd);
+     return NULL;
