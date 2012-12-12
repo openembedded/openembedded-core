@@ -6,8 +6,8 @@ def process_dir (directory, d):
     import stat
 
     cmd = d.expand('${CHRPATH_BIN}')
-    tmpdir = d.getVar('TMPDIR')
-    basedir = d.expand('${base_prefix}')
+    tmpdir = os.path.normpath(d.getVar('TMPDIR'))
+    basedir = os.path.normpath(d.expand('${base_prefix}'))
 
     #bb.debug("Checking %s for binaries to process" % directory)
     if not os.path.exists(directory):
@@ -49,6 +49,7 @@ def process_dir (directory, d):
             new_rpaths = []
             for rpath in rpaths:
                 # If rpath is already dynamic copy it to new_rpath and continue
+                rpath =  os.path.normpath(rpath)
                 if rpath.find("$ORIGIN") != -1:
                     new_rpaths.append(rpath.strip())
                     continue
