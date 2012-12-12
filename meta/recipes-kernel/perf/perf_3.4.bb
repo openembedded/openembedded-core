@@ -73,6 +73,17 @@ EXTRA_OEMAKE = \
 EXTRA_OEMAKE += "\
 	'CFLAGS=${CFLAGS}' \
 	'LDFLAGS=${LDFLAGS} -lpthread -lrt -lelf -lm -lbfd' \
+	\
+	'prefix=${prefix}' \
+	'bindir=${bindir}' \
+	'sharedir=${datadir}' \
+	'sysconfdir=${sysconfdir}' \
+	'perfexecdir=${libexecdir}/perf-core' \
+	\
+	'ETC_PERFCONFIG=${@oe.path.relative(prefix, sysconfdir)}' \
+	'sharedir=${@oe.path.relative(prefix, datadir)}' \
+	'mandir=${@oe.path.relative(prefix, mandir)}' \
+	'infodir=${@oe.path.relative(prefix, infodir)}' \
 "
 
 do_compile() {
