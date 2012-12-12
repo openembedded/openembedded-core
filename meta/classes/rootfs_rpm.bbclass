@@ -40,8 +40,6 @@ RPM="rpm ${RPMOPTS}"
 do_rootfs[lockfiles] += "${DEPLOY_DIR_RPM}/rpm.lock"
 
 fakeroot rootfs_rpm_do_rootfs () {
-	set +x
-
 	${RPM_PREPROCESS_COMMANDS}
 
 	#createrepo "${DEPLOY_DIR_RPM}"
