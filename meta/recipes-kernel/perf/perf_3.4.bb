@@ -9,7 +9,7 @@ as well."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-PR = "r6"
+PR = "r8"
 
 require perf.inc
 
@@ -66,6 +66,14 @@ EXTRA_OEMAKE = \
 		perfexecdir=${libexecdir} \
 		NO_GTK2=1 ${TUI_DEFINES} NO_DWARF=1 ${SCRIPTING_DEFINES} \
 		'
+
+# We already pass the correct arguments to our compiler for the CFLAGS (if we
+# don't override it, it'll add -m32/-m64 itself). For LDFLAGS, it was failing
+# to find bfd symbols.
+EXTRA_OEMAKE += "\
+	'CFLAGS=${CFLAGS}' \
+	'LDFLAGS=${LDFLAGS} -lpthread -lrt -lelf -lm -lbfd' \
+"
 
 do_compile() {
 	oe_runmake all
