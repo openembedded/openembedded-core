@@ -9,7 +9,7 @@ as well."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-PR = "r5"
+PR = "r6"
 
 require perf.inc
 
@@ -77,6 +77,10 @@ do_install() {
 	if [ "${@perf_feature_enabled('perf-scripting', 1, 0, d)}" = "1" -a $(grep install-python_ext ${S}/tools/perf/Makefile) = "0"]; then
 		oe_runmake DESTDIR=${D} install-python_ext
 	fi
+}
+
+do_configure_prepend () {
+    sed -i 's,-Werror ,,' ${S}/tools/perf/Makefile
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
