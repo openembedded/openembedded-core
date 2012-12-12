@@ -1,0 +1,24 @@
+Fix relocations warning when compile python module
+
+After enable python support in newt, bitbake complains warning:
+
+WARNING: QA Issue: ELF binary '/mnt/sda10/poky-all-platform/build/tmp/work/i586-poky-linux/libnewt/0.52.14-r2/packages-split/libnewt-python/usr/lib/python2.7/site-packages/_snackmodule.so' has relocations in .text
+
+Add flag -fPIC to compile _snackmodule.so to fix the warning.
+
+Signed-off-by: Kang Kai <kai.kang@windriver.com>
+
+Upstream-Status: Pending
+
+---
+--- newt-0.52.14/Makefile.in	2012-12-04 17:27:27.578915801 +0800
++++ newt-0.52.14/Makefile.in.new	2012-12-04 17:28:43.274918472 +0800
+@@ -84,7 +84,7 @@
+ 			PIFLAGS=`$$ver-config --includes`; \
+ 			PLDFLAGS=`$$ver-config --ldflags`; \
+ 			PLFLAGS=`$$ver-config --libs`; \
+-	        $(CC) $(CPPFLAGS) $$PIFLAGS $$PCFLAGS -c -o $$ver/snackmodule.o snackmodule.c ;\
++	        $(CC) $(SHCFLAGS) $(CPPFLAGS) $$PIFLAGS $$PCFLAGS -c -o $$ver/snackmodule.o snackmodule.c ;\
+ 	        $(CC) --shared $$PLDFLAGS $$PLFLAGS $(LDFLAGS) -o $$ver/_snackmodule.so $$ver/snackmodule.o -L.  -lnewt $(LIBS);\
+ 	done || :
+ 	touch $@
