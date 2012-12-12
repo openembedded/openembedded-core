@@ -1,0 +1,42 @@
+tzselect: workaround bug in busybox awk
+
+busybox's version of awk in version 1.20.2 and lower doesn't support
+escape sequences in conjunction with the -F option. Use -v FS= instead
+as a workaround until the bug is fixed.
+
+Reference:
+https://bugs.busybox.net/show_bug.cgi?id=5126
+
+Upstream-Status: Inappropriate [other]
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+--- libc/timezone/tzselect.ksh
++++ libc/timezone/tzselect.ksh
+@@ -208,7 +208,7 @@ while
+ 		TZ_for_date=$TZ;;
+ 	*)
+ 		# Get list of names of countries in the continent or ocean.
+-		countries=$($AWK -F'\t' \
++		countries=$($AWK -v FS="\t" \
+ 			-v continent="$continent" \
+ 			-v TZ_COUNTRY_TABLE="$TZ_COUNTRY_TABLE" \
+ 		'
+@@ -252,7 +252,7 @@ while
+ 
+ 
+ 		# Get list of names of time zone rule regions in the country.
+-		regions=$($AWK -F'\t' \
++		regions=$($AWK -v FS="\t" \
+ 			-v country="$country" \
+ 			-v TZ_COUNTRY_TABLE="$TZ_COUNTRY_TABLE" \
+ 		'
+@@ -289,7 +289,7 @@ while
+ 		esac
+ 
+ 		# Determine TZ from country and region.
+-		TZ=$($AWK -F'\t' \
++		TZ=$($AWK -v FS="\t" \
+ 			-v country="$country" \
+ 			-v region="$region" \
+ 			-v TZ_COUNTRY_TABLE="$TZ_COUNTRY_TABLE" \

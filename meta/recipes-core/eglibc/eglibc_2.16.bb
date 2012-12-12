@@ -1,7 +1,7 @@
 require eglibc.inc
 
 DEPENDS += "gperf-native kconfig-frontends-native"
-PR = "r18"
+PR = "r19"
 
 SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr21224.tar.bz2 \
            file://eglibc-svn-arm-lowlevellock-include-tls.patch \
@@ -30,6 +30,8 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr21
            http://people.linaro.org/~toolchain/openembedded/patches/eglibc/aarch64-0001-glibc-fsf-v1-eaf6f205.patch \
            http://people.linaro.org/~toolchain/openembedded/patches/eglibc/aarch64-0002-Synchronize-with-linux-elf.h.patch \
            http://people.linaro.org/~toolchain/openembedded/patches/eglibc/aarch64-0003-Adding-AArch64-support-to-elf-elf.h.patch \
+           file://tzselect-sh.patch \
+           file://tzselect-awk.patch \
           "
 
 SRC_URI[md5sum] = "88894fa6e10e58e85fbd8134b8e486a8"
