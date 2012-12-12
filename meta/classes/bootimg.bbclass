@@ -163,8 +163,15 @@ build_hddimg() {
 		# done in blocks, thus the mod by 16 instead of 32.
 		BLOCKS=$(expr $BLOCKS + $(expr 16 - $(expr $BLOCKS % 16)))
 
+		# mkdosfs will sometimes use FAT16 when it is not appropriate,
+		# resulting in a boot failure from SYSLINUX. Use FAT32 for
+		# images larger than 512MB, otherwise let mkdosfs decide.
+		if [ $(expr $BLOCKS / 1024) -gt 512 ]; then
+			FATSIZE="-F 32"
+		fi
+
 		IMG=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
-		mkdosfs -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${IMG} ${BLOCKS}
+		mkdosfs ${FATSIZE} -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${IMG} ${BLOCKS}
 		# Copy HDDDIR recursively into the image file directly
 		mcopy -i ${IMG} -s ${HDDDIR}/* ::/
 
