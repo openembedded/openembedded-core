@@ -1,0 +1,36 @@
+port fedora patch for fortify sources sigabort. See 
+https://qa.mandriva.com/show_bug.cgi?id=61419 for details.
+
+Upstream-Status: Pending
+
+Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+Signed-off-by: Fahad Usman <fahad_usman@mentor.com>
+
+---
+ src/create.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- tar-1.26.orig/src/create.c
++++ tar-1.26/src/create.c
+@@ -562,8 +562,8 @@ write_gnu_long_link (struct tar_stat_inf
+   GNAME_TO_CHARS (tmpname, header->header.gname);
+   free (tmpname);
+
+-  strcpy (header->buffer + offsetof (struct posix_header, magic),
+-	  OLDGNU_MAGIC);
++  strncpy (header->buffer + offsetof (struct posix_header, magic),
++	  OLDGNU_MAGIC, sizeof(header->header.magic));
+   header->header.typeflag = type;
+   finish_header (st, header, -1);
+
+@@ -900,8 +900,8 @@ start_header (struct tar_stat_info *st)
+     case OLDGNU_FORMAT:
+     case GNU_FORMAT:   /*FIXME?*/
+       /* Overwrite header->header.magic and header.version in one blow.  */
+-      strcpy (header->buffer + offsetof (struct posix_header, magic),
+-	      OLDGNU_MAGIC);
++      strncpy (header->buffer + offsetof (struct posix_header, magic),
++	      OLDGNU_MAGIC, sizeof(header->header.magic));
+       break;
+
+     case POSIX_FORMAT:
