@@ -8,7 +8,7 @@ BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://src/ls.c;beginline=4;endline=16;md5=15ed60f67b1db5fedd5dbc37cf8a9543"
-PR = "r3"
+PR = "r4"
 DEPENDS = "coreutils-native-${PV}"
 DEPENDS_class-native = "gettext-native"
 
@@ -60,6 +60,10 @@ do_install() {
 	# in update-alternatives to fail, therefore use lbracket - the name used
 	# for the actual source file.
 	mv ${D}${bindir}/[ ${D}${bindir}/lbracket.${BPN}
+
+	# Newer versions of coreutils do not include su, to mimic this behavior
+	# we simply remove it.
+	rm -f ${D}${bindir}/su
 }
 
 inherit update-alternatives
