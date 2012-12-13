@@ -11,7 +11,7 @@ DEPENDS = "gtk+ cairo libxml2"
 DEPENDS_class-native = "cairo-native pango-native gdk-pixbuf-native"
 BBCLASSEXTEND = "native"
 
-PR = "r10"
+PR = "r11"
 
 inherit autotools pkgconfig gnome gtk-doc
 
@@ -23,7 +23,9 @@ PACKAGECONFIG_class-native = ""
 
 PACKAGECONFIG[croco] = "--with-croco,--without-croco,libcroco"
 
-SRC_URI += "file://doc_Makefile.patch"
+SRC_URI += "file://doc_Makefile.patch \
+	    file://librsvg-CVE-2011-3146.patch \
+	    "
 
 SRC_URI[archive.md5sum] = "4b00d0fee130c936644892c152f42db7"
 SRC_URI[archive.sha256sum] = "91b98051f352fab8a6257688d6b2fd665b4648ed66144861f2f853ccf876d334"
