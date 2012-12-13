@@ -22,7 +22,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.radeon;md5=e56b405656593a0c97e478513051ea0e \
 SRCREV = "0d6729f2b0bc6254d3628eb831bc80a36b5a17db"
 PE = "1"
 PV = "0.0+git${SRCPV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git;protocol=git"
 
@@ -49,7 +49,13 @@ do_install() {
 	( cd ${D}/lib/firmware ; ln -sf ti-connectivity/* . )
 }
 
-PACKAGES =+ "${PN}-sd8686 ${PN}-rtl8192cu linux-firmware-rtl8192ce linux-firmware-rtl8192su ${PN}-wl12xx"
+PACKAGES =+ "${PN}-ralink ${PN}-sd8686 ${PN}-rtl8192cu linux-firmware-rtl8192ce linux-firmware-rtl8192su ${PN}-wl12xx"
+
+LICENSE_${PN}-ralink = "Firmware:LICENCE.ralink_firmware.txt"
+FILES_${PN}-ralink = " \
+  /lib/firmware/rt*.bin \
+  /lib/firmware/LICENSE.ralink_firmware.txt \
+"
 
 LICENSE_${PN}-sd8686 = "Firmware:LICENSE.libertas"
 FILES_${PN}-sd8686 = " \
