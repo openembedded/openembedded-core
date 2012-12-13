@@ -207,7 +207,7 @@ do_kernel_configme() {
 python do_kernel_configcheck() {
     import re, string, sys, commands
 
-    bb.plain("NOTE: validating kernel configuration")
+    bb.plain("NOTE: validating kernel config, see log.do_kernel_configcheck for details")
 
     # if KMETA isn't set globally by a recipe using this routine, we need to
     # set the default to 'meta'. Otherwise, kconf_check is not passed a valid
@@ -218,7 +218,11 @@ python do_kernel_configcheck() {
     cmd = d.expand("cd ${S}; kconf_check -config- %s/meta-series ${S} ${B}" % kmeta)
     ret, result = commands.getstatusoutput("%s%s" % (pathprefix, cmd))
 
-    bb.plain( "%s" % result )
+    config_check_visibility = d.getVar( "KCONF_AUDIT_LEVEL", True ) or 1
+    if config_check_visibility == 1:
+        bb.debug( 1, "%s" % result )
+    else:
+        bb.note( "%s" % result )
 }
 
 # Ensure that the branches (BSP and meta) are on the locations specified by
