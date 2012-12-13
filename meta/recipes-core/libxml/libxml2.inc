@@ -14,6 +14,7 @@ DEPENDS =+ "zlib"
 
 SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz \
            file://libxml-64bit.patch \
+           file://libxml2-CVE-2012-2871.patch \
            file://ansidecl.patch"
 
 
