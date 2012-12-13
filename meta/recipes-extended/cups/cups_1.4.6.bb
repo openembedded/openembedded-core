@@ -1,6 +1,6 @@
 require cups14.inc
 
-PR = "r7"
+PR = "r8"
 DEPENDS += "libusb \
        ${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
@@ -9,6 +9,7 @@ SRC_URI += " \
             file://use_echo_only_in_init.patch \
             file://0001-don-t-try-to-run-generated-binaries.patch \
             file://cups_serverbin.patch \
+            file://cups-CVE-2011-2896.patch \
             file://cups-CVE-2012-5519.patch \
 	"
 
