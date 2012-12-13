@@ -9,13 +9,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 SECTION = "x11/utils"
 DEPENDS = "gtk+ libcroco cairo libxml2 popt"
 
-PR = "r5"
+PR = "r6"
 
 inherit autotools pkgconfig gnome
 
 EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz --without-croco --disable-gnome-vfs"
 
-SRC_URI += "file://doc_Makefile.patch"
+SRC_URI += "file://doc_Makefile.patch \
+	    file://librsvg-CVE-2011-3146.patch \
+	    "
 
 SRC_URI[archive.md5sum] = "4b00d0fee130c936644892c152f42db7"
 SRC_URI[archive.sha256sum] = "91b98051f352fab8a6257688d6b2fd665b4648ed66144861f2f853ccf876d334"
