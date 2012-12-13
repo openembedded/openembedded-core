@@ -15,7 +15,7 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c5326026692dbed183f0558f926580f8"
 
-PR = "r4"
+PR = "r5"
 
 DEPENDS = "ghostscript-native tiff jpeg fontconfig cups"
 DEPENDS_class-native = ""
@@ -31,14 +31,23 @@ SRC_URI = "${SRC_URI_BASE} \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
-		        file://0001-make-ghostscript-work-with-long-building-directory.patch \
-		        "
+                        file://0001-make-ghostscript-work-with-long-building-directory.patch \
+                        file://ghostscript-native-fix-disable-system-libtiff.patch \
+                        "
 
 SRC_URI[md5sum] = "f7c6f0431ca8d44ee132a55d583212c1"
 SRC_URI[sha256sum] = "593f77f7584704bdf9de41598a084a4208c3ad3b940a1de1faaf8f59a15cc207"
 
 EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec --without-jasper \
                 --with-fontpath=${datadir}/fonts --with-install-cups --without-libidn"
+
+# Explicity disable libtiff, fontconfig,
+# freetype, cups for ghostscript-native
+EXTRA_OECONF_class-native = "--without-x --with-system-libtiff=no \
+                             --without-jbig2dec --without-jasper \
+                             --with-fontpath=${datadir}/fonts \
+                             --without-libidn --disable-fontconfig \
+                             --disable-freetype --disable-cups"
 
 # This has been fixed upstream but for now we need to subvert the check for time.h
 # http://bugs.ghostscript.com/show_bug.cgi?id=692443
