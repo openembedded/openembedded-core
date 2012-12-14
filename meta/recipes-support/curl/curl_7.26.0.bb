@@ -38,7 +38,7 @@ CURLGNUTLS_class-native = "--without-gnutls --with-ssl"
 CURLGNUTLS_class-nativesdk = "--without-gnutls --without-ssl"
 
 do_configure_prepend() {
-	sed -i s:OPT_GNUTLS/bin:OPT_GNUTLS:g configure.ac
+	sed -i s:OPT_GNUTLS/bin:OPT_GNUTLS:g ${S}/configure.ac
 }
 
 PACKAGES =+ "${PN}-certs libcurl libcurl-dev libcurl-staticdev libcurl-doc"
