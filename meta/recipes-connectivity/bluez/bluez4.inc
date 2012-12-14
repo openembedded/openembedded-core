@@ -39,5 +39,7 @@ EXTRA_OECONF = "\
   --disable-cups \
   --enable-test \
   --enable-datafiles \
+  --with-udevdir=${base_libdir}/udev \
+  --with-udevrulesdir=${nonarch_base_libdir}/udev/rules.d \
 "
 
