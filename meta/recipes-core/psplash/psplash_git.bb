@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://psplash.h;beginline=1;endline=16;md5=840fb2356b10a85b
 
 SRCREV = "de9979aefbc56af59b4d236a4b63dd19dcdcfb53"
 PV = "0.1+git${SRCPV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
            file://psplash-init \
@@ -50,13 +50,17 @@ python __anonymous() {
         d.appendVar("DEPENDS", " gdk-pixbuf-native")
 
     d.prependVar("PACKAGES", "%s " % (" ".join(pkgs)))
+    mlprefix = d.getVar('MLPREFIX', True) or ''
+    pn = d.getVar('PN', True) or ''
     for p in pkgs:
-        d.setVar("FILES_%s" % p, "${bindir}/%s" % p)
-        d.setVar("ALTERNATIVE_%s" % p, 'psplash')
-        d.setVarFlag("ALTERNATIVE_TARGET_%s" % p, 'psplash', '${bindir}/%s' % p)
-        d.appendVar("RDEPENDS_%s" % p, " ${PN}")
+        ep = '%s%s' % (mlprefix, p)
+        epsplash = '%s%s' % (mlprefix, 'psplash')
+        d.setVar("FILES_%s" % ep, "${bindir}/%s" % p)
+        d.setVar("ALTERNATIVE_%s" % ep, epsplash)
+        d.setVarFlag("ALTERNATIVE_TARGET_%s" % ep, epsplash, '${bindir}/%s' % p)
+        d.appendVar("RDEPENDS_%s" % ep, " %s" % pn)
         if p == "psplash-default":
-            d.appendVar("RRECOMMENDS_${PN}", " %s" % p)
+            d.appendVar("RRECOMMENDS_%s" % pn, " %s" % ep)
 }
 
 S = "${WORKDIR}/git"
