@@ -13,13 +13,12 @@ PR = "r13"
 
 inherit gnomebase gtk-doc
 
-SRC_URI = "${GNOME_MIRROR}/GConf/${@gnome_verdir("${PV}")}/GConf-${PV}.tar.bz2;name=archive \
-	   file://backenddir.patch"
-
-SRC_URI[archive.md5sum] = "f80329173cd9d134ad07e36002dd2a15"
-SRC_URI[archive.sha256sum] = "52008a82a847527877d9e1e549a351c86cc53cada4733b8a70a1123925d6aff4"
+SRC_URI = "${GNOME_MIRROR}/GConf/${@gnome_verdir("${PV}")}/GConf-${PV}.tar.xz;name=archive"
 
 S = "${WORKDIR}/GConf-${PV}"
+
+SRC_URI[archive.md5sum] = "1b803eb4f8576c572d072692cf40c9d8"
+SRC_URI[archive.sha256sum] = "4ddea9503a212ee126c5b46a0a958fd5484574c3cb6ef2baf38db02e819e58c6"
 
 POLKIT_OECONF = "--enable-defaults-service"
 POLKIT_OECONF_class-native = "--disable-defaults-service"
