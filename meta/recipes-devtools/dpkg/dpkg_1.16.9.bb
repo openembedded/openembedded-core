@@ -8,8 +8,7 @@ SRC_URI += "file://noman.patch \
             file://fix-timestamps.patch \
             file://remove-tar-no-timestamp.patch"
 
-SRC_URI[md5sum] = "9f8042561ecccd5124e5958a1e181de7"
-SRC_URI[sha256sum] = "4a1f4611390d93f1f198d910d3a4e4913b3cf81702b31f585a1872ca98df0eaa"
+SRC_URI[md5sum] = "4df9319b2d17e19cdb6fe94dacee44da"
+SRC_URI[sha256sum] = "73cd7fba4e54acddd645346b4bc517030b9c35938e82215d3eeb8b4e7af26b7a"
 
 PR = "${INC_PR}.0"
-
