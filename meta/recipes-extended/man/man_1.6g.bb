@@ -5,7 +5,7 @@ HOMEPAGE = "http://primates.ximian.com/~flucifredi/man"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
-PR = "r5"
+PR = "r0"
 
 DEPENDS = "groff less"
 
@@ -34,12 +34,10 @@ SRC_URI = "http://primates.ximian.com/~flucifredi/${BPN}/${BPN}-${PV}.tar.gz \
            file://man-1.5m2-sigpipe.patch; \
            file://man-1.6e-i18n_whatis.patch; \
            file://man-1.6e-new_sections.patch; \
-           file://man-1.6e-lzma+xz-support.patch; \
            file://man*"
 
-SRC_URI[md5sum] = "67aaaa6df35215e812fd7d89472c44b6"
-SRC_URI[sha256sum] = "9f208c7e1981371ad4481d6e6c2c566bc726a15778723f94136d220fb9375f6c"
-
+SRC_URI[md5sum] = "ba154d5796928b841c9c69f0ae376660"
+SRC_URI[sha256sum] = "ccdcb8c3f4e0080923d7e818f0e4a202db26c46415eaef361387c20995b8959f"
 
 do_configure () {
         ${S}/configure -default -confdir /etc +sgid +fhs +lang all
