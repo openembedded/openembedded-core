@@ -49,10 +49,10 @@ def process_dir (directory, d):
             new_rpaths = []
             for rpath in rpaths:
                 # If rpath is already dynamic copy it to new_rpath and continue
-                rpath =  os.path.normpath(rpath)
                 if rpath.find("$ORIGIN") != -1:
                     new_rpaths.append(rpath.strip())
                     continue
+                rpath =  os.path.normpath(rpath)
                 # If the rpath shares a root with base_prefix determine a new dynamic rpath from the
                 # base_prefix shared root
                 if rpath.find(basedir) != -1:
