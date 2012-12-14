@@ -50,6 +50,10 @@ sysroot_stage_dirs() {
 	then
 		sysroot_stage_libdir $from${base_libdir} $to${base_libdir}
 	fi
+	if [ -d $from${nonarch_base_libdir} ]
+	then
+		sysroot_stage_libdir $from${nonarch_base_libdir} $to${nonarch_base_libdir}
+	fi
 	sysroot_stage_dir $from${datadir} $to${datadir}
 	# We don't care about docs/info/manpages/locales
 	rm -rf $to${mandir}/ $to${docdir}/ $to${infodir}/ ${to}${datadir}/locale/
