@@ -1,7 +1,7 @@
 SUMMARY = "An Internet printing system for Unix"
 DESCRIPTION = "An Internet printing system for Unix."
 SECTION = "console/utils"
-LICENSE = "GPLv2 LGPLv2"
+LICENSE = "GPLv2 & LGPLv2"
 DEPENDS = "gnutls libpng jpeg dbus dbus-glib zlib"
 PROVIDES = "cups14"
 
