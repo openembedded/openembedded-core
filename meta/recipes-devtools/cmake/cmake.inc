@@ -16,9 +16,6 @@ CMAKE_MAJOR_VERSION = "${@'.'.join(d.getVar('PV',1).split('.')[0:2])}"
 SRC_URI = "http://www.cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz \
            file://support-oe-qt4-tools-names.patch"
 
-SRC_URI[md5sum] = "aabf16d8e957f99921a0095885381373"
-SRC_URI[sha256sum] = "dbfb9d609e8fdb6f0947993246c11e2ee5d47944d6e7bd9314463b31e420e6e0"
-
 inherit autotools
 
 do_configure () {
