@@ -13,22 +13,21 @@ SECTION = "devel"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504" 
 
-SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.gz \
+SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.xz \
            file://debian/0002-Mark-Unused-modules-are-removed-gc-test-as-unresolve.patch \
            file://debian/0003-Mark-mutex-with-owner-not-retained-threads-test-as-u.patch \
            file://opensuse/guile-64bit.patch \
            file://guile_2.0.6_fix_sed_error.patch \
            file://arm_endianness.patch \
-           file://change-install-data-hook-to-install-exec-hook-in-gui.patch \
            "
 
 #           file://debian/0001-Change-guile-to-guile-X.Y-for-info-pages.patch
 #           file://opensuse/guile-turn-off-gc-test.patch 
 
-SRC_URI[md5sum] = "3438cd4415c0c43ca93a20e845eba7e2"
-SRC_URI[sha256sum] = "3ece055145a5020dd36b84f5fbccd4b3846a671960dd5ee55931555f03200950"
+SRC_URI[md5sum] = "30ff9e94663a2e2098b52f8ce9d050b9"
+SRC_URI[sha256sum] = "6f278fa699685382ae51ba8bfad5840959e0af6414f3ad803d61131567bfa338"
 
-PR = "r2"
+PR = "r0"
 
 inherit autotools gettext
 BBCLASSEXTEND = "native"
