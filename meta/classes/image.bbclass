@@ -113,6 +113,17 @@ python () {
             bb.fatal("%s contains conflicting IMAGE_FEATURES %s %s" % (d.getVar('PN', True), feature, ' '.join(list(temp))))
 
     d.setVar('IMAGE_FEATURES', ' '.join(list(remain_features)))
+
+    # Ensure we have the vendor list for complementary package handling
+    ml_vendor_list = ""
+    multilibs = d.getVar('MULTILIBS', True) or ""
+    for ext in multilibs.split():
+        eext = ext.split(':')
+        if len(eext) > 1 and eext[0] == 'multilib':
+            localdata = bb.data.createCopy(d)
+            vendor = localdata.getVar("TARGET_VENDOR_virtclass-multilib-" + eext[1], False)
+            ml_vendor_list += " " + vendor
+    d.setVar('MULTILIB_VENDORS', ml_vendor_list)
 }
 
 python image_handler () {
@@ -357,7 +368,10 @@ rootfs_install_complementary() {
 
     if [ "$GLOBS" != "" ] ; then
         # Use the magic script to do all the work for us :)
-        oe-pkgdata-util glob ${TMPDIR}/pkgdata ${TARGET_VENDOR}-${TARGET_OS} ${WORKDIR}/installed_pkgs.txt "$GLOBS" > ${WORKDIR}/complementary_pkgs.txt
+        : > ${WORKDIR}/complementary_pkgs.txt
+        for vendor in ${TARGET_VENDOR} ${MULTILIB_VENDORS} ; do
+            oe-pkgdata-util glob ${TMPDIR}/pkgdata $vendor-${TARGET_OS} ${WORKDIR}/installed_pkgs.txt "$GLOBS" >> ${WORKDIR}/complementary_pkgs.txt
+        done
 
         # Install the packages, if any
         sed -i '/^$/d' ${WORKDIR}/complementary_pkgs.txt
