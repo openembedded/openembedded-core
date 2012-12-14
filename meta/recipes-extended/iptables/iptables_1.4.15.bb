@@ -7,7 +7,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263\
                     file://iptables/iptables.c;firstline=13;endline=25;md5=f1028f2401da1c120df27594b2be50ef"
 
-PR = "r0"
+PR = "r1"
 
 RRECOMMENDS_${PN} = "kernel-module-x-tables \
                      kernel-module-ip-tables \
@@ -18,7 +18,7 @@ RRECOMMENDS_${PN} = "kernel-module-x-tables \
                      kernel-module-nf-conntrack-ipv4 \
                      kernel-module-nf-nat \
                      kernel-module-ipt-masquerade"
-FILES_${PN} =+ "${libdir}/xtables/"
+FILES_${PN} =+ "${libdir}/xtables/ ${datadir}/xtables"
 FILES_${PN}-dbg =+ "${libdir}/xtables/.debug"
 
 SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
