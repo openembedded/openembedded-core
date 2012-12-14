@@ -17,7 +17,7 @@ RDEPENDS_${PN}_class-native = "mkfontdir-native mkfontscale-native"
 PR = "${INC_PR}.0"
 
 do_configure_prepend() {
-        sed -i "s#MAPFILES_PATH=\`pkg-config#MAPFILES_PATH=\`PKG_CONFIG_PATH=\"${STAGING_LIBDIR_NATIVE}/pkg-config\" pkg-config#g" fontutil.m4.in
+        sed -i "s#MAPFILES_PATH=\`pkg-config#MAPFILES_PATH=\`PKG_CONFIG_PATH=\"${STAGING_LIBDIR_NATIVE}/pkg-config\" pkg-config#g" ${S}/fontutil.m4.in
 }
 
 BBCLASSEXTEND = "native"
