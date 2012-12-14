@@ -27,7 +27,8 @@ EXTRA_OECONF_class-nativesdk = "--disable-legacy-scripts"
 
 acpaths = "-I ."
 do_configure_prepend () {
-	install -m 0644 ${WORKDIR}/glibconfig-sysdefs.h glib-1.2.10/
+	mkdir --parents ${B}/glib-1.2.10
+	install -m 0644 ${WORKDIR}/glibconfig-sysdefs.h ${B}/glib-1.2.10/
 }
 
 BBCLASSEXTEND = "native nativesdk"
