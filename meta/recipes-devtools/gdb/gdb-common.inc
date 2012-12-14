@@ -22,8 +22,8 @@ inherit autotools
 
 SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.gz \
           "
-SRC_URI[md5sum] = "c9f5ed81008194f8f667f131234f3ef0"
-SRC_URI[sha256sum] = "8dcf38dd04f7f031b51d0672050d6b14626302ddc24d74e486b4666335de2df3"
+SRC_URI[md5sum] = "b1519bf899890d21d4774845a6e602fe"
+SRC_URI[sha256sum] = "f99f26e2c1127f12ba14ece0947a9a9948be45e96b69ef363131e469a698636e"
 
 export CC_FOR_BUILD = "${BUILD_CC}"
 export CXX_FOR_BUILD = "${BUILD_CXX}"
