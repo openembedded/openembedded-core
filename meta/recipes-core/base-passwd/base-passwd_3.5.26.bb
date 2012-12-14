@@ -20,19 +20,19 @@ do_install () {
 	install -d -m 755 ${D}${sbindir}
 	install -o root -g root -p -m 755 update-passwd ${D}${sbindir}/
 	install -d -m 755 ${D}${mandir}/man8 ${D}${mandir}/pl/man8
-	install -p -m 644 man/update-passwd.8 ${D}${mandir}/man8/
-	install -p -m 644 man/update-passwd.pl.8 \
+	install -p -m 644 ${S}/man/update-passwd.8 ${D}${mandir}/man8/
+	install -p -m 644 ${S}/man/update-passwd.pl.8 \
 		${D}${mandir}/pl/man8/update-passwd.8
 	gzip -9 ${D}${mandir}/man8/* ${D}${mandir}/pl/man8/*
 	install -d -m 755 ${D}${datadir}/base-passwd
-	install -o root -g root -p -m 644 passwd.master ${D}${datadir}/base-passwd/
-	install -o root -g root -p -m 644 group.master ${D}${datadir}/base-passwd/
+	install -o root -g root -p -m 644 ${S}/passwd.master ${D}${datadir}/base-passwd/
+	install -o root -g root -p -m 644 ${S}/group.master ${D}${datadir}/base-passwd/
 
 	install -d -m 755 ${D}${docdir}/${BPN}
-	install -p -m 644 debian/changelog ${D}${docdir}/${BPN}/
+	install -p -m 644 ${S}/debian/changelog ${D}${docdir}/${BPN}/
 	gzip -9 ${D}${docdir}/${BPN}/*
-	install -p -m 644 README ${D}${docdir}/${BPN}/
-	install -p -m 644 debian/copyright ${D}${docdir}/${BPN}/
+	install -p -m 644 ${S}/README ${D}${docdir}/${BPN}/
+	install -p -m 644 ${S}/debian/copyright ${D}${docdir}/${BPN}/
 }
 
 base_passwd_sstate_postinst() {
