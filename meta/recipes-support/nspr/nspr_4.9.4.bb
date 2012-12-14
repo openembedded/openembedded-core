@@ -1,11 +1,11 @@
 DESCRIPTION = "Netscape Portable Runtime Library"
 HOMEPAGE =  "http://www.mozilla.org/projects/nspr/"
-LICENSE = "GPL-2.0 | MPL-1.1 | LGPL-2.1"
-LIC_FILES_CHKSUM = "file://configure.in;beginline=3;endline=40;md5=99d4d7d68bbc4bc60ebf8c15ed295f28 \
-                    file://Makefile.in;beginline=4;endline=38;md5=c2b512182a334e1bfa1edc4d1c84a298 "
+LICENSE = "GPL-2.0 | MPL-2.0 | LGPL-2.1"
+LIC_FILES_CHKSUM = "file://configure.in;beginline=3;endline=40;md5=f0babf9590d84c33083483f4ab9f98c0 \
+                    file://Makefile.in;beginline=4;endline=38;md5=beda1dbb98a515f557d3e58ef06bca99"
 SECTION = "libs/network"
 
-PR = "r4"
+PR = "r0"
 
 SRC_URI = "ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${PV}/src/nspr-${PV}.tar.gz \
            file://remove-rpath-from-tests.patch \
@@ -15,10 +15,10 @@ SRC_URI = "ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${PV}/src/nspr-$
 
 SRC_URI += "file://nspr.pc.in"
 
-SRC_URI[md5sum] = "60770d45dc08c0f181b22cdfce5be3e8"
-SRC_URI[sha256sum] = "ff43c7c819e72f03bb908e7652c5d5f59a5d31ee86c333e692650207103d1cce"
-
 S = "${WORKDIR}/nspr-${PV}/mozilla/nsprpub"
+
+SRC_URI[md5sum] = "cf58772702b3abbdcff14e22014eeeaf"
+SRC_URI[sha256sum] = "749046c75be17f2f8b3874d288873d3355cedcb37abe7b6eb7b3bc374440d4a4"
 
 TESTS = "runtests.pl \
     runtests.sh \
