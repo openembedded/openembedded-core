@@ -15,7 +15,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://README;beginline=30;endline=55;md5=b394fadb039bbfca6ad9d9d769ee960e \
 	   file://uuid_md5.c;beginline=1;endline=28;md5=9c1f4b2218546deae24c91be1dcf00dd"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz \
 	   file://0001-Change-library-name.patch \
@@ -24,6 +24,7 @@ SRC_URI = "ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz \
 	   file://0004-fix-data-uuid-from-string.patch \
 	   file://uuid-libtool.patch \
 	   file://uuid-nostrip.patch \
+           file://install-pc.patch \
 	  "
 SRC_URI[md5sum] = "5db0d43a9022a6ebbbc25337ae28942f"
 SRC_URI[sha256sum] = "11a615225baa5f8bb686824423f50e4427acd3f70d394765bdff32801f0fd5b0"
@@ -36,14 +37,12 @@ EXTRA_OECONF = "--without-dce --without-cxx --without-perl --without-perl-compat
 EXTRA_OECONF = "--includedir=${includedir}/ossp"
 
 do_configure_prepend() {
-  # This package has a completely custom aclocal.m4
-  # so we need to back it up and make it usable...
-  if [ ! -e m4/ossp.m4 ]; then
-    mkdir m4
-    mv aclocal.m4 m4/ossp.m4
+  # This package has a completely custom aclocal.m4, which should be acinclude.m4.
+  if [ ! -e ${S}/acinclude.m4 ]; then
+    mv ${S}/aclocal.m4 ${S}/acinclude.m4
   fi
 
-  rm -f libtool.m4
+  rm -f ${S}/libtool.m4
 }
 
 do_install_append() {
