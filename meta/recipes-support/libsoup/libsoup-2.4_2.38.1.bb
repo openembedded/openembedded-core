@@ -5,7 +5,7 @@ BUGTRACKER = "https://bugzilla.gnome.org/"
 LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 
-PR = "r1"
+PR = "r2"
 
 SECTION = "x11/gnome/libs"
 
@@ -21,3 +21,5 @@ S = "${WORKDIR}/libsoup-${PV}"
 
 inherit autotools pkgconfig
 
+# glib-networking is needed for SSL, proxies, etc.
+RRECOMMENDS_${PN} = "glib-networking"
