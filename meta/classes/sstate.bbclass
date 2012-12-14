@@ -124,10 +124,12 @@ def sstate_install(ss, d):
     sharedfiles = []
     shareddirs = []
     bb.mkdirhier(d.expand("${SSTATE_MANIFESTS}"))
-    manifest = d.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['name'])
+
+    d2 = d.createCopy()
     extrainf = d.getVarFlag("do_" + ss['task'], 'stamp-extra-info', True)
     if extrainf:
-        manifest = manifest + "." + extrainf
+        d2.setVar("SSTATE_MANMACH", extrainf)
+    manifest = d2.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['name'])
 
     if os.access(manifest, os.R_OK):
         bb.fatal("Package already staged (%s)?!" % manifest)
@@ -315,10 +317,11 @@ def sstate_clean_manifest(manifest, d):
 def sstate_clean(ss, d):
     import oe.path
 
-    manifest = d.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['name'])
+    d2 = d.createCopy()
     extrainf = d.getVarFlag("do_" + ss['task'], 'stamp-extra-info', True)
     if extrainf:
-        manifest = manifest + "." + extrainf
+        d2.setVar("SSTATE_MANMACH", extrainf)
+    manifest = d2.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['name'])
 
     if os.path.exists(manifest):
         locks = []
