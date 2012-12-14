@@ -20,7 +20,7 @@ EXTRA_OECONF = "--without-pth --disable-asm --with-capabilities"
 # libgcrypt.pc is added locally and thus installed here
 do_install_append() {
 	install -d ${D}/${libdir}/pkgconfig
-	install -m 0644 ${S}/src/libgcrypt.pc ${D}/${libdir}/pkgconfig/
+	install -m 0644 ${B}/src/libgcrypt.pc ${D}/${libdir}/pkgconfig/
 }
 
 FILES_${PN}-dev += "${bindir}/dumpsexp ${bindir}/hmac256"
