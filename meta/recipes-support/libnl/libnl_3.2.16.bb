@@ -14,8 +14,8 @@ SRC_URI = "http://www.infradead.org/~tgr/${BPN}/files/${BP}.tar.gz \
            file://fix-pktloc_syntax_h-race.patch \
            file://fix-pc-file.patch "
 
-SRC_URI[md5sum] = "81d44f530aa0af1638a220c413baec05"
-SRC_URI[sha256sum] = "6bb043eea08765bada37a053d932f073db9d51e7a8cd419e237c785ba6369e2c"
+SRC_URI[md5sum] = "f06e6de102abb2cef71ed671957ee099"
+SRC_URI[sha256sum] = "c43a42336c6a3cf559f390e202f8f029d165bd767da7cf7a32a815c570b31826"
 
 inherit autotools pkgconfig
 
