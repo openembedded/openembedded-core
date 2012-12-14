@@ -10,6 +10,7 @@ sources/
 meta-*
 !meta-skeleton
 !meta-hob
+hob-image-*.bb
 *.swp
 *.orig
 *.rej
