@@ -346,27 +346,18 @@ def sstate_clean(ss, d):
 CLEANFUNCS += "sstate_cleanall"
 
 python sstate_cleanall() {
-    import fnmatch
-
     bb.note("Removing shared state for package %s" % d.getVar('PN', True))
 
     manifest_dir = d.getVar('SSTATE_MANIFESTS', True)
-    manifest_prefix = d.getVar("SSTATE_MANFILEPREFIX", True)
-    manifest_pattern = os.path.basename(manifest_prefix) + ".*"
-
     if not os.path.exists(manifest_dir):
         return
 
-    for manifest in (os.listdir(manifest_dir)):
-        if fnmatch.fnmatch(manifest, manifest_pattern):
-            name = manifest.replace(manifest_pattern[:-1], "")
-            namemap = d.getVar('SSTATETASKNAMES', True).split()
-            tasks = d.getVar('SSTATETASKS', True).split()
-            if name not in namemap:
-                continue
-            taskname = tasks[namemap.index(name)]
-            shared_state = sstate_state_fromvars(d, taskname[3:])
-            sstate_clean(shared_state, d)
+    namemap = d.getVar('SSTATETASKNAMES', True).split()
+    tasks = d.getVar('SSTATETASKS', True).split()
+    for name in namemap:
+        taskname = tasks[namemap.index(name)]
+        shared_state = sstate_state_fromvars(d, taskname[3:])
+        sstate_clean(shared_state, d)
 }
 
 def sstate_hardcode_path(d):
