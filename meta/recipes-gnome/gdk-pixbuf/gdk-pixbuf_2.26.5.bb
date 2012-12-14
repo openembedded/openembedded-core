@@ -11,17 +11,16 @@ SECTION = "libs"
 DEPENDS = "libpng glib-2.0 jpeg"
 DEPENDS_append_linuxstdbase = " virtual/libx11"
 
-SRC_URI = "http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.24/gdk-pixbuf-${PV}.tar.xz \
-           file://configure_nm.patch \
+SRC_URI = "http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.26/gdk-pixbuf-${PV}.tar.xz \
            file://hardcoded_libtool.patch \
            file://configure_fix.patch \
            file://extending-libinstall-dependencies.patch \
            "
 
-SRC_URI[md5sum] = "72f39b34b20f68148c1609bd27415412"
-SRC_URI[sha256sum] = "da7a3f00db360913716368e19e336402755cafa93769f3cfa28a969303e4bee1"
+SRC_URI[md5sum] = "339329e6d619ee3e1cb93979111b04c0"
+SRC_URI[sha256sum] = "77696fd163bca95a130a1883dbd78d0ae4d782de2fc85a9a38556d13681f5c84"
 
-PR = "r7"
+PR = "r0"
 
 inherit autotools pkgconfig gettext
 
@@ -43,6 +42,7 @@ FILES_${PN}-xlib = "${libdir}/*pixbuf_xlib*${SOLIBS}"
 ALLOW_EMPTY_${PN}-xlib = "1"
 
 FILES_${PN} = "${bindir}/gdk-pixbuf-query-loaders \
+	${bindir}/gdk-pixbuf-pixdata \
 	${libdir}/lib*.so.*"
 
 FILES_${PN}-dev += " \
