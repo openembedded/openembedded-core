@@ -10,7 +10,7 @@ DEPENDS = "expat glib-2.0 intltool-native gobject-introspection-stub"
 PACKAGECONFIG = "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
 PACKAGECONFIG[pam] = "--with-authfw=pam,--with-authfw=shadow,libpam,libpam"
 
-PR = "r7"
+PR = "r8"
 
 PAM_SRC_URI = "file://polkit-1_pam.patch"
 SRC_URI = "http://hal.freedesktop.org/releases/polkit-${PV}.tar.gz \
@@ -27,12 +27,12 @@ EXTRA_OECONF = "--with-os-type=moblin --disable-man-pages --disable-introspectio
 inherit autotools gtk-doc pkgconfig
 
 do_install_append() {
-	rm -f ${D}${libdir}/${PN}-1/extensions/*.a
+	rm -f ${D}${libdir}/${BPN}-1/extensions/*.a
 }
 
-FILES_${PN} += "${libdir}/${PN}-1/extensions/*.so \
-                ${datadir}/${PN}-1/actions/* \
+FILES_${PN} += "${libdir}/${BPN}-1/extensions/*.so \
+                ${datadir}/${BPN}-1/actions/* \
                 ${datadir}/dbus-1/system-services/*"
-FILES_${PN}-dbg += "${libdir}/${PN}-1/extensions/.debug/*.so"
-FILES_${PN}-dev += "${libdir}/${PN}-1/extensions/*.la "
+FILES_${PN}-dbg += "${libdir}/${BPN}-1/extensions/.debug/*.so"
+FILES_${PN}-dev += "${libdir}/${BPN}-1/extensions/*.la "
 
