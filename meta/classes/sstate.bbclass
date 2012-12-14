@@ -1,8 +1,7 @@
 SSTATE_VERSION = "3"
 
 SSTATE_MANIFESTS ?= "${TMPDIR}/sstate-control"
-SSTATE_MANFILEBASE = "${SSTATE_MANIFESTS}/manifest-${SSTATE_MANMACH}-"
-SSTATE_MANFILEPREFIX = "${SSTATE_MANFILEBASE}${PN}"
+SSTATE_MANFILEPREFIX = "${SSTATE_MANIFESTS}/manifest-${SSTATE_MANMACH}-${PN}"
 
 def generate_sstatefn(spec, hash, d):
     if not hash:
