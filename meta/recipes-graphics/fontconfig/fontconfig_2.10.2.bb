@@ -26,8 +26,8 @@ SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
            file://fix-pkgconfig.patch \
            file://97_fontconfig"
 
-SRC_URI[md5sum] = "c94e380eea42f2f23ca9537035ef1899"
-SRC_URI[sha256sum] = "c3912bf909c0057e50a67f58fc1b0ae644f1ebf532a0d97864588d9599280222"
+SRC_URI[md5sum] = "025e08b3d7fe45c433de5718e441ed15"
+SRC_URI[sha256sum] = "5c3bf994bb6d6303bbf1e641eaa4b431932138dc90de33642e5845e31e1fdfd6"
 
 PACKAGES =+ "fontconfig-utils-dbg fontconfig-utils "
 FILES_fontconfig-utils-dbg = "${bindir}/*.dbg"
