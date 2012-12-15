@@ -32,5 +32,6 @@ SRC_URI += "\
             file://0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch \
             file://Generic-C-implementation-of-pixman_blt-with-overlapp.patch \
 "
-SRC_URI[md5sum] = "703c3f62437b161c610056e076560570"
-SRC_URI[sha256sum] = "6056f9aa0e0578a0492e34fc2ce6dd7bfb181090ed687993c03b969c8cec4828"
+
+SRC_URI[md5sum] = "f6e3294c4edb7b6bca8459e604286348"
+SRC_URI[sha256sum] = "583686afbfa5a1dfc40a21e888a3eacf31fe0e02469d20b821b5d8f719165a51"
