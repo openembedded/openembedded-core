@@ -4,7 +4,7 @@ compilation of C/C++/ObjC code across machines on a network."
 SECTION = "devel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
-PR = "r8"
+PR = "r9"
 
 DEPENDS = "avahi"
 
@@ -28,7 +28,14 @@ SRC_URI = "http://distcc.googlecode.com/files/${BPN}-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "0d6b80a1efc3a3d816c4f4175f63eaa2"
 SRC_URI[sha256sum] = "6500f1bc2a30b1f044ebed79c6ce15457d1712263e65f0db7d6046af262ba434"
 
-inherit autotools pkgconfig update-rc.d
+inherit autotools pkgconfig update-rc.d useradd
+
+USERADD_PACKAGES = "${PN}"
+USERADD_PARAM_${PN} = "--system \
+                       --home /dev/null \
+                       --no-create-home \
+                       --gid nogroup \
+                       distcc"
 
 INITSCRIPT_NAME = "distcc"
 
@@ -53,10 +60,6 @@ FILES_${PN} = " ${sysconfdir} \
 FILES_distcc-distmon-gnome = "  ${bindir}/distccmon-gnome \
 				${datadir}/distcc"
 
-pkg_postinst_${PN} () {
-	if test "x$D" != "x"; then
-		exit 1
-	else
-		grep distcc /etc/passwd || adduser --system --home /dev/null --no-create-home --empty-password --ingroup nogroup distcc
-	fi
+pkg_postrm_${PN} () {
+	deluser distcc || true
 }
