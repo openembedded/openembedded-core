@@ -11,9 +11,13 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/gst-openmax/gst-openmax-${PV}.ta
 
 inherit autotools
 
+# Tell configure that this isn't a development snapshot so we don't want
+# -Werror (hopefully fixed in 0.10.2)
+export GST_CVS="no"
+
 EXTRA_OECONF += "--disable-valgrind"
 
-PR = "r3"
+PR = "r4"
 
 FILES_${PN} += "${libdir}/gstreamer-0.10/libgstomx.so"
 FILES_${PN}-dev += "${libdir}/gstreamer-0.10/libgstomx.la"
