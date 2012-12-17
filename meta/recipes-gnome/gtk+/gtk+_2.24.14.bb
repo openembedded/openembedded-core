@@ -42,6 +42,11 @@ BBCLASSEXTEND = "native"
 RRECOMMENDS_${PN}_class-native = ""
 DEPENDS_class-native = "glib-2.0-native atk-native pango-native cairo-native gdk-pixbuf-native"
 
+do_install_append_class-native () {
+	create_wrapper ${D}/${bindir}/gtk-update-icon-cache \
+		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
+}
+
 python populate_packages_prepend () {
     prologue = d.getVar("postinst_prologue", True)
 
