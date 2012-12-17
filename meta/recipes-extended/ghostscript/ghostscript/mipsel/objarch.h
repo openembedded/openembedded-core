@@ -33,7 +33,7 @@
 
 	 /* ---------------- Miscellaneous ---------------- */
 
-#define ARCH_IS_BIG_ENDIAN 1
+#define ARCH_IS_BIG_ENDIAN 0
 #define ARCH_PTRS_ARE_SIGNED 0
 #define ARCH_FLOATS_ARE_IEEE 1
 #define ARCH_ARITH_RSHIFT 2
