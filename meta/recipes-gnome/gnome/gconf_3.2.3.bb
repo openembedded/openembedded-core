@@ -9,7 +9,7 @@ POLKIT_libc-uclibc = ""
 DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native ${POLKIT} gobject-introspection-stub"
 DEPENDS_class-native = "glib-2.0-native dbus-native dbus-glib-native libxml2-native intltool-native gnome-common-native gobject-introspection-stub-native"
 
-PR = "r12"
+PR = "r13"
 
 inherit gnomebase gtk-doc
 
@@ -35,6 +35,11 @@ do_install_append() {
 	# this stuff is unusable
 	rm -f ${D}${libdir}/GConf/*/*.*a
 	rm -f ${D}${libdir}/gio/*/*.*a
+}
+
+do_install_append_class-native() {
+	create_wrapper ${D}/${bindir}/gconftool-2 \
+		GCONF_BACKEND_DIR=${STAGING_LIBDIR_NATIVE}/GConf/2
 }
 
 # disable dbus-x11 when x11 isn't in DISTRO_FEATURES

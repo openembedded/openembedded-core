@@ -15,7 +15,6 @@ export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL = "1"
 
 gconf_postinst() {
 if [ "x$D" != "x" ]; then
-	export GCONF_BACKEND_DIR=${STAGING_LIBDIR_NATIVE}/GConf/2
 	export GCONF_CONFIG_SOURCE="xml::$D${sysconfdir}/gconf/gconf.xml.defaults"
 else
 	export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
