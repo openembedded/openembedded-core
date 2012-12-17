@@ -6,8 +6,8 @@ SRC_URI += "file://crosscompile.patch \
             file://mips64-compiler.patch \
            "
 
-SRC_URI[md5sum] = "bde3d178b756597d2ec2a19ef60d2e1f"
-SRC_URI[sha256sum] = "548b91cb01087ad4f892428e7ac4955251cf12393e86c70420436b33848ef28a"
+SRC_URI[md5sum] = "a13d8876e3e804189392119638a07a1f"
+SRC_URI[sha256sum] = "c93540e2799df4655c6f1b67dc7d8d6db96df4f08ef1702fffbc5df843a43d00"
 
 PR = "${INC_PR}.0"
 
