@@ -1,3 +1,4 @@
+require gcc-multilib-config.inc
 #
 # Build the list of lanaguages to build.
 #
@@ -25,7 +26,7 @@ EXTRA_OECONF_PATHS ?= ""
 EXTRA_OECONF_INITIAL ?= ""
 EXTRA_OECONF_INTERMEDIATE ?= ""
 
-GCCMULTILIB = "--disable-multilib"
+GCCMULTILIB ?= "--disable-multilib"
 GCCTHREADS ?= "posix"
 
 EXTRA_OECONF = "${@['--enable-clocale=generic', ''][d.getVar('USE_NLS', True) != 'no']} \

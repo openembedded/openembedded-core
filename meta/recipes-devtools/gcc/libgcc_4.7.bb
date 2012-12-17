@@ -15,6 +15,10 @@ FILES_${PN} = "${base_libdir}/libgcc*.so.*"
 FILES_${PN}-dev = " \
   ${base_libdir}/libgcc*.so \
   ${libdir}/${TARGET_SYS}/${BINV}/*crt* \
+  ${libdir}/${TARGET_SYS}/${BINV}/64 \
+  ${libdir}/${TARGET_SYS}/${BINV}/32 \
+  ${libdir}/${TARGET_SYS}/${BINV}/x32 \
+  ${libdir}/${TARGET_SYS}/${BINV}/n32 \
   ${libdir}/${TARGET_SYS}/${BINV}/libgcc*"
 FILES_libgcov-dev = " \
   ${libdir}/${TARGET_SYS}/${BINV}/libgcov.a \
@@ -70,3 +74,72 @@ BBCLASSEXTEND = "nativesdk"
 
 INSANE_SKIP_${PN}-dev = "staticdev"
 INSANE_SKIP_${MLPREFIX}libgcov-dev = "staticdev"
+
+addtask multilib_install after do_install before do_package do_populate_sysroot
+# this makes multilib gcc files findable for target gcc
+# e.g.
+#    /usr/lib/i586-pokymllib32-linux/4.7/
+# by creating this symlink to it
+#    /usr/lib64/x86_64-poky-linux/4.7/32
+
+python do_multilib_install() {
+    import re
+
+    multilibs = d.getVar('MULTILIB_VARIANTS', True)
+    if not multilibs:
+        return
+
+    binv = d.getVar('BINV', True)
+
+    mlprefix = d.getVar('MLPREFIX', True)
+    if ('%slibgcc' % mlprefix) != d.getVar('PN', True):
+        return
+
+    if mlprefix:
+        orig_tune = d.getVar('DEFAULTTUNE_MULTILIB_ORIGINAL', True)
+        orig_tune_params = get_tune_parameters(orig_tune, d)
+        orig_tune_baselib = orig_tune_params['baselib']
+        orig_tune_bitness = orig_tune_baselib.replace('lib', '')
+        if not orig_tune_bitness:
+            orig_tune_bitness = '32'
+
+        src = '../../../' + orig_tune_baselib + '/' + \
+            d.getVar('TARGET_SYS_MULTILIB_ORIGINAL', True) + '/' + binv + '/'
+
+        dest = d.getVar('D', True) + d.getVar('libdir', True) + '/' + \
+            d.getVar('TARGET_SYS', True) + '/' + binv + '/' + orig_tune_bitness
+
+        if os.path.lexists(dest):
+            os.unlink(dest)
+        os.symlink(src, dest)
+        return
+
+
+    for ml in multilibs.split():
+        tune = d.getVar('DEFAULTTUNE_virtclass-multilib-' + ml, True)
+        if not tune:
+            bb.warn('DEFAULTTUNE_virtclass-multilib-%s is not defined. Skipping...' % ml)
+            continue
+
+        tune_parameters = get_tune_parameters(tune, d)
+        tune_baselib = tune_parameters['baselib']
+        if not tune_baselib:
+            bb.warn("Tune %s doesn't have a baselib set. Skipping..." % tune)
+            continue
+
+        tune_arch = tune_parameters['arch']
+        tune_bitness = tune_baselib.replace('lib', '')
+        if not tune_bitness:
+            tune_bitness = '32' # /lib => 32bit lib
+
+        src = '../../../' + tune_baselib + '/' + \
+            tune_arch + d.getVar('TARGET_VENDOR', True) + 'ml' + ml + \
+            '-' + d.getVar('TARGET_OS', True) + '/' + binv + '/'
+
+        dest = d.getVar('D', True) + d.getVar('libdir', True) + '/' + \
+            d.getVar('TARGET_SYS', True) + '/' + binv + '/' + tune_bitness
+
+        if os.path.lexists(dest):
+            os.unlink(dest)
+        os.symlink(src, dest)
+}

@@ -34,6 +34,30 @@ def get_gcc_multiarch_setting(bb, d):
             return multiarch_options[target_arch]
     return ""
 
+# this is used by the multilib setup of gcc
+def get_tune_parameters(tune, d):
+    availtunes = d.getVar('AVAILTUNES', True)
+    if tune not in availtunes.split():
+        bb.error('The tune: %s is not one of the available tunes: %s', tune, availtunes)
+
+    localdata = bb.data.createCopy(d)
+    override = ':tune-' + tune
+    localdata.setVar('OVERRIDES', localdata.getVar('OVERRIDES', False) + override)
+    bb.data.update_data(localdata)
+
+    retdict = {}
+    retdict['tune'] = tune
+    retdict['ccargs'] = localdata.getVar('TUNE_CCARGS', True)
+    retdict['features'] = localdata.getVar('TUNE_FEATURES', True)
+    # BASELIB is used by the multilib code to change library paths
+    retdict['baselib'] = localdata.getVar('BASE_LIB', True) or localdata.getVar('BASELIB', True)
+    retdict['arch'] = localdata.getVar('TUNE_ARCH', True)
+    retdict['abiextension'] = localdata.getVar('ABIEXTENSION', True)
+    retdict['target_fpu'] = localdata.getVar('TARGET_FPU', True)
+    retdict['pkgarch'] = localdata.getVar('TUNE_PKGARCH', True)
+    retdict['package_extra_archs'] = localdata.getVar('PACKAGE_EXTRA_ARCHS', True)
+    return retdict
+
 # We really need HOST_SYS here for some packages and TARGET_SYS for others.
 # For now, libgcc is most important so we fix for that - RP.
 SHLIBSDIR = "${STAGING_DIR_TARGET}/shlibs"
