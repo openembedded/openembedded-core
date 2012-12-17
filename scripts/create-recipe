@@ -40,6 +40,8 @@ my $version = $predef_version;
 my $description = "";
 my $summary = "";
 my $url = "";
+my $homepage;
+my @rdepends;
 my $configure = "";
 my $localename = "";
 my @sources;
@@ -1679,6 +1681,7 @@ sub write_bbfile
 	open(BBFILE, ">${name}_$version.bb");
 	print BBFILE "SUMMARY = \"$summary\"\n";
 	print BBFILE "DESCRIPTION = \"$description\"\n";
+	print BBFILE "HOMEPAGE = \"$homepage\"\n";
 
 	print BBFILE "LICENSE = \"@license\"\n";
 	print BBFILE "LIC_FILES_CHKSUM = \"";
@@ -1697,6 +1700,10 @@ sub write_bbfile
 		my @out = grep(!$saw{$_}++,@buildreqs);
 		print BBFILE "DEPENDS = \"@out\"\n\n";
 	};
+
+	if (@rdepends > 0) {
+	    print BBFILE "RDEPENDS_\$\{PN\} += \"@rdepends\"\n";
+	}
 
 	print BBFILE 'PR = "r0"' . "\n\n";
 	print BBFILE "SRC_URI = \"";
@@ -1733,6 +1740,7 @@ sub calculate_sums
     $sha256sum = $1;
     chomp($sha256sum);
 }
+
 
 ############################################################################
 #
@@ -1820,6 +1828,40 @@ foreach (@dirs) {
 
 $fulldir = $dir;
 
+if ( -e "$dir/setup.py" ) {
+       	$python = 1;
+	push(@inherits, "distutils");
+	
+	system("cd $dir ; python setup.py build sdist &> /dev/null");	
+
+        $templic = `sed '/^License: */!d; s///;q' $dir/*.egg-info/PKG-INFO`;
+	chomp($templic);
+	push(@license, $templic);
+	$summary = `sed '/^Name: */!d; s///;q' $dir/*.egg-info/PKG-INFO`;
+	chomp($summary);
+	$description = `sed '/^Summary: */!d; s///;q' $dir/*.egg-info/PKG-INFO`;
+	chomp($description);
+	$homepage = `sed '/^Home-page: */!d; s///;q' $dir/*.egg-info/PKG-INFO`;
+	chomp($homepage);
+	$findoutput = `find $dir/*.egg-info/ -name "requires.txt" 2>/dev/null`;
+	@findlist = split(/\n/, $findoutput);
+	foreach (@findlist) {
+	    # Adding dependency do buildreqs should be removed when
+	    # distutils is unbroken, i.e. blocks setup.py install from 
+	    # downloading and installing dependencies.
+	    push(@buildreqs, `sed 's/[^a-zA-Z]//g' $dir/*.egg-info/requires.txt`);
+	    chomp(@buildreqs);	    
+	    foreach $item (@buildreqs) {
+		$item = "python-" . $item
+	    }
+	    push(@rdepends, `sed 's/[^a-zA-Z]//g' $dir/*.egg-info/requires.txt`);
+	    chomp(@rdepends);
+	    foreach $item (@rdepends) {
+		$item = "python-" . $item
+	    }
+	}
+}
+
 if ( -e "$dir/autogen.sh" ) {
 	$configure = "autogen";
 	$uses_configure = 1;
@@ -1859,7 +1901,6 @@ if (-e "$dir/$name.pro") {
 	push(@inherits, "qmake2");
 }
 
-
 #
 # This is a good place to generate configure.in
 #
@@ -1868,6 +1909,8 @@ if (length($configure) > 2) {
 		system("cd $dir ; ./autogen.sh &> /dev/null");
 	}
 }
+
+
 @files = <$dir/configure>;
 foreach (@files) {
 	process_configure("$_");
@@ -1893,8 +1936,10 @@ foreach (@files) {
 	guess_license_from_file("$_");
 }
 
-
-guess_description($dir);
+ 
+if ($python != 1) {
+        guess_description($dir);
+}
 
 #
 # Output of bbfile file
