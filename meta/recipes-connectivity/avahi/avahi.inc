@@ -14,7 +14,7 @@ SECTION = "network"
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-INC_PR = "r5"
+INC_PR = "r6"
 
 DEPENDS = "expat libcap libdaemon dbus glib-2.0"
 
@@ -26,10 +26,16 @@ SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
           file://fix_for_automake_1.12.x.patch \
           "
 
-USERADD_PACKAGES = "avahi-daemon"
+USERADD_PACKAGES = "avahi-daemon avahi-autoipd"
 USERADD_PARAM_avahi-daemon = "--system --home /var/run/avahi-daemon \
                               --no-create-home --shell /bin/false \
                               --user-group avahi"
+
+USERADD_PARAM_avahi-autoipd = "--system --home /var/run/avahi-autoipd \
+                              --no-create-home --shell /bin/false \
+                              --user-group \
+                              -c \"Avahi autoip daemon\" \
+                              avahi-autoipd"
 
 inherit autotools pkgconfig update-rc.d gettext useradd
 
@@ -135,15 +141,6 @@ if [ -z "$D" ]; then
 		/etc/init.d/dbus-1 force-reload
 	fi
 fi
-}
-
-pkg_postinst_avahi-autoipd () {
-	# can't do this offline
-	if [ "x$D" != "x" ]; then
-		exit 1
-	fi
-	grep "^avahi-autoipd:" /etc/group > /dev/null || addgroup avahi-autoipd
-	grep "^avahi-autoipd:" /etc/passwd > /dev/null || adduser --disabled-password --system --home /var/lib/avahi-autoipd --no-create-home avahi-autoipd --ingroup avahi-autoipd -g "Avahi autoip daemon"
 }
 
 pkg_postrm_avahi-daemon () {
