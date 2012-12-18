@@ -847,7 +847,23 @@ netdb_net_type='in_addr_t'
 nm='nm'
 nm_opt=''
 nm_so_opt='--dynamic'
-nonxs_ext='Archive/Extract Archive/Tar Attribute/Handlers AutoLoader B/Debug B/Deparse B/Lint CGI CPAN CPANPLUS CPANPLUS/Dist/Build Class/ISA Devel/SelfStubber Digest Errno ExtUtils/CBuilder ExtUtils/Command ExtUtils/Constant ExtUtils/Install ExtUtils/MakeMaker ExtUtils/Manifest ExtUtils/ParseXS File/Fetch File/Path File/Temp FileCache Filter/Simple Getopt/Long I18N/LangTags IO/Compress IO/Zlib IPC/Cmd IPC/Open2 IPC/Open3 Locale/Codes Locale/Maketext Locale/Maketext/Simple Log/Message Log/Message/Simple Math/BigInt Math/BigRat Math/Complex Memoize Module/Build Module/CoreList Module/Load Module/Load/Conditional Module/Loaded Module/Pluggable NEXT Net/Ping Object/Accessor Package/Constants Params/Check Parse/CPAN/Meta PerlIO/via/QuotedPrint Pod/Escapes Pod/Html Pod/LaTeX Pod/Parser Pod/Perldoc Pod/Plainer Pod/Simple Safe SelfLoader Shell Switch Term/ANSIColor Term/Cap Term/UI Test Test/Harness Test/Simple Text/Balanced Text/ParseWords Text/Tabs Thread/Queue Thread/Semaphore Tie/File Tie/Hash/NamedCapture Tie/Memoize Tie/RefHash Time/Local Unicode/Collate XSLoader autodie autouse base bignum constant encoding/warnings if lib libnet parent podlators'
+nonxs_ext='Archive/Extract Archive/Tar Attribute/Handlers AutoLoader B/Debug \
+B/Deparse B/Lint CGI CPAN CPAN/Meta CPAN/Meta/YAML CPANPLUS CPANPLUS/Dist/Build \
+Class/ISA Devel/SelfStubber Digest Dumpvalue Env Errno ExtUtils/CBuilder \
+ExtUtils/Command ExtUtils/Constant ExtUtils/Install ExtUtils/MakeMaker \
+ExtUtils/Manifest ExtUtils/ParseXS File/CheckTree File/Fetch File/Path File/Temp \
+FileCache Filter/Simple Getopt/Long HTTP/Tiny I18N/Collate I18N/LangTags \
+IO/Compress IO/Zlib IPC/Cmd IPC/Open2 IPC/Open3 JSON/PP Locale/Codes \
+Locale/Maketext Locale/Maketext/Simple Log/Message Log/Message/Simple \
+Math/BigInt Math/BigRat Math/Complex Memoize Module/Build Module/CoreList \
+Module/Load Module/Load/Conditional Module/Loaded Module/Pluggable NEXT Net/Ping \
+Object/Accessor Package/Constants Params/Check Parse/CPAN/Meta Perl/OSType \
+PerlIO/via/QuotedPrint Pod/Escapes Pod/Html Pod/LaTeX Pod/Parser Pod/Perldoc \
+Pod/Plainer Pod/Simple Safe SelfLoader Shell Switch Term/ANSIColor Term/Cap \
+Term/UI Test Test/Harness Test/Simple Text/Balanced Text/ParseWords Text/Tabs \
+Thread/Queue Thread/Semaphore Tie/File Tie/Hash/NamedCapture Tie/Memoize \
+Tie/RefHash Time/Local Unicode/Collate Version/Requirements XSLoader autodie \
+autouse base bignum constant encoding/warnings if lib libnet parent podlators'
 nroff='nroff'
 nvEUformat='"E"'
 nvFUformat='"F"'
