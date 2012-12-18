@@ -6,8 +6,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/b/base-passwd/base-passwd_${PV}.tar.gz \
-           file://nobash.patch \
-           file://root-home.patch"
+           file://nobash.patch"
 
 SRC_URI[md5sum] = "74245e5c21dc74d9675c77cd8dfa02e6"
 SRC_URI[sha256sum] = "258a78317aa563143d10375c6e1e63a60898e503887f00fffd70b6b297c1b429"
@@ -25,6 +24,7 @@ do_install () {
 		${D}${mandir}/pl/man8/update-passwd.8
 	gzip -9 ${D}${mandir}/man8/* ${D}${mandir}/pl/man8/*
 	install -d -m 755 ${D}${datadir}/base-passwd
+	sed -i 's#:/root:#:${ROOT_HOME}:#' ${S}/passwd.master
 	install -o root -g root -p -m 644 ${S}/passwd.master ${D}${datadir}/base-passwd/
 	install -o root -g root -p -m 644 ${S}/group.master ${D}${datadir}/base-passwd/
 
