@@ -45,7 +45,13 @@ read_args() {
                     console_params=$arg
                 else
                     console_params="$console_params $arg"
-                fi
+                fi ;;
+            debugshell*)
+                if [ -z "$optarg" ]; then
+                        shelltimeout=30
+                else
+                        shelltimeout=$optarg
+                fi 
         esac
     done
 }
@@ -75,6 +81,7 @@ early_setup
 read_args
 
 echo "Waiting for removable media..."
+C=0
 while true
 do
   for i in `ls /media 2>/dev/null`; do
@@ -89,6 +96,19 @@ do
   done
   if [ "$found" = "yes" ]; then
       break;
+  fi
+  # don't wait for more than $shelltimeout seconds, if it's set
+  if [ -n "$shelltimeout" ]; then
+      echo -n " " $(( $shelltimeout - $C ))
+      if [ $C -ge $shelltimeout ]; then
+           echo "..."
+	   echo "Mounted filesystems"
+           mount | grep media
+           echo "Available block devices"
+           ls /dev/sd*
+           fatal "Cannot find rootfs.img file in /media/* , dropping to a shell "
+      fi
+      C=$(( C + 1 ))
   fi
   sleep 1
 done
