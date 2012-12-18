@@ -31,6 +31,7 @@ EXTRA_OECONF="--disable-nls"
 do_configure() {
 	# Looks like configure.in is broken, so we are skipping
 	# rebuilding configure and are just using the shipped one
+	gnu-configize --force
 	oe_runconf
 }
 
