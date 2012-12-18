@@ -43,6 +43,9 @@ PACKAGES = ' \
 #
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+# Override by distro if needed
+VIRTUAL-RUNTIME_keymaps ?= "keymaps"
+
 #
 # packagegroup-base contain stuff needed for base system (machine related)
 #
@@ -141,7 +144,7 @@ RRECOMMENDS_packagegroup-machine-base = "${MACHINE_EXTRA_RRECOMMENDS}"
 
 SUMMARY_packagegroup-base-keyboard = "Keyboard support"
 RDEPENDS_packagegroup-base-keyboard = "\
-    keymaps"
+    ${VIRTUAL-RUNTIME_keymaps}"
 
 SUMMARY_packagegroup-base-pci = "PCI bus support"
 RDEPENDS_packagegroup-base-pci = "\
