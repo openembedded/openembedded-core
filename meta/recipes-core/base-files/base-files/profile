@@ -11,7 +11,7 @@ if [ ! -e /etc/localtime ]; then
 	export TZ
 fi
 
-if [ "$HOME" = "/home/root" ]; then
+if [ "$HOME" = "ROOTHOME" ]; then
    PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
 fi
 if [ "$PS1" ]; then
