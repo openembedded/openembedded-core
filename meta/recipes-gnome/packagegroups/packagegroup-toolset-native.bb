@@ -154,7 +154,6 @@ DEPENDS = "\
     makedepend-native \
     makedevs-native \
     make-native \
-    mesa-dri-glsl-native \
     mkelfimage-native \
     mkfontdir-native \
     mkfontscale-native \
