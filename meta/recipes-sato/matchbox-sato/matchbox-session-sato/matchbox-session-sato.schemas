@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<gconfschemafile>
+<schemalist>
+
+  <schema>
+    <key>/schemas/desktop/poky/interface/theme</key>
+    <applyto>/desktop/poky/interface/theme</applyto>
+    <type>string</type>
+    <owner>matchbox-session-sato</owner>
+    <default>Sato</default>
+    <locale name="C">
+      <short>Desktop theme</short>
+      <long>The theme name for Matchbox and Sato to use.</long>
+    </locale>
+  </schema>
+
+  <schema>
+    <key>/schemas/desktop/poky/interface/icon_theme</key>
+    <applyto>/desktop/poky/interface/icon_theme</applyto>
+    <type>string</type>
+    <owner>matchbox-session-sato</owner>
+    <default>Sato</default>
+    <locale name="C">
+      <short>Desktop icon theme</short>
+      <long>The icon theme name for Matchbox and Sato.</long>
+    </locale>
+  </schema>
+
+  <schema>
+    <key>/schemas/desktop/poky/interface/touchscreen</key>
+    <applyto>/desktop/poky/interface/touchscreen</applyto>
+    <type>bool</type>
+    <owner>matchbox-session-sato</owner>
+    <default>true</default>
+    <locale name="C">
+      <short>Activate touchscreen</short>
+    </locale>
+  </schema>
+
+  <schema>
+    <key>/schemas/desktop/poky/interface/font_name</key>
+    <applyto>/desktop/poky/interface/font_name</applyto>
+    <type>string</type>
+    <owner>matchbox-session-sato</owner>
+    <default>Sans 9</default>
+    <locale name="C">
+      <short>Font name</short>
+    </locale>
+  </schema>
+
+</schemalist>
+</gconfschemafile>
+

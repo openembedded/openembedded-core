@@ -16,7 +16,9 @@ PR = "r29"
 # based on the machine architecture.
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRC_URI = "file://session"
+SRC_URI = "file://session \
+           file://matchbox-session-sato.schemas \
+          "
 S = "${WORKDIR}"
 
 do_install() {
@@ -34,18 +36,9 @@ do_install() {
 	install -d ${D}/${sysconfdir}/matchbox
 	sed -f "$SCRIPT" ${S}/session > ${D}/${sysconfdir}/matchbox/session
         chmod +x ${D}/${sysconfdir}/matchbox/session
+
+	install -d ${D}/${sysconfdir}/gconf/schemas
+	install -m 664 ${S}/matchbox-session-sato.schemas ${D}/${sysconfdir}/gconf/schemas
 }
 
-pkg_postinst_${PN} () {
-#!/bin/sh -e
-if [ "x$D" != "x" ]; then
-    exit 1
-fi
-
-. ${sysconfdir}/init.d/functions
-
-gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type string --set /desktop/poky/interface/theme Sato
-gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type string --set /desktop/poky/interface/icon_theme Sato
-gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type bool --set /desktop/poky/interface/touchscreen true
-gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type string --set /desktop/poky/interface/font_name "Sans 9"
-}
+inherit gconf
