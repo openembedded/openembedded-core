@@ -20,7 +20,10 @@ ALTERNATIVE_PRIORITY = "100"
 ALTERNATIVE_${PN} = "functions"
 ALTERNATIVE_LINK_NAME[functions] = "${sysconfdir}/init.d/functions"
 
+# Since we are only taking the patched version of functions, no need to
+# configure or compile anything so do not execute these
 do_configure[noexec] = "1" 
+do_compile[noexec] = "1" 
 
 do_install(){
 	install -d ${D}${sysconfdir}/init.d/
