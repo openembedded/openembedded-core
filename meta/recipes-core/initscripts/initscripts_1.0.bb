@@ -3,7 +3,7 @@ DESCRIPTION = "Initscripts provide the basic system startup initialization scrip
 SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
-PR = "r137"
+PR = "r138"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
@@ -133,4 +133,6 @@ do_install () {
 	fi
 
 	install -m 0755		${WORKDIR}/device_table.txt		${D}${sysconfdir}/device_table
+	# Holds state information pertaining to urandom
+	install -d ${D}/var/lib/urandom
 }
