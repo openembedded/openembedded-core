@@ -7,7 +7,7 @@ DEPENDS = "icu-native"
 DEPENDS_class-native = ""
 
 S = "${WORKDIR}/icu/source"
-STAGING_ICU_SOURCE_DIR_NATIVE = "${STAGING_DATADIR_NATIVE}/icu"
+STAGING_ICU_DIR_NATIVE = "${STAGING_DATADIR_NATIVE}/${BPN}/${PV}"
 
 PARALLEL_MAKE = ""
 FULL_OPTIMIZATION_arm = "-Os"
@@ -17,7 +17,7 @@ inherit autotools pkgconfig binconfig
 # ICU needs the native build directory as an argument to its --with-cross-build option when
 # cross-compiling. Taken the situation that different builds may share a common sstate-cache
 # into consideration, the native build directory needs to be staged.
-EXTRA_OECONF = "--with-cross-build=${STAGING_DATADIR_NATIVE}/icu/source"
+EXTRA_OECONF = "--with-cross-build=${STAGING_ICU_DIR_NATIVE}"
 EXTRA_OECONF_class-native = ""
 
 # ICU puts custom m4 autoconf functions in aclocal.m4.
@@ -29,11 +29,13 @@ do_configure_prepend() {
     [ -f acinclude.m4 ] || cp aclocal.m4 acinclude.m4
 }
 
-do_install_append() {
-    if [ ${PN} == 'icu-native' ]; then
-	mkdir -p ${D}/${STAGING_ICU_SOURCE_DIR_NATIVE}
-	cp -r ${S} ${D}/${STAGING_ICU_SOURCE_DIR_NATIVE}
-    fi
+do_install_append_class-native() {
+	mkdir -p ${D}/${STAGING_ICU_DIR_NATIVE}/config
+	cp -r ${S}/config/icucross.mk ${D}/${STAGING_ICU_DIR_NATIVE}/config
+	cp -r ${S}/lib ${D}/${STAGING_ICU_DIR_NATIVE}
+	cp -r ${S}/bin ${D}/${STAGING_ICU_DIR_NATIVE}
+	cp -r ${S}/tools ${D}/${STAGING_ICU_DIR_NATIVE}
+
 }
 
 PACKAGES =+ "libicudata libicuuc libicui18n libicule libiculx libicutu libicuio"
