@@ -1,0 +1,2 @@
+#!/bin/sh
+echo Makefile: | make -f Makefile -f - -k THIS_SH=/bin/bash BUILD_DIR=. runtest

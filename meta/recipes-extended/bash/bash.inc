@@ -4,7 +4,7 @@ SECTION = "base/shell"
 
 DEPENDS = "ncurses bison-native"
 
-inherit autotools gettext update-alternatives
+inherit autotools gettext update-alternatives ptest
 
 PARALLEL_MAKE = ""
 
@@ -17,10 +17,18 @@ ALTERNATIVE_PRIORITY = "100"
 
 export AUTOHEADER = "true"
 
+RDEPENDS_${PN}-ptest += "make"
+
 do_configure_prepend () {
 	if [ ! -e acinclude.m4 ]; then
 		cat aclocal.m4 > acinclude.m4
 	fi
+}
+
+do_compile_append () {
+        if [ "${PN}" = "${BPN}" -a ${PTEST_ENABLED} = "1" ]; then
+            oe_runmake buildtest
+        fi
 }
 
 do_install_append () {
@@ -29,6 +37,12 @@ do_install_append () {
 		mkdir -p ${D}${base_bindir}
 		mv ${D}${bindir}/bash ${D}${base_bindir}
 	fi
+
+        if [ "${PN}" = "${BPN}" -a ${PTEST_ENABLED} = "1" ]; then
+            ptest_do_install
+            make INSTALL_TEST_DIR=${D}${PTEST_PATH}/tests install-test
+            cp ${B}/Makefile ${D}${PTEST_PATH}
+        fi
 }
 
 pkg_postinst_${PN} () {
