@@ -1,0 +1,16 @@
+#!/bin/sh
+
+echo "START: $0"
+cd /usr/lib
+for x in *
+do
+    if [ -x "/usr/lib/$x/ptest/run-ptest" ]; then
+       date "+%Y-%m-%dT%H:%M"
+        echo "BEGIN: $x"
+        cd /usr/lib/$x/ptest
+        ./run-ptest
+        echo "END: $x"
+       date "+%Y-%m-%dT%H:%M"
+    fi
+done
+echo "STOP: $0"
