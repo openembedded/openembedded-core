@@ -25,7 +25,7 @@ python () {
     packages = d.getVar('PACKAGES', True).split()
     genpackages = []
     for pkg in packages:
-        for postfix in ['-dbg', '-dev']:
+        for postfix in ['-dbg', '-dev', '-ptest']:
             genpackages.append(pkg+postfix)
     d.setVar('PACKAGES', ' '.join(packages+genpackages))
 }
