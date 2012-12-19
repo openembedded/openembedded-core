@@ -10,7 +10,7 @@ SECTION = "libs"
 LICENSE = "LGPLv2.0+"
 
 X11DEPENDS = "virtual/libx11 libxft"
-DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv cairo elfutils"
+DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv cairo elfutils pango-native"
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
 PACKAGECONFIG[x11] = "--with-x,--without-x,${X11DEPENDS}"
@@ -44,13 +44,31 @@ LEAD_SONAME = "libpango-1.0*"
 LIBV = "1.6.0"
 
 postinst_prologue() {
-if [ "x$D" != "x" ]; then
-  exit 1
-fi
-
 if ! [ -e $D${sysconfdir}/pango ] ; then
 	mkdir -p $D${sysconfdir}/pango
 fi
+
+if [ "x$D" != "x" ]; then
+pango-querymodules $(ls -d -1 $D${libdir}/pango/${LIBV}/modules/*.so|\
+    sed -e "s:$D:$NATIVE_ROOT:g") >\
+    $D${sysconfdir}/pango/${MLPREFIX}pango.modules \
+    2>$D${sysconfdir}/pango/${MLPREFIX}pango.err
+
+# pango-querymodules always returns 0, so we need to check if pango.err has
+# anything in it
+if [ -s $D${sysconfdir}/pango/${MLPREFIX}pango.err ]; then
+    rm $D${sysconfdir}/pango/${MLPREFIX}pango.err
+    exit 1
+fi
+
+sed -i -e "s:$NATIVE_ROOT::g" $D${sysconfdir}/pango/${MLPREFIX}pango.modules
+
+# remove the empty pango.err
+rm $D${sysconfdir}/pango/${MLPREFIX}pango.err
+
+exit 0
+fi
+
 }
 
 do_install_append () {
