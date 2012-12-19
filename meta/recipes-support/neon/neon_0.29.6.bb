@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://src/COPYING.LIB;md5=f30a9716ef3762e3467a2f62bf790f0a 
 DEPENDS = "zlib libxml2 expat time gnutls libproxy"
 DEPENDS_class-native = "zlib-native libxml2-native expat-native gnutls-native"
 
-PR = "r2"
+PR = "r3"
 
 BBCLASSEXTEND = "native"
 
@@ -20,3 +20,4 @@ SRC_URI[sha256sum] = "9c640b728d6dc80ef1e48f83181166ab6bc95309cece5537e01ffdd01b
 inherit autotools binconfig lib_package pkgconfig
 
 EXTRA_OECONF = "--with-ssl=gnutls --with-libxml2 --with-expat --enable-shared"
+EXTRA_OECONF += "--without-gssapi"
