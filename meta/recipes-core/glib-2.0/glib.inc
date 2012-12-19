@@ -21,13 +21,14 @@ PACKAGES =+ "${PN}-utils ${PN}-bash-completion ${PN}-codegen"
 LEAD_SONAME = "libglib-2.0.*"
 FILES_${PN}-utils = "${bindir}/* ${datadir}/glib-2.0/gettext"
 
-inherit autotools gettext gtk-doc pkgconfig
+inherit autotools gettext gtk-doc pkgconfig ptest
 
 S = "${WORKDIR}/glib-${PV}"
 
-CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap --disable-modular-tests"
+CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap"
 
-EXTRA_OECONF = "--enable-included-printf=no ${CORECONF}"
+PTEST_CONF = "${@base_contains('DISTRO_FEATURES', 'ptest', '', '--disable-modular-tests', d)}"
+EXTRA_OECONF = "--enable-included-printf=no ${CORECONF} ${PTEST_CONF}"
 EXTRA_OECONF_class-native = "${CORECONF}"
 EXTRA_OECONF_linuxstdbase = "--enable-included-printf=no ${CORECONF}"
 

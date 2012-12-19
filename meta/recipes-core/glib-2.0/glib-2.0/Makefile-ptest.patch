@@ -1,0 +1,61 @@
+Add 'ptest' target to Makefile, to run tests without checking dependencies.
+Add 'install-ptest' target, to copy needed files to ptest dir.
+
+Signed-off-by: Björn Stenberg <bjst@enea.com>
+Upstream-status: Pending
+---
+ Makefile.decl |   43 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+
+--- a/Makefile.decl	2012-03-12 01:42:39.000000000 +0100
++++ b/Makefile.decl	2012-11-26 13:42:08.436865192 +0100
+@@ -25,6 +25,49 @@
+ test-nonrecursive:
+ endif
+ 
++ptest: ptest-nonrecursive
++	@ for subdir in $(SUBDIRS) .; do \
++	    test -d "$$subdir" -a "$$subdir" != "." -a "$$subdir" != "po" && \
++	    ( test -d $$subdir && cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $@ ) \
++	  done
++
++ptest-nonrecursive:
++	@test -z "${TEST_PROGS}" || ${GTESTER} --keep-going --verbose ${TEST_PROGS}
++
++install-ptest: install-ptest-nonrecursive
++	@test -z "$(SUBDIRS)" || for subdir in $(SUBDIRS); do \
++	    test "$$subdir" == "." || \
++	    (cd $$subdir && $(MAKE) DESTDIR=$(DESTDIR)/$$subdir $@ ) \
++	done
++
++# install files used for ptest:
++# - copy EXTRA_DIST (for test data in glib/tests)
++# - run dist-hook (for glib/tests/bookmarks/ and glib/tests/markups)
++# - copy TEST_PROGS (the test programs)
++# - copy INSTALL_PROGS (for glib/gtester)
++# - avoid libtool wrappers by copying binaries from .libs
++# - strip Makefile: target from all Makefiles
++install-ptest-nonrecursive:
++	@mkdir -p $(DESTDIR)
++	@if [ -n "${TEST_PROGS}" ]; then \
++		if [ -n "${EXTRA_DIST}" ]; then \
++			cp ${EXTRA_DIST} $(DESTDIR); \
++		fi; \
++		grep -q dist-hook: Makefile && \
++			$(MAKE) distdir=$(DESTDIR) dist-hook; \
++		if [ -d .libs ] ; then \
++			cd .libs; \
++		fi; \
++		cp ${TEST_PROGS} $(DESTDIR); \
++	fi;
++	@if [ -n "${INSTALL_PROGS}" ]; then \
++		if [ -d .libs ]  ; then \
++			cd .libs; \
++		fi; \
++		cp ${INSTALL_PROGS} $(DESTDIR); \
++	fi
++	@test -f Makefile && sed 's/^Makefile:/_Makefile:/' <Makefile >$(DESTDIR)/Makefile
++
+ # test-report: run tests in subdirs and generate report
+ # perf-report: run tests in subdirs with -m perf and generate report
+ # full-report: like test-report: with -m perf and -m slow
