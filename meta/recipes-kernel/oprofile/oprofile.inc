@@ -31,6 +31,7 @@ inherit autotools
 
 EXTRA_OECONF = "--with-kernel-support --without-x"
 do_configure () {
+	find . -type f | xargs sed -i 's#ROOTHOME#${ROOT_HOME}#'
 	cp ${WORKDIR}/acinclude.m4 ${S}/
 	autotools_do_configure
 }

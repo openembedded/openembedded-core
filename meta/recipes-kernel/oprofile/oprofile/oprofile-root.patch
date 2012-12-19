@@ -4,6 +4,11 @@ Upstream-Status: inappropriate [OE specific]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
+Replace "/home/root" with stub "ROOTHOME", then substitute it with
+real root home directory which is configured dymanically.
+
+Signed-off-by: Kang Kai <kai.kang@windriver.com>
+
 diff -ur oprofile-0.9.7.orig/doc/opcontrol.1.in oprofile-0.9.7/doc/opcontrol.1.in
 --- oprofile-0.9.7.orig/doc/opcontrol.1.in	2011-07-04 21:25:04.000000000 -0500
 +++ oprofile-0.9.7/doc/opcontrol.1.in	2012-07-02 14:02:16.358865420 -0500
@@ -12,7 +17,7 @@ diff -ur oprofile-0.9.7.orig/doc/opcontrol.1.in oprofile-0.9.7/doc/opcontrol.1.i
  .SH FILES
  .TP
 -.I /root/.oprofile/daemonrc
-+.I /home/root/.oprofile/daemonrc
++.I ROOTHOME/.oprofile/daemonrc
  Configuration file for opcontrol
  .TP
  .I /var/lib/oprofile/samples/
@@ -24,7 +29,7 @@ diff -ur oprofile-0.9.7.orig/doc/oprofile.1 oprofile-0.9.7/doc/oprofile.1
  Configuration files
  .TP
 -.I /root/.oprofile/daemonrc
-+.I /home/root/.oprofile/daemonrc
++.I ROOTHOME/.oprofile/daemonrc
  Configuration file for opcontrol
  .TP
  .I /opt/oprofile-0.9.7-rc3/share/oprofile/
@@ -36,7 +41,7 @@ diff -ur oprofile-0.9.7.orig/doc/oprofile.1.in oprofile-0.9.7/doc/oprofile.1.in
  Configuration files
  .TP
 -.I /root/.oprofile/daemonrc
-+.I /home/root/.oprofile/daemonrc
++.I ROOTHOME/.oprofile/daemonrc
  Configuration file for opcontrol
  .TP
  .I @prefix@/share/oprofile/
@@ -48,7 +53,7 @@ diff -ur oprofile-0.9.7.orig/doc/oprofile.html oprofile-0.9.7/doc/oprofile.html
                  <p>
  		    Followed by list arguments for profiling set up. List of arguments
 -		    saved in <code class="filename">/root/.oprofile/daemonrc</code>.
-+		    saved in <code class="filename">/home/root/.oprofile/daemonrc</code>.
++		    saved in <code class="filename">ROOTHOME/.oprofile/daemonrc</code>.
  		    Giving this option is not necessary; you can just directly pass one
  		    of the setup options, e.g. <span class="command"><strong>opcontrol --no-vmlinux</strong></span>.
  		  </p>
@@ -57,7 +62,7 @@ diff -ur oprofile-0.9.7.orig/doc/oprofile.html oprofile-0.9.7/doc/oprofile.html
                  <p>
  		    Start data collection with either arguments provided by <code class="option">--setup</code>
 -		or information saved in <code class="filename">/root/.oprofile/daemonrc</code>. Specifying
-+		or information saved in <code class="filename">/home/root/.oprofile/daemonrc</code>. Specifying
++		or information saved in <code class="filename">ROOTHOME/.oprofile/daemonrc</code>. Specifying
  		the addition <code class="option">--verbose</code> makes the daemon generate lots of debug data
  		whilst it is running.
  		</p>
@@ -69,7 +74,7 @@ diff -ur oprofile-0.9.7.orig/doc/oprofile.xml oprofile-0.9.7/doc/oprofile.xml
  		<listitem><para>
  		    Followed by list arguments for profiling set up. List of arguments
 -		    saved in <filename>/root/.oprofile/daemonrc</filename>.
-+		    saved in <filename>/home/root/.oprofile/daemonrc</filename>.
++		    saved in <filename>ROOTHOME/.oprofile/daemonrc</filename>.
  		    Giving this option is not necessary; you can just directly pass one
  		    of the setup options, e.g. <command>opcontrol --no-vmlinux</command>.
  		  </para></listitem>
@@ -78,7 +83,7 @@ diff -ur oprofile-0.9.7.orig/doc/oprofile.xml oprofile-0.9.7/doc/oprofile.xml
  		<listitem><para>
  		    Start data collection with either arguments provided by <option>--setup</option>
 -		or information saved in <filename>/root/.oprofile/daemonrc</filename>. Specifying
-+		or information saved in <filename>/home/root/.oprofile/daemonrc</filename>. Specifying
++		or information saved in <filename>ROOTHOME/.oprofile/daemonrc</filename>. Specifying
  		the addition <option>--verbose</option> makes the daemon generate lots of debug data
  		whilst it is running.
  		</para></listitem>
@@ -90,7 +95,7 @@ diff -ur oprofile-0.9.7.orig/gui/oprof_start_util.cpp oprofile-0.9.7/gui/oprof_s
  string const get_config_dir()
  {
 -	return "/root";
-+	return "/home/root";
++	return "ROOTHOME";
  }
  
  string daemon_pid;
@@ -102,7 +107,7 @@ diff -ur oprofile-0.9.7.orig/utils/opcontrol oprofile-0.9.7/utils/opcontrol
  
  	# location for daemon setup information
 -	SETUP_DIR="/root/.oprofile"
-+	SETUP_DIR="/home/root/.oprofile"
++	SETUP_DIR="ROOTHOME/.oprofile"
  	SETUP_FILE="$SETUP_DIR/daemonrc"
  	SEC_SETUP_FILE="$SETUP_DIR/daemonrc_new"
  
