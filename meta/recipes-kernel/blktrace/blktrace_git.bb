@@ -6,19 +6,17 @@ DEPENDS = "libaio"
 
 SRCREV = "d6918c8832793b4205ed3bfede78c2f915c23385"
 
-PR = "r4"
+PR = "r5"
 PV = "1.0.5+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.dk/blktrace.git;protocol=git \
-           file://blktrace-makefile.patch"
+           file://ldflags.patch"
 
 S = "${WORKDIR}/git"
 
-do_compile() { 
-	oe_runmake ARCH="${ARCH}" CC="${CC}" LD="${LD}" prefix=${prefix}
-}
-
-do_install() {
-	oe_runmake ARCH="${ARCH}" CC="${CC}" LD="${LD}" \
-                   prefix=${prefix} DESTDIR=${D} install
-}
+EXTRA_OEMAKE = "\
+    'CC=${CC}' \
+    'CFLAGS=${CFLAGS}' \
+    'LDFLAGS=${LDFLAGS}' \
+"
+PARALLEL_MAKE = ""
