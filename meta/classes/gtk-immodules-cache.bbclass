@@ -2,9 +2,24 @@
 #
 # Usage: Set GTKIMMODULES_PACKAGES to the packages that needs to update the inputmethod modules
 
+DEPENDS =+ "qemu-native"
+
+inherit qemu
+
 gtk_immodule_cache_postinst() {
 if [ "x$D" != "x" ]; then
-    exit 1
+    for maj_ver in 2 3; do
+        if [ -x $D${bindir}/gtk-query-immodules-$maj_ver.0 ]; then
+            IMFILES=$(ls $D${libdir}/gtk-$maj_ver.0/*/immodules/*.so)
+            ${@qemu_run_binary(d, '$D', '${bindir}/gtk-query-immodules-$maj_ver.0')} \
+                $IMFILES > $D/etc/gtk-$maj_ver.0/gtk.immodules 2>/dev/null &&
+                sed -i -e "s:$D::" $D/etc/gtk-$maj_ver.0/gtk.immodules
+
+            [ $? -ne 0 ] && exit 1
+        fi
+    done
+
+    exit 0
 fi
 if [ ! -z `which gtk-query-immodules-2.0` ]; then
     gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules
