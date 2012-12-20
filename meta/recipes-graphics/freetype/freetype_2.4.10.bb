@@ -28,7 +28,7 @@ inherit autotools pkgconfig binconfig
 LIBTOOL = "${S}/builds/unix/${HOST_SYS}-libtool"
 EXTRA_OEMAKE = "'LIBTOOL=${LIBTOOL}'"
 EXTRA_OEMAKE_class-native = ""
-EXTRA_OECONF = "--without-zlib --without-bzip2"
+EXTRA_OECONF = "--without-zlib --without-bzip2 CC_BUILD='${BUILD_CC}'"
 
 do_configure() {
 	cd builds/unix
