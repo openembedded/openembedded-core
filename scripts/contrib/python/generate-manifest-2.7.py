@@ -291,7 +291,7 @@ if __name__ == "__main__":
     m.addPackage( "${PN}-mailbox", "Python Mailbox Format Support", "${PN}-core ${PN}-mime",
     "mailbox.*" )
 
-    m.addPackage( "${PN}-math", "Python Math Support", "${PN}-core",
+    m.addPackage( "${PN}-math", "Python Math Support", "${PN}-core ${PN}-crypt",
     "lib-dynload/cmath.so lib-dynload/math.so lib-dynload/_random.so random.* sets.*" )
 
     m.addPackage( "${PN}-mime", "Python MIME Handling APIs", "${PN}-core ${PN}-io",
