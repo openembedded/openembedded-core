@@ -1,7 +1,7 @@
 require eglibc.inc
 
 DEPENDS += "gperf-native kconfig-frontends-native"
-PR = "r19"
+PR = "r20"
 
 SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr21224.tar.bz2;name=tarball \
            file://eglibc-svn-arm-lowlevellock-include-tls.patch \
@@ -32,6 +32,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr21
            http://people.linaro.org/~toolchain/openembedded/patches/eglibc/aarch64-0003-Adding-AArch64-support-to-elf-elf.h.patch;name=patch3 \
            file://tzselect-sh.patch \
            file://tzselect-awk.patch \
+           file://0001-eglibc-run-libm-err-tab.pl-with-specific-dirs-in-S.patch \
           "
 
 SRC_URI[tarball.md5sum] = "88894fa6e10e58e85fbd8134b8e486a8"
