@@ -1,14 +1,13 @@
 require ofono.inc
 
 SRC_URI  = "\
-  ${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.bz2 \
+  ${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
   file://ofono \
 "
-PR = "r1"
+PR = "r0"
 
-SRC_URI[md5sum] = "dab284efb8cc4143d6f53d0fcc37b696"
-SRC_URI[sha256sum] = "e7931ac0dbe165eb0e16a38b7cb4acca59b704f356ec13583d58027135e3efa5"
-
+SRC_URI[md5sum] = "aa8924c0e8de3ec7ac5e41fe7df4cb99"
+SRC_URI[sha256sum] = "733b75bfd1b2a1925b6de532989c496b8ae17a746691120ef64cceb00b3ef751"
 
 EXTRA_OECONF += "\
     --enable-test \
