@@ -1,0 +1,26 @@
+
+
+Signed-off-by: Björn Stenberg <bjst@enea.com>
+Upstream-Status: Pending
+
+--- a/test/Makefile.am	2012-06-15 15:25:43.000000000 +0200
++++ b/test/Makefile.am	2012-11-16 09:24:44.263140840 +0100
+@@ -119,12 +119,13 @@
+ 	DBUS_TEST_HOMEDIR=@abs_top_builddir@/dbus \
+ 	DBUS_TEST_SYSCONFDIR=$(DESTDIR)$(sysconfdir)
+ 
++ptest_run_dir = ..
++
+ TESTS_ENVIRONMENT = \
+-	DBUS_BLOCK_ON_ABORT=1 \
+-	DBUS_FATAL_WARNINGS=1 \
+-	DBUS_TEST_DAEMON=@abs_top_builddir@/bus/dbus-daemon$(EXEEXT) \
+-	DBUS_TEST_DATA=@abs_top_builddir@/test/data \
+-	DBUS_TEST_HOMEDIR=@abs_top_builddir@/dbus \
++	DBUS_FATAL_WARNINGS=0 \
++	DBUS_TEST_DAEMON=$(ptest_run_dir)/bus/dbus-daemon$(EXEEXT) \
++	DBUS_TEST_DATA=$(ptest_run_dir)/test/data \
++	DBUS_TEST_HOMEDIR=$(ptest_run_dir)/dbus \
+ 	$(NULL)
+ 
+ test_corrupt_SOURCES = corrupt.c
