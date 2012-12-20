@@ -29,6 +29,14 @@ SRC_URI[sha256sum] = "9a8257a9a2a55099af858b13338dc8f3a06dd2069f46f0df2c9c3bb84a
 
 EXTRA_OECONF += " --without-z --without-png --without-onig --x-includes=${STAGING_DIR_HOST}/usr/include/X11 --x-libraries=${STAGING_DIR_HOST}/usr/lib"
 
+do_configure_prepend() {
+    # slang keeps configure.ac and rest of autoconf files in autoconf/ directory
+    # we have to go there to be able to run gnu-configize cause it expects configure.{in,ac}
+    # to be present. Resulting files land in autoconf/autoconf/ so we need to move them.
+    cd ${S}/autoconf && gnu-configize --force && mv autoconf/config.* .
+    cd ${B}
+}
+
 do_install() {
 	oe_runmake install DESTDIR=${D} -e 'INST_LIB_DIR=${STAGING_DIR_HOST}/usr/lib'
 }
