@@ -22,7 +22,7 @@ SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig gettext
+inherit autotools pkgconfig gettext gtk-immodules-cache
 
 EXTRA_OECONF = "--disable-cairo --enable-gtk-im --enable-applet"
 
@@ -49,18 +49,4 @@ do_install_append () {
 	rm -f ${D}${libdir}/matchbox-panel/*.la
 }
 
-pkg_postinst_matchbox-keyboard-im () {
-if [ "x$D" != "x" ]; then
-  exit 1
-fi
-
-gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules
-}
-
-pkg_postrm_matchbox-keyboard-im () {
-if [ "x$D" != "x" ]; then
-  exit 1
-fi
-
-gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules
-}
+GTKIMMODULES_PACKAGES = "${PN}-im"
