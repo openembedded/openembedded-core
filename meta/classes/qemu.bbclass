@@ -13,3 +13,20 @@ def qemu_target_binary(data):
         target_arch = "ppc64"
 
     return "qemu-" + target_arch
+#
+# Next function will return a string containing the command that is needed to
+# to run a certain binary through qemu. For example, in order to make a certain
+# postinstall scriptlet run at do_rootfs time and running the postinstall is
+# architecture dependent, we can run it through qemu. For example, in the
+# postinstall scriptlet, we could use the following:
+#
+# ${@qemu_run_binary(d, '$D', '/usr/bin/test_app')} [test_app arguments]
+#
+def qemu_run_binary(data, rootfs_path, binary):
+    dynamic_loader = rootfs_path + '$(readelf -l ' + rootfs_path + \
+                     binary + '| grep "Requesting program interpreter"|sed -e \'s/^.*\[.*: \(.*\)\]/\\1/\')'
+    library_path = rootfs_path + data.getVar("base_libdir", True) + ":" + \
+                   rootfs_path + data.getVar("libdir", True)
+
+    return qemu_target_binary(data) + " " + dynamic_loader + " --library-path " + library_path \
+           + " " + rootfs_path + binary
