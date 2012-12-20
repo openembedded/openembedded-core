@@ -162,7 +162,7 @@ while true; do
             ;;
         "kvm")
             KVM_ENABLED="yes"
-            KVM_CAPABLE=`grep -q 'vmx\|smx' /proc/cpuinfo && echo 1`
+            KVM_CAPABLE=`grep -q 'vmx\|svm' /proc/cpuinfo && echo 1`
             ;;
         "") break ;;
         *)
