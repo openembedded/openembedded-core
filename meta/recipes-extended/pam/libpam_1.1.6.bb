@@ -30,7 +30,7 @@ EXTRA_OECONF = "--with-db-uniquename=_pam \
 
 CFLAGS_append = " -fPIC "
 
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}/Linux-PAM-${PV}"
 
@@ -66,12 +66,13 @@ python populate_packages_prepend () {
     pam_filterdir = d.expand('${base_libdir}/security/pam_filter')
 
     do_split_packages(d, pam_libdir, '^pam(.*)\.so$', 'pam-plugin%s', 'PAM plugin for %s', extra_depends='')
-    pam_plugin_append_file('pam-plugin-unix', pam_sbindir, 'unix_chkpwd')
-    pam_plugin_append_file('pam-plugin-unix', pam_sbindir, 'unix_update')
-    pam_plugin_append_file('pam-plugin-tally', pam_sbindir, 'pam_tally')
-    pam_plugin_append_file('pam-plugin-tally2', pam_sbindir, 'pam_tally2')
-    pam_plugin_append_file('pam-plugin-timestamp', pam_sbindir, 'pam_timestamp_check')
-    pam_plugin_append_file('pam-plugin-mkhomedir', pam_sbindir, 'mkhomedir_helper')
+    mlprefix = d.getVar('MLPREFIX', True) or ''
+    pam_plugin_append_file('%spam-plugin-unix' % mlprefix, pam_sbindir, 'unix_chkpwd')
+    pam_plugin_append_file('%spam-plugin-unix' % mlprefix, pam_sbindir, 'unix_update')
+    pam_plugin_append_file('%spam-plugin-tally' % mlprefix, pam_sbindir, 'pam_tally')
+    pam_plugin_append_file('%spam-plugin-tally2' % mlprefix, pam_sbindir, 'pam_tally2')
+    pam_plugin_append_file('%spam-plugin-timestamp' % mlprefix, pam_sbindir, 'pam_timestamp_check')
+    pam_plugin_append_file('%spam-plugin-mkhomedir' % mlprefix, pam_sbindir, 'mkhomedir_helper')
     do_split_packages(d, pam_filterdir, '^(.*)$', 'pam-filter-%s', 'PAM filter for %s', extra_depends='')
 }
 
