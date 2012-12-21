@@ -95,6 +95,9 @@ do_configure () {
 	linux-mipsel)
 		target=debian-mipsel
 		;;
+        linux-*-mips64)
+               target=linux-mips
+                ;;
 	linux-powerpc)
 		target=linux-ppc
 		;;
