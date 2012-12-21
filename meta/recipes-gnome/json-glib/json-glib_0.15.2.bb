@@ -8,12 +8,14 @@ HOMEPAGE = "http://live.gnome.org/JsonGlib"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
-PR = "r2"
+PR = "r0"
 
 DEPENDS = "glib-2.0"
 
-SRC_URI[archive.md5sum] = "5716a181a2b85268f53a1fb0c8024c4a"
-SRC_URI[archive.sha256sum] = "b62cb148ae49d30d8ad807912ba3c7cf189459e2d75233620aae411cf8ea6c04"
+GNOME_COMPRESS_TYPE = "xz"
+
+SRC_URI[archive.md5sum] = "494332526f87956d05f32a9b12f3f286"
+SRC_URI[archive.sha256sum] = "f090cd94acc85989e033d72028fa70863d05092ae5bba6b454e70c132b24cdde"
 
 inherit gnome gettext
 
