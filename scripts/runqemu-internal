@@ -444,6 +444,7 @@ if [ "$MACHINE" = "qemush4" ]; then
         #KERNCMDLINE="root=/dev/hda console=ttyS0 console=tty0 $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         KERNCMDLINE="root=/dev/hda rw console=ttySC1 noiotrap earlyprintk=sh-sci.1 console=tty $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M $MACHINE_SUBTYPE -hda $ROOTFS -no-reboot $QEMU_UI_OPTIONS -monitor null -serial vc -serial stdio"
+        SERIALSTDIO="1"
     fi
     if [ "$FSTYPE" = "nfs" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
@@ -453,6 +454,7 @@ if [ "$MACHINE" = "qemush4" ]; then
         fi
         KERNCMDLINE="root=/dev/nfs console=ttySC1 noiotrap earlyprintk=sh-sci.1 console=tty nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M $MACHINE_SUBTYPE -no-reboot $QEMU_UI_OPTIONS -monitor null -serial vc -serial stdio"
+        SERIALSTDIO="1"
     fi
 fi
 
@@ -563,6 +565,11 @@ then
         GL_LD_PRELOAD="$GL_PATH $LD_PRELOAD"
     fi
 fi
+fi
+
+if [ "x$SERIALSTDIO" = "x1" ]; then
+        echo "Interrupt character is '^]'"
+        stty intr ^]
 fi
 
 echo "Running $QEMU..."
