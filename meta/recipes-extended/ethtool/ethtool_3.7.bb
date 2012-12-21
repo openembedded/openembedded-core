@@ -9,7 +9,7 @@ PR = "r0"
 
 SRC_URI = "${KERNELORG_MIRROR}/software/network/ethtool/ethtool-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "1f4fb25590d26cb622bf3bf03413cfac"
-SRC_URI[sha256sum] = "a0305779bc35893cf4683a9cbc47bbd1d726a142ce2b34384ae3d87fa8e44891"
+SRC_URI[md5sum] = "dc4bfea23c9d966638284dded4306f61"
+SRC_URI[sha256sum] = "8ff82984ced622ef6be300972ce208f48cdc80e81e06f433ad68c45a3e073ddf"
 
 inherit autotools
