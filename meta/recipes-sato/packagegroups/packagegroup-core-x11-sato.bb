@@ -53,7 +53,6 @@ WEB ?= ""
 
 SUMMARY_${PN}-apps = "Sato desktop - applications"
 RDEPENDS_${PN}-apps = "\
-    gthumb \
     leafpad \
     gaku \
     x11vnc \
