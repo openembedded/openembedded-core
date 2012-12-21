@@ -17,8 +17,8 @@ SRC_URI = "${BASE_SRC_URI} \
            file://fix_cross_manpage_building.patch \
           "
 
-SRC_URI[md5sum] = "8fedf916f1aa2c4a31441d8f8bbc603c"
-SRC_URI[sha256sum] = "48dc3649231b75ac160d73528000ec89b6cd8d3b87cb7d0713f72ef4610442d4"
+SRC_URI[md5sum] = "ded660799e76fb1667d594de1f7a0da9"
+SRC_URI[sha256sum] = "19bbe7374fd602f7a6654c131c21a15aebdc06cc89493e8ff250cb7f9ed0a831"
 
 LDFLAGS_prepend_libc-uclibc = " -lrt "
 DEPENDS_class-native = "gettext-minimal-native"
