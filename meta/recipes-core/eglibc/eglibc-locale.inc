@@ -1,7 +1,7 @@
 include eglibc-collateral.inc
 
 BPN = "eglibc"
-LOCALEBASEPN = "eglibc"
+LOCALEBASEPN = "${MLPREFIX}eglibc"
 
 # Binary locales are generated at build time if ENABLE_BINARY_LOCALE_GENERATION
 # is set. The idea is to avoid running localedef on the target (at first boot)
@@ -20,7 +20,7 @@ BINARY_LOCALE_ARCHES ?= "arm.* i[3-6]86 x86_64 powerpc mips mips64"
 # set "0" for qemu emulation of native localedef for locale generation
 LOCALE_GENERATION_WITH_CROSS-LOCALEDEF = "1"
 
-PR = "r22"
+PR = "r23"
 
 PROVIDES = "virtual/libc-locale"
 
