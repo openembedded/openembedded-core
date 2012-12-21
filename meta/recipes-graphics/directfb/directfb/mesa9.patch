@@ -1,0 +1,29 @@
+Patch from upstream to fix build against Mesa 9.
+
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 54beba0715a4fead2a0aa5477977347f81fc2bc0 Mon Sep 17 00:00:00 2001
+From: Andreas Shimokawa <andi@directfb.org>
+Date: Wed, 24 Oct 2012 18:01:15 +0200
+Subject: [PATCH] mesa: fix compatibility with mesa 9.0
+
+---
+ systems/mesa/mesa_surface_pool.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/systems/mesa/mesa_surface_pool.c b/systems/mesa/mesa_surface_pool.c
+index 0a588bb..bfb5ff3 100644
+--- a/systems/mesa/mesa_surface_pool.c
++++ b/systems/mesa/mesa_surface_pool.c
+@@ -297,7 +297,7 @@ mesaAllocateBuffer( CoreSurfacePool       *pool,
+      alloc->bo = gbm_bo_create( mesa->gbm, surface->config.size.w, surface->config.size.h, GBM_BO_FORMAT_ARGB8888,
+                                                                             GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING );
+      alloc->handle = gbm_bo_get_handle( alloc->bo ).u32;
+-     alloc->pitch  = gbm_bo_get_pitch( alloc->bo );
++     alloc->pitch  = gbm_bo_get_stride( alloc->bo );
+ 
+      alloc->image  = eglCreateImageKHR( mesa->dpy, NULL, EGL_NATIVE_PIXMAP_KHR, alloc->bo, NULL );
+ 
+-- 
+1.7.9.5
