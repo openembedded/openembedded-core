@@ -12,7 +12,9 @@ if [ "x$D" != "x" ]; then
 gdk-pixbuf-query-loaders --update-cache
 
 for icondir in $D/usr/share/icons/*/ ; do
-	gtk-update-icon-cache -fqt  $icondir
+    if [ -d $icondir ] ; then
+        gtk-update-icon-cache -fqt  $icondir
+    fi
 done
 EOF
     fi
