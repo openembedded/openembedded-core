@@ -1,0 +1,22 @@
+Fix segmentation fault when passing -a without angle value.
+
+When psplash -a is called instead of psplash -a<angle value>, it will
+cause a segmentation fault by calling an out of bound argv[]. 
+
+Upstream-Status: Accepted
+Needed for denzil since we're not upgrading the recipe.
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+
+diff -urN git.orig/psplash.c git/psplash.c
+--- git.orig/psplash.c	2012-12-22 21:28:05.830631789 -0800
++++ git/psplash.c	2012-12-22 21:29:54.962633330 -0800
+@@ -219,7 +219,7 @@
+ 
+       if (!strcmp(argv[i],"-a") || !strcmp(argv[i],"--angle"))
+         {
+-	  if (++i > argc) goto fail;
++	  if (++i >= argc) goto fail;
+ 	  angle = atoi(argv[i]);
+ 	  continue;
+ 	}
