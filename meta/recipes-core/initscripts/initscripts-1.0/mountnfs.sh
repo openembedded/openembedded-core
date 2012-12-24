@@ -1,7 +1,7 @@
 #!/bin/sh
 ### BEGIN INIT INFO
 # Provides:          mountnfs
-# Required-Start:    $local_fs $network $portmap
+# Required-Start:    $local_fs $network $rpcbind
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:
@@ -17,9 +17,9 @@ test -f /etc/fstab && (
 #
 #	Read through fstab line by line. If it is NFS, set the flag
 #	for mounting NFS filesystems. If any NFS partition is found and it
-#	not mounted with the nolock option, we start the portmapper.
+#	not mounted with the nolock option, we start the rpcbind.
 #
-portmap=no
+rpcbind=no
 mount_nfs=no
 mount_smb=no
 mount_ncp=no
@@ -45,7 +45,7 @@ do
 			*nolock*)
 				;;
 			*)
-				portmap=yes
+				rpcbind=yes
 				;;
 		esac
 	fi
@@ -65,12 +65,12 @@ done
 
 exec 0>&1
 
-if test "$portmap" = yes
+if test "$rpcbind" = yes
 then
-	if test -x /sbin/portmap
+	if test -x /usr/sbin/rpcbind
 	then
-		echo -n "Starting portmapper... "
-		start-stop-daemon --start --quiet --exec /sbin/portmap
+		echo -n "Starting rpcbind... "
+		start-stop-daemon --start --quiet --exec /usr/sbin/rpcbind
 		sleep 2
 	fi
 fi

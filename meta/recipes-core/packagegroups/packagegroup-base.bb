@@ -331,7 +331,7 @@ RRECOMMENDS_packagegroup-base-cramfs = "\
 #
 SUMMARY_packagegroup-base-nfs = "NFS network filesystem support"
 RDEPENDS_packagegroup-base-nfs = "\
-    portmap"
+    rpcbind"
 
 RRECOMMENDS_packagegroup-base-nfs = "\
     kernel-module-nfs "
