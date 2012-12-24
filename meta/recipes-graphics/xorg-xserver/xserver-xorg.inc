@@ -13,7 +13,7 @@ PROVIDES = "virtual/xserver-xf86"
 PROVIDES += "virtual/xserver"
 
 PE = "2"
-INC_PR = "r7"
+INC_PR = "r8"
 
 XORG_PN = "xorg-server"
 SRC_URI = "${XORG_MIRROR}/individual/xserver/${XORG_PN}-${PV}.tar.bz2"
@@ -151,7 +151,8 @@ python populate_packages_prepend() {
         p = subprocess.Popen(args="pkg-config --variable=%s xorg-server" % abis[name],
                              shell=True, env=newenv, stdout=subprocess.PIPE)
         output = p.communicate()[0]
-        return "xorg-abi-%s-%s" % (name, output.split(".")[0])
+        mlprefix = d.getVar('MLPREFIX', True) or ''
+        return "%sxorg-abi-%s-%s" % (mlprefix, name, output.split(".")[0])
 
     pn = d.getVar("PN", True)
     d.appendVar("RPROVIDES_" + pn, " " + get_abi("input"))
