@@ -5,7 +5,7 @@ SECTION = "x11/drivers"
 LICENSE = "MIT-X"
 
 PE = "2"
-INC_PR = "r20"
+INC_PR = "r21"
 
 DEPENDS = "virtual/xserver xproto randrproto util-macros"
 
@@ -34,7 +34,8 @@ def add_abi_depends(d, name):
     }
 
     output = os.popen("pkg-config xorg-server --variable=%s" % abis[name]).read()
-    abi = "xorg-abi-%s-%s" % (name, output.split(".")[0])
+    mlprefix = d.getVar('MLPREFIX', True) or ''
+    abi = "%sxorg-abi-%s-%s" % (mlprefix, name, output.split(".")[0])
 
     pn = d.getVar("PN", True)
     d.appendVar('RDEPENDS_' + pn, ' ' + abi)
