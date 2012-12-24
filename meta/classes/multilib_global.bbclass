@@ -10,7 +10,10 @@ python multilib_virtclass_handler_global () {
     variant = e.data.getVar("BBEXTENDVARIANT", True)
 
     if isinstance(e, bb.event.RecipeParsed) and not variant:
-        if bb.data.inherits_class('kernel', e.data) or bb.data.inherits_class('module-base', e.data):
+        if bb.data.inherits_class('kernel', e.data) or \
+            bb.data.inherits_class('module-base', e.data) or \
+            (bb.data.inherits_class('allarch', e.data) and\
+             not bb.data.inherits_class('packagegroup', e.data)):
             variants = (e.data.getVar("MULTILIB_VARIANTS", True) or "").split()
 
             import oe.classextend

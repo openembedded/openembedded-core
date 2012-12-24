@@ -1132,6 +1132,20 @@ python emit_pkgdata() {
             size = 0
         return size
 
+    def write_extra_pkgs(variants, pn, packages, pkgdatadir):
+        for variant in variants:
+            with open("%s/%s-%s" % (pkgdatadir, variant, pn), 'w') as fd:
+                fd.write("PACKAGES: %s\n" % ' '.join(
+                            map(lambda pkg: '%s-%s' % (variant, pkg), packages.split())))
+
+    def write_extra_runtime_pkgs(variants, packages, pkgdatadir):
+        for variant in variants:
+            for pkg in packages.split():
+                ml_pkg = "%s-%s" % (variant, pkg)
+                subdata_file = "%s/runtime/%s" % (pkgdatadir, ml_pkg)
+                with open(subdata_file, 'w') as fd:
+                    fd.write("PKG_%s: %s" % (ml_pkg, pkg))
+
     packages = d.getVar('PACKAGES', True)
     pkgdest = d.getVar('PKGDEST', True)
     pkgdatadir = d.getVar('PKGDESTWORK', True)
@@ -1143,6 +1157,16 @@ python emit_pkgdata() {
     f = open(data_file, 'w')
     f.write("PACKAGES: %s\n" % packages)
     f.close()
+
+    pn = d.getVar('PN', True)
+    global_variants = (d.getVar('MULTILIB_GLOBAL_VARIANTS', True) or "").split()
+    variants = (d.getVar('MULTILIB_VARIANTS', True) or "").split()
+
+    if bb.data.inherits_class('kernel', d) or bb.data.inherits_class('module-base', d):
+        write_extra_pkgs(variants, pn, packages, pkgdatadir)
+
+    if (bb.data.inherits_class('allarch', d) and not bb.data.inherits_class('packagegroup', d)):
+        write_extra_pkgs(global_variants, pn, packages, pkgdatadir)
 
     workdir = d.getVar('WORKDIR', True)
 
@@ -1197,6 +1221,12 @@ python emit_pkgdata() {
         if g or allow_empty == "1":
             packagedfile = pkgdatadir + '/runtime/%s.packaged' % pkg
             file(packagedfile, 'w').close()
+
+    if bb.data.inherits_class('kernel', d) or bb.data.inherits_class('module-base', d):
+        write_extra_runtime_pkgs(variants, packages, pkgdatadir)
+
+    if bb.data.inherits_class('allarch', d) and not bb.data.inherits_class('packagegroup', d):
+        write_extra_runtime_pkgs(global_variants, packages, pkgdatadir)
 
     bb.utils.unlockfile(lf)
 }

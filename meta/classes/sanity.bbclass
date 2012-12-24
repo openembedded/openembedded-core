@@ -114,6 +114,8 @@ def check_toolchain(data):
         tune_error_set.append(tune_errors)
 
     multilibs = (data.getVar("MULTILIB_VARIANTS", True) or "").split()
+    global_multilibs = (data.getVar("MULTILIB_GLOBAL_VARIANTS", True) or "").split()
+
     if multilibs:
         seen_libs = []
         seen_tunes = []
@@ -122,6 +124,8 @@ def check_toolchain(data):
                 tune_error_set.append("The multilib '%s' appears more than once." % lib)
             else:
                 seen_libs.append(lib)
+            if not lib in global_multilibs:
+                tune_error_set.append("Multilib %s is not present in MULTILIB_GLOBAL_VARIANTS" % lib)
             tune = data.getVar("DEFAULTTUNE_virtclass-multilib-%s" % lib, True)
             if tune in seen_tunes:
                 tune_error_set.append("The tuning '%s' appears in more than one multilib." % tune)
