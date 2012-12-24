@@ -11,7 +11,7 @@ SECTION = "x11"
 DEPENDS = "gtk+ startup-notification libfm"
 DEPENDS_append_poky = " libowl"
 
-PR = "r1"
+PR = "r0"
 
 COMPATIBLE_HOST = '(x86_64.*|i.86.*|aarch64.*|arm.*|mips.*|powerpc.*|sh.*)-(linux|freebsd.*)'
 
@@ -20,13 +20,10 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.gz \
 	   file://gnome-fs-regular.png \
 	   file://gnome-mime-text-plain.png \
 	   file://emblem-symbolic-link.png \
-	   file://cross-compile-fix.patch \
-           file://pcmanfm_fix_for_automake_1.12.patch" 
+	   file://cross-compile-fix.patch"
 
-SRC_URI_append_poky = " file://owl-window-menu.patch"
-
-SRC_URI[md5sum] = "d34a3530a6c5dcd674d23021d71c3e95"
-SRC_URI[sha256sum] = "f133c6f207f719d1fc69fe8bc07b2de6883c6937ffa87448df42e3b1a30e0298"
+SRC_URI[md5sum] = "af0cff78690e658f3c06ceabf27bc71a"
+SRC_URI[sha256sum] = "1f6301f330ad648f3322708ec6c0f680a8695a9453932fe19653bab6731e5582"
 
 inherit autotools pkgconfig
 
