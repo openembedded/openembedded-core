@@ -40,3 +40,9 @@ CFLAGS += " -I${STAGING_INCDIR}/xorg "
 do_compile_prepend_armv7a () {
         sed -i -e s:fb1:fb2:g ${S}/src/omap_xv.c
 }
+
+python () {
+    if not oe.utils.contains ('DISTRO_FEATURES', 'opengl', True, False, d):
+        raise bb.parse.SkipPackage("'opengl' not in DISTRO_FEATURES")
+}
+
