@@ -14,7 +14,6 @@ RDEPENDS_${PN} = "m4 gnu-config \
 		  perl-module-constant \
 		  perl-module-errno \
 		  perl-module-exporter \
-		  perl-module-file \
 		  perl-module-file-basename \
 		  perl-module-file-compare \
 		  perl-module-file-copy \
