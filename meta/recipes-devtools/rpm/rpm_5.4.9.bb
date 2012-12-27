@@ -43,7 +43,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "libpcre attr acl popt ossp-uuid file bison-native"
-PR = "r60"
+PR = "r61"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
@@ -445,7 +445,7 @@ do_install_append() {
 	rm -f ${D}/${libdir}/rpm/bin/pom2spec
 
 	rm -rf ${D}/var/lib/wdj ${D}/var/cache/wdj
-	rm -f ${D}/usr/lib/rpm/bin/api-sanity-checker.pl
+	rm -f ${D}/${libdir}/rpm/bin/api-sanity-checker.pl
 }
 
 do_install_append_class-native() {
