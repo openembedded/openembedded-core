@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://src/opkg-cl.c;beginline=1;endline=20;md5=321f658c3f6b6c832e25c8850b5dffba"
 
 PE = "1"
-INC_PR = "r11"
+INC_PR = "r12"
 
 # Werror gives all kinds bounds issuses with gcc 4.3.3
 do_configure_prepend() {
@@ -43,9 +43,15 @@ FILES_libopkg-dev = "${libdir}/*.la ${libdir}/*.so"
 FILES_libopkg-staticdev = "${libdir}/*.a"
 FILES_libopkg = "${libdir}/*.so.* ${localstatedir}/lib/opkg/"
 
-# We need to create the lock directory
 do_install_append() {
+	# We need to create the lock directory
 	install -d ${D}${localstatedir}/lib/opkg
+}
+
+do_install_append_class-native() {
+	if [ "${PREFERRED_PROVIDER_virtual/update-alternatives-native}" != "${PN}" ]; then
+		rm ${D}${bindir}/update-alternatives
+	fi
 }
 
 pkg_postinst_${PN} () {
