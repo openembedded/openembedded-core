@@ -12,23 +12,29 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5574c6965ae5f583e55880e397fbb018"
 
 DEPENDS = "libnewt popt"
 
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://fedorahosted.org/releases/c/h/chkconfig/${BPN}-${PV}.tar.bz2"
 
 SRC_URI[md5sum] = "c2039ca67f2749fe0c06ef7c6f8ee246"
 SRC_URI[sha256sum] = "18b497d25b2cada955c72810e45fcad8280d105f17cf45e2970f18271211de68"
 
-inherit autotools gettext
+inherit gettext
 
-# Makefile uses RPM_OPT_fLAGS to construct CFLAGS
+# Makefile uses RPM_OPT_FLAGS to construct CFLAGS
 #
-EXTRA_OEMAKE += 'RPM_OPT_FLAGS="${CFLAGS}" MANDIR="${mandir}" \
-                 BINDIR="${base_sbindir}" SBINDIR="${sbindir}"'
+EXTRA_OEMAKE = "\
+    'RPM_OPT_FLAGS=${CFLAGS}' \
+    'LDFLAGS=${LDFLAGS}' \
+    'BINDIR=${base_sbindir}' \
+    'SBINDIR=${sbindir}' \
+    'MANDIR=${mandir}' \
+"
 
-do_install_append() {
-    mkdir -p ${D}${sysconfdir}/chkconfig.d
-    rm -f ${D}${sbindir}/update-alternatives
+do_install() {
+	oe_runmake 'DESTDIR=${D}' 'INSTALLNLSDIR=${D}${datadir}/locale' install
+	mkdir -p ${D}${sysconfdir}/chkconfig.d
+	rm -f ${D}${sbindir}/update-alternatives
 }
 
 do_install_append_linuxstdbase() {
