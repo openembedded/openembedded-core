@@ -1,5 +1,4 @@
 SUMMARY = "A system tool for maintaining the /etc/rc*.d hierarchy"
-
 DESCRIPTION = "Chkconfig is a basic system utility.  It updates and queries runlevel \
 information for system services.  Chkconfig manipulates the numerous \
 symbolic links in /etc/rc.d, to relieve system administrators of some \
@@ -11,8 +10,9 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5574c6965ae5f583e55880e397fbb018"
 
 DEPENDS = "libnewt popt"
+PROVIDES += "virtual/update-alternatives"
 
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "http://fedorahosted.org/releases/c/h/chkconfig/${BPN}-${PV}.tar.bz2"
 
@@ -29,18 +29,22 @@ EXTRA_OEMAKE = "\
     'BINDIR=${base_sbindir}' \
     'SBINDIR=${sbindir}' \
     'MANDIR=${mandir}' \
+    'ALTDIR=${localstatedir}/lib/alternatives' \
+    'ALTDATADIR=${sysconfdir}/alternatives' \
 "
 
 do_unpack[postfuncs] += "obey_variables"
 do_unpack[vardeps] += "obey_variables"
 obey_variables () {
 	sed -i -e 's,/etc,${sysconfdir},; s,/lib/systemd,${base_libdir}/systemd,' leveldb.h
+	sed -i -e 's,/etc/alternatives,${sysconfdir}/alternatives,' \
+	       -e 's,/var/lib/alternatives,${localstatedir}/lib/alternatives,' \
+	       -e 's,/usr/share/locale,${datadir}/locale,' alternatives.c
 }
 
 do_install() {
 	oe_runmake 'DESTDIR=${D}' 'INSTALLNLSDIR=${D}${datadir}/locale' install
-	mkdir -p ${D}${sysconfdir}/chkconfig.d
-	rm -f ${D}${sbindir}/update-alternatives
+	install -d ${D}${sysconfdir}/chkconfig.d
 }
 
 do_install_append_linuxstdbase() {
@@ -48,5 +52,19 @@ do_install_append_linuxstdbase() {
 	ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/install_initd
 	ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/remove_initd
 }
+
+PACKAGES =+ "${PN}-alternatives ${PN}-alternatives-doc"
+SUMMARY_${PN}-alternatives = "Maintain symbolic links determining default commands"
+DESCRIPTION_${PN}-alternatives = "alternatives creates, removes, maintains and displays \
+information about the symbolic links comprising the alternatives system."
+SUMMARY_${PN}-alternatives-doc = "${SUMMARY_${PN}-alternatives} - Documentation files"
+DESCRIPTION_${PN}-alternatives-doc = "${DESCRIPTION_${PN}-alternatives}  \
+This package contains documentation."
+RPROVIDES_${PN}-alternatives += "update-alternatives"
+RCONFLICTS_${PN}-alternatives = "update-alternatives-cworth update-alternatives-dpkg"
+FILES_${PN}-alternatives = "${sbindir}/alternatives ${sbindir}/update-alternatives \
+			    ${sysconfdir}/alternatives ${localstatedir}/lib/alternatives"
+FILES_${PN}-alternatives-doc = "${mandir}/man8/alternatives.8 \
+                                ${mandir}/man8/update-alternatives.8"
 
 FILES_${PN}_append_linuxstdbase += "${libdir}/lsb"
