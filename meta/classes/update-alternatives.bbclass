@@ -298,7 +298,7 @@ python populate_packages_prepend () {
                 continue
 
             # Default to generate shell script.. eventually we may want to change this...
-            alt_target = os.path.relpath(alt_target, os.path.dirname(alt_link))
+            alt_target = os.path.normpath(alt_target)
 
             alt_setup_links  += '\tupdate-alternatives --install %s %s %s %s\n' % (alt_link, alt_name, alt_target, alt_priority)
             alt_remove_links += '\tupdate-alternatives --remove  %s %s\n' % (alt_name, alt_target)
