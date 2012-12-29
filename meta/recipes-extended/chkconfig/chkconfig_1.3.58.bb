@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5574c6965ae5f583e55880e397fbb018"
 
 DEPENDS = "libnewt popt"
 
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "http://fedorahosted.org/releases/c/h/chkconfig/${BPN}-${PV}.tar.bz2"
 
@@ -30,6 +30,12 @@ EXTRA_OEMAKE = "\
     'SBINDIR=${sbindir}' \
     'MANDIR=${mandir}' \
 "
+
+do_unpack[postfuncs] += "obey_variables"
+do_unpack[vardeps] += "obey_variables"
+obey_variables () {
+	sed -i -e 's,/etc,${sysconfdir},; s,/lib/systemd,${base_libdir}/systemd,' leveldb.h
+}
 
 do_install() {
 	oe_runmake 'DESTDIR=${D}' 'INSTALLNLSDIR=${D}${datadir}/locale' install
