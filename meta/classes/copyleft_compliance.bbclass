@@ -13,6 +13,7 @@ COPYLEFT_SOURCES_DIR ?= '${DEPLOY_DIR}/copyleft_sources'
 
 python do_prepare_copyleft_sources () {
     """Populate a tree of the recipe sources and emit patch series files"""
+    import os.path
     import shutil
 
     p = d.getVar('P', True)
@@ -24,22 +25,27 @@ python do_prepare_copyleft_sources () {
         bb.debug(1, 'copyleft: %s is included: %s' % (p, reason))
 
     sources_dir = d.getVar('COPYLEFT_SOURCES_DIR', True)
+    dl_dir = d.getVar('DL_DIR', True)
     src_uri = d.getVar('SRC_URI', True).split()
     fetch = bb.fetch2.Fetch(src_uri, d)
     ud = fetch.ud
-
-    locals = (fetch.localpath(url) for url in fetch.urls)
-    localpaths = [local for local in locals if not local.endswith('.bb')]
-    if not localpaths:
-        return
 
     pf = d.getVar('PF', True)
     dest = os.path.join(sources_dir, pf)
     shutil.rmtree(dest, ignore_errors=True)
     bb.mkdirhier(dest)
 
-    for path in localpaths:
-        os.symlink(path, os.path.join(dest, os.path.basename(path)))
+    for u in ud.values():
+        local = os.path.normpath(fetch.localpath(u.url))
+        if local.endswith('.bb'):
+            continue
+
+        if u.mirrortarball:
+            tarball_path = os.path.join(dl_dir, u.mirrortarball)
+            if os.path.exists(tarball_path):
+                local = tarball_path
+
+        os.symlink(local, os.path.join(dest, os.path.basename(local)))
 
     patches = src_patches(d)
     for patch in patches:
