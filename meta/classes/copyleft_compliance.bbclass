@@ -45,7 +45,7 @@ python do_prepare_copyleft_sources () {
             if os.path.exists(tarball_path):
                 local = tarball_path
 
-        os.symlink(local, os.path.join(dest, os.path.basename(local)))
+        oe.path.symlink(local, os.path.join(dest, os.path.basename(local)), force=True)
 
     patches = src_patches(d)
     for patch in patches:
