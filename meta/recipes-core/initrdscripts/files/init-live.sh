@@ -59,10 +59,11 @@ read_args() {
 boot_live_root() {
     killall udevd 2>/dev/null
 
-    # use devtmpfs if available
-    if grep -q devtmpfs /proc/filesystems; then
-        mount -t devtmpfs devtmpfs $ROOT_MOUNT/dev
-    fi
+    # Move the mount points of some filesystems over to
+    # the corresponding directories under the real root filesystem.
+    mount -n --move /proc ${ROOT_MOUNT}/proc
+    mount -n --move /sys ${ROOT_MOUNT}/sys
+    mount -n --move /dev ${ROOT_MOUNT}/dev
 
     cd $ROOT_MOUNT
     exec switch_root -c /dev/console $ROOT_MOUNT /sbin/init
