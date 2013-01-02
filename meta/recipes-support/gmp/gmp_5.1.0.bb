@@ -5,8 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 
 SRC_URI_append = " file://use-includedir.patch \
                    file://gmp_fix_for_x32.patch \
-                   file://gmp_fix_for_automake-1.12.patch \
                    "
 
-SRC_URI[md5sum] = "041487d25e9c230b0c42b106361055fe"
-SRC_URI[sha256sum] = "1f588aaccc41bb9aed946f9fe38521c26d8b290d003c5df807f65690f2aadec9"
+SRC_URI[md5sum] = "362cf515aff8dc240958ce47418e4c78"
+SRC_URI[sha256sum] = "dfd9aba98fe5caa54a715b4584c7d45eb0ee0c8be9a3181164ad2fad5eefc796"
