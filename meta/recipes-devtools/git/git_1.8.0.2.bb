@@ -1,12 +1,12 @@
 require git.inc
 
-PR = "r3"
+PR = "r0"
 
 SRC_URI = "http://git-core.googlecode.com/files/git-${PV}.tar.gz"
-SRC_URI[md5sum] = "5d645884e688921e773186783b65ce33"
-SRC_URI[sha256sum] = "5a977bc01e4989b9928345e99aab15ce896cf5897c6e32eb449538574df377f6"
+SRC_URI[md5sum] = "1aca109d4a719fe5bc43d25927fbc7d9"
+SRC_URI[sha256sum] = "c06d5d29389e90583d16ec41d5be931593196f6842f9b14e910a0b5781c10e07"
 
 EXTRA_OECONF += "ac_cv_snprintf_returns_bogus=no ac_cv_c_c99_format=yes \
                  ac_cv_fread_reads_directories=${ac_cv_fread_reads_directories=yes} \
                  "
-
+EXTRA_OEMAKE += "NO_GETTEXT=1"
