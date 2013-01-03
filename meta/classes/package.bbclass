@@ -1885,7 +1885,7 @@ python do_package () {
     dvar = d.getVar('PKGD', True)
     pn = d.getVar('PN', True)
 
-    if not workdir or not outdir or not dest or not dvar or not pn or not packages:
+    if not workdir or not outdir or not dest or not dvar or not pn:
         bb.error("WORKDIR, DEPLOY_DIR, D, PN and PKGD all must be defined, unable to package")
         return
 
