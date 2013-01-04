@@ -1,0 +1,23 @@
+include unistd.h for getting ssize_t definitions
+Fixes errors like
+
+| In file included from src/sms.c:38:0:
+| src/storage.h:32:1: error: unknown type name 'ssize_t'
+| src/storage.h:36:1: error: unknown type name 'ssize_t'
+
+
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: ofono-1.12/src/storage.h
+===================================================================
+--- ofono-1.12.org/src/storage.h	2013-01-04 10:01:24.137804178 -0800
++++ ofono-1.12/src/storage.h	2013-01-04 10:02:09.325806426 -0800
+@@ -26,6 +26,7 @@
+ #endif
+ 
+ #include <fcntl.h>
++#include <unistd.h>
+ 
+ int create_dirs(const char *filename, const mode_t mode);
+ 
