@@ -21,27 +21,27 @@ RP 14/10/2010
 
 Index: libc/elf/dl-load.c
 ===================================================================
---- libc.orig/elf/dl-load.c
-+++ libc/elf/dl-load.c
-@@ -2107,6 +2107,15 @@ _dl_map_object (struct link_map *loader,
+--- libc.orig/elf/dl-load.c	2012-12-02 13:11:45.000000000 -0800
++++ libc/elf/dl-load.c	2013-01-09 07:00:59.135223084 -0800
+@@ -2215,7 +2215,14 @@
+ 	fd = open_path (name, namelen, mode & __RTLD_SECURE,
  			&loader->l_runpath_dirs, &realname, &fb, loader,
  			LA_SER_RUNPATH, &found_other_class);
- 
+-
 +      /* try the default path.  */
 +      if (fd == -1
 +	  && ((l = loader ?: GL(dl_ns)[nsid]._ns_loaded) == NULL
-+	      || __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
-+	  && rtld_search_dirs.dirs != (void *) -1)
++	   || __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
++	 && rtld_search_dirs.dirs != (void *) -1)
 +	fd = open_path (name, namelen, mode & __RTLD_SECURE, &rtld_search_dirs,
 +			&realname, &fb, l, LA_SER_DEFAULT, &found_other_class);
-+
 +      /* Finally try ld.so.cache */
+ #ifdef USE_LDCONFIG
        if (fd == -1
  	  && (__builtin_expect (! (mode & __RTLD_SECURE), 1)
- 	      || ! INTUSE(__libc_enable_secure)))
-@@ -2169,14 +2178,6 @@ _dl_map_object (struct link_map *loader,
- 	    }
+@@ -2283,14 +2290,6 @@
  	}
+ #endif
  
 -      /* Finally, try the default path.  */
 -      if (fd == -1

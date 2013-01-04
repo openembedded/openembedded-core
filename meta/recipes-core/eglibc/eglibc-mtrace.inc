@@ -1,6 +1,5 @@
 include eglibc-collateral.inc
 
-PR = "r1"
 SUMMARY = "mtrace utility provided by eglibc"
 DESCRIPTION = "mtrace utility provided by eglibc"
 RDEPENDS_${PN} = "perl"

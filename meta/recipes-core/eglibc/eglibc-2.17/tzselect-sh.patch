@@ -8,43 +8,39 @@ Upstream-Status: Pending
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 
---- libc/timezone/tzselect.ksh
-+++ libc/timezone/tzselect.ksh
-@@ -1,6 +1,6 @@
--#! @KSH@
+Index: libc/timezone/tzselect.ksh
+===================================================================
+--- libc.orig/timezone/tzselect.ksh	2012-11-17 09:50:14.000000000 -0800
++++ libc/timezone/tzselect.ksh	2013-01-03 22:46:26.423844259 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/bash
 +#!/bin/sh
  
--VERSION='@(#)tzselect.ksh	8.2'
-+VERSION='@(#)tzselect.sh	8.2'
- PKGVERSION='@PKGVERSION@'
- REPORT_BUGS_TO='@REPORT_BUGS_TO@'
- 
-@@ -11,19 +11,10 @@ REPORT_BUGS_TO='@REPORT_BUGS_TO@'
+ PKGVERSION='(tzcode) '
+ TZVERSION=see_Makefile
+@@ -11,23 +11,80 @@
  
  # Porting notes:
  #
--# This script requires several features of the Korn shell.
--# If your host lacks the Korn shell,
--# you can use either of the following free programs instead:
+-# This script requires a Posix-like shell with the extension of a
+-# 'select' statement.  The 'select' statement was introduced in the
+-# Korn shell and is available in Bash and other shell implementations.
+-# If your host lacks both Bash and the Korn shell, you can get their
+-# source from one of these locations:
 +# func_select allows this script to run on shells (such as busybox ash)
 +# which lack the ksh "select" builtin.
  #
--#	<a href=ftp://ftp.gnu.org/pub/gnu/>
--#	Bourne-Again shell (bash)
--#	</a>
--#
--#	<a href=ftp://ftp.cs.mun.ca/pub/pdksh/pdksh.tar.gz>
--#	Public domain ksh
--#	</a>
+-#	Bash <http://www.gnu.org/software/bash/bash.html>
+-#	Korn Shell <http://www.kornshell.com/>
+-#	Public Domain Korn Shell <http://www.cs.mun.ca/~michael/pdksh/>
 -#
 -# This script also uses several features of modern awk programs.
 +# This script uses several features of modern awk programs.
- # If your host lacks awk, or has an old awk that does not conform to Posix.2,
+ # If your host lacks awk, or has an old awk that does not conform to Posix,
  # you can use either of the following free programs instead:
  #
-@@ -35,6 +26,70 @@ REPORT_BUGS_TO='@REPORT_BUGS_TO@'
- #	mawk
- #	</a>
+ #	Gawk (GNU awk) <http://www.gnu.org/software/gawk/>
+ #	mawk <http://invisible-island.net/mawk/>
  
 +# Implement ksh-style select in POSIX shell
 +
@@ -113,7 +109,7 @@ Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
  
  # Specify default values for environment variables if they are unset.
  : ${AWK=awk}
-@@ -80,7 +135,7 @@ IFS=$newline
+@@ -72,7 +129,7 @@
  
  
  # Work around a bug in bash 1.14.7 and earlier, where $PS3 is sent to stdout.
@@ -122,7 +118,7 @@ Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
  ?*) PS3=
  esac
  
-@@ -100,7 +155,7 @@ while
+@@ -92,7 +149,7 @@
  
  	echo >&2 'Please select a continent or ocean.'
  
@@ -131,7 +127,7 @@ Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
  	    Africa \
  	    Americas \
  	    Antarctica \
-@@ -180,7 +235,7 @@ while
+@@ -172,7 +229,7 @@
  		case $countries in
  		*"$newline"*)
  			echo >&2 'Please select a country.'
@@ -140,7 +136,7 @@ Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
  			do
  			    case $country in
  			    '') echo >&2 'Please enter a number in range.';;
-@@ -219,7 +274,7 @@ while
+@@ -211,7 +268,7 @@
  		*"$newline"*)
  			echo >&2 'Please select one of the following' \
  				'time zone regions.'
@@ -149,7 +145,7 @@ Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
  			do
  				case $region in
  				'') echo >&2 'Please enter a number in range.';;
-@@ -296,7 +351,7 @@ Universal Time is now:	$UTdate."
+@@ -288,7 +345,7 @@
  	echo >&2 "Is the above information OK?"
  
  	ok=
