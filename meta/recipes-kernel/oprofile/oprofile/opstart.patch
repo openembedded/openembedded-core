@@ -1,16 +1,17 @@
-Upstream-Status: Pending
-
-Index: oprofile/utils/Makefile.am
-===================================================================
---- oprofile.orig/utils/Makefile.am	2005-03-31 18:20:41.000000000 +0100
-+++ oprofile/utils/Makefile.am	2008-07-02 15:14:07.000000000 +0100
-@@ -3,8 +3,15 @@
+diff --git a/utils/Makefile.am b/utils/Makefile.am
+index d34b060..dff15f9 100644
+--- oprofile.orig/utils/Makefile.am
++++ oprofile/utils/Makefile.am
+@@ -7,7 +7,7 @@ AM_LDFLAGS = @OP_LDFLAGS@
  
  LIBS=@POPT_LIBS@ @LIBERTY_LIBS@
  
--bin_PROGRAMS = ophelp
-+bin_PROGRAMS = ophelp opstart
+-bin_PROGRAMS = ophelp op-check-perfevents
++bin_PROGRAMS = ophelp op-check-perfevents opstart
  dist_bin_SCRIPTS = opcontrol
+ 
+ op_check_perfevents_SOURCES = op_perf_events_checker.c
+@@ -15,3 +15,10 @@ op_check_perfevents_CPPFLAGS = ${AM_CFLAGS} @PERF_EVENT_FLAGS@
  
  ophelp_SOURCES = ophelp.c
  ophelp_LDADD = ../libop/libop.a ../libutil/libutil.a
@@ -19,8 +20,8 @@ Index: oprofile/utils/Makefile.am
 +
 +install-exec-local:
 +	cd $(DESTDIR)/$(bindir) && \
-+		rm -f opstop && \
-+		$(LN_S) opstart opstop
++	rm -f opstop && \
++	$(LN_S) opstart opstop
 Index: oprofile/utils/opstart.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
@@ -136,10 +137,10 @@ Index: oprofile/utils/opstart.c
 +	return 0;
 +}
 +
-Index: oprofile/configure.in
+Index: oprofile/configure.ac
 ===================================================================
---- oprofile.orig/configure.in	2008-07-02 15:13:58.000000000 +0100
-+++ oprofile/configure.in	2008-07-02 15:17:37.000000000 +0100
+--- oprofile.orig/configure.ac	2008-07-02 15:13:58.000000000 +0100
++++ oprofile/configure.ac	2008-07-02 15:17:37.000000000 +0100
 @@ -16,6 +16,7 @@
  AM_CONFIG_HEADER(config.h)
  

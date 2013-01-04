@@ -19,12 +19,11 @@ FILES_${PN} = "${bindir} ${libdir}/${BPN}/lib*${SOLIBS} ${datadir}/${BPN}"
 FILES_${PN}-dev += "${libdir}/${BPN}/lib*${SOLIBSDEV} ${libdir}/${BPN}/lib*.la"
 FILES_${PN}-staticdev += "${libdir}/${BPN}/lib*.a"
 
-INC_PR = "r2"
+INC_PR = "r0"
 
 SRC_URI = "file://opstart.patch \
            file://oprofile-no-query-modules.patch \
            file://oprofile-root.patch \
-           file://fix-bfd-include.patch \
            file://acinclude.m4"
 
 inherit autotools
