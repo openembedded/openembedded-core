@@ -18,7 +18,7 @@ PV = "4.7.2"
 
 BINV = "4.7.2"
 
-FILESPATH = "${FILE_DIRNAME}/gcc-4.7"
+FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/gcc-4.7' ], d)}"
 
 DEPENDS =+ "mpfr gmp libmpc"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native"
