@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0854da868a929923087141d9d7aba7d5"
 
 inherit native
 
-PR = "r5"
+PR = "r0"
 
 S = "${WORKDIR}"
 
