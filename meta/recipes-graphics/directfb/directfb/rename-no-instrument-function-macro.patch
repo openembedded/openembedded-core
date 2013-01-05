@@ -1,0 +1,345 @@
+Rename __no_instrument_function__ macro to avoid conficting redefinitions
+of the same symbol.
+
+Upstream-Status: Pending
+Signed-off-by: Andrei Gherzan <andrei@gherzan.ro>
+
+Index: DirectFB-1.6.1/lib/direct/clock.c
+===================================================================
+--- DirectFB-1.6.1.orig/lib/direct/clock.c	2012-06-29 19:01:11.000000000 +0300
++++ DirectFB-1.6.1/lib/direct/clock.c	2013-01-05 18:03:24.000000000 +0200
+@@ -36,28 +36,28 @@
+ 
+ /**********************************************************************************************************************/
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ long long
+ direct_clock_get_micros( void )
+ {
+      return direct_clock_get_time( DIRECT_CLOCK_SESSION );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ long long
+ direct_clock_get_millis( void )
+ {
+      return direct_clock_get_time( DIRECT_CLOCK_SESSION ) / 1000LL;
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ long long
+ direct_clock_get_abs_micros( void )
+ {
+      return direct_clock_get_time( DIRECT_CLOCK_REALTIME );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ long long
+ direct_clock_get_abs_millis( void )
+ {
+Index: DirectFB-1.6.1/lib/direct/debug.c
+===================================================================
+--- DirectFB-1.6.1.orig/lib/direct/debug.c	2012-06-29 19:01:11.000000000 +0300
++++ DirectFB-1.6.1/lib/direct/debug.c	2013-01-05 18:03:49.000000000 +0200
+@@ -48,7 +48,7 @@
+ 
+ #if DIRECT_BUILD_DEBUGS  /* Build with debug support? */
+   
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_debug_log( DirectLogDomain *domain,
+               unsigned int     debug_level,  /* 1-9, 0 = info */
+@@ -63,7 +63,7 @@
+      va_end( ap );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_debug_at( DirectLogDomain *domain,
+                  const char      *format, ... )
+@@ -77,7 +77,7 @@
+ 
+ #endif /* DIRECT_BUILD_DEBUGS */
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_debug_at_always( DirectLogDomain *domain,
+                         const char      *format, ... )
+@@ -93,7 +93,7 @@
+ 
+ #if DIRECT_BUILD_DEBUGS  /* Build with debug support? */
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_break( const char *func,
+               const char *file,
+@@ -123,7 +123,7 @@
+           direct_trap( "Break", SIGABRT );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_assertion( const char *exp,
+                   const char *func,
+@@ -144,7 +144,7 @@
+           direct_trap( "Assertion", SIGTRAP );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_assumption( const char *exp,
+                    const char *func,
+Index: DirectFB-1.6.1/lib/direct/interface.c
+===================================================================
+--- DirectFB-1.6.1.orig/lib/direct/interface.c	2012-06-29 19:01:11.000000000 +0300
++++ DirectFB-1.6.1/lib/direct/interface.c	2013-01-05 18:04:56.000000000 +0200
+@@ -522,7 +522,7 @@
+ 
+ /**************************************************************************************************/
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ static InterfaceDesc *
+ allocate_interface_desc( void )
+ {
+@@ -543,7 +543,7 @@
+      return &alloc_list[alloc_count++];
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ static __inline__ void
+ fill_interface_desc( InterfaceDesc     *desc,
+                      const void        *interface_ptr,
+@@ -565,7 +565,7 @@
+ 
+ /**************************************************************************************************/
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_dbg_interface_add( const char *func,
+                           const char *file,
+@@ -586,7 +586,7 @@
+      direct_mutex_unlock( &alloc_lock );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_dbg_interface_remove( const char *func,
+                              const char *file,
+Index: DirectFB-1.6.1/lib/direct/log.c
+===================================================================
+--- DirectFB-1.6.1.orig/lib/direct/log.c	2012-06-29 19:01:11.000000000 +0300
++++ DirectFB-1.6.1/lib/direct/log.c	2013-01-05 18:04:18.000000000 +0200
+@@ -128,7 +128,7 @@
+      return DR_OK;
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ DirectResult
+ direct_log_printf( DirectLog  *log,
+                    const char *format, ... )
+@@ -197,7 +197,7 @@
+      return DR_OK;
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_log_lock( DirectLog *log )
+ {
+@@ -211,7 +211,7 @@
+      direct_mutex_lock( &log->lock );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_log_unlock( DirectLog *log )
+ {
+@@ -262,7 +262,7 @@
+ 
+ /**********************************************************************************************************************/
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ DirectLog *
+ direct_log_default( void )
+ {
+Index: DirectFB-1.6.1/lib/direct/log_domain.c
+===================================================================
+--- DirectFB-1.6.1.orig/lib/direct/log_domain.c	2012-06-29 19:01:11.000000000 +0300
++++ DirectFB-1.6.1/lib/direct/log_domain.c	2013-01-05 18:04:38.000000000 +0200
+@@ -69,7 +69,7 @@
+ 
+ /**********************************************************************************************************************/
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ static __inline__ LogDomainEntry *
+ lookup_domain( const char *name, bool sub );
+ 
+@@ -104,7 +104,7 @@
+      return NULL;
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ static DirectLogLevel
+ check_domain( DirectLogDomain *domain );
+ 
+@@ -207,7 +207,7 @@
+ /* FIXME: merge following */
+ 
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ DirectResult
+ direct_log_domain_vprintf( DirectLogDomain *domain,
+                            DirectLogLevel   level,
+@@ -268,7 +268,7 @@
+      return DR_OK;
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ DirectResult
+ direct_log_domain_log( DirectLogDomain *domain,
+                        DirectLogLevel   level,
+Index: DirectFB-1.6.1/lib/direct/mem.c
+===================================================================
+--- DirectFB-1.6.1.orig/lib/direct/mem.c	2012-06-29 19:01:11.000000000 +0300
++++ DirectFB-1.6.1/lib/direct/mem.c	2013-01-05 18:03:08.000000000 +0200
+@@ -121,7 +121,7 @@
+ 
+ /**********************************************************************************************************************/
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ static __inline__ MemDesc *
+ fill_mem_desc( MemDesc *desc, int bytes, const char *func, const char *file, int line, DirectTraceBuffer *trace )
+ {
+Index: DirectFB-1.6.1/lib/direct/messages.c
+===================================================================
+--- DirectFB-1.6.1.orig/lib/direct/messages.c	2012-06-29 19:01:11.000000000 +0300
++++ DirectFB-1.6.1/lib/direct/messages.c	2013-01-05 18:02:57.000000000 +0200
+@@ -40,7 +40,7 @@
+ 
+ #if DIRECT_BUILD_TEXT
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_messages_info( const char *format, ... )
+ {
+@@ -57,7 +57,7 @@
+      direct_log_printf( NULL, "(*) %s", buf );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_messages_error( const char *format, ... )
+ {
+@@ -76,7 +76,7 @@
+      direct_trace_print_stack( NULL );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_messages_derror( DirectResult result, const char *format, ... )
+ {
+@@ -95,7 +95,7 @@
+      direct_trace_print_stack( NULL );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_messages_perror( int erno, const char *format, ... )
+ {
+@@ -114,7 +114,7 @@
+      direct_trace_print_stack( NULL );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_messages_dlerror( const char *dlerr, const char *format, ... )
+ {
+@@ -133,7 +133,7 @@
+      direct_trace_print_stack( NULL );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_messages_once( const char *func,
+                       const char *file,
+@@ -155,7 +155,7 @@
+      direct_trace_print_stack( NULL );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_messages_unimplemented( const char *func,
+                                const char *file,
+@@ -166,7 +166,7 @@
+      direct_trace_print_stack( NULL );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_messages_bug( const char *func,
+                      const char *file,
+@@ -188,7 +188,7 @@
+      direct_trace_print_stack( NULL );
+ }
+ 
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ void
+ direct_messages_warn( const char *func,
+                       const char *file,
+Index: DirectFB-1.6.1/lib/direct/os/linux/glibc/types.h
+===================================================================
+--- DirectFB-1.6.1.orig/lib/direct/os/linux/glibc/types.h	2012-06-29 19:01:11.000000000 +0300
++++ DirectFB-1.6.1/lib/direct/os/linux/glibc/types.h	2013-01-05 18:06:04.000000000 +0200
+@@ -74,7 +74,7 @@
+ 
+ #define __inline__                      inline
+ #define D_UNUSED                        __attribute__((unused))
+-#define __no_instrument_function__      __attribute__((no_instrument_function))
++#define __dfb_no_instrument_function__  __attribute__((no_instrument_function))
+ #define __constructor__                 __attribute__((constructor))
+ #define __destructor__                  __attribute__((destructor))
+ #define __typeof__(x)                   typeof(x)
+Index: DirectFB-1.6.1/lib/direct/util.c
+===================================================================
+--- DirectFB-1.6.1.orig/lib/direct/util.c	2012-06-29 19:01:11.000000000 +0300
++++ DirectFB-1.6.1/lib/direct/util.c	2013-01-05 18:03:59.000000000 +0200
+@@ -110,7 +110,7 @@
+ /*
+  * translates errno to DirectResult
+  */
+-__no_instrument_function__
++__dfb_no_instrument_function__
+ DirectResult
+ errno2result( int erno )
+ {

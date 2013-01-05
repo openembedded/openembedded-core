@@ -1,11 +1,12 @@
 require directfb.inc
 
 RV = "1.6-0"
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 
 DEPENDS += "sysfsutils"
 
-SRC_URI += "file://fix-compilation-with-zlib.patch"
+SRC_URI += "file://fix-compilation-with-zlib.patch \
+            file://rename-no-instrument-function-macro.patch"
 
 EXTRA_OECONF = "\
   --enable-freetype=yes \
