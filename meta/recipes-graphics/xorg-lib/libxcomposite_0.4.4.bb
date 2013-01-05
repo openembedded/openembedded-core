@@ -25,5 +25,5 @@ XORG_PN = "libXcomposite"
 
 SRC_URI += " file://change-include-order.patch"
 
-SRC_URI[md5sum] = "a60e0b5c276d0aa9e2d3b982c98f61c8"
-SRC_URI[sha256sum] = "32294d28f4ee46db310c344546d98484728b7d52158c6d7c25bba02563b41aad"
+SRC_URI[md5sum] = "f7a218dcbf6f0848599c6c36fc65c51a"
+SRC_URI[sha256sum] = "ede250cd207d8bee4a338265c3007d7a68d5aca791b6ac41af18e9a2aeb34178"
