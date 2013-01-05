@@ -1,6 +1,6 @@
 include udev.inc
 
-PR = "r3"
+PR = "r4"
 
 # module-init-tools from kmod_git will provide libkmod runtime
 DEPENDS += "module-init-tools"
