@@ -1,6 +1,6 @@
 SUMMARY = "PolicyKit Authorization Framework"
 DESCRIPTION = "The polkit package is an application-level toolkit for defining and handling the policy that allows unprivileged processes to speak to privileged processes."
-HOMEPAGE = "http://code.google.com/p/polkit/"
+HOMEPAGE = "http://www.freedesktop.org/wiki/Software/polkit"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=155db86cdbafa7532b41f390409283eb \
                     file://src/polkit/polkit.h;beginline=1;endline=20;md5=0a8630b0133176d0504c87a0ded39db4"
@@ -13,7 +13,7 @@ PACKAGECONFIG[pam] = "--with-authfw=pam,--with-authfw=shadow,libpam,libpam"
 PR = "r8"
 
 PAM_SRC_URI = "file://polkit-1_pam.patch"
-SRC_URI = "http://hal.freedesktop.org/releases/polkit-${PV}.tar.gz \
+SRC_URI = "http://www.freedesktop.org/software/polkit/releases/polkit-${PV}.tar.gz \
            ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
            file://0001-PolkitUnixSession-Set-error-if-we-cannot-find-a-sess.patch \
            file://0002-PolkitUnixSession-Actually-return-TRUE-if-a-session-.patch \
