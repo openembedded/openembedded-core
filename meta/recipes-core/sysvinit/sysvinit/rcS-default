@@ -23,3 +23,7 @@ FSCKFIX=yes
 #TICKADJ=10000
 # Enable caching in populate-volatile.sh
 VOLATILE_ENABLE_CACHE=yes
+# Indicate whether the rootfs is intended to be read-only or not.
+# Setting ROOTFS_READ_ONLY to yes and rebooting will give you a read-only rootfs.
+# Normally you should not change this value.
+ROOTFS_READ_ONLY=no
