@@ -4,15 +4,14 @@ So remove the check for Yocto.
 Upstream-Status: Pending
 
 Signed-off-by: Kang Kai <kai.kang@windriver.com>
+Signed-off-by: Sen Zhang <sen.zhang@windriver.com>
 
---- ghostscript-9.05/base/configure.ac.orig	2012-03-14 15:28:30.828956872 +0800
-+++ ghostscript-9.05/base/configure.ac	2012-03-14 15:29:05.060957357 +0800
-@@ -1739,25 +1739,25 @@
- dnl check for big/little endian for LCMS
- dnl --------------------------------------------------
+--- ghostscript-9.05/base/configure.ac.orig     2013-01-06 10:02:08.699479511 +0800
++++ ghostscript-9.05/base/configure.ac  2013-01-06 10:01:52.275382106 +0800
+@@ -1741,13 +1741,13 @@
  
--AC_MSG_CHECKING([for big endian])
--
+ AC_MSG_CHECKING([for big endian])
+ 
 -AC_RUN_IFELSE(
 -  [AC_LANG_PROGRAM([#include <stdio.h>], [
 -   static const int one = 1;
@@ -20,18 +19,6 @@ Signed-off-by: Kang Kai <kai.kang@windriver.com>
 -  ])],
 -  [LCMS_BIGENDIAN=1],
 -  [LCMS_BIGENDIAN=0])
--
--if test "x$LCMS_BIGENDIAN" != "x0"; then
--  LCMS_ENDIAN="-DUSE_BIG_ENDIAN=$LCMS_BIGENDIAN"
--  LCMS2_ENDIAN="-DCMS_USE_BIG_ENDIAN=$LCMS_BIGENDIAN"
--  AC_MSG_RESULT(yes)
--else
--  LCMS_ENDIAN=
--  LCMS2_ENDIAN=
--  AC_MSG_RESULT(no)
--fi
-+dnl AC_MSG_CHECKING([for big endian])
-+dnl 
 +dnl AC_RUN_IFELSE(
 +dnl   [AC_LANG_PROGRAM([#include <stdio.h>], [
 +dnl    static const int one = 1;
@@ -39,16 +26,7 @@ Signed-off-by: Kang Kai <kai.kang@windriver.com>
 +dnl   ])],
 +dnl   [LCMS_BIGENDIAN=1],
 +dnl   [LCMS_BIGENDIAN=0])
-+dnl 
-+dnl if test "x$LCMS_BIGENDIAN" != "x0"; then
-+dnl   LCMS_ENDIAN="-DUSE_BIG_ENDIAN=$LCMS_BIGENDIAN"
-+dnl   LCMS2_ENDIAN="-DCMS_USE_BIG_ENDIAN=$LCMS_BIGENDIAN"
-+dnl   AC_MSG_RESULT(yes)
-+dnl else
-+dnl   LCMS_ENDIAN=
-+dnl   LCMS2_ENDIAN=
-+dnl   AC_MSG_RESULT(no)
-+dnl fi
  
- 
- AC_SUBST(LCMS_ENDIAN)
+ if test "x$LCMS_BIGENDIAN" != "x0"; then
+   LCMS_ENDIAN="-DUSE_BIG_ENDIAN=$LCMS_BIGENDIAN"
+

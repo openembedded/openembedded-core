@@ -15,7 +15,7 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c5326026692dbed183f0558f926580f8"
 
-PR = "r5"
+PR = "r6"
 
 DEPENDS = "ghostscript-native tiff jpeg fontconfig cups"
 DEPENDS_class-native = ""
@@ -62,6 +62,13 @@ do_configure_prepend () {
 	mkdir -p soobj
 	if [ -e ${WORKDIR}/objarch.h ]; then
 		cp ${WORKDIR}/objarch.h obj/arch.h
+	fi
+	if [ ${SITEINFO_ENDIANNESS} = "le" ]; then
+		export LCMS_BIGENDIAN="0"
+		export LCMS2_BIGENDIAN="0"
+	else
+		export LCMS_BIGENDIAN="1"
+		export LCMS2_BIGENDIAN="1"
 	fi
 }
 
