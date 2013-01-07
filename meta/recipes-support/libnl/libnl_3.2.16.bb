@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.infradead.org/~tgr/libnl/"
 SECTION = "libs/network"
 
 PE = "1"
-PR = "r0"
+PR = "r1"
 
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
@@ -12,6 +12,7 @@ DEPENDS = "flex-native bison-native"
 
 SRC_URI = "http://www.infradead.org/~tgr/${BPN}/files/${BP}.tar.gz \
            file://fix-pktloc_syntax_h-race.patch \
+           file://fix-build-using-flex.patch \
            file://fix-pc-file.patch "
 
 SRC_URI[md5sum] = "f06e6de102abb2cef71ed671957ee099"

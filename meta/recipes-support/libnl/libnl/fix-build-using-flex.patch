@@ -1,0 +1,55 @@
+From 89ab8d4f1229a1d2605193686cc00e6b2c9786ff Mon Sep 17 00:00:00 2001
+From: Otavio Salvador <otavio@ossystems.com.br>
+Date: Mon, 7 Jan 2013 15:44:38 -0200
+Subject: [PATCH] Fix build using flex
+
+Upstream-Status: Backport [3.2.17]
+---
+ lib/Makefile.am     |    4 ++--
+ src/lib/Makefile.am |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 98c7b90..89cc5d2 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -43,14 +43,14 @@ CLEANFILES = \
+ route/pktloc.lo: route/pktloc_syntax.h route/pktloc_grammar.h
+ route/pktloc_grammar.h: route/pktloc_grammar.c
+ route/pktloc_grammar.c: route/pktloc_grammar.l
+-	$(AM_V_GEN) $(LEX) --header-file=route/pktloc_grammar.h $(LFLAGS) -o $@ $^
++	$(AM_V_GEN) $(FLEX) --header-file=route/pktloc_grammar.h $(LFLAGS) -o $@ $^
+ 
+ route/pktloc_syntax.h: route/pktloc_syntax.c
+ route/pktloc_syntax.c: route/pktloc_syntax.y
+ 	$(AM_V_GEN) $(YACC) -d $(YFLAGS) -o $@ $^
+ 
+ route/cls/ematch_grammar.c: route/cls/ematch_grammar.l
+-	$(AM_V_GEN) $(LEX) --header-file=route/cls/ematch_grammar.h $(LFLAGS) -o $@ $^
++	$(AM_V_GEN) $(FLEX) --header-file=route/cls/ematch_grammar.h $(LFLAGS) -o $@ $^
+ 
+ route/cls/ematch_syntax.c: route/cls/ematch_syntax.y
+ 	$(AM_V_GEN) $(YACC) -d $(YFLAGS) -o $@ $^
+diff --git a/src/lib/Makefile.am b/src/lib/Makefile.am
+index 6688e7c..507635d 100644
+--- a/src/lib/Makefile.am
++++ b/src/lib/Makefile.am
+@@ -11,13 +11,13 @@ AM_LDFLAGS = \
+ #cls_ematch_cmp_la_LDFLAGS = -module -version-info 2:0:0
+ 
+ #cls/ematch_grammar.c: cls/ematch_grammar.l
+-#	$(LEX) --header-file=cls/ematch_grammar.h $(LFLAGS) -o $@ $^
++#	$(FLEX) --header-file=cls/ematch_grammar.h $(LFLAGS) -o $@ $^
+ 
+ #cls/ematch_syntax.c: cls/ematch_syntax.y
+ #	$(YACC) -d $(YFLAGS) -o $@ $^
+ 
+ #cls/pktloc_grammar.c: cls/pktloc_grammar.l
+-#	$(LEX) --header-file=cls/pktloc_grammar.h $(LFLAGS) -o $@ $^
++#	$(FLEX) --header-file=cls/pktloc_grammar.h $(LFLAGS) -o $@ $^
+ 
+ #cls/pktloc_syntax.c: cls/pktloc_syntax.y
+ #	$(YACC) -d $(YFLAGS) -o $@ $^
+-- 
+1.7.10.4
+
