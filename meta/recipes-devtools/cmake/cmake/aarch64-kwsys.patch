@@ -1,0 +1,40 @@
+From: KWSys Robot <kwrobot@kitware.com>
+Date: Fri, 21 Dec 2012 13:29:37 +0000 (-0500)
+Subject: KWSys 2012-12-21 (8ce09af5)
+X-Git-Url: http://cmake.org/gitweb?p=cmake.git;a=commitdiff_plain;h=567e7d94
+
+KWSys 2012-12-21 (8ce09af5)
+
+Extract upstream KWSys using the following shell commands.
+
+$ git archive --prefix=upstream-kwsys/ 8ce09af5 | tar x
+$ git shortlog --no-merges --abbrev=8 --format='%h %s' 933eb822..8ce09af5
+Riku Voipio (1):
+      8ce09af5 CPU: Add Aarch64 support
+
+Change-Id: I4bd0a97abaa0f958e2679afe2d4ad4bcc37434a0
+
+Hand edited by: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org> to get it applied in OE
+
+Upstream-status: Backport
+---
+
+diff --git a/CPU.h.in b/CPU.h.in
+index ecd29d1..2e1a584 100644
+--- a/Source/kwsys/CPU.h.in
++++ b/Source/kwsys/CPU.h.in
+@@ -98,6 +98,14 @@
+ #elif defined(__SYSC_ZARCH__)
+ # define @KWSYS_NAMESPACE@_CPU_ENDIAN_ID @KWSYS_NAMESPACE@_CPU_ENDIAN_ID_BIG
+ 
++/* Aarch64 */
++#elif defined(__aarch64__)
++# if !defined(__AARCH64EB__)
++#  define @KWSYS_NAMESPACE@_CPU_ENDIAN_ID @KWSYS_NAMESPACE@_CPU_ENDIAN_ID_LITTLE
++# else
++#  define @KWSYS_NAMESPACE@_CPU_ENDIAN_ID @KWSYS_NAMESPACE@_CPU_ENDIAN_ID_BIG
++# endif
++
+ /* Unknown CPU */
+ #else
+ # define @KWSYS_NAMESPACE@_CPU_ENDIAN_ID 0

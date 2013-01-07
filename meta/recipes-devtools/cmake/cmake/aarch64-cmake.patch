@@ -1,0 +1,37 @@
+From: Riku Voipio <riku.voipio@linaro.org>
+Date: Fri, 21 Dec 2012 11:20:02 +0000 (+0200)
+Subject: KWIML: Teach ABI.h about Aarch64
+X-Git-Url: http://cmake.org/gitweb?p=cmake.git;a=commitdiff_plain;h=34916522
+
+KWIML: Teach ABI.h about Aarch64
+
+The __aarch64__ defines Aarch64, while __AARCH64EB__ defines bigendian
+and __AARCH64EL__ little endian.  Only little endian tested, no big
+endian toolchain exists yet.
+
+Signed-off-by: Riku Voipio <riku.voipio@linaro.org>
+
+Hand edited by: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org> to get it applied in OE
+
+Upstream-status: Backport
+---
+
+diff --git a/ABI.h.in b/ABI.h.in
+index f93ddba..7f4772a 100644
+--- a/Utilities/KWIML/ABI.h.in
++++ b/Utilities/KWIML/ABI.h.in
+@@ -418,6 +418,14 @@ suppression macro @KWIML@_ABI_NO_VERIFY was defined.
+ #elif defined(__vax__)
+ # define @KWIML@_ABI_ENDIAN_ID @KWIML@_ABI_ENDIAN_ID_BIG
+ 
++/* Aarch64 */
++#elif defined(__aarch64__)
++# if !defined(__AARCH64EB__)
++#  define @KWIML@_ABI_ENDIAN_ID @KWIML@_ABI_ENDIAN_ID_LITTLE
++# else
++#  define @KWIML@_ABI_ENDIAN_ID @KWIML@_ABI_ENDIAN_ID_BIG
++# endif
++
+ /* Unknown CPU */
+ #elif !defined(@KWIML@_ABI_NO_ERROR_ENDIAN)
+ # error "Byte order of target CPU unknown."
