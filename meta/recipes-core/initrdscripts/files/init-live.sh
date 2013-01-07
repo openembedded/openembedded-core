@@ -14,14 +14,12 @@ early_setup() {
     mkdir -p /sys
     mount -t proc proc /proc
     mount -t sysfs sysfs /sys
-    mount -t devtmpfs none /dev
 
     # support modular kernel
     modprobe isofs 2> /dev/null
 
     mkdir -p /run
-    mkdir -p /var/run
-    /lib/udev/udevd --daemon
+    udevd --daemon
     udevadm trigger --action=add
 }
 
