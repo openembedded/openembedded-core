@@ -34,8 +34,9 @@ EXTRA_OECONF = "\
     --with-match-limit=10000000 \
 "
 
-BUILD_CPPFLAGS += "-DLINK_SIZE=2"
-BUILD_CFLAGS =+ "-I${S}/include"
+# Set LINK_SIZE in BUILD_CFLAGS given that the autotools bbclass use it to
+# set CFLAGS_FOR_BUILD, required for the libpcre build.
+BUILD_CFLAGS =+ "-DLINK_SIZE=2 -I${S}/include"
 CFLAGS += "-D_REENTRANT"
 CXXFLAGS_append_powerpc = " -lstdc++"
 
