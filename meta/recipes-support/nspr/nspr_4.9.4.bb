@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://configure.in;beginline=3;endline=40;md5=f0babf9590d84
                     file://Makefile.in;beginline=4;endline=38;md5=beda1dbb98a515f557d3e58ef06bca99"
 SECTION = "libs/network"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${PV}/src/nspr-${PV}.tar.gz \
            file://remove-rpath-from-tests.patch \
@@ -140,6 +140,8 @@ TESTS = "runtests.pl \
 inherit autotools
 
 do_configure() {
+	gnu-configize --force
+	mv config.sub config.guess build/autoconf
 	oe_runconf
 }
 
