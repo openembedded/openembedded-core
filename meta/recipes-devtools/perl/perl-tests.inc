@@ -21,12 +21,13 @@ do_install_append () {
 	cp -pv lib/AnyDBM_File.t ${D}${libdir}/perl/${PV}/
 
 	mkdir -p ${D}${libdir}/perl/${PV}/XS
-	cp -pv lib/XS/{APItest,Typemap}.pm ${D}${libdir}/perl/${PV}/XS/
+	cp -pv lib/XS/APItest.pm ${D}${libdir}/perl/${PV}/XS/
+	cp -pv lib/XS/Typemap.pm ${D}${libdir}/perl/${PV}/XS/
 	mkdir -p ${D}${libdir}/perl/${PV}/auto/XS/APItest
 	cp -pv lib/auto/XS/APItest/APItest.so ${D}${libdir}/perl/${PV}/auto/XS/APItest/
 	cp -pv lib/auto/XS/Typemap/Typemap.so ${D}${libdir}/perl/${PV}/auto/XS/Typemap/
-
-	cp -pv cpan/Digest-MD5/{README,MD5.xs} ${D}${PERL_TEST_DIR}/cpan/Digest-MD5/
+	cp -pv cpan/Digest-MD5/README ${D}${PERL_TEST_DIR}/cpan/Digest-MD5/
+	cp -pv cpan/Digest-MD5/MD5.xs ${D}${PERL_TEST_DIR}/cpan/Digest-MD5/
 }
 
 FILES_${PN}-tests = "${PERL_TEST_DIR} \
