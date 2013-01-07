@@ -1,0 +1,54 @@
+## 60_linux_init.dpatch by  <david.sugar@canonical.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Fix Linux version detection which relied on elf loader side-effect.
+## DP: This patch also depends on 40_gnu-kbsd-version, which modified
+## DP: init_Linux_version().
+
+@DPATCH@
+
+Upstream-Status: inappropriate [upstream unmaintained]
+---
+ proc/sysinfo.c |    1 +
+ proc/version.c |    5 +++--
+ proc/version.h |    1 +
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+Index: procps-3.2.8/proc/sysinfo.c
+===================================================================
+--- procps-3.2.8.orig/proc/sysinfo.c
++++ procps-3.2.8/proc/sysinfo.c
+@@ -212,6 +212,7 @@ static int check_for_privs(void){
+ static void init_libproc(void) __attribute__((constructor));
+ static void init_libproc(void){
+   have_privs = check_for_privs();
++  init_Linux_version(); // make sure we have version before continuing...
+   // ought to count CPUs in /proc/stat instead of relying
+   // on glibc, which foolishly tries to parse /proc/cpuinfo
+   //
+Index: procps-3.2.8/proc/version.c
+===================================================================
+--- procps-3.2.8.orig/proc/version.c
++++ procps-3.2.8/proc/version.c
+@@ -33,8 +33,7 @@ void display_version(void) {
+ 
+ int linux_version_code;
+ 
+-static void init_Linux_version(void) __attribute__((constructor));
+-static void init_Linux_version(void) {
++void init_Linux_version(void) {
+     int x = 0, y = 0, z = 0;	/* cleared in case sscanf() < 2 */
+     FILE *fp;
+     char buf[256];
+Index: procps-3.2.8/proc/version.h
+===================================================================
+--- procps-3.2.8.orig/proc/version.h
++++ procps-3.2.8/proc/version.h
+@@ -14,6 +14,7 @@
+ 
+ EXTERN_C_BEGIN
+ 
++extern void init_Linux_version(void);	/* initialize linux version */
+ extern void display_version(void);	/* display suite version */
+ extern const char procps_version[];		/* global buf for suite version */
+ 
