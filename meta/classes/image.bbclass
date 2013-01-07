@@ -371,7 +371,7 @@ rootfs_install_complementary() {
     if [ "$GLOBS" != "" ] ; then
         # Use the magic script to do all the work for us :)
         : > ${WORKDIR}/complementary_pkgs.txt
-        for vendor in ${TARGET_VENDOR} ${MULTILIB_VENDORS} ; do
+        for vendor in '${TARGET_VENDOR}' ${MULTILIB_VENDORS} ; do
             oe-pkgdata-util glob ${TMPDIR}/pkgdata $vendor-${TARGET_OS} ${WORKDIR}/installed_pkgs.txt "$GLOBS" >> ${WORKDIR}/complementary_pkgs.txt
         done
 
