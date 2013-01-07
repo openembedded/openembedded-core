@@ -1,0 +1,41 @@
+From 180bf94c241728dd6d6f100437914d3cb11cbc30 Mon Sep 17 00:00:00 2001
+From: Martin Petersson <Martin.Petersson@nokia.com>
+Date: Wed, 7 Mar 2012 12:05:59 +0100
+Subject: [PATCH] QtNetwork: blacklist two more certificates
+
+The comodogate 72:03:21:05:c5:0c:08:57:3d:8e:a5:30:4e:fe:e8:b0
+certificate is a test certificate and the MD5 Collisions was created
+as a proof of concept deliberately made to be expired at the time
+of it's creation.
+
+Task-number: QTBUG-24654
+(cherry picked from commit 4c0df9feb2b44d0c4fcaa5076f00aa08fbc1dda5)
+
+Signed-off-by: Peter Hartmann <phartmann@rim.com>
+
+Apparently this commit was forgotten to cherry-pick to Qt 4.
+
+Change-Id: I86949eaa3c02483b0b66b4a620bfa88aaa9aa99b
+Reviewed-by: Richard J. Moore <rich@kde.org>
+
+Upstream-Status: Accepted https://codereview.qt-project.org/#change,43992
+---
+ src/network/ssl/qsslcertificate.cpp |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/src/network/ssl/qsslcertificate.cpp b/src/network/ssl/qsslcertificate.cpp
+index 37799d1..300a261 100644
+--- a/src/network/ssl/qsslcertificate.cpp
++++ b/src/network/ssl/qsslcertificate.cpp
+@@ -825,6 +825,8 @@ static const char *certificate_blacklist[] = {
+ 
+     "120001705", "Digisign Server ID (Enrich)", // (Malaysian) Digicert Sdn. Bhd. cross-signed by Verizon CyberTrust
+     "1276011370", "Digisign Server ID - (Enrich)", // (Malaysian) Digicert Sdn. Bhd. cross-signed by Entrust
++    "72:03:21:05:c5:0c:08:57:3d:8e:a5:30:4e:fe:e8:b0", "UTN-USERFirst-Hardware", // comodogate test certificate
++    "41",                                              "MD5 Collisions Inc. (http://www.phreedom.org/md5)", // http://www.phreedom.org/research/rogue-ca/
+ 
+     "2087",                                            "*.EGO.GOV.TR", // Turktrust mis-issued intermediate certificate
+     "2148",                                            "e-islem.kktcmerkezbankasi.org", // Turktrust mis-issued intermediate certificate
+-- 
+1.7.1
+

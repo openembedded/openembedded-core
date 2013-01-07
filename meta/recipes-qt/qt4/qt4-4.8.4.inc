@@ -21,6 +21,8 @@ SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-sr
            file://0018-configure-make-pulseaudio-a-configurable-option.patch \
            file://0019-Fixes-for-gcc-4.7.0-particularly-on-qemux86.patch \
            file://0020-webkit-disable-the-fuse-ld-gold-flag.patch \
+           file://0022-ssl-certificates-blacklist-mis-issued-turktrust-certificates.patch \
+           file://0023-qtnetwork-blacklist-two-more-certificates.patch \
            file://g++.conf \
            file://linux.conf \
            "
