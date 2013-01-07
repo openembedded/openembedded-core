@@ -89,8 +89,8 @@ def change_interpreter():
         if p_type == 3:
             # PT_INTERP section
             f.seek(p_offset)
-            dl_path = new_dl_path + "\0" * (e_phentsize - len(new_dl_path))
-            f.write(new_dl_path)
+            dl_path = new_dl_path + "\0" * (p_filesz - len(new_dl_path))
+            f.write(dl_path)
             break
 
 def change_dl_sysdirs():
