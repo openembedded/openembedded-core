@@ -8,9 +8,9 @@ DEPENDS = "libtelepathy dbus-glib gconf"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-mission-control/telepathy-mission-control-${PV}.tar.gz"
 
-PR = "r1"
+PR = "r0"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig pythonnative
 
 PACKAGES =+ " \
 	libmissioncontrol \
@@ -32,7 +32,7 @@ FILES_libmissioncontrol-server = "${libdir}/libmissioncontrol-server.so.*"
 
 FILES_libmissioncontrol-dev = "${libdir}/libmissioncontrol.* \
                                ${includedir}/libmissioncontrol/ \
-                	       ${libdir}/pkgconfig/libmissioncontrol.pc"
+                               ${libdir}/pkgconfig/libmissioncontrol.pc"
 FILES_libmissioncontrol-config-dev = "${libdir}/libmissioncontrol-config.*"
 FILES_libmissioncontrol-server-dev = "${libdir}/libmissioncontrol-server.*"
 
@@ -40,5 +40,5 @@ FILES_libmissioncontrol-dbg = "${libdir}/.debug/libmissioncontrol.so.*"
 FILES_libmissioncontrol-config-dbg = "${libdir}/.debug/libmissioncontrol-config.so.*"
 FILES_libmissioncontrol-server-dbg = "${libdir}/.debug/libmissioncontrol-server.so.*"
 
-SRC_URI[md5sum] = "8b0c82136467d1188d4fa7f032cd3beb"
-SRC_URI[sha256sum] = "b546da6bd1a1ac16f8a1db67b7673673e007ecaf9844da405c50acbcef0118eb"
+SRC_URI[md5sum] = "483fa8860891815a540ecf1bb9155122"
+SRC_URI[sha256sum] = "58e0047f5292836c2c35e1603a908b3ac20a5c0b183869514c63de339fd48a30"
