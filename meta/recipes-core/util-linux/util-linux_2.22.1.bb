@@ -1,5 +1,5 @@
 MAJOR_VERSION = "2.22"
-PR = "r2"
+PR = "r3"
 require util-linux.inc
 
 # note that `lscpu' is under GPLv3+
