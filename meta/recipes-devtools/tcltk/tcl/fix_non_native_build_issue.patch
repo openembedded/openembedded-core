@@ -1,10 +1,10 @@
 Upstream-Status: Pending
 
-Index: unix/Makefile.in
-===================================================================
+diff --git unix.orig/Makefile.in unix/Makefile.in
+index 87deb20..c8ce872 100644
 --- unix.orig/Makefile.in
 +++ unix/Makefile.in
-@@ -619,13 +619,13 @@ ro-test: tcltest@EXEEXT@
+@@ -623,13 +623,13 @@ ro-test: tcltest@EXEEXT@
  shell: ${TCL_EXE}
  	@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
@@ -20,7 +20,7 @@ Index: unix/Makefile.in
  	rm gdb.run
  
  VALGRINDARGS=--tool=memcheck --num-callers=8 --leak-resolution=high --leak-check=yes --show-reachable=yes -v
-@@ -638,7 +638,7 @@ valgrind: ${TCL_EXE} tcltest@EXEEXT@
+@@ -642,7 +642,7 @@ valgrind: ${TCL_EXE} tcltest@EXEEXT@
  valgrindshell: ${TCL_EXE}
  	@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
@@ -29,24 +29,16 @@ Index: unix/Makefile.in
  
  # The following target outputs the name of the top-level source directory for
  # Tcl (it is used by Tk's configure script, for example). The .NO_PARALLEL
-@@ -802,14 +802,14 @@ install-tzdata: ${TCL_EXE}
- 	@echo "Installing time zone data"
+@@ -797,7 +797,7 @@ install-tzdata: ${TCL_EXE}
+ 	@echo "Installing time zone files to $(SCRIPT_INSTALL_DIR)/tzdata/"
  	@@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
 -	./${TCL_EXE} $(TOOL_DIR)/installData.tcl \
 +	${TCL_EXE} $(TOOL_DIR)/installData.tcl \
  	    $(TOP_DIR)/library/tzdata "$(SCRIPT_INSTALL_DIR)"/tzdata
  
- install-msgs: ${TCL_EXE}
- 	@echo "Installing message catalogs"
- 	@@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
- 	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
--	./${TCL_EXE} $(TOOL_DIR)/installData.tcl \
-+	${TCL_EXE} $(TOOL_DIR)/installData.tcl \
- 	    $(TOP_DIR)/library/msgs "$(SCRIPT_INSTALL_DIR)"/msgs
- 
- install-doc: doc
-@@ -1730,7 +1730,7 @@ html-tk: ${TCL_EXE}
+ install-msgs:
+@@ -1731,7 +1731,7 @@ html-tk: ${TCL_EXE}
  BUILD_HTML = \
  	@@LD_LIBRARY_PATH_VAR@="`pwd`:$${@LD_LIBRARY_PATH_VAR@}"; export @LD_LIBRARY_PATH_VAR@; \
  	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
