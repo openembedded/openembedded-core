@@ -44,7 +44,7 @@ def main():
             print("Unable to find bitbake by searching parent directory of this script or PATH")
             sys.exit(1)
 
-    sys.path.extend([newpath, bitbakepath + '/lib'])
+    sys.path[0:0] = [newpath, bitbakepath + '/lib']
     import oe.buildhistory_analysis
 
     if len(sys.argv) > 3:
