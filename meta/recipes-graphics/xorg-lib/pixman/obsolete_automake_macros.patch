@@ -1,0 +1,14 @@
+Upstream-Status: Accepted
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd pixman-0.28.2/configure.ac pixman-0.28.2/configure.ac
+--- pixman-0.28.2/configure.ac	2012-12-10 13:46:36.000000000 +0200
++++ pixman-0.28.2/configure.ac	2013-01-03 06:31:07.574848073 +0200
+@@ -64,7 +64,7 @@
+ # Suppress verbose compile lines
+ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS(config.h)
+
+ AC_CANONICAL_HOST
