@@ -15,6 +15,7 @@ DEPENDS_class-nativesdk = ""
 SRC_URI = "http://pkgconfig.freedesktop.org/releases/pkg-config-${PV}.tar.gz \
            file://autofoo.patch \
            file://glibconfig-sysdefs.h \
+           file://pkg-config-native.in \
            file://disable-legacy.patch"
 
 S = "${WORKDIR}/pkg-config-${PV}/"
@@ -43,3 +44,12 @@ FILES_${PN} += "${datadir}/aclocal/pkg.m4"
 # will end up requiring 'pkgconfig(pkg-config)'.  Allow this behavior by
 # specifying an appropriate provide.
 RPROVIDES_${PN} += "pkgconfig(pkg-config) (= ${PV})"
+
+# Install a pkg-config-native wrapper that will use the native sysroot instead
+# of the MACHINE sysroot, for using pkg-config when building native tools.
+do_install_append_class-native () {
+    sed -e "s|@PATH_NATIVE@|${PKG_CONFIG_PATH}|" \
+        -e "s|@LIBDIR_NATIVE@|${PKG_CONFIG_LIBDIR}|" \
+        < ${WORKDIR}/pkg-config-native.in > ${B}/pkg-config-native
+    install -m755 ${B}/pkg-config-native ${D}${bindir}/pkg-config-native
+}
