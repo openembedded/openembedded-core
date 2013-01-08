@@ -1,0 +1,14 @@
+Upstream-Status: Backport [https://sourceforge.net/p/flac/support-requests/146/]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd flac-1.2.1/configure.in flac-1.2.1/configure.in
+--- flac-1.2.1/configure.in	2007-09-13 18:48:42.000000000 +0300
++++ flac-1.2.1/configure.in	2013-01-03 08:20:07.454704587 +0200
+@@ -44,7 +44,7 @@
+ AC_CHECK_SIZEOF(void*,0)
+
+ #@@@ new name is AC_CONFIG_HEADERS
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS(config.h)
+
+ AC_C_BIGENDIAN
