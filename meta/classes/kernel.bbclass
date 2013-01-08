@@ -204,8 +204,11 @@ kernel_do_install() {
 		rm -f $kerneldir/$entry
 	done
 
-	# Fix SLANG_INC for slang.h
-	sed -i 's#-I/usr/include/slang#-I=/usr/include/slang#g' $kerneldir/tools/perf/Makefile
+	# kernels <2.6.30 don't have $kerneldir/tools directory so we check if it exists before calling sed
+	if [ -f $kerneldir/tools/perf/Makefile ]; then
+		# Fix SLANG_INC for slang.h
+		sed -i 's#-I/usr/include/slang#-I=/usr/include/slang#g' $kerneldir/tools/perf/Makefile
+	fi
 }
 
 sysroot_stage_all_append() {
