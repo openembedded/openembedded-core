@@ -1,0 +1,15 @@
+Upstream-Status: Submitted [https://bugs.g10code.com/gnupg/issue1459]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd libgcrypt-1.5.0/configure.ac libgcrypt-1.5.0/configure.ac
+--- libgcrypt-1.5.0/configure.ac	2011-06-29 11:53:22.000000000 +0300
++++ libgcrypt-1.5.0/configure.ac	2013-01-03 07:12:26.854793677 +0200
+@@ -59,7 +59,7 @@
+
+ AC_CONFIG_SRCDIR([src/libgcrypt.vers])
+ AM_INIT_AUTOMAKE([])
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS(config.h)
+ AC_CONFIG_MACRO_DIR([m4])
+ AC_CONFIG_LIBOBJ_DIR([compat])
+ AC_CANONICAL_HOST
