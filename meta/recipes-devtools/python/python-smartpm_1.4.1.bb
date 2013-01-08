@@ -11,7 +11,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=393a5ca445f6965873eca0259a17f833"
 
 DEPENDS = "python rpm"
-PR = "r6"
+PR = "r7"
 SRCNAME = "smart"
 
 SRC_URI = "\
@@ -113,7 +113,7 @@ RDEPENDS_smartpm = "${PN}"
 
 RDEPENDS_${PN} += "${PN}-backend-rpm python-codecs python-textutils python-xml python-fcntl \
                    python-pickle python-crypt python-compression python-shell \
-                   python-resource python-netclient python-threading python-unixadmin"
+                   python-resource python-netclient python-threading python-unixadmin python-pprint"
 RDEPENDS_${PN}_class-native = ""
 
 RDEPENDS_${PN}-backend-rpm = "python-rpm"
