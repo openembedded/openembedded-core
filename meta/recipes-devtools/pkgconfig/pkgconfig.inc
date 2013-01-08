@@ -16,7 +16,9 @@ SRC_URI = "http://pkgconfig.freedesktop.org/releases/pkg-config-${PV}.tar.gz \
            file://autofoo.patch \
            file://glibconfig-sysdefs.h \
            file://pkg-config-native.in \
-           file://disable-legacy.patch"
+           file://disable-legacy.patch \
+           file://obsolete_automake_macros.patch \
+          "
 
 S = "${WORKDIR}/pkg-config-${PV}/"
 

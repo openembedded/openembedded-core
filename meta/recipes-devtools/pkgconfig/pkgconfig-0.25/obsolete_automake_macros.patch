@@ -1,0 +1,35 @@
+Upstream-Status: Backport [fixed in 0.27]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd pkg-config-0.25/configure.in pkg-config-0.25/configure.in
+--- pkg-config-0.25/configure.in	2010-05-28 18:55:09.000000000 +0300
++++ pkg-config-0.25/configure.in	2013-01-01 22:13:47.009573426 +0200
+@@ -4,7 +4,7 @@
+ AM_INIT_AUTOMAKE(pkg-config, 0.25)
+ AM_MAINTAINER_MODE
+
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS(config.h)
+
+ AM_PROG_LIBTOOL
+
+diff -Nurd pkg-config-0.25/glib-1.2.10/configure.in pkg-config-0.25/glib-1.2.10/configure.in
+--- pkg-config-0.25/glib-1.2.10/configure.in	2009-12-06 22:43:59.000000000 +0200
++++ pkg-config-0.25/glib-1.2.10/configure.in	2013-01-01 22:23:36.701560486 +0200
+@@ -63,7 +63,7 @@
+ AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
+
+ # Specify a configuration file
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS(config.h)
+
+ AC_DEFINE_UNQUOTED(GLIB_MAJOR_VERSION, $GLIB_MAJOR_VERSION)
+ AC_DEFINE_UNQUOTED(GLIB_MINOR_VERSION, $GLIB_MINOR_VERSION)
+@@ -154,7 +154,6 @@
+
+ # Checks for programs.
+ AC_PROG_CC
+-AM_PROG_CC_STDC
+ AC_PROG_INSTALL
+
+ changequote(,)dnl
