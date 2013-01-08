@@ -21,9 +21,12 @@ do_install () {
 	install -m 0755 libtoolize ${D}${bindir_crossscripts}/
 	install -d ${D}${target_datadir}/libtool/config/
 	install -d ${D}${target_datadir}/aclocal/
+	install -c ${S}/libltdl/config/compile ${D}${target_datadir}/libtool/config/
 	install -c ${S}/libltdl/config/config.guess ${D}${target_datadir}/libtool/config/
 	install -c ${S}/libltdl/config/config.sub ${D}${target_datadir}/libtool/config/
+	install -c ${S}/libltdl/config/depcomp ${D}${target_datadir}/libtool/config/
 	install -c ${S}/libltdl/config/install-sh ${D}${target_datadir}/libtool/config/
+	install -c ${S}/libltdl/config/missing ${D}${target_datadir}/libtool/config/
 	install -c -m 0644 ${S}/libltdl/config/ltmain.sh ${D}${target_datadir}/libtool/config/
 	install -c -m 0644 ${S}/libltdl/m4/*.m4 ${D}${target_datadir}/aclocal/
 }
