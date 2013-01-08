@@ -1,0 +1,15 @@
+Upstream-Status: Submitted [https://libusb.org/ticket/159]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd libusb-1.0.9/configure.ac libusb-1.0.9/configure.ac
+--- libusb-1.0.9/configure.ac	2012-04-20 09:44:27.000000000 +0300
++++ libusb-1.0.9/configure.ac	2013-01-02 16:36:44.152121483 +0200
+@@ -31,7 +31,7 @@
+
+ AC_CONFIG_SRCDIR([libusb/core.c])
+ AC_CONFIG_MACRO_DIR([m4])
+-AM_CONFIG_HEADER([config.h])
++AC_CONFIG_HEADERS([config.h])
+ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+
+ AC_PREREQ([2.50])

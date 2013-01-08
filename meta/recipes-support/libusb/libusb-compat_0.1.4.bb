@@ -16,9 +16,10 @@ PROVIDES = "libusb virtual/libusb0"
 BBCLASSEXTEND = "native nativesdk"
 
 PE = "1"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-compat-${PV}.tar.bz2 \
+           file://obsolete_automake_macros.patch \
           "
 #           file://0.1.0-beta1-gcc3.4-fix.patch"
 
