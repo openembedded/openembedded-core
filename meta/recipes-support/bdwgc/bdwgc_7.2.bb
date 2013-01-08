@@ -20,18 +20,20 @@ HOMEPAGE = "http://www.hpl.hp.com/personal/Hans_Boehm/gc/"
 SECTION = "devel"
 LICENSE = "MIT & FSF-Unlimited & GPL-2.0"
 LIC_FILES_CHKSUM = "file://README.QUICK;md5=9b9dd874f6940641b6ab19893ee8f1cc \
-                    file://doc/README;md5=6d74ce18ff55d936a4d6bd35a98e9eb9 \
+                    file://doc/README;md5=92e7dd0334d1f672b699cd0aca08bef0 \
                     file://libatomic_ops/doc/LICENSING.txt;md5=607073e04548eac7d1f763e480477bab"
 
-SRC_URI = "http://www.hpl.hp.com/personal/Hans_Boehm/gc/gc_source/bdwgc-7_2alpha5-20110107.tar.bz2"
+REVISION = "d"
 
-SRC_URI[md5sum] = "4f3c130fc71ff23584edaa19a37739ee"
-SRC_URI[sha256sum] = "1f57b959ae1144e1e5fa59d52d7cb4ed626fd74cf47da1c9c119b8b46ae2722d"
+SRC_URI = "http://www.hpl.hp.com/personal/Hans_Boehm/gc/gc_source/gc-${PV}${REVISION}.tar.gz"
+
+SRC_URI[md5sum] = "91340b28c61753a789eb6077675d87d2"
+SRC_URI[sha256sum] = "d9fe0ae8650d43746a48bfb394cab01a319f3809cee19f8ebd16aa985b511c5e"
 FILES_${PN}-doc = "/usr/share"
 
-PR = "r1"
+PR = "r0"
 
-S = "${WORKDIR}/bdwgc"
+S = "${WORKDIR}/gc-${PV}"
 
 ARM_INSTRUCTION_SET = "arm"
 
