@@ -74,7 +74,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 			shift
 		done
 	done
-	export INSTALL_PLATFORM_RPM
+	export INSTALL_PLATFORM_EXTRA_RPM
 
 	package_install_internal_rpm
 
