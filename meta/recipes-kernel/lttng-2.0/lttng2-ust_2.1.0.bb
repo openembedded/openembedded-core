@@ -12,8 +12,8 @@ inherit autotools
 
 DEPENDS = "liburcu util-linux"
 
-SRCREV = "5fbf75f52c808b648feebea1ed4874c5f6264b05"
-PV = "2.0.5"
+SRCREV = "0c9ad44b7604040dfcd1e67b18afc3dc5d025b19"
+PV = "2.1.0"
 PR = "r0"
 
 SRC_URI = "git://git.lttng.org/lttng-ust.git;protocol=git"

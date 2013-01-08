@@ -5,14 +5,14 @@ to extract program execution details from the Linux operating system \
 and interpret them."
 
 LICENSE = "GPLv2 & LGPLv2.1"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=61273c2e3f60dd38a74b01beb5f51fbd \
+LIC_FILES_CHKSUM = "file://LICENSE;md5=01d7fc4496aacf37d90df90b90b0cac1 \
                     file://gpl-2.0.txt;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://lgpl-2.1.txt;md5=0f0d71500e6a57fd24d825f33242b9ca"
 
 DEPENDS = "liburcu popt lttng2-ust"
 
-SRCREV = "98c8c95b0e1afb2dac686338efdf036f6446d790"
-PV = "v2.0.4"
+SRCREV = "917f768512b5d336d553b801f6c5308d90252a89"
+PV = "v2.1.0"
 PR = "r0"
 
 SRC_URI = "git://git.lttng.org/lttng-tools.git;protocol=git"
