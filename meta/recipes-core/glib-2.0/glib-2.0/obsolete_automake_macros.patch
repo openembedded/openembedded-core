@@ -1,0 +1,13 @@
+Upstream-Status: Accepted [https://bugzilla.gnome.org/show_bug.cgi?id=691011]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd glib-2.34.3/configure.ac glib-2.34.3/configure.ac
+--- glib-2.34.3/configure.ac	2012-11-26 19:10:04.000000000 +0200
++++ glib-2.34.3/configure.ac	2013-01-02 15:49:27.832183712 +0200
+@@ -291,7 +291,6 @@
+ AM_CONDITIONAL(HAVE_CXX, [test "$CXX" != ""])
+ AC_LANG_RESTORE
+
+-AM_PROG_CC_STDC
+ AM_PROG_CC_C_O
+ AC_PROG_INSTALL
