@@ -20,15 +20,17 @@ LDFLAGS_prepend_libc-uclibc = " -lpthread "
 inherit cmake pkgconfig
 
 do_configure_prepend() {
+    # The native build really doesn't like being rebuilt, so delete
+    # it if it's already present.
+    rm -rf build-native
     mkdir build-native
     cd build-native
     cmake -DCMAKE_C_FLAGS=${BUILD_CFLAGS} \
             -DCMAKE_C_COMPILER=${BUILD_CC} \
             -DCMAKE_CXX_FLAGS=${BUILD_CXXFLAGS} \
             -DCMAKE_CXX_COMPILER=${BUILD_CXX} \
-            -DCMAKE_LINK_FLAGS=${BUILD_LDFLAGS} \
             ..
-    make
+    make make-c-interface
     cd ..
 }
 
