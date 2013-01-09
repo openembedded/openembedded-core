@@ -10,13 +10,13 @@ SECTION = "libs"
 LICENSE = "LGPLv2.0+"
 
 X11DEPENDS = "virtual/libx11 libxft"
-DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv cairo elfutils pango-native"
+DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv cairo elfutils pango-native harfbuzz"
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
 PACKAGECONFIG[x11] = "--with-x,--without-x,${X11DEPENDS}"
 
 BBCLASSEXTEND = "native"
-DEPENDS_class-native = "glib-2.0-native cairo-native"
+DEPENDS_class-native = "glib-2.0-native cairo-native harfbuzz-native"
 
 PACKAGES_DYNAMIC += "^pango-module-.*"
 
@@ -41,7 +41,7 @@ EXTRA_OECONF = "--disable-glibtest \
 	        --with-mlprefix=${MLPREFIX}"
 
 LEAD_SONAME = "libpango-1.0*"
-LIBV = "1.6.0"
+LIBV = "1.8.0"
 
 postinst_prologue() {
 if ! [ -e $D${sysconfdir}/pango ] ; then

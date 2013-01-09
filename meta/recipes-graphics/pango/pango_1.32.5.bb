@@ -9,7 +9,7 @@ GNOME_COMPRESS_TYPE="xz"
 SRC_URI += "file://no-tests.patch \
             file://multilib-fix-clean.patch"
 
-SRC_URI[archive.md5sum] = "ec3c1f236ee9bd4a982a5f46fcaff7b9"
-SRC_URI[archive.sha256sum] = "3a8c061e143c272ddcd5467b3567e970cfbb64d1d1600a8f8e62435556220cbe"
+SRC_URI[archive.md5sum] = "8e846804d6e219bc795a26a4a39b5bfd"
+SRC_URI[archive.sha256sum] = "7d7bc99c3d9b580cb4fe787fe47824e56e39534b9040e1c8a2a159248d8e5821"
 
 #PARALLEL_MAKE = ""
