@@ -1,13 +1,14 @@
 Add case for glibc 2.16 and correct error message to denote support until 2.16
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
 Upstream-Status: Pending
 Index: valgrind-3.7.0/configure.in
 ===================================================================
---- valgrind-3.7.0.orig/configure.in	2012-07-04 12:57:10.557192441 -0700
-+++ valgrind-3.7.0/configure.in	2012-07-04 12:57:58.785194776 -0700
-@@ -788,6 +788,13 @@
+--- valgrind-3.7.0.orig/configure.in
++++ valgrind-3.7.0/configure.in
+@@ -788,6 +788,20 @@ case "${GLIBC_VERSION}" in
  	DEFAULT_SUPP="glibc-2.34567-NPTL-helgrind.supp ${DEFAULT_SUPP}"
  	DEFAULT_SUPP="glibc-2.X-drd.supp ${DEFAULT_SUPP}"
  	;;
@@ -18,15 +19,22 @@ Index: valgrind-3.7.0/configure.in
 +	DEFAULT_SUPP="glibc-2.34567-NPTL-helgrind.supp ${DEFAULT_SUPP}"
 +	DEFAULT_SUPP="glibc-2.X-drd.supp ${DEFAULT_SUPP}"
 +	;;
++     2.17)
++	AC_MSG_RESULT(2.17 family)
++	AC_DEFINE([GLIBC_2_17], 1, [Define to 1 if you're using glibc 2.17.x])
++	DEFAULT_SUPP="glibc-2.X.supp ${DEFAULT_SUPP}"
++	DEFAULT_SUPP="glibc-2.34567-NPTL-helgrind.supp ${DEFAULT_SUPP}"
++	DEFAULT_SUPP="glibc-2.X-drd.supp ${DEFAULT_SUPP}"
++	;;
       darwin)
  	AC_MSG_RESULT(Darwin)
  	AC_DEFINE([DARWIN_LIBC], 1, [Define to 1 if you're using Darwin])
-@@ -801,7 +808,7 @@
+@@ -801,7 +815,7 @@ case "${GLIBC_VERSION}" in
  
       *)
  	AC_MSG_RESULT([unsupported version ${GLIBC_VERSION}])
 -	AC_MSG_ERROR([Valgrind requires glibc version 2.2 - 2.14])
-+	AC_MSG_ERROR([Valgrind requires glibc version 2.2 - 2.16])
++	AC_MSG_ERROR([Valgrind requires glibc version 2.2 - 2.17])
  	AC_MSG_ERROR([or Darwin libc])
  	;;
  esac
