@@ -1,6 +1,6 @@
 require gcc-common.inc
 
-PR = "r13"
+PR = "r14"
 
 # Third digit in PV should be incremented after a minor release
 # happens from this branch on gcc e.g. currently its 4.7.1
@@ -20,7 +20,7 @@ BINV = "4.7.2"
 
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/gcc-4.7' ], d)}"
 
-DEPENDS =+ "mpfr gmp libmpc"
+DEPENDS =+ "mpfr gmp libmpc zlib"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native"
 
 LICENSE="GPL-3.0-with-GCC-exception & GPLv3"
