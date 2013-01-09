@@ -472,7 +472,7 @@ fi
 
 if [ "x$RAMFS" = "xtrue" ]; then
     QEMUOPTIONS="-initrd $ROOTFS -nographic"
-    KERNCMDLINE="root=/dev/ram0"
+    KERNCMDLINE="root=/dev/ram0 debugshell"
 fi
 
 if [ "x$QEMUOPTIONS" = "x" ]; then
