@@ -33,6 +33,11 @@ SSTATE_MANMACH ?= "${SSTATE_PKGARCH}"
 SSTATEPREINSTFUNCS ?= ""
 SSTATEPOSTINSTFUNCS ?= ""
 
+# Specify dirs in which the shell function is executed and don't use ${B}
+# as default dirs to avoid possible race about ${B} with other task.
+sstate_create_package[dirs] = "${SSTATE_BUILDDIR}"
+sstate_unpack_package[dirs] = "${SSTATE_INSTDIR}"
+
 python () {
     if bb.data.inherits_class('native', d):
         d.setVar('SSTATE_PKGARCH', d.getVar('BUILD_ARCH'))
