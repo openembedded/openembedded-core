@@ -20,6 +20,7 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.gz \
            file://guile_2.0.6_fix_sed_error.patch \
            file://arm_endianness.patch \
            file://change-install-data-hook-to-install-exec-hook-in-gui.patch \
+           file://fix_parallel_build_issue.patch \
            "
 
 #           file://debian/0001-Change-guile-to-guile-X.Y-for-info-pages.patch
@@ -28,7 +29,7 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.gz \
 SRC_URI[md5sum] = "3438cd4415c0c43ca93a20e845eba7e2"
 SRC_URI[sha256sum] = "3ece055145a5020dd36b84f5fbccd4b3846a671960dd5ee55931555f03200950"
 
-PR = "r2"
+PR = "r3"
 
 inherit autotools gettext
 BBCLASSEXTEND = "native"

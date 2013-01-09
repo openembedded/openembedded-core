@@ -1,0 +1,20 @@
+Add explicit dependency for libpath.h on dynl.x which fixes a potential parallel build issue.
+
+Fixes Yocto bug# 3558
+
+Signed-off-by: Bogdan Marinescu <bogdan.a.marinescu@intel.com>
+
+Upstream-Status: Pending
+
+diff --git a/libguile/Makefile.am b/libguile/Makefile.am
+index e216435..016bd90 100644
+--- a/libguile/Makefile.am
++++ b/libguile/Makefile.am
+@@ -700,6 +700,7 @@ $(DOT_DOC_FILES) $(EXTRA_DOT_DOC_FILES): scmconfig.h snarf.h guile-snarf-docs.in
+ error.x: cpp-E.c
+ posix.x: cpp-SIG.c
+ load.x: libpath.h
++dynl.x: libpath.h
+ 
+ alldotdocfiles    = $(DOT_DOC_FILES) $(EXTRA_DOT_DOC_FILES)
+ snarf2checkedtexi = GUILE_AUTO_COMPILE=0 $(top_builddir)/meta/uninstalled-env guild snarf-check-and-output-texi
