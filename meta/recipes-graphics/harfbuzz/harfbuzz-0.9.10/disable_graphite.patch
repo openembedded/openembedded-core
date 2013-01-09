@@ -1,0 +1,15 @@
+Upstream-Status: Inappropriate [disable feature]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd harfbuzz-0.9.10/configure.ac harfbuzz-0.9.10/configure.ac
+--- harfbuzz-0.9.10/configure.ac	2013-01-03 08:08:51.000000000 +0200
++++ harfbuzz-0.9.10/configure.ac	2013-01-09 08:18:04.812529418 +0200
+@@ -185,7 +185,7 @@
+
+ dnl ==========================================================================
+
+-PKG_CHECK_MODULES(GRAPHITE2, graphite2, have_graphite=true, have_graphite=false)
++have_graphite=false
+ if $have_graphite; then
+     AC_DEFINE(HAVE_GRAPHITE2, 1, [Have Graphite library])
+ fi
