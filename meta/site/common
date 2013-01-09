@@ -15,3 +15,5 @@ shadow_cv_utmpdir=${localstatedir}/run
 shadow_cv_logdir=${localstatedir}/log
 shadow_cv_passwd_dir=${bindir}
 
+# python: deactivate a runtime check for ipv6-support in python >=2.7.1 that fails when cross-compiling
+ac_cv_buggy_getaddrinfo=no
