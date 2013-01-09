@@ -23,11 +23,11 @@ PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
 PACKAGECONFIG[x11] = "--with-x=yes --with-gdktarget=x11,--with-x=no,${X11DEPENDS}"
 PACKAGECONFIG[gtk-directfb] = "--with-gdktarget=directfb,,directfb"
 
-inherit autotools gtk-doc pkgconfig
+inherit autotools gtk-doc pkgconfig update-alternatives
 
 PACKAGES += "libgail gtk-demo"
 
-FILES_${PN} = "${bindir}/gtk-update-icon-cache \
+FILES_${PN} = "${bindir}/gtk-update-icon-cache-2.0 \
 	${bindir}/gtk-query-immodules-2.0 \
 	${libdir}/lib*${SOLIBS} \
 	${datadir}/themes ${sysconfdir} \
@@ -66,6 +66,9 @@ GTKGLIBC_RRECOMMENDS ?= "${GTKBASE_RRECOMMENDS} glibc-gconv-iso8859-1"
 RRECOMMENDS_${PN} = "${GTKBASE_RRECOMMENDS}"
 RRECOMMENDS_${PN}_libc-glibc = "${GTKGLIBC_RRECOMMENDS}"
 
+ALTERNATIVE_${PN} = "gtk-update-icon-cache"
+ALTERNATIVE_TARGET[gtk-update-icon-cache] = "${bindir}/gtk-update-icon-cache-2.0"
+
 do_install () {
 	autotools_do_install
 
@@ -77,6 +80,14 @@ do_install () {
 	install -m 0644 gtk/gtkfilechooserprivate.h ${D}${includedir}/gtk-2.0/gtk/
 	install -m 0644 gtk/gtkfilechooserutils.h   ${D}${includedir}/gtk-2.0/gtk/
 	install -m 0644 gtk/gtkfilesystemmodel.h    ${D}${includedir}/gtk-2.0/gtk/
+
+	mv ${D}${bindir}/gtk-update-icon-cache ${D}${bindir}/gtk-update-icon-cache-2.0
+}
+
+do_install_append_class-native () {
+	# Ideally we'd use alternatives in the sysroot, but they don't work.
+	# As we know we don't have a native GTK+ 3 (yet), make a symlink instead.
+	ln -s gtk-update-icon-cache-2.0 ${D}${bindir}/gtk-update-icon-cache
 }
 
 SYSROOT_PREPROCESS_FUNCS += "gtk_sysroot_preprocess"
