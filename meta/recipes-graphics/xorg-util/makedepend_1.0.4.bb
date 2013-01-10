@@ -11,12 +11,14 @@ can reference files having other #include directives, and parsing will \
 occur in these files as well."
 
 DEPENDS = "xproto util-macros"
-PR = "r0"
+PR = "r1"
 PE = "1"
 
 BBCLASSEXTEND = "native"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=43a6eda34b48ee821b3b66f4f753ce4f"
+
+SRC_URI += "file://obsolete_automake_macros.patch"
 
 SRC_URI[md5sum] = "bf1c54028427829c9c3193bef710dbee"
 SRC_URI[sha256sum] = "f53b8ce5dec02a05f8994036a8ebac485a96324143ff2382e29578fdc096b04f"
