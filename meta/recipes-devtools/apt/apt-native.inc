@@ -14,17 +14,18 @@ python do_install () {
 
 python do_install_config () {
     indir = os.path.dirname(d.getVar('FILE',1))
-    infile = file(os.path.join(indir, 'files', 'apt.conf'), 'r')
+    infile = file(oe.path.join(indir, 'files', 'apt.conf'), 'r')
     data = infile.read()
     infile.close()
 
     data = d.expand(data)
 
-    outdir = os.path.join(d.getVar('D', True), d.getVar('sysconfdir', True), 'apt')
+    outdir = oe.path.join(d.getVar('D', True), d.getVar('sysconfdir', True), 'apt')
     if not os.path.exists(outdir):
         os.makedirs(outdir)
-        outpath = os.path.join(outdir, 'apt.conf.sample')
 
+    outpath = oe.path.join(outdir, 'apt.conf.sample')
+    if not os.path.exists(outpath):
         outfile = file(outpath, 'w')
         outfile.write(data)
         outfile.close()
