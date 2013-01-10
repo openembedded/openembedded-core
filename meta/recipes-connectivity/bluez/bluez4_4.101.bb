@@ -1,10 +1,12 @@
 require bluez4.inc
 
-PR = "r4"
+PR = "r5"
 
 SRC_URI += "file://bluetooth.conf \
             file://sbc_mmx.patch \
-            file://fix-udev-paths.patch"
+            file://fix-udev-paths.patch \
+            file://obsolete_automake_macros.patch \
+"
 
 SRC_URI[md5sum] = "fb42cb7038c380eb0e2fa208987c96ad"
 SRC_URI[sha256sum] = "59738410ade9f0e61a13c0f77d9aaffaafe49ba9418107e4ad75fe52846f7487"
