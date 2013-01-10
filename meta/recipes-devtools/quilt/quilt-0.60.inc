@@ -25,9 +25,12 @@ FILES_guards-doc = "${mandir}/man1/guards.1"
 
 RDEPENDS_${PN} = "bash"
 
+EXTRA_OE_MAKE_ARGS_darwin ?= ""
+EXTRA_OE_MAKE_ARGS ?= "BUILD_ROOT=${D}"
+
 # quilt ignores DESTDIR
 do_install () {
-	oe_runmake 'BUILD_ROOT=${D}' install
+	oe_runmake ${EXTRA_OE_MAKE_ARGS} install
 	# cleanup unpackaged files
 	rm -rf ${D}/${datadir}/emacs
 }
