@@ -1,6 +1,6 @@
 require eglibc.inc
 
-PR = "r2"
+PR = "r3"
 
 DEPENDS += "gperf-native kconfig-frontends-native"
 
@@ -45,6 +45,7 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
 
 SRC_URI_append_class-nativesdk = " file://ld-search-order.patch \
             file://relocatable_sdk.patch \
+            file://relocatable_sdk_fix_openpath.patch \
             "
 S = "${WORKDIR}/eglibc-${PV}/libc"
 B = "${WORKDIR}/build-${TARGET_SYS}"
