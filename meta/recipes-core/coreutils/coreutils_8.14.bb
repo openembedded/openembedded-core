@@ -6,7 +6,7 @@ HOMEPAGE = "http://www.gnu.org/software/coreutils/"
 BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
-                    file://src/ls.c;startline=5;endline=16;md5=e1a509558876db58fb6667ba140137ad"
+                    file://src/ls.c;beginline=5;endline=16;md5=2e9acd8818fe6db4c2981d20ca632553"
 PR = "r5"
 DEPENDS = "gmp libcap"
 DEPENDS_class-native = ""
