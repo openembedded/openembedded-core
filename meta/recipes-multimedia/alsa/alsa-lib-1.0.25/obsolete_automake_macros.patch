@@ -1,0 +1,15 @@
+Upstream-Status: Submitted [alsa-devel@alsa-project.org]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd alsa-lib-1.0.25/configure.in alsa-lib-1.0.25/configure.in
+--- alsa-lib-1.0.25/configure.in	2012-01-25 09:56:56.000000000 +0200
++++ alsa-lib-1.0.25/configure.in	2013-01-02 17:00:31.468090167 +0200
+@@ -53,7 +53,7 @@
+
+ dnl Checks for header files.
+ AC_HEADER_STDC
+-AM_CONFIG_HEADER(include/config.h)
++AC_CONFIG_HEADERS(include/config.h)
+
+ dnl Checks for typedefs, structures, and compiler characteristics.
+ AC_C_CONST

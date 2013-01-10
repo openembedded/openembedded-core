@@ -14,10 +14,12 @@ BBCLASSEXTEND = "native nativesdk"
 #FIXME: remove the following
 ARM_INSTRUCTION_SET = "arm"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2 \
-           file://fix-tstamp-declaration.patch"
+           file://fix-tstamp-declaration.patch \
+           file://obsolete_automake_macros.patch \
+          "
 
 SRC_URI[md5sum] = "06fe5819020c6684b991dcffc5471304"
 SRC_URI[sha256sum] = "5a1a805cf04106316d549ec650116ce6711a162e107ba8b3c551866680e286e6"
