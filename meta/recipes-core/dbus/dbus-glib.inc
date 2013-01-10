@@ -13,6 +13,7 @@ DEPENDS_class-native = "glib-2.0-native dbus-native"
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-${PV}.tar.gz \
            file://no-examples.patch \
            file://test-install-makefile.patch \
+           file://obsolete_automake_macros.patch \
 "
 
 inherit autotools pkgconfig gettext

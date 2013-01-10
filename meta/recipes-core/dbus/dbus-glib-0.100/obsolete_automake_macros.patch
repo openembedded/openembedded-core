@@ -1,0 +1,15 @@
+Upstream-Status: Submitted [https://bugs.freedesktop.org/show_bug.cgi?id=59003]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd dbus-glib-0.100/configure.ac dbus-glib-0.100/configure.ac
+--- dbus-glib-0.100/configure.ac	2012-06-25 19:26:39.000000000 +0300
++++ dbus-glib-0.100/configure.ac	2013-01-03 04:53:22.314976758 +0200
+@@ -8,7 +8,7 @@
+
+ AM_INIT_AUTOMAKE([1.9])
+
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS(config.h)
+
+ # Honor aclocal flags
+ ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
