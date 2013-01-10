@@ -3,11 +3,11 @@ SECTION = "devel"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 DEPENDS = "autoconf-native automake-native"
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "${GNU_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz"
-SRC_URI[md5sum] = "426671c6fe79e5ef2233303367eab5a6"
-SRC_URI[sha256sum] = "952c29561bce8b233aa10af7f0e0c79c8243712810bf8ddf01e6efd82ce250d1"
+SRC_URI[md5sum] = "ecbc98f1f146e404e85d7bef520b34d8"
+SRC_URI[sha256sum] = "15d3b6ebbac90f6d2a21480ba5e33c03b480a342ce498a84b1804f03d75358ba"
 
 inherit autotools native
 
