@@ -120,10 +120,12 @@ BJAM_TOOLS   = "-sTOOLS=gcc \
 		'--layout=system' \
 		"
 
-BJAM_OPTS    = '${BJAM_TOOLS} \
-                -sBOOST_BUILD_USER_CONFIG=${S}/tools/build/v2/user-config.jam \
+#use PARALLEL_MAKE to speed up the build
+BJAM_OPTS    = '${PARALLEL_MAKE} \
+		${BJAM_TOOLS} \
+		-sBOOST_BUILD_USER_CONFIG=${S}/tools/build/v2/user-config.jam \
 		--builddir=${S}/${TARGET_SYS} \
-                --disable-icu \
+		--disable-icu \
 		${BJAM_EXTRA}'
 
 
