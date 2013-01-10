@@ -1,0 +1,14 @@
+Upstream-Status: Submitted [https://bugs.freedesktop.org/show_bug.cgi?id=59006]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd dbus-python-1.1.1/configure.ac dbus-python-1.1.1/configure.ac
+--- dbus-python-1.1.1/configure.ac	2012-06-25 19:02:12.000000000 +0300
++++ dbus-python-1.1.1/configure.ac	2013-01-03 05:42:00.498912733 +0200
+@@ -29,7 +29,7 @@
+ AC_SUBST(DBUS_PYTHON_MICRO_VERSION, dbus_python_micro_version)
+
+ AC_CONFIG_SRCDIR([_dbus_bindings/module.c])
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS(config.h)
+
+ AM_INIT_AUTOMAKE([1.9 -Wno-portability])
