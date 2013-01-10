@@ -20,10 +20,10 @@ DEPENDS += "virtual/libx11 damageproto libxfixes"
 PROVIDES = "xdamage"
 BBCLASSEXTEND = "native"
 
-PR = "r1"
+PR = "r0"
 PE = "1"
 
 XORG_PN = "libXdamage"
 
-SRC_URI[md5sum] = "44774e1a065158b52f1a0da5100cebec"
-SRC_URI[sha256sum] = "bc6169c826d3cb17435ca84e1b479d65e4b51df1e48bbc3ec39a9cabf842c7a8"
+SRC_URI[md5sum] = "0cf292de2a9fa2e9a939aefde68fd34f"
+SRC_URI[sha256sum] = "7c3fe7c657e83547f4822bfde30a90d84524efb56365448768409b77f05355ad"
