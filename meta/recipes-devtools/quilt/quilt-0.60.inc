@@ -12,6 +12,10 @@ SRC_URI[sha256sum] = "3d72a292e432beb9a73f9d0acfe3a77c9b4d7e42209919bb244e9958c7
 
 inherit autotools
 
+EXTRA_OECONF_darwin += "--without-date \
+                        --without-getopt \
+                        "
+
 PACKAGES += "guards guards-doc"
 FILES_${PN} = "${sysconfdir} ${datadir}/quilt \
                ${bindir}/quilt ${libdir}/quilt"
