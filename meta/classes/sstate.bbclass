@@ -368,7 +368,7 @@ python sstate_cleanall() {
 }
 
 def sstate_hardcode_path(d):
-    import subprocess
+    import subprocess, platform
 
     # Need to remove hardcoded paths and fix these when we install the
     # staging packages.
@@ -390,7 +390,7 @@ def sstate_hardcode_path(d):
     else:
         sstate_grep_cmd = "grep -l -e '%s'" % (staging_host)
         sstate_sed_cmd = "sed -i -e 's:%s:FIXMESTAGINGDIRHOST:g'" % (staging_host)
-    
+
     fixmefn =  sstate_builddir + "fixmepath"
 
     sstate_scan_cmd = d.getVar('SSTATE_SCAN_CMD', True)
@@ -399,9 +399,13 @@ def sstate_hardcode_path(d):
     # fixmepath file needs relative paths, drop sstate_builddir prefix
     sstate_filelist_relative_cmd = "sed -i -e 's:^%s::g' %s" % (sstate_builddir, fixmefn)
 
+    xargs_no_empty_run_cmd = '--no-run-if-empty'
+    if platform.system() == 'Darwin':
+        xargs_no_empty_run_cmd = ''
+
     # Limit the fixpaths and sed operations based on the initial grep search
     # This has the side effect of making sure the vfs cache is hot
-    sstate_hardcode_cmd = "%s | xargs %s | %s | xargs --no-run-if-empty %s" % (sstate_scan_cmd, sstate_grep_cmd, sstate_filelist_cmd, sstate_sed_cmd)
+    sstate_hardcode_cmd = "%s | xargs %s | %s | xargs %s %s" % (sstate_scan_cmd, sstate_grep_cmd, sstate_filelist_cmd, xargs_no_empty_run_cmd, sstate_sed_cmd)
 
     print "Removing hardcoded paths from sstate package: '%s'" % (sstate_hardcode_cmd)
     subprocess.call(sstate_hardcode_cmd, shell=True)
