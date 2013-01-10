@@ -14,6 +14,7 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.24/gtk+-${PV}.tar.xz \
            file://0001-bgo-584832-Duplicate-the-exec-string-returned-by-gtk.patch \
            file://doc-fixes.patch \
            file://0001-GtkButton-do-not-prelight-in-touchscreen-mode.patch \
+           file://obsolete_automake_macros.patch \
 	  "
 
 # TO MERGE
