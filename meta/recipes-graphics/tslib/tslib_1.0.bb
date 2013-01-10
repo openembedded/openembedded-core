@@ -10,14 +10,16 @@ SECTION = "base"
 LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=f30a9716ef3762e3467a2f62bf790f0a"
 
-PR = "r20"
+PR = "r21"
 
 SRC_URI = "http://download.berlios.de/tslib/tslib-${PV}.tar.bz2 \
            file://fix_version.patch \
            file://0001-Link-plugins-against-libts.patch \
            file://ts.conf \
            file://tslib.sh \
-           file://set-open-mode-for-ts_calibrate_c.patch"
+           file://set-open-mode-for-ts_calibrate_c.patch \
+           file://obsolete_automake_macros.patch \
+"
 
 SRC_URI[md5sum] = "92b2eb55b1e4ef7e2c0347069389390e"
 SRC_URI[sha256sum] = "9c40d914e4f6fe00bdd77137d671c7ce4f211686228f2eb8b2d3c2360bc249c8"
