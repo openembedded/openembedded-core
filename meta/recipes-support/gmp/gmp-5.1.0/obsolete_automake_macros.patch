@@ -1,0 +1,13 @@
+Upstream-Status: Accepted
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd gmp-5.1.0/configure.in gmp-5.1.0/configure.in
+--- gmp-5.1.0/configure.in	2012-12-18 21:05:09.000000000 +0200
++++ gmp-5.1.0/configure.in	2013-01-02 06:00:41.552958778 +0200
+@@ -67,7 +67,7 @@
+ dnl  so update there too if changing anything.
+ dnl
+ AM_INIT_AUTOMAKE([1.8 gnu no-dependencies])
+-AM_CONFIG_HEADER(config.h:config.in)
++AC_CONFIG_HEADERS(config.h:config.in)
+ AM_MAINTAINER_MODE
