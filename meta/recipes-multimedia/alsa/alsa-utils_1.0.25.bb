@@ -47,6 +47,7 @@ ALSA_UTILS_PKGS = "\
 
 PACKAGES += "${ALSA_UTILS_PKGS}"
 RDEPENDS_${PN} += "${ALSA_UTILS_PKGS}"
+RDEPENDS_alsa-utils-alsaconf += "bash"
 
 # We omit alsaconf, because
 # a) this is a bash script
