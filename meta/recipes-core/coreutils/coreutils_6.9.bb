@@ -8,8 +8,7 @@ BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://src/ls.c;beginline=4;endline=16;md5=15ed60f67b1db5fedd5dbc37cf8a9543"
-PR = "r4"
-DEPENDS = "coreutils-native-${PV}"
+PR = "r5"
 DEPENDS_class-native = "gettext-native"
 
 inherit autotools gettext
