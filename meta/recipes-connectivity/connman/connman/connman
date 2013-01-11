@@ -28,9 +28,11 @@ done
 
 do_start() {
 	EXTRA_PARAM=""
-	if test $nfsroot -eq 0 ; then
-		$DAEMON $EXTRA_PARAM
+	if test $nfsroot -eq 1 ; then
+		ethn=`ifconfig | grep eth | sed -e "s/\(eth[0-9]\)\(.*\)/\1/"`
+		EXTRA_PARAM="-I $ethn"
 	fi
+	$DAEMON $EXTRA_PARAM
 }
 
 do_stop() {
