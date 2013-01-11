@@ -10,8 +10,8 @@ PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/linuxquota/quota-tools/${PV}/quota-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "975f587ff761a60ac25dbe6c00865925"
-SRC_URI[sha256sum] = "eb2b045f58b98299edc568b8607b95b10735b4a131fa5196f41c89b51fb409ba"
+SRC_URI[md5sum] = "5c2c31e321d2e1322ce12d69ae5c66d6"
+SRC_URI[sha256sum] = "a36300bbc126b79b745bf937245092808b4585aa3309ef3335d4ab9d873cd206"
 
 S = "${WORKDIR}/quota-tools"
 
