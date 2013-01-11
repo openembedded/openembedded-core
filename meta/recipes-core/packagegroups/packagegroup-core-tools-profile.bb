@@ -46,7 +46,7 @@ SYSTEMTAP_aarch64 = ""
 # which means we can not use syscall() to call it. So we ignore
 # it for x86_64/uclibc
 
-LTTNGUST = "lttng2-ust"
+LTTNGUST = "lttng-ust"
 LTTNGUST_libc-uclibc = ""
 LTTNGUST_mips = ""
 LTTNGUST_aarch64 = ""

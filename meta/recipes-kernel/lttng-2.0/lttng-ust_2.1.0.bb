@@ -12,6 +12,11 @@ inherit autotools
 
 DEPENDS = "liburcu util-linux"
 
+# For backwards compatibility after rename
+RPROVIDES_${PN} = "lttng2-ust"
+RREPLACES_${PN} = "lttng2-ust"
+RCONFLICTS_${PN} = "lttng2-ust"
+
 SRCREV = "0c9ad44b7604040dfcd1e67b18afc3dc5d025b19"
 PV = "2.1.0"
 PR = "r0"

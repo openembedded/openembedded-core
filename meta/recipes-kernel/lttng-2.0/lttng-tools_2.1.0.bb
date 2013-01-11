@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=01d7fc4496aacf37d90df90b90b0cac1 \
                     file://gpl-2.0.txt;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://lgpl-2.1.txt;md5=0f0d71500e6a57fd24d825f33242b9ca"
 
-DEPENDS = "liburcu popt lttng2-ust"
+DEPENDS = "liburcu popt lttng-ust"
 
 SRCREV = "917f768512b5d336d553b801f6c5308d90252a89"
 PV = "v2.1.0"
