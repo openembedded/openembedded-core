@@ -7,13 +7,16 @@ def get_imagecmds(d):
     ctypes = d.getVar('COMPRESSIONTYPES', True).split()
     cimages = {}
 
+    # The elf image depends on the cpio.gz image already having
+    # been created, so we add that explicit ordering here.
+
     if "elf" in alltypes:
         alltypes.remove("elf")
         if "cpio.gz" not in alltypes:
                 alltypes.append("cpio.gz")
         alltypes.append("elf")
 
-    # Filter out all the compressed images from types
+    # Filter out all the compressed images from alltypes
     for type in alltypes:
         basetype = None
         for ctype in ctypes:
