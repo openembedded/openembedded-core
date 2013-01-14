@@ -1,12 +1,12 @@
 require iproute2.inc
 
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BPN}-${PV}.tar.xz \
            file://configure-cross.patch"
 
-SRC_URI[md5sum] = "d4425b44edd5eacd6099e672e4baacbf"
-SRC_URI[sha256sum] = "36f2674e5436289f3ccfb0a58707aca9dcfa295d06afc36d2117674508f5ef72"
+SRC_URI[md5sum] = "b07241b267036de9a79ca5b69acf8593"
+SRC_URI[sha256sum] = "6b0e76d7adb8b9b65f70571f75d72db7c2548eff7813cace9e267065c3c0cb34"
 
 # CFLAGS are computed in Makefile and reference CCOPTS
 #
