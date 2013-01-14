@@ -19,7 +19,7 @@ FILES_${PN} = "${bindir} ${libdir}/${BPN}/lib*${SOLIBS} ${datadir}/${BPN}"
 FILES_${PN}-dev += "${libdir}/${BPN}/lib*${SOLIBSDEV} ${libdir}/${BPN}/lib*.la"
 FILES_${PN}-staticdev += "${libdir}/${BPN}/lib*.a"
 
-INC_PR = "r0"
+INC_PR = "r1"
 
 SRC_URI = "file://opstart.patch \
            file://oprofile-no-query-modules.patch \
@@ -28,7 +28,7 @@ SRC_URI = "file://opstart.patch \
 
 inherit autotools
 
-EXTRA_OECONF = "--with-kernel-support --without-x"
+EXTRA_OECONF = "--with-kernel=${STAGING_KERNEL_DIR}  --without-x"
 do_configure () {
 	find . -type f | xargs sed -i 's#ROOTHOME#${ROOT_HOME}#'
 	cp ${WORKDIR}/acinclude.m4 ${S}/
