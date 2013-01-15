@@ -1,0 +1,15 @@
+Upstream-Status: Submitted [alsa-devel@alsa-project.org]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd alsa-utils-1.0.25/configure.in alsa-utils-1.0.25/configure.in
+--- alsa-utils-1.0.25/configure.in	2012-01-25 11:43:48.000000000 +0200
++++ alsa-utils-1.0.25/configure.in	2013-01-12 10:11:51.401498722 +0200
+@@ -269,7 +269,7 @@
+   TESTSOUND="$dir/test.wav")
+ AC_SUBST(TESTSOUND)
+
+-AM_CONFIG_HEADER(include/aconfig.h)
++AC_CONFIG_HEADERS(include/aconfig.h)
+
+ dnl Checks for typedefs, structures, and compiler characteristics.
+ AC_C_CONST

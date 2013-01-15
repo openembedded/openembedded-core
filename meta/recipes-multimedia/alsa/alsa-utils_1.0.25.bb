@@ -6,12 +6,13 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://alsactl/utils.c;beginline=1;endline=20;md5=fe9526b055e246b5558809a5ae25c0b9"
 DEPENDS = "alsa-lib ncurses libsamplerate0"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://ncursesfix.patch \
            file://uclibc-exp10-replacement.patch \
            file://0001-alsactl-don-t-let-systemd-unit-restore-the-volume-wh.patch \
+           file://obsolete_automake_macros.patch \
           "
 
 SRC_URI[md5sum] = "f81f9dcb9a014fd32cb3a70066a5b9a9"
