@@ -13,6 +13,9 @@ inherit pkgconfig autotools gettext
 
 SRC_URI = "http://alpha.gnu.org/gnu/libidn/${BPN}-${PV}.tar.gz"
 
+SRC_URI[md5sum] = "040f012a45feb56168853998bb87ad4d"
+SRC_URI[sha256sum] = "98910c2ad664bdf4eed2c2fff88e24f8882636ec9d26669366ff03b469c05ae3"
+
 EXTRA_OECONF = " --disable-tld"
 
 do_configure_prepend() {
