@@ -22,7 +22,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.radeon;md5=e56b405656593a0c97e478513051ea0e \
 SRCREV = "0d6729f2b0bc6254d3628eb831bc80a36b5a17db"
 PE = "1"
 PV = "0.0+git${SRCPV}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git;protocol=git"
 
@@ -51,31 +51,31 @@ do_install() {
 
 PACKAGES =+ "${PN}-ralink ${PN}-sd8686 ${PN}-rtl8192cu linux-firmware-rtl8192ce linux-firmware-rtl8192su ${PN}-wl12xx"
 
-LICENSE_${PN}-ralink = "Firmware:LICENCE.ralink_firmware.txt"
+LICENSE_${PN}-ralink = "Firmware-ralink"
 FILES_${PN}-ralink = " \
   /lib/firmware/rt*.bin \
   /lib/firmware/LICENSE.ralink_firmware.txt \
 "
 
-LICENSE_${PN}-sd8686 = "Firmware:LICENSE.libertas"
+LICENSE_${PN}-sd8686 = "Firmware-libertas"
 FILES_${PN}-sd8686 = " \
   /lib/firmware/libertas/sd8686_v9* \
   /lib/firmware/sd8686* \
   /lib/firmware/LICENCE.libertas \
 "
 
-LICENSE_${PN}-rtl8192cu = "Firmware:LICENCE.rtlwifi_firmware"
+LICENSE_${PN}-rtl8192cu = "Firmware-rtlwifi"
 FILES_${PN}-rtl8192cu = " \
   /lib/firmware/rtlwifi/rtl8192cufw.bin \
   /lib/firmware/rtlwifi/LICENCE.rtlwifi_firmware.txt \
 "
 
-LICENSE_${PN}-rtl8192ce = "Firmware:LICENCE.rtlwifi_firmware"
+LICENSE_${PN}-rtl8192ce = "Firmware-rtlwifi"
 FILES_${PN}-rtl8192ce = " \
   /lib/firmware/rtlwifi/rtl8192cfw.bin \
 "
 
-LICENSE_${PN}-rtl8192su = "Firmware:LICENCE.rtlwifi_firmware"
+LICENSE_${PN}-rtl8192su = "Firmware-rtlwifi"
 FILES_${PN}-rtl8192su = " \
   /lib/firmware/rtlwifi/rtl8712u.bin \
 "
@@ -87,4 +87,3 @@ FILES_${PN}-wl12xx = " \
 "
 
 FILES_${PN} += "/lib/firmware/*"
-
