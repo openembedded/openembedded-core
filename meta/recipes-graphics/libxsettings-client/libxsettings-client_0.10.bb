@@ -12,14 +12,16 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7cfac9d2d4dc3694cc7eb605cf32a69b \
                     file://xsettings-common.h;endline=22;md5=7cfac9d2d4dc3694cc7eb605cf32a69b"
 DEPENDS = "virtual/libx11"
 
-PR = "r4"
+PR = "r5"
 
 headers = "xsettings-common.h xsettings-client.h"
 
 SRC_URI = "http://downloads.yoctoproject.org/releases/matchbox/optional-dependencies/Xsettings-client-0.10.tar.gz \
         file://MIT-style-license \
         file://link-x11.patch;apply=yes \
-        file://disable_Os_option.patch"
+        file://disable_Os_option.patch \
+        file://obsolete_automake_macros.patch \
+"
 
 SRC_URI[md5sum] = "c14aa9db6c097e0306dac97fb7da1add"
 SRC_URI[sha256sum] = "f274a4bc969ae192994a856b7f786c6fce96bae77f96c1c2b71dd97599e06e43"
