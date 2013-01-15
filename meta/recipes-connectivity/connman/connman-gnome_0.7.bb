@@ -10,7 +10,8 @@ DEPENDS = "gtk+ dbus-glib"
 
 # 0.7 tag
 SRCREV = "cf3c325b23dae843c5499a113591cfbc98acb143"
-SRC_URI = "git://github.com/connectivity/connman-gnome.git;protocol=git"
+SRC_URI = "git://github.com/connectivity/connman-gnome.git;protocol=git \
+	   file://0001-Removed-icon-from-connman-gnome-about-applet.patch"
 
 S = "${WORKDIR}/git"
 
