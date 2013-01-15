@@ -1,0 +1,14 @@
+Upstream-Status: Backport
+
+Signed-off-by: Marko Lindqvist
+diff -Nurd curl-7.28.1/configure.ac curl-7.28.1/configure.ac
+--- curl-7.28.1/configure.ac	2012-09-08 23:39:18.000000000 +0300
++++ curl-7.28.1/configure.ac	2013-01-12 09:15:27.753572960 +0200
+@@ -35,7 +35,7 @@
+ terms of the curl license; see COPYING for more details])
+
+ AC_CONFIG_SRCDIR([lib/urldata.h])
+-AM_CONFIG_HEADER(lib/curl_config.h include/curl/curlbuild.h)
++AC_CONFIG_HEADERS([lib/curl_config.h include/curl/curlbuild.h])
+ AC_CONFIG_MACRO_DIR([m4])
+ AM_MAINTAINER_MODE

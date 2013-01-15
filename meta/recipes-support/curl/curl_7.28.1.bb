@@ -8,10 +8,13 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e66
 DEPENDS = "zlib gnutls"
 DEPENDS_class-native = "zlib-native openssl-native"
 DEPENDS_class-nativesdk = "nativesdk-zlib"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
-           file://pkgconfig_fix.patch"
+           file://pkgconfig_fix.patch \
+           file://obsolete_automake_macros.patch \
+           file://dont_override_ac_config_macro_dir.patch \
+"
 
 # curl likes to set -g0 in CFLAGS, so we stop it
 # from mucking around with debug options
