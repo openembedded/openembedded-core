@@ -1,0 +1,15 @@
+Upstream-Status: Backport [fixed in development version]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd rgb-1.0.4/configure.ac rgb-1.0.4/configure.ac
+--- rgb-1.0.4/configure.ac	2010-10-07 06:17:16.000000000 +0300
++++ rgb-1.0.4/configure.ac	2013-01-11 08:04:23.767562150 +0200
+@@ -26,7 +26,7 @@
+	[https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], [rgb])
+ AM_INIT_AUTOMAKE([foreign dist-bzip2])
+ AM_MAINTAINER_MODE
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS(config.h)
+
+ # Require X.Org macros 1.8 or later for MAN_SUBSTS set by XORG_MANPAGE_SECTIONS
+ m4_ifndef([XORG_MACROS_VERSION],
