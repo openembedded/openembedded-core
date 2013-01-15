@@ -226,10 +226,10 @@ def incompatible_license(d, dont_want_licenses, package=None):
             # will exclude a trailing '+' character from LICENSE in
             # case INCOMPATIBLE_LICENSE is not a 'X+' license.
             lic = license
-        if not re.search('\+$', dwl):
-            lic = re.sub('\+', '', license)
-        if fnmatch(lic, dwl):
-            return False
+            if not re.search('\+$', dwl):
+                lic = re.sub('\+', '', license)
+            if fnmatch(lic, dwl):
+                return False
         return True
 
     # Handles an "or" or two license sets provided by
