@@ -215,8 +215,7 @@ def incompatible_license(d, dont_want_licenses, package=None):
     import re
     import oe.license
     from fnmatch import fnmatchcase as fnmatch
-    pn = d.getVar('PN', True)
-    license = d.getVar("LICENSE_%s-%s" % (pn, package), True) if package else None
+    license = d.getVar("LICENSE_%s" % package, True) if package else None
     if not license:
         license = d.getVar('LICENSE', True)
 
