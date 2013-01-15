@@ -6,7 +6,7 @@ SECTION = "console/utils"
 # change to GPLv3+ in 2007/07. Previous GPLv2 version is 1.3.12
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
-                    file://gzip.h;firstline=8;endline=20;md5=d31380638987e6789f06bc96a29a9a16"
+                    file://gzip.h;beginline=8;endline=20;md5=6e47caaa630e0c8bf9f1bc8d94a8ed0e"
 
 SRC_URI = "${GNU_MIRROR}/gzip/${BP}.tar.gz"
 
