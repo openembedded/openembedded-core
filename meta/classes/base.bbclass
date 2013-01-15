@@ -552,9 +552,8 @@ python () {
                         skipped_pkgs.append(pkg)
                     else:
                         unskipped_pkgs.append(pkg)
-                some_skipped = skipped_pkgs and unskipped_pkgs
                 all_skipped = skipped_pkgs and not unskipped_pkgs
-                if some_skipped:
+                if unskipped_pkgs:
                     for pkg in skipped_pkgs:
                         bb.debug(1, "SKIPPING the package " + pkg + " at do_rootfs because it's " + recipe_license)
                         d.setVar('LICENSE_EXCLUSION-' + pkg, 1)
