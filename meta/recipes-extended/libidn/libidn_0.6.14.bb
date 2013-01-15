@@ -5,8 +5,8 @@ SECTION = "libs"
 LICENSE = "LGPLv2.1+ & GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a \
                     file://COPYING.LIB;md5=a6f89e2100d9b6cdffcea4f398e37343 \
-                    file://lib/idna.h;firstline=6;endline=18;md5=6d9d5532eb28b99e860262281c540d02 \
-                    file://src/idn.c;firstline=6;endline=18;md5=41b6aec531cc6a9d54a6c4deee251bf5"
+                    file://lib/idna.h;beginline=6;endline=18;md5=1336e848ca7b8e25767c3c7e8fa38a89 \
+                    file://src/idn.c;beginline=6;endline=18;md5=56c89e359652a71cda128d75f0ffdac4"
 PR = "r1"
 
 inherit pkgconfig autotools gettext
