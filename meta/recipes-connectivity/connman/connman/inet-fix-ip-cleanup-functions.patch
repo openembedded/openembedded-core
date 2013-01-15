@@ -1,0 +1,40 @@
+From 100353e10f60a50ca1ba78daa6bc4dfebf5b3297 Mon Sep 17 00:00:00 2001
+From: Constantin Musca <constantinx.musca@intel.com>
+Date: Wed, 5 Dec 2012 15:07:21 +0200
+Subject: [PATCH] inet: fix ip cleanup functions
+
+Upstream-Status: Pending
+Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
+---
+ src/inet.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/inet.c b/src/inet.c
+index be69aca..e76a1f1 100644
+--- a/src/inet.c
++++ b/src/inet.c
+@@ -626,6 +626,10 @@ int connman_inet_clear_ipv6_address(int index, const char *address,
+ 
+ 	DBG("index %d address %s prefix_len %d", index, address, prefix_len);
+ 
++	if (address == NULL) {
++		return -1;
++	}
++
+ 	err = __connman_inet_modify_address(RTM_DELADDR, 0, index, AF_INET6,
+ 				address, NULL, prefix_len, NULL);
+ 	if (err < 0) {
+@@ -649,6 +653,10 @@ int connman_inet_clear_address(int index, struct connman_ipaddress *ipaddress)
+ 
+ 	DBG("index %d address %s prefix_len %d", index, address, prefix_len);
+ 
++	if (address == NULL) {
++		return -1;
++	}
++
+ 	err = __connman_inet_modify_address(RTM_DELADDR, 0, index, AF_INET,
+ 				address, peer, prefix_len, broadcast);
+ 	if (err < 0) {
+-- 
+1.7.11.7
+

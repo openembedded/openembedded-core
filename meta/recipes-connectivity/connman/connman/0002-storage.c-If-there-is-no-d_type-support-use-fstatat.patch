@@ -8,20 +8,33 @@ This is useful for filesystems where d_type is always DT_UNKNOWN.
 In this case use fstatat() function.
 
 Signed-off-by: Andrei Gherzan <andrei.gherzan@windriver.com>
+Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
 Upstream-Status: Submitted
  
 ---
  src/storage.c |   19 +++++++++++++++++++
  1 file changed, 19 insertions(+)
 
-diff --git a/src/storage.c b/src/storage.c
-index 47bd0cb..0491a52 100644
---- a/src/storage.c
-+++ b/src/storage.c
-@@ -206,6 +206,25 @@ gchar **connman_storage_get_services()
+Index: git/src/storage.c
+===================================================================
+--- git.orig/src/storage.c
++++ git/src/storage.c
+@@ -193,7 +193,6 @@ gchar **connman_storage_get_services()
  
- 			g_string_append_printf(result, "%s/", d->d_name);
- 			break;
+ 		switch (d->d_type) {
+ 		case DT_DIR:
+-		case DT_UNKNOWN:
+ 			/*
+ 			 * If the settings file is not found, then
+ 			 * assume this directory is not a services dir.
+@@ -203,6 +202,25 @@ gchar **connman_storage_get_services()
+ 			ret = stat(str, &buf);
+ 			g_free(str);
+ 			if (ret < 0)
++				continue;
++
++			g_string_append_printf(result, "%s/", d->d_name);
++			break;
 +		case DT_UNKNOWN:
 +			/*
 +			 * If there is no d_type support use fstatat()
@@ -37,13 +50,6 @@ index 47bd0cb..0491a52 100644
 +			ret = stat(str, &buf);
 +			g_free(str);
 +			if (ret < 0)
-+				continue;
-+
-+			g_string_append_printf(result, "%s/", d->d_name);
-+			break;
- 		}
- 	}
+ 				continue;
  
--- 
-1.7.9.5
-
+ 			g_string_append_printf(result, "%s/", d->d_name);
