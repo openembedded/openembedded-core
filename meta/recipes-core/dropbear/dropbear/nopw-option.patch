@@ -1,0 +1,106 @@
+Allow configuring "allow blank password option" at runtime
+
+Changes this from a compile-time switch to a command-line option.
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+Upstream-Status: Pending
+
+diff --git a/options.h b/options.h
+index 00f6179..b8d0ccb 100644
+--- a/options.h
++++ b/options.h
+@@ -176,12 +176,6 @@ much traffic. */
+ #define ENABLE_SVR_PUBKEY_OPTIONS
+ #endif
+ 
+-/* Define this to allow logging in to accounts that have no password specified.
+- * Public key logins are allowed for blank-password accounts regardless of this
+- * setting.  PAM is not affected by this setting, it uses the normal pam.d
+- * settings ('nullok' option) */
+-/* #define ALLOW_BLANK_PASSWORD */
+-
+ #define ENABLE_CLI_PASSWORD_AUTH
+ #define ENABLE_CLI_PUBKEY_AUTH
+ #define ENABLE_CLI_INTERACT_AUTH
+diff --git a/runopts.h b/runopts.h
+index 83b5861..126585b 100644
+--- a/runopts.h
++++ b/runopts.h
+@@ -85,6 +85,7 @@ typedef struct svr_runopts {
+ 
+ 	int noauthpass;
+ 	int norootpass;
++	int allowblankpass;
+ 
+ #ifdef ENABLE_SVR_REMOTETCPFWD
+ 	int noremotetcp;
+diff --git a/svr-authpasswd.c b/svr-authpasswd.c
+index 54b4889..d9b7928 100644
+--- a/svr-authpasswd.c
++++ b/svr-authpasswd.c
+@@ -29,6 +29,7 @@
+ #include "buffer.h"
+ #include "dbutil.h"
+ #include "auth.h"
++#include "runopts.h"
+ 
+ #ifdef ENABLE_SVR_PASSWORD_AUTH
+ 
+@@ -78,16 +79,17 @@ void svr_auth_password() {
+ 
+ 	/* check for empty password */
+ 	if (passwdcrypt[0] == '\0') {
+-#ifdef ALLOW_BLANK_PASSWORD
+-		if (passwordlen == 0) {
+-			success_blank = 1;
++		if (svr_opts.allowblankpass) {
++			if (passwordlen == 0) {
++				success_blank = 1;
++			}
++		}
++		else {
++			dropbear_log(LOG_WARNING, "User '%s' has blank password, rejected",
++					ses.authstate.pw_name);
++			send_msg_userauth_failure(0, 1);
++			return;
+ 		}
+-#else
+-		dropbear_log(LOG_WARNING, "User '%s' has blank password, rejected",
+-				ses.authstate.pw_name);
+-		send_msg_userauth_failure(0, 1);
+-		return;
+-#endif
+ 	}
+ 
+ 	if (success_blank || strcmp(testcrypt, passwdcrypt) == 0) {
+diff --git a/svr-runopts.c b/svr-runopts.c
+index c6e3508..b39ffb2 100644
+--- a/svr-runopts.c
++++ b/svr-runopts.c
+@@ -63,6 +63,7 @@ static void printhelp(const char * progname) {
+ #if defined(ENABLE_SVR_PASSWORD_AUTH) || defined(ENABLE_SVR_PAM_AUTH)
+ 					"-s		Disable password logins\n"
+ 					"-g		Disable password logins for root\n"
++					"-B		Allow blank password logins\n"
+ #endif
+ #ifdef ENABLE_SVR_LOCALTCPFWD
+ 					"-j		Disable local port forwarding\n"
+@@ -115,6 +116,7 @@ void svr_getopts(int argc, char ** argv) {
+ 	svr_opts.norootlogin = 0;
+ 	svr_opts.noauthpass = 0;
+ 	svr_opts.norootpass = 0;
++	svr_opts.allowblankpass = 0;
+ 	svr_opts.inetdmode = 0;
+ 	svr_opts.portcount = 0;
+ 	svr_opts.hostkey = NULL;
+@@ -234,6 +236,9 @@ void svr_getopts(int argc, char ** argv) {
+ 				case 'g':
+ 					svr_opts.norootpass = 1;
+ 					break;
++				case 'B':
++					svr_opts.allowblankpass = 1;
++					break;
+ #endif
+ 				case 'h':
+ 					printhelp(argv[0]);
