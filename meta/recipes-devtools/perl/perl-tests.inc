@@ -25,6 +25,7 @@ do_install_append () {
 	cp -pv lib/XS/Typemap.pm ${D}${libdir}/perl/${PV}/XS/
 	mkdir -p ${D}${libdir}/perl/${PV}/auto/XS/APItest
 	cp -pv lib/auto/XS/APItest/APItest.so ${D}${libdir}/perl/${PV}/auto/XS/APItest/
+	mkdir -p ${D}${libdir}/perl/${PV}/auto/XS/Typemap
 	cp -pv lib/auto/XS/Typemap/Typemap.so ${D}${libdir}/perl/${PV}/auto/XS/Typemap/
 	cp -pv cpan/Digest-MD5/README ${D}${PERL_TEST_DIR}/cpan/Digest-MD5/
 	cp -pv cpan/Digest-MD5/MD5.xs ${D}${PERL_TEST_DIR}/cpan/Digest-MD5/
