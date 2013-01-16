@@ -22,10 +22,11 @@ FILES_${PN} =+ "${libdir}/xtables/ ${datadir}/xtables"
 FILES_${PN}-dbg =+ "${libdir}/xtables/.debug"
 
 SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
-           file://types.h-add-defines-that-are-required-for-if_packet.patch"
-
-SRC_URI[md5sum] = "6dd40c12fb8f4c4312a0f8434369fbcd"
-SRC_URI[sha256sum] = "643ccf34099d53d5b839e1d889c05627745a51ec122648e76a9fcec3a8a9ec79"
+           file://types.h-add-defines-that-are-required-for-if_packet.patch \
+           file://fix-link-failure-ip6t-NETMAP.patch \
+           file://fix-iptables-extensions-build-error.patch"
+SRC_URI[md5sum] = "c3fb2ffd5b39d0d54b06ccc4c8660116"
+SRC_URI[sha256sum] = "51e7a769469383b6ad308a6a19cdd2bd813cf4593e21a156a543a1cd70554925"
 
 inherit autotools
 

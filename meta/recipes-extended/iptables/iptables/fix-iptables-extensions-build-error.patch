@@ -1,0 +1,44 @@
+From 0a43f156e23edf616859ac5a8c90e41ccc5cb1cd Mon Sep 17 00:00:00 2001
+From: Cristian Iorga <cristian.iorga@intel.com>
+Date: Wed, 16 Jan 2013 20:14:43 +0200
+Subject: [PATCH] extensions: fix iptables extensions build error            
+ in cross-compilation environments
+
+libtool is properly declared and used for cross-platform
+build environments
+
+Upstream-Status: Pending
+
+Signed-off-by: Cristian Iorga <cristian.iorga@intel.com>
+---
+ extensions/GNUmakefile.in |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/extensions/GNUmakefile.in b/extensions/GNUmakefile.in
+index adad4d6..befb1fb 100644
+--- a/extensions/GNUmakefile.in
++++ b/extensions/GNUmakefile.in
+@@ -13,6 +13,7 @@ xtlibdir     = @xtlibdir@
+ 
+ CC                 = @CC@
+ CCLD               = ${CC}
++LIBTOOL            = @LIBTOOL@
+ CFLAGS             = @CFLAGS@
+ CPPFLAGS           = @CPPFLAGS@
+ LDFLAGS            = @LDFLAGS@
+@@ -94,10 +95,10 @@ lib%.so: lib%.la
+ 	${AM_VERBOSE_NULL} ln -fs .libs/$@ $@
+ 
+ lib%.la: lib%.lo
+-	${AM_VERBOSE_CCLD} ../libtool ${AM_LIBTOOL_SILENT} --tag=CC --mode=link ${CCLD} ${AM_LDFLAGS} -module ${LDFLAGS} -o $@ $< ../libxtables/libxtables.la ${$*_LIBADD} -rpath ${xtlibdir}
++	${AM_VERBOSE_CCLD} ${LIBTOOL} ${AM_LIBTOOL_SILENT} --tag=CC --mode=link ${CCLD} ${AM_LDFLAGS} -module ${LDFLAGS} -o $@ $< ../libxtables/libxtables.la ${$*_LIBADD} -rpath ${xtlibdir}
+ 
+ lib%.lo: ${srcdir}/lib%.c
+-	${AM_VERBOSE_CC} ../libtool ${AM_LIBTOOL_SILENT} --tag=CC --mode=compile ${CC} ${AM_CPPFLAGS} ${AM_DEPFLAGS} ${AM_CFLAGS} -D_INIT=lib$*_init ${CFLAGS} -o $@ -c $<
++	${AM_VERBOSE_CC} ${LIBTOOL} ${AM_LIBTOOL_SILENT} --tag=CC --mode=compile ${CC} ${AM_CPPFLAGS} ${AM_DEPFLAGS} ${AM_CFLAGS} -D_INIT=lib$*_init ${CFLAGS} -o $@ -c $<
+ 
+ libxt_NOTRACK.so: libxt_CT.so
+ 	${AM_VERBOSE_GEN} ln -fs $< $@
+-- 
+1.7.10.4
+
