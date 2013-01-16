@@ -47,3 +47,7 @@ XSERVER_IA32_I965 = "xf86-video-intel \
            "
 
 XSERVER_IA32_VESA = "xf86-video-vesa"
+
+XSERVER_IA32_FBDEV = "xf86-video-fbdev"
+
+XSERVER_IA32_MODESETTING = "xf86-video-modesetting"
