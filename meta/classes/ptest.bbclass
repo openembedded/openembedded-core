@@ -14,7 +14,7 @@ PTEST_ENABLED = "${@base_contains("DISTRO_FEATURES", "ptest", "1", "0", d)}"
 RDEPENDS_${PN}-ptest_virtclass-native = ""
 RDEPENDS_${PN}-ptest_virtclass-nativesdk = ""
 
-PACKAGES += "${PN}-ptest"
+PACKAGES += "${@base_contains('DISTRO_FEATURES', 'ptest', '${PN}-ptest', '', d)}"
 
 FILES_${PN}-dbg += "${PTEST_PATH}/*/.debug \
                     ${PTEST_PATH}/*/*/.debug \
