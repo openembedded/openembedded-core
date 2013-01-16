@@ -83,7 +83,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 	
 	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
 		if grep Status:.install.ok.unpacked ${STATUS}; then
-			echo "Some packages could not be configured offline and rootfs is read-only."
+			bberror "Some packages could not be configured offline and rootfs is read-only."
 			exit 1
 		fi
 	fi
