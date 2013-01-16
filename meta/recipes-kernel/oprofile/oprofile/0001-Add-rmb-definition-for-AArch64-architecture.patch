@@ -1,0 +1,31 @@
+From 27edaef9c6d66dfc324630ef40cb27e78031eeeb Mon Sep 17 00:00:00 2001
+From: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
+Date: Tue, 15 Jan 2013 07:37:33 +0100
+Subject: [PATCH] Add rmb() definition for AArch64 architecture
+
+Signed-off-by: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
+
+Upstream-status: backport
+---
+ libperf_events/operf_utils.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/libperf_events/operf_utils.h b/libperf_events/operf_utils.h
+index 815d51d..2df00b7 100644
+--- a/libperf_events/operf_utils.h
++++ b/libperf_events/operf_utils.h
+@@ -148,6 +148,11 @@ void op_release_resources(void);
+ #define cpu_relax()	asm volatile("":::"memory")
+ #endif
+ 
++#ifdef __aarch64__
++#define rmb()		asm volatile("dmb ld" ::: "memory")
++#define cpu_relax()	asm volatile("yield" ::: "memory")
++#endif
++
+ #ifdef __mips__
+ #include <asm/unistd.h>
+ #define rmb()		asm volatile(					\
+-- 
+1.8.0
+
