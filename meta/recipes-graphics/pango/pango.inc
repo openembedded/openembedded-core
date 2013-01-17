@@ -10,7 +10,7 @@ SECTION = "libs"
 LICENSE = "LGPLv2.0+"
 
 X11DEPENDS = "virtual/libx11 libxft"
-DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv cairo elfutils pango-native harfbuzz"
+DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv cairo elfutils harfbuzz"
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
 PACKAGECONFIG[x11] = "--with-x,--without-x,${X11DEPENDS}"
@@ -22,7 +22,7 @@ PACKAGES_DYNAMIC += "^pango-module-.*"
 
 RRECOMMENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'x11', 'pango-module-basic-x', '', d)} pango-module-basic-fc" 
 
-inherit gnomebase gtk-doc
+inherit gnomebase gtk-doc qemu
 # Create a pango-modules package
 ALLOW_EMPTY_${BPN}-modules = "1"
 PACKAGES += "${BPN}-modules"
@@ -49,26 +49,16 @@ if ! [ -e $D${sysconfdir}/pango ] ; then
 fi
 
 if [ "x$D" != "x" ]; then
-pango-querymodules $(ls -d -1 $D${libdir}/pango/${LIBV}/modules/*.so|\
-    sed -e "s:$D:$NATIVE_ROOT:g") >\
-    $D${sysconfdir}/pango/${MLPREFIX}pango.modules \
-    2>$D${sysconfdir}/pango/${MLPREFIX}pango.err
+	${@qemu_run_binary(d, '$D','/usr/bin/pango-querymodules')} \
+		$D${libdir}/pango/${LIBV}/modules/*.so \
+		> $D${sysconfdir}/pango/${MLPREFIX}pango.modules 2>/dev/null
 
-# pango-querymodules always returns 0, so we need to check if pango.err has
-# anything in it
-if [ -s $D${sysconfdir}/pango/${MLPREFIX}pango.err ]; then
-    rm $D${sysconfdir}/pango/${MLPREFIX}pango.err
-    exit 1
+	[ $? -ne 0 ] && exit 1
+
+	sed -i -e "s:$D::" $D${sysconfdir}/pango/${MLPREFIX}pango.modules
+
+	exit 0
 fi
-
-sed -i -e "s:$NATIVE_ROOT::g" $D${sysconfdir}/pango/${MLPREFIX}pango.modules
-
-# remove the empty pango.err
-rm $D${sysconfdir}/pango/${MLPREFIX}pango.err
-
-exit 0
-fi
-
 }
 
 do_install_append () {
