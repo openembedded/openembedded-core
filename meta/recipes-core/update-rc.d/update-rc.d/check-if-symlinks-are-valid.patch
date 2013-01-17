@@ -24,10 +24,10 @@ Index: git/update-rc.d
  shift
  
 +sn=$initd/$bn
-+if [ -L "$sn" -a -n $root ]; then
++if [ -L "$sn" -a -n "$root" ]; then
 +	readlink=$(which readlink)
 +
-+	if [ -n $readlink ]; then
++	if [ -n "$readlink" ]; then
 +		sn=$($readlink "$sn")
 +		case "$sn" in
 +			/*) sn=${root}${sn} ;;
