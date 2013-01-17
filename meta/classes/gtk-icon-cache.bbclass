@@ -32,6 +32,24 @@ done
 }
 
 gtk_icon_cache_postrm() {
+if [ "x$D" != "x" ]; then
+    if [ ! -f $INTERCEPT_DIR/update_icon_cache ]; then
+        cat << "EOF" > $INTERCEPT_DIR/update_icon_cache
+#!/bin/sh
+
+# update native pixbuf loaders
+gdk-pixbuf-query-loaders --update-cache
+
+for icondir in $D/usr/share/icons/*/ ; do
+    if [ -d $icondir ] ; then
+        gtk-update-icon-cache -fqt  $icondir
+    fi
+done
+EOF
+    fi
+    exit 0
+fi
+
 for icondir in /usr/share/icons/* ; do
     if [ -d $icondir ] ; then
         gtk-update-icon-cache -qt  $icondir
