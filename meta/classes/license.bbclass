@@ -6,6 +6,11 @@
 LICENSE_DIRECTORY ??= "${DEPLOY_DIR}/licenses"
 LICSSTATEDIR = "${WORKDIR}/license-destdir/"
 
+# Create extra package with license texts and add it to RRECOMMENDS_${PN}
+LICENSE_CREATE_PACKAGE ??= "0"
+LICENSE_PACKAGE_SUFFIX ??= "-lic"
+LICENSE_FILES_DIRECTORY ??= "${datadir}/licenses/"
+
 addtask populate_lic after do_patch before do_build
 do_populate_lic[dirs] = "${LICSSTATEDIR}/${PN}"
 do_populate_lic[cleandirs] = "${LICSSTATEDIR}"
@@ -94,6 +99,35 @@ python do_populate_lic() {
     destdir = os.path.join(d.getVar('LICSSTATEDIR', True), d.getVar('PN', True))
     copy_license_files(lic_files_paths, destdir)
 }
+
+# it would be better to copy them in do_install_append, but find_license_filesa is python
+python perform_packagecopy_prepend () {
+    enabled = d.getVar('LICENSE_CREATE_PACKAGE', True)
+    if d.getVar('CLASSOVERRIDE', True) == 'class-target' and enabled:
+        lic_files_paths = find_license_files(d)
+
+        # LICENSE_FILES_DIRECTORY starts with '/' so os.path.join cannot be used to join D and LICENSE_FILES_DIRECTORY
+        destdir = d.getVar('D', True) + os.path.join(d.getVar('LICENSE_FILES_DIRECTORY', True), d.getVar('PN', True))
+        copy_license_files(lic_files_paths, destdir)
+        add_package_and_files(d)
+}
+
+def add_package_and_files(d):
+    packages = d.getVar('PACKAGES', True)
+    files = d.getVar('LICENSE_FILES_DIRECTORY', True)
+    pn = d.getVar('PN', True)
+    pn_lic = "%s%s" % (pn, d.getVar('LICENSE_PACKAGE_SUFFIX'))
+    if pn_lic in packages:
+        bb.warn("%s package already existed in %s." % (pn_lic, pn))
+    else:
+        # first in PACKAGES to be sure that nothing else gets LICENSE_FILES_DIRECTORY
+        d.setVar('PACKAGES', "%s %s" % (pn_lic, packages))
+        d.setVar('FILES_' + pn_lic, files)
+        rrecommends_pn = d.getVar('RRECOMMENDS_' + pn, True)
+        if rrecommends_pn:
+            d.setVar('RRECOMMENDS_' + pn, "%s %s" % (pn_lic, rrecommends_pn))
+        else:
+            d.setVar('RRECOMMENDS_' + pn, "%s" % (pn_lic))
 
 def copy_license_files(lic_files_paths, destdir):
     bb.mkdirhier(destdir)
