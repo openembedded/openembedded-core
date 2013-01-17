@@ -28,7 +28,11 @@ fi
 }
 
 updatercd_postrm() {
-update-rc.d $D ${INITSCRIPT_NAME} remove
+if [ "$D" != "" ]; then
+	update-rc.d -f -r $D ${INITSCRIPT_NAME} remove
+else
+	update-rc.d ${INITSCRIPT_NAME} remove
+fi
 }
 
 
