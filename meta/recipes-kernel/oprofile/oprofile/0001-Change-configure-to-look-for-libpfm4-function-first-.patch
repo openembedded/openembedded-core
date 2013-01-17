@@ -1,0 +1,49 @@
+Upstream-Status: Backport
+
+From 414f4dba2d77f3014755aa58937efb22a4789e9f Mon Sep 17 00:00:00 2001
+From: Maynard Johnson <maynardj@us.ibm.com>
+Date: Fri, 21 Dec 2012 08:27:37 -0600
+Subject: [PATCH] Change configure to look for libpfm4 function first; then
+ fallback to libpfm3
+
+This change only affects ppc64 architecture, since it's the only
+architecture that uses libpfm to obtain the event hex code to pass
+to perf_event_open.
+
+There were bugs in libpfm3 pertaining to POWER7 event definitions that
+have been fixed in libpfm4.  So it's likely that some IBM POWER7 users
+may want to install libpfm4 and build oprofile to link with it.  For
+example, if libpfm4 were installed in /usr/local, the user would invoke
+oprofile's configure thusly:
+
+LDFLAGS="-L/usr/local/lib64" CPPFLAGS="-I/usr/local/include" ./configure
+
+But if the user happens to also have libpfm3 already installed in /usr,
+then the current order of config tests would result in choosing the libpfm3
+library. This logic seems wrong.  The configure checking should go from most
+recent to older library versions.  This patch changes the order of checking
+so the libpfm4 library would be found first.
+
+Signed-off-by: Maynard Johnson <maynardj@us.ibm.com>
+---
+ configure.ac |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 3078393..a9b1ee4 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -160,8 +160,8 @@ if test "$HAVE_PERF_EVENTS" = "1"; then
+ 	arch="`uname -m`"
+ 	if test "$arch" = "ppc64" || test "$arch" = "ppc"; then
+ 		AC_CHECK_HEADER(perfmon/pfmlib.h,,[AC_MSG_ERROR([pfmlib.h not found; usually provided in papi devel package])])
+-		AC_CHECK_LIB(pfm,pfm_get_event_name, HAVE_LIBPFM3='1'; HAVE_LIBPFM='1', [
+-			AC_CHECK_LIB(pfm,pfm_get_os_event_encoding, HAVE_LIBPFM3='0'; HAVE_LIBPFM='1',
++		AC_CHECK_LIB(pfm,pfm_get_os_event_encoding, HAVE_LIBPFM3='0'; HAVE_LIBPFM='1', [
++			AC_CHECK_LIB(pfm, pfm_get_event_name, HAVE_LIBPFM3='1'; HAVE_LIBPFM='1',
+ 			[AC_MSG_ERROR([libpfm not found; usually provided in papi devel package])])])
+ 		PFM_LIB="-lpfm"
+ 		AC_DEFINE_UNQUOTED(HAVE_LIBPFM3, $HAVE_LIBPFM3, [Define to 1 if using libpfm3; 0 if using newer libpfm])
+-- 
+1.7.9.7
+
