@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 DEPENDS = "avahi"
 RDEPENDS_${PN} = "avahi-daemon"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "http://0pointer.de/lennart/projects/nss-mdns/nss-mdns-${PV}.tar.gz"
 
@@ -32,5 +32,5 @@ pkg_postinst_${PN} () {
 pkg_prerm_${PN} () {
 	sed -e '/^hosts:/s/\s*\<mdns4\>//' \
 		-e '/^hosts:/s/\s*mdns4_minimal\s\+\[NOTFOUND=return\]//' \
-		-i /etc/nsswitch.conf
+		-i $D/etc/nsswitch.conf
 }
