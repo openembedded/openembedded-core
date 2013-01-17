@@ -9,6 +9,23 @@ UMOUNT="/bin/umount"
 ISOLINUX=""
 UNIONFS="no"
 
+# Copied from initramfs-framework. The core of this script probably should be
+# turned into initramfs-framework modules to reduce duplication.
+udev_daemon() {
+	OPTIONS="/sbin/udevd /lib/udev/udevd /lib/systemd/systemd-udevd"
+
+	for o in $OPTIONS; do
+		if [ -x "$o" ]; then
+			echo $o
+			return 0
+		fi
+	done
+
+	return 1
+}
+
+_UDEV_DAEMON=`udev_daemon`
+
 early_setup() {
     mkdir -p /proc
     mkdir -p /sys
@@ -21,7 +38,8 @@ early_setup() {
 
     mkdir -p /run
     mkdir -p /var/run
-    /lib/udev/udevd --daemon
+
+    $_UDEV_DAEMON --daemon
     udevadm trigger --action=add
 }
 
