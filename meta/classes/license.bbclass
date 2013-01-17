@@ -88,6 +88,25 @@ python do_populate_lic() {
     """
     Populate LICENSE_DIRECTORY with licenses.
     """
+    lic_files_paths = find_license_files(d)
+
+    # The base directory we wrangle licenses to
+    destdir = os.path.join(d.getVar('LICSSTATEDIR', True), d.getVar('PN', True))
+    copy_license_files(lic_files_paths, destdir)
+}
+
+def copy_license_files(lic_files_paths, destdir):
+    bb.mkdirhier(destdir)
+    for (basename, path) in lic_files_paths:
+        ret = bb.copyfile(path, os.path.join(destdir, basename))
+        # If the copy didn't occur, something horrible went wrong and we fail out
+        if not ret:
+            bb.warn("%s could not be copied for some reason. It may not exist. WARN for now." % path)
+
+def find_license_files(d):
+    """
+    Creates list of files used in LIC_FILES_CHKSUM and generic LICENSE files.
+    """
     import shutil
     import oe.license
 
@@ -108,12 +127,12 @@ python do_populate_lic() {
     # All the license files for the package
     lic_files = d.getVar('LIC_FILES_CHKSUM', True)
     pn = d.getVar('PN', True)
-    # The base directory we wrangle licenses to
-    destdir = os.path.join(d.getVar('LICSSTATEDIR', True), pn)
     # The license files are located in S/LIC_FILE_CHECKSUM.
     srcdir = d.getVar('S', True)
     # Directory we store the generic licenses as set in the distro configuration
     generic_directory = d.getVar('COMMON_LICENSE_DIR', True)
+    # List of basename, path tuples
+    lic_files_paths = []
     license_source_dirs = []
     license_source_dirs.append(generic_directory)
     try:
@@ -159,19 +178,11 @@ python do_populate_lic() {
             # we really should copy to generic_ + spdx_generic, however, that ends up messing the manifest
             # audit up. This should be fixed in emit_pkgdata (or, we actually got and fix all the recipes)
 
-            bb.copyfile(os.path.join(license_source, spdx_generic), os.path.join(os.path.join(d.getVar('LICSSTATEDIR', True), pn), "generic_" + license_type))
-            if not os.path.isfile(os.path.join(os.path.join(d.getVar('LICSSTATEDIR', True), pn), "generic_" + license_type)):
-            # If the copy didn't occur, something horrible went wrong and we fail out
-                bb.warn("%s for %s could not be copied for some reason. It may not exist. WARN for now." % (spdx_generic, pn))
+            lic_files_paths.append(("generic_" + license_type, os.path.join(license_source, spdx_generic)))
         else:
             # And here is where we warn people that their licenses are lousy
             bb.warn("%s: No generic license file exists for: %s in any provider" % (pn, license_type))
             pass
-
-    try:
-        bb.mkdirhier(destdir)
-    except:
-        pass
 
     if not generic_directory:
         raise bb.build.FuncFailed("COMMON_LICENSE_DIR is unset. Please set this in your distro config")
@@ -180,16 +191,13 @@ python do_populate_lic() {
         # No recipe should have an invalid license file. This is checked else
         # where, but let's be pedantic
         bb.note(pn + ": Recipe file does not have license file information.")
-        return True
+        return lic_files_paths
 
     for url in lic_files.split():
         (type, host, path, user, pswd, parm) = bb.decodeurl(url)
-        # We want the license file to be copied into the destination
+        # We want the license filename and path
         srclicfile = os.path.join(srcdir, path)
-        ret = bb.copyfile(srclicfile, os.path.join(destdir, os.path.basename(path)))
-        # If the copy didn't occur, something horrible went wrong and we fail out
-        if not ret:
-            bb.warn("%s could not be copied for some reason. It may not exist. WARN for now." % srclicfile)
+        lic_files_paths.append((os.path.basename(path), srclicfile))
 
     v = FindVisitor()
     try:
@@ -199,7 +207,7 @@ python do_populate_lic() {
     except SyntaxError:
         bb.warn("%s: Failed to parse it's LICENSE field." % (d.getVar('PF', True)))
 
-}
+    return lic_files_paths
 
 def return_spdx(d, license):
     """
