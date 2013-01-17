@@ -1,4 +1,4 @@
-RDEPENDS_${PN} += "kernel-image ${@oe.utils.contains('DISTRO_FEATURES', 'update-modules', 'update-modules', '', d)}"
+RDEPENDS_${PN} += "kernel-image"
 DEPENDS += "virtual/kernel"
 
 inherit module-base
@@ -27,13 +27,18 @@ module_do_install() {
 
 pkg_postinst_append () {
 if [ -z "$D" ]; then
-	depmod -a
-	update-modules || true
+	depmod -a ${KERNEL_VERSION}
+else
+	depmod -a -b $D -F ${STAGING_KERNEL_DIR}/System.map-${KERNEL_VERSION} ${KERNEL_VERSION}
 fi
 }
 
 pkg_postrm_append () {
-update-modules || true
+if [ -z "$D" ]; then
+	depmod -a ${KERNEL_VERSION}
+else
+	depmod -a -b $D -F ${STAGING_KERNEL_DIR}/System.map-${KERNEL_VERSION} ${KERNEL_VERSION}
+fi
 }
 
 EXPORT_FUNCTIONS do_compile do_install
