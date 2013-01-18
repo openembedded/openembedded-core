@@ -101,12 +101,12 @@ if [ -z "$TITLE" ]; then
 fi
 
 # Determine the dgrid3d mesh dimensions size
-MIN=$(tail -n +2 "$DATFILE" | cut -d ' ' -f 1 | sort | uniq | head -n1)
-MAX=$(tail -n +2 "$DATFILE" | cut -d ' ' -f 1 | sort | uniq | tail -n1)
-BB_CNT=$[${MAX#*0} - $MIN + 1]
-MIN=$(tail -n +2 "$DATFILE" | cut -d ' ' -f 2 | sort | uniq | head -n1)
-MAX=$(tail -n +2 "$DATFILE" | cut -d ' ' -f 2 | sort | uniq | tail -n1)
-PM_CNT=$[${MAX#*0} - $MIN + 1]
+MIN=$(tail -n +2 "$DATFILE" | cut -d ' ' -f 1 | sed 's/^0*//' | sort -n | uniq | head -n1)
+MAX=$(tail -n +2 "$DATFILE" | cut -d ' ' -f 1 | sed 's/^0*//' | sort -n | uniq | tail -n1)
+BB_CNT=$[${MAX} - $MIN + 1]
+MIN=$(tail -n +2 "$DATFILE" | cut -d ' ' -f 2 | sed 's/^0*//' | sort -n | uniq | head -n1)
+MAX=$(tail -n +2 "$DATFILE" | cut -d ' ' -f 2 | sed 's/^0*//' | sort -n | uniq | tail -n1)
+PM_CNT=$[${MAX} - $MIN + 1]
 
 
 (cat <<EOF

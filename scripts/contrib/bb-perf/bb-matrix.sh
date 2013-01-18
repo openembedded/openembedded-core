@@ -33,6 +33,8 @@
 #
 
 # The following ranges are appropriate for a 4 core system with 8 logical units
+# Use leading 0s to ensure all digits are the same string length, this results
+# in nice log file names and columnar dat files.
 BB_RANGE="04 05 06 07 08 09 10 11 12 13 14 15 16"
 PM_RANGE="04 05 06 07 08 09 10 11 12 13 14 15 16"
 
@@ -62,10 +64,11 @@ for BB in $BB_RANGE; do
 		echo "BB=$BB PM=$PM Logging to $BB_LOG"
 
 		# Export the variables under test and run the bitbake command
+		# Strip any leading zeroes before passing to bitbake
 		export BB_NUMBER_THREADS=$(echo $BB | sed 's/^0*//')
 		export PARALLEL_MAKE="-j $(echo $PM | sed 's/^0*//')"
 		/usr/bin/time -f "$BB $PM $TIME_STR" -a -o $RUNTIME_LOG $BB_CMD &> $BB_LOG
-		
+
 		echo "  $(tail -n1 $RUNTIME_LOG)"
 		echo -n "  Cleaning up..."
 		mv tmp/buildstats $RUNDIR/$BB-$PM-buildstats
