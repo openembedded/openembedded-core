@@ -340,5 +340,6 @@ do_kernel_link_vmlinux() {
 	ln -sf ../../../vmlinux
 }
 
-OE_TERMINAL_EXPORTS += "GUILT_BASE"
+OE_TERMINAL_EXPORTS += "GUILT_BASE KBUILD_OUTPUT"
 GUILT_BASE = "meta"
+KBUILD_OUTPUT = "${B}"
