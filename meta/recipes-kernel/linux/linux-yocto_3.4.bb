@@ -11,7 +11,7 @@ SRCREV_machine_qemux86-64 ?= "5432e2acb6053f9f7563cf63abd101ed2fdc1b6f"
 SRCREV_machine ?= "5432e2acb6053f9f7563cf63abd101ed2fdc1b6f"
 SRCREV_meta ?= "7e0cd2990798aae80565baa17d3b6c771874f284"
 
-SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.4.git;protocol=git;nocheckout=1;branch=${KBRANCH},${KMETA};name=machine,meta"
+SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.4.git;protocol=git;bareclone=1;branch=${KBRANCH},${KMETA};name=machine,meta"
 
 LINUX_VERSION ?= "3.4.24"
 
