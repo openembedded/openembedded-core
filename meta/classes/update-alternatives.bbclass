@@ -167,12 +167,25 @@ def gen_updatealternativesvardeps(d):
                     continue
                 d.appendVar('%s_VARDEPS_%s' % (v,p), ' %s:%s' % (flag, d.getVarFlag('%s_%s' % (v,p), flag, False)))
 
+def ua_extend_depends(d):
+    if not 'virtual/update-alternatives' in d.getVar('PROVIDES', True):
+        d.appendVar('DEPENDS', ' virtual/update-alternatives')
+
 python __anonymous() {
+    # Update Alternatives only works on target packages...
+    if bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d) or \
+       bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or \
+       bb.data.inherits_class('cross-canadian', d):
+        return
+
     # deprecated stuff...
     update_alternatives_after_parse(d)
 
     # compute special vardeps
     gen_updatealternativesvardeps(d)
+
+    # extend the depends to include virtual/update-alternatives
+    ua_extend_depends(d)
 }
 
 def gen_updatealternativesvars(d):
