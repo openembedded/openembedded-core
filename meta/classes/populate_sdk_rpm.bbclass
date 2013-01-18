@@ -43,7 +43,9 @@ populate_sdk_rpm () {
 	export INSTALL_PACKAGES_RPM="${TOOLCHAIN_TARGET_TASK}"
 	export INSTALL_PACKAGES_ATTEMPTONLY_RPM="${TOOLCHAIN_TARGET_TASK_ATTEMPTONLY}"
 	export INSTALL_PACKAGES_LINGUAS_RPM=""
-	export INSTALL_PROVIDENAME_RPM=""
+	# We don't need any of these runtime items for the SDK, so
+	# just make the system assume they exist.
+	export INSTALL_PROVIDENAME_RPM="/bin/sh /bin/bash /usr/bin/env /usr/bin/perl pkgconfig"
 	export INSTALL_TASK_RPM="populate_sdk-target"
 	export INSTALL_COMPLEMENTARY_RPM=""
 	export INTERCEPT_DIR=${WORKDIR}/intercept_scripts
