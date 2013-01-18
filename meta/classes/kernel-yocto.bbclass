@@ -120,15 +120,11 @@ do_kernel_checkout() {
 
 	# A linux yocto SRC_URI should use the bareclone option. That
 	# ensures that all the branches are available in the WORKDIR version
-	# of the repository. If it wasn't passed, we should detect it, and put
-	# out a useful error message
+	# of the repository. 
 	if [ -d "${WORKDIR}/git/" ] && [ -d "${WORKDIR}/git/.git" ]; then
 		# we build out of {S}, so ensure that ${S} is clean and present
 		rm -rf ${S}
 		mkdir -p ${S}
-
-		echo "WARNING. ${WORKDIR}/git is not a bare clone."
-		echo "Ensure that the SRC_URI includes the 'bareclone=1' option."
 		
 		# We can fix up the kernel repository even if it wasn't a bare clone.
 		# If KMETA is defined, the branch must exist, but a machine branch
