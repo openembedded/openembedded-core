@@ -1,0 +1,28 @@
+From d7fb5d4e159071b6255181fcf436300038fe9e6c Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@windriver.com>
+Date: Wed, 16 Jan 2013 20:48:11 -0500
+Subject: [PATCH] guilt: update supported git versions to 1.8.x
+
+guilt errors on the new 1.8.x git series, when it shouldn't, since
+1.8.x works fine with the existing guilt version.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
+---
+ guilt |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/guilt b/guilt
+index 346f929..6505653 100755
+--- a/guilt
++++ b/guilt
+@@ -37,6 +37,7 @@ case "$gitver" in
+ 	1.5.*)	;; # git config
+ 	1.6.*)	;; # git config
+ 	1.7.*)	;; # git config
++	1.8.*)	;; # git config
+ 	*)	die "Unsupported version of git ($gitver)" ;;
+ esac
+ 
+-- 
+1.7.10.4
+
