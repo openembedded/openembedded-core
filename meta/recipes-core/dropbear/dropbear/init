@@ -58,9 +58,15 @@ gen_keys() {
 for t in $DROPBEAR_KEYTYPES; do
   case $t in
     rsa)
+        if [ -f "$DROPBEAR_RSAKEY" -a ! -s "$DROPBEAR_RSAKEY" ]; then
+                rm $DROPBEAR_RSAKEY || true
+        fi
         test -f $DROPBEAR_RSAKEY || dropbearkey -t rsa -f $DROPBEAR_RSAKEY
 	;;
     dsa)
+        if [ -f "$DROPBEAR_DSSKEY" -a ! -s "$DROPBEAR_DSSKEY" ]; then
+                rm $DROPBEAR_DSSKEY || true
+        fi
         test -f $DROPBEAR_DSSKEY || dropbearkey -t dss -f $DROPBEAR_DSSKEY
 	;;
   esac
