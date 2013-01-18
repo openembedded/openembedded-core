@@ -14,14 +14,9 @@ X11DEPENDS = "virtual/libx11 libxext libxcursor libxrandr libxdamage libxrender 
 DEPENDS = "glib-2.0 pango atk jpeg libpng gdk-pixbuf-native docbook-utils-native \
  libgcrypt cairo gdk-pixbuf"
 
-PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
- ${@base_contains('DISTRO_FEATURES', 'gtk-directfb', 'gtk-directfb', '', d)}"
+PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
 
-# for gtk+ 2.x, have to pick either x11 or directfb not both
-# for gtk+ 3.x, PACKAGECONFIG[gtk-directfb] should be removed because directfb will not be support as
-# a backend.
 PACKAGECONFIG[x11] = "--with-x=yes --with-gdktarget=x11,--with-x=no,${X11DEPENDS}"
-PACKAGECONFIG[gtk-directfb] = "--with-gdktarget=directfb,,directfb"
 
 inherit autotools gtk-doc pkgconfig update-alternatives
 

@@ -29,7 +29,7 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.24/gtk+-${PV}.tar.xz \
 #        file://combo-arrow-size.patch;striplevel=0
 #            file://configurefix.patch
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI[md5sum] = "e2c16f119ed624893ecfc3775930ae4c"
 SRC_URI[sha256sum] = "8bd1b8b511a3004e8972badf467ce829e6855cdff15540b9344dc934c68008ac"
