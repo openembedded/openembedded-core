@@ -11,6 +11,7 @@ SRC_URI = "ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${PV}/src/nspr-$
            file://remove-rpath-from-tests.patch \
            file://fix-build-on-x86_64.patch \
            file://trickly-fix-build-on-x86_64.patch \
+           file://fix-build-on-aarch64.patch \
           "
 
 SRC_URI += "file://nspr.pc.in"
