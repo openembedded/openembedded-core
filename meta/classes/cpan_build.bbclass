@@ -20,7 +20,7 @@ def cpan_build_dep_prepend(d):
 DEPENDS_prepend = "${@cpan_build_dep_prepend(d)}"
 
 cpan_build_do_configure () {
-	if [ ${@is_target(d)} == "yes" ]; then
+	if [ "${@is_target(d)}" = "yes" ]; then
 		# build for target
 		. ${STAGING_LIBDIR}/perl/config.sh
 	fi
