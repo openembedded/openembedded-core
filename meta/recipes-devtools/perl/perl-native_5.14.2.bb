@@ -18,6 +18,7 @@ SRC_URI = "http://www.cpan.org/src/5.0/perl-${PV}.tar.gz \
            file://native-nopacklist.patch \
            file://native-perlinc.patch \
            file://MM_Unix.pm.patch \
+           file://debian/errno_ver.diff \
            file://perl-build-in-t-dir.patch"
 
 SRC_URI[md5sum] = "3306fbaf976dcebdcd49b2ac0be00eb9"
