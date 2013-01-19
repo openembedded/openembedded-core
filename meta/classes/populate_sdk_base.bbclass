@@ -113,7 +113,7 @@ fakeroot create_sdk_files() {
 fakeroot tar_sdk() {
 	# Package it up
 	mkdir -p ${SDK_DEPLOY}
-	cd ${SDK_OUTPUT}
+	cd ${SDK_OUTPUT}/${SDKPATH}
 	tar --owner=root --group=root -cj --file=${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.tar.bz2 .
 }
 
@@ -130,7 +130,6 @@ if [ "$INST_ARCH" != "$SDK_ARCH" ]; then
 fi
 
 DEFAULT_INSTALL_DIR="${SDKPATH}"
-COMPONENTS_LEN=$(echo ".${SDKPATH}" | sed "s/\// /g" | wc -w)
 SUDO_EXEC=""
 target_sdk_dir=""
 answer=""
@@ -212,7 +211,7 @@ fi
 payload_offset=$(($(grep -na -m1 "^MARKER:$" $0|cut -d':' -f1) + 1))
 
 printf "Extracting SDK..."
-tail -n +$payload_offset $0| $SUDO_EXEC tar xj --strip-components=$COMPONENTS_LEN -C $target_sdk_dir
+tail -n +$payload_offset $0| $SUDO_EXEC tar xj -C $target_sdk_dir
 echo "done"
 
 printf "Setting it up..."
