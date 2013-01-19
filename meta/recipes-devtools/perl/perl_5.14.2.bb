@@ -67,6 +67,7 @@ SRC_URI = "http://www.cpan.org/src/5.0/perl-${PV}.tar.gz \
 	file://fix_bad_rpath.patch \
 	file://perl-build-in-t-dir.patch \
 	file://perl-archlib-exp.patch \
+	file://dynaloaderhack.patch \
 	\
         file://config.sh \
         file://config.sh-32 \
