@@ -5,6 +5,7 @@
 RPROVIDES_perl-module-b-asmdata = "perl-module-${TARGET_SYS}-b-asmdata"
 RPROVIDES_perl-module-b-assembler = "perl-module-${TARGET_SYS}-b-assembler"
 RPROVIDES_perl-module-b-bblock = "perl-module-${TARGET_SYS}-b-bblock"
+RPROVIDES_perl-module-build += "perl-module-module-build"
 RPROVIDES_perl-module-b-bytecode = "perl-module-${TARGET_SYS}-b-bytecode"
 RPROVIDES_perl-module-b-cc = "perl-module-${TARGET_SYS}-b-cc"
 RPROVIDES_perl-module-b-concise = "perl-module-${TARGET_SYS}-b-concise"
@@ -17,8 +18,11 @@ RPROVIDES_perl-module-b-stackobj = "perl-module-${TARGET_SYS}-b-stackobj"
 RPROVIDES_perl-module-b-stash = "perl-module-${TARGET_SYS}-b-stash"
 RPROVIDES_perl-module-b-terse = "perl-module-${TARGET_SYS}-b-terse"
 RPROVIDES_perl-module-b-xref = "perl-module-${TARGET_SYS}-b-xref"
-RPROVIDES_perl-module-config = "perl-module-${TARGET_SYS}-config"
-RPROVIDES_perl-module-config-heavy = "perl-module-${TARGET_SYS}-config-heavy"
+RPROVIDES_perl-lib += " \
+    perl-module-config \
+    perl-module-config-heavy \
+    perl-module-${TARGET_SYS}-config \
+    perl-module-${TARGET_SYS}-config-heavy"
 RPROVIDES_perl-module-encode-alias = "perl-module-${TARGET_SYS}-encode-alias"
 RPROVIDES_perl-module-encode-cjkconstants = "perl-module-${TARGET_SYS}-encode-cjkconstants"
 RPROVIDES_perl-module-encode-config = "perl-module-${TARGET_SYS}-encode-config"
