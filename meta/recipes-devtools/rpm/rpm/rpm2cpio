@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Prevent gawk >= 4.0.x from getting funny ideas wrt UTF in printf()
+LANG=C
+
 pkg=$1
 if [ "$pkg" = "" -o ! -e "$pkg" ]; then
     echo "no package supplied" 1>&2
@@ -22,30 +25,15 @@ dl=`expr 256 \* \( 256 \* \( 256 \* $6 + $7 \) + $8 \) + $9`
 
 hdrsize=`expr 8 + 16 \* $il + $dl`
 o=`expr $o + $hdrsize`
-EXTRACTOR="dd if=$pkg ibs=$o skip=1"
+comp=`dd if=$pkg ibs=$o skip=1 count=1 2>/dev/null | dd bs=3 count=1 2> /dev/null`
 
-COMPRESSION=`($EXTRACTOR |file -) 2>/dev/null`
-if echo $COMPRESSION |grep -q gzip; then
-	DECOMPRESSOR=gunzip
-elif echo $COMPRESSION |grep -q bzip2; then
-	DECOMPRESSOR=bunzip2
-elif echo $COMPRESSION |grep -q xz; then
-	DECOMPRESSOR=unxz
-elif echo $COMPRESSION |grep -q cpio; then
-	DECOMPRESSOR=cat
-else
-	# Most versions of file don't support LZMA, therefore we assume
-	# anything not detected is LZMA
-	DECOMPRESSOR=`which unlzma 2>/dev/null`
-	case "$DECOMPRESSOR" in
-	    /* ) ;;
-	    *  ) DECOMPRESSOR=`which lzmash 2>/dev/null`
-	         case "$DECOMPRESSOR" in
-	             /* ) DECOMPRESSOR="lzmash -d -c" ;;
-	             *  ) DECOMPRESSOR=cat ;;
-	         esac
-	         ;;
-	esac
-fi
-
-$EXTRACTOR 2>/dev/null | $DECOMPRESSOR
+gz="`echo . | awk '{ printf("%c%c", 0x1f, 0x8b); }'`"
+lzma="`echo . | awk '{ printf("%cLZ", 0xff); }'`"
+xz="`echo . | awk '{ printf("%c7z", 0xfd); }'`"
+case "$comp" in
+    BZh)      dd if="$pkg" ibs=$o skip=1 2>/dev/null | bunzip2 ;;
+    "$gz"*)   dd if="$pkg" ibs=$o skip=1 2>/dev/null | gunzip ;;
+    "$xz"*)   dd if="$pkg" ibs=$o skip=1 2>/dev/null | xzcat ;;
+    "$lzma"*) dd if="$pkg" ibs=$o skip=1 2>/dev/null | unlzma ;;
+    *)        echo "Unrecognized rpm file: $pkg"; exit 1 ;;
+esac
