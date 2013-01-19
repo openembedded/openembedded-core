@@ -33,7 +33,7 @@ CONFFILES_${PN} = "${sysconfdir}/dbus-1/system.conf ${sysconfdir}/dbus-1/session
 
 DEBIANNAME_${PN} = "dbus-1"
 
-PACKAGES =+ "${PN}-lib ${PN}-systemd"
+PACKAGES =+ "${PN}-lib"
 
 OLDPKGNAME = "dbus-x11"
 OLDPKGNAME_class-nativesdk = ""
@@ -41,8 +41,6 @@ OLDPKGNAME_class-nativesdk = ""
 # for compatibility
 RPROVIDES_${PN} = "${OLDPKGNAME}"
 RREPLACES_${PN} += "${OLDPKGNAME}"
-
-FILES_${PN}-systemd = "${systemd_unitdir}/system/"
 
 FILES_${PN} = "${bindir}/dbus-daemon* \
                ${bindir}/dbus-uuidgen \
@@ -54,7 +52,8 @@ FILES_${PN} = "${bindir}/dbus-daemon* \
                ${sysconfdir} \
                ${localstatedir} \
                ${datadir}/dbus-1/services \
-               ${datadir}/dbus-1/system-services"
+               ${datadir}/dbus-1/system-services \
+               ${systemd_unitdir}/system/"
 FILES_${PN}-lib = "${libdir}/lib*.so.*"
 RRECOMMENDS_${PN}-lib = "${PN}"
 FILES_${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-glib-tool"
@@ -67,6 +66,9 @@ pkg_postinst_dbus() {
 
 EXTRA_OECONF_X = "${@base_contains('DISTRO_FEATURES', 'x11', '--with-x', '--without-x', d)}"
 EXTRA_OECONF_X_class-native = "--without-x --disable-x11-autolaunch"
+# TODO: would like to --enable-systemd but that's a circular build-dependency
+# between systemd <->dbus
+EXTRA_OECONF_SYSTEMD = "${@base_contains('DISTRO_FEATURES', 'systemd', '--with-systemdsystemunitdir=${systemd_unitdir}/system/', '', d)}"
 
 EXTRA_OECONF = "--disable-tests \
                 --disable-checks \
@@ -74,15 +76,18 @@ EXTRA_OECONF = "--disable-tests \
                 --disable-doxygen-docs \
                 --disable-libaudit \
                 --with-xml=expat \
-                --with-systemdsystemunitdir=${systemd_unitdir}/system/ \
+                --disable-systemd \
+                ${EXTRA_OECONF_SYSTEMD} \
                 ${EXTRA_OECONF_X}"
 
 do_install() {
 	autotools_do_install
 
-	install -d ${D}${sysconfdir}/init.d
-	sed 's:@bindir@:${bindir}:' < ${WORKDIR}/dbus-1.init >${WORKDIR}/dbus-1.init.sh
-	install -m 0755 ${WORKDIR}/dbus-1.init.sh ${D}${sysconfdir}/init.d/dbus-1
+	if ${@base_contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
+		install -d ${D}${sysconfdir}/init.d
+		sed 's:@bindir@:${bindir}:' < ${WORKDIR}/dbus-1.init >${WORKDIR}/dbus-1.init.sh
+		install -m 0755 ${WORKDIR}/dbus-1.init.sh ${D}${sysconfdir}/init.d/dbus-1
+	fi
 
 	install -d ${D}${sysconfdir}/default/volatiles
 	echo "d messagebus messagebus 0755 ${localstatedir}/run/dbus none" \
@@ -101,10 +106,6 @@ do_install() {
 
 	# Remove empty testexec directory as we don't build tests
 	rm -rf ${D}${libdir}/dbus-1.0/test
-
-	# disable dbus-1 sysv script on systemd installs
-	# nearly all distros call the initscript plain 'dbus', but OE-core is different
-	ln -sf /dev/null ${D}/${systemd_unitdir}/system/dbus-1.service
 }
 
 do_install_class-native() {
@@ -114,7 +115,7 @@ do_install_class-native() {
 	install -d ${STAGING_DATADIR_NATIVE}/dbus/
 	# N.B. is below install actually required?
 	install -m 0644 bus/session.conf ${STAGING_DATADIR_NATIVE}/dbus/session.conf
-	
+
 	# dbus-glib-native and dbus-glib need this xml file
 	./bus/dbus-daemon --introspect > ${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml
 }
