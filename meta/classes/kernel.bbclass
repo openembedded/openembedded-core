@@ -1,7 +1,7 @@
 inherit linux-kernel-base module_strip
 
 PROVIDES += "virtual/kernel"
-DEPENDS += "virtual/${TARGET_PREFIX}gcc kmod-native virtual/${TARGET_PREFIX}gcc${KERNEL_CCSUFFIX}"
+DEPENDS += "virtual/${TARGET_PREFIX}gcc kmod-native"
 
 # we include gcc above, we dont need virtual/libc
 INHIBIT_DEFAULT_DEPS = "1"
@@ -36,20 +36,6 @@ KERNEL_PRIORITY ?= "${@int(d.getVar('PV',1).split('-')[0].split('+')[0].split('.
                        int(d.getVar('PV',1).split('-')[0].split('+')[0].split('.')[-1])}"
 
 KERNEL_RELEASE ?= "${KERNEL_VERSION}"
-
-KERNEL_CCSUFFIX ?= ""
-KERNEL_LDSUFFIX ?= ""
-
-# Set TARGET_??_KERNEL_ARCH in the machine .conf to set architecture
-# specific options necessary for building the kernel and modules.
-#FIXME: should be this: TARGET_CC_KERNEL_ARCH ?= "${TARGET_CC_ARCH}"
-TARGET_CC_KERNEL_ARCH ?= ""
-HOST_CC_KERNEL_ARCH ?= "${TARGET_CC_KERNEL_ARCH}"
-TARGET_LD_KERNEL_ARCH ?= ""
-HOST_LD_KERNEL_ARCH ?= "${TARGET_LD_KERNEL_ARCH}"
-
-KERNEL_CC = "${CCACHE}${HOST_PREFIX}gcc${KERNEL_CCSUFFIX} ${HOST_CC_KERNEL_ARCH}${TOOLCHAIN_OPTIONS}"
-KERNEL_LD = "${HOST_PREFIX}ld${KERNEL_LDSUFFIX} ${HOST_LD_KERNEL_ARCH}${TOOLCHAIN_OPTIONS}"
 
 # Where built kernel lies in the kernel tree
 KERNEL_OUTPUT ?= "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"

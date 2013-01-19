@@ -43,3 +43,16 @@ def map_uboot_arch(a, d):
 
 export UBOOT_ARCH = "${@map_uboot_arch(d.getVar('ARCH', True), d)}"
 
+# Set TARGET_??_KERNEL_ARCH in the machine .conf to set architecture
+# specific options necessary for building the kernel and modules.
+TARGET_CC_KERNEL_ARCH ?= ""
+HOST_CC_KERNEL_ARCH ?= "${TARGET_CC_KERNEL_ARCH}"
+TARGET_LD_KERNEL_ARCH ?= ""
+HOST_LD_KERNEL_ARCH ?= "${TARGET_LD_KERNEL_ARCH}"
+TARGET_AR_KERNEL_ARCH ?= ""
+HOST_AR_KERNEL_ARCH ?= "${TARGET_AR_KERNEL_ARCH}"
+
+KERNEL_CC = "${CC} ${HOST_CC_KERNEL_ARCH}"
+KERNEL_LD = "${LD} ${HOST_LD_KERNEL_ARCH}"
+KERNEL_AR = "${AR} ${HOST_AR_KERNEL_ARCH}"
+
