@@ -1,7 +1,12 @@
 #
 # This is for perl modules that use the new Build.PL build system
 #
-inherit cpan-base
+inherit cpan-base perlnative
+
+# Env var which tells perl if it should use host (no) or target (yes) settings
+export PERLCONFIGTARGET = "${@is_target(d)}"
+export PERL_ARCHLIB = "${STAGING_LIBDIR}${PERL_OWN_DIR}/perl/${@get_perl_version(d)}"
+export LD = "${CCLD}"
 
 #
 # We also need to have built libmodule-build-perl-native for
