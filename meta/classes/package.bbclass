@@ -1521,7 +1521,8 @@ python package_do_shlibs() {
             d.setVar('pkg_postinst_%s' % pkg, postinst)
 
     list_re = re.compile('^(.*)\.list$')
-    for dir in shlibs_dirs:
+    # Go from least to most specific since the last one found wins
+    for dir in reversed(shlibs_dirs):
         if not os.path.exists(dir):
             continue
         for file in os.listdir(dir):
@@ -1643,7 +1644,8 @@ python package_do_pkgconfig () {
                 f.write('%s\n' % p)
             f.close()
 
-    for dir in shlibs_dirs:
+    # Go from least to most specific since the last one found wins
+    for dir in reversed(shlibs_dirs):
         if not os.path.exists(dir):
             continue
         for file in os.listdir(dir):
