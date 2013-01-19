@@ -418,9 +418,9 @@ python package_get_auto_pr() {
             return
         d.setVar('PRAUTO',str(auto_pr))
     else:
-        pv = d.getVar("PV", True)
-        if 'AUTOINC' in pv:
-            d.setVar("PKGV", pv.replace("AUTOINC", "0"))
+        pkgv = d.getVar("PKGV", True)
+        if 'AUTOINC' in pkgv:
+            d.setVar("PKGV", pkgv.replace("AUTOINC", "0"))
 }
 
 LOCALEBASEPN ??= "${PN}"
