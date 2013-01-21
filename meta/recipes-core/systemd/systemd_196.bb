@@ -8,14 +8,14 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe \
 
 PROVIDES = "udev"
 
-DEPENDS = "xz kmod gtk-doc-stub-native docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline dbus libcap libcgroup tcp-wrappers usbutils glib-2.0 libgcrypt"
+DEPENDS = "xz kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline dbus libcap libcgroup tcp-wrappers usbutils glib-2.0 libgcrypt"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
 SERIAL_CONSOLE ?= "115200 /dev/ttyS0"
 
 SECTION = "base/shell"
 
-inherit useradd pkgconfig autotools perlnative
+inherit gtk-doc useradd pkgconfig autotools perlnative
 
 SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
            file://0001-Revert-systemd-analyze-use-argparse-instead-of-getop.patch \
@@ -47,6 +47,8 @@ CACHED_CONFIGUREVARS = "ac_cv_file__usr_share_pci_ids=no \
                         ac_cv_file__usr_share_hwdata_pci_ids=no \
                         ac_cv_file__usr_share_misc_pci_ids=yes"
 
+GTKDOC_DOCDIR = "${S}/docs/"
+
 # The gtk+ tools should get built as a separate recipe e.g. systemd-tools
 EXTRA_OECONF = " --with-distro=${SYSTEMDDISTRO} \
                  --with-rootprefix=${base_prefix} \
@@ -59,7 +61,6 @@ EXTRA_OECONF = " --with-distro=${SYSTEMDDISTRO} \
                  --disable-coredump \
                  --disable-introspection \
                  --with-pci-ids-path=/usr/share/misc \
-                 --disable-gtk-doc-html \
                  --disable-tcpwrap \
                  --enable-split-usr \
                  --disable-microhttpd \
@@ -69,12 +70,9 @@ EXTRA_OECONF = " --with-distro=${SYSTEMDDISTRO} \
 # There's no docbook-xsl-native, so for the xsltproc check to false
 do_configure_prepend() {
 	export CPP="${HOST_PREFIX}cpp ${TOOLCHAIN_OPTIONS} ${HOST_CC_ARCH}"
-	sed -i /xsltproc/d configure.ac
 
 	# we only have /home/root, not /root
 	sed -i -e 's:=/root:=/home/root:g' units/*.service*
-
-	gtkdocize --docdir ${S}/docs/
 }
 
 do_install() {
