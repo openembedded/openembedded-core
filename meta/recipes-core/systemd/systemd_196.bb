@@ -11,8 +11,6 @@ PROVIDES = "udev"
 DEPENDS = "xz kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline dbus libcap libcgroup tcp-wrappers usbutils glib-2.0 libgcrypt"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
-SERIAL_CONSOLE ?= "115200 /dev/ttyS0"
-
 SECTION = "base/shell"
 
 inherit gtk-doc useradd pkgconfig autotools perlnative
