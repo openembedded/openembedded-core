@@ -6,7 +6,7 @@ DEPENDS = "libaio"
 
 SRCREV = "d6918c8832793b4205ed3bfede78c2f915c23385"
 
-PR = "r5"
+PR = "r6"
 PV = "1.0.5+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.dk/blktrace.git;protocol=git \
@@ -20,3 +20,9 @@ EXTRA_OEMAKE = "\
     'LDFLAGS=${LDFLAGS}' \
 "
 PARALLEL_MAKE = ""
+
+do_install() {
+	oe_runmake ARCH="${ARCH}" prefix=${prefix} \
+		mandir=${mandir} DESTDIR=${D} install
+}
+
