@@ -1,3 +1,6 @@
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
 Index: git/src/nspawn/nspawn.c
 ===================================================================
 --- git.orig/src/nspawn/nspawn.c	2012-09-22 17:57:05.000000000 -0700

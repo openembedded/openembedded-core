@@ -1,3 +1,6 @@
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
 Index: git/src/journal/journal-file.c
 ===================================================================
 --- git.orig/src/journal/journal-file.c	2012-09-02 09:49:15.126089594 -0700

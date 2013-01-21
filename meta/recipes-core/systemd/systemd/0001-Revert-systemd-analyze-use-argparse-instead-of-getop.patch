@@ -1,3 +1,6 @@
+Upstream-Status: Backport [revert]
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+
 From 2003e63f48cee2f497de7b90b66284f98c1c9919 Mon Sep 17 00:00:00 2001
 From: Koen Kooi <koen@dominion.thruhere.net>
 Date: Mon, 10 Dec 2012 12:24:32 +0100
