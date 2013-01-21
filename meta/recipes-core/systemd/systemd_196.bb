@@ -197,7 +197,7 @@ RDEPENDS_udev += "udev-utils"
 RPROVIDES_udev = "hotplug"
 
 FILES_udev += "${base_sbindir}/udevd \
-               /libstemd-udevd \
+               ${base_libdir}/systemd/systemd-udevd \
                /lib/udev/accelerometer \
                /lib/udev/ata_id \
                /lib/udev/cdrom_id \
