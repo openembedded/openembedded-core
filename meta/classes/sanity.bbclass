@@ -570,6 +570,7 @@ def check_sanity(sanity_data):
         if (saved_tmpdir != tmpdir):
             messages = messages + "Error, TMPDIR has changed location. You need to either move it back to %s or rebuild\n" % saved_tmpdir
     else:
+        bb.utils.mkdirhier(tmpdir)
         f = file(checkfile, "w")
         f.write(tmpdir)
     f.close()
