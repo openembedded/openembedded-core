@@ -1,9 +1,9 @@
 on uclibc secure_getenv is not available
 therefore default to using getenv instead
 
-Singed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Denied [no desire for uclibc support]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Upstream-Status: Pending
 Index: git/src/shared/missing.h
 ===================================================================
 --- git.orig/src/shared/missing.h	2012-09-22 18:46:44.141282145 -0700

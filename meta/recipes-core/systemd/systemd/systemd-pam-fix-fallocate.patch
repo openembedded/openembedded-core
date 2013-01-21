@@ -1,4 +1,4 @@
-Upstream-Status: Pending
+Upstream-Status: Denied [no desire for uclibc support]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 Index: git/src/journal/journal-file.c

@@ -1,6 +1,6 @@
 Prefer getty to agetty in console setup systemd units
 
-Upstream-Status: Pending
+Upstream-Status: Inappropriate [configuration specific]
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
  units/getty@.service.m4        |    2 +-
