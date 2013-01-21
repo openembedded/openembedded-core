@@ -40,3 +40,9 @@ RDEPENDS_${PN} = "systemd"
 # This is a machine specific file
 FILES_${PN} = "${systemd_unitdir}/system/serial-getty@.service ${sysconfdir}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+# As this package is tied to systemd, only build it when we're also building systemd.
+python () {
+    if not oe.utils.contains ('DISTRO_FEATURES', 'systemd', True, False, d):
+        raise bb.parse.SkipPackage("'systemd' not in DISTRO_FEATURES")
+}
