@@ -10,10 +10,6 @@ SDK-GMAE = " \
     libxi-dev \
     libsqlite3-dev \
     gnome-desktop \
-    gssdp \
-    gupnp \
-    gupnp-av \
-    gupnp-tools \
     libart-lgpl \
     libtelepathy \
     pulseaudio \
