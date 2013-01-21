@@ -35,9 +35,6 @@ do_install() {
 	fi
 }
 
-PACKAGES = "${PN} ${PN}-dbg ${PN}-dev ${PN}-doc"
-
-RRECOMMENDS_${PN} = ""
 RDEPENDS_${PN} = "systemd"
 
 # This is a machine specific file
