@@ -7,9 +7,10 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/clrkwllms/rt-tests.git 
            file://0001-rt-tests-Allow-for-user-specified-PYLIB.patch \
            file://0002-rt-tests-Break-out-install_hwlatdetect.patch \
            file://added-missing-dependencies.patch \
+           file://cyclictest-finish-removal-of-1-second-first-loops.patch \
 "
 
-INC_PR = "r1"
+INC_PR = "r2"
 
 S = "${WORKDIR}/git"
 

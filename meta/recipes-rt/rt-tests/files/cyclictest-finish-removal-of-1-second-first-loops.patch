@@ -1,0 +1,58 @@
+From 8959451a8ec5dc83dcb2dba6701abe8bf419e12c Mon Sep 17 00:00:00 2001
+Message-Id: <8959451a8ec5dc83dcb2dba6701abe8bf419e12c.1358783585.git.Jim.Somerville@windriver.com>
+From: Jim Somerville <Jim.Somerville@windriver.com>
+Date: Mon, 21 Jan 2013 10:50:18 -0500
+Subject: [PATCH 1/1] cyclictest: finish removal of 1 second first loops
+
+Observation:
+Huge latencies reported close to 1 second when certain options
+are used in cyclictest.
+
+Problem:
+[ commit da4956cbcaf7945554f30e4d3a9be09b1431b19a
+    use interval on first loop instead of 1 second ]
+removed the 1 second first timing loop out of the main path
+in cyclictest but left it in two other paths, namely the ones
+triggered by these two options:
+-r       --relative        use relative timer instead of absolute
+-s       --system          use sys_nanosleep and sys_setitimer
+This causes huge latencies of close to 1 second to be reported
+by cyclictest with certain uses of those two options.
+
+Fix:
+Extend the original commit to remove the 1 second hardcoded
+timer values from the RELTIME and ITIMER options.  Use the
+the actual interval instead.
+
+Signed-off-by: Jim Somerville <Jim.Somerville@windriver.com>
+---
+ src/cyclictest/cyclictest.c |    6 ++----
+ 1 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/src/cyclictest/cyclictest.c b/src/cyclictest/cyclictest.c
+index 11b6cea..8487409 100644
+--- a/src/cyclictest/cyclictest.c
++++ b/src/cyclictest/cyclictest.c
+@@ -741,17 +741,15 @@ void *timerthread(void *param)
+ 		if (par->timermode == TIMER_ABSTIME)
+ 			tspec.it_value = next;
+ 		else {
+-			tspec.it_value.tv_nsec = 0;
+-			tspec.it_value.tv_sec = 1;
++			tspec.it_value = interval;
+ 		}
+ 		timer_settime(timer, par->timermode, &tspec, NULL);
+ 	}
+ 
+ 	if (par->mode == MODE_SYS_ITIMER) {
+-		itimer.it_value.tv_sec = 1;
+-		itimer.it_value.tv_usec = 0;
+ 		itimer.it_interval.tv_sec = interval.tv_sec;
+ 		itimer.it_interval.tv_usec = interval.tv_nsec / 1000;
++		itimer.it_value = itimer.it_interval;
+ 		setitimer (ITIMER_REAL, &itimer, NULL);
+ 	}
+ 
+-- 
+1.7.4.1
+
