@@ -232,8 +232,8 @@ Index: perl-5.14.2/Makefile.SH
 +pod/perlmodlib.pod: pod/perlmodlib.PL MANIFEST
  	$(MINIPERL) $(Icwd) pod/perlmodlib.PL -q
  
- pod/perl5142delta.pod: pod/perldelta.pod
- 	$(LNS) perldelta.pod pod/perl5142delta.pod
+ pod/perl5143delta.pod: pod/perldelta.pod
+ 	$(LNS) perldelta.pod pod/perl5143delta.pod
  
 -extra.pods: $(MINIPERL_EXE)
 +extra.pods: 

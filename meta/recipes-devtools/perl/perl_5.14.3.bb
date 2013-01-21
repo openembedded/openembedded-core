@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db grep-native"
 DEPENDS += "gdbm zlib"
-PR = "r18"
+PR = "r0"
 
 # 5.10.1 has Module::Build built-in
 PROVIDES += "libmodule-build-perl"
@@ -39,17 +39,13 @@ SRC_URI = "http://www.cpan.org/src/5.0/perl-${PV}.tar.gz \
 	file://debian/cpanplus_definstalldirs.diff \
 	file://debian/cpanplus_config_path.diff \
 	file://debian/deprecate-with-apt.diff \
-	file://debian/fixes/hurd-ccflags.diff \
 	file://debian/squelch-locale-warnings.diff \
 	file://debian/skip-upstream-git-tests.diff \
 	file://debian/fixes/extutils-cbuilder-cflags.diff \
 	file://debian/fixes/module-build-home-directory.diff \
-	file://debian/fixes/h2ph-multiarch.diff \
-	file://debian/fixes/index-tainting.diff \
 	file://debian/skip-kfreebsd-crash.diff \
 	file://debian/fixes/document_makemaker_ccflags.diff \
 	file://debian/fixes/sys-syslog-socket-timeout-kfreebsd.patch \
-	file://debian/fixes/hurd-hints.diff \
 	file://debian/fixes/pod_fixes.diff \
 	file://debian/find_html2text.diff \
 	\
@@ -78,8 +74,8 @@ SRC_URI = "http://www.cpan.org/src/5.0/perl-${PV}.tar.gz \
         file://config.sh-64-be"
 #	file://debian/fakeroot.diff
 
-SRC_URI[md5sum] = "3306fbaf976dcebdcd49b2ac0be00eb9"
-SRC_URI[sha256sum] = "6488359573bd7d41761bf935f66f827dc220fb3df961ef9b775d51fbd66548d3"
+SRC_URI[md5sum] = "f6a3d878c688d111b495c87db56c5be5"
+SRC_URI[sha256sum] = "03638a4f01bc26b81231233671524b4163849a3a9ea5cc2397293080c4ea339f"
 
 inherit perlnative siteinfo
 
