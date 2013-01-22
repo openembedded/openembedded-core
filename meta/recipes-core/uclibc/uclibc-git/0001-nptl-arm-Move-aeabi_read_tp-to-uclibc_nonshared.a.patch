@@ -11,21 +11,19 @@ Upstream-Status: Pending
  libc/sysdeps/linux/arm/Makefile.arch |    4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/libc/sysdeps/linux/arm/Makefile.arch b/libc/sysdeps/linux/arm/Makefile.arch
-index 5fc3e54..8285b9b 100644
---- a/libc/sysdeps/linux/arm/Makefile.arch
-+++ b/libc/sysdeps/linux/arm/Makefile.arch
-@@ -13,7 +13,9 @@ SSRC := \
+Index: git/libc/sysdeps/linux/arm/Makefile.arch
+===================================================================
+--- git.orig/libc/sysdeps/linux/arm/Makefile.arch	2013-01-21 16:29:25.000000000 -0800
++++ git/libc/sysdeps/linux/arm/Makefile.arch	2013-01-21 16:33:11.575571091 -0800
+@@ -12,7 +12,10 @@
+ 	bsd-_setjmp.S sigrestorer.S mmap64.S \
  	vfork.S clone.S
  
- ifeq ($(UCLIBC_HAS_THREADS_NATIVE),y)
--SSRC += libc-aeabi_read_tp.S libc-thumb_atomics.S
-+SSRC += libc-thumb_atomics.S
-+libc-nonshared-y += $(ARCH_OUT)/libc-aeabi_read_tp.os
-+libc-static-y += $(ARCH_OUT)/libc-aeabi_read_tp.o
- endif
- 
- ifeq ($(UCLIBC_HAS_ADVANCED_REALTIME),y)
--- 
-1.7.9.5
-
+-SSRC-$(UCLIBC_HAS_THREADS_NATIVE) += libc-aeabi_read_tp.S libc-thumb_atomics.S
++SSRC-$(UCLIBC_HAS_THREADS_NATIVE) += libc-thumb_atomics.S
++libc-nonshared-$(UCLIBC_HAS_THREADS_NATIVE) += $(ARCH_OUT)/libc-aeabi_read_tp.os
++libc-static-$(UCLIBC_HAS_THREADS_NATIVE) += $(ARCH_OUT)/libc-aeabi_read_tp.o
++
+ CSRC-$(UCLIBC_HAS_ADVANCED_REALTIME) += posix_fadvise.c
+ CSRC-$(UCLIBC_HAS_CONTEXT_FUNCS) += makecontext.c
+ SSRC-$(UCLIBC_HAS_CONTEXT_FUNCS) += getcontext.S setcontext.S swapcontext.S

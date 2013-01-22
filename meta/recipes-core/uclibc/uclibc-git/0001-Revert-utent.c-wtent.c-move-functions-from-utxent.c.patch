@@ -13,18 +13,18 @@ This reverts commit 84135275cfeebc0b233c1c96eeada4d4178a0b18.
  libc/misc/utmp/wtent.c  |   14 ++-------
  4 files changed, 30 insertions(+), 76 deletions(-)
 
-diff --git a/include/utmp.h b/include/utmp.h
-index cb8e08f..10b75c9 100644
---- a/include/utmp.h
-+++ b/include/utmp.h
-@@ -57,29 +57,37 @@ extern void logwtmp (__const char *__ut_line, __const char *__ut_name,
+Index: git/include/utmp.h
+===================================================================
+--- git.orig/include/utmp.h	2013-01-21 16:37:18.000000000 -0800
++++ git/include/utmp.h	2013-01-21 16:40:56.987583099 -0800
+@@ -56,30 +56,37 @@
  /* Append entry UTMP to the wtmp-like file WTMP_FILE.  */
- extern void updwtmp (__const char *__wtmp_file, __const struct utmp *__utmp)
+ extern void updwtmp (const char *__wtmp_file, const struct utmp *__utmp)
       __THROW;
 +libc_hidden_proto(updwtmp)
  
  /* Change name of the utmp file to be examined.  */
- extern int utmpname (__const char *__file) __THROW;
+ extern int utmpname (const char *__file) __THROW;
 +libc_hidden_proto(utmpname)
  
  /* Read next entry from a utmp-like file.  */
@@ -41,24 +41,25 @@ index cb8e08f..10b75c9 100644
  
  /* Search forward from the current point in the utmp file until the
     next entry with a ut_type matching ID->ut_type.  */
- extern struct utmp *getutid (__const struct utmp *__id) __THROW;
+ extern struct utmp *getutid (const struct utmp *__id) __THROW;
 +libc_hidden_proto(getutid)
  
  /* Search forward from the current point in the utmp file until the
     next entry with a ut_line matching LINE->ut_line.  */
- extern struct utmp *getutline (__const struct utmp *__line) __THROW;
+ extern struct utmp *getutline (const struct utmp *__line) __THROW;
 +libc_hidden_proto(getutline)
  
  /* Write out entry pointed to by UTMP_PTR into the utmp file.  */
- extern struct utmp *pututline (__const struct utmp *__utmp_ptr) __THROW;
+ extern struct utmp *pututline (const struct utmp *__utmp_ptr) __THROW;
+-
 +libc_hidden_proto(pututline)
  
- 
  #if 0 /* def	__USE_MISC */
-diff --git a/libc/misc/utmp/utent.c b/libc/misc/utmp/utent.c
-index a35bb2b..07ca44e 100644
---- a/libc/misc/utmp/utent.c
-+++ b/libc/misc/utmp/utent.c
+ /* Reentrant versions of the file for handling utmp files.  */
+Index: git/libc/misc/utmp/utent.c
+===================================================================
+--- git.orig/libc/misc/utmp/utent.c	2013-01-21 16:37:18.000000000 -0800
++++ git/libc/misc/utmp/utent.c	2013-01-21 16:38:14.035578638 -0800
 @@ -19,9 +19,6 @@
  #include <errno.h>
  #include <string.h>
@@ -69,7 +70,7 @@ index a35bb2b..07ca44e 100644
  #include <not-cancel.h>
  
  #include <bits/uClibc_mutex.h>
-@@ -34,7 +31,7 @@ static const char default_file_name[] = _PATH_UTMP;
+@@ -34,7 +31,7 @@
  static const char *static_ut_name = default_file_name;
  
  /* This function must be called with the LOCK held */
@@ -78,7 +79,7 @@ index a35bb2b..07ca44e 100644
  {
      if (static_fd < 0) {
  	static_fd = open_not_cancel_2(static_ut_name, O_RDWR | O_CLOEXEC);
-@@ -53,24 +50,19 @@ static void __setutent_unlocked(void)
+@@ -53,24 +50,19 @@
      lseek(static_fd, 0, SEEK_SET);
  }
  #if defined __UCLIBC_HAS_THREADS__
@@ -107,7 +108,7 @@ index a35bb2b..07ca44e 100644
  {
      if (static_fd < 0) {
  	__setutent();
-@@ -86,27 +78,19 @@ static struct utmp *__getutent_unlocked(void)
+@@ -86,27 +78,19 @@
      return NULL;
  }
  #if defined __UCLIBC_HAS_THREADS__
@@ -138,7 +139,7 @@ index a35bb2b..07ca44e 100644
  
  static void __endutent(void)
  {
-@@ -117,13 +101,10 @@ static void __endutent(void)
+@@ -117,13 +101,10 @@
      __UCLIBC_MUTEX_UNLOCK(utmplock);
  }
  strong_alias(__endutent,endutent)
@@ -154,7 +155,7 @@ index a35bb2b..07ca44e 100644
  {
      struct utmp *lutmp;
      unsigned type;
-@@ -133,7 +114,7 @@ static struct utmp *__getutid_unlocked(const struct utmp *utmp_entry)
+@@ -133,7 +114,7 @@
      type = utmp_entry->ut_type - 1;
      type /= 4;
  
@@ -163,7 +164,7 @@ index a35bb2b..07ca44e 100644
  	if (type == 0 && lutmp->ut_type == utmp_entry->ut_type)	{
  	    /* one of RUN_LVL, BOOT_TIME, NEW_TIME, OLD_TIME */
  	    return lutmp;
-@@ -147,34 +128,26 @@ static struct utmp *__getutid_unlocked(const struct utmp *utmp_entry)
+@@ -147,34 +128,26 @@
      return NULL;
  }
  #if defined __UCLIBC_HAS_THREADS__
@@ -202,7 +203,7 @@ index a35bb2b..07ca44e 100644
  	if (lutmp->ut_type == USER_PROCESS || lutmp->ut_type == LOGIN_PROCESS) {
  	    if (strncmp(lutmp->ut_line, utmp_entry->ut_line, sizeof(lutmp->ut_line)) == 0) {
  		break;
-@@ -185,13 +158,7 @@ static struct utmp *__getutline(const struct utmp *utmp_entry)
+@@ -185,13 +158,7 @@
      return lutmp;
  }
  strong_alias(__getutline,getutline)
@@ -217,7 +218,7 @@ index a35bb2b..07ca44e 100644
  
  static struct utmp *__pututline(const struct utmp *utmp_entry)
  {
-@@ -200,7 +167,7 @@ static struct utmp *__pututline(const struct utmp *utmp_entry)
+@@ -200,7 +167,7 @@
         the file pointer where they want it, everything will work out. */
      lseek(static_fd, (off_t) - sizeof(struct utmp), SEEK_CUR);
  
@@ -226,7 +227,7 @@ index a35bb2b..07ca44e 100644
  	lseek(static_fd, (off_t) - sizeof(struct utmp), SEEK_CUR);
      else
  	lseek(static_fd, (off_t) 0, SEEK_END);
-@@ -211,13 +178,7 @@ static struct utmp *__pututline(const struct utmp *utmp_entry)
+@@ -211,13 +178,7 @@
      return (struct utmp *)utmp_entry;
  }
  strong_alias(__pututline,pututline)
@@ -241,7 +242,7 @@ index a35bb2b..07ca44e 100644
  
  static int __utmpname(const char *new_ut_name)
  {
-@@ -241,7 +202,4 @@ static int __utmpname(const char *new_ut_name)
+@@ -241,7 +202,4 @@
      return 0; /* or maybe return -(static_ut_name != new_ut_name)? */
  }
  strong_alias(__utmpname,utmpname)
@@ -250,10 +251,10 @@ index a35bb2b..07ca44e 100644
 -strong_alias(__utmpname,utmpxname)
 -#endif
 +libc_hidden_def(utmpname)
-diff --git a/libc/misc/utmp/utxent.c b/libc/misc/utmp/utxent.c
-index 71157cc..a0e80a6 100644
---- a/libc/misc/utmp/utxent.c
-+++ b/libc/misc/utmp/utxent.c
+Index: git/libc/misc/utmp/utxent.c
+===================================================================
+--- git.orig/libc/misc/utmp/utxent.c	2013-01-21 16:37:18.000000000 -0800
++++ git/libc/misc/utmp/utxent.c	2013-01-21 16:38:14.035578638 -0800
 @@ -13,7 +13,6 @@
  #include <utmpx.h>
  #include <utmp.h>
@@ -262,7 +263,7 @@ index 71157cc..a0e80a6 100644
  void setutxent(void)
  {
  	setutent ();
-@@ -49,12 +48,10 @@ int utmpxname (const char *new_ut_name)
+@@ -49,12 +48,10 @@
  	return utmpname (new_ut_name);
  }
  
@@ -275,15 +276,15 @@ index 71157cc..a0e80a6 100644
  
  /* Copy the information in UTMPX to UTMP. */
  void getutmp (const struct utmpx *utmpx, struct utmp *utmp)
-@@ -107,3 +104,4 @@ void getutmpx (const struct utmp *utmp, struct utmpx *utmpx)
+@@ -107,3 +104,4 @@
  	utmpx->ut_time = utmp->ut_time;
  #endif
  }
 +
-diff --git a/libc/misc/utmp/wtent.c b/libc/misc/utmp/wtent.c
-index 9b3ad50..b5e4ee5 100644
---- a/libc/misc/utmp/wtent.c
-+++ b/libc/misc/utmp/wtent.c
+Index: git/libc/misc/utmp/wtent.c
+===================================================================
+--- git.orig/libc/misc/utmp/wtent.c	2013-01-21 16:37:18.000000000 -0800
++++ git/libc/misc/utmp/wtent.c	2013-01-21 16:38:14.035578638 -0800
 @@ -11,9 +11,6 @@
  #include <time.h>
  #include <unistd.h>
@@ -294,7 +295,7 @@ index 9b3ad50..b5e4ee5 100644
  #include <fcntl.h>
  #include <sys/file.h>
  #include <not-cancel.h>
-@@ -36,7 +33,7 @@ void logwtmp (const char *line, const char *name, const char *host)
+@@ -36,7 +33,7 @@
  }
  #endif
  
@@ -303,7 +304,7 @@ index 9b3ad50..b5e4ee5 100644
  {
      int fd;
  
-@@ -49,11 +46,4 @@ static void __updwtmp(const char *wtmp_file, const struct utmp *lutmp)
+@@ -49,11 +46,4 @@
  	}
      }
  }
@@ -316,6 +317,3 @@ index 9b3ad50..b5e4ee5 100644
 -}
 -#endif
 +libc_hidden_def(updwtmp)
--- 
-1.7.9.5
-

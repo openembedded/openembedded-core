@@ -6,21 +6,21 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 Index: git/libc/sysdeps/linux/powerpc/Makefile.arch
 ===================================================================
---- git.orig/libc/sysdeps/linux/powerpc/Makefile.arch
-+++ git/libc/sysdeps/linux/powerpc/Makefile.arch
+--- git.orig/libc/sysdeps/linux/powerpc/Makefile.arch	2013-01-21 16:18:22.000000000 -0800
++++ git/libc/sysdeps/linux/powerpc/Makefile.arch	2013-01-21 16:21:25.363552429 -0800
 @@ -5,7 +5,7 @@
  # Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
  #
  
--CSRC := __syscall_error.c pread_write.c ioctl.c
-+CSRC := __syscall_error.c pread_write.c ioctl.c copysignl.c
+-CSRC-y := __syscall_error.c pread_write.c ioctl.c
++CSRC-y := __syscall_error.c pread_write.c ioctl.c copysignl.c
  
- ifeq ($(UCLIBC_HAS_ADVANCED_REALTIME),y)
- CSRC += posix_fadvise.c posix_fadvise64.c
+ SSRC-y := \
+ 	__longjmp.S setjmp.S bsd-setjmp.S bsd-_setjmp.S brk.S \
 Index: git/libc/sysdeps/linux/powerpc/copysignl.c
 ===================================================================
---- /dev/null
-+++ git/libc/sysdeps/linux/powerpc/copysignl.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/libc/sysdeps/linux/powerpc/copysignl.c	2013-01-21 16:20:46.807552554 -0800
 @@ -0,0 +1,89 @@
 +/* s_copysignl.c -- long double version of s_copysign.c.
 + * Conversion to long double by Ulrich Drepper,
