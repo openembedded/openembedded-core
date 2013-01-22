@@ -469,7 +469,10 @@ python () {
                     extraconf.append(items[1])
         appendVar('DEPENDS', extradeps)
         appendVar('RDEPENDS_${PN}', extrardeps)
-        appendVar('EXTRA_OECONF', extraconf)
+        if bb.data.inherits_class('cmake', d):
+            appendVar('EXTRA_OECMAKE', extraconf)
+        else:
+            appendVar('EXTRA_OECONF', extraconf)
 
     # If PRINC is set, try and increase the PR value by the amount specified
     princ = d.getVar('PRINC', True)
