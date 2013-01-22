@@ -7,30 +7,29 @@ Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
  units/serial-getty@.service.m4 |    2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-Index: systemd-37/units/getty@.service.m4
+Index: systemd-196/units/getty@.service.m4
 ===================================================================
---- systemd-37.orig/units/getty@.service.m4
-+++ systemd-37/units/getty@.service.m4
-@@ -41,7 +41,7 @@
+--- systemd-196.orig/units/getty@.service.m4	2012-11-20 12:39:16.000000000 -0800
++++ systemd-196/units/getty@.service.m4	2013-01-21 16:08:03.707533381 -0800
+@@ -45,7 +45,7 @@
  
  [Service]
- Environment=TERM=linux
  # the VT is cleared by TTYVTDisallocate
--ExecStart=-/sbin/agetty --noclear %I 38400
+-ExecStart=-/sbin/agetty --noclear %I 38400 linux
 +ExecStart=-/sbin/getty -L %I 115200 linux
  Type=idle
  Restart=always
  RestartSec=0
-Index: systemd-37/units/serial-getty@.service.m4
+Index: systemd-196/units/serial-getty@.service.m4
 ===================================================================
---- systemd-37.orig/units/serial-getty@.service.m4
-+++ systemd-37/units/serial-getty@.service.m4
-@@ -37,7 +37,7 @@
+--- systemd-196.orig/units/serial-getty@.service.m4	2012-11-20 12:39:16.000000000 -0800
++++ systemd-196/units/serial-getty@.service.m4	2013-01-21 16:09:01.763535039 -0800
+@@ -40,7 +40,7 @@
+ IgnoreOnIsolate=yes
  
  [Service]
- Environment=TERM=vt102
--ExecStart=-/sbin/agetty -s %I 115200,38400,9600
-+ExecStart=-/sbin/getty -L %I 115200 vt100
+-ExecStart=-/sbin/agetty -s %I 115200,38400,9600 vt102
++ExecStart=-/sbin/getty -L %I 115200 vt102
  Type=idle
  Restart=always
  RestartSec=0
