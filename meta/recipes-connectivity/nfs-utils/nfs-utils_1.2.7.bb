@@ -4,24 +4,23 @@ NFS server and related tools."
 HOMEPAGE = "http://nfs.sourceforge.net/"
 SECTION = "console/network"
 
-LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
+LICENSE = "MIT & GPLv2+ & BSD"
+LIC_FILES_CHKSUM = "file://COPYING;md5=95f3a93a5c3c7888de623b46ea085a84"
 
 # util-linux for libblkid
-DEPENDS = "libcap libnfsidmap libevent util-linux tcp-wrappers"
+DEPENDS = "libcap libnfsidmap libevent util-linux tcp-wrappers sqlite3"
 RDEPENDS_${PN} = "rpcbind"
 RRECOMMENDS_${PN} = "kernel-module-nfsd"
 
-PR = "r5"
-
-SRC_URI = "${SOURCEFORGE_MIRROR}/nfs/nfs-utils-${PV}.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.bz2 \
+           file://nfs-utils.1.2.8.rc3.patch \
            file://nfs-utils-1.0.6-uclibc.patch \
            file://nfs-utils-1.2.3-uclibc-libio.h.patch \
-           file://nfs-utils-nfsctl-x32-fix.patch \
+           file://nfs-utils-1.2.3-sm-notify-res_init.patch \
            file://nfsserver"
 
-SRC_URI[md5sum] = "1131dc5f27c4f3905a6e7ee0d594fd4d"
-SRC_URI[sha256sum] = "5575ece941097cbfa67fbe0d220dfa11b73f5e6d991e7939c9339bd72259ff19"
+SRC_URI[md5sum] = "3b5ca797197765dc0c3a4122720c7716"
+SRC_URI[sha256sum] = "7ef8e0a8b22cd7ff33f3afd28e770d45643fae303468a180640c2967833fe75e"
 
 PARALLEL_MAKE = ""
 
@@ -38,11 +37,15 @@ inherit autotools update-rc.d
 
 # --enable-uuid is need for cross-compiling
 EXTRA_OECONF = "--with-statduser=nobody \
-                --enable-nfsv41 \
+                --enable-mountconfig \
+                --enable-libmount-mount \
+                --disable-nfsv41 \
                 --enable-uuid \
                 --disable-gss \
                 --disable-tirpc \
-                --with-statedir=/var/lib/nfs"
+                --disable-nfsdcltrack \
+                --with-statdpath=/var/lib/nfs/statd \
+               "
 
 INHIBIT_AUTO_STAGE = "1"
 

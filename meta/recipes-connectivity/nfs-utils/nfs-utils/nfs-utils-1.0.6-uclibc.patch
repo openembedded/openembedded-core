@@ -1,22 +1,27 @@
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
 Upstream-Status: Inappropriate [embedded specific]
 
-Index: nfs-utils-1.2.3/support/nfs/svc_socket.c
+Index: nfs-utils-1.2.6/support/nfs/svc_socket.c
 ===================================================================
---- nfs-utils-1.2.3.orig/support/nfs/svc_socket.c
-+++ nfs-utils-1.2.3/support/nfs/svc_socket.c
-@@ -67,6 +67,7 @@ svc_socket (u_long number, int type, int
-   memset (&addr, 0, sizeof (addr));
-   addr.sin_family = AF_INET;
+--- nfs-utils-1.2.6.orig/support/nfs/svc_socket.c	2012-05-14 07:40:52.000000000 -0700
++++ nfs-utils-1.2.6/support/nfs/svc_socket.c	2012-10-28 02:42:50.179222457 -0700
+@@ -40,8 +40,9 @@
+ 	char rpcdata[1024], servdata[1024];
+ 	struct rpcent rpcbuf, *rpcp;
+ 	struct servent servbuf, *servp = NULL;
+-	int ret;
++	int ret = 0;
  
-+#ifndef __UCLIBC__	/* neither getrpcbynumber() nor getrpcbynumber_r() is SuSv3 */
-   ret = getrpcbynumber_r (number, &rpcbuf, rpcdata, sizeof rpcdata,
- 			  &rpcp);
-   if (ret == 0 && rpcp != NULL)
-@@ -100,6 +101,7 @@ svc_socket (u_long number, int type, int
++#ifndef __UCLIBC__     /* neither getrpcbynumber() nor getrpcbynumber_r() is SuSv3 */
+ 	ret = getrpcbynumber_r(number, &rpcbuf, rpcdata, sizeof rpcdata,
+ 				&rpcp);
+ 	if (ret == 0 && rpcp != NULL) {
+@@ -60,6 +61,7 @@
+ 			}
+ 		}
  	}
-     }
-   else
-+#endif
-     {
- 	  addr.sin_port = 0;
- 	  if (bind (sock, (struct sockaddr *) &addr, len) < 0)
++#endif /* __UCLIBC__ */
+ 
+ 	if (ret == 0 && servp != NULL)
+ 		return ntohs(servp->s_port);
