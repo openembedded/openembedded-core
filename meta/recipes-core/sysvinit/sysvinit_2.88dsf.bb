@@ -26,6 +26,7 @@ S = "${WORKDIR}/sysvinit-${PV}"
 B = "${S}/src"
 
 inherit update-alternatives
+DEPENDS_append = " update-rc.d-native"
 
 ALTERNATIVE_${PN} = "init mountpoint halt reboot runlevel shutdown poweroff last mesg utmpdump wall"
 
@@ -63,18 +64,20 @@ EXTRA_OEMAKE += "'base_bindir=${base_bindir}' \
 
 do_install () {
 	oe_runmake 'ROOT=${D}' install
+
 	install -d ${D}${sysconfdir} \
 		   ${D}${sysconfdir}/default \
 		   ${D}${sysconfdir}/init.d
+	for level in S 0 1 2 3 4 5 6; do
+		install -d ${D}${sysconfdir}/rc$level.d
+	done
+
 	install -m 0644    ${WORKDIR}/rcS-default	${D}${sysconfdir}/default/rcS
 	install -m 0755    ${WORKDIR}/rc		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/rcS		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/bootlogd.init     ${D}${sysconfdir}/init.d/bootlogd
 	ln -sf bootlogd ${D}${sysconfdir}/init.d/stop-bootlogd
-	install -d ${D}${sysconfdir}/rcS.d
-	ln -sf ../init.d/bootlogd ${D}${sysconfdir}/rcS.d/S07bootlogd
-	for level in 2 3 4 5; do
-		install -d ${D}${sysconfdir}/rc$level.d
-		ln -s ../init.d/stop-bootlogd ${D}${sysconfdir}/rc$level.d/S99stop-bootlogd
-	done
+
+        update-rc.d -r ${D} bootlogd start 07 S .
+        update-rc.d -r ${D} stop-bootlogd start 99 2 3 4 5 .
 }
