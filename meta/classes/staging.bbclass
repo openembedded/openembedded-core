@@ -97,15 +97,6 @@ def sysroot_checkhashes(covered, tasknames, fnids, fns, d, invalidtasks = None):
     return problems
 
 python do_populate_sysroot () {
-    #
-    # if do_stage exists, we're legacy. In that case run the do_stage,
-    # modify the SYSROOT_DESTDIR variable and then run the staging preprocess
-    # functions against staging directly.
-    #
-    # Otherwise setup a destdir, copy the results from do_install
-    # and run the staging preprocess against that
-    #
-
     bb.build.exec_func("sysroot_stage_all", d)
     for f in (d.getVar('SYSROOT_PREPROCESS_FUNCS', True) or '').split():
         bb.build.exec_func(f, d)
