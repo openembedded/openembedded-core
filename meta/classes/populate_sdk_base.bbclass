@@ -122,11 +122,14 @@ fakeroot create_shar() {
 #!/bin/bash
 
 INST_ARCH=$(uname -m | sed -e "s/i[3-6]86/ix86/" -e "s/x86[-_]64/x86_64/")
-SDK_ARCH=$(echo ${SDK_ARCH} | sed -e "s/i[5-6]86/ix86/")
+SDK_ARCH=$(echo ${SDK_ARCH} | sed -e "s/i[3-6]86/ix86/" -e "s/x86[-_]64/x86_64/")
 
 if [ "$INST_ARCH" != "$SDK_ARCH" ]; then
-	echo "Error: Installation machine not supported!"
-	exit 1
+	# Allow for installation of ix86 SDK on x86_64 host
+	if [ "$INST_ARCH" != x86_64 -o "$SDK_ARCH" != ix86 ]; then
+		echo "Error: Installation machine not supported!"
+		exit 1
+	fi
 fi
 
 DEFAULT_INSTALL_DIR="${SDKPATH}"
