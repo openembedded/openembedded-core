@@ -108,7 +108,8 @@ fakeroot rootfs_rpm_do_rootfs () {
 	i=\$i
 	cat > ${IMAGE_ROOTFS}${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts << EOF
 #!/bin/sh
-for i in /etc/rpm-postinsts/*; do
+for i in `ls /etc/rpm-postinsts/`; do
+	i=/etc/rpm-postinsts/$i
 	echo "Running postinst $i..."
 	if [ -f $i ] && $i; then
 		rm $i
