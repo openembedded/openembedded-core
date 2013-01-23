@@ -116,11 +116,10 @@
 
 # The network based PR service host and port
 # Uncomment the following lines to enable PRservice.
-# Set PRSERV_HOST to 'localhost' and PRSERV_PORT to '0' to automatically
+# Set PRSERV_HOST to 'localhost:0' to automatically
 # start local PRService.
 # Set to other values to use remote PRService.
-#PRSERV_HOST = "localhost"
-#PRSERV_PORT = "0"
+#PRSERV_HOST = "localhost:0"
 
 # Additional image generation features
 #
