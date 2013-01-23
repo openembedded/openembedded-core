@@ -3,7 +3,7 @@ def prserv_get_pr_auto(d):
     import re
 
     pv = d.getVar("PV", True)
-    if d.getVar('USE_PR_SERV', True) != "1":
+    if not d.getVar('PRSERV_HOST', True):
         if 'AUTOINC' in pv:
             d.setVar("PKGV", pv.replace("AUTOINC", "0"))
         bb.warn("Not using network based PR service")

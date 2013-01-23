@@ -1,11 +1,10 @@
 
 def prserv_make_conn(d, check = False):
     import prserv.serv
-    host = d.getVar("PRSERV_HOST",True)
-    port = d.getVar("PRSERV_PORT",True)
+    host_params = filter(None, (d.getVar("PRSERV_HOST", True) or '').split(':'))
     try:
         conn = None
-        conn = prserv.serv.PRServerConnection(host,int(port))
+        conn = prserv.serv.PRServerConnection(host_params[0], int(host_params[1]))
         if check:
             if not conn.ping():
                 raise Exception('service not available')
@@ -16,7 +15,7 @@ def prserv_make_conn(d, check = False):
     return conn
 
 def prserv_dump_db(d):
-    if d.getVar('USE_PR_SERV', True) != "1":
+    if not d.getVar('PRSERV_HOST', True):
         bb.error("Not using network based PR service")
         return None
 
@@ -35,7 +34,7 @@ def prserv_dump_db(d):
     return conn.export(opt_version, opt_pkgarch, opt_checksum, opt_col)
 
 def prserv_import_db(d, filter_version=None, filter_pkgarch=None, filter_checksum=None):
-    if d.getVar('USE_PR_SERV', True) != "1":
+    if not d.getVar('PRSERV_HOST', True):
         bb.error("Not using network based PR service")
         return None
 
@@ -115,14 +114,13 @@ def prserv_export_tofile(d, metainfo, datainfo, lockdown, nomax=False):
     bb.utils.unlockfile(lf)
 
 def prserv_check_avail(d):
-    host = d.getVar("PRSERV_HOST",True)
-    port = d.getVar("PRSERV_PORT",True)
+    host_params = filter(None, (d.getVar("PRSERV_HOST", True) or '').split(':'))
     try:
-        if not host:
+        if len(host_params) != 2:
             raise TypeError
         else:
-            port = int(port)
+            int(host_params[1])
     except TypeError:
-        bb.fatal("Undefined or incorrect values of PRSERV_HOST or PRSERV_PORT")
+        bb.fatal('Undefined/incorrect PRSERV_HOST value. Format: "host:port"')
     else:
         prserv_make_conn(d, True)

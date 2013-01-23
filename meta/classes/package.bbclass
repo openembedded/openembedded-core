@@ -396,15 +396,13 @@ def runtime_mapping_rename (varname, d):
 #
 
 python package_get_auto_pr() {
-    # per recipe PRSERV_HOST PRSERV_PORT
+    # per recipe PRSERV_HOST
     pn = d.getVar('PN', True)
     host = d.getVar("PRSERV_HOST_" + pn, True)
-    port = d.getVar("PRSERV_PORT_" + pn, True)
     if not (host is None):
         d.setVar("PRSERV_HOST", host)
-    if not (port is None):
-        d.setVar("PRSERV_PORT", port)
-    if d.getVar('USE_PR_SERV', True) != "0":
+
+    if d.getVar('PRSERV_HOST', True):
         try:
             auto_pr=prserv_get_pr_auto(d)
         except Exception as e:
