@@ -477,7 +477,7 @@ python do_package_write_ipk () {
 }
 do_package_write_ipk[dirs] = "${PKGWRITEDIRIPK}"
 do_package_write_ipk[umask] = "022"
-addtask package_write_ipk before do_package_write after do_package
+addtask package_write_ipk before do_package_write after do_packagedata do_package
 
 PACKAGEINDEXES += "package_update_index_ipk;"
 PACKAGEINDEXDEPS += "opkg-utils-native:do_populate_sysroot"

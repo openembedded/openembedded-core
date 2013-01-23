@@ -151,6 +151,7 @@ python native_virtclass_handler () {
 addhandler native_virtclass_handler
 
 do_package[noexec] = "1"
+do_packagedata[noexec] = "1"
 do_package_write_ipk[noexec] = "1"
 do_package_write_deb[noexec] = "1"
 do_package_write_rpm[noexec] = "1"

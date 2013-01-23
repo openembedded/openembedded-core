@@ -1126,7 +1126,7 @@ python do_package_write_rpm () {
 
 do_package_write_rpm[dirs] = "${PKGWRITEDIRRPM}"
 do_package_write_rpm[umask] = "022"
-addtask package_write_rpm before do_package_write after do_package
+addtask package_write_rpm before do_package_write after do_packagedata do_package
 
 PACKAGEINDEXES += "package_update_index_rpm; [ ! -e ${DEPLOY_DIR_RPM} ] || createrepo ${DEPLOY_DIR_RPM};"
 PACKAGEINDEXDEPS += "rpm-native:do_populate_sysroot"

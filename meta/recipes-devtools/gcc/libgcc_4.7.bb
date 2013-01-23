@@ -61,10 +61,10 @@ do_install () {
 	rm -rf ${D}${libdir}/${TARGET_SYS}/${BINV}/include
 }
 
-do_package[depends] += "virtual/${MLPREFIX}libc:do_package"
-do_package_write_ipk[depends] += "virtual/${MLPREFIX}libc:do_package"
-do_package_write_deb[depends] += "virtual/${MLPREFIX}libc:do_package"
-do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_package"
+do_package[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
+do_package_write_ipk[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
+do_package_write_deb[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
+do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 
 BBCLASSEXTEND = "nativesdk"
 
