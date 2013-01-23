@@ -666,6 +666,9 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
 
         # Consider sysroot depending on sysroot tasks
         if taskdependees[task][1] == 'do_populate_sysroot' and taskdependees[dep][1] == 'do_populate_sysroot':
+            # base-passwd/shadow-sysroot don't need their dependencies
+            if taskdependees[dep][0].endswith(("base-passwd", "shadow-sysroot")):
+                continue
             # Nothing need depend on libc-initial/gcc-cross-initial
             if taskdependees[task][0].endswith("-initial"):
                 continue
@@ -680,6 +683,11 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
                 continue
             # Target populate_sysroot need their dependencies
             return False
+
+        # This is due to the [depends] in useradd.bbclass complicating matters
+        # The logic *is* reversed here due to the way hard setscene dependencies are injected
+        if taskdependees[task][1] == 'do_package' and taskdependees[dep][0].endswith(('shadow-native', 'shadow-sysroot', 'base-passwd')) and taskdependees[dep][1] == 'do_populate_sysroot':
+            continue
 
         # Safe fallthrough default
         bb.debug(2, " Default setscene dependency fall through due to dependency: %s" % (str(taskdependees[dep])))
