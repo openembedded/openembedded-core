@@ -82,6 +82,8 @@ boot_live_root() {
     mount -n --move /proc ${ROOT_MOUNT}/proc
     mount -n --move /sys ${ROOT_MOUNT}/sys
     mount -n --move /dev ${ROOT_MOUNT}/dev
+    # Move /media/$i over to the real root filesystem
+    mount -n --move /media/$i ${ROOT_MOUNT}/media/realroot
 
     cd $ROOT_MOUNT
     exec switch_root -c /dev/console $ROOT_MOUNT /sbin/init
