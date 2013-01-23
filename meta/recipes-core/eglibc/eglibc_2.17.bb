@@ -1,5 +1,7 @@
 require eglibc.inc
 
+PR = "r1"
+
 DEPENDS += "gperf-native kconfig-frontends-native"
 
 SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr22064.tar.bz2 \
@@ -26,7 +28,13 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr22
            file://tzselect-awk.patch \
            file://0001-eglibc-run-libm-err-tab.pl-with-specific-dirs-in-S.patch \
            file://fix-tibetian-locales.patch \
+           ${BACKPORTS} \
           "
+BACKPORTS = "\
+           file://eglibc-2.17/eglibc-2.17-r22178.patch \
+           file://eglibc-2.17/eglibc-2.17-PR15003-r22243.patch \
+          "
+
 SRC_URI[md5sum] = "1464af54779c2c7d1078df9ce2e41791"
 SRC_URI[sha256sum] = "97c3991a3772f513cf704841d20c275ac48895fad2e27802dda557c0196cba6b"
 
