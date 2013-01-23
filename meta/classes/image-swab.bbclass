@@ -40,9 +40,6 @@ PARALLEL_MAKE_pn-libgcrypt = ""
 PARALLEL_MAKE_pn-gpgme = ""
 PARALLEL_MAKE_pn-udev = ""
 PARALLEL_MAKE_pn-gnutls = ""
-PARALLEL_MAKE_pn-sat-solver = ""
-PARALLEL_MAKE_pn-libzypp = ""
-PARALLEL_MAKE_pn-zypper = ""
 
 python() {
     # NOTE: It might be useful to detect host infection on native and cross
