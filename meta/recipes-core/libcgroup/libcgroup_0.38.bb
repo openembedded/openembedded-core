@@ -3,15 +3,16 @@ SECTION = "libs"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
-PR = "r2"
+PR = "r0"
 
 inherit autotools pkgconfig
 
 DEPENDS = "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/project/libcg/${BPN}/v${PV}/${BPN}-${PV}.tar.bz2"
-SRC_URI[md5sum] = "24a41b18de112e8d085bb1f7d9e82af7"
-SRC_URI[sha256sum] = "0b08632de5d3641aa554b422d02a77d9367e57933328a8765204ad9588cd5c0d"
+SRC_URI = "${SOURCEFORGE_MIRROR}/project/libcg/${BPN}/v.038/${BPN}-${PV}.tar.bz2"
+
+SRC_URI[md5sum] = "f0f7d4060bf36ccc19d75dbf4f1695db"
+SRC_URI[sha256sum] = "5d36d1a48b95f62fe9fcdf74a5a4089512e5e43e6011aa1504fd6f2a0909867f"
 
 EXTRA_OECONF = "${@base_contains('DISTRO_FEATURES', 'pam', '--enable-pam-module-dir=${base_libdir}/security --enable-pam=yes', '--enable-pam=no', d)}"
 
