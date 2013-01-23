@@ -11,7 +11,7 @@ EXTRA_OECONF = "--without-python"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/cracklib/cracklib-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "ca0ec168d9c6466612204e8dfb2df8a9"
-SRC_URI[sha256sum] = "7086b0ca23f875c9cd9ea2a993c262384b274dba9c4ea1da845ec8ac290748a9"
+SRC_URI[md5sum] = "463177b5c29c7a598c991e12a4898e06"
+SRC_URI[sha256sum] = "feaff49bfb513ec10b2618c00d2f7f60776ba93fcc5fa22dd3479dd9cad9f770"
 
 inherit autotools gettext
