@@ -1,0 +1,32 @@
+Upstream-Status: Submitted
+
+From f3e0a95b6b3fe516e43ec72045c2fad239184392 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 22 Jan 2013 18:25:46 -0800
+Subject: [PATCH] test-unit-file: Add libsystemd-daemon.la to LDADD
+
+test-unit-file links with libsystemd-core which needs
+sd_* symbols from libsystemd-daemon
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ Makefile.am |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 7d5bd5a..884227a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1270,7 +1270,8 @@ test_unit_file_CFLAGS = \
+ 	$(DBUS_CFLAGS)
+ 
+ test_unit_file_LDADD = \
+-	libsystemd-core.la
++	libsystemd-core.la \
++	libsystemd-daemon.la
+ 
+ test_log_SOURCES = \
+ 	src/test/test-log.c
+-- 
+1.7.9.5
+
