@@ -42,6 +42,23 @@ def find_urls(d):
 
     return patch_list
 
+# check the SRC_URI for "kmeta" type'd git repositories. Return the name of
+# the repository as it will be found in WORKDIR
+def find_kernel_feature_dirs(d):
+    feature_dirs=[]
+    fetch = bb.fetch2.Fetch([], d)
+    for url in fetch.urls:
+        urldata = fetch.ud[url]
+        parm = urldata.parm
+        if "type" in parm:
+            type = parm["type"]
+        if "destsuffix" in parm:
+            destdir = parm["destsuffix"]
+            if type == "kmeta":
+                feature_dirs.append(destdir)
+	    
+    return feature_dirs
+
 
 do_patch() {
 	cd ${S}
@@ -72,6 +89,7 @@ do_patch() {
 
 	sccs="${@" ".join(find_sccs(d))}"
 	patches="${@" ".join(find_patches(d))}"
+	feat_dirs="${@" ".join(find_kernel_feature_dirs(d))}"
 
 	set +e
 	# add any explicitly referenced features onto the end of the feature
@@ -82,13 +100,26 @@ do_patch() {
 		done
 	fi
 
+	# check for feature directories/repos/branches that were part of the
+	# SRC_URI. If they were supplied, we convert them into include directives
+	# for the update part of the process
+	if [ -n "${feat_dirs}" ]; then
+	    for f in ${feat_dirs}; do
+		if [ -d "${WORKDIR}/$f/meta" ]; then
+		    includes="$includes -I${WORKDIR}/$f/meta"
+		elif [ -d "${WORKDIR}/$f" ]; then
+		    includes="$includes -I${WORKDIR}/$f"
+		fi
+	    done
+	fi
+
 	if [ "${kbranch}" != "${KBRANCH_DEFAULT}" ]; then
 		updateme_flags="--branch ${kbranch}"
 	fi
 
 	# updates or generates the target description
 	updateme ${updateme_flags} -DKDESC=${KMACHINE}:${LINUX_KERNEL_TYPE} \
-                           ${addon_features} ${ARCH} ${KMACHINE} ${sccs} ${patches}
+                         ${includes} ${addon_features} ${ARCH} ${KMACHINE} ${sccs} ${patches}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not update ${kbranch}"
 		exit 1
