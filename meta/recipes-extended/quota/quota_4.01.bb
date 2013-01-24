@@ -17,7 +17,7 @@ S = "${WORKDIR}/quota-tools"
 
 DEPENDS = "gettext-native"
 
-inherit autotools
+inherit autotools gettext
 
 EXTRA_OEMAKE += 'STRIP=""'
 
