@@ -158,22 +158,10 @@ do_kernel_checkout() {
 		mkdir -p ${S}
 		
 		# We can fix up the kernel repository even if it wasn't a bare clone.
-		# If KMETA is defined, the branch must exist, but a machine branch
-		# can be missing since it may be created later by the tools.
 		mv ${WORKDIR}/git/.git ${S}
 		rm -rf ${WORKDIR}/git/
 		cd ${S}
-		if [ -n "${KMETA}" ]; then
-			git branch -a | grep -q ${KMETA}
-			if [ $? -ne 0 ]; then
-				echo "ERROR. The branch '${KMETA}' is required and was not"
-				echo "found. Ensure that the SRC_URI points to a valid linux-yocto"
-				echo "kernel repository"
-				exit 1
-			fi
-		fi
-	fi
-	if [ -d "${WORKDIR}/git/" ] && [ ! -d "${WORKDIR}/git/.git" ]; then
+	elif [ -d "${WORKDIR}/git/" ] && [ ! -d "${WORKDIR}/git/.git" ]; then
 		# we build out of {S}, so ensure that ${S} is clean and present
 		rm -rf ${S}
 		mkdir -p ${S}/.git
@@ -182,8 +170,28 @@ do_kernel_checkout() {
 		rm -rf ${WORKDIR}/git/
 		cd ${S}	
 		git config core.bare false
+	else
+	        # We have no git repository at all. To support low bandwidth options
+		# for building the kernel, we'll just convert the tree to a git repo
+	        # and let the rest of the process work unchanged
+	        cd ${S}
+		git init
+		git add .
+		git commit -q -m "baseline commit: creating repo for ${PN}-${PV}"
 	fi
 	# end debare
+
+       	# If KMETA is defined, the branch must exist, but a machine branch
+	# can be missing since it may be created later by the tools.
+	if [ -n "${KMETA}" ]; then
+		git branch -a | grep -q ${KMETA}
+		if [ $? -ne 0 ]; then
+			echo "ERROR. The branch '${KMETA}' is required and was not"
+			echo "found. Ensure that the SRC_URI points to a valid linux-yocto"
+			echo "kernel repository"
+			exit 1
+		fi
+	fi
 
 	# convert any remote branches to local tracking ones
 	for i in `git branch -a | grep remotes | grep -v HEAD`; do
