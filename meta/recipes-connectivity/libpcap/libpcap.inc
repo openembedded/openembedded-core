@@ -12,6 +12,7 @@ DEPENDS = "flex-native bison-native libnl"
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluetooth', '', d)}"
 PACKAGECONFIG[bluetooth] = "--enable-bluetooth,--disable-bluetooth,bluez4"
+PACKAGECONFIG[canusb] = "--enable-canusb,--enable-canusb=no,libusb"
 
 INC_PR = "r4"
 

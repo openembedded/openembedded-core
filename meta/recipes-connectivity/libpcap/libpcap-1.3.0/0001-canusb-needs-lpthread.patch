@@ -1,0 +1,43 @@
+Upstream-Status: Backport
+
+From 2259a62edaf667d4bc9d1a28e612e3a7c0011545 Mon Sep 17 00:00:00 2001
+From: Gustavo Zacarias <gustavo@zacarias.com.ar>
+Date: Sat, 30 Jun 2012 10:48:14 -0700
+Subject: [PATCH] canusb: needs -lpthread
+
+canusb uses pthreads, but -lpthread is never added to LIBS hence missing
+from pcap-config, causing build failures. Fix this.
+---
+ configure    |    2 +-
+ configure.in |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure b/configure
+index 1368ac5..24587c8 100755
+--- a/configure
++++ b/configure
+@@ -11529,7 +11529,7 @@ cat >>confdefs.h <<\_ACEOF
+ _ACEOF
+ 
+ 		    CANUSB_SRC=pcap-canusb-linux.c
+-		    LIBS="-lusb-1.0 $LIBS"
++		    LIBS="-lusb-1.0 -lpthread $LIBS"
+ 		    { echo "$as_me:$LINENO: canusb sniffing is supported" >&5
+ echo "$as_me: canusb sniffing is supported" >&6;}
+ 
+diff --git a/configure.in b/configure.in
+index ba5b64e..47e0b70 100644
+--- a/configure.in
++++ b/configure.in
+@@ -1408,7 +1408,7 @@ if test "x$enable_canusb" != "xno" ; then
+ 		[
+ 		    AC_DEFINE(PCAP_SUPPORT_CANUSB, 1, [target host supports canusb])
+ 		    CANUSB_SRC=pcap-canusb-linux.c
+-		    LIBS="-lusb-1.0 $LIBS"
++		    LIBS="-lusb-1.0 -lpthread $LIBS"
+ 		    AC_MSG_NOTICE(canusb sniffing is supported)
+ 		],
+ 		AC_MSG_NOTICE(canusb sniffing is not supported; install libusb1.0 lib devel to enable it)
+-- 
+1.7.9.5
+
