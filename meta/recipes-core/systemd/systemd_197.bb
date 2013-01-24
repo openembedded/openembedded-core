@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.freedesktop.org/wiki/Software/systemd"
 
 LICENSE = "GPLv2 & LGPLv2.1 & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe \
-                    file://LICENSE.LGPL2.1;md5=fb919cc88dbe06ec0b0bd50e001ccf1f \
+                    file://LICENSE.LGPL2.1;md5=4fbd65380cdd255951079008b364516c \
                     file://LICENSE.MIT;md5=544799d0b492f119fa04641d1b8868ed"
 
 PROVIDES = "udev"
@@ -18,17 +18,16 @@ SECTION = "base/shell"
 inherit gtk-doc useradd pkgconfig autotools perlnative
 
 SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
-           file://0001-Revert-systemd-analyze-use-argparse-instead-of-getop.patch \
-           file://0002-Revert-analyze-use-GDBus-instead-of-dbus-python.patch \
            file://touchscreen.rules \
            file://modprobe.rules \
            file://var-run.conf \
            ${UCLIBCPATCHES} \
            file://00-create-volatile.conf \
+           file://0001-systemd-analyze-rewrite-in-C.patch \
            file://0001-test-unit-file-Add-libsystemd-daemon.la-to-LDADD.patch \
           "
-SRC_URI[md5sum] = "05ebd7f108e420e2b4e4810ea4b3c810"
-SRC_URI[sha256sum] = "6bd4a658a5dd8198235b17ad1b1f0cc56d9e6f00d646ddcffdfc6f058b55e4bf"
+SRC_URI[md5sum] = "56a860dceadfafe59f40141eb5223743"
+SRC_URI[sha256sum] = "e6857ea21ae24d7056e7b0f4c2aaaba73b8bf57025b8949c0a8af0c1bc9774b5"
 
 UCLIBCPATCHES = ""
 UCLIBCPATCHES_libc-uclibc = "file://systemd-pam-configure-check-uclibc.patch \
@@ -67,6 +66,8 @@ EXTRA_OECONF = " --with-distro=${SYSTEMDDISTRO} \
                  --disable-microhttpd \
                  --without-python \
                "
+# uclibc does not have NSS
+EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname "
 
 # There's no docbook-xsl-native, so for the xsltproc check to false
 do_configure_prepend() {
@@ -150,6 +151,7 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${systemd_unitdir}/system/* \
                 /lib/udev/rules.d/99-systemd.rules \
                 ${base_libdir}/security/*.so \
+                ${libdir}/libnss_myhostname.so.2 \
                 /cgroup \
                 ${bindir}/systemd* \
                 ${bindir}/localectl \
