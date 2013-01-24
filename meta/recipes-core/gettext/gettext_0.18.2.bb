@@ -15,9 +15,6 @@ SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
 	   file://parallel.patch \
           "
 
-SRC_URI_append_libc-uclibc = " file://wchar-uclibc.patch \
-                               file://gnulib-uclibc-sched_param-def.patch \
-                             "
 LDFLAGS_prepend_libc-uclibc = " -lrt -lpthread "
 
 SRC_URI[md5sum] = "0c86e5af70c195ab8bd651d17d783928"
