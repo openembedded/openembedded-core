@@ -23,6 +23,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 # - ssh-server-dropbear - SSH server (dropbear)
 # - ssh-server-openssh  - SSH server (openssh)
 # - qt4-pkgs            - Qt4/X11 and demo applications
+# - hwcodecs            - Install hardware acceleration codecs
 # - package-management  - installs package management tools and preserves the package manager database
 # - debug-tweaks        - makes an image suitable for development, e.g. allowing passwordless root logins
 # - dev-pkgs            - development packages (headers, etc.) for all installed packages in the rootfs
@@ -41,6 +42,7 @@ PACKAGE_GROUP_ssh-server-dropbear = "packagegroup-core-ssh-dropbear"
 PACKAGE_GROUP_ssh-server-openssh = "packagegroup-core-ssh-openssh"
 PACKAGE_GROUP_package-management = "${ROOTFS_PKGMANAGE}"
 PACKAGE_GROUP_qt4-pkgs = "packagegroup-core-qt-demoapps"
+PACKAGE_GROUP_hwcodecs = "${MACHINE_HWCODECS}"
 
 
 # IMAGE_FEATURES_REPLACES_foo = 'bar1 bar2'
@@ -49,6 +51,8 @@ IMAGE_FEATURES_REPLACES_ssh-server-openssh = "ssh-server-dropbear"
 
 # IMAGE_FEATURES_CONFLICTS_foo = 'bar1 bar2'
 # An error exception would be raised if both image features foo and bar1(or bar2) are included
+
+MACHINE_HWCODECS ??= ""
 
 python __anonymous() {
     # Ensure we still have a splash screen for existing images
