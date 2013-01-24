@@ -23,5 +23,16 @@ FILES_cgroups-pam-plugin = "${base_libdir}/security/pam_cgroup.so*"
 FILES_${PN}-dbg += "${base_libdir}/security/.debug"
 FILES_${PN}-dev += "${base_libdir}/security/*.la"
 
-# We really need the symlink so :(
-INSANE_SKIP_cgroups-pam-plugin = "dev-so"
+do_install_append() {
+	# Moving libcgroup to base_libdir
+	if [ ! ${D}${libdir} -ef ${D}${base_libdir} ]; then
+		mkdir -p ${D}/${base_libdir}/
+		mv -f ${D}${libdir}/libcgroup.so.* ${D}${base_libdir}/
+		ln -sf ${D}${base_libdir}/libcgroup.so.1 ${D}${libdir}/libcgroup.so
+	fi
+	# pam modules in ${base_libdir}/security/ should be binary .so files, not symlinks.
+	if [ -f ${D}${base_libdir}/security/pam_cgroup.so.0.0.0 ]; then
+		mv -f ${D}${base_libdir}/security/pam_cgroup.so.0.0.0 ${D}${base_libdir}/security/pam_cgroup.so
+		rm -f ${D}${base_libdir}/security/pam_cgroup.so.*
+	fi
+}
