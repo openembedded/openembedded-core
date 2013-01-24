@@ -314,6 +314,8 @@ python base_eventhandler() {
         generate_git_config(e)
         pkgarch_mapping(e.data)
         preferred_ml_updates(e.data)
+        e.data.appendVar('DISTRO_FEATURES', oe.utils.features_backfill("DISTRO_FEATURES", e.data))
+        e.data.appendVar('MACHINE_FEATURES', oe.utils.features_backfill("MACHINE_FEATURES", e.data))
 
     if isinstance(e, bb.event.BuildStarted):
         statuslines = []
