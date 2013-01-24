@@ -2,12 +2,12 @@ require cairo.inc
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e73e999e0c72b5ac9012424fa157ad77"
 
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "8b3dcade859c44fb7e56fc68edfe9a45"
-SRC_URI[sha256sum] = "8fbb6fc66117ab4100bad830cb4479497e53c6f3facb98bf05c8d298554ebdd9"
+SRC_URI[md5sum] = "bddd5c5b734ab4b9683eb0ba363070d4"
+SRC_URI[sha256sum] = "f1581aef210f6caa9cf42875fb66ab3b47a32db9436bdfa9913b9bbd5034b03b"
 
 PACKAGES =+ "cairo-gobject cairo-script-interpreter cairo-perf-utils"
 
