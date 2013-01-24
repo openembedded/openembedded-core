@@ -54,14 +54,7 @@ fi
 
 #
 # This is as good a place as any for a sanity check
-# /tmp should be a symlink to /var/tmp to cut down on the number
-# of mounted ramdisks.
-if test ! -L /tmp && test -d /var/tmp
-then
-	rm -rf /tmp
-	ln -sf /var/tmp /tmp
-fi
-
+#
 # Set the system clock from hardware clock
 # If the timestamp is more recent than the current time,
 # use the timestamp instead.
