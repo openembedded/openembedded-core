@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://Copying;md5=2b4c6ffbcfcbdee469f02565f253d81a \
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db grep-native"
 DEPENDS += "gdbm zlib"
-PR = "r11"
+PR = "r12"
 
 # 5.10.1 has Module::Build built-in
 PROVIDES += "libmodule-build-perl"
@@ -67,6 +67,7 @@ SRC_URI = "http://www.cpan.org/src/5.0/perl-${PV}.tar.gz \
 	file://fix_bad_rpath.patch \
 	file://perl-build-in-t-dir.patch \
 	file://perl-archlib-exp.patch \
+	file://perl-fix-CVE-2012-5195.patch \
 	\
         file://config.sh \
         file://config.sh-32 \
