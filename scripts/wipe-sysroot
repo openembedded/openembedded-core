@@ -1,0 +1,34 @@
+#! /bin/sh
+
+# Wipe out all of the sysroots and all of the stamps that populated it.
+# Author: Ross Burton <ross.burton@intel.com>
+#
+# Copyright (c) 2012 Intel Corporation
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+if [ -z "$BUILDDIR" ]; then
+    echo >&2 "Error: BUILDDIR is not defined, please initialise the build system."
+    return 1
+fi
+
+# The sysroots themselves
+rm -rf $BUILDDIR/tmp/sysroots/
+
+# The stamps that said the sysroot was populated
+rm -rf $BUILDDIR/tmp/stamps/*/*/*.do_populate_sysroot.*
+rm -rf $BUILDDIR/tmp/stamps/*/*/*.do_populate_sysroot_setscene.*
+
+# The sstate manifests
+rm -rf $BUILDDIR/tmp/sstate-control/manifest-*.populate-sysroot
