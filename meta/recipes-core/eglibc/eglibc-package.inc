@@ -117,7 +117,9 @@ do_evacuate_scripts () {
 	target=${D}${includedir}/eglibc-scripts-internal-${MULTIMACH_TARGET_SYS}
 	mkdir -p $target
 	for i in ${bashscripts}; do
-		cp ${D}${bindir}/$i $target/
+		if [ -f ${D}${bindir}/$i ]; then
+			cp ${D}${bindir}/$i $target/
+		fi
 	done
 }
 
