@@ -28,7 +28,11 @@ do_install () {
 	oe_runmake install DESTDIR="${D}" bindir=${bindir} \
 		template_dir=${datadir}/git-core/templates \
 		GIT_PYTHON_DIR=${D}${datadir}/git-core/python
-	rm -rf ${D}${libdir}/perl-native
+
+	# ${libdir} is not applicable here, perl-native files are always
+	# installed to /usr/lib on both 32/64 bits targets.
+	rm -rf ${D}/usr/lib/perl-native
+	rmdir ${D}/usr/lib || true
 }
 
 do_install_append_class-native() {
