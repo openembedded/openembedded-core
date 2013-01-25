@@ -32,8 +32,8 @@ COMPATIBLE_HOST_armv7a = 'arm.*-linux'
 
 inherit autotools
 
-EXTRA_OECONF = "--enable-tls"
-EXTRA_OECONF_armv7a = "--enable-tls -host=armv7-none-linux-gnueabi"
+EXTRA_OECONF = "--enable-tls --without-mpicc"
+EXTRA_OECONF_armv7a = "--enable-tls -host=armv7-none-linux-gnueabi --without-mpicc"
 EXTRA_OEMAKE = "-w"
 PARALLEL_MAKE = ""
 
