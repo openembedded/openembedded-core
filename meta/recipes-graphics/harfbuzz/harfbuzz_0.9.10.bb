@@ -13,10 +13,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e021dd6dda6ff1e6b1044002fc662b9b \
 
 SECTION = "libs"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/harfbuzz-${PV}.tar.bz2 \
            file://disable_graphite.patch \
+           file://avoid_double_version_h.patch \
 "
 
 SRC_URI[md5sum] = "deec04f2281bef6323f4ad1dabbf75f7"

@@ -1,0 +1,14 @@
+Upstream-Status: Pending
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd harfbuzz-0.9.10/src/Makefile.am harfbuzz-0.9.10/src/Makefile.am
+--- harfbuzz-0.9.10/src/Makefile.am	2012-12-19 03:39:27.000000000 +0200
++++ harfbuzz-0.9.10/src/Makefile.am	2013-01-25 11:55:23.946354729 +0200
+@@ -210,7 +210,6 @@
+ libharfbuzz_la_LIBADD = $(HBLIBS)
+ EXTRA_libharfbuzz_la_DEPENDENCIES = $(harfbuzz_def_dependency)
+ pkginclude_HEADERS = $(HBHEADERS)
+-nodist_pkginclude_HEADERS = hb-version.h
+
+ CLEANFILES += harfbuzz.def
+ harfbuzz.def: $(HBHEADERS)
