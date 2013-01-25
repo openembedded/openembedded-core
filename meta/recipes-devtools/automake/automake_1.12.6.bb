@@ -31,8 +31,7 @@ SRC_URI[sha256sum] = "0cbe570db487908e70af7119da85ba04f7e28656b26f717df0265ae08d
 
 PR = "r0"
 
-do_install () {
-    oe_runmake 'DESTDIR=${D}' install
+do_install_append () {
     install -d ${D}${datadir}
 
     # Some distros have both /bin/perl and /usr/bin/perl, but we set perl location
