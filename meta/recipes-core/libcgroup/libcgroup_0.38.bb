@@ -3,7 +3,7 @@ SECTION = "libs"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
-PR = "r0"
+PR = "r1"
 
 inherit autotools pkgconfig
 
@@ -29,7 +29,8 @@ do_install_append() {
 	if [ ! ${D}${libdir} -ef ${D}${base_libdir} ]; then
 		mkdir -p ${D}/${base_libdir}/
 		mv -f ${D}${libdir}/libcgroup.so.* ${D}${base_libdir}/
-		ln -sf ${D}${base_libdir}/libcgroup.so.1 ${D}${libdir}/libcgroup.so
+		rel_lib_prefix=`echo ${libdir} | sed 's,\(^/\|\)[^/][^/]*,..,g'`
+		ln -sf ${rel_lib_prefix}${base_libdir}/libcgroup.so.1 ${D}${libdir}/libcgroup.so
 	fi
 	# pam modules in ${base_libdir}/security/ should be binary .so files, not symlinks.
 	if [ -f ${D}${base_libdir}/security/pam_cgroup.so.0.0.0 ]; then
