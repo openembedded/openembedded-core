@@ -42,3 +42,18 @@ machine_id() { # return the machine ID
 killproc() { # kill the named process(es)
 	pid=`pidofproc $1` && kill $pid
 }
+
+status() {
+    local pid
+    if [ "$#" = 0 ]; then
+        echo "Usage: status {program}"
+        return 1
+    fi
+    pid=`pidofproc $1`
+    if [ -n "$pid" ]; then
+        echo "$1 (pid $pid) is running..."
+    else
+        echo "$1 is stopped"
+    fi
+    return 3
+}
