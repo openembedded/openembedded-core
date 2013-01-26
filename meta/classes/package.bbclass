@@ -1300,6 +1300,8 @@ python package_do_filedeps() {
 
     # Determine dependencies
     for pkg in packages.split():
+        if d.getVar('SKIP_FILEDEPS_' + pkg, True) == '1':
+            continue
         if pkg.endswith('-dbg') or pkg.endswith('-doc') or pkg.find('-locale-') != -1 or pkg.find('-localedata-') != -1 or pkg.find('-gconv-') != -1 or pkg.find('-charmap-') != -1 or pkg.startswith('kernel-module-'):
             continue
 
