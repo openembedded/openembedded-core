@@ -73,8 +73,7 @@ EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname "
 do_configure_prepend() {
 	export CPP="${HOST_PREFIX}cpp ${TOOLCHAIN_OPTIONS} ${HOST_CC_ARCH}"
 
-	# we only have /home/root, not /root
-	sed -i -e 's:=/root:=/home/root:g' units/*.service*
+	sed -i -e 's:=/root:=${ROOT_HOME}:g' units/*.service*
 }
 
 do_install() {
