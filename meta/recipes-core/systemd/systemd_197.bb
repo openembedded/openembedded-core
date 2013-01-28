@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe \
 PROVIDES = "udev"
 
 PE = "1"
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "xz kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline dbus libcap libcgroup tcp-wrappers glib-2.0 libgcrypt"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
@@ -111,7 +111,7 @@ PACKAGES =+ "${PN}-gui ${PN}-vconsole-setup ${PN}-initramfs ${PN}-analyze"
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "-r lock"
 
-FILES_${PN}-analyze = "${bindir}/systemd-analyze"
+FILES_${PN}-analyze = "${base_bindir}/systemd-analyze"
 RDEPENDS_${PN}-analyze = "python-dbus python-argparse python-textutils"
 RRECOMMENDS_${PN}-analyze = "python-pycairo"
 
