@@ -122,7 +122,9 @@ autotools_postconfigure(){
 	fi
 }
 
-do_configure[prefuncs] += "autotools_preconfigure"
+EXTRACONFFUNCS ??= ""
+
+do_configure[prefuncs] += "autotools_preconfigure ${EXTRACONFFUNCS}"
 do_configure[postfuncs] += "autotools_postconfigure"
 
 autotools_do_configure() {
