@@ -2,6 +2,8 @@ require oprofile.inc
 
 PR = "${INC_PR}.1"
 
+DEPENDS += "virtual/kernel"
+
 SRC_URI += "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
             file://0001-Add-rmb-definition-for-AArch64-architecture.patch \
             file://0001-OProfile-doesn-t-build-for-32-bit-ppc-the-operf_util.patch \
