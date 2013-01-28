@@ -112,8 +112,6 @@ USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "-r lock"
 
 FILES_${PN}-analyze = "${base_bindir}/systemd-analyze"
-RDEPENDS_${PN}-analyze = "python-dbus python-argparse python-textutils"
-RRECOMMENDS_${PN}-analyze = "python-pycairo"
 
 FILES_${PN}-initramfs = "/init"
 RDEPENDS_${PN}-initramfs = "${PN}"
