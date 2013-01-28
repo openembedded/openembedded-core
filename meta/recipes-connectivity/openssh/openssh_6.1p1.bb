@@ -7,7 +7,7 @@ SECTION = "console/network"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=e326045657e842541d3f35aada442507"
 
-PR = "r4"
+PR = "r0"
 
 DEPENDS = "zlib openssl"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
@@ -27,9 +27,9 @@ SRC_URI = "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.
            ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)}"
 
 PAM_SRC_URI = "file://sshd"
-SRC_URI[md5sum] = "3c9347aa67862881c5da3f3b1c08da7b"
-SRC_URI[sha256sum] = "589d48e952d6c017e667873486b5df63222f9133d417d0002bd6429d9bd882de"
 
+SRC_URI[md5sum] = "3345cbf4efe90ffb06a78670ab2d05d5"
+SRC_URI[sha256sum] = "d1c157f6c0852e90c191cc7c9018a583b51e3db4035489cb262639d337a1c411"
 inherit useradd update-rc.d update-alternatives
 
 USERADD_PACKAGES = "${PN}-sshd"
