@@ -18,14 +18,13 @@ python migrate_localcount_handler () {
         if not revs or not counts:
             return
 
-        srcrev = bb.fetch2.get_srcrev(e.data)
-        bpv = pv[:pv.find(srcrev)]
-
         if len(revs) != len(counts):
             bb.warn("The number of revs and localcounts don't match in %s" % pn)
             return
 
-        version = 'AUTOINC-%s-%s' % (pn, bpv)
+        version = e.data.getVar('PRAUTOINX', True)
+        srcrev = bb.fetch2.get_srcrev(e.data)
+        base_ver = 'AUTOINC-%s' % version[:version.find(srcrev)]
         pkgarch = e.data.getVar('PACKAGE_ARCH', True)
         value = max(int(count) for count in counts)
 
@@ -40,7 +39,7 @@ python migrate_localcount_handler () {
         flock = bb.utils.lockfile("%s.lock" % df)
         with open(df, 'a') as fd:
             fd.write('PRAUTO$%s$%s$%s = "%s"\n' %
-                    (version, pkgarch, srcrev, str(value)))
+                    (base_ver, pkgarch, srcrev, str(value)))
         bb.utils.unlockfile(flock)
 }
 
