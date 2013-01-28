@@ -5,15 +5,14 @@ BUGTRACKER = "http://sourceforge.net/tracker/?group_id=50884&atid=461322"
 SECTION = "libs"
 
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=50aad300de703db62baae12146832b45"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=45c5316ff684bcfe2f9f86d8b1279559"
 
-PR = "r2"
+PR = "r0"
 
-SRC_URI = "http://github.com/downloads/libevent/libevent/${BPN}-${PV}-stable.tar.gz \
-           file://libevent-2.0.16_fix_for_x32.patch"
+SRC_URI = "http://github.com/downloads/libevent/libevent/${BPN}-${PV}-stable.tar.gz"
 
-SRC_URI[md5sum] = "899efcffccdb3d5111419df76e7dc8df"
-SRC_URI[sha256sum] = "a578c7bcaf3bab1cc7924bd4d219f2ea621ab8c51dfc4f886e234b6ef4d38295"
+SRC_URI[md5sum] = "b2405cc9ebf264aa47ff615d9de527a2"
+SRC_URI[sha256sum] = "22a530a8a5ba1cb9c080cba033206b17dacd21437762155c6d30ee6469f574f5"
 
 S = "${WORKDIR}/${BPN}-${PV}-stable"
 
