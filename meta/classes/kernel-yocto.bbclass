@@ -20,7 +20,7 @@ def find_sccs(d):
     sources_list=[]
     for s in sources:
         base, ext = os.path.splitext(os.path.basename(s))
-        if ext and ext in ('.scc' '.cfg'):
+        if ext and ext in [".scc", ".cfg"]:
             sources_list.append(s)
         elif base and base in 'defconfig':
             sources_list.append(s)
