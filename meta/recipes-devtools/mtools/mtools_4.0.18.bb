@@ -5,7 +5,7 @@ SECTION = "optional"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-PR = "r1"
+PR = "r0"
 
 RDEPENDS_${PN} = "glibc-gconv-ibm850"
 RRECOMMENDS_${PN} = "\
@@ -24,13 +24,13 @@ RRECOMMENDS_${PN} = "\
 	glibc-gconv-ibm866 \
 	glibc-gconv-ibm869 \
 	"
+SRC_URI[md5sum] = "a23646617546bf6ad56f061d8b283c85"
+SRC_URI[sha256sum] = "59e9cf80885399c4f229e5d87e49c0c2bfeec044e1386d59fcd0b0aead6b2f85"
 
 SRC_URI = "${GNU_MIRROR}/mtools/mtools-${PV}.tar.bz2 \
            file://mtools-makeinfo.patch \
            file://no-x11.gplv3.patch"
 
-SRC_URI[md5sum] = "15571c615d8f75f5f6d294272f80c7fa"
-SRC_URI[sha256sum] = "0ecc358e30a72d215b1d4c625b27e67121cd6f6075370dfb791ef2a8b980ecb6"
 
 inherit autotools
 
