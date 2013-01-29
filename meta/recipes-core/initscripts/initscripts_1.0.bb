@@ -28,6 +28,7 @@ SRC_URI = "file://functions \
            file://sysfs.sh \
            file://device_table.txt \
            file://populate-volatile.sh \
+           file://read-only-rootfs-hook.sh \
            file://volatiles \
            file://save-rtc.sh \
            file://GPLv2.patch"
@@ -85,6 +86,7 @@ do_install () {
 	install -m 0755    ${WORKDIR}/devpts		${D}${sysconfdir}/default
 	install -m 0755    ${WORKDIR}/sysfs.sh		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/populate-volatile.sh ${D}${sysconfdir}/init.d
+	install -m 0755    ${WORKDIR}/read-only-rootfs-hook.sh ${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/save-rtc.sh	${D}${sysconfdir}/init.d
 	install -m 0644    ${WORKDIR}/volatiles		${D}${sysconfdir}/default/volatiles/00_core
 
@@ -116,6 +118,7 @@ do_install () {
 	update-rc.d -r ${D} bootmisc.sh start 55 S .
 	update-rc.d -r ${D} sysfs.sh start 02 S .
 	update-rc.d -r ${D} populate-volatile.sh start 37 S .
+	update-rc.d -r ${D} read-only-rootfs-hook.sh start 41 S .
 	update-rc.d -r ${D} devpts.sh start 38 S .
 	if [ "${TARGET_ARCH}" = "arm" ]; then
 	        update-rc.d -r ${D} alignment.sh start 06 S .
