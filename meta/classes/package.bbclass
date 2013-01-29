@@ -223,13 +223,12 @@ python () {
         d.setVar("PACKAGERDEPTASK", "")
 }
 
-def splitfile(file, debugfile, debugsrcdir, d):
-    # Function to split a single file, called from split_and_strip_files below
-    # A working 'file' (one which works on the target architecture)
-    # is split and the split off portions go to debugfile.
+def splitdebuginfo(file, debugfile, debugsrcdir, d):
+    # Function to split a single file into two components, one is the stripped
+    # target system binary, the other contains any debugging information. The
+    # two files are linked to reference each other.
     #
-    # The debug information is then processed for src references.  These
-    # references are copied to debugsrcdir, if defined.
+    # sourcefile is also generated containing a list of debugsources
 
     import commands, stat, subprocess
 
@@ -267,10 +266,8 @@ def splitfile(file, debugfile, debugsrcdir, d):
 
     return 0
 
-def splitfile2(debugsrcdir, d):
-    # Function to split a single file, called from split_and_strip_files below
-    #
-    # The debug src information processed in the splitfile2 is further procecessed
+def copydebugsources(debugsrcdir, d):
+    # The debug src information written out to sourcefile is further procecessed
     # and copied to the destination here.
 
     import commands, stat, subprocess
@@ -875,7 +872,7 @@ python split_and_strip_files () {
                 bb.mkdirhier(os.path.dirname(fpath))
                 #bb.note("Split %s -> %s" % (file, fpath))
                 # Only store off the hard link reference if we successfully split!
-                if splitfile(file, fpath, debugsrcdir, d) == 0 and file_reference != "":
+                if splitdebuginfo(file, fpath, debugsrcdir, d) == 0 and file_reference != "":
                     file_links[file_reference] = file
 
         # The above may have generated dangling symlinks, remove them!
@@ -899,7 +896,7 @@ python split_and_strip_files () {
 
         # Process the debugsrcdir if requested...
         # This copies and places the referenced sources for later debugging...
-        splitfile2(debugsrcdir, d)
+        copydebugsources(debugsrcdir, d)
     #
     # End of debug splitting
     #
