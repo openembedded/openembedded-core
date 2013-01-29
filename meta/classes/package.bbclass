@@ -949,18 +949,10 @@ python populate_packages () {
     seen = []
 
     for pkg in package_list:
-        localdata = bb.data.createCopy(d)
         root = os.path.join(pkgdest, pkg)
         bb.mkdirhier(root)
 
-        localdata.setVar('PKG', pkg)
-        overrides = localdata.getVar('OVERRIDES', True)
-        if not overrides:
-            raise bb.build.FuncFailed('OVERRIDES not defined')
-        localdata.setVar('OVERRIDES', overrides + ':' + pkg)
-        bb.data.update_data(localdata)
-
-        filesvar = localdata.getVar('FILES', True) or ""
+        filesvar = d.getVar('FILES_%s' % pkg, True) or d.getVar('FILES', True) or ""
         if "//" in filesvar:
             bb.warn("FILES variable for package %s contains '//' which is invalid. Attempting to fix this but you should correct the metadata.\n" % pkg)
             filesvar.replace("//", "/")
@@ -1023,7 +1015,6 @@ python populate_packages () {
             if ret is False or ret == 0:
                 raise bb.build.FuncFailed("File population failed")
 
-        del localdata
     os.chdir(workdir)
 
     unshipped = []
