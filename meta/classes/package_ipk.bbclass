@@ -476,6 +476,7 @@ python do_package_write_ipk () {
     bb.build.exec_func("do_package_ipk", d)
 }
 do_package_write_ipk[dirs] = "${PKGWRITEDIRIPK}"
+do_package_write_ipk[cleandirs] = "${PKGWRITEDIRIPK}"
 do_package_write_ipk[umask] = "022"
 addtask package_write_ipk before do_package_write after do_packagedata do_package
 
