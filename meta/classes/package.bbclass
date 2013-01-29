@@ -961,12 +961,12 @@ python populate_packages () {
         bb.data.update_data(localdata)
 
         filesvar = localdata.getVar('FILES', True) or ""
+        if "//" in filesvar:
+            bb.warn("FILES variable for package %s contains '//' which is invalid. Attempting to fix this but you should correct the metadata.\n" % pkg)
+            filesvar.replace("//", "/")
         files = filesvar.split()
         file_links = {}
         for file in files:
-            if file.find("//") != -1:
-                bb.warn("FILES variable for package %s contains '//' which is invalid. Attempting to fix this but you should correct the metadata.\n" % pkg)
-                file.replace("//", "/")
             if os.path.isabs(file):
                 file = '.' + file
             if not os.path.islink(file):
