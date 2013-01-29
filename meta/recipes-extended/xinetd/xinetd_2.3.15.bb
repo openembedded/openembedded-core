@@ -7,7 +7,7 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=8ad8615198542444f84d28a6cf226dd8"
 
 DEPENDS = ""
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://www.xinetd.org/xinetd-${PV}.tar.gz \
       file://xinetd.init \
@@ -27,6 +27,9 @@ INITSCRIPT_NAME = "xinetd"
 INITSCRIPT_PARAMS = "defaults"
 
 EXTRA_OECONF="--disable-nls"
+
+PACKAGECONFIG ??= "tcp-wrappers"
+PACKAGECONFIG[tcp-wrappers] = "--with-libwrap,,tcp-wrappers"
 
 do_configure() {
 	# Looks like configure.in is broken, so we are skipping
