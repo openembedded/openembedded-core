@@ -10,6 +10,9 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/flex/flex-${PV}.tar.bz2 "
 
 inherit autotools gettext
 
-do_install_append_class-native() {
-	create_wrapper ${D}/${bindir}/flex M4=${STAGING_BINDIR_NATIVE}/m4
+M4 = "${bindir}/m4"
+M4_class-native = "${STAGING_BINDIR_NATIVE}/m4"
+
+do_install_append() {
+	create_wrapper ${D}/${bindir}/flex M4=${M4}
 }
