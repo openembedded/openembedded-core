@@ -1035,8 +1035,6 @@ python populate_packages () {
             for f in unshipped:
                 msg = msg + "\n  " + f
             package_qa_handle_error("installed_vs_shipped", msg, d)
-
-    bb.build.exec_func("package_name_hook", d)
 }
 populate_packages[dirs] = "${D}"
 
@@ -1841,13 +1839,15 @@ def gen_packagevar(d):
     return " ".join(ret)
 
 PACKAGE_PREPROCESS_FUNCS ?= ""
-PACKAGEFUNCS ?= "package_get_auto_pr \
+PACKAGEFUNCS ?= " \
                 perform_packagecopy \
                 ${PACKAGE_PREPROCESS_FUNCS} \
                 package_do_split_locales \
                 split_and_strip_files \
                 fixup_perms \
                 populate_packages \
+                package_name_hook \
+                package_get_auto_pr \
                 package_fixsymlinks \
                 package_do_filedeps \
                 package_do_shlibs \
