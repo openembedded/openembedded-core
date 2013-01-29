@@ -404,7 +404,7 @@ def package_qa_check_arch(path,name,d, elf, messages):
 
     target_os   = d.getVar('TARGET_OS', True)
     target_arch = d.getVar('TARGET_ARCH', True)
-    provides = d.getVar('PROVIDES', d, True)
+    provides = d.getVar('PROVIDES', True)
     bpn = d.getVar('BPN', True)
 
     # FIXME: Cross package confuse this check, so just skip them
