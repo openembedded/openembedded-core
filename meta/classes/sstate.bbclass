@@ -146,8 +146,8 @@ def sstate_install(ss, d):
         locks.append(bb.utils.lockfile(lock))
 
     for state in ss['dirs']:
+        bb.debug(2, "Staging files from %s to %s" % (state[1], state[2]))
         for walkroot, dirs, files in os.walk(state[1]):
-            bb.debug(2, "Staging files from %s to %s" % (state[1], state[2]))
             for file in files:
                 srcpath = os.path.join(walkroot, file)
                 dstpath = srcpath.replace(state[1], state[2])
