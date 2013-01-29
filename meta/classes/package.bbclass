@@ -325,10 +325,6 @@ def runstrip(file, elftype, d):
     pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
     strip = d.getVar("STRIP", True)
 
-    # Handle kernel modules specifically - .debug directories here are pointless
-    if file.find("/lib/modules/") != -1 and file.endswith(".ko"):
-        return subprocess.call("%s'%s' --strip-debug --remove-section=.comment --remove-section=.note --preserve-dates '%s'" % (pathprefix, strip, file), shell=True)
-
     newmode = None
     if not os.access(file, os.W_OK) or os.access(file, os.R_OK):
         origmode = os.stat(file)[stat.ST_MODE]
@@ -337,15 +333,14 @@ def runstrip(file, elftype, d):
 
     extraflags = ""
     
-    # split_and_strip_files is calling this with elf_type None, causing:
-    # TypeError: unsupported operand type(s) for &: 'NoneType' and 'int'
-    if elftype:
-        # .so and shared library
-        if ".so" in file and elftype & 8:
-            extraflags = "--remove-section=.comment --remove-section=.note --strip-unneeded"
-        # shared or executable:
-        elif elftype & 8 or elftype & 4:
-            extraflags = "--remove-section=.comment --remove-section=.note"
+    # .so and shared library
+    if elftype & 16:
+        extraflags = "--strip-debug --remove-section=.comment --remove-section=.note --preserve-dates"
+    elif ".so" in file and elftype & 8:
+        extraflags = "--remove-section=.comment --remove-section=.note --strip-unneeded"
+    # shared or executable:
+    elif elftype & 8 or elftype & 4:
+        extraflags = "--remove-section=.comment --remove-section=.note"
 
     stripcmd = "'%s' %s '%s'" % (strip, extraflags, file)
     bb.debug(1, "runstrip: %s" % stripcmd)
@@ -749,6 +744,7 @@ python split_and_strip_files () {
     # 2 - stripped
     # 4 - executable
     # 8 - shared library
+    # 16 - kernel module
     def isELF(path):
         type = 0
         pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
@@ -775,11 +771,16 @@ python split_and_strip_files () {
     #
     file_list = {}
     file_links = {}
+    kernmods = []
     if (d.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT', True) != '1') and \
             (d.getVar('INHIBIT_PACKAGE_STRIP', True) != '1'):
         for root, dirs, files in os.walk(dvar):
             for f in files:
                 file = os.path.join(root, f)
+                if file.endswith(".ko") and file.find("/lib/modules/") != -1:
+                    kernmods.append(file)
+                    continue
+
                 # Only process files (and symlinks)... Skip files that are obviously debug files
                 if not (debugappend != "" and file.endswith(debugappend)) and \
                    not (debugdir != "" and debugdir in os.path.dirname(file[len(dvar):])) and \
@@ -910,14 +911,8 @@ python split_and_strip_files () {
                 elf_file = int(file_list[file][5:])
                 #bb.note("Strip %s" % file)
                 runstrip(file, elf_file, d)
-
-
-    if (d.getVar('INHIBIT_PACKAGE_STRIP', True) != '1'):
-        for root, dirs, files in os.walk(dvar):
-            for f in files:
-                if not f.endswith(".ko"):
-                    continue
-                runstrip(os.path.join(root, f), 0, d)
+        for f in kernmods:
+            runstrip(f, 16, d)
     #
     # End of strip
     #
