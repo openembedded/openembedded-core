@@ -7,6 +7,7 @@ LICENSE_DIRECTORY ??= "${DEPLOY_DIR}/licenses"
 LICSSTATEDIR = "${WORKDIR}/license-destdir/"
 
 # Create extra package with license texts and add it to RRECOMMENDS_${PN}
+LICENSE_CREATE_PACKAGE[type] = "boolean"
 LICENSE_CREATE_PACKAGE ??= "0"
 LICENSE_PACKAGE_SUFFIX ??= "-lic"
 LICENSE_FILES_DIRECTORY ??= "${datadir}/licenses/"
@@ -102,7 +103,7 @@ python do_populate_lic() {
 
 # it would be better to copy them in do_install_append, but find_license_filesa is python
 python perform_packagecopy_prepend () {
-    enabled = d.getVar('LICENSE_CREATE_PACKAGE', True)
+    enabled = oe.data.typed_value('LICENSE_CREATE_PACKAGE', d)
     if d.getVar('CLASSOVERRIDE', True) == 'class-target' and enabled:
         lic_files_paths = find_license_files(d)
 
