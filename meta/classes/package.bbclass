@@ -997,6 +997,8 @@ python populate_packages () {
                     seen.append(p)
 
             def mkdir_recurse(src, dest, paths):
+                if os.path.exists(dest + '/' + paths):
+                    return
                 while paths.startswith("./"):
                     paths = paths[2:]
                 p = "."
