@@ -1,0 +1,35 @@
+Upstream-Status: Accepted
+
+[Yocto 2896]
+
+Signed-off-by: Kang Kai <kai.kang@windriver.com>
+---
+From 03b614739b923994ff0bef74622973ad18fefebd Mon Sep 17 00:00:00 2001
+From: Kang Kai <kai.kang@windriver.com>
+Date: Mon, 28 Jan 2013 14:02:51 +0100
+Subject: [PATCH] testsuite/du/du-k-works: fix false positive
+
+Signed-off-by: Kang Kai <kai.kang@windriver.com>
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+---
+ testsuite/du/du-k-works |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/testsuite/du/du-k-works b/testsuite/du/du-k-works
+index 36dcaa8..417b0da 100644
+--- a/testsuite/du/du-k-works
++++ b/testsuite/du/du-k-works
+@@ -2,6 +2,10 @@ mkdir du.testdir
+ cd du.testdir
+ dd if=/dev/zero of=file1 bs=1k count=64 2>/dev/null
+ dd if=/dev/zero of=file2 bs=1k count=16 2>/dev/null
++# ext4 on images <512M gives 81kb
++# ext3 on images <512M gives 83kb
+ test x"`busybox du -k .`" = x"80	." \
++  -o x"`busybox du -k .`" = x"81	." \
++  -o x"`busybox du -k .`" = x"83	." \
+   -o x"`busybox du -k .`" = x"84	." \
+   -o x"`busybox du -k .`" = x"88	."
+-- 
+1.7.5.4
+
