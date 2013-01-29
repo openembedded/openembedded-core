@@ -199,12 +199,11 @@ python buildhistory_emit_pkghistory() {
         pkgdestpkg = os.path.join(pkgdest, pkg)
         filelist = []
         pkginfo.size = 0
-        for root, dirs, files in os.walk(pkgdestpkg):
-            relpth = os.path.relpath(root, pkgdestpkg)
-            for f in files:
-                fstat = os.lstat(os.path.join(root, f))
-                pkginfo.size += fstat.st_size
-                filelist.append(os.sep + os.path.join(relpth, f))
+        for f in pkgfiles[pkg]:
+            relpth = os.path.relpath(f, pkgdestpkg)
+            fstat = os.lstat(f)
+            pkginfo.size += fstat.st_size
+            filelist.append(os.sep + relpth)
         filelist.sort()
         pkginfo.filelist = " ".join(filelist)
 

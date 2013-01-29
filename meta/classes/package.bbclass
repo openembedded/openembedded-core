@@ -1049,9 +1049,7 @@ python package_fixsymlinks () {
         dangling_links[pkg] = []
         pkg_files[pkg] = []
         inst_root = os.path.join(pkgdest, pkg)
-        for root, dirs, files in os.walk(inst_root):
-            for f in files:
-                path = os.path.join(root, f)
+        for path in pkgfiles[pkg]:
                 rpath = path[len(inst_root):]
                 pkg_files[pkg].append(rpath)
                 try:
@@ -1061,7 +1059,7 @@ python package_fixsymlinks () {
                         raise
                     target = os.readlink(path)
                     if target[0] != '/':
-                        target = os.path.join(root[len(inst_root):], target)
+                        target = os.path.join(os.path.dirname(path)[len(inst_root):], target)
                     dangling_links[pkg].append(os.path.normpath(target))
 
     newrdepends = {}
@@ -1307,12 +1305,8 @@ python package_do_filedeps() {
 
         provides_files = []
         requires_files = []
-        rpfiles = []
-        for root, dirs, files in os.walk(pkgdest + "/" + pkg):
-            for file in files:
-                rpfiles.append(os.path.join(root, file))
 
-        for files in chunks(rpfiles, 100):
+        for files in chunks(pkgfiles[pkg], 100):
             dep_pipe = os.popen(rpmdeps + " " + " ".join(files))
 
             process_deps(dep_pipe, pkg, provides_files, requires_files)
@@ -1362,9 +1356,9 @@ python package_do_shlibs() {
     # Take shared lock since we're only reading, not writing
     lf = bb.utils.lockfile(d.expand("${PACKAGELOCK}"))
 
-    def linux_so(root, path, file):
+    def linux_so(file):
         needs_ldconfig = False
-        cmd = d.getVar('OBJDUMP', True) + " -p " + pipes.quote(os.path.join(root, file)) + " 2>/dev/null"
+        cmd = d.getVar('OBJDUMP', True) + " -p " + pipes.quote(file) + " 2>/dev/null"
         cmd = "PATH=\"%s\" %s" % (d.getVar('PATH', True), cmd)
         fd = os.popen(cmd)
         lines = fd.readlines()
@@ -1381,15 +1375,14 @@ python package_do_shlibs() {
                     # if library is private (only used by package) then do not build shlib for it
                     if not private_libs or -1 == private_libs.find(this_soname):
                         sonames.append(this_soname)
-                if libdir_re.match(root):
+                if libdir_re.match(os.path.dirname(file)):
                     needs_ldconfig = True
-                if snap_symlinks and (file != this_soname):
-                    renames.append((os.path.join(root, file), os.path.join(root, this_soname)))
+                if snap_symlinks and (os.path.basename(file) != this_soname):
+                    renames.append((file, os.path.join(os.path.dirname(file), this_soname)))
         return needs_ldconfig
 
-    def darwin_so(root, path, file):
-        fullpath = os.path.join(root, file)
-        if not os.path.exists(fullpath):
+    def darwin_so(file):
+        if not os.path.exists(file):
             return
 
         def get_combinations(base):
@@ -1414,7 +1407,7 @@ python package_do_shlibs() {
                 if not combo in sonames:
                     sonames.append(combo)
         if file.endswith('.dylib') or file.endswith('.so'):
-            lafile = fullpath.replace(os.path.join(pkgdest, pkg), d.getVar('PKGD', True))
+            lafile = file.replace(os.path.join(pkgdest, pkg), d.getVar('PKGD', True))
             # Drop suffix
             lafile = lafile.rsplit(".",1)[0]
             lapath = os.path.dirname(lafile)
@@ -1427,7 +1420,7 @@ python package_do_shlibs() {
             lafile = lapath + '/' + combo + '.la'
 
             #bb.note("Foo2: %s" % lafile)
-            #bb.note("Foo %s %s" % (file, fullpath))
+            #bb.note("Foo %s" % file)
             if os.path.exists(lafile):
                 fd = open(lafile, 'r')
                 lines = fd.readlines()
@@ -1475,17 +1468,14 @@ python package_do_shlibs() {
         needed[pkg] = []
         sonames = list()
         renames = list()
-        top = os.path.join(pkgdest, pkg)
-        for root, dirs, files in os.walk(top):
-            for file in files:
+        for file in pkgfiles[pkg]:
                 soname = None
-                path = os.path.join(root, file)
-                if os.path.islink(path):
+                if os.path.islink(file):
                     continue
                 if targetos == "darwin" or targetos == "darwin8":
-                    darwin_so(root, dirs, file)
-                elif os.access(path, os.X_OK) or lib_re.match(file):
-                    ldconfig = linux_so(root, dirs, file)
+                    darwin_so(file)
+                elif os.access(file, os.X_OK) or lib_re.match(file):
+                    ldconfig = linux_so(file)
                     needs_ldconfig = needs_ldconfig or ldconfig
         for (old, new) in renames:
             bb.note("Renaming %s to %s" % (old, new))
@@ -1594,18 +1584,15 @@ python package_do_pkgconfig () {
     for pkg in packages.split():
         pkgconfig_provided[pkg] = []
         pkgconfig_needed[pkg] = []
-        top = os.path.join(pkgdest, pkg)
-        for root, dirs, files in os.walk(top):
-            for file in files:
+        for file in pkgfiles[pkg]:
                 m = pc_re.match(file)
                 if m:
                     pd = bb.data.init()
                     name = m.group(1)
                     pkgconfig_provided[pkg].append(name)
-                    path = os.path.join(root, file)
-                    if not os.access(path, os.R_OK):
+                    if not os.access(file, os.R_OK):
                         continue
-                    f = open(path, 'r')
+                    f = open(file, 'r')
                     lines = f.readlines()
                     f.close()
                     for l in lines:
@@ -1844,16 +1831,19 @@ def gen_packagevar(d):
     return " ".join(ret)
 
 PACKAGE_PREPROCESS_FUNCS ?= ""
-PACKAGEFUNCS ?= " \
+# Functions for setting up PKGD
+PACKAGEBUILDPKGD ?= " \
                 perform_packagecopy \
                 ${PACKAGE_PREPROCESS_FUNCS} \
-                package_do_split_locales \
                 split_and_strip_files \
                 fixup_perms \
-                populate_packages \
+                package_do_split_locales \
+                populate_packages"
+# Functions which process metadata based on split packages
+PACKAGEFUNCS ?= " \
+                package_fixsymlinks \
                 package_name_hook \
                 package_get_auto_pr \
-                package_fixsymlinks \
                 package_do_filedeps \
                 package_do_shlibs \
                 package_do_pkgconfig \
@@ -1882,6 +1872,20 @@ python do_package () {
     if not workdir or not outdir or not dest or not dvar or not pn:
         bb.error("WORKDIR, DEPLOY_DIR, D, PN and PKGD all must be defined, unable to package")
         return
+
+    for f in (d.getVar('PACKAGEBUILDPKGD', True) or '').split():
+        bb.build.exec_func(f, d)
+
+    # Build global list of files in each split package
+    global pkgfiles
+    pkgfiles = {}
+    packages = d.getVar('PACKAGES', True).split()
+    pkgdest = d.getVar('PKGDEST', True)
+    for pkg in packages:
+        pkgfiles[pkg] = []
+        for walkroot, dirs, files in os.walk(pkgdest + "/" + pkg):
+            for file in files:
+                pkgfiles[pkg].append(walkroot + os.sep + file)
 
     for f in (d.getVar('PACKAGEFUNCS', True) or '').split():
         bb.build.exec_func(f, d)

@@ -658,9 +658,7 @@ def package_qa_walk(path, warnfuncs, errorfuncs, skip, package, d):
 
     warnings = []
     errors = []
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            path = os.path.join(root,file)
+    for path in pkgfiles[package]:
             elf = oe.qa.ELFFile(path)
             try:
                 elf.open()
