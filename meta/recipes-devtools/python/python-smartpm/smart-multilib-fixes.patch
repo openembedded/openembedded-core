@@ -1,0 +1,22 @@
+To fix some multilib issues, change the way the RPM backend decides
+if two packages can coexist: if they have a different architecture,
+automatically assume that they can coexist (which is fundamental for
+multilib).
+
+Upstream-Status: Pending
+
+Signed-off-by: Bogdan Marinescu <bogdan.a.marinescu@intel.com>
+
+diff --git a/smart/backends/rpm/base.py b/smart/backends/rpm/base.py
+index 6e83d40..7140c1b 100644
+--- a/smart/backends/rpm/base.py
++++ b/smart/backends/rpm/base.py
+@@ -228,6 +228,8 @@ class RPMPackage(Package):
+             return False
+         selfver, selfarch = splitarch(self.version)
+         otherver, otherarch = splitarch(other.version)
++        if selfarch != otherarch:
++            return True
+         selfcolor = getArchColor(selfarch)
+         othercolor = getArchColor(otherarch)
+         if (selfcolor and othercolor and selfcolor != othercolor and
