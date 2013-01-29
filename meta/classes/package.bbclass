@@ -1038,11 +1038,6 @@ python populate_packages () {
 
     bb.build.exec_func("package_name_hook", d)
 
-    for pkg in package_list:
-        pkgname = d.getVar('PKG_%s' % pkg, True)
-        if pkgname is None:
-            d.setVar('PKG_%s' % pkg, pkg)
-
     dangling_links = {}
     pkg_files = {}
     for pkg in package_list:
@@ -1154,6 +1149,11 @@ python emit_pkgdata() {
     for pkg in packages.split():
         subdata_file = pkgdatadir + "/runtime/%s" % pkg
 
+        pkgval = d.getVar('PKG_%s' % pkg, True)
+        if pkgval is None:
+            pkgval = pkg
+            d.setVar('PKG_%s' % pkg, pkg)
+
         sf = open(subdata_file, 'w')
         write_if_exists(sf, pkg, 'PN')
         write_if_exists(sf, pkg, 'PV')
@@ -1189,7 +1189,6 @@ python emit_pkgdata() {
         sf.close()
 
         # Symlinks needed for reverse lookups (from the final package name)
-        pkgval = d.getVar('PKG_%s' % (pkg), True)
         subdata_sym = pkgdatadir + "/runtime-reverse/%s" % pkgval
         oe.path.symlink("../runtime/%s" % pkg, subdata_sym, True)
 
