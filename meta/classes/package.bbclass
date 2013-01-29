@@ -1064,24 +1064,29 @@ python package_fixsymlinks () {
                         target = os.path.join(root[len(inst_root):], target)
                     dangling_links[pkg].append(os.path.normpath(target))
 
-    for pkg in packages:
-        rdepends = bb.utils.explode_dep_versions2(d.getVar('RDEPENDS_' + pkg, True) or d.getVar('RDEPENDS', True) or "")
-
+    newrdepends = {}
+    for pkg in dangling_links:
         for l in dangling_links[pkg]:
             found = False
             bb.debug(1, "%s contains dangling link %s" % (pkg, l))
             for p in packages:
-                for f in pkg_files[p]:
-                    if f == l:
+                if l in pkg_files[p]:
                         found = True
                         bb.debug(1, "target found in %s" % p)
                         if p == pkg:
                             break
-                        if p not in rdepends:
-                            rdepends[p] = []
+                        if pkg not in newrdepends:
+                            newrdepends[pkg] = []
+                        newrdepends[pkg].append(p)
                         break
             if found == False:
                 bb.note("%s contains dangling symlink to %s" % (pkg, l))
+
+    for pkg in newrdepends:
+        rdepends = bb.utils.explode_dep_versions2(d.getVar('RDEPENDS_' + pkg, True) or d.getVar('RDEPENDS', True) or "")
+        for p in newrdepends[pkg]:
+            if p not in rdepends:
+                rdepends[p] = []
         d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
 }
 
