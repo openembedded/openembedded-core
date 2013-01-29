@@ -919,7 +919,7 @@ python split_and_strip_files () {
 }
 
 python populate_packages () {
-    import glob, stat, errno, re, subprocess
+    import glob, re, subprocess
 
     workdir = d.getVar('WORKDIR', True)
     outdir = d.getVar('DEPLOY_DIR', True)
@@ -1037,10 +1037,17 @@ python populate_packages () {
             package_qa_handle_error("installed_vs_shipped", msg, d)
 
     bb.build.exec_func("package_name_hook", d)
+}
+populate_packages[dirs] = "${D}"
+
+python package_fixsymlinks () {
+    import errno
+    pkgdest = d.getVar('PKGDEST', True)
+    packages = d.getVar("PACKAGES").split()
 
     dangling_links = {}
     pkg_files = {}
-    for pkg in package_list:
+    for pkg in packages:
         dangling_links[pkg] = []
         pkg_files[pkg] = []
         inst_root = os.path.join(pkgdest, pkg)
@@ -1059,13 +1066,13 @@ python populate_packages () {
                         target = os.path.join(root[len(inst_root):], target)
                     dangling_links[pkg].append(os.path.normpath(target))
 
-    for pkg in package_list:
+    for pkg in packages:
         rdepends = bb.utils.explode_dep_versions2(d.getVar('RDEPENDS_' + pkg, True) or d.getVar('RDEPENDS', True) or "")
 
         for l in dangling_links[pkg]:
             found = False
             bb.debug(1, "%s contains dangling link %s" % (pkg, l))
-            for p in package_list:
+            for p in packages:
                 for f in pkg_files[p]:
                     if f == l:
                         found = True
@@ -1079,7 +1086,6 @@ python populate_packages () {
                 bb.note("%s contains dangling symlink to %s" % (pkg, l))
         d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
 }
-populate_packages[dirs] = "${D}"
 
 PKGDESTWORK = "${WORKDIR}/pkgdata"
 
@@ -1842,6 +1848,7 @@ PACKAGEFUNCS ?= "package_get_auto_pr \
                 split_and_strip_files \
                 fixup_perms \
                 populate_packages \
+                package_fixsymlinks \
                 package_do_filedeps \
                 package_do_shlibs \
                 package_do_pkgconfig \
