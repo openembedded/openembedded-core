@@ -1,4 +1,3 @@
-RDEPENDS_${PN} += "kernel-image"
 DEPENDS += "virtual/kernel"
 
 inherit module-base
@@ -25,7 +24,7 @@ module_do_install() {
 	           modules_install
 }
 
-pkg_postinst_${PN}_append () {
+module_pkg_postinst () {
 if [ -z "$D" ]; then
 	depmod -a ${KERNEL_VERSION}
 else
@@ -33,7 +32,7 @@ else
 fi
 }
 
-pkg_postrm_${PN}_append () {
+module_pkg_postrm () {
 if [ -z "$D" ]; then
 	depmod -a ${KERNEL_VERSION}
 else
@@ -43,4 +42,16 @@ fi
 
 EXPORT_FUNCTIONS do_compile do_install
 
-FILES_${PN} = "/etc /lib/modules"
+MODULE_PACKAGES ?= "${PN}"
+
+python __anonymous() {
+    for package in d.getVar("MODULE_PACKAGES", True).split():
+        d.appendVar("RDEPENDS_%s" % package, " kernel-image")
+        files = d.getVar("MODULE_FILES_%s" % package, True) or "/etc /lib/modules"
+        d.appendVar("FILES_%s" % package, " " + files)
+        d.appendVar('pkg_postinst_%s' %  package, " " + d.getVar('module_pkg_postinst', True))
+        d.appendVar('pkg_postrm_%s' %  package, " " + d.getVar('module_pkg_postrm', True))
+        if not package in d.getVar("PACKAGES", True):
+            d.prependVar("PACKAGES", package + " ")
+}
+         	
