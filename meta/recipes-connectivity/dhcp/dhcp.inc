@@ -41,8 +41,8 @@ do_install_append () {
 	install -m 0755 ${WORKDIR}/init-server ${D}${sysconfdir}/init.d/dhcp-server
 	install -m 0644 ${WORKDIR}/default-server ${D}${sysconfdir}/default/dhcp-server
 
-	rm -f ${D}${sysconfdir}/dhclient.conf
-	rm -f ${D}${sysconfdir}/dhcpd.conf
+	rm -f ${D}${sysconfdir}/dhclient.conf*
+	rm -f ${D}${sysconfdir}/dhcpd.conf*
 	install -m 0644 ${WORKDIR}/dhclient.conf ${D}${sysconfdir}/dhcp/dhclient.conf
 	install -m 0644 ${WORKDIR}/dhcpd.conf ${D}${sysconfdir}/dhcp/dhcpd.conf
 
