@@ -7,11 +7,10 @@ HOMEPAGE = "http://www.gentoo.org/proj/en/hardened/pax-utils.xml"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
-SRC_URI = "http://gentoo.osuosl.org/distfiles/pax-utils-${PV}.tar.bz2"
+SRC_URI = "http://gentoo.osuosl.org/distfiles/pax-utils-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "93a2e993ec7a83627c39ddf92988e191"
-SRC_URI[sha256sum] = "eac86abe7871ee12452d221c1e7c21acb9ba78ba2cba1daa587d3c93c77acd07"
-
+SRC_URI[md5sum] = "376ec23930a55a8d3e167d50e23bb66e"
+SRC_URI[sha256sum] = "1ffd4bf7bf3f8bb404007dd1617edfb0297e4c65a2c1153712e4a76875038784"
 PR = "r0"
 
 do_install() {
