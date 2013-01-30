@@ -31,6 +31,7 @@ EXTRA_OECONF = "\
   --enable-sdl=no \
   --enable-vnc=no \
   --disable-x11 \
+  --disable-mesa \
 "
 
 #PACKAGES_DYNAMIC += "^directfb-inputdrivers-.*"
