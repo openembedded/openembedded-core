@@ -1,6 +1,6 @@
 require eglibc.inc
 
-PR = "r1"
+PR = "r2"
 
 DEPENDS += "gperf-native kconfig-frontends-native"
 
@@ -143,8 +143,11 @@ do_compile () {
 	echo "Adjust ldd script"
 	if [ -n "${RTLDLIST}" ]
 	then
-		sed -i ${B}/elf/ldd -e 's#^\(RTLDLIST=\)"\(.*\)"$#\1\2#'
-		sed -i ${B}/elf/ldd -e 's#^\(RTLDLIST=\)\(.*\)$#\1"${RTLDLIST} \2"#'
+		prevrtld=`cat ${B}/elf/ldd | grep "^RTLDLIST=" | sed 's#^RTLDLIST=\(.*\)$#\1#'`
+		if [ "${prevrtld}" != "${RTLDLIST}" ]
+		then
+			sed -i ${B}/elf/ldd -e "s#^RTLDLIST=.*\$#RTLDLIST=\"${prevrtld} ${RTLDLIST}\"#"
+		fi
 	fi
 
 }
