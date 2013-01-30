@@ -1,14 +1,13 @@
 require e2fsprogs.inc
 
-PR = "r4"
+PR = "r0"
 
-SRC_URI += "file://fallocate.patch \
-            file://acinclude.m4 \
+SRC_URI += "file://acinclude.m4 \
             file://remove.ldconfig.call.patch \
 "
 
-SRC_URI[md5sum] = "8ed1501ae6746e2e735bdd1407211dc9"
-SRC_URI[sha256sum] = "0f1fdc10c6289b6750714490837df9aab691f352d33f5ecb64507704df6ff991"
+SRC_URI[md5sum] = "9e444c240c1001b3292d108fbad0f49c"
+SRC_URI[sha256sum] = "726b5919edeaee5b077d7a5b602284f1453ea31cf499efa433af26c679b667a5"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-elf-shlibs --disable-libuuid --disable-uuidd"
 EXTRA_OECONF_darwin = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-bsd-shlibs"
