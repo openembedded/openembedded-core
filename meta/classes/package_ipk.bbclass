@@ -198,7 +198,7 @@ ipk_log_check() {
 # Update the Packages index files in ${DEPLOY_DIR_IPK}
 #
 package_update_index_ipk () {
-	set -x
+	#set -x
 
 	ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS} ${SDK_PACKAGE_ARCHS}"
 
