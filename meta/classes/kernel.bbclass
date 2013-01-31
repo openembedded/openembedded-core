@@ -143,10 +143,13 @@ kernel_do_install() {
 	# work and sysroots can be on different partitions, so we can't rely on
 	# hardlinking, unfortunately.
 	#
-	cp -fR * $kerneldir
+	find . -depth -not -name "*.cmd" -not -name "*.o" -not -path "./.*" -print0 | cpio --null -pdu $kerneldir
 	cp .config $kerneldir
 	if [ "${S}" != "${B}" ]; then
-		cp -fR ${S}/* $kerneldir
+		pwd="$PWD"
+		cd "${S}"
+		find . -depth -not -path "./.*" -print0 | cpio --null -pdu $kerneldir
+		cd "$pwd"
 	fi
 	install -m 0644 ${KERNEL_OUTPUT} $kerneldir/${KERNEL_IMAGETYPE}
 	install -m 0644 System.map $kerneldir/System.map-${KERNEL_VERSION}
