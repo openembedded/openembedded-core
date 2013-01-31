@@ -14,17 +14,18 @@ BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=fontconfig"
 LICENSE = "MIT-style & MIT & PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=dc5b39c592e47a22dbec44855988d2a0 \
                     file://src/fcfreetype.c;endline=45;md5=5d9513e3196a1fbfdfa94051c09dfc84 \
-                    file://src/fccache.c;beginline=1109;endline=1124;md5=0326cfeb4a7333dd4dd25fbbc4b9f27f"
+                    file://src/fccache.c;beginline=1182;endline=1197;md5=0326cfeb4a7333dd4dd25fbbc4b9f27f"
 
 SECTION = "libs"
 
 DEPENDS = "expat freetype zlib"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
+           file://Add-sysroot-option-to-fc-cache-and-fc-cat.patch \
            file://fix-pkgconfig.patch \
-           file://97_fontconfig"
+          "
 
 SRC_URI[md5sum] = "025e08b3d7fe45c433de5718e441ed15"
 SRC_URI[sha256sum] = "5c3bf994bb6d6303bbf1e641eaa4b431932138dc90de33642e5845e31e1fdfd6"
@@ -82,9 +83,3 @@ do_configure_append () {
 
 }
 
-do_install_append() {
-	install -d ${D}${sysconfdir}/default/volatiles
-	install -m 0644 ${WORKDIR}/97_fontconfig ${D}${sysconfdir}/default/volatiles
-	rmdir ${D}${localstatedir}/cache/fontconfig
-	rmdir ${D}${localstatedir}/cache/
-}
