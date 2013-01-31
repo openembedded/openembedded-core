@@ -9,10 +9,12 @@ SECTION = "x11/fonts"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 RDEPENDS_${PN} = "fontconfig-utils"
-PR = "r2"
+PR = "r3"
 PE = "1"
 
-inherit allarch
+inherit allarch fontcache
+
+FONT_PACKAGES = "${PN}"
 
 SRC_URI = "https://fedorahosted.org/releases/l/i/liberation-fonts/liberation-fonts-${PV}.tar.gz \
            file://30-liberation-aliases.conf"
@@ -31,14 +33,6 @@ do_install () {
 
 	install -d ${D}${prefix}/share/doc/${PN}/
 	install -m 0644 License.txt ${D}${datadir}/doc/${PN}/
-}
-
-pkg_postinst_${PN} () {
-#!/bin/sh
-if [ "x$D" != "x" ] ; then
-	exit 1
-fi
-fc-cache
 }
 
 PACKAGES = "${PN}"
