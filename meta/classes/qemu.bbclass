@@ -23,10 +23,14 @@ def qemu_target_binary(data):
 # ${@qemu_run_binary(d, '$D', '/usr/bin/test_app')} [test_app arguments]
 #
 def qemu_run_binary(data, rootfs_path, binary):
+    qemu_binary = qemu_target_binary(data)
+    if qemu_binary == "qemu-allarch":
+        qemu_binary = "qemuwrapper"
+
     dynamic_loader = rootfs_path + '$(readelf -l ' + rootfs_path + \
                      binary + '| grep "Requesting program interpreter"|sed -e \'s/^.*\[.*: \(.*\)\]/\\1/\')'
     library_path = rootfs_path + data.getVar("base_libdir", True) + ":" + \
                    rootfs_path + data.getVar("libdir", True)
 
-    return qemu_target_binary(data) + " " + dynamic_loader + " --library-path " + library_path \
+    return qemu_binary + " " + dynamic_loader + " --library-path " + library_path \
            + " " + rootfs_path + binary
