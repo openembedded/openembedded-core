@@ -2,8 +2,8 @@ DEPENDS += "libdrm expat udev"
 X11_DEPS += "dri2proto"
 
 DRIDRIVERS = "swrast"
-DRIDRIVERS_append_x86 = ",i915,i965"
-DRIDRIVERS_append_x86-64 = ",i915,i965"
+DRIDRIVERS_append_x86 = ",radeon,r200,nouveau,i965,i915"
+DRIDRIVERS_append_x86-64 = ",radeon,r200,nouveau,i965,i915"
 
 EXTRA_OECONF += "--disable-gallium --without-gallium-drivers"
 EXTRA_OECONF += "--enable-dri --with-dri-drivers=${DRIDRIVERS}"
