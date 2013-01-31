@@ -10,6 +10,7 @@ inherit gzipnative
 
 LICENSE = "MIT"
 PACKAGES = ""
+DEPENDS += "qemuwrapper-cross"
 RDEPENDS += "${IMAGE_INSTALL} ${LINGUAS_INSTALL} ${NORMAL_FEATURE_INSTALL} ${ROOTFS_BOOTSTRAP_INSTALL}"
 RRECOMMENDS += "${NORMAL_FEATURE_INSTALL_OPTIONAL}"
 
@@ -197,6 +198,9 @@ run_intercept_scriptlets () {
 			echo "> Executing $script"
 			chmod +x $script
 			./$script
+			if [ $? -ne 0 ]; then
+				echo "ERROR: intercept script \"$script\" failed!"
+			fi
 		done
 	fi
 }
