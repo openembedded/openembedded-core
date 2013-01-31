@@ -5,7 +5,7 @@ class ClassExtender(object):
         self.pkgs_mapping = []
 
     def extend_name(self, name):
-        if name.startswith("kernel-module"):
+        if name.startswith("kernel-module") or name == "virtual/kernel":
             return name
         if name.startswith("rtld"):
             return name
