@@ -4,7 +4,7 @@ compilation of C/C++/ObjC code across machines on a network."
 SECTION = "devel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
-PR = "r9"
+PR = "r0"
 
 DEPENDS = "avahi"
 
@@ -16,19 +16,17 @@ PACKAGECONFIG[gtk] = "--with-gtk,--without-gtk --without-gnome,gtk+"
 
 RRECOMMENDS_${PN} = "avahi-daemon"
 
-# Upstream change this patch periodically so store locally
-# http://0pointer.de/public/distcc-avahi.patch
 SRC_URI = "http://distcc.googlecode.com/files/${BPN}-${PV}.tar.bz2 \
-           file://distcc-avahi.patch \	  
-           file://makefile-param-order.patch \
-	   file://default \
-	   file://distccmon-gnome.desktop \
-	   file://distcc"
+           file://default \
+           file://distccmon-gnome.desktop \
+           file://distcc"
 
-SRC_URI[md5sum] = "0d6b80a1efc3a3d816c4f4175f63eaa2"
-SRC_URI[sha256sum] = "6500f1bc2a30b1f044ebed79c6ce15457d1712263e65f0db7d6046af262ba434"
+SRC_URI[md5sum] = "a1a9d3853df7133669fffec2a9aab9f3"
+SRC_URI[sha256sum] = "f55dbafd76bed3ce57e1bbcdab1329227808890d90f4c724fcd2d53f934ddd89"
 
 inherit autotools pkgconfig update-rc.d useradd
+
+EXTRA_OECONF += "--disable-Werror PYTHON=/dev/null"
 
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "--system \
@@ -55,6 +53,7 @@ PACKAGES += "distcc-distmon-gnome"
 
 FILES_${PN} = " ${sysconfdir} \
 		${bindir}/distcc \
+    ${bindir}/lsdistcc \
 		${bindir}/distccd \
 		${bindir}/distccmon-text"
 FILES_distcc-distmon-gnome = "  ${bindir}/distccmon-gnome \
