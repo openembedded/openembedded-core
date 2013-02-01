@@ -309,49 +309,6 @@ def copydebugsources(debugsrcdir, d):
             if os.path.exists(p) and not os.listdir(p):
                 os.rmdir(p)
 
-def runstrip(file, elftype, d):
-    # Function to strip a single file, called from split_and_strip_files below
-    # A working 'file' (one which works on the target architecture)
-    #
-    # The elftype is a bit pattern (explained in split_and_strip_files) to tell
-    # us what type of file we're processing...
-    # 4 - executable
-    # 8 - shared library
-
-    import commands, stat, subprocess
-
-    strip = d.getVar("STRIP", True)
-
-    newmode = None
-    if not os.access(file, os.W_OK) or os.access(file, os.R_OK):
-        origmode = os.stat(file)[stat.ST_MODE]
-        newmode = origmode | stat.S_IWRITE | stat.S_IREAD
-        os.chmod(file, newmode)
-
-    extraflags = ""
-    
-    # .so and shared library
-    if elftype & 16:
-        extraflags = "--strip-debug --remove-section=.comment --remove-section=.note --preserve-dates"
-    elif ".so" in file and elftype & 8:
-        extraflags = "--remove-section=.comment --remove-section=.note --strip-unneeded"
-    # shared or executable:
-    elif elftype & 8 or elftype & 4:
-        extraflags = "--remove-section=.comment --remove-section=.note"
-
-    stripcmd = "'%s' %s '%s'" % (strip, extraflags, file)
-    bb.debug(1, "runstrip: %s" % stripcmd)
-
-    ret = subprocess.call(stripcmd, shell=True)
-
-    if newmode:
-        os.chmod(file, origmode)
-
-    if ret:
-        bb.error("runstrip: '%s' strip command failed" % stripcmd)
-
-    return 0
-
 #
 # Package data handling routines
 #
@@ -902,13 +859,24 @@ python split_and_strip_files () {
     # Now lets go back over things and strip them
     #
     if (d.getVar('INHIBIT_PACKAGE_STRIP', True) != '1'):
+        strip = d.getVar("STRIP", True)
+        sfiles = []
         for file in file_list:
             if file_list[file].startswith("ELF: "):
                 elf_file = int(file_list[file][5:])
                 #bb.note("Strip %s" % file)
-                runstrip(file, elf_file, d)
+                sfiles.append((file, elf_file, strip))
         for f in kernmods:
-            runstrip(f, 16, d)
+            sfiles.append((f, 16, strip))
+
+
+        import multiprocessing
+        nproc = multiprocessing.cpu_count()
+        pool = multiprocessing.Pool(nproc)
+        processed = pool.imap(oe.package.runstrip, sfiles)
+        pool.close()
+        pool.join()
+
     #
     # End of strip
     #
