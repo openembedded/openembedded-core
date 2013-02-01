@@ -17,14 +17,16 @@ exec /etc/mini_x/session
 fi
 
 MINI_X_SESSION_DIR=/etc/mini_x/session.d
-
-# Execute session file on behalf of file owner
-for SESSIONFILE in $MINI_X_SESSION_DIR/*; do
-    set +e
-    USERNAME=`stat -c %U $SESSIONFILE`
-    sudo -b -i -u $USERNAME $SESSIONFILE& 
-    set -e
-done
+if [ -d "$MINI_X_SESSION_DIR"]; then
+	# Execute session file on behalf of file owner
+	find $MINI_X_SESSION_DIR -type f | while read SESSIONFILE; do
+		set +e
+		USERNAME=`stat -c %U $SESSIONFILE`
+		# Using su rather than sudo as latest 1.8.1 cause failure [YOCTO #1211]
+		su -l -c '$SESSIONFILE&' $USERNAME
+		set -e
+	done
+fi
 
 # This resolution is big enough for hob2's max window size.
 xrandr -s 1024x768
