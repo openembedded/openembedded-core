@@ -233,7 +233,6 @@ def splitdebuginfo(file, debugfile, debugsrcdir, d):
     import commands, stat, subprocess
 
     dvar = d.getVar('PKGD', True)
-    pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
     objcopy = d.getVar("OBJCOPY", True)
     debugedit = d.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit")
     workdir = d.getVar("WORKDIR", True)
@@ -252,14 +251,14 @@ def splitdebuginfo(file, debugfile, debugsrcdir, d):
 
     # We need to extract the debug src information here...
     if debugsrcdir:
-        subprocess.call("%s'%s' -b '%s' -d '%s' -i -l '%s' '%s'" % (pathprefix, debugedit, workparentdir, debugsrcdir, sourcefile, file), shell=True)
+        subprocess.call("'%s' -b '%s' -d '%s' -i -l '%s' '%s'" % (debugedit, workparentdir, debugsrcdir, sourcefile, file), shell=True)
 
     bb.mkdirhier(os.path.dirname(debugfile))
 
-    subprocess.call("%s'%s' --only-keep-debug '%s' '%s'" % (pathprefix, objcopy, file, debugfile), shell=True)
+    subprocess.call("'%s' --only-keep-debug '%s' '%s'" % (objcopy, file, debugfile), shell=True)
 
     # Set the debuglink to have the view of the file path on the target
-    subprocess.call("%s'%s' --add-gnu-debuglink='%s' '%s'" % (pathprefix, objcopy, debugfile, file), shell=True)
+    subprocess.call("'%s' --add-gnu-debuglink='%s' '%s'" % (objcopy, debugfile, file), shell=True)
 
     if newmode:
         os.chmod(file, origmode)
@@ -275,7 +274,6 @@ def copydebugsources(debugsrcdir, d):
     sourcefile = d.expand("${WORKDIR}/debugsources.list")
     if debugsrcdir and os.path.isfile(sourcefile):
         dvar = d.getVar('PKGD', True)
-        pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
         strip = d.getVar("STRIP", True)
         objcopy = d.getVar("OBJCOPY", True)
         debugedit = d.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit")
@@ -322,7 +320,6 @@ def runstrip(file, elftype, d):
 
     import commands, stat, subprocess
 
-    pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
     strip = d.getVar("STRIP", True)
 
     newmode = None
@@ -345,7 +342,7 @@ def runstrip(file, elftype, d):
     stripcmd = "'%s' %s '%s'" % (strip, extraflags, file)
     bb.debug(1, "runstrip: %s" % stripcmd)
 
-    ret = subprocess.call("%s%s" % (pathprefix, stripcmd), shell=True)
+    ret = subprocess.call(stripcmd, shell=True)
 
     if newmode:
         os.chmod(file, origmode)
@@ -747,8 +744,7 @@ python split_and_strip_files () {
     # 16 - kernel module
     def isELF(path):
         type = 0
-        pathprefix = "export PATH=%s; " % d.getVar('PATH', True)
-        ret, result = commands.getstatusoutput("%sfile '%s'" % (pathprefix, path))
+        ret, result = commands.getstatusoutput("file '%s'" % path)
 
         if ret:
             bb.error("split_and_strip_files: 'file %s' failed" % path)
