@@ -33,7 +33,6 @@ RDEPENDS_${PN}-base = "\
     matchbox-keyboard \
     matchbox-keyboard-applet \
     matchbox-keyboard-im \
-    matchbox-stroke \
     matchbox-config-gtk \
     xcursor-transparent-theme \
     sato-icon-theme \
