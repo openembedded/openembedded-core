@@ -1236,85 +1236,57 @@ RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/bin/rpmdeps-oecore --macros ${STAGING_LI
 #  FILERDEPENDS_filepath_pkg - per file dep
 
 python package_do_filedeps() {
-    import re
-
     if d.getVar('SKIP_FILEDEPS', True) == '1':
         return
 
     pkgdest = d.getVar('PKGDEST', True)
     packages = d.getVar('PACKAGES', True)
-
     rpmdeps = d.expand("${RPMDEPS}")
-    r = re.compile(r'[<>=]+ +[^ ]*')
-
-    def file_translate(file):
-        ft = file.replace("@", "@at@")
-        ft = ft.replace(" ", "@space@")
-        ft = ft.replace("\t", "@tab@")
-        ft = ft.replace("[", "@openbrace@")
-        ft = ft.replace("]", "@closebrace@")
-        ft = ft.replace("_", "@underscore@")
-        return ft
-
-    # Quick routine to process the results of the rpmdeps call...
-    def process_deps(pipe, pkg, provides_files, requires_files):
-        provides = {}
-        requires = {}
-
-        for line in pipe:
-            f = line.split(" ", 1)[0].strip()
-            line = line.split(" ", 1)[1].strip()
-
-            if line.startswith("Requires:"):
-                i = requires
-            elif line.startswith("Provides:"):
-                i = provides
-            else:
-                continue
-
-            file = f.replace(pkgdest + "/" + pkg, "")
-            file = file_translate(file)
-            value = line.split(":", 1)[1].strip()
-            value = r.sub(r'(\g<0>)', value)
-
-            if value.startswith("rpmlib("):
-                continue
-            if value == "python":
-                continue
-            if file not in i:
-                i[file] = []
-            i[file].append(value)
-
-        for file in provides:
-            provides_files.append(file)
-            key = "FILERPROVIDES_" + file + "_" + pkg
-            d.setVar(key, " ".join(provides[file]))
-
-        for file in requires:
-            requires_files.append(file)
-            key = "FILERDEPENDS_" + file + "_" + pkg
-            d.setVar(key, " ".join(requires[file]))
 
     def chunks(files, n):
         return [files[i:i+n] for i in range(0, len(files), n)]
 
-    # Determine dependencies
+    pkglist = []
     for pkg in packages.split():
         if d.getVar('SKIP_FILEDEPS_' + pkg, True) == '1':
             continue
         if pkg.endswith('-dbg') or pkg.endswith('-doc') or pkg.find('-locale-') != -1 or pkg.find('-localedata-') != -1 or pkg.find('-gconv-') != -1 or pkg.find('-charmap-') != -1 or pkg.startswith('kernel-module-'):
             continue
-
-        provides_files = []
-        requires_files = []
-
         for files in chunks(pkgfiles[pkg], 100):
-            dep_pipe = os.popen(rpmdeps + " " + " ".join(files))
+            pkglist.append((pkg, files, rpmdeps, pkgdest))
 
-            process_deps(dep_pipe, pkg, provides_files, requires_files)
+    import multiprocessing
+    nproc = multiprocessing.cpu_count()
+    pool = multiprocessing.Pool(nproc)
+    processed = pool.imap(oe.package.filedeprunner, pkglist)
+    pool.close()
+    pool.join()
 
-        d.setVar("FILERDEPENDSFLIST_" + pkg, " ".join(requires_files))
-        d.setVar("FILERPROVIDESFLIST_" + pkg, " ".join(provides_files))
+    provides_files = {}
+    requires_files = {}
+
+    for result in processed:
+        (pkg, provides, requires) = result
+
+        if pkg not in provides_files:
+            provides_files[pkg] = []
+        if pkg not in requires_files:
+            requires_files[pkg] = []
+
+        for file in provides:
+            provides_files[pkg].append(file)
+            key = "FILERPROVIDES_" + file + "_" + pkg
+            d.setVar(key, " ".join(provides[file]))
+
+        for file in requires:
+            requires_files[pkg].append(file)
+            key = "FILERDEPENDS_" + file + "_" + pkg
+            d.setVar(key, " ".join(requires[file]))
+
+    for pkg in requires_files:
+        d.setVar("FILERDEPENDSFLIST_" + pkg, " ".join(requires_files[pkg]))
+    for pkg in provides_files:
+        d.setVar("FILERPROVIDESFLIST_" + pkg, " ".join(provides_files[pkg]))
 }
 
 def getshlibsdirs(d):
