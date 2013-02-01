@@ -29,6 +29,6 @@ FILES_lib${BPN}-dev = "${libdir}/*.la ${libdir}/*.so \
 	                	   ${libdir}/pkgconfig ${includedir}"
 FILES_lib${BPN}-doc = "${docdir} ${mandir} ${infodir}"
 FILES_lib${BPN}-staticdev = "${libdir}/lib*.a"
-AUTO_LIBNAME_PKGS = "lib${BPN}"
+AUTO_LIBNAME_PKGS = "${MLPREFIX}lib${BPN}"
 
 BBCLASSEXTEND = "native nativesdk"
