@@ -42,6 +42,5 @@ RDEPENDS_${PN} = "\
     xwininfo \
     xprop \
     xvideo-tests \
-    clutter-box2d \
     ltp \
     "
