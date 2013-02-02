@@ -5,7 +5,7 @@ SECTION = "console/network"
 
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://DISCLAIMER;md5=071bd69cb78b18888ea5e3da5c3127fa"
-PR ="r9"
+PR ="r10"
 
 
 PACKAGES = "${PN}-dbg libwrap libwrap-doc libwrap-dev libwrap-staticdev ${PN} ${PN}-doc"
@@ -36,7 +36,6 @@ SRC_URI = "ftp://ftp.porcupine.org/pub/security/tcp_wrappers_${PV}.tar.gz \
            file://safe_finger.patch \
            file://sig_fix.patch \
            file://siglongjmp.patch \
-           file://size_t.patch \
            file://tcpdchk_libwrapped.patch \
            file://ldflags.patch \
            \
