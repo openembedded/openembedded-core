@@ -836,6 +836,10 @@ python do_qa_staging() {
 python do_qa_configure() {
     import subprocess
 
+    ###########################################################################
+    # Check config.log for cross compile issues
+    ###########################################################################
+
     configs = []
     workdir = d.getVar('WORKDIR', True)
     bb.note("Checking autotools environment for common misconfiguration")
@@ -851,6 +855,10 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
             configs.append(os.path.join(root,"configure.ac"))
         if "configure.in" in files:
             configs.append(os.path.join(root, "configure.in"))
+
+    ###########################################################################
+    # Check gettext configuration and dependencies are correct
+    ###########################################################################
 
     cnf = d.getVar('EXTRA_OECONF', True) or ""
     if "gettext" not in d.getVar('P', True) and "gcc-runtime" not in d.getVar('P', True) and "--disable-nls" not in cnf:
@@ -869,8 +877,13 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
                     bb.fatal("""%s required but not in DEPENDS for file %s.
 Missing inherit gettext?""" % (gt, config))
 
+    ###########################################################################
+    # Check license variables
+    ###########################################################################
+
     if not package_qa_check_license(workdir, d):
         bb.fatal("Licensing Error: LIC_FILES_CHKSUM does not match, please fix")
+
 }
 # The Staging Func, to check all staging
 #addtask qa_staging after do_populate_sysroot before do_build
@@ -885,6 +898,10 @@ python () {
     tests = d.getVar('ALL_QA', True).split()
     if "desktop" in tests:
         d.appendVar("PACKAGE_DEPENDS", "desktop-file-utils-native")
+
+    ###########################################################################
+    # Check various variables
+    ###########################################################################
 
     issues = []
     if (d.getVar('PACKAGES', True) or "").split():
