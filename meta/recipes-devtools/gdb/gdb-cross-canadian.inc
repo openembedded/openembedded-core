@@ -6,8 +6,8 @@ PN = "gdb-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 BPN = "gdb"
 
 DEPENDS = "nativesdk-ncurses nativesdk-expat nativesdk-gettext nativesdk-readline nativesdk-python"
-RDEPENDS += "nativesdk-python-core nativesdk-python-lang nativesdk-python-re \
-             nativesdk-python-codecs nativesdk-python-netclient"
+RDEPENDS_${PN} += "nativesdk-python-core nativesdk-python-lang nativesdk-python-re \
+                   nativesdk-python-codecs nativesdk-python-netclient"
 
 EXTRA_OECONF_append = "--with-python=${WORKDIR}/python"
 
