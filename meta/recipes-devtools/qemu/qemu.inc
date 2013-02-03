@@ -4,7 +4,7 @@ LICENSE = "GPLv2 & LGPLv2.1"
 DEPENDS = "glib-2.0 zlib alsa-lib virtual/libx11 pixman"
 DEPENDS_class-native = "zlib-native alsa-lib-native glib-2.0-native pixman-native"
 DEPENDS_class-nativesdk = "nativesdk-zlib nativesdk-libsdl nativesdk-glib-2.0 nativesdk-pixman"
-RDEPENDS_class-nativesdk = "nativesdk-libsdl"
+RDEPENDS_${PN}_class-nativesdk = "nativesdk-libsdl"
 
 require qemu-targets.inc
 inherit autotools
