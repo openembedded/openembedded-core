@@ -298,11 +298,7 @@ def copydebugsources(debugsrcdir, d):
         subprocess.call(processdebugsrc % (sourcefile, workbasedir, workparentdir, dvar, debugsrcdir), shell=True)
 
         # The copy by cpio may have resulted in some empty directories!  Remove these
-        for root, dirs, files in os.walk("%s%s" % (dvar, debugsrcdir)):
-            for d in dirs:
-                dir = os.path.join(root, d)
-                #bb.note("rmdir -p %s" % dir)
-                subprocess.call("rmdir -p %s 2>/dev/null" % dir, shell=True)
+        subprocess.call("find %s%s -empty -type d -delete" % (dvar, debugsrcdir), shell=True)
 
         # Also remove debugsrcdir if its empty
         for p in nosuchdir[::-1]:
