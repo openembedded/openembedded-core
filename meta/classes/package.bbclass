@@ -557,11 +557,12 @@ python fixup_perms () {
     # paths are resolved via BBPATH
     def get_fs_perms_list(d):
         str = ""
+        bbpath = d.getVar('BBPATH', True)
         fs_perms_tables = d.getVar('FILESYSTEM_PERMS_TABLES', True)
         if not fs_perms_tables:
             fs_perms_tables = 'files/fs-perms.txt'
         for conf_file in fs_perms_tables.split():
-            str += " %s" % bb.which(d.getVar('BBPATH', True), conf_file)
+            str += " %s" % bb.utils.which(bbpath, conf_file)
         return str
 
 
@@ -892,11 +893,10 @@ python populate_packages () {
     for pkg in packages.split():
         if d.getVar('LICENSE_EXCLUSION-' + pkg, True):
             bb.warn("%s has an incompatible license. Excluding from packaging." % pkg)
+        elif pkg in package_list:
+            bb.error("%s is listed in PACKAGES multiple times, this leads to packaging errors." % pkg)
         else:
-            if pkg in package_list:
-                bb.error("%s is listed in PACKAGES multiple times, this leads to packaging errors." % pkg)
-            else:
-                package_list.append(pkg)
+            package_list.append(pkg)
     d.setVar('PACKAGES', ' '.join(package_list))
     pkgdest = d.getVar('PKGDEST', True)
 
@@ -911,7 +911,6 @@ python populate_packages () {
             bb.warn("FILES variable for package %s contains '//' which is invalid. Attempting to fix this but you should correct the metadata.\n" % pkg)
             filesvar.replace("//", "/")
         files = filesvar.split()
-        file_links = {}
         for file in files:
             if os.path.isabs(file):
                 file = '.' + file
@@ -1195,7 +1194,7 @@ python package_do_filedeps() {
 
     pkgdest = d.getVar('PKGDEST', True)
     packages = d.getVar('PACKAGES', True)
-    rpmdeps = d.expand("${RPMDEPS}")
+    rpmdeps = d.getVar('RPMDEPS', True)
 
     def chunks(files, n):
         return [files[i:i+n] for i in range(0, len(files), n)]
@@ -1287,7 +1286,6 @@ python package_do_shlibs() {
     def linux_so(file):
         needs_ldconfig = False
         cmd = d.getVar('OBJDUMP', True) + " -p " + pipes.quote(file) + " 2>/dev/null"
-        cmd = "PATH=\"%s\" %s" % (d.getVar('PATH', True), cmd)
         fd = os.popen(cmd)
         lines = fd.readlines()
         fd.close()
