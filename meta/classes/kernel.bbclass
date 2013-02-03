@@ -302,71 +302,68 @@ fi
 }
 
 python populate_packages_prepend () {
+    import re
+
+    modinfoexp = re.compile("([^=]+)=(.*)")
+    kerverrexp = re.compile('^(.*-hh.*)[\.\+].*$')
+    depmodpat0 = re.compile("^(.*\.k?o):..*$")
+    depmodpat1 = re.compile("^(.*\.k?o):\s*(.*\.k?o)\s*$")
+    depmodpat2 = re.compile("^(.*\.k?o):\s*(.*\.k?o)\s*\\\$")
+    depmodpat3 = re.compile("^\t(.*\.k?o)\s*\\\$")
+    depmodpat4 = re.compile("^\t(.*\.k?o)\s*$")
+
     def extract_modinfo(file):
-        import tempfile, re, subprocess
+        import tempfile, subprocess
         tempfile.tempdir = d.getVar("WORKDIR", True)
         tf = tempfile.mkstemp()
         tmpfile = tf[1]
-        cmd = "PATH=\"%s\" %sobjcopy -j .modinfo -O binary %s %s" % (d.getVar("PATH", True), d.getVar("HOST_PREFIX", True) or "", file, tmpfile)
+        cmd = "%sobjcopy -j .modinfo -O binary %s %s" % (d.getVar("HOST_PREFIX", True) or "", file, tmpfile)
         subprocess.call(cmd, shell=True)
         f = open(tmpfile)
         l = f.read().split("\000")
         f.close()
         os.close(tf[0])
         os.unlink(tmpfile)
-        exp = re.compile("([^=]+)=(.*)")
         vals = {}
         for i in l:
-            m = exp.match(i)
+            m = modinfoexp.match(i)
             if not m:
                 continue
             vals[m.group(1)] = m.group(2)
         return vals
     
     def parse_depmod():
-        import re
 
         dvar = d.getVar('PKGD', True)
-        if not dvar:
-            bb.error("PKGD not defined")
-            return
 
         kernelver = d.getVar('KERNEL_VERSION', True)
         kernelver_stripped = kernelver
-        m = re.match('^(.*-hh.*)[\.\+].*$', kernelver)
+        m = kerverrexp.match(kernelver)
         if m:
             kernelver_stripped = m.group(1)
-        path = d.getVar("PATH", True)
-
-        cmd = "PATH=\"%s\" depmod -n -a -b %s -F %s/boot/System.map-%s %s" % (path, dvar, dvar, kernelver, kernelver_stripped)
+        cmd = "depmod -n -a -b %s -F %s/boot/System.map-%s %s" % (dvar, dvar, kernelver, kernelver_stripped)
         f = os.popen(cmd, 'r')
 
         deps = {}
-        pattern0 = "^(.*\.k?o):..*$"
-        pattern1 = "^(.*\.k?o):\s*(.*\.k?o)\s*$"
-        pattern2 = "^(.*\.k?o):\s*(.*\.k?o)\s*\\\$"
-        pattern3 = "^\t(.*\.k?o)\s*\\\$"
-        pattern4 = "^\t(.*\.k?o)\s*$"
-
         line = f.readline()
         while line:
-            if not re.match(pattern0, line):
+            if not depmodpat0.match(line):
                 line = f.readline()
                 continue
-            m1 = re.match(pattern1, line)
+            m1 = depmodpat1.match(line)
             if m1:
                 deps[m1.group(1)] = m1.group(2).split()
             else:
-                m2 = re.match(pattern2, line)
+                m2 = depmodpat2.match(line)
                 if m2:
                     deps[m2.group(1)] = m2.group(2).split()
                     line = f.readline()
-                    m3 = re.match(pattern3, line)
+                    m3 = depmodpat3.match(line)
                     while m3:
                         deps[m2.group(1)].extend(m3.group(1).split())
                         line = f.readline()
-                        m3 = re.match(pattern3, line)
-                    m4 = re.match(pattern4, line)
+                        m3 = depmodpat3.match(line)
+                    m4 = depmodpat4.match(line)
                     deps[m2.group(1)].extend(m4.group(1).split())
             line = f.readline()
         f.close()
@@ -379,7 +376,6 @@ python populate_packages_prepend () {
         file = file.replace("/lib/modules/%s/" % d.getVar('KERNEL_VERSION', True) or '', '', 1)
 
         if module_deps.has_key(file):
-            import re
             dependencies = []
             for i in module_deps[file]:
                 m = re.match(pattern, os.path.basename(i))
@@ -392,7 +388,6 @@ python populate_packages_prepend () {
         return []
 
     def frob_metadata(file, pkg, pattern, format, basename):
-        import re
         vals = extract_modinfo(file)
 
         dvar = d.getVar('PKGD', True)
@@ -454,7 +449,6 @@ python populate_packages_prepend () {
         if len(os.listdir(dir)) == 0:
             os.rmdir(dir)
 
-    import re
     metapkg = "kernel-modules"
     blacklist = [ 'kernel-dev', 'kernel-image', 'kernel-base', 'kernel-vmlinux' ]
     for l in module_deps.values():
