@@ -1803,6 +1803,20 @@ python do_package () {
         return
 
     ###########################################################################
+    # Optimisations
+    ###########################################################################
+
+    # Contunually rexpanding complex expressions is inefficient, particularly when
+    # we write to the datastore and invalidate the expansion cache. This code 
+    # pre-expands some frequently used variables
+
+    def expandVar(x, d):
+        d.setVar(x, d.getVar(x, True))
+
+    for x in 'PN', 'PV', 'BPN', 'TARGET_SYS', 'EXTENDPRAUTO':
+        expandVar(x, d)
+
+    ###########################################################################
     # Setup PKGD (from D)
     ###########################################################################
 
