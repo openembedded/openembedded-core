@@ -1783,6 +1783,10 @@ python do_package () {
     # as any change to rpmdeps requires this to be rerun.
     # PACKAGE_BBCLASS_VERSION = "1"
 
+    ###########################################################################
+    # Sanity test the setup
+    ###########################################################################
+
     packages = (d.getVar('PACKAGES', True) or "").split()
     if len(packages) < 1:
         bb.debug(1, "No packages to build, skipping do_package")
@@ -1798,11 +1802,23 @@ python do_package () {
         bb.error("WORKDIR, DEPLOY_DIR, D, PN and PKGD all must be defined, unable to package")
         return
 
+    ###########################################################################
+    # Setup PKGD (from D)
+    ###########################################################################
+
     for f in (d.getVar('PACKAGEBUILDPKGD', True) or '').split():
         bb.build.exec_func(f, d)
 
+    ###########################################################################
+    # Split up PKGD into PKGDEST
+    ###########################################################################
+
     for f in (d.getVar('PACKAGESPLITFUNCS', True) or '').split():
         bb.build.exec_func(f, d)
+
+    ###########################################################################
+    # Process PKGDEST
+    ###########################################################################
 
     # Build global list of files in each split package
     global pkgfiles
