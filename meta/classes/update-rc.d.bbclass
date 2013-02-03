@@ -57,19 +57,19 @@ python populate_packages_updatercd () {
         execute on the target. Not doing so may cause update_rc.d postinst invoked
         twice to cause unwanted warnings.
         """ 
-        postinst = d.getVar('pkg_postinst_%s' % pkg, True) or d.getVar('pkg_postinst', True)
+        postinst = d.getVar('pkg_postinst_%s' % pkg, True)
         if not postinst:
             postinst = '#!/bin/sh\n'
         postinst += d.getVar('updatercd_postinst', True)
         d.setVar('pkg_postinst_%s' % pkg, postinst)
 
-        prerm = d.getVar('pkg_prerm_%s' % pkg, True) or d.getVar('pkg_prerm', True)
+        prerm = d.getVar('pkg_prerm_%s' % pkg, True)
         if not prerm:
             prerm = '#!/bin/sh\n'
         prerm += d.getVar('updatercd_prerm', True)
         d.setVar('pkg_prerm_%s' % pkg, prerm)
 
-        postrm = d.getVar('pkg_postrm_%s' % pkg, True) or d.getVar('pkg_postrm', True)
+        postrm = d.getVar('pkg_postrm_%s' % pkg, True)
         if not postrm:
                 postrm = '#!/bin/sh\n'
         postrm += d.getVar('updatercd_postrm', True)
