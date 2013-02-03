@@ -253,7 +253,7 @@ def splitdebuginfo(file, debugfile, debugsrcdir, d):
     if debugsrcdir:
         subprocess.call("'%s' -b '%s' -d '%s' -i -l '%s' '%s'" % (debugedit, workparentdir, debugsrcdir, sourcefile, file), shell=True)
 
-    bb.mkdirhier(os.path.dirname(debugfile))
+    bb.utils.mkdirhier(os.path.dirname(debugfile))
 
     subprocess.call("'%s' --only-keep-debug '%s' '%s'" % (objcopy, file, debugfile), shell=True)
 
@@ -287,7 +287,7 @@ def copydebugsources(debugsrcdir, d):
             basepath = basepath + "/" + p
             if not os.path.exists(basepath):
                 nosuchdir.append(basepath)
-        bb.mkdirhier(basepath)
+        bb.utils.mkdirhier(basepath)
 
         processdebugsrc =  "LC_ALL=C ; sort -z -u '%s' | egrep -v -z '(<internal>|<built-in>)$' | "
         # We need to ignore files that are not actually ours
@@ -644,7 +644,7 @@ python fixup_perms () {
             continue
 
         # Create path to move directory to, move it, and then setup the symlink
-        bb.mkdirhier(os.path.dirname(target))
+        bb.utils.mkdirhier(os.path.dirname(target))
         #bb.note("Fixup Perms: Rename %s -> %s" % (dir, ptarget))
         os.rename(origin, target)
         #bb.note("Fixup Perms: Link %s -> %s" % (dir, link))
@@ -891,7 +891,7 @@ python populate_packages () {
     packages = d.getVar('PACKAGES', True)
     pn = d.getVar('PN', True)
 
-    bb.mkdirhier(outdir)
+    bb.utils.mkdirhier(outdir)
     os.chdir(dvar)
 
     # Sanity check PACKAGES for duplicates and for LICENSE_EXCLUSION
@@ -914,7 +914,7 @@ python populate_packages () {
 
     for pkg in package_list:
         root = os.path.join(pkgdest, pkg)
-        bb.mkdirhier(root)
+        bb.utils.mkdirhier(root)
 
         filesvar = d.getVar('FILES_%s' % pkg, True) or d.getVar('FILES', True) or ""
         if "//" in filesvar:
@@ -945,7 +945,7 @@ python populate_packages () {
             def mkdir(src, dest, p):
                 src = os.path.join(src, p)
                 dest = os.path.join(dest, p)
-                bb.mkdirhier(dest)
+                bb.utils.mkdirhier(dest)
                 fstat = os.stat(src)
                 os.chmod(dest, fstat.st_mode)
                 os.chown(dest, fstat.st_uid, fstat.st_gid)
@@ -975,7 +975,7 @@ python populate_packages () {
                 os.chmod(fpath, fstat.st_mode)
                 os.chown(fpath, fstat.st_uid, fstat.st_gid)
                 continue
-            ret = bb.copyfile(file, fpath)
+            ret = bb.utils.copyfile(file, fpath)
             if ret is False or ret == 0:
                 raise bb.build.FuncFailed("File population failed")
 
