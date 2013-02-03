@@ -903,6 +903,9 @@ python () {
     # Check various variables
     ###########################################################################
 
+    if d.getVar('do_stage', True) is not None:
+        bb.fatal("Legacy staging found for %s as it has a do_stage function. This will need conversion to a do_install or often simply removal to work with OE-core" % d.getVar("FILE", True))
+
     issues = []
     if (d.getVar('PACKAGES', True) or "").split():
         for var in 'RDEPENDS', 'RRECOMMENDS', 'FILES', 'pkg_preinst', 'pkg_postinst', 'pkg_prerm', 'pkg_postrm':
