@@ -429,11 +429,8 @@ python perform_packagecopy () {
     dest = d.getVar('D', True)
     dvar = d.getVar('PKGD', True)
 
-    bb.mkdirhier(dvar)
-
     # Start by package population by taking a copy of the installed
     # files to operate on
-    subprocess.call('rm -rf %s/*' % (dvar), shell=True)
     # Preserve sparse files and hard links
     subprocess.call('tar -cf - -C %s -ps . | tar -xf - -C %s' % (dest, dvar), shell=True)
 
@@ -441,6 +438,8 @@ python perform_packagecopy () {
     if bb.data.inherits_class('nativesdk', d) or bb.data.inherits_class('cross-canadian', d):
         rpath_replace (dvar, d)
 }
+perform_packagecopy[cleandirs] = "${PKGD}"
+perform_packagecopy[dirs] = "${PKGD}"
 
 # We generate a master list of directories to process, we start by
 # seeding this list with reasonable defaults, then load from
@@ -900,7 +899,6 @@ python populate_packages () {
                 package_list.append(pkg)
     d.setVar('PACKAGES', ' '.join(package_list))
     pkgdest = d.getVar('PKGDEST', True)
-    subprocess.call('rm -rf %s' % pkgdest, shell=True)
 
     seen = []
 
@@ -1828,7 +1826,7 @@ addtask package before do_build after do_install
 PACKAGELOCK = "${STAGING_DIR}/package-output.lock"
 SSTATETASKS += "do_package"
 do_package[sstate-name] = "package"
-do_package[cleandirs] = "${PKGDESTWORK}"
+do_package[cleandirs] = "${PKGDEST} ${PKGDESTWORK}"
 do_package[sstate-plaindirs] = "${PKGD} ${PKGDEST} ${PKGDESTWORK}"
 do_package[sstate-lockfile-shared] = "${PACKAGELOCK}"
 do_package_setscene[dirs] = "${STAGING_DIR}"
