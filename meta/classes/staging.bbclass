@@ -1,8 +1,4 @@
 
-packagedstaging_fastpath () {
-	:
-}
-
 sysroot_stage_dir() {
 	src="$1"
 	dest="$2"
