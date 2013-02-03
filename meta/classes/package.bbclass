@@ -1759,6 +1759,9 @@ PACKAGEBUILDPKGD ?= " \
                 ${PACKAGE_PREPROCESS_FUNCS} \
                 split_and_strip_files \
                 fixup_perms \
+                "
+# Functions which split PKGD up into separate packages
+PACKAGESPLITFUNCS ?= " \
                 package_do_split_locales \
                 populate_packages"
 # Functions which process metadata based on split packages
@@ -1796,6 +1799,9 @@ python do_package () {
         return
 
     for f in (d.getVar('PACKAGEBUILDPKGD', True) or '').split():
+        bb.build.exec_func(f, d)
+
+    for f in (d.getVar('PACKAGESPLITFUNCS', True) or '').split():
         bb.build.exec_func(f, d)
 
     # Build global list of files in each split package

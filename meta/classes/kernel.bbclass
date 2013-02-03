@@ -301,7 +301,9 @@ if [ x"$D" = "x" ]; then
 fi
 }
 
-python populate_packages_prepend () {
+PACKAGESPLITFUNCS_prepend = "split_kernel_packages "
+
+python split_kernel_packages () {
     import re
 
     modinfoexp = re.compile("([^=]+)=(.*)")

@@ -282,7 +282,9 @@ python perform_packagecopy_append () {
                     bb.warn('%s: Unable to resolve dangling symlink: %s' % (pn, alt_target))
 }
 
-python populate_packages_prepend () {
+PACKAGESPLITFUNCS_prepend = "populate_packages_updatealternatives "
+
+python populate_packages_updatealternatives () {
     pn = d.getVar('BPN', True)
 
     # Do actual update alternatives processing

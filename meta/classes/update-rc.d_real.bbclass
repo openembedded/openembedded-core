@@ -47,7 +47,9 @@ python __anonymous() {
     update_rc_after_parse(d)
 }
 
-python populate_packages_prepend () {
+PACKAGESPLITFUNCS_prepend = "populate_packages_updatercd "
+
+python populate_packages_updatercd () {
     def update_rcd_package(pkg):
         bb.debug(1, 'adding update-rc.d calls to postinst/postrm for %s' % pkg)
         """
