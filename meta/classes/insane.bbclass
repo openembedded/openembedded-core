@@ -114,7 +114,7 @@ def package_qa_get_machine_dict():
 
 # Currently not being used by default "desktop"
 WARN_QA ?= "ldflags useless-rpaths rpaths staticdev libdir xorg-driver-abi textrel"
-ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch la2 pkgconfig la perms dep-cmp"
+ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch la2 pkgconfig la perms dep-cmp pkgvarcheck"
 
 ALL_QA = "${WARN_QA} ${ERROR_QA}"
 
@@ -885,4 +885,12 @@ python () {
     tests = d.getVar('ALL_QA', True).split()
     if "desktop" in tests:
         d.appendVar("PACKAGE_DEPENDS", "desktop-file-utils-native")
+
+    issues = []
+    if (d.getVar('PACKAGES', True) or "").split():
+        for var in 'RDEPENDS', 'RRECOMMENDS', 'FILES', 'pkg_preinst', 'pkg_postinst', 'pkg_prerm', 'pkg_postrm':
+            if d.getVar(var):
+                issues.append(var)
+    for i in issues:
+        package_qa_handle_error("pkgvarcheck", "%s: Variable %s is set as not being package specific, please fix this." % (d.getVar("FILE", True), i), d)
 }
