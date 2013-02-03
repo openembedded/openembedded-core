@@ -83,6 +83,14 @@ def copytree(src, dst):
     cmd = 'tar -cf - -C %s -ps . | tar -xf - -C %s' % (src, dst)
     check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
+def copyhardlinktree(src, dst):
+    bb.utils.mkdirhier(dst)
+    if os.path.isdir(src):
+        if not len(os.listdir(src)):
+            return	
+        src = src + "/*"
+    cmd = 'cp -al %s %s' % (src, dst)
+    check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
 def remove(path, recurse=True):
     """Equivalent to rm -f or rm -rf"""

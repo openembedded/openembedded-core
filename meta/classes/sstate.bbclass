@@ -458,14 +458,14 @@ def sstate_package(ss, d):
                 dstpath = srcpath.replace(state[1], sstatebuild + state[0])
                 make_relative_symlink(srcpath, dstpath, d)
         bb.debug(2, "Preparing tree %s for packaging at %s" % (state[1], sstatebuild + state[0]))
-        oe.path.copytree(state[1], sstatebuild + state[0])
+        oe.path.copyhardlinktree(state[1], sstatebuild + state[0])
 
     workdir = d.getVar('WORKDIR', True)
     for plain in ss['plaindirs']:
         pdir = plain.replace(workdir, sstatebuild)
         bb.mkdirhier(plain)
         bb.mkdirhier(pdir)
-        oe.path.copytree(plain, pdir)
+        oe.path.copyhardlinktree(plain, pdir)
 
     d.setVar('SSTATE_BUILDDIR', sstatebuild)
     d.setVar('SSTATE_PKG', sstatepkg)
