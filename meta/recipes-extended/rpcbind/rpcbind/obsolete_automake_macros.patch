@@ -1,0 +1,14 @@
+Upstream-Status: Submitted [https://sourceforge.net/tracker/?func=detail&aid=3603149&group_id=201237&atid=976751]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd rpcbind-0.2.0/configure.in rpcbind-0.2.0/configure.in
+--- rpcbind-0.2.0/configure.in	2009-05-29 16:38:22.000000000 +0300
++++ rpcbind-0.2.0/configure.in	2013-02-03 04:04:06.577480682 +0200
+@@ -4,7 +4,7 @@
+ # AM_MAINTAINER_MODE
+ AC_CONFIG_SRCDIR([src/rpcbind.c])
+  AC_PROG_CC
+- AM_CONFIG_HEADER(config.h)
++ AC_CONFIG_HEADERS(config.h)
+  AC_HEADER_DIRENT
+  AC_PREFIX_DEFAULT(/usr)
