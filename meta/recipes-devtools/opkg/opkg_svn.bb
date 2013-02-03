@@ -1,6 +1,7 @@
 require opkg.inc
 
 SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;protocol=http \
+           file://obsolete_automake_macros.patch \
 "
 
 S = "${WORKDIR}/trunk"

@@ -1,0 +1,15 @@
+Upstream-Status: Pending
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd opkg/configure.ac opkg/configure.ac
+--- opkg/configure.ac	2013-02-01 23:01:57.419774077 +0200
++++ opkg/configure.ac	2013-02-01 23:02:25.643773458 +0200
+@@ -7,7 +7,7 @@
+ AC_CONFIG_MACRO_DIR([shave])
+
+ AM_INIT_AUTOMAKE
+-AM_CONFIG_HEADER(libopkg/config.h)
++AC_CONFIG_HEADERS(libopkg/config.h)
+
+ AC_CANONICAL_HOST
+ AC_GNU_SOURCE
