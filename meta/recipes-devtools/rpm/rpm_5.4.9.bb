@@ -223,7 +223,6 @@ FILES_${PN} =  "${bindir}/rpm \
 		${libdir}/rpm/bin/wget \
 		/var/lib/rpm \
 		/var/cache/rpm \
-		/var/volatile/cache/rpm \
 		"
 
 FILES_${PN}-dbg += "${libdir}/rpm/.debug \
