@@ -1,7 +1,7 @@
 DESCRIPTION = "initramfs modular system"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-RDEPENDS = "busybox"
+RDEPENDS_${PN} += "busybox"
 
 PR = "r2"
 
