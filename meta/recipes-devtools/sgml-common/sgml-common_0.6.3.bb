@@ -13,7 +13,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://LICENSE-GPLv2;md5=ab8a50abe86dfc859e148baae043c89b"
 SECTION = "base"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "ftp://sources.redhat.com/pub/docbook-tools/new-trials/SOURCES/sgml-common-${PV}.tgz \
            file://autohell.patch \
@@ -29,7 +29,7 @@ do_compile_append() {
 	sed -i -e 's|\([ "]\+\)/etc/sgml|\1${sysconfdir}/sgml|g' bin/install-catalog
 }
 
-FILES_sgml-common_append = " ${datadir}/sgml"
+FILES_${PN} += "${datadir}/sgml"
 
 pkg_postinst_${PN}() {
 	install-catalog \
