@@ -5,7 +5,7 @@
 FILES_${PN} += "${libdir}/perl ${datadir}/perl"
 
 DEPENDS  += "${@["perl", "perl-native"][(bb.data.inherits_class('native', d))]}"
-RDEPENDS  += "${@["perl", ""][(bb.data.inherits_class('native', d))]}"
+RDEPENDS_${PN} += "${@["perl", ""][(bb.data.inherits_class('native', d))]}"
 
 PERL_OWN_DIR = "${@["", "/perl-native"][(bb.data.inherits_class('native', d))]}"
 
