@@ -7,7 +7,7 @@ implement the characters() callback."
 
 SECTION = "libs"
 LICENSE = "Artistic-1.0 | GPL-1.0+"
-RDEPENDS += "perl-module-extutils-makemaker"
+RDEPENDS_${PN} += "perl-module-extutils-makemaker"
 PR = "r0"
 
 LIC_FILES_CHKSUM = "file://dist.ini;endline=5;md5=8f9c9a55340aefaee6e9704c88466446"
