@@ -40,6 +40,7 @@ EXTRA_OECONF = "\
 		--disable-openssl \
 		--disable-xen \
 		--with-database=simple \
+		--without-fftw \
 "
 
 PARALLEL_MAKE = ""
