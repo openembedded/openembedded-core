@@ -16,7 +16,7 @@ S = "${WORKDIR}/${BPN}-${PV}"
 
 PARALLEL_MAKE = ""
 
-inherit autotools gettext perlnative
+inherit autotools gettext perlnative pkgconfig
 
 export PERL_LIBDIR = "${libdir}/perl"
 PERL_LIBDIR_class-native = "${libdir}/perl-native/perl"
