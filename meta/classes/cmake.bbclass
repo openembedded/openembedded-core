@@ -13,6 +13,7 @@ OECMAKE_SOURCEPATH ?= "."
 # If declaring this, make sure you also set EXTRA_OEMAKE to
 # "-C ${OECMAKE_BUILDPATH}". So it will run the right makefiles.
 OECMAKE_BUILDPATH ?= ""
+B="${S}"
 
 # C/C++ Compiler (without cpu arch/tune arguments)
 OECMAKE_C_COMPILER ?= "`echo ${CC} | sed 's/^\([^ ]*\).*/\1/'`"
