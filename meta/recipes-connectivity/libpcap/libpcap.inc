@@ -27,8 +27,8 @@ CFLAGS_prepend = "-I${S} "
 CXXFLAGS_prepend = "-I${S} "
 
 do_configure_prepend () {
-    if [ ! -e acinclude.m4 ]; then
-        cat aclocal.m4 > acinclude.m4
+    if [ ! -e ${S}/acinclude.m4 ]; then
+        cat ${S}/aclocal.m4 > ${S}/acinclude.m4
     fi
     sed -i -e's,^V_RPATH_OPT=.*$,V_RPATH_OPT=,' ${S}/pcap-config.in
 }
