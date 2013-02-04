@@ -9,7 +9,7 @@ DEPENDS = "virtual/kernel"
 RRECOMMENDS_${PN} = "kernel-module-uvesafb"
 PR = "r1"
 
-SRC_URI = "http://dev.gentoo.org/~spock/projects/uvesafb/archive/v86d-${PV}.tar.bz2 \
+SRC_URI = "http://distfiles.gentoo.org/distfiles/${P}.tar.bz2 \
            file://fbsetup \
            file://ar-from-env.patch"
 
