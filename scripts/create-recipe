@@ -37,11 +37,14 @@ use File::Basename qw(basename dirname);
 my $name = "";
 my $predef_version = "TO BE FILLED IN";
 my $version = $predef_version;
+my $pversion = $predef_version;
 my $description = "";
 my $summary = "";
 my $url = "";
-my $homepage;
+my $homepage = "";
+my @depends;
 my @rdepends;
+my @rawpythondeps;
 my $configure = "";
 my $localename = "";
 my @sources;
@@ -59,6 +62,7 @@ my $builder = "";
 
 
 my $oscmode = 0;
+my $python = 0;
 
 my @banned_pkgconfig;
 my %failed_commands;
@@ -74,7 +78,7 @@ my %failed_headers;
 # We store the sha1sum of common COPYING files in an associative array
 # %licenses. 
 #
-# For all matching sha1's in the tarbal, we then push the result
+# For all matching sha1's in the tarball, we then push the result
 # in the @license array (which we'll dedupe at the time of printing).
 # 
 
@@ -132,6 +136,18 @@ sub guess_license_from_file {
 		my $md5 = $1;
 		chomp($md5);
 		$lic_files{$copying} = $md5
+	}
+
+	#
+	# if file is found, and licence of python
+	# package is already aquired, add file.
+        #
+	if ($python == 1 && @license != 0) {
+	        my $md5output = `md5sum $copying`;
+	        $md5output =~ /^([a-zA-Z0-9]*) /;
+	        my $md5 = $1;
+	        chomp($md5);
+	        $lic_files{$copying} = $md5
 	}
 
 	#
@@ -1539,10 +1555,14 @@ sub guess_name_from_url {
 	}
 	my $tarfile = $spliturl[0];
 	
+	# Ensure correct name resolution from .zip&tgz archives
+	$tarfile =~ s/\.zip/\.tar/;
+	$tarfile =~ s/\.tgz/\.tar/;
+	$tarfile =~ s/\_/\-/g;
 	if ($tarfile =~ /(.*?)\-([0-9\.\-\~]+.*?)\.tar/) {
 		$name = $1;
 		$version = $2;
-                $version =~ s/\-/\_/g;
+		$version =~ s/\-/\_/g;
 	}
 }
 
@@ -1678,10 +1698,28 @@ sub write_yaml
 
 sub write_bbfile
 {
+	my $curdir = `pwd`;
+	chomp($curdir);
+
+	if ($python == 1) {
+	    $name =~ s/python-//;
+    	    $name = lc("python-" . $name);	    
+	}
+	
+	if (-e "$curdir/${name}_$version.bb") {
+	    print "Wont overwrite file:";
+	    print "$curdir/${name}_$version.bb, exiting\n";
+	    return;
+	}
 	open(BBFILE, ">${name}_$version.bb");
+	
 	print BBFILE "SUMMARY = \"$summary\"\n";
 	print BBFILE "DESCRIPTION = \"$description\"\n";
 	print BBFILE "HOMEPAGE = \"$homepage\"\n";
+
+	if ($python == 1) {
+	    print BBFILE "SRCNAME = \"$summary\"\n";
+	}
 
 	print BBFILE "LICENSE = \"@license\"\n";
 	print BBFILE "LIC_FILES_CHKSUM = \"";
@@ -1702,10 +1740,18 @@ sub write_bbfile
 	};
 
 	if (@rdepends > 0) {
-	    print BBFILE "RDEPENDS_\$\{PN\} += \"@rdepends\"\n";
+	    print BBFILE "RDEPENDS_\$\{PN\} += \"";
+	    foreach (@rdepends) {
+		print BBFILE "$_ \\\n\t";
+	    }
+	    print BBFILE "\"\n";
 	}
 
-	print BBFILE 'PR = "r0"' . "\n\n";
+	print BBFILE 'PR = "r0"' . "\n";
+	if ($python == 1) {
+	    print BBFILE "PV = \"$pversion\"\n\n";
+	}
+
 	print BBFILE "SRC_URI = \"";
 	foreach (@sources) {
 		print BBFILE "$_ \\\n";
@@ -1713,18 +1759,19 @@ sub write_bbfile
 	print BBFILE "\"\n\n";
 	print BBFILE "SRC_URI[md5sum] = \"$md5sum\"\n";
 	print BBFILE "SRC_URI[sha256sum] = \"$sha256sum\"\n\n";
+	if ($python == 1) {
+	    print BBFILE "S = \"\${WORKDIR}/\${SRCNAME}-\${PV}\"\n";
+	}
 
 	if (@inherits) {
 		print BBFILE "inherit ";
 		foreach (@inherits) {
 			print BBFILE "$_ ";
 		}
+		print BBFILE "\n";
 	}
 
-	close(BBFILE);
-
-	my $curdir = `pwd`;
-	chomp($curdir);
+	close(BBFILE);	
 	print "Create bb file: $curdir/${name}_$version.bb\n";
 }
 
@@ -1748,8 +1795,16 @@ sub calculate_sums
 #
 
 if ( @ARGV < 1 ) {
-    print "Usage: $0 <url-of-source-tarballs>\n";
+    print "Usage: $0 [-r] <url-of-source-tarballs>\n";
     exit(1);
+}
+
+# Recusive parsing of python dependencies using
+# easy_install
+my $recurse_python = 0;
+if ($ARGV[0] eq "-r") {
+    $recurse_python = 1;
+    shift @ARGV;
 }
 
 if (@ARGV > 1) {
@@ -1809,7 +1864,7 @@ foreach (@tgzfiles) {
 # this is a step backwards in time that is just silly.
 #
 
-my @sourcetars = <$orgdir/$outputdir/*\.tar\.bz2 $orgdir/$outputdir/*\.tar\.gz>;
+my @sourcetars = <$orgdir/$outputdir/*\.tar\.bz2 $orgdir/$outputdir/*\.tar\.gz $orgdir/$outputdir/*\.zip>;
 if ( length @sourcetars == 0) {
 	print "Can NOT find source tarball. Exiting...\n";
 	exit (1);
@@ -1818,6 +1873,8 @@ if (defined($sourcetars[0]) and $sourcetars[0] =~ ".*\.tar\.bz2") {
 	system("cd $tmpdir; tar -jxf $sourcetars[0] &>/dev/null");
 } elsif (defined($sourcetars[0]) and $sourcetars[0] =~ ".*\.tar\.gz") {
 	system("cd $tmpdir; tar -zxf $sourcetars[0] &>/dev/null");
+} elsif (defined($sourcetars[0]) and $sourcetars[0] =~ ".*\.zip") {
+        system("cd $tmpdir; unzip $sourcetars[0] &>/dev/null");
 }
 
 print "Parsing content    ....\n";
@@ -1830,34 +1887,64 @@ $fulldir = $dir;
 
 if ( -e "$dir/setup.py" ) {
        	$python = 1;
-	push(@inherits, "distutils");
-	
-	system("cd $dir ; python setup.py build sdist &> /dev/null");	
+	$tmp_stools = `grep -r setuptools $dir/setup.py`;
+	if (length($tmp_stools) > 2) {
+	    push(@inherits, "setuptools");
+	} else {
+	    push(@inherits, "distutils");
+	}	
 
-        $templic = `sed '/^License: */!d; s///;q' $dir/*.egg-info/PKG-INFO`;
-	chomp($templic);
+	$templic = `cd $dir; python setup.py --license;`;
+	$templic =~ s/[\r\n]+//g;
 	push(@license, $templic);
-	$summary = `sed '/^Name: */!d; s///;q' $dir/*.egg-info/PKG-INFO`;
-	chomp($summary);
-	$description = `sed '/^Summary: */!d; s///;q' $dir/*.egg-info/PKG-INFO`;
-	chomp($description);
-	$homepage = `sed '/^Home-page: */!d; s///;q' $dir/*.egg-info/PKG-INFO`;
-	chomp($homepage);
+	$summary = `cd $dir; python setup.py --name`;
+	$summary =~ s/[\r\n]+//g;
+	$description = `cd $dir; python setup.py --description`;
+	$description =~ s/[\r\n]+//g;
+	$homepage = `cd $dir; python setup.py --url`;
+	$homepage =~ s/[\r\n]+//g;
+	$pversion = `cd $dir; python setup.py -V`;
+	$pversion =~ s/[\r\n]+//g;
+#	$findoutput = `cd $dir; python setup.py --requires`;
+#	if (length($findoutput) < 3) {
 	$findoutput = `find $dir/*.egg-info/ -name "requires.txt" 2>/dev/null`;
+#	}
 	@findlist = split(/\n/, $findoutput);
 	foreach (@findlist) {
-	    # Adding dependency do buildreqs should be removed when
-	    # distutils is unbroken, i.e. blocks setup.py install from 
-	    # downloading and installing dependencies.
-	    push(@buildreqs, `sed 's/[^a-zA-Z]//g' $dir/*.egg-info/requires.txt`);
-	    chomp(@buildreqs);	    
-	    foreach $item (@buildreqs) {
-		$item = "python-" . $item
-	    }
-	    push(@rdepends, `sed 's/[^a-zA-Z]//g' $dir/*.egg-info/requires.txt`);
+	    push(@rawpythondeps, `sed -e '/^\$/d' "$_" | sed '/^\\[/d'`);
+	    chomp(@rawpythondeps);
+	    push(@rdepends, `sed -e 's/python-//g' "$_" | sed '/^\\[/d'`);
 	    chomp(@rdepends);
+	    if ($recurse_python == 1) {
+		foreach (@rawpythondeps) {
+		    my $ptempdir = tempdir();
+		    $purl = `easy_install -eb $ptempdir "$_" 2>/dev/null`;
+		    $purl =~ s/#.*//;
+		    @purllist = $purl =~ m/Downloading (http:\/\/.*\n)/g;
+		    chomp(@purllist);
+		    
+		    # Remove empty lines
+		    @purllist = grep(/\S/, @purllist);
+
+		    # Recursively create recipes for dependencies
+		    if (@purllist != 0) {
+			if (fork) {
+			    # Parent, do nothing
+			} else {
+			    # child, execute 
+			    print "Recursively creating recipe for: $purllist[0]\n";
+			    exec("cd .. ; create-recipe -r $purllist[0]");
+			}
+		    }
+		}
+		wait;
+	    }
+
 	    foreach $item (@rdepends) {
-		$item = "python-" . $item
+		@pyclean = split(/(\=|\<|\>).*/, $item);
+		if (defined($pyclean[0])) {
+		    $item = lc("python-" . $pyclean[0]);
+		}
 	    }
 	}
 }
@@ -1918,6 +2005,11 @@ foreach (@files) {
 
 if ($uses_configure == 0) {
 	$configure = "none"; 
+}
+
+@files = <$dir/docs/license.txt>;
+foreach (@files) {
+	guess_license_from_file("$_");
 }
 
 @files = <$dir/COPY*>;
