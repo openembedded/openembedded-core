@@ -45,7 +45,6 @@ ${oldincludedir}	0755	root	root	true	0644	root	root
 
 # Items from base-files
 # Links
-${localstatedir}/cache	link	volatile/cache
 ${localstatedir}/run	link	volatile/run
 ${localstatedir}/log	link	volatile/log
 ${localstatedir}/lock	link	volatile/lock
