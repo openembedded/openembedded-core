@@ -4,7 +4,7 @@
 STAGING_SIPDIR ?= "${STAGING_DATADIR_NATIVE}/sip"
 
 DEPENDS  =+ "sip-native"
-RDEPENDS += "python-sip"
+RDEPENDS_${PN} += "python-sip"
 
 # default stuff, do not uncomment
 # EXTRA_SIPTAGS = "-tWS_X11 -tQt_4_3_0"
