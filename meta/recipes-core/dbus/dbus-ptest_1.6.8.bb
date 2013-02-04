@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=10dded3b58148f3f1fd804b26354af3e \
 
 DEPENDS = "python-pygobject dbus dbus-glib"
 
-RDEPENDS = "make"
+RDEPENDS_${PN} += "make"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch \
