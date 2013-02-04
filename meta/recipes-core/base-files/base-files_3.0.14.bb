@@ -42,7 +42,7 @@ dirs755 = "/bin /boot /dev ${sysconfdir} ${sysconfdir}/default \
            ${mandir} ${datadir}/misc ${localstatedir} \
            ${localstatedir}/backups ${localstatedir}/lib \
            /sys ${localstatedir}/lib/misc ${localstatedir}/spool \
-           ${localstatedir}/volatile ${localstatedir}/volatile/cache \
+           ${localstatedir}/volatile \
            ${localstatedir}/volatile/lock/subsys \
            ${localstatedir}/volatile/log \
            ${localstatedir}/volatile/run \
@@ -55,7 +55,7 @@ dirs3755 = "/srv  \
             ${prefix}/local/share ${prefix}/local/src"
 dirs4775 = "/var/mail"
 
-volatiles = "cache run log lock tmp"
+volatiles = "run log lock tmp"
 conffiles = "${sysconfdir}/debian_version ${sysconfdir}/host.conf \
              ${sysconfdir}/inputrc ${sysconfdir}/issue /${sysconfdir}/issue.net \
              ${sysconfdir}/nsswitch.conf ${sysconfdir}/profile \
