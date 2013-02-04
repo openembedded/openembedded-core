@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 # If you really want to run syslinux, you need mtools.  We just want the
 # ldlinux.* stuff for now, so skip mtools-native
 DEPENDS = "nasm-native"
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/4.xx/syslinux-${PV}.tar.bz2 \
            file://cross-build.patch \
@@ -54,12 +54,12 @@ RDEPENDS_${PN} += "mtools"
 
 FILES_${PN} = "${bindir}/syslinux"
 FILES_${PN}-extlinux = "${sbindir}/extlinux"
-FILES_${PN}-mbr = "${libdir}/${PN}/mbr.bin"
-FILES_${PN}-chain = "${libdir}/${PN}/chain.c32"
-FILES_${PN}-isolinux = "${libdir}/${PN}/isolinux.bin"
-FILES_${PN}-pxelinux = "${libdir}/${PN}/pxelinux.0"
-FILES_${PN}-dev += "${datadir}/${PN}/com32/lib*${SOLIBS} ${datadir}/${PN}/com32/include ${datadir}/${PN}/com32/com32.ld"
-FILES_${PN}-staticdev += "${datadir}/${PN}/com32/lib*.a ${libdir}/${PN}/com32/lib*.a"
-FILES_${PN}-misc = "${libdir}/${PN}/* ${bindir}/*"
+FILES_${PN}-mbr = "${libdir}/${BPN}/mbr.bin"
+FILES_${PN}-chain = "${libdir}/${BPN}/chain.c32"
+FILES_${PN}-isolinux = "${libdir}/${BPN}/isolinux.bin"
+FILES_${PN}-pxelinux = "${libdir}/${BPN}/pxelinux.0"
+FILES_${PN}-dev += "${datadir}/${BPN}/com32/lib*${SOLIBS} ${datadir}/${BPN}/com32/include ${datadir}/${BPN}/com32/com32.ld"
+FILES_${PN}-staticdev += "${datadir}/${BPN}/com32/lib*.a ${libdir}/${BPN}/com32/lib*.a"
+FILES_${PN}-misc = "${libdir}/${BPN}/* ${bindir}/*"
 
 BBCLASSEXTEND = "native"
