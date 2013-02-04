@@ -19,11 +19,11 @@ OPKG_PREPROCESS_COMMANDS = "package_update_index_ipk; package_generate_ipkg_conf
 
 OPKG_POSTPROCESS_COMMANDS = "ipk_insert_feed_uris; "
 
-opkglibdir = "${localstatedir}/lib/opkg"
+OPKGLIBDIR = "${localstatedir}/lib"
 
 # Which packages to not install on the basis of a recommendation
 BAD_RECOMMENDATIONS ?= ""
-MULTILIBRE_ALLOW_REP = "${opkglibdir}"
+MULTILIBRE_ALLOW_REP = "${OPKGLIBDIR}/opkg"
 
 fakeroot rootfs_ipk_do_rootfs () {
 	set -x
@@ -37,8 +37,8 @@ fakeroot rootfs_ipk_do_rootfs () {
  
 	export INSTALL_CONF_IPK="${IPKGCONF_TARGET}"
 	export INSTALL_ROOTFS_IPK="${IMAGE_ROOTFS}"
-	STATUS=${IMAGE_ROOTFS}${opkglibdir}/status
-	mkdir -p ${IMAGE_ROOTFS}${opkglibdir}
+	STATUS=${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/status
+	mkdir -p ${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg
 
 	opkg-cl ${OPKG_ARGS} update
 
@@ -93,7 +93,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 
 	${ROOTFS_POSTPROCESS_COMMAND}
 	
-	rm -f ${IMAGE_ROOTFS}${opkglibdir}/lists/*
+	rm -f ${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/lists/*
 	if ${@base_contains("IMAGE_FEATURES", "package-management", "false", "true", d)}; then
 		if ! grep Status:.install.ok.unpacked ${STATUS}; then
 			# All packages were successfully configured.
@@ -120,7 +120,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 
 rootfs_ipk_write_manifest() {
 	manifest=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.manifest
-	cp ${IMAGE_ROOTFS}${opkglibdir}/status $manifest
+	cp ${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/status $manifest
 
 	sed '/Depends/d' -i $manifest
 	sed '/Status/d' -i $manifest
@@ -133,9 +133,9 @@ rootfs_ipk_write_manifest() {
 }
 
 remove_packaging_data_files() {
-	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
+	rm -rf ${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg
 	# We need the directory for the package manager lock
-	mkdir ${IMAGE_ROOTFS}${opkglibdir}
+	mkdir ${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg
 }
 
 list_installed_packages() {

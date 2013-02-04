@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://src/opkg-cl.c;beginline=1;endline=20;md5=321f658c3f6b6c832e25c8850b5dffba"
 
 PE = "1"
-INC_PR = "r12"
+INC_PR = "r13"
 
 # Werror gives all kinds bounds issuses with gcc 4.3.3
 do_configure_prepend() {
@@ -17,16 +17,19 @@ do_configure_prepend() {
 }
 
 inherit autotools pkgconfig
-EXTRA_OECONF += " --disable-gpg \
-                  --disable-openssl \
-                  --disable-ssl-curl \
-                  --disable-curl \
-                  --disable-sha256"
 
 target_localstatedir := "${localstatedir}"
-EXTRA_OECONF += "--with-opkglibdir=${localstatedir}/lib"
-EXTRA_OECONF_class-native = "--with-opkglibdir=${target_localstatedir}/lib --disable-gpg --disable-curl --disable-openssl"
-EXTRA_OECONF_class-nativesdk = "--with-opkglibdir=${target_localstatedir}/lib --disable-gpg --disable-curl --disable-openssl"
+OPKGLIBDIR = "${target_localstatedir}/lib"
+
+SHARED_EXTRA_OECONF = "\
+  --with-opkglibdir=${OPKGLIBDIR} \
+  --disable-gpg \
+  --disable-curl \
+  --disable-openssl \
+"
+EXTRA_OECONF_class-target = "${SHARED_EXTRA_OECONF} --disable-ssl-curl --disable-sha256"
+EXTRA_OECONF_class-native = "${SHARED_EXTRA_OECONF}"
+EXTRA_OECONF_class-nativesdk = "${SHARED_EXTRA_OECONF}"
 
 PROVIDES += "virtual/update-alternatives"
 RPROVIDES_update-alternatives-cworth += "update-alternatives"
@@ -41,11 +44,11 @@ PACKAGES =+ "libopkg-dev libopkg-staticdev libopkg update-alternatives-cworth"
 FILES_update-alternatives-cworth = "${bindir}/update-alternatives"
 FILES_libopkg-dev = "${libdir}/*.la ${libdir}/*.so"
 FILES_libopkg-staticdev = "${libdir}/*.a"
-FILES_libopkg = "${libdir}/*.so.* ${localstatedir}/lib/opkg/"
+FILES_libopkg = "${libdir}/*.so.* ${OPKGLIBDIR}/opkg/"
 
 do_install_append() {
 	# We need to create the lock directory
-	install -d ${D}${localstatedir}/lib/opkg
+	install -d ${D}${OPKGLIBDIR}/opkg
 }
 
 do_install_append_class-native() {

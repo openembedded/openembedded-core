@@ -2,18 +2,18 @@ DESCRIPTION = "opkg configuration files"
 SECTION = "base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "file://opkg.conf.comments \
-	   file://lists \
 	   file://dest \
 	   file://src "
 
+OPKGLIBDIR = "${localstatedir}/lib"
 do_compile () {
 	cat ${WORKDIR}/opkg.conf.comments >${WORKDIR}/opkg.conf
 	cat ${WORKDIR}/src	>>${WORKDIR}/opkg.conf
 	cat ${WORKDIR}/dest	>>${WORKDIR}/opkg.conf
-	cat ${WORKDIR}/lists	>>${WORKDIR}/opkg.conf
+	echo "lists_dir ext ${OPKGLIBDIR}/opkg" >>${WORKDIR}/opkg.conf
 }
 
 do_install () {
