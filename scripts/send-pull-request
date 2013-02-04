@@ -32,6 +32,7 @@ GITSOBCC="--suppress-cc=all"
 unset TO
 unset CC
 unset AUTO_CC
+unset EXTRA_CC
 
 usage()
 {
@@ -42,6 +43,7 @@ Usage: $(basename $0) [-h] [-a] [-c] [[-t email]...] -p pull-dir
 	       This option implies -c.
   -c           Expand the Cc list for the individual patches using the Cc and
                Signed-off-by lines from the same patch.
+  -C           Add extra CC to each email sent.
   -p pull-dir  Directory containing summary and patch files
   -t email     Explicitly add email to the recipients
 EOM
@@ -68,7 +70,7 @@ harvest_recipients()
 }
 
 # Parse and verify arguments
-while getopts "achp:t:" OPT; do
+while getopts "acC:hp:t:" OPT; do
 	case $OPT in
 	a)
 		AUTO=1
@@ -78,6 +80,9 @@ while getopts "achp:t:" OPT; do
 	c)
 		AUTO=1
 		GITSOBCC="--signed-off-by-cc"
+		;;
+	C)
+		EXTRA_CC="$OPTARG"
 		;;
 	h)
 		usage
@@ -149,15 +154,15 @@ fi
 export IFS=$','
 GIT_TO=$(for R in $TO; do echo -n "--to='$R' "; done)
 GIT_CC=$(for R in $AUTO_CC; do echo -n "--cc='$R' "; done)
+GIT_EXTRA_CC=$(for R in $EXTRA_CC; do echo -n "--cc='$R' "; done)
 unset IFS
-
 
 # Handoff to git-send-email. It will perform the send confirmation.
 PATCHES=$(echo $PDIR/*.patch)
 if [ $AUTO_CL -eq 1 ]; then
 	# Send the cover letter to every recipient, both specified as well as
 	# harvested. Then remove it from the patches list.
-	eval "git send-email $GIT_TO $GIT_CC --confirm=always --no-chain-reply-to --suppress-cc=all $CL"
+	eval "git send-email $GIT_TO $GIT_CC $GIT_EXTRA_CC --confirm=always --no-chain-reply-to --suppress-cc=all $CL"
 	if [ $? -eq 1 ]; then
 		echo "ERROR: failed to send cover-letter with automatic recipients."
 		exit 1
@@ -167,7 +172,7 @@ fi
 
 # Send the patch to the specified recipients and, if -c was specified, those git
 # finds in this specific patch.
-eval "git send-email $GIT_TO --confirm=always --no-chain-reply-to $GITSOBCC $PATCHES"
+eval "git send-email $GIT_TO $GIT_EXTRA_CC --confirm=always --no-chain-reply-to $GITSOBCC $PATCHES"
 if [ $? -eq 1 ]; then
 	echo "ERROR: failed to send patches."
 	exit 1
