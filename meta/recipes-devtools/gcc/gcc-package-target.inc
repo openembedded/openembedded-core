@@ -115,8 +115,8 @@ do_install () {
 	rm -f *gcc-?.?*
 
 	# We use libiberty from binutils
-	find ${D}${exec_prefix}/lib -name libiberty.a | xargs rm -f
-	find ${D}${exec_prefix}/lib -name libiberty.h | xargs rm -f
+	find ${D}${libdir} -name libiberty.a | xargs rm -f
+	find ${D}${libdir} -name libiberty.h | xargs rm -f
 
 	# Not sure why we end up with these but we don't want them...
 	rm -f ${TARGET_PREFIX}${TARGET_PREFIX}*

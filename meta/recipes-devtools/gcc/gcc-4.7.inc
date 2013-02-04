@@ -1,6 +1,6 @@
 require gcc-common.inc
 
-PR = "r15"
+PR = "r16"
 
 # Third digit in PV should be incremented after a minor release
 # happens from this branch on gcc e.g. currently its 4.7.1
