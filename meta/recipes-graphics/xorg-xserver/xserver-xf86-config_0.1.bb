@@ -7,12 +7,14 @@ PR = "r11"
 
 SRC_URI = "file://xorg.conf"
 
-CONFFILES_${PN} += "${sysconfdir}/X11/xorg.conf"
+CONFFILES_${PN} = "${sysconfdir}/X11/xorg.conf"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+ALLOW_EMPTY_${PN} = "1"
 
 do_install () {
-	install -d ${D}/${sysconfdir}/X11
-	install -m 0644 ${WORKDIR}/xorg.conf ${D}/${sysconfdir}/X11/
+	if test -s ${WORKDIR}/xorg.conf; then
+		install -d ${D}/${sysconfdir}/X11
+		install -m 0644 ${WORKDIR}/xorg.conf ${D}/${sysconfdir}/X11/
+	fi
 }
-
