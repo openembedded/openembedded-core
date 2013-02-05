@@ -86,7 +86,7 @@ python do_multilib_install() {
     import re
 
     multilibs = d.getVar('MULTILIB_VARIANTS', True)
-    if not multilibs:
+    if not multilibs or bb.data.inherits_class('nativesdk', d):
         return
 
     binv = d.getVar('BINV', True)
