@@ -3,6 +3,8 @@ DESCRIPTION = "BusyBox combines tiny versions of many common UNIX utilities into
 HOMEPAGE = "http://www.busybox.net"
 BUGTRACKER = "https://bugs.busybox.net/"
 
+DEPENDS += "kern-tools-native"
+
 # bzip2 applet in busybox is based on lightly-modified bzip2 source
 # the GPL is version 2 only
 LICENSE = "GPLv2 & bzip2"
@@ -112,8 +114,19 @@ do_prepare_config () {
 	fi
 }
 
+# returns all the elements from the src uri that are .cfg files
+def find_cfgs(d):
+    sources=src_patches(d, True)
+    sources_list=[]
+    for s in sources:
+        if s.endswith('.cfg'):
+            sources_list.append(s)
+
+    return sources_list
+
 do_configure () {
 	do_prepare_config
+	merge_config.sh -m .config ${@" ".join(find_cfgs(d))}
 	cml1_do_configure
 }
 
