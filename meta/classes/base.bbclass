@@ -54,7 +54,6 @@ die() {
 }
 
 oe_runmake() {
-	if [ x"$MAKE" = x ]; then MAKE=make; fi
 	bbnote ${MAKE} ${EXTRA_OEMAKE} "$@"
 	${MAKE} ${EXTRA_OEMAKE} "$@" || die "oe_runmake failed"
 }
