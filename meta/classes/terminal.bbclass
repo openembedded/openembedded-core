@@ -4,7 +4,7 @@ OE_TERMINAL[choices] = 'auto none \
                         ${@" ".join(o.name \
                                     for o in oe.terminal.prioritized())}'
 
-OE_TERMINAL_EXPORTS += 'XAUTHORITY SHELL DBUS_SESSION_BUS_ADDRESS DISPLAY EXTRA_OEMAKE SCREENDIR'
+OE_TERMINAL_EXPORTS += 'EXTRA_OEMAKE'
 OE_TERMINAL_EXPORTS[type] = 'list'
 
 XAUTHORITY ?= "${HOME}/.Xauthority"
@@ -25,6 +25,17 @@ def oe_terminal(command, title, d):
         if value is not None:
             os.environ[export] = str(value)
             env[export] = str(value)
+
+    # Add in all variables from the user's original environment which
+    # haven't subsequntly been set/changed
+    origbbenv = d.getVar("BB_ORIGENV", False) or {}
+    for key in origbbenv:
+        if key in env:
+            continue
+        value = origbbenv.getVar(key, True)
+        if value is not None:
+            os.environ[key] = str(value)
+            env[key] = str(value)
 
     terminal = oe.data.typed_value('OE_TERMINAL', d).lower()
     if terminal == 'none':
