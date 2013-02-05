@@ -7,11 +7,11 @@ RP 31/8/2011
 
 Upstream-Status: Inappropriate [OE specific]
 
-Index: intltool-0.40.6/configure.ac
-===================================================================
---- intltool-0.40.6.orig/configure.ac	2011-08-31 11:21:13.061160535 +0100
-+++ intltool-0.40.6/configure.ac	2011-08-31 11:22:44.991160885 +0100
-@@ -11,24 +11,10 @@
+diff --git a/configure.ac b/configure.ac
+index 5338a76..e709a2b 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -11,24 +11,10 @@ AC_SUBST(pkgdatadir) dnl automake does not need this, but libtoolize does
  aclocaldir='${datadir}'/aclocal
  AC_SUBST(aclocaldir)
  
@@ -35,6 +35,6 @@ Index: intltool-0.40.6/configure.ac
 +   AC_MSG_ERROR([PERL variable not set])
  fi
 +AC_SUBST(PERL)
+ AC_PATH_PROG(BZR, bzr)
  
- AC_OUTPUT([
- Makefile
+ 

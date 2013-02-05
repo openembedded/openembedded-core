@@ -1,9 +1,9 @@
 require intltool.inc
 LICENSE="GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
-PR = "r1"
+PR = "r0"
 
-SRC_URI += "file://intltool-nowarn-0.50.0.patch \
+SRC_URI += "file://intltool-nowarn.patch \
            ${NATIVEPATCHES} \
            "
 
@@ -15,5 +15,5 @@ NATIVEPATCHES = "file://noperlcheck.patch \
                  file://remove-xml-check.patch"
 NATIVEPATCHES_class-native = "file://use-nativeperl.patch" 
 
-SRC_URI[md5sum] = "0da9847a60391ca653df35123b1f7cc0"
-SRC_URI[sha256sum] = "dccfb0b7dd35a170130e8934bfd30c29da6ae73bcd3ca4ba71317c977b2893d6"
+SRC_URI[md5sum] = "23fbd879118253cb99aeac067da5f591"
+SRC_URI[sha256sum] = "67f25c5c6fb71d095793a7f895b245e65e829e8bde68c6c8b4c912144ff34406"
