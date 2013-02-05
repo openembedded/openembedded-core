@@ -1,0 +1,21 @@
+Don't call session manager function if not enabled
+
+If session management has been disabled we will get a compilation
+failure if we try to call QApplication::commitData() so don't do so if
+it is disabled.
+
+Upstream-Status: Pending
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+--- a/src/app/qmmpapplication.cpp
++++ b/src/app/qmmpapplication.cpp
+@@ -29,6 +29,8 @@ void QmmpApplication::commitData(QSessionManager &manager)
+ {
+     if(UiHelper::instance())
+         UiHelper::instance()->exit();
++#ifndef QT_NO_SESSIONMANAGER
+     else
+         QApplication::commitData(manager);
++#endif
+ }
