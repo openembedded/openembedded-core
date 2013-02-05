@@ -440,7 +440,8 @@ python do_package_ipk () {
                 bb.utils.unlockfile(lf)
                 raise bb.build.FuncFailed("unable to open conffiles for writing.")
             for f in conffiles_str.split():
-                conffiles.write('%s\n' % f)
+                if os.path.exists(oe.path.join(root, f)):
+                    conffiles.write('%s\n' % f)
             conffiles.close()
 
         os.chdir(basedir)
