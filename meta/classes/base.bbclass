@@ -160,7 +160,7 @@ def pkgarch_mapping(d):
             d.setVar("TUNE_PKGARCH", "armv7a")
 
 def preferred_ml_updates(d):
-    # If any PREFERRED_PROVIDER or PREFERRED_VERSIONS are set,
+    # If any PREFERRED_PROVIDER or PREFERRED_VERSION are set,
     # we need to mirror these variables in the multilib case;
     # likewise the PNBLACKLIST flags.
     multilibs = d.getVar('MULTILIBS', True) or ""
