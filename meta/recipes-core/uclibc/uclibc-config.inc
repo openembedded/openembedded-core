@@ -9,6 +9,7 @@ alpha \
 arm \
 avr32 \
 bfin \
+c6x \
 cris \
 e1 \
 frv \
