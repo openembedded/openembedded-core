@@ -148,29 +148,34 @@ do_kernel_checkout() {
 
 	# A linux yocto SRC_URI should use the bareclone option. That
 	# ensures that all the branches are available in the WORKDIR version
-	# of the repository. 
+	# of the repository.
+	source_dir=`echo ${S} | sed 's%/$%%'`
+	source_workdir="${WORKDIR}/git"
 	if [ -d "${WORKDIR}/git/" ] && [ -d "${WORKDIR}/git/.git" ]; then
-		# we build out of {S}, so ensure that ${S} is clean and present
-		rm -rf ${S}
-		mkdir -p ${S}
-		
-		# We can fix up the kernel repository even if it wasn't a bare clone.
-		mv ${WORKDIR}/git/.git ${S}
-		rm -rf ${WORKDIR}/git/
+		# case2: the repository is a non-bare clone
+
+		# if S is WORKDIR/git, then we shouldn't be moving or deleting the tree.
+		if [ "${source_dir}" != "${source_workdir}" ]; then
+			rm -rf ${S}
+			mv ${WORKDIR}/git ${S}
+		fi
 		cd ${S}
 	elif [ -d "${WORKDIR}/git/" ] && [ ! -d "${WORKDIR}/git/.git" ]; then
-		# we build out of {S}, so ensure that ${S} is clean and present
-		rm -rf ${S}
-		mkdir -p ${S}/.git
+		# case2: the repository is a bare clone
 
-		mv ${WORKDIR}/git/* ${S}/.git
-		rm -rf ${WORKDIR}/git/
+		# if S is WORKDIR/git, then we shouldn't be moving or deleting the tree.
+		if [ "${source_dir}" != "${source_workdir}" ]; then
+			rm -rf ${S}
+			mkdir -p ${S}/.git
+			mv ${WORKDIR}/git/* ${S}/.git
+			rm -rf ${WORKDIR}/git/
+		fi
 		cd ${S}	
 		git config core.bare false
 	else
-	        # We have no git repository at all. To support low bandwidth options
-		# for building the kernel, we'll just convert the tree to a git repo
-	        # and let the rest of the process work unchanged
+		# case 3: we have no git repository at all. 
+		# To support low bandwidth options for building the kernel, we'll just 
+		# convert the tree to a git repo and let the rest of the process work unchanged
 	        cd ${S}
 		git init
 		git add .
