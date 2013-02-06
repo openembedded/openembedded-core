@@ -61,8 +61,16 @@ do_migrate_localcount ()
     clean_cache
     echo "Exporting LOCALCOUNT to AUTOINCs..."
     bitbake -R conf/migrate_localcount.conf -p
-    [ ! $? -eq 0 ] && echo "Exporting failed!" && exit 1
+    [ ! $? -eq 0 ] && echo "Exporting to file $df failed!" && exit 1
 
+    if [ -e $df ];
+    then
+        echo "Exporting to file $df succeeded!"
+    else
+        echo "Exporting to file $df failed!"
+        exit 1
+    fi
+    
     echo "Importing generated AUTOINC entries..."
     [ -e $df ] && do_import $df
 
