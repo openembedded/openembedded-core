@@ -151,7 +151,7 @@ list_installed_packages() {
 
 	# print the info, need to different return counts
 	if [ "$1" = "arch" ] ; then
-		echo "$GET_LIST" | awk '{print $1, $2}'
+		echo "$GET_LIST" | awk '{PN=$1; gsub("_", "-"); print PN, $2}'
         elif [ "$1" = "file" ] ; then
 		echo "$GET_LIST" | awk '{print $1, $3}'
         else
