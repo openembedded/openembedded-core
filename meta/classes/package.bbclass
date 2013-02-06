@@ -766,7 +766,7 @@ python split_and_strip_files () {
                     elf_file = isELF(file)
                     if elf_file & 1:
                         if elf_file & 2:
-                            bb.warn("File '%s' from %s was already stripped, this will prevent future debugging!" % (src, pn))
+                            bb.warn("File '%s' from %s was already stripped, this will prevent future debugging!" % (file[len(dvar):], pn))
                             continue
                         # Check if it's a hard link to something else
                         if s.st_nlink > 1:
