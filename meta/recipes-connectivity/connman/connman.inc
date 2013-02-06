@@ -34,7 +34,7 @@ EXTRA_OECONF += "\
     --enable-ethernet \
     ${@base_contains('DISTRO_FEATURES', 'wifi','--enable-wifi ${TIST}', '--disable-wifi', d)} \
     ${@base_contains('DISTRO_FEATURES', 'bluetooth','--enable-bluetooth ${TIST}', '--disable-bluetooth', d)} \
-    ${@base_contains('DISTRO_FEATURES', '3g', '', '--disable-ofono', d)} \
+    ${@base_contains('DISTRO_FEATURES', '3g', '--enable-ofono', '--disable-ofono', d)} \
     --enable-tools \
     --enable-test \
     --disable-polkit \
