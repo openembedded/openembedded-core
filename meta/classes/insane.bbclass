@@ -908,7 +908,7 @@ python () {
 
     issues = []
     if (d.getVar('PACKAGES', True) or "").split():
-        for var in 'RDEPENDS', 'RRECOMMENDS', 'FILES', 'pkg_preinst', 'pkg_postinst', 'pkg_prerm', 'pkg_postrm':
+        for var in 'RDEPENDS', 'RRECOMMENDS', 'RSUGGESTS', 'RCONFLICTS', 'RPROVIDES', 'RREPLACES', 'FILES', 'pkg_preinst', 'pkg_postinst', 'pkg_prerm', 'pkg_postrm':
             if d.getVar(var):
                 issues.append(var)
     for i in issues:
