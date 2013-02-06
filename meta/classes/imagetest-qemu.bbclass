@@ -67,7 +67,6 @@ def qemuimagetest_main(d):
         os.environ["DEPLOY_DIR"] = d.getVar("DEPLOY_DIR", True)
         os.environ["QEMUARCH"] = machine
         os.environ["QEMUTARGET"] = pname
-        os.environ["DISPLAY"] = d.getVar("DISPLAY", True)
         os.environ["COREBASE"] = d.getVar("COREBASE", True)
         os.environ["TOPDIR"] = d.getVar("TOPDIR", True)
         os.environ["OE_TMPDIR"] = d.getVar("TMPDIR", True)
@@ -75,6 +74,16 @@ def qemuimagetest_main(d):
         os.environ["TARGET_IPSAVE"] = d.getVar("TARGET_IPSAVE", True)
         os.environ["TEST_SERIALIZE"] = d.getVar("TEST_SERIALIZE", True)
         os.environ["SDK_NAME"] = d.getVar("SDK_NAME", True)
+
+        # Add in all variables from the user's original environment which
+        # haven't subsequntly been set/changed
+        origbbenv = d.getVar("BB_ORIGENV", False) or {}
+        for key in origbbenv:
+            if key in os.environ:
+                continue
+            value = origbbenv.getVar(key, True)
+            if value is not None:
+                os.environ[key] = str(value)
 
         """run Test Case"""
         bb.note("Run %s test in scenario %s" % (case, scen))
