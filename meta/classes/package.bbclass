@@ -1771,7 +1771,6 @@ PACKAGESPLITFUNCS ?= " \
 PACKAGEFUNCS ?= " \
                 package_fixsymlinks \
                 package_name_hook \
-                package_get_auto_pr \
                 package_do_filedeps \
                 package_do_shlibs \
                 package_do_pkgconfig \
@@ -1804,6 +1803,8 @@ python do_package () {
     if not workdir or not outdir or not dest or not dvar or not pn:
         bb.error("WORKDIR, DEPLOY_DIR, D, PN and PKGD all must be defined, unable to package")
         return
+
+    bb.build.exec_func("package_get_auto_pr", d)
 
     ###########################################################################
     # Optimisations
