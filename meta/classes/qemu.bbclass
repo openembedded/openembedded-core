@@ -34,5 +34,5 @@ def qemu_run_binary(data, rootfs_path, binary):
     library_path = rootfs_path + data.getVar("base_libdir", True) + ":" + \
                    rootfs_path + data.getVar("libdir", True)
 
-    return qemu_binary + " " + dynamic_loader + " --library-path " + library_path \
+    return "PSEUDO_UNLOAD=1 " + qemu_binary + " " + dynamic_loader + " --library-path " + library_path \
            + " " + rootfs_path + binary
