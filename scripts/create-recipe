@@ -1918,9 +1918,9 @@ if ( -e "$dir/setup.py" ) {
 	    if ($recurse_python == 1) {
 		foreach (@rawpythondeps) {
 		    my $ptempdir = tempdir();
-		    $purl = `easy_install -eb $ptempdir "$_" 2>/dev/null`;
-		    $purl =~ s/#.*//;
-		    @purllist = $purl =~ m/Downloading (http:\/\/.*\n)/g;
+		    $purl = `easy_install -aeb $ptempdir "$_" 2>/dev/null`;
+		    $purl =~ s/#.*//g;
+		    @purllist = $purl =~ m/Downloading (.*:\/\/.*\n)/g;
 		    chomp(@purllist);
 		    
 		    # Remove empty lines
