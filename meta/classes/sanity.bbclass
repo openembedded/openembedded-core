@@ -499,8 +499,10 @@ def check_sanity(sanity_data):
             messages = messages + toolchain_msg + '\n'
 
     # Check if DISPLAY is set if IMAGETEST is set
-    if not sanity_data.getVar( 'DISPLAY', True ) and sanity_data.getVar( 'IMAGETEST', True ) == 'qemu':
-        messages = messages + 'qemuimagetest needs a X desktop to start qemu, please set DISPLAY correctly (e.g. DISPLAY=:1.0)\n'
+    if sanity_data.getVar( 'IMAGETEST', True ) == 'qemu':
+        display = sanity_data.getVar("BB_ORIGENV", False).getVar("DISPLAY", True)
+        if not display:
+            messages = messages + 'qemuimagetest needs a X desktop to start qemu, please set DISPLAY correctly (e.g. DISPLAY=:1.0)\n'
 
     omask = os.umask(022)
     if omask & 0755:
