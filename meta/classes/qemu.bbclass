@@ -4,7 +4,9 @@
 #
 
 def qemu_target_binary(data):
-    target_arch = data.getVar("TARGET_ARCH", True)
+    target_arch = data.getVar("TARGET_ARCH_MULTILIB_ORIGINAL", True)
+    if not target_arch:
+        target_arch = data.getVar("TARGET_ARCH", True)
     if target_arch in ("i486", "i586", "i686"):
         target_arch = "i386"
     elif target_arch == "powerpc":
