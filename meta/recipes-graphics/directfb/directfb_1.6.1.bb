@@ -16,6 +16,7 @@ EXTRA_OECONF = "\
   --disable-vnc \
   --disable-x11 \
   --disable-imlib2 \
+  --disable-mesa \
 "
 
 LEAD_SONAME = "libdirectfb-1.6.so.0"
