@@ -40,10 +40,13 @@ EXTRA_OECONF += "\
     --disable-polkit \
     --disable-client \
     --enable-fake \
+    ${@base_contains('DISTRO_FEATURES', 'systemd', '--with-systemdunitdir=${systemd_unitdir}/system/', '', d)} \
 "
 
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
+
+SYSTEMD_SERVICE_${PN} = "connman.service"
 
 # IMPORTANT: because xuser is shared with rootless X, please make sure the
 # USERADD_PARAM is in sync with the one in xserver-nodm-init.bb
@@ -52,7 +55,7 @@ USERADD_PARAM_${PN} = "--create-home \
                        --groups video,tty,audio \
                        --user-group xuser"
 
-inherit autotools gtk-doc pkgconfig update-rc.d useradd
+inherit autotools gtk-doc pkgconfig systemd update-rc.d useradd
 
 # This allows *everyone* to access ConnMan over DBus, without any access
 # control.  Really the at_console flag should work, which would mean that
@@ -62,8 +65,10 @@ do_compile_append() {
 }
 
 do_install_append() {
-	install -d ${D}${sysconfdir}/init.d
-	install -m 0755 ${WORKDIR}/connman ${D}${sysconfdir}/init.d/connman
+	if ${@base_contains('DISTRO_FEATURES','sysvinit','true','false',d)}; then
+		install -d ${D}${sysconfdir}/init.d
+		install -m 0755 ${WORKDIR}/connman ${D}${sysconfdir}/init.d/connman
+	fi
 
 	install -d ${D}${bindir}
 	install -m 0755 ${S}/tools/*-test ${D}${bindir}
