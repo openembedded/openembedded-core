@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 require make.inc
 
 SRC_URI += "file://expand_MAKEFLAGS.patch \
+            file://intermediate-target-bugfix.patch \
             file://make-savannah-bug30612-handling_of_archives.patch;striplevel=0"
 
 SRC_URI[md5sum] = "1a11100f3c63fcf5753818e59d63088f"

@@ -1,0 +1,23 @@
+Upstream-Status: Backport [The fix is already in upstream git repo, but not in the stable release]
+
+From fbe5b2c9cd612b962836b9391fa2b58c8baed6fc Mon Sep 17 00:00:00 2001
+From: Paul Smith <psmith@gnu.org>
+Date: Mon, 10 Sep 2012 02:36:05 +0000
+Subject: Force intermediate targets to be considered if their non-intermediate
+
+parent needs to be remade.  Fixes Savannah bug #30653.
+---
+diff --git a/remake.c b/remake.c
+index c0bf709..b1ddd23 100644
+--- a/remake.c
++++ b/remake.c
+@@ -612,6 +612,10 @@ update_file_1 (struct file *file, unsigned int depth)
+                 d->file->dontcare = file->dontcare;
+               }
+ 
++            /* We may have already considered this file, when we didn't know
++               we'd need to update it.  Force update_file() to consider it and
++               not prune it.  */
++            d->file->considered = !considered;
+ 
+ 	    dep_status |= update_file (d->file, depth);
