@@ -56,6 +56,7 @@ RDEPENDS_${PN}-stats = "python"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
+	install -d ${D}${localstatedir}/lib/nfs/statd
 	install -m 0755 ${WORKDIR}/nfsserver ${D}${sysconfdir}/init.d/nfsserver
 
 	# the following are built by CC_FOR_BUILD
