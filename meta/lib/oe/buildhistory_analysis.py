@@ -17,12 +17,12 @@ import bb.utils
 
 
 # How to display fields
-list_fields = ['DEPENDS', 'RDEPENDS', 'RRECOMMENDS', 'FILES', 'FILELIST', 'USER_CLASSES', 'IMAGE_CLASSES', 'IMAGE_FEATURES', 'IMAGE_LINGUAS', 'IMAGE_INSTALL', 'BAD_RECOMMENDATIONS']
+list_fields = ['DEPENDS', 'RPROVIDES', 'RDEPENDS', 'RRECOMMENDS', 'RSUGGESTS', 'RREPLACES', 'RCONFLICTS', 'FILES', 'FILELIST', 'USER_CLASSES', 'IMAGE_CLASSES', 'IMAGE_FEATURES', 'IMAGE_LINGUAS', 'IMAGE_INSTALL', 'BAD_RECOMMENDATIONS']
 list_order_fields = ['PACKAGES']
 defaultval_fields = ['PKG', 'PKGE', 'PKGV', 'PKGR']
 numeric_fields = ['PKGSIZE', 'IMAGESIZE']
 # Fields to monitor
-monitor_fields = ['RDEPENDS', 'RRECOMMENDS', 'PACKAGES', 'FILELIST', 'PKGSIZE', 'IMAGESIZE', 'PKG', 'PKGE', 'PKGV', 'PKGR']
+monitor_fields = ['RPROVIDES', 'RDEPENDS', 'RRECOMMENDS', 'RREPLACES', 'RCONFLICTS', 'PACKAGES', 'FILELIST', 'PKGSIZE', 'IMAGESIZE', 'PKG', 'PKGE', 'PKGV', 'PKGR']
 # Percentage change to alert for numeric fields
 monitor_numeric_threshold = 10
 # Image files to monitor (note that image-info.txt is handled separately)
@@ -66,7 +66,7 @@ class ChangeRecord:
             return pkglist
 
         if self.fieldname in list_fields or self.fieldname in list_order_fields:
-            if self.fieldname in ['RDEPENDS', 'RRECOMMENDS']:
+            if self.fieldname in ['RPROVIDES', 'RDEPENDS', 'RRECOMMENDS', 'RSUGGESTS', 'RREPLACES', 'RCONFLICTS']:
                 (depvera, depverb) = compare_pkg_lists(self.oldvalue, self.newvalue)
                 aitems = pkglist_combine(depvera)
                 bitems = pkglist_combine(depverb)
@@ -328,7 +328,7 @@ def compare_dict_blobs(path, ablob, bblob, report_all):
             elif (not report_all) and key in list_fields:
                 if key == "FILELIST" and path.endswith("-dbg") and bstr.strip() != '':
                     continue
-                if key in ['RDEPENDS', 'RRECOMMENDS']:
+                if key in ['RPROVIDES', 'RDEPENDS', 'RRECOMMENDS', 'RSUGGESTS', 'RREPLACES', 'RCONFLICTS']:
                     (depvera, depverb) = compare_pkg_lists(astr, bstr)
                     if depvera == depverb:
                         continue
