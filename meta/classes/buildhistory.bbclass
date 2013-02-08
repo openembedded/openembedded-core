@@ -58,8 +58,12 @@ python buildhistory_emit_pkghistory() {
             self.pkgr = ""
             self.size = 0
             self.depends = ""
+            self.rprovides = ""
             self.rdepends = ""
             self.rrecommends = ""
+            self.rsuggests = ""
+            self.rreplaces = ""
+            self.rconflicts = ""
             self.files = ""
             self.filelist = ""
             # Variables that need to be written to their own separate file
@@ -96,10 +100,18 @@ python buildhistory_emit_pkghistory() {
                     pkginfo.pkgv = value
                 elif name == "PKGR":
                     pkginfo.pkgr = value
+                elif name == "RPROVIDES":
+                    pkginfo.rprovides = value
                 elif name == "RDEPENDS":
                     pkginfo.rdepends = value
                 elif name == "RRECOMMENDS":
                     pkginfo.rrecommends = value
+                elif name == "RSUGGESTS":
+                    pkginfo.rsuggests = value
+                elif name == "RREPLACES":
+                    pkginfo.rreplaces = value
+                elif name == "RCONFLICTS":
+                    pkginfo.rconflicts = value
                 elif name == "PKGSIZE":
                     pkginfo.size = long(value)
                 elif name == "FILES":
@@ -189,8 +201,12 @@ python buildhistory_emit_pkghistory() {
         pkginfo.pkge = pkge
         pkginfo.pkgv = pkgv
         pkginfo.pkgr = pkgr
+        pkginfo.rprovides = sortpkglist(squashspaces(getpkgvar(pkg, 'RPROVIDES') or ""))
         pkginfo.rdepends = sortpkglist(squashspaces(getpkgvar(pkg, 'RDEPENDS') or ""))
         pkginfo.rrecommends = sortpkglist(squashspaces(getpkgvar(pkg, 'RRECOMMENDS') or ""))
+        pkginfo.rsuggests = sortpkglist(squashspaces(getpkgvar(pkg, 'RSUGGESTS') or ""))
+        pkginfo.rreplaces = sortpkglist(squashspaces(getpkgvar(pkg, 'RREPLACES') or ""))
+        pkginfo.rconflicts = sortpkglist(squashspaces(getpkgvar(pkg, 'RCONFLICTS') or ""))
         pkginfo.files = squashspaces(getpkgvar(pkg, 'FILES') or "")
         for filevar in pkginfo.filevars:
             pkginfo.filevars[filevar] = getpkgvar(pkg, filevar)
@@ -252,8 +268,15 @@ def write_pkghistory(pkginfo, d):
             if val:
                 f.write("%s = %s\n" % (pkgvar, val))
 
+        f.write("RPROVIDES = %s\n" %  pkginfo.rprovides)
         f.write("RDEPENDS = %s\n" %  pkginfo.rdepends)
         f.write("RRECOMMENDS = %s\n" %  pkginfo.rrecommends)
+        if pkginfo.rsuggests:
+            f.write("RSUGGESTS = %s\n" %  pkginfo.rsuggests)
+        if pkginfo.rreplaces:
+            f.write("RREPLACES = %s\n" %  pkginfo.rreplaces)
+        if pkginfo.rconflicts:
+            f.write("RCONFLICTS = %s\n" %  pkginfo.rconflicts)
         f.write("PKGSIZE = %d\n" %  pkginfo.size)
         f.write("FILES = %s\n" %  pkginfo.files)
         f.write("FILELIST = %s\n" %  pkginfo.filelist)
