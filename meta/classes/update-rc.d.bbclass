@@ -75,12 +75,15 @@ python populate_packages_updatercd () {
         postrm += d.getVar('updatercd_postrm', True)
         d.setVar('pkg_postrm_%s' % pkg, postrm)
 
-    pkgs = d.getVar('INITSCRIPT_PACKAGES', True)
-    if pkgs == None:
-        pkgs = d.getVar('UPDATERCPN', True)
-        packages = (d.getVar('PACKAGES', True) or "").split()
-        if not pkgs in packages and packages != []:
-            pkgs = packages[0]
-    for pkg in pkgs.split():
-        update_rcd_package(pkg)
+    # If the systemd class has also been inherited, then don't do anything as
+    # the systemd units will override anything created by update-rc.d.
+    if not d.getVar("SYSTEMD_BBCLASS_ENABLED", True):
+        pkgs = d.getVar('INITSCRIPT_PACKAGES', True)
+        if pkgs == None:
+            pkgs = d.getVar('UPDATERCPN', True)
+            packages = (d.getVar('PACKAGES', True) or "").split()
+            if not pkgs in packages and packages != []:
+                pkgs = packages[0]
+        for pkg in pkgs.split():
+            update_rcd_package(pkg)
 }
