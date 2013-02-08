@@ -132,26 +132,6 @@ python base_do_unpack() {
         raise bb.build.FuncFailed(e)
 }
 
-GIT_CONFIG_PATH = "${STAGING_DIR_NATIVE}/etc"
-GIT_CONFIG = "${GIT_CONFIG_PATH}/gitconfig"
-
-def generate_git_config(e):
-    if e.data.getVar('GIT_CORE_CONFIG', True):
-        gitconfig_path = e.data.getVar('GIT_CONFIG', True)
-        proxy_command = "    gitProxy = %s\n" % e.data.getVar('OE_GIT_PROXY_COMMAND', True)
-
-        bb.mkdirhier(e.data.expand("${GIT_CONFIG_PATH}"))
-        if (os.path.exists(gitconfig_path)):
-            os.remove(gitconfig_path)
-
-        f = open(gitconfig_path, 'w')
-        f.write("[core]\n")
-        ignore_hosts = e.data.getVar('GIT_PROXY_IGNORE', True).split()
-        for ignore_host in ignore_hosts:
-            f.write("    gitProxy = none for %s\n" % ignore_host)
-        f.write(proxy_command)
-        f.close
-
 def pkgarch_mapping(d):
     # Compatibility mappings of TUNE_PKGARCH (opt in)
     if d.getVar("PKGARCHCOMPAT_ARMV7A", True):
@@ -310,7 +290,6 @@ addhandler base_eventhandler
 python base_eventhandler() {
     if isinstance(e, bb.event.ConfigParsed):
         e.data.setVar('BB_VERSION', bb.__version__)
-        generate_git_config(e)
         pkgarch_mapping(e.data)
         preferred_ml_updates(e.data)
         e.data.appendVar('DISTRO_FEATURES', oe.utils.features_backfill("DISTRO_FEATURES", e.data))
