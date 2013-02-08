@@ -37,10 +37,13 @@ USERADD_PARAM_avahi-autoipd = "--system --home /var/run/avahi-autoipd \
                               -c \"Avahi autoip daemon\" \
                               avahi-autoipd"
 
-inherit autotools pkgconfig update-rc.d gettext useradd
+inherit autotools pkgconfig update-rc.d gettext systemd useradd
 
-EXTRA_OECONF = "--with-distro=debian \
-             --disable-introspection \
+SYSTEMD_PACKAGES = "${PN}-daemon ${PN}-dnsconfd"
+SYSTEMD_SERVICE_avahi-daemon = "avahi-daemon.service"
+SYSTEMD_SERVICE_avahi-dnsconfd = "avahi-dnsconfd.service"
+
+EXTRA_OECONF = "--disable-introspection \
              --with-avahi-priv-access-group=adm \
              --disable-stack-protector \
              --disable-gdbm \
@@ -50,9 +53,14 @@ EXTRA_OECONF = "--with-distro=debian \
              --disable-qt4 \
              --disable-python \
              --disable-doxygen-doc \
-             --with-systemdsystemunitdir=${systemd_unitdir}/system/ \
+             ${EXTRA_OECONF_SYSVINIT} \
+             ${EXTRA_OECONF_SYSTEMD} \
              ${AVAHI_GTK} \
            "
+
+# The distro choice determines what init scripts are installed
+EXTRA_OECONF_SYSVINIT = "${@base_contains('DISTRO_FEATURES','sysvinit','--with-distro=debian','--with-distro=none',d)}"
+EXTRA_OECONF_SYSTEMD = "${@base_contains('DISTRO_FEATURES','systemd','--with-systemdsystemunitdir=${systemd_unitdir}/system/','',d)}"
 
 AVAHI_GTK ?= "--disable-gtk --disable-gtk3"
 
@@ -64,9 +72,8 @@ do_configure_prepend() {
 }
 
 
-PACKAGES =+ "avahi-systemd avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib libavahi-ui avahi-autoipd avahi-utils"
+PACKAGES =+ "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib libavahi-ui avahi-autoipd avahi-utils"
 
-FILES_avahi-systemd = "${systemd_unitdir}"
 FILES_avahi-autoipd = "${sbindir}/avahi-autoipd \
                        ${sysconfdir}/avahi/avahi-autoipd.action \
                        ${sysconfdir}/dhcp/*/avahi-autoipd \
@@ -93,8 +100,6 @@ FILES_avahi-dnsconfd = "${sbindir}/avahi-dnsconfd \
 FILES_libavahi-glib = "${libdir}/libavahi-glib.so.*"
 FILES_libavahi-gobject = "${libdir}/libavahi-gobject.so.*"
 FILES_avahi-utils = "${bindir}/avahi-*"
-
-RDEPENDS_avahi-systemd = "avahi-daemon"
 
 RDEPENDS_avahi-daemon = "sysvinit-pidof"
 
