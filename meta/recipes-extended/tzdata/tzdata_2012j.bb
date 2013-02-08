@@ -16,8 +16,8 @@ RCONFLICTS_${PN} = "timezones timezone-africa timezone-america timezone-antarcti
 
 SRC_URI = "ftp://ftp.iana.org/tz/releases/tzdata${PV}.tar.gz;name=tzdata"
 
-SRC_URI[tzdata.md5sum] = "fc0f54b76054800394f8c366ea1eeea7"
-SRC_URI[tzdata.sha256sum] = "46c0e92a7aa89c3cfe571b585ceb6958bb444604aea3e09587f2cbe474c95575"
+SRC_URI[tzdata.md5sum] = "ba2f92ae7ad099090e8f86cff2f2d799"
+SRC_URI[tzdata.sha256sum] = "4b6a3c2831bdbb68ab1a1bf906bcf11d18ab78009713a0339da6fe96b6afceaa"
 
 S = "${WORKDIR}"
 
