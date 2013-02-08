@@ -5,7 +5,7 @@ LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://asia;beginline=2;endline=3;md5=06468c0e84ef4d4c97045a4a29b08234"
 DEPENDS = "tzcode-native"
 
-PR = "r2"
+PR = "r3"
 
 inherit allarch
 
@@ -93,12 +93,12 @@ pkg_postinst_${PN} () {
 		echo "You have an invalid TIMEZONE setting in ${src}"
 		echo "Your ${etc_lt} has been reset to Universal; enjoy!"
 		tz="Universal"
+		echo "Updating ${etc_lt} with $D${datadir}/zoneinfo/${tz}"
+		if [ -L ${etc_lt} ] ; then
+			rm -f "${etc_lt}"
+		fi
+		cp -f "$D${datadir}/zoneinfo/${tz}" "${etc_lt}"
 	fi
-	echo "Updating ${etc_lt} with $D${datadir}/zoneinfo/${tz}"
-	if [ -L ${etc_lt} ] ; then
-		rm -f "${etc_lt}"
-	fi
-	cp -f "$D${datadir}/zoneinfo/${tz}" "${etc_lt}"
 }
 
 # Packages primarily organized by directory with a major city
