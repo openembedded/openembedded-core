@@ -26,6 +26,7 @@ SRC_URI = "\
           file://smart-metadata-match.patch \
           file://smart-improve-error-reporting.patch \
           file://smart-multilib-fixes.patch \
+          file://smart-yaml-error.patch \
           "
 
 SRC_URI[md5sum] = "573ef32ba177a6b3c4bf7ef04873fcb6"
