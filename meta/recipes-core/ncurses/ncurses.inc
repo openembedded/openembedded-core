@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://ncurses/base/version.c;beginline=1;endline=27;md5=cbc
 SECTION = "libs"
 DEPENDS = "ncurses-native"
 DEPENDS_virtclass-native = ""
-INC_PR = "r12"
+INC_PR = "r13"
 
 inherit autotools binconfig multilib_header
 
@@ -28,6 +28,31 @@ BUILD_CPPFLAGS += "-D_GNU_SOURCE"
 
 # natives don't generally look in base_libdir
 base_libdir_virtclass-native = "${libdir}"
+
+# Display corruption occurs on 64 bit hosts without these settings
+# This was derrived from the upstream debian ncurses which uses
+# these settings for 32 and 64 bit hosts.
+EXCONFIG_ARGS = ""
+EXCONFIG_ARGS_virtclass-native = " \
+		--disable-lp64 \
+		--with-chtype='long' \
+		--with-mmask-t='long'"
+EXCONFIG_ARGS_virtclass-nativesdk = " \
+		--disable-lp64 \
+		--with-chtype='long' \
+		--with-mmask-t='long'"
+
+# Fall back to the host termcap / terminfo for -nativesdk and -native
+# The reality is a work around for strange problems with things like
+# "bitbake -c menuconfig busybox" where it cannot find the terminfo
+# because the sstate had a hard coded search path.  Until this is fixed
+# another way this is deemed good enough.
+EX_TERMCAP = ""
+EX_TERMCAP_virtclass-native = ":/etc/termcap:/usr/share/misc/termcap"
+EX_TERMCAP_virtclass-nativesdk = ":/etc/termcap:/usr/share/misc/termcap"
+EX_TERMINFO = ""
+EX_TERMINFO_virtclass-native = ":/etc/terminfo:/usr/share/misc/terminfo:/lib/terminfo"
+EX_TERMINFO_virtclass-nativesdk = ":/etc/terminfo:/usr/share/misc/terminfo:/lib/terminfo"
 
 # Display corruption occurs on 64 bit hosts without these settings
 # This was derrived from the upstream debian ncurses which uses
