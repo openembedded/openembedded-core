@@ -126,7 +126,7 @@ if [ $needpseudo != "0" -a $buildpseudo -eq 0 ]; then
 fi
 
 OLDPATH=$PATH
-export PATH=`echo $PATH | sed s#[^:]*/scripts:##`
+export PATH=`echo $PATH | sed s#[^:]*/scripts:##g`
 if [ $buildpseudo -gt 0 ]; then
     [ $buildpseudo -eq 1 ] && echo "Pseudo is not present but is required, building this first before the main build"
     [ $buildpseudo -eq 2 ] && echo "Pseudo may be out of date, rebuilding pseudo before the main build"
