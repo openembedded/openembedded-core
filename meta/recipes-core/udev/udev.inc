@@ -31,9 +31,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
 
 inherit autotools pkgconfig update-rc.d
 
-# udevd/udevadm -> /sbin/, libudev.so.* -> /lib/
-sbindir = "${base_sbindir}"
-libexecdir = "${base_libdir}" 
+libexecdir = "${base_libdir}"
 EXTRA_OECONF = "--disable-introspection \
                 --with-rootlibdir=${base_libdir} \
                 --with-pci-ids-path=${datadir}/pci.ids \
@@ -46,8 +44,8 @@ EXTRA_OECONF = "--disable-introspection \
                 --with-rootprefix= \
                "
 
-PACKAGES =+ "udev-acl udev-consolekit udev-utils"
-PACKAGES =+ "udev-cache libudev libudev-dev libudev-dbg"
+PACKAGES =+ "udev-utils udev-cache"
+PACKAGES =+ "libudev libudev-dev libudev-dbg"
 PACKAGES =+ "libgudev libgudev-dev libgudev-dbg"
 
 INITSCRIPT_PACKAGES = "udev udev-cache"
@@ -73,12 +71,7 @@ FILES_libgudev-dev = "${includedir}/gudev* ${libdir}/libgudev*.so ${libdir}/libg
                      ${libdir}/libgudev*.a ${libdir}/pkgconfig/gudev*.pc"
 FILES_udev-cache = "${sysconfdir}/init.d/udev-cache ${sysconfdir}/default/udev-cache"
 
-FILES_udev-acl = "${base_libdir}/udev/udev-acl ${base_libdir}/udev/rules.d/70-acl.rules"
-
-FILES_udev-utils = "${bindir}/udevinfo ${bindir}/udevtest ${base_sbindir}/udevadm"
-
-RDEPENDS_udev-consolekit += "udev-acl"
-FILES_udev-consolekit = "${libdir}/ConsoleKit"
+FILES_udev-utils = "${bindir}/udevadm"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
