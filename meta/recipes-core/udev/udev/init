@@ -73,13 +73,13 @@ case "$1" in
     echo -e '\000\000\000\000' > /proc/sys/kernel/hotplug
     /lib/udev/udevd -d
 
-    /usr/sbin/udevadm control --env=STARTUP=1
+    /usr/bin/udevadm control --env=STARTUP=1
     if [ "$not_first_boot" != "" ];then
-            /usr/sbin/udevadm trigger --action=add --subsystem-nomatch=tty --subsystem-nomatch=mem --subsystem-nomatch=vc --subsystem-nomatch=vtconsole --subsystem-nomatch=misc --subsystem-nomatch=dcon --subsystem-nomatch=pci_bus  --subsystem-nomatch=graphics	 --subsystem-nomatch=backlight --subsystem-nomatch=video4linux	--subsystem-nomatch=platform
-            (/usr/sbin/udevadm settle --timeout=3; /sbin/udevadm control --env=STARTUP=)&
+            /usr/bin/udevadm trigger --action=add --subsystem-nomatch=tty --subsystem-nomatch=mem --subsystem-nomatch=vc --subsystem-nomatch=vtconsole --subsystem-nomatch=misc --subsystem-nomatch=dcon --subsystem-nomatch=pci_bus  --subsystem-nomatch=graphics	 --subsystem-nomatch=backlight --subsystem-nomatch=video4linux	--subsystem-nomatch=platform
+            (/usr/bin/udevadm settle --timeout=3; /usr/bin/udevadm control --env=STARTUP=)&
     else
-            /usr/sbin/udevadm trigger --action=add
-            /usr/sbin/udevadm settle
+            /usr/bin/udevadm trigger --action=add
+            /usr/bin/udevadm settle
     fi
     ;;
   stop)
