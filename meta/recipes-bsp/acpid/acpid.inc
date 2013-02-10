@@ -13,7 +13,9 @@ inherit update-rc.d
 INITSCRIPT_NAME = "acpid"
 INITSCRIPT_PARAMS = "defaults"
 
-EXTRA_OEMAKE = ""
+# Makefile ignores our CFLAGS, so override it.
+#
+EXTRA_OEMAKE = "CFLAGS='-W -Wall -Werror -Wundef -Wshadow ${CFLAGS} $(DEFS)'"
 
 do_compile () {
 	oe_runmake 'CC=${CC} -D_GNU_SOURCE' 'CROSS=${HOST_PREFIX}'
