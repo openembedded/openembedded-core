@@ -2,6 +2,7 @@ import errno
 import glob
 import shutil
 import subprocess
+import os.path
 
 def join(*paths):
     """Like os.path.join but doesn't treat absolute RHS specially"""
@@ -161,3 +162,89 @@ def find(dir, **walkoptions):
     for root, dirs, files in os.walk(dir, **walkoptions):
         for file in files:
             yield os.path.join(root, file)
+
+
+## realpath() related functions
+def __is_path_below(file, root):
+    return (file + os.path.sep).startswith(root)
+
+def __realpath_rel(start, rel_path, root, loop_cnt):
+    """Calculates real path of symlink 'start' + 'rel_path' below
+    'root'; no part of 'start' below 'root' must contain symlinks. """
+    have_dir = True
+
+    for d in rel_path.split(os.path.sep):
+        if not have_dir:
+            raise OSError(errno.ENOENT, "no such directory %s" % start)
+
+        if d == os.path.pardir: # '..'
+            if len(start) >= len(root):
+                # do not follow '..' before root
+                start = os.path.dirname(start)
+            else:
+                # emit warning?
+                pass
+        else:
+            (start, have_dir) = __realpath(os.path.join(start, d),
+                                           root, loop_cnt)
+
+        assert(__is_path_below(start, root))
+
+    return start
+
+def __realpath(file, root, loop_cnt):
+    while os.path.islink(file) and len(file) >= len(root):
+        if loop_cnt == 0:
+            raise OSError(errno.ELOOP, file)
+
+        loop_cnt -= 1
+        target = os.path.normpath(os.readlink(file))
+
+        if not os.path.isabs(target):
+            tdir = os.path.dirname(file)
+            assert(__is_path_below(tdir, root))
+        else:
+            tdir = root
+
+        file = __realpath_rel(tdir, target, root, loop_cnt)
+
+    try:
+        is_dir = os.path.isdir(file)
+    except:
+        is_dir = false
+
+    return (file, is_dir)
+
+def realpath(file, root, use_physdir = True, loop_cnt = 100):
+    """ Returns the canonical path of 'file' with assuming a toplevel
+    'root' directory. When 'use_physdir' is set, all preceding path
+    components of 'file' will be resolved first; this flag should be
+    set unless it is guaranteed that there is no symlink in the path."""
+
+    root = os.path.normpath(root)
+    file = os.path.normpath(file)
+
+    if not root.endswith(os.path.sep):
+        # letting root end with '/' makes some things easier
+        root = root + os.path.sep
+
+    if not __is_path_below(file, root):
+        raise OSError(errno.EINVAL, "file '%s' is not below root" % file)
+
+    try:
+        if use_physdir:
+            file = __realpath_rel(root, file[(len(root) - 1):], root, loop_cnt)
+        else:
+            file = __realpath(file, root, loop_cnt)[0]
+    except OSError, e:
+        if e.errno == errno.ELOOP:
+            # make ELOOP more readable; without catching it, there will
+            # be printed a backtrace with 100s of OSError exceptions
+            # else
+            raise OSError(errno.ELOOP,
+                          "too much recursions while resolving '%s'; loop in '%s'" %
+                          (file, e.strerror))
+
+        raise
+
+    return file
