@@ -15,7 +15,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=14096c769ae0cbb5fcb94ec468be11b3 \
 DEPENDS += "zlib libpng"
 BBCLASSEXTEND = "native nativesdk"
 
-PR = "r1"
+PR = "r0"
 
 PE = "1"
 
@@ -31,8 +31,7 @@ EXTRA_OECONF_class-native = "--disable-gtk"
 SRC_URI += "\
             file://0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch \
             file://Generic-C-implementation-of-pixman_blt-with-overlapp.patch \
-            file://obsolete_automake_macros.patch \
 "
 
-SRC_URI[md5sum] = "f6e3294c4edb7b6bca8459e604286348"
-SRC_URI[sha256sum] = "583686afbfa5a1dfc40a21e888a3eacf31fe0e02469d20b821b5d8f719165a51"
+SRC_URI[md5sum] = "6e64a6d73559973ef6a9f125b5161ad3"
+SRC_URI[sha256sum] = "aa3dca46f6c90ae7731929d4e12195a981c52c3a423669ec3329d5a9c469841f"
