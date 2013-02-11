@@ -6,8 +6,8 @@ PR = "r0"
 
 SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "bddd5c5b734ab4b9683eb0ba363070d4"
-SRC_URI[sha256sum] = "f1581aef210f6caa9cf42875fb66ab3b47a32db9436bdfa9913b9bbd5034b03b"
+SRC_URI[md5sum] = "9f7315e54885c735dcfdabe77f322d30"
+SRC_URI[sha256sum] = "14f693759ecc87472355ae8f0c34731a8578b408b607cfd0b5d34331ff05d81a"
 
 PACKAGES =+ "cairo-gobject cairo-script-interpreter cairo-perf-utils"
 
