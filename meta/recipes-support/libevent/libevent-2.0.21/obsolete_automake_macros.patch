@@ -1,0 +1,15 @@
+Upstream-Status: Submitted [https://sourceforge.net/tracker/?func=detail&aid=3603774&group_id=50884&atid=461322]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd libevent-2.0.21-stable/configure.in libevent-2.0.21-stable/configure.in
+--- libevent-2.0.21-stable/configure.in	2012-11-18 08:34:13.000000000 +0200
++++ libevent-2.0.21-stable/configure.in	2013-02-08 02:03:58.403476183 +0200
+@@ -12,7 +12,7 @@
+ AC_CONFIG_MACRO_DIR([m4])
+
+ AM_INIT_AUTOMAKE(libevent,2.0.21-stable)
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS(config.h)
+ AC_DEFINE(NUMERIC_VERSION, 0x02001500, [Numeric representation of the version])
+
+ dnl Initialize prefix.

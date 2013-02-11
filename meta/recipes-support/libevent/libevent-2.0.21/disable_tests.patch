@@ -1,0 +1,15 @@
+Upstream-Status: Inappropriate [disable feature]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd libevent-2.0.21-stable/test/Makefile.am libevent-2.0.21-stable/test/Makefile.am
+--- libevent-2.0.21-stable/test/Makefile.am	2012-05-31 07:08:19.000000000 +0300
++++ libevent-2.0.21-stable/test/Makefile.am	2013-02-08 02:06:20.227475872 +0200
+@@ -19,8 +19,6 @@
+ EXTRA_PROGRAMS = regress
+ noinst_HEADERS = tinytest.h tinytest_macros.h regress.h tinytest_local.h
+
+-TESTS = $(top_srcdir)/test/test.sh
+-
+ BUILT_SOURCES =
+ if BUILD_REGRESS
+ BUILT_SOURCES += regress.gen.c regress.gen.h
