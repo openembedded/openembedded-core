@@ -25,7 +25,7 @@ class TestRealPath(unittest.TestCase):
         ( "usr/bin/prog-F",  "../../../sbin/prog-F", "/sbin/prog-F" ),
         ( "loop",            "a/loop",               None ),
         ( "a/loop",          "../loop",              None ),
-        ( "b/test",          "file/foo",             None ),
+        ( "b/test",          "file/foo",             "/b/file/foo" ),
     ]
 
     LINKS_PHYS = [
@@ -59,8 +59,9 @@ class TestRealPath(unittest.TestCase):
         for l in self.LINKS:
             os.symlink(l[1], os.path.join(self.root, l[0]))
 
-    def __realpath(self, file, use_physdir):
-        return oe.path.realpath(os.path.join(self.root, file), self.root, use_physdir)
+    def __realpath(self, file, use_physdir, assume_dir = True):
+        return oe.path.realpath(os.path.join(self.root, file), self.root,
+                                use_physdir, assume_dir = assume_dir)
 
     def test_norm(self):
         for l in self.LINKS:
@@ -85,5 +86,4 @@ class TestRealPath(unittest.TestCase):
     def test_loop(self):
         for e in self.EXCEPTIONS:
             self.assertRaisesRegexp(OSError, r'\[Errno %u\]' % e[1],
-                                    self.__realpath, e[0], False)
-
+                                    self.__realpath, e[0], False, False)

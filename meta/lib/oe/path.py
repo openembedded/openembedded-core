@@ -168,13 +168,13 @@ def find(dir, **walkoptions):
 def __is_path_below(file, root):
     return (file + os.path.sep).startswith(root)
 
-def __realpath_rel(start, rel_path, root, loop_cnt):
+def __realpath_rel(start, rel_path, root, loop_cnt, assume_dir):
     """Calculates real path of symlink 'start' + 'rel_path' below
     'root'; no part of 'start' below 'root' must contain symlinks. """
     have_dir = True
 
     for d in rel_path.split(os.path.sep):
-        if not have_dir:
+        if not have_dir and not assume_dir:
             raise OSError(errno.ENOENT, "no such directory %s" % start)
 
         if d == os.path.pardir: # '..'
@@ -186,13 +186,13 @@ def __realpath_rel(start, rel_path, root, loop_cnt):
                 pass
         else:
             (start, have_dir) = __realpath(os.path.join(start, d),
-                                           root, loop_cnt)
+                                           root, loop_cnt, assume_dir)
 
         assert(__is_path_below(start, root))
 
     return start
 
-def __realpath(file, root, loop_cnt):
+def __realpath(file, root, loop_cnt, assume_dir):
     while os.path.islink(file) and len(file) >= len(root):
         if loop_cnt == 0:
             raise OSError(errno.ELOOP, file)
@@ -206,7 +206,7 @@ def __realpath(file, root, loop_cnt):
         else:
             tdir = root
 
-        file = __realpath_rel(tdir, target, root, loop_cnt)
+        file = __realpath_rel(tdir, target, root, loop_cnt, assume_dir)
 
     try:
         is_dir = os.path.isdir(file)
@@ -215,11 +215,13 @@ def __realpath(file, root, loop_cnt):
 
     return (file, is_dir)
 
-def realpath(file, root, use_physdir = True, loop_cnt = 100):
-    """ Returns the canonical path of 'file' with assuming a toplevel
-    'root' directory. When 'use_physdir' is set, all preceding path
-    components of 'file' will be resolved first; this flag should be
-    set unless it is guaranteed that there is no symlink in the path."""
+def realpath(file, root, use_physdir = True, loop_cnt = 100, assume_dir = False):
+    """ Returns the canonical path of 'file' with assuming a
+    toplevel 'root' directory. When 'use_physdir' is set, all
+    preceding path components of 'file' will be resolved first;
+    this flag should be set unless it is guaranteed that there is
+    no symlink in the path. When 'assume_dir' is not set, missing
+    path components will raise an ENOENT error"""
 
     root = os.path.normpath(root)
     file = os.path.normpath(file)
@@ -233,9 +235,9 @@ def realpath(file, root, use_physdir = True, loop_cnt = 100):
 
     try:
         if use_physdir:
-            file = __realpath_rel(root, file[(len(root) - 1):], root, loop_cnt)
+            file = __realpath_rel(root, file[(len(root) - 1):], root, loop_cnt, assume_dir)
         else:
-            file = __realpath(file, root, loop_cnt)[0]
+            file = __realpath(file, root, loop_cnt, assume_dir)[0]
     except OSError, e:
         if e.errno == errno.ELOOP:
             # make ELOOP more readable; without catching it, there will
