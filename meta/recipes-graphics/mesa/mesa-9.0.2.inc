@@ -3,8 +3,8 @@ SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \
            file://cross-glsl.patch \
            "
 
-SRC_URI[md5sum] = "97d6554c05ea7449398afe3a0ede7018"
-SRC_URI[sha256sum] = "57a7ba83bace3f3a7dc0929fe026ef5f0ad454234ec4ad8a3e0d31650a75db6f"
+SRC_URI[md5sum] = "dc45d1192203e418163e0017640e1cfc"
+SRC_URI[sha256sum] = "75bf31f26c6e7b5515e610c1005fd1be1f7eeb2c9e6859848dab879c355ad64e"
 
 LIC_FILES_CHKSUM = "file://docs/license.html;md5=012f69938d81b766472fd0d240df38a4"
 
