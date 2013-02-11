@@ -73,13 +73,12 @@ def clean_package_list(package_list):
 def get_latest_released_meego_source_package_list():
     "Returns list of all the name os packages in the latest meego distro"
 
-    if not os.path.isfile("/tmp/Meego-1.1"):
-        os.mknod("/tmp/Meego-1.1")
-    f = open("/tmp/Meego-1.1", "r")
     package_names = []
-    for line in f:
-        package_names.append(line[:-1] + ":" + "main") # Also strip the '\n' at the end
-     
+    try:
+        f = open("/tmp/Meego-1.1", "r")
+        for line in f:
+            package_names.append(line[:-1] + ":" + "main") # Also strip the '\n' at the end
+    except IOError: pass
     package_list=clean_package_list(package_names)
     return "1.0", package_list
 
