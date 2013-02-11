@@ -42,3 +42,5 @@ DEBIAN_NOAUTONAME_fontconfig-utils = "1"
 inherit autotools pkgconfig
 
 EXTRA_OECONF = " --disable-docs --with-default-fonts=${datadir}/fonts"
+
+BBCLASSEXTEND = "native"
