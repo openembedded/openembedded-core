@@ -6,3 +6,4 @@ BPN = "gcc"
 
 DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${HOST_PREFIX}binutils-crosssdk virtual/nativesdk-${HOST_PREFIX}libc-for-gcc nativesdk-gettext"
 
+GCCMULTILIB = "--enable-multilib"

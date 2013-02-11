@@ -41,7 +41,8 @@ python gcc_multilib_setup() {
         return
 
     mlprefix = d.getVar('MLPREFIX', True)
-    if ('%sgcc' % mlprefix) != d.getVar('PN', True):
+    pn = d.getVar('PN', True)
+    if ('%sgcc' % mlprefix) != pn and (not pn.startswith('gcc-cross-canadian')):
         return
 
 
