@@ -6,7 +6,7 @@ HOMEPAGE = "http://www.gnu.org/software/texinfo/"
 SECTION = "console/utils"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=adefda309052235aa5d1e99ce7557010"
-PR = "r5"
+PR = "r6"
 
 DEPENDS = "zlib ncurses texinfo-native"
 DEPENDS_class-native = "zlib-native ncurses-native"
@@ -24,6 +24,7 @@ SRC_URI = "${GNU_MIRROR}/texinfo/texinfo-${PV}.tar.gz \
            file://link-zip.patch \
            file://gettext-macros.patch \
            file://texinfo_fix_for_automake-1.12.patch \
+           file://dont-depend-on-help2man.patch \
            ${TARGET_PATCH}"
 
 SRC_URI[md5sum] = "71ba711519209b5fb583fed2b3d86fcb"

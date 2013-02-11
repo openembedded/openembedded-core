@@ -1,0 +1,79 @@
+Upstream-Status: Inappropŕiate
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd texinfo-4.13/doc/Makefile.am texinfo-4.13/doc/Makefile.am
+--- texinfo-4.13/doc/Makefile.am	2008-09-18 21:31:56.000000000 +0300
++++ texinfo-4.13/doc/Makefile.am	2013-02-08 03:13:40.943466946 +0200
+@@ -14,9 +14,6 @@
+ info_TEXINFOS = texinfo.txi info-stnd.texi info.texi
+ DISTCLEANFILES = texinfo texinfo-* info*.info*
+
+-man_MANS = info.1 infokey.1 install-info.1 makeinfo.1 texindex.1  \
+-           info.5 texinfo.5
+-
+ # Use the programs built in our distribution, taking account of possible
+ # cross-compiling.
+ MAKEINFO = $(top_builddir)/$(native_tools)/makeinfo/makeinfo
+@@ -36,7 +33,7 @@
+ # Include our texinfo.tex, not Automake's.
+ EXTRA_DIST = epsf.tex texinfo.tex \
+              fdl.texi \
+-	     $(man_MANS) $(TXI_XLATE)
++	     $(TXI_XLATE)
+	     $(refcard_files)
+
+ if INSTALL_WARNINGS
+@@ -77,38 +74,10 @@
+	case $$program in info|install-info) program=g$$program;; \
+		esac
+
+-# Update the manpage for a binary program; set up the variables,
+-# make sure the binary is up-to-date and then generate the man page.
+-man_rule_bin = echo "Updating man page $@" && \
+-	$(man_rule_0) && \
+-	echo cd "$$dir" '&&' $(MAKE) $(AM_MAKEFLAGS) $$program$(EXEEXT) && \
+-	    (cd "$$dir"  &&  $(MAKE) $(AM_MAKEFLAGS) $$program$(EXEEXT)) && \
+-	echo $(HELP2MAN) --name=\""$$name"\" "$$dir/$$program" -o '$@' && \
+-	     $(HELP2MAN) --name="$$name"     "$$dir/$$program" -o '$@'
+-
+-$(srcdir)/info.1: $(top_srcdir)/info/info.c $(common_mandeps)
+-	@name="read Info documents" && $(man_rule_bin)
+-$(srcdir)/infokey.1: $(top_srcdir)/info/infokey.c $(common_mandeps)
+-	@name="compile customizations for Info" && $(man_rule_bin)
+-$(srcdir)/install-info.1: $(top_srcdir)/install-info/install-info.c $(common_mandeps)
+-	@name="update info/dir entries" && $(man_rule_bin)
+-
+-# Here we need some postprocessing:
+-$(srcdir)/makeinfo.1: $(top_srcdir)/makeinfo/makeinfo.c $(common_mandeps)
+-	@name="translate Texinfo documents" && $(man_rule_bin)
+-	mv $@ $@.tmp
+-	sed '/^\.IP$$/N;/\nAlso/s/I//;/\nThe/s/I//' $@.tmp >$@
+-	rm $@.tmp
+-
+-$(srcdir)/texindex.1: $(util_srcdir)/texindex.c $(common_mandeps)
+-	@name="sort Texinfo index files" && $(man_rule_bin)
+-
+-
+ ## ---------- ##
+ ## texi2dvi.  ##
+ ## ---------- ##
+
+-man_MANS += texi2dvi.1 texi2pdf.1 pdftexi2dvi.1
+ util_srcdir = $(top_srcdir)/util
+
+ # Do not depend on the current user's settings.
+@@ -119,14 +88,5 @@
+ common_texi2dvi_deps = $(common_mandeps) \
+                        $(util_srcdir)/texi2dvi $(util_srcdir)/texi2pdf
+
+-$(srcdir)/texi2dvi.1: $(common_texi2dvi_deps)
+-	$(change_envvars); $(HELP2MAN) --name="convert Texinfo documents to DVI" $(util_srcdir)/texi2dvi >$@
+-
+-$(srcdir)/texi2pdf.1: $(common_texi2dvi_deps)
+-	$(change_envvars); $(HELP2MAN) --name="convert Texinfo documents to PDF" $(util_srcdir)/texi2pdf >$@
+-
+-$(srcdir)/pdftexi2dvi.1:  $(common_texi2dvi_deps)
+-	$(change_envvars); $(HELP2MAN) --name="convert Texinfo documents to PDF" $(util_srcdir)/pdftexi2dvi >$@
+-
+ # Do not create info files for distribution.
+ dist-info:
