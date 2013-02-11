@@ -15,6 +15,12 @@ python multilib_virtclass_handler () {
     if "virtual/kernel" in provides or bb.data.inherits_class('module-base', e.data):
         raise bb.parse.SkipPackage("We shouldn't have multilib variants for the kernel")
 
+    save_var_name=e.data.getVar("MULTILIB_SAVE_VARNAME", True) or ""
+    for name in save_var_name.split():
+        val=e.data.getVar(name, True)
+        if val:
+            e.data.setVar(name + "_MULTILIB_ORIGINAL", val)
+
     if bb.data.inherits_class('image', e.data):
         e.data.setVar("MLPREFIX", variant + "-")
         e.data.setVar("PN", variant + "-" + e.data.getVar("PN", False))
@@ -36,11 +42,6 @@ python multilib_virtclass_handler () {
     if bb.data.inherits_class('allarch', e.data) and not bb.data.inherits_class('packagegroup', e.data):
         raise bb.parse.SkipPackage("Don't extend allarch recipes which are not packagegroups")
 
-    save_var_name=e.data.getVar("MULTILIB_SAVE_VARNAME", True) or ""
-    for name in save_var_name.split():
-        val=e.data.getVar(name, True)
-        if val:
-            e.data.setVar(name + "_MULTILIB_ORIGINAL", val)
 
     # Expand this since this won't work correctly once we set a multilib into place
     e.data.setVar("ALL_MULTILIB_PACKAGE_ARCHS", e.data.getVar("ALL_MULTILIB_PACKAGE_ARCHS", True))
