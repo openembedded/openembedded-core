@@ -1,0 +1,14 @@
+Upstream-Status: Backport
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd diffutils-3.2/configure.ac diffutils-3.2/configure.ac
+--- diffutils-3.2/configure.ac	2011-08-11 18:17:54.000000000 +0300
++++ diffutils-3.2/configure.ac	2013-02-08 08:13:28.271427213 +0200
+@@ -33,7 +33,6 @@
+
+ AC_PROG_AWK
+ AC_PROG_CC
+-AM_PROG_CC_STDC
+ AM_MISSING_PROG([HELP2MAN], [help2man])
+ AC_PROG_RANLIB
+ gl_EARLY

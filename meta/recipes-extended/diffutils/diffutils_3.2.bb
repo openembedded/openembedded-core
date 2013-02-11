@@ -10,9 +10,11 @@ do_configure_prepend () {
 	done
 }
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
-SRC_URI += "file://remove-gets.patch"
+SRC_URI += "file://remove-gets.patch \
+            file://obsolete_automake_macros.patch \
+"
 
 SRC_URI[md5sum] = "22e4deef5d8949a727b159d6bc65c1cc"
 SRC_URI[sha256sum] = "2aaaebef615be7dc365306a14caa5d273a4fc174f9f10abca8b60e082c054ed3"
