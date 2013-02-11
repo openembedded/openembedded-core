@@ -1,6 +1,6 @@
 require qemu.inc
 
-SRCREV = "6d6c9f59ca1b1a76ade7ad868bef191818f58819"
+SRCREV = "04024dea2674861fcf13582a77b58130c67fccd8"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
                     file://COPYING.LIB;endline=24;md5=c04def7ae38850e7d3ef548588159913"
