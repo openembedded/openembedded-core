@@ -13,6 +13,7 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://configure-libtool.patch \
            file://glib-2.0_fix_for_x32.patch \
            file://obsolete_automake_macros.patch \
+           file://fix-conflicting-rand.patch \
            file://Makefile-ptest.patch \
            file://run-ptest \
           "
@@ -23,6 +24,16 @@ SRC_URI_append_class-native = " file://glib-gettextize-dir.patch"
 BBCLASSEXTEND = "native nativesdk"
 
 RDEPENDS_${PN}-ptest += "\
+            tzdata \
+            tzdata-americas \
+            tzdata-asia \
+            tzdata-europe \
+            tzdata-posix \
+            python-pygobject \
+            python-dbus \
+           "
+
+RDEPENDS_${PN}-ptest_append_libc-glibc = "\
             eglibc-gconv-utf-16 \
             eglibc-charmap-utf-8 \
             eglibc-gconv-cp1255 \
@@ -31,13 +42,6 @@ RDEPENDS_${PN}-ptest += "\
             eglibc-gconv-utf-7 \
             eglibc-charmap-invariant \
             eglibc-localedata-translit-cjk-variants \
-            tzdata \
-            tzdata-americas \
-            tzdata-asia \
-            tzdata-europe \
-            tzdata-posix \
-            python-pygobject \
-            python-dbus \
            "
 
 do_configure_prepend() {
