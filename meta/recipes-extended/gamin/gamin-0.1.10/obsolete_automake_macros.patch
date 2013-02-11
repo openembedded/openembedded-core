@@ -1,0 +1,23 @@
+Upstream-Status: Submitted [https://bugzilla.gnome.org/show_bug.cgi?id=693449]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd gamin-0.1.10/configure.in gamin-0.1.10/configure.in
+--- gamin-0.1.10/configure.in	2008-11-24 17:23:06.000000000 +0200
++++ gamin-0.1.10/configure.in	2013-02-08 23:11:59.656279992 +0200
+@@ -1,7 +1,7 @@
+ dnl Process this file with autoconf to produce a configure script.
+ AC_PREREQ(2.52)
+ AC_INIT(libgamin)
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS(config.h)
+ AC_CANONICAL_SYSTEM
+
+ # get any external flags setting before we start playing with the CFLAGS variable
+@@ -31,7 +31,6 @@
+
+ AC_USE_SYSTEM_EXTENSIONS
+ AC_PROG_CC
+-AM_PROG_CC_STDC
+ AC_HEADER_STDC
+ AC_PROG_INSTALL
+ AC_PROG_MAKE_SET
