@@ -10,7 +10,7 @@ SYSTEMD_AUTO_ENABLE ??= "enable"
 # even if the systemd DISTRO_FEATURE isn't enabled.  As such don't make any
 # changes directly but check the DISTRO_FEATURES first.
 python __anonymous() {
-    if oe.utils.contains ('DISTRO_FEATURES', 'systemd', True, False, d):
+    if "systemd" in d.getVar("DISTRO_FEATURES", True).split():
         d.appendVar("DEPENDS", " systemd-systemctl-native")
         # Set a variable so that update-rcd.bbclass knows we're active and can
         # disable itself.
@@ -39,7 +39,10 @@ fi
 systemctl disable ${SYSTEMD_SERVICE}
 }
 
-def systemd_populate_packages(d):
+python systemd_populate_packages() {
+    if "systemd" not in d.getVar("DISTRO_FEATURES", True).split():
+        return
+
     def get_package_var(d, var, pkg):
         val = (d.getVar('%s_%s' % (var, pkg), True) or "").strip()
         if val == "":
@@ -150,9 +153,6 @@ def systemd_populate_packages(d):
                 systemd_generate_package_scripts(pkg)
                 systemd_add_rdepends(pkg)
         systemd_check_services()
-
-
-python populate_packages_prepend () {
-    if oe.utils.contains ('DISTRO_FEATURES', 'systemd', True, False, d):
-        systemd_populate_packages (d)
 }
+
+PACKAGESPLITFUNCS_prepend = "systemd_populate_packages "
