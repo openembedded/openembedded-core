@@ -8,21 +8,15 @@ inherit qemu
 
 FONT_PACKAGES ??= "${PN}"
 
+#
+# On host, the postinstall MUST return 1 because we do not know if the intercept
+# hook will succeed. If it does succeed, than the packages will be marked as
+# installed.
+#
 fontcache_common() {
 if [ "x$D" != "x" ] ; then
-	if [ ! -f $INTERCEPT_DIR/update_font_cache ]; then
-		cat << "EOF" > $INTERCEPT_DIR/update_font_cache
-#!/bin/sh
-
-${@qemu_run_binary(d, '$D', '/usr/bin/fc-cache')} --sysroot=$D >/dev/null 2>&1
-
-if [ $? -ne 0 ]; then
-    exit 1
-fi
-
-EOF
-	fi
-	exit 0
+	$INTERCEPT_DIR/postinst_intercept update_font_cache ${PKG} bindir=${bindir}
+	exit 1
 fi
 
 fc-cache
