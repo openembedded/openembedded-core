@@ -136,7 +136,10 @@ DEFAULT_INSTALL_DIR="${SDKPATH}"
 SUDO_EXEC=""
 target_sdk_dir=""
 answer=""
-while getopts ":yd:" OPT; do
+relocate=1
+savescripts=0
+verbose=0
+while getopts ":yd:DRS" OPT; do
 	case $OPT in
 	y)
 		answer="Y"
@@ -145,14 +148,32 @@ while getopts ":yd:" OPT; do
 	d)
 		target_sdk_dir=$OPTARG
 		;;
+	D)
+		verbose=1
+		;;
+	R)
+		relocate=0
+		savescripts=1
+		;;
+	S)
+		savescripts=1
+		;;
 	*)
 		echo "Usage: $(basename $0) [-y] [-d <dir>]"
 		echo "  -y         Automatic yes to all prompts"
 		echo "  -d <dir>   Install the SDK to <dir>"
+		echo "======== Advanced DEBUGGING ONLY OPTIONS ========"
+		echo "  -S         Save relocation scripts"
+		echo "  -R         Do not relocate executables"
+		echo "  -D         use set -x to see what is going on"
 		exit 1
 		;;
 	esac
 done
+
+if [ $verbose = 1 ] ; then
+	set -x
+fi
 
 printf "Enter target directory for SDK (default: $DEFAULT_INSTALL_DIR): "
 if [ "$target_sdk_dir" = "" ]; then
@@ -231,10 +252,23 @@ if [ "$dl_path" = "" ] ; then
 	exit 1
 fi
 executable_files=$($SUDO_EXEC find $native_sysroot -type f -perm +111)
-$SUDO_EXEC ${env_setup_script%/*}/relocate_sdk.py $target_sdk_dir $dl_path $executable_files
-if [ $? -ne 0 ]; then
-	echo "SDK could not be set up. Relocate script failed. Abort!"
-	exit 1
+
+tdir=`mktemp -d`
+if [ x$tdir = x ] ; then
+   echo "SDK relocate failed, could not create a temporary directory"
+   exit 1
+fi
+echo "#!/bin/bash" > $tdir/relocate_sdk.sh
+echo exec ${env_setup_script%/*}/relocate_sdk.py $target_sdk_dir $dl_path $executable_files >> $tdir/relocate_sdk.sh
+$SUDO_EXEC mv $tdir/relocate_sdk.sh ${env_setup_script%/*}/relocate_sdk.sh
+$SUDO_EXEC chmod 755 ${env_setup_script%/*}/relocate_sdk.sh
+rm -rf $tdir
+if [ $relocate = 1 ] ; then
+	$SUDO_EXEC ${env_setup_script%/*}/relocate_sdk.sh
+	if [ $? -ne 0 ]; then
+		echo "SDK could not be set up. Relocate script failed. Abort!"
+		exit 1
+	fi
 fi
 
 # replace ${SDKPATH} with the new prefix in all text files: configs/scripts/etc
@@ -249,7 +283,9 @@ echo done
 
 # delete the relocating script, so that user is forced to re-run the installer
 # if he/she wants another location for the sdk
-$SUDO_EXEC rm ${env_setup_script%/*}/relocate_sdk.py
+if [ $savescripts = 0 ] ; then
+	$SUDO_EXEC rm ${env_setup_script%/*}/relocate_sdk.py ${env_setup_script%/*}/relocate_sdk.sh
+fi
 
 echo "SDK has been successfully set up and is ready to be used."
 
