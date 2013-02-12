@@ -20,9 +20,9 @@ SRC_URI = "http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.26/gdk-pixbuf-${
 SRC_URI[md5sum] = "339329e6d619ee3e1cb93979111b04c0"
 SRC_URI[sha256sum] = "77696fd163bca95a130a1883dbd78d0ae4d782de2fc85a9a38556d13681f5c84"
 
-PR = "r0"
+PR = "r1"
 
-inherit autotools pkgconfig gettext
+inherit autotools pkgconfig gettext pixbufcache
 
 LIBV = "2.10.0"
 
@@ -56,48 +56,6 @@ FILES_${PN}-dbg += " \
 	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/.debug/* \
 "
 
-postinst_pixbufloader () {
-if [ "x$D" != "x" ]; then
-# Update the target's pixbuf loader's cache. Since the native binary will
-# throw an error if the shared objects do not belong to the same ELF class,
-# we trick the gdk-pixbuf-query-loaders into scanning the native shared
-# objects and then we remove the NATIVE_ROOT prefix from the paths in
-# loaders.cache.
-gdk-pixbuf-query-loaders $(ls -d -1 $D/${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/*.so |\
-        sed -e "s:$D:$NATIVE_ROOT:g") > \
-        $D/${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.cache \
-        2>$D/${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.err
-
-# gdk-pixbuf-query-loaders always returns 0, so we need to check if loaders.err
-# has anything in it
-if [ -s $D/${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.err ]; then
-	echo "${PN} postinstall scriptlet failed:"
-	cat $D/${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.err
-	rm $D/${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.err
-	# we've got errors, postpone postinstall for first boot
-	exit 1
-fi
-
-sed -i -e "s:$NATIVE_ROOT:/:g" $D/${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
-
-# remove the empty loaders.err
-rm $D/${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.err
-
-exit 0
-fi
-
-# Update the pixbuf loaders in case they haven't been registered yet
-GDK_PIXBUF_MODULEDIR=${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders gdk-pixbuf-query-loaders --update-cache
-
-if [ -x ${bindir}/gtk-update-icon-cache ] && [ -d ${datadir}/icons ]; then
-    for icondir in /usr/share/icons/*; do
-        if [ -d ${icondir} ]; then
-            gtk-update-icon-cache -t -q ${icondir}
-        fi
-    done
-fi
-}
-
 PACKAGES_DYNAMIC += "^gdk-pixbuf-loader-.*"
 PACKAGES_DYNAMIC_class-native = ""
 
@@ -106,7 +64,7 @@ python populate_packages_prepend () {
 
     loaders_root = d.expand('${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders')
 
-    do_split_packages(d, loaders_root, '^libpixbufloader-(.*)\.so$', 'gdk-pixbuf-loader-%s', 'GDK pixbuf loader for %s', postinst_pixbufloader)
+    d.setVar('PIXBUF_PACKAGES', ' '.join(do_split_packages(d, loaders_root, '^libpixbufloader-(.*)\.so$', 'gdk-pixbuf-loader-%s', 'GDK pixbuf loader for %s')))
 }
 
 do_install_append_class-native() {
