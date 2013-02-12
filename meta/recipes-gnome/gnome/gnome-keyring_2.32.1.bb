@@ -11,9 +11,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SECTION = "x11/gnome"
 
-PR = "r10"
+PR = "r11"
 
-inherit autotools gnome gtk-doc pkgconfig
+inherit autotools gnome gtk-doc pkgconfig gsettings
 
 DEPENDS = "gtk+ libgcrypt libtasn1 libtasn1-native gconf ${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} = "libgnome-keyring glib-2.0-utils"
@@ -28,14 +28,6 @@ SRC_URI[archive.sha256sum] = "31fecec1430a97f59a6159a5a2ea8d6a1b44287f1e9e595b35
 do_install_append () {
 	install -d ${D}${datadir}/dbus-1/services
 	install -m 0644 ${WORKDIR}/org.gnome.keyring.service ${D}${datadir}/dbus-1/services
-}
-
-pkg_postinst_${PN} () {
-	if [ "x$D" != "x" ]; then
-		exit 1
-	fi
-
-	test -x ${bindir}/glib-compile-schemas && glib-compile-schemas  ${datadir}/glib-2.0/schemas
 }
 
 FILES_${PN} += "${datadir}/dbus-1/services ${datadir}/gcr"
