@@ -6,6 +6,8 @@ DEPENDS =+ "qemu-native"
 
 inherit qemu
 
+GTKIMMODULES_PACKAGES ?= "${PN}"
+
 gtk_immodule_cache_postinst() {
 if [ "x$D" != "x" ]; then
     for maj_ver in 2 3; do
