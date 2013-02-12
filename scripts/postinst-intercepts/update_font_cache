@@ -1,0 +1,7 @@
+#!/bin/sh
+
+PSEUDO_UNLOAD=1 qemuwrapper $D$(readelf -l $D${bindir}/fc-cache| grep "Requesting program interpreter"|sed -e 's/^.*\[.*: \(.*\)\]/\1/') \
+        --library-path $D/lib:$D/usr/lib $D${bindir}/fc-cache \
+        --sysroot=$D >/dev/null 2>&1
+
+

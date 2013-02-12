@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# This script is called from inside postinstall scriptlets at do_rootfs time. It
+# actually adds, at the end, the list of packages for which the intercept script
+# is valid. Also, if one wants to pass any variables to the intercept script from
+# the postinstall itself, they will be added immediately after the shebang line.
+#
+# Usage: postinst_intercept <intercept_script_name> <package_name> <var1=...> ... <varN=...>
+#  * intercept_script_name - the name of the intercept script we want to change;
+#  * package_name - add the package_name to list of packages the intercept script
+#                   is used for;
+#  * var1=... - var1 will have the value we provide in the intercept script. This
+#               is useful when we want to pass on variables like ${libdir} to
+#               the intercept script;
+#
+[ $# -lt 2 ] && exit 1
+
+intercept_script=$INTERCEPT_DIR/$1 && shift
+package_name=$1 && shift
+
+[ -f "$intercept_script" ] || exit 1
+
+chmod +x "$intercept_script"
+
+pkgs_line="$(cat $intercept_script|grep "##PKGS:")"
+if [ -n "$pkgs_line" ]; then
+	# line exists, add this package to the list only if it's not already there
+	if [ -z "$(echo "$pkgs_line" | grep " $package_name ")" ]; then
+		sed -i -e "s/##PKGS:.*/\0${package_name} /" $intercept_script
+	fi
+else
+	for var in $@; do
+		sed -i -e "\%^#\!/bin/.*sh%a $var" $intercept_script
+	done
+	echo "##PKGS: ${package_name} " >> $intercept_script
+fi
+
