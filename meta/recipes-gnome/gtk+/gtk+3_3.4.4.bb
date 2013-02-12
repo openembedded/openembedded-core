@@ -21,7 +21,7 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/3.4/gtk+-${PV}.tar.xz \
 SRC_URI[md5sum] = "1b2cf29502a6394e8d4b30f7f5bb9131"
 SRC_URI[sha256sum] = "f154e460075034da4c0ce89c320025dcd459da2a1fdf32d92a09522eaca242c7"
 
-inherit autotools pkgconfig gtk-doc update-alternatives
+inherit autotools pkgconfig gtk-doc update-alternatives gtk-immodules-cache
 
 S = "${WORKDIR}/gtk+-${PV}"
 
@@ -90,22 +90,14 @@ ALTERNATIVE_TARGET[gtk-update-icon-cache] = "${bindir}/gtk-update-icon-cache-3.0
 python populate_packages_prepend () {
     import os.path
 
-    prologue = d.getVar("postinst_prologue", 1)
-
     gtk_libdir = d.expand('${libdir}/gtk-3.0/${LIBV}')
     immodules_root = os.path.join(gtk_libdir, 'immodules')
     printmodules_root = os.path.join(gtk_libdir, 'printbackends');
 
-    do_split_packages(d, immodules_root, '^im-(.*)\.so$', 'gtk3-immodule-%s', 'GTK input module for %s', prologue + 'gtk-query-immodules-3.0 > /etc/gtk-3.0/gtk.immodules')
+    d.setVar('GTKIMMODULES_PACKAGES', ' '.join(do_split_packages(d, immodules_root, '^im-(.*)\.so$', 'gtk3-immodule-%s', 'GTK input module for %s')))
     do_split_packages(d, printmodules_root, '^libprintbackend-(.*)\.so$', 'gtk3-printbackend-%s', 'GTK printbackend module for %s')
 
     if (d.getVar('DEBIAN_NAMES', 1)):
         d.setVar('PKG_${PN}', 'libgtk-3.0')
 }
 
-postinst_prologue() {
-if [ "x$D" != "x" ]; then
-  exit 1
-fi
-
-}

@@ -18,7 +18,7 @@ PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
 
 PACKAGECONFIG[x11] = "--with-x=yes --with-gdktarget=x11,--with-x=no,${X11DEPENDS}"
 
-inherit autotools gtk-doc pkgconfig update-alternatives
+inherit autotools gtk-doc pkgconfig update-alternatives gtk-immodules-cache
 
 PACKAGES += "libgail gtk-demo"
 
@@ -94,9 +94,3 @@ gtk_sysroot_preprocess () {
 	fi
 }
 
-postinst_prologue() {
-if [ "x$D" != "x" ]; then
-  exit 1
-fi
-
-}
