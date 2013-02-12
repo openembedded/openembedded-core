@@ -11,9 +11,9 @@ DEPENDS = "gtk+ cairo libxml2"
 DEPENDS_class-native = "cairo-native pango-native gdk-pixbuf-native"
 BBCLASSEXTEND = "native"
 
-PR = "r11"
+PR = "r12"
 
-inherit autotools pkgconfig gnome gtk-doc
+inherit autotools pkgconfig gnome gtk-doc pixbufcache
 
 EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz"
 
@@ -31,7 +31,7 @@ SRC_URI[archive.md5sum] = "4b00d0fee130c936644892c152f42db7"
 SRC_URI[archive.sha256sum] = "91b98051f352fab8a6257688d6b2fd665b4648ed66144861f2f853ccf876d334"
 
 do_configure_prepend () {
-	export GDK_PIXBUF_QUERYLOADERS="${libdir}/gtk-2.0/version/loaders"
+	export GDK_PIXBUF_QUERYLOADERS="${libdir}/gdk-pixbuf-2.0/2.10.0/loaders"
 }
 
 PACKAGES =+ "librsvg-gtk librsvg-gtk-dbg librsvg-gtk-dev rsvg"
@@ -53,18 +53,5 @@ FILES_librsvg-gtk-dbg += "${libdir}/gdk-pixbuf-2.0/.debug \
                           ${libdir}/gtk-2.0/.debug \
                           ${libdir}/gtk-2.0/*/*/.debug"
 
-pkg_postinst_librsvg-gtk() {
-if [ "x$D" != "x" ]; then
-  exit 1
-fi
-
-if [ -d ${libdir}/gtk-2.0/2.10.0/loaders ] ; then
-	export GDK_PIXBUF_MODULEDIR=${libdir}/gtk-2.0/2.10.0/loaders
-else
-	export GDK_PIXBUF_MODULEDIR=${libdir}/gdk-pixbuf-2.0/2.10.0/loaders
-fi
-
-test -x ${bindir}/gdk-pixbuf-query-loaders && gdk-pixbuf-query-loaders > ${sysconfdir}/gtk-2.0/gdk-pixbuf.loaders
-test -x ${bindir}/gtk-update-icon-cache && gtk-update-icon-cache  -q ${datadir}/icons/hicolor
-}
+PIXBUF_PACKAGES = "librsvg-gtk"
 PARALLEL_MAKE = ""
