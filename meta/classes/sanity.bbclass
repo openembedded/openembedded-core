@@ -344,6 +344,7 @@ def check_sanity_validmachine(sanity_data):
 def check_sanity(sanity_data):
     import subprocess
 
+    reparse = False
     try:
         from distutils.version import LooseVersion
     except ImportError:
@@ -384,7 +385,7 @@ def check_sanity(sanity_data):
         messages = messages + 'Please set a MACHINE in your local.conf or environment\n'
         machinevalid = False
 
-    # Check we are using a valid lacal.conf
+    # Check we are using a valid local.conf
     current_conf  = sanity_data.getVar('CONF_VERSION', True)
     conf_version =  sanity_data.getVar('LOCALCONF_VERSION', True)
 
@@ -397,12 +398,8 @@ def check_sanity(sanity_data):
     if current_lconf != lconf_version:
         try:
             bb.build.exec_func("check_bblayers_conf", sanity_data)
-            if sanity_data.getVar("SANITY_USE_EVENTS", True) == "1":
-                bb.event.fire(bb.event.SanityCheckFailed("Your conf/bblayers.conf has been automatically updated. Please close and re-run."), sanity_data)
-                return
-            else:
-                bb.note("Your conf/bblayers.conf has been automatically updated. Please re-run %s." % os.path.basename(sys.argv[0]))
-                sys.exit(0)
+            bb.note("Your conf/bblayers.conf has been automatically updated.")
+            reparse = True
         except Exception:
             messages = messages + "Your version of bblayers.conf was generated from an older version of bblayers.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/bblayers.conf ${COREBASE}/meta*/conf/bblayers.conf.sample\" is a good way to visualise the changes.\n"
 
@@ -630,6 +627,7 @@ def check_sanity(sanity_data):
 
     if messages != "":
         raise_sanity_error(sanity_data.expand(messages), sanity_data, network_error)
+    return reparse
 
 # Create a copy of the datastore and finalise it to ensure appends and 
 # overrides are set - the datastore has yet to be finalised at ConfigParsed
@@ -642,11 +640,13 @@ addhandler check_sanity_eventhandler
 python check_sanity_eventhandler() {
     if bb.event.getName(e) == "ConfigParsed" and e.data.getVar("BB_WORKERCONTEXT", True) != "1" and e.data.getVar("DISABLE_SANITY_CHECKS", True) != "1":
         sanity_data = copy_data(e)
-        check_sanity(sanity_data)
+        reparse = check_sanity(sanity_data)
+        e.data.setVar("BB_INVALIDCONF", reparse)
     elif bb.event.getName(e) == "SanityCheck":
         sanity_data = copy_data(e)
         sanity_data.setVar("SANITY_USE_EVENTS", "1")
-        check_sanity(sanity_data)
+        reparse = check_sanity(sanity_data)
+        e.data.setVar("BB_INVALIDCONF", reparse)
         bb.event.fire(bb.event.SanityCheckPassed(), e.data)
     elif bb.event.getName(e) == "NetworkTest":
         sanity_data = copy_data(e)
