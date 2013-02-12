@@ -66,7 +66,7 @@ def parse_elf_header():
     e_ehsize, e_phentsize, e_phnum, e_shentsize, e_shnum, e_shstrndx =\
         hdr_struct.unpack(elf_header[16:hdr_size])
 
-def change_interpreter():
+def change_interpreter(elf_file_name):
     if arch == 32:
         ph_struct = struct.Struct("<IIIIIIII")
     else:
@@ -89,7 +89,16 @@ def change_interpreter():
         if p_type == 3:
             # PT_INTERP section
             f.seek(p_offset)
+            # External SDKs with mixed pre-compiled binaries should not get
+            # relocated so look for some variant of /lib
+            fname = f.read(11)
+            if fname.startswith("/lib/") or fname.startswith("/lib64/") or fname.startswith("/lib32/") or fname.startswith("/usr/lib32/") or fname.startswith("/usr/lib32/") or fname.startswith("/usr/lib64/"):
+                break
+            if (len(new_dl_path) >= p_filesz):
+                print "ERROR: could not relocate %s, interp size = %i and %i is needed." % (elf_file_name, p_memsz, len(new_dl_path) + 1)
+                break
             dl_path = new_dl_path + "\0" * (p_filesz - len(new_dl_path))
+            f.seek(p_offset)
             f.write(dl_path)
             break
 
@@ -199,7 +208,7 @@ for e in executables_list:
     arch = get_arch()
     if arch:
         parse_elf_header()
-        change_interpreter()
+        change_interpreter(e)
         change_dl_sysdirs()
 
     """ change permissions back """
