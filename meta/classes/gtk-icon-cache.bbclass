@@ -2,23 +2,15 @@ FILES_${PN} += "${datadir}/icons/hicolor"
 
 DEPENDS += "${@['hicolor-icon-theme', '']['${BPN}' == 'hicolor-icon-theme']} gtk+-native"
 
+#
+# On host, the postinstall MUST return 1 because we do not know if the intercept
+# hook will succeed. If it does succeed, than the packages will be marked as
+# installed.
+#
 gtk_icon_cache_postinst() {
 if [ "x$D" != "x" ]; then
-    if [ ! -f $INTERCEPT_DIR/update_icon_cache ]; then
-        cat << "EOF" > $INTERCEPT_DIR/update_icon_cache
-#!/bin/sh
-
-# update native pixbuf loaders
-gdk-pixbuf-query-loaders --update-cache
-
-for icondir in $D/usr/share/icons/*/ ; do
-    if [ -d $icondir ] ; then
-        gtk-update-icon-cache -fqt  $icondir
-    fi
-done
-EOF
-    fi
-    exit 0
+    $INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG}
+    exit 1
 fi
 
 # Update the pixbuf loaders in case they haven't been registered yet
@@ -33,21 +25,8 @@ done
 
 gtk_icon_cache_postrm() {
 if [ "x$D" != "x" ]; then
-    if [ ! -f $INTERCEPT_DIR/update_icon_cache ]; then
-        cat << "EOF" > $INTERCEPT_DIR/update_icon_cache
-#!/bin/sh
-
-# update native pixbuf loaders
-gdk-pixbuf-query-loaders --update-cache
-
-for icondir in $D/usr/share/icons/*/ ; do
-    if [ -d $icondir ] ; then
-        gtk-update-icon-cache -fqt  $icondir
-    fi
-done
-EOF
-    fi
-    exit 0
+    $INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG}
+    exit 1
 fi
 
 for icondir in /usr/share/icons/* ; do
