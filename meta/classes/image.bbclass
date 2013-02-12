@@ -194,13 +194,41 @@ run_intercept_scriptlets () {
 		cd ${WORKDIR}/intercept_scripts
 		echo "Running intercept scripts:"
 		for script in *; do
-			if [ "$script" = "*" ]; then break; fi
+			[ "$script" = "*" ] && break
+			[ "$script" = "postinst_intercept" ] || [ ! -x "$script" ] && continue
 			echo "> Executing $script"
-			chmod +x $script
-			./$script
-			if [ $? -ne 0 ]; then
-				echo "ERROR: intercept script \"$script\" failed!"
-			fi
+			./$script || (echo "WARNING: intercept script \"$script\" failed, falling back to running postinstalls at first boot" && continue)
+			#
+			# If we got here, than the intercept was successful. Next, we must
+			# mark the postinstalls as "installed". For rpm is a little bit
+			# different, we just have to delete the saved postinstalls from
+			# /etc/rpm-postinsts
+			#
+			pkgs="$(cat ./$script|grep "^##PKGS"|cut -d':' -f2)" || continue
+			case ${IMAGE_PKGTYPE} in
+				"rpm")
+					for pi in ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts/*; do
+						pkg_name="$(cat $pi|sed -n -e "s/^.*postinst_intercept $script \([^ ]*\).*/\1/p")"
+						if [ -n "$pkg_name" -a -n "$(echo "$pkgs"|grep " $pkg_name ")" ]; then
+							rm $pi
+						fi
+					done
+					# move to the next intercept script
+					continue
+					;;
+				"ipk")
+					status_file="${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/status"
+					;;
+				"deb")
+					status_file="${IMAGE_ROOTFS}/var/lib/dpkg/status"
+					;;
+			esac
+			# the next piece of code is run only for ipk/dpkg
+			sed_expr=""
+			for p in $pkgs; do
+				sed_expr="$sed_expr -e \"/^Package: ${p}$/,/^Status: install.* unpacked$/ {s/unpacked/installed/}\""
+			done
+			eval sed -i $sed_expr $status_file
 		done
 	fi
 }
@@ -222,6 +250,9 @@ fakeroot do_rootfs () {
 	mkdir -p ${DEPLOY_DIR_IMAGE}
 
 	cp ${COREBASE}/meta/files/deploydir_readme.txt ${DEPLOY_DIR_IMAGE}/README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt || true
+
+	# copy the intercept scripts
+	cp ${COREBASE}/scripts/postinst-intercepts/* ${WORKDIR}/intercept_scripts/
 
 	# If "${IMAGE_ROOTFS}/dev" exists, then the device had been made by
 	# the previous build
