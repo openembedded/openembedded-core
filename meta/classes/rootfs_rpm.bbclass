@@ -87,15 +87,6 @@ fakeroot rootfs_rpm_do_rootfs () {
 
 	${ROOTFS_POSTINSTALL_COMMAND}
 
-	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
-		if [ -d ${IMAGE_ROOTFS}/etc/rpm-postinsts ] ; then
-			if [ "`ls -A ${IMAGE_ROOTFS}/etc/rpm-postinsts`" != "" ] ; then
-				bberror "Some packages could not be configured offline and rootfs is read-only."
-				exit 1
-			fi
-		fi
-	fi
-
 	# Report delayed package scriptlets
 	for i in ${IMAGE_ROOTFS}/etc/rpm-postinsts/*; do
 		if [ -f $i ]; then
@@ -126,7 +117,16 @@ EOF
 
 	${RPM_POSTPROCESS_COMMANDS}
 	${ROOTFS_POSTPROCESS_COMMAND}
-	
+
+	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
+		if [ -d ${IMAGE_ROOTFS}/etc/rpm-postinsts ] ; then
+			if [ "`ls -A ${IMAGE_ROOTFS}/etc/rpm-postinsts`" != "" ] ; then
+				bberror "Some packages could not be configured offline and rootfs is read-only."
+				exit 1
+			fi
+		fi
+	fi
+
 	rm -rf ${IMAGE_ROOTFS}/var/cache2/
 	rm -rf ${IMAGE_ROOTFS}/var/run2/
 	rm -rf ${IMAGE_ROOTFS}/var/log2/

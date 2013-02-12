@@ -70,13 +70,6 @@ fakeroot rootfs_deb_do_rootfs () {
 
 	set -e
 
-	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
-		if grep Status:.install.ok.unpacked ${IMAGE_ROOTFS}/var/lib/dpkg/status; then
-			bberror "Some packages could not be configured offline and rootfs is read-only."
-			exit 1
-		fi
-	fi
-
 	install -d ${IMAGE_ROOTFS}/${sysconfdir}
 	echo ${BUILDNAME} > ${IMAGE_ROOTFS}/${sysconfdir}/version
 
@@ -90,6 +83,13 @@ fakeroot rootfs_deb_do_rootfs () {
 	ln -s /var/lib/dpkg/status ${IMAGE_ROOTFS}${opkglibdir}/status
 
 	${ROOTFS_POSTPROCESS_COMMAND}
+
+	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
+		if grep Status:.install.ok.unpacked ${IMAGE_ROOTFS}/var/lib/dpkg/status; then
+			bberror "Some packages could not be configured offline and rootfs is read-only."
+			exit 1
+		fi
+	fi
 
 	log_check rootfs
 }

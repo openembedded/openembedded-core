@@ -80,7 +80,12 @@ fakeroot rootfs_ipk_do_rootfs () {
 
 	${OPKG_POSTPROCESS_COMMANDS}
 	${ROOTFS_POSTINSTALL_COMMAND}
-	
+
+	install -d ${IMAGE_ROOTFS}/${sysconfdir}
+	echo ${BUILDNAME} > ${IMAGE_ROOTFS}/${sysconfdir}/version
+
+	${ROOTFS_POSTPROCESS_COMMAND}
+
 	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
 		if grep Status:.install.ok.unpacked ${STATUS}; then
 			bberror "Some packages could not be configured offline and rootfs is read-only."
@@ -88,11 +93,6 @@ fakeroot rootfs_ipk_do_rootfs () {
 		fi
 	fi
 
-	install -d ${IMAGE_ROOTFS}/${sysconfdir}
-	echo ${BUILDNAME} > ${IMAGE_ROOTFS}/${sysconfdir}/version
-
-	${ROOTFS_POSTPROCESS_COMMAND}
-	
 	rm -f ${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/lists/*
 	if ${@base_contains("IMAGE_FEATURES", "package-management", "false", "true", d)}; then
 		if ! grep Status:.install.ok.unpacked ${STATUS}; then
@@ -114,7 +114,6 @@ fakeroot rootfs_ipk_do_rootfs () {
 			remove_packaging_data_files
 		fi
 	fi
-	set +x
 	log_check rootfs
 }
 
