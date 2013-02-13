@@ -3,8 +3,8 @@ require xorg-driver-input.inc
 DESCRIPTION = "X.Org X server -- VMWare mouse input driver"
 PR = "${INC_PR}.0"
 
-SRC_URI[md5sum] = "2b3bfea9ba1f73d9d68bddd0d6b20112"
-SRC_URI[sha256sum] = "fbcf00f6bfee38bc65e0f0b812a4d076f7e203e81ed908e57de4026792b299bf"
+SRC_URI[md5sum] = "34f9f64ee6a1a51fc8266a9af24e1e07"
+SRC_URI[sha256sum] = "04cfb60366008d4db815c550d8fb8d0a4270c75fa7a20fa3bddc9ecbd355612c"
 
 RDEPENDS_${PN} += "xf86-input-mouse"
 
