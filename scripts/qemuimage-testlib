@@ -220,7 +220,7 @@ Test_Kill_Qemu()
 	declare local pid
 
 	# Check if $1 pid exists and is a qemu process
-	ps -fp $PID | grep -iq "qemu"
+	ps -wwfp $PID | grep -iq "qemu"
 
 	# Find all children pid of the pid $1
 	if [ $? -eq 0 ]; then
@@ -383,7 +383,7 @@ Test_Fetch_Target_IP()
 	declare local pid
 
 	# Check if $1 pid exists and contains ipaddr of target
-	ps -fp $opid | grep -oq "192\.168\.7\.[0-9]*::"
+	ps -wwfp $opid | grep -oq "192\.168\.7\.[0-9]*::"
 
 	# Find all children pid of the pid $1
 	# and check if they contain ipaddr of target
@@ -408,14 +408,14 @@ Test_Fetch_Target_IP()
 		while [ $i -ne 0 ]
 		do
 			i=$((i-1))
-			ps -fp ${pid[$i]} | grep -oq "192\.168\.7\.[0-9]*::"
+			ps -wwfp ${pid[$i]} | grep -oq "192\.168\.7\.[0-9]*::"
 			if [ $? -eq 0 ]; then
-				ip_addr=`ps -fp ${pid[$i]} | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" '{print $1}'`
+				ip_addr=`ps -wwfp ${pid[$i]} | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" '{print $1}'`
 			fi
 			sleep 1
 		done
 	else
-		ip_addr=`ps -fp $opid | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" '{print $1}'`
+		ip_addr=`ps -wwfp $opid | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" '{print $1}'`
 	fi
 
 	echo $ip_addr
