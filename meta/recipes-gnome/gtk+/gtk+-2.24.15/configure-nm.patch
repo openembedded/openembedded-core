@@ -3,8 +3,13 @@ https://bugzilla.gnome.org/show_bug.cgi?id=671515
 
 Signed-Off-By: Xiaofeng Yan <xiaofeng.yan@windriver.com>
 # Pick up ${NM} from the environment
---- a/configure.in
-+++ b/configure.in
+
+Updated to apply to gtk+-2.24.15
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd gtk+-2.24.15/configure.ac gtk+-2.24.15/configure.ac
+--- gtk+-2.24.15/configure.ac	2013-01-12 20:52:54.000000000 +0200
++++ gtk+-2.24.15/configure.ac	2013-02-12 21:25:06.073937041 +0200
 @@ -190,7 +190,7 @@
  AC_SYS_LARGEFILE
  
@@ -13,4 +18,4 @@ Signed-Off-By: Xiaofeng Yan <xiaofeng.yan@windriver.com>
 +AC_CHECK_TOOLS(NM, [$NM nm], nm)
  
  dnl Initialize maintainer mode
- AM_MAINTAINER_MODE
+ AM_MAINTAINER_MODE([enable])

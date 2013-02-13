@@ -14,7 +14,6 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.24/gtk+-${PV}.tar.xz \
            file://0001-bgo-584832-Duplicate-the-exec-string-returned-by-gtk.patch \
            file://doc-fixes.patch \
            file://0001-GtkButton-do-not-prelight-in-touchscreen-mode.patch \
-           file://obsolete_automake_macros.patch \
 	  "
 
 # TO MERGE
@@ -29,10 +28,10 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.24/gtk+-${PV}.tar.xz \
 #        file://combo-arrow-size.patch;striplevel=0
 #            file://configurefix.patch
 
-PR = "r1"
+PR = "r0"
 
-SRC_URI[md5sum] = "e2c16f119ed624893ecfc3775930ae4c"
-SRC_URI[sha256sum] = "8bd1b8b511a3004e8972badf467ce829e6855cdff15540b9344dc934c68008ac"
+SRC_URI[md5sum] = "68f034fb4f68086790d7488cf00e71c8"
+SRC_URI[sha256sum] = "d7e1c6d6ae6baa48c88441fe52b73b0fb6008763644867d59b049bafb0cf771b"
 
 EXTRA_OECONF = "--without-libtiff --without-libjasper --enable-xkb --disable-glibtest --disable-cups --disable-xinerama"
 
