@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://Source/WebCore/rendering/RenderApplet.h;endline=22;md
                     file://Source/WebKit/gtk/webkit/webkit.h;endline=21;md5=b4fbe9f4a944f1d071dba1d2c76b3351 \
                     file://Source/JavaScriptCore/parser/Parser.h;endline=23;md5=b57c8a2952a8d0e655988fa0ecb2bf7f"
 
-PR = "r3"
+PR = "r0"
 
 # Choice of language backends - icu has issues on Big Endian machines so use pango
 ICU_LIB = "icu"
@@ -25,8 +25,8 @@ SRC_URI = "\
   file://bison-2.6.patch \
  "
 
-SRC_URI[md5sum] = "f7bd0bd4f323039f15e19c82a9a8313c"
-SRC_URI[sha256sum] = "0cd69b7c4bf4af3442a5e6777a1487cabf14db15baeeed96d0865419f69b81e6"
+SRC_URI[md5sum] = "dcbf9d5e2e6391f857c29a57528b32a6"
+SRC_URI[sha256sum] = "ada02d636af61aed38f142d3cded662d141ce71264f624c4eb873621a74cc9e7"
 
 inherit autotools lib_package gtk-doc pkgconfig
 
