@@ -52,6 +52,11 @@ python multilib_virtclass_handler () {
     e.data.setVar("PN", variant + "-" + e.data.getVar("PN", False))
     e.data.setVar("SHLIBSDIR_virtclass-multilib-" + variant ,e.data.getVar("SHLIBSDIR", False) + "/" + variant)
     e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + override)
+
+    # DEFAULTTUNE can change TARGET_ARCH override so expand this now before update_data
+    newtune = e.data.getVar("DEFAULTTUNE_" + "virtclass-multilib-" + variant, False)
+    if newtune:
+        e.data.setVar("DEFAULTTUNE", newtune)
 }
 
 addhandler multilib_virtclass_handler
