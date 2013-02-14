@@ -49,6 +49,12 @@ python systemd_populate_packages() {
             val = (d.getVar(var, True) or "").strip()
         return val
 
+    # Check if systemd-packages already included in PACKAGES
+    def systemd_check_package(pkg_systemd):
+        packages = d.getVar('PACKAGES', True)
+        if not pkg_systemd in packages.split():
+            bb.error('%s does not appear in package list, please add it', " " + pkg_systemd)
+
 
     # Add a runtime dependency on systemd to pkg
     def systemd_add_rdepends(pkg):
@@ -118,11 +124,9 @@ python systemd_populate_packages() {
 
     # Check service-files and call systemd_add_files_and_parse for each entry
     def systemd_check_services():
-        base_libdir = d.getVar('base_libdir', True)
         searchpaths = [oe.path.join(d.getVar("sysconfdir", True), "systemd", "system"),]
-        searchpaths.append(oe.path.join(d.getVar("base_libdir", True), "systemd", "system"))
-        searchpaths.append(oe.path.join(d.getVar("libdir", True), "systemd", "system"))
-        searchpaths.append(oe.path.join(d.getVar("libdir", True), "systemd", "user"))
+        searchpaths.append(oe.path.join(d.getVar("nonarch_base_libdir", True), "systemd", "system"))
+        searchpaths.append(oe.path.join(d.getVar("exec_prefix", True), d.getVar("nonarch_base_libdir", True), "systemd", "system"))
         systemd_packages = d.getVar('SYSTEMD_PACKAGES', True)
         has_exactly_one_service = len(systemd_packages.split()) == 1
         if has_exactly_one_service:
@@ -149,6 +153,7 @@ python systemd_populate_packages() {
     # Run all modifications once when creating package
     if os.path.exists(d.getVar("D", True)):
         for pkg in d.getVar('SYSTEMD_PACKAGES', True).split():
+            systemd_check_package(pkg)
             if d.getVar('SYSTEMD_SERVICE_' + pkg, True):
                 systemd_generate_package_scripts(pkg)
                 systemd_add_rdepends(pkg)
