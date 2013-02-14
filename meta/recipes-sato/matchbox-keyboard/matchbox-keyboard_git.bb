@@ -52,3 +52,4 @@ do_install_append () {
 GTKIMMODULES_PACKAGES = "${PN}-im"
 
 RDEPENDS_${PN} = "formfactor dbus-wait"
+RRECOMMENDS_${PN} = "${PN}-applet"
