@@ -13,13 +13,11 @@ DEPENDS += "readline"
 PROVIDES += "make"
 
 do_configure_prepend() {
+    # remove the default LINGUAS since we are not going to generate languages
+    rm po/LINGUAS
+    touch po/LINGUAS
     # create config.rpath which required by configure.ac
     autopoint || touch config.rpath
-}
-
-do_compile_prepend() {
-    # updating .po and other gnu build files
-    make update
 }
 
 BBCLASSEXTEND = "native"
