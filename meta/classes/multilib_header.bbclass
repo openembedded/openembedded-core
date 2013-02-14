@@ -39,3 +39,9 @@ oe_multilib_header() {
 	   sed -e "s#ENTER_HEADER_FILENAME_HERE#${stem}#g" ${COREBASE}/scripts/multilib_header_wrapper.h > ${D}/${includedir}/$each_header
 	done
 }
+
+# Dependencies on arch variables like MIPSPKGSFX_ABI can be problematic.
+# We don't need multilib headers for native builds so brute force things.
+oe_multilib_header_class-native () {
+	return
+}
