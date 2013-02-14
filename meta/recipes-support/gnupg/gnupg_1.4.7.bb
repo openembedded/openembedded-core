@@ -7,12 +7,13 @@ LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
-PR = "r6"
+PR = "r8"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-${PV}.tar.bz2 \
            file://long-long-thumb.patch \
            file://configure.patch \
            file://mips_gcc4.4.patch \
+           file://GnuPG1-CVE-2012-6085.patch \
            file://curl_typeof_fix_backport.patch"
 
 SRC_URI[md5sum] = "b06a141cca5cd1a55bbdd25ab833303c"
