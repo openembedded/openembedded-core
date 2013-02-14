@@ -272,7 +272,7 @@ if __name__ == "__main__":
     m.addPackage( "${PN}-image", "Python Graphical Image Handling", "${PN}-core",
     "colorsys.* imghdr.* lib-dynload/imageop.so lib-dynload/rgbimg.so" )
 
-    m.addPackage( "${PN}-io", "Python Low-Level I/O", "${PN}-core ${PN}-math",
+    m.addPackage( "${PN}-io", "Python Low-Level I/O", "${PN}-core ${PN}-math ${PN}-textutils",
     "lib-dynload/_socket.so lib-dynload/_io.so lib-dynload/_ssl.so lib-dynload/select.so lib-dynload/termios.so lib-dynload/cStringIO.so " +
     "pipes.* socket.* ssl.* tempfile.* StringIO.* io.* _pyio.*" )
 
