@@ -28,7 +28,7 @@ S = "${WORKDIR}/glib-${PV}"
 CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap"
 
 EXTRA_OECONF = "--enable-included-printf=no ${CORECONF}"
-EXTRA_OECONF_virtclass-native = "${CORECONF}"
+EXTRA_OECONF_virtclass-native = "${CORECONF} --disable-selinux"
 EXTRA_OECONF_linuxstdbase = "--enable-included-printf=no ${CORECONF}"
 
 FILES_${PN} = "${libdir}/lib*${SOLIBS} ${datadir}/glib-2.0/schemas \
