@@ -165,7 +165,6 @@ def package_qa_check_rpath(file,name, d, elf, messages):
         return
 
     bad_dirs = [d.getVar('TMPDIR', True) + "/work", d.getVar('STAGING_DIR_TARGET', True)]
-    bad_dir_test = d.getVar('TMPDIR', True)
 
     if not bad_dirs[0] in d.getVar('WORKDIR', True):
         bb.fatal("This class assumed that WORKDIR is ${TMPDIR}/work... Not doing any check")
