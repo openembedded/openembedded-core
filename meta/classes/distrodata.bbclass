@@ -291,8 +291,8 @@ python do_checkpkg() {
         suffix = "(tar\.gz|tgz|tar\.bz2|zip|xz|rpm|bz2|orig\.tar\.gz|tar\.xz|src\.tar\.gz|src\.tgz|svnr\d+\.tar\.bz2|stable\.tar\.gz|src\.rpm)"
 
         suffixtuple = ("tar.gz", "tgz", "zip", "tar.bz2", "tar.xz", "bz2", "orig.tar.gz", "src.tar.gz", "src.rpm", "src.tgz", "svnr\d+.tar.bz2", "stable.tar.gz", "src.rpm")
-        sinterstr = "(?P<name>%s?)v?(?P<ver>%s)(source)?" % (prefix, ver_regex)
-        sdirstr = "(?P<name>%s)\.?v?(?P<ver>%s)(source)?[\.\-](?P<type>%s$)" % (prefix, ver_regex, suffix)
+        sinterstr = "(?P<name>%s?)v?(?P<ver>%s)(\-source)?" % (prefix, ver_regex)
+        sdirstr = "(?P<name>%s)\.?v?(?P<ver>%s)(\-source)?[\.\-](?P<type>%s$)" % (prefix, ver_regex, suffix)
 
         def parse_inter(s):
                 m = re.search(sinterstr, s)
@@ -504,7 +504,7 @@ python do_checkpkg() {
                                 status = "ErrParseDir"
                         else:
                                 """newver still contains a full package name string"""
-                                status = newver[1]
+                                status = re.sub('_', '.', newver[1])
                 elif not len(fhtml):
                         status = "ErrHostNoDir"
 
