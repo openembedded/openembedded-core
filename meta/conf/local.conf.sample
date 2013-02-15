@@ -214,7 +214,7 @@ BB_DISKMON_DIRS = "\
 # at the end as shown in the examples below. This will be substituted with the
 # correct path within the directory structure.
 #SSTATE_MIRRORS ?= "\
-#file://.* http://someserver.tld/share/sstate/PATH \n \
+#file://.* http://someserver.tld/share/sstate/PATH;downloadfilename=PATH \n \
 #file://.* file:///some/local/dir/sstate/PATH"
 
 # CONF_VERSION is increased each time build/conf/ changes incompatibly and is used to
