@@ -269,6 +269,7 @@ FILES_${PN}-dbg += "${libdir}/perl/${PV}/auto/*/.debug \
                     ${libdir}/perl/${PV}/*/*/*/.debug "
 FILES_${PN}-doc = "${libdir}/perl/${PV}/*/*.txt \
                    ${libdir}/perl/${PV}/*/*/*.txt \
+                   ${libdir}/perl/${PV}/auto/XS/Typemap \
                    ${libdir}/perl/${PV}/B/assemble \
                    ${libdir}/perl/${PV}/B/cc_harness \
                    ${libdir}/perl/${PV}/B/disassemble \
