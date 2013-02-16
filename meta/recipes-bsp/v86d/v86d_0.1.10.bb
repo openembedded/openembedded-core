@@ -27,7 +27,7 @@ do_configure () {
 }
 
 do_compile () {
-	KDIR="${STAGING_KERNEL_DIR}" make
+	KDIR="${STAGING_DIR_HOST}/usr" make
 }
 
 do_install () {
