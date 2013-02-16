@@ -16,8 +16,6 @@ MACHINEOVERRIDES .= ":qemuall"
 
 IMAGE_FSTYPES += "tar.bz2 ext3"
 
-ROOT_FLASH_SIZE = "280"
-
 # Don't include kernels in standard images
 RDEPENDS_kernel-base = ""
 
