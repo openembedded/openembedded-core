@@ -8,11 +8,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=10dded3b58148f3f1fd804b26354af3e \
 X11DEPENDS = "virtual/libx11 libsm"
 DEPENDS = "expat virtual/libintl ${@base_contains('DISTRO_FEATURES', 'x11', '${X11DEPENDS}', '', d)}"
 DEPENDS_class-native = "expat-native virtual/libintl-native"
-DEPENDS_class-nativesdk = "nativesdk-expat virtual/nativesdk-libintl virtual/libx11"
+DEPENDS_class-nativesdk = "nativesdk-expat virtual/nativesdk-libintl"
 RDEPENDS_dbus = "${@base_contains('DISTRO_FEATURES', 'ptest', 'dbus-ptest', '', d)}"
 RDEPENDS_class-native = ""
 
-INC_PR = "r5"
+INC_PR = "r6"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch; \
@@ -126,5 +126,9 @@ do_install_class-native() {
 
 do_install_class-nativesdk() {
 	autotools_do_install
+
+	# dbus-launch has no X support so lets not install it in case the host
+	# has a more featured and useful version
+	rm -f ${D}${bindir}/dbus-launch
 }
 BBCLASSEXTEND = "native nativesdk"
