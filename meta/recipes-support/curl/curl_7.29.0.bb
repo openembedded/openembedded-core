@@ -8,12 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e66
 DEPENDS = "zlib gnutls"
 DEPENDS_class-native = "zlib-native openssl-native"
 DEPENDS_class-nativesdk = "nativesdk-zlib"
-PR = "r3"
+PR = "r0"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://pkgconfig_fix.patch \
-           file://obsolete_automake_macros.patch \
-           file://dont_override_ac_config_macro_dir.patch \
 "
 
 # curl likes to set -g0 in CFLAGS, so we stop it
@@ -21,8 +19,8 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
 #
 SRC_URI += " file://configure_ac.patch"
 
-SRC_URI[md5sum] = "26eb081c999b0e203770869427e9a93d"
-SRC_URI[sha256sum] = "e569d6deb58a516e6858cd4c348949e0397433e1354666bafde1a52d1ea77367"
+SRC_URI[md5sum] = "fa5f37f38a8042020e292ce7ec5341ce"
+SRC_URI[sha256sum] = "9d78e8bac6fa101679ca82e72a24e55918c5d495d29acb1eff62610929d3832f"
 
 inherit autotools pkgconfig binconfig
 

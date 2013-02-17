@@ -1,9 +1,9 @@
 Upstream-Status: Inappropriate [packaging]
 
-diff -Nurd curl-7.28.1/configure.ac curl-7.28.1/configure.ac
---- curl-7.28.1/configure.ac	2012-09-08 23:39:18.000000000 +0300
-+++ curl-7.28.1/configure.ac	2012-12-25 03:41:29.948026351 +0200
-@@ -1863,6 +1863,7 @@
+diff -Nurd curl-7.29.0/configure.ac curl-7.29.0/configure.ac
+--- curl-7.29.0/configure.ac	2013-02-06 11:47:19.000000000 +0200
++++ curl-7.29.0/configure.ac	2013-02-16 12:32:22.132327764 +0200
+@@ -1883,6 +1883,7 @@
         AC_SUBST(USE_GNUTLS, [1])
         GNUTLS_ENABLED=1
         USE_GNUTLS="yes"
@@ -11,7 +11,7 @@ diff -Nurd curl-7.28.1/configure.ac curl-7.28.1/configure.ac
         curl_ssl_msg="enabled (GnuTLS)"
         ],
         [
-@@ -1933,6 +1934,8 @@
+@@ -1953,6 +1954,8 @@
     ])
  fi
  
@@ -20,16 +20,13 @@ diff -Nurd curl-7.28.1/configure.ac curl-7.28.1/configure.ac
  dnl ----------------------------------------------------
  dnl check for PolarSSL
  dnl ----------------------------------------------------
-diff -Nurd curl-7.28.1/libcurl.pc.in curl-7.28.1/libcurl.pc.in
---- curl-7.28.1/libcurl.pc.in	2012-08-08 23:45:18.000000000 +0300
-+++ curl-7.28.1/libcurl.pc.in	2012-12-25 03:43:23.564023858 +0200
-@@ -34,6 +34,7 @@
- URL: http://curl.haxx.se/
+diff -Nurd curl-7.29.0/libcurl.pc.in curl-7.29.0/libcurl.pc.in
+--- curl-7.29.0/libcurl.pc.in	2012-12-12 00:32:22.000000000 +0200
++++ curl-7.29.0/libcurl.pc.in	2013-02-16 12:33:27.063844337 +0200
+@@ -35,5 +35,5 @@
  Description: Library to transfer files with ftp, http, etc.
  Version: @CURLVERSION@
--Libs: -L${libdir} -lcurl @LIBS@
--Libs.private: @LIBCURL_LIBS@ @LIBS@
-+Requires.private: @GNUTLS_REQUIRED@
-+Libs: -L${libdir} -lcurl
+ Libs: -L${libdir} -lcurl
+-Libs.private: @LIBCURL_LIBS@
 +Libs.private: -ldl -lz
  Cflags: -I${includedir} @CPPFLAG_CURL_STATICLIB@
