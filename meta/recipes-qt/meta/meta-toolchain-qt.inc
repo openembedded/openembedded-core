@@ -12,7 +12,7 @@ toolchain_create_sdk_env_script_append() {
     echo 'export OE_QMAKE_LDFLAGS="$LDFLAGS"' >> $script
     echo 'export OE_QMAKE_CC=$CC' >> $script
     echo 'export OE_QMAKE_CXX=$CXX' >> $script
-    echo 'export OE_QMAKE_LINK=$LD' >> $script
+    echo 'export OE_QMAKE_LINK=$CXX' >> $script
     echo 'export OE_QMAKE_AR=$AR' >> $script
     echo 'export OE_QMAKE_LIBDIR_QT=${SDKTARGETSYSROOT}/${libdir}' >> $script
     echo 'export OE_QMAKE_INCDIR_QT=${SDKTARGETSYSROOT}/${includedir}/${QT_DIR_NAME}' >> $script
