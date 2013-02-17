@@ -8,33 +8,6 @@ python package_tar_fn () {
 	d.setVar('PKGFN', fn)
 }
 
-python package_tar_install () {
-	import subprocess
-	pkg = d.getVar('PKG', True)
-	pkgfn = d.getVar('PKGFN', True)
-	rootfs = d.getVar('IMAGE_ROOTFS', True)
-
-	if None in (pkg,pkgfn,rootfs):
-		bb.error("missing variables (one or more of PKG, PKGFN, IMAGEROOTFS)")
-		raise bb.build.FuncFailed
-	try:
-		bb.mkdirhier(rootfs)
-		os.chdir(rootfs)
-	except OSError:
-		import sys
-		(type, value, traceback) = sys.exc_info()
-		print value
-		raise bb.build.FuncFailed
-
-	if not os.access(pkgfn, os.R_OK):
-		bb.debug(1, "%s does not exist, skipping" % pkgfn)
-		raise bb.build.FuncFailed
-
-	ret = subprocess.call('zcat %s | tar -xf -' % pkgfn, shell=True)
-	if ret != 0:
-		raise bb.build.FuncFailed
-}
-
 python do_package_tar () {
 	import subprocess
 	workdir = d.getVar('WORKDIR', True)

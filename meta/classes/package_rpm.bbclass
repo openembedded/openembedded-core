@@ -8,14 +8,6 @@ RPMBUILD="rpmbuild"
 PKGWRITEDIRRPM = "${WORKDIR}/deploy-rpms"
 PKGWRITEDIRSRPM = "${DEPLOY_DIR}/sources/deploy-srpm"
 
-python package_rpm_fn () {
-    d.setVar('PKGFN', d.getVar('PKG'))
-}
-
-python package_rpm_install () {
-    bb.fatal("package_rpm_install not implemented!")
-}
-
 #
 # Update the packages indexes ${DEPLOY_DIR_RPM}
 #

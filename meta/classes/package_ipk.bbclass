@@ -14,62 +14,6 @@ OPKG_ARGS = "-f $INSTALL_CONF_IPK -o $INSTALL_ROOTFS_IPK --force_postinstall --p
 
 OPKGLIBDIR = "${localstatedir}/lib"
 
-python package_ipk_fn () {
-    d.setVar('PKGFN', d.getVar('PKG'))
-}
-
-python package_ipk_install () {
-    import subprocess
-
-    pkg = d.getVar('PKG', True)
-    pkgfn = d.getVar('PKGFN', True)
-    rootfs = d.getVar('IMAGE_ROOTFS', True)
-    ipkdir = d.getVar('DEPLOY_DIR_IPK', True)
-    stagingdir = d.getVar('STAGING_DIR', True)
-    tmpdir = d.getVar('TMPDIR', True)
-
-    if None in (pkg,pkgfn,rootfs):
-        raise bb.build.FuncFailed("missing variables (one or more of PKG, PKGFN, IMAGEROOTFS)")
-    try:
-        bb.mkdirhier(rootfs)
-        os.chdir(rootfs)
-    except OSError:
-        import sys
-        (type, value, traceback) = sys.exc_info()
-        print value
-        raise bb.build.FuncFailed
-
-    # Generate ipk.conf if it or the stamp doesnt exist
-    conffile = os.path.join(stagingdir,"ipkg.conf")
-    if not os.access(conffile, os.R_OK):
-        ipkg_archs = d.getVar('PACKAGE_ARCHS')
-        if ipkg_archs is None:
-            bb.error("PACKAGE_ARCHS missing")
-            raise FuncFailed
-        ipkg_archs = ipkg_archs.split()
-        arch_priority = 1
-
-        f = open(conffile,"w")
-        for arch in ipkg_archs:
-            f.write("arch %s %s\n" % ( arch, arch_priority ))
-            arch_priority += 1
-        f.write("src local file:%s" % ipkdir)
-        f.close()
-
-
-    if not os.access(os.path.join(ipkdir,"Packages"), os.R_OK) or not os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"),os.R_OK):
-        ret = subprocess.call('opkg-make-index -p %s %s ' % (os.path.join(ipkdir, "Packages"), ipkdir), shell=True)
-        if (ret != 0 ):
-            raise bb.build.FuncFailed
-        f = open(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"),"w")
-        f.close()
-
-    ret = subprocess.call('opkg-cl  -o %s -f %s update' % (rootfs, conffile), shell=True)
-    ret = subprocess.call('opkg-cl  -o %s -f %s install %s' % (rootfs, conffile, pkgfn), shell=True)
-    if (ret != 0 ):
-        raise bb.build.FuncFailed
-}
-
 package_tryout_install_multilib_ipk() {
 	#try install multilib
 	multilib_tryout_dirs=""

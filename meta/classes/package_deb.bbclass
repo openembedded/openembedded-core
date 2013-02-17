@@ -10,57 +10,6 @@ DPKG_ARCH ?= "${TARGET_ARCH}"
 
 PKGWRITEDIRDEB = "${WORKDIR}/deploy-debs"
 
-python package_deb_fn () {
-    d.setVar('PKGFN', d.getVar('PKG'))
-}
-
-addtask package_deb_install
-python do_package_deb_install () {
-    pkg = d.getVar('PKG', True)
-    pkgfn = d.getVar('PKGFN', True)
-    rootfs = d.getVar('IMAGE_ROOTFS', True)
-    debdir = d.getVar('DEPLOY_DIR_DEB', True)
-    apt_config = d.expand('${STAGING_ETCDIR_NATIVE}/apt/apt.conf')
-    stagingbindir = d.getVar('STAGING_BINDIR_NATIVE', True)
-    tmpdir = d.getVar('TMPDIR', True)
-
-    if None in (pkg,pkgfn,rootfs):
-        raise bb.build.FuncFailed("missing variables (one or more of PKG, PKGFN, IMAGE_ROOTFS)")
-    try:
-        if not os.exists(rootfs):
-            os.makedirs(rootfs)
-        os.chdir(rootfs)
-    except OSError:
-        import sys
-        raise bb.build.FuncFailed(str(sys.exc_value))
-
-    # update packages file
-    (exitstatus, output) = commands.getstatusoutput('dpkg-scanpackages %s > %s/Packages' % (debdir, debdir))
-    if (exitstatus != 0 ):
-        raise bb.build.FuncFailed(output)
-
-    f = open(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"), "w")
-    f.close()
-
-    # NOTE: this env stuff is racy at best, we need something more capable
-    # than 'commands' for command execution, which includes manipulating the
-    # env of the fork+execve'd processs
-
-    # Set up environment
-    apt_config_backup = os.getenv('APT_CONFIG')
-    os.putenv('APT_CONFIG', apt_config)
-    path = os.getenv('PATH')
-    os.putenv('PATH', '%s:%s' % (stagingbindir, os.getenv('PATH')))
-
-    # install package
-    commands.getstatusoutput('apt-get update')
-    commands.getstatusoutput('apt-get install -y %s' % pkgfn)
-
-    # revert environment
-    os.putenv('APT_CONFIG', apt_config_backup)
-    os.putenv('PATH', path)
-}
-
 #
 # Update the Packages index files in ${DEPLOY_DIR_DEB}
 #
