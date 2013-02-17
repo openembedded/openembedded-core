@@ -24,12 +24,14 @@ python do_package_tar () {
         bb.debug(1, "PACKAGES not defined, nothing to package")
         return
 
+    pkgdest = d.getVar('PKGDEST', True)
+
     bb.utils.mkdirhier(outdir)
     bb.utils.mkdirhier(dvar)
 
     for pkg in packages.split():
         localdata = bb.data.createCopy(d)
-        root = "%s/install/%s" % (workdir, pkg)
+        root = "%s/%s" % (pkgdest, pkg)
 
         overrides = localdata.getVar('OVERRIDES')
         localdata.setVar('OVERRIDES', '%s:%s' % (overrides, pkg))
