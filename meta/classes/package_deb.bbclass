@@ -78,6 +78,7 @@ package_update_index_deb () {
 		fi
 	done
 
+	found=0
 	for arch in $debarchs; do
 		if [ ! -d ${DEPLOY_DIR_DEB}/$arch ]; then
 			continue;
@@ -85,7 +86,11 @@ package_update_index_deb () {
 		cd ${DEPLOY_DIR_DEB}/$arch
 		dpkg-scanpackages . | gzip > Packages.gz
 		echo "Label: $arch" > Release
+		found=1
 	done
+	if [ "$found" != "1" ]; then
+		bbfatal "There are no packages in ${DEPLOY_DIR_DEB}!"
+	fi
 }
 
 #
@@ -457,6 +462,6 @@ do_package_write_deb[umask] = "022"
 addtask package_write_deb before do_package_write after do_packagedata do_package
 
 
-PACKAGEINDEXES += "package_update_index_deb;"
+PACKAGEINDEXES += "[ ! -e ${DEPLOY_DIR_DEB} ] || package_update_index_deb;"
 PACKAGEINDEXDEPS += "dpkg-native:do_populate_sysroot"
 PACKAGEINDEXDEPS += "apt-native:do_populate_sysroot"
