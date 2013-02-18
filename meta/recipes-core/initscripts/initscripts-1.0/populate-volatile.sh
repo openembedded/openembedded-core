@@ -8,10 +8,18 @@
 # Short-Description:  Populate the volatile filesystem
 ### END INIT INFO
 
-. /etc/default/rcS
+# Get ROOT_DIR
+DIRNAME=`dirname $0`
+ROOT_DIR=`echo $DIRNAME | sed -ne 's:etc/.*::p'`
 
-CFGDIR="/etc/default/volatiles"
-TMPROOT="/var/tmp"
+[ -e ${ROOT_DIR}/etc/default/rcS ] && . ${ROOT_DIR}/etc/default/rcS
+# When running populate-volatile.sh at rootfs time, disable cache.
+[ "$ROOT_DIR" != "/" ] && VOLATILE_ENABLE_CACHE=no
+# If rootfs is read-only, disable cache.
+[ "$ROOTFS_READ_ONLY" = "yes" ] && VOLATILE_ENABLE_CACHE=no
+
+CFGDIR="${ROOT_DIR}/etc/default/volatiles"
+TMPROOT="${ROOT_DIR}/var/tmp"
 COREDEF="00_core"
 
 [ "${VERBOSE}" != "no" ] && echo "Populating volatile Filesystems."
@@ -27,7 +35,15 @@ create_file() {
 	[ -e "$1" ] && {
 		[ "${VERBOSE}" != "no" ] && echo "Target already exists. Skipping."
 	} || {
-		eval $EXEC &
+		if [ "$ROOT_DIR" = "/" ]; then
+			eval $EXEC &
+		else
+			# Creating some files at rootfs time may fail and should fail,
+			# but these failures should not be logged to make sure the do_rootfs
+			# process doesn't fail. This does no harm, as this script will
+			# run on target to set up the correct files and directories.
+			eval $EXEC > /dev/null 2>&1 &
+		fi
 	}
 }
 
@@ -41,7 +57,13 @@ mk_dir() {
 	[ -e "$1" ] && {
 		[ "${VERBOSE}" != "no" ] && echo "Target already exists. Skipping."
 	} || {
-		eval $EXEC
+		if [ "$ROOT_DIR" = "/" ]; then
+			eval $EXEC
+		else
+			# For the same reason with create_file(), failures should
+			# not be logged.
+			eval $EXEC > /dev/null 2>&1
+		fi
 	}
 }
 
@@ -49,11 +71,16 @@ link_file() {
 	EXEC="test -e \"$2\" -o -L $2 || ln -s \"$1\" \"$2\" >/dev/tty0 2>&1" 
 
 	test "$VOLATILE_ENABLE_CACHE" = yes && echo "	$EXEC" >> /etc/volatile.cache.build
-	
 	[ -e "$2" ] && {
 		echo "Cannot create link over existing -${TNAME}-." >&2
 	} || {
-		eval $EXEC &
+		if [ "$ROOT_DIR" = "/" ]; then
+			eval $EXEC &
+		else
+			# For the same reason with create_file(), failures should
+			# not be logged.
+			eval $EXEC > /dev/null 2>&1 &
+		fi
 	}
 }
 
@@ -63,7 +90,7 @@ check_requirements() {
 		rm "${TMP_DEFINED}"
 		rm "${TMP_COMBINED}"
 	}
-	
+
 	CFGFILE="$1"
 	[ `basename "${CFGFILE}"` = "${COREDEF}" ] && return 0
 
@@ -71,7 +98,7 @@ check_requirements() {
 	TMP_DEFINED="${TMPROOT}/tmpdefined.$$"
 	TMP_COMBINED="${TMPROOT}/tmpcombined.$$"
 
-	cat /etc/passwd | sed 's@\(^:\)*:.*@\1@' | sort | uniq > "${TMP_DEFINED}"
+	cat ${ROOT_DIR}/etc/passwd | sed 's@\(^:\)*:.*@\1@' | sort | uniq > "${TMP_DEFINED}"
 	cat ${CFGFILE} | grep -v "^#" | cut -d " " -f 2 > "${TMP_INTERMED}"
 	cat "${TMP_DEFINED}" "${TMP_INTERMED}" | sort | uniq > "${TMP_COMBINED}"
 	NR_DEFINED_USERS="`cat "${TMP_DEFINED}" | wc -l`"
@@ -85,7 +112,7 @@ check_requirements() {
 	}
 
 
-	cat /etc/group | sed 's@\(^:\)*:.*@\1@' | sort | uniq > "${TMP_DEFINED}"
+	cat ${ROOT_DIR}/etc/group | sed 's@\(^:\)*:.*@\1@' | sort | uniq > "${TMP_DEFINED}"
 	cat ${CFGFILE} | grep -v "^#" | cut -d " " -f 3 > "${TMP_INTERMED}"
 	cat "${TMP_DEFINED}" "${TMP_INTERMED}" | sort | uniq > "${TMP_COMBINED}"
 
@@ -116,6 +143,7 @@ apply_cfgfile() {
 	cat ${CFGFILE} | grep -v "^#" | \
 		while read LINE; do
 		eval `echo "$LINE" | sed -n "s/\(.*\)\ \(.*\) \(.*\)\ \(.*\)\ \(.*\)\ \(.*\)/TTYPE=\1 ; TUSER=\2; TGROUP=\3; TMODE=\4; TNAME=\5 TLTARGET=\6/p"`
+		TNAME=${ROOT_DIR}/${TNAME}
 		[ "${VERBOSE}" != "no" ] && echo "Checking for -${TNAME}-."
 
 		[ "${TTYPE}" = "l" ] && {
@@ -168,19 +196,19 @@ do
 done
 exec 9>&-
 
-if test -e /etc/volatile.cache -a "$VOLATILE_ENABLE_CACHE" = "yes" -a "x$1" != "xupdate" -a "x$clearcache" = "x0"
+if test -e ${ROOT_DIR}/etc/volatile.cache -a "$VOLATILE_ENABLE_CACHE" = "yes" -a "x$1" != "xupdate" -a "x$clearcache" = "x0"
 then
-	sh /etc/volatile.cache
-else	
-	rm -f /etc/volatile.cache /etc/volatile.cache.build
+	sh ${ROOT_DIR}/etc/volatile.cache
+else
+	rm -f ${ROOT_DIR}/etc/volatile.cache ${ROOT_DIR}/etc/volatile.cache.build
 	for file in `ls -1 "${CFGDIR}" | sort`; do
 		apply_cfgfile "${CFGDIR}/${file}"
 	done
 
-	[ -e /etc/volatile.cache.build ] && sync && mv /etc/volatile.cache.build /etc/volatile.cache
+	[ -e ${ROOT_DIR}/etc/volatile.cache.build ] && sync && mv ${ROOT_DIR}/etc/volatile.cache.build ${ROOT_DIR}/etc/volatile.cache
 fi
 
-if test -f /etc/ld.so.cache -a ! -f /var/run/ld.so.cache
+if [ "${ROOT_DIR}" = "/" ] && [ -f /etc/ld.so.cache ] && [ ! -f /var/run/ld.so.cache ]
 then
 	ln -s /etc/ld.so.cache /var/run/ld.so.cache
 fi
