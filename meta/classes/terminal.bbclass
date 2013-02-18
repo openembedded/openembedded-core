@@ -25,6 +25,11 @@ def oe_terminal(command, title, d):
         if value is not None:
             os.environ[export] = str(value)
             env[export] = str(value)
+        if export == "PSEUDO_DISABLED":
+            if "PSEUDO_UNLOAD" in os.environ:
+                del os.environ["PSEUDO_UNLOAD"]
+            if "PSEUDO_UNLOAD" in env:
+                del env["PSEUDO_UNLOAD"]
 
     # Add in all variables from the user's original environment which
     # haven't subsequntly been set/changed
