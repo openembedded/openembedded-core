@@ -11,7 +11,7 @@ DEPENDS = "libatomics-ops liboil avahi libsamplerate0 libsndfile1 libtool \
            ${@base_contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 libxtst libice libsm libxcb gtk+', '', d)}"
 # optional
 DEPENDS += "udev alsa-lib glib-2.0 dbus gconf \
-           ${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluez4', '', d)}"
+           ${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluez4 sbc', '', d)}"
 
 SRC_URI = "http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-${PV}.tar.gz \
            file://gcc4-compile-fix.patch \
@@ -42,6 +42,8 @@ EXTRA_OECONF = "\
 		--with-database=simple \
 		--without-fftw \
 "
+
+EXTRA_OECONF_append_arm += "${@bb.utils.contains("TUNE_FEATURES", "neon", "", "--enable-neon-opt=no", d)}"
 
 PARALLEL_MAKE = ""
 
