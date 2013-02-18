@@ -280,11 +280,8 @@ def check_supported_distro(sanity_data):
             f.close()
     else:
         # Use LSB method
-        import subprocess as sub
         try:
-            p = sub.Popen(['lsb_release','-d','-s'],stdout=sub.PIPE,stderr=sub.PIPE)
-            out, err = p.communicate()
-            distro = out.rstrip()
+            distro = oe.lsb.distro_identifier()
         except Exception:
             distro = None
 
