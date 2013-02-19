@@ -20,7 +20,7 @@
 
 [ ! -x /sbin/hwclock ] && exit 0
 
-. /etc/default/rcS
+[ -f /etc/default/rcS ] && . /etc/default/rcS
 
 [ "$UTC" = "yes" ] && tz="--utc" || tz="--localtime"
 case "$1" in
