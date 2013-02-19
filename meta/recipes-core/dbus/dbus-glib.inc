@@ -36,9 +36,9 @@ FILES_${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-glib-tool"
 FILES_${PN}-dev += "${bindir}/dbus-binding-tool"
 
 RDEPENDS_${PN}-tests += "dbus-x11"
-FILES_${PN}-tests = "${datadir}/${PN}/tests"
-FILES_${PN}-tests-dbg = "${datadir}/${PN}/tests/.debug/* \
-                         ${datadir}/${PN}/tests/core/.debug/* \
-                         ${datadir}/${PN}/tests/interfaces/.debug/*"
+FILES_${PN}-tests = "${datadir}/${BPN}/tests"
+FILES_${PN}-tests-dbg = "${datadir}/${BPN}/tests/.debug/* \
+                         ${datadir}/${BPN}/tests/core/.debug/* \
+                         ${datadir}/${BPN}/tests/interfaces/.debug/*"
 
 BBCLASSEXTEND = "native"
