@@ -4,14 +4,14 @@ formatting commands and produces formatted output."
 SECTION = "base"
 HOMEPAGE = "ftp://ftp.gnu.org/gnu/groff/"
 LICENSE = "GPLv2"
-PR = "r2"
+PR = "r0"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "${GNU_MIRROR}/groff/groff-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "48fa768dd6fdeb7968041dd5ae8e2b02"
-SRC_URI[sha256sum] = "b645878135cb620c6c417c5601bfe96172245af12045540d7344938b4c2cd805"
+SRC_URI[md5sum] = "9f4cd592a5efc7e36481d8d8d8af6d16"
+SRC_URI[sha256sum] = "380864dac4772e0c0d7b1282d25d0c5fd7f63baf45c87c4657afed22a13d2076"
 
 DEPENDS = "groff-native"
 DEPENDS_class-native = ""
@@ -34,10 +34,18 @@ do_configure_prepend() {
 	fi
 }
 
+do_configure_append() {
+    # generate gnulib configure script
+    olddir=`pwd`
+    cd ${S}/src/libs/gnulib/
+    ACLOCAL="$ACLOCAL" autoreconf -Wcross --verbose --install --force ${EXTRA_AUTORECONF} $acpaths || bbfatal "autoreconf execution failed."
+    cd ${olddir}
+}
+
 do_install_append() {
 	# Some distros have both /bin/perl and /usr/bin/perl, but we set perl location
 	# for target as /usr/bin/perl, so fix it to /usr/bin/perl.
-	for i in afmtodit mmroff; do
+	for i in afmtodit mmroff gropdf pdfmom; do
 		if [ -f ${D}${bindir}/$i ]; then
 			sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/$i
 		fi
