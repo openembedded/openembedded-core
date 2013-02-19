@@ -16,7 +16,8 @@ RDEPENDS_${PN}-ptest_virtclass-nativesdk = ""
 
 PACKAGES += "${@base_contains('DISTRO_FEATURES', 'ptest', '${PN}-ptest', '', d)}"
 
-FILES_${PN}-dbg += "${PTEST_PATH}/*/.debug \
+FILES_${PN}-dbg += "${PTEST_PATH}/.debug \
+                    ${PTEST_PATH}/*/.debug \
                     ${PTEST_PATH}/*/*/.debug \
                     ${PTEST_PATH}/*/*/*/.debug \
                     ${PTEST_PATH}/*/*/*/*/.debug \
