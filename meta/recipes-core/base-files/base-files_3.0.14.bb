@@ -129,7 +129,7 @@ do_install_basefilesissue () {
 			printf "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue
 			printf "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue.net
 		fi
-		echo "\n \l" >> ${D}${sysconfdir}/issue
+		printf "\\\n \\\l\n" >> ${D}${sysconfdir}/issue
 		echo >> ${D}${sysconfdir}/issue
 		echo "%h"    >> ${D}${sysconfdir}/issue.net
 		echo >> ${D}${sysconfdir}/issue.net
