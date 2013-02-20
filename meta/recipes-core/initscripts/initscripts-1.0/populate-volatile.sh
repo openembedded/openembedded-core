@@ -68,20 +68,27 @@ mk_dir() {
 }
 
 link_file() {
-	EXEC="test -e \"$2\" -o -L $2 || ln -s \"$1\" \"$2\" >/dev/tty0 2>&1" 
+	EXEC="
+	if [ -L \"$2\" ]; then
+		[ \"\$(readlink -f \"$2\")\" != \"\$(readlink -f \"$1\")\" ] && { rm -f \"$2\"; ln -sf \"$1\" \"$2\"; };
+	elif [ -d \"$2\" ]; then
+		for f in $2/* $2/.[^.]*; do [ -e \$f ] && cp -rf \$f $1; done;
+		rm -rf \"$2\";
+		ln -sf \"$1\" \"$2\";
+	else
+		ln -sf \"$1\" \"$2\";
+	fi
+        "
 
 	test "$VOLATILE_ENABLE_CACHE" = yes && echo "	$EXEC" >> /etc/volatile.cache.build
-	[ -e "$2" ] && {
-		echo "Cannot create link over existing -${TNAME}-." >&2
-	} || {
-		if [ "$ROOT_DIR" = "/" ]; then
-			eval $EXEC &
-		else
-			# For the same reason with create_file(), failures should
-			# not be logged.
-			eval $EXEC > /dev/null 2>&1 &
-		fi
-	}
+
+	if [ "$ROOT_DIR" = "/" ]; then
+		eval $EXEC &
+	else
+		# For the same reason with create_file(), failures should
+		# not be logged.
+		eval $EXEC > /dev/null 2>&1 &
+	fi
 }
 
 check_requirements() {
@@ -148,10 +155,8 @@ apply_cfgfile() {
 
 		[ "${TTYPE}" = "l" ] && {
 			TSOURCE="$TLTARGET"
-			[ -L "${TNAME}" ] || {
-				[ "${VERBOSE}" != "no" ] && echo "Creating link -${TNAME}- pointing to -${TSOURCE}-."
-				link_file "${TSOURCE}" "${TNAME}" &
-			}
+			[ "${VERBOSE}" != "no" ] && echo "Creating link -${TNAME}- pointing to -${TSOURCE}-."
+			link_file "${TSOURCE}" "${TNAME}" &
 			continue
 		}
 
