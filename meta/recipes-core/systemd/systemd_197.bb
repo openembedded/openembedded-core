@@ -173,11 +173,9 @@ RDEPENDS_${PN} += "dbus udev-systemd"
 
 # kbd -> loadkeys,setfont
 # And pull in the kernel modules mentioned in INSTALL
-# swapon -p is also not supported by busybox
 # busybox mount is broken
 RRECOMMENDS_${PN} += "systemd-serialgetty \
                       util-linux-agetty \
-                      util-linux-swaponoff \
                       util-linux-fsck e2fsprogs-e2fsck \
                       util-linux-mount util-linux-umount \
                       kernel-module-autofs4 kernel-module-unix kernel-module-ipv6 \
