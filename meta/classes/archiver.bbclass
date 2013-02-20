@@ -94,9 +94,11 @@ def get_bb_inc(d):
     work_dir = d.getVar('WORKDIR', True)
     bbfile = d.getVar('FILE', True)
     bbdir = os.path.dirname(bbfile)
-    script_logs = os.path.join(work_dir, 'script-logs')
+    target_sys = d.getVar('TARGET_SYS', True)
+    pf = d.getVar('PF', True)
+    licenses = get_licenses(d)
+    script_logs = os.path.join(work_dir, 'script-logs/'+ target_sys + '/' + licenses + '/' + pf + '/script-logs')
     bb_inc = os.path.join(script_logs, 'bb_inc')
-    bb.mkdirhier(script_logs)
     bb.mkdirhier(bb_inc)
 
     def find_file(dir, file):
@@ -123,6 +125,18 @@ def get_bb_inc(d):
     bbinc = list(set(bbinc))
     for bbincfile in bbinc:
         shutil.copy(bbincfile, bb_inc)
+
+    return script_logs
+
+def get_logs(d):
+    """
+    create a directory "script-logs" in ${WORKDIR}
+    """
+    work_dir = d.getVar('WORKDIR', True)
+    target_sys = d.getVar('TARGET_SYS', True)
+    pf = d.getVar('PF', True)
+    licenses = get_licenses(d)
+    script_logs = os.path.join(work_dir, 'script-logs/'+ target_sys + '/' + licenses + '/' + pf + '/script-logs')
 
     try:
         bb.mkdirhier(os.path.join(script_logs, 'temp'))
@@ -309,7 +323,8 @@ def archive_logs(d, logdir, bbinc=False):
     work_dir = d.getVar('WORKDIR', True)
     log_dir =  os.path.basename(logdir)
     tarname = pf + '-' + log_dir + ".tar.gz"
-    tarname = do_tarball(work_dir, log_dir, tarname)
+    archive_dir = os.path.join( logdir, '..' )
+    tarname = do_tarball(archive_dir, log_dir, tarname)
     if bbinc:
         shutil.rmtree(logdir, ignore_errors=True)
     return tarname
@@ -414,6 +429,7 @@ def archive_scripts_logs(d):
     archive scripts and logs. scripts include .bb and .inc files and
     logs include stuff in "temp".
     """
+    import shutil
 
     if tar_filter(d):
         return
@@ -421,18 +437,20 @@ def archive_scripts_logs(d):
     temp_dir = os.path.join(work_dir, 'temp')
     source_archive_log_with_scripts = d.getVar('SOURCE_ARCHIVE_LOG_WITH_SCRIPTS', True)
     if source_archive_log_with_scripts == 'logs_with_scripts':
+        logdir = get_logs(d)
         logdir = get_bb_inc(d)
-        tarlog = archive_logs(d, logdir, True)
     elif source_archive_log_with_scripts == 'logs':
-        if os.path.exists(temp_dir):
-            tarlog = archive_logs(d, temp_dir, False)
+        logdir = get_logs(d)
     else:
         return
 
-    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) != 'srpm':
-        move_tarball_deploy(d, [tarlog])
+    tarlog = archive_logs(d, logdir, True)
 
-    else:
+    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
+        if os.path.exists(work_dir+ '/' + tarlog):
+            os.remove(work_dir+ '/' + tarlog)
+        shutil.move(os.path.join(logdir, '..', tarlog), work_dir)
+        shutil.rmtree(os.path.join(work_dir,'script-logs'))
         store_package(d, tarlog)
 
 def dumpdata(d):
@@ -449,7 +467,7 @@ def dumpdata(d):
     pf = d.getVar('PF', True)
     target_sys = d.getVar('TARGET_SYS', True)
     licenses = get_licenses(d)
-    dumpdir = d.getVar('DEPLOY_DIR', True) + '/sources/' + target_sys + '/' + licenses + '/' + pf
+    dumpdir = os.path.join(workdir, 'diffgz-envdata/'+ target_sys + '/' + licenses + '/' + pf )
     if not os.path.exists(dumpdir):
         bb.mkdirhier(dumpdir)
 
@@ -480,7 +498,7 @@ def create_diff_gz(d):
     pf = d.getVar('PF', True)
     licenses = get_licenses(d)
     target_sys = d.getVar('TARGET_SYS', True)
-    diff_dir = d.getVar('DEPLOY_DIR', True) + '/sources/' + target_sys + '/' + licenses + '/' + pf
+    diff_dir = os.path.join(work_dir, 'diffgz-envdata/'+ target_sys + '/' + licenses + '/' + pf )
     diff_file = os.path.join(diff_dir, bb.data.expand("${P}-${PR}.diff.gz",d))
 
     f = open(os.path.join(work_dir,'temp/exclude-from-file'), 'a')
