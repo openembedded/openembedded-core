@@ -11,22 +11,26 @@ inherit archiver
 addtask do_archive_configured_sources after do_configure
 
 # Get archiving package with temp(logs) and scripts(.bb and inc files)
-addtask do_archive_scripts_logs after do_package_write_rpm
+addtask do_archive_scripts_logs
 
 # Get dump date and create diff file 
-addtask do_dumpdata_create_diff_gz after do_package_write_rpm before do_build
+addtask do_dumpdata_create_diff_gz before do_build
 
 python () {
+    pn = d.getVar('PN', True)
+    packaging = d.getVar('IMAGE_PKGTYPE', True)
+    d.appendVarFlag('do_dumpdata_create_diff_gz', 'depends', ' %s:do_package_write_' %pn + packaging)
+
     if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) != 'srpm':
         """
         If package type is not 'srpm' then add tasks to move archive packages of
         configured sources and scripts/logs in ${DEPLOY_DIR}/sources.
         """
-        pn = d.getVar('PN', True)
         d.appendVarFlag('do_compile', 'depends', ' %s:do_archive_configured_sources' %pn)
         build_deps = ' %s:do_archive_configured_sources' %pn
         build_deps += ' %s:do_archive_scripts_logs' %pn
         d.appendVarFlag('do_build', 'depends', build_deps)
+        d.appendVarFlag('do_archive_scripts_logs', 'depends', ' %s:do_package_write_' %pn + packaging)
 
     else:
         d.prependVarFlag('do_configure', 'postfuncs', "do_archive_configured_sources")
