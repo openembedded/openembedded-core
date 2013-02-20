@@ -52,6 +52,7 @@ status() {
     pid=`pidofproc $1`
     if [ -n "$pid" ]; then
         echo "$1 (pid $pid) is running..."
+        return 0
     else
         echo "$1 is stopped"
     fi
