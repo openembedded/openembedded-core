@@ -62,18 +62,27 @@ fakeroot rootfs_rpm_do_rootfs () {
 	mkdir -p ${INSTALL_ROOTFS_RPM}/etc/rpm/
 
 	# List must be prefered to least preferred order
+	default_extra_rpm=""
 	INSTALL_PLATFORM_EXTRA_RPM=""
 	for i in ${MULTILIB_PREFIX_LIST} ; do
 		old_IFS="$IFS"
 		IFS=":"
 		set $i
 		IFS="$old_IFS"
+		mlib=$1
 		shift #remove mlib
-		while [ -n "$1" ]; do  
-			INSTALL_PLATFORM_EXTRA_RPM="$INSTALL_PLATFORM_EXTRA_RPM $1"
+		while [ -n "$1" ]; do
+			if [ "$mlib" = "${BBEXTENDVARIANT}" ]; then
+				default_extra_rpm="$default_extra_rpm $1"
+			else
+				INSTALL_PLATFORM_EXTRA_RPM="$INSTALL_PLATFORM_EXTRA_RPM $1"
+			fi
 			shift
 		done
 	done
+	if [ -n "$default_extra_rpm" ]; then
+		INSTALL_PLATFORM_EXTRA_RPM="$default_extra_rpm $INSTALL_PLATFORM_EXTRA_RPM"
+	fi
 	export INSTALL_PLATFORM_EXTRA_RPM
 
 	package_install_internal_rpm
