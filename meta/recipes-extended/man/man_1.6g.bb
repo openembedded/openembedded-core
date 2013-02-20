@@ -5,36 +5,39 @@ HOMEPAGE = "http://primates.ximian.com/~flucifredi/man"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "groff less"
 
 SRC_URI = "http://primates.ximian.com/~flucifredi/${BPN}/${BPN}-${PV}.tar.gz \
            file://man-1.5k-confpath.patch;striplevel=0 \
-           file://man-1.5h1-make.patch; \
-           file://man-1.5k-nonascii.patch; \
-           file://man-1.6e-security.patch; \
-           file://man-1.6e-mandirs.patch; \
-           file://man-1.5m2-bug11621.patch; \
-           file://man-1.5k-sofix.patch; \
-           file://man-1.5m2-buildroot.patch; \
-           file://man-1.6e-ro_usr.patch; \
+           file://man-1.5h1-make.patch \
+           file://man-1.5k-nonascii.patch \
+           file://man-1.6e-security.patch \
+           file://man-1.6e-mandirs.patch \
+           file://man-1.5m2-bug11621.patch \
+           file://man-1.5k-sofix.patch \
+           file://man-1.5m2-buildroot.patch \
+           file://man-1.6e-ro_usr.patch \
            file://man-1.5i2-newline.patch;striplevel=0 \
-           file://man-1.5j-utf8.patch; \
-           file://man-1.5i2-overflow.patch; \
-           file://man-1.5j-nocache.patch; \
-           file://man-1.5i2-initial.patch; \
+           file://man-1.5j-utf8.patch \
+           file://man-1.5i2-overflow.patch \
+           file://man-1.5j-nocache.patch \
+           file://man-1.5i2-initial.patch \
            file://man-1.5h1-gencat.patch;striplevel=0 \
-           file://man-1.5g-nonrootbuild.patch; \
+           file://man-1.5g-nonrootbuild.patch \
            file://man-1.5m2-tv_fhs.patch;striplevel=0 \
-           file://man-1.5j-i18n.patch; \
-           file://man-1.6e-whatis2.patch; \
-           file://man-1.6e-use_i18n_vars_in_a_std_way.patch; \
-           file://man-1.5m2-no-color-for-printing.patch; \
-           file://man-1.5m2-sigpipe.patch; \
-           file://man-1.6e-i18n_whatis.patch; \
-           file://man-1.6e-new_sections.patch; \
-           file://man*"
+           file://man-1.5j-i18n.patch \
+           file://man-1.6e-whatis2.patch \
+           file://man-1.6e-use_i18n_vars_in_a_std_way.patch \
+           file://man-1.5m2-no-color-for-printing.patch \
+           file://man-1.5m2-sigpipe.patch \
+           file://man-1.6e-i18n_whatis.patch \
+           file://man-1.6e-new_sections.patch \
+           file://man.1.gz;unpack=false \
+           file://man.7.gz;unpack=false \
+           file://man.conf \
+           file://manpath.5.gz;unpack=false"
 
 SRC_URI[md5sum] = "ba154d5796928b841c9c69f0ae376660"
 SRC_URI[sha256sum] = "ccdcb8c3f4e0080923d7e818f0e4a202db26c46415eaef361387c20995b8959f"
