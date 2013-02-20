@@ -174,8 +174,6 @@ FILES_${PN}-dev += "${base_libdir}/security/*.la ${datadir}/dbus-1/interfaces/ $
 RDEPENDS_${PN} += "dbus udev-systemd"
 
 # kbd -> loadkeys,setfont
-# systemd calls 'modprobe -sab --', which busybox doesn't support due to lack
-# of blacklist support, so use proper modprobe from module-init-tools
 # And pull in the kernel modules mentioned in INSTALL
 # swapon -p is also not supported by busybox
 # busybox mount is broken
@@ -183,7 +181,6 @@ RRECOMMENDS_${PN} += "systemd-serialgetty \
                       util-linux-agetty \
                       util-linux-swaponoff \
                       util-linux-fsck e2fsprogs-e2fsck \
-                      module-init-tools \
                       util-linux-mount util-linux-umount \
                       kernel-module-autofs4 kernel-module-unix kernel-module-ipv6 \
 "
