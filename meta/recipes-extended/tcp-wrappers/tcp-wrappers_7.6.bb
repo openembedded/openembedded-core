@@ -36,6 +36,7 @@ SRC_URI = "ftp://ftp.porcupine.org/pub/security/tcp_wrappers_${PV}.tar.gz \
            file://safe_finger.patch \
            file://sig_fix.patch \
            file://siglongjmp.patch \
+           file://socklen_t.patch \
            file://tcpdchk_libwrapped.patch \
            file://ldflags.patch \
            \
