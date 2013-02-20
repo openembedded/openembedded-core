@@ -13,4 +13,4 @@ S = "${WORKDIR}/genext2fs-${PV}"
 
 inherit autotools
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
