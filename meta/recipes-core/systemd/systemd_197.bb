@@ -171,13 +171,9 @@ FILES_${PN}-dev += "${base_libdir}/security/*.la ${datadir}/dbus-1/interfaces/ $
 
 RDEPENDS_${PN} += "dbus udev-systemd"
 
-# kbd -> loadkeys,setfont
-# And pull in the kernel modules mentioned in INSTALL
-# busybox mount is broken
 RRECOMMENDS_${PN} += "systemd-serialgetty \
                       util-linux-agetty \
                       util-linux-fsck e2fsprogs-e2fsck \
-                      util-linux-mount util-linux-umount \
                       kernel-module-autofs4 kernel-module-unix kernel-module-ipv6 \
 "
 
