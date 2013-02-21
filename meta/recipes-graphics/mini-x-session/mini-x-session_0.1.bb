@@ -13,6 +13,8 @@ RCONFLICTS_${PN} = "matchbox-common"
 SRC_URI = "file://mini-x-session"
 S = "${WORKDIR}"
 
+RDEPENDS_${PN} = "sudo"
+
 inherit update-alternatives
 
 ALTERNATIVE_${PN} = "x-session-manager"
