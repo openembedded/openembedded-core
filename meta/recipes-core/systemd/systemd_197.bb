@@ -40,9 +40,6 @@ UCLIBCPATCHES_libc-uclibc = "file://systemd-pam-configure-check-uclibc.patch \
                             "
 LDFLAGS_libc-uclibc_append = " -lrt"
 
-# This will disappear with systemd 197
-SYSTEMDDISTRO ?= "debian"
-
 GTKDOC_DOCDIR = "${S}/docs/"
 
 PACKAGECONFIG ??= ""
@@ -50,8 +47,7 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG[gcrypt] = "--enable-gcrypt,--disable-gcrypt,libgcrypt"
 
 # The gtk+ tools should get built as a separate recipe e.g. systemd-tools
-EXTRA_OECONF = " --with-distro=${SYSTEMDDISTRO} \
-                 --with-rootprefix=${base_prefix} \
+EXTRA_OECONF = " --with-rootprefix=${base_prefix} \
                  --with-rootlibdir=${base_libdir} \
                  --sbindir=${base_sbindir} \
                  --libexecdir=${base_libdir} \
