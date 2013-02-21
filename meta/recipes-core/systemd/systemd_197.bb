@@ -180,13 +180,13 @@ RRECOMMENDS_${PN} += "systemd-serialgetty \
                       kernel-module-autofs4 kernel-module-unix kernel-module-ipv6 \
 "
 
-PACKAGES =+ "udev-dbg udev udev-consolekit udev-utils"
+PACKAGES =+ "udev-dbg udev udev-consolekit udev-utils udev-hwdb"
 
 FILES_udev-dbg += "/lib/udev/.debug"
 
 RDEPENDS_udev += "udev-utils"
 RPROVIDES_udev = "hotplug"
-RRECOMMENDS_udev += "udev-extraconf"
+RRECOMMENDS_udev += "udev-extraconf udev-hwdb"
 
 FILES_udev += "${base_sbindir}/udevd \
                ${base_libdir}/systemd/systemd-udevd \
@@ -209,7 +209,6 @@ FILES_udev += "${base_sbindir}/udevd \
                /lib/udev/rules.d/78*.rules \
                /lib/udev/rules.d/8*.rules \
                /lib/udev/rules.d/95*.rules \
-               ${base_libdir}/udev/hwdb.d \
                ${sysconfdir}/udev \
                ${systemd_unitdir}/system/*udev* \
                ${systemd_unitdir}/system/*.wants/*udev* \
@@ -219,6 +218,8 @@ FILES_udev-consolekit += "/lib/ConsoleKit"
 RDEPENDS_udev-consolekit += "${@base_contains('DISTRO_FEATURES', 'x11', 'consolekit', '', d)}"
 
 FILES_udev-utils = "${bindir}/udevadm"
+
+FILES_udev-hwdb = "${base_libdir}/udev/hwdb.d"
 
 # TODO:
 # u-a for runlevel and telinit
@@ -239,6 +240,21 @@ update-alternatives --remove shutdown ${base_bindir}/systemctl
 update-alternatives --remove poweroff ${base_bindir}/systemctl
 }
 
+pkg_postinst_udev-hwdb () {
+	if test -n "$D"; then
+		exit 1
+	fi
+
+	udevadm hwdb --update
+}
+
+pkg_prerm_udev-hwdb () {
+	if test -n "$D"; then
+		exit 1
+	fi
+
+	rm -f ${sysconfdir}/udev/hwdb.bin
+}
 
 # As this recipe builds udev, respect the systemd DISTRO_FEATURE so we don't try
 # building udev and systemd in world builds.
