@@ -43,10 +43,6 @@ LDFLAGS_libc-uclibc_append = " -lrt"
 # This will disappear with systemd 197
 SYSTEMDDISTRO ?= "debian"
 
-CACHED_CONFIGUREVARS = "ac_cv_file__usr_share_pci_ids=no \
-                        ac_cv_file__usr_share_hwdata_pci_ids=no \
-                        ac_cv_file__usr_share_misc_pci_ids=yes"
-
 GTKDOC_DOCDIR = "${S}/docs/"
 
 PACKAGECONFIG ??= ""
