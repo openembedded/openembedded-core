@@ -107,7 +107,7 @@ def package_qa_get_machine_dict():
                       },
             "linux-gnun32" :       {
                         "mips64":       ( 8,     0,    0,          False,         32),
-                        "mipsel64":     ( 8,     0,    0,          True,          32),
+                        "mips64el":     ( 8,     0,    0,          True,          32),
                       },
         }
 
