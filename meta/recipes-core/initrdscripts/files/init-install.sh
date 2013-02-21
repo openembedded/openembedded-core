@@ -151,14 +151,19 @@ if [ -d /ssd/etc/ ] ; then
     fi
 fi
 
-if [ -f /ssd/etc/grub.d/40_custom ] ; then
+if [ -f /etc/grub.d/40_custom ] ; then
     echo "Preparing custom grub2 menu..."
-    sed -i "s@__ROOTFS__@$rootfs $rootwait@g" /ssd/etc/grub.d/40_custom
-    sed -i "s/__VIDEO_MODE__/$3/g" /ssd/etc/grub.d/40_custom
-    sed -i "s/__VGA_MODE__/$4/g" /ssd/etc/grub.d/40_custom
-    sed -i "s/__CONSOLE__/$5/g" /ssd/etc/grub.d/40_custom
+    GRUBCFG="/bootmnt/boot/grub/grub.cfg"
     mount $bootfs /bootmnt
-    cp /ssd/etc/grub.d/40_custom /bootmnt/40_custom
+    mkdir -p $(dirname $GRUBCFG)
+    cp /etc/grub.d/40_custom $GRUBCFG
+    sed -i "s@__ROOTFS__@$rootfs $rootwait@g" $GRUBCFG
+    sed -i "s/__VIDEO_MODE__/$3/g" $GRUBCFG
+    sed -i "s/__VGA_MODE__/$4/g" $GRUBCFG
+    sed -i "s/__CONSOLE__/$5/g" $GRUBCFG
+    sed -i "/#/d" $GRUBCFG
+    sed -i "/exec tail/d" $GRUBCFG
+    chmod 0444 $GRUBCFG
     umount /bootmnt
 fi
 
@@ -171,12 +176,8 @@ grub-install --root-directory=/ssd /dev/${device}
 
 echo "(hd0) /dev/${device}" > /ssd/boot/grub/device.map
 
-if [ -f /ssd/40_custom ] ; then
-    mv /ssd/40_custom /ssd/boot/grub/grub.cfg
-    sed -i "/#/d" /ssd/boot/grub/grub.cfg
-    sed -i "/exec tail/d" /ssd/boot/grub/grub.cfg
-    chmod 0444 /ssd/boot/grub/grub.cfg
-else
+# If grub.cfg doesn't exist, assume GRUB 0.97 and create a menu.lst
+if [ ! -f /ssd/boot/grub/grub.cfg ] ; then
     echo "Preparing custom grub menu..."
     echo "default 0" > /ssd/boot/grub/menu.lst
     echo "timeout 30" >> /ssd/boot/grub/menu.lst
