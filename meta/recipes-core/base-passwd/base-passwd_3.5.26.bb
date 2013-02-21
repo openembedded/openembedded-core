@@ -1,7 +1,7 @@
 SUMMARY = "Base system master password/group files."
 DESCRIPTION = "The master copies of the user database files (/etc/passwd and /etc/group).  The update-passwd tool is also provided to keep the system databases synchronized with these master files."
 SECTION = "base"
-PR = "r0"
+PR = "r1"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
@@ -64,6 +64,7 @@ python populate_packages_prepend() {
     f.close()
 
     preinst = """#!/bin/sh
+mkdir -p $D${sysconfdir}
 if [ ! -e $D${sysconfdir}/passwd ]; then
 \tcat << EOF > $D${sysconfdir}/passwd
 """ + passwd + """EOF
