@@ -248,8 +248,6 @@ translate_oe_to_smart() {
 package_install_internal_rpm () {
 
 	local target_rootfs="$INSTALL_ROOTFS_RPM"
-	local platform="`echo $INSTALL_PLATFORM_RPM | sed 's#-#_#g'`"
-	local platform_extra="`echo $INSTALL_PLATFORM_EXTRA_RPM | sed 's#-#_#g'`"
 	local package_to_install="$INSTALL_PACKAGES_RPM"
 	local package_attemptonly="$INSTALL_PACKAGES_ATTEMPTONLY_RPM"
 	local package_linguas="$INSTALL_PACKAGES_LINGUAS_RPM"
@@ -273,29 +271,17 @@ package_install_internal_rpm () {
 		# Setup base system configuration
 		echo "Note: configuring RPM platform settings"
 		mkdir -p ${target_rootfs}/etc/rpm/
-		if [ -n "${sdk_mode}" ]; then
-			platform_vendor="${SDK_VENDOR}"
-			platform_os="${SDK_OS}"
-		else
-			platform_vendor="${TARGET_VENDOR}"
-			platform_os="${TARGET_OS}"
-		fi
+		echo "$INSTALL_PLATFORM_RPM" > ${target_rootfs}/etc/rpm/platform
 
-		echo "${platform}${platform_vendor}-${platform_os}" > ${target_rootfs}/etc/rpm/platform
-
-
-		if [ ! -z "$platform_extra" ]; then
-			for pt in $platform_extra ; do
+		if [ ! -z "$INSTALL_PLATFORM_EXTRA_RPM" ]; then
+			for pt in $INSTALL_PLATFORM_EXTRA_RPM ; do
 				channel_priority=$(expr $channel_priority + 5)
 				case $pt in
-					noarch | any | all)
-						os="`echo ${platform_os} | sed "s,-.*,,"`.*"
-						;;
-					*)
-						os="${platform_os}"
+					noarch-* | any-* | all-*)
+						pt=$(echo $pt | sed "s,-linux.*$,-linux\.*,")
 						;;
 				esac
-				echo "$pt-.*-$os" >> ${target_rootfs}/etc/rpm/platform
+				echo "$pt" >> ${target_rootfs}/etc/rpm/platform
 			done
 		fi
 
@@ -360,12 +346,13 @@ EOF
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._tmppath=/install/tmp
 		# Optional debugging
 		#smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-log-level=debug
+		#smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-log-file=/tmp/smart-debug-logfile
 
 		# Delay this until later...
 		#smart --data-dir=${target_rootfs}/var/lib/smart channel --add rpmsys type=rpm-sys -y
 
-		platform_extra_fixed=`echo "$platform_extra" | tr - _`
-		for arch in $platform_extra_fixed ; do
+		for canonical_arch in $INSTALL_PLATFORM_EXTRA_RPM; do
+			arch=$(echo $canonical_arch | sed "s,\([^-]*\)-.*,\1,")
 			if [ -d ${DEPLOY_DIR_RPM}/$arch -a ! -e ${target_rootfs}/install/channel.$arch.stamp ] ; then
 				echo "Note: adding Smart channel $arch ($channel_priority)"
 				smart --data-dir=${target_rootfs}/var/lib/smart channel --add $arch type=rpm-md type=rpm-md baseurl=${DEPLOY_DIR_RPM}/$arch -y

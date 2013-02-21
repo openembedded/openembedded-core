@@ -50,7 +50,7 @@ fakeroot rootfs_rpm_do_rootfs () {
 	# install packages
 	# This needs to work in the same way as populate_sdk_rpm.bbclass!
 	export INSTALL_ROOTFS_RPM="${IMAGE_ROOTFS}"
-	export INSTALL_PLATFORM_RPM="${TARGET_ARCH}"
+	export INSTALL_PLATFORM_RPM="$(echo ${TARGET_ARCH} | tr - _)${TARGET_VENDOR}-${TARGET_OS}"
 	export INSTALL_PACKAGES_RPM="${PACKAGE_INSTALL}"
 	export INSTALL_PACKAGES_ATTEMPTONLY_RPM="${PACKAGE_INSTALL_ATTEMPTONLY}"
 	export INSTALL_PACKAGES_LINGUAS_RPM="${LINGUAS_INSTALL}"
@@ -64,20 +64,31 @@ fakeroot rootfs_rpm_do_rootfs () {
 	# List must be prefered to least preferred order
 	default_extra_rpm=""
 	INSTALL_PLATFORM_EXTRA_RPM=""
-	for i in ${MULTILIB_PREFIX_LIST} ; do
+	for os in ${MULTILIB_OS_LIST} ; do
 		old_IFS="$IFS"
 		IFS=":"
-		set $i
+		set -- $os
 		IFS="$old_IFS"
 		mlib=$1
-		shift #remove mlib
-		while [ -n "$1" ]; do
-			if [ "$mlib" = "${BBEXTENDVARIANT}" ]; then
-				default_extra_rpm="$default_extra_rpm $1"
-			else
-				INSTALL_PLATFORM_EXTRA_RPM="$INSTALL_PLATFORM_EXTRA_RPM $1"
+		mlib_os=$2
+		for prefix in ${MULTILIB_PREFIX_LIST} ; do
+			old_IFS="$IFS"
+			IFS=":"
+			set -- $prefix
+			IFS="$old_IFS"
+			if [ "$mlib" != "$1" ]; then
+				continue
 			fi
-			shift
+			shift #remove mlib
+			while [ -n "$1" ]; do
+				platform="$(echo $1 | tr - _)-.*-$mlib_os"
+				if [ "$mlib" = "${BBEXTENDVARIANT}" ]; then
+					default_extra_rpm="$default_extra_rpm $platform"
+				else
+					INSTALL_PLATFORM_EXTRA_RPM="$INSTALL_PLATFORM_EXTRA_RPM $platform"
+				fi
+				shift
+			done
 		done
 	done
 	if [ -n "$default_extra_rpm" ]; then
@@ -210,7 +221,9 @@ python () {
     # package_arch order is reversed.  This ensures the -best- match is listed first!
     package_archs = d.getVar("PACKAGE_ARCHS", True) or ""
     package_archs = ":".join(package_archs.split()[::-1])
+    package_os = d.getVar("TARGET_OS", True) or ""
     ml_prefix_list = "%s:%s" % ('default', package_archs)
+    ml_os_list = "%s:%s" % ('default', package_os)
     multilibs = d.getVar('MULTILIBS', True) or ""
     for ext in multilibs.split():
         eext = ext.split(':')
@@ -219,8 +232,12 @@ python () {
             default_tune = localdata.getVar("DEFAULTTUNE_virtclass-multilib-" + eext[1], False)
             if default_tune:
                 localdata.setVar("DEFAULTTUNE", default_tune)
+                bb.data.update_data(localdata)
             package_archs = localdata.getVar("PACKAGE_ARCHS", True) or ""
             package_archs = ":".join([i in "all noarch any".split() and i or eext[1]+"_"+i for i in package_archs.split()][::-1])
+            package_os = localdata.getVar("TARGET_OS", True) or ""
             ml_prefix_list += " %s:%s" % (eext[1], package_archs)
+            ml_os_list += " %s:%s" % (eext[1], package_os)
     d.setVar('MULTILIB_PREFIX_LIST', ml_prefix_list)
+    d.setVar('MULTILIB_OS_LIST', ml_os_list)
 }
