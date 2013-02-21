@@ -10,7 +10,7 @@ PR = "r0"
 
 DEPENDS = "libsndfile1"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/${PN}-${PV}.tar.xz"
+SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/${BPN}-${PV}.tar.xz"
 
 SRC_URI[md5sum] = "aa2bc39c4a09aade064efea4bbbc4b2d"
 SRC_URI[sha256sum] = "bf970aa21226c594bb04ba3d949770c8fd91dc8f953556305f20c1016b16b882"
