@@ -61,7 +61,6 @@ EXTRA_OECONF = " --with-rootprefix=${base_prefix} \
                  --disable-manpages \
                  --disable-coredump \
                  --disable-introspection \
-                 --with-pci-ids-path=/usr/share/misc \
                  --disable-tcpwrap \
                  --enable-split-usr \
                  --disable-microhttpd \
@@ -187,7 +186,7 @@ FILES_udev-dbg += "/lib/udev/.debug"
 
 RDEPENDS_udev += "udev-utils"
 RPROVIDES_udev = "hotplug"
-RRECOMMENDS_udev += "udev-extraconf usbutils-ids pciutils-ids"
+RRECOMMENDS_udev += "udev-extraconf"
 
 FILES_udev += "${base_sbindir}/udevd \
                ${base_libdir}/systemd/systemd-udevd \
