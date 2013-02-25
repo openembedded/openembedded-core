@@ -223,6 +223,7 @@ FILES_${PN} =  "${bindir}/rpm \
 		${libdir}/rpm/bin/wget \
 		/var/lib/rpm \
 		/var/cache/rpm \
+		${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts \
 		"
 
 FILES_${PN}-dbg += "${libdir}/rpm/.debug \
@@ -374,6 +375,9 @@ do_configure() {
 #
 POSTINSTALL_INITPOSITION ?= "98"
 
+POSTLOG ?= "/var/log/postinstall.log"
+REDIRECT_CMD = "${@base_contains('IMAGE_FEATURES', 'debug-tweaks', '>>${POSTLOG} 2>&1', '', d)}"
+
 do_install_append() {
 	sed -i -e 's,%__check_files,#%%__check_files,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,%__scriptlet_requires,#%%__scriptlet_requires,' ${D}/${libdir}/rpm/macros
@@ -459,7 +463,7 @@ do_install_append() {
 for i in \`ls /etc/rpm-postinsts/\`; do
 	i=/etc/rpm-postinsts/$i
 	echo "Running postinst $i..."
-	if [ -f $i ] && $i; then
+	if [ -f $i ] && $i ${REDIRECT_CMD}; then
 		rm $i
 	else
 		echo "ERROR: postinst $i failed."
