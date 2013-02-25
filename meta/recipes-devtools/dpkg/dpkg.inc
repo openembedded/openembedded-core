@@ -2,7 +2,7 @@ DESCRIPTION = "Package maintenance system for Debian."
 LICENSE = "GPLv2.0+"
 SECTION = "base"
 
-INC_PR = "r18"
+INC_PR = "r19"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.xz \
            file://ignore_extra_fields.patch"
@@ -35,13 +35,15 @@ do_configure () {
     autotools_do_configure
 }
 
+POSTLOG ?= "/var/log/postinstall.log"
+REDIRECT_CMD = "${@base_contains('IMAGE_FEATURES', 'debug-tweaks', '>${POSTLOG} 2>&1', '', d)}"
 
 DPKG_INIT_POSITION ?= "98"
 do_install_prepend () {
 	install -d ${D}/${sysconfdir}/rcS.d
 	# this happens at S98 where our good 'ole packages script used to run
-	printf "#!/bin/sh
-dpkg --configure -a
+	echo "#!/bin/sh
+dpkg --configure -a ${REDIRECT_CMD}
 rm -f ${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
 " > ${D}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
 	chmod 0755 ${D}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
