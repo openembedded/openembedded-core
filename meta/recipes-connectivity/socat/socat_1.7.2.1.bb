@@ -7,16 +7,16 @@ SECTION = "console/network"
 DEPENDS = "openssl readline"
 
 LICENSE = "GPL-2.0+-with-OpenSSL-exception"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+                    file://README;beginline=252;endline=282;md5=79246f11a1db0b6ccec54d1fb711c01e"
 
-PR = "r1"
+
+PR = "r0"
 SRC_URI = "http://www.dest-unreach.org/socat/download/socat-${PV}.tar.bz2;name=src \
            file://compile.patch"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=18810669f13b87348459e611d31ab760 \
-                    file://README;beginline=252;endline=282;md5=79246f11a1db0b6ccec54d1fb711c01e"
-
-SRC_URI[src.md5sum] = "eb563dd00b9d39a49fb62a677fc941fe"
-SRC_URI[src.sha256sum] = "59b3bde927c14fbc3f9e42c782971710da8a89bbf46f7531f09a681754041802"
+SRC_URI[src.md5sum] = "7ddfea7e9e85f868670f94d3ea08358b"
+SRC_URI[src.sha256sum] = "faea2ed6c63bb97a59237fd43b7c35ad248317297e8bfeb2e6f2ec1e6bc58277"
 
 EXTRA_OECONF = " --disable-termios "
 
