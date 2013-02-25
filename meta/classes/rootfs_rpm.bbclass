@@ -29,11 +29,6 @@ do_rootfs[vardepsexclude] += "BUILDNAME"
 RPM_PREPROCESS_COMMANDS = "package_update_index_rpm; "
 RPM_POSTPROCESS_COMMANDS = "rpm_setup_smart_target_config; "
 
-# 
-# Allow distributions to alter when [postponed] package install scripts are run
-#
-POSTINSTALL_INITPOSITION ?= "98"
-
 rpmlibdir = "/var/lib/rpm"
 opkglibdir = "${localstatedir}/lib/opkg"
 
@@ -113,24 +108,6 @@ fakeroot rootfs_rpm_do_rootfs () {
 			echo "Delayed package scriptlet: `head -n 3 $i | tail -n 1`"
 		fi
 	done
-
-	install -d ${IMAGE_ROOTFS}/${sysconfdir}/rcS.d
-	# Stop $i getting expanded below...
-	i=\$i
-	cat > ${IMAGE_ROOTFS}${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts << EOF
-#!/bin/sh
-for i in \`ls /etc/rpm-postinsts/\`; do
-	i=/etc/rpm-postinsts/$i
-	echo "Running postinst $i..."
-	if [ -f $i ] && $i; then
-		rm $i
-	else
-		echo "ERROR: postinst $i failed."
-	fi
-done
-rm -f ${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
-EOF
-	chmod 0755 ${IMAGE_ROOTFS}${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
 
 	install -d ${IMAGE_ROOTFS}/${sysconfdir}
 	echo ${BUILDNAME} > ${IMAGE_ROOTFS}/${sysconfdir}/version

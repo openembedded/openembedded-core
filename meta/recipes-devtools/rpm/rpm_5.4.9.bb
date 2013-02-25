@@ -369,6 +369,11 @@ do_configure() {
 	oe_runconf
 }
 
+#
+# Allow distributions to alter when [postponed] package install scripts are run
+#
+POSTINSTALL_INITPOSITION ?= "98"
+
 do_install_append() {
 	sed -i -e 's,%__check_files,#%%__check_files,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,%__scriptlet_requires,#%%__scriptlet_requires,' ${D}/${libdir}/rpm/macros
@@ -445,6 +450,24 @@ do_install_append() {
 
 	rm -rf ${D}/var/lib/wdj ${D}/var/cache/wdj
 	rm -f ${D}/${libdir}/rpm/bin/api-sanity-checker.pl
+
+	install -d ${D}/${sysconfdir}/rcS.d
+	# Stop $i getting expanded below...
+	i=\$i
+	cat > ${D}${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts << EOF
+#!/bin/sh
+for i in \`ls /etc/rpm-postinsts/\`; do
+	i=/etc/rpm-postinsts/$i
+	echo "Running postinst $i..."
+	if [ -f $i ] && $i; then
+		rm $i
+	else
+		echo "ERROR: postinst $i failed."
+	fi
+done
+rm -f ${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
+EOF
+	chmod 0755 ${D}${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
 }
 
 do_install_append_class-native() {
