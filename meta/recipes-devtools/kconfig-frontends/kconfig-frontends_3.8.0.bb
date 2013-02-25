@@ -12,14 +12,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=9b8cf60ff39767ff04b671fca8302408"
 SECTION = "devel"
 DEPENDS += "ncurses flex bison gperf pkgconfig-native"
 PR = "r0"
-PV = "3.6.0"
-SPIN = "0"
-SRC_URI = "http://ymorin.is-a-geek.org/download/${BPN}/${BPN}-${PV}-${SPIN}.tar.xz"
+SPIN = ".0"
+SRC_URI = "http://ymorin.is-a-geek.org/download/${BPN}/${BPN}-${PV}${SPIN}.tar.xz"
 
-SRC_URI[md5sum] = "91ca87abb3c99c3fd40a7babb05ec507"
-SRC_URI[sha256sum] = "3084989a9b146688f318b5524dfb7ab3ba47c9cef355d1aebaa520befdb48da0"
+SRC_URI[md5sum] = "73598aea99d01d9c422b335e9b963271"
+SRC_URI[sha256sum] = "b3ff325338aa291c9129dbf33c69ff321e30105aa06ff957be6f958acdc72b42"
 
-S = "${WORKDIR}/${BPN}-${PV}-${SPIN}"
+S = "${WORKDIR}/${BPN}-${PV}${SPIN}"
 
 inherit autotools
 do_configure_prepend () {
