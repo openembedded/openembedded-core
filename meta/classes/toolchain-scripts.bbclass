@@ -1,4 +1,4 @@
-inherit siteinfo
+inherit siteinfo kernel-arch
 
 # We want to be able to change the value of MULTIMACH_TARGET_SYS, because it
 # doesn't always match our expectations... but we default to the stock value
@@ -46,6 +46,7 @@ toolchain_create_sdk_env_script () {
 	echo 'export OECORE_DISTRO_VERSION="${DISTRO_VERSION}"' >> $script
 	echo 'export OECORE_SDK_VERSION="${SDK_VERSION}"' >> $script
 	echo 'export PYTHONHOME=${SDKPATHNATIVE}${prefix_nativesdk}' >> $script
+	echo 'export ARCH=${ARCH}' >> $script
 }
 
 # This function creates an environment-setup-script in the TMPDIR which enables
@@ -90,6 +91,7 @@ toolchain_create_tree_env_script () {
 	echo 'export OECORE_ACLOCAL_OPTS="-I ${STAGING_DIR_NATIVE}/usr/share/aclocal"' >> $script
 	echo 'export OECORE_DISTRO_VERSION="${DISTRO_VERSION}"' >> $script
 	echo 'export OECORE_SDK_VERSION="${SDK_VERSION}"' >> $script
+	echo 'export ARCH=${ARCH}' >> $script
 }
 
 # This function creates an environment-setup-script for use by the ADT installer
@@ -134,6 +136,7 @@ toolchain_create_sdk_env_script_for_installer () {
 	echo 'export OECORE_DISTRO_VERSION="${DISTRO_VERSION}"' >> $script
 	echo 'export OECORE_SDK_VERSION="${SDK_VERSION}"' >> $script
 	echo 'export PYTHONHOME=${SDKPATHNATIVE}${prefix_nativesdk}' >> $script
+	echo 'export ARCH=${ARCH}' >> $script
 }
 
 #we get the cached site config in the runtime
