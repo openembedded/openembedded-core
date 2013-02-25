@@ -17,8 +17,8 @@ SRC_URI = "ftp://ftp.astron.com/pub/file/file-${PV}.tar.gz \
            file://dump \
            file://filesystems"
 
-SRC_URI[md5sum] = "1d7d85cb9354f79e5e351deef36be6ba"
-SRC_URI[sha256sum] = "199d0dab2e32814cbced8dc30d3d2d5b7e45587598160a2c401358b573273d22"
+SRC_URI[md5sum] = "d60c1364ba956eff7d21f8250808fc6d"
+SRC_URI[sha256sum] = "f75b7b23ac576b47ed4ba4915e2fb239d9c0d74ac5b4e6a89704b1ed45ee6e2b"
 
 inherit autotools
 
