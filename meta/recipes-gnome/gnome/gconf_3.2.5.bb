@@ -15,6 +15,7 @@ inherit gnomebase gtk-doc
 
 SRC_URI = "${GNOME_MIRROR}/GConf/${@gnome_verdir("${PV}")}/GConf-${PV}.tar.xz;name=archive \
            file://obsolete_automake_macros.patch \
+           file://remove_plus_from_invalid_characters_list.patch \
 "
 
 S = "${WORKDIR}/GConf-${PV}"
