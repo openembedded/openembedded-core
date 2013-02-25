@@ -1,18 +1,18 @@
-Upstream-Status: Rejected
-
 Add pkgconfig support to libassuan.
 This patch is rejected by upstream for the reason below:
 They think pkgconfig adds no portability and maintaining them is not worthwhile.
 
+Upstream-Status: Rejected
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
 
-Index: Makefile.am
-==============================================================
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -21,11 +21,14 @@
- ACLOCAL_AMFLAGS = -I m4
- AUTOMAKE_OPTIONS = dist-bzip2 no-dist-gzip
+Index: libassuan-2.1.0/Makefile.am
+===================================================================
+--- libassuan-2.1.0.orig/Makefile.am
++++ libassuan-2.1.0/Makefile.am
+@@ -24,10 +24,13 @@ AUTOMAKE_OPTIONS = dist-bzip2 no-dist-gz
+ # (A suitable gitlog-to-changelog script can be found in GnuPG master.)
+ GITLOG_TO_CHANGELOG=gitlog-to-changelog
  
 +pkgconfigdir = $(libdir)/pkgconfig
 +pkgconfig_DATA = assuan.pc
@@ -20,16 +20,15 @@ Index: Makefile.am
  EXTRA_DIST = config.rpath autogen.sh README.GIT                  	\
               ChangeLog-2011 doc/ChangeLog-2011 src/ChangeLog-2011 	\
               tests/ChangeLog-2011 contrib/ChangeLog-2011     		\
-              build-aux/gitlog-to-changelog build-aux/git-log-footer	\
--             build-aux/git-log-fix
-+             build-aux/git-log-fix assuan.pc.in
+-             build-aux/git-log-footer build-aux/git-log-fix
++             build-aux/git-log-footer build-aux/git-log-fix assuan.pc.in
  
  SUBDIRS = m4 src doc tests
  
-Index: assuan.pc.in
-==============================================================
+Index: libassuan-2.1.0/assuan.pc.in
+===================================================================
 --- /dev/null
-+++ b/assuan.pc.in
++++ libassuan-2.1.0/assuan.pc.in
 @@ -0,0 +1,12 @@
 +prefix=@prefix@
 +exec_prefix=@exec_prefix@
@@ -43,17 +42,16 @@ Index: assuan.pc.in
 +Libs: -L${libdir} -lassuan
 +Libs.private: -lgpg-error
 +Cflags: -I${includedir}
-Index: configure.ac
-==============================================================
---- a/configure.ac
-+++ b/configure.ac
-@@ -380,5 +380,5 @@ AC_CONFIG_FILES([doc/Makefile])
+Index: libassuan-2.1.0/configure.ac
+===================================================================
+--- libassuan-2.1.0.orig/configure.ac
++++ libassuan-2.1.0/configure.ac
+@@ -433,7 +433,7 @@ AC_CONFIG_FILES([doc/Makefile])
  AC_CONFIG_FILES([tests/Makefile])
  AC_CONFIG_FILES([src/libassuan-config], [chmod +x src/libassuan-config])
  AC_CONFIG_FILES([src/versioninfo.rc])
 -
 +AC_CONFIG_FILES([assuan.pc])
  AC_OUTPUT
--- 
-1.7.5.4
-
+ 
+ echo "
