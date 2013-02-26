@@ -18,9 +18,9 @@ Index: iproute2-3.7.0/configure
  #
  INCLUDE=${1:-"$PWD/include"}
 +SYSROOT=$1
- : ${PKG_CONFIG:=pkg-config}
- : ${CC=gcc}
- echo "PKG_CONFIG:=${PKG_CONFIG}" >>Config
+ 
+ # Make a temp directory in build tree.
+ TMPDIR=$(mktemp -d config.XXXXXX)
 @@ -158,7 +159,7 @@ check_ipt_lib_dir()
  		return
  	fi
