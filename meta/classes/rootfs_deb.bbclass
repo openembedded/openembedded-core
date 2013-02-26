@@ -2,7 +2,7 @@
 # Copyright 2006-2007 Openedhand Ltd.
 #
 
-ROOTFS_PKGMANAGE = "run-postinsts dpkg apt"
+ROOTFS_PKGMANAGE = "dpkg apt"
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
 do_rootfs[depends] += "dpkg-native:do_populate_sysroot apt-native:do_populate_sysroot"
