@@ -10,6 +10,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0de488f3bd4424e308e2e399cb99c788"
 
 SECTION = "devel"
 
+PR = "r1"
+COMPATIBLE_HOST = "powerpc64"
+
 SRC_URI = "http://downloads.sourceforge.net/project/perfmon2/libpfm4/libpfm-4.3.0.tar.gz"
 
 SRC_URI[md5sum] = "0ab272dbdbb759b852ba8bd06db030ef"
