@@ -1,7 +1,7 @@
 DESCRIPTION = "automate test for lsb"
 SECTION = "console/utils"
 LICENSE = "GPLv2"
-PR = "r2"
+PR = "r3"
 
 LIC_FILES_CHKSUM = "file://LSB_Test.sh;beginline=3;endline=16;md5=7063bb54b04719df0716b513447f4fc0"
 
