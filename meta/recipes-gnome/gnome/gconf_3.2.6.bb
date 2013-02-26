@@ -9,19 +9,18 @@ POLKIT_libc-uclibc = ""
 DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native ${POLKIT} gobject-introspection-stub"
 DEPENDS_class-native = "glib-2.0-native dbus-native dbus-glib-native libxml2-native intltool-native gnome-common-native gobject-introspection-stub-native"
 
-PR = "r14"
+PR = "r0"
 
 inherit gnomebase gtk-doc
 
 SRC_URI = "${GNOME_MIRROR}/GConf/${@gnome_verdir("${PV}")}/GConf-${PV}.tar.xz;name=archive \
-           file://obsolete_automake_macros.patch \
            file://remove_plus_from_invalid_characters_list.patch \
 "
 
-S = "${WORKDIR}/GConf-${PV}"
+SRC_URI[archive.md5sum] = "2b16996d0e4b112856ee5c59130e822c"
+SRC_URI[archive.sha256sum] = "1912b91803ab09a5eed34d364bf09fe3a2a9c96751fde03a4e0cfa51a04d784c"
 
-SRC_URI[archive.md5sum] = "1b803eb4f8576c572d072692cf40c9d8"
-SRC_URI[archive.sha256sum] = "4ddea9503a212ee126c5b46a0a958fd5484574c3cb6ef2baf38db02e819e58c6"
+S = "${WORKDIR}/GConf-${PV}"
 
 POLKIT_OECONF = "--enable-defaults-service"
 POLKIT_OECONF_class-native = "--disable-defaults-service"
