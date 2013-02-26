@@ -17,7 +17,7 @@ QT_EMBEDDED_FLAGS ?= " \
 QT_EMBEDDED_EXTRA_FLAGS ?= " \
     -plugin-gfx-transformed -plugin-gfx-qvfb -plugin-gfx-vnc -plugin-gfx-directfb \
     -plugin-mouse-tslib -qt-mouse-pc -qt-mouse-qvfb -qt-mouse-linuxinput \
-    -qt-kbd-tty \
+    -qt-kbd-tty -qt-kbd-linuxinput \
 "
 QT_EMBEDDED_KEYPAD_FLAGS ?= " \
     -DQT_KEYPAD_NAVIGATION \
