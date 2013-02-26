@@ -1,0 +1,34 @@
+From 735d9eb0322b34b3d26302a1dac173100d718d35 Mon Sep 17 00:00:00 2001
+From: Maynard Johnson <maynardj@us.ibm.com>
+Date: Thu, 10 Jan 2013 14:24:26 -0600
+Subject: [PATCH] ophelp lists events: Fix doc URL for ppc64 arch
+
+When ophelp is used to list available events, it displays
+some help text before the event list to direct the user
+where to find more info.  For the ppc64 architecture, a
+stale URL was listed.  This patch fixes that URL.
+
+Signed-off-by: Maynard Johnson <maynardj@us.ibm.com>
+---
+ utils/ophelp.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/utils/ophelp.c b/utils/ophelp.c
+index f48697b..827f2d0 100644
+--- a/utils/ophelp.c
++++ b/utils/ophelp.c
+@@ -652,8 +652,9 @@ int main(int argc, char const * argv[])
+ 	case CPU_PPC64_POWER7:
+ 	case CPU_PPC64_IBM_COMPAT_V1:
+ 		event_doc =
+-			"Obtain PowerPC64 processor documentation at:\n"
+-			"http://www-306.ibm.com/chips/techlib/techlib.nsf/productfamilies/PowerPC\n";
++			"Documentation for IBM POWER7 can be obtained at:\n"
++			"http://www.power.org/events/Power7/\n"
++			"No public performance monitoring doc available for older processors.\n";
+ 		break;
+ 
+ 	case CPU_PPC64_CELL:
+-- 
+1.7.9.7
+

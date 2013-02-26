@@ -1,0 +1,206 @@
+From 36028035555297695f52e856f21920012fd64f79 Mon Sep 17 00:00:00 2001
+From: Maynard Johnson <maynardj@us.ibm.com>
+Date: Fri, 11 Jan 2013 13:29:57 -0600
+Subject: [PATCH] Allow ppc64 events to be specified with or without _GRP<n>
+ suffix
+
+All events for IBM PowerPC server processors (except CYCLES) have
+a _GRP<n> suffix.  This is because the legacy opcontrol profiler
+can only profile events in the same group (i.e., having the same
+_GRP<n> suffix).  But operf has no such restriction because it
+can multiplex events; thus, so we should allow the user to pass
+event names without the _GRP<n> suffix.
+
+Signed-off-by: Maynard Johnson <maynardj@us.ibm.com>
+---
+ doc/operf.1.in         |    6 +++
+ doc/oprofile.xml       |   12 +++++-
+ pe_profiling/operf.cpp |  107 ++++++++++++++++++++++++++++++++++++++++++++++++
+ utils/ophelp.c         |    4 ++
+ 4 files changed, 127 insertions(+), 2 deletions(-)
+
+diff --git a/doc/operf.1.in b/doc/operf.1.in
+index b109324..03027ca 100644
+--- a/doc/operf.1.in
++++ b/doc/operf.1.in
+@@ -110,6 +110,12 @@ be specified using the symbolic name.  If no unit mask is specified, 0x0 will be
+ used as the default.
+ .P
+ .RS
++On IBM PowerPC systems, events may be specified with or without the
++.I _GRP<n>
++suffix.  If no group number suffix is given, one will be automatically
++assigned; thus, OProfile post-processing tools will always show real event
++names that include the group number suffix.
++.P
+ When no event specification is given, the default event for the running
+ processor type will be used for profiling.
+ Use
+diff --git a/doc/oprofile.xml b/doc/oprofile.xml
+index 0ae2b0b..0f74726 100644
+--- a/doc/oprofile.xml
++++ b/doc/oprofile.xml
+@@ -1106,10 +1106,18 @@ shown by the output of <command>ophelp</command>.  Unit masks with "extra:" para
+ specified using the symbolic name.
+ </para>
+ <note><para>
+-When using legacy mode <command>opcontrol</command> on PowerPC platforms, all events specified must be in the same group;
++When using legacy mode <command>opcontrol</command> on IBM PowerPC platforms, all events specified must be in the same group;
+ i.e., the group number appended to the event name (e.g. <constant>&lt;<emphasis>some-event-name</emphasis>&gt;_GRP9
+ </constant>) must be the same.
+-</para></note>
++</para>
++<para>
++When profiling with <command>operf</command> on IBM PowerPC platforms, the above restriction
++regarding the same group number does not apply, and events may be
++specified with or without the group number suffix.   If no group number suffix is given, one will be automatically
++assigned; thus, OProfile post-processing tools will always show real event
++names that include the group number suffix.
++</para>
++</note>
+ <para>
+ If OProfile is using timer-interrupt mode, there is no event configuration possible.
+ </para>
+diff --git a/pe_profiling/operf.cpp b/pe_profiling/operf.cpp
+index 4416b29..a776e71 100644
+--- a/pe_profiling/operf.cpp
++++ b/pe_profiling/operf.cpp
+@@ -1146,6 +1146,108 @@ static void _get_event_code(operf_event_t * event)
+ 	event->evt_code = config;
+ }
+ 
++#if (defined(__powerpc__) || defined(__powerpc64__))
++/* All ppc64 events (except CYCLES) have a _GRP<n> suffix.  This is
++ * because the legacy opcontrol profiler can only profile events in
++ * the same group (i.e., having the same _GRP<n> suffix).  But operf
++ * can multiplex events, so we should allow the user to pass event
++ * names without the _GRP<n> suffix.
++ *
++ * If event name is not CYCLES or does not have a _GRP<n> suffix,
++ * we'll call ophelp and scan the list of events, searching for one
++ * that matches up to the _GRP<n> suffix.  If we don't find a match,
++ * then we'll exit with the expected error message for invalid event name.
++ */
++static string _handle_powerpc_event_spec(string event_spec)
++{
++	FILE * fp;
++	char line[MAX_INPUT];
++	size_t grp_pos;
++	string evt, retval, err_msg;
++	size_t evt_name_len;
++	bool first_non_cyc_evt_found = false;
++	bool event_found = false;
++	char event_name[OP_MAX_EVT_NAME_LEN], event_spec_str[OP_MAX_EVT_NAME_LEN + 20], * count_str;
++	string cmd = OP_BINDIR;
++	cmd += "/ophelp";
++
++	strncpy(event_spec_str, event_spec.c_str(), event_spec.length() + 1);
++
++	strncpy(event_name, strtok(event_spec_str, ":"), OP_MAX_EVT_NAME_LEN);
++	count_str = strtok(NULL, ":");
++	if (!count_str) {
++		err_msg = "Invalid count for event ";
++		goto out;
++	}
++
++	if (!strcmp("CYCLES", event_name)) {
++		event_found = true;
++		goto out;
++	}
++
++	evt = event_name;
++	// Need to make sure the event name truly has a _GRP<n> suffix.
++	grp_pos = evt.rfind("_GRP");
++	if ((grp_pos != string::npos) && ((evt = evt.substr(grp_pos, string::npos))).length() > 4) {
++		unsigned long value;
++		char * end;
++		value = strtoul(evt.substr(4, string::npos).c_str(), &end, 0);
++		if (end && (*end == '\0')) {
++		// Valid group number found after _GRP, so we can skip to the end.
++			event_found = true;
++			goto out;
++		}
++	}
++
++	// If we get here, it implies the user passed a non-CYCLES event without a GRP suffix.
++	// Lets try to find a valid suffix for it.
++	fp = popen(cmd.c_str(), "r");
++	if (fp == NULL) {
++		cerr << "Unable to execute ophelp to get info for event "
++		     << event_spec << endl;
++		exit(EXIT_FAILURE);
++	}
++	evt_name_len = strlen(event_name);
++	err_msg = "Cannot find event ";
++	while (fgets(line, MAX_INPUT, fp)) {
++		if (!first_non_cyc_evt_found) {
++			if (!strncmp(line, "PM_", 3))
++				first_non_cyc_evt_found = true;
++			else
++				continue;
++		}
++		if (line[0] == ' ' || line[0] == '\t')
++			continue;
++		if (!strncmp(line, event_name, evt_name_len)) {
++			// Found a potential match.  Check if it's a perfect match.
++			string save_event_name = event_name;
++			size_t full_evt_len = index(line, ':') - line;
++			memset(event_name, '\0', OP_MAX_EVT_NAME_LEN);
++			strncpy(event_name, line, full_evt_len);
++			string candidate = event_name;
++			if (candidate.rfind("_GRP") == evt_name_len) {
++				event_found = true;
++				break;
++			} else {
++				memset(event_name, '\0', OP_MAX_EVT_NAME_LEN);
++				strncpy(event_name, save_event_name.c_str(), evt_name_len);
++			}
++		}
++	}
++	pclose(fp);
++
++out:
++	if (!event_found) {
++		cerr << err_msg << event_name << endl;
++		cerr << "Error retrieving info for event "
++				<< event_spec << endl;
++		exit(EXIT_FAILURE);
++	}
++	retval = event_name;
++	return retval + ":" + count_str;
++}
++#endif
++
+ static void _process_events_list(void)
+ {
+ 	string cmd = OP_BINDIR;
+@@ -1154,6 +1256,11 @@ static void _process_events_list(void)
+ 		FILE * fp;
+ 		string full_cmd = cmd;
+ 		string event_spec = operf_options::evts[i];
++
++#if (defined(__powerpc__) || defined(__powerpc64__))
++		event_spec = _handle_powerpc_event_spec(event_spec);
++#endif
++
+ 		if (operf_options::callgraph) {
+ 			full_cmd += " --callgraph=1 ";
+ 		}
+diff --git a/utils/ophelp.c b/utils/ophelp.c
+index 53a5dde..63895c8 100644
+--- a/utils/ophelp.c
++++ b/utils/ophelp.c
+@@ -652,6 +652,10 @@ int main(int argc, char const * argv[])
+ 	case CPU_PPC64_POWER7:
+ 	case CPU_PPC64_IBM_COMPAT_V1:
+ 		event_doc =
++			"When using operf, events may be specified without a '_GRP<n>' suffix.\n"
++			"If _GRP<n> (i.e., group number) is not specified, one will be automatically\n"
++			"selected for use by the profiler.  OProfile post-processing tools will\n"
++			"always show real event names that include the group number suffix.\n\n"
+ 			"Documentation for IBM POWER7 can be obtained at:\n"
+ 			"http://www.power.org/events/Power7/\n"
+ 			"No public performance monitoring doc available for older processors.\n";
+-- 
+1.7.9.7
+
