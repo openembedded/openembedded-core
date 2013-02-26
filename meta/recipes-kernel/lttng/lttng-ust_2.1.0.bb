@@ -22,7 +22,9 @@ PV = "2.1.0"
 PR = "r0"
 PE = "2"
 
-SRC_URI = "git://git.lttng.org/lttng-ust.git;protocol=git"
+SRC_URI = "git://git.lttng.org/lttng-ust.git;protocol=git \
+	   file://depends-liblttng-ust-tracepoin.patch \
+	   "
 
 S = "${WORKDIR}/git"
 

@@ -1,0 +1,30 @@
+liblttng_ust.la should depend on liblttng-ust-tracepoint.la
+
+liblttng_ust.la should depend on liblttng-ust-tracepoint.la, otherwise
+there maybe a parallel build issue:
+
+ld: cannot find -llttng-ust-tracepoint
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ liblttng-ust/Makefile.am | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/liblttng-ust/Makefile.am b/liblttng-ust/Makefile.am
+--- a/liblttng-ust/Makefile.am
++++ b/liblttng-ust/Makefile.am
+@@ -67,7 +67,8 @@ liblttng_ust_la_LIBADD = \
+ 	-llttng-ust-tracepoint \
+ 	$(top_builddir)/snprintf/libustsnprintf.la \
+ 	$(top_builddir)/liblttng-ust-comm/liblttng-ust-comm.la \
+-	liblttng-ust-runtime.la liblttng-ust-support.la
++	liblttng-ust-runtime.la liblttng-ust-support.la \
++	liblttng-ust-tracepoint.la
+ 
+ if LTTNG_UST_BUILD_WITH_LIBUUID
+ liblttng_ust_la_LIBADD += -luuid
+-- 
+1.7.11.2
+
