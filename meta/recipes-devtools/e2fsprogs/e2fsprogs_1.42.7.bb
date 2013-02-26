@@ -6,8 +6,8 @@ SRC_URI += "file://acinclude.m4 \
             file://remove.ldconfig.call.patch \
 "
 
-SRC_URI[md5sum] = "9e444c240c1001b3292d108fbad0f49c"
-SRC_URI[sha256sum] = "726b5919edeaee5b077d7a5b602284f1453ea31cf499efa433af26c679b667a5"
+SRC_URI[md5sum] = "a1ec22ef003688dae9f76c74881b22b9"
+SRC_URI[sha256sum] = "dc6501b2e75d205e425196d753d92b129c568525d8aad08085c0aa69ee9e7345"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-elf-shlibs --disable-libuuid --disable-uuidd"
 EXTRA_OECONF_darwin = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-bsd-shlibs"
