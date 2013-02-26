@@ -185,11 +185,16 @@ remove_duplicated () {
           | sed -e 's/-/_/g' -e 's/ /\n/g' | sort -u)
   echo "Done"
 
-  sstate_suffixes="deploy-rpm deploy-ipk deploy-deb deploy package populate-lic populate-sysroot"
-
   # Save all the sstate files in a file
   sstate_list=`mktemp` || exit 1
   find $cache_dir -name 'sstate-*.tgz' >$sstate_list
+
+  echo -n "Figuring out the suffixes in the sstate cache dir ... "
+  sstate_suffixes="`sed 's/.*_\([^_]*\)\.tgz$/\1/g' $sstate_list | sort -u`"
+  echo "Done"
+  echo "The following suffixes have been found in the cache dir:"
+  echo $sstate_suffixes
+
   echo -n "Figuring out the archs in the sstate cache dir ... "
   for arch in $all_archs; do
       grep -q "\-$arch-" $sstate_list
