@@ -72,7 +72,7 @@ Options:
   -v, --verbose
         explain what is being done
 
-  -d, --debug
+  -D, --debug
         show debug info, repeat for more debug info
 
 EOF
@@ -388,7 +388,7 @@ while [ -n "$1" ]; do
       verbose="-v"
       shift
         ;;
-    --debug)
+    --debug|-D)
       debug=`expr $debug + 1`
       echo "Debug level $debug"
       shift
