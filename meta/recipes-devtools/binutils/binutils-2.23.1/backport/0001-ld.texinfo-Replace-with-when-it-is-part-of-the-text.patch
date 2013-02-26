@@ -1,0 +1,196 @@
+From 935f85422863b42b6fbca30885885e3fa28eea36 Mon Sep 17 00:00:00 2001
+From: Nick Clifton <nickc@redhat.com>
+Date: Mon, 7 Jan 2013 12:11:11 +0000
+Subject: [PATCH] 	* ld.texinfo: Replace @ with @@ when it is part of
+ the text. 	Correct ordering of M68HC11 entry.
+
+	* doc/binutils.texi: Fix ordering of top level nodes.
+	Replace erroneous uses of @itemx with @item.
+
+	* bfd.texinfo: Replace @ with @@ when it is part of the text.
+---
+ bfd/doc/ChangeLog          |    4 ++++
+ bfd/doc/bfd.texinfo        |   12 +++++++-----
+ binutils/ChangeLog         |    5 +++++
+ binutils/doc/binutils.texi |    8 ++++----
+ ld/ChangeLog               |    5 +++++
+ ld/ld.texinfo              |   26 ++++++++++++++------------
+ 6 files changed, 39 insertions(+), 21 deletions(-)
+
+
+Upstream-Status: Backport
+Index: binutils-2.23.1/bfd/doc/bfd.texinfo
+===================================================================
+--- binutils-2.23.1.orig/bfd/doc/bfd.texinfo	2010-10-28 04:40:25.000000000 -0700
++++ binutils-2.23.1/bfd/doc/bfd.texinfo	2013-02-26 12:42:26.909115020 -0800
+@@ -1,7 +1,7 @@
+ \input texinfo.tex
+ @setfilename bfd.info
+ @c Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1997, 2000,
+-@c 2001, 2002, 2003, 2006, 2007, 2008, 2009
++@c 2001, 2002, 2003, 2006, 2007, 2008, 2009, 2013
+ @c Free Software Foundation, Inc.
+ @c 
+ @synindex fn cp
+@@ -16,7 +16,8 @@
+ @copying
+ This file documents the BFD library.
+ 
+-Copyright @copyright{} 1991, 2000, 2001, 2003, 2006, 2007, 2008 Free Software Foundation, Inc.
++Copyright @copyright{} 1991, 2000, 2001, 2003, 2006, 2007, 2008, 2013
++Free Software Foundation, Inc.
+ 
+ Permission is granted to copy, distribute and/or modify this document
+ under the terms of the GNU Free Documentation License, Version 1.3 or
+@@ -64,7 +65,8 @@
+ @end tex
+ 
+ @vskip 0pt plus 1filll
+-Copyright @copyright{} 1991, 2001, 2003, 2006, 2008 Free Software Foundation, Inc.
++Copyright @copyright{} 1991, 2001, 2003, 2006, 2008, 2013
++Free Software Foundation, Inc.
+ 
+       Permission is granted to copy, distribute and/or modify this document
+       under the terms of the GNU Free Documentation License, Version 1.3
+@@ -322,7 +324,7 @@
+ @printindex cp
+ 
+ @tex
+-% I think something like @colophon should be in texinfo.  In the
++% I think something like @@colophon should be in texinfo.  In the
+ % meantime:
+ \long\def\colophon{\hbox to0pt{}\vfill
+ \centerline{The body of this manual is set in}
+@@ -333,7 +335,7 @@
+ \centerline{{\sl\fontname\tensl\/}}
+ \centerline{are used for emphasis.}\vfill}
+ \page\colophon
+-% Blame: doc@cygnus.com, 28mar91.
++% Blame: doc@@cygnus.com, 28mar91.
+ @end tex
+ 
+ @bye
+Index: binutils-2.23.1/binutils/doc/binutils.texi
+===================================================================
+--- binutils-2.23.1.orig/binutils/doc/binutils.texi	2013-02-26 12:41:51.000000000 -0800
++++ binutils-2.23.1/binutils/doc/binutils.texi	2013-02-26 12:42:26.913115010 -0800
+@@ -148,18 +148,18 @@
+ * objcopy::			Copy and translate object files
+ * objdump::                     Display information from object files
+ * ranlib::                      Generate index to archive contents
+-* readelf::                     Display the contents of ELF format files
+ * size::                        List section sizes and total size
+ * strings::                     List printable strings from files
+ * strip::                       Discard symbols
+-* elfedit::                     Update the ELF header of ELF files
+ * c++filt::			Filter to demangle encoded C++ symbols
+ * cxxfilt: c++filt.             MS-DOS name for c++filt
+ * addr2line::			Convert addresses to file and line
+ * nlmconv::                     Converts object code into an NLM
+-* windres::			Manipulate Windows resources
+ * windmc::			Generator for Windows message resources
++* windres::			Manipulate Windows resources
+ * dlltool::			Create files needed to build and use DLLs
++* readelf::                     Display the contents of ELF format files
++* elfedit::                     Update the ELF header of ELF files
+ * Common Options::              Command-line options for all utilities
+ * Selecting the Target System:: How these utilities determine the target
+ * Reporting Bugs::              Reporting Bugs
+@@ -2898,7 +2898,7 @@
+ @c man end
+ @end ignore
+ 
+-@node c++filt, addr2line, elfedit, Top
++@node c++filt, addr2line, strip, Top
+ @chapter c++filt
+ 
+ @kindex c++filt
+Index: binutils-2.23.1/ld/ld.texinfo
+===================================================================
+--- binutils-2.23.1.orig/ld/ld.texinfo	2013-02-19 14:26:56.571782665 -0800
++++ binutils-2.23.1/ld/ld.texinfo	2013-02-26 12:45:20.677119476 -0800
+@@ -1,7 +1,8 @@
+ \input texinfo
+ @setfilename ld.info
+ @c Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,
+-@c 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
++@c 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011,
++@c 2012, 2013
+ @c Free Software Foundation, Inc.
+ @syncodeindex ky cp
+ @c man begin INCLUDE
+@@ -55,7 +56,8 @@
+ version @value{VERSION}.
+ 
+ Copyright @copyright{} 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,
+-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
++2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2012, 2013
++Free Software Foundation, Inc.
+ 
+ Permission is granted to copy, distribute and/or modify this document
+ under the terms of the GNU Free Documentation License, Version 1.3
+@@ -93,8 +95,8 @@
+ @vskip 0pt plus 1filll
+ @c man begin COPYRIGHT
+ Copyright @copyright{} 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
+-1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Free
+-Software Foundation, Inc.
++1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
++2012, 2013 Free Software Foundation, Inc.
+ 
+ Permission is granted to copy, distribute and/or modify this document
+ under the terms of the GNU Free Documentation License, Version 1.3
+@@ -142,12 +144,12 @@
+ @ifset ARM
+ * ARM::				ld and the ARM family
+ @end ifset
+-@ifset HPPA
+-* HPPA ELF32::                  ld and HPPA 32-bit ELF
+-@end ifset
+ @ifset M68HC11
+ * M68HC11/68HC12::              ld and the Motorola 68HC11 and 68HC12 families
+ @end ifset
++@ifset HPPA
++* HPPA ELF32::                  ld and HPPA 32-bit ELF
++@end ifset
+ @ifset M68K
+ * M68K::                        ld and Motorola 68K family
+ @end ifset
+@@ -6003,6 +6005,9 @@
+ @ifset I960
+ * i960::                        @command{ld} and the Intel 960 family
+ @end ifset
++@ifset M68HC11
++* M68HC11/68HC12::		@code{ld} and the Motorola 68HC11 and 68HC12 families
++@end ifset
+ @ifset ARM
+ * ARM::				@command{ld} and the ARM family
+ @end ifset
+@@ -6018,9 +6023,6 @@
+ @ifset MSP430
+ * MSP430::			@command{ld} and MSP430
+ @end ifset
+-@ifset M68HC11
+-* M68HC11/68HC12::		@code{ld} and the Motorola 68HC11 and 68HC12 families
+-@end ifset
+ @ifset POWERPC
+ * PowerPC ELF32::		@command{ld} and PowerPC 32-bit ELF Support
+ @end ifset
+@@ -7868,7 +7870,7 @@
+ @printindex cp
+ 
+ @tex
+-% I think something like @colophon should be in texinfo.  In the
++% I think something like @@colophon should be in texinfo.  In the
+ % meantime:
+ \long\def\colophon{\hbox to0pt{}\vfill
+ \centerline{The body of this manual is set in}
+@@ -7879,7 +7881,7 @@
+ \centerline{{\sl\fontname\tensl\/}}
+ \centerline{are used for emphasis.}\vfill}
+ \page\colophon
+-% Blame: doc@cygnus.com, 28mar91.
++% Blame: doc@@cygnus.com, 28mar91.
+ @end tex
+ 
+ @bye
