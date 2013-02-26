@@ -52,3 +52,4 @@ do_install_append() {
 FILES_${PN} += "${datadir}/applications ${datadir}/icons"
 
 RDEPENDS_${PN} += "xkeyboard-config"
+RRECOMMENDS_${PN} = "liberation-fonts"
