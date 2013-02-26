@@ -47,7 +47,9 @@ Options:
 
   -d, --remove-duplicated
         Remove the duplicated sstate cache files of one package, only
-        the newest one will be kept.
+        the newest one will be kept. The duplicated sstate cache files
+        of one package must have the same arch, which means sstate cache
+        files with multiple archs are not considered duplicate.
 
         Conflicts with --stamps-dir.
 
