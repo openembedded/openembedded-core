@@ -674,7 +674,7 @@ python do_checkpkg() {
                                 if len(line)==0:
                                         break;
                                 puptag = line.split("/")[-1]
-                                puptag = re.search("[0-9][0-9|\.|_]+[0-9]", puptag)
+                                puptag = re.search("([0-9][\.|_]?)+", puptag)
                                 if puptag == None:
                                         continue;
                                 puptag = puptag.group()
@@ -714,6 +714,10 @@ python do_checkpkg() {
                 svncmd = "svn info %s %s://%s%s/%s/ 2>&1" % (" ".join(options), svnproto, host, path, parm["module"])
                 print svncmd
                 svninfo = os.popen(svncmd).read()
+                if "Can't connect to host " in svninfo or "Connection timed out" in svninfo:
+                        svncmd = "svn info %s %s://%s%s/%s/ 2>&1" % (" ".join(options), "http",
+                                       host, path, parm["module"])
+                        svninfo = os.popen(svncmd).read()
                 for line in svninfo.split("\n"):
                         if re.search("^Last Changed Rev:", line):
                                 pupver = line.split(" ")[-1]
