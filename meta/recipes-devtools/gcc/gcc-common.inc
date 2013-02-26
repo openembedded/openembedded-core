@@ -38,7 +38,7 @@ def get_gcc_multiarch_setting(bb, d):
 def get_tune_parameters(tune, d):
     availtunes = d.getVar('AVAILTUNES', True)
     if tune not in availtunes.split():
-        bb.error('The tune: %s is not one of the available tunes: %s', tune, availtunes)
+        bb.error('The tune: %s is not one of the available tunes: %s', tune or None, availtunes)
 
     localdata = bb.data.createCopy(d)
     override = ':tune-' + tune
