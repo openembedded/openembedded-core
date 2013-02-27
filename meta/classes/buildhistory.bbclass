@@ -45,6 +45,11 @@ python buildhistory_emit_pkghistory() {
             self.pr = "r0"
             self.depends = ""
             self.packages = ""
+            self.bbfile = ""
+            self.src_uri = ""
+            self.srcrev = ""
+            self.srcrev_autorev = ""
+
 
     class PackageInfo:
         def __init__(self, name):
@@ -152,6 +157,12 @@ python buildhistory_emit_pkghistory() {
     pe = d.getVar('PE', True) or "0"
     pv = d.getVar('PV', True)
     pr = d.getVar('PR', True)
+
+    bbfile = d.getVar('BB_FILENAME', True)
+    src_uri = d.getVar('SRC_URI', True)
+    srcrev = d.getVar('SRCREV', True)
+    srcrev_autorev = 'yes' if d.getVar('SRCREV', False) == 'AUTOINC' else 'no'
+
     packages = squashspaces(d.getVar('PACKAGES', True))
 
     packagelist = packages.split()
@@ -160,7 +171,7 @@ python buildhistory_emit_pkghistory() {
     else:
         # Remove files for packages that no longer exist
         for item in os.listdir(pkghistdir):
-            if item != "latest":
+            if item != "latest" and item != "latest_srcrev":
                 if item not in packagelist:
                     subdir = os.path.join(pkghistdir, item)
                     for subfile in os.listdir(subdir):
@@ -172,6 +183,10 @@ python buildhistory_emit_pkghistory() {
     rcpinfo.pv = pv
     rcpinfo.pr = pr
     rcpinfo.depends = sortlist(squashspaces(d.getVar('DEPENDS', True) or ""))
+    rcpinfo.bbfile = bbfile
+    rcpinfo.src_uri = src_uri
+    rcpinfo.srcrev = srcrev
+    rcpinfo.srcrev_autorev = srcrev_autorev
     rcpinfo.packages = packages
     write_recipehistory(rcpinfo, d)
 
@@ -242,6 +257,12 @@ def write_recipehistory(rcpinfo, d):
         f.write("PR = %s\n" %  rcpinfo.pr)
         f.write("DEPENDS = %s\n" %  rcpinfo.depends)
         f.write("PACKAGES = %s\n" %  rcpinfo.packages)
+
+    if rcpinfo.srcrev:
+        srcrevfile = os.path.join(pkghistdir, "latest_srcrev")
+        with open(srcrevfile, "w") as f:
+            f.write(','.join([rcpinfo.bbfile, rcpinfo.src_uri, rcpinfo.srcrev,
+                        rcpinfo.srcrev_autorev]))
 
 
 def write_pkghistory(pkginfo, d):
