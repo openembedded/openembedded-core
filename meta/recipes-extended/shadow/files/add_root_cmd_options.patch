@@ -528,7 +528,17 @@ diff -urN shadow-4.1.4.3.orig//src/grpconv.c shadow-4.1.4.3//src/grpconv.c
  int main (int argc, char **argv)
  {
  	const struct group *gr;
-@@ -100,6 +183,8 @@
+@@ -89,9 +172,6 @@
+ 	const struct sgrp *sg;
+ 	struct sgrp sgent;
+ 
+-	if (1 != argc) {
+-		(void) fputs (_("Usage: grpconv\n"), stderr);
+-	}
+ 	Prog = Basename (argv[0]);
+ 
+ 	(void) setlocale (LC_ALL, "");
+@@ -100,6 +180,8 @@
  
  	OPENLOG ("grpconv");
  
