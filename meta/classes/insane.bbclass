@@ -89,9 +89,6 @@ def package_qa_get_machine_dict():
                         "arm" :       (40,     0,    0,          True,          32),
                         "armeb" :     (40,     0,    0,          False,         32),
                       },
-            "linux-gnu" : {
-                        "powerpc":    (20,     0,    0,          False,         32),
-                      },
             "linux-gnuspe" : {
                         "powerpc":    (20,     0,    0,          False,         32),
                       },
@@ -99,8 +96,10 @@ def package_qa_get_machine_dict():
                         "powerpc":    (20,     0,    0,          False,         32),
                       },
             "linux-gnu" :       {
+                        "powerpc":    (20,     0,    0,          False,         32),
                         "microblaze":   (47787,  0,    0,          False,         32),
                         "microblazeel": (47787,  0,    0,          True,          32),
+                        "sh4":        (42,     0,    0,          True,          32),
                       },
             "linux-gnux32" :       {
                         "x86_64":     (62,     0,    0,          True,          32),
