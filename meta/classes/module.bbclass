@@ -28,7 +28,7 @@ module_pkg_postinst () {
 if [ -z "$D" ]; then
 	depmod -a ${KERNEL_VERSION}
 else
-	depmod -a -b $D -F ${STAGING_KERNEL_DIR}/System.map-${KERNEL_VERSION} ${KERNEL_VERSION}
+	depmodwrapper -a -b $D ${KERNEL_VERSION}
 fi
 }
 
@@ -36,7 +36,7 @@ module_pkg_postrm () {
 if [ -z "$D" ]; then
 	depmod -a ${KERNEL_VERSION}
 else
-	depmod -a -b $D -F ${STAGING_KERNEL_DIR}/System.map-${KERNEL_VERSION} ${KERNEL_VERSION}
+	depmodwrapper -a -b $D ${KERNEL_VERSION}
 fi
 }
 
