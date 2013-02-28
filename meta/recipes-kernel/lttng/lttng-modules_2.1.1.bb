@@ -10,8 +10,8 @@ DEPENDS = "virtual/kernel"
 
 inherit module
 
-SRCREV = "b945d6c4083ce287f390f54dff4b5e0b73a9f845"
-PV = "2.1.0"
+SRCREV = "b374c356eb4827b68754d68adc0f1c94b5de9faa"
+PV = "2.1.1"
 PR = "r0"
 
 SRC_URI = "git://git.lttng.org/lttng-modules.git;protocol=git \
