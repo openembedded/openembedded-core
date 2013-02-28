@@ -144,7 +144,7 @@ do_compile () {
 	echo "Adjust ldd script"
 	if [ -n "${RTLDLIST}" ]
 	then
-		prevrtld=`cat ${B}/elf/ldd | grep "^RTLDLIST=" | sed 's#^RTLDLIST=\(.*\)$#\1#'`
+		prevrtld=`cat ${B}/elf/ldd | grep "^RTLDLIST=" | sed 's#^RTLDLIST="\?\([^"]*\)"\?$#\1#'`
 		if [ "${prevrtld}" != "${RTLDLIST}" ]
 		then
 			sed -i ${B}/elf/ldd -e "s#^RTLDLIST=.*\$#RTLDLIST=\"${prevrtld} ${RTLDLIST}\"#"
