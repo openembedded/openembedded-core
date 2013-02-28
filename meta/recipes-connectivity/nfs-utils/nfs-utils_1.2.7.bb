@@ -58,6 +58,8 @@ do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
 	install -d ${D}${localstatedir}/lib/nfs/statd
 	install -m 0755 ${WORKDIR}/nfsserver ${D}${sysconfdir}/init.d/nfsserver
+	# kernel code as of 3.8 hard-codes this path as a default
+	install -d ${D}/var/lib/nfs/v4recovery
 
 	# the following are built by CC_FOR_BUILD
 	rm -f ${D}${sbindir}/rpcdebug
