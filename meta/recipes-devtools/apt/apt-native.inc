@@ -58,6 +58,8 @@ do_install_base () {
 	install -m 0755 dselect/update ${D}${libdir}/dpkg/methods/apt/ 
 
 	install -d ${D}${sysconfdir}/apt
+	install -d ${D}${sysconfdir}/apt/apt.conf.d
+	install -d ${D}${sysconfdir}/apt/preferences.d
 	install -d ${D}${localstatedir}/lib/apt/lists/partial
 	install -d ${D}${localstatedir}/cache/apt/archives/partial
 

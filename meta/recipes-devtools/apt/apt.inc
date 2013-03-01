@@ -5,16 +5,22 @@ SECTION = "base"
 SRC_URI = "${DEBIAN_MIRROR}/main/a/apt/apt_${PV}.tar.gz \
            file://no-ko-translation.patch \
            file://use-host.patch \
-           file://localefixes.patch \
            file://makerace.patch \
-           file://remove-redeclaration.patch \
+           file://no-nls-dpkg.patch \
+           file://fix-gcc-4.6-null-not-defined.patch \
            file://truncate-filename.patch \
-           file://allocate-larger-memory.patch \
+           file://nodoc.patch \
+           file://disable-configure-in-makefile.patch \
            "
 
 inherit autotools gettext
 
 EXTRA_AUTORECONF = "--exclude=autopoint,autoheader"
+
+do_configure_prepend() {
+    rm -rf buildlib/config.sub
+    rm -rf buildlib/config.guess
+}
 
 # Apt wants to know the glibc version by running a binary file, which will
 # fail, so we have to tell configure which version to use Since I don't know

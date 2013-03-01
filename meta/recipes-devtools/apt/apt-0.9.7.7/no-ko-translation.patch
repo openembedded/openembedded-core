@@ -1,0 +1,11 @@
+Upstream-Status: Inappropriate [configuration]
+
+---
+ po/LINGUAS |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/po/LINGUAS
++++ b/po/LINGUAS
+@@ -1 +1 @@
+-ar ast bg bs ca cs cy da de dz el es eu fi fr gl hu it ja km ko ku lt mr nb ne nl nn pl pt pt_BR ro ru sk sl sv th tl uk vi zh_CN zh_TW
++ar ast bg bs ca cs cy da de dz el es eu fi fr gl hu it ja km ku lt mr nb ne nl nn pl pt pt_BR ro ru sk sl sv th tl uk vi zh_CN zh_TW
