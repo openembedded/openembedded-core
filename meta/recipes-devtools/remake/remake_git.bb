@@ -9,6 +9,8 @@ SRC_URI += "file://version-remake.texi.patch"
 SRCREV = "414d6e84121c6740ff5079370c905dea0f0e1ddb"
 S = "${WORKDIR}/git"
 
+PV = "3.82+dbg-0.8+git${SRCPV}"
+
 DEPENDS += "readline"
 PROVIDES += "make"
 
