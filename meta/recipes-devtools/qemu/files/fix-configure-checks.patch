@@ -8,14 +8,14 @@ Patch from Paul Eggleton, Comments by RP 28/11/10
 
 Upstream-Status: Inappropriate [embedded specific]
 
-Index: qemu-1.2.0/configure
+Index: qemu-1.4.0/configure
 ===================================================================
---- qemu-1.2.0.orig/configure	2012-09-05 07:03:06.000000000 -0700
-+++ qemu-1.2.0/configure	2012-09-06 13:55:07.007793823 -0700
-@@ -281,6 +281,7 @@
+--- qemu-1.4.0.orig/configure	2013-02-15 15:05:35.000000000 -0800
++++ qemu-1.4.0/configure	2013-02-25 13:44:17.915273181 -0800
+@@ -286,6 +286,7 @@
  QEMU_CFLAGS="-Wstrict-prototypes -Wredundant-decls $QEMU_CFLAGS"
  QEMU_CFLAGS="-D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE $QEMU_CFLAGS"
- QEMU_INCLUDES="-I. -I\$(SRC_PATH) -I\$(SRC_PATH)/fpu"
+ QEMU_INCLUDES="-I. -I\$(SRC_PATH) -I\$(SRC_PATH)/include"
 +QEMU_CFLAGS="$QEMU_CFLAGS $CFLAGS"
  if test "$debug_info" = "yes"; then
      CFLAGS="-g $CFLAGS"
