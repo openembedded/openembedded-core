@@ -777,19 +777,23 @@ python write_specfile () {
         # Now process scriptlets
         if splitrpreinst:
             spec_scriptlets_bottom.append('%%pre -n %s' % splitname)
+            spec_scriptlets_bottom.append('# %s - preinst' % splitname)
             spec_scriptlets_bottom.append(splitrpreinst)
             spec_scriptlets_bottom.append('')
         if splitrpostinst:
             spec_scriptlets_bottom.append('%%post -n %s' % splitname)
+            spec_scriptlets_bottom.append('# %s - postinst' % splitname)
             spec_scriptlets_bottom.append(splitrpostinst)
             spec_scriptlets_bottom.append('')
         if splitrprerm:
             spec_scriptlets_bottom.append('%%preun -n %s' % splitname)
+            spec_scriptlets_bottom.append('# %s - prerm' % splitname)
             scriptvar = wrap_uninstall(splitrprerm)
             spec_scriptlets_bottom.append(scriptvar)
             spec_scriptlets_bottom.append('')
         if splitrpostrm:
             spec_scriptlets_bottom.append('%%postun -n %s' % splitname)
+            spec_scriptlets_bottom.append('# %s - postrm' % splitname)
             scriptvar = wrap_uninstall(splitrpostrm)
             spec_scriptlets_bottom.append(scriptvar)
             spec_scriptlets_bottom.append('')
