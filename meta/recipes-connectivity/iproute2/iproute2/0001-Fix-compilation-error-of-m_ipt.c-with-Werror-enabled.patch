@@ -1,0 +1,46 @@
+Upstream-Status: Backport
+
+From 9235195666af7d887771cf557ef2bd3f00b9ecc8 Mon Sep 17 00:00:00 2001
+From: Vijay Subramanian <subramanian.vijay@gmail.com>
+Date: Tue, 26 Feb 2013 09:12:07 +0000
+Subject: [PATCH] Fix compilation error of m_ipt.c with -Werror enabled
+
+Commit (5a650703d47e10aa386406c855eff5a593b2120b Makefile: make warnings into
+errors ) causes the following build error.
+
+gcc -Wall -Wstrict-prototypes -Werror -Wmissing-prototypes
+-Wmissing-declarations -Wold-style-definition -O2 -I../include
+-DRESOLVE_HOSTNAMES -DLIBDIR=\"/usr/lib\" -DCONFDIR=\"/etc/iproute2\"
+-D_GNU_SOURCE -DCONFIG_GACT -DCONFIG_GACT_PROB -DIPT_LIB_DIR=\"/lib/xtables\"
+-DYY_NO_INPUT   -c -o m_ipt.o m_ipt.c
+cc1: warnings being treated as errors
+m_ipt.c:72: error: no previous prototype for 'xtables_register_target'
+m_ipt.c:361: error: no previous prototype for 'build_st'
+make[1]: *** [m_ipt.o] Error 1
+
+This is fixed by adding the prototype in the header include/iptables.h
+
+I am not sure if this is due to something wrong on my build system but I am
+using current glibc 2.17.
+
+Signed-off-by: Vijay Subramanian <subramanian.vijay@gmail.com>
+---
+ include/iptables.h |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/iptables.h b/include/iptables.h
+index dd844c1..f1e62e2 100644
+--- a/include/iptables.h
++++ b/include/iptables.h
+@@ -143,6 +143,8 @@ extern int line;
+ /* Your shared library should call one of these. */
+ extern void register_match(struct iptables_match *me);
+ extern void register_target(struct iptables_target *me);
++extern void xtables_register_target(struct iptables_target *me);
++extern int build_st(struct iptables_target *target, struct ipt_entry_target *t);
+ 
+ extern struct in_addr *dotted_to_addr(const char *dotted);
+ extern char *addr_to_dotted(const struct in_addr *addrp);
+-- 
+1.7.9.5
+
