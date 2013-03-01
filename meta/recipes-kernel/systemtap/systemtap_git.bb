@@ -6,6 +6,10 @@ DEPENDS = "elfutils sqlite3 systemtap-native"
 DEPENDS_class-native = "elfutils-native sqlite3-native gettext-native"
 DEPENDS_class-nativesdk = "nativesdk-elfutils nativesdk-sqlite3 nativesdk-gettext"
 
+RDEPENDS_${PN} += "python bash"
+RDEPENDS_${PN}_class-native += "python-native"
+RDEPENDS_${PN}_class-nativesdk += "python-native"
+
 PR = "r1"
 
 EXTRA_OECONF += "--with-libelf=${STAGING_DIR_TARGET} --without-rpm \
