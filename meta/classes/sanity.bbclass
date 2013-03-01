@@ -263,39 +263,11 @@ def check_supported_distro(sanity_data):
     if not tested_distros:
         return
 
-    if os.path.exists("/etc/redhat-release"):
-        f = open("/etc/redhat-release", "r")
-        try:
-            distro = f.readline().strip()
-        finally:
-            f.close()
-    elif os.path.exists("/etc/SuSE-release"):
-        import re
-        f = open("/etc/SuSE-release", "r")
-        try:
-            distro = f.readline()
-            # Remove the architecture suffix e.g. (i586)
-            distro = re.sub(r' \([a-zA-Z0-9\-_]*\)$', '', distro).strip()
-        finally:
-            f.close()
-    else:
-        # Use LSB method
-        try:
-            distro = oe.lsb.distro_identifier()
-        except Exception:
-            distro = None
+    try:
+        distro = oe.lsb.distro_identifier()
+    except Exception:
+        distro = None
 
-        if not distro:
-            if os.path.exists("/etc/lsb-release"):
-                f = open("/etc/lsb-release", "r")
-                try:
-                    for line in f:
-                        lns = line.split('=')
-                        if lns[0] == "DISTRIB_DESCRIPTION":
-                            distro = lns[1].strip('"\n')
-                            break
-                finally:
-                    f.close()
     if distro:
         if distro not in [x.strip() for x in tested_distros.split('\\n')]:
             bb.warn('Host distribution "%s" has not been validated with this version of the build system; you may possibly experience unexpected failures. It is recommended that you use a tested distribution.' % distro)
