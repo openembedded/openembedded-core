@@ -17,6 +17,8 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs.git;p
 
 S = "${WORKDIR}/git"
 
+PV = "0.19+git${SRCPV}"
+
 PR = "r6"
 
 SRC_URI += " file://fix_use_of_gcc.patch \
