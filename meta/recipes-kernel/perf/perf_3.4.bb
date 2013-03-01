@@ -28,7 +28,7 @@ DEPENDS = "virtual/kernel \
           "
 
 SCRIPTING_RDEPENDS = "${@perf_feature_enabled('perf-scripting', 'perl perl-modules python', '',d)}"
-RDEPENDS_${PN} += "elfutils ${SCRIPTING_RDEPENDS}"
+RDEPENDS_${PN} += "elfutils bash ${SCRIPTING_RDEPENDS}"
 
 PROVIDES = "virtual/perf"
 
