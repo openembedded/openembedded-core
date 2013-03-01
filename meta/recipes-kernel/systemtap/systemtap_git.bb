@@ -6,11 +6,15 @@ DEPENDS = "elfutils sqlite3 systemtap-native"
 DEPENDS_virtclass-native = "elfutils-native sqlite3-native gettext-native"
 DEPENDS_virtclass-nativesdk = "nativesdk-elfutils nativesdk-sqlite3 nativesdk-gettext"
 
-PR = "r0"
+PR = "r1"
 
 export CC_FOR_BUILD = "${BUILD_CC}"
 export CFLAGS_FOR_BUILD = "${BUILD_CFLAGS}"
 export LDFLAGS_FOR_BUILD = "${BUILD_LDFLAGS}"
+
+RDEPENDS_${PN} += "python bash"
+RDEPENDS_${PN}_class-native += "python-native"
+RDEPENDS_${PN}_class-nativesdk += "python-native"
 
 EXTRA_OECONF += "--with-libelf=${STAGING_DIR_TARGET} --without-rpm \
             --without-nss --without-avahi \
