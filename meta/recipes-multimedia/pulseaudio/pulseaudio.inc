@@ -41,6 +41,7 @@ EXTRA_OECONF = "\
 		--disable-xen \
 		--with-database=simple \
 		--without-fftw \
+                ac_cv_header_valgrind_memcheck_h=no \
 "
 
 EXTRA_OECONF_append_arm += "${@bb.utils.contains("TUNE_FEATURES", "neon", "", "--enable-neon-opt=no", d)}"
