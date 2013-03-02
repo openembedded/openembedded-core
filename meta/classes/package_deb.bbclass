@@ -117,12 +117,18 @@ package_install_internal_deb () {
 	fi
 
 	# normal install
-	for i in ${package_to_install}; do
-		apt-get install $i --force-yes --allow-unauthenticated
+	if [ ! -z "${package_to_install}" ]; then
+		apt-get install ${package_to_install} --force-yes --allow-unauthenticated
 		if [ $? -ne 0 ]; then
 			exit 1
 		fi
-	done
+
+		# Attempt to correct the probable broken dependencies in place.
+		apt-get -f install
+		if [ $? -ne 0 ]; then
+			exit 1
+		fi
+	fi
 
 	rm -f `dirname ${BB_LOGFILE}`/log.do_${task}-attemptonly.${PID}
 	if [ ! -z "${package_attemptonly}" ]; then
