@@ -3,7 +3,7 @@ require recipes-extended/chkconfig/chkconfig_1.3.58.bb
 SUMMARY = "${SUMMARY_chkconfig-alternatives}"
 DESCRIPTION = "${DESCRIPTION_chkconfig-alternatives}"
 DEPENDS = ""
-PROVIDES = "${PN} virtual/update-alternatives-native"
+PROVIDES += "virtual/update-alternatives-native"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 # The sysroot branch is 1.3.59 + some git commits from master + --sysroot
