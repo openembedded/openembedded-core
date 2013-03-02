@@ -3,6 +3,10 @@ LICENSE = "MIT"
 PR = "r0"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
+INHIBIT_DEFAULT_DEPS = "1"
+# The kernel and the staging dir for it is machine specific
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 # We need the following for the sstate code to process the wrapper
 SSTATE_SCAN_FILES += "depmodwrapper"
 
