@@ -82,6 +82,9 @@ package_install_internal_deb () {
 
 	tac ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev > ${STAGING_ETCDIR_NATIVE}/apt/sources.list
 
+	# The params in deb package control don't allow character `_', so
+	# change the arch's `_' to `-' in it.
+	dpkg_arch=`echo ${dpkg_arch} | sed 's/_/-/g'`
 	cat "${STAGING_ETCDIR_NATIVE}/apt/apt.conf.sample" \
 		| sed -e "s#Architecture \".*\";#Architecture \"${dpkg_arch}\";#" \
 		| sed -e "s:#ROOTFS#:${target_rootfs}:g" \
@@ -259,6 +262,11 @@ python do_package_deb () {
                     raise KeyError(f)
                 if i == 'DPKG_ARCH' and d.getVar('PACKAGE_ARCH', True) == 'all':
                     data = 'all'
+                elif i == 'PACKAGE_ARCH' or i == 'DPKG_ARCH':
+                   # The params in deb package control don't allow character
+                   # `_', so change the arch's `_' to `-'. Such as `x86_64'
+                   # -->`x86-64'
+                   data = data.replace('_', '-')
                 l2.append(data)
             return l2
 
