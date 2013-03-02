@@ -13,7 +13,9 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-dmesg | grep -iq "error"
+# For now, ignore mmci-pl18x errors on qemuarm which appeared
+# from the 3.8 kernel and are harmless
+dmesg | grep -v mmci-pl18x | grep -iq "error"
 if [ $? -eq 0 ]; then
 	echo "QEMU: There is some error log in dmesg:"
 	echo "QEMU: ##### Error Log ######"
