@@ -93,7 +93,8 @@ translate_smart_to_oe() {
 			while [ -n "$1" ]; do
 				cmp_arch=$1
 				shift
-				if [ "$arch" = "$cmp_arch" -o "$fixed_arch" = "$cmp_arch" ]; then
+				fixed_cmp_arch=`echo "$cmp_arch" | tr _ -`
+				if [ "$fixed_arch" = "$fixed_cmp_arch" ]; then
 					if [ "$mlib" = "default" ]; then
 						new_pkg="$pkg"
 						new_arch=$cmp_arch
@@ -114,7 +115,7 @@ translate_smart_to_oe() {
 					# break
 				fi
 			done
-			if [ "$found" = "1" ] && [ "$arch" = "$cmp_arch" -o "$fixed_arch" = "$cmp_arch" ]; then
+			if [ "$found" = "1" ] && [ "$fixed_arch" = "$fixed_cmp_arch" ]; then
 				break
 			fi
 		done
