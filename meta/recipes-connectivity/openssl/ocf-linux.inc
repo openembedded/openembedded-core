@@ -20,5 +20,5 @@ do_install() {
     install -m 0644 ${S}/ocf/*.h ${D}${includedir}/crypto/
 }
 
-ALLOW_EMPTY = "1"
+ALLOW_EMPTY_${PN} = "1"
 BBCLASSEXTEND = "native nativesdk"

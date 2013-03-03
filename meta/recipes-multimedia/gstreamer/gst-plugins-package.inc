@@ -24,8 +24,6 @@ python populate_packages_prepend () {
     d.setVar('DESCRIPTION_' + metapkg, pn + ' meta package')
 }
 
-ALLOW_EMPTY = "1"
-
 PACKAGES += "${PN}-apps ${PN}-meta ${PN}-glib"
 FILES_${PN}-apps = "${bindir}"
 

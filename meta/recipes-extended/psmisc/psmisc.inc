@@ -15,7 +15,7 @@ S = "${WORKDIR}/psmisc-${PV}"
 
 inherit autotools gettext
 
-ALLOW_EMPTY = "1"
+ALLOW_EMPTY_${PN} = "1"
 
 PACKAGES =+ "fuser fuser-doc killall killall-doc pstree pstree-doc"
 PACKAGES += "psmisc-extras"

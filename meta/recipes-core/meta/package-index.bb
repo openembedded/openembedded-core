@@ -2,7 +2,6 @@ DESCRIPTION = "Rebuild the package index"
 LICENSE = "MIT"
 
 INHIBIT_DEFAULT_DEPS = "1"
-ALLOW_EMPTY = "1"
 PACKAGES = ""
 
 do_fetch[noexec] = "1"
