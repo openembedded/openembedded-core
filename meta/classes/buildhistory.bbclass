@@ -14,6 +14,7 @@ BUILDHISTORY_DIR_PACKAGE = "${BUILDHISTORY_DIR}/packages/${MULTIMACH_TARGET_SYS}
 BUILDHISTORY_COMMIT ?= "0"
 BUILDHISTORY_COMMIT_AUTHOR ?= "buildhistory <buildhistory@${DISTRO}>"
 BUILDHISTORY_PUSH_REPO ?= ""
+BUILDHISTORY_CHECKVERBACKWARDS ?= "1"
 
 # Must inherit package first before changing PACKAGEFUNCS
 inherit package
@@ -183,14 +184,15 @@ python buildhistory_emit_pkghistory() {
         # Find out what the last version was
         # Make sure the version did not decrease
         #
-        lastversion = getlastpkgversion(pkg)
-        if lastversion:
-            last_pkge = lastversion.pkge
-            last_pkgv = lastversion.pkgv
-            last_pkgr = lastversion.pkgr
-            r = bb.utils.vercmp((pkge, pkgv, pkgr), (last_pkge, last_pkgv, last_pkgr))
-            if r < 0:
-                bb.error("Package version for package %s went backwards which would break package feeds from (%s:%s-%s to %s:%s-%s)" % (pkg, last_pkge, last_pkgv, last_pkgr, pkge, pkgv, pkgr))
+        if d.getVar("BUILDHISTORY_CHECKVERBACKWARDS", True) == "1":
+            lastversion = getlastpkgversion(pkg)
+            if lastversion:
+                last_pkge = lastversion.pkge
+                last_pkgv = lastversion.pkgv
+                last_pkgr = lastversion.pkgr
+                r = bb.utils.vercmp((pkge, pkgv, pkgr), (last_pkge, last_pkgv, last_pkgr))
+                if r < 0:
+                    bb.error("Package version for package %s went backwards which would break package feeds from (%s:%s-%s to %s:%s-%s)" % (pkg, last_pkge, last_pkgv, last_pkgr, pkge, pkgv, pkgr))
 
         pkginfo = PackageInfo(pkg)
         # Apparently the version can be different on a per-package basis (see Python)
