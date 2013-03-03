@@ -49,10 +49,6 @@ PACKAGES += "${ALSA_UTILS_PKGS}"
 RDEPENDS_${PN} += "${ALSA_UTILS_PKGS}"
 RDEPENDS_alsa-utils-alsaconf += "bash"
 
-# We omit alsaconf, because
-# a) this is a bash script
-# b) it creates config files not suitable for OE-based distros
-
 FILES_${PN} = ""
 FILES_alsa-utils-aplay       = "${bindir}/aplay ${bindir}/arecord"
 FILES_alsa-utils-amixer      = "${bindir}/amixer"
