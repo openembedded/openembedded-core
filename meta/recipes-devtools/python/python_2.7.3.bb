@@ -1,6 +1,6 @@
 require python.inc
 DEPENDS = "python-native bzip2 db gdbm openssl readline sqlite3 zlib"
-PR = "${INC_PR}.2"
+PR = "${INC_PR}.3"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
 DISTRO_SRC_URI_linuxstdbase = ""
@@ -28,6 +28,7 @@ SRC_URI += "\
   file://python-2.7.3-berkeley-db-5.3.patch \
   file://python-2.7.3-remove-bsdb-rpath.patch \
   file://builddir.patch \
+  file://python-2.7.3-CVE-2012-2135.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"
