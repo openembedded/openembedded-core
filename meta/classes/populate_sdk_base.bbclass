@@ -29,14 +29,9 @@ EXCLUDE_FROM_WORLD = "1"
 
 SDK_PACKAGING_FUNC ?= "create_shar"
 
-python () {
-    # If we don't do this we try and run the mapping hooks while parsing which is slow
-    # bitbake should really provide something to let us know this...
-    if bb.data.getVar('BB_WORKERCONTEXT', d, True) is not None:
-        runtime_mapping_rename("TOOLCHAIN_TARGET_TASK", d)
-}
-
 fakeroot python do_populate_sdk() {
+    runtime_mapping_rename("TOOLCHAIN_TARGET_TASK", d)
+
     bb.build.exec_func("populate_sdk_image", d)
 
     # Handle multilibs in the SDK environment, siteconfig, etc files...
