@@ -1,5 +1,11 @@
 require avahi.inc
 
+inherit systemd
+
+SYSTEMD_PACKAGES = "${PN}-daemon ${PN}-dnsconfd"
+SYSTEMD_SERVICE_avahi-daemon = "avahi-daemon.service"
+SYSTEMD_SERVICE_avahi-dnsconfd = "avahi-dnsconfd.service"
+
 LIC_FILES_CHKSUM = "file://LICENSE;md5=2d5025d4aa3495befef8f17206a5b0a1 \
                     file://avahi-common/address.h;endline=25;md5=b1d1d2cda1c07eb848ea7d6215712d9d \
                     file://avahi-core/dns.h;endline=23;md5=6fe82590b81aa0ddea5095b548e2fdcb \

@@ -37,11 +37,7 @@ USERADD_PARAM_avahi-autoipd = "--system --home /var/run/avahi-autoipd \
                               -c \"Avahi autoip daemon\" \
                               avahi-autoipd"
 
-inherit autotools pkgconfig update-rc.d gettext systemd useradd
-
-SYSTEMD_PACKAGES = "${PN}-daemon ${PN}-dnsconfd"
-SYSTEMD_SERVICE_avahi-daemon = "avahi-daemon.service"
-SYSTEMD_SERVICE_avahi-dnsconfd = "avahi-dnsconfd.service"
+inherit autotools pkgconfig update-rc.d gettext useradd
 
 EXTRA_OECONF = "--disable-introspection \
              --with-avahi-priv-access-group=adm \
