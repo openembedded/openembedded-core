@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=0c35ff3c4c83b89d2f076e315caac28b \
 
 BBCLASSEXTEND = "native"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.bz2 \
            file://configure_fixes.patch \
@@ -43,7 +43,7 @@ do_install_append() {
 	cp ${S}/${HOST_SYS}-libtool ${D}${datadir}/build-1/libtool
 }
 
-SSTATE_SCAN_FILES += "apr_rules.mk"
+SSTATE_SCAN_FILES += "apr_rules.mk libtool"
 
 SYSROOT_PREPROCESS_FUNCS += "apr_sysroot_preprocess"
 
