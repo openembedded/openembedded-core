@@ -5,18 +5,18 @@ BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1 \
-                    file://src/gpg-error.h.in;endline=23;md5=508c78081f11544da0fbb8c95913a301 \
+                    file://src/gpg-error.h.in;endline=23;md5=6ac0378874589a44d53512b3786b4bc0 \
                     file://src/init.c;endline=20;md5=b69742f2a8827d494c6f6a4b1768416c"
 
 
 SECTION = "libs"
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch"
 
-SRC_URI[md5sum] = "736a03daa9dc5873047d4eb4a9c22a16"
-SRC_URI[sha256sum] = "520629b4568b5c29b1991c8ffc267c8bdee5f223c7333c42a651b56f9b1c5431"
+SRC_URI[md5sum] = "b9fa55b71cae73cb2e44254c2acc4e2c"
+SRC_URI[sha256sum] = "ae3376480a073b120c7add08f1e6cfcc08500648ccf22461cd42db6224a218c0"
 
 inherit autotools binconfig pkgconfig gettext
 
