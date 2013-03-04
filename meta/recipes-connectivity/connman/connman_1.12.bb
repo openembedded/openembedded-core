@@ -1,12 +1,11 @@
 require connman.inc
 
-# 1.10 tag
-SRCREV = "3bda76eb442c9395db1dba17352c3e78376671cc"
+# 1.12 tag
+SRCREV = "8397cbbc0a79d39cf3b1880f4fd3f3405b6bc6ad"
 SRC_URI  = "git://git.kernel.org/pub/scm/network/connman/connman.git \
             file://0001-plugin.h-Change-visibility-to-default-for-debug-symb.patch \
             file://add_xuser_dbus_permission.patch \
             file://connman \
-            file://0002-storage.c-If-there-is-no-d_type-support-use-fstatat.patch \
             file://inet-fix-ip-cleanup-functions.patch \
             file://add-in.h-for-ipv6.patch"
 S = "${WORKDIR}/git"
