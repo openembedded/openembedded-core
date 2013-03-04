@@ -12,6 +12,7 @@ PREFERRED_PROVIDER_virtual/update-alternatives ?= "opkg"
 PREFERRED_PROVIDER_virtual/update-alternatives-native ?= "opkg-native"
 PREFERRED_PROVIDER_virtual/libx11 ?= "libx11"
 PREFERRED_PROVIDER_xf86-video-intel ?= "xf86-video-intel"
+PREFERRED_PROVIDER_virtual/gtk-update-icon-cache-native ?= "gtk-update-icon-cache-native"
 
 #
 # Default virtual runtime providers
