@@ -28,6 +28,7 @@ PACKAGES = ' \
             ${@base_contains("DISTRO_FEATURES", "bluetooth", "packagegroup-base-bluetooth", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "wifi", "packagegroup-base-wifi", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "3g", "packagegroup-base-3g", "", d)} \
+            ${@base_contains("DISTRO_FEATURES", "nfc", "packagegroup-base-nfc", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "cramfs", "packagegroup-base-cramfs", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "ipsec", "packagegroup-base-ipsec", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "ipv6", "packagegroup-base-ipv6", "", d)} \
@@ -71,6 +72,7 @@ RDEPENDS_packagegroup-base = "\
     ${@base_contains('COMBINED_FEATURES', 'bluetooth', 'packagegroup-base-bluetooth', '',d)} \
     ${@base_contains('COMBINED_FEATURES', 'wifi', 'packagegroup-base-wifi', '',d)} \
     ${@base_contains('COMBINED_FEATURES', '3g', 'packagegroup-base-3g', '',d)} \
+    ${@base_contains('COMBINED_FEATURES', 'nfc', 'packagegroup-base-nfc', '',d)} \
     \
     ${@base_contains('DISTRO_FEATURES', 'nfs', 'packagegroup-base-nfs', '',d)} \
     ${@base_contains('DISTRO_FEATURES', 'cramfs', 'packagegroup-base-cramfs', '',d)} \
@@ -96,11 +98,13 @@ RDEPENDS_packagegroup-base-extended = "\
     ${ADD_WIFI} \
     ${ADD_BT} \
     ${ADD_3G} \
+    ${ADD_NFC} \
     "
 
 ADD_WIFI = ""
 ADD_BT = ""
 ADD_3G = ""
+ADD_NFC = ""
 
 python __anonymous () {
     # If Distro want wifi and machine feature wifi/pci/pcmcia/usbhost (one of them)
@@ -117,6 +121,9 @@ python __anonymous () {
 
     if "3g" in distro_features and not "3g" in machine_features and ("pcmcia" in machine_features or "pci" in machine_features or "usbhost" in machine_features):
         d.setVar("ADD_3G", "packagegroup-base-3g")
+
+    if "nfc" in distro_features and not "nfc" in machine_features and ("usbhost" in machine_features):
+        d.setVar("ADD_NFC", "packagegroup-base-nfc")
 
     # For backwards compatibility after rename
     packages = d.getVar("PACKAGES", True).split()
@@ -308,6 +315,13 @@ RRECOMMENDS_packagegroup-base-wifi = "\
     kernel-module-michael-mic \
     kernel-module-aes-generic \
     kernel-module-aes"
+
+SUMMARY_packagegroup-base-nfc = "Near Field Communication support"
+RDEPENDS_packagegroup-base-nfc = "\
+    neard"
+
+RRECOMMENDS_packagegroup-base-nfc = "\
+    kernel-module-nfc"
 
 SUMMARY_packagegroup-base-3g = "Cellular data support"
 RDEPENDS_packagegroup-base-3g = "\
