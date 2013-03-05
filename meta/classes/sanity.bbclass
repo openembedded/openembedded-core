@@ -309,6 +309,31 @@ def check_sanity_validmachine(sanity_data):
 
     return messages
 
+# Checks if necessary to add option march to host gcc
+def check_gcc_march(sanity_data):
+    result = False
+
+    # Check if -march not in BUILD_CFLAGS
+    if sanity_data.getVar("BUILD_CFLAGS",True).find("-march") < 0:
+
+        # Construct a test file
+        f = file("gcc_test.c", "w")
+        f.write("int main (){ __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4; return 0;}\n")
+        f.close()
+        import commands
+
+        # Check if GCC could work without march
+        status,result = commands.getstatusoutput("${BUILD_PREFIX}gcc gcc_test.c -o gcc_test")
+        if status != 0:
+            # Check if GCC could work with march
+            status,result = commands.getstatusoutput("${BUILD_PREFIX}gcc -march=native gcc_test.c -o gcc_test")
+            if status == 0:
+                result =  True
+
+        os.remove("gcc_test.c")
+        os.remove("gcc_test")
+
+    return result
 
 def check_sanity(sanity_data):
     import subprocess
@@ -415,6 +440,10 @@ def check_sanity(sanity_data):
     if "qemu-native" in assume_provided:
         if not check_app_exists("qemu-arm", sanity_data):
             messages = messages + "qemu-native was in ASSUME_PROVIDED but the QEMU binaries (qemu-arm) can't be found in PATH"
+
+    if check_gcc_march(sanity_data):
+        messages = messages + "Your gcc version is older than 4.5, please add the following param to local.conf\n \
+        BUILD_CFLAGS_append = \" -march=native\"\n"
 
     paths = sanity_data.getVar('PATH', True).split(":")
     if "." in paths or "" in paths:
