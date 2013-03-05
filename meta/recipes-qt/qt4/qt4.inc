@@ -314,6 +314,7 @@ python populate_packages_prepend() {
     qtopia_split('designer',      'designer',      '^lib(.*)\.so$')
     qtopia_split('gfxdrivers',    'gfxdriver',     '^libq(.*)\.so$')
     qtopia_split('graphicssystems','graphicssystems', '^libq(.*)\.so$')
+    qtopia_split('kbddrivers',    'kbddriver',     '^libq(.*)kbddriver\.so$')
     qtopia_split('mousedrivers',  'mousedriver',   '^libq(.*)mousedriver\.so$')
     qtopia_split('iconengines',   'iconengine',    '^libq(.*)\.so$')
     qtopia_split('imageformats',  'imageformat',   '^libq(.*)\.so$')
