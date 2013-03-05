@@ -7,7 +7,7 @@
 # packages up any existing documentation (so from tarball builds).
 
 # The documentation directory, where the infrastructure will be copied.
-GTKDOC_DOCDIR ?= "${S}"
+GTKDOC_DOCDIR ?= "${B}"
 
 DEPENDS_append = " gtk-doc-stub-native"
 
@@ -18,5 +18,5 @@ EXTRA_OECONF_append = "\
 "
 
 do_configure_prepend () {
-	gtkdocize --docdir ${GTKDOC_DOCDIR}
+	( cd ${S}; gtkdocize --docdir ${GTKDOC_DOCDIR} )
 }
