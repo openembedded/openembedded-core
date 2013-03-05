@@ -86,6 +86,8 @@ EXTRA_OEMAKE += "\
 	'infodir=${@oe.path.relative(prefix, infodir)}' \
 "
 
+PARALLEL_MAKE = ""
+
 do_compile() {
 	oe_runmake all
 }
