@@ -1,5 +1,5 @@
 SUMMARY = "Interface for user-level network packet capture"
-DESCRIPT = "Libpcap provides a portable framework for low-level network \
+DESCRIPTION = "Libpcap provides a portable framework for low-level network \
 monitoring.  Libpcap can provide network statistics collection, \
 security monitoring and network debugging."
 HOMEPAGE = "http://www.tcpdump.org/"
@@ -14,7 +14,7 @@ PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluetooth',
 PACKAGECONFIG[bluetooth] = "--enable-bluetooth,--disable-bluetooth,bluez4"
 PACKAGECONFIG[canusb] = "--enable-canusb,--enable-canusb=no,libusb"
 
-INC_PR = "r4"
+INC_PR = "r5"
 
 SRC_URI = "http://www.tcpdump.org/release/libpcap-${PV}.tar.gz"
 
