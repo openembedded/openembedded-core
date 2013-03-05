@@ -1,0 +1,68 @@
+Upstream-Status: Backport
+
+From ae70d9665615ae723a108947aa60b5f65caffab2 Mon Sep 17 00:00:00 2001
+From: Stephen Hemminger <stephen@networkplumber.org>
+Date: Mon, 4 Mar 2013 13:59:39 -0800
+Subject: [PATCH] ipntable: more fixes for ppc64
+
+Not all arch have sizeof(unsigned long long) == sizeof(__u64)
+---
+ ip/ipntable.c |   30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
+
+diff --git a/ip/ipntable.c b/ip/ipntable.c
+index a1a3c26..67b199e 100644
+--- a/ip/ipntable.c
++++ b/ip/ipntable.c
+@@ -560,28 +560,38 @@ int print_ntable(const struct sockaddr_nl *who, struct nlmsghdr *n, void *arg)
+ 		fprintf(fp, "    ");
+ 		fprintf(fp, "stats ");
+ 
+-		fprintf(fp, "allocs %llu ", ndts->ndts_allocs);
+-		fprintf(fp, "destroys %llu ", ndts->ndts_destroys);
+-		fprintf(fp, "hash_grows %llu ", ndts->ndts_hash_grows);
++		fprintf(fp, "allocs %llu ",
++			(unsigned long long) ndts->ndts_allocs);
++		fprintf(fp, "destroys %llu ",
++			(unsigned long long) ndts->ndts_destroys);
++		fprintf(fp, "hash_grows %llu ",
++			(unsigned long long) ndts->ndts_hash_grows);
+ 
+ 		fprintf(fp, "%s", _SL_);
+ 		fprintf(fp, "        ");
+ 
+-		fprintf(fp, "res_failed %llu ", ndts->ndts_res_failed);
+-		fprintf(fp, "lookups %llu ", ndts->ndts_lookups);
+-		fprintf(fp, "hits %llu ", ndts->ndts_hits);
++		fprintf(fp, "res_failed %llu ",
++			(unsigned long long) ndts->ndts_res_failed);
++		fprintf(fp, "lookups %llu ",
++			(unsigned long long) ndts->ndts_lookups);
++		fprintf(fp, "hits %llu ",
++			(unsigned long long) ndts->ndts_hits);
+ 
+ 		fprintf(fp, "%s", _SL_);
+ 		fprintf(fp, "        ");
+ 
+-		fprintf(fp, "rcv_probes_mcast %llu ", ndts->ndts_rcv_probes_mcast);
+-		fprintf(fp, "rcv_probes_ucast %llu ", ndts->ndts_rcv_probes_ucast);
++		fprintf(fp, "rcv_probes_mcast %llu ",
++			(unsigned long long) ndts->ndts_rcv_probes_mcast);
++		fprintf(fp, "rcv_probes_ucast %llu ",
++			(unsigned long long) ndts->ndts_rcv_probes_ucast);
+ 
+ 		fprintf(fp, "%s", _SL_);
+ 		fprintf(fp, "        ");
+ 
+-		fprintf(fp, "periodic_gc_runs %llu ", ndts->ndts_periodic_gc_runs);
+-		fprintf(fp, "forced_gc_runs %llu ", ndts->ndts_forced_gc_runs);
++		fprintf(fp, "periodic_gc_runs %llu ",
++			(unsigned long long) ndts->ndts_periodic_gc_runs);
++		fprintf(fp, "forced_gc_runs %llu ",
++			(unsigned long long) ndts->ndts_forced_gc_runs);
+ 
+ 		fprintf(fp, "%s", _SL_);
+ 	}
+-- 
+1.7.9.7
+
