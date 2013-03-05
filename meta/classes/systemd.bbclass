@@ -24,19 +24,23 @@ if [ -n "$D" ]; then
     OPTS="--root=$D"
 fi
 
-systemctl $OPTS ${SYSTEMD_AUTO_ENABLE} ${SYSTEMD_SERVICE}
+if type systemctl >/dev/null; then
+	systemctl $OPTS ${SYSTEMD_AUTO_ENABLE} ${SYSTEMD_SERVICE}
 
-if [ -z "$D" -a "${SYSTEMD_AUTO_ENABLE}" = "enable" ]; then
-    systemctl start ${SYSTEMD_SERVICE}
+	if [ -z "$D" -a "${SYSTEMD_AUTO_ENABLE}" = "enable" ]; then
+		systemctl start ${SYSTEMD_SERVICE}
+	fi
 fi
 }
 
 systemd_prerm() {
-if [ -z "$D" ]; then
-    systemctl stop ${SYSTEMD_SERVICE}
-fi
+if type systemctl >/dev/null; then
+	if [ -z "$D" ]; then
+		systemctl stop ${SYSTEMD_SERVICE}
+	fi
 
-systemctl disable ${SYSTEMD_SERVICE}
+	systemctl disable ${SYSTEMD_SERVICE}
+fi
 }
 
 python systemd_populate_packages() {
@@ -54,14 +58,6 @@ python systemd_populate_packages() {
         packages = d.getVar('PACKAGES', True)
         if not pkg_systemd in packages.split():
             bb.error('%s does not appear in package list, please add it' % pkg_systemd)
-
-
-    # Add a runtime dependency on systemd to pkg
-    def systemd_add_rdepends(pkg):
-        rdepends = d.getVar('RDEPENDS_' + pkg, True) or ""
-        if not 'systemd' in rdepends.split():
-            rdepends = '%s %s' % (rdepends, 'systemd')
-        d.setVar('RDEPENDS_' + pkg, rdepends)
 
 
     def systemd_generate_package_scripts(pkg):
@@ -156,7 +152,6 @@ python systemd_populate_packages() {
             systemd_check_package(pkg)
             if d.getVar('SYSTEMD_SERVICE_' + pkg, True):
                 systemd_generate_package_scripts(pkg)
-                systemd_add_rdepends(pkg)
         systemd_check_services()
 }
 
