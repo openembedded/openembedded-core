@@ -9,5 +9,7 @@ SRC_URI_append = " file://use-includedir.patch \
                    file://obsolete_automake_macros.patch \
                    "
 
+PR = "r2"                   
+
 SRC_URI[md5sum] = "cf6d7cb5915f29ce0fc41d042205c080"
 SRC_URI[sha256sum] = "ed5239a62aeaba6cfc8d50ec36fb59215618f98c248d4bb05ca9bccd990794dc"
