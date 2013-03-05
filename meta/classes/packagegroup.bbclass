@@ -1,9 +1,5 @@
 # Class for packagegroup (package group) recipes
 
-# packagegroup packages are only used to pull in other packages
-# via their dependencies. They are empty.
-ALLOW_EMPTY = "1"
-
 # By default, only the packagegroup package itself is in PACKAGES.
 # -dbg and -dev flavours are handled by the anonfunc below.
 # This means that packagegroup recipes used to build multiple packagegroup
@@ -18,16 +14,16 @@ inherit allarch
 # This automatically adds -dbg and -dev flavours of all PACKAGES
 # to the list. Their dependencies (RRECOMMENDS) are handled as usual
 # by package_depchains in a following step.
+# Also mark all packages as ALLOW_EMPTY
 python () {
-    if d.getVar('PACKAGEGROUP_DISABLE_COMPLEMENTARY', True) == '1':
-        return
-
     packages = d.getVar('PACKAGES', True).split()
     genpackages = []
     for pkg in packages:
+        d.setVar("ALLOW_EMPTY_%s" % pkg, "1")
         for postfix in ['-dbg', '-dev', '-ptest']:
             genpackages.append(pkg+postfix)
-    d.setVar('PACKAGES', ' '.join(packages+genpackages))
+    if d.getVar('PACKAGEGROUP_DISABLE_COMPLEMENTARY', True) != '1':
+        d.setVar('PACKAGES', ' '.join(packages+genpackages))
 }
 
 # We don't want to look at shared library dependencies for the
