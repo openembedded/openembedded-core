@@ -7,11 +7,9 @@ LIC_FILES_CHKSUM = "file://GPL;md5=4325afd396febcb659c36b49533135d4 \
                     file://LGPL;md5=2d5025d4aa3495befef8f17206a5b0a1 \
                     file://src/modules/bluetooth/proximity-helper.c;beginline=1;endline=25;md5=e4cc710e40a4d900c2c294167bc58270 \
                     file://src/pulsecore/resampler.h;beginline=4;endline=23;md5=c3d539b93f8c82a1780bfa3cfa544a95"
-DEPENDS = "libatomics-ops liboil avahi libsamplerate0 libsndfile1 libtool \
-           ${@base_contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 libxtst libice libsm libxcb gtk+', '', d)}"
+DEPENDS = "libatomics-ops liboil avahi libsamplerate0 libsndfile1 libtool"
 # optional
-DEPENDS += "udev alsa-lib glib-2.0 dbus gconf \
-           ${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluez4 sbc', '', d)}"
+DEPENDS += "udev alsa-lib glib-2.0 dbus gconf"
 
 SRC_URI = "http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-${PV}.tar.gz \
            file://gcc4-compile-fix.patch \
@@ -25,9 +23,7 @@ USE_NLS = "yes"
 
 EXTRA_OECONF = "\
 		--disable-lynx \
-		${@base_contains('DISTRO_FEATURES', 'bluetooth', '--enable-bluez', '--disable-bluez', d)} \
 		--disable-polkit \
-		${@base_contains('DISTRO_FEATURES', 'x11', '--enable-x11', '--disable-x11 --disable-gtk2', d)} \
 		--without-jack \
 		--with-glib \
 		--with-alsa \
@@ -43,6 +39,12 @@ EXTRA_OECONF = "\
 		--without-fftw \
                 ac_cv_header_valgrind_memcheck_h=no \
 "
+
+PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluez', '', d)} \
+                   ${@base_contains('DISTRO_FEATURES', 'x11', 'gtk x11', '', d)}"
+PACKAGECONFIG[bluez] = "--enable-bluez,--disable-bluez,bluez4 sbc"
+PACKAGECONFIG[gtk] = "--enable-gtk2,--disable-gtk2,gtk+"
+PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11 libxtst libice libsm libxcb"
 
 EXTRA_OECONF_append_arm += "${@bb.utils.contains("TUNE_FEATURES", "neon", "", "--enable-neon-opt=no", d)}"
 
