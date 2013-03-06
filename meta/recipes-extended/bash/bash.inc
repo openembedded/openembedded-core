@@ -25,10 +25,8 @@ do_configure_prepend () {
 	fi
 }
 
-do_compile_append () {
-        if [ "${PN}" = "${BPN}" -a ${PTEST_ENABLED} = "1" ]; then
-            oe_runmake buildtest
-        fi
+do_compile_ptest () {
+	oe_runmake buildtest
 }
 
 do_install_append () {
@@ -37,12 +35,11 @@ do_install_append () {
 		mkdir -p ${D}${base_bindir}
 		mv ${D}${bindir}/bash ${D}${base_bindir}
 	fi
+}
 
-        if [ "${PN}" = "${BPN}" -a ${PTEST_ENABLED} = "1" ]; then
-            ptest_do_install
-            make INSTALL_TEST_DIR=${D}${PTEST_PATH}/tests install-test
-            cp ${B}/Makefile ${D}${PTEST_PATH}
-        fi
+do_install_ptest () {
+	make INSTALL_TEST_DIR=${D}${PTEST_PATH}/tests install-test
+	cp ${B}/Makefile ${D}${PTEST_PATH}
 }
 
 pkg_postinst_${PN} () {
