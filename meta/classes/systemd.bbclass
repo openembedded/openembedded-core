@@ -10,11 +10,14 @@ SYSTEMD_AUTO_ENABLE ??= "enable"
 # even if the systemd DISTRO_FEATURE isn't enabled.  As such don't make any
 # changes directly but check the DISTRO_FEATURES first.
 python __anonymous() {
-    if "systemd" in d.getVar("DISTRO_FEATURES", True).split():
+    features = d.getVar("DISTRO_FEATURES", True).split()
+    # If the distro features have systemd but not sysvinit, inhibit update-rcd
+    # from doing any work so that pure-systemd images don't have redundant init
+    # files.
+    if "systemd" in features:
         d.appendVar("DEPENDS", " systemd-systemctl-native")
-        # Set a variable so that update-rcd.bbclass knows we're active and can
-        # disable itself.
-        d.setVar("SYSTEMD_BBCLASS_ENABLED", "1")
+        if "sysvinit" not in features:
+            d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
 }
 
 systemd_postinst() {

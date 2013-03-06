@@ -80,12 +80,10 @@ python populate_packages_updatercd () {
         postrm += d.getVar('updatercd_postrm', True)
         d.setVar('pkg_postrm_%s' % pkg, postrm)
 
-    # Run if the sysvinit feature is present, or if the systemd feature is present
-    # but the systemd class hasn't been inherited.  We want to run in the latter case
-    # as systemd has sysvinit compatibility, but we don't want to always so that
-    # pure systemd images don't have redundent sysvinit files.
+    # Check that this class isn't being inhibited (generally, by
+    # systemd.bbclass) before doing any work.
     if "sysvinit" in d.getVar("DISTRO_FEATURES").split() or \
-       ("systemd" in d.getVar("DISTRO_FEATURES").split() and not d.getVar("SYSTEMD_BBCLASS_ENABLED", True)):
+       not d.getVar("INHIBIT_UPDATERCD_BBCLASS", True):
         pkgs = d.getVar('INITSCRIPT_PACKAGES', True)
         if pkgs == None:
             pkgs = d.getVar('UPDATERCPN', True)
