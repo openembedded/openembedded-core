@@ -1,0 +1,62 @@
+Don't cause libudev to link against libsystemd-daemon.
+
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 8ee37c2bed1d452d566abf85b0cdf732b7ca029a Mon Sep 17 00:00:00 2001
+From: Kay Sievers <kay@vrfy.org>
+Date: Thu, 7 Feb 2013 13:47:46 +0100
+Subject: [PATCH] build-sys: at least for now, never link libudev against
+ systemd's shared libraries
+
+---
+ Makefile.am |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 474110a..0e6c88f 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -811,8 +811,6 @@ libsystemd_shared_la_SOURCES = \
+ 	src/shared/calendarspec.c \
+ 	src/shared/calendarspec.h
+ 
+-libsystemd_shared_la_LIBADD = libsystemd-daemon.la
+-
+ #-------------------------------------------------------------------------------
+ noinst_LTLIBRARIES += \
+ 	libsystemd-dbus.la
+@@ -1662,6 +1660,9 @@ systemd_tty_ask_password_agent_LDADD = \
+ libsystemd_daemon_la_SOURCES = \
+ 	src/libsystemd-daemon/sd-daemon.c
+ 
++libsystemd_daemon_internal_la_SOURCES = \
++        $(libsystemd_daemon_la_SOURCES)
++
+ libsystemd_daemon_la_CFLAGS = \
+ 	$(AM_CFLAGS) \
+ 	-fvisibility=hidden \
+@@ -1689,6 +1690,9 @@ UNINSTALL_EXEC_HOOKS += libsystemd-daemon-uninstall-hook
+ lib_LTLIBRARIES += \
+ 	libsystemd-daemon.la
+ 
++noinst_LTLIBRARIES += \
++        libsystemd-daemon-internal.la
++
+ pkgconfiglib_DATA += \
+ 	src/libsystemd-daemon/libsystemd-daemon.pc
+ 
+@@ -1768,7 +1772,9 @@ libudev_la_LDFLAGS = \
+ 	-Wl,--version-script=$(top_srcdir)/src/libudev/libudev.sym
+ 
+ libudev_la_LIBADD = \
+-	libsystemd-shared.la
++	libsystemd-shared.la \
++	libsystemd-daemon-internal.la \
++	libsystemd-id128-internal.la
+ 
+ pkgconfiglib_DATA += \
+ 	src/libudev/libudev.pc
+-- 
+1.7.10.4
+
