@@ -23,13 +23,36 @@ FILES_${PN}-dbg += "${PTEST_PATH}/.debug \
                     ${PTEST_PATH}/*/*/*/*/.debug \
                    "
 
-ptest_do_install() {
-    if [ "${PN}" = "${BPN}" -a ${PTEST_ENABLED} = "1" ]; then
-        install -D ${WORKDIR}/run-ptest ${D}${PTEST_PATH}/run-ptest
-        if grep -q install-ptest: Makefile; then
-            oe_runmake DESTDIR=${D}${PTEST_PATH} install-ptest
+do_configure_ptest_base() {
+    if [ ${PTEST_ENABLED} = 1 ]; then
+        if [ type -t do_configure_ptest = function ]; then
+            do_configure_ptest
         fi
     fi
 }
 
-EXPORT_FUNCTIONS ptest_do_install
+do_compile_ptest_base() {
+    if [ ${PTEST_ENABLED} = 1 ]; then
+        if [ type -t do_compile_ptest = function ]; then
+            do_compile_ptest
+        fi
+    fi
+}
+
+do_install_ptest_base() {
+    if [ ${PTEST_ENABLED} = 1 ]; then
+        if [ -f ${WORKDIR}/run-ptest ]; then
+            install -D ${WORKDIR}/run-ptest ${D}${PTEST_PATH}/run-ptest
+            if grep -q install-ptest: Makefile; then
+                oe_runmake DESTDIR=${D}${PTEST_PATH} install-ptest
+            fi
+            if [ type -t do_install_ptest = function ]; then
+                do_install_ptest
+            fi
+        fi
+    fi
+}
+
+addtask configure_ptest_base after do_configure before do_compile
+addtask compile_ptest_base   after do_compile   before do_install
+addtask install_ptest_base   after do_install   before do_package
