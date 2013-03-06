@@ -41,6 +41,8 @@ EXTRA_OECONF = "--enable-tests \
                 ${EXTRA_OECONF_X}"
 
 do_install() {
-    ptest_do_install
+}
+
+do_install_ptest() {
     find ${D}${PTEST_PATH} -name Makefile | xargs sed -i 's/^Makefile:/_Makefile:/'
 }
