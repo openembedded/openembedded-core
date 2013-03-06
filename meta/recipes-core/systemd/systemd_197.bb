@@ -16,7 +16,7 @@ DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
 SECTION = "base/shell"
 
-inherit gtk-doc useradd pkgconfig autotools perlnative
+inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d
 
 SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
            file://touchscreen.rules \
@@ -26,6 +26,7 @@ SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
            file://00-create-volatile.conf \
            file://0001-systemd-analyze-rewrite-in-C.patch \
            file://udev-linkage.patch \
+           file://init \
           "
 SRC_URI[md5sum] = "56a860dceadfafe59f40141eb5223743"
 SRC_URI[sha256sum] = "e6857ea21ae24d7056e7b0f4c2aaaba73b8bf57025b8949c0a8af0c1bc9774b5"
@@ -100,6 +101,11 @@ do_install() {
 	install -m 0644 ${WORKDIR}/var-run.conf ${D}${sysconfdir}/tmpfiles.d/
 
 	install -m 0644 ${WORKDIR}/00-create-volatile.conf ${D}${sysconfdir}/tmpfiles.d/
+
+	if ${@base_contains('DISTRO_FEATURES','sysvinit','true','false',d)}; then
+		install -d ${D}${sysconfdir}/init.d
+		install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/systemd-udevd
+	fi
 }
 
 python populate_packages_prepend (){
@@ -210,6 +216,7 @@ FILES_udev += "${base_sbindir}/udevd \
                /lib/udev/rules.d/8*.rules \
                /lib/udev/rules.d/95*.rules \
                ${sysconfdir}/udev \
+               ${sysconfdir}/init.d/systemd-udevd \
                ${systemd_unitdir}/system/*udev* \
                ${systemd_unitdir}/system/*.wants/*udev* \
               "
@@ -220,6 +227,10 @@ RDEPENDS_udev-consolekit += "${@base_contains('DISTRO_FEATURES', 'x11', 'console
 FILES_udev-utils = "${bindir}/udevadm"
 
 FILES_udev-hwdb = "${base_libdir}/udev/hwdb.d"
+
+INITSCRIPT_PACKAGES = "udev"
+INITSCRIPT_NAME_udev = "systemd-udevd"
+INITSCRIPT_PARAMS_udev = "start 03 S ."
 
 # TODO:
 # u-a for runlevel and telinit
