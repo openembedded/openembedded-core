@@ -12,8 +12,9 @@ PACKAGECONFIG = "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)} \
 
 PACKAGECONFIG[pam] = "--with-authfw=pam,--with-authfw=shadow,libpam,libpam"
 PACKAGECONFIG[systemd] = "--enable-systemd,--disable-systemd,systemd"
-# there is no --enable/--disable option for consolekit and it's not picked by shlibs, so add it to RDEPENDS
-PACKAGECONFIG[consolekit] = ",,,consolekit"
+# There is no --enable/--disable option for consolekit, so disable systemd to
+# force it.  ConsoleKit is accessed via DBus, so add it to RDEPENDS.
+PACKAGECONFIG[consolekit] = "--disable-systemd,,,consolekit"
 
 PR = "r9"
 
