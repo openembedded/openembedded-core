@@ -40,7 +40,7 @@ EXTRA_OECONF += "\
     --disable-polkit \
     --enable-client \
     --enable-fake \
-    ${@base_contains('DISTRO_FEATURES', 'systemd', '--with-systemdunitdir=${systemd_unitdir}/system/', '', d)} \
+    ${@base_contains('DISTRO_FEATURES', 'systemd', '--with-systemdunitdir=${systemd_unitdir}/system/', '--with-systemdunitdir=', d)} \
 "
 
 INITSCRIPT_NAME = "connman"
