@@ -3,10 +3,7 @@ SECTION = "x11/gnome"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
 
-POLKIT = "polkit"
-POLKIT_libc-uclibc = ""
-
-DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native ${POLKIT} gobject-introspection-stub"
+DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native gobject-introspection-stub"
 DEPENDS_class-native = "glib-2.0-native dbus-native dbus-glib-native libxml2-native intltool-native gnome-common-native gobject-introspection-stub-native"
 
 PR = "r0"
@@ -22,12 +19,16 @@ SRC_URI[archive.sha256sum] = "1912b91803ab09a5eed34d364bf09fe3a2a9c96751fde03a4e
 
 S = "${WORKDIR}/GConf-${PV}"
 
-POLKIT_OECONF = "--enable-defaults-service"
-POLKIT_OECONF_class-native = "--disable-defaults-service"
-POLKIT_OECONF_libc-uclibc = "--disable-default-service"
-
 EXTRA_OECONF = "--enable-shared --disable-static --enable-debug=yes \
-                --disable-introspection --disable-orbit --with-openldap=no ${POLKIT_OECONF} --disable-gtk"
+                --disable-introspection --disable-orbit --with-openldap=no --disable-gtk"
+
+# Disable PolicyKit by default
+PACKAGECONFIG ??= ""
+# We really don't want PolicyKit for native or uclibc
+PACKAGECONFIG_class-native = ""
+PACKAGECONFIG_libc-uclibc = ""
+
+PACKAGECONFIG[policykit] = "--enable-defaults-service,--disable-defaults-service,polkit"
 
 do_install_append() {
 	# this directory need to be created to avoid an Error 256 at gdm launch
