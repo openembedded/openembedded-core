@@ -34,12 +34,12 @@ DEPENDS_class-native = ""
 EXTRA_OECONF = "--enable-threads --disable-rpath"
 
 do_configure() {
-	gnu-configize
+	( cd ${S}; gnu-configize )
 	oe_runconf
 }
 
 do_compile_prepend() {
-	echo > ../compat/fixstrtod.c
+	echo > ${S}/../compat/fixstrtod.c
 }
 
 do_install() {
@@ -52,7 +52,7 @@ do_install() {
 	install -d ${D}${bindir_crossscripts}
 	install -m 0755 tclConfig.sh ${D}${bindir_crossscripts}
 	cd ..
-	for dir in compat generic unix
+	for dir in ${S}/../compat ${S}/../generic ${S}/../unix
 	do
 		install -d ${D}${includedir}/tcl${PV}/$dir
 		install -m 0644 $dir/*.h ${D}${includedir}/tcl${PV}/$dir/
