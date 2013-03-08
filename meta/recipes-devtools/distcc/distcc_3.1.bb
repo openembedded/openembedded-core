@@ -17,6 +17,7 @@ PACKAGECONFIG[gtk] = "--with-gtk,--without-gtk --without-gnome,gtk+"
 RRECOMMENDS_${PN} = "avahi-daemon"
 
 SRC_URI = "http://distcc.googlecode.com/files/${BPN}-${PV}.tar.bz2 \
+           file://separatebuilddir.patch \
            file://default \
            file://distccmon-gnome.desktop \
            file://distcc"
