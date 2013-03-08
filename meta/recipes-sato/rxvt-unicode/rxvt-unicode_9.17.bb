@@ -10,15 +10,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 DEPENDS = "virtual/libx11 libxt libxft gdk-pixbuf"
 
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "http://dist.schmorp.de/rxvt-unicode/Attic/rxvt-unicode-${PV}.tar.bz2 \
 	   file://xwc.patch \
 	   file://rxvt.desktop \
 	   file://rxvt.png"
 
-SRC_URI[md5sum] = "15595aa326167ac5eb68c28d95432faf"
-SRC_URI[sha256sum] = "ec1aa2932da844979ed8140bd92223defb12042aa5e877e05ac31139ca81f2b1"
+SRC_URI[md5sum] = "1270432bdc7ce17dbb07d41a607081e0"
+SRC_URI[sha256sum] = "de017b2b2a1a7182aeada99f605da33cbee18d450e07a7fdabef48da446521e4"
 
 inherit autotools update-alternatives
 
