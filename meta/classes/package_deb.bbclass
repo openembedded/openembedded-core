@@ -7,6 +7,7 @@ inherit package
 IMAGE_PKGTYPE ?= "deb"
 
 DPKG_ARCH ?= "${TARGET_ARCH}" 
+DPKG_ARCH_arm ?= "armel"
 
 PKGWRITEDIRDEB = "${WORKDIR}/deploy-debs"
 
