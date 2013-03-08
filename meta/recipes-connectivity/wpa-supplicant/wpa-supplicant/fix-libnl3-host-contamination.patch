@@ -1,0 +1,42 @@
+Upstream-Status: Pending
+
+From 37d6b3dd5a737cd67468e4a58b372bddd924a7be Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Fri, 8 Mar 2013 22:55:19 +0100
+Subject: [PATCH] Revert "build: Use updated libnl3 header paths"
+
+This reverts commit e7ecddf33a446072effbc85a27a078a8e582c89e.
+---
+ src/drivers/drivers.mak |    2 +-
+ src/drivers/drivers.mk  |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/drivers/drivers.mak b/src/drivers/drivers.mak
+index 68ff910..1f38f57 100644
+--- a/src/drivers/drivers.mak
++++ b/src/drivers/drivers.mak
+@@ -30,7 +30,7 @@ NEED_RFKILL=y
+ ifdef CONFIG_LIBNL32
+   DRV_LIBS += -lnl-3
+   DRV_LIBS += -lnl-genl-3
+-  DRV_CFLAGS += -DCONFIG_LIBNL20 -I/usr/include/libnl3
++  DRV_CFLAGS += -DCONFIG_LIBNL20
+ else
+   ifdef CONFIG_LIBNL_TINY
+     DRV_LIBS += -lnl-tiny
+diff --git a/src/drivers/drivers.mk b/src/drivers/drivers.mk
+index db8561a..c93e88d 100644
+--- a/src/drivers/drivers.mk
++++ b/src/drivers/drivers.mk
+@@ -30,7 +30,7 @@ NEED_RFKILL=y
+ ifdef CONFIG_LIBNL32
+   DRV_LIBS += -lnl-3
+   DRV_LIBS += -lnl-genl-3
+-  DRV_CFLAGS += -DCONFIG_LIBNL20 -I/usr/include/libnl3
++  DRV_CFLAGS += -DCONFIG_LIBNL20
+ else
+   ifdef CONFIG_LIBNL_TINY
+     DRV_LIBS += -lnl-tiny
+-- 
+1.7.10.4
+
