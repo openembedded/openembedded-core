@@ -8,7 +8,7 @@ the driver supports hardware accelerated 3D via the Direct Rendering \
 Infrastructure (DRI)."
 
 DEPENDS += "virtual/libx11 drm dri2proto glproto \
-	    virtual/libgl xineramaproto libpciaccess"
+	    virtual/libgl xineramaproto libpciaccess udev"
 
 SRCREV = "87ea531c5dc5b39809395b277c330854aaaaf019"
 PV = "2.10.0+git${SRCPV}"
