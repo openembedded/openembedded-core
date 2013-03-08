@@ -18,6 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 
+LANG=C
+
 #
 # Defaults
 #
@@ -123,7 +125,7 @@ fi
 #
 # Partition $DEVICE
 #
-DEVICE_SIZE=$(parted $DEVICE unit mb print | grep Disk | cut -d" " -f 3 | sed -e "s/MB//")
+DEVICE_SIZE=$(parted $DEVICE unit mb print | grep ^Disk | cut -d" " -f 3 | sed -e "s/MB//")
 SWAP_SIZE=$((DEVICE_SIZE*SWAP_RATIO/100))
 ROOTFS_SIZE=$((DEVICE_SIZE-BOOT_SIZE-SWAP_SIZE))
 ROOTFS_START=$((BOOT_SIZE))
