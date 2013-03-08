@@ -30,8 +30,8 @@ FILES_${PN} += "${datadir}/dbus-1/system-services/*"
 CONFFILES_${PN} += "${sysconfdir}/wpa_supplicant.conf"
 
 do_configure () {
-	echo "CFLAGS +=\"-I${STAGING_INCDIR}/libnl3\"" >> ${WORKDIR}/defconfig-gnutls
 	install -m 0755 ${WORKDIR}/defconfig-gnutls wpa_supplicant/.config
+	echo "CFLAGS +=\"-I${STAGING_INCDIR}/libnl3\"" >> wpa_supplicant/.config
 }
 
 export EXTRA_CFLAGS = "${CFLAGS}"
