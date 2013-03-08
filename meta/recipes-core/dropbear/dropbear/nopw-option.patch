@@ -4,7 +4,7 @@ Changes this from a compile-time switch to a command-line option.
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 
-Upstream-Status: Pending
+Upstream-Status: Accepted [expected in next release after 2012.55]
 
 diff --git a/options.h b/options.h
 index 00f6179..b8d0ccb 100644
