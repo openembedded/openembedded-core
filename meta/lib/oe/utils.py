@@ -96,16 +96,14 @@ def features_backfill(var,d):
     # disturbing distributions that have already set DISTRO_FEATURES.
     # Distributions wanting to elide a value in DISTRO_FEATURES_BACKFILL should
     # add the feature to DISTRO_FEATURES_BACKFILL_CONSIDERED
-
+    features = (d.getVar(var, True) or "").split()
     backfill = (d.getVar(var+"_BACKFILL", True) or "").split()
     considered = (d.getVar(var+"_BACKFILL_CONSIDERED", True) or "").split()
 
     addfeatures = []
     for feature in backfill:
-        if feature not in considered:
+        if feature not in features and feature not in considered:
             addfeatures.append(feature)
 
     if addfeatures:
-        return " %s" % (" ".join(addfeatures))
-    else:
-        return ""
+        d.appendVar(var, " " + " ".join(addfeatures))

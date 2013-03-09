@@ -292,8 +292,8 @@ python base_eventhandler() {
         e.data.setVar('BB_VERSION', bb.__version__)
         pkgarch_mapping(e.data)
         preferred_ml_updates(e.data)
-        e.data.appendVar('DISTRO_FEATURES', oe.utils.features_backfill("DISTRO_FEATURES", e.data))
-        e.data.appendVar('MACHINE_FEATURES', oe.utils.features_backfill("MACHINE_FEATURES", e.data))
+        oe.utils.features_backfill("DISTRO_FEATURES", e.data)
+        oe.utils.features_backfill("MACHINE_FEATURES", e.data)
 
     if isinstance(e, bb.event.BuildStarted):
         statuslines = []
