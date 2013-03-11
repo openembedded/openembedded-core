@@ -1,0 +1,35 @@
+Upstream-Status: Backported
+
+From ac293412a01d87f87eb61f4adb9db7486a75d3fc Mon Sep 17 00:00:00 2001
+From: Adam Jackson <ajax@redhat.com>
+Date: Tue, 25 Sep 2012 08:54:37 -0400
+Subject: [PATCH] Remove mibstore.h
+
+Signed-off-by: Adam Jackson <ajax@redhat.com>
+---
+ src/fbdev.c |    2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/src/fbdev.c b/src/fbdev.c
+index cd7ebc5..f5a7378 100644
+--- a/src/fbdev.c
++++ b/src/fbdev.c
+@@ -14,7 +14,6 @@
+ #include "xf86_OSproc.h"
+ 
+ #include "mipointer.h"
+-#include "mibstore.h"
+ #include "micmap.h"
+ #include "colormapst.h"
+ #include "xf86cmap.h"
+@@ -845,7 +844,6 @@ FBDevScreenInit(SCREEN_INIT_ARGS_DECL)
+ 	}
+ 
+ 	xf86SetBlackWhitePixels(pScreen);
+-	miInitializeBackingStore(pScreen);
+ 	xf86SetBackingStore(pScreen);
+ 
+ 	/* software cursor */
+-- 
+1.7.9.5
+
