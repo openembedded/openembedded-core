@@ -13,8 +13,10 @@
 
 # Some additional dependencies that the above doesn't manage to figure out
 # Please take care that exporter depends exporter-heavy, not reverse
+RDEPENDS_${PN}-module-dynaloader += "${PN}-module-carp"
 RDEPENDS_${PN}-module-exporter += "${PN}-module-exporter-heavy"
 RDEPENDS_${PN}-module-file-glob += "${PN}-module-feature"
+RDEPENDS_${PN}-module-file-glob += "${PN}-module-file"
 RDEPENDS_${PN}-module-file-path += "${PN}-module-cwd"
 RDEPENDS_${PN}-module-file-spec += "${PN}-module-file-spec-unix"
 RDEPENDS_${PN}-module-file-stat += "${PN}-module-fcntl"
