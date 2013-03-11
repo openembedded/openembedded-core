@@ -13,12 +13,12 @@ DEPENDS += "readline"
 
 RDEPENDS_gawk += "gawk-common"
 RDEPENDS_pgawk += "gawk-common"
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "bab2bda483e9f32be65b43b8dab39fa5"
-SRC_URI[sha256sum] = "476dee8bea8bc3b04af5cae502b83ea16edd5b703d20418918f8773889d78c80"
+SRC_URI[md5sum] = "4d505dc2c9f1eb3e9f8d6cac87d4bd1a"
+SRC_URI[sha256sum] = "6e0de117c3713aa8d7fa347fc9fd645b10038ae49d8cf947d8c1d51cbb76141a"
 
 inherit autotools gettext update-alternatives
 
