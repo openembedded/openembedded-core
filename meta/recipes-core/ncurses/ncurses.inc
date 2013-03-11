@@ -244,7 +244,7 @@ inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
 
-ALTERNATIVE_ncurses-tools = "clear reset"
+ALTERNATIVE_ncurses-tools_class-target = "clear reset"
 
 BBCLASSEXTEND = "native nativesdk"
 
