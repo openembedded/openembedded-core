@@ -28,9 +28,10 @@ python () {
         """
         d.appendVarFlag('do_compile', 'depends', ' %s:do_archive_configured_sources' %pn)
         build_deps = ' %s:do_archive_configured_sources' %pn
-        build_deps += ' %s:do_archive_scripts_logs' %pn
+        if d.getVar('SOURCE_ARCHIVE_LOG_WITH_SCRIPTS', True) == 'logs_with_scripts':
+            build_deps += ' %s:do_archive_scripts_logs' %pn
+            d.appendVarFlag('do_archive_scripts_logs', 'depends', ' %s:do_package_write_' %pn + packaging)
         d.appendVarFlag('do_build', 'depends', build_deps)
-        d.appendVarFlag('do_archive_scripts_logs', 'depends', ' %s:do_package_write_' %pn + packaging)
 
     else:
         d.prependVarFlag('do_configure', 'postfuncs', "do_archive_configured_sources")
