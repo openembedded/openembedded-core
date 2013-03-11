@@ -183,6 +183,13 @@ fi
 # replace ${SDKPATH} with the new prefix in all text files: configs/scripts/etc
 find $native_sysroot -type f -exec file '{}' \;|grep ":.*ASCII.*text"|cut -d':' -f1|xargs sed -i -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g"
 
+# find out all perl scripts in $native_sysroot and modify them replacing the
+# host perl with SDK perl.
+for perl_script in $(grep "^#!.*perl" -rls $native_sysroot); do
+	sed -i -e "s:^#! */usr/bin/perl.*:#! /usr/bin/env perl:g" -e \
+		"s: /usr/bin/perl: /usr/bin/env perl:g" $perl_script
+done
+
 # change all symlinks pointing to ${SDKPATH}
 for l in $(find $native_sysroot -type l); do
 	ln -sfn $(readlink $l|sed -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:") $l
