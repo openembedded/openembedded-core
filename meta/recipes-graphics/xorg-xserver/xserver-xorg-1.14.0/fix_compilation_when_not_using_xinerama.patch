@@ -1,0 +1,21 @@
+Upstream-Status: Pending
+
+fix compilation when not using xinerama
+
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+
+Index: xorg-server-1.14.0/xfixes/xfixesint.h
+===================================================================
+--- xorg-server-1.14.0.orig/xfixes/xfixesint.h	2012-07-10 09:06:41.000000000 +0300
++++ xorg-server-1.14.0/xfixes/xfixesint.h	2013-03-11 15:01:07.019098531 +0200
+@@ -291,8 +291,10 @@
+  SProcXFixesDestroyPointerBarrier(ClientPtr client);
+ 
+ /* Xinerama */
++#ifdef PANORAMIX
+ extern int (*PanoramiXSaveXFixesVector[XFixesNumberRequests]) (ClientPtr);
+ void PanoramiXFixesInit(void);
+ void PanoramiXFixesReset(void);
++#endif
+ 
+ #endif                          /* _XFIXESINT_H_ */

@@ -1,0 +1,35 @@
+Subject: Add AArch64 support to xserver-xorg
+Author: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
+
+lnx_video.c parts are not existing in 1.14 branch.
+
+Xserver was checked in AArch64 fastmodel (commercial one with graphics support).
+
+http://patchwork.freedesktop.org/patch/12785/
+
+Upstream-status: Pending
+
+---
+ include/servermd.h                      |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
+
+--- xorg-server-1.13.1.orig/include/servermd.h
++++ xorg-server-1.13.1/include/servermd.h
+@@ -243,10 +243,17 @@ SOFTWARE.
+ #define BITMAP_BIT_ORDER       LSBFirst
+ #define GLYPHPADBYTES		4
+ /* ???? */
+ #endif                          /* AMD64 */
+ 
++#if defined(__aarch64__) || defined(aarch64) || defined(__aarch64)
++#define IMAGE_BYTE_ORDER	MSBFirst
++#define BITMAP_BIT_ORDER       MSBFirst
++#define GLYPHPADBYTES		4
++/* ???? */
++#endif                          /* AArch64 */
++
+ #if	defined(SVR4) && (defined(__i386__) || defined(__i386) ) ||	\
+ 	defined(__alpha__) || defined(__alpha) || \
+ 	defined(__i386__) || \
+ 	defined(__s390x__) || defined(__s390__)
+ 

@@ -5,10 +5,11 @@ SRC_URI += "file://crosscompile.patch \
             file://fix_open_max_preprocessor_error.patch \
             file://mips64-compiler.patch \
             file://aarch64.patch \
+            file://fix_compilation_when_not_using_xinerama.patch \
            "
 
-SRC_URI[md5sum] = "a13d8876e3e804189392119638a07a1f"
-SRC_URI[sha256sum] = "c93540e2799df4655c6f1b67dc7d8d6db96df4f08ef1702fffbc5df843a43d00"
+SRC_URI[md5sum] = "86110278b784e279381b7f6f2295c508"
+SRC_URI[sha256sum] = "1f5107573252c26439fdd165481765a2c0964e02a2e9fab36e02414d08f30630"
 
 PR = "${INC_PR}.0"
 
