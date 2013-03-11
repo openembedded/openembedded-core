@@ -17,3 +17,7 @@ inherit gettext gconf
 # way for machines to specify their preferred GL flavour this can be
 # automatically adapted.
 EXTRA_OECONF += "ac_cv_header_GL_gl_h=no"
+
+ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY_${PN}-apps = "1"
+ALLOW_EMPTY_${PN}-glib = "1"
