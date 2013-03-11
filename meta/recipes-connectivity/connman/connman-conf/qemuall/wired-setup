@@ -9,7 +9,7 @@ NET_CONF=`cat /proc/cmdline |sed -ne 's/^.*ip=\([^ ]*\):\([^ ]*\):\([^ ]*\):\([^
 if [ "x$NET_CONF" = "x" ]; then
 	# Wired interface is not configured via kernel cmdline
 	# Remove connman config file template
-	rm ${CONFIGF}
+	rm -f ${CONFIGF}
 else
 	# Setup a connman config accordingly
 	sed -i -e "s|^\(IPv4 =\)|\1 ${NET_CONF}|" ${CONFIGF}
