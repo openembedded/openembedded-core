@@ -75,10 +75,7 @@ def tar_filter(d):
     """
     if d.getVar('FILTER', True) == "yes":
         included, reason = copyleft_should_include(d)
-        if not included:
-            return False
-        else:
-            return True
+        return not included
     else:
         return False
 
@@ -400,8 +397,6 @@ def archive_sources_patches(d, stage_name):
     import shutil
 
     check_archiving_type(d)
-    if not_tarball(d) or tar_filter(d):
-        return
 
     source_tar_name = archive_sources(d, stage_name)
     if stage_name == "prepatch":
@@ -431,8 +426,6 @@ def archive_scripts_logs(d):
     """
     import shutil
 
-    if tar_filter(d):
-        return
     work_dir = d.getVar('WORKDIR', True)
     temp_dir = os.path.join(work_dir, 'temp')
     source_archive_log_with_scripts = d.getVar('SOURCE_ARCHIVE_LOG_WITH_SCRIPTS', True)
@@ -459,8 +452,6 @@ def dumpdata(d):
     kinds of variables and functions when running a task
     """
 
-    if tar_filter(d):
-        return
     workdir = bb.data.getVar('WORKDIR', d, 1)
     distro = bb.data.getVar('DISTRO', d, 1)
     s = d.getVar('S', True)
@@ -491,8 +482,6 @@ def create_diff_gz(d):
     import shutil
     import subprocess
 
-    if tar_filter(d):
-        return
     work_dir = d.getVar('WORKDIR', True)
     exclude_from = d.getVar('ARCHIVE_EXCLUDE_FROM', True).split()
     pf = d.getVar('PF', True)

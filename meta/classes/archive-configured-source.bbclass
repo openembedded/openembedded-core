@@ -14,11 +14,15 @@ addtask do_archive_configured_sources after do_configure
 addtask do_archive_scripts_logs
 
 # Get dump date and create diff file 
-addtask do_dumpdata_create_diff_gz before do_build
+addtask do_dumpdata_create_diff_gz
 
 python () {
     pn = d.getVar('PN', True)
     packaging = d.getVar('IMAGE_PKGTYPE', True)
+
+    if tar_filter(d):
+        return
+
     d.appendVarFlag('do_dumpdata_create_diff_gz', 'depends', ' %s:do_package_write_' %pn + packaging)
 
     if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) != 'srpm':
@@ -27,7 +31,9 @@ python () {
         configured sources and scripts/logs in ${DEPLOY_DIR}/sources.
         """
         d.appendVarFlag('do_compile', 'depends', ' %s:do_archive_configured_sources' %pn)
-        build_deps = ' %s:do_archive_configured_sources' %pn
+        build_deps = ' %s:do_dumpdata_create_diff_gz' %pn
+        if not not_tarball(d):
+            build_deps += ' %s:do_archive_configured_sources' %pn
         if d.getVar('SOURCE_ARCHIVE_LOG_WITH_SCRIPTS', True) == 'logs_with_scripts':
             build_deps += ' %s:do_archive_scripts_logs' %pn
             d.appendVarFlag('do_archive_scripts_logs', 'depends', ' %s:do_package_write_' %pn + packaging)
