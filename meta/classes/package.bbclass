@@ -682,6 +682,12 @@ python split_and_strip_files () {
         debugdir = ""
         debuglibdir = "/usr/lib/debug"
         debugsrcdir = "/usr/src/debug"
+    elif d.getVar('PACKAGE_DEBUG_SPLIT_STYLE', True) == 'debug-without-src':
+        # Original OE-core, a.k.a. ".debug", style debug info, but without sources in /usr/src/debug
+        debugappend = ""
+        debugdir = "/.debug"
+        debuglibdir = ""
+        debugsrcdir = ""
     else:
         # Original OE-core, a.k.a. ".debug", style debug info
         debugappend = ""
