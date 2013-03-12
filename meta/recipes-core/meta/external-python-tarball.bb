@@ -29,7 +29,7 @@ TOOLCHAIN_HOST_TASK ?= "\
     nativesdk-chrpath \
     "
 
-TOOLCHAIN_OUTPUTNAME ?= "python-nativesdk-standalone-${SDKMACHINE}"
+TOOLCHAIN_OUTPUTNAME ?= "${SDK_NAME}-python-nativesdk-standalone-${DISTRO_VERSION}"
 
 RDEPENDS = "${TOOLCHAIN_HOST_TASK}"
 
