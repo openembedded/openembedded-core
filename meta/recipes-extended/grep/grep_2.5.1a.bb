@@ -11,6 +11,7 @@ SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.bz2 \
            file://uclibc-fix.patch \
            file://grep_fix_for_automake-1.12.patch \
            file://gettext.patch \
+           file://fix64-int-to-pointer.patch \
            file://Makevars \
            "
 
