@@ -16,8 +16,8 @@ bindir = "${base_bindir}"
 SRC_URI = "${GNU_MIRROR}/ed/ed-${PV}.tar.gz \
            file://ed-1.2-build.patch"
 
-SRC_URI[md5sum] = "9a78593decccaa889523aa4bb555ed4b"
-SRC_URI[sha256sum] = "211c67b0c4aae277d34b1c5f842db1952e468e5905142868e4718ac838f08a65"
+SRC_URI[md5sum] = "0aa4e2428e325203d0d7c3e86c961b1c"
+SRC_URI[sha256sum] = "894241019a5ff2b7816d20c5bd5a7048fb8f336ca52e97b3cc88d45b16472031"
 
 do_configure() {
 	${S}/configure
