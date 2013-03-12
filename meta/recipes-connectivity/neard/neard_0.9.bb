@@ -11,14 +11,24 @@ inherit autotools pkgconfig update-rc.d
 INITSCRIPT_NAME = "neard"
 INITSCRIPT_PARAMS = "defaults 64"
 
+do_install() {
+	oe_runmake DESTDIR=${D} libexecdir=${libexecdir} install
+}
+
 # This would copy neard start-stop shell and test scripts
 do_install_append() {
-  install -d ${D}${sysconfdir}/init.d/
-  install -m 0755 ${WORKDIR}/neard ${D}${sysconfdir}/init.d/neard
+	# start/stop
+	install -d ${D}${sysconfdir}/init.d/
 
-  install -d ${D}${libdir}/neard
-  install -m 0755 ${S}/test/* ${D}${libdir}/neard/
-  install -m 0755 ${S}/tools/nfctool/nfctool ${D}${libdir}/neard/
+	sed "s:@installpath@:${libexecdir}:" ${WORKDIR}/neard.in \
+		> ${D}${sysconfdir}/init.d/neard
+
+	chmod 0755 ${D}${sysconfdir}/init.d/neard
+
+	#test files
+	install -d ${D}${libdir}/neard
+	install -m 0755 ${S}/test/* ${D}${libdir}/${BPN}/
+	install -m 0755 ${S}/tools/nfctool/nfctool ${D}${libdir}/${BPN}/
 }
 
 RDEPENDS_${PN} = "dbus python python-dbus python-pygobject"
@@ -32,26 +42,24 @@ RRECOMMENDS_${PN} = "\
 #Additional
 PACKAGES =+ "${PN}-tests"
 
-FILES_${PN}-tests = "${libdir}/neard/*-test"
+FILES_${PN}-tests = "${libdir}/${BPN}/*-test"
+FILES_${PN}-dbg += "${libdir}/${BPN}/*/.debug"
+
 RDEPENDS_${PN}-tests = "python python-dbus python-pygobject"
 
-FILES_${PN}-dbg += "${bindir}/neard/*/.debug"
-
-##=============================
 # This is valid for 0.9+
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
  file://src/near.h;beginline=1;endline=20;md5=358e4deefef251a4761e1ffacc965d13 \
  "
 S	= "${WORKDIR}/git"
-SRCREV	= "7abdb13d106d496e1115fab49e6448a249dfb3c8"
+SRCREV	= "1e20e396cb837017b7e5ef822bfdab6ce060d2cf"
 PV	= "0.9-git${SRCPV}"
 PR	= "r1"
 
 SRC_URI  = "git://git.kernel.org/pub/scm/network/nfc/neard.git;protocol=git \
-	file://neard \
+	file://neard.in \
 	"
 
 EXTRA_OECONF += "--enable-tools \
 	"
-
 
