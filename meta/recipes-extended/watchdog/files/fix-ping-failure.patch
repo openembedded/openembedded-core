@@ -33,19 +33,10 @@ Signed-off-by: Roy.Li <rongqing.li@windriver.com>
  src/watchdog.c |    5 ++++-
  2 files changed, 5 insertions(+), 2 deletions(-)
 
---- a/src/net.c
-+++ b/src/net.c
-@@ -118,7 +118,7 @@ int check_net(char *target, int sock_fp,
- 		    dtimeout.tv_usec -= 1000000;
- 		    dtimeout.tv_sec++;
- 		}
--		if (dtimeout.tv_sec <= 0)
-+		if (dtimeout.tv_sec < 0)
- 		    break;
- #if USE_SYSLOG
- 		if (verbose && logtick && ticker == 1)
---- a/src/watchdog.c
-+++ b/src/watchdog.c
+Index: watchdog-5.13/src/watchdog.c
+===================================================================
+--- watchdog-5.13.orig/src/watchdog.c	2013-02-01 03:15:44.000000000 -0800
++++ watchdog-5.13/src/watchdog.c	2013-03-11 22:27:48.741657881 -0700
 @@ -28,6 +28,7 @@
  #include <sys/types.h>
  #include <sys/ioctl.h>
@@ -54,7 +45,7 @@ Signed-off-by: Roy.Li <rongqing.li@windriver.com>
  #include <linux/watchdog.h>
  #include <string.h>
  
-@@ -567,6 +568,8 @@ int main(int argc, char *const argv[])
+@@ -567,6 +568,8 @@
      pid_t child_pid;
      int oom_adjusted = 0;
      struct stat s;
@@ -63,7 +54,7 @@ Signed-off-by: Roy.Li <rongqing.li@windriver.com>
  
  #if USE_SYSLOG
      char *opts = "d:i:n:Ffsvbql:p:t:c:r:m:a:";
-@@ -703,7 +706,7 @@ int main(int argc, char *const argv[])
+@@ -703,7 +706,7 @@
  		perror(progname);
  		exit(1);
  	    }
