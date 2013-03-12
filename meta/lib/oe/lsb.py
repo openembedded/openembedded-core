@@ -17,6 +17,37 @@ def release_dict():
             data[key] = value
     return data
 
+def release_dict_file():
+    """ Try to gather LSB release information manually when lsb_release tool is unavailable """
+    data = None
+    try:
+        if os.path.exists('/etc/lsb-release'):
+            data = {}
+            with open('/etc/lsb-release') as f:
+                for line in f:
+                    key, value = line.split("=", 1)
+                    data[key] = value
+        elif os.path.exists('/etc/redhat-release'):
+            data = {}
+            with open('/etc/redhat-release') as f:
+                distro = f.readline().strip()
+            import re
+            match = re.match(r'(.*) release (.*) \((.*)\)', distro)
+            if match:
+                data['DISTRIB_ID'] = match.group(1)
+                data['DISTRIB_RELEASE'] = match.group(2)
+        elif os.path.exists('/etc/SuSE-release'):
+            data = {}
+            data['DISTRIB_ID'] = 'SUSE LINUX'
+            with open('/etc/SuSE-release') as f:
+                for line in f:
+                    if line.startswith('VERSION = '):
+                        data['DISTRIB_RELEASE'] = line[10:].rstrip()
+                        break
+    except IOError:
+        return None
+    return data
+
 def distro_identifier(adjust_hook=None):
     """Return a distro identifier string based upon lsb_release -ri,
        with optional adjustment via a hook"""
@@ -25,8 +56,12 @@ def distro_identifier(adjust_hook=None):
     if lsb_data:
         distro_id, release = lsb_data['Distributor ID'], lsb_data['Release']
     else:
-        distro_id, release = None, None
-        
+        lsb_data_file = release_dict_file()
+        if lsb_data_file:
+            distro_id, release = lsb_data_file['DISTRIB_ID'], lsb_data_file['DISTRIB_RELEASE']
+        else:
+            distro_id, release = None, None
+
     if adjust_hook:
         distro_id, release = adjust_hook(distro_id, release)
     if not distro_id:
