@@ -26,6 +26,8 @@
 #Error checking is kept to minimum so double check any parameters you pass to the class
 ###########################################################################################
 
+BB_HASHBASE_WHITELIST += "ICECC_PARALLEL_MAKE ICECC_DISABLED"
+
 ICECC_ENV_EXEC ?= "${STAGING_BINDIR_NATIVE}/icecc-create-env"
 
 def icecc_dep_prepend(d):
@@ -160,6 +162,10 @@ def icc_get_tool(bb, d, tool):
         return os.path.join(ice_dir, "%s-%s" % (target_sys, tool))
 
 set_icecc_env() {
+    if [ "x${ICECC_DISABLED}" != "x" ]
+    then
+        return
+    fi
     ICECC_VERSION="${@icc_version(bb, d)}"
     if [ "x${ICECC_VERSION}" = "x" ]
     then
