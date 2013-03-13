@@ -1,4 +1,4 @@
-PR = "r2"
+PR = "r3"
 
 LIC_FILES_CHKSUM="\
     file://src-release;endline=17;md5=4830a9ef968f3b18dd5e9f2c00db2d35\
@@ -28,6 +28,7 @@ SRC_URI = "\
      file://binutils-armv5e.patch \
      file://mips64-default-ld-emulation.patch \
      ${BACKPORT} \
+     file://binutils-fix-over-array-bounds-issue.patch \
      "
 
 BACKPORT = "\
@@ -44,6 +45,8 @@ BACKPORT = "\
      file://backport/0026-ld-testsuite.patch \
      file://backport/0001-doc-binutils.texi-elfedit-Fix-use-of-itemx-in-table.patch \
      file://backport/0001-ld.texinfo-Replace-with-when-it-is-part-of-the-text.patch \
+     file://backport/binutils-fix-ineffectual-zero-of-cache.patch \
+     file://backport/binutils-replace-strncat-with-strcat.patch  \
 "
 SRC_URI[md5sum] = "33adb18c3048d057ac58d07a3f1adb38"
 SRC_URI[sha256sum] = "2ab2e5b03e086d12c6295f831adad46b3e1410a3a234933a2e8fac66cb2e7a19"

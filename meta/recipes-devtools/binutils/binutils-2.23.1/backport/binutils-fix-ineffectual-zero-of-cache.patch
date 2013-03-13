@@ -1,0 +1,60 @@
+Upstream-Status: Backport
+
+* elf32-xtensa.c 
+  * (free_section_cache): Renamed from clear_section_cache.
+  * (section_cache_section): Remove ineffectual zero of cache.
+   Call init_section_cache instead.
+
+binutils build might fail on recent Linux distros:
+binutils-2.23.1/bfd/elf32-xtensa.c:6078:36: error: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to dereference it? [-Werror=sizeof-pointer-memaccess]
+       memset (sec_cache, 0, sizeof (sec_cache));
+                                    ^
+binutils-2.23.1/bfd/elf32-xtensa.c:6120:32: error: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to dereference it? [-Werror=sizeof-pointer-memaccess]
+   memset (sec_cache, 0, sizeof (sec_cache));
+
+The original commit is http://sourceware.org/cgi-bin/cvsweb.cgi/src/bfd/elf32-xtensa.c.diff?r1=1.135&r2=1.136&cvsroot=src
+
+Signed-off-by: Zhenhua Luo <zhenhua.luo@freescale.com>
+
+--- binutils-2.23.1/bfd/elf32-xtensa.c.org	2013-03-12 03:04:29.000000000 -0500
++++ binutils-2.23.1/bfd/elf32-xtensa.c	2013-03-12 03:06:37.000000000 -0500
+@@ -6067,7 +6067,7 @@
+ 
+ 
+ static void
+-clear_section_cache (section_cache_t *sec_cache)
++free_section_cache (section_cache_t *sec_cache)
+ {
+   if (sec_cache->sec)
+     {
+@@ -6075,7 +6075,6 @@
+       release_internal_relocs (sec_cache->sec, sec_cache->relocs);
+       if (sec_cache->ptbl)
+ 	free (sec_cache->ptbl);
+-      memset (sec_cache, 0, sizeof (sec_cache));
+     }
+ }
+ 
+@@ -6116,8 +6115,8 @@
+     goto err;
+ 
+   /* Fill in the new section cache.  */
+-  clear_section_cache (sec_cache);
+-  memset (sec_cache, 0, sizeof (sec_cache));
++  free_section_cache (sec_cache);
++  init_section_cache (sec_cache);
+ 
+   sec_cache->sec = sec;
+   sec_cache->contents = contents;
+@@ -8272,8 +8271,9 @@
+ #endif /* DEBUG */
+ 
+ error_return:
+-  if (prop_table) free (prop_table);
+-  clear_section_cache (&target_sec_cache);
++  if (prop_table)
++    free (prop_table);
++  free_section_cache (&target_sec_cache);
+ 
+   release_contents (sec, contents);
+   release_internal_relocs (sec, internal_relocs);

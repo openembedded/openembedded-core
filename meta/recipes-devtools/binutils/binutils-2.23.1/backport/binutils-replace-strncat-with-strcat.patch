@@ -1,0 +1,26 @@
+Upstream-Status: Backport
+
+* arc-dis.c (write_comments_): Don't use strncat due to
+  the size of state->commentBuffer pointer isn't predictable.
+
+binutils build will fail on Fedora18+. 
+binutils-2.23.1/opcodes/arc-dis.c:430:13: error: argument to 'sizeof' in '__builtin_strncat' call is the same expression as the destination; did you mean to provide an explicit length? [-Werror=sizeof-pointer-memaccess]
+       sizeof (state->commentBuffer));
+              ^
+
+The original commit is http://sourceware.org/cgi-bin/cvsweb.cgi/src/opcodes/arc-dis.c.diff?r1=1.17&r2=1.18&cvsroot=src
+
+Signed-off-by: Zhenhua Luo <zhenhua.luo@freescale.com>
+
+--- binutils-2.23.1/opcodes/arc-dis.c.orig	2013-03-13 00:10:27.978498158 -0500
++++ binutils-2.23.1/opcodes/arc-dis.c	2013-03-13 00:11:28.297499381 -0500
+@@ -426,8 +426,7 @@
+ 	    strcpy (state->commentBuffer, comment_prefix);
+ 	  else
+ 	    strcat (state->commentBuffer, ", ");
+-	  strncat (state->commentBuffer, state->comm[i],
+-		   sizeof (state->commentBuffer));
++	  strcat (state->commentBuffer, state->comm[i]);
+ 	}
+     }
+ }
