@@ -1,5 +1,6 @@
 HOMEPAGE = "http://qt.nokia.com"
-DEPENDS += "pulseaudio bluez4"
+DEPENDS += "pulseaudio"
+DEPENDS += "${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluez4', '', d)}"
 
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
@@ -30,6 +31,8 @@ qtm_plugins	:= "/usr/lib/${qtm_dir}/plugins/QtMobility"
 qtm_data	:= "/usr/share/${qtm_dir}"
 qtm_imports	:= "/usr/lib/${qtm_dir}/imports"
 
+qtm_bluezflag ?= "${@base_contains('DISTRO_FEATURES', 'bluetooth', 'yes', 'no', d)}"
+
 do_configure_prepend() {
 	cp qtmobility.pro qtmobility.pro.old
 	sed -e 's@...QT_INSTALL_DATA.@${qtm_data}@' <qtmobility.pro.old >qtmobility.pro
@@ -49,7 +52,7 @@ do_configure_prepend() {
 	echo QT_MOBILITY_EXAMPLES = ${qtm_examples} >>./config.pri
 	echo QT_MOBILITY_DEMOS = ${qtm_demos} >>./config.pri
 	echo QT_CONFIG ${qtm_glflags} >>./config.pri
-	echo bluez_enabled = yes >>./config.pri
+	echo bluez_enabled = ${qtm_bluezflag} >>./config.pri
 	echo ${qtm_extra_config} >>./config.pri
 	echo CONFIG += ${qtm_embedded} >>./config.pri
 }
