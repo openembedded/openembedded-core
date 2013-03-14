@@ -10,7 +10,7 @@ inherit autotools
 
 DEPENDS = "glib-2.0 util-linux popt"
 
-SRCREV = "f6ed7fa4636ff22e08f57721dcd312828547aa66"
+SRCREV = "9eaf25433864cefc40242e0257a0177ef4515930"
 PV = "1.0+git${SRCPV}"
 PR = "r0"
 
