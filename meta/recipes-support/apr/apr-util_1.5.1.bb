@@ -9,14 +9,14 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=519e0a18e03f7c023070568c14b077bb \
                     file://include/apu_version.h;endline=17;md5=806685a84e71f10c80144c48eb35df42"
 
-PR = "r2"
+PR = "r0"
 
 SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.gz \
            file://configfix.patch \
            file://configure_fixes.patch"
 
-SRC_URI[md5sum] = "666a5d56098a9debf998510e304c8095"
-SRC_URI[sha256sum] = "d636d9ef95c6e50e47fc338d532aa375edd11e5d7a3c30dee48beb38ddf4ab4c"
+SRC_URI[md5sum] = "490c2e26e2dc95fd0983ad71112ddac6"
+SRC_URI[sha256sum] = "0cf4e48d93ceb9a5e314f48fe127211b71d30234665587e2eaffbb4fc13d931d"
 
 EXTRA_OECONF = "--with-apr=${STAGING_BINDIR_CROSS}/apr-1-config \ 
 		--without-odbc \
