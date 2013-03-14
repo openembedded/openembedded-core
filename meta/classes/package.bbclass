@@ -288,7 +288,7 @@ def copydebugsources(debugsrcdir, d):
         basepath = dvar
         for p in debugsrcdir.split("/"):
             basepath = basepath + "/" + p
-            if not os.path.exists(basepath):
+            if not cpath.exists(basepath):
                 nosuchdir.append(basepath)
         bb.utils.mkdirhier(basepath)
 
@@ -388,7 +388,7 @@ python package_do_split_locales() {
 
     localedir = os.path.join(dvar + datadir, 'locale')
 
-    if not os.path.isdir(localedir):
+    if not cpath.isdir(localedir):
         bb.debug(1, "No locale files in this package")
         return
 
@@ -628,7 +628,7 @@ python fixup_perms () {
             continue
 
         origin = dvar + dir
-        if not (os.path.exists(origin) and os.path.isdir(origin) and not os.path.islink(origin)):
+        if not (cpath.exists(origin) and cpath.isdir(origin) and not cpath.islink(origin)):
             continue
 
         link = fs_perms_table[dir].link
@@ -654,7 +654,7 @@ python fixup_perms () {
             continue
 
         origin = dvar + dir
-        if not (os.path.exists(origin) and os.path.isdir(origin)):
+        if not (cpath.exists(origin) and cpath.isdir(origin)):
             continue
 
         fix_perms(origin, fs_perms_table[dir].mode, fs_perms_table[dir].uid, fs_perms_table[dir].gid, dir)
@@ -735,7 +735,7 @@ python split_and_strip_files () {
     baselibdir = os.path.abspath(dvar + os.sep + d.getVar("base_libdir", True))
     if (d.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT', True) != '1') and \
             (d.getVar('INHIBIT_PACKAGE_STRIP', True) != '1'):
-        for root, dirs, files in os.walk(dvar):
+        for root, dirs, files in cpath.walk(dvar):
             for f in files:
                 file = os.path.join(root, f)
                 if file.endswith(".ko") and file.find("/lib/modules/") != -1:
@@ -749,18 +749,20 @@ python split_and_strip_files () {
                     continue
 
                 try:
-                    ltarget = oe.path.realpath(file, dvar, False)
-                    s = os.lstat(ltarget)
+                    ltarget = cpath.realpath(file, dvar, False)
+                    s = cpath.lstat(ltarget)
                 except OSError, (err, strerror):
                     if err != errno.ENOENT:
                         raise
                     # Skip broken symlinks
                     continue
+                if not s:
+                    continue
                 # Check its an excutable
                 if (s[stat.ST_MODE] & stat.S_IXUSR) or (s[stat.ST_MODE] & stat.S_IXGRP) or (s[stat.ST_MODE] & stat.S_IXOTH) \
                         or ((file.startswith(libdir) or file.startswith(baselibdir)) and ".so" in f):
                     # If it's a symlink, and points to an ELF file, we capture the readlink target
-                    if os.path.islink(file):
+                    if cpath.islink(file):
                         target = os.readlink(file)
                         if isELF(ltarget):
                             #bb.note("Sym: %s (%d)" % (ltarget, isELF(ltarget)))
@@ -918,8 +920,8 @@ python populate_packages () {
         for file in files:
             if os.path.isabs(file):
                 file = '.' + file
-            if not os.path.islink(file):
-                if os.path.isdir(file):
+            if not cpath.islink(file):
+                if cpath.isdir(file):
                     newfiles =  [ os.path.join(file,x) for x in os.listdir(file) ]
                     if newfiles:
                         files += newfiles
@@ -929,7 +931,7 @@ python populate_packages () {
                 if [ file ] != globbed:
                     files += globbed
                     continue
-            if (not os.path.islink(file)) and (not os.path.exists(file)):
+            if (not cpath.islink(file)) and (not cpath.exists(file)):
                 continue
             if file in seen:
                 continue
@@ -938,33 +940,33 @@ python populate_packages () {
             def mkdir(src, dest, p):
                 src = os.path.join(src, p)
                 dest = os.path.join(dest, p)
-                bb.utils.mkdirhier(dest)
-                fstat = os.stat(src)
-                os.chmod(dest, fstat.st_mode)
+                fstat = cpath.stat(src)
+                os.mkdir(dest, fstat.st_mode)
                 os.chown(dest, fstat.st_uid, fstat.st_gid)
                 if p not in seen:
                     seen.append(p)
+                cpath.updatecache(dest)
 
             def mkdir_recurse(src, dest, paths):
-                if os.path.exists(dest + '/' + paths):
+                if cpath.exists(dest + '/' + paths):
                     return
                 while paths.startswith("./"):
                     paths = paths[2:]
                 p = "."
                 for c in paths.split("/"):
                     p = os.path.join(p, c)
-                    if not os.path.exists(os.path.join(dest, p)):
+                    if not cpath.exists(os.path.join(dest, p)):
                         mkdir(src, dest, p)
 
-            if os.path.isdir(file) and not os.path.islink(file):
+            if cpath.isdir(file) and not cpath.islink(file):
                 mkdir_recurse(dvar, root, file)
                 continue
 
             mkdir_recurse(dvar, root, os.path.dirname(file))
             fpath = os.path.join(root,file)
-            if not os.path.islink(file):
+            if not cpath.islink(file):
                 os.link(file, fpath)
-                fstat = os.stat(file)
+                fstat = cpath.stat(file)
                 os.chmod(fpath, fstat.st_mode)
                 os.chown(fpath, fstat.st_uid, fstat.st_gid)
                 continue
@@ -975,7 +977,7 @@ python populate_packages () {
     os.chdir(workdir)
 
     unshipped = []
-    for root, dirs, files in os.walk(dvar):
+    for root, dirs, files in cpath.walk(dvar):
         dir = root[len(dvar):]
         if not dir:
             dir = os.sep
@@ -1009,8 +1011,8 @@ python package_fixsymlinks () {
         for path in pkgfiles[pkg]:
                 rpath = path[len(inst_root):]
                 pkg_files[pkg].append(rpath)
-                rtarget = oe.path.realpath(path, inst_root, True, assume_dir = True)
-                if not os.path.lexists(rtarget):
+                rtarget = cpath.realpath(path, inst_root, True, assume_dir = True)
+                if not cpath.lexists(rtarget):
                     dangling_links[pkg].append(os.path.normpath(rtarget[len(inst_root):]))
 
     newrdepends = {}
@@ -1394,7 +1396,7 @@ python package_do_shlibs() {
         renames = list()
         for file in pkgfiles[pkg]:
                 soname = None
-                if os.path.islink(file):
+                if cpath.islink(file):
                     continue
                 if targetos == "darwin" or targetos == "darwin8":
                     darwin_so(file)
@@ -1781,6 +1783,10 @@ python do_package () {
     # as any change to rpmdeps requires this to be rerun.
     # PACKAGE_BBCLASS_VERSION = "1"
 
+    # Init cachedpath
+    global cpath
+    cpath = oe.cachedpath.CachedPath()
+
     ###########################################################################
     # Sanity test the setup
     ###########################################################################
@@ -1827,6 +1833,8 @@ python do_package () {
     # Split up PKGD into PKGDEST
     ###########################################################################
 
+    cpath = oe.cachedpath.CachedPath()
+
     for f in (d.getVar('PACKAGESPLITFUNCS', True) or '').split():
         bb.build.exec_func(f, d)
 
@@ -1841,7 +1849,7 @@ python do_package () {
     pkgdest = d.getVar('PKGDEST', True)
     for pkg in packages:
         pkgfiles[pkg] = []
-        for walkroot, dirs, files in os.walk(pkgdest + "/" + pkg):
+        for walkroot, dirs, files in cpath.walk(pkgdest + "/" + pkg):
             for file in files:
                 pkgfiles[pkg].append(walkroot + os.sep + file)
 
