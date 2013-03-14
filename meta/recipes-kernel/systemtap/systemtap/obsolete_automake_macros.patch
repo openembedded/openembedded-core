@@ -1,11 +1,11 @@
 Upstream-Status: Pending
 
 Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
-diff --git a/configure.ac b/configure.ac
-index 2a30ea1..713800d 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -18,7 +18,6 @@ AC_PROG_LN_S
+Index: git/configure.ac
+===================================================================
+--- git.orig/configure.ac
++++ git/configure.ac
+@@ -19,7 +19,6 @@ AC_PROG_LN_S
  AC_PROG_CC
  AC_PROG_CXX
  AC_PROG_CPP
@@ -13,15 +13,3 @@ index 2a30ea1..713800d 100644
  AM_PROG_CC_C_O
  AC_PROG_RANLIB
  AC_OBJEXT
-diff --git a/runtime/staprun/configure.ac b/runtime/staprun/configure.ac
-index 48f48db..68152db 100644
---- a/runtime/staprun/configure.ac
-+++ b/runtime/staprun/configure.ac
-@@ -13,7 +13,6 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
-
- AC_PROG_CC
- AC_PROG_CXX
--AM_PROG_CC_STDC
- AM_PROG_CC_C_O
- AC_PROG_INSTALL
- AC_SYS_LARGEFILE
