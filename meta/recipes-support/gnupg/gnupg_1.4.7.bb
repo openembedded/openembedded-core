@@ -7,7 +7,7 @@ LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-${PV}.tar.bz2 \
            file://long-long-thumb.patch \
@@ -79,9 +79,9 @@ EXTRA_OECONF = "--disable-ldap \
 
 do_install () {
 	autotools_do_install
-	install -d ${D}${docdir}/${PN}
-	mv ${D}${datadir}/${PN}/* ${D}/${docdir}/${PN}/ || :
-	mv ${D}${prefix}/doc/* ${D}/${docdir}/${PN}/ || :
+	install -d ${D}${docdir}/${BPN}
+	mv ${D}${datadir}/${BPN}/* ${D}/${docdir}/${BPN}/ || :
+	mv ${D}${prefix}/doc/* ${D}/${docdir}/${BPN}/ || :
 }
 
 # split out gpgv from main package
@@ -90,5 +90,5 @@ PACKAGES =+ "gpgv"
 FILES_gpgv = "${bindir}/gpgv"
 
 # Exclude debug files from the main packages
-FILES_${PN} = "${bindir}/* ${datadir}/${PN} ${libexecdir}/${PN}/*"
-FILES_${PN}-dbg += "${libexecdir}/${PN}/.debug"
+FILES_${PN} = "${bindir}/* ${datadir}/${BPN} ${libexecdir}/${BPN}/*"
+FILES_${PN}-dbg += "${libexecdir}/${BPN}/.debug"
