@@ -10,7 +10,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 RDEPENDS_${PN} = "fontconfig-utils"
 PE = "1"
-PR = "r2"
+PR = "r3"
 
 FONTREV = "0.20100721"
 SRC_URI = "https://fedorahosted.org/releases/l/i/${BPN}/${BPN}-${PV}.${FONTREV}.tar.gz \
@@ -29,8 +29,8 @@ do_install () {
 	install -d ${D}${sysconfdir}/fonts/conf.d/
 	install -m 0644 ${WORKDIR}/30-liberation-aliases.conf ${D}${sysconfdir}/fonts/conf.d/
 
-	install -d ${D}${prefix}/share/doc/${PN}/
-	install -m 0644 License.txt ${D}${datadir}/doc/${PN}/
+	install -d ${D}${prefix}/share/doc/${BPN}/
+	install -m 0644 License.txt ${D}${datadir}/doc/${BPN}/
 }
 
 pkg_postinst_${PN} () {

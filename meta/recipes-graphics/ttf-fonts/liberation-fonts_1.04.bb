@@ -9,7 +9,7 @@ SECTION = "x11/fonts"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 RDEPENDS_${PN} = "fontconfig-utils"
-PR = "r3"
+PR = "r4"
 PE = "1"
 
 inherit allarch fontcache
@@ -31,8 +31,8 @@ do_install () {
 	install -d ${D}${sysconfdir}/fonts/conf.d/
 	install -m 0644 ${WORKDIR}/30-liberation-aliases.conf ${D}${sysconfdir}/fonts/conf.d/
 
-	install -d ${D}${prefix}/share/doc/${PN}/
-	install -m 0644 License.txt ${D}${datadir}/doc/${PN}/
+	install -d ${D}${prefix}/share/doc/${BPN}/
+	install -m 0644 License.txt ${D}${datadir}/doc/${BPN}/
 }
 
 PACKAGES = "${PN}"

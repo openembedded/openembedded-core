@@ -7,7 +7,7 @@ but is visibly different than normal and bold, and reasonably pleasing."
 SECTION = "x11/fonts"
 LICENSE = "BitstreamVera"
 LIC_FILES_CHKSUM = "file://COPYRIGHT.TXT;md5=27d7484b1e18d0ee4ce538644a3f04be"
-PR = "r6"
+PR = "r7"
 RDEPENDS_${PN} = "fontconfig-utils"
 
 inherit allarch
@@ -25,9 +25,9 @@ do_install () {
         #install -m 644 local.conf ${D}${sysconfdir}/fonts/local.conf 
 
 
-        install -d ${D}${prefix}/share/doc/${PN}/ 
+        install -d ${D}${prefix}/share/doc/${BPN}/
         for i in *.TXT; do 
-                install -m 644 $i ${D}${prefix}/share/doc/${PN}/$i 
+                install -m 644 $i ${D}${prefix}/share/doc/${BPN}/$i
         done 
 } 
 
