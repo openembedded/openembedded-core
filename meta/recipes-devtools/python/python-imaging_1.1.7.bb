@@ -4,7 +4,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://README;beginline=92;endline=120;md5=c4371af4579f1e489cf881c1443dd4ec"
 DEPENDS = "freetype jpeg tiff"
 SRCNAME = "Imaging"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "http://effbot.org/downloads/Imaging-${PV}.tar.gz \
            file://0001-python-imaging-setup.py-force-paths-for-zlib-freetyp.patch"
@@ -25,9 +25,9 @@ do_install() {
     export STAGING_LIBDIR=${STAGING_LIBDIR}
     export STAGING_INCDIR=${STAGING_INCDIR}
     distutils_do_install
-    install -d ${D}${datadir}/doc/${PN}/html/
-    install -m 0644 ${S}/README ${D}${datadir}/doc/${PN}/
-    install -m 0644 ${S}/Docs/* ${D}${datadir}/doc/${PN}/html/
+    install -d ${D}${datadir}/doc/${BPN}/html/
+    install -m 0644 ${S}/README ${D}${datadir}/doc/${BPN}/
+    install -m 0644 ${S}/Docs/* ${D}${datadir}/doc/${BPN}/html/
 
     # get rid of #!/usr/local/bin/python
     sed -i -e 's:/usr/local/bin/:${bindir}/env :g' ${D}${bindir}/*
