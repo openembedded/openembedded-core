@@ -1,0 +1,78 @@
+
+Upstream-Status: Backport
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Notes from Pdraig (via email) :
+
+Actually LGPLv2+ is most appropriate for that.
+The intent is that it's licensed under the LGPL anyway:
+
+$ gnulib/gnulib-tool --local-dir gl --extract-license mbsalign
+LGPL
+
+When extracting this to util-linux I should have adjusted
+the boilerplate default license in the file (which gnulib-tool
+can do on import).
+
+
+From 16d8546964db1f6a27ae0f1d1cd24ce42704111d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?P=C3=A1draig=20Brady?= <P@draigBrady.com>
+Date: Fri, 15 Mar 2013 09:48:37 +0000
+Subject: [PATCH] lib/mbsalign: correct license header from GPLv[23] to
+ LGPLv2+
+
+* lib/mbsalign.c: s/GPLv3/LGPLv2+/
+* include/mbsalign.h: s/GPLv2/LGPLv2+/
+* README.licensing: Remove mention GPLv3 as it's not actually used.
+---
+ README.licensing   |    2 --
+ include/mbsalign.h |    4 ++--
+ lib/mbsalign.c     |    4 ++--
+ 3 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/README.licensing b/README.licensing
+index b29883c..ab60004 100644
+--- a/README.licensing
++++ b/README.licensing
+@@ -2,8 +2,6 @@
+ The project util-linux doesn't use the same license for all of the code.
+ There is code under:
+ 
+-   * GPLv3+ (GNU General Public License version 3, or any later version)
+-
+    * GPLv2+ (GNU General Public License version 2, or any later version)
+ 
+    * GPLv2 (GNU General Public License version 2)
+diff --git a/include/mbsalign.h b/include/mbsalign.h
+index fd957b3..8c9f2db 100644
+--- a/include/mbsalign.h
++++ b/include/mbsalign.h
+@@ -2,8 +2,8 @@
+    Copyright (C) 2009-2010 Free Software Foundation, Inc.
+ 
+    This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 2 of the License, or
++   it under the terms of the GNU Lesser General Public License as published by
++   the Free Software Foundation, either version 2.1 of the License, or
+    (at your option) any later version.
+ 
+    This program is distributed in the hope that it will be useful,
+diff --git a/lib/mbsalign.c b/lib/mbsalign.c
+index d97bbd5..05c4650 100644
+--- a/lib/mbsalign.c
++++ b/lib/mbsalign.c
+@@ -2,8 +2,8 @@
+    Copyright (C) 2009-2010 Free Software Foundation, Inc.
+ 
+    This program is free software: you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published by
+-   the Free Software Foundation, either version 3 of the License, or
++   it under the terms of the GNU Lesser General Public License as published by
++   the Free Software Foundation, either version 2.1 of the License, or
+    (at your option) any later version.
+ 
+    This program is distributed in the hope that it will be useful,
+-- 
+1.7.7.6
+
