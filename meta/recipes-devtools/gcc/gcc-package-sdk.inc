@@ -60,6 +60,10 @@ do_install () {
 	dest=${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/
 	install -d $dest
 	for t in ar as ld nm objcopy objdump ranlib strip g77 gcc cpp gfortran; do
+		if [ "$t" = "g77" -o "$t" = "gfortran" ] && [ ! -e ${D}${bindir}/${TARGET_PREFIX}$t ]; then
+			continue
+		fi
+
 		ln -sf ${bindir}/${TARGET_PREFIX}$t $dest$t
 	done
 
