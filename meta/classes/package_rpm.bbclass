@@ -610,7 +610,7 @@ python write_specfile () {
                             pv = subd['PV']
                             pkgv = subd['PKGV']
                             reppv = pkgv.replace('-', '+')
-                            verlist.append(ver.replace(pv, reppv))
+                            verlist.append(ver.replace(pv, reppv).replace(pkgv, reppv))
                     else:
                         verlist.append(ver)
                 newdeps_dict[dep] = verlist
