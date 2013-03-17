@@ -7,12 +7,12 @@ PR = "r0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ebf4e8b49780ab187d51bd26aaa022c6"
 
 S="${WORKDIR}/initscripts-${PV}"
-SRC_URI = "http://pkgs.fedoraproject.org/repo/pkgs/initscripts/initscripts-9.44.tar.bz2/2a59d3bd214b4dc6238046490d536e42/initscripts-9.44.tar.bz2 \
+SRC_URI = "http://pkgs.fedoraproject.org/repo/pkgs/initscripts/initscripts-${PV}.tar.bz2/dd514ee65e4a4610be836bb34c62c0ed/initscripts-${PV}.tar.bz2 \
            file://functions.patch \
           " 
 
-SRC_URI[md5sum] = "2a59d3bd214b4dc6238046490d536e42"
-SRC_URI[sha256sum] = "59aed26c98981dff2e94b3ae1a9c57597399653fb592669e16dee3ab090b576e"
+SRC_URI[md5sum] = "dd514ee65e4a4610be836bb34c62c0ed"
+SRC_URI[sha256sum] = "dd8bfa09f41f56c223f90629f31fc16decc3b9df4c72b1e3ee00cfa3f7d9c48c"
 
 inherit update-alternatives
 
