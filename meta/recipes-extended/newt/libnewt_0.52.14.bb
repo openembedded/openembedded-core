@@ -45,7 +45,7 @@ export HOST_SYS
 PACKAGES_prepend = "whiptail ${PN}-python "
 
 do_configure_prepend() {
-    sh autogen.sh
+    ( cd ${S}; sh autogen.sh )
 }
 
 FILES_whiptail = "${bindir}/whiptail"
