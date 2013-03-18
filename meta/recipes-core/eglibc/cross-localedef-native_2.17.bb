@@ -39,11 +39,11 @@ EXTRA_OECONF = "--with-glibc=${WORKDIR}/eglibc-${PV}/libc"
 CFLAGS += "-DNOT_IN_libc=1"
 
 do_configure () {
-	./configure ${EXTRA_OECONF}
+	${S}/configure ${EXTRA_OECONF}
 }
 
 
 do_install() {
 	install -d ${D}${bindir} 
-	install -m 0755 ${S}/localedef ${D}${bindir}/cross-localedef
+	install -m 0755 ${B}/localedef ${D}${bindir}/cross-localedef
 }
