@@ -22,12 +22,12 @@ inherit autotools native
 do_configure_prepend() {
 	# Fix hard-coded references to /etc/sgml
 	if [ ! -e ${S}/.sed_done ]; then
-		sed -i -e "s|/etc/sgml|${sysconfdir}/sgml|g" bin/jw.in
-		sed -i -e "s|/etc/sgml|${sysconfdir}/sgml|g" doc/man/Makefile.am
-		sed -i -e "s|/etc/sgml|${sysconfdir}/sgml|g" doc/HTML/Makefile.am
+		sed -i -e "s|/etc/sgml|${sysconfdir}/sgml|g" ${S}/bin/jw.in
+		sed -i -e "s|/etc/sgml|${sysconfdir}/sgml|g" ${S}/doc/man/Makefile.am
+		sed -i -e "s|/etc/sgml|${sysconfdir}/sgml|g" ${S}/doc/HTML/Makefile.am
 
 		# Point jw to the native sysroot catalog
-		sed -i -e 's|^SGML_EXTRA_CATALOGS=""|SGML_EXTRA_CATALOGS=":${sysconfdir}/sgml/catalog"|g' bin/jw.in
+		sed -i -e 's|^SGML_EXTRA_CATALOGS=""|SGML_EXTRA_CATALOGS=":${sysconfdir}/sgml/catalog"|g' ${S}/bin/jw.in
 		touch ${S}/.sed_done
 	fi
 }
@@ -44,14 +44,15 @@ do_install() {
 		ln -sf docbook2$doctype ${D}${bindir}/docbook-to-$doctype
 	done
 
-	install -m 0755 ${S}/bin/jw ${D}${bindir}/
-	for i in backends/dvi backends/html backends/man \
-		backends/pdf backends/ps backends/rtf backends/tex \
-		backends/texi backends/txt frontends/docbook \
-		helpers/docbook2man-spec.pl helpers/docbook2texi-spec.pl \
-		docbook-utils.dsl
+	install -m 0755 ${B}/bin/jw ${D}${bindir}/
+	for i in ${S}/backends/dvi ${S}/backends/html ${B}/backends/man \
+		${S}/backends/pdf ${S}/backends/ps ${S}/backends/rtf ${S}/backends/tex \
+		${B}/backends/texi ${S}/backends/txt ${B}/frontends/docbook \
+		${S}/helpers/docbook2man-spec.pl ${S}/helpers/docbook2texi-spec.pl \
+		${S}/docbook-utils.dsl
 	do
 		install -d ${D}${datadir}/sgml/docbook/utils-${PV}/`dirname $i`
-		install ${S}/$i ${D}${datadir}/sgml/docbook/utils-${PV}/$i
+		install $i ${D}${datadir}/sgml/docbook/utils-${PV}/$i
 	done
+
 }
