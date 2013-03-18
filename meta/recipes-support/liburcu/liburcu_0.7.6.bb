@@ -17,7 +17,3 @@ SRC_URI[sha256sum] = "71f2c0b75f3473e4d7aa6ac5111ca4d9cccccd5d131e87b53a07d35bd2
 S = "${WORKDIR}/userspace-rcu-${PV}"
 CFLAGS_append_libc-uclibc = " -D_GNU_SOURCE"
 inherit autotools
-
-# liburcu, which is only used by lttng-ust, may not build on other
-# platforms, like MIPS.
-COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|powerpc.*)-linux.*'
