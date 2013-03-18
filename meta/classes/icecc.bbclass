@@ -47,6 +47,9 @@ def get_cross_kernel_cc(bb,d):
     kernel_cc = kernel_cc.strip()
     return kernel_cc
 
+def get_icecc(d):
+    return d.getVar('ICECC_PATH') or os.popen("which icecc").read()[:-1]
+
 def create_path(compilers, bb, d):
     """
     Create Symlinks for the icecc in the staging directory
@@ -56,7 +59,7 @@ def create_path(compilers, bb, d):
         staging += "-kernel"
 
     #check if the icecc path is set by the user
-    icecc   = d.getVar('ICECC_PATH') or os.popen("which icecc").read()[:-1]
+    icecc = get_icecc(d)
 
     # Create the dir if necessary
     try:
@@ -151,6 +154,11 @@ def icc_path(bb,d):
         prefix = d.expand('${HOST_PREFIX}')
         return create_path( [prefix+"gcc", prefix+"g++"], bb, d)      
 
+def icc_get_external_tool(bb, d, tool):
+    external_toolchain_bindir = d.expand('${EXTERNAL_TOOLCHAIN}${bindir_cross}')
+    target_prefix = d.expand('${TARGET_PREFIX}')
+    return os.path.join(external_toolchain_bindir, '%s%s' % (target_prefix, tool))
+
 def icc_get_tool(bb, d, tool):
     if icc_is_native(bb, d):
         return os.popen("which %s" % tool).read()[:-1]
@@ -159,7 +167,26 @@ def icc_get_tool(bb, d, tool):
     else:
         ice_dir = d.expand('${STAGING_BINDIR_TOOLCHAIN}')
         target_sys = d.expand('${TARGET_SYS}')
-        return os.path.join(ice_dir, "%s-%s" % (target_sys, tool))
+        tool_bin = os.path.join(ice_dir, "%s-%s" % (target_sys, tool))
+        if os.path.isfile(tool_bin):
+            return tool_bin
+        else:
+            external_tool_bin = icc_get_external_tool(bb, d, tool)
+            if os.path.isfile(external_tool_bin):
+                return external_tool_bin
+            else:
+                return ""
+
+def icc_get_and_check_tool(bb, d, tool):
+    # Check that g++ or gcc is not a symbolic link to icecc binary in
+    # PATH or icecc-create-env script will silently create an invalid
+    # compiler environment package.
+    t = icc_get_tool(bb, d, tool)
+    if t and os.popen("readlink -f %s" % t).read()[:-1] == get_icecc(d):
+        bb.error("%s is a symlink to %s in PATH and this prevents icecc from working" % (t, get_icecc(d)))
+        return ""
+    else:
+        return t
 
 set_icecc_env() {
     if [ "x${ICECC_DISABLED}" != "x" ]
@@ -178,8 +205,8 @@ set_icecc_env() {
         return
     fi
 
-    ICECC_CC="${@icc_get_tool(bb,d, "gcc")}"
-    ICECC_CXX="${@icc_get_tool(bb,d, "g++")}"
+    ICECC_CC="${@icc_get_and_check_tool(bb, d, "gcc")}"
+    ICECC_CXX="${@icc_get_and_check_tool(bb, d, "g++")}"
     if [ ! -x "${ICECC_CC}" -o ! -x "${ICECC_CXX}" ]
     then
         return
@@ -207,6 +234,8 @@ set_icecc_env() {
     export ICECC_VERSION ICECC_CC ICECC_CXX
     export PATH="$ICE_PATH:$PATH"
     export CCACHE_PATH="$PATH"
+
+    bbnote "Using icecc"
 }
 
 do_configure_prepend() {
