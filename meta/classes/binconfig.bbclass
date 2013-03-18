@@ -50,7 +50,7 @@ binconfig_package_preprocess () {
 SYSROOT_PREPROCESS_FUNCS += "binconfig_sysroot_preprocess"
 
 binconfig_sysroot_preprocess () {
-	for config in `find ${S} -name '${BINCONFIG_GLOB}'`; do
+	for config in `find ${S} -name '${BINCONFIG_GLOB}'` `find ${B} -name '${BINCONFIG_GLOB}'`; do
 		configname=`basename $config`
 		install -d ${SYSROOT_DESTDIR}${bindir_crossscripts}
 		cat $config | sed ${@get_binconfig_mangle(d)} > ${SYSROOT_DESTDIR}${bindir_crossscripts}/$configname
