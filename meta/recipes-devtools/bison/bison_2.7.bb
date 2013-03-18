@@ -16,6 +16,9 @@ BASE_SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.gz \
                 file://dont-depend-on-help2man.patch \
 	       "
 
+# No point in hardcoding path to m4, just use PATH
+EXTRA_OECONF += "M4=m4"
+
 SRC_URI = "${BASE_SRC_URI} \
            file://fix_cross_manpage_building.patch \
           "
@@ -32,8 +35,6 @@ acpaths = "-I ${S}/m4"
 
 do_install_append_class-native() {
 	create_wrapper ${D}/${bindir}/bison \
-		M4=${STAGING_BINDIR_NATIVE}/m4 \
 		BISON_PKGDATADIR=${STAGING_DATADIR_NATIVE}/bison
 }
-#bison-native encodes the staging M4 path
 BBCLASSEXTEND = "native nativesdk"
