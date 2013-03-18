@@ -87,7 +87,7 @@ python do_compile () {
             shutil.copyfile(localfile, destfile)
         # For some reason just updating the header is not enough, we have to touch the .c
         # file in order to get it to rebuild
-        os.utime("psplash.c", None)
+        os.utime("%s/psplash.c" % d.getVar('S', True), None)
         bb.build.exec_func("oe_runmake", d)
         shutil.copyfile("psplash", outputfile)
 }
