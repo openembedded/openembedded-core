@@ -47,14 +47,14 @@ FILES_${PN}-dbg += "${libdir}/${BPN}/*/.debug"
 
 RDEPENDS_${PN}-tests = "python python-dbus python-pygobject"
 
-# This is valid for 0.9+
+# This is valid for 0.10+
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
  file://src/near.h;beginline=1;endline=20;md5=358e4deefef251a4761e1ffacc965d13 \
  "
 S	= "${WORKDIR}/git"
-SRCREV	= "1e20e396cb837017b7e5ef822bfdab6ce060d2cf"
-PV	= "0.9-git${SRCPV}"
-PR	= "r1"
+SRCREV	= "eb486bf35e24d7d1db61350f5ab393a0c880523d"
+PV	= "0.10+git${SRCPV}"
+PR	= "r0"
 
 SRC_URI  = "git://git.kernel.org/pub/scm/network/nfc/neard.git;protocol=git \
 	file://neard.in \
