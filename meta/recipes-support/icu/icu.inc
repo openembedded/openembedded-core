@@ -27,15 +27,15 @@ EXTRA_OECONF_class-native = ""
 # This is a bug of ICU. See bug reference:
 # http://bugs.icu-project.org/trac/ticket/9790
 do_configure_prepend() {
-    [ -f acinclude.m4 ] || cp aclocal.m4 acinclude.m4
+    [ -f ${S}/acinclude.m4 ] || cp ${S}/aclocal.m4 ${S}/acinclude.m4
 }
 
 do_install_append_class-native() {
 	mkdir -p ${D}/${STAGING_ICU_DIR_NATIVE}/config
-	cp -r ${S}/config/icucross.mk ${D}/${STAGING_ICU_DIR_NATIVE}/config
-	cp -r ${S}/lib ${D}/${STAGING_ICU_DIR_NATIVE}
-	cp -r ${S}/bin ${D}/${STAGING_ICU_DIR_NATIVE}
-	cp -r ${S}/tools ${D}/${STAGING_ICU_DIR_NATIVE}
+	cp -r ${B}/config/icucross.mk ${D}/${STAGING_ICU_DIR_NATIVE}/config
+	cp -r ${B}/lib ${D}/${STAGING_ICU_DIR_NATIVE}
+	cp -r ${B}/bin ${D}/${STAGING_ICU_DIR_NATIVE}
+	cp -r ${B}/tools ${D}/${STAGING_ICU_DIR_NATIVE}
 
 }
 
