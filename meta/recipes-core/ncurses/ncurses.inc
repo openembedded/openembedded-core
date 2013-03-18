@@ -94,7 +94,7 @@ do_configure() {
         # not the case for /dev/null redirections)
         export cf_cv_working_poll=yes
 
-	gnu-configize --force
+	( cd ${S}; gnu-configize --force )
 	ncurses_configure "narrowc" || \
 		return 1
 	! ${ENABLE_WIDEC} || \
