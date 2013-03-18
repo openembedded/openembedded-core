@@ -18,8 +18,8 @@ DEPENDS = "expat makedepend-native flex-native bison-native"
 
 PROVIDES = "virtual/libgl virtual/libgles1 virtual/libgles2 virtual/egl"
 
-# for mesa-dri and mesa-xlib
-FILESEXTRAPATHS_append := "${THISDIR}/mesa:"
+# for mesa-dri
+FILESEXTRAPATHS_prepend := "${THISDIR}/mesa:"
 
 inherit autotools pkgconfig pythonnative
 
