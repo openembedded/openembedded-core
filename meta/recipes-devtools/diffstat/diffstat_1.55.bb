@@ -19,8 +19,8 @@ S = "${WORKDIR}/diffstat-${PV}"
 inherit autotools gettext
 
 do_configure () {
-	if [ ! -e acinclude.m4 ]; then
-		mv aclocal.m4 acinclude.m4
+	if [ ! -e ${S}/acinclude.m4 ]; then
+		mv ${S}/aclocal.m4 ${S}/acinclude.m4
 	fi
 	autotools_do_configure
 }
