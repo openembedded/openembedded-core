@@ -358,13 +358,13 @@ FILES_${PN}-staticdev = " \
 
 do_configure() {
 	# Disable tests!
-	echo "all:" > tests/Makefile.am
+	echo "all:" > ${S}/tests/Makefile.am
 
-	./autogen.sh
+	${S}/autogen.sh
 
 	# NASTY hack to make sure configure files the right pkg-config file...
 	sed -e 's/pkg-config --exists uuid/pkg-config --exists ossp-uuid/g' \
-	    -e 's/pkg-config uuid/pkg-config ossp-uuid/g' -i configure
+	    -e 's/pkg-config uuid/pkg-config ossp-uuid/g' -i ${S}/configure
 
 	export varprefix=${localstatedir}
 	oe_runconf
