@@ -14,8 +14,3 @@ AVAILTUNES += "xscale-be"
 ARMPKGARCH_tune-xscale-be = "xscale"
 TUNE_FEATURES_tune-xscale-be = "${TUNE_FEATURES_tune-armv5teb} xscale bigendian"
 PACKAGE_EXTRA_ARCHS_tune-xscale-be = "${PACKAGE_EXTRA_ARCHS_tune-armv5teb} xscaleb xscaletb xscaleeb xscaleteb"
-
-# webkit-gtk has alignment issues with double instructions on armv5 so
-# disable them here
-TUNE_CCARGS_pn-webkit-gtk = "${@bb.utils.contains("TUNE_FEATURES", "xscale", "-march=armv4t", "", d)}"
-TUNE_CCARGS_pn-cairo = "${@bb.utils.contains("TUNE_FEATURES", "xscale", "-march=armv4t", "", d)}"
