@@ -29,7 +29,7 @@ SRC_URI = "git://git.lttng.org/lttng-ust.git;protocol=git \
 S = "${WORKDIR}/git"
 
 do_configure_prepend () {
-	${S}/bootstrap
+	( cd ${S}; ${S}/bootstrap )
 }
 
 # Due to liburcu not building for MIPS currently this recipe needs to
