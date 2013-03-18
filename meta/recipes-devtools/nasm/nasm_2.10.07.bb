@@ -13,8 +13,8 @@ SRC_URI[sha256sum] = "c056e2abc83816892e448f9e9e95a3d21e9e096f44341b9d4853f62a44
 inherit autotools
 
 do_configure_prepend () {
-	if [ -f aclocal.m4 ] && [ ! -f acinclude.m4 ]; then
-		mv aclocal.m4 acinclude.m4
+	if [ -f ${S}/aclocal.m4 ] && [ ! -f ${S}/acinclude.m4 ]; then
+		mv ${S}/aclocal.m4 ${S}/acinclude.m4
 	fi
 }
 
