@@ -95,7 +95,9 @@ runimagecmd () {
         # And create the symlinks
         if [ -n "${IMAGE_LINK_NAME}" ]; then
             for type in ${subimages}; do
-                ln -s ${IMAGE_NAME}.rootfs.$type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
+                if [ -e ${IMAGE_NAME}.rootfs.$type ]; then
+                    ln -s ${IMAGE_NAME}.rootfs.$type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
+                fi
             done
         fi
 }
