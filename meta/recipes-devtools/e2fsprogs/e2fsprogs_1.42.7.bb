@@ -19,7 +19,7 @@ do_configure_prepend () {
 
 do_compile_prepend () {
 	find ./ -print | grep -v ./patches | xargs chmod u=rwX
-	( cd ${S}/util; ${BUILD_CC} subst.c -o subst )
+	( cd ${S}/util; ${BUILD_CC} subst.c -o ${B}/util/subst )
 }
 
 do_install () {
