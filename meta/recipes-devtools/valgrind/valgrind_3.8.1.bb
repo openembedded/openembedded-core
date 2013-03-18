@@ -33,7 +33,7 @@ EXTRA_OEMAKE = "-w"
 PARALLEL_MAKE = ""
 
 do_install_append () {
-    install -m 644 ${S}/default.supp ${D}/${libdir}/valgrind/
+    install -m 644 ${B}/default.supp ${D}/${libdir}/valgrind/
 }
 
 FILES_${PN}-dbg += "${libdir}/${PN}/*/.debug/*"
