@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+
+import optparse
+import subprocess
+import sys
+
+parser = optparse.OptionParser(
+    usage = """
+  %prog [options]
+""")
+
+parser.add_option("-q", "--findqemu",
+        help = "find a qemu beneath the process <pid>",
+        action="store", dest="findqemu")
+
+options, args = parser.parse_args(sys.argv)
+
+if options.findqemu:
+    #
+    # Walk the process tree from the process specified looking for a qemu-system. Return its pid.
+    #
+    ps = subprocess.Popen(['ps', 'ax', '-o', 'pid,ppid,command'], stdout=subprocess.PIPE).communicate()[0]
+    processes = ps.split('\n')
+    nfields = len(processes[0].split()) - 1
+    pids = {}
+    commands = {}
+    for row in processes[1:]:
+        data = row.split(None, nfields)
+        if len(data) != 3:
+            continue
+        if data[1] not in pids:
+            pids[data[1]] = []
+        pids[data[1]].append(data[0])
+        commands[data[0]] = data[2]
+
+    if options.findqemu not in pids:
+        print "No children found matching %s" % options.findqemu
+        sys.exit(1)
+
+    parents = []
+    newparents = pids[options.findqemu]
+    while newparents:
+        next = []
+        for p in newparents:
+            if p in pids:
+                for n in pids[p]:
+                    if n not in parents and n not in next:
+                        next.append(n)
+
+            if p not in parents:
+                parents.append(p)
+        newparents = next
+    #print "Children matching %s:" % str(parents)
+    for p in parents:
+        if "qemu-system" in commands[p]:
+            print p
+            sys.exit(0)
+    sys.exit(1)
+else:
+    parser.print_help()
+
