@@ -166,8 +166,8 @@ parted $DEVICE mklabel gpt
 echo "Creating boot partition on $BOOTFS"
 parted $DEVICE mkpart primary 0% $BOOT_SIZE
 
-# GPT doesn't have a real boot flag, parted will change the GUID to EFI System Partition, 
-# which is what we want
+# GPT doesn't have a real boot flag, parted will change the GUID to EFI System
+# Partition, which is what we want
 echo "Enabling boot flag on $BOOTFS"
 parted $DEVICE set 1 boot on
 
