@@ -16,6 +16,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 # - x11-base            - X server with minimal environment
 # - x11-sato            - OpenedHand Sato environment
 # - tools-debug         - debugging tools
+# - eclipse-debug       - Eclipse remote debugging support
 # - tools-profile       - profiling tools
 # - tools-testapps      - tools usable to make some device tests
 # - tools-sdk           - SDK (C/C++ compiler, autotools, etc.)
@@ -35,6 +36,7 @@ PACKAGE_GROUP_x11 = "packagegroup-core-x11"
 PACKAGE_GROUP_x11-base = "packagegroup-core-x11-base"
 PACKAGE_GROUP_x11-sato = "packagegroup-core-x11-sato"
 PACKAGE_GROUP_tools-debug = "packagegroup-core-tools-debug"
+PACKAGE_GROUP_eclipse-debug = "packagegroup-core-eclipse-debug"
 PACKAGE_GROUP_tools-profile = "packagegroup-core-tools-profile"
 PACKAGE_GROUP_tools-testapps = "packagegroup-core-tools-testapps"
 PACKAGE_GROUP_tools-sdk = "packagegroup-core-sdk packagegroup-core-standalone-sdk-target"
