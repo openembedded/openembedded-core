@@ -3,7 +3,7 @@ DESCRIPTION = "HarfBuzz is an OpenType text shaping engine."
 HOMEPAGE = "http://www.freedesktop.org/wiki/Software/HarfBuzz"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=HarfBuzz"
 
-LICENSE = "Old-MIT & UCDN & ICU & HarfBuzz-old"
+LICENSE = "MIT & ICU"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e021dd6dda6ff1e6b1044002fc662b9b \
                     file://src/hb-ucdn/COPYING;md5=994ba0f1295f15b4bda4999a5bbeddef \
                     file://src/hb-icu-le/COPYING;md5=0ac60acf068e2cc9facdf86169a9c13e \
