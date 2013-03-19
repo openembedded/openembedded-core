@@ -7,7 +7,7 @@
 #
 
 # First include a base image to base things off
-require recipes-core/images/core-image-sato.bb
+require recipes-sato/images/core-image-sato.bb
 
 # Now add the multilib packages we want to install
 IMAGE_INSTALL += "lib32-bash"
