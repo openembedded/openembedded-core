@@ -255,10 +255,6 @@ sed -i "s/ LABEL=[^ ]*/ /" $GRUBCFG
 sed -i "s@ root=[^ ]*@ @" $GRUBCFG
 sed -i "s@vmlinuz @vmlinuz root=$TARGET_ROOTFS ro rootwait quiet @" $GRUBCFG
 
-# Provide a startup.nsh script for older firmware with non-standard boot
-# directories and paths.
-echo "bootia32.efi" > $BOOTFS_MNT/startup.nsh
-
 umount $BOOTFS_MNT
 umount $HDDIMG_MNT
 rm -rf $TMPDIR
