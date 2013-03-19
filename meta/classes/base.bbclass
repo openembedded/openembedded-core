@@ -162,7 +162,7 @@ def preferred_ml_updates(d):
             providers.append(v)
 
     for pkg, reason in blacklists.items():
-        if pkg.endswith(("-native", "-crosssdk")) or pkg.startswith("nativesdk-") or 'cross-canadian' in pkg:
+        if pkg.endswith(("-native", "-crosssdk")) or pkg.startswith(("nativesdk-", "virtual/nativesdk-")) or 'cross-canadian' in pkg:
             continue
         for p in prefixes:
             newpkg = p + "-" + pkg
@@ -172,7 +172,7 @@ def preferred_ml_updates(d):
     for v in versions:
         val = d.getVar(v, False)
         pkg = v.replace("PREFERRED_VERSION_", "")
-        if pkg.endswith(("-native", "-crosssdk")) or pkg.startswith("nativesdk-"):
+        if pkg.endswith(("-native", "-crosssdk")) or pkg.startswith(("nativesdk-", "virtual/nativesdk-")):
             continue
         if 'cross-canadian' in pkg:
             for p in prefixes:
@@ -182,8 +182,12 @@ def preferred_ml_updates(d):
                 bb.data.update_data(localdata)
                 newname = localdata.expand(v)
                 if newname != v:
-                    newval = localdata.getVar(v, True)
+                    newval = localdata.expand(val)
                     d.setVar(newname, newval)
+            # Avoid future variable key expansion
+            vexp = d.expand(v)
+            if v != vexp and d.getVar(v, False):
+                d.renameVar(v, vexp)
             continue
         for p in prefixes:
             newname = "PREFERRED_VERSION_" + p + "-" + pkg
@@ -193,7 +197,7 @@ def preferred_ml_updates(d):
     for prov in providers:
         val = d.getVar(prov, False)
         pkg = prov.replace("PREFERRED_PROVIDER_", "")
-        if pkg.endswith(("-native", "-crosssdk")) or pkg.startswith("nativesdk-"):
+        if pkg.endswith(("-native", "-crosssdk")) or pkg.startswith(("nativesdk-", "virtual/nativesdk-")):
             continue
         if 'cross-canadian' in pkg:
             for p in prefixes:
@@ -205,6 +209,10 @@ def preferred_ml_updates(d):
                 if newname != prov:
                     newval = localdata.expand(val)
                     d.setVar(newname, newval)
+            # Avoid future variable key expansion
+            provexp = d.expand(prov)
+            if prov != provexp and d.getVar(prov, False):
+                d.renameVar(prov, provexp)
             continue
         virt = ""
         if pkg.startswith("virtual/"):
@@ -220,19 +228,23 @@ def preferred_ml_updates(d):
             localdata.setVar("OVERRIDES", localdata.getVar("OVERRIDES", False) + override)
             bb.data.update_data(localdata)
             newname = localdata.expand(prov)
-            if newname != prov:
+            if newname != prov and not d.getVar(newname, False):
                 d.setVar(newname, localdata.expand(val))
 
             # implement alternative multilib name
             newname = localdata.expand("PREFERRED_PROVIDER_" + virt + p + "-" + pkg)
             if not d.getVar(newname, False):
                 d.setVar(newname, val)
+        # Avoid future variable key expansion
+        provexp = d.expand(prov)
+        if prov != provexp and d.getVar(prov, False):
+            d.renameVar(prov, provexp)
 
 
     mp = (d.getVar("MULTI_PROVIDER_WHITELIST", True) or "").split()
     extramp = []
     for p in mp:
-        if p.endswith(("-native", "-crosssdk")) or p.startswith("nativesdk-") or 'cross-canadian' in p:
+        if p.endswith(("-native", "-crosssdk")) or p.startswith(("nativesdk-", "virtual/nativesdk-")) or 'cross-canadian' in p:
             continue
         virt = ""
         if p.startswith("virtual/"):
