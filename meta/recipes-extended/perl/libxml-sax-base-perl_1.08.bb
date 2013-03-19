@@ -19,6 +19,6 @@ SRC_URI[sha256sum] = "666270318b15f88b8427e585198abbc19bc2e6ccb36dc4c0a4f2d98073
 
 S = "${WORKDIR}/XML-SAX-Base-${PV}"
 
-inherit cpan allarch
+inherit cpan
 
 BBCLASSEXTEND = "native"

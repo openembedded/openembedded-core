@@ -16,7 +16,7 @@ SRC_URI[sha256sum] = "6d8151f0a3f102313d76b64bfd1c2d9ed46bfe63a16f038e7d860fda28
 
 S = "${WORKDIR}/XML-NamespaceSupport-${PV}"
 
-inherit cpan allarch
+inherit cpan
 
 BBCLASSEXTEND="native"
 
