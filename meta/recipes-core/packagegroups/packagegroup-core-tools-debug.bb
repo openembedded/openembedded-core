@@ -24,7 +24,6 @@ RDEPENDS_${PN} = "\
     gdbserver \
     tcf-agent \
     openssh-sftp-server \
-    rsync \
     strace \
     ${MTRACE} \
     "
