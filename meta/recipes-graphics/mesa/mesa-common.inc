@@ -18,9 +18,6 @@ DEPENDS = "expat makedepend-native flex-native bison-native"
 
 PROVIDES = "virtual/libgl virtual/libgles1 virtual/libgles2 virtual/egl"
 
-# for mesa-dri
-FILESEXTRAPATHS_prepend := "${THISDIR}/mesa:"
-
 inherit autotools pkgconfig pythonnative
 
 EXTRA_OECONF = "--disable-glu \
@@ -41,7 +38,7 @@ PACKAGECONFIG[wayland] = ",,wayland"
 # Multiple virtual/gl providers being built breaks staging
 EXCLUDE_FROM_WORLD = "1"
 
-# Remove the mesa-dri dependency on mesa-dri-dev, as mesa-dri is empty
+# Remove the mesa dependency on mesa-dev, as mesa is empty
 RDEPENDS_${PN}-dev = ""
 
 PACKAGES =+ "libegl-mesa libegl-mesa-dev \

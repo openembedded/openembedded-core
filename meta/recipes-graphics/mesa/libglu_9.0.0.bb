@@ -8,7 +8,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://include/GL/glu.h;endline=29;md5=6b79c570f644363b356456e7d44471d9 \
                     file://src/libtess/tess.c;endline=29;md5=6b79c570f644363b356456e7d44471d9"
 
-# Epoch as this used to be part of mesa-dri
+# Epoch as this used to be part of mesa
 PE = "2"
 PR = "0"
 
