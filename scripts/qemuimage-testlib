@@ -25,8 +25,9 @@ TOOLCHAIN_PROJECTS="$COREBASE/scripts/qemuimage-tests/toolchain_projects"
 # Test Directory on target for testing
 TARGET_TEST_DIR="/opt/test"
 
-# Global variable for process id
-PID=0
+# Global variables for process id
+XTERMPID=0
+QEMUPID=0
 
 # Global variable for target ip address
 TARGET_IPADDR=0
@@ -212,90 +213,33 @@ Test_Print_Result()
 # $1 is qemu process id, which needs to be killed
 Test_Kill_Qemu()
 {
-	local ret=0
-	local ppid=0
-	local i=0
 	local index=0
 	local total=0
-	declare local pid
 
-	# Check if $1 pid exists and is a qemu process
-	ps -wwfp $PID | grep -iq "qemu"
-
-	# Find all children pid of the pid $1
-	if [ $? -eq 0 ]; then
-
-		# Check if there is any child pid of the pid $PID
-		ppid=$PID
-		ps -f --ppid $ppid
-		ret=$?
-
-		while [ $ret -eq 0 ]
-		do
-			# If yes, get the child pid and check if the child pid has other child pid
-			# Continue the while loop until there is no child pid found
-			pid[$i]=`ps -f --ppid $ppid | awk '{if ($2 != "PID") print $2}'`
-			ppid=${pid[$i]}
-			i=$((i+1))
-			ps -f --ppid $ppid
-			ret=$?
-		done
-
-		# When TEST_SERIALIZE is set, qemu process will not be
-		# killed until all the cases are finished
-		if [ ${TEST_SERIALIZE} -eq 1 -a -e ${TEST_STATUS} ]; then
-			index=`sed -n 2p ${TEST_STATUS} | awk '{print $3}'`
-			total=`sed -n 2p ${TEST_STATUS} | awk '{print $4}'`
-			if [ ${index} != ${total} ]; then
-				Test_Info "Do not kill the qemu process and use it for later testing"
-				Test_Update_IPSAVE $PID $TARGET_IPADDR
-			else
-				# If it is the last case, let's kill it
-				while [ $i -ne 0 ]
-				do
-					i=$((i-1))
-					kill ${pid[$i]}
-					sleep 2
-				done
-
-				# Kill the parent id
-				kill $PID
-			fi
-
+	# When TEST_SERIALIZE is set, qemu process will not be
+	# killed until all the cases are finished
+	if [ ${TEST_SERIALIZE} -eq 1 -a -e ${TEST_STATUS} ]; then
+		index=`sed -n 2p ${TEST_STATUS} | awk '{print $3}'`
+		total=`sed -n 2p ${TEST_STATUS} | awk '{print $4}'`
+		if [ ${index} != ${total} ]; then
+			Test_Info "Do not kill the qemu process and use it for later testing"
+			Test_Update_IPSAVE $XTERMPID $TARGET_IPADDR
 		else
-			# Kill these children pids from the last one
-			while [ $i -ne 0 ]
-			do
-				i=$((i-1))
-				kill ${pid[$i]}
-				sleep 2
-			done
-
-			# Kill the parent id
-			kill $PID
+			kill -$QEMUPID
+			kill -$XTERMPID
 		fi
+	else
+		kill -$QEMUPID
+		kill -$XTERMPID
 	fi
 
 	return
 }
 
-# function to check if there is any qemu process
-Test_Check_Qemu_UP()
-{
-	local count=`ps -eo command | cut -d " " -f 1 | grep -c "\(^qemu\|.*/qemu\)"`
-	if [ ${count} -lt 1 ]; then
-		Test_Info "There is no Qemu process"
-		return 1
-	else
-		Test_Info "There is at least one Qemu process running"
-		return 0
-	fi
-}
-
 # function to check if network is up
 Test_Check_IP_UP()
 {
-	ping -c1 $1
+	ping -c1 $1 1> /dev/null
 	if [ $? -ne 0 ]; then
 		Test_Info "IP $1 is not up"
 		return 1
@@ -377,46 +321,12 @@ Test_Find_Image()
 Test_Fetch_Target_IP()
 {
 	local opid=$1
-	local ppid=0
 	local ip_addr=0
-	local i=0
-	declare local pid
 
 	# Check if $1 pid exists and contains ipaddr of target
 	ps -wwfp $opid | grep -oq "192\.168\.7\.[0-9]*::"
 
-	# Find all children pid of the pid $1
-	# and check if they contain ipaddr of target
-	if [ $? -ne 0 ]; then
-		# Check if there is any child pid of the pid $1
-		ppid=$opid
-		ps -f --ppid $ppid > /dev/zero
-		ret=$?
-
-		while [ $ret -eq 0 ]
-		do
-			# If yes, get the child pid and check if the child pid has other child pid
-			# Continue the while loop until there is no child pid found
-			pid[$i]=`ps -f --ppid $ppid | awk '{if ($2 != "PID") print $2}'`
-			ppid=${pid[$i]}
-			i=$((i+1))
-			ps -f --ppid $ppid > /dev/zero
-			ret=$?
-		done
-
-		# Check these children pids, if they have ipaddr included in command line
-		while [ $i -ne 0 ]
-		do
-			i=$((i-1))
-			ps -wwfp ${pid[$i]} | grep -oq "192\.168\.7\.[0-9]*::"
-			if [ $? -eq 0 ]; then
-				ip_addr=`ps -wwfp ${pid[$i]} | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" '{print $1}'`
-			fi
-			sleep 1
-		done
-	else
-		ip_addr=`ps -wwfp $opid | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" '{print $1}'`
-	fi
+	ip_addr=`ps -wwfp $opid | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" '{print $1}'`
 
 	echo $ip_addr
 
@@ -427,13 +337,10 @@ Test_Fetch_Target_IP()
 Test_Create_Qemu()
 {
 	local timeout=$1
-	local ret=1
 	local up_time=0
 
-	which runqemu
-	if [ $? -eq 0 ]; then
-		RUNQEMU=`which runqemu`
-	else
+	RUNQEMU=`which runqemu`
+	if [ $? -ne 0 ]; then
 		Test_Error "Can not find runqemu in \$PATH, return fail"
 		return 1
 	fi
@@ -449,7 +356,7 @@ Test_Create_Qemu()
 	# If there is no kernel image found, return failed directly
 	if [ $? -eq 1 ]; then
 		Test_Info "No kernel image file found under ${DEPLOY_DIR}/images for ${QEMUARCH}, pls. have a check"
-		return $ret
+		return 1
 	fi
 	
 	ROOTFS_IMAGE=$(Test_Find_Image -l ${DEPLOY_DIR}/images -t ${QEMUTARGET} -a ${QEMUARCH})
@@ -457,7 +364,7 @@ Test_Create_Qemu()
 	# If there is no rootfs image found, return failed directly
 	if [ $? -eq 1 ]; then
 		Test_Info "No ${QEMUTARGET} rootfs image file found under ${DEPLOY_DIR}/images for ${QEMUARCH}, pls. have a check"
-		return $ret
+		return 1
 	fi
 
 	TEST_ROOTFS_IMAGE="${TEST_TMP}/${QEMUTARGET}-${QEMUARCH}-test.ext3"
@@ -467,7 +374,7 @@ Test_Create_Qemu()
 	# When TEST_SERIALIZE is set, we use the existing image under tmp folder
 	if [ ${TEST_SERIALIZE} -eq 1 -a -e "$TARGET_IPSAVE" ]; then
 		# If TARGET_IPSAVE exists, check PID of the qemu process from it
-		PID=`awk '{print $1}' $TARGET_IPSAVE`
+		XTERMPID=`awk '{print $1}' $TARGET_IPSAVE`
 		timeout=50
 	else
 		rm -rf $TEST_ROOTFS_IMAGE
@@ -475,22 +382,22 @@ Test_Create_Qemu()
 		$CP $ROOTFS_IMAGE $TEST_ROOTFS_IMAGE
 		if [ $? -ne 0 ]; then
 			Test_Info "Image ${ROOTFS_IMAGE} copy to ${TEST_ROOTFS_IMAGE} failed, return fail"
-			return $ret
+			return 1
 		fi
 
 		export MACHINE=$QEMUARCH
 
 		# Create Qemu in localhost VNC Port 1
-		echo "Running xterm -display ${DISPLAY} -e 'OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} && /bin/sleep 60' &"
-		xterm -display ${DISPLAY} -e "OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} && /bin/sleep 60" &
+		echo "Running xterm -display ${DISPLAY} -e 'OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} || /bin/sleep 60' &"
+		xterm -display ${DISPLAY} -e "OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} || /bin/sleep 60" &
 	
 		# Get the pid of the xterm processor, which will be used in Test_Kill_Qemu
-		PID=$!
+		XTERMPID=$!
 	fi
 
 	while [ ${up_time} -lt 10 ]
 	do
-		Test_Check_Qemu_UP
+		QEMUPID=`qemuimage-testlib-pythonhelper --findqemu $XTERMPID`
 		if [ $? -ne 0 ]; then
 			Test_Info "Wait for qemu up..."
 			up_time=`expr $up_time + 5`
@@ -501,15 +408,17 @@ Test_Create_Qemu()
 		fi
 	done
 
+	if [ ${up_time} == 10 ]; then
+		Test_Info "No qemu process appeared to start, exiting"
+		return 1
+	fi
+
 	# Parse IP address of target from the qemu command line
-	if [ ${up_time} -lt ${timeout} ]; then
-		sleep 5
-		TARGET_IPADDR=`Test_Fetch_Target_IP $PID`
-		# If IP address is 0, means there is no qemu process found
-		if [ ${TARGET_IPADDR} == "0" ]; then
-			Test_Info "There is no qemu process or qemu ip address found, return failed"
-			return $ret
-		fi
+	TARGET_IPADDR=`Test_Fetch_Target_IP $QEMUPID`
+	# If IP address is 0, means there is no qemu process found
+	if [ ${TARGET_IPADDR} == "0" ]; then
+		Test_Info "There is no qemu process or qemu ip address found, return failed"
+		return 1
 	fi
 
 	while [ ${up_time} -lt ${timeout} ]
@@ -517,8 +426,7 @@ Test_Create_Qemu()
 		Test_Check_IP_UP ${TARGET_IPADDR}
 		if [ $? -eq 0 ]; then
 			Test_Info "Qemu Network is up, ping with ${TARGET_IPADDR} is OK within ${up_time} seconds"
-			ret=0
-			break
+			return 0
 		else
 			Test_Info "Wait for Qemu Network up"
 			up_time=`expr $up_time + 5`
@@ -526,14 +434,9 @@ Test_Create_Qemu()
 		fi
 	done
 
-	if [ $ret -eq 0 ]; then
-		Test_Info "Qemu and its network is up"
-		return $ret
-	else
-		Test_Info "Qemu or its network is not up in ${timeout} seconds"
-		Test_Update_IPSAVE $PID $TARGET_IPADDR
-		return $ret
-	fi
+	Test_Info "Qemu or its network is not up in ${timeout} seconds"
+	Test_Update_IPSAVE $XTERMPID $TARGET_IPADDR
+	return 1
 }
 
 # Function to prepare test project for toolchain test
@@ -542,41 +445,36 @@ Test_Create_Qemu()
 Test_Project_Prepare()
 {
 	local toolchain_dir=$1
-	local ret=1
 
 	if [ ! -d ${toolchain_dir} ]; then
 		mkdir -p ${toolchain_dir}
-		ret=$?
-
-		if [ $ret -ne 0 ]; then
+		if [ $? -ne 0 ]; then
+			ret=$?
 			Test_Info "Create ${toolchain_dir} fail, return"
 			return $ret
 		fi
 	fi
 
-	ret=0
 	# Download test project tarball if it does not exist
 	if [ ! -f ${toolchain_dir}/${2}-${PROJECT_PV}.${suffix} ]; then
 		wget -c -t 5 $PROJECT_DOWNLOAD_URL -O ${toolchain_dir}/${2}-${PROJECT_PV}.${suffix}
-		ret=$?
+		if [ $? -ne 0 ]; then
+			ret=$?
+			Test_Info "Fail to download ${2}-${PROJECT_PV}.${suffix} from $PROJECT_DOWNLOAD_URL"
+			rm -rf ${toolchain_dir}/${2}-${PROJECT_PV}.${suffix}
+			return $ret
+		fi
 	fi
 
 	# Extract the test project into ${TEST_TMP}
-	if [ $ret -eq 0 ]; then
-		tar jxf ${toolchain_dir}/${2}-${PROJECT_PV}.${suffix} -C ${TEST_TMP}
+	tar jxf ${toolchain_dir}/${2}-${PROJECT_PV}.${suffix} -C ${TEST_TMP}
+	if [ $? -ne 0 ]; then
 		ret=$?
-		if [ $ret -eq 0 ]; then
-			Test_Info "Extract ${2}-${PROJECT_PV}.${suffix} into ${TEST_TMP} successfully"
-			return $ret
-		else
-			Test_Info "Fail to extract ${2}-${PROJECT_PV}.${suffix} into ${TEST_TMP}"
-			return $ret
-		fi
-	else
-		Test_Info "Fail to download ${2}-${PROJECT_PV}.${suffix} from $PROJECT_DOWNLOAD_URL"
-		rm -rf ${toolchain_dir}/${2}-${PROJECT_PV}.${suffix}
+		Test_Info "Fail to extract ${2}-${PROJECT_PV}.${suffix} into ${TEST_TMP}"
 		return $ret
 	fi
+	Test_Info "Extract ${2}-${PROJECT_PV}.${suffix} into ${TEST_TMP} successfully"
+	return 0
 }
 
 # Function to prepare toolchain environment

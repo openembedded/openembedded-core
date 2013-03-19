@@ -45,7 +45,7 @@ if [ $RET -eq 0 ]; then
 	# If qemu start up process ends up, it means shutdown completes
 	while [ $i -lt $TIMEOUT ]
 	do
-		ps -fp $PID > /dev/null
+		ps -fp $QEMUPID > /dev/null 2> /dev/null
 		if [ $? -ne 0 ]; then
 			RET=0
 			break
