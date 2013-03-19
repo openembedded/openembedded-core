@@ -32,7 +32,7 @@ RDEPENDS_${PN} += "elfutils bash ${SCRIPTING_RDEPENDS}"
 
 PROVIDES = "virtual/perf"
 
-inherit kernel-arch pythonnative
+inherit linux-kernel-base kernel-arch pythonnative
 
 # needed for building the tools/perf Python bindings
 inherit python-dir
@@ -102,6 +102,10 @@ do_install() {
 
 do_configure_prepend () {
     sed -i 's,-Werror ,,' ${S}/tools/perf/Makefile
+}
+
+python do_package_prepend() {
+    bb.data.setVar('PKGV', '${@get_kernelversion('${S}').split("-")[0]}', d)
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
