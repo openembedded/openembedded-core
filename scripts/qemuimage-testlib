@@ -70,6 +70,7 @@ Test_Update_IPSAVE()
 	local ip_addr=$2
 
 	if [ "$TEST_SERIALIZE" -eq 1 ]; then
+		echo "Saving $pid $ip_addr to $TARGET_IPSAVE"
 		echo "$pid $ip_addr" > $TARGET_IPSAVE
 	fi
 }
@@ -215,6 +216,7 @@ Test_Kill_Qemu()
 {
 	local index=0
 	local total=0
+	local k=0
 
 	# When TEST_SERIALIZE is set, qemu process will not be
 	# killed until all the cases are finished
@@ -222,15 +224,26 @@ Test_Kill_Qemu()
 		index=`sed -n 2p ${TEST_STATUS} | awk '{print $3}'`
 		total=`sed -n 2p ${TEST_STATUS} | awk '{print $4}'`
 		if [ ${index} != ${total} ]; then
-			Test_Info "Do not kill the qemu process and use it for later testing"
+			Test_Info "Do not kill the qemu process and use it for later testing (step $index of $total)"
 			Test_Update_IPSAVE $XTERMPID $TARGET_IPADDR
 		else
-			kill -$QEMUPID
-			kill -$XTERMPID
+			k=1
 		fi
 	else
-		kill -$QEMUPID
-		kill -$XTERMPID
+		k=1
+	fi
+
+	if [ $k -eq 1 ]; then
+		running=`ps -wwfp $QEMUPID`
+		if [ $? -eq 0 ]; then
+			echo "killing $QEMUPID"
+			kill $QEMUPID
+		fi
+		running=`ps -wwfp $XTERMPID`
+		if [ $? -eq 0 ]; then
+			echo "killing $XTERMPID"
+			kill $XTERMPID
+		fi
 	fi
 
 	return
@@ -393,6 +406,7 @@ Test_Create_Qemu()
 	
 		# Get the pid of the xterm processor, which will be used in Test_Kill_Qemu
 		XTERMPID=$!
+		echo "XTERMPID is $XTERMPID"
 	fi
 
 	while [ ${up_time} -lt 10 ]
@@ -404,6 +418,7 @@ Test_Create_Qemu()
 			sleep 5
 		else
 			Test_Info "Begin to check if qemu network is up"
+			echo "QEMUPID is $QEMUPID"
 			break
 		fi
 	done
