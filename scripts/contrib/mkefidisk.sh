@@ -253,7 +253,7 @@ sed -i "s/ LABEL=[^ ]*/ /" $GRUBCFG
 # Replace the ramdisk root (if any) with the install device and include other
 # kernel parameters
 sed -i "s@ root=[^ ]*@ @" $GRUBCFG
-sed -i "s@vmlinuz @vmlinuz root=$TARGET_ROOTFS rw $ROOTWAIT quiet @" $GRUBCFG
+sed -i "s@vmlinuz @vmlinuz root=$TARGET_ROOTFS ro $ROOTWAIT quiet @" $GRUBCFG
 
 # Provide a startup.nsh script for older firmware with non-standard boot
 # directories and paths.
