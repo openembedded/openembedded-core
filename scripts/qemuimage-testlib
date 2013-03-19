@@ -337,8 +337,6 @@ Test_Fetch_Target_IP()
 	local ip_addr=0
 
 	# Check if $1 pid exists and contains ipaddr of target
-	ps -wwfp $opid | grep -oq "192\.168\.7\.[0-9]*::"
-
 	ip_addr=`ps -wwfp $opid | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" '{print $1}'`
 
 	echo $ip_addr
@@ -430,8 +428,8 @@ Test_Create_Qemu()
 
 	# Parse IP address of target from the qemu command line
 	TARGET_IPADDR=`Test_Fetch_Target_IP $QEMUPID`
-	# If IP address is 0, means there is no qemu process found
-	if [ ${TARGET_IPADDR} == "0" ]; then
+	echo "Target IP is ${TARGET_IPADDR}"
+	if [ -z ${TARGET_IPADDR} ]; then
 		Test_Info "There is no qemu process or qemu ip address found, return failed"
 		return 1
 	fi
