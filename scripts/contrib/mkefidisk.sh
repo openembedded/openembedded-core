@@ -156,19 +156,17 @@ echo "*****************"
 echo "Deleting partition table on $DEVICE ..."
 dd if=/dev/zero of=$DEVICE bs=512 count=2
 
-echo "Creating new partition table (GPT) on $DEVICE ..."
-parted $DEVICE mklabel gpt
+# Use MSDOS by default as GPT cannot be reliably distributed in disk image form
+# as it requires the backup table to be on the last block of the device, which
+# of course varies from device to device.
+echo "Creating new partition table (MSDOS) on $DEVICE ..."
+parted $DEVICE mklabel msdos
 
 echo "Creating boot partition on $BOOTFS"
 parted $DEVICE mkpart primary 0% $BOOT_SIZE
 
-# GPT doesn't have a real boot flag, parted will change the GUID to EFI System
-# Partition, which is what we want
 echo "Enabling boot flag on $BOOTFS"
 parted $DEVICE set 1 boot on
-
-echo "Labeling $BOOTFS as EFI System Partition"
-parted $DEVICE name 1 "EFI System Partition"
 
 echo "Creating ROOTFS partition on $ROOTFS"
 parted $DEVICE mkpart primary $ROOTFS_START $ROOTFS_END
@@ -184,10 +182,10 @@ parted $DEVICE print
 #
 echo ""
 echo "Formatting $BOOTFS as vfat..."
-mkfs.vfat $BOOTFS
+mkfs.vfat $BOOTFS -n "efi"
 
 echo "Formatting $ROOTFS as ext3..."
-mkfs.ext3 $ROOTFS
+mkfs.ext3 $ROOTFS -L "root"
 
 echo "Formatting swap partition...($SWAP)"
 mkswap $SWAP
