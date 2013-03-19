@@ -132,9 +132,7 @@ ROOTFS_START=$((BOOT_SIZE))
 ROOTFS_END=$((ROOTFS_START+ROOTFS_SIZE))
 SWAP_START=$((ROOTFS_END))
 
-# MMC devices are special in a couple of ways
-# 1) they use a partition prefix character 'p'
-# 2) they are detected asynchronously (need ROOTWAIT)
+# MMC devices use a partition prefix character 'p'
 PART_PREFIX=""
 if [ ! "${DEVICE#/dev/mmcblk}" = "${DEVICE}" ]; then
 	PART_PREFIX="p"
@@ -143,11 +141,9 @@ BOOTFS=$DEVICE${PART_PREFIX}1
 ROOTFS=$DEVICE${PART_PREFIX}2
 SWAP=$DEVICE${PART_PREFIX}3
 
-ROOTWAIT=""
 TARGET_PART_PREFIX=""
 if [ ! "${TARGET_DEVICE#/dev/mmcblk}" = "${TARGET_DEVICE}" ]; then
 	TARGET_PART_PREFIX="p"
-	ROOTWAIT="rootwait"
 fi
 TARGET_ROOTFS=$TARGET_DEVICE${TARGET_PART_PREFIX}2
 TARGET_SWAP=$TARGET_DEVICE${TARGET_PART_PREFIX}3
@@ -250,10 +246,14 @@ sed -i "/menuentry 'install'/,/^}/d" $GRUBCFG
 sed -i "/initrd /d" $GRUBCFG
 # Delete any LABEL= strings
 sed -i "s/ LABEL=[^ ]*/ /" $GRUBCFG
-# Replace the ramdisk root (if any) with the install device and include other
-# kernel parameters
+# Remove any existing root= kernel parameters and:
+# o Add a root= parameter with the target rootfs
+# o Specify ro so fsck can be run during boot
+# o Specify rootwait in case the target media is an asyncronous block device
+#   such as MMC or USB disks
+# o Specify "quiet" to minimize boot time when using slow serial consoles
 sed -i "s@ root=[^ ]*@ @" $GRUBCFG
-sed -i "s@vmlinuz @vmlinuz root=$TARGET_ROOTFS ro $ROOTWAIT quiet @" $GRUBCFG
+sed -i "s@vmlinuz @vmlinuz root=$TARGET_ROOTFS ro rootwait quiet @" $GRUBCFG
 
 # Provide a startup.nsh script for older firmware with non-standard boot
 # directories and paths.
