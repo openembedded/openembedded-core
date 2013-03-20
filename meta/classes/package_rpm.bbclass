@@ -605,7 +605,14 @@ python write_specfile () {
                             pv = subd['PV']
                             pkgv = subd['PKGV']
                             reppv = pkgv.replace('-', '+')
-                            verlist.append(ver.replace(pv, reppv).replace(pkgv, reppv))
+                            ver = ver.replace(pv, reppv).replace(pkgv, reppv)
+                        if 'PKGR' in subd:
+                            # Make sure PKGR rather than PR in ver
+                            pr = '-' + subd['PR']
+                            pkgr = '-' + subd['PKGR']
+                            if pkgr not in ver:
+                                ver = ver.replace(pr, pkgr)
+                        verlist.append(ver)
                     else:
                         verlist.append(ver)
                 newdeps_dict[dep] = verlist
