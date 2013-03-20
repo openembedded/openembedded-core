@@ -453,3 +453,4 @@ INTERNAL_SCRIPT=`which runqemu-internal`
 fi
 
 . $INTERNAL_SCRIPT
+exit $?

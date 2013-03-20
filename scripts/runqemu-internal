@@ -184,7 +184,7 @@ if [ "$TAP" = "" ]; then
     if [ $? -ne 0 ]; then
         # Re-run standalone to see verbose errors
         sudo $QEMUIFUP $USERID $GROUPID $OECORE_NATIVE_SYSROOT
-        return
+        return 1
     fi
     LOCKFILE="$LOCKDIR/$tap"
     echo "Acquiring lockfile for $tap..."
@@ -256,20 +256,20 @@ case "$MACHINE" in
     "spitz") ;;
     *)
         echo "Error: Unsupported machine type $MACHINE"
-        return
+        return 1
     ;;
 esac
 
 if [ ! -f "$KERNEL" -a "x$FSTYPE" != "xvmdk" ]; then
     echo "Error: Kernel image file $KERNEL doesn't exist"
     cleanup
-    return
+    return 1
 fi
 
 if [ "$FSTYPE" != "nfs" -a "$FSTYPE" != "vmdk" -a ! -f "$ROOTFS" ]; then
     echo "Error: Image file $ROOTFS doesn't exist"
     cleanup
-    return
+    return 1
 fi
 
 if [ "$FSTYPE" = "nfs" ]; then
@@ -289,7 +289,7 @@ if [ "$FSTYPE" = "nfs" ]; then
     runqemu-export-rootfs restart $ROOTFS
     if [ $? != 0 ]; then
         cleanup
-        return
+        return 1
     fi
     NFSRUNNING="true"
 fi
@@ -313,7 +313,7 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarm
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $ROOTFS doesn't exist"
             cleanup
-            return
+            return 1
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M versatilepb --no-reboot $QEMU_UI_OPTIONS"
@@ -337,7 +337,7 @@ if [ "$MACHINE" = "qemux86" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $ROOTFS doesn't exist."
             cleanup
-            return
+            return 1
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD $QEMU_UI_OPTIONS"
@@ -364,7 +364,7 @@ if [ "$MACHINE" = "qemux86-64" ]; then
         if [ ! -d "$ROOTFS" ]; then
             echo "Error: NFS mount point $ROOTFS doesn't exist."
             cleanup
-            return
+            return 1
         fi
         KERNCMDLINE="root=/dev/nfs nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD $QEMU_UI_OPTIONS"
@@ -408,7 +408,7 @@ if [ "$MACHINE" = "qemumips" -o "$MACHINE" = "qemumipsel" -o "$MACHINE" = "qemum
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $ROOTFS doesn't exist"
             cleanup
-            return
+            return 1
         fi
         KERNCMDLINE="root=/dev/nfs console=ttyS0 console=tty nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M $MACHINE_SUBTYPE -no-reboot $QEMU_UI_OPTIONS"
@@ -429,7 +429,7 @@ if [ "$MACHINE" = "qemuppc" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $ROOTFS doesn't exist"
             cleanup
-            return
+            return 1
         fi
         KERNCMDLINE="root=/dev/nfs console=ttyS0 console=tty nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -cpu $CPU_SUBTYPE -M $MACHINE_SUBTYPE -no-reboot $QEMU_UI_OPTIONS"
@@ -450,7 +450,7 @@ if [ "$MACHINE" = "qemush4" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $ROOTFS doesn't exist"
             cleanup
-            return
+            return 1
         fi
         KERNCMDLINE="root=/dev/nfs console=ttySC1 noiotrap earlyprintk=sh-sci.1 console=tty nfsroot=$NFS_SERVER:$NFS_DIR,$UNFS_OPTS rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M $MACHINE_SUBTYPE -no-reboot $QEMU_UI_OPTIONS -monitor null -serial vc -serial stdio"
@@ -482,7 +482,7 @@ fi
 if [ "x$QEMUOPTIONS" = "x" ]; then
     echo "Error: Unable to support this combination of options"
     cleanup
-    return
+    return 1
 fi
 
 if [ "x$CROSSPATH" = "x" ]; then
@@ -495,7 +495,7 @@ QEMUBIN=`which $QEMU 2> /dev/null`
 if [ ! -x "$QEMUBIN" ]; then
     echo "Error: No QEMU binary '$QEMU' could be found."
     cleanup
-    return
+    return 1
 fi
 
 NEED_GL=`ldd $QEMUBIN/$QEMU 2>&1 | grep libGLU`
@@ -511,7 +511,7 @@ if [ "$NEED_GL" != "" ]; then
         echo "You need libGL.so and libGLU.so to exist in your library path to run the QEMU emulator.
         Ubuntu package names are: libgl1-mesa-dev and libglu1-mesa-dev.
         Fedora package names are: mesa-libGL-devel mesa-libGLU-devel."
-        exit 1;
+        return 1;
     fi
 fi
 
@@ -521,7 +521,7 @@ do_quit() {
         kill `cat $PIDFILE`
     fi
     cleanup
-    return
+    return 1
 }
 
 DISTCCD=`which distccd 2> /dev/null`
@@ -588,9 +588,10 @@ else
     echo $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append '"'$KERNCMDLINE $SCRIPT_KERNEL_OPT'"'
     LD_PRELOAD="$GL_LD_PRELOAD" $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT"
 fi
-
-
+ret=$?
 
 cleanup
 
 trap - INT TERM QUIT
+
+return $ret
