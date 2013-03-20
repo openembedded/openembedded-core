@@ -1,0 +1,13 @@
+Index: alsa-tools-1.0.26.1/hda-verb/hda-verb.c
+===================================================================
+--- alsa-tools-1.0.26.1.orig/hda-verb/hda-verb.c
++++ alsa-tools-1.0.26.1/hda-verb/hda-verb.c
+@@ -13,7 +13,7 @@
+ #include <ctype.h>
+ #include <unistd.h>
+ #include <sys/ioctl.h>
+-#ifndef __PPC__
++#if __PPC__ || __MIPS__
+ #include <sys/io.h>
+ #endif
+ #include <sys/types.h>

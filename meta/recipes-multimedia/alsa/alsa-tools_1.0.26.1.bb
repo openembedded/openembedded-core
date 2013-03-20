@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://hdsploader/COPYING;md5=94d55d512a9ba36caa9b7df079bae1
                     file://ld10k1/COPYING.LIB;md5=7fbc338309ac38fefcd64b04bb903e34"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/tools/alsa-tools-${PV}.tar.bz2 \
+           file://mips_has_no_io_h.patch \
            file://autotools.patch"
 
 SRC_URI[md5sum] = "805526ea5d6c40e1f2c94cee86141230"
