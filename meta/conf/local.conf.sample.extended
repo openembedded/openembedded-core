@@ -152,10 +152,7 @@
 # Disk space monitor, take action when the disk space or the amount of
 # inode is running low, it is enabled when BB_DISKMON_DIRS is set.
 #
-# Set the directories to monitor for disk usage, if more than one
-# directories are mounted in the same device, then only one directory
-# would be monitored since the monitor is based on the device.
-# The format is:
+# Set the directory for the monitor, the format is:
 # "action,directory,minimum_space,minimum_free_inode"
 #
 # The "action" must be set and should be one of:
