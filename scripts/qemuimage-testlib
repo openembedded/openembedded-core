@@ -405,6 +405,8 @@ Test_Create_Qemu()
 		# Get the pid of the xterm processor, which will be used in Test_Kill_Qemu
 		XTERMPID=$!
 		echo "XTERMPID is $XTERMPID"
+		# When starting, qemu can reexecute itself and change PID so wait a short while for things to settle
+		sleep 5
 	fi
 
 	while [ ${up_time} -lt 10 ]
