@@ -327,11 +327,14 @@ def check_gcc_march(sanity_data):
         if status != 0:
             # Check if GCC could work with march
             status,result = commands.getstatusoutput("${BUILD_PREFIX}gcc -march=native gcc_test.c -o gcc_test")
-            if status == 0:
-                result =  True
+            if status == 0: 
+                result = True
+            else:
+                result = False
 
         os.remove("gcc_test.c")
-        os.remove("gcc_test")
+        if os.path.exists("gcc_test"):
+            os.remove("gcc_test")
 
     return result
 
