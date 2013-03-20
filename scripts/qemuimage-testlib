@@ -425,13 +425,15 @@ Test_Create_Qemu()
 
 	if [ ${up_time} == 10 ]; then
 		Test_Info "No qemu process appeared to start, exiting"
+		ps axww -O ppid
+		Test_Info "Process list dumped for debugging purposes"
 		return 1
 	fi
 
 	# Parse IP address of target from the qemu command line
 	TARGET_IPADDR=`Test_Fetch_Target_IP $QEMUPID`
 	echo "Target IP is ${TARGET_IPADDR}"
-	if [ -z ${TARGET_IPADDR} ]; then
+	if [ -z ${TARGET_IPADDR} -o "${TARGET_IPADDR}" = "0" ]; then
 		Test_Info "There is no qemu process or qemu ip address found, return failed"
 		return 1
 	fi
