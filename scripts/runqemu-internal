@@ -112,18 +112,12 @@ acquire_lock() {
         return 1
     fi
 
-    if [ -e "$lockfile.lock" ]; then
-        # Check that the lockfile is not stale
-        ps=`ps -eo pid | grep $(cat $lockfile.lock)`
-        if [ -z "$ps" ]; then
-            echo "WARNING: Stale lock file detected, deleting $lockfile.lock."
-            rm -f $lockfile.lock
-            echo $$ > $lockfile.lock
-        else
-            return 1
-        fi
-    else
-        echo $$ > $lockfile.lock
+    touch $lockfile.lock
+    exec 8>$lockfile.lock
+    flock -n -x 8
+    if [ $? -ne 0 ]; then
+        exec 8>&-
+        return 1
     fi
 
     return 0
@@ -137,6 +131,7 @@ release_lock() {
     fi
 
     rm -f $lockfile.lock
+    exec  8>&-
 }
 
 LOCKDIR="/tmp/qemu-tap-locks"
