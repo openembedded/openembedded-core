@@ -368,11 +368,6 @@ EOF
 		done
 	fi
 
-	# Uclibc builds don't provide this stuff...
-	if [ x${TARGET_OS} != "xlinux" ] && [ x${TARGET_OS} != "xlinux-gnueabi" ] ; then
-		package_linguas=""
-	fi
-
 	# Construct install scriptlet wrapper
 	cat << EOF > ${WORKDIR}/scriptlet_wrapper
 #!/bin/bash
