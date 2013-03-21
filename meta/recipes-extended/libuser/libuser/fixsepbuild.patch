@@ -1,0 +1,26 @@
+Fix out of tree build errors and parallel make issues. The mkdir commands 
+can race each other. The srcdir variable is a complete path so a ../ prefix makes
+no sense.
+
+Upstream-Status: Pending
+
+RP 2013/03/21
+
+Index: libuser/docs/Makefile.am
+===================================================================
+--- libuser/docs.orig/Makefile.am	2012-11-08 02:25:58.000000000 +0000
++++ libuser/docs/Makefile.am	2013-03-21 14:15:40.756950231 +0000
+@@ -13,9 +13,9 @@
+ 		< $(srcdir)/libuser.conf.5.in > $@
+ 
+ sgml/libuser.txt: $(srcdir)/sgml/libuser.sgml
+-	[ -d sgml ] || mkdir sgml
+-	cd sgml; sgml2txt ../$(srcdir)/sgml/libuser.sgml
++	[ -d sgml ] || mkdir sgml || true
++	cd sgml; sgml2txt $(srcdir)/sgml/libuser.sgml
+ 
+ sgml/libuser.html: $(srcdir)/sgml/libuser.sgml
+-	[ -d sgml ] || mkdir sgml
+-	cd sgml; sgml2html ../$(srcdir)/sgml/libuser.sgml
++	[ -d sgml ] || mkdir sgml || true
++	cd sgml; sgml2html $(srcdir)/sgml/libuser.sgml
