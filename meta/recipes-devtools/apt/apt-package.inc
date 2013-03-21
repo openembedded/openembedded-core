@@ -57,11 +57,11 @@ do_install () {
 	install -m 0755 bin/methods/* ${D}${libdir}/apt/methods/
 
 	install -d ${D}${libdir}/dpkg/methods/apt
-	install -m 0644 dselect/desc.apt ${D}${libdir}/dpkg/methods/apt/ 
-	install -m 0644 dselect/names ${D}${libdir}/dpkg/methods/apt/ 
-	install -m 0755 dselect/install ${D}${libdir}/dpkg/methods/apt/ 
-	install -m 0755 dselect/setup ${D}${libdir}/dpkg/methods/apt/ 
-	install -m 0755 dselect/update ${D}${libdir}/dpkg/methods/apt/ 
+	install -m 0644 ${S}/dselect/desc.apt ${D}${libdir}/dpkg/methods/apt/ 
+	install -m 0644 ${S}/dselect/names ${D}${libdir}/dpkg/methods/apt/ 
+	install -m 0755 ${S}/dselect/install ${D}${libdir}/dpkg/methods/apt/ 
+	install -m 0755 ${S}/dselect/setup ${D}${libdir}/dpkg/methods/apt/ 
+	install -m 0755 ${S}/dselect/update ${D}${libdir}/dpkg/methods/apt/ 
 
 	install -d ${D}${sysconfdir}/apt
 	install -d ${D}${sysconfdir}/apt/apt.conf.d
@@ -70,7 +70,7 @@ do_install () {
 	install -d ${D}${localstatedir}/lib/apt/lists/partial
 	install -d ${D}${localstatedir}/cache/apt/archives/partial
 	install -d ${D}${docdir}/apt/examples
-	install -m 0644 doc/examples/* ${D}${docdir}/apt/examples/
+	install -m 0644 ${S}/doc/examples/* ${D}${docdir}/apt/examples/
 
 	install -d ${D}${includedir}/apt-pkg/
 	install -m 0644 include/apt-pkg/*.h ${D}${includedir}/apt-pkg/

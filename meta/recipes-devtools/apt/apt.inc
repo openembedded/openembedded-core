@@ -18,8 +18,8 @@ inherit autotools gettext
 EXTRA_AUTORECONF = "--exclude=autopoint,autoheader"
 
 do_configure_prepend() {
-    rm -rf buildlib/config.sub
-    rm -rf buildlib/config.guess
+    rm -rf ${S}/buildlib/config.sub
+    rm -rf ${S}/buildlib/config.guess
 }
 
 # Apt wants to know the glibc version by running a binary file, which will
