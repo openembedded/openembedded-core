@@ -23,7 +23,7 @@ PARALLEL_MAKE=""
 inherit autotools binconfig pkgconfig
 
 do_configure() {
-	gnu-configize
-	autoconf
+	( cd ${S}; gnu-configize )
+	( cd ${S}; autoconf )
 	oe_runconf
 }
