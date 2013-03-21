@@ -34,7 +34,7 @@ PACKAGECONFIG[tcp-wrappers] = "--with-libwrap,,tcp-wrappers"
 do_configure() {
 	# Looks like configure.in is broken, so we are skipping
 	# rebuilding configure and are just using the shipped one
-	gnu-configize --force
+	( cd ${S}; gnu-configize --force )
 	oe_runconf
 }
 
@@ -49,8 +49,8 @@ do_install() {
 	install -m 644 "${WORKDIR}/xinetd.conf" "${D}${sysconfdir}"
 	install -m 755 "${WORKDIR}/xinetd.init" "${D}${sysconfdir}/init.d/xinetd"
 	install -m 644 "${WORKDIR}/xinetd.default" "${D}${sysconfdir}/default/xinetd"
-	install -m 755 "${S}/xinetd/xinetd" "${D}${sbindir}"
-	install -m 755 "${S}/xinetd/itox" "${D}${sbindir}"
+	install -m 755 "${B}/xinetd/xinetd" "${D}${sbindir}"
+	install -m 755 "${B}/xinetd/itox" "${D}${sbindir}"
 }
 
 CONFFILES_${PN} = "${sysconfdir}/xinetd.conf"
