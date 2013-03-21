@@ -43,7 +43,7 @@ do_compile_prepend() {
 
 do_install_append() {
 	mkdir -p ${D}${datadir}/${tex_texinfo}
-	install -p -m644 doc/texinfo.tex doc/txi-??.tex ${D}${datadir}/${tex_texinfo} 	
+	install -p -m644 ${S}/doc/texinfo.tex ${S}/doc/txi-??.tex ${D}${datadir}/${tex_texinfo} 	
 }
 do_install_append_class-native() {
 	install -m 755 info/makedoc ${D}${bindir}
