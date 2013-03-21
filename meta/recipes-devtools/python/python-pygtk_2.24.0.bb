@@ -35,7 +35,7 @@ do_configure_prepend() {
 		-e s:'`$PKG_CONFIG --variable codegendir pygobject-2.0`':\"${STAGING_DATADIR}/pygobject/2.0/codegen\":g \
 		-e s:'`$PKG_CONFIG --variable=fixxref pygobject-2.0`':\"${STAGING_DATADIR}/pygobject/xsl/fixxref.py\":g \
 		${S}/configure.ac
-	sed -i 's:tests docs:tests:' Makefile.am
+	sed -i 's:tests docs:tests:' ${S}/Makefile.am
 }
 
 # dirty fix #1: remove dependency on python-pygobject-dev
