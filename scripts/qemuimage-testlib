@@ -69,7 +69,7 @@ Test_Update_IPSAVE()
 	local pid=$1
 	local ip_addr=$2
 
-	if [ "$TEST_SERIALIZE" -eq 1 ]; then
+	if [ "$TEST_SERIALIZE" -eq 1 -a "$pid" != "0" -a "$pid" != "" -a "$ip_addr" != "" -a "$ip_addr" != "" ]; then
 		echo "Saving $pid $ip_addr to $TARGET_IPSAVE"
 		echo "$pid $ip_addr" > $TARGET_IPSAVE
 	fi
@@ -234,15 +234,19 @@ Test_Kill_Qemu()
 	fi
 
 	if [ $k -eq 1 ]; then
-		running=`ps -wwfp $QEMUPID`
-		if [ $? -eq 0 ]; then
-			echo "killing $QEMUPID"
-			kill $QEMUPID
+		if [ "$QEMUPID" != "0" -a "$QEMUPID" != "" ]; then
+			running=`ps -wwfp $QEMUPID`
+			if [ $? -eq 0 ]; then
+				echo "killing $QEMUPID"
+				kill $QEMUPID
+			fi
 		fi
-		running=`ps -wwfp $XTERMPID`
-		if [ $? -eq 0 ]; then
-			echo "killing $XTERMPID"
-			kill $XTERMPID
+		if [ "$XTERMPID" != "0" -a "$XTERMPID" != "" ]; then
+			running=`ps -wwfp $XTERMPID`
+			if [ $? -eq 0 ]; then
+				echo "killing $XTERMPID"
+				kill $XTERMPID
+			fi
 		fi
 	fi
 
@@ -335,6 +339,11 @@ Test_Fetch_Target_IP()
 {
 	local opid=$1
 	local ip_addr=0
+
+	if [ "$opid" = "0" -o "$opid" = "" ]; then
+		echo ""
+		return
+	fi
 
 	# Check if $1 pid exists and contains ipaddr of target
 	ip_addr=`ps -wwfp $opid | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" '{print $1}'`
@@ -433,8 +442,10 @@ Test_Create_Qemu()
 	# Parse IP address of target from the qemu command line
 	TARGET_IPADDR=`Test_Fetch_Target_IP $QEMUPID`
 	echo "Target IP is ${TARGET_IPADDR}"
-	if [ -z ${TARGET_IPADDR} -o "${TARGET_IPADDR}" = "0" ]; then
+	if [ ${TARGET_IPADDR} = "" -o "${TARGET_IPADDR}" = "0" ]; then
 		Test_Info "There is no qemu process or qemu ip address found, return failed"
+		ps -wwf
+		ps axww -O ppid
 		return 1
 	fi
 
