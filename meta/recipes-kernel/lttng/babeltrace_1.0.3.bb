@@ -19,5 +19,5 @@ SRC_URI = "git://git.efficios.com/babeltrace.git;protocol=git"
 S = "${WORKDIR}/git"
 
 do_configure_prepend () {
-	${S}/bootstrap
+	( cd ${S}; ${S}/bootstrap )
 }
