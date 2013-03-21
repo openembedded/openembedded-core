@@ -17,7 +17,7 @@ SSTATEPOSTINSTFUNCS += "base_passwd_sstate_postinst"
 
 do_install () {
 	install -d -m 755 ${D}${sbindir}
-	install -o root -g root -p -m 755 update-passwd ${D}${sbindir}/
+	install -o root -g root -p -m 755 ${B}/update-passwd ${D}${sbindir}/
 	install -d -m 755 ${D}${mandir}/man8 ${D}${mandir}/pl/man8
 	install -p -m 644 ${S}/man/update-passwd.8 ${D}${mandir}/man8/
 	install -p -m 644 ${S}/man/update-passwd.pl.8 \
