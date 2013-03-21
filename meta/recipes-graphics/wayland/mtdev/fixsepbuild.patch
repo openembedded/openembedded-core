@@ -1,0 +1,24 @@
+Fix separate build directory builds to avoid the error:
+
+| make[2]: Entering directory `/media/build1/poky/build/tmp/work/i586-poky-linux/mtdev/1.1.2-r0/build/test'
+| i586-poky-linux-gcc  -m32   -march=i586 --sysroot=/media/build1/poky/build/tmp/sysroots/qemux86 -DHAVE_CONFIG_H -I. -I/media/build1/poky/build/tmp/work/i586-poky-linux/mtdev/1.1.2-r0/mtdev-1.1.2/test -I.. -I/media/build1/poky/build/tmp/work/i586-poky-linux/mtdev/1.1.2-r0/mtdev-1.1.2/include/    -O2 -pipe -g -feliminate-unused-debug-types -c /media/build1/poky/build/tmp/work/i586-poky-linux/mtdev/1.1.2-r0/mtdev-1.1.2/test/mtdev-matching.c
+| /media/build1/poky/build/tmp/work/i586-poky-linux/mtdev/1.1.2-r0/mtdev-1.1.2/test/mtdev-matching.c:29:23: fatal error: src/match.h: No such file or directory
+| compilation terminated.
+
+Upstream-Status: Pending
+
+RP 2013/03/21
+
+Index: mtdev/test/Makefile.am
+===================================================================
+--- mtdev/test.orig/Makefile.am	2010-12-22 18:10:41.000000000 +0000
++++ mtdev/test/Makefile.am	2013-03-21 11:47:21.557160981 +0000
+@@ -1,7 +1,7 @@
+ noinst_PROGRAMS = mtdev-mapgen mtdev-matching mtdev-kernel
+ bin_PROGRAMS = mtdev-test
+ 
+-INCLUDES=-I$(top_srcdir)/include/
++INCLUDES=-I$(top_srcdir)/include/ -I$(top_srcdir)
+ 
+ mtdev_mapgen_SOURCES = mtdev-mapgen.c
+ 
