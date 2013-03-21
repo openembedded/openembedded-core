@@ -360,7 +360,7 @@ do_configure() {
 	# Disable tests!
 	echo "all:" > ${S}/tests/Makefile.am
 
-	${S}/autogen.sh
+	( cd ${S}; ${S}/autogen.sh )
 
 	# NASTY hack to make sure configure files the right pkg-config file...
 	sed -e 's/pkg-config --exists uuid/pkg-config --exists ossp-uuid/g' \
