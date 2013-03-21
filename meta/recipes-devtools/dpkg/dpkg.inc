@@ -30,7 +30,7 @@ EXTRA_OECONF = "--without-static-progs \
 		--without-sgml-doc"
 
 do_configure () {
-    echo >> m4/compiler.m4
+    echo >> ${S}/m4/compiler.m4
     sed -i -e 's#PERL_LIBDIR=.*$#PERL_LIBDIR="${libdir}/perl"#' ${S}/configure
     autotools_do_configure
 }
