@@ -6,7 +6,8 @@ PR = "${INC_PR}.2"
 DEPENDS += "sysfsutils"
 
 SRC_URI += "file://fix-compilation-with-zlib.patch \
-            file://rename-no-instrument-function-macro.patch"
+            file://rename-no-instrument-function-macro.patch \
+            file://fixsepbuild.patch"
 
 EXTRA_OECONF = "\
   --enable-freetype=yes \

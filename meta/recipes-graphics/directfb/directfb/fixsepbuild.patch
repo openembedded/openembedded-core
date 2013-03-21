@@ -1,0 +1,19 @@
+Fix out of tree builds
+
+Upstream-Status: Pending
+
+RP 2013/03/21
+
+Index: DirectFB-1.6.1/configure.in
+===================================================================
+--- DirectFB-1.6.1.orig/configure.in	2013-03-19 01:38:28.174004720 +0000
++++ DirectFB-1.6.1/configure.in	2013-03-21 12:18:10.253113675 +0000
+@@ -111,7 +111,7 @@
+ AC_PATH_TOOL(FLUXCOMP, fluxcomp)
+ AC_SUBST(FLUXCOMP)
+ if test -z "$FLUXCOMP"; then
+-  if ! test -e src/core/CoreDFB.cpp; then
++  if ! test -e $srcdir/src/core/CoreDFB.cpp; then
+     AC_MSG_ERROR([
+ *** DirectFB compilation requires fluxcomp ***
+ 
