@@ -19,7 +19,7 @@ inherit pkgconfig autotools
 RDEPENDS_${PN} = "grep"
 
 do_configure_prepend () {
-	autoreconf -f -i -s
+	( cd ${S}; autoreconf -f -i -s )
 }
 
 FILES_${PN} += "${libdir}/${BPN}/*"
