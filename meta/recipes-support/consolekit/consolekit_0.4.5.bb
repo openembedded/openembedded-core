@@ -8,10 +8,10 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://src/main.c;endline=21;md5=0a994e09769780220163255d8f9071c3"
 
-DEPENDS = "glib-2.0 dbus virtual/libx11"
+DEPENDS = "glib-2.0 dbus dbus-glib virtual/libx11"
 RDEPENDS_${PN} += "base-files"
 
-inherit gnome
+inherit autotools pkgconfig
 
 SRC_URI = "http://www.freedesktop.org/software/ConsoleKit/dist/ConsoleKit-${PV}.tar.bz2"
 SRC_URI[md5sum] = "f2657f93761206922d558471a936fbc3"
