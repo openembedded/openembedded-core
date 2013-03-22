@@ -12,5 +12,5 @@ if [ "x$NET_CONF" = "x" ]; then
 	rm -f ${CONFIGF}
 else
 	# Setup a connman config accordingly
-	sed -i -e "s|^\(IPv4 =\)|\1 ${NET_CONF}|" ${CONFIGF}
+	sed -i -e "s|^IPv4 =.*|IPv4 = ${NET_CONF}|" ${CONFIGF}
 fi
