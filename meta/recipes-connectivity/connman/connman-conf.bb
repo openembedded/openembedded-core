@@ -6,16 +6,18 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0;md5=80
 SRC_URI_append_qemuall = "file://wired.config \
                           file://wired-setup \
                          "
-PR = "r1"
+PR = "r2"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+FILES_${PN} = "${localstatedir}/* ${libdir}/*"
 
 do_install() {
     #Configure Wired network interface in case of qemu* machines
     if test -e ${WORKDIR}/wired.config && test -e ${WORKDIR}/wired-setup; then
         install -d ${D}${localstatedir}/lib/connman
         install -m 0644 ${WORKDIR}/wired.config ${D}${localstatedir}/lib/connman
-        install -d ${D}${sysconfdir}/connman
-        install -m 0755 ${WORKDIR}/wired-setup ${D}${sysconfdir}/connman
+        install -d ${D}${libdir}/connman
+        install -m 0755 ${WORKDIR}/wired-setup ${D}${libdir}/connman
     fi
 }

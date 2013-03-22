@@ -32,8 +32,8 @@ do_start() {
 		ethn=`ifconfig | grep eth | sed -e "s/\(eth[0-9]\)\(.*\)/\1/"`
 		EXTRA_PARAM="-I $ethn"
 	fi
-	if [ -f /etc/connman/wired-setup ] ; then
-		. /etc/connman/wired-setup
+	if [ -f /usr/lib/connman/wired-setup ] ; then
+		. /usr/lib/connman/wired-setup
 	fi
 	$DAEMON $EXTRA_PARAM
 }
