@@ -246,7 +246,7 @@ python checkpkg_eventhandler() {
 
         lf = bb.utils.lockfile("%s.lock" % logfile)
         f = open(logfile, "a")
-        f.write("Package\tVersion\tUpver\tLicense\tSection\tHome\tRelease\tDepends\tBugTracker\tPE\tDescription\tStatus\tTracking\tURI\tMAINTAINER\n")
+        f.write("Package\tVersion\tUpver\tLicense\tSection\tHome\tRelease\tDepends\tBugTracker\tPE\tDescription\tStatus\tTracking\tURI\tMAINTAINER\tNoUpReason\n")
         f.close()
         bb.utils.unlockfile(lf)
     elif bb.event.getName(e) == "BuildCompleted":
@@ -670,16 +670,22 @@ python do_checkpkg() {
                 if tmp:
                         tmpline = tmp.split("\n")
                         verflag = 0
+                        phash = tmpline[0].rsplit("\t")[0]
+                        pupver = pversion
                         for line in tmpline:
                                 if len(line)==0:
                                         break;
                                 puptag = line.split("/")[-1]
-                                puptag = re.search("([0-9][\.|_]?)+", puptag)
+                                upstr_regex = d.getVar('REGEX', True)
+                                if upstr_regex:
+                                        puptag = re.search(upstr_regex, puptag)
+                                else:
+                                        puptag = re.search("([0-9][\.|_]?)+", puptag)
                                 if puptag == None:
                                         continue;
                                 puptag = puptag.group()
                                 puptag = re.sub("_",".",puptag)
-                                plocaltag = pversion.split("+")[0]
+                                plocaltag = pupver.split("+git")[0]
                                 if "git" in plocaltag:
                                         plocaltag = plocaltag.split("-")[0]
                                 result = bb.utils.vercmp(("0", puptag, ""), ("0", plocaltag, ""))
@@ -687,18 +693,33 @@ python do_checkpkg() {
                                         verflag = 1
                                         pstatus = "UPDATE"
                                         pupver = puptag
+                                        phash = line.split("\t")[0]
                                 elif verflag == 0 :
                                         pupver = plocaltag
                                         pstatus = "MATCH"
                 #This is for those no tag repo
                 elif tmp2:
                         pupver = tmp2.split("\t")[0]
+                        phash = pupver
                         if pupver in pversion:
                                 pstatus = "MATCH"
                         else:
                                 pstatus = "UPDATE"
                 else:
                         pstatus = "ErrGitAccess"
+
+                tmp3 = re.search('(?P<git_ver>(\d+[\.-]?)+)(?P<git_prefix>(\+git[r|\-|]?)AUTOINC\+)(?P<head_md5>(.+))', pversion)
+                if tmp3:
+                        pversion = tmp3.group('git_ver') + tmp3.group('git_prefix') + tmp3.group('head_md5')[:7]
+                        git_prefix = tmp3.group('git_prefix')
+                        if not (git_prefix in pupver):
+                                if len(pupver) < 40:
+                                        """This is not the HEAD of the repository"""
+                                        pupver = pupver + tmp3.group('git_prefix') + phash[:7]
+                                else:
+                                        """This is the HEAD of the repository"""
+                                        pupver = tmp3.group('git_ver') + tmp3.group('git_prefix') + phash[:7]
+
         elif type == 'svn':
                 options = []
                 if user:
@@ -755,10 +776,11 @@ python do_checkpkg() {
         psrcuri = psrcuri.split()[0]
         pdepends = "".join(pdepends.split("\t"))
         pdesc = "".join(pdesc.split("\t"))
+        no_upgr_reason = d.getVar('RECIPE_NO_UPDATE_REASON', True)
         lf = bb.utils.lockfile("%s.lock" % logfile)
         f = open(logfile, "a")
-        f.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % \
-                  (pname,pversion,pupver,plicense,psection, phome,prelease, pdepends,pbugtracker,ppe,pdesc,pstatus,pmver,psrcuri,maintainer))
+        f.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % \
+                  (pname,pversion,pupver,plicense,psection, phome,prelease, pdepends,pbugtracker,ppe,pdesc,pstatus,pmver,psrcuri,maintainer, no_upgr_reason))
         f.close()
         bb.utils.unlockfile(lf)
 }
