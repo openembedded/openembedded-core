@@ -24,24 +24,17 @@ python () {
         return
 
     d.appendVarFlag('do_dumpdata_create_diff_gz', 'depends', ' %s:do_package_write_' %pn + packaging)
+    build_deps = ' %s:do_dumpdata_create_diff_gz' %pn
 
-    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) != 'srpm':
-        """
-        If package type is not 'srpm' then add tasks to move archive packages of
-        patched sources and scripts/logs in ${DEPLOY_DIR}/sources.
-        """
+    if d.getVar('SOURCE_ARCHIVE_LOG_WITH_SCRIPTS', True) == 'logs_with_scripts':
+        d.appendVarFlag('do_archive_scripts_logs', 'depends', ' %s:do_package_write_' %pn + packaging)
+        build_deps += ' %s:do_archive_scripts_logs' %pn
+
+    if not not_tarball(d):
         d.appendVarFlag('do_configure', 'depends', ' %s:do_archive_patched_sources' %pn)
-        build_deps = ' %s:do_dumpdata_create_diff_gz' %pn
-        if not not_tarball(d):
-            build_deps += ' %s:do_archive_patched_sources' %pn
-        if d.getVar('SOURCE_ARCHIVE_LOG_WITH_SCRIPTS', True) == 'logs_with_scripts':
-            build_deps += ' %s:do_archive_scripts_logs' %pn
-            d.appendVarFlag('do_archive_scripts_logs', 'depends', ' %s:do_package_write_' %pn + packaging)
-        d.appendVarFlag('do_build', 'depends', build_deps)
+        build_deps += ' %s:do_archive_patched_sources' %pn
 
-    else:
-        d.prependVarFlag('do_patch', 'postfuncs', "do_archive_patched_sources")
-        d.prependVarFlag('do_package_write_rpm', 'prefuncs', "do_archive_scripts_logs")
+    d.appendVarFlag('do_build', 'depends', build_deps)
 }
 
 ARCHIVE_SSTATE_OUTDIR = "${DEPLOY_DIR}/sources/"

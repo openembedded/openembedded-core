@@ -440,10 +440,6 @@ def archive_scripts_logs(d):
     tarlog = archive_logs(d, logdir, True)
 
     if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
-        if os.path.exists(work_dir+ '/' + tarlog):
-            os.remove(work_dir+ '/' + tarlog)
-        shutil.move(os.path.join(logdir, '..', tarlog), work_dir)
-        shutil.rmtree(os.path.join(work_dir,'script-logs'))
         store_package(d, tarlog)
 
 def dumpdata(d):
