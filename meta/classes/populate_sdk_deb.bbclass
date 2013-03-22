@@ -56,6 +56,7 @@ populate_sdk_deb () {
 	export INSTALL_TASK_DEB="populate_sdk-nativesdk"
 
 	package_install_internal_deb
+	${POPULATE_SDK_POST_HOST_COMMAND}
 	populate_sdk_post_deb ${SDK_OUTPUT}/${SDKPATHNATIVE}
 
 	#move remainings

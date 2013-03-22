@@ -113,6 +113,7 @@ populate_sdk_rpm () {
 	export INSTALL_PLATFORM_EXTRA_RPM
 
 	package_install_internal_rpm --sdk
+	${POPULATE_SDK_POST_HOST_COMMAND}
 	populate_sdk_post_rpm ${INSTALL_ROOTFS_RPM}
 
 	# move host RPM library data

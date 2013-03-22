@@ -41,6 +41,8 @@ populate_sdk_ipk() {
 
 	package_install_internal_ipk
 
+	${POPULATE_SDK_POST_HOST_COMMAND}
+
 	#post clean up
 	install -d ${SDK_OUTPUT}/${SDKTARGETSYSROOT}/${sysconfdir}
 	install -m 0644 ${IPKGCONF_TARGET} ${IPKGCONF_SDK} ${SDK_OUTPUT}/${SDKTARGETSYSROOT}/${sysconfdir}/

@@ -86,6 +86,8 @@ fakeroot populate_sdk_image() {
 
 	# Link the ld.so.cache file into the hosts filesystem
 	ln -s /etc/ld.so.cache ${SDK_OUTPUT}/${SDKPATHNATIVE}/etc/ld.so.cache
+
+	${SDK_POSTPROCESS_COMMAND}
 }
 
 fakeroot create_sdk_files() {

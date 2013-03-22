@@ -3,14 +3,15 @@
 #
 # Based in part on testlab.bbclass and packagehistory.bbclass
 #
-# Copyright (C) 2011 Intel Corporation
+# Copyright (C) 2013 Intel Corporation
 # Copyright (C) 2007-2011 Koen Kooi <koen@openembedded.org>
 #
 
-BUILDHISTORY_FEATURES ?= "image package"
+BUILDHISTORY_FEATURES ?= "image package sdk"
 BUILDHISTORY_DIR ?= "${TMPDIR}/buildhistory"
 BUILDHISTORY_DIR_IMAGE = "${BUILDHISTORY_DIR}/images/${MACHINE_ARCH}/${TCLIBC}/${IMAGE_BASENAME}"
 BUILDHISTORY_DIR_PACKAGE = "${BUILDHISTORY_DIR}/packages/${MULTIMACH_TARGET_SYS}/${PN}"
+BUILDHISTORY_DIR_SDK = "${BUILDHISTORY_DIR}/sdk/${SDK_NAME}"
 BUILDHISTORY_COMMIT ?= "0"
 BUILDHISTORY_COMMIT_AUTHOR ?= "buildhistory <buildhistory@${DISTRO}>"
 BUILDHISTORY_PUSH_REPO ?= ""
@@ -315,6 +316,56 @@ def write_pkghistory(pkginfo, d):
                 os.unlink(filevarpath)
 
 
+buildhistory_get_installed() {
+	mkdir -p $1
+
+	# Get list of installed packages
+	pkgcache="$1/installed-packages.tmp"
+	list_installed_packages file | sort > $pkgcache
+
+	cat $pkgcache | awk '{ print $1 }' > $1/installed-package-names.txt
+	cat $pkgcache | awk '{ print $2 }' | xargs -n1 basename > $1/installed-packages.txt
+
+	# Produce dependency graph
+	# First, filter out characters that cause issues for dot
+	rootfs_list_installed_depends | sed -e 's:-:_:g' -e 's:\.:_:g' -e 's:+::g' > $1/depends.tmp
+	# Change delimiter from pipe to -> and set style for recommend lines
+	sed -i -e 's:|: -> :' -e 's:\[REC\]:[style=dotted]:' -e 's:$:;:' $1/depends.tmp
+	# Add header, sorted and de-duped contents and footer and then delete the temp file
+	printf "digraph depends {\n    node [shape=plaintext]\n" > $1/depends.dot
+	cat $1/depends.tmp | sort | uniq >> $1/depends.dot
+	echo "}" >>  $1/depends.dot
+	rm $1/depends.tmp
+
+	# Produce installed package sizes list
+	printf "" > $1/installed-package-sizes.tmp
+	cat $pkgcache | while read pkg pkgfile
+	do
+		if [ -f $pkgfile ] ; then
+			pkgsize=`du -k $pkgfile | head -n1 | awk '{ print $1 }'`
+			echo $pkgsize $pkg >> $1/installed-package-sizes.tmp
+		fi
+	done
+	cat $1/installed-package-sizes.tmp | sort -n -r | awk '{print $1 "\tKiB " $2}' > $1/installed-package-sizes.txt
+	rm $1/installed-package-sizes.tmp
+
+	# We're now done with the cache, delete it
+	rm $pkgcache
+
+	if [ "$2" != "sdk" ] ; then
+		# Produce some cut-down graphs (for readability)
+		grep -v kernel_image $1/depends.dot | grep -v kernel_2 | grep -v kernel_3 > $1/depends-nokernel.dot
+		grep -v libc6 $1/depends-nokernel.dot | grep -v libgcc > $1/depends-nokernel-nolibc.dot
+		grep -v update_ $1/depends-nokernel-nolibc.dot > $1/depends-nokernel-nolibc-noupdate.dot
+		grep -v kernel_module $1/depends-nokernel-nolibc-noupdate.dot > $1/depends-nokernel-nolibc-noupdate-nomodules.dot
+	fi
+
+	# add complementary package information
+	if [ -e ${WORKDIR}/complementary_pkgs.txt ]; then
+		cp ${WORKDIR}/complementary_pkgs.txt $1
+	fi
+}
+
 buildhistory_get_image_installed() {
 	# Anything requiring the use of the packaging system should be done in here
 	# in case the packaging files are going to be removed for this image
@@ -323,61 +374,33 @@ buildhistory_get_image_installed() {
 		return
 	fi
 
-	mkdir -p ${BUILDHISTORY_DIR_IMAGE}
-
-	# Get list of installed packages
-	pkgcache="${BUILDHISTORY_DIR_IMAGE}/installed-packages.tmp"
-	list_installed_packages file | sort > $pkgcache
-
-	cat $pkgcache | awk '{ print $1 }' > ${BUILDHISTORY_DIR_IMAGE}/installed-package-names.txt
-	cat $pkgcache | awk '{ print $2 }' | xargs -n1 basename > ${BUILDHISTORY_DIR_IMAGE}/installed-packages.txt
-
-	# Produce dependency graph
-	# First, filter out characters that cause issues for dot
-	rootfs_list_installed_depends | sed -e 's:-:_:g' -e 's:\.:_:g' -e 's:+::g' > ${BUILDHISTORY_DIR_IMAGE}/depends.tmp
-	# Change delimiter from pipe to -> and set style for recommend lines
-	sed -i -e 's:|: -> :' -e 's:\[REC\]:[style=dotted]:' -e 's:$:;:' ${BUILDHISTORY_DIR_IMAGE}/depends.tmp
-	# Add header, sorted and de-duped contents and footer and then delete the temp file
-	printf "digraph depends {\n    node [shape=plaintext]\n" > ${BUILDHISTORY_DIR_IMAGE}/depends.dot
-	cat ${BUILDHISTORY_DIR_IMAGE}/depends.tmp | sort | uniq >> ${BUILDHISTORY_DIR_IMAGE}/depends.dot
-	echo "}" >>  ${BUILDHISTORY_DIR_IMAGE}/depends.dot
-	rm ${BUILDHISTORY_DIR_IMAGE}/depends.tmp
-
-	# Produce installed package sizes list
-	printf "" > ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.tmp
-	cat $pkgcache | while read pkg pkgfile
-	do
-		if [ -f $pkgfile ] ; then
-			pkgsize=`du -k $pkgfile | head -n1 | awk '{ print $1 }'`
-			echo $pkgsize $pkg >> ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.tmp
-		fi
-	done
-	cat ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.tmp | sort -n -r | awk '{print $1 "\tKiB " $2}' > ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.txt
-	rm ${BUILDHISTORY_DIR_IMAGE}/installed-package-sizes.tmp
-
-	# We're now done with the cache, delete it
-	rm $pkgcache
-
-	# Produce some cut-down graphs (for readability)
-	grep -v kernel_image ${BUILDHISTORY_DIR_IMAGE}/depends.dot | grep -v kernel_2 | grep -v kernel_3 > ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel.dot
-	grep -v libc6 ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel.dot | grep -v libgcc > ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel-nolibc.dot
-	grep -v update_ ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel-nolibc.dot > ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel-nolibc-noupdate.dot
-	grep -v kernel_module ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel-nolibc-noupdate.dot > ${BUILDHISTORY_DIR_IMAGE}/depends-nokernel-nolibc-noupdate-nomodules.dot
-
-	# add complementary package information
-	if [ -e ${WORKDIR}/complementary_pkgs.txt ]; then
-		cp ${WORKDIR}/complementary_pkgs.txt ${BUILDHISTORY_DIR_IMAGE}
-	fi
+	buildhistory_get_installed ${BUILDHISTORY_DIR_IMAGE}
 }
+
+buildhistory_get_sdk_installed() {
+	# Anything requiring the use of the packaging system should be done in here
+	# in case the packaging files are going to be removed for this SDK
+
+	if [ "${@base_contains('BUILDHISTORY_FEATURES', 'sdk', '1', '0', d)}" = "0" ] ; then
+		return
+	fi
+
+	buildhistory_get_installed ${BUILDHISTORY_DIR_SDK}/$1 sdk
+}
+
+buildhistory_list_files() {
+	# List the files in the specified directory, but exclude date/time etc.
+	# This awk script is somewhat messy, but handles where the size is not printed for device files under pseudo
+	( cd $1 && find . -ls | awk '{ if ( $7 ~ /[0-9]/ ) printf "%s %10-s %10-s %10s %s %s %s\n", $3, $5, $6, $7, $11, $12, $13 ; else printf "%s %10-s %10-s %10s %s %s %s\n", $3, $5, $6, 0, $10, $11, $12 }' | sort -k5 > $2 )
+}
+
 
 buildhistory_get_imageinfo() {
 	if [ "${@base_contains('BUILDHISTORY_FEATURES', 'image', '1', '0', d)}" = "0" ] ; then
 		return
 	fi
 
-	# List the files in the image, but exclude date/time etc.
-	# This awk script is somewhat messy, but handles where the size is not printed for device files under pseudo
-	( cd ${IMAGE_ROOTFS} && find . -ls | awk '{ if ( $7 ~ /[0-9]/ ) printf "%s %10-s %10-s %10s %s %s %s\n", $3, $5, $6, $7, $11, $12, $13 ; else printf "%s %10-s %10-s %10s %s %s %s\n", $3, $5, $6, 0, $10, $11, $12 }' | sort -k5 > ${BUILDHISTORY_DIR_IMAGE}/files-in-image.txt )
+	buildhistory_list_files ${IMAGE_ROOTFS} ${BUILDHISTORY_DIR_IMAGE}/files-in-image.txt
 
 	# Record some machine-readable meta-information about the image
 	printf ""  > ${BUILDHISTORY_DIR_IMAGE}/image-info.txt
@@ -395,10 +418,31 @@ ${@buildhistory_get_layers(d)}
 END
 }
 
+buildhistory_get_sdkinfo() {
+	if [ "${@base_contains('BUILDHISTORY_FEATURES', 'sdk', '1', '0', d)}" = "0" ] ; then
+		return
+	fi
+
+	buildhistory_list_files ${SDK_OUTPUT} ${BUILDHISTORY_DIR_SDK}/files-in-sdk.txt
+
+	# Record some machine-readable meta-information about the SDK
+	printf ""  > ${BUILDHISTORY_DIR_SDK}/sdk-info.txt
+	cat >> ${BUILDHISTORY_DIR_SDK}/sdk-info.txt <<END
+${@buildhistory_get_sdkvars(d)}
+END
+	sdksize=`du -ks ${SDK_OUTPUT} | awk '{ print $1 }'`
+	echo "SDKSIZE = $sdksize" >> ${BUILDHISTORY_DIR_SDK}/sdk-info.txt
+}
+
 # By prepending we get in before the removal of packaging files
 ROOTFS_POSTPROCESS_COMMAND =+ "buildhistory_get_image_installed ; "
 
 IMAGE_POSTPROCESS_COMMAND += " buildhistory_get_imageinfo ; "
+
+POPULATE_SDK_POST_TARGET_COMMAND += "buildhistory_get_sdk_installed target ; "
+POPULATE_SDK_POST_HOST_COMMAND += "buildhistory_get_sdk_installed host ; "
+
+SDK_POSTPROCESS_COMMAND += "buildhistory_get_sdkinfo ; "
 
 def buildhistory_get_layers(d):
     layertext = "Configured metadata layers:\n%s\n" % '\n'.join(get_layers_branch_rev(d))
@@ -418,21 +462,27 @@ def squashspaces(string):
     import re
     return re.sub("\s+", " ", string).strip()
 
-
-def buildhistory_get_imagevars(d):
-    imagevars = "DISTRO DISTRO_VERSION USER_CLASSES IMAGE_CLASSES IMAGE_FEATURES IMAGE_LINGUAS IMAGE_INSTALL BAD_RECOMMENDATIONS ROOTFS_POSTPROCESS_COMMAND IMAGE_POSTPROCESS_COMMAND"
-    listvars = "USER_CLASSES IMAGE_CLASSES IMAGE_FEATURES IMAGE_LINGUAS IMAGE_INSTALL BAD_RECOMMENDATIONS"
-
-    imagevars = imagevars.split()
+def outputvars(vars, listvars, d):
+    vars = vars.split()
     listvars = listvars.split()
     ret = ""
-    for var in imagevars:
+    for var in vars:
         value = d.getVar(var, True) or ""
         if var in listvars:
             # Squash out spaces
             value = squashspaces(value)
         ret += "%s = %s\n" % (var, value)
     return ret.rstrip('\n')
+
+def buildhistory_get_imagevars(d):
+    imagevars = "DISTRO DISTRO_VERSION USER_CLASSES IMAGE_CLASSES IMAGE_FEATURES IMAGE_LINGUAS IMAGE_INSTALL BAD_RECOMMENDATIONS ROOTFS_POSTPROCESS_COMMAND IMAGE_POSTPROCESS_COMMAND"
+    listvars = "USER_CLASSES IMAGE_CLASSES IMAGE_FEATURES IMAGE_LINGUAS IMAGE_INSTALL BAD_RECOMMENDATIONS"
+    return outputvars(imagevars, listvars, d)
+
+def buildhistory_get_sdkvars(d):
+    sdkvars = "DISTRO DISTRO_VERSION SDK_NAME SDK_VERSION SDKMACHINE SDKIMAGE_FEATURES BAD_RECOMMENDATIONS"
+    listvars = "SDKIMAGE_FEATURES BAD_RECOMMENDATIONS"
+    return outputvars(sdkvars, listvars, d)
 
 
 buildhistory_commit() {
