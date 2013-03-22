@@ -1,0 +1,49 @@
+Add support for the "strictatime" mount option.
+
+Upstream-Status: Backport [9ad8979ff15e1b894ee1f4bb6a2535a1a2c20d65]
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+Index: busybox-1.20.2/util-linux/mount.c
+===================================================================
+--- busybox-1.20.2.orig/util-linux/mount.c	2012-07-02 15:08:25.000000000 +0100
++++ busybox-1.20.2/util-linux/mount.c	2013-03-22 15:37:31.340277463 +0000
+@@ -113,6 +113,12 @@
+ #ifndef MS_RELATIME
+ # define MS_RELATIME    (1 << 21)
+ #endif
++#ifndef MS_STRICTATIME
++# define MS_STRICTATIME (1 << 24)
++#endif
++
++/* Any ~MS_FOO value has this bit set: */
++#define BB_MS_INVERTED_VALUE (1u << 31)
+ 
+ #include "libbb.h"
+ #if ENABLE_FEATURE_MOUNT_LABEL
+@@ -239,6 +245,7 @@
+ 		/* "nomand"      */ ~MS_MANDLOCK,
+ 		/* "relatime"    */ MS_RELATIME,
+ 		/* "norelatime"  */ ~MS_RELATIME,
++		/* "strictatime" */ MS_STRICTATIME,
+ 		/* "loud"        */ ~MS_SILENT,
+ 		/* "rbind"       */ MS_BIND|MS_RECURSIVE,
+ 
+@@ -295,6 +302,7 @@
+ 		"nomand\0"
+ 		"relatime\0"
+ 		"norelatime\0"
++		"strictatime\0"
+ 		"loud\0"
+ 		"rbind\0"
+ 
+@@ -466,8 +474,8 @@
+ 		// Find this option in mount_options
+ 		for (i = 0; i < ARRAY_SIZE(mount_options); i++) {
+ 			if (strcasecmp(option_str, options) == 0) {
+-				long fl = mount_options[i];
+-				if (fl < 0)
++				unsigned long fl = mount_options[i];
++				if (fl & BB_MS_INVERTED_VALUE)
+ 					flags &= fl;
+ 				else
+ 					flags |= fl;
