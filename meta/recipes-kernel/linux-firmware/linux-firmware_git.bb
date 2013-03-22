@@ -17,6 +17,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.radeon;md5=e56b405656593a0c97e478513051ea0e \
                     file://LICENCE.atheros_firmware;md5=30a14c7823beedac9fa39c64fdd01a13 \
                     file://LICENCE.agere;md5=af0133de6b4a9b2522defd5f188afd31 \
                     file://LICENCE.rtlwifi_firmware.txt;md5=00d06cfd3eddd5a2698948ead2ad54a5 \
+                    file://LICENCE.broadcom_bcm43xx;md5=3160c14df7228891b868060e1951dfbc \
                    "
 
 SRCREV = "c530a75c1e6a472b0eb9558310b518f0dfcd8860"
@@ -27,7 +28,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware
 
 S = "${WORKDIR}/git"
 
-inherit allarch
+inherit allarch update-alternatives
 
 do_compile() {
 	:
@@ -48,7 +49,9 @@ do_install() {
 	( cd ${D}/lib/firmware ; ln -sf ti-connectivity/* . )
 }
 
-PACKAGES =+ "${PN}-ralink ${PN}-sd8686 ${PN}-rtl8192cu linux-firmware-rtl8192ce linux-firmware-rtl8192su ${PN}-wl12xx"
+PACKAGES =+ "${PN}-ralink ${PN}-sd8686 ${PN}-rtl8192cu \
+             ${PN}-rtl8192ce ${PN}-rtl8192su ${PN}-wl12xx \
+             ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334"
 
 LICENSE_${PN}-ralink = "Firmware-ralink"
 FILES_${PN}-ralink = " \
@@ -84,5 +87,37 @@ FILES_${PN}-wl12xx = " \
   /lib/firmware/TI* \
   /lib/firmware/ti-connectivity \
 "
+
+# WARNING: The ALTERNATIVE_* variables are not using ${PN} because of
+# a bug in bitbake; when this is fixed and bitbake learns how to proper
+# pass variable flags with expansion we can rework this patch.
+
+ALTERNATIVE_LINK_NAME[brcmfmac-sdio.bin] = "/lib/firmware/brcm/brcmfmac-sdio.bin"
+
+LICENSE_${PN}-bcm4329 = "Firmware-bcm4329"
+FILES_${PN}-bcm4329 = " \
+  /lib/firmware/brcm/brcmfmac4329.bin \
+  /lib/firmware/LICENCE.broadcom_bcm43xx \
+"
+ALTERNATIVE_linux-firmware-bcm4329 = "brcmfmac-sdio.bin"
+ALTERNATIVE_TARGET_linux-firmware-bcm4329[brcmfmac-sdio.bin] = "/lib/firmware/brcm/brcmfmac4329.bin"
+
+LICENSE_${PN}-bcm4330 = "Firmware-bcm4330"
+FILES_${PN}-bcm4330 = " \
+  /lib/firmware/brcm/brcmfmac4330.bin \
+  /lib/firmware/LICENCE.broadcom_bcm43xx \
+"
+
+ALTERNATIVE_linux-firmware-bcm4330 = "brcmfmac-sdio.bin"
+ALTERNATIVE_TARGET_linux-firmware-bcm4330[brcmfmac-sdio.bin] = "/lib/firmware/brcm/brcmfmac4330.bin"
+
+LICENSE_${PN}-bcm4334 = "Firmware-bcm4334"
+FILES_${PN}-bcm4334 = " \
+  /lib/firmware/brcm/brcmfmac4334.bin \
+  /lib/firmware/LICENCE.broadcom_bcm43xx \
+"
+
+ALTERNATIVE_linux-firmware-bcm4334 = "brcmfmac-sdio.bin"
+ALTERNATIVE_TARGET_linux-firmware-bcm4334[brcmfmac-sdio.bin] = "/lib/firmware/brcm/brcmfmac4334.bin"
 
 FILES_${PN} += "/lib/firmware/*"
