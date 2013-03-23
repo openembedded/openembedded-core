@@ -52,10 +52,10 @@ do_install() {
 	install -d ${D}${bindir_crossscripts}
 	install -m 0755 tclConfig.sh ${D}${bindir_crossscripts}
 	cd ..
-	for dir in ${S}/../compat ${S}/../generic ${S}/../unix
+	for dir in compat generic unix
 	do
 		install -d ${D}${includedir}/tcl${PV}/$dir
-		install -m 0644 $dir/*.h ${D}${includedir}/tcl${PV}/$dir/
+		install -m 0644 ${S}/../$dir/*.h ${D}${includedir}/tcl${PV}/$dir/
 	done
 }
 
