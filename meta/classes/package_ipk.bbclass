@@ -430,27 +430,3 @@ addtask package_write_ipk before do_package_write after do_packagedata do_packag
 PACKAGEINDEXES += "[ ! -e ${DEPLOY_DIR_IPK} ] || package_update_index_ipk;"
 PACKAGEINDEXDEPS += "opkg-utils-native:do_populate_sysroot"
 PACKAGEINDEXDEPS += "opkg-native:do_populate_sysroot"
-
-
-list_installed_packages() {
-	if [ "$1" = "arch" ] ; then
-		opkg-cl ${OPKG_ARGS} status | opkg-query-helper.py -a
-	elif [ "$1" = "file" ] ; then
-		opkg-cl ${OPKG_ARGS} status | opkg-query-helper.py -f | while read pkg pkgfile
-		do
-			fullpath=`find ${DEPLOY_DIR_IPK} -name "$pkgfile" || true`
-			if [ "$fullpath" = "" ] ; then
-				echo "$pkg $pkgfile"
-			else
-				echo "$pkg $fullpath"
-			fi
-		done
-	else
-		opkg-cl ${OPKG_ARGS} list_installed | awk '{ print $1 }'
-	fi
-}
-
-rootfs_list_installed_depends() {
-	opkg-cl ${OPKG_ARGS} status | opkg-query-helper.py
-}
-

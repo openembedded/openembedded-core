@@ -56,3 +56,25 @@ populate_sdk_ipk() {
 
 	populate_sdk_log_check populate_sdk
 }
+
+list_installed_packages() {
+	if [ "$1" = "arch" ] ; then
+		opkg-cl ${OPKG_ARGS} status | opkg-query-helper.py -a
+	elif [ "$1" = "file" ] ; then
+		opkg-cl ${OPKG_ARGS} status | opkg-query-helper.py -f | while read pkg pkgfile
+		do
+			fullpath=`find ${DEPLOY_DIR_IPK} -name "$pkgfile" || true`
+			if [ "$fullpath" = "" ] ; then
+				echo "$pkg $pkgfile"
+			else
+				echo "$pkg $fullpath"
+			fi
+		done
+	else
+		opkg-cl ${OPKG_ARGS} list_installed | awk '{ print $1 }'
+	fi
+}
+
+rootfs_list_installed_depends() {
+	opkg-cl ${OPKG_ARGS} status | opkg-query-helper.py
+}
