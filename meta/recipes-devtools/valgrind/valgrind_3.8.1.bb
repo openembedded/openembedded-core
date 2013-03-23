@@ -17,6 +17,7 @@ SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
            file://fixed-perl-path.patch \
            file://Added-support-for-PPC-instructions-mfatbu-mfatbl.patch \
            file://configure-with-newer-glibc.patch \
+           file://sepbuildfix.patch \
           "
 
 SRC_URI[md5sum] = "288758010b271119a0ffc0183f1d6e38"
