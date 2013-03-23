@@ -6,21 +6,30 @@ Upstream-Status: Pending
 
 RP 2013/03/21
 
-Index: libuser/docs/Makefile.am
+Index: libuser-0.58/docs/Makefile.am
 ===================================================================
---- libuser/docs.orig/Makefile.am	2012-11-08 02:25:58.000000000 +0000
-+++ libuser/docs/Makefile.am	2013-03-21 14:15:40.756950231 +0000
-@@ -13,9 +13,9 @@
- 		< $(srcdir)/libuser.conf.5.in > $@
+--- libuser-0.58.orig/docs/Makefile.am	2012-11-07 18:25:58.000000000 -0800
++++ libuser-0.58/docs/Makefile.am	2013-03-22 23:32:06.843518069 -0700
+@@ -8,14 +8,14 @@
  
- sgml/libuser.txt: $(srcdir)/sgml/libuser.sgml
+ all: sgml/libuser.txt sgml/libuser.html
+ 
+-libuser.conf.5: $(srcdir)/libuser.conf.5.in Makefile
++libuser.conf.5: $(abs_srcdir)/libuser.conf.5.in Makefile
+ 	sed 's,@sysconfdir\@,$(sysconfdir),g' \
+-		< $(srcdir)/libuser.conf.5.in > $@
++		< $(abs_srcdir)/libuser.conf.5.in > $@
+ 
+-sgml/libuser.txt: $(srcdir)/sgml/libuser.sgml
 -	[ -d sgml ] || mkdir sgml
 -	cd sgml; sgml2txt ../$(srcdir)/sgml/libuser.sgml
++sgml/libuser.txt: $(abs_srcdir)/sgml/libuser.sgml
 +	[ -d sgml ] || mkdir sgml || true
-+	cd sgml; sgml2txt $(srcdir)/sgml/libuser.sgml
++	cd sgml; sgml2txt $(abs_srcdir)/sgml/libuser.sgml
  
- sgml/libuser.html: $(srcdir)/sgml/libuser.sgml
+-sgml/libuser.html: $(srcdir)/sgml/libuser.sgml
 -	[ -d sgml ] || mkdir sgml
 -	cd sgml; sgml2html ../$(srcdir)/sgml/libuser.sgml
++sgml/libuser.html: $(abs_srcdir)/sgml/libuser.sgml
 +	[ -d sgml ] || mkdir sgml || true
-+	cd sgml; sgml2html $(srcdir)/sgml/libuser.sgml
++	cd sgml; sgml2html $(abs_srcdir)/sgml/libuser.sgml
