@@ -1,0 +1,22 @@
+Upstream-Status: Inappropriate [disable feature]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd coreutils-8.21/man/local.mk coreutils-8.21/man/local.mk
+--- coreutils-8.21/man/local.mk	2013-02-05 16:01:21.000000000 +0200
++++ coreutils-8.21/man/local.mk	2013-03-23 09:12:53.360470192 +0200
+@@ -19,11 +19,11 @@
+ EXTRA_DIST += man/help2man man/dummy-man
+
+ ## Graceful degradation for systems lacking perl.
+-if HAVE_PERL
+-run_help2man = $(PERL) -- $(srcdir)/man/help2man
+-else
++#if HAVE_PERL
++#run_help2man = $(PERL) -- $(srcdir)/man/help2man
++#else
+ run_help2man = $(SHELL) $(srcdir)/man/dummy-man
+-endif
++#endif
+
+ man1_MANS = @man1_MANS@
+ EXTRA_DIST += $(man1_MANS:.1=.x)

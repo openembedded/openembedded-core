@@ -6,8 +6,8 @@ HOMEPAGE = "http://www.gnu.org/software/coreutils/"
 BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
-                    file://src/ls.c;beginline=5;endline=16;md5=2e9acd8818fe6db4c2981d20ca632553"
-PR = "r5"
+                    file://src/ls.c;beginline=5;endline=16;md5=38b79785ca88537b75871782a2a3c6b8"
+PR = "r0"
 DEPENDS = "gmp libcap"
 DEPENDS_class-native = ""
 
@@ -15,11 +15,12 @@ inherit autotools gettext
 
 SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
            file://remove-usr-local-lib-from-m4.patch \
-           file://remove-gets.patch \
            file://coreutils-build-with-acl.patch \
+           file://dummy_help2man.patch \
           "
-SRC_URI[md5sum] = "bcb135ce553493a45aba01b39eb3920a"
-SRC_URI[sha256sum] = "0d120817c19292edb19e92ae6b8eac9020e03d51e0af9cb116cf82b65d18b02d"
+
+SRC_URI[md5sum] = "065ba41828644eca5dd8163446de5d64"
+SRC_URI[sha256sum] = "adaa44bdab3fa5eb352e80d8a31fdbf957b78653d0c2cd30d63e161444288e18"
 
 EXTRA_OECONF = "--disable-acl"
 EXTRA_OECONF_class-native = "--disable-acl --without-gmp"
