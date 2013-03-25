@@ -242,6 +242,8 @@ def splitdebuginfo(file, debugfile, debugsrcdir, d):
     workparentdir = d.getVar("DEBUGSRC_OVERRIDE_PATH", True) or os.path.dirname(os.path.dirname(workdir))
     sourcefile = d.expand("${WORKDIR}/debugsources.list")
 
+    bb.utils.remove(sourcefile)
+
     # We ignore kernel modules, we don't generate debug info files.
     if file.find("/lib/modules/") != -1 and file.endswith(".ko"):
         return 1
