@@ -160,6 +160,7 @@ RDEPENDS_packagegroup-core-lsb-core = "\
     libxml2 \
     ncurses \
     zlib \
+    nspr \
 "
 
 SUMMARY_packagegroup-core-lsb-perl = "LSB Runtime Languages (Perl)"
