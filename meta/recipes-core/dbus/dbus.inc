@@ -68,8 +68,8 @@ pkg_postinst_dbus() {
 EXTRA_OECONF_X = "${@base_contains('DISTRO_FEATURES', 'x11', '--with-x', '--without-x', d)}"
 EXTRA_OECONF_X_class-native = "--without-x --disable-x11-autolaunch"
 # TODO: would like to --enable-systemd but that's a circular build-dependency
-# between systemd <->dbus
-EXTRA_OECONF_SYSTEMD = "${@base_contains('DISTRO_FEATURES', 'systemd', '--with-systemdsystemunitdir=${systemd_unitdir}/system/', '', d)}"
+# between systemd<->dbus
+EXTRA_OECONF_SYSTEMD = "${@base_contains('DISTRO_FEATURES', 'systemd', '--with-systemdsystemunitdir=${systemd_unitdir}/system/', '--without-systemdsystemunitdir', d)}"
 
 EXTRA_OECONF = "--disable-tests \
                 --disable-checks \
