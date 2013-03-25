@@ -16,6 +16,8 @@ SRC_URI = "ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${PV}/src/nspr-$
 
 SRC_URI += "file://nspr.pc.in"
 
+RDEPENDS_${PN}-dev += "perl"
+
 SRC_URI[md5sum] = "b6ccfa8fcbbeb17ebeb19a3edff612bd"
 SRC_URI[sha256sum] = "616ab65c849155c9ed0e5f502530a241cc9108e278275aa448b417ae632c7604"
 
@@ -163,9 +165,14 @@ do_install_append() {
     cd ${S}/pr/tests
     mkdir -p ${D}${libdir}/nspr/tests
     install -m 0755 ${TESTS} ${D}${libdir}/nspr/tests
+
+    # delete compile-et.pl and perr.properties from ${bindir} because these are
+    # only used to generate prerr.c and prerr.h files from prerr.et at compile
+    # time
+    rm ${D}${bindir}/compile-et.pl ${D}${bindir}/prerr.properties
 }
 
-FILES_${PN} = "${bindir}/* ${libdir}/lib*.so"
-FILES_${PN}-dev = "${libdir}/nspr/tests/* ${libdir}/pkgconfig \
+FILES_${PN} = "${libdir}/lib*.so"
+FILES_${PN}-dev = "${bindir}/* ${libdir}/nspr/tests/* ${libdir}/pkgconfig \
                 ${includedir}/* ${datadir}/aclocal/* "
 FILES_${PN}-dbg += "${libdir}/nspr/tests/.debug/*"
