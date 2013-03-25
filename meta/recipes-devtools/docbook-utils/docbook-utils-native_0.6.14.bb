@@ -45,14 +45,19 @@ do_install() {
 	done
 
 	install -m 0755 ${B}/bin/jw ${D}${bindir}/
-	for i in ${S}/backends/dvi ${S}/backends/html ${B}/backends/man \
-		${S}/backends/pdf ${S}/backends/ps ${S}/backends/rtf ${S}/backends/tex \
-		${B}/backends/texi ${S}/backends/txt ${B}/frontends/docbook \
-		${S}/helpers/docbook2man-spec.pl ${S}/helpers/docbook2texi-spec.pl \
-		${S}/docbook-utils.dsl
+	for i in backends/dvi backends/html \
+		backends/pdf backends/ps backends/rtf backends/tex \
+		backends/txt \
+		helpers/docbook2man-spec.pl helpers/docbook2texi-spec.pl \
+		docbook-utils.dsl
 	do
 		install -d ${D}${datadir}/sgml/docbook/utils-${PV}/`dirname $i`
-		install $i ${D}${datadir}/sgml/docbook/utils-${PV}/$i
+		install ${S}/$i ${D}${datadir}/sgml/docbook/utils-${PV}/$i
+	done
+	for i in backends/man backends/texi frontends/docbook
+	do
+		install -d ${D}${datadir}/sgml/docbook/utils-${PV}/`dirname $i`
+		install ${B}/$i ${D}${datadir}/sgml/docbook/utils-${PV}/$i
 	done
 
 }
