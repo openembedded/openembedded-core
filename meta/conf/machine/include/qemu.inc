@@ -12,7 +12,7 @@ XSERVER ?= "xserver-xorg \
 
 MACHINE_FEATURES = "apm alsa pcmcia bluetooth irda usbgadget screen"
 
-MACHINEOVERRIDES .= ":qemuall"
+MACHINEOVERRIDES =. "qemuall:"
 
 IMAGE_FSTYPES += "tar.bz2 ext3"
 
