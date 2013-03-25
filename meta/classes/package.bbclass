@@ -254,14 +254,23 @@ def splitdebuginfo(file, debugfile, debugsrcdir, d):
 
     # We need to extract the debug src information here...
     if debugsrcdir:
-        subprocess.call("'%s' -b '%s' -d '%s' -i -l '%s' '%s'" % (debugedit, workparentdir, debugsrcdir, sourcefile, file), shell=True)
+        cmd = "'%s' -b '%s' -d '%s' -i -l '%s' '%s'" % (debugedit, workparentdir, debugsrcdir, sourcefile, file)
+        retval = subprocess.call(cmd, shell=True)
+        if retval:
+            bb.fatal("debugedit failed with exit code %s (cmd was %s)" % (retval, cmd))
 
     bb.utils.mkdirhier(os.path.dirname(debugfile))
 
-    subprocess.call("'%s' --only-keep-debug '%s' '%s'" % (objcopy, file, debugfile), shell=True)
+    cmd = "'%s' --only-keep-debug '%s' '%s'" % (objcopy, file, debugfile)
+    retval = subprocess.call(cmd, shell=True)
+    if retval:
+        bb.fatal("objcopy failed with exit code %s (cmd was %s)" % (retval, cmd))
 
     # Set the debuglink to have the view of the file path on the target
-    subprocess.call("'%s' --add-gnu-debuglink='%s' '%s'" % (objcopy, debugfile, file), shell=True)
+    cmd = "'%s' --add-gnu-debuglink='%s' '%s'" % (objcopy, debugfile, file)
+    retval = subprocess.call(cmd, shell=True)
+    if retval:
+        bb.fatal("objcopy failed with exit code %s (cmd was %s)" % (retval, cmd))
 
     if newmode:
         os.chmod(file, origmode)
@@ -298,10 +307,18 @@ def copydebugsources(debugsrcdir, d):
         processdebugsrc += "fgrep -z '%s' | "
         processdebugsrc += "(cd '%s' ; cpio -pd0mlL --no-preserve-owner '%s%s' 2>/dev/null)"
 
-        subprocess.call(processdebugsrc % (sourcefile, workbasedir, workparentdir, dvar, debugsrcdir), shell=True)
+        cmd = processdebugsrc % (sourcefile, workbasedir, workparentdir, dvar, debugsrcdir)
+        retval = subprocess.call(cmd, shell=True)
+        # Can "fail" if internal headers/transient sources are attempted
+        #if retval:
+        #    bb.fatal("debug source copy failed with exit code %s (cmd was %s)" % (retval, cmd))
+
 
         # The copy by cpio may have resulted in some empty directories!  Remove these
-        subprocess.call("find %s%s -empty -type d -delete" % (dvar, debugsrcdir), shell=True)
+        cmd = "find %s%s -empty -type d -delete" % (dvar, debugsrcdir)
+        retval = subprocess.call(cmd, shell=True)
+        if retval:
+            bb.fatal("empty directory removal failed with exit code %s (cmd was %s)" % (retval, cmd))
 
         # Also remove debugsrcdir if its empty
         for p in nosuchdir[::-1]:
@@ -431,7 +448,10 @@ python perform_packagecopy () {
     # Start by package population by taking a copy of the installed
     # files to operate on
     # Preserve sparse files and hard links
-    subprocess.call('tar -cf - -C %s -ps . | tar -xf - -C %s' % (dest, dvar), shell=True)
+    cmd = 'tar -cf - -C %s -ps . | tar -xf - -C %s' % (dest, dvar)
+    retval = subprocess.call(cmd, shell=True)
+    if retval:
+        bb.fatal("file copy failed with exit code %s (cmd was %s)" % (retval, cmd))
 
     # replace RPATHs for the nativesdk binaries, to make them relocatable
     if bb.data.inherits_class('nativesdk', d) or bb.data.inherits_class('cross-canadian', d):
