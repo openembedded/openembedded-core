@@ -27,4 +27,5 @@ EXTRA_OECONF = "--disable-ldap \
 
 do_install_append() {
 	ln -sf gpg2 ${D}${bindir}/gpg
+	ln -sf gpgv2 ${D}${bindir}/gpgv
 }
