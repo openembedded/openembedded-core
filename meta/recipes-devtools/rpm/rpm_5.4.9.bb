@@ -84,7 +84,8 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;ex
 	   file://python-rpm-rpmsense.patch \
 	   file://rpm-reloc-macros.patch \
 	   file://rpm-platform2.patch \
-     file://rpm-remove-sykcparse-decl.patch \
+	   file://rpm-remove-sykcparse-decl.patch \
+	   file://debugedit-segv.patch \
 	  "
 
 # Uncomment the following line to enable platform score debugging

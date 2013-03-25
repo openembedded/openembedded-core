@@ -1,0 +1,35 @@
+There are cases, especially on PPC and MIPS, where the data address
+returned is 0, but the size is not 0.
+
+It appears to happen when the sections headers are similar to:
+
+  [21] .data             PROGBITS        000239c0 0139c0 000010 00  WA  0   0  8
+  [22] .got              PROGBITS        000239d0 0139d0 000014 04 WAX  0   0  4
+  [23] .plt              NOBITS          000239e4 0139e4 000234 00 WAX  0   0  4
+  [24] .bss              NOBITS          00023c18 0139e4 0001c8 00  WA  0   0  8
+  [25] .comment          PROGBITS        00000000 0139e4 000011 01  MS  0   0  1
+  [26] .debug_aranges    PROGBITS        00000000 0139f8 000d68 00      0   0  8
+
+Sections 23 and 24 (.plt and .bss) which are NOBITS have a loaded data address
+of 0, but a size != 0.
+
+This could be a bug in libelf...
+
+Upstream-status: Pending
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+Index: rpm-5.4.9/tools/debugedit.c
+===================================================================
+--- rpm-5.4.9.orig/tools/debugedit.c
++++ rpm-5.4.9/tools/debugedit.c
+@@ -1434,7 +1434,8 @@ handle_build_id (DSO *dso, Elf_Data *bui
+     auto inline void process (const void *data, size_t size)
+     {
+       memchunk chunk = { .data = (void *) data, .size = size };
+-      hashFunctionContextUpdateMC (&ctx, &chunk);
++      if (data != NULL && size != 0)
++        hashFunctionContextUpdateMC (&ctx, &chunk);
+     }
+     union
+     {
