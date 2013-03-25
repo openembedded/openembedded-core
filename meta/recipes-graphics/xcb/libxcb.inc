@@ -51,12 +51,12 @@ FILES_libxcb-xvmc = "${libdir}/libxcb-xvmc.so.*"
 
 inherit autotools pkgconfig pythonnative
 
-# XCBPROTO_XCBINCLUDEDIR is setup based on `pkg-config --variable=xcbincludedir xcb-proto`
+# XCBPROTO_XCBINCLUDEDIR is set based on `pkg-config --variable=xcbincludedir xcb-proto`
 # but the xcbincludedir variable doesn't point into the staging area, so it needs some
-# tweeking here:
+# tweaking here:
 do_configure_prepend () {
-    sed -i "s|XCBPROTO_XCBINCLUDEDIR=|XCBPROTO_XCBINCLUDEDIR=${STAGING_DIR_HOST}/|" \
+    sed -i "s|XCBPROTO_XCBINCLUDEDIR=\`|XCBPROTO_XCBINCLUDEDIR=${STAGING_DIR_HOST}/\`|" \
         ${S}/configure.ac
-    sed -i "s|XCBPROTO_XCBPYTHONDIR=|XCBPROTO_XCBPYTHONDIR=${STAGING_DIR_HOST}/|" \
+    sed -i "s|XCBPROTO_XCBPYTHONDIR=\`|XCBPROTO_XCBPYTHONDIR=${STAGING_DIR_HOST}/\`|" \
         ${S}/configure.ac
 }
