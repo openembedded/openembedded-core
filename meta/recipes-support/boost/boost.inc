@@ -1,24 +1,8 @@
-# The Boost web site provides free peer-reviewed portable
-# C++ source libraries. The emphasis is on libraries which
-# work well with the C++ Standard Library. The libraries are
-# intended to be widely useful, and are in regular use by
-# thousands of programmers across a broad spectrum of applications.
 DESCRIPTION = "Free peer-reviewed portable C++ source libraries"
-HOMEPAGE = "http://www.boost.org/"
 SECTION = "libs"
-DEPENDS = "boost-native zlib bzip2"
-DEPENDS_class-native = ""
-LICENSE = "BSL-1.0 & MIT & Python-2.0"
+DEPENDS = "bjam-native zlib bzip2"
 
 ARM_INSTRUCTION_SET = "arm"
-
-BOOST_VER = "${@"_".join(d.getVar("PV",1).split("."))}"
-BOOST_MAJ = "${@"_".join(d.getVar("PV",1).split(".")[0:2])}"
-BOOST_P = "boost_${BOOST_VER}"
-
-SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BOOST_P}.tar.bz2"
-
-S = "${WORKDIR}/${BOOST_P}"
 
 BOOST_LIBS = "\
 	date_time \
@@ -126,6 +110,8 @@ BJAM_OPTS    = '${PARALLEL_MAKE} \
 		--disable-icu \
 		${BJAM_EXTRA}'
 
+# Native compilation of bzip2 isn't working
+BJAM_OPTS_append_class-native = ' -sNO_BZIP2=1'
 
 do_boostconfig() {
 	cp -f boost/config/platform/linux.hpp boost/config/platform/linux-gnueabi.hpp
@@ -138,7 +124,7 @@ do_boostconfig() {
 
 	echo "using python : ${PYTHON_VERSION} : : ${STAGING_INCDIR}/python${PYTHON_VERSION} ;" >> ${S}/tools/build/v2/user-config.jam
 
-	CC="${BUILD_CC}" CFLAGS="${BUILD_CFLAGS}" ./bootstrap.sh --with-toolset=gcc --with-python-root=${PYTHON_ROOT}
+	CC="${BUILD_CC}" CFLAGS="${BUILD_CFLAGS}" ./bootstrap.sh --with-bjam=bjam --with-toolset=gcc --with-python-root=${PYTHON_ROOT}
 	sed -i '/^using python/d' project-config.jam
 }
 
@@ -170,30 +156,3 @@ do_install() {
 }
 
 BBCLASSEXTEND = "native"
-
-do_configure_class-native() {
-	:
-}
-
-do_boostconfig_class-native() {
-	:
-}
-
-do_compile_class-native() {
-	set -ex
-	cd ${S}/tools/build/v2/engine
-	rm -rf bin.*
-	./build.sh gcc
-}
-
-# This is too terrible - the build script doesn't give any good
-# way I can see to find out where the binaries are placed, so
-# rely on only one bin.foo directory being created.
-do_install_class-native () {
-	set -ex
-	cd ${S}/tools/build/v2/engine
-	install -d ${D}${bindir}/
-	install -c -m 755 bin.*/bjam ${D}${bindir}/
-}
-
-
