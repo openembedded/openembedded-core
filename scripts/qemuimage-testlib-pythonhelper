@@ -34,7 +34,7 @@ if options.findqemu:
         commands[data[0]] = data[2]
 
     if options.findqemu not in pids:
-        print "No children found matching %s" % options.findqemu
+        sys.stderr.write("No children found matching %s" % options.findqemu)
         sys.exit(1)
 
     parents = []
