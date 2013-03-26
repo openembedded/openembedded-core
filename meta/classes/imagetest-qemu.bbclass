@@ -75,6 +75,7 @@ def qemuimagetest_main(d):
         os.environ["TARGET_IPSAVE"] = d.getVar("TARGET_IPSAVE", True)
         os.environ["TEST_SERIALIZE"] = d.getVar("TEST_SERIALIZE", True)
         os.environ["SDK_NAME"] = d.getVar("SDK_NAME", True)
+        os.environ["RUNQEMU_LOGFILE"] = d.expand("${T}/log.runqemutest.%s" % os.getpid())
 
         """run Test Case"""
         bb.note("Run %s test in scenario %s" % (case, scen))
