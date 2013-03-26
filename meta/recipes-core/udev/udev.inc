@@ -27,7 +27,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
            file://local.rules \
            file://udev-cache \
            file://udev-cache.default \
-           file://init"
+           file://init \
+           file://volatiles"
 
 inherit autotools pkgconfig update-rc.d
 
@@ -80,6 +81,9 @@ do_install_append () {
 
 	install -d ${D}${sysconfdir}/default
 	install -m 0755 ${WORKDIR}/udev-cache.default ${D}${sysconfdir}/default/udev-cache
+
+	install -d ${D}${sysconfdir}/default/volatiles
+	install -m 0644 ${WORKDIR}/volatiles ${D}${sysconfdir}/default/volatiles/00_udev
 
 	touch ${D}${sysconfdir}/udev/cache.data
 
