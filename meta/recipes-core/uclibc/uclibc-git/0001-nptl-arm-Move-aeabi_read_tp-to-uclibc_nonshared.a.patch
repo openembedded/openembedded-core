@@ -13,12 +13,12 @@ Upstream-Status: Pending
 
 Index: git/libc/sysdeps/linux/arm/Makefile.arch
 ===================================================================
---- git.orig/libc/sysdeps/linux/arm/Makefile.arch	2013-01-21 16:29:25.000000000 -0800
-+++ git/libc/sysdeps/linux/arm/Makefile.arch	2013-01-21 16:33:11.575571091 -0800
-@@ -12,7 +12,10 @@
- 	bsd-_setjmp.S sigrestorer.S mmap64.S \
+--- git.orig/libc/sysdeps/linux/arm/Makefile.arch	2013-03-25 19:48:48.000000000 -0700
++++ git/libc/sysdeps/linux/arm/Makefile.arch	2013-03-25 19:51:57.496677771 -0700
+@@ -13,7 +13,10 @@
  	vfork.S clone.S
  
+ SSRC-$(UCLIBC_HAS_LFS) += mmap64.S
 -SSRC-$(UCLIBC_HAS_THREADS_NATIVE) += libc-aeabi_read_tp.S libc-thumb_atomics.S
 +SSRC-$(UCLIBC_HAS_THREADS_NATIVE) += libc-thumb_atomics.S
 +libc-nonshared-$(UCLIBC_HAS_THREADS_NATIVE) += $(ARCH_OUT)/libc-aeabi_read_tp.os
