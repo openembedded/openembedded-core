@@ -420,7 +420,7 @@ Test_Create_Qemu()
 
 	while [ ${up_time} -lt 10 ]
 	do
-		QEMUPID=`qemuimage-testlib-pythonhelper --findqemu $XTERMPID`
+		QEMUPID=`qemuimage-testlib-pythonhelper --findqemu $XTERMPID 2>/dev/null`
 		if [ $? -ne 0 ]; then
 			Test_Info "Wait for qemu up..."
 			up_time=`expr $up_time + 5`
