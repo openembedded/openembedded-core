@@ -408,8 +408,8 @@ Test_Create_Qemu()
 		export MACHINE=$QEMUARCH
 
 		# Create Qemu in localhost VNC Port 1
-		echo "Running xterm -display ${DISPLAY} -e 'OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} || /bin/sleep 60' &"
-		xterm -display ${DISPLAY} -e "OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} || /bin/sleep 60" &
+		echo "Running xterm -display ${DISPLAY} -e 'OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} | tee ${RUNQEMU_LOGFILE} || /bin/sleep 60' &"
+		xterm -display ${DISPLAY} -e "OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} | tee ${RUNQEMU_LOGFILE} || /bin/sleep 60" &
 	
 		# Get the pid of the xterm processor, which will be used in Test_Kill_Qemu
 		XTERMPID=$!
@@ -436,6 +436,9 @@ Test_Create_Qemu()
 		Test_Info "No qemu process appeared to start, exiting"
 		ps axww -O ppid
 		Test_Info "Process list dumped for debugging purposes"
+		Test_Info "runqemu output log:"
+		cat ${RUNQEMU_LOGFILE}
+		echo
 		return 1
 	fi
 
@@ -446,6 +449,9 @@ Test_Create_Qemu()
 		Test_Info "There is no qemu process or qemu ip address found, return failed"
 		ps -wwf
 		ps axww -O ppid
+		Test_Info "runqemu output log:"
+		cat ${RUNQEMU_LOGFILE}
+		echo
 		return 1
 	fi
 
