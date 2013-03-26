@@ -1,0 +1,46 @@
+The powerpc assembler can generate .PPC.EMB.apuinfo sections in some 
+circumstances.  These originate, I think, from the old e500 ABI; in 
+any case, they are only defined for 32-bit ABIs, and there is a 
+significant amount of code in bfd/elf32-ppc.c to handle them 
+appropriately, none of which is in elf64-ppc.c.  However, the 
+assembler can generate them when building 64-bit code for processors 
+such as e5500 (which uses PPC_OPCODE_E500MC).  In such circumstances, 
+they get generated as PROGBITS rather than NOTE sections, which 
+reportedly can cause problems in a Linux kernel build. 
+
+Since these sections are only defined in 32-bit ABIs, I think it's 
+most appropriate to avoid generating them for 64-bit output, which 
+this patch does.
+
+Upstream-Status: Backport
+
+-Khem 2013/03/25
+
+From d77411f56a85225e3f7b674e7172c712f6cd61cb Mon Sep 17 00:00:00 2001
+From: Joseph Myers <joseph@codesourcery.com>
+Date: Fri, 25 Jan 2013 02:02:20 +0000
+Subject: [PATCH] 	* config/tc-ppc.c (md_assemble): Do not generate
+ APUinfo sections 	for 64-bit output.
+
+---
+ gas/ChangeLog       |    5 +++++
+ gas/config/tc-ppc.c |    3 ++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/gas/config/tc-ppc.c b/gas/config/tc-ppc.c
+index fd15bea..0929e52 100644
+--- a/gas/config/tc-ppc.c
++++ b/gas/config/tc-ppc.c
+@@ -3249,7 +3249,8 @@ md_assemble (char *str)
+ 
+ #ifdef OBJ_ELF
+   /* Do we need/want an APUinfo section? */
+-  if ((ppc_cpu & (PPC_OPCODE_E500 | PPC_OPCODE_E500MC | PPC_OPCODE_VLE)) != 0)
++  if ((ppc_cpu & (PPC_OPCODE_E500 | PPC_OPCODE_E500MC | PPC_OPCODE_VLE)) != 0
++      && !ppc_obj64)
+     {
+       /* These are all version "1".  */
+       if (opcode->flags & PPC_OPCODE_SPE)
+-- 
+1.7.9.5
+

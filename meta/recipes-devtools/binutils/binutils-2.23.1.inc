@@ -47,6 +47,7 @@ BACKPORT = "\
      file://backport/0001-ld.texinfo-Replace-with-when-it-is-part-of-the-text.patch \
      file://backport/binutils-fix-ineffectual-zero-of-cache.patch \
      file://backport/binutils-replace-strncat-with-strcat.patch  \
+     file://backport/0001-config-tc-ppc.c-md_assemble-Do-not-generate-APUinfo-.patch  \
 "
 SRC_URI[md5sum] = "33adb18c3048d057ac58d07a3f1adb38"
 SRC_URI[sha256sum] = "2ab2e5b03e086d12c6295f831adad46b3e1410a3a234933a2e8fac66cb2e7a19"
