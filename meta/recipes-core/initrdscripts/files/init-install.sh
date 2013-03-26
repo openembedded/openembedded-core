@@ -57,6 +57,7 @@ echo "Installing image on /dev/${device}"
 #
 # The udev automounter can cause pain here, kill it
 #
+rm -f /etc/udev/rules.d/automount.rules
 rm -f /etc/udev/scripts/mount*
 
 #
