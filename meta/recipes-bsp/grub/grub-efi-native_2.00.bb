@@ -71,7 +71,7 @@ do_mkimage() {
 addtask mkimage after do_compile before do_install
 
 do_deploy() {
-	install -m 644 ${S}/${GRUB_IMAGE} ${DEPLOYDIR}
+	install -m 644 ${B}/${GRUB_IMAGE} ${DEPLOYDIR}
 }
 addtask deploy after do_install before do_build
 
