@@ -5,10 +5,10 @@
 #
 # INHERIT += "rm_work"
 #
-# To inhibit rm_work for some recipes, specify them in RM_WORK_WHITELIST.
+# To inhibit rm_work for some recipes, specify them in RM_WORK_EXCLUDE.
 # For example, in conf/local.conf:
 #
-# RM_WORK_WHITELIST += "icu-native icu busybox"
+# RM_WORK_EXCLUDE += "icu-native icu busybox"
 #
 
 # Use the completion scheduler by default when rm_work is active
@@ -19,10 +19,10 @@ RMWORK_ORIG_TASK := "${BB_DEFAULT_TASK}"
 BB_DEFAULT_TASK = "rm_work_all"
 
 do_rm_work () {
-    # If the recipe name is in the RM_WORK_WHITELIST, skip the recipe.
-    for p in ${RM_WORK_WHITELIST}; do
+    # If the recipe name is in the RM_WORK_EXCLUDE, skip the recipe.
+    for p in ${RM_WORK_EXCLUDE}; do
         if [ "$p" = "${PN}" ]; then
-            bbnote "rm_work: Skipping ${PN} since it is in RM_WORK_WHITELIST"
+            bbnote "rm_work: Skipping ${PN} since it is in RM_WORK_EXCLUDE"
             exit 0
         fi
     done
