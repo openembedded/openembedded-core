@@ -302,6 +302,7 @@ def copydebugsources(debugsrcdir, d):
             if not cpath.exists(basepath):
                 nosuchdir.append(basepath)
         bb.utils.mkdirhier(basepath)
+        cpath.updatecache(basepath)
 
         processdebugsrc =  "LC_ALL=C ; sort -z -u '%s' | egrep -v -z '(<internal>|<built-in>)$' | "
         # We need to ignore files that are not actually ours
