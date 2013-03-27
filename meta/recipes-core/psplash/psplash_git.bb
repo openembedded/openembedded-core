@@ -74,12 +74,13 @@ python do_compile () {
     import shutil, commands
 
     # Build a separate executable for each splash image
+    convertscript = "%s/make-image-header.sh" % d.getVar('S', True)
     destfile = "%s/psplash-poky-img.h" % d.getVar('S', True)
     localfiles = d.getVar('SPLASH_LOCALPATHS', True).split()
     outputfiles = d.getVar('SPLASH_INSTALL', True).split()
     for localfile, outputfile in zip(localfiles, outputfiles):
         if localfile.endswith(".png"):
-            outp = commands.getstatusoutput('./make-image-header.sh %s POKY' % localfile)
+            outp = commands.getstatusoutput('%s %s POKY' % (convertscript, localfile))
             print(outp[1])
             fbase = os.path.splitext(os.path.basename(localfile))[0]
             shutil.copyfile("%s-img.h" % fbase, destfile)
