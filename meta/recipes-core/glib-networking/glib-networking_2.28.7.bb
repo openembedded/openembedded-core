@@ -15,7 +15,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/2.28/${BPN}-${PV}.tar.bz2"
 SRC_URI[md5sum] = "c10e51571d03c10111a37bcd21fbf777"
 SRC_URI[sha256sum] = "98bedfbd530c4b1b53c91025fe82290bafd289d249e4eb549c3b90d23a76021c"
 
-EXTRA_OECONF = "--without-ca-certificates"
+EXTRA_OECONF = "--without-ca-certificates --without-gnome-proxy --without-libproxy"
 
 inherit autotools pkgconfig
 
