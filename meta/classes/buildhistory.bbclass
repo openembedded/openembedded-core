@@ -439,8 +439,9 @@ ROOTFS_POSTPROCESS_COMMAND =+ "buildhistory_get_image_installed ; "
 
 IMAGE_POSTPROCESS_COMMAND += " buildhistory_get_imageinfo ; "
 
-POPULATE_SDK_POST_TARGET_COMMAND += "buildhistory_get_sdk_installed target ; "
-POPULATE_SDK_POST_HOST_COMMAND += "buildhistory_get_sdk_installed host ; "
+# We want these to be the last run so that we get called after complementary package installation
+POPULATE_SDK_POST_TARGET_COMMAND_append = "buildhistory_get_sdk_installed target ; "
+POPULATE_SDK_POST_HOST_COMMAND_append = "buildhistory_get_sdk_installed host ; "
 
 SDK_POSTPROCESS_COMMAND += "buildhistory_get_sdkinfo ; "
 
