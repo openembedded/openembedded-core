@@ -259,12 +259,6 @@ def write_recipehistory(rcpinfo, d):
         f.write("DEPENDS = %s\n" %  rcpinfo.depends)
         f.write("PACKAGES = %s\n" %  rcpinfo.packages)
 
-    if rcpinfo.srcrev:
-        srcrevfile = os.path.join(pkghistdir, "latest_srcrev")
-        with open(srcrevfile, "w") as f:
-            f.write(','.join([rcpinfo.bbfile, rcpinfo.src_uri, rcpinfo.srcrev,
-                        rcpinfo.srcrev_autorev]))
-
 
 def write_pkghistory(pkginfo, d):
     bb.debug(2, "Writing package history for package %s" % pkginfo.name)
@@ -528,3 +522,55 @@ python buildhistory_eventhandler() {
 }
 
 addhandler buildhistory_eventhandler
+
+
+# FIXME this ought to be moved into the fetcher
+def _get_srcrev_values(d):
+    """
+    Return the version strings for the current recipe
+    """
+
+    scms = []
+    fetcher = bb.fetch.Fetch(d.getVar('SRC_URI', True).split(), d)
+    urldata = fetcher.ud
+    for u in urldata:
+        if urldata[u].method.supports_srcrev():
+            scms.append(u)
+
+    autoinc_templ = 'AUTOINC+'
+    dict = {}
+    for scm in scms:
+        ud = urldata[scm]
+        for name in ud.names:
+            rev = ud.method.sortable_revision(scm, ud, d, name)
+            if rev.startswith(autoinc_templ):
+                rev = rev[len(autoinc_templ):]
+            dict[name] = rev
+    return dict
+
+python do_write_srcrev() {
+    pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
+    srcrevfile = os.path.join(pkghistdir, 'latest_srcrev')
+
+    srcrevs = _get_srcrev_values(d)
+    if srcrevs:
+        if not os.path.exists(pkghistdir):
+            os.makedirs(pkghistdir)
+        with open(srcrevfile, 'w') as f:
+            orig_srcrev = d.getVar('SRCREV', False) or 'INVALID'
+            if orig_srcrev != 'INVALID':
+                f.write('# SRCREV = "%s"\n' % orig_srcrev)
+            if len(srcrevs) > 1:
+                for name, srcrev in srcrevs.items():
+                    orig_srcrev = d.getVar('SRCREV_%s' % name, False)
+                    if orig_srcrev:
+                        f.write('# SRCREV_%s = "%s"\n' % (name, orig_srcrev))
+                    f.write('SRCREV_%s = "%s"\n' % (name, srcrev))
+            else:
+                f.write('SRCREV = "%s"\n' % srcrevs.itervalues().next())
+    else:
+        if os.path.exists(srcrevfile):
+            os.remove(srcrevfile)
+}
+
+addtask write_srcrev after do_fetch before do_build
