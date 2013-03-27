@@ -1,20 +1,20 @@
 Upstream-Status: Denied [no desire for uclibc support]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Index: systemd-196/src/fsck/fsck.c
+Index: systemd-198/src/fsck/fsck.c
 ===================================================================
---- systemd-196.orig/src/fsck/fsck.c	2012-07-26 03:45:14.000000000 -0700
-+++ systemd-196/src/fsck/fsck.c	2013-01-21 16:10:46.807537608 -0800
-@@ -36,6 +36,8 @@
- #include "bus-errors.h"
+--- systemd-198.orig/src/fsck/fsck.c	2013-03-07 13:18:34.000000000 -0800
++++ systemd-198/src/fsck/fsck.c	2013-03-09 14:49:03.756572873 -0800
+@@ -37,6 +37,8 @@
  #include "virt.h"
+ #include "fileio.h"
  
 +#include "config.h"
 +
  static bool arg_skip = false;
  static bool arg_force = false;
  static bool arg_show_progress = false;
-@@ -193,9 +195,16 @@
+@@ -203,9 +205,16 @@
                  char *device;
                  double p;
                  usec_t t;
@@ -33,10 +33,10 @@ Index: systemd-196/src/fsck/fsck.c
  
                  /* Only show one progress counter at max */
                  if (!locked) {
-Index: systemd-196/src/core/swap.c
+Index: systemd-198/src/core/swap.c
 ===================================================================
---- systemd-196.orig/src/core/swap.c	2012-10-29 19:40:42.000000000 -0700
-+++ systemd-196/src/core/swap.c	2013-01-21 16:15:11.751544181 -0800
+--- systemd-198.orig/src/core/swap.c	2013-03-07 13:18:34.000000000 -0800
++++ systemd-198/src/core/swap.c	2013-03-09 14:49:03.756572873 -0800
 @@ -41,6 +41,8 @@
  #include "path-util.h"
  #include "virt.h"
@@ -46,7 +46,7 @@ Index: systemd-196/src/core/swap.c
  static const UnitActiveState state_translation_table[_SWAP_STATE_MAX] = {
          [SWAP_DEAD] = UNIT_INACTIVE,
          [SWAP_ACTIVATING] = UNIT_ACTIVATING,
-@@ -1059,6 +1061,7 @@
+@@ -1037,6 +1039,7 @@
                  char *dev = NULL, *d;
                  int prio = 0, k;
  
@@ -54,7 +54,7 @@ Index: systemd-196/src/core/swap.c
                  k = fscanf(m->proc_swaps,
                             "%ms "  /* device/file */
                             "%*s "  /* type of swap */
-@@ -1066,6 +1069,16 @@
+@@ -1044,6 +1047,16 @@
                             "%*s "  /* used */
                             "%i\n", /* priority */
                             &dev, &prio);
@@ -71,10 +71,10 @@ Index: systemd-196/src/core/swap.c
                  if (k != 2) {
                          if (k == EOF)
                                  break;
-Index: systemd-196/src/core/mount-setup.c
+Index: systemd-198/src/core/mount-setup.c
 ===================================================================
---- systemd-196.orig/src/core/mount-setup.c	2012-11-09 06:55:35.000000000 -0800
-+++ systemd-196/src/core/mount-setup.c	2013-01-21 16:10:46.807537608 -0800
+--- systemd-198.orig/src/core/mount-setup.c	2013-03-07 13:18:34.000000000 -0800
++++ systemd-198/src/core/mount-setup.c	2013-03-09 14:49:03.760572872 -0800
 @@ -28,6 +28,7 @@
  #include <assert.h>
  #include <unistd.h>
@@ -83,16 +83,16 @@ Index: systemd-196/src/core/mount-setup.c
  
  #include "mount-setup.h"
  #include "dev-setup.h"
-@@ -42,6 +43,8 @@
- #include "missing.h"
+@@ -43,6 +44,8 @@
  #include "virt.h"
+ #include "efivars.h"
  
 +#include "config.h"
 +
  #ifndef TTY_GID
  #define TTY_GID 5
  #endif
-@@ -224,9 +227,12 @@
+@@ -231,9 +234,12 @@
          for (;;) {
                  char *controller;
                  int enabled = 0;
@@ -107,11 +107,11 @@ Index: systemd-196/src/core/mount-setup.c
                          if (feof(f))
                                  break;
  
-Index: systemd-196/src/core/mount.c
+Index: systemd-198/src/core/mount.c
 ===================================================================
---- systemd-196.orig/src/core/mount.c	2012-10-22 16:53:02.000000000 -0700
-+++ systemd-196/src/core/mount.c	2013-01-21 16:10:46.811537609 -0800
-@@ -41,6 +41,8 @@
+--- systemd-198.orig/src/core/mount.c	2013-03-07 13:18:34.000000000 -0800
++++ systemd-198/src/core/mount.c	2013-03-09 14:49:03.760572872 -0800
+@@ -42,6 +42,8 @@
  #include "exit-status.h"
  #include "def.h"
  
@@ -120,7 +120,7 @@ Index: systemd-196/src/core/mount.c
  static const UnitActiveState state_translation_table[_MOUNT_STATE_MAX] = {
          [MOUNT_DEAD] = UNIT_INACTIVE,
          [MOUNT_MOUNTING] = UNIT_ACTIVATING,
-@@ -1538,7 +1540,7 @@
+@@ -1584,7 +1586,7 @@
                  int k;
  
                  device = path = options = options2 = fstype = d = p = o = NULL;
@@ -129,7 +129,7 @@ Index: systemd-196/src/core/mount.c
                  if ((k = fscanf(m->proc_self_mountinfo,
                                  "%*s "       /* (1) mount id */
                                  "%*s "       /* (2) parent id */
-@@ -1557,7 +1559,31 @@
+@@ -1603,7 +1605,31 @@
                                  &fstype,
                                  &device,
                                  &options2)) != 5) {
@@ -162,10 +162,10 @@ Index: systemd-196/src/core/mount.c
                          if (k == EOF)
                                  break;
  
-Index: systemd-196/src/core/umount.c
+Index: systemd-198/src/core/umount.c
 ===================================================================
---- systemd-196.orig/src/core/umount.c	2012-11-16 09:32:41.000000000 -0800
-+++ systemd-196/src/core/umount.c	2013-01-21 16:10:46.811537609 -0800
+--- systemd-198.orig/src/core/umount.c	2013-03-07 13:18:34.000000000 -0800
++++ systemd-198/src/core/umount.c	2013-03-09 14:49:03.760572872 -0800
 @@ -36,6 +36,8 @@
  #include "util.h"
  #include "virt.h"
@@ -235,20 +235,20 @@ Index: systemd-196/src/core/umount.c
                          if (k == EOF)
                                  break;
  
-Index: systemd-196/src/shared/socket-util.c
+Index: systemd-198/src/shared/socket-util.c
 ===================================================================
---- systemd-196.orig/src/shared/socket-util.c	2012-11-14 13:21:15.000000000 -0800
-+++ systemd-196/src/shared/socket-util.c	2013-01-21 16:10:46.811537609 -0800
-@@ -39,6 +39,8 @@
- #include "socket-util.h"
+--- systemd-198.orig/src/shared/socket-util.c	2013-03-07 13:18:34.000000000 -0800
++++ systemd-198/src/shared/socket-util.c	2013-03-09 14:49:03.760572872 -0800
+@@ -40,6 +40,8 @@
  #include "missing.h"
+ #include "fileio.h"
  
 +#include "config.h"
 +
  int socket_address_parse(SocketAddress *a, const char *s) {
          int r;
          char *e, *n;
-@@ -202,8 +204,16 @@
+@@ -203,8 +205,16 @@
          a->type = SOCK_RAW;
  
          errno = 0;
@@ -266,10 +266,10 @@ Index: systemd-196/src/shared/socket-util.c
  
          family = netlink_family_from_string(sfamily);
          if (family < 0)
-Index: systemd-196/src/tmpfiles/tmpfiles.c
+Index: systemd-198/src/tmpfiles/tmpfiles.c
 ===================================================================
---- systemd-196.orig/src/tmpfiles/tmpfiles.c	2012-10-23 16:06:30.000000000 -0700
-+++ systemd-196/src/tmpfiles/tmpfiles.c	2013-01-21 16:10:46.811537609 -0800
+--- systemd-198.orig/src/tmpfiles/tmpfiles.c	2013-03-07 13:18:34.000000000 -0800
++++ systemd-198/src/tmpfiles/tmpfiles.c	2013-03-09 14:55:40.772566599 -0800
 @@ -51,6 +51,8 @@
  #include "conf-files.h"
  #include "capability.h"
@@ -279,26 +279,25 @@ Index: systemd-196/src/tmpfiles/tmpfiles.c
  /* This reads all files listed in /etc/tmpfiles.d/?*.conf and creates
   * them in the file system. This is intended to be used to create
   * properly owned directories beneath /tmp, /var/tmp, /run, which are
-@@ -990,7 +992,7 @@
-         i = new0(Item, 1);
+@@ -993,6 +995,7 @@
          if (!i)
                  return log_oom();
--
+ 
 +#ifdef HAVE_MSFORMAT
-         if (sscanf(buffer,
-                    "%c "
-                    "%ms "
-@@ -1006,6 +1008,28 @@
+         r = sscanf(buffer,
+                    "%c %ms %ms %ms %ms %ms %n",
+                    &type,
+@@ -1002,6 +1005,29 @@
                     &group,
                     &age,
-                    &n) < 2) {
+                    &n);
 +#else
-+	i->path = malloc(257);
-+	mode = malloc(257);
-+	user = malloc(257);
-+	group = malloc(257);
-+	age = malloc(257);
-+        if (sscanf(buffer,
++        i->path = malloc(257);
++        mode = malloc(257);
++        user = malloc(257);
++        group = malloc(257);
++        age = malloc(257);
++        r = sscanf(buffer,
 +                   "%c "
 +                   "%256s "
 +                   "%256s "
@@ -312,38 +311,39 @@ Index: systemd-196/src/tmpfiles/tmpfiles.c
 +                   user,
 +                   group,
 +                   age,
-+                   &n) < 2) {
++                   &n);
 +#endif /* HAVE_MSFORMAT */
++
+         if (r < 2) {
                  log_error("[%s:%u] Syntax error.", fname, line);
                  r = -EIO;
-                 goto finish;
-Index: systemd-196/src/cryptsetup/cryptsetup-generator.c
+Index: systemd-198/src/cryptsetup/cryptsetup-generator.c
 ===================================================================
---- systemd-196.orig/src/cryptsetup/cryptsetup-generator.c	2012-08-08 14:53:24.000000000 -0700
-+++ systemd-196/src/cryptsetup/cryptsetup-generator.c	2013-01-21 16:10:46.811537609 -0800
-@@ -30,6 +30,8 @@
- #include "virt.h"
+--- systemd-198.orig/src/cryptsetup/cryptsetup-generator.c	2013-03-07 13:18:34.000000000 -0800
++++ systemd-198/src/cryptsetup/cryptsetup-generator.c	2013-03-09 14:51:33.080571639 -0800
+@@ -31,6 +31,8 @@
  #include "strv.h"
+ #include "fileio.h"
  
 +#include "config.h"
 +
  static const char *arg_dest = "/tmp";
  static bool arg_enabled = true;
  static bool arg_read_crypttab = true;
-@@ -421,8 +423,15 @@
-                 l = strstrip(line);
-                 if (*l == '#' || *l == 0)
-                         continue;
--
+@@ -395,7 +397,16 @@
+                         if (*l == '#' || *l == 0)
+                                 continue;
+ 
 +#ifdef HAVE_MSFORMAT
-                 k = sscanf(l, "%ms %ms %ms %ms", &name, &device, &password, &options);
+                         k = sscanf(l, "%ms %ms %ms %ms", &name, &device, &password, &options);
 +#else
-+		name = malloc(257);
-+		device = malloc(257);
-+		password = malloc(257);
-+		options = malloc(257);
-+                k = sscanf(l, "%256s %256s %256s %256s", name, device, password, options);
++                        name = malloc(257);
++                        device = malloc(257);
++                        password = malloc(257);
++                        options = malloc(257);
++                        k = sscanf(l, "%256s %256s %256s %256s", name, device, password, options);
 +#endif /* HAVE_MSFORMAT */
-                 if (k < 2 || k > 4) {
-                         log_error("Failed to parse /etc/crypttab:%u, ignoring.", n);
-                         r = EXIT_FAILURE;
++
+                         if (k < 2 || k > 4) {
+                                 log_error("Failed to parse /etc/crypttab:%u, ignoring.", n);
+                                 r = EXIT_FAILURE;
