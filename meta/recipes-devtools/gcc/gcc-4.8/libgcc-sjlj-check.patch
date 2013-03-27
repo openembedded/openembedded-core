@@ -1,0 +1,61 @@
+ac_fn_c_try_compile doesnt seem to keep the intermediate files
+which are needed for sjlj test to pass since it greps into the
+generated file. So we run the compiler command using AC_TRY_COMMAND
+which then generates the needed .s file
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+Index: trunk/libgcc/configure
+===================================================================
+--- trunk.orig/libgcc/configure	2012-03-01 22:59:10.112444433 -0800
++++ trunk/libgcc/configure	2012-03-01 22:59:50.424446325 -0800
+@@ -4525,17 +4525,19 @@
+ }
+ 
+ _ACEOF
+-CFLAGS_hold=$CFLAGS
+-CFLAGS="--save-temps -fexceptions"
+ libgcc_cv_lib_sjlj_exceptions=unknown
+-if ac_fn_c_try_compile; then :
++if { ac_try='${CC-cc} -fexceptions -S conftest.c -o conftest.s 1>&5'
++  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
++  (eval $ac_try) 2>&5
++  ac_status=$?
++  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
++  test $ac_status = 0; }; }; then
+   if grep _Unwind_SjLj_Resume conftest.s >/dev/null 2>&1; then
+     libgcc_cv_lib_sjlj_exceptions=yes
+   elif grep _Unwind_Resume conftest.s >/dev/null 2>&1; then
+     libgcc_cv_lib_sjlj_exceptions=no
+   fi
+ fi
+-CFLAGS=$CFLAGS_hold
+ rm -f conftest*
+ 
+ fi
+Index: trunk/libgcc/configure.ac
+===================================================================
+--- trunk.orig/libgcc/configure.ac	2012-03-01 22:59:10.128444406 -0800
++++ trunk/libgcc/configure.ac	2012-03-01 22:59:50.428446373 -0800
+@@ -209,16 +209,14 @@
+   bar();
+ }
+ ])])
+-CFLAGS_hold=$CFLAGS
+-CFLAGS="--save-temps -fexceptions"
+ libgcc_cv_lib_sjlj_exceptions=unknown
+-AS_IF([ac_fn_c_try_compile],
+-  [if grep _Unwind_SjLj_Resume conftest.s >/dev/null 2>&1; then
++if AC_TRY_COMMAND(${CC-cc} -fexceptions -S conftest.c -o conftest.s 1>&AS_MESSAGE_LOG_FD); then
++  if grep _Unwind_SjLj_Resume conftest.s >/dev/null 2>&1; then
+     libgcc_cv_lib_sjlj_exceptions=yes
+   elif grep _Unwind_Resume conftest.s >/dev/null 2>&1; then
+     libgcc_cv_lib_sjlj_exceptions=no
+-  fi])
+-CFLAGS=$CFLAGS_hold
++  fi
++fi
+ rm -f conftest*
+ ])
+ 

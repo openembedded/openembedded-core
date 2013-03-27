@@ -1,0 +1,32 @@
+Upstream-Status: Inappropriate [embedded specific]
+
+* Fortran would have searched for arm-angstrom-gnueabi-gfortran but would have used
+  used gfortan. For gcc_4.2.2.bb we want to use the gfortran compiler from our cross
+  directory.
+
+Index: gcc-4_7-branch/libgfortran/configure
+===================================================================
+--- gcc-4_7-branch.orig/libgfortran/configure	2012-04-10 10:17:24.055330044 -0700
++++ gcc-4_7-branch/libgfortran/configure	2012-04-10 10:42:26.159402591 -0700
+@@ -12689,7 +12689,7 @@
+ 
+ # We need gfortran to compile parts of the library
+ #AC_PROG_FC(gfortran)
+-FC="$GFORTRAN"
++#FC="$GFORTRAN"
+ ac_ext=${ac_fc_srcext-f}
+ ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
+ ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest.$ac_ext $LIBS >&5'
+Index: gcc-4_7-branch/libgfortran/configure.ac
+===================================================================
+--- gcc-4_7-branch.orig/libgfortran/configure.ac	2012-04-10 10:17:24.063330046 -0700
++++ gcc-4_7-branch/libgfortran/configure.ac	2012-04-10 10:42:26.159402591 -0700
+@@ -227,7 +227,7 @@
+ 
+ # We need gfortran to compile parts of the library
+ #AC_PROG_FC(gfortran)
+-FC="$GFORTRAN"
++#FC="$GFORTRAN"
+ AC_PROG_FC(gfortran)
+ 
+ # extra LD Flags which are required for targets
