@@ -45,9 +45,6 @@ do_install() {
 	ln -sf libertas/sd8686_v9.bin ${D}/lib/firmware/sd8686.bin
 	ln -sf libertas/sd8686_v9_helper.bin ${D}/lib/firmware/sd8686_helper.bin
 
-	# Realtek rtl8192* 
-	install -m 0644 LICENCE.rtlwifi_firmware.txt ${D}/lib/firmware/rtlwifi/LICENCE.rtlwifi_firmware.txt
-
 	# fixup wl12xx location, after 2.6.37 the kernel searches a different location for it
 	( cd ${D}/lib/firmware ; ln -sf ti-connectivity/* . )
 }
