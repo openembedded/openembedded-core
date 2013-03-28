@@ -38,6 +38,9 @@ do_install() {
 	install -d  ${D}/lib/firmware/
 	cp -r * ${D}/lib/firmware/
 
+	# Avoid Makefile to be deplyed
+	rm ${D}/lib/firmware/Makefile
+
 	# Libertas sd8686
 	ln -sf libertas/sd8686_v9.bin ${D}/lib/firmware/sd8686.bin
 	ln -sf libertas/sd8686_v9_helper.bin ${D}/lib/firmware/sd8686_helper.bin
