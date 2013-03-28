@@ -39,6 +39,11 @@ base_bindir_progs = "cat chgrp chmod chown cp date dd echo false kill ln ls mkdi
 
 sbindir_progs= "chroot"
 
+# Deal with a separate builddir failure if src doesn't exist when creating version.c/version.h
+do_compile_prepend () {
+	mkdir -p ${B}/src
+}
+
 do_install_append() {
 	for i in df mktemp base64; do mv ${D}${bindir}/$i ${D}${bindir}/$i.${BPN}; done
 
