@@ -52,7 +52,7 @@ EXTRA_OECONF_append_class-native = " --without-bzlib"
 EXTRA_OECONF_append_libc-uclibc = " --enable-uclibc"
 
 do_configure_prepend() {
-	sed -i 's:./i386_gendis:echo\ \#:g' ${S}/libcpu/Makefile.am
+	sed -i '/^i386_dis.h:/,+4 {/.*/d}' ${S}/libcpu/Makefile.am
 
 	cp ${WORKDIR}/*dis.h ${S}/libcpu
 }
