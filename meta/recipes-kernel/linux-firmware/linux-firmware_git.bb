@@ -49,9 +49,9 @@ do_install() {
 	( cd ${D}/lib/firmware ; ln -sf ti-connectivity/* . )
 }
 
-PACKAGES =+ "${PN}-ralink ${PN}-sd8686 ${PN}-rtl8192cu \
-             ${PN}-rtl8192ce ${PN}-rtl8192su ${PN}-wl12xx \
-             ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334"
+PACKAGES =+ "${PN}-ralink ${PN}-sd8686 ${PN}-wl12xx \
+             ${PN}-rtl-license ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
+             ${PN}-broadcom-license ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334"
 
 LICENSE_${PN}-ralink = "Firmware-ralink"
 FILES_${PN}-ralink = " \
@@ -66,16 +66,22 @@ FILES_${PN}-sd8686 = " \
   /lib/firmware/LICENCE.libertas \
 "
 
+FILES_${PN}-rtl-license = " \
+  /lib/firmware/rtlwifi/LICENCE.rtlwifi_firmware.txt \
+"
+
 LICENSE_${PN}-rtl8192cu = "Firmware-rtlwifi"
 FILES_${PN}-rtl8192cu = " \
   /lib/firmware/rtlwifi/rtl8192cufw.bin \
-  /lib/firmware/rtlwifi/LICENCE.rtlwifi_firmware.txt \
 "
+RDEPENDS_${PN}-rtl8192cu += "${PN}-rtl-license"
 
 LICENSE_${PN}-rtl8192ce = "Firmware-rtlwifi"
 FILES_${PN}-rtl8192ce = " \
   /lib/firmware/rtlwifi/rtl8192cfw.bin \
 "
+RDEPENDS_${PN}-rtl8192ce += "${PN}-rtl-license"
+
 
 LICENSE_${PN}-rtl8192su = "Firmware-rtlwifi"
 FILES_${PN}-rtl8192su = " \
@@ -94,29 +100,31 @@ FILES_${PN}-wl12xx = " \
 
 ALTERNATIVE_LINK_NAME[brcmfmac-sdio.bin] = "/lib/firmware/brcm/brcmfmac-sdio.bin"
 
+FILES_${PN}-broadcom-license = " \
+  /lib/firmware/LICENCE.broadcom_bcm43xx \
+"
+
 LICENSE_${PN}-bcm4329 = "Firmware-bcm4329"
 FILES_${PN}-bcm4329 = " \
   /lib/firmware/brcm/brcmfmac4329.bin \
-  /lib/firmware/LICENCE.broadcom_bcm43xx \
 "
+RDEPENDS_${PN}-bcm4329 += "${PN}-broadcom-license"
 ALTERNATIVE_linux-firmware-bcm4329 = "brcmfmac-sdio.bin"
 ALTERNATIVE_TARGET_linux-firmware-bcm4329[brcmfmac-sdio.bin] = "/lib/firmware/brcm/brcmfmac4329.bin"
 
 LICENSE_${PN}-bcm4330 = "Firmware-bcm4330"
 FILES_${PN}-bcm4330 = " \
   /lib/firmware/brcm/brcmfmac4330.bin \
-  /lib/firmware/LICENCE.broadcom_bcm43xx \
 "
-
+RDEPENDS_${PN}-bcm4330 += "${PN}-broadcom-license"
 ALTERNATIVE_linux-firmware-bcm4330 = "brcmfmac-sdio.bin"
 ALTERNATIVE_TARGET_linux-firmware-bcm4330[brcmfmac-sdio.bin] = "/lib/firmware/brcm/brcmfmac4330.bin"
 
 LICENSE_${PN}-bcm4334 = "Firmware-bcm4334"
 FILES_${PN}-bcm4334 = " \
   /lib/firmware/brcm/brcmfmac4334.bin \
-  /lib/firmware/LICENCE.broadcom_bcm43xx \
 "
-
+RDEPENDS_${PN}-bcm4334 += "${PN}-broadcom-license"
 ALTERNATIVE_linux-firmware-bcm4334 = "brcmfmac-sdio.bin"
 ALTERNATIVE_TARGET_linux-firmware-bcm4334[brcmfmac-sdio.bin] = "/lib/firmware/brcm/brcmfmac4334.bin"
 
