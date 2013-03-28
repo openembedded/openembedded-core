@@ -96,8 +96,7 @@ FILES_${PN}-misc = "${bindir}/ssh* ${libexecdir}/ssh*"
 FILES_${PN}-keygen = "${bindir}/ssh-keygen"
 
 RDEPENDS_${PN} += "${PN}-scp ${PN}-ssh ${PN}-sshd ${PN}-keygen"
-DEPENDS_${PN}-sshd += "update-rc.d"
-RDEPENDS_${PN}-sshd += "update-rc.d ${PN}-keygen"
+RDEPENDS_${PN}-sshd += "${PN}-keygen"
 
 CONFFILES_${PN}-sshd = "${sysconfdir}/ssh/sshd_config"
 CONFFILES_${PN}-ssh = "${sysconfdir}/ssh/ssh_config"
