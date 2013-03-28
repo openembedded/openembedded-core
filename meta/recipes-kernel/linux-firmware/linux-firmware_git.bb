@@ -18,6 +18,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.radeon;md5=e56b405656593a0c97e478513051ea0e \
                     file://LICENCE.agere;md5=af0133de6b4a9b2522defd5f188afd31 \
                     file://LICENCE.rtlwifi_firmware.txt;md5=00d06cfd3eddd5a2698948ead2ad54a5 \
                     file://LICENCE.broadcom_bcm43xx;md5=3160c14df7228891b868060e1951dfbc \
+                    file://LICENCE.atheros_firmware;md5=30a14c7823beedac9fa39c64fdd01a13 \
+                    file://LICENCE.via_vt6656;md5=e4159694cba42d4377a912e78a6e850f \
                    "
 
 SRCREV = "c530a75c1e6a472b0eb9558310b518f0dfcd8860"
@@ -49,9 +51,33 @@ do_install() {
 	( cd ${D}/lib/firmware ; ln -sf ti-connectivity/* . )
 }
 
-PACKAGES =+ "${PN}-ralink ${PN}-sd8686 ${PN}-wl12xx \
+PACKAGES =+ "${PN}-ralink ${PN}-sd8686 ${PN}-wl12xx ${PN}-vt6656 \
              ${PN}-rtl-license ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
-             ${PN}-broadcom-license ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334"
+             ${PN}-broadcom-license ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334 \
+             ${PN}-atheros-license ${PN}-ar9170 ${PN}-ath6k ${PN}-ath9k"
+
+FILES_${PN}-atheros-license = "/lib/firmware/LICENCE.atheros_firmware"
+
+LICENSE_${PN}-9170 = "Firmware-atheros_firmware"
+FILES_${PN}-ar9170 = " \
+  /lib/firmware/ar9170*.fw \
+"
+RDEPENDS_${PN}-ar9170 += "${PN}-atheros-license"
+
+LICENSE_${PN}-ath6k = "Firmware-atheros_firmware"
+FILES_${PN}-ath6k = " \
+  /lib/firmware/ath6k \
+"
+RDEPENDS_${PN}-ath6k += "${PN}-atheros-license"
+
+LICENSE_${PN}-ath9k = "Firmware-atheros_firmware"
+FILES_${PN}-ath9k = " \
+  /lib/firmware/ar9271.fw \
+  /lib/firmware/ar7010*.fw \
+  /lib/firmware/htc_9271.fw \
+  /lib/firmware/htc_7010.fw \
+"
+RDEPENDS_${PN}-ath9k += "${PN}-atheros-license"
 
 LICENSE_${PN}-ralink = "Firmware-ralink"
 FILES_${PN}-ralink = " \
@@ -92,6 +118,11 @@ FILES_${PN}-wl12xx = " \
   /lib/firmware/wl12* \
   /lib/firmware/TI* \
   /lib/firmware/ti-connectivity \
+"
+
+LICENSE_${PN}-vt6656 = "Firmware-via_vt6656"
+FILES_${PN}-vt6656 = " \
+  /lib/firmware/vntwusb.fw \
 "
 
 # WARNING: The ALTERNATIVE_* variables are not using ${PN} because of
