@@ -23,10 +23,13 @@ SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
            file://var-run.conf \
            ${UCLIBCPATCHES} \
            file://00-create-volatile.conf \
+           file://0002-readahead-chunk-on-spinning-media.patch \
+           file://0003-readahead-cleanups.patch \
+           file://0013-systemd-sysctl-Handle-missing-etc-sysctl.conf-proper.patch \
            file://init \
           "
-SRC_URI[md5sum] = "26a75e2a310f8c1c1ea9ec26ddb171c5"
-SRC_URI[sha256sum] = "444492355e5ff0ad99e0691ecaff1081ee8d45901580f47ba8b74e56107c71bf"
+SRC_URI[md5sum] = "4bb13f84ce211e93f0141774a90a2322"
+SRC_URI[sha256sum] = "8c4462a04f3ecf7f083782e5e0687913b1d33c6444bf20fa2f31df9222965fed"
 
 UCLIBCPATCHES = ""
 UCLIBCPATCHES_libc-uclibc = "file://systemd-pam-configure-check-uclibc.patch \
@@ -114,7 +117,7 @@ PACKAGES_DYNAMIC += "^lib(udev|gudev|systemd).*"
 PACKAGES =+ "${PN}-gui ${PN}-vconsole-setup ${PN}-initramfs ${PN}-analyze"
 
 USERADD_PACKAGES = "${PN}"
-GROUPADD_PARAM_${PN} = "-r lock"
+GROUPADD_PARAM_${PN} = "-r lock; -r systemd-journal"
 
 FILES_${PN}-analyze = "${base_bindir}/systemd-analyze"
 
@@ -224,7 +227,7 @@ FILES_udev += "${base_sbindir}/udevd \
 FILES_udev-consolekit += "/lib/ConsoleKit"
 RDEPENDS_udev-consolekit += "${@base_contains('DISTRO_FEATURES', 'x11', 'consolekit', '', d)}"
 
-FILES_udev-utils = "${bindir}/udevadm"
+FILES_udev-utils = "${base_bindir}/udevadm ${datadir}/bash-completion/completions/udevadm"
 
 FILES_udev-hwdb = "${base_libdir}/udev/hwdb.d"
 

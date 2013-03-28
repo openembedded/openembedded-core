@@ -1,0 +1,86 @@
+Upstream-Status: Backport
+
+-Khem 2013/03/28
+
+From b0640287f784a320661f7206c9ade07b99003fd5 Mon Sep 17 00:00:00 2001
+From: Auke Kok <auke-jan.h.kok@intel.com>
+Date: Tue, 26 Mar 2013 11:13:47 -0700
+Subject: [PATCH 03/17] readahead: cleanups
+
+- check for OOM
+- no need to use floats and round()
+---
+ Makefile.am                       |    2 +-
+ src/readahead/readahead-collect.c |   20 ++++++++++++++------
+ 2 files changed, 15 insertions(+), 7 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 5861976..37c1cc2 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2956,7 +2956,7 @@ systemd_readahead_SOURCES = \
+ systemd_readahead_LDADD = \
+ 	libsystemd-shared.la \
+ 	libsystemd-daemon.la \
+-	libudev.la -lm
++	libudev.la
+ 
+ dist_doc_DATA += \
+ 	src/readahead/sd-readahead.c \
+diff --git a/src/readahead/readahead-collect.c b/src/readahead/readahead-collect.c
+index 5d22949..e2fd8df 100644
+--- a/src/readahead/readahead-collect.c
++++ b/src/readahead/readahead-collect.c
+@@ -68,7 +68,7 @@
+  */
+ 
+ static ReadaheadShared *shared = NULL;
+-static struct timespec starttime;
++static usec_t starttime;
+ 
+ /* Avoid collisions with the NULL pointer */
+ #define SECTOR_TO_PTR(s) ULONG_TO_PTR((s)+1)
+@@ -260,7 +260,7 @@ static int collect(const char *root) {
+                 goto finish;
+         }
+ 
+-        clock_gettime(CLOCK_MONOTONIC, &starttime);
++        starttime = now(CLOCK_MONOTONIC);
+ 
+         /* If there's no pack file yet we lower the kernel readahead
+          * so that mincore() is accurate. If there is a pack file
+@@ -459,19 +459,27 @@ static int collect(const char *root) {
+                                         free(p);
+                                 else {
+                                         unsigned long ul;
+-                                        struct timespec ts;
++                                        usec_t entrytime;
+                                         struct item *entry;
+ 
+                                         entry = new0(struct item, 1);
++                                        if (!entry) {
++                                                r = log_oom();
++                                                goto finish;
++                                        }
+ 
+                                         ul = fd_first_block(m->fd);
+ 
+-                                        clock_gettime(CLOCK_MONOTONIC, &ts);
++                                        entrytime = now(CLOCK_MONOTONIC);
+ 
+                                         entry->block = ul;
+                                         entry->path = strdup(p);
+-                                        entry->bin = round((ts.tv_sec - starttime.tv_sec +
+-                                                     ((ts.tv_nsec - starttime.tv_nsec) / 1000000000.0)) / 2.0);
++                                        if (!entry->path) {
++                                                free(entry);
++                                                r = log_oom();
++                                                goto finish;
++                                        }
++                                        entry->bin = (entrytime - starttime) / 2000000;
+ 
+                                         if ((k = hashmap_put(files, p, entry)) < 0) {
+                                                 log_warning("set_put() failed: %s", strerror(-k));
+-- 
+1.7.9.5
+

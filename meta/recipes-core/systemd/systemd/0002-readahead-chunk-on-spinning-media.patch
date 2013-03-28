@@ -1,0 +1,142 @@
+Upstream-Status: Backport
+
+-Khem 2013/03/28
+
+From 94243ef299425d6c7089a7a05c48c9bb8f6cf3da Mon Sep 17 00:00:00 2001
+From: Auke Kok <auke-jan.h.kok@intel.com>
+Date: Fri, 22 Mar 2013 15:09:45 -0700
+Subject: [PATCH 02/17] readahead: chunk on spinning media
+
+Readahead has all sorts of bad side effects depending on your
+storage media. On rotating disks, it may be degrading startup
+performance if enough requests are queued spanning linearly
+over all blocks early at boot, and mount, blkid and friends
+want to insert reads to the start of these block devices after.
+
+The end result is that on spinning disks with ext3/4 that udev
+and mounts take a very long time, and nothing really happens until
+readahead is completely finished.
+
+This has the net effect that the CPU is almost entirely idle
+for the entire period that readahead is working. We could have
+finished starting up quite a lot of services in this time if
+we were smarter at how we do readahead.
+
+This patch sorts all requests into 2 second "chunks" and sub-sorts
+each chunk by block. This adds a single cross-drive seek per "chunk"
+but has the benefit that we will have a lot of the blocks we need
+early on in the boot sequence loaded into memory faster.
+
+For a comparison of how before/after bootcharts look (ext4 on a
+mobile 5400rpm 250GB drive) please look at:
+
+    http://foo-projects.org/~sofar/blocked-tests/
+
+There are bootcharts in the "before" and "after" folders where you
+should be able to see that many low-level services finish 5-7
+seconds earlier with the patch applied (after).
+---
+ Makefile.am                       |    2 +-
+ src/readahead/readahead-collect.c |   28 +++++++++++++++++++++++++---
+ 2 files changed, 26 insertions(+), 4 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 37c1cc2..5861976 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2956,7 +2956,7 @@ systemd_readahead_SOURCES = \
+ systemd_readahead_LDADD = \
+ 	libsystemd-shared.la \
+ 	libsystemd-daemon.la \
+-	libudev.la
++	libudev.la -lm
+ 
+ dist_doc_DATA += \
+ 	src/readahead/sd-readahead.c \
+diff --git a/src/readahead/readahead-collect.c b/src/readahead/readahead-collect.c
+index 5d07f47..5d22949 100644
+--- a/src/readahead/readahead-collect.c
++++ b/src/readahead/readahead-collect.c
+@@ -42,6 +42,7 @@
+ #include <sys/vfs.h>
+ #include <getopt.h>
+ #include <sys/inotify.h>
++#include <math.h>
+ 
+ #ifdef HAVE_FANOTIFY_INIT
+ #include <sys/fanotify.h>
+@@ -67,6 +68,7 @@
+  */
+ 
+ static ReadaheadShared *shared = NULL;
++static struct timespec starttime;
+ 
+ /* Avoid collisions with the NULL pointer */
+ #define SECTOR_TO_PTR(s) ULONG_TO_PTR((s)+1)
+@@ -205,6 +207,7 @@ static unsigned long fd_first_block(int fd) {
+ struct item {
+         const char *path;
+         unsigned long block;
++        unsigned long bin;
+ };
+ 
+ static int qsort_compare(const void *a, const void *b) {
+@@ -213,6 +216,13 @@ static int qsort_compare(const void *a, const void *b) {
+         i = a;
+         j = b;
+ 
++        /* sort by bin first */
++        if (i->bin < j->bin)
++                return -1;
++        if (i->bin > j->bin)
++                return 1;
++
++        /* then sort by sector */
+         if (i->block < j->block)
+                 return -1;
+         if (i->block > j->block)
+@@ -250,6 +260,8 @@ static int collect(const char *root) {
+                 goto finish;
+         }
+ 
++        clock_gettime(CLOCK_MONOTONIC, &starttime);
++
+         /* If there's no pack file yet we lower the kernel readahead
+          * so that mincore() is accurate. If there is a pack file
+          * already we assume it is accurate enough so that kernel
+@@ -447,10 +459,21 @@ static int collect(const char *root) {
+                                         free(p);
+                                 else {
+                                         unsigned long ul;
++                                        struct timespec ts;
++                                        struct item *entry;
++
++                                        entry = new0(struct item, 1);
+ 
+                                         ul = fd_first_block(m->fd);
+ 
+-                                        if ((k = hashmap_put(files, p, SECTOR_TO_PTR(ul))) < 0) {
++                                        clock_gettime(CLOCK_MONOTONIC, &ts);
++
++                                        entry->block = ul;
++                                        entry->path = strdup(p);
++                                        entry->bin = round((ts.tv_sec - starttime.tv_sec +
++                                                     ((ts.tv_nsec - starttime.tv_nsec) / 1000000000.0)) / 2.0);
++
++                                        if ((k = hashmap_put(files, p, entry)) < 0) {
+                                                 log_warning("set_put() failed: %s", strerror(-k));
+                                                 free(p);
+                                         }
+@@ -518,8 +541,7 @@ done:
+ 
+                 j = ordered;
+                 HASHMAP_FOREACH_KEY(q, p, files, i) {
+-                        j->path = p;
+-                        j->block = PTR_TO_SECTOR(q);
++                        memcpy(j, q, sizeof(struct item));
+                         j++;
+                 }
+ 
+-- 
+1.7.9.5
+
