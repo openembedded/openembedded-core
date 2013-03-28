@@ -3,15 +3,13 @@
 #
 
 ROOTFS_PKGMANAGE = "rpm smartpm"
+ROOTFS_PKGMANAGE_BOOTSTRAP = "rpm-postinsts"
 
 # Add 50Meg of extra space for Smart
 IMAGE_ROOTFS_EXTRA_SPACE_append = "${@base_contains("PACKAGE_INSTALL", "smartpm", " + 51200", "" ,d)}"
 
 # Smart is python based, so be sure python-native is available to us.
 EXTRANATIVEPATH += "python-native"
-
-# Postinstalls on device are handled within this class at present
-ROOTFS_PKGMANAGE_BOOTSTRAP = ""
 
 do_rootfs[depends] += "rpm-native:do_populate_sysroot"
 do_rootfs[depends] += "rpmresolve-native:do_populate_sysroot"
