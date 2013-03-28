@@ -27,7 +27,7 @@ if [ -n "$D" ]; then
     OPTS="--root=$D"
 fi
 
-if type systemctl >/dev/null; then
+if type systemctl >/dev/null 2>/dev/null; then
 	systemctl $OPTS ${SYSTEMD_AUTO_ENABLE} ${SYSTEMD_SERVICE}
 
 	if [ -z "$D" -a "${SYSTEMD_AUTO_ENABLE}" = "enable" ]; then
@@ -37,7 +37,7 @@ fi
 }
 
 systemd_prerm() {
-if type systemctl >/dev/null; then
+if type systemctl >/dev/null 2>/dev/null; then
 	if [ -z "$D" ]; then
 		systemctl stop ${SYSTEMD_SERVICE}
 	fi

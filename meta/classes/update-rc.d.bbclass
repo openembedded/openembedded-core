@@ -18,7 +18,7 @@ if test "x$D" != "x"; then
 else
 	OPT="-s"
 fi
-if type update-rc.d >/dev/null; then
+if type update-rc.d >/dev/null 2>/dev/null; then
 	update-rc.d $OPT ${INITSCRIPT_NAME} ${INITSCRIPT_PARAMS}
 fi
 }
@@ -35,7 +35,7 @@ if test "$D" != ""; then
 else
 	OPT=""
 fi
-if type update-rc.d >/dev/null; then
+if type update-rc.d >/dev/null 2>/dev/null; then
 	update-rc.d $OPT ${INITSCRIPT_NAME} remove
 fi
 }
