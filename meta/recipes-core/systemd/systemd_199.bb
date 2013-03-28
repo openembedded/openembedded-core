@@ -114,7 +114,7 @@ python populate_packages_prepend (){
 }
 PACKAGES_DYNAMIC += "^lib(udev|gudev|systemd).*"
 
-PACKAGES =+ "${PN}-gui ${PN}-vconsole-setup ${PN}-initramfs ${PN}-analyze"
+PACKAGES =+ "${PN}-gui ${PN}-vconsole-setup ${PN}-initramfs ${PN}-analyze ${PN}-kernel-install"
 
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "-r lock; -r systemd-journal"
@@ -130,6 +130,10 @@ FILES_${PN}-vconsole-setup = "${systemd_unitdir}/systemd-vconsole-setup \
                               ${systemd_unitdir}/system/systemd-vconsole-setup.service \
                               ${systemd_unitdir}/system/sysinit.target.wants/systemd-vconsole-setup.service"
 
+FILES_${PN}-kernel-install = "${bindir}/kernel-install \
+                              ${sysconfdir}/kernel/ \
+                              ${exec_prefix}/lib/kernel \
+                             "
 RRECOMMENDS_${PN}-vconsole-setup = "kbd kbd-consolefonts"
 
 CONFFILES_${PN} = "${sysconfdir}/systemd/journald.conf \
