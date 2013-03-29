@@ -28,7 +28,7 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.24/gtk+-${PV}.tar.xz \
 #        file://combo-arrow-size.patch;striplevel=0
 #            file://configurefix.patch
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI[md5sum] = "68f034fb4f68086790d7488cf00e71c8"
 SRC_URI[sha256sum] = "d7e1c6d6ae6baa48c88441fe52b73b0fb6008763644867d59b049bafb0cf771b"
@@ -38,14 +38,6 @@ EXTRA_OECONF = "--without-libtiff --without-libjasper --enable-xkb --disable-gli
 LIBV = "2.10.0"
 
 PACKAGES_DYNAMIC += "^gtk-immodule-.* ^gtk-printbackend-.*"
-BBCLASSEXTEND = "native"
-RRECOMMENDS_${PN}_class-native = ""
-DEPENDS_class-native = "glib-2.0-native atk-native pango-native cairo-native gdk-pixbuf-native"
-
-do_install_append_class-native () {
-	create_wrapper ${D}/${bindir}/gtk-update-icon-cache-2.0 \
-		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
-}
 
 python populate_packages_prepend () {
     gtk_libdir = d.expand('${libdir}/gtk-2.0/${LIBV}')

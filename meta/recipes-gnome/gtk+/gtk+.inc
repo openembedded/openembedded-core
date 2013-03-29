@@ -10,8 +10,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7"
 
 SECTION = "libs"
 
-PROVIDES_class-native = "virtual/gtk-update-icon-cache-native"
-
 X11DEPENDS = "virtual/libx11 libxext libxcursor libxrandr libxdamage libxrender libxcomposite"
 DEPENDS = "glib-2.0 pango atk jpeg libpng gdk-pixbuf-native docbook-utils-native \
  libgcrypt cairo gdk-pixbuf"
@@ -79,12 +77,6 @@ do_install () {
 	install -m 0644 ${S}/gtk/gtkfilesystemmodel.h    ${D}${includedir}/gtk-2.0/gtk/
 
 	mv ${D}${bindir}/gtk-update-icon-cache ${D}${bindir}/gtk-update-icon-cache-2.0
-}
-
-do_install_append_class-native () {
-	# Ideally we'd use alternatives in the sysroot, but they don't work.
-	# As we know we don't have a native GTK+ 3 (yet), make a symlink instead.
-	ln -s gtk-update-icon-cache-2.0 ${D}${bindir}/gtk-update-icon-cache
 }
 
 SYSROOT_PREPROCESS_FUNCS += "gtk_sysroot_preprocess"
