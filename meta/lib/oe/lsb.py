@@ -26,7 +26,7 @@ def release_dict_file():
             with open('/etc/lsb-release') as f:
                 for line in f:
                     key, value = line.split("=", 1)
-                    data[key] = value
+                    data[key] = value.strip()
         elif os.path.exists('/etc/redhat-release'):
             data = {}
             with open('/etc/redhat-release') as f:
