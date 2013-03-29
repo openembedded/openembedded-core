@@ -108,8 +108,9 @@ fi
 
 if [ -n "$commit" ]; then
             echo "git checkout $commit"
+            git pull > /dev/null 2>&1
             git checkout $commit || exit 1
-            git pull || exit 1
+            git pull > /dev/null 2>&1
 fi
 
 rev=$(git rev-parse --short HEAD)  || exit 1
@@ -118,6 +119,7 @@ BUILDDIR="$OUTDIR/build"
 resultsfile="$OUTDIR/results.log"
 bboutput="$OUTDIR/bitbake.log"
 myoutput="$OUTDIR/output.log"
+globalres="$clonedir/build-perf-test/globalres.log"
 
 mkdir -p $OUTDIR || exit 1
                                 
@@ -131,9 +133,10 @@ log () {
 # Config stuff
 #
 
+rev=$(git rev-parse HEAD) || exit 1
 log "Git revision is $rev"
 
-source ./oe-init-build-env $OUTDIR/build >/dev/null
+source ./oe-init-build-env $OUTDIR/build >/dev/null || exit 1
 cd $OUTDIR/build
 
 [ -n "$MACHINE" ] || export MACHINE="qemux86"
@@ -155,8 +158,12 @@ fi
 # Functions
 #
 
+declare -a TIMES
+time_count=0
+
 bbtime () {
-    log "Running and timing bitbake $1"
+    log "Timing: bitbake $1"
+
     if [ $verbose -eq 0 ]; then 
         /usr/bin/time -v -o $resultsfile bitbake "$1" >> $bboutput
     else
@@ -164,13 +171,14 @@ bbtime () {
     fi
     ret=$?
     if [ $ret -eq 0 ]; then
-        log "Finished bitbake $1"
+        t=`grep wall $resultsfile | sed 's/.*m:ss): //'`
+        log "Time: $t"
+        TIMES[(( time_count++ ))]="$t"
     else
         log "Exit status was non-zero. Exit..."
         exit $ret 
     fi
     
-    log "Time: `grep wall $resultsfile`"
     #time by default overwrites the output file and we  want to keep the results
     #it has an append option but I don't want to clobber the results in the same file
     i=`ls $OUTDIR/results.log* |wc -l`
@@ -180,7 +188,7 @@ bbtime () {
 
 #we don't time bitbake here
 bbnotime () {
-    log "Running bitbake $1"
+    log "Running: bitbake $1"
     if [ $verbose -eq 0 ]; then
         bitbake "$1" >> $bboutput
     else
@@ -198,7 +206,7 @@ bbnotime () {
 
 do_rmtmp() {
     log "Removing tmp"
-    rm -rf bitbake.lock pseudone tmp conf/sanity_info
+    rm -rf bitbake.lock pseudodone tmp conf/sanity_info
 }
 do_rmsstate () {
     log "Removing sstate-cache"
@@ -244,7 +252,7 @@ do_rmtmp
 do_rmsstate
 do_sync
 bbtime "$IMAGE"
-log "Size of tmp dir is: `du -hc tmp | grep total`"
+log "Size of tmp dir is: `du -sh tmp | sed 's/tmp//'`"
 log "Buildstats are saved in $OUTDIR/buildstats-test1"
 mv tmp/buildstats $OUTDIR/buildstats-test1
 }
@@ -265,8 +273,10 @@ do_rmtmp
 do_rmsstate
 do_sync
 bbtime "$IMAGE"
-log "Size of tmp dir is: `du -hc tmp | grep total`"
 sed -i 's/INHERIT += \"rm_work\"//' conf/local.conf
+log "Size of tmp dir is: `du -sh tmp | sed 's/tmp//'`"
+log "Buildstats are saved in $OUTDIR/buildstats-test13"
+mv tmp/buildstats $OUTDIR/buildstats-test13
 }
 
 
@@ -291,11 +301,12 @@ test1_p2
 test1_p3
 test2
 
-log "All done."
+log "All done"
 
-
-
-
-
-
-
+# if we got til here write to global results
+echo "$rev" >> $globalres
+for i in "${TIMES[@]}"; do
+    echo -n "$i," >> $globalres
+done
+echo >> $globalres
+sed -i '$ s/,$//' $globalres
