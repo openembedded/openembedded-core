@@ -641,7 +641,7 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
             return True
         return False
     def isPostInstDep(x):
-        if x in ["qemu-native", "gdk-pixbuf-native", "gtk+-native", "qemuwrapper-cross", "depmodwrapper-cross", "systemd-systemctl-native", "gtk-update-icon-cache-native"]:
+        if x in ["qemu-native", "gdk-pixbuf-native", "qemuwrapper-cross", "depmodwrapper-cross", "systemd-systemctl-native", "gtk-update-icon-cache-native"]:
             return True
         return False
 
