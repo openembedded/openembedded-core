@@ -2,8 +2,6 @@ SUMMARY = "gtk-update-icon-cache built natively"
 DESCRIPTION = "Just gtk-update-icon-cache built from GTK+ natively, for on-host postinst script execution."
 SECTION = "libs"
 
-PROVIDES = "virtual/gtk-update-icon-cache-native"
-
 DEPENDS = "gdk-pixbuf-native"
 
 LICENSE = "LGPLv2 & LGPLv2+ & LGPLv2.1+"
