@@ -1,9 +1,9 @@
 def release_dict():
-    """Return the output of lsb_release -a as a dictionary"""
+    """Return the output of lsb_release -ir as a dictionary"""
     from subprocess import PIPE
 
     try:
-        output, err = bb.process.run(['lsb_release', '-a'], stderr=PIPE)
+        output, err = bb.process.run(['lsb_release', '-ir'], stderr=PIPE)
     except bb.process.CmdError as exc:
         return None
 
