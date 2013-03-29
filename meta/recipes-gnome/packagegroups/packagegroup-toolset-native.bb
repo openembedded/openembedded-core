@@ -84,7 +84,7 @@ DEPENDS = "\
     gperf-native \
     groff-native \
     gtk-doc-stub-native \
-    gtk+-native \
+    gtk-update-icon-cache-native \
     guile-native \
     guilt-native \
     gzip-native \
