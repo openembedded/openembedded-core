@@ -36,23 +36,25 @@ cat << EOT
 Usage: $ME [-h]
        $ME [-c <commit>] [-v] [-m <val>] [-j <val>] [-t <val>] [-i <image-name>] [-d <path>]
 Options:
-	-h
-		Display this help and exit.
-	-c <commit>
-		git checkout <commit> before anything else
-	-v
-		Show bitbake output, don't redirect it to a log.
-	-m <machine>
-		Value for MACHINE. Default is qemux86.
-	-j <val>
-		Value for PARALLEL_MAKE. Default is 8. 
-	-t <val>
-		Value for BB_NUMBER_THREADS. Default is 8.
+        -h
+                Display this help and exit.
+        -c <commit>
+                git checkout <commit> before anything else
+        -v
+                Show bitbake output, don't redirect it to a log.
+        -m <machine>
+                Value for MACHINE. Default is qemux86.
+        -j <val>
+                Value for PARALLEL_MAKE. Default is 8. 
+        -t <val>
+                Value for BB_NUMBER_THREADS. Default is 8.
         -i <image-name>
                 Instead of timing agains core-image-sato, use <image-name>
         -d <path>
                 Use <path> as DL_DIR
-		
+        -p <githash>
+                Cherry pick githash onto the commit
+                
 Note: current working directory must be inside a poky git clone.
  
 EOT
@@ -71,29 +73,32 @@ verbose=0
 dldir=
 commit=
 pmake=
-while getopts "hvc:m:j:t:i:d:" opt; do
-	case $opt in
-		h)	usage
-			exit 0
-			;;
-		v)	verbose=1
-			;;
-		c)	commit=$OPTARG
-			;;
-		m)      export MACHINE=$OPTARG
-			;;
-		j)	pmake=$OPTARG
-			;;
-		t)	export BB_NUMBER_THREADS=$OPTARG
-			;;
+cherrypicks=
+while getopts "hvc:m:j:t:i:d:p:" opt; do
+        case $opt in
+                h)      usage
+                        exit 0
+                        ;;
+                v)      verbose=1
+                        ;;
+                c)      commit=$OPTARG
+                        ;;
+                m)      export MACHINE=$OPTARG
+                        ;;
+                j)      pmake=$OPTARG
+                        ;;
+                t)      export BB_NUMBER_THREADS=$OPTARG
+                        ;;
                 i)      IMAGE=$OPTARG
                         ;;
                 d)      dldir=$OPTARG
                         ;;
-		*)	usage
-			exit 1
-			;;			
-	esac
+                p)      cherrypicks="$cherrypicks $OPTARG"
+                        ;;
+                *)      usage
+                        exit 1
+                        ;;                      
+        esac
 done
 
 
@@ -111,6 +116,12 @@ if [ -n "$commit" ]; then
             git pull > /dev/null 2>&1
             git checkout $commit || exit 1
             git pull > /dev/null 2>&1
+fi
+
+if [ -n "$cherrypicks" ]; then
+    for c in $cherrypicks; do
+        git cherry-pick $c
+    done
 fi
 
 rev=$(git rev-parse --short HEAD)  || exit 1
@@ -176,7 +187,7 @@ bbtime () {
         TIMES[(( time_count++ ))]="$t"
     else
         log "Exit status was non-zero. Exit..."
-        exit $ret 
+        #exit $ret 
     fi
     
     #time by default overwrites the output file and we  want to keep the results
@@ -269,8 +280,8 @@ bbtime "virtual/kernel"
 test1_p3 () {
 log "Running Test 1, part 3/3: Build $IMAGE w/o sstate and report size of tmp/dir with rm_work enabled"
 echo "INHERIT += \"rm_work\"" >> conf/local.conf
-do_rmtmp
-do_rmsstate
+#do_rmtmp
+#do_rmsstate
 do_sync
 bbtime "$IMAGE"
 sed -i 's/INHERIT += \"rm_work\"//' conf/local.conf
@@ -302,6 +313,9 @@ test1_p3
 test2
 
 log "All done"
+
+do_rmtmp
+do_rmsstate
 
 # if we got til here write to global results
 echo "$rev" >> $globalres
