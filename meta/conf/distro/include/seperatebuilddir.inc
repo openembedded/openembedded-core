@@ -222,7 +222,6 @@ B_pn-gtk+3 = "${SEPB}"
 B_pn-gtk-doc-stub = "${SEPB}"
 B_pn-gtk-doc-stub-native = "${SEPB}"
 B_pn-gtk-engines = "${SEPB}"
-B_pn-gtk+-native = "${SEPB}"
 ##make[1]: *** No rule to make target `data/gtkrc', needed by `all-am'.  Stop
 ##B_pn-gtk-sato-engine = "${SEPB}"
 B_pn-guile = "${SEPB}"
