@@ -446,7 +446,7 @@ Test_Create_Qemu()
 	# Parse IP address of target from the qemu command line
 	TARGET_IPADDR=`Test_Fetch_Target_IP $QEMUPID`
 	echo "Target IP is ${TARGET_IPADDR}"
-	if [ ${TARGET_IPADDR} = "" -o "${TARGET_IPADDR}" = "0" ]; then
+	if [ "${TARGET_IPADDR}" = "" -o "${TARGET_IPADDR}" = "0" ]; then
 		Test_Info "There is no qemu process or qemu ip address found, return failed"
 		ps -wwf
 		ps axww -O ppid
