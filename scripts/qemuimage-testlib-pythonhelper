@@ -19,7 +19,7 @@ if options.findqemu:
     #
     # Walk the process tree from the process specified looking for a qemu-system. Return its pid.
     #
-    ps = subprocess.Popen(['ps', 'ax', '-o', 'pid,ppid,command'], stdout=subprocess.PIPE).communicate()[0]
+    ps = subprocess.Popen(['ps', 'axww', '-o', 'pid,ppid,command'], stdout=subprocess.PIPE).communicate()[0]
     processes = ps.split('\n')
     nfields = len(processes[0].split()) - 1
     pids = {}
