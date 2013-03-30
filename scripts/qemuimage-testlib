@@ -418,7 +418,7 @@ Test_Create_Qemu()
 		sleep 5
 	fi
 
-	while [ ${up_time} -lt 10 ]
+	while [ ${up_time} -lt 30 ]
 	do
 		QEMUPID=`qemuimage-testlib-pythonhelper --findqemu $XTERMPID 2>/dev/null`
 		if [ $? -ne 0 ]; then
@@ -432,7 +432,7 @@ Test_Create_Qemu()
 		fi
 	done
 
-	if [ ${up_time} == 10 ]; then
+	if [ ${up_time} == 30 ]; then
 		Test_Info "No qemu process appeared to start, exiting"
 		ps axww -O ppid
 		Test_Info "Process list dumped for debugging purposes"
@@ -442,6 +442,7 @@ Test_Create_Qemu()
 		return 1
 	fi
 
+	up_time=0
 	# Parse IP address of target from the qemu command line
 	TARGET_IPADDR=`Test_Fetch_Target_IP $QEMUPID`
 	echo "Target IP is ${TARGET_IPADDR}"
