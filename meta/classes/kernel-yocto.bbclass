@@ -46,7 +46,7 @@ def find_kernel_feature_dirs(d):
 
 # find the master/machine source branch. In the same way that the fetcher proceses
 # git repositories in the SRC_URI we take the first repo found, first branch.
-def get_machine_branch(d):
+def get_machine_branch(d, default):
     fetch = bb.fetch2.Fetch([], d)
     for url in fetch.urls:
         urldata = fetch.ud[url]
@@ -55,7 +55,7 @@ def get_machine_branch(d):
             branches = urldata.parm.get("branch").split(',')
             return branches[0]
 	    
-    return "master"
+    return default
 
 do_patch() {
 	cd ${S}
@@ -70,7 +70,7 @@ do_patch() {
 		fi
 	fi
 
-	machine_branch="${@ get_machine_branch(d)}"
+	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
 
 	# if we have a defined/set meta branch we should not be generating
 	# any meta data. The passed branch has what we need.
@@ -195,7 +195,8 @@ do_kernel_checkout() {
 		fi
 	fi
 	
-	machine_branch="${@ get_machine_branch(d)}"
+	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
+
 	if [ "${KBRANCH}" != "${machine_branch}" ]; then
 		echo "WARNING: The SRC_URI machine branch and KBRANCH are not the same."
 		echo "	       KBRANCH will be adjusted to match, but this typically is a"
@@ -280,7 +281,7 @@ do_validate_branches() {
 	cd ${S}
 	export KMETA=${KMETA}
 
-	machine_branch="${@ get_machine_branch(d)}"
+	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
 
 	set +e
 	# if SRCREV is AUTOREV it shows up as AUTOINC there's nothing to
