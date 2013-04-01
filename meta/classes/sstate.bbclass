@@ -547,7 +547,7 @@ sstate_create_package () {
 		tar -cz --file=$TFILE --files-from=/dev/null
 	fi
 	chmod 0664 $TFILE 
-	mv $TFILE ${SSTATE_PKG}
+	mv -f $TFILE ${SSTATE_PKG}
 
 	cd ${WORKDIR}
 	rm -rf ${SSTATE_BUILDDIR}
