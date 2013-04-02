@@ -16,10 +16,10 @@ PROVIDES += "make"
 
 do_configure_prepend() {
     # remove the default LINGUAS since we are not going to generate languages
-    rm po/LINGUAS
-    touch po/LINGUAS
+    rm ${S}/po/LINGUAS
+    touch ${S}/po/LINGUAS
     # create config.rpath which required by configure.ac
-    autopoint || touch config.rpath
+    ( cd ${S}; autopoint || touch config.rpath )
 }
 
 BBCLASSEXTEND = "native"
