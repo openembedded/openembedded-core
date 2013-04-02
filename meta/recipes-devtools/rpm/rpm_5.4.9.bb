@@ -226,6 +226,8 @@ FILES_${PN} =  "${bindir}/rpm \
 		/var/cache/rpm \
 		"
 
+RDEPENDS_${PN} += "${PN}-postinsts"
+
 FILES_${PN}-postinsts = "${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts \
                 "
 
