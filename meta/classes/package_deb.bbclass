@@ -7,7 +7,6 @@ inherit package
 IMAGE_PKGTYPE ?= "deb"
 
 DPKG_ARCH ?= "${TARGET_ARCH}" 
-DPKG_ARCH_arm ?= "armel"
 
 PKGWRITEDIRDEB = "${WORKDIR}/deploy-debs"
 
@@ -406,8 +405,11 @@ python () {
         d.setVarFlag('do_package_write_deb_setscene', 'fakeroot', "1")
 
     # Map TARGET_ARCH to Debian's ideas about architectures
-    if d.getVar('DPKG_ARCH', True) in ["x86", "i486", "i586", "i686", "pentium"]:
-        d.setVar('DPKG_ARCH', 'i386')
+    darch = d.getVar('DPKG_ARCH', True)
+    if darch in ["x86", "i486", "i586", "i686", "pentium"]:
+         d.setVar('DPKG_ARCH', 'i386')
+    elif darch == "arm":
+         d.setVar('DPKG_ARCH', 'armel')
 }
 
 python do_package_write_deb () {
