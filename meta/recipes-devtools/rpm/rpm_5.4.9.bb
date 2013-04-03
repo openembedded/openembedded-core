@@ -200,7 +200,7 @@ CFLAGS_append = " -DRPM_VENDOR_WINDRIVER -DRPM_VENDOR_POKY -DRPM_VENDOR_OE"
 
 LDFLAGS_append_libc-uclibc = "-lrt -lpthread"
 
-PACKAGES = "${PN}-dbg ${PN} ${PN}-doc ${PN}-libs ${PN}-dev ${PN}-staticdev ${PN}-common ${PN}-build python-rpm-dbg python-rpm-staticdev python-rpm-dev python-rpm perl-module-rpm perl-module-rpm-dev ${PN}-locale ${PN}-postinsts"
+PACKAGES = "${PN}-dbg ${PN} ${PN}-doc ${PN}-libs ${PN}-dev ${PN}-staticdev ${PN}-common ${PN}-build python-rpm-dbg python-rpm-staticdev python-rpm-dev python-rpm perl-module-rpm perl-module-rpm-dev ${PN}-locale"
 
 SOLIBS = "5.4.so"
 
@@ -227,9 +227,6 @@ FILES_${PN} =  "${bindir}/rpm \
 		"
 
 RDEPENDS_${PN} += "${PN}-postinsts"
-
-FILES_${PN}-postinsts = "${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts \
-                "
 
 FILES_${PN}-dbg += "${libdir}/rpm/.debug \
 		${libdir}/rpm/bin/.debug \
@@ -375,14 +372,6 @@ do_configure() {
 	oe_runconf
 }
 
-#
-# Allow distributions to alter when [postponed] package install scripts are run
-#
-POSTINSTALL_INITPOSITION ?= "98"
-
-POSTLOG ?= "/var/log/postinstall.log"
-REDIRECT_CMD = "${@base_contains('IMAGE_FEATURES', 'debug-tweaks', '>>${POSTLOG} 2>&1', '', d)}"
-
 do_install_append() {
 	sed -i -e 's,%__check_files,#%%__check_files,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,%__scriptlet_requires,#%%__scriptlet_requires,' ${D}/${libdir}/rpm/macros
@@ -460,23 +449,6 @@ do_install_append() {
 	rm -rf ${D}/var/lib/wdj ${D}/var/cache/wdj
 	rm -f ${D}/${libdir}/rpm/bin/api-sanity-checker.pl
 
-	install -d ${D}/${sysconfdir}/rcS.d
-	# Stop $i getting expanded below...
-	i=\$i
-	cat > ${D}${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts << EOF
-#!/bin/sh
-for i in \`ls /etc/rpm-postinsts/\`; do
-	i=/etc/rpm-postinsts/$i
-	echo "Running postinst $i..."
-	if [ -f $i ] && $i ${REDIRECT_CMD}; then
-		rm $i
-	else
-		echo "ERROR: postinst $i failed."
-	fi
-done
-rm -f ${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
-EOF
-	chmod 0755 ${D}${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
 }
 
 do_install_append_class-native() {
