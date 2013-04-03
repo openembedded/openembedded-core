@@ -19,3 +19,5 @@ KERNEL=="rtc0", SYMLINK+="rtc"
 #The first framebuffer is symlinked to /dev/fb
 KERNEL=="fb0",  SYMLINK+="fb"
 
+# Make all input devices read-write to the input group
+SUBSYSTEM=="input", GROUP="input", MODE="660"
