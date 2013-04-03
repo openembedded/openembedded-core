@@ -538,24 +538,38 @@ def _get_srcrev_values(d):
             scms.append(u)
 
     autoinc_templ = 'AUTOINC+'
-    dict = {}
+    dict_srcrevs = {}
+    dict_tag_srcrevs = {}
     for scm in scms:
         ud = urldata[scm]
         for name in ud.names:
             rev = ud.method.sortable_revision(scm, ud, d, name)
             if rev.startswith(autoinc_templ):
                 rev = rev[len(autoinc_templ):]
-            dict[name] = rev
-    return dict
+            dict_srcrevs[name] = rev
+            if 'tag' in ud.parm:
+                tag = ud.parm['tag'];
+                key = name+'_'+tag
+                dict_tag_srcrevs[key] = rev
+    return (dict_srcrevs, dict_tag_srcrevs)
 
 python do_write_srcrev() {
     pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
     srcrevfile = os.path.join(pkghistdir, 'latest_srcrev')
 
-    srcrevs = _get_srcrev_values(d)
+    srcrevs, tag_srcrevs = _get_srcrev_values(d)
     if srcrevs:
         if not os.path.exists(pkghistdir):
             os.makedirs(pkghistdir)
+        old_tag_srcrevs = {}
+        if os.path.exists(srcrevfile):
+            with open(srcrevfile) as f:
+                for line in f:
+                    if line.startswith('# tag_'):
+                        key, value = line.split("=", 1)
+                        key = key.replace('# tag_', '').strip()
+                        value = value.replace('"', '').strip()
+                        old_tag_srcrevs[key] = value
         with open(srcrevfile, 'w') as f:
             orig_srcrev = d.getVar('SRCREV', False) or 'INVALID'
             if orig_srcrev != 'INVALID':
@@ -568,6 +582,13 @@ python do_write_srcrev() {
                     f.write('SRCREV_%s = "%s"\n' % (name, srcrev))
             else:
                 f.write('SRCREV = "%s"\n' % srcrevs.itervalues().next())
+            if len(tag_srcrevs) > 0:
+                for name, srcrev in tag_srcrevs.items():
+                    f.write('# tag_%s = "%s"\n' % (name, srcrev))
+                    if name in old_tag_srcrevs and old_tag_srcrevs[name] != srcrev:
+                        pkg = d.getVar('PN', True)
+                        bb.warn("Revision for tag %s in package %s was changed since last build (from %s to %s)" % (name, pkg, old_tag_srcrevs[name], srcrev))
+
     else:
         if os.path.exists(srcrevfile):
             os.remove(srcrevfile)
