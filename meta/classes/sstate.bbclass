@@ -197,7 +197,8 @@ def sstate_install(ss, d):
 
     # Run the actual file install
     for state in ss['dirs']:
-        oe.path.copytree(state[1], state[2])
+        if os.path.exists(state[1]):
+            oe.path.copytree(state[1], state[2])
 
     for postinst in (d.getVar('SSTATEPOSTINSTFUNCS', True) or '').split():
         bb.build.exec_func(postinst, d)
@@ -448,6 +449,8 @@ def sstate_package(ss, d):
     bb.mkdirhier(sstatebuild)
     bb.mkdirhier(os.path.dirname(sstatepkg))
     for state in ss['dirs']:
+        if not os.path.exists(state[1]):
+            continue
         srcbase = state[0].rstrip("/").rsplit('/', 1)[0]
         for walkroot, dirs, files in os.walk(state[1]):
             for file in files:
