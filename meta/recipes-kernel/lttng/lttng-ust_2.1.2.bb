@@ -1,7 +1,7 @@
 SUMMARY = "Linux Trace Toolkit Userspace Tracer 2.0"
 DESCRIPTION = "The LTTng UST 2.0 package contains the userspace tracer library to trace userspace codes."
-HOMEPAGE = "http://lttng.org/lttng2.0"
-BUGTRACKER = "n/a"
+HOMEPAGE = "http://lttng.org/ust"
+BUGTRACKER = "https://bugs.lttng.org/projects/lttng-ust"
 
 LICENSE = "LGPLv2.1+ & BSD & GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c963eb366b781252b0bf0fdf1624d9e9 \
@@ -17,8 +17,8 @@ RPROVIDES_${PN} = "lttng2-ust"
 RREPLACES_${PN} = "lttng2-ust"
 RCONFLICTS_${PN} = "lttng2-ust"
 
-SRCREV = "05356aa2a4dca0bc9bfd716d2d6723e3941851dc"
-PV = "2.1.1"
+SRCREV = "3f7a0876566a432ad2cc2b27a2725641e36da92d"
+PV = "2.1.2"
 PR = "r0"
 PE = "2"
 
