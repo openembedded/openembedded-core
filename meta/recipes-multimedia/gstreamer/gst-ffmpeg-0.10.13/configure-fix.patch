@@ -11,7 +11,7 @@ diff -r f2f8f74c6e30 configure.ac
          --enable-gpl"
    fi
  
-+  if test "x$disable_yasm" != "xyes"; then
++  if test "x$disable_yasm" = "xyes"; then
 +    embffmpeg_configure_args="$embffmpeg_configure_args --disable-yasm"
 +  fi
 +
