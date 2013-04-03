@@ -33,7 +33,6 @@ case "$1" in
            # setting for rootless X
            chmod o+w /var/log
            chmod g+r /dev/tty[0-3]
-           chmod o+rw /dev/input/*
            # hidraw device is probably needed
            if [ -e /dev/hidraw0 ]; then
                chmod o+rw /dev/hidraw*
