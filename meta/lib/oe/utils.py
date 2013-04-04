@@ -107,3 +107,19 @@ def features_backfill(var,d):
 
     if addfeatures:
         d.appendVar(var, " " + " ".join(addfeatures))
+
+
+def packages_filter_out_system(d):
+    """
+    Return a list of packages from PACKAGES with the "system" packages such as
+    PN-dbg PN-doc PN-locale-eb-gb removed.
+    """
+    pn = d.getVar('PN', True)
+    blacklist = map(lambda suffix: pn + suffix, ('', '-dbg', '-dev', '-doc', '-locale', '-staticdev'))
+    localepkg = pn + "-locale-"
+    pkgs = []
+
+    for pkg in d.getVar('PACKAGES', True).split():
+        if pkg not in blacklist and localepkg not in pkg:
+            pkgs.append(pkg)
+    return pkgs
