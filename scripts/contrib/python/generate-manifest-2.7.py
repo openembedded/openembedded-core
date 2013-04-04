@@ -319,7 +319,7 @@ if __name__ == "__main__":
     m.addPackage( "${PN}-pkgutil", "Python Package Extension Utility Support", "${PN}-core",
     "pkgutil.*")
 
-    m.addPackage( "${PN}-pprint", "Python Pretty-Print Support", "${PN}-core",
+    m.addPackage( "${PN}-pprint", "Python Pretty-Print Support", "${PN}-core ${PN}-io",
     "pprint.*" )
 
     m.addPackage( "${PN}-profile", "Python Basic Profiling Support", "${PN}-core ${PN}-textutils",

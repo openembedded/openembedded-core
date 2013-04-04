@@ -175,7 +175,7 @@ RDEPENDS_${PN}-pkgutil="${PN}-core"
 FILES_${PN}-pkgutil="${libdir}/python2.7/pkgutil.* "
 
 DESCRIPTION_${PN}-pprint="Python Pretty-Print Support"
-RDEPENDS_${PN}-pprint="${PN}-core"
+RDEPENDS_${PN}-pprint="${PN}-core ${PN}-io"
 FILES_${PN}-pprint="${libdir}/python2.7/pprint.* "
 
 DESCRIPTION_${PN}-profile="Python Basic Profiling Support"
