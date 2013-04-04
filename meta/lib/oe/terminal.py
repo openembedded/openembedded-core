@@ -105,6 +105,43 @@ class Screen(Terminal):
         else:
             logger.warn(msg)
 
+class TmuxRunning(Terminal):
+    """Open a new pane in the current running tmux window"""
+    command = 'tmux split-window {command}'
+    priority = 2.75
+
+    def __init__(self, sh_cmd, title=None, env=None, d=None):
+        if not bb.utils.which(os.getenv('PATH'), 'tmux'):
+            raise UnsupportedTerminal('tmux is not installed')
+
+        if not os.getenv('TMUX'):
+            raise UnsupportedTerminal('tmux is not running')
+
+        Terminal.__init__(self, sh_cmd, title, env, d)
+
+class TmuxNewSession(Terminal):
+    """Start a new tmux session and window"""
+    command = 'tmux new -d -s devshell -n devshell {command}'
+    priority = 0.75
+
+    def __init__(self, sh_cmd, title=None, env=None, d=None):
+        if not bb.utils.which(os.getenv('PATH'), 'tmux'):
+            raise UnsupportedTerminal('tmux is not installed')
+
+        # TODO: consider using a 'devshell' session shared amongst all
+        # devshells, if it's already there, add a new window to it.
+        window_name = 'devshell-%i' % os.getpid()
+
+        self.command = 'tmux new -d -s {0} -n {0} {{command}}'.format(window_name)
+        Terminal.__init__(self, sh_cmd, title, env, d)
+
+        attach_cmd = 'tmux att -t {0}'.format(window_name)
+        msg = 'Tmux started. Please connect in another terminal with `tmux att -t {0}`'.format(window_name)
+        if d:
+            bb.event.fire(bb.event.LogExecTTY(msg, attach_cmd, 0.5, 10), d)
+        else:
+            logger.warn(msg)
+
 class Custom(Terminal):
     command = 'false' # This is a placeholder
     priority = 3
