@@ -469,6 +469,10 @@ Test_Create_Qemu()
 		fi
 	done
 
+	Test_Info "Process list dumped for debugging purposes:"
+	ps axww -O ppid
+	Test_Info "runqemu output log:"
+	cat ${RUNQEMU_LOGFILE}
 	Test_Info "Qemu or its network is not up in ${timeout} seconds"
 	Test_Update_IPSAVE $XTERMPID $TARGET_IPADDR
 	return 1
