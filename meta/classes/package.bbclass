@@ -1130,12 +1130,21 @@ python emit_pkgdata() {
     workdir = d.getVar('WORKDIR', True)
 
     for pkg in packages.split():
+        items = {}
+        for files_list in pkgfiles[pkg]:
+             item_name = os.path.basename(files_list)
+             item_path = os.path.dirname(files_list)
+             if item_path not in items:
+                 items[item_path] = []
+             items[item_path].append(item_name)
         subdata_file = pkgdatadir + "/runtime/%s" % pkg
 
         pkgval = d.getVar('PKG_%s' % pkg, True)
         if pkgval is None:
             pkgval = pkg
             d.setVar('PKG_%s' % pkg, pkg)
+
+        d.setVar('FILES_INFO', str(items))
 
         sf = open(subdata_file, 'w')
         write_if_exists(sf, pkg, 'PN')
@@ -1161,6 +1170,7 @@ python emit_pkgdata() {
         write_if_exists(sf, pkg, 'pkg_preinst')
         write_if_exists(sf, pkg, 'pkg_prerm')
         write_if_exists(sf, pkg, 'FILERPROVIDESFLIST')
+        write_if_exists(sf, pkg, 'FILES_INFO')
         for dfile in (d.getVar('FILERPROVIDESFLIST_' + pkg, True) or "").split():
             write_if_exists(sf, pkg, 'FILERPROVIDES_' + dfile)
 
