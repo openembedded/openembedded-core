@@ -1,0 +1,213 @@
+From 9a7146ca91c04d05af36684d8b3ca79c1254abc2 Mon Sep 17 00:00:00 2001
+From: Markus Armbruster <armbru@redhat.com>
+Date: Wed, 13 Feb 2013 19:49:40 +0100
+Subject: [PATCH 1/2] doc: Fix texinfo @table markup in qemu-options.hx
+
+End tables before headings, start new ones afterwards.  Fixes
+incorrect indentation of headings "File system options" and "Virtual
+File system pass-through options" in manual page and qemu-doc.
+
+Normalize markup some to increase chances it survives future edits.
+
+Upstream-Status: Backport
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+Signed-off-by: Markus Armbruster <armbru@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Message-id: 1360781383-28635-5-git-send-email-armbru@redhat.com
+Signed-off-by: Anthony Liguori <aliguori@us.ibm.com>
+---
+ qemu-options.hx | 56 +++++++++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 37 insertions(+), 19 deletions(-)
+
+diff --git a/qemu-options.hx b/qemu-options.hx
+index 9d7131a..54bd92a 100644
+--- a/qemu-options.hx
++++ b/qemu-options.hx
+@@ -537,13 +537,15 @@ STEXI
+ @end table
+ ETEXI
+ 
+-DEF("usb", 0, QEMU_OPTION_usb,
+-    "-usb            enable the USB driver (will be the default soon)\n",
+-    QEMU_ARCH_ALL)
+ STEXI
+ USB options:
+ @table @option
++ETEXI
+ 
++DEF("usb", 0, QEMU_OPTION_usb,
++    "-usb            enable the USB driver (will be the default soon)\n",
++    QEMU_ARCH_ALL)
++STEXI
+ @item -usb
+ @findex -usb
+ Enable the USB driver (will be the default soon)
+@@ -610,9 +612,15 @@ possible drivers and properties, use @code{-device help} and
+ @code{-device @var{driver},help}.
+ ETEXI
+ 
++STEXI
++@end table
++ETEXI
+ DEFHEADING()
+ 
+ DEFHEADING(File system options:)
++STEXI
++@table @option
++ETEXI
+ 
+ DEF("fsdev", HAS_ARG, QEMU_OPTION_fsdev,
+     "-fsdev fsdriver,id=id[,path=path,][security_model={mapped-xattr|mapped-file|passthrough|none}]\n"
+@@ -676,9 +684,15 @@ Specifies the tag name to be used by the guest to mount this export point
+ 
+ ETEXI
+ 
++STEXI
++@end table
++ETEXI
+ DEFHEADING()
+ 
+ DEFHEADING(Virtual File system pass-through options:)
++STEXI
++@table @option
++ETEXI
+ 
+ DEF("virtfs", HAS_ARG, QEMU_OPTION_virtfs,
+     "-virtfs local,path=path,mount_tag=tag,security_model=[mapped-xattr|mapped-file|passthrough|none]\n"
+@@ -769,11 +783,9 @@ ETEXI
+ STEXI
+ @end table
+ ETEXI
+-
+ DEFHEADING()
+ 
+ DEFHEADING(Display options:)
+-
+ STEXI
+ @table @option
+ ETEXI
+@@ -1215,7 +1227,6 @@ ETEXI
+ STEXI
+ @end table
+ ETEXI
+-
+ ARCHHEADING(, QEMU_ARCH_I386)
+ 
+ ARCHHEADING(i386 target only:, QEMU_ARCH_I386)
+@@ -1301,10 +1312,10 @@ Specify SMBIOS type 0 fields
+ Specify SMBIOS type 1 fields
+ ETEXI
+ 
+-DEFHEADING()
+ STEXI
+ @end table
+ ETEXI
++DEFHEADING()
+ 
+ DEFHEADING(Network options:)
+ STEXI
+@@ -1718,13 +1729,19 @@ libpcap, so it can be analyzed with tools such as tcpdump or Wireshark.
+ Indicate that no network devices should be configured. It is used to
+ override the default configuration (@option{-net nic -net user}) which
+ is activated if no @option{-net} options are provided.
++ETEXI
+ 
++STEXI
+ @end table
+ ETEXI
+-
+ DEFHEADING()
+ 
+ DEFHEADING(Character device options:)
++STEXI
++
++The general form of a character device option is:
++@table @option
++ETEXI
+ 
+ DEF("chardev", HAS_ARG, QEMU_OPTION_chardev,
+     "-chardev null,id=id[,mux=on|off]\n"
+@@ -1766,10 +1783,6 @@ DEF("chardev", HAS_ARG, QEMU_OPTION_chardev,
+ )
+ 
+ STEXI
+-
+-The general form of a character device option is:
+-@table @option
+-
+ @item -chardev @var{backend} ,id=@var{id} [,mux=on|off] [,@var{options}]
+ @findex -chardev
+ Backend is one of:
+@@ -1990,14 +2003,15 @@ Connect to a spice virtual machine channel, such as vdiport.
+ 
+ Connect to a spice port, allowing a Spice client to handle the traffic
+ identified by a name (preferably a fqdn).
++ETEXI
+ 
++STEXI
+ @end table
+ ETEXI
+-
+ DEFHEADING()
+ 
+-STEXI
+ DEFHEADING(Device URL Syntax:)
++STEXI
+ 
+ In addition to using normal file images for the emulated storage devices,
+ QEMU can also use networked resources such as iSCSI devices. These are
+@@ -2113,10 +2127,16 @@ qemu-system-x86_84 --drive file=gluster://192.0.2.1/testvol/a.img
+ @end example
+ 
+ See also @url{http://www.gluster.org}.
++ETEXI
++
++STEXI
+ @end table
+ ETEXI
+ 
+ DEFHEADING(Bluetooth(R) options:)
++STEXI
++@table @option
++ETEXI
+ 
+ DEF("bt", HAS_ARG, QEMU_OPTION_bt, \
+     "-bt hci,null    dumb bluetooth HCI - doesn't respond to commands\n" \
+@@ -2130,8 +2150,6 @@ DEF("bt", HAS_ARG, QEMU_OPTION_bt, \
+     "                emulate a bluetooth device 'dev' in scatternet 'n'\n",
+     QEMU_ARCH_ALL)
+ STEXI
+-@table @option
+-
+ @item -bt hci[...]
+ @findex -bt
+ Defines the function of the corresponding Bluetooth HCI.  -bt options
+@@ -2183,9 +2201,11 @@ currently:
+ @item keyboard
+ Virtual wireless keyboard implementing the HIDP bluetooth profile.
+ @end table
+-@end table
+ ETEXI
+ 
++STEXI
++@end table
++ETEXI
+ DEFHEADING()
+ 
+ DEFHEADING(Linux/Multiboot boot specific:)
+@@ -2242,11 +2262,9 @@ ETEXI
+ STEXI
+ @end table
+ ETEXI
+-
+ DEFHEADING()
+ 
+ DEFHEADING(Debug/Expert options:)
+-
+ STEXI
+ @table @option
+ ETEXI
+-- 
+1.8.1.5
+
