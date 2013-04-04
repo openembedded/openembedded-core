@@ -24,6 +24,12 @@ inherit useradd autotools pkgconfig gettext update-rc.d
 INITSCRIPT_NAME = "dbus-1"
 INITSCRIPT_PARAMS = "start 02 5 3 2 . stop 20 0 1 6 ."
 
+python __anonymous() {
+    features = d.getVar("DISTRO_FEATURES", True).split()
+    if "sysvinit" not in features:
+        d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
+}
+
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "-r netdev"
 USERADD_PARAM_${PN} = "--system --home ${localstatedir}/lib/dbus \
