@@ -239,6 +239,12 @@ INITSCRIPT_PACKAGES = "udev"
 INITSCRIPT_NAME_udev = "systemd-udevd"
 INITSCRIPT_PARAMS_udev = "start 03 S ."
 
+python __anonymous() {
+    features = d.getVar("DISTRO_FEATURES", True).split()
+    if "sysvinit" not in features:
+        d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
+}
+
 # TODO:
 # u-a for runlevel and telinit
 
