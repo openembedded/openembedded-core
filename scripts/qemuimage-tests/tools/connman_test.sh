@@ -45,7 +45,7 @@ fi
 
 if [ $count -ne 1 ]; then
 	Target_Info "connmand has issue when running in background, Pls, check the output of ps"
-	${PS} | grep connmand
+	${PS}
 	exit 1
 fi
 
