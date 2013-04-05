@@ -1,0 +1,63 @@
+
+This patch is from Slackware, I tried to find the actual
+author to add that attribution.  The comment below is the
+best summary, I will not repeat it here.
+
+Upstream-Status: Backport from slackware
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: shadow-4.1.4.3/lib/encrypt.c
+===================================================================
+--- shadow-4.1.4.3.orig/lib/encrypt.c
++++ shadow-4.1.4.3/lib/encrypt.c
+@@ -45,15 +45,40 @@ char *pw_encrypt (const char *clear, con
+ 	static char cipher[128];
+ 	char *cp;
+ 
+-	cp = crypt (clear, salt);
+-	if (!cp) {
+-		/*
+-		 * Single Unix Spec: crypt() may return a null pointer,
+-		 * and set errno to indicate an error.  The caller doesn't
+-		 * expect us to return NULL, so...
+-		 */
+-		perror ("crypt");
+-		exit (EXIT_FAILURE);
++ 	cp = crypt (clear, salt);
++ 	if (!cp) {
++ 		/*
++		 * In glibc-2.17 and newer, crypt() will return NULL if
++		 * it was called using an invalid salt format.  Previous
++		 * versions of glibc would go ahead and compute a DES hash
++		 * using the invalid salt.  The salt value in this case was
++		 * always '!'.  We might arrive at this place if either the
++		 * user does not exist, or if the hash in /etc/shadow doesn't
++		 * have the proper magic for one of the supported hash
++		 * formats (for example, if the account was locked using
++		 * "passwd -l".  To handle this situation, we will recompute
++		 * the hash using a hardcoded salt as was previously done
++		 * by glibc.  The hash returned by the old glibc function
++		 * always began with "!!", which would ensure that it could
++		 * never match an otherwise valid hash in /etc/shadow that
++		 * was disabled with a "!" at the beginning (since the second
++		 * character would never be "!" as well), so we will also
++		 * prepend the resulting hash with "!!".  Finally, in case
++		 * crypt() failed for some other reason we will check to see
++		 * if we still get NULL from crypt even with the valid salt
++		 * and will fail if that's the case.
++ 		 */
++
++		/* Recalculate hash using a hardcoded, valid SHA512 salt: */
++		cp = crypt (clear, "$6$8IIcy/1EPOk/");
++
++		if (!cp) {
++			perror ("crypt");
++			exit (EXIT_FAILURE);
++		} else {
++			sprintf (cipher, "!!%s", cp);
++			return cipher;
++		}
+ 	}
+ 
+ 	/* The GNU crypt does not return NULL if the algorithm is not
