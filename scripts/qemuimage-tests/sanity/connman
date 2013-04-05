@@ -46,6 +46,7 @@ if [ ${RET} -eq 0 ]; then
 	exit 0
 else
 	Test_Info "Connman Test FAIL, Pls. check above error log"
+        Test_Display_Syslog
 	Test_Kill_Qemu
 	Test_Print_Result "connman" 1
 	exit 1
