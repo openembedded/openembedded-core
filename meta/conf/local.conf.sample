@@ -117,6 +117,8 @@ PACKAGE_CLASSES ?= "package_ipk"
 #                     (adds symbol information for debugging/profiling)
 #  "dev-pkgs"       - add -dev packages for all installed packages
 #                     (useful if you want to develop against libs in the image)
+#  "ptest-pkgs"     - add -ptest packages for all ptest-enabled packages
+#                     (useful if you want to run the package test suites)
 #  "tools-sdk"      - add development tools (gcc, make, pkgconfig etc.)
 #  "tools-debug"    - add debugging tools (gdb, strace)
 #  "eclipse-debug"  - add Eclipse remote debugging support
