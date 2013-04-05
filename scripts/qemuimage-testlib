@@ -109,6 +109,40 @@ EOF`
 	return $ret
 }
 
+# function to copy files from target to host
+# $1 is the ip address of target
+# $2 is the files, which need to be copied into target
+# $3 is the path on target, where files are copied into
+Test_SCP_From()
+{
+	local ip_addr=$1
+	local src=$2
+	local des=$3
+	local time_out=60
+	local ret=0
+
+	# We use expect to interactive with target by ssh
+	local exp_cmd=`cat << EOF
+eval spawn scp -o UserKnownHostsFile=/dev/null  -o StrictHostKeyChecking=no root@$ip_addr:"$src" "$des"
+set timeout $time_out
+expect {
+    "*assword:" { send "\r"; exp_continue}
+    "*(yes/no)?" { send "yes\r"; exp_continue }
+    eof          { exit [ lindex [wait] 3 ] }
+}
+EOF`
+
+	expect=`which expect`
+	if [ ! -x "$expect" ]; then
+		Test_Error "ERROR: Please install expect"
+		return 1
+	fi
+
+	expect -c "$exp_cmd"
+	ret=$?
+	return $ret
+}
+
 # function to run command in $ip_addr via ssh
 Test_SSH()
 {
@@ -708,4 +742,13 @@ Test_Toolchain()
 	fi
 
 	return $ret
+}
+
+Test_Display_Syslog()
+{
+	local tmplog=`mktemp`
+        Test_SCP_From ${TARGET_IPADDR} /var/log/messages $tmplog
+        echo "System logs:"
+        cat $tmplog
+        rm -f $tmplog
 }
