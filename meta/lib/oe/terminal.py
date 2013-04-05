@@ -107,6 +107,7 @@ class Screen(Terminal):
 
 class TmuxRunning(Terminal):
     """Open a new pane in the current running tmux window"""
+    name = 'tmux-running'
     command = 'tmux split-window {command}'
     priority = 2.75
 
@@ -119,7 +120,7 @@ class TmuxRunning(Terminal):
 
         Terminal.__init__(self, sh_cmd, title, env, d)
 
-class TmuxNewSession(Terminal):
+class Tmux(Terminal):
     """Start a new tmux session and window"""
     command = 'tmux new -d -s devshell -n devshell {command}'
     priority = 0.75
