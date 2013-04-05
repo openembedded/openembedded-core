@@ -422,4 +422,4 @@ done
 [ -n "$stamps" ] && rm_by_stamps
 [ -z "$rm_duplicated" -a -z "$stamps" ] && \
     echo "What do you want to do?"
-
+exit 0
