@@ -1,0 +1,23 @@
+
+staring from glibc 2.17 the crypt() function will error out and return
+NULL if the seed or "correct" is invalid. The failure case for this is
+an unknown user which tinylogin assigns '!' for the password. crypt() 
+now expects a minimum of 2 valid characters. If we get a NULL return
+value from the crypt, assume we fail and return 0.
+
+Upstream-Status: Inappropriate [tinylogin depercated]
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: tinylogin-1.4/libbb/correct_password.c
+===================================================================
+--- tinylogin-1.4.orig/libbb/correct_password.c
++++ tinylogin-1.4/libbb/correct_password.c
+@@ -74,5 +74,8 @@ int correct_password ( const struct pass
+ 	}
+ 	encrypted = crypt ( unencrypted, correct );
+ 	memset ( unencrypted, 0, xstrlen ( unencrypted ));
++        if ( !encrypted )
++		return 0;
++
+ 	return ( strcmp ( encrypted, correct ) == 0 ) ? 1 : 0;
+ }
