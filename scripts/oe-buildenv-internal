@@ -74,8 +74,9 @@ if ! (test -d "$BITBAKEDIR"); then
     return 1
 fi
 
-PATH="${OEROOT}/scripts:$BITBAKEDIR/bin/:$PATH"
-unset BITBAKEDIR
+NEWPATHS="${OEROOT}/scripts:$BITBAKEDIR/bin/:"
+[ "${PATH#$NEWPATHS}" != "$PATH" ] || PATH="$NEWPATHS$PATH"
+unset BITBAKEDIR NEWPATHS
 
 # Used by the runqemu script
 export BUILDDIR
