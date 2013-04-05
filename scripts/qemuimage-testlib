@@ -84,13 +84,12 @@ Test_SCP()
 	local ip_addr=$1
 	local src=$2
 	local des=$3
-	local tmpfile=`mktemp`
 	local time_out=60
 	local ret=0
 
 	# We use expect to interactive with target by ssh
 	local exp_cmd=`cat << EOF
-eval spawn scp -o UserKnownHostsFile=$tmpfile "$src" root@$ip_addr:"$des"
+eval spawn scp -o UserKnownHostsFile=/dev/null  -o StrictHostKeyChecking=no "$src" root@$ip_addr:"$des"
 set timeout $time_out
 expect {
     "*assword:" { send "\r"; exp_continue}
@@ -107,7 +106,6 @@ EOF`
 
 	expect -c "$exp_cmd"
 	ret=$?
-	rm -rf $tmpfile
 	return $ret
 }
 
@@ -117,11 +115,10 @@ Test_SSH()
 	local ip_addr=$1
 	shift
 	local command=$@
-	local tmpfile=`mktemp`
 	local time_out=60
 	local ret=0
 	local exp_cmd=`cat << EOF
-eval spawn ssh -o UserKnownHostsFile=$tmpfile root@$ip_addr "$command"
+eval spawn ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@$ip_addr "$command"
 set timeout $time_out
 expect {
     "*assword:" { send "\r"; exp_continue}
@@ -138,7 +135,6 @@ EOF`
 
 	expect -c "$exp_cmd"
 	ret=$?
-	rm -rf $tmpfile
 	return $ret
 }
 
