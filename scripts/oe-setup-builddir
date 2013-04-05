@@ -118,5 +118,5 @@ EOM
 if [ "x" = "x$OECORENOTESCONF" ]; then
     OECORENOTESCONF="$OEROOT/meta/conf/conf-notes.txt"
 fi
-cat $OECORENOTESCONF
+[ ! -r "$OECORENOTESCONF" ] || cat $OECORENOTESCONF
 unset OECORENOTESCONF
