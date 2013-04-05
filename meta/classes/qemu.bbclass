@@ -29,10 +29,4 @@ def qemu_run_binary(data, rootfs_path, binary):
     if qemu_binary == "qemu-allarch":
         qemu_binary = "qemuwrapper"
 
-    dynamic_loader = rootfs_path + '$(readelf -l ' + rootfs_path + \
-                     binary + '| grep "Requesting program interpreter"|sed -e \'s/^.*\[.*: \(.*\)\]/\\1/\')'
-    library_path = rootfs_path + data.getVar("base_libdir", True) + ":" + \
-                   rootfs_path + data.getVar("libdir", True)
-
-    return "PSEUDO_UNLOAD=1 " + qemu_binary + " " + dynamic_loader + " --library-path " + library_path \
-           + " " + rootfs_path + binary
+    return "PSEUDO_UNLOAD=1 " + qemu_binary + " -L " + rootfs_path + " " + rootfs_path + binary

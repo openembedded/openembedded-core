@@ -2,8 +2,7 @@
 
 export GDK_PIXBUF_MODULEDIR=$D${libdir}/gdk-pixbuf-2.0/2.10.0/loaders
 
-PSEUDO_UNLOAD=1 qemuwrapper $D$(readelf -l $D${bindir}/gdk-pixbuf-query-loaders|grep "Requesting program interpreter"|sed -e 's/^.*\[.*: \(.*\)\]/\1/') \
-    --library-path $D/lib:$D/usr/lib $D${bindir}/gdk-pixbuf-query-loaders \
+PSEUDO_UNLOAD=1 qemuwrapper -L $D $D${bindir}/gdk-pixbuf-query-loaders \
     >$GDK_PIXBUF_MODULEDIR/../loaders.cache 2>/dev/null && \
     sed -i -e "s:$D::g" $GDK_PIXBUF_MODULEDIR/../loaders.cache
 
