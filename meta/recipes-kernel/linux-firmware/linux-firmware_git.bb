@@ -162,3 +162,9 @@ ALTERNATIVE_linux-firmware-bcm4334 = "brcmfmac-sdio.bin"
 ALTERNATIVE_TARGET_linux-firmware-bcm4334[brcmfmac-sdio.bin] = "/lib/firmware/brcm/brcmfmac4334.bin"
 
 FILES_${PN} += "/lib/firmware/*"
+
+# Make linux-firmware depend on all of the split-out packages.
+python populate_packages_prepend () {
+    firmware_pkgs = oe.utils.packages_filter_out_system(d)
+    d.appendVar('RDEPENDS_linux-firmware', ' ' + ' '.join(firmware_pkgs))
+}
