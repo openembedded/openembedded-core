@@ -3,6 +3,7 @@
 import optparse
 import subprocess
 import sys
+import os
 
 parser = optparse.OptionParser(
     usage = """
@@ -52,7 +53,10 @@ if options.findqemu:
         newparents = next
     #print "Children matching %s:" % str(parents)
     for p in parents:
-        if "qemu-system" in commands[p]:
+        # Need to be careful here since runqemu-internal runs "ldd qemu-system-xxxx"
+        basecmd = commands[p].split()[0]
+        basecmd = os.path.basename(basecmd)
+        if "qemu-system" in basecmd:
             print p
             sys.exit(0)
     sys.exit(1)
