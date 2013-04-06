@@ -11,7 +11,7 @@
 #
 . $COREBASE/scripts/qemuimage-testlib
 
-TIMEOUT=120
+TIMEOUT=400
 
 # Start qemu and check its network
 Test_Create_Qemu ${TIMEOUT}
