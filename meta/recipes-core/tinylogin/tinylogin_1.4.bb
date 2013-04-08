@@ -12,13 +12,13 @@ PR = "r9"
 inherit update-alternatives
 
 SRC_URI = "http://www.angstrom-distribution.org/unstable/sources/tinylogin-${PV}.tar.bz2 \
-	file://cvs-20040608.patch \
-	file://add-system.patch \
-	file://adduser-empty_pwd.patch \
-	file://remove-index.patch \
-	file://use_O2_option.patch \
-	file://passwd_rotate_check.patch \
-	file://avoid_static.patch \
+        file://cvs-20040608.patch \
+        file://add-system.patch \
+        file://adduser-empty_pwd.patch \
+        file://remove-index.patch \
+        file://use_O2_option.patch \
+        file://passwd_rotate_check.patch \
+        file://avoid_static.patch \
         file://glibc_crypt_fix.patch \
         "
 
