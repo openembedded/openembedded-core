@@ -11,7 +11,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=393a5ca445f6965873eca0259a17f833"
 
 DEPENDS = "python rpm"
-PR = "r8"
+PR = "r9"
 SRCNAME = "smart"
 
 SRC_URI = "\
@@ -27,6 +27,7 @@ SRC_URI = "\
           file://smart-improve-error-reporting.patch \
           file://smart-multilib-fixes.patch \
           file://smart-yaml-error.patch \
+          file://smart-channelsdir.patch \
           "
 
 SRC_URI[md5sum] = "573ef32ba177a6b3c4bf7ef04873fcb6"
