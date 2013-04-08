@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe \
 PROVIDES = "udev"
 
 PE = "1"
+PR = "r2"
 
 DEPENDS = "kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline dbus libcap libcgroup tcp-wrappers glib-2.0"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
@@ -26,6 +27,7 @@ SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
            file://0002-readahead-chunk-on-spinning-media.patch \
            file://0003-readahead-cleanups.patch \
            file://0013-systemd-sysctl-Handle-missing-etc-sysctl.conf-proper.patch \
+           file://199-firmware.patch \
            file://init \
           "
 SRC_URI[md5sum] = "4bb13f84ce211e93f0141774a90a2322"
@@ -67,6 +69,7 @@ EXTRA_OECONF = " --with-rootprefix=${base_prefix} \
                  --disable-microhttpd \
                  --without-python \
                  --with-sysvrcnd-path=${sysconfdir} \
+                 --with-firmware-path=/lib/firmware \
                  ac_cv_path_KILL=${base_bindir}/kill \
                "
 # uclibc does not have NSS

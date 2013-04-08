@@ -1,0 +1,98 @@
+Upstream-Status: Backport
+http://cgit.freedesktop.org/systemd/systemd/patch/?id=d8d4bee76cf3b40ea923bc57d44aa0815ca9b5ff
+
+From d8d4bee76cf3b40ea923bc57d44aa0815ca9b5ff Mon Sep 17 00:00:00 2001
+From: Kay Sievers <kay@vrfy.org>
+Date: Thu, 28 Mar 2013 14:28:10 +0000
+Subject: build-sys: fix HAVE/ENABLE_FIRMWARE
+
+https://bugs.freedesktop.org/show_bug.cgi?id=62864
+---
+diff --git a/configure.ac b/configure.ac
+index 5b88bcf..e73cd5c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -728,6 +728,7 @@ for i in $with_firmware_path; do
+ done
+ IFS=$OLD_IFS
+ AC_SUBST(FIRMWARE_PATH)
++AS_IF([test "x${FIRMWARE_PATH}" != "x"], [ AC_DEFINE(HAVE_FIRMWARE, 1, [Define if FIRMWARE is available]) ])
+ AM_CONDITIONAL(ENABLE_FIRMWARE, [test "x${FIRMWARE_PATH}" != "x"])
+ 
+ # ------------------------------------------------------------------------------
+@@ -736,7 +737,6 @@ AC_ARG_ENABLE([gudev],
+        [], [enable_gudev=yes])
+ AS_IF([test "x$enable_gudev" = "xyes"], [ PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.22.0 gobject-2.0 >= 2.22.0 gio-2.0]) ])
+ AM_CONDITIONAL([ENABLE_GUDEV], [test "x$enable_gudev" = "xyes"])
+-
+ AS_IF([test "x$enable_gudev" = "xyes"], [ AC_DEFINE(HAVE_GLIB, 1, [Define if glib is available]) ])
+ 
+ # ------------------------------------------------------------------------------
+diff --git a/src/udev/udev-builtin.c b/src/udev/udev-builtin.c
+index 13922d3..c7d4319 100644
+--- a/src/udev/udev-builtin.c
++++ b/src/udev/udev-builtin.c
+@@ -34,7 +34,7 @@ static const struct udev_builtin *builtins[] = {
+         [UDEV_BUILTIN_BLKID] = &udev_builtin_blkid,
+ #endif
+         [UDEV_BUILTIN_BTRFS] = &udev_builtin_btrfs,
+-#ifdef ENABLE_FIRMWARE
++#ifdef HAVE_FIRMWARE
+         [UDEV_BUILTIN_FIRMWARE] = &udev_builtin_firmware,
+ #endif
+         [UDEV_BUILTIN_HWDB] = &udev_builtin_hwdb,
+diff --git a/src/udev/udev.h b/src/udev/udev.h
+index aa2edbe..906dfba 100644
+--- a/src/udev/udev.h
++++ b/src/udev/udev.h
+@@ -140,7 +140,7 @@ enum udev_builtin_cmd {
+         UDEV_BUILTIN_BLKID,
+ #endif
+         UDEV_BUILTIN_BTRFS,
+-#ifdef ENABLE_FIRMWARE
++#ifdef HAVE_FIRMWARE
+         UDEV_BUILTIN_FIRMWARE,
+ #endif
+         UDEV_BUILTIN_HWDB,
+@@ -169,7 +169,7 @@ struct udev_builtin {
+ extern const struct udev_builtin udev_builtin_blkid;
+ #endif
+ extern const struct udev_builtin udev_builtin_btrfs;
+-#ifdef ENABLE_FIRMWARE
++#ifdef HAVE_FIRMWARE
+ extern const struct udev_builtin udev_builtin_firmware;
+ #endif
+ extern const struct udev_builtin udev_builtin_hwdb;
+diff --git a/src/udev/udevd.c b/src/udev/udevd.c
+index b30bedf..2ad7388 100644
+--- a/src/udev/udevd.c
++++ b/src/udev/udevd.c
+@@ -98,7 +98,7 @@ struct event {
+         dev_t devnum;
+         int ifindex;
+         bool is_block;
+-#ifdef ENABLE_FIRMWARE
++#ifdef HAVE_FIRMWARE
+         bool nodelay;
+ #endif
+ };
+@@ -444,7 +444,7 @@ static int event_queue_insert(struct udev_device *dev)
+         event->devnum = udev_device_get_devnum(dev);
+         event->is_block = streq("block", udev_device_get_subsystem(dev));
+         event->ifindex = udev_device_get_ifindex(dev);
+-#ifdef ENABLE_FIRMWARE
++#ifdef HAVE_FIRMWARE
+         if (streq(udev_device_get_subsystem(dev), "firmware"))
+                 event->nodelay = true;
+ #endif
+@@ -527,7 +527,7 @@ static bool is_devpath_busy(struct event *event)
+                         return true;
+                 }
+ 
+-#ifdef ENABLE_FIRMWARE
++#ifdef HAVE_FIRMWARE
+                 /* allow to bypass the dependency tracking */
+                 if (event->nodelay)
+                         continue;
+--
+cgit v0.9.0.2-2-gbebe
