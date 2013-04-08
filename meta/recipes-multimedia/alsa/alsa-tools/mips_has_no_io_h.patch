@@ -1,3 +1,6 @@
+Upstream-Status: Pending
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
 Index: alsa-tools-1.0.26.1/hda-verb/hda-verb.c
 ===================================================================
 --- alsa-tools-1.0.26.1.orig/hda-verb/hda-verb.c
@@ -7,7 +10,7 @@ Index: alsa-tools-1.0.26.1/hda-verb/hda-verb.c
  #include <unistd.h>
  #include <sys/ioctl.h>
 -#ifndef __PPC__
-+#if __PPC__ || __MIPS__
++#if !(__PPC__ || __mips__)
  #include <sys/io.h>
  #endif
  #include <sys/types.h>
