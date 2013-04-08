@@ -7,11 +7,13 @@ Signed-off-by: Shane Wang <shane.wang@intel.com>
 diff -r f2f8f74c6e30 configure.ac
 --- a/configure.ac	Thu Dec 22 23:56:09 2011 +0800
 +++ b/configure.ac	Thu Dec 22 23:57:37 2011 +0800
-@@ -325,6 +325,10 @@
+@@ -325,6 +325,12 @@
          --enable-gpl"
    fi
  
-+  if test "x$disable_yasm" = "xyes"; then
++ AC_ARG_ENABLE(yasm,
++              [AC_HELP_STRING([--disable-yasm], [disable use of yasm assembler])])
++  if test "x$enable_yasm" = "xno"; then
 +    embffmpeg_configure_args="$embffmpeg_configure_args --disable-yasm"
 +  fi
 +
