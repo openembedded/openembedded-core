@@ -40,7 +40,7 @@ EXTRA_OECONF = "--disable-introspection \
                 ac_cv_file__usr_share_hwdata_pci_ids=no \
                 ac_cv_file__usr_share_misc_pci_ids=yes \
                 --sbindir=${base_sbindir} \
-                --libexecdir=${base_libdir} \
+                --libexecdir=${base_sbindir} \
                 --with-rootlibdir=${base_libdir} \
                 --with-rootprefix= \
                "
@@ -61,6 +61,7 @@ RRECOMMENDS_${PN} += "udev-utils"
 FILES_${PN}-dbg += "${libexecdir}/.debug"
 FILES_${PN}-dbg += "${base_libdir}/udev/.debug/"
 FILES_${PN}-dbg += "${base_libdir}/udev/.debug/*"
+FILES_${PN}-dbg += "${base_sbindir}/udev/.debug/*"
 FILES_${PN}-dev = "${datadir}/pkgconfig/udev.pc"
 FILES_libudev = "${base_libdir}/libudev.so.*"
 FILES_libudev-dbg = "${base_libdir}/.debug/libudev.so.*"
