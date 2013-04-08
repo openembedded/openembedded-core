@@ -115,14 +115,21 @@ def glob(args):
                     if not os.path.exists(fwdfile + ".packaged"):
                         mappedpkg = ""
                 else:
-                    # That didn't work, so now get the PN, substitute that, then map in the other direction
                     revlink = revpkgdata(pkg)
                     if os.path.exists(revlink):
-                        pn = readpn(revlink)
-                        newpkg = g.replace("*", pn)
+                        # Check if we can map after undoing the package renaming (by resolving the symlink)
+                        origpkg = os.path.basename(os.readlink(revlink))
+                        newpkg = g.replace("*", origpkg)
                         fwdfile = fwdpkgdata(newpkg)
                         if os.path.exists(fwdfile):
                             mappedpkg = readrenamed(fwdfile)
+                        else:
+                            # That didn't work, so now get the PN, substitute that, then map in the other direction
+                            pn = readpn(revlink)
+                            newpkg = g.replace("*", pn)
+                            fwdfile = fwdpkgdata(newpkg)
+                            if os.path.exists(fwdfile):
+                                mappedpkg = readrenamed(fwdfile)
                         if not os.path.exists(fwdfile + ".packaged"):
                             mappedpkg = ""
                     else:
