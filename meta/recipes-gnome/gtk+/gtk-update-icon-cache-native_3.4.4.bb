@@ -40,4 +40,8 @@ do_compile() {
 do_install() {
 	install -d ${D}${bindir}
         install -m 0755 ${B}/gtk-update-icon-cache ${D}${bindir}
+
+	create_wrapper ${D}/${bindir}/gtk-update-icon-cache \
+		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/2.10.0/loaders.cache
+
 }
