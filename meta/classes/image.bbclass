@@ -186,7 +186,7 @@ run_intercept_scriptlets () {
 			[ "$script" = "*" ] && break
 			[ "$script" = "postinst_intercept" ] || [ ! -x "$script" ] && continue
 			echo "> Executing $script"
-			./$script || (echo "WARNING: intercept script \"$script\" failed, falling back to running postinstalls at first boot" && continue)
+			./$script || { echo "WARNING: intercept script \"$script\" failed, falling back to running postinstalls at first boot" && continue; };
 			#
 			# If we got here, than the intercept was successful. Next, we must
 			# mark the postinstalls as "installed". For rpm is a little bit
