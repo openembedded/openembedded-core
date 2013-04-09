@@ -16,7 +16,7 @@ DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
 SECTION = "base/shell"
 
-inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d
+inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-alternatives
 
 SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
            file://touchscreen.rules \
@@ -251,21 +251,27 @@ python __anonymous() {
 # TODO:
 # u-a for runlevel and telinit
 
-pkg_postinst_systemd () {
-update-alternatives --install ${base_sbindir}/init init ${systemd_unitdir}/systemd 300
-update-alternatives --install ${base_sbindir}/halt halt ${base_bindir}/systemctl 300
-update-alternatives --install ${base_sbindir}/reboot reboot ${base_bindir}/systemctl 300
-update-alternatives --install ${base_sbindir}/shutdown shutdown ${base_bindir}/systemctl 300
-update-alternatives --install ${base_sbindir}/poweroff poweroff ${base_bindir}/systemctl 300
-}
+ALTERNATIVE_${PN} = "init halt reboot shutdown poweroff"
 
-pkg_prerm_systemd () {
-update-alternatives --remove init ${systemd_unitdir}/systemd
-update-alternatives --remove halt ${base_bindir}/systemctl
-update-alternatives --remove reboot ${base_bindir}/systemctl
-update-alternatives --remove shutdown ${base_bindir}/systemctl
-update-alternatives --remove poweroff ${base_bindir}/systemctl
-}
+ALTERNATIVE_TARGET[init] = "${systemd_unitdir}/systemd"
+ALTERNATIVE_LINK_NAME[init] = "${base_sbindir}/init"
+ALTERNATIVE_PRIORITY[init] ?= "300"
+
+ALTERNATIVE_TARGET[halt] = "${base_bindir}/systemctl"
+ALTERNATIVE_LINK_NAME[halt] = "${base_sbindir}/halt"
+ALTERNATIVE_PRIORITY[halt] ?= "300"
+
+ALTERNATIVE_TARGET[reboot] = "${base_bindir}/systemctl"
+ALTERNATIVE_LINK_NAME[reboot] = "${base_sbindir}/reboot"
+ALTERNATIVE_PRIORITY[reboot] ?= "300"
+
+ALTERNATIVE_TARGET[shutdown] = "${base_bindir}/systemctl"
+ALTERNATIVE_LINK_NAME[shutdown] = "${base_sbindir}/shutdown"
+ALTERNATIVE_PRIORITY[shutdown] ?= "300"
+
+ALTERNATIVE_TARGET[poweroff] = "${base_bindir}/systemctl"
+ALTERNATIVE_LINK_NAME[poweroff] = "${base_sbindir}/poweroff"
+ALTERNATIVE_PRIORITY[poweroff] ?= "300"
 
 pkg_postinst_udev-hwdb () {
 	if test -n "$D"; then
