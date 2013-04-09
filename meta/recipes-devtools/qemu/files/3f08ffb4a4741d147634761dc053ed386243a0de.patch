@@ -1,0 +1,42 @@
+Upsteream-Status: Backport
+
+[Appears to fix the random segfaults we were seeing in a variety of architectures:
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=4216 ]
+
+
+From: Yeongkyoon Lee <yeongkyoon.lee@samsung.com>
+Date: Fri, 22 Mar 2013 12:50:17 +0000 (+0900)
+Subject: tcg: Fix occasional TCG broken problem when ldst optimization enabled
+X-Git-Url: http://git.qemu.org/?p=qemu.git;a=commitdiff_plain;h=52ae646d4a3ebdcdcc973492c6a56f2c49b6578f;hp=3f08ffb4a4741d147634761dc053ed386243a0de
+
+tcg: Fix occasional TCG broken problem when ldst optimization enabled
+
+is_tcg_gen_code() checks the upper limit of TCG generated code range wrong, so
+that TCG could get broken occasionally only when CONFIG_QEMU_LDST_OPTIMIZATION
+enabled. The reason is code_gen_buffer_max_size does not cover the upper range
+up to (TCG_MAX_OP_SIZE * OPC_BUF_SIZE), thus code_gen_buffer_max_size should be
+modified to code_gen_buffer_size.
+
+CC: qemu-stable@nongnu.org
+Signed-off-by: Yeongkyoon Lee <yeongkyoon.lee@samsung.com>
+Reviewed-by: Peter Maydell <peter.maydell@linaro.org>
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+---
+
+Index: qemu-1.4.0/translate-all.c
+===================================================================
+--- qemu-1.4.0.orig/translate-all.c	2013-04-09 10:58:19.000000000 +0000
++++ qemu-1.4.0/translate-all.c	2013-04-09 10:58:34.783203406 +0000
+@@ -1310,10 +1310,10 @@
+ /* check whether the given addr is in TCG generated code buffer or not */
+ bool is_tcg_gen_code(uintptr_t tc_ptr)
+ {
+-    /* This can be called during code generation, code_gen_buffer_max_size
++    /* This can be called during code generation, code_gen_buffer_size
+        is used instead of code_gen_ptr for upper boundary checking */
+     return (tc_ptr >= (uintptr_t)code_gen_buffer &&
+-            tc_ptr < (uintptr_t)(code_gen_buffer + code_gen_buffer_max_size));
++            tc_ptr < (uintptr_t)(code_gen_buffer + code_gen_buffer_size));
+ }
+ #endif
+ 
