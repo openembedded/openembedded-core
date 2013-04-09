@@ -1,10 +1,10 @@
 sanity ssh
 sanity scp
-sanity dmesg
 sanity zypper_help
 sanity zypper_search
 sanity rpm_query
 sanity connman
+sanity dmesg
 sanity shutdown
 systemusage bash
 systemusage df
