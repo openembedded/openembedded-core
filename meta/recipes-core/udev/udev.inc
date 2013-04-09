@@ -79,6 +79,8 @@ do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/udev
 	install -m 0755 ${WORKDIR}/udev-cache ${D}${sysconfdir}/init.d/udev-cache
+	sed -i s%@UDEVD@%${base_sbindir}/udev/udevd% ${D}${sysconfdir}/init.d/udev
+	sed -i s%@UDEVD@%${base_sbindir}/udev/udevd% ${D}${sysconfdir}/init.d/udev-cache
 
 	install -d ${D}${sysconfdir}/default
 	install -m 0755 ${WORKDIR}/udev-cache.default ${D}${sysconfdir}/default/udev-cache
