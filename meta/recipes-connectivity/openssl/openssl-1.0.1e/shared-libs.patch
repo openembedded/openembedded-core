@@ -1,10 +1,10 @@
 Upstream-Status: Inappropriate [configuration]
 
-Index: openssl-1.0.0/crypto/Makefile
+Index: openssl-1.0.1e/crypto/Makefile
 ===================================================================
---- openssl-1.0.0.orig/crypto/Makefile
-+++ openssl-1.0.0/crypto/Makefile
-@@ -104,7 +104,7 @@
+--- openssl-1.0.1e.orig/crypto/Makefile
++++ openssl-1.0.1e/crypto/Makefile
+@@ -108,7 +108,7 @@ $(LIB):	$(LIBOBJ)
  
  shared: buildinf.h lib subdirs
  	if [ -n "$(SHARED_LIBS)" ]; then \
@@ -13,20 +13,11 @@ Index: openssl-1.0.0/crypto/Makefile
  	fi
  
  libs:
-Index: openssl-1.0.0/Makefile.org
+Index: openssl-1.0.1e/Makefile.org
 ===================================================================
---- openssl-1.0.0.orig/Makefile.org
-+++ openssl-1.0.0/Makefile.org
-@@ -260,7 +260,7 @@
- 
- libcrypto$(SHLIB_EXT): libcrypto.a
- 	@if [ "$(SHLIB_TARGET)" != "" ]; then \
--		$(MAKE) SHLIBDIRS=crypto build-shared; \
-+		$(MAKE) -e SHLIBDIRS=crypto build-shared; \
- 	else \
- 		echo "There's no support for shared libraries on this platform" >&2; \
- 		exit 1; \
-@@ -268,7 +268,7 @@
+--- openssl-1.0.1e.orig/Makefile.org
++++ openssl-1.0.1e/Makefile.org
+@@ -310,7 +310,7 @@ libcrypto$(SHLIB_EXT): libcrypto.a fips_
  
  libssl$(SHLIB_EXT): libcrypto$(SHLIB_EXT) libssl.a
  	@if [ "$(SHLIB_TARGET)" != "" ]; then \
@@ -35,11 +26,11 @@ Index: openssl-1.0.0/Makefile.org
  	else \
  		echo "There's no support for shared libraries on this platform" >&2; \
  		exit 1; \
-Index: openssl-1.0.0/ssl/Makefile
+Index: openssl-1.0.1e/ssl/Makefile
 ===================================================================
---- openssl-1.0.0.orig/ssl/Makefile
-+++ openssl-1.0.0/ssl/Makefile
-@@ -62,7 +62,7 @@
+--- openssl-1.0.1e.orig/ssl/Makefile
++++ openssl-1.0.1e/ssl/Makefile
+@@ -62,7 +62,7 @@ lib:	$(LIBOBJ)
  
  shared: lib
  	if [ -n "$(SHARED_LIBS)" ]; then \

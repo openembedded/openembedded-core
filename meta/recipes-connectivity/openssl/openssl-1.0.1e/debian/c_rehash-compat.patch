@@ -9,19 +9,19 @@ Subject: [PATCH] also create old hash for compatibility
  tools/c_rehash.in |    8 +++++++-
  1 files changed, 7 insertions(+), 1 deletions(-)
 
-Index: openssl-1.0.0c/tools/c_rehash.in
+Index: openssl-1.0.0d/tools/c_rehash.in
 ===================================================================
---- openssl-1.0.0c.orig/tools/c_rehash.in	2010-04-14 16:07:28.000000000 -0700
-+++ openssl-1.0.0c/tools/c_rehash.in	2011-08-12 23:06:41.976664773 -0700
-@@ -83,6 +83,7 @@
- 			next;
+--- openssl-1.0.0d.orig/tools/c_rehash.in	2011-04-13 20:41:28.000000000 +0000
++++ openssl-1.0.0d/tools/c_rehash.in	2011-04-13 20:41:28.000000000 +0000
+@@ -86,6 +86,7 @@
+ 			}
  		}
  		link_hash_cert($fname) if($cert);
 +		link_hash_cert_old($fname) if($cert);
  		link_hash_crl($fname) if($crl);
  	}
  }
-@@ -116,8 +117,9 @@
+@@ -119,8 +120,9 @@
  
  sub link_hash_cert {
  		my $fname = $_[0];
@@ -32,7 +32,7 @@ Index: openssl-1.0.0c/tools/c_rehash.in
  		chomp $hash;
  		chomp $fprint;
  		$fprint =~ s/^.*=//;
-@@ -147,6 +149,10 @@
+@@ -150,6 +152,10 @@
  		$hashlist{$hash} = $fprint;
  }
  

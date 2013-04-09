@@ -6,22 +6,22 @@ Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com> 2011/07/13
 
 ported the patch to the 1.0.0e version
 Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com> 2011/12/01
-Index: openssl-1.0.0e/Configure
+Index: openssl-1.0.1e/Configure
 ===================================================================
---- openssl-1.0.0e.orig/Configure
-+++ openssl-1.0.0e/Configure
-@@ -393,6 +393,7 @@ my %table=(
+--- openssl-1.0.1e.orig/Configure
++++ openssl-1.0.1e/Configure
+@@ -402,6 +402,7 @@ my %table=(
  "linux-ia64-ecc","ecc:-DL_ENDIAN -DTERMIO -O2 -Wall -no_cpprt::-D_REENTRANT::-ldl:SIXTY_FOUR_BIT_LONG RC4_CHUNK DES_INT:${ia64_asm}:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
  "linux-ia64-icc","icc:-DL_ENDIAN -DTERMIO -O2 -Wall -no_cpprt::-D_REENTRANT::-ldl:SIXTY_FOUR_BIT_LONG RC4_CHUNK DES_RISC1 DES_INT:${ia64_asm}:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
- "linux-x86_64",	"gcc:-m64 -DL_ENDIAN -DTERMIO -O3 -Wall -DMD32_REG_T=int::-D_REENTRANT::-ldl:SIXTY_FOUR_BIT_LONG RC4_CHUNK DES_INT DES_UNROLL:${x86_64_asm}:elf:dlfcn:linux-shared:-fPIC:-m64:.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR):::64",
+ "linux-x86_64",	"gcc:-m64 -DL_ENDIAN -DTERMIO -O3 -Wall::-D_REENTRANT::-ldl:SIXTY_FOUR_BIT_LONG RC4_CHUNK DES_INT DES_UNROLL:${x86_64_asm}:elf:dlfcn:linux-shared:-fPIC:-m64:.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR):::64",
 +"linux-x32", "gcc:-mx32 -DL_ENDIAN -DTERMIO -O3 -Wall -DMD32_REG_T=int::-D_REENTRANT::-ldl:SIXTY_FOUR_BIT RC4_CHUNK DES_INT DES_UNROLL:${x86_64_asm}:elf:dlfcn:linux-shared:-fPIC:-mx32:.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR):::x32",
- "linux-s390x",	"gcc:-m64 -DB_ENDIAN -DTERMIO -O3 -Wall::-D_REENTRANT::-ldl:SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL:${s390x_asm}:dlfcn:linux-shared:-fPIC:-m64:.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR):::64",
- #### SPARC Linux setups
- # Ray Miller <ray.miller@computing-services.oxford.ac.uk> has patiently
-Index: openssl-1.0.0e/crypto/bn/asm/x86_64-gcc.c
+ "linux64-s390x",	"gcc:-m64 -DB_ENDIAN -DTERMIO -O3 -Wall::-D_REENTRANT::-ldl:SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL:${s390x_asm}:64:dlfcn:linux-shared:-fPIC:-m64:.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR):::64",
+ #### So called "highgprs" target for z/Architecture CPUs
+ # "Highgprs" is kernel feature first implemented in Linux 2.6.32, see
+Index: openssl-1.0.1e/crypto/bn/asm/x86_64-gcc.c
 ===================================================================
---- openssl-1.0.0e.orig/crypto/bn/asm/x86_64-gcc.c
-+++ openssl-1.0.0e/crypto/bn/asm/x86_64-gcc.c
+--- openssl-1.0.1e.orig/crypto/bn/asm/x86_64-gcc.c
++++ openssl-1.0.1e/crypto/bn/asm/x86_64-gcc.c
 @@ -55,7 +55,7 @@
   *    machine.
   */
@@ -57,10 +57,10 @@ Index: openssl-1.0.0e/crypto/bn/asm/x86_64-gcc.c
  	"	leaq	1(%2),%2	\n"
  	"	loop	1b		\n"
  	"	sbbq	%0,%0		\n"
-Index: openssl-1.0.0e/crypto/bn/bn.h
+Index: openssl-1.0.1e/crypto/bn/bn.h
 ===================================================================
---- openssl-1.0.0e.orig/crypto/bn/bn.h
-+++ openssl-1.0.0e/crypto/bn/bn.h
+--- openssl-1.0.1e.orig/crypto/bn/bn.h
++++ openssl-1.0.1e/crypto/bn/bn.h
 @@ -172,6 +172,13 @@ extern "C" {
  # endif
  #endif
@@ -75,15 +75,15 @@ Index: openssl-1.0.0e/crypto/bn/bn.h
  /* assuming long is 64bit - this is the DEC Alpha
   * unsigned long long is only 64 bits :-(, don't define
   * BN_LLONG for the DEC Alpha */
-Index: openssl-1.0.0e/crypto/bn/bn_exp.c
+Index: openssl-1.0.1e/crypto/bn/bn_exp.c
 ===================================================================
---- openssl-1.0.0e.orig/crypto/bn/bn_exp.c
-+++ openssl-1.0.0e/crypto/bn/bn_exp.c
-@@ -561,7 +561,7 @@ static int MOD_EXP_CTIME_COPY_FROM_PREBU
+--- openssl-1.0.1e.orig/crypto/bn/bn_exp.c
++++ openssl-1.0.1e/crypto/bn/bn_exp.c
+@@ -567,7 +567,7 @@ static int MOD_EXP_CTIME_COPY_FROM_PREBU
  
  /* Given a pointer value, compute the next address that is a cache line multiple. */
  #define MOD_EXP_CTIME_ALIGN(x_) \
--	((unsigned char*)(x_) + (MOD_EXP_CTIME_MIN_CACHE_LINE_WIDTH - (((BN_ULONG)(x_)) & (MOD_EXP_CTIME_MIN_CACHE_LINE_MASK))))
+-	((unsigned char*)(x_) + (MOD_EXP_CTIME_MIN_CACHE_LINE_WIDTH - (((size_t)(x_)) & (MOD_EXP_CTIME_MIN_CACHE_LINE_MASK))))
 +	((unsigned char*)(x_) + (MOD_EXP_CTIME_MIN_CACHE_LINE_WIDTH - (((BN_ADDR)(x_)) & (MOD_EXP_CTIME_MIN_CACHE_LINE_MASK))))
  
  /* This variant of BN_mod_exp_mont() uses fixed windows and the special

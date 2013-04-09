@@ -6,7 +6,7 @@ DEPENDS += "ocf-linux"
 
 CFLAG += "-DHAVE_CRYPTODEV -DUSE_CRYPTODEV_DIGESTS"
 
-PR = "${INC_PR}.4"
+PR = "${INC_PR}.0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 
@@ -32,8 +32,8 @@ SRC_URI += "file://configure-targets.patch \
             file://find.pl \
            "
 
-SRC_URI[md5sum] = "cbe4ac0d8f598680f68a951e04b0996b"
-SRC_URI[sha256sum] = "626fb8fcb3eb7e966edbe71553ff993d137f6e8a87b05051a3695e621098b8af"
+SRC_URI[md5sum] = "66bf6f10f060d561929de96f9dfe5b8c"
+SRC_URI[sha256sum] = "f74f15e8c8ff11aa3d5bb5f276d202ec18d7246e95f961db76054199c69c1ae3"
 
 PACKAGES =+ " \
 	${PN}-engines \
