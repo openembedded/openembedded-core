@@ -161,6 +161,7 @@ RDEPENDS_packagegroup-core-lsb-core = "\
     ncurses \
     zlib \
     nspr \
+    libpng12 \
 "
 
 SUMMARY_packagegroup-core-lsb-perl = "LSB Runtime Languages (Perl)"
