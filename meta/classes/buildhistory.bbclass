@@ -553,7 +553,8 @@ def _get_srcrev_values(d):
                 dict_tag_srcrevs[key] = rev
     return (dict_srcrevs, dict_tag_srcrevs)
 
-python do_write_srcrev() {
+do_fetch[postfuncs] += "write_srcrev"
+python write_srcrev() {
     pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
     srcrevfile = os.path.join(pkghistdir, 'latest_srcrev')
 
@@ -593,5 +594,3 @@ python do_write_srcrev() {
         if os.path.exists(srcrevfile):
             os.remove(srcrevfile)
 }
-
-addtask write_srcrev after do_fetch before do_build
