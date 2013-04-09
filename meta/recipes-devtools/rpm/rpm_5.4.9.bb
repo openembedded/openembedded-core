@@ -226,8 +226,6 @@ FILES_${PN} =  "${bindir}/rpm \
 		/var/cache/rpm \
 		"
 
-RDEPENDS_${PN} += "${PN}-postinsts"
-
 FILES_${PN}-dbg += "${libdir}/rpm/.debug \
 		${libdir}/rpm/bin/.debug \
 		"
@@ -311,7 +309,7 @@ FILES_${PN}-build = "${prefix}/src/rpm \
 		${libdir}/rpm/vpkg-provides2.sh \
 		${libdir}/rpm/perfile_rpmdeps.sh \
 		"
-RDEPENDS_${PN} = "base-files"
+RDEPENDS_${PN} = "base-files ${PN}-postinsts"
 RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN}-build = "file"
 
