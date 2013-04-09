@@ -74,8 +74,9 @@ if ! (test -d "$BITBAKEDIR"); then
     return 1
 fi
 
-NEWPATHS="${OEROOT}/scripts:$BITBAKEDIR/bin/:"
-[ "${PATH#$NEWPATHS}" != "$PATH" ] || PATH="$NEWPATHS$PATH"
+# Make sure our paths are at the beginning of $PATH
+NEWPATHS="${OEROOT}/scripts:$BITBAKEDIR/bin:"
+PATH=$NEWPATHS$(echo $PATH | sed -e "s|:$NEWPATHS|:|g" -e "s|^$NEWPATHS||")
 unset BITBAKEDIR NEWPATHS
 
 # Used by the runqemu script
