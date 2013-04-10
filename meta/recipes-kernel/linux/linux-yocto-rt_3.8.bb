@@ -10,7 +10,7 @@ KMETA = "meta"
 
 SRCREV_machine ?= "0f7d294a9d07713059af345188f9cd4f549b4e77"
 SRCREV_machine_qemuppc ?= "82cdb00523b3f86219706d9f12dc80ff8d1c747a"
-SRCREV_meta ?= "4c567e02266ebe383abc6755b4f7908696ac099d"
+SRCREV_meta ?= "1b94482e3ab8f7e495ee4d6971e13cdad1990e8e"
 
 PR = "${INC_PR}.0"
 PV = "${LINUX_VERSION}+git${SRCPV}"
