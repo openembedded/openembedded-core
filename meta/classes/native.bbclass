@@ -50,6 +50,9 @@ TOOLCHAIN_OPTIONS = ""
 
 DEPENDS_GETTEXT = "gettext-native"
 
+# Don't build ptest natively
+PTEST_ENABLED = "0"
+
 # Don't use site files for native builds
 export CONFIG_SITE = ""
 

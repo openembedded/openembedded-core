@@ -216,7 +216,7 @@ def package_qa_check_dev(path, name, d, elf, messages):
     Check for ".so" library symlinks in non-dev packages
     """
 
-    if not name.endswith("-dev") and not name.endswith("-dbg") and not name.startswith("nativesdk-") and path.endswith(".so") and os.path.islink(path):
+    if not name.endswith("-dev") and not name.endswith("-dbg") and not name.endswith("-ptest") and not name.startswith("nativesdk-") and path.endswith(".so") and os.path.islink(path):
         messages.append("non -dev/-dbg/-nativesdk package contains symlink .so: %s path '%s'" % \
                  (name, package_qa_clean_path(path,d)))
 
@@ -229,7 +229,7 @@ def package_qa_check_staticdev(path, name, d, elf, messages):
     libgcc.a, libgcov.a will be skipped in their packages
     """
 
-    if not name.endswith("-pic") and not name.endswith("-staticdev") and path.endswith(".a") and not path.endswith("_nonshared.a"):
+    if not name.endswith("-pic") and not name.endswith("-staticdev") and not name.endswith("-ptest") and path.endswith(".a") and not path.endswith("_nonshared.a"):
         messages.append("non -staticdev package contains static .a library: %s path '%s'" % \
                  (name, package_qa_clean_path(path,d)))
 
@@ -273,7 +273,7 @@ def package_qa_check_dbg(path, name, d, elf, messages):
     Check for ".debug" files or directories outside of the dbg package
     """
 
-    if not "-dbg" in name:
+    if not "-dbg" in name and not "-ptest" in name:
         if '.debug' in path.split(os.path.sep):
             messages.append("non debug package contains .debug directory: %s path %s" % \
                      (name, package_qa_clean_path(path,d)))
