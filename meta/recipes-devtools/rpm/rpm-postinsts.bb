@@ -5,14 +5,11 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/LGPL-2.1;md5=1
 
 RDEPENDS_${PN} = "base-files"
 
-inherit update-rc.d allarch
+inherit allarch
 #
 # Allow distributions to alter when [postponed] package install scripts are run
 #
 POSTINSTALL_INITPOSITION ?= "98"
-
-INITSCRIPT_NAME = "run-postinsts"
-INITSCRIPT_PARAMS = "start ${{POSTINSTALL_INITPOSITION} S ."
 
 POSTLOG ?= "/var/log/postinstall.log"
 REDIRECT_CMD = "${@base_contains('IMAGE_FEATURES', 'debug-tweaks', '>>${POSTLOG} 2>&1', '', d)}"
