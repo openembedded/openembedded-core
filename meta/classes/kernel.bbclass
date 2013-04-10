@@ -88,7 +88,7 @@ do_compile_kernelmodules() {
 		bbnote "no modules to compile"
 	fi
 }
-addtask compile_kernelmodules after do_compile before do_install
+addtask compile_kernelmodules after do_compile before do_strip
 
 kernel_do_install() {
 	#
@@ -289,6 +289,35 @@ python split_kernel_packages () {
     do_split_packages(d, root='/lib/firmware', file_regex='^(.*)\.cis$', output_pattern='kernel-firmware-%s', description='Firmware for %s', recursive=True, extra_depends='')
 }
 
+do_strip() {
+	if [ -n "${KERNEL_IMAGE_STRIP_EXTRA_SECTIONS}" ]; then
+		if [[ "${KERNEL_IMAGETYPE}" != "vmlinux" ]]; then
+			bbwarn "image type will not be stripped (not supported): ${KERNEL_IMAGETYPE}"
+			return
+		fi
+
+		cd ${B}
+		headers=`"$CROSS_COMPILE"readelf -S ${KERNEL_OUTPUT} | \
+			  grep "^ \{1,\}\[[0-9 ]\{1,\}\] [^ ]" | \
+			  sed "s/^ \{1,\}\[[0-9 ]\{1,\}\] //" | \
+			  gawk '{print $1}'`
+
+		for str in ${KERNEL_IMAGE_STRIP_EXTRA_SECTIONS}; do {
+			if [[ "$headers" != *"$str"* ]]; then
+				bbwarn "Section not found: $str";
+			fi
+
+			"$CROSS_COMPILE"strip -s -R $str ${KERNEL_OUTPUT}
+		}; done
+
+		bbnote "KERNEL_IMAGE_STRIP_EXTRA_SECTIONS is set, stripping sections:" \
+			"${KERNEL_IMAGE_STRIP_EXTRA_SECTIONS}"
+	fi;
+}
+do_strip[dirs] = "${B}"
+
+addtask do_strip before do_sizecheck after do_kernel_link_vmlinux
+
 # Support checking the kernel size since some kernels need to reside in partitions
 # with a fixed length or there is a limit in transferring the kernel to memory
 do_sizecheck() {
@@ -302,7 +331,7 @@ do_sizecheck() {
 }
 do_sizecheck[dirs] = "${B}"
 
-addtask sizecheck before do_install after do_kernel_link_vmlinux
+addtask sizecheck before do_install after do_strip
 
 KERNEL_IMAGE_BASE_NAME ?= "${KERNEL_IMAGETYPE}-${PE}-${PV}-${PR}-${MACHINE}-${DATETIME}"
 # Don't include the DATETIME variable in the sstate package signatures
