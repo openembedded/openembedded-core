@@ -12,8 +12,8 @@ LINUX_VERSION ?= "3.8.4"
 
 KMETA = "meta"
 
-SRCREV_machine ?= "42ddf06111efe45f3c36012d5a04a1eeb9781f42"
-SRCREV_meta ?= "f86199dd4c142fae61517a993b3f7162bb6d4f94"
+SRCREV_machine ?= "11998bd1f44b21cd0b8c0ca11cbd36865f14bfdc"
+SRCREV_meta ?= "4c567e02266ebe383abc6755b4f7908696ac099d"
 
 PR = "${INC_PR}.0"
 PV = "${LINUX_VERSION}+git${SRCPV}"
