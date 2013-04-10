@@ -62,22 +62,28 @@ python populate_packages_updatercd () {
         execute on the target. Not doing so may cause update_rc.d postinst invoked
         twice to cause unwanted warnings.
         """ 
+
+        localdata = bb.data.createCopy(d)
+        overrides = localdata.getVar("OVERRIDES", True)
+        localdata.setVar("OVERRIDES", "%s:%s" % (pkg, overrides))
+        bb.data.update_data(localdata)
+
         postinst = d.getVar('pkg_postinst_%s' % pkg, True)
         if not postinst:
             postinst = '#!/bin/sh\n'
-        postinst += d.getVar('updatercd_postinst', True)
+        postinst += localdata.getVar('updatercd_postinst', True)
         d.setVar('pkg_postinst_%s' % pkg, postinst)
 
         prerm = d.getVar('pkg_prerm_%s' % pkg, True)
         if not prerm:
             prerm = '#!/bin/sh\n'
-        prerm += d.getVar('updatercd_prerm', True)
+        prerm += localdata.getVar('updatercd_prerm', True)
         d.setVar('pkg_prerm_%s' % pkg, prerm)
 
         postrm = d.getVar('pkg_postrm_%s' % pkg, True)
         if not postrm:
                 postrm = '#!/bin/sh\n'
-        postrm += d.getVar('updatercd_postrm', True)
+        postrm += localdata.getVar('updatercd_postrm', True)
         d.setVar('pkg_postrm_%s' % pkg, postrm)
 
     # Check that this class isn't being inhibited (generally, by
