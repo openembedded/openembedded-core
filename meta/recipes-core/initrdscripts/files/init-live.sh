@@ -12,7 +12,7 @@ UNIONFS="no"
 # Copied from initramfs-framework. The core of this script probably should be
 # turned into initramfs-framework modules to reduce duplication.
 udev_daemon() {
-	OPTIONS="/sbin/udevd /lib/udev/udevd /lib/systemd/systemd-udevd"
+	OPTIONS="/sbin/udev/udevd /sbin/udevd /lib/udev/udevd /lib/systemd/systemd-udevd"
 
 	for o in $OPTIONS; do
 		if [ -x "$o" ]; then
