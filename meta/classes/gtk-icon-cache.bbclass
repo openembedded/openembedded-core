@@ -9,7 +9,8 @@ DEPENDS += "${@['hicolor-icon-theme', '']['${BPN}' == 'hicolor-icon-theme']} gtk
 #
 gtk_icon_cache_postinst() {
 if [ "x$D" != "x" ]; then
-    $INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG}
+    $INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG} libdir=${libdir} \
+        base_libdir=${base_libdir}
     exit 1
 fi
 
@@ -25,7 +26,9 @@ done
 
 gtk_icon_cache_postrm() {
 if [ "x$D" != "x" ]; then
-    $INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG}
+    $INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG} libdir=${libdir} \
+        base_libdir=${base_libdir}
+
     exit 1
 fi
 

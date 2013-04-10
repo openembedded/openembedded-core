@@ -29,4 +29,9 @@ def qemu_run_binary(data, rootfs_path, binary):
     if qemu_binary == "qemu-allarch":
         qemu_binary = "qemuwrapper"
 
-    return "PSEUDO_UNLOAD=1 " + qemu_binary + " -L " + rootfs_path + " " + rootfs_path + binary
+    libdir = rootfs_path + data.getVar("libdir", False)
+    base_libdir = rootfs_path + data.getVar("base_libdir", False)
+
+    return "PSEUDO_UNLOAD=1 " + qemu_binary + " -L " + rootfs_path\
+            + " -E LD_LIBRARY_PATH=" + libdir + ":" + base_libdir + " "\
+            + rootfs_path + binary
