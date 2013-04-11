@@ -11,7 +11,7 @@ udev_shutdown_hook_handler() {
 }
 
 udev_daemon() {
-	OPTIONS="/sbin/udev/udevd /sbin/udevd /lib/udev/udevd /lib/systemd/systemd-udevd"
+	OPTIONS="/sbin/udev/udevd /sbin/udevd /lib/udev/udevd /sbin/systemd/systemd-udevd /lib/systemd/systemd-udevd"
 
 	for o in $OPTIONS; do
 		if [ -x "$o" ]; then
