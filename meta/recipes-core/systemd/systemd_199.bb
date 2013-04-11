@@ -122,7 +122,7 @@ PACKAGES =+ "${PN}-gui ${PN}-vconsole-setup ${PN}-initramfs ${PN}-analyze ${PN}-
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "-r lock; -r systemd-journal"
 
-FILES_${PN}-analyze = "${base_bindir}/systemd-analyze"
+FILES_${PN}-analyze = "${bindir}/systemd-analyze"
 
 FILES_${PN}-initramfs = "/init"
 RDEPENDS_${PN}-initramfs = "${PN}"
