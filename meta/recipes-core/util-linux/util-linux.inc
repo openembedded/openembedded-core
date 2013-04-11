@@ -93,7 +93,7 @@ RRECOMMENDS_${PN} = "util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-l
 RRECOMMENDS_${PN}_class-native = ""
 RDEPENDS_${PN}_class-native = ""
 
-SYSTEMD_PACKAGES = "util-linux-uuidd"
+SYSTEMD_PACKAGES = "${PN}-uuidd"
 SYSTEMD_SERVICE_util-linux-uuidd = "uuidd.service"
 
 do_compile () {
