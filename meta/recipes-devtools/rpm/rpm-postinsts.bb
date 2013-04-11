@@ -27,15 +27,17 @@ do_compile() {
 }
 
 do_install() {
-	install -d ${D}/${sysconfdir}/rcS.d
-	# Stop $i getting expanded below...
-	i=\$i
-	cat > ${D}${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts << EOF
-#!/bin/sh
+	:
+}
 
+pkg_postinst_${PN} () {
+if [ "x$D" != "x" ] && [ -f $D/var/lib/rpm/Packages ]; then
+	install -d $D/${sysconfdir}/rcS.d
+	cat > $D${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts << "EOF"
+#!/bin/sh
 . /etc/default/rcS
 
-[ -d /etc/rpm-postinsts ] && for i in \`ls /etc/rpm-postinsts/ \`; do
+[ -d /etc/rpm-postinsts ] && for i in `ls /etc/rpm-postinsts/`; do
 	i=/etc/rpm-postinsts/$i
 	echo "Running postinst $i..."
 	if [ -f $i ] && $i ${REDIRECT_CMD}; then
@@ -46,5 +48,8 @@ do_install() {
 done
 rm -f ${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts 2>/dev/null
 EOF
-	chmod 0755 ${D}${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
+	chmod 0755 $D${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
+fi
 }
+
+ALLOW_EMPTY_${PN} = "1"

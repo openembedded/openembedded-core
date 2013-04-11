@@ -62,8 +62,9 @@ REDIRECT_CMD = "${@base_contains('IMAGE_FEATURES', 'debug-tweaks', '>${POSTLOG} 
 
 pkg_postinst_${PN} () {
 #!/bin/sh
-if [ "x$D" != "x" ]; then
+if [ "x$D" != "x" ] && [ -f $D/var/lib/opkg/status ]; then
 	install -d $D${sysconfdir}/rcS.d
+
 	# this happens at S98 where our good 'ole packages script used to run
 	echo "#!/bin/sh
 opkg-cl configure ${REDIRECT_CMD}
