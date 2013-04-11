@@ -1,0 +1,24 @@
+Staring from glibc 2.17 the crypt() function will error out and return NULL if
+the seed or "correct" is invalid. The failure case for this is the sudo user
+having a locked account in /etc/shadow, so their password is "!", which is an
+invalid hash.  crypt() never returned NULL previously so this is crashing in
+strcmp().
+
+Upstream-Status: Pending
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+Index: sudo-1.8.6p7/plugins/sudoers/auth/passwd.c
+===================================================================
+--- sudo-1.8.6p7.orig/plugins/sudoers/auth/passwd.c	2013-04-11 15:26:28.456416867 +0100
++++ sudo-1.8.6p7/plugins/sudoers/auth/passwd.c	2013-04-11 15:31:31.156421718 +0100
+@@ -96,7 +96,9 @@
+      */
+     epass = (char *) crypt(pass, pw_epasswd);
+     pass[8] = sav;
+-    if (HAS_AGEINFO(pw_epasswd, pw_len) && strlen(epass) == DESLEN)
++    if (epass == NULL)
++	error = AUTH_FAILURE;
++    else if (HAS_AGEINFO(pw_epasswd, pw_len) && strlen(epass) == DESLEN)
+ 	error = strncmp(pw_epasswd, epass, DESLEN);
+     else
+ 	error = strcmp(pw_epasswd, epass);
