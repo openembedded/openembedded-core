@@ -63,7 +63,7 @@ REDIRECT_CMD[vardepsexclude] += "IMAGE_FEATURES POSTLOG"
 
 pkg_postinst_${PN} () {
 #!/bin/sh
-if [ "x$D" != "x" ] && [ -f $D/var/lib/opkg/status ]; then
+if [ "x$D" != "x" ] && [ -f $D${OPKGLIBDIR}/opkg/status ]; then
 	install -d $D${sysconfdir}/rcS.d
 
 	# this happens at S98 where our good 'ole packages script used to run
