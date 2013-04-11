@@ -57,8 +57,6 @@ CACHED_CONFIGUREVARS = "ac_cv_path_KILL=${base_bindir}/kill"
 # The gtk+ tools should get built as a separate recipe e.g. systemd-tools
 EXTRA_OECONF = " --with-rootprefix=${base_prefix} \
                  --with-rootlibdir=${base_libdir} \
-                 --sbindir=${base_sbindir} \
-                 --libexecdir=${base_libdir} \
                  ${@base_contains('DISTRO_FEATURES', 'pam', '--enable-pam', '--disable-pam', d)} \
                  --enable-xz \
                  --disable-manpages \
@@ -82,6 +80,9 @@ do_configure_prepend() {
 	sed -i -e 's:=/root:=${ROOT_HOME}:g' units/*.service*
 }
 
+EXTRA_OEMAKE = "rootlibexecdir=${base_sbindir}/systemd \
+                udevlibexecdir=${base_sbindir}/udev"
+
 do_install() {
 	autotools_do_install
 	install -d ${D}/${base_sbindir}
@@ -89,8 +90,8 @@ do_install() {
 	rm ${D}${systemd_unitdir}/system/serial-getty* -f
 
 	# provide support for initramfs
-	ln -s ${systemd_unitdir}/systemd ${D}/init
-	ln -s ${systemd_unitdir}/systemd-udevd ${D}/${base_sbindir}/udevd
+	ln -s ${base_sbindir}/systemd/systemd ${D}/init
+	ln -s ${base_sbindir}/systemd/systemd-udevd ${D}/${base_sbindir}/udev/udevd
 
 	# create dir for journal
 	install -d ${D}${localstatedir}/log/journal
@@ -108,6 +109,7 @@ do_install() {
 	if ${@base_contains('DISTRO_FEATURES','sysvinit','true','false',d)}; then
 		install -d ${D}${sysconfdir}/init.d
 		install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/systemd-udevd
+		sed -i s%@UDEVD@%${base_sbindir}/systemd/systemd-udevd% ${D}${sysconfdir}/init.d/systemd-udevd
 	fi
 }
 
@@ -145,6 +147,9 @@ CONFFILES_${PN} = "${sysconfdir}/systemd/journald.conf \
                 ${sysconfdir}/systemd/user.conf"
 
 FILES_${PN} = " ${base_bindir}/* \
+                ${base_sbindir}/systemd \
+                ${base_sbindir}/systemd/system-generators \
+                ${base_sbindir}/udev \
                 ${datadir}/bash-completion \
                 ${datadir}/dbus-1/services \
                 ${datadir}/dbus-1/system-services \
@@ -178,14 +183,13 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${exec_prefix}/lib/modules-load.d \
                 ${exec_prefix}/lib/sysctl.d \
                 ${localstatedir} \
-                ${libexecdir} \
                 /lib/udev/rules.d/70-uaccess.rules \
                 /lib/udev/rules.d/71-seat.rules \
                 /lib/udev/rules.d/73-seat-late.rules \
                 /lib/udev/rules.d/99-systemd.rules \
                "
 
-FILES_${PN}-dbg += "${systemd_unitdir}/.debug ${systemd_unitdir}/*/.debug ${base_libdir}/security/.debug/"
+FILES_${PN}-dbg += "${systemd_unitdir}/.debug ${systemd_unitdir}/*/.debug ${base_libdir}/security/.debug/ ${base_sbindir}/systemd/.debug ${base_sbindir}/systemd/system-generators/.debug ${base_sbindir}/udev/.debug"
 FILES_${PN}-dev += "${base_libdir}/security/*.la ${datadir}/dbus-1/interfaces/ ${sysconfdir}/rpm/macros.systemd"
 
 RDEPENDS_${PN} += "dbus"
@@ -196,35 +200,17 @@ RRECOMMENDS_${PN} += "systemd-serialgetty systemd-compat-units \
                       kernel-module-autofs4 kernel-module-unix kernel-module-ipv6 \
 "
 
-PACKAGES =+ "udev-dbg udev udev-consolekit udev-utils udev-hwdb"
+PACKAGES =+ "udev-dbg udev-hwdb udev udev-consolekit udev-utils"
 
-FILES_udev-dbg += "/lib/udev/.debug"
+FILES_udev-dbg += "${base_sbindir}/udev/.debug"
 
 RDEPENDS_udev += "udev-utils"
 RPROVIDES_udev = "hotplug"
 RRECOMMENDS_udev += "udev-extraconf udev-hwdb"
 
 FILES_udev += "${base_sbindir}/udevd \
-               ${base_libdir}/systemd/systemd-udevd \
-               /lib/udev/accelerometer \
-               /lib/udev/ata_id \
-               /lib/udev/cdrom_id \
-               /lib/udev/collect \
-               /lib/udev/findkeyboards \
-               /lib/udev/keyboard-force-release.sh \
-               /lib/udev/keymap \
-               /lib/udev/mtd_probe \
-               /lib/udev/scsi_id \
-               /lib/udev/v4l_id \
-               /lib/udev/keymaps \
-               /lib/udev/rules.d/4*.rules \
-               /lib/udev/rules.d/5*.rules \
-               /lib/udev/rules.d/6*.rules \
-               /lib/udev/rules.d/70-power-switch.rules \
-               /lib/udev/rules.d/75*.rules \
-               /lib/udev/rules.d/78*.rules \
-               /lib/udev/rules.d/8*.rules \
-               /lib/udev/rules.d/95*.rules \
+               ${base_sbindir}/systemd/systemd-udevd \
+               ${base_sbindir}/udev \
                ${sysconfdir}/udev \
                ${sysconfdir}/init.d/systemd-udevd \
                ${systemd_unitdir}/system/*udev* \
@@ -236,7 +222,7 @@ RDEPENDS_udev-consolekit += "${@base_contains('DISTRO_FEATURES', 'x11', 'console
 
 FILES_udev-utils = "${base_bindir}/udevadm ${datadir}/bash-completion/completions/udevadm"
 
-FILES_udev-hwdb = "${base_libdir}/udev/hwdb.d"
+FILES_udev-hwdb = "${base_sbindir}/udev/hwdb.d"
 
 INITSCRIPT_PACKAGES = "udev"
 INITSCRIPT_NAME_udev = "systemd-udevd"
@@ -253,7 +239,7 @@ python __anonymous() {
 
 ALTERNATIVE_${PN} = "init halt reboot shutdown poweroff"
 
-ALTERNATIVE_TARGET[init] = "${systemd_unitdir}/systemd"
+ALTERNATIVE_TARGET[init] = "${base_sbindir}/systemd/systemd"
 ALTERNATIVE_LINK_NAME[init] = "${base_sbindir}/init"
 ALTERNATIVE_PRIORITY[init] ?= "300"
 
