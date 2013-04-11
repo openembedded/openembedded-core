@@ -149,7 +149,7 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${datadir}/dbus-1/services \
                 ${datadir}/dbus-1/system-services \
                 ${datadir}/polkit-1 \
-                ${datadir}/${PN} \
+                ${datadir}/${BPN} \
                 ${sysconfdir}/bash_completion.d/ \
                 ${sysconfdir}/binfmt.d/ \
                 ${sysconfdir}/dbus-1/ \
