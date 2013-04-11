@@ -37,6 +37,7 @@ do_configure () {
 
 POSTLOG ?= "/var/log/postinstall.log"
 REDIRECT_CMD = "${@base_contains('IMAGE_FEATURES', 'debug-tweaks', '>${POSTLOG} 2>&1', '', d)}"
+REDIRECT_CMD[vardepsexclude] += "IMAGE_FEATURES POSTLOG"
 
 DPKG_INIT_POSITION ?= "98"
 

@@ -13,6 +13,7 @@ POSTINSTALL_INITPOSITION ?= "98"
 
 POSTLOG ?= "/var/log/postinstall.log"
 REDIRECT_CMD = "${@base_contains('IMAGE_FEATURES', 'debug-tweaks', '>>${POSTLOG} 2>&1', '', d)}"
+REDIRECT_CMD[vardepsexclude] += "IMAGE_FEATURES POSTLOG"
 
 do_fetch() {
 	:
