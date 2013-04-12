@@ -16,7 +16,11 @@ PR = "r4"
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/demos/${PV}/${BPN}-${PV}.tar.bz2 \
 	file://dso_linking_change_build_fix.patch \
 	file://gles2-info.patch \
-        file://glut.patch"
+        file://glut.patch \
+        file://egl-mesa-screen-surface-build-fix.patch \
+        file://egl-mesa-screen-surface-query.patch \
+        file://0001-xeglgears-Make-EGL_KHR_image-usage-portable.patch"
+
 SRC_URI[md5sum] = "320c2a4b6edc6faba35d9cb1e2a30bf4"
 SRC_URI[sha256sum] = "4bc7f2b20d17e3eebfec288f2367a435cd2db71fc5ac9ece2c14827e290d77d1"
 

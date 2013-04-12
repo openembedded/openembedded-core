@@ -1,0 +1,95 @@
+From 43c2122af1caa750531f29bf734c03d1f50801d1 Mon Sep 17 00:00:00 2001
+Message-Id: <43c2122af1caa750531f29bf734c03d1f50801d1.1365283761.git.tom.zanussi@linux.intel.com>
+From: Frank Binns <frank.binns@imgtec.com>
+Date: Fri, 29 Jun 2012 14:06:27 +0100
+Subject: [PATCH] xeglgears: Make EGL_KHR_image usage portable
+
+EGL extension functions don't have to be exported which means
+xeglgears was failing to link against implementations that
+support EGL_KHR_image but were not exporting its related functions.
+
+This has been fixed by using eglGetProcAddress to get a function
+pointer instead of using the functions prototype. This is portable.
+
+Signed-off-by: Frank Binns <frank.binns@imgtec.com>
+
+Integrated-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+
+Upstream-Status: Backport
+---
+ src/egl/opengl/xeglgears.c | 37 +++++++++++++++++++++++++++++++------
+ 1 file changed, 31 insertions(+), 6 deletions(-)
+
+diff --git a/src/egl/opengl/xeglgears.c b/src/egl/opengl/xeglgears.c
+index 513c587..866b89a 100644
+--- a/src/egl/opengl/xeglgears.c
++++ b/src/egl/opengl/xeglgears.c
+@@ -51,6 +51,10 @@
+ static PFNGLEGLIMAGETARGETTEXTURE2DOESPROC glEGLImageTargetTexture2DOES_func;
+ #endif
+ 
++#ifdef EGL_KHR_image
++static PFNEGLCREATEIMAGEKHRPROC eglCreateImageKHR_func;
++#endif
++
+ 
+ #define BENCHMARK
+ 
+@@ -405,6 +409,17 @@ egl_manager_new(EGLNativeDisplayType xdpy, const EGLint *attrib_list,
+       eglGetProcAddress("glEGLImageTargetTexture2DOES");
+ #endif
+ 
++#ifdef EGL_KHR_image
++   eglCreateImageKHR_func = (PFNEGLCREATEIMAGEKHRPROC)
++      eglGetProcAddress("eglCreateImageKHR");
++   if (eglCreateImageKHR_func == NULL) {
++      printf("failed to get eglCreateImageKHR\n");
++      eglTerminate(eman->dpy);
++      free(eman);
++      return NULL;
++   }
++#endif
++
+    return eman;
+ }
+ 
+@@ -850,10 +865,16 @@ main(int argc, char *argv[])
+    case GEARS_PIXMAP:
+    case GEARS_PIXMAP_TEXTURE:
+       ret = egl_manager_create_pixmap(eman, eman->xwin, EGL_TRUE, NULL);
++
++#ifdef EGL_KHR_image
+       if (surface_type == GEARS_PIXMAP_TEXTURE)
+-	 eman->image = eglCreateImageKHR (eman->dpy, eman->ctx,
+-					  EGL_NATIVE_PIXMAP_KHR,
+-					  (EGLClientBuffer) eman->xpix, NULL);
++	 eman->image = eglCreateImageKHR_func(eman->dpy, eman->ctx,
++					      EGL_NATIVE_PIXMAP_KHR,
++					      (EGLClientBuffer) eman->xpix, NULL);
++#else
++      fprintf(stderr, "EGL_KHR_image not found at compile time.\n");
++#endif
++
+       if (ret)
+          ret = eglMakeCurrent(eman->dpy, eman->pix, eman->pix, eman->ctx);
+       break;
+@@ -892,9 +913,13 @@ main(int argc, char *argv[])
+ 				   GL_RENDERBUFFER_EXT,
+ 				   color_rb);
+ 
+-      eman->image = eglCreateImageKHR(eman->dpy, eman->ctx,
+-				      EGL_GL_RENDERBUFFER_KHR,
+-				      (EGLClientBuffer) color_rb, NULL);
++#ifdef EGL_KHR_image
++      eman->image = eglCreateImageKHR_func(eman->dpy, eman->ctx,
++					   EGL_GL_RENDERBUFFER_KHR,
++					   (EGLClientBuffer) color_rb, NULL);
++#else
++      fprintf(stderr, "EGL_KHR_image not found at compile time.\n");
++#endif
+ 
+       glGenRenderbuffers(1, &depth_rb);
+       glBindRenderbuffer(GL_RENDERBUFFER_EXT, depth_rb);
+-- 
+1.7.11.4
+
