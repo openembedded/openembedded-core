@@ -1,0 +1,36 @@
+We only build wayland-native for the scanner, so disable the bits we don't
+actually need.  This gives us a small speed up but importantly should allow
+wayland-native to compile on older hosts such as CentOS 5 which currently fails:
+
+| wayland-1.0.6/src/wayland-server.c:1245: error: 'O_CLOEXEC' undeclared (first use in this function)
+| wayland-1.0.6/src/event-loop.c:34:25: error: sys/timerfd.h: No such file or directory
+| wayland-1.0.6/src/event-loop.c:199: error: 'CLOCK_MONOTONIC' undeclared (first use in this function)
+| wayland-1.0.6/src/event-loop.c:199: error: 'TFD_CLOEXEC' undeclared (first use in this function)
+| wayland-1.0.6/src/event-loop.c:268: error: 'SFD_CLOEXEC' undeclared (first use in this function)
+
+Upstream-Status: Inappropriate
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+diff --git a/Makefile.am b/Makefile.am
+index 306d7b3..571fe89 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2,7 +2,7 @@ if BUILD_DOCS
+ doc_subdir = doc
+ endif
+ 
+-SUBDIRS = src protocol $(doc_subdir) tests cursor
++SUBDIRS = src protocol $(doc_subdir)
+ 
+ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+ 
+diff --git a/src/Makefile.am b/src/Makefile.am
+index e1d04ea..702342e 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -1,4 +1,4 @@
+-lib_LTLIBRARIES = libwayland-server.la libwayland-client.la
++#lib_LTLIBRARIES = libwayland-server.la libwayland-client.la
+ noinst_LTLIBRARIES = libwayland-util.la
+ 
+ include_HEADERS =				\
