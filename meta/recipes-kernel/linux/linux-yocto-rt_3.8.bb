@@ -12,7 +12,7 @@ SRCREV_machine ?= "0f7d294a9d07713059af345188f9cd4f549b4e77"
 SRCREV_machine_qemuppc ?= "82cdb00523b3f86219706d9f12dc80ff8d1c747a"
 SRCREV_meta ?= "27b63fdbd25ad1a37bacc05f49a205c150d21779"
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.8.git;protocol=git;bareclone=1;branch=${KBRANCH},meta;name=machine,meta"

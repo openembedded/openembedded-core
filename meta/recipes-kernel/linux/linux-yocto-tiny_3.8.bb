@@ -15,7 +15,7 @@ KMETA = "meta"
 SRCREV_machine ?= "11998bd1f44b21cd0b8c0ca11cbd36865f14bfdc"
 SRCREV_meta ?= "27b63fdbd25ad1a37bacc05f49a205c150d21779"
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.8.git;protocol=git;bareclone=1;branch=${KBRANCH},meta;name=machine,meta"

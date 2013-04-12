@@ -15,7 +15,7 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.4.git;protocol=git;bareclone
 
 LINUX_VERSION ?= "3.4.36"
 
-PR = "${INC_PR}.3"
+PR = "${INC_PR}.4"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 KMETA = "meta"
