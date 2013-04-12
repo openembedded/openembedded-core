@@ -1,4 +1,4 @@
-Upsteream-Status: Backport
+Upstream-Status: Backport
 
 [Appears to fix the random segfaults we were seeing in a variety of architectures:
 https://bugzilla.yoctoproject.org/show_bug.cgi?id=4216 ]
