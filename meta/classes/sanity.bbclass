@@ -4,8 +4,34 @@
 
 SANITY_REQUIRED_UTILITIES ?= "patch diffstat makeinfo git bzip2 tar gzip gawk chrpath wget cpio"
 
-python check_bblayers_conf() {
-    bblayers_fn = os.path.join(d.getVar('TOPDIR', True), 'conf/bblayers.conf')
+def bblayers_conf_file(d):
+    return os.path.join(d.getVar('TOPDIR', True), 'conf/bblayers.conf')
+
+def sanity_conf_read(fn):
+    with open(fn, 'r') as f:
+        lines = f.readlines()
+    return lines
+
+def sanity_conf_find_line(pattern, lines):
+    import re
+    return next(((index, line)
+        for index, line in enumerate(lines)
+        if re.search(pattern, line)), (None, None))
+
+def sanity_conf_update(fn, lines, version_var_name, new_version):
+    index, line = sanity_conf_find_line(version_var_name, lines)
+    lines[index] = '%s = "%d"\n' % (version_var_name, new_version)
+    with open(fn, "w") as f:
+        f.write(''.join(lines))
+
+EXPORT_FUNCTIONS bblayers_conf_file sanity_conf_read sanity_conf_find_line sanity_conf_update
+
+# Functions added to this variable MUST throw an exception (or sys.exit()) unless they
+# successfully changed LCONF_VERSION in bblayers.conf
+BBLAYERS_CONF_UPDATE_FUNCS += "oecore_update_bblayers"
+
+python oecore_update_bblayers() {
+    # bblayers.conf is out of date, so see if we can resolve that
 
     current_lconf = int(d.getVar('LCONF_VERSION', True))
     if not current_lconf:
@@ -13,21 +39,15 @@ python check_bblayers_conf() {
     lconf_version = int(d.getVar('LAYER_CONF_VERSION', True))
     lines = []
 
-    import re
-    def find_line(pattern, lines):
-        return next(((index, line)
-            for index, line in enumerate(lines)
-            if re.search(pattern, line)), (None, None))
-
     if current_lconf < 4:
         sys.exit()
 
-    with open(bblayers_fn, 'r') as f:
-        lines = f.readlines()
+    bblayers_fn = bblayers_conf_file(d)
+    lines = sanity_conf_read(bblayers_fn)
 
-    if current_lconf == 4:
+    if current_lconf == 4 and lconf_version > 4:
         topdir_var = '$' + '{TOPDIR}'
-        index, bbpath_line = find_line('BBPATH', lines)
+        index, bbpath_line = sanity_conf_find_line('BBPATH', lines)
         if bbpath_line:
             start = bbpath_line.find('"')
             if start != -1 and (len(bbpath_line) != (start + 1)):
@@ -41,17 +61,17 @@ python check_bblayers_conf() {
             else:
                 sys.exit()
         else:
-            index, bbfiles_line = find_line('BBFILES', lines)
+            index, bbfiles_line = sanity_conf_find_line('BBFILES', lines)
             if bbfiles_line:
                 lines.insert(index, 'BBPATH = "' + topdir_var + '"\n')
             else:
                 sys.exit()
 
-        index, line = find_line('LCONF_VERSION', lines)
         current_lconf += 1
-        lines[index] = 'LCONF_VERSION = "%d"\n' % current_lconf
-        with open(bblayers_fn, "w") as f:
-            f.write(''.join(lines))
+        sanity_conf_update(bblayers_fn, lines, 'LCONF_VERSION', current_lconf)
+        return
+
+    sys.exit()
 }
 
 def raise_sanity_error(msg, d, network_error=False):
@@ -387,18 +407,25 @@ def check_sanity(sanity_data):
     conf_version =  sanity_data.getVar('LOCALCONF_VERSION', True)
 
     if current_conf != conf_version:
-        messages = messages + "Your version of local.conf was generated from an older version of local.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/local.conf ${COREBASE}/meta*/conf/local.conf.sample\" is a good way to visualise the changes.\n"
+        messages = messages + "Your version of local.conf was generated from an older/newer version of local.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/local.conf ${COREBASE}/meta*/conf/local.conf.sample\" is a good way to visualise the changes.\n"
 
     # Check bblayers.conf is valid
     current_lconf = sanity_data.getVar('LCONF_VERSION', True)
     lconf_version = sanity_data.getVar('LAYER_CONF_VERSION', True)
     if current_lconf != lconf_version:
-        try:
-            bb.build.exec_func("check_bblayers_conf", sanity_data)
-            bb.note("Your conf/bblayers.conf has been automatically updated.")
-            reparse = True
-        except Exception:
-            messages = messages + "Your version of bblayers.conf was generated from an older version of bblayers.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/bblayers.conf ${COREBASE}/meta*/conf/bblayers.conf.sample\" is a good way to visualise the changes.\n"
+        funcs = sanity_data.getVar('BBLAYERS_CONF_UPDATE_FUNCS', True).split()
+        for func in funcs:
+            success = True
+            try:
+                bb.build.exec_func(func, sanity_data)
+            except Exception:
+                success = False
+            if success:
+                bb.note("Your conf/bblayers.conf has been automatically updated.")
+                reparse = True
+                break
+        if not reparse:
+            messages = messages + "Your version of bblayers.conf was generated from an older/newer version of bblayers.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/bblayers.conf ${COREBASE}/meta*/conf/bblayers.conf.sample\" is a good way to visualise the changes.\n"
 
     # If we have a site.conf, check it's valid
     if check_conf_exists("conf/site.conf", sanity_data):
@@ -454,7 +481,7 @@ def check_sanity(sanity_data):
         messages = messages + "Parsed PATH is " + str(paths) + "\n"
 
     bbpaths = sanity_data.getVar('BBPATH', True).split(":")
-    if "." in bbpaths or "" in bbpaths:
+    if ("." in bbpaths or "" in bbpaths) and not reparse:
         # TODO: change the following message to fatal when all BBPATH issues
         # are fixed
         bb.warn("BBPATH references the current directory, either through "    \
