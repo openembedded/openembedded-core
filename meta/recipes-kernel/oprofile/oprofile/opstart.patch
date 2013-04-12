@@ -1,3 +1,10 @@
+Upstream-Status: Pending
+
+The patch gives a low overhead way of starting/stopping oprofile which
+doesn't involve script exection.
+
+(written by RP in OpenedHand days)
+
 diff --git a/utils/Makefile.am b/utils/Makefile.am
 index d34b060..dff15f9 100644
 --- oprofile.orig/utils/Makefile.am
