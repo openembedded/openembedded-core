@@ -30,7 +30,8 @@ EXCLUDE_FROM_WORLD = "1"
 SDK_PACKAGING_FUNC ?= "create_shar"
 
 fakeroot python do_populate_sdk() {
-    runtime_mapping_rename("TOOLCHAIN_TARGET_TASK", d)
+    pn = d.getVar('PN', True)
+    runtime_mapping_rename("TOOLCHAIN_TARGET_TASK", pn, d)
 
     bb.build.exec_func("populate_sdk_image", d)
 

@@ -116,8 +116,9 @@ python () {
     d.setVar('IMAGE_FEATURES', ' '.join(list(remain_features)))
 
     if d.getVar('BB_WORKERCONTEXT', True) is not None:
-        runtime_mapping_rename("PACKAGE_INSTALL", d)
-        runtime_mapping_rename("PACKAGE_INSTALL_ATTEMPTONLY", d)
+        pn = d.getVar('PN', True)
+        runtime_mapping_rename("PACKAGE_INSTALL", pn, d)
+        runtime_mapping_rename("PACKAGE_INSTALL_ATTEMPTONLY", pn, d)
 
     # Ensure we have the vendor list for complementary package handling
     ml_vendor_list = ""

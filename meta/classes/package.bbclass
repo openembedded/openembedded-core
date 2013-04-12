@@ -332,24 +332,27 @@ def copydebugsources(debugsrcdir, d):
 # Package data handling routines
 #
 
-def get_package_mapping (pkg, d):
+def get_package_mapping (pkg, basepkg, d):
     import oe.packagedata
 
     data = oe.packagedata.read_subpkgdata(pkg, d)
     key = "PKG_%s" % pkg
 
     if key in data:
+        # Have to avoid undoing the write_extra_pkgs(global_variants...)
+        if bb.data.inherits_class('allarch', d) and data[key] == basepkg:
+            return pkg
         return data[key]
 
     return pkg
 
-def runtime_mapping_rename (varname, d):
+def runtime_mapping_rename (varname, pkg, d):
     #bb.note("%s before: %s" % (varname, d.getVar(varname, True)))
 
     new_depends = {}
     deps = bb.utils.explode_dep_versions2(d.getVar(varname, True) or "")
     for depend in deps:
-        new_depend = get_package_mapping(depend, d)
+        new_depend = get_package_mapping(depend, pkg, d)
         new_depends[new_depend] = deps[depend]
 
     d.setVar(varname, bb.utils.join_deps(new_depends, commasep=False))
@@ -1942,10 +1945,11 @@ def mapping_rename_hook(d):
     Rewrite variables to account for package renaming in things
     like debian.bbclass or manual PKG variable name changes
     """
-    runtime_mapping_rename("RDEPENDS", d)
-    runtime_mapping_rename("RRECOMMENDS", d)
-    runtime_mapping_rename("RSUGGESTS", d)
-    runtime_mapping_rename("RPROVIDES", d)
-    runtime_mapping_rename("RREPLACES", d)
-    runtime_mapping_rename("RCONFLICTS", d)
+    pkg = d.getVar("PKG", True)
+    runtime_mapping_rename("RDEPENDS", pkg, d)
+    runtime_mapping_rename("RRECOMMENDS", pkg, d)
+    runtime_mapping_rename("RSUGGESTS", pkg, d)
+    runtime_mapping_rename("RPROVIDES", pkg, d)
+    runtime_mapping_rename("RREPLACES", pkg, d)
+    runtime_mapping_rename("RCONFLICTS", pkg, d)
 
