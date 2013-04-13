@@ -21,6 +21,11 @@ automount() {
 	name="`basename "$DEVNAME"`"
 
 	! test -d "/media/$name" && mkdir -p "/media/$name"
+	# Silent util-linux's version of mounting auto
+	if [ "x`readlink $MOUNT`" = "x/bin/mount.util-linux" ] ;
+	then
+		MOUNT="$MOUNT -o silent"
+	fi
 	
 	if ! $MOUNT -t auto $DEVNAME "/media/$name"
 	then
