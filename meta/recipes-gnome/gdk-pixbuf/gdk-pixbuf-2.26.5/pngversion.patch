@@ -1,0 +1,23 @@
+We now have libpng 1.6. If we build libpng12 as well as libpng 1.6, the 1.2 version gets 
+preferred which is not desirable and does not give deterministic builds.
+
+We really do want to use libpng since the item in DEPENDS will provide this so
+manipulate the search list so the one we DEPEND on gets chosen.
+
+RP 2013/4/13
+
+Upstream-Status: Pending [worth discussing at least]
+
+Index: gdk-pixbuf-2.26.5/configure.ac
+===================================================================
+--- gdk-pixbuf-2.26.5.orig/configure.ac	2013-03-26 15:45:16.594820303 +0000
++++ gdk-pixbuf-2.26.5/configure.ac	2013-04-13 10:15:19.241433789 +0000
+@@ -588,7 +588,7 @@
+ 
+ dnl Test for libpng
+   if test x$with_libpng != xno && test -z "$LIBPNG"; then
+-    for l in libpng15 libpng14 libpng12 libpng13 libpng10 libpng ; do
++    for l in libpng libpng15 libpng14 libpng12 libpng13 libpng10 ; do
+       AC_MSG_CHECKING(for $l)
+       if $PKG_CONFIG --exists $l ; then
+         AC_MSG_RESULT(yes)

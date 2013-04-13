@@ -15,6 +15,7 @@ SRC_URI = "http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.26/gdk-pixbuf-${
            file://hardcoded_libtool.patch \
            file://configure_fix.patch \
            file://extending-libinstall-dependencies.patch \
+           file://pngversion.patch \
            "
 
 SRC_URI[md5sum] = "339329e6d619ee3e1cb93979111b04c0"
