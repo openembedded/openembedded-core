@@ -35,6 +35,14 @@ case "$1" in
     # propagate /dev from /sys
     echo "Starting udev"
 
+    # Check for requireed devtmpfs before trying to start udev and
+    # mount a no-existant fs.
+    if ! grep -q devtmpfs /proc/filesystems
+    then
+        echo "Missing devtmpfs, which is required for udev to run";
+        echo "Halting..."
+        halt
+    fi
     # mount the tmpfs on /dev, if not already done
     LANG=C awk '$2 == "/dev" && ($3 == "tmpfs" || $3 == "devtmpfs") { exit 1 }' /proc/mounts && {
             mount -n -o mode=0755 -t tmpfs none "/dev"
