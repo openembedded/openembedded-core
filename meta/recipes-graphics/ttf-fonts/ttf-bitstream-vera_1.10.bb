@@ -10,7 +10,9 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT.TXT;md5=27d7484b1e18d0ee4ce538644a3f04be"
 PR = "r7"
 RDEPENDS_${PN} = "fontconfig-utils"
 
-inherit allarch
+inherit allarch fontcache
+
+FONT_PACKAGES = "${PN}"
 
 SRC_URI = "${GNOME_MIRROR}/ttf-bitstream-vera/1.10/ttf-bitstream-vera-${PV}.tar.bz2" 
 
@@ -30,12 +32,6 @@ do_install () {
                 install -m 644 $i ${D}${prefix}/share/doc/${BPN}/$i
         done 
 } 
-
-pkg_postinst_${PN} () {
-#!/bin/sh
-fc-cache
-}
-
 
 FILES_${PN} = "/etc ${datadir}/fonts"
 
