@@ -18,3 +18,5 @@ SYSROOT_PREPROCESS_FUNCS += "qemuwrapper_sysroot_preprocess"
 qemuwrapper_sysroot_preprocess () {
 	sysroot_stage_dir ${D}${bindir_crossscripts} ${SYSROOT_DESTDIR}${bindir_crossscripts}
 }
+
+INHIBIT_DEFAULT_DEPS = "1"
