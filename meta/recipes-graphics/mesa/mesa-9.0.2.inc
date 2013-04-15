@@ -1,6 +1,8 @@
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \
            file://0002-cross-compile.patch \
            file://cross-glsl.patch \
+           file://dont-fail-if-libX11-isnt-installed.patch \
+           file://fix-egl-compilation-without-x11-headers.patch \
            "
 
 SRC_URI[md5sum] = "dc45d1192203e418163e0017640e1cfc"

@@ -1,0 +1,36 @@
+Upstream-Status: Backport
+
+From d6b06474f69129eb41ecd85d6b3bb0eb7b9dccb3 Mon Sep 17 00:00:00 2001
+From: Daniel Stone <daniel@fooishbar.org>
+Date: Tue, 9 Oct 2012 14:27:06 +1100
+Subject: [PATCH] build: Don't fail if libX11 isn't installed
+
+configure.ac would previously refuse to complete if libX11 wasn't
+installed, even if we'd disabled GLX and weren't building an X11 EGL
+platform.  Make the check simply set the no_x variable that's used (but
+never set) immediately below for what looks like this very case.
+
+Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+Reviewed-by: Matt Turner <mattst88@gmail.com>
+Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+(cherry picked from commit 4004620d34a580c8fdb965d9b640e97453fc8b28)
+---
+ configure.ac |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index eb273b9..b384b44 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -836,7 +836,7 @@ if test "x$enable_dri" = xyes; then
+ fi
+ 
+ dnl Find out if X is available.
+-PKG_CHECK_MODULES([X11], [x11])
++PKG_CHECK_MODULES([X11], [x11], [no_x=no], [no_x=yes])
+ 
+ dnl Try to tell the user that the --x-* options are only used when
+ dnl pkg-config is not available. This must be right after AC_PATH_XTRA.
+-- 
+1.7.10.4
+
