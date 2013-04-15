@@ -29,7 +29,7 @@ EXTRA_OECONF_class-native = "--disable-acl --without-gmp"
 bindir_progs = "basename chcon cksum comm csplit cut dir dircolors dirname du \
                 env expand expr factor fmt fold groups head hostid id install \
                 join link logname md5sum mkfifo nice nl nohup nproc od paste pathchk \
-                pinky pr printenv printf ptx readlink runcon seq sha1sum sha224sum sha256sum \
+                pinky pr printenv printf ptx readlink realpath runcon seq sha1sum sha224sum sha256sum \
                 sha384sum sha512sum shred shuf sort split stat stdbuf sum tac tail tee test timeout\
                 tr truncate tsort tty unexpand uniq unlink uptime users vdir wc who whoami yes"
 
