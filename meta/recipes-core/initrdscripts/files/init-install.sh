@@ -78,7 +78,6 @@ if [ ! -b /dev/loop0 ] ; then
 fi
 
 mkdir -p /tmp
-cat /proc/mounts > /etc/mtab
 
 disk_size=$(parted /dev/${device} unit mb print | grep Disk | cut -d" " -f 3 | sed -e "s/MB//")
 
