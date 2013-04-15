@@ -9,8 +9,6 @@ SRC_URI = "file://etc \
 
 S = "${WORKDIR}"
 
-inherit allarch
-
 do_install() {
 	cp -R ${S}/etc ${D}${sysconfdir}
 	chmod -R 755 ${D}${sysconfdir}

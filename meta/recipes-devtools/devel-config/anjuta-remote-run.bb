@@ -15,5 +15,3 @@ do_install() {
 PACKAGES = "${PN}"
 RDEPENDS_${PN} = "dbus rsync"
 
-inherit allarch
-

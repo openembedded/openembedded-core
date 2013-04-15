@@ -15,5 +15,3 @@ do_install() {
 }
 
 RDEPENDS_${PN} = "packagegroup-core-nfs-server"
-
-inherit allarch

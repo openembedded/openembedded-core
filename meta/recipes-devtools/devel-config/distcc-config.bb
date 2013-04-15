@@ -21,5 +21,3 @@ do_install() {
 }
 
 RDEPENDS_${PN} = "distcc"
-
-inherit allarch

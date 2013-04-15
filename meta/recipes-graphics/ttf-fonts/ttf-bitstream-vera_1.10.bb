@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT.TXT;md5=27d7484b1e18d0ee4ce538644a3f04be"
 PR = "r7"
 RDEPENDS_${PN} = "fontconfig-utils"
 
-inherit allarch fontcache
+inherit fontcache
 
 FONT_PACKAGES = "${PN}"
 

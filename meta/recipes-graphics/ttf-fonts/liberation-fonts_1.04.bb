@@ -12,7 +12,7 @@ RDEPENDS_${PN} = "fontconfig-utils"
 PR = "r4"
 PE = "1"
 
-inherit allarch fontcache
+inherit fontcache
 
 FONT_PACKAGES = "${PN}"
 
