@@ -169,7 +169,7 @@ def gen_updatealternativesvardeps(d):
 
 def ua_extend_depends(d):
     if not 'virtual/update-alternatives' in d.getVar('PROVIDES', True):
-        d.appendVar('DEPENDS', ' virtual/update-alternatives')
+        d.appendVar('DEPENDS', ' virtual/${MLPREFIX}update-alternatives')
 
 python __anonymous() {
     # Update Alternatives only works on target packages...
