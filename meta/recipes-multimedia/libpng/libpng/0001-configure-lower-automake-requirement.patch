@@ -1,0 +1,30 @@
+From a4fd84bdc69e9929a1040f20ea291ee3115bf5b2 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Mon, 15 Apr 2013 11:16:20 +0200
+Subject: [PATCH] configure: lower automake requirement
+
+We're not using parallel tests in OE-core yet
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+
+Upstream-status: Inapropriate [OE specific build hack]
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 1745d31..7f015fe 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -27,7 +27,7 @@ AC_CONFIG_MACRO_DIR([scripts])
+ # dist-xz requires automake 1.11 or later
+ # 1.12.2 fixes a security issue in 1.11.2 and 1.12.1
+ # 1.13 is required for parallel tests
+-AM_INIT_AUTOMAKE([1.13 foreign dist-xz color-tests silent-rules])
++AM_INIT_AUTOMAKE([1.12.2 foreign dist-xz color-tests silent-rules])
+ # The following line causes --disable-maintainer-mode to be the default to
+ # configure, this is necessary because libpng distributions cannot rely on the
+ # time stamps of the autotools generated files being correct
+-- 
+1.8.1.4
+
