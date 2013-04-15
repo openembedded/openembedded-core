@@ -20,7 +20,7 @@ DEPENDS  = "dbus glib-2.0 ppp iptables gnutls \
             ${@base_contains('DISTRO_FEATURES', '3g','ofono', '', d)} \
             "
 
-INC_PR = "r1"
+INC_PR = "r19"
 
 TIST = "--enable-tist"
 TIST_powerpc = ""
