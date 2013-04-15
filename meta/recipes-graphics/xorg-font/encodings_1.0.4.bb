@@ -10,6 +10,7 @@ PE = "1"
 PR = "${INC_PR}.1"
 
 DEPENDS = "mkfontscale-native font-util-native"
+RDEPENDS_${PN} = ""
 
 SRC_URI += "file://nocompiler.patch"
 
