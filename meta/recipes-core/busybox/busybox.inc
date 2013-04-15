@@ -153,14 +153,14 @@ do_install () {
 
 	install -d ${D}${sysconfdir}/init.d
 
-	if ! grep -q "CONFIG_FEATURE_INDIVIDUAL=y" ${WORKDIR}/defconfig; then
+	if ! grep -q "CONFIG_FEATURE_INDIVIDUAL=y" ${B}/.config; then
 		# Install /bin/busybox, and the /bin/sh link so the postinst script
 		# can run. Let update-alternatives handle the rest.
 		install -d ${D}${base_bindir}
-		if grep -q "CONFIG_FEATURE_SUID=y" ${WORKDIR}/defconfig; then
-			install -m 4755 ${S}/busybox ${D}${base_bindir}
+		if grep -q "CONFIG_FEATURE_SUID=y" ${B}/.config; then
+			install -m 4755 ${B}/busybox ${D}${base_bindir}
 		else
-			install -m 0755 ${S}/busybox ${D}${base_bindir}
+			install -m 0755 ${B}/busybox ${D}${base_bindir}
 		fi
 		ln -sf busybox ${D}${base_bindir}/sh
 	else
@@ -183,36 +183,36 @@ do_install () {
 		fi
 	fi
 
-	if grep -q "CONFIG_SYSLOGD=y" ${WORKDIR}/defconfig; then
+	if grep -q "CONFIG_SYSLOGD=y" ${B}/.config; then
 		install -m 0755 ${WORKDIR}/syslog ${D}${sysconfdir}/init.d/syslog.${BPN}
 		install -m 644 ${WORKDIR}/syslog-startup.conf ${D}${sysconfdir}/syslog-startup.conf.${BPN}
 	fi
-	if grep "CONFIG_CROND=y" ${WORKDIR}/defconfig; then
+	if grep "CONFIG_CROND=y" ${B}/.config; then
 		install -m 0755 ${WORKDIR}/busybox-cron ${D}${sysconfdir}/init.d/
 	fi
-	if grep "CONFIG_HTTPD=y" ${WORKDIR}/defconfig; then
+	if grep "CONFIG_HTTPD=y" ${B}/.config; then
 		install -m 0755 ${WORKDIR}/busybox-httpd ${D}${sysconfdir}/init.d/
 		install -d ${D}/srv/www
 	fi
-	if grep "CONFIG_UDHCPD=y" ${WORKDIR}/defconfig; then
+	if grep "CONFIG_UDHCPD=y" ${B}/.config; then
 		install -m 0755 ${WORKDIR}/busybox-udhcpd ${D}${sysconfdir}/init.d/
 	fi
-	if grep "CONFIG_HWCLOCK=y" ${WORKDIR}/defconfig; then
+	if grep "CONFIG_HWCLOCK=y" ${B}/.config; then
 		install -m 0755 ${WORKDIR}/hwclock.sh ${D}${sysconfdir}/init.d/
 	fi
-	if grep "CONFIG_UDHCPC=y" ${WORKDIR}/defconfig; then
+	if grep "CONFIG_UDHCPC=y" ${B}/.config; then
 		install -d ${D}${sysconfdir}/udhcpc.d
 		install -d ${D}${datadir}/udhcpc
                 install -m 0755 ${WORKDIR}/simple.script ${D}${sysconfdir}/udhcpc.d/50default
 		install -m 0755 ${WORKDIR}/default.script ${D}${datadir}/udhcpc/default.script
 	fi
-	if grep "CONFIG_INETD=y" ${WORKDIR}/defconfig; then
+	if grep "CONFIG_INETD=y" ${B}/.config; then
 		install -m 0755 ${WORKDIR}/inetd ${D}${sysconfdir}/init.d/inetd.${BPN}
 		install -m 0644 ${WORKDIR}/inetd.conf ${D}${sysconfdir}/
 	fi
-        if grep "CONFIG_MDEV=y" ${WORKDIR}/defconfig; then
+        if grep "CONFIG_MDEV=y" ${B}/.config; then
                install -m 0755 ${WORKDIR}/mdev ${D}${sysconfdir}/init.d/mdev
-               if grep "CONFIG_FEATURE_MDEV_CONF=y" ${WORKDIR}/defconfig; then
+               if grep "CONFIG_FEATURE_MDEV_CONF=y" ${B}/.config; then
                        install -m 644 ${WORKDIR}/mdev.conf ${D}${sysconfdir}/mdev.conf
                fi
 	fi
