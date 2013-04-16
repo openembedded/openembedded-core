@@ -1,6 +1,6 @@
 DESCRIPTION = "Target packages for Qt Embedded SDK"
 
-PR = "r5"
+PR = "r7"
 
 QTLIBPREFIX = "-embedded"
 
