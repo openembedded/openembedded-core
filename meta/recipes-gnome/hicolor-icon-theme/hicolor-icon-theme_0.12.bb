@@ -10,7 +10,7 @@ inherit gnome allarch
 
 DEPENDS = ""
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://icon-theme.freedesktop.org/releases/${BPN}-${PV}.tar.gz \
         file://index.theme"
