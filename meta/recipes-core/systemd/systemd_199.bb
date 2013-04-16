@@ -78,8 +78,8 @@ EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname "
 do_configure_prepend() {
 	export CPP="${HOST_PREFIX}cpp ${TOOLCHAIN_OPTIONS} ${HOST_CC_ARCH}"
 
-	export STRINGS = "${HOST_PREFIX}strings"
-	export GPERF = "${HOST_PREFIX}gperf"
+	export STRINGS="${HOST_PREFIX}strings"
+	export GPERF="${HOST_PREFIX}gperf"
 
 	sed -i -e 's:=/root:=${ROOT_HOME}:g' units/*.service*
 }
