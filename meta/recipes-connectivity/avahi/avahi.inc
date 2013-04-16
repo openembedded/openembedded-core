@@ -136,11 +136,7 @@ do_install() {
 
 pkg_postinst_avahi-daemon () {
 if [ -z "$D" ]; then
-	DBUSPID=`pidof dbus-daemon`
-
-	if [ "x$DBUSPID" != "x" ]; then
-		/etc/init.d/dbus-1 force-reload
-	fi
+	killall -q -HUP dbus-daemon || true
 fi
 }
 
