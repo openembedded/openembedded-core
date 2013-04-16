@@ -305,7 +305,8 @@ B_pn-libmad = "${SEPB}"
 B_pn-libmatchbox = "${SEPB}"
 B_pn-libmpc = "${SEPB}"
 B_pn-libmpc-native = "${SEPB}"
-B_pn-libmusicbrainz = "${SEPB}"
+# CMake Error: The source directory "[...]libmusicbrainz-5.0.1[...]/build" does not appear to contain CMakeLists.txt.
+#B_pn-libmusicbrainz = "${SEPB}"
 # Not automake and no support for out of tree
 #B_pn-libnewt = "${SEPB}"
 B_pn-libnfsidmap = "${SEPB}"
