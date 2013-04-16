@@ -1,0 +1,41 @@
+From d6f92bcbbae9a577adb9588c7b2783a5d0bf343d Mon Sep 17 00:00:00 2001
+From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Tue, 16 Apr 2013 14:20:41 +0200
+Subject: [PATCH] configure: use AC_CHECK_TOOL for objcopy, strings and gperf
+
+* using AC_PATH_TOOL does not allow to override it from shell environment
+  which is useful when cross-compiling
+* with external toolchain I have different HOST_PREFIX and HOST_SYS
+  AC_PATH_TOOL is using HOST_SYS as prefix and fails to find objcopy
+  which is available only as ${TARGET_PREFIX}objcopy then it tries
+  objcopy without prefix which is found on host, but that objcopy
+  does not work for !host (e.g. arm when building on x86) libs
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+Upstream-Status: Submitted
+http://lists.freedesktop.org/archives/systemd-devel/2013-April/010468.html
+
+---
+ configure.ac | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 33b0ca9..519f1a9 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -86,9 +86,9 @@ GOBJECT_INTROSPECTION_CHECK([1.31.1])
+    AM_CONDITIONAL([HAVE_INTROSPECTION], [false])
+    enable_introspection=no])
+ 
+-AC_PATH_TOOL(OBJCOPY, objcopy)
+-AC_PATH_TOOL(STRINGS, strings)
+-AC_PATH_TOOL(GPERF, gperf)
++AC_CHECK_TOOL(OBJCOPY, objcopy)
++AC_CHECK_TOOL(STRINGS, strings)
++AC_CHECK_TOOL(GPERF, gperf)
+ if test -z "$GPERF" ; then
+         AC_MSG_ERROR([*** gperf not found])
+ fi
+-- 
+1.8.1.5
+

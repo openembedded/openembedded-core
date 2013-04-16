@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe \
 PROVIDES = "udev"
 
 PE = "1"
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline dbus libcap libcgroup tcp-wrappers glib-2.0"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
@@ -27,6 +27,7 @@ SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
            file://0002-readahead-chunk-on-spinning-media.patch \
            file://0003-readahead-cleanups.patch \
            file://0013-systemd-sysctl-Handle-missing-etc-sysctl.conf-proper.patch \
+           file://0001-configure-use-AC_CHECK_TOOL-for-objcopy-strings-and-.patch \
            file://199-firmware.patch \
            file://init \
           "
@@ -76,6 +77,9 @@ EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname "
 # There's no docbook-xsl-native, so for the xsltproc check to false
 do_configure_prepend() {
 	export CPP="${HOST_PREFIX}cpp ${TOOLCHAIN_OPTIONS} ${HOST_CC_ARCH}"
+
+	export STRINGS = "${HOST_PREFIX}strings"
+	export GPERF = "${HOST_PREFIX}gperf"
 
 	sed -i -e 's:=/root:=${ROOT_HOME}:g' units/*.service*
 }
