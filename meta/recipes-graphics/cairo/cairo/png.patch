@@ -1,0 +1,123 @@
+libpng 1.6 is stricter in various ways, which trips up Cairo's PNG loader.
+
+Upstream-Status: Submitted (first)/Backport (second)
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+
+From 1535e4eeda7e0792fe5e7e5ab377c5253ee89ce7 Mon Sep 17 00:00:00 2001
+From: Ingmar Runge <ingmar@irsoft.de>
+Date: Tue, 16 Apr 2013 10:48:59 +0100
+Subject: [PATCH 1/2] png: fix transform ordering
+
+libpng 1.6 is stricter with the function ordering, emitting the warning "invalid
+before the PNG header has been read" when calling png_set_read_user_transform_fn
+whilst loading a PNG.
+
+So, re-order the functions to the order that libpng is happy with.
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ src/cairo-png.c |   21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/src/cairo-png.c b/src/cairo-png.c
+index e74a4a8..3aec86a 100644
+--- a/src/cairo-png.c
++++ b/src/cairo-png.c
+@@ -497,6 +497,20 @@ convert_bytes_to_data (png_structp png, png_row_infop row_info, png_bytep data)
+     }
+ }
+ 
++/* branches into premultiply_data or convert_bytes_to_data depending on color type */
++static void read_user_transform_func (png_structp png, png_row_infop row_info, png_bytep data)
++{
++    switch ((cairo_format_t) png_get_user_transform_ptr (png)) {
++        case CAIRO_FORMAT_ARGB32:
++            premultiply_data (png, row_info, data);
++            break;
++
++        case CAIRO_FORMAT_RGB24:
++            convert_bytes_to_data (png, row_info, data);
++            break;
++    }
++}
++
+ static cairo_status_t
+ stdio_read_func (void *closure, unsigned char *data, unsigned int size)
+ {
+@@ -623,6 +637,9 @@ read_png (struct png_read_closure_t *png_closure)
+ 
+     png_set_filler (png, 0xff, PNG_FILLER_AFTER);
+ 
++    /* this must be stored before calling png_read_update_info */
++    png_set_read_user_transform_fn (png, read_user_transform_func);
++
+     /* recheck header after setting EXPAND options */
+     png_read_update_info (png, info);
+     png_get_IHDR (png, info,
+@@ -643,15 +660,15 @@ read_png (struct png_read_closure_t *png_closure)
+ 
+ 	case PNG_COLOR_TYPE_RGB_ALPHA:
+ 	    format = CAIRO_FORMAT_ARGB32;
+-	    png_set_read_user_transform_fn (png, premultiply_data);
+ 	    break;
+ 
+ 	case PNG_COLOR_TYPE_RGB:
+ 	    format = CAIRO_FORMAT_RGB24;
+-	    png_set_read_user_transform_fn (png, convert_bytes_to_data);
+ 	    break;
+     }
+ 
++    png_set_user_transform_info (png, (void*) format, 0, 0);
++
+     stride = cairo_format_stride_for_width (format, png_width);
+     if (stride < 0) {
+ 	surface = _cairo_surface_create_in_error (_cairo_error (CAIRO_STATUS_INVALID_STRIDE));
+-- 
+1.7.10.4
+
+From 2dd2c826a5b367d32cf2d48ed69754795990c5db Mon Sep 17 00:00:00 2001
+From: Chris Wilson <chris@chris-wilson.co.uk>
+Date: Tue, 16 Apr 2013 10:58:56 +0100
+Subject: [PATCH] png: Avoid marking the surface as in error after a png
+ warning
+
+It turns out that libpng will continue to load an image after throwing a
+warning, and that libpng16 now throws warnings for images that libpng15
+and earlier loaded without error. As we were happily loading those
+images into cairo surfaces before, we are therefore being overzealous
+in throwing an error now - so just squelch the warning.
+
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+---
+ src/cairo-png.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/src/cairo-png.c b/src/cairo-png.c
+index e74a4a8..068617d 100644
+--- a/src/cairo-png.c
++++ b/src/cairo-png.c
+@@ -149,13 +149,13 @@ static void
+ png_simple_warning_callback (png_structp png,
+ 	                     png_const_charp error_msg)
+ {
+-    cairo_status_t *error = png_get_error_ptr (png);
+-
+-    /* default to the most likely error */
+-    if (*error == CAIRO_STATUS_SUCCESS)
+-	*error = _cairo_error (CAIRO_STATUS_NO_MEMORY);
+-
+-    /* png does not expect to abort and will try to tidy up after a warning */
++    /* png does not expect to abort and will try to tidy up and continue
++     * loading the image after a warning. So we also want to return the
++     * (incorrect?) surface.
++     *
++     * We use our own warning callback to squelch any attempts by libpng
++     * to write to stderr as we may not be in control of that output.
++     */
+ }
+ 
+ 
+-- 
+1.7.10.4
+
