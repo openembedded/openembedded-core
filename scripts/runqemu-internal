@@ -20,7 +20,6 @@
 # Call setting:
 #   QEMU_MEMORY (optional) - set the amount of memory in the emualted system.
 #   SERIAL_LOGFILE (optional) - log the serial port output to a file
-#   CROSSPATH - the path to any cross toolchain to use with distcc
 #
 # Image options:
 #   MACHINE - the machine to run
@@ -480,11 +479,7 @@ if [ "x$QEMUOPTIONS" = "x" ]; then
     return 1
 fi
 
-if [ "x$CROSSPATH" = "x" ]; then
-    PATH=$OECORE_NATIVE_SYSROOT/usr/bin:$PATH
-else
-    PATH=$CROSSPATH:$OECORE_NATIVE_SYSROOT/usr/bin:$PATH
-fi
+PATH=$OECORE_NATIVE_SYSROOT/usr/bin:$PATH
 
 QEMUBIN=`which $QEMU 2> /dev/null`
 if [ ! -x "$QEMUBIN" ]; then
@@ -511,26 +506,11 @@ if [ "$NEED_GL" != "" ]; then
 fi
 
 do_quit() {
-    if [ -n "$PIDFILE" ]; then
-        #echo kill `cat $PIDFILE`
-        kill `cat $PIDFILE`
-    fi
     cleanup
     return 1
 }
 
-DISTCCD=`which distccd 2> /dev/null`
-PIDFILE=""
-
 trap do_quit INT TERM QUIT
-
-if [ -x "$DISTCCD" ]; then
-    echo "Starting distccd..."
-    PIDFILE=`mktemp`
-    $DISTCCD --allow 192.168.7.2 --daemon --pid-file $PIDFILE &
-else
-    echo "WARNING: distccd not present, no distcc support loaded."
-fi
 
 # qemu got segfault if linked with nVidia's libgl
 GL_LD_PRELOAD=$LD_PRELOAD
