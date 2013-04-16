@@ -84,9 +84,5 @@ pkg_postinst_wpa-supplicant () {
 		exit 0
 	fi
 
-	DBUSPID=`pidof dbus-daemon`
-
-	if [ "x$DBUSPID" != "x" ]; then
-		/etc/init.d/dbus-1 reload || true
-	fi
+	killall -q -HUP dbus-daemon || true
 }
