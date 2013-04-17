@@ -7,5 +7,5 @@ SRC_URI[sha256sum] = "79e6ae441278e178c07501d492394ed2c0326fdb66894f6d040ec811b0
 
 PR = "r1"
 
-FILES_${PN}-dbg += "${base_libdir}/udev/.debug"
-FILES_${PN} += "${base_libdir}/udev ${nonarch_base_libdir}/udev"
+FILES_${PN}-dbg += "*/udev/.debug"
+FILES_${PN} += "*/udev"
