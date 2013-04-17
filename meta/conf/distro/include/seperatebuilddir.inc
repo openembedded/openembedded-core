@@ -660,6 +660,7 @@ B_pn-sysfsutils = "${SEPB}"
 B_pn-sysprof = "${SEPB}"
 # No automake, no separate build support
 #B_pn-sysstat = "${SEPB}"
+B_pn-systemd = "${SEPB}"
 B_pn-systemtap = "${SEPB}"
 B_pn-systemtap-native = "${SEPB}"
 B_pn-tar = "${SEPB}"
@@ -774,4 +775,3 @@ B_pn-xz-native = "${SEPB}"
 B_pn-yasm = "${SEPB}"
 B_pn-yasm-native = "${SEPB}"
 B_pn-zaurusd = "${SEPB}"
-
