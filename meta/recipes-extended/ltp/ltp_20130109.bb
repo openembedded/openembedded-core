@@ -12,21 +12,19 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 		    file://testcases/kernel/hotplug/cpu_hotplug/COPYING;md5=e04a2e542b2b8629bf9cd2ba29b0fe41 \
 		    file://testcases/open_posix_testsuite/COPYING;md5=216e43b72efbe4ed9017cc19c4c68b01 \
 		    file://testcases/realtime/COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
-		    file://tools/netpipe-2.4/COPYING;md5=18810669f13b87348459e611d31ab760 \
-		    file://tools/netpipe-2.4-ipv6/COPYING;md5=18810669f13b87348459e611d31ab760 \
-		    file://tools/top-LTP/proc/COPYING;md5=6e29c688d912da12b66b73e32b03d812 \
+		    file://tools/netpipe-2.4/COPYING;md5=9e3781bb5fe787aa80e1f51f5006b6fa \
+		    file://tools/netpipe-2.4-ipv6/COPYING;md5=9e3781bb5fe787aa80e1f51f5006b6fa \
+		    file://tools/top-LTP/proc/COPYING;md5=aefc88eb8a41672fbfcfe6b69ab8c49c \
 		    file://tools/pounder21/COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 		    file://utils/benchmark/kernbench-0.42/COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 		"
 
 DEPENDS = "attr libaio libcap"
 
-PR = "r2"
-
 SRC_URI = "${SOURCEFORGE_MIRROR}/ltp/ltp-full-${PV}.bz2"
 
-SRC_URI[md5sum] = "3c885047b137a6955e087ad20807a018"
-SRC_URI[sha256sum] = "41d2f4cd88619aa7b5cdad93cb7691b69166f7751bc9f2f72558937cbef581c2"
+SRC_URI[md5sum] = "06974c85542c78b6b6ff74ac3ac3a5d3"
+SRC_URI[sha256sum] = "471b21f1d6f952957f534cd0c5ee5bcbbf50b9fcb83519b0293be141e6f2338d"
 
 export prefix = "/opt/ltp"
 export exec_prefix = "/opt/ltp"
