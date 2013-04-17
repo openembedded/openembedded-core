@@ -946,6 +946,8 @@ python populate_packages () {
         for file in files:
             if os.path.isabs(file):
                 file = '.' + file
+            if not file.startswith("./"):
+                file = './' + file
             if not cpath.islink(file):
                 if cpath.isdir(file):
                     newfiles =  [ os.path.join(file,x) for x in os.listdir(file) ]
