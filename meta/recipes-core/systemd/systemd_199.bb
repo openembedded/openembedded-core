@@ -81,7 +81,7 @@ do_configure_prepend() {
 	export STRINGS="${HOST_PREFIX}strings"
 	export GPERF="${HOST_PREFIX}gperf"
 
-	sed -i -e 's:=/root:=${ROOT_HOME}:g' units/*.service*
+	sed -i -e 's:=/root:=${ROOT_HOME}:g' ${S}/units/*.service*
 }
 
 EXTRA_OEMAKE = "rootlibexecdir=${base_sbindir}/systemd \
