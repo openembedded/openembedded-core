@@ -10,6 +10,7 @@ LIBV = "16"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/libpng/libpng${LIBV}/${PV}/libpng-${PV}.tar.xz \
            file://0001-configure-lower-automake-requirement.patch \
+           file://transform.patch \
           "
 SRC_URI[md5sum] = "93fc0b0841ce2db0e6756673e22dafc3"
 SRC_URI[sha256sum] = "5ef57f8b9ef591c8504e2a8f78d31779f0c8f2b34b34d01d533360d2483c8946"
