@@ -23,7 +23,7 @@ Index: busybox-1.20.2/util-linux/mount.c
 +		 * Break if there is no media, no point retrying for all
 +		 * fs types since there is no media available
 +		 */
-+		if ((rc == -1) && (errno == ENOMEDIUM || errno == ENODEV)) {
++		if (rc == -1 && errno == ENOMEDIUM) {
 +			bb_perror_msg_and_die("mounting %s on %s failed", mp->mnt_fsname, mp->mnt_dir);
 +		}
  		if (!rc || (vfsflags & MS_RDONLY) || (errno != EACCES && errno != EROFS))
