@@ -13,7 +13,8 @@ RDEPENDS_${PN} += "base-files"
 
 inherit autotools pkgconfig
 
-SRC_URI = "http://www.freedesktop.org/software/ConsoleKit/dist/ConsoleKit-${PV}.tar.bz2"
+SRC_URI = "http://www.freedesktop.org/software/ConsoleKit/dist/ConsoleKit-${PV}.tar.bz2 \
+           file://sepbuildfix.patch"
 SRC_URI[md5sum] = "f2657f93761206922d558471a936fbc3"
 SRC_URI[sha256sum] = "43e0780c53078e125efcec3f847e484dc3533e49b408ce6a0ab1b223686b9c38"
 
