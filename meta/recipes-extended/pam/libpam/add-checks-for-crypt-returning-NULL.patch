@@ -1,0 +1,63 @@
+Backport from linux-pam git repo.
+
+[YOCTO #4107]
+
+Upstream-Status: Backport
+
+Signed-off-by: Kang Kai <kai.kang@windriver.com>
+
+From 8dc056c1c8bc7acb66c4decc49add2c3a24e6310 Mon Sep 17 00:00:00 2001
+From: Tomas Mraz <tmraz@fedoraproject.org>
+Date: Fri, 8 Feb 2013 15:04:26 +0100
+Subject: [PATCH] Add checks for crypt() returning NULL.
+
+modules/pam_pwhistory/opasswd.c (compare_password): Add check for crypt() NULL return.
+modules/pam_unix/bigcrypt.c (bigcrypt): Likewise.
+---
+ modules/pam_pwhistory/opasswd.c |    2 +-
+ modules/pam_unix/bigcrypt.c     |    9 +++++++++
+ 2 files changed, 10 insertions(+), 1 deletions(-)
+
+diff --git a/modules/pam_pwhistory/opasswd.c b/modules/pam_pwhistory/opasswd.c
+index 274fdb9..836d713 100644
+--- a/modules/pam_pwhistory/opasswd.c
++++ b/modules/pam_pwhistory/opasswd.c
+@@ -108,7 +108,7 @@ compare_password(const char *newpass, const char *oldpass)
+   outval = crypt (newpass, oldpass);
+ #endif
+ 
+-  return strcmp(outval, oldpass) == 0;
++  return outval != NULL && strcmp(outval, oldpass) == 0;
+ }
+ 
+ /* Check, if the new password is already in the opasswd file.  */
+diff --git a/modules/pam_unix/bigcrypt.c b/modules/pam_unix/bigcrypt.c
+index e10d1c5..e1d57a0 100644
+--- a/modules/pam_unix/bigcrypt.c
++++ b/modules/pam_unix/bigcrypt.c
+@@ -109,6 +109,10 @@ char *bigcrypt(const char *key, const char *salt)
+ #else
+ 	tmp_ptr = crypt(plaintext_ptr, salt);	/* libc crypt() */
+ #endif
++	if (tmp_ptr == NULL) {
++		free(dec_c2_cryptbuf);
++		return NULL;
++	}
+ 	/* and place in the static area */
+ 	strncpy(cipher_ptr, tmp_ptr, 13);
+ 	cipher_ptr += ESEGMENT_SIZE + SALT_SIZE;
+@@ -130,6 +134,11 @@ char *bigcrypt(const char *key, const char *salt)
+ #else
+ 			tmp_ptr = crypt(plaintext_ptr, salt_ptr);
+ #endif
++			if (tmp_ptr == NULL) {
++				_pam_overwrite(dec_c2_cryptbuf);
++				free(dec_c2_cryptbuf);
++				return NULL;
++			}
+ 
+ 			/* skip the salt for seg!=0 */
+ 			strncpy(cipher_ptr, (tmp_ptr + SALT_SIZE), ESEGMENT_SIZE);
+-- 
+1.7.5.4
+

@@ -1,0 +1,35 @@
+Backport from linux-pam git repo.
+
+[YOCTO #4107]
+
+Upstream-Status: Backport
+
+Signed-off-by: Kang Kai <kai.kang@windriver.com>
+
+From bd07ad3adc626f842a4391d256541883426fd389 Mon Sep 17 00:00:00 2001
+From: Tomas Mraz <tmraz@fedoraproject.org>
+Date: Tue, 13 Nov 2012 09:19:05 +0100
+Subject: [PATCH] Reflect the enforce_for_root semantics change in
+ pam_pwhistory xtest.
+
+xtests/tst-pam_pwhistory1.pamd: Use enforce_for_root as the test is
+running with real uid == 0.
+---
+ xtests/tst-pam_pwhistory1.pamd | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/xtests/tst-pam_pwhistory1.pamd b/xtests/tst-pam_pwhistory1.pamd
+index 68e1b94..d60db7c 100644
+--- a/xtests/tst-pam_pwhistory1.pamd
++++ b/xtests/tst-pam_pwhistory1.pamd
+@@ -1,6 +1,6 @@
+ #%PAM-1.0
+ auth     required       pam_permit.so
+ account  required       pam_permit.so
+-password required	pam_pwhistory.so remember=10 retry=1
++password required	pam_pwhistory.so remember=10 retry=1 enforce_for_root
+ password required	pam_unix.so	use_authtok md5
+ session  required       pam_permit.so
+-- 
+1.7.11.7
+
