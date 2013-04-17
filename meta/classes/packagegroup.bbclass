@@ -38,3 +38,10 @@ do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_install[noexec] = "1"
 do_populate_sysroot[noexec] = "1"
+
+python () {
+    initman = d.getVar("VIRTUAL-RUNTIME_init_manager", True)
+    if initman and initman in ['sysvinit', 'systemd'] and not base_contains('DISTRO_FEATURES', initman, True, False, d):
+        bb.fatal("Please ensure that your setting of VIRTUAL-RUNTIME_init_manager (%s) matches the entries enabled in DISTRO_FEATURES" % initman)
+}
+
