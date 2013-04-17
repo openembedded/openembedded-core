@@ -40,7 +40,7 @@ EXTRA_OECONF = "--disable-introspection \
                 ac_cv_file__usr_share_hwdata_pci_ids=no \
                 ac_cv_file__usr_share_misc_pci_ids=yes \
                 --sbindir=${base_sbindir} \
-                --libexecdir=${base_sbindir} \
+                --libexecdir=${nonarch_base_libdir} \
                 --with-rootlibdir=${base_libdir} \
                 --with-rootprefix= \
                "
@@ -61,7 +61,7 @@ RRECOMMENDS_${PN} += "udev-utils"
 FILES_${PN}-dbg += "${libexecdir}/.debug"
 FILES_${PN}-dbg += "${base_libdir}/udev/.debug/"
 FILES_${PN}-dbg += "${base_libdir}/udev/.debug/*"
-FILES_${PN}-dbg += "${base_sbindir}/udev/.debug/*"
+FILES_${PN}-dbg += "${nonarch_base_libdir}/udev/.debug/*"
 FILES_${PN}-dev = "${datadir}/pkgconfig/udev.pc"
 FILES_libudev = "${base_libdir}/libudev.so.*"
 FILES_libudev-dbg = "${base_libdir}/.debug/libudev.so.*"
@@ -79,8 +79,8 @@ do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/udev
 	install -m 0755 ${WORKDIR}/udev-cache ${D}${sysconfdir}/init.d/udev-cache
-	sed -i s%@UDEVD@%${base_sbindir}/udev/udevd% ${D}${sysconfdir}/init.d/udev
-	sed -i s%@UDEVD@%${base_sbindir}/udev/udevd% ${D}${sysconfdir}/init.d/udev-cache
+	sed -i s%@UDEVD@%${nonarch_base_libdir}/udev/udevd% ${D}${sysconfdir}/init.d/udev
+	sed -i s%@UDEVD@%${nonarch_base_libdir}/udev/udevd% ${D}${sysconfdir}/init.d/udev-cache
 
 	install -d ${D}${sysconfdir}/default
 	install -m 0755 ${WORKDIR}/udev-cache.default ${D}${sysconfdir}/default/udev-cache
