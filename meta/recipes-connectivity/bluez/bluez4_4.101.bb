@@ -34,5 +34,5 @@ FILES_${PN}-dev += "\
 FILES_${PN}-dbg += "\
   ${libdir}/bluetooth/plugins/.debug \
   ${libdir}/*/.debug \
-  ${base_libdir}/udev/.debug \
+  */udev/.debug \
   "
