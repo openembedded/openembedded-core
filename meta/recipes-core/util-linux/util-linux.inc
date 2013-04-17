@@ -94,7 +94,7 @@ RRECOMMENDS_${PN}_class-native = ""
 RDEPENDS_${PN}_class-native = ""
 
 SYSTEMD_PACKAGES = "${PN}-uuidd"
-SYSTEMD_SERVICE_util-linux-uuidd = "uuidd.service"
+SYSTEMD_SERVICE_${PN}-uuidd = "uuidd.service"
 
 do_compile () {
 	set -e
