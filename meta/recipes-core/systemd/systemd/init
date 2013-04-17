@@ -43,6 +43,9 @@ case "$1" in
     [ -e /dev/shm ] || mkdir -m 1777 /dev/shm
     mount -a -t tmpfs 2>/dev/null
     mkdir -p /var/volatile/run
+    if [ ! -e /run ]; then
+        ln -s /var/run /run
+    fi
 
     # cache handling
     if [ "$DEVCACHE" != "" ]; then
