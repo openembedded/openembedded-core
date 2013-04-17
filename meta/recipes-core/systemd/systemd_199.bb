@@ -55,9 +55,15 @@ PACKAGECONFIG[xz] = "--enable-xz,--disable-xz,xz"
 
 CACHED_CONFIGUREVARS = "ac_cv_path_KILL=${base_bindir}/kill"
 
+# Helper variables to clarify locations.  This mirrors the logic in systemd's
+# build system.
+rootprefix ?= "${base_prefix}"
+rootlibdir ?= "${base_libdir}"
+rootlibexecdir = "${rootprefix}/lib"
+
 # The gtk+ tools should get built as a separate recipe e.g. systemd-tools
-EXTRA_OECONF = " --with-rootprefix=${base_prefix} \
-                 --with-rootlibdir=${base_libdir} \
+EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
+                 --with-rootlibdir=${rootlibdir} \
                  ${@base_contains('DISTRO_FEATURES', 'pam', '--enable-pam', '--disable-pam', d)} \
                  --enable-xz \
                  --disable-manpages \
@@ -74,7 +80,6 @@ EXTRA_OECONF = " --with-rootprefix=${base_prefix} \
 # uclibc does not have NSS
 EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname "
 
-# There's no docbook-xsl-native, so for the xsltproc check to false
 do_configure_prepend() {
 	export CPP="${HOST_PREFIX}cpp ${TOOLCHAIN_OPTIONS} ${HOST_CC_ARCH}"
 
@@ -84,23 +89,20 @@ do_configure_prepend() {
 	sed -i -e 's:=/root:=${ROOT_HOME}:g' ${S}/units/*.service*
 }
 
-EXTRA_OEMAKE = "rootlibexecdir=${base_sbindir}/systemd \
-                udevlibexecdir=${base_sbindir}/udev"
-
 do_install() {
 	autotools_do_install
 	install -d ${D}/${base_sbindir}
-	# provided by a seperate recipe
+	# Provided by a separate recipe
 	rm ${D}${systemd_unitdir}/system/serial-getty* -f
 
-	# provide support for initramfs
-	ln -s ${base_sbindir}/systemd/systemd ${D}/init
-	ln -s ${base_sbindir}/systemd/systemd-udevd ${D}/${base_sbindir}/udev/udevd
+	# Provide support for initramfs
+	ln -s ${rootlibexecdir}/systemd/systemd ${D}/init
+	ln -s ${rootlibexecdir}/systemd/systemd-udevd ${D}/${base_sbindir}/udevd
 
-	# create dir for journal
+	# Create dir for journal
 	install -d ${D}${localstatedir}/log/journal
 
-	# create machine-id
+	# Create machine-id
 	# 20:12 < mezcalero> koen: you have three options: a) run systemd-machine-id-setup at install time, b) have / read-only and an empty file there (for stateless) and c) boot with / writable
 	touch ${D}${sysconfdir}/machine-id
 
@@ -113,12 +115,12 @@ do_install() {
 	if ${@base_contains('DISTRO_FEATURES','sysvinit','true','false',d)}; then
 		install -d ${D}${sysconfdir}/init.d
 		install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/systemd-udevd
-		sed -i s%@UDEVD@%${base_sbindir}/systemd/systemd-udevd% ${D}${sysconfdir}/init.d/systemd-udevd
+		sed -i s%@UDEVD@%${rootlibexecdir}/systemd/systemd-udevd% ${D}${sysconfdir}/init.d/systemd-udevd
 	fi
 }
 
 python populate_packages_prepend (){
-    systemdlibdir = d.getVar("base_libdir", True)
+    systemdlibdir = d.getVar("rootlibdir", True)
     do_split_packages(d, systemdlibdir, '^lib(.*)\.so\.*', 'lib%s', 'Systemd %s library', extra_depends='', allow_links=True)
 }
 PACKAGES_DYNAMIC += "^lib(udev|gudev|systemd).*"
@@ -135,7 +137,7 @@ RDEPENDS_${PN}-initramfs = "${PN}"
 
 FILES_${PN}-gui = "${bindir}/systemadm"
 
-FILES_${PN}-vconsole-setup = "${systemd_unitdir}/systemd-vconsole-setup \
+FILES_${PN}-vconsole-setup = "${rootlibexecdir}/systemd/systemd-vconsole-setup \
                               ${systemd_unitdir}/system/systemd-vconsole-setup.service \
                               ${systemd_unitdir}/system/sysinit.target.wants/systemd-vconsole-setup.service"
 
@@ -151,9 +153,6 @@ CONFFILES_${PN} = "${sysconfdir}/systemd/journald.conf \
                 ${sysconfdir}/systemd/user.conf"
 
 FILES_${PN} = " ${base_bindir}/* \
-                ${base_sbindir}/systemd \
-                ${base_sbindir}/systemd/system-generators \
-                ${base_sbindir}/udev \
                 ${datadir}/bash-completion \
                 ${datadir}/dbus-1/services \
                 ${datadir}/dbus-1/system-services \
@@ -169,9 +168,8 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${sysconfdir}/tmpfiles.d/ \
                 ${sysconfdir}/xdg/ \
                 ${sysconfdir}/init.d/README \
+                ${rootlibexecdir}/systemd/* \
                 ${systemd_unitdir}/* \
-                ${systemd_unitdir}/system/* \
-                /lib/udev/rules.d/99-systemd.rules \
                 ${base_libdir}/security/*.so \
                 ${libdir}/libnss_myhostname.so.2 \
                 /cgroup \
@@ -193,7 +191,7 @@ FILES_${PN} = " ${base_bindir}/* \
                 /lib/udev/rules.d/99-systemd.rules \
                "
 
-FILES_${PN}-dbg += "${systemd_unitdir}/.debug ${systemd_unitdir}/*/.debug ${base_libdir}/security/.debug/ ${base_sbindir}/systemd/.debug ${base_sbindir}/systemd/system-generators/.debug ${base_sbindir}/udev/.debug"
+FILES_${PN}-dbg += "${systemd_unitdir}/.debug ${systemd_unitdir}/*/.debug ${base_libdir}/security/.debug/"
 FILES_${PN}-dev += "${base_libdir}/security/*.la ${datadir}/dbus-1/interfaces/ ${sysconfdir}/rpm/macros.systemd"
 
 RDEPENDS_${PN} += "dbus util-linux-mount"
@@ -204,29 +202,44 @@ RRECOMMENDS_${PN} += "systemd-serialgetty systemd-compat-units \
                       kernel-module-autofs4 kernel-module-unix kernel-module-ipv6 \
 "
 
-PACKAGES =+ "udev-dbg udev-hwdb udev udev-consolekit udev-utils"
+PACKAGES =+ "udev-dbg udev udev-utils udev-hwdb"
 
-FILES_udev-dbg += "${base_sbindir}/udev/.debug"
+FILES_udev-dbg += "/lib/udev/.debug"
 
 RDEPENDS_udev += "udev-utils"
 RPROVIDES_udev = "hotplug"
 RRECOMMENDS_udev += "udev-extraconf udev-hwdb"
 
 FILES_udev += "${base_sbindir}/udevd \
-               ${base_sbindir}/systemd/systemd-udevd \
-               ${base_sbindir}/udev \
+               ${rootlibexecdir}/systemd/systemd-udevd \
+               ${rootlibexecdir}/udev/accelerometer \
+               ${rootlibexecdir}/udev/ata_id \
+               ${rootlibexecdir}/udev/cdrom_id \
+               ${rootlibexecdir}/udev/collect \
+               ${rootlibexecdir}/udev/findkeyboards \
+               ${rootlibexecdir}/udev/keyboard-force-release.sh \
+               ${rootlibexecdir}/udev/keymap \
+               ${rootlibexecdir}/udev/mtd_probe \
+               ${rootlibexecdir}/udev/scsi_id \
+               ${rootlibexecdir}/udev/v4l_id \
+               ${rootlibexecdir}/udev/keymaps \
+               ${rootlibexecdir}/udev/rules.d/4*.rules \
+               ${rootlibexecdir}/udev/rules.d/5*.rules \
+               ${rootlibexecdir}/udev/rules.d/6*.rules \
+               ${rootlibexecdir}/udev/rules.d/70-power-switch.rules \
+               ${rootlibexecdir}/udev/rules.d/75*.rules \
+               ${rootlibexecdir}/udev/rules.d/78*.rules \
+               ${rootlibexecdir}/udev/rules.d/8*.rules \
+               ${rootlibexecdir}/udev/rules.d/95*.rules \
                ${sysconfdir}/udev \
                ${sysconfdir}/init.d/systemd-udevd \
                ${systemd_unitdir}/system/*udev* \
                ${systemd_unitdir}/system/*.wants/*udev* \
               "
 
-FILES_udev-consolekit += "/lib/ConsoleKit"
-RDEPENDS_udev-consolekit += "${@base_contains('DISTRO_FEATURES', 'x11', 'consolekit', '', d)}"
-
 FILES_udev-utils = "${base_bindir}/udevadm ${datadir}/bash-completion/completions/udevadm"
 
-FILES_udev-hwdb = "${base_sbindir}/udev/hwdb.d"
+FILES_udev-hwdb = "${rootlibexecdir}/udev/hwdb.d"
 
 INITSCRIPT_PACKAGES = "udev"
 INITSCRIPT_NAME_udev = "systemd-udevd"
@@ -243,7 +256,7 @@ python __anonymous() {
 
 ALTERNATIVE_${PN} = "init halt reboot shutdown poweroff"
 
-ALTERNATIVE_TARGET[init] = "${base_sbindir}/systemd/systemd"
+ALTERNATIVE_TARGET[init] = "${rootlibexecdir}/systemd/systemd"
 ALTERNATIVE_LINK_NAME[init] = "${base_sbindir}/init"
 ALTERNATIVE_PRIORITY[init] ?= "300"
 
