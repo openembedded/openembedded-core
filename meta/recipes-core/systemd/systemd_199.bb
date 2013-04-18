@@ -50,6 +50,9 @@ GTKDOC_DOCDIR = "${S}/docs/"
 PACKAGECONFIG ??= "xz"
 # Sign the journal for anti-tampering
 PACKAGECONFIG[gcrypt] = "--enable-gcrypt,--disable-gcrypt,libgcrypt"
+# regardless of PACKAGECONFIG, libgcrypt is always required to expand
+# the AM_PATH_LIBGCRYPT autoconf macro
+DEPENDS += "libgcrypt"
 # Compress the journal
 PACKAGECONFIG[xz] = "--enable-xz,--disable-xz,xz"
 
