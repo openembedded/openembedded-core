@@ -42,6 +42,7 @@ EXTRA_OECONF = "--disable-introspection \
                 --libexecdir=${nonarch_base_libdir} \
                 --with-rootlibdir=${base_libdir} \
                 --with-rootprefix= \
+                --without-systemdsystemunitdir \
                "
 
 PACKAGES =+ "udev-utils udev-cache"
