@@ -14,7 +14,7 @@ inherit gettext
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb \
                  --with-plugins=wavpack,ivorbis,mpegvideoparse --disable-vdpau --disable-apexsink \
-                 --disable-orc"
+                 --disable-orc --disable-neon"
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'librsvg', '', d)}"
 PACKAGECONFIG[librsvg] = "--enable-librsvg,--disable-librsvg,librsvg,"
