@@ -56,8 +56,8 @@ python __anonymous() {
         ep = '%s%s' % (mlprefix, p)
         epsplash = '%s%s' % (mlprefix, 'psplash')
         d.setVar("FILES_%s" % ep, "${bindir}/%s" % p)
-        d.setVar("ALTERNATIVE_%s" % ep, epsplash)
-        d.setVarFlag("ALTERNATIVE_TARGET_%s" % ep, epsplash, '${bindir}/%s' % p)
+        d.setVar("ALTERNATIVE_%s" % ep, 'psplash')
+        d.setVarFlag("ALTERNATIVE_TARGET_%s" % ep, 'psplash', '${bindir}/%s' % p)
         d.appendVar("RDEPENDS_%s" % ep, " %s" % pn)
         if p == "psplash-default":
             d.appendVar("RRECOMMENDS_%s" % pn, " %s" % ep)
