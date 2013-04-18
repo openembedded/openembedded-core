@@ -41,6 +41,8 @@ export STAGING_LIBDIR
 export BUILD_SYS
 export HOST_SYS
 
+do_populate_lic[depends] += "virtual/kernel:do_populate_sysroot"
+
 # needed for building the tools/perf Perl binding
 inherit perlnative cpan-base
 # Env var which tells perl if it should use host (no) or target (yes) settings
