@@ -1,0 +1,28 @@
+From f66d54b934710f54999debb72e8b7c620edece1d Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Fri, 25 May 2012 15:28:19 -0400
+Subject: [PATCH] gnulib accused in build breaking shocker.
+
+Upstream-Status: pending [Fedora will push this]
+
+---
+ grub-core/gnulib/stdio.in.h |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/grub-core/gnulib/stdio.in.h b/grub-core/gnulib/stdio.in.h
+index 80b9dbf..69932d9 100644
+--- a/grub-core/gnulib/stdio.in.h
++++ b/grub-core/gnulib/stdio.in.h
+@@ -141,7 +141,9 @@ _GL_WARN_ON_USE (fflush, "fflush is not always POSIX compliant - "
+    so any use of gets warrants an unconditional warning.  Assume it is
+    always declared, since it is required by C89.  */
+ #undef gets
++#if 0
+ _GL_WARN_ON_USE (gets, "gets is a security hole - use fgets instead");
++#endif
+ 
+ #if @GNULIB_FOPEN@
+ # if @REPLACE_FOPEN@
+-- 
+1.7.10.1
+
