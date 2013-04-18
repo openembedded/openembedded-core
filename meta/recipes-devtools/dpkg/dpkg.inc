@@ -62,14 +62,14 @@ do_install_append_class-native () {
 pkg_postinst_${PN} () {
 #!/bin/sh
 if [ "x$D" != "x" ] && [ -f $D/var/lib/dpkg/status ]; then
-	install -d ${D}/${sysconfdir}/rcS.d
+	install -d $D${sysconfdir}/rcS.d
 
 	# this happens at S98 where our good 'ole packages script used to run
 	echo "#!/bin/sh
 dpkg --configure -a ${REDIRECT_CMD}
 rm -f ${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
-" > ${D}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
-	chmod 0755 ${D}/${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
+" > $D${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
+	chmod 0755 $D${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
 fi
 }
 
