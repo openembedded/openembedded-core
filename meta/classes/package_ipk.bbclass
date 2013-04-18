@@ -85,6 +85,7 @@ package_install_internal_ipk() {
 	local package_multilib="${INSTALL_PACKAGES_MULTILIB_IPK}"
 
 	mkdir -p ${target_rootfs}${OPKGLIBDIR}/opkg
+	touch ${target_rootfs}${OPKGLIBDIR}/opkg/status
 
 	local ipkg_args="${OPKG_ARGS}"
 
