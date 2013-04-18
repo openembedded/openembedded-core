@@ -23,6 +23,14 @@ do_install_prepend() {
 }
 
 RDEPENDS_${PN} = "\
+  python-stringold \
+  python-email \
+  python-shell \
+  python-distutils \
+  python-compression \
+"
+
+RDEPENDS_${PN}_class-native = "\
   python-distutils \
   python-compression \
 "
