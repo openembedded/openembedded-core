@@ -11,10 +11,16 @@ DEPENDS = "gtk+ dbus-glib intltool-native"
 # 0.7 tag
 SRCREV = "cf3c325b23dae843c5499a113591cfbc98acb143"
 SRC_URI = "git://github.com/connectivity/connman-gnome.git;protocol=git \
-	   file://0001-Removed-icon-from-connman-gnome-about-applet.patch"
+	   file://0001-Removed-icon-from-connman-gnome-about-applet.patch \
+	   file://images/* \
+          "
 
 S = "${WORKDIR}/git"
 
 inherit autotools gtk-icon-cache
 
 RDEPENDS_${PN} = "connman"
+
+do_install_append() {
+    install -m 0644 ${WORKDIR}/images/* ${D}/usr/share/icons/hicolor/22x22/apps/
+}
