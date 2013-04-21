@@ -12,13 +12,7 @@ DEPENDS = "glib-2.0 popt"
 DEPENDS_class-native = ""
 DEPENDS_class-nativesdk = ""
 
-SRC_URI = "http://pkgconfig.freedesktop.org/releases/pkg-config-${PV}.tar.gz \
-           file://autofoo.patch \
-           file://glibconfig-sysdefs.h \
-           file://pkg-config-native.in \
-           file://disable-legacy.patch \
-           file://obsolete_automake_macros.patch \
-          "
+SRC_URI = "http://pkgconfig.freedesktop.org/releases/pkg-config-${PV}.tar.gz"
 
 S = "${WORKDIR}/pkg-config-${PV}/"
 
