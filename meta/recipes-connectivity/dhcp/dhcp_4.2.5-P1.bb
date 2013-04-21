@@ -9,5 +9,5 @@ SRC_URI += "file://fixincludes.patch \
             file://fixsepbuild.patch \
            "
 
-SRC_URI[md5sum] = "6489e919ac093d17249270ee9be1020e"
-SRC_URI[sha256sum] = "771a5cffb1fd1392d25926e22e1c58a006e2ad02ecd77d136096e5e366a5b6bc"
+SRC_URI[md5sum] = "f68e3c1f00a9af5742bc5e71d567cf93"
+SRC_URI[sha256sum] = "59b06c9f5d775e46999b422c45b9229402c462b114ce1685617bfb2b8b028250"
