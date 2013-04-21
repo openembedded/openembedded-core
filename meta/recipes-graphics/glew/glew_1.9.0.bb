@@ -12,6 +12,7 @@ PR = "r1"
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/glew/glew/${PV}/glew-${PV}.tgz \
            file://autotools.patch \
            file://glew_fix_for_automake-1.12.patch \
+           file://fix-glew.pc-install.patch \
           "
 
 SRC_URI[md5sum] = "69ce911decef6249d24742497e6ad06a"
