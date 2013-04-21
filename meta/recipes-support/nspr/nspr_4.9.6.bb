@@ -11,15 +11,14 @@ SRC_URI = "ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${PV}/src/nspr-$
            file://remove-rpath-from-tests.patch \
            file://fix-build-on-x86_64.patch \
            file://trickly-fix-build-on-x86_64.patch \
-           file://fix-build-on-aarch64.patch \
           "
 
 SRC_URI += "file://nspr.pc.in"
 
-RDEPENDS_${PN}-dev += "perl"
+SRC_URI[md5sum] = "62b1e9d376d503d972f90c3c0031d879"
+SRC_URI[sha256sum] = "7693fddd3c5cc15d53a50df53ab5dcdaa2eb58f5003302690559471744d6c6f9"
 
-SRC_URI[md5sum] = "b6ccfa8fcbbeb17ebeb19a3edff612bd"
-SRC_URI[sha256sum] = "616ab65c849155c9ed0e5f502530a241cc9108e278275aa448b417ae632c7604"
+RDEPENDS_${PN}-dev += "perl"
 
 S = "${WORKDIR}/nspr-${PV}/mozilla/nsprpub"
 
