@@ -9,16 +9,11 @@ A layer must exist above `libffi' that handles type conversions for values passe
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e54c573c49435ccbbd3f6dc9e49a065e"
 
-PR = "r1"
-
 SRC_URI = "ftp://sourceware.org/pub/libffi/${BPN}-${PV}.tar.gz \
-           file://0001-libffi-update-for-3.0.11.patch \
-           file://add-aarch64-support.patch \
-           file://aarch64-adding-build-support.patch \
-"
+           file://fix-libffi.la-location.patch"
 
-SRC_URI[md5sum] = "f69b9693227d976835b4857b1ba7d0e3"
-SRC_URI[sha256sum] = "70bfb01356360089aa97d3e71e3edf05d195599fd822e922e50d46a0055a6283"
+SRC_URI[md5sum] = "45f3b6dbc9ee7c7dfbbbc5feba571529"
+SRC_URI[sha256sum] = "1dddde1400c3bcb7749d398071af88c3e4754058d2d4c0b3696c2f82dc5cf11c"
 
 EXTRA_OECONF += "--disable-builddir"
 
