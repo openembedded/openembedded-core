@@ -1,6 +1,5 @@
 require glib.inc
 
-PR = "r2"
 PE = "1"
 
 DEPENDS += "libffi python-argparse-native zlib"
@@ -12,15 +11,16 @@ SHRT_VER = "${@d.getVar('PV',1).split('.')[0]}.${@d.getVar('PV',1).split('.')[1]
 SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://configure-libtool.patch \
            file://glib-2.0_fix_for_x32.patch \
-           file://obsolete_automake_macros.patch \
            file://fix-conflicting-rand.patch \
            file://Makefile-ptest.patch \
            file://run-ptest \
           "
-SRC_URI[md5sum] = "a4ca31e258273c3761e3de2edd607661"
-SRC_URI[sha256sum] = "855fcbf87cb93065b488358e351774d8a39177281023bae58c286f41612658a7"
 
 SRC_URI_append_class-native = " file://glib-gettextize-dir.patch"
+
+SRC_URI[md5sum] = "2047dff287473450593edecb18f79c17"
+SRC_URI[sha256sum] = "455a8abe8692c5174bcc7ffa15b96a7521a2f2f9fb47594405927c35cb9bb227"
+
 BBCLASSEXTEND = "native nativesdk"
 
 RDEPENDS_${PN}-ptest += "\
@@ -50,8 +50,8 @@ do_configure_prepend() {
 
 do_install_append() {
   # remove some unpackaged files
-  rm -f ${D}${libdir}/gdbus-2.0/codegen/*.pyc
-  rm -f ${D}${libdir}/gdbus-2.0/codegen/*.pyo
+  rm -f ${D}${datadir}/glib-2.0/codegen/*.pyc
+  rm -f ${D}${datadir}/glib-2.0/codegen/*.pyo
   # and empty dirs
   rm -rf ${D}${libdir}/gio
 
