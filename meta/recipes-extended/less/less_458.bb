@@ -23,12 +23,11 @@ LICENSE = "GPLv3+ | BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                     file://LICENSE;md5=866cc220f330b04ae4661fc3cdfedea7"
 DEPENDS = "ncurses"
-PR = "r0"
 
 SRC_URI = "http://www.greenwoodsoftware.com/${BPN}/${BPN}-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "b5a964682f327b0dceb690f34e02632f"
-SRC_URI[sha256sum] = "63c9c421df5c64439babc3aa44861512c298af394c932672b3e5aeb53580eed8"
+SRC_URI[md5sum] = "935b38aa2e73c888c210dedf8fd94f49"
+SRC_URI[sha256sum] = "e536c7819ede54b3d487f0ffc4c14b3620bed83734d92a81e89f62346db0fcac"
 
 inherit autotools update-alternatives
 
