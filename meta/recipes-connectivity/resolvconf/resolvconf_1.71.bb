@@ -10,12 +10,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c93c0550bd3173f4504b2cbd8991e50b"
 AUTHOR = "Thomas Hood"
 HOMEPAGE = "http://packages.debian.org/resolvconf"
 RDEPENDS_${PN} = "bash"
-PR = "r0"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/r/resolvconf/resolvconf_${PV}.tar.gz"
 
-SRC_URI[md5sum] = "95e19745790fd1c9a102ddde3bfdb15c"
-SRC_URI[sha256sum] = "7bb1ccfb68d61a96b91d135c4048f464482b634b0fc4a4b9d9a0f56ced5b4bf6"
+SRC_URI[md5sum] = "f073ab06b11584c8af86e7f84a56680e"
+SRC_URI[sha256sum] = "f2ec30a0e89330c6cbc3117efd60639da8305782979844ee4a1906e4b0ca230c"
 
 inherit allarch
 
