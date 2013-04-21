@@ -11,18 +11,13 @@ LIC_FILES_CHKSUM = "file://src/xdemos/glxgears.c;beginline=1;endline=20;md5=9142
 
 DEPENDS = "virtual/libx11 virtual/libgl glew"
 
-PR = "r4"
-
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/demos/${PV}/${BPN}-${PV}.tar.bz2 \
-	file://dso_linking_change_build_fix.patch \
-	file://gles2-info.patch \
         file://glut.patch \
         file://egl-mesa-screen-surface-build-fix.patch \
-        file://egl-mesa-screen-surface-query.patch \
-        file://0001-xeglgears-Make-EGL_KHR_image-usage-portable.patch"
+        file://egl-mesa-screen-surface-query.patch"
 
-SRC_URI[md5sum] = "320c2a4b6edc6faba35d9cb1e2a30bf4"
-SRC_URI[sha256sum] = "4bc7f2b20d17e3eebfec288f2367a435cd2db71fc5ac9ece2c14827e290d77d1"
+SRC_URI[md5sum] = "9df33ba69a26bbfbc7c8148602e59542"
+SRC_URI[sha256sum] = "9703fa0646b32a1e68d2abf5628f936f77bf97c69ffcaac90de380820a87a828"
 
 inherit autotools pkgconfig
 
