@@ -3,17 +3,15 @@ HOMEPAGE = "http://git.gnome.org/browse/glib-networking/"
 BUGTRACKER = "http://bugzilla.gnome.org"
 
 LICENSE = "LGPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7"
+LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 
 SECTION = "libs"
 DEPENDS = "glib-2.0 gnutls intltool-native"
 
-PR = "r3"
+SRC_URI = "${GNOME_MIRROR}/${BPN}/2.36/${BPN}-${PV}.tar.xz"
 
-SRC_URI = "${GNOME_MIRROR}/${BPN}/2.28/${BPN}-${PV}.tar.bz2"
-
-SRC_URI[md5sum] = "c10e51571d03c10111a37bcd21fbf777"
-SRC_URI[sha256sum] = "98bedfbd530c4b1b53c91025fe82290bafd289d249e4eb549c3b90d23a76021c"
+SRC_URI[md5sum] = "062dafdb939510e7b38eea3d3b367be0"
+SRC_URI[sha256sum] = "190d66fbaeb023ba4f43c315f23c5372c43be6cbe857596e00990211514650d9"
 
 EXTRA_OECONF = "--without-ca-certificates --without-gnome-proxy --without-libproxy"
 
