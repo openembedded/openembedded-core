@@ -8,19 +8,13 @@ inherit qemu
 
 FONT_PACKAGES ??= "${PN}"
 
-#
-# On host, the postinstall MUST return 1 because we do not know if the intercept
-# hook will succeed. If it does succeed, than the packages will be marked as
-# installed.
-#
 fontcache_common() {
 if [ "x$D" != "x" ] ; then
 	$INTERCEPT_DIR/postinst_intercept update_font_cache ${PKG} bindir=${bindir} \
 		libdir=${libdir} base_libdir=${base_libdir}
-	exit 1
+else
+	fc-cache
 fi
-
-fc-cache
 }
 
 python populate_packages_append() {
