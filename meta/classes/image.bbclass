@@ -187,21 +187,32 @@ run_intercept_scriptlets () {
 			[ "$script" = "*" ] && break
 			[ "$script" = "postinst_intercept" ] || [ ! -x "$script" ] && continue
 			echo "> Executing $script"
-			./$script || { echo "WARNING: intercept script \"$script\" failed, falling back to running postinstalls at first boot" && continue; };
+			./$script && continue
+			echo "WARNING: intercept script \"$script\" failed, falling back to running postinstalls at first boot"
 			#
-			# If we got here, than the intercept was successful. Next, we must
-			# mark the postinstalls as "installed". For rpm is a little bit
-			# different, we just have to delete the saved postinstalls from
+			# If we got here, than the intercept has failed. Next, we must
+			# mark the postinstalls as "unpacked". For rpm is a little bit
+			# different, we just have to save the package postinstalls in
 			# /etc/rpm-postinsts
 			#
 			pkgs="$(cat ./$script|grep "^##PKGS"|cut -d':' -f2)" || continue
 			case ${IMAGE_PKGTYPE} in
 				"rpm")
-					for pi in ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts/*; do
-						pkg_name="$(cat $pi|sed -n -e "s/^.*postinst_intercept $script \([^ ]*\).*/\1/p")"
-						if [ -n "$pkg_name" -a -n "$(echo "$pkgs"|grep " $pkg_name ")" ]; then
-							rm $pi
-						fi
+					[ -d ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts/ ] || mkdir ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts/
+					v_expr=$(echo ${MULTILIB_GLOBAL_VARIANTS}|tr ' ' '|')
+					for p in $pkgs; do
+						# remove any multilib prefix from the package name (RPM 
+						# does not use it like this)
+						new_p=$(echo $p | sed -r "s/^($v_expr)-//")
+
+						# extract the postinstall scriptlet from rpm package and
+						# save it in /etc/rpm-postinsts
+						echo "  * postponing $new_p"
+						rpm -q --scripts --root=${IMAGE_ROOTFS} --dbpath=/var/lib/rpm $new_p |\
+						sed -n -e '/^postinstall scriptlet (using .*):$/,/^.* scriptlet (using .*):$/ {/.*/p}' |\
+						sed -e 's/postinstall scriptlet (using \(.*\)):$/#!\1/' -e '/^.* scriptlet (using .*):$/d'\
+							> ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts/$new_p
+						chmod +x ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts/$new_p
 					done
 					# move to the next intercept script
 					continue
@@ -216,7 +227,8 @@ run_intercept_scriptlets () {
 			# the next piece of code is run only for ipk/dpkg
 			sed_expr=""
 			for p in $pkgs; do
-				sed_expr="$sed_expr -e \"/^Package: ${p}$/,/^Status: install.* unpacked$/ {s/unpacked/installed/}\""
+				echo "  * postponing $p"
+				sed_expr="$sed_expr -e \"/^Package: ${p}$/,/^Status: install.* installed$/ {s/installed/unpacked/}\""
 			done
 			eval sed -i $sed_expr $status_file
 		done
