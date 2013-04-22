@@ -6,16 +6,15 @@ LICENSE = "GPLv2.0+"
 LIC_FILES_CHKSUM = "file://session;endline=3;md5=f8a5c5b9c279e52dc094d10e11c2be63"
 
 SECTION = "x11"
-RDEPENDS_${PN} = "formfactor gtk-sato-engine matchbox-theme-sato gtk-theme-sato matchbox-panel-2 matchbox-desktop-sato matchbox-session"
+DEPENDS = "gconf-native"
+RDEPENDS_${PN} = "formfactor gtk-sato-engine matchbox-theme-sato gtk-theme-sato matchbox-panel-2 matchbox-desktop-sato matchbox-session gconf"
 PR = "r30"
 
 # This package is architecture specific because the session script is modified
 # based on the machine architecture.
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRC_URI = "file://session \
-           file://matchbox-session-sato.schemas \
-          "
+SRC_URI = "file://session"
 S = "${WORKDIR}"
 
 do_install() {
@@ -33,9 +32,15 @@ do_install() {
 	install -d ${D}/${sysconfdir}/matchbox
 	sed -f "$SCRIPT" ${S}/session > ${D}/${sysconfdir}/matchbox/session
         chmod +x ${D}/${sysconfdir}/matchbox/session
-
-	install -d ${D}/${sysconfdir}/gconf/schemas
-	install -m 664 ${S}/matchbox-session-sato.schemas ${D}/${sysconfdir}/gconf/schemas
 }
 
-inherit gconf
+pkg_postinst_${PN} () {
+	set_value() {
+		#type, name, value
+		gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type $1 --set /desktop/poky/interface/$2 "$3"
+	}
+	set_value string theme Sato
+	set_value string icon_theme Sato
+	set_value bool touchscreen true
+	set_value string font_name "Sans 9"
+}
