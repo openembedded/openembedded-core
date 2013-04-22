@@ -2,41 +2,34 @@ FILES_${PN} += "${datadir}/icons/hicolor"
 
 DEPENDS += "${@['hicolor-icon-theme', '']['${BPN}' == 'hicolor-icon-theme']} gtk-update-icon-cache-native"
 
-#
-# On host, the postinstall MUST return 1 because we do not know if the intercept
-# hook will succeed. If it does succeed, than the packages will be marked as
-# installed.
-#
 gtk_icon_cache_postinst() {
 if [ "x$D" != "x" ]; then
-    $INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG} libdir=${libdir} \
-        base_libdir=${base_libdir}
-    exit 1
+	$INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG} libdir=${libdir} \
+		base_libdir=${base_libdir}
+else
+
+	# Update the pixbuf loaders in case they haven't been registered yet
+	GDK_PIXBUF_MODULEDIR=${libdir}/gdk-pixbuf-2.0/2.10.0/loaders gdk-pixbuf-query-loaders --update-cache
+
+	for icondir in /usr/share/icons/* ; do
+		if [ -d $icondir ] ; then
+			gtk-update-icon-cache -fqt  $icondir
+		fi
+	done
 fi
-
-# Update the pixbuf loaders in case they haven't been registered yet
-GDK_PIXBUF_MODULEDIR=${libdir}/gdk-pixbuf-2.0/2.10.0/loaders gdk-pixbuf-query-loaders --update-cache
-
-for icondir in /usr/share/icons/* ; do
-    if [ -d $icondir ] ; then
-        gtk-update-icon-cache -fqt  $icondir
-    fi
-done
 }
 
 gtk_icon_cache_postrm() {
 if [ "x$D" != "x" ]; then
-    $INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG} libdir=${libdir} \
-        base_libdir=${base_libdir}
-
-    exit 1
+	$INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG} libdir=${libdir} \
+		base_libdir=${base_libdir}
+else
+	for icondir in /usr/share/icons/* ; do
+		if [ -d $icondir ] ; then
+			gtk-update-icon-cache -qt  $icondir
+		fi
+	done
 fi
-
-for icondir in /usr/share/icons/* ; do
-    if [ -d $icondir ] ; then
-        gtk-update-icon-cache -qt  $icondir
-    fi
-done
 }
 
 python populate_packages_append () {
