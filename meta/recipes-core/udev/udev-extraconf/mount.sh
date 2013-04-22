@@ -47,7 +47,7 @@ rm_dir() {
 	fi
 }
 
-if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ]; then
+if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" ]; then
 	if [ -x "$PMOUNT" ]; then
 		$PMOUNT $DEVNAME 2> /dev/null
 	elif [ -x $MOUNT ]; then
