@@ -94,7 +94,7 @@ FILES_${PN}-sd8686 = " \
 "
 
 FILES_${PN}-rtl-license = " \
-  /lib/firmware/rtlwifi/LICENCE.rtlwifi_firmware.txt \
+  /lib/firmware/LICENCE.rtlwifi_firmware.txt \
 "
 
 LICENSE_${PN}-rtl8192cu = "Firmware-rtlwifi"
