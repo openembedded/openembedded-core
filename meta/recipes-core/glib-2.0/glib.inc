@@ -27,10 +27,9 @@ S = "${WORKDIR}/glib-${PV}"
 
 CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap"
 
-PTEST_CONF = "${@base_contains('DISTRO_FEATURES', 'ptest', '', '--disable-modular-tests', d)}"
+PTEST_CONF = "${@base_contains('DISTRO_FEATURES', 'ptest', '--enable-modular-tests', '--disable-modular-tests', d)}"
 EXTRA_OECONF = "--enable-included-printf=no ${CORECONF} ${PTEST_CONF}"
-EXTRA_OECONF_class-native = "${CORECONF} --disable-selinux"
-EXTRA_OECONF_linuxstdbase = "--enable-included-printf=no ${CORECONF}"
+EXTRA_OECONF_class-native = "${CORECONF} --disable-selinux --disable-modular-tests"
 
 FILES_${PN} = "${libdir}/lib*${SOLIBS} ${datadir}/glib-2.0/schemas \
                ${datadir}/glib-2.0/gettext/mkinstalldirs ${datadir}/glib-2.0/gettext/po/Makefile.in.in"
