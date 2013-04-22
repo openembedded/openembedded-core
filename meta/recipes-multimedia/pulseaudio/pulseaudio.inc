@@ -147,6 +147,7 @@ RDEPENDS_pulseaudio-module-console-kit =+ "consolekit"
 
 FILES_pulseaudio-module-gconf += "${libexecdir}/pulse/gconf-helper"
 FILES_pulseaudio-module-bluetooth-proximity += "${libexecdir}/pulse/proximity-helper"
+FILES_pulseaudio-module-alsa-card += "${datadir}/pulseaudio/alsa-mixer"
 
 RDEPENDS_pulseaudio-server += "\
         ${@base_contains('DISTRO_FEATURES', 'x11', 'pulseaudio-module-console-kit', '', d)}"
