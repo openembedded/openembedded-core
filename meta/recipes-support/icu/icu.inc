@@ -10,7 +10,6 @@ S = "${WORKDIR}/icu/source"
 STAGING_ICU_DIR_NATIVE = "${STAGING_DATADIR_NATIVE}/${BPN}/${PV}"
 
 PARALLEL_MAKE = ""
-FULL_OPTIMIZATION_arm = "-Os"
 CPPFLAGS_append_libc-uclibc = " -DU_TIMEZONE=0"
 
 inherit autotools pkgconfig binconfig
