@@ -42,6 +42,8 @@ EXCONFIG_ARGS_virtclass-nativesdk = " \
 		--with-chtype='long' \
 		--with-mmask-t='long'"
 
+PACKAGES_DYNAMIC = "^${PN}-lib.*"
+
 # Fall back to the host termcap / terminfo for -nativesdk and -native
 # The reality is a work around for strange problems with things like
 # "bitbake -c menuconfig busybox" where it cannot find the terminfo
