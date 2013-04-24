@@ -1,4 +1,7 @@
-DESCRIPTION = "Libcgroup"
+SUMMARY = "Linux control group abstraction library"
+DESCRIPTION = "libcgroup is a library that abstracts the control group file system \
+in Linux. Control groups allow you to limit, account and isolate resource usage \
+(CPU, memory, disk I/O, etc.) of groups of processes."
 SECTION = "libs"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2d5025d4aa3495befef8f17206a5b0a1"
