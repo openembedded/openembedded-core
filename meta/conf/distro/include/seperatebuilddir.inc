@@ -188,7 +188,6 @@ B_pn-gnome-desktop = "${SEPB}"
 #B_pn-gnome-doc-utils = "${SEPB}"
 #B_pn-gnome-doc-utils-native = "${SEPB}"
 B_pn-gnome-icon-theme = "${SEPB}"
-B_pn-gnome-keyring = "${SEPB}"
 B_pn-gnome-mime-data = "${SEPB}"
 B_pn-gnupg = "${SEPB}"
 ## libtool: link: warning: library `.../usr/lib/libgcrypt.la' was moved.
