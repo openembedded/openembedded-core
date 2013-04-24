@@ -26,7 +26,7 @@ cpan_do_configure () {
 			test -f $f2 || continue
 			sed -i -e "s:\(PERL_ARCHLIB = \).*:\1${PERL_ARCHLIB}:" \
 				-e 's/perl.real/perl/' \
-				-e "s/^\(CCFLAGS =.*\)/\1 ${CFLAGS}/" \
+				-e "s|^\(CCFLAGS =.*\)|\1 ${CFLAGS}|" \
 				$f2
 		done
 	fi
