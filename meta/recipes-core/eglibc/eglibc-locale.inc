@@ -1,5 +1,7 @@
 include eglibc-collateral.inc
 
+SUMMARY = "Locale data from eglibc"
+
 BPN = "eglibc"
 LOCALEBASEPN = "${MLPREFIX}eglibc"
 
