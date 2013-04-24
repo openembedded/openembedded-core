@@ -2,6 +2,7 @@
 # Copyright (C) 2004-2006, Advanced Micro Devices, Inc.  All Rights Reserved
 # Released under the MIT license (see packages/COPYING)
 
+SUMMARY = "Utilities to access MS-DOS disks without mounting them"
 DESCRIPTION = "Mtools is a collection of utilities for accessing MS-DOS disks from Unix without mounting them."
 HOMEPAGE = "http://www.gnu.org/software/mtools/"
 LICENSE = "GPLv2+"
