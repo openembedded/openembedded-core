@@ -1,4 +1,5 @@
-pickDESCRIPTION = "Python hardware latency detector"
+SUMMARY = "Hardware latency detector"
+DESCRIPTION = "Python utility for controlling the kernel hardware latency detection module (hwlat_detector.ko)."
 HOMEPAGE = "http://git.kernel.org/?p=linux/kernel/git/clrkwllms/rt-tests.git"
 SECTION = "tests"
 LICENSE = "GPLv2"
