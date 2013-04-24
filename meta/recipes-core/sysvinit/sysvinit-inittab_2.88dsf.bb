@@ -21,14 +21,12 @@ do_install() {
         echo "S:2345:respawn:${base_sbindir}/getty ${SERIAL_CONSOLE}" >> ${D}${sysconfdir}/inittab
     fi
 
-    idx=0
     tmp="${SERIAL_CONSOLES}"
     for i in $tmp
     do
 	j=`echo ${i} | sed s/\;/\ /g`
-	echo "${idx}:12345:respawn:${base_sbindir}/getty ${j}" >> ${D}${sysconfdir}/inittab
-
-	idx=`expr $idx + 1`
+	label=`echo ${i} | sed -e 's/^.*;tty//'`
+	echo "$label:12345:respawn:${base_sbindir}/getty ${j}" >> ${D}${sysconfdir}/inittab
     done
 
     if [ "${USE_VT}" = "1" ]; then
