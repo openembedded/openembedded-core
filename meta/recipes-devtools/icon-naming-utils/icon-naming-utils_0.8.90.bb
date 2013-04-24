@@ -1,3 +1,13 @@
+SUMMARY = "Enables backwards compatibility with current desktop icon themes"
+DESCRIPTION = "A Perl script used for maintaining backwards \
+compatibility with current desktop icon themes, while migrating to the \
+names specified in the Icon Naming Specification. The Icon Naming \
+Utilities map the icon names used by the GNOME and KDE desktops to the \
+icon names proposed in the Icon Naming Specification, and generate the \
+icon files appropriate to the desktop environment you use. The Icon \
+Naming Specification provides a standard list of common icon contexts \
+and names that can be used to make icon themes work in a desktop \
+environment or application that implements the naming specification. "
 LICENSE = "GPLv2"
 DEPENDS = "libxml-simple-perl-native"
 PR = "r4"
