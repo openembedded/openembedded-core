@@ -21,6 +21,10 @@ inherit autotools pkgconfig binconfig lib_package
 # We don't DEPEND on binutils for ansidecl.h so ensure we don't use the header
 do_configure_prepend () {
 	sed -i -e 's/ansidecl.h//' ${S}/configure.in
+
+	# The timestamps in the 1.1.28 tarball are messed up causing this file to
+	# appear out of date.  Touch it so that we don't try to regenerate it.
+	touch ${S}/doc/xsltproc.1
 }
 
 EXTRA_OECONF = "--without-python --without-debug --without-mem-debug --without-crypto"
