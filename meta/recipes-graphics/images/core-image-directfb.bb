@@ -1,3 +1,4 @@
+SUMMARY = "An image that uses DirectFB instead of X11."
 LICENSE = "MIT"
 PR="r0"
 
