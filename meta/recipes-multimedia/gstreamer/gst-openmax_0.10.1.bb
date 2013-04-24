@@ -1,3 +1,9 @@
+SUMMARY = "GStreamer plug-in for communication with OpenMAX IL components"
+DESCRIPTION = "GstOpenMAX is a GStreamer plug-in that allows \
+communication with OpenMAX Integration Layer (IL) components. OpenMAX \
+IL is an industry standard that provides an abstraction layer for \
+computer graphics, video, and sound routines."
+HOMEPAGE = "http://freedesktop.org/wiki/GstOpenMAX"
 DEPENDS = "gstreamer"
 RDEPENDS_${PN} = "libomxil"
 LICENSE = "LGPLv2.1"
