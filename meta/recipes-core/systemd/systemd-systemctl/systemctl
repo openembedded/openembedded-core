@@ -78,8 +78,7 @@ for service in $services; do
 	echo "Found $service in $service_file"
 
 	# create the required symbolic links
-	wanted_by=$(grep WantedBy $ROOT/$service_file \
-		        | sed 's,WantedBy=,,g' \
+	wanted_by=$(sed '/^WantedBy[[:space:]]*=/s,[^=]*=,,p;d' "$ROOT/$service_file" \
 		        | tr ',' '\n' \
 		        | grep '\(\.target$\)\|\(\.service$\)')
 
@@ -97,8 +96,7 @@ for service in $services; do
 	done
 
 	# create the required symbolic 'Alias' links
-	alias=$(grep Alias $ROOT/$service_file \
-		        | sed 's,Alias=,,g' \
+	alias=$(sed '/^Alias[[:space:]]*=/s,[^=]*=,,p;d' "$ROOT/$service_file" \
 		        | tr ',' '\n' \
 		        | grep '\.service$')
 
@@ -114,8 +112,7 @@ for service in $services; do
 	done
 
 	# call us for the other required scripts
-	also=$(grep Also $ROOT/$service_file \
-		   | sed 's,Also=,,g' \
+	also=$(sed '/^Also[[:space:]]*=/s,[^=]*=,,p;d' "$ROOT/$service_file" \
 		   | tr ',' '\n')
 	for a in $also; do
 		echo "Also=$a found in $service"
