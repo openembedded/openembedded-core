@@ -84,6 +84,16 @@ do_install_append () {
 	if [ -e "${D}${infodir}/dir" ]; then
 		rm -f ${D}${infodir}/dir
 	fi
+
+	if [ "${USE_LDCONFIG}" != "1" ]; then
+		# We won't ship this file (see FILES above) so let's not install it
+		rm -f ${D}${sysconfdir}/ld.so.conf
+		# This directory will be empty now so remove it too.
+		# But check whether it exists first, since it won't for eglibc-initial.
+		if [ -d ${D}${sysconfdir} ]; then
+			rmdir ${D}${sysconfdir}
+		fi
+	fi
 }
 
 do_install_locale () {
