@@ -1,10 +1,10 @@
-SUMMARY = "Displays the full path of executables that bash would execute"
+SUMMARY = "Displays the full path of shell commands"
 DESCRIPTION = "Which is a utility that prints out the full path of the \
 executables that bash(1) would execute when the passed \
 program names would have been entered on the shell prompt. \
 It does this by using the exact same algorithm as bash."
-HOMEPAGE = "http://www.xs4all.nl/~carlo17/which/"
-BUGTRACKER = "n/a"
+SECTION = "libs"
+HOMEPAGE = "http://carlo17.home.xs4all.nl/which/"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"

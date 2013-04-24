@@ -1,9 +1,14 @@
-DESCRIPTION = "which - shows the full path of (shell) commands."
-SECTION     = "libs"
+SUMMARY = "Displays the full path of shell commands"
+DESCRIPTION = "Which is a utility that prints out the full path of the \
+executables that bash(1) would execute when the passed \
+program names would have been entered on the shell prompt. \
+It does this by using the exact same algorithm as bash."
+SECTION = "libs"
+HOMEPAGE = "http://carlo17.home.xs4all.nl/which/"
+
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
                     file://which.c;beginline=1;endline=17;md5=a9963693af2272e7a8df6f231164e7a2"
-HOMEPAGE = "http://ftp.gnu.org/gnu/which/"
 DEPENDS     = "cwautomacros-native"
 
 inherit autotools update-alternatives
