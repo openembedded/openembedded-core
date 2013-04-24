@@ -1,3 +1,8 @@
+SUMMARY = "A simple shell script to run all installed ptests"
+DESCRIPTION = "The ptest-runner package installs a ptest-runner \
+shell script which loops through all installed ptest test suites and \
+runs them in sequence."
+HOMEPAGE = "https://wiki.yoctoproject.org/wiki/Ptest"
 SRC_URI += "file://ptest-runner"
 
 LICENSE = "MIT"
