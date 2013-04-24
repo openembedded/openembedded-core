@@ -10,3 +10,5 @@ GDBPROPREFIX = ""
 
 inherit cross
 inherit gettext
+
+datadir .= "/gdb-${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}"
