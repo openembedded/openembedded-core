@@ -1,5 +1,6 @@
-#connman config to setup wired interface on qemu machines
-
+SUMMARY = "Connman config to setup wired interface on qemu machines"
+DESCRIPTION = "This is the ConnMan configuration to set up a Wired \
+network interface for a qemu machine."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0;md5=801f80980d171dd6425610833a22dbe6"
 
