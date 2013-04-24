@@ -2,7 +2,7 @@ DESCRIPTION = "Dropbear is a lightweight SSH and SCP implementation"
 HOMEPAGE = "http://matt.ucc.asn.au/dropbear/dropbear.html"
 SECTION = "console/network"
 
-INC_PR = "r2"
+INC_PR = "r0"
 
 # some files are from other projects and have others license terms:
 #   public domain, OpenSSH 3.5p1, OpenSSH3.6.1p2, PuTTY
@@ -14,17 +14,16 @@ RPROVIDES_${PN} = "ssh sshd"
 
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
-SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.gz \
-	         file://urandom-xauth-changes-to-options.h.patch \
-		 file://dropbear-0.53.1-static_build_fix.patch \
-	         file://configure.patch \
-	         file://fix-2kb-keys.patch \
-	         file://nopw-option.patch \
-	         file://init \
-                 ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} "
+SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.bz2 \
+           file://0001-urandom-xauth-changes-to-options.h.patch \
+           file://0002-static_build_fix.patch \
+           file://0003-configure.patch \
+           file://0004-fix-2kb-keys.patch \
+           file://init \
+           ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} "
 
-PAM_SRC_URI = "file://dropbear-enable-pam.patch \
-               file://dropbear-configuration-file.patch \
+PAM_SRC_URI = "file://0005-dropbear-enable-pam.patch \
+               file://0006-dropbear-configuration-file.patch \
                file://dropbear"
 
 inherit autotools update-rc.d

@@ -1,5 +1,5 @@
+Subject: [PATCH 2/6] static_build_fix
 Upstream-Status: Submitted
-
 
 dropbear: fix static build
 
@@ -13,12 +13,15 @@ svr-authpasswd.c:(.text+0xfc): undefined reference to `crypt'
 collect2: ld returned 1 exit status
 
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
+---
+ Makefile.in | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Index: dropbear-2011.54/Makefile.in
-===================================================================
---- dropbear-2011.54.orig/Makefile.in	2011-11-08 04:48:15.000000000 -0800
-+++ dropbear-2011.54/Makefile.in	2011-12-27 13:44:41.644354442 -0800
-@@ -56,7 +56,7 @@
+diff --git a/Makefile.in b/Makefile.in
+index 4bdd845..e82e561 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -56,7 +56,7 @@ HEADERS=options.h dbutil.h session.h packet.h algo.h ssh.h buffer.h kex.h \
  		loginrec.h atomicio.h x11fwd.h agentfwd.h tcpfwd.h compat.h \
  		listener.h fake-rfc2553.h
  
@@ -27,7 +30,7 @@ Index: dropbear-2011.54/Makefile.in
  dbclientobjs=$(COMMONOBJS) $(CLISVROBJS) $(CLIOBJS)
  dropbearkeyobjs=$(COMMONOBJS) $(KEYOBJS)
  dropbearconvertobjs=$(COMMONOBJS) $(CONVERTOBJS)
-@@ -158,7 +158,10 @@
+@@ -158,7 +158,10 @@ dbclient: $(dbclientobjs)
  dropbearkey: $(dropbearkeyobjs)
  dropbearconvert: $(dropbearconvertobjs)
  
@@ -39,7 +42,7 @@ Index: dropbear-2011.54/Makefile.in
  	$(CC) $(LDFLAGS) -o $@$(EXEEXT) $($@objs) $(LIBS)
  
  # scp doesn't use the libs so is special.
-@@ -169,14 +172,14 @@
+@@ -169,14 +172,14 @@ scp: $(SCPOBJS)  $(HEADERS) Makefile
  # multi-binary compilation.
  MULTIOBJS=
  ifeq ($(MULTI),1)
@@ -56,3 +59,6 @@ Index: dropbear-2011.54/Makefile.in
  
  multilink: multibinary $(addprefix link, $(PROGRAMS))
  
+-- 
+1.7.11.7
+
