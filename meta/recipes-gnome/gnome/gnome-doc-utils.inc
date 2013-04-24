@@ -1,3 +1,9 @@
+SUMMARY = "A collection of documentation utilities for the Gnome project."
+DESCRIPTION = "The GNOME Documentation Build Utilities (gnome-doc- \
+utils) were created to make it easier for application developers to \
+include and create documentation in their releases. They include the \
+xml2po tool which makes it easier to translate and keep up to date \
+translations of documentation."
 LICENSE = "GPLv2 & LGPLv2.1"
 DEPENDS = "libxml2 libxslt libxslt-native gnome-doc-utils-native glib-2.0"
 DEPENDS_class-native = "libxml2-native libxslt-native intltool-native glib-2.0-native"
