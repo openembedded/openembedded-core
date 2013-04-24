@@ -1,3 +1,8 @@
+SUMMARY = "Minimal gettext for supporting native autoconf/automake"
+DESCRIPTION = "Contains the m4 macros sufficient to support building \
+autoconf/automake. This provides a significant build time speedup by \
+the removal of gettext-native from most dependency chains (now only \
+needed for gettext for the target)."
 SRC_URI = "file://aclocal.tgz \
            file://config.rpath \
            file://Makefile.in.in \
