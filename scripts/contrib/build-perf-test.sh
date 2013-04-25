@@ -165,6 +165,10 @@ else
     echo "DL_DIR = \"$clonedir/build-perf-test/downloads\"" >> conf/local.conf
 fi
 
+# Sometimes I've noticed big differences in timings for the same commit, on the same machine
+# Disabling the network sanity check helps a bit (because of my crappy network connection and/or proxy)
+echo "CONNECTIVITY_CHECK_URIS =\"\"" >> conf/local.conf
+
 #
 # Functions
 #
