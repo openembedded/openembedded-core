@@ -6,7 +6,7 @@ LICENSE = "GPLv3+ & LGPL-2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 PR = "r0"
-DEPENDS = "gettext-native virtual/libiconv ncurses expat"
+DEPENDS = "gettext-native virtual/libiconv expat"
 DEPENDS_class-native = "gettext-minimal-native"
 PROVIDES = "virtual/libintl virtual/gettext"
 PROVIDES_class-native = "virtual/gettext-native"
@@ -14,6 +14,8 @@ RCONFLICTS_${PN} = "proxy-libintl"
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
 	   file://parallel.patch \
           "
+
+PACKAGECONFIG[msgcat-curses] = "--with-libncurses-prefix=${STAGING_LIBDIR}/..,--disable-curses,ncurses,"
 
 LDFLAGS_prepend_libc-uclibc = " -lrt -lpthread "
 
@@ -30,7 +32,6 @@ EXTRA_OECONF += "--without-lispdir \
                  --disable-openmp \
                  --disable-acl \
                  --with-included-glib \
-                 --with-libncurses-prefix=${STAGING_LIBDIR}/.. \
                  --without-emacs \
                  --without-cvs \
                  --without-git \
