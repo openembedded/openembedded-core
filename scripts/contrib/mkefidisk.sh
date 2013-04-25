@@ -102,10 +102,14 @@ fi
 #
 grep -q $DEVICE /proc/mounts
 if [ $? -eq 0 ]; then
-	echo "ERROR: $DEVICE partitions mounted:"
-	grep $DEVICE /proc/mounts | cut -f 1 -d " "
-	echo "Unmount the partitions listed and try again."
-	exit 1
+	echo -n "$DEVICE listed in /proc/mounts, attempting to unmount..."
+	umount $DEVICE* 2>/dev/null
+	grep -q $DEVICE /proc/mounts
+	if [ $? -eq 0 ]; then
+		echo "FAILED"
+		exit 1
+	fi
+	echo "OK"
 fi
 
 
@@ -153,6 +157,7 @@ echo "Boot partition size:   $BOOT_SIZE MB ($BOOTFS)"
 echo "ROOTFS partition size: $ROOTFS_SIZE MB ($ROOTFS)"
 echo "Swap partition size:   $SWAP_SIZE MB ($SWAP)"
 echo "*****************"
+
 echo "Deleting partition table on $DEVICE ..."
 dd if=/dev/zero of=$DEVICE bs=512 count=2
 
