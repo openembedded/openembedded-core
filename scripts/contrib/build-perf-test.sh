@@ -239,6 +239,15 @@ do_sync () {
     sleep 3
 }
 
+write_results() {
+    echo -n "`uname -n`,$rev," >> $globalres
+    for i in "${TIMES[@]}"; do
+        echo -n "$i," >> $globalres
+    done
+    echo >> $globalres
+    sed -i '$ s/,$//' $globalres
+}
+
 ####
 
 #
@@ -338,15 +347,10 @@ test1_p3
 test2
 test3
 
+# if we got til here write to global results
+write_results
+
 log "All done, cleaning up..."
 
 do_rmtmp
 do_rmsstate
-
-# if we got til here write to global results
-echo "$rev" >> $globalres
-for i in "${TIMES[@]}"; do
-    echo -n "$i," >> $globalres
-done
-echo >> $globalres
-sed -i '$ s/,$//' $globalres
