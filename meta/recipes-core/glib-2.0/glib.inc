@@ -25,7 +25,7 @@ inherit autotools gettext gtk-doc pkgconfig ptest
 
 S = "${WORKDIR}/glib-${PV}"
 
-CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap"
+CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap --disable-man"
 
 PTEST_CONF = "${@base_contains('DISTRO_FEATURES', 'ptest', '--enable-modular-tests', '--disable-modular-tests', d)}"
 EXTRA_OECONF = "--enable-included-printf=no ${CORECONF} ${PTEST_CONF}"
