@@ -71,6 +71,20 @@ function device_details() {
 	echo ""
 }
 
+function unmount_device() {
+	grep -q $DEVICE /proc/mounts
+	if [ $? -eq 0 ]; then
+		echo -n "$DEVICE listed in /proc/mounts, attempting to unmount..."
+		umount $DEVICE* 2>/dev/null
+		grep -q $DEVICE /proc/mounts
+		if [ $? -eq 0 ]; then
+			echo "FAILED"
+			exit 1
+		fi
+		echo "OK"
+	fi
+}
+
 
 #
 # Parse and validate arguments
@@ -100,17 +114,7 @@ fi
 #
 # Check if any $DEVICE partitions are mounted
 #
-grep -q $DEVICE /proc/mounts
-if [ $? -eq 0 ]; then
-	echo -n "$DEVICE listed in /proc/mounts, attempting to unmount..."
-	umount $DEVICE* 2>/dev/null
-	grep -q $DEVICE /proc/mounts
-	if [ $? -eq 0 ]; then
-		echo "FAILED"
-		exit 1
-	fi
-	echo "OK"
-fi
+unmount_device
 
 
 #
@@ -180,6 +184,12 @@ echo "Creating swap partition on $SWAP"
 parted $DEVICE mkpart primary $SWAP_START 100%
 
 parted $DEVICE print
+
+
+#
+# Check if any $DEVICE partitions are mounted after partitioning
+#
+unmount_device
 
 
 #
