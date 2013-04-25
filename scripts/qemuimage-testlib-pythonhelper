@@ -54,9 +54,10 @@ if options.findqemu:
     #print "Children matching %s:" % str(parents)
     for p in parents:
         # Need to be careful here since runqemu-internal runs "ldd qemu-system-xxxx"
+        # Also, old versions of ldd (2.11) run "LD_XXXX qemu-system-xxxx"
         basecmd = commands[p].split()[0]
         basecmd = os.path.basename(basecmd)
-        if "qemu-system" in basecmd:
+        if "qemu-system" in basecmd and "192.168" in commands[p]:
             print p
             sys.exit(0)
     sys.exit(1)
