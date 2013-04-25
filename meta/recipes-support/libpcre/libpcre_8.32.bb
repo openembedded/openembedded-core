@@ -20,7 +20,9 @@ S = "${WORKDIR}/pcre-${PV}"
 FILESPATH .= ":${@base_set_filespath([bb.which(BBPATH, 'recipes-support/libpcre/files', direction=True)], d)}"
 
 PROVIDES += "pcre"
-DEPENDS += "bzip2 zlib readline"
+DEPENDS += "bzip2 zlib"
+
+PACKAGECONFIG[pcretest-readline] = "--enable-pcretest-libreadline,--disable-pcretest-libreadline,readline,"
 
 inherit autotools binconfig
 
