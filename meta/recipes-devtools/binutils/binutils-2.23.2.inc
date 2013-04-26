@@ -32,23 +32,12 @@ SRC_URI = "\
      "
 
 BACKPORT = "\
-     file://backport/0001-bfd.patch \
-     file://backport/0003-Assemble-all-sources-files-in-each-test.patch \
-     file://backport/0005-bfd.patch \
-     file://backport/0010-bfd-ChangeLog.patch \
-     file://backport/0012-Fix-TLS-LD-to-LE-optimization-for-x32.patch \
-     file://backport/0013-gas-ChangeLog.patch \
-     file://backport/0014-Fix-opcode-for-64-bit-jecxz.patch \
-     file://backport/0017-ld-elf-comm-data.exp-Add-XFAIL-for-arm-targets-refer.patch \
-     file://backport/0018-bfd.patch \
-     file://backport/0024-bfd.patch \
-     file://backport/0026-ld-testsuite.patch \
      file://backport/0001-doc-binutils.texi-elfedit-Fix-use-of-itemx-in-table.patch \
      file://backport/0001-ld.texinfo-Replace-with-when-it-is-part-of-the-text.patch \
      file://backport/binutils-fix-ineffectual-zero-of-cache.patch \
      file://backport/binutils-replace-strncat-with-strcat.patch  \
      file://backport/0001-config-tc-ppc.c-md_assemble-Do-not-generate-APUinfo-.patch  \
 "
-SRC_URI[md5sum] = "33adb18c3048d057ac58d07a3f1adb38"
-SRC_URI[sha256sum] = "2ab2e5b03e086d12c6295f831adad46b3e1410a3a234933a2e8fac66cb2e7a19"
+SRC_URI[md5sum] = "4f8fa651e35ef262edc01d60fb45702e"
+SRC_URI[sha256sum] = "fe914e56fed7a9ec2eb45274b1f2e14b0d8b4f41906a5194eac6883cfe5c1097"
 
