@@ -49,7 +49,7 @@ if ! [ -e $D${sysconfdir}/pango ] ; then
 fi
 
 if [ "x$D" != "x" ]; then
-	${@qemu_run_binary(d, '$D','/usr/bin/pango-querymodules')} \
+	${@qemu_run_binary(d, '$D','${bindir}/${MLPREFIX}pango-querymodules')} \
 		$D${libdir}/pango/${LIBV}/modules/*.so \
 		> $D${sysconfdir}/pango/${MLPREFIX}pango.modules 2>/dev/null
 
