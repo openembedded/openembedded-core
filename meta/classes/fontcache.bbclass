@@ -10,7 +10,7 @@ FONT_PACKAGES ??= "${PN}"
 
 fontcache_common() {
 if [ "x$D" != "x" ] ; then
-	$INTERCEPT_DIR/postinst_intercept update_font_cache ${PKG} bindir=${bindir} \
+	$INTERCEPT_DIR/postinst_intercept update_font_cache ${PKG} mlprefix=${MLPREFIX} bindir=${bindir} \
 		libdir=${libdir} base_libdir=${base_libdir}
 else
 	fc-cache
