@@ -4,7 +4,7 @@ DEPENDS += "${@['hicolor-icon-theme', '']['${BPN}' == 'hicolor-icon-theme']} gtk
 
 gtk_icon_cache_postinst() {
 if [ "x$D" != "x" ]; then
-	$INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG} libdir=${libdir} \
+	$INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG} mlprefix=${MLPREFIX} libdir=${libdir} \
 		base_libdir=${base_libdir}
 else
 
@@ -21,7 +21,7 @@ fi
 
 gtk_icon_cache_postrm() {
 if [ "x$D" != "x" ]; then
-	$INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG} libdir=${libdir} \
+	$INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG} mlprefix=${MLPREFIX} libdir=${libdir} \
 		base_libdir=${base_libdir}
 else
 	for icondir in /usr/share/icons/* ; do
