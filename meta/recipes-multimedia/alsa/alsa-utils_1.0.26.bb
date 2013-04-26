@@ -39,7 +39,6 @@ ALSA_UTILS_PKGS = "\
              alsa-utils-speakertest \
              alsa-utils-aseqnet \
              alsa-utils-aseqdump \
-             alsa-utils-alsaconf \
              alsa-utils-alsactl \
              alsa-utils-alsaloop \
              alsa-utils-alsaucm \
@@ -47,7 +46,6 @@ ALSA_UTILS_PKGS = "\
 
 PACKAGES += "${ALSA_UTILS_PKGS}"
 RDEPENDS_${PN} += "${ALSA_UTILS_PKGS}"
-RDEPENDS_alsa-utils-alsaconf += "bash"
 
 FILES_${PN} = ""
 FILES_alsa-utils-aplay       = "${bindir}/aplay ${bindir}/arecord"
@@ -60,7 +58,6 @@ FILES_alsa-utils-aseqnet     = "${bindir}/aseqnet"
 FILES_alsa-utils-iecset      = "${bindir}/iecset"
 FILES_alsa-utils-alsactl     = "${sbindir}/alsactl */udev/rules.d ${systemd_unitdir} ${localstatedir}/lib/alsa ${datadir}/alsa/init/"
 FILES_alsa-utils-aseqdump    = "${bindir}/aseqdump"
-FILES_alsa-utils-alsaconf    = "${sbindir}/alsaconf"
 FILES_alsa-utils-alsaloop    = "${bindir}/alsaloop"
 FILES_alsa-utils-alsaucm     = "${bindir}/alsaucm"
 
@@ -73,9 +70,16 @@ DESCRIPTION_alsa-utils-midi         = "miscalleanous MIDI utilities for ALSA"
 DESCRIPTION_alsa-utils-aconnect     = "ALSA sequencer connection manager"
 DESCRIPTION_alsa-utils-aseqnet      = "network client/server on ALSA sequencer"
 DESCRIPTION_alsa-utils-alsactl      = "saves/restores ALSA-settings in /etc/asound.state"
-DESCRIPTION_alsa-utils-alsaconf     = "a bash script that creates ALSA configuration files"
 DESCRIPTION_alsa-utils-alsaucm      = "ALSA Use Case Manager"
 
 RRECOMMENDS_alsa-utils-alsactl = "alsa-states"
 
 ALLOW_EMPTY_alsa-utils = "1"
+
+do_install() {
+	autotools_do_install
+
+	# We don't ship this here because it requires a dependency on bash.
+	# See alsa-utils-alsaconf_${PV}.bb
+	rm ${D}${sbindir}/alsaconf
+}
