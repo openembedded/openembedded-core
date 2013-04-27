@@ -85,13 +85,18 @@ def copytree(src, dst):
     check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
 def copyhardlinktree(src, dst):
+    """ Make the hard link when possible, otherwise copy. """
     bb.utils.mkdirhier(dst)
+    src_bak = src
     if os.path.isdir(src):
         if not len(os.listdir(src)):
             return	
         src = src + "/*"
-    cmd = 'cp -al %s %s' % (src, dst)
-    check_output(cmd, shell=True, stderr=subprocess.STDOUT)
+    if (os.stat(src_bak).st_dev ==  os.stat(dst).st_dev):
+        cmd = 'cp -afl %s %s' % (src, dst)
+        check_output(cmd, shell=True, stderr=subprocess.STDOUT)
+    else:
+        copytree(src_bak, dst)
 
 def remove(path, recurse=True):
     """Equivalent to rm -f or rm -rf"""
