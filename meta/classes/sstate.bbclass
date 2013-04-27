@@ -198,7 +198,7 @@ def sstate_install(ss, d):
     # Run the actual file install
     for state in ss['dirs']:
         if os.path.exists(state[1]):
-            oe.path.copytree(state[1], state[2])
+            oe.path.copyhardlinktree(state[1], state[2])
 
     for postinst in (d.getVar('SSTATEPOSTINSTFUNCS', True) or '').split():
         bb.build.exec_func(postinst, d)
