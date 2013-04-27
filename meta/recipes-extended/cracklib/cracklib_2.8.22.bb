@@ -11,7 +11,8 @@ PR ="r0"
 EXTRA_OECONF = "--without-python"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/cracklib/cracklib-${PV}.tar.gz \
-           file://0001-packlib.c-support-dictionary-byte-order-dependent.patch"
+           file://0001-packlib.c-support-dictionary-byte-order-dependent.patch \
+           file://0002-craklib-fix-testnum-and-teststr-failed.patch"
 
 SRC_URI[md5sum] = "463177b5c29c7a598c991e12a4898e06"
 SRC_URI[sha256sum] = "feaff49bfb513ec10b2618c00d2f7f60776ba93fcc5fa22dd3479dd9cad9f770"
