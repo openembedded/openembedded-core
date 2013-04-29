@@ -69,6 +69,7 @@ SRC_URI = "http://www.cpan.org/src/5.0/perl-${PV}.tar.gz \
 	file://perl-archlib-exp.patch \
 	file://perl-fix-CVE-2012-5195.patch \
 	file://cve-2012-6329.patch \
+	file://cve-2013-1667.patch \
 	\
         file://config.sh \
         file://config.sh-32 \
