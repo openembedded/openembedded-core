@@ -37,8 +37,8 @@ FILES_${QT_BASE_NAME}-tools_append     = " ${bindir}/qml ${bindir}/qmlplugindump
 FILES_${QT_BASE_NAME}-tools-dbg_append = " ${bindir}/.debug/qml ${bindir}/.debug/qmlplugindump"
 
 PACKAGES_append = " ${QT_BASE_NAME}-tests-dbg ${QT_BASE_NAME}-tests"
-FILES_${QT_BASE_NAME}-tests-dbg        = "/usr/tests/qt4/*/.debug"
-FILES_${QT_BASE_NAME}-tests            = "/usr/tests/qt4/*"
+FILES_${QT_BASE_NAME}-tests-dbg        = "${prefix}/tests/qt4/*/.debug"
+FILES_${QT_BASE_NAME}-tests            = "${prefix}/tests/qt4/*"
 
 do_configure_prepend() {
     for pro in $(find ${S} -name "*.pro") ; do
