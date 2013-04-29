@@ -23,7 +23,8 @@ SRC_URI = "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.
            file://sshd_config \
            file://ssh_config \
            file://init \
-           ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)}"
+           ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
+           file://cve-2010-5107.patch;pnum=4"
 
 PAM_SRC_URI = "file://sshd"
 SRC_URI[md5sum] = "3c9347aa67862881c5da3f3b1c08da7b"
