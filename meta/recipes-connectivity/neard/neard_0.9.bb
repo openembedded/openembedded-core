@@ -1,15 +1,26 @@
-SUMMARY  = "Linux NFC daemon"
+SUMMARY = "Linux NFC daemon"
 DESCRIPTION = "A daemon for the Linux Near Field Communication stack"
 HOMEPAGE = "http://01.org/linux-nfc"
+LICENSE = "GPLv2"
 
-LICENSE  = "GPLv2"
+DEPENDS = "dbus glib-2.0 libnl"
 
-DEPENDS  = "dbus glib-2.0 libnl"
+SRC_URI = "git://git.kernel.org/pub/scm/network/nfc/neard.git;protocol=git \
+           file://neard.in \
+          "
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
+ file://src/near.h;beginline=1;endline=20;md5=358e4deefef251a4761e1ffacc965d13 \
+ "
+
+S = "${WORKDIR}/git"
+SRCREV = "eb486bf35e24d7d1db61350f5ab393a0c880523d"
+PV = "0.10+git${SRCPV}"
+PR = "r0"
 
 inherit autotools pkgconfig update-rc.d
 
-INITSCRIPT_NAME = "neard"
-INITSCRIPT_PARAMS = "defaults 64"
+EXTRA_OECONF += "--enable-tools"
 
 do_install() {
 	oe_runmake DESTDIR=${D} libexecdir=${libexecdir} install
@@ -31,35 +42,20 @@ do_install_append() {
 	install -m 0755 ${S}/tools/nfctool/nfctool ${D}${libdir}/${BPN}/
 }
 
-RDEPENDS_${PN} = "dbus python python-dbus python-pygobject"
-
-# Bluez & Wifi are not mandatory except for handover	"
-RRECOMMENDS_${PN} = "\
-	${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluez4', '', d)} \
-	${@base_contains('DISTRO_FEATURES', 'wifi','wpa-supplicant', '', d)} \
-	"
-
-#Additional
 PACKAGES =+ "${PN}-tests"
 
 FILES_${PN}-tests = "${libdir}/${BPN}/*-test"
 FILES_${PN}-dbg += "${libdir}/${BPN}/*/.debug"
 
+RDEPENDS_${PN} = "dbus python python-dbus python-pygobject"
+
+# Bluez & Wifi are not mandatory except for handover
+RRECOMMENDS_${PN} = "\
+                     ${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluez4', '', d)} \
+                     ${@base_contains('DISTRO_FEATURES', 'wifi','wpa-supplicant', '', d)} \
+                    "
+
 RDEPENDS_${PN}-tests = "python python-dbus python-pygobject"
 
-# This is valid for 0.10+
-LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
- file://src/near.h;beginline=1;endline=20;md5=358e4deefef251a4761e1ffacc965d13 \
- "
-S	= "${WORKDIR}/git"
-SRCREV	= "eb486bf35e24d7d1db61350f5ab393a0c880523d"
-PV	= "0.10+git${SRCPV}"
-PR	= "r0"
-
-SRC_URI  = "git://git.kernel.org/pub/scm/network/nfc/neard.git;protocol=git \
-	file://neard.in \
-	"
-
-EXTRA_OECONF += "--enable-tools \
-	"
-
+INITSCRIPT_NAME = "neard"
+INITSCRIPT_PARAMS = "defaults 64"
