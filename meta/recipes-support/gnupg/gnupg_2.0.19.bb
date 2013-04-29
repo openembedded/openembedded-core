@@ -11,7 +11,8 @@ PR = "r4"
 
 inherit autotools gettext
 
-SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2"
+SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
+           file://cve-2012-6085.patch"
 
 SRC_URI[md5sum] = "6a8589381ca1b0c1a921e9955f42b016"
 SRC_URI[sha256sum] = "efa23a8a925adb51c7d3b708c25b6d000300f5ce37de9bdec6453be7b419c622"
