@@ -23,7 +23,6 @@ PR = "r0"
 
 EXTRA_OECONF = "--with-xkb-rules-symlink=xorg --disable-runtime-deps"
 
-RDEPENDS_${PN} += "xkbcomp"
 FILES_${PN} += "${datadir}/X11/xkb"
 
 inherit autotools pkgconfig
