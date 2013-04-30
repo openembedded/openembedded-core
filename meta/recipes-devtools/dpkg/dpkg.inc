@@ -47,6 +47,7 @@ do_install_append () {
 		rm ${D}${bindir}/update-alternatives
 	else
 		mv ${D}${bindir}/update-alternatives ${D}${sbindir}
+		sed -i -e 's|^#!.*${bindir}/perl-native.*/perl|#!/usr/bin/env perl|' ${D}${bindir}/dpkg-*
 	fi
 }
 
