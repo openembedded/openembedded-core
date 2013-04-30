@@ -17,9 +17,6 @@ do_compile() {
 do_install() {
 	install -d ${D}${sysconfdir}
     install -m 0644 ${WORKDIR}/inittab ${D}${sysconfdir}/inittab
-    if [ ! -z "${SERIAL_CONSOLE}" ]; then
-        echo "S:2345:respawn:${base_sbindir}/getty ${SERIAL_CONSOLE}" >> ${D}${sysconfdir}/inittab
-    fi
 
     tmp="${SERIAL_CONSOLES}"
     for i in $tmp
@@ -71,7 +68,7 @@ else
 fi
 }
 
-# USE_VT and SERIAL_CONSOLE are generally defined by the MACHINE .conf.
+# USE_VT and SERIAL_CONSOLES are generally defined by the MACHINE .conf.
 # Set PACKAGE_ARCH appropriately.
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
