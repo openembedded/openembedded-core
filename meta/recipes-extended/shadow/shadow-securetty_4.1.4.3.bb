@@ -10,22 +10,28 @@ PR = "r2"
 
 SRC_URI = "file://securetty"
 
-# Since we deduce our arch from ${SERIAL_CONSOLE}
+# Since SERIAL_CONSOLES is likely to be set from the machine configuration
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_install () {
 	# Ensure we add a suitable securetty file to the package that has
 	# most common embedded TTYs defined.
-	if [ ! -z "${SERIAL_CONSOLE}" ]; then
-		# Our SERIAL_CONSOLE contains a baud rate and sometimes a -L
-		# option as well. The following pearl :) takes that and converts
+	install -d ${D}${sysconfdir}
+	install -m 0400 ${WORKDIR}/securetty ${D}${sysconfdir}/securetty
+	if [ ! -z "${SERIAL_CONSOLES}" ]; then
+		# Our SERIAL_CONSOLES contains a baud rate and sometimes extra
+		# options as well. The following pearl :) takes that and converts
 		# it into newline-separated tty's and appends them into
 		# securetty. So if a machine has a weird looking console device
 		# node (e.g. ttyAMA0) that securetty does not know, it will get
 		# appended to securetty and root logins will be allowed on that
 		# console.
-		echo "${SERIAL_CONSOLE}" | sed -e 's/[0-9][0-9]\|\-L//g'|tr "[ ]" "[\n]"  >> ${WORKDIR}/securetty
+		tmp="${SERIAL_CONSOLES}"
+		for entry in $tmp ; do
+			ttydev=`echo "$entry" | sed -e 's/^[0-9]*\;//' -e 's/\;.*//'`
+			if ! grep -q $ttydev ${D}${sysconfdir}/securetty; then
+				echo $ttydev >> ${D}${sysconfdir}/securetty
+			fi
+		done
 	fi
-	install -d ${D}${sysconfdir}
-	install -m 0400 ${WORKDIR}/securetty ${D}${sysconfdir}/securetty 
 }
