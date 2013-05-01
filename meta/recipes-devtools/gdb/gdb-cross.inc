@@ -1,6 +1,6 @@
 require gdb-common.inc
 
-DEPENDS = "expat-native ncurses-native"
+DEPENDS = "expat-native ncurses-native readline-native"
 
 EXTRA_OECONF += "--without-python"
 
