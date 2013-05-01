@@ -24,11 +24,11 @@ PN := "grub-efi-${TRANSLATED_TARGET_ARCH}-native"
 
 SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
            file://grub-2.00-fpmath-sse-387-fix.patch \
-	   file://grub-2.00-fix-enable_execute_stack-check.patch \
+           file://grub-2.00-fix-enable_execute_stack-check.patch \
            file://grub-2.00-disable-help2man.patch \
            file://check-if-liblzma-is-disabled.patch \
-	   file://grub-no-unused-result.patch \
-	   file://grub-2.00-ignore-gnulib-gets-stupidity.patch \
+           file://grub-no-unused-result.patch \
+           file://grub-2.00-ignore-gnulib-gets-stupidity.patch \
           "
 SRC_URI[md5sum] = "e927540b6eda8b024fb0391eeaa4091c"
 SRC_URI[sha256sum] = "65b39a0558f8c802209c574f4d02ca263a804e8a564bc6caf1cd0fd3b3cc11e3"
@@ -66,7 +66,7 @@ EXTRA_OECONF = "--with-platform=efi --disable-grub-mkfont \
 
 do_mkimage() {
 	./grub-mkimage -p /EFI/BOOT -d ./grub-core/ \
-		       -O ${GRUB_TARGET}-efi -o ./${GRUB_IMAGE} \
+	               -O ${GRUB_TARGET}-efi -o ./${GRUB_IMAGE} \
 	               boot linux ext2 fat serial part_msdos part_gpt normal efi_gop
 }
 addtask mkimage after do_compile before do_install
