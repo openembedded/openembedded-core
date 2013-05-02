@@ -23,3 +23,6 @@ RDEPENDS_kernel-base = ""
 PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
 
 EXTRA_IMAGEDEPENDS += "qemu-native qemu-helper-native"
+
+# Provide the nfs server kernel module for all qemu images
+KERNEL_FEATURES_append = " features/nfsd/nfsd-enable.scc"
