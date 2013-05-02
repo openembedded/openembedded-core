@@ -43,8 +43,12 @@ do_install () {
 		oe_runmake 'DESTDIR=${D}' MULTIBUILDTOP=${B}/$target/$d/ install
 	done
 	rm -rf ${D}${infodir}/libgomp.info ${D}${infodir}/dir
-	rmdir --ignore-fail-on-non-empty -p ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/finclude
-	rmdir --ignore-fail-on-non-empty -p ${D}${infodir}
+	if [ -d ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/finclude ]; then
+		rmdir --ignore-fail-on-non-empty -p ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/finclude
+	fi
+	if [ -d ${D}${infodir} ]; then
+		rmdir --ignore-fail-on-non-empty -p ${D}${infodir}
+	fi
 	chown -R root:root ${D}
 }
 
