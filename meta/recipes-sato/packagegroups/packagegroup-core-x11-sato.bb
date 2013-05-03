@@ -41,6 +41,7 @@ RDEPENDS_${PN}-base = "\
     shutdown-desktop \
     libsdl \
     ${NETWORK_MANAGER} \
+    udev-extraconf \
     "
 
 # pcmanfm doesn't work on mips
