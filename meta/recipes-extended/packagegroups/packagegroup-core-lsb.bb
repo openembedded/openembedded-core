@@ -59,6 +59,7 @@ RDEPENDS_packagegroup-core-sys-extended = "\
     screen \
     setserial \
     sysstat \
+    udev-extraconf \
     unzip \
     watchdog \
     wget \
