@@ -33,7 +33,7 @@ NORMAL_FEATURE_INSTALL_OPTIONAL = "${@' '.join(oe.packagegroup.optional_packages
 
 def normal_groups(d):
     """Return all the IMAGE_FEATURES, with the exception of our special package groups"""
-    extras = set(['dev-pkgs', 'staticdev-pkgs', 'doc-pkgs', 'dbg-pkgs', 'ptest-pkgs'])
+    extras = set(d.getVarFlags('COMPLEMENTARY_GLOB').keys())
     features = set(oe.data.typed_value('IMAGE_FEATURES', d))
     return features.difference(extras)
 
@@ -43,20 +43,19 @@ PACKAGE_GROUP_splash = "${SPLASH}"
 
 # Wildcards specifying complementary packages to install for every package that has been explicitly
 # installed into the rootfs
+COMPLEMENTARY_GLOB[dev-pkgs] = '*-dev'
+COMPLEMENTARY_GLOB[staticdev-pkgs] = '*-staticdev'
+COMPLEMENTARY_GLOB[doc-pkgs] = '*-doc'
+COMPLEMENTARY_GLOB[dbg-pkgs] = '*-dbg'
+COMPLEMENTARY_GLOB[ptest-pkgs] = '*-ptest'
+
 def complementary_globs(featurevar, d):
+    all_globs = d.getVarFlags('COMPLEMENTARY_GLOB')
     globs = []
     features = set((d.getVar(featurevar, True) or '').split())
-    for feature in features:
-        if feature == 'dev-pkgs':
-            globs.append('*-dev')
-        elif feature == 'staticdev-pkgs':
-            globs.append('*-staticdev')
-        elif feature == 'doc-pkgs':
-            globs.append('*-doc')
-        elif feature == 'dbg-pkgs':
-            globs.append('*-dbg')
-        elif feature == 'ptest-pkgs':
-            globs.append('*-ptest')
+    for name, glob in all_globs.items():
+        if name in features:
+            globs.append(glob)
     return ' '.join(globs)
 
 IMAGE_INSTALL_COMPLEMENTARY = '${@complementary_globs("IMAGE_FEATURES", d)}'
