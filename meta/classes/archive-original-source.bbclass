@@ -14,7 +14,7 @@ addtask do_archive_original_sources_patches after do_unpack
 addtask do_archive_scripts_logs
 
 # Get dump date and create diff file 
-addtask do_dumpdata_create_diff_gz
+addtask do_dumpdata_create_diff_gz before do_rootfs
 
 python () {
     pn = d.getVar('PN', True)
