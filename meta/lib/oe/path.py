@@ -87,16 +87,20 @@ def copytree(src, dst):
 def copyhardlinktree(src, dst):
     """ Make the hard link when possible, otherwise copy. """
     bb.utils.mkdirhier(dst)
-    src_bak = src
-    if os.path.isdir(src):
-        if not len(os.listdir(src)):
-            return	
-        src = src + "/*"
-    if (os.stat(src_bak).st_dev ==  os.stat(dst).st_dev):
+    if os.path.isdir(src) and not len(os.listdir(src)):
+        return	
+
+    if (os.stat(src).st_dev ==  os.stat(dst).st_dev):
+        # Need to copy directories only with tar first since cp will error if two 
+        # writers try and create a directory at the same time
+        cmd = 'cd %s; find . -type d -print | tar -cf - -C %s -ps --files-from - | tar -xf - -C %s' % (src, src, dst)
+        check_output(cmd, shell=True, stderr=subprocess.STDOUT)
+        if os.path.isdir(src):
+            src = src + "/*"
         cmd = 'cp -afl %s %s' % (src, dst)
         check_output(cmd, shell=True, stderr=subprocess.STDOUT)
     else:
-        copytree(src_bak, dst)
+        copytree(src, dst)
 
 def remove(path, recurse=True):
     """Equivalent to rm -f or rm -rf"""
