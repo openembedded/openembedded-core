@@ -37,6 +37,7 @@ BACKPORT = "\
      file://backport/binutils-fix-ineffectual-zero-of-cache.patch \
      file://backport/binutils-replace-strncat-with-strcat.patch  \
      file://backport/0001-config-tc-ppc.c-md_assemble-Do-not-generate-APUinfo-.patch  \
+     file://backport/binutils-fix-skip-whitespace-pr14887.patch \
 "
 SRC_URI[md5sum] = "4f8fa651e35ef262edc01d60fb45702e"
 SRC_URI[sha256sum] = "fe914e56fed7a9ec2eb45274b1f2e14b0d8b4f41906a5194eac6883cfe5c1097"
