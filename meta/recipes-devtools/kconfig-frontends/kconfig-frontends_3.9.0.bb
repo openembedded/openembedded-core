@@ -11,12 +11,11 @@ LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9b8cf60ff39767ff04b671fca8302408"
 SECTION = "devel"
 DEPENDS += "ncurses flex bison gperf pkgconfig-native"
-PR = "r0"
 SPIN = ".0"
 SRC_URI = "http://ymorin.is-a-geek.org/download/${BPN}/${BPN}-${PV}${SPIN}.tar.xz"
 
-SRC_URI[md5sum] = "73598aea99d01d9c422b335e9b963271"
-SRC_URI[sha256sum] = "b3ff325338aa291c9129dbf33c69ff321e30105aa06ff957be6f958acdc72b42"
+SRC_URI[md5sum] = "344646587de1bdf965640fff220281bd"
+SRC_URI[sha256sum] = "5d524b238d7dfb63fec782b731af681c5408d74304ef4de38137c542350dd6d6"
 
 S = "${WORKDIR}/${BPN}-${PV}${SPIN}"
 
