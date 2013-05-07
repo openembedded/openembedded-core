@@ -9,9 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SECTION = "devel"
 DEPENDS = "bison-native flex-native"
 
-PR = "r1"
-
-BASE_SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.gz \
+BASE_SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.xz \
 	        file://m4.patch \
                 file://dont-depend-on-help2man.patch \
 	       "
@@ -23,8 +21,8 @@ SRC_URI = "${BASE_SRC_URI} \
            file://fix_cross_manpage_building.patch \
           "
 
-SRC_URI[md5sum] = "ded660799e76fb1667d594de1f7a0da9"
-SRC_URI[sha256sum] = "19bbe7374fd602f7a6654c131c21a15aebdc06cc89493e8ff250cb7f9ed0a831"
+SRC_URI[md5sum] = "7be02eb973eccf388f1ae750fc09eed0"
+SRC_URI[sha256sum] = "b409adcbf245baadb68d2f66accf6fdca5e282cafec1b865f4b5e963ba8ea7fb"
 
 LDFLAGS_prepend_libc-uclibc = " -lrt "
 DEPENDS_class-native = "gettext-minimal-native"
