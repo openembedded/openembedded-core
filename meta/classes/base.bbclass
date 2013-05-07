@@ -394,7 +394,7 @@ def set_packagetriplet(d):
     settriplet(d, "PKGMLTRIPLETS", archs, tos, tvs)
 
 python () {
-    import exceptions, string, re
+    import string, re
 
     # Handle PACKAGECONFIG
     #
