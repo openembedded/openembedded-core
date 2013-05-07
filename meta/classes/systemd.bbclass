@@ -146,8 +146,8 @@ python systemd_populate_packages() {
                 if path_found != '':
                     systemd_add_files_and_parse(pkg_systemd, path_found, service, keys)
                 else:
-                    raise bb.build.FuncFailed, "\n\nSYSTEMD_SERVICE_%s value %s does not exist" % \
-                        (pkg_systemd, service)
+                    raise bb.build.FuncFailed("SYSTEMD_SERVICE_%s value %s does not exist" % \
+                        (pkg_systemd, service))
 
     # Run all modifications once when creating package
     if os.path.exists(d.getVar("D", True)):

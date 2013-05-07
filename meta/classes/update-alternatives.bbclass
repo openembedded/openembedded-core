@@ -128,9 +128,9 @@ def update_alternatives_after_parse(d):
         alt_path = d.getVar('ALTERNATIVE_PATH', True)
         alt_link = d.getVar('ALTERNATIVE_LINK', True) or ("%s/%s" % (d.getVar('bindir', True), alt_name))
         if alt_name == None:
-            raise bb.build.build.FuncFailed, "%s inherits update-alternatives but doesn't set ALTERNATIVE_NAME" % d.getVar('FILE')
+            raise bb.build.build.FuncFailed("%s inherits update-alternatives but doesn't set ALTERNATIVE_NAME" % d.getVar('FILE'))
         if alt_path == None:
-            raise bb.build.build.FuncFailed, "%s inherits update-alternatives but doesn't set ALTERNATIVE_PATH" % d.getVar('FILE')
+            raise bb.build.build.FuncFailed("%s inherits update-alternatives but doesn't set ALTERNATIVE_PATH" % d.getVar('FILE'))
 
         alternative = d.getVar('ALTERNATIVE_%s' % pn, True) or ""
         alternative += " " + alt_name
