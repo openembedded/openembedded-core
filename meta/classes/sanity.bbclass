@@ -367,7 +367,9 @@ def check_sanity(sanity_data):
     try:
         from distutils.version import LooseVersion
     except ImportError:
-        def LooseVersion(v): print "WARNING: sanity.bbclass can't compare versions without python-distutils"; return 1
+        def LooseVersion(v):
+            print("WARNING: sanity.bbclass can't compare versions without python-distutils")
+            return 1
     import commands
 
     # Check the bitbake version meets minimum requirements
@@ -375,7 +377,7 @@ def check_sanity(sanity_data):
     if not minversion:
         # Hack: BB_MIN_VERSION hasn't been parsed yet so return 
         # and wait for the next call
-        print "Foo %s" % minversion
+        print("Foo %s" % minversion)
         return
 
     if 0 == os.getuid():

@@ -55,7 +55,7 @@ def make_relative_symlink(path):
         depth += 1
 
     if not ancestor:
-        print "make_relative_symlink() Error: unable to find the common ancestor of %s and its target" % path
+        print("make_relative_symlink() Error: unable to find the common ancestor of %s and its target" % path)
         return
 
     base = link.partition(ancestor)[2].strip('/')
