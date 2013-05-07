@@ -14,7 +14,7 @@ addtask do_archive_original_sources_patches after do_unpack
 addtask do_archive_scripts_logs
 
 # Get dump date and create diff file 
-addtask do_dumpdata_create_diff_gz before do_rootfs
+addtask do_dumpdata_create_diff_gz
 
 python () {
     pn = d.getVar('PN', True)
@@ -34,7 +34,10 @@ python () {
         d.appendVarFlag('do_patch', 'depends', ' %s:do_archive_original_sources_patches' %pn)
         build_deps += ' %s:do_archive_original_sources_patches' %pn
 
-    d.appendVarFlag('do_build', 'depends', build_deps)
+    if bb.data.inherits_class('image', d):
+        d.appendVarFlag('do_rootfs', 'depends', build_deps)
+    else:
+        d.appendVarFlag('do_build', 'depends', build_deps)
 }
 
 ARCHIVE_SSTATE_OUTDIR = "${DEPLOY_DIR}/sources/"
