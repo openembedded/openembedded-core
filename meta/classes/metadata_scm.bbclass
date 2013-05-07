@@ -9,7 +9,7 @@ def base_detect_revision(d):
 
     for scm in scms:
         rev = scm(path, d)
-        if rev <> "<unknown>":
+        if rev != "<unknown>":
             return rev
 
     return "<unknown>"
@@ -21,7 +21,7 @@ def base_detect_branch(d):
 
     for scm in scms:
         rev = scm(path, d)
-        if rev <> "<unknown>":
+        if rev != "<unknown>":
             return rev.strip()
 
     return "<unknown>"
