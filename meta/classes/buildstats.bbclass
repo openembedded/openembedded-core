@@ -12,12 +12,14 @@ DEVFILE = "${BUILDSTATS_BASE}/.device"
 ################################################################################
 
 def get_process_cputime(pid):
-    fields = open("/proc/%d/stat" % pid, "r").readline().rstrip().split()
+    with open("/proc/%d/stat" % pid, "r") as f:
+        fields = f.readline().rstrip().split()
     # 13: utime, 14: stime, 15: cutime, 16: cstime
     return sum(int(field) for field in fields[13:16])
 
 def get_cputime():
-    fields = open("/proc/stat", "r").readline().rstrip().split()[1:]
+    with open("/proc/stat", "r") as f:
+        fields = f.readline().rstrip().split()[1:]
     return sum(int(field) for field in fields)
 
 def set_bn(e):
@@ -26,14 +28,12 @@ def set_bn(e):
         os.remove(e.data.getVar('BNFILE', True))
     except:
         pass
-    file = open(e.data.getVar('BNFILE', True), "w")
-    file.write(os.path.join(bn, e.data.getVar('BUILDNAME', True)))
-    file.close()
+    with open(e.data.getVar('BNFILE', True), "w") as f:
+        f.write(os.path.join(bn, e.data.getVar('BUILDNAME', True)))
 
 def get_bn(e):
-    file = open(e.data.getVar('BNFILE', True))
-    bn = file.readline()
-    file.close()
+    with open(e.data.getVar('BNFILE', True)) as f:
+        bn = f.readline()
     return bn
 
 def set_device(e):
@@ -63,9 +63,10 @@ def set_device(e):
     ############################################################################
     rdev="NoLogicalDevice"
     try:
-        for line in open("/proc/diskstats", "r"):
-            if majordev == int(line.split()[0]) and minordev == int(line.split()[1]):
-                rdev=line.split()[2]
+        with open("/proc/diskstats", "r") as f:
+            for line in f:
+                if majordev == int(line.split()[0]) and minordev == int(line.split()[1]):
+                    rdev=line.split()[2]
     except:
         pass
     file = open(e.data.getVar('DEVFILE', True), "w")
@@ -85,9 +86,10 @@ def get_diskstats(dev):
     ############################################################################
     DSTAT_KEYS = ['ReadsComp', 'ReadsMerged', 'SectRead', 'TimeReads', 'WritesComp', 'SectWrite', 'TimeWrite', 'IOinProgress', 'TimeIO', 'WTimeIO']  
     try:
-        for x in open("/proc/diskstats", "r"):
-            if dev in x:
-                diskstats_val = x.rstrip().split()[4:]
+        with open("/proc/diskstats", "r") as f:
+            for x in f:
+                if dev in x:
+                    diskstats_val = x.rstrip().split()[4:]
     except IOError as e:
         return
     diskstats = dict(itertools.izip(DSTAT_KEYS, diskstats_val))
@@ -274,7 +276,6 @@ python run_buildstats () {
         file = open(build_status,"a")
         file.write(e.data.expand("Failed at: ${PF} at task: %s \n" % e.task))
         file.close()
-        
 }
 
 addhandler run_buildstats
