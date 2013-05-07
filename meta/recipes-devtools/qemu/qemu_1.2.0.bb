@@ -8,6 +8,7 @@ SRC_URI = "\
     file://powerpc_rom.bin \
     file://no-strip.patch \
     file://linker-flags.patch \
+    file://linker-flags-2.patch \
     file://qemu-vmware-vga-depth.patch \
     file://fix-configure-checks.patch \
     file://fallback-to-safe-mmap_min_addr.patch \
