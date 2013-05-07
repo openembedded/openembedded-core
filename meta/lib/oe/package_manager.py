@@ -1090,8 +1090,8 @@ class RpmPM(PackageManager):
                                                 native_root)
         open(self.scriptlet_wrapper, 'w+').write(scriptlet_content)
 
-        bb.note("Configuring RPM cross-install scriptlet_wrapper")
-        os.chmod(self.scriptlet_wrapper, 0755)
+        bb.note("configuring RPM cross-install scriptlet_wrapper")
+        os.chmod(self.scriptlet_wrapper, 0o755)
         cmd = 'config --set rpm-extra-macros._cross_scriptlet_wrapper=%s' % \
               self.scriptlet_wrapper
         self._invoke_smart(cmd)

@@ -117,7 +117,7 @@ python do_package_deb () {
 
         controldir = os.path.join(root, 'DEBIAN')
         bb.utils.mkdirhier(controldir)
-        os.chmod(controldir, 0755)
+        os.chmod(controldir, 0o755)
         try:
             import codecs
             ctrlfile = codecs.open(os.path.join(controldir, 'control'), 'w', 'utf-8')
@@ -293,7 +293,7 @@ python do_package_deb () {
             scriptfile.write(scriptvar[pos:])
             scriptfile.write('\n')
             scriptfile.close()
-            os.chmod(os.path.join(controldir, script), 0755)
+            os.chmod(os.path.join(controldir, script), 0o755)
 
         conffiles_str = ' '.join(get_conffiles(pkg, d))
         if conffiles_str:

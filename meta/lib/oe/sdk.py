@@ -251,12 +251,12 @@ class OpkgSdk(Sdk):
         self.mkdirhier(target_sysconfdir)
         shutil.copy(self.target_conf, target_sysconfdir)
         os.chmod(os.path.join(target_sysconfdir,
-                              os.path.basename(self.target_conf)), 0644)
+                              os.path.basename(self.target_conf)), 0o644)
 
         self.mkdirhier(host_sysconfdir)
         shutil.copy(self.host_conf, host_sysconfdir)
         os.chmod(os.path.join(host_sysconfdir,
-                              os.path.basename(self.host_conf)), 0644)
+                              os.path.basename(self.host_conf)), 0o644)
 
         native_opkg_state_dir = os.path.join(self.sdk_output, self.sdk_native_path,
                                              self.d.getVar('localstatedir_nativesdk', True).strip('/'),

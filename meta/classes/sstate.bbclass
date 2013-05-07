@@ -655,9 +655,9 @@ python sstate_task_postfunc () {
     sstate_install(shared_state, d)
     for intercept in shared_state['interceptfuncs']:
         bb.build.exec_func(intercept, d, (d.getVar("WORKDIR", True),))
-    omask = os.umask(002)
-    if omask != 002:
-       bb.note("Using umask 002 (not %0o) for sstate packaging" % omask)
+    omask = os.umask(0o002)
+    if omask != 0o002:
+       bb.note("Using umask 0o002 (not %0o) for sstate packaging" % omask)
     sstate_package(shared_state, d)
     os.umask(omask)
 }

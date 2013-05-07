@@ -225,7 +225,7 @@ python do_package_ipk () {
                 raise bb.build.FuncFailed("unable to open %s script file for writing." % script)
             scriptfile.write(scriptvar)
             scriptfile.close()
-            os.chmod(os.path.join(controldir, script), 0755)
+            os.chmod(os.path.join(controldir, script), 0o755)
 
         conffiles_str = ' '.join(get_conffiles(pkg, d))
         if conffiles_str:

@@ -841,8 +841,8 @@ def check_sanity_everybuild(status, d):
 
     check_supported_distro(d)
 
-    omask = os.umask(022)
-    if omask & 0755:
+    omask = os.umask(0o022)
+    if omask & 0o755:
         status.addresult("Please use a umask which allows a+rx and u+rwx\n")
     os.umask(omask)
 
