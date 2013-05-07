@@ -108,16 +108,16 @@ def find_siginfo(pn, taskname, taskhashlist, d):
     foundall = False
     import glob
     for fullpath in glob.glob(filespec):
-	match = False
-	if taskhashlist:
-	    for taskhash in taskhashlist:
-		if fullpath.endswith('.%s' % taskhash):
-		    hashfiles[taskhash] = fullpath
-		    if len(hashfiles) == len(taskhashlist):
-			foundall = True
-			break
-	else:
-	    filedates[fullpath] = os.stat(fullpath).st_mtime
+        match = False
+        if taskhashlist:
+            for taskhash in taskhashlist:
+                if fullpath.endswith('.%s' % taskhash):
+                    hashfiles[taskhash] = fullpath
+                    if len(hashfiles) == len(taskhashlist):
+                        foundall = True
+                        break
+        else:
+            filedates[fullpath] = os.stat(fullpath).st_mtime
 
     if len(filedates) < 2 and not foundall:
         # That didn't work, look in sstate-cache

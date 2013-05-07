@@ -5,7 +5,7 @@ python multilib_virtclass_handler_global () {
     if isinstance(e, bb.event.RecipePreFinalise):
         for v in e.data.getVar("MULTILIB_VARIANTS", True).split():
             if e.data.getVar("TARGET_VENDOR_virtclass-multilib-" + v, False) is None:
-	       e.data.setVar("TARGET_VENDOR_virtclass-multilib-" + v, e.data.getVar("TARGET_VENDOR", False) + "ml" + v)
+                e.data.setVar("TARGET_VENDOR_virtclass-multilib-" + v, e.data.getVar("TARGET_VENDOR", False) + "ml" + v)
 
     variant = e.data.getVar("BBEXTENDVARIANT", True)
 

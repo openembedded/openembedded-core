@@ -173,10 +173,10 @@ def package_qa_check_rpath(file,name, d, elf, messages):
     import re
     rpath_re = re.compile("\s+RPATH\s+(.*)")
     for line in phdrs.split("\n"):
-    	m = rpath_re.match(line)
-	if m:
-	    rpath = m.group(1)
-	    for dir in bad_dirs:
+        m = rpath_re.match(line)
+        if m:
+            rpath = m.group(1)
+            for dir in bad_dirs:
                 if dir in rpath:
                     messages.append("package %s contains bad RPATH %s in file %s" % (name, rpath, file))
 
@@ -202,13 +202,13 @@ def package_qa_check_useless_rpaths(file, name, d, elf, messages):
     import re
     rpath_re = re.compile("\s+RPATH\s+(.*)")
     for line in phdrs.split("\n"):
-    	m = rpath_re.match(line)
-	if m:
-	   rpath = m.group(1)
-	   if rpath_eq(rpath, libdir) or rpath_eq(rpath, base_libdir):
-	      # The dynamic linker searches both these places anyway.  There is no point in
-	      # looking there again.
-	      messages.append("%s: %s contains probably-redundant RPATH %s" % (name, package_qa_clean_path(file, d), rpath))
+        m = rpath_re.match(line)
+        if m:
+            rpath = m.group(1)
+            if rpath_eq(rpath, libdir) or rpath_eq(rpath, base_libdir):
+                # The dynamic linker searches both these places anyway.  There is no point in
+                # looking there again.
+                messages.append("%s: %s contains probably-redundant RPATH %s" % (name, package_qa_clean_path(file, d), rpath))
 
 QAPATHTEST[dev-so] = "package_qa_check_dev"
 def package_qa_check_dev(path, name, d, elf, messages):
@@ -463,7 +463,7 @@ def package_qa_textrel(path, name, d, elf, messages):
     textrel_re = re.compile("\s+TEXTREL\s+")
     for line in phdrs.split("\n"):
         if textrel_re.match(line):
-	   sane = False
+            sane = False
 
     if not sane:
         messages.append("ELF binary '%s' has relocations in .text" % path)
@@ -498,7 +498,7 @@ def package_qa_hash_style(path, name, d, elf, messages):
         if "GNU_HASH" in line:
             sane = True
         if "[mips32]" in line or "[mips64]" in line:
-	    sane = True
+            sane = True
 
     if has_syms and not sane:
         messages.append("No GNU_HASH in the elf binary: '%s'" % path)

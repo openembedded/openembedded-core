@@ -17,11 +17,11 @@ python () {
     docdir=d.getVar("docdir", True)
 
     if not docdir.startswith(prefix):
-	raise bb.build.FuncFailed('docdir must contain prefix as its prefix')
+        raise bb.build.FuncFailed('docdir must contain prefix as its prefix')
 
     docdir_stripped = docdir[len(prefix):]
     if len(docdir_stripped) > 0 and docdir_stripped[0] == '/':
-	docdir_stripped = docdir_stripped[1:]
+        docdir_stripped = docdir_stripped[1:]
 
     d.setVar("docdir_stripped", docdir_stripped)
 }

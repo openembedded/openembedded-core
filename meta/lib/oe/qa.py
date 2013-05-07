@@ -72,7 +72,7 @@ class ELFFile:
         return ord(self.data[ELFFile.EI_ABIVERSION])
 
     def abiSize(self):
-	return self.bits
+        return self.bits
 
     def isLittleEndian(self):
         return self.sex == "<"
