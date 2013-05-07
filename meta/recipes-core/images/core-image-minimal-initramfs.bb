@@ -1,7 +1,7 @@
 # Simple initramfs image. Mostly used for live images.
 DESCRIPTION = "Small image capable of booting a device. The kernel includes \
 the Minimal RAM-based Initial Root Filesystem (initramfs), which finds the \
-first “init” program more efficiently."
+first 'init' program more efficiently."
 
 IMAGE_INSTALL = "initramfs-live-boot initramfs-live-install initramfs-live-install-efi busybox udev base-passwd"
 
