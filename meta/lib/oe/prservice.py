@@ -101,7 +101,7 @@ def prserv_export_tofile(d, metainfo, datainfo, lockdown, nomax=False):
         for i in range(len(datainfo)):
             pkgarch = datainfo[i]['pkgarch']
             value = datainfo[i]['value']
-            if not idx.has_key(pkgarch):
+            if pkgarch not in idx:
                 idx[pkgarch] = i
             elif value > datainfo[idx[pkgarch]]['value']:
                 idx[pkgarch] = i

@@ -1,7 +1,7 @@
 def ld_append_if_tune_exists(d, infos, dict):
     tune = d.getVar("DEFAULTTUNE", True) or ""
     libdir = d.getVar("base_libdir", True) or ""
-    if dict.has_key(tune):
+    if tune in dict:
         infos['ldconfig'].add('{"' + libdir + '/' + dict[tune][0] + '",' + dict[tune][1] + ' }')
         infos['lddrewrite'].add(libdir+'/'+dict[tune][0])
 

@@ -93,7 +93,7 @@ class ELFFile:
         import bb.process
         import sys
 
-        if self.objdump_output.has_key(cmd):
+        if cmd in self.objdump_output:
             return self.objdump_output[cmd]
 
         objdump = d.getVar('OBJDUMP', True)

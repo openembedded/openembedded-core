@@ -368,7 +368,7 @@ for dir in dirs.split():
       key=str(os.path.join("/",os.path.relpath(item,dir)))
 
       valid=True;
-      if files.has_key(key):
+      if key in files:
         #check whether the file is allow to replace
         if allow_rep.match(key):
           valid=True
