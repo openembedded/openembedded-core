@@ -71,7 +71,7 @@ ALTERNATIVE_PRIORITY = "100"
 ALTERNATIVE_LINK_NAME[psplash] = "${bindir}/psplash"
 
 python do_compile () {
-    import shutil, commands
+    import shutil, subprocess
 
     # Build a separate executable for each splash image
     convertscript = "%s/make-image-header.sh" % d.getVar('S', True)
@@ -80,7 +80,7 @@ python do_compile () {
     outputfiles = d.getVar('SPLASH_INSTALL', True).split()
     for localfile, outputfile in zip(localfiles, outputfiles):
         if localfile.endswith(".png"):
-            outp = commands.getstatusoutput('%s %s POKY' % (convertscript, localfile))
+            outp = subprocess.getstatusoutput('%s %s POKY' % (convertscript, localfile))
             print(outp[1])
             fbase = os.path.splitext(os.path.basename(localfile))[0]
             shutil.copyfile("%s-img.h" % fbase, destfile)

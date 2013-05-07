@@ -254,7 +254,7 @@ do_kernel_configme() {
 }
 
 python do_kernel_configcheck() {
-    import re, string, sys, commands
+    import re, string, sys, subprocess
 
     bb.plain("NOTE: validating kernel config, see log.do_kernel_configcheck for details")
 
@@ -265,7 +265,7 @@ python do_kernel_configcheck() {
 
     pathprefix = "export PATH=%s:%s; " % (d.getVar('PATH', True), "${S}/scripts/util/")
     cmd = d.expand("cd ${S}; kconf_check -config- %s/meta-series ${S} ${B}" % kmeta)
-    ret, result = commands.getstatusoutput("%s%s" % (pathprefix, cmd))
+    ret, result = subprocess.getstatusoutput("%s%s" % (pathprefix, cmd))
 
     config_check_visibility = d.getVar( "KCONF_AUDIT_LEVEL", True ) or 1
     if config_check_visibility == 1:

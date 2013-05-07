@@ -233,7 +233,7 @@ def splitdebuginfo(file, debugfile, debugsrcdir, d):
     #
     # sourcefile is also generated containing a list of debugsources
 
-    import commands, stat, subprocess
+    import stat, subprocess
 
     dvar = d.getVar('PKGD', True)
     objcopy = d.getVar("OBJCOPY", True)
@@ -283,7 +283,7 @@ def copydebugsources(debugsrcdir, d):
     # The debug src information written out to sourcefile is further procecessed
     # and copied to the destination here.
 
-    import commands, stat, subprocess
+    import stat, subprocess
 
     sourcefile = d.expand("${WORKDIR}/debugsources.list")
     if debugsrcdir and os.path.isfile(sourcefile):
@@ -696,7 +696,7 @@ python fixup_perms () {
 }
 
 python split_and_strip_files () {
-    import commands, stat, errno, subprocess
+    import stat, errno, subprocess
 
     dvar = d.getVar('PKGD', True)
     pn = d.getVar('PN', True)
@@ -732,7 +732,7 @@ python split_and_strip_files () {
     # 16 - kernel module
     def isELF(path):
         type = 0
-        ret, result = commands.getstatusoutput("file '%s'" % path)
+        ret, result = subprocess.getstatusoutput("file '%s'" % path)
 
         if ret:
             bb.error("split_and_strip_files: 'file %s' failed" % path)

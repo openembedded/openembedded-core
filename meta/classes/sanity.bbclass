@@ -342,13 +342,13 @@ def check_gcc_march(sanity_data):
         f = open("gcc_test.c", "w")
         f.write("int main (){ __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4; return 0;}\n")
         f.close()
-        import commands
+        import subprocess
 
         # Check if GCC could work without march
-        status,result = commands.getstatusoutput("${BUILD_PREFIX}gcc gcc_test.c -o gcc_test")
+        status,result = subprocess.getstatusoutput("${BUILD_PREFIX}gcc gcc_test.c -o gcc_test")
         if status != 0:
             # Check if GCC could work with march
-            status,result = commands.getstatusoutput("${BUILD_PREFIX}gcc -march=native gcc_test.c -o gcc_test")
+            status,result = subprocess.getstatusoutput("${BUILD_PREFIX}gcc -march=native gcc_test.c -o gcc_test")
             if status == 0: 
                 result = True
             else:
@@ -370,7 +370,6 @@ def check_sanity(sanity_data):
         def LooseVersion(v):
             print("WARNING: sanity.bbclass can't compare versions without python-distutils")
             return 1
-    import commands
 
     # Check the bitbake version meets minimum requirements
     minversion = sanity_data.getVar('BB_MIN_VERSION', True)
