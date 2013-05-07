@@ -392,7 +392,7 @@ class UserResolver(Resolver):
         os.chdir(self.patchset.dir)
         try:
             self.patchset.Push(False)
-        except CmdError, v:
+        except CmdError as v:
             # Patch application failed
             patchcmd = self.patchset.Push(True, False, False)
 

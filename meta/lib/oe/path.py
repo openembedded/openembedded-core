@@ -107,7 +107,7 @@ def remove(path, recurse=True):
     for name in glob.glob(path):
         try:
             os.unlink(name)
-        except OSError, exc:
+        except OSError as exc:
             if recurse and exc.errno == errno.EISDIR:
                 shutil.rmtree(name)
             elif exc.errno != errno.ENOENT:
@@ -119,7 +119,7 @@ def symlink(source, destination, force=False):
         if force:
             remove(destination)
         os.symlink(source, destination)
-    except OSError, e:
+    except OSError as e:
         if e.errno != errno.EEXIST or os.readlink(destination) != source:
             raise
 
@@ -247,7 +247,7 @@ def realpath(file, root, use_physdir = True, loop_cnt = 100, assume_dir = False)
             file = __realpath_rel(root, file[(len(root) - 1):], root, loop_cnt, assume_dir)
         else:
             file = __realpath(file, root, loop_cnt, assume_dir)[0]
-    except OSError, e:
+    except OSError as e:
         if e.errno == errno.ELOOP:
             # make ELOOP more readable; without catching it, there will
             # be printed a backtrace with 100s of OSError exceptions

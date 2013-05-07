@@ -777,7 +777,8 @@ python split_and_strip_files () {
                 try:
                     ltarget = cpath.realpath(file, dvar, False)
                     s = cpath.lstat(ltarget)
-                except OSError, (err, strerror):
+                except OSError as e:
+                    (err, strerror) = e.args
                     if err != errno.ENOENT:
                         raise
                     # Skip broken symlinks
@@ -855,7 +856,8 @@ python split_and_strip_files () {
             # Skip it if the target doesn't exist
             try:
                 s = os.stat(fpath)
-            except OSError, (err, strerror):
+            except OSError as e:
+                (err, strerror) = e.args
                 if err != errno.ENOENT:
                     raise
                 continue

@@ -235,12 +235,14 @@ def check_create_long_filename(filepath, pathname):
         f = file(testfile, "w")
         f.close()
         os.remove(testfile)
-    except IOError as (errno, strerror):
+    except IOError as e:
+        errno, strerror = e.args
         if errno == 36: # ENAMETOOLONG
             return "Failed to create a file with a long name in %s. Please use a filesystem that does not unreasonably limit filename length.\n" % pathname
         else:
             return "Failed to create a file in %s: %s.\n" % (pathname, strerror)
-    except OSError as (errno, strerror):
+    except OSError as e:
+        errno, strerror = e.args
         return "Failed to create %s directory in which to run long name sanity check: %s.\n" % (pathname, strerror)
     return ""
 

@@ -125,7 +125,7 @@ class CachedPath(object):
             # Note that listdir and error are globals in this module due
             # to earlier import-*.
             names = os.listdir(top)
-        except error, err:
+        except error as err:
             if onerror is not None:
                 onerror(err)
             return
@@ -221,7 +221,7 @@ class CachedPath(object):
                 file = self.__realpath_rel(root, file[(len(root) - 1):], root, loop_cnt, assume_dir)
             else:
                 file = self.__realpath(file, root, loop_cnt, assume_dir)[0]
-        except OSError, e:
+        except OSError as e:
             if e.errno == errno.ELOOP:
                 # make ELOOP more readable; without catching it, there will
                 # be printed a backtrace with 100s of OSError exceptions

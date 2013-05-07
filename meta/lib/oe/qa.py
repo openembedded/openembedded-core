@@ -106,6 +106,6 @@ class ELFFile:
             bb.note("%s %s %s" % (objdump, cmd, self.name))
             self.objdump_output[cmd] = bb.process.run([objdump, cmd, self.name], env=env, shell=False)[0]
             return self.objdump_output[cmd]
-        except Exception, e:
+        except Exception as e:
             bb.note("%s %s %s failed: %s" % (objdump, cmd, self.name, e))
             return ""

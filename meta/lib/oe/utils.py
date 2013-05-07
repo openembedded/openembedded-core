@@ -1,7 +1,7 @@
 def read_file(filename):
     try:
         f = file( filename, "r" )
-    except IOError, reason:
+    except IOError as reason:
         return "" # WARNING: can't raise an error now because of the new RDEPENDS handling. This is a bit ugly. :M:
     else:
         return f.read().strip()

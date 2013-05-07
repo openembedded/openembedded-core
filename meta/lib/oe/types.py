@@ -92,7 +92,7 @@ def regex(value, regexflags=None):
 
     try:
         return re.compile(value, flagval)
-    except re.error, exc:
+    except re.error as exc:
         raise ValueError("Invalid regex value '%s': %s" %
                          (value, exc.args[0]))
 
