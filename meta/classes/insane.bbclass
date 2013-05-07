@@ -578,7 +578,7 @@ def package_qa_check_license(workdir, d):
         if (not beginline) and (not endline):
             md5chksum = bb.utils.md5_file(srclicfile)
         else:
-            fi = open(srclicfile, 'r')
+            fi = open(srclicfile, 'rb')
             fo = tempfile.NamedTemporaryFile(mode='wb', prefix='poky.', suffix='.tmp', delete=False)
             tmplicfile = fo.name;
             lineno = 0
