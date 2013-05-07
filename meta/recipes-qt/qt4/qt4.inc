@@ -213,7 +213,7 @@ do_configure() {
 	cp -f ${WORKDIR}/linux.conf mkspecs/common/
 
 	echo "[Paths]"                                 > $QT_CONF_PATH
-	echo "Prefix=${prefix}/"                      >> $QT_CONF_PATH
+	echo "Prefix=${prefix}"                       >> $QT_CONF_PATH
 	echo "Documentation=${docdir}/${QT_DIR_NAME}" >> $QT_CONF_PATH
 	echo "Headers=${includedir}/${QT_DIR_NAME}"   >> $QT_CONF_PATH
 	echo "Libraries=${libdir}"                    >> $QT_CONF_PATH
@@ -229,7 +229,7 @@ do_configure() {
 	${EXTRA_QMAKE_MUNGE}|| true
 
 	echo yes | QT_LICENSE_FILE="${QT_LICENSE_FILE}" ./configure -v \
-			-prefix ${prefix}/ \
+			-prefix ${prefix} \
 			-bindir ${bindir} \
 			-libdir ${libdir} \
 			-datadir ${datadir}/${QT_DIR_NAME} \
@@ -358,7 +358,7 @@ do_install() {
 
 	# QT abuses $includedir to point to its headers, which breaks pkgconfig sysroot, so manually fix it up here:
 	for pc in ${D}${libdir}/pkgconfig/*.pc ; do
-		sed -i -e "s:prefix}include/${QT_DIR_NAME}/$(basename $pc .pc):prefix}/include:" \
+		sed -i -e "s:prefix}/include/${QT_DIR_NAME}/$(basename $pc .pc):prefix}/include:" \
 				-e 's:IP{:I${:g' $pc
 	done
 
