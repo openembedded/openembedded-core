@@ -51,7 +51,11 @@ def get_imagecmds(d):
         types.remove("live")
 
     if d.getVar('IMAGE_LINK_NAME', True):
-        cmds += "\trm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.*"
+        if d.getVar('RM_OLD_IMAGE', True) == "1":
+            # Remove the old image
+            cmds += "\trm -f `find ${DEPLOY_DIR_IMAGE} -maxdepth 1 -type l -name ${IMAGE_LINK_NAME}'.*' -exec readlink -f {} \;`"
+        # Remove the symlink
+        cmds += "\n\trm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.*"
 
     for type in types:
         ccmd = []

@@ -207,3 +207,6 @@
 #ARCHIVER_MODE[filter] ?= "no"
 #ARCHIVER_CLASS = "${@'archive-${ARCHIVER_MODE}-source' if ARCHIVER_MODE != 'none' else ''}"
 #INHERIT += "${ARCHIVER_CLASS}"
+
+# Remove the old image before the new one generated to save disk space
+#RM_OLD_IMAGE = "1"
