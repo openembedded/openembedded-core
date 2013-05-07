@@ -360,6 +360,7 @@ FILES_${PN}-staticdev = " \
 do_configure() {
 	# Disable tests!
 	echo "all:" > ${S}/tests/Makefile.am
+	sed -e 's/@__MKDIR_P@/%{__mkdir} -p/' -i ${S}/macros/macros.in
 
 	( cd ${S}; ${S}/autogen.sh )
 
