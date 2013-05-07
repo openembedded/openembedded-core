@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/README;md5=d7a19b8c6d8a28785c4cd04ff2e46d2
 SRC_URI =" ftp://ftp.iana.org/tz/releases/tzcode${PV}.tar.gz;name=tzcode \
            ftp://ftp.iana.org/tz/releases/tzdata2013b.tar.gz;name=tzdata"
 
-SRC_URI[tzcode.md5sum] = "c8bb91ce60092ef61d628d104ad3dab1"
-SRC_URI[tzcode.sha256sum] = "fda9a8bd15f06939f0ecd1edba17d5e66d4d526632145609574459b250ab0efb"
+SRC_URI[tzcode.md5sum] = "69d333d829802af4475707e32fa01681"
+SRC_URI[tzcode.sha256sum] = "e46ee931927273108db1c6b5ab86c37210e903536a910b35a5699a08799bd6f0"
 SRC_URI[tzdata.md5sum] = "489dbca77d1f2e287a3987ca047bb246"
 SRC_URI[tzdata.sha256sum] = "70d589d0e76a3749403d2bb404e9214c2520dda4c13e4b07b1b945ed2c64edb2"
 
