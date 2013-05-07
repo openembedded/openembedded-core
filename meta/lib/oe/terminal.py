@@ -6,10 +6,10 @@ from bb.process import Popen, ExecutionError
 logger = logging.getLogger('BitBake.OE.Terminal')
 
 
-class UnsupportedTerminal(StandardError):
+class UnsupportedTerminal(Exception):
     pass
 
-class NoSupportedTerminals(StandardError):
+class NoSupportedTerminals(Exception):
     pass
 
 
