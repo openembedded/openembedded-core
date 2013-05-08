@@ -11,6 +11,9 @@ EXTRA_OECONF_PATHS = " \
                       --with-sysroot=${STAGING_DIR_TARGET} \
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
 
+do_configure_prepend () {
+	sed -i 's/BUILD_INFO=info/BUILD_INFO=/' ${S}/gcc/configure
+}
 do_compile_prepend () {
 	export CC="${BUILD_CC}"
 	export AR_FOR_TARGET="${TARGET_SYS}-ar"
