@@ -1,10 +1,16 @@
 require libtool-${PV}.inc
 
 PR = "${INC_PR}.0"
+
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/libtool:"
+
 SRC_URI += "file://prefix.patch"
 SRC_URI += "file://fixinstall.patch"
 
 inherit nativesdk
+
+S = "${WORKDIR}/libtool-${PV}"
+FILES_${PN} += "${datadir}/libtool/*"
 
 do_configure_prepend () {
 	# Remove any existing libtool m4 since old stale versions would break
