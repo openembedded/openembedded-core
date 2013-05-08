@@ -9,10 +9,9 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=96254c20ab81c63e65b26f0dbcd4a1c1"
 
 DEPENDS += "zlib xproto font-util"
-PR = "r0"
 PE = "1"
 
 BBCLASSEXTEND = "native"
 
-SRC_URI[md5sum] = "a2a861f142c3b4367f14fc14239fc1f7"
-SRC_URI[sha256sum] = "de72812f1856bb63bd2226ec8c2e2301931d3c72bd0f08b0d63a0cdf0722017f"
+SRC_URI[md5sum] = "ad2919764933e075bb0361ad5caa3d19"
+SRC_URI[sha256sum] = "a9a4efed3359b2e80161bb66b65038fac145137fa134e71335264cbc23b02f62"
