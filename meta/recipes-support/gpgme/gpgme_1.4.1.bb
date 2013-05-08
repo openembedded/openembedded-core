@@ -12,13 +12,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gpgme/gpgme-${PV}.tar.bz2 \
            file://disable_gpgconf_check.patch"
 
-SRC_URI[md5sum] = "a0f93aba6d8a831ba14905085027f2f9"
-SRC_URI[sha256sum] = "728c959abb0795ed4357b308cdbba92210d22998b075664d1e038d3cc7145619"
+SRC_URI[md5sum] = "07f1c0eb6596a94efa3ffb75e74bfbba"
+SRC_URI[sha256sum] = "7ab63e5086ebe4cfe7f78face1bb059a7a60da586b1e5c6a77bedcd6d04019b8"
 DEPENDS = "libgpg-error libassuan ${PTH}"
 PTH_libc-uclibc = "npth"
 PTH = "pth"
-
-PR = "r0"
 
 EXTRA_OECONF = "--with-pth=${STAGING_DIR_HOST} --without-pth-test \
                 --with-gpg=${bindir}/gpg --without-gpgsm"
