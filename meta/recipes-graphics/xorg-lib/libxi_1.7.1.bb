@@ -18,5 +18,5 @@ PR = "r0"
 
 XORG_PN = "libXi"
 
-SRC_URI[md5sum] = "d77922d822cb3abdbdfb92cd66440576"
-SRC_URI[sha256sum] = "4ebcf2b02c16ff51e41e9d045de01416d6430b6a4af6a82b17b6bfa4d6f9cbfc"
+SRC_URI[md5sum] = "24d71afed1b86c60d4eb361628d7f47b"
+SRC_URI[sha256sum] = "e92adb6b69c53c51e05c1e65db97e23751b935a693000fb0606c11b88c0066c5"
