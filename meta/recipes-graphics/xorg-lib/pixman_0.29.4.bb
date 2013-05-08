@@ -15,8 +15,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=14096c769ae0cbb5fcb94ec468be11b3 \
 DEPENDS += "zlib libpng"
 BBCLASSEXTEND = "native nativesdk"
 
-PR = "r0"
-
 PE = "1"
 
 IWMMXT = "--disable-arm-iwmmxt"
@@ -33,5 +31,5 @@ SRC_URI += "\
             file://Generic-C-implementation-of-pixman_blt-with-overlapp.patch \
 "
 
-SRC_URI[md5sum] = "6e64a6d73559973ef6a9f125b5161ad3"
-SRC_URI[sha256sum] = "aa3dca46f6c90ae7731929d4e12195a981c52c3a423669ec3329d5a9c469841f"
+SRC_URI[md5sum] = "7ae4104aa9fcd46c4fb7fe01080b8b56"
+SRC_URI[sha256sum] = "56fe8f5d1bb3e63013a4bb6b114bdf174df4c041b03b1965147b9f40d2f4c88e"
