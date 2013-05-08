@@ -2,9 +2,8 @@ require oprofileui.inc
 
 DEPENDS += "gtk+ libglade libxml2 avahi-ui gconf"
 
-SRCREV = "82ecf8c6b53b84f80682a8312f9defa83a95f2a3"
+SRCREV = "f168b8bfdc63660033de1739c6ddad1abd97c379"
 PV = "0.0+git${SRCPV}"
-PR = "r1"
 
 S = "${WORKDIR}/git"
 
