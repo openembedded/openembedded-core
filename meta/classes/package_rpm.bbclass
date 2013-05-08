@@ -672,12 +672,10 @@ python write_specfile () {
     pkgdest = d.getVar('PKGDEST', True)
     if not pkgdest:
         bb.fatal("No PKGDEST")
-        return
 
     outspecfile = d.getVar('OUTSPECFILE', True)
     if not outspecfile:
         bb.fatal("No OUTSPECFILE")
-        return
 
     # Construct the SPEC file...
     srcname    = strip_multilib(d.getVar('PN', True), d)

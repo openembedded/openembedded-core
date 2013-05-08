@@ -718,7 +718,6 @@ def package_qa_check_deps(pkg, pkgdest, skip, d):
             rvar = bb.utils.explode_dep_versions2(localdata.getVar(var, True) or "")
         except ValueError as e:
             bb.fatal("%s_%s: %s" % (var, pkg, e))
-            raise e
         for dep in rvar:
             for v in rvar[dep]:
                 if v and not v.startswith(('< ', '= ', '> ', '<= ', '>=')):

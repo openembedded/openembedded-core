@@ -372,7 +372,6 @@ python package_get_auto_pr() {
             auto_pr=prserv_get_pr_auto(d)
         except Exception as e:
             bb.fatal("Can NOT get PRAUTO, exception %s" %  str(e))
-            return
         if auto_pr is None:
             if d.getVar('PRSERV_LOCKDOWN', True):
                 bb.fatal("Can NOT get PRAUTO from lockdown exported file")
