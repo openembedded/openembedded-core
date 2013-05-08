@@ -5,6 +5,7 @@ SECTION = "devel"
 DEPENDS = "expat ncurses readline ${LTTNGUST}"
 
 LTTNGUST = "lttng-ust"
+LTTNGUST_aarch64 = ""
 LTTNGUST_libc-uclibc = ""
 LTTNGUST_mips = ""
 LTTNGUST_mipsel = ""
