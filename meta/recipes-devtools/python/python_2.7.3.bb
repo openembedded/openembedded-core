@@ -7,11 +7,9 @@ DISTRO_SRC_URI_linuxstdbase = ""
 SRC_URI += "\
   file://01-use-proper-tools-for-cross-build.patch \
   file://03-fix-tkinter-detection.patch \
-  file://04-default-is-optimized.patch \
   file://05-enable-ctypes-cross-build.patch \
   file://06-ctypes-libffi-fix-configure.patch \
   file://06-avoid_usr_lib_termcap_path_in_linking.patch \
-  file://99-ignore-optimization-flag.patch \
   ${DISTRO_SRC_URI} \
   file://multilib.patch \
   file://cgi_py.patch \

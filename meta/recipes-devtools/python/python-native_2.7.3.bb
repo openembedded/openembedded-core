@@ -4,7 +4,7 @@ EXTRANATIVEPATH += "bzip2-native"
 DEPENDS = "openssl-native bzip2-replacement-native zlib-native readline-native sqlite3-native"
 PR = "${INC_PR}.1"
 
-SRC_URI += "file://04-default-is-optimized.patch \
+SRC_URI += "\
            file://05-enable-ctypes-cross-build.patch \
            file://06-ctypes-libffi-fix-configure.patch \
            file://10-distutils-fix-swig-parameter.patch \
