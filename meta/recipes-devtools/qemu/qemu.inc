@@ -26,7 +26,6 @@ SRC_URI = "\
     file://larger_default_ram_size.patch \
     file://arm-bgr.patch \
     file://Revert-vmware_vga-Add-back-some-info-in-local-state-.patch \
-    file://0001-doc-Fix-texinfo-table-markup-in-qemu-options.hx.patch \
     file://0002-docs-Fix-generating-qemu-doc.html-with-texinfo-5.patch \
     "
 
