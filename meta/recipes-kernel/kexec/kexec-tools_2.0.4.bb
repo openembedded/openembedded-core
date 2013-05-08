@@ -2,10 +2,8 @@ require kexec-tools.inc
 export LDFLAGS = "-L${STAGING_LIBDIR}"
 EXTRA_OECONF = " --with-zlib=yes"
 
-PR = "r0"
-
-SRC_URI[md5sum] = "1b362abd2e8669171a5ba50a9cc26183"
-SRC_URI[sha256sum] = "36a50fad961e24c9cdaa7c01b74d3cdd2b1bebf9bf0f0f3740dd1f21bd1b8ba6"
+SRC_URI[md5sum] = "b9f2a3ba0ba9c78625ee7a50532500d8"
+SRC_URI[sha256sum] = "6ba1872c58434b8e92506ff515c7ef64555671af54097bae51b833bda3f5126c"
 
 PACKAGES =+ "kexec kdump"
 
