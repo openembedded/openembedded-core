@@ -217,7 +217,6 @@ python run_buildstats () {
         if timedata:
             time, cpu = timedata
             # write end of build and cpu used into build_time
-            file = open(build_time, "a")
             file.write("Elapsed time: %0.2f seconds \n" % (time))
             if cpu:
                 file.write("CPU usage: %0.1f%% \n" % cpu)
