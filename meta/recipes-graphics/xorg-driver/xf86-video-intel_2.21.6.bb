@@ -9,8 +9,6 @@ Infrastructure (DRI)."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 
-PR = "${INC_PR}.0"
-
 DEPENDS += "virtual/libx11 drm xf86driproto glproto \
 	    virtual/libgl xineramaproto xf86driproto libpciaccess udev"
 
@@ -23,5 +21,5 @@ EXTRA_OECONF += '${@base_conditional( "ROOTLESS_X", "1", " --enable-kms-only", "
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
-SRC_URI[md5sum] = "362a1d70082f5c0d2410aaf87b5125ba"
-SRC_URI[sha256sum] = "1ce672a042226dba776649e9067827c24fbb27383c78919a372265bb0d939dbb"
+SRC_URI[md5sum] = "a4f002f50b370fe550231c9b33e12399"
+SRC_URI[sha256sum] = "c3ef371e72544350c878d5373b2e7f49b8a0e253f9b63cb1ce2881180b45f8d9"
