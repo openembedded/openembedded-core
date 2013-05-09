@@ -2,7 +2,7 @@
 
 # Report significant differences in the buildhistory repository since a specific revision
 #
-# Copyright (C) 2012 Intel Corporation
+# Copyright (C) 2013 Intel Corporation
 # Author: Paul Eggleton <paul.eggleton@linux.intel.com>
 
 import sys
@@ -18,10 +18,10 @@ except ImportError:
 
 def main():
     if LooseVersion(git.__version__) < '0.3.1':
-        print("Version of GitPython is too old, please install GitPython (python-git) 0.3.1 or later in order to use this script")
+        sys.stderr.write("Version of GitPython is too old, please install GitPython (python-git) 0.3.1 or later in order to use this script\n")
         sys.exit(1)
 
-    if (len(sys.argv) < 3):
+    if len(sys.argv) < 3 or '--help' in sys.argv:
         print("Report significant differences in the buildhistory repository")
         print("Syntax: %s <buildhistory-path> <since-revision> [to-revision]" % os.path.basename(sys.argv[0]))
         print("If to-revision is not specified, it defaults to HEAD")
@@ -41,17 +41,29 @@ def main():
                 bitbakepath = os.path.abspath(os.path.join(pth, '..'))
                 break
         if not bitbakepath:
-            print("Unable to find bitbake by searching parent directory of this script or PATH")
+            sys.stderr.write("Unable to find bitbake by searching parent directory of this script or PATH\n")
             sys.exit(1)
 
     sys.path[0:0] = [newpath, bitbakepath + '/lib']
     import oe.buildhistory_analysis
 
+    buildhistory_dir = sys.argv[1]
+    if not os.path.exists(buildhistory_dir):
+        sys.stderr.write('Specified buildhistory directory "%s" does not exist\n' % buildhistory_dir)
+        sys.exit(1)
+
     if len(sys.argv) > 3:
         torev = sys.argv[3]
     else:
         torev = 'HEAD'
-    changes = oe.buildhistory_analysis.process_changes(sys.argv[1], sys.argv[2], torev)
+
+    import gitdb
+    try:
+        changes = oe.buildhistory_analysis.process_changes(buildhistory_dir, sys.argv[2], torev)
+    except gitdb.exc.BadObject as e:
+        sys.stderr.write('Specified git revision "%s" is not valid\n' % e.args[0])
+        sys.exit(1)
+
     for chg in changes:
         print('%s' % chg)
 
