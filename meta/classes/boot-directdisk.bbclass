@@ -28,9 +28,6 @@ do_bootdirectdisk[depends] += "dosfstools-native:do_populate_sysroot \
 PACKAGES = " "
 EXCLUDE_FROM_WORLD = "1"
 
-HDDDIR = "${S}/hdd/boot"
-HDDIMG = "${S}/hdd.image"
-
 BOOTDD_VOLUME_ID   ?= "boot"
 BOOTDD_EXTRA_SPACE ?= "16384"
 
@@ -43,14 +40,16 @@ SYSLINUX_TIMEOUT ?= "10"
 inherit syslinux
 		
 build_boot_dd() {
+	HDDDIR="${S}/hdd/boot"
+	HDDIMG="${S}/hdd.image"
 	IMAGE=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hdddirect
 
-	install -d ${HDDDIR}
-	install -m 0644 ${STAGING_KERNEL_DIR}/bzImage ${HDDDIR}/vmlinuz
-	install -m 0644 ${S}/syslinux.cfg ${HDDDIR}/syslinux.cfg
-	install -m 444 ${STAGING_DATADIR}/syslinux/ldlinux.sys ${HDDDIR}/ldlinux.sys
+	install -d $HDDDIR
+	install -m 0644 ${STAGING_KERNEL_DIR}/bzImage $HDDDIR/vmlinuz
+	install -m 0644 ${S}/syslinux.cfg $HDDDIR/syslinux.cfg
+	install -m 444 ${STAGING_DATADIR}/syslinux/ldlinux.sys $HDDDIR/ldlinux.sys
 
-	BLOCKS=`du -bks ${HDDDIR} | cut -f 1`
+	BLOCKS=`du -bks $HDDDIR | cut -f 1`
 	BLOCKS=`expr $BLOCKS + ${BOOTDD_EXTRA_SPACE}`
 
 	# Ensure total sectors is an integral number of sectors per
@@ -59,11 +58,11 @@ build_boot_dd() {
 	# done in blocks, thus the mod by 16 instead of 32.
 	BLOCKS=$(expr $BLOCKS + $(expr 16 - $(expr $BLOCKS % 16)))
 
-	mkdosfs -n ${BOOTDD_VOLUME_ID} -S 512 -C ${HDDIMG} $BLOCKS 
-	mcopy -i ${HDDIMG} -s ${HDDDIR}/* ::/
+	mkdosfs -n ${BOOTDD_VOLUME_ID} -S 512 -C $HDDIMG $BLOCKS 
+	mcopy -i $HDDIMG -s $HDDDIR/* ::/
 
-	syslinux ${HDDIMG}
-	chmod 644 ${HDDIMG}
+	syslinux $HDDIMG
+	chmod 644 $HDDIMG
 
 	ROOTFSBLOCKS=`du -Lbks ${ROOTFS} | cut -f 1`
 	TOTALSIZE=`expr $BLOCKS + $ROOTFSBLOCKS`
@@ -83,7 +82,7 @@ build_boot_dd() {
 
 	OFFSET=`expr $END2 / 512`
 	dd if=${STAGING_DATADIR}/syslinux/mbr.bin of=$IMAGE conv=notrunc
-	dd if=${HDDIMG} of=$IMAGE conv=notrunc seek=1 bs=512
+	dd if=$HDDIMG of=$IMAGE conv=notrunc seek=1 bs=512
 	dd if=${ROOTFS} of=$IMAGE conv=notrunc seek=$OFFSET bs=512
 
 	cd ${DEPLOY_DIR_IMAGE}
