@@ -52,7 +52,10 @@ class ChangeRecord:
 
     def _str_internal(self, outer):
         if outer:
-            prefix = '%s: ' % self.path
+            if '/image-files/' in self.path:
+                prefix = '%s: ' % self.path.split('/image-files/')[0]
+            else:
+                prefix = '%s: ' % self.path
         else:
             prefix = ''
 
@@ -107,16 +110,21 @@ class ChangeRecord:
             diff = difflib.unified_diff(alines, blines, self.fieldname, self.fieldname, lineterm='')
             out += '\n  '.join(list(diff)[2:])
             out += '\n  --'
-        elif self.fieldname in img_monitor_files:
-            if outer:
-                prefix = 'Changes to %s ' % self.path
-            out = '(%s):\n  ' % self.fieldname
+        elif self.fieldname in img_monitor_files or '/image-files/' in self.path:
+            fieldname = self.fieldname
+            if '/image-files/' in self.path:
+                fieldname = os.path.join('/' + self.path.split('/image-files/')[1], self.fieldname)
+                out = 'Changes to %s:\n  ' % fieldname
+            else:
+                if outer:
+                    prefix = 'Changes to %s ' % self.path
+                out = '(%s):\n  ' % self.fieldname
             if self.filechanges:
                 out += '\n  '.join(['%s' % i for i in self.filechanges])
             else:
                 alines = self.oldvalue.splitlines()
                 blines = self.newvalue.splitlines()
-                diff = difflib.unified_diff(alines, blines, self.fieldname, self.fieldname, lineterm='')
+                diff = difflib.unified_diff(alines, blines, fieldname, fieldname, lineterm='')
                 out += '\n  '.join(list(diff))
                 out += '\n  --'
         else:
@@ -393,6 +401,9 @@ def process_changes(repopath, revision1, revision2 = 'HEAD', report_all = False)
                     changes.append(chg)
             elif filename == 'image-info.txt':
                 changes.extend(compare_dict_blobs(path, d.a_blob, d.b_blob, report_all))
+            elif '/image-files/' in path:
+                chg = ChangeRecord(path, filename, d.a_blob.data_stream.read(), d.b_blob.data_stream.read(), True)
+                changes.append(chg)
 
     # Look for added preinst/postinst/prerm/postrm
     # (without reporting newly added recipes)

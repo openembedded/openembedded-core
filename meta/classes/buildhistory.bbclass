@@ -12,6 +12,7 @@ BUILDHISTORY_DIR ?= "${TOPDIR}/buildhistory"
 BUILDHISTORY_DIR_IMAGE = "${BUILDHISTORY_DIR}/images/${MACHINE_ARCH}/${TCLIBC}/${IMAGE_BASENAME}"
 BUILDHISTORY_DIR_PACKAGE = "${BUILDHISTORY_DIR}/packages/${MULTIMACH_TARGET_SYS}/${PN}"
 BUILDHISTORY_DIR_SDK = "${BUILDHISTORY_DIR}/sdk/${SDK_NAME}"
+BUILDHISTORY_IMAGE_FILES ?= "/etc/passwd /etc/group"
 BUILDHISTORY_COMMIT ?= "0"
 BUILDHISTORY_COMMIT_AUTHOR ?= "buildhistory <buildhistory@${DISTRO}>"
 BUILDHISTORY_PUSH_REPO ?= ""
@@ -395,6 +396,15 @@ buildhistory_get_imageinfo() {
 	fi
 
 	buildhistory_list_files ${IMAGE_ROOTFS} ${BUILDHISTORY_DIR_IMAGE}/files-in-image.txt
+
+	# Collect files requested in BUILDHISTORY_IMAGE_FILES
+	rm -rf ${BUILDHISTORY_DIR_IMAGE}/image-files
+	for f in ${BUILDHISTORY_IMAGE_FILES}; do
+		if [ -f ${IMAGE_ROOTFS}/$f ] ; then
+			mkdir -p ${BUILDHISTORY_DIR_IMAGE}/image-files/`dirname $f`
+			cp ${IMAGE_ROOTFS}/$f ${BUILDHISTORY_DIR_IMAGE}/image-files/$f
+		fi
+	done
 
 	# Record some machine-readable meta-information about the image
 	printf ""  > ${BUILDHISTORY_DIR_IMAGE}/image-info.txt
