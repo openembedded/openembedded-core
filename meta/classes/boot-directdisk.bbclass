@@ -48,7 +48,7 @@ build_boot_dd() {
 	install -d ${HDDDIR}
 	install -m 0644 ${STAGING_KERNEL_DIR}/bzImage ${HDDDIR}/vmlinuz
 	install -m 0644 ${S}/syslinux.cfg ${HDDDIR}/syslinux.cfg
-	install -m 444 ${STAGING_LIBDIR}/syslinux/ldlinux.sys ${HDDDIR}/ldlinux.sys
+	install -m 444 ${STAGING_DATADIR}/syslinux/ldlinux.sys ${HDDDIR}/ldlinux.sys
 
 	BLOCKS=`du -bks ${HDDDIR} | cut -f 1`
 	BLOCKS=`expr $BLOCKS + ${BOOTDD_EXTRA_SPACE}`
@@ -82,7 +82,7 @@ build_boot_dd() {
 	parted $IMAGE print
 
 	OFFSET=`expr $END2 / 512`
-	dd if=${STAGING_LIBDIR}/syslinux/mbr.bin of=$IMAGE conv=notrunc
+	dd if=${STAGING_DATADIR}/syslinux/mbr.bin of=$IMAGE conv=notrunc
 	dd if=${HDDIMG} of=$IMAGE conv=notrunc seek=1 bs=512
 	dd if=${ROOTFS} of=$IMAGE conv=notrunc seek=$OFFSET bs=512
 

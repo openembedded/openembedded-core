@@ -2,20 +2,17 @@ DESCRIPTION = "A multi-purpose linux bootloader"
 HOMEPAGE = "http://syslinux.zytor.com/"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
-                    file://README;beginline=28;endline=34;md5=a4607efd4a6392017186d08099e7d546"
+                    file://README;beginline=35;endline=41;md5=f7249a750bc692d1048b2626752aa415"
 
 # If you really want to run syslinux, you need mtools.  We just want the
 # ldlinux.* stuff for now, so skip mtools-native
-DEPENDS = "nasm-native"
-PR = "r9"
+DEPENDS = "nasm-native util-linux"
+PR = "r0"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/4.xx/syslinux-${PV}.tar.bz2 \
-           file://cross-build.patch \
-           file://no-strip.patch \
-           file://libinstaller-Avoid-using-linux-ext2_fs.h.patch"
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/4.xx/syslinux-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "a7ca38a0a5786b6efae8fb01a1ae8070"
-SRC_URI[sha256sum] = "c65567e324f9d1f7f794ae8f9578a0292bbd47d7b8d895a004d2f0152d0bda38"
+SRC_URI[md5sum] = "0384ef35b724615074e77b1fc89d5b47"
+SRC_URI[sha256sum] = "dbb7774e36c4596de68fa5e6788ad57809ab31a1760e5d7626e697766d30ad26"
 
 COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 
@@ -37,15 +34,15 @@ do_configure() {
 do_compile() {
 	# Rebuild only the installer; keep precompiled bootloaders
 	# as per author's request (doc/distrib.txt)
-	oe_runmake CC="${CC}" installer
+	oe_runmake CC="${CC} ${CFLAGS}" LDFLAGS="${LDFLAGS}" installer
 }
 
 do_install() {
 	oe_runmake install INSTALLROOT="${D}"
 
-	install -d ${D}${libdir}/syslinux/
-	install -m 644 ${S}/core/ldlinux.sys ${D}${libdir}/syslinux/
-	install -m 644 ${S}/core/ldlinux.bss ${D}${libdir}/syslinux/
+	install -d ${D}${datadir}/syslinux/
+	install -m 644 ${S}/core/ldlinux.sys ${D}${datadir}/syslinux/
+	install -m 644 ${S}/core/ldlinux.bss ${D}${datadir}/syslinux/
 }
 
 PACKAGES += "${PN}-extlinux ${PN}-mbr ${PN}-chain ${PN}-pxelinux ${PN}-isolinux ${PN}-misc"
@@ -54,12 +51,12 @@ RDEPENDS_${PN} += "mtools"
 
 FILES_${PN} = "${bindir}/syslinux"
 FILES_${PN}-extlinux = "${sbindir}/extlinux"
-FILES_${PN}-mbr = "${libdir}/${BPN}/mbr.bin"
-FILES_${PN}-chain = "${libdir}/${BPN}/chain.c32"
-FILES_${PN}-isolinux = "${libdir}/${BPN}/isolinux.bin"
-FILES_${PN}-pxelinux = "${libdir}/${BPN}/pxelinux.0"
+FILES_${PN}-mbr = "${datadir}/${BPN}/mbr.bin"
+FILES_${PN}-chain = "${datadir}/${BPN}/chain.c32"
+FILES_${PN}-isolinux = "${datadir}/${BPN}/isolinux.bin"
+FILES_${PN}-pxelinux = "${datadir}/${BPN}/pxelinux.0"
 FILES_${PN}-dev += "${datadir}/${BPN}/com32/lib*${SOLIBS} ${datadir}/${BPN}/com32/include ${datadir}/${BPN}/com32/com32.ld"
 FILES_${PN}-staticdev += "${datadir}/${BPN}/com32/lib*.a ${libdir}/${BPN}/com32/lib*.a"
-FILES_${PN}-misc = "${libdir}/${BPN}/* ${bindir}/*"
+FILES_${PN}-misc = "${datadir}/${BPN}/* ${libdir}/${BPN}/* ${bindir}/*"
 
 BBCLASSEXTEND = "native"
