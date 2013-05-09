@@ -696,7 +696,7 @@ python fixup_perms () {
 }
 
 python split_and_strip_files () {
-    import stat, errno, subprocess
+    import stat, errno
 
     dvar = d.getVar('PKGD', True)
     pn = d.getVar('PN', True)
@@ -732,7 +732,7 @@ python split_and_strip_files () {
     # 16 - kernel module
     def isELF(path):
         type = 0
-        ret, result = subprocess.getstatusoutput("file '%s'" % path)
+        ret, result = oe.utils.getstatusoutput("file '%s'" % path)
 
         if ret:
             bb.error("split_and_strip_files: 'file %s' failed" % path)

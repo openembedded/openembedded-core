@@ -342,13 +342,12 @@ def check_gcc_march(sanity_data):
         f = open("gcc_test.c", "w")
         f.write("int main (){ __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4; return 0;}\n")
         f.close()
-        import subprocess
 
         # Check if GCC could work without march
-        status,result = subprocess.getstatusoutput("${BUILD_PREFIX}gcc gcc_test.c -o gcc_test")
+        status,result = oe.utils.getstatusoutput("${BUILD_PREFIX}gcc gcc_test.c -o gcc_test")
         if status != 0:
             # Check if GCC could work with march
-            status,result = subprocess.getstatusoutput("${BUILD_PREFIX}gcc -march=native gcc_test.c -o gcc_test")
+            status,result = oe.utils.getstatusoutput("${BUILD_PREFIX}gcc -march=native gcc_test.c -o gcc_test")
             if status == 0: 
                 result = True
             else:

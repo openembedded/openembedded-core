@@ -17,7 +17,7 @@ class CmdError(bb.BBHandledException):
 
 
 def runcmd(args, dir = None):
-    import subprocess, pipes
+    import pipes
 
     if dir:
         olddir = os.path.abspath(os.curdir)
@@ -30,7 +30,7 @@ def runcmd(args, dir = None):
         args = [ pipes.quote(str(arg)) for arg in args ]
         cmd = " ".join(args)
         # print("cmd: %s" % cmd)
-        (exitstatus, output) = subprocess.getstatusoutput(cmd)
+        (exitstatus, output) = oe.utils.getstatusoutput(cmd)
         if exitstatus != 0:
             raise CmdError(exitstatus >> 8, output)
         return output

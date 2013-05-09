@@ -1,3 +1,10 @@
+try:
+    # Python 2
+    import commands as cmdstatus
+except ImportError:
+    # Python 3
+    import subprocess as cmdstatus
+
 def read_file(filename):
     try:
         f = file( filename, "r" )
@@ -123,3 +130,6 @@ def packages_filter_out_system(d):
         if pkg not in blacklist and localepkg not in pkg:
             pkgs.append(pkg)
     return pkgs
+
+def getstatusoutput(cmd):
+    return cmdstatus.getstatusoutput(cmd)
