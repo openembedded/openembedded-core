@@ -8,7 +8,6 @@ System."
 LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b9e051107d5628966739a0b2e9b32676"
 
-PR = "r0"
 PE = "1"
 
 SRC_URI += "file://xproto_fix_for_x32.patch"
@@ -16,6 +15,6 @@ SRC_URI += "file://xproto_fix_for_x32.patch"
 EXTRA_OECONF_append = " --enable-specs=no"
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "d4d241a4849167e4e694fe73371c328c"
-SRC_URI[sha256sum] = "ade04a0949ebe4e3ef34bb2183b1ae8e08f6f9c7571729c9db38212742ac939e"
+SRC_URI[md5sum] = "9c0203c3bee4bac432ec504dc45712ed"
+SRC_URI[sha256sum] = "3698a1c7e3b734bc1139a7eb694ed8c66188658d6b4dea3d567066fe4e88b2fc"
 
