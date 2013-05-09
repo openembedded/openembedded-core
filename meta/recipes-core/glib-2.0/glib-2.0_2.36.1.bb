@@ -18,8 +18,8 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
 
 SRC_URI_append_class-native = " file://glib-gettextize-dir.patch"
 
-SRC_URI[md5sum] = "2047dff287473450593edecb18f79c17"
-SRC_URI[sha256sum] = "455a8abe8692c5174bcc7ffa15b96a7521a2f2f9fb47594405927c35cb9bb227"
+SRC_URI[md5sum] = "a3bbee44a13facb5a3cab18be5ece14c"
+SRC_URI[sha256sum] = "7de37586794e92c024feebe5d306bf5f245fef4803c3666af1ae8dac6ee10b24"
 
 BBCLASSEXTEND = "native nativesdk"
 
