@@ -78,5 +78,3 @@ do_configure_append() {
 }
 
 GLIBC_ADDONS ?= "ports,nptl,libidn"
-SDK_GLIBC_ADDONS ?= "ports,nptl,libidn"
-GLIBC_ADDONS_class-nativesdk = "${SDK_GLIBC_ADDONS}"
