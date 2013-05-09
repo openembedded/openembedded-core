@@ -9,6 +9,8 @@ DEPENDS = "nativesdk-ncurses nativesdk-expat nativesdk-gettext nativesdk-readlin
 RDEPENDS_${PN} += "nativesdk-python-core nativesdk-python-lang nativesdk-python-re \
                    nativesdk-python-codecs nativesdk-python-netclient"
 
+GDBPROPREFIX = "--program-prefix='${TARGET_PREFIX}'"
+
 EXTRA_OECONF_append = "--with-python=${WORKDIR}/python"
 
 do_configure_prepend() {
