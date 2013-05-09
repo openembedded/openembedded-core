@@ -181,7 +181,7 @@ def get_all_cmd_params(d, cmd_type):
         if param:
             params.append(param)
 
-    return string.join(params, "; ")
+    return "; ".join(params)
 
 # Adds the preinst script into generated packages
 fakeroot python populate_packages_prepend () {
