@@ -32,10 +32,11 @@ def base_get_scmbasepath(d):
 def base_get_metadata_monotone_branch(path, d):
     monotone_branch = "<unknown>"
     try:
-        monotone_branch = file( "%s/_MTN/options" % path ).read().strip()
-        if monotone_branch.startswith( "database" ):
-            monotone_branch_words = monotone_branch.split()
-            monotone_branch = monotone_branch_words[ monotone_branch_words.index( "branch" )+1][1:-1]
+        with open("%s/_MTN/options" % path) as f:
+            monotone_branch = f.read().strip()
+            if monotone_branch.startswith( "database" ):
+                monotone_branch_words = monotone_branch.split()
+                monotone_branch = monotone_branch_words[ monotone_branch_words.index( "branch" )+1][1:-1]
     except:
         pass
     return monotone_branch
@@ -43,10 +44,11 @@ def base_get_metadata_monotone_branch(path, d):
 def base_get_metadata_monotone_revision(path, d):
     monotone_revision = "<unknown>"
     try:
-        monotone_revision = file( "%s/_MTN/revision" % path ).read().strip()
-        if monotone_revision.startswith( "format_version" ):
-            monotone_revision_words = monotone_revision.split()
-            monotone_revision = monotone_revision_words[ monotone_revision_words.index( "old_revision" )+1][1:-1]
+        with open("%s/_MTN/revision" % path) as f:
+            monotone_revision = f.read().strip()
+            if monotone_revision.startswith( "format_version" ):
+                monotone_revision_words = monotone_revision.split()
+                monotone_revision = monotone_revision_words[ monotone_revision_words.index( "old_revision" )+1][1:-1]
     except IOError:
         pass
     return monotone_revision
@@ -54,7 +56,8 @@ def base_get_metadata_monotone_revision(path, d):
 def base_get_metadata_svn_revision(path, d):
     revision = "<unknown>"
     try:
-        revision = file( "%s/.svn/entries" % path ).readlines()[3].strip()
+        with open("%s/.svn/entries" % path) as f:
+            revision = f.readlines()[3].strip()
     except IOError:
         pass
     return revision

@@ -227,7 +227,7 @@ python do_package_deb () {
         bb.mkdirhier(controldir)
         os.chmod(controldir, 0755)
         try:
-            ctrlfile = file(os.path.join(controldir, 'control'), 'wb')
+            ctrlfile = open(os.path.join(controldir, 'control'), 'w')
             # import codecs
             # ctrlfile = codecs.open("someFile", "w", "utf-8")
         except OSError:
@@ -355,7 +355,7 @@ python do_package_deb () {
             if not scriptvar:
                 continue
             try:
-                scriptfile = file(os.path.join(controldir, script), 'w')
+                scriptfile = open(os.path.join(controldir, script), 'w')
             except OSError:
                 bb.utils.unlockfile(lf)
                 raise bb.build.FuncFailed("unable to open %s script file for writing." % script)
@@ -367,7 +367,7 @@ python do_package_deb () {
         conffiles_str = localdata.getVar("CONFFILES", True)
         if conffiles_str:
             try:
-                conffiles = file(os.path.join(controldir, 'conffiles'), 'w')
+                conffiles = open(os.path.join(controldir, 'conffiles'), 'w')
             except OSError:
                 bb.utils.unlockfile(lf)
                 raise bb.build.FuncFailed("unable to open conffiles for writing.")

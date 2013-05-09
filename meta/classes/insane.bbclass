@@ -518,9 +518,10 @@ def package_qa_check_buildpaths(path, name, d, elf, messages):
         return
 
     tmpdir = d.getVar('TMPDIR', True)
-    file_content = open(path).read()
-    if tmpdir in file_content:
-        messages.append("File %s in package contained reference to tmpdir" % package_qa_clean_path(path,d))
+    with open(path) as f:
+        file_content = f.read()
+        if tmpdir in file_content:
+            messages.append("File %s in package contained reference to tmpdir" % package_qa_clean_path(path,d))
 
 
 QAPATHTEST[xorg-driver-abi] = "package_qa_check_xorg_driver_abi"
@@ -634,15 +635,17 @@ def package_qa_check_staged(path,d):
         for file in files:
             path = os.path.join(root,file)
             if file.endswith(".la"):
-                file_content = open(path).read()
-                if workdir in file_content:
-                    error_msg = "%s failed sanity test (workdir) in path %s" % (file,root)
-                    sane = package_qa_handle_error("la", error_msg, d)
+                with open(path) as f:
+                    file_content = f.read()
+                    if workdir in file_content:
+                        error_msg = "%s failed sanity test (workdir) in path %s" % (file,root)
+                        sane = package_qa_handle_error("la", error_msg, d)
             elif file.endswith(".pc"):
-                file_content = open(path).read()
-                if pkgconfigcheck in file_content:
-                    error_msg = "%s failed sanity test (tmpdir) in path %s" % (file,root)
-                    sane = package_qa_handle_error("pkgconfig", error_msg, d)
+                with open(path) as f:
+                    file_content = f.read()
+                    if pkgconfigcheck in file_content:
+                        error_msg = "%s failed sanity test (tmpdir) in path %s" % (file,root)
+                        sane = package_qa_handle_error("pkgconfig", error_msg, d)
 
     return sane
 

@@ -146,7 +146,7 @@ python package_do_split_gconvs () {
 
     def calc_gconv_deps(fn, pkg, file_regex, output_pattern, group):
         deps = []
-        f = open(fn, "r")
+        f = open(fn, "rb")
         c_re = re.compile('^copy "(.*)"')
         i_re = re.compile('^include "(\w+)".*')
         for l in f.readlines():
@@ -167,7 +167,7 @@ python package_do_split_gconvs () {
 
     def calc_charmap_deps(fn, pkg, file_regex, output_pattern, group):
         deps = []
-        f = open(fn, "r")
+        f = open(fn, "rb")
         c_re = re.compile('^copy "(.*)"')
         i_re = re.compile('^include "(\w+)".*')
         for l in f.readlines():
@@ -187,7 +187,7 @@ python package_do_split_gconvs () {
 
     def calc_locale_deps(fn, pkg, file_regex, output_pattern, group):
         deps = []
-        f = open(fn, "r")
+        f = open(fn, "rb")
         c_re = re.compile('^copy "(.*)"')
         i_re = re.compile('^include "(\w+)".*')
         for l in f.readlines():

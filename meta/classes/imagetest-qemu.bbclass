@@ -146,6 +146,7 @@ def qemuimagetest_main(d):
                        if not os.path.isfile(fulltestcase):
                             raise bb.build.FuncFailed("Testcase %s not found" % fulltestcase)
                        list.append((item, casefile, fulltestcase))
+                    f.close()
         final_list = check_list(list)
         return final_list
 

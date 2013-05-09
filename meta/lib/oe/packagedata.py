@@ -12,7 +12,7 @@ def read_pkgdatafile(fn):
 
     if os.access(fn, os.R_OK):
         import re
-        f = file(fn, 'r')
+        f = open(fn, 'r')
         lines = f.readlines()
         f.close()
         r = re.compile("([^:]+):\s*(.*)")

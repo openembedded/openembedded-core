@@ -268,7 +268,7 @@ python do_package_ipk () {
         controldir = os.path.join(root, 'CONTROL')
         bb.mkdirhier(controldir)
         try:
-            ctrlfile = file(os.path.join(controldir, 'control'), 'w')
+            ctrlfile = open(os.path.join(controldir, 'control'), 'w')
         except OSError:
             bb.utils.unlockfile(lf)
             raise bb.build.FuncFailed("unable to open control file for writing.")
@@ -369,7 +369,7 @@ python do_package_ipk () {
             if not scriptvar:
                 continue
             try:
-                scriptfile = file(os.path.join(controldir, script), 'w')
+                scriptfile = open(os.path.join(controldir, script), 'w')
             except OSError:
                 bb.utils.unlockfile(lf)
                 raise bb.build.FuncFailed("unable to open %s script file for writing." % script)
@@ -380,7 +380,7 @@ python do_package_ipk () {
         conffiles_str = localdata.getVar("CONFFILES", True)
         if conffiles_str:
             try:
-                conffiles = file(os.path.join(controldir, 'conffiles'), 'w')
+                conffiles = open(os.path.join(controldir, 'conffiles'), 'w')
             except OSError:
                 bb.utils.unlockfile(lf)
                 raise bb.build.FuncFailed("unable to open conffiles for writing.")

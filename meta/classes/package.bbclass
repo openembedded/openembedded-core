@@ -1096,7 +1096,8 @@ python emit_pkgdata() {
 
     def get_directory_size(dir):
         if os.listdir(dir):
-            size = int(os.popen('du -sk %s' % dir).readlines()[0].split('\t')[0])
+            with os.popen('du -sk %s' % dir) as f:
+                size = int(f.readlines()[0].split('\t')[0])
         else:
             size = 0
         return size
@@ -1203,7 +1204,7 @@ python emit_pkgdata() {
         g = glob('*')
         if g or allow_empty == "1":
             packagedfile = pkgdatadir + '/runtime/%s.packaged' % pkg
-            file(packagedfile, 'w').close()
+            open(packagedfile, 'w').close()
 
     if bb.data.inherits_class('kernel', d) or bb.data.inherits_class('module-base', d):
         write_extra_runtime_pkgs(variants, packages, pkgdatadir)
@@ -1633,7 +1634,7 @@ def read_libdep_files(d):
         for extension in ".shlibdeps", ".pcdeps", ".clilibdeps":
             depsfile = d.expand("${PKGDEST}/" + pkg + extension)
             if os.access(depsfile, os.R_OK):
-                fd = file(depsfile)
+                fd = open(depsfile)
                 lines = fd.readlines()
                 fd.close()
                 for l in lines:

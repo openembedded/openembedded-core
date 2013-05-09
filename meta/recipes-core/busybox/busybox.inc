@@ -262,6 +262,7 @@ python do_package_prepend () {
 
         d.appendVar('ALTERNATIVE_%s' % (pn), ' ' + alt_name)
         d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, alt_link_name)
+    f.close()
 }
 
 pkg_postinst_${PN} () {
