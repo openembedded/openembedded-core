@@ -57,14 +57,6 @@ IMAGE_FEATURES_REPLACES_ssh-server-openssh = "ssh-server-dropbear"
 
 MACHINE_HWCODECS ??= ""
 
-python __anonymous() {
-    # Ensure we still have a splash screen for existing images
-    if base_contains("IMAGE_FEATURES", "apps-console-core", "1", "", d) == "1":
-        bb.warn("%s: apps-console-core in IMAGE_FEATURES is no longer supported; adding \"splash\" to enable splash screen" % d.getVar("PN", True))
-        d.appendVar("IMAGE_FEATURES", " splash")
-}
-
-
 CORE_IMAGE_BASE_INSTALL = '\
     packagegroup-core-boot \
     packagegroup-base-extended \
