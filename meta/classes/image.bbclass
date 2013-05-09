@@ -19,6 +19,7 @@ INHIBIT_DEFAULT_DEPS = "1"
 # IMAGE_FEATURES may contain any available package group
 IMAGE_FEATURES ?= ""
 IMAGE_FEATURES[type] = "list"
+IMAGE_FEATURES[validitems] += "debug-tweaks read-only-rootfs"
 
 # rootfs bootstrap install
 ROOTFS_BOOTSTRAP_INSTALL = "${@base_contains("IMAGE_FEATURES", "package-management", "", "${ROOTFS_PKGMANAGE_BOOTSTRAP}",d)}"
@@ -61,6 +62,19 @@ def complementary_globs(featurevar, d):
 IMAGE_INSTALL_COMPLEMENTARY = '${@complementary_globs("IMAGE_FEATURES", d)}'
 SDKIMAGE_FEATURES ??= "dev-pkgs dbg-pkgs"
 SDKIMAGE_INSTALL_COMPLEMENTARY = '${@complementary_globs("SDKIMAGE_FEATURES", d)}'
+
+def check_image_features(d):
+    valid_features = (d.getVarFlag('IMAGE_FEATURES', 'validitems', True) or "").split()
+    valid_features += d.getVarFlags('COMPLEMENTARY_GLOB').keys()
+    for var in d:
+       if var.startswith("PACKAGE_GROUP_"):
+           valid_features.append(var[14:])
+    valid_features.sort()
+
+    features = set(oe.data.typed_value('IMAGE_FEATURES', d))
+    for feature in features:
+        if feature not in valid_features:
+            bb.fatal("'%s' in IMAGE_FEATURES is not a valid image feature. Valid features: %s" % (feature, ' '.join(valid_features)))
 
 IMAGE_INSTALL ?= ""
 IMAGE_INSTALL[type] = "list"
@@ -129,6 +143,8 @@ python () {
             vendor = localdata.getVar("TARGET_VENDOR_virtclass-multilib-" + eext[1], False)
             ml_vendor_list += " " + vendor
     d.setVar('MULTILIB_VENDORS', ml_vendor_list)
+
+    check_image_features(d)
 }
 
 #
