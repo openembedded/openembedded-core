@@ -13,7 +13,7 @@ Signed-off-by: Riku Voipio <riku.voipio@linaro.org>
 
 Hand edited by: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org> to get it applied in OE
 
-Upstream-status: Backport
+Upstream-Status: Backport
 ---
 
 diff --git a/ABI.h.in b/ABI.h.in

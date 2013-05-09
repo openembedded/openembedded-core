@@ -1,4 +1,4 @@
-Upstream-status: Accepted [https://bugs.freedesktop.org/show_bug.cgi?id=59005]
+Upstream-Status: Accepted [https://bugs.freedesktop.org/show_bug.cgi?id=59005]
 
 Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
 diff -Nurd makedepend-1.0.4/configure.ac makedepend-1.0.4/configure.ac

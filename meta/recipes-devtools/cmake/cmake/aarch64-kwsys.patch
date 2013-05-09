@@ -16,7 +16,7 @@ Change-Id: I4bd0a97abaa0f958e2679afe2d4ad4bcc37434a0
 
 Hand edited by: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org> to get it applied in OE
 
-Upstream-status: Backport
+Upstream-Status: Backport
 ---
 
 diff --git a/CPU.h.in b/CPU.h.in

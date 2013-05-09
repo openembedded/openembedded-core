@@ -5,7 +5,7 @@ Subject: [PATCH] Add rmb() definition for AArch64 architecture
 
 Signed-off-by: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
 
-Upstream-status: backport
+Upstream-Status: backport
 ---
  libperf_events/operf_utils.h | 5 +++++
  1 file changed, 5 insertions(+)

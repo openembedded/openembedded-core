@@ -1,4 +1,4 @@
-Upstream-status: Submitted [https://libusb.org/ticket/161]
+Upstream-Status: Submitted [https://libusb.org/ticket/161]
 
 Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
 diff -Nurd libusb-compat-0.1.4/configure.ac libusb-compat-0.1.4/configure.ac

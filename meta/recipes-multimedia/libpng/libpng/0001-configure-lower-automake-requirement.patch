@@ -7,7 +7,7 @@ We're not using parallel tests in OE-core yet
 
 Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
 
-Upstream-status: Inapropriate [OE specific build hack]
+Upstream-Status: Inapropriate [OE specific build hack]
 ---
  configure.ac | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

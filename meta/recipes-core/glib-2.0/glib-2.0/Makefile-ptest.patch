@@ -2,7 +2,7 @@ Add 'ptest' target to Makefile, to run tests without checking dependencies.
 Add 'install-ptest' target, to copy needed files to ptest dir.
 
 Signed-off-by: Björn Stenberg <bjst@enea.com>
-Upstream-status: Pending
+Upstream-Status: Pending
 ---
  Makefile.decl |   43 +++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 43 insertions(+)

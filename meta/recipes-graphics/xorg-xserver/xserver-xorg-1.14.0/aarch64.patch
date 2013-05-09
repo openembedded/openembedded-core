@@ -7,7 +7,7 @@ Xserver was checked in AArch64 fastmodel (commercial one with graphics support).
 
 http://patchwork.freedesktop.org/patch/12785/
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 ---
  include/servermd.h                      |    7 +++++++
