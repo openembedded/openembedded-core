@@ -10,8 +10,6 @@ driver."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=90ea9f90d72b6d9327dede5ffdb2a510"
 
-PR = "${INC_PR}.0"
-
-SRC_URI[md5sum] = "f314c56e4ac6c8fc0cc2710892d5776e"
-SRC_URI[sha256sum] = "f5b97aac9aab8fa8b933e960631441ae23b18681c8bf3d5007c00da838f9c9c8"
+SRC_URI[md5sum] = "36b5b92000c4644f648b58a535e4ee73"
+SRC_URI[sha256sum] = "5d601e4bae53d5e9ead4ecd700f1beb5aeaf78b79e634c4aa381a9ce00276488"
 
