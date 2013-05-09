@@ -907,6 +907,11 @@ python () {
     if d.getVar('do_stage', True) is not None:
         bb.fatal("Legacy staging found for %s as it has a do_stage function. This will need conversion to a do_install or often simply removal to work with OE-core" % d.getVar("FILE", True))
 
+    overrides = d.getVar('OVERRIDES', True).split(':')
+    pn = d.getVar('PN', True)
+    if pn in overrides:
+        bb.warn('Recipe %s has PN of "%s" which is in OVERRIDES, this can result in unexpected behaviour.' % (d.getVar("FILE", True), pn))
+
     issues = []
     if (d.getVar('PACKAGES', True) or "").split():
         for var in 'RDEPENDS', 'RRECOMMENDS', 'RSUGGESTS', 'RCONFLICTS', 'RPROVIDES', 'RREPLACES', 'FILES', 'pkg_preinst', 'pkg_postinst', 'pkg_prerm', 'pkg_postrm', 'ALLOW_EMPTY':
