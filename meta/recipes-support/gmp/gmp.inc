@@ -3,7 +3,7 @@ DESCRIPTION = "GNU multiprecision arithmetic library"
 HOMEPAGE = "http://gmplib.org/"
 LICENSE = "GPLv3 LGPLv3"
 
-REVISION = "a"
+REVISION = ""
 
 SRC_URI = "ftp://ftp.gmplib.org/pub/gmp-${PV}/gmp-${PV}${REVISION}.tar.bz2 \
 	   file://configure.patch \

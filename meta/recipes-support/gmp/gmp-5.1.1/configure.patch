@@ -115,9 +115,9 @@ diff -Nurd gmp-5.1.0/acinclude.m4 gmp-5.1.0/acinclude.m4
  ])
 
 
-diff -Nurd gmp-5.1.0/configure.in gmp-5.1.0/configure.in
---- gmp-5.1.0/configure.in	2012-12-18 21:05:09.000000000 +0200
-+++ gmp-5.1.0/configure.in	2013-01-02 05:19:26.977013073 +0200
+diff -Nurd gmp-5.1.0/configure.ac gmp-5.1.0/configure.ac
+--- gmp-5.1.0/configure.ac	2012-12-18 21:05:09.000000000 +0200
++++ gmp-5.1.0/configure.ac	2013-01-02 05:19:26.977013073 +0200
 @@ -29,13 +29,6 @@
  AC_PREREQ(2.59)
  AC_INIT(GNU MP, GMP_VERSION, [gmp-bugs@gmplib.org, see http://gmplib.org/manual/Reporting-Bugs.html], gmp)
