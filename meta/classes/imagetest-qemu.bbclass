@@ -137,15 +137,15 @@ def qemuimagetest_main(d):
 
                     f = open(scenlist, "r")
                     for line in f:
-                       if item != line.split()[0]:
-                           continue
-                       else:
-                           casefile = line.split()[1]
+                        if item != line.split()[0]:
+                            continue
+                        else:
+                            casefile = line.split()[1]
 
-                       fulltestcase = os.path.join(dir, item, casefile)
-                       if not os.path.isfile(fulltestcase):
+                        fulltestcase = os.path.join(dir, item, casefile)
+                        if not os.path.isfile(fulltestcase):
                             raise bb.build.FuncFailed("Testcase %s not found" % fulltestcase)
-                       list.append((item, casefile, fulltestcase))
+                        list.append((item, casefile, fulltestcase))
                     f.close()
         final_list = check_list(list)
         return final_list
