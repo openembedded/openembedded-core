@@ -1,5 +1,5 @@
 
-NOISO = "1"
+#NOISO = "1"
 
 SYSLINUX_ROOT = "root=/dev/hda2 "
 SYSLINUX_PROMPT = "0"
