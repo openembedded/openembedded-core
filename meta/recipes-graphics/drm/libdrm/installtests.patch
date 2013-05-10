@@ -21,29 +21,3 @@ index bf1987f..d909e19 100644
  SUBDIRS = modeprint
  
  if HAVE_LIBKMS
-diff --git a/tests/modeprint/Makefile.am b/tests/modeprint/Makefile.am
-index c4862ac..7db76ea 100644
---- a/tests/modeprint/Makefile.am
-+++ b/tests/modeprint/Makefile.am
-@@ -2,7 +2,7 @@ AM_CFLAGS = \
- 	-I$(top_srcdir)/include/drm \
- 	-I$(top_srcdir)
- 
--noinst_PROGRAMS = \
-+bin_PROGRAMS = \
- 	modeprint
- 
- modeprint_SOURCES = \
-diff --git a/tests/modetest/Makefile.am b/tests/modetest/Makefile.am
-index 2191242..1d2c1b0 100644
---- a/tests/modetest/Makefile.am
-+++ b/tests/modetest/Makefile.am
-@@ -4,7 +4,7 @@ AM_CFLAGS = \
- 	-I$(top_srcdir) \
- 	$(CAIRO_CFLAGS)
- 
--noinst_PROGRAMS = \
-+bin_PROGRAMS = \
- 	modetest
- 
- modetest_SOURCES = \
