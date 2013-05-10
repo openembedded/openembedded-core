@@ -14,8 +14,6 @@
 # Version 2.
 #
 
-TYPE="ext3"
-
 # The folder to hold all scripts running on targets
 TOOLS="$COREBASE/scripts/qemuimage-tests/tools"
 
@@ -306,18 +304,18 @@ Test_Find_Image()
 	extension=""
 	rootfs=""
 
-	while getopts "l:k:a:t:" Option
+	while getopts "l:k:a:t:e:" Option
 	do
 		case $Option in
 			l) where="$OPTARG"
 			   ;;
 			k) kernel="$OPTARG"
-			   extension="bin"
 			   ;;
 			a) arch="$OPTARG"
 			   ;;
 			t) target="$OPTARG"
-			   extension="ext3"
+			   ;;
+			e) extension="$OPTARG"
 			   ;;
 			*) echo "invalid option: -$Option" && return 1
 			   ;;
@@ -396,11 +394,11 @@ Test_Create_Qemu()
 	fi
 	
 	if [ "$QEMUARCH" = "qemux86" -o "$QEMUARCH" = "qemux86-64" ]; then
-		KERNEL=$(Test_Find_Image -l ${DEPLOY_DIR}/images -k bzImage -a ${QEMUARCH})
+		KERNEL=$(Test_Find_Image -l ${DEPLOY_DIR}/images -k bzImage -a ${QEMUARCH} -e "bin")
 	elif [ "$QEMUARCH" = "qemuarm" -o "$QEMUARCH" = "spitz" -o "$QEMUARCH" = "borzoi" -o "$QEMUARCH" = "akita" -o "$QEMUARCH" = "nokia800" ]; then
 		KERNEL=$(Test_Find_Image -l ${DEPLOY_DIR}/images -k zImage -a ${QEMUARCH})
 	elif [ "$QEMUARCH" = "qemumips" -o "$QEMUARCH" = "qemuppc" ]; then
-		KERNEL=$(Test_Find_Image -l ${DEPLOY_DIR}/images -k vmlinux -a ${QEMUARCH})
+		KERNEL=$(Test_Find_Image -l ${DEPLOY_DIR}/images -k vmlinux -a ${QEMUARCH} -e "bin")
 	fi
 
 	# If there is no kernel image found, return failed directly
@@ -409,7 +407,8 @@ Test_Create_Qemu()
 		return 1
 	fi
 	
-	ROOTFS_IMAGE=$(Test_Find_Image -l ${DEPLOY_DIR}/images -t ${QEMUTARGET} -a ${QEMUARCH})
+	Test_Info "rootfs image extension selected: $ROOTFS_EXT"
+	ROOTFS_IMAGE=$(Test_Find_Image -l ${DEPLOY_DIR}/images -t ${QEMUTARGET} -a ${QEMUARCH} -e "$ROOTFS_EXT")
 
 	# If there is no rootfs image found, return failed directly
 	if [ $? -eq 1 ]; then
@@ -417,7 +416,7 @@ Test_Create_Qemu()
 		return 1
 	fi
 
-	TEST_ROOTFS_IMAGE="${TEST_TMP}/${QEMUTARGET}-${QEMUARCH}-test.ext3"
+	TEST_ROOTFS_IMAGE="${TEST_TMP}/${QEMUTARGET}-${QEMUARCH}-test.${ROOTFS_EXT}"
 	
 	CP=`which cp`
 
