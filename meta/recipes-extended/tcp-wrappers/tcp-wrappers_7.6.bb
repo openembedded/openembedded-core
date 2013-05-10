@@ -1,6 +1,6 @@
 SUMMARY = "Security tool that is a wrapper for TCP daemons"
 DESCRIPTION = "Tools for monitoring and filtering incoming requests for tcp \
-	      services."
+               services."
 SECTION = "console/network"
 
 LICENSE = "BSD"
@@ -51,25 +51,25 @@ S = "${WORKDIR}/tcp_wrappers_${PV}"
 
 PARALLEL_MAKE = ""
 EXTRA_OEMAKE = "'CC=${CC}' \
-		'AR=${AR}' \
-		'RANLIB=${RANLIB}' \
-		'REAL_DAEMON_DIR=${sbindir}' \
-		'STYLE=-DPROCESS_OPTIONS' \
-		'FACILITY=LOG_DAEMON' \
-		'SEVERITY=LOG_INFO' \
-		'BUGS=' \
-		'VSYSLOG=' \
-		'RFC931_TIMEOUT=10' \
-		'ACCESS=-DHOSTS_ACCESS' \
-		'KILL_OPT=-DKILL_IP_OPTIONS' \
-		'UMASK=-DDAEMON_UMASK=022' \
-		'NETGROUP=${EXTRA_OEMAKE_NETGROUP}' \
-		'LIBS=-lnsl' \
-		'ARFLAGS=rv' \
-		'AUX_OBJ=weak_symbols.o' \
-		'TLI=' \
-		'COPTS=' \
-		'EXTRA_CFLAGS=${CFLAGS} -DSYS_ERRLIST_DEFINED -DHAVE_STRERROR -DHAVE_WEAKSYMS -D_REENTRANT -DINET6=1 -Dss_family=__ss_family -Dss_len=__ss_len'"
+                'AR=${AR}' \
+                'RANLIB=${RANLIB}' \
+                'REAL_DAEMON_DIR=${sbindir}' \
+                'STYLE=-DPROCESS_OPTIONS' \
+                'FACILITY=LOG_DAEMON' \
+                'SEVERITY=LOG_INFO' \
+                'BUGS=' \
+                'VSYSLOG=' \
+                'RFC931_TIMEOUT=10' \
+                'ACCESS=-DHOSTS_ACCESS' \
+                'KILL_OPT=-DKILL_IP_OPTIONS' \
+                'UMASK=-DDAEMON_UMASK=022' \
+                'NETGROUP=${EXTRA_OEMAKE_NETGROUP}' \
+                'LIBS=-lnsl' \
+                'ARFLAGS=rv' \
+                'AUX_OBJ=weak_symbols.o' \
+                'TLI=' \
+                'COPTS=' \
+                'EXTRA_CFLAGS=${CFLAGS} -DSYS_ERRLIST_DEFINED -DHAVE_STRERROR -DHAVE_WEAKSYMS -D_REENTRANT -DINET6=1 -Dss_family=__ss_family -Dss_len=__ss_len'"
 
 EXTRA_OEMAKE_NETGROUP = "-DNETGROUP -DUSE_GETDOMAIN"
 EXTRA_OEMAKE_NETGROUP_libc-uclibc = "-DUSE_GETDOMAIN"
