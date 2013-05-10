@@ -384,7 +384,8 @@ if [ -e "$ROOTFS" -a -z "$FSTYPE" ]; then
     # Extract the filename extension
     EXT=`echo $ROOTFS | awk -F . '{ print \$NF }'`
     if [ "x$EXT" = "xext2" -o "x$EXT" = "xext3" -o \
-          "x$EXT" = "xjffs2" -o "x$EXT" = "xbtrfs" ]; then
+          "x$EXT" = "xjffs2" -o "x$EXT" = "xbtrfs" -o \
+          "x$EXT" = "xext4" ]; then
         FSTYPE=$EXT
     else
         echo "Note: Unable to determine filesystem extension for $ROOTFS"
