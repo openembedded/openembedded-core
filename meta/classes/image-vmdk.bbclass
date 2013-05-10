@@ -28,7 +28,6 @@ python do_vmdkimg() {
 
 #addtask vmdkimg after do_bootimg before do_build
 addtask vmdkimg after do_bootdirectdisk before do_build
-do_vmdkimg[nostamp] = "1"
 
 do_vmdkimg[depends] += "qemu-native:do_populate_sysroot" 
 

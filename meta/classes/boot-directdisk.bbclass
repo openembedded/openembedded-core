@@ -97,4 +97,3 @@ python do_bootdirectdisk() {
 }
 
 addtask bootdirectdisk before do_build
-do_bootdirectdisk[nostamp] = "1"
