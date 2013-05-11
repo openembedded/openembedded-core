@@ -27,6 +27,20 @@ QADEPENDS_class-native = ""
 QADEPENDS_class-nativesdk = ""
 QA_SANE = "True"
 
+# Elect whether a given type of error is a warning or error, they may
+# have been set by other files.
+WARN_QA ?= "ldflags useless-rpaths rpaths staticdev libdir xorg-driver-abi \
+            textrel already-stripped incompatible-license files-invalid \
+            installed-vs-shipped compile-host-path install-host-path \
+            pn-overrides \
+            "
+ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch la2 pkgconfig la \
+            perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
+            split-strip packages-list pkgv-undefined var-undefined \
+            "
+
+ALL_QA = "${WARN_QA} ${ERROR_QA}"
+
 #
 # dictionary for elf headers
 #
@@ -110,12 +124,6 @@ def package_qa_get_machine_dict():
                       },
         }
 
-
-# Currently not being used by default "desktop"
-WARN_QA ?= "ldflags useless-rpaths rpaths staticdev libdir xorg-driver-abi textrel"
-ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch la2 pkgconfig la perms dep-cmp pkgvarcheck"
-
-ALL_QA = "${WARN_QA} ${ERROR_QA}"
 
 def package_qa_clean_path(path,d):
     """ Remove the common prefix from the path. In this case it is the TMPDIR"""
@@ -757,8 +765,9 @@ python do_package_qa () {
     if os.path.exists(compilelog):
         statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % compilelog
         if subprocess.call(statement, shell=True) == 0:
-            bb.warn("%s: The compile log indicates that host include and/or library paths were used.\n \
-        Please check the log '%s' for more information." % (pkg, compilelog))
+            msg = "%s: The compile log indicates that host include and/or library paths were used.\n \
+        Please check the log '%s' for more information." % (pkg, compilelog)
+            package_qa_handle_error("compile-host-path", msg, d)
 
     # Check the install log for host contamination
     installlog = os.path.join(logdir,"log.do_install")
@@ -766,8 +775,9 @@ python do_package_qa () {
     if os.path.exists(installlog):
         statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % installlog
         if subprocess.call(statement, shell=True) == 0:
-            bb.warn("%s: The install log indicates that host include and/or library paths were used.\n \
-        Please check the log '%s' for more information." % (pkg, installlog))
+            msg = "%s: The install log indicates that host include and/or library paths were used.\n \
+        Please check the log '%s' for more information." % (pkg, installlog)
+            package_qa_handle_error("install-host-path", msg, d)
 
     # Scan the packages...
     pkgdest = d.getVar('PKGDEST', True)
@@ -911,7 +921,8 @@ python () {
     overrides = d.getVar('OVERRIDES', True).split(':')
     pn = d.getVar('PN', True)
     if pn in overrides:
-        bb.warn('Recipe %s has PN of "%s" which is in OVERRIDES, this can result in unexpected behaviour.' % (d.getVar("FILE", True), pn))
+        msg = 'Recipe %s has PN of "%s" which is in OVERRIDES, this can result in unexpected behaviour.' % (d.getVar("FILE", True), pn)
+        package_qa_handle_error("pn-overrides", msg, d)
 
     issues = []
     if (d.getVar('PACKAGES', True) or "").split():

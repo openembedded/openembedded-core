@@ -500,7 +500,8 @@ python fixup_perms () {
             elif len(lsplit) == 8:
                 self._setdir(lsplit[0], lsplit[1], lsplit[2], lsplit[3], lsplit[4], lsplit[5], lsplit[6], lsplit[7])
             else:
-                bb.error("Fixup Perms: invalid config line %s" % line)
+                msg = "Fixup Perms: invalid config line %s" % line
+                package_qa_handle_error("perm-config", msg, d)
                 self.path = None
                 self.link = None
 
@@ -635,7 +636,8 @@ python fixup_perms () {
                 if len(lsplit) == 0:
                     continue
                 if len(lsplit) != 8 and not (len(lsplit) == 3 and lsplit[1].lower() == "link"):
-                    bb.error("Fixup perms: %s invalid line: %s" % (conf, line))
+                    msg = "Fixup perms: %s invalid line: %s" % (conf, line)
+                    package_qa_handle_error("perm-line", msg, d)
                     continue
                 entry = fs_perms_entry(d.expand(line))
                 if entry and entry.path:
@@ -664,7 +666,8 @@ python fixup_perms () {
             target = os.path.join(os.path.dirname(origin), link)
             ptarget = os.path.join(os.path.dirname(dir), link)
         if os.path.exists(target):
-            bb.error("Fixup Perms: Unable to correct directory link, target already exists: %s -> %s" % (dir, ptarget))
+            msg = "Fixup Perms: Unable to correct directory link, target already exists: %s -> %s" % (dir, ptarget)
+            package_qa_handle_error("perm-link", msg, d)
             continue
 
         # Create path to move directory to, move it, and then setup the symlink
@@ -737,7 +740,8 @@ python split_and_strip_files () {
         ret, result = oe.utils.getstatusoutput("file '%s'" % path)
 
         if ret:
-            bb.error("split_and_strip_files: 'file %s' failed" % path)
+            msg = "split_and_strip_files: 'file %s' failed" % path
+            package_qa_handle_error("split-strip", msg, d)
             return type
 
         # Not stripped
@@ -802,7 +806,8 @@ python split_and_strip_files () {
                     elf_file = isELF(file)
                     if elf_file & 1:
                         if elf_file & 2:
-                            bb.warn("File '%s' from %s was already stripped, this will prevent future debugging!" % (file[len(dvar):], pn))
+                            msg = "File '%s' from %s was already stripped, this will prevent future debugging!" % (file[len(dvar):], pn)
+                            package_qa_handle_error("already-stripped", msg, d)
                             continue
                         # Check if it's a hard link to something else
                         if s.st_nlink > 1:
@@ -928,9 +933,11 @@ python populate_packages () {
 
     for pkg in packages.split():
         if d.getVar('LICENSE_EXCLUSION-' + pkg, True):
-            bb.warn("%s has an incompatible license. Excluding from packaging." % pkg)
+            msg = "%s has an incompatible license. Excluding from packaging." % pkg
+            package_qa_handle_error("incompatible-license", msg, d)
         if pkg in package_list:
-            bb.error("%s is listed in PACKAGES multiple times, this leads to packaging errors." % pkg)
+            msg = "%s is listed in PACKAGES multiple times, this leads to packaging errors." % pkg
+            package_qa_handle_error("packages-list", msg, d)
         else:
             package_list.append(pkg)
     d.setVar('PACKAGES', ' '.join(package_list))
@@ -944,7 +951,8 @@ python populate_packages () {
 
         filesvar = d.getVar('FILES_%s' % pkg, True) or ""
         if "//" in filesvar:
-            bb.warn("FILES variable for package %s contains '//' which is invalid. Attempting to fix this but you should correct the metadata.\n" % pkg)
+            msg = "FILES variable for package %s contains '//' which is invalid. Attempting to fix this but you should correct the metadata.\n" % pkg
+            package_qa_handle_error("files-invalid", msg, d)
             filesvar.replace("//", "/")
         files = filesvar.split()
         for file in files:
@@ -1023,12 +1031,12 @@ python populate_packages () {
 
     if unshipped != []:
         msg = pn + ": Files/directories were installed but not shipped"
-        if "installed_vs_shipped" in (d.getVar('INSANE_SKIP_' + pn, True) or "").split():
-            bb.note("Package %s skipping QA tests: installed_vs_shipped" % pn)
+        if "installed-vs-shipped" in (d.getVar('INSANE_SKIP_' + pn, True) or "").split():
+            bb.note("Package %s skipping QA tests: installed-vs-shipped" % pn)
         else:
             for f in unshipped:
                 msg = msg + "\n  " + f
-            package_qa_handle_error("installed_vs_shipped", msg, d)
+            package_qa_handle_error("installed-vs-shipped", msg, d)
 }
 populate_packages[dirs] = "${D}"
 
@@ -1318,7 +1326,8 @@ python package_do_shlibs() {
 
     ver = d.getVar('PKGV', True)
     if not ver:
-        bb.error("PKGV not defined")
+        msg = "PKGV not defined"
+        package_qa_handle_error("pkgv-undefined", msg, d)
         return
 
     pkgdest = d.getVar('PKGDEST', True)
@@ -1853,7 +1862,8 @@ python do_package () {
     pn = d.getVar('PN', True)
 
     if not workdir or not outdir or not dest or not dvar or not pn:
-        bb.error("WORKDIR, DEPLOY_DIR, D, PN and PKGD all must be defined, unable to package")
+        msg = "WORKDIR, DEPLOY_DIR, D, PN and PKGD all must be defined, unable to package"
+        package_qa_handle_error("var-undefined", msg, d)
         return
 
     bb.build.exec_func("package_get_auto_pr", d)
