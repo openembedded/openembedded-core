@@ -42,6 +42,9 @@ inherit packagedata
 inherit prserv
 inherit chrpath
 
+# Need the package_qa_handle_error() in insane.bbclass
+inherit insane
+
 PKGD    = "${WORKDIR}/package"
 PKGDEST = "${WORKDIR}/packages-split"
 
@@ -1813,7 +1816,7 @@ PACKAGESPLITFUNCS ?= " \
                 package_do_split_locales \
                 populate_packages"
 # Functions which process metadata based on split packages
-PACKAGEFUNCS ?= " \
+PACKAGEFUNCS += " \
                 package_fixsymlinks \
                 package_name_hook \
                 package_do_filedeps \

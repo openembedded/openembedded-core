@@ -17,7 +17,6 @@
 #   files under exec_prefix
 
 
-inherit package
 PACKAGE_DEPENDS += "${QADEPENDS}"
 PACKAGEFUNCS += " do_package_qa "
 
@@ -26,6 +25,7 @@ PACKAGEFUNCS += " do_package_qa "
 QADEPENDS = "prelink-native"
 QADEPENDS_class-native = ""
 QADEPENDS_class-nativesdk = ""
+QA_SANE = "True"
 
 #
 # dictionary for elf headers
@@ -133,6 +133,7 @@ def package_qa_handle_error(error_class, error_msg, d):
     package_qa_write_error(error_msg, d)
     if error_class in (d.getVar("ERROR_QA", True) or "").split():
         bb.error("QA Issue: %s" % error_msg)
+        d.setVar("QA_SANE", False)
         return False
     else:
         bb.warn("QA Issue: %s" % error_msg)
@@ -820,7 +821,8 @@ python do_package_qa () {
     if 'libdir' in d.getVar("ALL_QA", True).split():
         package_qa_check_libdir(d)
 
-    if not walk_sane or not rdepends_sane or not deps_sane:
+    qa_sane = d.getVar("QA_SANE", True)
+    if not walk_sane or not rdepends_sane or not deps_sane or not qa_sane:
         bb.fatal("QA run found fatal errors. Please consider fixing them.")
     bb.note("DONE with PACKAGE QA")
 }
