@@ -2,9 +2,9 @@ require glib.inc
 
 PE = "1"
 
-DEPENDS += "libffi python-argparse-native zlib"
-DEPENDS_class-native += "libffi-native python-argparse-native"
-DEPENDS_class-nativesdk += "nativesdk-libffi python-argparse-native nativesdk-zlib ${BPN}-native"
+DEPENDS += "libffi zlib"
+DEPENDS_class-native += "libffi-native"
+DEPENDS_class-nativesdk += "nativesdk-libffi nativesdk-zlib ${BPN}-native"
 
 SHRT_VER = "${@d.getVar('PV',1).split('.')[0]}.${@d.getVar('PV',1).split('.')[1]}"
 
