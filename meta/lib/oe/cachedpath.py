@@ -122,10 +122,8 @@ class CachedPath(object):
         # minor reason when (say) a thousand readable directories are still
         # left to visit.  That logic is copied here.
         try:
-            # Note that listdir and error are globals in this module due
-            # to earlier import-*.
             names = os.listdir(top)
-        except error as err:
+        except os.error as err:
             if onerror is not None:
                 onerror(err)
             return
