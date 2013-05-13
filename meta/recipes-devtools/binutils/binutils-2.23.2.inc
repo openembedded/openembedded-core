@@ -29,6 +29,7 @@ SRC_URI = "\
      file://mips64-default-ld-emulation.patch \
      ${BACKPORT} \
      file://binutils-fix-over-array-bounds-issue.patch \
+     file://binutils-xlp-support.patch \
      "
 
 BACKPORT = "\
