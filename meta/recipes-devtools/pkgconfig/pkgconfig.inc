@@ -18,9 +18,9 @@ S = "${WORKDIR}/pkg-config-${PV}/"
 
 inherit autotools
 
-EXTRA_OECONF = "--with-installed-glib --with-installed-popt --disable-legacy-scripts"
-EXTRA_OECONF_class-native = "--disable-legacy-scripts"
-EXTRA_OECONF_class-nativesdk = "--disable-legacy-scripts"
+EXTRA_OECONF = "--with-installed-glib --with-installed-popt --disable-legacy-scripts --with-internal-glib"
+EXTRA_OECONF_class-native = "--disable-legacy-scripts --with-internal-glib"
+EXTRA_OECONF_class-nativesdk = "--disable-legacy-scripts --with-internal-glib"
 
 acpaths = "-I ."
 do_configure_prepend () {
