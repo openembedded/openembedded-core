@@ -3,8 +3,8 @@ RDEPENDS_${PN} = "dpkg"
 LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=0636e73ff0215e8d672dc4c32c317bb3"
 require apt.inc
 
-SRC_URI[md5sum] = "d44f459d59d8fa7fc5f455f1f982f08c"
-SRC_URI[sha256sum] = "9570905992f4a83b0c182f11f9e0a8c20a1209a52996d1a01ddbfa359ae2c819"
+SRC_URI[md5sum] = "85781bb39901d6fb79c37ca307929594"
+SRC_URI[sha256sum] = "dcef6fc33948d5e430d337ad6326bf7ac3d06b14d99ede176809461ac12b4c6f"
 
 require apt-package.inc
 
