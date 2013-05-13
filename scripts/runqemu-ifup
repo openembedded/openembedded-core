@@ -70,10 +70,10 @@ if [ $STATUS -ne 0 ]; then
 	fi
 fi
 
-IFCONFIG=`which ifconfig 2> /dev/null`
+IFCONFIG=`which ip 2> /dev/null`
 if [ "x$IFCONFIG" = "x" ]; then
 	# better than nothing...
-	IFCONFIG=/sbin/ifconfig
+	IFCONFIG=/sbin/ip
 fi
 if [ ! -x "$IFCONFIG" ]; then
 	echo "$IFCONFIG cannot be executed"
@@ -100,7 +100,7 @@ if [ ! -x "$IPTABLES" ]; then
 fi
 
 n=$[ (`echo $TAP | sed 's/tap//'` * 2) + 1 ]
-$IFCONFIG $TAP 192.168.7.$n netmask 255.255.255.255
+$IFCONFIG addr add 192.168.7.$n/32 dev $TAP
 
 dest=$[ (`echo $TAP | sed 's/tap//'` * 2) + 2 ]
 $ROUTE add -host 192.168.7.$dest $TAP

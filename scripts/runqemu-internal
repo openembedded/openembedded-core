@@ -139,16 +139,16 @@ if [ ! -d "$LOCKDIR" ]; then
     chmod 777 $LOCKDIR
 fi
 
-IFCONFIG=`which ifconfig 2> /dev/null`
+IFCONFIG=`which ip 2> /dev/null`
 if [ -z "$IFCONFIG" ]; then
-    IFCONFIG=/sbin/ifconfig
+    IFCONFIG=/sbin/ip
 fi
 if [ ! -x "$IFCONFIG" ]; then
        echo "$IFCONFIG cannot be executed"
        exit 1
 fi
 
-POSSIBLE=`$IFCONFIG -a | grep '^tap' | awk '{print $1}' | sed s/://`
+POSSIBLE=`$IFCONFIG link | grep 'tap' | awk '{print $2}' | sed s/://`
 TAP=""
 LOCKFILE=""
 for tap in $POSSIBLE; do

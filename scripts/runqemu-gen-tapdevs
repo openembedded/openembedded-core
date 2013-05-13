@@ -59,10 +59,10 @@ if [ ! -x "$RUNQEMU_IFUP" ]; then
 	exit 1
 fi
 
-IFCONFIG=`which ifconfig 2> /dev/null`
+IFCONFIG=`which ip 2> /dev/null`
 if [ -z "$IFCONFIG" ]; then
 	# Is it ever anywhere else?
-	IFCONFIG=/sbin/ifconfig
+	IFCONFIG=/sbin/ip
 fi
 if [ ! -x "$IFCONFIG" ]; then
        echo "$IFCONFIG cannot be executed"
@@ -70,7 +70,7 @@ if [ ! -x "$IFCONFIG" ]; then
 fi
 
 # Ensure we start with a clean slate
-for tap in `$IFCONFIG | grep ^tap | awk '{ print \$1 }' | sed s/://`; do
+for tap in `$IFCONFIG link | grep tap | awk '{ print \$2 }' | sed s/://`; do
 	echo "Note: Destroying pre-existing tap interface $tap..."
 	$TUNCTL -d $tap
 done
