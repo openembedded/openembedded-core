@@ -49,6 +49,7 @@ PACKAGECONFIG[tist] = "--enable-tist,--disable-tist,"
 PACKAGECONFIG[openvpn] = "--enable-openvpn,--disable-openvpn,,openvpn"
 PACKAGECONFIG[vpnc] = "--enable-vpnc,--disable-vpnc,,vpnc"
 PACKAGECONFIG[l2tp] = "--enable-l2tp,--disable-l2tp,,xl2tpd"
+PACKAGECONFIG[pptp] = "--enable-pptp,--disable-pptp,,pptp-linux"
 
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
@@ -199,3 +200,11 @@ FILES_${PN}-plugin-vpn-l2tp += "${libdir}/connman/scripts/libppp-plugin.so* \
                                 ${libdir}/connman/plugins-vpn/l2tp.so"
 RDEPENDS_${PN}-plugin-vpn-l2tp += "${PN}-vpn"
 RRECOMMENDS_${PN} += "${@base_contains('PACKAGECONFIG','l2tp','${PN}-plugin-vpn-l2tp', '', d)}"
+
+SUMMARY_${PN}-plugin-vpn-pptp = "A PPTP plugin for ConnMan VPN"
+DESCRIPTION_${PN}-plugin-vpn-pptp = "The ConnMan PPTP plugin uses pptp-linux client \
+to create a VPN connection to PPTP server."
+FILES_${PN}-plugin-vpn-pptp += "${libdir}/connman/scripts/libppp-plugin.so* \
+                                ${libdir}/connman/plugins-vpn/pptp.so"
+RDEPENDS_${PN}-plugin-vpn-pptp += "${PN}-vpn"
+RRECOMMENDS_${PN} += "${@base_contains('PACKAGECONFIG','pptp','${PN}-plugin-vpn-pptp', '', d)}"
