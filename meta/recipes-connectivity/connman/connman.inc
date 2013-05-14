@@ -46,6 +46,7 @@ PACKAGECONFIG[wifi] = "--enable-wifi, --disable-wifi, wpa-supplicant"
 PACKAGECONFIG[bluetooth] = "--enable-bluetooth, --disable-bluetooth, bluez4"
 PACKAGECONFIG[3g] = "--enable-ofono, --disable-ofono, ofono"
 PACKAGECONFIG[tist] = "--enable-tist,--disable-tist,"
+PACKAGECONFIG[openvpn] = "--enable-openvpn,--disable-openvpn,,openvpn"
 
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
@@ -172,3 +173,11 @@ FILES_${PN}-vpn += "${sbindir}/connman-vpnd \
                     ${sysconfdir}/dbus-1/system.d/connman-vpn-dbus.conf \
                     ${datadir}/dbus-1/system-services/net.connman.vpn.service \
                     ${systemd_unitdir}/system/connman-vpn.service"
+
+SUMMARY_${PN}-plugin-vpn-openvpn = "An OpenVPN plugin for ConnMan VPN"
+DESCRIPTION_${PN}-plugin-vpn-openvpn = "The ConnMan OpenVPN plugin uses openvpn client \
+to create a VPN connection to OpenVPN server."
+FILES_${PN}-plugin-vpn-openvpn += "${libdir}/connman/scripts/openvpn-script \
+                                   ${libdir}/connman/plugins-vpn/openvpn.so"
+RDEPENDS_${PN}-plugin-vpn-openvpn += "${PN}-vpn"
+RRECOMMENDS_${PN} += "${@base_contains('PACKAGECONFIG','openvpn','${PN}-plugin-vpn-openvpn', '', d)}"
