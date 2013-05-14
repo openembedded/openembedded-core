@@ -226,7 +226,7 @@ python () {
         d.setVar("PACKAGERDEPTASK", "")
 }
 
-def splitdebuginfo(file, debugfile, debugsrcdir, d):
+def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
     # Function to split a single file into two components, one is the stripped
     # target system binary, the other contains any debugging information. The
     # two files are linked to reference each other.
@@ -240,9 +240,6 @@ def splitdebuginfo(file, debugfile, debugsrcdir, d):
     debugedit = d.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit")
     workdir = d.getVar("WORKDIR", True)
     workparentdir = d.getVar("DEBUGSRC_OVERRIDE_PATH", True) or os.path.dirname(os.path.dirname(workdir))
-    sourcefile = d.expand("${WORKDIR}/debugsources.list")
-
-    bb.utils.remove(sourcefile)
 
     # We ignore kernel modules, we don't generate debug info files.
     if file.find("/lib/modules/") != -1 and file.endswith(".ko"):
@@ -721,6 +718,9 @@ python split_and_strip_files () {
         debuglibdir = ""
         debugsrcdir = "/usr/src/debug"
 
+    sourcefile = d.expand("${WORKDIR}/debugsources.list")
+    bb.utils.remove(sourcefile)
+
     os.chdir(dvar)
 
     # Return type (bits):
@@ -833,7 +833,7 @@ python split_and_strip_files () {
             bb.utils.mkdirhier(os.path.dirname(fpath))
             #bb.note("Split %s -> %s" % (file, fpath))
             # Only store off the hard link reference if we successfully split!
-            splitdebuginfo(file, fpath, debugsrcdir, d)
+            splitdebuginfo(file, fpath, debugsrcdir, sourcefile, d)
 
         # Hardlink our debug symbols to the other hardlink copies
         for file in hardlinks:
