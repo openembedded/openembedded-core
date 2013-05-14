@@ -1,0 +1,29 @@
+Upstream-Status: Accepted [http://hg.python.org/cpython/rev/c816479f6aaf/]
+Bugtracker: http://bugs.python.org/issue12326
+
+[Removed "Misc/NEWS" hunk]
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+
+# HG changeset patch
+# User Victor Stinner <victor.stinner@haypocalc.com>
+# Date 1313841758 -7200
+# Node ID c816479f6aaf71dbd3f3fe4b239186d60c55ce48
+# Parent  3e093590ac57fdda428c7da3f72ddf0c475ecf2b
+Issue #12326: sys.platform is now always 'linux2' on Linux
+
+Even if Python is compiled on Linux 3.
+
+Index: Python-3.3.0rc2/configure.ac
+===================================================================
+--- Python-3.3.0rc2.orig/configure.ac	2012-09-09 02:11:14.000000000 -0700
++++ Python-3.3.0rc2/configure.ac	2012-09-20 00:44:03.317124001 -0700
+@@ -366,7 +366,7 @@
+     MACHDEP="$ac_md_system$ac_md_release"
+ 
+     case $MACHDEP in
+-	linux*) MACHDEP="linux";;
++	linux*) MACHDEP="linux2";;
+ 	cygwin*) MACHDEP="cygwin";;
+ 	darwin*) MACHDEP="darwin";;
+ 	irix646) MACHDEP="irix6";;

@@ -1,0 +1,29 @@
+We should make sure that sysroot is used by gcc instead of assuming
+hardcoded locations for include paths
+
+Upstream-Status: Pending
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+:
+Index: Python-3.3.3/configure.ac
+===================================================================
+--- Python-3.3.3.orig/configure.ac	2014-01-29 19:00:15.245312752 -0800
++++ Python-3.3.3/configure.ac	2014-01-29 23:27:22.938526262 -0800
+@@ -1548,7 +1548,7 @@
+ # checks for header files
+ AC_HEADER_STDC
+ ac_save_cppflags="$CPPFLAGS"
+-CPPFLAGS="$CPPFLAGS -I/usr/include/ncursesw"
++CPPFLAGS="$CPPFLAGS -I=/usr/include/ncursesw"
+ AC_CHECK_HEADERS(asm/types.h conio.h curses.h direct.h dlfcn.h errno.h \
+ fcntl.h grp.h \
+ ieeefp.h io.h langinfo.h libintl.h ncurses.h process.h pthread.h \
+@@ -4308,7 +4308,7 @@
+ fi
+ 
+ ac_save_cppflags="$CPPFLAGS"
+-CPPFLAGS="$CPPFLAGS -I/usr/include/ncursesw"
++CPPFLAGS="$CPPFLAGS -I=/usr/include/ncursesw"
+ # On HP/UX 11.0, mvwdelch is a block with a return statement
+ AC_MSG_CHECKING(whether mvwdelch is an expression)
+ AC_CACHE_VAL(ac_cv_mvwdelch_is_expression,
