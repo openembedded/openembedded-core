@@ -48,6 +48,7 @@ PACKAGECONFIG[3g] = "--enable-ofono, --disable-ofono, ofono"
 PACKAGECONFIG[tist] = "--enable-tist,--disable-tist,"
 PACKAGECONFIG[openvpn] = "--enable-openvpn,--disable-openvpn,,openvpn"
 PACKAGECONFIG[vpnc] = "--enable-vpnc,--disable-vpnc,,vpnc"
+PACKAGECONFIG[l2tp] = "--enable-l2tp,--disable-l2tp,,xl2tpd"
 
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
@@ -190,3 +191,11 @@ FILES_${PN}-plugin-vpn-vpnc += "${libdir}/connman/scripts/openconnect-script \
                                 ${libdir}/connman/plugins-vpn/vpnc.so"
 RDEPENDS_${PN}-plugin-vpn-vpnc += "${PN}-vpn"
 RRECOMMENDS_${PN} += "${@base_contains('PACKAGECONFIG','vpnc','${PN}-plugin-vpn-vpnc', '', d)}"
+
+SUMMARY_${PN}-plugin-vpn-l2tp = "A L2TP plugin for ConnMan VPN"
+DESCRIPTION_${PN}-plugin-vpn-l2tp = "The ConnMan L2TP plugin uses xl2tpd daemon \
+to create a VPN connection to L2TP server."
+FILES_${PN}-plugin-vpn-l2tp += "${libdir}/connman/scripts/libppp-plugin.so* \
+                                ${libdir}/connman/plugins-vpn/l2tp.so"
+RDEPENDS_${PN}-plugin-vpn-l2tp += "${PN}-vpn"
+RRECOMMENDS_${PN} += "${@base_contains('PACKAGECONFIG','l2tp','${PN}-plugin-vpn-l2tp', '', d)}"
