@@ -13,14 +13,12 @@ RDEPENDS_${PN} = "rpcbind"
 RRECOMMENDS_${PN} = "kernel-module-nfsd"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.bz2 \
-           file://nfs-utils.1.2.8.rc3.patch \
            file://nfs-utils-1.0.6-uclibc.patch \
-           file://nfs-utils-1.2.3-uclibc-libio.h.patch \
            file://nfs-utils-1.2.3-sm-notify-res_init.patch \
            file://nfsserver"
 
-SRC_URI[md5sum] = "3b5ca797197765dc0c3a4122720c7716"
-SRC_URI[sha256sum] = "7ef8e0a8b22cd7ff33f3afd28e770d45643fae303468a180640c2967833fe75e"
+SRC_URI[md5sum] = "6e7d97de51e428a0b8698c16ca23db77"
+SRC_URI[sha256sum] = "1cc8f02a633eddbf0a1d93421f331479c4cdab4c5ab33b8bf8c7c369f9156ac6"
 
 PARALLEL_MAKE = ""
 
@@ -53,6 +51,12 @@ PACKAGES =+ "${PN}-client ${PN}-stats"
 FILES_${PN}-client = "${base_sbindir}/*mount.nfs*"
 FILES_${PN}-stats = "${sbindir}/mountstats ${sbindir}/nfsiostat"
 RDEPENDS_${PN}-stats = "python"
+
+# Make clean needed because the package comes with
+# precompiled 64-bit objects that break the build
+do_compile_prepend() {
+    make clean
+}
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
