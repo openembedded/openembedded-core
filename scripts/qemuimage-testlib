@@ -144,10 +144,15 @@ EOF`
 # function to run command in $ip_addr via ssh
 Test_SSH()
 {
-	local ip_addr=$1
-	shift
-	local command=$@
-	local time_out=60
+	local ip_addr="$1"
+	local command="$2"
+
+	if [ $# -eq 3 ]; then
+	    local time_out=$3
+	else
+	    local time_out=60
+	fi
+
 	local ret=0
 	local exp_cmd=`cat << EOF
 eval spawn ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@$ip_addr "$command"
