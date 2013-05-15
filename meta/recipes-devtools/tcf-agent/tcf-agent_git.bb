@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://edl-v10.html;md5=522a390a83dc186513f0500543ad3679"
 
 SRCREV = "4ef94ecb927a8912c3d79ce137182247786cff8f"
 PV = "0.4.0+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git;protocol=git \
            file://fix_ranlib.patch \
@@ -22,7 +22,7 @@ S = "${WORKDIR}/git"
 inherit update-rc.d
 
 INITSCRIPT_NAME = "tcf-agent"
-INITSCRIPT_PARAMS = "start 999 3 5 . stop 20 0 1 2 6 ."
+INITSCRIPT_PARAMS = "start 99 3 5 . stop 20 0 1 2 6 ."
 
 # mangling needed for make
 MAKE_ARCH = "`echo ${TARGET_ARCH} | sed s,i.86,i686,`"
