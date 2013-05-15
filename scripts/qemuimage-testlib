@@ -385,6 +385,8 @@ Test_Fetch_Target_IP()
 Test_Create_Qemu()
 {
 	local timeout=$1
+	shift
+	local extraargs="$@"
 	local up_time=0
 
 	RUNQEMU=`which runqemu`
@@ -437,8 +439,8 @@ Test_Create_Qemu()
 		export MACHINE=$QEMUARCH
 
 		# Create Qemu in localhost VNC Port 1
-		echo "Running xterm -display ${DISPLAY} -e 'OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} 2>&1 | tee ${RUNQEMU_LOGFILE} || /bin/sleep 60' &"
-		xterm -display ${DISPLAY} -e "OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} 2>&1 | tee ${RUNQEMU_LOGFILE} || /bin/sleep 60" &
+		echo "Running xterm -display ${DISPLAY} -e 'OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} ${extraargs} 2>&1 | tee ${RUNQEMU_LOGFILE} || /bin/sleep 60' &"
+		xterm -display ${DISPLAY} -e "OE_TMPDIR=${OE_TMPDIR} ${RUNQEMU} ${KERNEL} ${TEST_ROOTFS_IMAGE} ${extraargs} 2>&1 | tee ${RUNQEMU_LOGFILE} || /bin/sleep 60" &
 	
 		# Get the pid of the xterm processor, which will be used in Test_Kill_Qemu
 		XTERMPID=$!
