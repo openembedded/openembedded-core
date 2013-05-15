@@ -21,7 +21,7 @@ TOOLS="$COREBASE/scripts/qemuimage-tests/tools"
 TOOLCHAIN_PROJECTS="$COREBASE/scripts/qemuimage-tests/toolchain_projects"
 
 # Test Directory on target for testing
-TARGET_TEST_DIR="/opt/test"
+TARGET_TEST_DIR="/tmp/test"
 
 # Global variables for process id
 XTERMPID=0
