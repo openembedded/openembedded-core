@@ -3,8 +3,6 @@ SECTION = "core"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/LGPL-2.1;md5=1a6d268fd218675ffea8be556788b780"
 
-RDEPENDS_${PN} = "base-files"
-
 inherit allarch
 #
 # Allow distributions to alter when [postponed] package install scripts are run
