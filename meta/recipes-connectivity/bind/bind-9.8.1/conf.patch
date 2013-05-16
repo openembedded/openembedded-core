@@ -270,8 +270,8 @@ diff -urN bind-9.3.1.orig/init.d bind-9.3.1/init.d
 +	# dirs under /var/run can go away on reboots.
 +	mkdir -p /var/run/named
 +	mkdir -p /var/cache/bind
-+	chmod 775 /var/run/bind/run
-+	chown root:bind /var/run/bind/run >/dev/null 2>&1 || true
++	chmod 775 /var/run/named
++	chown root:bind /var/run/named >/dev/null 2>&1 || true
 +
 +	if [ ! -x /usr/sbin/named ]; then
 +	    echo "named binary missing - not starting"
