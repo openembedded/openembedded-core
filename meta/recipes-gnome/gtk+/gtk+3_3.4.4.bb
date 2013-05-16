@@ -39,6 +39,7 @@ do_configure_prepend() {
 EXTRA_OECONF += " \
                  --disable-gtk2-dependency \
                  --disable-glibtest \
+                 --disable-xinerama \
                  --enable-modules \
                  --disable-cups \
 "
