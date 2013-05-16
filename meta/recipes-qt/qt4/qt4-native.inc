@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
                     file://LICENSE.GPL3;md5=6e1694ee338db410417517884918d4d2 \
                     file://LGPL_EXCEPTION.txt;md5=0145c4d1b6f96a661c2c139dfb268fb6"
 
-INC_PR = "r19"
+INC_PR = "r20"
 
 inherit native
 
@@ -18,6 +18,7 @@ SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-sr
            file://0002-qkbdtty_qws-fix-build-with-old-kernel-headers.patch \
            file://0003-webkit2-set-OUTPUT_DIR-value-if-empty.patch \
            file://0021-configure-make-qt4-native-work-with-long-building-pa.patch \
+           file://0025-Remove-unnecessary-typedef-found-by-gcc4-8.patch \
            file://g++.conf \
            file://linux.conf \
 	"
