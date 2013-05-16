@@ -6,6 +6,8 @@ SECTION = "libs"
 LICENSE = "Zlib"
 LIC_FILES_CHKSUM = "file://zlib.h;beginline=4;endline=23;md5=94d1b5a40dadd127f3351471727e66a9"
 
+PR = "r1"
+
 SRC_URI = "http://www.zlib.net/${BPN}-${PV}.tar.bz2 \
            file://remove.ldconfig.call.patch \
            "
@@ -22,6 +24,19 @@ do_compile (){
 
 do_install() {
 	oe_runmake DESTDIR=${D} install
+}
+
+# We move zlib shared libraries for target builds to avoid
+# qa warnings.
+#
+do_install_append_class-target() {
+	if [ ${base_libdir} != ${libdir} ]
+	then
+		mkdir -p ${D}/${base_libdir}
+		mv ${D}/${libdir}/libz.so.* ${D}/${base_libdir}
+		tmp=`readlink ${D}/${libdir}/libz.so`
+		ln -sf ../../${base_libdir}/$tmp ${D}/${libdir}/libz.so
+	fi
 }
 
 BBCLASSEXTEND = "native nativesdk"
