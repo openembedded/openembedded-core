@@ -14,7 +14,14 @@ PR = "r12"
 
 inherit autotools pkgconfig gnomebase gtk-doc pixbufcache
 
-EXTRA_OECONF = "--disable-mozilla-plugin --without-svgz"
+SRC_URI += "file://doc_Makefile.patch \
+            file://librsvg-CVE-2011-3146.patch \
+           "
+
+SRC_URI[archive.md5sum] = "4b00d0fee130c936644892c152f42db7"
+SRC_URI[archive.sha256sum] = "91b98051f352fab8a6257688d6b2fd665b4648ed66144861f2f853ccf876d334"
+
+EXTRA_OECONF = "--without-svgz"
 
 PACKAGECONFIG ??= "croco gdkpixbuf"
 
@@ -24,17 +31,6 @@ PACKAGECONFIG[croco] = "--with-croco,--without-croco,libcroco"
 PACKAGECONFIG[gdkpixbuf] = "--enable-pixbuf-loader,--disable-pixbuf-loader"
 # GTK+ 2 theme engine
 PACKAGECONFIG[gtk] = "--enable-gtk-theme,--disable-gtk-theme,gtk+"
-
-SRC_URI += "file://doc_Makefile.patch \
-	    file://librsvg-CVE-2011-3146.patch \
-	    "
-
-SRC_URI[archive.md5sum] = "4b00d0fee130c936644892c152f42db7"
-SRC_URI[archive.sha256sum] = "91b98051f352fab8a6257688d6b2fd665b4648ed66144861f2f853ccf876d334"
-
-do_configure_prepend () {
-	export GDK_PIXBUF_QUERYLOADERS="${libdir}/gdk-pixbuf-2.0/2.10.0/loaders"
-}
 
 PACKAGES =+ "librsvg-gtk librsvg-gtk-dbg librsvg-gtk-dev rsvg"
 FILES_${PN} = "${libdir}/*.so.*"
