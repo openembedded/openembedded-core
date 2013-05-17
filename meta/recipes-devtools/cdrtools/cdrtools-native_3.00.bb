@@ -6,15 +6,14 @@ DESCRIPTION = "A set of tools for CD recording, including cdrecord"
 HOMEPAGE = "http://cdrecord.berlios.de/private/cdrecord.html"
 SECTION = "console/utils"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
-PR = "r2"
+LIC_FILES_CHKSUM = "file://COPYING;md5=8d16123ffd39e649a5e4a6bc1de60e6d"
+PR = "r0"
 
 SRC_URI = "ftp://ftp.berlios.de/pub/cdrecord/cdrtools-${PV}.tar.bz2 \
-           file://no_usr_src.patch \
-           file://glibc-conflict-rename.patch"
+           file://no_usr_src.patch"
 
-SRC_URI[md5sum] = "d44a81460e97ae02931c31188fe8d3fd"
-SRC_URI[sha256sum] = "728b6175069a77c4d7d92ae60108cbda81fbbf7bc7aa02e25153ccf2092f6c22"
+SRC_URI[md5sum] = "f9fbab08fbd458b0d2312976d8c5f558"
+SRC_URI[sha256sum] = "7f9cb64820055573b880f77b2f16662a512518336ba95ab49228a1617973423d"
 
 inherit native
 

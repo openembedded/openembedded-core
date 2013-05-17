@@ -1,33 +1,33 @@
-Remove hard-coded references to /usr/src/linux/include to avoid
-host contamination.
+From 8d835cc7185e7cd878712d8208e6aa29b227ceff Mon Sep 17 00:00:00 2001
+From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+Date: Thu, 9 May 2013 16:03:59 +0300
+Subject: [PATCH] Remove hard-coded references to /usr/src/linux/include to
+ avoid host contamination.
 
-Upstream-Status: Inappropriate [configuration]
+Upstream-Status: Innappropriate [configuration]
 
+Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+---
+ cdrtools-3.00/DEFAULTS/Defaults.gnu |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ mode change 100644 => 100755 cdrtools-3.00/DEFAULTS/Defaults.gnu
 
-Index: cdrtools-2.01/DEFAULTS/Defaults.gnu
-===================================================================
---- cdrtools-2.01.orig/DEFAULTS/Defaults.gnu	2008-09-22 12:42:12.000000000 +0100
-+++ cdrtools-2.01/DEFAULTS/Defaults.gnu	2008-09-22 12:42:27.000000000 +0100
-@@ -18,7 +18,7 @@
+diff --git a/DEFAULTS/Defaults.gnu b/cdrtools-3.00/DEFAULTS/Defaults.gnu
+old mode 100644
+new mode 100755
+index e3e102b..8a18209
+--- a/DEFAULTS/Defaults.gnu
++++ b/DEFAULTS/Defaults.gnu
+@@ -28,7 +28,7 @@ DEFLINKMODE=	static
  ###########################################################################
  CWARNOPTS=
  
 -DEFINCDIRS=	$(SRCROOT)/include /usr/src/linux/include
 +DEFINCDIRS=	$(SRCROOT)/include
  LDPATH=		-L/opt/schily/lib
- RUNPATH=	-R $(INS_BASE)/lib -R /opt/schily/lib -R $(OLIBSDIR)
- 
-Index: cdrtools-2.01/DEFAULTS/Defaults.linux
-===================================================================
---- cdrtools-2.01.orig/DEFAULTS/Defaults.linux	2008-09-22 12:42:08.000000000 +0100
-+++ cdrtools-2.01/DEFAULTS/Defaults.linux	2008-09-22 12:42:37.000000000 +0100
-@@ -18,7 +18,7 @@
- ###########################################################################
- CWARNOPTS=
- 
--DEFINCDIRS=	$(SRCROOT)/include /usr/src/linux/include
-+DEFINCDIRS=	$(SRCROOT)/include
- LDPATH=		-L/opt/schily/lib
- RUNPATH=	-R $(INS_BASE)/lib -R /opt/schily/lib -R $(OLIBSDIR)
- 
+ #RUNPATH=	-R$(INS_BASE)/lib -R/opt/schily/lib -R$(OLIBSDIR)
+ RUNPATH=	-R$(INS_BASE)/lib -R/opt/schily/lib
+-- 
+1.7.9.5
+
