@@ -69,9 +69,6 @@ python populate_packages_prepend () {
 }
 
 do_install_append_class-native() {
-#Use wrapper script rather than binary as required libtool library is not installed now
-	GDK_PIXBUF_MODULEDIR=${D}${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders ${B}/gdk-pixbuf/gdk-pixbuf-query-loaders > ${D}${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
-	sed -i -e 's#${D}##g' ${D}${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
 	find ${D}${libdir} -name "libpixbufloader-*.la" -exec rm \{\} \;
 
 	create_wrapper ${D}/${bindir}/gdk-pixbuf-csource \
