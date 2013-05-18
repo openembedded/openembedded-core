@@ -10,8 +10,8 @@ DEPENDS = "glib-2.0 gnutls intltool-native"
 
 SRC_URI = "${GNOME_MIRROR}/${BPN}/2.36/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "062dafdb939510e7b38eea3d3b367be0"
-SRC_URI[sha256sum] = "190d66fbaeb023ba4f43c315f23c5372c43be6cbe857596e00990211514650d9"
+SRC_URI[md5sum] = "fb9121742ed36d1723f296eea19dbb3c"
+SRC_URI[sha256sum] = "2108d55b0af3eea56ce256830bcaf1519d6337e0054ef2eff80f2c0ef0eb23f9"
 
 EXTRA_OECONF = "--without-ca-certificates --without-gnome-proxy --without-libproxy"
 
