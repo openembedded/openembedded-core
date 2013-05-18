@@ -1,5 +1,5 @@
-MAJOR_VERSION = "2.22"
-PR = "r3"
+MAJOR_VERSION = "2.23"
+PR = "r0"
 require util-linux.inc
 
 SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
@@ -7,11 +7,12 @@ SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             file://uclibc-__progname-conflict.patch \
             file://configure-sbindir.patch \
             file://fix-configure.patch \
-            file://mbsalign-license.patch \
+            file://0001-lib-loopdev-fix-loopcxt_check_size-to-work-with-blkd.patch \
+            file://0001-losetup-use-warn_size-for-regular-files-only.patch \
 "
 
-SRC_URI[md5sum] = "3e379b4d8b9693948d751c154614c73e"
-SRC_URI[sha256sum] = "7463a17a01a77cee36d8ce845d8148208f553c9abdd67b446324bf42968bc36d"
+SRC_URI[md5sum] = "7bd10387f1aa00efaa4b07dfa13215bc"
+SRC_URI[sha256sum] = "19ee024b4c6678eaa928d38edc011c332b088e0ff06239575f6b7e00a1855959"
 
 CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=as"
 EXTRA_OECONF_class-native += "--disable-fallocate --disable-use-tty-group"

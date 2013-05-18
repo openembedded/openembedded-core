@@ -1,0 +1,29 @@
+Upstream-Status: Backport
+Signed-off-by: Jonathan Liu <net147@gmail.com>
+
+From b048b8af3a5568c90f6e0c2d56f6cb399dedb0d1 Mon Sep 17 00:00:00 2001
+From: Karel Zak <kzak@redhat.com>
+Date: Mon, 13 May 2013 11:00:47 +0200
+Subject: [PATCH] losetup: use warn_size() for regular files only
+
+Signed-off-by: Karel Zak <kzak@redhat.com>
+---
+ sys-utils/losetup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sys-utils/losetup.c b/sys-utils/losetup.c
+index ccf120e..b44c9e5 100644
+--- a/sys-utils/losetup.c
++++ b/sys-utils/losetup.c
+@@ -380,7 +380,7 @@ static void warn_size(const char *filename, uint64_t size)
+ 	struct stat st;
+ 
+ 	if (!size) {
+-		if (stat(filename, &st))
++		if (stat(filename, &st) || S_ISBLK(st.st_mode))
+ 			return;
+ 		size = st.st_size;
+ 	}
+-- 
+1.8.2.3
+
