@@ -5,7 +5,7 @@
 SUMMARY = "Clutter package groups"
 LICENSE = "MIT"
 
-PR = "r5"
+PR = "r6"
 
 inherit packagegroup
 
@@ -20,7 +20,7 @@ RCONFLICTS_${PN}-core = "task-core-clutter-core"
 
 SUMMARY_${PN}-core = "Clutter graphics library"
 RDEPENDS_${PN}-core = "\
-    clutter-1.8 \
-    clutter-gst-1.8 \
-    clutter-gtk-1.8 \
+    clutter-1.0 \
+    clutter-gst-1.0 \
+    clutter-gtk-1.0 \
     "
