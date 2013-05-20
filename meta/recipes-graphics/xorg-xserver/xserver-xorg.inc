@@ -111,7 +111,7 @@ EXTRA_OECONF += "--with-fop=no \
                  --disable-record \
                  --disable-dmx \
                  --disable-xnest \
-                 --disable-xvfb \
+                 --enable-xvfb \
                  --enable-composite \
                  --without-dtrace \
                  --with-int10=x86emu \
