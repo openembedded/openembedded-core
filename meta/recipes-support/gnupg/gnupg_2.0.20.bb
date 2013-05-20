@@ -7,15 +7,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949 \
 DEPENDS = "${PTH} libassuan libksba zlib bzip2 readline libgcrypt"
 PTH = "pth"
 PTH_libc-uclibc = "npth"
-PR = "r5"
 
 inherit autotools gettext
 
-SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://GnuPG2-CVE-2012-6085.patch"
+SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "6a8589381ca1b0c1a921e9955f42b016"
-SRC_URI[sha256sum] = "efa23a8a925adb51c7d3b708c25b6d000300f5ce37de9bdec6453be7b419c622"
+SRC_URI[md5sum] = "9d18ee71bb0b10d40d1c8a393bdd7a89"
+SRC_URI[sha256sum] = "6e949b7f062cab8a3cf0910f91ecf04cabaad458c0aeeec66298651b8b04b79a"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
