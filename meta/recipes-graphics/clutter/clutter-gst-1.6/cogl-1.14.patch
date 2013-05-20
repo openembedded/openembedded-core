@@ -1,0 +1,48 @@
+From 1ae4c3e7b1e2c33892590f9ac7bf0e892a5bcbd5 Mon Sep 17 00:00:00 2001
+From: Tomas Frydrych <tomas@sleepfive.com>
+Date: Thu, 11 Oct 2012 08:53:03 +0100
+Subject: [PATCH] ClutterGstVideoSink: fix includes so we can build against
+ cogl-1.14
+
+Cogl 1.14 exposes various GL types through the public API but it does not
+pull in the GL type definitions through its public headers; specifically
+compilation will fail due to undefined GL_TEXTURE_2D. So include the headers
+the hard way.
+
+Upstream-status: Submitted @ https://bugzilla.gnome.org/show_bug.cgi?id=700509
+Signed-off-by: Tomas Frydrych <tomas@sleepfive.com>
+---
+ clutter-gst/clutter-gst-video-sink.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/clutter-gst/clutter-gst-video-sink.c b/clutter-gst/clutter-gst-video-sink.c
+index 9b4b53c..f092581 100644
+--- a/clutter-gst/clutter-gst-video-sink.c
++++ b/clutter-gst/clutter-gst-video-sink.c
+@@ -42,6 +42,23 @@
+ #include "config.h"
+ #endif
+
++/*
++ * cogl-1.14 exposes generic GL types in the API, but not the actual includes.
++ */
++#include <cogl/cogl.h>
++
++#ifdef COGL_HAS_GLES1
++#include <GLES/gl.h>
++#include <GLES/glext.h>
++#elif COGL_HAS_GLES2
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
++#elif COGL_HAS_GL
++#include <GL/gl.h>
++#else
++#error Unknown cogl configuration
++#endif
++
+ #include "clutter-gst-video-sink.h"
+ #include "clutter-gst-util.h"
+ #include "clutter-gst-private.h"
+--
+1.7.10.4
+
