@@ -104,135 +104,152 @@ fi
 
 NFSRUNNING="false"
 
-acquire_lock() {
-    lockfile=$1
-    if [ -z "$lockfile" ]; then
-        echo "Error: missing lockfile arg passed to acquire_lock()"
-        return 1
+if [ "$SLIRP_ENABLED" = "yes" ]; then
+    KERNEL_NETWORK_CMD=""
+    QEMU_TAP_CMD=""
+    QEMU_UI_OPTIONS="-show-cursor -usb -usbdevice wacom-tablet"
+    if [ "$KVM_ACTIVE" = "yes" ]; then
+        QEMU_NETWORK_CMD=""
+        DROOT="/dev/vda"
+        ROOTFS_OPTIONS="-drive file=$ROOTFS,if=virtio"
+    else
+        QEMU_NETWORK_CMD=""
+        DROOT="/dev/hda"
+        ROOTFS_OPTIONS="-hda $ROOTFS"
     fi
 
-    touch $lockfile.lock
-    exec 8>$lockfile.lock
-    flock -n -x 8
-    if [ $? -ne 0 ]; then
-        exec 8>&-
-        return 1
-    fi
-
-    return 0
-}
-
-release_lock() {
-    lockfile=$1
-    if [ -z "$lockfile" ]; then
-        echo "Error: missing lockfile arg passed to release_lock()"
-        return 1
-    fi
-
-    rm -f $lockfile.lock
-    exec  8>&-
-}
-
-LOCKDIR="/tmp/qemu-tap-locks"
-if [ ! -d "$LOCKDIR" ]; then
-    mkdir $LOCKDIR
-    chmod 777 $LOCKDIR
-fi
-
-IFCONFIG=`which ip 2> /dev/null`
-if [ -z "$IFCONFIG" ]; then
-    IFCONFIG=/sbin/ip
-fi
-if [ ! -x "$IFCONFIG" ]; then
-       echo "$IFCONFIG cannot be executed"
-       exit 1
-fi
-
-POSSIBLE=`$IFCONFIG link | grep 'tap' | awk '{print $2}' | sed s/://`
-TAP=""
-LOCKFILE=""
-for tap in $POSSIBLE; do
-    LOCKFILE="$LOCKDIR/$tap"
-    echo "Acquiring lockfile for $tap..."
-    acquire_lock $LOCKFILE
-    if [ $? -eq 0 ]; then
-        TAP=$tap
-        break
-    fi
-done
-
-if [ "$TAP" = "" ]; then
-    if [ -e "$NOSUDO_FLAG" ]; then
-        echo "Error: There are no available tap devices to use for networking,"
-        echo "and I see $NOSUDO_FLAG exists, so I am not going to try creating"
-        echo "a new one with sudo."
-        exit 1
-    fi
-
-    GROUPID=`id -g`
-    USERID=`id -u`
-    echo "Setting up tap interface under sudo"
-    # Redirect stderr since we could see a LD_PRELOAD warning here if pseudo is loaded
-    # but inactive. This looks scary but is harmless
-    tap=`sudo $QEMUIFUP $USERID $GROUPID $OECORE_NATIVE_SYSROOT 2> /dev/null`
-    if [ $? -ne 0 ]; then
-        # Re-run standalone to see verbose errors
-        sudo $QEMUIFUP $USERID $GROUPID $OECORE_NATIVE_SYSROOT
-        return 1
-    fi
-    LOCKFILE="$LOCKDIR/$tap"
-    echo "Acquiring lockfile for $tap..."
-    acquire_lock $LOCKFILE
-    if [ $? -eq 0 ]; then
-        TAP=$tap
-    fi 
 else
-    echo "Using preconfigured tap device '$TAP'"
-fi
+        acquire_lock() {
+            lockfile=$1
+            if [ -z "$lockfile" ]; then
+                echo "Error: missing lockfile arg passed to acquire_lock()"
+                return 1
+            fi
 
-cleanup() {
-    if [ ! -e "$NOSUDO_FLAG" ]; then
-        # Redirect stderr since we could see a LD_PRELOAD warning here if pseudo is loaded
-        # but inactive. This looks scary but is harmless
-        sudo $QEMUIFDOWN $TAP $OECORE_NATIVE_SYSROOT 2> /dev/null
-    fi
-    echo "Releasing lockfile of preconfigured tap device '$TAP'"
-    release_lock $LOCKFILE
+            touch $lockfile.lock
+            exec 8>$lockfile.lock
+            flock -n -x 8
+            if [ $? -ne 0 ]; then
+                exec 8>&-
+                return 1
+            fi
 
-    if [ "$NFSRUNNING" = "true" ]; then
-        echo "Shutting down the userspace NFS server..."
-        echo "runqemu-export-rootfs stop $ROOTFS"
-        runqemu-export-rootfs stop $ROOTFS
-    fi
-    # If QEMU crashes or somehow tty properties are not restored
-    # after qemu exits, we need to run stty sane
-    stty sane
-}
+            return 0
+        }
 
-n0=$(echo $TAP | sed 's/tap//')
-n1=$(($n0 * 2 + 1))
-n2=$(($n1 + 1))
+        release_lock() {
+            lockfile=$1
+            if [ -z "$lockfile" ]; then
+                echo "Error: missing lockfile arg passed to release_lock()"
+                return 1
+            fi
 
-KERNEL_NETWORK_CMD="ip=192.168.7.$n2::192.168.7.$n1:255.255.255.0"
-QEMU_TAP_CMD="-net tap,vlan=0,ifname=$TAP,script=no,downscript=no"
-if [ "$KVM_ACTIVE" = "yes" ]; then
-    QEMU_NETWORK_CMD="-net nic,model=virtio $QEMU_TAP_CMD,vhost=on"
-    DROOT="/dev/vda"
-    ROOTFS_OPTIONS="-drive file=$ROOTFS,if=virtio"
-else
-    QEMU_NETWORK_CMD="-net nic,vlan=0 $QEMU_TAP_CMD"
-    DROOT="/dev/hda"
-    ROOTFS_OPTIONS="-hda $ROOTFS"
-fi
-KERNCMDLINE="mem=$QEMU_MEMORY"
-QEMU_UI_OPTIONS="-show-cursor -usb -usbdevice wacom-tablet"
+            rm -f $lockfile.lock
+            exec  8>&-
+        }
 
-NFS_INSTANCE=`echo $TAP | sed 's/tap//'`
-export NFS_INSTANCE
+        LOCKDIR="/tmp/qemu-tap-locks"
+        if [ ! -d "$LOCKDIR" ]; then
+            mkdir $LOCKDIR
+            chmod 777 $LOCKDIR
+        fi
 
-SERIALOPTS=""
-if [ "x$SERIAL_LOGFILE" != "x" ]; then
-    SERIALOPTS="-serial file:$SERIAL_LOGFILE"
+        IFCONFIG=`which ip 2> /dev/null`
+        if [ -z "$IFCONFIG" ]; then
+            IFCONFIG=/sbin/ip
+        fi
+        if [ ! -x "$IFCONFIG" ]; then
+               echo "$IFCONFIG cannot be executed"
+               exit 1
+        fi
+
+        POSSIBLE=`$IFCONFIG link | grep 'tap' | awk '{print $2}' | sed s/://`
+        TAP=""
+        LOCKFILE=""
+        for tap in $POSSIBLE; do
+            LOCKFILE="$LOCKDIR/$tap"
+            echo "Acquiring lockfile for $tap..."
+            acquire_lock $LOCKFILE
+            if [ $? -eq 0 ]; then
+                TAP=$tap
+                break
+            fi
+        done
+
+        if [ "$TAP" = "" ]; then
+            if [ -e "$NOSUDO_FLAG" ]; then
+                echo "Error: There are no available tap devices to use for networking,"
+                echo "and I see $NOSUDO_FLAG exists, so I am not going to try creating"
+                echo "a new one with sudo."
+                exit 1
+            fi
+
+            GROUPID=`id -g`
+            USERID=`id -u`
+            echo "Setting up tap interface under sudo"
+            # Redirect stderr since we could see a LD_PRELOAD warning here if pseudo is loaded
+            # but inactive. This looks scary but is harmless
+            tap=`sudo $QEMUIFUP $USERID $GROUPID $OECORE_NATIVE_SYSROOT 2> /dev/null`
+            if [ $? -ne 0 ]; then
+                # Re-run standalone to see verbose errors
+                sudo $QEMUIFUP $USERID $GROUPID $OECORE_NATIVE_SYSROOT
+                return 1
+            fi
+            LOCKFILE="$LOCKDIR/$tap"
+            echo "Acquiring lockfile for $tap..."
+            acquire_lock $LOCKFILE
+            if [ $? -eq 0 ]; then
+                TAP=$tap
+            fi 
+        else
+            echo "Using preconfigured tap device '$TAP'"
+        fi
+
+        cleanup() {
+            if [ ! -e "$NOSUDO_FLAG" ]; then
+                # Redirect stderr since we could see a LD_PRELOAD warning here if pseudo is loaded
+                # but inactive. This looks scary but is harmless
+                sudo $QEMUIFDOWN $TAP $OECORE_NATIVE_SYSROOT 2> /dev/null
+            fi
+            echo "Releasing lockfile of preconfigured tap device '$TAP'"
+            release_lock $LOCKFILE
+
+            if [ "$NFSRUNNING" = "true" ]; then
+                echo "Shutting down the userspace NFS server..."
+                echo "runqemu-export-rootfs stop $ROOTFS"
+                runqemu-export-rootfs stop $ROOTFS
+            fi
+            # If QEMU crashes or somehow tty properties are not restored
+            # after qemu exits, we need to run stty sane
+            stty sane
+        }
+
+
+        n0=$(echo $TAP | sed 's/tap//')
+        n1=$(($n0 * 2 + 1))
+        n2=$(($n1 + 1))
+
+        KERNEL_NETWORK_CMD="ip=192.168.7.$n2::192.168.7.$n1:255.255.255.0"
+        QEMU_TAP_CMD="-net tap,vlan=0,ifname=$TAP,script=no,downscript=no"
+        if [ "$KVM_ACTIVE" = "yes" ]; then
+            QEMU_NETWORK_CMD="-net nic,model=virtio $QEMU_TAP_CMD,vhost=on"
+            DROOT="/dev/vda"
+            ROOTFS_OPTIONS="-drive file=$ROOTFS,if=virtio"
+        else
+            QEMU_NETWORK_CMD="-net nic,vlan=0 $QEMU_TAP_CMD"
+            DROOT="/dev/hda"
+            ROOTFS_OPTIONS="-hda $ROOTFS"
+        fi
+        KERNCMDLINE="mem=$QEMU_MEMORY"
+        QEMU_UI_OPTIONS="-show-cursor -usb -usbdevice wacom-tablet"
+
+        NFS_INSTANCE=`echo $TAP | sed 's/tap//'`
+        export NFS_INSTANCE
+
+        SERIALOPTS=""
+        if [ "x$SERIAL_LOGFILE" != "x" ]; then
+            SERIALOPTS="-serial file:$SERIAL_LOGFILE"
+        fi
 fi
 
 case "$MACHINE" in
@@ -414,7 +431,11 @@ if [ "$MACHINE" = "qemuppc" ]; then
     MACHINE_SUBTYPE=mac99
     CPU_SUBTYPE=G4
     QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS"
-    QEMU_NETWORK_CMD="-net nic,model=pcnet $QEMU_TAP_CMD"
+    if [ "$SLIRP_ENABLED" = "yes" ]; then
+        QEMU_NETWORK_CMD=""
+    else
+        QEMU_NETWORK_CMD="-net nic,model=pcnet $QEMU_TAP_CMD"
+    fi
     if [ "${FSTYPE:0:3}" = "ext" -o "$FSTYPE" = "btrfs" ]; then
         KERNCMDLINE="root=/dev/hda rw console=ttyS0 console=tty $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -cpu $CPU_SUBTYPE -M $MACHINE_SUBTYPE -hda $ROOTFS -no-reboot $QEMU_UI_OPTIONS"
@@ -560,12 +581,13 @@ elif [ "$FSTYPE" = "iso" ]; then
     echo $QEMUBIN $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT
     LD_PRELOAD="$GL_LD_PRELOAD" $QEMUBIN $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT
 else
-    echo $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append '"'$KERNCMDLINE $SCRIPT_KERNEL_OPT'"'
+    echo $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SLIRP_CMD $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append '"'$KERNCMDLINE $SCRIPT_KERNEL_OPT'"'
     LD_PRELOAD="$GL_LD_PRELOAD" $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT"
 fi
 ret=$?
-
-cleanup
+if [ "$SLIRP_ENABLED" != "yes" ]; then
+        cleanup
+fi
 
 trap - INT TERM QUIT
 
