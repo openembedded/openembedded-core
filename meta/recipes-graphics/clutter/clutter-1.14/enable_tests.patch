@@ -1,10 +1,12 @@
----
- tests/Makefile.am   |    7 ++++++-
- tests/test-actors.c |    2 +-
- tests/test-text.c   |    2 +-
- 3 files changed, 8 insertions(+), 3 deletions(-)
+Make tests installable
+
+The test applications are useful for image testing.
+
+Imported from clutter 1.8 package, git://git.openembedded.org/openembedded,
+commit ae28ee3f7a060b9e0d13154a84f2444a98490b5b, updated patch header.
 
 Upstream-Status: Inappropriate [configuration]
+Signed-off-by: Tomas Frydrych <tomas@sleepfive.com>
 
 Index: git/tests/interactive/Makefile.am
 ===================================================================
