@@ -6,12 +6,10 @@ SECTION = "console/utils"
 DEPENDS = "ncurses glib-2.0"
 RDEPENDS_${PN} = "ncurses-terminfo"
 
-PR = "r0"
-
 SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "b113e50682293a953141134969dba785"
-SRC_URI[sha256sum] = "4e9c45925b47650dac58d7556a89c3e9b4275e48976b6c13b63c2f8eed3a383b"
+SRC_URI[md5sum] = "324ff5a192d30d3a3b234c130550eb0a"
+SRC_URI[sha256sum] = "7b5e6f90e6709d1c1bcb4a2bf6d2a62b9494adef3ff4325ffdb3551c29e42a1c"
 
 inherit autotools gettext
 
