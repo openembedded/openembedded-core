@@ -3,7 +3,6 @@ HOMEPAGE = "http://www.infradead.org/~tgr/libnl/"
 SECTION = "libs/network"
 
 PE = "1"
-PR = "r0"
 
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
@@ -14,8 +13,8 @@ SRC_URI = "http://www.infradead.org/~tgr/${BPN}/files/${BP}.tar.gz \
            file://fix-pktloc_syntax_h-race.patch \
            file://fix-pc-file.patch "
 
-SRC_URI[md5sum] = "6fe7136558a9071e70673dcda38545b3"
-SRC_URI[sha256sum] = "2dc80f043116ec8610d9d418f5f5e9283f3d9a3a48b8d51a8cb0146b3f279604"
+SRC_URI[md5sum] = "2e1c889494d274aca24ce5f6a748e66e"
+SRC_URI[sha256sum] = "c7c5f267dfeae0c1a530bf96b71fb7c8dbbb07d54beef49b6712d8d6166f629b"
 
 inherit autotools pkgconfig
 
