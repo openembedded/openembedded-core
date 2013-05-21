@@ -4,7 +4,7 @@ LICENSE = "LGPLv2.1+"
 
 inherit clutter
 
-DEPENDS = "gtk-doc-native pango glib-2.0 gdk-pixbuf"
+DEPENDS = "pango glib-2.0 gdk-pixbuf"
 PACKAGES =+ "${PN}-examples"
 AUTOTOOLS_AUXDIR = "${S}/build"
 
@@ -21,38 +21,30 @@ ERDEPENDS_GL    = "libgl"
 ERDEPENDS_GLES2 = "libgles2"
 
 EXTRA_OECONF += "--disable-introspection	\
-	       	 --disable-gtk-doc		\
-	       	 ${@get_fpu_setting(bb, d)}	\
 	       	 --enable-examples-install	\
 	       	 --enable-debug		 	\
-	       	 --disable-gl			\
 	       	 --disable-gles1		\
-	       	 --disable-gles2		\
-	       	 --disable-glx			\
 	    	"
 
 # GL flavours
-PACKAGECONFIG[gl] = "--enable-gl,,${EDEPENDS_GL},${ERDPENDS_GL}"
-PACKAGECONFIG[gles2] = "--enable-gles2,,${EDEPENDS_GLES2}, ${ERDEPENDS_GLES2}"
+PACKAGECONFIG[gl] = "--enable-gl,--disable-gl,${EDEPENDS_GL},${ERDEPENDS_GL}"
+PACKAGECONFIG[gles2] = "--enable-gles2,--disable-gles2,${EDEPENDS_GLES2}, ${ERDEPENDS_GLES2}"
 
 # egl backends
-PACKAGECONFIG[egl-kms] = "--enable-kms-egl-platform,,${EDEPENDS_KMS}"
-PACKAGECONFIG[egl-null] = "--enable-null-egl-platform"
-PACKAGECONFIG[egl-x11] = "--enable-xlib-egl-platform,,${EDEPENDS_X11}"
+PACKAGECONFIG[egl-kms] = "--enable-kms-egl-platform,--disable-kms-egl-platform,${EDEPENDS_KMS}"
+PACKAGECONFIG[egl-null] = "--enable-null-egl-platform,--disable-null-egl-platform"
+PACKAGECONFIG[egl-x11] = "--enable-xlib-egl-platform,--disable-xlib-egl-platform,${EDEPENDS_X11}"
 
 # glx
-PACKAGECONFIG[glx] = "--enable-gl --enable-glx, ${EDEPENDS_GL} ${EDEPENDS_X11}"
+PACKAGECONFIG[glx] = "--enable-glx,--disable-glx,${EDEPENDS_GL} ${EDEPENDS_X11}"
 
 # Default to GLX
-PACKAGECONFIG ??= "glx"
+PACKAGECONFIG ??= "gl glx"
 
 #Fix up some weirdness in the docs
 do_configure_prepend() {
         sed -i s:doc/reference/Makefile::g ${S}/configure.ac
         sed -i s:doc::g ${S}/Makefile.am
-
-	# Disable DOLT
-	sed -i -e 's/^DOLT//' ${S}/configure.ac
 }
 
 FILES_${PN}-examples = "${bindir}/* ${datadir}/cogl/examples-data/*"
