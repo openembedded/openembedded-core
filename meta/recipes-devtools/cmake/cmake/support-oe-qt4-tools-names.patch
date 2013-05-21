@@ -11,36 +11,20 @@ Upstream-Status: Inappropriate [embedded specific]
 
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 
-Index: cmake-2.8.10.1/Modules/FindQt4.cmake
+Index: cmake-2.8.11/Modules/FindQt4.cmake
 ===================================================================
---- cmake-2.8.10.1.orig/Modules/FindQt4.cmake
-+++ cmake-2.8.10.1/Modules/FindQt4.cmake
-@@ -497,7 +497,7 @@ get_filename_component(qt_install_versio
- # check for qmake
- # Debian uses qmake-qt4
- # macports' Qt uses qmake-mac
--find_program(QT_QMAKE_EXECUTABLE NAMES qmake qmake4 qmake-qt4 qmake-mac
-+find_program(QT_QMAKE_EXECUTABLE NAMES qmake qmake2 qmake4 qmake-qt4 qmake-mac
-   PATHS
-     ENV QTDIR
-     "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\${qt_install_version};InstallDir]"
-@@ -982,13 +982,13 @@ if (QT_QMAKE_EXECUTABLE AND QTVERSION)
-   endif()
+--- cmake-2.8.11.orig/Modules/FindQt4.cmake
++++ cmake-2.8.11/Modules/FindQt4.cmake
+@@ -569,7 +569,7 @@ endfunction()
  
-   find_program(QT_MOC_EXECUTABLE
--    NAMES moc-qt4 moc
-+    NAMES moc-qt4 moc4 moc
-     PATHS ${QT_BINARY_DIR}
-     NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
-     )
+ set(QT4_INSTALLED_VERSION_TOO_OLD FALSE)
  
-   find_program(QT_UIC_EXECUTABLE
--    NAMES uic-qt4 uic
-+    NAMES uic-qt4 uic4 uic
-     PATHS ${QT_BINARY_DIR}
-     NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
-     )
-@@ -1000,49 +1000,49 @@ if (QT_QMAKE_EXECUTABLE AND QTVERSION)
+-set(_QT4_QMAKE_NAMES qmake qmake4 qmake-qt4 qmake-mac)
++set(_QT4_QMAKE_NAMES qmake qmake2 qmake4 qmake-qt4 qmake-mac)
+ _qt4_find_qmake("${_QT4_QMAKE_NAMES}" QT_QMAKE_EXECUTABLE QTVERSION)
+ 
+ if (QT_QMAKE_EXECUTABLE AND QTVERSION)
+@@ -1157,19 +1157,19 @@ if (QT_QMAKE_EXECUTABLE AND QTVERSION)
      )
  
    find_program(QT_RCC_EXECUTABLE
@@ -59,42 +43,16 @@ Index: cmake-2.8.10.1/Modules/FindQt4.cmake
  
    find_program(QT_DBUSXML2CPP_EXECUTABLE
 -    NAMES qdbusxml2cpp
-+    NAMES qdbusxml2cpp4 qdbusxml2cpp
++    NAMES qdbusxml2cp4 qdbusxml2cpp
      PATHS ${QT_BINARY_DIR}
      NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
      )
- 
-   find_program(QT_LUPDATE_EXECUTABLE
--    NAMES lupdate-qt4 lupdate
-+    NAMES lupdate-qt4 lupdate4 lupdate
-     PATHS ${QT_BINARY_DIR}
-     NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
-     )
- 
-   find_program(QT_LRELEASE_EXECUTABLE
--    NAMES lrelease-qt4 lrelease
-+    NAMES lrelease-qt4 lrelease4 lrelease
-     PATHS ${QT_BINARY_DIR}
-     NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
+@@ -1187,7 +1187,7 @@ if (QT_QMAKE_EXECUTABLE AND QTVERSION)
      )
  
    find_program(QT_QCOLLECTIONGENERATOR_EXECUTABLE
 -    NAMES qcollectiongenerator-qt4 qcollectiongenerator
-+    NAMES qcollectiongenerator-qt4 qcollectiongenerator4 qcollectiongenerator
-     PATHS ${QT_BINARY_DIR}
-     NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
-     )
- 
-   find_program(QT_DESIGNER_EXECUTABLE
--    NAMES designer-qt4 designer
-+    NAMES designer-qt4 designer4 designer
-     PATHS ${QT_BINARY_DIR}
-     NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
-     )
- 
-   find_program(QT_LINGUIST_EXECUTABLE
--    NAMES linguist-qt4 linguist
-+    NAMES linguist-qt4 linguist4 linguist
++    NAMES qcollectiongenerator-qt4 qcollectiongenerator qcollectiongenerator4
      PATHS ${QT_BINARY_DIR}
      NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
      )
