@@ -10,8 +10,8 @@ SRC_URI = "http://ftp.de.debian.org/debian/pool/main/m/mklibs/${BPN}_${PV}.tar.g
 	file://fix_STT_GNU_IFUNC.patch\
 "
 
-SRC_URI[md5sum] = "3d2a4bd0bbf5ba964b0a1ecdafd1ea9a"
-SRC_URI[sha256sum] = "ccb1023dc1729c5a37ca6c3eca8e4bac3491116763c8820dfce8eea4845c8567"
+SRC_URI[md5sum] = "099cc99d51f09ea51e58a56e62a46af7"
+SRC_URI[sha256sum] = "9b2ef35618b1c2def1ca7a0a92c2b3029ef7f2080d894b6d1dbb3f313684d3a3"
 
 inherit autotools gettext native pythonnative
 
