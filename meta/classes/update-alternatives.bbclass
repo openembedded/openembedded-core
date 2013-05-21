@@ -57,96 +57,12 @@
 #
 # The package priority for a specific target
 # ALTERNATIVE_PRIORITY_<pkg>[name] = "priority"
-#
-#
-# -----
-#
-#
-# The following describes deprecated behavior, using any of the
-# following modes will result in a warning, and eventually an error:
-#
-# There are two basic modes supported: 'single update' and 'batch update'
-#
-# 'single update' is used for a single alternative command, and you're
-# expected to provide at least below keywords:
-#
-#     ALTERNATIVE_NAME - the name that the alternative is registered
-#     ALTERNATIVE_PATH - the path of installed alternative
-#
-# ALTERNATIVE_PRIORITY and ALTERNATIVE_LINK are optional which have defaults
-# in this class.
-#
-# 'batch update' is used if you have multiple alternatives to be updated.
-# Unlike 'single update', 'batch update' in most times only require two
-# parameters:
-#
-#     ALTERNATIVE_LINKS - a list of symbolic links for which you'd like to
-#                         create alternatives, with space as delimiter, e.g:
-#
-#         ALTERNATIVE_LINKS = "${bindir}/cmd1 ${sbindir}/cmd2 ..."
-#
-#     ALTERNATIVE_PRIORITY - optional, applies to all
-#
-# To simplify the design, this class has the assumption that for a name
-# listed in ALTERNATIVE_LINKS, say /path/cmd:
-#
-#     the name of the alternative would be: cmd
-#     the path of installed alternative would be: /path/cmd.${BPN}
-#     ${D}/path/cmd will be renamed to ${D}/path/cmd.{BPN} automatically
-#     priority will be the same from ALTERNATIVE_PRIORITY
-#
-# If above assumption breaks your requirement, then you still need to use
-# your own update-alternatives command directly.
 
-# defaults
 ALTERNATIVE_PRIORITY = "10"
-
-# The following code is deprecated, but included for compatibility with older packages
-def update_alternatives_after_parse(d):
-    if bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d):
-        return
-
-    # The following code is deprecated, but included for compatibility with older packages
-    pn = d.getVar('BPN', True)
-
-    if d.getVar('ALTERNATIVE_LINKS') != None:
-        # Convert old format to new format...
-        alt_links = d.getVar('ALTERNATIVE_LINKS', True) or ""
-        for alt_link in alt_links.split():
-            alt_name = os.path.basename(alt_link)
-
-            alternative = d.getVar('ALTERNATIVE_%s' % pn, True) or ""
-            alternative += " " + alt_name
-            d.setVar('ALTERNATIVE_%s' % pn, alternative)
-            d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, alt_link)
-            d.setVarFlag('ALTERNATIVE_TARGET', alt_name, alt_link)
-        return
-
-    if d.getVar('ALTERNATIVE_NAME') != None or d.getVar('ALTERNATIVE_PATH') != None:
-        # Convert old format to new format...
-        alt_name = d.getVar('ALTERNATIVE_NAME', True)
-        alt_path = d.getVar('ALTERNATIVE_PATH', True)
-        alt_link = d.getVar('ALTERNATIVE_LINK', True) or ("%s/%s" % (d.getVar('bindir', True), alt_name))
-        if alt_name == None:
-            raise bb.build.build.FuncFailed("%s inherits update-alternatives but doesn't set ALTERNATIVE_NAME" % d.getVar('FILE'))
-        if alt_path == None:
-            raise bb.build.build.FuncFailed("%s inherits update-alternatives but doesn't set ALTERNATIVE_PATH" % d.getVar('FILE'))
-
-        alternative = d.getVar('ALTERNATIVE_%s' % pn, True) or ""
-        alternative += " " + alt_name
-
-        # Fix the alt_path if it's relative
-        alt_path = os.path.join(os.path.dirname(alt_link), alt_path)
-
-        d.setVar('ALTERNATIVE_%s' % pn, alternative)
-        d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, alt_link)
-        d.setVarFlag('ALTERNATIVE_TARGET', alt_name, alt_path)
-
 
 # We need special processing for vardeps because it can not work on
 # modified flag values.  So we agregate the flags into a new variable
 # and include that vairable in the set.
-
 UPDALTVARS  = "ALTERNATIVE ALTERNATIVE_LINK_NAME ALTERNATIVE_TARGET ALTERNATIVE_PRIORITY"
 
 def gen_updatealternativesvardeps(d):
@@ -178,9 +94,6 @@ python __anonymous() {
        bb.data.inherits_class('cross-canadian', d):
         return
 
-    # deprecated stuff...
-    update_alternatives_after_parse(d)
-
     # compute special vardeps
     gen_updatealternativesvardeps(d)
 
@@ -202,9 +115,6 @@ def gen_updatealternativesvars(d):
             ret.append(v + "_VARDEPS_" + p)
     return " ".join(ret)
 
-# First the deprecated items...
-populate_packages[vardeps] += "ALTERNATIVE_LINKS ALTERNATIVE_NAME ALTERNATIVE_PATH"
-
 # Now the new stuff, we use a custom function to generate the right values
 populate_packages[vardeps] += "${UPDALTVARS} ${@gen_updatealternativesvars(d)}"
 
@@ -215,10 +125,7 @@ python perform_packagecopy_append () {
     # Check for deprecated usage...
     pn = d.getVar('BPN', True)
     if d.getVar('ALTERNATIVE_LINKS', True) != None:
-        bb.warn('%s: Use of ALTERNATIVE_LINKS is deprecated, see update-alternatives.bbclass for more info.' % pn)
-
-    if d.getVar('ALTERNATIVE_NAME', True) != None or d.getVar('ALTERNATIVE_PATH', True) != None:
-        bb.warn('%s: Use of ALTERNATIVE_NAME is deprecated, see update-alternatives.bbclass for more info.' % pn)
+        bb.fatal('%s: Use of ALTERNATIVE_LINKS/ALTERNATIVE_PATH/ALTERNATIVE_NAME is no longer supported, please convert to the updated syntax, see update-alternatives.bbclass for more info.' % pn)
 
     # Do actual update alternatives processing
     pkgdest = d.getVar('PKGD', True)
