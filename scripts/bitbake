@@ -60,7 +60,7 @@ fi
 needtar="1"
 needgit="1"
 TARVERSION=`tar --version | head -n 1 | cut -d ' ' -f 4`
-GITVERSION=`git --version | cut -d ' ' -f 3`
+GITVERSION=`git --version 2> /dev/null | cut -d ' ' -f 3`
 float_test() {
      echo | awk 'END { exit ( !( '"$1"')); }'
 }
@@ -72,9 +72,10 @@ version_compare() {
 # but earlier versions do not; this needs to work properly for sstate
 float_test "$TARVERSION > 1.23" && needtar="0"
 
-# Need git >= 1.7.5 for git-remote --mirror=xxx syntax
-version_compare $GITVERSION ">=" 1.7.5 && needgit="0"
-
+if [ ! -z $GITVERSION ]; then
+    # Need git >= 1.7.5 for git-remote --mirror=xxx syntax
+    version_compare $GITVERSION ">=" 1.7.5 && needgit="0"
+fi
 
 buildpseudo="1"
 if [ $needpseudo = "1" ]; then
