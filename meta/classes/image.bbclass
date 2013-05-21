@@ -303,6 +303,9 @@ fakeroot do_rootfs () {
 
 	rootfs_${IMAGE_PKGTYPE}_do_rootfs
 
+	# remove unneeded packages/files from the final image
+	rootfs_remove_unneeded
+
 	insert_feed_uris
 
 	if [ "x${LDCONFIGDEPEND}" != "x" ]; then
@@ -461,6 +464,36 @@ rootfs_install_complementary() {
     if false ; then
         get_split_linguas
     fi
+}
+
+rootfs_remove_unneeded () {
+	if ${@base_contains("IMAGE_FEATURES", "package-management", "false", "true", d)}; then
+		if [ -z "$(delayed_postinsts)" ]; then
+			# All packages were successfully configured.
+			# update-rc.d, base-passwd, run-postinsts are no further use, remove them now
+			remove_run_postinsts=false
+			if [ -e ${IMAGE_ROOTFS}${sysconfdir}/init.d/run-postinsts ]; then
+				remove_run_postinsts=true
+			fi
+			rootfs_remove_packages update-rc.d base-passwd ${ROOTFS_BOOTSTRAP_INSTALL}
+
+			# Need to remove rc.d files for run-postinsts by hand since opkg won't
+			# call postrm scripts in offline root mode.
+			if $remove_run_postinsts; then
+				update-rc.d -f -r ${IMAGE_ROOTFS} run-postinsts remove
+			fi
+		else
+			# Some packages were not successfully configured, save them only
+			# if we have run-postinsts script present. Otherwise, they're
+			# useless
+			if [ -e ${IMAGE_ROOTFS}${sysconfdir}/init.d/run-postinsts ]; then
+				save_postinsts
+			fi
+		fi
+
+		# Since no package manager is present in the image the metadata is not needed
+		remove_packaging_data_files
+	fi
 }
 
 # set '*' as the root password so the images
