@@ -80,16 +80,6 @@ if [ ! -x "$IFCONFIG" ]; then
 	exit 1
 fi
 
-ROUTE=`which route`
-if [ "x$ROUTE" = "x" ]; then
-	# better than nothing...
-	ROUTE=/sbin/route
-fi
-if [ ! -x "$ROUTE" ]; then
-	echo "$ROUTE cannot be executed"
-	exit 1
-fi
-
 IPTABLES=`which iptables 2> /dev/null`
 if [ "x$IPTABLES" = "x" ]; then
 	IPTABLES=/sbin/iptables
@@ -100,10 +90,11 @@ if [ ! -x "$IPTABLES" ]; then
 fi
 
 n=$[ (`echo $TAP | sed 's/tap//'` * 2) + 1 ]
-$IFCONFIG addr add 192.168.7.$n/32 dev $TAP
+$IFCONFIG addr add 192.168.7.$n/32 broadcast 192.168.7.255 dev $TAP
+$IFCONFIG link set dev $TAP up
 
 dest=$[ (`echo $TAP | sed 's/tap//'` * 2) + 2 ]
-$ROUTE add -host 192.168.7.$dest $TAP
+$IFCONFIG route add to 192.168.7.$dest dev $TAP
 
 # setup NAT for tap0 interface to have internet access in QEMU
 $IPTABLES -A POSTROUTING -t nat -j MASQUERADE -s 192.168.7.$n/32
