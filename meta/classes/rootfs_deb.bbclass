@@ -85,7 +85,7 @@ fakeroot rootfs_deb_do_rootfs () {
 	${ROOTFS_POSTPROCESS_COMMAND}
 
 	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
-		if grep Status:.install.ok.unpacked ${IMAGE_ROOTFS}/var/lib/dpkg/status; then
+		if [ -n "$(delayed_postinsts)" ]; then
 			bberror "Some packages could not be configured offline and rootfs is read-only."
 			exit 1
 		fi
@@ -94,9 +94,22 @@ fakeroot rootfs_deb_do_rootfs () {
 	log_check rootfs
 }
 
+rootfs_deb_do_rootfs[vardeps] += "delayed_postinsts"
+
+delayed_postinsts () {
+	cat ${IMAGE_ROOTFS}/var/lib/dpkg/status|grep -e "^Package:" -e "^Status:"|sed -ne 'N;s/Package: \(.*\)\nStatus:.*unpacked/\1/p'
+}
+
+save_postinsts () {
+	for p in $(delayed_postinsts); do
+		install -d ${IMAGE_ROOTFS}${sysconfdir}/deb-postinsts
+		cp ${IMAGE_ROOTFS}/var/lib/dpkg/info/$p.postinst ${IMAGE_ROOTFS}${sysconfdir}/deb-postinsts/$p
+	done
+}
+
 remove_packaging_data_files() {
 	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
-	rm -rf ${IMAGE_ROOTFS}/usr/dpkg/
+	rm -rf ${IMAGE_ROOTFS}/var/lib/dpkg/
 }
 
 rootfs_install_packages() {
@@ -105,3 +118,9 @@ rootfs_install_packages() {
 	# Mark all packages installed
 	sed -i -e "s/Status: install ok unpacked/Status: install ok installed/;" $INSTALL_ROOTFS_DEB/var/lib/dpkg/status
 }
+
+rootfs_remove_packages() {
+	# for some reason, --root doesn't really work here... We use --admindir&--instdir instead.
+	${STAGING_BINDIR_NATIVE}/dpkg --admindir=${IMAGE_ROOTFS}/var/lib/dpkg --instdir=${IMAGE_ROOTFS} -r --force-depends $@
+}
+

@@ -91,34 +91,27 @@ fakeroot rootfs_ipk_do_rootfs () {
 	${ROOTFS_POSTPROCESS_COMMAND}
 
 	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
-		if grep Status:.install.ok.unpacked ${STATUS}; then
+		if [ -n "$(delayed_postinsts)" ]; then
 			bberror "Some packages could not be configured offline and rootfs is read-only."
 			exit 1
 		fi
 	fi
 
 	rm -f ${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/lists/*
-	if ${@base_contains("IMAGE_FEATURES", "package-management", "false", "true", d)}; then
-		if ! grep Status:.install.ok.unpacked ${STATUS}; then
-			# All packages were successfully configured.
-			# update-rc.d, base-passwd, run-postinsts are no further use, remove them now
-			remove_run_postinsts=false
-			if [ -e ${IMAGE_ROOTFS}${sysconfdir}/init.d/run-postinsts ]; then
-				remove_run_postinsts=true
-			fi
-			opkg-cl ${OPKG_ARGS} --force-depends remove update-rc.d base-passwd ${ROOTFS_BOOTSTRAP_INSTALL} || true
-
-			# Need to remove rc.d files for run-postinsts by hand since opkg won't
-			# call postrm scripts in offline root mode.
-			if $remove_run_postinsts; then
-				update-rc.d -f -r ${IMAGE_ROOTFS} run-postinsts remove
-			fi
-
-			# Also delete the status files
-			remove_packaging_data_files
-		fi
-	fi
 	log_check rootfs
+}
+
+rootfs_ipk_do_rootfs[vardeps] += "delayed_postinsts"
+
+delayed_postinsts () {
+	cat ${STATUS}|grep -e "^Package:" -e "^Status:"|sed -ne 'N;s/Package: \(.*\)\nStatus:.*unpacked/\1/p'
+}
+
+save_postinsts () {
+	for p in $(delayed_postinsts); do
+		install -d ${IMAGE_ROOTFS}${sysconfdir}/ipk-postinsts
+		cp ${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/info/$p.postinst ${IMAGE_ROOTFS}${sysconfdir}/ipk-postinsts/$p
+	done
 }
 
 rootfs_ipk_write_manifest() {
@@ -143,6 +136,10 @@ remove_packaging_data_files() {
 
 rootfs_install_packages() {
 	opkg-cl ${OPKG_ARGS} install `cat $1`
+}
+
+rootfs_remove_packages() {
+	opkg-cl ${OPKG_ARGS} --force-depends remove $@
 }
 
 ipk_insert_feed_uris () {

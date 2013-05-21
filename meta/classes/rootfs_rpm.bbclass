@@ -114,8 +114,8 @@ fakeroot rootfs_rpm_do_rootfs () {
 	${ROOTFS_POSTPROCESS_COMMAND}
 
 	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
-		if [ -d ${IMAGE_ROOTFS}/etc/rpm-postinsts ] ; then
-			if [ "`ls -A ${IMAGE_ROOTFS}/etc/rpm-postinsts`" != "" ] ; then
+		if [ -d ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts ] ; then
+			if [ "`ls -A ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts`" != "" ] ; then
 				bberror "Some packages could not be configured offline and rootfs is read-only."
 				exit 1
 			fi
@@ -133,6 +133,20 @@ fakeroot rootfs_rpm_do_rootfs () {
 	rm -rf ${IMAGE_ROOTFS}/install
 
 	log_check rootfs
+}
+
+rootfs_rpm_do_rootfs[vardeps] += "delayed_postinsts"
+
+delayed_postinsts() {
+	if [ -d ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts ]; then
+		ls ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts
+	fi
+}
+
+save_postinsts() {
+	# this is just a stub. For RPM, the failed postinstalls are already saved in
+	# /etc/rpm-postinsts
+	true
 }
 
 remove_packaging_data_files() {
@@ -163,6 +177,15 @@ rootfs_install_packages() {
 	export INSTALL_COMPLEMENTARY_RPM="1"
 
 	package_install_internal_rpm
+}
+
+rootfs_remove_packages() {
+	rpm -e --nodeps --root=${IMAGE_ROOTFS} --dbpath=/var/lib/rpm\
+		--define='_cross_scriptlet_wrapper ${WORKDIR}/scriptlet_wrapper'\
+		--define='_tmppath /install/tmp' $@
+
+	# remove temp directory
+	rm -rf ${IMAGE_ROOTFS}/install
 }
 
 python () {
