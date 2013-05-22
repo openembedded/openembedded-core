@@ -33,6 +33,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://testsuite-du-du-k-works-fix-false-positive.patch \
            file://strict-atime.patch \
            file://fail_on_no_media.patch \
+           file://busybox-sulogin-empty-root-password.patch \
            file://inetd.conf \
            file://inetd"
 
