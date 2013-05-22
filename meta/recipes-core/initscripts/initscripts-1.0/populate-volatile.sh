@@ -10,11 +10,11 @@
 
 # Get ROOT_DIR
 DIRNAME=`dirname $0`
-ROOT_DIR=`echo $DIRNAME | sed -ne 's:etc/.*::p'`
+ROOT_DIR=`echo $DIRNAME | sed -ne 's:/etc/.*::p'`
 
 [ -e ${ROOT_DIR}/etc/default/rcS ] && . ${ROOT_DIR}/etc/default/rcS
 # When running populate-volatile.sh at rootfs time, disable cache.
-[ "$ROOT_DIR" != "/" ] && VOLATILE_ENABLE_CACHE=no
+[ -n "$ROOT_DIR" ] && VOLATILE_ENABLE_CACHE=no
 # If rootfs is read-only, disable cache.
 [ "$ROOTFS_READ_ONLY" = "yes" ] && VOLATILE_ENABLE_CACHE=no
 
@@ -35,7 +35,7 @@ create_file() {
 	[ -e "$1" ] && {
 		[ "${VERBOSE}" != "no" ] && echo "Target already exists. Skipping."
 	} || {
-		if [ "$ROOT_DIR" = "/" ]; then
+		if [ -z "$ROOT_DIR" ]; then
 			eval $EXEC &
 		else
 			# Creating some files at rootfs time may fail and should fail,
@@ -57,7 +57,7 @@ mk_dir() {
 	[ -e "$1" ] && {
 		[ "${VERBOSE}" != "no" ] && echo "Target already exists. Skipping."
 	} || {
-		if [ "$ROOT_DIR" = "/" ]; then
+		if [ -z "$ROOT_DIR" ]; then
 			eval $EXEC
 		else
 			# For the same reason with create_file(), failures should
@@ -82,7 +82,7 @@ link_file() {
 
 	test "$VOLATILE_ENABLE_CACHE" = yes && echo "	$EXEC" >> /etc/volatile.cache.build
 
-	if [ "$ROOT_DIR" = "/" ]; then
+	if [ -z "$ROOT_DIR" ]; then
 		eval $EXEC &
 	else
 		# For the same reason with create_file(), failures should
@@ -150,7 +150,7 @@ apply_cfgfile() {
 	cat ${CFGFILE} | grep -v "^#" | \
 		while read LINE; do
 		eval `echo "$LINE" | sed -n "s/\(.*\)\ \(.*\) \(.*\)\ \(.*\)\ \(.*\)\ \(.*\)/TTYPE=\1 ; TUSER=\2; TGROUP=\3; TMODE=\4; TNAME=\5 TLTARGET=\6/p"`
-		TNAME=${ROOT_DIR}/${TNAME}
+		TNAME=${ROOT_DIR}${TNAME}
 		[ "${VERBOSE}" != "no" ] && echo "Checking for -${TNAME}-."
 
 		[ "${TTYPE}" = "l" ] && {
@@ -213,7 +213,7 @@ else
 	[ -e ${ROOT_DIR}/etc/volatile.cache.build ] && sync && mv ${ROOT_DIR}/etc/volatile.cache.build ${ROOT_DIR}/etc/volatile.cache
 fi
 
-if [ "${ROOT_DIR}" = "/" ] && [ -f /etc/ld.so.cache ] && [ ! -f /var/run/ld.so.cache ]
+if [ -z "${ROOT_DIR}" ] && [ -f /etc/ld.so.cache ] && [ ! -f /var/run/ld.so.cache ]
 then
 	ln -s /etc/ld.so.cache /var/run/ld.so.cache
 fi
