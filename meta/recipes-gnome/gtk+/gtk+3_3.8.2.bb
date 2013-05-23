@@ -65,6 +65,10 @@ FILES_${PN}-demo = "${bindir}/gtk3-demo \
                     ${bindir}/gtk3-widget-factory \
                     ${datadir}/gtk-3.0/demo"
 
+# The demo uses PNG files and mime type sniffing, so ensure that these
+# dependencies are present.
+RDEPENDS_${PN}-demo += "gdk-pixbuf-loader-png shared-mime-info"
+
 FILES_${PN} = "${bindir}/gtk-update-icon-cache-3.0 \
                ${bindir}/gtk-query-immodules-3.0 \
                ${bindir}/gtk-launch \
