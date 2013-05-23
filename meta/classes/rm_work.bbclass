@@ -30,15 +30,18 @@ do_rm_work () {
     cd ${WORKDIR}
     for dir in *
     do
-        # Retain only logs and other files in temp.
-        if [ $dir != 'temp' ]; then
+        # Retain only logs and other files in temp, safely ignore
+        # failures of removing pseudo folers on NFS2/3 server.
+        if [ $dir = 'pseudo' ]; then
+            rm -rf $dir 2> /dev/null || true
+        elif [ $dir != 'temp' ]; then
             rm -rf $dir
         fi
     done
 
     # Need to add pseudo back or subsqeuent work in this workdir
     # might fail since setscene may not rerun to recreate it
-    mkdir ${WORKDIR}/pseudo/
+    mkdir -p ${WORKDIR}/pseudo/
 
     # Change normal stamps into setscene stamps as they better reflect the
     # fact WORKDIR is now empty
