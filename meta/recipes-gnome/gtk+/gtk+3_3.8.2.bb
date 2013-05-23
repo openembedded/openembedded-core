@@ -43,6 +43,7 @@ EXTRA_OECONF += " \
                  --disable-xinerama \
                  --enable-modules \
                  --disable-cups \
+                 --disable-introspection \
 "
 
 do_install_append() {
