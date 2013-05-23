@@ -1,11 +1,15 @@
 import unittest
-import bb, oe.utils
+import oe.utils
 
 class TestPackagesFilterOutSystem(unittest.TestCase):
     def test_filter(self):
         """
         Test that oe.utils.packages_filter_out_system works.
         """
+        try:
+            import bb
+        except ImportError:
+            self.skipTest("Cannot import bb")
 
         d = bb.data_smart.DataSmart()
         d.setVar("PN", "foo")
