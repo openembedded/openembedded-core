@@ -1,0 +1,32 @@
+The Wayland backend was including X11 headers, which won't work in a no-X11
+distro.
+
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 875b1d07ded377b20acbf1a10cae847f56de05b4 Mon Sep 17 00:00:00 2001
+From: Matthias Clasen <mclasen@redhat.com>
+Date: Thu, 23 May 2013 12:26:26 -0400
+Subject: [PATCH] Don't include X11 headers in wayland
+
+The include of X11/keysyms.h in gdkdevice-wayland.c was just
+a leftover.
+---
+ gdk/wayland/gdkdevice-wayland.c |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/gdk/wayland/gdkdevice-wayland.c b/gdk/wayland/gdkdevice-wayland.c
+index c258be3..cd4a695 100644
+--- a/gdk/wayland/gdkdevice-wayland.c
++++ b/gdk/wayland/gdkdevice-wayland.c
+@@ -32,7 +32,6 @@
+ #include "gdkdevicemanagerprivate.h"
+ 
+ #include <xkbcommon/xkbcommon.h>
+-#include <X11/keysym.h>
+ 
+ #include <sys/time.h>
+ #include <sys/mman.h>
+-- 
+1.7.10.4
+
