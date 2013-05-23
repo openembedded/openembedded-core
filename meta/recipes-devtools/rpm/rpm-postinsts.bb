@@ -9,10 +9,6 @@ inherit allarch
 #
 POSTINSTALL_INITPOSITION ?= "98"
 
-POSTLOG ?= "/var/log/postinstall.log"
-REDIRECT_CMD = "${@base_contains('IMAGE_FEATURES', 'debug-tweaks', '>>${POSTLOG} 2>&1', '', d)}"
-REDIRECT_CMD[vardepsexclude] += "IMAGE_FEATURES POSTLOG"
-
 do_fetch() {
 	:
 }
@@ -34,11 +30,16 @@ if [ "x$D" != "x" ] && [ -f $D/var/lib/rpm/Packages ]; then
 	install -d $D/${sysconfdir}/rcS.d
 	cat > $D${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts << "EOF"
 #!/bin/sh
-
-[ -d /etc/rpm-postinsts ] && for i in `ls /etc/rpm-postinsts/`; do
-	i=/etc/rpm-postinsts/$i
+[ -e ${sysconfdir}/default/postinst ] && . ${sysconfdir}/default/postinst
+[ -d ${sysconfdir}/rpm-postinsts ] && for i in `ls ${sysconfdir}/rpm-postinsts/`; do
+	i=${sysconfdir}/rpm-postinsts/$i
 	echo "Running postinst $i..."
-	if [ -f $i ] && $i ${REDIRECT_CMD}; then
+	if [ -x $i ]; then
+		if [ "$POSTINST_LOGGING" = "1" ]; then
+			$i >>$LOGFILE 2&>1
+		else
+			$i
+		fi
 		rm $i
 	else
 		echo "ERROR: postinst $i failed."
