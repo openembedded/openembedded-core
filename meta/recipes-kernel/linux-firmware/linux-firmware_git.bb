@@ -55,7 +55,7 @@ do_install() {
 PACKAGES =+ "${PN}-ralink ${PN}-sd8686 ${PN}-wl12xx ${PN}-vt6656 \
              ${PN}-rtl-license ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
              ${PN}-broadcom-license ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334 \
-             ${PN}-atheros-license ${PN}-ar9170 ${PN}-ath6k ${PN}-ath9k"
+             ${PN}-atheros-license ${PN}-ar9170 ${PN}-ar3k ${PN}-ath6k ${PN}-ath9k"
 
 FILES_${PN}-atheros-license = "/lib/firmware/LICENCE.atheros_firmware"
 
@@ -64,6 +64,12 @@ FILES_${PN}-ar9170 = " \
   /lib/firmware/ar9170*.fw \
 "
 RDEPENDS_${PN}-ar9170 += "${PN}-atheros-license"
+
+LICENSE_${PN}-ar3k = "Firmware-atheros_firmware"
+FILES_${PN}-ar3k = " \
+  /lib/firmware/ar3k \
+"
+RDEPENDS_${PN}-ath6k += "${PN}-atheros-license"
 
 LICENSE_${PN}-ath6k = "Firmware-atheros_firmware"
 FILES_${PN}-ath6k = " \
