@@ -25,3 +25,23 @@ class TestPackagesFilterOutSystem(unittest.TestCase):
         d.setVar("PACKAGES", "foo foo-data foo-locale-en-gb")
         pkgs = oe.utils.packages_filter_out_system(d)
         self.assertEqual(pkgs, ["foo-data"])
+
+
+class TestTrimVersion(unittest.TestCase):
+    def test_version_exception(self):
+        with self.assertRaises(TypeError):
+            trim_version(None, 2)
+        with self.assertRaises(TypeError):
+            trim_version((1, 2, 3), 2)
+
+    def test_num_exception(self):
+        with self.assertRaises(ValueError):
+            trim_version("1.2.3", 0)
+        with self.assertRaises(ValueError):
+            trim_version("1.2.3", -1)
+
+    def test_valid(self):
+        self.assertEqual(trim_version("1.2.3", 1), "1")
+        self.assertEqual(trim_version("1.2.3", 2), "1.2")
+        self.assertEqual(trim_version("1.2.3", 3), "1.2.3")
+        self.assertEqual(trim_version("1.2.3", 4), "1.2.3")

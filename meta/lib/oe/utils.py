@@ -135,3 +135,18 @@ def packages_filter_out_system(d):
 
 def getstatusoutput(cmd):
     return cmdstatus.getstatusoutput(cmd)
+
+
+def trim_version(version, num_parts=2):
+    """
+    Return just the first <num_parts> of <version>, split by periods.  For
+    example, trim_version("1.2.3", 2) will return "1.2".
+    """
+    if type(version) is not str:
+        raise TypeError("Version should be a string")
+    if num_parts < 1:
+        raise ValueError("Cannot split to parts < 1")
+
+    parts = version.split(".")
+    trimmed = ".".join(parts[:num_parts])
+    return trimmed
