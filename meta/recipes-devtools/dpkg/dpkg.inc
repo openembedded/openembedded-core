@@ -35,10 +35,6 @@ do_configure () {
     autotools_do_configure
 }
 
-POSTLOG ?= "/var/log/postinstall.log"
-REDIRECT_CMD = "${@base_contains('IMAGE_FEATURES', 'debug-tweaks', '>${POSTLOG} 2>&1', '', d)}"
-REDIRECT_CMD[vardepsexclude] += "IMAGE_FEATURES POSTLOG"
-
 DPKG_INIT_POSITION ?= "98"
 
 do_install_append () {
@@ -67,7 +63,12 @@ if [ "x$D" != "x" ] && [ -f $D/var/lib/dpkg/status ]; then
 
 	# this happens at S98 where our good 'ole packages script used to run
 	echo "#!/bin/sh
-dpkg --configure -a ${REDIRECT_CMD}
+[ -e ${sysconfdir}/default/postinst ] && . ${sysconfdir}/default/postinst
+if [ \"\$POSTINST_LOGGING\" = \"1\" ]; then
+    dpkg --configure -a >\$LOGFILE 2>&1
+else
+    dpkg --configure -a
+fi
 rm -f ${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
 " > $D${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
 	chmod 0755 $D${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
