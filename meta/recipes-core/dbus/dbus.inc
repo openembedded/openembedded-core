@@ -101,9 +101,9 @@ do_install() {
 	     > ${D}${sysconfdir}/default/volatiles/99_dbus
 
 
-	mkdir -p ${D}${localstatedir}/run/dbus ${D}${localstatedir}/lib/dbus
+	mkdir -p ${D}${localstatedir}/lib/dbus
 
-	chown messagebus:messagebus ${D}${localstatedir}/run/dbus ${D}${localstatedir}/lib/dbus
+	chown messagebus:messagebus ${D}${localstatedir}/lib/dbus
 
 	chown root:messagebus ${D}${libexecdir}/dbus-daemon-launch-helper
 	chmod 4755 ${D}${libexecdir}/dbus-daemon-launch-helper
@@ -113,6 +113,9 @@ do_install() {
 
 	# Remove empty testexec directory as we don't build tests
 	rm -rf ${D}${libdir}/dbus-1.0/test
+
+	# Remove /var/run as it is created on startup
+	rm -rf ${D}${localstatedir}/run
 }
 
 do_install_class-native() {
