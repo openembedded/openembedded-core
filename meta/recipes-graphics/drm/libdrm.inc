@@ -11,6 +11,7 @@ SRC_URI = "http://dri.freedesktop.org/libdrm/libdrm-${PV}.tar.bz2"
 PROVIDES = "drm"
 DEPENDS = "libpthread-stubs udev"
 
+# be aware that libdrm_2.4.44.bb ignores this
 INC_PR = "r4"
 
 #libpciaccess is required starting from libdrm 2.4.26
@@ -29,7 +30,7 @@ PACKAGES =+ "${PN}-tests ${PN}-drivers ${PN}-radeon ${PN}-nouveau ${PN}-omap \
 RDEPENDS_${PN}-drivers = "${PN}-radeon ${PN}-nouveau ${PN}-omap ${PN}-intel \
                           ${PN}-exynos"
 
-FILES_${PN}-tests = "${bindir}/dr* ${bindir}/mode*"
+FILES_${PN}-tests = "${bindir}/dr* ${bindir}/mode* ${bindir}/*test"
 FILES_${PN}-radeon = "${libdir}/libdrm_radeon.so.*"
 FILES_${PN}-nouveau = "${libdir}/libdrm_nouveau.so.*"
 FILES_${PN}-omap = "${libdir}/libdrm_omap.so.*"
