@@ -20,6 +20,7 @@ SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.gz \
 	         file://configure.patch \
 	         file://fix-2kb-keys.patch \
 	         file://nopw-option.patch \
+	         file://0007-dropbear-fix-for-x32-abi.patch \
 	         file://init \
                  ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} "
 
