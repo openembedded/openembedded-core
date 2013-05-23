@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# Copyright 2007 Openedhand Ltd.
+#
+# Author: Richard Purdie <rpurdie@openedhand.com>
+#
+
+# The following script will run all the scriptlets found in #SYSCONFDIR#/deb-postinsts or
+# #SYSCONFDIR#/ipk-postinsts
+
+pi_dir=""
+for pm in rpm deb ipk; do
+	if [ -d "#SYSCONFDIR#/${pm}-postinsts" ]; then
+		pi_dir=#SYSCONFDIR#/${pm}-postinsts
+		break
+	fi
+done
+
+[ -z "$pi_dir" ] && exit 0
+
+[ -e #SYSCONFDIR#/default/postinst ] && . #SYSCONFDIR#/default/postinst
+
+remove_pi_dir=1
+for i in `ls $pi_dir`; do
+	i=$pi_dir/$i
+	echo "Running postinst $i..."
+	if [ -x $i ]; then
+		if [ "$POSTINST_LOGGING" = "1" ]; then
+			sh -c $i >>$LOGFILE 2&>1
+		else
+			sh -c $i
+		fi
+		rm $i
+	else
+		echo "ERROR: postinst $i failed."
+		remove_pi_dir=0
+	fi
+done
+
+# since all postinstalls executed successfully, remove the postinstalls directory
+# and the rcS.d link
+if [ $remove_pi_dir = 1 ]; then
+	rm -rf $pi_dir
+	if [ -n "`which update-rc.d`" ]; then
+		update-rc.d -f run-postinsts remove
+	fi
+fi
