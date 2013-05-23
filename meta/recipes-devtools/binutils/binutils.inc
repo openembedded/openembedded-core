@@ -90,7 +90,7 @@ do_configure () {
 #
 	mkdir -p ${B}/build-${BUILD_SYS}
 	for i in ${CONFIG_SITE}; do
-		cat $i >> ${B}/build-${BUILD_SYS}/config.cache
+		cat $i >> ${B}/build-${BUILD_SYS}/config.cache || true
 	done
 }
 
