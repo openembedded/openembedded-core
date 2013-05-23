@@ -1,10 +1,10 @@
 Upstream-Status: Denied [no desire for uclibc support]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Index: systemd-198/src/fsck/fsck.c
+Index: systemd-204/src/fsck/fsck.c
 ===================================================================
---- systemd-198.orig/src/fsck/fsck.c	2013-03-07 13:18:34.000000000 -0800
-+++ systemd-198/src/fsck/fsck.c	2013-03-09 14:49:03.756572873 -0800
+--- systemd-204.orig/src/fsck/fsck.c	2013-04-02 05:48:49.000000000 -0700
++++ systemd-204/src/fsck/fsck.c	2013-05-23 11:26:51.776345015 -0700
 @@ -37,6 +37,8 @@
  #include "virt.h"
  #include "fileio.h"
@@ -14,7 +14,7 @@ Index: systemd-198/src/fsck/fsck.c
  static bool arg_skip = false;
  static bool arg_force = false;
  static bool arg_show_progress = false;
-@@ -203,9 +205,16 @@
+@@ -198,9 +200,16 @@
                  char *device;
                  double p;
                  usec_t t;
@@ -33,10 +33,10 @@ Index: systemd-198/src/fsck/fsck.c
  
                  /* Only show one progress counter at max */
                  if (!locked) {
-Index: systemd-198/src/core/swap.c
+Index: systemd-204/src/core/swap.c
 ===================================================================
---- systemd-198.orig/src/core/swap.c	2013-03-07 13:18:34.000000000 -0800
-+++ systemd-198/src/core/swap.c	2013-03-09 14:49:03.756572873 -0800
+--- systemd-204.orig/src/core/swap.c	2013-05-06 12:06:04.000000000 -0700
++++ systemd-204/src/core/swap.c	2013-05-23 11:26:51.780345015 -0700
 @@ -41,6 +41,8 @@
  #include "path-util.h"
  #include "virt.h"
@@ -46,7 +46,7 @@ Index: systemd-198/src/core/swap.c
  static const UnitActiveState state_translation_table[_SWAP_STATE_MAX] = {
          [SWAP_DEAD] = UNIT_INACTIVE,
          [SWAP_ACTIVATING] = UNIT_ACTIVATING,
-@@ -1037,6 +1039,7 @@
+@@ -1055,6 +1057,7 @@
                  char *dev = NULL, *d;
                  int prio = 0, k;
  
@@ -54,7 +54,7 @@ Index: systemd-198/src/core/swap.c
                  k = fscanf(m->proc_swaps,
                             "%ms "  /* device/file */
                             "%*s "  /* type of swap */
-@@ -1044,6 +1047,16 @@
+@@ -1062,6 +1065,16 @@
                             "%*s "  /* used */
                             "%i\n", /* priority */
                             &dev, &prio);
@@ -71,10 +71,10 @@ Index: systemd-198/src/core/swap.c
                  if (k != 2) {
                          if (k == EOF)
                                  break;
-Index: systemd-198/src/core/mount-setup.c
+Index: systemd-204/src/core/mount-setup.c
 ===================================================================
---- systemd-198.orig/src/core/mount-setup.c	2013-03-07 13:18:34.000000000 -0800
-+++ systemd-198/src/core/mount-setup.c	2013-03-09 14:49:03.760572872 -0800
+--- systemd-204.orig/src/core/mount-setup.c	2013-04-24 06:34:38.000000000 -0700
++++ systemd-204/src/core/mount-setup.c	2013-05-23 11:26:51.780345015 -0700
 @@ -28,6 +28,7 @@
  #include <assert.h>
  #include <unistd.h>
@@ -92,7 +92,7 @@ Index: systemd-198/src/core/mount-setup.c
  #ifndef TTY_GID
  #define TTY_GID 5
  #endif
-@@ -231,9 +234,12 @@
+@@ -233,9 +236,12 @@
          for (;;) {
                  char *controller;
                  int enabled = 0;
@@ -107,11 +107,11 @@ Index: systemd-198/src/core/mount-setup.c
                          if (feof(f))
                                  break;
  
-Index: systemd-198/src/core/mount.c
+Index: systemd-204/src/core/mount.c
 ===================================================================
---- systemd-198.orig/src/core/mount.c	2013-03-07 13:18:34.000000000 -0800
-+++ systemd-198/src/core/mount.c	2013-03-09 14:49:03.760572872 -0800
-@@ -42,6 +42,8 @@
+--- systemd-204.orig/src/core/mount.c	2013-05-06 12:06:04.000000000 -0700
++++ systemd-204/src/core/mount.c	2013-05-23 11:26:51.780345015 -0700
+@@ -43,6 +43,8 @@
  #include "exit-status.h"
  #include "def.h"
  
@@ -120,7 +120,7 @@ Index: systemd-198/src/core/mount.c
  static const UnitActiveState state_translation_table[_MOUNT_STATE_MAX] = {
          [MOUNT_DEAD] = UNIT_INACTIVE,
          [MOUNT_MOUNTING] = UNIT_ACTIVATING,
-@@ -1584,7 +1586,7 @@
+@@ -1626,7 +1628,7 @@
                  int k;
  
                  device = path = options = options2 = fstype = d = p = o = NULL;
@@ -129,7 +129,7 @@ Index: systemd-198/src/core/mount.c
                  if ((k = fscanf(m->proc_self_mountinfo,
                                  "%*s "       /* (1) mount id */
                                  "%*s "       /* (2) parent id */
-@@ -1603,7 +1605,31 @@
+@@ -1645,7 +1647,31 @@
                                  &fstype,
                                  &device,
                                  &options2)) != 5) {
@@ -162,10 +162,10 @@ Index: systemd-198/src/core/mount.c
                          if (k == EOF)
                                  break;
  
-Index: systemd-198/src/core/umount.c
+Index: systemd-204/src/core/umount.c
 ===================================================================
---- systemd-198.orig/src/core/umount.c	2013-03-07 13:18:34.000000000 -0800
-+++ systemd-198/src/core/umount.c	2013-03-09 14:49:03.760572872 -0800
+--- systemd-204.orig/src/core/umount.c	2013-04-18 08:14:11.000000000 -0700
++++ systemd-204/src/core/umount.c	2013-05-23 11:26:51.780345015 -0700
 @@ -36,6 +36,8 @@
  #include "util.h"
  #include "virt.h"
@@ -235,10 +235,10 @@ Index: systemd-198/src/core/umount.c
                          if (k == EOF)
                                  break;
  
-Index: systemd-198/src/shared/socket-util.c
+Index: systemd-204/src/shared/socket-util.c
 ===================================================================
---- systemd-198.orig/src/shared/socket-util.c	2013-03-07 13:18:34.000000000 -0800
-+++ systemd-198/src/shared/socket-util.c	2013-03-09 14:49:03.760572872 -0800
+--- systemd-204.orig/src/shared/socket-util.c	2013-04-18 08:14:11.000000000 -0700
++++ systemd-204/src/shared/socket-util.c	2013-05-23 11:30:53.528348084 -0700
 @@ -40,6 +40,8 @@
  #include "missing.h"
  #include "fileio.h"
@@ -252,25 +252,25 @@ Index: systemd-198/src/shared/socket-util.c
          a->type = SOCK_RAW;
  
          errno = 0;
--        if (sscanf(s, "%ms %u", &sfamily, &group) < 1)
 +#ifdef HAVE_MSFORMAT
-+	if (sscanf(s, "%ms %u", &sfamily, &group) < 1)
+         if (sscanf(s, "%ms %u", &sfamily, &group) < 1)
+-                return errno > 0 ? -errno : -EINVAL;
 +                return errno ? -errno : -EINVAL;
 +#else
-+	sfamily = malloc(257);
-+	if (sscanf(s, "%256s %u", sfamily, &group) < 1) {
-+		free(sfamily);
-                 return errno ? -errno : -EINVAL;
-+	}
++        sfamily = malloc(257);
++        if (sscanf(s, "%256s %u", sfamily, &group) < 1) {
++                 free(sfamily);
++                 return errno ? -errno : -EINVAL;
++        }
 +#endif /* HAVE_MSFORMAT */
  
          family = netlink_family_from_string(sfamily);
          if (family < 0)
-Index: systemd-198/src/tmpfiles/tmpfiles.c
+Index: systemd-204/src/tmpfiles/tmpfiles.c
 ===================================================================
---- systemd-198.orig/src/tmpfiles/tmpfiles.c	2013-03-07 13:18:34.000000000 -0800
-+++ systemd-198/src/tmpfiles/tmpfiles.c	2013-03-09 14:55:40.772566599 -0800
-@@ -51,6 +51,8 @@
+--- systemd-204.orig/src/tmpfiles/tmpfiles.c	2013-04-24 06:34:38.000000000 -0700
++++ systemd-204/src/tmpfiles/tmpfiles.c	2013-05-23 11:26:51.784345016 -0700
+@@ -52,6 +52,8 @@
  #include "conf-files.h"
  #include "capability.h"
  
@@ -279,7 +279,7 @@ Index: systemd-198/src/tmpfiles/tmpfiles.c
  /* This reads all files listed in /etc/tmpfiles.d/?*.conf and creates
   * them in the file system. This is intended to be used to create
   * properly owned directories beneath /tmp, /var/tmp, /run, which are
-@@ -993,6 +995,7 @@
+@@ -1029,6 +1031,7 @@
          if (!i)
                  return log_oom();
  
@@ -287,7 +287,7 @@ Index: systemd-198/src/tmpfiles/tmpfiles.c
          r = sscanf(buffer,
                     "%c %ms %ms %ms %ms %ms %n",
                     &type,
-@@ -1002,6 +1005,29 @@
+@@ -1038,6 +1041,29 @@
                     &group,
                     &age,
                     &n);
@@ -316,11 +316,11 @@ Index: systemd-198/src/tmpfiles/tmpfiles.c
 +
          if (r < 2) {
                  log_error("[%s:%u] Syntax error.", fname, line);
-                 r = -EIO;
-Index: systemd-198/src/cryptsetup/cryptsetup-generator.c
+                 return -EIO;
+Index: systemd-204/src/cryptsetup/cryptsetup-generator.c
 ===================================================================
---- systemd-198.orig/src/cryptsetup/cryptsetup-generator.c	2013-03-07 13:18:34.000000000 -0800
-+++ systemd-198/src/cryptsetup/cryptsetup-generator.c	2013-03-09 14:51:33.080571639 -0800
+--- systemd-204.orig/src/cryptsetup/cryptsetup-generator.c	2013-05-06 12:06:04.000000000 -0700
++++ systemd-204/src/cryptsetup/cryptsetup-generator.c	2013-05-23 11:26:51.784345016 -0700
 @@ -31,6 +31,8 @@
  #include "strv.h"
  #include "fileio.h"
@@ -330,7 +330,7 @@ Index: systemd-198/src/cryptsetup/cryptsetup-generator.c
  static const char *arg_dest = "/tmp";
  static bool arg_enabled = true;
  static bool arg_read_crypttab = true;
-@@ -395,7 +397,16 @@
+@@ -398,7 +400,16 @@
                          if (*l == '#' || *l == 0)
                                  continue;
  

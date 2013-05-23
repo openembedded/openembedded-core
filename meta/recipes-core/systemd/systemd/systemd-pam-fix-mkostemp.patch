@@ -1,72 +1,74 @@
 Upstream-Status: Denied [no desire for uclibc support]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Index: git/src/journal/journal-send.c
+Index: systemd-204/src/journal/journal-send.c
 ===================================================================
---- git.orig/src/journal/journal-send.c	2012-09-02 00:10:08.748768268 -0700
-+++ git/src/journal/journal-send.c	2012-09-02 00:10:10.508768335 -0700
-@@ -34,6 +34,8 @@
- 
- #define SNDBUF_SIZE (8*1024*1024)
+--- systemd-204.orig/src/journal/journal-send.c	2013-05-06 12:06:04.000000000 -0700
++++ systemd-204/src/journal/journal-send.c	2013-05-23 11:21:14.500338688 -0700
+@@ -46,6 +46,8 @@
+                 memcpy(*_f + 10, _func, _fl);     \
+         } while(false)
  
 +#include "config.h"
 +
  /* We open a single fd, and we'll share it with the current process,
   * all its threads, and all its subprocesses. This means we need to
   * initialize it atomically, and need to operate on it atomically
-@@ -293,7 +295,12 @@
+@@ -312,8 +314,13 @@
+         /* Message doesn't fit... Let's dump the data in a temporary
           * file and just pass a file descriptor of it to the other
           * side */
- 
+-
 +#ifdef HAVE_MKOSTEMP
          buffer_fd = mkostemp(path, O_CLOEXEC|O_RDWR);
 +#else
-+	buffer_fd = mkstemp(path);
-+	if (buffer_fd >= 0) fcntl(buffer_fd, F_SETFD, FD_CLOEXEC);
-+#endif	/* HAVE_MKOSTEMP */
-         if (buffer_fd < 0) {
-                 r = -errno;
-                 goto finish;
-Index: git/src/core/manager.c
++        buffer_fd = mkstemp(path);
++        if (buffer_fd >= 0) fcntl(buffer_fd, F_SETFD, FD_CLOEXEC);
++#endif /* HAVE_MKOSTEMP */
++
+         if (buffer_fd < 0)
+                 return -errno;
+ 
+Index: systemd-204/src/core/manager.c
 ===================================================================
---- git.orig/src/core/manager.c	2012-09-02 00:10:08.732768266 -0700
-+++ git/src/core/manager.c	2012-09-02 00:10:10.512768334 -0700
-@@ -67,6 +67,8 @@
- #include "cgroup-util.h"
- #include "path-util.h"
+--- systemd-204.orig/src/core/manager.c	2013-04-25 17:53:56.000000000 -0700
++++ systemd-204/src/core/manager.c	2013-05-23 11:23:15.864340878 -0700
+@@ -72,6 +72,8 @@
+ #include "audit-fd.h"
+ #include "env-util.h"
  
 +#include "config.h"
 +
  /* As soon as 16 units are in our GC queue, make sure to run a gc sweep */
  #define GC_QUEUE_ENTRIES_MAX 16
  
-@@ -1701,7 +1703,12 @@
+@@ -1973,7 +1975,12 @@
                  return -ENOMEM;
  
-         saved_umask = umask(0077);
+         RUN_WITH_UMASK(0077) {
 +#ifdef HAVE_MKOSTEMP
-         fd = mkostemp(path, O_RDWR|O_CLOEXEC);
+                 fd = mkostemp(path, O_RDWR|O_CLOEXEC);
 +#else
-+	fd = mkstemp(path);
-+	if (fd >= 0) fcntl(fd, F_SETFD, FD_CLOEXEC);
-+#endif	/* HAVE_MKOSTEMP */
-         umask(saved_umask);
++                fd = mkstemp(path);
++                if (fd >= 0) fcntl(fd, F_SETFD, FD_CLOEXEC);
++#endif /* HAVE_MKOSTEMP */
+         }
  
          if (fd < 0) {
-Index: git/src/shared/util.c
+Index: systemd-204/src/shared/util.c
 ===================================================================
---- git.orig/src/shared/util.c	2012-09-02 00:10:08.784768269 -0700
-+++ git/src/shared/util.c	2012-09-02 00:10:10.512768334 -0700
-@@ -68,6 +68,8 @@
- #include "exit-status.h"
- #include "hashmap.h"
+--- systemd-204.orig/src/shared/util.c	2013-05-07 12:07:22.000000000 -0700
++++ systemd-204/src/shared/util.c	2013-05-23 11:19:35.028336822 -0700
+@@ -74,6 +74,8 @@
+ #include "env-util.h"
+ #include "fileio.h"
  
 +#include "config.h"
 +
  int saved_argc = 0;
  char **saved_argv = NULL;
  
-@@ -4519,7 +4521,12 @@
+@@ -3921,7 +3923,12 @@
          t[k] = '.';
          stpcpy(stpcpy(t+k+1, fn), "XXXXXX");
  
@@ -79,10 +81,10 @@ Index: git/src/shared/util.c
          if (fd < 0) {
                  free(t);
                  return -errno;
-Index: git/src/shared/ask-password-api.c
+Index: systemd-204/src/shared/ask-password-api.c
 ===================================================================
---- git.orig/src/shared/ask-password-api.c	2012-09-02 00:10:08.772768268 -0700
-+++ git/src/shared/ask-password-api.c	2012-09-02 00:10:10.512768334 -0700
+--- systemd-204.orig/src/shared/ask-password-api.c	2013-04-08 08:26:34.000000000 -0700
++++ systemd-204/src/shared/ask-password-api.c	2013-05-23 11:24:43.456342451 -0700
 @@ -37,6 +37,8 @@
  
  #include "ask-password-api.h"
@@ -92,24 +94,24 @@ Index: git/src/shared/ask-password-api.c
  static void backspace_chars(int ttyfd, size_t p) {
  
          if (ttyfd < 0)
-@@ -326,7 +328,12 @@
+@@ -325,7 +327,12 @@
          mkdir_p_label("/run/systemd/ask-password", 0755);
  
-         u = umask(0022);
+         RUN_WITH_UMASK(0022) {
 +#ifdef HAVE_MKOSTEMP
-         fd = mkostemp(temp, O_CLOEXEC|O_CREAT|O_WRONLY);
+                 fd = mkostemp(temp, O_CLOEXEC|O_CREAT|O_WRONLY);
 +#else
-+	fd = mkstemp(temp);
-+	if (fd >= 0) fcntl(fd, F_SETFD, FD_CLOEXEC);
-+#endif	/* HAVE_MKOSTEMP */
-         umask(u);
++                fd = mkstemp(temp);
++                if (fd >= 0) fcntl(fd, F_SETFD, FD_CLOEXEC);
++#endif /* HAVE_MKOSTEMP */
+         }
  
          if (fd < 0) {
-Index: git/src/journal/journalctl.c
+Index: systemd-204/src/journal/journalctl.c
 ===================================================================
---- git.orig/src/journal/journalctl.c	2012-09-02 00:10:08.752768267 -0700
-+++ git/src/journal/journalctl.c	2012-09-02 00:18:41.928787779 -0700
-@@ -540,7 +540,13 @@
+--- systemd-204.orig/src/journal/journalctl.c	2013-05-07 12:07:22.000000000 -0700
++++ systemd-204/src/journal/journalctl.c	2013-05-23 11:19:35.028336822 -0700
+@@ -755,7 +755,13 @@
          n /= arg_interval;
  
          close_nointr_nofail(fd);
@@ -123,11 +125,11 @@ Index: git/src/journal/journalctl.c
          if (fd < 0) {
                  log_error("Failed to open %s: %m", k);
                  r = -errno;
-Index: git/src/journal/journal-verify.c
+Index: systemd-204/src/journal/journal-verify.c
 ===================================================================
---- git.orig/src/journal/journal-verify.c	2012-09-02 00:10:08.752768267 -0700
-+++ git/src/journal/journal-verify.c	2012-09-02 00:24:10.268800268 -0700
-@@ -693,8 +693,12 @@
+--- systemd-204.orig/src/journal/journal-verify.c	2012-11-20 13:42:23.000000000 -0800
++++ systemd-204/src/journal/journal-verify.c	2013-05-23 11:19:35.032336822 -0700
+@@ -700,8 +700,12 @@
  #endif
          } else if (f->seal)
                  return -ENOKEY;
@@ -141,7 +143,7 @@ Index: git/src/journal/journal-verify.c
          if (data_fd < 0) {
                  log_error("Failed to create data file: %m");
                  r = -errno;
-@@ -702,7 +706,12 @@
+@@ -709,7 +713,12 @@
          }
          unlink(data_path);
  
@@ -154,7 +156,7 @@ Index: git/src/journal/journal-verify.c
          if (entry_fd < 0) {
                  log_error("Failed to create entry file: %m");
                  r = -errno;
-@@ -710,7 +719,12 @@
+@@ -717,7 +726,12 @@
          }
          unlink(entry_path);
  
