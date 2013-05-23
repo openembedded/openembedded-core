@@ -3,7 +3,7 @@
 #
 
 ROOTFS_PKGMANAGE = "rpm smartpm"
-ROOTFS_PKGMANAGE_BOOTSTRAP = "rpm-postinsts"
+ROOTFS_PKGMANAGE_BOOTSTRAP = "run-postinsts"
 
 # Add 50Meg of extra space for Smart
 IMAGE_ROOTFS_EXTRA_SPACE_append = "${@base_contains("PACKAGE_INSTALL", "smartpm", " + 51200", "" ,d)}"
