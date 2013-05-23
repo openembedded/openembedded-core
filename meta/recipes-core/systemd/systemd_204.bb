@@ -9,9 +9,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe \
 PROVIDES = "udev"
 
 PE = "1"
-PR = "r4"
 
-DEPENDS = "kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline dbus libcap libcgroup tcp-wrappers glib-2.0 qemu-native"
+DEPENDS = "kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline dbus libcap libcgroup tcp-wrappers glib-2.0 qemu-native util-linux"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
 SECTION = "base/shell"
@@ -23,16 +22,12 @@ SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
            file://modprobe.rules \
            file://var-run.conf \
            ${UCLIBCPATCHES} \
+           file://0001-utmp-turn-systemd-update-utmp-shutdown.service-into-.patch \
            file://00-create-volatile.conf \
-           file://0002-readahead-chunk-on-spinning-media.patch \
-           file://0003-readahead-cleanups.patch \
-           file://0013-systemd-sysctl-Handle-missing-etc-sysctl.conf-proper.patch \
-           file://0001-configure-use-AC_CHECK_TOOL-for-objcopy-strings-and-.patch \
-           file://199-firmware.patch \
            file://init \
           "
-SRC_URI[md5sum] = "4bb13f84ce211e93f0141774a90a2322"
-SRC_URI[sha256sum] = "8c4462a04f3ecf7f083782e5e0687913b1d33c6444bf20fa2f31df9222965fed"
+SRC_URI[md5sum] = "a07619bb19f48164fbf0761d12fd39a8"
+SRC_URI[sha256sum] = "072c393503c7c1e55ca7acf3db659cbd28c7fe5fa94fab3db95360bafd96731b"
 
 UCLIBCPATCHES = ""
 UCLIBCPATCHES_libc-uclibc = "file://systemd-pam-configure-check-uclibc.patch \
