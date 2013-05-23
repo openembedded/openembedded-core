@@ -554,7 +554,10 @@ def _get_srcrev_values(d):
         ud = urldata[scm]
         for name in ud.names:
             rev = ud.method.sortable_revision(scm, ud, d, name)
-            if rev.startswith(autoinc_templ):
+            # Clean this up when we next bump bitbake version
+            if type(rev) != str:
+                autoinc, rev = rev
+            elif rev.startswith(autoinc_templ):
                 rev = rev[len(autoinc_templ):]
             dict_srcrevs[name] = rev
             if 'tag' in ud.parm:
