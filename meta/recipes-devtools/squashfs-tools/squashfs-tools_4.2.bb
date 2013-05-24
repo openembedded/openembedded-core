@@ -37,9 +37,6 @@ do_install () {
         install -m 0755 mksquashfs ${D}${sbindir}/
 }
 
-# required to share same place with -lzma specific packages
-FILESPATHPKG =. "squashfs-tools-${PV}:"
-
 ARM_INSTRUCTION_SET = "arm"
 
 BBCLASSEXTEND = "native"
