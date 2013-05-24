@@ -23,7 +23,7 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar.xz \
 SRC_URI[md5sum] = "8e878e18fc385f2b813419dc7b40a968"
 SRC_URI[sha256sum] = "1ca80c9c15a1df95d74cefb8c2afe4682ba272a4b489106f04877be2a7aff297"
 
-inherit autotools pkgconfig gtk-doc update-alternatives gtk-immodules-cache
+inherit autotools pkgconfig gtk-doc update-alternatives gtk-immodules-cache gsettings
 
 S = "${WORKDIR}/gtk+-${PV}"
 
