@@ -1,0 +1,16 @@
+Remove obsolete AM_PROG_CC_STDC use as there's already modern equivalent,
+AC_PROG_CC, present.
+
+Upstream-Status: Submitted
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd pkg-config-0.28/glib/configure.ac pkg-config-0.28/glib/configure.ac
+--- pkg-config-0.28/glib/configure.ac	2012-10-13 17:35:36.000000000 +0300
++++ pkg-config-0.28/glib/configure.ac	2013-05-24 23:48:34.093415116 +0300
+@@ -288,7 +288,6 @@
+ AM_CONDITIONAL(HAVE_CXX, [test "$CXX" != ""])
+ AC_LANG_RESTORE
+
+-AM_PROG_CC_STDC
+ AM_PROG_CC_C_O
+ AC_PROG_INSTALL

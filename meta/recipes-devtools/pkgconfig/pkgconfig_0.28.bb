@@ -4,6 +4,7 @@ SRC_URI += " \
             file://glibconfig-sysdefs.h \
             file://pkg-config-native.in \
             file://fix-glib-configure-libtool-usage.patch \
+            file://obsolete_automake_macros.patch \
            "
 
 SRC_URI[md5sum] = "aa3c86e67551adc3ac865160e34a2a0d"
