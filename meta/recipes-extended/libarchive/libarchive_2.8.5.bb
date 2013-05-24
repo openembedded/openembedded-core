@@ -5,7 +5,25 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4255e2e6f0349a4ac8fbd68459296e46"
 PR = "r0"
 
-DEPENDS = "libxml2"
+PACKAGECONFIG ?= "libxml2 zlib bz2"
+
+PACKAGECONFIG_class-target += "\
+	${@base_contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
+	${@base_contains('DISTRO_FEATURES', 'xattr', 'xattr', '', d)} \
+	${@base_contains('DISTRO_FEATURES', 'largefile', 'largefile', '', d)} \
+"
+
+PACKAGECONFIG_class-nativesdk += "largefile"
+
+PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl,"
+PACKAGECONFIG[xattr] = "--enable-xattr,--disable-xattr,attr,"
+PACKAGECONFIG[largefile] = "--enable-largefile,--disable-largefile,,"
+PACKAGECONFIG[zlib] = "--with-zlib,--without-zlib,zlib,"
+PACKAGECONFIG[bz2] = "--with-bz2lib,--without-bz2lib,bzip2,"
+PACKAGECONFIG[xz] = "--with-lzmadec --with-lzma,--without-lzmadec --without-lzma,xz,"
+PACKAGECONFIG[openssl] = "--with-openssl,--without-openssl,openssl,"
+PACKAGECONFIG[libxml2] = "--with-xml2,--without-xml2,libxml2,"
+PACKAGECONFIG[expat] = "--with-expat,--without-expat,expat,"
 
 SRC_URI = "http://libarchive.googlecode.com/files/libarchive-${PV}.tar.gz \
            file://0001-Patch-from-upstream-revision-1990.patch \
