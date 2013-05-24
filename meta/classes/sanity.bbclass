@@ -375,7 +375,6 @@ def check_sanity(sanity_data):
     if not minversion:
         # Hack: BB_MIN_VERSION hasn't been parsed yet so return 
         # and wait for the next call
-        print("Foo %s" % minversion)
         return
 
     if 0 == os.getuid():
