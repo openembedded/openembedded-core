@@ -8,11 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e66
 DEPENDS = "zlib gnutls"
 DEPENDS_class-native = "zlib-native openssl-native"
 DEPENDS_class-nativesdk = "nativesdk-zlib"
-PR = "r1"
+PR = "r0"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://pkgconfig_fix.patch \
-           file://0001-Fix-NULL-pointer-reference-when-closing-an-unused-mu.patch \
 "
 
 # curl likes to set -g0 in CFLAGS, so we stop it
@@ -20,8 +19,8 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
 #
 SRC_URI += " file://configure_ac.patch"
 
-SRC_URI[md5sum] = "fa5f37f38a8042020e292ce7ec5341ce"
-SRC_URI[sha256sum] = "9d78e8bac6fa101679ca82e72a24e55918c5d495d29acb1eff62610929d3832f"
+SRC_URI[md5sum] = "0db5ec03a5001b42a2edc03bf63b5ceb"
+SRC_URI[sha256sum] = "6b1c410387bea82601baec85d6aa61955794672e36766407e99ade8d55aaaf11"
 
 inherit autotools pkgconfig binconfig
 
