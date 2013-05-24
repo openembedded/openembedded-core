@@ -17,11 +17,10 @@ PR = "r0"
 
 SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/harfbuzz-${PV}.tar.bz2 \
            file://disable_graphite.patch \
-           file://avoid_double_version_h.patch \
 "
 
-SRC_URI[md5sum] = "35551b8cdf53b75aa9c42460f210e89f"
-SRC_URI[sha256sum] = "c653f70a275e98d109a9f1271373a6e80978c97298d723cb3f370351852f9da5"
+SRC_URI[md5sum] = "c48827713e93539dc7285f9e86ffbdc5"
+SRC_URI[sha256sum] = "a4773003512035cb5c559de23e1d53f292bcb0212f023b540c4dc695b39690ed"
 
 inherit autotools pkgconfig
 
