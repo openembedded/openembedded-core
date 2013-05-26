@@ -23,11 +23,31 @@ do_compile () {
 }
 
 do_install () {
-	install -d ${D}${sysconfdir} ${D}${base_sbindir} ${D}${localstatedir}/volatile/run/resolvconf/interface
+	install -d ${D}${sysconfdir}/default/volatiles
+	echo "d root root 0755 ${localstatedir}/run/${BPN}/interface none" \
+	     > ${D}${sysconfdir}/default/volatiles/99_resolvconf
+	if ${@base_contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+		install -d ${D}${sysconfdir}/tmpfiles.d
+		echo "d /run/${BPN}/interface - - - -" \
+		     > ${D}${sysconfdir}/tmpfiles.d/resolvconf.conf
+	fi
+	install -d ${D}${sysconfdir}/${BPN}
+	ln -snf ${localstatedir}/run/${BPN} ${D}${sysconfdir}/${BPN}/run
+	install -d ${D}${sysconfdir} ${D}${base_sbindir}
 	install -d ${D}${mandir}/man8 ${D}${docdir}/${P}
 	cp -pPR etc/* ${D}${sysconfdir}/
 	chown -R root:root ${D}${sysconfdir}/
 	install -m 0755 bin/resolvconf ${D}${base_sbindir}/
 	install -m 0644 README ${D}${docdir}/${P}/
 	install -m 0644 man/resolvconf.8 ${D}${mandir}/man8/
+}
+
+pkg_postinst_${PN} () {
+	if [ -z "$D" ]; then
+		if command -v systemd-tmpfiles >/dev/null; then
+			systemd-tmpfiles --create
+		elif [ -e ${sysconfdir}/init.d/populate-volatile.sh ]; then
+			${sysconfdir}/init.d/populate-volatile.sh update
+		fi
+	fi
 }
