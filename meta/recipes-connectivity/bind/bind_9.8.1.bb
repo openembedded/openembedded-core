@@ -39,6 +39,8 @@ FILES_${PN}-dev += "${bindir}/isc-config.h"
 do_install_append() {
 	rm "${D}${bindir}/nslookup"
 	rm "${D}${mandir}/man1/nslookup.1"
+	rmdir "${D}${localstatedir}/run"
+	rmdir --ignore-fail-on-non-empty "${D}${localstatedir}"
 	install -d "${D}${sysconfdir}/bind"
 	install -d "${D}${sysconfdir}/init.d"
 	install -m 644 ${S}/conf/* "${D}${sysconfdir}/bind/"
