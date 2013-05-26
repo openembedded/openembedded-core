@@ -37,3 +37,8 @@ FILES_${PN}-dbg += "${base_libdir}/security/.debug"
 PACKAGES =+ "pam-plugin-ck-connector"
 FILES_pam-plugin-ck-connector += "${base_libdir}/security/*.so"
 RDEPENDS_pam-plugin-ck-connector += "${PN}"
+
+do_install_append() {
+	# Remove /var/run from package as console-kit-daemon will populate it on startup
+	rm -fr "${D}${localstatedir}/run"
+}
