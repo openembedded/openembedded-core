@@ -53,9 +53,9 @@ do_compile () {
 fakeroot do_install () {
 	oe_runmake "DSTROOT=${D}" install
 
-   # This directory gets installed with perms 511, which makes packaging fail
-   chmod 0711 "${D}/${localstatedir}/run/cups/certs"
-   rmdir ${D}/${libdir}/${BPN}/driver
+	# Remove /var/run from package as cupsd will populate it on startup
+	rm -fr ${D}/${localstatedir}/run
+	rmdir ${D}/${libdir}/${BPN}/driver
 }
 
 python do_package_append() {
