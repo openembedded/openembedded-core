@@ -1,0 +1,50 @@
+Fix documentation build errors
+
+This fixes the following errors building the findutils documentation:
+find.texi:53: misplaced {
+find.texi:53: misplaced }
+find.texi:1862: warning: node `Formatting Flags' is next for `Time Directives' in menu but not in sectioning
+find.texi:1975: warning: node `Formatting Flags' is next for `Combined Time Formats' in sectioning but not in menu
+find.texi:2004: warning: node prev `Formatting Flags' in menu `Time Directives' and in sectioning `Combined Time Formats' differ
+find.texi:2004: warning: node up `Formatting Flags' in menu `Format Directives' and in sectioning `Time Formats' differ
+find.texi:1893: node `Time Formats' lacks menu item for `Formatting Flags' despite being its Up target
+
+Upstream-Status: Backport
+Signed-off-by: Jonathan Liu <net147@gmail.com>
+
+--- a/doc/find.texi
++++ b/doc/find.texi
+@@ -50,7 +50,7 @@ Texts.  A copy of the license is included in the section entitled
+
+ @page
+ @vskip 0pt plus 1filll
+-@insertcopying{}
++@insertcopying
+ @end titlepage
+
+ @contents
+@@ -1665,6 +1665,7 @@ no output is ever sent to it.
+ * Escapes::
+ * Format Directives::
+ * Time Formats::
++* Formatting Flags::
+ @end menu
+
+ @node Escapes
+@@ -1733,7 +1734,6 @@ from the novel you are reading.
+ * Size Directives::
+ * Location Directives::
+ * Time Directives::
+-* Formatting Flags::
+ @end menu
+
+ @node Name Directives
+@@ -2002,7 +2002,7 @@ seconds field includes a fractional part.
+ @end table
+
+ @node Formatting Flags
+-@subsubsection Formatting Flags
++@subsection Formatting Flags
+
+ The @samp{%m} and @samp{%d} directives support the @samp{#}, @samp{0}
+ and @samp{+} flags, but the other directives do not, even if they
