@@ -1,0 +1,144 @@
+From: Yufeng Zhang <yufeng.zhang@arm.com>
+Date: Mon, 13 May 2013 23:09:51 +0000 (+0000)
+Subject: gas/testsuite/
+X-Git-Url: http://sourceware.org/git/?p=binutils.git;a=commitdiff_plain;h=f426901e1be0f58fe4e9386cada50ca57d0a4f36
+
+Upstream-status: backport
+
+gas/testsuite/
+
+	Backport from mainline:
+
+	2013-05-13  Yufeng Zhang  <yufeng.zhang@arm.com>
+	* gas/aarch64/diagnostic.s: Update.
+	* gas/aarch64/diagnostic.l: Ditto.
+	* gas/aarch64/movi.s: Add new tests.
+	* gas/aarch64/movi.d: Update.
+
+opcodes/
+
+	Backport from mainline:
+
+	2013-05-13  Yufeng Zhang  <yufeng.zhang@arm.com>
+	* aarch64-asm.c (aarch64_ins_advsimd_imm_modified): Remove assertion.
+	* aarch64-opc.c (operand_general_constraint_met_p): Relax the range
+	check from [0, 255] to [-128, 255].
+---
+
+diff --git a/gas/testsuite/ChangeLog b/gas/testsuite/ChangeLog
+index 8ee06c8..475c93a 100644
+--- a/gas/testsuite/ChangeLog
++++ b/gas/testsuite/ChangeLog
+@@ -1,3 +1,13 @@
++2013-05-13  Yufeng Zhang  <yufeng.zhang@arm.com>
++
++	Backport from mainline:
++
++	2013-05-13  Yufeng Zhang  <yufeng.zhang@arm.com>
++	* gas/aarch64/diagnostic.s: Update.
++	* gas/aarch64/diagnostic.l: Ditto.
++	* gas/aarch64/movi.s: Add new tests.
++	* gas/aarch64/movi.d: Update.
++
+ 2013-05-13 Yufeng Zhang <yufeng.zhang@arm.com>
+ 
+ 	Backport from mainline:
+diff --git a/gas/testsuite/gas/aarch64/diagnostic.l b/gas/testsuite/gas/aarch64/diagnostic.l
+index f37f11c..d7a1347 100644
+--- a/gas/testsuite/gas/aarch64/diagnostic.l
++++ b/gas/testsuite/gas/aarch64/diagnostic.l
+@@ -38,8 +38,8 @@
+ [^:]*:40: Error: invalid shift amount at operand 3 -- `shll v1.4s,v2.4h,#32'
+ [^:]*:41: Error: immediate value out of range 0 to 31 at operand 3 -- `shl v1.2s,v2.2s,32'
+ [^:]*:42: Error: immediate value out of range 1 to 8 at operand 3 -- `sqshrn2 v2.16b,v3.8h,#17'
+-[^:]*:43: Error: immediate value out of range 0 to 255 at operand 2 -- `movi v1.4h,256'
+-[^:]*:44: Error: immediate value out of range 0 to 255 at operand 2 -- `movi v1.4h,-1'
++[^:]*:43: Error: immediate value out of range -128 to 255 at operand 2 -- `movi v1.4h,256'
++[^:]*:44: Error: immediate value out of range -128 to 255 at operand 2 -- `movi v1.4h,-129'
+ [^:]*:45: Error: invalid shift operator at operand 2 -- `movi v1.4h,255,msl#8'
+ [^:]*:46: Error: invalid value for immediate at operand 2 -- `movi d0,256'
+ [^:]*:47: Error: immediate value should be a multiple of 8 at operand 2 -- `movi v1.4h,255,lsl#7'
+diff --git a/gas/testsuite/gas/aarch64/diagnostic.s b/gas/testsuite/gas/aarch64/diagnostic.s
+index 99ebf8f..e5443ab 100644
+--- a/gas/testsuite/gas/aarch64/diagnostic.s
++++ b/gas/testsuite/gas/aarch64/diagnostic.s
+@@ -41,7 +41,7 @@
+ 	shl	v1.2s, v2.2s, 32
+ 	sqshrn2	v2.16b, v3.8h, #17
+ 	movi	v1.4h, 256
+-	movi	v1.4h, -1
++	movi	v1.4h, -129
+ 	movi	v1.4h, 255, msl #8
+ 	movi	d0, 256
+ 	movi	v1.4h, 255, lsl #7
+diff --git a/gas/testsuite/gas/aarch64/movi.d b/gas/testsuite/gas/aarch64/movi.d
+index 2c73cc4..c225b21 100644
+--- a/gas/testsuite/gas/aarch64/movi.d
++++ b/gas/testsuite/gas/aarch64/movi.d
+@@ -8201,3 +8201,6 @@ Disassembly of section \.text:
+     8004:	6f07e7e0 	movi	v0.2d, #0xffffffffffffffff
+     8008:	6f07e7e0 	movi	v0.2d, #0xffffffffffffffff
+     800c:	2f07e7ff 	movi	d31, #0xffffffffffffffff
++    8010:	0f04e403 	movi	v3.8b, #0x80
++    8014:	0f04e423 	movi	v3.8b, #0x81
++    8018:	0f07e7e3 	movi	v3.8b, #0xff
+diff --git a/gas/testsuite/gas/aarch64/movi.s b/gas/testsuite/gas/aarch64/movi.s
+index 99ca34a..76f2d47 100644
+--- a/gas/testsuite/gas/aarch64/movi.s
++++ b/gas/testsuite/gas/aarch64/movi.s
+@@ -102,3 +102,8 @@
+ 	movi	v0.2d, bignum
+ 	movi	d31, 18446744073709551615
+ .set    bignum, 0xffffffffffffffff
++
++	// Allow -128 to 255 in #<imm8>
++	movi	v3.8b, -128
++	movi	v3.8b, -127
++	movi	v3.8b, -1
+diff --git a/opcodes/ChangeLog b/opcodes/ChangeLog
+index 96dfaeb..4adbc86 100644
+--- a/opcodes/ChangeLog
++++ b/opcodes/ChangeLog
+@@ -1,3 +1,12 @@
++2013-05-13  Yufeng Zhang  <yufeng.zhang@arm.com>
++
++	Backport from mainline:
++
++	2013-05-13  Yufeng Zhang  <yufeng.zhang@arm.com>
++	* aarch64-asm.c (aarch64_ins_advsimd_imm_modified): Remove assertion.
++	* aarch64-opc.c (operand_general_constraint_met_p): Relax the range
++	check from [0, 255] to [-128, 255].
++
+ 2013-03-25  Tristan Gingold  <gingold@adacore.com>
+ 	Backport of: 2013-03-08  Yann Sionneau  <yann.sionneau@gmail.com>
+ 
+diff --git a/opcodes/aarch64-asm.c b/opcodes/aarch64-asm.c
+index 16cdaa9..ba463d9 100644
+--- a/opcodes/aarch64-asm.c
++++ b/opcodes/aarch64-asm.c
+@@ -369,7 +369,6 @@ aarch64_ins_advsimd_imm_modified (const aarch64_operand *self ATTRIBUTE_UNUSED,
+       imm = aarch64_shrink_expanded_imm8 (imm);
+       assert ((int)imm >= 0);
+     }
+-  assert (imm <= 255);
+   insert_fields (code, imm, 0, 2, FLD_defgh, FLD_abc);
+ 
+   if (kind == AARCH64_MOD_NONE)
+diff --git a/opcodes/aarch64-opc.c b/opcodes/aarch64-opc.c
+index 73a760a..32f34c6 100644
+--- a/opcodes/aarch64-opc.c
++++ b/opcodes/aarch64-opc.c
+@@ -1724,10 +1724,10 @@ operand_general_constraint_met_p (const aarch64_opnd_info *opnds, int idx,
+ 	  assert (idx == 1);
+ 	  if (aarch64_get_qualifier_esize (opnds[0].qualifier) != 8)
+ 	    {
+-	      /* uimm8 */
+-	      if (!value_in_range_p (opnd->imm.value, 0, 255))
++	      /* uimm8 or simm8 */
++	      if (!value_in_range_p (opnd->imm.value, -128, 255))
+ 		{
+-		  set_imm_out_of_range_error (mismatch_detail, idx, 0, 255);
++		  set_imm_out_of_range_error (mismatch_detail, idx, -128, 255);
+ 		  return 0;
+ 		}
+ 	    }
