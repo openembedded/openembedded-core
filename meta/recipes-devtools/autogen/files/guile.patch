@@ -1,14 +1,14 @@
-Disable the autoconf macros that use dpkg (!) and guile-config to determine what
-version and where guile is installed, and just use pkg-config directly (guile-config is a deprecated wrapper around pkg-config).
-
-Signed-off-by: Ross Burton <ross.burton@intel.com>
-Upstream-Status: Pending (should be submitted)
+Disable the autoconf macros that use dpkg (!) and guile-config to determine what 
+version and where guile is installed, and just use pkg-config directly (guile-config is a deprecated wrapper around pkg-config). 
+ 
+ Signed-off-by: Ross Burton <ross.burton@intel.com> 
+ Upstream-Status: Pending (should be submitted)
 
 diff --git a/config/ag_macros.m4 b/config/ag_macros.m4
-index c69b11c..915968b 100644
+index 9914a65..b6db97a 100644
 --- a/config/ag_macros.m4
 +++ b/config/ag_macros.m4
-@@ -175,124 +175,12 @@ return 0;],
+@@ -175,123 +175,12 @@ return 0;],
  
  
  AC_DEFUN([AG_WITHLIB_GUILE],[
@@ -69,8 +69,6 @@ index c69b11c..915968b 100644
 -    test -n "${f}" && ag_cv_with_libguile_libs="${f}" && \
 -      AC_MSG_NOTICE([guile-config used for LIBS: $f]) ;;
 -  esac
--  fi ## disabled by request
--
 -  case "X${ag_cv_with_libguile_cflags}" in
 -  Xyes|Xno|X )
 -    ag_cv_with_libguile_cflags="" ;;
@@ -107,6 +105,7 @@ index c69b11c..915968b 100644
 -    [ag_cv_with_libguile=yes],
 -    [ag_cv_with_libguile=no]) # end of AC_LINK_IFELSE 
 -  ]) # end of AC_CACHE_VAL for ag_cv_with_libguile
+-  fi ## disabled by request
 -  AC_MSG_RESULT([${ag_cv_with_libguile}])
 -    AC_SUBST([LIBGUILE_CFLAGS])
 -    AC_SUBST([LIBGUILE_LIBS])
@@ -138,7 +137,7 @@ index c69b11c..915968b 100644
  ]) # end of AC_DEFUN of AG_WITHLIB_GUILE
  
  
-@@ -312,40 +200,10 @@ AC_DEFUN([AG_WITHCONF_GUILE_VER],[
+@@ -311,40 +200,10 @@ AC_DEFUN([AG_WITHCONF_GUILE_VER],[
  
  
  AC_DEFUN([AG_TEST_GUILE_VERSION],[

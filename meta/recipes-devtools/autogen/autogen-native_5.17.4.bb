@@ -11,8 +11,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
            file://guile.patch"
 
-SRC_URI[md5sum] = "2d14ced1c28f71e61bb7c58e93317a40"
-SRC_URI[sha256sum] = "2f795c224fac899ec3a801a9a32aad2a8104fe926dcc1994cc0797f9a3f4e97d"
+SRC_URI[md5sum] = "09f074cba57610bf4ef1147e01c8ae90"
+SRC_URI[sha256sum] = "cd2585f4794d0e9d7f2cb0b9af4f2bd429946e718473edf1cf8c49f081ca71ed"
 
 DEPENDS = "guile-native libtool-native libxml2-native"
 RDEPENDS = "automake pkgconfig"
