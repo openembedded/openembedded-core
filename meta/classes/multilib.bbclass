@@ -103,7 +103,7 @@ python __anonymous () {
     clsextend.map_variable("USERADD_PACKAGES")
 }
 
-PACKAGEFUNCS_append = "do_package_qa_multilib"
+PACKAGEFUNCS_append = " do_package_qa_multilib"
 
 python do_package_qa_multilib() {
 
