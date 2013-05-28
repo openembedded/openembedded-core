@@ -104,6 +104,9 @@ fi
 
 NFSRUNNING="false"
 
+#capture original stty values
+ORIG_STTY=$(stty -g)
+
 if [ "$SLIRP_ENABLED" = "yes" ]; then
     KERNEL_NETWORK_CMD=""
     QEMU_TAP_CMD=""
@@ -221,7 +224,11 @@ else
             fi
             # If QEMU crashes or somehow tty properties are not restored
             # after qemu exits, we need to run stty sane
-            stty sane
+            #stty sane
+
+            #instead of using stty sane we set the original stty values
+            stty ${ORIG_STTY}
+
         }
 
 
@@ -589,6 +596,8 @@ if [ "$SLIRP_ENABLED" != "yes" ]; then
         cleanup
 fi
 
+#set the original stty values before exit
+stty ${ORIG_STTY}
 trap - INT TERM QUIT
 
 return $ret
