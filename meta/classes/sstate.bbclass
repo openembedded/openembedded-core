@@ -32,6 +32,7 @@ SSTATE_MANMACH ?= "${SSTATE_PKGARCH}"
 
 SSTATEPREINSTFUNCS ?= ""
 SSTATEPOSTINSTFUNCS ?= ""
+EXTRA_STAGING_FIXMES ?= ""
 
 # Specify dirs in which the shell function is executed and don't use ${B}
 # as default dirs to avoid possible race about ${B} with other task.
@@ -258,6 +259,11 @@ def sstate_installpkg(ss, d):
         else:
             sstate_sed_cmd = "sed -i -e 's:FIXMESTAGINGDIRHOST:%s:g'" % (staging_host)
 
+        extra_staging_fixmes = d.getVar('EXTRA_STAGING_FIXMES', True) or ''
+        for fixmevar in extra_staging_fixmes.split():
+            fixme_path = d.getVar(fixmevar, True)
+            sstate_sed_cmd += " -e 's:FIXME_%s:%s:g'" % (fixmevar, fixme_path)
+
         # Add sstateinst to each filename in fixmepath, use xargs to efficiently call sed
         sstate_hardcode_cmd = "sed -e 's:^:%s:g' %s | xargs %s" % (sstateinst, fixmefn, sstate_sed_cmd)
 
@@ -391,6 +397,11 @@ def sstate_hardcode_path(d):
     else:
         sstate_grep_cmd = "grep -l -e '%s'" % (staging_host)
         sstate_sed_cmd = "sed -i -e 's:%s:FIXMESTAGINGDIRHOST:g'" % (staging_host)
+
+    extra_staging_fixmes = d.getVar('EXTRA_STAGING_FIXMES', True) or ''
+    for fixmevar in extra_staging_fixmes.split():
+        fixme_path = d.getVar(fixmevar, True)
+        sstate_sed_cmd += " -e 's:%s:FIXME_%s:g'" % (fixme_path, fixmevar)
 
     fixmefn =  sstate_builddir + "fixmepath"
 
