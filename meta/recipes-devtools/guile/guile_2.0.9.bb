@@ -36,6 +36,8 @@ DEPENDS = "libunistring bdwgc gmp libtool libffi"
 # add guile-native only to the target recipe's DEPENDS
 DEPENDS += "${@['guile-native libatomics-ops', ''][d.getVar('PN', True) != 'guile']}"
 
+RDEPENDS_${PN}_append_libc-glibc_class-target = "glibc-gconv-iso8859-1"
+
 EXTRA_OECONF += "${@['--without-libltdl-prefix --without-libgmp-prefix --without-libreadline-prefix', ''][bb.data.inherits_class('native',d)]}"
 
 do_configure_prepend() {
