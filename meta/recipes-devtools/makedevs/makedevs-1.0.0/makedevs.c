@@ -226,7 +226,7 @@ static int interpret_table_entry(char *line)
 				sprintf(path, "%s/%s%d", rootdir, name, i);
 				/* FIXME:  MKDEV uses illicit insider knowledge of kernel 
 				 * major/minor representation...  */
-				rdev = MKDEV(major, minor + (i * increment - start));
+				rdev = MKDEV(major, minor + (i - start) * increment);
 				add_new_device(buf, path, uid, gid, mode, rdev);
 			}
 		} else {
