@@ -61,6 +61,9 @@ pixbufcache_sstate_postinst() {
 # do_populate_sysroot_setscene so that pixbufcache_sstate_postinst can work
 # (otherwise gdk-pixbuf-query-loaders may not exist or link). Only add
 # gdk-pixbuf-native if we're not building gdk-pixbuf itself.
+#
+# Packages that use this class should extend this variable with their runtime
+# dependencies.
 PIXBUFCACHE_SYSROOT_DEPS = ""
 PIXBUFCACHE_SYSROOT_DEPS_class-native = "${@['gdk-pixbuf-native:do_populate_sysroot_setscene', '']['${BPN}' == 'gdk-pixbuf']} glib-2.0-native:do_populate_sysroot_setscene libffi-native:do_populate_sysroot_setscene libpng-native:do_populate_sysroot_setscene"
 do_populate_sysroot_setscene[depends] += "${PIXBUFCACHE_SYSROOT_DEPS}"
