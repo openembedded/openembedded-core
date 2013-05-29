@@ -130,7 +130,7 @@ static void add_new_device(char *name, char *path, unsigned long uid,
 		timestamp = sb.st_mtime;
 	}
 
-	mknod(name, mode, rdev);
+	mknod(path, mode, rdev);
 	chown(path, uid, gid);
 //	printf("Device: %s %s  UID: %ld  GID: %ld  MODE: %ld  MAJOR: %d  MINOR: %d\n",
 //			path, name, uid, gid, mode, (short)(rdev >> 8), (short)(rdev & 0xff));
@@ -198,7 +198,7 @@ static int interpret_table_entry(char *line)
 		error_msg_and_die("Device table entries require absolute paths");
 	}
 	name = xstrdup(path + 1);
-	sprintf(path, "%s/%s\0", rootdir, name);
+	sprintf(path, "%s/%s", rootdir, name);
 
 	switch (type) {
 	case 'd':
@@ -223,6 +223,7 @@ static int interpret_table_entry(char *line)
 
 			for (i = start; i < count; i++) {
 				sprintf(buf, "%s%d", name, i);
+				sprintf(path, "%s/%s%d", rootdir, name, i);
 				/* FIXME:  MKDEV uses illicit insider knowledge of kernel 
 				 * major/minor representation...  */
 				rdev = MKDEV(major, minor + (i * increment - start));
