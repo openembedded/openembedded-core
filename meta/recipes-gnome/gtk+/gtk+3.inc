@@ -18,7 +18,8 @@ export PKG_CONFIG_FOR_BUILD = "${STAGING_BINDIR_NATIVE}/pkg-config-native"
 
 do_configure_prepend() {
     # Do this because the configure script is running ./libtool directly
-    ln -s ${TARGET_PREFIX}libtool libtool || true
+    rm -f libtool
+    ln -s ${TARGET_PREFIX}libtool libtool
 }
 
 # Forcibly disable the GTK+ 2 dependency as we don't want to natively build the
