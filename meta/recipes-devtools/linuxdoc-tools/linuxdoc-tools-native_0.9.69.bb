@@ -2,20 +2,20 @@ SUMMARY = "Convert LinuxDoc SGML source into other formats"
 DESCRIPTION = "Convert LinuxDoc SGML source into other formats"
 HOMEPAGE = "http://packages.debian.org/linuxdoc-tools"
 LICENSE = "GPLv3+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=5fbccc46cff2379505ca4e09c7d6ccfe"
+LIC_FILES_CHKSUM = "file://COPYING;md5=077ef64ec3ac257fb0d786531cf26931"
 
 DEPENDS = "groff-native openjade-native"
 
-PR = "r3"
+PR = "r0"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/l/linuxdoc-tools/linuxdoc-tools_${PV}.tar.gz \
+SRC_URI = "${DEBIAN_MIRROR}/main/l/linuxdoc-tools/linuxdoc-tools_${PV}.orig.tar.gz \
            file://disable_sgml2rtf.patch \
            file://disable_txt_doc.patch \
            file://disable_tex_doc.patch \
            file://disable_dvips_doc.patch"
 
-SRC_URI[md5sum] = "f214e79b0dd084689cd04f18722bd563"
-SRC_URI[sha256sum] = "128cabb52ef8fb2f370ee488ea92bf4d8e49859200c7c8cae807abfe860a62ec"
+SRC_URI[md5sum] = "1d13d500918a7a145b0edc2f16f61dd1"
+SRC_URI[sha256sum] = "7103facee18a2ea97186ca459d743d22f7f89ad4b5cd1dfd1c34f83d6bfd4101"
 
 FILESPATH = "${FILE_DIRNAME}/linuxdoc-tools-native/"
 
