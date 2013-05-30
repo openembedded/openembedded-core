@@ -6,9 +6,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=f08a446809913fc9b3c718f0eaea0426"
 
 SECTION = "unknown"
-inherit gnome allarch
-
-DEPENDS = ""
+inherit gnomebase allarch
 
 PR = "r1"
 
