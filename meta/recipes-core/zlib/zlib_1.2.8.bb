@@ -4,15 +4,16 @@ library which is used by many different programs."
 HOMEPAGE = "http://zlib.net/"
 SECTION = "libs"
 LICENSE = "Zlib"
-LIC_FILES_CHKSUM = "file://zlib.h;beginline=4;endline=23;md5=94d1b5a40dadd127f3351471727e66a9"
+LIC_FILES_CHKSUM = "file://zlib.h;beginline=4;endline=23;md5=fde612df1e5933c428b73844a0c494fd"
 
-PR = "r1"
+PR = "r0"
 
-SRC_URI = "http://www.zlib.net/${BPN}-${PV}.tar.bz2 \
+SRC_URI = "http://www.zlib.net/${BPN}-${PV}.tar.xz \
            file://remove.ldconfig.call.patch \
            "
-SRC_URI[md5sum] = "2ab442d169156f34c379c968f3f482dd"
-SRC_URI[sha256sum] = "49e2e9658dfb036900da6ea0267a737fa3c4eee6666776d378c79d52e9334934"
+
+SRC_URI[md5sum] = "28f1205d8dd2001f26fec1e8c2cebe37"
+SRC_URI[sha256sum] = "831df043236df8e9a7667b9e3bb37e1fcb1220a0f163b6de2626774b9590d057"
 
 do_configure (){
 	./configure --prefix=${prefix} --shared --libdir=${libdir}
