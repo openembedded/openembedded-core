@@ -116,7 +116,6 @@ static void add_new_device(char *name, char *path, unsigned long uid,
 {
 	int status;
 	struct stat sb;
-	time_t timestamp = time(NULL);
 
 	memset(&sb, 0, sizeof(struct stat));
 	status = lstat(path, &sb);
@@ -127,7 +126,6 @@ static void add_new_device(char *name, char *path, unsigned long uid,
 		 * better match the actual file or strange things will happen.... */
 		if ((mode & S_IFMT) != (sb.st_mode & S_IFMT))
 			error_msg_and_die("%s: file type does not match specified type!", path);
-		timestamp = sb.st_mtime;
 	}
 
 	mknod(path, mode, rdev);
