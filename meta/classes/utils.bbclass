@@ -261,9 +261,9 @@ create_cmdline_wrapper () {
 	mv $cmd $cmd.real
 	cmdname=`basename $cmd`.real
 	cat <<END >$cmd
-#!/bin/sh
+#!/bin/bash
 realpath=\`readlink -fn \$0\`
-exec \`dirname \$realpath\`/$cmdname $@ "\$@"
+exec -a $cmd \`dirname \$realpath\`/$cmdname $@ "\$@"
 END
 	chmod +x $cmd
 }
@@ -284,9 +284,10 @@ create_wrapper () {
 	mv $cmd $cmd.real
 	cmdname=`basename $cmd`.real
 	cat <<END >$cmd
-#!/bin/sh
+#!/bin/bash
 realpath=\`readlink -fn \$0\`
-exec env $@ \`dirname \$realpath\`/$cmdname "\$@"
+export $@
+exec -a $cmd \`dirname \$realpath\`/$cmdname "\$@"
 END
 	chmod +x $cmd
 }
