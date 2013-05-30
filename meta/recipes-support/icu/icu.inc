@@ -32,6 +32,7 @@ do_configure_prepend() {
 do_install_append_class-native() {
 	mkdir -p ${D}/${STAGING_ICU_DIR_NATIVE}/config
 	cp -r ${B}/config/icucross.mk ${D}/${STAGING_ICU_DIR_NATIVE}/config
+        cp -r ${B}/config/icucross.inc ${D}/${STAGING_ICU_DIR_NATIVE}/config
 	cp -r ${B}/lib ${D}/${STAGING_ICU_DIR_NATIVE}
 	cp -r ${B}/bin ${D}/${STAGING_ICU_DIR_NATIVE}
 	cp -r ${B}/tools ${D}/${STAGING_ICU_DIR_NATIVE}
