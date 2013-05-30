@@ -906,7 +906,7 @@ python split_and_strip_files () {
         import multiprocessing
         nproc = multiprocessing.cpu_count()
         pool = bb.utils.multiprocessingpool(nproc)
-        processed = pool.imap(oe.package.runstrip, sfiles)
+        processed = list(pool.imap(oe.package.runstrip, sfiles))
         pool.close()
         pool.join()
 
@@ -1265,7 +1265,7 @@ python package_do_filedeps() {
     import multiprocessing
     nproc = multiprocessing.cpu_count()
     pool =  bb.utils.multiprocessingpool(nproc)
-    processed = pool.imap(oe.package.filedeprunner, pkglist)
+    processed = list(pool.imap(oe.package.filedeprunner, pkglist))
     pool.close()
     pool.join()
 
