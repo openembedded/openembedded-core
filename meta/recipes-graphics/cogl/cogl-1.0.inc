@@ -13,7 +13,7 @@ EDEPENDS_GL    = "virtual/libgl libdrm"
 EDEPENDS_GLES2 = "virtual/libgles2"
 EDEPENDS_KMS   = "libdrm virtual/egl"
 EDEPENDS_EGL   = "virtual/egl"
-EDEPENDS_X11   = "virtual/libx11 libxcomposite libxfixes libxi"
+EDEPENDS_X11   = "virtual/libx11 libxcomposite libxfixes libxi libxrandr"
 
 # Extra RDEPENDS for PACKAGECONFIG
 # This has to be explictly listed, because cogl dlopens the backends
