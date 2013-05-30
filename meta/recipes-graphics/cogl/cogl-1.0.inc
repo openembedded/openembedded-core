@@ -41,10 +41,4 @@ PACKAGECONFIG[glx] = "--enable-glx,--disable-glx,${EDEPENDS_GL} ${EDEPENDS_X11}"
 # Default to GLX
 PACKAGECONFIG ??= "gl glx"
 
-#Fix up some weirdness in the docs
-do_configure_prepend() {
-        sed -i s:doc/reference/Makefile::g ${S}/configure.ac
-        sed -i s:doc::g ${S}/Makefile.am
-}
-
 FILES_${PN}-examples = "${bindir}/* ${datadir}/cogl/examples-data/*"
