@@ -39,10 +39,6 @@ PACKAGECONFIG ??= "x11 glx"
 FILES_${PN}-examples = "${bindir}/test-* ${pkgdatadir}/redhand.png"
 
 do_configure_prepend() {
-        # Fix up some weirdness in the docs
-        sed -i s:doc/reference/Makefile::g ${S}/configure.ac
-        sed -i s:doc::g ${S}/Makefile.am
-
 	# see https://bugzilla.gnome.org/show_bug.cgi?id=661128 for this
 	touch -t 200001010000 po/clutter-1.0.pot
 }
