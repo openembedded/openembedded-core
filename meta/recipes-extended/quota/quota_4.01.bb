@@ -21,6 +21,9 @@ inherit autotools gettext
 
 EXTRA_OEMAKE += 'STRIP=""'
 
+PACKAGECONFIG ??= "tcp-wrappers"
+PACKAGECONFIG[tcp-wrappers] = "--with-tcpwrappers,--without-tcpwrappers,tcp-wrappers"
+
 do_install() {
 	oe_runmake prefix=${D}${prefix} install
 }
