@@ -66,6 +66,7 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	   file://0034-Use-the-multilib-config-files-from-B-instead-of-usin.patch \
 	   file://0035-wcast-qual-PR-55383.patch \
 	   file://gcc-4.8-PR56797.patch \
+	   file://gcc-4.8-build-args.patch \
 	  "
 SRC_URI[md5sum] = "e6040024eb9e761c3bea348d1fa5abb0"
 SRC_URI[sha256sum] = "b037fe5132b71ecad2ea7141ec92292b5d32427bf90fd90cde432b1d5abacc2c"
