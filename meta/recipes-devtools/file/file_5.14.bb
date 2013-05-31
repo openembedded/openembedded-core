@@ -13,7 +13,6 @@ DEPENDS_class-native = "zlib-native"
 PR = "r0"
 
 SRC_URI = "ftp://ftp.astron.com/pub/file/file-${PV}.tar.gz \
-           file://fix_version_check.patch \
            file://dump \
            file://filesystems"
 
