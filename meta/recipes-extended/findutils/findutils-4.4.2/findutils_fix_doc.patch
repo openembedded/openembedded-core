@@ -1,6 +1,17 @@
 Fix documentation build errors
 
 This fixes the following errors building the findutils documentation:
+find-maint.texi:45: misplaced {
+find-maint.texi:45: misplaced }
+find-maint.texi:236: warning: node next `Make the Compiler Find the Bugs' in menu `The File System Is Being Modified' and in sectioning `Factor Out Repeated Code' differ
+find-maint.texi:335: warning: node `Debugging is For Users Too' is next for `Factor Out Repeated Code' in sectioning but not in menu
+find-maint.texi:335: warning: node prev `Factor Out Repeated Code' in menu `Debugging is For Users Too' and in sectioning `Make the Compiler Find the Bugs' differ
+find-maint.texi:378: warning: node next `Debugging is For Users Too' in menu `Factor Out Repeated Code' and in sectioning `Don't Trust the File System Contents' differ
+find-maint.texi:378: warning: node prev `Debugging is For Users Too' in menu `Don't Trust the File System Contents' and in sectioning `Factor Out Repeated Code' differ
+find-maint.texi:392: warning: node next `Don't Trust the File System Contents' in menu `Debugging is For Users Too' and in sectioning `The File System Is Being Modified' differ
+find-maint.texi:392: warning: node prev `Don't Trust the File System Contents' in menu `The File System Is Being Modified' and in sectioning `Debugging is For Users Too' differ
+find-maint.texi:417: warning: node `Don't Trust the File System Contents' is next for `The File System Is Being Modified' in menu but not in sectioning
+find-maint.texi:417: warning: node prev `The File System Is Being Modified' in menu `Make the Compiler Find the Bugs' and in sectioning `Don't Trust the File System Contents' differ
 find.texi:53: misplaced {
 find.texi:53: misplaced }
 find.texi:1862: warning: node `Formatting Flags' is next for `Time Directives' in menu but not in sectioning
@@ -12,6 +23,29 @@ find.texi:1893: node `Time Formats' lacks menu item for `Formatting Flags' despi
 Upstream-Status: Backport
 Signed-off-by: Jonathan Liu <net147@gmail.com>
 
+--- a/doc/find-maint.texi
++++ b/doc/find-maint.texi
+@@ -42,7 +42,7 @@ Free Documentation License''.
+ 
+ @page
+ @vskip 0pt plus 1filll
+-@insertcopying{}
++@insertcopying
+ @end titlepage
+ 
+ @contents
+@@ -227,10 +227,10 @@ circumstances.
+ 
+ @menu
+ * Make the Compiler Find the Bugs::
++* Factor Out Repeated Code::
+ * The File System Is Being Modified::
+ * Don't Trust the File System Contents::
+ * Debugging is For Users Too::
+-* Factor Out Repeated Code::
+ @end menu
+ 
+ @node    Make the Compiler Find the Bugs
 --- a/doc/find.texi
 +++ b/doc/find.texi
 @@ -50,7 +50,7 @@ Texts.  A copy of the license is included in the section entitled
