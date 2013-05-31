@@ -1,0 +1,31 @@
+Upstream-Status: Backport
+Signed-off-by: Jonathan Liu <net147@gmail.com>
+
+From cba29fd8c2f605ed66718aa3a6b5833deb5d4cf9 Mon Sep 17 00:00:00 2001
+From: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date: Wed, 3 Apr 2013 12:08:44 +0200
+Subject: [PATCH] support 32 bpp pixmaps when 24 bpp fb is used.
+
+Fixes background corruption in ubuntu.
+
+Signed-off-by: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+---
+ src/driver.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/driver.c b/src/driver.c
+index 06d6d53..742aadd 100644
+--- a/src/driver.c
++++ b/src/driver.c
+@@ -650,7 +650,7 @@ PreInit(ScrnInfoPtr pScrn, int flags)
+ #endif
+     drmmode_get_default_bpp(pScrn, &ms->drmmode, &defaultdepth, &defaultbpp);
+     if (defaultdepth == 24 && defaultbpp == 24)
+-	    bppflags = Support24bppFb;
++	    bppflags = SupportConvert32to24 | Support24bppFb;
+     else
+ 	    bppflags = PreferConvert24to32 | SupportConvert24to32 | Support32bppFb;
+     
+-- 
+1.8.3
+
