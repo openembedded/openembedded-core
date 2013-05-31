@@ -219,7 +219,7 @@ static int interpret_table_entry(char *line)
 			dev_t rdev;
 			char buf[80];
 
-			for (i = start; i < count; i++) {
+			for (i = start; i < start + count; i++) {
 				sprintf(buf, "%s%d", name, i);
 				sprintf(path, "%s/%s%d", rootdir, name, i);
 				/* FIXME:  MKDEV uses illicit insider knowledge of kernel 
