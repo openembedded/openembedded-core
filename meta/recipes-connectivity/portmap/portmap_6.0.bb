@@ -1,6 +1,5 @@
 require portmap.inc
 
-DEPENDS += "tcp-wrappers"
 PR = "r7"
 
 SRC_URI = "http://www.sourcefiles.org/Networking/Tools/Miscellanenous/portmap-6.0.tgz \
@@ -13,8 +12,12 @@ SRC_URI[sha256sum] = "02c820d39f3e6e729d1bea3287a2d8a6c684f1006fb9612f97dcad4a28
 
 S = "${WORKDIR}/${BPN}_${PV}/"
 
+PACKAGECONFIG ??= "tcp-wrappers"
+PACKAGECONFIG[tcp-wrappers] = ",,tcp-wrappers"
+
 CPPFLAGS += "-DFACILITY=LOG_DAEMON -DENABLE_DNS -DHOSTS_ACCESS"
 CFLAGS += "-Wall -Wstrict-prototypes -fPIC"
+EXTRA_OEMAKE += "'NO_TCP_WRAPPER=${@base_contains('PACKAGECONFIG', 'tcp-wrappers', '', '1', d)}'"
 
 fakeroot do_install() {
     install -d ${D}${mandir}/man8/ ${D}${base_sbindir} ${D}${sysconfdir}/init.d
