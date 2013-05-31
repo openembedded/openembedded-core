@@ -2,6 +2,11 @@ MAJOR_VERSION = "2.23"
 PR = "r0"
 require util-linux.inc
 
+# To support older hosts, we need to patch and/or revert
+# some upstream changes.  Only do this for native packages.
+OLDHOST = ""
+OLDHOST_class-native = "file://util-linux-native.patch"
+
 SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             file://util-linux-ng-2.16-mount_lock_path.patch \
             file://uclibc-__progname-conflict.patch \
@@ -9,6 +14,7 @@ SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             file://fix-configure.patch \
             file://0001-lib-loopdev-fix-loopcxt_check_size-to-work-with-blkd.patch \
             file://0001-losetup-use-warn_size-for-regular-files-only.patch \
+            ${OLDHOST} \
 "
 
 SRC_URI[md5sum] = "7bd10387f1aa00efaa4b07dfa13215bc"
