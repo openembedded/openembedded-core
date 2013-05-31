@@ -9,8 +9,9 @@ SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
            file://install-examples.patch \
            file://weston.png \
            file://weston.desktop"
-SRC_URI[md5sum] = "63202129d66d5514e572814da5dfa1f7"
-SRC_URI[sha256sum] = "c833bc4dc8667561d2639b57220541531c039aa9332ce2a7022a3c466eb894f1"
+SRC_URI[md5sum] = "dd9f3043fc5228c6bc4e99873fae2254"
+SRC_URI[sha256sum] = "e7715d2c731f77a729c994a599ffdaebac1307b2dd9336136706869fa53618b4"
+
 
 inherit autotools pkgconfig useradd
 
@@ -23,7 +24,11 @@ EXTRA_OECONF = "--disable-android-compositor \
                 --disable-xwayland \
                 --enable-simple-clients \
                 --enable-clients \
-                --disable-simple-egl-clients"
+                --disable-simple-egl-clients \
+                --disable-libunwind \
+                --disable-rpi-compositor \
+                --disable-rdp-compositor"
+
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'wayland', 'kms wayland', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
@@ -38,6 +43,10 @@ PACKAGECONFIG[kms] = "--enable-drm-compositor --enable-weston-launch,--disable-d
 PACKAGECONFIG[wayland] = "--enable-wayland-compositor,--disable-wayland-compositor,mesa"
 # Weston on X11
 PACKAGECONFIG[x11] = "--enable-x11-compositor,--disable-x11-compositor,virtual/libx11 libxcb libxcb libxcursor cairo"
+# Headless Weston
+PACKAGECONFIG[headless] = "--enable-headless-compositor,--disable-headless-compositor"
+# Weston on framebuffer
+PACKAGECONFIG[fbdev] = "--enable-fbdev-compositor,--disable-fbdev-compositor,udev mtdev"
 
 # Use cairo-gl or cairo-glesv2
 PACKAGECONFIG[gles] = "--with-cairo-glesv2,,virtual/libgles2"
