@@ -1,0 +1,18 @@
+Install the examples so we can package them.
+
+Upstream-Status: Pending
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+diff --git a/clients/Makefile.am b/clients/Makefile.am
+index 621c7c3..749ef20 100644
+--- a/clients/Makefile.am
++++ b/clients/Makefile.am
+@@ -2,7 +2,7 @@ bin_PROGRAMS =					\
+ 	weston-info				\
+ 	$(terminal)
+ 
+-noinst_PROGRAMS =				\
++bin_PROGRAMS +=				\
+ 	$(clients_programs)			\
+ 	$(poppler_programs)			\
+ 	$(simple_clients_programs)		\

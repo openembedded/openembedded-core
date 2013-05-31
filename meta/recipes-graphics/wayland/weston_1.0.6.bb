@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=275efac2559a224527bd4fd593d38466 \
                     file://src/compositor.c;endline=23;md5=aa98a8db03480fe7d500d0b1f4b8850c"
 
 SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
+           file://install-examples.patch \
            file://weston.png \
            file://weston.desktop"
 SRC_URI[md5sum] = "63202129d66d5514e572814da5dfa1f7"
@@ -49,7 +50,10 @@ do_install_append() {
 	done
 }
 
-FILES_${PN} += "${datadir}/applications ${datadir}/icons"
+PACKAGES += "${PN}-examples"
+
+FILES_${PN} = "${bindir}/weston* ${bindir}/wcap-decode ${libexecdir} ${datadir}"
+FILES_${PN}-examples = "${bindir}/*"
 
 RDEPENDS_${PN} += "xkeyboard-config"
 RRECOMMENDS_${PN} = "liberation-fonts"
