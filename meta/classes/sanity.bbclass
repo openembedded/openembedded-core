@@ -387,6 +387,12 @@ def check_sanity(sanity_data):
     import sys
     if sys.hexversion < 0x020600F0:
         messages = messages + 'The system requires at least Python 2.6 to run. Please update your Python interpreter.\n'
+    # Check the python install is complete. glib-2.0-natives requries
+    # xml.parsers.expat
+    try:
+        import xml.parsers.expat
+    except ImportError:
+        messages = messages + 'Your python is not a full install. Please install the module xml.parsers.expat (python-xml on openSUSE and SUSE Linux).\n'
 
     if (LooseVersion(bb.__version__) < LooseVersion(minversion)):
         messages = messages + 'Bitbake version %s is required and version %s was found\n' % (minversion, bb.__version__)
