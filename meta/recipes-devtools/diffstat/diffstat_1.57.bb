@@ -6,13 +6,13 @@ HOMEPAGE = "http://invisible-island.net/diffstat/"
 SECTION = "devel"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://install-sh;endline=42;md5=b3549726c1022bee09c174c72a0ca4a5"
-PR = "r0"
 
 SRC_URI = "ftp://invisible-island.net/diffstat/diffstat-${PV}.tgz \
-           file://dirfix.patch"
+           file://dirfix.patch \
+           file://aclocal.patch"
 
-SRC_URI[md5sum] = "630d5278f1cd874dc3cc68cff3fddecf"
-SRC_URI[sha256sum] = "59a46c75a99f2c373a81880051adc43a17b71c55478691e702c61c13c6d61b55"
+SRC_URI[md5sum] = "a70ae35e479ab91da7eb6023a4e9240a"
+SRC_URI[sha256sum] = "cb9845839d695f178d6b5458b08d3e04773e400f35c0c062c4c0102220fba1e6"
 
 S = "${WORKDIR}/diffstat-${PV}"
 
