@@ -1,4 +1,4 @@
-PR = "r3"
+PR = "r4"
 
 LIC_FILES_CHKSUM="\
     file://src-release;endline=17;md5=4830a9ef968f3b18dd5e9f2c00db2d35\
@@ -41,6 +41,8 @@ BACKPORT = "\
      file://backport/binutils-fix-skip-whitespace-pr14887.patch \
      file://backport/aarch64-crn.patch \
      file://backport/aarch64-movi.patch \
+     file://backport/0001-config-tc-ppc.c-PPC_VLE_SPLIT16A-Delete-unused-macro.patch \
+     file://backport/0002-config-tc-ppc.c-md_apply_fix-Sign-extend-fieldval-un.patch \
 "
 SRC_URI[md5sum] = "4f8fa651e35ef262edc01d60fb45702e"
 SRC_URI[sha256sum] = "fe914e56fed7a9ec2eb45274b1f2e14b0d8b4f41906a5194eac6883cfe5c1097"
