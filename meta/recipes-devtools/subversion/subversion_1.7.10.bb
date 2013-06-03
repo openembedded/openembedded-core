@@ -13,8 +13,8 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libtool2.patch \
            file://fix-install-depends.patch \
 "
-SRC_URI[md5sum] = "8d532025771a67c06c23f299699f056f"
-SRC_URI[sha256sum] = "f8454c585f99afed764232a5048d9b8bfd0a25a9ab8e339ea69fe1204c453ef4"
+SRC_URI[md5sum] = "4088a77e14232876c9b4ff1541e6e200"
+SRC_URI[sha256sum] = "c1df222bec83d014d17785e2ceba6bc80962f64b280967de0285836d8d77a8e7"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4a14fd2da3134e40a087eb4326a4ecd4"
 
