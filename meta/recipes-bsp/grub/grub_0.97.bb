@@ -16,6 +16,7 @@ SRC_URI = "ftp://alpha.gnu.org/gnu/grub/grub-${PV}.tar.gz; \
             file://no-reorder-functions.patch \
             file://autohell.patch \
             file://grub_fix_for_automake-1.12.patch \
+            file://objcopy-absolute.patch \
             "
 
 SRC_URI[md5sum] = "cd3f3eb54446be6003156158d51f4884"
