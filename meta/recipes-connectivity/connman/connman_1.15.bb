@@ -7,8 +7,8 @@ SRC_URI  = "${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
             file://inet-fix-ip-cleanup-functions.patch \
             "
 
-SRC_URI[md5sum] = "6c9ecaf9c044f8c66a7b465f6716b569"
-SRC_URI[sha256sum] = "d0c37452a4e8eec27e433ff901a6c447963b9d8a8ceddd4a7311cc322e2dbf8c"
+SRC_URI[md5sum] = "e785c0c4564bfffb5215272f1be6f17c"
+SRC_URI[sha256sum] = "8229cc5e3e75197453ba2a644c03860a7cf9f4f27fcbf111bb589530d4efb58f"
 
 PR = "${INC_PR}.0"
 
