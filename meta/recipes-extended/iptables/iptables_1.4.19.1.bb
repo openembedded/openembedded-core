@@ -21,12 +21,11 @@ FILES_${PN}-dbg =+ "${libdir}/xtables/.debug"
 
 SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://types.h-add-defines-that-are-required-for-if_packet.patch \
-           file://fix-iptables-extensions-build-error.patch \
            file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
           "
 
-SRC_URI[md5sum] = "a819199d5ec013b82da13a8ffbba857e"
-SRC_URI[sha256sum] = "14a99fb8b0ca22027a9ac6eb72fa32c834ceb3073820e0ba79bf251c6a7bcf3c"
+SRC_URI[md5sum] = "be97ce9007fa42c867901b496c935a0a"
+SRC_URI[sha256sum] = "dd51d3b942758a462afc7c8495930d25c93058e5319303247375183ad50164d2"
 
 inherit autotools
 
