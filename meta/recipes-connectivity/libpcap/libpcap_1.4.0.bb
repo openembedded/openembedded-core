@@ -4,18 +4,21 @@ PR = "${INC_PR}.0"
 
 SRC_URI += "file://aclocal.patch \
             file://ieee80215-arphrd.patch \
-            file://0001-Fix-disable-canusb.patch \
-            file://0001-The-leading-comma-looked-weird-remove-it.patch \
-            file://0001-canusb-needs-lpthread.patch \
            "
 
-SRC_URI[md5sum] = "f78455a92622b7a3c05c58b6ad1cec7e"
-SRC_URI[sha256sum] = "41cbd9ed68383afd9f1fda279cb78427d36879d9e34ee707e31a16a1afd872b9"
+SRC_URI[md5sum] = "56e88a5aabdd1e04414985ac24f7e76c"
+SRC_URI[sha256sum] = "7c6a2a4f71e8ab09804e6b4fb3aff998c5583108ac42c0e2967eee8e1dbc7406"
 
 #
 # make install doesn't cover the shared lib
 # make install-shared is just broken (no symlinks)
 #
+
+do_configure_prepend () {
+    #remove hardcoded references to /usr/include
+    sed 's|\([ "^'\''I]\+\)/usr/include/|\1${STAGING_INCDIR}/|g' -i ${S}/configure.in
+}
+
 do_install_prepend () {
     install -d ${D}${libdir}
     install -d ${D}${bindir}
