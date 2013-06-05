@@ -382,12 +382,16 @@ export NATIVE_ROOT=${STAGING_DIR_NATIVE}
 
 \$2 \$1/\$3 \$4
 if [ \$? -ne 0 ]; then
-  mkdir -p \$1/etc/rpm-postinsts
-  name=\`head -1 \$1/\$3 | cut -d' ' -f 2\`
-  echo "#!\$2" > \$1/etc/rpm-postinsts/\${name}
-  echo "# Arg: \$4" >> \$1/etc/rpm-postinsts/\${name}
-  cat \$1/\$3 >> \$1/etc/rpm-postinsts/\${name}
-  chmod +x \$1/etc/rpm-postinsts/\${name}
+  if [ \$4 -eq 1 ]; then
+    mkdir -p \$1/etc/rpm-postinsts
+    name=\`head -1 \$1/\$3 | cut -d' ' -f 2\`
+    echo "#!\$2" > \$1/etc/rpm-postinsts/\${name}
+    echo "# Arg: \$4" >> \$1/etc/rpm-postinsts/\${name}
+    cat \$1/\$3 >> \$1/etc/rpm-postinsts/\${name}
+    chmod +x \$1/etc/rpm-postinsts/\${name}
+  else
+    echo "Error: pre/post remove scriptlet failed"
+  fi
 fi
 EOF
 
