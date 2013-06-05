@@ -75,6 +75,9 @@ RDEPENDS_packagegroup-self-hosted-sdk = "\
     intltool \
     ldd \
     less \
+    libssp \
+    libssp-dev \
+    libssp-staticdev \
     libstdc++ \
     libstdc++-dev \
     libtool \
