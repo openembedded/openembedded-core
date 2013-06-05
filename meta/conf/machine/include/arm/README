@@ -38,3 +38,6 @@ the core arch-arm.inc file.
 
 ARMPKGSFX_FPU - This is the FPU specific suffix.  The suffix indicates 
 specific FPU optimizations.  'vfp' and 'neon' are both defined.
+
+CORTEX_ID - This is the cortex processor type, and is used to setup the
+proper tuning (-mtune=cortex-${CORTEX_ID}) in tune-cortexa.inc.
