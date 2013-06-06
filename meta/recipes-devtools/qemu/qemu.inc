@@ -20,13 +20,8 @@ SDL_class-nativesdk ?= ""
 SRC_URI = "\
     file://powerpc_rom.bin \
     file://no-strip.patch \
-    file://linker-flags.patch \
     file://fix-configure-checks.patch \
-    file://fallback-to-safe-mmap_min_addr.patch \
     file://larger_default_ram_size.patch \
-    file://arm-bgr.patch \
-    file://Revert-vmware_vga-Add-back-some-info-in-local-state-.patch \
-    file://0002-docs-Fix-generating-qemu-doc.html-with-texinfo-5.patch \
     "
 
 SRC_URI_append_class-nativesdk = "\
@@ -37,7 +32,7 @@ SRC_URI_append_class-native = "\
     file://fix-libcap-header-issue-on-some-distro.patch \
     "
 
-EXTRA_OECONF += "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls --audio-drv-list=oss,alsa --audio-card-list=ac97,es1370 ${SDL} --disable-curl --disable-vnc-jpeg --disable-bluez --with-system-pixman"
+EXTRA_OECONF += "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls --audio-drv-list=oss,alsa --disable-curl --disable-vnc-jpeg --disable-bluez --with-system-pixman"
 
 EXTRA_OECONF_class-nativesdk = "--target-list=${@get_qemu_target_list(d)} --disable-werror --disable-vnc-tls \
 				--disable-curl \

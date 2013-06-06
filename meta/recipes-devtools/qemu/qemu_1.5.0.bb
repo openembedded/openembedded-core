@@ -6,5 +6,5 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
 SRC_URI += "file://fdt_header.patch"
 
 SRC_URI_prepend = "http://wiki.qemu.org/download/qemu-${PV}.tar.bz2"
-SRC_URI[md5sum] = "eb2d696956324722b5ecfa46e41f9a75"
-SRC_URI[sha256sum] = "75063a9326221607de3599e89fb5af80f2d8080ddc55ca253fff113843432df1"
+SRC_URI[md5sum] = "b6f3265b8ed39d77e8f354f35cc26e16"
+SRC_URI[sha256sum] = "b22b30ee9712568dfb4eedf76783f4a76546e1cbc41659b909646bcf0b4867bb"
