@@ -1,7 +1,5 @@
 def gnome_verdir(v):
-    import re
-    m = re.match("^([0-9]+)\.([0-9]+)", v)
-    return "%s.%s" % (m.group(1), m.group(2))
+    return oe.utils.trim_version(v, 2)
 
 GNOME_COMPRESS_TYPE ?= "bz2"
 SECTION ?= "x11/gnome"
