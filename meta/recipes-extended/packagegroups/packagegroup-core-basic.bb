@@ -92,11 +92,12 @@ RDEPENDS_packagegroup-core-dev-utils = "\
 
 VIRTUAL-RUNTIME_initscripts ?= "initscripts"
 VIRTUAL-RUNTIME_init_manager ?= "sysvinit"
+VIRTUAL-RUNTIME_login_manager ?= "busybox"
 RDEPENDS_packagegroup-core-initscripts = "\
     ${VIRTUAL-RUNTIME_initscripts} \
     ${VIRTUAL-RUNTIME_init_manager} \
     ethtool \
-    mingetty \
+    ${VIRTUAL-RUNTIME_login_manager} \
     sysklogd \
     "
 
