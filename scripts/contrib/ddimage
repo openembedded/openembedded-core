@@ -6,11 +6,11 @@ BLACKLIST_DEVICES="/dev/sda"
 # 1MB blocksize
 BLOCKSIZE=1048576
 
-function usage() {
+usage() {
 	echo "Usage: $(basename $0) IMAGE DEVICE"
 }
 
-function image_details() {
+image_details() {
 	IMG=$1
 	echo "Image details"
 	echo "============="
@@ -21,7 +21,7 @@ function image_details() {
 	echo ""
 }
 
-function device_details() {
+device_details() {
 	DEV=$1
 	BLOCK_SIZE=512
 
@@ -61,10 +61,12 @@ if [ ! -e "$IMAGE" ]; then
 fi
 
 
-if [ "${BLACKLIST_DEVICES/${DEVICE}/ERROR}" != "$BLACKLIST_DEVICES" ]; then
-	echo "ERROR: Device $DEVICE is blacklisted"
-	exit 1
-fi
+for i in ${BLACKLIST_DEVICES}; do
+	if [ "$i" = "$DEVICE" ]; then
+		echo "ERROR: Device $DEVICE is blacklisted"
+		exit 1
+	fi
+done
 
 if [ ! -w "$DEVICE" ]; then
 	echo "ERROR: Device $DEVICE does not exist or is not writable"
