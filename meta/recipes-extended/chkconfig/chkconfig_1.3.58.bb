@@ -43,7 +43,8 @@ obey_variables () {
 }
 
 do_install() {
-	oe_runmake 'DESTDIR=${D}' 'INSTALLNLSDIR=${D}${datadir}/locale' install
+	oe_runmake 'DESTDIR=${D}' 'INSTALLNLSDIR=${D}${datadir}/locale' \
+		'BINDIR=${sbindir}' install
 	install -d ${D}${sysconfdir}/chkconfig.d
 }
 
