@@ -1,0 +1,40 @@
+Subject: [PATCH] fix autoheader for *_SHIFT values.
+
+Upstream-Status: Pending
+
+autoheader would not generate C `#define' statements if
+the first param of AC_DEFINE_UNQUOTED is a shell variable.
+This will cause build failures while enable termios, so
+expand these AC_DEFINE_UNQUOTED from the macro.
+
+Signed-off-by: Xin Ouyang <Xin.Ouyang@windriver.com>
+---
+ configure.in |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index c54e4c4..13bae64 100644
+--- a/configure.in
++++ b/configure.in
+@@ -1335,8 +1335,6 @@ AC_CACHE_CHECK(shift offset of $1, $2,
+  [$2=-1]
+ )
+  LIBS="$LIBS1"])
+-SHIFT_NAME="$1"_SHIFT
+-AC_DEFINE_UNQUOTED($SHIFT_NAME, ${$2}, [foo])
+ if test "$2" = -1; then
+ AC_MSG_WARN(please determine $1_SHIFT manually)
+ fi
+@@ -1346,6 +1344,9 @@ AC_SHIFT_OFFSET(CRDLY,  sc_cv_sys_crdly_shift)
+ AC_SHIFT_OFFSET(TABDLY, sc_cv_sys_tabdly_shift)
+ AC_SHIFT_OFFSET(CSIZE,  sc_cv_sys_csize_shift)
+ 
++AC_DEFINE_UNQUOTED(CRDLY_SHIFT, ${sc_cv_sys_crdly_shift}, [shift for CRDLY, carriage return delay])
++AC_DEFINE_UNQUOTED(TABDLY_SHIFT, ${sc_cv_sys_tabdly_shift}, [shift for TABDLY, horizontal tab delay])
++AC_DEFINE_UNQUOTED(CSIZE_SHIFT, ${sc_cv_sys_csize_shift}, [shift for CSIZE, character size])
+ 
+ dnl find what physical type (basic C type) is equivalent to the given type.
+ dnl arg1: include file(s)
+-- 
+1.7.9.5
+
