@@ -265,14 +265,6 @@ python do_package_prepend () {
     f.close()
 }
 
-pkg_postinst_${PN} () {
-	# If we are not making an image we create links for the utilities that doesn't exist
-	# so the update-alternatives script will get the utilities it needs
-	# (update-alternatives have no problem replacing links later anyway)
-	test -n 2> /dev/null || alias test='busybox test'
-	if test "x$D" = "x"; then while read link; do if test ! -h "$link"; then case "$link" in /*/*/*) to="../../bin/busybox";; /bin/*) to="busybox";; /*/*) to="../bin/busybox";; esac; busybox ln -s $to $link; fi; done </etc/busybox.links; fi
-}
-
 pkg_prerm_${PN} () {
 	# This is so you can make busybox commit suicide - removing busybox with no other packages
 	# providing its files, this will make update-alternatives work, but the update-rc.d part
