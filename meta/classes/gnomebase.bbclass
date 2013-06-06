@@ -3,7 +3,8 @@ def gnome_verdir(v):
 
 GNOME_COMPRESS_TYPE ?= "bz2"
 SECTION ?= "x11/gnome"
-SRC_URI = "${GNOME_MIRROR}/${BPN}/${@gnome_verdir("${PV}")}/${BPN}-${PV}.tar.${GNOME_COMPRESS_TYPE};name=archive"
+GNOMEBN ?= "${BPN}"
+SRC_URI = "${GNOME_MIRROR}/${GNOMEBN}/${@gnome_verdir("${PV}")}/${GNOMEBN}-${PV}.tar.${GNOME_COMPRESS_TYPE};name=archive"
 
 DEPENDS += "gnome-common-native"
 
