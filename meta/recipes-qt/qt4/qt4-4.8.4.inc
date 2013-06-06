@@ -25,6 +25,7 @@ SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-sr
            file://0023-qtnetwork-blacklist-two-more-certificates.patch \
            file://0024-Change-all-shmget-calls-to-user-only-memory.patch \
            file://0025-Remove-unnecessary-typedef-found-by-gcc4-8.patch \
+           file://0026-Don-t-overwrite-QMAKE_QT_CONFIG-with-empty-value.patch \
            file://g++.conf \
            file://linux.conf \
            "
