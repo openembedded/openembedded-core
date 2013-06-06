@@ -82,7 +82,7 @@
 # Use "external-MODE" to use the precompiled external toolchains where MODE
 # is the type of external toolchain to use e.g. eabi. You need to ensure 
 # the toolchain you want to use is included in an appropriate layer
-# TCMODE = "external-eabi"
+# TCMODE ?= "external-eabi"
 
 # mklibs library size optimization is more useful to smaller images,
 # and less useful for bigger images. Also mklibs library optimization
