@@ -204,29 +204,6 @@ def check_sanity_version_change(data):
     # Sanity checks to be done when SANITY_VERSION changes
     return ""
 
-def check_pseudo_wrapper():
-    import sys
-    if not sys.argv[0].endswith('/bitbake'):
-        return ""
-
-    import subprocess as sub
-    # Check if bitbake wrapper is being used
-    pseudo_build = os.environ.get( 'PSEUDO_BUILD' )
-    if not pseudo_build:
-        bb.warn("Bitbake has not been run using the bitbake wrapper (scripts/bitbake); this is likely because your PATH has been altered from that normally set up by the oe-init-build-env script. Not using the wrapper may result in failures during package installation, so it is highly recommended that you set your PATH back so that the wrapper script is being executed.")
-
-    if (not pseudo_build) or pseudo_build == '2':
-        # pseudo ought to be working, let's see if it is...
-        p = sub.Popen(['sh', '-c', 'PSEUDO_DISABLED=0 id -u'],stdout=sub.PIPE,stderr=sub.PIPE)
-        out, err = p.communicate()
-        if out.rstrip() != '0':
-            msg = "Pseudo is not functioning correctly, which will cause failures during package installation. Please check your configuration."
-            if pseudo_build == '2':
-                return msg
-            else:
-                bb.warn(msg)
-    return ""
-
 def check_create_long_filename(filepath, pathname):
     testfile = os.path.join(filepath, ''.join([`num`[-1] for num in xrange(1,200)]))
     try:
@@ -550,10 +527,6 @@ def check_sanity(sanity_data):
     if missing != "":
         missing = missing.rstrip(',')
         messages = messages + "Please install the following missing utilities: %s\n" % missing
-
-    pseudo_msg = check_pseudo_wrapper()
-    if pseudo_msg != "":
-        messages = messages + pseudo_msg + '\n'
 
     check_supported_distro(sanity_data)
     if machinevalid:
