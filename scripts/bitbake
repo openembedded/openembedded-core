@@ -57,26 +57,6 @@ elif [ -z "$BUILDDIR" ] ; then
     BUILDDIR="`pwd`"
 fi
 
-needtar="1"
-needgit="1"
-TARVERSION=`tar --version | head -n 1 | cut -d ' ' -f 4`
-GITVERSION=`git --version 2> /dev/null | cut -d ' ' -f 3`
-float_test() {
-     echo | awk 'END { exit ( !( '"$1"')); }'
-}
-version_compare() {
-    python -c "from distutils.version import LooseVersion; import sys; sys.exit(not (LooseVersion('$1') $2 LooseVersion('$3')))"
-}
-
-# Tar version 1.24 and onwards handle overwriting symlinks correctly
-# but earlier versions do not; this needs to work properly for sstate
-float_test "$TARVERSION > 1.23" && needtar="0"
-
-if [ ! -z $GITVERSION ]; then
-    # Need git >= 1.7.5 for git-remote --mirror=xxx syntax
-    version_compare $GITVERSION ">=" 1.7.5 && needgit="0"
-fi
-
 buildpseudo="1"
 if [ $needpseudo = "1" ]; then
     if [ -e "$BUILDDIR/pseudodone" ]; then
@@ -103,14 +83,6 @@ if [ $needpseudo = "1" ]; then
     fi
 fi
 
-# If tar is already built, we don't want to do it again...
-if [ -e "$PSEUDOBINDIR/tar" -a "$needtar" = "1" ]; then
-    needtar="0"
-fi
-# If git is already built, we don't want to do it again...
-if [ -e "$PSEUDOBINDIR/git" -a "$needgit" = "1" ]; then
-    needgit="0"
-fi
 
 if [ $needpseudo = "0" ]; then
     buildpseudo="0"
@@ -133,14 +105,6 @@ if [ $buildpseudo -gt 0 ]; then
     [ $buildpseudo -eq 2 ] && echo "Pseudo may be out of date, rebuilding pseudo before the main build"
     [ $buildpseudo -eq 3 ] && echo "Building pseudo-native before main build"
     export PSEUDO_BUILD=1
-    TARTARGET="tar-replacement-native"
-    if [ $needtar = "0" ]; then
-        TARTARGET=""
-    fi
-    GITTARGET="git-replacement-native"
-    if [ $needgit = "0" ]; then
-        GITTARGET=""
-    fi
 
     # Pass through debug options
     additionalopts=""
@@ -154,11 +118,7 @@ if [ $buildpseudo -gt 0 ]; then
         done
     done
 
-    if [ $needtar = "1" ]; then
-	bitbake $TARTARGET -c populate_sysroot
-    fi
-
-    bitbake pseudo-native $GITTARGET $additionalopts -c populate_sysroot
+    bitbake pseudo-native $additionalopts -c populate_sysroot
     ret=$?
     if [ "$ret" != "0" ]; then
         exit 1

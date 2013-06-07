@@ -359,6 +359,28 @@ def check_gcc_march(sanity_data):
 
     return result
 
+# Tar version 1.24 and onwards handle overwriting symlinks correctly
+# but earlier versions do not; this needs to work properly for sstate
+def check_tar_version(sanity_data, loosever):
+    status, result = oe.utils.getstatusoutput("tar --version")
+    if status != 0:
+        return "Unable to execute tar --version, exit code %s\n" % status
+    version = result.split()[3]
+    if loosever(version) < loosever("1.24"):
+        return "Your version of tar is older than 1.24 and has bugs which will break builds. Please install a newer version of tar.\n"
+    return None
+
+# We use git parameters and functionality only found in 1.7.5 or later
+def check_git_version(sanity_data, loosever):
+    status, result = oe.utils.getstatusoutput("git --version 2> /dev/null")
+    if status != 0:
+        return "Unable to execute git --version, exit code %s\n" % status
+    version = result.split()[2]
+    if loosever(version) < loosever("1.7.5"):
+        return "Your version of git is older than 1.7.5 and has bugs which will break builds. Please install a newer version of git.\n"
+    return None
+
+
 def check_sanity(sanity_data):
     import subprocess
 
@@ -408,6 +430,15 @@ def check_sanity(sanity_data):
     else:
         messages = messages + 'Please set a MACHINE in your local.conf or environment\n'
         machinevalid = False
+
+    tarmsg = check_tar_version(sanity_data, LooseVersion)
+    if tarmsg:
+        messages = messages + tarmsg
+
+    gitmsg = check_git_version(sanity_data, LooseVersion)
+    if gitmsg:
+        messages = messages + gitmsg
+
 
     # Check we are using a valid local.conf
     current_conf  = sanity_data.getVar('CONF_VERSION', True)
