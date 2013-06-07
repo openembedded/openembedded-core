@@ -501,6 +501,7 @@ python () {
         d.setVarFlag('do_package', 'fakeroot', 1)
         d.setVarFlag('do_package', 'umask', 022)
         d.setVarFlag('do_package_setscene', 'fakeroot', 1)
+        d.appendVarFlag('do_package_setscene', 'depends', ' virtual/fakeroot-native:do_populate_sysroot')
         d.setVarFlag('do_devshell', 'fakeroot', 1)
         d.appendVarFlag('do_devshell', 'depends', ' virtual/fakeroot-native:do_populate_sysroot')
     source_mirror_fetch = d.getVar('SOURCE_MIRROR_FETCH', 0)

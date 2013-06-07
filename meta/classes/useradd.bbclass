@@ -150,7 +150,7 @@ USERADDSETSCENEDEPS = "${MLPREFIX}base-passwd:do_populate_sysroot_setscene shado
 USERADDSETSCENEDEPS_virtclass-cross = ""
 USERADDSETSCENEDEPS_class-native = ""
 USERADDSETSCENEDEPS_class-nativesdk = ""
-do_package_setscene[depends] = "${USERADDSETSCENEDEPS}"
+do_package_setscene[depends] += "${USERADDSETSCENEDEPS}"
 
 # Recipe parse-time sanity checks
 def update_useradd_after_parse(d):
