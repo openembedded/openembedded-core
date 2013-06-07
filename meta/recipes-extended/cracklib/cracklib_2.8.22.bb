@@ -8,7 +8,7 @@ DEPENDS = "cracklib-native zlib"
 DEPENDS_class-native = "zlib"
 PR ="r0"
 
-EXTRA_OECONF = "--without-python"
+EXTRA_OECONF = "--without-python --libdir=${base_libdir}"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/cracklib/cracklib-${PV}.tar.gz \
            file://0001-packlib.c-support-dictionary-byte-order-dependent.patch \
