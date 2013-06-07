@@ -25,7 +25,11 @@ SRC_URI = "http://ppp.samba.org/ftp/ppp/ppp-${PV}.tar.gz \
            file://ip-up \
            file://ip-down \
            file://08setupdns \
-           file://92removedns"
+           file://92removedns \
+           file://copts.patch \
+           file://pap \
+           file://ppp_on_boot \
+           file://provider "
 
 SRC_URI[md5sum] = "4621bc56167b6953ec4071043fe0ec57"
 SRC_URI[sha256sum] = "43317afec9299f9920b96f840414c977f0385410202d48e56d2fdb8230003505"
@@ -35,6 +39,11 @@ inherit autotools
 TARGET_CC_ARCH += " ${LDFLAGS}"
 EXTRA_OEMAKE = "STRIPPROG=${STRIP} MANDIR=${D}${datadir}/man/man8 INCDIR=${D}${includedir} LIBDIR=${D}${libdir}/pppd/${PV} BINDIR=${D}${sbindir}"
 EXTRA_OECONF = "--disable-strip"
+
+# Package Makefile computes CFLAGS, referencing COPTS.
+# Typically hard-coded to '-O2 -g' in the Makefile's.
+#
+EXTRA_OEMAKE += ' COPTS="${CFLAGS}"'
 
 do_install_append () {
 	make install-etcppp ETCDIR=${D}/${sysconfdir}/ppp
@@ -48,6 +57,11 @@ do_install_append () {
 	install -m 0755 ${WORKDIR}/ip-down ${D}${sysconfdir}/ppp/
 	install -m 0755 ${WORKDIR}/08setupdns ${D}${sysconfdir}/ppp/ip-up.d/
 	install -m 0755 ${WORKDIR}/92removedns ${D}${sysconfdir}/ppp/ip-down.d/
+	mkdir -p ${D}${sysconfdir}/chatscripts
+	mkdir -p ${D}${sysconfdir}/ppp/peers
+	install -m 0755 ${WORKDIR}/pap ${D}${sysconfdir}/chatscripts
+	install -m 0755 ${WORKDIR}/ppp_on_boot ${D}${sysconfdir}/ppp/ppp_on_boot
+	install -m 0755 ${WORKDIR}/provider ${D}${sysconfdir}/ppp/peers/provider
 	rm -rf ${D}/${mandir}/man8/man8
 	chmod u+s ${D}${sbindir}/pppd
 }
