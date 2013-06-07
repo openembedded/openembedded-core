@@ -94,9 +94,20 @@ qmake_base_do_configure() {
 	fi
 
 	# Hack .pro files to use OE utilities
+	LCONVERT_NAME=$(basename ${OE_QMAKE_LCONVERT})
+	LRELEASE_NAME=$(basename ${OE_QMAKE_LRELEASE})
+	LUPDATE_NAME=$(basename ${OE_QMAKE_LUPDATE})
+	XMLPATTERNS_NAME=$(basename ${OE_QMAKE_XMLPATTERNS})
 	find -name '*.pro' \
-	     -exec sed -i -e 's,=\s*.*/lrelease,= ${OE_QMAKE_LRELEASE},g' \
-	                  -e 's,=\s*.*/lupdate,= ${OE_QMAKE_LUPDATE},g' '{}' ';'
+	     -exec sed -i -e "s|\(=\s*.*\)/$LCONVERT_NAME|\1/lconvert|g" \
+	                  -e "s|\(=\s*.*\)/$LRELEASE_NAME|\1/lrelease|g" \
+	                  -e "s|\(=\s*.*\)/$LUPDATE_NAME|\1/lupdate|g" \
+	                  -e "s|\(=\s*.*\)/$XMLPATTERNS_NAME|\1/xmlpatterns|g" \
+	                  -e "s|\(=\s*.*\)/lconvert|\1/$LCONVERT_NAME|g" \
+	                  -e "s|\(=\s*.*\)/lrelease|\1/$LRELEASE_NAME|g" \
+	                  -e "s|\(=\s*.*\)/lupdate|\1/$LUPDATE_NAME|g" \
+	                  -e "s|\(=\s*.*\)/xmlpatterns|\1/$XMLPATTERNS_NAME|g" \
+	                  '{}' ';'
 
 #bbnote "Calling '${OE_QMAKE_QMAKE} -makefile -spec ${QMAKESPEC} -o Makefile $QMAKE_VARSUBST_PRE $AFTER $PROFILES $QMAKE_VARSUBST_POST'"
 	unset QMAKESPEC || true
