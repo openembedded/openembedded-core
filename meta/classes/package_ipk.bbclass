@@ -416,7 +416,6 @@ python () {
         deps = ' opkg-utils-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot'
         d.appendVarFlag('do_package_write_ipk', 'depends', deps)
         d.setVarFlag('do_package_write_ipk', 'fakeroot', "1")
-        d.setVarFlag('do_package_write_ipk_setscene', 'fakeroot', "1")
 }
 
 python do_package_write_ipk () {

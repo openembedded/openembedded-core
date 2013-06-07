@@ -1128,7 +1128,6 @@ python () {
         deps = ' rpm-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot'
         d.appendVarFlag('do_package_write_rpm', 'depends', deps)
         d.setVarFlag('do_package_write_rpm', 'fakeroot', 1)
-        d.setVarFlag('do_package_write_rpm_setscene', 'fakeroot', 1)
 }
 
 SSTATETASKS += "do_package_write_rpm"

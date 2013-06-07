@@ -402,7 +402,6 @@ python () {
         deps = ' dpkg-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot'
         d.appendVarFlag('do_package_write_deb', 'depends', deps)
         d.setVarFlag('do_package_write_deb', 'fakeroot', "1")
-        d.setVarFlag('do_package_write_deb_setscene', 'fakeroot', "1")
 
     # Map TARGET_ARCH to Debian's ideas about architectures
     darch = d.getVar('DPKG_ARCH', True)
