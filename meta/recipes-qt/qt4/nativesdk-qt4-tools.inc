@@ -1,7 +1,7 @@
 DESCRIPTION = "SDK tools for Qt/[X11|Mac|Embedded] version 4.x"
 DEPENDS = "nativesdk-zlib nativesdk-dbus nativesdk-libx11 qt4-native"
 SECTION = "libs"
-HOMEPAGE = "http://qt.nokia.com"
+HOMEPAGE = "http://qt-project.org/"
 LICENSE = "LGPLv2.1 | GPLv3"
 
 INC_PR = "r13"
