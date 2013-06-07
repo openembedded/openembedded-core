@@ -381,11 +381,10 @@ def check_sanity(sanity_data):
 
     messages = ""
 
-    # Check the Python version, we now use Python 2.6 features in
-    # various classes
+    # Check the Python version, we now have a minimum of Python 2.7.3
     import sys
-    if sys.hexversion < 0x020600F0:
-        messages = messages + 'The system requires at least Python 2.6 to run. Please update your Python interpreter.\n'
+    if sys.hexversion < 0x020703F0:
+        messages = messages + 'The system requires at least Python 2.7.3 to run. Please update your Python interpreter.\n'
     # Check the python install is complete. glib-2.0-natives requries
     # xml.parsers.expat
     try:

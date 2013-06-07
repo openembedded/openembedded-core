@@ -43,9 +43,9 @@ fi
 # Similarly, we now have code that doesn't parse correctly with older
 # versions of Python, and rather than fixing that and being eternally
 # vigilant for any other new feature use, just check the version here.
-py_v26_check=`python -c 'import sys; print sys.version_info >= (2,6,0)'`
+py_v26_check=`python -c 'import sys; print sys.version_info >= (2,7,3)'`
 if [ "$py_v26_check" != "True" ]; then
-	echo "BitBake requires Python 2.6 or later"
+	echo "BitBake requires Python 2.7.3 or later"
 	exit 1
 fi
 
