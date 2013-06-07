@@ -1,6 +1,6 @@
 DESCRIPTION = "Qt is a versatile cross-platform application framework -- this is the embedded version."
 SECTION = "libs"
-HOMEPAGE = "http://qt.nokia.com"
+HOMEPAGE = "http://qt-project.org/"
 DEPENDS += "directfb tslib"
 INC_PR = "r52"
 
