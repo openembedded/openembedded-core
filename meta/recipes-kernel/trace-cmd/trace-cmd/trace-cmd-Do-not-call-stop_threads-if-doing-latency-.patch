@@ -1,0 +1,38 @@
+From 356dee73d9ced3e019dea2883a7f357fd4664b3e Mon Sep 17 00:00:00 2001
+From: Mark Asselstine <mark.asselstine@windriver.com>
+Date: Thu, 5 Apr 2012 15:19:45 -0400
+Subject: [PATCH] trace-cmd: Do not call stop_threads() if doing latency
+ tracing
+
+Upstream-Status: Backport
+
+If we are using a latency tracer we do not call start_threads() we
+should therefore not call stop_threads() if 'latency'. Attempting
+to call stop_threads() without first calling start_threads() will
+cause a segfault since pids will be uninitialized.
+
+Link: http://lkml.kernel.org/r/1333653586-3379-3-git-send-email-mark.asselstine@windriver.com
+
+Signed-off-by: Mark Asselstine <mark.asselstine@windriver.com>
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ trace-record.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/trace-record.c b/trace-record.c
+index fcec28b..1c56fa9 100644
+--- a/trace-record.c
++++ b/trace-record.c
+@@ -2216,7 +2216,8 @@ void trace_record (int argc, char **argv)
+ 		}
+ 
+ 		disable_tracing();
+-		stop_threads();
++		if (!latency)
++			stop_threads();
+ 	}
+ 
+ 	for (cpu = 0; cpu < cpu_count; cpu++) {
+-- 
+1.7.10.4
+

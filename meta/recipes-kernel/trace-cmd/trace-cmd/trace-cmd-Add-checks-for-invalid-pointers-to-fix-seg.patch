@@ -1,0 +1,61 @@
+From a6e259b2cd43db3c0f69441f627a8cf214f88506 Mon Sep 17 00:00:00 2001
+From: Mark Asselstine <mark.asselstine@windriver.com>
+Date: Thu, 5 Apr 2012 15:19:44 -0400
+Subject: [PATCH] trace-cmd: Add checks for invalid pointers to fix segfaults
+
+Upstream-Status: Backport
+
+Running 'trace-cmd report' after running latency tracers will cause a
+segfault due to invalid pointers. Adding checks to ensure
+pointers/lists are initialized before attempting to use them prevents
+these segfaults.
+
+Link: http://lkml.kernel.org/r/1333653586-3379-2-git-send-email-mark.asselstine@windriver.com
+
+Signed-off-by: Mark Asselstine <mark.asselstine@windriver.com>
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ trace-input.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/trace-input.c b/trace-input.c
+index b6af1e6..5151c1e 100644
+--- a/trace-input.c
++++ b/trace-input.c
+@@ -695,7 +695,8 @@ static void __free_page(struct tracecmd_input *handle, struct page *page)
+ 
+ static void free_page(struct tracecmd_input *handle, int cpu)
+ {
+-	if (!handle->cpu_data[cpu].page)
++	if (!handle->cpu_data || cpu >= handle->cpus ||
++	    !handle->cpu_data[cpu].page)
+ 		return;
+ 
+ 	__free_page(handle, handle->cpu_data[cpu].page);
+@@ -746,8 +747,12 @@ void tracecmd_record_ref(struct record *record)
+ 
+ static void free_next(struct tracecmd_input *handle, int cpu)
+ {
+-	struct record *record = handle->cpu_data[cpu].next;
++	struct record *record;
++
++	if (!handle->cpu_data || cpu >= handle->cpus)
++		return;
+ 
++	record = handle->cpu_data[cpu].next;
+ 	if (!record)
+ 		return;
+ 
+@@ -2337,7 +2342,8 @@ void tracecmd_close(struct tracecmd_input *handle)
+ 		/* The tracecmd_peek_data may have cached a record */
+ 		free_next(handle, cpu);
+ 		free_page(handle, cpu);
+-		if (!list_empty(&handle->cpu_data[cpu].pages))
++		if (handle->cpu_data &&
++		    !list_empty(&handle->cpu_data[cpu].pages))
+ 			warning("pages still allocated on cpu %d%s",
+ 				cpu, show_records(&handle->cpu_data[cpu].pages));
+ 	}
+-- 
+1.7.10.4
+

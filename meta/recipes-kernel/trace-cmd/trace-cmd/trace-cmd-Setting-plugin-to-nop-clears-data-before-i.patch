@@ -1,0 +1,96 @@
+From d65740d61e7a4ea6d8d77237954b33dd18e3276c Mon Sep 17 00:00:00 2001
+From: Mark Asselstine <mark.asselstine@windriver.com>
+Date: Sun, 8 Apr 2012 11:38:45 -0400
+Subject: [PATCH] trace-cmd: Setting plugin to 'nop' clears data before it's
+ recorded
+
+Upstream-Status: Backport
+
+commit e09a5db1a929ab668c273b87c4f0a32b81e1c21a
+[trace-cmd: Add trace-cmd record --date option]
+
+moved the call to disable_all() in trace_record() from after record_data()
+to before it. Unfortunately disable_all() sets 'nop' in 'current_tracer'
+which has the side affect of clearing 'trace', thus all the latency tracer
+reports are empty/useless. Here we make disable_all() optionally call
+set_plugin() thus, where we need to, we can delay the disabling of the tracer
+until we have had a chance to capture 'trace'. We have added this delayed
+behavior to trace_record() to fix the latency reports, for all other calls to
+disable_all() we continue to have set_plugin() called.
+
+Link: http://lkml.kernel.org/r/1333899525-6436-1-git-send-email-mark.asselstine@windriver.com
+
+Signed-off-by: Mark Asselstine <mark.asselstine@windriver.com>
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ trace-record.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/trace-record.c b/trace-record.c
+index 1c56fa9..95d4a2a 100644
+--- a/trace-record.c
++++ b/trace-record.c
+@@ -897,11 +897,13 @@ static void disable_tracing(void)
+ 	write_tracing_on(0);
+ }
+ 
+-static void disable_all(void)
++static void disable_all(int disable_tracer)
+ {
+ 	disable_tracing();
+ 
+-	set_plugin("nop");
++	if (disable_tracer)
++		set_plugin("nop");
++
+ 	reset_events();
+ 
+ 	/* Force close and reset of ftrace pid file */
+@@ -1573,7 +1575,7 @@ static void set_funcs(void)
+ 	/* make sure we are filtering functions */
+ 	if (func_stack) {
+ 		if (!functions_filtered()) {
+-			disable_all();
++			disable_all(1);
+ 			die("Function stack trace set, but functions not filtered");
+ 		}
+ 		save_option(FUNC_STACK_TRACE);
+@@ -1938,7 +1940,7 @@ void trace_record (int argc, char **argv)
+ 				break;
+ 			}
+ 		}
+-		disable_all();
++		disable_all(1);
+ 		set_buffer_size();
+ 		exit(0);
+ 	} else
+@@ -2147,7 +2149,7 @@ void trace_record (int argc, char **argv)
+ 
+ 	if (!extract) {
+ 		fset = set_ftrace(!disable);
+-		disable_all();
++		disable_all(1);
+ 
+ 		/* Record records the date first */
+ 		if (record && date)
+@@ -2227,7 +2229,7 @@ void trace_record (int argc, char **argv)
+ 	}
+ 
+ 	if (!keep)
+-		disable_all();
++		disable_all(0);
+ 
+ 	printf("Kernel buffer statistics:\n"
+ 	       "  Note: \"entries\" are the entries left in the kernel ring buffer and are not\n"
+@@ -2249,6 +2251,8 @@ void trace_record (int argc, char **argv)
+ 	if (keep)
+ 		exit(0);
+ 
++	set_plugin("nop");
++
+ 	/* If tracing_on was enabled before we started, set it on now */
+ 	if (tracing_on_init_val)
+ 		write_tracing_on(tracing_on_init_val);
+-- 
+1.7.10.4
+
