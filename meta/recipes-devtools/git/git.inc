@@ -31,11 +31,17 @@ do_install () {
 
 	# ${libdir} is not applicable here, perl-native files are always
 	# installed to /usr/lib on both 32/64 bits targets.
-	rm -rf ${D}/usr/lib/perl-native
-	rmdir ${D}/usr/lib || true
+	rm -rf ${D}${exec_prefix}/lib/perl-native
+	rmdir ${D}${exec_prefix}/lib || true
 }
 
 do_install_append_class-native() {
+	create_wrapper ${D}/${bindir}/git \
+		GIT_EXEC_PATH=${libexecdir}/git-core \
+		GIT_TEMPLATE_DIR=${STAGING_DATADIR_NATIVE}/git-core/templates
+}
+
+do_install_append_class-nativesdk() {
 	create_wrapper ${D}/${bindir}/git \
 		GIT_EXEC_PATH=${libexecdir}/git-core \
 		GIT_TEMPLATE_DIR=${STAGING_DATADIR_NATIVE}/git-core/templates
@@ -78,4 +84,4 @@ PACKAGES =+ "gitweb"
 FILES_gitweb = "${datadir}/gitweb/"
 
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"

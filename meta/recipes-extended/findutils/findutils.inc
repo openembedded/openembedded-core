@@ -21,4 +21,4 @@ ALTERNATIVE_PRIORITY = "100"
 # see diffutils.mk in buildroot)
 EXTRA_OECONF_libc-uclibc = "--without-included-regex"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"

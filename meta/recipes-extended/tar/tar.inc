@@ -33,6 +33,10 @@ ALTERNATIVE_PRIORITY = "100"
 
 ALTERNATIVE_${PN} = "tar"
 ALTERNATIVE_${PN}-rmt = "rmt"
+ALTERNATIVE_${PN}_class-nativesdk = ""
+ALTERNATIVE_${PN}-rmt_class-nativesdk = ""
 
 ALTERNATIVE_LINK_NAME[tar] = "${base_bindir}/tar"
 ALTERNATIVE_LINK_NAME[rmt] = "${base_sbindir}/rmt"
+
+BBCLASSEXTEND = "nativesdk"
