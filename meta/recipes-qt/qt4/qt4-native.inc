@@ -25,6 +25,17 @@ SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-sr
 S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 
 EXTRA_OECONF = "-prefix ${prefix} \
+                -bindir ${bindir} \
+                -libdir ${libdir} \
+                -datadir ${datadir}/qt4 \
+                -sysconfdir ${sysconfdir}/qt4 \
+                -docdir ${docdir}/qt4 \
+                -headerdir ${includedir}/qt4 \
+                -plugindir ${libdir}/qt4/plugins \
+                -importdir ${libdir}/qt4/imports \
+                -translationdir ${datadir}/qt4/translations \
+                -examplesdir ${bindir}/qt4/examples \
+                -demosdir ${bindir}/qt4/demos \
                 -L ${STAGING_LIBDIR_NATIVE} \
                 -I ${STAGING_INCDIR_NATIVE} \
                 -qt-libjpeg -system-zlib \
@@ -34,7 +45,6 @@ EXTRA_OECONF = "-prefix ${prefix} \
                 -no-nas-sound \
                 -no-nis -no-openssl \
                 -verbose -release \
-                -headerdir ${includedir}/qt4 \
                 -embedded -no-freetype -no-glib -no-iconv \
                 -exceptions -xmlpatterns \
                 -qt3support \
