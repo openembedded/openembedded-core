@@ -224,8 +224,6 @@ def sstate_installpkg(ss, d):
 
     if not os.path.exists(sstatepkg):
         pstaging_fetch(sstatefetch, sstatepkg, d)
-    if not os.path.exists(sstatepkg + ".siginfo"):
-        pstaging_fetch(sstatefetch + ".siginfo", sstatepkg + ".siginfo", d)
 
     if not os.path.isfile(sstatepkg):
         bb.note("Staging package %s does not exist" % sstatepkg)
@@ -504,30 +502,30 @@ def pstaging_fetch(sstatefetch, sstatepkg, d):
     bb.data.update_data(localdata)
 
     dldir = localdata.expand("${SSTATE_DIR}")
-    srcuri = "file://" + sstatefetch
-
     bb.mkdirhier(dldir)
 
     localdata.delVar('MIRRORS')
     localdata.delVar('FILESPATH')
     localdata.setVar('DL_DIR', dldir)
     localdata.setVar('PREMIRRORS', mirrors)
-    localdata.setVar('SRC_URI', srcuri)
 
     # Try a fetch from the sstate mirror, if it fails just return and
     # we will build the package
-    try:
-        fetcher = bb.fetch2.Fetch([srcuri], localdata, cache=False)
-        fetcher.download()        
+    for srcuri in ['file://{0}'.format(sstatefetch),
+                   'file://{0}.siginfo'.format(sstatefetch)]:
+        localdata.setVar('SRC_URI', srcuri)
+        try:
+            fetcher = bb.fetch2.Fetch([srcuri], localdata, cache=False)
+            fetcher.download()
 
-        # Need to optimise this, if using file:// urls, the fetcher just changes the local path
-        # For now work around by symlinking
-        localpath = bb.data.expand(fetcher.localpath(srcuri), localdata)
-        if localpath != sstatepkg and os.path.exists(localpath) and not os.path.exists(sstatepkg):
-            os.symlink(localpath, sstatepkg)
+            # Need to optimise this, if using file:// urls, the fetcher just changes the local path
+            # For now work around by symlinking
+            localpath = bb.data.expand(fetcher.localpath(srcuri), localdata)
+            if localpath != sstatepkg and os.path.exists(localpath) and not os.path.exists(sstatepkg):
+                os.symlink(localpath, sstatepkg)
 
-    except bb.fetch2.BBFetchException:
-        pass
+        except bb.fetch2.BBFetchException:
+            break
 
 def sstate_setscene(d):
     shared_state = sstate_state_fromvars(d)
