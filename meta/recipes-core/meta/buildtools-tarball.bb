@@ -27,6 +27,9 @@ TOOLCHAIN_HOST_TASK ?= "\
     nativesdk-python-netserver \
     nativesdk-python-distutils \
     nativesdk-python-unixadmin \
+    nativesdk-python-compression \
+    nativesdk-python-json \
+    nativesdk-python-unittest \
     nativesdk-chrpath \
     nativesdk-tar \
     nativesdk-git \
