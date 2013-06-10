@@ -39,6 +39,8 @@ python do_prepare_copyleft_sources () {
         local = os.path.normpath(fetch.localpath(u.url))
         if local.endswith('.bb'):
             continue
+        elif local.endswith('/'):
+            local = local[:-1]
 
         if u.mirrortarball:
             tarball_path = os.path.join(dl_dir, u.mirrortarball)
