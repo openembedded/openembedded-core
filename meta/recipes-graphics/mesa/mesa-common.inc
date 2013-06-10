@@ -20,10 +20,7 @@ PROVIDES = "virtual/libgl virtual/libgles1 virtual/libgles2 virtual/egl"
 
 inherit autotools pkgconfig pythonnative
 
-EXTRA_OECONF = "--disable-glu \
-                --disable-glw \
-                --disable-glut \
-                --enable-shared-glapi"
+EXTRA_OECONF = "--enable-shared-glapi"
 
 PACKAGECONFIG ??= "egl gles \
 		${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}\
