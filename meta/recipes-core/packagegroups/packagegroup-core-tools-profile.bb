@@ -48,22 +48,15 @@ SYSTEMTAP_aarch64 = ""
 
 LTTNGUST = "lttng-ust"
 LTTNGUST_libc-uclibc = ""
-LTTNGUST_mips = ""
 LTTNGUST_aarch64 = ""
 
-# lttng-tools, lttng-modules and babeltrace all depend on liburcu
-# which currentl doesn't build on mips
-
 LTTNGTOOLS = "lttng-tools"
-LTTNGTOOLS_mips = ""
 LTTNGTOOLS_aarch64 = ""
 
 LTTNGMODULES = "lttng-modules"
-LTTNGMODULES_mips = ""
 LTTNGMODULES_aarch64 = ""
 
 BABELTRACE = "babeltrace"
-BABELTRACE_mips = ""
 BABELTRACE_aarch64 = ""
 
 # valgrind does not work on mips
@@ -77,10 +70,6 @@ VALGRIND_aarch64 = ""
 #    exmap-console
 #    exmap-server
 
-# At present we only build lttng-ust on
-# qemux86/qemux86-64/qemuppc/qemuarm/emenlow/atom-pc since upstream liburcu
-# (which is required by lttng-ust) may not build on other platforms, like
-# MIPS.
 RDEPENDS_${PN} = "\
     ${PROFILETOOLS} \
     ${LTTNGUST} \
