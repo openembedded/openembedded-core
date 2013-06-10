@@ -8,7 +8,7 @@ DEPENDS_class-native = "glib-2.0-native dbus-native dbus-glib-native libxml2-nat
 
 PR = "r0"
 
-inherit gnomebase gtk-doc
+inherit gnomebase gtk-doc gettext
 
 SRC_URI = "${GNOME_MIRROR}/GConf/${@gnome_verdir("${PV}")}/GConf-${PV}.tar.xz;name=archive \
            file://remove_plus_from_invalid_characters_list.patch \
