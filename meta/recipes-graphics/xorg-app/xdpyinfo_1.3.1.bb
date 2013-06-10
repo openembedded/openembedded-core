@@ -10,12 +10,11 @@ that are available."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=f3d09e6b9e203a1af489e16c708f4fb3"
 DEPENDS += "libxtst libxext libxxf86vm libxxf86dga libxxf86misc libxi libxrender libxinerama libdmx libxau"
-PR = "${INC_PR}.1"
 PE = "1"
 
 SRC_URI += "file://disable-xkb.patch"
 
-SRC_URI[md5sum] = "1ef08f4c8d0e669c2edd49e4a1bf650d"
-SRC_URI[sha256sum] = "23ee4944a32b5701b4379cb420729eb7a4dde54de2b5b006d4747855efd6d73f"
+SRC_URI[md5sum] = "cacc0733f16e4f2a97a5c430fcc4420e"
+SRC_URI[sha256sum] = "aef9285069a517ed870e5d8a02d13f7d8a953d7f7220146da563e04c7f128b94"
 
 EXTRA_OECONF = "--disable-xkb"
