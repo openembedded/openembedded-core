@@ -143,9 +143,11 @@ def package_qa_handle_error(error_class, error_msg, d):
         bb.error("QA Issue: %s" % error_msg)
         d.setVar("QA_SANE", False)
         return False
-    else:
+    elif error_class in (d.getVar("WARN_QA", True) or "").split():
         bb.warn("QA Issue: %s" % error_msg)
-        return True
+    else:
+        bb.note("QA Issue: %s" % error_msg)
+    return True
 
 QAPATHTEST[libexec] = "package_qa_check_libexec"
 def package_qa_check_libexec(path,name, d, elf, messages):
