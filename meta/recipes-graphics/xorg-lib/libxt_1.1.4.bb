@@ -13,13 +13,12 @@ independent of any particular user interface policy or style."
 require xorg-lib-common.inc
 
 LICENSE = "MIT & MIT-style"
-LIC_FILES_CHKSUM = "file://COPYING;md5=3239170e81427c5948287df07691f03f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=6565b1e0094ea1caae0971cc4035f343"
 
 
 DEPENDS += "util-linux libxcb libsm virtual/libx11 kbproto libxdmcp"
 PROVIDES = "xt"
 
-PR = "r0"
 PE = "1"
 
 XORG_PN = "libXt"
@@ -41,5 +40,5 @@ do_compile() {
 	oe_runmake
 }
 
-SRC_URI[md5sum] = "a6f137ae100e74ebe3b71eb4a38c40b3"
-SRC_URI[sha256sum] = "8db593c3fc5ffc4e9cd854ba50af1eac9b90d66521ba17802b8f1e0d2d7f05bd"
+SRC_URI[md5sum] = "03149823ae57bb02d0cec90d5b97d56c"
+SRC_URI[sha256sum] = "843a97a988f5654872682a4120486d987d853a71651515472f55519ffae2dd57"
