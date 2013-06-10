@@ -11,6 +11,7 @@ inherit autotools gettext
 EXTRA_OECONF += "DEFAULT_RMT_DIR=${base_sbindir}"
 
 EXTRAINSTALL = "do_install_extra"
+EXTRAINSTALL_class-nativesdk = ""
 
 do_install () {
     autotools_do_install
