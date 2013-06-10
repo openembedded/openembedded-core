@@ -6,6 +6,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=2d5025d4aa3495befef8f17206a5b0a1 \
 
 require avahi.inc
 
+inherit python-dir pythonnative
+
+PACKAGECONFIG ??= "python"
+PACKAGECONFIG[python] = "--enable-python,--disable-python,python-native python"
+
 PR = "${INC_PR}.0"
 
 SRC_URI[md5sum] = "2f22745b8f7368ad5a0a3fddac343f2d"
@@ -26,7 +31,7 @@ FILES_${PN}-staticdev += "${libdir}/libavahi-ui.a"
 
 FILES_${PN}-utils = "${bindir}/b* ${datadir}/applications/b*"
 
-FILES_python-avahi = "${PYTHON_SITEPACKAGES_DIR}/avahi/*"
+FILES_python-avahi = "${PYTHON_SITEPACKAGES_DIR}/avahi ${PYTHON_SITEPACKAGES_DIR}/avahi_discover"
 FILES_avahi-discover = "${bindir}/avahi-discover \
                         ${datadir}/applications/avahi-discover.desktop \
                         ${datadir}/avahi/interfaces/avahi-discover*"
@@ -34,7 +39,7 @@ FILES_avahi-discover-standalone = "${bindir}/avahi-discover-standalone \
                                    ${datadir}/avahi/interfaces/avahi-discover.glade"
 
 RDEPENDS_avahi-discover = "python-avahi python-pygtk"
-RDEPENDS_python-avahi = "python-dbus"
+RDEPENDS_python-avahi = "python-core python-dbus"
 
 
 do_install_append () {
