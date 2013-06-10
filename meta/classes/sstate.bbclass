@@ -508,6 +508,8 @@ def pstaging_fetch(sstatefetch, sstatepkg, d):
 
     bb.mkdirhier(dldir)
 
+    localdata.delVar('MIRRORS')
+    localdata.delVar('FILESPATH')
     localdata.setVar('DL_DIR', dldir)
     localdata.setVar('PREMIRRORS', mirrors)
     localdata.setVar('SRC_URI', srcuri)
