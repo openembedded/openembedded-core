@@ -13,7 +13,7 @@ LICENSE  = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
                     file://src/main.c;beginline=1;endline=20;md5=d6a1ac98a6791c5294e8a7f176ecd66d"
 
-DEPENDS  = "dbus glib-2.0 ppp iptables gnutls"
+DEPENDS  = "dbus glib-2.0 ppp iptables"
 
 INC_PR = "r20"
 
@@ -32,7 +32,7 @@ EXTRA_OECONF += "\
     ${@base_contains('DISTRO_FEATURES', 'systemd', '--with-systemdunitdir=${systemd_unitdir}/system/', '--with-systemdunitdir=', d)} \
 "
 
-PACKAGECONFIG ??= "\
+PACKAGECONFIG ??= "wispr \
                    ${@base_contains('DISTRO_FEATURES', 'wifi','wifi', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', 'bluetooth','bluetooth', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', '3g','3g', '', d)} \
@@ -50,6 +50,8 @@ PACKAGECONFIG[openvpn] = "--enable-openvpn,--disable-openvpn,,openvpn"
 PACKAGECONFIG[vpnc] = "--enable-vpnc,--disable-vpnc,,vpnc"
 PACKAGECONFIG[l2tp] = "--enable-l2tp,--disable-l2tp,,xl2tpd"
 PACKAGECONFIG[pptp] = "--enable-pptp,--disable-pptp,,pptp-linux"
+# WISPr support for logging into hotspots, requires TLS
+PACKAGECONFIG[wispr] = "--enable-wispr,--disable-wispr,gnutls,"
 
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
@@ -89,7 +91,9 @@ do_install_append() {
 
 	install -d ${D}${bindir}
 	install -m 0755 ${S}/tools/*-test ${D}${bindir}
-	install -m 0755 ${S}/tools/wispr ${D}${bindir}
+	if [ -e ${S}/tools/wispr ]; then
+		install -m 0755 ${S}/tools/wispr ${D}${bindir}
+	fi
 	install -m 0755 ${B}/client/connmanctl ${D}${bindir}
 
 	# We don't need to package an empty directory
