@@ -1,0 +1,83 @@
+From fa049b3584a1cc36c250205e3d5841e6a40ff677 Mon Sep 17 00:00:00 2001
+From: amker <amker@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Wed, 27 Mar 2013 08:16:54 +0000
+Subject: [PATCH] PR target/56102
+
+* config/arm/arm.c (thumb1_rtx_costs, thumb1_size_rtx_costs): Fix rtx costs for SET/ASHIFT/ASHIFTRT/LSHIFTRT/ROTATERT patterns with mult-word mode.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/trunk@197155 138bc75d-0d04-0410-961f-82ee72b054a4
+
+Upstream-Status: Backport
+http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57329
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ gcc/config/arm/arm.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/gcc/config/arm/arm.c b/gcc/config/arm/arm.c
+index 460d333..edf850d 100644
+--- a/gcc/config/arm/arm.c
++++ b/gcc/config/arm/arm.c
+@@ -7094,7 +7094,7 @@ static inline int
+ thumb1_rtx_costs (rtx x, enum rtx_code code, enum rtx_code outer)
+ {
+   enum machine_mode mode = GET_MODE (x);
+-  int total;
++  int total, words;
+ 
+   switch (code)
+     {
+@@ -7102,6 +7102,8 @@ thumb1_rtx_costs (rtx x, enum rtx_code code, enum rtx_code outer)
+     case ASHIFTRT:
+     case LSHIFTRT:
+     case ROTATERT:
++      return (mode == SImode) ? COSTS_N_INSNS (1) : COSTS_N_INSNS (2);
++
+     case PLUS:
+     case MINUS:
+     case COMPARE:
+@@ -7125,7 +7127,10 @@ thumb1_rtx_costs (rtx x, enum rtx_code code, enum rtx_code outer)
+       return COSTS_N_INSNS (1) + 16;
+ 
+     case SET:
+-      return (COSTS_N_INSNS (1)
++      /* A SET doesn't have a mode, so let's look at the SET_DEST to get
++	 the mode.  */
++      words = ARM_NUM_INTS (GET_MODE_SIZE (GET_MODE (SET_DEST (x))));
++      return (COSTS_N_INSNS (words)
+ 	      + 4 * ((MEM_P (SET_SRC (x)))
+ 		     + MEM_P (SET_DEST (x))));
+ 
+@@ -7822,6 +7827,7 @@ static inline int
+ thumb1_size_rtx_costs (rtx x, enum rtx_code code, enum rtx_code outer)
+ {
+   enum machine_mode mode = GET_MODE (x);
++  int words;
+ 
+   switch (code)
+     {
+@@ -7829,6 +7835,8 @@ thumb1_size_rtx_costs (rtx x, enum rtx_code code, enum rtx_code outer)
+     case ASHIFTRT:
+     case LSHIFTRT:
+     case ROTATERT:
++      return (mode == SImode) ? COSTS_N_INSNS (1) : COSTS_N_INSNS (2);
++
+     case PLUS:
+     case MINUS:
+     case COMPARE:
+@@ -7847,7 +7855,10 @@ thumb1_size_rtx_costs (rtx x, enum rtx_code code, enum rtx_code outer)
+       return COSTS_N_INSNS (1);
+ 
+     case SET:
+-      return (COSTS_N_INSNS (1)
++      /* A SET doesn't have a mode, so let's look at the SET_DEST to get
++	 the mode.  */
++      words = ARM_NUM_INTS (GET_MODE_SIZE (GET_MODE (SET_DEST (x))));
++      return (COSTS_N_INSNS (words)
+               + 4 * ((MEM_P (SET_SRC (x)))
+                      + MEM_P (SET_DEST (x))));
+ 
+-- 
+1.8.2.1
+
