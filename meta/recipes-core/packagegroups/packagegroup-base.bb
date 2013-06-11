@@ -180,7 +180,7 @@ RRECOMMENDS_packagegroup-base-vfat = "\
     kernel-module-vfat \
     kernel-module-nls-iso8859-1 \
     kernel-module-nls-cp437 \
-    dosfsprogs"
+    dosfstools"
 
 SUMMARY_packagegroup-base-alsa = "ALSA sound support"
 RDEPENDS_packagegroup-base-alsa = "\
