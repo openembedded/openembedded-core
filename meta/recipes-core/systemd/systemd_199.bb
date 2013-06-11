@@ -23,6 +23,7 @@ SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
            file://modprobe.rules \
            file://var-run.conf \
            ${UCLIBCPATCHES} \
+           file://install-quotaon-once.patch \
            file://00-create-volatile.conf \
            file://0002-readahead-chunk-on-spinning-media.patch \
            file://0003-readahead-cleanups.patch \
