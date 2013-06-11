@@ -23,23 +23,6 @@ Index: glib-2.30.0/glib/Makefile.am
  BUILT_SOURCES += glib_probes.h glib_probes.o
  CLEANFILES += glib_probes.h glib_probes.h.tmp
  libglib_2_0_la_LIBADD += glib_probes.o
-Index: glib-2.30.0/glib/Makefile.in
-===================================================================
---- glib-2.30.0.orig/glib/Makefile.in
-+++ glib-2.30.0/glib/Makefile.in
-@@ -1691,10 +1691,10 @@ uninstall-local: uninstall-ms-lib uninst
- @OS_WIN32_AND_DLL_COMPILATION_FALSE@uninstall-def-file:
- 
- @ENABLE_DTRACE_TRUE@glib_probes.h: glib_probes.d Makefile
--@ENABLE_DTRACE_TRUE@	$(AM_V_GEN) $(DTRACE) -C -h -s $< -o $@.tmp
-+@ENABLE_DTRACE_TRUE@	$(AM_V_GEN)  CC="$(CC)" CFLAGS="$(CFLAGS)" $(DTRACE) -C -h -s $< -o $@.tmp
- @ENABLE_DTRACE_TRUE@	@$(SED) -e "s,define STAP_HAS_SEMAPHORES 1,undef STAP_HAS_SEMAPHORES," < $@.tmp > $@ && rm -f $@.tmp
- @ENABLE_DTRACE_TRUE@glib_probes.o: glib_probes.d Makefile
--@ENABLE_DTRACE_TRUE@	$(AM_V_GEN) $(DTRACE) -G -s $< -o $@
-+@ENABLE_DTRACE_TRUE@	$(AM_V_GEN)  CC="$(CC)" CFLAGS="$(CFLAGS)" $(DTRACE) -G -s $< -o $@
- 
- gspawn-win32-helper-console.c:
- 	echo '#define HELPER_CONSOLE' >$@
 Index: glib-2.30.0/gobject/Makefile.am
 ===================================================================
 --- glib-2.30.0.orig/gobject/Makefile.am
@@ -57,20 +40,3 @@ Index: glib-2.30.0/gobject/Makefile.am
  BUILT_SOURCES += gobject_probes.h gobject_probes.o
  CLEANFILES += gobject_probes.h
  libgobject_2_0_la_LIBADD += gobject_probes.o
-Index: glib-2.30.0/gobject/Makefile.in
-===================================================================
---- glib-2.30.0.orig/gobject/Makefile.in
-+++ glib-2.30.0/gobject/Makefile.in
-@@ -1581,10 +1581,10 @@ uninstall-ms-lib:
- @OS_WIN32_AND_DLL_COMPILATION_FALSE@uninstall-def-file:
- 
- @ENABLE_DTRACE_TRUE@gobject_probes.h: gobject_probes.d Makefile
--@ENABLE_DTRACE_TRUE@	$(AM_V_GEN) $(DTRACE) -C -h -s $< -o $@.tmp
-+@ENABLE_DTRACE_TRUE@	$(AM_V_GEN) CFLAGS="$(CFLAGS)" $(DTRACE) -C -h -s $< -o $@.tmp
- @ENABLE_DTRACE_TRUE@	@$(SED) -e "s,define STAP_HAS_SEMAPHORES 1,undef STAP_HAS_SEMAPHORES," < $@.tmp > $@ && rm -f $@.tmp
- @ENABLE_DTRACE_TRUE@gobject_probes.o: gobject_probes.d Makefile
--@ENABLE_DTRACE_TRUE@	$(AM_V_GEN) $(DTRACE) -G -s $< -o $@
-+@ENABLE_DTRACE_TRUE@	$(AM_V_GEN) CFLAGS="$(CFLAGS)" $(DTRACE) -G -s $< -o $@
- 
- # This is read by gobject-introspection/misc/ and gtk-doc
- gobject-public-headers.txt: Makefile
