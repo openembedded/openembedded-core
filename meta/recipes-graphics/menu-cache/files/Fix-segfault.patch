@@ -1,0 +1,31 @@
+From a497ea6aae3994b7f6527ef7599dd95baf2ad841 Mon Sep 17 00:00:00 2001
+From: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Date: Mon, 29 Apr 2013 12:04:20 +0300
+Subject: [PATCH] Fix segfault
+
+Apparently, g_io_channel_unref() was called twice: once in the
+menu-cache's on_client_closed() callback and once from the finalize
+function, g_io_unix_finalize()/g_io_win32_finalize(), which is called
+anyway when the source is removed.
+
+Upstream-Status: Pending
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+---
+ menu-cache-daemon/menu-cached.c |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/menu-cache-daemon/menu-cached.c b/menu-cache-daemon/menu-cached.c
+index e246bb4..a10b6db 100644
+--- a/menu-cache-daemon/menu-cached.c
++++ b/menu-cache-daemon/menu-cached.c
+@@ -579,7 +579,6 @@ static void on_client_closed(gpointer user_data)
+         }
+     }
+     /* DEBUG("client closed"); */
+-    g_io_channel_unref(ch);
+ }
+ 
+ static gboolean on_client_data_in(GIOChannel* ch, GIOCondition cond, gpointer user_data)
+-- 
+1.7.9.5
+
