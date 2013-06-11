@@ -348,7 +348,7 @@ def check_gcc_march(sanity_data):
         if status != 0:
             # Check if GCC could work with march
             status,result = oe.utils.getstatusoutput("${BUILD_PREFIX}gcc -march=native gcc_test.c -o gcc_test")
-            if status == 0: 
+            if status != 0: 
                 result = True
             else:
                 result = False
