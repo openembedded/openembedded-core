@@ -122,7 +122,7 @@ class TmuxRunning(Terminal):
 
 class Tmux(Terminal):
     """Start a new tmux session and window"""
-    command = 'tmux new -d -s devshell -n devshell {command}'
+    command = 'tmux new -d -s devshell -n devshell "{command}"'
     priority = 0.75
 
     def __init__(self, sh_cmd, title=None, env=None, d=None):
@@ -133,7 +133,7 @@ class Tmux(Terminal):
         # devshells, if it's already there, add a new window to it.
         window_name = 'devshell-%i' % os.getpid()
 
-        self.command = 'tmux new -d -s {0} -n {0} {{command}}'.format(window_name)
+        self.command = 'tmux new -d -s {0} -n {0} "{{command}}"'.format(window_name)
         Terminal.__init__(self, sh_cmd, title, env, d)
 
         attach_cmd = 'tmux att -t {0}'.format(window_name)
