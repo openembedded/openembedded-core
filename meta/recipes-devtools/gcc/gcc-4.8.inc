@@ -6,7 +6,7 @@ require gcc-common.inc
 # on branch then PV should be incremented to 4.7.2+svnr${SRCPV}
 # to reflect that change
 
-PV = "4.8.0"
+PV = "4.8.1"
 
 # BINV should be incremented after updating to a revision
 # after a minor gcc release (e.g. 4.7.1 or 4.7.2) has been made
@@ -14,7 +14,7 @@ PV = "4.8.0"
 # 4.7.1 then the value below will have 2 which will mean 4.7.2
 # which will be next minor release and so on.
 
-BINV = "4.8.0"
+BINV = "4.8.1"
 
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/gcc-4.8' ], d)}"
 
@@ -68,8 +68,8 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	   file://gcc-4.8-PR56797.patch \
 	   file://gcc-4.8-build-args.patch \
 	  "
-SRC_URI[md5sum] = "e6040024eb9e761c3bea348d1fa5abb0"
-SRC_URI[sha256sum] = "b037fe5132b71ecad2ea7141ec92292b5d32427bf90fd90cde432b1d5abacc2c"
+SRC_URI[md5sum] = "3b2386c114cd74185aa3754b58a79304"
+SRC_URI[sha256sum] = "545b44be3ad9f2c4e90e6880f5c9d4f0a8f0e5f67e1ffb0d45da9fa01bb05813"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
