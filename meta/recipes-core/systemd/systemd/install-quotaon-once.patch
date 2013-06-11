@@ -1,0 +1,32 @@
+Upstream-Status: Submitted (https://bugs.freedesktop.org/show_bug.cgi?id=65659)
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 44b7c4dc877984b5ea3f2c9fa09a93ee16dbe3b2 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Tue, 11 Jun 2013 17:16:37 +0100
+Subject: [PATCH] build-sys: don't install quotaon.service twice
+
+quotaon.service is already installed through dist_systemunit_DATA, so it doesn't
+need to be added to nodist_systemunit_DATA.  Installing the same file twice
+results in a race condition where the install process can fail.
+---
+ Makefile.am |    3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 28ae7ed..197119e 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -3229,9 +3229,6 @@ endif
+ EXTRA_DIST += \
+ 	units/systemd-quotacheck.service.in
+ 
+-nodist_systemunit_DATA += \
+-	units/quotaon.service
+-
+ # ------------------------------------------------------------------------------
+ if ENABLE_RANDOMSEED
+ rootlibexec_PROGRAMS += \
+-- 
+1.7.10.4
+
