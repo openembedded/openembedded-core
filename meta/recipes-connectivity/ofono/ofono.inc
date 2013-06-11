@@ -23,4 +23,4 @@ RDEPENDS_${PN} += "dbus"
 
 FILES_${PN} += "${base_libdir}/udev ${systemd_unitdir}"
 FILES_${PN}-tests = "${libdir}/ofono"
-RDEPENDS_${PN}-tests = "python python-pygobject"
+RDEPENDS_${PN}-tests = "python python-pygobject python-dbus"
