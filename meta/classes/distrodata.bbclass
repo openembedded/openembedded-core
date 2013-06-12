@@ -1,15 +1,14 @@
 include conf/distro/include/package_regex.inc
 addhandler distro_eventhandler
+distro_eventhandler[eventmask] = "bb.event.BuildStarted"
 python distro_eventhandler() {
-
-    if bb.event.getName(e) == "BuildStarted":
-        import oe.distro_check as dc
-        logfile = dc.create_log_file(e.data, "distrodata.csv")
-        lf = bb.utils.lockfile("%s.lock" % logfile)
-        f = open(logfile, "a")
-        f.write("Package,Description,Owner,License,VerMatch,Version,Upsteam,Reason,Recipe Status,Distro 1,Distro 2,Distro 3\n")
-        f.close()
-        bb.utils.unlockfile(lf)
+    import oe.distro_check as dc
+    logfile = dc.create_log_file(e.data, "distrodata.csv")
+    lf = bb.utils.lockfile("%s.lock" % logfile)
+    f = open(logfile, "a")
+    f.write("Package,Description,Owner,License,VerMatch,Version,Upsteam,Reason,Recipe Status,Distro 1,Distro 2,Distro 3\n")
+    f.close()
+    bb.utils.unlockfile(lf)
 
     return
 }
@@ -197,6 +196,7 @@ do_distrodataall() {
 }
 
 addhandler checkpkg_eventhandler
+ checkpkg_eventhandler[eventmask] = "bb.event.BuildStarted bb.event.BuildCompleted"
 python checkpkg_eventhandler() {
     def parse_csv_file(filename):
         package_dict = {}
@@ -793,11 +793,11 @@ do_checkpkgall() {
 }
 
 addhandler distro_check_eventhandler
+distro_check_eventhandler bb.event.BuildStarted
 python distro_check_eventhandler() {
-    if bb.event.getName(e) == "BuildStarted":
-        """initialize log files."""
-        import oe.distro_check as dc
-        result_file = dc.create_log_file(e.data, "distrocheck.csv")
+    """initialize log files."""
+    import oe.distro_check as dc
+    result_file = dc.create_log_file(e.data, "distrocheck.csv")
     return
 }
 
@@ -839,16 +839,16 @@ do_distro_checkall() {
 #then we can search those recipes which license text isn't exsit in common-licenses directory
 #
 addhandler checklicense_eventhandler
+checklicense_eventhandler[eventmask] = "bb.event.BuildStarted"
 python checklicense_eventhandler() {
-    if bb.event.getName(e) == "BuildStarted":
-        """initialize log files."""
-        import oe.distro_check as dc
-        logfile = dc.create_log_file(e.data, "missinglicense.csv")
-        lf = bb.utils.lockfile("%s.lock" % logfile)
-        f = open(logfile, "a")
-        f.write("Package\tLicense\tMissingLicense\n")
-        f.close()
-        bb.utils.unlockfile(lf)
+    """initialize log files."""
+    import oe.distro_check as dc
+    logfile = dc.create_log_file(e.data, "missinglicense.csv")
+    lf = bb.utils.lockfile("%s.lock" % logfile)
+    f = open(logfile, "a")
+    f.write("Package\tLicense\tMissingLicense\n")
+    f.close()
+    bb.utils.unlockfile(lf)
     return
 }
 

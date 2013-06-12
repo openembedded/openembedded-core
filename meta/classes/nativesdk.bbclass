@@ -60,9 +60,6 @@ export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${libdir}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 
 python nativesdk_virtclass_handler () {
-    if not isinstance(e, bb.event.RecipePreFinalise):
-        return
-
     pn = e.data.getVar("PN", True)
     if not pn.endswith("-nativesdk") or pn.startswith("nativesdk-"):
         return
@@ -89,5 +86,6 @@ python () {
 }
 
 addhandler nativesdk_virtclass_handler
+nativesdk_virtclass_handler[eventmask] = "bb.event.RecipePreFinalise"
 
 do_populate_sysroot[stamp-extra-info] = ""

@@ -58,9 +58,6 @@ do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR_NATIVE
 do_populate_sysroot[stamp-extra-info] = ""
 
 python cross_virtclass_handler () {
-    if not isinstance(e, bb.event.RecipePreFinalise):
-        return
-
     classextend = e.data.getVar('BBCLASSEXTEND', True) or ""
     if "cross" not in classextend:
         return
@@ -73,6 +70,7 @@ python cross_virtclass_handler () {
 }
 
 addhandler cross_virtclass_handler
+cross_virtclass_handler[eventmask] = "bb.event.RecipePreFinalise"
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install

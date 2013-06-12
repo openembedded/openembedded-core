@@ -79,9 +79,6 @@ EXTERNAL_TOOLCHAIN_SYSROOT_CMD += "${@csl_multilib_arg(d)}"
 # to our staging toolchain bindir.
 
 python toolchain_metadata_setup () {
-    if not isinstance(e, bb.event.ConfigParsed):
-        return
-
     d = e.data
 
     l = d.createCopy()
@@ -90,17 +87,16 @@ python toolchain_metadata_setup () {
         d.setVar('TOOLCHAIN_PATH_ADD', '')
 }
 addhandler toolchain_metadata_setup
+toolchain_metadata_setup[eventmask] = "bb.event.ConfigParsed"
 
 python toolchain_setup () {
-    if not isinstance(e, bb.event.BuildStarted):
-        return
-
     d = e.data
 
     if not d.getVar('TOOLCHAIN_PATH_ADD', True):
         populate_toolchain_links(d)
 }
 addhandler toolchain_setup
+toolchain_setup[eventmask] = "bb.event.BuildStarted"
 
 def populate_toolchain_links(d):
     import errno

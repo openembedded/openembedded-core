@@ -43,4 +43,5 @@ python multilib_virtclass_handler_global () {
 }
 
 addhandler multilib_virtclass_handler_global
+multilib_virtclass_handler_global[eventmask] = "bb.event.RecipePreFinalise bb.event.RecipeParsed"
 

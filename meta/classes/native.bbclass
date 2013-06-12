@@ -104,9 +104,6 @@ CLASSOVERRIDE = "class-native"
 PATH_prepend = "${COREBASE}/scripts/native-intercept:"
 
 python native_virtclass_handler () {
-    if not isinstance(e, bb.event.RecipePreFinalise):
-        return
-
     classextend = e.data.getVar('BBCLASSEXTEND', True) or ""
     if "native" not in classextend:
         return
@@ -152,6 +149,7 @@ python native_virtclass_handler () {
 }
 
 addhandler native_virtclass_handler
+native_virtclass_handler[eventmask] = "bb.event.RecipePreFinalise"
 
 do_package[noexec] = "1"
 do_packagedata[noexec] = "1"

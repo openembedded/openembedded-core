@@ -4,9 +4,9 @@
 
 python check_types() {
     import oe.types
-    if isinstance(e, bb.event.ConfigParsed):
-        for key in e.data.keys():
-            if e.data.getVarFlag(key, "type"):
-                oe.data.typed_value(key, e.data)
+    for key in e.data.keys():
+        if e.data.getVarFlag(key, "type"):
+            oe.data.typed_value(key, e.data)
 }
 addhandler check_types
+check_types[eventmask] = "bb.event.ConfigParsed"

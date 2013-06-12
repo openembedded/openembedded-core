@@ -32,12 +32,12 @@ def oe_import(d):
         inject(toimport.split(".", 1)[0], imported)
 
 python oe_import_eh () {
-    if isinstance(e, bb.event.ConfigParsed):
-        oe_import(e.data)
-        e.data.setVar("NATIVELSBSTRING", lsb_distro_identifier(e.data))
+    oe_import(e.data)
+    e.data.setVar("NATIVELSBSTRING", lsb_distro_identifier(e.data))
 }
 
 addhandler oe_import_eh
+oe_import_eh[eventmask] = "bb.event.ConfigParsed"
 
 def lsb_distro_identifier(d):
     adjust = d.getVar('LSB_DISTRO_ADJUST', True)
@@ -299,6 +299,7 @@ def buildcfg_neededvars(d):
         bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
 
 addhandler base_eventhandler
+base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.BuildStarted"
 python base_eventhandler() {
     if isinstance(e, bb.event.ConfigParsed):
         e.data.setVar('BB_VERSION', bb.__version__)

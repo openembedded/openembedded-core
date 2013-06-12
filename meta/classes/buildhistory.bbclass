@@ -525,13 +525,13 @@ END
 }
 
 python buildhistory_eventhandler() {
-    if isinstance(e, bb.event.BuildCompleted):
-        if e.data.getVar('BUILDHISTORY_FEATURES', True).strip():
-            if e.data.getVar("BUILDHISTORY_COMMIT", True) == "1":
-                bb.build.exec_func("buildhistory_commit", e.data)
+    if e.data.getVar('BUILDHISTORY_FEATURES', True).strip():
+        if e.data.getVar("BUILDHISTORY_COMMIT", True) == "1":
+            bb.build.exec_func("buildhistory_commit", e.data)
 }
 
 addhandler buildhistory_eventhandler
+buildhistory_eventhandler[eventmask] = "bb.event.BuildCompleted"
 
 
 # FIXME this ought to be moved into the fetcher

@@ -278,4 +278,5 @@ python run_buildstats () {
 }
 
 addhandler run_buildstats
+run_buildstats[eventmask] = "bb.event.BuildStarted bb.event.BuildCompleted bb.build.TaskStarted bb.build.TaskSucceeded bb.build.TaskFailed"
 

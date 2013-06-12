@@ -71,6 +71,7 @@ def bugzilla_add_comment(debug_file, server, args, bug_number, text):
         return False
 
 addhandler bugzilla_eventhandler
+bugzilla_eventhandler[eventmask] = "bb.event.MsgNote bb.build.TaskFailed"
 python bugzilla_eventhandler() {
     import glob
     import xmlrpclib, httplib

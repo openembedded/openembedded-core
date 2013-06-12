@@ -672,6 +672,7 @@ def copy_data(e):
     return sanity_data
 
 addhandler check_sanity_eventhandler
+check_sanity_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.SanityCheck bb.event.NetworkTest"
 python check_sanity_eventhandler() {
     if bb.event.getName(e) == "ConfigParsed" and e.data.getVar("BB_WORKERCONTEXT", True) != "1" and e.data.getVar("DISABLE_SANITY_CHECKS", True) != "1":
         sanity_data = copy_data(e)

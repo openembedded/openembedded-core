@@ -18,3 +18,4 @@ python primport_handler () {
 }
 
 addhandler primport_handler
+primport_handler[eventmask] = "bb.event.ParseCompleted bb.event.ParseStarted"

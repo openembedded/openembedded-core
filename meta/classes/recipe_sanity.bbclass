@@ -140,9 +140,6 @@ do_recipe_sanity_all () {
 addtask recipe_sanity_all after do_recipe_sanity
 
 python recipe_sanity_eh () {
-    if bb.event.getName(e) != "ConfigParsed":
-        return
-
     d = e.data
 
     cfgdata = {}
@@ -168,3 +165,4 @@ python recipe_sanity_eh () {
     DataSmart.renameVar = myrename
 }
 addhandler recipe_sanity_eh
+recipe_sanity_eh[eventmask] = "bb.event.ConfigParsed"

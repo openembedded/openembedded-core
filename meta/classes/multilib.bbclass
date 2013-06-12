@@ -1,7 +1,4 @@
 python multilib_virtclass_handler () {
-    if not isinstance(e, bb.event.RecipePreFinalise):
-        return
-
     cls = e.data.getVar("BBEXTENDCURR", True)
     variant = e.data.getVar("BBEXTENDVARIANT", True)
     if cls != "multilib" or not variant:
@@ -60,6 +57,7 @@ python multilib_virtclass_handler () {
 }
 
 addhandler multilib_virtclass_handler
+multilib_virtclass_handler[eventmask] = "bb.event.RecipePreFinalise"
 
 STAGINGCC_prepend = "${BBEXTENDVARIANT}-"
 
