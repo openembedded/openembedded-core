@@ -48,4 +48,10 @@ do_install() {
 	for PYTHSCRIPT in `grep -rIl ${bindir}/${PN}/python ${D}${bindir}/${PN}`; do
 		sed -i -e '1s|^#!.*|#!/usr/bin/env python|' $PYTHSCRIPT
 	done
+
+	# Add a symlink to the native Python so that scripts can just invoke
+	# "nativepython" and get the right one without needing absolute paths
+	# (these often end up too long for the #! parser in the kernel as the
+	# buffer is 128 bytes long).
+	ln -s python-native/python ${D}${bindir}/nativepython
 }
