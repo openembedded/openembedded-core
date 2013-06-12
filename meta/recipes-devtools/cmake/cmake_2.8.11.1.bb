@@ -6,8 +6,8 @@ DEPENDS += "curl expat zlib libarchive ncurses"
 
 SRC_URI += "file://dont-run-cross-binaries.patch"
 
-SRC_URI[md5sum] = "be6008f2299613d23fe82ab53ef7472e"
-SRC_URI[sha256sum] = "20d0d3661797fa82c19e7a75c7315c640e001cb3238331ca170bb0fae27feee5"
+SRC_URI[md5sum] = "df5324a3b203373a9e0a04b924281a43"
+SRC_URI[sha256sum] = "b7dbb86824051319b8e082d2f892ebe6d5914b4dac9b9ef1aeac5e7ed054b0bf"
 
 # Strip ${prefix} from ${docdir}, set result into docdir_stripped
 python () {
