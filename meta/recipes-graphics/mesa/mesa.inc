@@ -105,7 +105,7 @@ python __anonymous() {
         d.appendVar("RCONFLICTS_" + fullp, pkgs)
 }
 
-python populate_packages_prepend() {
+python mesa_populate_packages() {
     dri_drivers_root = os.path.join(d.getVar('libdir', True), "dri")
 
     pkgs = ['mesa', 'mesa-dev', 'mesa-dbg']
@@ -118,6 +118,8 @@ python populate_packages_prepend() {
     pipe_drivers_root = os.path.join(d.getVar('libdir', True), "gallium-pipe")
     do_split_packages(d, pipe_drivers_root, '^pipe_(.*)\.so$', 'mesa-driver-pipe-%s', 'Mesa %s pipe driver', extra_depends='')
 }
+
+PACKAGESPLITFUNCS_prepend = "mesa_populate_packages "
 
 PACKAGES_DYNAMIC += "^mesa-driver-.*"
 
