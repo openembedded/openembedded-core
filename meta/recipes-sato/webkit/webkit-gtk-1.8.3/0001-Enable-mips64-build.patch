@@ -1,0 +1,69 @@
+From 4084d31d5b1fe3bf041881ad124873dbf3cd1868 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 17 May 2013 19:51:11 -0700
+Subject: [PATCH] Enable mips64 build
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
+---
+ Source/JavaScriptCore/wtf/Platform.h   |    2 +-
+ Source/JavaScriptCore/wtf/dtoa/utils.h |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+Index: webkit-1.8.3/Source/JavaScriptCore/wtf/Platform.h
+===================================================================
+--- webkit-1.8.3.orig/Source/JavaScriptCore/wtf/Platform.h	2012-08-20 09:30:25.000000000 -0700
++++ webkit-1.8.3/Source/JavaScriptCore/wtf/Platform.h	2013-06-12 00:58:14.624055787 -0700
+@@ -76,14 +76,19 @@
+ 
+ /* CPU(MIPS) - MIPS 32-bit */
+ /* Note: Only O32 ABI is tested, so we enable it for O32 ABI for now.  */
+-#if (defined(mips) || defined(__mips__) || defined(MIPS) || defined(_MIPS_)) \
+-    && defined(_ABIO32)
++#if (defined(mips) || defined(__mips__) || defined(MIPS) || defined(_MIPS_) \
++    || defined(__mips64))
++#if defined(__mips64)
++#define WTF_CPU_MIPS64 1
++#define WTF_MIPS_ARCH __mips64
++#else
+ #define WTF_CPU_MIPS 1
++#define WTF_MIPS_ARCH __mips
++#endif
+ #if defined(__MIPSEB__)
+ #define WTF_CPU_BIG_ENDIAN 1
+ #endif
+ #define WTF_MIPS_PIC (defined __PIC__)
+-#define WTF_MIPS_ARCH __mips
+ #define WTF_MIPS_ISA(v) (defined WTF_MIPS_ARCH && WTF_MIPS_ARCH == v)
+ #define WTF_MIPS_ISA_AT_LEAST(v) (defined WTF_MIPS_ARCH && WTF_MIPS_ARCH >= v)
+ #define WTF_MIPS_ARCH_REV __mips_isa_rev
+@@ -295,7 +300,7 @@
+ 
+ #endif /* ARM */
+ 
+-#if CPU(ARM) || CPU(MIPS) || CPU(SH4) || CPU(SPARC)
++#if CPU(ARM) || CPU(MIPS) || CPU(MIPS64) || CPU(SH4) || CPU(SPARC)
+ #define WTF_CPU_NEEDS_ALIGNED_ACCESS 1
+ #endif
+ 
+@@ -899,6 +904,7 @@
+     || CPU(ALPHA) \
+     || CPU(SPARC64) \
+     || CPU(S390X) \
++    || CPU(MIPS64) \
+     || CPU(PPC64)
+ #define WTF_USE_JSVALUE64 1
+ #else
+Index: webkit-1.8.3/Source/JavaScriptCore/wtf/dtoa/utils.h
+===================================================================
+--- webkit-1.8.3.orig/Source/JavaScriptCore/wtf/dtoa/utils.h	2012-08-20 09:26:05.000000000 -0700
++++ webkit-1.8.3/Source/JavaScriptCore/wtf/dtoa/utils.h	2013-06-12 00:57:22.424054793 -0700
+@@ -49,7 +49,7 @@
+ defined(__ARMEL__) || \
+ defined(_MIPS_ARCH_MIPS32R2)
+ #define DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS 1
+-#elif CPU(MIPS) || CPU(PPC) || CPU(PPC64) || OS(WINCE) || CPU(SH4) || CPU(S390) || CPU(S390X) || CPU(IA64) || CPU(SPARC) || CPU(ALPHA)
++#elif CPU(MIPS) || CPU(PPC) || CPU(PPC64) || OS(WINCE) || CPU(SH4) || CPU(S390) || CPU(S390X) || CPU(IA64) || CPU(SPARC) || CPU(ALPHA) || CPU(MIPS64)
+ #define DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS 1
+ #elif defined(_M_IX86) || defined(__i386__)
+ #if defined(_WIN32)

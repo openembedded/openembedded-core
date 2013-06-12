@@ -24,6 +24,7 @@ SRC_URI = "\
   file://webgit-gtk_fix_build_with_automake_1.12.patch \
   file://bison-2.6.patch \
   file://obsolete_automake_macros.patch \
+  file://0001-Enable-mips64-build.patch \
  "
 
 SRC_URI[md5sum] = "dcbf9d5e2e6391f857c29a57528b32a6"
