@@ -10,5 +10,4 @@ LIC_FILES_CHKSUM = "file://docs/license.html;md5=42d77d95cba529a3637129be87d6555
 
 S = "${WORKDIR}/Mesa-${PV}"
 
-require mesa-common.inc
 require mesa.inc
