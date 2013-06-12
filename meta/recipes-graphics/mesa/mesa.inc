@@ -71,6 +71,9 @@ do_install_append () {
 
     # Drivers never need libtool .la files
     rm -f ${D}${libdir}/dri/*.la
+    rm -f ${D}${libdir}/egl/*.la
+    rm -f ${D}${libdir}/gallium-pipe/*.la
+    rm -f ${D}${libdir}/gbm/*.la
 }
 
 # For the packages that make up the OpenGL interfaces, inject variables so that
