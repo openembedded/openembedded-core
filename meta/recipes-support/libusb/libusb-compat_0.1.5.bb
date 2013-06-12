@@ -16,15 +16,11 @@ PROVIDES = "libusb virtual/libusb0"
 BBCLASSEXTEND = "native nativesdk"
 
 PE = "1"
-PR = "r1"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-compat-${PV}.tar.bz2 \
-           file://obsolete_automake_macros.patch \
-          "
-#           file://0.1.0-beta1-gcc3.4-fix.patch"
+SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-compat-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "2ca521fffadd0c28fdf174e6ec73865b"
-SRC_URI[sha256sum] = "ed5bdd160c7b01ef767fb931a81b454f46226d1e2cf58502ced758d3e5a9fdc4"
+SRC_URI[md5sum] = "2780b6a758a1e2c2943bdbf7faf740e4"
+SRC_URI[sha256sum] = "404ef4b6b324be79ac1bfb3d839eac860fbc929e6acb1ef88793a6ea328bc55a"
 
 inherit autotools pkgconfig binconfig lib_package
 
