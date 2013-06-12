@@ -51,6 +51,12 @@ PACKAGECONFIG[openvg] = "--enable-openvg, --disable-openvg"
 GALLIUMDRIVERS = "swrast"
 PACKAGECONFIG[gallium] = "--enable-gallium --with-gallium-drivers=${GALLIUMDRIVERS}, --disable-gallium --without-gallium-drivers"
 
+export WANT_LLVM_RELEASE = "3.2"
+PACKAGECONFIG[gallium-llvmpipe] = "--enable-gallium-llvm --enable-gallium-egl --enable-gallium-gbm --with-llvm-shared-libs --with-gallium-drivers=${GALLIUMDRIVERS}, --disable-gallium --without-gallium-drivers, llvm3.2"
+
+# llvmpipe is slow if compiled with -fomit-frame-pointer (e.g. -O2)
+FULL_OPTIMIZATION_append = " -fno-omit-frame-pointer"
+
 # Multiple virtual/gl providers being built breaks staging
 EXCLUDE_FROM_WORLD = "1"
 

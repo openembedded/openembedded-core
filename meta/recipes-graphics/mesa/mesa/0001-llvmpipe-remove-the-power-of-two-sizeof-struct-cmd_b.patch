@@ -1,0 +1,42 @@
+From 9915636fb8afe75ee2e8e013e4f495a4cb937afb Mon Sep 17 00:00:00 2001
+From: Brian Paul <brianp@vmware.com>
+Date: Wed, 6 Mar 2013 16:57:20 -0700
+Subject: [PATCH] llvmpipe: remove the power of two sizeof(struct cmd_block)
+ assertion
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+It fails on 32-bit systems (I only tested on 64-bit).  Power of two
+size isn't required, so just remove the assertion.
+
+Reviewed-by: José Fonseca <jfonseca@vmware.com>
+
+Upstream-Status: Backport
+http://cgit.freedesktop.org/mesa/mesa/commit/?id=9915636fb8afe75ee2e8e013e4f495a4cb937afb
+
+---
+ src/gallium/drivers/llvmpipe/lp_scene.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/src/gallium/drivers/llvmpipe/lp_scene.c b/src/gallium/drivers/llvmpipe/lp_scene.c
+index dd0943e..a0912eb 100644
+--- a/src/gallium/drivers/llvmpipe/lp_scene.c
++++ b/src/gallium/drivers/llvmpipe/lp_scene.c
+@@ -76,13 +76,6 @@ lp_scene_create( struct pipe_context *pipe )
+       assert(maxCommandBytes < LP_SCENE_MAX_SIZE);
+       /* We'll also need space for at least one other data block */
+       assert(maxCommandPlusData <= LP_SCENE_MAX_SIZE);
+-
+-      /* Ideally, the size of a cmd_block object will be a power of two
+-       * in order to avoid wasting space when we allocation them from
+-       * data blocks (which are power of two also).
+-       */
+-      assert(sizeof(struct cmd_block) ==
+-             util_next_power_of_two(sizeof(struct cmd_block)));
+    }
+ #endif
+
+--
+1.8.3
+

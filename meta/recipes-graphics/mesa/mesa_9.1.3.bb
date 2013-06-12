@@ -3,6 +3,8 @@ require ${BPN}.inc
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \
            file://EGL-Mutate-NativeDisplayType-depending-on-config.patch \
            file://fix-glsl-cross.patch \
+           file://0001-configure-Avoid-use-of-AC_CHECK_FILE-for-cross-compi.patch \
+           file://0001-llvmpipe-remove-the-power-of-two-sizeof-struct-cmd_b.patch \
            "
 
 SRC_URI[md5sum] = "952ccd03547ed72333b64e1746cf8ada"
