@@ -3,7 +3,6 @@ DESCRIPTION = "The sysstat utilities are a collection of performance monitoring 
 HOMEPAGE = "http://sebastien.godard.pagesperso-orange.fr/"
 LICENSE = "GPLv2+"
 SECTION = "console/utils"
-INC_PR = "r2"
 
 SRC_URI = "http://pagesperso-orange.fr/sebastien.godard/sysstat-${PV}.tar.gz \
 		   file://99_sysstat"
