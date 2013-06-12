@@ -10,8 +10,8 @@ SRC_URI += " \
             file://cups_serverbin.patch \
 	"
 
-SRC_URI[md5sum] = "87ade07e3d1efd03c9c3add949cf9c00"
-SRC_URI[sha256sum] = "5842ab1144e653160fe667ee78b932ee036b054c0c2d20533d19e309149a7790"
+SRC_URI[md5sum] = "13c8b2b2336d42001abe4899766b62dc"
+SRC_URI[sha256sum] = "37a3ebd305e76cfd4c9c53013e89c0f7a4dcb04b2e9da61029a29faa57e0f10d"
 
 EXTRA_OECONF += " --disable-gssapi --enable-debug --disable-relro --enable-libusb \
        ${@base_contains('DISTRO_FEATURES', 'pam', '--enable-pam', '--disable-pam', d)}"

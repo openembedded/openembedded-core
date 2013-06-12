@@ -5,7 +5,7 @@ LICENSE = "GPLv2 & LGPLv2"
 DEPENDS = "gnutls libpng jpeg dbus dbus-glib zlib"
 PROVIDES = "cups14"
 
-SRC_URI = "ftp://ftp.easysw.com/pub/cups/${PV}/cups-${PV}-source.tar.bz2"
+SRC_URI = "http://www.cups.org/software/${PV}/${BP}-source.tar.bz2"
 
 LEAD_SONAME = "libcupsdriver.so"
 
