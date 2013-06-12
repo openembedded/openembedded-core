@@ -63,7 +63,10 @@ def copyleft_should_include(d):
         bb.fatal('%s: %s' % (d.getVar('PF', True), exc))
     else:
         if is_included:
-            return True, 'recipe has included licenses: %s' % ', '.join(reason)
+            if reason:
+                return True, 'recipe has included licenses: %s' % ', '.join(reason)
+            else:
+                return False, 'recipe does not include a copyleft license'
         else:
             return False, 'recipe has excluded licenses: %s' % ', '.join(reason)
 
