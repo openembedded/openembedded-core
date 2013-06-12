@@ -221,7 +221,7 @@ nfsd_cv_broken_setfsuid=${nfsd_cv_broken_setfsuid=0}
 nfsd_cv_func_statfs=${nfsd_cv_func_statfs=statfs2_bsize}
 nfsd_cv_bsd_signals=${nfsd_cv_bsd_signals=yes}
 
-# dbind, in at-spi2-core
+# at-spi2-core
 ac_cv_alignof_char=1
 ac_cv_alignof_dbind_pointer=4
 ac_cv_alignof_dbind_struct=1

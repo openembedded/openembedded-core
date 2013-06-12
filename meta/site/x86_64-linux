@@ -125,7 +125,8 @@ ac_cv_func__restgpr_14_x=no
 # cvs
 cvs_cv_func_printf_ptr=${cvs_cv_func_printf_ptr=yes}
 
-# dbind
+# at-spi2-core
+ac_cv_alignof_char=1
 ac_cv_alignof_dbind_pointer=8
 ac_cv_alignof_dbind_struct=1
 ac_cv_alignof_dbus_bool_t=4
