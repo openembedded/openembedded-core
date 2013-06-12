@@ -112,9 +112,9 @@ if [ $reqpass -ne 0 ]; then
 fi
 
 if [ -n "$commit" ]; then
-            echo "git checkout $commit"
+            echo "git checkout -f $commit"
             git pull > /dev/null 2>&1
-            git checkout $commit || exit 1
+            git checkout -f $commit || exit 1
             git pull > /dev/null 2>&1
 fi
 
@@ -144,8 +144,9 @@ log () {
 # Config stuff
 #
 
-rev=$(git rev-parse HEAD) || exit 1
-log "Git revision is $rev"
+branch=`git branch 2>&1 | grep "^* " | tr -d "* "`
+gitcommit=$(git rev-parse HEAD)  || exit 1
+log "Running on $branch:$gitcommit"
 
 source ./oe-init-build-env $OUTDIR/build >/dev/null || exit 1
 cd $OUTDIR/build
@@ -175,6 +176,8 @@ echo "CONNECTIVITY_CHECK_URIS =\"\"" >> conf/local.conf
 
 declare -a TIMES
 time_count=0
+declare -a SIZES
+size_count=0
 
 bbtime () {
     log "   Timing: bitbake $1"
@@ -240,8 +243,11 @@ do_sync () {
 }
 
 write_results() {
-    echo -n "`uname -n`,$rev," >> $globalres
+    echo -n "`uname -n`,$branch:$gitcommit,`git describe`," >> $globalres
     for i in "${TIMES[@]}"; do
+        echo -n "$i," >> $globalres
+    done
+    for i in "${SIZES[@]}"; do
         echo -n "$i," >> $globalres
     done
     echo >> $globalres
@@ -276,7 +282,9 @@ test1_p1 () {
     do_rmsstate
     do_sync
     bbtime "$IMAGE"
-    log "SIZE of tmp dir is: `du -sh tmp | sed 's/tmp//'`"
+    s=`du -sh tmp | sed 's/tmp//'`
+    SIZES[(( size_count++ ))]="$s"
+    log "SIZE of tmp dir is: $s"
     log "Buildstats are saved in $OUTDIR/buildstats-test1"
     mv tmp/buildstats $OUTDIR/buildstats-test1
 }
@@ -297,7 +305,9 @@ test1_p3 () {
     do_sync
     bbtime "$IMAGE"
     sed -i 's/INHERIT += \"rm_work\"//' conf/local.conf
-    log "SIZE of tmp dir is: `du -sh tmp | sed 's/tmp//'`"
+    s=`du -sh tmp | sed 's/tmp//'`
+    SIZES[(( size_count++ ))]="$s"
+    log "SIZE of tmp dir is: $s"
     log "Buildstats are saved in $OUTDIR/buildstats-test13"
     mv tmp/buildstats $OUTDIR/buildstats-test13
 }
