@@ -45,19 +45,11 @@ do_install_append () {
 	if [ "${PN}" = "dpkg-native" ]; then
 		# update-alternatives doesn't have an offline mode
 		rm ${D}${bindir}/update-alternatives
+		sed -i -e 's|^#!.*${bindir}/perl-native.*/perl|#!/usr/bin/env nativeperl|' ${D}${bindir}/dpkg-*
 	else
 		mv ${D}${bindir}/update-alternatives ${D}${sbindir}
 		sed -i -e 's|^#!.*${bindir}/perl-native.*/perl|#!/usr/bin/env perl|' ${D}${bindir}/dpkg-*
 	fi
-}
-
-# Create a wrapper for the perl script to avoid the "bad interpreter"
-# error when the tmpdir is longer than 150.
-do_install_append_class-native () {
-	tmp=`find ${D}${bindir} -type f -exec grep -m 1 -l '#!/.*/perl-native/perl' {} \;`
-	for i in $tmp; do
-		create_wrapper $i ${STAGING_BINDIR_NATIVE}/perl-native/perl
-	done
 }
 
 pkg_postinst_${PN} () {
