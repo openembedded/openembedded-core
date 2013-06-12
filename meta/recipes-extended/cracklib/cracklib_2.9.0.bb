@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=e3eda01d9815f8d24aae2dbd89b68b06"
 
 DEPENDS = "cracklib-native zlib"
 DEPENDS_class-native = "zlib"
-PR ="r0"
 
 EXTRA_OECONF = "--without-python --libdir=${base_libdir}"
 
@@ -14,8 +13,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/cracklib/cracklib-${PV}.tar.gz \
            file://0001-packlib.c-support-dictionary-byte-order-dependent.patch \
            file://0002-craklib-fix-testnum-and-teststr-failed.patch"
 
-SRC_URI[md5sum] = "463177b5c29c7a598c991e12a4898e06"
-SRC_URI[sha256sum] = "feaff49bfb513ec10b2618c00d2f7f60776ba93fcc5fa22dd3479dd9cad9f770"
+SRC_URI[md5sum] = "e0f94ac2138fd33c7e77b19c1e9a9390"
+SRC_URI[sha256sum] = "17fecdfa78c0b9b47afa1533ea99b5351c3cef770bbd9c8c34391827efecbdc0"
 
 inherit autotools gettext
 
