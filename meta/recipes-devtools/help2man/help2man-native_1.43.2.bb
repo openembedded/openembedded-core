@@ -5,8 +5,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 DEPENDS = "autoconf-native automake-native"
 
 SRC_URI = "${GNU_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz"
-SRC_URI[md5sum] = "48cb7fa1d9cca2ebea1844694668c8a8"
-SRC_URI[sha256sum] = "6a8c94cde314fdfd1e9e397eeebf2c57b0603c8cc2a2ec9228c7778e1a0940ab"
+
+SRC_URI[md5sum] = "bd816983f068ebcf8ca7a20463f7337d"
+SRC_URI[sha256sum] = "ec43eb74669e02cb61af142f1398bb882ff1dbbc9a8cc4f8cd70098fe425e4a9"
 
 inherit autotools native
 
