@@ -35,7 +35,7 @@ do_install_append_class-native () {
 	for i in ${D}${datadir}/createrepo/genpkgmetadata.py \
 		 ${D}${datadir}/createrepo/modifyrepo.py \
 		 ${D}${bindir}/rpm-createsolvedb.py ; do
-		create_wrapper $i ${STAGING_BINDIR_NATIVE}/python-native/python
+		sed -i -e 's|^#!.*/usr/bin/env python|#! /usr/bin/env nativepython|' $i
 	done
 
 	create_wrapper ${D}/${bindir}/createrepo \
