@@ -5,8 +5,6 @@ LIC_FILES_CHKSUM = "file://configure.in;beginline=3;endline=6;md5=90c2fdee38e45d
                     file://Makefile.in;beginline=4;endline=38;md5=beda1dbb98a515f557d3e58ef06bca99"
 SECTION = "libs/network"
 
-PR = "r0"
-
 SRC_URI = "ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${PV}/src/nspr-${PV}.tar.gz \
            file://remove-rpath-from-tests.patch \
            file://fix-build-on-x86_64.patch \
@@ -15,12 +13,12 @@ SRC_URI = "ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${PV}/src/nspr-$
 
 SRC_URI += "file://nspr.pc.in"
 
-SRC_URI[md5sum] = "62b1e9d376d503d972f90c3c0031d879"
-SRC_URI[sha256sum] = "7693fddd3c5cc15d53a50df53ab5dcdaa2eb58f5003302690559471744d6c6f9"
+SRC_URI[md5sum] = "f5466def95726b3c900d8a0227bdd034"
+SRC_URI[sha256sum] = "0cfbe561676b92e5af3ddc7ac77452014e3da8885da66baec811e7354138cc16"
+
+S = "${WORKDIR}/nspr-${PV}/nspr"
 
 RDEPENDS_${PN}-dev += "perl"
-
-S = "${WORKDIR}/nspr-${PV}/mozilla/nsprpub"
 
 TESTS = "runtests.pl \
     runtests.sh \
