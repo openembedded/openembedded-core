@@ -2,6 +2,10 @@ DESCRIPTION = "a modern 3D graphics API with associated utility APIs"
 HOMEPAGE = "http://wiki.clutter-project.org/wiki/Cogl"
 LICENSE = "LGPLv2.1+"
 
+SRC_URI += "file://cogl_fixed_mul-constraint.patch \
+            file://cogl-fixed-thumb.patch \
+            "
+
 inherit clutter
 
 DEPENDS = "pango glib-2.0 gdk-pixbuf"

@@ -1,0 +1,22 @@
+Upstream-Status: Backport
+
+Add register constraints to prevent asm statement complaints like:
+
+  {standard input}:382: rdhi, rdlo and rm must all be different
+
+Signed-off-by: Donn Seeley <donn.seeley@windriver.com>
+---
+ cogl/cogl-fixed.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/cogl/cogl-fixed.c
++++ b/cogl/cogl-fixed.c
+@@ -816,7 +816,7 @@ cogl_fixed_mul (CoglFixed a,
+   __asm__ ("smull %0, %1, %2, %3     \n"
+            "mov   %0, %0,     lsr %4 \n"
+            "add   %1, %0, %1, lsl %5 \n"
+-           : "=r"(res_hi), "=r"(res_low) \
++           : "=&r"(res_hi), "=&r"(res_low) \
+            : "r"(a), "r"(b), "i"(COGL_FIXED_Q), "i"(32 - COGL_FIXED_Q));
+ 
+   return (CoglFixed) res_low;

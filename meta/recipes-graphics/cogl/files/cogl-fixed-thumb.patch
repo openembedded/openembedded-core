@@ -1,0 +1,30 @@
+Upstream-Status: Backport
+
+There are two asm() statements in cogl-fixed.c that can't be assembled
+in Thumb mode.  Add a patch to switch to the generic code in Thumb mode.
+
+Signed-off-by: Donn Seeley <donn.seeley@windriver.com>
+---
+ cogl/cogl-fixed.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/cogl/cogl-fixed.c
++++ b/cogl/cogl-fixed.c
+@@ -626,7 +626,7 @@ cogl_fixed_sqrt (CoglFixed x)
+ 	/*
+ 	 * Find the highest bit set
+ 	 */
+-#if defined (__arm__) && !defined(__ARM_ARCH_4T__)
++#if defined (__arm__) && !defined(__ARM_ARCH_4T__) && !defined(__thumb__)
+ 	/* This actually requires at least arm v5, but gcc does not seem
+ 	 * to set the architecture defines correctly, and it is I think
+ 	 * very unlikely that anyone will want to use clutter on anything
+@@ -804,7 +804,7 @@ CoglFixed
+ cogl_fixed_mul (CoglFixed a,
+                 CoglFixed b)
+ {
+-#ifdef __arm__
++#if defined(__arm__) && !defined(__thumb__)
+   /* This provides about 12% speedeup on the gcc -O2 optimised
+    * C version
+    *
