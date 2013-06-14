@@ -32,6 +32,7 @@ TOOLCHAIN_HOST_TASK ?= "\
     nativesdk-python-unittest \
     nativesdk-python-difflib \
     nativesdk-python-pprint \
+    nativesdk-ncurses-terminfo-base \
     nativesdk-chrpath \
     nativesdk-tar \
     nativesdk-git \
