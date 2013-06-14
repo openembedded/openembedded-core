@@ -34,6 +34,10 @@ EXTRA_OECONF = "\
   --disable-mesa \
 "
 
+#Once -fno-omit-frame-pointer option of gcc is added into TARGET_CLFAGS as default
+#this will cause directfb build failure on x86 arch, so filter out it.
+TARGET_CFLAGS_x86 := "${@oe_filter_out('-fno-omit-frame-pointer', '${TARGET_CFLAGS}', d)}"
+
 #PACKAGES_DYNAMIC += "^directfb-inputdrivers-.*"
 #
 #python populate_packages_prepend () {
