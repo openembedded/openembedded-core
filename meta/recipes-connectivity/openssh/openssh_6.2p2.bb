@@ -41,6 +41,9 @@ INITSCRIPT_PACKAGES = "${PN}-sshd"
 INITSCRIPT_NAME_${PN}-sshd = "sshd"
 INITSCRIPT_PARAMS_${PN}-sshd = "defaults 9"
 
+PACKAGECONFIG ??= "tcp-wrappers"
+PACKAGECONFIG[tcp-wrappers] = "--with-tcp-wrappers,,tcp-wrappers"
+
 inherit autotools
 
 # LFS support:
