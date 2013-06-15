@@ -196,7 +196,7 @@ do_distrodataall() {
 }
 
 addhandler checkpkg_eventhandler
- checkpkg_eventhandler[eventmask] = "bb.event.BuildStarted bb.event.BuildCompleted"
+checkpkg_eventhandler[eventmask] = "bb.event.BuildStarted bb.event.BuildCompleted"
 python checkpkg_eventhandler() {
     def parse_csv_file(filename):
         package_dict = {}
@@ -793,7 +793,7 @@ do_checkpkgall() {
 }
 
 addhandler distro_check_eventhandler
-distro_check_eventhandler bb.event.BuildStarted
+distro_check_eventhandler[eventmask] = "bb.event.BuildStarted"
 python distro_check_eventhandler() {
     """initialize log files."""
     import oe.distro_check as dc
