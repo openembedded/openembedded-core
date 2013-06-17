@@ -16,32 +16,15 @@ SCONF_VERSION = "1"
 #http-proxy-port = 81
 #
 
-# Uncomment to cause git to use the proxy host specificed 
-# although this only works for http
-#GIT_PROXY_HOST = "proxy.example.com"
-#GIT_PROXY_PORT = "81"
-#export GIT_PROXY_COMMAND = "${COREBASE}/scripts/oe-git-proxy-command"
-
-# Set to yes to have a gitconfig generated for handling proxies; you
-# might not want this if you have all that set in your global git
-# configuration. If you don't enable it, the rest of the entries
-# (_PROXY_IGNORE, etc) don't really work that well
-#GIT_CORE_CONFIG = "Yes"
-
-# Space separate list of hosts to ignore for GIT proxy
-#GIT_PROXY_IGNORE = "host.server.com another.server.com"
-
-# If SOCKS is available run the following command to comple a simple transport
-# gcc scripts/oe-git-proxy-socks.c -o oe-git-proxy-socks
-# and then share that binary somewhere in PATH, then use the following settings
-#GIT_PROXY_HOST = "proxy.example.com"
-#GIT_PROXY_PORT = "81"
-
-# GIT_PROXY_COMMAND is used by git to override all proxy settings from
-# configuration files, so we prefix OE_ to avoid breaking havoc on the
-# generated (or local) gitconfig's.
-#OE_GIT_PROXY_COMMAND = "${COREBASE}/scripts/oe-git-proxy-socks-command"
-
+# To use git with a proxy, you must use an external git proxy command, such as
+# the one provided by scripts/oe-git-proxy.sh. To use this script, copy it to
+# your PATH and uncomment the following:
+#GIT_PROXY_COMMAND ?= "oe-git-proxy"
+#ALL_PROXY ?= "socks://socks.example.com:1080"
+#or
+#ALL_PROXY ?= "https://proxy.example.com:8080"
+# If you wish to use certain hosts without the proxy, specify them in NO_PROXY.
+# See the script for details on syntax.
 
 # Uncomment this to use a shared download directory
 #DL_DIR = "/some/shared/download/directory/"
