@@ -36,7 +36,8 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://busybox-sulogin-empty-root-password.patch \
            file://inetd.conf \
            file://inetd \
-           file://login-utilities.cfg"
+           file://login-utilities.cfg \
+           file://busybox-list-suid-and-non-suid-app-configs.patch"
 
 SRC_URI[tarball.md5sum] = "e025414bc6cd79579cc7a32a45d3ae1c"
 SRC_URI[tarball.sha256sum] = "eb13ff01dae5618ead2ef6f92ba879e9e0390f9583bd545d8789d27cf39b6882"
