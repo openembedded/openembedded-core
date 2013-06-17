@@ -1,0 +1,63 @@
+Change function type from "extern __inline__" to "static __inline__"
+
+"extern __inline__ function()" is the inlined version that
+can be used in this compilation unit, but there will be another
+definition of this function somewhere, so compiler will not emit
+any code for the function body. This causes problem in -O0,
+where functions are never inlined, the function call is preserved,
+but linker can't find the symbol, thus the error happens.
+
+since no packages provide atomic_add and atomic_sub, and -O0
+Optimize is hoped to keep for debug, we can change extern to
+static to fix this problem.
+
+Upstream-Status: Pending
+
+Signed-off-by: Roy.Li <rongqing.li@windriver.com>
+---
+ include/iatomic.h |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/include/iatomic.h b/include/iatomic.h
+index e92dbfd..364bc5c 100644
+--- a/include/iatomic.h
++++ b/include/iatomic.h
+@@ -720,7 +720,7 @@ typedef struct { volatile int counter; } atomic_t;
+  * Atomically adds @i to @v.  Note that the guaranteed useful range
+  * of an atomic_t is only 24 bits.
+  */
+-extern __inline__ void atomic_add(int i, atomic_t * v)
++static __inline__ void atomic_add(int i, atomic_t * v)
+ {
+ 	unsigned long temp;
+ 
+@@ -744,7 +744,7 @@ extern __inline__ void atomic_add(int i, atomic_t * v)
+  * Atomically subtracts @i from @v.  Note that the guaranteed
+  * useful range of an atomic_t is only 24 bits.
+  */
+-extern __inline__ void atomic_sub(int i, atomic_t * v)
++static __inline__ void atomic_sub(int i, atomic_t * v)
+ {
+ 	unsigned long temp;
+ 
+@@ -763,7 +763,7 @@ extern __inline__ void atomic_sub(int i, atomic_t * v)
+ /*
+  * Same as above, but return the result value
+  */
+-extern __inline__ int atomic_add_return(int i, atomic_t * v)
++static __inline__ int atomic_add_return(int i, atomic_t * v)
+ {
+ 	unsigned long temp, result;
+ 
+@@ -784,7 +784,7 @@ extern __inline__ int atomic_add_return(int i, atomic_t * v)
+ 	return result;
+ }
+ 
+-extern __inline__ int atomic_sub_return(int i, atomic_t * v)
++static __inline__ int atomic_sub_return(int i, atomic_t * v)
+ {
+ 	unsigned long temp, result;
+ 
+-- 
+1.7.4.1
+

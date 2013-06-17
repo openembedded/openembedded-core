@@ -19,6 +19,7 @@ PR = "r0"
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2 \
            file://fix-tstamp-declaration.patch \
            file://obsolete_automake_macros.patch \
+           file://fix-O0-Optimize-unable-inline-function.patch \
           "
 SRC_URI[md5sum] = "2dfa35d28471d721e592b616beedf965"
 SRC_URI[sha256sum] = "8c9f8161603cc3db640619650401292c3e110da63429ab6938aac763319f6e7d"
