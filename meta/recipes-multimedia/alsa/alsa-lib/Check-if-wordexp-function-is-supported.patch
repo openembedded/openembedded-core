@@ -1,0 +1,50 @@
+From 2555c5d62229cf269974f6ec6e4689ab97bbda42 Mon Sep 17 00:00:00 2001
+From: "Hong H. Pham" <hong.pham@windriver.com>
+Date: Tue, 26 Feb 2013 19:40:04 -0500
+Subject: [PATCH] Check if wordexp function is supported
+
+eglibc could be configured to build without wordexp, so it is not enough
+to check if wordexp.h exists (the header file could be installed, but it's
+possible that the wordexp() function is not supported).  An additional
+check if wordexp() is supported by the system C library is needed.
+
+Upstream-Status: Pending
+
+Signed-off-by: Hong H. Pham <hong.pham@windriver.com>
+---
+ configure.in   |    5 ++++-
+ src/userfile.c |    2 +-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 4bcb0d6..ba1c2dd 100644
+--- a/configure.in
++++ b/configure.in
+@@ -333,7 +333,10 @@ arm*)
+ esac
+ 
+ dnl Check for wordexp.h
+-AC_CHECK_HEADERS([wordexp.h])
++AC_CHECK_HEADERS([wordexp.h],
++  dnl Make sure wordexp is supported by the C library
++  AC_CHECK_FUNCS([wordexp])
++)
+ 
+ dnl Check for resmgr support...
+ AC_MSG_CHECKING(for resmgr support)
+diff --git a/src/userfile.c b/src/userfile.c
+index 3a73836..b8ce809 100644
+--- a/src/userfile.c
++++ b/src/userfile.c
+@@ -32,7 +32,7 @@
+  * stores the first matchine one.  The returned string is strdup'ed.
+  */
+ 
+-#ifdef HAVE_WORDEXP_H
++#if (defined(HAVE_WORDEXP_H) && defined(HAVE_WORDEXP))
+ #include <wordexp.h>
+ #include <assert.h>
+ int snd_user_file(const char *file, char **result)
+-- 
+1.7.10.4
+
