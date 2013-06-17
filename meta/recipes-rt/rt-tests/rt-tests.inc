@@ -8,6 +8,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/clrkwllms/rt-tests.git 
            file://0002-rt-tests-Break-out-install_hwlatdetect.patch \
            file://added-missing-dependencies.patch \
            file://cyclictest-finish-removal-of-1-second-first-loops.patch \
+           file://hackbench-fix-error-check.patch \
 "
 
 INC_PR = "r2"
