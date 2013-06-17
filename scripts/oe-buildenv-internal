@@ -37,7 +37,7 @@ py_v3_check=`/usr/bin/env python --version 2>&1 | grep "Python 3"`
 if [ "$py_v3_check" != "" ]; then
 	echo "Bitbake is not compatible with python v3"
 	echo "Please set up python v2 as your default python interpreter"
-	exit 1
+	return 1
 fi
 
 # Similarly, we now have code that doesn't parse correctly with older
@@ -46,7 +46,7 @@ fi
 py_v26_check=`python -c 'import sys; print sys.version_info >= (2,7,3)'`
 if [ "$py_v26_check" != "True" ]; then
 	echo "BitBake requires Python 2.7.3 or later"
-	exit 1
+	return 1
 fi
 
 if [ "x$BDIR" = "x" ]; then
