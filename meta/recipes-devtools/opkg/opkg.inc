@@ -42,7 +42,7 @@ RREPLACES_${PN} = "opkg-nogpg"
 PACKAGES =+ "libopkg-dev libopkg-staticdev libopkg update-alternatives-cworth"
 
 FILES_update-alternatives-cworth = "${bindir}/update-alternatives"
-FILES_libopkg-dev = "${libdir}/*.la ${libdir}/*.so"
+FILES_libopkg-dev = "${libdir}/*.la ${libdir}/*.so ${includedir}/libopkg"
 FILES_libopkg-staticdev = "${libdir}/*.a"
 FILES_libopkg = "${libdir}/*.so.* ${OPKGLIBDIR}/opkg/"
 
