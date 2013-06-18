@@ -12,6 +12,7 @@ SRC_URI = "https://fedorahosted.org/releases/l/o/logrotate/logrotate-${PV}.tar.g
            file://act-as-mv-when-rotate.patch \
            file://disable-check-different-filesystems.patch \
            file://update-the-manual.patch \
+           file://logrotate-CVE-2011-1548.patch \
             "
 
 SRC_URI[md5sum] = "bd2e20d8dc644291b08f9215397d28a5"
