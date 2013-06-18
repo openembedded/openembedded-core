@@ -11,7 +11,7 @@ DEPENDS = "gnome-common gtk+ startup-notification dbus dbus-glib"
 DEPENDS += " ${@base_contains("MACHINE_FEATURES", "acpi", "libacpi", "",d)}"
 DEPENDS += " ${@base_contains("MACHINE_FEATURES", "apm", "apmd", "",d)}"
 
-SRCREV = "c03234512784b78a95b5aa9ca445d05836b9d51a"
+SRCREV = "26a3a67b41c50e0ae163d8fe86ccf7a0f0a671ae"
 PV = "2.0+git${SRCPV}"
 PR = "r0"
 
