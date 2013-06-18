@@ -6,4 +6,4 @@ LICENSE = "MIT"
 
 inherit core-image
 
-CORE_IMAGE_BASE_INSTALL += "weston weston-init gtk+3-demo"
+CORE_IMAGE_BASE_INSTALL += "weston weston-init weston-examples gtk+3-demo"
