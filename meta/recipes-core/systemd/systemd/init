@@ -83,7 +83,7 @@ case "$1" in
     ;;
   stop)
     echo "Stopping udevd"
-    start-stop-daemon --stop --name udevd --quiet
+    start-stop-daemon --stop --name systemd-udevd --quiet
     ;;
   restart)
     $0 stop
@@ -91,7 +91,7 @@ case "$1" in
     $0 start
     ;;
   status)
-    status udevd
+    status systemd-udevd
     ;;
   *)
     echo "Usage: $0 {start|stop|status|restart}"
