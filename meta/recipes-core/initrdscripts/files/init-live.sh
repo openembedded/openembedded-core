@@ -75,7 +75,9 @@ read_args() {
 }
 
 boot_live_root() {
-    killall udevd 2>/dev/null
+    # Watches the udev event queue, and exits if all current events are handled
+    udevadm settle --timeout=3 --quiet
+    killall "${_UDEV_DAEMON##*/}" 2>/dev/null
 
     # Move the mount points of some filesystems over to
     # the corresponding directories under the real root filesystem.
