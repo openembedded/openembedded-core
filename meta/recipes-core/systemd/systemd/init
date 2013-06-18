@@ -59,8 +59,12 @@ case "$1" in
                     if [ "$READDATA" = "$VERSION$CMDLINE$DEVICES$ATAGS" ]; then
                             (cd /; tar xf $DEVCACHE > /dev/null 2>&1)
                             not_first_boot=1
+                            [ "$VERBOSE" != "no" ] && echo "udev: using cache file $DEVCACHE"
+                            [ -e /dev/shm/udev.cache ] && rm -f /dev/shm/udev.cache
+                    else
+                            echo "$VERSION$CMDLINE$DEVICES$ATAGS" > /dev/shm/udev.cache
                     fi
-
+            else
                     echo "$VERSION$CMDLINE$DEVICES$ATAGS" > /dev/shm/udev.cache
             fi
     fi
