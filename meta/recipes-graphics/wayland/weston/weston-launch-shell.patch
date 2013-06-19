@@ -1,0 +1,74 @@
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From ff3230952a68077669e0ea0ac3ceb234273556fc Mon Sep 17 00:00:00 2001
+From: Quentin Glidic <sardemff7+git@sardemff7.net>
+Date: Fri, 17 May 2013 16:20:37 +0200
+Subject: [PATCH] weston-launch: Run weston in the user login shell
+
+This patch brings back the user environment from the shell.
+In the future, weston-launch could create the Wayland socket earlier, in
+which case the user's shell could be used to run Wayland-specific tools
+in the new Weston session.
+
+Signed-off-by: Quentin Glidic <sardemff7+git@sardemff7.net>
+---
+ src/weston-launch.c |   19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/src/weston-launch.c b/src/weston-launch.c
+index 64d4a8a..89c3c5a 100644
+--- a/src/weston-launch.c
++++ b/src/weston-launch.c
+@@ -60,6 +60,8 @@
+ 
+ #include "weston-launch.h"
+ 
++#define MAX_ARGV_SIZE 256
++
+ struct weston_launch {
+ 	struct pam_conv pc;
+ 	pam_handle_t *ph;
+@@ -523,8 +525,9 @@ main(int argc, char *argv[])
+ 	struct weston_launch wl;
+ 	char **env;
+ 	int i, c;
+-	char **child_argv;
++	char *child_argv[MAX_ARGV_SIZE];
+ 	char *tty = NULL, *new_user = NULL;
++	char *term;
+ 	int sleep_fork = 0;
+ 	struct option opts[] = {
+ 		{ "user",    required_argument, NULL, 'u' },
+@@ -562,8 +565,8 @@ main(int argc, char *argv[])
+ 		}
+ 	}
+ 
+-	child_argv = &argv[optind-1];
+-	child_argv[0] = BINDIR "/weston";
++	if ((argc - optind) > (MAX_ARGV_SIZE - 5))
++		error(1, E2BIG, "Too many arguments to pass to weston");
+ 
+ 	if (new_user)
+ 		wl.pw = getpwnam(new_user);
+@@ -572,7 +575,17 @@ main(int argc, char *argv[])
+ 	if (wl.pw == NULL)
+ 		error(1, errno, "failed to get username");
+ 
++	child_argv[0] = wl.pw->pw_shell;
++	child_argv[1] = "-l";
++	child_argv[2] = "-c";
++	child_argv[3] = BINDIR "/weston \"$@\"";
++	child_argv[4] = "weston";
++	for (i = 0; i < (argc - optind); ++i)
++		child_argv[5+i] = argv[optind+i];
++
++	term = getenv("TERM");
+ 	clearenv();
++	setenv("TERM", term, 1);
+ 	setenv("USER", wl.pw->pw_name, 1);
+ 	setenv("LOGNAME", wl.pw->pw_name, 1);
+ 	setenv("HOME", wl.pw->pw_dir, 1);
+-- 
+1.7.10.4
+

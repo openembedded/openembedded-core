@@ -1,0 +1,47 @@
+Upstream-Status: Submitted (https://bugs.freedesktop.org/show_bug.cgi?id=65933)
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 42821739a228a85ce3432be1796858e5cc31688b Mon Sep 17 00:00:00 2001
+From: Quentin Glidic <sardemff7+git@sardemff7.net>
+Date: Wed, 19 Jun 2013 15:27:11 +0200
+Subject: [PATCH weston] weston-launch: Set all groups for user
+
+Signed-off-by: Quentin Glidic <sardemff7+git@sardemff7.net>
+---
+ configure.ac        | 2 +-
+ src/weston-launch.c | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index b625221..db3feb0 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -52,7 +52,7 @@ AC_CHECK_DECL(CLOCK_MONOTONIC,[],
+ 	      [[#include <time.h>]])
+ AC_CHECK_HEADERS([execinfo.h])
+ 
+-AC_CHECK_FUNCS([mkostemp strchrnul])
++AC_CHECK_FUNCS([mkostemp strchrnul initgroups])
+ 
+ COMPOSITOR_MODULES="wayland-server >= 1.1.90 xkbcommon pixman-1"
+ 
+diff --git a/src/weston-launch.c b/src/weston-launch.c
+index 76dcede..7d7b556 100644
+--- a/src/weston-launch.c
++++ b/src/weston-launch.c
+@@ -631,9 +631,13 @@ main(int argc, char *argv[])
+ 		}
+ 
+ 		if (setgid(wl.pw->pw_gid) < 0 ||
++#ifdef HAVE_INITGROUPS
++                    initgroups(wl.pw->pw_name, wl.pw->pw_gid) < 0 ||
++#endif
+ 		    setuid(wl.pw->pw_uid) < 0)
+ 			error(1, errno, "dropping privilidges failed");
+ 
++
+ 		if (sleep_fork) {
+ 			if (wl.verbose)
+ 				printf("weston-launch: waiting %d seconds\n", sleep_fork);
+-- 
+1.8.3

@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=275efac2559a224527bd4fd593d38466 \
 
 SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
            file://install-examples.patch \
+           file://weston-launch-shell.patch \
+           file://groups.patch \
            file://weston.png \
            file://weston.desktop"
 SRC_URI[md5sum] = "dd9f3043fc5228c6bc4e99873fae2254"
