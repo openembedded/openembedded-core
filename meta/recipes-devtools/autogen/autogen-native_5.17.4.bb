@@ -9,7 +9,8 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504" 
 
 SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
-           file://guile.patch"
+           file://guile.patch \
+           file://increase-timeout-limit.patch"
 
 SRC_URI[md5sum] = "09f074cba57610bf4ef1147e01c8ae90"
 SRC_URI[sha256sum] = "cd2585f4794d0e9d7f2cb0b9af4f2bd429946e718473edf1cf8c49f081ca71ed"
