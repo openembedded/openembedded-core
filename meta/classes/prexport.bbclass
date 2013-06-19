@@ -55,4 +55,4 @@ python prexport_handler () {
 }
 
 addhandler prexport_handler
-prexport_handler bb.event.RecipeParsed bb.event.ParseStarted bb.event.ParseCompleted"
+prexport_handler[eventmask] = "bb.event.RecipeParsed bb.event.ParseStarted bb.event.ParseCompleted"

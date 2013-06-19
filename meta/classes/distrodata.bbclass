@@ -190,6 +190,7 @@ python do_distrodata() {
 
 addtask distrodataall after do_distrodata
 do_distrodataall[recrdeptask] = "do_distrodataall do_distrodata"
+do_distrodataall[recideptask] = "do_${BB_DEFAULT_TASK}"
 do_distrodataall[nostamp] = "1"
 do_distrodataall() {
         :
@@ -787,6 +788,7 @@ python do_checkpkg() {
 
 addtask checkpkgall after do_checkpkg
 do_checkpkgall[recrdeptask] = "do_checkpkgall do_checkpkg"
+do_checkpkgall[recideptask] = "do_${BB_DEFAULT_TASK}"
 do_checkpkgall[nostamp] = "1"
 do_checkpkgall() {
         :
@@ -829,6 +831,7 @@ python do_distro_check() {
 
 addtask distro_checkall after do_distro_check
 do_distro_checkall[recrdeptask] = "do_distro_checkall do_distro_check"
+do_distro_checkall[recideptask] = "do_${BB_DEFAULT_TASK}"
 do_distro_checkall[nostamp] = "1"
 do_distro_checkall() {
         :
@@ -877,6 +880,7 @@ python do_checklicense() {
 
 addtask checklicenseall after do_checklicense
 do_checklicenseall[recrdeptask] = "do_checklicenseall do_checklicense"
+do_checklicenseall[recideptask] = "do_${BB_DEFAULT_TASK}"
 do_checklicenseall[nostamp] = "1"
 do_checklicenseall() {
         :
