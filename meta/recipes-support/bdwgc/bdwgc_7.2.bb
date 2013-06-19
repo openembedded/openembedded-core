@@ -37,5 +37,5 @@ S = "${WORKDIR}/gc-${PV}"
 
 ARM_INSTRUCTION_SET = "arm"
 
-inherit autotools
+inherit autotools pkgconfig
 BBCLASSEXTEND = "native nativesdk"
