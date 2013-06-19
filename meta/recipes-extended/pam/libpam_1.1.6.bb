@@ -22,6 +22,7 @@ SRC_URI = "http://linux-pam.org/library/Linux-PAM-${PV}.tar.bz2 \
            file://fixsepbuild.patch \
            file://reflect-the-enforce_for_root-semantics-change-in-pam.patch \
            file://add-checks-for-crypt-returning-NULL.patch \
+           file://libpam-fix-for-CVE-2010-4708.patch \
           "
 SRC_URI[md5sum] = "7b73e58b7ce79ffa321d408de06db2c4"
 SRC_URI[sha256sum] = "bab887d6280f47fc3963df3b95735a27a16f0f663636163ddf3acab5f1149fc2"
