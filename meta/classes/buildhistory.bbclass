@@ -319,7 +319,11 @@ buildhistory_get_installed() {
 	list_installed_packages file | sort > $pkgcache
 
 	cat $pkgcache | awk '{ print $1 }' > $1/installed-package-names.txt
-	cat $pkgcache | awk '{ print $2 }' | xargs -n1 basename > $1/installed-packages.txt
+	if [ -s $pkgcache ] ; then
+		cat $pkgcache | awk '{ print $2 }' | xargs -n1 basename > $1/installed-packages.txt
+	else
+		printf "" > $1/installed-packages.txt
+	fi
 
 	# Produce dependency graph
 	# First, filter out characters that cause issues for dot
