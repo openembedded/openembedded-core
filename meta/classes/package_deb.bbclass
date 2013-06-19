@@ -279,10 +279,20 @@ python do_package_deb () {
                 # Special behavior for description...
                 if 'DESCRIPTION' in fs:
                      summary = localdata.getVar('SUMMARY', True) or localdata.getVar('DESCRIPTION', True) or "."
+                     ctrlfile.write('Description: %s\n' % unicode(summary))
                      description = localdata.getVar('DESCRIPTION', True) or "."
                      description = textwrap.dedent(description).strip()
-                     ctrlfile.write('Description: %s\n' % unicode(summary))
-                     ctrlfile.write('%s\n' % unicode(textwrap.fill(description, width=74, initial_indent=' ', subsequent_indent=' ')))
+                     if '\\n' in description:
+                         # Manually indent
+                         for t in description.split('\\n'):
+                             # We don't limit the width when manually indent, but we do
+                             # need the textwrap.fill() to set the initial_indent and
+                             # subsequent_indent, so set a large width
+                             ctrlfile.write('%s\n' % unicode(textwrap.fill(t, width=100000, initial_indent=' ', subsequent_indent=' ')))
+                     else:
+                         # Auto indent
+                         ctrlfile.write('%s\n' % unicode(textwrap.fill(description.strip(), width=74, initial_indent=' ', subsequent_indent=' ')))
+
                 else:
                      ctrlfile.write(unicode(c % tuple(pullData(fs, localdata))))
         except KeyError:
