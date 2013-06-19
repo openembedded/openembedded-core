@@ -154,6 +154,7 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     python-elementtree \
     python-email \
     python-fcntl \
+    python-git \
     python-logging \
     python-misc \
     python-multiprocessing \
