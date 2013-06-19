@@ -49,7 +49,8 @@ dirs755 = "/bin /boot /dev ${sysconfdir} ${sysconfdir}/default \
 dirs3755 = "/srv  \
             ${prefix}/local ${prefix}/local/bin ${prefix}/local/games \
             ${prefix}/local/include ${prefix}/local/lib ${prefix}/local/sbin \
-            ${prefix}/local/share ${prefix}/local/src"
+            ${prefix}/local/share ${prefix}/local/src \
+            ${prefix}/lib/locale"
 dirs4775 = "/var/mail"
 
 volatiles = "log tmp"
