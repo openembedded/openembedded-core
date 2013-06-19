@@ -56,7 +56,7 @@ python () {
         deps.append('tar-native:do_populate_sysroot')
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         d.setVarFlag('do_package_write_tar', 'depends', " ".join(deps))
-        d.setVarFlag('do_package_write_ipk', 'fakeroot', "1")
+        d.setVarFlag('do_package_write_tar', 'fakeroot', "1")
 }
 
 
