@@ -17,8 +17,8 @@ SRC_URI = "http://dist.schmorp.de/rxvt-unicode/Attic/rxvt-unicode-${PV}.tar.bz2 
 	   file://rxvt.desktop \
 	   file://rxvt.png"
 
-SRC_URI[md5sum] = "1270432bdc7ce17dbb07d41a607081e0"
-SRC_URI[sha256sum] = "de017b2b2a1a7182aeada99f605da33cbee18d450e07a7fdabef48da446521e4"
+SRC_URI[md5sum] = "963ccc748fe5bca925e7b92c0404d68b"
+SRC_URI[sha256sum] = "87b72a43cac7c9362a984094c661a632ce1a829ad90f149142ab1953854b433f"
 
 inherit autotools update-alternatives
 
@@ -42,7 +42,7 @@ EXTRA_OECONF = "--enable-menubar --enable-xim \
 		--with-x=${STAGING_DIR_HOST}${prefix}"
 
 do_configure_prepend () {
-	cp aclocal.m4 acinclude.m4
+	cp ${S}/aclocal.m4 ${S}/acinclude.m4
 }
 
 do_compile_prepend () {
