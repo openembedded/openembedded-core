@@ -15,7 +15,8 @@ SRC_URI = "ftp://ftp.gnome.org/pub/gnome/sources/pygtk/2.24/${SRCNAME}-${PV}.tar
            file://fix-gtkunixprint.patch \
            file://prevent_to_get_display_during_import.patch \
            file://nodocs.patch \
-           file://acinclude.m4"
+           file://acinclude.m4 \
+           file://update-dependences-of-defs.c.patch"
 
 SRC_URI[md5sum] = "a1051d5794fd7696d3c1af6422d17a49"
 SRC_URI[sha256sum] = "cd1c1ea265bd63ff669e92a2d3c2a88eb26bcd9e5363e0f82c896e649f206912"
