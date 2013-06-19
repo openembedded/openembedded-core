@@ -38,7 +38,7 @@ case "$1" in
   ;;
 
   stop)
-        echo "Stopping XServer"
+        echo "Stopping Weston"
         killproc weston
   ;;
 
