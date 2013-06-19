@@ -534,7 +534,6 @@ def write_rpm_perfiledata(srcname, d):
 
 
 python write_specfile () {
-    import textwrap
     import oe.packagedata
 
     # append information for logs and patches to %prep
@@ -667,6 +666,19 @@ python write_specfile () {
             if depends:
                 deps.append(depends)
         return " ".join(deps)
+
+    def append_description(spec_preamble, text):
+        """
+        Add the description to the spec file.
+        """
+        import textwrap
+        dedent_text = textwrap.dedent(text).strip()
+        # Bitbake saves "\n" as "\\n"
+        if '\\n' in dedent_text:
+            for t in dedent_text.split('\\n'):
+                spec_preamble.append(t.strip())
+        else:
+            spec_preamble.append('%s' % textwrap.fill(dedent_text, width=75))
 
     packages = d.getVar('PACKAGES', True)
     if not packages or packages == '':
@@ -868,8 +880,7 @@ python write_specfile () {
         spec_preamble_bottom.append('')
 
         spec_preamble_bottom.append('%%description -n %s' % splitname)
-        dedent_text = textwrap.dedent(splitdescription).strip()
-        spec_preamble_bottom.append('%s' % textwrap.fill(dedent_text, width=75))
+        append_description(spec_preamble_bottom, splitdescription)
 
         spec_preamble_bottom.append('')
 
@@ -975,8 +986,7 @@ python write_specfile () {
     spec_preamble_top.append('')
 
     spec_preamble_top.append('%description')
-    dedent_text = textwrap.dedent(srcdescription).strip()
-    spec_preamble_top.append('%s' % textwrap.fill(dedent_text, width=75))
+    append_description(spec_preamble_top, srcdescription)
 
     spec_preamble_top.append('')
 
