@@ -96,6 +96,6 @@ do_install() {
 	install -d ${D}${sysconfdir}/pam.d/     
 	install -m 0644 ${WORKDIR}/pam.d/* ${D}${sysconfdir}/pam.d/
 
-    # The lsb requires unix_chkpwd has setuid permission
-    chmod 4755 ${D}${sbindir}/unix_chkpwd
+	# The lsb requires unix_chkpwd has setuid permission
+	chmod 4755 ${D}${sbindir}/unix_chkpwd
 }
