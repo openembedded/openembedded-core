@@ -78,9 +78,6 @@ PACKAGES =+ "libegl-mesa libegl-mesa-dev \
             "
 
 do_install_append () {
-    # GLU is now in libglu (this shouldn't be required in Mesa 9.x)
-    rm -f ${D}${includedir}/GL/glu*
-
     # Drivers never need libtool .la files
     rm -f ${D}${libdir}/dri/*.la
     rm -f ${D}${libdir}/egl/*.la
