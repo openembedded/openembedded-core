@@ -25,9 +25,7 @@ DEPENDS += "xproto-native"
 EXTRA_OECONF += "--with-keysymdefdir=${STAGING_INCDIR}/X11/ --disable-xf86bigfont"
 EXTRA_OEMAKE += 'CWARNFLAGS=""'
 
-# Let people with incredibly archaic requirements enable Xcms, but disable it by
-# default.
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "xcms"
 PACKAGECONFIG[xcms] = "--enable-xcms,--disable-xcms"
 
 # src/util/makekeys is built natively but needs -D_GNU_SOURCE defined.
