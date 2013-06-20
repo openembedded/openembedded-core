@@ -1,0 +1,35 @@
+From f10135df3f4751d7c83a66561c988ae799b6372f Mon Sep 17 00:00:00 2001
+From: "Song.Li" <Song.Li@windriver.com>
+Date: Fri, 10 Aug 2012 13:07:20 +0800
+Subject: [PATCH] let DST include year 2099
+
+tcl puts Daylight Saving Time in deffect from 1916 to 2099,
+it should include the year 2099,becuase tcl
+self-contained testing have a DST testcase on 2099.
+so the condition statement "<2099" should be "<=2099"
+
+Upstream-Status: Submitted
+
+Signed-off-by: Song.Li <Song.Li@windriver.com>
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+
+---
+ library/clock.tcl |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/library/clock.tcl b/library/clock.tcl
+index 2e9cae7..e8efe4a 100644
+--- a/library/clock.tcl
++++ b/library/clock.tcl
+@@ -3945,7 +3945,7 @@ proc ::tcl::clock::ProcessPosixTimeZone { z } {
+ 
+     # Put DST in effect in all years from 1916 to 2099.
+ 
+-    for { set y 1916 } { $y < 2099 } { incr y } {
++    for { set y 1916 } { $y <= 2099 } { incr y } {
+ 	set startTime [DeterminePosixDSTTime $z start $y]
+ 	incr startTime [expr { - wide($stdOffset) }]
+ 	set endTime [DeterminePosixDSTTime $z end $y]
+-- 
+1.7.9.5
+
