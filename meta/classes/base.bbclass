@@ -309,13 +309,15 @@ python base_eventhandler() {
         oe.utils.features_backfill("MACHINE_FEATURES", e.data)
 
     if isinstance(e, bb.event.BuildStarted):
+        localdata = bb.data.createCopy(e.data)
+        bb.data.update_data(localdata)
         statuslines = []
-        for func in oe.data.typed_value('BUILDCFG_FUNCS', e.data):
+        for func in oe.data.typed_value('BUILDCFG_FUNCS', localdata):
             g = globals()
             if func not in g:
                 bb.warn("Build configuration function '%s' does not exist" % func)
             else:
-                flines = g[func](e.data)
+                flines = g[func](localdata)
                 if flines:
                     statuslines.extend(flines)
 
