@@ -17,7 +17,8 @@ BASE_SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl${PV}-src.tar.gz \
 SRC_URI = "${BASE_SRC_URI} \
 	   file://fix_non_native_build_issue.patch \
 	   file://fix_issue_with_old_distro_glibc.patch \
-     file://no_packages.patch"
+	   file://no_packages.patch \
+	   file://tcl-remove-hardcoded-install-path.patch"
 
 SRC_URI[md5sum] = "573aa5fe678e9185ef2b3c56b24658d3"
 SRC_URI[sha256sum] = "354422b9c4791685499123b2dfe01faa98b555c08906c010cb4449ddc75dcade"
@@ -65,7 +66,7 @@ tcl_sysroot_preprocess () {
 
 PACKAGES =+ "tcl-lib"
 FILES_tcl-lib = "${libdir}/libtcl8.6.so*"
-FILES_${PN} += "${prefix}/lib/tcl8.6 ${prefix}/lib/tcl8"
+FILES_${PN} += "${libdir}/tcl8.6 ${libdir}/tcl8"
 FILES_${PN}-dev += "${libdir}/tclConfig.sh ${libdir}/tclooConfig.sh"
 
 # isn't getting picked up by shlibs code
