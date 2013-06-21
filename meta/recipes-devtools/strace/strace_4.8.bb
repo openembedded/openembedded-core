@@ -6,11 +6,18 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=124500c21e856f0912df29295ba104c7"
 PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
-           file://git-version-gen"
+           file://git-version-gen \
+           file://strace-add-configure-options.patch"
 
 SRC_URI[md5sum] = "c575ef43829586801f514fd91bfe7575"
 SRC_URI[sha256sum] = "f492291f07a7c805c07a8395cce1ea054a6401ad414f4cc12185672215e1d7f8"
 inherit autotools
+
+PACKAGECONFIG_class-target ?= "libaio"
+PACKAGECONFIG_class-target += "${@base_contains('DISTRO_FEATURES', 'acl', 'acl', '', d)}"
+
+PACKAGECONFIG[libaio] = "--enable-aio,--disable-aio,libaio"
+PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl"
 
 export INCLUDES = "-I. -I./linux"
 

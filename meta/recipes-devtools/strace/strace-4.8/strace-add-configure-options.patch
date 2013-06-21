@@ -1,0 +1,60 @@
+Add options "aio" and "acl" to enable/disable libaio and acl support.
+
+Upstream-Status: Pending
+
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+
+--- strace-4.8/configure.ac.orig	2013-06-21 15:37:52.145892182 +0800
++++ strace-4.8/configure.ac	2013-06-21 15:45:49.029909004 +0800
+@@ -219,7 +219,6 @@ AC_CHECK_HEADERS(m4_normalize([
+ 	netinet/sctp.h
+ 	poll.h
+ 	stropts.h
+-	sys/acl.h
+ 	sys/asynch.h
+ 	sys/conf.h
+ 	sys/epoll.h
+@@ -231,6 +230,19 @@ AC_CHECK_HEADERS(m4_normalize([
+ 	sys/uio.h
+ 	sys/vfs.h
+ ]))
++
++AC_ARG_ENABLE([acl],
++	[AS_HELP_STRING([--enable-acl], [turn on acl support])],
++	[case $enableval in
++	yes) 
++		AC_CHECK_HEADERS([sys/acl.h])
++		;;
++	no)  ;;
++	*)   AC_MSG_ERROR([bad value $enableval for aio option]) ;;
++	esac]
++	
++)
++
+ AC_CHECK_HEADERS([linux/icmp.h linux/in6.h linux/netlink.h linux/if_packet.h],
+                  [], [], [#include <stddef.h>
+ #include <sys/socket.h>
+@@ -301,10 +313,19 @@ AC_CHECK_SIZEOF([long])
+ AC_CHECK_SIZEOF([long long])
+ AC_CHECK_SIZEOF([rlim_t],,[#include <sys/resource.h>])
+ 
+-AC_CHECK_HEADERS([libaio.h], [
+-	AC_CHECK_MEMBERS([struct iocb.u.c.flags],,, [#include <libaio.h>])
+-	AC_CHECK_DECLS([IO_CMD_PWRITE, IO_CMD_PWRITEV],,, [#include <libaio.h>])
+-])
++AC_ARG_ENABLE([aio],
++	[AS_HELP_STRING([--enable-aio], [turn on libaio support])],
++	[case $enableval in
++	yes) 
++	AC_CHECK_HEADERS([libaio.h], [
++		AC_CHECK_MEMBERS([struct iocb.u.c.flags],,, [#include <libaio.h>])
++		AC_CHECK_DECLS([IO_CMD_PWRITE, IO_CMD_PWRITEV],,, [#include <libaio.h>])
++	])
++	;;
++	no)  ;;
++	*)   AC_MSG_ERROR([bad value $enableval for aio option]) ;;
++	esac]
++)
+ 
+ AC_PATH_PROG([PERL], [perl])
+ 
