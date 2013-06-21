@@ -23,8 +23,8 @@ DEPENDS = "attr libaio libcap"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/ltp/ltp-full-${PV}.bz2"
 
-SRC_URI[md5sum] = "06974c85542c78b6b6ff74ac3ac3a5d3"
-SRC_URI[sha256sum] = "471b21f1d6f952957f534cd0c5ee5bcbbf50b9fcb83519b0293be141e6f2338d"
+SRC_URI[md5sum] = "d448d9e9731d7ef45352fc74633cc97f"
+SRC_URI[sha256sum] = "afdb1479e73d4da7f0d4d5d3fe1570bc5fc96e3317d4a5c10c59c046d3dfa4a0"
 
 export prefix = "/opt/ltp"
 export exec_prefix = "/opt/ltp"
