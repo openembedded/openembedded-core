@@ -369,13 +369,6 @@ def check_sanity(sanity_data):
             print("WARNING: sanity.bbclass can't compare versions without python-distutils")
             return 1
 
-    # Check the bitbake version meets minimum requirements
-    minversion = sanity_data.getVar('BB_MIN_VERSION', True)
-    if not minversion:
-        # Hack: BB_MIN_VERSION hasn't been parsed yet so return 
-        # and wait for the next call
-        return
-
     if 0 == os.getuid():
         raise_sanity_error("Do not use Bitbake as root.", sanity_data)
 
@@ -392,6 +385,8 @@ def check_sanity(sanity_data):
     except ImportError:
         messages = messages + 'Your python is not a full install. Please install the module xml.parsers.expat (python-xml on openSUSE and SUSE Linux).\n'
 
+    # Check the bitbake version meets minimum requirements
+    minversion = sanity_data.getVar('BB_MIN_VERSION', True)
     if (LooseVersion(bb.__version__) < LooseVersion(minversion)):
         messages = messages + 'Bitbake version %s is required and version %s was found\n' % (minversion, bb.__version__)
 
