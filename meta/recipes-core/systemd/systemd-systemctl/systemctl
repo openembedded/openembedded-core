@@ -77,10 +77,14 @@ for service in $services; do
 	fi
 	echo "Found $service in $service_file"
 
+	# If any new unit types are added to systemd they should be added
+	# to this regular expression.
+	unit_types_re='\.\(service\|socket\|device\|mount\|automount\|swap\|target\|path\|timer\|snapshot\)$'
+
 	# create the required symbolic links
 	wanted_by=$(sed '/^WantedBy[[:space:]]*=/s,[^=]*=,,p;d' "$ROOT/$service_file" \
 		        | tr ',' '\n' \
-		        | grep '\(\.target$\)\|\(\.service$\)')
+		        | grep "$unit_types_re")
 
 	for r in $wanted_by; do
 		echo "WantedBy=$r found in $service"
@@ -98,7 +102,7 @@ for service in $services; do
 	# create the required symbolic 'Alias' links
 	alias=$(sed '/^Alias[[:space:]]*=/s,[^=]*=,,p;d' "$ROOT/$service_file" \
 		        | tr ',' '\n' \
-		        | grep '\.service$')
+		        | grep "$unit_types_re")
 
 	for r in $alias; do
 		if [ "$action" = "enable" ]; then
