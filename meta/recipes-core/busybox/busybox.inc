@@ -44,7 +44,7 @@ CONFFILES_${PN}-mdev = "${sysconfdir}/mdev.conf"
 
 RRECOMMENDS_${PN} = "${PN}-syslog ${PN}-udhcpc"
 
-inherit cml1 systemd update-rc.d
+inherit cml1 systemd update-rc.d ptest
 
 # internal helper
 def busybox_cfg(feature, features, tokens, cnf, rem):
