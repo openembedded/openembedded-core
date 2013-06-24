@@ -1,0 +1,58 @@
+Fix another error related to whitespace handling in archives.
+
+2011-06-12  Paul Smith  <psmith@gnu.org>
+
+* read.c (parse_file_seq): Move the check for empty members out of
+the loop so we can go to the next member properly.
+Another fix for Savannah bug #30612.
+
+Upstream-Status: Backport
+
+---
+ read.c                          | 10 +++++-----
+ tests/scripts/features/archives |  5 +++++
+ 5 files changed, 30 insertions(+), 5 deletions(-)
+
+diff --git a/read.c b/read.c
+index c87d4a7..b012094 100644
+--- a/read.c
++++ b/read.c
+@@ -3044,16 +3044,16 @@ parse_file_seq (char **stringp, unsigned int size, int stopchar,
+                       nlen -= (n + 1) - tp;
+                       tp = n + 1;
+ 
+-                      /* If we have just "lib(", part of something like
+-                         "lib( a b)", go to the next item.  */
+-                      if (! nlen)
+-                        continue;
+-
+                       /* We can stop looking now.  */
+                       break;
+                     }
+                 }
+               while (*e != '\0');
++
++              /* If we have just "lib(", part of something like "lib( a b)",
++                 go to the next item.  */
++              if (! nlen)
++                continue;
+             }
+         }
+ 
+diff --git a/tests/scripts/features/archives b/tests/scripts/features/archives
+index 00aa1af..3fe46a0 100644
+--- a/tests/scripts/features/archives
++++ b/tests/scripts/features/archives
+@@ -36,6 +36,11 @@ utouch(-50, 'a2.o');
+ run_make_test('all: libxx.a(a3.o *.o)', '',
+               "ar rv libxx.a a3.o\na - a3.o\nar rv libxx.a a2.o\nr - a2.o\n");
+ 
++# Check whitespace handling
++utouch(-40, 'a2.o');
++run_make_test('all: libxx.a(  a3.o    *.o     )', '',
++              "ar rv libxx.a a2.o\nr - a2.o\n");
++
+ rmfiles(qw(a1.o a2.o a3.o libxx.a));
+ 
+ # This tells the test driver that the perl test script executed properly.
+
