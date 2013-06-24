@@ -17,7 +17,7 @@ EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disab
                  --disable-orc --disable-neon"
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'librsvg', '', d)}"
-PACKAGECONFIG[librsvg] = "--enable-librsvg,--disable-librsvg,librsvg,"
+PACKAGECONFIG[librsvg] = "--enable-rsvg,--disable-rsvg,librsvg,"
 
 ARM_INSTRUCTION_SET = "arm"
 
