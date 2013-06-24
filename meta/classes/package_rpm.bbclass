@@ -543,6 +543,9 @@ EOF
 		grep /base-passwd-[0-9] ${target_rootfs}/install/total_solution.manifest >> ${target_rootfs}/install/initial_install.manifest || true
 		grep /base-files-[0-9] ${target_rootfs}/install/total_solution.manifest >> ${target_rootfs}/install/initial_install.manifest || true
 		grep /shadow-[0-9] ${target_rootfs}/install/total_solution.manifest >> ${target_rootfs}/install/initial_install.manifest || true
+		# Ensure we get the right shell
+		grep /bash-[0-9] ${target_rootfs}/install/total_solution.manifest >> ${target_rootfs}/install/initial_install.manifest || true
+		grep /busybox-[0-9] ${target_rootfs}/install/total_solution.manifest >> ${target_rootfs}/install/initial_install.manifest || true
 
 		if [ -s ${target_rootfs}/install/initial_install.manifest ]; then
 			echo "# Initial Install manifest padding..." >> ${target_rootfs}/install/initial_install.manifest
