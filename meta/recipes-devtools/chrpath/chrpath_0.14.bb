@@ -8,7 +8,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 PR = "r0"
 
-SRC_URI = "http://alioth.debian.org/frs/download.php/3648/chrpath-${PV}.tar.gz \
+SRC_URI = "http://alioth.debian.org/frs/download.php/file/3648/chrpath-${PV}.tar.gz \
            file://standarddoc.patch"
 
 SRC_URI[md5sum] = "ea6b212b23393bf58b0ef9bcf6491b86"
