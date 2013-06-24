@@ -21,6 +21,7 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://configure-fix.patch \
            file://h264_qpel_mmx.patch \
            file://libav_e500mc.patch \
+           file://libav_e5500.patch \
 "
 
 SRC_URI[md5sum] = "7f5beacaf1312db2db30a026b36888c4"
@@ -31,7 +32,11 @@ PR = "r4"
 GSTREAMER_DEBUG ?= "--disable-debug"
 
 FFMPEG_EXTRA_CONFIGURE = "--with-ffmpeg-extra-configure"
-FFMPEG_EXTRA_CONFIGURE_COMMON_ARG = "--target-os=linux \
+# pass --cpu for powerpc. get cpu name by stripping "ppc" or "ppc64"
+# from DEFAULTTUNE
+FFMPEG_CPU_powerpc = "--cpu=${@d.getVar('DEFAULTTUNE')[3:]}"
+FFMPEG_CPU_powerpc64 = "--cpu=${@d.getVar('DEFAULTTUNE')[5:]}"
+FFMPEG_EXTRA_CONFIGURE_COMMON_ARG = "--target-os=linux ${FFMPEG_CPU} \
   --cc='${CC}' --as='${CC}' --ld='${CC}' --nm='${NM}' --ar='${AR}' \
   --ranlib='${RANLIB}' \
   ${GSTREAMER_DEBUG}"
