@@ -26,6 +26,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.radeon;md5=e56b405656593a0c97e478513051ea0e \
 SRCREV = "c530a75c1e6a472b0eb9558310b518f0dfcd8860"
 PE = "1"
 PV = "0.0+git${SRCPV}"
+PR = "r1"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git;protocol=git"
 
