@@ -59,6 +59,12 @@ do_configure_prepend() {
 	echo CONFIG += ${qtm_embedded} >>./config.pri
 }
 
+do_compile_prepend() {
+	for NAME in `find ./ -name Makefile` ; do
+	    sed -e 's:-Wl,-rpath-link,${libdir}::g' -i $NAME 
+	done
+}
+
 do_install() {
 	for NAME in */*.prf
 	do
