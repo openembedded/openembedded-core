@@ -40,6 +40,7 @@ do_install_append () {
 do_install_ptest () {
 	make INSTALL_TEST_DIR=${D}${PTEST_PATH}/tests install-test
 	cp ${B}/Makefile ${D}${PTEST_PATH}
+        sed -i 's/^Makefile/_Makefile/' ${D}${PTEST_PATH}/Makefile
 }
 
 pkg_postinst_${PN} () {
