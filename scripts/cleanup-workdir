@@ -174,7 +174,7 @@ will be deleted. Be CAUTIOUS.""")
         break
 
     for d in obsolete_dirs:
-        print "Deleleting %s" % d
+        print "Deleting %s" % d
         shutil.rmtree(d, True)
 
     if len(obsolete_dirs):
