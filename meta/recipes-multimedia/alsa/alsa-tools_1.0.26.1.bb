@@ -33,7 +33,7 @@ do_configure () {
 do_compile_prepend () {
     #Automake dir is not correctly detected in cross compilation case
     export AUTOMAKE_DIR=${STAGING_DATADIR_NATIVE}/$(ls ${STAGING_DATADIR_NATIVE} | grep automake)
-    export ACLOCAL="aclocal --system-acdir=${ACLOCALDIR}/"
+    export ACLOCAL_FLAGS="--system-acdir=${ACLOCALDIR}/"
 }
 
 FILES_${PN} += "${datadir}/ld10k1"
