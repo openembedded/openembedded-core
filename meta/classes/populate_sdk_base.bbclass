@@ -181,11 +181,16 @@ else
 	echo "$target_sdk_dir"
 fi
 
-eval target_sdk_dir=$target_sdk_dir
-if [ -d $target_sdk_dir ]; then
-	target_sdk_dir=$(cd $target_sdk_dir; pwd)
+eval target_sdk_dir=$(printf "%q" "$target_sdk_dir")
+if [ -d "$target_sdk_dir" ]; then
+	target_sdk_dir=$(cd "$target_sdk_dir"; pwd)
 else
-	target_sdk_dir=$(readlink -m $target_sdk_dir)
+	target_sdk_dir=$(readlink -m "$target_sdk_dir")
+fi
+
+if [ -n "$(echo $target_sdk_dir|grep ' ')" ]; then
+	echo "The target directory path ($target_sdk_dir) contains spaces. Abort!"
+	exit 1
 fi
 
 if [ -e "$target_sdk_dir/environment-setup-${REAL_MULTIMACH_TARGET_SYS}" ]; then
