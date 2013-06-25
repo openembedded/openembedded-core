@@ -339,11 +339,16 @@ if [ "$INSTALL_FOLDER" = "" ]; then
     INSTALL_FOLDER=$DEFAULT_INSTALL_FOLDER
 fi
 
-eval INSTALL_FOLDER=$INSTALL_FOLDER
-if [ -d $INSTALL_FOLDER ]; then
-	export INSTALL_FOLDER=$(cd $INSTALL_FOLDER; pwd)
+eval INSTALL_FOLDER=$(printf "%q" "$INSTALL_FOLDER")
+if [ -d "$INSTALL_FOLDER" ]; then
+	export INSTALL_FOLDER=$(cd "$INSTALL_FOLDER"; pwd)
 else
-	export INSTALL_FOLDER=$(readlink -m $INSTALL_FOLDER)
+	export INSTALL_FOLDER=$(readlink -m "$INSTALL_FOLDER")
+fi
+
+if [ -n "$(echo $INSTALL_FOLDER|grep ' ')" ]; then
+       echo "The target directory path ($INSTALL_FOLDER) contains spaces. Abort!"
+       exit 1
 fi
 
 clear
