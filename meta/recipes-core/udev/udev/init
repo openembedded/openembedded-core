@@ -43,9 +43,9 @@ case "$1" in
         echo "Halting..."
         halt
     fi
-    # mount the tmpfs on /dev, if not already done
-    LANG=C awk '$2 == "/dev" && ($3 == "tmpfs" || $3 == "devtmpfs") { exit 1 }' /proc/mounts && {
-            mount -n -o mode=0755 -t tmpfs none "/dev"
+    # mount the devtmpfs on /dev, if not already done
+    LANG=C awk '$2 == "/dev" && ($3 == "devtmpfs") { exit 1 }' /proc/mounts && {
+            mount -n -o mode=0755 -t devtmpfs none "/dev"
     }
     [ -e /dev/pts ] || mkdir -m 0755 /dev/pts
     [ -e /dev/shm ] || mkdir -m 1777 /dev/shm
