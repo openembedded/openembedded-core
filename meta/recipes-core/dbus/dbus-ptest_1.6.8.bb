@@ -38,6 +38,7 @@ EXTRA_OECONF = "--enable-tests \
                 --disable-libaudit \
                 --with-xml=expat \
                 --with-systemdsystemunitdir=${systemd_unitdir}/system/ \
+                --with-dbus-test-dir=${PTEST_PATH} \
                 ${EXTRA_OECONF_X}"
 
 do_install() {

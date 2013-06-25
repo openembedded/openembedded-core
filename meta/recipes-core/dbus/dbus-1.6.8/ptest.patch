@@ -76,7 +76,7 @@ diff -ur a/test/Makefile.am b/test/Makefile.am
  	$(NULL)
  
  test_corrupt_SOURCES = corrupt.c
-@@ -325,3 +326,18 @@
+@@ -325,3 +325,25 @@
  data/valid-config-files/system.conf: $(top_builddir)/bus/system.conf
  	$(AM_V_at)$(MKDIR_P) data/valid-config-files
  	$(AM_V_GEN)cp $< $@
@@ -91,25 +91,35 @@ diff -ur a/test/Makefile.am b/test/Makefile.am
 +
 +install-ptest-nonrecursive:
 +	@$(MKDIR_P) $(DESTDIR)/data/valid-config-files/session.d
-+	@for file in Makefile $(installable_tests) $(EXTRA_DIST) $(noinst_DATA); do \
-+		install -D $${file%.in} $(DESTDIR)/$${file%.in}; \
++	@for file in Makefile $(installable_tests) $(noinst_PROGRAMS) $(noinst_DATA) ; do \
++		if [ -f .libs/$$file ]; then \
++			install .libs/$$file $(DESTDIR); \
++		else \
++			install -D $${file%.in} $(DESTDIR)/$${file%.in}; \
++		fi; \
++	done;
++	@for file in $(EXTRA_DIST); do \
++		install -D ${srcdir}/$${file%.in} $(DESTDIR)/$${file%.in}; \
 +	done;
 +endif
 diff -ur a/test/name-test/Makefile.am b/test/name-test/Makefile.am
 --- a/test/name-test/Makefile.am	2012-12-06 14:34:01.169413931 +0100
 +++ b/test/name-test/Makefile.am	2012-12-06 15:21:14.459112518 +0100
-@@ -36,4 +36,13 @@
+@@ -36,4 +36,16 @@
  test_privserver_client_LDADD=../libdbus-testutils.la
  test_autolaunch_LDADD=../libdbus-testutils.la
  
 +install-ptest:
 +	@$(MKDIR_P) $(DESTDIR)
-+	@for file in Makefile $(noinst_PROGRAMS) $(EXTRA_DIST); do \
++	@for file in Makefile $(noinst_PROGRAMS); do \
 +		if [ -f .libs/$$file ]; then \
 +			install .libs/$$file $(DESTDIR); \
 +		else \
 +			install $$file $(DESTDIR); \
 +		fi \
++	done;
++	@for file in $(EXTRA_DIST); do \
++		cp $(srcdir)/$$file $(DESTDIR); \
 +	done;
  endif
 diff -ur a/tools/Makefile.am b/tools/Makefile.am
