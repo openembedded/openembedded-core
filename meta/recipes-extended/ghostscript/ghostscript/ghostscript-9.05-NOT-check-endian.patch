@@ -5,10 +5,11 @@ Upstream-Status: Pending
 
 Signed-off-by: Kang Kai <kai.kang@windriver.com>
 Signed-off-by: Sen Zhang <sen.zhang@windriver.com>
+Signed-off-by: Wenzong Fan <wenzong.fan@windriver.com>
 
---- ghostscript-9.05/base/configure.ac.orig     2013-01-06 10:02:08.699479511 +0800
-+++ ghostscript-9.05/base/configure.ac  2013-01-06 10:01:52.275382106 +0800
-@@ -1741,13 +1741,13 @@
+--- base/configure.ac.orig	2013-06-24 03:58:26.224723002 -0400
++++ base/configure.ac	2013-06-24 04:03:29.730807957 -0400
+@@ -255,13 +255,13 @@
  
  AC_MSG_CHECKING([for big endian])
  
@@ -17,16 +18,27 @@ Signed-off-by: Sen Zhang <sen.zhang@windriver.com>
 -   static const int one = 1;
 -   return (*(char*)&one == 0 ? 0 : 1);
 -  ])],
--  [LCMS_BIGENDIAN=1],
--  [LCMS_BIGENDIAN=0])
-+dnl AC_RUN_IFELSE(
-+dnl   [AC_LANG_PROGRAM([#include <stdio.h>], [
-+dnl    static const int one = 1;
-+dnl    return (*(char*)&one == 0 ? 0 : 1);
-+dnl   ])],
-+dnl   [LCMS_BIGENDIAN=1],
-+dnl   [LCMS_BIGENDIAN=0])
+-  [BIGENDIAN=1;AC_MSG_RESULT(big)],
+-  [BIGENDIAN=0;AC_MSG_RESULT(little)])
++#AC_RUN_IFELSE(
++#  [AC_LANG_PROGRAM([#include <stdio.h>], [
++#   static const int one = 1;
++#   return (*(char*)&one == 0 ? 0 : 1);
++#  ])],
++#  [BIGENDIAN=1;AC_MSG_RESULT(big)],
++#  [BIGENDIAN=0;AC_MSG_RESULT(little)])
  
- if test "x$LCMS_BIGENDIAN" != "x0"; then
-   LCMS_ENDIAN="-DUSE_BIG_ENDIAN=$LCMS_BIGENDIAN"
-
+ 
+ 
+@@ -1922,9 +1922,11 @@
+ if test "x$BIGENDIAN" != "x0"; then
+   LCMS_ENDIAN="-DUSE_BIG_ENDIAN=$BIGENDIAN"
+   LCMS2_ENDIAN="-DCMS_USE_BIG_ENDIAN=$BIGENDIAN"
++  AC_MSG_RESULT(big)
+ else
+   LCMS_ENDIAN=
+   LCMS2_ENDIAN=
++  AC_MSG_RESULT(little)
+ fi
+ 
+ AC_SUBST(LCMS_ENDIAN)

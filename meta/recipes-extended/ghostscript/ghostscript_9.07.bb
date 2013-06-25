@@ -13,9 +13,7 @@ HOMEPAGE = "http://www.ghostscript.com"
 SECTION = "console/utils"
 
 LICENSE = "GPLv3"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=c5326026692dbed183f0558f926580f8"
-
-PR = "r6"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=a5146dadaa8cd9f5f913b7577d49bf19"
 
 DEPENDS = "ghostscript-native tiff jpeg fontconfig cups"
 DEPENDS_class-native = ""
@@ -31,12 +29,11 @@ SRC_URI = "${SRC_URI_BASE} \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
-                        file://0001-make-ghostscript-work-with-long-building-directory.patch \
                         file://ghostscript-native-fix-disable-system-libtiff.patch \
                         "
 
-SRC_URI[md5sum] = "f7c6f0431ca8d44ee132a55d583212c1"
-SRC_URI[sha256sum] = "593f77f7584704bdf9de41598a084a4208c3ad3b940a1de1faaf8f59a15cc207"
+SRC_URI[md5sum] = "57ebf17c5abcf0fc95a386bfff08c1a4"
+SRC_URI[sha256sum] = "44800d004c53f13192d1b5db413119198ddfc8a11c4d2a030aac2f2fda822ebf"
 
 EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec --without-jasper \
                 --with-fontpath=${datadir}/fonts --with-install-cups --without-libidn"
@@ -64,11 +61,11 @@ do_configure_prepend () {
 		cp ${WORKDIR}/objarch.h obj/arch.h
 	fi
 	if [ ${SITEINFO_ENDIANNESS} = "le" ]; then
-		export LCMS_BIGENDIAN="0"
-		export LCMS2_BIGENDIAN="0"
+		export BIGENDIAN="0"
+		export BIGENDIAN="0"
 	else
-		export LCMS_BIGENDIAN="1"
-		export LCMS2_BIGENDIAN="1"
+		export BIGENDIAN="1"
+		export BIGENDIAN="1"
 	fi
 }
 
