@@ -4,11 +4,13 @@ formatting commands and produces formatted output."
 SECTION = "base"
 HOMEPAGE = "ftp://ftp.gnu.org/gnu/groff/"
 LICENSE = "GPLv2"
-PR = "r0"
+PR = "r1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-SRC_URI = "${GNU_MIRROR}/groff/groff-${PV}.tar.gz"
+SRC_URI = "${GNU_MIRROR}/groff/groff-${PV}.tar.gz \
+	file://groff-1.22.2-correct-man.local-install-path.patch \
+"
 
 SRC_URI[md5sum] = "9f4cd592a5efc7e36481d8d8d8af6d16"
 SRC_URI[sha256sum] = "380864dac4772e0c0d7b1282d25d0c5fd7f63baf45c87c4657afed22a13d2076"

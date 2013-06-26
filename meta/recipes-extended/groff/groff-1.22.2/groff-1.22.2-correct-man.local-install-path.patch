@@ -1,0 +1,32 @@
+Correct the install path of man.local to fix following error:
+    /yocto/build/tmp/sysroots/x86_64-linux/usr/share/groff/1.22.2/tmac/an-old.tmac:690: warning: can't find macro file `man.local'
+
+Signed-off-by: Zhenhua Luo <zhenhua.luo@freescale.com>
+Upstream-Status: Pending
+
+--- groff-1.22.2/tmac/Makefile.sub.orig	2013-02-07 20:06:08.000000000 +0800
++++ groff-1.22.2/tmac/Makefile.sub	2013-06-26 19:11:23.572259001 +0800
+@@ -114,9 +114,9 @@
+ 	  rm -f $(DESTDIR)$(mdocdir)/$$f; \
+ 	  $(INSTALL_DATA) $$f-s $(DESTDIR)$(mdocdir)/$$f; \
+ 	done
+-	-test -f $(DESTDIR)$(localtmacdir)/man.local || \
++	-test -f $(DESTDIR)$(tmacdir)/man.local || \
+ 	  $(INSTALL_DATA) $(srcdir)/man.local \
+-	    $(DESTDIR)$(localtmacdir)/man.local
++	    $(DESTDIR)$(tmacdir)/man.local
+ 	-test -f $(DESTDIR)$(localtmacdir)/mdoc.local || \
+ 	  $(INSTALL_DATA) mdoc.local-s $(DESTDIR)$(localtmacdir)/mdoc.local
+ 
+@@ -158,9 +158,9 @@
+ 	-rm -f $(DESTDIR)$(tmacdir)/$(tmac_s_prefix)s.tmac
+ 	-rm -f $(DESTDIR)$(tmacdir)/$(tmac_an_prefix)an.tmac
+ 	-rm -f $(DESTDIR)$(tmacdir)/www.tmac
+-	-if cmp -s $(DESTDIR)$(localtmacdir)/man.local \
++	-if cmp -s $(DESTDIR)$(tmacdir)/man.local \
+ 	           $(srcdir)/man.local; then \
+-	  rm -f $(DESTDIR)$(localtmacdir)/man.local; \
++	  rm -f $(DESTDIR)$(tmacdir)/man.local; \
+ 	fi
+ 	-if cmp -s $(DESTDIR)$(localtmacdir)/mdoc.local \
+ 	           $(srcdir)/mdoc.local; then \
