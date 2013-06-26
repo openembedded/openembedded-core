@@ -1,0 +1,75 @@
+Add a --root command option to groupmems utility.
+
+This option allows the utility to be chrooted when run under pseudo.
+
+Signed-off-by: Mikhail Durnev <mikhail_durnev@mentor.com>
+
+diff -Naur old/src/groupmems.c new/src/groupmems.c
+--- old/src/groupmems.c	2011-02-13 11:58:16.000000000 -0600
++++ new/src/groupmems.c	2013-05-30 04:45:38.000000000 -0500
+@@ -60,6 +60,7 @@
+ #define EXIT_MEMBER_EXISTS	7	/* member of group already exists */
+ #define EXIT_INVALID_USER	8	/* specified user does not exist */
+ #define EXIT_INVALID_GROUP	9	/* specified group does not exist */
++#define EXIT_BAD_ARG		10	/* invalid argument to option */
+
+ /*
+  * Global variables
+@@ -79,6 +80,7 @@
+ static bool is_shadowgrp;
+ static bool sgr_locked = false;
+ #endif
++static const char *newroot = "";
+
+ /* local function prototypes */
+ static char *whoami (void);
+@@ -368,6 +370,7 @@
+	                "Options:\n"
+	                "  -g, --group groupname         change groupname instead of the user's group\n"
+	                "                                (root only)\n"
++	                "  -R, --root CHROOT_DIR         directory to chroot into\n"
+	                "\n"
+	                "Actions:\n"
+	                "  -a, --add username            add username to the members of the group\n"
+@@ -391,10 +394,11 @@
+		{"group", required_argument, NULL, 'g'},
+		{"list", no_argument, NULL, 'l'},
+		{"purge", no_argument, NULL, 'p'},
++		{"root", required_argument, NULL, 'R'},
+		{NULL, 0, NULL, '\0'}
+	};
+
+-	while ((arg = getopt_long (argc, argv, "a:d:g:lp", long_options,
++	while ((arg = getopt_long (argc, argv, "a:d:g:lpR:", long_options,
+	                           &option_index)) != EOF) {
+		switch (arg) {
+		case 'a':
+@@ -416,6 +420,28 @@
+			purge = true;
+			++exclusive;
+			break;
++		case 'R':
++			if ('/' != optarg[0]) {
++				fprintf (stderr,
++					 _("%s: invalid chroot path '%s'\n"),
++					Prog, optarg);
++				exit (EXIT_BAD_ARG);
++			}
++			newroot = optarg;
++
++			if (access (newroot, F_OK) != 0) {
++				fprintf(stderr,
++					_("%s: chroot directory %s does not exist\n"),
++					Prog, newroot);
++				exit (EXIT_BAD_ARG);
++			}
++			if ( chroot(newroot) != 0 ) {
++				fprintf(stderr,
++					_("%s: unable to chroot to directory %s\n"),
++					Prog, newroot);
++				exit (EXIT_BAD_ARG);
++			}
++			break;
+		default:
+			usage ();
+		}

@@ -17,6 +17,7 @@ SRC_URI = "http://pkg-shadow.alioth.debian.org/releases/${BPN}-${PV}.tar.bz2 \
            file://disable-syslog.patch \
            file://useradd.patch \
            file://shadow_fix_for_automake-1.12.patch \
+           file://add_root_cmd_groupmems.patch \
            "
 
 SRC_URI[md5sum] = "b8608d8294ac88974f27b20f991c0e79"
