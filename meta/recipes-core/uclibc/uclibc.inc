@@ -60,8 +60,10 @@ export V="2"
 CFLAGS_arm := "${@oe_filter_out('-fno-omit-frame-pointer', '${CFLAGS}', d)}"
 UCLIBC_EXTRA_CFLAGS  := "${@oe_filter_out('(-I\S+|-i\S+)', '${CFLAGS}', d)}"
 UCLIBC_EXTRA_LDFLAGS := "${@oe_filter_out('(-L\S+|-l\S+)', '${LDFLAGS}', d)}"
+
 do_compile_prepend () {
   unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+  oe_runmake pregen
 }
 
 configmangle = '/^KERNEL_HEADERS/d; \
@@ -146,8 +148,10 @@ do_configure() {
 
         # Mangle the resulting .config depending on OE variables
         sed -i -e '${configmangle}' ${S}/merged.config
+	cp ${S}/merged.config .config
+        merge_config.sh -r -n -m .config ${@" ".join(find_cfgs(d))}
+	cml1_do_configure
 
-        oe_runmake KCONFIG_ALLCONFIG=${S}/merged.config allnoconfig
 }
 
 do_install() {
