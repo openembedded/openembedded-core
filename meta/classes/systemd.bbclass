@@ -2,6 +2,8 @@
 # each entry, optionally have a SYSTEMD_SERVICE_[package] that lists the service
 # files in this package.  If this variable isn't set, [package].service is used.
 SYSTEMD_PACKAGES ?= "${PN}"
+SYSTEMD_PACKAGES_class-native ?= ""
+SYSTEMD_PACKAGES_class-nativesdk ?= ""
 
 # Whether to enable or disable the services on installation.
 SYSTEMD_AUTO_ENABLE ??= "enable"
