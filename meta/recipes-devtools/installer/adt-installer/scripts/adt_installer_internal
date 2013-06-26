@@ -220,6 +220,13 @@ for l in $(find $NATIVE_INSTALL_DIR -type l); do
     $SUDO ln -sfn $(readlink $l|sed -e "s:$DEFAULT_INSTALL_FOLDER:$NATIVE_INSTALL_DIR:") $l
 done
 
+# find out all perl scripts in $OECORE_NATIVE_SYSROOT and modify them
+# replacing the host perl with SDK perl.
+for perl_script in $($SUDO grep -m 1 "^#!.*perl" -rl $OECORE_NATIVE_SYSROOT); do
+    $SUDO sed -i -e "s:^#! */usr/bin/perl.*:#! /usr/bin/env perl:g" -e \
+        "s: /usr/bin/perl: /usr/bin/env perl:g" $perl_script
+done
+
 echo_info "\nSuccessfully installed selected native ADT!"
 }
 
