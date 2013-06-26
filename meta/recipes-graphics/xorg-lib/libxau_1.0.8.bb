@@ -14,12 +14,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7908e342491198401321cec1956807ec"
 DEPENDS += " xproto"
 PROVIDES = "xau"
 
-PR = "r0"
 PE = "1"
 
 XORG_PN = "libXau"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "2d241521df40d27034413436d1a1465c"
-SRC_URI[sha256sum] = "7153ba503e2362d552612d9dc2e7d7ad3106d5055e310a26ecf28addf471a489"
+SRC_URI[md5sum] = "685f8abbffa6d145c0f930f00703b21b"
+SRC_URI[sha256sum] = "fdd477320aeb5cdd67272838722d6b7d544887dfe7de46e1e7cc0c27c2bea4f2"
