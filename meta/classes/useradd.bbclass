@@ -24,13 +24,15 @@ if test "x$D" != "x"; then
 	OPT="--root $D"
 
 	# Add groups and users defined for all recipe packages
-	GROUPADD_PARAM="${@get_all_cmd_params(d, 'group')}"
-	USERADD_PARAM="${@get_all_cmd_params(d, 'user')}"
+	GROUPADD_PARAM="${@get_all_cmd_params(d, 'groupadd')}"
+	USERADD_PARAM="${@get_all_cmd_params(d, 'useradd')}"
+	GROUPMEMS_PARAM="${@get_all_cmd_params(d, 'groupmems')}"
 else
 	# Installing onto a target
 	# Add groups and users defined only for this package
 	GROUPADD_PARAM="${GROUPADD_PARAM}"
 	USERADD_PARAM="${USERADD_PARAM}"
+	GROUPMEMS_PARAM="${GROUPMEMS_PARAM}"
 fi
 
 # Perform group additions first, since user additions may depend
@@ -114,6 +116,62 @@ if test "x$USERADD_PARAM" != "x"; then
 		remaining=`echo "$remaining" | cut -d ';' -f 2-`
 	done
 fi
+
+if test "x$GROUPMEMS_PARAM" != "x"; then
+	echo "Running groupmems commands..."
+	# groupmems fails if /etc/gshadow does not exist
+	if [ -f $SYSROOT${sysconfdir}/gshadow ]; then
+		gshadow="yes"
+	else
+		gshadow="no"
+		touch $SYSROOT${sysconfdir}/gshadow
+	fi
+	# Invoke multiple instances of groupmems for parameter lists
+	# separated by ';'
+	opts=`echo "$GROUPMEMS_PARAM" | cut -d ';' -f 1`
+	remaining=`echo "$GROUPMEMS_PARAM" | cut -d ';' -f 2-`
+	while test "x$opts" != "x"; do
+		groupname=`echo "$opts" | awk '{ for (i = 1; i < NF; i++) if ($i == "-g" || $i == "--group") print $(i+1) }'`
+		username=`echo "$opts" | awk '{ for (i = 1; i < NF; i++) if ($i == "-a" || $i == "--add") print $(i+1) }'`
+		echo "$groupname $username"
+		mem_exists=`grep "^$groupname:[^:]*:[^:]*:\([^,]*,\)*$username\(,[^,]*\)*" $SYSROOT/etc/group || true`
+		if test "x$mem_exists" = "x"; then
+			count=1
+			while true; do
+				eval $PSEUDO groupmems $OPT $opts || true
+				mem_exists=`grep "^$groupname:[^:]*:[^:]*:\([^,]*,\)*$username\(,[^,]*\)*" $SYSROOT/etc/group || true`
+				if test "x$mem_exists" = "x"; then
+					# File locking issues can require us to retry the command
+					echo "WARNING: groupmems command did not succeed. Retrying..."
+					sleep 1
+				else
+					break
+				fi
+				count=`expr $count + 1`
+				if test $count = 11; then
+					echo "ERROR: tried running groupmems command 10 times without success, giving up"
+					if test "x$gshadow" = "xno"; then
+						rm -f $SYSROOT${sysconfdir}/gshadow
+						rm -f $SYSROOT${sysconfdir}/gshadow-
+					fi
+					exit 1
+				fi
+			done
+		else
+			echo "Note: group $groupname already contains $username, not re-adding it"
+		fi
+
+		if test "x$opts" = "x$remaining"; then
+			break
+		fi
+		opts=`echo "$remaining" | cut -d ';' -f 1`
+		remaining=`echo "$remaining" | cut -d ';' -f 2-`
+	done
+	if test "x$gshadow" = "xno"; then
+		rm -f $SYSROOT${sysconfdir}/gshadow
+		rm -f $SYSROOT${sysconfdir}/gshadow-
+	fi
+fi
 }
 
 useradd_sysroot () {
@@ -160,8 +218,8 @@ def update_useradd_after_parse(d):
         raise bb.build.FuncFailed("%s inherits useradd but doesn't set USERADD_PACKAGES" % d.getVar('FILE'))
 
     for pkg in useradd_packages.split():
-        if not d.getVar('USERADD_PARAM_%s' % pkg, True) and not d.getVar('GROUPADD_PARAM_%s' % pkg, True):
-            raise bb.build.FuncFailed("%s inherits useradd but doesn't set USERADD_PARAM or GROUPADD_PARAM for package %s" % (d.getVar('FILE'), pkg))
+        if not d.getVar('USERADD_PARAM_%s' % pkg, True) and not d.getVar('GROUPADD_PARAM_%s' % pkg, True) and not d.getVar('GROUPMEMS_PARAM_%s' % pkg, True):
+            raise bb.build.FuncFailed("%s inherits useradd but doesn't set USERADD_PARAM, GROUPADD_PARAM or GROUPMEMS_PARAM for package %s" % (d.getVar('FILE'), pkg))
 
 python __anonymous() {
     update_useradd_after_parse(d)
@@ -172,7 +230,7 @@ python __anonymous() {
 def get_all_cmd_params(d, cmd_type):
     import string
     
-    param_type = cmd_type.upper() + "ADD_PARAM_%s"
+    param_type = cmd_type.upper() + "_PARAM_%s"
     params = []
 
     useradd_packages = d.getVar('USERADD_PACKAGES', True) or ""
