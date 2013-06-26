@@ -17,5 +17,5 @@ PE = "1"
 
 XORG_PN = "libXxf86vm"
 
-SRC_URI[md5sum] = "ffd93bcedd8b2b5aeabf184e7b91f326"
-SRC_URI[sha256sum] = "a564172fb866b1b587bbccb7d041088931029845245e0d15c32ca7f1bb48fc84"
+SRC_URI[md5sum] = "e46f6ee4f4567349a3189044fe1bb712"
+SRC_URI[sha256sum] = "da5e86c32ee2069b9e6d820e4c2e4242d4877cb155a2b2fbf2675a1480ec37b8"
