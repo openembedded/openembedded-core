@@ -26,6 +26,36 @@ bin_SCRIPTS = bzgrep bzmore bzdiff
 man_MANS = bzip2.1 bzgrep.1 bzmore.1 bzdiff.1
 EXTRA_DIST = $(man_MANS)
 
+runtest:
+	./bzip2 -1  < sample1.ref > sample1.rb2
+	./bzip2 -2  < sample2.ref > sample2.rb2
+	./bzip2 -3  < sample3.ref > sample3.rb2
+	./bzip2 -d  < sample1.bz2 > sample1.tst
+	./bzip2 -d  < sample2.bz2 > sample2.tst
+	./bzip2 -ds < sample3.bz2 > sample3.tst
+	@if cmp sample1.bz2 sample1.rb2; then echo "PASS: sample1 compress";\
+	else echo "FAIL: sample1 compress"; fi
+	@if cmp sample2.bz2 sample2.rb2; then echo "PASS: sample2 compress";\
+	else echo "FAIL: sample2 compress"; fi
+	@if cmp sample3.bz2 sample3.rb2; then echo "PASS: sample3 compress";\
+	else echo "FAIL: sample3 compress"; fi
+	@if cmp sample1.tst sample1.ref; then echo "PASS: sample1 decompress";\
+	else echo "FAIL: sample1 decompress"; fi
+	@if cmp sample2.tst sample2.ref; then echo "PASS: sample2 decompress";\
+	else echo "FAIL: sample2 decompress"; fi
+	@if cmp sample3.tst sample3.ref; then echo "PASS: sample3 decompress";\
+	else echo "FAIL: sample3 decompress"; fi
+
+install-ptest:
+	cp $(srcdir)/Makefile		$(DESTDIR)/
+	cp $(srcdir)/sample1.ref	$(DESTDIR)/
+	cp $(srcdir)/sample2.ref	$(DESTDIR)/
+	cp $(srcdir)/sample3.ref	$(DESTDIR)/
+	cp $(srcdir)/sample1.bz2	$(DESTDIR)/
+	cp $(srcdir)/sample2.bz2	$(DESTDIR)/
+	cp $(srcdir)/sample3.bz2	$(DESTDIR)/
+	ln -s $(bindir)/bzip2		$(DESTDIR)/bzip2
+
 install-exec-hook:
 	ln -s $(bindir)/bzip2$(EXEEXT) $(DESTDIR)$(bindir)/bunzip2$(EXEEXT)
 	ln -s $(bindir)/bzip2$(EXEEXT) $(DESTDIR)$(bindir)/bzcat$(EXEEXT)

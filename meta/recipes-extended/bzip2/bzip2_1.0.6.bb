@@ -10,6 +10,7 @@ PR = "r5"
 
 SRC_URI = "http://www.bzip.org/${PV}/${BPN}-${PV}.tar.gz \
            file://configure.ac \
+           file://run-ptest \
 	   file://Makefile.am"
 
 SRC_URI[md5sum] = "00b516f4704d4a7cb50a1d97e6e8e15b"
@@ -19,7 +20,7 @@ PACKAGES =+ "libbz2 libbz2-dev libbz2-staticdev"
 
 CFLAGS_append = " -fPIC -fpic -Winline -fno-strength-reduce -D_FILE_OFFSET_BITS=64"
 
-inherit autotools update-alternatives
+inherit autotools update-alternatives ptest
 
 ALTERNATIVE_PRIORITY = "100"
 ALTERNATIVE_${PN} = "bunzip2 bzcat"
@@ -30,6 +31,10 @@ do_configure_prepend () {
 	cp ${WORKDIR}/configure.ac ${S}/
 	cp ${WORKDIR}/Makefile.am ${S}/
 	cp ${STAGING_DATADIR_NATIVE}/automake*/install-sh ${S}/
+}
+
+do_install_ptest () {
+	sed -i -e "s|^Makefile:|_Makefile:|" ${D}${PTEST_PATH}/Makefile
 }
 
 FILES_libbz2 = "${libdir}/lib*${SOLIBS}"
