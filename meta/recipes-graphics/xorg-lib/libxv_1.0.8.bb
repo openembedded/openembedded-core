@@ -16,5 +16,5 @@ PR = "r0"
 
 XORG_PN = "libXv"
 
-SRC_URI[md5sum] = "5e1ac203ccd3ce3e89755ed1fbe75b0b"
-SRC_URI[sha256sum] = "5d664aeb641f8c867331a0c6b4574a5e7e420f00bf5fcefd874e8d003ea59010"
+SRC_URI[md5sum] = "224dadca53d9c88f8a2b8945babcea70"
+SRC_URI[sha256sum] = "4f00eb5347390909cea4e53a69425839d2a6a44e0e0613321d59e7e4aeaf73d7"
