@@ -1,0 +1,203 @@
+From a347c1bd9be53513f60ed0e5f440c1f5cd78dec4 Mon Sep 17 00:00:00 2001
+From: "Maciej W. Rozycki" <macro@linux-mips.org>
+Date: Fri, 3 May 2013 15:19:26 +0000
+Subject: [PATCH]         gold/         PR ld/15365         * layout.cc
+ (Layout::finalize): Make __ehdr_start STV_HIDDEN.
+
+        ld/
+        PR ld/15365
+        * emultempl/elf32.em (gld${EMULATION_NAME}_before_allocation):
+        Restrict __ehdr_start's export class to no less than STV_HIDDEN.
+
+        ld/testsuite/
+        PR ld/15365
+        * ld-elf/ehdr_start.d: Expect __ehdr_start to be STB_LOCAL.
+        * ld-mips-elf/ehdr_start-1.nd: New test.
+        * ld-mips-elf/ehdr_start-2.nd: New test.
+        * ld-mips-elf/ehdr_start-1.ld: New test linker script.
+        * ld-mips-elf/ehdr_start-2.ld: New test linker script.
+        * ld-mips-elf/ehdr_start-new.s: New test source.
+        * ld-mips-elf/ehdr_start-o32.s: New test source.
+        * ld-mips-elf/mips-elf.exp: Run the new tests.
+---
+ gold/ChangeLog                            |    5 +++++
+ gold/layout.cc                            |    2 +-
+ ld/ChangeLog                              |    6 ++++++
+ ld/emultempl/elf32.em                     |    7 +++++++
+ ld/testsuite/ChangeLog                    |   12 ++++++++++++
+ ld/testsuite/ld-elf/ehdr_start.d          |    2 +-
+ ld/testsuite/ld-mips-elf/ehdr_start-1.ld  |    9 +++++++++
+ ld/testsuite/ld-mips-elf/ehdr_start-1.nd  |    4 ++++
+ ld/testsuite/ld-mips-elf/ehdr_start-2.ld  |   10 ++++++++++
+ ld/testsuite/ld-mips-elf/ehdr_start-2.nd  |    4 ++++
+ ld/testsuite/ld-mips-elf/ehdr_start-new.s |   13 +++++++++++++
+ ld/testsuite/ld-mips-elf/ehdr_start-o32.s |   14 ++++++++++++++
+ ld/testsuite/ld-mips-elf/mips-elf.exp     |   25 +++++++++++++++++++++++++
+ 13 files changed, 111 insertions(+), 2 deletions(-)
+ create mode 100644 ld/testsuite/ld-mips-elf/ehdr_start-1.ld
+ create mode 100644 ld/testsuite/ld-mips-elf/ehdr_start-1.nd
+ create mode 100644 ld/testsuite/ld-mips-elf/ehdr_start-2.ld
+ create mode 100644 ld/testsuite/ld-mips-elf/ehdr_start-2.nd
+ create mode 100644 ld/testsuite/ld-mips-elf/ehdr_start-new.s
+ create mode 100644 ld/testsuite/ld-mips-elf/ehdr_start-o32.s
+
+Upstream-Status: Backport
+Index: binutils-2.23.2/gold/layout.cc
+===================================================================
+--- binutils-2.23.2.orig/gold/layout.cc	2013-06-26 23:29:32.000000000 -0700
++++ binutils-2.23.2/gold/layout.cc	2013-06-26 23:39:22.170432315 -0700
+@@ -2516,7 +2516,7 @@
+     symtab->define_in_output_segment("__ehdr_start", NULL,
+ 				     Symbol_table::PREDEFINED, load_seg, 0, 0,
+ 				     elfcpp::STT_NOTYPE, elfcpp::STB_GLOBAL,
+-				     elfcpp::STV_DEFAULT, 0,
++				     elfcpp::STV_HIDDEN, 0,
+ 				     Symbol::SEGMENT_START, true);
+ 
+   // Set the file offsets of all the non-data sections we've seen so
+Index: binutils-2.23.2/ld/emultempl/elf32.em
+===================================================================
+--- binutils-2.23.2.orig/ld/emultempl/elf32.em	2013-06-26 23:37:04.000000000 -0700
++++ binutils-2.23.2/ld/emultempl/elf32.em	2013-06-26 23:39:22.174432315 -0700
+@@ -1498,6 +1498,13 @@
+     {
+       _bfd_elf_tls_setup (link_info.output_bfd, &link_info);
+ 
++      /* Make __ehdr_start hidden if it has been referenced, to
++	 prevent the symbol from being dynamic.  */
++      if (!bfd_elf_record_link_assignment (link_info.output_bfd, &link_info,
++					   "__ehdr_start", TRUE, TRUE))
++	einfo ("%P%F: failed to record assignment to %s: %E\n",
++	       "__ehdr_start");
++
+       /* If we are going to make any variable assignments, we need to
+ 	 let the ELF backend know about them in case the variables are
+ 	 referred to by dynamic objects.  */
+Index: binutils-2.23.2/ld/testsuite/ld-elf/ehdr_start.d
+===================================================================
+--- binutils-2.23.2.orig/ld/testsuite/ld-elf/ehdr_start.d	2013-06-26 23:29:32.000000000 -0700
++++ binutils-2.23.2/ld/testsuite/ld-elf/ehdr_start.d	2013-06-26 23:39:22.174432315 -0700
+@@ -4,5 +4,5 @@
+ #target: *-*-linux* *-*-gnu* *-*-nacl*
+ 
+ #...
+-[0-9a-f]*000 [ADRT] __ehdr_start
++[0-9a-f]*000 [Adrt] __ehdr_start
+ #pass
+Index: binutils-2.23.2/ld/testsuite/ld-mips-elf/ehdr_start-1.ld
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ binutils-2.23.2/ld/testsuite/ld-mips-elf/ehdr_start-1.ld	2013-06-26 23:39:22.174432315 -0700
+@@ -0,0 +1,9 @@
++ENTRY (__start)
++SECTIONS
++{
++  . = 0x12300000 + SIZEOF_HEADERS;
++  .text : { *(.text) }
++  . = 0x23400000;
++  HIDDEN (_gp = ALIGN (16) + 0x7ff0);
++  .got : { *(.got) }
++}
+Index: binutils-2.23.2/ld/testsuite/ld-mips-elf/ehdr_start-1.nd
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ binutils-2.23.2/ld/testsuite/ld-mips-elf/ehdr_start-1.nd	2013-06-26 23:39:22.174432315 -0700
+@@ -0,0 +1,4 @@
++Symbol table '\.symtab' contains [0-9]+ entries:
++#...
++ *[0-9]+: 0*12300000 +0 (?:NOTYPE|OBJECT) +LOCAL +DEFAULT +[0-9]+ __ehdr_start
++#pass
+Index: binutils-2.23.2/ld/testsuite/ld-mips-elf/ehdr_start-2.ld
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ binutils-2.23.2/ld/testsuite/ld-mips-elf/ehdr_start-2.ld	2013-06-26 23:39:22.174432315 -0700
+@@ -0,0 +1,10 @@
++ENTRY (__start)
++SECTIONS
++{
++  . = 0x12300000 + SIZEOF_HEADERS;
++  .text : { *(.text) }
++  . = 0x23400000;
++  __ehdr_start = .;
++  HIDDEN (_gp = ALIGN (16) + 0x7ff0);
++  .got : { *(.got) }
++}
+Index: binutils-2.23.2/ld/testsuite/ld-mips-elf/ehdr_start-2.nd
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ binutils-2.23.2/ld/testsuite/ld-mips-elf/ehdr_start-2.nd	2013-06-26 23:39:22.178432315 -0700
+@@ -0,0 +1,4 @@
++Symbol table '\.symtab' contains [0-9]+ entries:
++#...
++ *[0-9]+: 0*23400000 +0 (?:NOTYPE|OBJECT) +LOCAL +DEFAULT +[0-9]+ __ehdr_start
++#pass
+Index: binutils-2.23.2/ld/testsuite/ld-mips-elf/ehdr_start-new.s
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ binutils-2.23.2/ld/testsuite/ld-mips-elf/ehdr_start-new.s	2013-06-26 23:39:22.178432315 -0700
+@@ -0,0 +1,13 @@
++	.abicalls
++	.text
++	.weak	__ehdr_start
++	.globl	__start
++	.ent	__start
++	.frame	$29, 0, $31
++	.mask	0x00000000, 0
++__start:
++	.cplocal $2
++	.cpsetup $t9, $zero, __start
++	lw	$2, __ehdr_start
++	jr	$31
++	.end	__start
+Index: binutils-2.23.2/ld/testsuite/ld-mips-elf/ehdr_start-o32.s
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ binutils-2.23.2/ld/testsuite/ld-mips-elf/ehdr_start-o32.s	2013-06-26 23:39:22.178432315 -0700
+@@ -0,0 +1,14 @@
++	.abicalls
++	.text
++	.weak	__ehdr_start
++	.globl	__start
++	.ent	__start
++	.frame	$29, 0, $31
++	.mask	0x00000000, 0
++__start:
++	.set	noreorder
++	.cpload	$25
++	.set	reorder
++	lw	$2, __ehdr_start
++	jr	$31
++	.end	__start
+Index: binutils-2.23.2/ld/testsuite/ld-mips-elf/mips-elf.exp
+===================================================================
+--- binutils-2.23.2.orig/ld/testsuite/ld-mips-elf/mips-elf.exp	2013-06-26 23:29:32.000000000 -0700
++++ binutils-2.23.2/ld/testsuite/ld-mips-elf/mips-elf.exp	2013-06-26 23:39:22.178432315 -0700
+@@ -669,3 +669,28 @@
+ 		"readelf -A export-class-call16-${abi}.gd"] \
+ 	    "export-class-call16-${abi}.so"]]
+ }
++
++# Magic __ehdr_start symbol tests.
++set abis [concat o32 [expr {$has_newabi ? "n32 n64" : ""}]]
++foreach { abi } $abis {
++    set suff [string map {o32 o32 n32 new n64 new} $abi]
++    run_ld_link_tests [list \
++        [list \
++            "MIPS magic __ehdr_start symbol test 1 ($abi)" \
++            "$abi_ldflags($abi) -T ehdr_start-1.ld" "" \
++            "$abi_asflags($abi)" \
++            [list ehdr_start-${suff}.s] \
++            [list "readelf -s ehdr_start-1.nd"] \
++            "ehdr_start-1-${abi}"]]
++    if [regexp "(?:n32|n64)" "$abi"] {
++	setup_kfail "mips*-*-*" "ld/15428"
++    }
++    run_ld_link_tests [list \
++        [list \
++            "MIPS magic __ehdr_start symbol test 2 ($abi)" \
++            "$abi_ldflags($abi) -T ehdr_start-2.ld" "" \
++            "$abi_asflags($abi)" \
++            [list ehdr_start-${suff}.s] \
++            [list "readelf -s ehdr_start-2.nd"] \
++            "ehdr_start-2-${abi}"]]
++}

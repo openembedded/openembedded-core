@@ -1,0 +1,31 @@
+From 4c147afe1796611c431aa86ea12342c1d80c2c4b Mon Sep 17 00:00:00 2001
+From: "Maciej W. Rozycki" <macro@linux-mips.org>
+Date: Wed, 1 May 2013 17:18:43 +0000
+Subject: [PATCH] 	* emultempl/elf32.em
+ (gld${EMULATION_NAME}_before_allocation): 	Use
+ is_elf_hash_table rather than a handcoded condition.
+
+---
+ ld/ChangeLog          |    5 +++++
+ ld/emultempl/elf32.em |    2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+2013-05-01  Maciej W. Rozycki  <macro@codesourcery.com>
+
+       * emultempl/elf32.em (gld${EMULATION_NAME}_before_allocation):
+       Use is_elf_hash_table rather than a handcoded condition.
+
+Upstream-Status: Backport
+Index: binutils-2.23.2/ld/emultempl/elf32.em
+===================================================================
+--- binutils-2.23.2.orig/ld/emultempl/elf32.em	2013-06-26 23:29:32.000000000 -0700
++++ binutils-2.23.2/ld/emultempl/elf32.em	2013-06-26 23:35:45.798428256 -0700
+@@ -1494,7 +1494,7 @@
+   asection *sinterp;
+   bfd *abfd;
+ 
+-  if (link_info.hash->type == bfd_link_elf_hash_table)
++  if (is_elf_hash_table (link_info.hash))
+     _bfd_elf_tls_setup (link_info.output_bfd, &link_info);
+ 
+   /* If we are going to make any variable assignments, we need to let
