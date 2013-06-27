@@ -76,7 +76,7 @@ case "$1" in
   	check_keys
 	check_config
         echo -n "Restarting OpenBSD Secure Shell server: sshd"
-	start-stop-daemon -K -oknodo -x /usr/sbin/sshd
+	start-stop-daemon -K --oknodo -x /usr/sbin/sshd
 	check_for_no_start
 	check_privsep_dir
 	sleep 2
