@@ -306,6 +306,42 @@ def check_gcc_march(sanity_data):
 
     return result
 
+# Unpatched versions of make 3.82 are known to be broken.  See GNU Savannah Bug 30612.
+# Use a modified reproducer from http://savannah.gnu.org/bugs/?30612 to validate.
+def check_make_version(sanity_data):
+    from distutils.version import LooseVersion
+    status, result = oe.utils.getstatusoutput("make --version")
+    if status != 0:
+        return "Unable to execute make --version, exit code %s\n" % status
+    version = result.split()[2]
+    if LooseVersion(version) == LooseVersion("3.82"):
+        # Construct a test file
+        f = open("makefile_test", "w")
+        f.write("makefile_test.a: makefile_test_a.c makefile_test_b.c makefile_test.a( makefile_test_a.c makefile_test_b.c)\n")
+        f.write("\n")
+        f.write("makefile_test_a.c:\n")
+        f.write("	touch $@\n")
+        f.write("\n")
+        f.write("makefile_test_b.c:\n")
+        f.write("	touch $@\n")
+        f.close()
+
+        # Check if make 3.82 has been patched
+        status,result = oe.utils.getstatusoutput("make -f makefile_test")
+
+        os.remove("makefile_test")
+        if os.path.exists("makefile_test_a.c"):
+            os.remove("makefile_test_a.c")
+        if os.path.exists("makefile_test_b.c"):
+            os.remove("makefile_test_b.c")
+        if os.path.exists("makefile_test.a"):
+            os.remove("makefile_test.a")
+
+        if status != 0:
+            return "Your version of make 3.82 is broken. Please revert to 3.81 or install a patched version.\n"
+    return None
+
+
 # Tar version 1.24 and onwards handle overwriting symlinks correctly
 # but earlier versions do not; this needs to work properly for sstate
 def check_tar_version(sanity_data):
@@ -436,6 +472,7 @@ def check_sanity_version_change(status, d):
     except ImportError:
         status.addresult('Your python is not a full install. Please install the module xml.parsers.expat (python-xml on openSUSE and SUSE Linux).\n')
 
+    status.addresult(check_make_version(d))
     status.addresult(check_tar_version(d))
     status.addresult(check_git_version(d))
 
