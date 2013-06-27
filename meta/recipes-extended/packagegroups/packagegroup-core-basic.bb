@@ -69,7 +69,6 @@ RDEPENDS_packagegroup-core-basic-utils = "\
     sed \
     tar \
     time \
-    udev \
     util-linux \
     zlib \
     "
