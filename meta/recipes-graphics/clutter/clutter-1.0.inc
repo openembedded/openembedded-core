@@ -42,5 +42,5 @@ FILES_${PN}-examples = "${bindir}/test-* ${pkgdatadir}/redhand.png"
 
 do_configure_prepend() {
 	# see https://bugzilla.gnome.org/show_bug.cgi?id=661128 for this
-	touch -t 200001010000 po/clutter-1.0.pot
+	touch -t 200001010000 ${S}/po/clutter-1.0.pot
 }
