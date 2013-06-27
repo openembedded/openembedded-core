@@ -3,7 +3,7 @@ require apt-native.inc
 SRC_URI += "file://noconfigure.patch \
             file://no-curl.patch"
 
-SRC_URI[md5sum] = "85781bb39901d6fb79c37ca307929594"
-SRC_URI[sha256sum] = "dcef6fc33948d5e430d337ad6326bf7ac3d06b14d99ede176809461ac12b4c6f"
+SRC_URI[md5sum] = "956bb906224a5662111d353ab11a0347"
+SRC_URI[sha256sum] = "cb0360e218490d875dc1e9e15c4e0ba0b53c7f512a6c98253f2eb07877be5106"
 
 LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=0636e73ff0215e8d672dc4c32c317bb3"
