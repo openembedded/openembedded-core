@@ -59,6 +59,10 @@ RDEPENDS_packagegroup-core-basic-utils = "\
     grep \
     makedevs \
     mc \
+    mc-fish \
+    mc-helpers \
+    mc-helpers-perl \
+    mc-helpers-python \
     mktemp \
     ncurses \
     net-tools \

@@ -50,6 +50,10 @@ RDEPENDS_packagegroup-core-sys-extended = "\
     lrzsz \
     lzo \
     mc \
+    mc-fish \
+    mc-helpers \
+    mc-helpers-perl \
+    mc-helpers-python \
     mdadm \
     minicom \
     neon \
