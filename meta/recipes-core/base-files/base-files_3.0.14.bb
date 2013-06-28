@@ -43,9 +43,7 @@ dirs755 = "/bin /boot /dev ${sysconfdir} ${sysconfdir}/default \
            /sys ${localstatedir}/lib/misc ${localstatedir}/spool \
            ${localstatedir}/volatile \
            ${localstatedir}/volatile/log \
-           /mnt /media /media/card /media/cf /media/net /media/ram \
-           /media/union /media/realroot /media/hdd \
-           /media/mmc1"
+           /media"
 dirs3755 = "/srv  \
             ${prefix}/local ${prefix}/local/bin ${prefix}/local/games \
             ${prefix}/local/include ${prefix}/local/lib ${prefix}/local/sbin \
@@ -78,9 +76,6 @@ do_install () {
 	done
 	for d in ${volatiles}; do
 		ln -sf volatile/$d ${D}${localstatedir}/$d
-	done
-	for d in card cf net ram; do
-		ln -sf /media/$d ${D}/mnt/$d
 	done
 	ln -snf ../run ${D}${localstatedir}/run
 	ln -snf ../run/lock ${D}${localstatedir}/lock
