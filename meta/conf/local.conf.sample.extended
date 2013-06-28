@@ -210,3 +210,7 @@
 
 # Remove the old image before the new one generated to save disk space
 #RM_OLD_IMAGE = "1"
+
+# Use the following line to enable the security compiler and linker flags to your build
+#require conf/distro/include/security_flags.inc
+
