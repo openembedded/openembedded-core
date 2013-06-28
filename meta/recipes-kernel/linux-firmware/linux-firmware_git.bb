@@ -92,7 +92,7 @@ RDEPENDS_${PN}-ath9k += "${PN}-atheros-license"
 LICENSE_${PN}-ralink = "Firmware-ralink"
 FILES_${PN}-ralink = " \
   /lib/firmware/rt*.bin \
-  /lib/firmware/LICENSE.ralink_firmware.txt \
+  /lib/firmware/LICENCE.ralink-firmware.txt \
 "
 
 LICENSE_${PN}-sd8686 = "Firmware-libertas"
