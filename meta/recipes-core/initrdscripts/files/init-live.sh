@@ -137,15 +137,64 @@ do
   sleep 1
 done
 
+# Try to make a union mount of the root image.
+# If no unification filesystem is available, mount the image read-only.
+mount_and_boot() {
+    mkdir $ROOT_MOUNT
+    mknod /dev/loop0 b 7 0 2>/dev/null
+
+    # determine which unification filesystem to use
+    union_fs_type=""
+    if grep -q -w "overlayfs" /proc/filesystems; then
+	union_fs_type="overlayfs"
+    elif grep -q -w "aufs" /proc/filesystems; then
+	union_fs_type="aufs"
+    else
+	union_fs_type=""
+    fi
+
+    # make a union mount if possible
+    case $union_fs_type in
+	"overlayfs")
+	    mkdir -p /rootfs.ro /rootfs.rw
+	    if ! mount -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE /rootfs.ro; then
+		rm -rf /rootfs.ro /rootfs.rw
+		fatal "Could not mount rootfs image"
+	    else
+		mount -t tmpfs -o rw,noatime,mode=755 tmpfs /rootfs.rw
+		mount -t overlayfs -o "lowerdir=/rootfs.ro,upperdir=/rootfs.rw" overlayfs $ROOT_MOUNT
+		mkdir -p $ROOT_MOUNT/rootfs.ro $ROOT_MOUNT/rootfs.rw
+		mount --move /rootfs.ro $ROOT_MOUNT/rootfs.ro
+		mount --move /rootfs.rw $ROOT_MOUNT/rootfs.rw
+	    fi
+	    ;;
+	"aufs")
+	    mkdir -p /rootfs.ro /rootfs.rw
+	    if ! mount -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE /rootfs.ro; then
+		rm -rf /rootfs.ro /rootfs.rw
+		fatal "Could not mount rootfs image"
+	    else
+		mount -t tmpfs -o rw,noatime,mode=755 tmpfs /rootfs.rw
+		mount -t aufs -o "dirs=/rootfs.rw=rw:/rootfs.ro=ro" aufs $ROOT_MOUNT
+		mkdir -p $ROOT_MOUNT/rootfs.ro $ROOT_MOUNT/rootfs.rw
+		mount --move /rootfs.ro $ROOT_MOUNT/rootfs.ro
+		mount --move /rootfs.rw $ROOT_MOUNT/rootfs.rw
+	    fi
+	    ;;
+	"")
+	    if ! mount -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
+		fatal "Could not mount rootfs image"
+	    fi
+	    ;;
+    esac
+
+    # boot the image
+    boot_live_root
+}
+
 case $label in
     boot)
-	mkdir $ROOT_MOUNT
-	mknod /dev/loop0 b 7 0 2>/dev/null
-	if ! $MOUNT -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
-	    fatal "Could not mount rootfs image"
-	else
-	    boot_live_root
-	fi
+	mount_and_boot
 	;;
     install|install-efi)
 	if [ -f /media/$i/$ISOLINUX/$ROOT_IMAGE ] ; then
