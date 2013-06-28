@@ -7,13 +7,6 @@ SRC_URI = "file://init-live.sh"
 
 PR = "r11"
 
-do_compile() {
-	#if grep -q "CONFIG_UNION_FS=y" ${STAGING_KERNEL_DIR}/.config; then
-	#	sed -i 's/UNIONFS="no"/UNIONFS="yes"/g' ${WORKDIR}/init-live.sh
-	#fi
-	:
-}
- 
 do_install() {
         install -m 0755 ${WORKDIR}/init-live.sh ${D}/init
 }

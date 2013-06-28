@@ -7,7 +7,6 @@ ROOT_IMAGE="rootfs.img"
 MOUNT="/bin/mount"
 UMOUNT="/bin/umount"
 ISOLINUX=""
-UNIONFS="no"
 
 # Copied from initramfs-framework. The core of this script probably should be
 # turned into initramfs-framework modules to reduce duplication.
@@ -142,25 +141,10 @@ case $label in
     boot)
 	mkdir $ROOT_MOUNT
 	mknod /dev/loop0 b 7 0 2>/dev/null
-
-	
-	if [ "$UNIONFS" = "yes" ]; then
-	    mkdir /rootfs-tmp
-
-	    if ! $MOUNT -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE /rootfs-tmp ; then
-		fatal "Could not mount rootfs image"
-	    else
-		mkdir /cow
-		mount -t tmpfs -o rw,noatime,mode=755 tmpfs /cow
-		mount -t unionfs -o dirs=/cow:/rootfs-tmp=ro unionfs $ROOT_MOUNT
-		boot_live_root
-	    fi
+	if ! $MOUNT -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
+	    fatal "Could not mount rootfs image"
 	else
-	    if ! $MOUNT -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
-		fatal "Could not mount rootfs image"
-	    else
-		boot_live_root
-	    fi
+	    boot_live_root
 	fi
 	;;
     install|install-efi)
