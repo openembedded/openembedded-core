@@ -15,7 +15,13 @@ export TZ=/etc/localtime
 [ -x @UDEVD@ ] || exit 1
 [ -d /sys/class ] || exit 1
 
+[ -f /etc/default/rcS ] && . /etc/default/rcS
 [ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
+
+if [ "$ROOTFS_READ_ONLY" = "yes" ]; then
+    [ "$VERBOSE" != "no" ] && echo "udev-cache: read-only rootfs, skip generating udev-cache"
+    exit 0
+fi
 
 if [ "$DEVCACHE" != "" -a -e /dev/shm/udev.cache ]; then
 	echo "Populating dev cache"

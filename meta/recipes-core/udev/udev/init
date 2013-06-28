@@ -18,15 +18,17 @@ export TZ=/etc/localtime
 [ -x @UDEVD@ ] || exit 1
 [ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
 [ -f /etc/udev/udev.conf ] && . /etc/udev/udev.conf
+[ -f /etc/default/rcS ] && . /etc/default/rcS
 
-readfile () {
-   filename=$1
+readfiles () {
    READDATA=""
-   if [ -r $filename ]; then
-       while read line; do
-           READDATA="$READDATA$line"
-       done < $filename
-   fi
+   for filename in $@; do
+	   if [ -r $filename ]; then
+		   while read line; do
+			   READDATA="$READDATA$line"
+		   done < $filename
+	   fi
+   done
 }
 
 case "$1" in
@@ -52,29 +54,37 @@ case "$1" in
     mount -a -t tmpfs 2>/dev/null
     mkdir -p /var/volatile/tmp
 
-    # cache handling
+    # Cache handling.
+    # A list of files which are used as a criteria to judge whether the udev cache could be reused.
+    CMP_FILE_LIST="/proc/version /proc/cmdline /proc/devices /proc/atags"
     if [ "$DEVCACHE" != "" ]; then
-            readfile /proc/version
-            VERSION="$READDATA"
-            readfile /proc/cmdline
-            CMDLINE="$READDATA"
-            readfile /proc/devices
-            DEVICES="$READDATA"
-            readfile /proc/atags
-            ATAGS="$READDATA"
-
             if [ -e $DEVCACHE ]; then
-                    readfile /etc/udev/cache.data
-                    if [ "$READDATA" = "$VERSION$CMDLINE$DEVICES$ATAGS" ]; then
+		    readfiles $CMP_FILE_LIST
+		    NEWDATA="$READDATA"
+		    readfiles /etc/udev/cache.data
+		    OLDDATA="$READDATA"
+		    if [ "$OLDDATA" = "$NEWDATA" ]; then
                             (cd /; tar xf $DEVCACHE > /dev/null 2>&1)
                             not_first_boot=1
                             [ "$VERBOSE" != "no" ] && echo "udev: using cache file $DEVCACHE"
                             [ -e /dev/shm/udev.cache ] && rm -f /dev/shm/udev.cache
                     else
-                            echo "$VERSION$CMDLINE$DEVICES$ATAGS" > /dev/shm/udev.cache
+			    # Output detailed reason why the cached /dev is not used
+			    if [ "$VERBOSE" != "no" ]; then
+				    echo "udev: udev cache not used"
+				    echo "udev: we use $CMP_FILE_LIST as criteria to judge whether the cache /dev could be resued"
+				    echo "udev: olddata: $OLDDATA"
+				    echo "udev: newdata: $NEWDATA"
+			    fi
+			    echo "$NEWDATA" > /dev/shm/udev.cache
                     fi
-            else
-                    echo "$VERSION$CMDLINE$DEVICES$ATAGS" > /dev/shm/udev.cache
+	    else
+		    if [ "$ROOTFS_READ_ONLY" != "yes" ]; then
+			    # If rootfs is not read-only, it's possible that a new udev cache would be generated;
+			    # otherwise, we do not bother to read files.
+			    readfiles $CMP_FILE_LIST
+			    echo "$READDATA" > /dev/shm/udev.cache
+		    fi
             fi
     fi
 
