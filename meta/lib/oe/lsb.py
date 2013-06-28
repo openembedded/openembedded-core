@@ -44,6 +44,14 @@ def release_dict_file():
                     if line.startswith('VERSION = '):
                         data['DISTRIB_RELEASE'] = line[10:].rstrip()
                         break
+        elif os.path.exists('/etc/os-release'):
+            data = {}
+            with open('/etc/os-release') as f:
+                for line in f:
+                    if line.startswith('NAME='):
+                        data['DISTRIB_ID'] = line[5:].rstrip().strip('"')
+                    if line.startswith('VERSION_ID='):
+                        data['DISTRIB_RELEASE'] = line[11:].rstrip().strip('"')
     except IOError:
         return None
     return data
@@ -58,7 +66,7 @@ def distro_identifier(adjust_hook=None):
     else:
         lsb_data_file = release_dict_file()
         if lsb_data_file:
-            distro_id, release = lsb_data_file['DISTRIB_ID'], lsb_data_file['DISTRIB_RELEASE']
+            distro_id, release = lsb_data_file['DISTRIB_ID'], lsb_data_file.get('DISTRIB_RELEASE', None)
         else:
             distro_id, release = None, None
 
@@ -66,4 +74,8 @@ def distro_identifier(adjust_hook=None):
         distro_id, release = adjust_hook(distro_id, release)
     if not distro_id:
         return "Unknown"
-    return '{0}-{1}'.format(distro_id, release).replace(' ','-').replace('/','-')
+    if release:
+        id_str = '{0}-{1}'.format(distro_id, release)
+    else:
+        id_str = distro_id
+    return id_str.replace(' ','-').replace('/','-')
