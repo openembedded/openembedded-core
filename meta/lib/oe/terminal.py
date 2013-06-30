@@ -108,7 +108,7 @@ class Screen(Terminal):
 class TmuxRunning(Terminal):
     """Open a new pane in the current running tmux window"""
     name = 'tmux-running'
-    command = 'tmux split-window {command}'
+    command = 'tmux split-window "{command}"'
     priority = 2.75
 
     def __init__(self, sh_cmd, title=None, env=None, d=None):
