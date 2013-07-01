@@ -32,7 +32,7 @@ QA_SANE = "True"
 WARN_QA ?= "ldflags useless-rpaths rpaths staticdev libdir xorg-driver-abi \
             textrel already-stripped incompatible-license files-invalid \
             installed-vs-shipped compile-host-path install-host-path \
-            pn-overrides \
+            pn-overrides infodir \
             "
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
@@ -551,6 +551,16 @@ def package_qa_check_xorg_driver_abi(path, name, d, elf, messages):
             if rdep.startswith("xorg-abi-"):
                 return
         messages.append("Package %s contains Xorg driver (%s) but no xorg-abi- dependencies" % (name, os.path.basename(path)))
+
+QAPATHTEST[infodir] = "package_qa_check_infodir"
+def package_qa_check_infodir(path, name, d, elf, messages):
+    """
+    Check that /usr/share/info/dir isn't shipped in a particular package
+    """
+    infodir = d.expand("${infodir}/dir")
+
+    if infodir in path:
+        messages.append("The /usr/share/info/dir file is not meant to be shipped in a particular package.")
 
 def package_qa_check_license(workdir, d):
     """
