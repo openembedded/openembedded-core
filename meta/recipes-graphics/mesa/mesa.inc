@@ -86,6 +86,9 @@ do_install_append () {
     rm -f ${D}${libdir}/egl/*.la
     rm -f ${D}${libdir}/gallium-pipe/*.la
     rm -f ${D}${libdir}/gbm/*.la
+    
+    # it was packaged in libdricore9.1.3-1 and preventing upgrades when debian.bbclass was used 
+    rm -f ${D}${sysconfdir}/drirc
 }
 
 # For the packages that make up the OpenGL interfaces, inject variables so that
