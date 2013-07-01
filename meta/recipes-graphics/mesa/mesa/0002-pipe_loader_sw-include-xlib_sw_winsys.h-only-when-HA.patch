@@ -1,0 +1,52 @@
+From debac5531f7107d239530ff6e29eeda72b9ec1e9 Mon Sep 17 00:00:00 2001
+From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Sat, 29 Jun 2013 11:20:51 +0200
+Subject: [PATCH 2/4] pipe_loader_sw: include xlib_sw_winsys.h only when
+ HAVE_PIPE_LOADER_XLIB
+
+* HAVE_WINSYS_XLIB was removed in
+  commit b3f1f665b0fef178ae193e6b111f14c9a5ad3b25
+  Author: Matt Turner <mattst88@gmail.com>
+  Date:   Sun Jan 20 15:32:08 2013 -0800
+  build: Get rid of GALLIUM_WINSYS_DIRS
+
+* HAVE_PIPE_LOADER_XLIB is set correctly:
+  if test "x$NEED_WINSYS_XLIB" = xyes; then
+      GALLIUM_PIPE_LOADER_DEFINES="$GALLIUM_PIPE_LOADER_DEFINES -DHAVE_PIPE_LOADER_XLIB"
+      GALLIUM_PIPE_LOADER_LIBS="$GALLIUM_PIPE_LOADER_LIBS \$(top_builddir)/src/gallium/winsys/sw/xlib/libws_xlib.la"
+  fi
+
+* fixes build of pipe_loader_sw without libx11 headers available
+
+Upstream-Status: Submitted https://bugs.freedesktop.org/show_bug.cgi?id=66357
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ src/gallium/auxiliary/pipe-loader/pipe_loader_sw.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/gallium/auxiliary/pipe-loader/pipe_loader_sw.c b/src/gallium/auxiliary/pipe-loader/pipe_loader_sw.c
+index c2b78c6..0da3f4d 100644
+--- a/src/gallium/auxiliary/pipe-loader/pipe_loader_sw.c
++++ b/src/gallium/auxiliary/pipe-loader/pipe_loader_sw.c
+@@ -31,7 +31,9 @@
+ #include "util/u_dl.h"
+ #include "sw/null/null_sw_winsys.h"
+ #include "target-helpers/inline_sw_helper.h"
++#ifdef HAVE_PIPE_LOADER_XLIB
+ #include "state_tracker/xlib_sw_winsys.h"
++#endif
+ 
+ struct pipe_loader_sw_device {
+    struct pipe_loader_device base;
+@@ -44,7 +46,7 @@ struct pipe_loader_sw_device {
+ static struct pipe_loader_ops pipe_loader_sw_ops;
+ 
+ static struct sw_winsys *(*backends[])() = {
+-#ifdef HAVE_WINSYS_XLIB
++#ifdef HAVE_PIPE_LOADER_XLIB
+    x11_sw_create,
+ #endif
+    null_sw_create
+-- 
+1.8.2.1
+
