@@ -1,0 +1,41 @@
+Upstream-Status: Pending
+Signed-off-by: Riku Voipio <riku.voipio@linaro.org>
+Index: webkit-1.8.3/Source/JavaScriptCore/wtf/Platform.h
+===================================================================
+--- webkit-1.8.3.orig/Source/JavaScriptCore/wtf/Platform.h 2013-06-12 00:58:14.000000000 -0700
++++ webkit-1.8.3/Source/JavaScriptCore/wtf/Platform.h  2013-06-12 00:59:18.764056782 -0700
+@@ -304,6 +304,11 @@
+ #define WTF_CPU_NEEDS_ALIGNED_ACCESS 1
+ #endif
+ 
++/* CPU(AARCH64) - Aarch64 */
++#if defined(__aarch64__)
++#define WTF_CPU_AARCH64 1
++#endif
++
+ /* ==== OS() - underlying operating system; only to be used for mandated low-level services like 
+    virtual memory, not to choose a GUI toolkit ==== */
+ 
+@@ -905,7 +910,8 @@
+     || CPU(SPARC64) \
+     || CPU(S390X) \
+     || CPU(MIPS64) \
+-    || CPU(PPC64)
++    || CPU(PPC64) \
++    || CPU(AARCH64)
+ #define WTF_USE_JSVALUE64 1
+ #else
+ #define WTF_USE_JSVALUE32_64 1
+Index: webkit-1.8.3/Source/JavaScriptCore/wtf/dtoa/utils.h
+===================================================================
+--- webkit-1.8.3.orig/Source/JavaScriptCore/wtf/dtoa/utils.h   2013-06-12 00:57:22.000000000 -0700
++++ webkit-1.8.3/Source/JavaScriptCore/wtf/dtoa/utils.h    2013-06-12 00:58:28.340056029 -0700
+@@ -49,7 +49,7 @@
+ defined(__ARMEL__) || \
+ defined(_MIPS_ARCH_MIPS32R2)
+ #define DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS 1
+-#elif CPU(MIPS) || CPU(PPC) || CPU(PPC64) || OS(WINCE) || CPU(SH4) || CPU(S390) || CPU(S390X) || CPU(IA64) || CPU(SPARC) || CPU(ALPHA) || CPU(MIPS64)
++#elif CPU(MIPS) || CPU(PPC) || CPU(PPC64) || OS(WINCE) || CPU(SH4) || CPU(S390) || CPU(S390X) || CPU(IA64) || CPU(SPARC) || CPU(ALPHA) || CPU(MIPS64) || CPU(AARCH64)
+ #define DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS 1
+ #elif defined(_M_IX86) || defined(__i386__)
+ #if defined(_WIN32)
