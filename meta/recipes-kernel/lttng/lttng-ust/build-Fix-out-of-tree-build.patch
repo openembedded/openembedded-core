@@ -1,0 +1,28 @@
+From d5a822fbeaec69e86c6af1f0ab8db0ff030f6678 Mon Sep 17 00:00:00 2001
+From: Otavio Salvador <otavio@ossystems.com.br>
+Date: Tue, 2 Jul 2013 10:25:06 -0300
+Subject: [PATCH] build: Fix out-of-tree build
+
+To allow out-of-tree build, we need to include top_buildir in include
+directories or the generated config header won't be found.
+
+Upstream-Status: Pending
+
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+---
+ liblttng-ust-comm/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/liblttng-ust-comm/Makefile.am b/liblttng-ust-comm/Makefile.am
+index 2ae997c..065dbbf 100644
+--- a/liblttng-ust-comm/Makefile.am
++++ b/liblttng-ust-comm/Makefile.am
+@@ -1,4 +1,4 @@
+-AM_CPPFLAGS = -I$(top_srcdir)/include
++AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include
+ 
+ noinst_LTLIBRARIES = liblttng-ust-comm.la
+ 
+-- 
+1.8.3.1
+

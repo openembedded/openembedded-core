@@ -17,13 +17,13 @@ RPROVIDES_${PN} = "lttng2-ust"
 RREPLACES_${PN} = "lttng2-ust"
 RCONFLICTS_${PN} = "lttng2-ust"
 
-SRCREV = "3f7a0876566a432ad2cc2b27a2725641e36da92d"
-PV = "2.1.2"
-PR = "r0"
+SRCREV = "cfaee541fea7f5760b5501913c6902f5e4da9dba"
+PV = "2.2.0"
 PE = "2"
 
 SRC_URI = "git://git.lttng.org/lttng-ust.git;protocol=git \
 	   file://depends-liblttng-ust-tracepoin.patch \
+	   file://build-Fix-out-of-tree-build.patch \
 	   "
 
 S = "${WORKDIR}/git"
