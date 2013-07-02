@@ -12,7 +12,8 @@ SRC_URI = "http://get.qt.nokia.com/qt/add-ons/qt-mobility-opensource-src-${PV}.t
            file://0001-gstvideoconnector-fixed-buffers-allocation.patch \
            file://0002-Remove-unnecessary-rpaths-from-qml_device-example.patch \
            file://qt-mobility-no-opengl.patch \
-	   file://gcc-scope.patch \
+           file://gcc-scope.patch \
+           file://qt-mobility-no-xvideo.patch \
 	   "
 
 SRC_URI[md5sum]="ea5db5a8d3dd4709c2926dceda646bd8"
