@@ -1,0 +1,34 @@
+Upstream-Status: Backport
+Signed-off-by: Roy.Li <rongqing.li@windriver.com>
+
+From eb44730094a68f4d37d95ddc3480a5972619b43f Mon Sep 17 00:00:00 2001
+From: Sebastien GODARD <sysstat@orange.fr.fake>
+Date: Sat, 22 Jun 2013 14:08:40 +0200
+Subject: [PATCH] Update Makefile to allow for parallel execution
+
+Rewrite rule for librdstats.a in Makefile to prevent possible file
+corruption when using make -j.
+
+Signed-off-by: Sebastien GODARD <sysstat@orange.fr.fake>
+---
+ Makefile.in |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index f8e6159..159cacf 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -202,7 +202,9 @@ sadf_misc.o: sadf_misc.c sadf.h sa.h
+ libsyscom.a: common.o ioconf.o
+ 	$(AR) rvs $@ $?
+ 
+-librdstats.a: librdstats.a(rd_stats.o count.o)
++# Ditto
++librdstats.a: rd_stats.o count.o
++	$(AR) rvs $@ $?
+ 
+ librdsensors.a: librdsensors.a(rd_sensors.o)
+ 
+-- 
+1.7.10.4
+

@@ -5,7 +5,8 @@ LICENSE = "GPLv2+"
 SECTION = "console/utils"
 
 SRC_URI = "http://pagesperso-orange.fr/sebastien.godard/sysstat-${PV}.tar.gz \
-		   file://99_sysstat"
+		   file://99_sysstat \
+		   file://0001-Update-Makefile-to-allow-for-parallel-execution.patch "
 
 inherit autotools gettext
 
