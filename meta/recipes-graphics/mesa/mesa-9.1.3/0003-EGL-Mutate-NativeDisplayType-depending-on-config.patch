@@ -1,26 +1,27 @@
-From d52a7ec5dcdf3936bd727b854831efb90acfd2ba Mon Sep 17 00:00:00 2001
+From 06c1ba29de8a26fffb73ee99f0fc54c704e9fee4 Mon Sep 17 00:00:00 2001
 From: Daniel Stone <daniel@fooishbar.org>
 Date: Fri, 24 May 2013 17:20:27 +0100
-Subject: [PATCH] EGL: Mutate NativeDisplayType depending on config
+Subject: [PATCH 3/5] EGL: Mutate NativeDisplayType depending on config
 
 If we go through ./configure without enabling X11 anywhere, then set the
 fallback types for EGL NativeDisplay and friends, rather than assuming
 X11/Xlib.
 
 Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
- configure.ac                 |    9 +++
- include/EGL/eglplatform.h    |  146 ------------------------------------------
- include/EGL/eglplatform.h.in |  146 ++++++++++++++++++++++++++++++++++++++++++
+ configure.ac                 |   9 +++
+ include/EGL/eglplatform.h    | 146 -------------------------------------------
+ include/EGL/eglplatform.h.in | 146 +++++++++++++++++++++++++++++++++++++++++++
  3 files changed, 155 insertions(+), 146 deletions(-)
  delete mode 100644 include/EGL/eglplatform.h
  create mode 100644 include/EGL/eglplatform.h.in
 
 diff --git a/configure.ac b/configure.ac
-index 4a98996..6fa77da 100644
+index 2b4a374..d4c7a95 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1576,12 +1576,20 @@ fi
+@@ -1565,12 +1565,20 @@ fi
  
  EGL_PLATFORMS="$egl_platforms"
  
@@ -41,11 +42,11 @@ index 4a98996..6fa77da 100644
  AM_CONDITIONAL(HAVE_EGL_DRIVER_DRI2, test "x$HAVE_EGL_DRIVER_DRI2" != "x")
  AM_CONDITIONAL(HAVE_EGL_DRIVER_GLX, test "x$HAVE_EGL_DRIVER_GLX" != "x")
  
-@@ -2053,6 +2061,7 @@ CXXFLAGS="$CXXFLAGS $USER_CXXFLAGS"
+@@ -2042,6 +2050,7 @@ CXXFLAGS="$CXXFLAGS $USER_CXXFLAGS"
  
  dnl Substitute the config
  AC_CONFIG_FILES([Makefile
-+                include/EGL/eglplatform.h
++		include/EGL/eglplatform.h
  		src/Makefile
  		src/egl/Makefile
  		src/egl/drivers/Makefile
@@ -354,5 +355,5 @@ index 0000000..5126c92
 +
 +#endif /* __eglplatform_h */
 -- 
-1.7.10.4
+1.8.2.1
 

@@ -1,8 +1,8 @@
-From 9915636fb8afe75ee2e8e013e4f495a4cb937afb Mon Sep 17 00:00:00 2001
+From 33098ef45e6035f3348040a25641f95c95266103 Mon Sep 17 00:00:00 2001
 From: Brian Paul <brianp@vmware.com>
 Date: Wed, 6 Mar 2013 16:57:20 -0700
-Subject: [PATCH] llvmpipe: remove the power of two sizeof(struct cmd_block)
- assertion
+Subject: [PATCH 5/5] llvmpipe: remove the power of two sizeof(struct
+ cmd_block) assertion
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -14,13 +14,12 @@ Reviewed-by: José Fonseca <jfonseca@vmware.com>
 
 Upstream-Status: Backport
 http://cgit.freedesktop.org/mesa/mesa/commit/?id=9915636fb8afe75ee2e8e013e4f495a4cb937afb
-
 ---
  src/gallium/drivers/llvmpipe/lp_scene.c | 7 -------
  1 file changed, 7 deletions(-)
 
 diff --git a/src/gallium/drivers/llvmpipe/lp_scene.c b/src/gallium/drivers/llvmpipe/lp_scene.c
-index dd0943e..a0912eb 100644
+index e145391..c88bc95 100644
 --- a/src/gallium/drivers/llvmpipe/lp_scene.c
 +++ b/src/gallium/drivers/llvmpipe/lp_scene.c
 @@ -76,13 +76,6 @@ lp_scene_create( struct pipe_context *pipe )
@@ -36,7 +35,7 @@ index dd0943e..a0912eb 100644
 -             util_next_power_of_two(sizeof(struct cmd_block)));
     }
  #endif
-
---
-1.8.3
+ 
+-- 
+1.8.2.1
 

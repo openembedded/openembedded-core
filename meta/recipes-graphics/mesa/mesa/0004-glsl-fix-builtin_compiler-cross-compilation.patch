@@ -1,9 +1,17 @@
+From ab38c97f057f739533a4e1fc9de51ea5f4e6242d Mon Sep 17 00:00:00 2001
+From: Jonathan Liu <net147@gmail.com>
+Date: Sat, 29 Jun 2013 11:37:20 +0200
+Subject: [PATCH 4/4] glsl: fix builtin_compiler cross-compilation
+
 The target libtool is used when building host binaries, which predictably
 doesn't work.
 
-Upstream-Status: Submitted (https://bugs.freedesktop.org/show_bug.cgi?id=44618)
+Upstream-Status: Submitted https://bugs.freedesktop.org/show_bug.cgi?id=44618
 Signed-off-by: Jonathan Liu <net147@gmail.com>
 Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ src/glsl/builtin_compiler/Makefile.am | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/src/glsl/builtin_compiler/Makefile.am b/src/glsl/builtin_compiler/Makefile.am
 index e11a17f..8ebe0a2 100644
@@ -41,3 +49,6 @@ index e11a17f..8ebe0a2 100644
 +else
  builtin_compiler_LDADD = libglslcore.la libglcpp.la
 +endif
+-- 
+1.8.2.1
+
