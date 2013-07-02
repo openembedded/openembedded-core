@@ -7,35 +7,75 @@ build and install lttng-modules, we do this replacement for
 it as-is.
 
 Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
----
- Makefile |    7 +++----
- 1 files changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 5ac13d7..25caad5 100644
+index a9d1cb1..c1b65b9 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -38,17 +38,16 @@ obj-m += lib/
- endif
-
- else
+@@ -43,19 +43,19 @@ obj-m += lib/
+ endif # CONFIG_TRACEPOINTS
+ 
+ else # KERNELRELEASE
 -	KERNELDIR ?= /lib/modules/$(shell uname -r)/build
++	KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build
  	PWD := $(shell pwd)
  	CFLAGS = $(EXTCFLAGS)
-
+ 
  default:
 -	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
 +	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) modules
-
+ 
  modules_install:
 -	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules_install
 +	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) modules_install
-
+ 
  clean:
 -	$(MAKE) -C $(KERNELDIR) M=$(PWD) clean
 +	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) clean
-
+ 
+ %.i: %.c
+-	$(MAKE) -C $(KERNELDIR) M=$(PWD) $@
++	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) $@
+ endif # KERNELRELEASE
+diff --git a/README b/README
+index 8c5dd46..6bd3334 100644
+--- a/README
++++ b/README
+@@ -27,8 +27,8 @@ access to your full kernel source tree), and use:
+ If you need to specify the target directory to the kernel you want to build
+ against, use:
+ 
+-% KERNELDIR=path_to_kernel_dir make
+-# KERNELDIR=path_to_kernel_dir make modules_install
++% KERNEL_SRC=path_to_kernel_dir make
++# KERNEL_SRC=path_to_kernel_dir make modules_install
+ # depmod -a kernel_version
+ 
+ Use lttng-tools to control the tracer. LTTng tools should automatically load
+diff --git a/probes/Makefile b/probes/Makefile
+index 225803c..3449866 100644
+--- a/probes/Makefile
++++ b/probes/Makefile
+@@ -212,18 +212,18 @@ endif
  endif
--- 
-1.7.5.4
-
+ 
+ else
+-	KERNELDIR ?= /lib/modules/$(shell uname -r)/build
++	KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build
+ 	PWD := $(shell pwd)
+ 	CFLAGS = $(EXTCFLAGS)
+ 
+ default:
+-	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
++	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) modules
+ 
+ modules_install:
+-	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules_install
++	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) modules_install
+ 	/sbin/depmod -a
+ 
+ clean:
+-	$(MAKE) -C $(KERNELDIR) M=$(PWD) clean
++	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) clean
+ 
+ endif
