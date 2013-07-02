@@ -509,6 +509,11 @@ def pstaging_fetch(sstatefetch, sstatepkg, d):
     localdata.setVar('DL_DIR', dldir)
     localdata.setVar('PREMIRRORS', mirrors)
 
+    # if BB_NO_NETWORK is set but we also have SSTATE_MIRROR_ALLOW_NETWORK,
+    # we'll want to allow network access for the current set of fetches.
+    if localdata.getVar('BB_NO_NETWORK', True) == "1" and localdata.getVar('SSTATE_MIRROR_ALLOW_NETWORK', True) == "1":
+        localdata.delVar('BB_NO_NETWORK')
+
     # Try a fetch from the sstate mirror, if it fails just return and
     # we will build the package
     for srcuri in ['file://{0}'.format(sstatefetch),
@@ -618,6 +623,11 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
         localdata.setVar('PREMIRRORS', mirrors)
 
         bb.debug(2, "SState using premirror of: %s" % mirrors)
+
+        # if BB_NO_NETWORK is set but we also have SSTATE_MIRROR_ALLOW_NETWORK,
+        # we'll want to allow network access for the current set of fetches.
+        if localdata.getVar('BB_NO_NETWORK', True) == "1" and localdata.getVar('SSTATE_MIRROR_ALLOW_NETWORK', True) == "1":
+            localdata.delVar('BB_NO_NETWORK')
 
         for task in range(len(sq_fn)):
             if task in ret:
