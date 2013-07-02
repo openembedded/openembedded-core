@@ -11,9 +11,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=01d7fc4496aacf37d90df90b90b0cac1 \
 
 DEPENDS = "liburcu popt lttng-ust"
 
-SRCREV = "917f768512b5d336d553b801f6c5308d90252a89"
-PV = "v2.1.0"
-PR = "r0"
+SRCREV = "eff0b2c38d24092c41bbb51926ac4e3b8c6acb83"
+PV = "v2.2.0"
 
 SRC_URI = "git://git.lttng.org/lttng-tools.git;protocol=git"
 
