@@ -10,9 +10,8 @@ inherit autotools
 
 DEPENDS = "glib-2.0 util-linux popt"
 
-SRCREV = "c99b1910bea848e8f0ae5641bb63b8f4f84f3ec0"
+SRCREV = "a386e24609752742b100120db6798d311fab512a"
 PV = "1.1+git${SRCPV}"
-PR = "r0"
 
 SRC_URI = "git://git.efficios.com/babeltrace.git;protocol=git"
 
