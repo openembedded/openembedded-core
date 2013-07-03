@@ -6,10 +6,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 require remake.inc
 
 SRC_URI += "file://version-remake.texi.patch"
-SRCREV = "414d6e84121c6740ff5079370c905dea0f0e1ddb"
+SRCREV = "f05508e521987c8494c92d9c2871aec46307d51d"
 S = "${WORKDIR}/git"
 
-PV = "3.82+dbg-0.8+git${SRCPV}"
+PV = "3.82+dbg-0.9+git${SRCPV}"
 
 DEPENDS += "readline"
 PROVIDES += "make"
