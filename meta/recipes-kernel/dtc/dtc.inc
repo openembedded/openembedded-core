@@ -11,7 +11,6 @@ SRC_URI = "git://www.jdl.com/software/dtc.git;protocol=git \
 	  "
 
 EXTRA_OEMAKE='PREFIX="${prefix}" LIBDIR="${libdir}"'
-INC_PR = "r3"
 
 S = "${WORKDIR}/git"
 
