@@ -23,6 +23,9 @@ inherit autotools lib_package binconfig multilib_header
 
 OE_BINCONFIG_EXTRA_MANGLE = " -e 's:location=source:location=installed:'"
 
+# Added to fix some issues with cmake. Refer to https://github.com/bmwcarit/meta-ros/issues/68#issuecomment-19896928
+CACHED_CONFIGUREVARS += "apr_cv_mutex_recursive=yes"
+
 do_configure_prepend() {
 	cd ${S}
 	./buildconf

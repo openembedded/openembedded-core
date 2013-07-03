@@ -203,7 +203,6 @@ apr_cv_use_lfs64=${apr_cv_use_lfs64=yes}
 apr_cv_epoll=${apr_cv_epoll=yes}
 apr_cv_pthreads_cflags=${apr_cv_pthreads_cflags=-pthread}
 apr_cv_pthreads_lib=${apr_cv_pthreads_lib=-lpthread}
-apr_cv_mutex_recursive=${apr_cv_mutex_recursive=yes}
 ac_cv_func_mmap=${ac_cv_func_mmap=yes}
 ac_cv_file__dev_zero=${ac_cv_file__dev_zero=yes}
 ac_cv_sizeof_off_t=${ac_cv_sizeof_off_t=4}
