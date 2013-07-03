@@ -3,7 +3,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 SECTION = "x11"
 PR = "r31"
-RDEPENDS_${PN} = "sudo"
+RDEPENDS_${PN} = "sudo xuser-account"
 
 SRC_URI = "file://xserver-nodm \
            file://Xusername \
@@ -23,17 +23,8 @@ do_install() {
     fi
 }
 
-inherit update-rc.d useradd
+inherit update-rc.d
 
 INITSCRIPT_NAME = "xserver-nodm"
 INITSCRIPT_PARAMS = "start 9 5 2 . stop 20 0 1 6 ."
-
-# Use fixed Xusername of xuser for now, this will need to be
-# fixed if the Xusername changes from xuser
-# IMPORTANT: because xuser is shared with connman, please make sure the
-# USERADD_PARAM is in sync with the one in connman.inc
-USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} = "--create-home \
-                       --groups video,tty,audio,input \
-                       --user-group xuser"
 
