@@ -190,6 +190,10 @@ do_install () {
 			install -m 0644 ${S}/busybox.links.suid ${D}${sysconfdir}
 			install -m 0644 ${S}/busybox.links.nosuid ${D}${sysconfdir}
 			ln -sf busybox.nosuid ${D}${base_bindir}/sh
+			# Keep a default busybox for people who want to invoke busybox directly.
+			# This is also useful for the on device upgrade. Because we want
+			# to use the busybox command in postinst.
+			ln -sf busybox.nosuid ${D}${base_bindir}/busybox
 		else
 			if grep -q "CONFIG_FEATURE_SUID=y" ${B}/.config; then
 				install -m 4755 ${B}/busybox ${D}${base_bindir}
@@ -198,6 +202,12 @@ do_install () {
 			fi
 			install -m 0644 ${S}/busybox.links ${D}${sysconfdir}
 			ln -sf busybox ${D}${base_bindir}/sh
+			# We make this symlink here to eliminate the error when upgrading together
+			# with busybox-syslog. Without this symlink, the opkg may think of the
+			# busybox.nosuid as obsolete and remove it, resulting in dead links like
+			# /bin/sed -> /bin/busybox.nosuid. This will make upgrading busybox-syslog fail.
+			# This symlink will be safely deleted in postinst, thus no negative effect.
+			ln -sf busybox ${D}${base_bindir}/busybox.nosuid
 		fi
 	else
 		install -d ${D}${base_bindir} ${D}${base_sbindir}
@@ -304,6 +314,44 @@ python do_package_prepend () {
     else:
         set_alternative_vars("/etc/busybox.links.nosuid", "/bin/busybox.nosuid")
         set_alternative_vars("/etc/busybox.links.suid", "/bin/busybox.suid")
+}
+
+pkg_postinst_${PN} () {
+	# This part of code is dedicated to the on target upgrade problem.
+	# It's known that if we don't make appropriate symlinks before update-alternatives calls,
+	# there will be errors indicating missing commands such as 'sed'.
+	# These symlinks will later be updated by update-alternatives calls.
+	test -n 2 > /dev/null || alias test='busybox test'
+	if test "x$D" = "x"; then
+		# Remove busybox.nosuid if it's a symlink, because this situation indicates
+		# that we're installing or upgrading to a one-binary busybox.
+		if test -h /bin/busybox.nosuid; then
+			rm -f /bin/busybox.nosuid
+		fi
+		for suffix in "" ".nosuid" ".suid"; do
+			if test -e /etc/busybox.links$suffix; then
+				while read link; do
+					if test ! -e "$link"; then
+						case "$link" in
+							/*/*/*)
+								to="../../bin/busybox$suffix"
+								;;
+							/bin/*)
+								to="busybox$suffix"
+								;;
+							/*/*)
+								to="../bin/busybox$suffix"
+								;;
+						esac
+						# we can use busybox here because even if we are using splitted busybox
+						# we've made a symlink from /bin/busybox to /bin/busybox.nosuid.
+						busybox rm -f $link
+						busybox ln -s $to $link
+					fi
+				done < /etc/busybox.links$suffix
+			fi
+		done
+	fi
 }
 
 pkg_prerm_${PN} () {
