@@ -12,11 +12,13 @@ S = "${WORKDIR}"
 do_install() {
 	install -d ${D}${datadir}/applications
 	install -m 0644 shutdown.desktop ${D}${datadir}/applications/
+
+	sed -i ${D}${datadir}/applications/shutdown.desktop -e 's#^Exec=\(.*\)#Exec=${base_sbindir}/\1#'
 }
 
 pkg_postinst_${PN} () {
     grep -q qemuarm $D${sysconfdir}/hostname && \
-        sed -i $D${datadir}/applications/shutdown.desktop -e 's/^Exec=halt/Exec=reboot/' \
+        sed -i $D${datadir}/applications/shutdown.desktop -e 's#^Exec=\(.*\)/halt#Exec=\1/reboot#' \
         || true
 }
 
