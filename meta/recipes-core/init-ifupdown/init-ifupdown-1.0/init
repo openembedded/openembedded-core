@@ -58,6 +58,7 @@ check_network_swap() {
 case "$1" in
 start)
 	echo -n "Configuring network interfaces... "
+	sysctl -e -p /etc/sysctl.conf >/dev/null 2>&1
 	ifup -a
 	echo "done."
 	;;
