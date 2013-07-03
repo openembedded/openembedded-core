@@ -60,14 +60,7 @@ SYSTEMD_SERVICE_${PN} = "connman.service"
 SYSTEMD_SERVICE_${PN}-vpn = "connman-vpn.service"
 SYSTEMD_WIRED_SETUP = "ExecStartPre=-${libdir}/connman/wired-setup"
 
-# IMPORTANT: because xuser is shared with rootless X, please make sure the
-# USERADD_PARAM is in sync with the one in xserver-nodm-init.bb
-USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} = "--create-home \
-                       --groups video,tty,audio \
-                       --user-group xuser"
-
-inherit autotools gtk-doc pkgconfig systemd update-rc.d useradd
+inherit autotools gtk-doc pkgconfig systemd update-rc.d
 
 do_configure_append () {
 	sed -i "s#ExecStart=#${SYSTEMD_WIRED_SETUP}\nExecStart=#" ${S}/src/connman.service
@@ -118,6 +111,7 @@ RDEPENDS_${PN} = "\
 	${@base_contains('PACKAGECONFIG', 'bluetooth', 'bluez4', '', d)} \
 	${@base_contains('PACKAGECONFIG', 'wifi','wpa-supplicant', '', d)} \
 	${@base_contains('PACKAGECONFIG', '3g','ofono', '', d)} \
+	xuser-account \
 	"
 
 PACKAGES_DYNAMIC += "^${PN}-plugin-.*"
