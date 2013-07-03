@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt4-${PV}:"
 
-SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-${PV}.tar.gz \
+SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-everywhere-opensource-src-${PV}.tar.gz \
            file://0003-webkit2-set-OUTPUT_DIR-value-if-empty.patch \
            file://0004-configure-qmake-is-already-built-in-qt4-tools-native.patch \
            file://0008-qmake.pro-Allow-building-a-separate-qmake-for-the-ta.patch \
@@ -21,18 +21,13 @@ SRC_URI = "http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-sr
            file://0018-configure-make-pulseaudio-a-configurable-option.patch \
            file://0019-Fixes-for-gcc-4.7.0-particularly-on-qemux86.patch \
            file://0020-webkit-disable-the-fuse-ld-gold-flag.patch \
-           file://0022-ssl-certificates-blacklist-mis-issued-turktrust-certificates.patch \
-           file://0023-qtnetwork-blacklist-two-more-certificates.patch \
-           file://0024-Change-all-shmget-calls-to-user-only-memory.patch \
-           file://0025-Remove-unnecessary-typedef-found-by-gcc4-8.patch \
-           file://0026-Don-t-overwrite-QMAKE_QT_CONFIG-with-empty-value.patch \
            file://0027-tools.pro-disable-qmeegographicssystemhelper.patch \
            file://g++.conf \
            file://linux.conf \
            "
 
-SRC_URI[md5sum] = "89c5ecba180cae74c66260ac732dc5cb"
-SRC_URI[sha256sum] = "33b0e38ba4c54a0cf8a4be8ca5a4584f1c2e0adfecb57b21d9d1d267b0093270"
+SRC_URI[md5sum] = "1864987bdbb2f58f8ae8b350dfdbe133"
+SRC_URI[sha256sum] = "eb728f8268831dc4373be6403b7dd5d5dde03c169ad6882f9a8cb560df6aa138"
 
 S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 
