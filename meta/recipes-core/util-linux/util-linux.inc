@@ -45,6 +45,7 @@ EXTRA_OECONF = "--libdir=${base_libdir} --disable-use-tty-group \
                 --disable-vipw --disable-newgrp --disable-chfn-chsh --disable-su \
                 --enable-write --enable-arch --enable-mount --with-fsprobe=builtin \
                 --enable-libuuid --enable-libblkid --enable-fsck --without-udev \
+                --disable-runuser \
 		usrsbin_execdir='${sbindir}' \
 "
 
@@ -52,7 +53,7 @@ EXTRA_OECONF = "--libdir=${base_libdir} --disable-use-tty-group \
 EXTRA_OECONF += "${@base_contains('DISTRO_FEATURES', 'systemd', '--enable-socket-activation', '--disable-socket-activation', d)}"
 EXTRA_OECONF += "${@base_contains('DISTRO_FEATURES', 'systemd', '--with-systemdsystemunitdir=${systemd_unitdir}/system/', '--without-systemdsystemunitdir', d)}"
 
-EXTRA_OECONF_append_class-native = " --disable-login --disable-su"
+EXTRA_OECONF_append_class-native = " --disable-login --disable-su --disable-runuser"
 
 FILES_${PN}-bash-completion += "${datadir}/bash-completion"
 FILES_${PN}-doc += "${datadir}/getopt/getopt-*.*"
