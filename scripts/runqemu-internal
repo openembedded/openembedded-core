@@ -50,6 +50,9 @@ else
         "qemuarm")
             mem_size=128
             ;;
+        "qemumicroblaze")
+            mem_size=64
+            ;;
         "qemumips"|"qemumips64")
             mem_size=128
             ;;
@@ -264,6 +267,7 @@ fi
 
 case "$MACHINE" in
     "qemuarm") ;;
+    "qemumicroblaze") ;;
     "qemumips") ;;
     "qemumipsel") ;;
     "qemumips64") ;;
@@ -493,6 +497,15 @@ if [ "$MACHINE" = "akita" ]; then
         raw2flash.akita < $ROOTFS > $ROOTFS.qemuflash
         fi
         QEMUOPTIONS="$QEMU_NETWORK_CMD -M akita -mtdblock $ROOTFS.qemuflash -portrait"
+    fi
+fi
+
+if [ "$MACHINE" = "qemumicroblaze" ]; then
+    QEMU=qemu-system-microblazeel
+    QEMU_SYSTEM_OPTIONS="-M petalogix-ml605 -serial mon:stdio -dtb $KERNEL-$MACHINE.dtb"
+    if [ "${FSTYPE:0:3}" = "ext" -o "${FSTYPE:0:4}" = "cpio" ]; then
+        KERNCMDLINE="earlyprintk root=/dev/ram rw"
+        QEMUOPTIONS="$QEMU_SYSTEM_OPTIONS -initrd $ROOTFS"
     fi
 fi
 
