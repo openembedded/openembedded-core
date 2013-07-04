@@ -3,7 +3,7 @@ DESCRIPTION = "Initscripts provide the basic system startup initialization scrip
 SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
-PR = "r140"
+PR = "r141"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
@@ -31,7 +31,10 @@ SRC_URI = "file://functions \
            file://read-only-rootfs-hook.sh \
            file://volatiles \
            file://save-rtc.sh \
-           file://GPLv2.patch"
+           file://GPLv2.patch \
+           file://dmesg.sh \
+           file://logrotate-dmesg.conf \
+"
 
 SRC_URI_append_arm = " file://alignment.sh"
 
@@ -89,6 +92,8 @@ do_install () {
 	install -m 0755    ${WORKDIR}/read-only-rootfs-hook.sh ${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/save-rtc.sh	${D}${sysconfdir}/init.d
 	install -m 0644    ${WORKDIR}/volatiles		${D}${sysconfdir}/default/volatiles/00_core
+	install -m 0755    ${WORKDIR}/dmesg.sh		${D}${sysconfdir}/init.d
+	install -m 0644    ${WORKDIR}/logrotate-dmesg.conf ${D}${sysconfdir}/
 
 	if [ "${TARGET_ARCH}" = "arm" ]; then
 		install -m 0755 ${WORKDIR}/alignment.sh	${D}${sysconfdir}/init.d
