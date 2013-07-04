@@ -15,6 +15,7 @@ SRC_URI = "http://www.cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz
            file://support-oe-qt4-tools-names.patch \
            file://aarch64-cmake.patch \
            file://aarch64-kwsys.patch \
+           file://qt4-fail-silent.patch \
            "
 
 inherit autotools

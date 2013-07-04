@@ -1,0 +1,55 @@
+Fail silently if system Qt installation is broken
+
+Fixes a regression in behaviour from 2.8.10 to 2.8.11 resulting in the
+following error if the system Qt installation is broken:
+
+CMake Error at Modules/FindQt4.cmake:1028 (set_property):
+  set_property could not find TARGET Qt4::QtCore.  Perhaps it has not yet
+  been created.
+Call Stack (most recent call first):
+  Tests/RunCMake/CMakeLists.txt:79 (find_package)
+
+Upstream-Status: Pending
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+--- cmake-2.8.11/Modules/FindQt4.cmake	2013-07-04 10:20:42.092848274 +0100
++++ cmake-2.8.11/Modules/FindQt4.cmake	2013-07-04 10:52:15.693380555 +0100
+@@ -1025,21 +1025,22 @@
+     set(_configs)
+   endmacro()
+ 
+-
+-  # Set QT_xyz_LIBRARY variable and add
+-  # library include path to QT_INCLUDES
+-  _QT4_ADJUST_LIB_VARS(QtCore)
+-  set_property(TARGET Qt4::QtCore APPEND PROPERTY
+-    INTERFACE_INCLUDE_DIRECTORIES
+-      "${QT_MKSPECS_DIR}/default"
+-      ${QT_INCLUDE_DIR}
+-  )
+-  set_property(TARGET Qt4::QtCore PROPERTY
+-    INTERFACE_QT_MAJOR_VERSION 4
+-  )
+-  set_property(TARGET Qt4::QtCore APPEND PROPERTY
+-    COMPATIBLE_INTERFACE_STRING QT_MAJOR_VERSION
+-  )
++  if(QT_QTCORE_FOUND)
++    # Set QT_xyz_LIBRARY variable and add
++    # library include path to QT_INCLUDES
++    _QT4_ADJUST_LIB_VARS(QtCore)
++    set_property(TARGET Qt4::QtCore APPEND PROPERTY
++      INTERFACE_INCLUDE_DIRECTORIES
++        "${QT_MKSPECS_DIR}/default"
++        ${QT_INCLUDE_DIR}
++    )
++    set_property(TARGET Qt4::QtCore PROPERTY
++      INTERFACE_QT_MAJOR_VERSION 4
++    )
++    set_property(TARGET Qt4::QtCore APPEND PROPERTY
++      COMPATIBLE_INTERFACE_STRING QT_MAJOR_VERSION
++    )
++  endif()
+ 
+   foreach(QT_MODULE ${QT_MODULES})
+     _QT4_ADJUST_LIB_VARS(${QT_MODULE})
