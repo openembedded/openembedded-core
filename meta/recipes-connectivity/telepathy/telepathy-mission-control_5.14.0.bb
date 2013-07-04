@@ -4,11 +4,9 @@ LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d8045f3b8f929c1cb29a1e3fd737b499 \
                     file://src/request.h;beginline=1;endline=21;md5=f80534d9af1c33291b3b79609f196eb2"
 SECTION = "libs"
-DEPENDS = "libtelepathy dbus-glib gconf"
+DEPENDS = "libtelepathy dbus-glib gconf libxslt-native"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-mission-control/telepathy-mission-control-${PV}.tar.gz"
-
-PR = "r0"
 
 inherit autotools pkgconfig pythonnative
 
