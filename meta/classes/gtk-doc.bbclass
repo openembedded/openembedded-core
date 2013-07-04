@@ -7,7 +7,8 @@
 # packages up any existing documentation (so from tarball builds).
 
 # The documentation directory, where the infrastructure will be copied.
-GTKDOC_DOCDIR ?= "${B}"
+# gtkdocize has a default of "." so to handle out-of-tree builds set this to $S.
+GTKDOC_DOCDIR ?= "${S}"
 
 DEPENDS_append = " gtk-doc-stub-native"
 
