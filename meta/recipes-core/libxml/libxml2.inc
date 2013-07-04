@@ -13,12 +13,16 @@ DEPENDS_class-nativesdk = "nativesdk-python"
 DEPENDS_class-native = "python-native"
 DEPENDS =+ "zlib"
 
-SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz \
+SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz;name=libtar \
            file://libxml-64bit.patch \
-           file://ansidecl.patch"
+           file://ansidecl.patch \
+           file://runtest.patch \
+           file://run-ptest \
+          "
 
+inherit autotools pkgconfig binconfig pythonnative ptest
 
-inherit autotools pkgconfig binconfig pythonnative
+RDEPENDS_${PN}-ptest_append_libc-glibc += "eglibc-gconv-ebcdic-us eglibc-gconv-ibm1141"
 
 # We don't DEPEND on binutils for ansidecl.h so ensure we don't use the header
 do_configure_prepend () {
@@ -48,5 +52,9 @@ PACKAGES += "${PN}-utils"
 
 FILES_${PN}-dev += "${libdir}/xml2Conf.sh"
 FILES_${PN}-utils += "${bindir}/*"
+
+do_install_ptest () {
+  cp -r ${WORKDIR}/xmlconf ${D}${PTEST_PATH}
+}
 
 BBCLASSEXTEND = "native nativesdk"
