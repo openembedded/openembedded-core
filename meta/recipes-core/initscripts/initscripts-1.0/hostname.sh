@@ -7,8 +7,16 @@
 # Default-Stop:
 # Short-Description: Set hostname based on /etc/hostname
 ### END INIT INFO
+HOSTNAME=$(/bin/hostname)
 
-if test -f /etc/hostname
-then
+hostname -b -F /etc/hostname 2> /dev/null
+if [ $? -eq 0 ]; then
+	exit
+fi
+
+# Busybox hostname doesn't support -b so we need implement it on our own
+if [ -f /etc/hostname ];then
 	hostname -F /etc/hostname
+elif [ -z "$HOSTNAME" -o "$HOSTNAME" = "(none)" -o ! -z "`echo $HOSTNAME | sed -n '/^[0-9]*\.[0-9].*/p'`" ] ; then
+	hostname localhost
 fi
