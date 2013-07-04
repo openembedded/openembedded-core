@@ -10,7 +10,7 @@ DEPENDS += "gst-plugins-base curl"
 
 PR = "r4"
 
-inherit gettext
+inherit gettext gsettings
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb \
                  --with-plugins=wavpack,mpegvideoparse --disable-vdpau --disable-apexsink \
