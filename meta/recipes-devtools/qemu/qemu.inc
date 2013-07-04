@@ -84,6 +84,8 @@ do_install_append() {
 # END of qemu-mips workaround
 
 PACKAGECONFIG ??= ""
+PACKAGECONFIG[virtfs] = "--enable-virtfs --enable-attr,--disable-virtfs,libcap attr,"
+PACKAGECONFIG[aio] = "--enable-linux-aio,--disable-linux-aio,libaio,"
 
 # Qemu target will not build in world build for ARM or Mips
 BROKEN_qemuarm = "1"
