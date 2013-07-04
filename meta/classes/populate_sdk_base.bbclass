@@ -181,7 +181,7 @@ else
 	echo "$target_sdk_dir"
 fi
 
-eval target_sdk_dir=$(printf "%q" "$target_sdk_dir")
+eval target_sdk_dir=$(echo "$target_sdk_dir"|sed 's/ /\\ /g')
 if [ -d "$target_sdk_dir" ]; then
 	target_sdk_dir=$(cd "$target_sdk_dir"; pwd)
 else
