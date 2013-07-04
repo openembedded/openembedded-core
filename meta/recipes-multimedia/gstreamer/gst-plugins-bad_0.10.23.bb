@@ -10,7 +10,7 @@ DEPENDS += "gst-plugins-base"
 
 PR = "r4"
 
-inherit gettext
+inherit gettext gsettings
 
 EXTRA_OECONF += "--disable-experimental \
                  --disable-sdl --disable-cdaudio --disable-directfb \
