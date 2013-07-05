@@ -7,6 +7,8 @@ DESCRIPTION = "Packages required to satisfy the Linux Standard Base (LSB) specif
 PR = "r10"
 LICENSE = "MIT"
 
+COMPATIBLE_HOST_mips64 = "mips64.*-linux-gnun32"
+
 inherit packagegroup
 
 PACKAGES = "\
