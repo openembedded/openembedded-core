@@ -18,10 +18,10 @@ Upstream-Status: Inappropriate [configuration]
 diff -uNr busybox-1.15.3.orig//include/applets.src.h busybox-1.15.3/include/applets.src.h
 --- busybox-1.15.3.orig//include/applets.src.h	2009-12-12 22:13:28.000000000 +0100
 +++ busybox-1.15.3/include/applets.src.h	2010-04-30 15:35:40.000000000 +0200
-@@ -323,7 +323,7 @@
+@@ -304,7 +304,7 @@
  IF_RPM(APPLET(rpm, BB_DIR_BIN, BB_SUID_DROP))
  IF_RPM2CPIO(APPLET(rpm2cpio, BB_DIR_USR_BIN, BB_SUID_DROP))
- IF_RTCWAKE(APPLET(rtcwake, BB_DIR_USR_BIN, BB_SUID_DROP))
+ IF_RTCWAKE(APPLET(rtcwake, BB_DIR_USR_SBIN, BB_SUID_DROP))
 -IF_RUN_PARTS(APPLET_ODDNAME(run-parts, run_parts, BB_DIR_BIN, BB_SUID_DROP, run_parts))
 +IF_RUN_PARTS(APPLET_ODDNAME(run-parts, run_parts, BB_DIR_USR_BIN, BB_SUID_DROP, run_parts))
  IF_RUNCON(APPLET(runcon, BB_DIR_USR_BIN, BB_SUID_DROP))
