@@ -18,6 +18,8 @@ SRC_URI[sha256sum] = "fc83d4d98ccea8b7bfa8f5c20fff545c8baa7d035db930977550c51c6c
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4a14fd2da3134e40a087eb4326a4ecd4"
 
+PACKAGECONFIG[sasl] = "--with-sasl,--without-sasl,cyrus-sasl"
+
 EXTRA_OECONF = " \
                 --without-berkeley-db --without-apxs \
                 --without-swig --with-apr=${STAGING_BINDIR_CROSS} \

@@ -20,6 +20,8 @@ SRC_URI[sha256sum] = "b2919d603a5f3c19f42e3265c4b930e2376c43b3969b90ef9c42b2f72d
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=2a69fef414e2cb907b4544298569300b"
 
+PACKAGECONFIG[sasl] = "--with-sasl,--without-sasl,cyrus-sasl"
+
 EXTRA_OECONF = " \
                 --without-berkeley-db --without-apxs --without-apache \
                 --without-swig --with-apr=${STAGING_BINDIR_CROSS} \
