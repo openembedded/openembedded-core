@@ -10,13 +10,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 
 
 SECTION = "libs"
-PR = "r0"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch"
 
-SRC_URI[md5sum] = "b9fa55b71cae73cb2e44254c2acc4e2c"
-SRC_URI[sha256sum] = "ae3376480a073b120c7add08f1e6cfcc08500648ccf22461cd42db6224a218c0"
+SRC_URI[md5sum] = "8f0eb41a344d19ac2aa9bd101dfb9ce6"
+SRC_URI[sha256sum] = "cafc9ed6a87c53a35175d5a1220a96ca386696eef2fa059cc0306211f246e55f"
 
 inherit autotools binconfig pkgconfig gettext
 
