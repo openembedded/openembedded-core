@@ -12,9 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=827da9afab1f727f2a66574629e0f39c"
 
 DEPENDS += "libxext videoproto"
 
-PR = "r0"
-
 XORG_PN = "libXv"
 
-SRC_URI[md5sum] = "224dadca53d9c88f8a2b8945babcea70"
-SRC_URI[sha256sum] = "4f00eb5347390909cea4e53a69425839d2a6a44e0e0613321d59e7e4aeaf73d7"
+SRC_URI[md5sum] = "3f642e1d868a2289769b983cf346e7bb"
+SRC_URI[sha256sum] = "a874dbf864d0271bbe795af67ef5b3f20096c92fc11eacbf0d2af00e32bc5b4b"
