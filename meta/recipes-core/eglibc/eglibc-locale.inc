@@ -5,6 +5,11 @@ SUMMARY = "Locale data from eglibc"
 BPN = "eglibc"
 LOCALEBASEPN = "${MLPREFIX}eglibc"
 
+# eglibc-collateral.inc inhibits all default deps, but do_package needs objcopy
+# ERROR: objcopy failed with exit code 127 (cmd was 'i586-webos-linux-objcopy' --only-keep-debug 'eglibc-locale/2.17-r0/package/usr/lib/gconv/IBM1166.so' 'eglibc-locale/2.17-r0/package/usr/lib/gconv/.debug/IBM1166.so')
+# ERROR: Function failed: split_and_strip_files
+DEPENDS_class-target = "virtual/${TARGET_PREFIX}binutils"
+
 # Binary locales are generated at build time if ENABLE_BINARY_LOCALE_GENERATION
 # is set. The idea is to avoid running localedef on the target (at first boot)
 # to decrease initial boot time and avoid localedef being killed by the OOM
