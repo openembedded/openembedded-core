@@ -14,9 +14,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=17b064789fab936a1c58c4e13d965b0f \
 DEPENDS += "libxext inputproto libxfixes"
 
 PE = "1"
-PR = "r0"
 
 XORG_PN = "libXi"
 
-SRC_URI[md5sum] = "24d71afed1b86c60d4eb361628d7f47b"
-SRC_URI[sha256sum] = "e92adb6b69c53c51e05c1e65db97e23751b935a693000fb0606c11b88c0066c5"
+SRC_URI[md5sum] = "f4df3532b1af1dcc905d804f55b30b4a"
+SRC_URI[sha256sum] = "df24781dc63645e2b561cd0b20bd8a0e7aff02e426a8d2a7641159004d4cb20e"
