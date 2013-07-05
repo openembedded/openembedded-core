@@ -21,6 +21,9 @@ S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--enable-libowl"
 
+# web-webkit could NOT be built on MIPS64 with 64 bits userspace
+COMPATIBLE_HOST_mips64 = "mips64.*-linux-gnun32"
+
 inherit autotools pkgconfig
 
 FILES_${PN} += "${datadir}/web2"
