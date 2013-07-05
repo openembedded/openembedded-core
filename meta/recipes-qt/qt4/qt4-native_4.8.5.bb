@@ -1,7 +1,5 @@
 require qt4-native.inc
 
-PR = "${INC_PR}.0"
-
 TOBUILD := "src/tools/bootstrap ${TOBUILD}"
 
 SRC_URI[md5sum] = "1864987bdbb2f58f8ae8b350dfdbe133"

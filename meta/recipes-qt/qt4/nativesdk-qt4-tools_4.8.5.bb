@@ -1,7 +1,5 @@
 require nativesdk-qt4-tools.inc
 
-PR = "${INC_PR}.0"
-
 SRC_URI += "file://0009-qmake-fix-source-file-references-in-qmake.pri.patch"
 
 SRC_URI[md5sum] = "1864987bdbb2f58f8ae8b350dfdbe133"
