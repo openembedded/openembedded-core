@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 SRC_URI = "${KERNELORG_MIRROR}/software/network/ethtool/ethtool-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "e5942ca785b3893f53bed421260d9534"
-SRC_URI[sha256sum] = "5680005481820ba77bad8be62c0ec60bc108088f39b57448b39956bd3169f163"
+SRC_URI[md5sum] = "b41deb37143dfb86934a8f52cea853d2"
+SRC_URI[sha256sum] = "62f0a9cea954c32a2bdc2d2ece295fda5b915cfea56f5de97b997d8ebaae0381"
 
 inherit autotools
