@@ -17,7 +17,7 @@ S = "${WORKDIR}/quota-tools"
 
 DEPENDS = "gettext-native e2fsprogs"
 
-inherit autotools gettext
+inherit autotools gettext pkgconfig
 
 EXTRA_OEMAKE += 'STRIP=""'
 
