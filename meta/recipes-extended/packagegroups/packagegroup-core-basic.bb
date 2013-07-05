@@ -108,7 +108,6 @@ RDEPENDS_packagegroup-core-multiuser = "\
     cracklib \
     gzip \
     libuser \
-    ${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)} \
     shadow \
     sudo \
     "
