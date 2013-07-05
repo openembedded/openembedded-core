@@ -20,7 +20,7 @@ STAP_DOCS ?= "--disable-docs --disable-publican --disable-refdocs"
 
 EXTRA_OECONF += "${STAP_DOCS} "
 
-inherit autotools gettext
+inherit autotools gettext pkgconfig
 
 BBCLASSEXTEND = "native nativesdk"
 
