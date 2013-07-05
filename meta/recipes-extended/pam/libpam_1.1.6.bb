@@ -43,7 +43,7 @@ PR = "r2"
 
 S = "${WORKDIR}/Linux-PAM-${PV}"
 
-inherit autotools gettext
+inherit autotools gettext pkgconfig
 
 PACKAGES += "${PN}-runtime ${PN}-xtests"
 FILES_${PN} = "${base_libdir}/lib*${SOLIBS}"
