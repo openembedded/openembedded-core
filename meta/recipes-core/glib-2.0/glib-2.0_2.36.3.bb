@@ -13,6 +13,7 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://glib-2.0_fix_for_x32.patch \
            file://fix-conflicting-rand.patch \
            file://Makefile-ptest.patch \
+           file://add-march-i486-into-CFLAGS-automatically.patch \
            file://run-ptest \
           "
 
