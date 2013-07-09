@@ -20,7 +20,7 @@ DEPENDS_class-native = "glib-2.0-native cairo-native harfbuzz-native"
 
 PACKAGES_DYNAMIC += "^pango-module-.*"
 
-RRECOMMENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'x11', 'pango-module-basic-x', '', d)} pango-module-basic-fc" 
+RRECOMMENDS_${PN} = "pango-module-basic-fc"
 
 inherit gnomebase gtk-doc qemu
 # Create a pango-modules package
