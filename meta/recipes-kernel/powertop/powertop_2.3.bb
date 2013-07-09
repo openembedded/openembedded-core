@@ -26,5 +26,5 @@ do_configure_prepend() {
 inherit update-alternatives
 ALTERNATIVE_${PN} = "powertop"
 ALTERNATIVE_TARGET[powertop] = "${sbindir}/powertop"
-ALTERNATIVE_LINK_NAME[powertop] = "${base_bindir}/powertop"
+ALTERNATIVE_LINK_NAME[powertop] = "${sbindir}/powertop"
 ALTERNATIVE_PRIORITY = "100"
