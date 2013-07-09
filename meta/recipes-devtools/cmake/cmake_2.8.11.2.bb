@@ -9,6 +9,9 @@ SRC_URI += "file://dont-run-cross-binaries.patch"
 SRC_URI[md5sum] = "df5324a3b203373a9e0a04b924281a43"
 SRC_URI[sha256sum] = "b7dbb86824051319b8e082d2f892ebe6d5914b4dac9b9ef1aeac5e7ed054b0bf"
 
+SRC_URI[md5sum] = "6f5d7b8e7534a5d9e1a7664ba63cf882"
+SRC_URI[sha256sum] = "b32acb483afdd14339941c6e4ec25f633d916a7a472653a0b00838771a6c0562"
+
 # Strip ${prefix} from ${docdir}, set result into docdir_stripped
 python () {
     prefix=d.getVar("prefix", True)
