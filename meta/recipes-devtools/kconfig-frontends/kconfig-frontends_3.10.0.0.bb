@@ -11,13 +11,12 @@ LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9b8cf60ff39767ff04b671fca8302408"
 SECTION = "devel"
 DEPENDS += "ncurses flex bison gperf pkgconfig-native"
-SPIN = ".0"
-SRC_URI = "http://ymorin.is-a-geek.org/download/${BPN}/${BPN}-${PV}${SPIN}.tar.xz"
+SRC_URI = "http://ymorin.is-a-geek.org/download/${BPN}/${BP}.tar.xz"
 
-SRC_URI[md5sum] = "344646587de1bdf965640fff220281bd"
-SRC_URI[sha256sum] = "5d524b238d7dfb63fec782b731af681c5408d74304ef4de38137c542350dd6d6"
+SRC_URI[md5sum] = "1ebf13983eb5b2ce960d131cae290cad"
+SRC_URI[sha256sum] = "442a3794b6dd9427f411ecec25dccab1a4bfcf07fe734f62d40e538afd1f0c8a"
 
-S = "${WORKDIR}/${BPN}-${PV}${SPIN}"
+S = "${WORKDIR}/${BPN}-${PV}"
 
 inherit autotools
 do_configure_prepend () {
@@ -33,7 +32,7 @@ EXTRA_OECONF += "--disable-gconf --disable-qconf"
 
 # Some packages have the version preceeding the .so instead properly
 # versioned .so.<version>, so we need to reorder and repackage.
-SOLIBS = "-${PV}.so"
+SOLIBS = "-${@d.getVar('PV',1)[:-2]}.so"
 FILES_SOLIBSDEV = "${libdir}/libkconfig-parser.so"
 
 BBCLASSEXTEND = "native"
