@@ -45,6 +45,7 @@ SRC_URI = "\
      file://0144-timer.cc-include-unistd.h.patch \
      file://0166-2012-04-27-Doug-Kwan-dougkwan-google.com.patch \
      file://0182-PR-ld-13991.patch \
+     file://texinfo.patch \
      "
 
 SRC_URI[md5sum] = "ee0f10756c84979622b992a4a61ea3f5"
