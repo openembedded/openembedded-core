@@ -1079,8 +1079,13 @@ python do_package_rpm () {
         return
 
     # Construct the spec file...
+    # If the spec file already exist, and has not been stored into 
+    # pseudo's files.db, it maybe cause rpmbuild src.rpm fail,
+    # so remove it before doing rpmbuild src.rpm.
     srcname    = strip_multilib(d.getVar('PN', True), d)
     outspecfile = workdir + "/" + srcname + ".spec"
+    if os.path.isfile(outspecfile):
+        os.remove(outspecfile)
     d.setVar('OUTSPECFILE', outspecfile)
     bb.build.exec_func('write_specfile', d)
 
