@@ -173,3 +173,5 @@ FILES_${PN} = "${libdir}/lib*.so"
 FILES_${PN}-dev = "${bindir}/* ${libdir}/nspr/tests/* ${libdir}/pkgconfig \
                 ${includedir}/* ${datadir}/aclocal/* "
 FILES_${PN}-dbg += "${libdir}/nspr/tests/.debug/*"
+
+BBCLASSEXTEND = "native"
