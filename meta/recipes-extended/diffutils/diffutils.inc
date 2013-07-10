@@ -4,10 +4,6 @@ sdiff, and cmp utilities. These programs are usually \
 used for creating patch files."
 SECTION = "base"
 
-INC_PR = "r7"
-
-SRC_URI = "${GNU_MIRROR}/diffutils/diffutils-${PV}.tar.gz"
-
 inherit autotools update-alternatives gettext
 
 # diffutils assumes non-glibc compilation with uclibc and
