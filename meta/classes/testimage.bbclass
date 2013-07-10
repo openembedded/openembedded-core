@@ -7,6 +7,8 @@ DEFAULT_TEST_SUITES_pn-core-image-sato-sdk = "ping ssh connman rpm smart gcc xor
 
 TEST_SUITES ?= "${DEFAULT_TEST_SUITES}"
 
+TEST_QEMUBOOT_TIMEOUT ?= "500"
+
 python do_testimage() {
     testimage_main(d)
 }
@@ -65,6 +67,10 @@ def testimage_main(d):
     qemu.tmpdir = d.getVar("TMPDIR", True)
     qemu.display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True)
     qemu.logfile = os.path.join(testdir, "qemu_boot_log.%s" % d.getVar('DATETIME', True))
+    try:
+        qemu.boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT", True))
+    except ValueError:
+        qemu.boottime = 500
 
     bb.note("DISPLAY value: %s" % qemu.display)
     bb.note("rootfs file: %s" %  rootfs)

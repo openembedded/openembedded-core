@@ -10,7 +10,7 @@ from oeqa.utils.oeqemuconsole import oeQemuConsole
 
 class QemuRunner:
 
-    def __init__(self, machine, rootfs, display = None, tmpdir = None, logfile = None):
+    def __init__(self, machine, rootfs, display = None, tmpdir = None, logfile = None, boottime = 400):
         # Popen object
         self.runqemu = None
 
@@ -25,6 +25,7 @@ class QemuRunner:
         self.display = display
         self.tmpdir = tmpdir
         self.logfile = logfile
+        self.boottime = boottime
 
     def launch(self, qemuparams = None):
 
@@ -49,7 +50,6 @@ class QemuRunner:
         self.runqemu = subprocess.Popen(launch_cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,preexec_fn=os.setpgrp)
 
         bb.note("runqemu started, pid is %s" % self.runqemu.pid)
-        # wait at most 30 seconds until qemu pid appears
         bb.note("waiting at most 60 seconds for qemu pid")
         endtime = time.time() + 60
         while not self.is_alive() and time.time() < endtime:
@@ -59,8 +59,8 @@ class QemuRunner:
             bb.note("qemu started - qemu procces pid is %s" % self.qemupid)
 
             console = oeQemuConsole(self.streampath, self.logfile)
-            bb.note("Waiting at most 200 seconds for login banner")
-            (match, text) = console.read_all_timeout("login:", 200)
+            bb.note("Waiting at most %d seconds for login banner" % self.boottime )
+            (match, text) = console.read_all_timeout("login:", self.boottime)
 
             if match:
                 bb.note("Reached login banner")
@@ -80,7 +80,7 @@ class QemuRunner:
                     return False
             else:
                 console.close()
-                bb.note("Target didn't reached login boot in 120 seconds")
+                bb.note("Target didn't reached login boot in %d seconds" % self.boottime)
                 lines = "\n".join(text.splitlines()[-5:])
                 bb.note("Last 5 lines of text:\n%s" % lines)
                 bb.note("Check full boot log: %s" % self.logfile)
