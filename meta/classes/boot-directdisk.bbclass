@@ -34,6 +34,7 @@ BOOTDD_EXTRA_SPACE ?= "16384"
 # Get the build_syslinux_cfg() function from the syslinux class
 
 AUTO_SYSLINUXCFG = "1"
+DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
 SYSLINUX_ROOT ?= "root=/dev/sda2"
 SYSLINUX_TIMEOUT ?= "10"
 
@@ -80,6 +81,9 @@ build_boot_dd() {
 	parted $IMAGE set 1 boot on 
 	parted $IMAGE print
 
+	echo -ne "$(echo ${DISK_SIGNATURE} | fold -w 2 | tac | paste -sd '' | sed 's/\(..\)/\\x&/g')" | \
+		dd of=$IMAGE bs=1 seek=440 conv=notrunc
+
 	OFFSET=`expr $END2 / 512`
 	dd if=${STAGING_DATADIR}/syslinux/mbr.bin of=$IMAGE conv=notrunc
 	dd if=$HDDIMG of=$IMAGE conv=notrunc seek=1 bs=512
@@ -91,8 +95,24 @@ build_boot_dd() {
 } 
 
 python do_bootdirectdisk() {
+    validate_disk_signature(d)
     bb.build.exec_func('build_syslinux_cfg', d)
     bb.build.exec_func('build_boot_dd', d)
 }
+
+def generate_disk_signature():
+    import uuid
+
+    return str(uuid.uuid4())[:8]
+
+def validate_disk_signature(d):
+    import re
+
+    disk_signature = d.getVar("DISK_SIGNATURE", True)
+
+    if not re.match(r'^[0-9a-fA-F]{8}$', disk_signature):
+        bb.fatal("DISK_SIGNATURE '%s' must be an 8 digit hex string" % disk_signature)
+
+DISK_SIGNATURE_GENERATED := "${@generate_disk_signature()}"
 
 addtask bootdirectdisk before do_build
