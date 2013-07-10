@@ -9,13 +9,9 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=db1b7a668b2a6f47b2af88fb008ad555 \
                     file://include/ogg/ogg.h;beginline=1;endline=11;md5=eda812856f13a3b1326eb8f020cc3b0b"
 
-PR = "r1"
+SRC_URI = "http://downloads.xiph.org/releases/ogg/libogg-${PV}.tar.xz"
 
-SRC_URI = "http://downloads.xiph.org/releases/ogg/libogg-${PV}.tar.gz \
-           file://obsolete_automake_macros.patch \
-          "
-
-SRC_URI[md5sum] = "0a7eb40b86ac050db3a789ab65fe21c2"
-SRC_URI[sha256sum] = "a8de807631014615549d2356fd36641833b8288221cea214f8a72750efe93780"
+SRC_URI[md5sum] = "ca25d8da0ddfc8c6cbbf78d847a209fe"
+SRC_URI[sha256sum] = "3a5bad78d81afb78908326d11761c0fb1a0662ee7150b6ad587cc586838cdcfa"
 
 inherit autotools pkgconfig
