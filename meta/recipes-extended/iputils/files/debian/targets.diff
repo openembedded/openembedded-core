@@ -1,15 +1,15 @@
 Upstream-Status: Inappropriate [disable feature]
 
-Index: trunk/Makefile
+Index: iputils-s20121221/Makefile
 ===================================================================
---- trunk.orig/Makefile	2010-05-07 23:43:00.000000000 -0700
-+++ trunk/Makefile	2010-05-07 23:47:10.000000000 -0700
-@@ -16,7 +16,7 @@
- CCOPT=-D_GNU_SOURCE -O2 -Wstrict-prototypes -Wall -g
- CFLAGS=$(CCOPT) $(GLIBCFIX) $(DEFINES) 
+--- iputils-s20121221.orig/Makefile
++++ iputils-s20121221/Makefile
+@@ -106,7 +106,7 @@ endif
+ endif
  
+ # -------------------------------------
 -IPV4_TARGETS=tracepath ping clockdiff rdisc arping tftpd rarpd
-+IPV4_TARGETS=tracepath ping arping clockdiff
++IPV4_TARGETS=tracepath ping clockdiff arping
  IPV6_TARGETS=tracepath6 traceroute6 ping6
  TARGETS=$(IPV4_TARGETS) $(IPV6_TARGETS)
  

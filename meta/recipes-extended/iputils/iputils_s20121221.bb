@@ -8,25 +8,22 @@ LICENSE = "BSD & GPLv2+"
 
 LIC_FILES_CHKSUM = "file://ping.c;beginline=1;endline=35;md5=f9ceb201733e9a6cf8f00766dd278d82 \
                     file://tracepath.c;beginline=1;endline=10;md5=0ecea2bf60bff2f3d840096d87647f3d \
-                    file://arping.c;beginline=1;endline=10;md5=ada2a6d06acc90f943bddf40d15e0541 \
+                    file://arping.c;beginline=1;endline=11;md5=fe84301b5c2655c950f8b92a057fafa6 \
                     file://tftpd.c;beginline=1;endline=32;md5=28834bf8a91a5b8a92755dbee709ef96 "
 
-DEPENDS = "openssl docbook-utils-native sgmlspl-native"
+DEPENDS = "gnutls docbook-utils-native sgmlspl-native libcap"
 
-PR = "r6"
+PR = "r0"
 
 SRC_URI = "http://www.skbuff.net/iputils/${BPN}-${PV}.tar.bz2 \
-           file://debian/fix-dead-host-ping-stats.diff \
-           file://debian/add-icmp-return-codes.diff \
            file://debian/use_gethostbyname2.diff \
            file://debian/targets.diff \
-           file://debian/fix-arping-timeouts.diff \
            file://nsgmls-path-fix.patch \
-           file://arping-break-libsysfs-dependency.patch \
+           file://fix-build-command-line-argument-with-gnutls.patch \
           "
 
-SRC_URI[md5sum] = "a36c25e9ec17e48be514dc0485e7376c"
-SRC_URI[sha256sum] = "fd3af46c80ebb99607c2ca1f2a3608b6fe828e25bbec6e54f2afd25f6ddb6ee7"
+SRC_URI[md5sum] = "6072aef64205720dd1893b375e184171"
+SRC_URI[sha256sum] = "450f549fc5b620c23c5929aa6d54b7ddfc7ee1cb1e8efdc5e8bb21d8d0c5319f"
 
 do_compile () {
 	oe_runmake 'CC=${CC} -D_GNU_SOURCE' VPATH="${STAGING_LIBDIR}:${STAGING_DIR_HOST}/${base_libdir}" all man

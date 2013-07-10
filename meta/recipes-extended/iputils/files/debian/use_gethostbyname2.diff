@@ -1,31 +1,31 @@
 Upstream-Status: Pending [from other distro Debian]
 
-Index: trunk/tracepath.c
+Index: iputils-s20121221/tracepath.c
 ===================================================================
---- trunk.orig/tracepath.c	2010-05-07 23:13:52.000000000 -0700
-+++ trunk/tracepath.c	2010-05-07 23:24:09.000000000 -0700
-@@ -338,9 +338,9 @@
- 		base_port = atoi(p+1);
- 	} else
- 		base_port = 44444;
--	he = gethostbyname(argv[0]);
+--- iputils-s20121221.orig/tracepath.c
++++ iputils-s20121221/tracepath.c
+@@ -370,9 +370,9 @@ main(int argc, char **argv)
+ 	}
+ #endif
+ 
+-	he = gethostbyname(p);
 +	he = gethostbyname2(argv[0], AF_INET);
  	if (he == NULL) {
 -		herror("gethostbyname");
 +		herror("gethostbyname2");
  		exit(1);
  	}
- 	memcpy(&target.sin_addr, he->h_addr, 4);
-Index: trunk/ping.c
+ 
+Index: iputils-s20121221/ping.c
 ===================================================================
---- trunk.orig/ping.c	2010-05-07 23:23:22.000000000 -0700
-+++ trunk/ping.c	2010-05-07 23:24:09.000000000 -0700
-@@ -250,7 +250,7 @@
- 			if (argc == 1)
- 				options |= F_NUMERIC;
- 		} else {
--			hp = gethostbyname(target);
-+			hp = gethostbyname2(target, AF_INET);
+--- iputils-s20121221.orig/ping.c
++++ iputils-s20121221/ping.c
+@@ -279,7 +279,7 @@ main(int argc, char **argv)
+ #else
+ 			idn = target;
+ #endif
+-			hp = gethostbyname(idn);
++			hp = gethostbyname2(idn, AF_INET);
  			if (!hp) {
  				fprintf(stderr, "ping: unknown host %s\n", target);
  				exit(2);
