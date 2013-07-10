@@ -18,6 +18,7 @@ SRC_URI = "\
 "
 SRC_URI_append_class-target += "\
     file://nss.pc.in \
+    file://signlibs.sh \
 "
 inherit siteinfo
 PR = "r0"
@@ -136,6 +137,14 @@ do_install() {
 }
 
 do_install_append_class-target() {
+    # Create empty .chk files for the NSS libraries at build time. They could
+    # be regenerated at target's boot time.
+    for file in libsoftokn3.chk libfreebl3.chk libnssdbm3.chk; do
+        touch ${D}/${libdir}/$file
+        chmod 755 ${D}/${libdir}/$file
+    done
+    install -D -m 755 ${WORKDIR}/signlibs.sh ${D}/${bindir}/signlibs.sh
+
     install -d ${D}${libdir}/pkgconfig/
     sed 's/%NSS_VERSION%/${PV}/' ${WORKDIR}/nss.pc.in | sed 's/%NSPR_VERSION%/4.9.2/' > ${D}${libdir}/pkgconfig/nss.pc
     sed -i s:OEPREFIX:${prefix}:g ${D}${libdir}/pkgconfig/nss.pc
@@ -149,6 +158,13 @@ do_install_append_class-target() {
     certutil -N -d ${D}/etc/pki/nssdb/ -f ./empty_password
     chmod 644 ${D}/etc/pki/nssdb/*.db
     rm ./empty_password
+}
+
+pkg_postinst_${PN} () {
+    if [ -n "$D" ]; then
+        exit 1
+    fi
+    signlibs.sh
 }
 
 FILES_${PN} = "\
