@@ -1,0 +1,170 @@
+SUMMARY = "Mozilla's SSL and TLS implementation"
+DESCRIPTION = "Network Security Services (NSS) is a set of libraries \
+designed to support cross-platform development of \
+security-enabled client and server applications. \
+Applications built with NSS can support SSL v2 and v3, \
+TLS, PKCS 5, PKCS 7, PKCS 11, PKCS 12, S/MIME, X.509 \
+v3 certificates, and other security standards."
+HOMEPAGE = "http://www.mozilla.org/projects/security/pki/nss/"
+SECTION = "libs"
+
+LICENSE = "MPL-1.1 GPL-2.0 LGPL-2.1"
+
+LIC_FILES_CHKSUM = "file://nss/lib/freebl/mpi/doc/LICENSE;md5=491f158d09d948466afce85d6f1fe18f \
+                    file://nss/lib/freebl/mpi/doc/LICENSE-MPL;md5=6bf96825e3d7ce4de25621ae886cc859"
+SRC_URI = "\
+    file://nss-fix-support-cross-compiling.patch \
+    file://nss-no-rpath-for-cross-compiling.patch \
+"
+SRC_URI_append_class-target += "\
+    file://nss.pc.in \
+"
+inherit siteinfo
+PR = "r0"
+DEPENDS = "sqlite3 nspr zlib nss-native"
+DEPENDS_class-native = "sqlite3-native nspr-native zlib-native"
+RDEPENDS_${PN} = "perl"
+
+TD = "${S}/tentative-dist"
+TDS = "${S}/tentative-dist-staging"
+
+TARGET_CC_ARCH += "${LDFLAGS}"
+
+do_compile_prepend_class-native() {
+    export NSPR_INCLUDE_DIR=${STAGING_INCDIR_NATIVE}
+    export NSPR_LIB_DIR=${STAGING_LIBDIR_NATIVE}
+}
+
+do_compile() {
+    export CROSS_COMPILE=1
+    export NATIVE_CC="gcc"
+    export BUILD_OPT=1
+
+    export FREEBL_NO_DEPEND=1
+    export FREEBL_LOWHASH=1
+
+    export LIBDIR=${libdir}
+    export MOZILLA_CLIENT=1
+    export NS_USE_GCC=1
+    export NSS_USE_SYSTEM_SQLITE=1
+    export NSS_ENABLE_ECC=1
+
+    export OS_RELEASE=3.4
+    export OS_TARGET=Linux
+    export OS_ARCH=Linux
+
+    if [ "${TARGET_ARCH}" = "powerpc" ]; then
+        OS_TEST=ppc
+    elif [ "${TARGET_ARCH}" = "powerpc64" ]; then
+        OS_TEST=ppc64
+    elif [ "${TARGET_ARCH}" = "mips" -o "${TARGET_ARCH}" = "mipsel" -o "${TARGET_ARCH}" = "mips64" -o "${TARGET_ARCH}" = "mips64el" ]; then
+        OS_TEST=mips
+    else
+        OS_TEST="${TARGET_ARCH}"
+    fi
+
+    if [ "${SITEINFO_BITS}" = "64" ]; then
+        export USE_64=1
+    fi
+
+    make -C ./nss CCC="${CXX}" \
+        OS_TEST=${OS_TEST} \
+}
+
+do_install() {
+    export CROSS_COMPILE=1
+    export NATIVE_CC="gcc"
+    export BUILD_OPT=1
+
+    export FREEBL_NO_DEPEND=1
+
+    export LIBDIR=${libdir}
+    export MOZILLA_CLIENT=1
+    export NS_USE_GCC=1
+    export NSS_USE_SYSTEM_SQLITE=1
+    export NSS_ENABLE_ECC=1
+
+    export OS_RELEASE=3.4
+    export OS_TARGET=Linux
+    export OS_ARCH=Linux
+
+    if [ "${TARGET_ARCH}" = "powerpc" ]; then
+        OS_TEST=ppc
+    elif [ "${TARGET_ARCH}" = "powerpc64" ]; then
+        OS_TEST=ppc64
+    elif [ "${TARGET_ARCH}" = "mips" -o "${TARGET_ARCH}" = "mipsel" -o "${TARGET_ARCH}" = "mips64" -o "${TARGET_ARCH}" = "mips64el" ]; then
+        OS_TEST=mips
+    else
+        OS_TEST="${TARGET_ARCH}"
+    fi
+    if [ "${SITEINFO_BITS}" = "64" ]; then
+        export USE_64=1
+    fi
+
+    make -C ./nss \
+        CCC="${CXX}" \
+        OS_TEST=${OS_TEST} \
+        SOURCE_LIB_DIR="${TD}/${libdir}" \
+        SOURCE_BIN_DIR="${TD}/${bindir}" \
+        install
+
+    install -d ${D}/${libdir}/
+    for file in ${S}/dist/*.OBJ/lib/*.so; do
+        echo "Installing `basename $file`..."
+        cp $file  ${D}/${libdir}/
+    done
+
+    for shared_lib in ${TD}/${libdir}/*.so.*; do
+        if [ -f $shared_lib ]; then
+            cp $shared_lib ${D}/${libdir}
+            ln -sf $(basename $shared_lib) ${D}/${libdir}/$(basename $shared_lib .1oe)
+        fi
+    done
+    for shared_lib in ${TD}/${libdir}/*.so; do
+        if [ -f $shared_lib -a ! -e ${D}/${libdir}/$shared_lib ]; then
+            cp $shared_lib ${D}/${libdir}
+        fi
+    done
+
+    install -d ${D}/${includedir}/nss3
+    install -m 644 -t ${D}/${includedir}/nss3 dist/public/nss/*
+
+    install -d ${D}/${bindir}
+    for binary in ${TD}/${bindir}/*; do
+        install -m 755 -t ${D}/${bindir} $binary
+    done
+}
+
+do_install_append_class-target() {
+    install -d ${D}${libdir}/pkgconfig/
+    sed 's/%NSS_VERSION%/${PV}/' ${WORKDIR}/nss.pc.in | sed 's/%NSPR_VERSION%/4.9.2/' > ${D}${libdir}/pkgconfig/nss.pc
+    sed -i s:OEPREFIX:${prefix}:g ${D}${libdir}/pkgconfig/nss.pc
+    sed -i s:OEEXECPREFIX:${exec_prefix}:g ${D}${libdir}/pkgconfig/nss.pc
+    sed -i s:OELIBDIR:${libdir}:g ${D}${libdir}/pkgconfig/nss.pc
+    sed -i s:OEINCDIR:${includedir}/nss3:g ${D}${libdir}/pkgconfig/nss.pc
+
+    # Create a blank certificate
+    mkdir -p ${D}/etc/pki/nssdb/
+    touch ./empty_password
+    certutil -N -d ${D}/etc/pki/nssdb/ -f ./empty_password
+    chmod 644 ${D}/etc/pki/nssdb/*.db
+    rm ./empty_password
+}
+
+FILES_${PN} = "\
+    ${sysconfdir} \
+    ${bindir} \
+    ${libdir}/lib*.chk \
+    ${libdir}/lib*.so \
+    "
+FILES_${PN}-dev = "\
+    ${libdir}/nss \
+    ${libdir}/pkgconfig/* \
+    ${includedir}/* \
+    "
+FILES_${PN}-dbg = "\
+    ${bindir}/.debug/* \
+    ${libdir}/.debug/* \
+    "
+
+BBCLASSEXTEND = "native"
