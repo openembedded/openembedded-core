@@ -38,6 +38,7 @@ PROFILETOOLS = "\
 SYSTEMTAP = "systemtap"
 SYSTEMTAP_libc-uclibc = ""
 SYSTEMTAP_mips = ""
+SYSTEMTAP_mips64 = ""
 SYSTEMTAP_aarch64 = ""
 
 # lttng-ust uses sched_getcpu() which is not there on uclibc
@@ -64,6 +65,7 @@ BABELTRACE_aarch64 = ""
 VALGRIND = "valgrind"
 VALGRIND_libc-uclibc = ""
 VALGRIND_mips = ""
+VALGRIND_mips64 = ""
 VALGRIND_arm = ""
 VALGRIND_aarch64 = ""
 
