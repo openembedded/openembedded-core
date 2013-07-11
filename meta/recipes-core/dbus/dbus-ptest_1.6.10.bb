@@ -16,8 +16,8 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://run-ptest \
            "
 
-SRC_URI[md5sum] = "3bf059c7dd5eda5f539a1b7cfe7a14a2"
-SRC_URI[sha256sum] = "fc1370ef38abeeb13f55c905ec002e60705fb0bfde3b8d21c8d6eb8056c11bac"
+SRC_URI[md5sum] = "de4970c20629aeb958a12132415b3630"
+SRC_URI[sha256sum] = "1f3d6f4a53a7121328f6cd685fc14440d72e6c0006ecb3312cc779c495915e86"
 
 S="${WORKDIR}/dbus-${PV}"
 FILESPATH = "${FILE_DIRNAME}/dbus-${PV}"

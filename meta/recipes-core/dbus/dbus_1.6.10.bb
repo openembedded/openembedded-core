@@ -1,0 +1,6 @@
+include dbus.inc
+
+PR = "${INC_PR}.0"
+
+SRC_URI[md5sum] = "de4970c20629aeb958a12132415b3630"
+SRC_URI[sha256sum] = "1f3d6f4a53a7121328f6cd685fc14440d72e6c0006ecb3312cc779c495915e86"
