@@ -42,7 +42,9 @@ EXTRA_OECONF = "--enable-menubar --enable-xim \
 		--with-x=${STAGING_DIR_HOST}${prefix}"
 
 do_configure_prepend () {
-	cp ${S}/aclocal.m4 ${S}/acinclude.m4
+	if [ ! -e ${S}/acinclude.m4 ]; then
+		cp ${S}/aclocal.m4 ${S}/acinclude.m4
+	fi
 }
 
 do_compile_prepend () {
