@@ -8,7 +8,7 @@ SRC_URI += "file://cogl_fixed_mul-constraint.patch \
 
 inherit clutter
 
-DEPENDS = "pango glib-2.0 gdk-pixbuf"
+DEPENDS = "glib-2.0 gdk-pixbuf"
 PACKAGES =+ "${PN}-examples \
              libcogl libcogl-dev \
              libcogl-gles2 libcogl-gles2-dev \
@@ -34,6 +34,8 @@ EXTRA_OECONF += "--disable-introspection	\
 	       	 --disable-gles1		\
 	    	"
 
+PACKAGECONFIG[cogl-pango] = "--enable-cogl-pango,--disable-cogl-pango,pango"
+
 # GL flavours
 PACKAGECONFIG[gl] = "--enable-gl,--disable-gl,${EDEPENDS_GL},${ERDEPENDS_GL}"
 PACKAGECONFIG[gles2] = "--enable-gles2,--disable-gles2,${EDEPENDS_GLES2}, ${ERDEPENDS_GLES2}"
@@ -52,7 +54,7 @@ PACKAGECONFIG[wayland-server] = "--enable-wayland-egl-server,--disable-wayland-e
 
 # Respect the DISTRO_FEATURES to pull in GLX or Wayland as appropriate by
 # default.
-PACKAGECONFIG ??= "gl \
+PACKAGECONFIG ??= "cogl-pango gl \
                    ${@base_contains('DISTRO_FEATURES', 'wayland', 'egl-wayland', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', 'x11', 'glx', '', d)}"
 
