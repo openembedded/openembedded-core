@@ -1,5 +1,6 @@
 import unittest
 from oeqa.oetest import oeRuntimeTest, skipModule
+from oeqa.utils.decorators import *
 
 def setUpModule():
     multilibs = oeRuntimeTest.tc.d.getVar("MULTILIBS", True) or ""
@@ -7,8 +8,10 @@ def setUpModule():
         skipModule("this isn't a multilib:lib32 image")
 
 
-class MultilibFileTest(oeRuntimeTest):
+class MultilibTest(oeRuntimeTest):
 
+    @skipUnlessPassed('test_ssh')
     def test_file_connman(self):
-        (status, output) = self.target.run('file -L /usr/sbin/connmand | grep "ELF 32-bit LSB executable"')
-        self.assertEqual(status, 0, msg="status and output : %s and %s" % (status,output))
+        self.assertTrue(oeRuntimeTest.hasPackage('connman-gnome'), msg="This test assumes connman-gnome is installed")
+        (status, output) = self.target.run("readelf -h /usr/bin/connman-applet | sed -n '3p' | awk '{print $2}'")
+        self.assertEqual(output, "ELF32", msg="connman-applet isn't an ELF32 binary. readelf says: %s" % self.target.run("readelf -h /usr/bin/connman-applet")[1])
