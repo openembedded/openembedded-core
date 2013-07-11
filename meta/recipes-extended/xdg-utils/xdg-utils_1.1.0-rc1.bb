@@ -13,14 +13,13 @@ xdg-open \
 xdg-screensaver \ 
 "
 
-PR="r0"
-
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a5367a90934098d6b05af3b746405014"
 
-SRC_URI = "http://portland.freedesktop.org/download/${BPN}-${PV}.tgz"
+SRC_URI = "http://portland.freedesktop.org/download/${BPN}-${PV}.tar.gz"
+
+SRC_URI[md5sum] = "fadf5e7a08e0526fc60dbe3e5b7ef8d6"
+SRC_URI[sha256sum] = "7b05558ae4bb8ede356863cae8c42e3e012aa421bf9d45130a570fd209d79102"
 
 inherit autotools
 
-SRC_URI[md5sum] = "348a5b91dc66426505022c74a64b2940"
-SRC_URI[sha256sum] = "21aeb7d16b2529b8d3975118f59eec09953e09f9a68d718159e98c90474b01ac"
