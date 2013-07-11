@@ -15,6 +15,11 @@ inherit gettext
 EXTRA_OECONF += "--with-plugins=a52dec,lame,id3tag,mad,mpeg2dec,mpegstream,mpegaudioparse,asfdemux,realmedia \
                  --disable-orc"
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[x264] = "--enable-x264,--disable-x264,x264"
+PACKAGECONFIG[cdio] = "--enable-cdio,--disable-cdio,libcdio"
+PACKAGECONFIG[dvdread] = "--enable-dvdread,--disable-dvdread,libdvdread"
+
 do_configure_prepend() {
 	# This m4 file contains nastiness which conflicts with libtool 2.2.2
 	rm ${S}/m4/lib-link.m4 || true
