@@ -48,6 +48,7 @@ PACKAGECONFIG[bluez] = "--enable-bluez,--disable-bluez,bluez4 sbc"
 PACKAGECONFIG[gtk] = "--enable-gtk2,--disable-gtk2,gtk+"
 PACKAGECONFIG[systemd] = "--enable-systemd,--disable-systemd,systemd"
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11 libxtst libice libsm libxcb"
+PACKAGECONFIG[jack] = "--enable-jack,--disable-jack,jack"
 
 EXTRA_OECONF_append_arm += "${@bb.utils.contains("TUNE_FEATURES", "neon", "", "--enable-neon-opt=no", d)}"
 
