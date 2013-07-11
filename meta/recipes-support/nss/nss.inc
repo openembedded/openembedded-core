@@ -15,6 +15,7 @@ LIC_FILES_CHKSUM = "file://nss/lib/freebl/mpi/doc/LICENSE;md5=491f158d09d948466a
 SRC_URI = "\
     file://nss-fix-support-cross-compiling.patch \
     file://nss-no-rpath-for-cross-compiling.patch \
+    file://nss-fix-incorrect-shebang-of-perl.patch \
 "
 SRC_URI_append_class-target += "\
     file://nss.pc.in \
