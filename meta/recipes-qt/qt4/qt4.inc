@@ -345,7 +345,8 @@ do_install() {
 			-e 's#" -Wl,-rpath-link,${S}/lib/\?"##g' \
 			-e 's#" -Wl,-rpath-link,${libdir}/\?"##g' \
 			-e 's#Iin#I${in#g' \
-			-e 's#-L\.\./\.\./WebCore/release\s\+-L\.\./\.\./JavaScriptCore/release\s\+-lwebcore\s\+-ljscore##g' \
+			-e 's#-L\.\./\.\./WebCore/release\s\+-L\.\./\.\./JavaScriptCore/release\s\+-lwebcore##g' \
+			-e 's#-ljscore##g' \
 			${D}${libdir}/*.la ${D}${libdir}/*.prl ${D}${libdir}/pkgconfig/*.pc
 
 	sed -i -e s#" -Wl,-rpath-link,${S}/lib"##g \
