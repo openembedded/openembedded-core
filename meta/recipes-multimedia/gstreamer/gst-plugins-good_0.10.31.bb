@@ -9,6 +9,7 @@ PR = "r8"
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)}"
 PACKAGECONFIG[pulseaudio] = "--enable-pulse,--disable-pulse,pulseaudio"
+PACKAGECONFIG[jack] = "--enable-jack,--disable-jack,jack"
 
 DEPENDS += "gst-plugins-base gconf cairo jpeg libpng zlib libid3tag flac \
             speex libsoup-2.4"
