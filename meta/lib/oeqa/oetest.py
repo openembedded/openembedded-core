@@ -9,7 +9,8 @@ def runTests(tc):
 
     # set the context object passed from the test class
     setattr(oeRuntimeTest, "tc", tc)
-
+    # set ps command to use
+    setattr(oeRuntimeTest, "pscmd", "ps -ef" if oeRuntimeTest.hasPackage("procps") else "ps")
     # prepare test suite, loader and runner
     suite = unittest.TestSuite()
     testloader = unittest.TestLoader()
@@ -30,7 +31,6 @@ class oeRuntimeTest(unittest.TestCase):
     testFailures = []
     testSkipped = []
     testErrors = []
-    pscmd = "ps"
 
     def __init__(self, methodName='runTest'):
         self.target = oeRuntimeTest.tc.target
@@ -71,7 +71,6 @@ class oeRuntimeTest(unittest.TestCase):
             return True
         else:
             return False
-
 
 
 

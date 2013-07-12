@@ -17,11 +17,6 @@ class ConnmanTest(oeRuntimeTest):
 
     @skipUnlessPassed('test_connmand_help')
     def test_connmand_running(self):
-        status = self.target.run('ls -l `which ps` | grep busybox')[0]
-        if status == 0:
-            oeRuntimeTest.pscmd = 'ps'
-        else:
-            oeRuntimeTest.pscmd = 'ps -ef'
         (status, output) = self.target.run(oeRuntimeTest.pscmd + ' | grep [c]onnmand')
         self.assertEqual(status, 0, msg="no connmand process, ps output: %s" % self.target.run(oeRuntimeTest.pscmd)[1])
 
