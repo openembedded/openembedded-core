@@ -1,3 +1,27 @@
+# Copyright (C) 2013 Intel Corporation
+#
+# Released under the MIT license (see COPYING.MIT)
+
+
+# testimage.bbclass enables testing of qemu images using python unittests.
+# Most of the tests are commands run on target image over ssh.
+# To use it add testimage to global inherit and call your target image with -c testimage
+# You can try it out like this:
+# - first build a qemu core-image-sato
+# - add INHERIT += "testimage" in local.conf
+# - then bitbake core-image-sato -c testimage. That will run a standard suite of tests.
+
+# You can set (or append to) TEST_SUITES in local.conf to select the tests
+# which you want to run for your target.
+# The test names are the module names in meta/lib/oeqa/runtime.
+# Each name in TEST_SUITES represents a required test for the image. (no skipping allowed)
+# Appending "auto" means that it will try to run all tests that are suitable for the image (each test decides that on it's own).
+# Note that order in TEST_SUITES is important (it's the order tests run) and it influences tests dependencies.
+
+# TEST_LOG_DIR contains a ssh log (what command is running, output and return codes) and a qemu boot log till login
+# Booting is handled by this class, and it's not a test in itself.
+# TEST_QEMUBOOT_TIMEOUT can be used to set the maximum time in seconds the launch code will wait for the login prompt.
+
 TEST_LOG_DIR ?= "${WORKDIR}/testimage"
 
 DEFAULT_TEST_SUITES = "ping auto"

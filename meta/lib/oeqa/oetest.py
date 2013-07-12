@@ -1,3 +1,12 @@
+# Copyright (C) 2013 Intel Corporation
+#
+# Released under the MIT license (see COPYING.MIT)
+
+# Main unittest module used by testimage.bbclass
+# This provides the oeRuntimeTest base class which is inherited by all tests in meta/lib/oeqa/runtime.
+
+# It also has some helper functions and it's responsible for actually starting the tests
+
 import os, re, mmap
 import unittest
 import inspect

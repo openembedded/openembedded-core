@@ -1,3 +1,12 @@
+# Copyright (C) 2013 Intel Corporation
+#
+# Released under the MIT license (see COPYING.MIT)
+
+# Provides a class for setting up ssh connections,
+# running commands and copying files to/from a target.
+# It's used by testimage.bbclass and tests in lib/oeqa/runtime.
+
+
 import subprocess
 import time
 import os
