@@ -22,6 +22,7 @@ def testimage_main(d):
     import os
     import oeqa.runtime
     import re
+    import shutil
     from oeqa.oetest import runTests
     from oeqa.utils.sshcontrol import SSHControl
     from oeqa.utils.qemurunner import QemuRunner
@@ -61,7 +62,13 @@ def testimage_main(d):
     # and boot each supported fs type
     machine=d.getVar("MACHINE", True)
     #will handle fs type eventually, stick with ext3 for now
-    rootfs=d.getVar("DEPLOY_DIR_IMAGE", True) + '/' + d.getVar("IMAGE_BASENAME",True) + '-' + machine + '.ext3'
+    #make a copy of the original rootfs and use that for tests
+    origrootfs=os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),  d.getVar("IMAGE_LINK_NAME",True) + '.ext3')
+    rootfs=os.path.join(testdir, d.getVar("IMAGE_LINK_NAME", True) + '-testimage.ext3')
+    try:
+        shutil.copyfile(origrootfs, rootfs)
+    except Exception as e:
+        bb.fatal("Error copying rootfs: %s" % e)
 
     qemu = QemuRunner(machine, rootfs)
     qemu.tmpdir = d.getVar("TMPDIR", True)
