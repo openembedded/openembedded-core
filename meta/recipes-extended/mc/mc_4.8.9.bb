@@ -8,8 +8,8 @@ RDEPENDS_${PN} = "ncurses-terminfo"
 
 SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "324ff5a192d30d3a3b234c130550eb0a"
-SRC_URI[sha256sum] = "7b5e6f90e6709d1c1bcb4a2bf6d2a62b9494adef3ff4325ffdb3551c29e42a1c"
+SRC_URI[md5sum] = "e701cc5ced4beed38e1977eba26dad50"
+SRC_URI[sha256sum] = "7e184cf5ed3ff8b93fcbfff16608c1444920f523beda2fcc586878d619ea11da"
 
 inherit autotools gettext
 
