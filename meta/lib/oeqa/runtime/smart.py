@@ -10,6 +10,7 @@ def setUpModule():
 
 class SmartHelpTest(oeRuntimeTest):
 
+    @skipUnlessPassed('test_ssh')
     def test_smart_help(self):
         status = self.target.run('smart --help')[0]
         self.assertEqual(status, 0)
