@@ -13,7 +13,7 @@ of the function which can be any integer value.
  lib/cache_mngr.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 diff --git a/lib/cache_mngr.c b/lib/cache_mngr.c
 index dae8768..57cc1f9 100644

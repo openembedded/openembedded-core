@@ -11,7 +11,7 @@ this is not defined on older hosts.  Revert:
   commit c69bbca9c1f6645097bd20fe3a21f5a99a2a0698
   fdisk: (sun): use ask API, remove global variable
 
-Upstream-status: Inappropriate [other]
+Upstream-Status: Inappropriate [other]
 Patches revert upstream changes in order to support older
 machines.
 

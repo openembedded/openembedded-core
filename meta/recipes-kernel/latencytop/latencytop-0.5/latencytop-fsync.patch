@@ -5,7 +5,7 @@ tracing_enabled use in the kernel is being deprecated as per commit
 the linux mainline kernel. tracing_enabled use will generate a warning
 and may no longer function as expected, therefore move to use tracing_on.
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Dennis Hall <dennis.hall@windriver.com>
 

@@ -9,7 +9,7 @@ is being ran in, not the source directory. So we fix this by adding
 $(srcdir)/*.h to the list of header files to install.
 
 Signed-off-by: Paul Barker <paul@paulbarker.me.uk>
-Upstream-status: Submitted
+Upstream-Status: Submitted
 ---
  libopkg/Makefile.am | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

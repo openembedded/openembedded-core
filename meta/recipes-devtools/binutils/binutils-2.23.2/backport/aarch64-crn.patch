@@ -3,7 +3,7 @@ Date: Mon, 13 May 2013 22:50:00 +0000 (+0000)
 Subject: gas/
 X-Git-Url: http://sourceware.org/git/?p=binutils.git;a=commitdiff_plain;h=1796bf893c4729d5c523502318d72cae78495d6c
 
-Upstream-status: backport
+Upstream-Status: backport
 
 gas/
 

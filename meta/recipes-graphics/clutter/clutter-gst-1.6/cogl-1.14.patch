@@ -9,7 +9,7 @@ pull in the GL type definitions through its public headers; specifically
 compilation will fail due to undefined GL_TEXTURE_2D. So include the headers
 the hard way.
 
-Upstream-status: Submitted @ https://bugzilla.gnome.org/show_bug.cgi?id=700509
+Upstream-Status: Submitted @ https://bugzilla.gnome.org/show_bug.cgi?id=700509
 Signed-off-by: Tomas Frydrych <tomas@sleepfive.com>
 ---
  clutter-gst/clutter-gst-video-sink.c |   17 +++++++++++++++++

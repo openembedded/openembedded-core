@@ -2,7 +2,7 @@ Add 'install-ptest' rule.
 Print a standard result line for each test.
 
 Signed-off-by: Mihaela Sendrea <mihaela.sendrea@enea.com>
-Upstream-status: Pending
+Upstream-Status: Pending
 
 diff -uNr a/Makefile.am b/Makefile.am
 --- a/Makefile.am	2013-04-17 14:51:42.633386477 +0200

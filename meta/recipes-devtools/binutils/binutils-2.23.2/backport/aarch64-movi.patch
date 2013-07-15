@@ -3,7 +3,7 @@ Date: Mon, 13 May 2013 23:09:51 +0000 (+0000)
 Subject: gas/testsuite/
 X-Git-Url: http://sourceware.org/git/?p=binutils.git;a=commitdiff_plain;h=f426901e1be0f58fe4e9386cada50ca57d0a4f36
 
-Upstream-status: backport
+Upstream-Status: backport
 
 gas/testsuite/
 
