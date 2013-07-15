@@ -12,7 +12,7 @@ LINUX_VERSION ?= "3.4.52"
 
 KMETA = "meta"
 
-SRCREV_machine ?= "cdd7a546922ca1c46c94adeec3b9c90dc9aaad2d"
+SRCREV_machine ?= "4122d6cf3f9e1fd6d54f6e13af29c4c589289fdc"
 SRCREV_meta ?= "7250de4d4afc2558082cd42b8a0d151903436e8f"
 
 PR = "${INC_PR}.1"
