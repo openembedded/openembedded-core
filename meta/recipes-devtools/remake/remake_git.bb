@@ -1,4 +1,4 @@
-PR = "r0"
+PR = "r1"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                     file://tests/COPYING;md5=d32239bcb673463ab874e80d47fae504 \
@@ -12,6 +12,10 @@ S = "${WORKDIR}/git"
 PV = "3.82+dbg-0.9+git${SRCPV}"
 
 DEPENDS += "readline"
+# Need to add "gettext-native" dependency to remake-native.
+# By default only "gettext-minimal-native" is added
+# when inherit gettext.
+DEPENDS_class-native += "gettext-native"
 PROVIDES += "make"
 
 do_configure_prepend() {
