@@ -252,29 +252,39 @@ def package_qa_check_libdir(d):
     """
     import re
 
-    pkgd = d.getVar('PKGD', True)
+    pkgdest = d.getVar('PKGDEST', True)
     base_libdir = d.getVar("base_libdir",True) + os.sep
     libdir = d.getVar("libdir", True) + os.sep
     exec_prefix = d.getVar("exec_prefix", True) + os.sep
 
     messages = []
-    my_files = []
-
-    for root, dirs, files in os.walk(pkgd):
-        for file in files:
-            full_path = os.path.join(root,file)
-            my_files.append(full_path[len(pkgd):])
 
     lib_re = re.compile("^/lib.+\.so(\..+)?$")
     exec_re = re.compile("^%s.*/lib.+\.so(\..+)?$" % exec_prefix)
 
-    for file in my_files:
-        if lib_re.match(file):
-            if base_libdir not in file:
-                messages.append("Found library in wrong location: %s" % file)
-        if exec_re.match(file):
-            if libdir not in file:
-                messages.append("Found library in wrong location: %s" % file)
+    for root, dirs, files in os.walk(pkgdest):
+        if root == pkgdest:
+            # Skip subdirectories for any packages with libdir in INSANE_SKIP
+            skippackages = []
+            for package in dirs:
+                if 'libdir' in (d.getVar('INSANE_SKIP_' + package, True) or "").split():
+                    bb.note("Package %s skipping libdir QA test" % (package))
+                    skippackages.append(package)
+            for package in skippackages:
+                dirs.remove(package)
+        for file in files:
+            full_path = os.path.join(root, file)
+            rel_path = os.path.relpath(full_path, pkgdest)
+            if os.sep in rel_path:
+                package, rel_path = rel_path.split(os.sep, 1)
+                rel_path = os.sep + rel_path
+                if lib_re.match(rel_path):
+                    if base_libdir not in rel_path:
+                        messages.append("%s: found library in wrong location: %s" % (package, rel_path))
+                if exec_re.match(rel_path):
+                    if libdir not in rel_path:
+                        messages.append("%s: found library in wrong location: %s" % (package, rel_path))
+
     if messages:
         package_qa_handle_error("libdir", "\n".join(messages), d)
 
