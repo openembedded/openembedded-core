@@ -265,7 +265,7 @@ def package_qa_check_libdir(d):
             full_path = os.path.join(root,file)
             my_files.append(full_path[len(pkgd):])
 
-    lib_re = re.compile("^lib.+\.so(\..+)?$")
+    lib_re = re.compile("^/lib.+\.so(\..+)?$")
     exec_re = re.compile("^%s.*/lib.+\.so(\..+)?$" % exec_prefix)
 
     for file in my_files:
