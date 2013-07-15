@@ -20,7 +20,8 @@ SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
            file://wpa_supplicant.conf \
            file://wpa_supplicant.conf-sane \
            file://99_wpa_supplicant \
-           file://fix-libnl3-host-contamination.patch"
+           file://fix-libnl3-host-contamination.patch \
+           file://register-autoscan-correctly.patch"
 
 S = "${WORKDIR}/wpa_supplicant-${PV}"
 

@@ -1,0 +1,51 @@
+From f157b78166baff2c32ed3983b4e787417505b343 Mon Sep 17 00:00:00 2001
+From: Tomasz Bursztyka <tomasz.bursztyka@linux.intel.com>
+Date: Mon, 1 Jul 2013 19:11:34 +0300
+Subject: [PATCH] dbus: Register the AutoScan method call at the right place
+
+Upstream-Status: Accepted [hostap@lists.shmoo.com]
+
+Signed-hostap: Tomasz Bursztyka <tomasz.bursztyka@linux.intel.com>
+---
+ wpa_supplicant/dbus/dbus_new.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/wpa_supplicant/dbus/dbus_new.c b/wpa_supplicant/dbus/dbus_new.c
+index 8bc6618..d076d2d 100644
+--- a/wpa_supplicant/dbus/dbus_new.c
++++ b/wpa_supplicant/dbus/dbus_new.c
+@@ -1917,15 +1917,6 @@ static const struct wpa_dbus_method_desc wpas_dbus_global_methods[] = {
+ 		  END_ARGS
+ 	  }
+ 	},
+-#ifdef CONFIG_AUTOSCAN
+-	{ "AutoScan", WPAS_DBUS_NEW_IFACE_INTERFACE,
+-	  (WPADBusMethodHandler) &wpas_dbus_handler_autoscan,
+-	  {
+-		  { "arg", "s", ARG_IN },
+-		  END_ARGS
+-	  }
+-	},
+-#endif /* CONFIG_AUTOSCAN */
+ 	{ NULL, NULL, NULL, { END_ARGS } }
+ };
+ 
+@@ -2649,6 +2640,15 @@ static const struct wpa_dbus_method_desc wpas_dbus_interface_methods[] = {
+ 	  }
+ 	},
+ #endif /* CONFIG_AP */
++#ifdef CONFIG_AUTOSCAN
++	{ "AutoScan", WPAS_DBUS_NEW_IFACE_INTERFACE,
++	  (WPADBusMethodHandler) &wpas_dbus_handler_autoscan,
++	  {
++		  { "arg", "s", ARG_IN },
++		  END_ARGS
++	  }
++	},
++#endif /* CONFIG_AUTOSCAN */
+ 	{ NULL, NULL, NULL, { END_ARGS } }
+ };
+ 
+-- 
+1.8.1.2
+
