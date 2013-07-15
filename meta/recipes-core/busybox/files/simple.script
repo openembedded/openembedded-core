@@ -15,7 +15,7 @@ root_is_nfs() {
 }
 
 have_bin_ip=0
-if [ -x /bin/ip ]; then
+if [ -x /sbin/ip ]; then
   have_bin_ip=1
 fi
 
