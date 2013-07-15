@@ -1,6 +1,10 @@
 HOMEPAGE = "http://qt-project.org/"
-DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)}"
-DEPENDS += "${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluez4', '', d)}"
+DEPENDS = "gstreamer util-linux"
+
+PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
+                   ${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluetooth', '', d)}"
+PACKAGECONFIG[bluetooth] = ",,bluez4"
+PACKAGECONFIG[pulseaudio] = ",,pulseaudio"
 
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
@@ -34,7 +38,6 @@ qtm_imports	:= "/usr/lib/${qtm_dir}/imports"
 
 QTM_MODULES_LIST ?= "bearer contacts gallery location publishsubscribe messaging multimedia \
 systeminfo serviceframework sensors versit organizer feedback connectivity"
-qtm_bluezflag ?= "${@base_contains('DISTRO_FEATURES', 'bluetooth', 'yes', 'no', d)}"
 
 do_configure_prepend() {
 	cp qtmobility.pro qtmobility.pro.old
@@ -47,7 +50,35 @@ do_configure_prepend() {
 	cp staticconfig.pri staticconfig.pri.old
 	echo "include(${STAGING_DATADIR}/${qtm_dir}/mkspecs/qconfig.pri)" >staticconfig.pri
 	cat staticconfig.pri.old >>staticconfig.pri
-	./configure -qmake-exec qmake2 -prefix /usr -examples -demos -modules "${QTM_MODULES_LIST}"
+
+        cat > features/platformconfig/oe.pri <<EOF
+qmf_enabled = no
+networkmanager_enabled = no
+corewlan_enabled = no
+immersion_enabled = no
+meegotouchfeedback_enabled = no
+maemo-icd_enabled = no
+maemo-icd-network-wlan_enabled = no
+maemo5-contacts_enabled = no
+maemo5-calendar_enabled = no
+maemo6-landmarks_enabled = no
+bme_enabled = no
+bluez_enabled = ${@base_contains('PACKAGECONFIG', 'bluetooth', 'yes', 'no', d)}
+proj_enabled = no
+gstreamer-photography_enabled = no
+gstreamer-appsrc_enabled = yes
+blkid_enabled = yes
+pulseaudio_enabled = ${@base_contains('PACKAGECONFIG', 'pulseaudio', 'yes', 'no', d)}
+udev_enabled = yes
+iphb_enabled = no
+nfc_symbian_enabled = no
+sensord_enabled = no
+geoclue-master_enabled = no
+gypsy_enabled = no
+${qtm_extra_config}
+EOF
+
+	./configure -qmake-exec qmake2 -prefix /usr -staticconfig oe -examples -demos -modules "${QTM_MODULES_LIST}"
 	echo QT_MOBILITY_BIN = ${qtm_bin} >>./config.pri
 	echo QT_MOBILITY_LIB = ${qtm_lib} >>./config.pri
 	echo QT_MOBILITY_INCLUDE = ${qtm_include} >>./config.pri
@@ -55,8 +86,6 @@ do_configure_prepend() {
 	echo QT_MOBILITY_EXAMPLES = ${qtm_examples} >>./config.pri
 	echo QT_MOBILITY_DEMOS = ${qtm_demos} >>./config.pri
 	echo QT_CONFIG ${qtm_glflags} >>./config.pri
-	echo bluez_enabled = ${qtm_bluezflag} >>./config.pri
-	echo ${qtm_extra_config} >>./config.pri
 	echo CONFIG += ${qtm_embedded} >>./config.pri
 }
 
