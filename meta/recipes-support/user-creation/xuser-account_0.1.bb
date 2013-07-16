@@ -21,7 +21,7 @@ do_install() {
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "--system shutdown"
 USERADD_PARAM_${PN} = "--create-home \
-                       --groups video,tty,audio,input,shutdown \
+                       --groups video,tty,audio,input,shutdown,disk \
                        --user-group xuser"
 
 ALLOW_EMPTY_${PN} = "1"
