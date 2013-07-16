@@ -30,6 +30,7 @@ TOOLCHAIN_HOST_TASK ?= "\
     nativesdk-python-compression \
     nativesdk-python-json \
     nativesdk-python-unittest \
+    nativesdk-python-mmap \
     nativesdk-python-difflib \
     nativesdk-python-pprint \
     nativesdk-python-git \
