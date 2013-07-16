@@ -203,7 +203,7 @@ $SUDO sh -c "sed -e '"s:##DEFAULT_INSTALL_DIR##:$escaped_sdkpath:"' scripts/relo
 $SUDO chmod +x scripts/relocate_sdk_tmp.py
 
 dl_path=$(find $OECORE_NATIVE_SYSROOT/lib -name "ld-linux*")
-executable_files=$(find $OECORE_NATIVE_SYSROOT -type f -perm +111)
+executable_files=$(find $OECORE_NATIVE_SYSROOT -type f -perm /111)
 
 $SUDO scripts/relocate_sdk_tmp.py $INSTALL_FOLDER $dl_path $executable_files
 check_result
