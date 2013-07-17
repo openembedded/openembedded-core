@@ -39,7 +39,7 @@ device_details() {
 		echo "   model: UNKNOWN"
 	fi
 	if [ -f "/sys/class/block/$DEV/size" ]; then
-		echo "    size: $[$(cat /sys/class/block/$DEV/size)*BLOCK_SIZE] bytes"
+		echo "    size: $(($(cat /sys/class/block/$DEV/size) * $BLOCK_SIZE)) bytes"
 	else
 		echo "    size: UNKNOWN"
 	fi
