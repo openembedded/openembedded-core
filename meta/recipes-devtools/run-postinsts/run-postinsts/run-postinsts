@@ -26,7 +26,7 @@ for i in `ls $pi_dir`; do
 	echo "Running postinst $i..."
 	if [ -x $i ]; then
 		if [ "$POSTINST_LOGGING" = "1" ]; then
-			sh -c $i >>$LOGFILE 2&>1
+			sh -c $i >>$LOGFILE 2>&1
 		else
 			sh -c $i
 		fi
