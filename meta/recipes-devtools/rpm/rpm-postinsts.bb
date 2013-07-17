@@ -36,7 +36,7 @@ if [ "x$D" != "x" ] && [ -f $D/var/lib/rpm/Packages ]; then
 	echo "Running postinst $i..."
 	if [ -x $i ]; then
 		if [ "$POSTINST_LOGGING" = "1" ]; then
-			$i >>$LOGFILE 2&>1
+			$i >>$LOGFILE 2>&1
 		else
 			$i
 		fi
