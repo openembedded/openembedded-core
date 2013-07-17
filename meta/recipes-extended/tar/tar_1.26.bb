@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 PR = "r5"
 
 SRC_URI += "file://remove-gets.patch \
-           file://tar-1.26-fortifysourcessigabrt.patch\
            "
 
 SRC_URI[md5sum] = "2cee42a2ff4f1cd4f9298eeeb2264519"
