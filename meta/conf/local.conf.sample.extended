@@ -214,3 +214,18 @@
 # Use the following line to enable the security compiler and linker flags to your build
 #require conf/distro/include/security_flags.inc
 
+# Image level user/group configuration.
+# Inherit extrausers to make the setting of EXTRA_USERS_PARAMS effective.
+#INHERIT += "extrausers"
+# User / group settings
+# The settings are sperated by the ; character.
+# Each setting is actually a command. The supported commands are useradd,
+# groupadd, userdel, groupdel, usermod and groupmod.
+#EXTRA_USERS_PARAMS = "\
+#useradd -p '' tester; \
+#groupadd developers; \
+#userdel nobody; \
+#groupdel -g video; \
+#groupmod -g 1020 developers; \
+#usermod -s /bin/sh tester; \
+#"
