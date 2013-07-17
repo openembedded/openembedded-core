@@ -31,7 +31,7 @@ FILES_${PN}-dbg += "${libdir}/tc/.debug"
 
 ALTERNATIVE_${PN} = "ip"
 ALTERNATIVE_TARGET[ip] = "${base_sbindir}/ip.${BPN}"
-ALTERNATIVE_LINK_NAME[ip] = "${base_bindir}/ip"
+ALTERNATIVE_LINK_NAME[ip] = "${base_sbindir}/ip"
 ALTERNATIVE_PRIORITY = "100"
 
 PARALLEL_MAKE = ""
