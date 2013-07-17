@@ -144,6 +144,7 @@ RDEPENDS_pulseaudio-server = " \
     pulseaudio-module-switch-on-port-available"
 
 RDEPENDS_pulseaudio-module-console-kit =+ "consolekit"
+RDEPENDS_pulseaudio-misc += "pulseaudio-module-cli-protocol-unix"
 
 FILES_pulseaudio-module-gconf += "${libexecdir}/pulse/gconf-helper"
 FILES_pulseaudio-module-bluetooth-proximity += "${libexecdir}/pulse/proximity-helper"
