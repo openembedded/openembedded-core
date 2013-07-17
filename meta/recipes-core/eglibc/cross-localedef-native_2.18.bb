@@ -16,11 +16,11 @@ inherit autotools
 # pick up an eglibc patch
 FILESPATH = "${FILE_DIRNAME}/eglibc-${PV}"
 
-SRC_URI = "http://sakrah.dontexist.org/files/eglibc-${PV}-svnr23424.tar.bz2 \
+SRC_URI = "http://sakrah.dontexist.org/files/eglibc-${PV}-svnr23532.tar.bz2 \
 	   file://fix_for_centos_5.8.patch;patchdir=.. \
 	  "
-SRC_URI[md5sum] = "e7bb555f34e782d428de3482d203df8d"
-SRC_URI[sha256sum] = "3824e699a91a34aebbe80bae9993b569616fad2056e4f6430cd455d604fb1d9c"
+SRC_URI[md5sum] = "8c83078851c44089a019c626d51c51bb"
+SRC_URI[sha256sum] = "ecd3167d7d417c05b10ea7ab8e3acbc05f4bc2b389b6fae9c186bc0fd34c3ff1"
 
 S = "${WORKDIR}/eglibc-${PV}/localedef"
 
