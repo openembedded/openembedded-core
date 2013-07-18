@@ -1,0 +1,41 @@
+debugfs.c: the max length of debugfs argument is too short
+
+The max length of debugfs argument is 256 which is too short, the
+arguments are two paths, the PATH_MAX is 4096 according to
+/usr/include/linux/limits.h, so use BUFSIZ (which is 8192 on Linux
+systems), that's also what the ss library uses.
+
+Upstream-Status: Submitted
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Acked-by: Darren Hart <dvhart@linux.intel.com>
+---
+ debugfs/debugfs.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/debugfs/debugfs.c b/debugfs/debugfs.c
+--- a/debugfs/debugfs.c
++++ b/debugfs/debugfs.c
+@@ -37,6 +37,10 @@ extern char *optarg;
+ #include "../version.h"
+ #include "jfs_user.h"
+ 
++#ifndef BUFSIZ
++#define BUFSIZ 8192
++#endif
++
+ ss_request_table *extra_cmds;
+ const char *debug_prog_name;
+ int sci_idx;
+@@ -2311,7 +2315,7 @@ void do_dump_mmp(int argc EXT2FS_ATTR((unused)), char *argv[])
+ static int source_file(const char *cmd_file, int ss_idx)
+ {
+ 	FILE		*f;
+-	char		buf[256];
++	char		buf[BUFSIZ];
+ 	char		*cp;
+ 	int		exit_status = 0;
+ 	int		retval;
+-- 
+1.8.1.2
+

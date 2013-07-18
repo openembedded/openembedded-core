@@ -3,6 +3,7 @@ require e2fsprogs.inc
 
 SRC_URI += "file://acinclude.m4 \
             file://remove.ldconfig.call.patch \
+            file://debugfs-too-short.patch \
 "
 
 SRC_URI[md5sum] = "8ef664b6eb698aa6b733df59b17b9ed4"
