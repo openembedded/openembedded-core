@@ -134,7 +134,7 @@ for native_target_type in $YOCTOADT_TARGETS; do
   $OPKG_INSTALL_NATIVE_CMD gdb-cross-canadian-$native_target_type &>> $YOCTOADT_INSTALL_LOG_FILE
   check_result
 
-  echo_info "Installing envrionement file for $native_target_type ..."
+  echo_info "Installing environment file for $native_target_type ..."
   $OPKG_INSTALL_NATIVE_CMD meta-environment-$native_target_type &>> $YOCTOADT_INSTALL_LOG_FILE
   check_result
 
