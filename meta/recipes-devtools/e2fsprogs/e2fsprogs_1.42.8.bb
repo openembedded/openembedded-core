@@ -5,6 +5,7 @@ SRC_URI += "file://acinclude.m4 \
             file://remove.ldconfig.call.patch \
             file://debugfs-too-short.patch \
             file://debugfs-sparse-copy.patch \
+            file://fix-icache.patch \
 "
 
 SRC_URI[md5sum] = "8ef664b6eb698aa6b733df59b17b9ed4"
