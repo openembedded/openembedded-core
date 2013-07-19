@@ -28,6 +28,8 @@ SRC_URI += "\
   file://builddir.patch \
   file://python-2.7.3-CVE-2012-2135.patch \
   file://gcc-4.8-fix-configure-Wformat.patch \
+  file://fix-makefile-for-ptest.patch \
+  file://run-ptest \
 "
 
 S = "${WORKDIR}/Python-${PV}"
@@ -119,6 +121,11 @@ do_install_append_class-nativesdk () {
 	create_wrapper ${D}${bindir}/python2.7 TERMINFO_DIRS='${sysconfdir}/terminfo:/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo'
 }
 
+do_install_ptest() {
+	cp ${B}/Makefile ${D}${PTEST_PATH}
+	sed -i s:LIBDIR:${libdir}:g ${D}${PTEST_PATH}/run-ptest
+}
+
 SSTATE_SCAN_FILES += "Makefile"
 PACKAGE_PREPROCESS_FUNCS += "py_package_preprocess"
 
@@ -148,6 +155,9 @@ FILES_${PN}-dbg += "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/.debug"
 # catch all the rest (unsorted)
 PACKAGES += "${PN}-misc"
 FILES_${PN}-misc = "${libdir}/python${PYTHON_MAJMIN}"
+RDEPENDS_${PN}-ptest = "${PN}-modules ${PN}-misc"
+#inherit ptest after "require python-${PYTHON_MAJMIN}-manifest.inc" so PACKAGES doesn't get overwritten
+inherit ptest
 
 # catch manpage
 PACKAGES += "${PN}-man"
