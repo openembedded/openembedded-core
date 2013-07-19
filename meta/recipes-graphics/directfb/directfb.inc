@@ -14,7 +14,6 @@ DEPENDS = "jpeg libpng freetype zlib tslib"
 INC_PR = "r0"
 
 SRC_URI = "http://directfb.org/downloads/Core/DirectFB-1.6/DirectFB-${PV}.tar.gz \
-           file://directfb-1.2.x-fix-pkgconfig-cflags.patch \
            file://configurefix.patch \
            file://mesa9.patch"
 
