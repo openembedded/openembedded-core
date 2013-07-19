@@ -37,6 +37,15 @@ do_install_append () {
         install -Dm644 "${WORKDIR}/depmod-search.conf" "${D}${base_libdir}/depmod.d/search.conf"
 }
 
+do_compile_prepend() {
+            sed -i 's/ac_pwd=/#ac_pwd=/' config.status ; sed -i "/#ac_pwd=/a\ac_pwd='.'" config.status
+}
+
+do_compile_ptest () {
+        oe_runmake buildtest-TESTS
+        oe_runmake rootfs
+}
+
 inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "60"

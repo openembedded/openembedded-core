@@ -1,0 +1,5 @@
+#!/bin/sh
+tar -xzf tools.tgz
+tar -C testsuite -xzf testsuite.tgz
+make rootfs
+make -k runtest-TESTS 2>/dev/null| grep -e ^PASS -e ^FAIL
