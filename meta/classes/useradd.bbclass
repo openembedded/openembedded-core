@@ -1,3 +1,5 @@
+inherit useradd_base
+
 # base-passwd-cross provides the default passwd and group files in the
 # target sysroot, and shadow -native and -sysroot provide the utilities
 # and support files needed to add and modify user and group accounts
@@ -44,30 +46,7 @@ if test "x$GROUPADD_PARAM" != "x"; then
 	opts=`echo "$GROUPADD_PARAM" | cut -d ';' -f 1`
 	remaining=`echo "$GROUPADD_PARAM" | cut -d ';' -f 2-`
 	while test "x$opts" != "x"; do
-		groupname=`echo "$opts" | awk '{ print $NF }'`
-		group_exists=`grep "^$groupname:" $SYSROOT/etc/group || true`
-		if test "x$group_exists" = "x"; then
-			count=1
-			while true; do
-				eval $PSEUDO groupadd $OPT $opts || true
-				group_exists=`grep "^$groupname:" $SYSROOT/etc/group || true`
-				if test "x$group_exists" = "x"; then
-					# File locking issues can require us to retry the command
-					echo "WARNING: groupadd command did not succeed. Retrying..."
-					sleep 1
-				else
-					break
-				fi
-				count=`expr $count + 1`
-				if test $count = 11; then
-					echo "ERROR: tried running groupadd command 10 times without success, giving up"
-					exit 1
-				fi
-			done		
-		else
-			echo "Note: group $groupname already exists, not re-creating it"
-		fi
-
+		perform_groupadd "$SYSROOT" "$OPT $opts" 10
 		if test "x$opts" = "x$remaining"; then
 			break
 		fi
@@ -83,32 +62,7 @@ if test "x$USERADD_PARAM" != "x"; then
 	opts=`echo "$USERADD_PARAM" | cut -d ';' -f 1`
 	remaining=`echo "$USERADD_PARAM" | cut -d ';' -f 2-`
 	while test "x$opts" != "x"; do
-		# useradd does not have a -f option, so we have to check if the
-		# username already exists manually
-		username=`echo "$opts" | awk '{ print $NF }'`
-		user_exists=`grep "^$username:" $SYSROOT/etc/passwd || true`
-		if test "x$user_exists" = "x"; then
-			count=1
-			while true; do
-				eval $PSEUDO useradd $OPT $opts || true
-				user_exists=`grep "^$username:" $SYSROOT/etc/passwd || true`
-				if test "x$user_exists" = "x"; then
-					# File locking issues can require us to retry the command
-					echo "WARNING: useradd command did not succeed. Retrying..."
-					sleep 1
-				else
-					break
-				fi
-				count=`expr $count + 1`
-				if test $count = 11; then
-					echo "ERROR: tried running useradd command 10 times without success, giving up"
-					exit 1
-				fi
-			done
-		else
-			echo "Note: username $username already exists, not re-creating it"
-		fi
-
+		perform_useradd "$SYSROOT" "$OPT $opts" 10
 		if test "x$opts" = "x$remaining"; then
 			break
 		fi
@@ -119,58 +73,18 @@ fi
 
 if test "x$GROUPMEMS_PARAM" != "x"; then
 	echo "Running groupmems commands..."
-	# groupmems fails if /etc/gshadow does not exist
-	if [ -f $SYSROOT${sysconfdir}/gshadow ]; then
-		gshadow="yes"
-	else
-		gshadow="no"
-		touch $SYSROOT${sysconfdir}/gshadow
-	fi
 	# Invoke multiple instances of groupmems for parameter lists
 	# separated by ';'
 	opts=`echo "$GROUPMEMS_PARAM" | cut -d ';' -f 1`
 	remaining=`echo "$GROUPMEMS_PARAM" | cut -d ';' -f 2-`
 	while test "x$opts" != "x"; do
-		groupname=`echo "$opts" | awk '{ for (i = 1; i < NF; i++) if ($i == "-g" || $i == "--group") print $(i+1) }'`
-		username=`echo "$opts" | awk '{ for (i = 1; i < NF; i++) if ($i == "-a" || $i == "--add") print $(i+1) }'`
-		echo "$groupname $username"
-		mem_exists=`grep "^$groupname:[^:]*:[^:]*:\([^,]*,\)*$username\(,[^,]*\)*" $SYSROOT/etc/group || true`
-		if test "x$mem_exists" = "x"; then
-			count=1
-			while true; do
-				eval $PSEUDO groupmems $OPT $opts || true
-				mem_exists=`grep "^$groupname:[^:]*:[^:]*:\([^,]*,\)*$username\(,[^,]*\)*" $SYSROOT/etc/group || true`
-				if test "x$mem_exists" = "x"; then
-					# File locking issues can require us to retry the command
-					echo "WARNING: groupmems command did not succeed. Retrying..."
-					sleep 1
-				else
-					break
-				fi
-				count=`expr $count + 1`
-				if test $count = 11; then
-					echo "ERROR: tried running groupmems command 10 times without success, giving up"
-					if test "x$gshadow" = "xno"; then
-						rm -f $SYSROOT${sysconfdir}/gshadow
-						rm -f $SYSROOT${sysconfdir}/gshadow-
-					fi
-					exit 1
-				fi
-			done
-		else
-			echo "Note: group $groupname already contains $username, not re-adding it"
-		fi
-
+		perform_groupmems "$SYSROOT" "$OPT $opts" 10
 		if test "x$opts" = "x$remaining"; then
 			break
 		fi
 		opts=`echo "$remaining" | cut -d ';' -f 1`
 		remaining=`echo "$remaining" | cut -d ';' -f 2-`
 	done
-	if test "x$gshadow" = "xno"; then
-		rm -f $SYSROOT${sysconfdir}/gshadow
-		rm -f $SYSROOT${sysconfdir}/gshadow-
-	fi
 fi
 }
 
@@ -254,6 +168,9 @@ fakeroot python populate_packages_prepend () {
         preinst = d.getVar('pkg_preinst_%s' % pkg, True) or d.getVar('pkg_preinst', True)
         if not preinst:
             preinst = '#!/bin/sh\n'
+        preinst += 'perform_groupadd () {\n%s}\n' % d.getVar('perform_groupadd', True)
+        preinst += 'perform_useradd () {\n%s}\n' % d.getVar('perform_useradd', True)
+        preinst += 'perform_groupmems () {\n%s}\n' % d.getVar('perform_groupmems', True)
         preinst += d.getVar('useradd_preinst', True)
         d.setVar('pkg_preinst_%s' % pkg, preinst)
 
