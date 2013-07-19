@@ -24,6 +24,7 @@ remove_pi_dir=1
 for i in `ls $pi_dir`; do
 	i=$pi_dir/$i
 	echo "Running postinst $i..."
+	[ "$POSTINST_LOGGING" = "1" ] && echo "Running postinst $i..." >> $LOGFILE
 	if [ -x $i ]; then
 		if [ "$POSTINST_LOGGING" = "1" ]; then
 			sh -c $i >>$LOGFILE 2>&1
@@ -33,6 +34,7 @@ for i in `ls $pi_dir`; do
 		rm $i
 	else
 		echo "ERROR: postinst $i failed."
+		[ "$POSTINST_LOGGING" = "1" ] && echo "ERROR: postinst $i failed." >> $LOGFILE
 		remove_pi_dir=0
 	fi
 done
