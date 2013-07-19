@@ -161,3 +161,12 @@ python systemd_populate_packages() {
 }
 
 PACKAGESPLITFUNCS_prepend = "systemd_populate_packages "
+
+python rm_systemd_unitdir (){
+    import shutil
+    if "systemd" not in d.getVar("DISTRO_FEATURES", True).split():
+        systemd_unitdir = oe.path.join(d.getVar("D", True), d.getVar('systemd_unitdir', True))
+        if os.path.exists(systemd_unitdir):
+            shutil.rmtree(systemd_unitdir)
+}
+do_install[postfuncs] += "rm_systemd_unitdir "
