@@ -7,6 +7,9 @@ If we go through ./configure without enabling X11 anywhere, then set the
 fallback types for EGL NativeDisplay and friends, rather than assuming
 X11/Xlib.
 
+Upstream-Status: Backport (slightly different solution was applied in master
+https://bugs.freedesktop.org/show_bug.cgi?id=64959)
+
 Signed-off-by: Daniel Stone <daniel@fooishbar.org>
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
