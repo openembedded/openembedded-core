@@ -14,6 +14,7 @@ DEPENDS = "openssl"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/h/heirloom-mailx/heirloom-mailx_${PV}.orig.tar.gz;name=archive \
            ${DEBIAN_MIRROR}/main/h/heirloom-mailx/heirloom-mailx_${PV}-1.diff.gz;name=patch \
+           file://explicitly.disable.krb5.support.patch \
           "
 
 SRC_URI[archive.md5sum] = "29a6033ef1412824d02eb9d9213cb1f2"
