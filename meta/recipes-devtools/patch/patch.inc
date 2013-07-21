@@ -9,5 +9,8 @@ S = "${WORKDIR}/patch-${PV}"
 
 inherit autotools update-alternatives
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[attr] = "--enable-xattr,--disable-xattr,attr"
+
 ALTERNATIVE_${PN} = "patch"
 ALTERNATIVE_PRIORITY = "100"
