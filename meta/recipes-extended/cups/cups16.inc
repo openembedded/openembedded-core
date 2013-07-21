@@ -13,6 +13,7 @@ inherit autotools binconfig
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'zeroconf', 'avahi', '', d)}"
 PACKAGECONFIG[avahi] = "--enable-avahi,--disable-avahi,avahi"
+PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl"
 
 EXTRA_OECONF = " \
                --enable-gnutls \
