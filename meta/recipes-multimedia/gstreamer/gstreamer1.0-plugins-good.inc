@@ -32,7 +32,7 @@ PACKAGECONFIG[speex]      = "--enable-speex,--disable-speex,speex"
 PACKAGECONFIG[taglib]     = "--enable-taglib,--disable-taglib,taglib"
 PACKAGECONFIG[vpx]        = "--enable-vpx,--disable-vpx,libvpx"
 PACKAGECONFIG[wavpack]    = "--enable-wavpack,--disable-wavpack,wavpack"
-
+PACKAGECONFIG[v4l]        = "--with-libv4l2,--without-libv4l2,libv4l"
 
 EXTRA_OECONF += " \
     --disable-directsound \
