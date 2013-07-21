@@ -18,6 +18,9 @@ SRC_URI = "http://www.dest-unreach.org/socat/download/socat-${PV}.tar.bz2;name=s
 SRC_URI[src.md5sum] = "7ddfea7e9e85f868670f94d3ea08358b"
 SRC_URI[src.sha256sum] = "faea2ed6c63bb97a59237fd43b7c35ad248317297e8bfeb2e6f2ec1e6bc58277"
 
+PACKAGECONFIG ??= "tcp-wrappers"
+PACKAGECONFIG[tcp-wrappers] = "--enable-libwrap,--disable-libwrap,tcp-wrappers"
+
 EXTRA_OECONF = " --disable-termios "
 
 inherit autotools
