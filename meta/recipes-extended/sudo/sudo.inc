@@ -13,6 +13,9 @@ LIC_FILES_CHKSUM = "file://doc/LICENSE;md5=d25a8240ca6decdecb9990789e593130 \
 
 inherit autotools
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[zlib] = "--enable-zlib,--disable-zlib,zlib"
+
 EXTRA_OECONF = "--with-editor=/bin/vi --with-env-editor"
 
 do_configure_prepend () {
