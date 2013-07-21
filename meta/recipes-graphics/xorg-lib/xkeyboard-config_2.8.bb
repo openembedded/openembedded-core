@@ -17,7 +17,7 @@ SRC_URI[md5sum] = "e66d567d85a954d589c5723fb0e1f3dd"
 SRC_URI[sha256sum] = "4e1cf5468d488aaf320ddfd439e03cbda0b213550fd734026d23138e4b2078ae"
 
 SECTION = "x11/libs"
-DEPENDS = "intltool-native virtual/gettext"
+DEPENDS = "intltool-native virtual/gettext util-macros"
 
 PR = "r0"
 
