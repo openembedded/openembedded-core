@@ -23,6 +23,9 @@ LDFLAGS_append =" -lts -lm"
 
 inherit autotools binconfig pkgconfig
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[jpeg2000] = "--enable-jpeg2000,--disable-jpeg2000,jasper"
+
 EXTRA_OECONF = "\
   --with-gfxdrivers=none \
   --enable-libmpeg3=no \
