@@ -6,7 +6,7 @@ PR = "r0"
 
 SRC_URI = "http://savannah.nongnu.org/download/dmidecode/${BP}.tar.bz2"
 
-COMPATIBLE_HOST = "(i.86|x86_64).*-linux"
+COMPATIBLE_HOST = "(i.86|x86_64|aarch64|arm).*-linux"
 
 do_install() {
 	oe_runmake DESTDIR="${D}" install
