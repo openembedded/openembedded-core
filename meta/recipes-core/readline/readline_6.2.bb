@@ -6,6 +6,7 @@ SRC_URI += "${GNU_MIRROR}/readline/readline-6.2-patches/readline62-001;name=patc
 ${GNU_MIRROR}/readline/readline-6.2-patches/readline62-002;name=patch2;apply=yes;striplevel=0 \
 ${GNU_MIRROR}/readline/readline-6.2-patches/readline62-003;name=patch3;apply=yes;striplevel=0 \
 ${GNU_MIRROR}/readline/readline-6.2-patches/readline62-004;name=patch4;apply=yes;striplevel=0 \
+file://readline-only-enable-meta-key-for-a-single-call-read.patch \
 "
 
 SRC_URI[archive.md5sum] = "67948acb2ca081f23359d0256e9a271c"
