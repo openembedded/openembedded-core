@@ -729,7 +729,7 @@ Index: elfutils-0.155/backends/Makefile.am
 ===================================================================
 --- elfutils-0.155.orig/backends/Makefile.am
 +++ elfutils-0.155/backends/Makefile.am
-@@ -32,7 +32,7 @@ INCLUDES += -I$(top_srcdir)/libebl -I$(t
+@@ -32,11 +32,11 @@
  	   -I$(top_srcdir)/libelf -I$(top_srcdir)/libdw
  
  
@@ -738,7 +738,12 @@ Index: elfutils-0.155/backends/Makefile.am
  libebl_pic = libebl_i386_pic.a libebl_sh_pic.a libebl_x86_64_pic.a \
  	     libebl_ia64_pic.a libebl_alpha_pic.a libebl_arm_pic.a \
  	     libebl_sparc_pic.a libebl_ppc_pic.a libebl_ppc64_pic.a \
-@@ -103,6 +103,9 @@ tilegx_SRCS = tilegx_init.c tilegx_symbo
+-	     libebl_s390_pic.a libebl_tilegx_pic.a
++	     libebl_s390_pic.a libebl_tilegx_pic.a libebl_parisc_pic.a
+ noinst_LIBRARIES = $(libebl_pic)
+ noinst_DATA = $(libebl_pic:_pic.a=.so)
+ 
+@@ -103,6 +103,9 @@
  libebl_tilegx_pic_a_SOURCES = $(tilegx_SRCS)
  am_libebl_tilegx_pic_a_OBJECTS = $(tilegx_SRCS:.c=.os)
  
@@ -752,7 +757,7 @@ Index: elfutils-0.155/libelf/elf.h
 ===================================================================
 --- elfutils-0.155.orig/libelf/elf.h
 +++ elfutils-0.155/libelf/elf.h
-@@ -1780,16 +1780,24 @@ typedef Elf32_Addr Elf32_Conflict;
+@@ -1780,16 +1780,24 @@
  #define R_PARISC_PCREL17F	12	/* 17 bits of rel. address.  */
  #define R_PARISC_PCREL14R	14	/* Right 14 bits of rel. address.  */
  #define R_PARISC_DPREL21L	18	/* Left 21 bits of rel. address.  */
@@ -777,7 +782,7 @@ Index: elfutils-0.155/libelf/elf.h
  #define R_PARISC_LTOFF_FPTR32	57	/* 32 bits LT-rel. function pointer. */
  #define R_PARISC_LTOFF_FPTR21L	58	/* LT-rel. fct ptr, left 21 bits. */
  #define R_PARISC_LTOFF_FPTR14R	62	/* LT-rel. fct ptr, right 14 bits. */
-@@ -1798,6 +1806,7 @@ typedef Elf32_Addr Elf32_Conflict;
+@@ -1798,6 +1806,7 @@
  #define R_PARISC_PLABEL21L	66	/* Left 21 bits of fdesc address.  */
  #define R_PARISC_PLABEL14R	70	/* Right 14 bits of fdesc address.  */
  #define R_PARISC_PCREL64	72	/* 64 bits PC-rel. address.  */
@@ -785,7 +790,7 @@ Index: elfutils-0.155/libelf/elf.h
  #define R_PARISC_PCREL22F	74	/* 22 bits PC-rel. address.  */
  #define R_PARISC_PCREL14WR	75	/* PC-rel. address, right 14 bits.  */
  #define R_PARISC_PCREL14DR	76	/* PC rel. address, right 14 bits.  */
-@@ -1823,6 +1832,8 @@ typedef Elf32_Addr Elf32_Conflict;
+@@ -1823,6 +1832,8 @@
  #define R_PARISC_LTOFF16WF	102	/* 16 bits LT-rel. address.  */
  #define R_PARISC_LTOFF16DF	103	/* 16 bits LT-rel. address.  */
  #define R_PARISC_SECREL64	104	/* 64 bits section rel. address.  */

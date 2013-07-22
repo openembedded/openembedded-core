@@ -645,7 +645,7 @@ Index: elfutils-0.155/libebl/eblopenbackend.c
 ===================================================================
 --- elfutils-0.155.orig/libebl/eblopenbackend.c
 +++ elfutils-0.155/libebl/eblopenbackend.c
-@@ -71,6 +71,8 @@ static const struct
+@@ -71,6 +71,8 @@
    { "sparc", "elf_sparc", "sparc", 5, EM_SPARC, 0, 0 },
    { "sparc", "elf_sparcv8plus", "sparc", 5, EM_SPARC32PLUS, 0, 0 },
    { "s390", "ebl_s390", "s390", 4, EM_S390, 0, 0 },
@@ -658,7 +658,7 @@ Index: elfutils-0.155/backends/common-reloc.c
 ===================================================================
 --- elfutils-0.155.orig/backends/common-reloc.c
 +++ elfutils-0.155/backends/common-reloc.c
-@@ -112,11 +112,13 @@ EBLHOOK(reloc_valid_use) (Elf *elf, int
+@@ -112,11 +112,13 @@
  }
  
  
@@ -672,7 +672,7 @@ Index: elfutils-0.155/backends/common-reloc.c
  
  bool
  EBLHOOK(none_reloc_p) (int reloc)
-@@ -138,7 +140,9 @@ EBLHOOK(init_reloc) (Ebl *ebl)
+@@ -138,7 +140,9 @@
    ebl->reloc_type_name = EBLHOOK(reloc_type_name);
    ebl->reloc_type_check = EBLHOOK(reloc_type_check);
    ebl->reloc_valid_use = EBLHOOK(reloc_valid_use);
@@ -686,7 +686,7 @@ Index: elfutils-0.155/backends/Makefile.am
 ===================================================================
 --- elfutils-0.155.orig/backends/Makefile.am
 +++ elfutils-0.155/backends/Makefile.am
-@@ -32,7 +32,7 @@ INCLUDES += -I$(top_srcdir)/libebl -I$(t
+@@ -32,11 +32,12 @@
  	   -I$(top_srcdir)/libelf -I$(top_srcdir)/libdw
  
  
@@ -695,7 +695,13 @@ Index: elfutils-0.155/backends/Makefile.am
  libebl_pic = libebl_i386_pic.a libebl_sh_pic.a libebl_x86_64_pic.a \
  	     libebl_ia64_pic.a libebl_alpha_pic.a libebl_arm_pic.a \
  	     libebl_sparc_pic.a libebl_ppc_pic.a libebl_ppc64_pic.a \
-@@ -107,6 +107,10 @@ parisc_SRCS = parisc_init.c parisc_symbo
+-	     libebl_s390_pic.a libebl_tilegx_pic.a libebl_parisc_pic.a
++	     libebl_s390_pic.a libebl_tilegx_pic.a libebl_parisc_pic.a \
++	     libebl_mips_pic.a
+ noinst_LIBRARIES = $(libebl_pic)
+ noinst_DATA = $(libebl_pic:_pic.a=.so)
+ 
+@@ -107,6 +108,10 @@
  libebl_parisc_pic_a_SOURCES = $(parisc_SRCS)
  am_libebl_parisc_pic_a_OBJECTS = $(parisc_SRCS:.c=.os)
  

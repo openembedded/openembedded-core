@@ -219,7 +219,7 @@ Index: elfutils-0.155/libelf/elf.h
 ===================================================================
 --- elfutils-0.155.orig/libelf/elf.h
 +++ elfutils-0.155/libelf/elf.h
-@@ -1126,6 +1126,9 @@ typedef struct
+@@ -1126,6 +1126,9 @@
  #define R_68K_GLOB_DAT	20		/* Create GOT entry */
  #define R_68K_JMP_SLOT	21		/* Create PLT entry */
  #define R_68K_RELATIVE	22		/* Adjust by program base */
@@ -233,7 +233,7 @@ Index: elfutils-0.155/backends/Makefile.am
 ===================================================================
 --- elfutils-0.155.orig/backends/Makefile.am
 +++ elfutils-0.155/backends/Makefile.am
-@@ -32,7 +32,7 @@ INCLUDES += -I$(top_srcdir)/libebl -I$(t
+@@ -32,12 +32,12 @@
  	   -I$(top_srcdir)/libelf -I$(top_srcdir)/libdw
  
  
@@ -242,7 +242,13 @@ Index: elfutils-0.155/backends/Makefile.am
  libebl_pic = libebl_i386_pic.a libebl_sh_pic.a libebl_x86_64_pic.a \
  	     libebl_ia64_pic.a libebl_alpha_pic.a libebl_arm_pic.a \
  	     libebl_sparc_pic.a libebl_ppc_pic.a libebl_ppc64_pic.a \
-@@ -111,6 +111,10 @@ mips_SRCS = mips_init.c mips_symbol.c mi
+ 	     libebl_s390_pic.a libebl_tilegx_pic.a libebl_parisc_pic.a \
+-	     libebl_mips_pic.a
++	     libebl_mips_pic.a libebl_m68k_pic.a
+ noinst_LIBRARIES = $(libebl_pic)
+ noinst_DATA = $(libebl_pic:_pic.a=.so)
+ 
+@@ -112,6 +112,10 @@
  libebl_mips_pic_a_SOURCES = $(mips_SRCS)
  am_libebl_mips_pic_a_OBJECTS = $(mips_SRCS:.c=.os)
  
