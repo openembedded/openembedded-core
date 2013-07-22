@@ -10,8 +10,8 @@ def gettext_dependencies(d):
 def gettext_oeconf(d):
     if oe.utils.inherits(d, 'native', 'cross'):
         return '--disable-nls'
-    # Remove the NLS bits if USE_NLS is no.
-    if d.getVar('USE_NLS', True) == 'no' and not oe.utils.inherits(d, 'nativesdk', 'cross-canadian'):
+    # Remove the NLS bits if USE_NLS is no or INHIBIT_DEFAULT_DEPS is set
+    if (d.getVar('USE_NLS', True) == 'no' or d.getVar('INHIBIT_DEFAULT_DEPS', True)) and not oe.utils.inherits(d, 'nativesdk', 'cross-canadian'):
         return '--disable-nls'
     return "--enable-nls"
 
