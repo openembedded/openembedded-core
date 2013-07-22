@@ -163,7 +163,13 @@ do_install_append_class-target() {
 
 pkg_postinst_${PN} () {
     if [ -n "$D" ]; then
-        exit 1
+        for I in $D/${libdir}/lib*.chk; do
+            DN=`dirname $I`
+            BN=`basename $I .chk`
+            FN=$DN/$BN.so
+            shlibsign -i $FN
+        done
+        exit 0
     fi
     signlibs.sh
 }
