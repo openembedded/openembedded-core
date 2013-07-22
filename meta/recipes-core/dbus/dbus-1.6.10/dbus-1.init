@@ -57,7 +57,7 @@ start_it_up()
   dbus-uuidgen --ensure  
 
   echo -n "Starting $DESC: "
-  start-stop-daemon --start --quiet --pidfile $PIDFILE \
+  start-stop-daemon -o --start --quiet --pidfile $PIDFILE \
     --user $DAEMONUSER --exec $DAEMON -- --system $PARAMS
   echo "$NAME."
   if [ -d $EVENTDIR ]; then
@@ -72,7 +72,7 @@ shut_it_down()
       run-parts --arg=stop $EVENTDIR
   fi
   echo -n "Stopping $DESC: "
-  start-stop-daemon --stop  --quiet --pidfile $PIDFILE \
+  start-stop-daemon -o --stop  --quiet --pidfile $PIDFILE \
     --user $DAEMONUSER
   # We no longer include these arguments so that start-stop-daemon
   # can do its job even given that we may have been upgraded.
