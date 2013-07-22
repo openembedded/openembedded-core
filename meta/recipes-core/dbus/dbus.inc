@@ -16,7 +16,9 @@ INC_PR = "r6"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch; \
-           file://dbus-1.init"
+           file://dbus-1.init \
+           file://os-test.patch \
+"
 
 inherit useradd autotools pkgconfig gettext update-rc.d
 
