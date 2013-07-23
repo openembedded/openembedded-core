@@ -526,7 +526,7 @@ if [ "x$RAMFS" = "xtrue" ]; then
 fi
 
 if [ "x$ISOFS" = "xtrue" ]; then
-    QEMUOPTIONS="-cdrom $ROOTFS"
+    QEMUOPTIONS="$QEMU_NETWORK_CMD -cdrom $ROOTFS $QEMU_UI_OPTIONS"
 fi
 
 if [ "x$QEMUOPTIONS" = "x" ]; then
