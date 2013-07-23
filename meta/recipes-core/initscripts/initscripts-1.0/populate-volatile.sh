@@ -19,7 +19,7 @@ ROOT_DIR=`echo $DIRNAME | sed -ne 's:/etc/.*::p'`
 [ "$ROOTFS_READ_ONLY" = "yes" ] && VOLATILE_ENABLE_CACHE=no
 
 CFGDIR="${ROOT_DIR}/etc/default/volatiles"
-TMPROOT="${ROOT_DIR}/var/tmp"
+TMPROOT="${ROOT_DIR}/var/volatile/tmp"
 COREDEF="00_core"
 
 [ "${VERBOSE}" != "no" ] && echo "Populating volatile Filesystems."
