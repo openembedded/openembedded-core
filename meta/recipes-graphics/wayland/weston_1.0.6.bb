@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=275efac2559a224527bd4fd593d38466 \
                     file://src/compositor.c;endline=23;md5=aa98a8db03480fe7d500d0b1f4b8850c"
 
 SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
+           file://0001-autotools-Add-a-libunwind-configure-switch.patch \
            file://weston.png \
            file://weston.desktop"
 SRC_URI[md5sum] = "63202129d66d5514e572814da5dfa1f7"
@@ -17,7 +18,7 @@ DEPENDS = "libxkbcommon gdk-pixbuf pixman cairo glib-2.0 mtdev jpeg"
 DEPENDS += "wayland mesa virtual/egl"
 
 EXTRA_OECONF  = "--disable-android-compositor --enable-setuid-install"
-EXTRA_OECONF += "--disable-tablet-shell --disable-xwayland"
+EXTRA_OECONF += "--disable-tablet-shell --disable-xwayland --disable-libunwind"
 EXTRA_OECONF += "--enable-simple-clients --enable-clients --disable-simple-egl-clients"
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'wayland', 'kms wayland', '', d)} \
