@@ -9,8 +9,6 @@
 # Short-Description: Start udevd, populate /dev and load drivers.
 ### END INIT INFO
 
-. /etc/init.d/functions
-
 export TZ=/etc/localtime
 
 [ -d /sys/class ] || exit 1
@@ -29,6 +27,11 @@ readfiles () {
 		   done < $filename
 	   fi
    done
+}
+
+kill_udevd () {
+    pid=`pidof -x udevd`
+    [ -n "$pid" ] && kill $pid
 }
 
 case "$1" in
@@ -89,7 +92,7 @@ case "$1" in
     fi
 
     # make_extra_nodes
-    killproc udevd > "/dev/null" 2>&1
+    kill_udevd > "/dev/null" 2>&1
 
     # trigger the sorted events
     echo -e '\000\000\000\000' > /proc/sys/kernel/hotplug
@@ -114,7 +117,12 @@ case "$1" in
     $0 start
     ;;
   status)
-    status udevd
+    pid=`pidof -x udevd`
+    if [ -n "$pid" ]; then
+	echo "udevd (pid $pid) is running ..."
+    else
+	echo "udevd is stopped"
+    fi
     ;;
   *)
     echo "Usage: $0 {start|stop|status|restart}"
