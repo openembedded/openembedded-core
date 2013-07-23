@@ -2,8 +2,6 @@ DESCRIPTION = "ConsoleKit is a framework for defining and tracking users, login 
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/ConsoleKit"
 BUGTRACKER="https://bugs.freedesktop.org/buglist.cgi?query_format=specific&product=ConsoleKit"
 
-PR = "r10"
-
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://src/main.c;endline=21;md5=0a994e09769780220163255d8f9071c3"
@@ -13,11 +11,11 @@ RDEPENDS_${PN} += "base-files"
 
 inherit autotools pkgconfig
 
-SRC_URI = "http://www.freedesktop.org/software/ConsoleKit/dist/ConsoleKit-${PV}.tar.bz2 \
+SRC_URI = "http://www.freedesktop.org/software/ConsoleKit/dist/ConsoleKit-${PV}.tar.xz \
            file://sepbuildfix.patch"
-SRC_URI[md5sum] = "f2657f93761206922d558471a936fbc3"
-SRC_URI[sha256sum] = "43e0780c53078e125efcec3f847e484dc3533e49b408ce6a0ab1b223686b9c38"
 
+SRC_URI[md5sum] = "611792b4d616253a5bdec9175f8b7678"
+SRC_URI[sha256sum] = "b41d17e06f80059589fbeefe96ad07bcc564c49e65516da1caf975146475565c"
 
 S = "${WORKDIR}/ConsoleKit-${PV}"
 
