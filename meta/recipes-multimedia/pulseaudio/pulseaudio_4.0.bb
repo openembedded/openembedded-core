@@ -1,19 +1,12 @@
 require pulseaudio.inc
 
-PR = "r0"
-
-DEPENDS += "libjson gdbm speex libxml-parser-perl-native"
-
-inherit gettext perlnative
-
 SRC_URI = "http://freedesktop.org/software/pulseaudio/releases/pulseaudio-${PV}.tar.xz \
            file://volatiles.04_pulse"
 
-SRC_URI[md5sum] = "47fd7eca8479c757822bee68a1feef25"
-SRC_URI[sha256sum] = "c90bfda29605942d08e3e218ef10e3c660506a06651a616bfbb6a6df8392836d"
+SRC_URI[md5sum] = "591f211db2790a7e4d222f2dc6858db3"
+SRC_URI[sha256sum] = "35ceb36bb1822fe54f0b5e4863b4f486769fdfb8ff2111f01fd8778928f9cdae"
 
 do_compile_prepend() {
     mkdir -p ${S}/libltdl
     cp ${STAGING_LIBDIR}/libltdl* ${S}/libltdl
 }
-

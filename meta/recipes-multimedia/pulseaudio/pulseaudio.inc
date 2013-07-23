@@ -7,15 +7,13 @@ LIC_FILES_CHKSUM = "file://GPL;md5=4325afd396febcb659c36b49533135d4 \
                     file://LGPL;md5=2d5025d4aa3495befef8f17206a5b0a1 \
                     file://src/modules/bluetooth/proximity-helper.c;beginline=1;endline=25;md5=e4cc710e40a4d900c2c294167bc58270 \
                     file://src/pulsecore/resampler.h;beginline=4;endline=23;md5=c3d539b93f8c82a1780bfa3cfa544a95"
+
 DEPENDS = "libatomics-ops liboil libsamplerate0 libsndfile1 libtool"
 # optional
 DEPENDS += "udev alsa-lib glib-2.0 dbus gconf"
+DEPENDS += "libjson gdbm speex libxml-parser-perl-native"
 
-SRC_URI = "http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-${PV}.tar.gz \
-           file://gcc4-compile-fix.patch \
-           file://volatiles.04_pulse"
-
-inherit autotools pkgconfig useradd
+inherit autotools pkgconfig useradd gettext perlnative
 
 # *.desktop rules wont be generated during configure and build will fail
 # if using --disable-nls
@@ -54,7 +52,6 @@ PACKAGECONFIG[jack] = "--enable-jack,--disable-jack,jack"
 
 EXTRA_OECONF_append_arm += "${@bb.utils.contains("TUNE_FEATURES", "neon", "", "--enable-neon-opt=no", d)}"
 
-PARALLEL_MAKE = ""
 
 export TARGET_PFPU = "${TARGET_FPU}"
 
