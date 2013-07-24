@@ -13,7 +13,7 @@ import os
 
 class SSHControl(object):
 
-    def __init__(self, host=None, timeout=200, logfile=None):
+    def __init__(self, host=None, timeout=300, logfile=None):
         self.host = host
         self.timeout = timeout
         self._out = ''
@@ -52,9 +52,10 @@ class SSHControl(object):
             self._ret = sshconn.poll()
         else:
             if timeout is None:
-                endtime = time.time() + self.timeout
+                tdelta = self.timeout
             else:
-                endtime = time.time() + timeout
+                tdelta = timeout
+            endtime = time.time() + tdelta
             while sshconn.poll() is None and time.time() < endtime:
                 time.sleep(1)
             # process hasn't returned yet
@@ -64,7 +65,8 @@ class SSHControl(object):
                 sshconn.kill()
                 self._out = sshconn.stdout.read()
                 sshconn.stdout.close()
-                self.log("[!!! process killed]")
+                self._out += "\n[!!! SSH command timed out after %d seconds and it was killed]" % tdelta
+                self.log("[!!! SSH command timed out after %d seconds and it was killed]" % tdelta)
             else:
                 self._out = sshconn.stdout.read()
                 self._ret = sshconn.poll()
