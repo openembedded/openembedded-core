@@ -24,6 +24,9 @@ Extend the original commit to remove the 1 second hardcoded
 timer values from the RELTIME and ITIMER options.  Use the
 the actual interval instead.
 
+Upstream-Status:  Accepted
+[ https://git.kernel.org/cgit/linux/kernel/git/clrkwllms/rt-tests.git/commit/?h=work&id=1b92da30837e9552aba209cbdf938877f0fd3bbf ]
+
 Signed-off-by: Jim Somerville <Jim.Somerville@windriver.com>
 ---
  src/cyclictest/cyclictest.c |    6 ++----
