@@ -190,7 +190,7 @@ CONFIG_EAP_LEAP=y
 #CONFIG_EAP_TNC=y
 
 # Wi-Fi Protected Setup (WPS)
-#CONFIG_WPS=y
+CONFIG_WPS=y
 
 # EAP-IKEv2
 #CONFIG_EAP_IKEV2=y
@@ -407,3 +407,22 @@ CONFIG_TLS = gnutls
 #CONFIG_GNUTLS_EXTRA=y
 CONFIG_CTRL_IFACE_DBUS=y
 CONFIG_CTRL_IFACE_DBUS_NEW=y
+
+# AP mode operations with wpa_supplicant
+# This can be used for controlling AP mode operations with wpa_supplicant. It
+# should be noted that this is mainly aimed at simple cases like
+# WPA2-Personal while more complex configurations like WPA2-Enterprise with an
+# external RADIUS server can be supported with hostapd.
+CONFIG_AP=y
+
+CONFIG_BGSCAN_SIMPLE=y
+
+# Autoscan
+# This can be used to enable automatic scan support in wpa_supplicant.
+# See wpa_supplicant.conf for more information on autoscan usage.
+#
+# Enabling directly a module will enable autoscan support.
+# For exponential module:
+CONFIG_AUTOSCAN_EXPONENTIAL=y
+# For periodic module:
+#CONFIG_AUTOSCAN_PERIODIC=y
