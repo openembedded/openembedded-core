@@ -1,7 +1,7 @@
 Add 'install-ptest' rule.
 
 Signed-off-by: Tudor Florea <tudor.florea@enea.com>
-Upstream-status: Pending
+Upstream-Status: Pending
 
 diff -ruN a/Makefile.am b/Makefile.am
 --- a/Makefile.am	2013-07-12 17:11:05.278331557 +0200
