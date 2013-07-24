@@ -26,6 +26,7 @@ import os.path
 import fnmatch
 import re
 import optparse
+from collections import defaultdict
 
 
 def glob(args, usage):
@@ -186,6 +187,38 @@ def read_value(args, usage):
                 qvar = "%s_%s" % (var, mappedpkg)
             print(readvar(revlink, qvar))
 
+def lookup_pkg(args, usage):
+    if len(args) < 2:
+        usage()
+        sys.exit(1)
+
+    pkgdata_dir = args[0]
+    pkgs = args[1].split()
+
+    if not os.path.exists(pkgdata_dir):
+        print('ERROR: Unable to find pkgdata directory %s' % pkgdata_dir)
+        sys.exit(1)
+
+    mappings = defaultdict(list)
+    for pkg in pkgs:
+        pkgfile = os.path.join(pkgdata_dir, 'runtime', pkg)
+        if os.path.exists(pkgfile):
+            with open(pkgfile, 'r') as f:
+                for line in f:
+                    fields = line.rstrip().split(': ')
+                    if fields[0] == 'PKG_%s' % pkg:
+                        mappings[pkg].append(fields[1])
+                        break
+    if len(mappings) < len(pkgs):
+        missing = list(set(pkgs) - set(mappings.keys()))
+        sys.stderr.write("ERROR: the following packages could not be found: %s\n" % ', '.join(missing))
+        sys.exit(1)
+
+    items = []
+    for pkg in pkgs:
+        items.extend(mappings.get(pkg, []))
+    print '\n'.join(items)
+
 def find_path(args, usage):
     if len(args) < 2:
         usage()
@@ -227,6 +260,9 @@ Available commands:
     glob <pkgdatadir> <pkglistfile> "<globs>"
         expand one or more glob expressions over the packages listed in
         pkglistfile (one package per line)
+    lookup-pkg <pkgdatadir> "<recipe-pkgs>"
+        look up the specified recipe-space package name(s) to see what the
+        final runtime package name is (e.g. eglibc becomes libc6)
     find-path <pkgdatadir> <path>
         find the package providing the specified path (wildcards * ? allowed)
     read-value <pkgdatadir> <value-name> "<pkgs>"
@@ -246,6 +282,8 @@ Available commands:
 
     if args[0] == "glob":
         glob(args[1:], parser.print_help)
+    elif args[0] == "lookup-pkg":
+        lookup_pkg(args[1:], parser.print_help)
     elif args[0] == "find-path":
         find_path(args[1:], parser.print_help)
     elif args[0] == "read-value":
