@@ -12,6 +12,7 @@ RDEPENDS_${PN} = "${PN}-inittab"
 SRC_URI = "http://download.savannah.gnu.org/releases-noredirect/sysvinit/sysvinit-${PV}.tar.bz2 \
 	   file://install.patch \
 	   file://crypt-lib.patch \
+	   file://pidof-add-m-option.patch \
            file://need \
            file://provide \
            file://rcS-default \
