@@ -13,12 +13,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=aa33e583cc3e96238a8467b485e62992"
 
 DEPENDS += "virtual/libx11 randrproto libxrender libxext"
 
-PR = "r0"
 PE = "1"
 
 XORG_PN = "libXrandr"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "0c843636124cc1494e3d87df16957672"
-SRC_URI[sha256sum] = "033ad0ac2f012afb05268660f6d78705c85f84689f92fa7b47ce12959b15f5c3"
+SRC_URI[md5sum] = "8dbac4e972348dcbd3a0673ce2e37919"
+SRC_URI[sha256sum] = "d914a0490fd0a2ea6c3194505b5b28c56e2a277d8f4648b0275ee0ee370fb905"
