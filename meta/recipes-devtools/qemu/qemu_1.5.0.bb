@@ -9,3 +9,5 @@ SRC_URI += "file://fdt_header.patch \
 SRC_URI_prepend = "http://wiki.qemu.org/download/qemu-${PV}.tar.bz2"
 SRC_URI[md5sum] = "b6f3265b8ed39d77e8f354f35cc26e16"
 SRC_URI[sha256sum] = "b22b30ee9712568dfb4eedf76783f4a76546e1cbc41659b909646bcf0b4867bb"
+
+COMPATIBLE_HOST_mips64 = "null"

@@ -12,3 +12,5 @@ SRC_URI_prepend = "git://git.qemu.org/qemu.git;protocol=git"
 S = "${WORKDIR}/git"
 
 DEFAULT_PREFERENCE = "-1"
+
+COMPATIBLE_HOST_mips64 = "null"
