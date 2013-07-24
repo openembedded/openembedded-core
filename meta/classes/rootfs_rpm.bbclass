@@ -163,8 +163,7 @@ rpm_setup_smart_target_config() {
 	# Set up smart configuration for the target
 	rm -rf ${IMAGE_ROOTFS}/var/lib/smart
 	smart --data-dir=${IMAGE_ROOTFS}/var/lib/smart channel --add rpmsys type=rpm-sys -y
-	smart --data-dir=${IMAGE_ROOTFS}/var/lib/smart config --set rpm-nolinktos=1
-	smart --data-dir=${IMAGE_ROOTFS}/var/lib/smart config --set rpm-noparentdirs=1
+	package_write_smart_config ${IMAGE_ROOTFS}
 	rm -f ${IMAGE_ROOTFS}/var/lib/smart/config.old
 }
 

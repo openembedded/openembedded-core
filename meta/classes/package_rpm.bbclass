@@ -224,6 +224,14 @@ translate_oe_to_smart() {
 	export pkgs_to_install
 }
 
+package_write_smart_config() {
+	# Write common configuration for host and target usage
+	smart --data-dir=$1/var/lib/smart config --set rpm-nolinktos=1
+	smart --data-dir=$1/var/lib/smart config --set rpm-noparentdirs=1
+	for i in ${BAD_RECOMMENDATIONS}; do
+		smart --data-dir=$1/var/lib/smart flag --set ignore-recommends $i
+	done
+}
 
 #
 # Install a bunch of packages using rpm.
@@ -345,10 +353,9 @@ EOF
 		rm -rf ${target_rootfs}/var/lib/smart
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-root=${target_rootfs}
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-dbpath=${rpmlibdir}
-		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-nolinktos=1
-		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-noparentdirs=1
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._var=${localstatedir}
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._tmppath=/install/tmp
+		package_write_smart_config ${target_rootfs}
 		# Optional debugging
 		#smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-log-level=debug
 		#smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-log-file=/tmp/smart-debug-logfile

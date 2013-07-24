@@ -21,8 +21,6 @@ OPKG_POSTPROCESS_COMMANDS = "ipk_insert_feed_uris; "
 
 OPKGLIBDIR = "${localstatedir}/lib"
 
-# Which packages to not install on the basis of a recommendation
-BAD_RECOMMENDATIONS ?= ""
 MULTILIBRE_ALLOW_REP = "${OPKGLIBDIR}/opkg"
 
 fakeroot rootfs_ipk_do_rootfs () {
