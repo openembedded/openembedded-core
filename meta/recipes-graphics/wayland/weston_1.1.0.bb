@@ -18,7 +18,7 @@ SRC_URI[sha256sum] = "e7715d2c731f77a729c994a599ffdaebac1307b2dd9336136706869fa5
 inherit autotools pkgconfig useradd
 
 DEPENDS = "libxkbcommon gdk-pixbuf pixman cairo glib-2.0 jpeg"
-DEPENDS += "wayland mesa virtual/egl"
+DEPENDS += "wayland mesa virtual/egl pango"
 
 EXTRA_OECONF = "--disable-android-compositor \
                 --enable-setuid-install \
