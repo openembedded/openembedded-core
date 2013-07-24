@@ -26,5 +26,5 @@ do_compile[noexec] = "1"
 
 do_install(){
 	install -d ${D}${sysconfdir}/init.d/
-	install -m 0755 ${S}/rc.d/init.d/functions ${D}${sysconfdir}/init.d/functions
+	install -m 0644 ${S}/rc.d/init.d/functions ${D}${sysconfdir}/init.d/functions
 }
