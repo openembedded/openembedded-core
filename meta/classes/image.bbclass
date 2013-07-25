@@ -132,6 +132,7 @@ python () {
         pn = d.getVar('PN', True)
         runtime_mapping_rename("PACKAGE_INSTALL", pn, d)
         runtime_mapping_rename("PACKAGE_INSTALL_ATTEMPTONLY", pn, d)
+        runtime_mapping_rename("BAD_RECOMMENDATIONS", pn, d)
 
     # Ensure we have the vendor list for complementary package handling
     ml_vendor_list = ""
