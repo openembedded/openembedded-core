@@ -1,0 +1,28 @@
+strace: Add ptest
+
+Signed-off-by: Gabriel Barbu <gabriel.barbu@enea.com>
+Upstream-Status: Pending
+
+--- old/tests/Makefile.am	2013-07-23 13:44:24.660481381 +0200
++++ new/tests/Makefile.am	2013-07-23 16:22:42.937654391 +0200
+@@ -9,3 +9,20 @@
+ EXTRA_DIST = init.sh $(TESTS)
+ 
+ CLEANFILES = check.log
++
++buildtest-TESTS: $(check_PROGRAMS) $(TESTS)
++
++install-ptest:
++	install $(BUILDDIR)/strace $(DESTDIR)
++	install "$(srcdir)/.."/strace-log-merge $(DESTDIR)
++	install -d $(DESTDIR)/$(TESTDIR)
++	cp $(BUILDDIR)/$(TESTDIR)/Makefile $(DESTDIR)/$(TESTDIR)
++	sed -i -e 's/^Makefile:/_Makefile:/' $(DESTDIR)/$(TESTDIR)/Makefile
++	for file in $(check_PROGRAMS); do \
++		install $(BUILDDIR)/$(TESTDIR)/$$file $(DESTDIR)/$(TESTDIR); \
++	done
++	for file in $(EXTRA_DIST); do \
++		install $(srcdir)/$$file $(DESTDIR)/$(TESTDIR); \
++		sed -i -e 's/$${srcdir=.}/./g' $(DESTDIR)/$(TESTDIR)/$$file; \
++	done
++	sed -i -e 's/$$srcdir/./g' $(DESTDIR)/$(TESTDIR)/net
