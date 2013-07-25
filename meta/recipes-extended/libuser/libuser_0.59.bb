@@ -14,8 +14,8 @@ SECTION = "base"
 SRC_URI = "https://fedorahosted.org/releases/l/i/libuser/libuser-${PV}.tar.xz \
            file://fixsepbuild.patch"
 
-SRC_URI[md5sum] = "1fc3ef3f3a3955b2d78562ff4daed793"
-SRC_URI[sha256sum] = "12a0c09d016d80687e04227a00a89e3c056d3b48bfa2444a9028e6474d8e1dbd"
+SRC_URI[md5sum] = "22835cbfec894b1e9491845ed5023244"
+SRC_URI[sha256sum] = "27a93ed1f6424cfbf539c56cf0ca54d3b9b2c4daba6c408464e3c77ddf9c7a2f"
 PR = "r0"
 
 DEPENDS = "popt libpam glib-2.0 xz-native docbook-utils-native linuxdoc-tools-native python"
