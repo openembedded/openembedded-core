@@ -1,3 +1,5 @@
+Upstream-Status: Pending
+
 --- a/apt-pkg/contrib/weakptr.h
 +++ b/apt-pkg/contrib/weakptr.h
 @@ -21,6 +21,7 @@
