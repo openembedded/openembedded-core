@@ -16,12 +16,14 @@ PROVIDES += "\
 	virtual/${TARGET_PREFIX}gcc-intermediate \
 	virtual/${TARGET_PREFIX}binutils \
 	virtual/${TARGET_PREFIX}libc-for-gcc \
+	virtual/${TARGET_PREFIX}libc-initial \
 	virtual/${TARGET_PREFIX}compilerlibs \
 	virtual/libc \
 	virtual/libintl \
 	virtual/libiconv \
 	glibc-thread-db \
 	libgcc \
+	eglibc \
 	virtual/linux-libc-headers \
 "
 PV = "${CSL_VER_MAIN}"
