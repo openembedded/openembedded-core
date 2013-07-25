@@ -157,7 +157,7 @@ mount_and_boot() {
     case $union_fs_type in
 	"overlayfs")
 	    mkdir -p /rootfs.ro /rootfs.rw
-	    if ! mount -o ro,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE /rootfs.ro; then
+	    if ! mount -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE /rootfs.ro; then
 		rm -rf /rootfs.ro /rootfs.rw
 		fatal "Could not mount rootfs image"
 	    else
@@ -170,7 +170,7 @@ mount_and_boot() {
 	    ;;
 	"aufs")
 	    mkdir -p /rootfs.ro /rootfs.rw
-	    if ! mount -o ro,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE /rootfs.ro; then
+	    if ! mount -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE /rootfs.ro; then
 		rm -rf /rootfs.ro /rootfs.rw
 		fatal "Could not mount rootfs image"
 	    else
@@ -182,7 +182,7 @@ mount_and_boot() {
 	    fi
 	    ;;
 	"")
-	    if ! mount -o ro,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
+	    if ! mount -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
 		fatal "Could not mount rootfs image"
 	    fi
 	    ;;
