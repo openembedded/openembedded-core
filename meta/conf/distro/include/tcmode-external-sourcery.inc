@@ -27,13 +27,16 @@ PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-intermediate = "external-sourcery
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ = "external-sourcery-toolchain"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}binutils = "external-sourcery-toolchain"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}libc-for-gcc = "external-sourcery-toolchain"
+PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}libc-initial = "external-sourcery-toolchain"
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}compilerlibs = "external-sourcery-toolchain"
 PREFERRED_PROVIDER_libgcc = "external-sourcery-toolchain"
+PREFERRED_PROVIDER_eglibc = "external-sourcery-toolchain"
 PREFERRED_PROVIDER_virtual/libc = "external-sourcery-toolchain"
 PREFERRED_PROVIDER_virtual/libintl = "external-sourcery-toolchain"
 PREFERRED_PROVIDER_virtual/libiconv = "external-sourcery-toolchain"
 PREFERRED_PROVIDER_glibc-thread-db = "external-sourcery-toolchain"
 PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-sourcery-toolchain"
+PREFERRED_PROVIDER_virtual/linux-libc-headers-dev = "external-sourcery-toolchain"
 PREFERRED_PROVIDER_gdbserver ??= "external-sourcery-toolchain"
 
 # No need to re-compile the locale files
