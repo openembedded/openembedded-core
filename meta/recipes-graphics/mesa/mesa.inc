@@ -30,6 +30,7 @@ PACKAGECONFIG ??= "egl gles dri \
 
 X11_DEPS = "xf86driproto glproto virtual/libx11 libxext libxxf86vm libxdamage libxfixes"
 PACKAGECONFIG[x11] = "--enable-glx-tls,--disable-glx,${X11_DEPS}"
+PACKAGECONFIG[xvmc] = "--enable-xvmc,--disable-xvmc,libxvmc"
 PACKAGECONFIG[wayland] = ",,wayland"
 
 DRIDRIVERS = "swrast"
@@ -78,6 +79,7 @@ PACKAGES =+ "libegl-mesa libegl-mesa-dev \
              libwayland-egl libwayland-egl-dev \
              libegl-gallium libgbm-gallium \
              libopenvg libopenvg-dev \
+             libxvmcsoftpipe libxvmcsoftpipe-dev \
             "
 
 do_install_append () {
@@ -146,6 +148,7 @@ FILES_libwayland-egl = "${libdir}/libwayland-egl.so.*"
 FILES_libegl-gallium = "${libdir}/egl/egl_gallium.so*"
 FILES_libgbm-gallium = "${libdir}/gbm/gbm_gallium_drm.so*"
 FILES_libopenvg = "${libdir}/libOpenVG.so.*"
+FILES_libxvmcsoftpipe = "${libdir}/libXvMCsoftpipe.so.*"
 
 FILES_${PN}-dev = "${libdir}/pkgconfig/dri.pc"
 FILES_libdricore-dev = "${libdir}/libdricore*.*"
@@ -160,5 +163,6 @@ FILES_libosmesa-dev = "${libdir}/libOSMesa.* ${includedir}/osmesa.h ${libdir}/pk
 FILES_libwayland-egl-dev = "${libdir}/pkgconfig/wayland-egl.pc ${libdir}/libwayland-egl.*"
 FILES_libopenvg-dev = "${libdir}/libOpenVG.so ${libdir}/libOpenVG.la* \
                        ${includedir}/VG ${libdir}/pkgconfig/vg.pc"
+FILES_libxvmcsoftpipe-dev = "${libdir}/libXvMCsoftpipe.so ${libdir}/libXvMCsoftpipe.la"
 
 FILES_${PN}-dbg += "${libdir}/dri/.debug/* ${libdir}/egl/.debug/* ${libdir}/gbm/.debug/* ${libdir}/gallium-pipe/.debug"
