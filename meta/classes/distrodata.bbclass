@@ -71,7 +71,7 @@ python do_distrodata_np() {
         rstatus = localdata.getVar('RECIPE_COLOR', True)
         if rstatus is not None:
                 rstatus = rstatus.replace(',','')
-                
+
         pupver = localdata.getVar('RECIPE_UPSTREAM_VERSION', True)
         if pcurver == pupver:
                 vermatch="1"
@@ -157,7 +157,7 @@ python do_distrodata() {
         rstatus = localdata.getVar('RECIPE_COLOR', True)
         if rstatus is not None:
                 rstatus = rstatus.replace(',','')
-                
+
         pupver = localdata.getVar('RECIPE_UPSTREAM_VERSION', True)
         if pcurver == pupver:
                 vermatch="1"
@@ -408,7 +408,7 @@ python do_checkpkg() {
                                 s = "%s[^\d\"]*?(\d+[\.\-_])+\d+/?" % m.group()
                         else:
                                 s = "(\d+[\.\-_])+\d+/?"
-                                
+
                         searchstr = "[hH][rR][eE][fF]=\"%s\">" % s
 
                         reg = re.compile(searchstr)
@@ -599,17 +599,17 @@ python do_checkpkg() {
                 altpath = path
                 dirver = "-"
                 curname = "-"
-        
+
                 """
                 match version number amid the path, such as "5.7" in:
-                        http://download.gnome.org/sources/${PN}/5.7/${PN}-${PV}.tar.gz        
+                        http://download.gnome.org/sources/${PN}/5.7/${PN}-${PV}.tar.gz
                 N.B. how about sth. like "../5.7/5.8/..."? Not find such example so far :-P
                 """
                 m = re.search(r"[^/]*(\d+\.)+\d+([\-_]r\d+)*/", path)
                 if m:
                         altpath = path.split(m.group())[0]
                         dirver = m.group().strip("/")
-        
+
                         """use new path and remove param. for wget only param is md5sum"""
                         alturi = bb.encodeurl([type, host, altpath, user, pswd, {}])
                         my_uri = d.getVar('REGEX_URI', True)
@@ -624,7 +624,7 @@ python do_checkpkg() {
                 """Now try to acquire all remote files in current directory"""
                 if not re.match("Err", newver):
                         curname = altpath.split("/")[-1]
-        
+
                         """get remote name by skipping pacakge name"""
                         m = re.search(r"/.*/", altpath)
                         if not m:
@@ -650,7 +650,7 @@ python do_checkpkg() {
                                 pstatus = "UPDATE"
                         else:
                                 pstatus = "MATCH"
-        
+
                 if re.match("Err", newver):
                         pstatus = newver + ":" + altpath + ":" + dirver + ":" + curname
         elif type == 'git':
@@ -796,7 +796,7 @@ python do_checkpkg() {
                         pmstatus = "MATCH"
                 else:
                         pmstatus = "UPDATE"
-        
+
         psrcuri = psrcuri.split()[0]
         pdepends = "".join(pdepends.split("\t"))
         pdesc = "".join(pdesc.split("\t"))
