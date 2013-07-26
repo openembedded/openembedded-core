@@ -18,6 +18,7 @@ def csl_get_version(d):
 		stdout, stderr = csl_run(d, 'gcc', '-v')
 	except bb.process.CmdError as exc:
 		bb.error('Failed to obtain CodeSourcery toolchain version: %s' % exc)
+		bb.error('Make sure that MACHINE is set correctly in your local.conf and the toolchain supports %s.' % d.getVar("TARGET_ARCH", True))
 		return 'UNKNOWN'
 	else:
 		last_line = stderr.splitlines()[-1]
