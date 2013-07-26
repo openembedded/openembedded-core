@@ -563,7 +563,10 @@ python do_checkpkg() {
                chk_uri = src_uri
         pdesc = localdata.getVar('DESCRIPTION', True)
         pgrp = localdata.getVar('SECTION', True)
-        pversion = localdata.getVar('PV', True)
+        if localdata.getVar('PRSPV', True):
+                pversion = localdata.getVar('PRSPV', True)
+        else:
+                pversion = localdata.getVar('PV', True)
         plicense = localdata.getVar('LICENSE', True)
         psection = localdata.getVar('SECTION', True)
         phome = localdata.getVar('HOMEPAGE', True)
@@ -590,9 +593,16 @@ python do_checkpkg() {
 
         (type, host, path, user, pswd, parm) = bb.decodeurl(uri)
         if type in ['http', 'https', 'ftp']:
-                pcurver = d.getVar('PV', True)
+                if d.getVar('PRSPV', True):
+                    pcurver = d.getVar('PRSPV', True)
+                else:
+                    pcurver = d.getVar('PV', True)
         else:
-                pcurver = d.getVar("SRCREV", True)
+                if d.getVar('PRSPV', True):
+                    pcurver = d.getVar('PRSPV', True)
+                else:
+                    pcurver = d.getVar("SRCREV", True)
+
 
         if type in ['http', 'https', 'ftp']:
                 newver = pcurver
@@ -614,7 +624,10 @@ python do_checkpkg() {
                         alturi = bb.encodeurl([type, host, altpath, user, pswd, {}])
                         my_uri = d.getVar('REGEX_URI', True)
                         if my_uri:
-                            newver = d.getVar('PV', True)
+                            if d.getVar('PRSPV', True):
+                                    newver = d.getVar('PRSPV', True)
+                            else:
+                                    newver = d.getVar('PV', True)
                         else:
                             newver = check_new_dir(alturi, dirver, d)
                         altpath = path
@@ -736,7 +749,7 @@ python do_checkpkg() {
                                 pupver = latest_pv + tmp3.group('git_prefix') + latest_head
                         else:
                                 if not tmp3:
-                                        bb.plain("#DEBUG# Current version (%s) doesn't match the usual pattern" %pversion)
+                                        bb.plain("#DEBUG# Package %s: current version (%s) doesn't match the usual pattern" %(pname, pversion))
         elif type == 'svn':
                 options = []
                 if user:
