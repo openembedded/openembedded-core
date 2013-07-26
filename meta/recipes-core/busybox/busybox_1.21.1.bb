@@ -22,6 +22,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://umount.busybox \
            file://defconfig \
            file://stat-usr-bin.patch \
+           file://su-usr-bin.patch \
            file://busybox-syslog.service.in \
            file://busybox-klogd.service.in \
            file://testsuite-du-du-k-works-fix-false-positive.patch \
