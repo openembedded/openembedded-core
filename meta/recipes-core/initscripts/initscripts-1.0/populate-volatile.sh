@@ -42,7 +42,7 @@ create_file() {
 			# but these failures should not be logged to make sure the do_rootfs
 			# process doesn't fail. This does no harm, as this script will
 			# run on target to set up the correct files and directories.
-			eval $EXEC > /dev/null 2>&1 &
+			eval $EXEC > /dev/null 2>&1
 		fi
 	}
 }
@@ -87,7 +87,7 @@ link_file() {
 	else
 		# For the same reason with create_file(), failures should
 		# not be logged.
-		eval $EXEC > /dev/null 2>&1 &
+		eval $EXEC > /dev/null 2>&1
 	fi
 }
 
@@ -156,7 +156,7 @@ apply_cfgfile() {
 		[ "${TTYPE}" = "l" ] && {
 			TSOURCE="$TLTARGET"
 			[ "${VERBOSE}" != "no" ] && echo "Creating link -${TNAME}- pointing to -${TSOURCE}-."
-			link_file "${TSOURCE}" "${TNAME}" &
+			link_file "${TSOURCE}" "${TNAME}"
 			continue
 		}
 
