@@ -6,17 +6,13 @@ Upstream-Status: Inappropriate [OE Specific]
 
 RP 2011/12/07
 
-Index: dpkg-1.16.8/src/script.c
+Index: dpkg-1.17.1/src/script.c
 ===================================================================
---- dpkg-1.16.8.orig/src/script.c
-+++ dpkg-1.16.8/src/script.c
-@@ -102,38 +102,10 @@ setexecute(const char *path, struct stat
- static const char *
- preexecscript(struct command *cmd)
- {
--	const char *admindir = dpkg_db_get_dir();
--	size_t instdirl = strlen(instdir);
--
+--- dpkg-1.17.1.orig/src/script.c
++++ dpkg-1.17.1/src/script.c
+@@ -111,36 +111,9 @@ preexecscript(struct command *cmd)
+ 	size_t instdirl = strlen(instdir);
+ 
  	if (*instdir) {
 -		if (strncmp(admindir, instdir, instdirl) != 0)
 -			ohshit(_("admindir must be inside instdir for dpkg to work properly"));
@@ -25,10 +21,11 @@ Index: dpkg-1.16.8/src/script.c
 -
 -		if (chroot(instdir))
 -			ohshite(_("failed to chroot to `%.250s'"), instdir);
--		if (chdir("/"))
--			ohshite(_("failed to chdir to `%.255s'"), "/");
-+        setenv("D", instdir, 1);
- 	}
+-	}
+-	/* Switch to a known good directory to give the maintainer script
+-	 * a saner environment, also needed after the chroot(). */
+-	if (chdir("/"))
+-		ohshite(_("failed to chdir to `%.255s'"), "/");
 -	if (debug_has_flag(dbg_scripts)) {
 -		struct varbuf args = VARBUF_INIT;
 -		const char **argv = cmd->argv;
@@ -41,7 +38,8 @@ Index: dpkg-1.16.8/src/script.c
 -		debug(dbg_scripts, "fork/exec %s (%s )", cmd->filename,
 -		      args.buf);
 -		varbuf_destroy(&args);
--	}
++		setenv("D", instdir, 1);
+ 	}
 -	if (!instdirl)
 -		return cmd->filename;
 -
@@ -50,4 +48,4 @@ Index: dpkg-1.16.8/src/script.c
 +	return cmd->filename;
  }
  
- static int
+ /**

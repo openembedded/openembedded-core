@@ -3,14 +3,15 @@ busybox-1.19.4 tar utility doesn't support --warning=no-timestamp
 Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
 
 Upstream-Status: Inappropriate [configuration]
---- a/dpkg-deb/extract.c
-+++ b/dpkg-deb/extract.c
-@@ -319,7 +319,7 @@ extracthalf(const char *debar, const cha
-         }
-       }
+Index: dpkg-1.17.1/dpkg-deb/extract.c
+===================================================================
+--- dpkg-1.17.1.orig/dpkg-deb/extract.c
++++ dpkg-1.17.1/dpkg-deb/extract.c
+@@ -318,7 +318,6 @@ extracthalf(const char *debar, const cha
  
--      execlp(TAR, "tar", buffer, "-", "--warning=no-timestamp", NULL);
-+      execlp(TAR, "tar", buffer, "-", NULL);
-       ohshite(_("unable to execute %s (%s)"), "tar", TAR);
-     }
-     close(p2[0]);
+       command_add_arg(&cmd, "-f");
+       command_add_arg(&cmd, "-");
+-      command_add_arg(&cmd, "--warning=no-timestamp");
+ 
+       m_dup2(p2[0],0);
+       close(p2[0]);
