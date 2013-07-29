@@ -1,0 +1,16 @@
+Upstream-Status: Inappropŕiate
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+Index: texinfo-5.1/doc/Makefile.am
+===================================================================
+--- texinfo-5.1.orig/doc/Makefile.am
++++ texinfo-5.1/doc/Makefile.am
+@@ -40,7 +40,7 @@ refcard_files = refcard/Makefile refcard
+ # Include our texinfo.tex, not Automake's.
+ EXTRA_DIST = epsf.tex texinfo.tex \
+              fdl.texi \
+-	     $(man_MANS) $(TXI_XLATE) \
++	     $(TXI_XLATE) \
+ 	     $(refcard_files)
+ 
+ if INSTALL_WARNINGS

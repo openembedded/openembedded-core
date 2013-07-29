@@ -1,21 +1,23 @@
 Upstream-Status: Pending
 
-diff -up texinfo-4.12/install-info/Makefile.in_old texinfo-4.12/install-info/Makefile.in
---- texinfo-4.12/install-info/Makefile.in_old	2008-05-13 13:33:55.000000000 +0200
-+++ texinfo-4.12/install-info/Makefile.in	2008-05-13 13:52:35.000000000 +0200
-@@ -114,7 +114,7 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
+Index: texinfo-5.1/install-info/Makefile.in
+===================================================================
+--- texinfo-5.1.orig/install-info/Makefile.in
++++ texinfo-5.1/install-info/Makefile.in
+@@ -171,7 +171,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
  PROGRAMS = $(bin_PROGRAMS)
  am_ginstall_info_OBJECTS = install-info.$(OBJEXT)
  ginstall_info_OBJECTS = $(am_ginstall_info_OBJECTS)
 -ginstall_info_LDADD = $(LDADD)
 +ginstall_info_LDADD = $(LDADD) -lz
  am__DEPENDENCIES_1 =
- ginstall_info_DEPENDENCIES = ../lib/libtxi.a \
- 	$(top_builddir)/gnulib/lib/libgnu.a $(am__DEPENDENCIES_1)
-diff -up texinfo-4.12/install-info/install-info.c_old texinfo-4.12/install-info/install-info.c
---- texinfo-4.12/install-info/install-info.c_old	2008-05-13 13:52:44.000000000 +0200
-+++ texinfo-4.12/install-info/install-info.c	2008-05-14 10:30:53.000000000 +0200
-@@ -21,6 +21,7 @@
+ ginstall_info_DEPENDENCIES = $(top_builddir)/gnulib/lib/libgnu.a \
+ 	$(am__DEPENDENCIES_1)
+Index: texinfo-5.1/install-info/install-info.c
+===================================================================
+--- texinfo-5.1.orig/install-info/install-info.c
++++ texinfo-5.1/install-info/install-info.c
+@@ -22,6 +22,7 @@
  #include <getopt.h>
  #include <regex.h>
  #include <argz.h>
@@ -23,16 +25,16 @@ diff -up texinfo-4.12/install-info/install-info.c_old texinfo-4.12/install-info/
  
  #define TAB_WIDTH 8
  
-@@ -638,7 +639,7 @@ The first time you invoke Info you start
-    COMPRESSION_PROGRAM.  The compression program is determined by the
-    magic number, not the filename.  */
+@@ -670,7 +671,7 @@ The first time you invoke Info you start
+    
+    MAGIC number, not the filename.  */
  
 -FILE *
 +void *
  open_possibly_compressed_file (char *filename,
      void (*create_callback) (char *),
      char **opened_filename, char **compression_program, int *is_pipe) 
-@@ -646,7 +647,7 @@ open_possibly_compressed_file (char *fil
+@@ -678,7 +679,7 @@ open_possibly_compressed_file (char *fil
    char *local_opened_filename, *local_compression_program;
    int nread;
    char data[13];
@@ -41,7 +43,7 @@ diff -up texinfo-4.12/install-info/install-info.c_old texinfo-4.12/install-info/
  
    /* We let them pass NULL if they don't want this info, but it's easier
       to always determine it.  */
-@@ -654,22 +655,22 @@ open_possibly_compressed_file (char *fil
+@@ -686,48 +687,48 @@ open_possibly_compressed_file (char *fil
      opened_filename = &local_opened_filename;
  
    *opened_filename = filename;
@@ -52,10 +54,25 @@ diff -up texinfo-4.12/install-info/install-info.c_old texinfo-4.12/install-info/
        *opened_filename = concat (filename, ".gz", "");
 -      f = fopen (*opened_filename, FOPEN_RBIN);
 +      f = gzopen (*opened_filename, FOPEN_RBIN);
+     }
+   if (!f)
+     {
+       free (*opened_filename);
+       *opened_filename = concat (filename, ".xz", "");
+-      f = fopen (*opened_filename, FOPEN_RBIN);
++      f = gzopen (*opened_filename, FOPEN_RBIN);
+     }
    if (!f)
      {
        free (*opened_filename);
        *opened_filename = concat (filename, ".bz2", "");
+-      f = fopen (*opened_filename, FOPEN_RBIN);
++      f = gzopen (*opened_filename, FOPEN_RBIN);
+     }
+   if (!f)
+     {
+       free (*opened_filename);
+       *opened_filename = concat (filename, ".lz", "");
 -      f = fopen (*opened_filename, FOPEN_RBIN);
 +      f = gzopen (*opened_filename, FOPEN_RBIN);
      }
@@ -66,34 +83,33 @@ diff -up texinfo-4.12/install-info/install-info.c_old texinfo-4.12/install-info/
 -     f = fopen (*opened_filename, FOPEN_RBIN);
 +     f = gzopen (*opened_filename, FOPEN_RBIN);
      }
- 
  #ifdef __MSDOS__
-@@ -677,13 +678,13 @@ open_possibly_compressed_file (char *fil
-         {
-           free (*opened_filename);
-           *opened_filename = concat (filename, ".igz", "");
--          f = fopen (*opened_filename, FOPEN_RBIN);
-+          f = gzopen (*opened_filename, FOPEN_RBIN);
-         }
-       if (!f)
-         {
-           free (*opened_filename);
-           *opened_filename = concat (filename, ".inz", "");
--          f = fopen (*opened_filename, FOPEN_RBIN);
-+          f = gzopen (*opened_filename, FOPEN_RBIN);
-         }
- #endif
-       if (!f)
-@@ -695,7 +696,7 @@ open_possibly_compressed_file (char *fil
-               /* And try opening it again.  */
-               free (*opened_filename);
-               *opened_filename = filename;
--              f = fopen (*opened_filename, FOPEN_RBIN);
-+              f = gzopen (*opened_filename, FOPEN_RBIN);
-               if (!f)
-                 pfatal_with_name (filename);
-             }
-@@ -706,12 +707,12 @@ open_possibly_compressed_file (char *fil
+   if (!f)
+     {
+       free (*opened_filename);
+       *opened_filename = concat (filename, ".igz", "");
+-      f = fopen (*opened_filename, FOPEN_RBIN);
++      f = gzopen (*opened_filename, FOPEN_RBIN);
+     }
+   if (!f)
+     {
+       free (*opened_filename);
+       *opened_filename = concat (filename, ".inz", "");
+-      f = fopen (*opened_filename, FOPEN_RBIN);
++      f = gzopen (*opened_filename, FOPEN_RBIN);
+     }
+ #endif /* __MSDOS__ */
+    if (!f)
+@@ -739,7 +740,7 @@ open_possibly_compressed_file (char *fil
+            /* And try opening it again.  */
+            free (*opened_filename);
+            *opened_filename = filename;
+-           f = fopen (*opened_filename, FOPEN_RBIN);
++           f = gzopen (*opened_filename, FOPEN_RBIN);
+            if (!f)
+              pfatal_with_name (filename);
+          }
+@@ -749,12 +750,12 @@ open_possibly_compressed_file (char *fil
  
    /* Read first few bytes of file rather than relying on the filename.
       If the file is shorter than this it can't be usable anyway.  */
@@ -106,10 +122,10 @@ diff -up texinfo-4.12/install-info/install-info.c_old texinfo-4.12/install-info/
           "install-info: No error for foo", which is confusing.  */
 -      if (nread == 0)
 +      if (nread >= 0)
-         fatal (_("%s: empty file"), *opened_filename, 0);
+         fatal (_("%s: empty file"), *opened_filename);
        pfatal_with_name (*opened_filename);
      }
-@@ -758,20 +759,22 @@ open_possibly_compressed_file (char *fil
+@@ -821,20 +822,22 @@ open_possibly_compressed_file (char *fil
  
    if (*compression_program)
      { /* It's compressed, so fclose the file and then open a pipe.  */
@@ -137,7 +153,7 @@ diff -up texinfo-4.12/install-info/install-info.c_old texinfo-4.12/install-info/
        /* Since this is a text file, and we opened it in binary mode,
           switch back to text mode.  */
        f = freopen (*opened_filename, "r", f);
-@@ -796,7 +799,7 @@ readfile (char *filename, int *sizep,
+@@ -859,7 +862,7 @@ readfile (char *filename, int *sizep,
      char **compression_program)
  {
    char *real_name;
@@ -146,7 +162,7 @@ diff -up texinfo-4.12/install-info/install-info.c_old texinfo-4.12/install-info/
    int pipe_p;
    int filled = 0;
    int data_size = 8192;
-@@ -810,7 +813,12 @@ readfile (char *filename, int *sizep,
+@@ -873,7 +876,12 @@ readfile (char *filename, int *sizep,
  
    for (;;)
      {
@@ -160,7 +176,7 @@ diff -up texinfo-4.12/install-info/install-info.c_old texinfo-4.12/install-info/
        if (nread < 0)
          pfatal_with_name (real_name);
        if (nread == 0)
-@@ -832,7 +840,7 @@ readfile (char *filename, int *sizep,
+@@ -895,7 +903,7 @@ readfile (char *filename, int *sizep,
    if (pipe_p)
      pclose (f);
    else
