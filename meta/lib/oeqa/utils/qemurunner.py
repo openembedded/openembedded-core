@@ -25,7 +25,7 @@ class QemuRunner:
         self.rootfs = rootfs
 
         self.streampath = '/tmp/qemuconnection.%s' % os.getpid()
-        self.qemuparams = 'bootparams="console=ttyS0" qemuparams="-serial unix:%s,server,nowait"' % self.streampath
+        self.qemuparams = 'bootparams="console=tty1 console=ttyS0,115200n8" qemuparams="-serial unix:%s,server,nowait"' % self.streampath
         self.qemupid = None
         self.ip = None
 
@@ -76,7 +76,7 @@ class QemuRunner:
                 if not match:
                     bb.note("Couldn't get prompt, all I got was:\n%s" % match.group(0))
                     return False
-                console.write("ip addr show eth0 | sed -n '3p' | awk '{ print $2 }' | cut -f 1 -d \"/\"\n")
+                console.write("ip addr show `ip route list | sed -n '1p' | awk '{print $5}'` | sed -n '3p' | awk '{ print $2 }' | cut -f 1 -d \"/\"\n")
                 (index, match, text) = console.expect([r"((?:[0-9]{1,3}\.){3}[0-9]{1,3})"],10)
                 console.close()
                 if match:
