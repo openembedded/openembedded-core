@@ -13,10 +13,6 @@ BBCLASSEXTEND = "native nativesdk"
 # QEMU_TARGETS is overridable variable
 QEMU_TARGETS ?= "arm i386 mips mipsel mips64 mips64el ppc sh4 x86_64"
 
-SDL ?= ""
-SDL_class-native ?= ""
-SDL_class-nativesdk ?= ""
-
 SRC_URI = "\
     file://powerpc_rom.bin \
     file://no-strip.patch \
