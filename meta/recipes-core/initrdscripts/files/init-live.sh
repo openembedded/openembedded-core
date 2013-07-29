@@ -184,6 +184,8 @@ mount_and_boot() {
 	"")
 	    if ! mount -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
 		fatal "Could not mount rootfs image"
+	    else
+		mount -t tmpfs -o rw,noatime,mode=755 tmpfs $ROOT_MOUNT/media
 	    fi
 	    ;;
     esac
