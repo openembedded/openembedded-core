@@ -39,9 +39,15 @@ EXTRA_OECONF = "\
 
 do_install_append() {
 	install -d ${D}${sysconfdir}/bluetooth/
-	install -m 0644 ${S}/profiles/audio/audio.conf ${D}/${sysconfdir}/bluetooth/
-	install -m 0644 ${S}/profiles/network/network.conf ${D}/${sysconfdir}/bluetooth/
-	install -m 0644 ${S}/profiles/input/input.conf ${D}/${sysconfdir}/bluetooth/
+	if [ -f ${S}/profiles/audio/audio.conf ]; then
+	    install -m 0644 ${S}/profiles/audio/audio.conf ${D}/${sysconfdir}/bluetooth/
+	fi
+	if [ -f ${S}/profiles/network/network.conf ]; then
+	    install -m 0644 ${S}/profiles/network/network.conf ${D}/${sysconfdir}/bluetooth/
+	fi
+	if [ -f ${S}/profiles/input/input.conf ]; then
+	    install -m 0644 ${S}/profiles/input/input.conf ${D}/${sysconfdir}/bluetooth/
+	fi
 	# at_console doesn't really work with the current state of OE, so punch some more holes so people can actually use BT
 	install -m 0644 ${WORKDIR}/bluetooth.conf ${D}/${sysconfdir}/dbus-1/system.d/
 }
