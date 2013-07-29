@@ -13,8 +13,8 @@ RDEPENDS_${PN} = "bash"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/r/resolvconf/resolvconf_${PV}.tar.gz"
 
-SRC_URI[md5sum] = "1216bf45be4695e13d95ef5b63b76faa"
-SRC_URI[sha256sum] = "1147412c93e1ae9dc2bec43d3763ffada21dc00c1c7051b06543bd5d65629d09"
+SRC_URI[md5sum] = "2f190d3bb8960b69157f63590c262e93"
+SRC_URI[sha256sum] = "2e72e6884e9105cbf57101ab0f11e768717b6f76b7f5100c6a2a0cc69bb3d4a0"
 
 inherit allarch
 
