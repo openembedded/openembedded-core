@@ -55,6 +55,10 @@ class Gnome(XTerminal):
     command = 'gnome-terminal --disable-factory -t "{title}" -x {command}'
     priority = 2
 
+class Mate(XTerminal):
+    command = 'mate-terminal --disable-factory -t "{title}" -x {command}'
+    priority = 2
+
 class Xfce(XTerminal):
     command = 'Terminal -T "{title}" -e "{command}"'
     priority = 2
