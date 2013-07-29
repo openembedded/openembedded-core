@@ -31,7 +31,7 @@ export DIRS = "crypto ssl apps"
 export EX_LIBS = "-lgcc -ldl"
 export AS = "${CC} -c"
 
-inherit pkgconfig siteinfo
+inherit pkgconfig siteinfo multilib_header
 
 PACKAGES =+ "libcrypto libssl ${PN}-misc"
 FILES_libcrypto = "${base_libdir}/libcrypto${SOLIBS}"
@@ -145,6 +145,7 @@ do_install () {
 	cp --dereference -R include/openssl ${D}${includedir}
 	sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${libdir}/ssl/misc/CA.pl
 
+	oe_multilib_header openssl/opensslconf.h
 }
 
 BBCLASSEXTEND = "native nativesdk"
