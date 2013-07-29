@@ -170,3 +170,18 @@ python rm_systemd_unitdir (){
             shutil.rmtree(systemd_unitdir)
 }
 do_install[postfuncs] += "rm_systemd_unitdir "
+
+python rm_sysvinit_initddir (){
+    import shutil
+    sysv_initddir = oe.path.join(d.getVar("D", True), (d.getVar('INIT_D_DIR', True) or "/etc/init.d"))
+
+    if ("systemd" in d.getVar("DISTRO_FEATURES", True).split() and
+        "sysvinit" not in d.getVar("DISTRO_FEATURES", True).split() and
+        os.path.exists(sysv_initddir)):
+        systemd_unitdir = oe.path.join(d.getVar("D", True), d.getVar('systemd_unitdir', True), "system")
+
+        # If systemd_unitdir contains anything, delete sysv_initddir
+        if (os.path.exists(systemd_unitdir) and os.listdir(systemd_unitdir)):
+            shutil.rmtree(sysv_initddir)
+}
+do_install[postfuncs] += "rm_sysvinit_initddir "
