@@ -6,11 +6,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0f334a06f2de517e37e86d6757167d88"
 
 DEPENDS = "font-util"
 
-PR = "r1"
 
 FILES_${PN} += "${libdir}/X11/config/*"
 
-SRC_URI[md5sum] = "ff4502b6e31aac90e24ce134090d0e46"
-SRC_URI[sha256sum] = "8fc8a1224d2a716b1f3f1ca85dfda02387ab215251b8eddd03551eac998c9cb8"
+SRC_URI[md5sum] = "ccb5f341ed5932d5ae870d9128e37c32"
+SRC_URI[sha256sum] = "8c9ce7952094d49a1d3f849e45caf848d83ad879d91f3169cc373f52502d0c20"
 
 BBCLASSEXTEND = "native"
