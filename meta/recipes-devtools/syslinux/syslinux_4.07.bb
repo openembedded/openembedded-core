@@ -11,8 +11,8 @@ PR = "r0"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/4.xx/syslinux-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "0384ef35b724615074e77b1fc89d5b47"
-SRC_URI[sha256sum] = "dbb7774e36c4596de68fa5e6788ad57809ab31a1760e5d7626e697766d30ad26"
+SRC_URI[md5sum] = "9ff6e1b94efab931fb4717b600d88779"
+SRC_URI[sha256sum] = "1240a4e4219b518bdaef78931b6e901befeff35e6894ac6db785115848a7a05a"
 
 COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 
