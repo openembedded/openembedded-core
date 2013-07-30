@@ -6,12 +6,13 @@ LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
                     file://COPYING.LIB;md5=fb504b67c50331fc78734fed90fb0e09 \
                     file://src/main.c;beginline=1;endline=24;md5=9bc54b93cd7e17bf03f52513f39f926e"
-DEPENDS = "udev libusb dbus-glib glib-2.0 libcheck libical readline"
+DEPENDS = "udev libusb dbus-glib glib-2.0 libcheck readline"
 
 RCONFLICTS_${PN} = "bluez4"
 
-PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)}"
+PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)} obex-profiles"
 PACKAGECONFIG[alsa] = "--enable-alsa,--disable-alsa,alsa-lib"
+PACKAGECONFIG[obex-profiles] = "--enable-obex,--disable-obex,libical"
 
 SRC_URI = "\
     ${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.gz \
@@ -53,7 +54,7 @@ do_install_append() {
 }
 
 ALLOW_EMPTY_libasound-module-bluez = "1"
-PACKAGES =+ "libasound-module-bluez ${PN}-test"
+PACKAGES =+ "libasound-module-bluez ${PN}-test ${PN}-obex"
 
 FILES_libasound-module-bluez = "${libdir}/alsa-lib/lib*.so ${datadir}/alsa"
 FILES_${PN} += "${libdir}/bluetooth/plugins ${libdir}/bluetooth/plugins/*.so ${base_libdir}/udev/ ${nonarch_base_libdir}/udev/ ${systemd_unitdir}/ ${datadir}/dbus-1"
@@ -61,6 +62,12 @@ FILES_${PN}-dev += "\
   ${libdir}/bluetooth/plugins/*.la \
   ${libdir}/alsa-lib/*.la \
 "
+
+FILES_${PN}-obex = "${libdir}/bluez5/bluetooth/obexd \
+                    ${libdir}/systemd/user/obex.service \
+                    ${datadir}/dbus-1/services/org.bluez.obex.service \
+                   "
+SYSTEMD_SERVICE_${PN}-obex = "obex.service"
 
 FILES_${PN}-test = "${libdir}/bluez/test/*"
 
