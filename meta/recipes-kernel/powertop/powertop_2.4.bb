@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
 
 SRC_URI = "http://01.org/powertop/sites/default/files/downloads/powertop-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "dc03608f20e56cdc99d121a6191556f6"
-SRC_URI[sha256sum] = "b8c1add69afee28c77dca56fdcedb4a46820f3a71c86aae7891b0c5c595cd744"
+SRC_URI[md5sum] = "3aa686bb245d6683b86cba9a6a4b8c6d"
+SRC_URI[sha256sum] = "42796c94546ae7f3d232e41b7fa09b2532396ca389908ff528870311db6327b7"
 
 inherit autotools gettext
 
