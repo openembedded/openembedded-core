@@ -11,8 +11,7 @@ protocol for passing other authentication data to the server."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8fbed71dddf48541818cef8079124199"
 DEPENDS += "libxmu libxau"
-PR = "${INC_PR}.0"
 PE = "1"
 
-SRC_URI[md5sum] = "a0fcd2cb6ddd9f378944cc6f4f83cd7c"
-SRC_URI[sha256sum] = "2870d19f3f4867ead5ba4e35bb73d1fa302be29d812c13e4195066c78d1f8850"
+SRC_URI[md5sum] = "f1669af1fe0554e876f03319c678e79d"
+SRC_URI[sha256sum] = "a6f5b922df0a7be5d3ba43f525fa8e69c539c738418f013a0b7adaa423a89dc2"
