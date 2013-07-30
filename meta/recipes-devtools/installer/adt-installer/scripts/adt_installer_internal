@@ -242,6 +242,8 @@ target_sysroot=`eval echo $target_sysroot_var`
 
 if [ "$target_sysroot" == "" ]; then
   return 0
+else
+  target_sysroot=`readlink -m $target_sysroot`
 fi
 
 target_sysroot_image_var="\$YOCTOADT_TARGET_SYSROOT_IMAGE_$1"

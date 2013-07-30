@@ -272,6 +272,10 @@ download_images()
   select_sysroot_image=`eval echo $select_sysroot_image_var`
   select_sysroot=`eval echo $select_sysroot_var`
 
+  if [ -n "$select_sysroot" ]; then
+    select_sysroot=`readlink -m $select_sysroot`
+  fi
+
   if [ "$select_rootfs" != "" ]; then
     if [ $2 ]; then
     #echo_info "\n############################################################################"
