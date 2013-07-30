@@ -58,8 +58,6 @@ do_install_append_class-native() {
 }
 
 POSTLOG ?= "/var/log/postinstall.log"
-REDIRECT_CMD = "${@base_contains('IMAGE_FEATURES', 'debug-tweaks', '>${POSTLOG} 2>&1', '', d)}"
-REDIRECT_CMD[vardepsexclude] += "IMAGE_FEATURES POSTLOG"
 
 pkg_postinst_${PN} () {
 #!/bin/sh
