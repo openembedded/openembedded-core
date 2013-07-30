@@ -21,5 +21,5 @@ EXTRA_OECONF += '${@base_conditional( "ROOTLESS_X", "1", " --enable-kms-only", "
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
-SRC_URI[md5sum] = "fd96651b0d90dc7e977b23fd54f2c3e8"
-SRC_URI[sha256sum] = "1359cbc9e494a284faa52d1db83e7388cb8ab590b660e29e78e6e7f5ee7ff189"
+SRC_URI[md5sum] = "018154293ea25b69568ff0340a89ae7c"
+SRC_URI[sha256sum] = "76e17cebf79d3c3c98af246fcfb55018aa12e2d56fe5f3b6d54b93e90837efa8"
