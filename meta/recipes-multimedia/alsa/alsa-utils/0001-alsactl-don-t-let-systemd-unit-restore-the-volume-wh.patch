@@ -6,41 +6,35 @@ Subject: [PATCH] alsactl: don't let systemd unit restore the volume when asound.
 This avoids an error on bootup
 
 Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
----
 
 Filed as https://bugtrack.alsa-project.org/alsa-bug/view.php?id=5459
 
 Upstream-Status: Pending
 
- alsactl/Makefile.am             |    2 +-
- alsactl/alsa-restore.service.in |    1 +
- 2 files changed, 2 insertions(+), 1 deletions(-)
-
-diff --git a/alsactl/Makefile.am b/alsactl/Makefile.am
-index 5cfc415..c3768c4 100644
---- a/alsactl/Makefile.am
-+++ b/alsactl/Makefile.am
-@@ -34,7 +34,7 @@ install-data-hook:
+Index: alsa-utils-1.0.27.2/alsactl/Makefile.am
+===================================================================
+--- alsa-utils-1.0.27.2.orig/alsactl/Makefile.am
++++ alsa-utils-1.0.27.2/alsactl/Makefile.am
+@@ -36,8 +36,8 @@ install-data-hook:
  endif
  
  edit = \
--	$(SED) -r 's,@sbindir\@,$(sbindir),g' < $< > $@ || rm $@
-+	$(SED) -e 's,@localstatedir\@,$(localstatedir),g' -e 's,@sbindir\@,$(sbindir),g' < $< > $@ || rm $@
+-	$(SED) -r -e 's,@sbindir\@,$(sbindir),g' \
+-		  -e 's,@daemonswitch\@,$(ALSACTL_DAEMONSWITCH),g' \
++	$(SED) -e 's,@localstatedir\@,$(localstatedir),g' -e 's,@sbindir\@,$(sbindir),g' \
++	       -e 's,@daemonswitch\@,$(ALSACTL_DAEMONSWITCH),g' \
+ 							< $< > $@ || rm $@
  
- alsa-store.service: alsa-store.service.in
- 	$(edit)
-diff --git a/alsactl/alsa-restore.service.in b/alsactl/alsa-restore.service.in
-index e97d196..3b76710 100644
---- a/alsactl/alsa-restore.service.in
-+++ b/alsactl/alsa-restore.service.in
-@@ -4,6 +4,7 @@ DefaultDependencies=no
- After=sysinit.target
+ alsa-state.service: alsa-state.service.in
+Index: alsa-utils-1.0.27.2/alsactl/alsa-restore.service.in
+===================================================================
+--- alsa-utils-1.0.27.2.orig/alsactl/alsa-restore.service.in
++++ alsa-utils-1.0.27.2/alsactl/alsa-restore.service.in
+@@ -10,6 +10,7 @@ DefaultDependencies=no
+ After=alsa-state.service
  Before=shutdown.target
  Conflicts=shutdown.target
 +ConditionPathExists=@localstatedir@/lib/alsa/asound.state
  
  [Service]
  Type=oneshot
--- 
-1.6.6.1
-
