@@ -24,24 +24,28 @@ KEXECTOOLS_powerpc ?= ""
 KEXECTOOLS_e5500-64b ?= ""
 KEXECTOOLS_aarch64 ?= ""
 
-RDEPENDS_${PN} = "\
-    blktool \
+X11TOOLS = "\
     fstests \
-    tslib-calibrate \
-    tslib-tests \
-    lrzsz \
-    ${KEXECTOOLS} \
-    alsa-utils-amixer \
-    alsa-utils-aplay \
     owl-video \
-    gst-meta-video \
-    gst-meta-audio \
     mesa-demos \
     x11perf \
     xrestop \
     xwininfo \
     xprop \
     xvideo-tests \
+    "
+
+RDEPENDS_${PN} = "\
+    blktool \
+    tslib-calibrate \
+    tslib-tests \
+    lrzsz \
+    ${KEXECTOOLS} \
+    alsa-utils-amixer \
+    alsa-utils-aplay \
+    gst-meta-video \
+    gst-meta-audio \
     ltp \
     connman-client \
+    ${@base_contains('DISTRO_FEATURES', 'x11', "${X11TOOLS}", "", d)} \
     "
