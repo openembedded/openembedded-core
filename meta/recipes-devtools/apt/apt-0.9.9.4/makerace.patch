@@ -8,16 +8,16 @@ RP 2012/3/19
 
 Upstream-Status: Pending
 
-Index: apt-0.7.14/buildlib/library.mak
+Index: apt-0.9.9.4/buildlib/library.mak
 ===================================================================
---- apt-0.7.14.orig/buildlib/library.mak
-+++ apt-0.7.14/buildlib/library.mak
-@@ -61,7 +61,7 @@ $(LIB)/lib$(LIBRARY)$(LIBEXT).so.$(MAJOR
+--- apt-0.9.9.4.orig/buildlib/library.mak	2013-07-31 15:45:07.320440575 +0300
++++ apt-0.9.9.4/buildlib/library.mak	2013-07-31 15:46:49.440440561 +0300
+@@ -61,7 +61,7 @@
  
  # Compilation rules
  vpath %.cc $(SUBDIRS)
--$(OBJ)/%.opic: %.cc
-+$(OBJ)/%.opic: %.cc $($(LOCAL)-HEADERS)
+-$(OBJ)/%.opic: %.cc $(LIBRARYDEPENDS)
++$(OBJ)/%.opic: %.cc $(LIBRARYDEPENDS) $($(LOCAL)-HEADERS)
  	echo Compiling $< to $@
  	$(CXX) -c $(INLINEDEPFLAG) $(CPPFLAGS) $(CXXFLAGS) $(PICFLAGS) -o $@ $<
  	$(DoDep)
