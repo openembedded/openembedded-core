@@ -1,4 +1,4 @@
-DESCRIPTION = "Alsa sound library"
+DESCRIPTION = "ALSA sound library"
 HOMEPAGE = "http://www.alsa-project.org"
 BUGTRACKER = "https://bugtrack.alsa-project.org/alsa-bug/login_page.php"
 SECTION = "libs/multimedia"
@@ -14,16 +14,12 @@ BBCLASSEXTEND = "native nativesdk"
 #FIXME: remove the following
 ARM_INSTRUCTION_SET = "arm"
 
-PR = "r0"
-
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2 \
-           file://fix-tstamp-declaration.patch \
-           file://obsolete_automake_macros.patch \
-           file://fix-O0-Optimize-unable-inline-function.patch \
            file://Check-if-wordexp-function-is-supported.patch \
+           file://fix-tstamp-declaration.patch \
           "
-SRC_URI[md5sum] = "2dfa35d28471d721e592b616beedf965"
-SRC_URI[sha256sum] = "8c9f8161603cc3db640619650401292c3e110da63429ab6938aac763319f6e7d"
+SRC_URI[md5sum] = "69129a7c37697f81ac092335e9fa452b"
+SRC_URI[sha256sum] = "690ed393e7efd4fc7e3a2d2cda5449298ca0c895197e5914e350882012430d19"
 
 inherit autotools pkgconfig
 
