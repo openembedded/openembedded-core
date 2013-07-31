@@ -37,6 +37,10 @@ EXTRA_OECONF += "--without-audit \
                  --without-selinux"
 EXTRA_OECONF_libc-uclibc += "--with-nscd=no"
 
+# Build falsely assumes that if --enable-libpam is set, we don't need to link against
+# libcrypt. This breaks chsh.
+BUILD_LDFLAGS += "${@base_contains('DISTRO_FEATURES', 'pam', base_contains('DISTRO_FEATURES', 'libc-crypt',  '-lcrypt', '', d), '', d)}"
+
 PAM_PLUGINS = "libpam-runtime \
                pam-plugin-faildelay \
                pam-plugin-securetty \
