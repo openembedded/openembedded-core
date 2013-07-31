@@ -20,7 +20,9 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
           file://grub-2.00-fpmath-sse-387-fix.patch \
           file://remove-gets.patch \
           file://check-if-liblzma-is-disabled.patch \
-          file://40_custom"
+          file://40_custom \
+          file://fix-issue-with-flex-2.5.37.patch \
+          "
 
 SRC_URI[md5sum] = "e927540b6eda8b024fb0391eeaa4091c"
 SRC_URI[sha256sum] = "65b39a0558f8c802209c574f4d02ca263a804e8a564bc6caf1cd0fd3b3cc11e3"
