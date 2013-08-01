@@ -14,6 +14,5 @@ SRC_URI[sha256sum] = "733b75bfd1b2a1925b6de532989c496b8ae17a746691120ef64cceb00b
 
 EXTRA_OECONF += "\
     --enable-test \
-    ${@base_contains('DISTRO_FEATURES', 'bluetooth','--enable-bluetooth', '--disable-bluetooth', d)} \
 "
 CFLAGS_append_libc-uclibc = " -D_GNU_SOURCE"

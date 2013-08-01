@@ -14,6 +14,7 @@ INITSCRIPT_PARAMS = "defaults 22"
 
 EXTRA_OECONF += "\
     ${@base_contains('DISTRO_FEATURES', 'systemd', '--with-systemdunitdir=${systemd_unitdir}/system/', '--with-systemdunitdir=', d)} \
+    ${@base_contains('DISTRO_FEATURES', 'bluetooth','--enable-bluetooth', '--disable-bluetooth', d)} \
 "
 SYSTEMD_SERVICE_${PN} = "ofono.service"
 
