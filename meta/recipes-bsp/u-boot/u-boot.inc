@@ -13,7 +13,7 @@ python () {
 		FILE = os.path.basename(d.getVar("FILE", True))
 		bb.debug(1, "To build %s, see %s for instructions on \
 			     setting up your machine config" % (PN, FILE))
-		raise bb.parse.SkipPackage("because UBOOT_MACHINE is not set")
+		raise bb.parse.SkipPackage("UBOOT_MACHINE is not set in the %s machine configuration." % d.getVar("MACHINE", True))
 }
 
 # Some versions of u-boot use .bin and others use .img.  By default use .bin
