@@ -19,7 +19,7 @@ DEPENDS = "expat makedepend-native flex-native bison-native"
 
 PROVIDES = "virtual/libgl virtual/libgles1 virtual/libgles2 virtual/egl"
 
-inherit autotools pkgconfig pythonnative
+inherit autotools pkgconfig pythonnative gettext
 
 EXTRA_OECONF = "--enable-shared-glapi"
 
