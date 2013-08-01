@@ -8,9 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=2d5025d4aa3495befef8f17206a5b0a1 \
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/${BPN}/${BPN}-${PV}.tar.gz \
            file://fix-svc-gtk-doc.h-target.patch"
-
-SRC_URI[md5sum] = "c292c54aa08f61544ab53fda880d861c"
-SRC_URI[sha256sum] = "df344e7959d99ab4ee4c0bcde82e6fc652cc48dc93ce11fcd024fa2383068fec"
+SRC_URI[md5sum] = "afabda908a798aac3a427f4564af113a"
+SRC_URI[sha256sum] = "739614e2d526d82bdd2fd94026ca70a46670563556ff15537a2a08bf17172875"
 
 inherit autotools pkgconfig pythonnative
 
