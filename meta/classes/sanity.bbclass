@@ -195,6 +195,17 @@ def check_sanity_tmpdir_change(tmpdir, data):
 
     # Check that TMPDIR isn't on a filesystem with limited filename length (eg. eCryptFS)
     testmsg = check_create_long_filename(tmpdir, "TMPDIR")
+
+    # Some third-party software apparently relies on chmod etc. being suid root (!!)
+    import stat
+    suid_check_bins = "chown chmod mknod".split()
+    for bin_cmd in suid_check_bins:
+        bin_path = bb.utils.which(os.environ["PATH"], bin_cmd)
+        if bin_path:
+            bin_stat = os.stat(bin_path)
+            if bin_stat.st_uid == 0 and bin_stat.st_mode & stat.S_ISUID:
+                testmsg = testmsg + '%s has the setuid bit set. This interferes with pseudo and may cause other issues that break the build process.\n' % bin_path
+
     # Check that we can fetch from various network transports
     errmsg = check_connectivity(data)
     testmsg = testmsg + check_connectivity(data)
