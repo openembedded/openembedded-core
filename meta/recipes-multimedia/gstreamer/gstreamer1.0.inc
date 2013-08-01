@@ -7,8 +7,6 @@ SECTION = "multimedia"
 LICENSE = "LGPLv2+"
 DEPENDS = "glib-2.0 libxml2 bison-native flex-native"
 
-PR = "r1"
-
 inherit autotools pkgconfig gettext
 
 GSTREAMER_1_DEBUG ?= "--disable-debug"
