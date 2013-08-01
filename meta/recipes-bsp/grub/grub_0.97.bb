@@ -26,6 +26,8 @@ inherit autotools
 
 COMPATIBLE_HOST = "i.86.*-linux"
 
+EXTRA_OECONF = "--without-curses"
+
 do_install_append_vmware() {
 	mkdir -p ${D}/boot/
 	ln -sf ../usr/lib/grub/{$TARGET_ARCH}{$TARGET_VENDOR}/ ${D}/boot/grub
