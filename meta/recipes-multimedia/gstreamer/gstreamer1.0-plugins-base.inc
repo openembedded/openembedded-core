@@ -5,8 +5,6 @@ LICENSE = "GPLv2+ & LGPLv2+"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 libxv', '', d)}"
 DEPENDS += "freetype liboil util-linux"
 
-PR = "r1"
-
 inherit gettext
 
 
