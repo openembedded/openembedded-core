@@ -71,6 +71,7 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	   file://0039-gcc-4.8-PR57717.patch \
 	   file://0040-fix-g++-sysroot.patch \
 	   file://0041-libtool-avoid-libdir.patch \
+	   file://0042-pr57748.patch \
 	  "
 SRC_URI[md5sum] = "3b2386c114cd74185aa3754b58a79304"
 SRC_URI[sha256sum] = "545b44be3ad9f2c4e90e6880f5c9d4f0a8f0e5f67e1ffb0d45da9fa01bb05813"
