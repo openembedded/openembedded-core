@@ -530,6 +530,16 @@ def check_sanity_version_change(status, d):
     tmpdir = d.getVar('TMPDIR', True)
     status.addresult(check_create_long_filename(tmpdir, "TMPDIR"))
 
+    # Some third-party software apparently relies on chmod etc. being suid root (!!)
+    import stat
+    suid_check_bins = "chown chmod mknod".split()
+    for bin_cmd in suid_check_bins:
+        bin_path = bb.utils.which(os.environ["PATH"], bin_cmd)
+        if bin_path:
+            bin_stat = os.stat(bin_path)
+            if bin_stat.st_uid == 0 and bin_stat.st_mode & stat.S_ISUID:
+                status.addresult('%s has the setuid bit set. This interferes with pseudo and may cause other issues that break the build process.\n' % bin_path)
+
     # Check that we can fetch from various network transports
     netcheck = check_connectivity(d)
     status.addresult(netcheck)
