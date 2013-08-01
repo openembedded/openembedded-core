@@ -522,7 +522,7 @@ def check_sanity_version_change(status, d):
         status.addresult("Your gcc version is older than 4.5, please add the following param to local.conf\n \
         %s\n" % message)
     if not result:
-        status.addresult("Your gcc version is older then 4.5 or is not working properly.  Please verify you can build")
+        status.addresult("Your gcc version is older than 4.5 or is not working properly.  Please verify you can build")
         status.addresult(" and link something that uses atomic operations, such as: \n")
         status.addresult("        __sync_bool_compare_and_swap (&atomic, 2, 3);\n")
 
@@ -567,7 +567,7 @@ def check_sanity_version_change(status, d):
 
     oes_bb_conf = d.getVar( 'OES_BITBAKE_CONF', True)
     if not oes_bb_conf:
-        status.addresult('You do not include the OpenEmbedded version of conf/bitbake.conf. This means your environment is misconfigured, in particular check BBPATH.\n')
+        status.addresult('You are not using the OpenEmbedded version of conf/bitbake.conf. This means your environment is misconfigured, in particular check BBPATH.\n')
 
     # The length of tmpdir can't be longer than 410
     status.addresult(check_path_length(tmpdir, "TMPDIR", 410))
@@ -631,7 +631,7 @@ def check_sanity_everybuild(status, d):
     if d.getVar( 'IMAGETEST', True ) == 'qemu':
         display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True)
         if not display:
-            status.addresult('qemuimagetest needs a X desktop to start qemu, please set DISPLAY correctly (e.g. DISPLAY=:1.0)\n')
+            status.addresult('qemuimagetest needs an X desktop to start qemu, please set DISPLAY correctly (e.g. DISPLAY=:1.0)\n')
 
     omask = os.umask(022)
     if omask & 0755:
