@@ -15,6 +15,7 @@ INITSCRIPT_PARAMS = "defaults 22"
 EXTRA_OECONF += "\
     ${@base_contains('DISTRO_FEATURES', 'systemd', '--with-systemdunitdir=${systemd_unitdir}/system/', '--with-systemdunitdir=', d)} \
     ${@base_contains('DISTRO_FEATURES', 'bluetooth','--enable-bluetooth', '--disable-bluetooth', d)} \
+    --enable-test \
 "
 SYSTEMD_SERVICE_${PN} = "ofono.service"
 
@@ -28,5 +29,5 @@ PACKAGES =+ "${PN}-tests"
 RDEPENDS_${PN} += "dbus"
 
 FILES_${PN} += "${base_libdir}/udev ${systemd_unitdir}"
-FILES_${PN}-tests = "${libdir}/ofono"
+FILES_${PN}-tests = "${libdir}/${BPN}/test"
 RDEPENDS_${PN}-tests = "python python-pygobject python-dbus"
