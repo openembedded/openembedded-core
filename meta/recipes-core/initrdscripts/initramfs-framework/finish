@@ -16,8 +16,9 @@ finish_run() {
 		if [ -n "$bootparam_root" ]; then
 			debug "No e2fs compatible filesystem has been mounted, mounting $bootparam_root..."
 
-			if [ "${bootparam_root:0:5}" = "UUID=" ]; then
-				bootparam_root="/dev/disk/by-uuid/${bootparam_root/UUID=/}"
+			if [ "`echo ${bootparam_root} | cut -c1-5`" = "UUID=" ]; then
+				root_uuid=`echo $bootparam_root | cut -c6-`
+				bootparam_root="/dev/disk/by-uuid/$root_uuid"
 			fi
 
 			if [ -e "$bootparam_root" ]; then

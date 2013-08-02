@@ -78,12 +78,13 @@ mount -t sysfs sysfs /sys
 
 # populate bootparam environment
 for p in `cat /proc/cmdline`; do
-	opt="${p%%=*}"
-	opt=${opt/-/_}
-	if [ "${p/=/}" = "$p" ]; then
+	opt=`echo $p | cut -d'=' -f1`
+	opt=`echo $opt | sed -e 's/-/_/'`
+	if [ "`echo $p | cut -d'=' -f1`" = "$p" ]; then
 		eval "bootparam_${opt}=true"
 	else
-		eval "bootparam_${opt}=\"${p#*=}\""
+		value="`echo $p | cut -d'=' -f2-`"
+		eval "bootparam_${opt}=\"${value}\""
 	fi
 done
 
@@ -102,7 +103,7 @@ mkdir $ROOTFS_DIR
 # Load and run modules
 for m in $MODULES_DIR/*; do
 	# Skip backup files
-	if [ "${m/\~/}" != "$m" ]; then
+	if [ "`echo $m | sed -e 's/\~$//'`" = "$m" ]; then
 		continue
 	fi
 
@@ -117,7 +118,7 @@ for m in $MODULES_DIR/*; do
 	done
 
 	# process module
-	source $m
+	. $m
 
 	if ! eval "${module}_enabled"; then
 		debug "Skipping module $module"
