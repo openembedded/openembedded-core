@@ -59,7 +59,10 @@ create_sdk_files_append () {
 	script=${1:-${SDK_OUTPUT}/${SDKPATH}/environment-setup-${SDK_SYS}}
 	touch $script
 	echo 'export PATH=${SDKPATHNATIVE}${bindir_nativesdk}:$PATH' >> $script
-	echo 'export OECORE_NATIVE_SYSROOT="${SDKPATHNATIVE}"' >> $script
-
+	# In order for the self-extraction script to correctly extract and set up things,
+	# we need a 'OECORE_NATIVE_SYSROOT=xxx' line in environment setup script.
+	# However, buildtools-tarball is inherently a tool set instead of a fully functional SDK,
+	# so instead of exporting the variable, we use a comment here.
+	echo '#OECORE_NATIVE_SYSROOT="${SDKPATHNATIVE}"' >> $script
 	toolchain_create_sdk_version ${SDK_OUTPUT}/${SDKPATH}/version-${SDK_SYS}
 }
