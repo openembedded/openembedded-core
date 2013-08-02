@@ -267,6 +267,7 @@ python package_do_split_gconvs () {
             target_arch = d.getVar('TARGET_ARCH', True)
             locale_arch_options = { \
                 "arm":     " --uint32-align=4 --little-endian ", \
+                "armeb":   " --uint32-align=4 --big-endian ",    \
                 "sh4":     " --uint32-align=4 --big-endian ",    \
                 "powerpc": " --uint32-align=4 --big-endian ",    \
                 "powerpc64": " --uint32-align=4 --big-endian ",  \
