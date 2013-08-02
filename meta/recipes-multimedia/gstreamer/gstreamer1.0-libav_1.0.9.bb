@@ -14,9 +14,8 @@ SRC_URI = " \
     file://0001-Disable-yasm-for-libav-when-disable-yasm.patch \
     file://libav_e500mc.patch \
     "
-
-SRC_URI[md5sum] = "68e1eb18a58907e21b81d26ce7db056a"
-SRC_URI[sha256sum] = "aefa679d14e7a6558673cfbf401b9c01f1903bb52e5dc08332e9001d25a7ba7a"
+SRC_URI[md5sum] = "8414f8d4c4a239a74a3d5eadf3d14875"
+SRC_URI[sha256sum] = "759641c0597c24191322f40945b363b75df299a539ff4086650be6193028189a"
 
 LIBAV_EXTRA_CONFIGURE_COMMON_ARG = "--target-os=linux \
   --cc='${CC}' --as='${CC}' --ld='${CC}' --nm='${NM}' --ar='${AR}' \
