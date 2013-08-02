@@ -7,8 +7,6 @@ DEPENDS += "gstreamer1.0-plugins-base bzip2"
 SRC_URI[md5sum] = "d1493d1219b836a8cbf54f4fba962420"
 SRC_URI[sha256sum] = "5f49e6353fdc855834b5beb054b3a47ef5fa558006c7eda6d2ec07b36315c2ab"
 
-PR = "r1"
-
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
 inherit gettext
