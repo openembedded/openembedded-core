@@ -28,14 +28,14 @@ BOOT_SIZE=20
 # 5% for swap
 SWAP_RATIO=5
 
-function usage() {
+usage() {
 	echo "Usage: $(basename $0) DEVICE HDDIMG TARGET_DEVICE"
 	echo "       DEVICE: The device to write the image to, e.g. /dev/sdh"
 	echo "       HDDIMG: The hddimg file to generate the efi disk from"
 	echo "       TARGET_DEVICE: The device the target will boot from, e.g.  /dev/mmcblk0"
 }
 
-function image_details() {
+image_details() {
 	IMG=$1
 	echo "Image details"
 	echo "============="
@@ -46,7 +46,7 @@ function image_details() {
 	echo ""
 }
 
-function device_details() {
+device_details() {
 	DEV=$1
 	BLOCK_SIZE=512
 
@@ -71,7 +71,7 @@ function device_details() {
 	echo ""
 }
 
-function unmount_device() {
+unmount_device() {
 	grep -q $DEVICE /proc/mounts
 	if [ $? -eq 0 ]; then
 		echo -n "$DEVICE listed in /proc/mounts, attempting to unmount..."
