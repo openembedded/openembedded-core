@@ -8,6 +8,6 @@ if [ "$HAVE_TOUCHSCREEN" = "1" ]; then
 	do
 	   /usr/bin/xtscal
 	   sleep 1
-	   let "n += 1"
+	   n=$(($n+1))
 	done
 fi
