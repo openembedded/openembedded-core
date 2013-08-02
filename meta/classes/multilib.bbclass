@@ -50,6 +50,13 @@ python multilib_virtclass_handler () {
     e.data.setVar("SHLIBSDIR_virtclass-multilib-" + variant ,e.data.getVar("SHLIBSDIR", False) + "/" + variant)
     e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + override)
 
+    # Expand the WHITELISTs with multilib prefix
+    for whitelist in ["HOSTTOOLS_WHITELIST_GPLv3", "WHITELIST_GPLv3", "LGPLv2_WHITELIST_GPLv3"]:
+        pkgs = e.data.getVar(whitelist, True)
+        for pkg in pkgs.split():
+            pkgs += " " + variant + "-" + pkg
+        e.data.setVar(whitelist, pkgs)
+
     # DEFAULTTUNE can change TARGET_ARCH override so expand this now before update_data
     newtune = e.data.getVar("DEFAULTTUNE_" + "virtclass-multilib-" + variant, False)
     if newtune:
