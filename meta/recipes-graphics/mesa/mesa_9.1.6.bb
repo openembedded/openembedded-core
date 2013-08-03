@@ -8,7 +8,7 @@ SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \
            file://0005-llvmpipe-remove-the-power-of-two-sizeof-struct-cmd_b.patch \
            "
 
-SRC_URI[md5sum] = "4ed2af5943141a85a21869053a2fc2eb"
-SRC_URI[sha256sum] = "89ea0d1afd90a87dab253777bfe414820c4aa3890add1487ca2b49f6b3e194fd"
+SRC_URI[md5sum] = "443a2a352667294b53d56cb1a74114e9"
+SRC_URI[sha256sum] = "e632dff0acafad0a59dc208d16dedb37f7bd58f94c5d58c4b51912e41d005e3d"
 
 S = "${WORKDIR}/Mesa-${PV}"
