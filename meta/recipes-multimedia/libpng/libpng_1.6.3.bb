@@ -19,4 +19,8 @@ inherit autotools binconfig pkgconfig
 # Work around missing symbols
 EXTRA_OECONF_append_arm = " ${@bb.utils.contains("TUNE_FEATURES", "neon", "--enable-arm-neon=on", "--enable-arm-neon=off" ,d)}"
 
+PACKAGES =+ "${PN}-tools"
+
+FILES_${PN}-tools = "${bindir}/png-fix-itxt ${bindir}/pngfix"
+
 BBCLASSEXTEND = "native nativesdk"
