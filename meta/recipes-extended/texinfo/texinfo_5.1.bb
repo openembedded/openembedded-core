@@ -39,7 +39,9 @@ do_compile_prepend() {
 do_install_append() {
 	mkdir -p ${D}${datadir}/${tex_texinfo}
 	install -p -m644 ${S}/doc/texinfo.tex ${S}/doc/txi-??.tex ${D}${datadir}/${tex_texinfo} 	
+	sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/texi2any ${D}${bindir}/pod2texi
 }
+
 do_install_append_class-native() {
 	install -m 755 info/makedoc ${D}${bindir}
 }
