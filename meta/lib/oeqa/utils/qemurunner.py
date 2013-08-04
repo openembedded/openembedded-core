@@ -74,7 +74,7 @@ class QemuRunner:
                 console.write("root\n")
                 (index, match, text) = console.expect([r"(root@[\w-]+:~#)"],10)
                 if not match:
-                    bb.note("Couldn't get prompt, all I got was:\n%s" % match.group(0))
+                    bb.note("Couldn't get prompt, all I got was:\n%s" % text)
                     return False
                 console.write("ip addr show `ip route list | sed -n '1p' | awk '{print $5}'` | sed -n '3p' | awk '{ print $2 }' | cut -f 1 -d \"/\"\n")
                 (index, match, text) = console.expect([r"((?:[0-9]{1,3}\.){3}[0-9]{1,3})"],10)
