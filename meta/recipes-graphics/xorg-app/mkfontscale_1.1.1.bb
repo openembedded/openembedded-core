@@ -10,11 +10,9 @@ is used by the mkfontdir program."
 
 DEPENDS += " zlib libfontenc freetype virtual/libx11"
 
-PR = "${INC_PR}.0"
-
 BBCLASSEXTEND = "native"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=2e0d129d05305176d1a790e0ac1acb7f"
 
-SRC_URI[md5sum] = "414fcb053418fb1418e3a39f4a37e0f7"
-SRC_URI[sha256sum] = "ce55f862679b8ec127d7f7315ac04a8d64a0d90a0309a70dc56c1ba3f9806994"
+SRC_URI[md5sum] = "03de3f15db678e277f5ef9c013aca1ad"
+SRC_URI[sha256sum] = "244017992477ced2397a44fd0ddcfb0f1d9899128613f5c4db81471163b0b731"
