@@ -8,7 +8,6 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e66
 DEPENDS = "zlib gnutls"
 DEPENDS_class-native = "zlib-native openssl-native"
 DEPENDS_class-nativesdk = "nativesdk-zlib"
-PR = "r0"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://pkgconfig_fix.patch \
@@ -19,8 +18,8 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
 #
 SRC_URI += " file://configure_ac.patch"
 
-SRC_URI[md5sum] = "0db5ec03a5001b42a2edc03bf63b5ceb"
-SRC_URI[sha256sum] = "6b1c410387bea82601baec85d6aa61955794672e36766407e99ade8d55aaaf11"
+SRC_URI[md5sum] = "b7bea20579ac2f696338ae03f2c19ba5"
+SRC_URI[sha256sum] = "a73b118eececff5de25111f35d1d0aafe1e71afdbb83082a8e44d847267e3e08"
 
 inherit autotools pkgconfig binconfig
 
