@@ -5,8 +5,6 @@ LICENSE_FLAGS = "commercial"
 
 DEPENDS += "gstreamer1.0-plugins-base libid3tag"
 
-PR = "r1"
-
 inherit gettext
 
 
