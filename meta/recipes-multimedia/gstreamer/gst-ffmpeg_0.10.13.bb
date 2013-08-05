@@ -27,7 +27,7 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "7f5beacaf1312db2db30a026b36888c4"
 SRC_URI[sha256sum] = "76fca05b08e00134e3cb92fa347507f42cbd48ddb08ed3343a912def187fbb62"
 
-PR = "r4"
+PR = "r7"
 
 GSTREAMER_DEBUG ?= "--disable-debug"
 
@@ -44,6 +44,10 @@ FFMPEG_EXTRA_CONFIGURE_COMMON = \
 '${FFMPEG_EXTRA_CONFIGURE}="${FFMPEG_EXTRA_CONFIGURE_COMMON_ARG}"'
 
 EXTRA_OECONF = "${FFMPEG_EXTRA_CONFIGURE_COMMON}"
+
+PACKAGECONFIG ??= "external-libav"
+PACKAGECONFIG[external-libav] = "--with-system-ffmpeg,,libav"
+PACKAGECONFIG[orc] = "--enable-orc,--disable-orc,orc"
 
 # yasm not found, use --disable-yasm for a crippled build for libav
 EXTRA_OECONF_append_x86-64 = " --disable-yasm "
