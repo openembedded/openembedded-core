@@ -1,4 +1,4 @@
-DESCRIPTION = "FFmpeg-based GStreamer plug-in"
+SUMMARY = "FFmpeg-based GStreamer plug-in"
 SECTION = "multimedia"
 LICENSE = "GPLv2+ & LGPLv2+ & ( (GPLv2+ & LGPLv2.1+) | (GPLv3+ & LGPLv3+) )"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
