@@ -57,7 +57,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 UBOOT_ENTRYPOINT ?= "20008000"
 UBOOT_LOADADDRESS ?= "${UBOOT_ENTRYPOINT}"
 
-# Some Linux kenrel configurations need additional parameters on the command line
+# Some Linux kernel configurations need additional parameters on the command line
 KERNEL_EXTRA_ARGS ?= ""
 
 # For the kernel, we don't want the '-e MAKEFLAGS=' in EXTRA_OEMAKE.
