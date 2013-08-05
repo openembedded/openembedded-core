@@ -403,7 +403,7 @@ python () {
     #
     # These take the form:
     #
-    # PACKAGECONFIG ?? = "<default options>"
+    # PACKAGECONFIG ??= "<default options>"
     # PACKAGECONFIG[foo] = "--enable-foo,--disable-foo,foo_depends,foo_runtime_depends"
     pkgconfigflags = d.getVarFlags("PACKAGECONFIG") or {}
     if pkgconfigflags:
