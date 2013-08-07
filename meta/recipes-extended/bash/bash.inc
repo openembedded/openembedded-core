@@ -20,8 +20,8 @@ export AUTOHEADER = "true"
 RDEPENDS_${PN}-ptest += "make"
 
 do_configure_prepend () {
-	if [ ! -e acinclude.m4 ]; then
-		cat aclocal.m4 > acinclude.m4
+	if [ ! -e ${S}/acinclude.m4 ]; then
+		cat ${S}/aclocal.m4 > ${S}/acinclude.m4
 	fi
 }
 
