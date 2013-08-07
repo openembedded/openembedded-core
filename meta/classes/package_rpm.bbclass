@@ -358,6 +358,11 @@ EOF
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._var=${localstatedir}
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._tmppath=/install/tmp
 		package_write_smart_config ${target_rootfs}
+		# Do the following configurations here, to avoid them being saved for field upgrade
+		for i in ${PACKAGE_EXCLUDE}; do
+			smart --data-dir=$1/var/lib/smart flag --set exclude-packages $i
+		done
+
 		# Optional debugging
 		#smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-log-level=debug
 		#smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-log-file=/tmp/smart-debug-logfile
