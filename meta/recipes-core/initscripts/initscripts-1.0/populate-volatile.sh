@@ -72,7 +72,8 @@ link_file() {
 	if [ -L \"$2\" ]; then
 		[ \"\$(readlink -f \"$2\")\" != \"\$(readlink -f \"$1\")\" ] && { rm -f \"$2\"; ln -sf \"$1\" \"$2\"; };
 	elif [ -d \"$2\" ]; then
-		for f in $2/* $2/.[^.]*; do [ -e \$f ] && cp -rf \$f $1; done;
+		cp -a $2/* $1 2>/dev/null;
+		cp -a $2/.[!.]* $1 2>/dev/null;
 		rm -rf \"$2\";
 		ln -sf \"$1\" \"$2\";
 	else
