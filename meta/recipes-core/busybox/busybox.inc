@@ -274,13 +274,16 @@ do_install () {
 
         ln -sf /dev/null ${D}${systemd_unitdir}/system/syslog.service
     fi
+
+    # Remove the sysvinit specific configuration file for systemd systems to avoid confusion
+    if ${@base_contains('DISTRO_FEATURES', 'sysvinit', 'false', 'true', d)}; then
+	rm ${D}${sysconfdir}/syslog-startup.conf.${BPN}
+    fi
 }
 
 inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "50"
-
-ALTERNATIVE_${PN}-syslog = "syslog-startup-conf"
 
 python () {
     if 'sysvinit' in d.getVar("DISTRO_FEATURES", True).split():
@@ -288,10 +291,10 @@ python () {
         d.appendVar('ALTERNATIVE_%s-syslog' % (pn), ' syslog-init')
         d.setVarFlag('ALTERNATIVE_LINK_NAME', 'syslog-init', '%s/init.d/syslog' % (d.getVar('sysconfdir', True)))
         d.setVarFlag('ALTERNATIVE_TARGET', 'syslog-init', '%s/init.d/syslog.%s' % (d.getVar('sysconfdir', True), d.getVar('BPN', True)))
+        d.appendVar('ALTERNATIVE_%s-syslog' % (pn), ' syslog-startup-conf')
+        d.setVarFlag('ALTERNATIVE_LINK_NAME', 'syslog-startup-conf', '%s/syslog-startup.conf' % (d.getVar('sysconfdir', True)))
+        d.setVarFlag('ALTERNATIVE_TARGET', 'syslog-startup-conf', '%s/syslog-startup.conf.%s' % (d.getVar('sysconfdir', True), d.getVar('BPN', True)))
 }
-
-ALTERNATIVE_LINK_NAME[syslog-startup-conf] = "${sysconfdir}/syslog-startup.conf"
-ALTERNATIVE_TARGET[syslog-startup-conf] = "${sysconfdir}/syslog-startup.conf.${BPN}"
 
 python do_package_prepend () {
     # We need to load the full set of busybox provides from the /etc/busybox.links
