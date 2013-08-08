@@ -22,7 +22,7 @@ test "$SULOGIN" = yes && sulogin -t 30 $CONSOLE
 exec 9< /etc/fstab
 rootmode=rw
 rootopts=rw
-rootcheck=no
+rootcheck=$ENABLE_ROOTFS_FSCK
 swap_on_md=no
 devfs=
 while read fs mnt type opts dump pass junk <&9
