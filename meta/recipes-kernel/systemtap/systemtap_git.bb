@@ -13,7 +13,7 @@ RDEPENDS_${PN}_class-nativesdk += "python-native"
 PR = "r1"
 
 EXTRA_OECONF += "--with-libelf=${STAGING_DIR_TARGET} --without-rpm \
-            --without-nss --without-avahi \
+            --without-nss --without-avahi --without-dyninst \
             --disable-server --disable-grapher "
 
 STAP_DOCS ?= "--disable-docs --disable-publican --disable-refdocs"
