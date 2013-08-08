@@ -53,11 +53,6 @@ def testimage_main(d):
 
     testdir = d.getVar("TEST_LOG_DIR", True)
     bb.utils.mkdirhier(testdir)
-    sshlog = os.path.join(testdir, "ssh_target_log.%s" % d.getVar('DATETIME', True))
-    sshloglink = os.path.join(testdir, "ssh_target_log")
-    if os.path.islink(sshloglink):
-        os.unlink(sshloglink)
-    os.symlink(sshlog, sshloglink)
 
     # tests in TEST_SUITES become required tests
     # they won't be skipped even if they aren't suitable for a default image (like xorg for minimal)
@@ -103,9 +98,22 @@ def testimage_main(d):
     except ValueError:
         qemu.boottime = 500
 
+    qemuloglink = os.path.join(testdir, "qemu_boot_log")
+    if os.path.islink(qemuloglink):
+        os.unlink(qemuloglink)
+    os.symlink(qemu.logfile, qemuloglink)
+
+    sshlog = os.path.join(testdir, "ssh_target_log.%s" % d.getVar('DATETIME', True))
+    sshloglink = os.path.join(testdir, "ssh_target_log")
+    if os.path.islink(sshloglink):
+        os.unlink(sshloglink)
+    os.symlink(sshlog, sshloglink)
+
+
     bb.note("DISPLAY value: %s" % qemu.display)
     bb.note("rootfs file: %s" %  rootfs)
-    bb.note("Qemu logfile: %s" % qemu.logfile)
+    bb.note("Qemu log file: %s" % qemu.logfile)
+    bb.note("SSH log file: %s" %  sshlog)
 
     #catch exceptions when loading or running tests (mostly our own errors)
     try:
