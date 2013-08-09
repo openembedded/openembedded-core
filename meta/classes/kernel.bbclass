@@ -237,14 +237,6 @@ do_savedefconfig() {
 do_savedefconfig[nostamp] = "1"
 addtask savedefconfig after do_configure
 
-pkg_postinst_kernel-base () {
-	update-alternatives --install /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ${KERNEL_IMAGETYPE} ${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ${KERNEL_PRIORITY} || true
-}
-
-pkg_postrm_kernel-base () {
-	update-alternatives --remove ${KERNEL_IMAGETYPE} ${KERNEL_IMAGETYPE}-${KERNEL_VERSION} || true
-}
-
 inherit cml1
 
 EXPORT_FUNCTIONS do_compile do_install do_configure
@@ -272,14 +264,19 @@ ALLOW_EMPTY_kernel-modules = "1"
 DESCRIPTION_kernel-modules = "Kernel modules meta package"
 
 pkg_postinst_kernel-image () {
-if [ ! -e "$D/lib/modules/${KERNEL_VERSION}" ]; then
-	mkdir -p $D/lib/modules/${KERNEL_VERSION}
-fi
-if [ -n "$D" ]; then
-	depmodwrapper -a -b $D ${KERNEL_VERSION}
-else
-	depmod -a ${KERNEL_VERSION}
-fi
+	update-alternatives --install /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ${KERNEL_IMAGETYPE} ${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ${KERNEL_PRIORITY} || true
+	if [ ! -e "$D/lib/modules/${KERNEL_VERSION}" ]; then
+		mkdir -p $D/lib/modules/${KERNEL_VERSION}
+	fi
+	if [ -n "$D" ]; then
+		depmodwrapper -a -b $D ${KERNEL_VERSION}
+	else
+		depmod -a ${KERNEL_VERSION}
+	fi
+}
+
+pkg_postrm_kernel-image () {
+	update-alternatives --remove ${KERNEL_IMAGETYPE} ${KERNEL_IMAGETYPE}-${KERNEL_VERSION} || true
 }
 
 PACKAGESPLITFUNCS_prepend = "split_kernel_packages "
