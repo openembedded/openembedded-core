@@ -86,7 +86,8 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;ex
 	   file://rpm-platform2.patch \
 	   file://rpm-remove-sykcparse-decl.patch \
 	   file://debugedit-segv.patch \
-     file://rpm-platform-file-fix.patch \
+	   file://rpm-platform-file-fix.patch \
+	   file://rpm-lsb-compatibility.patch \
 	  "
 
 # Uncomment the following line to enable platform score debugging
