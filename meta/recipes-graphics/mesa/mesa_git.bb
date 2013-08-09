@@ -13,6 +13,8 @@ SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git \
            file://0002-pipe_loader_sw-include-xlib_sw_winsys.h-only-when-HA.patch \
            file://0003-EGL-Mutate-NativeDisplayType-depending-on-config.patch \
            file://0004-glsl-fix-builtin_compiler-cross-compilation.patch \
+           file://0005-fix-out-of-tree-builds-gallium.patch \
+           file://0006-fix-out-of-tree-egl.patch \
            "
 
 S = "${WORKDIR}/git"

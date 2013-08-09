@@ -1,0 +1,48 @@
+Fix out of tree compilation failure due to
+0003-EGL-Mutate-NativeDisplayType-depending-on-config.patch.
+
+Upstream-Status: Inappropriate (upstream has different solution to root problem)
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+diff --git a/src/egl/drivers/dri2/Makefile.am b/src/egl/drivers/dri2/Makefile.am
+index 45f7dfa..ed0e777 100644
+--- a/src/egl/drivers/dri2/Makefile.am
++++ b/src/egl/drivers/dri2/Makefile.am
+@@ -21,6 +21,7 @@
+ 
+ AM_CFLAGS = \
+ 	-I$(top_srcdir)/include \
++	-I$(top_builddir)/include \
+ 	-I$(top_srcdir)/src/egl/main \
+ 	-I$(top_srcdir)/src/gbm/main \
+ 	-I$(top_srcdir)/src/gbm/backends/dri \
+diff --git a/src/egl/drivers/glx/Makefile.am b/src/egl/drivers/glx/Makefile.am
+index 6bf67ea..7b87047 100644
+--- a/src/egl/drivers/glx/Makefile.am
++++ b/src/egl/drivers/glx/Makefile.am
+@@ -21,6 +21,7 @@
+ 
+ AM_CFLAGS = \
+ 	-I$(top_srcdir)/include \
++	-I$(top_builddir)/include \
+ 	-I$(top_srcdir)/src/egl/main \
+ 	$(X11_CFLAGS) \
+ 	$(DEFINES)
+diff --git a/src/egl/main/Makefile.am b/src/egl/main/Makefile.am
+index ca5257a..13a5734 100644
+--- a/src/egl/main/Makefile.am
++++ b/src/egl/main/Makefile.am
+@@ -27,6 +27,7 @@ endif
+ 
+ AM_CFLAGS = \
+ 	-I$(top_srcdir)/include \
++	-I$(top_builddir)/include \
+ 	-I$(top_srcdir)/src/gbm/main \
+ 	$(DEFINES) \
+ 	$(EGL_CFLAGS) \
+@@ -135,4 +136,4 @@ egl_HEADERS = \
+ 	$(top_srcdir)/include/EGL/eglext.h \
+ 	$(top_srcdir)/include/EGL/egl.h \
+ 	$(top_srcdir)/include/EGL/eglmesaext.h \
+-	$(top_srcdir)/include/EGL/eglplatform.h
++	$(top_builddir)/include/EGL/eglplatform.h

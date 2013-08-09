@@ -1,0 +1,42 @@
+Upstream-Status: Submitted
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 9e31e15ebb0adbf3cc0394c30cbc1ccd2b35a27f Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Fri, 28 Jun 2013 11:44:58 +0100
+Subject: [PATCH] build: fix out-of-tree builds in gallium/auxiliary
+
+The rules were writing files to e.g. util/u_indices_gen.py, but in an
+out-of-tree build this directory doesn't exist in the build directory.  So,
+create the directories just in case.
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ src/gallium/auxiliary/Makefile.am |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/gallium/auxiliary/Makefile.am b/src/gallium/auxiliary/Makefile.am
+index f14279b..0c3e7ba 100644
+--- a/src/gallium/auxiliary/Makefile.am
++++ b/src/gallium/auxiliary/Makefile.am
+@@ -38,13 +38,17 @@ libgallium_la_SOURCES += \
+ endif
+ 
+ indices/u_indices_gen.c: $(srcdir)/indices/u_indices_gen.py
++	mkdir --parents indices
+ 	$(AM_V_GEN) $(PYTHON2) $< > $@
+ 
+ indices/u_unfilled_gen.c: $(srcdir)/indices/u_unfilled_gen.py
++	mkdir --parents indices
+ 	$(AM_V_GEN) $(PYTHON2) $< > $@
+ 
+ util/u_format_srgb.c: $(srcdir)/util/u_format_srgb.py
++	mkdir --parents util
+ 	$(AM_V_GEN) $(PYTHON2) $< > $@
+ 
+ util/u_format_table.c: $(srcdir)/util/u_format_table.py $(srcdir)/util/u_format_pack.py $(srcdir)/util/u_format_parse.py $(srcdir)/util/u_format.csv
++	mkdir --parents util
+ 	$(AM_V_GEN) $(PYTHON2) $(srcdir)/util/u_format_table.py $(srcdir)/util/u_format.csv > $@
+-- 
+1.7.10.4
+
