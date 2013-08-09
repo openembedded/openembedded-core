@@ -12,7 +12,7 @@ index e676601..9140bbe 100644
  #endif
  	}
  
-+#if !defined(RPM_VENDOR_POKY) /* Skip the explicit-platform */
++#if !defined(RPM_VENDOR_OE) /* Skip the explicit-platform */
  #if defined(RPM_VENDOR_OPENPKG) /* explicit-platform */
  	/* do not use vendor and GNU attribution */
  	p = rpmExpand("%{_host_cpu}-%{_host_os}", NULL);

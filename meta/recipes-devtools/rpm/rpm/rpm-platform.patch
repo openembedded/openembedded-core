@@ -14,7 +14,7 @@ diff -ur rpm-5.4.0.orig/lib/depends.c rpm-5.4.0/lib/depends.c
  	}
  
 -#if defined(RPM_VENDOR_WINDRIVER)
-+#if defined(RPM_VENDOR_WINDRIVER) && !defined(RPM_VENDOR_POKY)
++#if defined(RPM_VENDOR_WINDRIVER) && !defined(RPM_VENDOR_OE)
  	/*
  	 * If we're capable of installing multiple colors
  	 * but at least one of the packages are white (0), we
@@ -23,7 +23,7 @@ diff -ur rpm-5.4.0.orig/lib/depends.c rpm-5.4.0/lib/depends.c
  }
  
 -#if defined(RPM_VENDOR_WINDRIVER)
-+#if defined(RPM_VENDOR_WINDRIVER) && !defined(RPM_VENDOR_POKY)
++#if defined(RPM_VENDOR_WINDRIVER) && !defined(RPM_VENDOR_OE)
  /* Is "compat" compatible w/ arch? */
  int _isCompatibleArch(const char * arch, const char * compat)
  {
@@ -32,7 +32,7 @@ diff -ur rpm-5.4.0.orig/lib/depends.c rpm-5.4.0/lib/depends.c
  	    if (arch == NULL || (parch = rpmteA(p)) == NULL)
  		continue;
 -#if defined(RPM_VENDOR_WINDRIVER)
-+#if defined(RPM_VENDOR_WINDRIVER) && !defined(RPM_VENDOR_POKY)
++#if defined(RPM_VENDOR_WINDRIVER) && !defined(RPM_VENDOR_OE)
  	    /* XXX hackery for alias matching. */
  	    if (!_isCompatibleArch(arch, parch))
  		continue;
@@ -40,7 +40,7 @@ diff -ur rpm-5.4.0.orig/lib/depends.c rpm-5.4.0/lib/depends.c
      return rc;
  }
  
-+#if defined(RPM_VENDOR_WINDRIVER) || defined(RPM_VENDOR_POKY)
++#if defined(RPM_VENDOR_WINDRIVER) || defined(RPM_VENDOR_OE)
 +#define _ETC_RPM_SYSINFO        "%{_etcrpm}/sysinfo"
 +#else
 +#define _ETC_RPM_SYSINFO        SYSCONFIGDIR "/sysinfo"

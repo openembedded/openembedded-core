@@ -22,7 +22,7 @@ Index: rpm-5.4.9/lib/rpmrc.c
  {
  
 -#if defined(RPM_VENDOR_WINDRIVER)
-+#if defined(RPM_VENDOR_WINDRIVER) || defined(RPM_VENDOR_POKY)
++#if defined(RPM_VENDOR_WINDRIVER) || defined(RPM_VENDOR_OE)
      addMacro(NULL, "_usrlibrpm", NULL, __usrlibrpm, RMIL_DEFAULT);
      addMacro(NULL, "_etcrpm", NULL, __etcrpm, RMIL_DEFAULT);
      addMacro(NULL, "_vendor", NULL, "%{?_host_vendor}%{!?_host_vendor:wrs}", RMIL_DEFAULT);
@@ -38,7 +38,7 @@ Index: rpm-5.4.9/lib/rpmrc.c
  	}
  
  	if (!parseCVOG(p, &cvog) && cvog != NULL) {
-+#if defined(RPM_VENDOR_POKY)
++#if defined(RPM_VENDOR_OE)
 +	    char * _gnu = NULL;
 +
 +	    addMacro(NULL, "_platform_cpu", NULL, cvog->cpu, -1);
@@ -98,7 +98,7 @@ Index: rpm-5.4.9/python/rpmmodule.c
  
 -#if defined(RPM_VENDOR_WINDRIVER)
 -    platform = rpmExpand(arch, "-%{_host_vendor}", "-%{_host_os}%{?_gnu}", NULL);
-+#if defined(RPM_VENDOR_WINDRIVER) || defined(RPM_VENDOR_POKY)
++#if defined(RPM_VENDOR_WINDRIVER) || defined(RPM_VENDOR_OE)
 +    platform = rpmExpand(arch, "-%{_host_vendor}", "-%{_host_os}%{?_host_gnu}%{!?_host_gnu:%{?_gnu}}", NULL);
  #else
      platform = rpmExpand(arch, "-", "%{_vendor}", "-", "%{_os}", NULL);
