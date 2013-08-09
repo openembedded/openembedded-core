@@ -128,12 +128,6 @@ python () {
 
     d.setVar('IMAGE_FEATURES', ' '.join(list(remain_features)))
 
-    if d.getVar('BB_WORKERCONTEXT', True) is not None:
-        pn = d.getVar('PN', True)
-        runtime_mapping_rename("PACKAGE_INSTALL", pn, d)
-        runtime_mapping_rename("PACKAGE_INSTALL_ATTEMPTONLY", pn, d)
-        runtime_mapping_rename("BAD_RECOMMENDATIONS", pn, d)
-
     # Ensure we have the vendor list for complementary package handling
     ml_vendor_list = ""
     multilibs = d.getVar('MULTILIBS', True) or ""
@@ -270,6 +264,17 @@ read_only_rootfs_hook () {
 		fi
 	fi
 }
+
+# We have to delay the runtime_mapping_rename until just before rootfs runs
+# otherwise, the multilib renaming could step in and squash any fixups that
+# may have occurred.
+python rootfs_runtime_mapping() {
+    pn = d.getVar('PN', True)
+    runtime_mapping_rename("PACKAGE_INSTALL", pn, d)
+    runtime_mapping_rename("PACKAGE_INSTALL_ATTEMPTONLY", pn, d)
+    runtime_mapping_rename("BAD_RECOMMENDATIONS", pn, d)
+}
+do_rootfs[prefuncs] += "rootfs_runtime_mapping"
 
 fakeroot do_rootfs () {
 	#set -x
