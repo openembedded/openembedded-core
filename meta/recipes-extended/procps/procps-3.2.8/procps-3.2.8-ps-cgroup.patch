@@ -1,0 +1,82 @@
+From e529ce0b53f6b73d8b760cd37b23e0397720cede Mon Sep 17 00:00:00 2001
+From: Daniel Novotny <dnovotny@fedoraproject.org>
+Date: Mon, 16 Feb 2009 12:22:20 +0000
+Subject: add cgroup support
+
+Rebased for 3.2.8: Andrei Gherzan <andrei.gherzan@windriver.com>
+
+Upstream-Status: Pending
+
+The patch was imported from the meta-ivi repository
+(git://git.yoctoproject.org/meta-ivi) as of commit id
+74b9624fe94b2b90810717a13d481b0db9d2d95a
+
+Signed-off-by: Jukka Rissanen <jukka.rissanen@linux.intel.com>
+
+Index: procps-3.2.8/ps/output.c
+===================================================================
+--- procps-3.2.8.orig/ps/output.c	2012-11-15 17:44:05.501337741 +0200
++++ procps-3.2.8/ps/output.c	2012-11-15 17:48:31.585328231 +0200
+@@ -1099,6 +1099,39 @@
+   return snprintf(outbuf, COLWID, "*");
+ }
+ 
++static int pr_cgroup(char *restrict const outbuf, const proc_t *restrict const pp){
++  char filename[48];
++  FILE *fd;
++  int counter = 0;
++  int c;
++  int is_cgroup = 0;
++
++  outbuf[0]='\0';
++  snprintf(filename, sizeof filename, "/proc/%d/cgroup", pp->tgid);
++  fd = fopen(filename, "r");
++  if (likely(fd == NULL)) goto fail;
++  while (( (c = fgetc(fd)) != EOF) && (counter<665)) {
++    if (is_cgroup == 0) {
++      if (c == ':') {
++        is_cgroup = 1;
++        if (counter>0)
++          outbuf[counter++]=';';
++      }
++    }else
++      if ((c == '\n') || (c == '\0'))
++        is_cgroup = 0;
++      else
++        outbuf[counter++]=c;
++  }
++  outbuf[counter]='\0';
++  close(fd);
++  if (counter>0)
++    return counter;
++fail:
++  outbuf[0] = '-';
++  outbuf[1] = '\0';
++  return 1;
++}
+ 
+ /****************** FLASK & seLinux security stuff **********************/
+ // move the bulk of this to libproc sometime
+@@ -1293,6 +1326,7 @@
+ {"bsdtime",   "TIME",    pr_bsdtime,  sr_nop,     6,   0,    LNX, ET|RIGHT},
+ {"c",         "C",       pr_c,        sr_pcpu,    2,   0,    SUN, ET|RIGHT},
+ {"caught",    "CAUGHT",  pr_sigcatch, sr_nop,     9,   0,    BSD, TO|SIGNAL}, /*sigcatch*/
++{"cgroup",    "CGROUP",  pr_cgroup,   sr_nop,    35,   0,    LNX, PO|LEFT},  /* cgroups*/
+ {"class",     "CLS",     pr_class,    sr_sched,   3,   0,    XXX, TO|LEFT},
+ {"cls",       "CLS",     pr_class,    sr_sched,   3,   0,    HPU, TO|RIGHT}, /*says HPUX or RT*/
+ {"cmaj_flt",  "-",       pr_nop,      sr_cmaj_flt, 1,  0,    LNX, AN|RIGHT},
+Index: procps-3.2.8/ps/ps.1
+===================================================================
+--- procps-3.2.8.orig/ps/ps.1	2012-11-15 17:44:50.845336117 +0200
++++ procps-3.2.8/ps/ps.1	2012-11-15 17:49:09.621326859 +0200
+@@ -904,6 +904,10 @@
+ displayed.  (alias\ \fBsig_catch\fR,\ \fBsigcatch\fR).
+ T}
+ 
++cgroup	CGROUP	T{
++display control groups to which the process belonges.
++t}
++
+ class	CLS	T{
+ scheduling class of the process.  (alias\ \fBpolicy\fR,\ \fBcls\fR).
+ Field's possible values are:
