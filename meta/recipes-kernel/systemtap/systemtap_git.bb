@@ -10,11 +10,11 @@ RDEPENDS_${PN} += "python bash"
 RDEPENDS_${PN}_class-native += "python-native"
 RDEPENDS_${PN}_class-nativesdk += "python-native"
 
-PR = "r1"
-
 EXTRA_OECONF += "--with-libelf=${STAGING_DIR_TARGET} --without-rpm \
             --without-nss --without-avahi --without-dyninst \
-            --disable-server --disable-grapher "
+            --disable-server --disable-grapher \
+            ac_cv_prog_have_javac=no \
+            ac_cv_prog_have_jar=no "
 
 STAP_DOCS ?= "--disable-docs --disable-publican --disable-refdocs"
 
