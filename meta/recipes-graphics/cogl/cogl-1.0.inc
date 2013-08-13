@@ -28,16 +28,17 @@ EDEPENDS_WAYLAND = "wayland"
 ERDEPENDS_GL    = "libgl"
 ERDEPENDS_GLES2 = "libgles2"
 
+# GLESv1 is rarely tested, so disable it
 EXTRA_OECONF += "--disable-introspection	\
 	       	 --enable-examples-install	\
 	       	 --enable-debug		 	\
 	       	 --disable-gles1		\
 	    	"
 
-PACKAGECONFIG[cogl-pango] = "--enable-cogl-pango,--disable-cogl-pango,pango"
+# OpenGL/GLX
+PACKAGECONFIG[glx] = "--enable-gl --enable-glx,--disable-gl --disable-glx,${EDEPENDS_GL} ${EDEPENDS_X11},${ERDEPENDS_GL}"
 
-# GL flavours
-PACKAGECONFIG[gl] = "--enable-gl,--disable-gl,${EDEPENDS_GL},${ERDEPENDS_GL}"
+# GLESv2
 PACKAGECONFIG[gles2] = "--enable-gles2,--disable-gles2,${EDEPENDS_GLES2}, ${ERDEPENDS_GLES2}"
 
 # EGL backends
@@ -46,15 +47,15 @@ PACKAGECONFIG[egl-null] = "--enable-null-egl-platform,--disable-null-egl-platfor
 PACKAGECONFIG[egl-x11] = "--enable-xlib-egl-platform,--disable-xlib-egl-platform,${EDEPENDS_X11}"
 PACKAGECONFIG[egl-wayland] = "--enable-wayland-egl-platform,--disable-wayland-egl-platform,${EDEPENDS_WAYLAND}"
 
-# GLX
-PACKAGECONFIG[glx] = "--enable-glx,--disable-glx,${EDEPENDS_GL} ${EDEPENDS_X11}"
-
-# Wayland server-side
+# Wayland (server-side)
 PACKAGECONFIG[wayland-server] = "--enable-wayland-egl-server,--disable-wayland-egl-server,${EDEPENDS_WAYLAND}"
+
+# Support rendering text directly with Pango
+PACKAGECONFIG[cogl-pango] = "--enable-cogl-pango,--disable-cogl-pango,pango"
 
 # Respect the DISTRO_FEATURES to pull in GLX or Wayland as appropriate by
 # default.
-PACKAGECONFIG ??= "cogl-pango gl \
+PACKAGECONFIG ??= "cogl-pango gles2 \
                    ${@base_contains('DISTRO_FEATURES', 'wayland', 'egl-wayland', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', 'x11', 'glx', '', d)}"
 
