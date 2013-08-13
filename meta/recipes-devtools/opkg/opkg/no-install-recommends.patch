@@ -1,0 +1,78 @@
+Add the ability to not install ANY recommended packages.
+
+Upstream-Status: Pending
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+Index: trunk/libopkg/opkg_conf.h
+===================================================================
+--- trunk.orig/libopkg/opkg_conf.h
++++ trunk/libopkg/opkg_conf.h
+@@ -80,6 +80,7 @@ struct opkg_conf
+      int prefer_arch_to_version;
+      int check_signature;
+      int nodeps; /* do not follow dependencies */
++     int noinstall_recommends;
+      char *offline_root;
+      char *overlay_root;
+      int query_all;
+Index: trunk/libopkg/pkg_depends.c
+===================================================================
+--- trunk.orig/libopkg/pkg_depends.c
++++ trunk/libopkg/pkg_depends.c
+@@ -19,6 +19,7 @@
+ #include <ctype.h>
+ 
+ #include "pkg.h"
++#include "opkg_conf.h"
+ #include "opkg_utils.h"
+ #include "pkg_hash.h"
+ #include "opkg_message.h"
+@@ -204,7 +205,7 @@ pkg_hash_fetch_unsatisfied_dependencies(
+ 		    /* user request overrides package recommendation */
+ 		    if (satisfying_pkg != NULL
+ 			&& (compound_depend->type == RECOMMEND || compound_depend->type == SUGGEST)
+-			&& (satisfying_pkg->state_want == SW_DEINSTALL || satisfying_pkg->state_want == SW_PURGE)) {
++			&& (satisfying_pkg->state_want == SW_DEINSTALL || satisfying_pkg->state_want == SW_PURGE || conf->noinstall_recommends)) {
+ 			 opkg_msg(NOTICE, "%s: ignoring recommendation for "
+ 					"%s at user request\n",
+ 					pkg->name, satisfying_pkg->name);
+Index: trunk/src/opkg-cl.c
+===================================================================
+--- trunk.orig/src/opkg-cl.c
++++ trunk/src/opkg-cl.c
+@@ -50,6 +50,7 @@ enum {
+ 	ARGS_OPT_NODEPS,
+ 	ARGS_OPT_AUTOREMOVE,
+ 	ARGS_OPT_CACHE,
++	ARGS_OPT_NOINSTALL_RECOMMENDS,
+ };
+ 
+ static struct option long_options[] = {
+@@ -89,6 +90,7 @@ static struct option long_options[] = {
+ 	{"noaction", 0, 0, ARGS_OPT_NOACTION},
+ 	{"download-only", 0, 0, ARGS_OPT_DOWNLOAD_ONLY},
+ 	{"nodeps", 0, 0, ARGS_OPT_NODEPS},
++	{"no-install-recommends", 0, 0, ARGS_OPT_NOINSTALL_RECOMMENDS},
+ 	{"offline", 1, 0, 'o'},
+ 	{"offline-root", 1, 0, 'o'},
+ 	{"add-arch", 1, 0, ARGS_OPT_ADD_ARCH},
+@@ -199,6 +201,9 @@ args_parse(int argc, char *argv[])
+ 		case ARGS_OPT_NOACTION:
+ 			conf->noaction = 1;
+ 			break;
++		case ARGS_OPT_NOINSTALL_RECOMMENDS:
++			conf->noinstall_recommends = 1;
++			break;
+         case ARGS_OPT_DOWNLOAD_ONLY:
+ 			conf->download_only = 1;
+ 			break;
+@@ -293,6 +298,8 @@ usage()
+ 	printf("\t--noaction		No action -- test only\n");
+ 	printf("\t--download-only	No action -- download only\n");
+ 	printf("\t--nodeps		Do not follow dependencies\n");
++	printf("\t--no-install-recommends\n");
++	printf("\t                      Do not install any recommended packages\n");
+ 	printf("\t--force-removal-of-dependent-packages\n");
+ 	printf("\t			Remove package and all dependencies\n");
+ 	printf("\t--autoremove		Remove packages that were installed\n");

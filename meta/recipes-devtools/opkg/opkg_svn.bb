@@ -1,6 +1,8 @@
 require opkg.inc
 
-SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;protocol=http"
+SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;protocol=http \
+           file://no-install-recommends.patch \
+"
 
 S = "${WORKDIR}/trunk"
 
