@@ -566,7 +566,7 @@ sstate_create_package () {
 	TFILE=`mktemp ${SSTATE_PKG}.XXXXXXXX`
 	# Need to handle empty directories
 	if [ "$(ls -A)" ]; then
-		tar -czf $TFILE *
+		tar --ignore-failed-read -czf $TFILE *
 	else
 		tar -cz --file=$TFILE --files-from=/dev/null
 	fi
