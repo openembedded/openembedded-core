@@ -56,6 +56,14 @@ PACKAGECONFIG[wispr] = "--enable-wispr,--disable-wispr,gnutls,"
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
 
+python __anonymous () {
+    systemd_packages = "${PN}"
+    pkgconfig = d.getVar('PACKAGECONFIG', True)
+    if ('openvpn' or 'vpnc' or 'l2tp' or 'pptp') in pkgconfig.split():
+        systemd_packages += " ${PN}-vpn"
+    d.setVar('SYSTEMD_PACKAGES', systemd_packages)
+}
+
 SYSTEMD_SERVICE_${PN} = "connman.service"
 SYSTEMD_SERVICE_${PN}-vpn = "connman-vpn.service"
 SYSTEMD_WIRED_SETUP = "ExecStartPre=-${libdir}/connman/wired-setup"
