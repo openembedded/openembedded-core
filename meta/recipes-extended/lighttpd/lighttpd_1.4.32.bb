@@ -45,10 +45,10 @@ INITSCRIPT_NAME = "lighttpd"
 INITSCRIPT_PARAMS = "defaults 70"
 
 do_install_append() {
-    install -d ${D}${sysconfdir}/init.d ${D}/www/logs ${D}/www/pages/dav ${D}/www/var
-    install -m 0755 ${WORKDIR}/lighttpd ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/lighttpd.conf ${D}${sysconfdir}
-    install -m 0644 ${WORKDIR}/index.html.lighttpd ${D}/www/pages/index.html
+	install -d ${D}${sysconfdir}/init.d ${D}/www/logs ${D}/www/pages/dav ${D}/www/var
+	install -m 0755 ${WORKDIR}/lighttpd ${D}${sysconfdir}/init.d
+	install -m 0755 ${WORKDIR}/lighttpd.conf ${D}${sysconfdir}
+	install -m 0644 ${WORKDIR}/index.html.lighttpd ${D}/www/pages/index.html
 }
 
 FILES_${PN} += "${sysconfdir} /www"
