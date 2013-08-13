@@ -10,6 +10,8 @@ DPKG_ARCH ?= "${TARGET_ARCH}"
 
 PKGWRITEDIRDEB = "${WORKDIR}/deploy-debs"
 
+APTCONF_TARGET = "${WORKDIR}"
+
 #
 # Update the Packages index files in ${DEPLOY_DIR_DEB}
 #
@@ -63,8 +65,9 @@ package_install_internal_deb () {
 	local package_linguas="${INSTALL_PACKAGES_LINGUAS_DEB}"
 	local task="${INSTALL_TASK_DEB}"
 
-	rm -f ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev
-	rm -f ${STAGING_ETCDIR_NATIVE}/apt/preferences
+	mkdir -p ${APTCONF_TARGET}/apt
+	rm -f ${APTCONF_TARGET}/apt/sources.list.rev
+	rm -f ${APTCONF_TARGET}/apt/preferences
 
 	priority=1
 	for arch in $archs; do
@@ -72,15 +75,15 @@ package_install_internal_deb () {
 			continue;
 		fi
 
-		echo "deb file:${DEPLOY_DIR_DEB}/$arch/ ./" >> ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev
+		echo "deb file:${DEPLOY_DIR_DEB}/$arch/ ./" >> ${APTCONF_TARGET}/apt/sources.list.rev
 		(echo "Package: *"
 		echo "Pin: release l=$arch"
 		echo "Pin-Priority: $(expr 800 + $priority)"
-		echo) >> ${STAGING_ETCDIR_NATIVE}/apt/preferences
+		echo) >> ${APTCONF_TARGET}/apt/preferences
 		priority=$(expr $priority + 5)
 	done
 
-	tac ${STAGING_ETCDIR_NATIVE}/apt/sources.list.rev > ${STAGING_ETCDIR_NATIVE}/apt/sources.list
+	tac ${APTCONF_TARGET}/apt/sources.list.rev > ${APTCONF_TARGET}/apt/sources.list
 
 	# The params in deb package control don't allow character `_', so
 	# change the arch's `_' to `-' in it.
@@ -88,9 +91,9 @@ package_install_internal_deb () {
 	cat "${STAGING_ETCDIR_NATIVE}/apt/apt.conf.sample" \
 		| sed -e "s#Architecture \".*\";#Architecture \"${dpkg_arch}\";#" \
 		| sed -e "s:#ROOTFS#:${target_rootfs}:g" \
-		> "${STAGING_ETCDIR_NATIVE}/apt/apt-${task}.conf"
+		> "${APTCONF_TARGET}/apt/apt.conf"
 
-	export APT_CONFIG="${STAGING_ETCDIR_NATIVE}/apt/apt-${task}.conf"
+	export APT_CONFIG="${APTCONF_TARGET}/apt/apt.conf"
 
 	mkdir -p ${target_rootfs}/var/lib/dpkg/info
 	mkdir -p ${target_rootfs}/var/lib/dpkg/updates
