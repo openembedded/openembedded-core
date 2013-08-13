@@ -57,8 +57,6 @@ do_install_append_class-native() {
 	fi
 }
 
-POSTLOG ?= "/var/log/postinstall.log"
-
 pkg_postinst_${PN} () {
 #!/bin/sh
 if [ "x$D" != "x" ] && [ -f $D${OPKGLIBDIR}/opkg/status ]; then
