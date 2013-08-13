@@ -7,6 +7,7 @@ SRC_URI += "file://noman.patch \
             file://preinst.patch \
             file://fix-timestamps.patch \
             file://remove-tar-no-timestamp.patch \
+            file://fix-abs-redefine.patch \
            "
 
 SRC_URI[md5sum] = "ece3ae87a099158c17bde95c0036c575"
