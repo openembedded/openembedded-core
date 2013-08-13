@@ -359,6 +359,9 @@ EOF
 		smart --data-dir=${target_rootfs}/var/lib/smart config --set rpm-extra-macros._tmppath=/install/tmp
 		package_write_smart_config ${target_rootfs}
 		# Do the following configurations here, to avoid them being saved for field upgrade
+		if [ "x${NO_RECOMMENDATIONS}" = "x1" ]; then
+			smart --data-dir=$1/var/lib/smart config --set ignore-all-recommends=1
+		fi
 		for i in ${PACKAGE_EXCLUDE}; do
 			smart --data-dir=$1/var/lib/smart flag --set exclude-packages $i
 		done
