@@ -58,7 +58,7 @@ RDEPENDS_${PN}-stats = "python"
 # Make clean needed because the package comes with
 # precompiled 64-bit objects that break the build
 do_compile_prepend() {
-    make clean
+	make clean
 }
 
 do_install_append () {
