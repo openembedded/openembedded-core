@@ -11,6 +11,12 @@ rootfs_deb_do_rootfs[vardepsexclude] += "BUILDNAME"
 
 do_rootfs[lockfiles] += "${DEPLOY_DIR_DEB}/deb.lock"
 
+python rootfs_deb_bad_recommendations() {
+    if d.getVar("BAD_RECOMMENDATIONS", True):
+	bb.warn("Debian package install does not support BAD_RECOMMENDATIONS")
+}
+do_rootfs[prefuncs] += "rootfs_deb_bad_recommendations"
+
 DEB_POSTPROCESS_COMMANDS = ""
 
 opkglibdir = "${localstatedir}/lib/opkg"
@@ -113,7 +119,7 @@ remove_packaging_data_files() {
 }
 
 rootfs_install_packages() {
-	${STAGING_BINDIR_NATIVE}/apt-get install `cat $1` --force-yes --allow-unauthenticated
+	${STAGING_BINDIR_NATIVE}/apt-get ${APT_ARGS} install `cat $1` --force-yes --allow-unauthenticated
 
 	# Mark all packages installed
 	sed -i -e "s/Status: install ok unpacked/Status: install ok installed/;" $INSTALL_ROOTFS_DEB/var/lib/dpkg/status
