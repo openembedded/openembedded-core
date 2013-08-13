@@ -85,6 +85,7 @@ PACKAGECONFIG[aio] = "--enable-linux-aio,--disable-linux-aio,libaio,"
 
 # Qemu target will not build in world build for ARM or Mips
 BROKEN_qemuarm = "1"
+BROKEN_qemumips64 = "1"
 BROKEN_qemumips = "1"
 
 INSANE_SKIP_${PN} = "arch"
