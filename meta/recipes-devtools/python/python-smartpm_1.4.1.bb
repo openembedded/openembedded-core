@@ -29,6 +29,7 @@ SRC_URI = "\
           file://smart-conflict-provider.patch \
           file://smart-flag-ignore-recommends.patch \
           file://smart-flag-exclude-packages.patch \
+          file://smart-config-ignore-all-recommends.patch \
           "
 
 SRC_URI[md5sum] = "573ef32ba177a6b3c4bf7ef04873fcb6"
