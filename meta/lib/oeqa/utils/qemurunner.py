@@ -6,26 +6,23 @@
 # It's used by testimage.bbclass.
 
 import subprocess
-import optparse
-import sys
 import os
 import time
 import signal
 import re
+import socket
+import select
 import bb
-from oeqa.utils.oeqemuconsole import oeQemuConsole
 
 class QemuRunner:
 
-    def __init__(self, machine, rootfs, display = None, tmpdir = None, logfile = None, boottime = 400):
+    def __init__(self, machine, rootfs, display = None, tmpdir = None, logfile = None, boottime = 400, runqemutime = 60):
         # Popen object
         self.runqemu = None
 
         self.machine = machine
         self.rootfs = rootfs
 
-        self.streampath = '/tmp/qemuconnection.%s' % os.getpid()
-        self.qemuparams = 'bootparams="console=tty1 console=ttyS0,115200n8" qemuparams="-serial unix:%s,server,nowait"' % self.streampath
         self.qemupid = None
         self.ip = None
 
@@ -33,11 +30,30 @@ class QemuRunner:
         self.tmpdir = tmpdir
         self.logfile = logfile
         self.boottime = boottime
+        self.runqemutime = runqemutime
+
+        self.bootlog = ''
+        self.qemusock = None
+
+        try:
+            self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.server_socket.setblocking(0)
+            self.server_socket.bind(("127.0.0.1",0))
+            self.server_socket.listen(2)
+            self.serverport = self.server_socket.getsockname()[1]
+            bb.note("Created listening socket for qemu serial console on: 127.0.0.1:%s" % self.serverport)
+        except socket.error, msg:
+            self.server_socket.close()
+            bb.fatal("Failed to create listening socket: %s" %msg[1])
+
+
+    def log(self, msg):
+        if self.logfile:
+            with open(self.logfile, "a") as f:
+                f.write("%s" % msg)
 
     def launch(self, qemuparams = None):
 
-        if qemuparams:
-            self.qemuparams = self.qemuparams[:-1] + " " + qemuparams + " " + '\"'
 
         if self.display:
             os.environ["DISPLAY"] = self.display
@@ -53,49 +69,70 @@ class QemuRunner:
         else:
             os.environ["OE_TMPDIR"] = self.tmpdir
 
+        self.qemuparams = 'bootparams="console=tty1 console=ttyS0,115200n8" qemuparams="-serial tcp:127.0.0.1:%s"' % self.serverport
+        if qemuparams:
+            self.qemuparams = self.qemuparams[:-1] + " " + qemuparams + " " + '\"'
+
         launch_cmd = 'runqemu %s %s %s' % (self.machine, self.rootfs, self.qemuparams)
         self.runqemu = subprocess.Popen(launch_cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,preexec_fn=os.setpgrp)
 
         bb.note("runqemu started, pid is %s" % self.runqemu.pid)
-        bb.note("waiting at most 60 seconds for qemu pid")
-        endtime = time.time() + 60
+        bb.note("waiting at most %s seconds for qemu pid" % self.runqemutime)
+        endtime = time.time() + self.runqemutime
         while not self.is_alive() and time.time() < endtime:
             time.sleep(1)
 
         if self.is_alive():
             bb.note("qemu started - qemu procces pid is %s" % self.qemupid)
-
-            console = oeQemuConsole(self.streampath, self.logfile)
+            pscmd = 'ps -p %s -fww | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" \'{print $1}\'' % self.qemupid
+            self.ip = subprocess.Popen(pscmd,shell=True,stdout=subprocess.PIPE).communicate()[0].strip()
+            if not re.search("^((?:[0-9]{1,3}\.){3}[0-9]{1,3})$", self.ip):
+                bb.note("Couldn't get ip from qemu process arguments, I got '%s'" % self.ip)
+                bb.note("Here is the ps output:\n%s" % \
+                        subprocess.Popen("ps -p %s -fww" % self.qemupid,shell=True,stdout=subprocess.PIPE).communicate()[0])
+                self.kill()
+                return False
+            bb.note("IP found: %s" % self.ip)
             bb.note("Waiting at most %d seconds for login banner" % self.boottime )
-            (match, text) = console.read_all_timeout("login:", self.boottime)
+            endtime = time.time() + self.boottime
+            socklist = [self.server_socket]
+            reachedlogin = False
+            stopread = False
+            while time.time() < endtime and not stopread:
+                sread, swrite, serror = select.select(socklist, [], [], 0)
+                for sock in sread:
+                    if sock is self.server_socket:
+                        self.qemusock, addr = self.server_socket.accept()
+                        self.qemusock.setblocking(0)
+                        socklist.append(self.qemusock)
+                        socklist.remove(self.server_socket)
+                        bb.note("Connection from %s:%s" % addr)
+                    else:
+                        data = sock.recv(1024)
+                        if data:
+                            self.log(data)
+                            self.bootlog += data
+                            lastlines = "\n".join(self.bootlog.splitlines()[-2:])
+                            if re.search("login:", lastlines):
+                                stopread = True
+                                reachedlogin = True
+                                bb.note("Reached login banner")
+                        else:
+                            socklist.remove(sock)
+                            sock.close()
+                            stopread = True
 
-            if match:
-                bb.note("Reached login banner")
-                console.write("root\n")
-                (index, match, text) = console.expect([r"(root@[\w-]+:~#)"],10)
-                if not match:
-                    bb.note("Couldn't get prompt, all I got was:\n%s" % text)
-                    return False
-                console.write("ip addr show `ip route list | sed -n '1p' | awk '{print $5}'` | sed -n '3p' | awk '{ print $2 }' | cut -f 1 -d \"/\"\n")
-                (index, match, text) = console.expect([r"((?:[0-9]{1,3}\.){3}[0-9]{1,3})"],10)
-                console.close()
-                if match:
-                    self.ip = match.group(0)
-                    bb.note("Ip found: %s" % self.ip)
-                else:
-                    bb.note("Couldn't determine ip, all I got was:\n%s" % text)
-                    return False
-            else:
-                console.close()
+
+            if not reachedlogin:
                 bb.note("Target didn't reached login boot in %d seconds" % self.boottime)
-                lines = "\n".join(text.splitlines()[-5:])
+                lines = "\n".join(self.bootlog.splitlines()[-5:])
                 bb.note("Last 5 lines of text:\n%s" % lines)
                 bb.note("Check full boot log: %s" % self.logfile)
+                self.kill()
                 return False
         else:
-            bb.note("Qemu pid didn't appeared in 30 seconds")
-            self.runqemu.terminate()
-            self.runqemu.kill()
+            bb.note("Qemu pid didn't appeared in %s seconds" % self.runqemutime)
+            self.kill()
             bb.note("Output from runqemu: %s " % self.runqemu.stdout.read())
             self.runqemu.stdout.close()
             return False
@@ -104,12 +141,15 @@ class QemuRunner:
 
 
     def kill(self):
-        if self.runqemu:
+        if self.server_socket:
+            self.server_socket.close()
+            self.server_socket = None
+        if self.runqemu.pid:
             os.kill(-self.runqemu.pid,signal.SIGTERM)
+            os.kill(-self.runqemu.pid,signal.SIGKILL)
+            self.runqemu.pid = None
         self.qemupid = None
         self.ip = None
-        if os.path.exists(self.streampath):
-            os.remove(self.streampath)
 
     def restart(self, qemuparams = None):
         if self.is_alive():
@@ -121,7 +161,7 @@ class QemuRunner:
         qemu_child = self.find_child(str(self.runqemu.pid))
         if qemu_child:
             self.qemupid = qemu_child[0]
-            if os.path.exists("/proc/" + str(self.qemupid)) and os.path.exists(self.streampath):
+            if os.path.exists("/proc/" + str(self.qemupid)):
                 return True
         return False
 
@@ -145,7 +185,6 @@ class QemuRunner:
             commands[data[0]] = data[2]
 
         if parent_pid not in pids:
-            sys.stderr.write("No children found matching %s\n" % parent_pid)
             return []
 
         parents = []
@@ -166,6 +205,6 @@ class QemuRunner:
             # Also, old versions of ldd (2.11) run "LD_XXXX qemu-system-xxxx"
             basecmd = commands[p].split()[0]
             basecmd = os.path.basename(basecmd)
-            if "qemu-system" in basecmd and "-serial unix" in commands[p]:
+            if "qemu-system" in basecmd and "-serial tcp" in commands[p]:
                 return [int(p),commands[p]]
 
