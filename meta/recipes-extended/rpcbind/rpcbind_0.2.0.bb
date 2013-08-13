@@ -36,11 +36,11 @@ INITSCRIPT_NAME = "rpcbind"
 INITSCRIPT_PARAMS = "start 43 S . start 32 0 6 . stop 81 1 ."
 
 do_install_append () {
-    mv ${D}${bindir} ${D}${sbindir}
+	mv ${D}${bindir} ${D}${sbindir}
 
-    install -d ${D}${sysconfdir}/init.d
-    sed -e 's,/etc/,${sysconfdir}/,g' \
-        -e 's,/sbin/,${sbindir}/,g' \
-        ${WORKDIR}/init.d > ${D}${sysconfdir}/init.d/rpcbind
-    chmod 0755 ${D}${sysconfdir}/init.d/rpcbind
+	install -d ${D}${sysconfdir}/init.d
+	sed -e 's,/etc/,${sysconfdir}/,g' \
+		-e 's,/sbin/,${sbindir}/,g' \
+		${WORKDIR}/init.d > ${D}${sysconfdir}/init.d/rpcbind
+	chmod 0755 ${D}${sysconfdir}/init.d/rpcbind
 }
