@@ -11,6 +11,7 @@ PKGWRITEDIRIPK = "${WORKDIR}/deploy-ipks"
 OPKGBUILDCMD ??= "opkg-build"
 
 OPKG_ARGS = "-f $INSTALL_CONF_IPK -o $INSTALL_ROOTFS_IPK --force_postinstall --prefer-arch-to-version"
+OPKG_ARGS += "${@['', '--no-install-recommends'][d.getVar("NO_RECOMMENDATIONS", True) == "1"]}"
 
 OPKGLIBDIR = "${localstatedir}/lib"
 
