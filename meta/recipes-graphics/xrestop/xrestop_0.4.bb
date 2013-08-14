@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 SECTION = "x11/utils"
 PR = "r3"
 
-DEPENDS = "libxres libxext virtual/libx11"
+DEPENDS = "libxres libxext virtual/libx11 ncurses"
 
 SRC_URI = "http://downloads.yoctoproject.org/releases/xrestop/xrestop-${PV}.tar.gz"
 
