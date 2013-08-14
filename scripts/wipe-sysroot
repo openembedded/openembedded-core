@@ -18,17 +18,27 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
-if [ -z "$BUILDDIR" ]; then
-    echo >&2 "Error: BUILDDIR is not defined, please initialise the build system."
-    return 1
+set -e
+
+ENVS=`mktemp --suffix -wipe-sysroot-envs`
+bitbake -p -e > $ENVS
+
+eval `grep -F SSTATE_MANIFESTS= $ENVS`
+eval `grep -F STAGING_DIR= $ENVS`
+eval `grep -F STAMPS_DIR= $ENVS`
+rm -f $ENVS
+
+if [ -z "$SSTATE_MANIFESTS" -o -z "$STAGING_DIR" -o -z "$STAMPS_DIR" ]; then
+    echo "Could not determine SSTATE_MANIFESTS/STAGING_DIR/STAMPS_DIR, check above for errors"
+    exit 1
 fi
 
 # The sysroots themselves
-rm -rf $BUILDDIR/tmp/sysroots/
+rm -rf "$STAGING_DIR"
 
 # The stamps that said the sysroot was populated
-rm -rf $BUILDDIR/tmp/stamps/*/*/*.do_populate_sysroot.*
-rm -rf $BUILDDIR/tmp/stamps/*/*/*.do_populate_sysroot_setscene.*
+rm -rf "$STAMPS_DIR/*/*/*.do_populate_sysroot.*"
+rm -rf "$STAMPS_DIR/*/*/*.do_populate_sysroot_setscene.*"
 
 # The sstate manifests
-rm -rf $BUILDDIR/tmp/sstate-control/manifest-*.populate-sysroot
+rm -rf "$SSTATE_MANIFESTS/manifest-*.populate-sysroot"
