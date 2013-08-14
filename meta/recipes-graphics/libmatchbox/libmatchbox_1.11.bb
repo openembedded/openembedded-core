@@ -10,19 +10,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34 \
 
 DEPENDS = "virtual/libx11 libxext expat libxft jpeg libpng zlib libxsettings-client startup-notification"
 
-SRC_URI = "http://downloads.yoctoproject.org/releases/matchbox/${BPN}/${PV}/${BPN}-${PV}.tar.gz \
-           file://check.m4"
-SRC_URI[md5sum] = "042c5874631dfb95151aa793dc1434b8"
-SRC_URI[sha256sum] = "d14d4844840e3e1e4faa9f9e90060915d39b6033f6979464ab3ea3fe1c4f9293"
-
-PR = "r0"
+SRC_URI = "http://downloads.yoctoproject.org/releases/matchbox/${BPN}/${PV}/${BPN}-${PV}.tar.bz2"
+SRC_URI[md5sum] = "fc6cc807f55a3e7c752d8013176875d7"
+SRC_URI[sha256sum] = "254cab52e304a3512c8df4be59d690cf3921bbb68a28ede7fe26b93534217b53"
 
 inherit autotools pkgconfig
-
-S = "${WORKDIR}/libmatchbox-${PV}"
-
-do_configure_prepend () {
-	cp ${WORKDIR}/check.m4 ${S}/
-}
 
 EXTRA_OECONF = "--enable-jpeg --enable-expat --enable-xsettings --enable-startup-notification"
