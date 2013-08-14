@@ -8,7 +8,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz"
 SRC_URI[md5sum] = "93b57d5d56d15d1222ddf2386e2f869f"
 SRC_URI[sha256sum] = "1861a30fc7f583d5a567a0ba547db67ce9bd294f0d1c9f7403c96a10a481c458"
 
-DEPENDS = "dbus glib-2.0 virtual/libx11 libxi libxtst"
+DEPENDS = "dbus glib-2.0 virtual/libx11 libxi libxtst intltool-native"
 
 inherit autotools gtk-doc
 
