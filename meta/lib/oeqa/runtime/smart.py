@@ -1,6 +1,7 @@
 import unittest
 from oeqa.oetest import oeRuntimeTest
 from oeqa.utils.decorators import *
+from oeqa.utils.httpserver import HTTPService
 
 def setUpModule():
     if not oeRuntimeTest.hasFeature("package-management"):
@@ -8,21 +9,100 @@ def setUpModule():
     if not oeRuntimeTest.hasPackage("smart"):
         skipModule("Image doesn't have smart installed")
 
-class SmartHelpTest(oeRuntimeTest):
+class SmartTest(oeRuntimeTest):
+
+    longMessage = True
+
+    @skipUnlessPassed('test_smart_help')
+    def smart(self, command, expected = 0):
+        command = 'smart %s' % command
+        status, output = self.target.run(command)
+        message = os.linesep.join([command, output])
+        self.assertEqual(status, expected, message)
+        return output
+
+class SmartBasicTest(SmartTest):
 
     @skipUnlessPassed('test_ssh')
     def test_smart_help(self):
-        status = self.target.run('smart --help')[0]
-        self.assertEqual(status, 0)
+        self.smart('--help')
 
-class SmartQueryTest(oeRuntimeTest):
+    def test_smart_version(self):
+        self.smart('--version')
 
-    @skipUnlessPassed('test_smart_help')
-    def test_smart_query(self):
-        (status, output) = self.target.run('smart query rpm')
-        self.assertEqual(status, 0, msg="smart query failed, output: %s" % output)
-
-    @skipUnlessPassed('test_smart_query')
     def test_smart_info(self):
-        (status, output) = self.target.run('smart info rpm')
-        self.assertEqual(status, 0, msg="smart info rpm failed, output: %s" % output)
+        self.smart('info python-smartpm')
+
+    def test_smart_query(self):
+        self.smart('query python-smartpm')
+
+    def test_smart_search(self):
+        self.smart('search python-smartpm')
+
+    def test_smart_stats(self):
+        self.smart('stats')
+
+class SmartRepoTest(SmartTest):
+
+    @classmethod
+    def setUpClass(self):
+        self.repo_server = HTTPService(oeRuntimeTest.tc.d.getVar('DEPLOY_DIR', True))
+        self.repo_server.start()
+
+    @classmethod
+    def tearDownClass(self):
+        self.repo_server.stop()
+
+    def test_smart_channel(self):
+        self.smart('channel', 1)
+
+    def test_smart_channel_add(self):
+        image_pkgtype = self.tc.d.getVar('IMAGE_PKGTYPE', True)
+        deploy_url = 'http://%s:%s/%s' %(self.tc.qemu.host_ip, self.repo_server.port, image_pkgtype)
+        for arch in os.listdir('%s/%s' % (self.repo_server.root_dir, image_pkgtype)):
+            self.smart('channel -y --add {a} type=rpm-md baseurl={u}/{a}'.format(a=arch, u=deploy_url))
+        self.smart('update')
+
+    def test_smart_channel_help(self):
+        self.smart('channel --help')
+
+    def test_smart_channel_list(self):
+        self.smart('channel --list')
+
+    def test_smart_channel_show(self):
+        self.smart('channel --show')
+
+    def test_smart_channel_rpmsys(self):
+        self.smart('channel --show rpmsys')
+        self.smart('channel --disable rpmsys')
+        self.smart('channel --enable rpmsys')
+
+    @skipUnlessPassed('test_smart_channel_add')
+    def test_smart_install(self):
+        self.smart('remove -y psplash-default')
+        self.smart('install -y psplash-default')
+
+    @skipUnlessPassed('test_smart_install')
+    def test_smart_install_dependency(self):
+        self.smart('remove -y psplash')
+        self.smart('install -y psplash-default')
+
+    @skipUnlessPassed('test_smart_channel_add')
+    def test_smart_install_from_disk(self):
+        self.smart('remove -y psplash-default')
+        self.smart('download psplash-default')
+        self.smart('install -y ./psplash-default*')
+
+    @skipUnlessPassed('test_smart_channel_add')
+    def test_smart_install_from_http(self):
+        url = 'http://'
+        output = self.smart('download --urls psplash-default')
+        for line in output.splitlines():
+            if line.startswith(url):
+                url = line
+        self.smart('remove -y psplash-default')
+        self.smart('install -y %s' % url)
+
+    @skipUnlessPassed('test_smart_install')
+    def test_smart_reinstall(self):
+        self.smart('reinstall -y psplash-default')
