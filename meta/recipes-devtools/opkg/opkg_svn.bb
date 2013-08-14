@@ -2,6 +2,7 @@ require opkg.inc
 
 SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;protocol=http \
            file://no-install-recommends.patch \
+           file://add-exclude.patch \
 "
 
 S = "${WORKDIR}/trunk"

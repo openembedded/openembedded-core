@@ -1,0 +1,99 @@
+Add a way to exclude specific packages from the install
+
+When an excluded package is required by another package an error
+will be generated.  If the excluded package is only recommended,
+no error will be generated.
+
+The lifespan of the exclude_list covers the execution of the process,
+so there is no need to free the data.
+
+Upstream-Status: Pending
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+Index: trunk/libopkg/opkg_conf.h
+===================================================================
+--- trunk.orig/libopkg/opkg_conf.h
++++ trunk/libopkg/opkg_conf.h
+@@ -49,6 +49,8 @@ struct opkg_conf
+      pkg_dest_list_t pkg_dest_list;
+      pkg_dest_list_t tmp_dest_list;
+      nv_pair_list_t arch_list;
++     size_t exclude_count;
++     char ** exclude_list;
+ 
+      int restrict_to_default_dest;
+      pkg_dest_t *default_dest;
+Index: trunk/libopkg/pkg_depends.c
+===================================================================
+--- trunk.orig/libopkg/pkg_depends.c
++++ trunk/libopkg/pkg_depends.c
+@@ -212,6 +212,22 @@ pkg_hash_fetch_unsatisfied_dependencies(
+ 			 continue;
+ 		    }
+ 
++		    /* Check for excluded packages */
++		    if (satisfying_pkg != NULL && conf->exclude_list) {
++			int i, exclude = 0;
++			for (i = 0; i < conf->exclude_count; i++) {
++			    if (!strcmp(satisfying_pkg->name, conf->exclude_list[i])) {
++				opkg_msg(NOTICE, "%s: exclude required package %s"
++					"at users request\n",
++					pkg->name, satisfying_pkg->name);
++				exclude = 1;
++				break;
++			    }
++			}
++			if (exclude)
++			    continue;
++		    }
++
+ 		    opkg_msg(DEBUG, "satisfying_pkg=%p\n", satisfying_pkg);
+ 		    if (satisfying_pkg != NULL) {
+ 			 satisfier_entry_pkg = satisfying_pkg;
+Index: trunk/src/opkg-cl.c
+===================================================================
+--- trunk.orig/src/opkg-cl.c
++++ trunk/src/opkg-cl.c
+@@ -45,6 +45,7 @@ enum {
+ 	ARGS_OPT_PREFER_ARCH_TO_VERSION,
+ 	ARGS_OPT_ADD_ARCH,
+ 	ARGS_OPT_ADD_DEST,
++	ARGS_OPT_ADD_EXCLUDE,
+ 	ARGS_OPT_NOACTION,
+ 	ARGS_OPT_DOWNLOAD_ONLY,
+ 	ARGS_OPT_NODEPS,
+@@ -95,6 +96,7 @@ static struct option long_options[] = {
+ 	{"offline-root", 1, 0, 'o'},
+ 	{"add-arch", 1, 0, ARGS_OPT_ADD_ARCH},
+ 	{"add-dest", 1, 0, ARGS_OPT_ADD_DEST},
++	{"add-exclude", 1, 0, ARGS_OPT_ADD_EXCLUDE},
+ 	{"test", 0, 0, ARGS_OPT_NOACTION},
+ 	{"tmp-dir", 1, 0, 't'},
+ 	{"tmp_dir", 1, 0, 't'},
+@@ -198,6 +200,17 @@ args_parse(int argc, char *argv[])
+ 			}
+ 			free(tuple);
+ 			break;
++		case ARGS_OPT_ADD_EXCLUDE:
++			tuple = xstrdup(optarg);
++			if (!conf->exclude_list) {
++				conf->exclude_count = 1;
++				conf->exclude_list = malloc(sizeof(char *) * conf->exclude_count);
++				conf->exclude_list[conf->exclude_count - 1] = tuple;
++			} else {
++				conf->exclude_count++;
++				conf->exclude_list = realloc(conf->exclude_list, sizeof(char *) * conf->exclude_count);
++				conf->exclude_list[conf->exclude_count - 1] = tuple;
++			}
+ 		case ARGS_OPT_NOACTION:
+ 			conf->noaction = 1;
+ 			break;
+@@ -282,6 +295,7 @@ usage()
+ 	printf("\t--offline-root <dir>	offline installation of packages.\n");
+ 	printf("\t--add-arch <arch>:<prio>	Register architecture with given priority\n");
+ 	printf("\t--add-dest <name>:<path>	Register destination with given path\n");
++	printf("\t--add-exclude <name>		Register package to be excluded from install\n");
+ 	printf("\t--prefer-arch-to-version\t 	Use the architecture priority package rather\n");
+ 	printf("\t				than the higher version one if more\n");
+ 	printf("\t				than one candidate is found.\n");
