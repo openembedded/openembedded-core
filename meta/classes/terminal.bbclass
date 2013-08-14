@@ -62,6 +62,10 @@ def oe_terminal(command, title, d):
             envdata.setVar(key, str(value))
             envdata.setVarFlag(key, 'export', 1)
 
+    # LD_PRELOAD of pseudo will cause problems if this is a fakeroot task
+    # and we shouldn't be exporting it anyway
+    envdata.delVar('LD_PRELOAD')
+
     # Replace command with an executable wrapper script
     command = emit_terminal_func(command, envdata, d)
 
