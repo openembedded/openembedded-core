@@ -22,7 +22,8 @@ SRC_URI += "file://update_to_1.95.patch \
             file://0017-Fix-file-same-comparison.patch \
             file://0018-Handle-files-changing-while-we-are-working.patch \
             file://0019-Make-sure-superblock-is-clear-on-allocation.patch \
-            file://fix-nbblocks-cast.patch"
+            file://fix-nbblocks-cast.patch \
+            file://fix-memory-corruption-on-powerpc.patch "
 
 SRC_URI[md5sum] = "b7b6361bcce2cedff1ae437fadafe53b"
 SRC_URI[sha256sum] = "404dbbfa7a86a6c3de8225c8da254d026b17fd288e05cec4df2cc7e1f4feecfc"

@@ -1,0 +1,76 @@
+Upstream-Status: Submitted
+
+fix memory corruption on powerpc
+
+Signed-off-by: Wrobel Heinz <Heinz.Wrobel@freescale.com>
+
+diff --unified a/genext2fs.c b/genext2fs.c
+--- a/genext2fs.c	2013-08-14 16:50:59.061623605 +0200
++++ b/genext2fs.c	2013-08-14 16:47:23.349623674 +0200
+@@ -675,21 +675,34 @@
+ }
+ 
+ static void
+-swap_nod(inode *nod)
++swap_nod(inode *nod, int fromdisk)
+ {
+ 	uint32 nblk;
++	uint32 i_blocks = nod->i_blocks;
++	uint32 i_size = nod->i_size;
++	uint16 i_mode = nod->i_mode;
++
+ 
+ #define this nod
+ 	inode_decl
+ #undef this
+ 
++	if (fromdisk) {
++		// Only now do we have the values in the correct
++		// endianess for the host. So we override the
++		// earlier assumption
++		i_blocks = nod->i_blocks;
++		i_size = nod->i_size;
++		i_mode = nod->i_mode;
++	}
++
+ 	// block and character inodes store the major and minor in the
+ 	// i_block, so we need to unswap to get those.  Also, if it's
+ 	// zero iblocks, put the data back like it belongs.
+-	nblk = nod->i_blocks / INOBLK;
+-	if ((nod->i_size && !nblk)
+-	    || ((nod->i_mode & FM_IFBLK) == FM_IFBLK)
+-	    || ((nod->i_mode & FM_IFCHR) == FM_IFCHR))
++	nblk = i_blocks / INOBLK;
++	if ((i_size && !nblk)
++	    || ((i_mode & FM_IFBLK) == FM_IFBLK)
++	    || ((i_mode & FM_IFCHR) == FM_IFCHR))
+ 	{
+ 		int i;
+ 		for(i = 0; i <= EXT2_TIND_BLOCK; i++)
+@@ -1066,7 +1079,7 @@
+ 	nod_info *ni = container_of(elem, nod_info, link);
+ 
+ 	if (ni->fs->swapit)
+-		swap_nod(ni->itab);
++		swap_nod(ni->itab, 0);
+ 	put_blk(ni->bi);
+ 	free(ni);
+ }
+@@ -1102,7 +1115,7 @@
+ 	ni->b = get_blk(fs, fs->gd[grp].bg_inode_table + boffset, &ni->bi);
+ 	ni->itab = ((inode *) ni->b) + offset;
+ 	if (fs->swapit)
+-		swap_nod(ni->itab);
++		swap_nod(ni->itab, 1);
+ 
+ out:
+ 	*rni = ni;
+@@ -1158,6 +1171,8 @@
+ 	if (dw->fs->swapit)
+ 		swap_dir(&dw->d);
+ 	memcpy(dw->last_d, &dw->d, sizeof(directory));
++	if (dw->fs->swapit)
++		swap_dir(&dw->d);
+ 
+ 	if (((int8 *) next_d) >= ((int8 *) dw->b + BLOCKSIZE))
+ 		return NULL;
