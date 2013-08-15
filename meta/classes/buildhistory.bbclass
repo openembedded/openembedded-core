@@ -518,6 +518,10 @@ END
 		# Initialise the repo if necessary
 		if [ ! -d .git ] ; then
 			git init -q
+		else
+			git tag -f build-minus-3 build-minus-2 > /dev/null 2>&1 || true
+			git tag -f build-minus-2 build-minus-1 > /dev/null 2>&1 || true
+			git tag -f build-minus-1 > /dev/null 2>&1 || true
 		fi
 		# Check if there are new/changed files to commit (other than metadata-revs)
 		repostatus=`git status --porcelain | grep -v " metadata-revs$"`
