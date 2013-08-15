@@ -325,10 +325,10 @@ buildhistory_get_installed() {
 	fi
 
 	# Produce dependency graph
-	# First, filter out characters that cause issues for dot
-	rootfs_list_installed_depends | sed -e 's:-:_:g' -e 's:\.:_:g' -e 's:+::g' > $1/depends.tmp
+	# First, quote each name to handle characters that cause issues for dot
+	rootfs_list_installed_depends | sed 's:\([^| ]*\):"\1":g' > $1/depends.tmp
 	# Change delimiter from pipe to -> and set style for recommend lines
-	sed -i -e 's:|: -> :' -e 's:\[REC\]:[style=dotted]:' -e 's:$:;:' $1/depends.tmp
+	sed -i -e 's:|: -> :' -e 's:"\[REC\]":[style=dotted]:' -e 's:$:;:' $1/depends.tmp
 	# Add header, sorted and de-duped contents and footer and then delete the temp file
 	printf "digraph depends {\n    node [shape=plaintext]\n" > $1/depends.dot
 	cat $1/depends.tmp | sort | uniq >> $1/depends.dot
@@ -354,10 +354,10 @@ buildhistory_get_installed() {
 
 	if [ "$2" != "sdk" ] ; then
 		# Produce some cut-down graphs (for readability)
-		grep -v kernel_image $1/depends.dot | grep -v kernel_2 | grep -v kernel_3 > $1/depends-nokernel.dot
+		grep -v kernel_image $1/depends.dot | grep -v kernel-2 | grep -v kernel-3 > $1/depends-nokernel.dot
 		grep -v libc6 $1/depends-nokernel.dot | grep -v libgcc > $1/depends-nokernel-nolibc.dot
-		grep -v update_ $1/depends-nokernel-nolibc.dot > $1/depends-nokernel-nolibc-noupdate.dot
-		grep -v kernel_module $1/depends-nokernel-nolibc-noupdate.dot > $1/depends-nokernel-nolibc-noupdate-nomodules.dot
+		grep -v update- $1/depends-nokernel-nolibc.dot > $1/depends-nokernel-nolibc-noupdate.dot
+		grep -v kernel-module $1/depends-nokernel-nolibc-noupdate.dot > $1/depends-nokernel-nolibc-noupdate-nomodules.dot
 	fi
 
 	# add complementary package information
