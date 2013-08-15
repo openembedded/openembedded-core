@@ -16,7 +16,6 @@ BUILDHISTORY_IMAGE_FILES ?= "/etc/passwd /etc/group"
 BUILDHISTORY_COMMIT ?= "0"
 BUILDHISTORY_COMMIT_AUTHOR ?= "buildhistory <buildhistory@${DISTRO}>"
 BUILDHISTORY_PUSH_REPO ?= ""
-BUILDHISTORY_CHECKVERBACKWARDS ?= "1"
 
 # Must inherit package first before changing PACKAGEFUNCS
 inherit package
