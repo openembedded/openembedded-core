@@ -1,7 +1,6 @@
-SRCREV="c2c684f88157f8bd0c236c7546f922fbf66b64a1"
+SRCREV="f22cca4722fa66e424562e69f4afa2bca0af871d"
 
 PV = "0.9.33+git${SRCPV}"
-PR = "${INC_PR}.4"
 
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/uclibc-git' ], d)}"
 
