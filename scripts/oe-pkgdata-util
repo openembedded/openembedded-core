@@ -20,9 +20,12 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 #
-# Currently only has one function - mapping of packages to their dev/dbg/doc/locale etc. 
-# counterparts ("glob" command). Could be extended in future to perform other useful querying
-# functions on the pkgdata though.
+# Currently only has two functions:
+# 1) glob - mapping of packages to their dev/dbg/doc/locale etc. counterparts.
+# 2) read-value - mapping of packagenames to their location in
+#    pkgdata and then returns value of selected variable (e.g. PKGSIZE)
+# Could be extended in future to perform other useful querying functions on the
+# pkgdata though.
 #
 
 import sys
@@ -32,7 +35,8 @@ import fnmatch
 import re
 
 def usage():
-    print("syntax: pkgdata-util glob [-d] <pkgdatadir> <vendor-os> <pkglist> \"<globs>\"");
+    print("syntax: oe-pkgdata-util glob [-d] <pkgdatadir> <vendor-os> <pkglist> \"<globs>\"\n \
+                    read-value [-d] <pkgdatadir> <vendor-os> <value-name> \"<package-name>_<package_architecture>\"");
 
 
 
@@ -151,7 +155,52 @@ def glob(args):
 
     print("\n".join(mappedpkgs))
 
+def read_value(args):
+    if len(args) < 4:
+        usage()
+        sys.exit(1)
 
+    pkgdata_dir = args[0]
+    target_suffix = args[1]
+    var = args[2]
+    packages = args[3].split()
+
+    if target_suffix.startswith("-"):
+        target_suffix = target_suffix[1:]
+
+    def readvar(pkgdata_file, var):
+        val = ""
+        with open(pkgdata_file, 'r') as f:
+            for line in f:
+                if line.startswith(var + ":"):
+                    val = line.split(': ')[1].rstrip()
+        return val
+
+    if debug:
+        print "read-value('%s', '%s', '%s' '%s'" % (pkgdata_dir, target_suffix, var, packages)
+    for package in packages:
+        pkg_split = package.split('_')
+        pkg_name = pkg_split[0]
+        pkg_arch = '_'.join(pkg_split[1:])
+        if debug:
+            print "package: name: '%s', arch: '%s'" % (pkg_name, pkg_arch)
+        multimach_target_sys = "%s-%s" % (pkg_arch, target_suffix)
+        revlink = os.path.join(pkgdata_dir, multimach_target_sys, "runtime-reverse", pkg_name)
+        if debug:
+            print(revlink)
+        if not os.path.exists(revlink):
+            # [YOCTO #4227] try to drop -gnueabi from TARGET_OS
+            multimach_target_sys = '-'.join(multimach_target_sys.split('-')[:-1])
+            revlink = os.path.join(pkgdata_dir, multimach_target_sys, "runtime-reverse", pkg_name)
+            if debug:
+                print(revlink)
+        if os.path.exists(revlink):
+            mappedpkg = os.path.basename(os.readlink(revlink))
+            qvar = var
+            if qvar == "PKGSIZE":
+                # append packagename
+                qvar = "%s_%s" % (var, mappedpkg)
+            print(readvar(revlink, qvar))
 
 # Too lazy to use getopt
 debug = False
@@ -173,6 +222,8 @@ if len(args) < 1:
 
 if args[0] == "glob":
     glob(args[1:])
+elif args[0] == "read-value":
+    read_value(args[1:])
 else:
     usage()
     sys.exit(1)

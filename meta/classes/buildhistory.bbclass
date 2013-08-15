@@ -337,12 +337,14 @@ buildhistory_get_installed() {
 
 	# Produce installed package sizes list
 	printf "" > $1/installed-package-sizes.tmp
-	cat $pkgcache | while read pkg pkgfile
+	cat $pkgcache | while read pkg pkgfile pkgarch
 	do
-		if [ -f $pkgfile ] ; then
-			pkgsize=`du -k $pkgfile | head -n1 | awk '{ print $1 }'`
-			echo $pkgsize $pkg >> $1/installed-package-sizes.tmp
-		fi
+		for vendor in ${TARGET_VENDOR} ${MULTILIB_VENDORS} ; do
+			size=`oe-pkgdata-util read-value ${TMPDIR}/pkgdata $vendor-${TARGET_OS} "PKGSIZE" ${pkg}_${pkgarch}`
+			if [ "$size" != "" ] ; then
+				echo "$size $pkg" >> $1/installed-package-sizes.tmp
+			fi
+		done
 	done
 	cat $1/installed-package-sizes.tmp | sort -n -r | awk '{print $1 "\tKiB " $2}' > $1/installed-package-sizes.txt
 	rm $1/installed-package-sizes.tmp

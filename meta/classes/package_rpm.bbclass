@@ -127,6 +127,8 @@ translate_smart_to_oe() {
 		#echo "$pkg -> $new_pkg" >&2
 		if [ "$arg1" = "arch" ]; then
 			echo $new_pkg $new_arch $other
+		elif [ "$arg1" = "file" ]; then
+			echo $new_pkg $other $new_arch
 		else
 			echo $new_pkg $other
 		fi

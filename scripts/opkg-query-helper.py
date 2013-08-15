@@ -59,7 +59,7 @@ for line in fileinput.input(args):
                     ver = line.split(": ")[1]
                 elif line.startswith("Architecture:"):
                     arch = line.split(": ")[1]
-                    print("%s %s_%s_%s.ipk" % (pkg,pkg,ver,arch))
+                    print("%s %s_%s_%s.ipk %s" % (pkg,pkg,ver,arch,arch))
             else:
                 if line.startswith("Depends:"):
                     depval = line.split(": ")[1]

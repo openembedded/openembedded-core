@@ -75,13 +75,13 @@ list_installed_packages() {
 		# Here we want the PACKAGE_ARCH not the deb architecture
 		${DPKG_QUERY_COMMAND} -W -f='${Package} ${PackageArch}\n'
 	elif [ "$1" = "file" ] ; then
-		${DPKG_QUERY_COMMAND} -W -f='${Package} ${Package}_${Version}_${Architecture}.deb\n' | while read pkg pkgfile
+		${DPKG_QUERY_COMMAND} -W -f='${Package} ${Package}_${Version}_${Architecture}.deb ${PackageArch}\n' | while read pkg pkgfile pkgarch
 		do
 			fullpath=`find ${DEPLOY_DIR_DEB} -name "$pkgfile" || true`
 			if [ "$fullpath" = "" ] ; then
-				echo "$pkg $pkgfile"
+				echo "$pkg $pkgfile $pkgarch"
 			else
-				echo "$pkg $fullpath"
+				echo "$pkg $fullpath $pkgarch"
 			fi
 		done
 	else
