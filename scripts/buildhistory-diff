@@ -7,6 +7,7 @@
 
 import sys
 import os
+import optparse
 from distutils.version import LooseVersion
 
 # Ensure PythonGit is installed (buildhistory_analysis needs it)
@@ -17,14 +18,30 @@ except ImportError:
     sys.exit(1)
 
 def main():
+    parser = optparse.OptionParser(
+        description = "Reports significant differences in the buildhistory repository.",
+        usage = """
+    %prog [options] [from-revision [to-revision]]
+(if not specified, from-revision defaults to build-minus-1, and to-revision defaults to HEAD)""")
+
+    parser.add_option("-p", "--buildhistory-dir",
+            help = "Specify path to buildhistory directory (defaults to buildhistory/ under cwd)",
+            action="store", dest="buildhistory_dir", default='buildhistory/')
+
+    options, args = parser.parse_args(sys.argv)
+
+    if len(args) > 3:
+        sys.stderr.write('Invalid argument(s) specified: %s\n\n' % ' '.join(args[3:]))
+        parser.print_help()
+        sys.exit(1)
+
     if LooseVersion(git.__version__) < '0.3.1':
         sys.stderr.write("Version of GitPython is too old, please install GitPython (python-git) 0.3.1 or later in order to use this script\n")
         sys.exit(1)
 
-    if len(sys.argv) < 3 or '--help' in sys.argv:
-        print("Report significant differences in the buildhistory repository")
-        print("Syntax: %s <buildhistory-path> <since-revision> [to-revision]" % os.path.basename(sys.argv[0]))
-        print("If to-revision is not specified, it defaults to HEAD")
+    if not os.path.exists(options.buildhistory_dir):
+        sys.stderr.write('Buildhistory directory "%s" does not exist\n\n' % options.buildhistory_dir)
+        parser.print_help()
         sys.exit(1)
 
     # Set path to OE lib dir so we can import the buildhistory_analysis module
@@ -47,21 +64,28 @@ def main():
     sys.path[0:0] = [newpath, bitbakepath + '/lib']
     import oe.buildhistory_analysis
 
-    buildhistory_dir = sys.argv[1]
-    if not os.path.exists(buildhistory_dir):
-        sys.stderr.write('Specified buildhistory directory "%s" does not exist\n' % buildhistory_dir)
-        sys.exit(1)
-
-    if len(sys.argv) > 3:
-        torev = sys.argv[3]
-    else:
-        torev = 'HEAD'
+    fromrev = 'build-minus-1'
+    torev = 'HEAD'
+    if len(args) > 1:
+        if len(args) == 2 and '..' in args[1]:
+            revs = args[1].split('..')
+            fromrev = revs[0]
+            if revs[1]:
+                torev = revs[1]
+        else:
+            fromrev = args[1]
+    if len(args) > 2:
+        torev = args[2]
 
     import gitdb
     try:
-        changes = oe.buildhistory_analysis.process_changes(buildhistory_dir, sys.argv[2], torev)
+        changes = oe.buildhistory_analysis.process_changes(options.buildhistory_dir, fromrev, torev)
     except gitdb.exc.BadObject as e:
-        sys.stderr.write('Specified git revision "%s" is not valid\n' % e.args[0])
+        if len(args) == 1:
+            sys.stderr.write("Unable to find previous build revision in buildhistory repository\n\n")
+            parser.print_help()
+        else:
+            sys.stderr.write('Specified git revision "%s" is not valid\n' % e.args[0])
         sys.exit(1)
 
     for chg in changes:
