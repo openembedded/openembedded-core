@@ -22,8 +22,16 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
 SRC_URI[md5sum] = "065ba41828644eca5dd8163446de5d64"
 SRC_URI[sha256sum] = "adaa44bdab3fa5eb352e80d8a31fdbf957b78653d0c2cd30d63e161444288e18"
 
-EXTRA_OECONF = "--disable-acl"
-EXTRA_OECONF_class-native = "--disable-acl --without-gmp"
+EXTRA_OECONF_class-native = "--without-gmp"
+
+# acl is not a default feature
+#
+PACKAGECONFIG_class-target ??= "${@base_contains('DISTRO_FEATURES', 'acl', 'acl', '', d)}"
+PACKAGECONFIG_class-native ??= ""
+
+# with, without, depends, rdepends
+#
+PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl,"
 
 # [ df mktemp base64 gets a special treatment and is not included in this
 bindir_progs = "basename chcon cksum comm csplit cut dir dircolors dirname du \
