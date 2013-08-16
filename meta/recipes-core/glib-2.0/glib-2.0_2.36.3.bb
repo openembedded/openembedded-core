@@ -6,7 +6,7 @@ DEPENDS += "libffi zlib"
 DEPENDS_class-native += "libffi-native"
 DEPENDS_class-nativesdk += "nativesdk-libffi nativesdk-zlib ${BPN}-native"
 
-SHRT_VER = "${@d.getVar('PV',1).split('.')[0]}.${@d.getVar('PV',1).split('.')[1]}"
+SHRT_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://configure-libtool.patch \
