@@ -1,0 +1,51 @@
+From 0e70072ce655a0d053bb7433083ced5e6eac74d4 Mon Sep 17 00:00:00 2001
+From: Jackie Huang <jackie.huang@windriver.com>
+Date: Thu, 15 Aug 2013 23:49:47 -0700
+Subject: [PATCH] handle correctly @enumerate specification greater than 10
+
+Upstream-Status: Backport
+
+Revision: 5270
+          http://svn.sv.gnu.org/viewvc/?view=rev&root=texinfo&revision=5270
+Author:   pertusus
+Date:     2013-07-29 20:02:23 +0000 (Mon, 29 Jul 2013)
+Log Message:
+-----------
+        * tp/Common.pm (enumerate_item_representation), Texinfo/Parser.pm:
+        handle correctly @enumerate specification greater than 10.  Report
+        from Dmitry Shachnev.
+
+---
+ tp/Texinfo/Common.pm |    2 +-
+ tp/Texinfo/Parser.pm |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tp/Texinfo/Common.pm b/tp/Texinfo/Common.pm
+index 8aee9f7..bdffeee 100644
+--- a/tp/Texinfo/Common.pm
++++ b/tp/Texinfo/Common.pm
+@@ -1382,7 +1382,7 @@ sub enumerate_item_representation($$)
+   my $specification = shift;
+   my $number = shift;
+
+-  if ($specification =~ /^[0-9]$/) {
++  if ($specification =~ /^[0-9]+$/) {
+     return $specification + $number -1;
+   }
+
+diff --git a/tp/Texinfo/Parser.pm b/tp/Texinfo/Parser.pm
+index cf8fa72..8e845e9 100644
+--- a/tp/Texinfo/Parser.pm
++++ b/tp/Texinfo/Parser.pm
+@@ -2973,7 +2973,7 @@ sub _end_line($$$)
+                         $current->{'cmdname'});
+           }
+           my $arg = $current->{'extra'}->{'block_command_line_contents'}->[0]->[0];
+-          if (!defined($arg->{'text'}) or $arg->{'text'} !~ /^[[:alnum:]]$/) {
++          if (!defined($arg->{'text'}) or $arg->{'text'} !~ /^(([[:digit:]]+)|([[:alpha:]]+))$/) {
+             $self->_command_error($current, $line_nr, 
+                         $self->__("bad argument to \@%s"),
+                         $current->{'cmdname'});
+--
+1.7.1
+

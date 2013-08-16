@@ -19,6 +19,7 @@ SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
            file://disable-native-tools.patch \
            file://link-zip.patch \
            file://dont-depend-on-help2man.patch \
+           file://enumerate_greater_than_ten.patch \
            ${TARGET_PATCH} \
           "
 
