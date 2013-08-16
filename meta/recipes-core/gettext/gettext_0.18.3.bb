@@ -5,7 +5,6 @@ SECTION = "libs"
 LICENSE = "GPLv3+ & LGPL-2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-PR = "r0"
 DEPENDS = "gettext-native virtual/libiconv expat"
 DEPENDS_class-native = "gettext-minimal-native"
 PROVIDES = "virtual/libintl virtual/gettext"
@@ -19,8 +18,8 @@ PACKAGECONFIG[msgcat-curses] = "--with-libncurses-prefix=${STAGING_LIBDIR}/..,--
 
 LDFLAGS_prepend_libc-uclibc = " -lrt -lpthread "
 
-SRC_URI[md5sum] = "0c86e5af70c195ab8bd651d17d783928"
-SRC_URI[sha256sum] = "516a6370b3b3f46e2fc5a5e222ff5ecd76f3089bc956a7587a6e4f89de17714c"
+SRC_URI[md5sum] = "3fa4236c41b7e837355de144210207ec"
+SRC_URI[sha256sum] = "36f3c1043df803565d4977c1efbd41e1ec0f0301acf5f057984406c34cb9f948"
 
 inherit autotools
 
