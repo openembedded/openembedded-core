@@ -31,5 +31,5 @@ SRC_URI += "\
             file://Generic-C-implementation-of-pixman_blt-with-overlapp.patch \
 "
 
-SRC_URI[md5sum] = "11b7e062e20ae40e49c2871dd9f82b0b"
-SRC_URI[sha256sum] = "77e756dc7fafdf17f39a4f23bdc8be59f9f6a65c08704f5cac1d8aa87cfaf517"
+SRC_URI[md5sum] = "2d0588e20dc1308b29b2fca68dad9a9c"
+SRC_URI[sha256sum] = "4fbb51788fe7cbd8abb5f80aed95ec878704e57a06328f7bebe0306e3822c96c"
