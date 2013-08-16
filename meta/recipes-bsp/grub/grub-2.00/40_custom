@@ -5,5 +5,5 @@ exec tail -n +3 $0
 # the 'exec tail' line above.
 menuentry "Linux" {
     set root=(hd0,1)
-    linux /boot/vmlinuz root=__ROOTFS__ rw __CONSOLE__ __VIDEO_MODE__ __VGA_MODE__ quiet
+    linux /vmlinuz root=__ROOTFS__ rw __CONSOLE__ __VIDEO_MODE__ __VGA_MODE__ quiet
 }

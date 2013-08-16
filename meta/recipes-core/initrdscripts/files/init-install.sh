@@ -145,29 +145,32 @@ mkfs.ext3 $rootfs
 echo "Formatting swap partition...($swap)"
 mkswap $swap
 
-mkdir /ssd
-mkdir /rootmnt
-mkdir /bootmnt
+mkdir /tgt_root
+mkdir /src_root
+mkdir -p /boot
 
-mount $rootfs /ssd
-mount -o rw,loop,noatime,nodiratime /media/$1/$2 /rootmnt
-
+# Handling of the target root partition
+mount $rootfs /tgt_root
+mount -o rw,loop,noatime,nodiratime /media/$1/$2 /src_root
 echo "Copying rootfs files..."
-cp -a /rootmnt/* /ssd
-
-if [ -d /ssd/etc/ ] ; then
-    echo "$swap                swap             swap       defaults              0  0" >> /ssd/etc/fstab
-
+cp -a /src_root/* /tgt_root
+if [ -d /tgt_root/etc/ ] ; then
+    echo "$swap                swap             swap       defaults              0  0" >> /tgt_root/etc/fstab
+    echo "$bootfs              /boot            ext3       defaults              1  2" >> /tgt_root/etc/fstab
     # We dont want udev to mount our root device while we're booting...
-    if [ -d /ssd/etc/udev/ ] ; then
-	echo "/dev/${device}" >> /ssd/etc/udev/mount.blacklist
+    if [ -d /tgt_root/etc/udev/ ] ; then
+	echo "/dev/${device}" >> /tgt_root/etc/udev/mount.blacklist
     fi
 fi
+umount /tgt_root
+umount /src_root
 
+# Handling of the target boot partition
+mount $bootfs /boot
+echo "Preparing boot partition..."
 if [ -f /etc/grub.d/40_custom ] ; then
     echo "Preparing custom grub2 menu..."
-    GRUBCFG="/bootmnt/boot/grub/grub.cfg"
-    mount $bootfs /bootmnt
+    GRUBCFG="/boot/grub/grub.cfg"
     mkdir -p $(dirname $GRUBCFG)
     cp /etc/grub.d/40_custom $GRUBCFG
     sed -i "s@__ROOTFS__@$rootfs $rootwait@g" $GRUBCFG
@@ -177,31 +180,24 @@ if [ -f /etc/grub.d/40_custom ] ; then
     sed -i "/#/d" $GRUBCFG
     sed -i "/exec tail/d" $GRUBCFG
     chmod 0444 $GRUBCFG
-    umount /bootmnt
 fi
-
-umount /ssd
-umount /rootmnt
-
-echo "Preparing boot partition..."
-mount $bootfs /ssd
-grub-install --root-directory=/ssd /dev/${device}
-
-echo "(hd0) /dev/${device}" > /ssd/boot/grub/device.map
+grub-install /dev/${device}
+echo "(hd0) /dev/${device}" > /boot/grub/device.map
 
 # If grub.cfg doesn't exist, assume GRUB 0.97 and create a menu.lst
-if [ ! -f /ssd/boot/grub/grub.cfg ] ; then
+if [ ! -f /boot/grub/grub.cfg ] ; then
     echo "Preparing custom grub menu..."
-    echo "default 0" > /ssd/boot/grub/menu.lst
-    echo "timeout 30" >> /ssd/boot/grub/menu.lst
-    echo "title Live Boot/Install-Image" >> /ssd/boot/grub/menu.lst
-    echo "root  (hd0,0)" >> /ssd/boot/grub/menu.lst
-    echo "kernel /boot/vmlinuz root=$rootfs rw $3 $4 quiet" >> /ssd/boot/grub/menu.lst
+    echo "default 0" > /boot/grub/menu.lst
+    echo "timeout 30" >> /boot/grub/menu.lst
+    echo "title Live Boot/Install-Image" >> /boot/grub/menu.lst
+    echo "root  (hd0,0)" >> /boot/grub/menu.lst
+    echo "kernel /vmlinuz root=$rootfs rw $3 $4 quiet" >> /boot/grub/menu.lst
 fi
 
-cp /media/$1/vmlinuz /ssd/boot/
+cp /media/$1/vmlinuz /boot/
 
-umount /ssd
+umount /boot
+
 sync
 
 echo "Remove your installation media, and press ENTER"
