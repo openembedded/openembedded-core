@@ -168,6 +168,9 @@ fakeroot python populate_packages_prepend () {
         preinst = d.getVar('pkg_preinst_%s' % pkg, True) or d.getVar('pkg_preinst', True)
         if not preinst:
             preinst = '#!/bin/sh\n'
+        preinst += 'bbnote () {\n%s}\n' % d.getVar('bbnote', True)
+        preinst += 'bbwarn () {\n%s}\n' % d.getVar('bbwarn', True)
+        preinst += 'bbfatal () {\n%s}\n' % d.getVar('bbfatal', True)
         preinst += 'perform_groupadd () {\n%s}\n' % d.getVar('perform_groupadd', True)
         preinst += 'perform_useradd () {\n%s}\n' % d.getVar('perform_useradd', True)
         preinst += 'perform_groupmems () {\n%s}\n' % d.getVar('perform_groupmems', True)
