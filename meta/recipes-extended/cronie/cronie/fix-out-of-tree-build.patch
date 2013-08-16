@@ -1,0 +1,31 @@
+For an out of tree build, the cronie-common.h file was not being
+found correctly, so point it to the top_srcdir
+
+Upstream-Status: Submitted
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: cronie-1.4.11/anacron/Makefile.am
+===================================================================
+--- cronie-1.4.11.orig/anacron/Makefile.am
++++ cronie-1.4.11/anacron/Makefile.am
+@@ -9,6 +9,7 @@ common_nodist = anacron-paths.h
+ nodist_anacron_SOURCES = $(common_nodist)
+ BUILT_SOURCES = $(common_nodist)
+ 
++AM_CFLAGS = -I$(top_srcdir)
+ 
+ LDADD = $(LIBSELINUX) $(LIBPAM) $(LIBAUDIT)
+ 
+Index: cronie-1.4.11/src/Makefile.am
+===================================================================
+--- cronie-1.4.11.orig/src/Makefile.am
++++ cronie-1.4.11/src/Makefile.am
+@@ -15,6 +15,7 @@ nodist_crond_SOURCES = $(common_nodist)
+ nodist_crontab_SOURCES = $(common_nodist)
+ BUILT_SOURCES = $(common_nodist)
+ 
++AM_CFLAGS = -I$(top_srcdir)
+ 
+ LDADD = $(LIBSELINUX) $(LIBPAM) $(LIBAUDIT)
+ 
