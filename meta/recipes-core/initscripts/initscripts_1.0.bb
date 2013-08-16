@@ -26,7 +26,6 @@ SRC_URI = "file://functions \
            file://checkroot.sh \
            file://umountnfs.sh \
            file://sysfs.sh \
-           file://device_table.txt \
            file://populate-volatile.sh \
            file://read-only-rootfs-hook.sh \
            file://volatiles \
@@ -103,7 +102,6 @@ do_install () {
 #
 	install -m 0755 ${WORKDIR}/banner.sh	${D}${sysconfdir}/init.d/banner.sh
 	install -m 0755 ${WORKDIR}/umountfs	${D}${sysconfdir}/init.d/umountfs
-	install -m 0755		${WORKDIR}/device_table.txt		${D}${sysconfdir}/device_table
 #
 # Create runlevel links
 #
