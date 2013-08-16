@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
                     file://gtk/gtk.h;endline=27;md5=c59e0b4490dd135a5726ebf851f9b17f \
                     file://gdk/gdk.h;endline=27;md5=07db285ec208fb3e0bf7d861b0614202 \
                     file://tests/testgtk.c;endline=27;md5=262db5db5f776f9863e56df31423e24c"
-SRC_URI = "http://download.gnome.org/sources/gtk+/2.24/gtk+-${PV}.tar.xz \
+SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-${PV}.tar.xz \
            file://xsettings.patch \
            file://run-iconcache.patch \
            file://configure-nm.patch \
@@ -28,10 +28,8 @@ SRC_URI = "http://download.gnome.org/sources/gtk+/2.24/gtk+-${PV}.tar.xz \
 #        file://combo-arrow-size.patch;striplevel=0
 #            file://configurefix.patch
 
-PR = "r0"
-
-SRC_URI[md5sum] = "4309379acdcd8abfb72ea89bce3e7746"
-SRC_URI[sha256sum] = "6c963101272ff53bb5b01d21bfb86cebba5f0a68f31c5e10523c63f07e762385"
+SRC_URI[md5sum] = "9d7833331d7accd80668e29d7f567ce5"
+SRC_URI[sha256sum] = "cc66bcbf9239a7d9861175c681ba95894b55c70dc0b37aad8345c46ecfda0da3"
 
 EXTRA_OECONF = "--without-libtiff --without-libjasper --enable-xkb --disable-glibtest --disable-cups --disable-xinerama"
 
