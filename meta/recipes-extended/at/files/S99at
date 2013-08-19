@@ -5,6 +5,9 @@
 
 umask 077
 
+# Source function library.
+. /etc/init.d/functions
+
 start() {
 	echo -n "Starting atd: "
 	start-stop-daemon --start --quiet --pidfile /var/run/atd.pid --background --exec /usr/sbin/atd -- -f
@@ -30,8 +33,11 @@ case "$1" in
   restart|reload)
 	restart
 	;;
+  status)
+	status /usr/sbin/atd
+	;;
   *)
-	echo $"Usage: $0 {start|stop|restart}"
+	echo $"Usage: $0 {start|stop|restart|status}"
 	exit 1
 esac
 
