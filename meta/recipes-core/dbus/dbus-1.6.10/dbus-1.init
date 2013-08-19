@@ -16,6 +16,9 @@
 
 set -e
 
+# Source function library.
+. /etc/init.d/functions
+
 DAEMON=@bindir@/dbus-daemon
 NAME=dbus
 DAEMONUSER=messagebus           # must match /etc/dbus-1/system.conf
@@ -99,6 +102,10 @@ case "$1" in
   stop)
     shut_it_down
   ;;
+  status)
+    status $DAEMON
+    exit $?
+  ;;
   reload|force-reload)
     reload_it
   ;;
@@ -108,7 +115,7 @@ case "$1" in
     start_it_up
   ;;
   *)
-    echo "Usage: /etc/init.d/$NAME {start|stop|restart|reload|force-reload}" >&2
+    echo "Usage: /etc/init.d/$NAME {start|stop|status|restart|reload|force-reload}" >&2
     exit 1
   ;;
 esac
