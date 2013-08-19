@@ -12,6 +12,9 @@
 # Short-Description:    System logger
 ### END INIT INFO
 
+# Source function library.
+. /etc/init.d/functions
+
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
 pidfile_syslogd=/var/run/syslogd.pid
@@ -132,8 +135,16 @@ case "$1" in
 	$0 start
     fi
     ;;
+  status)
+    status syslogd
+    RETVAL=$?
+    status klogd
+    rval=$?
+    [ $RETVAL -eq 0 ] && exit $rval
+    exit $RETVAL
+    ;;
   *)
-    log_success_msg "Usage: /etc/init.d/sysklogd {start|stop|reload|restart|force-reload|reload-or-restart}"
+    log_success_msg "Usage: /etc/init.d/sysklogd {start|stop|reload|restart|force-reload|reload-or-restart|status}"
     exit 1
 esac
 
