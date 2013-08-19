@@ -54,7 +54,6 @@ class QemuRunner:
 
     def launch(self, qemuparams = None):
 
-
         if self.display:
             os.environ["DISPLAY"] = self.display
         else:
@@ -84,12 +83,11 @@ class QemuRunner:
 
         if self.is_alive():
             bb.note("qemu started - qemu procces pid is %s" % self.qemupid)
-            pscmd = 'ps -p %s -fww | grep -o "192\.168\.7\.[0-9]*::" | awk -F":" \'{print $1}\'' % self.qemupid
-            self.ip = subprocess.Popen(pscmd,shell=True,stdout=subprocess.PIPE).communicate()[0].strip()
+            cmdline = open('/proc/%s/cmdline' % self.qemupid).read()
+            self.ip, _, self.host_ip = cmdline.split('ip=')[1].split(' ')[0].split(':')[0:3]
             if not re.search("^((?:[0-9]{1,3}\.){3}[0-9]{1,3})$", self.ip):
                 bb.note("Couldn't get ip from qemu process arguments, I got '%s'" % self.ip)
-                bb.note("Here is the ps output:\n%s" % \
-                        subprocess.Popen("ps -p %s -fww" % self.qemupid,shell=True,stdout=subprocess.PIPE).communicate()[0])
+                bb.note("Here is the ps output:\n%s" % cmdline)
                 self.kill()
                 return False
             bb.note("IP found: %s" % self.ip)
@@ -122,7 +120,6 @@ class QemuRunner:
                             sock.close()
                             stopread = True
 
-
             if not reachedlogin:
                 bb.note("Target didn't reached login boot in %d seconds" % self.boottime)
                 lines = "\n".join(self.bootlog.splitlines()[-5:])
@@ -138,7 +135,6 @@ class QemuRunner:
             return False
 
         return self.is_alive()
-
 
     def kill(self):
         if self.server_socket:
@@ -207,4 +203,3 @@ class QemuRunner:
             basecmd = os.path.basename(basecmd)
             if "qemu-system" in basecmd and "-serial tcp" in commands[p]:
                 return [int(p),commands[p]]
-
