@@ -22,6 +22,8 @@ S = "${WORKDIR}/libiconv-${PV}"
 inherit autotools pkgconfig gettext
 
 python __anonymous() {
+    if d.getVar("TARGET_OS", True) != "linux":
+        return
     if d.getVar("TCLIBC", True) == "eglibc":
         raise bb.parse.SkipPackage("libiconv is provided for use with uClibc only - eglibc already provides iconv")
 }
@@ -44,3 +46,5 @@ do_install_append () {
 	rm -rf ${D}${libdir}/preloadable_libiconv.so
 	rm -rf ${D}${libdir}/charset.alias
 }
+
+BBCLASSEXTEND = "nativesdk"
