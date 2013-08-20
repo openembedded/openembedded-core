@@ -28,6 +28,8 @@ FILES_${PN}-doc = "\
     ${gcclibdir}/${TARGET_SYS}/${BINV}/include/README \
     "
 
+EXEEXT = ""
+
 # Compute how to get from libexecdir to bindir in python (easier than shell)
 BINRELPATH = "${@oe.path.relative(d.expand("${libexecdir}/gcc/${TARGET_SYS}/${BINV}"), d.expand("${bindir}"))}"
 
@@ -62,12 +64,13 @@ do_install () {
 	# found.
 	dest=${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/
 	install -d $dest
+	suffix=${EXEEXT}
 	for t in ar as ld nm objcopy objdump ranlib strip g77 gcc cpp gfortran; do
-		if [ "$t" = "g77" -o "$t" = "gfortran" ] && [ ! -e ${D}${bindir}/${TARGET_PREFIX}$t ]; then
+		if [ "$t" = "g77" -o "$t" = "gfortran" ] && [ ! -e ${D}${bindir}/${TARGET_PREFIX}$t$suffix ]; then
 			continue
 		fi
 
-		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t $dest$t
+		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t$suffix $dest$t$suffix
 	done
 
 	chown -R root:root ${D}
