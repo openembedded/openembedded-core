@@ -316,6 +316,12 @@ def copydebugsources(debugsrcdir, d):
         #if retval:
         #    bb.fatal("debug source copy failed with exit code %s (cmd was %s)" % (retval, cmd))
 
+        # cpio seems to have a bug with -lL together and symbolic links are just copied, not dereferenced.
+        # Work around this by manually finding and copying any symbolic links that made it through.
+        cmd = "find %s%s -type l -print0 -delete | sed s#%s%s/##g | (cd '%s' ; cpio -pd0mL --no-preserve-owner '%s%s' 2>/dev/null)" % (dvar, debugsrcdir, dvar, debugsrcdir, workparentdir, dvar, debugsrcdir)
+        (retval, output) = oe.utils.getstatusoutput(cmd)
+        if retval:
+            bb.fatal("debugsrc symlink fixup failed with exit code %s (cmd was %s)" % (retval, cmd))
 
         # The copy by cpio may have resulted in some empty directories!  Remove these
         cmd = "find %s%s -empty -type d -delete" % (dvar, debugsrcdir)
