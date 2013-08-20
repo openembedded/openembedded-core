@@ -1,4 +1,7 @@
+import errno
 import re
+import os
+
 
 class OEList(list):
     """OpenEmbedded 'list' type
@@ -133,3 +136,18 @@ def float(value, fromhex='false'):
         return _float.fromhex(value)
     else:
         return _float(value)
+
+def path(value, relativeto='', normalize='true', mustexist='false'):
+    value = os.path.join(relativeto, value)
+
+    if boolean(normalize):
+        value = os.path.normpath(value)
+
+    if boolean(mustexist):
+        try:
+            open(value, 'r')
+        except IOError as exc:
+            if exc.errno == errno.ENOENT:
+                raise ValueError("{0}: {1}".format(value, os.strerror(errno.ENOENT)))
+
+    return value
