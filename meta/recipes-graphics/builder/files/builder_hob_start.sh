@@ -9,6 +9,15 @@ export PSEUDO_LOCALSTATEDIR=/home/builder/pseudo
 export PSEUDO_LIBDIR=/usr/lib/pseudo/lib64
 export GIT_PROXY_COMMAND=/home/builder/poky/scripts/oe-git-proxy
 
+#start pcmanfm in daemon mode to allow asynchronous launch
+pcmanfm -d&
+
+#register folders to open with PCManFM filemanager
+if [ ! -d /home/ubik/tmp/.local/share/applications ]; then
+    mkdir -p /home/builder/.local/share/applications/
+    xdg-mime default pcmanfm.desktop inode/directory
+fi
+
 cd /home/builder/poky
 . ./oe-init-build-env
 
