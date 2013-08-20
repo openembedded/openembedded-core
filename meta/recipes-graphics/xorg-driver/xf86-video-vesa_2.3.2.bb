@@ -14,7 +14,7 @@ supports depths 8, 15 16 and 24."
 PR = "${INC_PR}.0"
 
 DEPENDS += "virtual/libx11 libxvmc drm xf86driproto glproto \
-	    virtual/libgl xineramaproto xf86driproto libpciaccess"
+            virtual/libgl xineramaproto libpciaccess"
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
