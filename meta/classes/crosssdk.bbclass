@@ -30,3 +30,5 @@ do_populate_sysroot[stamp-extra-info] = ""
 
 # Need to force this to ensure consitency accross architectures
 EXTRA_OECONF_FPU = ""
+
+USE_NLS = "no"

@@ -75,3 +75,5 @@ cross_virtclass_handler[eventmask] = "bb.event.RecipePreFinalise"
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 }
+
+USE_NLS = "no"
