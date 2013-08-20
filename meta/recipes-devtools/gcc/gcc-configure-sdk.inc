@@ -43,5 +43,5 @@ do_configure () {
 }
 
 do_compile () {
-	oe_runmake all-host all-target-libgcc
+	oe_runmake all-host
 }
