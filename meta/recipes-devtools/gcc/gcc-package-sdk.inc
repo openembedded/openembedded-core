@@ -28,6 +28,9 @@ FILES_${PN}-doc = "\
     ${gcclibdir}/${TARGET_SYS}/${BINV}/include/README \
     "
 
+# Compute how to get from libexecdir to bindir in python (easier than shell)
+BINRELPATH = "${@oe.path.relative(d.expand("${libexecdir}/gcc/${TARGET_SYS}/${BINV}"), d.expand("${bindir}"))}"
+
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install-host
 
@@ -64,7 +67,7 @@ do_install () {
 			continue
 		fi
 
-		ln -sf ${bindir}/${TARGET_PREFIX}$t $dest$t
+		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t $dest$t
 	done
 
 	chown -R root:root ${D}
