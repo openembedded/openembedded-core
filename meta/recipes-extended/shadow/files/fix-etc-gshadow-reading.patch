@@ -1,0 +1,36 @@
+shadow: Fix parsing of gshadow entries
+
+Upstream-Status: Backport [http://anonscm.debian.org/viewvc/pkg-shadow?view=revision&revision=3096]
+
+newgrp command does not function properly.
+Even with the valid password, it outputs: "'Invalid password'"
+
+Signed-off-by: Roy.Li <rongqing.li@windriver.com>
+
+2010-02-14  Michael Bunk  <mb@computer-leipzig.com>
+
+	* NEWS, lib/gshadow.c: Fix parsing of gshadow entries.
+
+diff -urpN a/lib/gshadow.c b/lib/gshadow.c
+--- a/lib/gshadow.c	2013-07-11 10:18:15.745450428 +0800
++++ b/lib/gshadow.c	2013-07-11 10:17:30.465450280 +0800
+@@ -222,6 +222,7 @@ void endsgent (void)
+ 		if (NULL == buf) {
+ 			return NULL;
+ 		}
++		buflen = BUFSIZ;
+ 	}
+ 
+ 	if (NULL == fp) {
+@@ -229,9 +230,9 @@ void endsgent (void)
+ 	}
+ 
+ #ifdef	USE_NIS
+-	while (fgetsx (buf, (int) sizeof buf, fp) == buf)
++	while (fgetsx (buf, (int) buflen, fp) == buf)
+ #else
+-	if (fgetsx (buf, (int) sizeof buf, fp) == buf)
++	if (fgetsx (buf, (int) buflen, fp) == buf)
+ #endif
+ 	{
+ 		while (   ((cp = strrchr (buf, '\n')) == NULL)
