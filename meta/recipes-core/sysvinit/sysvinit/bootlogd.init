@@ -13,6 +13,9 @@ DAEMON=/sbin/bootlogd
 NAME=bootlogd
 DESC="Bootlog daemon"
 
+# source function library
+. /etc/init.d/functions
+
 test -f $DAEMON || exit 0
 
 [ -r /etc/default/bootlogd ] && . /etc/default/bootlogd
@@ -73,10 +76,14 @@ case "$ACTION" in
 		start-stop-daemon --start --quiet --exec $DAEMON
 		echo "$NAME."
 		;;
+	status)
+		status $DAEMON
+		exit $?
+		;;
 	*)
 		N=${0##*/}
 		N=${N#[SK]??}
-		echo "Usage: $N {start|stop|restart|force-reload}" >&2
+		echo "Usage: $N {start|stop|status|restart|force-reload}" >&2
 		exit 1
 		;;
 esac
