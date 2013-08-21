@@ -3,10 +3,7 @@ require libx11.inc
 DESCRIPTION += " Support for XCMS and XLOCALE is disabled in \
 this version."
 
-PR = "${INC_PR}.4"
-
 SRC_URI += "file://X18NCMSstubs.diff \
-            file://keysymdef_include.patch \
             file://fix-disable-xlocale.diff \
             file://fix-utf8-wrong-define.patch \
            "
@@ -14,8 +11,8 @@ SRC_URI += "file://X18NCMSstubs.diff \
 RPROVIDES_${PN}-dev = "libx11-dev"
 RPROVIDES_${PN}-locale = "libx11-locale"
 
-SRC_URI[md5sum] = "78b4b3bab4acbdf0abcfca30a8c70cc6"
-SRC_URI[sha256sum] = "c382efd7e92bfc3cef39a4b7f1ecf2744ba4414a705e3bc1e697f75502bd4d86"
+SRC_URI[md5sum] = "bc5fc459ec25a50c5a7e27035b89e579"
+SRC_URI[sha256sum] = "10a54fc16b58b4f5a5eed4d080c357a82fd2f42d09af625c1f5df50650701892"
 
 EXTRA_OECONF += "--disable-xlocale"
 
