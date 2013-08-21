@@ -74,6 +74,10 @@ do_install_append () {
 	rm -f ${D}${sysconfdir}/localtime
 	rm -rf ${D}${localstatedir}
 
+	# remove empty eglibc dir
+	if [ -d ${D}${libdir}/eglibc ]; then
+		rmdir ${D}${libdir}/eglibc
+	fi
 	oe_multilib_header bits/syscall.h
 
 	if [ -f ${D}${bindir}/mtrace ]; then

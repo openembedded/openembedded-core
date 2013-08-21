@@ -2,7 +2,7 @@ require eglibc.inc
 
 DEPENDS += "gperf-native kconfig-frontends-native"
 
-SRC_URI = "http://sakrah.dontexist.org/files/eglibc-${PV}-svnr23532.tar.bz2 \
+SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr23787.tar.bz2 \
            file://eglibc-svn-arm-lowlevellock-include-tls.patch \
            file://IO-acquire-lock-fix.patch \
            file://mips-rld-map-check.patch \
@@ -27,8 +27,8 @@ SRC_URI = "http://sakrah.dontexist.org/files/eglibc-${PV}-svnr23532.tar.bz2 \
            file://0001-eglibc-run-libm-err-tab.pl-with-specific-dirs-in-S.patch \
            file://fix-tibetian-locales.patch \
           "
-SRC_URI[md5sum] = "8c83078851c44089a019c626d51c51bb"
-SRC_URI[sha256sum] = "ecd3167d7d417c05b10ea7ab8e3acbc05f4bc2b389b6fae9c186bc0fd34c3ff1"
+SRC_URI[md5sum] = "b395b021422a027d89884992e91734fc"
+SRC_URI[sha256sum] = "15f564b45dc5dd65faf0875579e3447961ae61e876933384ae05d19328539ad4"
 
 LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
       file://COPYING;md5=393a5ca445f6965873eca0259a17f833 \
