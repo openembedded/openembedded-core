@@ -14,6 +14,8 @@
 #
 # Startup script for nfs-utils
 #
+# Source function library.
+. /etc/init.d/functions
 #
 # The environment variable NFS_SERVERS may be set in /etc/default/nfsd
 # Other control variables may be overridden here too
@@ -141,6 +143,13 @@ stop)	exportfs -ua
 	stop_statd
 	stop_mountd
 	stop_nfsd;;
+status)
+	status /usr/sbin/rpc.mountd
+	RETVAL=$?
+	status nfsd
+	rval=$?
+	[ $RETVAL -eq 0 ] && exit $rval
+	exit $RETVAL;;
 reload)	test -r /etc/exports && exportfs -r;;
 restart)exportfs -ua
 	stop_mountd
@@ -150,4 +159,6 @@ restart)exportfs -ua
 	start_mountd
 	start_statd
 	test -r /etc/exports && exportfs -a;;
+*)	echo "Usage: $0 {start|stop|status|reload|restart}"
+	exit 1;;
 esac
