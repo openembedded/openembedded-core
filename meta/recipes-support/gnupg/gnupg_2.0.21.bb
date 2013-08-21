@@ -12,8 +12,8 @@ inherit autotools gettext
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "9d18ee71bb0b10d40d1c8a393bdd7a89"
-SRC_URI[sha256sum] = "6e949b7f062cab8a3cf0910f91ecf04cabaad458c0aeeec66298651b8b04b79a"
+SRC_URI[md5sum] = "48c05f5dfe97cf21ae0ced811aaad750"
+SRC_URI[sha256sum] = "00df8902c7cef4d2440d36ca2a45985853eb36c34a4163bc995c3578030eeef5"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
