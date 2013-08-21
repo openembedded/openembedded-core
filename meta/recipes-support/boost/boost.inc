@@ -115,6 +115,8 @@ def get_boost_parallel_make(bb, d):
             bb.error("Unable to analyse format of PARALLEL_MAKE variable: %s" % pm)
         pm_nval = min(64, int(pm_val.group(0)))
         return pm_prefix.group(0) + str(pm_nval) + pm[pm_val.end():]
+    else:
+        return ""
 
 BOOST_PARALLEL_MAKE = "${@get_boost_parallel_make(bb, d)}"
 BJAM_OPTS    = '${BOOST_PARALLEL_MAKE} \
