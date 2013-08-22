@@ -277,7 +277,7 @@ do_install () {
 
     # Remove the sysvinit specific configuration file for systemd systems to avoid confusion
     if ${@base_contains('DISTRO_FEATURES', 'sysvinit', 'false', 'true', d)}; then
-	rm ${D}${sysconfdir}/syslog-startup.conf.${BPN}
+	rm -f ${D}${sysconfdir}/syslog-startup.conf.${BPN}
     fi
 }
 
