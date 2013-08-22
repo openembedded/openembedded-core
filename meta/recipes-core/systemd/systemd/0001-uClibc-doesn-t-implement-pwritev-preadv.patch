@@ -1,0 +1,37 @@
+Upstream-Status: Inappropriate [uclibc specific]
+
+From 7be9273548bcb1f57d011fc252965e45dd2a058c Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Wed, 21 Aug 2013 19:09:27 -0700
+Subject: [PATCH] uClibc doesn't implement pwritev/preadv
+
+Lets stub out the testcase for building.
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ src/libsystemd-bus/test-bus-memfd.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/libsystemd-bus/test-bus-memfd.c b/src/libsystemd-bus/test-bus-memfd.c
+index 05ef555..45e5e44 100644
+--- a/src/libsystemd-bus/test-bus-memfd.c
++++ b/src/libsystemd-bus/test-bus-memfd.c
+@@ -145,6 +145,7 @@ int main(int argc, char *argv[]) {
+         /* check content */
+         assert_se(memcmp(buf, "ll", 2) == 0);
+ 
++#ifndef __UCLIBC__
+         /* writev it out*/
+         iov[0].iov_base = (char *)"ABC";
+         iov[0].iov_len = 3;
+@@ -167,6 +168,7 @@ int main(int argc, char *argv[]) {
+         assert_se(memcmp(bufv[0], "ABC", 3) == 0);
+         assert_se(memcmp(bufv[1], "DEF", 3) == 0);
+         assert_se(memcmp(bufv[2], "GHI", 3) == 0);
++#endif /* __UCLIBC__ */
+ 
+         sd_memfd_free(m);
+ 
+-- 
+1.8.3.4
+

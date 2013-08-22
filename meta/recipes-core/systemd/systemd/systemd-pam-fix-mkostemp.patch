@@ -1,10 +1,10 @@
 Upstream-Status: Denied [no desire for uclibc support]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Index: systemd-204/src/journal/journal-send.c
+Index: systemd-206/src/journal/journal-send.c
 ===================================================================
---- systemd-204.orig/src/journal/journal-send.c	2013-05-06 12:06:04.000000000 -0700
-+++ systemd-204/src/journal/journal-send.c	2013-05-23 11:21:14.500338688 -0700
+--- systemd-206.orig/src/journal/journal-send.c	2013-07-21 15:43:28.000000000 -0700
++++ systemd-206/src/journal/journal-send.c	2013-08-21 08:50:50.825892498 -0700
 @@ -46,6 +46,8 @@
                  memcpy(*_f + 10, _func, _fl);     \
          } while(false)
@@ -14,7 +14,7 @@ Index: systemd-204/src/journal/journal-send.c
  /* We open a single fd, and we'll share it with the current process,
   * all its threads, and all its subprocesses. This means we need to
   * initialize it atomically, and need to operate on it atomically
-@@ -312,8 +314,13 @@
+@@ -311,8 +313,13 @@
          /* Message doesn't fit... Let's dump the data in a temporary
           * file and just pass a file descriptor of it to the other
           * side */
@@ -29,20 +29,19 @@ Index: systemd-204/src/journal/journal-send.c
          if (buffer_fd < 0)
                  return -errno;
  
-Index: systemd-204/src/core/manager.c
+Index: systemd-206/src/core/manager.c
 ===================================================================
---- systemd-204.orig/src/core/manager.c	2013-04-25 17:53:56.000000000 -0700
-+++ systemd-204/src/core/manager.c	2013-05-23 11:23:15.864340878 -0700
-@@ -72,6 +72,8 @@
+--- systemd-206.orig/src/core/manager.c	2013-07-21 15:43:28.000000000 -0700
++++ systemd-206/src/core/manager.c	2013-08-21 08:51:35.209893331 -0700
+@@ -71,6 +71,7 @@
  #include "audit-fd.h"
+ #include "efivars.h"
  #include "env-util.h"
- 
 +#include "config.h"
-+
- /* As soon as 16 units are in our GC queue, make sure to run a gc sweep */
- #define GC_QUEUE_ENTRIES_MAX 16
  
-@@ -1973,7 +1975,12 @@
+ /* As soon as 5s passed since a unit was added to our GC queue, make sure to run a gc sweep */
+ #define GC_QUEUE_USEC_MAX (10*USEC_PER_SEC)
+@@ -2058,7 +2059,12 @@
                  return -ENOMEM;
  
          RUN_WITH_UMASK(0077) {
@@ -55,10 +54,10 @@ Index: systemd-204/src/core/manager.c
          }
  
          if (fd < 0) {
-Index: systemd-204/src/shared/util.c
+Index: systemd-206/src/shared/util.c
 ===================================================================
---- systemd-204.orig/src/shared/util.c	2013-05-07 12:07:22.000000000 -0700
-+++ systemd-204/src/shared/util.c	2013-05-23 11:19:35.028336822 -0700
+--- systemd-206.orig/src/shared/util.c	2013-07-21 15:43:28.000000000 -0700
++++ systemd-206/src/shared/util.c	2013-08-21 08:50:50.829892498 -0700
 @@ -74,6 +74,8 @@
  #include "env-util.h"
  #include "fileio.h"
@@ -68,7 +67,7 @@ Index: systemd-204/src/shared/util.c
  int saved_argc = 0;
  char **saved_argv = NULL;
  
-@@ -3921,7 +3923,12 @@
+@@ -3980,7 +3982,12 @@
          t[k] = '.';
          stpcpy(stpcpy(t+k+1, fn), "XXXXXX");
  
@@ -81,10 +80,10 @@ Index: systemd-204/src/shared/util.c
          if (fd < 0) {
                  free(t);
                  return -errno;
-Index: systemd-204/src/shared/ask-password-api.c
+Index: systemd-206/src/shared/ask-password-api.c
 ===================================================================
---- systemd-204.orig/src/shared/ask-password-api.c	2013-04-08 08:26:34.000000000 -0700
-+++ systemd-204/src/shared/ask-password-api.c	2013-05-23 11:24:43.456342451 -0700
+--- systemd-206.orig/src/shared/ask-password-api.c	2013-07-21 15:43:28.000000000 -0700
++++ systemd-206/src/shared/ask-password-api.c	2013-08-21 08:50:50.829892498 -0700
 @@ -37,6 +37,8 @@
  
  #include "ask-password-api.h"
@@ -107,11 +106,11 @@ Index: systemd-204/src/shared/ask-password-api.c
          }
  
          if (fd < 0) {
-Index: systemd-204/src/journal/journalctl.c
+Index: systemd-206/src/journal/journalctl.c
 ===================================================================
---- systemd-204.orig/src/journal/journalctl.c	2013-05-07 12:07:22.000000000 -0700
-+++ systemd-204/src/journal/journalctl.c	2013-05-23 11:19:35.028336822 -0700
-@@ -755,7 +755,13 @@
+--- systemd-206.orig/src/journal/journalctl.c	2013-07-21 15:43:28.000000000 -0700
++++ systemd-206/src/journal/journalctl.c	2013-08-21 08:50:50.833892498 -0700
+@@ -1005,7 +1005,13 @@
          n /= arg_interval;
  
          close_nointr_nofail(fd);
@@ -125,11 +124,11 @@ Index: systemd-204/src/journal/journalctl.c
          if (fd < 0) {
                  log_error("Failed to open %s: %m", k);
                  r = -errno;
-Index: systemd-204/src/journal/journal-verify.c
+Index: systemd-206/src/journal/journal-verify.c
 ===================================================================
---- systemd-204.orig/src/journal/journal-verify.c	2012-11-20 13:42:23.000000000 -0800
-+++ systemd-204/src/journal/journal-verify.c	2013-05-23 11:19:35.032336822 -0700
-@@ -700,8 +700,12 @@
+--- systemd-206.orig/src/journal/journal-verify.c	2013-07-21 15:43:28.000000000 -0700
++++ systemd-206/src/journal/journal-verify.c	2013-08-21 08:50:50.833892498 -0700
+@@ -811,8 +811,12 @@
  #endif
          } else if (f->seal)
                  return -ENOKEY;
@@ -143,7 +142,7 @@ Index: systemd-204/src/journal/journal-verify.c
          if (data_fd < 0) {
                  log_error("Failed to create data file: %m");
                  r = -errno;
-@@ -709,7 +713,12 @@
+@@ -820,7 +824,12 @@
          }
          unlink(data_path);
  
@@ -156,7 +155,7 @@ Index: systemd-204/src/journal/journal-verify.c
          if (entry_fd < 0) {
                  log_error("Failed to create entry file: %m");
                  r = -errno;
-@@ -717,7 +726,12 @@
+@@ -828,7 +837,12 @@
          }
          unlink(entry_path);
  

@@ -1,0 +1,32 @@
+Upstream-Status: Submitted
+
+From cfdd1eb76dced87c73bac8ec22d3a10244c9bbf6 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Wed, 21 Aug 2013 20:25:19 -0700
+Subject: [PATCH] use CAP_MKNOD ConditionCapability
+
+Fixes errors seen when booting VMs on QEMU like
+
+systemd[1]: kmod-static-nodes.service: main process exited, code=exited, status=203/EXEC
+systemd[1]: Failed to start Create list of required static device nodes for the current kernel.
+systemd[1]: Unit kmod-static-nodes.service entered failed state.
+
+Make sure that mknod capability is available
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ units/kmod-static-nodes.service.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: systemd-206/units/kmod-static-nodes.service.in
+===================================================================
+--- systemd-206.orig/units/kmod-static-nodes.service.in	2013-08-21 19:13:02.000000000 -0700
++++ systemd-206/units/kmod-static-nodes.service.in	2013-08-21 20:39:13.310689871 -0700
+@@ -9,6 +9,7 @@
+ Description=Create list of required static device nodes for the current kernel
+ DefaultDependencies=no
+ Before=sysinit.target systemd-tmpfiles-setup-dev.service
++ConditionCapability=CAP_MKNOD
+ 
+ [Service]
+ Type=oneshot
