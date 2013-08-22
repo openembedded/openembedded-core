@@ -108,3 +108,15 @@ STOP
 }
 
 EXTRA_OECONF_append_sh4 = " --with-multilib-list= --enable-incomplete-targets "
+
+EXTRA_OECONF += "--disable-libunwind-exceptions \
+                 --with-mpfr=${STAGING_DIR_NATIVE}${prefix_native} \
+                 --with-system-zlib "
+
+EXTRA_OECONF_PATHS = " \
+                      --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++ \
+                      --with-sysroot=${STAGING_DIR_TARGET} \
+                      --with-build-sysroot=${STAGING_DIR_TARGET}"
+
+
+ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_DIR_TARGET}${target_includedir}"
