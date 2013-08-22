@@ -15,8 +15,8 @@ RUNTIMETARGET = "libssp libstdc++-v3 libgomp"
 
 do_configure () {
 	export CXX="${CXX} -nostdinc++ -nostdlib++"
-	mtarget=`echo ${MULTIMACH_TARGET_SYS} | sed -e s#-nativesdk##`
-	target=`echo ${TARGET_SYS} | sed -e s#-nativesdk##`
+	mtarget=`echo ${MULTIMACH_TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
+	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	cp -fpPR ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$mtarget/* ${B}
 	for d in libgcc ${RUNTIMETARGET}; do
 		echo "Configuring $d"
@@ -29,7 +29,7 @@ do_configure () {
 }
 
 do_compile () {
-	target=`echo ${TARGET_SYS} | sed -e s#-nativesdk##`
+	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	for d in libgcc ${RUNTIMETARGET}; do
 		cd ${B}/$target/$d/
 		oe_runmake MULTIBUILDTOP=${B}/$target/$d/
@@ -37,7 +37,7 @@ do_compile () {
 }
 
 do_install () {
-	target=`echo ${TARGET_SYS} | sed -e s#-nativesdk##`
+	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	for d in ${RUNTIMETARGET}; do
 		cd ${B}/$target/$d/
 		oe_runmake 'DESTDIR=${D}' MULTIBUILDTOP=${B}/$target/$d/ install

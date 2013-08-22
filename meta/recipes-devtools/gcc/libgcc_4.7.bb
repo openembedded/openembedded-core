@@ -26,7 +26,7 @@ FILES_libgcov-dev = " \
 FILES_${PN}-dbg += "${base_libdir}/.debug/"
 
 do_configure () {
-	target=`echo ${MULTIMACH_TARGET_SYS} | sed -e s#-nativesdk##`
+	target=`echo ${MULTIMACH_TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	install -d ${D}${base_libdir} ${D}${libdir}
 	cp -fpPR ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$target/* ${B}
 	mkdir -p ${B}/${BPN}
@@ -36,13 +36,13 @@ do_configure () {
 }
 
 do_compile () {
-	target=`echo ${TARGET_SYS} | sed -e s#-nativesdk##`
+	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	cd ${B}/${BPN}
 	oe_runmake MULTIBUILDTOP=${B}/$target/${BPN}/
 }
 
 do_install () {
-	target=`echo ${TARGET_SYS} | sed -e s#-nativesdk##`
+	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	cd ${B}/${BPN}
 	oe_runmake 'DESTDIR=${D}' MULTIBUILDTOP=${B}/$target/${BPN}/ install
 
