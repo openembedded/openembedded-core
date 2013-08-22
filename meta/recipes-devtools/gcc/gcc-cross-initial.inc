@@ -24,6 +24,8 @@ EXTRA_OECONF = "--with-newlib \
 		${@base_contains('DISTRO_FEATURES', 'ld-is-gold', '--with-ld=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld.bfd', '', d)} \
 		${EXTRA_OECONF_FPU}"
 
+EXTRA_OECONF += " --with-native-system-header-dir=${SYSTEMHEADERS} "
+
 GCCCROSS_BUILDSYSROOT = "${B}/tmpsysroot"
 
 do_configure_prepend () {
