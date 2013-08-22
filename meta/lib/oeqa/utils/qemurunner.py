@@ -32,6 +32,10 @@ class QemuRunner:
         self.boottime = boottime
         self.runqemutime = runqemutime
 
+        self.create_socket()
+
+    def create_socket(self):
+
         self.bootlog = ''
         self.qemusock = None
 
@@ -137,21 +141,31 @@ class QemuRunner:
         return self.is_alive()
 
     def kill(self):
+
+        if self.runqemu:
+            bb.note("Sending SIGTERM to runqemu")
+            os.kill(-self.runqemu.pid,signal.SIGTERM)
+            endtime = time.time() + self.runqemutime
+            while self.runqemu.poll() is None and time.time() < endtime:
+                time.sleep(1)
+            if self.runqemu.poll() is None:
+                bb.note("Sending SIGKILL to runqemu")
+                os.kill(-self.runqemu.pid,signal.SIGKILL)
+            self.runqemu = None
         if self.server_socket:
             self.server_socket.close()
             self.server_socket = None
-        if self.runqemu.pid:
-            os.kill(-self.runqemu.pid,signal.SIGTERM)
-            os.kill(-self.runqemu.pid,signal.SIGKILL)
-            self.runqemu.pid = None
         self.qemupid = None
         self.ip = None
 
     def restart(self, qemuparams = None):
-        if self.is_alive():
+        bb.note("Restarting qemu process")
+        if self.runqemu.poll() is None:
             self.kill()
-        bb.note("Qemu Restart required...")
-        return self.launch(qemuparams)
+        self.create_socket()
+        if self.launch(qemuparams):
+            return True
+        return False
 
     def is_alive(self):
         qemu_child = self.find_child(str(self.runqemu.pid))

@@ -81,6 +81,13 @@ class oeRuntimeTest(unittest.TestCase):
         else:
             return False
 
+    @classmethod
+    def restartTarget(self,params=None):
+
+        if oeRuntimeTest.tc.qemu.restart(params):
+            oeRuntimeTest.tc.target.host = oeRuntimeTest.tc.qemu.ip
+        else:
+            raise Exception("Restarting target failed")
 
 
 def getmodule(pos=2):
