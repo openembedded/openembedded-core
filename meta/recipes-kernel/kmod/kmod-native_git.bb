@@ -4,8 +4,9 @@
 require kmod.inc
 inherit native
 
-PR = "${INC_PR}.1"
-SRC_URI += "file://fix-undefined-O_CLOEXEC.patch"
+SRC_URI += "file://fix-undefined-O_CLOEXEC.patch \
+            file://0001-Fix-build-with-older-gcc-4.6.patch \
+           "
 
 do_install_append (){
 	for tool in depmod insmod lsmod modinfo modprobe rmmod

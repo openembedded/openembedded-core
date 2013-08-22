@@ -1,0 +1,44 @@
+Upstream-Status: Inappropriate [kmod is new]
+
+From 30e1839a46b0b9449f272765193a0da61bf85997 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 26 Aug 2013 15:32:36 -0700
+Subject: [PATCH] Fix build with older gcc < 4.6
+
+Static_assert is new feature in C11 standards and older than gcc 4.6
+does not support it. So define it to make the old gcc happy
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ libkmod/macro.h | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/libkmod/macro.h b/libkmod/macro.h
+index c6ba855..5032f54 100644
+--- a/libkmod/macro.h
++++ b/libkmod/macro.h
+@@ -20,9 +20,19 @@
+ #pragma once
+ 
+ #include <stddef.h>
+-
+-#define assert_cc(expr) \
++#if defined(__GNUC__)
++/* Determine which version of GNU C we're using */
++#define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
++#endif
++#if (GCC_VERSION >= 40600)
++# define assert_cc(expr) \
+ 	_Static_assert((expr), #expr)
++#else
++# define STATIC_ASSERT_GLUE1(x, y) x##y
++# define STATIC_ASSERT_GLUE(x, y)  STATIC_ASSERT_GLUE1(x, y)
++# define assert_cc(expr) \
++extern void STATIC_ASSERT_GLUE(static_assert, __LINE__)(int arg[(expr) ? 1 : -1]) __attribute__((unused))
++#endif
+ 
+ #if HAVE_TYPEOF
+ #define check_types_match(expr1, expr2)		\
+-- 
+1.8.3.4
+

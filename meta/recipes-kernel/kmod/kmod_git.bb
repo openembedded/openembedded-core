@@ -3,8 +3,7 @@
 
 require kmod.inc
 
-PR = "${INC_PR}.0"
-PV = "9+git${SRCPV}"
+PV_append = "+git${SRCPV}"
 
 PROVIDES += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
 RPROVIDES_${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
