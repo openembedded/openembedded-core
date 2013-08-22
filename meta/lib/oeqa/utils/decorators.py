@@ -17,7 +17,7 @@ class skipIfFailure(object):
         def wrapped_f(*args):
             if self.testcase in (oeRuntimeTest.testFailures or oeRuntimeTest.testErrors):
                 raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
-            f(*args)
+            return f(*args)
         wrapped_f.__name__ = f.__name__
         return wrapped_f
 
@@ -30,7 +30,7 @@ class skipIfSkipped(object):
         def wrapped_f(*args):
             if self.testcase in oeRuntimeTest.testSkipped:
                 raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
-            f(*args)
+            return f(*args)
         wrapped_f.__name__ = f.__name__
         return wrapped_f
 
@@ -45,6 +45,6 @@ class skipUnlessPassed(object):
                     self.testcase in  oeRuntimeTest.testFailures or \
                     self.testcase in oeRuntimeTest.testErrors:
                 raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
-            f(*args)
+            return f(*args)
         wrapped_f.__name__ = f.__name__
         return wrapped_f
