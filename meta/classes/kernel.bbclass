@@ -9,6 +9,7 @@ INHIBIT_DEFAULT_DEPS = "1"
 KERNEL_IMAGETYPE ?= "zImage"
 INITRAMFS_IMAGE ?= ""
 INITRAMFS_TASK ?= ""
+INITRAMFS_IMAGE_BUNDLE ?= ""
 
 python __anonymous () {
     kerneltype = d.getVar('KERNEL_IMAGETYPE', True) or ''
@@ -19,7 +20,15 @@ python __anonymous () {
 
     image = d.getVar('INITRAMFS_IMAGE', True)
     if image:
-        d.setVar('INITRAMFS_TASK', '${INITRAMFS_IMAGE}:do_rootfs')
+        d.appendVarFlag('do_bundle_initramfs', 'depends', ' ${INITRAMFS_IMAGE}:do_rootfs')
+
+    # NOTE: setting INITRAMFS_TASK is for backward compatibility
+    #       The preferred method is to set INITRAMFS_IMAGE, because
+    #       this INITRAMFS_TASK has circular dependency problems
+    #       if the initramfs requires kernel modules
+    image_task = d.getVar('INITRAMFS_TASK', True)
+    if image_task:
+        d.appendVarFlag('do_configure', 'depends', ' ${INITRAMFS_TASK}')
 }
 
 inherit kernel-arch deploy
@@ -72,9 +81,82 @@ KERNEL_SRC_PATH = "/usr/src/kernel"
 
 KERNEL_IMAGETYPE_FOR_MAKE = "${@(lambda s: s[:-3] if s[-3:] == ".gz" else s)(d.getVar('KERNEL_IMAGETYPE', True))}"
 
+copy_initramfs() {
+	echo "Copying initramfs into ./usr ..."
+	# Find and use the first initramfs image archive type we find
+	rm -f ${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.cpio
+	for img in cpio.gz cpio.lzo cpio.lzma cpio.xz; do
+		if [ -e "${DEPLOY_DIR_IMAGE}/${INITRAMFS_IMAGE}-${MACHINE}.$img" ]; then
+			cp ${DEPLOY_DIR_IMAGE}/${INITRAMFS_IMAGE}-${MACHINE}.$img ${B}/usr/.
+			case $img in
+			*gz)
+				echo "gzip decompressing image"
+				gunzip -f ${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.$img
+				break
+				;;
+			*lzo)
+				echo "lzo decompressing image"
+				lzop -df ${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.$img
+				break
+				;;
+			*lzma)
+				echo "lzma decompressing image"
+				lzmash -df ${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.$img
+				break
+				;;
+			*xz)
+				echo "xz decompressing image"
+				xz -df ${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.$img
+				break
+				;;
+			esac
+		fi
+	done
+	echo "Finished copy of initramfs into ./usr"
+}
+
+INITRAMFS_BASE_NAME = "${KERNEL_IMAGETYPE}-initramfs-${PV}-${PR}-${MACHINE}-${DATETIME}"
+INITRAMFS_BASE_NAME[vardepsexclude] = "DATETIME"
+do_bundle_initramfs () {
+	if [ ! -z "${INITRAMFS_IMAGE}" -a x"${INITRAMFS_IMAGE_BUNDLE}" = x1 ]; then
+		echo "Creating a kernel image with a bundled initramfs..."
+		copy_initramfs
+		if [ -e ${KERNEL_OUTPUT} ] ; then
+			mv -f ${KERNEL_OUTPUT} ${KERNEL_OUTPUT}.bak
+		fi
+		use_alternate_initrd=CONFIG_INITRAMFS_SOURCE=${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.cpio
+		kernel_do_compile
+		mv -f ${KERNEL_OUTPUT} ${KERNEL_OUTPUT}.initramfs
+		mv -f ${KERNEL_OUTPUT}.bak ${KERNEL_OUTPUT}
+		# Update install area
+		echo "There is kernel image bundled with initramfs: ${B}/${KERNEL_OUTPUT}.initramfs"
+		install -m 0644 ${B}/${KERNEL_OUTPUT}.initramfs ${D}/boot/${KERNEL_IMAGETYPE}-initramfs-${MACHINE}.bin
+		echo "${B}/${KERNEL_OUTPUT}.initramfs"
+		cd ${B}
+		# Update deploy directory
+		if [ -e "${KERNEL_OUTPUT}.initramfs" ]; then
+			echo "Copying deploy kernel-initramfs image and setting up links..."
+			initramfs_base_name=${INITRAMFS_BASE_NAME}
+			initramfs_symlink_name=${KERNEL_IMAGETYPE}-initramfs-${MACHINE}
+			install -m 0644 ${KERNEL_OUTPUT}.initramfs ${DEPLOY_DIR_IMAGE}/${initramfs_base_name}.bin
+			cd ${DEPLOY_DIR_IMAGE}
+			ln -sf ${initramfs_base_name}.bin ${initramfs_symlink_name}.bin
+		fi
+	fi
+}
+do_bundle_initramfs[nostamp] = "1"
+addtask bundle_initramfs after do_compile
+
 kernel_do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
-	oe_runmake ${KERNEL_IMAGETYPE_FOR_MAKE} ${KERNEL_ALT_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" ${KERNEL_EXTRA_ARGS}
+	# The $use_alternate_initrd is only set from
+	# do_bundle_initramfs() This variable is specifically for the
+	# case where we are making a second pass at the kernel
+	# compilation and we want to force the kernel build to use a
+	# different initramfs image.  The way to do that in the kernel
+	# is to specify:
+	# make ...args... CONFIG_INITRAMFS_SOURCE=some_other_initramfs.cpio
+	oe_runmake ${KERNEL_IMAGETYPE_FOR_MAKE} ${KERNEL_ALT_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" ${KERNEL_EXTRA_ARGS} $use_alternate_initrd
 	if test "${KERNEL_IMAGETYPE_FOR_MAKE}.gz" = "${KERNEL_IMAGETYPE}"; then
 		gzip -9c < "${KERNEL_IMAGETYPE_FOR_MAKE}" > "${KERNEL_OUTPUT}"
 	fi
@@ -219,17 +301,7 @@ kernel_do_configure() {
 		cp "${WORKDIR}/defconfig" "${B}/.config"
 	fi
 	yes '' | oe_runmake oldconfig
-
-	if [ ! -z "${INITRAMFS_IMAGE}" ]; then
-		for img in cpio.gz cpio.lzo cpio.lzma cpio.xz; do
-		if [ -e "${DEPLOY_DIR_IMAGE}/${INITRAMFS_IMAGE}-${MACHINE}.$img" ]; then
-			cp "${DEPLOY_DIR_IMAGE}/${INITRAMFS_IMAGE}-${MACHINE}.$img" initramfs.$img
-		fi
-		done
-	fi
 }
-
-do_configure[depends] += "${INITRAMFS_TASK}"
 
 do_savedefconfig() {
 	oe_runmake savedefconfig

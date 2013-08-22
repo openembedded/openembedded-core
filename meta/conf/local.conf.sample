@@ -145,6 +145,7 @@ EXTRA_IMAGE_FEATURES = "debug-tweaks"
 # NOTE: mklibs also needs to be explicitly enabled for a given image, see local.conf.extended
 USER_CLASSES ?= "buildstats image-mklibs image-prelink"
 
+
 #
 # Runtime testing of images
 #

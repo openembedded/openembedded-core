@@ -237,3 +237,25 @@ FORTRAN_forcevariable = ",fortran"
 RUNTIMETARGET_append_pn-gcc-runtime = " libquadmath libgfortran"
 export BUILD_FC = "${CCACHE}${BUILD_PREFIX}gfortran ${BUILD_CC_ARCH}"
 export FC = "${CCACHE}${HOST_PREFIX}gfortran ${HOST_CC_ARCH}"
+
+#
+# Kernel image features
+#
+# The INITRAMFS_IMAGE image variable will cause an additional recipe to
+# be built as a dependency to the what ever rootfs recipe you might be
+# using such as core-image-sato.  The initramfs might be needed for
+# the initial boot of of the target system such as to load kernel
+# modules prior to mounting the root file system.
+#
+# INITRAMFS_IMAGE_BUNDLE variable controls if the image recipe
+# specified by the INITRAMFS_IMAGE will be run through an extra pass
+# through the kernel compilation in order to build a single binary
+# which contains both the kernel image and the initramfs.  The
+# combined binary will be deposited into the tmp/deploy directory.
+# NOTE: You can set INITRAMFS_IMAGE in an image recipe, but
+#       INITRAMFS_IMAGE_BUNDLE can only be set in a conf file.
+#
+#INITRAMFS_IMAGE = "core-image-minimal-initramfs"
+#INITRAMFS_IMAGE_BUNDLE = "1"
+
+
