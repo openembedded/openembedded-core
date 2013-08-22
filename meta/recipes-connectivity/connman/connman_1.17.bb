@@ -6,8 +6,8 @@ SRC_URI  = "${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
             file://connman \
             "
 
-SRC_URI[md5sum] = "d2906816222219e10426442d07c3f4c1"
-SRC_URI[sha256sum] = "7273e88e6a6338be1e51b0e4c685d556386897cba9317cd83370bfb3f009982a"
+SRC_URI[md5sum] = "dd4a13f789de1b69fcddf0cf613f2d5b"
+SRC_URI[sha256sum] = "d31aa2e7dc9fa817c93aba973995b63506a8c83f55afe507028f09b580ef0b00"
 
 PR = "${INC_PR}.0"
 
