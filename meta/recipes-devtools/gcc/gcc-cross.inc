@@ -3,8 +3,38 @@ inherit cross
 DEPENDS = "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}libc-for-gcc ${EXTRADEPENDS} ${NATIVEDEPS}"
 PROVIDES = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
 
-require gcc-configure-cross.inc
-require gcc-package-cross.inc
+require gcc-configure-common.inc
+
+EXTRA_OECONF += " --enable-poison-system-directories \
+		"
+
+INHIBIT_DEFAULT_DEPS = "1"
+
+EXTRA_OECONF_PATHS = " \
+		      --with-headers=${STAGING_DIR_TARGET}${SYSTEMHEADERS} \
+		      --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++ \
+                      --with-sysroot=${STAGING_DIR_TARGET} \
+                      --with-build-sysroot=${STAGING_DIR_TARGET}"
+
+do_configure_prepend () {
+	sed -i 's/BUILD_INFO=info/BUILD_INFO=/' ${S}/gcc/configure
+}
+
+do_compile_prepend () {
+	export CC="${BUILD_CC}"
+	export AR_FOR_TARGET="${TARGET_SYS}-ar"
+	export RANLIB_FOR_TARGET="${TARGET_SYS}-ranlib"
+	export LD_FOR_TARGET="${TARGET_SYS}-ld"
+	export NM_FOR_TARGET="${TARGET_SYS}-nm"
+	export CC_FOR_TARGET="${CCACHE} ${TARGET_SYS}-gcc ${TARGET_CC_ARCH}"
+	export CFLAGS_FOR_TARGET="${TARGET_CFLAGS}"
+	export CPPFLAGS_FOR_TARGET="${TARGET_CPPFLAGS}"
+	export CXXFLAGS_FOR_TARGET="${TARGET_CXXFLAGS}"
+	export LDFLAGS_FOR_TARGET="${TARGET_LDFLAGS}"
+}
+
+LIBGCCS_VAR = "-lgcc_s"
+LIBGCCS_VAR_avr32 = ""
 
 EXTRADEPENDS = ""
 python () {
@@ -118,5 +148,53 @@ EXTRA_OECONF_PATHS = " \
                       --with-sysroot=${STAGING_DIR_TARGET} \
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
 
-
 ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_DIR_TARGET}${target_includedir}"
+
+INHIBIT_PACKAGE_STRIP = "1"
+
+# Compute how to get from libexecdir to bindir in python (easier than shell)
+BINRELPATH = "${@oe.path.relative(d.expand("${libexecdir}/gcc/${TARGET_SYS}/${BINV}"), d.expand("${STAGING_DIR_NATIVE}${prefix_native}/bin/${MULTIMACH_TARGET_SYS}"))}"
+
+do_install () {
+	oe_runmake 'DESTDIR=${D}' install-host
+
+	install -d ${D}${target_base_libdir}
+	install -d ${D}${target_libdir}
+    
+	# Link gfortran to g77 to satisfy not-so-smart configure or hard coded g77
+	# gfortran is fully backwards compatible. This is a safe and practical solution. 
+	ln -sf ${STAGING_DIR_NATIVE}${prefix_native}/bin/${TARGET_PREFIX}gfortran ${STAGING_DIR_NATIVE}${prefix_native}/bin/${TARGET_PREFIX}g77 || true
+
+	
+	# Insert symlinks into libexec so when tools without a prefix are searched for, the correct ones are
+	# found. These need to be relative paths so they work in different locations.
+	dest=${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/
+	install -d $dest
+	for t in ar as ld nm objcopy objdump ranlib strip g77 gcc cpp gfortran; do
+		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t $dest$t
+		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t ${dest}${TARGET_PREFIX}$t
+	done
+
+	# Remove things we don't need but keep share/java
+	for d in info man share/doc share/locale share/man share/info; do
+		rm -rf ${D}${STAGING_DIR_NATIVE}${prefix_native}/$d
+	done
+
+	# We use libiberty from binutils
+	find ${D}${exec_prefix}/lib -name libiberty.a | xargs rm -f
+	find ${D}${exec_prefix}/lib -name libiberty.h | xargs rm -f
+
+	# gcc-runtime installs libgcc into a special location in staging since it breaks doing a standalone build
+	case ${PN} in
+		*gcc-cross|*gcc-crosssdk)
+			dest=${D}/${includedir}/gcc-build-internal-${MULTIMACH_TARGET_SYS}
+			cp -fpPR . $dest
+		;;
+	esac
+}
+
+do_package[noexec] = "1"
+do_packagedata[noexec] = "1"
+do_package_write_ipk[noexec] = "1"
+do_package_write_rpm[noexec] = "1"
+do_package_write_deb[noexec] = "1"
