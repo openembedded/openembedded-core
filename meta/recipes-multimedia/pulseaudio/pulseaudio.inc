@@ -20,14 +20,7 @@ inherit autotools pkgconfig useradd gettext perlnative
 USE_NLS = "yes"
 
 EXTRA_OECONF = "\
-		--disable-lynx \
-		--disable-polkit \
-		--without-jack \
-		--with-glib \
-		--with-alsa \
-		--with-oss \
-		--without-hal \
-		--disable-hal \
+		--disable-hal-compat \
 		--disable-orc \
 		--enable-tcpwrap=no \
 		--with-access-group=audio \
@@ -44,7 +37,7 @@ PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluez', '',
                    ${@base_contains('DISTRO_FEATURES', 'zeroconf', 'avahi', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', 'x11', 'gtk x11', '', d)}"
 PACKAGECONFIG[bluez] = "--enable-bluez,--disable-bluez,bluez4 sbc"
-PACKAGECONFIG[gtk] = "--enable-gtk2,--disable-gtk2,gtk+"
+PACKAGECONFIG[gtk] = "--enable-gtk3,--disable-gtk3,gtk+3"
 PACKAGECONFIG[systemd] = "--enable-systemd,--disable-systemd,systemd"
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11 libxtst libice libsm libxcb"
 PACKAGECONFIG[avahi] = "--enable-avahi,--disable-avahi,avahi"
