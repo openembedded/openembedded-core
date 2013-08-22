@@ -37,6 +37,7 @@ python populate_packages_prepend() {
     # TODO: mark theme packages as arch all
 }
 
-SRC_URI += "file://glib-2.32.patch"
+SRC_URI += "file://glib-2.32.patch \
+            file://substitute-tests.patch"
 SRC_URI[archive.md5sum] = "5deb287bc6075dc21812130604c7dc4f"
 SRC_URI[archive.sha256sum] = "15b680abca6c773ecb85253521fa100dd3b8549befeecc7595b10209d62d66b5"
