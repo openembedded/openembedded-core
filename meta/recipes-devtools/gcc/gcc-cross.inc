@@ -25,9 +25,6 @@ EXTRA_OECONF_PATHS = " \
 
 ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_DIR_TARGET}${target_includedir}"
 
-LIBGCCS_VAR = "-lgcc_s"
-LIBGCCS_VAR_avr32 = ""
-
 do_configure_prepend () {
 	sed -i 's/BUILD_INFO=info/BUILD_INFO=/' ${S}/gcc/configure
 }
