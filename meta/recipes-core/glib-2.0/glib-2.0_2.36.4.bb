@@ -44,6 +44,7 @@ RDEPENDS_${PN}-ptest_append_libc-glibc = "\
             eglibc-charmap-invariant \
             eglibc-localedata-translit-cjk-variants \
            "
+EXTRA_OECONF_append_class-target_libc-uclibc = " --with-libiconv=gnu"
 
 do_configure_prepend() {
 	sed -i -e '1s,#!.*,#!${USRBINPATH}/env python,' ${S}/gio/gdbus-2.0/codegen/gdbus-codegen.in
