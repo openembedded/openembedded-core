@@ -22,7 +22,7 @@ RDEPENDS_${PN} = "\
     nativesdk-automake \
     "
 
-RDEPENDS_${PN}_darwin8 = "\
+RDEPENDS_${PN}_darwin = "\
     odcctools-cross-canadian \
     llvm-cross-canadian \
     nativesdk-pkgconfig \

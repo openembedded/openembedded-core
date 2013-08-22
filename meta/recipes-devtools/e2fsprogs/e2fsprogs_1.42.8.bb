@@ -10,7 +10,6 @@ SRC_URI[sha256sum] = "b984aaf1fe888d6a4cf8c2e8d397207879599b5368f1d33232c1ec9d68
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-elf-shlibs --disable-libuuid --disable-uuidd"
 EXTRA_OECONF_darwin = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-bsd-shlibs"
-EXTRA_OECONF_darwin8 = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-bsd-shlibs"
 
 do_configure_prepend () {
 	cp ${WORKDIR}/acinclude.m4 ${S}/
