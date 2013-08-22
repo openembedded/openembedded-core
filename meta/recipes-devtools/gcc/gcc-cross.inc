@@ -1,26 +1,38 @@
 inherit cross
 
+INHIBIT_DEFAULT_DEPS = "1"
+EXTRADEPENDS = ""
 DEPENDS = "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}libc-for-gcc ${EXTRADEPENDS} ${NATIVEDEPS}"
 PROVIDES = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
+python () {
+    if d.getVar("TARGET_OS", True).startswith("linux"):
+        d.setVar("EXTRADEPENDS", "linux-libc-headers")
+}
 
 require gcc-configure-common.inc
 
-EXTRA_OECONF += " --enable-poison-system-directories \
-		"
+EXTRA_OECONF += " --enable-poison-system-directories"
+EXTRA_OECONF_append_sh4 = " --with-multilib-list= --enable-incomplete-targets "
 
-INHIBIT_DEFAULT_DEPS = "1"
+EXTRA_OECONF += "--disable-libunwind-exceptions \
+                 --with-mpfr=${STAGING_DIR_NATIVE}${prefix_native} \
+                 --with-system-zlib "
 
 EXTRA_OECONF_PATHS = " \
-		      --with-headers=${STAGING_DIR_TARGET}${SYSTEMHEADERS} \
-		      --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++ \
+                      --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++ \
                       --with-sysroot=${STAGING_DIR_TARGET} \
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
+
+ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_DIR_TARGET}${target_includedir}"
+
+LIBGCCS_VAR = "-lgcc_s"
+LIBGCCS_VAR_avr32 = ""
 
 do_configure_prepend () {
 	sed -i 's/BUILD_INFO=info/BUILD_INFO=/' ${S}/gcc/configure
 }
 
-do_compile_prepend () {
+do_compile () {
 	export CC="${BUILD_CC}"
 	export AR_FOR_TARGET="${TARGET_SYS}-ar"
 	export RANLIB_FOR_TARGET="${TARGET_SYS}-ranlib"
@@ -31,18 +43,7 @@ do_compile_prepend () {
 	export CPPFLAGS_FOR_TARGET="${TARGET_CPPFLAGS}"
 	export CXXFLAGS_FOR_TARGET="${TARGET_CXXFLAGS}"
 	export LDFLAGS_FOR_TARGET="${TARGET_LDFLAGS}"
-}
 
-LIBGCCS_VAR = "-lgcc_s"
-LIBGCCS_VAR_avr32 = ""
-
-EXTRADEPENDS = ""
-python () {
-    if d.getVar("TARGET_OS", True).startswith("linux"):
-        d.setVar("EXTRADEPENDS", "linux-libc-headers")
-}
-
-do_compile () {
 	oe_runmake all-host all-target-libgcc
 	# now generate script to drive testing
 	echo "#!/usr/bin/env sh" >${B}/${TARGET_PREFIX}testgcc
@@ -136,19 +137,6 @@ STOP
 	chmod +x ${B}/${TARGET_PREFIX}testgcc
 
 }
-
-EXTRA_OECONF_append_sh4 = " --with-multilib-list= --enable-incomplete-targets "
-
-EXTRA_OECONF += "--disable-libunwind-exceptions \
-                 --with-mpfr=${STAGING_DIR_NATIVE}${prefix_native} \
-                 --with-system-zlib "
-
-EXTRA_OECONF_PATHS = " \
-                      --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++ \
-                      --with-sysroot=${STAGING_DIR_TARGET} \
-                      --with-build-sysroot=${STAGING_DIR_TARGET}"
-
-ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_DIR_TARGET}${target_includedir}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
