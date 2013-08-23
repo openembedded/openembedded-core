@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# OE Build Environment Setup Script
+#
+# Copyright (C) 2006-2011 Linux Foundation
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+#
+# Normally this is called as '. ./oe-init-build-env builddir <portnumber> <builddir>'
+#
+# This works in most shells (not dash), but not all of them pass arg1 when
+# being sourced.   To workaround the shell limitation use "set arg1" prior 
+# to sourcing this script.
+#
+if [ -z "$1" ]; then
+    echo "No port specified, using 12345"
+    port=12345
+else
+    port=$1
+    shift
+fi
+if [ -z "$ZSH_NAME" ] && [ "x$0" = "x./oe-init-build-env" ]; then
+   echo "Error: This script needs to be sourced. Please run as '. ./oe-init-build-env'"
+else
+   if [ -n "$BASH_SOURCE" ]; then
+      OEROOT="`dirname $BASH_SOURCE`"
+   elif [ -n "$ZSH_NAME" ]; then
+      OEROOT="`dirname $0`"
+   else
+      OEROOT="`pwd`"
+   fi
+   OEROOT=`readlink -f "$OEROOT"`
+   export OEROOT
+   . $OEROOT/scripts/oe-buildenv-internal && \
+        $OEROOT/scripts/oe-setup-builddir && \
+        [ -n "$BUILDDIR" ] && cd $BUILDDIR
+   unset OEROOT
+   unset BBPATH
+fi
+bitbake --server-only -t xmlrpc -B localhost:$port
+export BBSERVER=localhost:$port
+echo "Bitbake server started on port %s, use bitbake -m to shut it down"
