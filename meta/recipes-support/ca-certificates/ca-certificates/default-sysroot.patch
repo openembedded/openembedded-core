@@ -1,0 +1,55 @@
+Upstream-Status: Pending
+
+update-ca-certificates: find SYSROOT relative to its own location
+
+This makes the script relocatable.
+
+--- ca-certificates-20130119.orig/sbin/update-ca-certificates
++++ ca-certificates-20130119/sbin/update-ca-certificates
+@@ -37,11 +37,44 @@ do
+   shift
+ done
+
+-CERTSCONF=$SYSROOT/etc/ca-certificates.conf
++if [ -z "$SYSROOT" ]; then
++  local_which () {
++    if [ $# -lt 1 ]; then
++      return 1
++    fi
++
++    (
++      IFS=:
++      for entry in $PATH; do
++        if [ -x "$entry/$1" ]; then
++          echo "$entry/$1"
++          exit 0
++        fi
++      done
++      exit 1
++    )
++  }
++
++  case "$0" in
++    */*)
++      sbindir=$(cd ${0%/*} && pwd)
++      ;;
++    *)
++      sbindir=$(cd $(dirname $(local_which $0)) && pwd)
++      ;;
++  esac
++  prefix=${sbindir%/*}
++  SYSROOT=${prefix%/*}
++  if [ ! -d "$SYSROOT/usr/share/ca-certificates" ]; then
++    SYSROOT=
++  fi
++fi
++
+ CERTSDIR=$SYSROOT/usr/share/ca-certificates
++CERTSCONF=$SYSROOT/etc/ca-certificates.conf
++ETCCERTSDIR=$SYSROOT/etc/ssl/certs
+ LOCALCERTSDIR=$SYSROOT/usr/local/share/ca-certificates
+ CERTBUNDLE=ca-certificates.crt
+-ETCCERTSDIR=$SYSROOT/etc/ssl/certs
+
+ cleanup() {
+   rm -f "$TEMPBUNDLE"
