@@ -13,7 +13,7 @@ export GIT_PROXY_COMMAND=/home/builder/poky/scripts/oe-git-proxy
 pcmanfm -d&
 
 #register folders to open with PCManFM filemanager
-if [ ! -d /home/ubik/tmp/.local/share/applications ]; then
+if [ ! -d /home/builder/.local/share/applications ]; then
     mkdir -p /home/builder/.local/share/applications/
     xdg-mime default pcmanfm.desktop inode/directory
 fi
