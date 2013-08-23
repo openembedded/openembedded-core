@@ -23,3 +23,4 @@ SRC_URI[sha256sum] = "7b05558ae4bb8ede356863cae8c42e3e012aa421bf9d45130a570fd209
 
 inherit autotools
 
+RDEPENDS_${PN} += "xprop"
