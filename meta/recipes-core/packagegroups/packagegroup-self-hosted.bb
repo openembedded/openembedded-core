@@ -38,11 +38,13 @@ RDEPENDS_packagegroup-self-hosted-host-tools = "\
     hdparm \
     iptables \
     lsb \
+    xdg-utils \
     mc \
     mc-fish \
     mc-helpers \
     mc-helpers-perl \
     mc-helpers-python \
+    pcmanfm \
     parted \
     pseudo \
     screen \
