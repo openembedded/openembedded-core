@@ -7,8 +7,8 @@ def eglibc_cfg(feature, features, tokens, cnf):
         for token in tokens:
             cnf.extend([token + '=n'])
             if token == 'OPTION_EGLIBC_NSSWITCH':
-                cnf.extend(["OPTION_EGLIBC_NSSWITCH_FIXED_CONFIG = ${S}/nss/nsswitch.conf"])
-                cnf.extend(["OPTION_EGLIBC_NSSWITCH_FIXED_FUNCTIONS = ${S}/nss/fixed-nsswitch.functions"])
+                cnf.extend(["OPTION_EGLIBC_NSSWITCH_FIXED_CONFIG=\"${S}/nss/nsswitch.conf\""])
+                cnf.extend(["OPTION_EGLIBC_NSSWITCH_FIXED_FUNCTIONS=\"${S}/nss/fixed-nsswitch.functions\""])
 
 # arrange the dependencies among eglibc configuable options according to file option-groups.def from eglibc source code
 def distro_features_check_deps(distro_features):
