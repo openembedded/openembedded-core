@@ -2,11 +2,11 @@ DESCRIPTION = "Scripts and utilities for managing Yocto branched kernels."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://git/tools/kgit;beginline=5;endline=9;md5=d8d1d729a70cd5f52972f8884b80743d"
 
-DEPENDS = "git-native guilt-native"
+DEPENDS = "git-native"
 
-SRCREV = "fbcdcb8e23c38352b46235598f34d7b345f458f1"
+SRCREV = "60a894e1018ab55f4014fbfb2a56624d26d94504"
 PR = "r12"
-PV = "0.1+git${SRCPV}"
+PV = "0.2+git${SRCPV}"
 
 inherit native
 

@@ -262,6 +262,8 @@ python do_kernel_configcheck() {
     # set the default to 'meta'. Otherwise, kconf_check is not passed a valid
     # meta-series for processing
     kmeta = d.getVar( "KMETA", True ) or "meta"
+    if not os.path.exists(kmeta):
+        kmeta = "." + kmeta
 
     pathprefix = "export PATH=%s:%s; " % (d.getVar('PATH', True), "${S}/scripts/util/")
     cmd = d.expand("cd ${S}; kconf_check -config- %s/meta-series ${S} ${B}" % kmeta)
