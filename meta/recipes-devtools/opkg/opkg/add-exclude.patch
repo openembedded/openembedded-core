@@ -10,7 +10,20 @@ so there is no need to free the data.
 Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+Signed-off-by: Jonathan Liu <net147@gmail.com>
 
+Index: trunk/libopkg/opkg_conf.c
+===================================================================
+--- trunk.orig/libopkg/opkg_conf.c
++++ trunk/libopkg/opkg_conf.c
+@@ -442,6 +442,7 @@ opkg_conf_init(void)
+ 	pkg_dest_list_init(&conf->pkg_dest_list);
+ 	pkg_dest_list_init(&conf->tmp_dest_list);
+ 	nv_pair_list_init(&conf->arch_list);
++	conf->exclude_list = NULL;
+ 
+ 	return 0;
+ }
 Index: trunk/libopkg/opkg_conf.h
 ===================================================================
 --- trunk.orig/libopkg/opkg_conf.h
