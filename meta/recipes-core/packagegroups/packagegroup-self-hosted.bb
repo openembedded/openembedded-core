@@ -121,7 +121,9 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     grep \
     groff \
     gzip \
+    settings-daemon \
     hicolor-icon-theme \
+    sato-icon-theme \
     libaio \
     libusb1 \
     libxml2 \
