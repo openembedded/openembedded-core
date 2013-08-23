@@ -440,13 +440,14 @@ def sstate_package(ss, d):
         if not link.startswith(tmpdir):
             return
 
-        depth = link.rpartition(tmpdir)[2].count('/')
+        depth = outputpath.rpartition(tmpdir)[2].count('/')
         base = link.partition(tmpdir)[2].strip()
         while depth > 1:
-            base = "../" + base
+            base = "/.." + base
             depth -= 1
+        base = "." + base
 
-        bb.debug(2, "Replacing absolute path %s with relative path %s" % (link, base))
+        bb.debug(2, "Replacing absolute path %s with relative path %s for %s" % (link, base, outputpath))
         os.remove(path)
         os.symlink(base, path)
 
@@ -464,11 +465,11 @@ def sstate_package(ss, d):
         for walkroot, dirs, files in os.walk(state[1]):
             for file in files:
                 srcpath = os.path.join(walkroot, file)
-                dstpath = srcpath.replace(state[1], sstatebuild + state[0])
+                dstpath = srcpath.replace(state[1], state[2])
                 make_relative_symlink(srcpath, dstpath, d)
             for dir in dirs:
                 srcpath = os.path.join(walkroot, dir)
-                dstpath = srcpath.replace(state[1], sstatebuild + state[0])
+                dstpath = srcpath.replace(state[1], state[2])
                 make_relative_symlink(srcpath, dstpath, d)
         bb.debug(2, "Preparing tree %s for packaging at %s" % (state[1], sstatebuild + state[0]))
         oe.path.copyhardlinktree(state[1], sstatebuild + state[0])
