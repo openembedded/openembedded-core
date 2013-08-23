@@ -12,6 +12,7 @@ DEPENDS = "gtk+ dbus-glib intltool-native"
 SRCREV = "cf3c325b23dae843c5499a113591cfbc98acb143"
 SRC_URI = "git://github.com/connectivity/connman-gnome.git;protocol=git \
 	   file://0001-Removed-icon-from-connman-gnome-about-applet.patch \
+       file://null_check_for_ipv4_config.patch \
 	   file://images/* \
           "
 
