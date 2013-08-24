@@ -57,7 +57,7 @@ def can_use_autotools_base(cfgdata, d):
 
     return True
 
-def can_remove_FILESPATH(cfgdata, d):
+def can_delete_FILESPATH(cfgdata, d):
     expected = cfgdata.get("FILESPATH")
     #expected = "${@':'.join([os.path.normpath(os.path.join(fp, p, o)) for fp in d.getVar('FILESPATHBASE', True).split(':') for p in d.getVar('FILESPATHPKG', True).split(':') for o in (d.getVar('OVERRIDES', True) + ':').split(':') if os.path.exists(os.path.join(fp, p, o))])}:${FILESDIR}"
     expectedpaths = d.expand(expected)
@@ -71,7 +71,7 @@ def can_remove_FILESPATH(cfgdata, d):
             return False
     return expected != unexpanded
 
-def can_remove_FILESDIR(cfgdata, d):
+def can_delete_FILESDIR(cfgdata, d):
     expected = cfgdata.get("FILESDIR")
     #expected = "${@bb.which(d.getVar('FILESPATH', True), '.')}"
     unexpanded = d.getVar("FILESDIR", 0)
@@ -87,7 +87,7 @@ def can_remove_FILESDIR(cfgdata, d):
            (expanded in filespath or
             expanded == d.expand(expected))
 
-def can_remove_others(p, cfgdata, d):
+def can_delete_others(p, cfgdata, d):
     for k in ["S", "PV", "PN", "DESCRIPTION", "DEPENDS",
               "SECTION", "PACKAGES", "EXTRA_OECONF", "EXTRA_OEMAKE"]:
     #for k in cfgdata:
@@ -113,8 +113,8 @@ python do_recipe_sanity () {
     p = "%s %s %s" % (d.getVar("PN", True), d.getVar("PV", True), d.getVar("PR", True))
 
     sanitychecks = [
-        (can_remove_FILESDIR, "candidate for removal of FILESDIR"),
-        (can_remove_FILESPATH, "candidate for removal of FILESPATH"),
+        (can_delete_FILESDIR, "candidate for removal of FILESDIR"),
+        (can_delete_FILESPATH, "candidate for removal of FILESPATH"),
         #(can_use_autotools_base, "candidate for use of autotools_base"),
         (incorrect_nonempty_PACKAGES, "native or cross recipe with non-empty PACKAGES"),
     ]
@@ -124,7 +124,7 @@ python do_recipe_sanity () {
         if func(cfgdata, d):
             __note(msg, d)
 
-    can_remove_others(p, cfgdata, d)
+    can_delete_others(p, cfgdata, d)
     var_renames_overwrite(cfgdata, d)
     req_vars(cfgdata, d)
     bad_runtime_vars(cfgdata, d)

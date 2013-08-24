@@ -125,7 +125,7 @@ rootfs_install_packages() {
 	sed -i -e "s/Status: install ok unpacked/Status: install ok installed/;" $INSTALL_ROOTFS_DEB/var/lib/dpkg/status
 }
 
-rootfs_remove_packages() {
+rootfs_uninstall_packages() {
 	# for some reason, --root doesn't really work here... We use --admindir&--instdir instead.
 	${STAGING_BINDIR_NATIVE}/dpkg --admindir=${IMAGE_ROOTFS}/var/lib/dpkg --instdir=${IMAGE_ROOTFS} -r --force-depends $@
 }

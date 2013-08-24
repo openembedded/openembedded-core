@@ -559,11 +559,11 @@ python do_archive_linux_yocto(){
 do_kernel_checkout[postfuncs] += "do_archive_linux_yocto "
 
 # remove tarball for sources, patches and logs after creating srpm.
-python do_remove_tarlist(){
+python do_delete_tarlist(){
     work_dir = d.getVar('WORKDIR', True)
     tarlist = os.path.join(work_dir, 'tar-package')
     if os.path.exists(tarlist):
         os.remove(tarlist)
 }
-do_remove_tarlist[deptask] = "do_archive_scripts_logs"
-do_package_write_rpm[postfuncs] += "do_remove_tarlist "
+do_delete_tarlist[deptask] = "do_archive_scripts_logs"
+do_package_write_rpm[postfuncs] += "do_delete_tarlist "

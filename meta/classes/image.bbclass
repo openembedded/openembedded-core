@@ -335,7 +335,7 @@ fakeroot do_rootfs () {
 	fi
 
 	# remove unneeded packages/files from the final image
-	rootfs_remove_unneeded
+	rootfs_uninstall_unneeded
 
 	insert_feed_uris
 
@@ -497,7 +497,7 @@ rootfs_install_complementary() {
     fi
 }
 
-rootfs_remove_unneeded () {
+rootfs_uninstall_unneeded () {
 	if ${@base_contains("IMAGE_FEATURES", "package-management", "false", "true", d)}; then
 		if [ -z "$(delayed_postinsts)" ]; then
 			# All packages were successfully configured.
@@ -506,7 +506,7 @@ rootfs_remove_unneeded () {
 			if [ -e ${IMAGE_ROOTFS}${sysconfdir}/init.d/run-postinsts ]; then
 				remove_run_postinsts=true
 			fi
-			rootfs_remove_packages update-rc.d base-passwd ${ROOTFS_BOOTSTRAP_INSTALL}
+			rootfs_uninstall_packages update-rc.d base-passwd ${ROOTFS_BOOTSTRAP_INSTALL}
 
 			# Need to remove rc.d files for run-postinsts by hand since opkg won't
 			# call postrm scripts in offline root mode.

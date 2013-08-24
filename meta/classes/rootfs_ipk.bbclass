@@ -136,7 +136,7 @@ rootfs_install_packages() {
 	opkg-cl ${OPKG_ARGS} install `cat $1`
 }
 
-rootfs_remove_packages() {
+rootfs_uninstall_packages() {
 	opkg-cl ${OPKG_ARGS} --force-depends remove $@
 }
 

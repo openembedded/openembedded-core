@@ -178,7 +178,7 @@ rootfs_install_packages() {
 	package_install_internal_rpm
 }
 
-rootfs_remove_packages() {
+rootfs_uninstall_packages() {
 	rpm -e --nodeps --root=${IMAGE_ROOTFS} --dbpath=/var/lib/rpm\
 		--define='_cross_scriptlet_wrapper ${WORKDIR}/scriptlet_wrapper'\
 		--define='_tmppath /install/tmp' $@
