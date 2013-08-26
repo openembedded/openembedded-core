@@ -75,7 +75,7 @@ do_install_append () {
 	rm -rf ${D}${localstatedir}
 
 	# remove empty eglibc dir
-	if [ -d ${D}${libdir}/eglibc ]; then
+	if [ -d ${D}${libdir}/eglibc -a ! -e ${D}${libdir}/eglibc/pt_chown ]; then
 		rmdir ${D}${libdir}/eglibc
 	fi
 	oe_multilib_header bits/syscall.h
