@@ -1,0 +1,190 @@
+From be97cb958f2934fa398fc8e344b25b84ebd4e90c Mon Sep 17 00:00:00 2001
+From: "Peter A. Bigot" <pab@pabigot.com>
+Date: Sun, 25 Aug 2013 19:22:09 -0500
+Subject: [PATCH] pseudo_has_unload: add function
+
+Various wrappers checked for a non-null pseudo_get_value("PSEUDO_UNLOAD") to
+determine whether the environment should include the pseudo variables.  None
+of those checks freed the returned value when it was not null.  The new
+check function does.
+
+The new check function also sees whether PSEUDO_UNLOAD was defined in the
+environment that should be used in the wrapped system call.  This allows
+pkg_postinst scripts to strip out the LD_PRELOAD setting, for example before
+invoking qemu to execute commands in an environment that does not have
+libpseudo.so.
+
+[YOCTO #4843]
+
+Upstream-Status: Pending
+Signed-off-by: Peter A. Bigot <pab@pabigot.com>
+---
+ ports/common/guts/execv.c              |    2 +-
+ ports/common/guts/execve.c             |    2 +-
+ ports/common/guts/execvp.c             |    2 +-
+ ports/common/guts/fork.c               |    2 +-
+ ports/linux/newclone/pseudo_wrappers.c |    2 +-
+ ports/linux/oldclone/pseudo_wrappers.c |    2 +-
+ ports/unix/guts/popen.c                |    2 +-
+ ports/unix/guts/system.c               |    2 +-
+ pseudo.h                               |    1 +
+ pseudo_util.c                          |   27 +++++++++++++++++++++++++++
+ 10 files changed, 36 insertions(+), 8 deletions(-)
+
+diff --git a/ports/common/guts/execv.c b/ports/common/guts/execv.c
+index 763e1f9..3e1f820 100644
+--- a/ports/common/guts/execv.c
++++ b/ports/common/guts/execv.c
+@@ -19,7 +19,7 @@
+ 	}
+ 
+ 	pseudo_setupenv();
+-	if (pseudo_get_value("PSEUDO_UNLOAD"))
++	if (pseudo_has_unload(NULL))
+ 		pseudo_dropenv();
+ 
+ 	/* if exec() fails, we may end up taking signals unexpectedly...
+diff --git a/ports/common/guts/execve.c b/ports/common/guts/execve.c
+index a003657..ff6a44e 100644
+--- a/ports/common/guts/execve.c
++++ b/ports/common/guts/execve.c
+@@ -20,7 +20,7 @@
+         }
+ 
+ 	new_environ = pseudo_setupenvp(envp);
+-	if (pseudo_get_value("PSEUDO_UNLOAD"))
++	if (pseudo_has_unload(new_environ))
+ 		new_environ = pseudo_dropenvp(new_environ);
+ 
+ 	/* if exec() fails, we may end up taking signals unexpectedly...
+diff --git a/ports/common/guts/execvp.c b/ports/common/guts/execvp.c
+index 5e75be7..04253c3 100644
+--- a/ports/common/guts/execvp.c
++++ b/ports/common/guts/execvp.c
+@@ -20,7 +20,7 @@
+         }
+ 
+ 	pseudo_setupenv();
+-	if (pseudo_get_value("PSEUDO_UNLOAD"))
++	if (pseudo_has_unload(NULL))
+ 		pseudo_dropenv();
+ 
+ 	/* if exec() fails, we may end up taking signals unexpectedly...
+diff --git a/ports/common/guts/fork.c b/ports/common/guts/fork.c
+index df8abd7..bebe3b0 100644
+--- a/ports/common/guts/fork.c
++++ b/ports/common/guts/fork.c
+@@ -12,7 +12,7 @@
+ 	 */
+ 	if (rc == 0) {
+ 		pseudo_setupenv();
+-		if (!pseudo_get_value("PSEUDO_UNLOAD")) {
++		if (!pseudo_has_unload(NULL)) {
+ 			pseudo_reinit_libpseudo();
+ 		} else {
+ 			pseudo_dropenv();
+diff --git a/ports/linux/newclone/pseudo_wrappers.c b/ports/linux/newclone/pseudo_wrappers.c
+index 9dbac42..257e8bb 100644
+--- a/ports/linux/newclone/pseudo_wrappers.c
++++ b/ports/linux/newclone/pseudo_wrappers.c
+@@ -28,7 +28,7 @@ int wrap_clone_child(void *args) {
+ 
+ 	if (!(flags & CLONE_VM)) {
+ 		pseudo_setupenv();
+-		if (!pseudo_get_value("PSEUDO_UNLOAD")) {
++		if (!pseudo_has_unload(NULL)) {
+ 			pseudo_reinit_libpseudo();
+ 		} else {
+ 			pseudo_dropenv();
+diff --git a/ports/linux/oldclone/pseudo_wrappers.c b/ports/linux/oldclone/pseudo_wrappers.c
+index c0ce5dd..598d966 100644
+--- a/ports/linux/oldclone/pseudo_wrappers.c
++++ b/ports/linux/oldclone/pseudo_wrappers.c
+@@ -22,7 +22,7 @@ int wrap_clone_child(void *args) {
+ 
+ 	if (!(flags & CLONE_VM)) {
+ 		pseudo_setupenv();
+-		if (!pseudo_get_value("PSEUDO_UNLOAD")) {
++		if (!pseudo_has_unload(NULL)) {
+ 			pseudo_reinit_libpseudo();
+ 		} else {
+ 			pseudo_dropenv();
+diff --git a/ports/unix/guts/popen.c b/ports/unix/guts/popen.c
+index 0ca16b0..5d44c0e 100644
+--- a/ports/unix/guts/popen.c
++++ b/ports/unix/guts/popen.c
+@@ -9,7 +9,7 @@
+ 	 * in ways that avoid our usual enforcement of the environment.
+ 	 */
+ 	pseudo_setupenv();
+-	if (pseudo_get_value("PSEUDO_UNLOAD"))
++	if (pseudo_has_unload(NULL))
+ 		pseudo_dropenv();
+ 
+ 	rc = real_popen(command, mode);
+diff --git a/ports/unix/guts/system.c b/ports/unix/guts/system.c
+index 028b372..6351592 100644
+--- a/ports/unix/guts/system.c
++++ b/ports/unix/guts/system.c
+@@ -9,7 +9,7 @@
+ 		return 1;
+ 
+ 	pseudo_setupenv();
+-	if (pseudo_get_value("PSEUDO_UNLOAD"))
++	if (pseudo_has_unload(NULL))
+ 		pseudo_dropenv();
+ 
+ 	rc = real_system(command);
+diff --git a/pseudo.h b/pseudo.h
+index 56760a4..f600793 100644
+--- a/pseudo.h
++++ b/pseudo.h
+@@ -28,6 +28,7 @@ extern void pseudo_init_client(void);
+ void pseudo_dump_env(char **envp);
+ int pseudo_set_value(const char *key, const char *value);
+ char *pseudo_get_value(const char *key);
++int pseudo_has_unload(char * const *envp);
+ 
+ #include "pseudo_tables.h"
+ 
+diff --git a/pseudo_util.c b/pseudo_util.c
+index 8d0969e..16c70e0 100644
+--- a/pseudo_util.c
++++ b/pseudo_util.c
+@@ -95,6 +95,33 @@ dump_env(char **envp) {
+ }
+ #endif
+ 
++int
++pseudo_has_unload(char * const *envp) {
++	static const char unload[] = "PSEUDO_UNLOAD";
++	static size_t unload_len = strlen(unload);
++	size_t i = 0;
++
++	/* Is it in the caller environment? */
++	if (NULL != getenv(unload))
++		return 1;
++
++	/* Is it in the environment cache? */
++	if (pseudo_util_initted == -1)
++		pseudo_init_util();
++	while (pseudo_env[i].key && strcmp(pseudo_env[i].key, unload))
++	       ++i;
++	if (pseudo_env[i].key && pseudo_env[i].value)
++		return 1;
++
++	/* Is it in the operational environment? */
++	while (envp && *envp) {
++		if ((!strncmp(*envp, unload, unload_len)) && ('=' == (*envp)[unload_len]))
++			return 1;
++		++envp;
++	}
++	return 0;
++}
++
+ /* Caller must free memory! */
+ char *
+ pseudo_get_value(const char *key) {
+-- 
+1.7.9.5
+
