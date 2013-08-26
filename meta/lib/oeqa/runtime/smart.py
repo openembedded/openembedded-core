@@ -1,4 +1,5 @@
 import unittest
+import re
 from oeqa.oetest import oeRuntimeTest
 from oeqa.utils.decorators import *
 from oeqa.utils.httpserver import HTTPService
@@ -19,6 +20,7 @@ class SmartTest(oeRuntimeTest):
         status, output = self.target.run(command)
         message = os.linesep.join([command, output])
         self.assertEqual(status, expected, message)
+        self.assertFalse("Cannot allocate memory" in output, message)
         return output
 
 class SmartBasicTest(SmartTest):
@@ -95,13 +97,11 @@ class SmartRepoTest(SmartTest):
 
     @skipUnlessPassed('test_smart_channel_add')
     def test_smart_install_from_http(self):
-        url = 'http://'
         output = self.smart('download --urls psplash-default')
-        for line in output.splitlines():
-            if line.startswith(url):
-                url = line
+        url = re.search('(http://.*/psplash-default.*\.rpm)', output)
+        self.assertTrue(url, msg="Couln't find download url in %s" % output)
         self.smart('remove -y psplash-default')
-        self.smart('install -y %s' % url)
+        self.smart('install -y %s' % url.group(0))
 
     @skipUnlessPassed('test_smart_install')
     def test_smart_reinstall(self):
