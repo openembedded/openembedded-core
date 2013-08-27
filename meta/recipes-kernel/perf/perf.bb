@@ -73,7 +73,7 @@ EXTRA_OEMAKE = \
 # don't override it, it'll add -m32/-m64 itself). For LDFLAGS, it was failing
 # to find bfd symbols.
 EXTRA_OEMAKE += "\
-	'CFLAGS=${CFLAGS}' \
+	'CFLAGS=${CFLAGS} -fPIC' \
 	'LDFLAGS=${LDFLAGS} -lpthread -lrt -lelf -lm -lbfd' \
 	\
 	'prefix=${prefix}' \
