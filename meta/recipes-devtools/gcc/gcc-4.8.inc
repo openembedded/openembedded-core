@@ -85,7 +85,9 @@ B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 FORTRAN = ""
 JAVA = ""
 
-EXTRA_OECONF_BASE = " --enable-lto \
+LTO = "--enable-lto"
+
+EXTRA_OECONF_BASE = "   ${LTO} \
 			--enable-libssp \
 			--disable-bootstrap \
 			--disable-libmudflap \
