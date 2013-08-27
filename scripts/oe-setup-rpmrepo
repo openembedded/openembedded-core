@@ -90,6 +90,7 @@ if [ ! -e "$CREATEREPO" ]; then
 	exit 1
 fi
 
+export PATH=${PATH}:${OECORE_NATIVE_SYSROOT}/usr/bin
 
 $CREATEREPO "$RPM_DIR"
 
