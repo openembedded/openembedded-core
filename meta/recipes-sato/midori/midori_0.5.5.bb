@@ -4,7 +4,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=fbc093901857fcd118f065f900982c24"
 DEPENDS = "webkit-gtk libsoup-2.4 openssl python-native python-docutils-native librsvg-native libnotify libunique"
 
-SRC_URI = "http://www.midori-browser.org/downloads/${PN}_${PV}_all_.tar.bz2 \
+SRC_URI = "http://www.midori-browser.org/downloads/${BPN}_${PV}_all_.tar.bz2 \
 "
 
 SRC_URI[md5sum] = "b99e87d4b73a4732ed1c1e591f0242ac"
