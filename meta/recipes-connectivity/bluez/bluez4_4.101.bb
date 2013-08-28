@@ -6,6 +6,7 @@ SRC_URI += "file://bluetooth.conf \
             file://sbc_mmx.patch \
             file://fix-udev-paths.patch \
             file://obsolete_automake_macros.patch \
+            file://network-fix-network-Connect-method-parameters.patch \
 "
 
 SRC_URI[md5sum] = "fb42cb7038c380eb0e2fa208987c96ad"
