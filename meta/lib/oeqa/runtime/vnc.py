@@ -3,7 +3,7 @@ from oeqa.utils.decorators import *
 import re
 
 def setUpModule():
-    skipModuleUnless(oeRuntimeTest.tc.target.run('which x11vnc')[0] == 0, "No x11vnc in image")
+    skipModuleUnless(oeRuntimeTest.hasPackage('x11vnc'), "No x11vnc package in image")
 
 class VNCTest(oeRuntimeTest):
 

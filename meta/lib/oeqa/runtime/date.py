@@ -2,9 +2,6 @@ from oeqa.oetest import oeRuntimeTest
 from oeqa.utils.decorators import *
 import re
 
-def setUpModule():
-    skipModuleUnless(oeRuntimeTest.tc.target.run('which date')[0] == 0, "No date in image or no connection")
-
 class DateTest(oeRuntimeTest):
 
     def setUp(self):

@@ -2,8 +2,6 @@ import unittest
 from oeqa.oetest import oeRuntimeTest
 from oeqa.utils.decorators import *
 
-def setUpModule():
-    skipModuleUnless(oeRuntimeTest.tc.target.run('which df')[0] == 0, "No df in image or no connection")
 
 class DfTest(oeRuntimeTest):
 
