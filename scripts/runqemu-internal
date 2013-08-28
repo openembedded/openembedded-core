@@ -214,6 +214,7 @@ else
             fi 
         else
             echo "Using preconfigured tap device '$TAP'"
+            echo "If this is not intended, use flock on $LOCKFILE.lock to make runqemu skip $TAP."
         fi
 
         cleanup() {
