@@ -175,12 +175,14 @@ else
         POSSIBLE=`$IFCONFIG link | grep 'tap' | awk '{print $2}' | sed s/://`
         TAP=""
         LOCKFILE=""
+        USE_PRECONF_TAP="no"
         for tap in $POSSIBLE; do
             LOCKFILE="$LOCKDIR/$tap"
             echo "Acquiring lockfile for $tap..."
             acquire_lock $LOCKFILE
             if [ $? -eq 0 ]; then
                 TAP=$tap
+                USE_PRECONF_TAP="yes"
                 break
             fi
         done
@@ -215,7 +217,7 @@ else
         fi
 
         cleanup() {
-            if [ ! -e "$NOSUDO_FLAG" ]; then
+            if [ ! -e "$NOSUDO_FLAG" -a "$USE_PRECONF_TAP" = "no" ]; then
                 # Redirect stderr since we could see a LD_PRELOAD warning here if pseudo is loaded
                 # but inactive. This looks scary but is harmless
                 sudo $QEMUIFDOWN $TAP $OECORE_NATIVE_SYSROOT 2> /dev/null
