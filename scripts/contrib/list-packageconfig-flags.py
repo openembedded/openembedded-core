@@ -23,8 +23,26 @@ import sys
 import getopt
 import os
 
+def search_bitbakepath():
+    bitbakepath = ""
+
+    # Search path to bitbake lib dir in order to load bb modules
+    if os.path.exists(os.path.join(os.path.dirname(sys.argv[0]), '../../bitbake/lib/bb')):
+        bitbakepath = os.path.join(os.path.dirname(sys.argv[0]), '../../bitbake/lib')
+        bitbakepath = os.path.abspath(bitbakepath)
+    else:
+        # Look for bitbake/bin dir in PATH
+        for pth in os.environ['PATH'].split(':'):
+            if os.path.exists(os.path.join(pth, '../lib/bb')):
+                bitbakepath = os.path.abspath(os.path.join(pth, '../lib'))
+                break
+        if not bitbakepath:
+            sys.stderr.write("Unable to find bitbake by searching parent directory of this script or PATH\n")
+            sys.exit(1)
+    return bitbakepath
+
 # For importing the following modules
-sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), '../../bitbake/lib'))
+sys.path.insert(0, search_bitbakepath())
 import bb.cache
 import bb.cooker
 import bb.providers
@@ -39,12 +57,12 @@ OPTION:
   -p, --prefer  list pkgs with preferred version
 
 EXAMPLE:
-list-packageconfig-flags.py poky/meta poky/meta-yocto
-list-packageconfig-flags.py -f poky/meta poky/meta-yocto
-list-packageconfig-flags.py -a poky/meta poky/meta-yocto
-list-packageconfig-flags.py -p poky/meta poky/meta-yocto
-list-packageconfig-flags.py -f -p poky/meta poky/meta-yocto
-list-packageconfig-flags.py -a -p poky/meta poky/meta-yocto
+list-packageconfig-flags.py
+list-packageconfig-flags.py -f
+list-packageconfig-flags.py -a
+list-packageconfig-flags.py -p
+list-packageconfig-flags.py -f -p
+list-packageconfig-flags.py -a -p
 '''
 
 def usage():
