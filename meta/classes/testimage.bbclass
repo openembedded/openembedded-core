@@ -31,7 +31,7 @@ DEFAULT_TEST_SUITES_pn-core-image-sato-sdk = "ping ssh df connman syslog xorg sc
 
 TEST_SUITES ?= "${DEFAULT_TEST_SUITES}"
 
-TEST_QEMUBOOT_TIMEOUT ?= "500"
+TEST_QEMUBOOT_TIMEOUT ?= "1000"
 
 python do_testimage() {
     testimage_main(d)
