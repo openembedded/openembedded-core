@@ -50,3 +50,17 @@ if [ ! -e "$TUNCTL" ]; then
 fi
 
 $TUNCTL -d $TAP
+
+# cleanup the remaining iptables rules
+IPTABLES=`which iptables 2> /dev/null`
+if [ "x$IPTABLES" = "x" ]; then
+	IPTABLES=/sbin/iptables
+fi
+if [ ! -x "$IPTABLES" ]; then
+	echo "$IPTABLES cannot be executed"
+	exit 1
+fi
+n=$[ (`echo $TAP | sed 's/tap//'` * 2) + 1 ]
+dest=$[ (`echo $TAP | sed 's/tap//'` * 2) + 2 ]
+$IPTABLES -D POSTROUTING -t nat -j MASQUERADE -s 192.168.7.$n/32
+$IPTABLES -D POSTROUTING -t nat -j MASQUERADE -s 192.168.7.$dest/32
