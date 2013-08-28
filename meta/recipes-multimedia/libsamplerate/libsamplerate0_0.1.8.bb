@@ -13,3 +13,5 @@ SRC_URI[sha256sum] = "93b54bdf46d5e6d2354b7034395fe329c222a966790de34520702bb964
 S = "${WORKDIR}/libsamplerate-${PV}"
 
 inherit autotools pkgconfig
+
+PACKAGECONFIG[fftw] = ",--disable-fftw,fftw"
