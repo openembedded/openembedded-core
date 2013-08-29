@@ -133,9 +133,9 @@ class QemuRunner:
                 return False
         else:
             bb.note("Qemu pid didn't appeared in %s seconds" % self.runqemutime)
+            output = self.runqemu.stdout
             self.kill()
-            bb.note("Output from runqemu: %s " % self.runqemu.stdout.read())
-            self.runqemu.stdout.close()
+            bb.note("Output from runqemu:\n%s" % output.read())
             return False
 
         return self.is_alive()
