@@ -1,0 +1,86 @@
+From 1735f6f53ca19f99c6e9e39496c486af323ba6a8 Mon Sep 17 00:00:00 2001
+From: Brian Carlson <brian.carlson@cpanel.net>
+Date: Wed, 28 Nov 2012 08:54:33 -0500
+Subject: [PATCH] Fix misparsing of maketext strings.
+
+Case 61251: This commit fixes a misparse of maketext strings that could
+lead to arbitrary code execution.  Basically, maketext was compiling
+bracket notation into functions, but neglected to escape backslashes
+inside the content or die on fully-qualified method names when
+generating the code.  This change escapes all such backslashes and dies
+when a method name with a colon or apostrophe is specified.
+---
+ AUTHORS                                     |  1 +
+ dist/Locale-Maketext/lib/Locale/Maketext.pm | 24 ++++++++----------------
+ 2 files changed, 9 insertions(+), 16 deletions(-)
+
+Upstream-Status: Backport
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+
+diff --git a/AUTHORS b/AUTHORS
+index 70734b0..009dea0 100644
+--- a/AUTHORS
++++ b/AUTHORS
+@@ -154,6 +154,7 @@ Breno G. de Oliveira		<garu@cpan.org>
+ Brent Dax			<brentdax@cpan.org>
+ Brooks D Boyd
+ Brian Callaghan			<callagh@itginc.com>
++Brian Carlson			<brian.carlson@cpanel.net>
+ Brian Clarke			<clarke@appliedmeta.com>
+ brian d foy			<brian.d.foy@gmail.com>
+ Brian Fraser			<fraserbn@gmail.com>
+diff --git a/dist/Locale-Maketext/lib/Locale/Maketext.pm b/dist/Locale-Maketext/lib/Locale/Maketext.pm
+index 4822027..63e5fba 100644
+--- a/dist/Locale-Maketext/lib/Locale/Maketext.pm
++++ b/dist/Locale-Maketext/lib/Locale/Maketext.pm
+@@ -625,21 +625,9 @@ sub _compile {
+                         # 0-length method name means to just interpolate:
+                         push @code, ' (';
+                     }
+-                    elsif($m =~ /^\w+(?:\:\:\w+)*$/s
+-                            and $m !~ m/(?:^|\:)\d/s
+-                        # exclude starting a (sub)package or symbol with a digit
++                    elsif($m =~ /^\w+$/s
++                        # exclude anything fancy, especially fully-qualified module names
+                     ) {
+-                        # Yes, it even supports the demented (and undocumented?)
+-                        #  $obj->Foo::bar(...) syntax.
+-                        $target->_die_pointing(
+-                            $string_to_compile, q{Can't use "SUPER::" in a bracket-group method},
+-                            2 + length($c[-1])
+-                        )
+-                        if $m =~ m/^SUPER::/s;
+-                        # Because for SUPER:: to work, we'd have to compile this into
+-                        #  the right package, and that seems just not worth the bother,
+-                        #  unless someone convinces me otherwise.
+-
+                         push @code, ' $_[0]->' . $m . '(';
+                     }
+                     else {
+@@ -693,7 +681,9 @@ sub _compile {
+             elsif(substr($1,0,1) ne '~') {
+                 # it's stuff not containing "~" or "[" or "]"
+                 # i.e., a literal blob
+-                $c[-1] .= $1;
++                my $text = $1;
++                $text =~ s/\\/\\\\/g;
++                $c[-1] .= $text;
+ 
+             }
+             elsif($1 eq '~~') { # "~~"
+@@ -731,7 +721,9 @@ sub _compile {
+             else {
+                 # It's a "~X" where X is not a special character.
+                 # Consider it a literal ~ and X.
+-                $c[-1] .= $1;
++                my $text = $1;
++                $text =~ s/\\/\\\\/g;
++                $c[-1] .= $text;
+             }
+         }
+     }
+-- 
+1.8.3.1
+
