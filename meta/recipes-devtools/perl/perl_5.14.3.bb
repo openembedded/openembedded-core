@@ -65,6 +65,9 @@ SRC_URI = "http://www.cpan.org/src/5.0/perl-${PV}.tar.gz \
 	file://perl-archlib-exp.patch \
 	file://dynaloaderhack.patch \
 	\
+        file://0001-Fix-misparsing-of-maketext-strings.patch \
+        file://0001-Prevent-premature-hsplit-calls-and-only-trigger-REHA.patch \
+        \
         file://config.sh \
         file://config.sh-32 \
         file://config.sh-32-le \
