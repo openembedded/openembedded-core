@@ -23,7 +23,7 @@ class SyslogTestConfig(oeRuntimeTest):
 
     @skipUnlessPassed("test_syslog_running")
     def test_syslog_logger(self):
-        (status,output) = self.target.run('logger foobar && grep foobar /var/log/messages')
+        (status,output) = self.target.run('logger foobar && test -e /var/log/messages && grep foobar /var/log/messages || logread | grep foobar')
         self.assertEqual(status, 0, msg="Test log string not found in /var/log/messages. Output: %s " % output)
 
     @skipUnlessPassed("test_syslog_running")
