@@ -1,0 +1,35 @@
+# HG changeset patch
+# User Philip Jenvey <pjenvey@underboss.org>
+# Date 1322701507 28800
+# Branch 2.7
+# Node ID e7c20a8476a0e2ca18f8040864cbc400818d8f24
+# Parent  3ecddf168f1f554a17a047384fe0b02f2d688277
+create the .pypirc securely
+
+Upstream-Status: Backport
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+
+diff -r 3ecddf168f1f -r e7c20a8476a0 Lib/distutils/config.py
+--- a/Lib/distutils/config.py	Tue Nov 29 00:53:09 2011 +0100
++++ b/Lib/distutils/config.py	Wed Nov 30 17:05:07 2011 -0800
+@@ -42,16 +42,8 @@
+     def _store_pypirc(self, username, password):
+         """Creates a default .pypirc file."""
+         rc = self._get_rc_file()
+-        f = open(rc, 'w')
+-        try:
+-            f.write(DEFAULT_PYPIRC % (username, password))
+-        finally:
+-            f.close()
+-        try:
+-            os.chmod(rc, 0600)
+-        except OSError:
+-            # should do something better here
+-            pass
++        with os.fdopen(os.open(rc, os.O_CREAT | os.O_WRONLY, 0600), 'w') as fp:
++            fp.write(DEFAULT_PYPIRC % (username, password))
+ 
+     def _read_pypirc(self):
+         """Reads the .pypirc file."""

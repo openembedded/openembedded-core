@@ -30,6 +30,8 @@ SRC_URI += "\
   file://gcc-4.8-fix-configure-Wformat.patch \
   file://fix-makefile-for-ptest.patch \
   file://run-ptest \
+  file://CVE-2013-4073_py27.patch \
+  file://pypirc-secure.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"
