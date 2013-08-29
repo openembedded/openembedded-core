@@ -3,6 +3,7 @@ require gtk+3.inc
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "http://download.gnome.org/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar.xz \
+           file://hardcoded_libtool.patch \
            file://no-x11-in-wayland.patch \
            file://wayland-attach.patch"
 
