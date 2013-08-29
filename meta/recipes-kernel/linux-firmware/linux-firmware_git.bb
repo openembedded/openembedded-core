@@ -55,7 +55,9 @@ do_install() {
 }
 
 
-PACKAGES =+ "${PN}-ralink ${PN}-sd8686 ${PN}-wl12xx ${PN}-vt6656 \
+PACKAGES =+ "${PN}-ralink \
+             ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8787 \
+             ${PN}-wl12xx ${PN}-vt6656 \
              ${PN}-rtl-license ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
              ${PN}-broadcom-license ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334 \
              ${PN}-atheros-license ${PN}-ar9170 ${PN}-ar3k ${PN}-ath6k ${PN}-ath9k \
@@ -96,12 +98,20 @@ FILES_${PN}-ralink = " \
   /lib/firmware/LICENCE.ralink-firmware.txt \
 "
 
+FILES_${PN}-marvell-license = "/lib/firmware/LICENCE.Marvell"
+
 LICENSE_${PN}-sd8686 = "Firmware-Marvell"
 FILES_${PN}-sd8686 = " \
   /lib/firmware/libertas/sd8686_v9* \
   /lib/firmware/sd8686* \
-  /lib/firmware/LICENCE.Marvell \
 "
+RDEPENDS_${PN}-sd8686 += "${PN}-marvell-license"
+
+LICENSE_${PN}-sd8787 = "Firmware-Marvell"
+FILES_${PN}-sd8787 = " \
+  /lib/firmware/mrvl/sd8787_uapsta.bin \
+"
+RDEPENDS_${PN}-sd8787 += "${PN}-marvell-license"
 
 FILES_${PN}-rtl-license = " \
   /lib/firmware/LICENCE.rtlwifi_firmware.txt \
