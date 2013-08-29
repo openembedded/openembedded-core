@@ -36,6 +36,7 @@ PACKAGES =+ "util-linux-agetty util-linux-fdisk util-linux-cfdisk util-linux-sfd
              util-linux-libblkid-dev util-linux-libuuid util-linux-libuuid-dev \
              util-linux-uuidgen util-linux-lscpu util-linux-fsck util-linux-blkid \
              util-linux-mkfs util-linux-mcookie util-linux-reset util-linux-uuidd \
+             util-linux-mkfs.cramfs util-linux-fsck.cramfs \
              util-linux-partx ${PN}-bash-completion"
 
 EXTRA_OECONF = "--libdir=${base_libdir} --disable-use-tty-group \
@@ -82,6 +83,10 @@ FILES_util-linux-lscpu = "${bindir}/lscpu"
 
 FILES_util-linux-fsck = "${base_sbindir}/fsck*"
 FILES_util-linux-mkfs = "${sbindir}/mkfs"
+
+FILES_util-linux-fsck.cramfs = "${sbindir}/fsck.cramfs"
+FILES_util-linux-mkfs.cramfs = "${sbindir}/mkfs.cramfs"
+
 
 # Util-linux' blkid replaces the e2fsprogs one
 FILES_util-linux-blkid = "${base_sbindir}/blkid*"
