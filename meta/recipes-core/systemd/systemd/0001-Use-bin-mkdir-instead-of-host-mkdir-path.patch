@@ -1,0 +1,31 @@
+From 5599ab4ae3fe74cdd9699f2874badf241f0148fe Mon Sep 17 00:00:00 2001
+From: Jonathan Liu <net147@gmail.com>
+Date: Wed, 28 Aug 2013 19:09:49 -0700
+Subject: [PATCH] Use /bin/mkdir instead of host mkdir path
+
+If the host system has /usr/bin/mkdir, autoconf would set MKDIR_P to
+/usr/bin/mkdir when it should be /bin/mkdir. As a result, the
+kmod-static-nodes service fails to start on the target because
+/usr/bin/mkdir doesn't exist. This has been observed when building
+systemd on Arch Linux host.
+
+Upstream-Status: Inappropriate [embedded specific]
+Signed-off-by: Jonathan Liu <net147@gmail.com>
+---
+ units/kmod-static-nodes.service.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/units/kmod-static-nodes.service.in b/units/kmod-static-nodes.service.in
+index d8a8420..1daed5f 100644
+--- a/units/kmod-static-nodes.service.in
++++ b/units/kmod-static-nodes.service.in
+@@ -14,5 +14,5 @@ ConditionCapability=CAP_MKNOD
+ [Service]
+ Type=oneshot
+ RemainAfterExit=yes
+-ExecStartPre=@MKDIR_P@ /run/tmpfiles.d
++ExecStartPre=/bin/mkdir -p /run/tmpfiles.d
+ ExecStart=@KMOD@ static-nodes --format=tmpfiles --output=/run/tmpfiles.d/kmod.conf
+-- 
+1.8.3.4
+

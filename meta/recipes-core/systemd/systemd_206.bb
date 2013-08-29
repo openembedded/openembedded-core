@@ -19,6 +19,7 @@ inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-altern
 
 SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
            file://0001-use-CAP_MKNOD-ConditionCapability.patch \
+           file://0001-Use-bin-mkdir-instead-of-host-mkdir-path.patch \
            file://touchscreen.rules \
            ${UCLIBCPATCHES} \
            file://00-create-volatile.conf \
