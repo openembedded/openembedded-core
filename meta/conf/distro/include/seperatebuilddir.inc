@@ -694,7 +694,6 @@ B_pn-wayland = "${SEPB}"
 B_pn-wayland-native = "${SEPB}"
 # Not even going there
 #B_pn-webkit-gtk = "${SEPB}"
-B_pn-web-webkit = "${SEPB}"
 B_pn-weston = "${SEPB}"
 B_pn-wget = "${SEPB}"
 B_pn-which = "${SEPB}"
