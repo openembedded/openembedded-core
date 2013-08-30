@@ -12,10 +12,16 @@ export GIT_PROXY_COMMAND=/home/builder/poky/scripts/oe-git-proxy
 #start pcmanfm in daemon mode to allow asynchronous launch
 pcmanfm -d&
 
-#register folders to open with PCManFM filemanager
+#register handlers for some file types
 if [ ! -d /home/builder/.local/share/applications ]; then
     mkdir -p /home/builder/.local/share/applications/
+    #register folders to open with PCManFM filemanager
     xdg-mime default pcmanfm.desktop inode/directory
+
+    #register html links and files with Midori
+    xdg-mime default midori.desktop x-scheme-handler/http
+    xdg-mime default midori.desktop x-scheme-handler/https
+    xdg-mime default midori.desktop text/html
 fi
 
 cd /home/builder/poky
