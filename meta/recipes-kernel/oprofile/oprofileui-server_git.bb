@@ -5,7 +5,7 @@ PV = "0.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://git.yoctoproject.org/oprofileui;protocol=git \
+SRC_URI = "git://git.yoctoproject.org/oprofileui \
            file://init"
 
 EXTRA_OECONF += "--disable-client --enable-server"

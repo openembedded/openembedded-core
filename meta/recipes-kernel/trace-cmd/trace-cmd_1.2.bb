@@ -11,7 +11,7 @@ PV = "1.2+git${SRCPV}"
 
 inherit pkgconfig pythonnative
 
-SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/trace-cmd.git;protocol=git \
+SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/trace-cmd.git \
            file://addldflags.patch \
            file://make-docs-optional.patch \
            file://blktrace-api-compatibility.patch \

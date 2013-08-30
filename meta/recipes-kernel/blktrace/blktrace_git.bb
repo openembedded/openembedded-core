@@ -9,7 +9,7 @@ SRCREV = "d6918c8832793b4205ed3bfede78c2f915c23385"
 PR = "r6"
 PV = "1.0.5+git${SRCPV}"
 
-SRC_URI = "git://git.kernel.dk/blktrace.git;protocol=git \
+SRC_URI = "git://git.kernel.dk/blktrace.git \
            file://ldflags.patch"
 
 S = "${WORKDIR}/git"

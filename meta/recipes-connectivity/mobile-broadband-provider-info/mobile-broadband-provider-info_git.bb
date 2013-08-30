@@ -7,7 +7,7 @@ PV = "20120614+gitr${SRCPV}"
 PE = "1"
 PR = "r0"
 
-SRC_URI = "git://git.gnome.org/mobile-broadband-provider-info;protocol=git"
+SRC_URI = "git://git.gnome.org/mobile-broadband-provider-info"
 S = "${WORKDIR}/git"
 
 inherit autotools

@@ -10,7 +10,7 @@ PR = "r5"
 # Revision corresponding to tag update-rc.d_0.7
 SRCREV = "eca680ddf28d024954895f59a241a622dd575c11"
 
-SRC_URI = "git://github.com/philb/update-rc.d.git;protocol=git \
+SRC_URI = "git://github.com/philb/update-rc.d.git \
            file://add-verbose.patch \
            file://check-if-symlinks-are-valid.patch \
           "

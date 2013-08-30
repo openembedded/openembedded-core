@@ -26,7 +26,7 @@ FILES_${PN}-cron = "${sysconfdir}/cron.daily ${sysconfdir}/default"
 
 PACKAGES =+ "${PN}-cron"
 
-SRC_URI = "git://git.yoctoproject.org/prelink-cross.git;protocol=git \
+SRC_URI = "git://git.yoctoproject.org/prelink-cross.git \
            file://prelink.conf \
            file://prelink.cron.daily \
            file://prelink.default \

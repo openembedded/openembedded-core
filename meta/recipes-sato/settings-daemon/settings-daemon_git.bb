@@ -11,7 +11,7 @@ PV = "0.0+git${SRCPV}"
 
 PR = "r0"
 
-SRC_URI = "git://git.yoctoproject.org/xsettings-daemon;protocol=git \
+SRC_URI = "git://git.yoctoproject.org/xsettings-daemon \
            file://addsoundkeys.patch;apply=yes \
            file://70settings-daemon.sh \
            file://dso_linking_change_build_fix.patch"

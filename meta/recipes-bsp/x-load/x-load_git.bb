@@ -9,9 +9,9 @@ SRCREV = "9f94c6577e3a018b6b75cbe39f32bb331871f915"
 PV = "1.5.0+git${SRCPV}"
 PR="r0"
 
-#SRC_URI = "git://www.sakoman.net/git/x-load-omap3.git;branch=master;protocol=git"
-#SRC_URI = "git://gitorious.org/x-load-omap3/mainline.git;branch=master;protocol=git"
-SRC_URI = "git://gitorious.org/x-loader/x-loader.git;branch=master;protocol=git"
+#SRC_URI = "git://www.sakoman.net/git/x-load-omap3.git;branch=master"
+#SRC_URI = "git://gitorious.org/x-load-omap3/mainline.git;branch=master"
+SRC_URI = "git://gitorious.org/x-loader/x-loader.git;branch=master"
 
 SRC_URI_append_beagleboard = " file://name.patch "
 

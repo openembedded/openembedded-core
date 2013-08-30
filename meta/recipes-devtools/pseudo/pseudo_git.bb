@@ -6,7 +6,7 @@ PR = "r0"
 
 DEFAULT_PREFERENCE = "-1"
 
-SRC_URI = "git://git.yoctoproject.org/pseudo;protocol=git"
+SRC_URI = "git://git.yoctoproject.org/pseudo"
 
 S = "${WORKDIR}/git"
 

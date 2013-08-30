@@ -14,7 +14,7 @@ PR = "r2"
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git \
+SRC_URI = "git://git.yoctoproject.org/${BPN} \
            file://owl-video-widget.png \
            file://stock_media-play.png \
            file://stock_volume-0.png \

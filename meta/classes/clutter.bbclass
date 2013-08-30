@@ -15,7 +15,7 @@ FILESPATH = "${@base_set_filespath(["${FILE_DIRNAME}/${REALNAME}-${PV}", "${FILE
 
 CLUTTER_SRC_FTP = "${GNOME_MIRROR}/${REALNAME}/${VERMINOR}/${REALNAME}-${PV}.tar.xz;name=archive"
 
-CLUTTER_SRC_GIT = "git://git.gnome.org/${REALNAME};protocol=git"
+CLUTTER_SRC_GIT = "git://git.gnome.org/${REALNAME}"
 
 SRC_URI = "${CLUTTER_SRC_FTP}"
 S = "${WORKDIR}/${REALNAME}-${PV}"

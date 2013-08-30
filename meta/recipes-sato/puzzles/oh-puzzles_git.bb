@@ -15,7 +15,7 @@ SRCREV = "92f1a20e4b72eed7a35b00984d9793b51dc2fb3b"
 PV = "0.2+git${SRCPV}"
 PR = "r10"
 
-SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git"
+SRC_URI = "git://git.yoctoproject.org/${BPN}"
 SRC_URI_append_poky = " file://oh-puzzles-owl-menu.patch;striplevel=0 "
 
 S = "${WORKDIR}/git"

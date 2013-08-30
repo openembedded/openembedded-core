@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 SRCREV = "e58138572ebddac9498b93c76770eeca7d45e3b1"
 PV = "2.3+git${SRCPV}"
 
-SRC_URI = "git://sourceware.org/git/systemtap.git;protocol=git \
+SRC_URI = "git://sourceware.org/git/systemtap.git \
            file://docproc-build-fix.patch \
            file://obsolete_automake_macros.patch \
           "

@@ -11,7 +11,7 @@ PR = "r0"
 
 RDEPENDS_${PN} = "pm-utils"
 
-SRC_URI = "git://git.debian.org/git/debian-eeepc/eeepc-acpi-scripts.git;protocol=git \
+SRC_URI = "git://git.debian.org/git/debian-eeepc/eeepc-acpi-scripts.git \
 	   file://remove-doc-check.patch \
 	   file://powerbtn.patch \
 	   file://policy-funcs "

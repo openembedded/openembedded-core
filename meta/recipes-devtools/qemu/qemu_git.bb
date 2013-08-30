@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
 PV = "1.3.0+git${SRCPV}"
 PR = "r0"
 
-SRC_URI_prepend = "git://git.qemu.org/qemu.git;protocol=git"
+SRC_URI_prepend = "git://git.qemu.org/qemu.git"
 S = "${WORKDIR}/git"
 
 DEFAULT_PREFERENCE = "-1"

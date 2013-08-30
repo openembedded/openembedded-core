@@ -12,7 +12,7 @@ SRCREV_machine_qemumips64 ?= "10a8db0603d7186633a6bf90e2308710763e718e"
 SRCREV_machine ?= "7144bcc4b8091675bfcf1941479067857b6242da"
 SRCREV_meta ?= "cd502a88148ab214b54860f97a96f41858fd6446"
 
-SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.10.git;protocol=git;bareclone=1;branch=${KBRANCH},${KMETA};name=machine,meta"
+SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.10.git;bareclone=1;branch=${KBRANCH},${KMETA};name=machine,meta"
 
 LINUX_VERSION ?= "3.10.9"
 

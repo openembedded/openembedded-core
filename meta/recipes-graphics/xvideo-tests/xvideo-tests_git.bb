@@ -8,7 +8,7 @@ SRCREV = "f8f320d0254c09ce483fc1d8ee99ecf5bc940965"
 PV = "0.1+git${SRCPV}"
 PR = "r0"
 
-SRC_URI = "git://git.yoctoproject.org/test-xvideo;protocol=git"
+SRC_URI = "git://git.yoctoproject.org/test-xvideo"
 
 S = "${WORKDIR}/git"
 

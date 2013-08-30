@@ -1,6 +1,6 @@
 require libdrm.inc
 
-SRC_URI = "git://anongit.freedesktop.org/git/mesa/drm;protocol=git"
+SRC_URI = "git://anongit.freedesktop.org/git/mesa/drm"
 
 S = "${WORKDIR}/git"
 

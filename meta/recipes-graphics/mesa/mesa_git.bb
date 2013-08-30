@@ -8,7 +8,7 @@ PR = "${INC_PR}.0"
 SRCREV = "5a925cc5504575c22dbb7d29842d7fc5babcb5c7"
 PV = "9.1.3+git${SRCPV}"
 
-SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;protocol=git \
+SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa \
            file://0001-configure-Avoid-use-of-AC_CHECK_FILE-for-cross-compi.patch \
            file://0002-pipe_loader_sw-include-xlib_sw_winsys.h-only-when-HA.patch \
            file://0003-EGL-Mutate-NativeDisplayType-depending-on-config.patch \

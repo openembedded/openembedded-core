@@ -13,7 +13,7 @@ SECTION = "base"
 DEPENDS = "util-linux attr"
 
 SRCREV = "194aa4a1bd6447bb545286d0bcb0b0be8204d79f"
-SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs.git;protocol=git"
+SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs.git"
 
 S = "${WORKDIR}/git"
 

@@ -4,7 +4,7 @@ PV = "0.9.33+git${SRCPV}"
 
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/uclibc-git' ], d)}"
 
-SRC_URI = "git://uclibc.org/uClibc.git;branch=master;protocol=git \
+SRC_URI = "git://uclibc.org/uClibc.git;branch=master \
 	file://uClibc.machine \
 	file://uClibc.distro \
 	file://obstack.cfg \

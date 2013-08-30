@@ -8,7 +8,7 @@ PV = "0.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://git.yoctoproject.org/swabber;protocol=git"
+SRC_URI = "git://git.yoctoproject.org/swabber"
 
 inherit native
 

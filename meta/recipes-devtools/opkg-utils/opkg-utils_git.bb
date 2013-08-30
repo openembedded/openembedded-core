@@ -9,7 +9,7 @@ RDEPENDS_${PN}_class-native = ""
 SRCREV = "757a1664a440c60e8126443bf984e4bdf374c327"
 PV = "0.1.8+git${SRCPV}"
 
-SRC_URI = "git://git.yoctoproject.org/opkg-utils;protocol=git \
+SRC_URI = "git://git.yoctoproject.org/opkg-utils \
            "
 
 S = "${WORKDIR}/git"

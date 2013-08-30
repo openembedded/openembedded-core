@@ -28,7 +28,7 @@ PE = "1"
 PV = "0.0+git${SRCPV}"
 PR = "r1"
 
-SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git;protocol=git"
+SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git"
 
 S = "${WORKDIR}/git"
 

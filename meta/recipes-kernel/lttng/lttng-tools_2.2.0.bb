@@ -14,7 +14,7 @@ DEPENDS = "liburcu popt lttng-ust"
 SRCREV = "eff0b2c38d24092c41bbb51926ac4e3b8c6acb83"
 PV = "v2.2.0"
 
-SRC_URI = "git://git.lttng.org/lttng-tools.git;protocol=git"
+SRC_URI = "git://git.lttng.org/lttng-tools.git"
 
 S = "${WORKDIR}/git"
 

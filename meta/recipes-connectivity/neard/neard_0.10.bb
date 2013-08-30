@@ -1,6 +1,6 @@
 require neard.inc
 
-SRC_URI = "git://git.kernel.org/pub/scm/network/nfc/neard.git;protocol=git \
+SRC_URI = "git://git.kernel.org/pub/scm/network/nfc/neard.git \
            file://neard.in \
            file://neard.service.in \
           "

@@ -13,7 +13,7 @@ SECTION = "x11/wm"
 SRCREV = "e327ff049b8503af2dadffa84370a0860b9fb682"
 PV = "0.0+git${SRCPV}"
 
-SRC_URI = "git://git.yoctoproject.org/${BPN};protocol=git"
+SRC_URI = "git://git.yoctoproject.org/${BPN}"
 
 S = "${WORKDIR}/git"
 

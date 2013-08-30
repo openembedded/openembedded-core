@@ -21,7 +21,7 @@ SRCREV = "cfaee541fea7f5760b5501913c6902f5e4da9dba"
 PV = "2.2.0"
 PE = "2"
 
-SRC_URI = "git://git.lttng.org/lttng-ust.git;protocol=git \
+SRC_URI = "git://git.lttng.org/lttng-ust.git \
 	   file://depends-liblttng-ust-tracepoin.patch \
 	   file://build-Fix-out-of-tree-build.patch \
 	   "

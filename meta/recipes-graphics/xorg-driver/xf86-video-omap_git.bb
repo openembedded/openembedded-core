@@ -28,7 +28,7 @@ SRCREV = "ae0394e687f1a77e966cf72f895da91840dffb8f"
 PR = "${INC_PR}.3"
 PV = "0.4.2+gitr${SRCPV}"
 
-SRC_URI = "git://anongit.freedesktop.org/xorg/driver/xf86-video-omap;protocol=git \
+SRC_URI = "git://anongit.freedesktop.org/xorg/driver/xf86-video-omap \
            file://configure.patch \
 "
 

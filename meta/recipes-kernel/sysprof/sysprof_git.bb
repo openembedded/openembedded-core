@@ -7,7 +7,7 @@ DEPENDS = "gtk+ libglade"
 SRCREV = "cd44ee6644c3641507fb53b8a2a69137f2971219"
 PV = "1.2.0+git${SRCPV}"
 
-SRC_URI = "git://git.gnome.org/sysprof;protocol=git \
+SRC_URI = "git://git.gnome.org/sysprof \
            file://define-NT_GNU_BUILD_ID.patch \
           "
 

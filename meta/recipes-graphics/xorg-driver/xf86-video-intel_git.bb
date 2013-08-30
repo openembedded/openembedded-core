@@ -16,7 +16,7 @@ PR = "${INC_PR}.1"
 
 EXTRA_OECONF += "--disable-xvmc --enable-dri --disable-static"
 
-SRC_URI = "git://anongit.freedesktop.org/git/xorg/driver/xf86-video-intel;protocol=git"
+SRC_URI = "git://anongit.freedesktop.org/git/xorg/driver/xf86-video-intel"
 
 S = "${WORKDIR}/git"
 

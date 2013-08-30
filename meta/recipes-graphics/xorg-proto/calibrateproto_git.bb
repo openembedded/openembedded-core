@@ -14,6 +14,6 @@ SRCREV = "1da6fd1e2c7a49648245c98481fabea8b9690a8c"
 PV = "0.0+git${SRCPV}"
 PR = "r2"
 
-SRC_URI = "git://anongit.freedesktop.org/git/xorg/proto/calibrateproto;protocol=git \
+SRC_URI = "git://anongit.freedesktop.org/git/xorg/proto/calibrateproto \
            file://fix.patch;apply=yes"
 S = "${WORKDIR}/git"
