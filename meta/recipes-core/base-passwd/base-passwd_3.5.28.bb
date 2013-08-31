@@ -1,17 +1,20 @@
 SUMMARY = "Base system master password/group files."
 DESCRIPTION = "The master copies of the user database files (/etc/passwd and /etc/group).  The update-passwd tool is also provided to keep the system databases synchronized with these master files."
 SECTION = "base"
-PR = "r2"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
+
+DEPENDS = "docbook-utils-native linuxdoc-tools-native"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/b/base-passwd/base-passwd_${PV}.tar.gz \
            file://add_shutdown.patch \
            file://nobash.patch \
-           file://input.patch"
+           file://input.patch \
+           file://disable-docs.patch \
+          "
 
-SRC_URI[md5sum] = "74245e5c21dc74d9675c77cd8dfa02e6"
-SRC_URI[sha256sum] = "258a78317aa563143d10375c6e1e63a60898e503887f00fffd70b6b297c1b429"
+SRC_URI[md5sum] = "9b535ace7ea3073435e7a6d38d62980a"
+SRC_URI[sha256sum] = "06e757a02ec0a77ea38dd3c5b35493b589f81c4b053ee38df1d32e458ee86b67"
 
 inherit autotools
 
