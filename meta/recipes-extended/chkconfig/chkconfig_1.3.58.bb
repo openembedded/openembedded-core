@@ -48,12 +48,6 @@ do_install() {
 	install -d ${D}${sysconfdir}/chkconfig.d
 }
 
-do_install_append_linuxstdbase() {
-	install -d ${D}${libdir}/lsb/
-	ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/install_initd
-	ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/remove_initd
-}
-
 PACKAGES =+ "${PN}-alternatives ${PN}-alternatives-doc"
 SUMMARY_${PN}-alternatives = "Maintain symbolic links determining default commands"
 DESCRIPTION_${PN}-alternatives = "alternatives creates, removes, maintains and displays \
@@ -67,5 +61,3 @@ FILES_${PN}-alternatives = "${sbindir}/alternatives ${sbindir}/update-alternativ
 			    ${sysconfdir}/alternatives ${localstatedir}/lib/alternatives"
 FILES_${PN}-alternatives-doc = "${mandir}/man8/alternatives.8 \
                                 ${mandir}/man8/update-alternatives.8"
-
-FILES_${PN}_append_linuxstdbase += "${libdir}/lsb"
