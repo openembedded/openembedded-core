@@ -8,8 +8,8 @@ DEPENDS = "glib-2.0-native"
 
 SRC_URI = "http://freedesktop.org/software/desktop-file-utils/releases/desktop-file-utils-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "fda5c312c9fb3b8d818fb54f2c34db82"
-SRC_URI[sha256sum] = "b6c9b860538ef1cffbcdfbc9cb578f85a080ad8c1207c8b3a39e9fd183f9782b"
+SRC_URI[md5sum] = "c6b9f9aac1ea143091178c23437e6cd0"
+SRC_URI[sha256sum] = "843532672692f98e9b2d6ae6cc8658da562dfde1606c7f33d9d227a344de56c5"
 
 inherit autotools native
 
