@@ -694,7 +694,7 @@ def check_sanity(sanity_data):
     last_sanity_version = 0
     last_tmpdir = ""
     last_sstate_dir = ""
-    sanityverfile = 'conf/sanity_info'
+    sanityverfile = sanity_data.expand("${TOPDIR}/conf/sanity_info")
     if os.path.exists(sanityverfile):
         with open(sanityverfile, 'r') as f:
             for line in f:
@@ -715,7 +715,8 @@ def check_sanity(sanity_data):
     else: 
         if last_sstate_dir != sstate_dir:
             status.addresult(check_sanity_sstate_dir_change(sstate_dir, sanity_data))
-    if os.path.exists("conf") and not status.messages:
+
+    if os.path.exists(os.path.dirname(sanityverfile)) and not status.messages:
         with open(sanityverfile, 'w') as f:
             f.write("SANITY_VERSION %s\n" % sanity_version) 
             f.write("TMPDIR %s\n" % tmpdir) 
