@@ -149,7 +149,7 @@ def get_devtable_list(d):
     if devtables == None:
         devtables = 'files/device_table-minimal.txt'
     for devtable in devtables.split():
-        str += " %s" % bb.which(d.getVar('BBPATH', True), devtable)
+        str += " %s" % bb.utils.which(d.getVar('BBPATH', True), devtable)
     return str
 
 IMAGE_CLASSES ?= "image_types"

@@ -1,4 +1,4 @@
-CCACHE = "${@bb.which(d.getVar('PATH', True), 'ccache') and 'ccache '}"
+CCACHE = "${@bb.utils.which(d.getVar('PATH', True), 'ccache') and 'ccache '}"
 export CCACHE_DIR ?= "${TMPDIR}/ccache/${MULTIMACH_HOST_SYS}/${PN}"
 CCACHE_DISABLE[unexport] = "1"
 

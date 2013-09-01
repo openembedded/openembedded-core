@@ -331,7 +331,7 @@ class QuiltTree(PatchSet):
             patch = self.patches[kwargs["patch"]]
             if not patch:
                 raise PatchError("No patch found at index %s in patchset." % kwargs["patch"])
-            (type, host, path, user, pswd, parm) = bb.decodeurl(patch["remote"])
+            (type, host, path, user, pswd, parm) = bb.fetch.decodeurl(patch["remote"])
             if type == "file":
                 import shutil
                 if not patch.get("file") and patch.get("remote"):

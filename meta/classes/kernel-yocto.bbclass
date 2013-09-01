@@ -9,7 +9,7 @@ def find_patches(d):
     patches = src_patches(d)
     patch_list=[]
     for p in patches:
-        _, _, local, _, _, _ = bb.decodeurl(p)
+        _, _, local, _, _, _ = bb.fetch.decodeurl(p)
         patch_list.append(local)
 
     return patch_list

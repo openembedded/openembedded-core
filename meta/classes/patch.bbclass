@@ -44,7 +44,7 @@ def src_patches(d, all = False ):
         if patchdir:
             patchparm['patchdir'] = patchdir
 
-        localurl = bb.encodeurl(('file', '', local, '', '', patchparm))
+        localurl = bb.fetch.encodeurl(('file', '', local, '', '', patchparm))
         patches.append(localurl)
 
     if all:
@@ -147,7 +147,7 @@ python patch_do_patch() {
     os.environ['TMPDIR'] = process_tmpdir
 
     for patch in src_patches(d):
-        _, _, local, _, _, parm = bb.decodeurl(patch)
+        _, _, local, _, _, parm = bb.fetch.decodeurl(patch)
 
         if "patchdir" in parm:
             patchdir = parm["patchdir"]

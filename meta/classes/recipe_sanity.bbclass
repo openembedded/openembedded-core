@@ -73,7 +73,7 @@ def can_delete_FILESPATH(cfgdata, d):
 
 def can_delete_FILESDIR(cfgdata, d):
     expected = cfgdata.get("FILESDIR")
-    #expected = "${@bb.which(d.getVar('FILESPATH', True), '.')}"
+    #expected = "${@bb.utils.which(d.getVar('FILESPATH', True), '.')}"
     unexpanded = d.getVar("FILESDIR", 0)
     if unexpanded is None:
         return False

@@ -220,7 +220,7 @@ python do_package_deb () {
         basedir = os.path.join(os.path.dirname(root))
 
         pkgoutdir = os.path.join(outdir, localdata.getVar('PACKAGE_ARCH', True))
-        bb.mkdirhier(pkgoutdir)
+        bb.utils.mkdirhier(pkgoutdir)
 
         os.chdir(root)
         from glob import glob
@@ -236,7 +236,7 @@ python do_package_deb () {
             continue
 
         controldir = os.path.join(root, 'DEBIAN')
-        bb.mkdirhier(controldir)
+        bb.utils.mkdirhier(controldir)
         os.chmod(controldir, 0755)
         try:
             ctrlfile = open(os.path.join(controldir, 'control'), 'w')

@@ -34,7 +34,7 @@ python gcc_multilib_setup() {
             rel_path = os.path.relpath(fn, src_conf_dir)
             parent_dir = os.path.dirname(rel_path)
             bb.utils.mkdirhier('%s/%s' % (build_conf_dir, parent_dir))
-            bb.copyfile(fn, '%s/%s' % (build_conf_dir, rel_path))
+            bb.utils.copyfile(fn, '%s/%s' % (build_conf_dir, rel_path))
 
     multilibs = (d.getVar('MULTILIB_VARIANTS', True) or '').split()
     if not multilibs:

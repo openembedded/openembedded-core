@@ -20,7 +20,7 @@ def emit_terminal_func(command, envdata, d):
     runfmt = d.getVar('BB_RUNFMT', True) or "run.{func}.{pid}"
     runfile = runfmt.format(func=cmd_func, task=cmd_func, taskfunc=cmd_func, pid=os.getpid())
     runfile = os.path.join(d.getVar('T', True), runfile)
-    bb.mkdirhier(os.path.dirname(runfile))
+    bb.utils.mkdirhier(os.path.dirname(runfile))
 
     with open(runfile, 'w') as script:
         script.write('#!/bin/sh -e\n')

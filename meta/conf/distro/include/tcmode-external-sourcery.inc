@@ -114,7 +114,7 @@ def populate_toolchain_links(d):
         bb.fatal("Unable to populate toolchain binary symlinks in %s" % pattern)
 
     bindir = d.getVar('STAGING_BINDIR_TOOLCHAIN', True)
-    bb.mkdirhier(bindir)
+    bb.utils.mkdirhier(bindir)
     for f in files:
         base = os.path.basename(f)
         newpath = os.path.join(bindir, base)

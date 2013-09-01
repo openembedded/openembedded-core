@@ -33,7 +33,7 @@ python do_prepare_copyleft_sources () {
     pf = d.getVar('PF', True)
     dest = os.path.join(sources_dir, pf)
     shutil.rmtree(dest, ignore_errors=True)
-    bb.mkdirhier(dest)
+    bb.utils.mkdirhier(dest)
 
     for u in ud.values():
         local = os.path.normpath(fetch.localpath(u.url))
@@ -51,7 +51,7 @@ python do_prepare_copyleft_sources () {
 
     patches = src_patches(d)
     for patch in patches:
-        _, _, local, _, _, parm = bb.decodeurl(patch)
+        _, _, local, _, _, parm = bb.fetch.decodeurl(patch)
         patchdir = parm.get('patchdir')
         if patchdir:
             series = os.path.join(dest, 'series.subdir.%s' % patchdir.replace('/', '_'))

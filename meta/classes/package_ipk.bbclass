@@ -253,7 +253,7 @@ python do_package_ipk () {
         basedir = os.path.join(os.path.dirname(root))
         arch = localdata.getVar('PACKAGE_ARCH', True)
         pkgoutdir = "%s/%s" % (outdir, arch)
-        bb.mkdirhier(pkgoutdir)
+        bb.utils.mkdirhier(pkgoutdir)
         os.chdir(root)
         from glob import glob
         g = glob('*')
@@ -268,7 +268,7 @@ python do_package_ipk () {
             continue
 
         controldir = os.path.join(root, 'CONTROL')
-        bb.mkdirhier(controldir)
+        bb.utils.mkdirhier(controldir)
         try:
             ctrlfile = open(os.path.join(controldir, 'control'), 'w')
         except OSError:

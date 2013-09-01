@@ -129,9 +129,9 @@ def add_package_and_files(d):
             d.setVar('RRECOMMENDS_' + pn, "%s" % (pn_lic))
 
 def copy_license_files(lic_files_paths, destdir):
-    bb.mkdirhier(destdir)
+    bb.utils.mkdirhier(destdir)
     for (basename, path) in lic_files_paths:
-        ret = bb.copyfile(path, os.path.join(destdir, basename))
+        ret = bb.utils.copyfile(path, os.path.join(destdir, basename))
         # If the copy didn't occur, something horrible went wrong and we fail out
         if not ret:
             bb.warn("%s could not be copied for some reason. It may not exist. WARN for now." % path)
@@ -188,7 +188,7 @@ def find_license_files(d):
 
     def find_license(license_type):
         try:
-            bb.mkdirhier(gen_lic_dest)
+            bb.utils.mkdirhier(gen_lic_dest)
         except:
             pass
         spdx_generic = None
@@ -227,7 +227,7 @@ def find_license_files(d):
         return lic_files_paths
 
     for url in lic_files.split():
-        (type, host, path, user, pswd, parm) = bb.decodeurl(url)
+        (type, host, path, user, pswd, parm) = bb.fetch.decodeurl(url)
         # We want the license filename and path
         srclicfile = os.path.join(srcdir, path)
         lic_files_paths.append((os.path.basename(path), srclicfile))

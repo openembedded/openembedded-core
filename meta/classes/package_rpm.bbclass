@@ -1069,7 +1069,7 @@ python do_package_rpm () {
             clean_licenses = get_licenses(d)
             pkgwritesrpmdir = bb.data.expand('${PKGWRITEDIRSRPM}/${PACKAGE_ARCH_EXTEND}', d)
             pkgwritesrpmdir = pkgwritesrpmdir + '/' + clean_licenses
-            bb.mkdirhier(pkgwritesrpmdir)
+            bb.utils.mkdirhier(pkgwritesrpmdir)
             os.chmod(pkgwritesrpmdir, 0755)
             return pkgwritesrpmdir
             
@@ -1123,7 +1123,7 @@ python do_package_rpm () {
     pkgwritedir = d.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH_EXTEND}')
     pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}${TARGET_VENDOR}-${TARGET_OS}')
     magicfile = d.expand('${STAGING_DIR_NATIVE}${datadir_native}/misc/magic.mgc')
-    bb.mkdirhier(pkgwritedir)
+    bb.utils.mkdirhier(pkgwritedir)
     os.chmod(pkgwritedir, 0755)
 
     cmd = rpmbuild

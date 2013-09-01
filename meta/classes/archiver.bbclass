@@ -99,7 +99,7 @@ def get_bb_inc(d):
     licenses = get_licenses(d)
     script_logs = os.path.join(work_dir, 'script-logs/'+ target_sys + '/' + licenses + '/' + pf + '/script-logs')
     bb_inc = os.path.join(script_logs, 'bb_inc')
-    bb.mkdirhier(bb_inc)
+    bb.utils.mkdirhier(bb_inc)
 
     def find_file(dir, file):
         for root, dirs, files in os.walk(dir):
@@ -139,7 +139,7 @@ def get_logs(d):
     script_logs = os.path.join(work_dir, 'script-logs/'+ target_sys + '/' + licenses + '/' + pf + '/script-logs')
 
     try:
-        bb.mkdirhier(os.path.join(script_logs, 'temp'))
+        bb.utils.mkdirhier(os.path.join(script_logs, 'temp'))
         oe.path.copytree(os.path.join(work_dir, 'temp'), os.path.join(script_logs, 'temp'))
     except (IOError, AttributeError):
         pass
@@ -158,7 +158,7 @@ def get_series(d):
     s = d.getVar('S', True)
     dest = os.path.join(work_dir, pf + '-series')
     shutil.rmtree(dest, ignore_errors=True)
-    bb.mkdirhier(dest)
+    bb.utils.mkdirhier(dest)
 
     src_uri = d.getVar('SRC_URI', True).split()
     fetch = bb.fetch2.Fetch(src_uri, d)
@@ -175,7 +175,7 @@ def get_series(d):
             shutil.copy(patch, dest)
         except IOError:
             if os.path.isdir(patch):
-                bb.mkdirhier(os.path.join(dest, patch))
+                bb.utils.mkdirhier(os.path.join(dest, patch))
                 oe.path.copytree(patch, os.path.join(dest, patch))
     return dest
 
@@ -190,11 +190,11 @@ def get_applying_patches(d):
     work_dir = d.getVar('WORKDIR', True)
     dest = os.path.join(work_dir, pf + '-patches')
     shutil.rmtree(dest, ignore_errors=True)
-    bb.mkdirhier(dest)
+    bb.utils.mkdirhier(dest)
 
     patches = src_patches(d)
     for patch in patches:
-        _, _, local, _, _, parm = bb.decodeurl(patch)
+        _, _, local, _, _, parm = bb.fetch.decodeurl(patch)
         if local:
              shutil.copy(local, dest)
     return dest
@@ -357,7 +357,7 @@ def move_tarball_deploy(d, tarball_list):
     work_dir = d.getVar('WORKDIR', True)
     tar_sources = d.getVar('DEPLOY_DIR', True) + '/sources/' + target_sys + '/' + licenses + '/' + pf
     if not os.path.exists(tar_sources):
-        bb.mkdirhier(tar_sources)
+        bb.utils.mkdirhier(tar_sources)
     for source in tarball_list:
         if source:
             if os.path.exists(os.path.join(tar_sources, source)):
@@ -459,7 +459,7 @@ def dumpdata(d):
     licenses = get_licenses(d)
     dumpdir = os.path.join(workdir, 'diffgz-envdata/'+ target_sys + '/' + licenses + '/' + pf )
     if not os.path.exists(dumpdir):
-        bb.mkdirhier(dumpdir)
+        bb.utils.mkdirhier(dumpdir)
 
     dumpfile = os.path.join(dumpdir, bb.data.expand("${P}-${PR}.showdata.dump", d))
 
@@ -499,7 +499,7 @@ def create_diff_gz(d):
     distro = d.getVar('DISTRO',True) or ""
     dest = s + '/' + distro + '/files'
     if not os.path.exists(dest):
-        bb.mkdirhier(dest)
+        bb.utils.mkdirhier(dest)
     for i in os.listdir(os.getcwd()):
         if os.path.isfile(i):
             try:

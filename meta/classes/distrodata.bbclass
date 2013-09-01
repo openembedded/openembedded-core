@@ -591,7 +591,7 @@ python do_checkpkg() {
         pupver = "N/A"
         pstatus = "ErrUnknown"
 
-        (type, host, path, user, pswd, parm) = bb.decodeurl(uri)
+        (type, host, path, user, pswd, parm) = bb.fetch.decodeurl(uri)
         if type in ['http', 'https', 'ftp']:
                 if d.getVar('PRSPV', True):
                     pcurver = d.getVar('PRSPV', True)
@@ -621,7 +621,7 @@ python do_checkpkg() {
                         dirver = m.group().strip("/")
 
                         """use new path and remove param. for wget only param is md5sum"""
-                        alturi = bb.encodeurl([type, host, altpath, user, pswd, {}])
+                        alturi = bb.fetch.encodeurl([type, host, altpath, user, pswd, {}])
                         my_uri = d.getVar('REGEX_URI', True)
                         if my_uri:
                             if d.getVar('PRSPV', True):
@@ -647,7 +647,7 @@ python do_checkpkg() {
 
                         chk_uri = d.getVar('REGEX_URI', True)
                         if not chk_uri:
-                                alturi = bb.encodeurl([type, host, altpath, user, pswd, {}])
+                                alturi = bb.fetch.encodeurl([type, host, altpath, user, pswd, {}])
                         else:
                                 alturi = chk_uri
                         newver = check_new_version(alturi, curname, d)

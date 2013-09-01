@@ -573,7 +573,7 @@ python () {
         d.appendVarFlag('do_fetch', 'depends', ' osc-native:do_populate_sysroot')
 
     # *.xz should depends on xz-native for unpacking
-    # Not endswith because of "*.patch.xz;patch=1". Need bb.decodeurl in future
+    # Not endswith because of "*.patch.xz;patch=1". Need bb.fetch.decodeurl in future
     if '.xz' in srcuri:
         d.appendVarFlag('do_unpack', 'depends', ' xz-native:do_populate_sysroot')
 

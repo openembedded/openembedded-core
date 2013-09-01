@@ -45,9 +45,9 @@ python do_spdx () {
     cur_ver_code = get_ver_code( info['sourcedir'] ) 
     cache_cur = False
     if not os.path.exists( spdx_sstate_dir ):
-        bb.mkdirhier( spdx_sstate_dir )
+        bb.utils.mkdirhier( spdx_sstate_dir )
     if not os.path.exists( info['spdx_temp_dir'] ):
-        bb.mkdirhier( info['spdx_temp_dir'] )
+        bb.utils.mkdirhier( info['spdx_temp_dir'] )
     if os.path.exists( sstatefile ):
         ## cache for this package exists. read it in
         cached_spdx = get_cached_spdx( sstatefile )
