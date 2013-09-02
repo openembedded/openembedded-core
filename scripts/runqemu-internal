@@ -42,22 +42,22 @@ if [ ! -z "$mem_set" ] ; then
 else
     case "$MACHINE" in
         "qemux86")
-            mem_size=128
+            mem_size=256
             ;;
         "qemux86-64")
-            mem_size=128
+            mem_size=256
             ;;
         "qemuarm")
-            mem_size=128
+            mem_size=256
             ;;
         "qemumicroblaze")
             mem_size=64
             ;;
         "qemumips"|"qemumips64")
-            mem_size=128
+            mem_size=256
             ;;
         "qemuppc")
-            mem_size=128
+            mem_size=256
             ;;
         "qemush4")
             mem_size=1024
