@@ -34,11 +34,11 @@ if [ -z "$SSTATE_MANIFESTS" -o -z "$STAGING_DIR" -o -z "$STAMPS_DIR" ]; then
 fi
 
 # The sysroots themselves
-rm -rf "$STAGING_DIR"
+rm -rf $STAGING_DIR
 
 # The stamps that said the sysroot was populated
-rm -rf "$STAMPS_DIR/*/*/*.do_populate_sysroot.*"
-rm -rf "$STAMPS_DIR/*/*/*.do_populate_sysroot_setscene.*"
+rm -rf $STAMPS_DIR/*/*/*.do_populate_sysroot.*
+rm -rf $STAMPS_DIR/*/*/*.do_populate_sysroot_setscene.*
 
 # The sstate manifests
-rm -rf "$SSTATE_MANIFESTS/manifest-*.populate-sysroot"
+rm -rf $SSTATE_MANIFESTS/manifest-*.populate-sysroot
