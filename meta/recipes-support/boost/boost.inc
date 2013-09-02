@@ -11,14 +11,12 @@ BOOST_LIBS = "\
 	iostreams \
 	program_options \
 	regex \
+	serialization \
 	signals \
 	system \
 	test \
 	thread \
 	"
-
-# FIXME: for some reason this fails on powerpc
-#BOOST_LIBS += "serialization"
 
 # To enable python, uncomment the following:
 #BOOST_LIBS += "python"
