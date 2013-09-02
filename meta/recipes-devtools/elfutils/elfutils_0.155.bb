@@ -19,7 +19,6 @@ SRC_URI += "\
         file://arm_backend.diff \
         file://mips_backend.diff \
         file://m68k_backend.diff \
-        file://do-autoreconf.diff \
         file://elf_additions.diff \
         file://mempcpy.patch \
 	file://dso-link-change.patch \

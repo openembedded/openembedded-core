@@ -23,7 +23,6 @@ SRC_URI += "\
         file://arm_backend.diff \
         file://mips_backend.diff \
         file://m68k_backend.diff \
-        file://do-autoreconf.diff \
         file://testsuite-ignore-elflint.diff \
         file://elf_additions.diff \
 	file://elfutils-fsize.patch \
