@@ -186,6 +186,38 @@ def read_value(args, usage):
                 qvar = "%s_%s" % (var, mappedpkg)
             print(readvar(revlink, qvar))
 
+def find_path(args, usage):
+    if len(args) < 2:
+        usage()
+        sys.exit(1)
+
+    pkgdata_dir = args[0]
+    targetpath = args[1]
+
+    if not os.path.exists(pkgdata_dir):
+        print('ERROR: Unable to find pkgdata directory %s' % pkgdata_dir)
+        sys.exit(1)
+
+    import ast
+    import fnmatch
+
+    for root, dirs, files in os.walk(os.path.join(pkgdata_dir, 'runtime')):
+        for fn in files:
+            pkgsplitname = '/packages-split/%s' % fn
+            with open(os.path.join(root,fn)) as f:
+                for line in f:
+                    if line.startswith('FILES_INFO:'):
+                        val = line.split(':', 1)[1].strip().replace('\\\'', '\'')
+                        dictval = ast.literal_eval(val)
+                        for parent, dirlist in dictval.items():
+                            idx = parent.find(pkgsplitname)
+                            if idx > -1:
+                                parent = parent[idx+len(pkgsplitname):]
+                            for basename in dirlist:
+                                fullpth = os.path.join(parent, basename)
+                                if fnmatch.fnmatchcase(fullpth, targetpath):
+                                    print("%s: %s" % (fn, fullpth))
+
 
 def main():
     parser = optparse.OptionParser(
@@ -195,6 +227,8 @@ Available commands:
     glob <pkgdatadir> <pkglistfile> "<globs>"
         expand one or more glob expressions over the packages listed in
         pkglistfile (one package per line)
+    find-path <pkgdatadir> <path>
+        find the package providing the specified path (wildcards * ? allowed)
     read-value <pkgdatadir> <value-name> "<pkgs>"
         read the named value from the pkgdata files for the specified
         packages''')
@@ -212,6 +246,8 @@ Available commands:
 
     if args[0] == "glob":
         glob(args[1:], parser.print_help)
+    elif args[0] == "find-path":
+        find_path(args[1:], parser.print_help)
     elif args[0] == "read-value":
         read_value(args[1:], parser.print_help)
     else:
