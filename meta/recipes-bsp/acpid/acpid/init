@@ -6,8 +6,12 @@ test -d /proc/acpi || exit 0
 case "$1" in
   start)
     echo -n "Starting Advanced Configuration and Power Interface daemon: "
-    start-stop-daemon -S -x /usr/sbin/acpid -- -c /etc/acpi/events
-    echo "acpid."
+    if [ ! -d /etc/acpi/events ]; then
+        echo "There is not any rule configuration file."
+    else
+        start-stop-daemon -S -x /usr/sbin/acpid -- -c /etc/acpi/events
+        echo "acpid."
+    fi
     ;;
   stop)
     echo -n "Stopping Advanced Configuration and Power Interface daemon: "
