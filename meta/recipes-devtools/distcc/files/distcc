@@ -35,6 +35,9 @@ test -x $DAEMON || exit 0
 
 set -e
 
+# Source function library.
+. /etc/init.d/functions
+
 # construct access list
 ALLOW=""
 for net in $ALLOWEDNETS
@@ -94,9 +97,14 @@ case "$1" in
 	}
 	echo "."
 	;;
+
+   status)
+	status $DAEMON
+	exit $?
+	;;
   *)
 	N=/etc/init.d/$NAME
-	echo "Usage: $N {start|stop|restart|force-reload}" >&2
+	echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
 	exit 1
 	;;
 esac
