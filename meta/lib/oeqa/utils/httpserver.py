@@ -15,12 +15,13 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 class HTTPService(object):
 
-    def __init__(self, root_dir):
+    def __init__(self, root_dir, host=''):
         self.root_dir = root_dir
+        self.host = host
         self.port = 0
 
     def start(self):
-        self.server = HTTPServer(('', self.port), HTTPRequestHandler)
+        self.server = HTTPServer((self.host, self.port), HTTPRequestHandler)
         if self.port == 0:
             self.port = self.server.server_port
         self.process = multiprocessing.Process(target=self.server.server_start, args=[self.root_dir])

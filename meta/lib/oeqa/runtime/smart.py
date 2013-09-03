@@ -17,7 +17,7 @@ class SmartTest(oeRuntimeTest):
     @skipUnlessPassed('test_smart_help')
     def smart(self, command, expected = 0):
         command = 'smart %s' % command
-        status, output = self.target.run(command)
+        status, output = self.target.run(command, 500)
         message = os.linesep.join([command, output])
         self.assertEqual(status, expected, message)
         self.assertFalse("Cannot allocate memory" in output, message)
@@ -48,7 +48,7 @@ class SmartRepoTest(SmartTest):
 
     @classmethod
     def setUpClass(self):
-        self.repo_server = HTTPService(oeRuntimeTest.tc.d.getVar('DEPLOY_DIR', True))
+        self.repo_server = HTTPService(oeRuntimeTest.tc.d.getVar('DEPLOY_DIR', True), oeRuntimeTest.tc.qemu.host_ip)
         self.repo_server.start()
 
     @classmethod
