@@ -15,6 +15,7 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://Makefile-ptest.patch \
            file://add-march-i486-into-CFLAGS-automatically.patch \
            file://run-ptest \
+           file://glib-2.0-configure-readlink.patch \
           "
 
 SRC_URI_append_class-native = " file://glib-gettextize-dir.patch"
