@@ -8,6 +8,9 @@
 # Short-Description: Infrared port support
 ### END INIT INFO
 
+# Source function library.
+. /etc/init.d/functions
+
 module_id() {
         awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
 }
@@ -62,9 +65,13 @@ case "$1" in
 		killall irattach > /dev/null 2>&1
         echo "$NAME."
         ;;
+  status)
+	status irattach
+	exit $?
+	;;
   *)
         N=/etc/init.d/$NAME
-        echo "Usage: $N {start|stop|restart|force-reload}" >&2
+        echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
         exit 1
         ;;
 esac
