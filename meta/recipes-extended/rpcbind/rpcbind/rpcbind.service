@@ -1,0 +1,14 @@
+[Unit]
+Description=RPC Bind
+After=network.target
+Wants=rpcbind.target
+Before=rpcbind.target
+
+[Service]
+Type=forking
+EnvironmentFile=-@SYSCONFDIR@/rpcbind.conf
+ExecStart=@SBINDIR@/rpcbind -w $RPCBIND_OPTS
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

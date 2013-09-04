@@ -15,6 +15,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/rpcbind/rpcbind-${PV}.tar.bz2 \
            file://fix_host_path.patch \
            file://obsolete_automake_macros.patch \
            ${UCLIBCPATCHES} \
+           file://rpcbind.conf \
+           file://rpcbind.service \
           "
 
 UCLIBCPATCHES_libc-uclibc = "file://0001-uclibc-nss.patch \
@@ -27,13 +29,18 @@ SRC_URI[sha256sum] = "c92f263e0353887f16379d7708ef1fb4c7eedcf20448bc1e4838f59497
 
 PR = "r4"
 
-inherit autotools update-rc.d
+inherit autotools update-rc.d systemd
 
 PACKAGECONFIG ??= "tcp-wrappers"
 PACKAGECONFIG[tcp-wrappers] = "--enable-libwrap,--disable-libwrap,tcp-wrappers"
 
 INITSCRIPT_NAME = "rpcbind"
 INITSCRIPT_PARAMS = "start 43 S . start 32 0 6 . stop 81 1 ."
+
+SYSTEMD_SERVICE_${PN} = "rpcbind.service"
+SYSTEMD_AUTO_ENABLE = "disable"
+
+EXTRA_OECONF += " --enable-warmstarts "
 
 do_install_append () {
 	mv ${D}${bindir} ${D}${sbindir}
@@ -43,4 +50,11 @@ do_install_append () {
 		-e 's,/sbin/,${sbindir}/,g' \
 		${WORKDIR}/init.d > ${D}${sysconfdir}/init.d/rpcbind
 	chmod 0755 ${D}${sysconfdir}/init.d/rpcbind
+
+	install -m 0755 ${WORKDIR}/rpcbind.conf ${D}${sysconfdir}
+	install -d ${D}${systemd_unitdir}/system
+	install -m 0644 ${WORKDIR}/rpcbind.service ${D}${systemd_unitdir}/system
+	sed -i -e 's,@SBINDIR@,${sbindir},g' \
+		-e 's,@SYSCONFDIR@,${sysconfdir},g' \
+		${D}${systemd_unitdir}/system/rpcbind.service
 }
