@@ -1386,7 +1386,7 @@ python package_do_shlibs() {
 
         if (file.endswith('.dylib') or file.endswith('.so')) and not pkg.endswith('-dev') and not pkg.endswith('-dbg'):
             # Drop suffix
-            name = file.rsplit(".",1)[0]
+            name = os.path.basename(file).rsplit(".",1)[0]
             # Find all combinations
             combos = get_combinations(name)
             for combo in combos:
