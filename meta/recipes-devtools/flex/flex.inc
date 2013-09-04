@@ -13,6 +13,10 @@ inherit autotools gettext
 M4 = "${bindir}/m4"
 M4_class-native = "${STAGING_BINDIR_NATIVE}/m4"
 
-do_install_append() {
+do_install_append_class-native() {
+	create_wrapper ${D}/${bindir}/flex M4=${M4}
+}
+
+do_install_append_class-nativesdk() {
 	create_wrapper ${D}/${bindir}/flex M4=${M4}
 }
