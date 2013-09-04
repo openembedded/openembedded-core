@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenSSH Per-Connection Daemon
+After=sshdgenkeys.service
+
+[Service]
+ExecStart=-@SBINDIR@/sshd -i
+ExecReload=@BASE_BINDIR@/kill -HUP $MAINPID
+StandardInput=socket
+StandardError=syslog

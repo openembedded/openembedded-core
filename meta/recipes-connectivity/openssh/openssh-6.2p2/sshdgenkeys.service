@@ -1,0 +1,10 @@
+[Unit]
+Description=SSH Key Generation
+
+[Service]
+ExecStart=@BINDIR@/ssh-keygen -A
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

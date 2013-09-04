@@ -26,20 +26,26 @@ SRC_URI = "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.
            file://init \
            file://openssh-CVE-2011-4327.patch \
            file://mac.patch \
-           ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)}"
+           ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
+           file://sshd.socket \
+           file://sshd@.service \
+           file://sshdgenkeys.service "
 
 PAM_SRC_URI = "file://sshd"
 
 SRC_URI[md5sum] = "be46174dcbb77ebb4ea88ef140685de1"
 SRC_URI[sha256sum] = "7f29b9d2ad672ae0f9e1dcbff871fc5c2e60a194e90c766432e32161b842313b"
 
-inherit useradd update-rc.d update-alternatives
+inherit useradd update-rc.d update-alternatives systemd
 
 USERADD_PACKAGES = "${PN}-sshd"
 USERADD_PARAM_${PN}-sshd = "--system --no-create-home --home-dir /var/run/sshd --shell /bin/false --user-group sshd"
 INITSCRIPT_PACKAGES = "${PN}-sshd"
 INITSCRIPT_NAME_${PN}-sshd = "sshd"
 INITSCRIPT_PARAMS_${PN}-sshd = "defaults 9"
+
+SYSTEMD_PACKAGES = "${PN}-sshd"
+SYSTEMD_SERVICE_${PN}-sshd = "sshd.socket sshd@.service sshdgenkeys.service"
 
 PACKAGECONFIG ??= "tcp-wrappers"
 PACKAGECONFIG[tcp-wrappers] = "--with-tcp-wrappers,,tcp-wrappers"
@@ -93,6 +99,15 @@ do_install_append () {
 	echo "HostKey /var/run/ssh/ssh_host_rsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
 	echo "HostKey /var/run/ssh/ssh_host_dsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
 	echo "HostKey /var/run/ssh/ssh_host_ecdsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+
+	install -d ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${WORKDIR}/sshd.socket ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${WORKDIR}/sshd@.service ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${WORKDIR}/sshdgenkeys.service ${D}${systemd_unitdir}/system
+	sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+		-e 's,@SBINDIR@,${sbindir},g' \
+		-e 's,@BINDIR@,${bindir},g' \
+		${D}${systemd_unitdir}/system/sshd.socket ${D}${systemd_unitdir}/system/*.service
 }
 
 ALLOW_EMPTY_${PN} = "1"
