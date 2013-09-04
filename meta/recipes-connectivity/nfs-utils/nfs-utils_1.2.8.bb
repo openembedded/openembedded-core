@@ -15,7 +15,11 @@ RRECOMMENDS_${PN} = "kernel-module-nfsd"
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.bz2 \
            file://nfs-utils-1.0.6-uclibc.patch \
            file://nfs-utils-1.2.3-sm-notify-res_init.patch \
-           file://nfsserver"
+           file://nfsserver \
+           file://nfs-utils.conf \
+           file://nfs-server.service \
+           file://nfs-mountd.service \
+           file://nfs-statd.service "
 
 SRC_URI[md5sum] = "6e7d97de51e428a0b8698c16ca23db77"
 SRC_URI[sha256sum] = "1cc8f02a633eddbf0a1d93421f331479c4cdab4c5ab33b8bf8c7c369f9156ac6"
@@ -31,7 +35,10 @@ INITSCRIPT_NAME = "nfsserver"
 # in the shutdown levels, but that works fine.
 INITSCRIPT_PARAMS = "defaults"
 
-inherit autotools update-rc.d
+inherit autotools update-rc.d systemd
+
+SYSTEMD_SERVICE_${PN} = "nfs-server.service nfs-mountd.service nfs-statd.service"
+SYSTEMD_AUTO_ENABLE = "disable"
 
 # --enable-uuid is need for cross-compiling
 EXTRA_OECONF = "--with-statduser=nobody \
@@ -65,6 +72,16 @@ do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
 	install -d ${D}${localstatedir}/lib/nfs/statd
 	install -m 0755 ${WORKDIR}/nfsserver ${D}${sysconfdir}/init.d/nfsserver
+
+	install -m 0755 ${WORKDIR}/nfs-utils.conf ${D}${sysconfdir}
+	install -d ${D}${systemd_unitdir}/system
+	install -m 0644 ${WORKDIR}/nfs-server.service ${D}${systemd_unitdir}/system/
+	install -m 0644 ${WORKDIR}/nfs-mountd.service ${D}${systemd_unitdir}/system/
+	install -m 0644 ${WORKDIR}/nfs-statd.service ${D}${systemd_unitdir}/system/
+	sed -i -e 's,@SBINDIR@,${sbindir},g' \
+		-e 's,@SYSCONFDIR@,${sysconfdir},g' \
+		${D}${systemd_unitdir}/system/*.service
+
 	# kernel code as of 3.8 hard-codes this path as a default
 	install -d ${D}/var/lib/nfs/v4recovery
 
