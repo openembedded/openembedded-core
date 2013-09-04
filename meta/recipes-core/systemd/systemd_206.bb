@@ -262,7 +262,7 @@ python __anonymous() {
 # TODO:
 # u-a for runlevel and telinit
 
-ALTERNATIVE_${PN} = "init halt reboot shutdown poweroff"
+ALTERNATIVE_${PN} = "init halt reboot shutdown poweroff runlevel"
 
 ALTERNATIVE_TARGET[init] = "${rootlibexecdir}/systemd/systemd"
 ALTERNATIVE_LINK_NAME[init] = "${base_sbindir}/init"
@@ -283,6 +283,10 @@ ALTERNATIVE_PRIORITY[shutdown] ?= "300"
 ALTERNATIVE_TARGET[poweroff] = "${base_bindir}/systemctl"
 ALTERNATIVE_LINK_NAME[poweroff] = "${base_sbindir}/poweroff"
 ALTERNATIVE_PRIORITY[poweroff] ?= "300"
+
+ALTERNATIVE_TARGET[runlevel] = "${base_bindir}/systemctl"
+ALTERNATIVE_LINK_NAME[runlevel] = "${base_sbindir}/runlevel"
+ALTERNATIVE_PRIORITY[runlevel] ?= "300"
 
 pkg_postinst_udev-hwdb () {
 	if test -n "$D"; then
