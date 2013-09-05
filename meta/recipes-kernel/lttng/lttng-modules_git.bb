@@ -10,8 +10,8 @@ DEPENDS = "virtual/kernel"
 
 inherit module
 
-SRCREV = "10fe4e3f10c9ce1f2963bd118b91895a67e955ee"
-PV = "2.2.1+git${SRCPV}"
+SRCREV = "78c8710bb8e6b7f6301d95afec0305f40fa063ad"
+PV = "2.3.0+git${SRCPV}"
 
 SRC_URI = "git://git.lttng.org/lttng-modules.git \
            file://lttng-modules-replace-KERNELDIR-with-KERNEL_SRC.patch"
