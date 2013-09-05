@@ -12,8 +12,6 @@ def setUpModule():
 
 class SmartTest(oeRuntimeTest):
 
-    longMessage = True
-
     @skipUnlessPassed('test_smart_help')
     def smart(self, command, expected = 0):
         command = 'smart %s' % command

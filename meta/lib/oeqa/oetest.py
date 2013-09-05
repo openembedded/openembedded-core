@@ -37,6 +37,8 @@ def runTests(tc):
 
 
 class oeRuntimeTest(unittest.TestCase):
+
+    longMessage = True
     testFailures = []
     testSkipped = []
     testErrors = []
