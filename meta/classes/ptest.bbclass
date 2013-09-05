@@ -16,20 +16,28 @@ RDEPENDS_${PN}-ptest_virtclass-nativesdk = ""
 
 PACKAGES =+ "${@base_contains('DISTRO_FEATURES', 'ptest', '${PN}-ptest', '', d)}"
 
+do_configure_ptest() {
+    :
+}
+
 do_configure_ptest_base() {
     if [ ${PTEST_ENABLED} = 1 ]; then
-        if [ a$(type -t do_configure_ptest) = afunction ]; then
-            do_configure_ptest
-        fi
+        do_configure_ptest
     fi
+}
+
+do_compile_ptest() {
+    :
 }
 
 do_compile_ptest_base() {
     if [ ${PTEST_ENABLED} = 1 ]; then
-        if [ a$(type -t do_compile_ptest) = afunction ]; then
-            do_compile_ptest
-        fi
+        do_compile_ptest
     fi
+}
+
+do_install_ptest() {
+    :
 }
 
 do_install_ptest_base() {
@@ -39,9 +47,7 @@ do_install_ptest_base() {
             if grep -q install-ptest: Makefile; then
                 oe_runmake DESTDIR=${D}${PTEST_PATH} install-ptest
             fi
-            if [ a$(type -t do_install_ptest) = afunction ]; then
-                do_install_ptest
-            fi
+            do_install_ptest
         fi
     fi
 }
