@@ -48,6 +48,7 @@ do_install () {
 		oe_runmake 'DESTDIR=${D}' MULTIBUILDTOP=${B}/$target/$d/ install
 	done
 	rm -rf ${D}${infodir}/libgomp.info ${D}${infodir}/dir
+	rm -rf ${D}${infodir}/libquadmath.info ${D}${infodir}/dir
 	if [ -d ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/finclude ]; then
 		rmdir --ignore-fail-on-non-empty -p ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/finclude
 	fi
@@ -76,8 +77,13 @@ PACKAGES = "\
   libssp-staticdev \
   libgfortran \
   libgfortran-dev \
+  libgfortran-staticdev \
   libmudflap \
   libmudflap-dev \
+  libmudflap-staticdev \
+  libquadmath \
+  libquadmath-dev \
+  libquadmath-staticdev \
   libgomp \
   libgomp-dev \
   libgomp-staticdev \
@@ -119,15 +125,30 @@ FILES_libssp-staticdev = " \
 
 FILES_libgfortran = "${libdir}/libgfortran.so.*"
 FILES_libgfortran-dev = " \
-  ${libdir}/libgfortran.a \
-  ${libdir}/libgfortran.so \
-  ${libdir}/libgfortranbegin.a"
+  ${libdir}/libgfortran*.so \
+  ${libdir}/libgfortran.spec \
+  ${libdir}/libgfortran.la \
+  ${libdir}/gcc/${TARGET_SYS}/${BINV}/libgfortranbegin.* \
+  ${libdir}/gcc/${TARGET_SYS}/${BINV}/libcaf_single*"
+FILES_libgfortran-staticdev = " \
+  ${libdir}/libgfortran.a"
+
+INSANE_SKIP_${MLPREFIX}libgfortran-dev = "staticdev"
+
+FILES_libquadmath = "${libdir}/libquadmath*.so.*"
+FILES_libquadmath-dev = "\
+  ${libdir}/gcc/${TARGET_SYS}/${BINV}/include/quadmath* \
+  ${libdir}/libquadmath*.so \
+  ${libdir}/libquadmath.la"
+FILES_libquadmath-staticdev = "\
+  ${libdir}/libquadmath.a"
 
 FILES_libmudflap = "${libdir}/libmudflap*.so.*"
 FILES_libmudflap-dev = "\
   ${libdir}/libmudflap*.so \
-  ${libdir}/libmudflap*.a \
-  ${libdir}/libmudflap*.la"
+  ${libdir}/libmudflap.la"
+FILES_libmudflap-staticdev = "\
+  ${libdir}/libmudflap.a"
 
 FILES_libgomp = "${libdir}/libgomp*${SOLIBS}"
 FILES_libgomp-dev = "\
