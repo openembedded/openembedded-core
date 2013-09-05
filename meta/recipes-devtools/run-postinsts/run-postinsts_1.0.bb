@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3
 SRC_URI = "file://run-postinsts"
 
 INITSCRIPT_NAME = "run-postinsts"
-INITSCRIPT_PARAMS = "start 98 S ."
+INITSCRIPT_PARAMS = "start 99 S ."
 
 inherit update-rc.d
 
