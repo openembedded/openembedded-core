@@ -52,6 +52,8 @@ do_install_ptest_base() {
     fi
 }
 
+do_install_ptest_base[cleandirs] = "${D}${PTEST_PATH}"
+
 addtask configure_ptest_base after do_configure before do_compile
 addtask compile_ptest_base   after do_compile   before do_install
 addtask install_ptest_base   after do_install   before do_package
