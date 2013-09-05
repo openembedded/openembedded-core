@@ -229,3 +229,11 @@
 #groupmod -g 1020 developers; \
 #usermod -s /bin/sh tester; \
 #"
+
+# Enabling FORTRAN
+# Note this is not officially supported and is just illustrated here to
+# show an example of how it can be done
+FORTRAN_forcevariable = ",fortran"
+RUNTIMETARGET_append_pn-gcc-runtime = " libquadmath libgfortran"
+export BUILD_FC = "${CCACHE}${BUILD_PREFIX}gfortran ${BUILD_CC_ARCH}"
+export FC = "${CCACHE}${HOST_PREFIX}gfortran ${HOST_CC_ARCH}"
