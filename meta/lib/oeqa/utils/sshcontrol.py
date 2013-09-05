@@ -6,7 +6,6 @@
 # running commands and copying files to/from a target.
 # It's used by testimage.bbclass and tests in lib/oeqa/runtime.
 
-
 import subprocess
 import time
 import os
@@ -19,6 +18,12 @@ class SSHControl(object):
         self._out = ''
         self._ret = 126
         self.logfile = logfile
+        self.ssh_options = [
+                '-o', 'UserKnownHostsFile=/dev/null',
+                '-o', 'StrictHostKeyChecking=no',
+                '-o', 'LogLevel=ERROR'
+                ]
+        self.ssh = ['ssh', '-l', 'root'] + self.ssh_options
 
     def log(self, msg):
         if self.logfile:
@@ -28,7 +33,7 @@ class SSHControl(object):
     def _internal_run(self, cmd):
         # We need this for a proper PATH
         cmd = ". /etc/profile; " + cmd
-        command = ['ssh', '-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no', '-l', 'root', self.host, cmd ]
+        command = self.ssh + [self.host, cmd]
         self.log("[Running]$ %s" % " ".join(command))
         # ssh hangs without os.setsid
         proc = subprocess.Popen(command, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
@@ -39,8 +44,6 @@ class SSHControl(object):
         Let it run for timeout seconds and then terminate/kill it,
         if time is 0 will let cmd run until it finishes.
         Time can be passed to here or can be set per class instance."""
-
-
 
         if self.host:
             sshconn = self._internal_run(cmd)
@@ -70,15 +73,14 @@ class SSHControl(object):
             else:
                 self._out = sshconn.stdout.read()
                 self._ret = sshconn.poll()
-        # remove first line from output which is always smth like (unless return code is 255 - which is a ssh error):
-        # Warning: Permanently added '192.168.7.2' (RSA) to the list of known hosts.
-        if self._ret != 255:
-            self._out = '\n'.join(self._out.splitlines()[1:])
+        # strip the last LF so we can test the output
+        self._out = self._out.rstrip()
         self.log("%s" % self._out)
         self.log("[SSH command returned]: %s" % self._ret)
         return (self._ret, self._out)
 
     def _internal_scp(self, cmd):
+        cmd = ['scp'] + self.ssh_options + cmd
         self.log("[Running SCP]$ %s" % " ".join(cmd))
         scpconn = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
         out = scpconn.communicate()[0]
@@ -90,12 +92,11 @@ class SSHControl(object):
         return (ret, out)
 
     def copy_to(self, localpath, remotepath):
-        actualcmd = ['scp', '-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no', localpath, 'root@%s:%s' % (self.host, remotepath)]
+        actualcmd = [localpath, 'root@%s:%s' % (self.host, remotepath)]
         return self._internal_scp(actualcmd)
 
-
     def copy_from(self, remotepath, localpath):
-        actualcmd = ['scp', '-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no', 'root@%s:%s' % (self.host, remotepath), localpath]
+        actualcmd = ['root@%s:%s' % (self.host, remotepath), localpath]
         return self._internal_scp(actualcmd)
 
     def get_status(self):
