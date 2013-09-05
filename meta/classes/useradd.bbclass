@@ -101,7 +101,7 @@ useradd_sysroot () {
 }
 
 useradd_sysroot_sstate () {
-	if [ "${BB_CURRENTTASK}" = "package_setscene" ]
+	if [ "${BB_CURRENTTASK}" = "package_setscene" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
 	then
 		useradd_sysroot
 	fi
@@ -123,6 +123,7 @@ USERADDSETSCENEDEPS_virtclass-cross = ""
 USERADDSETSCENEDEPS_class-native = ""
 USERADDSETSCENEDEPS_class-nativesdk = ""
 do_package_setscene[depends] += "${USERADDSETSCENEDEPS}"
+do_populate_sysroot_setscene[depends] += "${USERADDSETSCENEDEPS}"
 
 # Recipe parse-time sanity checks
 def update_useradd_after_parse(d):
