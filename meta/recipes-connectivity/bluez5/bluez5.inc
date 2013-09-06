@@ -55,7 +55,7 @@ do_install_append() {
 }
 
 ALLOW_EMPTY_libasound-module-bluez = "1"
-PACKAGES =+ "libasound-module-bluez ${PN}-test ${PN}-obex"
+PACKAGES =+ "libasound-module-bluez ${PN}-testtools ${PN}-obex"
 
 FILES_libasound-module-bluez = "${libdir}/alsa-lib/lib*.so ${datadir}/alsa"
 FILES_${PN} += "${libdir}/bluetooth/plugins ${libdir}/bluetooth/plugins/*.so ${base_libdir}/udev/ ${nonarch_base_libdir}/udev/ ${systemd_unitdir}/ ${datadir}/dbus-1"
@@ -70,7 +70,7 @@ FILES_${PN}-obex = "${libdir}/bluez5/bluetooth/obexd \
                    "
 SYSTEMD_SERVICE_${PN}-obex = "obex.service"
 
-FILES_${PN}-test = "${libdir}/bluez/test/*"
+FILES_${PN}-testtools = "${libdir}/bluez/test/*"
 
 FILES_${PN}-dbg += "\
   ${libdir}/${BPN}/bluetooth/.debug \
@@ -78,5 +78,7 @@ FILES_${PN}-dbg += "\
   ${libdir}/*/.debug \
   */udev/.debug \
   "
+
+RDEPENDS_${PN}-testtools += "python python-dbus python-pygobject"
 
 SYSTEMD_SERVICE_${PN} = "bluetooth.service"
