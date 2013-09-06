@@ -914,3 +914,16 @@ index 92f296e..ee6b136 100644
  
  fjpx_luratech=$(PSOBJ)zfjpx_luratech.$(OBJ)
  
+Index: ghostscript-9.07/base/devs.mak
+===================================================================
+--- ghostscript-9.07.orig/base/devs.mak	2013-02-14 07:58:13.000000000 +0000
++++ ghostscript-9.07/base/devs.mak	2013-09-06 22:50:06.331064815 +0000
+@@ -1511,7 +1511,7 @@
+ png_i_=-include $(PNGGENDIR)$(D)libpng
+ 
+ $(GLOBJ)gdevpng.$(OBJ) : $(GLSRC)gdevpng.c\
+- $(gdevprn_h) $(gdevpccm_h) $(gscdefs_h) $(png__h)
++ $(gdevprn_h) $(gdevpccm_h) $(gscdefs_h) $(png__h) $(PDEP)
+ 	$(CC_) $(I_)$(GLI_) $(II)$(PI_)$(_I) $(PCF_) $(GLF_) $(GLO_)gdevpng.$(OBJ) $(C_) $(GLSRC)gdevpng.c
+ 
+ $(DD)pngmono.dev : $(DEVS_MAK) $(libpng_dev) $(png_) $(GLD)page.dev $(GDEV)
