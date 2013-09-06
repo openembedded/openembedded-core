@@ -63,6 +63,10 @@ for BB in $BB_RANGE; do
 		date
 		echo "BB=$BB PM=$PM Logging to $BB_LOG"
 
+		echo -n "  Preparing the work directory... "
+		rm -rf pseudodone tmp sstate-cache tmp-eglibc &> /dev/null
+		echo "done"
+
 		# Export the variables under test and run the bitbake command
 		# Strip any leading zeroes before passing to bitbake
 		export BB_NUMBER_THREADS=$(echo $BB | sed 's/^0*//')
@@ -70,12 +74,6 @@ for BB in $BB_RANGE; do
 		/usr/bin/time -f "$BB $PM $TIME_STR" -a -o $RUNTIME_LOG $BB_CMD &> $BB_LOG
 
 		echo "  $(tail -n1 $RUNTIME_LOG)"
-		echo -n "  Cleaning up..."
-		mv tmp/buildstats $RUNDIR/$BB-$PM-buildstats
-		rm -f pseudodone &> /dev/null
-		rm -rf tmp &> /dev/null
-		rm -rf sstate-cache &> /dev/null
-		rm -rf tmp-eglibc &> /dev/null
-		echo "done"
+		cp -a tmp/buildstats $RUNDIR/$BB-$PM-buildstats
 	done
 done
