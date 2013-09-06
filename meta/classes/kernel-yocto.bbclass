@@ -176,7 +176,17 @@ do_kernel_checkout() {
 		# case 3: we have no git repository at all. 
 		# To support low bandwidth options for building the kernel, we'll just 
 		# convert the tree to a git repo and let the rest of the process work unchanged
+		
+		# if ${S} hasn't been set to the proper subdirectory a default of "linux" is 
+		# used, but we can't initialize that empty directory. So check it and throw a
+		# clear error
+
 	        cd ${S}
+		if [ ! -f "Makefile" ]; then
+			echo "[ERROR]: S is not set to the linux source directory. Check "
+			echo "         the recipe and set S to the proper extracted subdirectory"
+			exit 1
+		fi
 		git init
 		git add .
 		git commit -q -m "baseline commit: creating repo for ${PN}-${PV}"
@@ -288,7 +298,8 @@ do_validate_branches() {
 	set +e
 	# if SRCREV is AUTOREV it shows up as AUTOINC there's nothing to
 	# check and we can exit early
-	if [ "${SRCREV_machine}" = "AUTOINC" ]; then
+	if [ "${SRCREV_machine}" = "AUTOINC" ] || "${SRCREV_machine}" = "INVALID" ] ||
+	   [ "${SRCREV_machine}" = "" ]; then
 		return
 	fi
 
