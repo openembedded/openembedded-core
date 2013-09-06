@@ -101,7 +101,7 @@ class QemuRunner:
             reachedlogin = False
             stopread = False
             while time.time() < endtime and not stopread:
-                sread, swrite, serror = select.select(socklist, [], [], 0)
+                sread, swrite, serror = select.select(socklist, [], [], 5)
                 for sock in sread:
                     if sock is self.server_socket:
                         self.qemusock, addr = self.server_socket.accept()
