@@ -1,0 +1,18 @@
+Avoid parallel-tests as it remove
+buildtest-TESTS and runtest-TESTS targets
+
+Signed-off-by: Tudor Florea <tudor.florea@enea.com>
+Upstream-Status: Inappropriate (disable feature incompatible with ptest) 
+
+diff -ruN a/configure.ac b/configure.ac
+--- a/configure.ac	2013-09-02 15:05:18.662366800 +0200
++++ b/configure.ac	2013-09-02 15:05:49.557066764 +0200
+@@ -8,7 +8,7 @@
+ AC_CONFIG_SRCDIR([libkmod/libkmod.c])
+ AC_CONFIG_AUX_DIR([build-aux])
+ AM_INIT_AUTOMAKE([check-news foreign 1.11 silent-rules
+-	tar-pax no-dist-gzip dist-xz subdir-objects color-tests parallel-tests])
++	tar-pax no-dist-gzip dist-xz subdir-objects color-tests])
+ AC_PROG_CC_STDC
+ AC_USE_SYSTEM_EXTENSIONS
+ AC_SYS_LARGEFILE
