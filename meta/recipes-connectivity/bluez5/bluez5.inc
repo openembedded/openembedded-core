@@ -36,6 +36,7 @@ EXTRA_OECONF = "\
   --enable-test \
   --enable-datafiles \
   ${@base_contains('DISTRO_FEATURES', 'systemd', '--with-systemdunitdir=${systemd_unitdir}/system/', '--disable-systemd', d)} \
+  --enable-library \
 "
 
 do_install_append() {
