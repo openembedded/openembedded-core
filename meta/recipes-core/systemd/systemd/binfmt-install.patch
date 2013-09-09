@@ -1,7 +1,12 @@
 Don't install dependency links at install time for the binfmt services, use
-[Install] blocks so that they get created when the service is enabled.
+[Install] blocks so that they get created when the service is enabled like a
+traditional service.
 
-Upstream-Status: Inappropriate(Makefile.am) / Submitted(units/)
+The [Install] blocks were rejected upstream as they don't have a way to "enable"
+it on install without static symlinks which can't be disabled, only masked.  We
+however can do that in a postinst.
+
+Upstream-Status: Denied
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 
 diff --git a/Makefile.am b/Makefile.am
