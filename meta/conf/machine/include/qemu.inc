@@ -11,7 +11,7 @@ XSERVER ?= "xserver-xorg \
             xf86-video-fbdev \
             xf86-input-keyboard"
 
-MACHINE_FEATURES = "apm alsa pcmcia bluetooth irda usbgadget screen"
+MACHINE_FEATURES = "alsa pcmcia bluetooth irda usbgadget screen"
 
 MACHINEOVERRIDES =. "qemuall:"
 
