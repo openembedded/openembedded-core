@@ -9,11 +9,14 @@ Infrastructure (DRI)."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 
-DEPENDS += "virtual/libx11 drm xf86driproto glproto \
-            virtual/libgl xineramaproto libpciaccess udev"
+DEPENDS += "virtual/libx11 drm libpciaccess pixman"
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "sna udev ${@base_contains('DISTRO_FEATURES', 'opengl', 'dri', '', d)}"
+
+PACKAGECONFIG[dri] = "--enable-dri,--disable-dri,xf86driproto dri2proto"
 PACKAGECONFIG[sna] = "--enable-sna,--disable-sna"
+PACKAGECONFIG[uxa] = "--enable-uxa,--disable-uxa"
+PACKAGECONFIG[udev] = "--enable-udev,--disable-udev,udev"
 PACKAGECONFIG[xvmc] = "--enable-xvmc,--disable-xvmc,libxvmc"
 
 # --enable-kms-only option is required by ROOTLESS_X
