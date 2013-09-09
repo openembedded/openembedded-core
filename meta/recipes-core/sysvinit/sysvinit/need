@@ -1,6 +1,0 @@
-#!/bin/sh
-
-# need binary that doesnt do anything, supplied for simpleinit
-# vs sysvinit compatibility for the supplied startup scripts
-
-exit 0

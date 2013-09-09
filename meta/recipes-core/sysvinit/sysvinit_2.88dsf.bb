@@ -13,8 +13,6 @@ SRC_URI = "http://download.savannah.gnu.org/releases-noredirect/sysvinit/sysvini
            file://install.patch \
            file://crypt-lib.patch \
            file://pidof-add-m-option.patch \
-           file://need \
-           file://provide \
            file://rcS-default \
            file://rc \
            file://rcS \
