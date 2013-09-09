@@ -19,7 +19,9 @@ DEPENDS = "expat makedepend-native flex-native bison-native"
 
 PROVIDES = "virtual/libgl virtual/libgles1 virtual/libgles2 virtual/egl"
 
-inherit autotools pkgconfig pythonnative gettext
+inherit autotools pkgconfig pythonnative gettext distro_features_check
+
+REQUIRED_DISTRO_FEATURES = "opengl"
 
 EXTRA_OECONF = "--enable-shared-glapi"
 
