@@ -21,17 +21,17 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 
 DEPENDS = "attr libaio libcap acl openssl"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/ltp/ltp-full-${PV}.bz2"
+SRC_URI = "git://github.com/linux-test-project/ltp.git"
 
-SRC_URI[md5sum] = "d448d9e9731d7ef45352fc74633cc97f"
-SRC_URI[sha256sum] = "afdb1479e73d4da7f0d4d5d3fe1570bc5fc96e3317d4a5c10c59c046d3dfa4a0"
+SRCREV = "a8c42db5f9314211811c36275a21f83902830dc5"
+S = "${WORKDIR}/git"
 
 export prefix = "/opt/ltp"
 export exec_prefix = "/opt/ltp"
 
 inherit autotools
 
-RDEPENDS_${PN} = "perl"
+RDEPENDS_${PN} = "perl e2fsprogs-mke2fs"
 
 FILES_${PN}-dbg += "/opt/ltp/runtest/.debug"
 FILES_${PN}-dbg += "/opt/ltp/testcases/bin/.debug"
@@ -62,7 +62,7 @@ do_extract_tarball() {
 do_install(){
 	install -d ${D}/opt/ltp/
 	oe_runmake DESTDIR=${D} SKIP_IDCHECK=1 install
-	
+
 	# Copy POSIX test suite into ${D}/opt/ltp/testcases by manual
 	cp -r testcases/open_posix_testsuite ${D}/opt/ltp/testcases
 
