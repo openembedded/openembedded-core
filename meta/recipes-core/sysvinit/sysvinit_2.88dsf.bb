@@ -10,15 +10,15 @@ PR = "r11"
 RDEPENDS_${PN} = "${PN}-inittab"
 
 SRC_URI = "http://download.savannah.gnu.org/releases-noredirect/sysvinit/sysvinit-${PV}.tar.bz2 \
-	   file://install.patch \
-	   file://crypt-lib.patch \
-	   file://pidof-add-m-option.patch \
+           file://install.patch \
+           file://crypt-lib.patch \
+           file://pidof-add-m-option.patch \
            file://need \
            file://provide \
            file://rcS-default \
            file://rc \
            file://rcS \
-	   file://bootlogd.init"
+           file://bootlogd.init"
 
 SRC_URI[md5sum] = "6eda8a97b86e0a6f59dabbf25202aa6f"
 SRC_URI[sha256sum] = "60bbc8c1e1792056e23761d22960b30bb13eccc2cabff8c7310a01f4d5df1519"
