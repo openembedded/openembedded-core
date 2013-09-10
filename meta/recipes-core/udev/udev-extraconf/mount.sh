@@ -58,7 +58,11 @@ rm_dir() {
 	fi
 }
 
-if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" ]; then
+# No ID_FS_TYPE for cdrom device, yet it should be mounted
+name="`basename "$DEVNAME"`"
+[ -e /sys/block/$name/device/media ] && media_type=`cat /sys/block/$name/device/media`
+
+if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_type" = "cdrom" ]; then
 	if [ -x "$PMOUNT" ]; then
 		$PMOUNT $DEVNAME 2> /dev/null
 	elif [ -x $MOUNT ]; then
