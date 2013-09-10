@@ -168,9 +168,9 @@ python rm_systemd_unitdir (){
         systemd_unitdir = oe.path.join(d.getVar("D", True), d.getVar('systemd_unitdir', True))
         if os.path.exists(systemd_unitdir):
             shutil.rmtree(systemd_unitdir)
-        base_libdir = oe.path.join(d.getVar("D", True), d.getVar('base_libdir', True))
-        if (os.path.exists(base_libdir) and not os.listdir(base_libdir)):
-            os.rmdir(base_libdir)
+        systemd_libdir = os.path.dirname(systemd_unitdir)
+        if (os.path.exists(systemd_libdir) and not os.listdir(systemd_libdir)):
+            os.rmdir(systemd_libdir)
 }
 do_install[postfuncs] += "rm_systemd_unitdir "
 
