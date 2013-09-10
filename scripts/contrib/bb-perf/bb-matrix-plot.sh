@@ -115,7 +115,7 @@ set xlabel "$XLABEL"
 set ylabel "$YLABEL"
 set style line 100 lt 5 lw 1.5
 $PM3D_FRAGMENT
-set dgrid3d $PM_CNT,$BB_CNT
+set dgrid3d $PM_CNT,$BB_CNT splines
 set ticslevel 0.2
 
 set term png size $SIZE
