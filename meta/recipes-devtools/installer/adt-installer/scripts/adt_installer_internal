@@ -121,23 +121,12 @@ for pkg in $BASE_HOSTSDK_PKGNAMES; do
   check_result
 done
 
-for native_target_type in $YOCTOADT_TARGETS; do
-  native_target_type=`echo "$native_target_type" | sed -e 's/x86_64/x86-64/' -e 's/ppc/powerpc/'  -e 's/x86$/i586/'`
-  echo_info "Installing cross toolchain for $native_target_type ..."
-  echo_info "Installing binutils for $native_target_type ..."
-  $OPKG_INSTALL_NATIVE_CMD binutils-cross-canadian-$native_target_type &>> $YOCTOADT_INSTALL_LOG_FILE
+for target_type in $YOCTOADT_TARGETS; do
+  machine_var="\$YOCTOADT_TARGET_MACHINE_$target_type"
+  machine=`eval echo $machine_var`
+  echo_info "Installing cross canadian packages for $machine ..."
+  $OPKG_INSTALL_NATIVE_CMD packagegroup-cross-canadian-$machine &>> $YOCTOADT_INSTALL_LOG_FILE
   check_result
-  echo_info "Installing gcc for $native_target_type ..."
-  $OPKG_INSTALL_NATIVE_CMD gcc-cross-canadian-$native_target_type &>> $YOCTOADT_INSTALL_LOG_FILE
-  check_result
-  echo_info "Installing gdb for $native_target_type ..."
-  $OPKG_INSTALL_NATIVE_CMD gdb-cross-canadian-$native_target_type &>> $YOCTOADT_INSTALL_LOG_FILE
-  check_result
-
-  echo_info "Installing environment file for $native_target_type ..."
-  $OPKG_INSTALL_NATIVE_CMD meta-environment-$native_target_type &>> $YOCTOADT_INSTALL_LOG_FILE
-  check_result
-
 done
 
 if [ "$YOCTOADT_QEMU" == "Y" ] || [ "$YOCTOADT_QEMU" = "y" ]; then
@@ -255,9 +244,9 @@ fi
 
 echo_info "Installing target sysroot for arch: $1, rootfs type: $target_sysroot_image, location: $target_sysroot"
 
-
-qemu_type=`echo "$1" | sed -e 's/x86_64/x86-64/'`
-sysroot_image_name="core-image-$target_sysroot_image-qemu$qemu_type.tar.bz2"
+target_machine_var="\$YOCTOADT_TARGET_MACHINE_$1"
+target_machine=`eval echo $target_machine_var`
+sysroot_image_name="core-image-$target_sysroot_image-$target_machine.tar.bz2"
     #echo_info "Extracting rootfs: $sysroot_image_name, using pseudo..."
 
 $SUDO scripts/extract_rootfs $sysroot_image_name $target_sysroot $OECORE_NATIVE_SYSROOT $user_inst_type
