@@ -37,7 +37,7 @@ do_install() {
     install -m 0644 -t ${D}/${SDKPATH} ${SDK_OUTPUT}/${SDKPATH}/*
 }
 
-PN = "meta-environment-${TRANSLATED_TARGET_ARCH}"
+PN = "meta-environment-${MACHINE}"
 PACKAGES = "${PN}"
 FILES_${PN}= " \
     ${SDKPATH}/* \
