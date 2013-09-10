@@ -1,0 +1,39 @@
+From 0c4dbadc9db3cda1cfca64e44ea08c6e89919ea7 Mon Sep 17 00:00:00 2001
+From: Ting Liu <b28495@freescale.com>
+Date: Tue, 10 Sep 2013 13:44:18 +0800
+Subject: [PATCH] Change to calling bswap_* instead of htobe* and be*toh
+
+We can't use htobe* and be*toh functions because they are not
+available on older versions of glibc, For example, shipped on Centos 5.5.
+
+Change to directly calling bswap_* as defined in+byteswap.h.
+
+Signed-off-by: Ting Liu <b28495@freescale.com>
+---
+ libkmod/libkmod-signature.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/libkmod/libkmod-signature.c b/libkmod/libkmod-signature.c
+index 6b80caa..3544a36 100644
+--- a/libkmod/libkmod-signature.c
++++ b/libkmod/libkmod-signature.c
+@@ -19,6 +19,7 @@
+  */
+ 
+ #include <endian.h>
++#include <byteswap.h>
+ #include <stdint.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -121,7 +122,7 @@ bool kmod_module_signature_info(const struct kmod_file *file, struct kmod_signat
+ 			modsig->hash >= PKEY_HASH__LAST ||
+ 			modsig->id_type >= PKEY_ID_TYPE__LAST)
+ 		return false;
+-	sig_len = be32toh(modsig->sig_len);
++	sig_len = bswap_32(modsig->sig_len);
+ 	if (size < (off_t)(modsig->signer_len + modsig->key_id_len + sig_len))
+ 		return false;
+ 
+-- 
+1.7.5.4
+
