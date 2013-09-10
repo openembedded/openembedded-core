@@ -30,7 +30,9 @@ oe_runconf_prepend() {
 	fi
 }
 
-python __anonymous () {
+SRC_URI = "${@get_gst_srcuri(d)}"
+
+def get_gst_srcuri(d):
     # check if expected prefix is present
     prefix = "gstreamer1.0-"
     bpn = d.getVar("BPN", True)
@@ -43,10 +45,10 @@ python __anonymous () {
     branch = d.getVar("GSTREAMER_1_0_GIT_BRANCH", True)
 
     if pv == "git":
-        d.setVar("SRC_URI", "git://anongit.freedesktop.org/gstreamer/%s;branch=%s" % (gstpkg_basename, branch))
+        s = "git://anongit.freedesktop.org/gstreamer/%s;branch=%s" % (gstpkg_basename, branch)
     else:
-        d.setVar("SRC_URI", "http://gstreamer.freedesktop.org/src/%s/%s-%s.tar.xz" % (gstpkg_basename, gstpkg_basename, pv))
-}
+        s = "http://gstreamer.freedesktop.org/src/%s/%s-%s.tar.xz" % (gstpkg_basename, gstpkg_basename, pv)
+    return s
 
 delete_liblink_m4_file() {
 	# This m4 file contains nastiness which conflicts with libtool 2.2.2
