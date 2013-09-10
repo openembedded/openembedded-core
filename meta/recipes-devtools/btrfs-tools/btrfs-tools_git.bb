@@ -20,6 +20,7 @@ S = "${WORKDIR}/git"
 PV = "0.20+git${SRCPV}"
 
 SRC_URI += "file://weak-defaults.patch"
+SRC_URI += "file://btrfs-progs-fix-parallel-build.patch"
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install

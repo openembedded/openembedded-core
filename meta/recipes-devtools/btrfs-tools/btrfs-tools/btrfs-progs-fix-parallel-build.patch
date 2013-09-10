@@ -1,0 +1,30 @@
+btrfs-progs: fix parallel build
+
+Upstream-Status: Submitted [http://permalink.gmane.org/gmane.comp.file-systems.btrfs/28197]
+
+Parallel execution of "make install" may fail due to late creation of
+version.h, fix it by adding the dependence on version.h.
+
+The fix is similare to 7aaf00fc[btrfs-progs: fix parallel build]
+
+Signed-off-by: Roy.Li <rongqing.li@windriver.com>
+---
+ Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index c43cb68..40ef205 100644
+--- a/Makefile
++++ b/Makefile
+@@ -190,7 +190,7 @@ clean :
+ 	      $(libs) $(lib_links)
+ 	$(Q)$(MAKE) $(MAKEOPTS) -C man $@
+ 
+-install: $(libs) $(progs) install-man
++install: version.h $(libs) $(progs) install-man
+ 	$(INSTALL) -m755 -d $(DESTDIR)$(bindir)
+ 	$(INSTALL) $(progs) $(DESTDIR)$(bindir)
+ 	$(INSTALL) -m755 -d $(DESTDIR)$(libdir)
+-- 
+1.7.10.4
+
