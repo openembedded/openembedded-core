@@ -103,6 +103,7 @@ do_install () {
 	# Cleanup some of the ${libdir}{,exec}/gcc stuff ...
 	rm -r ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
 	rm -r ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
+	rm -rf ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/finclude
 
 	# We care about g++ not c++
 	rm -f ${D}${bindir}/*c++
