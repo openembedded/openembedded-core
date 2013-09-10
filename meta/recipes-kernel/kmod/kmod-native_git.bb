@@ -6,6 +6,7 @@ inherit native
 
 SRC_URI += "file://fix-undefined-O_CLOEXEC.patch \
             file://0001-Fix-build-with-older-gcc-4.6.patch \
+            file://Change-to-calling-bswap_-instead-of-htobe-and-be-toh.patch \
            "
 
 do_install_append (){
