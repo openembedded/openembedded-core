@@ -4,7 +4,7 @@ inherit populate_sdk_base
 
 TOOLCHAIN_TARGET_TASK += "${PACKAGE_INSTALL}"
 TOOLCHAIN_TARGET_TASK_ATTEMPTONLY += "${PACKAGE_INSTALL_ATTEMPTONLY}"
-POPULATE_SDK_POST_TARGET_COMMAND += "rootfs_install_complementary populate_sdk; "
+POPULATE_SDK_POST_TARGET_COMMAND += "rootfs_install_complementary populate_sdk; rootfs_sysroot_relativelinks; "
 
 inherit gzipnative
 
@@ -615,6 +615,11 @@ rootfs_trim_schemas () {
 			mv $schema.new $schema
 		fi
 	done
+}
+
+# Make any absolute links in a sysroot relative
+rootfs_sysroot_relativelinks () {
+	sysroot-relativelinks.py ${SDK_OUTPUT}/${SDKTARGETSYSROOT}
 }
 
 EXPORT_FUNCTIONS zap_root_password remove_init_link do_rootfs make_zimage_symlink_relative set_image_autologin rootfs_update_timestamp rootfs_no_x_startup
