@@ -137,11 +137,22 @@ do
   sleep 1
 done
 
-# Try to make a union mount of the root image.
-# If no unification filesystem is available, mount the image read-only.
+# Try to mount the root image read-write and then boot it up.
+# This function distinguishes between a read-only image and a read-write image.
+# In the former case (typically an iso), it tries to make a union mount if possible.
+# In the latter case, the root image could be mounted and then directly booted up.
 mount_and_boot() {
     mkdir $ROOT_MOUNT
     mknod /dev/loop0 b 7 0 2>/dev/null
+
+    if ! mount -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
+	fatal "Could not mount rootfs image"
+    fi
+
+    if touch $ROOT_MOUNT/bin 2>/dev/null; then
+	# The root image is read-write, directly boot it up.
+	boot_live_root
+    fi
 
     # determine which unification filesystem to use
     union_fs_type=""
@@ -157,9 +168,9 @@ mount_and_boot() {
     case $union_fs_type in
 	"overlayfs")
 	    mkdir -p /rootfs.ro /rootfs.rw
-	    if ! mount -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE /rootfs.ro; then
+	    if ! mount -n --move $ROOT_MOUNT /rootfs.ro; then
 		rm -rf /rootfs.ro /rootfs.rw
-		fatal "Could not mount rootfs image"
+		fatal "Could not move rootfs mount point"
 	    else
 		mount -t tmpfs -o rw,noatime,mode=755 tmpfs /rootfs.rw
 		mount -t overlayfs -o "lowerdir=/rootfs.ro,upperdir=/rootfs.rw" overlayfs $ROOT_MOUNT
@@ -170,9 +181,9 @@ mount_and_boot() {
 	    ;;
 	"aufs")
 	    mkdir -p /rootfs.ro /rootfs.rw
-	    if ! mount -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE /rootfs.ro; then
+	    if ! mount -n --move $ROOT_MOUNT /rootfs.ro; then
 		rm -rf /rootfs.ro /rootfs.rw
-		fatal "Could not mount rootfs image"
+		fatal "Could not move rootfs mount point"
 	    else
 		mount -t tmpfs -o rw,noatime,mode=755 tmpfs /rootfs.rw
 		mount -t aufs -o "dirs=/rootfs.rw=rw:/rootfs.ro=ro" aufs $ROOT_MOUNT
@@ -182,11 +193,7 @@ mount_and_boot() {
 	    fi
 	    ;;
 	"")
-	    if ! mount -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
-		fatal "Could not mount rootfs image"
-	    else
-		mount -t tmpfs -o rw,noatime,mode=755 tmpfs $ROOT_MOUNT/media
-	    fi
+	    mount -t tmpfs -o rw,noatime,mode=755 tmpfs $ROOT_MOUNT/media
 	    ;;
     esac
 
