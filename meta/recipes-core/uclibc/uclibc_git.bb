@@ -10,7 +10,8 @@ PROVIDES += "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
 DEPENDS = "virtual/${TARGET_PREFIX}binutils \
            virtual/${TARGET_PREFIX}gcc-initial \
            virtual/${TARGET_PREFIX}libc-initial \
-           linux-libc-headers ncurses-native"
+           linux-libc-headers ncurses-native \
+           kern-tools-native"
 
 RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
 RPROVIDES_${PN}-dev += "libc-dev virtual-libc-dev"
