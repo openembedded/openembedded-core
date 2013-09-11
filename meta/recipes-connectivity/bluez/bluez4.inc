@@ -43,3 +43,4 @@ EXTRA_OECONF = "\
   --with-udevrulesdir=`pkg-config --variable=udevdir udev`/rules.d \
 "
 
+EXCLUDE_FROM_WORLD = "1"

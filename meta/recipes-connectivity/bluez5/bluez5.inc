@@ -82,3 +82,5 @@ FILES_${PN}-dbg += "\
 RDEPENDS_${PN}-testtools += "python python-dbus python-pygobject"
 
 SYSTEMD_SERVICE_${PN} = "bluetooth.service"
+
+EXCLUDE_FROM_WORLD = "1"
