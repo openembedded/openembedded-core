@@ -2,8 +2,6 @@ require xorg-driver-video.inc
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=a1f0610ebdc6f314a9fa5102a8c5c1b0"
 
-EXTRA_OECONF += "--disable-xvmc"
-
 SUMMARY = "X.Org X server -- Generic Vesa video driver"
 
 DESCRIPTION = "vesa is an Xorg driver for generic VESA video cards. It \
@@ -13,8 +11,7 @@ supports depths 8, 15 16 and 24."
 
 PR = "${INC_PR}.0"
 
-DEPENDS += "virtual/libx11 libxvmc drm xf86driproto glproto \
-            virtual/libgl xineramaproto libpciaccess"
+DEPENDS += "virtual/libx11 randrproto libpciaccess"
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
