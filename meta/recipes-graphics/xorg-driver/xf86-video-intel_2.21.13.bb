@@ -11,6 +11,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 
 DEPENDS += "virtual/libx11 drm libpciaccess pixman"
 
+SRC_URI += "file://disable-dri2-tests.patch"
+
 PACKAGECONFIG ??= "sna udev ${@base_contains('DISTRO_FEATURES', 'opengl', 'dri', '', d)}"
 
 PACKAGECONFIG[dri] = "--enable-dri,--disable-dri,xf86driproto dri2proto"

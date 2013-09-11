@@ -1,0 +1,50 @@
+Upstream-Status: Submitted
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From ec91cfe7e5efdd5e1b1fbb85eea8f07b50e24c4b Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Wed, 11 Sep 2013 21:12:37 +0100
+Subject: [PATCH] test: only build DRI2 tests if DRI2 is enabled
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ test/Makefile.am |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/test/Makefile.am b/test/Makefile.am
+index f51967b..18528a9 100644
+--- a/test/Makefile.am
++++ b/test/Makefile.am
+@@ -16,9 +16,14 @@ stress_TESTS = \
+ 	render-copyarea-size \
+ 	render-copy-alphaless \
+ 	mixed-stress \
++	$(NULL)
++
++if DRI2
++stress_TESTS += \
+ 	dri2-swap \
+ 	dri2-race \
+ 	$(NULL)
++endif
+ 
+ check_PROGRAMS = $(stress_TESTS)
+ 
+@@ -34,9 +39,14 @@ libtest_la_SOURCES = \
+ 	test_image.c \
+ 	test_log.c \
+ 	test_render.c \
++	$(NULL)
++
++if DRI2
++libtest_la_SOURCES += \
+ 	dri2.c \
+ 	dri2.h \
+ 	$(NULL)
++endif
+ 
+ vsync.avi: mkvsync.sh
+ 	./mkvsync.sh $@
+-- 
+1.7.10.4
+
