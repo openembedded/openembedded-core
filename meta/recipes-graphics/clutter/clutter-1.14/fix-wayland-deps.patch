@@ -1,0 +1,57 @@
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 74f9d8a597acf0fd8458e3d6cb0475b8d9a0a6ba Mon Sep 17 00:00:00 2001
+From: Emmanuele Bassi <ebassi@gnome.org>
+Date: Thu, 27 Jun 2013 16:42:40 +0100
+Subject: [PATCH] build: Enable Cogl support with Wayland
+
+The Wayland backend is based on Cogl, so we need to turn on the
+SUPPORT_COGL flag to avoid breaking the build; this always went
+unnoticed because we usually build the Wayland client backend
+with the X11 backend.
+
+Reported-by: Ross Burton <ross.burton@intel.com>
+(cherry picked from commit 1fb0295ba162507fb798b2b7030f0f45ff252f27)
+
+Signed-off-by: Emmanuele Bassi <ebassi@gnome.org>
+---
+ configure.ac |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index f5afe12..355c95b 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -310,6 +310,7 @@ AS_IF([test "x$enable_wayland" = "xyes"],
+         experimental_backend="yes"
+ 
+         SUPPORT_WAYLAND=1
++        SUPPORT_COGL=1
+ 
+         PKG_CHECK_EXISTS([wayland-client wayland-cursor xkbcommon gdk-pixbuf-2.0],
+                          [
+@@ -337,7 +338,10 @@ AS_IF([test "x$enable_wayland_compositor" = "xyes"],
+       [
+         PKG_CHECK_EXISTS([wayland-server],
+ 			 [BACKEND_PC_FILES="$BACKEND_PC_FILES wayland-server"], [])
++
+         SUPPORT_WAYLAND_COMPOSITOR=1
++        SUPPORT_COGL=1
++
+ 	CLUTTER_CONFIG_DEFINES="$CLUTTER_CONFIG_DEFINES
+ #define CLUTTER_HAS_WAYLAND_COMPOSITOR_SUPPORT 1"
+         AC_DEFINE([HAVE_CLUTTER_WAYLAND_COMPOSITOR], [1], [Have Wayland compositor support])
+@@ -359,8 +363,8 @@ AS_IF([test "x$enable_cex100" = "xyes"],
+ 
+         experimental_backend="yes"
+ 
+-        SUPPORT_COGL=1
+         SUPPORT_CEX100=1
++        SUPPORT_COGL=1
+ 
+         have_gdl=no
+         AC_CHECK_HEADERS([libgdl.h], [have_gdl=yes])
+-- 
+1.7.10.4
+

@@ -4,7 +4,8 @@ LICENSE = "LGPLv2.1+"
 
 inherit clutter
 
-SRC_URI += "file://enable_tests.patch"
+SRC_URI += "file://enable_tests.patch \
+            file://fix-wayland-deps.patch"
 
 DEPENDS = "pango glib-2.0 json-glib atk udev cogl-1.0"
 PACKAGES =+ "${PN}-examples"
