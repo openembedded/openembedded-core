@@ -17,7 +17,7 @@ PE = "2"
 
 DEPENDS = "expat makedepend-native flex-native bison-native"
 
-PROVIDES = "virtual/libgl virtual/libgles1 virtual/libgles2 virtual/egl"
+PROVIDES = "virtual/libgl virtual/libgles1 virtual/libgles2 virtual/egl virtual/mesa"
 
 inherit autotools pkgconfig pythonnative gettext distro_features_check
 
