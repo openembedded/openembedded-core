@@ -33,16 +33,16 @@ XSERVER_IA32_BASE = "xserver-xorg \
            "
 
 XSERVER_IA32_EXT = " \
-           xserver-xorg-extension-glx \
+           ${@base_contains('DISTRO_FEATURES', 'opengl', 'xserver-xorg-extension-glx', '', d)} \
            xserver-xorg-module-libint10 \
            "
 
 XSERVER_IA32_I915 = "xf86-video-intel \
-           mesa-driver-i915 \
+           ${@base_contains('DISTRO_FEATURES', 'opengl', 'mesa-driver-i915', '', d)} \
            "
 
 XSERVER_IA32_I965 = "xf86-video-intel \
-           mesa-driver-i965 \
+           ${@base_contains('DISTRO_FEATURES', 'opengl', 'mesa-driver-i965', '', d)} \
            "
 
 XSERVER_IA32_VESA = "xf86-video-vesa"
