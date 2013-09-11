@@ -1,16 +1,32 @@
 #!/bin/sh
 
 echo "START: $0"
-cd /usr/lib
-for x in *
+
+for libdir in /usr/lib*
 do
-    if [ -x "/usr/lib/$x/ptest/run-ptest" ]; then
-       date "+%Y-%m-%dT%H:%M"
+
+    [ ! -d "$libdir" ] && continue
+
+    cd "$libdir"
+    for x in `find -L ./ -name run-ptest -type f -perm /u+x,g+x`
+    do
+        # test if a dir is linking to one that they are under same directory
+        # like perl5-->perl
+        ptestdir=`dirname $x|cut -f2 -d"/"`
+        if [ -h "$ptestdir" ]; then
+            linkdir=`readlink -f "$ptestdir"`
+            if [ `dirname "$linkdir"` = "$libdir" ]; then
+                continue
+            fi
+        fi
+    
+        date "+%Y-%m-%dT%H:%M"
         echo "BEGIN: $x"
-        cd /usr/lib/$x/ptest
+        pushd `dirname "$x"`
         ./run-ptest
+        popd
         echo "END: $x"
-       date "+%Y-%m-%dT%H:%M"
-    fi
+        date "+%Y-%m-%dT%H:%M"
+    done
 done
 echo "STOP: $0"
