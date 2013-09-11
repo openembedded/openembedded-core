@@ -1079,11 +1079,10 @@ python do_package_rpm () {
         return name
 
     workdir = d.getVar('WORKDIR', True)
-    outdir = d.getVar('DEPLOY_DIR_IPK', True)
     tmpdir = d.getVar('TMPDIR', True)
     pkgd = d.getVar('PKGD', True)
     pkgdest = d.getVar('PKGDEST', True)
-    if not workdir or not outdir or not pkgd or not tmpdir:
+    if not workdir or not pkgd or not tmpdir:
         bb.error("Variables incorrectly set, unable to package")
         return
 
