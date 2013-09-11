@@ -35,12 +35,13 @@ EXTRA_OECONF = "--disable-android-compositor \
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'wayland', 'kms wayland', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', 'opengles2', 'gles', '', d)} \
+                   ${@base_contains('DISTRO_FEATURES', 'pam', 'launch', '', d)} \
                   "
 #
 # Compositor choices
 #
 # Weston on KMS
-PACKAGECONFIG[kms] = "--enable-drm-compositor --enable-weston-launch,--disable-drm-compositor --disable-weston-launch,drm udev mesa mtdev libpam"
+PACKAGECONFIG[kms] = "--enable-drm-compositor,--disable-drm-compositor,drm udev mesa mtdev"
 # Weston on Wayland (nested Weston)
 PACKAGECONFIG[wayland] = "--enable-wayland-compositor,--disable-wayland-compositor,mesa"
 # Weston on X11
@@ -49,7 +50,8 @@ PACKAGECONFIG[x11] = "--enable-x11-compositor,--disable-x11-compositor,virtual/l
 PACKAGECONFIG[headless] = "--enable-headless-compositor,--disable-headless-compositor"
 # Weston on framebuffer
 PACKAGECONFIG[fbdev] = "--enable-fbdev-compositor,--disable-fbdev-compositor,udev mtdev"
-
+# weston-launch
+PACKAGECONFIG[launch] = "--enable-weston-launch,--disable-weston-launch,libpam"
 # Use cairo-gl or cairo-glesv2
 PACKAGECONFIG[gles] = "--with-cairo-glesv2,,virtual/libgles2"
 
