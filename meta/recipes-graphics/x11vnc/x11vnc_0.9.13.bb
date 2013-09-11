@@ -7,7 +7,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=361b6b837cad26c6900a926b62aada5f \
                     file://x11vnc/x11vnc.h;endline=33;md5=6f95dc6535467d7ee1563fd434fb372e"
 
-DEPENDS = "openssl virtual/libx11 libxext avahi jpeg zlib"
+DEPENDS = "openssl virtual/libx11 libxext avahi jpeg zlib libxfixes libxrandr libxdamage libxtst"
 
 PR = "r0"
 
