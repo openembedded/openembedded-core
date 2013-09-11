@@ -1,0 +1,59 @@
+Add a mechanism to attempt the install operation, w/o failing.
+
+For complementary and 'attemptonly' packages, we need a way to instruct smart to
+try to install, but ignore any failures.
+
+This option only works for the install operation.
+
+Upstream-Status: Pending
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+Index: smart-1.4.1/smart/commands/install.py
+===================================================================
+--- smart-1.4.1.orig/smart/commands/install.py
++++ smart-1.4.1/smart/commands/install.py
+@@ -50,6 +50,8 @@ def option_parser():
+     parser = OptionParser(usage=USAGE,
+                           description=DESCRIPTION,
+                           examples=EXAMPLES)
++    parser.add_option("--attempt", action="store_true",
++                      help=_("attempt to install packages, ignore failures"))
+     parser.add_option("--stepped", action="store_true",
+                       help=_("split operation in steps"))
+     parser.add_option("--urls", action="store_true",
+@@ -80,6 +82,9 @@ def main(ctrl, opts):
+     if not opts.args:
+         raise Error, _("no package(s) given")
+ 
++    if opts.attempt:
++	sysconf.set("attempt-install", True, soft=True)
++
+     if opts.explain:
+         sysconf.set("explain-changesets", True, soft=True)
+ 
+Index: smart-1.4.1/smart/transaction.py
+===================================================================
+--- smart-1.4.1.orig/smart/transaction.py
++++ smart-1.4.1/smart/transaction.py
+@@ -1216,9 +1216,17 @@ class Transaction(object):
+                     else:
+                         op = REMOVE
+                 if op is INSTALL or op is REINSTALL:
+-                    self._install(pkg, changeset, locked, pending)
+-                    if pkg in changeset:
+-                        changeset.setRequested(pkg, True)
++                    try:
++                        self._install(pkg, changeset, locked, pending)
++                        if pkg in changeset:
++                            changeset.setRequested(pkg, True)
++                    except Failed, e:
++                        if sysconf.has("attempt-install", soft=True):
++                            if pkg in changeset:
++                                del changeset[pkg]
++                            continue
++                        else:
++                            raise Failed, e
+                 elif op is REMOVE:
+                     self._remove(pkg, changeset, locked, pending)
+                 elif op is UPGRADE:

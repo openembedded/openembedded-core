@@ -472,11 +472,8 @@ EOF
 		echo "Attempting $pkgs_to_install"
 		echo "Note: see `dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}"
 		translate_oe_to_smart ${sdk_mode} --attemptonly $package_attemptonly
-		for each_pkg in $pkgs_to_install ;  do
-			# We need to try each package individually as a single dependency failure
-			# will break the whole set otherwise.
-			smart --data-dir=${target_rootfs}/var/lib/smart install -y $each_pkg >> "`dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}" 2>&1 || true
-		done
+		echo "Attempting $pkgs_to_install" >> "`dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}"
+		smart --data-dir=${target_rootfs}/var/lib/smart install --attempt -y ${pkgs_to_install} >> "`dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}" 2>&1
 	fi
 }
 
