@@ -21,6 +21,7 @@ do_install () {
 	install -m 0644 snack.py ${D}${PYTHON_SITEPACKAGES_DIR}/
 }
 
+PACKAGES_remove = "whiptail"
 
 FILES_${PN} = "${PYTHON_SITEPACKAGES_DIR}/*"
 FILES_${PN}-dbg += "${PYTHON_SITEPACKAGES_DIR}/.debug/"
