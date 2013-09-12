@@ -170,6 +170,7 @@ fi
 # Disabling the network sanity check helps a bit (because of my crappy network connection and/or proxy)
 echo "CONNECTIVITY_CHECK_URIS =\"\"" >> conf/local.conf
 
+
 #
 # Functions
 #
@@ -284,7 +285,7 @@ test1_p1 () {
     do_rmsstate
     do_sync
     bbtime $IMAGE
-    s=`du -sh tmp | sed 's/tmp//'`
+    s=`du -s tmp | sed 's/tmp//' | sed 's/[ \t]*$//'`
     SIZES[(( size_count++ ))]="$s"
     log "SIZE of tmp dir is: $s"
     log "Buildstats are saved in $OUTDIR/buildstats-test1"
@@ -307,7 +308,7 @@ test1_p3 () {
     do_sync
     bbtime $IMAGE
     sed -i 's/INHERIT += \"rm_work\"//' conf/local.conf
-    s=`du -sh tmp | sed 's/tmp//'`
+    s=`du -s tmp | sed 's/tmp//' | sed 's/[ \t]*$//'`
     SIZES[(( size_count++ ))]="$s"
     log "SIZE of tmp dir is: $s"
     log "Buildstats are saved in $OUTDIR/buildstats-test13"
