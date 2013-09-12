@@ -122,6 +122,7 @@ def testimage_main(d):
 
     qemu = QemuRunner(machine, rootfs)
     qemu.tmpdir = d.getVar("TMPDIR", True)
+    qemu.deploy_dir_image = d.getVar("DEPLOY_DIR_IMAGE", True)
     qemu.display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True)
     qemu.logfile = os.path.join(testdir, "qemu_boot_log.%s" % d.getVar('DATETIME', True))
     try:

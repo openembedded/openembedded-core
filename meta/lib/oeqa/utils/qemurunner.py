@@ -16,7 +16,7 @@ import bb
 
 class QemuRunner:
 
-    def __init__(self, machine, rootfs, display = None, tmpdir = None, logfile = None, boottime = 400, runqemutime = 60):
+    def __init__(self, machine, rootfs, display = None, tmpdir = None, deploy_dir_image = None, logfile = None, boottime = 400, runqemutime = 60):
         # Popen object
         self.runqemu = None
 
@@ -28,6 +28,7 @@ class QemuRunner:
 
         self.display = display
         self.tmpdir = tmpdir
+        self.deploy_dir_image = deploy_dir_image
         self.logfile = logfile
         self.boottime = boottime
         self.runqemutime = runqemutime
@@ -71,6 +72,11 @@ class QemuRunner:
             return False
         else:
             os.environ["OE_TMPDIR"] = self.tmpdir
+        if not os.path.exists(self.deploy_dir_image):
+            bb.error("Invalid DEPLOY_DIR_IMAGE path %s" % self.deploy_dir_image)
+            return False
+        else:
+            os.environ["DEPLOY_DIR_IMAGE"] = self.deploy_dir_image
 
         self.qemuparams = 'bootparams="console=tty1 console=ttyS0,115200n8" qemuparams="-serial tcp:127.0.0.1:%s"' % self.serverport
         if qemuparams:

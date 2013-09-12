@@ -321,9 +321,17 @@ AKITA_DEFAULT_FSTYPE=jffs2
 SPITZ_DEFAULT_KERNEL=zImage-spitz.bin
 SPITZ_DEFAULT_FSTYPE=ext3
 
-setup_tmpdir() {
-    if [ -z "$OE_TMPDIR" ]; then
-        # Try to get OE_TMPDIR from bitbake
+setup_path_vars() {
+    if [ -z "$OE_TMPDIR" ] ; then
+        PATHS_REQUIRED=true
+    elif [ "$1" = "1" -a -z "$DEPLOY_DIR_IMAGE" ] ; then
+        PATHS_REQUIRED=true
+    else
+        PATHS_REQUIRED=false
+    fi
+
+    if [ "$PATHS_REQUIRED" = "true" ]; then
+        # Try to get the variable values from bitbake
         type -P bitbake &>/dev/null || {
             echo "In order for this script to dynamically infer paths";
             echo "to kernels or filesystem images, you either need";
@@ -331,21 +339,35 @@ setup_tmpdir() {
             echo "before running this script" >&2;
             exit 1; }
 
-        # We have bitbake in PATH, get OE_TMPDIR from bitbake
-        OE_TMPDIR=`MACHINE=$MACHINE bitbake -e | grep ^TMPDIR=\" | cut -d '=' -f2 | cut -d '"' -f2`
+        # We have bitbake in PATH, get the variable values from bitbake
+        BITBAKE_ENV_TMPFILE=`mktemp runqemu.XXXXXXXXXX`
+        if [ "$?" != "0" ] ; then
+            echo "Error: mktemp failed for bitbake environment output"
+            exit 1
+        fi
+
+        MACHINE=$MACHINE bitbake -e > $BITBAKE_ENV_TMPFILE
+        if [ -z "$OE_TMPDIR" ] ; then
+            OE_TMPDIR=`cat $BITBAKE_ENV_TMPFILE | sed -n 's/^TMPDIR=\"\(.*\)\"/\1/p'`
+        fi
+        if [ -z "$DEPLOY_DIR_IMAGE" ] ; then
+            DEPLOY_DIR_IMAGE=`cat $BITBAKE_ENV_TMPFILE | sed -n 's/^DEPLOY_DIR_IMAGE=\"\(.*\)\"/\1/p'`
+        fi
         if [ -z "$OE_TMPDIR" ]; then
             # Check for errors from bitbake that the user needs to know about
-            BITBAKE_OUTPUT=`bitbake -e | wc -l`
+            BITBAKE_OUTPUT=`cat $BITBAKE_ENV_TMPFILE | wc -l`
             if [ "$BITBAKE_OUTPUT" -eq "0" ]; then
-                echo "Error: this script needs to be run from your build directory,"
-                echo "or you need to explicitly set OE_TMPDIR in your environment"
+                echo "Error: this script needs to be run from your build directory, or you need"
+                echo "to explicitly set OE_TMPDIR and DEPLOY_DIR_IMAGE in your environment"
             else
                 echo "There was an error running bitbake to determine TMPDIR"
                 echo "Here is the output from 'bitbake -e':"
-                bitbake -e
+                cat $BITBAKE_ENV_TMPFILE
             fi
+            rm $BITBAKE_ENV_TMPFILE
             exit 1
         fi
+        rm $BITBAKE_ENV_TMPFILE
     fi
 }
 
@@ -355,7 +377,7 @@ setup_sysroot() {
     # either in an in-tree build scenario or the environment
     # script wasn't source'd.
     if [ -z "$OECORE_NATIVE_SYSROOT" ]; then
-        setup_tmpdir
+        setup_path_vars
         BUILD_ARCH=`uname -m`
         BUILD_OS=`uname | tr '[A-Z]' '[a-z]'`
         BUILD_SYS="$BUILD_ARCH-$BUILD_OS"
@@ -405,9 +427,9 @@ if [ -e "$ROOTFS" -a -z "$FSTYPE" ]; then
 fi
 
 if [ -z "$KERNEL" -a "x$FSTYPE" != "xvmdk" ]; then
-    setup_tmpdir
+    setup_path_vars 1
     eval kernel_file=\$${machine2}_DEFAULT_KERNEL
-    KERNEL=$OE_TMPDIR/deploy/images/$kernel_file
+    KERNEL=$DEPLOY_DIR_IMAGE/$kernel_file
 
     if [ -z "$KERNEL" ]; then
         error "Unable to determine default kernel for MACHINE [$MACHINE]"
@@ -428,14 +450,14 @@ fi
 # Handle cases where a ROOTFS type is given instead of a filename, e.g.
 # core-image-sato
 if [ "$LAZY_ROOTFS" = "true" ]; then
-    setup_tmpdir
-    echo "Assuming $ROOTFS really means $OE_TMPDIR/deploy/images/$ROOTFS-$MACHINE.$FSTYPE"
-    ROOTFS=$OE_TMPDIR/deploy/images/$ROOTFS-$MACHINE.$FSTYPE
+    setup_path_vars 1
+    echo "Assuming $ROOTFS really means $DEPLOY_DIR_IMAGE/$ROOTFS-$MACHINE.$FSTYPE"
+    ROOTFS=$DEPLOY_DIR_IMAGE/$ROOTFS-$MACHINE.$FSTYPE
 fi
 
 if [ -z "$ROOTFS" -a "x$FSTYPE" != "xvmdk" ]; then
-    setup_tmpdir
-    T=$OE_TMPDIR/deploy/images
+    setup_path_vars 1
+    T=$DEPLOY_DIR_IMAGE
     eval rootfs_list=\$${machine2}_DEFAULT_ROOTFS
     findimage $T $MACHINE $FSTYPE
 
