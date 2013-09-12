@@ -64,6 +64,11 @@ syslinux_hddimg_install() {
 	syslinux ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
 }
 
+syslinux_hdddirect_install() {
+	DEST=$1
+	syslinux $DEST
+}
+
 python build_syslinux_cfg () {
     import copy
     import sys
