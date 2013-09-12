@@ -41,7 +41,7 @@ populate_sdk_rpm () {
 	export INSTALL_ROOTFS_RPM="${SDK_OUTPUT}/${SDKTARGETSYSROOT}"
 	export INSTALL_PLATFORM_RPM="$(echo ${TARGET_ARCH} | tr - _)${TARGET_VENDOR}-${TARGET_OS}"
 	export INSTALL_PACKAGES_RPM="${TOOLCHAIN_TARGET_TASK}"
-	export INSTALL_PACKAGES_ATTEMPTONLY_RPM="$(echo '${TOOLCHAIN_TARGET_TASK_ATTEMPTONLY}' | tr -d ' ')"
+	export INSTALL_PACKAGES_ATTEMPTONLY_RPM="$(echo '${TOOLCHAIN_TARGET_TASK_ATTEMPTONLY}' | sed 's/ *$//g')"
 	export INSTALL_PACKAGES_LINGUAS_RPM=""
 	# We don't need any of these runtime items for the SDK, so
 	# just make the system assume they exist.
@@ -98,7 +98,7 @@ populate_sdk_rpm () {
 	export INSTALL_ROOTFS_RPM="${SDK_OUTPUT}"
 	export INSTALL_PLATFORM_RPM="$(echo ${TARGET_ARCH} | tr - _)${SDK_VENDOR}-${SDK_OS}"
 	export INSTALL_PACKAGES_RPM="${TOOLCHAIN_HOST_TASK}"
-	export INSTALL_PACKAGES_ATTEMPTONLY_RPM="$(echo '${TOOLCHAIN_HOST_TASK_ATTEMPTONLY}' | tr -d ' ')"
+	export INSTALL_PACKAGES_ATTEMPTONLY_RPM="$(echo '${TOOLCHAIN_HOST_TASK_ATTEMPTONLY}' | sed 's/ *$//g')"
 	export INSTALL_PACKAGES_LINGUAS_RPM=""
 	export INSTALL_PROVIDENAME_RPM="/bin/sh /bin/bash /usr/bin/env /usr/bin/perl pkgconfig libGL.so()(64bit) libGL.so"
 	export INSTALL_TASK_RPM="populate_sdk_rpm-nativesdk"
