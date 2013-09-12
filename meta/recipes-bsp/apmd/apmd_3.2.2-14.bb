@@ -17,7 +17,8 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/apmd/apmd_3.2.2.orig.tar.gz;name=tarball \
            file://init \
            file://default \
            file://apmd_proxy \
-           file://apmd_proxy.conf"
+           file://apmd_proxy.conf \
+           file://apmd.service"
 
 SRC_URI[tarball.md5sum] = "b1e6309e8331e0f4e6efd311c2d97fa8"
 SRC_URI[tarball.sha256sum] = "7f7d9f60b7766b852881d40b8ff91d8e39fccb0d1d913102a5c75a2dbb52332d"
@@ -27,10 +28,13 @@ SRC_URI[patch.sha256sum] = "7905ff96be93d725544d0040e425c42f9c05580db3c272f11cff
 
 S = "${WORKDIR}/apmd-3.2.2.orig"
 
-inherit update-rc.d
+inherit update-rc.d systemd
 
 INITSCRIPT_NAME = "apmd"
 INITSCRIPT_PARAMS = "defaults"
+
+SYSTEMD_SERVICE_${PN} = "apmd.service"
+SYSTEMD_AUTO_ENABLE = "disable"
 
 do_compile() {
 	# apmd doesn't use whole autotools. Just libtool for installation
@@ -63,6 +67,11 @@ do_install() {
 
 	cat ${WORKDIR}/init | sed -e 's,/usr/sbin,${sbindir},g; s,/etc,${sysconfdir},g;' > ${D}${sysconfdir}/init.d/apmd
 	chmod 755 ${D}${sysconfdir}/init.d/apmd
+
+	install -d ${D}${systemd_unitdir}/system
+	install -m 0644 ${WORKDIR}/apmd.service ${D}${systemd_unitdir}/system/
+	sed -i -e 's,@SYSCONFDIR@,${sysconfdir},g' \
+		-e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_unitdir}/system/apmd.service
 }
 
 PACKAGES =+ "libapm libapm-dev libapm-staticdev apm"
