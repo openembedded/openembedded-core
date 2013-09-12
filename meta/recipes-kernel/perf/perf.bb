@@ -52,6 +52,9 @@ export PERL_LIB = "${STAGING_LIBDIR}${PERL_OWN_DIR}/perl/${@get_perl_version(d)}
 export PERL_ARCHLIB = "${STAGING_LIBDIR}${PERL_OWN_DIR}/perl/${@get_perl_version(d)}"
 
 S = "${STAGING_KERNEL_DIR}"
+# The source should be ready after the do_unpack
+do_unpack[depends] += "virtual/kernel:do_populate_sysroot"
+
 B = "${WORKDIR}/${BPN}-${PV}"
 
 SCRIPTING_DEFINES = "${@perf_feature_enabled('perf-scripting', '', 'NO_LIBPERL=1 NO_LIBPYTHON=1',d)}"
