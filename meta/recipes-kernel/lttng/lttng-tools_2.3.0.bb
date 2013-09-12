@@ -10,15 +10,19 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=01d7fc4496aacf37d90df90b90b0cac1 \
                     file://lgpl-2.1.txt;md5=0f0d71500e6a57fd24d825f33242b9ca"
 
 DEPENDS = "liburcu popt lttng-ust"
+RDEPENDS_${PN}-ptest += "make"
 
 SRCREV = "c9dc1289e040c542f96fbfd558267786816d5703"
 PV = "v2.3.0"
 
-SRC_URI = "git://git.lttng.org/lttng-tools.git"
+SRC_URI = "git://git.lttng.org/lttng-tools.git \
+           file://runtest.patch \
+           file://run-ptest \
+	  "
 
 S = "${WORKDIR}/git"
 
-inherit autotools
+inherit autotools ptest
 
 export KERNELDIR="${STAGING_KERNEL_DIR}"
 
