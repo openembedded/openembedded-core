@@ -129,7 +129,7 @@ do_install () {
         sbinprogs="agetty ctrlaltdel cfdisk vipw vigr"
         sbinprogs_a="pivot_root hwclock mkswap mkfs.minix fsck.minix losetup swapon swapoff fdisk readprofile fsck blkid blockdev"
         usrbinprogs_a="chfn chsh hexdump last logger mesg newgrp renice utmpdump wall setsid chrt flock getopt"
-        binprogs_a="dmesg kill more umount mount login reset"
+        binprogs_a="dmesg kill more umount mount login reset su"
 
         if [ "${base_sbindir}" != "${sbindir}" ]; then
         	mkdir -p ${D}${base_sbindir}
@@ -224,6 +224,6 @@ BBCLASSEXTEND = "native nativesdk"
 python do_package_prepend () {
     if '--enable-su' in d.getVar('EXTRA_OECONF', True).split():
         alt_name = "su"
-        d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, '%s/%s' % (d.getVar('bindir', True), alt_name))
+        d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, '%s/%s' % (d.getVar('base_bindir', True), alt_name))
         d.appendVar('ALTERNATIVE_%s' % (d.getVar('PN', True)), ' ' + alt_name)
 }
