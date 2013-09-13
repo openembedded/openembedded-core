@@ -58,6 +58,10 @@ CPPFLAGS_append_powerpc = " -I${STAGING_INCDIR}/pango-1.0 \
                             -I${STAGING_LIBDIR}/glib-2.0/include \
                             -I${STAGING_INCDIR}/glib-2.0"
 
+# ld can run out of memory linking libwebkitgtk!
+#
+LDFLAGS += "-Wl,--no-keep-memory"
+
 EXTRA_AUTORECONF = " -I Source/autotools "
 
 
