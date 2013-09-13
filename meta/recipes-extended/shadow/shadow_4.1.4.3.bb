@@ -113,6 +113,7 @@ do_install() {
 	fi
 	if [ "${bindir}" != "${base_bindir}" ]; then
 		mv ${D}${bindir}/login ${D}${base_bindir}/login
+		mv ${D}${bindir}/su ${D}${base_bindir}/su
 	fi
 
 	# Handle link properly after rename, otherwise missing files would
@@ -129,7 +130,7 @@ ALTERNATIVE_LINK_NAME[chpasswd] = "${sbindir}/chpasswd"
 ALTERNATIVE_LINK_NAME[login] = "${base_bindir}/login"
 ALTERNATIVE_LINK_NAME[vipw] = "${base_sbindir}/vipw"
 ALTERNATIVE_LINK_NAME[vigr] = "${base_sbindir}/vigr"
-ALTERNATIVE_LINK_NAME[su] = "${bindir}/su"
+ALTERNATIVE_LINK_NAME[su] = "${base_bindir}/su"
 
 pkg_postinst_${PN} () {
 	if [ "x$D" != "x" ]; then
