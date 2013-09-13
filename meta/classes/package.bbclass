@@ -1304,17 +1304,8 @@ python package_do_filedeps() {
         d.setVar("FILERPROVIDESFLIST_" + pkg, " ".join(provides_files[pkg]))
 }
 
-def getshlibsdirs(d):
-    dirs = []
-    triplets = (d.getVar("PKGTRIPLETS") or "").split()
-    for t in triplets:
-        dirs.append("${TMPDIR}/pkgdata/" + t + "/shlibs/")
-    return " ".join(dirs)
-getshlibsdirs[vardepsexclude] = "PKGTRIPLETS"
-
-SHLIBSDIRS = "${@getshlibsdirs(d)}"
-SHLIBSDIR = "${TMPDIR}/pkgdata/${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}/shlibs"
-SHLIBSWORKDIR = "${PKGDESTWORK}/shlibs"
+SHLIBSDIRS = "${PKGDATA_DIR}/${MLPREFIX}shlibs"
+SHLIBSWORKDIR = "${PKGDESTWORK}/${MLPREFIX}shlibs"
 
 python package_do_shlibs() {
     import re, pipes
@@ -1953,6 +1944,7 @@ do_packagedata[sstate-name] = "packagedata"
 do_packagedata[sstate-inputdirs] = "${PKGDESTWORK}"
 do_packagedata[sstate-outputdirs] = "${PKGDATA_DIR}"
 do_packagedata[sstate-lockfile-shared] = "${PACKAGELOCK}"
+do_packagedata[stamp-extra-info] = "${MACHINE}"
 
 python do_packagedata_setscene () {
     sstate_setscene(d)

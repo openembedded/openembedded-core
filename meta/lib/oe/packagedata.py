@@ -23,21 +23,7 @@ def read_pkgdatafile(fn):
 
     return pkgdata
 
-def all_pkgdatadirs(d):
-    dirs = []
-    triplets = (d.getVar("PKGMLTRIPLETS") or "").split()
-    for t in triplets:
-        dirs.append(t + "/runtime/")
-    return dirs 
- 
 def get_subpkgedata_fn(pkg, d):
-    dirs = all_pkgdatadirs(d)
-
-    pkgdata = d.expand('${TMPDIR}/pkgdata/')
-    for dir in dirs:
-        fn = pkgdata + dir + pkg
-        if os.path.exists(fn):
-            return fn
     return d.expand('${PKGDATA_DIR}/runtime/%s' % pkg)
 
 def has_subpkgdata(pkg, d):
@@ -70,29 +56,24 @@ def read_subpkgdata_dict(pkg, d):
 def _pkgmap(d):
     """Return a dictionary mapping package to recipe name."""
 
-    target_os = d.getVar("TARGET_OS", True)
-    target_vendor = d.getVar("TARGET_VENDOR", True)
-    basedir = os.path.dirname(d.getVar("PKGDATA_DIR", True))
-
-    dirs = ("%s%s-%s" % (arch, target_vendor, target_os)
-            for arch in d.getVar("PACKAGE_ARCHS", True).split())
+    pkgdatadir = d.getVar("PKGDATA_DIR", True)
 
     pkgmap = {}
-    for pkgdatadir in (os.path.join(basedir, sys) for sys in dirs):
+    try:
+        files = os.listdir(pkgdatadir)
+    except OSError:
+        bb.warn("No files in %s?" % pkgdatadir)
+        files = []
+
+    for pn in filter(lambda f: not os.path.isdir(os.path.join(pkgdatadir, f)), files):
         try:
-            files = os.listdir(pkgdatadir)
+            pkgdata = read_pkgdatafile(os.path.join(pkgdatadir, pn))
         except OSError:
             continue
 
-        for pn in filter(lambda f: not os.path.isdir(os.path.join(pkgdatadir, f)), files):
-            try:
-                pkgdata = read_pkgdatafile(os.path.join(pkgdatadir, pn))
-            except OSError:
-                continue
-
-            packages = pkgdata.get("PACKAGES") or ""
-            for pkg in packages.split():
-                pkgmap[pkg] = pn
+        packages = pkgdata.get("PACKAGES") or ""
+        for pkg in packages.split():
+            pkgmap[pkg] = pn
 
     return pkgmap
 

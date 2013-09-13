@@ -484,7 +484,7 @@ rootfs_install_complementary() {
         # Use the magic script to do all the work for us :)
         : > ${WORKDIR}/complementary_pkgs.txt
         for vendor in '${TARGET_VENDOR}' ${MULTILIB_VENDORS} ; do
-            oe-pkgdata-util glob ${TMPDIR}/pkgdata $vendor-${TARGET_OS} ${WORKDIR}/installed_pkgs.txt "$GLOBS" >> ${WORKDIR}/complementary_pkgs.txt
+            oe-pkgdata-util glob ${PKGDATA_DIR} ${WORKDIR}/installed_pkgs.txt "$GLOBS" >> ${WORKDIR}/complementary_pkgs.txt
         done
 
         # Install the packages, if any

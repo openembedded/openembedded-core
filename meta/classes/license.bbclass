@@ -28,8 +28,7 @@ license_create_manifest() {
 	fi
 	touch ${LICENSE_MANIFEST}
 	for pkg in ${INSTALLED_PKGS}; do
-		# not the best way to do this but licenses are not arch dependant iirc
-		filename=`ls ${TMPDIR}/pkgdata/*/runtime-reverse/${pkg}| head -1`
+		filename=`ls ${PKGDATA_DIR}/runtime-reverse/${pkg}| head -1`
 		pkged_pn="$(sed -n 's/^PN: //p' ${filename})"
 
 		# check to see if the package name exists in the manifest. if so, bail.

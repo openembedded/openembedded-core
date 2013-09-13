@@ -41,17 +41,13 @@ def usage():
 
 
 def glob(args):
-    if len(args) < 4:
+    if len(args) < 3:
         usage()
         sys.exit(1)
 
     pkgdata_dir = args[0]
-    target_suffix = args[1]
-    pkglist_file = args[2]
-    globs = args[3].split()
-
-    if target_suffix.startswith("-"):
-        target_suffix = target_suffix[1:]
+    pkglist_file = args[1]
+    globs = args[2].split()
 
     skipregex = re.compile("-locale-|^locale-base-|-dev$|-doc$|-dbg$|-staticdev$|^kernel-module-")
 
@@ -63,7 +59,6 @@ def glob(args):
                 continue
             pkg = fields[0]
             arch = fields[1]
-            multimach_target_sys = "%s-%s" % (arch, target_suffix)
 
             # Skip packages for which there is no point applying globs
             if skipregex.search(pkg):
@@ -86,9 +81,9 @@ def glob(args):
 
             # Define some functions
             def revpkgdata(pkgn):
-                return os.path.join(pkgdata_dir, multimach_target_sys, "runtime-reverse", pkgn)
+                return os.path.join(pkgdata_dir, "runtime-reverse", pkgn)
             def fwdpkgdata(pkgn):
-                return os.path.join(pkgdata_dir, multimach_target_sys, "runtime", pkgn)
+                return os.path.join(pkgdata_dir, "runtime", pkgn)
             def readpn(pkgdata_file):
                 pn = ""
                 with open(pkgdata_file, 'r') as f:
@@ -156,17 +151,13 @@ def glob(args):
     print("\n".join(mappedpkgs))
 
 def read_value(args):
-    if len(args) < 4:
+    if len(args) < 3:
         usage()
         sys.exit(1)
 
     pkgdata_dir = args[0]
-    target_suffix = args[1]
-    var = args[2]
-    packages = args[3].split()
-
-    if target_suffix.startswith("-"):
-        target_suffix = target_suffix[1:]
+    var = args[1]
+    packages = args[2].split()
 
     def readvar(pkgdata_file, var):
         val = ""
@@ -177,23 +168,16 @@ def read_value(args):
         return val
 
     if debug:
-        print "read-value('%s', '%s', '%s' '%s'" % (pkgdata_dir, target_suffix, var, packages)
+        print "read-value('%s', '%s' '%s'" % (pkgdata_dir, var, packages)
     for package in packages:
         pkg_split = package.split('_')
         pkg_name = pkg_split[0]
         pkg_arch = '_'.join(pkg_split[1:])
         if debug:
             print "package: name: '%s', arch: '%s'" % (pkg_name, pkg_arch)
-        multimach_target_sys = "%s-%s" % (pkg_arch, target_suffix)
-        revlink = os.path.join(pkgdata_dir, multimach_target_sys, "runtime-reverse", pkg_name)
+        revlink = os.path.join(pkgdata_dir, "runtime-reverse", pkg_name)
         if debug:
             print(revlink)
-        if not os.path.exists(revlink):
-            # [YOCTO #4227] try to drop -gnueabi from TARGET_OS
-            multimach_target_sys = '-'.join(multimach_target_sys.split('-')[:-1])
-            revlink = os.path.join(pkgdata_dir, multimach_target_sys, "runtime-reverse", pkg_name)
-            if debug:
-                print(revlink)
         if os.path.exists(revlink):
             mappedpkg = os.path.basename(os.readlink(revlink))
             qvar = var

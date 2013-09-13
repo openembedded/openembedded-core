@@ -340,7 +340,7 @@ buildhistory_get_installed() {
 	cat $pkgcache | while read pkg pkgfile pkgarch
 	do
 		for vendor in ${TARGET_VENDOR} ${MULTILIB_VENDORS} ; do
-			size=`oe-pkgdata-util read-value ${TMPDIR}/pkgdata $vendor-${TARGET_OS} "PKGSIZE" ${pkg}_${pkgarch}`
+			size=`oe-pkgdata-util read-value ${PKGDATA_DIR} "PKGSIZE" ${pkg}_${pkgarch}`
 			if [ "$size" != "" ] ; then
 				echo "$size $pkg" >> $1/installed-package-sizes.tmp
 			fi

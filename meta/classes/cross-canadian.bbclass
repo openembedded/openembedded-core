@@ -31,7 +31,6 @@ STAGING_DIR_HOST = "${STAGING_DIR}/${HOST_ARCH}-${SDKPKGSUFFIX}${HOST_VENDOR}-${
 TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR}/${HOST_ARCH}-${SDKPKGSUFFIX}${HOST_VENDOR}-${HOST_OS}"
 
 PATH_append = ":${TMPDIR}/sysroots/${HOST_ARCH}/${bindir_cross}"
-PKGDATA_DIR = "${TMPDIR}/pkgdata/${HOST_ARCH}-${SDKPKGSUFFIX}${HOST_VENDOR}-${HOST_OS}"
 PKGHIST_DIR = "${TMPDIR}/pkghistory/${HOST_ARCH}-${SDKPKGSUFFIX}${HOST_VENDOR}-${HOST_OS}/"
 
 HOST_ARCH = "${SDK_ARCH}"
@@ -88,10 +87,6 @@ FILES_${PN}-dbg += "${prefix}/.debug \
 
 export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${layout_libdir}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
-
-# Cross-canadian packages need to pull in nativesdk dynamic libs
-SHLIBSDIRS = "${TMPDIR}/pkgdata/${HOST_ARCH}-${SDKPKGSUFFIX}${HOST_VENDOR}-${HOST_OS}/shlibs/ ${TMPDIR}/pkgdata/all-${HOST_VENDOR}-${HOST_OS}/shlibs/"
-SHLIBSDIR = "${TMPDIR}/pkgdata/${HOST_ARCH}-${SDKPKGSUFFIX}${HOST_VENDOR}-${HOST_OS}/shlibs/"
 
 do_populate_sysroot[stamp-extra-info] = ""
 

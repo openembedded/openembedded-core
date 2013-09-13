@@ -109,7 +109,7 @@ translate_smart_to_oe() {
 					fi
 					# Workaround for bug 3565
 					# Simply look to see if we know of a package with that name, if not try again!
-					filename=`ls ${TMPDIR}/pkgdata/*/runtime-reverse/$new_pkg 2>/dev/null | head -n 1`
+					filename=`ls ${PKGDATA_DIR}/runtime-reverse/$new_pkg 2>/dev/null | head -n 1`
 					if [ -n "$filename" ] ; then
 						found=1
 						break
