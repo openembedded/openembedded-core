@@ -15,7 +15,7 @@ class SmartTest(oeRuntimeTest):
     @skipUnlessPassed('test_smart_help')
     def smart(self, command, expected = 0):
         command = 'smart %s' % command
-        status, output = self.target.run(command, 500)
+        status, output = self.target.run(command, 900)
         message = os.linesep.join([command, output])
         self.assertEqual(status, expected, message)
         self.assertFalse("Cannot allocate memory" in output, message)

@@ -9,7 +9,7 @@ class PingTest(oeRuntimeTest):
     def test_ping(self):
         output = ''
         status = None
-        endtime = time.time() + 30
+        endtime = time.time() + 60
         while status != 0 and time.time() < endtime:
             proc = subprocess.Popen("ping -c 1 %s" % oeRuntimeTest.tc.qemu.ip, shell=True, stdout=subprocess.PIPE)
             output += proc.communicate()[0]
