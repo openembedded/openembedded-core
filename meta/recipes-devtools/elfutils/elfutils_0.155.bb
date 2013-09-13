@@ -5,8 +5,6 @@ LICENSE = "(GPLv3 & Elfutils-Exception)"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 DEPENDS = "libtool bzip2 zlib virtual/libintl"
 
-PR = "r0"
-
 SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/${PV}/elfutils-${PV}.tar.bz2"
 
 SRC_URI[md5sum] = "163a5712b86f6bdfebdf233cc6e2192d"
@@ -24,6 +22,7 @@ SRC_URI += "\
 	file://dso-link-change.patch \
 	file://nm-Fix-size-passed-to-snprintf-for-invalid-sh_name-case.patch \
 	file://elfutils-ar-c-fix-num-passed-to-memset.patch \
+	file://fix-build-gcc-4.8.patch \
 "
 # Only apply when building uclibc based target recipe
 SRC_URI_append_libc-uclibc = " file://uclibc-support.patch"
