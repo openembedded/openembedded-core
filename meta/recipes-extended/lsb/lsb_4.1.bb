@@ -79,8 +79,8 @@ do_install_append(){
 
        # creat links for LSB test
        install -d ${D}/${libdir}/lsb
-       ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/install_initd
-       ln -sf ${base_sbindir}/chkconfig ${D}/${libdir}/lsb/remove_initd
+       ln -sf ${sbindir}/chkconfig ${D}/${libdir}/lsb/install_initd
+       ln -sf ${sbindir}/chkconfig ${D}/${libdir}/lsb/remove_initd
        ln -sf ${sbindir}/sendmail ${D}/${libdir}/sendmail
 
        if [ "${TARGET_ARCH}" = "x86_64" ];then
