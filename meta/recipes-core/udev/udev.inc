@@ -17,6 +17,7 @@ RPROVIDES_${PN} = "hotplug"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
            file://0001-Fixing-keyboard_force_release.sh-shell-script-path.patch \
+           file://avoid-mouse-autosuspend.patch \
            file://run.rules \
            file://udev.rules \
            file://devfs-udev.rules \
