@@ -1,0 +1,43 @@
+Upstream-Status: Backport
+
+From d0721e703d222c01a9e8c329311c4fb01dac6972 Mon Sep 17 00:00:00 2001
+From: Carlos O'Donell <carlos@redhat.com>
+Date: Thu, 29 Aug 2013 00:17:33 -0400
+Subject: [PATCH] ARM: Pass dl_hwcap to IFUNC resolver.
+
+For REL relocs pass dl_hwcap to the IFUNC resolver
+as is required by the IFUNC API (bug 15905).
+---
+ NEWS                           | 2 +-
+ ports/ChangeLog.arm            | 7 +++++++
+ ports/sysdeps/arm/dl-machine.h | 2 +-
+ 3 files changed, 9 insertions(+), 2 deletions(-)
+
+Index: libc/ports/ChangeLog.arm
+===================================================================
+--- libc.orig/ports/ChangeLog.arm	2013-07-14 16:08:52.000000000 -0700
++++ libc/ports/ChangeLog.arm	2013-09-12 17:17:24.174387150 -0700
+@@ -1,3 +1,10 @@
++2013-08-28  Kyle McMartin  <kyle@redhat.com>
++	    Carlos O'Donell  <carlos@redhat.com>
++
++	[BZ #15905]
++	* sysdeps/arm/dl-machine [!RTLD_BOOTSTRAP] (elf_machine_rel):
++	Pass GLRO(dl_hwcap) to the IFUNC resolver.
++
+ 2013-07-03  Joseph Myers  <joseph@codesourcery.com>
+ 
+ 	* sysdeps/arm/include/bits/setjmp.h [_ISOMAC] (JMP_BUF_REGLIST):
+Index: libc/ports/sysdeps/arm/dl-machine.h
+===================================================================
+--- libc.orig/ports/sysdeps/arm/dl-machine.h	2013-09-12 08:56:03.641743520 -0700
++++ libc/ports/sysdeps/arm/dl-machine.h	2013-09-12 17:17:24.174387150 -0700
+@@ -503,7 +503,7 @@
+ 	  break;
+ 	case R_ARM_IRELATIVE:
+ 	  value = map->l_addr + *reloc_addr;
+-	  value = ((Elf32_Addr (*) (void)) value) ();
++	  value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
+ 	  *reloc_addr = value;
+ 	  break;
+ #endif
