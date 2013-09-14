@@ -193,6 +193,16 @@ RDEPENDS_packagegroup-core-lsb-python = "\
     python-misc \
 "
 
+def get_libqt3(d):
+    if 'linuxstdbase' in d.getVar('DISTROOVERRIDES') or "":
+        if 'qt3' in d.getVar('BBFILE_COLLECTIONS') or "":
+            return 'libqt-mt3'
+
+        bb.warn('The meta-qt3 layer should be added, this layer provides Qt 3.x')
+        bb.warn('libraries. Its intended use is for passing LSB tests as Qt3 is')
+        bb.warn('a requirement for LSB')
+    return ''
+
 SUMMARY_packagegroup-core-lsb-desktop = "LSB Desktop"
 DESCRIPTION_packagegroup-core-lsb-desktop = "Packages required to support libraries \
     specified in the LSB Desktop specification"
@@ -221,6 +231,7 @@ RDEPENDS_packagegroup-core-lsb-desktop = "\
     atk \
     libasound \
     ${@base_contains("DISTRO_FEATURES", "opengl", "libqtopengl4", "", d)} \
+    ${@get_libqt3(d)} \
 "
 
 RDEPENDS_packagegroup-core-lsb-runtime-add = "\
