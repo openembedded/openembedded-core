@@ -8,7 +8,6 @@ LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1970511fddd439b07a6ba789d28ff662"
 
 PE = "1"
-PR = "r0"
 
 # ${PN} is empty so we need to tweak -dev and -dbg package dependencies
 RDEPENDS_${PN}-dev = ""
@@ -16,5 +15,5 @@ RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "e162e8921cd08c50bf17b9de5131b3f1"
-SRC_URI[sha256sum] = "a7de22d6828b2a4469d32b4744ac2fe9103fcb85e72dd70794ef77f188946371"
+SRC_URI[md5sum] = "886de1940334e097c5f66233a8393122"
+SRC_URI[sha256sum] = "67bd01d5f4713c9e9d57dc742504d06292dd9c4fb73041ea16fed034c56c622a"
