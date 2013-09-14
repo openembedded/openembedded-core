@@ -111,6 +111,63 @@ build_iso() {
 	ln -s ${IMAGE_NAME}.iso ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.iso
 }
 
+build_fat_img() {
+	FATSOURCEDIR=$1
+	FATIMG=$2
+
+	# Calculate the size required for the final image including the
+	# data and filesystem overhead.
+	# Sectors: 512 bytes
+	#  Blocks: 1024 bytes
+
+	# Determine the sector count just for the data
+	SECTORS=$(expr $(du --apparent-size -ks ${FATSOURCEDIR} | cut -f 1) \* 2)
+
+	# Account for the filesystem overhead. This includes directory
+	# entries in the clusters as well as the FAT itself.
+	# Assumptions:
+	#   FAT32 (12 or 16 may be selected by mkdosfs, but the extra
+	#   padding will be minimal on those smaller images and not
+	#   worth the logic here to caclulate the smaller FAT sizes)
+	#   < 16 entries per directory
+	#   8.3 filenames only
+
+	# 32 bytes per dir entry
+	DIR_BYTES=$(expr $(find ${FATSOURCEDIR} | tail -n +2 | wc -l) \* 32)
+	# 32 bytes for every end-of-directory dir entry
+	DIR_BYTES=$(expr $DIR_BYTES + $(expr $(find ${FATSOURCEDIR} -type d | tail -n +2 | wc -l) \* 32))
+	# 4 bytes per FAT entry per sector of data
+	FAT_BYTES=$(expr $SECTORS \* 4)
+	# 4 bytes per FAT entry per end-of-cluster list
+	FAT_BYTES=$(expr $FAT_BYTES + $(expr $(find ${FATSOURCEDIR} -type d | tail -n +2 | wc -l) \* 4))
+
+	# Use a ceiling function to determine FS overhead in sectors
+	DIR_SECTORS=$(expr $(expr $DIR_BYTES + 511) / 512)
+	# There are two FATs on the image
+	FAT_SECTORS=$(expr $(expr $(expr $FAT_BYTES + 511) / 512) \* 2)
+	SECTORS=$(expr $SECTORS + $(expr $DIR_SECTORS + $FAT_SECTORS))
+
+	# Determine the final size in blocks accounting for some padding
+	BLOCKS=$(expr $(expr $SECTORS / 2) + ${BOOTIMG_EXTRA_SPACE})
+
+	# Ensure total sectors is an integral number of sectors per
+	# track or mcopy will complain. Sectors are 512 bytes, and we
+	# generate images with 32 sectors per track. This calculation is
+	# done in blocks, thus the mod by 16 instead of 32.
+	BLOCKS=$(expr $BLOCKS + $(expr 16 - $(expr $BLOCKS % 16)))
+
+	# mkdosfs will sometimes use FAT16 when it is not appropriate,
+	# resulting in a boot failure from SYSLINUX. Use FAT32 for
+	# images larger than 512MB, otherwise let mkdosfs decide.
+	if [ $(expr $BLOCKS / 1024) -gt 512 ]; then
+		FATSIZE="-F 32"
+	fi
+
+	mkdosfs ${FATSIZE} -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${FATIMG} ${BLOCKS}
+	# Copy FATSOURCEDIR recursively into the image file directly
+	mcopy -i ${FATIMG} -s ${FATSOURCEDIR}/* ::/
+}
+
 build_hddimg() {
 	# Create an HDD image
 	if [ "${NOHDD}" != "1" ] ; then
@@ -123,58 +180,7 @@ build_hddimg() {
 			grubefi_hddimg_populate
 		fi
 
-		# Calculate the size required for the final image including the
-		# data and filesystem overhead.
-		# Sectors: 512 bytes
-		#  Blocks: 1024 bytes
-
-		# Determine the sector count just for the data
-		SECTORS=$(expr $(du --apparent-size -ks ${HDDDIR} | cut -f 1) \* 2)
-
-		# Account for the filesystem overhead. This includes directory
-		# entries in the clusters as well as the FAT itself.
-		# Assumptions:
-		#   FAT32 (12 or 16 may be selected by mkdosfs, but the extra
-		#   padding will be minimal on those smaller images and not
-		#   worth the logic here to caclulate the smaller FAT sizes)
-		#   < 16 entries per directory
-		#   8.3 filenames only
-
-		# 32 bytes per dir entry
-		DIR_BYTES=$(expr $(find ${HDDDIR} | tail -n +2 | wc -l) \* 32)
-		# 32 bytes for every end-of-directory dir entry
-		DIR_BYTES=$(expr $DIR_BYTES + $(expr $(find ${HDDDIR} -type d | tail -n +2 | wc -l) \* 32))
-		# 4 bytes per FAT entry per sector of data
-		FAT_BYTES=$(expr $SECTORS \* 4)
-		# 4 bytes per FAT entry per end-of-cluster list
-		FAT_BYTES=$(expr $FAT_BYTES + $(expr $(find ${HDDDIR} -type d | tail -n +2 | wc -l) \* 4))
-
-		# Use a ceiling function to determine FS overhead in sectors
-		DIR_SECTORS=$(expr $(expr $DIR_BYTES + 511) / 512)
-		# There are two FATs on the image
-		FAT_SECTORS=$(expr $(expr $(expr $FAT_BYTES + 511) / 512) \* 2)
-		SECTORS=$(expr $SECTORS + $(expr $DIR_SECTORS + $FAT_SECTORS))
-
-		# Determine the final size in blocks accounting for some padding
-		BLOCKS=$(expr $(expr $SECTORS / 2) + ${BOOTIMG_EXTRA_SPACE})
-
-		# Ensure total sectors is an integral number of sectors per
-		# track or mcopy will complain. Sectors are 512 bytes, and we
-		# generate images with 32 sectors per track. This calculation is
-		# done in blocks, thus the mod by 16 instead of 32.
-		BLOCKS=$(expr $BLOCKS + $(expr 16 - $(expr $BLOCKS % 16)))
-
-		# mkdosfs will sometimes use FAT16 when it is not appropriate,
-		# resulting in a boot failure from SYSLINUX. Use FAT32 for
-		# images larger than 512MB, otherwise let mkdosfs decide.
-		if [ $(expr $BLOCKS / 1024) -gt 512 ]; then
-			FATSIZE="-F 32"
-		fi
-
-		IMG=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
-		mkdosfs ${FATSIZE} -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${IMG} ${BLOCKS}
-		# Copy HDDDIR recursively into the image file directly
-		mcopy -i ${IMG} -s ${HDDDIR}/* ::/
+		build_fat_img ${HDDDIR} ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
 
 		if [ "${PCBIOS}" = "1" ]; then
 			syslinux_hddimg_install
