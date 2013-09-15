@@ -47,6 +47,12 @@ base_bindir_progs = "cat chgrp chmod chown cp date dd echo false kill ln ls mkdi
 
 sbindir_progs= "chroot"
 
+# Let aclocal use the relative path for the m4 file rather than the
+# absolute since coreutils has a lot of m4 files, otherwise there might
+# be an "Argument list too long" error when it is built in a long/deep
+# directory.
+acpaths = "-I ./m4"
+
 # Deal with a separate builddir failure if src doesn't exist when creating version.c/version.h
 do_compile_prepend () {
 	mkdir -p ${B}/src
