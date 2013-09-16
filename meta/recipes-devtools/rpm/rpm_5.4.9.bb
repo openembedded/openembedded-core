@@ -156,7 +156,7 @@ PACKAGECONFIG[neon] = "${WITH_NEON},${WITHOUT_NEON},neon expat,"
 PACKAGECONFIG[lua] = "--with-lua,--without-lua,expat,"
 PACKAGECONFIG[tcl] = "--with-tcl,--without-tcl,tcl,"
 
-PACAKGECONFIG[augeas] = "--with-augeas,--without-augeas,augeas,"
+PACKAGECONFIG[augeas] = "--with-augeas,--without-augeas,augeas,"
 
 EXTRA_OECONF += "--verbose \
 		--sysconfdir=${sysconfdir} \
