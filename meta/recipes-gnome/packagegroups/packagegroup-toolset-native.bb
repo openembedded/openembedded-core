@@ -92,7 +92,6 @@ DEPENDS = "\
     icecc-create-env-native \
     icon-naming-utils-native \
     icu-native \
-    imake-native \
     inputproto-native \
     insserv-native \
     intltool-native \
@@ -225,7 +224,6 @@ DEPENDS = "\
     xcmiscproto-native \
     xextproto-native \
     xkbcomp-native \
-    xorg-cf-files-native \
     xproto-native \
     xtrans-native \
     xz-native \
