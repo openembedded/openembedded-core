@@ -213,7 +213,6 @@ DEPENDS = "\
     tcl-native \
     texinfo-native \
     tiff-native \
-    transfig-native \
     tzcode-native \
     u-boot-mkimage-native \
     unfs-server-native \
