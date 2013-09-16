@@ -18,11 +18,12 @@ BOOST_LIBS = "\
 	thread \
 	"
 
-# To enable python, uncomment the following:
-#BOOST_LIBS += "python"
-#DEPENDS += "python"
-#PYTHON_ROOT = "${STAGING_DIR_HOST}/${prefix}"
-#PYTHON_VERSION = "2.7"
+# optional boost-python library
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[python] = ",,python"
+BOOST_LIBS += "${@base_contains('PACKAGECONFIG', 'python', 'python', '', d)}"
+inherit python-dir
+PYTHON_ROOT = "${STAGING_DIR_HOST}/${prefix}"
 
 # Make a package for each library, plus -dev
 PACKAGES = "${PN}-dbg ${BOOST_PACKAGES}"
@@ -95,7 +96,7 @@ BJAM_TOOLS   = "-sTOOLS=gcc \
 		'-sGCC_INCLUDE_DIRECTORY=${STAGING_INCDIR}' \
 		'-sGCC_STDLIB_DIRECTORY=${STAGING_LIBDIR}' \
 		'-sBUILD=release <optimization>space <threading>multi <inlining>on <debug-symbols>off' \
-		'-sPYTHON_VERSION=${PYTHON_VERSION}' \
+		'-sPYTHON_VERSION=${PYTHON_BASEVERSION}' \
 		'-sPYTHON_ROOT=${PYTHON_ROOT}' \
 		'--layout=system' \
 		"
@@ -136,7 +137,7 @@ do_boostconfig() {
 		echo 'using gcc : 4.3.1 : ${CXX} : compileflags -DBOOST_SP_USE_PTHREADS -I${includedir} linkflags -L${libdir} ;' >> ${S}/tools/build/v2/user-config.jam
 	fi	
 
-	echo "using python : ${PYTHON_VERSION} : : ${STAGING_INCDIR}/python${PYTHON_VERSION} ;" >> ${S}/tools/build/v2/user-config.jam
+	echo "using python : ${PYTHON_BASEVERSION} : : ${STAGING_INCDIR}/python${PYTHON_BASEVERSION} ;" >> ${S}/tools/build/v2/user-config.jam
 
 	CC="${BUILD_CC}" CFLAGS="${BUILD_CFLAGS}" ./bootstrap.sh --with-bjam=bjam --with-toolset=gcc --with-python-root=${PYTHON_ROOT}
 	sed -i '/^using python/d' project-config.jam
