@@ -1,0 +1,28 @@
+Upstream-status: Accepted
+This patch had accepted at kdb-1.5.4
+
+From e069cfa96b41a6714118e15496cdd6b83fc16ad2 Mon Sep 17 00:00:00 2001
+From: Alexey Gladkov <gladkov.alexey@gmail.com>
+Date: Mon, 27 Feb 2012 14:30:50 +0400
+Subject: [PATCH] Allow resizecons on x86_64
+
+Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+---
+ configure.ac |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index a8115ed..b58f3bd 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -62,6 +62,7 @@ AM_CONDITIONAL(KEYCODES_PROGS, test "$KEYCODES_PROGS" = "yes")
+ 
+ case $host_cpu in
+ 	i?86*) RESIZECONS_PROGS=yes ;;
++	x86_64*) RESIZECONS_PROGS=yes ;;
+ 	*)     RESIZECONS_PROGS=no ;;
+ esac
+ AM_CONDITIONAL(RESIZECONS_PROGS, test "$RESIZECONS_PROGS" = "yes")
+-- 
+1.7.1
+
