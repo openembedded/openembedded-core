@@ -1,0 +1,2 @@
+search.file /EFI/BOOT/grub.cfg root
+set prefix=($root)/EFI/BOOT
