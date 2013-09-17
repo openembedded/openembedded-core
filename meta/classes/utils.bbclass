@@ -293,11 +293,9 @@ END
 }
 
 def check_app_exists(app, d):
-    from bb import which, data
-
-    app = data.expand(app, d)
-    path = data.getVar('PATH', d, 1)
-    return bool(which(path, app))
+    app = d.expand(app)
+    path = d.getVar('PATH', d, True)
+    return bool(bb.utils.which(path, app))
 
 def explode_deps(s):
     return bb.utils.explode_deps(s)
