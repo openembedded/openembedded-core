@@ -2,19 +2,21 @@ DESCRIPTION = "A multi-purpose linux bootloader"
 HOMEPAGE = "http://syslinux.zytor.com/"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
-                    file://README;beginline=35;endline=41;md5=f7249a750bc692d1048b2626752aa415"
+                    file://README;beginline=35;endline=41;md5=558f2c71cb1fb9ba511ccd4858e48e8a"
 
 # If you really want to run syslinux, you need mtools.  We just want the
 # ldlinux.* stuff for now, so skip mtools-native
 DEPENDS = "nasm-native util-linux"
-PR = "r0"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/4.xx/syslinux-${PV}.tar.bz2"
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/6.xx/syslinux-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "9ff6e1b94efab931fb4717b600d88779"
-SRC_URI[sha256sum] = "1240a4e4219b518bdaef78931b6e901befeff35e6894ac6db785115848a7a05a"
+SRC_URI[md5sum] = "6945ee89e29119d459baed4937bbc534"
+SRC_URI[sha256sum] = "83a04cf81e6a46b80ee5a321926eea095af3498b04317e3674b46c125c7a5b43"
 
 COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
+# Don't let the sanity checker trip on the 32 bit real mode BIOS binaries
+INSANE_SKIP_${PN}-misc = "arch"
+INSANE_SKIP_${PN}-chain = "arch"
 
 EXTRA_OEMAKE = " \
 	BINDIR=${bindir} SBINDIR=${sbindir} LIBDIR=${libdir} \
@@ -28,21 +30,25 @@ do_configure() {
 	sed -e 's,win32/\S*,,g' -i Makefile
 
 	# clean installer executables included in source tarball
-	oe_runmake clean
+	oe_runmake clean firmware="efi32" EFIINC="${includedir}"
+	# NOTE: There is a temporary work around above to specify
+	#	the efi32 as the firmware else the pre-built bios
+	#	files get erased contrary to the doc/distib.txt
+	#	In the future this should be "bios" and not "efi32".
 }
 
 do_compile() {
 	# Rebuild only the installer; keep precompiled bootloaders
 	# as per author's request (doc/distrib.txt)
-	oe_runmake CC="${CC} ${CFLAGS}" LDFLAGS="${LDFLAGS}" installer
+	oe_runmake CC="${CC} ${CFLAGS}" LDFLAGS="${LDFLAGS}" firmware="bios" installer
 }
 
 do_install() {
-	oe_runmake install INSTALLROOT="${D}"
+	oe_runmake install INSTALLROOT="${D}" firmware="bios"
 
 	install -d ${D}${datadir}/syslinux/
-	install -m 644 ${S}/core/ldlinux.sys ${D}${datadir}/syslinux/
-	install -m 644 ${S}/core/ldlinux.bss ${D}${datadir}/syslinux/
+	install -m 644 ${S}/bios/core/ldlinux.sys ${D}${datadir}/syslinux/
+	install -m 644 ${S}/bios/core/ldlinux.bss ${D}${datadir}/syslinux/
 }
 
 PACKAGES += "${PN}-extlinux ${PN}-mbr ${PN}-chain ${PN}-pxelinux ${PN}-isolinux ${PN}-misc"
