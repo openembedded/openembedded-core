@@ -108,10 +108,16 @@ CONFIGURESTAMPFILE = "${WORKDIR}/configure.sstate"
 
 autotools_preconfigure() {
 	if [ -n "${CONFIGURESTAMPFILE}" -a -e "${CONFIGURESTAMPFILE}" ]; then
-		if [ "`cat ${CONFIGURESTAMPFILE}`" != "${BB_TASKHASH}" -a "${S}" != "${B}" ]; then
-			echo "Previously configured separate build directory detected, cleaning ${B}"
-			rm -rf ${B}
-			mkdir ${B}
+		if [ "`cat ${CONFIGURESTAMPFILE}`" != "${BB_TASKHASH}" ]; then
+			if [ "${S}" != "${B}" ]; then
+				echo "Previously configured separate build directory detected, cleaning ${B}"
+				rm -rf ${B}
+				mkdir ${B}
+			else
+				# At least remove the .la files since automake won't automatically
+				# regenerate them even if CFLAGS/LDFLAGS are different
+				cd ${S}; find ${S} -name \*.la -delete
+			fi
 		fi
 	fi
 }
