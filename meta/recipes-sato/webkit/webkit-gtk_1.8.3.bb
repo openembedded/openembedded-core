@@ -86,26 +86,6 @@ do_configure_append() {
 	done
 }
 
-# A dirty hack for GNU make 3.82 bug which means it drops required
-# dependencies. https://bugs.webkit.org/show_bug.cgi?id=79498 is the WebKitGTK+
-# bug, and http://savannah.gnu.org/bugs/?30653 is the GNU Make bug.  This is
-# fixed in Make CVS, so 3.83 won't have this problem.
-do_compile() {
-    if [ x"$MAKE" = x ]; then MAKE=make; fi
-    bbnote ${MAKE} ${EXTRA_OEMAKE} "$@"
-    for error_count in 1 2 3; do
-        bbnote "Attempt $error_count of 3"
-        exit_code=0
-        ${MAKE} ${EXTRA_OEMAKE} "$@" || exit_code=1
-        if [ $exit_code = 0 ]; then
-            break
-        fi
-    done
-    if [ ! $exit_code = 0 ]; then
-        die "oe_runmake failed"
-    fi
-}
-
 do_install_append() {
 	rmdir ${D}${libexecdir}
 }
