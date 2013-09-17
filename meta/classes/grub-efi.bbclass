@@ -9,6 +9,7 @@
 # External variables
 # ${INITRD} - indicates a filesystem image to use as an initrd (optional)
 # ${ROOTFS} - indicates a filesystem image to include as the root filesystem (optional)
+# ${GRUB_GFXSERIAL} - set this to 1 to have graphics and serial in the boot menu
 # ${LABELS} - a list of targets for the automatic config
 # ${APPEND} - an override list of append strings for each label
 # ${GRUB_OPTS} - additional options to add to the config, ';' delimited # (optional)
@@ -16,6 +17,7 @@
 
 do_bootimg[depends] += "grub-efi-${TRANSLATED_TARGET_ARCH}-native:do_deploy"
 
+GRUB_SERIAL ?= "console=ttyS0,115200"
 GRUBCFG = "${S}/grub.cfg"
 GRUB_TIMEOUT ?= "10"
 #FIXME: build this from the machine config
@@ -63,6 +65,8 @@ python build_grub_cfg() {
         bb.error("WORKDIR not defined, unable to package")
         return
 
+    gfxserial = d.getVar('GRUB_GFXSERIAL', True) or ""
+
     labels = d.getVar('LABELS', True)
     if not labels:
         bb.debug(1, "LABELS not defined, nothing to do")
@@ -96,6 +100,12 @@ python build_grub_cfg() {
     else:
         cfgfile.write('timeout=50\n')
 
+    if gfxserial == "1":
+        btypes = [ [ " graphics console", "" ],
+            [ " serial console", d.getVar('GRUB_SERIAL', True) or "" ] ]
+    else:
+        btypes = [ [ "", "" ] ]
+
     for label in labels.split():
         localdata = d.createCopy()
 
@@ -103,24 +113,27 @@ python build_grub_cfg() {
         if not overrides:
             raise bb.build.FuncFailed('OVERRIDES not defined')
 
-        localdata.setVar('OVERRIDES', label + ':' + overrides)
-        bb.data.update_data(localdata)
+        for btype in btypes:
+            localdata.setVar('OVERRIDES', label + ':' + overrides)
+            bb.data.update_data(localdata)
 
-        cfgfile.write('\nmenuentry \'%s\'{\n' % (label))
-        if label == "install":
-            label = "install-efi"
-        cfgfile.write('linux /vmlinuz LABEL=%s' % (label))
+            cfgfile.write('\nmenuentry \'%s%s\'{\n' % (label, btype[0]))
+            lb = label
+            if label == "install":
+                lb = "install-efi"
+            cfgfile.write('linux /vmlinuz LABEL=%s' % (lb))
 
-        append = localdata.getVar('APPEND', True)
-        initrd = localdata.getVar('INITRD', True)
+            append = localdata.getVar('APPEND', True)
+            initrd = localdata.getVar('INITRD', True)
 
-        if append:
-            cfgfile.write('%s' % (append))
-        cfgfile.write('\n')
+            if append:
+                cfgfile.write('%s' % (append))
+            cfgfile.write(' %s' % btype[1])
+            cfgfile.write('\n')
 
-        if initrd:
-            cfgfile.write('initrd /initrd')
-        cfgfile.write('\n}\n')
+            if initrd:
+                cfgfile.write('initrd /initrd')
+            cfgfile.write('\n}\n')
 
     cfgfile.close()
 }
