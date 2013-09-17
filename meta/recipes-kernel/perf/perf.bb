@@ -60,7 +60,6 @@ B = "${WORKDIR}/${BPN}-${PV}"
 SCRIPTING_DEFINES = "${@perf_feature_enabled('perf-scripting', '', 'NO_LIBPERL=1 NO_LIBPYTHON=1',d)}"
 TUI_DEFINES = "${@perf_feature_enabled('perf-tui', '', 'NO_NEWT=1',d)}"
 
-export LDFLAGS = "-ldl -lutil"
 EXTRA_OEMAKE = \
 		'-C ${S}/tools/perf \
 		O=${B} \
@@ -72,13 +71,7 @@ EXTRA_OEMAKE = \
 		NO_GTK2=1 ${TUI_DEFINES} NO_DWARF=1 ${SCRIPTING_DEFINES} \
 		'
 
-# We already pass the correct arguments to our compiler for the CFLAGS (if we
-# don't override it, it'll add -m32/-m64 itself). For LDFLAGS, it was failing
-# to find bfd symbols.
 EXTRA_OEMAKE += "\
-	'CFLAGS=${CFLAGS} -fPIC' \
-	'LDFLAGS=${LDFLAGS} -lpthread -lrt -lelf -lm -lbfd' \
-	\
 	'prefix=${prefix}' \
 	'bindir=${bindir}' \
 	'sharedir=${datadir}' \
@@ -94,10 +87,14 @@ EXTRA_OEMAKE += "\
 PARALLEL_MAKE = ""
 
 do_compile() {
+	# Linux kernel build system is expected to do the right thing
+	unset CFLAGS LDFLAGS
 	oe_runmake all
 }
 
 do_install() {
+	# Linux kernel build system is expected to do the right thing
+	unset CFLAGS LDFLAGS
 	oe_runmake DESTDIR=${D} install
 	# we are checking for this make target to be compatible with older perf versions
 	if [ "${@perf_feature_enabled('perf-scripting', 1, 0, d)}" = "1" -a $(grep install-python_ext ${S}/tools/perf/Makefile) = "0"]; then
