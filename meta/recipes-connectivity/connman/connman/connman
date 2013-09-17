@@ -30,16 +30,23 @@ do_start() {
 	EXTRA_PARAM=""
 	if test $nfsroot -eq 1 ; then
 	    NET_DEVS=`cat /proc/net/dev | sed -ne 's/^\([a-zA-Z0-9 ]*\):.*$/\1/p'`
-	    NET_ADDR=`cat /proc/cmdline | sed -ne 's/^.*ip=\([^ ]*\):.*$/\1/p'`
+	    NET_ADDR=`cat /proc/cmdline | sed -ne 's/^.*ip=\([^ :]*\).*$/\1/p'`
 
-	    if [ x$NET_ADDR != x ]; then
-		for i in $NET_DEVS; do
-		    ADDR=`ifconfig $i | sed 's/addr://g' | sed -ne 's/^.*inet \([0-9.]*\) .*$/\1/p'`
-		    if [ "$NET_ADDR" = "$ADDR" ]; then
-			EXTRA_PARAM="-I $i"
-			break
+	    if [ ! -z "$NET_ADDR" ]; then
+		if [ "$NET_ADDR" = dhcp ]; then
+		    ethn=`ifconfig | grep "^eth" | sed -e "s/\(eth[0-9]\)\(.*\)/\1/"`
+		    if [ ! -z "$ethn" ]; then
+			EXTRA_PARAM="-I $ethn"
 		    fi
-		done
+		else
+		    for i in $NET_DEVS; do
+			ADDR=`ifconfig $i | sed 's/addr://g' | sed -ne 's/^.*inet \([0-9.]*\) .*$/\1/p'`
+			if [ "$NET_ADDR" = "$ADDR" ]; then
+			    EXTRA_PARAM="-I $i"
+			    break
+			fi
+		    done
+		fi
 	    fi
 	fi
 	if [ -f @LIBDIR@/connman/wired-setup ] ; then
