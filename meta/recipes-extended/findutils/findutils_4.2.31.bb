@@ -6,6 +6,7 @@ require findutils.inc
 
 SRC_URI += "file://gnulib-extension.patch \
             file://findutils_fix_for_automake-1.12.patch \
+            file://findutils-fix-doc-build-error.patch \
            "
 
 SRC_URI[md5sum] = "a0e31a0f18a49709bf5a449867c8049a"
