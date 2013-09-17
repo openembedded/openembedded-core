@@ -1,0 +1,35 @@
+From a17998b6be3319ae476a64f366737bc267a53a8a Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Mon, 16 Sep 2013 05:54:13 -0400
+Subject: [PATCH] fetcher.py: truncate the filename to meet NAME_MAX
+
+The function getLocalPath() converts the filepath into the filename,
+there would be a "File name too long" error when len(filename) >
+NAME_MAX, truncate it to meet NAME_MAX will fix the problem.
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ smart/fetcher.py |    8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/smart/fetcher.py b/smart/fetcher.py
+--- a/smart/fetcher.py
++++ b/smart/fetcher.py
+@@ -139,6 +139,14 @@ class Fetcher(object):
+             filename = os.path.basename(path)
+         if self._localpathprefix:
+             filename = self._localpathprefix+filename
++        # pathconf requires the path existed
++        if not os.path.exists(self._localdir):
++            os.makedirs(self._localdir)
++        name_max = os.pathconf(self._localdir, 'PC_NAME_MAX')
++        # The length of the filename should be less than NAME_MAX
++        if len(filename) > name_max:
++            iface.debug(_("Truncate %s to %s") % (filename, filename[-name_max:]))
++            filename = filename[-name_max:]
+         return os.path.join(self._localdir, filename)
+ 
+     def setForceCopy(self, value):
+-- 
+1.7.10.4
+

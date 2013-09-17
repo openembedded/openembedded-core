@@ -31,6 +31,7 @@ SRC_URI = "\
           file://smart-flag-exclude-packages.patch \
           file://smart-config-ignore-all-recommends.patch \
           file://smart-attempt.patch \
+          file://smart-filename-NAME_MAX.patch \
           "
 
 SRC_URI[md5sum] = "573ef32ba177a6b3c4bf7ef04873fcb6"
