@@ -32,6 +32,7 @@ EXCLUDE_FROM_WORLD = "1"
 
 HDDDIR = "${S}/hddimg"
 ISODIR = "${S}/iso"
+EFIIMGDIR = "${S}/efi_img"
 
 BOOTIMG_VOLUME_ID   ?= "boot"
 BOOTIMG_EXTRA_SPACE ?= "512"
@@ -48,15 +49,10 @@ def pcbios(d):
         pcbios = base_contains("MACHINE_FEATURES", "efi", "0", "1", d)
     return pcbios
 
-def pcbios_class(d):
-    if d.getVar("PCBIOS", True) == "1":
-        return "syslinux"
-    return ""
-
 PCBIOS = "${@pcbios(d)}"
-PCBIOS_CLASS = "${@pcbios_class(d)}"
 
-inherit ${PCBIOS_CLASS}
+# The syslinux is required for the isohybrid command and boot catalog
+inherit syslinux
 inherit ${EFI_CLASS}
 
 populate() {
@@ -90,21 +86,36 @@ build_iso() {
 	fi
 	if [ "${EFI}" = "1" ]; then
 		grubefi_iso_populate
+		build_fat_img ${EFIIMGDIR} ${ISODIR}/efi.img
 	fi
 
-	if [ "${PCBIOS}" = "1" ]; then
+	# EFI only
+	if [ "${PCBIOS}" != "1" ] && [ "${EFI}" = "1" ] ; then
+		# Work around bug in isohybrid where it requires isolinux.bin
+		# In the boot catalog, even though it is not used
+		mkdir -p ${ISODIR}/${ISOLINUXDIR}
+		install -m 0644 ${STAGING_DATADIR}/syslinux/isolinux.bin ${ISODIR}${ISOLINUXDIR}
+	fi
+
+	if [ "${PCBIOS}" = "1" ] && [ "${EFI}" != "1" ] ; then
+		# PCBIOS only media
 		mkisofs -V ${BOOTIMG_VOLUME_ID} \
 		        -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso \
 			-b ${ISO_BOOTIMG} -c ${ISO_BOOTCAT} -r \
 			${MKISOFS_OPTIONS} ${ISODIR}
 	else
-		bbnote "EFI-only ISO images are untested, please provide feedback."
-		mkisofs -V ${BOOTIMG_VOLUME_ID} \
+		# EFI only OR EFI+PCBIOS
+		mkisofs -A ${BOOTIMG_VOLUME_ID} -V ${BOOTIMG_VOLUME_ID} \
 		        -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso \
-			-r ${ISODIR}
+			-b ${ISO_BOOTIMG} -c ${ISO_BOOTCAT} \
+			-r ${MKISOFS_OPTIONS} \
+			-eltorito-alt-boot -eltorito-platform efi \
+			-b efi.img -no-emul-boot \
+			${ISODIR}
+		isohybrid_args="-u"
 	fi
 
-	isohybrid ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso
+	isohybrid $isohybrid_args ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso
 
 	cd ${DEPLOY_DIR_IMAGE}
 	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.iso

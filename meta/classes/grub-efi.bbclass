@@ -41,6 +41,14 @@ grubefi_populate() {
 
 grubefi_iso_populate() {
 	grubefi_populate ${ISODIR}
+	# Build a EFI directory to create efi.img
+	mkdir -p ${EFIIMGDIR}/${EFIDIR}
+	cp ${ISODIR}/${EFIDIR}/* ${EFIIMGDIR}${EFIDIR}
+	cp ${ISODIR}/vmlinuz ${EFIIMGDIR}
+	echo "EFI\\BOOT\\${GRUB_IMAGE}" > ${EFIIMGDIR}/startup.nsh
+	if [ -f "${ISODIR}/initrd" ] ; then
+		cp ${ISODIR}/initrd ${EFIIMGDIR}
+	fi
 }
 
 grubefi_hddimg_populate() {
