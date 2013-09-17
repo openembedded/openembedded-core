@@ -19,13 +19,15 @@
 
 # External variables (also used by syslinux.bbclass)
 # ${INITRD} - indicates a filesystem image to use as an initrd (optional)
+# ${COMPRESSISO} - Transparent compress ISO, reduce size ~40% if set to 1
 # ${NOISO}  - skip building the ISO image if set to 1
 # ${NOHDD}  - skip building the HDD image if set to 1
 # ${ROOTFS} - indicates a filesystem image to include as the root filesystem (optional)
 
 do_bootimg[depends] += "dosfstools-native:do_populate_sysroot \
                         mtools-native:do_populate_sysroot \
-                        cdrtools-native:do_populate_sysroot"
+                        cdrtools-native:do_populate_sysroot \
+                        ${@oe.utils.ifelse(d.getVar('COMPRESSISO'),'zisofs-tools-native:do_populate_sysroot','')}"
 
 PACKAGES = " "
 EXCLUDE_FROM_WORLD = "1"
@@ -33,6 +35,8 @@ EXCLUDE_FROM_WORLD = "1"
 HDDDIR = "${S}/hddimg"
 ISODIR = "${S}/iso"
 EFIIMGDIR = "${S}/efi_img"
+COMPACT_ISODIR = "${S}/iso.z"
+COMPRESSISO ?= "0"
 
 BOOTIMG_VOLUME_ID   ?= "boot"
 BOOTIMG_EXTRA_SPACE ?= "512"
@@ -97,18 +101,32 @@ build_iso() {
 		install -m 0644 ${STAGING_DATADIR}/syslinux/isolinux.bin ${ISODIR}${ISOLINUXDIR}
 	fi
 
+	if [ "${COMPRESSISO}" = "1" ] ; then
+		# create compact directory, compress iso
+		mkdir -p ${COMPACT_ISODIR}
+		mkzftree -z 9 -p 4 -F ${ISODIR}/rootfs.img ${COMPACT_ISODIR}/rootfs.img
+
+		# move compact iso to iso, then remove compact directory
+		mv ${COMPACT_ISODIR}/rootfs.img ${ISODIR}/rootfs.img
+		rm -Rf ${COMPACT_ISODIR}
+		mkisofs_compress_opts="-R -z -D -l"
+	else
+		mkisofs_compress_opts="-r"
+	fi
+
 	if [ "${PCBIOS}" = "1" ] && [ "${EFI}" != "1" ] ; then
 		# PCBIOS only media
 		mkisofs -V ${BOOTIMG_VOLUME_ID} \
 		        -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso \
-			-b ${ISO_BOOTIMG} -c ${ISO_BOOTCAT} -r \
+			-b ${ISO_BOOTIMG} -c ${ISO_BOOTCAT} \
+			$mkisofs_compress_opts \
 			${MKISOFS_OPTIONS} ${ISODIR}
 	else
 		# EFI only OR EFI+PCBIOS
 		mkisofs -A ${BOOTIMG_VOLUME_ID} -V ${BOOTIMG_VOLUME_ID} \
 		        -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.iso \
 			-b ${ISO_BOOTIMG} -c ${ISO_BOOTCAT} \
-			-r ${MKISOFS_OPTIONS} \
+			$mkisofs_compress_opts ${MKISOFS_OPTIONS} \
 			-eltorito-alt-boot -eltorito-platform efi \
 			-b efi.img -no-emul-boot \
 			${ISODIR}
