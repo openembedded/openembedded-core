@@ -12,7 +12,9 @@
 # ${APPEND} - an override list of append strings for each label
 # ${SYSLINUX_OPTS} - additional options to add to the syslinux file ';' delimited
 # ${SYSLINUX_SPLASH} - A background for the vga boot menu if using the boot menu
+# ${SYSLINUX_DEFAULT_CONSOLE} - set to "console=ttyX" to change kernel boot default console
 # ${SYSLINUX_SERIAL} - Set an alternate serial port or turn off serial with empty string
+# ${SYSLINUX_SERIAL_TTY} - Set alternate console=tty... kernel boot argument
 
 do_bootimg[depends] += "syslinux:do_populate_sysroot \
                         syslinux-native:do_populate_sysroot"
@@ -21,7 +23,11 @@ SYSLINUXCFG  = "${S}/syslinux.cfg"
 
 ISOLINUXDIR = "/isolinux"
 SYSLINUXDIR = "/"
+# The kernel has an internal default console, which you can override with
+# a console=...some_tty...
+SYSLINUX_DEFAULT_CONSOLE ?= ""
 SYSLINUX_SERIAL ?= "0 115200"
+SYSLINUX_SERIAL_TTY ?= "ttyS0,115200"
 ISO_BOOTIMG = "isolinux/isolinux.bin"
 ISO_BOOTCAT = "isolinux/boot.cat"
 MKISOFS_OPTIONS = "-no-emul-boot -boot-load-size 4 -boot-info-table"
@@ -105,6 +111,8 @@ python build_syslinux_cfg () {
             cfgfile.write('%s\n' % opt)
 
     cfgfile.write('ALLOWOPTIONS 1\n');
+    syslinux_default_console = d.getVar('SYSLINUX_DEFAULT_CONSOLE', True)
+    syslinux_serial_tty = d.getVar('SYSLINUX_SERIAL_TTY', True)
     syslinux_serial = d.getVar('SYSLINUX_SERIAL', True)
     if syslinux_serial:
         cfgfile.write('SERIAL %s\n' % syslinux_serial)
@@ -147,10 +155,10 @@ python build_syslinux_cfg () {
         localdata.setVar('OVERRIDES', label + ':' + overrides)
         bb.data.update_data(localdata)
     
-        btypes = [ [ "", "console=tty0" ] ]
+        btypes = [ [ "", syslinux_default_console ] ]
         if menu and syslinux_serial:
-            btypes = [ [ "Graphics console ", " console=tty0" ],
-                [ "Serial console ",  " console=ttyS0,115200" ] ]
+            btypes = [ [ "Graphics console ", syslinux_default_console  ],
+                [ "Serial console ", syslinux_serial_tty ] ]
 
         for btype in btypes:
             cfgfile.write('LABEL %s%s\nKERNEL /vmlinuz\n' % (btype[0], label))
