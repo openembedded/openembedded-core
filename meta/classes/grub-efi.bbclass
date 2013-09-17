@@ -42,19 +42,20 @@ grubefi_populate() {
 }
 
 grubefi_iso_populate() {
-	grubefi_populate ${ISODIR}
+	iso_dir=$1
+	grubefi_populate $iso_dir
 	# Build a EFI directory to create efi.img
 	mkdir -p ${EFIIMGDIR}/${EFIDIR}
-	cp ${ISODIR}/${EFIDIR}/* ${EFIIMGDIR}${EFIDIR}
-	cp ${ISODIR}/vmlinuz ${EFIIMGDIR}
+	cp $iso_dir/${EFIDIR}/* ${EFIIMGDIR}${EFIDIR}
+	cp $iso_dir/vmlinuz ${EFIIMGDIR}
 	echo "EFI\\BOOT\\${GRUB_IMAGE}" > ${EFIIMGDIR}/startup.nsh
-	if [ -f "${ISODIR}/initrd" ] ; then
-		cp ${ISODIR}/initrd ${EFIIMGDIR}
+	if [ -f "$iso_dir/initrd" ] ; then
+		cp $iso_dir/initrd ${EFIIMGDIR}
 	fi
 }
 
 grubefi_hddimg_populate() {
-	grubefi_populate ${HDDDIR}
+	grubefi_populate $1
 }
 
 python build_grub_cfg() {

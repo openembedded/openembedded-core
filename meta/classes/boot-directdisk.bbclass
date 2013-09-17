@@ -61,15 +61,15 @@ DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
 SYSLINUX_ROOT ?= "root=/dev/sda2"
 SYSLINUX_TIMEOUT ?= "10"
 
-populate() {
-	DEST=$1
-	install -d ${DEST}
+boot_direct_populate() {
+	dest=$1
+	install -d $dest
 
 	# Install bzImage, initrd, and rootfs.img in DEST for all loaders to use.
-	install -m 0644 ${STAGING_KERNEL_DIR}/bzImage ${DEST}/vmlinuz
+	install -m 0644 ${STAGING_KERNEL_DIR}/bzImage $dest/vmlinuz
 
 	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ]; then
-		install -m 0644 ${INITRD} ${DEST}/initrd
+		install -m 0644 ${INITRD} $dest/initrd
 	fi
 
 }
@@ -79,13 +79,13 @@ build_boot_dd() {
 	HDDIMG="${S}/hdd.image"
 	IMAGE=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hdddirect
 
-	populate ${HDDDIR}
+	boot_direct_populate $HDDDIR
 
 	if [ "${PCBIOS}" = "1" ]; then
-		syslinux_hddimg_populate
+		syslinux_hddimg_populate $HDDDIR
 	fi
 	if [ "${EFI}" = "1" ]; then
-		grubefi_hddimg_populate
+		grubefi_hddimg_populate $HDDDIR
 	fi
 
 	BLOCKS=`du -bks $HDDDIR | cut -f 1`

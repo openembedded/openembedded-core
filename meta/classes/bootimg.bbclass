@@ -86,10 +86,10 @@ build_iso() {
 	populate ${ISODIR}
 
 	if [ "${PCBIOS}" = "1" ]; then
-		syslinux_iso_populate
+		syslinux_iso_populate ${ISODIR}
 	fi
 	if [ "${EFI}" = "1" ]; then
-		grubefi_iso_populate
+		grubefi_iso_populate ${ISODIR}
 		build_fat_img ${EFIIMGDIR} ${ISODIR}/efi.img
 	fi
 
@@ -203,10 +203,10 @@ build_hddimg() {
 		populate ${HDDDIR}
 
 		if [ "${PCBIOS}" = "1" ]; then
-			syslinux_hddimg_populate
+			syslinux_hddimg_populate ${HDDDIR}
 		fi
 		if [ "${EFI}" = "1" ]; then
-			grubefi_hddimg_populate
+			grubefi_hddimg_populate ${HDDDIR}
 		fi
 
 		build_fat_img ${HDDDIR} ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg

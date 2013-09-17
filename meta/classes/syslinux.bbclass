@@ -53,14 +53,16 @@ syslinux_populate() {
 }
 
 syslinux_iso_populate() {
-	syslinux_populate ${ISODIR} ${ISOLINUXDIR} isolinux.cfg
-	install -m 0644 ${STAGING_DATADIR}/syslinux/isolinux.bin ${ISODIR}${ISOLINUXDIR}
-	install -m 0644 ${STAGING_DATADIR}/syslinux/ldlinux.c32 ${ISODIR}${ISOLINUXDIR}
+	iso_dir=$1
+	syslinux_populate $iso_dir ${ISOLINUXDIR} isolinux.cfg
+	install -m 0644 ${STAGING_DATADIR}/syslinux/isolinux.bin $iso_dir${ISOLINUXDIR}
+	install -m 0644 ${STAGING_DATADIR}/syslinux/ldlinux.c32 $iso_dir${ISOLINUXDIR}
 }
 
 syslinux_hddimg_populate() {
-	syslinux_populate ${HDDDIR} ${SYSLINUXDIR} syslinux.cfg
-	install -m 0444 ${STAGING_DATADIR}/syslinux/ldlinux.sys ${HDDDIR}${SYSLINUXDIR}/ldlinux.sys
+	hdd_dir=$1
+	syslinux_populate $hdd_dir ${SYSLINUXDIR} syslinux.cfg
+	install -m 0444 ${STAGING_DATADIR}/syslinux/ldlinux.sys $hdd_dir${SYSLINUXDIR}/ldlinux.sys
 }
 
 syslinux_hddimg_install() {
