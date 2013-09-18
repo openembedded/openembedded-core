@@ -55,7 +55,7 @@ index 39a42d6..6095aa6 100644
      gui_grab = 0;
      sdl_show_cursor();
      sdl_update_caption();
-@@ -909,7 +912,8 @@ void sdl_display_init(DisplayState *ds, int full_screen, int no_frame)
+@@ -909,6 +912,8 @@ void sdl_display_init(DisplayState *ds,
       * This requires SDL >= 1.2.14. */
      setenv("SDL_DISABLE_LOCK_KEYS", "1", 1);
  
