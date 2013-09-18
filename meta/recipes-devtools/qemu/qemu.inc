@@ -17,6 +17,7 @@ SRC_URI = "\
     file://powerpc_rom.bin \
     file://no-strip.patch \
     file://larger_default_ram_size.patch \
+    file://disable-grabs.patch \
     "
 
 SRC_URI_append_class-nativesdk = "\
