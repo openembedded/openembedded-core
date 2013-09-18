@@ -60,6 +60,11 @@ B = "${WORKDIR}/${BPN}-${PV}"
 SCRIPTING_DEFINES = "${@perf_feature_enabled('perf-scripting', '', 'NO_LIBPERL=1 NO_LIBPYTHON=1',d)}"
 TUI_DEFINES = "${@perf_feature_enabled('perf-tui', '', 'NO_NEWT=1',d)}"
 
+# The LDFLAGS is required or some old kernels fails due missing
+# symbols and this is preferred than requiring patches to every old
+# supported kernel.
+LDFLAGS="-ldl -lutil"
+
 EXTRA_OEMAKE = \
 		'-C ${S}/tools/perf \
 		O=${B} \
@@ -88,13 +93,13 @@ PARALLEL_MAKE = ""
 
 do_compile() {
 	# Linux kernel build system is expected to do the right thing
-	unset CFLAGS LDFLAGS
+	unset CFLAGS
 	oe_runmake all
 }
 
 do_install() {
 	# Linux kernel build system is expected to do the right thing
-	unset CFLAGS LDFLAGS
+	unset CFLAGS
 	oe_runmake DESTDIR=${D} install
 	# we are checking for this make target to be compatible with older perf versions
 	if [ "${@perf_feature_enabled('perf-scripting', 1, 0, d)}" = "1" -a $(grep install-python_ext ${S}/tools/perf/Makefile) = "0"]; then
