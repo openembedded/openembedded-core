@@ -17,6 +17,15 @@ S = "${WORKDIR}/git"
 
 EXTRA_OEMAKE = 'HOSTCC="${CC}" HOSTSTRIP="true"'
 
+python () {
+	if not d.getVar("UBOOT_MACHINE", True):
+		PN = d.getVar("PN", True)
+		FILE = os.path.basename(d.getVar("FILE", True))
+		bb.debug(1, "To build %s, see %s for instructions on \
+			     setting up your machine config" % (PN, FILE))
+		raise bb.parse.SkipPackage("UBOOT_MACHINE is not set in the %s machine configuration." % d.getVar("MACHINE", True))
+}
+
 do_compile () {
   oe_runmake ${UBOOT_MACHINE}
   oe_runmake env
