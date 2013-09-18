@@ -1,0 +1,42 @@
+From 8d99a368615656a835f5502326afd31cec2cebfe Mon Sep 17 00:00:00 2001
+From: Jackie Huang <jackie.huang@windriver.com>
+Date: Mon, 16 Sep 2013 18:16:12 +0800
+Subject: [PATCH] remove the test to convert euc-jp
+
+Remove the test "Test against HP-UX 11.11 bug:
+No converter from EUC-JP to UTF-8 is provided"
+since we don't support HP-UX and if the euc-jp is not
+installed on the host, libunistring will be built without
+iconv support and will cause guild-native configure fail.
+
+Upstream-Status: Inappropriate [OE specific]
+
+Signed-off-by: Jackie Huang <jackie.huang@windriver.com>
+---
+ gnulib-m4/iconv.m4 |   11 -----------
+ 1 files changed, 0 insertions(+), 11 deletions(-)
+
+diff --git a/gnulib-m4/iconv.m4 b/gnulib-m4/iconv.m4
+index f46ff14..de0a5e9 100644
+--- a/gnulib-m4/iconv.m4
++++ b/gnulib-m4/iconv.m4
+@@ -126,17 +126,6 @@ int main ()
+       }
+   }
+ #endif
+-  /* Test against HP-UX 11.11 bug: No converter from EUC-JP to UTF-8 is
+-     provided.  */
+-  if (/* Try standardized names.  */
+-      iconv_open ("UTF-8", "EUC-JP") == (iconv_t)(-1)
+-      /* Try IRIX, OSF/1 names.  */
+-      && iconv_open ("UTF-8", "eucJP") == (iconv_t)(-1)
+-      /* Try AIX names.  */
+-      && iconv_open ("UTF-8", "IBM-eucJP") == (iconv_t)(-1)
+-      /* Try HP-UX names.  */
+-      && iconv_open ("utf8", "eucJP") == (iconv_t)(-1))
+-    return 1;
+   return 0;
+ }], [am_cv_func_iconv_works=yes], [am_cv_func_iconv_works=no],
+         [case "$host_os" in
+--
+1.7.4
