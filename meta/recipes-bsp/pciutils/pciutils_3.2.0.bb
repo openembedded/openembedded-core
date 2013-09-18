@@ -13,7 +13,6 @@ PR = "r0"
 
 SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.bz2 \
            file://configure.patch \
-           file://pcimodules-pciutils.diff \
            file://lib-build-fix.patch \
            file://guess-fix.patch \
            file://makefile.patch"

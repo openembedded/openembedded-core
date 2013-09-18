@@ -8,35 +8,33 @@ Upstream-Status: Pending
 7/30/2010 - created by Qing He <qing.he@intel.com>
 
 diff --git a/Makefile b/Makefile
-index 1b48e18..21af4b3 100644
+index 74c570a..31337e0 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -51,9 +51,9 @@ PCIINC_INS=lib/config.h lib/header.h lib/pci.h lib/types.h
+@@ -56,9 +56,9 @@ PCIINC_INS=lib/config.h lib/header.h lib/pci.h lib/types.h
  
  export
  
--all: lib/$(PCILIB) lspci setpci example lspci.8 setpci.8 pcilib.7 update-pciids update-pciids.8 $(PCI_IDS) pcimodules pcimodules.8
-+all: lib/$(PCILIB_DEV) lspci setpci example lspci.8 setpci.8 pcilib.7 update-pciids update-pciids.8 $(PCI_IDS) pcimodules pcimodules.8
+-all: lib/$(PCILIB) lspci setpci example lspci.8 setpci.8 pcilib.7 update-pciids update-pciids.8 $(PCI_IDS)
++all: lib/$(PCILIB_DEV) lspci setpci example lspci.8 setpci.8 pcilib.7 update-pciids update-pciids.8 $(PCI_IDS)
  
 -lib/$(PCILIB): $(PCIINC) force
 +lib/$(PCILIB) lib/$(PCILIB_DEV): $(PCIINC) force
  	$(MAKE) -C lib all
  
  force:
-@@ -61,9 +61,9 @@ force:
+@@ -66,8 +66,8 @@ force:
  lib/config.h lib/config.mk:
  	cd lib && ./configure
  
--pcimodules: pcimodules.o common.o lib/$(PCILIB)
 -lspci: lspci.o ls-vpd.o ls-caps.o ls-ecaps.o ls-kernel.o ls-tree.o ls-map.o common.o lib/$(PCILIB)
 -setpci: setpci.o common.o lib/$(PCILIB)
-+pcimodules: pcimodules.o common.o lib/$(PCILIB_DEV)
 +lspci: lspci.o ls-vpd.o ls-caps.o ls-ecaps.o ls-kernel.o ls-tree.o ls-map.o common.o lib/$(PCILIB_DEV)
 +setpci: setpci.o common.o lib/$(PCILIB_DEV)
  
- pcimodules.o: pcimodules.c pciutils.h
  LSPCIINC=lspci.h pciutils.h $(PCIINC)
-@@ -83,7 +83,7 @@ update-pciids: update-pciids.sh
+ lspci.o: lspci.c $(LSPCIINC)
+@@ -89,7 +89,7 @@ update-pciids: update-pciids.sh
  	chmod +x $@
  
  # The example of use of libpci
@@ -69,10 +67,10 @@ index 1eb06a5..a8dab56 100644
  
  $(PCILIBPC): libpci.pc.in
 diff --git a/lib/configure b/lib/configure
-index eec225a..4318b05 100755
+index 27388bc..6c508cf 100755
 --- a/lib/configure
 +++ b/lib/configure
-@@ -174,16 +193,18 @@ fi
+@@ -216,16 +216,18 @@ fi
  echo "Checking whether to build a shared library... $SHARED (set manually)"
  if [ "$SHARED" = no ] ; then
  	echo >>$m 'PCILIB=$(LIBNAME).a'
