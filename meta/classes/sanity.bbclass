@@ -627,11 +627,11 @@ def check_sanity_everybuild(status, d):
 
     check_supported_distro(d)
 
-    # Check if DISPLAY is set if IMAGETEST is set
-    if d.getVar( 'IMAGETEST', True ) == 'qemu':
+    # Check if DISPLAY is set if TEST_IMAGE is set
+    if d.getVar('TEST_IMAGE', True) == '1' or d.getVar('DEFAULT_TEST_SUITES', True):
         display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True)
         if not display:
-            status.addresult('qemuimagetest needs an X desktop to start qemu, please set DISPLAY correctly (e.g. DISPLAY=:1.0)\n')
+            status.addresult('testimage needs an X desktop to start qemu, please set DISPLAY correctly (e.g. DISPLAY=:1.0)\n')
 
     omask = os.umask(022)
     if omask & 0755:
