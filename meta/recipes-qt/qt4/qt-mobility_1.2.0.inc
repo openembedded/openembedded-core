@@ -18,6 +18,7 @@ SRC_URI = "http://get.qt.nokia.com/qt/add-ons/qt-mobility-opensource-src-${PV}.t
            file://qt-mobility-no-opengl.patch \
            file://gcc-scope.patch \
            file://qt-mobility-no-xvideo.patch \
+           file://0001-fix-embedded-usage-doesn-t-work-outside-of-Qt.patch \
 	   "
 
 SRC_URI[md5sum]="ea5db5a8d3dd4709c2926dceda646bd8"
