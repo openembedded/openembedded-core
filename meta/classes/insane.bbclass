@@ -175,10 +175,7 @@ def package_qa_check_rpath(file,name, d, elf, messages):
     if os.path.islink(file):
         return
 
-    bad_dirs = [d.getVar('TMPDIR', True) + "/work", d.getVar('STAGING_DIR_TARGET', True)]
-
-    if not bad_dirs[0] in d.getVar('WORKDIR', True):
-        bb.fatal("This class assumed that WORKDIR is ${TMPDIR}/work... Not doing any check")
+    bad_dirs = [d.getVar('BASE_WORKDIR', True), d.getVar('STAGING_DIR_TARGET', True)]
 
     phdrs = elf.run_objdump("-p", d)
 
