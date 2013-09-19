@@ -26,6 +26,7 @@ do_configure () {
 }
 
 NO32LIBS ??= "1"
+NO32LIBS_virtclass-nativesdk = "1"
 
 # Compile for the local machine arch...
 do_compile () {
