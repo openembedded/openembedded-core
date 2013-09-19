@@ -39,6 +39,8 @@ rm -rf $STAGING_DIR
 # The stamps that said the sysroot was populated
 rm -rf $STAMPS_DIR/*/*/*.do_populate_sysroot.*
 rm -rf $STAMPS_DIR/*/*/*.do_populate_sysroot_setscene.*
+rm -rf $STAMPS_DIR/*/*/*.do_packagedata.*
+rm -rf $STAMPS_DIR/*/*/*.do_packagedata_setscene.*
 
 # The sstate manifests
 rm -rf $SSTATE_MANIFESTS/manifest-*.populate-sysroot
