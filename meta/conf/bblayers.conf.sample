@@ -6,10 +6,10 @@ BBPATH = "${TOPDIR}"
 BBFILES ?= ""
 
 BBLAYERS ?= " \
-  ##COREBASE##/meta \
+  ##OEROOT##/meta \
   "
 
 BBLAYERS_NON_REMOVABLE ?= " \
-  ##COREBASE##/meta \
+  ##OEROOT##/meta \
   "
 
