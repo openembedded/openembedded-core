@@ -26,7 +26,7 @@ do_install_append() {
 inherit update-rc.d systemd
 
 INITSCRIPT_NAME = "oprofileui-server"
-INITSCRIPT_PARAMS = "start 999 5 2 . stop 20 0 1 6 ."
+INITSCRIPT_PARAMS = "start 99 5 2 . stop 20 0 1 6 ."
 
 SYSTEMD_SERVICE_${PN} = "oprofileui-server.service"
 SYSTEMD_AUTO_ENABLE = "disable"
