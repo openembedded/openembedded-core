@@ -29,7 +29,7 @@ import uuid
 from mic import msger
 from mic.utils import runner
 from mic.utils.errors import *
-
+from mic.utils.oe.misc import *
 
 def find_binary_inchroot(binary, chroot):
     paths = ["/usr/sbin",
@@ -279,6 +279,34 @@ class RawDisk(Disk):
 
     def exists(self):
         return True
+
+
+class DiskImage(Disk):
+    """
+    A Disk backed by a file.
+    """
+    def __init__(self, image_file, size):
+        Disk.__init__(self, size)
+        self.image_file = image_file
+
+    def exists(self):
+        return os.path.exists(self.image_file)
+
+    def create(self):
+        if self.device is not None:
+            return
+
+        blocks = self.size / 1024
+        if self.size - blocks * 1024:
+            blocks += 1
+
+        # create disk image
+        dd_cmd = "dd if=/dev/zero of=%s bs=1024 seek=%d count=1" % \
+            (self.image_file, blocks)
+        rc, out = exec_cmd(dd_cmd)
+
+        self.device = self.image_file
+
 
 class LoopbackDisk(Disk):
     """A Disk backed by a file via the loop module."""

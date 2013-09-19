@@ -40,7 +40,11 @@ class PluginMgr(object):
         return cls._instance
 
     def __init__(self):
-        self.plugin_dir = configmgr.common['plugin_dir']
+        mic_path = os.path.dirname(__file__)
+        eos = mic_path.find('scripts') + len('scripts')
+        scripts_path = mic_path[:eos]
+
+        self.plugin_dir = scripts_path + "/lib/mic/plugins"
 
     def append_dirs(self, dirs):
         for path in dirs:

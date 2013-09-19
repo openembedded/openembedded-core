@@ -37,6 +37,12 @@ import subprocess
 import shutil
 
 import os, sys, errno
+from mic import msger, creator
+from mic.utils import cmdln, misc, errors
+from mic.conf import configmgr
+from mic.plugin import pluginmgr
+from mic.__version__ import VERSION
+from mic.utils.oe.misc import *
 
 
 def verify_build_env():
@@ -215,6 +221,24 @@ def wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     except KeyError:
         print "BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)"
         sys.exit(1)
+
+    direct_args = list()
+    direct_args.insert(0, oe_builddir)
+    direct_args.insert(0, image_output_dir)
+    direct_args.insert(0, wks_file)
+    direct_args.insert(0, rootfs_dir)
+    direct_args.insert(0, bootimg_dir)
+    direct_args.insert(0, kernel_dir)
+    direct_args.insert(0, native_sysroot)
+    direct_args.insert(0, hdddir)
+    direct_args.insert(0, staging_data_dir)
+    direct_args.insert(0, "direct")
+
+    cr = creator.Creator()
+
+    cr.main(direct_args)
+
+    print "\nThe image(s) were created using OE kickstart file:\n  %s" % wks_file
 
 
 def wic_list(args, scripts_path, properties_file):

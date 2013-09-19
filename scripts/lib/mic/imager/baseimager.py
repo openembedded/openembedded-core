@@ -1,4 +1,3 @@
-
 #!/usr/bin/python -tt
 #
 # Copyright (c) 2007 Red Hat  Inc.
@@ -69,9 +68,10 @@ class BaseImageCreator(object):
 
         self.ks = None
         self.name = "target"
-        self.tmpdir = "/var/tmp/mic"
-        self.cachedir = "/var/tmp/mic/cache"
-        self.workdir = "/var/tmp/mic/build"
+        self.tmpdir = "/var/tmp/wic"
+        self.cachedir = "/var/tmp/wic/cache"
+        self.workdir = "/var/tmp/wic/build"
+
         self.destdir = "."
         self.installerfw_prefix = "INSTALLERFW_"
         self.target_arch = "noarch"
@@ -463,7 +463,7 @@ class BaseImageCreator(object):
         env[self.installerfw_prefix + "DISTRO_NAME"] = self.distro_name
 
         # Name of the image creation tool
-        env[self.installerfw_prefix + "INSTALLER_NAME"] = "mic"
+        env[self.installerfw_prefix + "INSTALLER_NAME"] = "wic"
 
         # The real current location of the mounted file-systems
         if in_chroot:
@@ -668,7 +668,7 @@ class BaseImageCreator(object):
         if cachedir:
             self.cachedir = cachedir
         else:
-            self.cachedir = self.__builddir + "/mic-cache"
+            self.cachedir = self.__builddir + "/wic-cache"
         fs.makedirs(self.cachedir)
         return self.cachedir
 
@@ -751,51 +751,7 @@ class BaseImageCreator(object):
         self.__setup_tmpdir()
         self.__ensure_builddir()
 
-        # prevent popup dialog in Ubuntu(s)
-        misc.hide_loopdev_presentation()
-
-        fs.makedirs(self._instroot)
-        fs.makedirs(self._outdir)
-
         self._mount_instroot(base_on)
-
-        for d in ("/dev/pts",
-                  "/etc",
-                  "/boot",
-                  "/var/log",
-                  "/sys",
-                  "/proc",
-                  "/usr/bin"):
-            fs.makedirs(self._instroot + d)
-
-        if self.target_arch and self.target_arch.startswith("arm"):
-            self.qemu_emulator = misc.setup_qemu_emulator(self._instroot,
-                                                          self.target_arch)
-
-
-        self.get_cachedir(cachedir)
-
-        # bind mount system directories into _instroot
-        for (f, dest) in [("/sys", None),
-                          ("/proc", None),
-                          ("/proc/sys/fs/binfmt_misc", None),
-                          ("/dev/pts", None)]:
-            self.__bindmounts.append(
-                    fs.BindChrootMount(
-                        f, self._instroot, dest))
-
-        self._do_bindmounts()
-
-        self.__create_minimal_dev()
-
-        if os.path.exists(self._instroot + "/etc/mtab"):
-            os.unlink(self._instroot + "/etc/mtab")
-        os.symlink("../proc/mounts", self._instroot + "/etc/mtab")
-
-        self.__write_fstab()
-
-        # get size of available space in 'instroot' fs
-        self._root_fs_avail = misc.get_filesystem_avail(self._instroot)
 
     def unmount(self):
         """Unmounts the target filesystem.
@@ -805,33 +761,7 @@ class BaseImageCreator(object):
         from the install root.
 
         """
-        try:
-            mtab = self._instroot + "/etc/mtab"
-            if not os.path.islink(mtab):
-                os.unlink(self._instroot + "/etc/mtab")
-
-            if self.qemu_emulator:
-                os.unlink(self._instroot + self.qemu_emulator)
-        except OSError:
-            pass
-
-        self._undo_bindmounts()
-
-        """ Clean up yum garbage """
-        try:
-            instroot_pdir = os.path.dirname(self._instroot + self._instroot)
-            if os.path.exists(instroot_pdir):
-                shutil.rmtree(instroot_pdir, ignore_errors = True)
-            yumlibdir = self._instroot + "/var/lib/yum"
-            if os.path.exists(yumlibdir):
-                shutil.rmtree(yumlibdir, ignore_errors = True)
-        except OSError:
-            pass
-
         self._unmount_instroot()
-
-        # reset settings of popup dialog in Ubuntu(s)
-        misc.unhide_loopdev_presentation()
 
 
     def cleanup(self):

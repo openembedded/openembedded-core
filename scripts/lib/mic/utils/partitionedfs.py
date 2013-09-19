@@ -25,6 +25,7 @@ from mic.utils import runner
 from mic.utils.errors import MountError
 from mic.utils.fs_related import *
 from mic.utils.gpt_parser import GptParser
+from mic.utils.oe.misc import *
 
 # Overhead of the MBR partitioning scheme (just one sector)
 MBR_OVERHEAD = 1
@@ -93,7 +94,7 @@ class PartitionedMount(Mount):
         self.partitions.append(part)
         self.__add_disk(part['disk_name'])
 
-    def add_partition(self, size, disk_name, mountpoint, fstype = None,
+    def add_partition(self, size, disk_name, mountpoint, source_file = None, fstype = None,
                       label=None, fsopts = None, boot = False, align = None,
                       part_type = None):
         """ Add the next partition. Prtitions have to be added in the
@@ -141,6 +142,7 @@ class PartitionedMount(Mount):
             part = { 'ks_pnum' : ks_pnum, # Partition number in the KS file
                      'size': size, # In sectors
                      'mountpoint': mountpoint, # Mount relative to chroot
+                     'source_file': source_file, # partition contents
                      'fstype': fstype, # Filesystem type
                      'fsopts': fsopts, # Filesystem mount options
                      'label': label, # Partition label
@@ -723,67 +725,51 @@ class PartitionedMount(Mount):
 
         self.snapshot_created = True
 
+    def __install_partition(self, num, source_file, start, size):
+        """
+        Install source_file contents into a partition.
+        """
+        if not source_file: # nothing to install
+            return
+
+        # Start is included in the size so need to substract one from the end.
+        end = start + size - 1
+        msger.debug("Installed %s in partition %d, sectors %d-%d, size %d sectors" % (source_file, num, start, end, size))
+
+        dd_cmd = "dd if=%s of=%s bs=%d seek=%d count=%d conv=notrunc" % \
+            (source_file, self.image_file, self.sector_size, start, size)
+        rc, out = exec_cmd(dd_cmd)
+
+
+    def install(self, image_file):
+        msger.debug("Installing partitions")
+
+        self.image_file = image_file
+
+        for p in self.partitions:
+            d = self.disks[p['disk_name']]
+            if d['ptable_format'] == "msdos" and p['num'] == 5:
+                # The last sector of the 3rd partition was reserved for the EBR
+                # of the first _logical_ partition. This is why the extended
+                # partition should start one sector before the first logical
+                # partition.
+                self.__install_partition(p['num'], p['source_file'],
+                                         p['start'] - 1,
+                                         d['offset'] - p['start'])
+
+            self.__install_partition(p['num'], p['source_file'],
+                                     p['start'], p['size'])
+
     def mount(self):
         for dev in self.disks.keys():
             d = self.disks[dev]
             d['disk'].create()
 
         self.__format_disks()
-        self.__map_partitions()
+
         self.__calculate_mountorder()
 
-        for mp in self.mountOrder:
-            p = None
-            for p1 in self.partitions:
-                if p1['mountpoint'] == mp:
-                    p = p1
-                    break
-
-            if not p['label']:
-                if p['mountpoint'] == "/":
-                    p['label'] = 'platform'
-                else:
-                    p['label'] = mp.split('/')[-1]
-
-            if mp == 'swap':
-                import uuid
-                p['uuid'] = str(uuid.uuid1())
-                runner.show([self.mkswap,
-                             '-L', p['label'],
-                             '-U', p['uuid'],
-                             p['device']])
-                continue
-
-            rmmountdir = False
-            if p['mountpoint'] == "/":
-                rmmountdir = True
-            if p['fstype'] == "vfat" or p['fstype'] == "msdos":
-                myDiskMount = VfatDiskMount
-            elif p['fstype'] in ("ext2", "ext3", "ext4"):
-                myDiskMount = ExtDiskMount
-            elif p['fstype'] == "btrfs":
-                myDiskMount = BtrfsDiskMount
-            else:
-                raise MountError("Fail to support file system " + p['fstype'])
-
-            if p['fstype'] == "btrfs" and not p['fsopts']:
-                p['fsopts'] = "subvolid=0"
-
-            pdisk = myDiskMount(RawDisk(p['size'] * self.sector_size, p['device']),
-                                 self.mountdir + p['mountpoint'],
-                                 p['fstype'],
-                                 4096,
-                                 p['label'],
-                                 rmmountdir,
-                                 self.skipformat,
-                                 fsopts = p['fsopts'])
-            pdisk.mount(pdisk.fsopts)
-            if p['fstype'] == "btrfs" and p['mountpoint'] == "/":
-                if not self.skipformat:
-                    self.__create_subvolumes(p, pdisk)
-                self.__mount_subvolumes(p, pdisk)
-            p['mount'] = pdisk
-            p['uuid'] = pdisk.uuid
+        return
 
     def resparse(self, size = None):
         # Can't re-sparse a disk image - too hard

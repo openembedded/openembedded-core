@@ -99,11 +99,11 @@ def read_kickstart(path):
     commandMap[using_version]["desktop"] = desktop.Mic_Desktop
     commandMap[using_version]["repo"] = micrepo.Mic_Repo
     commandMap[using_version]["bootloader"] = micboot.Mic_Bootloader
-    commandMap[using_version]["part"] = partition.Mic_Partition
-    commandMap[using_version]["partition"] = partition.Mic_Partition
+    commandMap[using_version]["part"] = partition.Wic_Partition
+    commandMap[using_version]["partition"] = partition.Wic_Partition
     commandMap[using_version]["installerfw"] = installerfw.Mic_installerfw
     dataMap[using_version]["RepoData"] = micrepo.Mic_RepoData
-    dataMap[using_version]["PartData"] = partition.Mic_PartData
+    dataMap[using_version]["PartData"] = partition.Wic_PartData
     superclass = ksversion.returnClassForVersion(version=using_version)
 
     class KSHandlers(superclass):

@@ -512,8 +512,8 @@ def uncompress_squashfs(squashfsimg, outdir):
     if (rc != 0):
         raise SquashfsError("Failed to uncompress %s." % squashfsimg)
 
-def mkdtemp(dir = "/var/tmp", prefix = "mic-tmp-"):
-    """ FIXME: use the dir in mic.conf instead """
+def mkdtemp(dir = "/var/tmp", prefix = "wic-tmp-"):
+    """ FIXME: use the dir in wic.conf instead """
 
     makedirs(dir)
     return tempfile.mkdtemp(dir = dir, prefix = prefix)

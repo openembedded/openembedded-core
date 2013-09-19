@@ -293,9 +293,6 @@ class Creator(cmdln.Cmdln):
         if len(argv) == 1:
             return ['help', argv[0]]
 
-        if os.geteuid() != 0:
-            raise msger.error("Root permission is required, abort")
-
         return argv
 
     def do_auto(self, subcmd, opts, *args):

@@ -23,29 +23,24 @@ from mic import kickstart
 from mic.utils import misc, runner, proxy, errors
 
 
-DEFAULT_GSITECONF = '/etc/mic/mic.conf'
-
-
 def get_siteconf():
     mic_path = os.path.dirname(__file__)
+    eos = mic_path.find('scripts') + len('scripts')
+    scripts_path = mic_path[:eos]
 
-    m = re.match(r"(?P<prefix>.*)\/lib(64)?\/.*", mic_path)
-    if m and m.group('prefix') != "/usr":
-        return os.path.join(m.group('prefix'), "etc/mic/mic.conf")
-
-    return DEFAULT_GSITECONF
+    return scripts_path + "/lib/image/config/wic.conf"
 
 class ConfigMgr(object):
     prefer_backends = ["zypp", "yum"]
 
     DEFAULTS = {'common': {
                     "distro_name": "Default Distribution",
-                    "plugin_dir": "/usr/lib/mic/plugins", # TODO use prefix also?
+                    "plugin_dir": "/usr/lib/wic/plugins", # TODO use prefix also?
                 },
                 'create': {
-                    "tmpdir": '/var/tmp/mic',
-                    "cachedir": '/var/tmp/mic/cache',
-                    "outdir": './mic-output',
+                    "tmpdir": '/var/tmp/wic',
+                    "cachedir": '/var/tmp/wic/cache',
+                    "outdir": './wic-output',
 
                     "arch": None, # None means auto-detect
                     "pkgmgr": "auto",
@@ -75,7 +70,7 @@ class ConfigMgr(object):
                     "shell": False,
                 },
                 'bootstrap': {
-                    "rootdir": '/var/tmp/mic-bootstrap',
+                    "rootdir": '/var/tmp/wic-bootstrap',
                     "packages": [],
                 },
                }
@@ -190,39 +185,6 @@ class ConfigMgr(object):
                                               self.create['release'],
                                               self.create['name_prefix'],
                                               self.create['name_suffix'])
-
-        msger.info("Retrieving repo metadata:")
-        ksrepos = misc.get_repostrs_from_ks(ks)
-        if not ksrepos:
-            raise errors.KsError('no valid repos found in ks file')
-
-        for repo in ksrepos:
-            if 'baseurl' in repo and repo['baseurl'].startswith("file:"):
-                repourl = repo['baseurl'].replace('file:', '')
-                repourl = "/%s" % repourl.lstrip('/')
-                self.create['localrepos'].append(repourl)
-
-        self.create['repomd'] = misc.get_metadata_from_repos(
-                                                    ksrepos,
-                                                    self.create['cachedir'])
-        msger.raw(" DONE")
-
-        target_archlist, archlist = misc.get_arch(self.create['repomd'])
-        if self.create['arch']:
-            if self.create['arch'] not in archlist:
-                raise errors.ConfigError("Invalid arch %s for repository. "
-                                  "Valid arches: %s" \
-                                  % (self.create['arch'], ', '.join(archlist)))
-        else:
-            if len(target_archlist) == 1:
-                self.create['arch'] = str(target_archlist[0])
-                msger.info("\nUse detected arch %s." % target_archlist[0])
-            else:
-                raise errors.ConfigError("Please specify a valid arch, "
-                                         "the choice can be: %s" \
-                                         % ', '.join(archlist))
-
-        kickstart.resolve_groups(self.create, self.create['repomd'])
 
         # check selinux, it will block arm and btrfs image creation
         misc.selinux_check(self.create['arch'],
