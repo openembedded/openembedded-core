@@ -14,7 +14,7 @@ SECTION = "network"
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-INC_PR = "r6"
+INC_PR = "r7"
 
 DEPENDS = "expat libcap libdaemon dbus glib-2.0"
 
