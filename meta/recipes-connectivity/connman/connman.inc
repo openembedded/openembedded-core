@@ -21,14 +21,12 @@ EXTRA_OECONF += "\
     ac_cv_path_WPASUPPLICANT=${sbindir}/wpa_supplicant \
     ac_cv_path_PPPD=${sbindir}/pppd \
     --enable-debug \
-    --enable-threads \
     --enable-loopback \
     --enable-ethernet \
     --enable-tools \
     --enable-test \
     --disable-polkit \
     --enable-client \
-    --enable-fake \
     ${@base_contains('DISTRO_FEATURES', 'systemd', '--with-systemdunitdir=${systemd_unitdir}/system/', '--with-systemdunitdir=', d)} \
 "
 
