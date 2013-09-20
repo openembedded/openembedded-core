@@ -147,6 +147,11 @@ do_bundle_initramfs () {
 	fi
 }
 do_bundle_initramfs[nostamp] = "1"
+
+python do_devshell_prepend () {
+    os.environ["LDFLAGS"] = ''
+}
+
 addtask bundle_initramfs after do_compile
 
 kernel_do_compile() {
