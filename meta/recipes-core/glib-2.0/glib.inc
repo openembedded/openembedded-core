@@ -46,7 +46,5 @@ ARM_INSTRUCTION_SET = "arm"
 USE_NLS = "yes"
 
 do_install_append () {
-	if [ "${PN}" != "glib-2.0-native" ]; then
-		sed ${D}${bindir}/gtester-report -i -e 's,${STAGING_BINDIR_NATIVE},${bindir},g'
-	fi
+	sed ${D}${bindir}/gtester-report -i -e '1s|^#!.*|#!/usr/bin/env python|'
 }
