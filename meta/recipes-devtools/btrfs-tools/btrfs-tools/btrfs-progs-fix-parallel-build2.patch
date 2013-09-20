@@ -1,0 +1,27 @@
+btrfs-progs: Fix parallel build
+
+Upstream-Status: Pending
+
+"make btrfs.o" fails unable to find version.h.
+
+This adds version.h as a dependency for all .o files and fixes various parallel 
+build failures.
+
+RP 20/9/2013
+---
+ Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: git/Makefile
+===================================================================
+--- git.orig/Makefile	2013-09-20 14:45:34.307723221 +0000
++++ git/Makefile	2013-09-20 16:06:45.503611030 +0000
+@@ -76,7 +76,7 @@
+ 	check = true
+ endif
+ 
+-.c.o:
++%.o: %.c version.h
+ 	$(Q)$(check) $<
+ 	@echo "    [CC]     $@"
+ 	$(Q)$(CC) $(DEPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c $<
