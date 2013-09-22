@@ -513,7 +513,17 @@ rootfs_uninstall_unneeded () {
 			if [ -e ${IMAGE_ROOTFS}${sysconfdir}/init.d/run-postinsts ]; then
 				remove_run_postinsts=true
 			fi
-			rootfs_uninstall_packages update-rc.d base-passwd ${ROOTFS_BOOTSTRAP_INSTALL}
+
+			# Remove package only if it's installed
+			pkgs_to_remove="update-rc.d base-passwd ${ROOTFS_BOOTSTRAP_INSTALL}"
+			for pkg in $pkgs_to_remove; do
+			    # regexp for pkg, to be used in grep and sed
+			    pkg_regexp="^`echo $pkg | sed 's/\./\\\./'` "
+			    if grep -q "$pkg_regexp" ${WORKDIR}/installed_pkgs.txt; then
+				rootfs_uninstall_packages $pkg
+				sed -i "/$pkg_regexp/d" ${WORKDIR}/installed_pkgs.txt
+			    fi
+			done
 
 			# Need to remove rc.d files for run-postinsts by hand since opkg won't
 			# call postrm scripts in offline root mode.
