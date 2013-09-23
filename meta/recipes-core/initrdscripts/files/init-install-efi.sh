@@ -161,8 +161,10 @@ sed -i "/menuentry 'install'/,/^}/d" $GRUBCFG
 sed -i "/initrd /d" $GRUBCFG
 # Delete any LABEL= strings
 sed -i "s/ LABEL=[^ ]*/ /" $GRUBCFG
-# Replace the ramdisk root with the install device and include other options
-sed -i "s@ root=[^ ]*@ root=$rootfs rw $rootwait quiet@" $GRUBCFG
+# Delete any root= strings
+sed -i "s/ root=[^ ]*/ /" $GRUBCFG
+# Add the root= and other standard boot options
+sed -i "s@linux /vmlinuz *@linux /vmlinuz root=$rootfs rw $rootwait quiet @" $GRUBCFG
 
 umount /ssd
 sync
