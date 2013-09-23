@@ -100,6 +100,7 @@ package_install_internal_deb () {
 	cat "${STAGING_ETCDIR_NATIVE}/apt/apt.conf.sample" \
 		| sed -e "s#Architecture \".*\";#Architecture \"${dpkg_arch}\";#" \
 		| sed -e "s:#ROOTFS#:${target_rootfs}:g" \
+		| sed -e "s:#APTCONF#:${APTCONF_TARGET}/apt:g" \
 		> "${APTCONF_TARGET}/apt/apt.conf"
 
 	export APT_CONFIG="${APTCONF_TARGET}/apt/apt.conf"
