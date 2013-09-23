@@ -37,7 +37,8 @@ EXTRA_OECONF = "--with-db-uniquename=_pam \
                 --includedir=${includedir}/security \
                 --libdir=${base_libdir} \
                 --disable-nis \
-                --disable-regenerate-docu"
+                --disable-regenerate-docu \
+		--disable-prelude"
 
 CFLAGS_append = " -fPIC "
 
