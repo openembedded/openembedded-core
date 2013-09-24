@@ -117,14 +117,13 @@ do_install() {
 
 do_install_ptest () {
        install -d ${D}${PTEST_PATH}/test
-       install -d ${D}${libdir}/udev/rules.d
-       install ${B}/test/* ${D}${PTEST_PATH}/test
+       install ${S}/test/* ${D}${PTEST_PATH}/test
        install -m 0755  ${B}/test-udev ${D}${PTEST_PATH}/
        install -d ${D}${PTEST_PATH}/build-aux
        cp -rf ${B}/rules ${D}${PTEST_PATH}/
        cp ${B}/Makefile ${D}${PTEST_PATH}/
-       cp ${B}/build-aux/test-driver ${D}${PTEST_PATH}/build-aux/
-       tar -C ${D}${PTEST_PATH}/test -xJf ${B}/test/sys.tar.xz
+       cp ${S}/build-aux/test-driver ${D}${PTEST_PATH}/build-aux/
+       tar -C ${D}${PTEST_PATH}/test -xJf ${S}/test/sys.tar.xz
        sed -i 's/"tree"/"ls"/' ${D}${PTEST_PATH}/test/udev-test.pl
 }
 
