@@ -22,16 +22,3 @@ Index: grub-1.99/configure.ac
  fi
  
  # By default, GCC 4.4 generates .eh_frame sections containing unwind
-Index: grub-1.99/configure
-===================================================================
---- grub-1.99.orig/configure
-+++ grub-1.99/configure
-@@ -19991,7 +19991,7 @@ $as_echo "$grub_cv_cc_falign_loop" >&6;
- 
-   # Some toolchains enable these features by default, but they need
-   # registers that aren't set up properly in GRUB.
--  TARGET_CFLAGS="$TARGET_CFLAGS -mno-mmx -mno-sse -mno-sse2 -mno-3dnow"
-+  TARGET_CFLAGS="$TARGET_CFLAGS -mno-mmx -mno-sse -mno-sse2 -mno-3dnow -mfpmath=387"
- fi
- 
- # By default, GCC 4.4 generates .eh_frame sections containing unwind
