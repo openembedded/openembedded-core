@@ -340,7 +340,7 @@ setup_path_vars() {
             exit 1; }
 
         # We have bitbake in PATH, get the variable values from bitbake
-        BITBAKE_ENV_TMPFILE=`mktemp runqemu.XXXXXXXXXX`
+        BITBAKE_ENV_TMPFILE=`mktemp --tmpdir runqemu.XXXXXXXXXX`
         if [ "$?" != "0" ] ; then
             echo "Error: mktemp failed for bitbake environment output"
             exit 1
