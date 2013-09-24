@@ -21,11 +21,11 @@ do_install_ptest () {
 	# Tweaks to make tests pass
 	cp -pv lib/unicore/TestProp.pl ${D}${libdir}/perl/${PV}/unicore/
 	# Put all *.t files from the lib dir in the ptest package
-	pushd lib
+	cd lib
 	for file in `find -name \*.t`; do
 	    tar -cf - $file | ( cd ${D}${libdir}/perl/${PV} && tar -xf - )
 	done
-	popd
+	cd ..
 
 	mkdir -p ${D}${libdir}/perl/${PV}/XS
 	cp -pv lib/XS/APItest.pm ${D}${libdir}/perl/${PV}/XS/
