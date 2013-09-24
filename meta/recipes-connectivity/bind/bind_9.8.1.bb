@@ -18,6 +18,7 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://bind-CVE-2012-3817.patch \
            file://bind-CVE-2013-2266.patch \
            file://bind-Fix-CVE-2012-4244.patch \
+           file://mips1-not-support-opcode.diff \
 	   "
 
 SRC_URI[md5sum] = "cf31117c5d35af34d4c0702970ad9fb7"
