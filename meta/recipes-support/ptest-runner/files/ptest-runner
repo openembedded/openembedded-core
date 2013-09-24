@@ -7,24 +7,15 @@ do
 
     [ ! -d "$libdir" ] && continue
 
-    cd "$libdir"
-    for x in `find -L ./ -name run-ptest -type f -perm /u+x,g+x`
+    for x in `ls -d $libdir/*/ptest 2>/dev/null`
     do
-        # test if a dir is linking to one that they are under same directory
-        # like perl5-->perl
-        ptestdir=`dirname $x|cut -f2 -d"/"`
-        if [ -h "$ptestdir" ]; then
-            linkdir=`readlink -f "$ptestdir"`
-            if [ `dirname "$linkdir"` = "$libdir" ]; then
-                continue
-            fi
-        fi
-    
+        [ ! -f $x/run-ptest ] && continue
+        [ -h `dirname $x` ] && continue
+
         date "+%Y-%m-%dT%H:%M"
         echo "BEGIN: $x"
-        pushd `dirname "$x"`
+        cd "$x"
         ./run-ptest
-        popd
         echo "END: $x"
         date "+%Y-%m-%dT%H:%M"
     done
