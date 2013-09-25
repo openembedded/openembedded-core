@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=08c553a87d4e51bbed50b20e0adcaede \
 
 DEPENDS = "shadow-native"
 DEPENDS_class-native = ""
+DEPENDS_class-nativesdk = ""
 
 SRC_URI = "http://pkg-shadow.alioth.debian.org/releases/${BPN}-${PV}.tar.bz2 \
            file://shadow.automake-1.11.patch \
@@ -28,6 +29,12 @@ SRC_URI_append_class-target = " \
            "
 
 SRC_URI_append_class-native = " \
+           file://add_root_cmd_options.patch \
+           file://disable-syslog.patch \
+           file://useradd.patch \
+           file://add_root_cmd_groupmems.patch \
+           "
+SRC_URI_append_class-nativesdk = " \
            file://add_root_cmd_options.patch \
            file://disable-syslog.patch \
            file://useradd.patch \
@@ -57,6 +64,7 @@ EXTRA_OECONF += "--without-audit \
 
 NSCDOPT = ""
 NSCDOPT_class-native = "--without-nscd"
+NSCDOPT_class-nativesdk = "--without-nscd"
 NSCDOPT_libc-uclibc = " --without-nscd"
           
 PAM_PLUGINS = "libpam-runtime \
@@ -74,11 +82,13 @@ PAM_PLUGINS = "libpam-runtime \
 
 PACKAGECONFIG = "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
 PACKAGECONFIG_class-native = ""
+PACKAGECONFIG_class-nativesdk = ""
 PACKAGECONFIG[pam] = "--with-libpam,--without-libpam,libpam,${PAM_PLUGINS}"
 
 RDEPENDS_${PN} = "shadow-securetty \
                   base-passwd"
 RDEPENDS_${PN}_class-native = ""
+RDEPENDS_${PN}_class-nativesdk = ""
 
 do_install() {
 	oe_runmake DESTDIR="${D}" sbindir="${base_sbindir}" usbindir="${sbindir}" install
