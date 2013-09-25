@@ -31,7 +31,7 @@ import os
 import re
 import errno
 
-old_prefix = re.compile("##DEFAULT_INSTALL_DIR##")
+old_prefix = re.compile(b"##DEFAULT_INSTALL_DIR##")
 
 def get_arch():
     f.seek(0)
@@ -92,12 +92,15 @@ def change_interpreter(elf_file_name):
             # External SDKs with mixed pre-compiled binaries should not get
             # relocated so look for some variant of /lib
             fname = f.read(11)
-            if fname.startswith("/lib/") or fname.startswith("/lib64/") or fname.startswith("/lib32/") or fname.startswith("/usr/lib32/") or fname.startswith("/usr/lib32/") or fname.startswith("/usr/lib64/"):
+            if fname.startswith(b"/lib/") or fname.startswith(b"/lib64/") or \
+               fname.startswith(b"/lib32/") or fname.startswith(b"/usr/lib32/") or \
+               fname.startswith(b"/usr/lib32/") or fname.startswith(b"/usr/lib64/"):
                 break
             if (len(new_dl_path) >= p_filesz):
-                print "ERROR: could not relocate %s, interp size = %i and %i is needed." % (elf_file_name, p_memsz, len(new_dl_path) + 1)
+                print("ERROR: could not relocate %s, interp size = %i and %i is needed." \
+                    % (elf_file_name, p_memsz, len(new_dl_path) + 1))
                 break
-            dl_path = new_dl_path + "\0" * (p_filesz - len(new_dl_path))
+            dl_path = new_dl_path + b"\0" * (p_filesz - len(new_dl_path))
             f.seek(p_offset)
             f.write(dl_path)
             break
@@ -129,40 +132,40 @@ def change_dl_sysdirs():
         sh_name, sh_type, sh_flags, sh_addr, sh_offset, sh_size, sh_link,\
             sh_info, sh_addralign, sh_entsize = struct.unpack(sh_fmt, sh_hdr)
 
-        name = sh_strtab[sh_name:sh_strtab.find("\0", sh_name)]
+        name = sh_strtab[sh_name:sh_strtab.find(b"\0", sh_name)]
 
         """ look only into SHT_PROGBITS sections """
         if sh_type == 1:
             f.seek(sh_offset)
             """ default library paths cannot be changed on the fly because  """
             """ the string lengths have to be changed too.                  """
-            if name == ".sysdirs":
+            if name == b".sysdirs":
                 sysdirs = f.read(sh_size)
                 sysdirs_off = sh_offset
                 sysdirs_sect_size = sh_size
-            elif name == ".sysdirslen":
+            elif name == b".sysdirslen":
                 sysdirslen = f.read(sh_size)
                 sysdirslen_off = sh_offset
-            elif name == ".ldsocache":
+            elif name == b".ldsocache":
                 ldsocache_path = f.read(sh_size)
                 new_ldsocache_path = old_prefix.sub(new_prefix, ldsocache_path)
                 # pad with zeros
-                new_ldsocache_path += "\0" * (sh_size - len(new_ldsocache_path))
+                new_ldsocache_path += b"\0" * (sh_size - len(new_ldsocache_path))
                 # write it back
                 f.seek(sh_offset)
                 f.write(new_ldsocache_path)
 
     if sysdirs != "" and sysdirslen != "":
-        paths = sysdirs.split("\0")
-        sysdirs = ""
-        sysdirslen = ""
+        paths = sysdirs.split(b"\0")
+        sysdirs = b""
+        sysdirslen = b""
         for path in paths:
             """ exit the loop when we encounter first empty string """
-            if path == "":
+            if path == b"":
                 break
 
             new_path = old_prefix.sub(new_prefix, path)
-            sysdirs += new_path + "\0"
+            sysdirs += new_path + b"\0"
 
             if arch == 32:
                 sysdirslen += struct.pack("<L", len(new_path))
@@ -170,7 +173,7 @@ def change_dl_sysdirs():
                 sysdirslen += struct.pack("<Q", len(new_path))
 
         """ pad with zeros """
-        sysdirs += "\0" * (sysdirs_sect_size - len(sysdirs))
+        sysdirs += b"\0" * (sysdirs_sect_size - len(sysdirs))
 
         """ write the sections back """
         f.seek(sysdirs_off)
@@ -178,13 +181,19 @@ def change_dl_sysdirs():
         f.seek(sysdirslen_off)
         f.write(sysdirslen)
 
-
 # MAIN
 if len(sys.argv) < 4:
     sys.exit(-1)
 
-new_prefix = sys.argv[1]
-new_dl_path = sys.argv[2]
+# In python > 3, strings may also contain Unicode characters. So, convert
+# them to bytes
+if sys.version_info < (3,):
+    new_prefix = sys.argv[1]
+    new_dl_path = sys.argv[2]
+else:
+    new_prefix = sys.argv[1].encode()
+    new_dl_path = sys.argv[2].encode()
+
 executables_list = sys.argv[3:]
 
 for e in executables_list:
@@ -196,7 +205,7 @@ for e in executables_list:
 
     try:
         f = open(e, "r+b")
-    except IOError, ioex:
+    except IOError as ioex:
         if ioex.errno == errno.ETXTBSY:
             print("Could not open %s. File used by another process.\nPlease "\
                   "make sure you exit all processes that might use any SDK "\
@@ -204,6 +213,9 @@ for e in executables_list:
         else:
             print("Could not open %s: %s(%d)" % (e, ioex.strerror, ioex.errno))
         sys.exit(-1)
+
+    # Save old size and do a size check at the end. Just a safety measure.
+    old_size = os.path.getsize(e)
 
     arch = get_arch()
     if arch:
@@ -216,4 +228,8 @@ for e in executables_list:
         os.chmod(e, perms)
 
     f.close()
+
+    if old_size != os.path.getsize(e):
+        print("New file size for %s is different. Looks like a relocation error!", e)
+        sys.exit(-1)
 
