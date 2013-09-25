@@ -953,6 +953,9 @@ python populate_packages () {
 
     seen = []
 
+    # os.mkdir masks the permissions with umask so we have to unset it first
+    oldumask = os.umask(0)
+
     for pkg in package_list:
         root = os.path.join(pkgdest, pkg)
         bb.utils.mkdirhier(root)
@@ -1025,6 +1028,7 @@ python populate_packages () {
             if ret is False or ret == 0:
                 raise bb.build.FuncFailed("File population failed")
 
+    os.umask(oldumask)
     os.chdir(workdir)
 
     unshipped = []
