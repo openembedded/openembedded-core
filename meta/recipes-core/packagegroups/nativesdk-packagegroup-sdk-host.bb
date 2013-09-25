@@ -20,6 +20,7 @@ RDEPENDS_${PN} = "\
     nativesdk-libtool \
     nativesdk-autoconf \
     nativesdk-automake \
+    nativesdk-shadow \
     "
 
 RDEPENDS_${PN}_darwin = "\
