@@ -48,6 +48,7 @@ EXTRA_OECONF = "${@['--enable-clocale=generic', ''][d.getVar('USE_NLS', True) !=
                 ${@get_gcc_mips_plt_setting(bb, d)} \
                 ${@get_gcc_multiarch_setting(bb, d)}"
 
+export ac_cv_path_SED = 'sed'
 export gcc_cv_collect2_libs = 'none required'
 # We need to set gcc_cv_collect2_libs else there is cross-compilation badness
 # in the config.log files (which might not get generated until do_compile

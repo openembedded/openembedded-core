@@ -63,6 +63,7 @@ do_configure () {
 		-Di_syslog \
 		-Duseperlio \
 		-Dman3ext=3pm \
+		-Dsed=/bin/sed \
 		-Uafs \
 		-Ud_csh \
 		-Uusesfio \
