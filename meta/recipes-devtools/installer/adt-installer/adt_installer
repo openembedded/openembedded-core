@@ -67,6 +67,10 @@ validate_config()
 
   for selected_arch_type in $YOCTOADT_TARGETS; do
     found=0
+    select_machine_var="\$YOCTOADT_TARGET_MACHINE_$selected_arch_type"
+    select_machine=`eval echo $select_machine_var`
+    show_error_banner=0
+
     for supported_arch_type in $YOCTOADT_SUPPORTED_TARGETS; do
       if [ "$selected_arch_type" == "$supported_arch_type" ]; then
         found=1
@@ -75,10 +79,18 @@ validate_config()
     done
     if [ $found == 0 ]; then
        echo_info "[ADT_INST] Error: YOCTADT_TARGETS in adt_installer.conf contains invalid entries: $YOCTOADT_TARGETS. Valid values are: $YOCTOADT_SUPPORTED_TARGETS"
+       show_error_banner=1
+    elif [ -z "$select_machine" ]; then
+       echo_info "[ADT_INST] Error: No MACHINE was defined for $selected_arch_type architecture! This is needed to install the toolchain and the correct environment settings."
+       echo_info "[ADT_INST] To do that, in adt-installer.conf, set the following variable: YOCTOADT_TARGET_MACHINE_$selected_arch_type"
+       show_error_banner=1
+    fi
+
+    if [ $show_error_banner == 1 ]; then
        echo -e "\n#############################################################################"
        echo -e "# Meet error(s) when installing Yocto ADT! Please check log file for details. "
        echo -e "#############################################################################\n"
-      exit -1
+       exit -1
     fi
   done
 

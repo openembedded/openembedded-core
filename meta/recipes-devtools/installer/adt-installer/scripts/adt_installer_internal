@@ -195,8 +195,8 @@ escaped_sdkpath=$(echo $DEFAULT_INSTALL_FOLDER |sed -e "s:[\+\.]:\\\\\\\\\0:g")
 
 # We don't change the script in-place since we may want the user to re-run
 # adt-installer script
-$SUDO sh -c "sed -e '"s:##DEFAULT_INSTALL_DIR##:$escaped_sdkpath:"' scripts/relocate_sdk.py > scripts/relocate_sdk_tmp.py"
-$SUDO chmod +x scripts/relocate_sdk_tmp.py
+sed -e "s:##DEFAULT_INSTALL_DIR##:$escaped_sdkpath:" scripts/relocate_sdk.py > scripts/relocate_sdk_tmp.py
+chmod +x scripts/relocate_sdk_tmp.py
 
 dl_path=$(find $OECORE_NATIVE_SYSROOT/lib -name "ld-linux*")
 executable_files=$(find $OECORE_NATIVE_SYSROOT -type f -perm /111)
