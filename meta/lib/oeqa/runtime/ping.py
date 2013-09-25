@@ -8,10 +8,13 @@ class PingTest(oeRuntimeTest):
 
     def test_ping(self):
         output = ''
-        status = None
+        count = 0
         endtime = time.time() + 60
-        while status != 0 and time.time() < endtime:
+        while count < 5 and time.time() < endtime:
             proc = subprocess.Popen("ping -c 1 %s" % oeRuntimeTest.tc.qemu.ip, shell=True, stdout=subprocess.PIPE)
             output += proc.communicate()[0]
-            status = proc.poll()
-        self.assertEqual(status, 0, msg = "No echo reply, ping output is:\n%s" % output)
+            if proc.poll() == 0:
+                count += 1
+            else:
+                count = 0
+        self.assertEqual(count, 5, msg = "Expected 5 consecutive replies, got %d.\nping output is:\n%s" % (count,output))
