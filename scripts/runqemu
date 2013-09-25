@@ -261,7 +261,11 @@ if [ "x$KVM_ENABLED" = "xyes" ]; then
         exit 1;
     fi
     if [ -w /dev/kvm -a -r /dev/kvm ]; then
-        SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -enable-kvm -cpu host"
+        if [ "x$MACHINE" = "xqemux86" ]; then
+            SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -enable-kvm -cpu kvm32"
+        elif [ "x$MACHINE" = "xqemux86-64" ]; then
+            SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -enable-kvm -cpu kvm64"
+        fi
         KVM_ACTIVE="yes"
     else
         echo "You have no rights on /dev/kvm."
