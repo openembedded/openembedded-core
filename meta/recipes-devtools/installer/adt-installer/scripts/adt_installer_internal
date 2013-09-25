@@ -42,6 +42,28 @@ parse_config()
   esac
 }
 
+get_sudo_app()
+{
+  username=$(id -nu)
+
+  # find the owner of the parent
+  dir=$1
+  while [ 1 ]; do
+      if [ -d $dir ]; then
+          owner=$(stat -c %U $dir)
+          break
+     else
+          dir=$(dirname $dir)
+     fi
+  done
+
+  if [ "$owner" = "$username" ]; then
+      true
+  else
+      echo sudo
+  fi
+}
+
 
 #let us install a qemu-native firstly
 #installation step 2
@@ -60,26 +82,11 @@ fi
 
 #Now begin to install native sdk and extract qemu rootfs which needs privilege rights
 #depending on the install location
-username=$(id -nu)
-
-# find the owner of the parent
-dir=$NATIVE_INSTALL_DIR
-while [ 1 ]; do
-    if [ -d $dir ]; then
-        owner=$(stat -c %U $dir)
-        break
-   else
-        dir=$(dirname $dir)
-   fi
-done
-
-if [ "$owner" = "$username" ]; then
-    SUDO=""
-else
-    echo_info "#######################################################################"
-    echo_info "Please note from this point on installation requires sudo password ..."
-    echo_info "#######################################################################"
-    SUDO=sudo
+SUDO=$(get_sudo_app $NATIVE_INSTALL_DIR)
+if [ -n "$SUDO" ]; then
+  echo_info "#######################################################################"
+  echo_info "Please note from this point on installation requires sudo password ..."
+  echo_info "#######################################################################"
 fi
 
 #we need to make this directory firstly since opkg need to use it.
@@ -249,6 +256,9 @@ target_machine=`eval echo $target_machine_var`
 sysroot_image_name="core-image-$target_sysroot_image-$target_machine.tar.bz2"
     #echo_info "Extracting rootfs: $sysroot_image_name, using pseudo..."
 
+# sudo password might be needed to install the target sysroot
+SUDO=$(get_sudo_app $target_sysroot)
+
 $SUDO scripts/extract_rootfs $sysroot_image_name $target_sysroot $OECORE_NATIVE_SYSROOT $user_inst_type
 check_result
 
@@ -260,6 +270,7 @@ else
 fi
 
 if [ ! -z "$env_filename" ]; then
+  SUDO=$(get_sudo_app $INSTALL_FOLDER)
   $SUDO sed -i -e "s%##SDKTARGETSYSROOT##%$target_sysroot%g" $env_filename
 else
   echo_info "[ADT_INST] Error: Failed to find environment script for arch: $1"
