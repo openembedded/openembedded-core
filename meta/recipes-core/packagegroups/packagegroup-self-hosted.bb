@@ -206,6 +206,7 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     xinetd \
     zip \
     zlib \
+    xz \
     "
 
 
