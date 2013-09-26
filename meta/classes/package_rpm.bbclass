@@ -35,6 +35,11 @@ package_update_index_rpm () {
 		done
 	done
 
+	# FIXME stopgap for broken "bitbake package-index" since MULTILIB_PREFIX_LIST isn't set for that
+	if [ "$target_archs" = "" ] ; then
+		target_archs="${ALL_MULTILIB_PACKAGE_ARCHS}"
+	fi
+
 	target_archs=`echo "$target_archs" | tr - _`
 
 	archs=`for arch in $target_archs $sdk_archs ; do
