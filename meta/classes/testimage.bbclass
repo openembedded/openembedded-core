@@ -175,3 +175,5 @@ def testimage_main(d):
             raise bb.build.FuncFailed("%s - FAILED to start qemu - check the task log and the boot log" % pn)
     finally:
         qemu.kill()
+
+testimage_main[vardepsexclude] =+ "BB_ORIGENV"
