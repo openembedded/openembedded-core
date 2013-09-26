@@ -1,0 +1,53 @@
+There is a potential issue with the fastop code in pseudo since a process may
+exit and allow some other function to run before the server has processed
+the commands run by the process. Issues have been see with unpredictable
+file permissions.
+
+To avoid this, we ping the server before exitting which guarantees it has
+processed the current command queue.
+
+Debugged-by: RP
+Fix written by peter.seebach@windriver.com
+
+Upstream-Status: Submitted
+
+[YOCTO #5132]
+
+diff --git a/pseudo_client.c b/pseudo_client.c
+index f58ce4c..20943b6 100644
+--- a/pseudo_client.c
++++ b/pseudo_client.c
+@@ -75,6 +75,9 @@ static int nfds = 0;
+ static int messages = 0;
+ static struct timeval message_time = { .tv_sec = 0 };
+ static int pseudo_inited = 0;
++
++static int sent_messages = 0;
++
+ int pseudo_nosymlinkexp = 0;
+ 
+ /* note: these are int, not uid_t/gid_t, so I can use 'em with scanf */
+@@ -711,6 +714,11 @@ client_ping(void) {
+ 	return 0;
+ }
+ 
++static void
++void_client_ping(void) {
++	client_ping();
++}
++
+ int
+ pseudo_fd(int fd, int how) {
+ 	int newfd;
+@@ -1043,6 +1051,11 @@ pseudo_client_op(pseudo_op_t op, int access, int fd, int dirfd, const char *path
+ 	/* disable wrappers */
+ 	pseudo_antimagic();
+ 
++	if (!sent_messages) {
++		sent_messages = 1;
++		atexit(void_client_ping);
++	}
++
+ 	if (op == OP_RENAME) {
+ 		va_list ap;
+ 		va_start(ap, buf);
