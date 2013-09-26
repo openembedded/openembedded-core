@@ -22,6 +22,9 @@ if [ ! -d /home/builder/.local/share/applications ]; then
     xdg-mime default midori.desktop x-scheme-handler/http
     xdg-mime default midori.desktop x-scheme-handler/https
     xdg-mime default midori.desktop text/html
+
+    #register text files with leafpad text editor
+    xdg-mime default leafpad.desktop text/plain
 fi
 
 cd /home/builder/poky
