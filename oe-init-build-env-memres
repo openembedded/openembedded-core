@@ -52,4 +52,4 @@ else
 fi
 bitbake --server-only -t xmlrpc -B localhost:$port
 export BBSERVER=localhost:$port
-echo "Bitbake server started on port %s, use bitbake -m to shut it down"
+echo "Bitbake server started on port $port, use bitbake -m to shut it down"
