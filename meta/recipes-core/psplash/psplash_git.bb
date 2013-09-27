@@ -23,8 +23,8 @@ python __anonymous() {
     haspng = False
     for uri in splashfiles:
         fetcher = bb.fetch2.Fetch([uri], d)
-        flocal = fetcher.localpath(uri)
-        fbase = os.path.splitext(os.path.basename(flocal))[0]
+        flocal = os.path.basename(fetcher.localpath(uri))
+        fbase = os.path.splitext(flocal)[0]
         outsuffix = fetcher.ud[uri].parm.get("outsuffix")
         if not outsuffix:
             if fbase.startswith("psplash-"):
@@ -74,18 +74,19 @@ python do_compile () {
     import shutil
 
     # Build a separate executable for each splash image
+    workdir = d.getVar('WORKDIR', True)
     convertscript = "%s/make-image-header.sh" % d.getVar('S', True)
     destfile = "%s/psplash-poky-img.h" % d.getVar('S', True)
     localfiles = d.getVar('SPLASH_LOCALPATHS', True).split()
     outputfiles = d.getVar('SPLASH_INSTALL', True).split()
     for localfile, outputfile in zip(localfiles, outputfiles):
         if localfile.endswith(".png"):
-            outp = oe.utils.getstatusoutput('%s %s POKY' % (convertscript, localfile))
+            outp = oe.utils.getstatusoutput('%s %s POKY' % (convertscript, os.path.join(workdir, localfile)))
             print(outp[1])
-            fbase = os.path.splitext(os.path.basename(localfile))[0]
+            fbase = os.path.splitext(localfile)[0]
             shutil.copyfile("%s-img.h" % fbase, destfile)
         else:
-            shutil.copyfile(localfile, destfile)
+            shutil.copyfile(os.path.join(workdir, localfile), destfile)
         # For some reason just updating the header is not enough, we have to touch the .c
         # file in order to get it to rebuild
         os.utime("%s/psplash.c" % d.getVar('S', True), None)
