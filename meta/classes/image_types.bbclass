@@ -43,12 +43,17 @@ def get_imagecmds(d):
         if "ext3" not in alltypes:
             alltypes.append("ext3")
         types.remove("vmdk")
-    if "live" in types:
+    if "live" in types or "iso" in types or "hddimg" in types:
         if "ext3" not in types:
             types.append("ext3")
         if "ext3" not in alltypes:
             alltypes.append("ext3")
-        types.remove("live")
+        if "live" in types:
+            types.remove("live")
+        if "iso" in types:
+            types.remove("iso")
+        if "hddimg" in types:
+            types.remove("hddimg")
 
     if d.getVar('IMAGE_LINK_NAME', True):
         if d.getVar('RM_OLD_IMAGE', True) == "1":
@@ -115,7 +120,7 @@ def imagetypes_getdepends(d):
     deps = []
     ctypes = d.getVar('COMPRESSIONTYPES', True).split()
     for type in (d.getVar('IMAGE_FSTYPES', True) or "").split():
-        if type == "vmdk" or type == "live":
+        if type == "vmdk" or type == "live" or type == "iso" or type == "hddimg":
             type = "ext3"
         basetype = type
         for ctype in ctypes:
@@ -230,7 +235,7 @@ IMAGE_DEPENDS_ubi = "mtd-utils-native"
 IMAGE_DEPENDS_ubifs = "mtd-utils-native"
 
 # This variable is available to request which values are suitable for IMAGE_FSTYPES
-IMAGE_TYPES = "jffs2 sum.jffs2 cramfs ext2 ext2.gz ext2.bz2 ext3 ext3.gz ext2.lzma btrfs live squashfs squashfs-xz ubi ubifs tar tar.gz tar.bz2 tar.xz cpio cpio.gz cpio.xz cpio.lzma vmdk elf"
+IMAGE_TYPES = "jffs2 sum.jffs2 cramfs ext2 ext2.gz ext2.bz2 ext3 ext3.gz ext2.lzma btrfs iso hddimg squashfs squashfs-xz ubi ubifs tar tar.gz tar.bz2 tar.xz cpio cpio.gz cpio.xz cpio.lzma vmdk elf"
 
 COMPRESSIONTYPES = "gz bz2 lzma xz"
 COMPRESS_CMD_lzma = "lzma -k -f -7 ${IMAGE_NAME}.rootfs.${type}"
