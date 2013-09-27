@@ -83,6 +83,8 @@ KERNEL_IMAGETYPE_FOR_MAKE = "${@(lambda s: s[:-3] if s[-3:] == ".gz" else s)(d.g
 
 copy_initramfs() {
 	echo "Copying initramfs into ./usr ..."
+	# In case the directory is not created yet from the first pass compile:
+	mkdir -p ${B}/usr
 	# Find and use the first initramfs image archive type we find
 	rm -f ${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.cpio
 	for img in cpio.gz cpio.lzo cpio.lzma cpio.xz; do
@@ -156,6 +158,12 @@ kernel_do_compile() {
 	# different initramfs image.  The way to do that in the kernel
 	# is to specify:
 	# make ...args... CONFIG_INITRAMFS_SOURCE=some_other_initramfs.cpio
+	if [ "$use_alternate_initrd" = "" ] && [ "${INITRAMFS_TASK}" != "" ] ; then
+		# The old style way of copying an prebuilt image and building it
+		# is turned on via INTIRAMFS_TASK != ""
+		copy_initramfs
+		use_alternate_initrd=CONFIG_INITRAMFS_SOURCE=${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.cpio
+	fi
 	oe_runmake ${KERNEL_IMAGETYPE_FOR_MAKE} ${KERNEL_ALT_IMAGETYPE} CC="${KERNEL_CC}" LD="${KERNEL_LD}" ${KERNEL_EXTRA_ARGS} $use_alternate_initrd
 	if test "${KERNEL_IMAGETYPE_FOR_MAKE}.gz" = "${KERNEL_IMAGETYPE}"; then
 		gzip -9c < "${KERNEL_IMAGETYPE_FOR_MAKE}" > "${KERNEL_OUTPUT}"
