@@ -21,11 +21,6 @@ do_install() {
 	install -m 0644 ${WORKDIR}/machineid.service ${D}${systemd_unitdir}/system
 	ln -sf ../machineid.service ${D}${systemd_unitdir}/system/sysinit.target.wants/
 	ln -sf ../machineid.service ${D}${systemd_unitdir}/system/basic.target.wants/
-
-	# hack to make old style sysvinit postinsts succeed
-	install -d ${D}${bindir}
-	echo "echo 1" > ${D}${bindir}/runlevel
-	chmod 0755 ${D}${bindir}/runlevel
 }
 
 SYSTEMD_DISABLED_SYSV_SERVICES = " \
