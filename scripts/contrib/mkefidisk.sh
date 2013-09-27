@@ -134,6 +134,11 @@ fi
 # Partition $DEVICE
 #
 DEVICE_SIZE=$(parted $DEVICE unit mb print | grep ^Disk | cut -d" " -f 3 | sed -e "s/MB//")
+# If the device size is not reported there may not be a valid label
+if [ "$DEVICE_SIZE" = "" ] ; then
+	parted $DEVICE mklabel msdos
+	DEVICE_SIZE=$(parted $DEVICE unit mb print | grep ^Disk | cut -d" " -f 3 | sed -e "s/MB//")
+fi
 SWAP_SIZE=$((DEVICE_SIZE*SWAP_RATIO/100))
 ROOTFS_SIZE=$((DEVICE_SIZE-BOOT_SIZE-SWAP_SIZE))
 ROOTFS_START=$((BOOT_SIZE))
@@ -142,7 +147,7 @@ SWAP_START=$((ROOTFS_END))
 
 # MMC devices use a partition prefix character 'p'
 PART_PREFIX=""
-if [ ! "${DEVICE#/dev/mmcblk}" = "${DEVICE}" ]; then
+if [ ! "${DEVICE#/dev/mmcblk}" = "${DEVICE}" ] || [ ! "${DEVICE#/dev/loop}" = "${DEVICE}" ]; then
 	PART_PREFIX="p"
 fi
 BOOTFS=$DEVICE${PART_PREFIX}1
@@ -197,7 +202,12 @@ unmount_device
 #
 echo ""
 echo "Formatting $BOOTFS as vfat..."
-mkfs.vfat $BOOTFS -n "efi"
+if [ ! "${DEVICE#/dev/loop}" = "${DEVICE}" ]; then
+	mkfs.vfat -I $BOOTFS -n "efi"
+else
+	mkfs.vfat $BOOTFS -n "efi"
+
+fi
 
 echo "Formatting $ROOTFS as ext3..."
 mkfs.ext3 $ROOTFS -L "root"
