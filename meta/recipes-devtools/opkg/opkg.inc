@@ -16,7 +16,13 @@ do_configure_prepend() {
 	sed -i -e s:-Werror::g ${S}/libopkg/Makefile.am
 }
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig systemd
+
+python () {
+    if 'sysvinit' not in d.getVar("DISTRO_FEATURES", True).split():
+        pn = d.getVar('PN', True)
+        d.setVar('SYSTEMD_SERVICE_%s' % (pn), 'opkg-configure.service')
+}
 
 target_localstatedir := "${localstatedir}"
 OPKGLIBDIR = "${target_localstatedir}/lib"
@@ -49,6 +55,16 @@ FILES_libopkg = "${libdir}/*.so.* ${OPKGLIBDIR}/opkg/"
 do_install_append() {
 	# We need to create the lock directory
 	install -d ${D}${OPKGLIBDIR}/opkg
+
+	if ${@base_contains('DISTRO_FEATURES','sysvinit','false','true',d)};then
+		install -d ${D}${systemd_unitdir}/system
+		install -m 0644 ${WORKDIR}/opkg-configure.service ${D}${systemd_unitdir}/system/
+		sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+			-e 's,@SYSCONFDIR@,${sysconfdir},g' \
+			-e 's,@BINDIR@,${bindir},g' \
+			-e 's,@SYSTEMD_UNITDIR@,${systemd_unitdir},g' \
+			${D}${systemd_unitdir}/system/opkg-configure.service
+	fi
 }
 
 do_install_append_class-native() {
@@ -59,7 +75,8 @@ do_install_append_class-native() {
 
 pkg_postinst_${PN} () {
 #!/bin/sh
-if [ "x$D" != "x" ] && [ -f $D${OPKGLIBDIR}/opkg/status ]; then
+if ${@base_contains('DISTRO_FEATURES','sysvinit','true','false',d)} && \
+	[ "x$D" != "x" ] && [ -f $D${OPKGLIBDIR}/opkg/status ]; then
 	install -d $D${sysconfdir}/rcS.d
 
 	# this happens at S98 where our good 'ole packages script used to run
