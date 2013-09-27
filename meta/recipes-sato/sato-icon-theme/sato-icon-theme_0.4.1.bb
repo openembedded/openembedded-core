@@ -23,6 +23,12 @@ FILES_${PN} += "${datadir}"
 
 EXTRA_OECONF += "--with-iconmap=${@d.getVar('STAGING_LIBEXECDIR_NATIVE', True).replace('sato-icon-theme', 'icon-naming-utils')}/icon-name-mapping"
 
+do_install_append() {
+	find ${D}${datadir}/icons/Sato/ -maxdepth 1 -type d -exec ln -s preferences-system.png {}/apps/preferences-desktop.png \;
+	find ${D}${datadir}/icons/Sato/ -maxdepth 1 -type d -exec ln -s file-manager.png {}/apps/system-file-manager.png \;
+	find ${D}${datadir}/icons/Sato/ -maxdepth 1 -type d -exec ln -s ../apps/terminal.png {}/places/computer.png \;
+}
+
 # Explictly setting "Sato" as the default icon theme to avoid flickering from
 # the desktop and settings daemon racing.  This shouldn't be done here but in the sato image
 pkg_postinst_${PN} () {
