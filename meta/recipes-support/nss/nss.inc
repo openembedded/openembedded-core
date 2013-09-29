@@ -168,6 +168,9 @@ pkg_postinst_${PN} () {
             BN=`basename $I .chk`
             FN=$DN/$BN.so
             shlibsign -i $FN
+	    if [ $? -ne 0 ]; then
+	       exit 1
+	    fi
         done
         exit 0
     fi
