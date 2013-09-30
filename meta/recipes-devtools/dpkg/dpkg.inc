@@ -7,8 +7,8 @@ SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.xz \
 
 DEPENDS = "zlib bzip2 perl ncurses"
 DEPENDS_class-native = "bzip2-native zlib-native virtual/update-alternatives-native gettext-native perl-native"
-RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives}"
-RDEPENDS_${PN}_class-native = ""
+RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} xz"
+RDEPENDS_${PN}_class-native = "xz"
 
 S = "${WORKDIR}/${BPN}-${PV}"
 
