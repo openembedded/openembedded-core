@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
 SRC_URI += "file://fdt_header.patch \
             file://target-i386-Fix-aflag-logic-for-CODE64-and-the-0x67-.patch \
             file://target-ppc_fix_bit_extraction.patch \
+            file://fxrstorssefix.patch \
            "
 
 SRC_URI_prepend = "http://wiki.qemu.org/download/qemu-${PV}.tar.bz2"

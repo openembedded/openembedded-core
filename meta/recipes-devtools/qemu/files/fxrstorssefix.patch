@@ -1,0 +1,31 @@
+When we restore the mxcsr resgister with FXRSTOR, we need to update the various SSE
+flag files by calling update_sse_status() else we're using the flags from some other
+process with interesting results.
+
+The code isn't ordered to make this easy hence the function declaration.
+
+Upstream-Status: Pending
+
+RP 2013/9/30
+
+Index: qemu-1.5.0/target-i386/fpu_helper.c
+===================================================================
+--- qemu-1.5.0.orig/target-i386/fpu_helper.c	2013-09-30 18:46:39.283377648 +0000
++++ qemu-1.5.0/target-i386/fpu_helper.c	2013-09-30 18:46:56.895377232 +0000
+@@ -1149,6 +1149,8 @@
+     }
+ }
+ 
++static void update_sse_status(CPUX86State *env);
++
+ void helper_fxrstor(CPUX86State *env, target_ulong ptr, int data64)
+ {
+     int i, fpus, fptag, nb_xmm_regs;
+@@ -1180,6 +1182,7 @@
+     if (env->cr[4] & CR4_OSFXSR_MASK) {
+         /* XXX: finish it */
+         env->mxcsr = cpu_ldl_data(env, ptr + 0x18);
++        update_sse_status(env);
+         /* cpu_ldl_data(env, ptr + 0x1c); */
+         if (env->hflags & HF_CS64_MASK) {
+             nb_xmm_regs = 16;
