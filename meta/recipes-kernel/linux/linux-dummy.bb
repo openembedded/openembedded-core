@@ -27,3 +27,10 @@ do_compile () {
 do_install() {
         :
 }
+
+do_bundle_initramfs() {
+        :
+}
+do_bundle_initramfs[nostamp] = "1"
+addtask bundle_initramfs after do_compile
+
