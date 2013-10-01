@@ -274,8 +274,20 @@ static void add_new_file(char *name, char *path, unsigned long uid,
 static void add_new_fifo(char *name, char *path, unsigned long uid,
 				  unsigned long gid, unsigned long mode)
 {
-	if (mknod(path, mode, 0))
-		error_msg_and_die("%s: file can not be created with mknod!", path);
+	int status;
+	struct stat sb;
+
+	memset(&sb, 0, sizeof(struct stat));
+	status = stat(path, &sb);
+
+
+	/* Update the mode if we exist and are a fifo already */
+	if (status >= 0 && S_ISFIFO(sb.st_mode)) {
+		chmod(path, mode);
+	} else {
+		if (mknod(path, mode, 0))
+			error_msg_and_die("%s: file can not be created with mknod!", path);
+	}
 	chown(path, uid, gid);
 //	printf("File: %s %s  UID: %ld  GID: %ld  MODE: %04lo\n",
 //			path, name, gid, uid, mode);
