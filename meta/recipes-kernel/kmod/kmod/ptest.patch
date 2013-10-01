@@ -15,10 +15,10 @@ diff -ruN a/Makefile.am b/Makefile.am
 +	@for file in $(TESTSUITE); do \
 +		install $$file $(DESTDIR)/testsuite; \
 +	done;
-+	@cp Makefile $(DESTDIR)
-+	@sed -i 's/^Makefile/_Makefile/'  ${DESTDIR}/Makefile
-+	@tar -czf $(DESTDIR)/tools.tgz $(noinst_SCRIPTS) $(noinst_PROGRAMS)
-+	@tar -C testsuite -czf $(DESTDIR)/testsuite.tgz rootfs-pristine .libs
++	@sed -e 's/^Makefile/_Makefile/' < Makefile > $(DESTDIR)/Makefile
++	@$(MKDIR_P) $(DESTDIR)/tools
++	@cp $(noinst_SCRIPTS) $(noinst_PROGRAMS) $(DESTDIR)/tools
++	@cp -r testsuite/rootfs testsuite/.libs $(DESTDIR)/testsuite
 +
  # ------------------------------------------------------------------------------
  # custom release helpers

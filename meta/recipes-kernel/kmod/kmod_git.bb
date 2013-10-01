@@ -41,9 +41,11 @@ do_compile_prepend() {
 }
 
 do_compile_ptest () {
-        oe_runmake buildtest-TESTS
-        oe_runmake rootfs
+        oe_runmake buildtest-TESTS rootfs
 }
+
+INHIBIT_PACKAGE_STRIP = "${@base_contains("DISTRO_FEATURES", "ptest", "1", "0", d)}"
+INSANE_SKIP_${PN}-ptest = "arch"
 
 inherit update-alternatives
 
