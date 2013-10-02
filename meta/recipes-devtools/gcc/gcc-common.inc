@@ -16,6 +16,8 @@ def get_gcc_fpu_setting(bb, d):
         return "--enable-e500_double"
     return ""
 
+get_gcc_fpu_setting[vardepvalue] = "${@get_gcc_fpu_setting(bb, d)}"
+
 def get_gcc_mips_plt_setting(bb, d):
     if d.getVar('TRANSLATED_TARGET_ARCH', True) in [ 'mips', 'mipsel' ] and 'mplt' in d.getVar('DISTRO_FEATURES',1).split() :
         return "--with-mips-plt"
