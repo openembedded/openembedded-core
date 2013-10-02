@@ -73,12 +73,12 @@ target_exec_prefix := "${exec_prefix}"
 base_prefix = "${SDKPATHNATIVE}"
 prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
 exec_prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
-bindir = "${exec_prefix}/bin/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}"
+bindir = "${exec_prefix}/bin/${TARGET_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
 sbindir = "${bindir}"
 base_bindir = "${bindir}"
 base_sbindir = "${bindir}"
-libdir = "${exec_prefix}/lib/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}"
-libexecdir = "${exec_prefix}/libexec/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}"
+libdir = "${exec_prefix}/lib/${TARGET_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
+libexecdir = "${exec_prefix}/libexec/${TARGET_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
 
 FILES_${PN} = "${prefix}"
 FILES_${PN}-dbg += "${prefix}/.debug \
@@ -91,3 +91,7 @@ export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 do_populate_sysroot[stamp-extra-info] = ""
 
 USE_NLS = "${SDKUSE_NLS}"
+
+# We have to us TARGET_ARCH but we care about the absolute value
+# and not any particular tune that is enabled.
+TARGET_ARCH[vardepsexclude] = "TUNE_ARCH"

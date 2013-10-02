@@ -14,6 +14,11 @@ EXTRA_OECONF_PATHS = "--with-gxx-include-dir=${SDKPATH}/sysroots/${TUNE_PKGARCH}
                       --with-build-time-tools=${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin \
                       --with-sysroot=${SDKPATH}/sysroots/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS} \
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
+# We have to point gcc at a sysroot but we don't need to rebuild if this changes
+# e.g. we switch between different machines with different tunes.
+EXTRA_OECONF_PATHS[vardepsexclude] = "TUNE_PKGARCH"
+TARGET_ARCH[vardepsexclude] = "TUNE_ARCH"
+get_gcc_fpu_setting[vardepvalue] = ""
 
 #
 # gcc-cross looks and finds these in ${exec_prefix} but we're not so lucky
