@@ -87,5 +87,6 @@ addhandler nativesdk_virtclass_handler
 nativesdk_virtclass_handler[eventmask] = "bb.event.RecipePreFinalise"
 
 do_populate_sysroot[stamp-extra-info] = ""
+do_packagedata[stamp-extra-info] = ""
 
 USE_NLS = "${SDKUSE_NLS}"

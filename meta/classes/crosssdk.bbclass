@@ -27,6 +27,7 @@ target_exec_prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
 baselib = "lib"
 
 do_populate_sysroot[stamp-extra-info] = ""
+do_packagedata[stamp-extra-info] = ""
 
 # Need to force this to ensure consitency accross architectures
 EXTRA_OECONF_FPU = ""
