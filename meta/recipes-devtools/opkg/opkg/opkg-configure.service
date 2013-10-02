@@ -7,7 +7,7 @@ Before=sysinit.target
 [Service]
 Type=oneshot
 EnvironmentFile=-@SYSCONFDIR@/default/postinst
-ExecStart=@BASE_BINDIR@/sh -c " if [ $POSTINST_LOGGING = '1' ]; then @BINDIR@/opkg-cl configure > $LOGFILE 2>&1; else @BINDIR@/opkg-cl configure; fi"
+ExecStart=-@BASE_BINDIR@/sh -c " if [ $POSTINST_LOGGING = '1' ]; then @BINDIR@/opkg-cl configure > $LOGFILE 2>&1; else @BINDIR@/opkg-cl configure; fi"
 ExecStartPost=@BASE_BINDIR@/systemctl disable opkg-configure.service
 StandardOutput=syslog
 RemainAfterExit=No
