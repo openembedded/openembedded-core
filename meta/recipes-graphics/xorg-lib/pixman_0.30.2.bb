@@ -20,6 +20,7 @@ PE = "1"
 IWMMXT = "--disable-arm-iwmmxt"
 LOONGSON_MMI = "--disable-loongson-mmi"
 NEON = " --disable-arm-neon "
+NEON_class-nativesdk = " --disable-arm-neon "
 NEON_armv7a = " "
 NEON_armv7a-vfp-neon = " "
 
