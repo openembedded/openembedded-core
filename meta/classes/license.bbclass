@@ -128,12 +128,14 @@ def add_package_and_files(d):
             d.setVar('RRECOMMENDS_' + pn, "%s" % (pn_lic))
 
 def copy_license_files(lic_files_paths, destdir):
+    import shutil
+
     bb.utils.mkdirhier(destdir)
     for (basename, path) in lic_files_paths:
-        ret = bb.utils.copyfile(path, os.path.join(destdir, basename))
-        # If the copy didn't occur, something horrible went wrong and we fail out
-        if not ret:
-            bb.warn("%s could not be copied for some reason. It may not exist. WARN for now." % path)
+        try:
+            ret = shutil.copyfile(path, os.path.join(destdir, basename))
+        except Exception as e:
+            bb.warn("Could not copy license file %s: %s" % (basename, e))
 
 def find_license_files(d):
     """
