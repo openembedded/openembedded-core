@@ -148,11 +148,12 @@ python do_bootdirectdisk() {
 def generate_disk_signature():
     import uuid
 
-    while True:
-        signature = str(uuid.uuid4())[:8]
+    signature = str(uuid.uuid4())[:8]
 
-        if signature != '00000000':
-            return signature
+    if signature != '00000000':
+        return signature
+    else:
+        return 'ffffffff'
 
 def validate_disk_signature(d):
     import re
