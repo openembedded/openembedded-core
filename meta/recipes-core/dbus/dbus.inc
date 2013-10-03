@@ -141,5 +141,8 @@ do_install_class-nativesdk() {
 	# dbus-launch has no X support so lets not install it in case the host
 	# has a more featured and useful version
 	rm -f ${D}${bindir}/dbus-launch
+
+	# Remove /var/run to avoid QA error
+	rm -rf ${D}${localstatedir}/run
 }
 BBCLASSEXTEND = "native nativesdk"
