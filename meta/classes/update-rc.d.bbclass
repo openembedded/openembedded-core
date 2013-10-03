@@ -13,7 +13,23 @@ INITSCRIPT_PARAMS ?= "defaults"
 INIT_D_DIR = "${sysconfdir}/init.d"
 
 updatercd_postinst() {
-if test "x$D" != "x"; then
+IN_TARGET=`test "x$D" = "x"`
+
+# test if there is a previous init script there, ie, we are updating the package
+# if so, we stop the service and remove it before we install from the new package
+if type update-rc.d >/dev/null 2>/dev/null; then
+	if [ $IN_TARGET -a `test -f "${INIT_D_DIR}/${INITSCRIPT_NAME}"` ]; then
+		${INIT_D_DIR}/${INITSCRIPT_NAME} stop
+	fi
+	if [ ! $IN_TARGET ]; then
+		OPT="-f -r $D"
+	else
+		OPT="-f"
+	fi
+	update-rc.d $OPT ${INITSCRIPT_NAME} remove
+fi
+
+if [ ! $IN_TARGET ]; then
 	OPT="-r $D"
 else
 	OPT="-s"
