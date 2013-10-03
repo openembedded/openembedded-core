@@ -183,8 +183,13 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
             else:
                 packages.append(pkg)
         oldfiles = d.getVar('FILES_' + pkg, True)
+        newfile = os.path.join(root, o)
+        # These names will be passed through glob() so if the filename actually
+        # contains * or ? (rare, but possible) we need to handle that specially
+        newfile = newfile.replace('*', '[*]')
+        newfile = newfile.replace('?', '[?]')
         if not oldfiles:
-            the_files = [os.path.join(root, o)]
+            the_files = [newfile]
             if aux_files_pattern:
                 if type(aux_files_pattern) is list:
                     for fp in aux_files_pattern:
@@ -206,7 +211,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
             if postrm:
                 d.setVar('pkg_postrm_' + pkg, postrm)
         else:
-            d.setVar('FILES_' + pkg, oldfiles + " " + os.path.join(root, o))
+            d.setVar('FILES_' + pkg, oldfiles + " " + newfile)
         if callable(hook):
             hook(f, pkg, file_regex, output_pattern, m.group(1))
 
@@ -965,23 +970,28 @@ python populate_packages () {
             msg = "FILES variable for package %s contains '//' which is invalid. Attempting to fix this but you should correct the metadata.\n" % pkg
             package_qa_handle_error("files-invalid", msg, d)
             filesvar.replace("//", "/")
-        files = filesvar.split()
-        for file in files:
+
+        origfiles = filesvar.split()
+        files = []
+        for file in origfiles:
             if os.path.isabs(file):
                 file = '.' + file
             if not file.startswith("./"):
                 file = './' + file
+            globbed = glob.glob(file)
+            if globbed:
+                if [ file ] != globbed:
+                    files += globbed
+                    continue
+            files.append(file)
+
+        for file in files:
             if not cpath.islink(file):
                 if cpath.isdir(file):
                     newfiles =  [ os.path.join(file,x) for x in os.listdir(file) ]
                     if newfiles:
                         files += newfiles
                         continue
-            globbed = glob.glob(file)
-            if globbed:
-                if [ file ] != globbed:
-                    files += globbed
-                    continue
             if (not cpath.islink(file)) and (not cpath.exists(file)):
                 continue
             if file in seen:
