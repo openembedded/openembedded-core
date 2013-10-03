@@ -478,7 +478,7 @@ EOF
 		echo "Note: see `dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}"
 		translate_oe_to_smart ${sdk_mode} --attemptonly $package_attemptonly
 		echo "Attempting $pkgs_to_install" >> "`dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}"
-		smart --data-dir=${target_rootfs}/var/lib/smart install --attempt -y ${pkgs_to_install} >> "`dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}" 2>&1
+		smart --data-dir=${target_rootfs}/var/lib/smart install --attempt -y ${pkgs_to_install} >> "`dirname ${BB_LOGFILE}`/log.do_${task}_attemptonly.${PID}" 2>&1 || :
 	fi
 }
 
