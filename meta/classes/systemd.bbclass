@@ -48,6 +48,9 @@ if type systemctl >/dev/null 2>/dev/null; then
 fi
 }
 
+
+systemd_populate_packages[vardeps] += "systemd_prerm systemd_postinst"
+
 python systemd_populate_packages() {
     if "systemd" not in d.getVar("DISTRO_FEATURES", True).split():
         return
