@@ -106,9 +106,14 @@ delayed_postinsts () {
 }
 
 save_postinsts () {
+	# Scripts need to be ordered when executed, this ensures numeric order
+	# If we ever run into needing more the 899 scripts, we'll have to
+	# change num to start with 1000.
+	num=100
 	for p in $(delayed_postinsts); do
 		install -d ${IMAGE_ROOTFS}${sysconfdir}/ipk-postinsts
-		cp ${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/info/$p.postinst ${IMAGE_ROOTFS}${sysconfdir}/ipk-postinsts/$p
+		cp ${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/info/$p.postinst ${IMAGE_ROOTFS}${sysconfdir}/ipk-postinsts/$num-$p
+		num=`echo \$((num+1))`
 	done
 }
 

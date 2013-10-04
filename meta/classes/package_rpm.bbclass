@@ -391,6 +391,10 @@ EOF
 	fi
 
 	# Construct install scriptlet wrapper
+	# Scripts need to be ordered when executed, this ensures numeric order
+	# If we ever run into needing more the 899 scripts, we'll have to
+	# change num to start with 1000.
+	#
 	cat << EOF > ${WORKDIR}/scriptlet_wrapper
 #!/bin/bash
 
@@ -406,11 +410,13 @@ export NATIVE_ROOT=${STAGING_DIR_NATIVE}
 if [ \$? -ne 0 ]; then
   if [ \$4 -eq 1 ]; then
     mkdir -p \$1/etc/rpm-postinsts
+    num=100
+    while [ -e \$1/etc/rpm-postinsts/\${num}-* ]; do num=\$((num + 1)); done
     name=\`head -1 \$1/\$3 | cut -d' ' -f 2\`
-    echo "#!\$2" > \$1/etc/rpm-postinsts/\${name}
-    echo "# Arg: \$4" >> \$1/etc/rpm-postinsts/\${name}
-    cat \$1/\$3 >> \$1/etc/rpm-postinsts/\${name}
-    chmod +x \$1/etc/rpm-postinsts/\${name}
+    echo "#!\$2" > \$1/etc/rpm-postinsts/\${num}-\${name}
+    echo "# Arg: \$4" >> \$1/etc/rpm-postinsts/\${num}-\${name}
+    cat \$1/\$3 >> \$1/etc/rpm-postinsts/\${num}-\${name}
+    chmod +x \$1/etc/rpm-postinsts/\${num}-\${name}
   else
     echo "Error: pre/post remove scriptlet failed"
   fi
