@@ -54,6 +54,8 @@ python __anonymous() {
 
 PACKAGESPLITFUNCS_prepend = "populate_packages_updatercd "
 
+populate_packages_updatercd[vardeps] += "updatercd_prerm updatercd_postrm updatercd_postinst"
+
 python populate_packages_updatercd () {
     def update_rcd_package(pkg):
         bb.debug(1, 'adding update-rc.d calls to postinst/postrm for %s' % pkg)
