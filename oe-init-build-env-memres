@@ -42,6 +42,10 @@ else
    else
       OEROOT="`pwd`"
    fi
+   if [ -n "$BBSERVER" ]; then
+      unset BBSERVER
+   fi
+            
    OEROOT=`readlink -f "$OEROOT"`
    export OEROOT
    . $OEROOT/scripts/oe-buildenv-internal && \
