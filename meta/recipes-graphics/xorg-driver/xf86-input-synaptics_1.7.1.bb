@@ -15,6 +15,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55aacd3535a741824955c5eb8f061398"
 SRC_URI[md5sum] = "6505de717972b6a24b8eb13e69eb996c"
 SRC_URI[sha256sum] = "db5825660e1fb23190697f609bf75d4450fe707344a14298e1c9b47039bbb58e"
 
-DEPENDS += "libxi mtdev"
+DEPENDS += "libxi mtdev libxtst"
 
 FILES_${PN} += "${datadir}/X11/xorg.conf.d"

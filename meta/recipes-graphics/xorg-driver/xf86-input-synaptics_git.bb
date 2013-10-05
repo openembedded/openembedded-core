@@ -15,4 +15,4 @@ PR = "${INC_PR}.1"
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/driver/xf86-input-synaptics"
 S = "${WORKDIR}/git"
 
-DEPENDS += "libxi mtdev"
+DEPENDS += "libxi mtdev libxtst"
