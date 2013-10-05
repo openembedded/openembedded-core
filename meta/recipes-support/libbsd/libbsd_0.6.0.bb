@@ -13,7 +13,7 @@ SECTION = "libs"
 DEPENDS = ""
 
 SRC_URI = "http://libbsd.freedesktop.org/releases/${BPN}-${PV}.tar.xz"
-SRC_URI[md5sum] = "be8b2e0dc4614699834c49693574fd1a"
-SRC_URI[sha256sum] = "5340cf67555a8d92e7652d96540a47986a26eeafb9a0a3e22d3b3e5701ebe23f"
+SRC_URI[md5sum] = "f6c75f0a9818e323a589bcbd560a0eb4"
+SRC_URI[sha256sum] = "9e8f34ffa9c8579c87965a55a82d8ac37a1dc64858f717b7c49452ade277cc62"
 
 inherit autotools pkgconfig
