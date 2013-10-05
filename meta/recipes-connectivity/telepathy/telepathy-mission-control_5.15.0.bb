@@ -14,6 +14,14 @@ SRC_URI[sha256sum] = "88800d1b5f385e94b34721319ff4fe65c493632954d7229b36e57af5b4
 
 inherit autotools pkgconfig pythonnative
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[upower] = "--enable-upower,--disable-upower,upower"
+
+# to select connman or nm you need to use "connectivity" and "connman" or "nm", default is to disable both
+PACKAGECONFIG[connectvity] = ",--with-connectivity=no"
+PACKAGECONFIG[connman] = "--with-connectivity=connman,,connman"
+PACKAGECONFIG[nm] = "--with-connectivity=nm,,networkmanager"
+
 PACKAGES =+ " \
 	libmissioncontrol \
 	libmissioncontrol-config \
