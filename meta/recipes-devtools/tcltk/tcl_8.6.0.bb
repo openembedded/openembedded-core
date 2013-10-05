@@ -2,7 +2,7 @@ DESCRIPTION = "Tool Command Language"
 LICENSE = "BSD-3-Clause"
 SECTION = "devel/tcltk"
 HOMEPAGE = "http://tcl.sourceforge.net"
-DEPENDS = "tcl-native"
+DEPENDS = "tcl-native zlib"
 LIC_FILES_CHKSUM = "file://../license.terms;md5=3c6f62c07835353e36f0db550ccfb65a \
     file://../compat/license.terms;md5=3c6f62c07835353e36f0db550ccfb65a \
     file://../library/license.terms;md5=3c6f62c07835353e36f0db550ccfb65a \
