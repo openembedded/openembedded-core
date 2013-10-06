@@ -40,7 +40,7 @@ sysroot_stage_dirs() {
 	fi
 	if [ -d $from${libdir} ]
 	then
-		sysroot_stage_libdir $from/${libdir} $to${libdir}
+		sysroot_stage_libdir $from${libdir} $to${libdir}
 	fi
 	if [ -d $from${base_libdir} ]
 	then
