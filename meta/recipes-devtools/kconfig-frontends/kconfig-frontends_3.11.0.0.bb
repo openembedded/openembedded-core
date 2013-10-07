@@ -13,8 +13,8 @@ SECTION = "devel"
 DEPENDS += "ncurses flex bison gperf pkgconfig-native"
 SRC_URI = "http://ymorin.is-a-geek.org/download/${BPN}/${BP}.tar.xz"
 
-SRC_URI[md5sum] = "1ebf13983eb5b2ce960d131cae290cad"
-SRC_URI[sha256sum] = "442a3794b6dd9427f411ecec25dccab1a4bfcf07fe734f62d40e538afd1f0c8a"
+SRC_URI[md5sum] = "b6bd173a39cc32f5e4a580fb1db2e677"
+SRC_URI[sha256sum] = "f4bbd7a2727bef3bb0693b37756457c47f2a08e1ed534cb11e4c8640489e6c8e"
 
 S = "${WORKDIR}/${BPN}-${PV}"
 
