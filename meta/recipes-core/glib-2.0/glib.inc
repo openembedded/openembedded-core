@@ -27,9 +27,9 @@ S = "${WORKDIR}/glib-${PV}"
 
 CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap --disable-man"
 
-PTEST_CONF = "${@base_contains('DISTRO_FEATURES', 'ptest', '--enable-modular-tests', '--disable-modular-tests', d)}"
+PTEST_CONF = "${@base_contains('DISTRO_FEATURES', 'ptest', '--enable-installed-tests', '--disable-installed-tests', d)}"
 EXTRA_OECONF = "--enable-included-printf=no ${CORECONF} ${PTEST_CONF}"
-EXTRA_OECONF_class-native = "${CORECONF} --disable-selinux --disable-modular-tests"
+EXTRA_OECONF_class-native = "${CORECONF} --disable-selinux"
 
 FILES_${PN} = "${libdir}/lib*${SOLIBS} ${datadir}/glib-2.0/schemas \
                ${datadir}/glib-2.0/gettext/mkinstalldirs ${datadir}/glib-2.0/gettext/po/Makefile.in.in"
@@ -37,10 +37,13 @@ FILES_${PN}-dev += "${libdir}/glib-2.0/include \
                     ${libdir}/gio/modules/lib*${SOLIBSDEV} \
                     ${libdir}/gio/modules/*.la"
 FILES_${PN}-dbg += "${datadir}/glib-2.0/gdb ${datadir}/gdb \
-                    ${libdir}/gio/modules/.debug"
+                    ${libdir}/gio/modules/.debug \
+                    ${libdir}/glib-2.0/installed-tests/glib/.debug"
 FILES_${PN}-codegen = "${datadir}/glib-2.0/codegen/*.py"
 FILES_${PN}-bash-completion = "${sysconfdir}/bash_completion.d \
                                ${datadir}/bash-completion"
+FILES_${PN}-ptest += "${libdir}/glib-2.0/installed-tests \
+                      ${datadir}/installed-tests/glib"
 
 ARM_INSTRUCTION_SET = "arm"
 USE_NLS = "yes"

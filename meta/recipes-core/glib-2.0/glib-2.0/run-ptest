@@ -1,3 +1,3 @@
-#!/bin/sh
+#! /bin/sh
 
-make -k ptest
+gnome-desktop-testing-runner glib

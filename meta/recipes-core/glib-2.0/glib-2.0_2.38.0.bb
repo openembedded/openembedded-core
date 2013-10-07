@@ -10,22 +10,21 @@ SHRT_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://configure-libtool.patch \
-           file://glib-2.0_fix_for_x32.patch \
            file://fix-conflicting-rand.patch \
-           file://Makefile-ptest.patch \
            file://add-march-i486-into-CFLAGS-automatically.patch \
-           file://run-ptest \
            file://glib-2.0-configure-readlink.patch \
+           file://run-ptest \
           "
 
 SRC_URI_append_class-native = " file://glib-gettextize-dir.patch"
 
-SRC_URI[md5sum] = "2f4b15f7ef43d8702d067ab987bf7aba"
-SRC_URI[sha256sum] = "f654d2542329012d8475736a165dfbf82fadf3ee940c2e0e6ddd4b2fde5cad7e"
+SRC_URI[md5sum] = "c50d2805a76763e9b4cc4385d4ea215d"
+SRC_URI[sha256sum] = "7513a7de5e814ccb48206340a8773ea523d6a7bf04dc74565de69b899bc2ff32"
 
 BBCLASSEXTEND = "native nativesdk"
 
 RDEPENDS_${PN}-ptest += "\
+            gnome-desktop-testing \
             tzdata \
             tzdata-americas \
             tzdata-asia \
