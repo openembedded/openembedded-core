@@ -22,7 +22,7 @@ do_install() {
     for i in $tmp
     do
 	j=`echo ${i} | sed s/\;/\ /g`
-	label=`echo ${i} | sed -e 's/^.*;tty//'`
+	label=`echo ${i} | sed -e 's/^.*;tty//' -e 's/;.*//'`
 	echo "$label:12345:respawn:${base_sbindir}/getty ${j}" >> ${D}${sysconfdir}/inittab
     done
 
