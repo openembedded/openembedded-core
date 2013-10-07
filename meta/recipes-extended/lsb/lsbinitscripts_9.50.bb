@@ -6,12 +6,12 @@ DEPENDS = "popt glib-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ebf4e8b49780ab187d51bd26aaa022c6"
 
 S="${WORKDIR}/initscripts-${PV}"
-SRC_URI = "http://pkgs.fedoraproject.org/repo/pkgs/initscripts/initscripts-9.48.tar.bz2/7dfab81a5a8d3f0dea5ba55e391c26f3/initscripts-9.48.tar.bz2 \
+SRC_URI = "http://pkgs.fedoraproject.org/repo/pkgs/initscripts/initscripts-9.50.tar.bz2/7252642952d33be10cc00beb862c7b7b/initscripts-9.50.tar.bz2 \
            file://functions.patch \
           " 
 
-SRC_URI[md5sum] = "7dfab81a5a8d3f0dea5ba55e391c26f3"
-SRC_URI[sha256sum] = "5f786121269383d81117532877f6488b48c52a544e0013528dc52c8924f70455"
+SRC_URI[md5sum] = "7252642952d33be10cc00beb862c7b7b"
+SRC_URI[sha256sum] = "1d8fb32b9a7de0c24437acdab27d71deb58c05314f81978ec2aea574fba862e0"
 
 inherit update-alternatives
 
