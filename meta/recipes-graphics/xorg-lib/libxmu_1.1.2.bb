@@ -11,12 +11,11 @@ second library, libXmuu."
 require xorg-lib-common.inc
 
 LICENSE = "MIT & MIT-style"
-LIC_FILES_CHKSUM = "file://COPYING;md5=15f1d981860c677503992da79140669c"
+LIC_FILES_CHKSUM = "file://COPYING;md5=def3d8e4e9c42004f1941fa22f01dc18"
 
 DEPENDS += "libxt libxext"
 PROVIDES = "xmu"
 
-PR = "r0"
 PE = "1"
 
 XORG_PN = "libXmu"
@@ -30,5 +29,5 @@ FILES_libxmuu-dev = "${libdir}/libXmuu.so"
 
 BBCLASSEXTEND = "native"
 
-SRC_URI[md5sum] = "a4efff8de85bd45dd3da124285d10c00"
-SRC_URI[sha256sum] = "709081c550cc3a866d7c760a3f97384a1fe16e27fc38fe8169b8db9f33aa7edd"
+SRC_URI[md5sum] = "41d92ab627dfa06568076043f3e089e4"
+SRC_URI[sha256sum] = "756edc7c383254eef8b4e1b733c3bf1dc061b523c9f9833ac7058378b8349d0b"
