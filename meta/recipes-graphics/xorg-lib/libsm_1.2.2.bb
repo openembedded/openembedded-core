@@ -13,12 +13,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c0fb37f44e02bdbde80546024400728d"
 
 DEPENDS += "libice xproto xtrans e2fsprogs"
 
-PR = "r0"
 PE = "1"
 
 XORG_PN = "libSM"
 
 BBCLASSEXTEND = "native"
 
-SRC_URI[md5sum] = "766de9d1e1ecf8bf74cebe2111d8e2bd"
-SRC_URI[sha256sum] = "93c11d569c64f40723b93b44af1efb474a0cfe92573b0c8c330343cabb897f1d"
+SRC_URI[md5sum] = "499a7773c65aba513609fe651853c5f3"
+SRC_URI[sha256sum] = "0baca8c9f5d934450a70896c4ad38d06475521255ca63b717a6510fdb6e287bd"
