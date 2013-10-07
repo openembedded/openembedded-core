@@ -15,7 +15,7 @@ PR = "r3"
 SRC_URI = "\
   file://asound.conf \
   file://asound.state \
-  file://alsa-state \
+  file://alsa-state-init \
 "
 
 inherit update-rc.d
@@ -24,9 +24,9 @@ INITSCRIPT_NAME = "alsa-state"
 INITSCRIPT_PARAMS = "start 39 S . stop 31 0 6 ."
 
 do_install() {
-    sed -i -e "s:#STATEDIR#:${localstatedir}/lib/alsa:g" ${WORKDIR}/alsa-state
+    sed -i -e "s:#STATEDIR#:${localstatedir}/lib/alsa:g" ${WORKDIR}/alsa-state-init
     install -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/alsa-state ${D}${sysconfdir}/init.d
+    install -m 0755 ${WORKDIR}/alsa-state-init ${D}${sysconfdir}/init.d/alsa-state
 
     install -d ${D}/${localstatedir}/lib/alsa
     install -m 0644 ${WORKDIR}/asound.conf ${D}${sysconfdir}
