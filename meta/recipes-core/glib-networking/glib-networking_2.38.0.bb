@@ -6,19 +6,24 @@ LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 
 SECTION = "libs"
-DEPENDS = "glib-2.0 gnutls intltool-native"
+DEPENDS = "glib-2.0 intltool-native"
 
-SRC_URI = "${GNOME_MIRROR}/${BPN}/2.36/${BPN}-${PV}.tar.xz"
+GNOME_COMPRESS_TYPE = "xz"
 
-SRC_URI[md5sum] = "fb9121742ed36d1723f296eea19dbb3c"
-SRC_URI[sha256sum] = "2108d55b0af3eea56ce256830bcaf1519d6337e0054ef2eff80f2c0ef0eb23f9"
+SRC_URI[archive.md5sum] = "a22907deed3d956860d83aa3233e86ff"
+SRC_URI[archive.sha256sum] = "a43eacbf721b475cf6ba0cd2eab02a332014f71a4c41d0b44bd7bbf8ed1f840d"
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "ca-certificates gnutls"
+
+# No explicit dependency as it works without ca-certificates installed
+PACKAGECONFIG[ca-certificates] = "--with-ca-certificates=${sysconfdir}/ssl/certs/ca-certificates.crt,--without-ca-certificates"
+PACKAGECONFIG[gnutls] = "--with-gnutls,--without-gnutls,gnutls"
+PACKAGECONFIG[libproxy] = "--with-libproxy,--without-libproxy,libproxy"
 PACKAGECONFIG[pkcs11] = "--with-pkcs11,--without-pkcs11,p11-kit"
 
-EXTRA_OECONF = "--without-ca-certificates --without-gnome-proxy --without-libproxy"
+EXTRA_OECONF = "--without-gnome-proxy"
 
-inherit autotools pkgconfig
+inherit gnomebase
 
 FILES_${PN} += "${libdir}/gio/modules/libgio*.so ${datadir}/dbus-1/services/"
 FILES_${PN}-dbg += "${libdir}/gio/modules/.debug/"
