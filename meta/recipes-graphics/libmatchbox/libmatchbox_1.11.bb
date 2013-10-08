@@ -16,4 +16,4 @@ SRC_URI[sha256sum] = "254cab52e304a3512c8df4be59d690cf3921bbb68a28ede7fe26b93534
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = "--enable-jpeg --enable-expat --enable-xsettings --enable-startup-notification"
+EXTRA_OECONF = "--enable-jpeg --enable-xsettings"
