@@ -126,4 +126,4 @@ python populate_packages_prepend() {
             d.appendVar('INSANE_SKIP_%s' % pkg, ' textrel')
 }
 
-PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util)|postproc).*"
+PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util)|postproc|swscale).*"
