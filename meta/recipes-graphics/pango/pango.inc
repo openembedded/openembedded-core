@@ -13,7 +13,7 @@ X11DEPENDS = "virtual/libx11 libxft"
 DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv cairo harfbuzz"
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
-PACKAGECONFIG[x11] = "--with-x,--without-x,${X11DEPENDS}"
+PACKAGECONFIG[x11] = "--with-xft,--without-xft,${X11DEPENDS}"
 
 BBCLASSEXTEND = "native"
 DEPENDS_class-native = "glib-2.0-native cairo-native harfbuzz-native"
@@ -34,8 +34,7 @@ EXTRA_AUTORECONF = ""
 # seems to go wrong with default cflags
 FULL_OPTIMIZATION_arm = "-O2"
 
-EXTRA_OECONF = "--disable-glibtest \
-		--disable-introspection \
+EXTRA_OECONF = "--disable-introspection \
 		--enable-explicit-deps=no \
 	        --disable-debug \
 	        --with-mlprefix=${MLPREFIX}"
