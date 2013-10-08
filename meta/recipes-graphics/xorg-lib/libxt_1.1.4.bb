@@ -27,7 +27,7 @@ SRC_URI +=  "file://libxt_fix_for_x32.patch"
 
 BBCLASSEXTEND = "native"
 
-EXTRA_OECONF += "--disable-install-makestrs --disable-xkb"
+EXTRA_OECONF += "--disable-xkb"
 
 do_compile() {
 	(
