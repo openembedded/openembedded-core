@@ -1,0 +1,34 @@
+
+If we are not building in the existing source tree, the testsuite
+directory will not exist so the cp of the stamp-rootfs would fail.
+
+Also added buildtest-TESTS so they could be build in the cross env,
+without running the tests.
+
+Upstream-Status: Accepted
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: git/Makefile.am
+===================================================================
+--- git.orig/Makefile.am
++++ git/Makefile.am
+@@ -131,7 +131,7 @@ endif
+ 
+ ROOTFS = testsuite/rootfs
+ ROOTFS_PRISTINE = $(top_srcdir)/testsuite/rootfs-pristine
+-CREATE_ROOTFS = $(AM_V_GEN) ( $(RM) -rf $(ROOTFS) && \
++CREATE_ROOTFS = $(AM_V_GEN) ( $(RM) -rf $(ROOTFS) && mkdir -p $(dir $(ROOTFS)) && \
+ 				cp -r $(ROOTFS_PRISTINE) $(ROOTFS) && \
+ 				touch testsuite/stamp-rootfs && \
+ 				find $(ROOTFS) -type d -exec chmod +w {} \; )
+@@ -217,6 +217,9 @@ DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-d
+ 
+ distclean-local: $(DISTCLEAN_LOCAL_HOOKS)
+ 
++buildtest-TESTS:
++	$(MAKE) $(AM_MAKEFLAGS) $(check_LTLIBRARIES) $(check_PROGRAMS)
++
+ install-ptest:
+ 	@$(MKDIR_P) $(DESTDIR)/testsuite
+ 	@for file in $(TESTSUITE); do \
