@@ -19,24 +19,13 @@ Updated for version 1.11.3:
 Signed-off-by: Nitin A Kamble <nitin.a.kamble@intel.com>
 Date: 2011/03/14
 
-Index: automake-1.11.3/m4/tar.m4
-===================================================================
---- automake-1.11.3.orig/m4/tar.m4	2012-01-31 03:41:18.000000000 -0800
-+++ automake-1.11.3/m4/tar.m4	2012-03-14 17:36:11.901303777 -0700
-@@ -31,7 +31,7 @@ m4_if([$1], [v7],
-               [m4_fatal([Unknown tar format])])
- AC_MSG_CHECKING([how to create a $1 tar archive])
- # Loop over all known methods to create a tar archive until one works.
--_am_tools='gnutar m4_if([$1], [ustar], [plaintar]) pax cpio none'
-+_am_tools='gnutar m4_if([$1], [ustar], [plaintar]) cpio pax none'
- _am_tools=${am_cv_prog_tar_$1-$_am_tools}
- # Do not fold the above two line into one, because Tru64 sh and
- # Solaris sh will not grok spaces in the rhs of `-'.
-Index: automake-1.11.3/Makefile.in
-===================================================================
---- automake-1.11.3.orig/Makefile.in	2012-02-01 02:37:59.000000000 -0800
-+++ automake-1.11.3/Makefile.in	2012-03-14 17:38:03.530869197 -0700
-@@ -62,7 +62,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/a
+Updated for version 1.13.2:
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+
+diff -Nurd automake-1.13.2/Makefile.in automake-1.13.2/Makefile.in
+--- automake-1.13.2/Makefile.in	2013-05-15 23:12:58.000000000 +0300
++++ automake-1.13.2/Makefile.in	2013-05-23 02:13:41.364026301 +0300
+@@ -141,7 +141,7 @@
  	$(top_srcdir)/m4/options.m4 $(top_srcdir)/m4/runlog.m4 \
  	$(top_srcdir)/m4/sanity.m4 $(top_srcdir)/m4/silent.m4 \
  	$(top_srcdir)/m4/strip.m4 $(top_srcdir)/m4/substnot.m4 \
@@ -45,3 +34,15 @@ Index: automake-1.11.3/Makefile.in
  am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
  	$(ACLOCAL_M4)
  am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
+diff -Nurd automake-1.13.2/m4/tar.m4 automake-1.13.2/m4/tar.m4
+--- automake-1.13.2/m4/tar.m4	2013-05-13 23:12:48.000000000 +0300
++++ automake-1.13.2/m4/tar.m4	2013-05-23 02:13:26.600025805 +0300
+@@ -26,7 +26,7 @@
+ AC_SUBST([AMTAR], ['$${TAR-tar}'])
+
+ # We'll loop over all known methods to create a tar archive until one works.
+-_am_tools='gnutar m4_if([$1], [ustar], [plaintar]) pax cpio none'
++_am_tools='gnutar m4_if([$1], [ustar], [plaintar]) cpio pax none'
+
+ m4_if([$1], [v7],
+   [am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'],
