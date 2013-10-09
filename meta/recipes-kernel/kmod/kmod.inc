@@ -20,6 +20,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
            file://run-ptest \
            file://ptest.patch \
            file://remove_parallel_tests.patch \
+           file://fix-seperatebuilddir.patch \
           "
 
 SRCREV = "3b38c7fcb58be4ddc34f90454c5f5dc3693d2d85"
