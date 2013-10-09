@@ -12,8 +12,8 @@
 /dev/initctl	p	600	root	root	-	-	-	-	-
 /dev/apm_bios	c	660	root	plugdev	10	134	-	-	-
 /dev/fb0	c	600	root	root	29	0	-	-	-
-/dev/hda	b	660	root	root	3	0	-	-	-
-/dev/hda	b	660	root	root	3	1	1	1	19
+/dev/hda	b	660	root	disk	3	0	-	-	-
+/dev/hda	b	660	root	disk	3	1	1	1	19
 /dev/kmem	c	640	root	kmem	1	2	-	-	-
 /dev/kmsg	c	600	root	root	1	11	-	-	-
 /dev/mem	c	640	root	kmem	1	1	-	-	-
