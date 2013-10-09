@@ -22,31 +22,49 @@ FILES_${PN} = " \
 	${libdir}/lib*-*.so \
 	${prefix}/${TARGET_SYS}/bin/*"
 
+# Use alternatives rather than actual symlinks.
+FILES_${PN}-symlinks = ""
+
+ALLOW_EMPTY_${PN}-symlinks = "1"
+
 FILES_${PN}-dev = " \
 	${includedir} \
 	${libdir}/*.la \
 	${libdir}/libbfd.so \
 	${libdir}/libopcodes.so"
 
-FILES_${PN}-symlinks = " \
-	${bindir}/addr2line \
-	${bindir}/as \
-	${bindir}/c++filt \
-	${bindir}/embedspu \
-	${bindir}/gprof \
-	${bindir}/ld \
-	${bindir}/ld.bfd \
-	${bindir}/ld.gold \
-	${bindir}/nm \
-	${bindir}/objcopy \
-	${bindir}/objdump \
-	${bindir}/ranlib \
-	${bindir}/readelf \
-	${bindir}/elfedit \
-	${bindir}/size \
-	${bindir}/strip"
+# Rather than duplicating multiple entries for these, make one
+# list and reuse it.
 
-FILES_${PN}-dbg += "${prefix}/${TARGET_SYS}/bin/.debug"
+USE_ALTERNATIVES_FOR = " \
+	addr2line \
+	ar \
+	as \
+	c++filt \
+	elfedit \
+	gprof \
+	ld \
+	${@base_contains('DISTRO_FEATURES', 'ld-is-gold', 'ld.gold', 'ld.bfd', d)} \
+	nm \
+	objcopy \
+	objdump \
+	ranlib \
+	readelf \
+	size \
+	strings \
+	strip \
+"
+
+python do_package_prepend() {
+    make_alts = d.getVar("USE_ALTERNATIVES_FOR", True) or ""
+    prefix = d.getVar("TARGET_PREFIX", True)
+    bindir = d.getVar("bindir", True)
+    for alt in make_alts.split():
+        d.setVarFlag('ALTERNATIVE_TARGET', alt, bindir + "/" + prefix + alt)
+        d.setVarFlag('ALTERNATIVE_LINK_NAME', alt, bindir + "/" + alt)
+}
+
+# FILES_${PN}-dbg = "${prefix}/${TARGET_SYS}/bin/.debug ${prefix}/${libdir}/.debug"
 
 B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
 
@@ -120,7 +138,9 @@ do_install () {
 		ln -sf $p `echo $p | sed -e s,${TARGET_PREFIX},,`
 	done
 
-	rm -f ${D}${bindir}/ar ${D}${bindir}/strings
+	for alt in ${USE_ALTERNATIVES_FOR}; do
+		rm -f ${D}${bindir}/$alt
+	done
 
 	oe_multilib_header bfd.h
 }
@@ -129,10 +149,5 @@ inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
 
-ALTERNATIVE_${PN}-symlinks = "ar strings"
+ALTERNATIVE_${PN}-symlinks_class-target = "${USE_ALTERNATIVES_FOR}"
 
-ALTERNATIVE_LINK_NAME[ar] = "${bindir}/ar"
-ALTERNATIVE_TARGET[ar] = "${bindir}/${TARGET_PREFIX}ar"
-
-ALTERNATIVE_LINK_NAME[strings] = "${bindir}/strings"
-ALTERNATIVE_TARGET[strings] = "${bindir}/${TARGET_PREFIX}strings"
