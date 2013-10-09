@@ -22,4 +22,4 @@ FILES_liblzma-dev = "${includedir}/lzma* ${libdir}/liblzma*${SOLIBSDEV} ${libdir
 FILES_liblzma-staticdev = "${libdir}/liblzma.a"
 FILES_liblzma-dbg = "${libdir}/.debug/liblzma*"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
