@@ -3,6 +3,8 @@ LICENSE="GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe" 
 DEPENDS_class-native = "autoconf-native"
 
+NAMEVER = "${@oe.utils.trim_version("${PV}", 2)}"
+
 RDEPENDS_${PN} += "\
     autoconf \
     perl \
@@ -29,14 +31,12 @@ SRC_URI += "${PATHFIXPATCH} \
 SRC_URI[md5sum] = "199d39ece2e6070d64ac20d45ac86026"
 SRC_URI[sha256sum] = "0cbe570db487908e70af7119da85ba04f7e28656b26f717df0265ae08defd9ef"
 
-PR = "r0"
-
 do_install_append () {
     install -d ${D}${datadir}
 
     # Some distros have both /bin/perl and /usr/bin/perl, but we set perl location
     # for target as /usr/bin/perl, so fix it to /usr/bin/perl.
-    for i in aclocal aclocal-1.12 automake automake-1.12; do
+    for i in aclocal aclocal-${NAMEVER} automake automake-${NAMEVER}; do
         if [ -f ${D}${bindir}/$i ]; then
             sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/perl,' \
             -e 's,exec .*/bin/perl \(.*\) exec .*/bin/perl \(.*\),exec ${USRBINPATH}/perl \1 exec ${USRBINPATH}/perl \2,' \
