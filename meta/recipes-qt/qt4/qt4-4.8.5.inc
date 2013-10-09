@@ -23,6 +23,7 @@ SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-ever
            file://0020-webkit-disable-the-fuse-ld-gold-flag.patch \
            file://0022-Fix-drawing-of-0-width-polylines-from-outside-the-de.patch \
            file://0023-QHttpMultiPart-fix-data-corruption-in-readData-metho.patch \
+           file://0024-Ensure-lastPixel.y-is-also-initalized-to-1-when-nece.patch \
            file://0027-tools.pro-disable-qmeegographicssystemhelper.patch \
            file://g++.conf \
            file://linux.conf \
