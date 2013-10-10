@@ -298,7 +298,7 @@ do_validate_branches() {
 	set +e
 	# if SRCREV is AUTOREV it shows up as AUTOINC there's nothing to
 	# check and we can exit early
-	if [ "${SRCREV_machine}" = "AUTOINC" ] || "${SRCREV_machine}" = "INVALID" ] ||
+	if [ "${SRCREV_machine}" = "AUTOINC" ] || [ "${SRCREV_machine}" = "INVALID" ] ||
 	   [ "${SRCREV_machine}" = "" ]; then
 		return
 	fi
