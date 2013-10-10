@@ -15,17 +15,12 @@ DEPENDS = "flex-native bison-native zlib-native"
 
 inherit autotools gettext multilib_header
 
-PACKAGES += "${PN}-symlinks"
-
 FILES_${PN} = " \
 	${bindir}/${TARGET_PREFIX}* \
 	${libdir}/lib*-*.so \
 	${prefix}/${TARGET_SYS}/bin/*"
 
-# Use alternatives rather than actual symlinks.
-FILES_${PN}-symlinks = ""
-
-ALLOW_EMPTY_${PN}-symlinks = "1"
+RPROVIDES_${PN} += "${PN}-symlinks"
 
 FILES_${PN}-dev = " \
 	${includedir} \
@@ -149,5 +144,4 @@ inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
 
-ALTERNATIVE_${PN}-symlinks_class-target = "${USE_ALTERNATIVES_FOR}"
-
+ALTERNATIVE_${PN}_class-target = "${USE_ALTERNATIVES_FOR}"
