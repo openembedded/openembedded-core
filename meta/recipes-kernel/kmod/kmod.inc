@@ -8,12 +8,16 @@ LICENSE = "GPL-2.0+ & LGPL-2.1+"
 LICENSE_libkmod = "LGPL-2.1+"
 SECTION = "base"
 
-DEPENDS += "pkgconfig-native"
+DEPENDS += "pkgconfig-native zlib"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://libkmod/COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
                    "
 inherit autotools gtk-doc ptest
+
+SRCREV = "18811d22e9923893555b88a482aa967db0e7892a"
+# Lookout for PV bump too when SRCREV is changed
+PV = "15+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
            file://depmod-search.conf \
@@ -23,14 +27,10 @@ SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
            file://fix-seperatebuilddir.patch \
           "
 
-SRCREV = "3b38c7fcb58be4ddc34f90454c5f5dc3693d2d85"
-# Lookout for PV bump too when SRCREV is changed
-PV = "14"
-
 S = "${WORKDIR}/git"
 
 EXTRA_AUTORECONF += "--install --symlink"
-EXTRA_OECONF +="--enable-debug --enable-logging --enable-tools --disable-manpages"
+EXTRA_OECONF +="--enable-debug --enable-logging --enable-tools --disable-manpages --with-zlib"
 
 do_configure_prepend () {
         gtkdocize --docdir ${S}/libkmod/docs || touch ${S}/libkmod/docs/gtk-doc.make

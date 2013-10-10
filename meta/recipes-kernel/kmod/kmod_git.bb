@@ -3,8 +3,6 @@
 
 require kmod.inc
 
-PV_append = "+git${SRCPV}"
-
 PROVIDES += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
 RPROVIDES_${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
 RCONFLICTS_${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
@@ -34,6 +32,7 @@ do_install_append () {
 
         # install depmod.d file for search/ dir
         install -Dm644 "${WORKDIR}/depmod-search.conf" "${D}${base_libdir}/depmod.d/search.conf"
+
 }
 
 do_compile_prepend() {
@@ -64,7 +63,8 @@ ALTERNATIVE_TARGET[lsmod] = "${base_bindir}/lsmod.${BPN}"
 
 ALTERNATIVE_LINK_NAME[depmod] = "${base_sbindir}/depmod"
 
-PACKAGES =+ "libkmod"
+PACKAGES =+ "libkmod ${PN}-bash-completion"
 
 FILES_libkmod = "${base_libdir}/libkmod*${SOLIBS} ${libdir}/libkmod*${SOLIBS}"
 FILES_${PN} += "${base_libdir}/depmod.d ${base_libdir}/modprobe.d"
+FILES_${PN}-bash-completion = "${datadir}/bash-completion"
