@@ -13,7 +13,7 @@ populate_sdk_post_deb () {
 	local target_rootfs=$1
 
 	mkdir -p ${target_rootfs}/etc
-	tar -cf - -C ${STAGING_ETCDIR_NATIVE} -ps apt | tar -xf - -C ${target_rootfs}/etc
+	tar -cf - -C ${STAGING_ETCDIR_NATIVE} -p apt | tar -xf - -C ${target_rootfs}/etc
 }
 
 populate_sdk_deb () {
