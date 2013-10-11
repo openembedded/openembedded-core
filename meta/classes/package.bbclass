@@ -458,7 +458,7 @@ python perform_packagecopy () {
     # Start by package population by taking a copy of the installed
     # files to operate on
     # Preserve sparse files and hard links
-    cmd = 'tar -cf - -C %s -ps . | tar -xf - -C %s' % (dest, dvar)
+    cmd = 'tar -cf - -C %s -p . | tar -xf - -C %s' % (dest, dvar)
     (retval, output) = oe.utils.getstatusoutput(cmd)
     if retval:
         bb.fatal("file copy failed with exit code %s (cmd was %s)%s" % (retval, cmd, ":\n%s" % output if output else ""))
