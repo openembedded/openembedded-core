@@ -12,8 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e226ab8db88ac0bc0391673be40c9f91"
 
 DEPENDS += " libxmu virtual/libx11"
 
-PR = "${INC_PR}.0"
 PE = "1"
 
-SRC_URI[md5sum] = "d5529dc8d811efabd136ca2d8e857deb"
-SRC_URI[sha256sum] = "07907a189099b8a000406b5ca6c5346df238a9e1fe3b32dc59f48fe0ad12f1a3"
+SRC_URI[md5sum] = "fae3d2fda07684027a643ca783d595cc"
+SRC_URI[sha256sum] = "9bee88b1025865ad121f72d32576dd3027af1446774aa8300cce3c261d869bc6"
