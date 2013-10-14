@@ -13,11 +13,12 @@ RDEPENDS_${PN} = "diffutils"
 PR = "r6"
 
 SRC_URI = "ftp://alpha.gnu.org/gnu/grub/grub-${PV}.tar.gz; \
-            file://no-reorder-functions.patch \
-            file://autohell.patch \
-            file://grub_fix_for_automake-1.12.patch \
-            file://objcopy-absolute.patch \
-            "
+           file://no-reorder-functions.patch \
+           file://autohell.patch \
+           file://grub_fix_for_automake-1.12.patch \
+           file://objcopy-absolute.patch \
+           file://grub-support-256byte-inode.patch \
+"
 
 SRC_URI[md5sum] = "cd3f3eb54446be6003156158d51f4884"
 SRC_URI[sha256sum] = "4e1d15d12dbd3e9208111d6b806ad5a9857ca8850c47877d36575b904559260b"
