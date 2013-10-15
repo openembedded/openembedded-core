@@ -59,7 +59,7 @@ export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 
 python nativesdk_virtclass_handler () {
     pn = e.data.getVar("PN", True)
-    if not pn.endswith("-nativesdk") or pn.startswith("nativesdk-"):
+    if not (pn.endswith("-nativesdk") or pn.startswith("nativesdk-")):
         return
 
     e.data.setVar("MLPREFIX", "nativesdk-")
