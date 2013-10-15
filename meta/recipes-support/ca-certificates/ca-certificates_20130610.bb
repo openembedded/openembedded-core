@@ -1,6 +1,7 @@
 SUMMARY = "Common CA certificates"
 DESCRIPTION = "This package includes PEM files of CA certificates to allow \
-SSL-based applications to check for the authenticity of SSL connections."
+SSL-based applications to check for the authenticity of SSL connections. \
+This derived from Debian's CA Certificates."
 HOMEPAGE = "http://packages.debian.org/sid/ca-certificates"
 SECTION = "misc"
 LICENSE = "GPL-2.0+ & MPL-2.0"
