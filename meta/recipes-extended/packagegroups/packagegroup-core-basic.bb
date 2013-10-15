@@ -107,7 +107,7 @@ RDEPENDS_packagegroup-core-initscripts = "\
 RDEPENDS_packagegroup-core-multiuser = "\
     cracklib \
     gzip \
-    libuser \
+    ${@base_contains('DISTRO_FEATURES', 'pam', 'libuser', '', d)} \
     shadow \
     sudo \
     "
