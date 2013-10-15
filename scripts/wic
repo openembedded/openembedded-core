@@ -31,10 +31,22 @@
 
 __version__ = "0.1.0"
 
+# Python Standard Library modules
 import os
 import sys
 import optparse
 import logging
+
+# External modules
+try:
+    import rpm
+    import urlgrabber
+except ImportError:
+    print("ERROR: failed to import necessary modules.")
+    print("Please ensure the following modules are installed:")
+    print("\trpm");
+    print("\turlgrabber");
+    sys.exit(1)
 
 scripts_path = os.path.abspath(os.path.dirname(os.path.abspath(sys.argv[0])))
 lib_path = scripts_path + '/lib'
