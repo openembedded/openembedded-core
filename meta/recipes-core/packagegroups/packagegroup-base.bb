@@ -353,6 +353,7 @@ RRECOMMENDS_packagegroup-base-nfs = "\
 
 SUMMARY_packagegroup-base-zeroconf = "Zeroconf support"
 RDEPENDS_packagegroup-base-zeroconf = "\
+    libnss-mdns \
     avahi-daemon"
 
 SUMMARY_packagegroup-base-ipv6 = "IPv6 support"
