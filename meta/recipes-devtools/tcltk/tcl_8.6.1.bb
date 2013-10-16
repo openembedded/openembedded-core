@@ -19,10 +19,9 @@ SRC_URI = "${BASE_SRC_URI} \
 	   file://fix_issue_with_old_distro_glibc.patch \
 	   file://no_packages.patch \
 	   file://tcl-remove-hardcoded-install-path.patch \
-	   file://let-DST-include-year-2099.patch;patchdir=.. "
-
-SRC_URI[md5sum] = "573aa5fe678e9185ef2b3c56b24658d3"
-SRC_URI[sha256sum] = "354422b9c4791685499123b2dfe01faa98b555c08906c010cb4449ddc75dcade"
+       "
+SRC_URI[md5sum] = "aae4b701ee527c6e4e1a6f9c7399882e"
+SRC_URI[sha256sum] = "16ee769248e64ba1cae6b4834fcc4e4edd7470d881410e8d58f7dd1434343514"
 
 SRC_URI_class-native = "${BASE_SRC_URI}"
 
