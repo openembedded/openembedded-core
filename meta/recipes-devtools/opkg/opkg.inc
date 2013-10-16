@@ -105,4 +105,6 @@ BBCLASSEXTEND = "native nativesdk"
 
 # Define a variable to allow distros to run configure earlier.
 # (for example, to enable loading of ethernet kernel modules before networking starts)
+# note: modifying name or default value for POSTINSTALL_INITPOSITION requires
+# changes in systemd-compat-units.bb
 POSTINSTALL_INITPOSITION ?= "98"

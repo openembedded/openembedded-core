@@ -1,12 +1,12 @@
 [Unit]
 Description=Run pending postinsts
 DefaultDependencies=no
-ConditionPathExists=|/etc/rcS.d/S99run-postinsts
+ConditionPathExists=|/etc/rcS.d/S@POSTINSTALL_INITPOSITION@run-postinsts
 After=systemd-remount-fs.service systemd-tmpfiles-setup.service tmp.mount
 Before=sysinit.target
 
 [Service]
-ExecStart=/etc/rcS.d/S99run-postinsts
+ExecStart=/etc/rcS.d/S@POSTINSTALL_INITPOSITION@run-postinsts
 RemainAfterExit=No
 Type=oneshot
 StandardOutput=syslog

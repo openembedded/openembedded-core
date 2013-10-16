@@ -14,6 +14,8 @@ SRC_URI = "file://*.service"
 do_install() {
 	install -d ${D}${systemd_unitdir}/system/basic.target.wants
 	install -d ${D}${systemd_unitdir}/system/sysinit.target.wants/
+	sed -i -e 's,@POSTINSTALL_INITPOSITION@,${POSTINSTALL_INITPOSITION},g' \
+			${WORKDIR}/run-postinsts.service
 	install -m 0644 ${WORKDIR}/run-postinsts.service ${D}${systemd_unitdir}/system
 	ln -sf ../run-postinsts.service ${D}${systemd_unitdir}/system/basic.target.wants/
 	ln -sf ../run-postinsts.service ${D}${systemd_unitdir}/system/sysinit.target.wants/
@@ -53,4 +55,8 @@ pkg_postinst_${PN} () {
 FILES_${PN} = "${systemd_unitdir}/system ${bindir}"
 RDPEPENDS_${PN} = "systemd"
 
-
+# Define a variable to allow distros to run configure earlier.
+# (for example, to enable loading of ethernet kernel modules before networking starts)
+# note: modifying name or default value for POSTINSTALL_INITPOSITION requires
+# changes in opkg.inc
+POSTINSTALL_INITPOSITION ?= "98"
