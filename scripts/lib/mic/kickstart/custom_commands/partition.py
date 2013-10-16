@@ -216,7 +216,14 @@ class Wic_PartData(Mic_PartData):
         """
         Prepare content for an ext2/3/4 rootfs partition.
         """
-        populate_script = "%s/usr/bin/populate-extfs.sh" % native_sysroot
+        populate_script = "export PSEUDO_PREFIX=%s/usr;" % native_sysroot
+        populate_script += "export PSEUDO_LOCALSTATEDIR=%s/../pseudo;" % rootfs_dir
+        populate_script += "export PSEUDO_PASSWD=%s;" % rootfs_dir
+        populate_script += "export PSEUDO_NOSYMLINKEXP=1;"
+        populate_script += "export PSEUDO_DISABLED=0;"
+        populate_script += "%s/usr/bin/pseudo %s/usr/bin/populate-extfs.sh" % \
+            (native_sysroot, native_sysroot)
+
         image_extra_space = 10240
 
         image_rootfs = rootfs_dir
