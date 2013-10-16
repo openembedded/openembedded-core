@@ -75,6 +75,14 @@ def wic_create_subcommand(args, usage_str):
         parser.print_help()
         sys.exit(1)
 
+    if not options.image_name and not (options.rootfs_dir and
+                                       options.bootimg_dir and
+                                       options.kernel_dir and
+                                       options.native_sysroot):
+        print "Build artifacts not completely specified, exiting."
+        print "  (Use 'wic -e' or 'wic -r -b -k -n' to specify artifacts)"
+        sys.exit(1)
+
     if not options.image_name:
         options.build_check = False
 
