@@ -61,7 +61,7 @@ do_configure () {
 	target="$os-${HOST_ARCH}"
 	case $target in
 	linux-arm)
-		target=linux-elf-arm
+		target=linux-armv4
 		;;
 	linux-armeb)
 		target=linux-elf-armeb
