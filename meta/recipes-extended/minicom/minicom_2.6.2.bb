@@ -10,6 +10,7 @@ PR = "r0"
 
 SRC_URI = "http://alioth.debian.org/frs/download.php/3869/minicom-${PV}.tar.gz \
            file://allow.to.disable.lockdev.patch \
+           file://0001-fix-minicom-h-v-return-value-is-not-0.patch \
 "
 
 SRC_URI[md5sum] = "203c56c4b447f45e2301b0cc4e83da3c"
