@@ -2,10 +2,9 @@ DESCRIPTION = "Download, build, install, upgrade, and uninstall Python packages"
 HOMEPAGE = "http://cheeseshop.python.org/pypi/setuptools"
 SECTION = "devel/python"
 LICENSE = "PSF"
-LIC_FILES_CHKSUM = "file://setup.py;beginline=23;endline=23;md5=8a314270dd7a8dbca741775415f1716e"
+LIC_FILES_CHKSUM = "file://setup.py;beginline=107;endline=107;md5=8a314270dd7a8dbca741775415f1716e"
 
 SRCNAME = "setuptools"
-PR = "ml5"
 DEPENDS += "python"
 DEPENDS_class-native += "python-native"
 
@@ -35,7 +34,7 @@ RDEPENDS_${PN}_class-native = "\
   python-compression \
 "
 
-SRC_URI[md5sum] = "7df2a529a074f613b509fb44feefe74e"
-SRC_URI[sha256sum] = "630fea9b726320b73ee3ca6ff61732cb32675b0389be658080fe46383b87a1d3"
+SRC_URI[md5sum] = "ee82ea53def4480191061997409d2996"
+SRC_URI[sha256sum] = "e5a60b88138def225c29cbf13ee20f1c176f200450e286dcc7d192963a67723a"
 
 BBCLASSEXTEND = "native"
