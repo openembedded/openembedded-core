@@ -19,6 +19,7 @@ SRC_URI[sha256sum] = "0cfbe561676b92e5af3ddc7ac77452014e3da8885da66baec811e73541
 S = "${WORKDIR}/nspr-${PV}/nspr"
 
 RDEPENDS_${PN}-dev += "perl"
+TARGET_CC_ARCH += "${LDFLAGS}"
 
 TESTS = "runtests.pl \
     runtests.sh \
