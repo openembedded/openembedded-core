@@ -8,14 +8,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://mdmon.c;beginline=4;endline=18;md5=af7d8444d9c4d3e5c7caac0d9d34039d \
                     file://mdadm.h;beglinlne=4;endline=22;md5=462bc9936ac0d3da110191a3f9994161"
 
-PR = "r0"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.bz2 \
 	    file://mdadm-3.2.2_fix_for_x32.patch \
 	  "
 
-SRC_URI[md5sum] = "3e255dc71e5144bbcb872788ca647267"
-SRC_URI[sha256sum] = "c44ed3b31238b41cffe67caffaf45067d01e095de94988889ea8a94e22dc6c38"
+SRC_URI[md5sum] = "8ac04259cdd74b4566c3b6dea9414b57"
+SRC_URI[sha256sum] = "9c07e518bdf3392ebac8874eb686258e10ea3ae0ff7a8acb6d014718a9c3ed45"
 
 CFLAGS += "-fno-strict-aliasing"
 

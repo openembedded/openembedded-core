@@ -8,17 +8,16 @@ make file, hence making the CC definition in the Makefile conditional.
 
 Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com> 2011/12/07
 
-Index: mdadm-3.2.2/Makefile
+Index: mdadm-3.3/Makefile
 ===================================================================
---- mdadm-3.2.2.orig/Makefile
-+++ mdadm-3.2.2/Makefile
-@@ -40,7 +40,8 @@ KLIBC=/home/src/klibc/klibc-0.77
+--- mdadm-3.3.orig/Makefile	2013-09-03 07:47:47.000000000 +0300
++++ mdadm-3.3/Makefile	2013-10-16 16:44:23.542295487 +0300
+@@ -41,7 +41,7 @@
  
  KLIBC_GCC = gcc -nostdinc -iwithprefix include -I$(KLIBC)/klibc/include -I$(KLIBC)/linux/include -I$(KLIBC)/klibc/arch/i386/include -I$(KLIBC)/klibc/include/bits32
  
 -CC = $(CROSS_COMPILE)gcc
 +CC ?= $(CROSS_COMPILE)gcc
-+
- CXFLAGS = -ggdb
+ CXFLAGS ?= -ggdb
  CWFLAGS = -Wall -Werror -Wstrict-prototypes -Wextra -Wno-unused-parameter
  ifdef WARN_UNUSED
