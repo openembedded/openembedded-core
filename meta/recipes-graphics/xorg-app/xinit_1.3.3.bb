@@ -8,13 +8,12 @@ directly from /etc/init or in environments that use multiple window \
 systems. When this first client exits, xinit will kill the X server and \
 then terminate."
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=0d4b5eef75f1584ccbdc5e4a34314407"
+LIC_FILES_CHKSUM = "file://COPYING;md5=18f01e7b39807bebe2b8df101a039b68"
 
-PR = "${INC_PR}.0"
 PE = "1"
 
-SRC_URI[md5sum] = "9c0943cbd83e489ad1b05221b97efd44"
-SRC_URI[sha256sum] = "a1867fdaa83f68750b12ba4305c3c62f5992d0f52cfeb98e96c27a8e690e0235"
+SRC_URI[md5sum] = "3b8da0e6237aee9828cc809c647510a7"
+SRC_URI[sha256sum] = "74b2878de6e3d5b5948f1562a77e7f53b4e10621e505ddb278050c7f3cae00af"
 
 EXTRA_OECONF = "ac_cv_path_MCOOKIE=${bindir}/mcookie"
 
