@@ -1,5 +1,5 @@
 require gdb.inc
-require gdb-7.6.inc
+require gdb-${PV}.inc
 
 inherit python-dir
 
