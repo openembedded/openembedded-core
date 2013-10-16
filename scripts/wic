@@ -119,6 +119,18 @@ def wic_create_subcommand(args, usage_str):
         bootimg_dir = options.bootimg_dir
         kernel_dir = options.kernel_dir
         native_sysroot = options.native_sysroot
+        if not os.path.isdir(rootfs_dir):
+            print "--roofs-dir (-r) not found, exiting\n"
+            sys.exit(1)
+        if not os.path.isdir(bootimg_dir):
+            print "--bootimg-dir (-b) not found, exiting\n"
+            sys.exit(1)
+        if not os.path.isdir(kernel_dir):
+            print "--kernel-dir (-k) not found, exiting\n"
+            sys.exit(1)
+        if not os.path.isdir(native_sysroot):
+            print "--native-sysroot (-n) not found, exiting\n"
+            sys.exit(1)
 
     wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
                native_sysroot, hdddir, staging_data_dir, scripts_path,
