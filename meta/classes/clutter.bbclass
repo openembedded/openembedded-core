@@ -11,7 +11,6 @@ def get_real_name(n):
 
 VERMINOR = "${@get_minor_dir("${PV}")}"
 REALNAME = "${@get_real_name("${BPN}")}"
-FILESPATH = "${@base_set_filespath(["${FILE_DIRNAME}/${REALNAME}-${PV}", "${FILE_DIRNAME}/${REALNAME}-${VERMINOR}", "${FILE_DIRNAME}/${REALNAME}", "${FILE_DIRNAME}/files"], d)}"
 
 CLUTTER_SRC_FTP = "${GNOME_MIRROR}/${REALNAME}/${VERMINOR}/${REALNAME}-${PV}.tar.xz;name=archive"
 
