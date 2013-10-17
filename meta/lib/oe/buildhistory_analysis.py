@@ -19,10 +19,11 @@ import bb.utils
 # How to display fields
 list_fields = ['DEPENDS', 'RPROVIDES', 'RDEPENDS', 'RRECOMMENDS', 'RSUGGESTS', 'RREPLACES', 'RCONFLICTS', 'FILES', 'FILELIST', 'USER_CLASSES', 'IMAGE_CLASSES', 'IMAGE_FEATURES', 'IMAGE_LINGUAS', 'IMAGE_INSTALL', 'BAD_RECOMMENDATIONS']
 list_order_fields = ['PACKAGES']
-defaultval_fields = ['PKG', 'PKGE', 'PKGV', 'PKGR']
+defaultval_map = {'PKG': 'PKG', 'PKGE': 'PE', 'PKGV': 'PV', 'PKGR': 'PR'}
 numeric_fields = ['PKGSIZE', 'IMAGESIZE']
 # Fields to monitor
-monitor_fields = ['RPROVIDES', 'RDEPENDS', 'RRECOMMENDS', 'RREPLACES', 'RCONFLICTS', 'PACKAGES', 'FILELIST', 'PKGSIZE', 'IMAGESIZE', 'PKG', 'PKGE', 'PKGV', 'PKGR']
+monitor_fields = ['RPROVIDES', 'RDEPENDS', 'RRECOMMENDS', 'RREPLACES', 'RCONFLICTS', 'PACKAGES', 'FILELIST', 'PKGSIZE', 'IMAGESIZE', 'PKG']
+ver_monitor_fields = ['PKGE', 'PKGV', 'PKGR']
 # Percentage change to alert for numeric fields
 monitor_numeric_threshold = 10
 # Image files to monitor (note that image-info.txt is handled separately)
@@ -94,7 +95,7 @@ class ChangeRecord:
             else:
                 percentchg = 100
             out = '%s changed from %s to %s (%s%d%%)' % (self.fieldname, self.oldvalue or "''", self.newvalue or "''", '+' if percentchg > 0 else '', percentchg)
-        elif self.fieldname in defaultval_fields:
+        elif self.fieldname in defaultval_map:
             out = '%s changed from %s to %s' % (self.fieldname, self.oldvalue, self.newvalue)
             if self.fieldname == 'PKG' and '[default]' in self.newvalue:
                 out += ' - may indicate debian renaming failure'
@@ -305,24 +306,32 @@ def compare_pkg_lists(astr, bstr):
     return (depvera, depverb)
 
 
-def compare_dict_blobs(path, ablob, bblob, report_all):
+def compare_dict_blobs(path, ablob, bblob, report_all, report_ver):
     adict = blob_to_dict(ablob)
     bdict = blob_to_dict(bblob)
 
     pkgname = os.path.basename(path)
+
     defaultvals = {}
     defaultvals['PKG'] = pkgname
-    defaultvals['PKGE'] = adict.get('PE', '0')
-    defaultvals['PKGV'] = adict.get('PV', '')
-    defaultvals['PKGR'] = adict.get('PR', '')
-    for key in defaultvals:
-        defaultvals[key] = '%s [default]' % defaultvals[key]
+    defaultvals['PKGE'] = '0'
 
     changes = []
-    keys = list(set(adict.keys()) | set(bdict.keys()))
+    keys = list(set(adict.keys()) | set(bdict.keys()) | set(defaultval_map.keys()))
     for key in keys:
         astr = adict.get(key, '')
         bstr = bdict.get(key, '')
+        if key in ver_monitor_fields:
+            monitored = report_ver or astr or bstr
+        else:
+            monitored = key in monitor_fields
+        mapped_key = defaultval_map.get(key, '')
+        if mapped_key:
+            if not astr:
+                astr = '%s [default]' % adict.get(mapped_key, defaultvals.get(key, ''))
+            if not bstr:
+                bstr = '%s [default]' % bdict.get(mapped_key, defaultvals.get(key, ''))
+
         if astr != bstr:
             if (not report_all) and key in numeric_fields:
                 aval = int(astr or 0)
@@ -350,18 +359,12 @@ def compare_dict_blobs(path, ablob, bblob, report_all):
                 if ' '.join(alist) == ' '.join(blist):
                     continue
 
-            if key in defaultval_fields:
-                if not astr:
-                    astr = defaultvals[key]
-                elif not bstr:
-                    bstr = defaultvals[key]
-
-            chg = ChangeRecord(path, key, astr, bstr, key in monitor_fields)
+            chg = ChangeRecord(path, key, astr, bstr, monitored)
             changes.append(chg)
     return changes
 
 
-def process_changes(repopath, revision1, revision2 = 'HEAD', report_all = False):
+def process_changes(repopath, revision1, revision2='HEAD', report_all=False, report_ver=False):
     repo = git.Repo(repopath)
     assert repo.bare == False
     commit = repo.commit(revision1)
@@ -373,7 +376,7 @@ def process_changes(repopath, revision1, revision2 = 'HEAD', report_all = False)
         if path.startswith('packages/'):
             filename = os.path.basename(d.a_blob.path)
             if filename == 'latest':
-                changes.extend(compare_dict_blobs(path, d.a_blob, d.b_blob, report_all))
+                changes.extend(compare_dict_blobs(path, d.a_blob, d.b_blob, report_all, report_ver))
             elif filename.startswith('latest.'):
                 chg = ChangeRecord(path, filename, d.a_blob.data_stream.read(), d.b_blob.data_stream.read(), True)
                 changes.append(chg)
