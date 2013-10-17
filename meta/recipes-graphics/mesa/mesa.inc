@@ -105,11 +105,16 @@ do_install_append () {
 # they don't get Debian-renamed (which would remove the -mesa suffix), and
 # RPROVIDEs/RCONFLICTs on the generic libgl name.
 python __anonymous() {
-    for p in (("libegl", "libegl1"), ("libgl", "libgl1"),
-              ("libgles1", "libglesv1-cm1"), ("libgles2", "libglesv2-2"),
-              ("libgles3",)):
-        fullp = p[0] + "-mesa"
-        pkgs = " ".join(p)
+    pkgconfig = (d.getVar('PACKAGECONFIG', True) or "").split()
+    for p in (("egl", "libegl", "libegl1"),
+              ("dri", "libgl", "libgl1"),
+              ("gles", "libgles1", "libglesv1-cm1"),
+              ("gles", "libgles2", "libglesv2-2"),
+              ("gles", "libgles3",)):
+        if not p[0] in pkgconfig:
+            continue
+        fullp = p[1] + "-mesa"
+        pkgs = " ".join(p[1:])
         d.setVar("DEBIAN_NOAUTONAME_" + fullp, "1")
         d.appendVar("RREPLACES_" + fullp, pkgs)
         d.appendVar("RPROVIDES_" + fullp, pkgs)
@@ -117,7 +122,7 @@ python __anonymous() {
         
         # For -dev, the first element is both the Debian and original name
         fullp += "-dev"
-        pkgs = p[0] + "-dev"
+        pkgs = p[1] + "-dev"
         d.setVar("DEBIAN_NOAUTONAME_" + fullp, "1")
         d.appendVar("RREPLACES_" + fullp, pkgs)
         d.appendVar("RPROVIDES_" + fullp, pkgs)
