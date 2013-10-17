@@ -29,6 +29,7 @@ EXTRA_OECONF += "--disable-introspection	\
 	       	 --enable-examples-install	\
 	       	 --enable-debug		 	\
 	       	 --disable-gles1		\
+	         --disable-cairo                \
 	    	"
 
 # OpenGL/GLX
