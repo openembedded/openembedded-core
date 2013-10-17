@@ -66,6 +66,9 @@ do_configure () {
 	linux-armeb)
 		target=linux-elf-armeb
 		;;
+	linux-aarch64*)
+		target=linux-generic64
+		;;
 	linux-sh3)
 		target=debian-sh3
 		;;

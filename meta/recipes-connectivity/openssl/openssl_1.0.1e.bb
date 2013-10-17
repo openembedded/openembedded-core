@@ -33,6 +33,7 @@ SRC_URI += "file://configure-targets.patch \
             file://fix-cipher-des-ede3-cfb1.patch \
             file://openssl-avoid-NULL-pointer-dereference-in-EVP_DigestInit_ex.patch \
             file://openssl-avoid-NULL-pointer-dereference-in-dh_pub_encode.patch \
+            file://initial-aarch64-bits.patch \
             file://find.pl \
            "
 
