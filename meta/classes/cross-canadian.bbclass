@@ -29,7 +29,8 @@ python () {
         tos = d.getVar("TARGET_OS", True)
         if (tos != "linux" and tos != "linux-gnuspe"):
             bb.fatal("Building cross-candian powerpc for an unknown TARGET_SYS (%s), please update cross-canadian.bbclass" % d.getVar("TARGET_SYS", True))
-        # Have to expand DEPENDS before we change the extensions
+        # This is a bit ugly. We need to zero LIBC/ABI extension which will change TARGET_OS
+        # however we need the old value in some variables. We expand those here first.
         d.setVar("DEPENDS", d.getVar("DEPENDS", True))
         d.setVar("STAGING_BINDIR_TOOLCHAIN", d.getVar("STAGING_BINDIR_TOOLCHAIN", True))
         for prefix in ["AR", "AS", "DLLTOOL", "CC", "CXX", "GCC", "LD", "LIPO", "NM", "OBJDUMP", "RANLIB", "STRIP", "WINDRES"]:
