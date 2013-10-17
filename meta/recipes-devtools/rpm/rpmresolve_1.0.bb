@@ -26,4 +26,4 @@ do_install_append_class-native() {
 			RPM_LOCALEDIRRPM=${STAGING_DATADIR_NATIVE}/locale
 }
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
