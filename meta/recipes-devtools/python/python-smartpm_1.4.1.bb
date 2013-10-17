@@ -49,6 +49,10 @@ RPM_RDEP_class-native = ""
 QT_RDEP_class-native = ""
 GTK_RDEP_class-native = ""
 
+RPM_RDEP_class-nativesdk = ""
+QT_RDEP_class-nativesdk = ""
+GTK_RDEP_class-nativesdk = ""
+
 PACKAGECONFIG[rpm] = ",,rpm,${RPM_RDEP}"
 PACKAGECONFIG[qt4] = ",,qt4-x11,${QT_RDEP}"
 PACKAGECONFIG[gtk] = ",,gtk+,${GTK_RDEP}"
@@ -138,5 +142,5 @@ FILES_${PN}-interface-qt4 = "${libdir}/python*/site-packages/smart/interfaces/qt
 FILES_${PN}-interface-gtk = "${libdir}/python*/site-packages/smart/interfaces/gtk"
 FILES_${PN}-interface-images = "${datadir}/${baselib}/python*/site-packages/smart/interfaces/images"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
 
