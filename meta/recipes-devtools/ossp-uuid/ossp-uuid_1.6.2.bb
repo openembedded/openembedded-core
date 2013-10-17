@@ -55,4 +55,4 @@ FILES_uuid = "${bindir}/uuid"
 FILES_${PN} = "${libdir}/libossp-uuid.so.16*"
 FILES_${PN}-dev += "${bindir}/uuid-config"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
