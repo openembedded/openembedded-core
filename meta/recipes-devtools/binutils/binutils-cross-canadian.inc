@@ -22,6 +22,8 @@ do_install () {
 	rm -f ${D}${libdir}/libiberty*
 	rm -f ${D}${libdir}/libopcodes*
 	rm -f ${D}${includedir}/*.h
+	
+	cross_canadian_bindirlinks
 }
 
 BBCLASSEXTEND = ""
