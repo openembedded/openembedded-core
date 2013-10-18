@@ -35,8 +35,8 @@ import fnmatch
 import re
 
 def usage():
-    print("syntax: oe-pkgdata-util glob [-d] <pkgdatadir> <vendor-os> <pkglist> \"<globs>\"\n \
-                    read-value [-d] <pkgdatadir> <vendor-os> <value-name> \"<package-name>_<package_architecture>\"");
+    print("syntax: oe-pkgdata-util glob [-d] <pkgdatadir> <pkglist> \"<globs>\"\n \
+                    read-value [-d] <pkgdatadir> <value-name> \"<pkgs>\"");
 
 
 
@@ -55,10 +55,11 @@ def glob(args):
     with open(pkglist_file, 'r') as f:
         for line in f:
             fields = line.rstrip().split()
-            if len(fields) < 2:
+            if not fields:
                 continue
             pkg = fields[0]
-            arch = fields[1]
+            # We don't care about other args (used to need the package architecture but the
+            # new pkgdata structure avoids the need for that)
 
             # Skip packages for which there is no point applying globs
             if skipregex.search(pkg):
@@ -172,9 +173,8 @@ def read_value(args):
     for package in packages:
         pkg_split = package.split('_')
         pkg_name = pkg_split[0]
-        pkg_arch = '_'.join(pkg_split[1:])
         if debug:
-            print "package: name: '%s', arch: '%s'" % (pkg_name, pkg_arch)
+            print "package: '%s'" % pkg_name
         revlink = os.path.join(pkgdata_dir, "runtime-reverse", pkg_name)
         if debug:
             print(revlink)
