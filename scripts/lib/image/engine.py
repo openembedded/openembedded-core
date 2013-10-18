@@ -82,6 +82,8 @@ def find_artifacts(image_name):
         print "Couldn't get '%s' output, exiting." % bitbake_env_cmd
         sys.exit(1)
 
+    rootfs_dir = kernel_dir = hdddir = staging_data_dir = native_sysroot = ""
+
     for line in bitbake_env_lines.split('\n'):
         if (get_line_val(line, "IMAGE_ROOTFS")):
             rootfs_dir = get_line_val(line, "IMAGE_ROOTFS")
