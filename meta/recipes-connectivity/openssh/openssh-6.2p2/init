@@ -97,7 +97,7 @@ case "$1" in
 
   status)
 	status /usr/sbin/sshd
-	return $?
+	exit $?
   ;;
 
   *)
