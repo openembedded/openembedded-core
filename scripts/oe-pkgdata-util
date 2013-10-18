@@ -37,6 +37,14 @@ def glob(args, usage):
     pkglist_file = args[1]
     globs = args[2].split()
 
+    if not os.path.exists(pkgdata_dir):
+        print('ERROR: Unable to find pkgdata directory %s' % pkgdata_dir)
+        sys.exit(1)
+
+    if not os.path.exists(pkglist_file):
+        print('ERROR: Unable to find package list file %s' % pkglist_file)
+        sys.exit(1)
+
     skipregex = re.compile("-locale-|^locale-base-|-dev$|-doc$|-dbg$|-staticdev$|^kernel-module-")
 
     mappedpkgs = set()
@@ -147,6 +155,10 @@ def read_value(args, usage):
     pkgdata_dir = args[0]
     var = args[1]
     packages = args[2].split()
+
+    if not os.path.exists(pkgdata_dir):
+        print('ERROR: Unable to find pkgdata directory %s' % pkgdata_dir)
+        sys.exit(1)
 
     def readvar(pkgdata_file, var):
         val = ""
