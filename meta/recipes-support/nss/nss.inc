@@ -17,7 +17,7 @@ SRC_URI = "\
     file://nss-no-rpath-for-cross-compiling.patch \
     file://nss-fix-incorrect-shebang-of-perl.patch \
 "
-SRC_URI_append_class-target += "\
+SRC_URI_append_class-target = "\
     file://nss.pc.in \
     file://signlibs.sh \
 "
