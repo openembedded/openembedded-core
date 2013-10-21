@@ -26,15 +26,18 @@ inherit autotools pkgconfig gettext pixbufcache
 
 LIBV = "2.10.0"
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG_linuxstdbase = "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
+PACKAGECONFIG_class-native = ""
+PACKAGECONFIG[x11] = "--with-x11,--without-x11,virtual/libx11"
+
 EXTRA_OECONF = "\
-  --without-libtiff \
   --with-libpng \
-  ${X11DEPENDS} \
+  --with-libjpeg \
+  --without-libtiff \
+  --without-libjasper \
   --disable-introspection \
 "
-X11DEPENDS = "--without-x11"
-X11DEPENDS_linuxstdbase = "${@base_contains('DISTRO_FEATURES', 'x11', '--with-x11', '--without-x11', d)}"
-X11DEPENDS_class-native = "--without-x11"
 
 PACKAGES =+ "${PN}-xlib"
 
