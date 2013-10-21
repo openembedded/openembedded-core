@@ -20,3 +20,6 @@ CACHED_CONFIGUREVARS += "ac_cv_path_AWK_PATH=${bindir}/gawk"
 
 RREPLACES_${PN} = "check (<= 0.9.5)"
 RDEPENDS_${PN} += "gawk"
+RDEPENDS_${PN}_class-native = ""
+
+BBCLASSEXTEND = "native"
