@@ -7,7 +7,8 @@ PR = "r0"
 
 SRC_URI = "ftp://ftp.remotesensing.org/pub/libtiff/tiff-${PV}.tar.gz \
            file://libtool2.patch \
-           file://libtiff-CVE-2013-1960.patch"
+           file://libtiff-CVE-2013-1960.patch \
+           file://libtiff-CVE-2013-4232.patch"
 
 SRC_URI[md5sum] = "051c1068e6a0627f461948c365290410"
 SRC_URI[sha256sum] = "ea1aebe282319537fb2d4d7805f478dd4e0e05c33d0928baba76a7c963684872"
