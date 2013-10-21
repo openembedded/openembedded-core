@@ -15,7 +15,7 @@ LIC_FILES_CHKSUM = "file://docs/license.html;md5=42d77d95cba529a3637129be87d6555
 INC_PR = "r9"
 PE = "2"
 
-DEPENDS = "expat makedepend-native flex-native bison-native"
+DEPENDS = "expat makedepend-native flex-native bison-native udev"
 
 PROVIDES = "virtual/libgl virtual/libgles1 virtual/libgles2 virtual/egl virtual/mesa"
 
@@ -38,7 +38,7 @@ PACKAGECONFIG[wayland] = ",,wayland"
 DRIDRIVERS = "swrast"
 DRIDRIVERS_append_x86 = ",radeon,r200,nouveau,i965,i915"
 DRIDRIVERS_append_x86-64 = ",radeon,r200,nouveau,i965,i915"
-PACKAGECONFIG[dri] = "--enable-dri --with-dri-drivers=${DRIDRIVERS}, --disable-dri, dri2proto libdrm udev"
+PACKAGECONFIG[dri] = "--enable-dri --with-dri-drivers=${DRIDRIVERS}, --disable-dri, dri2proto libdrm"
 
 EXTRA_OECONF += "--enable-gbm"
 
