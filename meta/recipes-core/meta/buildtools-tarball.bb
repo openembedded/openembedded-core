@@ -39,6 +39,7 @@ TOOLCHAIN_HOST_TASK ?= "\
     nativesdk-chrpath \
     nativesdk-tar \
     nativesdk-git \
+    nativesdk-pigz \
     nativesdk-make \
     "
 

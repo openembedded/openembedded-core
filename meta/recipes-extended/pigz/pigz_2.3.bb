@@ -6,5 +6,5 @@ SRC_URI[sha256sum] = "74bbd5962f9420549fc987ddd1ccda692ec2b29d2d612fbbe26edf3fa3
 
 NATIVE_PACKAGE_PATH_SUFFIX = "/${PN}"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
 
