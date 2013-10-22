@@ -204,25 +204,27 @@ class Wic_PartData(Mic_PartData):
 
         Currently handles ext2/3/4 and btrfs.
         """
+        pseudo = "export PSEUDO_PREFIX=%s/usr;" % native_sysroot
+        pseudo += "export PSEUDO_LOCALSTATEDIR=%s/../pseudo;" % rootfs_dir
+        pseudo += "export PSEUDO_PASSWD=%s;" % rootfs_dir
+        pseudo += "export PSEUDO_NOSYMLINKEXP=1;"
+        pseudo += "%s/usr/bin/pseudo " % native_sysroot
+
         if self.fstype.startswith("ext"):
             return self.prepare_rootfs_ext(cr_workdir, oe_builddir,
-                                           rootfs_dir, native_sysroot)
+                                           rootfs_dir, native_sysroot,
+                                           pseudo)
         elif self.fstype.startswith("btrfs"):
             return self.prepare_rootfs_btrfs(cr_workdir, oe_builddir,
-                                             rootfs_dir, native_sysroot)
+                                             rootfs_dir, native_sysroot,
+                                             pseudo)
 
     def prepare_rootfs_ext(self, cr_workdir, oe_builddir, rootfs_dir,
-                           native_sysroot):
+                           native_sysroot, pseudo):
         """
         Prepare content for an ext2/3/4 rootfs partition.
         """
-        populate_script = "export PSEUDO_PREFIX=%s/usr;" % native_sysroot
-        populate_script += "export PSEUDO_LOCALSTATEDIR=%s/../pseudo;" % rootfs_dir
-        populate_script += "export PSEUDO_PASSWD=%s;" % rootfs_dir
-        populate_script += "export PSEUDO_NOSYMLINKEXP=1;"
-        populate_script += "export PSEUDO_DISABLED=0;"
-        populate_script += "%s/usr/bin/pseudo %s/usr/bin/populate-extfs.sh" % \
-            (native_sysroot, native_sysroot)
+        populate_script = "%s/usr/bin/populate-extfs.sh" % native_sysroot
 
         image_extra_space = 10240
 
@@ -245,7 +247,7 @@ class Wic_PartData(Mic_PartData):
         rc, out = exec_native_cmd(mkfs_cmd, native_sysroot)
 
         populate_cmd = populate_script + " " + image_rootfs + " " + rootfs
-        rc, out = exec_native_cmd(populate_cmd, native_sysroot)
+        rc, out = exec_native_cmd(pseudo + populate_cmd, native_sysroot)
 
         # get the rootfs size in the right units for kickstart (Mb)
         du_cmd = "du -Lbms %s" % rootfs
@@ -258,7 +260,7 @@ class Wic_PartData(Mic_PartData):
         return 0
 
     def prepare_rootfs_btrfs(self, cr_workdir, oe_builddir, rootfs_dir,
-                             native_sysroot):
+                             native_sysroot, pseudo):
         """
         Prepare content for a btrfs rootfs partition.
 
@@ -281,7 +283,7 @@ class Wic_PartData(Mic_PartData):
 
         mkfs_cmd = "mkfs.%s -b %d -r %s %s" % \
             (self.fstype, rootfs_size * 1024, image_rootfs, rootfs)
-        rc, out = exec_native_cmd(mkfs_cmd, native_sysroot)
+        rc, out = exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
 
         # get the rootfs size in the right units for kickstart (Mb)
         du_cmd = "du -Lbms %s" % rootfs
