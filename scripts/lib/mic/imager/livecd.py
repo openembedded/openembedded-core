@@ -20,7 +20,7 @@ import glob
 import shutil
 
 from mic import kickstart, msger
-from mic.utils import fs_related, rpmmisc, runner, misc
+from mic.utils import fs_related, runner, misc
 from mic.utils.errors import CreatorError
 from mic.imager.loop import LoopImageCreator
 

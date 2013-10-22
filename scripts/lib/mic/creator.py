@@ -19,7 +19,7 @@ import os, sys, re
 from optparse import SUPPRESS_HELP
 
 from mic import msger
-from mic.utils import cmdln, errors, rpmmisc
+from mic.utils import cmdln, errors
 from mic.conf import configmgr
 from mic.plugin import pluginmgr
 
