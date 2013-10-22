@@ -14,7 +14,7 @@
 # Debian init.d script for D-BUS
 # Copyright © 2003 Colin Walters <walters@debian.org>
 
-set -e
+# set -e
 
 # Source function library.
 . /etc/init.d/functions
