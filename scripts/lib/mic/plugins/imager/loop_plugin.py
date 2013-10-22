@@ -19,7 +19,7 @@ import os
 import shutil
 import tempfile
 
-from mic import chroot, msger, rt_util
+from mic import chroot, msger
 from mic.utils import misc, fs_related, errors, cmdln
 from mic.conf import configmgr
 from mic.plugin import pluginmgr

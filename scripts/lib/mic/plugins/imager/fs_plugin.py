@@ -18,7 +18,7 @@
 import os
 import sys
 
-from mic import chroot, msger, rt_util
+from mic import chroot, msger
 from mic.utils import cmdln, misc, errors, fs_related
 from mic.imager import fs
 from mic.conf import configmgr

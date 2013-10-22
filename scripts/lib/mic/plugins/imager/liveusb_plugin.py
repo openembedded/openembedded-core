@@ -19,7 +19,7 @@ import os
 import shutil
 import tempfile
 
-from mic import chroot, msger, rt_util
+from mic import chroot, msger
 from mic.utils import misc, fs_related, errors
 from mic.utils.partitionedfs import PartitionedMount
 from mic.conf import configmgr
