@@ -741,7 +741,7 @@ hiddenmenu
         self._configure_syslinux_bootloader(isodir)
         self._configure_efi_bootloader(isodir)
 
-arch = rpmmisc.getBaseArch()
+arch = "i386"
 if arch in ("i386", "x86_64"):
     LiveCDImageCreator = x86LiveImageCreator
 elif arch.startswith("arm"):
