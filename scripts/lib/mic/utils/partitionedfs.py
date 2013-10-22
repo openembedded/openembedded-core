@@ -45,11 +45,7 @@ class PartitionedMount(Mount):
         self.mountOrder = []
         self.unmountOrder = []
         self.parted = find_binary_path("parted")
-        self.kpartx = find_binary_path("kpartx")
-        self.mkswap = find_binary_path("mkswap")
         self.btrfscmd=None
-        self.mountcmd = find_binary_path("mount")
-        self.umountcmd = find_binary_path("umount")
         self.skipformat = skipformat
         self.snapshot_created = self.skipformat
         # Size of a sector used in calculations
