@@ -17,6 +17,8 @@ ALTERNATIVE_PRIORITY = "100"
 
 export AUTOHEADER = "true"
 
+RDEPENDS_${PN} += "base-files"
+RDEPENDS_${PN}_class-nativesdk = ""
 RDEPENDS_${PN}-ptest += "make"
 
 do_configure_prepend () {
@@ -44,7 +46,9 @@ do_install_ptest () {
 }
 
 pkg_postinst_${PN} () {
-	touch $D${sysconfdir}/shells
-	grep -q "bin/bash" $D${sysconfdir}/shells || echo /bin/bash >> $D${sysconfdir}/shells
-	grep -q "bin/sh" $D${sysconfdir}/shells || echo /bin/sh >> $D${sysconfdir}/shells
+	grep -q "^${base_bindir}/bash$" $D${sysconfdir}/shells || echo ${base_bindir}/bash >> $D${sysconfdir}/shells
+}
+
+pkg_postrm_${PN} () {
+	printf "$(grep -v "^${base_bindir}/bash$" $D${sysconfdir}/shells)\n" > $D${sysconfdir}/shells
 }
