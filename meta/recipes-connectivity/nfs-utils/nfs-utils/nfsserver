@@ -25,6 +25,7 @@ test -r /etc/default/nfsd && . /etc/default/nfsd
 test -x "$NFS_MOUNTD" || NFS_MOUNTD=/usr/sbin/rpc.mountd
 test -x "$NFS_NFSD" || NFS_NFSD=/usr/sbin/rpc.nfsd
 test -x "$NFS_STATD" || NFS_STATD=/usr/sbin/rpc.statd
+test -z "$STATD_PID" && STATD_PID=/var/run/rpc.statd.pid
 #
 # The user mode program must also exist (it just starts the kernel
 # threads using the kernel module code).
@@ -77,6 +78,17 @@ stop_mountd(){
 #
 #nfsd
 start_nfsd(){
+        modprobe -q nfsd
+	grep -q nfsd /proc/filesystems || {
+		echo NFS daemon support not enabled in kernel
+		exit 1
+        }
+	grep -q nfsd /proc/mounts || mount -t nfsd nfsd /proc/fs/nfsd
+	grep -q nfsd /proc/mounts || {
+		echo nfsd filesystem could not be mounted at /proc/fs/nfsd
+		exit 1
+        }
+
 	echo -n "starting $1 nfsd kernel threads: "
 	start-stop-daemon --start --exec "$NFS_NFSD" -- "$@"
 	echo done
@@ -115,14 +127,12 @@ stop_nfsd(){
 #statd
 start_statd(){
 	echo -n "starting statd: "
-	start-stop-daemon --start --exec "$NFS_STATD"
+	start-stop-daemon --start --exec "$NFS_STATD" --pidfile "$STATD_PID"
 	echo done
 }
 stop_statd(){
-	# WARNING: this kills any process with the executable
-	# name 'statd'.
 	echo -n 'stopping statd: '
-	start-stop-daemon --stop --quiet --signal 1 --name statd
+	start-stop-daemon --stop --quiet --signal 1 --pidfile "$STATD_PID"
 	echo done
 }
 #----------------------------------------------------------------------
