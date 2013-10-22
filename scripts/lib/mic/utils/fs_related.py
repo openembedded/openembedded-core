@@ -57,7 +57,10 @@ def find_binary_path(binary):
         bin_path = "%s/%s" % (path, binary)
         if os.path.exists(bin_path):
             return bin_path
-    raise CreatorError("Command '%s' is not available." % binary)
+
+    print "External command '%s' not found, exiting." % binary
+    print "  (Please install '%s' on your host system)" % binary
+    sys.exit(1)
 
 def makedirs(dirname):
     """A version of os.makedirs() that doesn't throw an
