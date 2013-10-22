@@ -26,12 +26,10 @@ import re
 import tarfile
 import glob
 
-import rpm
-
 from mic import kickstart
 from mic import msger
 from mic.utils.errors import CreatorError, Abort
-from mic.utils import misc, grabber, runner, fs_related as fs
+from mic.utils import misc, runner, fs_related as fs
 
 class BaseImageCreator(object):
     """Installs a system to a chroot directory.
