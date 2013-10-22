@@ -103,7 +103,7 @@ mkdir $ROOTFS_DIR
 # Load and run modules
 for m in $MODULES_DIR/*; do
 	# Skip backup files
-	if [ "`echo $m | sed -e 's/\~$//'`" = "$m" ]; then
+	if [ "`echo $m | sed -e 's/\~$//'`" != "$m" ]; then
 		continue
 	fi
 
