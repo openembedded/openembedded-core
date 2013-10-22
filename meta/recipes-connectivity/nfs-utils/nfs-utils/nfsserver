@@ -144,26 +144,26 @@ stop_statd(){
 #  restart: stops and starts mountd
 #FIXME: need to create the /var/lib/nfs/... directories
 case "$1" in
-start)	create_directories
+  start)	create_directories
 	start_nfsd "$NFS_SERVERS"
 	start_mountd
 	start_statd
 	test -r /etc/exports && exportfs -a;;
-stop)	exportfs -ua
+  stop)	exportfs -ua
 	stop_statd
 	stop_mountd
 	stop_nfsd;;
-status)
+  status)
 	status /usr/sbin/rpc.mountd
 	RETVAL=$?
 	status nfsd
 	rval=$?
 	[ $RETVAL -eq 0 ] && exit $rval
 	exit $RETVAL;;
-reload)	test -r /etc/exports && exportfs -r;;
-restart)
+  reload)	test -r /etc/exports && exportfs -r;;
+  restart)
 	$0 stop
 	$0 start;;
-*)	echo "Usage: $0 {start|stop|status|reload|restart}"
+  *)	echo "Usage: $0 {start|stop|status|reload|restart}"
 	exit 1;;
 esac
