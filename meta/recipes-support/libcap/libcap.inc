@@ -10,7 +10,8 @@ DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 # attr and pam are disabled by EXTRA_OEMAKE_class-native
 DEPENDS_class-native = "perl-native-runtime"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/libc/libcap2/${BPN}2_${PV}.orig.tar.gz"
+SRC_URI = "${DEBIAN_MIRROR}/main/libc/libcap2/${BPN}2_${PV}.orig.tar.gz \
+           file://fix-CAP_LAST_CAP.patch"
 
 PR = "r1"
 
