@@ -1,0 +1,39 @@
+fix CAP_LAST_CAP
+
+Upstream-Status: pending
+
+Two new capability CAP_BLOCK_SUSPEND and CAP_WAKE_ALARM have been added into
+kernel, but libcap did not update them.
+Once libcap uses its capability.h (the default value of KERNEL_HEADERS), and
+application always use capability.h from kernel, that will make cap_get_flag
+return wrong value.
+
+Signed-off-by: Roy Li <rongqing.li@windriver.com>
+---
+ libcap/include/linux/capability.h |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/libcap/include/linux/capability.h b/libcap/include/linux/capability.h
+index 4924f2a..57026be 100644
+--- a/libcap/include/linux/capability.h
++++ b/libcap/include/linux/capability.h
+@@ -360,7 +360,15 @@ struct cpu_vfs_cap_data {
+    CAP_SYS_ADMIN is not acceptable anymore. */
+ #define CAP_SYSLOG           34
+ 
+-#define CAP_LAST_CAP         CAP_SYSLOG
++/* Allow triggering something that will wake the system */
++
++#define CAP_WAKE_ALARM            35
++
++/* Allow preventing system suspends */
++
++#define CAP_BLOCK_SUSPEND    36
++
++#define CAP_LAST_CAP         CAP_BLOCK_SUSPEND
+ 
+ #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+ 
+-- 
+1.7.10.4
+
