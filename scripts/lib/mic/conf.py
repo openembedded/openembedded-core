@@ -186,10 +186,6 @@ class ConfigMgr(object):
                                               self.create['name_prefix'],
                                               self.create['name_suffix'])
 
-        # check selinux, it will block arm and btrfs image creation
-        misc.selinux_check(self.create['arch'],
-                           [p.fstype for p in ks.handler.partition.partitions])
-
     def set_runtime(self, runtime):
         if runtime not in ("bootstrap", "native"):
             msger.error("Invalid runtime mode: %s" % runtime)
