@@ -5,7 +5,7 @@ LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=e3eda01d9815f8d24aae2dbd89b68b06"
 
 DEPENDS = "cracklib-native zlib"
-DEPENDS_class-native = "zlib"
+DEPENDS_class-native = "zlib-native"
 
 EXTRA_OECONF = "--without-python --libdir=${base_libdir}"
 
