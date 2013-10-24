@@ -16,11 +16,8 @@ PAM_DEPS = "libpam libpam-runtime pam-plugin-env pam-plugin-limits"
 
 RCONFLICTS_${PN} = "atd"
 RREPLACES_${PN} = "atd"
-PR = "r5"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
-    file://configure.patch \
-    file://use-ldflags.patch \
     file://fix_parallel_build_error.patch \
     file://posixtm.c \
     file://posixtm.h \
@@ -31,8 +28,8 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
 PAM_SRC_URI = "file://pam.conf.patch \
                file://configure-add-enable-pam.patch"
 
-SRC_URI[md5sum] = "1da61af6c29e323abaaf13ee1a8dad79"
-SRC_URI[sha256sum] = "3a8b90868d615d21a92f4986ea9a823886329af8fae8dd7ab4eed9b273bca072"
+SRC_URI[md5sum] = "d41cfd79033b6e49a8838add59a42ac6"
+SRC_URI[sha256sum] = "cd092bf05d29c25b286f55a960ce8b8c3c5beb571d86ed8eb1dfb3b61291b3ae"
 
 EXTRA_OECONF += "ac_cv_path_SENDMAIL=/bin/true \
                  --with-daemon_username=root \
