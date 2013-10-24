@@ -7,10 +7,7 @@ HOMEPAGE = "http://zlib.net/pigz/"
 SECTION = "console/utils"
 LICENSE = "Zlib"
 
-PR = "r1"
-
-SRC_URI = "http://zlib.net/pigz/pigz-${PV}.tar.gz \
-           file://ldflags.patch"
+SRC_URI = "http://zlib.net/pigz/pigz-${PV}.tar.gz"
 
 PROVIDES_class-native += "gzip-native"
 
@@ -33,4 +30,3 @@ ALTERNATIVE_${PN} = "gzip gunzip"
 ALTERNATIVE_LINK_NAME[gzip] = "${base_bindir}/gzip"
 ALTERNATIVE_LINK_NAME[gunzip] = "${base_bindir}/gunzip"
 ALTERNATIVE_PRIORITY = "80"
-
