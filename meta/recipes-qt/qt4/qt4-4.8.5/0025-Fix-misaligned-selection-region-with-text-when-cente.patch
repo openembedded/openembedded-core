@@ -1,0 +1,75 @@
+From c368cbad3a505d44894ff150dc25c74d0174ca15 Mon Sep 17 00:00:00 2001
+From: Jonathan Liu <net147@gmail.com>
+Date: Wed, 23 Oct 2013 00:28:17 +1100
+Subject: [PATCH] Fix misaligned selection region with text when centered
+
+If the text is centered, the x/y position in the selection QRectF may
+be a multiple of 0.5 which is rounded up. This rounding causes
+misalignment of the selection region with the text.
+
+The alignment is fixed by using qFloor on the x and y components.
+
+Upstream-Status: Accepted [https://codereview.qt-project.org/#change,68935]
+Signed-off-by: Jonathan Liu <net147@gmail.com>
+
+Task-number: QTBUG-34218
+Task-number: QTBUG-34234
+Change-Id: I4f2fadeb38602f62a93773c6e5faecf03b28069f
+Reviewed-by: Gunnar Sletta <gunnar.sletta@digia.com>
+(cherry picked from qtbase/5d8a882c11201a29475c5ea71cfb76c9de6573f5)
+---
+ src/gui/text/qtextlayout.cpp | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/src/gui/text/qtextlayout.cpp b/src/gui/text/qtextlayout.cpp
+index 3d340cb..8d652ea 100644
+--- a/src/gui/text/qtextlayout.cpp
++++ b/src/gui/text/qtextlayout.cpp
+@@ -44,6 +44,7 @@
+ 
+ #include <qfont.h>
+ #include <qapplication.h>
++#include <qmath.h>
+ #include <qpainter.h>
+ #include <qvarlengtharray.h>
+ #include <qtextformat.h>
+@@ -979,15 +980,23 @@ static void addSelectedRegionsToPath(QTextEngine *eng, int lineNumber, const QPo
+                 continue;
+             }
+ 
+-            if (lastSelectionWidth > 0)
+-                region->addRect(boundingRect & QRectF(lastSelectionX.toReal(), selectionY, lastSelectionWidth.toReal(), lineHeight));
++            if (lastSelectionWidth > 0) {
++                QRectF rect = boundingRect & QRectF(lastSelectionX.toReal(), selectionY, lastSelectionWidth.toReal(), lineHeight);
++                rect.moveLeft(qFloor(rect.left()));
++                rect.moveTop(qFloor(rect.top()));
++                region->addRect(rect);
++            }
+ 
+             lastSelectionX = selectionX;
+             lastSelectionWidth = selectionWidth;
+         }
+     }
+-    if (lastSelectionWidth > 0)
+-        region->addRect(boundingRect & QRectF(lastSelectionX.toReal(), selectionY, lastSelectionWidth.toReal(), lineHeight));
++    if (lastSelectionWidth > 0) {
++        QRectF rect = boundingRect & QRectF(lastSelectionX.toReal(), selectionY, lastSelectionWidth.toReal(), lineHeight);
++        rect.moveLeft(qFloor(rect.left()));
++        rect.moveTop(qFloor(rect.top()));
++        region->addRect(rect);
++    }
+ }
+ 
+ static inline QRectF clipIfValid(const QRectF &rect, const QRectF &clip)
+@@ -2081,7 +2090,7 @@ static void setPenAndDrawBackground(QPainter *p, const QPen &defaultPen, const Q
+ 
+     QBrush bg = chf.background();
+     if (bg.style() != Qt::NoBrush && !chf.property(SuppressBackground).toBool())
+-        p->fillRect(r, bg);
++        p->fillRect(QRectF(qFloor(r.x()), qFloor(r.y()), r.width(), r.height()), bg);
+     if (c.style() != Qt::NoBrush) {
+         p->setPen(QPen(c, 0));
+     }
+-- 
+1.8.4
+
