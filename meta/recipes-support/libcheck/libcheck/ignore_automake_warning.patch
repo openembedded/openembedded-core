@@ -1,0 +1,15 @@
+Upstream-Status: Inappropriate [configuration]
+
+Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+diff -Nurd check-0.9.10/configure.ac check-0.9.10/configure.ac
+--- check-0.9.10/configure.ac	2013-04-18 13:19:02.000000000 +0300
++++ check-0.9.10/configure.ac	2013-10-25 00:26:43.102413363 +0300
+@@ -26,7 +26,7 @@
+ AC_USE_SYSTEM_EXTENSIONS
+
+ # really severe build strictness
+-AM_INIT_AUTOMAKE([-Wall -Werror gnits 1.9.6])
++AM_INIT_AUTOMAKE([-Wall gnits 1.9.6])
+
+ # From patch 2803433, request system extensions to generate 64-bit safe code
+ AC_USE_SYSTEM_EXTENSIONS

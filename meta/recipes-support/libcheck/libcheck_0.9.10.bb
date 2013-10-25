@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING.LESSER;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/check/check-${PV}.tar.gz \
            file://libcheck_fix_for_automake-1.12.patch \
+           file://ignore_automake_warning.patch \
           "
 
 SRC_URI[md5sum] = "6d10a8efb9a683467b92b3bce97aeb30"
