@@ -161,14 +161,9 @@ status)
 	[ $RETVAL -eq 0 ] && exit $rval
 	exit $RETVAL;;
 reload)	test -r /etc/exports && exportfs -r;;
-restart)exportfs -ua
-	stop_mountd
-	stop_statd
-	# restart does not restart the kernel threads,
-	# only the user mode processes
-	start_mountd
-	start_statd
-	test -r /etc/exports && exportfs -a;;
+restart)
+	$0 stop
+	$0 start;;
 *)	echo "Usage: $0 {start|stop|status|reload|restart}"
 	exit 1;;
 esac
