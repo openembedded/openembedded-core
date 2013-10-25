@@ -12,6 +12,7 @@ DEPENDS = "glib-2.0 pango gtk+ menu-cache intltool-native libexif"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/libfm-${PV}.tar.gz \
            file://fix-make-parallelism-issue.patch \
+           file://ignore_automake_warnings.patch \
            "
 
 SRC_URI[md5sum] = "ea3d09b23ef4c37cb84ae57ea16b8f08"
