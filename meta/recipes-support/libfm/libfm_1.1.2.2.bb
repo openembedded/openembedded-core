@@ -10,14 +10,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 SECTION = "x11/libs"
 DEPENDS = "glib-2.0 pango gtk+ menu-cache intltool-native libexif"
 
-PR = "r0"
-
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/libfm-${PV}.tar.gz \
            file://fix-make-parallelism-issue.patch \
            "
 
-SRC_URI[md5sum] = "a5bc8b8291cf810c659bfb3af378b5de"
-SRC_URI[sha256sum] = "b9426e588670b53570b808c49abd1d103863614dd3622559b8c3ef1392fe0b3d"
+SRC_URI[md5sum] = "ea3d09b23ef4c37cb84ae57ea16b8f08"
+SRC_URI[sha256sum] = "158e2b6974350d2dab15932b496bb4d448553e60bbf7cdfe4d6e9bd99d19d682"
 
 inherit autotools pkgconfig
 
