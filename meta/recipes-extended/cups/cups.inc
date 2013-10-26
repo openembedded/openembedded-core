@@ -2,18 +2,24 @@ SUMMARY = "An Internet printing system for Unix"
 DESCRIPTION = "An Internet printing system for Unix."
 SECTION = "console/utils"
 LICENSE = "GPLv2 & LGPLv2"
-DEPENDS = "gnutls libpng jpeg dbus dbus-glib zlib"
+DEPENDS = "gnutls libpng jpeg dbus dbus-glib zlib libusb"
 PROVIDES = "cups14"
 
-SRC_URI = "http://www.cups.org/software/${PV}/${BP}-source.tar.bz2"
+SRC_URI = "http://www.cups.org/software/${PV}/${BP}-source.tar.bz2 \
+           file://use_echo_only_in_init.patch \
+           file://0001-don-t-try-to-run-generated-binaries.patch \
+           file://cups_serverbin.patch \
+	  "
 
 LEAD_SONAME = "libcupsdriver.so"
 
 inherit autotools binconfig
 
-PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'zeroconf', 'avahi', '', d)}"
+PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'zeroconf', 'avahi', '', d)} \
+                   ${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
 PACKAGECONFIG[avahi] = "--enable-avahi,--disable-avahi,avahi"
 PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl"
+PACKAGECONFIG[pam] = "--enable-pam, --disable-pam, libpam"
 
 EXTRA_OECONF = " \
                --enable-gnutls \
@@ -21,6 +27,10 @@ EXTRA_OECONF = " \
                --enable-browsing \
                --disable-openssl \
                --disable-tiff \
+               --disable-gssapi \
+               --enable-debug \
+               --disable-relro \
+               --enable-libusb \
                --without-php \
                --without-perl \
                --without-python \
@@ -98,6 +108,7 @@ FILES_${PN} += "${datadir}/doc/cups/images \
                 ${datadir}/doc/cups/*.css \
                 ${datadir}/icons/ \
                "
+CONFFILES_${PN} += "${sysconfdir}/cups/cupsd.conf"
 
 SYSROOT_PREPROCESS_FUNCS += "cups_sysroot_preprocess"
 cups_sysroot_preprocess () {
