@@ -6,12 +6,10 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8006d9c814277c1bfc4ca22af94b59ee"
 
-PR = "r0"
-
 SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "d4a3f03849d1e17ce56ab76aa5a24cab"
-SRC_URI[sha256sum] = "e70e801d4fbb16e761654a58ae48bf5020621c95c8e35bd864742577685872e1"
+SRC_URI[md5sum] = "8cab8ca52bcae735af40278423c7c942"
+SRC_URI[sha256sum] = "bf5a834e587974c8c64e71b35b9e75cd21c7ff253c0e7fbfb0a78be794965314"
 
 inherit autotools gettext
 
