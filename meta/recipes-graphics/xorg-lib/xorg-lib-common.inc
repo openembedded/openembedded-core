@@ -17,6 +17,9 @@ EXTRA_OECONF = "--disable-specs --without-groff --without-ps2pdf --without-fop -
 EXTRA_OECONF_append_libc-glibc = " --disable-malloc0returnsnull"
 EXTRA_OECONF_append_libc-uclibc = " --enable-malloc0returnsnull"
 
+UNKNOWN_CONFIGURE_WHITELIST += "--enable-malloc0returnsnull --disable-malloc0returnsnull \
+                                --disable-specs --without-groff --without-ps2pdf --without-fop --without-xmlto"
+
 python () {
         whitelist = [ "pixman", "libpciaccess" ]
         if not d.getVar('BPN', True) in whitelist and not oe.utils.contains ('DISTRO_FEATURES', 'x11', True, False, d):
