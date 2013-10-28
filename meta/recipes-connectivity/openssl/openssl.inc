@@ -33,12 +33,20 @@ export AS = "${CC} -c"
 
 inherit pkgconfig siteinfo multilib_header
 
-PACKAGES =+ "libcrypto libssl ${PN}-misc"
+PACKAGES =+ "libcrypto libssl ${PN}-misc openssl-conf"
 FILES_libcrypto = "${base_libdir}/libcrypto${SOLIBS}"
 FILES_libssl = "${libdir}/libssl.so.*"
 FILES_${PN} =+ " ${libdir}/ssl/*"
-FILES_${PN}-misc = "${libdir}/ssl/misc ${libdir}/ssl/openssl.cnf"
+FILES_${PN}-misc = "${libdir}/ssl/misc"
 FILES_${PN}-dev += "${base_libdir}/libcrypto${SOLIBSDEV}"
+
+# Add the openssl.cnf file to the openssl-conf package.  Make the libcrypto
+# package RRECOMMENDS on this package.  This will enable the configuration
+# file to be installed for both the base openssl package and the libcrypto
+# package since the base openssl package depends on the libcrypto package.
+FILES_openssl-conf = "${libdir}/ssl/openssl.cnf"
+CONFFILES_openssl-conf = "${libdir}/ssl/openssl.cnf"
+RRECOMMENDS_libcrypto += "openssl-conf"
 
 do_configure_prepend_darwin () {
 	sed -i -e '/version-script=openssl\.ld/d' Configure
