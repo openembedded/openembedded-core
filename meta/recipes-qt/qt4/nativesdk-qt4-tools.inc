@@ -118,4 +118,10 @@ do_install() {
     for i in moc uic uic3 rcc lrelease lupdate qdbuscpp2xml qdbusxml2cpp; do \
         ln -s ${i}4 ${i}; \
     done)
+
+    install -d ${D}${sysconfdir}
+    cat >${D}${sysconfdir}/qt.conf <<EOF
+[Paths]
+Prefix = ${prefix}
+EOF
 }
