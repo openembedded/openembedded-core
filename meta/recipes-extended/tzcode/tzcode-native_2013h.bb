@@ -6,13 +6,13 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/README;md5=0b7570113550eb5d30aa4bd220964b8
 # note that we allow for us to use data later than our code version
 #
 SRC_URI =" ftp://ftp.iana.org/tz/releases/tzcode${PV}.tar.gz;name=tzcode \
-           ftp://ftp.iana.org/tz/releases/tzdata2013g.tar.gz;name=tzdata"
+           ftp://ftp.iana.org/tz/releases/tzdata2013h.tar.gz;name=tzdata"
 
-SRC_URI[tzcode.md5sum] = "cc2a52297310ba1a673dc60973ea3ad8"
-SRC_URI[tzcode.sha256sum] = "c7c358b459bb65cfab7b7bdd6a9689233fc393f1f9fdf4f0f46ca7dac5a9587b"
+SRC_URI[tzdata.md5sum] = "d310abe42cbe87e76ceb69e2c7003c92"
+SRC_URI[tzdata.sha256sum] = "6b9e17e823eec0e09e12f74b452a70be4face1ef14c2fb1917b7c7e60564de27"
 
-SRC_URI[tzdata.md5sum] = "76dbc3b5a81913fc0d824376c44a5d15"
-SRC_URI[tzdata.sha256sum] = "b6cdd3998dcc732a6ae5e101e1394f9d4d6dff68bd48a8fb78c44c2b997d3a4f"
+SRC_URI[tzcode.md5sum] = "14250703b253e1cfdf97f1e928541508"
+SRC_URI[tzcode.sha256sum] = "e14addfc4e0da3cf17ccc1c08cb8094a2a0d3ae9524f565b74e6373c9b83ca0e"
 
 S = "${WORKDIR}"
 
