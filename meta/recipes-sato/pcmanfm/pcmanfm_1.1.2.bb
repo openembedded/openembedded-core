@@ -20,11 +20,10 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.gz \
 	   file://gnome-fs-regular.png \
 	   file://gnome-mime-text-plain.png \
 	   file://emblem-symbolic-link.png \
-	   file://cross-compile-fix.patch \
 	   file://no-desktop.patch"
 
-SRC_URI[md5sum] = "af0cff78690e658f3c06ceabf27bc71a"
-SRC_URI[sha256sum] = "1f6301f330ad648f3322708ec6c0f680a8695a9453932fe19653bab6731e5582"
+SRC_URI[md5sum] = "41104699e653ff2b0a9a9e80a257d6a2"
+SRC_URI[sha256sum] = "23ee33b34066ac83ce9a98bc9930049e69839438fb60489bd453bec8c2068950"
 
 inherit autotools pkgconfig
 
