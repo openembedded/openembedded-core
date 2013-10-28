@@ -15,7 +15,7 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-${PV}.tar.gz \
 
 inherit autotools binconfig pkgconfig
 
-EXTRA_OECONF = "--without-pth --disable-asm --with-capabilities"
+EXTRA_OECONF = "--disable-asm --with-capabilities"
 
 # libgcrypt.pc is added locally and thus installed here
 do_install_append() {
