@@ -1,3 +1,5 @@
 inherit gnomebase gtk-icon-cache gconf mime
 
-EXTRA_OECONF += "--enable-introspection=no"
+EXTRA_OECONF += "--disable-introspection"
+
+UNKNOWN_CONFIGURE_WHITELIST += "--disable-introspection"
