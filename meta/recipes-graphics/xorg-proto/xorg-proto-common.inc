@@ -14,7 +14,9 @@ S = "${WORKDIR}/${XORG_PN}-${PV}"
 DEPENDS = "util-macros"
 
 inherit autotools pkgconfig
-EXTRA_OECONF = "--with-fop=no --without-xmlto"
+EXTRA_OECONF = "--without-fop --without-xmlto"
+
+UNKNOWN_CONFIGURE_WHITELIST += "--without-fop --without-xmlto"
 
 # ${PN} is empty so we need to tweak -dev and -dbg package dependencies
 RDEPENDS_${PN}-dev = ""
