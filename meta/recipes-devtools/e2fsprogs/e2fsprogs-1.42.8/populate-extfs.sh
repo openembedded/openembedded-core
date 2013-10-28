@@ -35,7 +35,7 @@ DEBUGFS="debugfs"
 		fi
 
 		# Only stat once since stat is a time consuming command
-		STAT=$(stat -c "TYPE=\"%F\";DEVNO=\"0x%t 0x%T\";MODE=\"%f\";U=\"%u\";G=\"%g\"" $FILE)
+		STAT=$(stat -c "TYPE=\"%F\";DEVNO=\"0x%t 0x%T\";MODE=\"%f\";U=\"%u\";G=\"%g\"" "$FILE")
 		eval $STAT
 
 		case $TYPE in
@@ -43,20 +43,20 @@ DEBUGFS="debugfs"
 			echo "mkdir $TGT"
 			;;
 		"regular file" | "regular empty file")
-			echo "write $FILE $TGT"
+			echo "write \"$FILE\" \"$TGT\""
 			;;
 		"symbolic link")
-			LINK_TGT=$(readlink $FILE)
-			echo "symlink $TGT $LINK_TGT"
+			LINK_TGT=$(readlink "$FILE")
+			echo "symlink \"$TGT\" \"$LINK_TGT\""
 			;;
 		"block special file")
-			echo "mknod $TGT b $DEVNO"
+			echo "mknod \"$TGT\" b $DEVNO"
 			;;
 		"character special file")
-			echo "mknod $TGT c $DEVNO"
+			echo "mknod \"$TGT\" c $DEVNO"
 			;;
 		"fifo")
-			echo "mknod $TGT p"
+			echo "mknod \"$TGT\" p"
 			;;
 		*)
 			echo "Unknown/unhandled file type '$TYPE' file: $FILE" 1>&2
@@ -64,11 +64,11 @@ DEBUGFS="debugfs"
 		esac
 
 		# Set the file mode
-		echo "sif $TGT mode 0x$MODE"
+		echo "sif \"$TGT\" mode 0x$MODE"
 
 		# Set uid and gid
-		echo "sif $TGT uid $U"
-		echo "sif $TGT gid $G"
+		echo "sif \"$TGT\" uid $U"
+		echo "sif \"$TGT\" gid $G"
 	done
 
 	# Handle the hard links.
