@@ -18,12 +18,12 @@ Index: shared-mime-info-1.0/Makefile.am
 @@ -1,5 +1,3 @@
 -SUBDIRS=. po
 -
- INCLUDES = $(ALL_CFLAGS)
+ AM_CPPFLAGS = $(ALL_CFLAGS)
  
  packagesdir = $(datadir)/mime/packages
 @@ -72,8 +70,7 @@ uninstall-hook:
  
- all: check create-pot
+ all: $(defaultmakedeps)
  
 -create-pot:
 -	$(AM_V_GEN) $(MAKE) -C po shared-mime-info.pot
