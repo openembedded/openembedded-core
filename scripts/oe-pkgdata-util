@@ -28,8 +28,7 @@ import re
 import optparse
 from collections import defaultdict
 
-
-def glob(args, usage):
+def glob(args, usage, debug=False):
     if len(args) < 3:
         usage()
         sys.exit(1)
@@ -148,7 +147,7 @@ def glob(args, usage):
 
     print("\n".join(mappedpkgs))
 
-def read_value(args, usage):
+def read_value(args, usage, debug=False):
     if len(args) < 3:
         usage()
         sys.exit(1)
@@ -187,7 +186,7 @@ def read_value(args, usage):
                 qvar = "%s_%s" % (var, mappedpkg)
             print(readvar(revlink, qvar))
 
-def lookup_pkg(args, usage):
+def lookup_pkg(args, usage, debug=False):
     if len(args) < 2:
         usage()
         sys.exit(1)
@@ -219,7 +218,7 @@ def lookup_pkg(args, usage):
         items.extend(mappings.get(pkg, []))
     print '\n'.join(items)
 
-def lookup_recipe(args, usage):
+def lookup_recipe(args, usage, debug=False):
     if len(args) < 2:
         usage()
         sys.exit(1)
@@ -251,7 +250,7 @@ def lookup_recipe(args, usage):
         items.extend(mappings.get(pkg, []))
     print '\n'.join(items)
 
-def find_path(args, usage):
+def find_path(args, usage, debug=False):
     if len(args) < 2:
         usage()
         sys.exit(1)
@@ -306,7 +305,7 @@ Available commands:
 
     parser.add_option("-d", "--debug",
             help = "Report all SRCREV values, not just ones where AUTOREV has been used",
-            action="store_true", dest="debug")
+            action="store_true", dest="debug", default=False)
 
     options, args = parser.parse_args(sys.argv)
     args = args[1:]
@@ -316,15 +315,15 @@ Available commands:
         sys.exit(1)
 
     if args[0] == "glob":
-        glob(args[1:], parser.print_help)
+        glob(args[1:], parser.print_help, options.debug)
     elif args[0] == "lookup-pkg":
-        lookup_pkg(args[1:], parser.print_help)
+        lookup_pkg(args[1:], parser.print_help, options.debug)
     elif args[0] == "lookup-recipe":
-        lookup_recipe(args[1:], parser.print_help)
+        lookup_recipe(args[1:], parser.print_help, options.debug)
     elif args[0] == "find-path":
-        find_path(args[1:], parser.print_help)
+        find_path(args[1:], parser.print_help, options.debug)
     elif args[0] == "read-value":
-        read_value(args[1:], parser.print_help)
+        read_value(args[1:], parser.print_help, options.debug)
     else:
         parser.print_help()
         sys.exit(1)
