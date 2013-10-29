@@ -13,8 +13,11 @@ SRC_URI_append_class-nativesdk = " file://symver.patch"
 
 SRC_URI_append_class-native = " file://symver.patch"
 
-FILES_${PN} = "${libdir}/pseudo/lib*/libpseudo.so ${bindir}/* ${localstatedir}/pseudo ${prefix}/var/pseudo"
-FILES_${PN}-dbg += "${libdir}/pseudo/lib*/.debug"
+FILES_${PN} = "${prefix}/lib/pseudo/lib*/libpseudo.so ${bindir}/* ${localstatedir}/pseudo ${prefix}/var/pseudo"
+FILES_${PN}-dbg += "${prefix}/lib/pseudo/lib*/.debug"
+INSANE_SKIP_${PN} += "libdir"
+INSANE_SKIP_${PN}-dbg += "libdir"
+
 PROVIDES += "virtual/fakeroot"
 
 MAKEOPTS = ""
