@@ -7,14 +7,20 @@ def get_imagecmds(d):
     ctypes = d.getVar('COMPRESSIONTYPES', True).split()
     cimages = {}
 
+    # Image type b depends on a having been generated first
+    def addtypedepends(a, b):
+        if a in alltypes:
+            alltypes.remove(a)
+            if b not in alltypes:
+                alltypes.append(b)
+            alltypes.append(a)
+
     # The elf image depends on the cpio.gz image already having
     # been created, so we add that explicit ordering here.
+    addtypedepends("elf", "cpio.gz")
 
-    if "elf" in alltypes:
-        alltypes.remove("elf")
-        if "cpio.gz" not in alltypes:
-                alltypes.append("cpio.gz")
-        alltypes.append("elf")
+    # jffs2 sumtool'd images need jffs2
+    addtypedepends("sum.jffs2", "jffs2")
 
     # Filter out all the compressed images from alltypes
     for type in alltypes:
@@ -141,8 +147,7 @@ XZ_INTEGRITY_CHECK ?= "crc32"
 XZ_THREADS ?= "-T 0"
 
 IMAGE_CMD_jffs2 = "mkfs.jffs2 --root=${IMAGE_ROOTFS} --faketime --output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2 ${EXTRA_IMAGECMD}"
-IMAGE_CMD_sum.jffs2 = "${IMAGE_CMD_jffs2} && sumtool -i ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2 \
-	-o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.sum.jffs2 ${EXTRA_IMAGECMD}"
+IMAGE_CMD_sum.jffs2 = "sumtool -i ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2 -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.sum.jffs2 ${EXTRA_IMAGECMD}"
 
 IMAGE_CMD_cramfs = "mkfs.cramfs ${IMAGE_ROOTFS} ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.cramfs ${EXTRA_IMAGECMD}"
 
