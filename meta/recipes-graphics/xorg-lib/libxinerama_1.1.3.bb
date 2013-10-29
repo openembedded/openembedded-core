@@ -12,7 +12,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6f4f634d1643a2e638bba3fcd19c2536 \
 
 DEPENDS += "libxext xineramaproto"
 PROVIDES = "xinerama"
-PR = "r0"
 PE = "1"
 
 XORG_PN = "libXinerama"

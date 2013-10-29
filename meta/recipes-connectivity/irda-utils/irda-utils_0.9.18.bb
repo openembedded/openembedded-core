@@ -10,7 +10,6 @@ LIC_FILES_CHKSUM = "file://irdadump/COPYING;md5=94d55d512a9ba36caa9b7df079bae19f
                     file://smcinit/COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://man/COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://irdadump/irdadump.c;beginline=1;endline=24;md5=d78b9dce3cd78c2220250c9c7a2be178"
-PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/irda/irda-utils-${PV}.tar.gz \
           file://init"

@@ -6,7 +6,6 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SECTION = "x11/gnome"
-PR = "r0"
 inherit gnomebase allarch
 
 GNOME_COMPRESS_TYPE = "xz"

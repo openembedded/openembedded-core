@@ -1,6 +1,5 @@
 require xorg-proto-common.inc
 
-PR = "r0"
 PE = "1"
 
 SUMMARY = "BigReqs: X Big Requests extension headers"

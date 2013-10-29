@@ -1,5 +1,4 @@
 SUMMARY = "DirectFB without X11"
-PR = "r0"
 LICENSE = "MIT"
 
 inherit packagegroup

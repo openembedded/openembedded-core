@@ -8,7 +8,6 @@ This can be used to pre-process Pod before using tools which do not recognise th
 HOMEPAGE = "http://search.cpan.org/dist/Pod-Plainer/"
 SECTION = "libs"
 LICENSE = "Artistic-1.0 | GPL-1.0+"
-PR = "r0"
 
 LIC_FILES_CHKSUM = "file://README;beginline=27;md5=80b4a99d477135bfcd1d0a44a041c63c"
 

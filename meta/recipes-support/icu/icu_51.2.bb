@@ -2,7 +2,6 @@ require icu.inc
 
 LIC_FILES_CHKSUM = "file://../license.html;md5=443a74288a72fad9069a74e7637192c1"
 
-PR = "r0"
 
 BASE_SRC_URI = "http://download.icu-project.org/files/icu4c/${PV}/icu4c-51_2-src.tgz"
 SRC_URI = "${BASE_SRC_URI} \

@@ -18,4 +18,3 @@ SRC_URI = "http://bitmath.org/code/mtdev/mtdev-1.1.2.tar.bz2 \
 SRC_URI[md5sum] = "d9c7700918fc392e29da7477ae20c5c2"
 SRC_URI[sha256sum] = "698dd11ca08b3a73ad33d8a5076f6d9e018d97afad3eba36f540b8ea7b775a30"
 
-PR = "r0"

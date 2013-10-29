@@ -2,7 +2,6 @@ require matchbox-theme-sato.inc
 
 SRCREV = "f72cf4ed7d71ad9e47b0f2d3dbc593bc2f3e76f8"
 PV = "0.2+git${SRCPV}"
-PR = "r0"
 
 DEFAULT_PREFERENCE = "-1"
 

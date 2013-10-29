@@ -12,7 +12,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=bb4f89972c3869f617f61c1a79ad1952 \
 
 DEPENDS += "libxext recordproto inputproto libxi"
 PROVIDES = "xtst"
-PR = "r0"
 PE = "1"
 
 XORG_PN = "libXtst"

@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1 \
 
 SRCREV = "4740ad8d53aba4368ce3e03b06cfdc69eb86dcdc"
 PV = "0.3.3+git${SRCPV}"
-PR = "r0"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN}"
 

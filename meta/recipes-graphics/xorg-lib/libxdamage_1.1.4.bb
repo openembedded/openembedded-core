@@ -20,7 +20,6 @@ DEPENDS += "virtual/libx11 damageproto libxfixes"
 PROVIDES = "xdamage"
 BBCLASSEXTEND = "native"
 
-PR = "r0"
 PE = "1"
 
 XORG_PN = "libXdamage"

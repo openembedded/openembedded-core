@@ -13,7 +13,6 @@ DEPENDS = "virtual/libx11 calibrateproto libxext"
 
 SRCREV = "209d83af61ed38a002c8096377deac292b3e396c"
 PV = "0.0+git${SRCPV}"
-PR = "r0"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/lib/libXCalibrate \
            file://fix-xcb.patch"

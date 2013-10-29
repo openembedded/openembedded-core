@@ -3,7 +3,6 @@ HOMEPAGE = "http://code.google.com/p/libarchive/"
 SECTION = "devel"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4255e2e6f0349a4ac8fbd68459296e46"
-PR = "r0"
 
 PACKAGECONFIG ?= "libxml2 zlib bz2"
 

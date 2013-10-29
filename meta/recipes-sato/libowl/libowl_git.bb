@@ -12,7 +12,6 @@ SECTION = "libs"
 DEPENDS = "gtk+"
 SRCREV = "6ebc8ac8f8575278dd40a535cadefa26374e44b1"
 PV = "0.1+git${SRCPV}"
-PR = "r0"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN}"
 

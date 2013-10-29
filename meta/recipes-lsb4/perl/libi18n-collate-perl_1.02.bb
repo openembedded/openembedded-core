@@ -6,7 +6,6 @@ on your system."
 HOMEPAGE = "http://search.cpan.org/~flora/I18N-Collate/"
 SECTION = "libs"
 LICENSE = "Artistic-1.0 | GPL-1.0+"
-PR = "r0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=ff6d629144a6ec1ea8c300f75760184f"
 

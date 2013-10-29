@@ -12,7 +12,6 @@ DEPENDS = "gtk+ startup-notification dbus"
 SECTION = "x11/wm"
 SRCREV = "71e3e6e04271e9d5a14f1c231ef100c7f320134d"
 PV = "2.0+git${SRCPV}"
-PR = "r0"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN}-2"
 

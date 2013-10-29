@@ -6,7 +6,6 @@ DEPENDS = "pango libxext libxft virtual/libx11 gtk+"
 
 SRCREV = "218b99d82b56011e3f1b909e6baf22ce25af6334"
 PV = "0.1+git${SRCPV}"
-PR = "r0"
 
 
 SRC_URI = "git://git.yoctoproject.org/${BPN} \

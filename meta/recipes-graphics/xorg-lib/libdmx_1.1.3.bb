@@ -13,7 +13,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a3c3499231a8035efd0e004cfbd3b72a \
 
 DEPENDS += "libxext dmxproto"
 
-PR = "r0"
 PE = "1"
 
 SRC_URI[md5sum] = "ba983eba5a9f05d152a0725b8e863151"

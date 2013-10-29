@@ -16,7 +16,6 @@ This library, Class::ISA, provides functions that return that list -- the list\
 HOMEPAGE = "http://search.cpan.org/dist/Class-ISA/"
 SECTION = "libs"
 LICENSE = "Artistic-1.0 | GPL-1.0+"
-PR = "r0"
 
 LIC_FILES_CHKSUM = "file://README;beginline=107;endline=111;md5=6a5c6842a63cfe4dab1f66e2350e4d25"
 

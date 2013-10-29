@@ -17,7 +17,6 @@ The routine returns the number of warnings issued."
 HOMEPAGE = "http://search.cpan.org/~flora/File-CheckTree/"
 SECTION = "libs"
 LICENSE = "Artistic-1.0 | GPL-1.0+"
-PR = "r0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c6fcacc5df80e037060300a7f4b93bf9"
 

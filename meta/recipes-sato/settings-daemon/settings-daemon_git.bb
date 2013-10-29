@@ -9,7 +9,6 @@ SECTION = "x11"
 SRCREV = "9a99528b02255450db81176abd9bbcc1dab9a4c1"
 PV = "0.0+git${SRCPV}"
 
-PR = "r0"
 
 SRC_URI = "git://git.yoctoproject.org/xsettings-daemon \
            file://addsoundkeys.patch;apply=yes \

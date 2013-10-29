@@ -27,7 +27,6 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.xz \
 SRC_URI[md5sum] = "a69b575d4a633bdd9118f3a4a1e97766"
 SRC_URI[sha256sum] = "f70a38c8d9751f442679bfe61852bba8545af4d4355d037630997c2f37f2895b"
 
-PR = "r0"
 
 inherit autotools gettext
 BBCLASSEXTEND = "native"

@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=39886b077fd072e876e5c4c16310b631 \
 
 BBCLASSEXTEND = "native"
 
-PR = "r0"
 
 SRC_URI = "ftp://metalab.unc.edu/pub/Linux/utils/file/stat-3.3.tar.gz \
            file://fix-error-return.patch"

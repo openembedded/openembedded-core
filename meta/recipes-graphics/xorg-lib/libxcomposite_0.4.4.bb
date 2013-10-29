@@ -19,7 +19,6 @@ PROVIDES = "xcomposite"
 BBCLASSEXTEND = "native"
 
 PE = "1"
-PR = "r0"
 
 XORG_PN = "libXcomposite"
 

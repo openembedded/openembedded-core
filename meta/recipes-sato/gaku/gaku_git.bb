@@ -17,7 +17,6 @@ RRECOMMENDS_${PN} = "gst-plugins-good-id3demux \
 
 SRCREV = "a0be2fe4b5f12b8b07f4e3bd624b3729657f0ac5"
 PV = "0.1+git${SRCPV}"
-PR = "r0"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN}"
 

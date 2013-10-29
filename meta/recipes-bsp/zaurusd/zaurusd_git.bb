@@ -7,7 +7,6 @@ RDEPENDS_${PN} = "xrandr"
 
 SRCREV = "85d941d87f0c41b196766a173feaafffa6de2dc2"
 PV = "0.1+git${SRCPV}"
-PR = "r0"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN}"
 

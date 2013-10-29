@@ -7,7 +7,6 @@ LIC_FILES_CHKSUM = "file://debian/copyright;md5=77ef83ab5f4af938a93edb61f7b74f2c
 
 SRCREV = "9d4cdedca25b396405f8587f9c4fbf8229e041c2"
 PV = "1.1.12+git${SRCPV}"
-PR = "r0"
 
 RDEPENDS_${PN} = "pm-utils"
 

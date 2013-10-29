@@ -4,7 +4,6 @@ DESCRIPTION = "The DirectFB-examples package contains a set of simple DirectFB \
 DEPENDS = "directfb"
 SECTION = "libs"
 LICENSE = "MIT"
-PR = "r0"
 
 SRC_URI = " \
            http://www.directfb.org/downloads/Extras/DirectFB-examples-${PV}.tar.gz \

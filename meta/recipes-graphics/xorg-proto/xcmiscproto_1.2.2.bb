@@ -9,7 +9,6 @@ server."
 LICENSE = "MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=09d83047c15994e05db29b423ed6662e"
 
-PR = "r0"
 PE = "1"
 
 BBCLASSEXTEND = "native nativesdk"

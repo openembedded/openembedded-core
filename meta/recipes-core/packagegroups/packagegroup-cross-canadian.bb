@@ -1,6 +1,5 @@
 SUMMARY = "Host SDK package for cross canadian toolchain"
 PN = "packagegroup-cross-canadian-${MACHINE}"
-PR = "r0"
 LICENSE = "MIT"
 
 # Save TRANSLATED_TARGET_ARCH before allarch tramples it

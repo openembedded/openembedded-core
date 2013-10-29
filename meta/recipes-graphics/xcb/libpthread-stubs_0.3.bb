@@ -6,7 +6,6 @@ BUGTRACKER = "http://bugs.freedesktop.org/buglist.cgi?product=XCB"
 SECTION = "x11/libs"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6edc1fea03d959f0c2d743fe5ca746ad"
-PR = "r0"
 
 PARALLEL_MAKE = ""
 #DEPENDS = "xcb-proto xproto libxau libxslt-native"

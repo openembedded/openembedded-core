@@ -10,7 +10,6 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 SRCREV = "a47f842264fc19837f8a00eb1d2d254a4c527334"
 PV = "1.0+git${SRCPV}"
-PR = "r0"
 
 SRC_URI = "git://git.sv.gnu.org/config.git \
 	   file://config-guess-uclibc.patch \
