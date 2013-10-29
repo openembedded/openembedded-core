@@ -4,8 +4,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BPN}-${PV}.tar.xz \
            file://configure-cross.patch \
           "
 
-SRC_URI[md5sum] = "45fb5427fc723a0001c72b92c931ba02"
-SRC_URI[sha256sum] = "c4023d8d722a1ed673474ca0e5a2d61ebd747cc7001a91321757422d9074c97e"
+SRC_URI[md5sum] = "d7ffb27bc9f0d80577b1f3fb9d1a7689"
+SRC_URI[sha256sum] = "0ab31b52b5fd5ff0d3cf03f2068f05eeb4f0b37d107070fbbaacac94df5e88b7"
 
 # CFLAGS are computed in Makefile and reference CCOPTS
 #
