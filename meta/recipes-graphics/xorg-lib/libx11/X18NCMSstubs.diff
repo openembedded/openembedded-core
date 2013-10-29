@@ -483,10 +483,9 @@ Index: libX11-1.3/src/Makefile.am
  x11datadir = @X11_DATADIR@
  x11data_DATA = XKeysymDB XErrorDB
  
-@@ -342,7 +344,8 @@ EXTRA_DIST = \
+@@ -342,6 +344,7 @@ EXTRA_DIST = \
  	$(x11data_DATA) \
  	os2Stubs.c \
- 	udcInf.c \
 -	UIThrStubs.c 
 +	UIThrStubs.c \
 +	X18NCMSstubs.c
