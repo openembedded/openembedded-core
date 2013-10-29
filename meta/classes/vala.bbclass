@@ -1,9 +1,12 @@
 # Vala has problems with multiple concurrent invocations
 PARALLEL_MAKE = ""
 
-# Vala needs vala-native
-DEPENDS += "vala-native"
-DEPENDS_virtclass-native += "vala-native"
+# Everyone needs vala-native and targets need vala, too,
+# because that is where target builds look for .vapi files.
+#
+VALADEPENDS = ""
+VALADEPENDS_class-target = "vala"
+DEPENDS_append = " vala-native ${VALADEPENDS}"
 
 # Our patched version of Vala looks in STAGING_DATADIR for .vapi files
 export STAGING_DATADIR
