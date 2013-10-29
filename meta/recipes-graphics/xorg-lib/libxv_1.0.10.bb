@@ -14,5 +14,5 @@ DEPENDS += "libxext videoproto"
 
 XORG_PN = "libXv"
 
-SRC_URI[md5sum] = "3f642e1d868a2289769b983cf346e7bb"
-SRC_URI[sha256sum] = "a874dbf864d0271bbe795af67ef5b3f20096c92fc11eacbf0d2af00e32bc5b4b"
+SRC_URI[md5sum] = "e0af49d7d758b990e6fef629722d4aca"
+SRC_URI[sha256sum] = "55fe92f8686ce8612e2c1bfaf58c057715534419da700bda8d517b1d97914525"
