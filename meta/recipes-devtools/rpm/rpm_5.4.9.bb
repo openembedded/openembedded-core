@@ -224,7 +224,6 @@ FILES_${PN} =  "${bindir}/rpm \
 		${libdir}/rpm/bin/rpmrepo \
 		${libdir}/rpm/bin/rpmspecdump \
 		${libdir}/rpm/bin/wget \
-		${libdir}/rpm \
 		${localstatedir}/cache \
 		${localstatedir}/cache/rpm \
 		${localstatedir}/cache/wdj \
