@@ -5,8 +5,9 @@ DEPENDS = "glib-2.0 dbus python-native-runtime dbus-native dbus-glib libxslt-nat
 LICENSE = "LGPLv2.1+"
 
 SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-glib/${BPN}-${PV}.tar.gz"
-SRC_URI[md5sum] = "78be56307d2da7c580cf6df33a225ba0"
-SRC_URI[sha256sum] = "c9a307c85d412c58bc68265c4c4128a8e3ffb283bc784143f1f086faaafcb16c"
+
+SRC_URI[md5sum] = "e4fff5885d4840c965b71c1c113d731e"
+SRC_URI[sha256sum] = "d9e08f3af867846c3f81e8ab85bbb71f30ea914f004065419ea65a14bb30d809"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e413d83db6ee8f2c8e6055719096a48e"
 
