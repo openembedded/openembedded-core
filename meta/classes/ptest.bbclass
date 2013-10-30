@@ -10,7 +10,7 @@ PTEST_PATH ?= "${libdir}/${PN}/ptest"
 FILES_${PN}-ptest = "${PTEST_PATH}"
 SECTION_${PN}-ptest = "devel"
 ALLOW_EMPTY_${PN}-ptest = "1"
-PTEST_ENABLED = "${@base_contains("DISTRO_FEATURES", "ptest", "1", "0", d)}"
+PTEST_ENABLED = "${@base_contains('DISTRO_FEATURES', 'ptest', '1', '0', d)}"
 RDEPENDS_${PN}-ptest_virtclass-native = ""
 RDEPENDS_${PN}-ptest_virtclass-nativesdk = ""
 
