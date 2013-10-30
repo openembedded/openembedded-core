@@ -16,6 +16,7 @@
 # ${GRUB_TIMEOUT} - timeout before executing the deault label (optional)
 
 do_bootimg[depends] += "grub-efi-${TRANSLATED_TARGET_ARCH}-native:do_deploy"
+do_bootdirectdisk[depends] += "grub-efi-${TRANSLATED_TARGET_ARCH}-native:do_deploy"
 
 GRUB_SERIAL ?= "console=ttyS0,115200"
 GRUBCFG = "${S}/grub.cfg"
