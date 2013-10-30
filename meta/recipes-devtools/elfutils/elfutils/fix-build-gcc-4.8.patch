@@ -25,11 +25,11 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 Upstream-Status: Inappropriate [Caused by an earlier patch]
 
-Index: elfutils-0.155/src/addr2line.c
+Index: elfutils-0.148/src/addr2line.c
 ===================================================================
---- elfutils-0.155.orig/src/addr2line.c
-+++ elfutils-0.155/src/addr2line.c
-@@ -447,10 +447,10 @@ handle_address (const char *string, Dwfl
+--- elfutils-0.148.orig/src/addr2line.c	2013-09-23 17:46:45.513586538 -0700
++++ elfutils-0.148/src/addr2line.c	2013-09-23 17:46:46.329586558 -0700
+@@ -447,10 +447,10 @@
        bool parsed = false;
        int i, j;
        char *name = NULL;
@@ -42,3 +42,16 @@ Index: elfutils-0.155/src/addr2line.c
  	{
  	default:
  	  break;
+Index: elfutils-0.148/tests/line2addr.c
+===================================================================
+--- elfutils-0.148.orig/tests/line2addr.c	2013-09-23 17:46:45.521586538 -0700
++++ elfutils-0.148/tests/line2addr.c	2013-09-23 17:46:46.329586558 -0700
+@@ -132,7 +132,7 @@
+     {
+       struct args a = { .arg = argv[cnt] };
+ 
+-      switch (sscanf (a.arg, "%a[^:]:%d", &a.file, &a.line))
++      switch (sscanf (a.arg, "%m[^:]:%d", &a.file, &a.line))
+ 	{
+ 	default:
+ 	case 0:
