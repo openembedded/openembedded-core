@@ -1,7 +1,3 @@
-# Ptest packages are built indirectly by a distro_feature,
-# no need for them to be a direct target of 'world'
-EXCLUDE_FROM_WORLD = "1"
-
 SUMMARY_${PN}-ptest ?= "${SUMMARY} - Package test files"
 DESCRIPTION_${PN}-ptest ?= "${DESCRIPTION}  \
 This package contains a test directory ${PTEST_PATH} for package test purposes."
