@@ -12,13 +12,11 @@ INITSCRIPT_PARAMS ?= "defaults"
 
 INIT_D_DIR = "${sysconfdir}/init.d"
 
-updatercd_postinst() {
-# test if there is a previous init script there, ie, we are updating the package
-# if so, we stop the service and remove it before we install from the new package
+updatercd_preinst() {
+if [ -z "$D" -a -f "${INIT_D_DIR}/${INITSCRIPT_NAME}" ]; then
+	${INIT_D_DIR}/${INITSCRIPT_NAME} stop
+fi
 if type update-rc.d >/dev/null 2>/dev/null; then
-	if [ -z "$D" -a -f "${INIT_D_DIR}/${INITSCRIPT_NAME}" ]; then
-		${INIT_D_DIR}/${INITSCRIPT_NAME} stop
-	fi
 	if [ -n "$D" ]; then
 		OPT="-f -r $D"
 	else
@@ -26,30 +24,32 @@ if type update-rc.d >/dev/null 2>/dev/null; then
 	fi
 	update-rc.d $OPT ${INITSCRIPT_NAME} remove
 fi
+}
 
-if [ -n "$D" ]; then
-	OPT="-r $D"
-else
-	OPT="-s"
-fi
+updatercd_postinst() {
 if type update-rc.d >/dev/null 2>/dev/null; then
+	if [ -n "$D" ]; then
+		OPT="-r $D"
+	else
+		OPT="-s"
+	fi
 	update-rc.d $OPT ${INITSCRIPT_NAME} ${INITSCRIPT_PARAMS}
 fi
 }
 
 updatercd_prerm() {
-if test "x$D" = "x"; then
+if [ -z "$D" ]; then
 	${INIT_D_DIR}/${INITSCRIPT_NAME} stop
 fi
 }
 
 updatercd_postrm() {
-if test "$D" != ""; then
-	OPT="-f -r $D"
-else
-	OPT=""
-fi
 if type update-rc.d >/dev/null 2>/dev/null; then
+	if [ -n "$D" ]; then
+		OPT="-r $D"
+	else
+		OPT=""
+	fi
 	update-rc.d $OPT ${INITSCRIPT_NAME} remove
 fi
 }
@@ -68,21 +68,22 @@ python __anonymous() {
 
 PACKAGESPLITFUNCS_prepend = "populate_packages_updatercd "
 
-populate_packages_updatercd[vardeps] += "updatercd_prerm updatercd_postrm updatercd_postinst"
+populate_packages_updatercd[vardeps] += "updatercd_prerm updatercd_postrm updatercd_preinst updatercd_postinst"
 
 python populate_packages_updatercd () {
     def update_rcd_package(pkg):
-        bb.debug(1, 'adding update-rc.d calls to postinst/postrm for %s' % pkg)
-        """
-        update_rc.d postinst is appended here because pkg_postinst may require to
-        execute on the target. Not doing so may cause update_rc.d postinst invoked
-        twice to cause unwanted warnings.
-        """ 
+        bb.debug(1, 'adding update-rc.d calls to preinst/postinst/prerm/postrm for %s' % pkg)
 
         localdata = bb.data.createCopy(d)
         overrides = localdata.getVar("OVERRIDES", True)
         localdata.setVar("OVERRIDES", "%s:%s" % (pkg, overrides))
         bb.data.update_data(localdata)
+
+        preinst = d.getVar('pkg_preinst_%s' % pkg, True)
+        if not preinst:
+            preinst = '#!/bin/sh\n'
+        preinst += localdata.getVar('updatercd_preinst', True)
+        d.setVar('pkg_preinst_%s' % pkg, preinst)
 
         postinst = d.getVar('pkg_postinst_%s' % pkg, True)
         if not postinst:
