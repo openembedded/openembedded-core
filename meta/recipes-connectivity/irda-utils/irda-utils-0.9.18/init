@@ -8,6 +8,10 @@
 # Short-Description: Infrared port support
 ### END INIT INFO
 
+NAME="irattach"
+test -x "$IRDA_DAEMON" || IRDA_DAEMON=/usr/sbin/irattach
+test -z "$IRATTACH_PID" && IRATTACH_PID=/var/run/irattach.pid
+
 # Source function library.
 . /etc/init.d/functions
 
@@ -49,30 +53,26 @@ fi
 
 case "$1" in
   start)
-        echo -n "Starting IrDA: "
-		irattach ${DEVICE} ${ARGS} > /dev/null 2>&1 &
-        echo "$NAME."
-        ;;
+	echo -n "Starting IrDA: $NAME"
+	start-stop-daemon --start --quiet --exec "$IRDA_DAEMON" ${DEVICE} ${ARGS} --pidfile "$IRATTACH_PID"
+	sleep 1
+	[ -f /var/run/irattach.pid ] && echo " done" || echo " fail"
+	;;
   stop)
-        echo -n "Stopping IrDA: "
-		killall irattach > /dev/null 2>&1
-        echo "$NAME."
-        ;;
+	echo "Stopping IrDA: $NAME"
+	start-stop-daemon --stop --quiet --exec "$IRDA_DAEMON" --pidfile "$IRATTACH_PID"
+	;;
   restart|force-reload)
-        echo -n "Restarting IrDA: "
-		irattach ${DEVICE} ${ARGS} > /dev/null 2>&1 &
-        sleep 1
-		killall irattach > /dev/null 2>&1
-        echo "$NAME."
-        ;;
+	$0 stop
+	$0 start
+	;;
   status)
 	status irattach
 	exit $?
 	;;
   *)
-        N=/etc/init.d/$NAME
-        echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
-        exit 1
-        ;;
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
+	exit 1
+	;;
 esac
-
