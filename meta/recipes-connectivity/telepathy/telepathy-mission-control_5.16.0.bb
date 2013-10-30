@@ -9,8 +9,8 @@ DEPENDS = "libtelepathy dbus-glib gconf libxslt-native"
 SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-mission-control/telepathy-mission-control-${PV}.tar.gz \
 	file://tmc-Makefile-fix-race.patch \
 	"
-SRC_URI[md5sum] = "0efd7d9043f6e189e8ed8111d043b52c"
-SRC_URI[sha256sum] = "88800d1b5f385e94b34721319ff4fe65c493632954d7229b36e57af5b4a7e1b5"
+SRC_URI[md5sum] = "736ae9d71028d8e6d95017433c07fa06"
+SRC_URI[sha256sum] = "edc3c7265c291343d5d7d47c20add4d426e894068c66c79696795502a4e1c1d0"
 
 inherit autotools pkgconfig pythonnative
 
