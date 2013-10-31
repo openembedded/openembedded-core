@@ -21,15 +21,9 @@ SRC_URI[md5sum] = "ceecb81533936d251ed015f40e5f7287"
 SRC_URI[sha256sum] = "ff3c7c3b6cae5e8cc5062a144de5eff0022e8e970e1774529cc2d5dde46ce50d"
 PARALLEL_MAKE = ""
 
-
 do_configure (){
     oe_runconf
 }
-
-do_install_prepend() {
-	install -m 0755 -d ${D}
-}
-
 
 do_install_append() {
 	mkdir -p ${D}${sysconfdir}/groff
@@ -38,8 +32,8 @@ do_install_append() {
 }
 
 pkg_postinst_${PN}() {
-	ln -s ${bindir}/tbl ${bindir}/gtbl
-	echo "export GROFF_FONT_PATH=/usr/share/groff/${PV}/font" >> ${sysconfdir}/profile
-	echo "export GROFF_TMAC_PATH=/usr/share/groff/${PV}/tmac" >> ${sysconfdir}/profile
+	ln -s tbl $D${bindir}/gtbl
+	echo "export GROFF_FONT_PATH=/usr/share/groff/${PV}/font" >> $D${sysconfdir}/profile
+	echo "export GROFF_TMAC_PATH=/usr/share/groff/${PV}/tmac" >> $D${sysconfdir}/profile
 }
 
