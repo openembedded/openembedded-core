@@ -45,12 +45,8 @@ FILES_jpeg-tools = 	"${bindir}/*"
 BBCLASSEXTEND = "native"
 
 pkg_postinst_${PN}_linuxstdbase () {
-    if [ "$D" = "" ]; then
-        if [ ! -e ${libdir}/libjpeg.so.62 ]; then
-            JPEG=`find ${libdir} -type f -name libjpeg.so.\*.\*.\*`
-            ln -sf `basename $JPEG` ${libdir}/libjpeg.so.62
-        fi
-    else
-        exit 1
+    if [ ! -e $D${libdir}/libjpeg.so.62 ]; then
+        JPEG=`find $D${libdir} -type f -name libjpeg.so.\*.\*.\*`
+        ln -sf `basename $JPEG` $D${libdir}/libjpeg.so.62
     fi
 }
