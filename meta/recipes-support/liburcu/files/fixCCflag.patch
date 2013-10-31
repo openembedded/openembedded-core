@@ -1,0 +1,20 @@
+Upstream-Status: Pending
+
+Use cross compiler for doc exemples too
+
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+
+Index: userspace-rcu-0.8.0/doc/examples/Makefile.examples.template
+===================================================================
+--- userspace-rcu-0.8.0.orig/doc/examples/Makefile.examples.template	2013-08-30 21:25:20.000000000 +0300
++++ userspace-rcu-0.8.0/doc/examples/Makefile.examples.template	2013-10-23 13:34:30.405550556 +0300
+@@ -11,7 +11,9 @@
+ #
+ # This makefile is purposefully kept simple to support GNU and BSD make.
+ 
++ifndef CC
+ CC = gcc
++endif
+ CFLAGS = -g -O2 -Wall
+ 
+ all: $(BINARY)

@@ -1,0 +1,19 @@
+Upstream-Status: Pending
+
+Fix out of tree build for doc examples
+
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+
+Index: userspace-rcu-0.8.0/doc/examples/Makefile.am
+===================================================================
+--- userspace-rcu-0.8.0.orig/doc/examples/Makefile.am	2013-08-30 21:25:20.000000000 +0300
++++ userspace-rcu-0.8.0/doc/examples/Makefile.am	2013-10-21 17:52:34.774597179 +0300
+@@ -128,7 +128,7 @@
+ 			cp -fR $(srcdir)/$$subdir $(builddir); \
+ 		done; \
+ 	fi
+-	$(MAKE) -f dist-files/Makefile AM_CPPFLAGS="$(CPPFLAGS) -I../../../urcu/ -I../../../" AM_CFLAGS='$(CFLAGS)' AM_LDFLAGS='$(LDFLAGS) -L../../../.libs/ -Wl,-rpath="$(PWD)/../../.libs/"' $(AM_MAKEFLAGS) all
++	$(MAKE) -f dist-files/Makefile AM_CPPFLAGS="$(CPPFLAGS) -I$(top_srcdir) -I../../../urcu/ -I../../../" AM_CFLAGS='$(CFLAGS)' AM_LDFLAGS='$(LDFLAGS) -L../../../.libs/ -Wl,-rpath="$(PWD)/../../.libs/"' $(AM_MAKEFLAGS) all
+ 
+ clean-local:
+ 	$(MAKE) -f dist-files/Makefile $(AM_MAKEFLAGS) clean
