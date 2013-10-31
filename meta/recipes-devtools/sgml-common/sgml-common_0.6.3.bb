@@ -32,6 +32,7 @@ do_compile_append() {
 FILES_${PN} += "${datadir}/sgml"
 
 pkg_postinst_${PN}() {
+    if [ "x$D" = "x" ]; then
 	install-catalog \
 		--add ${sysconfdir}/sgml/sgml-ent.cat \
 		${datadir}/sgml/sgml-iso-entities-8879.1986/catalog
@@ -39,6 +40,21 @@ pkg_postinst_${PN}() {
 	install-catalog \
 		--add ${sysconfdir}/sgml/sgml-docbook.cat \
 		${sysconfdir}/sgml/sgml-ent.cat
+    else
+	if ! grep -q ${datadir}/sgml/sgml-iso-entities-8879.1986/catalog $D${sysconfdir}/sgml/sgml-ent.cat; then
+	    echo "CATALOG ${datadir}/sgml/sgml-iso-entities-8879.1986/catalog" >> $D${sysconfdir}/sgml/sgml-ent.cat
+	fi
+	if ! grep -q ${sysconfdir}/sgml/sgml-ent.cat $D${sysconfdir}/sgml/catalog; then
+	    echo "CATALOG ${sysconfdir}/sgml/sgml-ent.cat" >> $D${sysconfdir}/sgml/catalog
+	fi
+
+	if ! grep -q ${sysconfdir}/sgml/sgml-ent.cat $D${sysconfdir}/sgml/sgml-docbook.cat; then
+	    echo "CATALOG ${sysconfdir}/sgml/sgml-ent.cat" >> $D${sysconfdir}/sgml/sgml-docbook.cat
+	fi
+	if ! grep -q ${sysconfdir}/sgml/sgml-docbook.cat $D${sysconfdir}/sgml/catalog; then
+	    echo "CATALOG ${sysconfdir}/sgml/sgml-docbook.cat" >> $D${sysconfdir}/sgml/catalog
+	fi
+    fi
 }
 
 pkg_postrm_${PN}() {
