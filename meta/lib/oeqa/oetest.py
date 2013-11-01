@@ -17,9 +17,9 @@ from oeqa.utils.sshcontrol import SSHControl
 def runTests(tc):
 
     # set the context object passed from the test class
-    setattr(oeRuntimeTest, "tc", tc)
+    setattr(oeTest, "tc", tc)
     # set ps command to use
-    setattr(oeRuntimeTest, "pscmd", "ps -ef" if oeRuntimeTest.hasPackage("procps") else "ps")
+    setattr(oeRuntimeTest, "pscmd", "ps -ef" if oeTest.hasPackage("procps") else "ps")
     # prepare test suite, loader and runner
     suite = unittest.TestSuite()
     testloader = unittest.TestLoader()
@@ -36,33 +36,28 @@ def runTests(tc):
 
 
 
-class oeRuntimeTest(unittest.TestCase):
+class oeTest(unittest.TestCase):
 
     longMessage = True
     testFailures = []
     testSkipped = []
     testErrors = []
 
-    def __init__(self, methodName='runTest'):
-        self.target = oeRuntimeTest.tc.target
-        super(oeRuntimeTest, self).__init__(methodName)
-
-
     def run(self, result=None):
-        super(oeRuntimeTest, self).run(result)
+        super(oeTest, self).run(result)
 
         # we add to our own lists the results, we use those for decorators
-        if len(result.failures) > len(oeRuntimeTest.testFailures):
-            oeRuntimeTest.testFailures.append(str(result.failures[-1][0]).split()[0])
-        if len(result.skipped) > len(oeRuntimeTest.testSkipped):
-            oeRuntimeTest.testSkipped.append(str(result.skipped[-1][0]).split()[0])
-        if len(result.errors) > len(oeRuntimeTest.testErrors):
-            oeRuntimeTest.testErrors.append(str(result.errors[-1][0]).split()[0])
+        if len(result.failures) > len(oeTest.testFailures):
+            oeTest.testFailures.append(str(result.failures[-1][0]).split()[0])
+        if len(result.skipped) > len(oeTest.testSkipped):
+            oeTest.testSkipped.append(str(result.skipped[-1][0]).split()[0])
+        if len(result.errors) > len(oeTest.testErrors):
+            oeTest.testErrors.append(str(result.errors[-1][0]).split()[0])
 
     @classmethod
     def hasPackage(self, pkg):
 
-        pkgfile = os.path.join(oeRuntimeTest.tc.d.getVar("WORKDIR", True), "installed_pkgs.txt")
+        pkgfile = os.path.join(oeTest.tc.d.getVar("WORKDIR", True), "installed_pkgs.txt")
 
         with open(pkgfile) as f:
             data = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
@@ -77,11 +72,18 @@ class oeRuntimeTest(unittest.TestCase):
     @classmethod
     def hasFeature(self,feature):
 
-        if feature in oeRuntimeTest.tc.d.getVar("IMAGE_FEATURES", True).split() or \
-                feature in oeRuntimeTest.tc.d.getVar("DISTRO_FEATURES", True).split():
+        if feature in oeTest.tc.d.getVar("IMAGE_FEATURES", True).split() or \
+                feature in oeTest.tc.d.getVar("DISTRO_FEATURES", True).split():
             return True
         else:
             return False
+
+
+class oeRuntimeTest(oeTest):
+
+    def __init__(self, methodName='runTest'):
+        self.target = oeRuntimeTest.tc.target
+        super(oeRuntimeTest, self).__init__(methodName)
 
     @classmethod
     def restartTarget(self,params=None):
@@ -102,7 +104,7 @@ def getmodule(pos=2):
 
 def skipModule(reason, pos=2):
     modname = getmodule(pos)
-    if modname not in oeRuntimeTest.tc.testsrequired:
+    if modname not in oeTest.tc.testsrequired:
         raise unittest.SkipTest("%s: %s" % (modname, reason))
     else:
         raise Exception("\nTest %s wants to be skipped.\nReason is: %s" \
