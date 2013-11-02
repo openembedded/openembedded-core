@@ -47,9 +47,9 @@ case "$ACTION" in
 		then
 			umask 027
 			start-stop-daemon --start --quiet \
-				--exec $DAEMON -- -r
+				--exec $DAEMON -- -r -c
 		else
-			$DAEMON -r
+			$DAEMON -r -c
 		fi
 		echo "$NAME."
 		;;
