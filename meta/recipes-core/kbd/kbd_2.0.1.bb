@@ -12,8 +12,8 @@ RCONFLICTS_${PN} = "console-tools"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.bz2"
 
-SRC_URI[md5sum] = "1d9bbc36506b8c25740d028b0f6d2839"
-SRC_URI[sha256sum] = "f5eb125d5154bc0fe6f38175de9fcd394879485dadbba75c350d4ab050684a42"
+SRC_URI[md5sum] = "f80b93a6abddb6cc2a3652daaf7562ba"
+SRC_URI[sha256sum] = "223d60bb6882323cca161aeb5965590768b2f590fd7cddbf27511ad0ba7a429e"
 
 PACKAGECONFIG ?= "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
 PACKAGECONFIG[pam] = "--enable-vlock, --disable-vlock, libpam,"
