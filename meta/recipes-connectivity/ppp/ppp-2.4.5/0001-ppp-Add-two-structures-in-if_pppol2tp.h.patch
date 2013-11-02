@@ -1,0 +1,60 @@
+From 17ffc69db08c809c069e73aa2f2ed2ce02df5fa8 Mon Sep 17 00:00:00 2001
+From: Lu Chong <Chong.Lu@windriver.com>
+Date: Sat, 2 Nov 2013 14:34:24 +0800
+Subject: [PATCH] ppp: Add two structures in if_pppol2tp.h
+
+Some further structure definitions are needed in include/linux/if_pppol2tp.h for IPv6 support.
+
+Upstream-Status: Pending
+
+Signed-off-by: Lu Chong <Chong.Lu@windriver.com>
+---
+ include/linux/if_pppol2tp.h |   25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/include/linux/if_pppol2tp.h b/include/linux/if_pppol2tp.h
+index 7ee86b2..9d626d1 100644
+--- a/include/linux/if_pppol2tp.h
++++ b/include/linux/if_pppol2tp.h
+@@ -32,6 +32,20 @@ struct pppol2tp_addr {
+ 	__u16 d_tunnel, d_session;	/* For sending outgoing packets */
+ };
+ 
++/* Structure used to connect() the socket to a particular tunnel UDP
++ * socket over IPv6.
++ */
++struct pppol2tpin6_addr {
++        __kernel_pid_t  pid;            /* pid that owns the fd.
++                                         * 0 => current */
++        int     fd;                     /* FD of UDP socket to use */
++
++        __u16 s_tunnel, s_session;      /* For matching incoming packets */
++        __u16 d_tunnel, d_session;      /* For sending outgoing packets */
++
++        struct sockaddr_in6 addr;       /* IP address and port to send to */
++};
++
+ /* The L2TPv3 protocol changes tunnel and session ids from 16 to 32
+  * bits. So we need a different sockaddr structure.
+  */
+@@ -46,6 +60,17 @@ struct pppol2tpv3_addr {
+ 	__u32 d_tunnel, d_session;	/* For sending outgoing packets */
+ };
+ 
++struct pppol2tpv3in6_addr {
++        __kernel_pid_t  pid;            /* pid that owns the fd.
++                                         * 0 => current */
++        int     fd;                     /* FD of UDP or IP socket to use */
++
++        __u32 s_tunnel, s_session;      /* For matching incoming packets */
++        __u32 d_tunnel, d_session;      /* For sending outgoing packets */
++
++        struct sockaddr_in6 addr;       /* IP address and port to send to */
++};
++
+ /* Socket options:
+  * DEBUG	- bitmask of debug message categories
+  * SENDSEQ	- 0 => don't send packets with sequence numbers
+-- 
+1.7.9.5
+
