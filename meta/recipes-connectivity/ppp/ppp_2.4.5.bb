@@ -29,7 +29,9 @@ SRC_URI = "http://ppp.samba.org/ftp/ppp/ppp-${PV}.tar.gz \
            file://copts.patch \
            file://pap \
            file://ppp_on_boot \
-           file://provider "
+           file://provider \
+           file://0001-ppp-Add-two-structures-in-if_pppol2tp.h.patch \
+"
 
 SRC_URI[md5sum] = "4621bc56167b6953ec4071043fe0ec57"
 SRC_URI[sha256sum] = "43317afec9299f9920b96f840414c977f0385410202d48e56d2fdb8230003505"
