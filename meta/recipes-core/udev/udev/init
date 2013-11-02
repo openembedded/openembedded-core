@@ -54,7 +54,9 @@ case "$1" in
     }
     [ -e /dev/pts ] || mkdir -m 0755 /dev/pts
     [ -e /dev/shm ] || mkdir -m 1777 /dev/shm
-    mount -a -t tmpfs 2>/dev/null
+    # the automount rule for udev needs /tmp directory available, as /tmp is a symlink
+    # to /var/tmp which in turn is a symlink to /var/volatile/tmp, we need to make sure
+    # /var/volatile/tmp directory to be available.
     mkdir -p /var/volatile/tmp
 
     # Cache handling.

@@ -115,7 +115,7 @@ do_install () {
 	update-rc.d -r ${D} save-rtc.sh start 25 0 6 .
 	update-rc.d -r ${D} banner.sh start 02 S .
 	update-rc.d -r ${D} checkroot.sh start 06 S .
-	update-rc.d -r ${D} mountall.sh start 35 S .
+	update-rc.d -r ${D} mountall.sh start 03 S .
 	update-rc.d -r ${D} hostname.sh start 39 S .
 	update-rc.d -r ${D} mountnfs.sh start 45 S .
 	update-rc.d -r ${D} bootmisc.sh start 55 S .
