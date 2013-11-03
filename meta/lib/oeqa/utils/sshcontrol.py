@@ -9,6 +9,7 @@
 import subprocess
 import time
 import os
+import select
 
 class SSHControl(object):
 
@@ -50,32 +51,44 @@ class SSHControl(object):
         if self.host:
             sshconn = self._internal_run(cmd)
         else:
-            raise Exception("Remote IP hasn't been set: '%s'" % actualcmd)
+            raise Exception("Remote IP/host hasn't been set, I can't run ssh without one.")
 
+        # run the command forever
         if timeout == 0:
-            self._out = sshconn.communicate()[0]
-            self._ret = sshconn.poll()
+            output = sshconn.communicate()[0]
         else:
+            # use the default timeout
             if timeout is None:
                 tdelta = self.timeout
+            # use the specified timeout
             else:
                 tdelta = timeout
             endtime = self._starttime + tdelta
-            while sshconn.poll() is None and time.time() < endtime:
-                time.sleep(1)
+            output = ''
+            eof = False
+            while time.time() < endtime and not eof:
+                if select.select([sshconn.stdout], [], [], 5)[0] != []:
+                    data = os.read(sshconn.stdout.fileno(), 1024)
+                    if not data:
+                        sshconn.stdout.close()
+                        eof = True
+                    else:
+                        output += data
+                        endtime = time.time() + tdelta
+
             # process hasn't returned yet
             if sshconn.poll() is None:
-                self._ret = 255
                 sshconn.terminate()
-                sshconn.kill()
-                self._out = sshconn.stdout.read()
-                sshconn.stdout.close()
-                self._out += "\n[!!! SSH command timed out after %d seconds and it was killed]" % tdelta
-            else:
-                self._out = sshconn.stdout.read()
-                self._ret = sshconn.poll()
+                time.sleep(3)
+                try:
+                    sshconn.kill()
+                except OSError:
+                    pass
+                output += "\n[!!! SSH command killed - no output for %d seconds. Total running time: %d seconds." % (tdelta, time.time() - self._starttime)
+
+        self._ret = sshconn.poll()
         # strip the last LF so we can test the output
-        self._out = self._out.rstrip()
+        self._out = output.rstrip()
         self.log("%s" % self._out)
         self.log("[SSH command returned after %d seconds]: %s" % (time.time() - self._starttime, self._ret))
         return (self._ret, self._out)
