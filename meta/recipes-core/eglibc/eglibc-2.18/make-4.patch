@@ -1,0 +1,31 @@
+Accept make versions 4.0 and greater
+
+Backport of glibc 28d708c44bc47b56f6551ff285f78edcf61c208a.
+
+Upstream-Status: Backport
+Signed-off-by: Jonathan Liu <net147@gmail.com>
+
+diff -Nur libc.orig/configure libc/configure
+--- libc.orig/configure     2013-08-21 02:23:48.000000000 +1000
++++ libc/configure  2013-11-04 17:04:17.778333748 +1100
+@@ -4772,7 +4772,7 @@
+   ac_prog_version=`$MAKE --version 2>&1 | sed -n 's/^.*GNU Make[^0-9]*\([0-9][0-9.]*\).*$/\1/p'`
+   case $ac_prog_version in
+     '') ac_prog_version="v. ?.??, bad"; ac_verc_fail=yes;;
+-    3.79* | 3.[89]*)
++    3.79* | 3.[89]* | [4-9].* | [1-9][0-9]*)
+        ac_prog_version="$ac_prog_version, ok"; ac_verc_fail=no;;
+     *) ac_prog_version="$ac_prog_version, bad"; ac_verc_fail=yes;;
+ 
+diff -Nur libc.orig/configure.in libc/configure.in
+--- libc.orig/configure.in	2013-08-21 02:23:48.000000000 +1000
++++ libc/configure.in	2013-11-04 16:54:17.955014870 +1100
+@@ -989,7 +989,7 @@
+   critic_missing="$critic_missing gcc")
+ AC_CHECK_PROG_VER(MAKE, gnumake gmake make, --version,
+   [GNU Make[^0-9]*\([0-9][0-9.]*\)],
+-  [3.79* | 3.[89]*], critic_missing="$critic_missing make")
++  [3.79* | 3.[89]* | [4-9].* | [1-9][0-9]*], critic_missing="$critic_missing make")
+ 
+ AC_CHECK_PROG_VER(MSGFMT, gnumsgfmt gmsgfmt msgfmt, --version,
+   [GNU gettext.* \([0-9]*\.[0-9.]*\)],
