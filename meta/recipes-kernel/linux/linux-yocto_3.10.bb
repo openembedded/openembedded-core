@@ -3,18 +3,18 @@ require recipes-kernel/linux/linux-yocto.inc
 KBRANCH_DEFAULT = "standard/base"
 KBRANCH = "${KBRANCH_DEFAULT}"
 
-SRCREV_machine_qemuarm ?= "07224529d7ceb1e16eb815b8dd4c03ad9d58653d"
-SRCREV_machine_qemumips  ?= "7747c5a158a99b8a668fd526f1f7f1f7f7e03d3e"
-SRCREV_machine_qemuppc ?= "d63375e4b0a2de3ba110b83f78d6be6e01ec5c9e"
-SRCREV_machine_qemux86 ?= "3f6c8243ed67011f70b27952d42657cf3a2c3115"
-SRCREV_machine_qemux86-64 ?= "3f6c8243ed67011f70b27952d42657cf3a2c3115"
-SRCREV_machine_qemumips64 ?= "9a4f9f4d44fdcd25fe365216b366bc346efb23d0"
-SRCREV_machine ?= "3f6c8243ed67011f70b27952d42657cf3a2c3115"
-SRCREV_meta ?= "452f0679ea93a6cb4433bebd7177629228a5cf68"
+SRCREV_machine_qemuarm ?= "f1714b2190a2a66caa9b775c7c9e80e731620b7d"
+SRCREV_machine_qemumips  ?= "0ff63d9064c97748eb99ecfe83eaca2288431502"
+SRCREV_machine_qemuppc ?= "fe8f8e061e437fd12187e002123b019eb4876405"
+SRCREV_machine_qemux86 ?= "05de57c692983035c9ec2cdf53234f73d2b15f23"
+SRCREV_machine_qemux86-64 ?= "05de57c692983035c9ec2cdf53234f73d2b15f23"
+SRCREV_machine_qemumips64 ?= "e4fb43c587b9ee44b1032d234594646124e29cb2"
+SRCREV_machine ?= "05de57c692983035c9ec2cdf53234f73d2b15f23"
+SRCREV_meta ?= "43dd30e1955545a264fda63b4f66bb8f5cd875f9"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.10.git;bareclone=1;branch=${KBRANCH},${KMETA};name=machine,meta"
 
-LINUX_VERSION ?= "3.10.11"
+LINUX_VERSION ?= "3.10.17"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
