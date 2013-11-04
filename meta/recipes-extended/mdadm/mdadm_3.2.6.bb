@@ -26,6 +26,8 @@ do_configure_prepend () {
 	sed -i -e '/.*ansidecl.h.*/d' ${S}/sha1.h
 }
 
+EXTRA_OEMAKE = "CHECK_RUN_DIR=0"
+
 do_compile() {
 	oe_runmake
 }
