@@ -11,6 +11,9 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
     def isKernel(fn):
         inherits = " ".join(dataCache.inherits[fn])
         return inherits.find("module-base.bbclass") != -1 or inherits.find("linux-kernel-base.bbclass") != -1
+    def isPackageGroup(fn):
+        inherits = " ".join(dataCache.inherits[fn])
+        return "packagegroup.bbclass" in inherits
 
     # Always include our own inter-task dependencies
     if recipename == depname:
@@ -26,6 +29,10 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
         return True
 
     # Only target packages beyond here
+
+    # packagegroups are assumed to have well behaved names which don't change between architecures/tunes
+    if isPackageGroup(fn):
+        return False  
 
     # Drop native/cross/nativesdk dependencies from target recipes
     if isNative(depname) or isCross(depname) or isNativeSDK(depname):
