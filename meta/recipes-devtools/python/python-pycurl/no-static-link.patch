@@ -1,16 +1,15 @@
 Upstream-Status: Pending
 
-Index: pycurl-7.18.2/setup.py
+Index: pycurl-7.19.0.2/setup.py
 ===================================================================
---- pycurl-7.18.2.orig/setup.py
-+++ pycurl-7.18.2/setup.py
-@@ -97,8 +97,7 @@ else:
-         else:
-             extra_compile_args.append(e)
-     libs = split_quoted(
--        os.popen("'%s' --libs" % CURL_CONFIG).read()+\
--        os.popen("'%s' --static-libs" % CURL_CONFIG).read())
-+        os.popen("'%s' --libs" % CURL_CONFIG).read())
-     for e in libs:
-         if e[:2] == "-l":
-             libraries.append(e[2:])
+--- pycurl-7.19.0.2.orig/setup.py	2013-10-08 15:28:53.000000000 +0300
++++ pycurl-7.19.0.2/setup.py	2013-11-04 13:46:47.928292585 +0200
+@@ -101,7 +101,7 @@
+     # support one or the other of these curl-config options, so gracefully
+     # tolerate failure of either, but not both.
+     optbuf = ""
+-    for option in ["--libs", "--static-libs"]:
++    for option in ["--libs"]:
+         p = subprocess.Popen("'%s' %s" % (CURL_CONFIG, option), shell=True,
+             stdout=subprocess.PIPE)
+         (stdout, stderr) = p.communicate()
