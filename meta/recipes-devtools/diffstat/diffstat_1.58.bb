@@ -11,8 +11,8 @@ SRC_URI = "ftp://invisible-island.net/diffstat/diffstat-${PV}.tgz \
            file://dirfix.patch \
            file://aclocal.patch"
 
-SRC_URI[md5sum] = "a70ae35e479ab91da7eb6023a4e9240a"
-SRC_URI[sha256sum] = "cb9845839d695f178d6b5458b08d3e04773e400f35c0c062c4c0102220fba1e6"
+SRC_URI[md5sum] = "6d6e13f7dcfe4db5da65c5175260ea47"
+SRC_URI[sha256sum] = "fad5135199c3b9aea132c5d45874248f4ce0ff35f61abb8d03c3b90258713793"
 
 S = "${WORKDIR}/diffstat-${PV}"
 
