@@ -202,6 +202,12 @@ python do_package_deb () {
 
     pkgdest = d.getVar('PKGDEST', True)
 
+    def cleanupcontrol(root):
+        for p in ['CONTROL', 'DEBIAN']:
+            p = os.path.join(root, p)
+            if os.path.exists(p):
+                bb.utils.prunedir(p)
+
     for pkg in packages.split():
         localdata = bb.data.createCopy(d)
         root = "%s/%s" % (pkgdest, pkg)
@@ -224,13 +230,9 @@ python do_package_deb () {
         bb.utils.mkdirhier(pkgoutdir)
 
         os.chdir(root)
+        cleanupcontrol(root)
         from glob import glob
         g = glob('*')
-        try:
-            del g[g.index('DEBIAN')]
-            del g[g.index('./DEBIAN')]
-        except ValueError:
-            pass
         if not g and localdata.getVar('ALLOW_EMPTY') != "1":
             bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', True), localdata.getVar('PKGR', True)))
             bb.utils.unlockfile(lf)
@@ -402,11 +404,10 @@ python do_package_deb () {
         os.chdir(basedir)
         ret = subprocess.call("PATH=\"%s\" dpkg-deb -b %s %s" % (localdata.getVar("PATH", True), root, pkgoutdir), shell=True)
         if ret != 0:
-            bb.utils.prunedir(controldir)
             bb.utils.unlockfile(lf)
             raise bb.build.FuncFailed("dpkg-deb execution failed")
 
-        bb.utils.prunedir(controldir)
+        cleanupcontrol(root)
         bb.utils.unlockfile(lf)
 }
 

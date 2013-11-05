@@ -234,6 +234,12 @@ python do_package_ipk () {
     if os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"), os.R_OK):
         os.unlink(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"))
 
+    def cleanupcontrol(root):
+        for p in ['CONTROL', 'DEBIAN']:
+            p = os.path.join(root, p)
+            if os.path.exists(p):
+                bb.utils.prunedir(p)
+
     for pkg in packages.split():
         localdata = bb.data.createCopy(d)
         root = "%s/%s" % (pkgdest, pkg)
@@ -255,13 +261,9 @@ python do_package_ipk () {
         pkgoutdir = "%s/%s" % (outdir, arch)
         bb.utils.mkdirhier(pkgoutdir)
         os.chdir(root)
+        cleanupcontrol(root)
         from glob import glob
         g = glob('*')
-        try:
-            del g[g.index('CONTROL')]
-            del g[g.index('./CONTROL')]
-        except ValueError:
-            pass
         if not g and localdata.getVar('ALLOW_EMPTY') != "1":
             bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', True), localdata.getVar('PKGR', True)))
             bb.utils.unlockfile(lf)
@@ -407,7 +409,7 @@ python do_package_ipk () {
             bb.utils.unlockfile(lf)
             raise bb.build.FuncFailed("opkg-build execution failed")
 
-        bb.utils.prunedir(controldir)
+        cleanupcontrol(root)
         bb.utils.unlockfile(lf)
 
 }
