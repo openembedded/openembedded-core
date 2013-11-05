@@ -1,8 +1,7 @@
 # zisofs-tools-native OE build file
 # Copyright (C) 1989, 1991 Free Software Foundation, Inc.
-SUMMARY = "A set of tools for iso file compression"
-DESCRIPTION = "A set of tools for iso file compression"
-HOMEPAGE = "http://http://freecode.com/projects/zisofs-tools"
+SUMMARY = "Utilities for creating compressed CD-ROM filesystems"
+HOMEPAGE = "http://freecode.com/projects/zisofs-tools"
 SECTION = "console/utils"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
