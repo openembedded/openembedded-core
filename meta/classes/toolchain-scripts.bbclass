@@ -34,13 +34,6 @@ toolchain_create_sdk_env_script () {
 	echo 'export M4=m4' >> $script
 	echo 'export TARGET_PREFIX=${TARGET_PREFIX}' >> $script
 	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS} --build=${SDK_ARCH}-linux --with-libtool-sysroot=$SDKTARGETSYSROOT"' >> $script
-	if [ "${TARGET_OS}" = "darwin8" ]; then
-		echo 'export TARGET_CFLAGS="-I$SDKTARGETSYSROOT'"$includedir"'"' >> $script
-		echo 'export TARGET_LDFLAGS="-L$SDKTARGETSYSROOT'"$libdir"'"' >> $script
-		# Workaround darwin toolchain sysroot path problems
-		cd ${SDK_OUTPUT}$SDKTARGETSYSROOT/usr
-		ln -s /usr/local local
-	fi
 	echo 'export CFLAGS="${TARGET_CFLAGS}"' >> $script
 	echo 'export CXXFLAGS="${TARGET_CXXFLAGS}"' >> $script
 	echo 'export LDFLAGS="${TARGET_LDFLAGS}"' >> $script
@@ -81,13 +74,6 @@ toolchain_create_tree_env_script () {
 	echo 'export NM=${TARGET_PREFIX}nm' >> $script
 	echo 'export TARGET_PREFIX=${TARGET_PREFIX}' >> $script
 	echo 'export CONFIGURE_FLAGS="--target=${TARGET_SYS} --host=${TARGET_SYS} --build=${BUILD_SYS} --with-libtool-sysroot=${STAGING_DIR_TARGET}"' >> $script
-	if [ "${TARGET_OS}" = "darwin8" ]; then
-		echo 'export TARGET_CFLAGS="-I${STAGING_DIR}${MACHINE}${includedir}"' >> $script
-		echo 'export TARGET_LDFLAGS="-L${STAGING_DIR}${MACHINE}${libdir}"' >> $script
-		# Workaround darwin toolchain sysroot path problems
-		cd ${SDK_OUTPUT}${SDKTARGETSYSROOT}/usr
-		ln -s /usr/local local
-	fi
 	echo 'export CFLAGS="${TARGET_CFLAGS}"' >> $script
 	echo 'export CXXFLAGS="${TARGET_CXXFLAGS}"' >> $script
 	echo 'export LDFLAGS="${TARGET_LDFLAGS}"' >> $script
