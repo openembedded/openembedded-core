@@ -34,7 +34,7 @@ RDEPENDS_${PN}_class-native = "\
   python-compression \
 "
 
-SRC_URI[md5sum] = "ee82ea53def4480191061997409d2996"
-SRC_URI[sha256sum] = "e5a60b88138def225c29cbf13ee20f1c176f200450e286dcc7d192963a67723a"
+SRC_URI[md5sum] = "1f33594d25d574a1640ffb84667c6759"
+SRC_URI[sha256sum] = "b35e3d7c79cfdb5b38cfc71f4b0deab4350c1176fc4bb05bfa8945504ecfb028"
 
 BBCLASSEXTEND = "native"
