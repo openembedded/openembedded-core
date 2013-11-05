@@ -434,7 +434,6 @@ static int parse_devtable(FILE * devtable)
 static struct option long_options[] = {
 	{"root", 1, NULL, 'r'},
 	{"help", 0, NULL, 'h'},
-	{"squash", 0, NULL, 'q'},
 	{"version", 0, NULL, 'v'},
 	{"devtable", 1, NULL, 'D'},
 	{NULL, 0, NULL, 0}
@@ -446,7 +445,6 @@ static char *helptext =
 	"Options:\n"
 	"  -r, -d, --root=DIR     Build filesystem from directory DIR (default: cwd)\n"
 	"  -D, --devtable=FILE    Use the named FILE as a device table file\n"
-	"  -q, --squash           Squash permissions and owners making all files be owned by root\n"
 	"  -h, --help             Display this help text\n"
 	"  -v, --version          Display version information\n\n";
 
@@ -463,8 +461,14 @@ int main(int argc, char **argv)
 	FILE *passwd_file = NULL;
 	FILE *group_file = NULL;
 	FILE *devtable = NULL;
+	DIR *dir = NULL;
 
 	umask (0);
+
+	if (argc==1) {
+		fprintf(stderr, helptext);
+		exit(1);
+	}
 
 	while ((opt = getopt_long(argc, argv, "D:d:r:qhv", 
 			long_options, &c)) >= 0) {
@@ -484,6 +488,11 @@ int main(int argc, char **argv)
 			if (rootdir != default_rootdir) {
 				error_msg_and_die("root directory specified more than once");
 			}
+			if ((dir = opendir(optarg)) == NULL) {
+				perror_msg_and_die(optarg);
+			} else {
+				closedir(dir);
+			}
 			rootdir = xstrdup(optarg);
 			break;
 
@@ -495,6 +504,11 @@ int main(int argc, char **argv)
 			fprintf(stderr, helptext);
 			exit(1);
 		}
+	}
+
+	if (argv[optind] != NULL) {
+		fprintf(stderr, helptext);
+		exit(1);
 	}
 
 	// Get name-id mapping
