@@ -9,7 +9,7 @@ LINUX_VERSION ?= "3.10.17"
 
 KMETA = "meta"
 
-SRCREV_machine ?= "375aee37c2508899b6a8c0bdff7d4d67cb75fb36"
+SRCREV_machine ?= "c03195ed6e3066494e3fb4be69154a57066e845b"
 SRCREV_meta ?= "f1c9080cd27f99700fa59b5375d1ddd0afe625ad"
 
 
