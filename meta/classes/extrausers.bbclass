@@ -54,6 +54,10 @@ set_user_group () {
 				bbfatal "Invalid command in EXTRA_USERS_PARAMS: $cmd"
 				;;
 		esac
+		# Avoid infinite loop if the last parameter doesn't end with ';'
+		if [ "$setting" = "$remaining" ]; then
+			break
+		fi
 		# iterate to the next setting
 		setting=`echo $remaining | cut -d ';' -f1`
 		remaining=`echo $remaining | cut -d ';' -f2-`
