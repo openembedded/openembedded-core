@@ -140,6 +140,11 @@ do_install () {
 	oe_multilib_header bfd.h
 }
 
+do_install_append_class-target_powerpc () {
+        # we dont really care about embedspu for ppc so remove it
+        rm -f ${D}/${bindir}/embedspu || :
+}
+
 inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
