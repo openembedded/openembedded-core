@@ -6,13 +6,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=275efac2559a224527bd4fd593d38466 \
                     file://src/compositor.c;endline=23;md5=aa98a8db03480fe7d500d0b1f4b8850c"
 
 SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
-           file://install-examples.patch \
-           file://weston-launch-shell.patch \
-           file://groups.patch \
            file://weston.png \
            file://weston.desktop"
-SRC_URI[md5sum] = "dd9f3043fc5228c6bc4e99873fae2254"
-SRC_URI[sha256sum] = "e7715d2c731f77a729c994a599ffdaebac1307b2dd9336136706869fa53618b4"
+SRC_URI[md5sum] = "29ad994dd5ea07f52d7bffb24c25d9f7"
+SRC_URI[sha256sum] = "8e4f5b4736358b63d83c3252567ba7aa49cc0da9e2e2c30f59ddf635159702a0"
 
 
 inherit autotools pkgconfig useradd
@@ -20,12 +17,12 @@ inherit autotools pkgconfig useradd
 DEPENDS = "libxkbcommon gdk-pixbuf pixman cairo glib-2.0 jpeg"
 DEPENDS += "wayland virtual/mesa virtual/egl pango"
 
-EXTRA_OECONF = "--disable-android-compositor \
-                --enable-setuid-install \
+EXTRA_OECONF = "--enable-setuid-install \
                 --disable-tablet-shell \
                 --disable-xwayland \
                 --enable-simple-clients \
                 --enable-clients \
+                --enable-demo-clients \
                 --disable-simple-egl-clients \
                 --disable-libunwind \
                 --disable-rpi-compositor \
@@ -52,8 +49,8 @@ PACKAGECONFIG[headless] = "--enable-headless-compositor,--disable-headless-compo
 PACKAGECONFIG[fbdev] = "--enable-fbdev-compositor,--disable-fbdev-compositor,udev mtdev"
 # weston-launch
 PACKAGECONFIG[launch] = "--enable-weston-launch,--disable-weston-launch,libpam"
-# Use cairo-gl or cairo-glesv2
-PACKAGECONFIG[gles] = "--with-cairo-glesv2,,virtual/libgles2"
+# VA-API desktop recorder
+PACKAGECONFIG[vaapi] = "--enable-vaapi-recorder,--disable-vaapi-recorder,libva"
 
 do_install_append() {
 	# Weston doesn't need the .la files to load modules, so wipe them
@@ -73,7 +70,7 @@ do_install_append() {
 
 PACKAGES += "${PN}-examples"
 
-FILES_${PN} = "${bindir}/weston* ${bindir}/wcap-decode ${libexecdir} ${datadir}"
+FILES_${PN} = "${bindir}/weston ${bindir}/weston-terminal ${bindir}/weston-info ${bindir}/weston-launch ${bindir}/wcap-decode ${libexecdir} ${datadir}"
 FILES_${PN}-examples = "${bindir}/*"
 
 RDEPENDS_${PN} += "xkeyboard-config"
