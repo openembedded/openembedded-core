@@ -41,6 +41,9 @@ export STAGING_LIBDIR
 export BUILD_SYS
 export HOST_SYS
 
+#kernel 3.1+ supports WERROR to disable warnings as errors
+export WERROR = "0"
+
 do_populate_lic[depends] += "virtual/kernel:do_populate_sysroot"
 
 # needed for building the tools/perf Perl binding
@@ -115,6 +118,7 @@ do_install() {
 }
 
 do_configure_prepend () {
+    #kernels before 3.1 do not support WERROR env variable
     sed -i 's,-Werror ,,' ${S}/tools/perf/Makefile
 }
 
