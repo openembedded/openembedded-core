@@ -43,8 +43,8 @@ NO32LIBS ??= "1"
 
 # Default to emitting logfiles if a build fails.
 BBINCLUDELOGS ??= "yes"
-SDK_VERSION ??= "oe-core.0"
-DISTRO_VERSION ??= "oe-core.0"
+SDK_VERSION ??= "nodistro.0"
+DISTRO_VERSION ??= "nodistro.0"
 
 # Missing checksums should raise an error
 BB_STRICT_CHECKSUM = "1"
