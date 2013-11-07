@@ -25,6 +25,7 @@ SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
           file://avahi_fix_install_issue.patch \
           file://fix_for_automake_1.12.x.patch \
           file://out-of-tree.patch \
+          file://0001-avahi-fix-avahi-status-command-error-prompt.patch \
           "
 
 USERADD_PACKAGES = "avahi-daemon avahi-autoipd"
