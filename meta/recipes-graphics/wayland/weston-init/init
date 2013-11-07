@@ -34,7 +34,7 @@ case "$1" in
                 chmod 0700 $XDG_RUNTIME_DIR
         fi
 
-        weston
+        openvt -s weston
   ;;
 
   stop)

@@ -13,5 +13,7 @@ do_install() {
 
 inherit allarch update-rc.d
 
+RDEPENDS_${PN} = "weston kbd"
+
 INITSCRIPT_NAME = "weston"
 INITSCRIPT_PARAMS = "start 9 5 2 . stop 20 0 1 6 ."
