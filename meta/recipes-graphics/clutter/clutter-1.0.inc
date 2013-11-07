@@ -4,11 +4,8 @@ LICENSE = "LGPLv2.1+"
 
 inherit clutter
 
-SRC_URI += "file://enable_tests.patch \
-            file://fix-wayland-deps.patch"
-
 DEPENDS = "pango glib-2.0 json-glib atk udev cogl-1.0"
-PACKAGES =+ "${PN}-examples"
+PACKAGE_BEFORE_PN += "${PN}-examples"
 AUTOTOOLS_AUXDIR = "${S}/build"
 
 EDEPENDS_X11 = "virtual/libx11 libxi libxfixes"
@@ -39,7 +36,8 @@ PACKAGECONFIG[wayland-compositor] = "--enable-wayland-compositor,--disable-wayla
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', 'x11', 'glx x11', '', d)}"
 
-FILES_${PN}-examples = "${bindir}/test-* ${pkgdatadir}/redhand.png"
+FILES_${PN}-dbg += "${libdir}/clutter/examples/.debug"
+FILES_${PN}-examples = "${libdir}/clutter/examples"
 
 do_configure_prepend() {
 	# see https://bugzilla.gnome.org/show_bug.cgi?id=661128 for this
