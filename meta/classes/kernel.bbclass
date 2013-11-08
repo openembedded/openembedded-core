@@ -308,8 +308,8 @@ kernelscripts_sstate_postinst () {
 	fi
 }
 
-sysroot_stage_all_append() {
-	sysroot_stage_dir ${D}${KERNEL_SRC_PATH} ${SYSROOT_DESTDIR}${KERNEL_SRC_PATH}
+python sysroot_stage_all () {
+    oe.path.copyhardlinktree(d.expand("${D}${KERNEL_SRC_PATH}"), d.expand("${SYSROOT_DESTDIR}${KERNEL_SRC_PATH}"))
 }
 
 kernel_do_configure() {
