@@ -13,9 +13,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
 BUGTRACKER = "http://bugzilla.gnome.org"
 SECTION = "libs"
 
-DEPENDS = "glib-2.0-native virtual/libiconv"
-DEPENDS_class-native = "pkgconfig-native gettext-native"
-DEPENDS_class-nativesdk = "nativesdk-libtool"
+BBCLASSEXTEND = "native nativesdk"
+
+DEPENDS = "glib-2.0-native virtual/libiconv libffi zlib"
+DEPENDS_class-native = "pkgconfig-native gettext-native libffi-native"
+DEPENDS_class-nativesdk = "nativesdk-libtool nativesdk-libffi nativesdk-zlib ${BPN}-native"
 PACKAGES =+ "${PN}-utils ${PN}-bash-completion ${PN}-codegen"
 
 LEAD_SONAME = "libglib-2.0.*"
@@ -30,8 +32,13 @@ CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap 
 PTEST_CONF = "${@base_contains('DISTRO_FEATURES', 'ptest', '--enable-installed-tests', '--disable-installed-tests', d)}"
 EXTRA_OECONF = "--enable-included-printf=no ${CORECONF} ${PTEST_CONF}"
 EXTRA_OECONF_class-native = "${CORECONF} --disable-selinux"
+EXTRA_OECONF_append_class-target_libc-uclibc = " --with-libiconv=gnu"
 
-FILES_${PN} = "${libdir}/lib*${SOLIBS} ${datadir}/glib-2.0/schemas \
+do_configure_prepend() {
+	sed -i -e '1s,#!.*,#!${USRBINPATH}/env python,' ${S}/gio/gdbus-2.0/codegen/gdbus-codegen.in
+}
+
+FILES_${PN} = "${libdir}/lib*${SOLIBS} ${libdir}/gio ${datadir}/glib-2.0/schemas \
                ${datadir}/glib-2.0/gettext/mkinstalldirs ${datadir}/glib-2.0/gettext/po/Makefile.in.in"
 FILES_${PN}-dev += "${libdir}/glib-2.0/include \
                     ${libdir}/gio/modules/lib*${SOLIBSDEV} \
@@ -50,4 +57,36 @@ USE_NLS = "yes"
 
 do_install_append () {
 	sed ${D}${bindir}/gtester-report -i -e '1s|^#!.*|#!/usr/bin/env python|'
+
+	# Remove some unpackaged files
+	rm -f ${D}${datadir}/glib-2.0/codegen/*.pyc
+	rm -f ${D}${datadir}/glib-2.0/codegen/*.pyo
+
+	# Some distros have both /bin/perl and /usr/bin/perl, but we set perl location
+	# for target as /usr/bin/perl, so fix it to /usr/bin/perl.
+	if [ -f ${D}${bindir}/glib-mkenums ]; then
+		sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/glib-mkenums
+	fi
 }
+
+RDEPENDS_${PN}-ptest += "\
+            gnome-desktop-testing \
+            tzdata \
+            tzdata-americas \
+            tzdata-asia \
+            tzdata-europe \
+            tzdata-posix \
+            python-pygobject \
+            python-dbus \
+           "
+
+RDEPENDS_${PN}-ptest_append_libc-glibc = "\
+            eglibc-gconv-utf-16 \
+            eglibc-charmap-utf-8 \
+            eglibc-gconv-cp1255 \
+            eglibc-charmap-cp1255 \
+            eglibc-gconv-utf-32 \
+            eglibc-gconv-utf-7 \
+            eglibc-charmap-invariant \
+            eglibc-localedata-translit-cjk-variants \
+           "
