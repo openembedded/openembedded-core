@@ -6,12 +6,10 @@ LICENSE  = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING.LESSER;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/check/check-${PV}.tar.gz \
-           file://libcheck_fix_for_automake-1.12.patch \
-           file://ignore_automake_warning.patch \
           "
 
-SRC_URI[md5sum] = "6d10a8efb9a683467b92b3bce97aeb30"
-SRC_URI[sha256sum] = "823819235753e94ae0bcab3c46cc209de166c32ff2f52cefe120597db4403e6d"
+SRC_URI[md5sum] = "fd5a03979bcab9fb80ba005b55f54178"
+SRC_URI[sha256sum] = "ea4e8c7ffb00bb4ffb3f59f11744a71f1cc4212c79f3083c7d9a4b0953976936"
 
 S = "${WORKDIR}/check-${PV}"
 
