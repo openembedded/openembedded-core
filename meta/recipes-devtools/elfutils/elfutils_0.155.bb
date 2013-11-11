@@ -47,6 +47,12 @@ do_configure_prepend() {
 	cp ${WORKDIR}/*dis.h ${S}/libcpu
 }
 
+do_install_append() {
+	if [ "${TARGET_ARCH}" != "x86_64" ] && [ ! `echo "${TARGET_ARCH}"|grep -q 'i.86'` ];then
+		rm ${D}${bindir}/eu-objdump
+	fi
+}
+
 # we can not build complete elfutils when using uclibc
 # but some recipes e.g. gcc 4.5 depends on libelf so we
 # build only libelf for uclibc case
