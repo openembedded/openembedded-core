@@ -1,7 +1,6 @@
 require alsa-utils_${PV}.bb
 
-THISDIR := "${@os.path.dirname(bb.data.getVar('FILE', d, True))}"
-FILESPATH =. "${@base_set_filespath(["${THISDIR}/alsa-utils"], d)}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/alsa-utils:"
 
 PACKAGES = "${PN}"
 RDEPENDS_${PN} += "bash"
