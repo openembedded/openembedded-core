@@ -21,8 +21,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.b
            file://nfs-mountd.service \
            file://nfs-statd.service "
 
-SRC_URI[md5sum] = "6e7d97de51e428a0b8698c16ca23db77"
-SRC_URI[sha256sum] = "1cc8f02a633eddbf0a1d93421f331479c4cdab4c5ab33b8bf8c7c369f9156ac6"
+SRC_URI[md5sum] = "18869d16db3f49c053f8c68eba3fe2e0"
+SRC_URI[sha256sum] = "90b76d5692a520b74273e607a4fd69df4cc35f65e242e22e2bc61b58759722f3"
 
 PARALLEL_MAKE = ""
 
