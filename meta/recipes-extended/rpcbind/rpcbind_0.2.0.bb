@@ -35,7 +35,7 @@ PACKAGECONFIG ??= "tcp-wrappers"
 PACKAGECONFIG[tcp-wrappers] = "--enable-libwrap,--disable-libwrap,tcp-wrappers"
 
 INITSCRIPT_NAME = "rpcbind"
-INITSCRIPT_PARAMS = "start 43 S . start 32 0 6 . stop 81 1 ."
+INITSCRIPT_PARAMS = "start 12 2 3 4 5 . stop 60 0 1 6 ."
 
 SYSTEMD_SERVICE_${PN} = "rpcbind.service"
 SYSTEMD_AUTO_ENABLE = "disable"
