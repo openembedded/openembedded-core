@@ -18,7 +18,6 @@ SECTION = "base/shell"
 inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest
 
 SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
-           file://0001-use-CAP_MKNOD-ConditionCapability.patch \
            file://0001-Use-bin-mkdir-instead-of-host-mkdir-path.patch \
            file://binfmt-install.patch \
            file://touchscreen.rules \
@@ -27,8 +26,8 @@ SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
            file://init \
            file://run-ptest \
           "
-SRC_URI[md5sum] = "89e36f2d3ba963020b72738549954cbc"
-SRC_URI[sha256sum] = "4c993de071118ea1df7ffc4be26ef0b0d78354ef15b2743a2783d20edfcde9de"
+SRC_URI[md5sum] = "df64550d92afbffb4f67a434193ee165"
+SRC_URI[sha256sum] = "aa64fa864466fd5727005c55d61c092828b94b4f857272c0b503695022146390"
 
 UCLIBCPATCHES = ""
 UCLIBCPATCHES_libc-uclibc = "file://systemd-pam-configure-check-uclibc.patch \
@@ -134,7 +133,8 @@ python populate_packages_prepend (){
 }
 PACKAGES_DYNAMIC += "^lib(udev|gudev|systemd).*"
 
-PACKAGES =+ "${PN}-gui ${PN}-vconsole-setup ${PN}-initramfs ${PN}-analyze ${PN}-kernel-install ${PN}-rpm-macros ${PN}-binfmt"
+PACKAGES =+ "${PN}-gui ${PN}-vconsole-setup ${PN}-initramfs ${PN}-analyze ${PN}-kernel-install \
+             ${PN}-rpm-macros ${PN}-binfmt ${PN}-pam ${PN}-zsh"
 
 SYSTEMD_PACKAGES = "${PN}-binfmt"
 SYSTEMD_SERVICE_${PN}-binfmt = "systemd-binfmt.service"
@@ -159,6 +159,10 @@ FILES_${PN}-kernel-install = "${bindir}/kernel-install \
                              "
 FILES_${PN}-rpm-macros = "${exec_prefix}/lib/rpm \
                          "
+
+FILES_${PN}  += "${@base_contains('DISTRO_FEATURES', 'pam', '${sysconfdir}/pam.d', '', d)}"
+
+FILES_${PN}-zsh = "${datadir}/zsh/site-functions"
 
 FILES_${PN}-binfmt = "${sysconfdir}/binfmt.d/ \
                       ${exec_prefix}/lib/binfmt.d \
