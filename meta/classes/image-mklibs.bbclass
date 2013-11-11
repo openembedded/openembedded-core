@@ -9,7 +9,7 @@ mklibs_optimize_image_doit() {
 	du -bs > ${WORKDIR}/mklibs/du.before.mklibs.txt
 	for i in `find .`; do file $i; done \
 		| grep ELF \
-		| grep "LSB executable" \
+		| grep "LSB *executable" \
 		| grep "dynamically linked" \
 		| sed "s/:.*//" \
 		| sed "s+^\./++" \
