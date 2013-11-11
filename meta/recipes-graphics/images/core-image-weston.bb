@@ -1,6 +1,6 @@
 DESCRIPTION = "A very basic Wayland image with a terminal"
 
-IMAGE_FEATURES += "splash package-management"
+IMAGE_FEATURES += "splash package-management ssh-server-dropbear hwcodecs"
 
 LICENSE = "MIT"
 
