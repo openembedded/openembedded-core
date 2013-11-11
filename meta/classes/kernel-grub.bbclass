@@ -40,10 +40,11 @@ pkg_preinst_kernel-image_append () {
 pkg_postinst_kernel-image_prepend () {
 	get_new_grub_cfg() {
 		grubcfg="$1"
+		old_image="$2"
 		title="Update ${KERNEL_IMAGETYPE}-${KERNEL_VERSION}-${PV}"
 		if [ "${grubcfg##*/}" = "grub.cfg" ]; then
 			rootfs=`grep " *linux \+[^ ]\+ \+root=" $grubcfg -m 1 | \
-				 sed "s# *linux \+[^ ]\+ \+root=#    linux /${KERNEL_IMAGETYPE}-${KERNEL_VERSION} root=#"`
+				 sed "s#${old_image}#${old_image%/*}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}#"`
 
 			echo "menuentry \"$title\" {"
 			echo "    set root=(hd0,1)"
@@ -51,7 +52,7 @@ pkg_postinst_kernel-image_prepend () {
 			echo "}"
 		elif [ "${grubcfg##*/}" = "menu.list" ]; then
 			rootfs=`grep "kernel \+[^ ]\+ \+root=" $grubcfg -m 1 | \
-				 sed "s#kernel \+[^ ]\+ \+root=#kernel /${KERNEL_IMAGETYPE}-${KERNEL_VERSION} root=#"`
+				 sed "s#${old_image}#${old_image%/*}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}#"`
 
 			echo "default 0"
 			echo "timeout 30"
@@ -79,9 +80,9 @@ pkg_postinst_kernel-image_prepend () {
 	fi
 
 	# Don't update grubcfg at first install while old bzImage doesn't exist.
-	if [ -f "$D/boot/$old_image" ]; then
+	if [ -f "$D/boot/${old_image##*/}" ]; then
 		grubcfgtmp="$grubcfg.tmp"
-		get_new_grub_cfg "$grubcfg"  > $grubcfgtmp
+		get_new_grub_cfg "$grubcfg" "$old_image"  > $grubcfgtmp
 		get_old_grub_cfg "$grubcfg" >> $grubcfgtmp
 		mv $grubcfgtmp $grubcfg
 		echo "Caution! Update kernel may affect kernel-module!"
