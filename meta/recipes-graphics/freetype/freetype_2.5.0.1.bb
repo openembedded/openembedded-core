@@ -13,12 +13,11 @@ LIC_FILES_CHKSUM = "file://docs/LICENSE.TXT;md5=c017ff17fc6f0794adf93db5559ccd56
 
 SECTION = "libs"
 
-
 SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
 "
 
-SRC_URI[md5sum] = "3463102764315eb86c0d3c2e1f3ffb7d"
-SRC_URI[sha256sum] = "a78a17486689ab6852a9e1a759b179827ac9dfd7e2f237ddf169c73398c85381"
+SRC_URI[md5sum] = "c72e9010b1d986d556fc0b2b5fcbf31a"
+SRC_URI[sha256sum] = "57bce5b37989577aa8b4a588426839f6bf39bcc3869748cb18f6827df251f4e5"
 
 S = "${WORKDIR}/freetype-${PV}"
 
@@ -28,6 +27,9 @@ LIBTOOL = "${S}/builds/unix/${HOST_SYS}-libtool"
 EXTRA_OEMAKE = "'LIBTOOL=${LIBTOOL}'"
 EXTRA_OEMAKE_class-native = ""
 EXTRA_OECONF = "--without-zlib --without-bzip2 CC_BUILD='${BUILD_CC}'"
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[pixmap] = "--with-png,--without-png,libpng"
 
 do_configure() {
 	cd builds/unix
