@@ -12,7 +12,9 @@ DEPENDS = "flex-native bison-native"
 SRC_URI = "http://www.infradead.org/~tgr/${BPN}/files/${BP}.tar.gz \
            file://fix-pktloc_syntax_h-race.patch \
            file://fix-pc-file.patch \
-           file://fix-lib-cache_mngr.c-two-parentheses-bugs.patch"
+           file://fix-lib-cache_mngr.c-two-parentheses-bugs.patch \
+           file://0001-fix-double-free-caused-by-freeing-link-af_data-in-rt.patch \
+          "
 
 SRC_URI[md5sum] = "2e1c889494d274aca24ce5f6a748e66e"
 SRC_URI[sha256sum] = "c7c5f267dfeae0c1a530bf96b71fb7c8dbbb07d54beef49b6712d8d6166f629b"

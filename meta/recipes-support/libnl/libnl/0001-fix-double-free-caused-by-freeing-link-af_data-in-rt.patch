@@ -1,0 +1,41 @@
+From 6f37b439af7e96104aadd8ec3ae8d3882df8d102 Mon Sep 17 00:00:00 2001
+From: Jiri Pirko <jiri@resnulli.us>
+Date: Wed, 21 Aug 2013 14:40:34 +0200
+Subject: [PATCH] fix double free caused by freeing link af_data in
+ rtnl_link_set_family()
+
+Introduced by commit 8026fe2e3a9089eff3f5a06ee6e3cc78d96334ed ("link:
+Free and realloc af specific data upon rtnl_link_set_family()")
+
+link->l_af_data[link->l_af_ops->ao_family] is freed here but not set to
+zero. That leads to double free made by link_free_data->do_foreach_af.
+
+Fix this by setting link->l_af_data[link->l_af_ops->ao_family] to zero
+rigth after free.
+
+Signed-off-by: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: Thomas Graf <tgraf@suug.ch>
+---
+ lib/route/link.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/lib/route/link.c b/lib/route/link.c
+index a73e1db..0bb90a0 100644
+--- a/lib/route/link.c
++++ b/lib/route/link.c
+@@ -1762,9 +1762,11 @@ void rtnl_link_set_family(struct rtnl_link *link, int family)
+ 	link->l_family = family;
+ 	link->ce_mask |= LINK_ATTR_FAMILY;
+ 
+-	if (link->l_af_ops)
++	if (link->l_af_ops) {
+ 		af_free(link, link->l_af_ops,
+ 			link->l_af_data[link->l_af_ops->ao_family], NULL);
++		link->l_af_data[link->l_af_ops->ao_family] = NULL;
++	}
+ 
+ 	link->l_af_ops = af_lookup_and_alloc(link, family);
+ }
+-- 
+1.8.4
+
