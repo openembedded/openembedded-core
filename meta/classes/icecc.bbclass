@@ -106,7 +106,7 @@ def use_icc(bb,d):
             return "no"
 
     if d.getVar('PARALLEL_MAKE') == "":
-        bb.note(package_tmp, " ", d.expand('${PV}'), " has empty PARALLEL_MAKE, disable icecc")
+        bb.debug(1, package_tmp, " ", d.expand('${PV}'), " has empty PARALLEL_MAKE, disable icecc")
         return "no"
 
     return "yes"
