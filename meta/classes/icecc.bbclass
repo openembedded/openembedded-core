@@ -196,12 +196,14 @@ set_icecc_env() {
     ICECC_VERSION="${@icc_version(bb, d)}"
     if [ "x${ICECC_VERSION}" = "x" ]
     then
+        bbwarn "Cannot use icecc: could not get ICECC_VERSION"
         return
     fi
 
     ICE_PATH="${@icc_path(bb, d)}"
     if [ "x${ICE_PATH}" = "x" ]
     then
+        bbwarn "Cannot use icecc: could not get ICE_PATH"
         return
     fi
 
@@ -209,6 +211,7 @@ set_icecc_env() {
     ICECC_CXX="${@icc_get_and_check_tool(bb, d, "g++")}"
     if [ ! -x "${ICECC_CC}" -o ! -x "${ICECC_CXX}" ]
     then
+        bbwarn "Cannot use icecc: could not get ICECC_CC or ICECC_CXX"
         return
     fi
 
@@ -216,6 +219,7 @@ set_icecc_env() {
     ICECC_VERSION=`echo ${ICECC_VERSION} | sed -e "s/@VERSION@/$ICE_VERSION/g"`
     if [ ! -x "${ICECC_ENV_EXEC}" ]
     then
+        bbwarn "Cannot use icecc: invalid ICECC_ENV_EXEC"
         return
     fi
 
