@@ -19,11 +19,11 @@ Signed-off-by: Kai Kang <kai.kang@windriver.com>
  configure |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/configure b/configure
-index 478a4d5..79c2979 100755
---- a/configure
-+++ b/configure
-@@ -18772,7 +18772,7 @@ eval "TCL_LIB_FILE=libtcl${LIB_SUFFIX}"
+Index: unix/configure
+===================================================================
+--- unix.orig/configure	2013-11-10 23:38:33.643426430 -0800
++++ unix/configure	2013-11-10 23:39:51.347428387 -0800
+@@ -19134,7 +19134,7 @@
  
  eval "TCL_LIB_FILE=${TCL_LIB_FILE}"
  
@@ -32,6 +32,16 @@ index 478a4d5..79c2979 100755
  PRIVATE_INCLUDE_DIR='$(includedir)'
  HTML_DIR='$(DISTDIR)/html'
  
--- 
-1.7.9.5
-
+Index: unix/configure.in
+===================================================================
+--- unix.orig/configure.in	2013-11-10 23:20:50.000000000 -0800
++++ unix/configure.in	2013-11-10 23:39:41.199428131 -0800
+@@ -790,7 +790,7 @@
+ 
+ eval "TCL_LIB_FILE=${TCL_LIB_FILE}"
+ 
+-TCL_LIBRARY='$(prefix)/lib/tcl$(VERSION)'
++TCL_LIBRARY='$(libdir)/tcl$(VERSION)'
+ PRIVATE_INCLUDE_DIR='$(includedir)'
+ HTML_DIR='$(DISTDIR)/html'
+ 

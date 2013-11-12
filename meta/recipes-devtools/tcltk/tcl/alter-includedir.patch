@@ -1,0 +1,46 @@
+Lets install the include header and private header files into 
+usr/include/tcl8.6 when version of tcl is 8.6.x
+
+Upstream-Status: Inappropriate [Configuration Specific]
+
+Signed-off-by: Khem Raj <raj.khem@gmai.com>
+
+Index: unix/Makefile.in
+===================================================================
+--- unix.orig/Makefile.in	2013-11-11 01:00:36.431550403 -0800
++++ unix/Makefile.in	2013-11-11 01:05:09.587557282 -0800
+@@ -53,7 +53,7 @@
+ SCRIPT_INSTALL_DIR	= $(INSTALL_ROOT)$(TCL_LIBRARY)
+ 
+ # Directory in which to install the include file tcl.h:
+-INCLUDE_INSTALL_DIR	= $(INSTALL_ROOT)$(includedir)
++INCLUDE_INSTALL_DIR	= $(INSTALL_ROOT)$(includedir)/tcl$(VERSION)
+ 
+ # Path to the private tcl header dir:
+ PRIVATE_INCLUDE_DIR	= @PRIVATE_INCLUDE_DIR@
+Index: unix/configure.in
+===================================================================
+--- unix.orig/configure.in	2013-11-11 01:00:36.467550403 -0800
++++ unix/configure.in	2013-11-11 01:00:36.503550404 -0800
+@@ -791,7 +791,7 @@
+ eval "TCL_LIB_FILE=${TCL_LIB_FILE}"
+ 
+ TCL_LIBRARY='$(libdir)/tcl$(VERSION)'
+-PRIVATE_INCLUDE_DIR='$(includedir)'
++PRIVATE_INCLUDE_DIR='$(includedir)/tcl$(VERSION)'
+ HTML_DIR='$(DISTDIR)/html'
+ 
+ # Note:  in the following variable, it's important to use the absolute
+Index: unix/configure
+===================================================================
+--- unix.orig/configure	2013-11-11 01:00:36.467550403 -0800
++++ unix/configure	2013-11-11 01:00:36.503550404 -0800
+@@ -19134,7 +19134,7 @@
+ eval "TCL_LIB_FILE=${TCL_LIB_FILE}"
+ 
+ TCL_LIBRARY='$(libdir)/tcl$(VERSION)'
+-PRIVATE_INCLUDE_DIR='$(includedir)'
++PRIVATE_INCLUDE_DIR='$(includedir)/tcl$(VERSION)'
+ HTML_DIR='$(DISTDIR)/html'
+ 
+ # Note:  in the following variable, it's important to use the absolute

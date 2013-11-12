@@ -15,17 +15,20 @@ BASE_SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl${PV}-src.tar.gz \
                 file://tcl-add-soname.patch"
 
 SRC_URI = "${BASE_SRC_URI} \
-	   file://fix_non_native_build_issue.patch \
-	   file://fix_issue_with_old_distro_glibc.patch \
-	   file://no_packages.patch \
-	   file://tcl-remove-hardcoded-install-path.patch \
-       "
+           file://fix_non_native_build_issue.patch \
+           file://fix_issue_with_old_distro_glibc.patch \
+           file://no_packages.patch \
+           file://tcl-remove-hardcoded-install-path.patch \
+           file://alter-includedir.patch \
+          "
 SRC_URI[md5sum] = "aae4b701ee527c6e4e1a6f9c7399882e"
 SRC_URI[sha256sum] = "16ee769248e64ba1cae6b4834fcc4e4edd7470d881410e8d58f7dd1434343514"
 
 SRC_URI_class-native = "${BASE_SRC_URI}"
 
 S = "${WORKDIR}/tcl${PV}/unix"
+
+VER = "8.6"
 
 inherit autotools
 
@@ -43,9 +46,8 @@ do_compile_prepend() {
 }
 
 do_install() {
-	autotools_do_install
-	oe_libinstall -so libtcl8.6 ${D}${libdir}
-	ln -sf ./tclsh8.6 ${D}${bindir}/tclsh
+	autotools_do_install install-private-headers
+	ln -sf ./tclsh${VER} ${D}${bindir}/tclsh
 	sed -i "s+${WORKDIR}+${STAGING_INCDIR}+g" tclConfig.sh
 	sed -i "s,-L${libdir},-L=${libdir},g" tclConfig.sh
 	sed -i "s,-I${includedir},-I=${includedir},g" tclConfig.sh 
@@ -54,8 +56,8 @@ do_install() {
 	cd ..
 	for dir in compat generic unix
 	do
-		install -d ${D}${includedir}/tcl${PV}/$dir
-		install -m 0644 ${S}/../$dir/*.h ${D}${includedir}/tcl${PV}/$dir/
+		install -d ${D}${includedir}/${BPN}${VER}/$dir
+		install -m 0644 ${S}/../$dir/*.h ${D}${includedir}/${BPN}${VER}/$dir/
 	done
 }
 
@@ -65,8 +67,8 @@ tcl_sysroot_preprocess () {
 }
 
 PACKAGES =+ "tcl-lib"
-FILES_tcl-lib = "${libdir}/libtcl8.6.so*"
-FILES_${PN} += "${libdir}/tcl8.6 ${libdir}/tcl8"
+FILES_tcl-lib = "${libdir}/libtcl${VER}.so.*"
+FILES_${PN} += "${libdir}/tcl${VER} ${libdir}/tcl8"
 FILES_${PN}-dev += "${libdir}/tclConfig.sh ${libdir}/tclooConfig.sh"
 
 # isn't getting picked up by shlibs code

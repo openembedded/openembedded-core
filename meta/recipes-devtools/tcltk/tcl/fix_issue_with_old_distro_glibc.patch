@@ -15,11 +15,11 @@ Fixes tcl target recipe build on old distros which have glibc older than 2.14
 Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
 2012/04/26
 
-diff --git unix.orig/Makefile.in unix/Makefile.in
-index 571d53f..16351f6 100644
---- unix.orig/Makefile.in
-+++ unix/Makefile.in
-@@ -679,7 +679,7 @@ topDirName:
+Index: unix/Makefile.in
+===================================================================
+--- unix.orig/Makefile.in	2013-11-10 23:38:01.787425628 -0800
++++ unix/Makefile.in	2013-11-10 23:37:59.807425578 -0800
+@@ -686,7 +686,7 @@
  # tcltest executable gets the build directory burned into its ld search path.
  # This keeps tcltest from picking up an already installed version of the Tcl
  # library.
@@ -28,7 +28,7 @@ index 571d53f..16351f6 100644
  		TCLLIBPATH="@abs_builddir@/pkgs" \
  		TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"
  
-@@ -705,7 +705,7 @@ test-tcl: ${TCLTEST_EXE}
+@@ -712,7 +712,7 @@
  	$(SHELL_ENV) ${TCLTEST_EXE} $(TOP_DIR)/tests/all.tcl $(TESTFLAGS)
  
  gdb-test: ${TCLTEST_EXE}

@@ -1,10 +1,10 @@
 Upstream-Status: Pending
 
-diff --git unix.orig/Makefile.in unix/Makefile.in
-index df05759..571d53f 100644
---- unix.orig/Makefile.in
-+++ unix/Makefile.in
-@@ -702,23 +702,23 @@ tcltest-real:
+Index: unix/Makefile.in
+===================================================================
+--- unix.orig/Makefile.in	2013-11-10 23:37:34.243424934 -0800
++++ unix/Makefile.in	2013-11-10 23:37:34.243424934 -0800
+@@ -709,23 +709,23 @@
  test: test-tcl test-packages
  
  test-tcl: ${TCLTEST_EXE}
@@ -32,7 +32,7 @@ index df05759..571d53f 100644
  
  # The following target generates the shared libraries in dltest/ that are used
  # for testing; they are included as part of the "tcltest" target (via the
-@@ -736,23 +736,23 @@ dltest.marker: ${STUB_LIB_FILE}
+@@ -743,23 +743,23 @@
  # This target can be used to run tclsh from the build directory
  # via `make shell SCRIPT=/tmp/foo.tcl`
  shell: ${TCL_EXE}

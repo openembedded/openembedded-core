@@ -5,11 +5,11 @@ Upstream-Status:Inappropriate [embedded specific]
 
 Signed-off-by: Bogdan Marinescu <bogdan.a.marinescu@intel.com>
 
-diff --git unix.orig/Makefile.in unix/Makefile.in
-index 16351f6..76ccadb 100644
---- unix.orig/Makefile.in
-+++ unix/Makefile.in
-@@ -601,7 +601,7 @@ SRCS = $(GENERIC_SRCS) $(TOMMATH_SRCS) $(UNIX_SRCS) $(NOTIFY_SRCS) \
+Index: unix/Makefile.in
+===================================================================
+--- unix.orig/Makefile.in	2013-11-10 23:38:12.235425891 -0800
++++ unix/Makefile.in	2013-11-10 23:38:12.231425891 -0800
+@@ -611,7 +611,7 @@
  # Start of rules
  #--------------------------------------------------------------------------
  
@@ -18,7 +18,7 @@ index 16351f6..76ccadb 100644
  
  binaries: ${LIB_FILE} $(STUB_LIB_FILE) ${TCL_EXE}
  
-@@ -646,12 +646,12 @@ Makefile: $(UNIX_DIR)/Makefile.in $(DLTEST_DIR)/Makefile.in
+@@ -653,12 +653,12 @@
  #tclConfig.h: $(UNIX_DIR)/tclConfig.h.in
  #	$(SHELL) config.status
  
@@ -33,7 +33,7 @@ index 16351f6..76ccadb 100644
  	rm -rf Makefile config.status config.cache config.log tclConfig.sh \
  		tclConfig.h *.plist Tcl.framework tcl.pc
  	cd dltest ; $(MAKE) distclean
-@@ -699,7 +699,7 @@ tcltest-real:
+@@ -706,7 +706,7 @@
  # tcltest, ie:
  #	% make test TESTFLAGS="-verbose bps -file fileName.test"
  
@@ -42,7 +42,7 @@ index 16351f6..76ccadb 100644
  
  test-tcl: ${TCLTEST_EXE}
  	$(SHELL_ENV) ${TCLTEST_EXE} $(TOP_DIR)/tests/all.tcl $(TESTFLAGS)
-@@ -764,7 +764,7 @@ INSTALL_PACKAGE_TARGETS = install-packages
+@@ -771,7 +771,7 @@
  INSTALL_DEV_TARGETS = install-headers
  INSTALL_EXTRA_TARGETS = @EXTRA_INSTALL@
  INSTALL_TARGETS = $(INSTALL_BASE_TARGETS) $(INSTALL_DOC_TARGETS) $(INSTALL_DEV_TARGETS) \
