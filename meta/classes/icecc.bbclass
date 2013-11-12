@@ -188,6 +188,10 @@ def icc_get_and_check_tool(bb, d, tool):
     else:
         return t
 
+def set_icecc_env():
+    # dummy python version of set_icecc_env
+    return
+
 set_icecc_env() {
     if [ "x${ICECC_DISABLED}" != "x" ]
     then
