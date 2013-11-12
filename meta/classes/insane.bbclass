@@ -594,7 +594,10 @@ def package_qa_check_license(workdir, d):
     srcdir = d.getVar('S', True)
 
     for url in lic_files.split():
-        (type, host, path, user, pswd, parm) = bb.fetch.decodeurl(url)
+        try:
+            (type, host, path, user, pswd, parm) = bb.fetch.decodeurl(url)
+        except bb.fetch.MalformedUrl:
+            raise bb.build.FuncFailed( pn + ": LIC_FILES_CHKSUM contains an invalid URL: " + url)
         srclicfile = os.path.join(srcdir, path)
         if not os.path.isfile(srclicfile):
             raise bb.build.FuncFailed( pn + ": LIC_FILES_CHKSUM points to an invalid file: " + srclicfile)

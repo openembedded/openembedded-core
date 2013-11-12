@@ -228,7 +228,10 @@ def find_license_files(d):
         return lic_files_paths
 
     for url in lic_files.split():
-        (type, host, path, user, pswd, parm) = bb.fetch.decodeurl(url)
+        try:
+            (type, host, path, user, pswd, parm) = bb.fetch.decodeurl(url)
+        except bb.fetch.MalformedUrl:
+            raise bb.build.FuncFailed("%s: LIC_FILES_CHKSUM contains an invalid URL:  %s" % (d.getVar('PF', True), url))
         # We want the license filename and path
         srclicfile = os.path.join(srcdir, path)
         lic_files_paths.append((os.path.basename(path), srclicfile))
