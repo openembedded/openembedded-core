@@ -41,7 +41,13 @@ def icecc_dep_prepend(d):
 DEPENDS_prepend += "${@icecc_dep_prepend(d)} "
 
 def get_cross_kernel_cc(bb,d):
-    kernel_cc = d.expand('${KERNEL_CC}')
+    kernel_cc = d.getVar('KERNEL_CC')
+
+    # evaluate the expression by the shell if necessary
+    if '`' in kernel_cc or '$(' in kernel_cc:
+        kernel_cc = os.popen("echo %s" % kernel_cc).read()[:-1]
+
+    kernel_cc = d.expand(kernel_cc)
     kernel_cc = kernel_cc.replace('ccache', '').strip()
     kernel_cc = kernel_cc.split(' ')[0]
     kernel_cc = kernel_cc.strip()
