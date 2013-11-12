@@ -21,12 +21,13 @@
 #
 #User can specify if specific packages or packages belonging to class should not use icecc to distribute
 #compile jobs to remote machines, but handled localy, by defining ICECC_USER_CLASS_BL and ICECC_PACKAGE_BL
-#with the appropriate values in local.conf
+#with the appropriate values in local.conf. In addition the user can force to enable icecc for packages
+#which set an empty PARALLEL_MAKE variable by defining ICECC_USER_PACKAGE_WL.
 #########################################################################################
 #Error checking is kept to minimum so double check any parameters you pass to the class
 ###########################################################################################
 
-BB_HASHBASE_WHITELIST += "ICECC_PARALLEL_MAKE ICECC_DISABLED ICECC_USER_PACKAGE_BL ICECC_USER_CLASS_BL"
+BB_HASHBASE_WHITELIST += "ICECC_PARALLEL_MAKE ICECC_DISABLED ICECC_USER_PACKAGE_BL ICECC_USER_CLASS_BL ICECC_USER_PACKAGE_WL"
 
 ICECC_ENV_EXEC ?= "${STAGING_BINDIR_NATIVE}/icecc-create-env"
 
@@ -104,12 +105,18 @@ def use_icc(bb,d):
     #for one reason or the other
     system_package_blacklist = [ "uclibc", "glibc", "gcc", "bind", "u-boot", "dhcp-forwarder", "enchant", "connman", "orbit2" ]
     user_package_blacklist = (d.getVar('ICECC_USER_PACKAGE_BL') or "").split()
+    user_package_whitelist = (d.getVar('ICECC_USER_PACKAGE_WL') or "").split()
     package_blacklist = system_package_blacklist + user_package_blacklist
 
     for black in package_blacklist:
         if black in package_tmp:
             #bb.note(package_tmp, ' found in blacklist, disable icecc')
             return "no"
+
+    for white in user_package_whitelist:
+        if white in package_tmp:
+            bb.debug(1, package_tmp, " ", d.expand('${PV})'), " found in whitelist, enable icecc")
+            return "yes"
 
     if d.getVar('PARALLEL_MAKE') == "":
         bb.debug(1, package_tmp, " ", d.expand('${PV}'), " has empty PARALLEL_MAKE, disable icecc")
@@ -131,7 +138,8 @@ def icc_version(bb, d):
         return ""
 
     parallel = d.getVar('ICECC_PARALLEL_MAKE') or ""
-    d.setVar("PARALLEL_MAKE", parallel)
+    if not d.getVar('PARALLEL_MAKE') == "":
+        d.setVar("PARALLEL_MAKE", parallel)
 
     if icc_is_native(bb, d):
         archive_name = "local-host-env"
