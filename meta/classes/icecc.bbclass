@@ -258,6 +258,6 @@ do_compile_kernelmodules_prepend() {
     set_icecc_env
 }
 
-#do_install_prepend() {
-#    set_icecc_env
-#}
+do_install_prepend() {
+    set_icecc_env
+}
