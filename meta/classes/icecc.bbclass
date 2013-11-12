@@ -202,6 +202,21 @@ def icc_get_and_check_tool(bb, d, tool):
     else:
         return t
 
+wait_for_file() {
+    local TIME_ELAPSED=0
+    local FILE_TO_TEST=$1
+    local TIMEOUT=$2
+    until [ -f "$FILE_TO_TEST" ]
+    do
+        TIME_ELAPSED=`expr $TIME_ELAPSED + 1`
+        if [ $TIME_ELAPSED -gt $TIMEOUT ]
+        then
+            return 1
+        fi
+        sleep 1
+    done
+}
+
 def set_icecc_env():
     # dummy python version of set_icecc_env
     return
@@ -247,10 +262,22 @@ set_icecc_env() {
         ICECC_AS="`which as`"
     fi
 
-    if [ ! -r "${ICECC_VERSION}" ]
+    if [ ! -f "${ICECC_VERSION}.done" ]
     then
         mkdir -p "`dirname "${ICECC_VERSION}"`"
-        ${ICECC_ENV_EXEC} "${ICECC_CC}" "${ICECC_CXX}" "${ICECC_AS}" "${ICECC_VERSION}"
+
+        # the ICECC_VERSION generation step must be locked by a mutex
+        # in order to prevent race conditions
+        if flock -n "${ICECC_VERSION}.lock" \
+            ${ICECC_ENV_EXEC} "${ICECC_CC}" "${ICECC_CXX}" "${ICECC_AS}" "${ICECC_VERSION}"
+        then
+            touch "${ICECC_VERSION}.done"
+        elif [ ! wait_for_file "${ICECC_VERSION}.done" 30 ]
+        then
+            # locking failed so wait for ${ICECC_VERSION}.done to appear
+            bbwarn "Timeout waiting for ${ICECC_VERSION}.done"
+            return
+        fi
     fi
 
     export ICECC_VERSION ICECC_CC ICECC_CXX
