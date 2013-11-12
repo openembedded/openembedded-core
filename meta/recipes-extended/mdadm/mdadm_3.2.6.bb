@@ -27,6 +27,11 @@ do_configure_prepend () {
 }
 
 EXTRA_OEMAKE = "CHECK_RUN_DIR=0"
+# PPC64 uses long long for u64 in the kernel, but powerpc's asm/types.h
+# prevents 64-bit userland from seeing this definition, instead defaulting
+# to u64 == long in userspace. Define __SANE_USERSPACE_TYPES__ to get
+# int-ll64.h included
+EXTRA_OEMAKE_append_powerpc64 = ' CFLAGS=-D__SANE_USERSPACE_TYPES__'
 
 do_compile() {
 	oe_runmake
