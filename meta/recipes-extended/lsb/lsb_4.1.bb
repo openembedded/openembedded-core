@@ -78,9 +78,10 @@ do_install_append(){
        install -m 0755 ${WORKDIR}/init-functions ${D}/${baselib}/lsb
 
        # creat links for LSB test
-       install -d ${D}/${libdir}/lsb
-       ln -sf ${sbindir}/chkconfig ${D}/${libdir}/lsb/install_initd
-       ln -sf ${sbindir}/chkconfig ${D}/${libdir}/lsb/remove_initd
+       install -d ${D}/usr/lib/lsb
+       ln -sf ${sbindir}/chkconfig ${D}/usr/lib/lsb/install_initd
+       ln -sf ${sbindir}/chkconfig ${D}/usr/lib/lsb/remove_initd
+       install -d ${D}/${libdir}
        ln -sf ${sbindir}/sendmail ${D}/${libdir}/sendmail
 
        if [ "${TARGET_ARCH}" = "x86_64" ];then
@@ -114,6 +115,7 @@ do_install_append(){
        fi
 }
 FILES_${PN} += "/lib64 \
+		/usr/lib/lsb \
                 ${base_libdir}/lsb/* \
 		${libdir}/sendmail \
                "
