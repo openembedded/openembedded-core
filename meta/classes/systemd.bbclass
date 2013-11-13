@@ -9,8 +9,8 @@ SYSTEMD_PACKAGES_class-nativesdk ?= ""
 SYSTEMD_AUTO_ENABLE ??= "enable"
 
 # This class will be included in any recipe that supports systemd init scripts,
-# even if the systemd DISTRO_FEATURE isn't enabled.  As such don't make any
-# changes directly but check the DISTRO_FEATURES first.
+# even if systemd is not in DISTRO_FEATURES.  As such don't make any changes
+# directly but check the DISTRO_FEATURES first.
 python __anonymous() {
     features = d.getVar("DISTRO_FEATURES", True).split()
     # If the distro features have systemd but not sysvinit, inhibit update-rcd
