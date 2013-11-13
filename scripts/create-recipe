@@ -1794,7 +1794,7 @@ sub calculate_sums
 # Main program 
 #
 
-if ( @ARGV < 1 ) {
+if ( @ARGV < 1 || $ARGV[0] eq "--help" ) {
     print "Usage: $0 [-r] <url-of-source-tarballs>\n";
     exit(1);
 }
