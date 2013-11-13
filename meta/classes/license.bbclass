@@ -290,11 +290,11 @@ def incompatible_license(d, dont_want_licenses, package=None):
 
 def check_license_flags(d):
     """
-    This function checks if a recipe has any LICENSE_FLAGs that
+    This function checks if a recipe has any LICENSE_FLAGS that
     aren't whitelisted.
 
-    If it does, it returns the first LICENSE_FLAG missing from the
-    whitelist, or all the LICENSE_FLAGs if there is no whitelist.
+    If it does, it returns the first LICENSE_FLAGS item missing from the
+    whitelist, or all of the LICENSE_FLAGS if there is no whitelist.
 
     If everything is is properly whitelisted, it returns None.
     """
