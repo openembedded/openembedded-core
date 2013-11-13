@@ -625,6 +625,11 @@ def check_sanity_everybuild(status, d):
     if machinevalid:
         status.addresult(check_toolchain(d))
 
+    # Check that the SDKMACHINE is valid, if it is set
+    if d.getVar('SDKMACHINE', True):
+        if not check_conf_exists("conf/machine-sdk/${SDKMACHINE}.conf", d):
+            status.addresult('Specified SDKMACHINE value is not valid\n')
+
     check_supported_distro(d)
 
     # Check if DISPLAY is set if TEST_IMAGE is set
