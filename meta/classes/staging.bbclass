@@ -7,14 +7,11 @@ sysroot_stage_dir() {
 		 return
 	fi
 
-	# We only want to stage the contents of $src if it's non-empty so first rmdir $src
-	# then if it still exists (rmdir on non-empty dir fails) we can copy its contents
-	rmdir "$src" 2> /dev/null || true
-	# However we always want to stage a $src itself, even if it's empty
 	mkdir -p "$dest"
-	if [ -d "$src" ]; then
-		tar -cf - -C "$src" -p . | tar -xf - -C "$dest"
-	fi
+	(
+		cd $src
+		find . -print0 | cpio --null -pdlu $dest
+	)
 }
 
 sysroot_stage_libdir() {
