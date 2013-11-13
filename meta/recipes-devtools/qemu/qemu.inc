@@ -84,6 +84,7 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG[virtfs] = "--enable-virtfs --enable-attr,--disable-virtfs,libcap attr,"
 PACKAGECONFIG[aio] = "--enable-linux-aio,--disable-linux-aio,libaio,"
 PACKAGECONFIG[xfs] = "--enable-xfsctl,--disable-xfsctl,xfsprogs,"
+PACKAGECONFIG[xen] = "--enable-xen, --disable-xen,,"
 
 # Qemu target will not build in world build for ARM or Mips
 BROKEN_qemuarm = "1"
