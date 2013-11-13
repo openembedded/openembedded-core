@@ -62,10 +62,10 @@ license_create_manifest() {
 	# - Just copy the manifest
 	# - Copy the manifest and the license directories
 	# With both options set we see a .5 M increase in core-image-minimal
-	if [ -n "${COPY_LIC_MANIFEST}" ]; then
+	if [ "${COPY_LIC_MANIFEST}" = "1" ]; then
 		mkdir -p ${IMAGE_ROOTFS}/usr/share/common-licenses/
 		cp ${LICENSE_MANIFEST} ${IMAGE_ROOTFS}/usr/share/common-licenses/license.manifest
-		if [ -n "${COPY_LIC_DIRS}" ]; then
+		if [ "${COPY_LIC_DIRS}" = "1" ]; then
 			for pkg in ${INSTALLED_PKGS}; do
 				mkdir -p ${IMAGE_ROOTFS}/usr/share/common-licenses/${pkg}
 				for lic in `ls ${LICENSE_DIRECTORY}/${pkg}`; do
