@@ -95,15 +95,15 @@ def build_live(d):
         d.setVar('NOISO', base_contains('IMAGE_FSTYPES', "iso", "0", "1", d))
         d.setVar('NOHDD', base_contains('IMAGE_FSTYPES', "hddimg", "0", "1", d))
         if d.getVar('NOISO', True) == "0" or d.getVar('NOHDD', True) == "0":
-            return "live"
-        return "empty"
-    return "live"
+            return "image-live"
+        return ""
+    return "image-live"
 
 IMAGE_TYPE_live = "${@build_live(d)}"
 
-inherit image-${IMAGE_TYPE_live}
-IMAGE_TYPE_vmdk = '${@base_contains("IMAGE_FSTYPES", "vmdk", "vmdk", "empty", d)}'
-inherit image-${IMAGE_TYPE_vmdk}
+inherit ${IMAGE_TYPE_live}
+IMAGE_TYPE_vmdk = '${@base_contains("IMAGE_FSTYPES", "vmdk", "image-vmdk", "", d)}'
+inherit ${IMAGE_TYPE_vmdk}
 
 python () {
     deps = " " + imagetypes_getdepends(d)
