@@ -45,8 +45,8 @@ EXTRA_OECONF = "--disable-introspection \
                "
 
 PACKAGES =+ "udev-utils udev-cache"
-PACKAGES =+ "libudev libudev-dev libudev-dbg"
-PACKAGES =+ "libgudev libgudev-dev libgudev-dbg"
+PACKAGES =+ "libudev"
+PACKAGES =+ "libgudev"
 
 INITSCRIPT_PACKAGES = "udev udev-cache"
 INITSCRIPT_NAME_udev = "udev"
@@ -61,15 +61,13 @@ FILES_${PN}-dbg += "${libexecdir}/.debug"
 FILES_${PN}-dbg += "${base_libdir}/udev/.debug/"
 FILES_${PN}-dbg += "${base_libdir}/udev/.debug/*"
 FILES_${PN}-dbg += "${nonarch_base_libdir}/udev/.debug/*"
-FILES_${PN}-dev = "${datadir}/pkgconfig/udev.pc"
+FILES_${PN}-dev = "${datadir}/pkgconfig/udev.pc \
+                   ${includedir}/libudev.h ${libdir}/libudev.so ${libdir}/libudev.la \
+                   ${libdir}/libudev.a ${libdir}/pkgconfig/libudev.pc \
+                   ${includedir}/gudev* ${libdir}/libgudev*.so ${libdir}/libgudev*.la \
+                   ${libdir}/libgudev*.a ${libdir}/pkgconfig/gudev*.pc"
 FILES_libudev = "${base_libdir}/libudev.so.*"
-FILES_libudev-dbg = "${base_libdir}/.debug/libudev.so.*"
-FILES_libudev-dev = "${includedir}/libudev.h ${libdir}/libudev.so ${libdir}/libudev.la \
-                     ${libdir}/libudev.a ${libdir}/pkgconfig/libudev.pc"
 FILES_libgudev = "${base_libdir}/libgudev*.so.* ${libdir}/libgudev*.so.*"
-FILES_libgudev-dbg = "${base_libdir}/.debug/libgudev*.so.* ${libdir}/.debug/libgudev*.so.*"
-FILES_libgudev-dev = "${includedir}/gudev* ${libdir}/libgudev*.so ${libdir}/libgudev*.la \
-                     ${libdir}/libgudev*.a ${libdir}/pkgconfig/gudev*.pc"
 FILES_udev-cache = "${sysconfdir}/init.d/udev-cache ${sysconfdir}/default/udev-cache"
 
 FILES_udev-utils = "${bindir}/udevadm"
