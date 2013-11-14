@@ -676,12 +676,10 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
 
     bb.debug(2, "Considering setscene task: %s" % (str(taskdependees[task])))
 
-    def isNative(x):
-        return x.endswith("-native")
     def isNativeCross(x):
-        return x.endswith("-native") or x.endswith("-cross") or x.endswith("-cross-initial")
+        return x.endswith("-native") or x.endswith("-cross") or x.endswith("-cross-initial") or x.endswith("-crosssdk") or x.endswith("-crosssdk-initial")
     def isSafeDep(x):
-        if x in ["quilt-native", "autoconf-native", "automake-native", "gnu-config-native", "libtool-native", "pkgconfig-native", "gcc-cross", "binutils-cross", "gcc-cross-initial"]:
+        if x in ["quilt-native", "autoconf-native", "automake-native", "gnu-config-native", "libtool-native", "pkgconfig-native", "gcc-cross", "binutils-cross", "gcc-cross-initial", "gcc-crosssdk", "binutils-crosssdk", "gcc-crosssdk-initial"]:
             return True
         return False
     def isPostInstDep(x):
