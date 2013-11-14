@@ -50,7 +50,7 @@ class Trace:
         self.parent_map = None
         self.mem_stats = None
 
-        parse_paths (writer, self, paths, options.mintime)
+        parse_paths (writer, self, paths)
         if not self.valid():
             raise ParseError("empty state: '%s' does not contain a valid bootchart" % ", ".join(paths))
 
@@ -630,7 +630,7 @@ def get_num_cpus(headers):
         return 1
     return max (int(mat.group(1)), 1)
 
-def _do_parse(writer, state, filename, file, mintime):
+def _do_parse(writer, state, filename, file):
     writer.info("parsing '%s'" % filename)
     t1 = clock()
     paths = filename.split("/")
@@ -643,7 +643,7 @@ def _do_parse(writer, state, filename, file, mintime):
             start = int(float(line.split()[-1]))
         elif line.startswith("Ended:"):
             end = int(float(line.split()[-1]))
-    if start and end and (end - start) >= mintime:
+    if start and end:
         k = pn + ":" + task
         state.processes[pn + ":" + task] = [start, end]
         if start not in state.start:
@@ -658,14 +658,14 @@ def _do_parse(writer, state, filename, file, mintime):
     writer.info("  %s seconds" % str(t2-t1))
     return state
 
-def parse_file(writer, state, filename, mintime):
+def parse_file(writer, state, filename):
     if state.filename is None:
         state.filename = filename
     basename = os.path.basename(filename)
     with open(filename, "rb") as file:
-        return _do_parse(writer, state, filename, file, mintime)
+        return _do_parse(writer, state, filename, file)
 
-def parse_paths(writer, state, paths, mintime):
+def parse_paths(writer, state, paths):
     for path in paths:
         if state.filename is None:
             state.filename = path
@@ -676,7 +676,7 @@ def parse_paths(writer, state, paths, mintime):
         #state.filename = path
         if os.path.isdir(path):
             files = sorted([os.path.join(path, f) for f in os.listdir(path)])
-            state = parse_paths(writer, state, files, mintime)
+            state = parse_paths(writer, state, files)
         elif extension in [".tar", ".tgz", ".gz"]:
             if extension == ".gz":
                 root, extension = os.path.splitext(root)
@@ -695,7 +695,7 @@ def parse_paths(writer, state, paths, mintime):
                 if tf != None:
                     tf.close()
         else:
-            state = parse_file(writer, state, path, mintime)
+            state = parse_file(writer, state, path)
     return state
 
 def split_res(res, n):

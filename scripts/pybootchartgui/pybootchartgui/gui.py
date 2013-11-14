@@ -121,6 +121,8 @@ class PyBootchartWidget(gtk.DrawingArea):
 
     def show_toggled(self, button):
         self.options.app_options.show_all = button.get_property ('active')
+        self.chart_width, self.chart_height = draw.extents(self.options, self.xscale, self.trace)
+        self._set_scroll_adjustments(self.hadj, self.vadj)
         self.queue_draw()
 
     POS_INCREMENT = 100

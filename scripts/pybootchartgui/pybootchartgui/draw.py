@@ -297,10 +297,20 @@ OPTIONS = None
 
 def extents(options, xscale, trace):
 	start = min(trace.start.keys())
-	end = max(trace.end.keys())
+	end = start
 
-	w = int ((end - start) * sec_w_base * xscale) + 2*off_x
-	h = proc_h * len(trace.processes) + header_h + 2 * off_y
+        processes = 0
+        for proc in trace.processes:
+                if not options.app_options.show_all and \
+                   trace.processes[proc][1] - trace.processes[proc][0] < options.app_options.mintime:
+                        continue
+
+                if trace.processes[proc][1] > end:
+                        end = trace.processes[proc][1]
+                processes += 1
+
+	w = int ((end - start) * sec_w_base * xscale) + 2 * off_x
+	h = proc_h * processes + header_h + 2 * off_y
 
 	return (w, h)
 
@@ -419,6 +429,9 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
         offset = min(trace.start.keys())
         for s in sorted(trace.start.keys()):
             for val in sorted(trace.start[s]):
+                if not options.app_options.show_all and \
+                   trace.processes[val][1] - s < options.app_options.mintime:
+                    continue
                 task = val.split(":")[1]
                 #print val
                 #print trace.processes[val][1]
