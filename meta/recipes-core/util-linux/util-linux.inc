@@ -39,15 +39,18 @@ PACKAGES =+ "util-linux-agetty util-linux-fdisk util-linux-cfdisk util-linux-sfd
              util-linux-mkfs.cramfs util-linux-fsck.cramfs \
              util-linux-partx ${PN}-bash-completion"
 
-EXTRA_OECONF = "--libdir=${base_libdir} --disable-use-tty-group \
-                --disable-makeinstall-chown --enable-elvtune --enable-init \
-                --enable-kill --enable-last --enable-mesg --enable-partx \
-                --enable-raw --enable-rdev --enable-reset --disable-login \
-                --disable-vipw --disable-newgrp --disable-chfn-chsh \
-                --enable-write --enable-arch --enable-mount --with-fsprobe=builtin \
-                --enable-libuuid --enable-libblkid --enable-fsck --without-udev \
-		usrsbin_execdir='${sbindir}' \
+SHARED_EXTRA_OECONF = "--disable-use-tty-group \
+                       --disable-makeinstall-chown --enable-elvtune --enable-init \
+                       --enable-kill --enable-last --enable-mesg --enable-partx \
+                       --enable-raw --enable-rdev --enable-reset --disable-login \
+                       --disable-vipw --disable-newgrp --disable-chfn-chsh \
+                       --enable-write --enable-arch --enable-mount --with-fsprobe=builtin \
+                       --enable-libuuid --enable-libblkid --enable-fsck --without-udev \
+                       usrsbin_execdir='${sbindir}' \
 "
+
+EXTRA_OECONF = "${SHARED_EXTRA_OECONF} --libdir=${base_libdir}"
+
 PACKAGECONFIG_class-target ?= "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)} \
                                 ${@base_contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)} "
 PACKAGECONFIG[pam] = "--enable-su --enable-runuser,--disable-su --disable-runuser, libpam,"
