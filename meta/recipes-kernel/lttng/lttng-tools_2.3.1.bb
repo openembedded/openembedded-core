@@ -12,8 +12,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=01d7fc4496aacf37d90df90b90b0cac1 \
 DEPENDS = "liburcu popt lttng-ust"
 RDEPENDS_${PN}-ptest += "make"
 
-SRCREV = "c9dc1289e040c542f96fbfd558267786816d5703"
-PV = "v2.3.0"
+SRCREV = "5d985544a7ad54afa0514ea7f522a89d8d844860"
+PV = "v2.3.1"
 
 SRC_URI = "git://git.lttng.org/lttng-tools.git \
            file://runtest.patch \
