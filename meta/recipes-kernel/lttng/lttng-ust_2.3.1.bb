@@ -1,5 +1,5 @@
-SUMMARY = "Linux Trace Toolkit Userspace Tracer 2.0"
-DESCRIPTION = "The LTTng UST 2.0 package contains the userspace tracer library to trace userspace codes."
+SUMMARY = "Linux Trace Toolkit Userspace Tracer 2.x"
+DESCRIPTION = "The LTTng UST 2.x package contains the userspace tracer library to trace userspace codes."
 HOMEPAGE = "http://lttng.org/ust"
 BUGTRACKER = "https://bugs.lttng.org/projects/lttng-ust"
 
@@ -17,8 +17,8 @@ RPROVIDES_${PN} = "lttng2-ust"
 RREPLACES_${PN} = "lttng2-ust"
 RCONFLICTS_${PN} = "lttng2-ust"
 
-SRCREV = "9f00ce32b103eed13524c876757b6611c5922382"
-PV = "2.3.0"
+SRCREV = "535d0408caee93577c2b4d8ad3cd672fa97eac1d"
+PV = "2.3.1"
 PE = "2"
 
 SRC_URI = "git://git.lttng.org/lttng-ust.git \
