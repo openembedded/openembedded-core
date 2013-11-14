@@ -3,7 +3,6 @@
 DESCRIPTION = "Tools to manipulate Squashfs filesystems."
 SECTION = "base"
 LICENSE = "GPL-2 & PD"
-FILESEXTRAPATHS_prepend := "${THISDIR}/patches:"
 LIC_FILES_CHKSUM = "file://../COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://../../7zC.txt;beginline=12;endline=16;md5=2056cd6d919ebc3807602143c7449a7c \
                    "
