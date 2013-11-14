@@ -16,8 +16,6 @@ SRC_URI[sha256sum] = "c603957a4966811c04af5f6048c71cfb4966ec93312d7b3118116ed9f3
 
 S = "${WORKDIR}/pcre-${PV}"
 
-FILESPATH .= ":${@base_set_filespath([bb.utils.which(BBPATH, 'recipes-support/libpcre/files', direction=True)], d)}"
-
 PROVIDES += "pcre"
 DEPENDS += "bzip2 zlib"
 
