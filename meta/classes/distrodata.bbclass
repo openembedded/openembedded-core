@@ -751,34 +751,25 @@ python do_checkpkg() {
                                 if not tmp3:
                                         bb.plain("#DEBUG# Package %s: current version (%s) doesn't match the usual pattern" %(pname, pversion))
         elif type == 'svn':
-                options = []
-                if user:
-                        options.append("--username %s" % user)
-                if pswd:
-                        options.append("--password %s" % pswd)
-                svnproto = 'svn'
-                if 'proto' in parm:
-                        svnproto = parm['proto']
-                if 'rev' in parm:
-                        pcurver = parm['rev']
+                ud = bb.fetch2.FetchData(uri, d)
 
-                svncmd = "svn info %s %s://%s%s/%s/ 2>&1" % (" ".join(options), svnproto, host, path, parm["module"])
-                print svncmd
-                svninfo = os.popen(svncmd).read()
-                if "Can't connect to host " in svninfo or "Connection timed out" in svninfo:
-                        svncmd = "svn info %s %s://%s%s/%s/ 2>&1" % (" ".join(options), "http",
-                                       host, path, parm["module"])
-                        svninfo = os.popen(svncmd).read()
-                for line in svninfo.split("\n"):
-                        if re.search("^Last Changed Rev:", line):
-                                pupver = line.split(" ")[-1]
-                                if pupver in pversion:
-                                        pstatus = "MATCH"
-                                else:
-                                        pstatus = "UPDATE"
-
-                if re.match("Err", pstatus):
+                svnFetcher = bb.fetch2.svn.Svn(d)
+                svnFetcher.urldata_init(ud, d)
+                try:
+                        pupver = svnFetcher.latest_revision(uri, ud, d, ud.names[0])
+                except bb.fetch2.FetchError:
                         pstatus = "ErrSvnAccess"
+                
+                if pupver:
+                        if pupver in pversion:
+                                pstatus = "MATCH"
+                        else:
+                                pstatus = "UPDATE"
+                else:
+                        pstatus = "ErrSvnAccess"
+                
+                if 'rev' in ud.parm:
+                        pcurver = ud.parm['rev']
 
                 if pstatus != "ErrSvnAccess":
                         tag = pversion.rsplit("+svn")[0]
