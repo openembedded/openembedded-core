@@ -1,0 +1,59 @@
+Link boost_thread with boost_atomic to avoid undefined references to
+boost::atomic::detail::lock_pool::get_lock_for().
+
+From https://svn.boost.org/trac/boost/ticket/9041
+
+Phil Blundell <pb@pbcl.net>
+Upstream-Status: Backport
+
+diff -Nurp boost_1_54_0/libs/thread/build/has_atomic_flag_lockfree_test.cpp boost_1_54_0.pm/libs/thread/build/has_atomic_flag_lockfree_test.cpp
+--- boost_1_54_0/libs/thread/build/has_atomic_flag_lockfree_test.cpp	1970-01-01 01:00:00.000000000 +0100
++++ boost_1_54_0.pm/libs/thread/build/has_atomic_flag_lockfree_test.cpp	2013-08-23 19:51:52.706329968 +0200
+@@ -0,0 +1,14 @@
++// Copyright (c) 2013, Petr Machata, Red Hat Inc.
++//
++// Use modification and distribution are subject to the boost Software
++// License, Version 1.0.  (See http://www.boost.org/LICENSE_1_0.txt).
++
++#include "../../../boost/atomic.hpp"
++#include "../../../boost/static_assert.hpp"
++
++int
++main(int argc, char *argv[])
++{
++  BOOST_STATIC_ASSERT(BOOST_ATOMIC_FLAG_LOCK_FREE);
++  return 0;
++}
+diff -Nurp boost_1_54_0/libs/thread/build/Jamfile.v2 boost_1_54_0.pm/libs/thread/build/Jamfile.v2
+--- boost_1_54_0/libs/thread/build/Jamfile.v2	2013-06-15 12:35:45.000000000 +0200
++++ boost_1_54_0.pm/libs/thread/build/Jamfile.v2	2013-08-23 19:52:30.018613408 +0200
+@@ -36,6 +36,7 @@ import os ;
+ import feature ;
+ import indirect ;
+ import path ;
++import configure ;
+ 
+ project boost/thread
+     : source-location ../src
+@@ -140,6 +141,8 @@ local rule default_threadapi ( )
+ feature.feature threadapi : pthread win32 : propagated ;
+ feature.set-default threadapi : [ default_threadapi ] ;
+ 
++exe has_atomic_flag_lockfree : ../build/has_atomic_flag_lockfree_test.cpp ;
++
+ rule tag ( name : type ? : property-set )
+ {
+     local result = $(name) ;
+@@ -248,6 +251,12 @@ rule requirements ( properties * )
+ {
+     local result ;
+ 
++    if ! [ configure.builds has_atomic_flag_lockfree
++	   : $(properties) : "lockfree boost::atomic_flag" ]
++    {
++        result += <library>/boost/atomic//boost_atomic ;
++    }
++
+     if <threadapi>pthread in $(properties)
+     {
+         result += <define>BOOST_THREAD_POSIX ;
