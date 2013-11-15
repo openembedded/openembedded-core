@@ -1,3 +1,18 @@
+#  This file is part of pybootchartgui.
+
+#  pybootchartgui is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+
+#  pybootchartgui is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+
+#  You should have received a copy of the GNU General Public License
+#  along with pybootchartgui. If not, see <http://www.gnu.org/licenses/>.
+
 class ProcessTree:
     """ProcessTree encapsulates a process tree.  The tree is built from log files
        retrieved during the boot process.  When building the process tree, it is
@@ -19,55 +34,61 @@ class ProcessTree:
           are merged together.
 
     """
-    LOGGER_PROC = 'bootchartd'
+    LOGGER_PROC = 'bootchart-colle'
     EXPLODER_PROCESSES = set(['hwup'])
 
-    def __init__(self, psstats, monitoredApp, prune, for_testing = False):
+    def __init__(self, writer, kernel, psstats, sample_period,
+                 monitoredApp, prune, idle, taskstats,
+                 accurate_parentage, for_testing = False):
+        self.writer = writer
         self.process_tree = []
-	self.psstats = psstats
-	self.process_list = sorted(psstats.process_list, key = lambda p: p.pid)
-	self.sample_period = psstats.sample_period
+        self.taskstats = taskstats
+        if psstats is None:
+            process_list = kernel
+        elif kernel is None:
+            process_list = psstats.process_map.values()
+        else:
+            process_list = list(kernel) + list(psstats.process_map.values())
+        self.process_list = sorted(process_list, key = lambda p: p.pid)
+        self.sample_period = sample_period
 
-	self.build()
-        self.update_ppids_for_daemons(self.process_list)
+        self.build()
+        if not accurate_parentage:
+            self.update_ppids_for_daemons(self.process_list)
+
+        self.start_time = self.get_start_time(self.process_tree)
+        self.end_time = self.get_end_time(self.process_tree)
+        self.duration = self.end_time - self.start_time
+        self.idle = idle
+
+        if for_testing:
+            return
+
+        removed = self.merge_logger(self.process_tree, self.LOGGER_PROC, monitoredApp, False)
+        writer.status("merged %i logger processes" % removed)
+
+        if prune:
+            p_processes = self.prune(self.process_tree, None)
+            p_exploders = self.merge_exploders(self.process_tree, self.EXPLODER_PROCESSES)
+            p_threads = self.merge_siblings(self.process_tree)
+            p_runs = self.merge_runs(self.process_tree)
+            writer.status("pruned %i process, %i exploders, %i threads, and %i runs" % (p_processes, p_exploders, p_threads, p_runs))
+
+        self.sort(self.process_tree)
 
         self.start_time = self.get_start_time(self.process_tree)
         self.end_time = self.get_end_time(self.process_tree)
         self.duration = self.end_time - self.start_time
 
-        if for_testing:
-            return
-
-	# print 'proc_tree before prune: num_proc=%i, duration=%i' % (self.num_nodes(self.process_list), self.duration)
-
-	removed = self.merge_logger(self.process_tree, self.LOGGER_PROC, monitoredApp, False)
-	print "Merged %i logger processes" % removed
-
-	if prune:
-            removed = self.prune(self.process_tree, None)
-	    print "Pruned %i processes" % removed
-	    removed = self.merge_exploders(self.process_tree, self.EXPLODER_PROCESSES)
-	    print "Pruned %i exploders" % removed
-	    removed = self.merge_siblings(self.process_tree)
-	    print "Pruned %i threads" % removed
-	    removed = self.merge_runs(self.process_tree)
-	    print "Pruned %i runs" % removed
-
-        self.sort(self.process_tree)
-
-	self.start_time = self.get_start_time(self.process_tree)
-        self.end_time = self.get_end_time(self.process_tree)
-	self.duration = self.end_time - self.start_time
-
-	self.num_proc = self.num_nodes(self.process_tree)
+        self.num_proc = self.num_nodes(self.process_tree)
 
     def build(self):
         """Build the process tree from the list of top samples."""
         self.process_tree = []
-	for proc in self.process_list:
+        for proc in self.process_list:
             if not proc.parent:
                 self.process_tree.append(proc)
-	    else:
+            else:
                 proc.parent.child_list.append(proc)
 
     def sort(self, process_subtree):
@@ -85,11 +106,11 @@ class ProcessTree:
 
     def get_start_time(self, process_subtree):
         """Returns the start time of the process subtree.  This is the start
-	   time of the earliest process.
+           time of the earliest process.
 
         """
         if not process_subtree:
-            return 100000000;
+            return 100000000
         return min( [min(proc.start_time, self.get_start_time(proc.child_list)) for proc in process_subtree] )
 
     def get_end_time(self, process_subtree):
@@ -98,13 +119,13 @@ class ProcessTree:
 
         """
         if not process_subtree:
-            return -100000000;
+            return -100000000
         return max( [max(proc.start_time + proc.duration, self.get_end_time(proc.child_list)) for proc in process_subtree] )
 
     def get_max_pid(self, process_subtree):
         """Returns the max PID found in the process tree."""
         if not process_subtree:
-            return -100000000;
+            return -100000000
         return max( [max(proc.pid, self.get_max_pid(proc.child_list)) for proc in process_subtree] )
 
     def update_ppids_for_daemons(self, process_list):
@@ -118,29 +139,29 @@ class ProcessTree:
         rcendpid = -1
         rcproc = None
         for p in process_list:
-            if p.cmd == "rc" and p.ppid == 1:
+            if p.cmd == "rc" and p.ppid // 1000 == 1:
                 rcproc = p
                 rcstartpid = p.pid
                 rcendpid = self.get_max_pid(p.child_list)
         if rcstartpid != -1 and rcendpid != -1:
             for p in process_list:
-                if p.pid > rcstartpid and p.pid < rcendpid and p.ppid == 1:
+                if p.pid > rcstartpid and p.pid < rcendpid and p.ppid // 1000 == 1:
                     p.ppid = rcstartpid
                     p.parent = rcproc
             for p in process_list:
                 p.child_list = []
             self.build()
-            
+
     def prune(self, process_subtree, parent):
         """Prunes the process tree by removing idle processes and processes
-	   that only live for the duration of a single top sample.  Sibling
-	   processes with the same command line (i.e. threads) are merged 
-	   together. This filters out sleepy background processes, short-lived
-	   processes and bootcharts' analysis tools.
+           that only live for the duration of a single top sample.  Sibling
+           processes with the same command line (i.e. threads) are merged
+           together. This filters out sleepy background processes, short-lived
+           processes and bootcharts' analysis tools.
         """
         def is_idle_background_process_without_children(p):
             process_end = p.start_time + p.duration
-	    return not p.active and \
+            return not p.active and \
                    process_end >= self.start_time + self.duration and \
                    p.start_time > self.start_time and \
                    p.duration > 0.9 * self.duration and \
@@ -175,8 +196,8 @@ class ProcessTree:
 
     def merge_logger(self, process_subtree, logger_proc, monitored_app, app_tree):
         """Merges the logger's process subtree.  The logger will typically
-	   spawn lots of sleep and cat processes, thus polluting the
-	   process tree.
+           spawn lots of sleep and cat processes, thus polluting the
+           process tree.
 
         """
         num_removed = 0
@@ -185,7 +206,7 @@ class ProcessTree:
             if logger_proc == p.cmd and not app_tree:
                 is_app_tree = True
                 num_removed += self.merge_logger(p.child_list, logger_proc, monitored_app, is_app_tree)
-		# don't remove the logger itself
+                # don't remove the logger itself
                 continue
 
             if app_tree and monitored_app != None and monitored_app == p.cmd:
@@ -193,7 +214,7 @@ class ProcessTree:
 
             if is_app_tree:
                 for child in p.child_list:
-                    self.__merge_processes(p, child)
+                    self.merge_processes(p, child)
                     num_removed += 1
                 p.child_list = []
             else:
@@ -202,7 +223,7 @@ class ProcessTree:
 
     def merge_exploders(self, process_subtree, processes):
         """Merges specific process subtrees (used for processes which usually
-	   spawn huge meaningless process trees).
+           spawn huge meaningless process trees).
 
         """
         num_removed = 0
@@ -210,7 +231,7 @@ class ProcessTree:
             if processes in processes and len(p.child_list) > 0:
                 subtreemap = self.getProcessMap(p.child_list)
                 for child in subtreemap.values():
-                    self.__merge_processes(p, child)
+                    self.merge_processes(p, child)
                     num_removed += len(subtreemap)
                     p.child_list = []
                     p.cmd += " (+)"
@@ -218,10 +239,10 @@ class ProcessTree:
                 num_removed += self.merge_exploders(p.child_list, processes)
         return num_removed
 
-    def merge_siblings(self,process_subtree):
+    def merge_siblings(self, process_subtree):
         """Merges thread processes.  Sibling processes with the same command
-	   line are merged together.
-	   
+           line are merged together.
+
         """
         num_removed = 0
         idx = 0
@@ -233,7 +254,7 @@ class ProcessTree:
                 idx -= 1
                 num_removed += 1
                 p.child_list.extend(nextp.child_list)
-                self.__merge_processes(p, nextp)
+                self.merge_processes(p, nextp)
             num_removed += self.merge_siblings(p.child_list)
             idx += 1
         if len(process_subtree) > 0:
@@ -243,7 +264,7 @@ class ProcessTree:
 
     def merge_runs(self, process_subtree):
         """Merges process runs.  Single child processes which share the same
-	   command line with the parent are merged.
+           command line with the parent are merged.
 
         """
         num_removed = 0
@@ -253,16 +274,17 @@ class ProcessTree:
             if len(p.child_list) == 1 and p.child_list[0].cmd == p.cmd:
                 child = p.child_list[0]
                 p.child_list = list(child.child_list)
-                self.__merge_processes(p, child)
+                self.merge_processes(p, child)
                 num_removed += 1
                 continue
             num_removed += self.merge_runs(p.child_list)
             idx += 1
         return num_removed
 
-    def __merge_processes(self, p1, p2):
-        """Merges two process samples."""
+    def merge_processes(self, p1, p2):
+        """Merges two process' samples."""
         p1.samples.extend(p2.samples)
+        p1.samples.sort( key = lambda p: p.time )
         p1time = p1.start_time
         p2time = p2.start_time
         p1.start_time = min(p1time, p2time)

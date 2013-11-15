@@ -4,16 +4,28 @@ import unittest
 
 sys.path.insert(0, os.getcwd())
 
-import parsing
-import process_tree
+import pybootchartgui.parsing as parsing
+import pybootchartgui.process_tree as process_tree
+import pybootchartgui.main as main
+
+if sys.version_info >= (3, 0):
+    long = int
 
 class TestProcessTree(unittest.TestCase):
 
     def setUp(self):
-	self.name = "Process tree unittest"
-        self.rootdir = '../examples/1'
-	self.ps_stats = parsing.parse_file(parsing.ParserState(), self.mk_fname('proc_ps.log')).ps_stats
-        self.processtree = process_tree.ProcessTree(self.ps_stats, None, False, for_testing = True)
+        self.name = "Process tree unittest"
+        self.rootdir = os.path.join(os.path.dirname(sys.argv[0]), '../../examples/1/')
+
+        parser = main._mk_options_parser()
+        options, args = parser.parse_args(['--q', self.rootdir])
+        writer = main._mk_writer(options)
+        trace = parsing.Trace(writer, args, options)
+
+        parsing.parse_file(writer, trace, self.mk_fname('proc_ps.log'))
+        trace.compile(writer)
+        self.processtree = process_tree.ProcessTree(writer, None, trace.ps_stats, \
+            trace.ps_stats.sample_period, None, options.prune, None, None, False, for_testing = True)
 
     def mk_fname(self,f):
         return os.path.join(self.rootdir, f)
@@ -26,14 +38,16 @@ class TestProcessTree(unittest.TestCase):
         return flattened
 
     def checkAgainstJavaExtract(self, filename, process_tree):
-        for expected, actual in zip(open(filename), self.flatten(process_tree)):
+        test_data = open(filename)
+        for expected, actual in zip(test_data, self.flatten(process_tree)):
             tokens = expected.split('\t')
-            self.assertEqual(int(tokens[0]), actual.pid)
+            self.assertEqual(int(tokens[0]), actual.pid // 1000)
             self.assertEqual(tokens[1], actual.cmd)
             self.assertEqual(long(tokens[2]), 10 * actual.start_time)
             self.assert_(long(tokens[3]) - 10 * actual.duration < 5, "duration")
             self.assertEqual(int(tokens[4]), len(actual.child_list))
             self.assertEqual(int(tokens[5]), len(actual.samples))
+        test_data.close()
 
     def testBuild(self):
         process_tree = self.processtree.process_tree
