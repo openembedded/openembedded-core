@@ -19,8 +19,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://extending-libinstall-dependencies.patch \
            "
 
-SRC_URI[md5sum] = "04c04e5042acd85cff6c439aba1995f1"
-SRC_URI[sha256sum] = "183113c2eb2232963e88864a6a54fd963dbfeb1a3679fb0d3456f9e0b79e4617"
+SRC_URI[md5sum] = "e5ae32be7927c9bc94d8593a881eeb3f"
+SRC_URI[sha256sum] = "a3263b1e15668c009313bf04ab67420bec9f2b167c402a71a486307cadee8d30"
 
 inherit autotools pkgconfig gettext pixbufcache
 
