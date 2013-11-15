@@ -44,6 +44,9 @@ ALTERNATIVE_LINK_NAME[poweroff] = "${base_sbindir}/poweroff"
 ALTERNATIVE_${PN}-pidof = "pidof"
 ALTERNATIVE_LINK_NAME[pidof] = "${base_bindir}/pidof"
 
+ALTERNATIVE_${PN}-sulogin = "sulogin"
+ALTERNATIVE_LINK_NAME[sulogin] = "${base_sbindir}/sulogin"
+
 ALTERNATIVE_${PN}-doc = "mountpoint.1 last.1 mesg.1 wall.1 sulogin.8 utmpdump.1"
 
 ALTERNATIVE_LINK_NAME[last.1] = "${mandir}/man1/last.1"
@@ -56,7 +59,7 @@ ALTERNATIVE_LINK_NAME[wall.1] = "${mandir}/man1/wall.1"
 PACKAGES =+ "sysvinit-pidof sysvinit-sulogin"
 FILES_${PN} += "${base_sbindir}/* ${base_bindir}/*"
 FILES_sysvinit-pidof = "${base_bindir}/pidof.sysvinit ${base_sbindir}/killall5"
-FILES_sysvinit-sulogin = "${base_sbindir}/sulogin"
+FILES_sysvinit-sulogin = "${base_sbindir}/sulogin.sysvinit"
 
 RDEPENDS_${PN} += "sysvinit-pidof"
 
