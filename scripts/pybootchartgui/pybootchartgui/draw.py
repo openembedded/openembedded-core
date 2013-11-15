@@ -432,9 +432,9 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
                 elif task == "do_populate_sysroot":
                     col = TASK_COLOR_SYSROOT
 
-                draw_rect(ctx, PROC_BORDER_COLOR, (x, y, w, proc_h))
                 if col:
                     draw_fill_rect(ctx, col, (x, y, w, proc_h))
+                draw_rect(ctx, PROC_BORDER_COLOR, (x, y, w, proc_h))
 
                 draw_label_in_box(ctx, PROC_TEXT_COLOR, val, x, y + proc_h - 4, w, proc_h)
                 y = y + proc_h
