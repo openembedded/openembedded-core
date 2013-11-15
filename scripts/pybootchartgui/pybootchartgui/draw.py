@@ -126,10 +126,10 @@ TASK_COLOR_CONFIGURE = (1.0, 1.0, 0.00, 1.0)
 TASK_COLOR_COMPILE = (0.0, 1.00, 0.00, 1.0)
 # Install task color
 TASK_COLOR_INSTALL = (1.0, 0.00, 1.00, 1.0)
-# Package task color
-TASK_COLOR_PACKAGE = (0.0, 1.00, 1.00, 1.0)
 # Sysroot task color
 TASK_COLOR_SYSROOT = (0.0, 0.00, 1.00, 1.0)
+# Package task color
+TASK_COLOR_PACKAGE = (0.0, 1.00, 1.00, 1.0)
 
 # Process states
 STATE_UNDEFINED = 0
@@ -414,10 +414,10 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
 			 TASK_COLOR_COMPILE, off_x+120, curr_y + 45, leg_s)
 	draw_legend_box (ctx, "Install", \
 			 TASK_COLOR_INSTALL, off_x+240, curr_y + 45, leg_s)
-	draw_legend_box (ctx, "Package", \
-			 TASK_COLOR_PACKAGE, off_x+360, curr_y + 45, leg_s)
 	draw_legend_box (ctx, "Populate Sysroot", \
 			 TASK_COLOR_SYSROOT, off_x+480, curr_y + 45, leg_s)
+	draw_legend_box (ctx, "Package", \
+			 TASK_COLOR_PACKAGE, off_x+480, curr_y + 45, leg_s)
 
 	ctx.set_font_size(PROC_TEXT_FONT_SIZE)
 
@@ -447,10 +447,10 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
                     col = TASK_COLOR_CONFIGURE
                 elif task == "do_install":
                     col = TASK_COLOR_INSTALL
-                elif task == "do_package":
-                    col = TASK_COLOR_PACKAGE
                 elif task == "do_populate_sysroot":
                     col = TASK_COLOR_SYSROOT
+                elif task == "do_package":
+                    col = TASK_COLOR_PACKAGE
                 else:
                     col = WHITE
 
