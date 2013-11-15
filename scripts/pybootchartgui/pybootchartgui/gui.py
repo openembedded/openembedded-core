@@ -302,6 +302,7 @@ class PyBootchartShell(gtk.VBox):
             # Misc. options
             button = gtk.CheckButton("Show more")
             button.connect ('toggled', self.widget.show_toggled)
+            button.set_active(options.app_options.show_all)
             hbox.pack_start (button, False, True)
 
         self.pack_start(hbox, False)
