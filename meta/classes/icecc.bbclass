@@ -55,7 +55,7 @@ def get_cross_kernel_cc(bb,d):
     return kernel_cc
 
 def get_icecc(d):
-    return d.getVar('ICECC_PATH') or os.popen("which icecc").read()[:-1]
+    return d.getVar('ICECC_PATH') or bb.utils.which(os.getenv("PATH"), "icecc")
 
 def create_path(compilers, bb, d):
     """
@@ -175,9 +175,9 @@ def icc_get_external_tool(bb, d, tool):
 
 def icc_get_tool(bb, d, tool):
     if icc_is_native(bb, d):
-        return os.popen("which %s" % tool).read()[:-1]
+        return bb.utils.which(os.getenv("PATH"), tool)
     elif icc_is_kernel(bb, d):
-        return os.popen("which %s" % get_cross_kernel_cc(bb, d)).read()[:-1]
+        return bb.utils.which(os.getenv("PATH"), get_cross_kernel_cc(bb, d))
     else:
         ice_dir = d.expand('${STAGING_BINDIR_TOOLCHAIN}')
         target_sys = d.expand('${TARGET_SYS}')
