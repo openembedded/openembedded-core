@@ -130,6 +130,8 @@ TASK_COLOR_INSTALL = (1.0, 0.00, 1.00, 1.0)
 TASK_COLOR_SYSROOT = (0.0, 0.00, 1.00, 1.0)
 # Package task color
 TASK_COLOR_PACKAGE = (0.0, 1.00, 1.00, 1.0)
+# Package Write RPM/DEB/IPK task color
+TASK_COLOR_PACKAGE_WRITE = (0.0, 0.50, 0.50, 1.0)
 
 # Process states
 STATE_UNDEFINED = 0
@@ -418,6 +420,8 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
 			 TASK_COLOR_SYSROOT, off_x+480, curr_y + 45, leg_s)
 	draw_legend_box (ctx, "Package", \
 			 TASK_COLOR_PACKAGE, off_x+480, curr_y + 45, leg_s)
+	draw_legend_box (ctx, "Package Write",
+			 TASK_COLOR_PACKAGE_WRITE, off_x+600, curr_y + 45, leg_s)
 
 	ctx.set_font_size(PROC_TEXT_FONT_SIZE)
 
@@ -451,6 +455,10 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
                     col = TASK_COLOR_SYSROOT
                 elif task == "do_package":
                     col = TASK_COLOR_PACKAGE
+                elif task == "do_package_write_rpm" or \
+                     task == "do_package_write_deb" or \
+                     task == "do_package_write_ipk":
+                    col = TASK_COLOR_PACKAGE_WRITE
                 else:
                     col = WHITE
 
