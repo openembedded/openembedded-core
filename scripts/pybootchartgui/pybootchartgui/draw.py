@@ -187,12 +187,15 @@ def draw_label_in_box(ctx, color, label, x, y, w, maxx):
 		label_x = x - label_w - 5
 	draw_text(ctx, label, color, label_x, y)
 
-def draw_sec_labels(ctx, rect, sec_w, nsecs):
+def draw_sec_labels(ctx, options, rect, sec_w, nsecs):
 	ctx.set_font_size(AXIS_FONT_SIZE)
 	prev_x = 0
 	for i in range(0, rect[2] + 1, sec_w):
 		if ((i / sec_w) % nsecs == 0) :
-			label = "%ds" % (i / sec_w)
+			if options.app_options.as_minutes :
+				label = "%.1f" % (i / sec_w / 60.0)
+			else :
+				label = "%d" % (i / sec_w)
 			label_w = ctx.text_extents(label)[2]
 			x = rect[0] + i - label_w/2
 			if x >= prev_x:
@@ -426,7 +429,7 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
 	ctx.set_font_size(PROC_TEXT_FONT_SIZE)
 
 	draw_box_ticks(ctx, chart_rect, sec_w)
-	draw_sec_labels(ctx, chart_rect, sec_w, 30)
+	draw_sec_labels(ctx, options, chart_rect, sec_w, 30)
 
 	y = curr_y+header_h
 
@@ -555,7 +558,7 @@ def draw_process_bar_chart(ctx, clip, options, proc_tree, times, curr_y, w, h, s
 		nsec = 1
 	else:
 		nsec = 5
-	draw_sec_labels (ctx, chart_rect, sec_w, nsec)
+	draw_sec_labels (ctx, options, chart_rect, sec_w, nsec)
 	draw_annotations (ctx, proc_tree, times, chart_rect)
 
 	y = curr_y + 60

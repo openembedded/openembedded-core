@@ -40,6 +40,8 @@ def _mk_options_parser():
 			  help="split the output chart into <NUM> charts, only works with \"-o PATH\"")
 	parser.add_option("-m", "--mintime", dest="mintime", type=int, default=8,
 			  help="only tasks longer than this time will be displayed")
+	parser.add_option("-M", "--minutes", action="store_true", dest="as_minutes", default=False,
+			  help="display time in minutes instead of seconds")
 #	parser.add_option("-n", "--no-prune", action="store_false", dest="prune", default=True,
 #			  help="do not prune the process tree")
 	parser.add_option("-q", "--quiet", action="store_true", dest="quiet", default=False,
