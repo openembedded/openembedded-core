@@ -278,7 +278,7 @@ def draw_chart(ctx, color, fill, chart_bounds, data, proc_tree, data_range):
 
 bar_h = 55
 meminfo_bar_h = 2 * bar_h
-header_h = 110 + 2 * (30 + bar_h) + 1 * (30 + meminfo_bar_h)
+header_h = 60
 # offsets
 off_x, off_y = 220, 10
 sec_w_base = 1 # the width of a second
@@ -389,7 +389,7 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
 	return curr_y
 
 def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
-        chart_rect = [off_x, curr_y+60, w, h - 2 * off_y - (curr_y+60) + proc_h]
+        chart_rect = [off_x, curr_y+header_h, w, h - 2 * off_y - (curr_y+header_h) + proc_h]
 
 	draw_legend_box (ctx, "Configure", \
 			 TASK_COLOR_CONFIGURE, off_x  , curr_y + 45, leg_s)
@@ -407,7 +407,7 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
 	draw_box_ticks(ctx, chart_rect, sec_w)
 	draw_sec_labels(ctx, chart_rect, sec_w, 30)
 
-	y = curr_y+60
+	y = curr_y+header_h
 
         offset = min(trace.start.keys())
         for s in sorted(trace.start.keys()):
