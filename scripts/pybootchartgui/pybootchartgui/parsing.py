@@ -675,8 +675,7 @@ def parse_paths(writer, state, paths, mintime):
             continue
         #state.filename = path
         if os.path.isdir(path):
-            files = [ f for f in [os.path.join(path, f) for f in os.listdir(path)] ]
-            files.sort()
+            files = sorted([os.path.join(path, f) for f in os.listdir(path)])
             state = parse_paths(writer, state, files, mintime)
         elif extension in [".tar", ".tgz", ".gz"]:
             if extension == ".gz":
