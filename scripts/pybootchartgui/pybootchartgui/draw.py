@@ -451,6 +451,8 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
                     col = TASK_COLOR_PACKAGE
                 elif task == "do_populate_sysroot":
                     col = TASK_COLOR_SYSROOT
+                else:
+                    col = WHITE
 
                 if col:
                     draw_fill_rect(ctx, col, (x, y, w, proc_h))
