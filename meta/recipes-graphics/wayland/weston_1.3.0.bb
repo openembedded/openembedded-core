@@ -31,7 +31,6 @@ EXTRA_OECONF = "--enable-setuid-install \
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'wayland', 'kms wayland', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
-                   ${@base_contains('DISTRO_FEATURES', 'opengles2', 'gles', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', 'pam', 'launch', '', d)} \
                   "
 #
