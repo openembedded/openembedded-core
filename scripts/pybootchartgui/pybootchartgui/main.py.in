@@ -40,29 +40,29 @@ def _mk_options_parser():
 			  help="split the output chart into <NUM> charts, only works with \"-o PATH\"")
 	parser.add_option("-m", "--mintime", dest="mintime", type=int, default=8,
 			  help="only tasks longer than this time will be displayed")
-	parser.add_option("-n", "--no-prune", action="store_false", dest="prune", default=True,
-			  help="do not prune the process tree")
+#	parser.add_option("-n", "--no-prune", action="store_false", dest="prune", default=True,
+#			  help="do not prune the process tree")
 	parser.add_option("-q", "--quiet", action="store_true", dest="quiet", default=False,
 			  help="suppress informational messages")
-	parser.add_option("-t", "--boot-time", action="store_true", dest="boottime", default=False,
-			  help="only display the boot time of the boot in text format (stdout)")	
+#	parser.add_option("-t", "--boot-time", action="store_true", dest="boottime", default=False,
+#			  help="only display the boot time of the boot in text format (stdout)")	
 	parser.add_option("--very-quiet", action="store_true", dest="veryquiet", default=False,
 			  help="suppress all messages except errors")
 	parser.add_option("--verbose", action="store_true", dest="verbose", default=False,
 			  help="print all messages")
-	parser.add_option("--profile", action="store_true", dest="profile", default=False,
-			  help="profile rendering of chart (only useful when in batch mode indicated by -f)")
-	parser.add_option("--show-pid", action="store_true", dest="show_pid", default=False,
-			  help="show process ids in the bootchart as 'processname [pid]'")
+#	parser.add_option("--profile", action="store_true", dest="profile", default=False,
+#			  help="profile rendering of chart (only useful when in batch mode indicated by -f)")
+#	parser.add_option("--show-pid", action="store_true", dest="show_pid", default=False,
+#			  help="show process ids in the bootchart as 'processname [pid]'")
 	parser.add_option("--show-all", action="store_true", dest="show_all", default=False,
 			  help="show all process information in the bootchart as '/process/path/exe [pid] [args]'")
-	parser.add_option("--crop-after", dest="crop_after", metavar="PROCESS", default=None,
-			  help="crop chart when idle after PROCESS is started")
-	parser.add_option("--annotate", action="append", dest="annotate", metavar="PROCESS", default=None,
-			  help="annotate position where PROCESS is started; can be specified multiple times. " +
-			       "To create a single annotation when any one of a set of processes is started, use commas to separate the names")
-	parser.add_option("--annotate-file", dest="annotate_file", metavar="FILENAME", default=None,
-			  help="filename to write annotation points to")
+#	parser.add_option("--crop-after", dest="crop_after", metavar="PROCESS", default=None,
+#			  help="crop chart when idle after PROCESS is started")
+#	parser.add_option("--annotate", action="append", dest="annotate", metavar="PROCESS", default=None,
+#			  help="annotate position where PROCESS is started; can be specified multiple times. " +
+#			       "To create a single annotation when any one of a set of processes is started, use commas to separate the names")
+#	parser.add_option("--annotate-file", dest="annotate_file", metavar="FILENAME", default=None,
+#			  help="filename to write annotation points to")
 	return parser
 
 class Writer:
@@ -108,6 +108,16 @@ def main(argv=None):
 	
 		parser = _mk_options_parser()
 		options, args = parser.parse_args(argv)
+
+		# Default values for disabled options
+		options.prune = True
+		options.boottime = False
+		options.profile = False
+		options.show_pid = False
+		options.crop_after = None
+		options.annotate = None
+		options.annotate_file = None
+
 		writer = _mk_writer(options)
 
 		if len(args) == 0:
