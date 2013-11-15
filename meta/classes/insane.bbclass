@@ -558,8 +558,9 @@ def package_qa_check_xorg_driver_abi(path, name, d, elf, messages):
 
     driverdir = d.expand("${libdir}/xorg/modules/drivers/")
     if driverdir in path and path.endswith(".so"):
+        mlprefix = d.getVar('MLPREFIX', True) or ''
         for rdep in bb.utils.explode_deps(d.getVar('RDEPENDS_' + name, True) or ""):
-            if rdep.startswith("xorg-abi-"):
+            if rdep.startswith("%sxorg-abi-" % mlprefix):
                 return
         messages.append("Package %s contains Xorg driver (%s) but no xorg-abi- dependencies" % (name, os.path.basename(path)))
 
