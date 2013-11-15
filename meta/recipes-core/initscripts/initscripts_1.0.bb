@@ -126,5 +126,7 @@ do_install () {
 	if [ "${TARGET_ARCH}" = "arm" ]; then
 	        update-rc.d -r ${D} alignment.sh start 06 S .
 	fi
-
+	# We wish to have /var/log ready at this stage so execute this after
+	# populate-volatile.sh
+	update-rc.d -r ${D} dmesg.sh start 38 S .
 }
