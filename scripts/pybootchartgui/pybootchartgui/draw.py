@@ -280,7 +280,7 @@ bar_h = 55
 meminfo_bar_h = 2 * bar_h
 header_h = 110 + 2 * (30 + bar_h) + 1 * (30 + meminfo_bar_h)
 # offsets
-off_x, off_y = 10, 10
+off_x, off_y = 220, 10
 sec_w_base = 1 # the width of a second
 proc_h = 16 # the height of a process
 leg_s = 10
@@ -416,7 +416,7 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
                 #print val
                 #print trace.processes[val][1]
                 #print s
-                x = (s - offset) * sec_w
+                x = chart_rect[0] + (s - offset) * sec_w
                 w = ((trace.processes[val][1] - s) * sec_w)
 
                 #print "proc at %s %s %s %s" % (x, y, w, proc_h)
