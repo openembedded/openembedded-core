@@ -103,7 +103,7 @@ copy_initramfs() {
 				;;
 			*lzma)
 				echo "lzma decompressing image"
-				lzmash -df ${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.$img
+				lzma -df ${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.$img
 				break
 				;;
 			*xz)
