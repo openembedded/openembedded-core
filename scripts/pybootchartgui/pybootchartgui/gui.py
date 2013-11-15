@@ -101,10 +101,10 @@ class PyBootchartWidget(gtk.DrawingArea):
         self.zoom_image (self.zoom_ratio)
 
     def on_expand(self, action):
-        self.set_xscale (self.xscale * 1.5)
+        self.set_xscale (int(self.xscale * 1.5 + 0.5))
 
     def on_contract(self, action):
-        self.set_xscale (self.xscale / 1.5)
+        self.set_xscale (max(int(self.xscale / 1.5), 1))
 
     def on_zoom_in(self, action):
         self.zoom_image(self.zoom_ratio * self.ZOOM_INCREMENT)
