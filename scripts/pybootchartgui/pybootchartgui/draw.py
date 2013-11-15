@@ -203,6 +203,12 @@ def draw_box_ticks(ctx, rect, sec_w):
 	ctx.set_line_cap(cairo.LINE_CAP_SQUARE)
 
 	for i in range(sec_w, rect[2] + 1, sec_w):
+		if ((i / sec_w) % 10 == 0) :
+			ctx.set_line_width(1.5)
+		elif sec_w < 5 :
+			continue
+		else :
+			ctx.set_line_width(1.0)
 		if ((i / sec_w) % 30 == 0) :
 			ctx.set_source_rgba(*TICK_COLOR_BOLD)
 		else :
@@ -210,6 +216,7 @@ def draw_box_ticks(ctx, rect, sec_w):
 		ctx.move_to(rect[0] + i, rect[1] + 1)
 		ctx.line_to(rect[0] + i, rect[1] + rect[3] - 1)
 		ctx.stroke()
+	ctx.set_line_width(1.0)
 
 	ctx.set_line_cap(cairo.LINE_CAP_BUTT)
 
