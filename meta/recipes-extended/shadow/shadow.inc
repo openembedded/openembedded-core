@@ -32,6 +32,7 @@ SRC_URI_append_class-native = " \
            file://disable-syslog.patch \
            file://useradd.patch \
            file://add_root_cmd_groupmems.patch \
+           file://allow-for-setting-password-in-clear-text.patch \
            "
 SRC_URI_append_class-nativesdk = " \
            file://add_root_cmd_options.patch \
