@@ -1,0 +1,32 @@
+Fix to get correct SVN_NEON_CONFIG and CFLAGS when sysroot path contains '-D' and '-I'
+characters.
+
+Upstream-Status: Pending
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+
+index f951039..a813145 100644
+--- a/build/ac-macros/neon.m4
++++ b/build/ac-macros/neon.m4
+@@ -105,8 +105,8 @@ AC_DEFUN(SVN_NEON_CONFIG,
+            test "$svn_allowed_neon" = "any"; then
+             svn_allowed_neon_on_system="yes"
+             if test "$NEON_PKG_CONFIG" = "yes"; then
+-              SVN_NEON_INCLUDES=[`$PKG_CONFIG neon --cflags | $SED -e 's/-D[^ ]*//g'`]
+-              CFLAGS=["$CFLAGS `$PKG_CONFIG neon --cflags | $SED -e 's/-I[^ ]*//g'`"]
++              SVN_NEON_INCLUDES=["`$PKG_CONFIG neon --cflags | $SED -e 's/^-D[^ ]*//g' -e 's/ -D[^ ]*//g'`"]
++              CFLAGS=["$CFLAGS `$PKG_CONFIG neon --cflags | $SED -e 's/^-I[^ ]*//g' -e 's/ -I[^ ]*//g'`"]
+               old_CFLAGS="$CFLAGS"
+               old_LIBS="$LIBS"
+               NEON_LIBS=`$PKG_CONFIG neon --libs`
+@@ -126,8 +126,8 @@ int main()
+               CFLAGS="$old_CFLAGS"
+               LIBS="$old_LIBS"
+             else
+-              SVN_NEON_INCLUDES=[`$neon_config --cflags | $SED -e 's/-D[^ ]*//g'`]
+-              CFLAGS=["$CFLAGS `$neon_config --cflags | $SED -e 's/-I[^ ]*//g'`"]
++              SVN_NEON_INCLUDES=[`$neon_config --cflags | $SED -e 's/^-D[^ ]*//g' -e 's/ -D[^ ]*//g'`]
++              CFLAGS=["$CFLAGS `$neon_config --cflags | $SED -e 's/^-I[^ ]*//g' -e 's/ -I[^ ]*//g'`"]
+               NEON_LIBS=`$neon_config --libs`
+             fi
+             svn_lib_neon="yes"
