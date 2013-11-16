@@ -11,7 +11,7 @@ inherit gettext gconf
 PACKAGECONFIG ??= " \
     ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
     ${@base_contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
-    cairo flac gdk-pixbuf jpeg libpng soup speex taglib \
+    orc cairo flac gdk-pixbuf jpeg libpng soup speex taglib \
     "
 
 X11DEPENDS = "virtual/libx11 libsm libxrender"
@@ -30,12 +30,17 @@ PACKAGECONFIG[speex]      = "--enable-speex,--disable-speex,speex"
 PACKAGECONFIG[taglib]     = "--enable-taglib,--disable-taglib,taglib"
 PACKAGECONFIG[vpx]        = "--enable-vpx,--disable-vpx,libvpx"
 PACKAGECONFIG[wavpack]    = "--enable-wavpack,--disable-wavpack,wavpack"
-PACKAGECONFIG[v4l]        = "--with-libv4l2,--without-libv4l2,libv4l"
+
+# the 1394 plugins require both libraw1394 and libiec61883
+# the former is included in meta-oe, the latter isn't
+# -> disabled
 
 EXTRA_OECONF += " \
+    --enable-oss \
+    --enable-gst_v4l2 \
+    --without-libv4l2 \
     --disable-directsound \
     --disable-waveform \
-    --disable-oss \
     --disable-oss4 \
     --disable-sunaudio \
     --disable-osx_audio \
@@ -43,9 +48,9 @@ EXTRA_OECONF += " \
     --disable-aalib \
     --disable-libcaca \
     --disable-libdv \
-    --disable-dv1394 \
     --disable-shout2 \
     --disable-examples \
+    --disable-dv1394 \
     ${GSTREAMER_1_0_ORC} \
 "
 

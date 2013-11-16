@@ -9,7 +9,7 @@ inherit gettext
 
 
 PACKAGECONFIG ??= " \
-    a52dec lame mad mpeg2dec \
+    orc a52dec lame mad mpeg2dec \
     "
 
 PACKAGECONFIG[a52dec]   = "--enable-a52dec,--disable-a52dec,liba52"

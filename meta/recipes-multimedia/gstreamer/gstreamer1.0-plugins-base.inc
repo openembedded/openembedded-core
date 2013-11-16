@@ -11,7 +11,7 @@ inherit gettext
 PACKAGECONFIG ??= " \
     ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
     ${@base_contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)} \
-    ivorbis ogg theora vorbis \
+    orc ivorbis ogg theora vorbis \
     "
 
 X11DEPENDS = "virtual/libx11 libsm libxrender"
