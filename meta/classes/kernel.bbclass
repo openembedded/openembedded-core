@@ -248,7 +248,7 @@ kernel_do_install() {
 	# Test to ensure that the output file and image type are not actually
 	# the same file. If hardlinking is used, they will be the same, and there's
 	# no need to install.
-	![ ${KERNEL_OUTPUT} -ef $kerneldir/${KERNEL_IMAGETYPE} ] && install -m 0644 ${KERNEL_OUTPUT} $kerneldir/${KERNEL_IMAGETYPE}
+	! [ ${KERNEL_OUTPUT} -ef $kerneldir/${KERNEL_IMAGETYPE} ] && install -m 0644 ${KERNEL_OUTPUT} $kerneldir/${KERNEL_IMAGETYPE}
 	install -m 0644 System.map $kerneldir/System.map-${KERNEL_VERSION}
 
 	# Dummy Makefile so the clean below works
