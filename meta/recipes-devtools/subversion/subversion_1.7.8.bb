@@ -12,6 +12,7 @@ inherit gettext
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libtool2.patch \
            file://fix-install-depends.patch \
+           file://neon.m4-fix-includes-and-cflags.patch \
 "
 SRC_URI[md5sum] = "454b9f398415c3504435bf8c3f6ed127"
 SRC_URI[sha256sum] = "fc83d4d98ccea8b7bfa8f5c20fff545c8baa7d035db930977550c51c6ca23686"
