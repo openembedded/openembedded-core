@@ -5,7 +5,6 @@
 SUMMARY = "Minimal boot requirements"
 DESCRIPTION = "The minimal set of packages required to boot the system"
 LICENSE = "MIT"
-DEPENDS = "virtual/kernel"
 PR = "r11"
 
 inherit packagegroup
