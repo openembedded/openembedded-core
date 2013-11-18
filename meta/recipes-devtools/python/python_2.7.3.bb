@@ -134,11 +134,6 @@ do_install_append_class-nativesdk () {
 	create_wrapper ${D}${bindir}/python2.7 TERMINFO_DIRS='${sysconfdir}/terminfo:/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo'
 }
 
-do_install_ptest() {
-	cp ${B}/Makefile ${D}${PTEST_PATH}
-	sed -i s:LIBDIR:${libdir}:g ${D}${PTEST_PATH}/run-ptest
-}
-
 SSTATE_SCAN_FILES += "Makefile"
 PACKAGE_PREPROCESS_FUNCS += "py_package_preprocess"
 
@@ -171,6 +166,14 @@ FILES_${PN}-misc = "${libdir}/python${PYTHON_MAJMIN}"
 RDEPENDS_${PN}-ptest = "${PN}-modules ${PN}-misc"
 #inherit ptest after "require python-${PYTHON_MAJMIN}-manifest.inc" so PACKAGES doesn't get overwritten
 inherit ptest
+
+# This must come after inherit ptest for the override to take effect
+do_install_ptest() {
+	cp ${B}/Makefile ${D}${PTEST_PATH}
+	sed -e s:LIBDIR/python/ptest:${PTEST_PATH}:g \
+	 -e s:LIBDIR:${libdir}:g \
+	 -i ${D}${PTEST_PATH}/run-ptest
+}
 
 # catch manpage
 PACKAGES += "${PN}-man"
