@@ -38,17 +38,22 @@ INSANE_SKIP_${PN}-dbg = "libexec"
 do_install_ptest () {
 	chmod +x ${D}/${libdir}/${PN}/ptest/tests/utils/utils.sh
 	for i in `find ${D}/${libdir}/${PN}/ptest -perm /u+x -type f`; do
-		sed -e "s:\$TESTDIR.*/src/bin/lttng/\$LTTNG_BIN:\$LTTNG_BIN:" \
-		  -e "s:\$TESTDIR/../src/bin/lttng-sessiond/\$SESSIOND_BIN:\$SESSIOND_BIN:" \
-		  -e "s:\$DIR/../src/bin/lttng-sessiond/\$SESSIOND_BIN:\$SESSIOND_BIN:" \
-		  -e "s:\$TESTDIR/../src/bin/lttng-consumerd/:${libedir}/lttng/libexec/:" \
-		  -e "s:\$DIR/../src/bin/lttng-consumerd/:${libdir}/lttng/libexec/:" \
-		  -e "s:\$TESTDIR/../src/bin/lttng-relayd/\$RELAYD_BIN:\$RELAYD_BIN:" \
+		sed -e "s:\$TESTDIR.*/src/bin/lttng/\$LTTNG_BIN:\$LTTNG_BIN:g" \
+		  -e "s:\$TESTDIR/../src/bin/lttng-sessiond/\$SESSIOND_BIN:\$SESSIOND_BIN:g" \
+		  -e "s:\$DIR/../src/bin/lttng-sessiond/\$SESSIOND_BIN:\$SESSIOND_BIN:g" \
+		  -e "s:\$TESTDIR/../src/bin/lttng-consumerd/:${libdir}/lttng/libexec/:g" \
+		  -e "s:\$DIR/../src/bin/lttng-consumerd/:${libdir}/lttng/libexec/:g" \
+		  -e "s:\$TESTDIR/../src/bin/lttng-relayd/\$RELAYD_BIN:\$RELAYD_BIN:g" \
+		  -e "s:\$DIR/../src/bin/lttng-sessiond/lttng-sessiond:\$SESSIOND_BIN:g" \
+		  -e "s:\$DIR/../src/bin/lttng-relayd/\$RELAYD_BIN:\$RELAYD_BIN:g" \
+		  -e "s:\$DIR/../bin/lttng-relayd/\$RELAYD_BIN:\$RELAYD_BIN:g" \
 		  -i $i
 	done
 
-	sed -e "s:src/bin/lttng-sessiond:$bindir:" \
-	    -e "s:src/bin/lttng-consumerd:${libexecdir}/libexec/:" \
+	sed -e "s:src/bin/lttng-sessiond:$bindir:g" \
+	    -e "s:src/bin/lttng-consumerd:${libexecdir}/libexec/:g" \
 	-i ${D}/${libdir}/${PN}/ptest/tests/regression/run-report.py
+	sed -e "s:src/bin:bin:g" \
+	-i ${D}/${libdir}/${PN}/ptest/tests/utils/utils.sh
 
 }
