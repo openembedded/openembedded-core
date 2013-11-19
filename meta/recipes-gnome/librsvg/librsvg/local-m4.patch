@@ -1,0 +1,32 @@
+This patch is required to make autoreconf use the local macros (so that it can
+autoreconf without vala being installed).
+
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 6c3b8eee243204678574e162b7d480f6f83b71e6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Germ=C3=A1n=20Poo-Caama=C3=B1o?= <gpoo@gnome.org>
+Date: Tue, 29 Oct 2013 13:05:39 -0700
+Subject: [PATCH] build: Use local macros to detect vala
+
+Fixes build when vala < 0.19 is present.
+---
+ Makefile.am |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index d95f008..e881100 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -3,7 +3,7 @@ SUBDIRS = . gdk-pixbuf-loader tests tools doc
+ NULL =
+ BUILT_SOURCES =
+ 
+-ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
++ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
+ 
+ lib_LTLIBRARIES = librsvg-@RSVG_API_MAJOR_VERSION@.la
+ 
+-- 
+1.7.10.4
+
