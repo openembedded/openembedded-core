@@ -7,6 +7,7 @@ SRC_URI += "file://bluetooth.conf \
             file://fix-udev-paths.patch \
             file://obsolete_automake_macros.patch \
             file://network-fix-network-Connect-method-parameters.patch \
+            file://install-test-script.patch \
 "
 
 SRC_URI[md5sum] = "fb42cb7038c380eb0e2fa208987c96ad"
@@ -23,9 +24,10 @@ do_install_append() {
 }
 
 RDEPENDS_${PN}-dev = "bluez-hcidump"
+RDEPENDS_${PN}-testtools += "python python-dbus python-pygobject"
 
 ALLOW_EMPTY_libasound-module-bluez = "1"
-PACKAGES =+ "libasound-module-bluez"
+PACKAGES =+ "libasound-module-bluez ${PN}-testtools"
 
 FILES_libasound-module-bluez = "${libdir}/alsa-lib/lib*.so ${datadir}/alsa"
 FILES_${PN} += "${libdir}/bluetooth/plugins ${libdir}/bluetooth/plugins/*.so ${base_libdir}/udev/ ${nonarch_base_libdir}/udev/ ${systemd_unitdir}/ ${datadir}/dbus-1"
@@ -33,6 +35,8 @@ FILES_${PN}-dev += "\
   ${libdir}/bluetooth/plugins/*.la \
   ${libdir}/alsa-lib/*.la \
 "
+
+FILES_${PN}-testtools = "${libdir}/bluez4/test/*"
 
 FILES_${PN}-dbg += "\
   ${libdir}/bluetooth/plugins/.debug \
