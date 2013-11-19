@@ -88,6 +88,15 @@ build_boot_dd() {
 		grubefi_hddimg_populate $HDDDIR
 	fi
 
+	if [ ${IMAGE_FSTYPE} = "vmdk" ]; then
+		if [ x${AUTO_SYSLINUXMENU} = x1 ] ; then
+			install -m 0644 ${STAGING_DIR}/${MACHINE}/usr/share/syslinux/vesamenu.c32 ${HDDDIR}${SYSLINUXDIR}/vesamenu.c32
+			if [ x${SYSLINUX_SPLASH} != x ] ; then
+				install -m 0644 ${SYSLINUX_SPLASH} ${HDDDIR}${SYSLINUXDIR}/splash.lss
+			fi
+		fi
+	fi
+
 	BLOCKS=`du -bks $HDDDIR | cut -f 1`
 	BLOCKS=`expr $BLOCKS + ${BOOTDD_EXTRA_SPACE}`
 
@@ -119,7 +128,10 @@ build_boot_dd() {
 	parted $IMAGE mkpart primary fat16 0 ${END1}B
 	parted $IMAGE unit B mkpart primary ext2 ${END2}B ${END3}B
 	parted $IMAGE set 1 boot on 
-	parted $IMAGE print
+
+	if [ ${IMAGE_FSTYPE} != "vmdk" ]; then
+		parted $IMAGE print
+	fi
 
 	awk "BEGIN { printf \"$(echo ${DISK_SIGNATURE} | fold -w 2 | tac | paste -sd '' | sed 's/\(..\)/\\x&/g')\" }" | \
 		dd of=$IMAGE bs=1 seek=440 conv=notrunc
@@ -128,8 +140,11 @@ build_boot_dd() {
 	if [ "${PCBIOS}" = "1" ]; then
 		dd if=${STAGING_DATADIR}/syslinux/mbr.bin of=$IMAGE conv=notrunc
 	fi
-	dd if=$HDDIMG of=$IMAGE conv=notrunc seek=1 bs=512
-	dd if=${ROOTFS} of=$IMAGE conv=notrunc seek=$OFFSET bs=512	
+
+	if [ ${IMAGE_FSTYPE} != "vmdk" ]; then
+		dd if=$HDDIMG of=$IMAGE conv=notrunc seek=1 bs=512
+		dd if=${ROOTFS} of=$IMAGE conv=notrunc seek=$OFFSET bs=512	
+	fi
 
 	cd ${DEPLOY_DIR_IMAGE}
 	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect
