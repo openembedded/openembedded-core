@@ -11,7 +11,7 @@ SECTION = "bootloaders"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-DEPENDS = "autogen-native flex-native"
+DEPENDS = "autogen-native flex-native bison-native"
 RDEPENDS_${PN} = "diffutils freetype xz"
 PR = "r1"
 
