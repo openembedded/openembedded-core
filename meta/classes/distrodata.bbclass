@@ -756,7 +756,7 @@ python do_checkpkg() {
                 svnFetcher = bb.fetch2.svn.Svn(d)
                 svnFetcher.urldata_init(ud, d)
                 try:
-                        pupver = svnFetcher.latest_revision(uri, ud, d, ud.names[0])
+                        pupver = svnFetcher.latest_revision(ud, d, ud.names[0])
                 except bb.fetch2.FetchError:
                         pstatus = "ErrSvnAccess"
                 

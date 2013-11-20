@@ -572,7 +572,11 @@ def _get_srcrev_values(d):
     for scm in scms:
         ud = urldata[scm]
         for name in ud.names:
-            rev = ud.method.sortable_revision(scm, ud, d, name)
+            try:
+                rev = ud.method.sortable_revision(ud, d, name)
+            except TypeError:
+                # support old bitbake versions
+                rev = ud.method.sortable_revision(scm, ud, d, name)
             # Clean this up when we next bump bitbake version
             if type(rev) != str:
                 autoinc, rev = rev
