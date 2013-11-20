@@ -68,6 +68,10 @@ do_install_append() {
 			-e 's,@SYSTEMD_UNITDIR@,${systemd_unitdir},g' \
 			${D}${systemd_unitdir}/system/opkg-configure.service
 	fi
+
+	# The installed binary is 'opkg-cl' but people and scripts often expect
+	# it to just be 'opkg'
+	ln -sf opkg-cl ${D}${bindir}/opkg
 }
 
 do_install_append_class-native() {
@@ -95,13 +99,6 @@ rm -f ${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
 	chmod 0755 $D${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
 fi
 }
-
-inherit update-alternatives
-
-ALTERNATIVE_PRIORITY = "100"
-ALTERNATIVE_${PN} = "opkg"
-ALTERNATIVE_LINK_NAME[opkg] = "${bindir}/opkg"
-ALTERNATIVE_TARGET[opkg] = "${bindir}/opkg-cl"
 
 BBCLASSEXTEND = "native nativesdk"
 
