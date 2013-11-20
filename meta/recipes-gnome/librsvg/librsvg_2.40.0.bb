@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://rsvg.h;beginline=3;endline=24;md5=20b4113c4909bbf0d67e006778302bc6"
 
 SECTION = "x11/utils"
-DEPENDS = "gdk-pixbuf-native cairo gdk-pixbuf glib-2.0 libcroco libxml2 pango"
+DEPENDS = "cairo gdk-pixbuf glib-2.0 libcroco libxml2 pango"
 BBCLASSEXTEND = "native"
 
 inherit autotools pkgconfig gnomebase gtk-doc pixbufcache
@@ -25,7 +25,7 @@ EXTRA_OECONF = "--disable-introspection --disable-vala"
 
 PACKAGECONFIG ??= "gdkpixbuf"
 # The gdk-pixbuf loader
-PACKAGECONFIG[gdkpixbuf] = "--enable-pixbuf-loader,--disable-pixbuf-loader"
+PACKAGECONFIG[gdkpixbuf] = "--enable-pixbuf-loader,--disable-pixbuf-loader,gdk-pixbuf-native"
 # GTK+ test application (rsvg-view)
 PACKAGECONFIG[gtk] = "--with-gtk3,--without-gtk3,gtk+3"
 
