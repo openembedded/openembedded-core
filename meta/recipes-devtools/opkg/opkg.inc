@@ -26,15 +26,18 @@ python () {
 target_localstatedir := "${localstatedir}"
 OPKGLIBDIR = "${target_localstatedir}/lib"
 
-SHARED_EXTRA_OECONF = "\
+PACKAGECONFIG ??= ""
+
+PACKAGECONFIG[gpg] = "--enable-gpg,--disable-gpg,gpgme libgpg-error"
+PACKAGECONFIG[curl] = "--enable-curl,--disable-curl,curl"
+PACKAGECONFIG[ssl-curl] = "--enable-ssl-curl,--disable-ssl-curl,curl openssl"
+PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
+PACKAGECONFIG[sha256] = "--enable-sha256,--disable-sha256"
+PACKAGECONFIG[pathfinder] = "--enable-pathfinder,--disable-pathfinder,pathfinder"
+
+EXTRA_OECONF = "\
   --with-opkglibdir=${OPKGLIBDIR} \
-  --disable-gpg \
-  --disable-curl \
-  --disable-openssl \
 "
-EXTRA_OECONF_class-target = "${SHARED_EXTRA_OECONF} --disable-ssl-curl --disable-sha256"
-EXTRA_OECONF_class-native = "${SHARED_EXTRA_OECONF}"
-EXTRA_OECONF_class-nativesdk = "${SHARED_EXTRA_OECONF}"
 
 PROVIDES += "virtual/update-alternatives"
 RPROVIDES_update-alternatives-cworth += "update-alternatives"
