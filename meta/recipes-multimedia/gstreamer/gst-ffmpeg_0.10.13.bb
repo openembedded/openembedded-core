@@ -21,6 +21,7 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://configure-fix.patch \
            file://h264_qpel_mmx.patch \
            file://libav_e500mc.patch \
+           file://gst-ffmpeg-CVE-2013-3674.patch \
 "
 
 SRC_URI[md5sum] = "7f5beacaf1312db2db30a026b36888c4"
