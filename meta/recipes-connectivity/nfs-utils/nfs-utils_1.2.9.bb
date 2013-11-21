@@ -9,14 +9,21 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=95f3a93a5c3c7888de623b46ea085a84"
 
 # util-linux for libblkid
 DEPENDS = "libcap libnfsidmap libevent util-linux sqlite3"
-RDEPENDS_${PN} = "rpcbind"
+RDEPENDS_${PN}-client = "rpcbind"
+RDEPENDS_${PN} = "${PN}-client"
 RRECOMMENDS_${PN} = "kernel-module-nfsd"
+
+inherit useradd
+
+USERADD_PACKAGES = "${PN}-client"
+USERADD_PARAM_${PN}-client = "-d /var/lib/nfs -r -s /bin/false rpcuser"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.bz2 \
            file://0001-configure-Allow-to-explicitly-disable-nfsidmap.patch \
            file://nfs-utils-1.0.6-uclibc.patch \
            file://nfs-utils-1.2.3-sm-notify-res_init.patch \
            file://nfsserver \
+           file://nfscommon \
            file://nfs-utils.conf \
            file://nfs-server.service \
            file://nfs-mountd.service \
@@ -30,15 +37,16 @@ PARALLEL_MAKE = ""
 # Only kernel-module-nfsd is required here (but can be built-in)  - the nfsd module will
 # pull in the remainder of the dependencies.
 
+INITSCRIPT_PACKAGES = "${PN} ${PN}-client"
 INITSCRIPT_NAME = "nfsserver"
-# The server has no dependencies at the user run levels, so just put
-# it in at the default levels.  It must be terminated before the network
-# in the shutdown levels, but that works fine.
 INITSCRIPT_PARAMS = "defaults"
+INITSCRIPT_NAME_${PN}-client = "nfscommon"
+INITSCRIPT_PARAMS_${PN}-client = "start 44 S ."
 
 inherit autotools update-rc.d systemd
 
-SYSTEMD_SERVICE_${PN} = "nfs-server.service nfs-mountd.service nfs-statd.service"
+SYSTEMD_SERVICE_${PN} = "nfs-server.service nfs-mountd.service"
+SYSTEMD_SERVICE_${PN}-client = "nfs-statd.service"
 SYSTEMD_AUTO_ENABLE = "disable"
 
 # --enable-uuid is need for cross-compiling
@@ -60,7 +68,13 @@ PACKAGECONFIG[nfsidmap] = "--enable-nfsidmap,--disable-nfsidmap,keyutils"
 INHIBIT_AUTO_STAGE = "1"
 
 PACKAGES =+ "${PN}-client ${PN}-stats"
-FILES_${PN}-client = "${base_sbindir}/*mount.nfs*"
+FILES_${PN}-client = "${base_sbindir}/*mount.nfs* ${sbindir}/*statd \
+		      ${sbindir}/rpc.idmapd ${sbindir}/sm-notify \
+		      ${sbindir}/showmount ${sbindir}/nfsstat \
+		      ${localstatedir}/lib/nfs \
+		      ${sysconfdir}/nfs-utils.conf \
+		      ${sysconfdir}/init.d/nfscommon \
+		      ${systemd_unitdir}/system/nfs-statd.service"
 FILES_${PN}-stats = "${sbindir}/mountstats ${sbindir}/nfsiostat"
 RDEPENDS_${PN}-stats = "python"
 
@@ -74,6 +88,7 @@ do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
 	install -d ${D}${localstatedir}/lib/nfs/statd
 	install -m 0755 ${WORKDIR}/nfsserver ${D}${sysconfdir}/init.d/nfsserver
+	install -m 0755 ${WORKDIR}/nfscommon ${D}${sysconfdir}/init.d/nfscommon
 
 	install -m 0755 ${WORKDIR}/nfs-utils.conf ${D}${sysconfdir}
 	install -d ${D}${systemd_unitdir}/system
