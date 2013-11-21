@@ -296,11 +296,7 @@ package_install_internal_rpm () {
 		if [ ! -z "$INSTALL_PLATFORM_EXTRA_RPM" ]; then
 			for pt in $INSTALL_PLATFORM_EXTRA_RPM ; do
 				channel_priority=$(expr $channel_priority + 5)
-				case $pt in
-					noarch-* | any-* | all-*)
-						pt=$(echo $pt | sed "s,-linux.*$,-linux\.*,")
-						;;
-				esac
+				pt=$(echo $pt | sed "s,-linux.*$,-linux\.*,")
 				echo "$pt" >> ${target_rootfs}/etc/rpm/platform
 			done
 		fi
