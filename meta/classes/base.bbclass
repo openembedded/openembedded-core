@@ -210,7 +210,7 @@ def preferred_ml_updates(d):
             virt = "virtual/"
         for p in prefixes:
             if pkg != "kernel":
-                val = p + "-" + val
+                newval = p + "-" + val
 
             # implement variable keys
             localdata = bb.data.createCopy(d)
@@ -219,12 +219,12 @@ def preferred_ml_updates(d):
             bb.data.update_data(localdata)
             newname = localdata.expand(prov)
             if newname != prov and not d.getVar(newname, False):
-                d.setVar(newname, localdata.expand(val))
+                d.setVar(newname, localdata.expand(newval))
 
             # implement alternative multilib name
             newname = localdata.expand("PREFERRED_PROVIDER_" + virt + p + "-" + pkg)
             if not d.getVar(newname, False):
-                d.setVar(newname, val)
+                d.setVar(newname, newval)
         # Avoid future variable key expansion
         provexp = d.expand(prov)
         if prov != provexp and d.getVar(prov, False):
