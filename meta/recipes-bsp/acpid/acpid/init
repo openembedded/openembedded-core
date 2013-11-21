@@ -2,6 +2,7 @@
 
 test -x /usr/sbin/acpid || exit 0
 test -d /proc/acpi || exit 0
+mkdir -p /etc/acpi/events
 
 case "$1" in
   start)
