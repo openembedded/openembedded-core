@@ -1,20 +1,12 @@
 require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
-# happens from this branch on gcc e.g. currently its 4.7.1
-# when 4.7.2 is releases and we bump SRCREV beyond the release
-# on branch then PV should be incremented to 4.7.2+svnr${SRCPV}
-# to reflect that change
 
-PV = "4.8.1"
+PV = "4.8.2"
 
-# BINV should be incremented after updating to a revision
-# after a minor gcc release (e.g. 4.7.1 or 4.7.2) has been made
-# the value will be minor-release+1 e.g. if current minor release was
-# 4.7.1 then the value below will have 2 which will mean 4.7.2
-# which will be next minor release and so on.
+# BINV should be incremented to a revision after a minor gcc release
 
-BINV = "4.8.1"
+BINV = "4.8.2"
 
 FILESPATH = "${@base_set_filespath([ '${FILE_DIRNAME}/gcc-4.8' ], d)}"
 
@@ -65,7 +57,6 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	   file://0033-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch \
 	   file://0034-Use-the-multilib-config-files-from-B-instead-of-usin.patch \
 	   file://0035-wcast-qual-PR-55383.patch \
-	   file://0036-PR-target-56102.patch \
 	   file://0037-gcc-4.8-PR56797.patch \
 	   file://0038-gcc-4.8-build-args.patch \
 	   file://0039-gcc-4.8-PR57717.patch \
@@ -78,8 +69,8 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	   file://0046-libatomic-deptracking.patch \
 	   file://0047-repomembug.patch \
 	  "
-SRC_URI[md5sum] = "3b2386c114cd74185aa3754b58a79304"
-SRC_URI[sha256sum] = "545b44be3ad9f2c4e90e6880f5c9d4f0a8f0e5f67e1ffb0d45da9fa01bb05813"
+SRC_URI[md5sum] = "a3d7d63b9cb6b6ea049469a0c4a43c9d"
+SRC_URI[sha256sum] = "09dc2276c73424bbbfda1dbddc62bbbf900c9f185acf7f3e1d773ce2d7e3cdc8"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
