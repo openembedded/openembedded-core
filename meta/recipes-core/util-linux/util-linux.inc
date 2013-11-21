@@ -201,6 +201,9 @@ ALTERNATIVE_LINK_NAME[mount] = "${base_bindir}/mount"
 ALTERNATIVE_util-linux-umount = "umount"
 ALTERNATIVE_LINK_NAME[umount] = "${base_bindir}/umount"
 
+ALTERNATIVE_util-linux-readprofile = "readprofile"
+ALTERNATIVE_LINK_NAME[readprofile] = "${base_sbindir}/readprofile"
+
 ALTERNATIVE_util-linux-losetup = "losetup"
 ALTERNATIVE_LINK_NAME[losetup] = "${base_sbindir}/losetup"
 
