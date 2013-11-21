@@ -22,12 +22,13 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://h264_qpel_mmx.patch \
            file://libav_e500mc.patch \
            file://libav_e5500.patch \
+           file://gst-ffmpeg-CVE-2013-3674.patch \
 "
 
 SRC_URI[md5sum] = "7f5beacaf1312db2db30a026b36888c4"
 SRC_URI[sha256sum] = "76fca05b08e00134e3cb92fa347507f42cbd48ddb08ed3343a912def187fbb62"
 
-PR = "r7"
+PR = "r8"
 
 GSTREAMER_DEBUG ?= "--disable-debug"
 
