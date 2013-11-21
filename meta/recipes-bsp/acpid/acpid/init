@@ -10,13 +10,13 @@ case "$1" in
     if [ ! -d /etc/acpi/events ]; then
         echo "There is not any rule configuration file."
     else
-        start-stop-daemon -S -x /usr/sbin/acpid -- -c /etc/acpi/events
+        start-stop-daemon -o -S -x /usr/sbin/acpid -- -c /etc/acpi/events
         echo "acpid."
     fi
     ;;
   stop)
     echo -n "Stopping Advanced Configuration and Power Interface daemon: "
-    start-stop-daemon -K -x /usr/sbin/acpid
+    start-stop-daemon -o -K -x /usr/sbin/acpid
     echo "acpid."
     ;;
   restart|force-reload) 
