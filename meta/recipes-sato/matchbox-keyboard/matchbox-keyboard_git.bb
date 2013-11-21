@@ -3,22 +3,20 @@ HOMEPAGE = "http://matchbox-project.org"
 BUGTRACKER = "http://bugzilla.openedhand.com/"
 SECTION = "x11"
 
-LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
-                    file://src/matchbox-keyboard.h;endline=20;md5=4ba16ff913ad245dd6d95a6c67f72526 \
-                    file://applet/applet.c;endline=20;md5=e9201b3efa0a81a160b88d6feb5cf75b"
+LICENSE = "LGPLv2.1"
+LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
+                    file://src/matchbox-keyboard.h;endline=17;md5=9d6586c69e4a926f3cb0b4425f24ba3c \
+                    file://applet/applet.c;endline=18;md5=4a0f721724746b14d95b51ddd42b95e7"
 
 DEPENDS = "libfakekey expat libxft gtk+ matchbox-panel-2"
 
-SRCREV = "b38f24036cff3be6c2fbcf9ca9881803e69003ac"
+SRCREV = "217f1bfe14c41cf7e291d04a63aa2d79cc13d063"
 PV = "0.0+git${SRCPV}"
 PR = "r4"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN} \
-           file://configure_fix.patch;maxrev=1819 \
            file://single-instance.patch \
-           file://80matchboxkeyboard.shbg \
-           file://png-fix.patch"
+           file://80matchboxkeyboard.shbg"
 
 S = "${WORKDIR}/git"
 
