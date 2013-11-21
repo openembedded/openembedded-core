@@ -115,8 +115,9 @@ fakeroot rootfs_rpm_do_rootfs () {
 
 	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
 		if [ -d ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts ] ; then
-			if [ "`ls -A ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts`" != "" ] ; then
-				bberror "Some packages could not be configured offline and rootfs is read-only."
+		        failed_pkgs=$(ls -A ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts)
+			if [ -n "$failed_pkgs" ] ; then
+				bberror "The following post-install scripts could not be run offline and rootfs is read-only: $failed_pkgs"
 				exit 1
 			fi
 		fi

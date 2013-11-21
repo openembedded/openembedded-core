@@ -91,8 +91,9 @@ fakeroot rootfs_deb_do_rootfs () {
 	${ROOTFS_POSTPROCESS_COMMAND}
 
 	if ${@base_contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false" ,d)}; then
-		if [ -n "$(delayed_postinsts)" ]; then
-			bberror "Some packages could not be configured offline and rootfs is read-only."
+	        delayed_postinsts="$(delayed_postinsts)"
+		if [ -n "$delayed_postinsts" ]; then
+			bberror "The following packages could not be configured offline and rootfs is read-only: $delayed_postinsts"
 			exit 1
 		fi
 	fi
