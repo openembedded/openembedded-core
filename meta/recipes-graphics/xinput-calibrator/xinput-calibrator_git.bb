@@ -27,5 +27,5 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/30xinput_calibrate.sh ${D}${sysconfdir}/X11/Xsession.d/
 }
 
-RDEPENDS_${PN} = "xinput"
+RDEPENDS_${PN} = "xinput formfactor"
 RRECOMMENDS_${PN} = "pointercal-xinput"
