@@ -34,9 +34,6 @@ auth       sufficient pam_rootok.so
 # 
 # parsing /etc/environment needs "readenv=1"
 session       required   pam_env.so readenv=1
-# locale variables are also kept into /etc/default/locale in etch
-# reading this file *in addition to /etc/environment* does not hurt
-session       required   pam_env.so readenv=1 envfile=/etc/default/locale
 
 # Defines the MAIL environment variable
 # However, userdel also needs MAIL_DIR and MAIL_FILE variables
