@@ -52,10 +52,13 @@ def base_get_metadata_monotone_revision(path, d):
     return monotone_revision
 
 def base_get_metadata_svn_revision(path, d):
+    # This only works with older subversion. For newer versions
+    # this function will need to be fixed by someone interested
     revision = "<unknown>"
     try:
-        revision = file( "%s/.svn/entries" % path ).readlines()[3].strip()
-    except IOError:
+        with open("%s/.svn/entries" % path) as f:
+            revision = f.readlines()[3].strip()
+    except IOError, IndexError:
         pass
     return revision
 
