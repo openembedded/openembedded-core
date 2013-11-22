@@ -16,5 +16,5 @@ inherit autotools
 
 do_configure_prepend() {
     # Clean up autoconf cruft that should not be in the tarball
-    rm ${S}/config.status
+    rm -f ${S}/config.status
 }
