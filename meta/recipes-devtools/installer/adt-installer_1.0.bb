@@ -33,11 +33,10 @@ PR = "r11"
 ADT_DEPLOY = "${TMPDIR}/deploy/sdk/"
 ADT_DIR = "${WORKDIR}/adt-installer/"
 YOCTOADT_VERSION = "${SDK_VERSION}"
-S = "${WORKDIR}/trunk"
+S = "${WORKDIR}/opkg-${PV}"
 
-SRCREV = "596"
-PV = "0.1.8+svnr${SRCPV}"
-SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;protocol=http \
+PV = "0.2.0"
+SRC_URI = "https://opkg.googlecode.com/files/opkg-${PV}.tar.gz \
            file://wget_cache.patch \
            file://adt_installer \
            file://scripts/adt_installer_internal \
@@ -48,6 +47,9 @@ SRC_URI = "svn://opkg.googlecode.com/svn;module=trunk;protocol=http \
            file://opkg/conf/opkg-sdk-x86_64.conf \
            file://opkg/conf/opkg-sdk-i686.conf \
 	  "
+
+SRC_URI[md5sum] = "e8a6fd34fb2529191fe09dc14c934cc3"
+SRC_URI[sha256sum] = "81b7055eb4c12c5e5652339305c9236cf357890717d4bea063963f3f434d966f"
 
 ADTREPO ?= "http://adtrepo.yoctoproject.org/${SDK_VERSION}"
 
@@ -61,8 +63,8 @@ fakeroot do_populate_adt () {
 	mkdir -p ${ADT_DIR}/opkg/build
 	cp -r opkg ${ADT_DIR}/
 	sed -i -e 's#ADTREPO_URL#${ADTREPO}#' ${ADT_DIR}/opkg/conf/*.conf
-	cp -r trunk ${ADT_DIR}/opkg/build/
-	mv ${ADT_DIR}/opkg/build/trunk ${ADT_DIR}/opkg/build/opkg-svn
+	cp -r opkg-${PV} ${ADT_DIR}/opkg/build/
+	mv ${ADT_DIR}/opkg/build/opkg-${PV} ${ADT_DIR}/opkg/build/opkg-svn
 	rm -rf ${ADT_DIR}/opkg/build/opkg-svn/patches ${ADT_DIR}/opkg/build/opkg-svn/.pc
 	cp -r scripts ${ADT_DIR}/
 	cp adt_installer ${ADT_DIR}
