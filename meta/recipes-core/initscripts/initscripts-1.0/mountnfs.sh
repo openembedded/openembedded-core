@@ -7,8 +7,6 @@
 # Default-Stop:
 ### END INIT INFO
 
-. /etc/default/rcS
-
 #
 #	Run in a subshell because of I/O redirection.
 #
