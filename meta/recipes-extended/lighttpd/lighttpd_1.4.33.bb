@@ -24,8 +24,8 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
         file://lighttpd.service \
         "
 
-SRC_URI[md5sum] = "8e2d4ae8e918d4de1aeb9842584d170b"
-SRC_URI[sha256sum] = "60691b2dcf3ad2472c06b23d75eb0c164bf48a08a630ed3f308f61319104701f"
+SRC_URI[md5sum] = "e66b8164e5fc5a6beec0823b697fbe1d"
+SRC_URI[sha256sum] = "2ff2324658c0f90e7d39afd40f08f11ca230903b9019c31a2bbecd8f087f235e"
 
 EXTRA_OECONF = " \
              --without-bzip2 \
