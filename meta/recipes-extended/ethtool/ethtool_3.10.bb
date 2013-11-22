@@ -16,7 +16,7 @@ inherit autotools ptest
 RDEPENDS_${PN}-ptest += "make"
 
 do_compile_ptest() {
-   oe_runmake buildtest-TESTS
+   oe_runmake test-cmdline test-features
 }
 
 do_install_ptest () {
