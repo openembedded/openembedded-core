@@ -33,6 +33,14 @@ while [ $# != 0 ]; do
 			cmd_args="1"
 			shift
 			;;
+		preset)
+			shift
+
+			action="$opt"
+			services="$1"
+			cmd_args="1"
+			shift
+			;;
 		--root=*)
 			ROOT=${opt##--root=}
 			cmd_args="0"
@@ -49,8 +57,16 @@ while [ $# != 0 ]; do
 			;;
 	esac
 done
+if [ "$action" = "preset" -a "$service_file" = "" ]; then
+	services=$(for f in `find $ROOT/etc/systemd/system $ROOT/lib/systemd/system $ROOT/usr/lib/systemd/system -type f 2>1`; do basename $f; done)
+	services="$services $opt"
+	presetall=1
+fi
 
 for service in $services; do
+	if [ "$presetall" = "1" ]; then
+		action="preset"
+	fi
 	if [ "$action" = "mask" ]; then
 		if [ ! -d $ROOT/etc/systemd/system/ ]; then
 			mkdir -p $ROOT/etc/systemd/system/
@@ -80,7 +96,17 @@ for service in $services; do
 	# If any new unit types are added to systemd they should be added
 	# to this regular expression.
 	unit_types_re='\.\(service\|socket\|device\|mount\|automount\|swap\|target\|path\|timer\|snapshot\)$'
-
+	if [ "$action" = "preset" ]; then
+		action=`egrep -sh  $service $ROOT/etc/systemd/user-preset/*.preset | cut -f1 -d' '`
+		if [ -z "$action" ]; then
+			globalpreset=`egrep -sh  '\*'  $ROOT/etc/systemd/user-preset/*.preset | cut -f1 -d' '`
+			if [ -n "$globalpreset" ]; then
+				action="$globalpreset"
+			else
+				action="enable"
+			fi
+		fi
+	fi
 	# create the required symbolic links
 	wanted_by=$(sed '/^WantedBy[[:space:]]*=/s,[^=]*=,,p;d' "$ROOT/$service_file" \
 		        | tr ',' '\n' \
