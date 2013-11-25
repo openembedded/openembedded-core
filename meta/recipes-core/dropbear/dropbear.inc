@@ -1,4 +1,4 @@
-DESCRIPTION = "Dropbear is a lightweight SSH and SCP implementation"
+SUMMARY = "A lightweight SSH and SCP implementation"
 HOMEPAGE = "http://matt.ucc.asn.au/dropbear/dropbear.html"
 SECTION = "console/network"
 
