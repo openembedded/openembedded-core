@@ -22,11 +22,12 @@ PACKAGES =+ "libxcb-composite libxcb-damage libxcb-dpms libxcb-glx \
              libxcb-screensaver libxcb-shape libxcb-shm libxcb-sync \
              libxcb-xevie libxcb-xf86dri libxcb-xfixes libxcb-xlib \
              libxcb-xprint libxcb-xtest libxcb-xv libxcb-xvmc \
-             libxcb-dri2"
+             libxcb-dri2 libxcb-dri3 libxcb-present"
 
 FILES_${PN} = "${libdir}/libxcb.so.*"
 #FILES_${PN}-dev = "${libdir}/libxcb.* ${libdir}/pkgconfig/*.pc ${includedir}/xcb/*.h"
 FILES_libxcb-dri2 = "${libdir}/libxcb-dri2.so.*"
+FILES_libxcb-dri3 = "${libdir}/libxcb-dri3.so.*"
 FILES_libxcb-composite = "${libdir}/libxcb-composite.so.*"
 FILES_libxcb-damage = "${libdir}/libxcb-damage.so.*"
 FILES_libxcb-dpms = "${libdir}/libxcb-dpms.so.*"
@@ -48,6 +49,7 @@ FILES_libxcb-xprint = "${libdir}/libxcb-xprint.so.*"
 FILES_libxcb-xtest = "${libdir}/libxcb-xtest.so.*"
 FILES_libxcb-xv = "${libdir}/libxcb-xv.so.*"
 FILES_libxcb-xvmc = "${libdir}/libxcb-xvmc.so.*"
+FILES_libxcb-present = "${libdir}/libxcb-present.so.*"
 
 inherit autotools pkgconfig pythonnative
 
