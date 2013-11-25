@@ -32,6 +32,7 @@ SRC_URI += "\
   file://run-ptest \
   file://CVE-2013-4073_py27.patch \
   file://pypirc-secure.patch \
+  file://parallel-makeinst-create-bindir.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"

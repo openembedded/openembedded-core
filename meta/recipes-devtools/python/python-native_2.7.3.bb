@@ -16,6 +16,7 @@ SRC_URI += "\
            file://multilib.patch \
            file://add-md5module-support.patch \
            file://builddir.patch \
+           file://parallel-makeinst-create-bindir.patch \
            "
 S = "${WORKDIR}/Python-${PV}"
 
