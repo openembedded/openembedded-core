@@ -11,8 +11,8 @@ SRC_URI[md5sum] = "b99e87d4b73a4732ed1c1e591f0242ac"
 SRC_URI[sha256sum] = "ca69382a285222a86028abebd73fed1976735883027ff0adc094b627789bbd62"
 
 # midori depends on webkit-gtk, and webkit-gtk can NOT be built on
-# MIPS64 with 64 bits userspace. So remove it from mips64 temporarily.
-COMPATIBLE_HOST_mips64 = "mips64.*-linux-gnun32"
+# MIPS64 with n32 ABI. So remove it from mips64 n32 temporarily.
+COMPATIBLE_HOST_mips64 = "mips64.*-linux"
 
 inherit gtk-icon-cache pkgconfig vala pythonnative
 
