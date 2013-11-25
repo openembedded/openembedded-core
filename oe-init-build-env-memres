@@ -26,8 +26,8 @@
 # to sourcing this script.
 #
 if [ -z "$1" ]; then
-    echo "No port specified, using 12345"
-    port=12345
+    echo "No port specified, using dynamically selected port"
+    port=-1
 else
     port=$1
     shift
@@ -60,15 +60,20 @@ if [ -e bitbake.lock ] && grep : bitbake.lock > /dev/null ; then
     res=$?
 fi
 
-if [ $res != 0 ] ; then
-    bitbake --server-only -t xmlrpc -B localhost:$port
-fi
-
-export BBSERVER=`cat bitbake.lock`
-
-if [ $res = 0 ] ; then
-    echo "Using existing bitbake server at: $BBSERVER, use bitbake -m to shut it down"
+if [ $port = -1 ] ; then
+    export BBSERVER=localhost:-1
+    echo "Bitbake server started on demand as needed, use bitbake -m to shut it down"
 else
-    echo "Bitbake server started at: $BBSERVER, use bitbake -m to shut it down"
+    if [ $res != 0 ] ; then
+	bitbake --server-only -t xmlrpc -B localhost:$port
+    fi
+
+    export BBSERVER=`cat bitbake.lock`
+
+    if [ $res = 0 ] ; then
+	echo "Using existing bitbake server at: $BBSERVER, use bitbake -m to shut it down"
+    else
+	echo "Bitbake server started at: $BBSERVER, use bitbake -m to shut it down"
+    fi
+    unset res
 fi
-unset res
