@@ -175,7 +175,8 @@ def check_conf_exists(fn, data):
     return False
 
 def check_create_long_filename(filepath, pathname):
-    testfile = os.path.join(filepath, ''.join([`num`[-1] for num in xrange(1,200)]))
+    import string, random
+    testfile = os.path.join(filepath, ''.join(random.choice(string.ascii_letters) for x in range(200)))
     try:
         if not os.path.exists(filepath):
             bb.utils.mkdirhier(filepath)
