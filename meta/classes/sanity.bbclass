@@ -183,8 +183,9 @@ def check_create_long_filename(filepath, pathname):
         f.close()
         os.remove(testfile)
     except IOError as e:
-        errno, strerror = e.args
-        if errno == 36: # ENAMETOOLONG
+        import errno
+        err, strerror = e.args
+        if err == errno.ENAMETOOLONG:
             return "Failed to create a file with a long name in %s. Please use a filesystem that does not unreasonably limit filename length.\n" % pathname
         else:
             return "Failed to create a file in %s: %s.\n" % (pathname, strerror)
