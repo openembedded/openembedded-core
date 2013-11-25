@@ -16,6 +16,7 @@ PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
            ${@base_contains('DISTRO_FEATURES', 'directfb', 'directfb', '', d)}"
 PACKAGECONFIG[x11] = "--with-x=yes,--without-x,${X11DEPENDS}"
 PACKAGECONFIG[directfb] = "--enable-directfb=yes,,directfb"
+PACKAGECONFIG[valgrind] = "--enable-valgrind=yes,--disable-valgrind,valgrind"
 BBCLASSEXTEND = "native"
 
 #check for TARGET_FPU=soft and inform configure of the result so it can disable some floating points 
