@@ -1,5 +1,4 @@
 SUMMARY = "An asynchronous event notification library"
-DESCRIPTION = "An asynchronous event notification library"
 HOMEPAGE = "http://libevent.org/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=50884&atid=461322"
 SECTION = "libs"

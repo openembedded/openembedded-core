@@ -1,5 +1,4 @@
 SUMMARY = "A simple post-processor for SGMLS and NSGMLS"
-DESCRIPTION = "A simple post-processor for SGMLS and NSGMLS"
 HOMEPAGE = "http://search.cpan.org/src/DMEGG/SGMLSpm-1.03ii/DOC/HTML/SGMLSpm/sgmlspm.html"
 SECTION = "libs"
 LICENSE = "GPLv2+"

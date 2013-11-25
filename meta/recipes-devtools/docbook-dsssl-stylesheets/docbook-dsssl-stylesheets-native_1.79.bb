@@ -1,5 +1,4 @@
 SUMMARY = "DSSSL stylesheets used to transform SGML and XML DocBook files"
-DESCRIPTION = "DSSSL stylesheets used to transform SGML and XML DocBook files"
 HOMEPAGE= "http://docbook.sourceforge.net"
 # Simple persmissive
 LICENSE = "DSSSL"

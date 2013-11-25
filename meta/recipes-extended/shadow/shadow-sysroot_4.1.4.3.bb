@@ -1,5 +1,4 @@
 SUMMARY = "Shadow utils requirements for useradd.bbclass"
-DESCRIPTION = "Shadow utils requirements for useradd.bbclass"
 HOMEPAGE = "http://pkg-shadow.alioth.debian.org"
 BUGTRACKER = "https://alioth.debian.org/tracker/?group_id=30580"
 SECTION = "base utils"

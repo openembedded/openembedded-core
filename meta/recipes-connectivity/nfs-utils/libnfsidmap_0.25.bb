@@ -1,5 +1,4 @@
 SUMMARY = "NFS id mapping library"
-DESCRIPTION = "NFS id mapping library"
 HOMEPAGE = "http://www.citi.umich.edu/projects/nfsv4/linux/"
 SECTION = "libs"
 

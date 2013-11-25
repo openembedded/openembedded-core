@@ -1,5 +1,4 @@
 SUMMARY = "Qemu helper scripts"
-DESCRIPTION = "Qemu helper scripts"
 LICENSE = "GPLv2"
 RDEPENDS_${PN} = "nativesdk-qemu"
 PR = "r9"

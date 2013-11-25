@@ -1,5 +1,4 @@
 SUMMARY = "Perl module for provides screen dump of Perl data."
-DESCRIPTION = "Perl module for provides screen dump of Perl data."
 
 HOMEPAGE = "http://search.cpan.org/~flora/Dumpvalue/"
 SECTION = "libs"

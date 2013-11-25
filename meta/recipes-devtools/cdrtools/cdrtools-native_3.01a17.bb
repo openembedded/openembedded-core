@@ -2,7 +2,6 @@
 # Copyright (C) 2004-2006, Advanced Micro Devices, Inc.  All Rights Reserved
 # Released under the MIT license (see packages/COPYING)
 SUMMARY = "A set of tools for CD recording, including cdrecord"
-DESCRIPTION = "A set of tools for CD recording, including cdrecord"
 HOMEPAGE = "http://cdrecord.berlios.de/private/cdrecord.html"
 SECTION = "console/utils"
 LICENSE = "GPLv2 & CDDL-1.0 & LGPLv2.1+"

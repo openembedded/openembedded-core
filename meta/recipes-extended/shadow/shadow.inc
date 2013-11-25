@@ -1,5 +1,4 @@
 SUMMARY = "Tools to change and administer password and group data"
-DESCRIPTION = "Tools to change and administer password and group data"
 HOMEPAGE = "http://pkg-shadow.alioth.debian.org"
 BUGTRACKER = "https://alioth.debian.org/tracker/?group_id=30580"
 SECTION = "base utils"

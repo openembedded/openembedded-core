@@ -1,5 +1,4 @@
 SUMMARY = "GNU grep utility"
-DESCRIPTION = "GNU grep utility"
 HOMEPAGE = "http://savannah.gnu.org/projects/grep/"
 BUGTRACKER = "http://savannah.gnu.org/bugs/?group=grep"
 SECTION = "console/utils"
