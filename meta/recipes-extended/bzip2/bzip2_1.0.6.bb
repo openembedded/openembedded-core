@@ -30,7 +30,6 @@ EXTRA_OECONF_append_class-native = " --bindir=${STAGING_BINDIR_NATIVE}/${PN}"
 do_configure_prepend () {
 	cp ${WORKDIR}/configure.ac ${S}/
 	cp ${WORKDIR}/Makefile.am ${S}/
-	cp ${STAGING_DATADIR_NATIVE}/automake*/install-sh ${S}/
 }
 
 do_install_ptest () {
