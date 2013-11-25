@@ -25,6 +25,7 @@ X264_DISABLE_ASM_armv5 = "--disable-asm"
 
 EXTRA_OECONF = '--prefix=${prefix} \
                 --host=${HOST_SYS} \
+                --libdir=${libdir} \
                 --cross-prefix=${TARGET_PREFIX} \
                 --sysroot=${STAGING_DIR_TARGET} \
                 --enable-shared \
