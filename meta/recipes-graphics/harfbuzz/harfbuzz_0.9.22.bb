@@ -18,11 +18,14 @@ SRC_URI[sha256sum] = "989680807e76197418338e44f226e02f155f33031efd9aff14dbc4dc14
 
 inherit autotools pkgconfig
 
-DEPENDS = "icu glib-2.0 cairo freetype"
+DEPENDS = "glib-2.0 cairo freetype"
 
 BBCLASSEXTEND = "native"
 
-EXTRA_OECONF = "--with-glib --with-freetype --with-cairo --with-icu --without-graphite2"
+EXTRA_OECONF = "--with-glib --with-freetype --with-cairo --without-graphite2"
+
+PACKAGECONFIG = ""
+PACKAGECONFIG[icu] = "--with-icu,--without-icu,icu"
 
 PACKAGES =+ "${PN}-icu ${PN}-icu-dbg ${PN}-icu-dev"
 
