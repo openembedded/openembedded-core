@@ -16,8 +16,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=9894370afd5dfe7d02b8d14319e729a1 \
                     file://COPYING.LIB;md5=dcf3c825659e82539645da41a7908589 \
                     file://include/beecrypt/beecrypt.h;endline=20;md5=47a93eef539aac237eef86297a4d71c1"
 
-DEPENDS = "icu"
-
 PR = "r3"
 
 inherit autotools multilib_header
@@ -28,6 +26,9 @@ do_install_append() {
 }
 
 EXTRA_OECONF="--without-python --enable-shared --enable-static --disable-openmp --with-java=no"
+
+PACKAGECONFIG = ""
+PACKAGECONFIG[cplusplus] = "--with-cplusplus,--without-cplusplus,icu"
 
 FILES_${PN} = "${sysconfdir} ${libdir}/*.so.* ${libdir}/${BPN}/*.so.*"
 FILES_${PN}-dev += "${libdir}/${BPN}/*.so ${libdir}/${BPN}/*.la"
