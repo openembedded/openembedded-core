@@ -8,11 +8,11 @@ KBRANCH = "${KBRANCH_DEFAULT}"
 LINUX_KERNEL_TYPE = "tiny"
 KCONFIG_MODE = "--allnoconfig"
 
-LINUX_VERSION ?= "3.4.59"
+LINUX_VERSION ?= "3.4.69"
 
 KMETA = "meta"
 
-SRCREV_machine ?= "ea977edd05ae2ebfa82731e0bee309bdfd08abee"
+SRCREV_machine ?= "7f4d818b0450a5dc79f81b51dc7d13d0682b1287"
 SRCREV_meta ?= "f36797c2df3fbe9491c8ac5977fb691f4a75e9b7"
 
 PR = "${INC_PR}.1"
