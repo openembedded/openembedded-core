@@ -1,0 +1,32 @@
+Upstream-Status: Submitted [https://bugs.freedesktop.org/show_bug.cgi?id=72044]
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From f2ade764cc9f009e1fe25b856b24b7695f66a952 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Tue, 26 Nov 2013 17:18:25 +0000
+Subject: [PATCH] fc-cache: --sysroot option takes an argument
+
+The getopt_long option definitions say that sysroot doesn't take an argument,
+when it in fact does.
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ fc-cache/fc-cache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fc-cache/fc-cache.c b/fc-cache/fc-cache.c
+index 27c7513..bf3b6b4 100644
+--- a/fc-cache/fc-cache.c
++++ b/fc-cache/fc-cache.c
+@@ -67,7 +67,7 @@
+ const struct option longopts[] = {
+     {"force", 0, 0, 'f'},
+     {"really-force", 0, 0, 'r'},
+-    {"sysroot", 0, 0, 'y'},
++    {"sysroot", required_argument, 0, 'y'},
+     {"system-only", 0, 0, 's'},
+     {"version", 0, 0, 'V'},
+     {"verbose", 0, 0, 'v'},
+-- 
+1.8.4.4
+

@@ -12,22 +12,18 @@ HOMEPAGE = "http://www.fontconfig.org"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=fontconfig"
 
 LICENSE = "MIT-style & MIT & PD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=dc5b39c592e47a22dbec44855988d2a0 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=7a0449e9bc5370402a94c00204beca3d \
                     file://src/fcfreetype.c;endline=45;md5=5d9513e3196a1fbfdfa94051c09dfc84 \
-                    file://src/fccache.c;beginline=1182;endline=1197;md5=0326cfeb4a7333dd4dd25fbbc4b9f27f"
+                    file://src/fccache.c;beginline=1131;endline=1146;md5=754c7b855210ee746e5f0b840fad9a9f"
 
 SECTION = "libs"
 
 DEPENDS = "expat freetype zlib"
 
-PR = "r1"
-
 SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
-           file://Add-sysroot-option-to-fc-cache-and-fc-cat.patch \
-          "
-
-SRC_URI[md5sum] = "025e08b3d7fe45c433de5718e441ed15"
-SRC_URI[sha256sum] = "5c3bf994bb6d6303bbf1e641eaa4b431932138dc90de33642e5845e31e1fdfd6"
+           file://sysroot-arg.patch"
+SRC_URI[md5sum] = "84278204cd7f36adbea7ad8094e039ac"
+SRC_URI[sha256sum] = "274c047487b90dacbaa55f4d70b8cdcd556944e7251ce9cf1de442c00a16343b"
 
 PACKAGES =+ "fontconfig-utils"
 FILES_${PN} =+ "${datadir}/xml/*"
