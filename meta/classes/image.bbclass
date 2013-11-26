@@ -179,6 +179,9 @@ ROOTFS_POSTPROCESS_COMMAND_prepend = "run_intercept_scriptlets; "
 ROOTFS_POSTPROCESS_COMMAND += '${@base_contains("IMAGE_FEATURES", "debug-tweaks", "ssh_allow_empty_password; ", "",d)}'
 # Enable postinst logging if debug-tweaks is enabled
 ROOTFS_POSTPROCESS_COMMAND += '${@base_contains("IMAGE_FEATURES", "debug-tweaks", "postinst_enable_logging; ", "",d)}'
+# Write manifest
+IMAGE_MANIFEST = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.manifest"
+ROOTFS_POSTPROCESS_COMMAND =+ "write_image_manifest ; "
 # Set default postinst log file
 POSTINST_LOGFILE ?= "${localstatedir}/log/postinstall.log"
 
@@ -381,6 +384,11 @@ fakeroot do_rootfs () {
 	${IMAGE_POSTPROCESS_COMMAND}
 	
 	${MACHINE_POSTPROCESS_COMMAND}
+
+	if [ -n "${IMAGE_LINK_NAME}" -a -f "${IMAGE_MANIFEST}" ]; then
+		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.manifest
+		ln -s ${IMAGE_NAME}.rootfs.manifest ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.manifest
+	fi
 }
 
 insert_feed_uris () {
@@ -602,12 +610,7 @@ make_zimage_symlink_relative () {
 }
 
 write_image_manifest () {
-	rootfs_${IMAGE_PKGTYPE}_write_manifest
-
-	if [ -n "${IMAGE_LINK_NAME}" ]; then
-		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.manifest
-		ln -s ${IMAGE_NAME}.rootfs.manifest ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.manifest
-	fi
+	list_installed_packages ver | sort > ${IMAGE_MANIFEST}
 }
 
 # Make login manager(s) enable automatic login.

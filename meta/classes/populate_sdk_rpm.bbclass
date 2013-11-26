@@ -162,6 +162,8 @@ list_installed_packages() {
 		${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{ARCH}\n]" | translate_smart_to_oe arch
 	elif [ "$1" = "file" ]; then
 		${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{ARCH} %{PACKAGEORIGIN}\n]" | translate_smart_to_oe file
+	elif [ "$1" = "ver" ]; then
+		${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{ARCH} %{VERSION}\n]" | translate_smart_to_oe arch
 	else
 		${RPM_QUERY_CMD} -qa --qf "[%{NAME} %{ARCH}\n]" | translate_smart_to_oe
 	fi

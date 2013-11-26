@@ -28,6 +28,7 @@ import re
 
 archmode = False
 filemode = False
+vermode = False
 
 args = []
 for arg in sys.argv[1:]:
@@ -35,6 +36,8 @@ for arg in sys.argv[1:]:
         archmode = True
     elif arg == '-f':
         filemode = True
+    elif arg == '-v':
+        vermode = True
     else:
         args.append(arg)
 
@@ -60,6 +63,12 @@ for line in fileinput.input(args):
                 elif line.startswith("Architecture:"):
                     arch = line.split(": ")[1]
                     print("%s %s_%s_%s.ipk %s" % (pkg,pkg,ver,arch,arch))
+            elif vermode:
+                if line.startswith("Version:"):
+                    ver = line.split(": ")[1]
+                elif line.startswith("Architecture:"):
+                    arch = line.split(": ")[1]
+                    print("%s %s %s" % (pkg,arch,ver))
             else:
                 if line.startswith("Depends:"):
                     depval = line.split(": ")[1]

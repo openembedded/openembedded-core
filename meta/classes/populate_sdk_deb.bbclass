@@ -84,6 +84,8 @@ list_installed_packages() {
 				echo "$pkg $fullpath $pkgarch"
 			fi
 		done
+	elif [ "$1" = "ver" ] ; then
+		${DPKG_QUERY_COMMAND} -W -f='${Package} ${PackageArch} ${Version}\n'
 	else
 		${DPKG_QUERY_COMMAND} -W -f='${Package}\n'
 	fi

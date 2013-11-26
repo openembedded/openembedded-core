@@ -118,20 +118,6 @@ save_postinsts () {
 	done
 }
 
-rootfs_ipk_write_manifest() {
-	manifest=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.manifest
-	cp ${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/status $manifest
-
-	sed '/Depends/d' -i $manifest
-	sed '/Status/d' -i $manifest
-	sed '/Architecture/d' -i $manifest
-	sed '/Installed-Time/d' -i $manifest
-	sed '/Auto-Installed/d' -i $manifest
-	sed '/Recommends/d' -i $manifest
-	sed '/Provides/d' -i $manifest
-	sed '/Conflicts/d' -i $manifest
-}
-
 remove_packaging_data_files() {
 	rm -rf ${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg
 	# We need the directory for the package manager lock

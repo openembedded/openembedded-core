@@ -70,6 +70,8 @@ list_installed_packages() {
 				echo "$pkg $fullpath $pkgarch"
 			fi
 		done
+	elif [ "$1" = "ver" ] ; then
+		opkg-cl ${OPKG_ARGS} status | opkg-query-helper.py -v
 	else
 		opkg-cl ${OPKG_ARGS} list_installed | awk '{ print $1 }'
 	fi
