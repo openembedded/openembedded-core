@@ -48,7 +48,7 @@ do_configure_prepend() {
 }
 
 do_install_append() {
-	if [ "${TARGET_ARCH}" != "x86_64" ] && [ ! `echo "${TARGET_ARCH}"|grep -q 'i.86'` ];then
+	if [ "${TARGET_ARCH}" != "x86_64" ] && [ -z `echo "${TARGET_ARCH}"|grep 'i.86'` ];then
 		rm ${D}${bindir}/eu-objdump
 	fi
 }
