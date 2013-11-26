@@ -3,9 +3,9 @@ DESCRIPTION = "PNG Library"
 HOMEPAGE = "http://www.libpng.org/"
 SECTION = "libs"
 LICENSE = "Libpng"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=2ebec5fb1db10234542f80fdd7117e25 \
-                    file://png.h;endline=15;md5=41143e20c803af0a376888699ce0980e \
-                    file://png.h;beginline=209;endline=323;md5=d30ef0b1dd12d869cb3c6bdb3678e5f4"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=243135ddedf702158f9170807cbcfb66 \
+                    file://png.h;endline=15;md5=cb4981447519fe0bb87fbda5e8cd50be \
+                    file://png.h;beginline=209;endline=323;md5=f6b7821e0ddefaa4d71fdfa1f5a91fb7"
 DEPENDS = "zlib"
 LIBV = "16"
 
@@ -13,8 +13,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/libpng/libpng${LIBV}/${PV}/libpng-${PV}
            file://0001-configure-lower-automake-requirement.patch \
           "
 
-SRC_URI[md5sum] = "3a41dcd58bcac7cc191c2ec80c7fb2ac"
-SRC_URI[sha256sum] = "0407965a0057af7a9e4cefe27c062f517d9ad701cdfd20aa91afb6a84f214e70"
+SRC_URI[md5sum] = "7023a9eacd7b6a3eb95761a2f574d456"
+SRC_URI[sha256sum] = "13c9c853a9a600218fff9961658dc4f485ad2ef9b862315b434dd2fdbbe1f945"
 
 inherit autotools binconfig pkgconfig
 
