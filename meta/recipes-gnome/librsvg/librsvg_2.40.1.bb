@@ -15,11 +15,10 @@ inherit autotools pkgconfig gnomebase gtk-doc pixbufcache
 GNOME_COMPRESS_TYPE = "xz"
 
 SRC_URI += "file://gtk-option.patch \
-            file://local-m4.patch \
             file://vapigen.m4"
 
-SRC_URI[archive.md5sum] = "e16a84e9a86a18e5ca6ba95c512db6c6"
-SRC_URI[archive.sha256sum] = "8f7db31df235813dbd035888035cf862d682e7cc5706c4e7ec05750d3f64a2f9"
+SRC_URI[archive.md5sum] = "a31eb5d66c3fe94d888a6b17a287ea42"
+SRC_URI[archive.sha256sum] = "8813b4fe776d5e7acbce28bacbaed30ccb0cec3734eb3632c711a16ebe2961d7"
 
 EXTRA_OECONF = "--disable-introspection --disable-vala"
 
@@ -29,13 +28,13 @@ PACKAGECONFIG[gdkpixbuf] = "--enable-pixbuf-loader,--disable-pixbuf-loader,gdk-p
 # GTK+ test application (rsvg-view)
 PACKAGECONFIG[gtk] = "--with-gtk3,--without-gtk3,gtk+3"
 
-# 2.40.1 should ship the tarball with local m4 macros, but until then drop a
-# vapigen in there so we don't need to build vala to configure.
+# The tarball doesn't ship with macros, so drop a vapigen in there so we don't
+# need to build vala to configure.
 do_configure_prepend() {
-	if test ! -e ${S}/m4/vapigen.m4; then
-		mkdir --parents ${S}/m4
-		mv ${WORKDIR}/vapigen.m4 ${S}/m4/
-	fi
+       if test ! -e ${S}/m4/vapigen.m4; then
+               mkdir --parents ${S}/m4
+               mv ${WORKDIR}/vapigen.m4 ${S}/m4/
+       fi
 }
 
 do_install_append() {
