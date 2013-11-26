@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=275efac2559a224527bd4fd593d38466 \
 SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
            file://weston.png \
            file://weston.desktop"
-SRC_URI[md5sum] = "29ad994dd5ea07f52d7bffb24c25d9f7"
-SRC_URI[sha256sum] = "8e4f5b4736358b63d83c3252567ba7aa49cc0da9e2e2c30f59ddf635159702a0"
+SRC_URI[md5sum] = "ffe7c3bc0e7eb39a305cbbea8c7766f3"
+SRC_URI[sha256sum] = "f7141334b141ae1a6435bd03bfdb01b7fb628f39259164f201e7e71c8d815bc7"
 
 
 inherit autotools pkgconfig useradd
