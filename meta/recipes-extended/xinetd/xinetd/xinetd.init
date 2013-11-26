@@ -2,6 +2,9 @@
 #
 # /etc/init.d/xinetd  --  script to start and stop xinetd.
 
+# Source function library.
+. /etc/init.d/functions
+
 if test -f /etc/default/xinetd; then
 	. /etc/default/xinetd
 fi
@@ -33,6 +36,10 @@ case "$1" in
 	start-stop-daemon --stop --signal 3 --quiet --exec /usr/sbin/xinetd
 	echo "."
 	;;
+    status)
+	status /usr/sbin/xinetd;
+	exit $?
+	;;
     reload)
 	echo -n "Reloading internet superserver configuration: xinetd"
 	start-stop-daemon --stop --signal 1 --quiet --exec /usr/sbin/xinetd
@@ -49,7 +56,7 @@ case "$1" in
 	$0 start
 	;;
     *)
-	echo "Usage: /etc/init.d/xinetd {start|stop|reload|force-reload|restart}"
+	echo "Usage: /etc/init.d/xinetd {start|stop|status|reload|force-reload|restart}"
 	exit 1
 	;;
 esac
