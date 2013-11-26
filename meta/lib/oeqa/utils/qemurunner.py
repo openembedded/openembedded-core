@@ -16,24 +16,29 @@ import bb
 
 class QemuRunner:
 
-    def __init__(self, machine, rootfs, display = None, tmpdir = None, deploy_dir_image = None, logfile = None, boottime = 400, runqemutime = 60):
-        # Popen object
+    def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime):
+
+        # Popen object for runqemu
         self.runqemu = None
+        # pid of the qemu process that runqemu will start
+        self.qemupid = None
+        # target ip - from the command line
+        self.ip = None
+        # host ip - where qemu is running
+        self.server_ip = None
 
         self.machine = machine
         self.rootfs = rootfs
-
-        self.qemupid = None
-        self.ip = None
-
         self.display = display
         self.tmpdir = tmpdir
         self.deploy_dir_image = deploy_dir_image
         self.logfile = logfile
         self.boottime = boottime
-        self.runqemutime = runqemutime
+
+        self.runqemutime = 60
 
         self.create_socket()
+
 
     def create_socket(self):
 
@@ -57,7 +62,7 @@ class QemuRunner:
             with open(self.logfile, "a") as f:
                 f.write("%s" % msg)
 
-    def launch(self, qemuparams = None):
+    def start(self, qemuparams = None):
 
         if self.display:
             os.environ["DISPLAY"] = self.display
@@ -96,14 +101,19 @@ class QemuRunner:
 
         if self.is_alive():
             bb.note("qemu started - qemu procces pid is %s" % self.qemupid)
-            cmdline = open('/proc/%s/cmdline' % self.qemupid).read()
-            self.ip, _, self.host_ip = cmdline.split('ip=')[1].split(' ')[0].split(':')[0:3]
-            if not re.search("^((?:[0-9]{1,3}\.){3}[0-9]{1,3})$", self.ip):
-                bb.note("Couldn't get ip from qemu process arguments, I got '%s'" % self.ip)
-                bb.note("Here is the ps output:\n%s" % cmdline)
-                self.kill()
+            cmdline = ''
+            with open('/proc/%s/cmdline' % self.qemupid) as p:
+                cmdline = p.read()
+            ips = re.findall("((?:[0-9]{1,3}\.){3}[0-9]{1,3})", cmdline.split("ip=")[1])
+            if not ips or len(ips) != 3:
+                bb.note("Couldn't get ip from qemu process arguments! Here is the qemu command line used: %s" % cmdline)
+                self.stop()
                 return False
-            bb.note("IP found: %s" % self.ip)
+            else:
+                self.ip = ips[0]
+                self.server_ip = ips[1]
+            bb.note("Target IP: %s" % self.ip)
+            bb.note("Server IP: %s" % self.server_ip)
             bb.note("Waiting at most %d seconds for login banner" % self.boottime )
             endtime = time.time() + self.boottime
             socklist = [self.server_socket]
@@ -138,18 +148,18 @@ class QemuRunner:
                 lines = "\n".join(self.bootlog.splitlines()[-5:])
                 bb.note("Last 5 lines of text:\n%s" % lines)
                 bb.note("Check full boot log: %s" % self.logfile)
-                self.kill()
+                self.stop()
                 return False
         else:
             bb.note("Qemu pid didn't appeared in %s seconds" % self.runqemutime)
             output = self.runqemu.stdout
-            self.kill()
+            self.stop()
             bb.note("Output from runqemu:\n%s" % output.read())
             return False
 
         return self.is_alive()
 
-    def kill(self):
+    def stop(self):
 
         if self.runqemu:
             bb.note("Sending SIGTERM to runqemu")
@@ -170,9 +180,9 @@ class QemuRunner:
     def restart(self, qemuparams = None):
         bb.note("Restarting qemu process")
         if self.runqemu.poll() is None:
-            self.kill()
+            self.stop()
         self.create_socket()
-        if self.launch(qemuparams):
+        if self.start(qemuparams):
             return True
         return False
 

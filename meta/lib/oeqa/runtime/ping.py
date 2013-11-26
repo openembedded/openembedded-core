@@ -11,7 +11,7 @@ class PingTest(oeRuntimeTest):
         count = 0
         endtime = time.time() + 60
         while count < 5 and time.time() < endtime:
-            proc = subprocess.Popen("ping -c 1 %s" % oeRuntimeTest.tc.qemu.ip, shell=True, stdout=subprocess.PIPE)
+            proc = subprocess.Popen("ping -c 1 %s" % self.target.ip, shell=True, stdout=subprocess.PIPE)
             output += proc.communicate()[0]
             if proc.poll() == 0:
                 count += 1

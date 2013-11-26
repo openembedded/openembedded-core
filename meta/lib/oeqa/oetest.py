@@ -14,7 +14,7 @@ import bb
 from oeqa.utils.sshcontrol import SSHControl
 
 
-def runTests(tc):
+def loadTests(tc):
 
     # set the context object passed from the test class
     setattr(oeTest, "tc", tc)
@@ -24,12 +24,16 @@ def runTests(tc):
     suite = unittest.TestSuite()
     testloader = unittest.TestLoader()
     testloader.sortTestMethodsUsing = None
-    runner = unittest.TextTestRunner(verbosity=2)
-
-    bb.note("Test modules  %s" % tc.testslist)
     suite = testloader.loadTestsFromNames(tc.testslist)
-    bb.note("Found %s tests" % suite.countTestCases())
 
+    return suite
+
+def runTests(tc):
+
+    suite = loadTests(tc)
+    bb.note("Test modules  %s" % tc.testslist)
+    bb.note("Found %s tests" % suite.countTestCases())
+    runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
 
     return result
@@ -81,11 +85,7 @@ class oeRuntimeTest(oeTest):
 
     @classmethod
     def restartTarget(self,params=None):
-
-        if oeRuntimeTest.tc.qemu.restart(params):
-            oeRuntimeTest.tc.target.host = oeRuntimeTest.tc.qemu.ip
-        else:
-            raise Exception("Restarting target failed")
+        oeRuntimeTest.tc.target.restart(params)
 
 
 def getmodule(pos=2):
@@ -103,7 +103,7 @@ def skipModule(reason, pos=2):
     else:
         raise Exception("\nTest %s wants to be skipped.\nReason is: %s" \
                 "\nTest was required in TEST_SUITES, so either the condition for skipping is wrong" \
-                "\nor the image really doesn't have the requred feature/package when it should." % (modname, reason))
+                "\nor the image really doesn't have the required feature/package when it should." % (modname, reason))
 
 def skipModuleIf(cond, reason):
 

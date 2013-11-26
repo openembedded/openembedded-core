@@ -13,8 +13,8 @@ import select
 
 class SSHControl(object):
 
-    def __init__(self, host=None, timeout=300, logfile=None):
-        self.host = host
+    def __init__(self, ip=None, timeout=300, logfile=None):
+        self.ip = ip
         self.timeout = timeout
         self._starttime = None
         self._out = ''
@@ -35,7 +35,7 @@ class SSHControl(object):
     def _internal_run(self, cmd):
         # We need this for a proper PATH
         cmd = ". /etc/profile; " + cmd
-        command = self.ssh + [self.host, cmd]
+        command = self.ssh + [self.ip, cmd]
         self.log("[Running]$ %s" % " ".join(command))
         self._starttime = time.time()
         # ssh hangs without os.setsid
@@ -48,10 +48,10 @@ class SSHControl(object):
         if time is 0 will let cmd run until it finishes.
         Time can be passed to here or can be set per class instance."""
 
-        if self.host:
+        if self.ip:
             sshconn = self._internal_run(cmd)
         else:
-            raise Exception("Remote IP/host hasn't been set, I can't run ssh without one.")
+            raise Exception("Remote IP hasn't been set, I can't run ssh without one.")
 
         # run the command forever
         if timeout == 0:
@@ -108,15 +108,9 @@ class SSHControl(object):
         return (ret, out)
 
     def copy_to(self, localpath, remotepath):
-        actualcmd = [localpath, 'root@%s:%s' % (self.host, remotepath)]
+        actualcmd = [localpath, 'root@%s:%s' % (self.ip, remotepath)]
         return self._internal_scp(actualcmd)
 
     def copy_from(self, remotepath, localpath):
-        actualcmd = ['root@%s:%s' % (self.host, remotepath), localpath]
+        actualcmd = ['root@%s:%s' % (self.ip, remotepath), localpath]
         return self._internal_scp(actualcmd)
-
-    def get_status(self):
-        return self._ret
-
-    def get_output(self):
-        return self._out

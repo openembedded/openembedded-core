@@ -34,13 +34,19 @@ TEST_SUITES ?= "${DEFAULT_TEST_SUITES}"
 
 TEST_QEMUBOOT_TIMEOUT ?= "1000"
 
+TEST_TARGET ?= "qemu"
+TEST_TARGET_IP ?= ""
+TEST_SERVER_IP ?= ""
+
+TESTIMAGEDEPENDS = ""
+TESTIMAGEDEPENDS_qemuall = "qemu-native:do_populate_sysroot qemu-helper-native:do_populate_sysroot"
+
 python do_testimage() {
     testimage_main(d)
 }
 addtask testimage
 do_testimage[nostamp] = "1"
-do_testimage[depends] += "qemu-native:do_populate_sysroot"
-do_testimage[depends] += "qemu-helper-native:do_populate_sysroot"
+do_testimage[depends] += "${TESTIMAGEDEPENDS}"
 
 
 def get_tests_list(d):
@@ -83,15 +89,12 @@ def testimage_main(d):
     import unittest
     import os
     import oeqa.runtime
-    import re
-    import shutil
     import time
-    from oeqa.oetest import runTests
-    from oeqa.utils.sshcontrol import SSHControl
-    from oeqa.utils.qemurunner import QemuRunner
+    from oeqa.oetest import loadTests, runTests
+    from oeqa.targetcontrol import get_target_controller
 
-    testdir = d.getVar("TEST_LOG_DIR", True)
-    bb.utils.mkdirhier(testdir)
+    pn = d.getVar("PN", True)
+    bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR", True))
 
     # tests in TEST_SUITES become required tests
     # they won't be skipped even if they aren't suitable for a image (like xorg for minimal)
@@ -99,81 +102,46 @@ def testimage_main(d):
     testslist = get_tests_list(d)
     testsrequired = [t for t in d.getVar("TEST_SUITES", True).split() if t != "auto"]
 
+    # the robot dance
+    target = get_target_controller(d)
+
     class TestContext:
         def __init__(self):
             self.d = d
             self.testslist = testslist
             self.testsrequired = testsrequired
             self.filesdir = os.path.join(os.path.dirname(os.path.abspath(oeqa.runtime.__file__)),"files")
+            self.target = target
 
     # test context
     tc = TestContext()
 
-    # prepare qemu instance
-    # and boot each supported fs type
-    machine=d.getVar("MACHINE", True)
-    #will handle fs type eventually, stick with ext3 for now
-    #make a copy of the original rootfs and use that for tests
-    origrootfs=os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),  d.getVar("IMAGE_LINK_NAME",True) + '.ext3')
-    testrootfs=os.path.join(testdir, d.getVar("IMAGE_LINK_NAME", True) + '-testimage.ext3')
+    # this is a dummy load of tests
+    # we are doing that to find compile errors in the tests themselves
+    # before booting the image
     try:
-        shutil.copyfile(origrootfs, testrootfs)
+        loadTests(tc)
     except Exception as e:
-        bb.fatal("Error copying rootfs: %s" % e)
+        bb.fatal("Loading tests failed:\n %s" % e)
+
+    target.deploy()
 
     try:
-        boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT", True))
-    except ValueError:
-        boottime = 1000
-
-    qemu = QemuRunner(machine=machine, rootfs=testrootfs,
-                        tmpdir = d.getVar("TMPDIR", True),
-                        deploy_dir_image = d.getVar("DEPLOY_DIR_IMAGE", True),
-                        display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True),
-                        logfile = os.path.join(testdir, "qemu_boot_log.%s" % d.getVar('DATETIME', True)),
-                        boottime = boottime)
-
-    qemuloglink = os.path.join(testdir, "qemu_boot_log")
-    if os.path.islink(qemuloglink):
-        os.unlink(qemuloglink)
-    os.symlink(qemu.logfile, qemuloglink)
-
-    sshlog = os.path.join(testdir, "ssh_target_log.%s" % d.getVar('DATETIME', True))
-    sshloglink = os.path.join(testdir, "ssh_target_log")
-    if os.path.islink(sshloglink):
-        os.unlink(sshloglink)
-    os.symlink(sshlog, sshloglink)
-
-    bb.note("DISPLAY value: %s" % qemu.display)
-    bb.note("rootfs file: %s" %  qemu.rootfs)
-    bb.note("Qemu log file: %s" % qemu.logfile)
-    bb.note("SSH log file: %s" %  sshlog)
-
-    pn = d.getVar("PN", True)
-    #catch exceptions when loading or running tests (mostly our own errors)
-    try:
-        if qemu.launch():
-
-            # set more context - ssh instance and qemu
-            # we do these here because we needed qemu to boot and get the ip
-            tc.qemu = qemu
-            tc.target = SSHControl(host=qemu.ip,logfile=sshlog)
-            # run tests and get the results
-            starttime = time.time()
-            result = runTests(tc)
-            stoptime = time.time()
-            if result.wasSuccessful():
-                bb.plain("%s - Ran %d test%s in %.3fs" % (pn, result.testsRun, result.testsRun != 1 and "s" or "", stoptime - starttime))
-                msg = "%s - OK - All required tests passed" % pn
-                skipped = len(result.skipped)
-                if skipped:
-                    msg += " (skipped=%d)" % skipped
-                bb.plain(msg)
-            else:
-                raise bb.build.FuncFailed("%s - FAILED - check the task log and the ssh log" % pn )
+        target.start()
+        # run tests and get the results
+        starttime = time.time()
+        result = runTests(tc)
+        stoptime = time.time()
+        if result.wasSuccessful():
+            bb.plain("%s - Ran %d test%s in %.3fs" % (pn, result.testsRun, result.testsRun != 1 and "s" or "", stoptime - starttime))
+            msg = "%s - OK - All required tests passed" % pn
+            skipped = len(result.skipped)
+            if skipped:
+                msg += " (skipped=%d)" % skipped
+            bb.plain(msg)
         else:
-            raise bb.build.FuncFailed("%s - FAILED to start qemu - check the task log and the boot log" % pn)
+            raise bb.build.FuncFailed("%s - FAILED - check the task log and the ssh log" % pn )
     finally:
-        qemu.kill()
+        target.stop()
 
 testimage_main[vardepsexclude] =+ "BB_ORIGENV"

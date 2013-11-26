@@ -19,5 +19,4 @@ python do_testimage_auto() {
     testimage_main(d)
 }
 addtask testimage_auto before do_build after do_rootfs
-do_testimage_auto[depends] += "qemu-native:do_populate_sysroot"
-do_testimage_auto[depends] += "qemu-helper-native:do_populate_sysroot"
+do_testimage_auto[depends] += "${TESTIMAGEDEPENDS}"
