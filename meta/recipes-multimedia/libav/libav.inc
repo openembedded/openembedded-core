@@ -55,6 +55,8 @@ EXTRA_OECONF = " \
     --sysroot="${STAGING_DIR_TARGET}" \
     --enable-hardcoded-tables \
     ${EXTRA_FFCONF} \
+    --libdir=${libdir} \
+    --shlibdir=${libdir} \
 "
 
 do_configure() {
