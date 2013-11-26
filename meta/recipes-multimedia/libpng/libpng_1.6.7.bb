@@ -1,5 +1,4 @@
-SUMMARY = "PNG Library"
-DESCRIPTION = "PNG Library"
+SUMMARY = "PNG image format decoding library"
 HOMEPAGE = "http://www.libpng.org/"
 SECTION = "libs"
 LICENSE = "Libpng"
