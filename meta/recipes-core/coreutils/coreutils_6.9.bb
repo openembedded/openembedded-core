@@ -24,6 +24,7 @@ SRC_URI_BASE = "${GNU_MIRROR}/coreutils/${BP}.tar.bz2 \
            file://man-touch.patch \
            file://coreutils_fix_for_automake-1.12.patch \
            file://coreutils-build-with-acl.patch \
+           file://coreutils-fix-texinfo.patch \
            "
 
 SRC_URI = "${SRC_URI_BASE} file://fix_for_manpage_building.patch"
