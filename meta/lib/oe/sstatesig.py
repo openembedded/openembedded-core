@@ -14,6 +14,8 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
     def isPackageGroup(fn):
         inherits = " ".join(dataCache.inherits[fn])
         return "packagegroup.bbclass" in inherits
+    def isImage(fn):
+        return "image.bbclass" in " ".join(dataCache.inherits[fn])
 
     # Always include our own inter-task dependencies
     if recipename == depname:
@@ -39,7 +41,7 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
         return False
 
     # Exclude well defined machine specific configurations which don't change ABI
-    if depname in siggen.abisaferecipes:
+    if depname in siggen.abisaferecipes and not isImage(fn):
         return False
 
     # Exclude well defined recipe->dependency
