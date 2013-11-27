@@ -153,6 +153,79 @@ python toaster_image_dumpdata() {
 }
 
 
+
+# collect list of buildstats files based on fired events; when the build completes, collect all stats and fire an event with collected data
+
+python toaster_collect_task_stats() {
+    import bb.build
+    import bb.event
+    import bb.data
+    import bb.utils
+    import os
+
+    def _append_read_list(v):
+        lock = bb.utils.lockfile(e.data.expand("${TOPDIR}/toaster.lock"), False, True)
+
+        with open(os.path.join(e.data.getVar('BUILDSTATS_BASE', True), "toasterstatlist"), "a") as fout:
+            bn = get_bn(e)
+            bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
+            taskdir = os.path.join(bsdir, e.data.expand("${PF}"))
+            fout.write("%s:%s:%s\n" % (e.taskfile, e.taskname, os.path.join(taskdir, e.task)))
+
+        bb.utils.unlockfile(lock)
+
+    def _read_stats(filename):
+        cpu_usage = 0
+        disk_io = 0
+        startio = ''
+        endio = ''
+        pn = ''
+        taskname = ''
+        statinfo = {}
+
+        with open(filename, 'r') as task_bs:
+            for line in task_bs.readlines():
+                k,v = line.strip().split(": ", 1)
+                statinfo[k] = v
+
+        try:
+            cpu_usage = statinfo["CPU usage"]
+            endio = statinfo["EndTimeIO"]
+            startio = statinfo["StartTimeIO"]
+        except KeyError:
+            pass    # we may have incomplete data here
+
+        if startio and endio:
+            disk_io = int(endio.strip('\n ')) - int(startio.strip('\n '))
+
+        if cpu_usage:
+            cpu_usage = float(cpu_usage.strip('% \n'))
+
+        return {'cpu_usage': cpu_usage, 'disk_io': disk_io}
+
+
+    if isinstance(e, (bb.build.TaskSucceeded, bb.build.TaskFailed)):
+        _append_read_list(e)
+        pass
+
+
+    if isinstance(e, bb.event.BuildCompleted):
+        events = []
+        with open(os.path.join(e.data.getVar('BUILDSTATS_BASE', True), "toasterstatlist"), "r") as fin:
+            for line in fin:
+                (taskfile, taskname, filename) = line.strip().split(":")
+                events.append((taskfile, taskname, _read_stats(filename)))
+        bb.event.fire(bb.event.MetadataEvent("BuildStatsList", events), e.data)
+        os.unlink(os.path.join(e.data.getVar('BUILDSTATS_BASE', True), "toasterstatlist"))
+}
+
+
+# set event handlers
+addhandler toaster_layerinfo_dumpdata
+toaster_layerinfo_dumpdata[eventmask] = "bb.event.TreeDataPreparationCompleted"
+
+addhandler toaster_collect_task_stats
+toaster_collect_task_stats[eventmask] = "bb.event.BuildCompleted bb.build.TaskSucceeded bb.build.TaskFailed"
 do_package[postfuncs] += "toaster_package_dumpdata "
 
 do_rootfs[postfuncs] += "toaster_image_dumpdata "
