@@ -43,11 +43,8 @@ case "$1" in
     fi
     ;;
   status)
-    if [ -n "`/bin/pidof $CROND`" ] ; then
-        echo "crond is running."
-    else
-        echo "crond is not running."
-    fi
+    status crond
+    exit $?
     ;;
   restart)
     $0 stop && sleep 1 && $0 start
