@@ -290,17 +290,6 @@ kernel_do_install() {
 }
 do_install[prefuncs] += "package_get_auto_pr"
 
-
-SSTATEPOSTINSTFUNCS += "kernelscripts_sstate_postinst"
-kernelscripts_sstate_postinst () {
-	if [ "${BB_CURRENTTASK}" = "populate_sysroot" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]; then
-		( 
-		  cd ${STAGING_KERNEL_DIR}
-		  oe_runmake scripts
-		)
-	fi
-}
-
 python sysroot_stage_all () {
     oe.path.copyhardlinktree(d.expand("${D}${KERNEL_SRC_PATH}"), d.expand("${SYSROOT_DESTDIR}${KERNEL_SRC_PATH}"))
 }
