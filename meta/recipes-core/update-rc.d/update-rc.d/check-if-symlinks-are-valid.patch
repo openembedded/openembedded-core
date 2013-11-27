@@ -14,25 +14,31 @@ actually exists in rootfs path and then continue.
 Upstream-Status: Pending
 
 Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com> 
+Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 
 Index: git/update-rc.d
 ===================================================================
---- git.orig/update-rc.d	2013-01-16 12:12:58.349814356 +0200
-+++ git/update-rc.d	2013-01-16 13:02:42.490864939 +0200
-@@ -147,13 +147,29 @@
+--- git.orig/update-rc.d
++++ git/update-rc.d
+@@ -147,13 +147,34 @@ fi
  bn=$1
  shift
  
 +sn=$initd/$bn
 +if [ -L "$sn" -a -n "$root" ]; then
-+	readlink=$(which readlink)
++	if which readlink >/dev/null; then
++		while true; do
++			linksn="$(readlink "$sn")"
++			if [ -z "$linksn" ]; then
++				break
++			fi
 +
-+	if [ -n "$readlink" ]; then
-+		sn=$($readlink "$sn")
-+		case "$sn" in
-+			/*) sn=${root}${sn} ;;
-+			*)  sn=$initd/$sn ;;
-+		esac
++			sn="$linksn"
++			case "$sn" in
++				/*) sn="$root$sn" ;;
++				*)  sn="$initd/$sn" ;;
++			esac
++		done
 +	else
 +		echo "update-rc.d: readlink tool not present, cannot check whether \
 +				$sn symlink points to a valid file." >&2
