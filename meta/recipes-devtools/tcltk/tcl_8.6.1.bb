@@ -28,13 +28,13 @@ SRC_URI_class-native = "${BASE_SRC_URI}"
 
 S = "${WORKDIR}/tcl${PV}/unix"
 
-VER = "8.6"
+VER = "8.6.1"
 
 inherit autotools
 
 DEPENDS_class-native = ""
 
-EXTRA_OECONF = "--enable-threads --disable-rpath"
+EXTRA_OECONF = "--enable-threads --disable-rpath --libdir=${libdir}"
 
 do_configure() {
 	( cd ${S}; gnu-configize )
@@ -67,8 +67,8 @@ tcl_sysroot_preprocess () {
 }
 
 PACKAGES =+ "tcl-lib"
-FILES_tcl-lib = "${libdir}/libtcl${VER}.so.*"
-FILES_${PN} += "${libdir}/tcl${VER} ${libdir}/tcl8"
+FILES_tcl-lib = "${libdir}/libtcl8.6.so.*"
+FILES_${PN} += "${libdir}/tcl${VER} ${libdir}/tcl8.6 ${libdir}/tcl8"
 FILES_${PN}-dev += "${libdir}/tclConfig.sh ${libdir}/tclooConfig.sh"
 
 # isn't getting picked up by shlibs code
