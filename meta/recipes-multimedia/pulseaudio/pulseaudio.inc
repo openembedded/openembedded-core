@@ -69,8 +69,12 @@ USERADD_PARAM_pulseaudio-server = "--system --home /var/run/pulse \
                               --no-create-home --shell /bin/false \
                               --groups audio,pulse --gid pulse pulse"
 
+# The console-kit module is included here explicitly so bitbake can map to the
+# RDEPENDS we define for it in this recipe, and thereby ensure that when
+# adding the console-kit module to an image, we also get the necessary
+# consolekit package produced.
 PACKAGES =+ "libpulsecore libpulsecommon libpulse libpulse-simple libpulse-mainloop-glib \
-             pulseaudio-server pulseaudio-misc"
+             pulseaudio-server pulseaudio-misc pulseaudio-module-console-kit"
 
 #upgrade path:
 RREPLACES_pulseaudio-server = "libpulse-bin libpulse-conf"
