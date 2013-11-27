@@ -11,7 +11,7 @@ PR = "r2"
 
 SRC_URI = "git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git \
            file://fix_ranlib.patch \
-           file://fix_tcf-agent.init.patch \
+           file://tcf-agent.init \
           "
 
 DEPENDS = "util-linux openssl"
@@ -42,5 +42,7 @@ do_compile() {
 
 do_install() {
 	oe_runmake install INSTALLROOT=${D}
+	install -d ${D}${sysconfdir}/init.d/
+	install -m 0755 ${WORKDIR}/tcf-agent.init ${D}${sysconfdir}/init.d/tcf-agent
 }
 
