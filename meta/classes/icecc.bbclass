@@ -90,6 +90,10 @@ def create_path(compilers, bb, d):
     return staging
 
 def use_icc(bb,d):
+    # allarch recipes don't use compiler
+    if icc_is_allarch(bb, d):
+        return "no"
+
     package_tmp = d.expand('${PN}')
 
     system_class_blacklist = [ "none" ] 
@@ -123,6 +127,10 @@ def use_icc(bb,d):
         return "no"
 
     return "yes"
+
+def icc_is_allarch(bb, d):
+    return \
+        bb.data.inherits_class("allarch", d);
 
 def icc_is_kernel(bb, d):
     return \
