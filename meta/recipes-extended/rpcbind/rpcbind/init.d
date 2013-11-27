@@ -47,7 +47,7 @@ stop ()
     echo "Stopping rpcbind daemon..."
     if ! pidof /sbin/rpcbind >/dev/null; then
         echo "not running."
-        exit 0
+        return 0
     fi
     start-stop-daemon --stop --quiet --exec /sbin/rpcbind
     if [ $? -eq 0 ]; then
