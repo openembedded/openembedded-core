@@ -9,10 +9,16 @@ LIC_FILES_CHKSUM = "file://zlib.h;beginline=4;endline=23;md5=fde612df1e5933c428b
 
 SRC_URI = "http://www.zlib.net/${BPN}-${PV}.tar.xz \
            file://remove.ldconfig.call.patch \
+           file://Makefile-runtests.patch \
+           file://run-ptest \
            "
 
 SRC_URI[md5sum] = "28f1205d8dd2001f26fec1e8c2cebe37"
 SRC_URI[sha256sum] = "831df043236df8e9a7667b9e3bb37e1fcb1220a0f163b6de2626774b9590d057"
+
+RDEPENDS_${PN}-ptest += "make"
+
+inherit ptest
 
 do_configure (){
 	./configure --prefix=${prefix} --shared --libdir=${libdir}
@@ -22,8 +28,20 @@ do_compile (){
 	oe_runmake
 }
 
+do_compile_ptest() {
+	oe_runmake static shared
+}
+
 do_install() {
 	oe_runmake DESTDIR=${D} install
+}
+
+do_install_ptest() {
+	install ${B}/Makefile   ${D}${PTEST_PATH}
+	install ${B}/example    ${D}${PTEST_PATH}
+	install ${B}/minigzip   ${D}${PTEST_PATH}
+	install ${B}/examplesh  ${D}${PTEST_PATH}
+	install ${B}/minigzipsh ${D}${PTEST_PATH}
 }
 
 # We move zlib shared libraries for target builds to avoid
