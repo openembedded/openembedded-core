@@ -24,7 +24,73 @@
 #
 #
 
-# 1. Dump package file info data
+# Find and dump layer info when we got the layers parsed
+
+
+
+python toaster_layerinfo_dumpdata() {
+    import subprocess
+
+    def _get_git_branch(layer_path):
+        branch = subprocess.Popen("git symbolic-ref HEAD 2>/dev/null ", cwd=layer_path, shell=True, stdout=subprocess.PIPE).communicate()[0]
+        branch = branch.replace('refs/heads/', '').rstrip()
+        return branch
+
+    def _get_git_revision(layer_path):
+        revision = subprocess.Popen("git rev-parse HEAD 2>/dev/null ", cwd=layer_path, shell=True, stdout=subprocess.PIPE).communicate()[0].rstrip()
+        return revision
+
+    def _get_url_map_name(layer_name):
+        """ Some layers have a different name on openembedded.org site,
+            this method returns the correct name to use in the URL
+        """
+
+        url_name = layer_name
+        url_mapping = {'meta': 'openembedded-core'}
+
+        for key in url_mapping.keys():
+            if key == layer_name:
+                url_name = url_mapping[key]
+
+        return url_name
+
+    def _get_layer_version_information(layer_path):
+
+        layer_version_info = {}
+        layer_version_info['branch'] = _get_git_branch(layer_path)
+        layer_version_info['commit'] = _get_git_revision(layer_path)
+        layer_version_info['priority'] = 0
+
+        return layer_version_info
+
+
+    def _get_layer_dict(layer_path):
+
+        layer_info = {}
+        layer_name = layer_path.split('/')[-1]
+        layer_url = 'http://layers.openembedded.org/layerindex/layer/{layer}/'
+        layer_url_name = _get_url_map_name(layer_name)
+
+        layer_info['name'] = layer_name
+        layer_info['local_path'] = layer_path
+        layer_info['layer_index_url'] = layer_url.format(layer=layer_url_name)
+        layer_info['version'] = _get_layer_version_information(layer_path)
+
+        return layer_info
+
+
+    bblayers = e.data.getVar("BBLAYERS", True)
+
+    llayerinfo = {}
+
+    for layer in { l for l in bblayers.strip().split(" ") if len(l) }:
+        llayerinfo[layer] = _get_layer_dict(layer)
+
+
+    bb.event.fire(bb.event.MetadataEvent("LayerInfo", llayerinfo), e.data)
+}
+
+# Dump package file info data
 
 python toaster_package_dumpdata() {
     """
