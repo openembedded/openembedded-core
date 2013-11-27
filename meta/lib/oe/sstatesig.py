@@ -11,6 +11,8 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
     def isKernel(fn):
         inherits = " ".join(dataCache.inherits[fn])
         return inherits.find("module-base.bbclass") != -1 or inherits.find("linux-kernel-base.bbclass") != -1
+    def isImage(fn):
+        return "image.bbclass" in " ".join(dataCache.inherits[fn])
 
     # Always include our own inter-task dependencies
     if recipename == depname:
@@ -32,7 +34,7 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
         return False
 
     # Exclude well defined machine specific configurations which don't change ABI
-    if depname in siggen.abisaferecipes:
+    if depname in siggen.abisaferecipes and not isImage(fn):
         return False
 
     # Exclude well defined recipe->dependency
