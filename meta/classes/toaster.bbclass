@@ -92,6 +92,23 @@ python toaster_layerinfo_dumpdata() {
 
 # Dump package file info data
 
+def _toaster_load_pkgdatafile(dirpath, filepath):
+    import json
+    pkgdata = {}
+    with open(os.path.join(dirpath, filepath), "r") as fin:
+        for line in fin:
+            try:
+                kn, kv = line.strip().split(": ", 1)
+                kn = "_".join([x for x in kn.split("_") if x.isupper()])
+                pkgdata[kn] = kv.strip()
+                if kn == 'FILES_INFO':
+                    pkgdata[kn] = json.loads(kv)
+
+            except ValueError:
+                pass    # ignore lines without valid key: value pairs
+    return pkgdata
+
+
 python toaster_package_dumpdata() {
     """
     Dumps the data created by emit_pkgdata
@@ -103,27 +120,12 @@ python toaster_package_dumpdata() {
 
     pkgdatadir = d.getVar('PKGDESTWORK', True)
 
-
     # scan and send data for each package
-    import json
 
     lpkgdata = {}
     for pkg in packages.split():
 
-        subdata_file = pkgdatadir + "/runtime/%s" % pkg
-        lpkgdata = {}
-
-        sf = open(subdata_file, "r")
-        line = sf.readline()
-        while line:
-            (n, v) = line.rstrip().split(":", 1)
-            if pkg in n:
-                n = n.replace("_" + pkg, "")
-            if n == 'FILES_INFO':
-                lpkgdata[n] = json.loads(v)
-            else:
-                lpkgdata[n] = v.strip()
-            line = sf.readline()
+        lpkgdata = _toaster_load_pkgdatafile(pkgdatadir + "/runtime/", pkg)
 
         # Fire an event containing the pkg data
         bb.event.fire(bb.event.MetadataEvent("SinglePackageInfo", lpkgdata), d)
@@ -209,7 +211,7 @@ python toaster_collect_task_stats() {
         pass
 
 
-    if isinstance(e, bb.event.BuildCompleted):
+    if isinstance(e, bb.event.BuildCompleted) and os.path.exists(os.path.join(e.data.getVar('BUILDSTATS_BASE', True), "toasterstatlist")):
         events = []
         with open(os.path.join(e.data.getVar('BUILDSTATS_BASE', True), "toasterstatlist"), "r") as fin:
             for line in fin:
@@ -219,6 +221,58 @@ python toaster_collect_task_stats() {
         os.unlink(os.path.join(e.data.getVar('BUILDSTATS_BASE', True), "toasterstatlist"))
 }
 
+# dump relevant build history data as an event when the build is completed
+
+python toaster_buildhistory_dump() {
+    import re
+    BUILDHISTORY_DIR = e.data.expand("${TOPDIR}/buildhistory")
+    BUILDHISTORY_DIR_IMAGE_BASE = e.data.expand("%s/images/${MACHINE_ARCH}/${TCLIBC}/"% BUILDHISTORY_DIR)
+    pkgdata_dir = e.data.getVar("PKGDATA_DIR", True)
+
+
+    # scan the build targets for this build
+    images = {}
+    allpkgs = {}
+    for target in e._pkgs:
+        installed_img_path = e.data.expand(os.path.join(BUILDHISTORY_DIR_IMAGE_BASE, target))
+        if os.path.exists(installed_img_path):
+            images[target] = {}
+            with open("%s/installed-package-sizes.txt" % installed_img_path, "r") as fin:
+                for line in fin:
+                    line = line.rstrip(";")
+                    psize, px = line.split("\t")
+                    punit, pname = px.split(" ")
+                    # this size is "installed-size" as it measures how much space it takes on disk
+                    images[target][pname.strip()] = {'size':int(psize)*1024, 'depends' : []}
+
+            with open("%s/depends.dot" % installed_img_path, "r") as fin:
+                p = re.compile(r' -> ')
+                dot = re.compile(r'.*style=dotted')
+                for line in fin:
+                    line = line.rstrip(';')
+                    linesplit = p.split(line)
+                    if len(linesplit) == 2:
+                        pname = linesplit[0].rstrip('"').strip('"')
+                        dependsname = linesplit[1].split(" ")[0].strip().strip(";").strip('"').rstrip('"')
+                        deptype = "depends"
+                        if dot.match(line):
+                            deptype = "recommends"
+                        if not pname in images[target]:
+                            images[target][pname] = {'size': 0, 'depends' : []}
+                        if not dependsname in images[target]:
+                            images[target][dependsname] = {'size': 0, 'depends' : []}
+                        images[target][pname]['depends'].append((dependsname, deptype))
+
+            for pname in images[target]:
+                if not pname in allpkgs:
+                    allpkgs[pname] = _toaster_load_pkgdatafile("%s/runtime-reverse/" % pkgdata_dir, pname)
+
+
+    data = { 'pkgdata' : allpkgs, 'imgdata' : images }
+
+    bb.event.fire(bb.event.MetadataEvent("ImagePkgList", data), e.data)
+
+}
 
 # set event handlers
 addhandler toaster_layerinfo_dumpdata
@@ -226,6 +280,9 @@ toaster_layerinfo_dumpdata[eventmask] = "bb.event.TreeDataPreparationCompleted"
 
 addhandler toaster_collect_task_stats
 toaster_collect_task_stats[eventmask] = "bb.event.BuildCompleted bb.build.TaskSucceeded bb.build.TaskFailed"
+
+addhandler toaster_buildhistory_dump
+toaster_buildhistory_dump[eventmask] = "bb.event.BuildCompleted"
 do_package[postfuncs] += "toaster_package_dumpdata "
 
 do_rootfs[postfuncs] += "toaster_image_dumpdata "
