@@ -56,17 +56,11 @@ class oeTest(unittest.TestCase):
 
     @classmethod
     def hasPackage(self, pkg):
-
-        pkgfile = os.path.join(oeTest.tc.d.getVar("WORKDIR", True), "installed_pkgs.txt")
-
-        with open(pkgfile) as f:
-            data = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
-            match = re.search(pkg, data)
-            data.close()
-
-        if match:
+        manifest = os.path.join(oeTest.tc.d.getVar("DEPLOY_DIR_IMAGE", True), oeTest.tc.d.getVar("IMAGE_LINK_NAME", True) + ".manifest")
+        with open(manifest) as f:
+            data = f.read()
+        if re.search(pkg, data):
             return True
-
         return False
 
     @classmethod
