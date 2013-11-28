@@ -4,6 +4,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 		    file://COPYING3.LIB;md5=6a6a8e020838b23406c81b19c1d46df6 \
 		    file://COPYING.LIB;md5=9f604d8a4f8e74f4f5140845a21b6674"
 
+SRC_URI += " file://gdb-fix-cygwin-check-in-configure-script.patch "
+
 S = "${WORKDIR}/${BPN}-${PV}"
 
 SRC_URI[md5sum] = "d42841167fd061d90fddf9a7212a1f9f"
