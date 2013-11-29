@@ -90,6 +90,7 @@ do_patch[stamp-base] = "${SS}"
 SSCLEAN = "${TMPDIR}/stamps/work-shared/gcc-[0-9]*-*"
 do_fetch[stamp-base-clean] = "${SSCLEAN}"
 do_unpack[stamp-base-clean] = "${SSCLEAN}"
+do_unpack[umask] = "022"
 do_patch[stamp-base-clean] = "${SSCLEAN}"
 
 # SW means Shared Work directory
