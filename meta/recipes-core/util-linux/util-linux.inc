@@ -40,11 +40,11 @@ PACKAGES =+ "util-linux-agetty util-linux-fdisk util-linux-cfdisk util-linux-sfd
              util-linux-partx ${PN}-bash-completion"
 
 SHARED_EXTRA_OECONF = "--disable-use-tty-group \
-                       --disable-makeinstall-chown --enable-elvtune --enable-init \
+                       --disable-makeinstall-chown --enable-elvtune \
                        --enable-kill --enable-last --enable-mesg --enable-partx \
-                       --enable-raw --enable-rdev --enable-reset --disable-login \
+                       --enable-raw --enable-reset --disable-login \
                        --disable-vipw --disable-newgrp --disable-chfn-chsh \
-                       --enable-write --enable-arch --enable-mount --with-fsprobe=builtin \
+                       --enable-write --enable-mount \
                        --enable-libuuid --enable-libblkid --enable-fsck --without-udev \
                        usrsbin_execdir='${sbindir}' \
 "
