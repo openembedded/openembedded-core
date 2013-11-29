@@ -32,7 +32,7 @@ SRC_URI[md5sum] = "dcbf9d5e2e6391f857c29a57528b32a6"
 SRC_URI[sha256sum] = "ada02d636af61aed38f142d3cded662d141ce71264f624c4eb873621a74cc9e7"
 
 # webkit-gtk can NOT be built on MIPS64 with n32 ABI
-COMPATIBLE_HOST_mips64 = "mips64.*-linux"
+COMPATIBLE_HOST_mips64 = "mips64.*-linux$"
 
 inherit autotools lib_package gtk-doc pkgconfig
 
