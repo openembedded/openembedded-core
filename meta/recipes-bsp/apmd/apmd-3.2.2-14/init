@@ -8,6 +8,9 @@
 # Short-Description: Advanced Power Management daemon
 ### END INIT INFO
 
+# Source function library.
+. /etc/init.d/functions
+
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
 [ -f /etc/default/rcS ] && . /etc/default/rcS
@@ -30,13 +33,17 @@ case "$1" in
 		-x /usr/sbin/apmd
 	echo "apmd."
 	;;
+    status)
+	status /usr/sbin/apmd;
+	exit $?
+	;;
     restart|force-reload) 
 	$0 stop
 	$0 start
 	exit
 	;;
     *)
-	echo "Usage: /etc/init.d/apmd {start|stop|restart|force-reload}"
+	echo "Usage: /etc/init.d/apmd {start|stop|status|restart|force-reload}"
 	exit 1
 	;;
 esac
