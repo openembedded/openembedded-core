@@ -45,6 +45,12 @@ do_install() {
 	# Avoid Makefile to be deplyed
 	rm ${D}/lib/firmware/Makefile
 
+	# Remove unbuild firmware which needs cmake and bash
+	rm ${D}/lib/firmware/carl9170fw -rf
+
+	# Remove pointless bash script
+	rm ${D}/lib/firmware/configure
+
 	# Libertas sd8686
 	ln -sf libertas/sd8686_v9.bin ${D}/lib/firmware/sd8686.bin
 	ln -sf libertas/sd8686_v9_helper.bin ${D}/lib/firmware/sd8686_helper.bin
