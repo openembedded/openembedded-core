@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=910a8a42c962d238619c75fdb78bdb24 \
                     file://wiper/wiper.sh;beginline=7;endline=31;md5=b7bc642addc152ea307505bf1a296f09"
 
 
-PACKAGES += "wiper"
+PACKAGES =+ "wiper"
 
 FILES_wiper = "${bindir}/wiper.sh"
 
