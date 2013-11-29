@@ -7,8 +7,8 @@ LICENSE = "PD"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = "--disable-tcl --enable-shared --enable-threadsafe"
-EXTRA_OECONF_class-native = "--disable-tcl --enable-shared --enable-threadsafe --disable-readline --enable-tempstore"
+EXTRA_OECONF = "--enable-shared --enable-threadsafe"
+EXTRA_OECONF_class-native = "--enable-shared --enable-threadsafe --disable-readline --enable-tempstore"
 export config_BUILD_CC = "${BUILD_CC}"
 export config_BUILD_CFLAGS = "${BUILD_CFLAGS}"
 export config_BUILD_LIBS = "${BUILD_LDFLAGS}"
