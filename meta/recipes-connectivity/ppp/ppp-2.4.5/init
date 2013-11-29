@@ -6,6 +6,9 @@
 # rename the /etc/ppp/no_ppp_on_boot file to /etc/ppp/ppp_on_boot, and
 # follow the instructions in the comments in that file.
 
+# Source function library.
+. /etc/init.d/functions
+
 test -x /usr/sbin/pppd -a -f /etc/ppp/ppp_on_boot || exit 0
 if [ -x /etc/ppp/ppp_on_boot ]; then RUNFILE=1; fi
 
@@ -28,6 +31,10 @@ case "$1" in
       fi
       echo "."
     ;;
+  status)
+    status /usr/sbin/pppd;
+    exit $?
+    ;;
   restart|force-reload)
     echo -n "Restarting PPP link: pppd"
     if [ "$RUNFILE" = "1" ]; then      
@@ -42,7 +49,7 @@ case "$1" in
     echo "."
     ;;
   *)
-      echo "Usage: /etc/init.d/ppp {start|stop|restart|force-reload}"
+      echo "Usage: /etc/init.d/ppp {start|stop|status|restart|force-reload}"
       exit 1
     ;;
 esac
