@@ -23,7 +23,7 @@ QT_MULTIMEDIA ?= "${@base_contains('DISTRO_FEATURES', 'pulseaudio', '-pulseaudio
 QT_CONFIG_FLAGS += "-release -no-cups -reduce-relocations \
                     -shared -no-nas-sound -no-nis \
                     -system-libjpeg -system-libpng -system-libtiff -system-zlib \
-                    -no-pch -stl -glib \
+                    -no-pch -stl -glib -icu \
                     -no-rpath -silent \
                     ${QT_DBUS} \
                     ${QT_QT3SUPPORT} \
