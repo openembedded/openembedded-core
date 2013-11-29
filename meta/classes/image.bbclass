@@ -95,6 +95,8 @@ inherit image-${IMAGE_TYPE_live}
 IMAGE_TYPE_vmdk = '${@base_contains("IMAGE_FSTYPES", "vmdk", "vmdk", "empty", d)}'
 inherit image-${IMAGE_TYPE_vmdk}
 
+do_build[depends] += "virtual/kernel:do_deploy"
+
 python () {
     deps = " " + imagetypes_getdepends(d)
     d.appendVarFlag('do_rootfs', 'depends', deps)
