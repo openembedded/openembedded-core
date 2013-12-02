@@ -1184,8 +1184,10 @@ python emit_pkgdata() {
         subdata_file = pkgdatadir + "/runtime/%s" % pkg
         sf = open(subdata_file, 'w')
         write_if_exists(sf, pkg, 'PN')
+        write_if_exists(sf, pkg, 'PE')
         write_if_exists(sf, pkg, 'PV')
         write_if_exists(sf, pkg, 'PR')
+        write_if_exists(sf, pkg, 'PKGE')
         write_if_exists(sf, pkg, 'PKGV')
         write_if_exists(sf, pkg, 'PKGR')
         write_if_exists(sf, pkg, 'LICENSE')
