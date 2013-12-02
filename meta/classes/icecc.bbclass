@@ -20,7 +20,7 @@
 #(NOTE that this is a modified version of the script need it and *not the one that comes with icecc*
 #
 #User can specify if specific packages or packages belonging to class should not use icecc to distribute
-#compile jobs to remote machines, but handled localy, by defining ICECC_USER_CLASS_BL and ICECC_PACKAGE_BL
+#compile jobs to remote machines, but handled locally, by defining ICECC_USER_CLASS_BL and ICECC_USER_PACKAGE_BL
 #with the appropriate values in local.conf. In addition the user can force to enable icecc for packages
 #which set an empty PARALLEL_MAKE variable by defining ICECC_USER_PACKAGE_WL.
 #########################################################################################
