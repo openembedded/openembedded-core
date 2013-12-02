@@ -448,6 +448,8 @@ POPULATE_SDK_POST_HOST_COMMAND_append = "buildhistory_get_sdk_installed host ; "
 SDK_POSTPROCESS_COMMAND += "buildhistory_get_sdkinfo ; "
 
 def buildhistory_get_layers(d):
+    if d.getVar('BB_WORKERCONTEXT', True) != '1':
+        return ""
     layertext = "Configured metadata layers:\n%s\n" % '\n'.join(get_layers_branch_rev(d))
     return layertext
 
@@ -478,11 +480,15 @@ def outputvars(vars, listvars, d):
     return ret.rstrip('\n')
 
 def buildhistory_get_imagevars(d):
+    if d.getVar('BB_WORKERCONTEXT', True) != '1':
+        return ""
     imagevars = "DISTRO DISTRO_VERSION USER_CLASSES IMAGE_CLASSES IMAGE_FEATURES IMAGE_LINGUAS IMAGE_INSTALL BAD_RECOMMENDATIONS NO_RECOMMENDATIONS PACKAGE_EXCLUDE ROOTFS_POSTPROCESS_COMMAND IMAGE_POSTPROCESS_COMMAND"
     listvars = "USER_CLASSES IMAGE_CLASSES IMAGE_FEATURES IMAGE_LINGUAS IMAGE_INSTALL BAD_RECOMMENDATIONS PACKAGE_EXCLUDE"
     return outputvars(imagevars, listvars, d)
 
 def buildhistory_get_sdkvars(d):
+    if d.getVar('BB_WORKERCONTEXT', True) != '1':
+        return ""
     sdkvars = "DISTRO DISTRO_VERSION SDK_NAME SDK_VERSION SDKMACHINE SDKIMAGE_FEATURES BAD_RECOMMENDATIONS NO_RECOMMENDATIONS PACKAGE_EXCLUDE"
     listvars = "SDKIMAGE_FEATURES BAD_RECOMMENDATIONS PACKAGE_EXCLUDE"
     return outputvars(sdkvars, listvars, d)
