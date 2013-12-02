@@ -39,8 +39,7 @@ python toaster_package_dumpdata() {
 
 
     # scan and send data for each package
-    import ast
-    import fnmatch
+    import json
 
     lpkgdata = {}
     for pkg in packages.split():
@@ -54,28 +53,11 @@ python toaster_package_dumpdata() {
             (n, v) = line.rstrip().split(":", 1)
             if pkg in n:
                 n = n.replace("_" + pkg, "")
-            lpkgdata[n] = v.strip()
-            line = sf.readline()
-            pkgsplitname = os.path.join(pkgdest, pkg)
-            # replace FILES_INFO data with a dictionary of file name - file size
             if n == 'FILES_INFO':
-                filesizedata = {}
-                val = v.strip().replace('\\\'', '\'')
-                dictval = ast.literal_eval(val)
-                for parent, dirlist in dictval.items():
-                    idx = parent.find(pkgsplitname)
-                    if idx > -1:
-                        parent = parent[idx+len(pkgsplitname):]
-                    else:
-                        bb.error("Invalid path while looking for file ", parent)
-                    for basename in dirlist:
-                        fullpath = os.path.join(parent, basename)
-                        try:
-                            filesizedata[fullpath] = os.stat(pkgsplitname + fullpath).st_size
-                        except OSError:
-                            # we may hit a symlink that is not pointing correctly over package-split
-                            filesizedata[fullpath] = 0
-                lpkgdata[n] = filesizedata
+                lpkgdata[n] = json.loads(v)
+            else:
+                lpkgdata[n] = v.strip()
+            line = sf.readline()
 
         # Fire an event containing the pkg data
         bb.event.fire(bb.event.MetadataEvent("SinglePackageInfo", lpkgdata), d)

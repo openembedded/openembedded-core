@@ -1110,6 +1110,7 @@ PKGDESTWORK = "${WORKDIR}/pkgdata"
 
 python emit_pkgdata() {
     from glob import glob
+    import json
 
     def write_if_exists(f, pkg, var):
         def encode(str):
@@ -1173,22 +1174,20 @@ python emit_pkgdata() {
     workdir = d.getVar('WORKDIR', True)
 
     for pkg in packages.split():
-        items = {}
-        for files_list in pkgfiles[pkg]:
-             item_name = os.path.basename(files_list)
-             item_path = os.path.dirname(files_list)
-             if item_path not in items:
-                 items[item_path] = []
-             items[item_path].append(item_name)
-        subdata_file = pkgdatadir + "/runtime/%s" % pkg
-
         pkgval = d.getVar('PKG_%s' % pkg, True)
         if pkgval is None:
             pkgval = pkg
             d.setVar('PKG_%s' % pkg, pkg)
 
-        d.setVar('FILES_INFO', str(items))
+        pkgdestpkg = os.path.join(pkgdest, pkg)
+        files = {}
+        for f in pkgfiles[pkg]:
+            relpth = os.path.relpath(f, pkgdestpkg)
+            fstat = os.lstat(f)
+            files[os.sep + relpth] = fstat.st_size
+        d.setVar('FILES_INFO', json.dumps(files))
 
+        subdata_file = pkgdatadir + "/runtime/%s" % pkg
         sf = open(subdata_file, 'w')
         write_if_exists(sf, pkg, 'PN')
         write_if_exists(sf, pkg, 'PV')
