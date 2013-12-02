@@ -26,9 +26,12 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
            file://local.rules \
            file://udev-cache \
            file://udev-cache.default \
+           file://add-install-ptest.patch \
+           file://run-ptest \
            file://init"
 
-inherit autotools pkgconfig update-rc.d
+inherit autotools pkgconfig update-rc.d ptest
++RDEPENDS_${PN}-ptest += "make"
 
 libexecdir = "${base_libdir}"
 EXTRA_OECONF = "--disable-introspection \
@@ -98,4 +101,7 @@ do_install_append () {
 python () {
     if oe.utils.contains ('DISTRO_FEATURES', 'systemd', True, False, d):
         raise bb.parse.SkipPackage("'systemd' in DISTRO_FEATURES")
+}
+do_compile_ptest() {
+    oe_runmake test-udev
 }
