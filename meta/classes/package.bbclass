@@ -1127,14 +1127,6 @@ python emit_pkgdata() {
             f.write('%s: %s\n' % (var, encode(val)))
         return
 
-    def get_directory_size(dir):
-        if os.listdir(dir):
-            with os.popen('du -sk %s' % dir) as f:
-                size = int(f.readlines()[0].split('\t')[0])
-        else:
-            size = 0
-        return size
-
     def write_extra_pkgs(variants, pn, packages, pkgdatadir):
         for variant in variants:
             with open("%s/%s-%s" % (pkgdatadir, variant, pn), 'w') as fd:
@@ -1181,9 +1173,11 @@ python emit_pkgdata() {
 
         pkgdestpkg = os.path.join(pkgdest, pkg)
         files = {}
+        total_size = 0
         for f in pkgfiles[pkg]:
             relpth = os.path.relpath(f, pkgdestpkg)
             fstat = os.lstat(f)
+            total_size += fstat.st_size
             files[os.sep + relpth] = fstat.st_size
         d.setVar('FILES_INFO', json.dumps(files))
 
@@ -1220,7 +1214,7 @@ python emit_pkgdata() {
         for dfile in (d.getVar('FILERDEPENDSFLIST_' + pkg, True) or "").split():
             write_if_exists(sf, pkg, 'FILERDEPENDS_' + dfile)
 
-        sf.write('%s_%s: %s\n' % ('PKGSIZE', pkg, get_directory_size(pkgdest + "/%s" % pkg)))
+        sf.write('%s_%s: %d\n' % ('PKGSIZE', pkg, total_size))
         sf.close()
 
         # Symlinks needed for reverse lookups (from the final package name)

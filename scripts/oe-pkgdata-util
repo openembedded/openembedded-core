@@ -184,7 +184,11 @@ def read_value(args, usage, debug=False):
             if qvar == "PKGSIZE":
                 # append packagename
                 qvar = "%s_%s" % (var, mappedpkg)
-            print(readvar(revlink, qvar))
+                # PKGSIZE is now in bytes, but we we want it in KB
+                pkgsize = (int(readvar(revlink, qvar)) + 1024 // 2) // 1024
+                print("%d" % pkgsize)
+            else:
+                print(readvar(revlink, qvar))
 
 def lookup_pkg(args, usage, debug=False):
     if len(args) < 2:
