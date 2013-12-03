@@ -13,8 +13,8 @@ SRC_URI = "ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${PV}/src/nspr-$
 
 SRC_URI += "file://nspr.pc.in"
 
-SRC_URI[md5sum] = "2e354084ca2bc5fbbb820762597f3890"
-SRC_URI[sha256sum] = "0c2f8dc265f1e9b2600fd519430a1f960799888857bbb1538343a1b16ba41b20"
+SRC_URI[md5sum] = "f0d254da0b2b870d9a5fa094e879d4b8"
+SRC_URI[sha256sum] = "4d09ee67a6fb57d3c646098b0ac7fd1e31be1c2c2ca57cd2ad28b42e6d3cf400"
 
 S = "${WORKDIR}/nspr-${PV}/nspr"
 
