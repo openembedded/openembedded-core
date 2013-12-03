@@ -81,6 +81,7 @@ python () {
     clsextend.map_depends_variable("DEPENDS")
     clsextend.map_packagevars()
     clsextend.map_variable("PROVIDES")
+    clsextend.map_regexp_variable("PACKAGES_DYNAMIC")
 }
 
 addhandler nativesdk_virtclass_handler
