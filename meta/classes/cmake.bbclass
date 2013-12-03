@@ -6,15 +6,6 @@ CCACHE = ""
 # We want the staging and installing functions from autotools
 inherit autotools
 
-# Use in-tree builds by default but allow this to be changed
-# since some packages do not support them (e.g. llvm 2.5).
-OECMAKE_SOURCEPATH ?= "."
-
-# If declaring this, make sure you also set EXTRA_OEMAKE to
-# "-C ${OECMAKE_BUILDPATH}". So it will run the right makefiles.
-OECMAKE_BUILDPATH ?= ""
-B="${S}"
-
 # C/C++ Compiler (without cpu arch/tune arguments)
 OECMAKE_C_COMPILER ?= "`echo ${CC} | sed 's/^\([^ ]*\).*/\1/'`"
 OECMAKE_CXX_COMPILER ?= "`echo ${CXX} | sed 's/^\([^ ]*\).*/\1/'`"
@@ -73,10 +64,14 @@ EOF
 addtask generate_toolchain_file after do_patch before do_configure
 
 cmake_do_configure() {
-	if [ ${OECMAKE_BUILDPATH} ]
-	then
-		mkdir -p ${OECMAKE_BUILDPATH}
-		cd ${OECMAKE_BUILDPATH}
+	if [ "${OECMAKE_BUILDPATH}" -o "${OECMAKE_SOURCEPATH}" ]; then
+		bbnote "cmake.bbclass no longer uses OECMAKE_SOURCEPATH and OECMAKE_BUILDPATH. This recipe now will do in-tree builds, to do out-of-tree builds set S and B."
+	fi
+
+	if [ "${S}" != "${B}" ]; then
+		rm -rf ${B}
+		mkdir -p ${B}
+		cd ${B}
 	fi
 
 	# Just like autotools cmake can use a site file to cache result that need generated binaries to run
@@ -88,7 +83,7 @@ cmake_do_configure() {
 
 	cmake \
 	  ${OECMAKE_SITEFILE} \
-	  ${OECMAKE_SOURCEPATH} \
+	  ${S} \
 	  -DCMAKE_INSTALL_PREFIX:PATH=${prefix} \
 	  -DCMAKE_INSTALL_SO_NO_EXE=0 \
 	  -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
@@ -98,20 +93,12 @@ cmake_do_configure() {
 }
 
 cmake_do_compile()  {
-	if [ ${OECMAKE_BUILDPATH} ]
-	then
-		cd ${OECMAKE_BUILDPATH}
-	fi
-
+	cd ${B}
 	base_do_compile
 }
 
 cmake_do_install() {
-	if [ ${OECMAKE_BUILDPATH} ];
-	then
-		cd ${OECMAKE_BUILDPATH}
-	fi
-
+	cd ${B}
 	autotools_do_install
 }
 
