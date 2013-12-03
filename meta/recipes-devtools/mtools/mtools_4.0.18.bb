@@ -37,4 +37,4 @@ EXTRA_OECONF = "--without-x"
 
 PARALLEL_MAKEINST = ""
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
