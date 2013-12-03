@@ -57,3 +57,8 @@ do_install_ptest_base[cleandirs] = "${D}${PTEST_PATH}"
 addtask configure_ptest_base after do_configure before do_compile
 addtask compile_ptest_base   after do_compile   before do_install
 addtask install_ptest_base   after do_install   before do_package
+
+python () {
+    if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
+        d.setVarFlag('do_install_ptest_base', 'fakeroot', 1)
+}
