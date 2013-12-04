@@ -8,5 +8,5 @@ SRC_URI += "file://no-tests.patch \
             file://multilib-fix-clean.patch \
 "
 
-SRC_URI[archive.md5sum] = "1af2e3a0ac5a258eff5ceddb6ed60ebd"
-SRC_URI[archive.sha256sum] = "8e9a3eadebf30a31640f2b3ae0fb455cf92d10d1cad246d0ffe72ec595905174"
+SRC_URI[archive.md5sum] = "9e0d3a1ea395172f8c39ba98a4d2081a"
+SRC_URI[archive.sha256sum] = "42e4b51cdc99e6878a9ea2a5ef2b31b79c1033f8518726df738a3c54c90e59f8"
