@@ -17,7 +17,6 @@ PACKAGECONFIG ??= " \
     orc curl uvch264 neon \
     hls sbc dash bz2 smoothstreaming \
     "
-# rsvg plugin requires librsvg >= 2.36
 # dash = Dynamic Adaptive Streaming over HTTP
 PACKAGECONFIG[assrender]       = "--enable-assrender,--disable-assrender,libass"
 PACKAGECONFIG[curl]            = "--enable-curl,--disable-curl,curl"
@@ -43,7 +42,7 @@ PACKAGECONFIG[fluidsynth]      = "--enable-fluidsynth,--disable-fluidsynth,fluid
 PACKAGECONFIG[schroedinger]    = "--enable-schro,--disable-schro,schroedinger"
 PACKAGECONFIG[smoothstreaming] = "--enable-smoothstreaming,--disable-smoothstreaming,libxml2"
 PACKAGECONFIG[bluez]           = "--enable-bluez,--disable-bluez,bluez4"
-
+PACKAGECONFIG[rsvg]            = "--enable-rsvg,--disable-rsvg,librsvg"
 
 # these plugins have not been ported to 1.0 (yet):
 #   directdraw vcd apexsink cdaudio dc1394 lv2 linsys musepack mythtv
@@ -92,7 +91,6 @@ EXTRA_OECONF += " \
     --disable-pvr \
     --disable-quicktime \
     --disable-resindvd \
-    --disable-rsvg \
     --disable-rtmp \
     --disable-sdl \
     --disable-sdltest \
