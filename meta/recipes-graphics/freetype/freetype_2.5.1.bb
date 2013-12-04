@@ -16,8 +16,8 @@ SECTION = "libs"
 SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
 "
 
-SRC_URI[md5sum] = "c72e9010b1d986d556fc0b2b5fcbf31a"
-SRC_URI[sha256sum] = "57bce5b37989577aa8b4a588426839f6bf39bcc3869748cb18f6827df251f4e5"
+SRC_URI[md5sum] = "93eba7854094f46d7d98a9a2370af4d6"
+SRC_URI[sha256sum] = "d715faa92b37980280c857ce9d356fff4361c5a7bd9b5c3f867fc24f598d8f45"
 
 S = "${WORKDIR}/freetype-${PV}"
 
