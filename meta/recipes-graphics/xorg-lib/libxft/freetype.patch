@@ -1,0 +1,39 @@
+Upstream-Status: Submitted
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From f568fa5a8220fd06659c0f26a93adcc81a42917c Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Mon, 2 Dec 2013 13:48:40 +0000
+Subject: [PATCH] xftglyphs: use recommend freetype inclusion
+
+FreeType recommends to use their special macros to include the headers, because
+it gives them the ability to move headers around.  They did this in 2.5.1 (yes,
+a point release) and this direct inclusion doesn't work anymore.
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ src/xftglyphs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/xftglyphs.c b/src/xftglyphs.c
+index 2f3dc5a..53302f0 100644
+--- a/src/xftglyphs.c
++++ b/src/xftglyphs.c
+@@ -21,10 +21,10 @@
+  */
+ 
+ #include "xftint.h"
+-#include <freetype/ftoutln.h>
+-#include <freetype/ftlcdfil.h>
+-
+-#include <freetype/ftsynth.h>
++#include <ft2build.h>
++#include FT_FREETYPE_H
++#include FT_LCD_FILTER_H
++#include FT_SYNTHESIS_H
+ 
+ /*
+  * Validate the memory info for a font
+-- 
+1.8.5
+

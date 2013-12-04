@@ -20,6 +20,11 @@ PROVIDES = "xft"
 
 PE = "1"
 
+SRC_URI += "file://freetype.patch"
+
+SRC_URI[md5sum] = "78d64dece560c9e8699199f3faa521c0"
+SRC_URI[sha256sum] = "7fce32b92dcb7b2869bed567af2abc7bbad0d5d6fcf471b8a3e137964a31bbbd"
+
 XORG_PN = "libXft"
 
 BBCLASSEXTEND = "native"
@@ -28,6 +33,3 @@ python () {
         if d.getVar('DEBIAN_NAMES', True):
             d.setVar('PKG_${PN}', '${MLPREFIX}libxft2')
 }
-
-SRC_URI[md5sum] = "78d64dece560c9e8699199f3faa521c0"
-SRC_URI[sha256sum] = "7fce32b92dcb7b2869bed567af2abc7bbad0d5d6fcf471b8a3e137964a31bbbd"
