@@ -8,21 +8,22 @@
 # For the cross compiler, creates a tar.gz of our toolchain and sets
 # ICECC_VERSION accordingly.
 #
-#The class now handles all 3 different compile 'stages' (i.e native ,cross-kernel and target) creating the
-#necessary environment tar.gz file to be used by the remote machines.
-#It also supports meta-toolchain generation
+# The class now handles all 3 different compile 'stages' (i.e native ,cross-kernel and target) creating the
+# necessary environment tar.gz file to be used by the remote machines.
+# It also supports meta-toolchain generation
 #
-#If ICECC_PATH is not set in local.conf then the class will try to locate it using 'which'
-#but nothing is sure ;)
+# If ICECC_PATH is not set in local.conf then the class will try to locate it using 'bb.utils.which'
+# but nothing is sure ;)
 #
-#If ICECC_ENV_EXEC is set in local.conf should point to the icecc-create-env script provided by the user
-#or the default one provided by icecc-create-env.bb  will be used
-#(NOTE that this is a modified version of the script need it and *not the one that comes with icecc*
+# If ICECC_ENV_EXEC is set in local.conf, then it should point to the icecc-create-env script provided by the user
+# or the default one provided by icecc-create-env.bb will be used
+# (NOTE that this is a modified version of the script need it and *not the one that comes with icecc*
 #
-#User can specify if specific packages or packages belonging to class should not use icecc to distribute
-#compile jobs to remote machines, but handled locally, by defining ICECC_USER_CLASS_BL and ICECC_USER_PACKAGE_BL
-#with the appropriate values in local.conf. In addition the user can force to enable icecc for packages
-#which set an empty PARALLEL_MAKE variable by defining ICECC_USER_PACKAGE_WL.
+# User can specify if specific packages or packages belonging to class should not use icecc to distribute
+# compile jobs to remote machines, but handled locally, by defining ICECC_USER_CLASS_BL and ICECC_USER_PACKAGE_BL
+# with the appropriate values in local.conf. In addition the user can force to enable icecc for packages
+# which set an empty PARALLEL_MAKE variable by defining ICECC_USER_PACKAGE_WL.
+#
 #########################################################################################
 #Error checking is kept to minimum so double check any parameters you pass to the class
 ###########################################################################################
@@ -96,7 +97,7 @@ def use_icc(bb,d):
 
     package_tmp = d.expand('${PN}')
 
-    system_class_blacklist = [ "none" ] 
+    system_class_blacklist = [ "none" ]
     user_class_blacklist = (d.getVar('ICECC_USER_CLASS_BL') or "none").split()
     package_class_blacklist = system_class_blacklist + user_class_blacklist
 
@@ -174,7 +175,7 @@ def icc_path(bb,d):
 
     else:
         prefix = d.expand('${HOST_PREFIX}')
-        return create_path( [prefix+"gcc", prefix+"g++"], bb, d)      
+        return create_path( [prefix+"gcc", prefix+"g++"], bb, d)
 
 def icc_get_external_tool(bb, d, tool):
     external_toolchain_bindir = d.expand('${EXTERNAL_TOOLCHAIN}${bindir_cross}')
