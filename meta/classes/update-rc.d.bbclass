@@ -105,7 +105,7 @@ python populate_packages_updatercd () {
 
     # Check that this class isn't being inhibited (generally, by
     # systemd.bbclass) before doing any work.
-    if "sysvinit" in d.getVar("DISTRO_FEATURES").split() or \
+    if oe.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d) or \
        not d.getVar("INHIBIT_UPDATERCD_BBCLASS", True):
         pkgs = d.getVar('INITSCRIPT_PACKAGES', True)
         if pkgs == None:

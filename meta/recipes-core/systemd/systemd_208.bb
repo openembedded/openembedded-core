@@ -271,8 +271,7 @@ INITSCRIPT_NAME_udev = "systemd-udevd"
 INITSCRIPT_PARAMS_udev = "start 03 S ."
 
 python __anonymous() {
-    features = d.getVar("DISTRO_FEATURES", True).split()
-    if "sysvinit" not in features:
+    if not oe.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
         d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
 }
 

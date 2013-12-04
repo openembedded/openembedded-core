@@ -55,16 +55,14 @@ do_install_append() {
 	# Weston doesn't need the .la files to load modules, so wipe them
 	rm -f ${D}/${libdir}/weston/*.la
 
-	for feature in ${DISTRO_FEATURES}; do
-		# If X11, ship a desktop file to launch it
-		if [ "$feature" = "x11" ]; then
-			install -d ${D}${datadir}/applications
-			install ${WORKDIR}/weston.desktop ${D}${datadir}/applications
+	# If X11, ship a desktop file to launch it
+	if [ "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}" = "x11" ]; then
+		install -d ${D}${datadir}/applications
+		install ${WORKDIR}/weston.desktop ${D}${datadir}/applications
 
-			install -d ${D}${datadir}/icons/hicolor/48x48/apps
-			install ${WORKDIR}/weston.png ${D}${datadir}/icons/hicolor/48x48/apps
-                fi
-	done
+		install -d ${D}${datadir}/icons/hicolor/48x48/apps
+		install ${WORKDIR}/weston.png ${D}${datadir}/icons/hicolor/48x48/apps
+        fi
 }
 
 PACKAGES += "${PN}-examples"

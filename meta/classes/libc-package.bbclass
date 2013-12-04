@@ -36,10 +36,10 @@ python __anonymous () {
                 d.setVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", "compile")
                 break
 
-    distro_features = (d.getVar('DISTRO_FEATURES', True) or '').split()
-
     # try to fix disable charsets/locales/locale-code compile fail
-    if 'libc-charsets' in distro_features and 'libc-locales' in distro_features and 'libc-locale-code' in distro_features:
+    if oe.utils.contains('DISTRO_FEATURES', 'libc-charsets', True, False, d) and \
+            oe.utils.contains('DISTRO_FEATURES', 'libc-locales', True, False, d) and \
+            oe.utils.contains('DISTRO_FEATURES', 'libc-locale-code', True, False, d):
         d.setVar('PACKAGE_NO_GCONV', '0')
     else:
         d.setVar('PACKAGE_NO_GCONV', '1')

@@ -12,13 +12,12 @@ SYSTEMD_AUTO_ENABLE ??= "enable"
 # even if systemd is not in DISTRO_FEATURES.  As such don't make any changes
 # directly but check the DISTRO_FEATURES first.
 python __anonymous() {
-    features = d.getVar("DISTRO_FEATURES", True).split()
     # If the distro features have systemd but not sysvinit, inhibit update-rcd
     # from doing any work so that pure-systemd images don't have redundant init
     # files.
-    if "systemd" in features:
+    if oe.utils.contains('DISTRO_FEATURES', 'systemd', True, False, d):
         d.appendVar("DEPENDS", " systemd-systemctl-native")
-        if "sysvinit" not in features:
+        if not oe.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
             d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
 }
 
@@ -52,7 +51,7 @@ fi
 systemd_populate_packages[vardeps] += "systemd_prerm systemd_postinst"
 
 python systemd_populate_packages() {
-    if "systemd" not in d.getVar("DISTRO_FEATURES", True).split():
+    if not oe.utils.contains('DISTRO_FEATURES', 'systemd', True, False, d):
         return
 
     def get_package_var(d, var, pkg):
@@ -167,7 +166,7 @@ PACKAGESPLITFUNCS_prepend = "systemd_populate_packages "
 
 python rm_systemd_unitdir (){
     import shutil
-    if "systemd" not in d.getVar("DISTRO_FEATURES", True).split():
+    if not oe.utils.contains('DISTRO_FEATURES', 'systemd', True, False, d):
         systemd_unitdir = oe.path.join(d.getVar("D", True), d.getVar('systemd_unitdir', True))
         if os.path.exists(systemd_unitdir):
             shutil.rmtree(systemd_unitdir)
@@ -181,9 +180,9 @@ python rm_sysvinit_initddir (){
     import shutil
     sysv_initddir = oe.path.join(d.getVar("D", True), (d.getVar('INIT_D_DIR', True) or "/etc/init.d"))
 
-    if ("systemd" in d.getVar("DISTRO_FEATURES", True).split() and
-        "sysvinit" not in d.getVar("DISTRO_FEATURES", True).split() and
-        os.path.exists(sysv_initddir)):
+    if oe.utils.contains('DISTRO_FEATURES', 'systemd', True, False, d) and \
+        not oe.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d) and \
+        os.path.exists(sysv_initddir):
         systemd_unitdir = oe.path.join(d.getVar("D", True), d.getVar('systemd_unitdir', True), "system")
 
         # If systemd_unitdir contains anything, delete sysv_initddir

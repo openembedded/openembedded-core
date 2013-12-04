@@ -110,7 +110,7 @@ do_install() {
 }
 
 python do_pam_sanity () {
-    if "pam" not in d.getVar("DISTRO_FEATURES", True).split():
+    if not base_contains('DISTRO_FEATURES', 'pam', True, False, d):
         bb.warn("Building libpam but 'pam' isn't in DISTRO_FEATURES, PAM won't work correctly")
 }
 addtask pam_sanity before do_configure

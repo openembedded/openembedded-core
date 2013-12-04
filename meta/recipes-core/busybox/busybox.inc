@@ -47,11 +47,11 @@ RRECOMMENDS_${PN} = "${PN}-syslog ${PN}-udhcpc"
 inherit cml1 systemd update-rc.d ptest
 
 # internal helper
-def busybox_cfg(feature, features, tokens, cnf, rem):
+def busybox_cfg(feature, tokens, cnf, rem):
 	if type(tokens) == type(""):
 		tokens = [tokens]
 	rem.extend(['/^[# ]*' + token + '[ =]/d' for token in tokens])
-	if type(features) == type([]) and feature in features:
+	if feature:
 		cnf.extend([token + '=y' for token in tokens])
 	else:
 		cnf.extend(['# ' + token + ' is not set' for token in tokens])
@@ -59,15 +59,14 @@ def busybox_cfg(feature, features, tokens, cnf, rem):
 # Map distro features to config settings
 def features_to_busybox_settings(d):
 	cnf, rem = ([], [])
-	distro_features = d.getVar('DISTRO_FEATURES', True).split()
-	busybox_cfg('ipv6', distro_features, 'CONFIG_FEATURE_IPV6', cnf, rem)
-	busybox_cfg('largefile', distro_features, 'CONFIG_LFS', cnf, rem)
-	busybox_cfg('largefile', distro_features, 'CONFIG_FDISK_SUPPORT_LARGE_DISKS', cnf, rem)
-	busybox_cfg('nls',  distro_features, 'CONFIG_LOCALE_SUPPORT', cnf, rem)
-	busybox_cfg('ipv4', distro_features, 'CONFIG_FEATURE_IFUPDOWN_IPV4', cnf, rem)
-	busybox_cfg('ipv6', distro_features, 'CONFIG_FEATURE_IFUPDOWN_IPV6', cnf, rem)
-	busybox_cfg('wifi', distro_features, 'CONFIG_RFKILL', cnf, rem)
-	busybox_cfg('bluetooth', distro_features, 'CONFIG_RFKILL', cnf, rem)
+	busybox_cfg(base_contains('DISTRO_FEATURES', 'ipv6', True, False, d), 'CONFIG_FEATURE_IPV6', cnf, rem)
+	busybox_cfg(base_contains('DISTRO_FEATURES', 'largefile', True, False, d), 'CONFIG_LFS', cnf, rem)
+	busybox_cfg(base_contains('DISTRO_FEATURES', 'largefile', True, False, d), 'CONFIG_FDISK_SUPPORT_LARGE_DISKS', cnf, rem)
+	busybox_cfg(base_contains('DISTRO_FEATURES', 'nls', True, False, d), 'CONFIG_LOCALE_SUPPORT', cnf, rem)
+	busybox_cfg(base_contains('DISTRO_FEATURES', 'ipv4', True, False, d), 'CONFIG_FEATURE_IFUPDOWN_IPV4', cnf, rem)
+	busybox_cfg(base_contains('DISTRO_FEATURES', 'ipv6', True, False, d), 'CONFIG_FEATURE_IFUPDOWN_IPV6', cnf, rem)
+	busybox_cfg(base_contains('DISTRO_FEATURES', 'wifi', True, False, d), 'CONFIG_RFKILL', cnf, rem)
+	busybox_cfg(base_contains('DISTRO_FEATURES', 'bluetooth', True, False, d), 'CONFIG_RFKILL', cnf, rem)
 	return "\n".join(cnf), "\n".join(rem)
 
 # X, Y = ${@features_to_uclibc_settings(d)}
@@ -295,7 +294,7 @@ ALTERNATIVE_${PN}-syslog += "syslog-conf"
 ALTERNATIVE_LINK_NAME[syslog-conf] = "${sysconfdir}/syslog.conf"
 
 python () {
-    if 'sysvinit' in d.getVar("DISTRO_FEATURES", True).split():
+    if base_contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
         pn = d.getVar('PN', True)
         d.appendVar('ALTERNATIVE_%s-syslog' % (pn), ' syslog-init')
         d.setVarFlag('ALTERNATIVE_LINK_NAME', 'syslog-init', '%s/init.d/syslog' % (d.getVar('sysconfdir', True)))

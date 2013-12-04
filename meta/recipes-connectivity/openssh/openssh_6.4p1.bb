@@ -80,13 +80,11 @@ do_compile_append () {
 }
 
 do_install_append () {
-	for i in ${DISTRO_FEATURES};
-	do
-		if [ ${i} = "pam" ];  then
-			install -d ${D}${sysconfdir}/pam.d
-			install -m 0755 ${WORKDIR}/sshd ${D}${sysconfdir}/pam.d/sshd
-		fi
-	done
+	if [ "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}" = "pam" ]; then
+		install -d ${D}${sysconfdir}/pam.d
+		install -m 0755 ${WORKDIR}/sshd ${D}${sysconfdir}/pam.d/sshd
+	fi
+
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/sshd
 	rm -f ${D}${bindir}/slogin ${D}${datadir}/Ssh.bin

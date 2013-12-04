@@ -36,12 +36,9 @@ EXTRA_OECONF = "--with-pty-mode=0620 --with-pty-group=5 \
                ${@base_contains('DISTRO_FEATURES', 'pam', '--enable-pam', '--disable-pam', d)}"
 
 do_install_append () {
-	for feature in ${DISTRO_FEATURES}; do
-		if [ "$feature" = "pam" ]; then
-			install -D -m 644 ${WORKDIR}/screen.pam ${D}/${sysconfdir}/pam.d/screen
-			break
-		fi
-	done
+	if [ "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}" = "pam" ]; then
+		install -D -m 644 ${WORKDIR}/screen.pam ${D}/${sysconfdir}/pam.d/screen
+	fi
 }
 
 pkg_postinst_${PN} () {
