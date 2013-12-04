@@ -55,8 +55,7 @@ inherit autotools
 CFLAGS += "-D__FILE_OFFSET_BITS=64"
 export LD = "${CC}"
 
-EXTRA_OECONF = "--with-rand-helper=no \
-                ${@base_contains('DISTRO_FEATURES', 'pam', '--with-pam', '--without-pam', d)} \
+EXTRA_OECONF = "${@base_contains('DISTRO_FEATURES', 'pam', '--with-pam', '--without-pam', d)} \
                 --without-zlib-version-check \
                 --with-privsep-path=/var/run/sshd \
                 --sysconfdir=${sysconfdir}/ssh \
