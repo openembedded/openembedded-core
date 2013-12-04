@@ -223,7 +223,9 @@ FILES_${PN} =  "${bindir}/rpm \
 		${libdir}/rpm/bin/mtree \
 		${libdir}/rpm/bin/rpmkey \
 		${libdir}/rpm/bin/rpmrepo \
+		${libdir}/rpm/bin/rpmrepo.real \
 		${libdir}/rpm/bin/rpmspecdump \
+		${libdir}/rpm/bin/rpmspecdump.real \
 		${libdir}/rpm/bin/wget \
 		${localstatedir}/cache \
 		${localstatedir}/cache/rpm \
@@ -284,11 +286,17 @@ FILES_${PN}-build = "${prefix}/src/rpm \
 		${libdir}/rpm/pkgconfigdeps.sh \
 		${libdir}/rpm/pythondeps.sh \
 		${libdir}/rpm/bin/debugedit \
+		${libdir}/rpm/bin/debugedit.real \
 		${libdir}/rpm/bin/rpmcache \
+		${libdir}/rpm/bin/rpmcache.real \
 		${libdir}/rpm/bin/rpmcmp \
+		${libdir}/rpm/bin/rpmcmp.real \
 		${libdir}/rpm/bin/rpmdeps \
+		${libdir}/rpm/bin/rpmdeps.real \
 		${libdir}/rpm/bin/rpmdeps-oecore \
+		${libdir}/rpm/bin/rpmdeps-oecore.real \
 		${libdir}/rpm/bin/rpmdigest \
+		${libdir}/rpm/bin/rpmdigest.real \
 		${libdir}/rpm/bin/abi-compliance-checker.pl \
 		${libdir}/rpm/bin/api-sanity-autotest.pl \
 		${libdir}/rpm/bin/chroot \
