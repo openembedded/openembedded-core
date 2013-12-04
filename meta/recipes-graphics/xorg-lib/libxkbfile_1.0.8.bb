@@ -12,8 +12,6 @@ DEPENDS += "virtual/libx11 kbproto"
 
 PE = "1"
 
-EXTRA_OECONF += "--without-xcb"
-
 BBCLASSEXTEND = "native"
 
 SRC_URI[md5sum] = "19e6533ae64abba0773816a23f2b9507"
