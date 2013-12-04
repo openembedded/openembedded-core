@@ -46,16 +46,16 @@ class DiskMonTest(oeSelfTest):
     def test_stoptask_behavior(self):
         result = runCmd("df -k %s" % os.getcwd())
         size = result.output.split("\n")[1].split()[3]
-        self.append_config('BB_DISKMON_DIRS = "STOPTASKS,${TMPDIR},%sK,4510K"' % size)
-        res = bitbake("core-image-minimal", ignore_status = True)
+        self.write_config('BB_DISKMON_DIRS = "STOPTASKS,${TMPDIR},%sK,4510K"' % size)
+        res = bitbake("m4", ignore_status = True)
         self.assertTrue('ERROR: No new tasks can be executed since the disk space monitor action is "STOPTASKS"!' in res.output)
         self.assertEqual(res.status, 1)
-        self.append_config('BB_DISKMON_DIRS = "ABORT,${TMPDIR},%sK,4510K"' % size)
-        res = bitbake("core-image-minimal", ignore_status = True)
+        self.write_config('BB_DISKMON_DIRS = "ABORT,${TMPDIR},%sK,4510K"' % size)
+        res = bitbake("m4", ignore_status = True)
         self.assertTrue('ERROR: Immediately abort since the disk space monitor action is "ABORT"!' in res.output)
         self.assertEqual(res.status, 1)
-        self.append_config('BB_DISKMON_DIRS = "WARN,${TMPDIR},%sK,4510K"' % size)
-        res = bitbake("core-image-minimal")
+        self.write_config('BB_DISKMON_DIRS = "WARN,${TMPDIR},%sK,4510K"' % size)
+        res = bitbake("m4")
         self.assertTrue('WARNING: The free space' in res.output)
 
 class SanityOptionsTest(oeSelfTest):
@@ -74,9 +74,10 @@ class SanityOptionsTest(oeSelfTest):
         self.write_recipeinc('xcursor-transparent-theme', 'PACKAGES += \"${PN}-dbg\"')
         self.append_config('ERROR_QA_remove = "packages-list"')
         self.append_config('WARN_QA_append = " packages-list"')
-        bitbake("xcursor-transparent-theme")
+        res = bitbake("xcursor-transparent-theme")
         bitbake("xcursor-transparent-theme -ccleansstate")
         self.delete_recipeinc('xcursor-transparent-theme')
+        self.assertTrue("WARNING: QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors." in res.output)
 
     def test_sanity_userspace_dependency(self):
         self.append_config('WARN_QA_append = " unsafe-references-in-binaries unsafe-references-in-scripts"')
