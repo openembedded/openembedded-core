@@ -97,6 +97,17 @@ def remove_include():
             ftools.remove_from_file(os.path.join(builddir, "conf/local.conf"), \
                     "#include added by oe-selftest.py\ninclude selftest.inc")
 
+
+def remove_inc_files():
+    try:
+        os.remove(os.path.join(os.environ.get("BUILDDIR"), "conf/selftest.inc"))
+        for root, _, files in os.walk(get_test_layer()):
+            for f in files:
+                if f == 'test_recipe.inc':
+                    os.remove(os.path.join(root, f))
+    except OSError as e:
+        pass
+
 def get_tests():
     testslist = []
     for x in sys.argv[1:]:
@@ -145,4 +156,5 @@ if __name__ == "__main__":
         traceback.print_exc(5)
     finally:
         remove_include()
+        remove_inc_files()
     sys.exit(ret)

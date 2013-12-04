@@ -92,7 +92,7 @@ class oeSelfTest(unittest.TestCase):
         inc_file = os.path.join(self.testlayer_path, 'recipes-test', recipe, 'test_recipe.inc')
         self.log.debug("Deleting file: %s" % inc_file)
         try:
-            os.remove(self.testinc_path)
+            os.remove(inc_file)
         except OSError as e:
             if e.errno != errno.ENOENT:
                 raise
