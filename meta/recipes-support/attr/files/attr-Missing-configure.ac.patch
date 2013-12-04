@@ -1,6 +1,7 @@
 Subject: [PATCH] attr: Missing configure.ac
 
 Upstream-Status: Backport [Upstream released tarball missing this file]
+Signed-off-by: Nathan Rossi <nathan.rossi@xilinx.com>
 ---
  configure.ac |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 48 insertions(+)
