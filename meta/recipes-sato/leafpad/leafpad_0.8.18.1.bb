@@ -19,7 +19,7 @@ SRC_URI_append_poky = " file://owl-menu.patch;apply=yes "
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = " --enable-chooser --disable-gtktest --disable-print"
+EXTRA_OECONF = " --enable-chooser --disable-emacs --disable-print"
 
 do_install_append () {
         install -d ${D}/${datadir}
