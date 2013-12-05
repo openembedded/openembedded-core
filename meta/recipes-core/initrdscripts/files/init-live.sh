@@ -89,7 +89,7 @@ boot_live_root() {
     mount -n --move /dev ${ROOT_MOUNT}/dev
 
     cd $ROOT_MOUNT
-    exec switch_root -c /dev/console $ROOT_MOUNT /sbin/init
+    exec switch_root $ROOT_MOUNT /sbin/init
 }
 
 fatal() {
