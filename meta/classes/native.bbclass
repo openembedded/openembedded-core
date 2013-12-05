@@ -59,7 +59,7 @@ export CONFIG_SITE = "${COREBASE}/meta/site/native"
 # set the compiler as well. It could have been set to something else
 export CC = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
 export CXX = "${CCACHE}${HOST_PREFIX}g++ ${HOST_CC_ARCH}"
-export F77 = "${CCACHE}${HOST_PREFIX}g77 ${HOST_CC_ARCH}"
+export FC = "${CCACHE}${HOST_PREFIX}gfortran ${HOST_CC_ARCH}"
 export CPP = "${HOST_PREFIX}gcc ${HOST_CC_ARCH} -E"
 export LD = "${HOST_PREFIX}ld ${HOST_LD_ARCH} "
 export CCLD = "${CC}"
