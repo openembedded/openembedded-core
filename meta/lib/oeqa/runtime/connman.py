@@ -9,6 +9,13 @@ def setUpModule():
 
 class ConnmanTest(oeRuntimeTest):
 
+    def service_status(self, service):
+        if oeRuntimeTest.hasFeature("systemd"):
+            (status, output) = self.target.run('systemctl status -l %s' % service)
+            return output
+        else:
+            return "Unable to get status or logs for %s" % service
+
     @skipUnlessPassed('test_ssh')
     def test_connmand_help(self):
         (status, output) = self.target.run('/usr/sbin/connmand --help')
@@ -18,4 +25,6 @@ class ConnmanTest(oeRuntimeTest):
     @skipUnlessPassed('test_connmand_help')
     def test_connmand_running(self):
         (status, output) = self.target.run(oeRuntimeTest.pscmd + ' | grep [c]onnmand')
-        self.assertEqual(status, 0, msg="no connmand process, ps output: %s" % self.target.run(oeRuntimeTest.pscmd)[1])
+        if status != 0:
+            print self.service_status("connman")
+            self.fail("No connmand process running")
