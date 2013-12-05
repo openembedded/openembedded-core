@@ -16,7 +16,7 @@ RUNTIMETARGET = "libssp libstdc++-v3 libgomp"
 #  ?
 # libiberty
 # libmudflap
-# libgfortran
+# libgfortran needs separate recipe due to libquadmath dependency
 
 do_configure () {
 	export CXX="${CXX} -nostdinc++ -nostdlib++"
