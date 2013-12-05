@@ -11,6 +11,12 @@
 inherit kernel
 require recipes-kernel/linux/linux-yocto.inc
 
+USE_MACHINE_AUTOREV ?= "1"
+USE_META_AUTOREV ?= "1"
+
+# provide this .inc to set specific revisions
+include recipes-kernel/linux/linux-yocto-dev-revisions.inc
+
 KBRANCH = "standard/base"
 KBRANCH_DEFAULT = "${KBRANCH}"
 KMETA = "meta"
@@ -22,15 +28,19 @@ SRC_URI = "git://git.pokylinux.org/linux-yocto-dev.git;nocheckout=1;branch=${KBR
 # linux-yocto-dev is the preferred provider, they will be overridden to
 # AUTOREV in following anonymous python routine and resolved when the
 # variables are finalized.
-SRCREV_machine="29594404d7fe73cd80eaa4ee8c43dcc53970c60e"
-SRCREV_meta="29594404d7fe73cd80eaa4ee8c43dcc53970c60e"
+SRCREV_machine ?= "29594404d7fe73cd80eaa4ee8c43dcc53970c60e"
+SRCREV_meta ?= "29594404d7fe73cd80eaa4ee8c43dcc53970c60e"
 
 python () {
     if d.getVar("PREFERRED_PROVIDER_virtual/kernel", True) != "linux-yocto-dev":
         raise bb.parse.SkipPackage("Set PREFERRED_PROVIDER_virtual/kernel to linux-yocto-dev to enable it")
     else:
-        d.setVar("SRCREV_machine", "${AUTOREV}")
-        d.setVar("SRCREV_meta", "${AUTOREV}")
+        # if the revisions have been changed from the defaults above we leave them
+        # alone. But if the defaults are left, we change to AUTOREV.
+        if d.getVar("USE_MACHINE_AUTOREV", True) == "1":
+            d.setVar("SRCREV_machine", "${AUTOREV}")
+        if d.getVar("USE_META_AUTOREV", True) == "1":
+            d.setVar("SRCREV_meta", "${AUTOREV}")
 }
 
 LINUX_VERSION ?= "3.10+"
@@ -40,8 +50,9 @@ PV = "${LINUX_VERSION}+git${SRCPV}"
 COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemumips64|qemux86-64)"
 
 # Functionality flags
-KERNEL_FEATURES_append = " features/netfilter/netfilter.scc"
-KERNEL_FEATURES_append_qemux86=" cfg/sound.scc"
+KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/taskstats/taskstats.scc"
+KERNEL_FEATURES_append = " ${KERNEL_EXTRA_FEATURES}"
+KERNEL_FEATURES_append_qemux86=" cfg/sound.scc cfg/paravirt_kvm.scc"
 KERNEL_FEATURES_append_qemux86-64=" cfg/sound.scc"
-KERNEL_FEATURES_append_qemux86=" cfg/paravirt_kvm.scc"
 KERNEL_FEATURES_append = " ${@bb.utils.contains("TUNE_FEATURES", "mx32", " cfg/x32.scc", "" ,d)}"
+
