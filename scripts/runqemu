@@ -399,18 +399,11 @@ findimage() {
 
     # Sort rootfs candidates by modification time - the most
     # recently created one is the one we most likely want to boot.
-    filenames=`ls -t $where/*-image*$machine.$extension 2>/dev/null | xargs`
-    for name in $filenames; do
-        case $name in
-        *core-image-sato* | \
-        *core-image-lsb* | \
-        *core-image-basic* | \
-        *core-image-minimal* )
-            ROOTFS=$name
-            return
-            ;;
-        esac
-    done
+    filename=`ls -t1 $where/*-image*$machine.$extension 2>/dev/null | head -n1`
+    if [ "x$filename" != "x" ]; then
+        ROOTFS=$filename
+        return
+    fi
 
     echo "Couldn't find a $machine rootfs image in $where."
     exit 1
