@@ -6,7 +6,8 @@ LICENSE="GPLv2+"
 
 SECTION = "base"
 SRC_URI = "${SOURCEFORGE_MIRROR}/acpid/acpid-${PV}.tar.gz \
-           file://init"
+           file://init \
+           file://set_socket_noblock.patch "
 
 inherit update-rc.d
 
