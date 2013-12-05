@@ -14,7 +14,7 @@ SRCREV = "217f1bfe14c41cf7e291d04a63aa2d79cc13d063"
 PV = "0.0+git${SRCPV}"
 PR = "r4"
 
-SRC_URI = "git://git.yoctoproject.org/${BPN} \
+SRC_URI = "git://git.yoctoproject.org/${BPN};branch=matchbox-keyboard-0-1 \
            file://single-instance.patch \
            file://80matchboxkeyboard.shbg"
 
