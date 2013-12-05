@@ -187,7 +187,10 @@ python buildhistory_emit_pkghistory() {
         with open(os.path.join(pkgdata_dir, 'runtime', pkg)) as f:
             for line in f.readlines():
                 item = line.rstrip('\n').split(': ', 1)
-                pkgdata[item[0]] = item[1].decode('string_escape')
+                key = item[0]
+                if key.endswith('_' + pkg):
+                    key = key[:-len(pkg)-1]
+                pkgdata[key] = item[1].decode('string_escape')
 
         pkge = pkgdata.get('PKGE', '0')
         pkgv = pkgdata['PKGV']
@@ -211,19 +214,19 @@ python buildhistory_emit_pkghistory() {
         pkginfo.pe = pkgdata.get('PE', '0')
         pkginfo.pv = pkgdata['PV']
         pkginfo.pr = pkgdata['PR']
-        pkginfo.pkg = pkgdata['PKG_%s' % pkg]
+        pkginfo.pkg = pkgdata['PKG']
         pkginfo.pkge = pkge
         pkginfo.pkgv = pkgv
         pkginfo.pkgr = pkgr
-        pkginfo.rprovides = sortpkglist(squashspaces(pkgdata.get('RPROVIDES_%s' % pkg, "")))
-        pkginfo.rdepends = sortpkglist(squashspaces(pkgdata.get('RDEPENDS_%s' % pkg, "")))
-        pkginfo.rrecommends = sortpkglist(squashspaces(pkgdata.get('RRECOMMENDS_%s' % pkg, "")))
-        pkginfo.rsuggests = sortpkglist(squashspaces(pkgdata.get('RSUGGESTS_%s' % pkg, "")))
-        pkginfo.rreplaces = sortpkglist(squashspaces(pkgdata.get('RREPLACES_%s' % pkg, "")))
-        pkginfo.rconflicts = sortpkglist(squashspaces(pkgdata.get('RCONFLICTS_%s' % pkg, "")))
-        pkginfo.files = squashspaces(pkgdata.get('FILES_%s' % pkg, ""))
+        pkginfo.rprovides = sortpkglist(squashspaces(pkgdata.get('RPROVIDES', "")))
+        pkginfo.rdepends = sortpkglist(squashspaces(pkgdata.get('RDEPENDS', "")))
+        pkginfo.rrecommends = sortpkglist(squashspaces(pkgdata.get('RRECOMMENDS', "")))
+        pkginfo.rsuggests = sortpkglist(squashspaces(pkgdata.get('RSUGGESTS', "")))
+        pkginfo.rreplaces = sortpkglist(squashspaces(pkgdata.get('RREPLACES', "")))
+        pkginfo.rconflicts = sortpkglist(squashspaces(pkgdata.get('RCONFLICTS', "")))
+        pkginfo.files = squashspaces(pkgdata.get('FILES', ""))
         for filevar in pkginfo.filevars:
-            pkginfo.filevars[filevar] = pkgdata.get('%s_%s' % (filevar, pkg), "")
+            pkginfo.filevars[filevar] = pkgdata.get(filevar, "")
 
         # Gather information about packaged files
         val = pkgdata.get('FILES_INFO', '')
@@ -232,7 +235,7 @@ python buildhistory_emit_pkghistory() {
         filelist.sort()
         pkginfo.filelist = " ".join(filelist)
 
-        pkginfo.size = int(pkgdata['PKGSIZE_%s' % pkg])
+        pkginfo.size = int(pkgdata['PKGSIZE'])
 
         write_pkghistory(pkginfo, d)
 }
