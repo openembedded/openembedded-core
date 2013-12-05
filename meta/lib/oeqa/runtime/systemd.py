@@ -21,7 +21,9 @@ class SystemdTests(oeRuntimeTest):
     @skipUnlessPassed('test_systemd_version')
     def test_systemd_failed(self):
         (status, output) = self.target.run('systemctl --failed | grep "0 loaded units listed"')
-        self.assertEqual(status, 0, msg="Failed systemd services: %s" % self.target.run('systemctl --failed')[1])
+        if status != 0:
+            print self.target.run('systemctl status --failed -l')[1]
+            self.fail("Some systemd units failed.")
 
     @skipUnlessPassed('test_systemd_version')
     def test_systemd_service(self):
