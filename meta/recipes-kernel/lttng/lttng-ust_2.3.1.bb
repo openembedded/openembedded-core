@@ -21,7 +21,7 @@ SRCREV = "535d0408caee93577c2b4d8ad3cd672fa97eac1d"
 PV = "2.3.1"
 PE = "2"
 
-SRC_URI = "git://git.lttng.org/lttng-ust.git \
+SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.3 \
 	   "
 
 S = "${WORKDIR}/git"

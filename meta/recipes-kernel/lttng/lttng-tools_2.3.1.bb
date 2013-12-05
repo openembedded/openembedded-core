@@ -15,7 +15,7 @@ RDEPENDS_${PN}-ptest += "make"
 SRCREV = "5d985544a7ad54afa0514ea7f522a89d8d844860"
 PV = "v2.3.1"
 
-SRC_URI = "git://git.lttng.org/lttng-tools.git \
+SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.3 \
            file://runtest.patch \
            file://run-ptest \
 	  "

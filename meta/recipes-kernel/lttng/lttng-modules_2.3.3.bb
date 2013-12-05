@@ -13,7 +13,7 @@ inherit module
 SRCREV = "eef112db0e63feff6cbf0a98cda9af607cefb377"
 PV = "2.3.3"
 
-SRC_URI = "git://git.lttng.org/lttng-modules.git \
+SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.3 \
            file://lttng-modules-replace-KERNELDIR-with-KERNEL_SRC.patch"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
