@@ -24,8 +24,8 @@ SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
           "
 
-SRC_URI[md5sum] = "be97ce9007fa42c867901b496c935a0a"
-SRC_URI[sha256sum] = "dd51d3b942758a462afc7c8495930d25c93058e5319303247375183ad50164d2"
+SRC_URI[md5sum] = "536d048c8e8eeebcd9757d0863ebb0c0"
+SRC_URI[sha256sum] = "52004c68021da9a599feed27f65defcfb22128f7da2c0531c0f75de0f479d3e0"
 
 inherit autotools
 
