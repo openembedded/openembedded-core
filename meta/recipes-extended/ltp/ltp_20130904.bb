@@ -21,7 +21,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 
 DEPENDS = "attr libaio libcap acl openssl"
 
-SRC_URI = "git://github.com/linux-test-project/ltp.git"
+SRC_URI = "git://github.com/linux-test-project/ltp.git \
+           file://0001-Rename-runtests_noltp.sh-script-so-have-unique-name.patch \
+"
 
 SRCREV = "a8c42db5f9314211811c36275a21f83902830dc5"
 S = "${WORKDIR}/git"

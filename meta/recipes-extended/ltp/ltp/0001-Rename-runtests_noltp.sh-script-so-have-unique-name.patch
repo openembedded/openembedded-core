@@ -1,0 +1,38 @@
+From 9751a6526cffcdf4e3dc2cb33641259a7be00e19 Mon Sep 17 00:00:00 2001
+From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Sat, 7 Dec 2013 18:24:32 +0100
+Subject: [PATCH] Rename runtests_noltp.sh script so have unique name
+
+* they are installed in the same target path
+  /opt/ltp/testcases/bin/runtests_noltp.sh
+  and overwrite each other in non-deterministic way
+  when multiple processes are used in "make install"
+
+  ./temp/log.do_install:install -m 00775
+    "ltp/20120903-r2/ltp-20120903/testcases/kernel/containers/sysvipc/runtests_noltp.sh"
+    "ltp/20120903-r2/image/opt/ltp/testcases/bin/runtests_noltp.sh"
+  ./temp/log.do_install:install -m 00775
+    "ltp/20120903-r2/ltp-20120903/testcases/kernel/containers/utsname/runtests_noltp.sh"
+    "ltp/20120903-r2/image/opt/ltp/testcases/bin/runtests_noltp.sh"
+
+Upstream-Status: Pending
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ .../kernel/containers/sysvipc/{runtests_noltp.sh => runipctests_noltp.sh} | 0
+ .../kernel/containers/utsname/{runtests_noltp.sh => runutstests_noltp.sh} | 0
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ rename testcases/kernel/containers/sysvipc/{runtests_noltp.sh => runipctests_noltp.sh} (100%)
+ rename testcases/kernel/containers/utsname/{runtests_noltp.sh => runutstests_noltp.sh} (100%)
+
+diff --git a/testcases/kernel/containers/sysvipc/runtests_noltp.sh b/testcases/kernel/containers/sysvipc/runipctests_noltp.sh
+similarity index 100%
+rename from testcases/kernel/containers/sysvipc/runtests_noltp.sh
+rename to testcases/kernel/containers/sysvipc/runipctests_noltp.sh
+diff --git a/testcases/kernel/containers/utsname/runtests_noltp.sh b/testcases/kernel/containers/utsname/runutstests_noltp.sh
+similarity index 100%
+rename from testcases/kernel/containers/utsname/runtests_noltp.sh
+rename to testcases/kernel/containers/utsname/runutstests_noltp.sh
+-- 
+1.8.4.3
+
