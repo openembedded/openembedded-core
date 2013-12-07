@@ -1,6 +1,6 @@
 require libav.inc
 
-SRC_URI = "http://libav.org/releases/libav-0.8.9.tar.xz \
+SRC_URI = "http://libav.org/releases/${BP}.tar.xz \
            file://0001-configure-enable-pic-for-AArch64.patch"
 
 SRC_URI[md5sum] = "7c0e5743cd5c4d4b1bcafd02a2e82e09"
