@@ -18,7 +18,8 @@ inherit autotools gettext multilib_header
 FILES_${PN} = " \
 	${bindir}/${TARGET_PREFIX}* \
 	${libdir}/lib*-*.so \
-	${prefix}/${TARGET_SYS}/bin/*"
+	${prefix}/${TARGET_SYS}/bin/* \
+        ${bindir}/embedspu"
 
 RPROVIDES_${PN} += "${PN}-symlinks"
 
@@ -138,11 +139,6 @@ do_install () {
 	done
 
 	oe_multilib_header bfd.h
-}
-
-do_install_append_class-target_powerpc () {
-        # we dont really care about embedspu for ppc so remove it
-        rm -f ${D}/${bindir}/embedspu || :
 }
 
 inherit update-alternatives
