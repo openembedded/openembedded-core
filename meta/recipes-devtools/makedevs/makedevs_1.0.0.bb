@@ -13,7 +13,7 @@ do_configure() {
 }
 
 do_compile() {
-	${CC} ${CFLAGS} -o ${S}/makedevs ${S}/makedevs.c
+	${CC} ${CFLAGS} ${LDFLAGS} -o ${S}/makedevs ${S}/makedevs.c
 }
 
 do_install() {
