@@ -12,10 +12,9 @@ LICENSE = "MIT-X"
 
 PARALLEL_MAKE = ""
 DEPENDS = "xcb-proto xproto libxau libxslt-native xcb-proto-native libpthread-stubs"
-# DEPENDS += "xsltproc-native gperf-native"
 
-SRC_URI = "http://xcb.freedesktop.org/dist/libxcb-${PV}.tar.bz2"
-#           file://xcbincludedir.patch"
+SRC_URI = "http://xcb.freedesktop.org/dist/libxcb-${PV}.tar.bz2 \
+           file://xcbincludedir.patch"
 
 PACKAGES =+ "libxcb-composite libxcb-damage libxcb-dpms libxcb-glx \
              libxcb-randr libxcb-record libxcb-render libxcb-res \
@@ -25,7 +24,6 @@ PACKAGES =+ "libxcb-composite libxcb-damage libxcb-dpms libxcb-glx \
              libxcb-dri2 libxcb-dri3 libxcb-present"
 
 FILES_${PN} = "${libdir}/libxcb.so.*"
-#FILES_${PN}-dev = "${libdir}/libxcb.* ${libdir}/pkgconfig/*.pc ${includedir}/xcb/*.h"
 FILES_libxcb-dri2 = "${libdir}/libxcb-dri2.so.*"
 FILES_libxcb-dri3 = "${libdir}/libxcb-dri3.so.*"
 FILES_libxcb-composite = "${libdir}/libxcb-composite.so.*"
@@ -52,13 +50,3 @@ FILES_libxcb-xvmc = "${libdir}/libxcb-xvmc.so.*"
 FILES_libxcb-present = "${libdir}/libxcb-present.so.*"
 
 inherit autotools pkgconfig pythonnative
-
-# XCBPROTO_XCBINCLUDEDIR is set based on `pkg-config --variable=xcbincludedir xcb-proto`
-# but the xcbincludedir variable doesn't point into the staging area, so it needs some
-# tweaking here:
-do_configure_prepend () {
-    sed -i "s|XCBPROTO_XCBINCLUDEDIR=\`|XCBPROTO_XCBINCLUDEDIR=${STAGING_DIR_HOST}/\`|" \
-        ${S}/configure.ac
-    sed -i "s|XCBPROTO_XCBPYTHONDIR=\`|XCBPROTO_XCBPYTHONDIR=${STAGING_DIR_HOST}/\`|" \
-        ${S}/configure.ac
-}
