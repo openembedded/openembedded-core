@@ -11,6 +11,6 @@ SRC_URI += "file://noman.patch \
             file://arch_pm.patch \
            "
 
-SRC_URI[md5sum] = "ece3ae87a099158c17bde95c0036c575"
-SRC_URI[sha256sum] = "8912ea77bc9c14297c0a340f5f461fbd212582ce814e1805d1d0436ca885e3a1"
+SRC_URI[md5sum] = "cc25086e1e3bd9512a95f14cfe9002e1"
+SRC_URI[sha256sum] = "01cdc81c33e77c3d7c40df17e19171794542be7cf12e411381ffcaa8f87b1854"
 
