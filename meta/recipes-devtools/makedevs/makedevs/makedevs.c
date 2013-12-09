@@ -21,16 +21,18 @@
 #ifndef PATH_MAX
 #define PATH_MAX        4096
 #endif
+#define VERSION         "1.0.1"
 
 /* These are all stolen from busybox's libbb to make
- * error handling simpler (and since I maintain busybox, 
- * I'm rather partial to these for error handling). 
+ * error handling simpler (and since I maintain busybox,
+ * I'm rather partial to these for error handling).
  *  -Erik
  */
 static const char *const app_name = "makedevs";
 static const char *const memory_exhausted = "memory exhausted";
 static char default_rootdir[]=".";
 static char *rootdir = default_rootdir;
+static int trace = 0;
 
 struct name_id {
 	char name[MAX_NAME_LEN+1];
@@ -224,56 +226,95 @@ static void free_list(struct name_id *list)
 	}
 }
 
-static void add_new_directory(char *name, char *path, 
+static void add_new_directory(char *name, char *path,
 		unsigned long uid, unsigned long gid, unsigned long mode)
 {
-	mkdir(path, mode);
+	if (trace)
+		fprintf(stderr, "Directory: %s %s  UID: %ld  GID %ld  MODE: %04lo", path, name, uid, gid, mode);
+
+	if (mkdir(path, mode) < 0) {
+		if (EEXIST == errno) {
+			/* Unconditionally apply the mode setting to the existing directory.
+			 * XXX should output something when trace */
+			chmod(path, mode & ~S_IFMT);
+		}
+	}
+	if (trace)
+		putc('\n', stderr);
 	chown(path, uid, gid);
-//	printf("Directory: %s %s  UID: %ld  GID %ld  MODE: %04lo\n", path, name, uid, gid, mode);
 }
 
-static void add_new_device(char *name, char *path, unsigned long uid, 
+static void add_new_device(char *name, char *path, unsigned long uid,
 	unsigned long gid, unsigned long mode, dev_t rdev)
 {
 	int status;
 	struct stat sb;
 
-	memset(&sb, 0, sizeof(struct stat));
-	status = lstat(path, &sb);
-
-	if (status >= 0) {
-		/* It is ok for some types of files to not exit on disk (such as
-		 * device nodes), but if they _do_ exist the specified mode had
-		 * better match the actual file or strange things will happen.... */
-		if ((mode & S_IFMT) != (sb.st_mode & S_IFMT))
-			error_msg_and_die("%s: file type does not match specified type!", path);
+	if (trace) {
+		fprintf(stderr, "Device: %s %s  UID: %ld  GID: %ld  MODE: %04lo  MAJOR: %d  MINOR: %d",
+				path, name, uid, gid, mode, (short)(rdev >> 8), (short)(rdev & 0xff));
 	}
 
-	mknod(path, mode, rdev);
+	memset(&sb, 0, sizeof(struct stat));
+	status = lstat(path, &sb);
+	if (status >= 0) {
+		/* It is ok for some types of files to not exit on disk (such as
+		 * device nodes), but if they _do_ exist, the file type bits had
+		 * better match those of the actual file or strange things will happen... */
+		if ((mode & S_IFMT) != (sb.st_mode & S_IFMT)) {
+			if (trace)
+				putc('\n', stderr);
+			error_msg_and_die("%s: existing file (04%o) type does not match specified file type (04%lo)!",
+						path, (sb.st_mode & S_IFMT), (mode & S_IFMT));
+		}
+		if (mode != sb.st_mode) {
+			if (trace)
+				fprintf(stderr, " -- applying new mode 04%lo (old was 04%o)\n", mode & ~S_IFMT, sb.st_mode & ~S_IFMT);
+			/* Apply the mode setting to the existing device node */
+			chmod(path, mode & ~S_IFMT);
+		}
+		else {
+			if (trace)
+				fprintf(stderr, " -- extraneous entry in table\n", path);
+		}
+	}
+	else {
+		mknod(path, mode, rdev);
+		if (trace)
+			putc('\n', stderr);
+
+	}
+
 	chown(path, uid, gid);
-//	printf("Device: %s %s  UID: %ld  GID: %ld  MODE: %04lo  MAJOR: %d  MINOR: %d\n",
-//			path, name, uid, gid, mode, (short)(rdev >> 8), (short)(rdev & 0xff));
 }
 
 static void add_new_file(char *name, char *path, unsigned long uid,
 				  unsigned long gid, unsigned long mode)
 {
+	if (trace) {
+		fprintf(stderr, "File: %s %s  UID: %ld  GID: %ld  MODE: %04lo\n",
+			path, name, gid, uid, mode);
+	}
+
 	int fd = open(path,O_CREAT | O_WRONLY, mode);
-	if (fd < 0) { 
+	if (fd < 0) {
 		error_msg_and_die("%s: file can not be created!", path);
 	} else {
 		close(fd);
-	} 
+	}
 	chmod(path, mode);
 	chown(path, uid, gid);
-//	printf("File: %s %s  UID: %ld  GID: %ld  MODE: %04lo\n",
-//			path, name, gid, uid, mode);
 }
 
 
 static void add_new_fifo(char *name, char *path, unsigned long uid,
 				  unsigned long gid, unsigned long mode)
 {
+	if (trace) {
+		printf("Fifo: %s %s  UID: %ld  GID: %ld  MODE: %04lo\n",
+			path, name, gid, uid, mode);
+	}
+
 	int status;
 	struct stat sb;
 
@@ -289,8 +330,6 @@ static void add_new_fifo(char *name, char *path, unsigned long uid,
 			error_msg_and_die("%s: file can not be created with mknod!", path);
 	}
 	chown(path, uid, gid);
-//	printf("File: %s %s  UID: %ld  GID: %ld  MODE: %04lo\n",
-//			path, name, gid, uid, mode);
 }
 
 
@@ -299,7 +338,7 @@ static void add_new_fifo(char *name, char *path, unsigned long uid,
     /dev/mem    c      640      0       0       1       1       0        0        -
     /dev/zero   c      644      root    root    1       5       -        -        -
 
-    type can be one of: 
+    type can be one of:
 	f	A regular file
 	d	Directory
 	c	Character special device file
@@ -323,8 +362,9 @@ static int interpret_table_entry(char *line)
 
 	if (0 > sscanf(line, "%40s %c %lo %40s %40s %lu %lu %lu %lu %lu", path,
 		    &type, &mode, usr_buf, grp_buf, &major, &minor, &start,
-		    &increment, &count)) 
+		    &increment, &count))
 	{
+		fprintf(stderr, "%s: sscanf returned < 0 for line '%s'\n", app_name, line);
 		return 1;
 	}
 
@@ -335,8 +375,10 @@ static int interpret_table_entry(char *line)
 		error_msg_and_die("Device table entries require absolute paths");
 	}
 	name = xstrdup(path + 1);
+	/* prefix path with rootdir */
 	sprintf(path, "%s/%s", rootdir, name);
 
+	/* XXX Why is name passed into all of the add_new_*() routines? */
 	switch (type) {
 	case 'd':
 		mode |= S_IFDIR;
@@ -361,13 +403,14 @@ static int interpret_table_entry(char *line)
 			for (i = start; i < start + count; i++) {
 				sprintf(buf, "%s%d", name, i);
 				sprintf(path, "%s/%s%d", rootdir, name, i);
-				/* FIXME:  MKDEV uses illicit insider knowledge of kernel 
+				/* FIXME:  MKDEV uses illicit insider knowledge of kernel
 				 * major/minor representation...  */
 				rdev = MKDEV(major, minor + (i - start) * increment);
+				sprintf(path, "%s/%s\0", rootdir, buf);
 				add_new_device(buf, path, uid, gid, mode, rdev);
 			}
 		} else {
-			/* FIXME:  MKDEV uses illicit insider knowledge of kernel 
+			/* FIXME:  MKDEV uses illicit insider knowledge of kernel
 			 * major/minor representation...  */
 			dev_t rdev = MKDEV(major, minor);
 			add_new_device(name, path, uid, gid, mode, rdev);
@@ -391,8 +434,9 @@ static void parse_device_table(FILE * file)
 		error_msg_and_die(memory_exhausted);
 	}
 	/* Looks ok so far.  The general plan now is to read in one
-	 * line at a time, check for leading comment delimiters ('#'),
-	 * then try and parse the line as a device table.  If we fail
+	 * line at a time, trim off leading and trailing whitespace,
+	 * check for leading comment delimiters ('#') or a blank line,
+	 * then try and parse the line as a device table entry. If we fail
 	 * to parse things, try and help the poor fool to fix their
 	 * device table with a useful error msg... */
 
@@ -406,8 +450,8 @@ static void parse_device_table(FILE * file)
 		/* trim leading whitespace */
 		memmove(line, &line[strspn(line, " \n\r\t\v")], len + 1);
 
-		/* If this is NOT a comment line, try to interpret it */
-		if (*line != '#') interpret_table_entry(line);
+		/* If this is NOT a comment or an empty line, try to interpret it */
+		if (*line != '#' && *line != '\0') interpret_table_entry(line);
 	}
 
 	if (line)
@@ -434,6 +478,7 @@ static int parse_devtable(FILE * devtable)
 static struct option long_options[] = {
 	{"root", 1, NULL, 'r'},
 	{"help", 0, NULL, 'h'},
+	{"trace", 0, NULL, 't'},
 	{"version", 0, NULL, 'v'},
 	{"devtable", 1, NULL, 'D'},
 	{NULL, 0, NULL, 0}
@@ -446,10 +491,9 @@ static char *helptext =
 	"  -r, -d, --root=DIR     Build filesystem from directory DIR (default: cwd)\n"
 	"  -D, --devtable=FILE    Use the named FILE as a device table file\n"
 	"  -h, --help             Display this help text\n"
+	"  -t, --trace            Be verbose\n"
 	"  -v, --version          Display version information\n\n";
 
-
-static char *revtext = "$Revision: 0.1 $";
 
 int main(int argc, char **argv)
 {
@@ -470,7 +514,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	while ((opt = getopt_long(argc, argv, "D:d:r:qhv", 
+	while ((opt = getopt_long(argc, argv, "D:d:r:htv",
 			long_options, &c)) >= 0) {
 		switch (opt) {
 		case 'D':
@@ -493,12 +537,20 @@ int main(int argc, char **argv)
 			} else {
 				closedir(dir);
 			}
-			rootdir = xstrdup(optarg);
+			/* If "/" is specified, use "" because rootdir is always prepended to a
+			 * string that starts with "/" */
+			if (0 == strcmp(optarg, "/"))
+				rootdir = xstrdup("");
+			else
+				rootdir = xstrdup(optarg);
+			break;
+
+		case 't':
+			trace = 1;
 			break;
 
 		case 'v':
-			printf("makedevs revision %.*s\n",
-					(int) strlen(revtext) - 13, revtext + 11);
+			printf("%s: %s\n", app_name, VERSION);
 			exit(0);
 		default:
 			fprintf(stderr, helptext);
