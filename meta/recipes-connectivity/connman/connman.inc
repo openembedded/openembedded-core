@@ -66,6 +66,8 @@ SYSTEMD_SERVICE_${PN} = "connman.service"
 SYSTEMD_SERVICE_${PN}-vpn = "connman-vpn.service"
 SYSTEMD_WIRED_SETUP = "ExecStartPre=-${libdir}/connman/wired-setup"
 
+UNKNOWN_CONFIGURE_WHITELIST += "--disable-gtk-doc-pdf --disable-gtk-doc-html"
+
 inherit autotools gtk-doc pkgconfig systemd update-rc.d
 
 do_configure_append () {
