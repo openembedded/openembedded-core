@@ -13,8 +13,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/cracklib/cracklib-${PV}.tar.gz \
            file://0001-packlib.c-support-dictionary-byte-order-dependent.patch \
            file://0002-craklib-fix-testnum-and-teststr-failed.patch"
 
-SRC_URI[md5sum] = "e0f94ac2138fd33c7e77b19c1e9a9390"
-SRC_URI[sha256sum] = "17fecdfa78c0b9b47afa1533ea99b5351c3cef770bbd9c8c34391827efecbdc0"
+SRC_URI[md5sum] = "90536219c520add2ceb3c26f0d7da404"
+SRC_URI[sha256sum] = "408905c2539a97dc8cbbb6d7cd2046cb5647a345b4bda399220d9471be16d156"
 
 inherit autotools gettext
 
