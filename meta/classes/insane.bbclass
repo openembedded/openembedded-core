@@ -941,8 +941,10 @@ Missing inherit gettext?""" % (gt, config))
         try:
             flag = "WARNING: unrecognized options:"
             log = os.path.join(d.getVar('B', True), 'config.log')
-            output = subprocess.check_output(['grep', '-F', flag, log])
-            options = set(map(lambda s: s.strip(' ,'), output.partition(flag)[2].split()))
+            output = subprocess.check_output(['grep', '-F', flag, log]).replace(', ', ' ')
+            options = set()
+            for line in output.splitlines():
+                options |= set(line.partition(flag)[2].split())
             whitelist = set(d.getVar("UNKNOWN_CONFIGURE_WHITELIST", True).split())
             options -= whitelist
             if options:
