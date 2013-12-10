@@ -1,0 +1,34 @@
+From c0f8bd146a8b3e630798561c605f5669823107af Mon Sep 17 00:00:00 2001
+From: Aurelien Jarno <aurelien@aurel32.net>
+Date: Thu, 14 Nov 2013 15:16:19 +1100
+Subject: [PATCH] UAPI: include <asm/byteorder.h> in linux/raid/md_p.h
+
+linux/raid/md_p.h is using conditionals depending on endianess and fails
+with an error if neither of __BIG_ENDIAN, __LITTLE_ENDIAN or
+__BYTE_ORDER are defined, but it doesn't include any header which can
+define these constants. This make this header unusable alone.
+
+This patch adds a #include <asm/byteorder.h> at the beginning of this
+header to make it usable alone. This is needed to compile klibc on MIPS.
+
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ include/uapi/linux/raid/md_p.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/uapi/linux/raid/md_p.h b/include/uapi/linux/raid/md_p.h
+index fe1a540..f7cf7f3 100644
+--- a/include/uapi/linux/raid/md_p.h
++++ b/include/uapi/linux/raid/md_p.h
+@@ -16,6 +16,7 @@
+ #define _MD_P_H
+ 
+ #include <linux/types.h>
++#include <asm/byteorder.h>
+ 
+ /*
+  * RAID superblock.
+-- 
+1.8.1.2
+
