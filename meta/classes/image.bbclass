@@ -77,7 +77,7 @@ PACKAGE_INSTALL_ATTEMPTONLY ?= "${FEATURE_INSTALL_OPTIONAL}"
 # Images are generally built explicitly, do not need to be part of world.
 EXCLUDE_FROM_WORLD = "1"
 
-USE_DEVFS ?= "0"
+USE_DEVFS ?= "1"
 
 PID = "${@os.getpid()}"
 
