@@ -32,7 +32,8 @@ USERADD_PACKAGES = "${PN} ${PN}-user3"
 USERADD_PARAM_${PN} = "-u 1200 -d /home/user1 -r -s /bin/bash user1; -u 1201 -d /home/user2 -r -s /bin/bash user2"
 
 # user3 will be managed in the useradd-example-user3 pacakge:
-USERADD_PARAM_${PN}-user3 = "-u 1202 -d /home/user3 -r -s /bin/bash user3"
+# As an example, we use the -P option to set clear text password for user3
+USERADD_PARAM_${PN}-user3 = "-u 1202 -d /home/user3 -r -s /bin/bash -P 'user3' user3"
 
 # GROUPADD_PARAM works the same way, which you set to the options
 # you'd normally pass to the groupadd command. This will create
