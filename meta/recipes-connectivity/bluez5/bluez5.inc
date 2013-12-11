@@ -11,11 +11,10 @@ DEPENDS = "udev libusb dbus-glib glib-2.0 libcheck readline"
 RCONFLICTS_${PN} = "bluez4"
 
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)} obex-profiles"
-PACKAGECONFIG[alsa] = "--enable-alsa,--disable-alsa,alsa-lib"
 PACKAGECONFIG[obex-profiles] = "--enable-obex,--disable-obex,libical"
 
 SRC_URI = "\
-    ${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.gz \
+    ${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
     file://bluetooth.conf \
 "
 S = "${WORKDIR}/bluez-${PV}"
@@ -23,15 +22,7 @@ S = "${WORKDIR}/bluez-${PV}"
 inherit autotools pkgconfig systemd
 
 EXTRA_OECONF = "\
-  --disable-gstreamer \
-  --enable-usb \
   --enable-tools \
-  --enable-bccmd \
-  --enable-hid2hci \
-  --enable-dfutool \
-  --disable-hidd \
-  --disable-pand \
-  --disable-dund \
   --disable-cups \
   --enable-test \
   --enable-datafiles \
