@@ -562,11 +562,13 @@ rootfs_uninstall_unneeded () {
 	fi
 }
 
-# set '*' as the root password so the images
-# can decide if they want it or not
-zap_root_password () {
-	sed 's%^root:[^:]*:%root:*:%' < ${IMAGE_ROOTFS}/etc/passwd >${IMAGE_ROOTFS}/etc/passwd.new
-	mv ${IMAGE_ROOTFS}/etc/passwd.new ${IMAGE_ROOTFS}/etc/passwd
+# This function is intended to disallow empty root password if 'debug-tweaks' is not in IMAGE_FEATURES.
+zap_empty_root_password () {
+	if [ -e ${IMAGE_ROOTFS}/etc/shadow ]; then
+		sed -i 's%^root::%root:*:%' ${IMAGE_ROOTFS}/etc/shadow
+	elif [ -e ${IMAGE_ROOTFS}/etc/passwd ]; then
+		sed -i 's%^root::%root:*:%' ${IMAGE_ROOTFS}/etc/passwd
+	fi
 } 
 
 # allow dropbear/openssh to accept root logins and logins from accounts with an empty password string
@@ -648,7 +650,7 @@ rootfs_sysroot_relativelinks () {
 	sysroot-relativelinks.py ${SDK_OUTPUT}/${SDKTARGETSYSROOT}
 }
 
-EXPORT_FUNCTIONS zap_root_password remove_init_link do_rootfs make_zimage_symlink_relative set_image_autologin rootfs_update_timestamp rootfs_no_x_startup
+EXPORT_FUNCTIONS zap_empty_root_password remove_init_link do_rootfs make_zimage_symlink_relative set_image_autologin rootfs_update_timestamp rootfs_no_x_startup
 
 do_fetch[noexec] = "1"
 do_unpack[noexec] = "1"
