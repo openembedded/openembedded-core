@@ -277,6 +277,15 @@ if ! `grep -F -q "noarch-suse" ${PLATFORM_FILE}`; then
 		echo "i486-noarch" >> ${PLATFORM_FILE}
 		echo "i486-pc" >> ${PLATFORM_FILE}
 		echo "noarch-suse" >> ${PLATFORM_FILE}
+	elif [ ${ARCH} == x86_64 ]; then
+		echo "i486-suse" >> ${PLATFORM_FILE}
+		echo "i486-noarch" >> ${PLATFORM_FILE}
+		echo "i486-pc" >> ${PLATFORM_FILE}
+		echo "i486-.*-linux.*" >> ${PLATFORM_FILE}
+		echo "noarch-suse" >> ${PLATFORM_FILE}
+		echo "${ARCH}-suse" >> ${PLATFORM_FILE}
+		echo "${ARCH}-noarch" >> ${PLATFORM_FILE}
+		echo "${ARCH}-pc" >> ${PLATFORM_FILE}
 	else
 		echo "${ARCH}-suse" >> ${PLATFORM_FILE}
 		echo "${ARCH}-noarch" >> ${PLATFORM_FILE}
