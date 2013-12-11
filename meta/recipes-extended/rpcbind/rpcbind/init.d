@@ -16,6 +16,9 @@
 #                    RPC include NFS and NIS.
 ### END INIT INFO
 
+# Source function library.
+. /etc/init.d/functions
+
 test -f /sbin/rpcbind || exit 0
 
 OPTIONS=""
@@ -73,8 +76,7 @@ case "$1" in
         start $OPTIONS
         ;;
     status)
-        pidof /sbin/rpcbind >/dev/null
-        exit $?
+        status /sbin/rpcbind
         ;;
     *)
         echo "Usage: /etc/init.d/rpcbind {start|stop|force-reload|restart|status}"
@@ -82,4 +84,4 @@ case "$1" in
         ;;
 esac
 
-exit 0
+exit $?
