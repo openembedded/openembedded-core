@@ -64,6 +64,7 @@ distutils_do_install() {
         fi
 
         rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/easy-install.pth
+        rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/site.py*
         
         #
         # FIXME: Bandaid against wrong datadir computation
