@@ -210,7 +210,6 @@ do_install() {
         install config.sh ${D}${libdir}/perl
 
         ln -s Config_heavy.pl ${D}${libdir}/perl/${PV}/Config_heavy-target.pl
-
 }
 
 do_install_append_class-nativesdk () {
@@ -223,12 +222,14 @@ PACKAGE_PREPROCESS_FUNCS += "perl_package_preprocess"
 perl_package_preprocess () {
         # Fix up installed configuration
         sed -i -e "s,${D},,g" \
+               -e "s,--sysroot=${STAGING_DIR_HOST},,g" \
                -e "s,-isystem${STAGING_INCDIR} ,,g" \
                -e "s,${STAGING_LIBDIR},${libdir},g" \
                -e "s,${STAGING_BINDIR},${bindir},g" \
                -e "s,${STAGING_INCDIR},${includedir},g" \
                -e "s,${STAGING_BINDIR_NATIVE}/perl-native/,${bindir}/,g" \
                -e "s,${STAGING_BINDIR_NATIVE}/,,g" \
+               -e "s,${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX},${bindir},g" \
             ${PKGD}${bindir}/h2xs \
             ${PKGD}${bindir}/h2ph \
             ${PKGD}${bindir}/pod2man \
@@ -236,14 +237,17 @@ perl_package_preprocess () {
             ${PKGD}${bindir}/pod2usage \
             ${PKGD}${bindir}/podchecker \
             ${PKGD}${bindir}/podselect \
-            ${PKGD}${libdir}/perl/${PV}/pod/*.pod \
-            ${PKGD}${libdir}/perl/${PV}/cacheout.pl \
-            ${PKGD}${libdir}/perl/${PV}/FileCache.pm \
-            ${PKGD}${libdir}/perl/config.sh \
-            ${PKGD}${libdir}/perl/${PV}/Config.pm \
-            ${PKGD}${libdir}/perl/${PV}/Config_heavy.pl \
+            ${PKGD}${libdir}/perl/${PV}/CORE/config.h \
             ${PKGD}${libdir}/perl/${PV}/CORE/perl.h \
-            ${PKGD}${libdir}/perl/${PV}/CORE/pp.h
+            ${PKGD}${libdir}/perl/${PV}/CORE/pp.h \
+            ${PKGD}${libdir}/perl/${PV}/Config.pm \
+            ${PKGD}${libdir}/perl/${PV}/Config.pod \
+            ${PKGD}${libdir}/perl/${PV}/Config_heavy.pl \
+            ${PKGD}${libdir}/perl/${PV}/ExtUtils/Liblist/Kid.pm \
+            ${PKGD}${libdir}/perl/${PV}/FileCache.pm \
+            ${PKGD}${libdir}/perl/${PV}/cacheout.pl \
+            ${PKGD}${libdir}/perl/${PV}/pod/*.pod \
+            ${PKGD}${libdir}/perl/config.sh
 }
 
 PACKAGES = "perl-dbg perl perl-misc perl-dev perl-pod perl-doc perl-lib \
