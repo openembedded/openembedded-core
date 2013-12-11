@@ -13,7 +13,7 @@ import logging
 import errno
 
 import oeqa.utils.ftools as ftools
-
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_test_layer
 
 class oeSelfTest(unittest.TestCase):
 
@@ -25,6 +25,7 @@ class oeSelfTest(unittest.TestCase):
         self.localconf_path = os.path.join(self.builddir, "conf/local.conf")
         self.testinc_path = os.path.join(self.builddir, "conf/selftest.inc")
         self.testlayer_path = oeSelfTest.testlayer_path
+        self._extra_tear_down_commands = []
         super(oeSelfTest, self).__init__(methodName)
 
     def setUp(self):
@@ -49,10 +50,25 @@ class oeSelfTest(unittest.TestCase):
         pass
 
     def tearDown(self):
+        if self._extra_tear_down_commands:
+            failed_extra_commands = []
+            for command in self._extra_tear_down_commands:
+                result = runCmd(command, ignore_status=True)
+                if not result.status ==  0:
+                    failed_extra_commands.append(command)
+            if failed_extra_commands:
+                self.log.warning("tearDown commands have failed: %s" % ', '.join(map(str, failed_extra_commands)))
+                self.log.debug("Trying to move on.")
+            self._extra_tear_down_commands = []
         self.tearDownLocal()
 
     def tearDownLocal(self):
         pass
+
+    # add test specific commands to the tearDown method.
+    def add_command_to_tearDown(self, command):
+        self.log.debug("Adding command '%s' to tearDown for this test." % command)
+        self._extra_tear_down_commands.append(command)
 
     # write to <builddir>/conf/selftest.inc
     def write_config(self, data):
