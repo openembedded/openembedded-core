@@ -14,8 +14,6 @@ S = "${WORKDIR}/${XORG_PN}-${PV}"
 inherit autotools distro_features_check pkgconfig
 
 EXTRA_OECONF = "--disable-specs --without-groff --without-ps2pdf --without-fop --without-xmlto"
-EXTRA_OECONF_append_libc-glibc = " --disable-malloc0returnsnull"
-EXTRA_OECONF_append_libc-uclibc = " --enable-malloc0returnsnull"
 
 UNKNOWN_CONFIGURE_WHITELIST += "--enable-malloc0returnsnull --disable-malloc0returnsnull \
                                 --disable-specs --without-groff --without-ps2pdf --without-fop --without-xmlto"
