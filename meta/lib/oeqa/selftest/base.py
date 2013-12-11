@@ -9,6 +9,7 @@
 import unittest
 import os
 import sys
+import shutil
 import logging
 import errno
 
@@ -26,6 +27,7 @@ class oeSelfTest(unittest.TestCase):
         self.testinc_path = os.path.join(self.builddir, "conf/selftest.inc")
         self.testlayer_path = oeSelfTest.testlayer_path
         self._extra_tear_down_commands = []
+        self._track_for_cleanup = []
         super(oeSelfTest, self).__init__(methodName)
 
     def setUp(self):
@@ -60,6 +62,15 @@ class oeSelfTest(unittest.TestCase):
                 self.log.warning("tearDown commands have failed: %s" % ', '.join(map(str, failed_extra_commands)))
                 self.log.debug("Trying to move on.")
             self._extra_tear_down_commands = []
+
+        if self._track_for_cleanup:
+            for path in self._track_for_cleanup:
+                if os.path.isdir(path):
+                    shutil.rmtree(path)
+                if os.path.isfile(path):
+                    os.remove(path)
+            self._track_for_cleanup = []
+
         self.tearDownLocal()
 
     def tearDownLocal(self):
@@ -69,6 +80,10 @@ class oeSelfTest(unittest.TestCase):
     def add_command_to_tearDown(self, command):
         self.log.debug("Adding command '%s' to tearDown for this test." % command)
         self._extra_tear_down_commands.append(command)
+    # add test specific files or directories to be removed in the tearDown method
+    def track_for_cleanup(self, path):
+        self.log.debug("Adding path '%s' to be cleaned up when test is over" % path)
+        self._track_for_cleanup.append(path)
 
     # write to <builddir>/conf/selftest.inc
     def write_config(self, data):
