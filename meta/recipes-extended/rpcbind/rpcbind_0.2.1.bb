@@ -12,8 +12,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b46486e4c4a416602693a711bb5bfa39 \
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/rpcbind/rpcbind-${PV}.tar.bz2 \
            file://init.d \
-           file://fix_host_path.patch \
-           file://obsolete_automake_macros.patch \
            ${UCLIBCPATCHES} \
            file://rpcbind.conf \
            file://rpcbind.service \
@@ -24,10 +22,8 @@ UCLIBCPATCHES_libc-uclibc = "file://0001-uclibc-nss.patch \
                             "
 UCLIBCPATCHES ?= ""
 
-SRC_URI[md5sum] = "1a77ddb1aaea8099ab19c351eeb26316"
-SRC_URI[sha256sum] = "c92f263e0353887f16379d7708ef1fb4c7eedcf20448bc1e4838f59497a00de3"
-
-PR = "r4"
+SRC_URI[md5sum] = "0a5f9c2142af814c55d957aaab3bcc68"
+SRC_URI[sha256sum] = "da169ff877a5a07581fad50a9a808ac6e96f0c277a3df49a7ef005778428496e"
 
 inherit autotools update-rc.d systemd
 
