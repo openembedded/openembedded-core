@@ -78,11 +78,21 @@
 # TCMODE controls the characteristics of the generated packages/images by
 # telling poky which toolchain 'profile' to use.
 #
-# The default is "default"
-# Use "external-MODE" to use the precompiled external toolchains where MODE
-# is the type of external toolchain to use e.g. eabi. You need to ensure 
-# the toolchain you want to use is included in an appropriate layer
-# TCMODE ?= "external-eabi"
+# The default is "default" which uses the internal toolchain. With
+# additional layers, it is possible to set this to use a precompiled
+# external toolchain. One example is the Sourcery G++ Toolchain, support
+# for which is now in the separate meta-sourcery layer:
+#
+#  http://github.com/MentorEmbedded/meta-sourcery/
+#
+# meta-sourcery can be used as a template for adding support for other
+# external toolchains. See the link above for further details.
+#
+# TCMODE points the system to a file in conf/distro/include/tcmode-${TCMODE}.inc,
+# so for meta-sourcery which has conf/distro/include/tcmode-external-sourcery.inc
+# you would set it as follows:
+#
+# TCMODE ?= "external-sourcery"
 
 # mklibs library size optimization is more useful to smaller images,
 # and less useful for bigger images. Also mklibs library optimization
