@@ -34,14 +34,18 @@ class SystemdTests(oeRuntimeTest):
     def test_systemd_stop(self):
         self.target.run('systemctl stop systemd-hostnamed.service')
         (status, output) = self.target.run('systemctl show systemd-hostnamed.service | grep "ActiveState" | grep "=inactive"')
-        self.assertEqual(status, 0, msg="systemd-hostnamed.service service could not be stopped.Status and output: %s and %s" % (status, output))
+        if status != 0:
+            (status, output) = self.target.run('systemctl status -l systemd-hostnamed.service')
+            self.fail(msg="systemd-hostnamed.service service could not be stopped. Status:\n" + output)
 
     @skipUnlessPassed('test_systemd_stop')
     @skipUnlessPassed('test_systemd_version')
     def test_systemd_start(self):
         self.target.run('systemctl start systemd-hostnamed.service')
-        (status, output) = self.target.run('systemctl show systemd-hostnamed.service | grep "ActiveState" | grep "=active"')
-        self.assertEqual(status, 0, msg="systemd-hostnamed.service service could not be started. Status and output: %s and %s" % (status, output))
+        (status, output) = self.target.run('systemctl is-active systemd-hostnamed.service')
+        if status != 0:
+            (status, output) = self.target.run('systemctl status -l systemd-hostnamed.service')
+            self.fail(msg="systemd-hostnamed.service service could not be started. Status:\n" + output)
 
     @skipUnlessPassed('test_systemd_version')
     def test_systemd_enable(self):
