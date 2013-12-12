@@ -9,7 +9,7 @@ PR = "r3"
 inherit update-rc.d
 
 INITSCRIPT_NAME = "networking"
-INITSCRIPT_PARAMS = "start 10 2 3 4 5 . stop 80 0 6 1 ."
+INITSCRIPT_PARAMS = "start 01 2 3 4 5 . stop 80 0 6 1 ."
 
 SRC_URI = "file://copyright \
            file://init \
