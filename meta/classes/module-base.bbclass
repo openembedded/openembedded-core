@@ -1,5 +1,3 @@
-inherit module_strip
-
 inherit kernel-arch
 
 export OS = "${TARGET_OS}"
