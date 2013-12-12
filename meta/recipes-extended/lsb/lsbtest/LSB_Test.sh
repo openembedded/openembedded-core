@@ -485,6 +485,11 @@ localedef -i it_IT -f ISO-8859-1 it_IT
 localedef -i ja_JP -f EUC-JP ja_JP.eucjp
 localedef -i se_NO -f UTF-8 se_NO.UTF-8
 localedef -i ta_IN -f UTF-8 ta_IN
+localedef -i es_ES -f ISO-8859-1 es_ES
+localedef -i fr_FR@euro -f ISO-8859-1 fr_FR@euro
+localedef -i is_IS -f UTF-8 is_IS.UTF-8
+localedef -i zh_TW -f BIG5 zh_TW.BIG5
+localedef -i en_US -f ISO-8859-15 en_US.ISO-8859-15
 
 echo ""
 echo "Installation done!"
