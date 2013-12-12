@@ -29,7 +29,7 @@ EOF
 fi
 
 ARCH=`uname -m`
-if [ ${ARCH} != "i686" ] && [ ${ARCH} != "x86_64" ] && [ ${ARCH} != "ppc" ]
+if [ ${ARCH} != "i686" ] && [ ${ARCH} != "x86_64" ] && [ ${ARCH} != "ppc" ] && [ ${ARCH} != "ppc64" ]
 then
 	echo "Error: Unsupported architecture"
 	exit 1
