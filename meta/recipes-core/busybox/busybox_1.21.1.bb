@@ -34,6 +34,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://login-utilities.cfg \
            file://busybox-list-suid-and-non-suid-app-configs.patch \
            file://busybox-sed-fix-sed-clusternewline-testcase.patch \
+           file://find-get-rid-of-nested-functions.patch \
 "
 
 SRC_URI[tarball.md5sum] = "795394f83903b5eec6567d51eebb417e"
