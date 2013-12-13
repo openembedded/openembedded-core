@@ -16,7 +16,7 @@ EXTRA_OECONF = "--with-perl=${STAGING_BINDIR_NATIVE}/perl-native/perl \
 
 inherit autotools perlnative
 
-EXTRA_OEMAKE = "NO_PYTHON=1"
+EXTRA_OEMAKE = "NO_PYTHON=1 RUNTIME_PREFIX=1"
 
 do_compile_prepend () {
 	# Remove perl/perl.mak to fix the out-of-date perl.mak error
@@ -33,18 +33,6 @@ do_install () {
 	# installed to /usr/lib on both 32/64 bits targets.
 	rm -rf ${D}${exec_prefix}/lib/perl-native
 	rmdir ${D}${exec_prefix}/lib || true
-}
-
-do_install_append_class-native() {
-	create_wrapper ${D}/${bindir}/git \
-		GIT_EXEC_PATH=${libexecdir}/git-core \
-		GIT_TEMPLATE_DIR=${STAGING_DATADIR_NATIVE}/git-core/templates
-}
-
-do_install_append_class-nativesdk() {
-	create_wrapper ${D}/${bindir}/git \
-		GIT_EXEC_PATH=${libexecdir}/git-core \
-		GIT_TEMPLATE_DIR=${STAGING_DATADIR_NATIVE}/git-core/templates
 }
 
 FILES_${PN} += "${datadir}/git-core ${libxecdir}/git-core/"
