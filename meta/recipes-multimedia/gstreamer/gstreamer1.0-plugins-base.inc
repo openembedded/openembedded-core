@@ -7,6 +7,7 @@ DEPENDS += "freetype liboil util-linux"
 
 inherit gettext
 
+PACKAGES_DYNAMIC =+ "^libgst.*"
 
 PACKAGECONFIG ??= " \
     ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
