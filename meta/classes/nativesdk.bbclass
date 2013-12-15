@@ -4,8 +4,9 @@ EXCLUDE_FROM_WORLD = "1"
 
 STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${SDK_VENDOR}-${SDK_OS}"
 
-# we dont want libc-uclibc or libc-glibc to kick in for nativesdk recipes
-LIBCOVERRIDE = ""
+# libc for the SDK can be different to that of the target
+NATIVESDKLIBC ?= "libc-glibc"
+LIBCOVERRIDE = ":${NATIVESDKLIBC}"
 CLASSOVERRIDE = "class-nativesdk"
 
 #
