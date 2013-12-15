@@ -93,6 +93,7 @@ PACKAGECONFIG[uuid] = "--enable-uuid,--disable-uuid,util-linux,"
 PACKAGECONFIG[curses] = "--enable-curses,--disable-curses,ncurses,"
 PACKAGECONFIG[gtk+] = "--enable-gtk,--disable-gtk,gtk+ libvte,"
 PACKAGECONFIG[libcap-ng] = "--enable-cap-ng,--disable-cap-ng,libcap-ng,"
+PACKAGECONFIG[sdl] = "--enable-sdl,--disable-sdl,libsdl,"
 
 # Qemu target will not build in world build for ARM or Mips
 BROKEN_qemuarm = "1"
