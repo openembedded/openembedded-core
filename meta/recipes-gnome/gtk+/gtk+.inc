@@ -14,9 +14,13 @@ X11DEPENDS = "virtual/libx11 libxext libxcursor libxrandr libxdamage libxrender 
 DEPENDS = "glib-2.0 pango atk jpeg libpng gdk-pixbuf-native docbook-utils-native \
  cairo gdk-pixbuf"
 
-PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
+PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
+           ${@base_contains('DISTRO_FEATURES', 'directfb', 'directfb', '', d)} \
+"
 
 PACKAGECONFIG[x11] = "--with-x=yes --with-gdktarget=x11,--with-x=no,${X11DEPENDS}"
+# without --with-gdktarget=directfb it will check for cairo-xlib which isn't available without X11 DISTRO_FEATURE
+PACKAGECONFIG[directfb] = "--with-gdktarget=directfb,,directfb"
 
 inherit autotools gtk-doc pkgconfig update-alternatives gtk-immodules-cache
 
