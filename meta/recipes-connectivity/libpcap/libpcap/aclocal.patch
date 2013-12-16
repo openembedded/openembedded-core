@@ -9,16 +9,16 @@ diff -ruN libpcap-1.1.1-orig/aclocal.m4 libpcap-1.1.1/aclocal.m4
  dnl
 -AC_DEFUN(AC_LBL_C_INIT_BEFORE_CC,
 +AC_DEFUN([AC_LBL_C_INIT_BEFORE_CC],
-     [AC_PREREQ(2.50)
+ [
      AC_BEFORE([$0], [AC_LBL_C_INIT])
      AC_BEFORE([$0], [AC_PROG_CC])
 @@ -90,7 +90,7 @@
- dnl	ac_cv_lbl_gcc_vers
- dnl	LBL_CFLAGS
+ dnl     LDFLAGS
+ dnl     LBL_CFLAGS
  dnl
 -AC_DEFUN(AC_LBL_C_INIT,
 +AC_DEFUN([AC_LBL_C_INIT],
-     [AC_PREREQ(2.50)
+ [
      AC_BEFORE([$0], [AC_LBL_FIXINCLUDES])
      AC_BEFORE([$0], [AC_LBL_DEVEL])
 @@ -217,7 +217,7 @@
