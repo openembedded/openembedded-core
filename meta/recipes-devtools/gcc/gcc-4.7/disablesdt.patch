@@ -6,12 +6,15 @@ but before libgcc is compiled for example.
 RP 2012/8/7
 
 Upstream-Status: Inappropriate [hack]
+---
+ gcc/configure    | 12 ++++++------
+ gcc/configure.ac | 18 +++++++++---------
+ 2 files changed, 15 insertions(+), 15 deletions(-)
 
-Index: git/gcc/configure
-===================================================================
---- git.orig/gcc/configure	2012-08-07 21:18:42.319247701 +0000
-+++ git/gcc/configure	2012-08-07 21:19:08.939247082 +0000
-@@ -26758,12 +26758,12 @@
+diff --git a/gcc/configure b/gcc/configure
+--- a/gcc/configure
++++ b/gcc/configure
+@@ -26817,12 +26817,12 @@ fi
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking sys/sdt.h in the target C library" >&5
  $as_echo_n "checking sys/sdt.h in the target C library... " >&6; }
  have_sys_sdt_h=no
@@ -30,3 +33,34 @@ Index: git/gcc/configure
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_sys_sdt_h" >&5
  $as_echo "$have_sys_sdt_h" >&6; }
  
+diff --git a/gcc/configure.ac b/gcc/configure.ac
+--- a/gcc/configure.ac
++++ b/gcc/configure.ac
+@@ -4688,15 +4688,15 @@ if test x$gcc_cv_libc_provides_ssp = xyes; then
+ fi
+ 
+ # Test for <sys/sdt.h> on the target.
+-GCC_TARGET_TEMPLATE([HAVE_SYS_SDT_H])
+-AC_MSG_CHECKING(sys/sdt.h in the target C library)
+-have_sys_sdt_h=no
+-if test -f $target_header_dir/sys/sdt.h; then
+-  have_sys_sdt_h=yes
+-  AC_DEFINE(HAVE_SYS_SDT_H, 1,
+-            [Define if your target C library provides sys/sdt.h])
+-fi
+-AC_MSG_RESULT($have_sys_sdt_h)
++#GCC_TARGET_TEMPLATE([HAVE_SYS_SDT_H])
++#AC_MSG_CHECKING(sys/sdt.h in the target C library)
++#have_sys_sdt_h=no
++#if test -f $target_header_dir/sys/sdt.h; then
++#  have_sys_sdt_h=yes
++#  AC_DEFINE(HAVE_SYS_SDT_H, 1,
++#            [Define if your target C library provides sys/sdt.h])
++#fi
++#AC_MSG_RESULT($have_sys_sdt_h)
+ 
+ # Check if TFmode long double should be used by default or not.
+ # Some glibc targets used DFmode long double, but with glibc 2.4
+-- 
+1.8.3.1
+
