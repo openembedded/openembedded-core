@@ -4,6 +4,7 @@ import logging
 import re
 
 from oeqa.selftest.base import oeSelfTest
+from oeqa.selftest.buildhistory import BuildhistoryBase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
 import oeqa.utils.ftools as ftools
 
@@ -85,3 +86,22 @@ class SanityOptionsTest(oeSelfTest):
         res = bitbake("gzip nfs-utils")
         self.assertTrue("WARNING: QA Issue: gzip" in res.output)
         self.assertTrue("WARNING: QA Issue: nfs-utils" in res.output)
+
+class BuildhistoryTests(BuildhistoryBase):
+
+    def test_buildhistory_basic(self):
+        self.run_buildhistory_operation('xcursor-transparent-theme')
+        self.assertTrue(os.path.isdir(get_bb_var('BUILDHISTORY_DIR')))
+
+    def test_buildhistory_buildtime_pr_backwards(self):
+        self.add_command_to_tearDown('cleanup-workdir')
+        target = 'xcursor-transparent-theme'
+        error = "ERROR: QA Issue: Package version for package %s went backwards which would break package feeds from (.*-r1 to .*-r0)" % target
+        self.run_buildhistory_operation(target, target_config="PR = \"r1\"", change_bh_location=True)
+        self.run_buildhistory_operation(target, target_config="PR = \"r0\"", change_bh_location=False, expect_error=True, error_regex=error)
+
+
+
+
+
+
