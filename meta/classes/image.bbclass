@@ -531,7 +531,7 @@ rootfs_uninstall_unneeded () {
 			# All packages were successfully configured.
 			# update-rc.d, base-passwd, run-postinsts are no further use, remove them now
 			remove_run_postinsts=false
-			if [ -e ${IMAGE_ROOTFS}${sysconfdir}/init.d/run-postinsts ]; then
+			if [ -e ${IMAGE_ROOTFS}${sbindir}/run-postinsts ]; then
 				remove_run_postinsts=true
 			fi
 
@@ -555,7 +555,7 @@ rootfs_uninstall_unneeded () {
 			# Some packages were not successfully configured, save them only
 			# if we have run-postinsts script present. Otherwise, they're
 			# useless
-			if [ -e ${IMAGE_ROOTFS}${sysconfdir}/init.d/run-postinsts ]; then
+			if [ -e ${IMAGE_ROOTFS}${sbindir}/run-postinsts ]; then
 				save_postinsts
 			fi
 		fi
