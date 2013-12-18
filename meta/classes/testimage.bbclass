@@ -122,7 +122,8 @@ def testimage_main(d):
     try:
         loadTests(tc)
     except Exception as e:
-        bb.fatal("Loading tests failed:\n %s" % e)
+        import traceback
+        bb.fatal("Loading tests failed:\n%s" % traceback.format_exc())
 
     target.deploy()
 
