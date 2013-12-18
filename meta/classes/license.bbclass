@@ -351,7 +351,6 @@ def check_license_flags(d):
     return None
 
 SSTATETASKS += "do_populate_lic"
-do_populate_lic[sstate-name] = "populate-lic"
 do_populate_lic[sstate-inputdirs] = "${LICSSTATEDIR}"
 do_populate_lic[sstate-outputdirs] = "${LICENSE_DIRECTORY}/"
 

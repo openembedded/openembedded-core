@@ -412,7 +412,6 @@ python do_package_deb () {
 }
 
 SSTATETASKS += "do_package_write_deb"
-do_package_write_deb[sstate-name] = "deploy-deb"
 do_package_write_deb[sstate-inputdirs] = "${PKGWRITEDIRDEB}"
 do_package_write_deb[sstate-outputdirs] = "${DEPLOY_DIR_DEB}"
 

@@ -415,7 +415,6 @@ python do_package_ipk () {
 }
 
 SSTATETASKS += "do_package_write_ipk"
-do_package_write_ipk[sstate-name] = "deploy-ipk"
 do_package_write_ipk[sstate-inputdirs] = "${PKGWRITEDIRIPK}"
 do_package_write_ipk[sstate-outputdirs] = "${DEPLOY_DIR_IPK}"
 

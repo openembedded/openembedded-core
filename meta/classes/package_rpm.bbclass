@@ -1172,7 +1172,6 @@ python () {
 }
 
 SSTATETASKS += "do_package_write_rpm"
-do_package_write_rpm[sstate-name] = "deploy-rpm"
 do_package_write_rpm[sstate-inputdirs] = "${PKGWRITEDIRRPM}"
 do_package_write_rpm[sstate-outputdirs] = "${DEPLOY_DIR_RPM}"
 # Take a shared lock, we can write multiple packages at the same time...

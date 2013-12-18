@@ -45,7 +45,6 @@ ARCHIVE_SSTATE_SCRIPTS_LOGS_INDIR = "${WORKDIR}/script-logs/"
 ARCHIVE_SSTATE_DIFFGZ_ENVDATA_INDIR = "${WORKDIR}/diffgz-envdata/"
 
 SSTATETASKS += "do_archive_scripts_logs"
-do_archive_scripts_logs[sstate-name] = "archive_scripts_logs"
 do_archive_scripts_logs[sstate-inputdirs] = "${ARCHIVE_SSTATE_SCRIPTS_LOGS_INDIR}"
 do_archive_scripts_logs[sstate-outputdirs] = "${ARCHIVE_SSTATE_OUTDIR}"
 
@@ -56,7 +55,6 @@ python do_archive_scripts_logs_setscene () {
 addtask do_archive_scripts_logs_setscene
 
 SSTATETASKS += "do_dumpdata_create_diff_gz"
-do_dumpdata_create_diff_gz[sstate-name] = "dumpdata_create_diff_gz"
 do_dumpdata_create_diff_gz[sstate-inputdirs] = "${ARCHIVE_SSTATE_DIFFGZ_ENVDATA_INDIR}"
 do_dumpdata_create_diff_gz[sstate-outputdirs] = "${ARCHIVE_SSTATE_OUTDIR}"
 

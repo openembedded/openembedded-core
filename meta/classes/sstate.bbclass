@@ -69,12 +69,9 @@ python () {
 
     unique_tasks = set((d.getVar('SSTATETASKS', True) or "").split())
     d.setVar('SSTATETASKS', " ".join(unique_tasks))
-    namemap = []
     for task in unique_tasks:
-        namemap.append(d.getVarFlag(task, 'sstate-name'))
         d.prependVarFlag(task, 'prefuncs', "sstate_task_prefunc ")
         d.appendVarFlag(task, 'postfuncs', " sstate_task_postfunc")
-    d.setVar('SSTATETASKNAMES', " ".join(namemap))
 }
 
 def sstate_init(name, task, d):
@@ -94,7 +91,9 @@ def sstate_state_fromvars(d, task = None):
             bb.fatal("sstate code running without task context?!")
         task = task.replace("_setscene", "")
 
-    name = d.getVarFlag("do_" + task, 'sstate-name', True)
+    name = task
+    if task.startswith("do_"):
+        name = task[3:]
     inputs = (d.getVarFlag("do_" + task, 'sstate-inputdirs', True) or "").split()
     outputs = (d.getVarFlag("do_" + task, 'sstate-outputdirs', True) or "").split()
     plaindirs = (d.getVarFlag("do_" + task, 'sstate-plaindirs', True) or "").split()
@@ -297,7 +296,7 @@ def sstate_clean_cachefile(ss, d):
 
 def sstate_clean_cachefiles(d):
     for task in (d.getVar('SSTATETASKS', True) or "").split():
-        ss = sstate_state_fromvars(d, task[3:])
+        ss = sstate_state_fromvars(d, task)
         sstate_clean_cachefile(ss, d)
 
 def sstate_clean_manifest(manifest, d):
@@ -365,11 +364,9 @@ python sstate_cleanall() {
     if not os.path.exists(manifest_dir):
         return
 
-    namemap = d.getVar('SSTATETASKNAMES', True).split()
     tasks = d.getVar('SSTATETASKS', True).split()
-    for name in namemap:
-        taskname = tasks[namemap.index(name)]
-        shared_state = sstate_state_fromvars(d, taskname[3:])
+    for name in tasks:
+        shared_state = sstate_state_fromvars(d, name)
         sstate_clean(shared_state, d)
 }
 
@@ -592,20 +589,11 @@ sstate_unpack_package () {
 	tar -xmvzf ${SSTATE_PKG}
 }
 
-# Need to inject information about classes not in the global configuration scope
-EXTRASSTATEMAPS += "do_deploy:deploy"
-
 BB_HASHCHECK_FUNCTION = "sstate_checkhashes"
 
 def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
 
     ret = []
-    mapping = {}
-    for t in d.getVar("SSTATETASKS", True).split():
-        mapping[t] = d.getVarFlag(t, "sstate-name", True)
-    for extra in d.getVar("EXTRASSTATEMAPS", True).split():
-        e = extra.split(":")
-        mapping[e[0]] = e[1]
 
     def getpathcomponents(task, d):
         # Magic data from BB_HASHFILENAME
@@ -614,8 +602,6 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
         extrapath = splithashfn[0]
 
         tname = sq_task[task][3:]
-        if sq_task[task] in mapping:
-            tname = mapping[sq_task[task]]
 
         if tname in ["fetch", "unpack", "patch"] and splithashfn[2]:
             spec = splithashfn[2]
