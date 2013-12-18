@@ -10,6 +10,7 @@ def generate_sstatefn(spec, hash, d):
 
 SSTATE_PKGARCH    = "${PACKAGE_ARCH}"
 SSTATE_PKGSPEC    = "sstate-${PN}-${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}-${PV}-${PR}-${SSTATE_PKGARCH}-${SSTATE_VERSION}-"
+SSTATE_SWSPEC     = ""
 SSTATE_PKGNAME    = "${SSTATE_EXTRAPATH}${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC', True), d.getVar('BB_TASKHASH', True), d)}"
 SSTATE_PKG        = "${SSTATE_DIR}/${SSTATE_PKGNAME}"
 SSTATE_EXTRAPATH   = ""
@@ -26,7 +27,7 @@ SSTATE_DUPWHITELIST += "${STAGING_ETCDIR_NATIVE}/sgml ${STAGING_DATADIR_NATIVE}/
 SSTATE_SCAN_FILES ?= "*.la *-config *_config"
 SSTATE_SCAN_CMD ?= 'find ${SSTATE_BUILDDIR} \( -name "${@"\" -o -name \"".join(d.getVar("SSTATE_SCAN_FILES", True).split())}" \) -type f'
 
-BB_HASHFILENAME = "${SSTATE_EXTRAPATH} ${SSTATE_PKGSPEC}"
+BB_HASHFILENAME = "${SSTATE_EXTRAPATH} ${SSTATE_PKGSPEC} ${SSTATE_SWSPEC}"
 
 SSTATE_MANMACH ?= "${SSTATE_PKGARCH}"
 
@@ -606,11 +607,28 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
         e = extra.split(":")
         mapping[e[0]] = e[1]
 
-    for task in range(len(sq_fn)):
-        spec = sq_hashfn[task].split(" ")[1]
-        extrapath = sq_hashfn[task].split(" ")[0]
+    def getpathcomponents(task, d):
+        # Magic data from BB_HASHFILENAME
+        splithashfn = sq_hashfn[task].split(" ")
+        spec = splithashfn[1]
+        extrapath = splithashfn[0]
 
-        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + mapping[sq_task[task]] + ".tgz")
+        tname = sq_task[task][3:]
+        if sq_task[task] in mapping:
+            tname = mapping[sq_task[task]]
+
+        if tname in ["fetch", "unpack", "patch"] and splithashfn[2]:
+            spec = splithashfn[2]
+            extrapath = ""
+
+        return spec, extrapath, tname
+
+
+    for task in range(len(sq_fn)):
+
+        spec, extrapath, tname = getpathcomponents(task, d)
+
+        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + ".tgz.siginfo")
         if os.path.exists(sstatefile):
             bb.debug(2, "SState: Found valid sstate file %s" % sstatefile)
             ret.append(task)
@@ -639,9 +657,9 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
             if task in ret:
                 continue
 
-            spec = sq_hashfn[task].split(" ")[1]
-            extrapath = sq_hashfn[task].split(" ")[0]
-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + mapping[sq_task[task]] + ".tgz")
+            spec, extrapath, tname = getpathcomponents(task, d)
+
+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + ".tgz.siginfo")
 
             srcuri = "file://" + sstatefile
             localdata.setVar('SRC_URI', srcuri)
@@ -743,6 +761,12 @@ python sstate_eventhandler() {
     spkg = d.getVar('SSTATE_PKG', True)
     if not spkg.endswith(".tgz"):
         taskname = d.getVar("BB_RUNTASK", True)[3:]
-        bb.siggen.dump_this_task(d.getVar('SSTATE_PKG', True) + '_' + taskname + ".tgz" ".siginfo", d)
+        spec = d.getVar('SSTATE_PKGSPEC', True)
+        swspec = d.getVar('SSTATE_SWSPEC', True)
+        if taskname in ["fetch", "unpack", "patch"] and swspec:
+            d.setVar("SSTATE_PKGSPEC", "${SSTATE_SWSPEC}")
+            d.setVar("SSTATE_EXTRAPATH", "")
+        sstatepkg = d.getVar('SSTATE_PKG', True)
+        bb.siggen.dump_this_task(sstatepkg + '_' + taskname + ".tgz" ".siginfo", d)
 }
 
