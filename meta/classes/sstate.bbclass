@@ -735,3 +735,14 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
         return False
     return True
 
+addhandler sstate_eventhandler
+sstate_eventhandler[eventmask] = "bb.build.TaskSucceeded"
+python sstate_eventhandler() {
+    d = e.data
+    # When we write an sstate package we rewrite the SSTATE_PKG
+    spkg = d.getVar('SSTATE_PKG', True)
+    if not spkg.endswith(".tgz"):
+        taskname = d.getVar("BB_RUNTASK", True)[3:]
+        bb.siggen.dump_this_task(d.getVar('SSTATE_PKG', True) + '_' + taskname + ".tgz" ".siginfo", d)
+}
+
