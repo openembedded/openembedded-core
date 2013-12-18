@@ -26,21 +26,6 @@
 
 SRCTREECOVEREDTASKS ?= "do_patch do_unpack do_fetch"
 
-def remove_tasks(tasks, deltasks, d):
-    for task in tasks:
-        deps = d.getVarFlag(task, "deps")
-        for preptask in deltasks:
-            if preptask in deps:
-                deps.remove(preptask)
-        d.setVarFlag(task, "deps", deps)
-    # Poking around bitbake internal variables is evil but there appears to be no better way :(
-    tasklist = d.getVar('__BBTASKS') or []
-    for task in deltasks:
-        d.delVarFlag(task, "task")
-        if task in tasklist:
-            tasklist.remove(task)
-    d.setVar('__BBTASKS', tasklist)
-
 python () {
     externalsrc = d.getVar('EXTERNALSRC', True)
     if externalsrc:
@@ -53,16 +38,16 @@ python () {
         d.setVar('SRC_URI', '')
 
         tasks = filter(lambda k: d.getVarFlag(k, "task"), d.keys())
-        covered = d.getVar("SRCTREECOVEREDTASKS", True).split()
 
         for task in tasks:
             if task.endswith("_setscene"):
                 # sstate is never going to work for external source trees, disable it
-                covered.append(task)
+                bb.build.deltask(task, d)
             else:
                 # Since configure will likely touch ${S}, ensure only we lock so one task has access at a time
                 d.appendVarFlag(task, "lockfiles", "${S}/singletask.lock")
 
-        remove_tasks(tasks, covered, d)
+        for task in covered:
+            bb.build.deltask(task, d)
 }
 
