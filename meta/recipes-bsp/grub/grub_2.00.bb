@@ -11,8 +11,8 @@ SECTION = "bootloaders"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-DEPENDS = "autogen-native flex-native bison-native"
-RDEPENDS_${PN} = "diffutils freetype xz"
+DEPENDS = "autogen-native flex-native bison-native xz"
+RDEPENDS_${PN} = "diffutils freetype"
 PR = "r1"
 
 SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
