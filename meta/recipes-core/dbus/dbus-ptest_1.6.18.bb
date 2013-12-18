@@ -18,8 +18,8 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://python-config.patch \
            "
 
-SRC_URI[md5sum] = "de4970c20629aeb958a12132415b3630"
-SRC_URI[sha256sum] = "1f3d6f4a53a7121328f6cd685fc14440d72e6c0006ecb3312cc779c495915e86"
+SRC_URI[md5sum] = "b02e9c95027a416987b81f9893831061"
+SRC_URI[sha256sum] = "7085a0895a9eb11a952394cdbea6d8b4358e17cb991fed0e8fb85e2b9e686dcd"
 
 S="${WORKDIR}/dbus-${PV}"
 FILESPATH = "${FILE_DIRNAME}/dbus"
