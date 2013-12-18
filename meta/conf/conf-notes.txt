@@ -2,7 +2,6 @@ Common targets are:
     core-image-minimal
     core-image-sato
     meta-toolchain
-    meta-toolchain-sdk
     adt-installer
     meta-ide-support
 
