@@ -38,12 +38,18 @@ fi
 }
 
 systemd_prerm() {
+OPTS=""
+
+if [ -n "$D" ]; then
+    OPTS="--root=$D"
+fi
+
 if type systemctl >/dev/null 2>/dev/null; then
 	if [ -z "$D" ]; then
 		systemctl stop ${SYSTEMD_SERVICE}
 	fi
 
-	systemctl disable ${SYSTEMD_SERVICE}
+	systemctl $OPTS disable ${SYSTEMD_SERVICE}
 fi
 }
 
