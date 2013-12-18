@@ -97,9 +97,6 @@ do_install() {
 	ln -s ${rootlibexecdir}/systemd/systemd ${D}/init
 	ln -s ${rootlibexecdir}/systemd/systemd-udevd ${D}/${base_sbindir}/udevd
 
-	# Create dir for journal
-	install -d ${D}${localstatedir}/log/journal
-
 	# Create machine-id
 	# 20:12 < mezcalero> koen: you have three options: a) run systemd-machine-id-setup at install time, b) have / read-only and an empty file there (for stateless) and c) boot with / writable
 	touch ${D}${sysconfdir}/machine-id
@@ -113,6 +110,9 @@ do_install() {
 		install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/systemd-udevd
 		sed -i s%@UDEVD@%${rootlibexecdir}/systemd/systemd-udevd% ${D}${sysconfdir}/init.d/systemd-udevd
 	fi
+
+        # Delete journal README, as log can be symlinked inside volatile.
+        rm -f ${D}/${localstatedir}/log/README
 }
 
 do_install_ptest () {
