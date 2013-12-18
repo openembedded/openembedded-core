@@ -19,10 +19,6 @@ do_install() {
 	install -m 0644 ${WORKDIR}/run-postinsts.service ${D}${systemd_unitdir}/system
 	ln -sf ../run-postinsts.service ${D}${systemd_unitdir}/system/basic.target.wants/
 	ln -sf ../run-postinsts.service ${D}${systemd_unitdir}/system/sysinit.target.wants/
-
-	install -m 0644 ${WORKDIR}/machineid.service ${D}${systemd_unitdir}/system
-	ln -sf ../machineid.service ${D}${systemd_unitdir}/system/sysinit.target.wants/
-	ln -sf ../machineid.service ${D}${systemd_unitdir}/system/basic.target.wants/
 }
 
 SYSTEMD_DISABLED_SYSV_SERVICES = " \
