@@ -1,7 +1,7 @@
 SUMMARY = "Text-based modem control and terminal emulation program"
 DESCRIPTION = "Minicom is a text-based modem control and terminal emulation program for Unix-like operating systems"
 SECTION = "console/network"
-DEPENDS = "ncurses"
+DEPENDS = "ncurses virtual/libiconv"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=420477abc567404debca0a2a1cb6b645 \
                     file://src/minicom.h;beginline=1;endline=12;md5=a58838cb709f0db517f4e42730c49e81"
