@@ -61,7 +61,7 @@ def both_contain(variable1, variable2, checkvalue, d):
         return ""
 
 def prune_suffix(var, suffixes, d):
-    # See if var ends with any of the suffixes listed and 
+    # See if var ends with any of the suffixes listed and
     # remove it if found
     for suffix in suffixes:
         if var.endswith(suffix):
@@ -154,3 +154,13 @@ def trim_version(version, num_parts=2):
 def cpu_count():
     import multiprocessing
     return multiprocessing.cpu_count()
+
+def execute_pre_post_process(d, cmds):
+    if cmds is None:
+        return
+
+    for cmd in cmds.strip().split(';'):
+        cmd = cmd.strip()
+        if cmd != '':
+            bb.note("Executing %s ..." % cmd)
+            bb.build.exec_func(cmd, d)
