@@ -165,6 +165,9 @@ python toaster_collect_task_stats() {
     import bb.utils
     import os
 
+    if not e.data.getVar('BUILDSTATS_BASE', True):
+        return  # if we don't have buildstats, we cannot collect stats
+
     def _append_read_list(v):
         lock = bb.utils.lockfile(e.data.expand("${TOPDIR}/toaster.lock"), False, True)
 
