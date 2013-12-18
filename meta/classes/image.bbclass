@@ -151,32 +151,11 @@ python () {
         d.appendVarFlag('do_bundle_initramfs', 'depends', " %s:do_rootfs" % initramfs_image)
 }
 
-#
-# Get a list of files containing device tables to create.
-# * IMAGE_DEVICE_TABLE is the old name to an absolute path to a device table file
-# * IMAGE_DEVICE_TABLES is a new name for a file, or list of files, seached
-#   for in the BBPATH
-# If neither are specified then the default name of files/device_table-minimal.txt
-# is searched for in the BBPATH (same as the old version.)
-#
-def get_devtable_list(d):
-    devtable = d.getVar('IMAGE_DEVICE_TABLE', True)
-    if devtable != None:
-        return devtable
-    str = ""
-    devtables = d.getVar('IMAGE_DEVICE_TABLES', True)
-    if devtables == None:
-        devtables = 'files/device_table-minimal.txt'
-    for devtable in devtables.split():
-        str += " %s" % bb.utils.which(d.getVar('BBPATH', True), devtable)
-    return str
-
 IMAGE_CLASSES ?= "image_types"
 inherit ${IMAGE_CLASSES}
 
 IMAGE_POSTPROCESS_COMMAND ?= ""
 MACHINE_POSTPROCESS_COMMAND ?= ""
-ROOTFS_POSTPROCESS_COMMAND_prepend = "run_intercept_scriptlets; "
 # Allow dropbear/openssh to accept logins from accounts with an empty password string if debug-tweaks is enabled
 ROOTFS_POSTPROCESS_COMMAND += '${@base_contains("IMAGE_FEATURES", "debug-tweaks", "ssh_allow_empty_password; ", "",d)}'
 # Enable postinst logging if debug-tweaks is enabled
@@ -197,70 +176,13 @@ LINGUAS_INSTALL ?= "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('IM
 
 PSEUDO_PASSWD = "${IMAGE_ROOTFS}"
 
-do_rootfs[dirs] = "${TOPDIR} ${WORKDIR}/intercept_scripts"
+do_rootfs[dirs] = "${TOPDIR}"
 do_rootfs[lockfiles] += "${IMAGE_ROOTFS}.lock"
 do_rootfs[cleandirs] += "${S} ${WORKDIR}/intercept_scripts"
 
 # Must call real_do_rootfs() from inside here, rather than as a separate
 # task, so that we have a single fakeroot context for the whole process.
 do_rootfs[umask] = "022"
-
-
-run_intercept_scriptlets () {
-	if [ -d ${WORKDIR}/intercept_scripts ]; then
-		cd ${WORKDIR}/intercept_scripts
-		echo "Running intercept scripts:"
-		for script in *; do
-			[ "$script" = "*" ] && break
-			[ "$script" = "postinst_intercept" ] || [ ! -x "$script" ] && continue
-			echo "> Executing $script"
-			./$script && continue
-			echo "WARNING: intercept script \"$script\" failed, falling back to running postinstalls at first boot"
-			#
-			# If we got here, than the intercept has failed. Next, we must
-			# mark the postinstalls as "unpacked". For rpm is a little bit
-			# different, we just have to save the package postinstalls in
-			# /etc/rpm-postinsts
-			#
-			pkgs="$(cat ./$script|grep "^##PKGS"|cut -d':' -f2)" || continue
-			case ${IMAGE_PKGTYPE} in
-				"rpm")
-					[ -d ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts/ ] || mkdir ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts/
-					v_expr=$(echo ${MULTILIB_GLOBAL_VARIANTS}|tr ' ' '|')
-					for p in $pkgs; do
-						# remove any multilib prefix from the package name (RPM 
-						# does not use it like this)
-						new_p=$(echo $p | sed -r "s/^($v_expr)-//")
-
-						# extract the postinstall scriptlet from rpm package and
-						# save it in /etc/rpm-postinsts
-						echo "  * postponing $new_p"
-						rpm -q --scripts --root=${IMAGE_ROOTFS} --dbpath=/var/lib/rpm $new_p |\
-						sed -n -e '/^postinstall scriptlet (using .*):$/,/^.* scriptlet (using .*):$/ {/.*/p}' |\
-						sed -e 's/postinstall scriptlet (using \(.*\)):$/#!\1/' -e '/^.* scriptlet (using .*):$/d'\
-							> ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts/$new_p
-						chmod +x ${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts/$new_p
-					done
-					# move to the next intercept script
-					continue
-					;;
-				"ipk")
-					status_file="${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/status"
-					;;
-				"deb")
-					status_file="${IMAGE_ROOTFS}/var/lib/dpkg/status"
-					;;
-			esac
-			# the next piece of code is run only for ipk/dpkg
-			sed_expr=""
-			for p in $pkgs; do
-				echo "  * postponing $p"
-				sed_expr="$sed_expr -e \"/^Package: ${p}$/,/^Status: install.* installed$/ {s/installed/unpacked/}\""
-			done
-			eval sed -i $sed_expr $status_file
-		done
-	fi
-}
 
 # A hook function to support read-only-rootfs IMAGE_FEATURES
 # Currently, it only supports sysvinit system.
@@ -328,72 +250,19 @@ python rootfs_runtime_mapping() {
 }
 do_rootfs[prefuncs] += "rootfs_runtime_mapping"
 
-fakeroot do_rootfs () {
-	#set -x
-	# When use the rpm incremental image generation, don't remove the rootfs
-	if [ "${INC_RPM_IMAGE_GEN}" != "1" -o "${IMAGE_PKGTYPE}" != "rpm" ]; then
-		rm -rf ${IMAGE_ROOTFS}
-	elif [ -d ${T}/saved_rpmlib/var/lib/rpm ]; then
-		# Move the rpmlib back
-		if [ ! -d ${IMAGE_ROOTFS}/var/lib/rpm ]; then
-			mkdir -p ${IMAGE_ROOTFS}/var/lib/
-			mv ${T}/saved_rpmlib/var/lib/rpm ${IMAGE_ROOTFS}/var/lib/
-		fi
-	fi
-	rm -rf ${MULTILIB_TEMP_ROOTFS}
-	mkdir -p ${IMAGE_ROOTFS}
-	mkdir -p ${DEPLOY_DIR_IMAGE}
+fakeroot python do_rootfs () {
+    from oe.rootfs import create_rootfs
+    from oe.image import create_image
+    from oe.manifest import create_manifest
 
-	cp ${COREBASE}/meta/files/deploydir_readme.txt ${DEPLOY_DIR_IMAGE}/README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt || true
+    # generate the initial manifest
+    create_manifest(d)
 
-	# copy the intercept scripts
-	cp ${COREBASE}/scripts/postinst-intercepts/* ${WORKDIR}/intercept_scripts/
+    # generate rootfs
+    create_rootfs(d)
 
-	rootfs_${IMAGE_PKGTYPE}_do_rootfs
-
-	if [ "${USE_DEVFS}" != "1" ]; then
-		for devtable in ${@get_devtable_list(d)}; do
-			# Always return ture since there maybe already one when use the
-			# incremental image generation
-			makedevs -r ${IMAGE_ROOTFS} -D $devtable
-		done
-	fi
-
-	# remove unneeded packages/files from the final image
-	rootfs_uninstall_unneeded
-
-	insert_feed_uris
-
-	if [ "x${LDCONFIGDEPEND}" != "x" ]; then
-		# Run ldconfig on the image to create a valid cache 
-		# (new format for cross arch compatibility)
-		echo executing: ldconfig -r ${IMAGE_ROOTFS} -c new -v
-		ldconfig -r ${IMAGE_ROOTFS} -c new -v
-	fi
-
-	# (re)create kernel modules dependencies
-	# This part is done by kernel-module-* postinstall scripts but if image do
-	# not contains modules at all there are few moments in boot sequence with
-	# "unable to open modules.dep" message.
-	if [ -e ${STAGING_KERNEL_DIR}/kernel-abiversion ]; then
-		KERNEL_VERSION=`cat ${STAGING_KERNEL_DIR}/kernel-abiversion`
-
-		mkdir -p ${IMAGE_ROOTFS}/lib/modules/$KERNEL_VERSION
-		depmodwrapper -a -b ${IMAGE_ROOTFS} $KERNEL_VERSION
-	fi
-
-	${IMAGE_PREPROCESS_COMMAND}
-
-	${@get_imagecmds(d)}
-
-	${IMAGE_POSTPROCESS_COMMAND}
-	
-	${MACHINE_POSTPROCESS_COMMAND}
-
-	if [ -n "${IMAGE_LINK_NAME}" -a -f "${IMAGE_MANIFEST}" ]; then
-		rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.manifest
-		ln -s ${IMAGE_NAME}.rootfs.manifest ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.manifest
-	fi
+    # generate final images
+    create_image(d)
 }
 
 insert_feed_uris () {
@@ -411,23 +280,6 @@ insert_feed_uris () {
 		
 		# insert new feed-sources
 		echo "src/gz $feed_name $feed_uri" >> ${IMAGE_ROOTFS}/etc/opkg/${feed_name}-feed.conf
-	done
-}
-
-log_check() {
-	for target in $*
-	do
-		lf_path="`dirname ${BB_LOGFILE}`/log.do_$target.${PID}"
-		
-		echo "log_check: Using $lf_path as logfile"
-		
-		if test -e "$lf_path"
-		then
-			${IMAGE_PKGTYPE}_log_check $target $lf_path
-		else
-			echo "Cannot find logfile [$lf_path]"
-		fi
-		echo "Logfile is clean"
 	done
 }
 
@@ -471,98 +323,6 @@ EOF
 multilib_sanity_check() {
   multilib_generate_python_file
   echo $@ | python ${MULTILIB_CHECK_FILE}
-}
-
-get_split_linguas() {
-    for translation in ${IMAGE_LINGUAS}; do
-        translation_split=$(echo ${translation} | awk -F '-' '{print $1}')
-        echo ${translation}
-        echo ${translation_split}
-    done | sort | uniq
-}
-
-rootfs_install_complementary() {
-    # Install complementary packages based upon the list of currently installed packages
-    # e.g. locales, *-dev, *-dbg, etc. This will only attempt to install these packages,
-    # if they don't exist then no error will occur.
-    # Note: every backend needs to call this function explicitly after the normal
-    # package installation
-
-    # Get list of installed packages
-    list_installed_packages arch > ${WORKDIR}/installed_pkgs.txt
-
-    # Apply the globs to all the packages currently installed
-    if [ -n "$1" -a "$1" = "populate_sdk" ] ; then
-        GLOBS="${SDKIMAGE_INSTALL_COMPLEMENTARY}"
-    elif [ -n "$1" ]; then
-        GLOBS="$@"
-    else
-        GLOBS="${IMAGE_INSTALL_COMPLEMENTARY}"
-        # Add locales
-        SPLIT_LINGUAS=`get_split_linguas`
-        PACKAGES_TO_INSTALL=""
-        for lang in $SPLIT_LINGUAS ; do
-            GLOBS="$GLOBS *-locale-$lang"
-        done
-    fi
-
-    if [ "$GLOBS" != "" ] ; then
-        # Use the magic script to do all the work for us :)
-        : > ${WORKDIR}/complementary_pkgs.txt
-        oe-pkgdata-util glob ${PKGDATA_DIR} ${WORKDIR}/installed_pkgs.txt "$GLOBS" >> ${WORKDIR}/complementary_pkgs.txt
-
-        # Install the packages, if any
-        sed -i '/^$/d' ${WORKDIR}/complementary_pkgs.txt
-        if [ -s ${WORKDIR}/complementary_pkgs.txt ]; then
-            echo "Installing complementary packages"
-            rootfs_install_packages ${WORKDIR}/complementary_pkgs.txt
-        fi
-    fi
-
-    # Workaround for broken shell function dependencies
-    if false ; then
-        get_split_linguas
-    fi
-}
-
-rootfs_uninstall_unneeded () {
-	if ${@base_contains("IMAGE_FEATURES", "package-management", "false", "true", d)}; then
-		if [ -z "$(delayed_postinsts)" ]; then
-			# All packages were successfully configured.
-			# update-rc.d, base-passwd, run-postinsts are no further use, remove them now
-			remove_run_postinsts=false
-			if [ -e ${IMAGE_ROOTFS}${sbindir}/run-postinsts ]; then
-				remove_run_postinsts=true
-			fi
-
-			# Remove package only if it's installed
-			pkgs_to_remove="update-rc.d base-passwd update-alternatives shadow ${ROOTFS_BOOTSTRAP_INSTALL}"
-			for pkg in $pkgs_to_remove; do
-			    # regexp for pkg, to be used in grep and sed
-			    pkg_regexp="^`echo $pkg | sed 's/\./\\\./'` "
-			    if grep -q "$pkg_regexp" ${WORKDIR}/installed_pkgs.txt; then
-				rootfs_uninstall_packages $pkg
-				sed -i "/$pkg_regexp/d" ${WORKDIR}/installed_pkgs.txt
-			    fi
-			done
-
-			# Need to remove rc.d files for run-postinsts by hand since opkg won't
-			# call postrm scripts in offline root mode.
-			if $remove_run_postinsts; then
-				update-rc.d -f -r ${IMAGE_ROOTFS} run-postinsts remove
-			fi
-		else
-			# Some packages were not successfully configured, save them only
-			# if we have run-postinsts script present. Otherwise, they're
-			# useless
-			if [ -e ${IMAGE_ROOTFS}${sbindir}/run-postinsts ]; then
-				save_postinsts
-			fi
-		fi
-
-		# Since no package manager is present in the image the metadata is not needed
-		remove_packaging_data_files
-	fi
 }
 
 # This function is intended to disallow empty root password if 'debug-tweaks' is not in IMAGE_FEATURES.
