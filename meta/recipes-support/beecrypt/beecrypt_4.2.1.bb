@@ -27,7 +27,7 @@ do_install_append() {
 
 EXTRA_OECONF="--without-python --enable-shared --enable-static --disable-openmp --with-java=no"
 
-PACKAGECONFIG = ""
+PACKAGECONFIG ??= ""
 PACKAGECONFIG[cplusplus] = "--with-cplusplus,--without-cplusplus,icu"
 
 FILES_${PN} = "${sysconfdir} ${libdir}/*.so.* ${libdir}/${BPN}/*.so.*"
