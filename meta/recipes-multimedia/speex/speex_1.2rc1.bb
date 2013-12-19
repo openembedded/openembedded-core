@@ -9,7 +9,7 @@ DEPENDS = "libogg"
 
 PR = "r2"
 
-SRC_URI = "http://downloads.us.xiph.org/releases/speex/speex-1.2rc1.tar.gz"
+SRC_URI = "http://downloads.us.xiph.org/releases/speex/speex-${PV}.tar.gz"
 
 SRC_URI[md5sum] = "c4438b22c08e5811ff10e2b06ee9b9ae"
 SRC_URI[sha256sum] = "342f30dc57bd4a6dad41398365baaa690429660b10d866b7d508e8f1179cb7a6"
