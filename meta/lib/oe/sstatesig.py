@@ -128,7 +128,7 @@ def find_siginfo(pn, taskname, taskhashlist, d):
         else:
             filedates[fullpath] = os.stat(fullpath).st_mtime
 
-    if len(filedates) < 2 and not foundall:
+    if not taskhashlist or (len(filedates) < 2 and not foundall):
         # That didn't work, look in sstate-cache
         hashes = taskhashlist or ['*']
         localdata = bb.data.createCopy(d)
