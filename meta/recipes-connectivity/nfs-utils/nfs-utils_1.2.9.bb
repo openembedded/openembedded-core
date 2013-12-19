@@ -16,7 +16,8 @@ RRECOMMENDS_${PN} = "kernel-module-nfsd"
 inherit useradd
 
 USERADD_PACKAGES = "${PN}-client"
-USERADD_PARAM_${PN}-client = "-d /var/lib/nfs -r -s /bin/false rpcuser"
+USERADD_PARAM_${PN}-client = "--system  --home-dir /var/lib/nfs \
+			      --shell /bin/false --user-group rpcuser"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.bz2 \
            file://0001-configure-Allow-to-explicitly-disable-nfsidmap.patch \
@@ -41,7 +42,7 @@ INITSCRIPT_PACKAGES = "${PN} ${PN}-client"
 INITSCRIPT_NAME = "nfsserver"
 INITSCRIPT_PARAMS = "defaults"
 INITSCRIPT_NAME_${PN}-client = "nfscommon"
-INITSCRIPT_PARAMS_${PN}-client = "start 44 S ."
+INITSCRIPT_PARAMS_${PN}-client = "defaults 19 21"
 
 inherit autotools update-rc.d systemd
 
