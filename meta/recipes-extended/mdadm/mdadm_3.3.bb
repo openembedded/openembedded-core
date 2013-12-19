@@ -1,6 +1,5 @@
 DESCRIPTION = " A tool for managing Soft RAID under Linux"
 HOMEPAGE = "http://www.kernel.org/pub/linux/utils/raid/mdadm/"
-BUGTRACKER = "n/a"
 
 # Some files are GPLv2+ while others are GPLv2.
 LICENSE = "GPLv2 & GPLv2+"

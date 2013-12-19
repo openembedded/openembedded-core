@@ -1,6 +1,5 @@
 DESCRIPTION = "a line-oriented text editor"
 HOMEPAGE = "http://www.gnu.org/software/ed/"
-BUGTRACKER = ""
 
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949 \

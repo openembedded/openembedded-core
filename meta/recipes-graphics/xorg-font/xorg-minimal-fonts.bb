@@ -1,7 +1,6 @@
 SUMMARY = "Xorg minimal fonts data"
 DESCRIPTION = "Minimal fonts required by X.org."
 HOMEPAGE = "http://www.x.org"
-BUGTRACKER = "n/a"
 
 SECTION = "x11/fonts"
 
