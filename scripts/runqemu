@@ -156,6 +156,7 @@ while true; do
             # to use simplified options instead
             serial_option=`expr "$SCRIPT_QEMU_EXTRA_OPT" : '.*\(-serial\)'`
             kvm_option=`expr "$SCRIPT_QEMU_EXTRA_OPT" : '.*\(-enable-kvm\)'`
+            vga_option=`expr "$SCRIPT_QEMU_EXTRA_OPT" : '.*\(-vga\)'`
             [ ! -z "$serial_option" -o ! -z "$kvm_option" ] && \
                 echo "Please use simplified serial or kvm options instead"
             ;;

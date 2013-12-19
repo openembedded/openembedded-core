@@ -357,7 +357,11 @@ fi
 
 if [ "$MACHINE" = "qemux86" ]; then
     QEMU=qemu-system-i386
-    QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS -vga vmware"
+    if [ ! -z "$vga_option" ]; then
+        QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS"
+    else
+        QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS -vga vmware"
+    fi
     if [ "${FSTYPE:0:3}" = "ext" -o "$FSTYPE" = "btrfs" ]; then
         KERNCMDLINE="vga=0 uvesafb.mode_option=640x480-32 root=$DROOT rw mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD"
         QEMUOPTIONS="$QEMU_NETWORK_CMD $ROOTFS_OPTIONS $QEMU_UI_OPTIONS"
@@ -381,7 +385,11 @@ fi
 
 if [ "$MACHINE" = "qemux86-64" ]; then
     QEMU=qemu-system-x86_64
-    QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS -vga vmware"
+    if [ ! -z "$vga_option" ]; then
+        QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS"
+    else
+        QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS -vga vmware"
+    fi
     if [ "${FSTYPE:0:3}" = "ext" -o "$FSTYPE" = "btrfs" ]; then
         KERNCMDLINE="vga=0 uvesafb.mode_option=640x480-32 root=$DROOT rw mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD"
         QEMUOPTIONS="$QEMU_NETWORK_CMD $ROOTFS_OPTIONS $QEMU_UI_OPTIONS"
