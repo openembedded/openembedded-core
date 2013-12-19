@@ -1,4 +1,4 @@
-SUMMARY = "Library to read the extended image information (EXIF) from JPEG pictures"
+SUMMARY = "Library for reading extended image information (EXIF) from JPEG files"
 HOMEPAGE = "http://sourceforge.net/projects/libexif"
 SECTION = "libs"
 LICENSE = "LGPLv2.1"
