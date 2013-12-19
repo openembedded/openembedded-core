@@ -1,4 +1,4 @@
-DESCRIPTION = "utilities for access control list"
+SUMMARY = "Utilities for managing POSIX Access Control Lists"
 HOMEPAGE = "http://savannah.nongnu.org/projects/acl/"
 SECTION = "libs"
 

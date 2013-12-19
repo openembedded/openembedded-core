@@ -1,4 +1,4 @@
-DESCRIPTION = "A standalone native ldconfig build"
+SUMMARY = "A standalone native ldconfig build"
 
 LICENSE = "GPLv2+"
 

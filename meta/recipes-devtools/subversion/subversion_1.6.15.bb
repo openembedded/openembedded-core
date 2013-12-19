@@ -1,4 +1,4 @@
-DESCRIPTION = "The Subversion (svn) client"
+SUMMARY = "Subversion (svn) version control system client"
 SECTION = "console/network"
 DEPENDS = "apr-util neon sqlite3"
 RDEPENDS_${PN} = "neon"

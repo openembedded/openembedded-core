@@ -1,4 +1,4 @@
-DESCRIPTION = "Matchbox window manager core library"
+SUMMARY = "Matchbox window manager core library"
 SECTION = "x11/libs"
 HOMEPAGE = "http://matchbox-project.org/"
 BUGTRACKER = "http://bugzilla.yoctoproject.com/"

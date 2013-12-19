@@ -1,4 +1,4 @@
-DESCRIPTION = "A utility to create ELF boot images for ELF-based Linux kernel images"
+SUMMARY = "Utility for creating ELF boot images for ELF-based Linux kernel images"
 HOMEPAGE = "http://www.coreboot.org/Mkelfimage"
 SECTION = "devel"
 LICENSE = "GPLv2"

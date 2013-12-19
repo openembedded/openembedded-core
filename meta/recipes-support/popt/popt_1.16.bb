@@ -1,4 +1,4 @@
-DESCRIPTION = "The popt library for parsing command line options."
+SUMMARY = "Library for parsing command line options"
 HOMEPAGE = "http://rpm5.org/"
 SECTION = "libs"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "Matchbox GTK+ theme configuration application."
+SUMMARY = "Matchbox GTK+ theme configuration application"
 HOMEPAGE = "http://matchbox-project.org"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

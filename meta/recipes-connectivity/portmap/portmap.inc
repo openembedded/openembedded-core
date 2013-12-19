@@ -1,4 +1,4 @@
-DESCRIPTION = "RPC program number mapper."
+SUMMARY = "RPC program number mapper"
 HOMEPAGE = "http://neil.brown.name/portmap/"
 SECTION = "console/network"
 LICENSE = "BSD"

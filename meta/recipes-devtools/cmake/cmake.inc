@@ -1,7 +1,7 @@
 # Copyright (C) 2005, Koninklijke Philips Electronics NV.  All Rights Reserved
 # Released under the MIT license (see packages/COPYING)
 
-DESCRIPTION = "A cross-platform, open-source make system"
+SUMMARY = "Cross-platform, open-source make system"
 HOMEPAGE = "http://www.cmake.org/"
 BUGTRACKER = "http://public.kitware.com/Bug/my_view_page.php"
 SECTION = "console/utils"

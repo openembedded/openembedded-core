@@ -1,4 +1,4 @@
-DESCRIPTION = "Gstreamer package groups"
+SUMMARY = "GStreamer package groups"
 LICENSE = "MIT"
 DEPENDS = "gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \

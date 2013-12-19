@@ -1,4 +1,4 @@
-DESCRIPTION = "Common macros for building GNOME applications"
+SUMMARY = "Common macros for building GNOME applications"
 HOMEPAGE = "http://www.gnome.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 

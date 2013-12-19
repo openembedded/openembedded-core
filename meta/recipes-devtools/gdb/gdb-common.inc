@@ -1,4 +1,4 @@
-DESCRIPTION = "gdb - GNU debugger"
+SUMMARY = "GNU debugger"
 HOMEPAGE = "http://www.gnu.org/software/gdb/"
 LICENSE="GPLv3+"
 SECTION = "devel"

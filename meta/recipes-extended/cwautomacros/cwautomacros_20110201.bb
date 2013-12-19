@@ -1,4 +1,4 @@
-DESCRIPTION = "cwautomacros: a collection of autoconf m4 macros"
+SUMMARY = "Collection of autoconf m4 macros"
 SECTION = "base"
 HOMEPAGE = "http://cwautomacros.berlios.de/"
 LICENSE = "GPLv2"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Package maintenance system for Debian."
+SUMMARY = "Package maintenance system from Debian"
 LICENSE = "GPLv2.0+"
 SECTION = "base"
 

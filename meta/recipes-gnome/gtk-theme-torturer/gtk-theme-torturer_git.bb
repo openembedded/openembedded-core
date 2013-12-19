@@ -1,4 +1,4 @@
-DESCRIPTION = "Gtk+ Theme Benchmark Program"
+SUMMARY = "GTK+ Theme benchmark program"
 DEPENDS = "gtk+"
 HOMEPAGE = "http://wiki.laptop.org/go/GTK_for_OLPC"
 SECTION = "devel"

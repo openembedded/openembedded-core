@@ -1,4 +1,4 @@
-DESCRIPTION = "Library for ASN.1 and DER manipulation"
+SUMMARY = "Library for ASN.1 and DER manipulation"
 HOMEPAGE = "http://www.gnu.org/software/libtasn1/"
 
 LICENSE = "GPLv3+ & LGPLv2.1+"

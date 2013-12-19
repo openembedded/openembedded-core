@@ -1,4 +1,4 @@
-DESCRIPTION = "The git revision control system used by the Linux kernel developers"
+SUMMARY = "Distributed version control system"
 SECTION = "console/utils"
 LICENSE = "GPLv2"
 DEPENDS = "openssl curl zlib expat"

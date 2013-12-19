@@ -1,4 +1,4 @@
-DESCRIPTION = "A clock combined with a game of pong"
+SUMMARY = "A clock combined with a game of pong"
 LICENSE = "GPLv2+"
 DEPENDS = "virtual/libx11 xdmcp xau"
 

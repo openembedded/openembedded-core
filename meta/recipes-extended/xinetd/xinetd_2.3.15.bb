@@ -1,4 +1,4 @@
-DESCRIPTION = "Highly configurable, modular and secure inetd"
+SUMMARY = "Socket-based service activation daemon"
 HOMEPAGE = "http://www.xinetd.org"
 
 # xinetd is a BSD-like license

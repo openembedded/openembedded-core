@@ -1,4 +1,4 @@
-DESCRIPTION = "Pulseaudio is a sound server for Linux and Unix-like operating systems."
+SUMMARY = "Sound server for Linux and Unix-like operating systems"
 HOMEPAGE = "http://www.pulseaudio.org"
 AUTHOR = "Lennart Poettering"
 SECTION = "libs/multimedia"

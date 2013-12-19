@@ -1,4 +1,4 @@
-DESCRIPTION = "Settings-daemon provides a bridge between gconf and xsettings"
+SUMMARY = "Provides a bridge between gconf and xsettings"
 HOMEPAGE = "http://svn.o-hand.com/view/matchbox/trunk/settings-daemon/"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 LICENSE = "MIT-style"

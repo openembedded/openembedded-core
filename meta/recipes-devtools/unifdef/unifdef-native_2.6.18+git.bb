@@ -1,4 +1,4 @@
-DESCRIPTION = "Kernel header preprocessor"
+SUMMARY = "Kernel header preprocessor"
 SECTION = "devel"
 LICENSE = "BSD-2-Clause"
 

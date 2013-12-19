@@ -1,4 +1,4 @@
-DESCRIPTION = "Startup-notification contains a reference implementation of the startup notification protocol."
+SUMMARY = "Enables monitoring and display of application startup"
 HOMEPAGE = "http://www.freedesktop.org/wiki/software/startup-notification/"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=Specifications"
 

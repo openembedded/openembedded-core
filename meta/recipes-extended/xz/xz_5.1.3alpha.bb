@@ -1,4 +1,4 @@
-DESCRIPTION = "utils for managing LZMA compressed files"
+SUMMARY = "Utilities for managing LZMA compressed files"
 HOMEPAGE = "http://tukaani.org/xz/"
 SECTION = "base"
 

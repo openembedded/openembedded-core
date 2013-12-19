@@ -1,4 +1,4 @@
-DESCRIPTION = "Units to make systemd work better with existing sysvinit scripts"
+SUMMARY = "Enhances systemd compatilibity with existing SysVinit scripts"
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58"

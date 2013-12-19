@@ -1,4 +1,4 @@
-DESCRIPTION = "OPKG Package Manager Utilities"
+SUMMARY = "Additional utilities for the opkg package manager"
 SECTION = "base"
 HOMEPAGE = "http://wiki.openmoko.org/wiki/Opkg"
 LICENSE = "GPLv2+"

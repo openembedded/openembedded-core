@@ -1,4 +1,4 @@
-DESCRIPTION = "U-boot bootloader fw_printenv/setenv utils"
+SUMMARY = "U-Boot bootloader fw_printenv/setenv utilities"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1707d6db1d42237583f50183a5651ecb"
 SECTION = "bootloader"

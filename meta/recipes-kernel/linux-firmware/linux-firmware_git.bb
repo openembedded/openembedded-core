@@ -1,4 +1,4 @@
-DESCRIPTION = "Firmware files for use with Linux kernel"
+SUMMARY = "Firmware files for use with Linux kernel"
 SECTION = "kernel"
 # Notes:
 # This is kind of a mess. Each bit of firmware has their own license. Some free

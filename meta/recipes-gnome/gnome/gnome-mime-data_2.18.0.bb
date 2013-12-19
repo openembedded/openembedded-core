@@ -1,4 +1,4 @@
-DESCRIPTION = "Base MIME and Application database for GNOME"
+SUMMARY = "Base MIME and Application database for GNOME"
 HOMEPAGE = "http://www.gnome.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "Cross locale generation tool for eglibc"
+SUMMARY = "Cross locale generation tool for eglibc"
 HOMEPAGE = "http://www.eglibc.org/home"
 SECTION = "libs"
 LICENSE = "LGPL-2.1"

@@ -1,4 +1,4 @@
-DESCRIPTION = "D-Bus test package, only used for D-bus functionality test."
+SUMMARY = "D-Bus test package (for D-bus functionality testing only)"
 HOMEPAGE = "http://dbus.freedesktop.org"
 SECTION = "base"
 LICENSE = "AFL-2 | GPLv2+"

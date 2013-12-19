@@ -1,4 +1,4 @@
-DESCRIPTION = "TimeDate - parser for absolute times"
+SUMMARY = "Perl modules useful for manipulating date and time information"
 SECTION = "libs"
 # You can redistribute it and/or modify it under the same terms as Perl itself.
 LICENSE = "Artistic-1.0 | GPL-1.0+"

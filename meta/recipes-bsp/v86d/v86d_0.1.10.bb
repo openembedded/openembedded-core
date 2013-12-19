@@ -1,4 +1,4 @@
-DESCRIPTION = "User support binary for the uvesafb kernel module"
+SUMMARY = "User support binary for the uvesafb kernel module"
 HOMEPAGE = "http://dev.gentoo.org/~spock/projects/uvesafb/"
 
 # the copyright info is at the bottom of README, expect break

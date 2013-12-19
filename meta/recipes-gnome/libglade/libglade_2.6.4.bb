@@ -1,4 +1,4 @@
-DESCRIPTION = "Runtime support for GTK interface builder"
+SUMMARY = "Runtime support for the GTK+ interface builder"
 HOMEPAGE = "http://library.gnome.org/devel/libglade/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 

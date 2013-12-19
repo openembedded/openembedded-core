@@ -1,4 +1,4 @@
-DESCRIPTION = "utilities for manipulating filesystem extended attributes"
+SUMMARY = "Utilities for manipulating filesystem extended attributes"
 HOMEPAGE = "http://savannah.nongnu.org/projects/attr/"
 SECTION = "libs"
 

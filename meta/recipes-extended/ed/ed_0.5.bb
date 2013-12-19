@@ -1,4 +1,4 @@
-DESCRIPTION = "GNU ed is a line-oriented text editor"
+SUMMARY = "Line-oriented text editor"
 HOMEPAGE = "http://www.gnu.org/software/ed/"
 SECTION = "base"
 LICENSE = "GPLv2+"

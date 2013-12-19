@@ -1,4 +1,4 @@
-DESCRIPTION = "vte is a virtual terminal emulator"
+SUMMARY = "Virtual terminal emulator GTK+ widget library"
 BUGTRACKER = "https://bugzilla.gnome.org/buglist.cgi?product=vte"
 LICENSE = "LGPLv2.1+"
 DEPENDS = " glib-2.0 gtk+ intltool-native ncurses gobject-introspection-stub"

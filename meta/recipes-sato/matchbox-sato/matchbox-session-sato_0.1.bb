@@ -1,4 +1,4 @@
-DESCRIPTION = "Custom MB session files for poky"
+SUMMARY = "Custom Matchbox session files for the Sato environment"
 HOMEPAGE = "http://www.matchbox-project.org/"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

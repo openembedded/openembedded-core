@@ -1,4 +1,4 @@
-DESCRIPTION  = "Check Test Framework"
+SUMMARY  = "Check - unit testing framework for C code"
 HOMEPAGE = "http://check.sourceforge.net/"
 SECTION = "devel"
 

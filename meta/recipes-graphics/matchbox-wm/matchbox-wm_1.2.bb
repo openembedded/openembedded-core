@@ -1,5 +1,5 @@
+SUMMARY = "Matchbox lightweight window manager"
 SECTION = "x11/wm"
-DESCRIPTION = "Matchbox window manager"
 LICENSE = "GPLv2.0+"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxcomposite libxfixes libxcursor xdamage libxrender startup-notification expat"
 PR = "r5"

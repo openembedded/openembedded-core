@@ -1,4 +1,4 @@
-DESCRIPTION = "default icon theme that all icon themes automatically inherit from."
+SUMMARY = "Default icon theme that all icon themes automatically inherit from"
 HOMEPAGE = "http://icon-theme.freedesktop.org/wiki/HicolorTheme"
 BUGTRACKER = "https://bugs.freedesktop.org/"
 

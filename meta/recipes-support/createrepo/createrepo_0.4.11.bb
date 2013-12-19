@@ -1,4 +1,4 @@
-DESCRIPTION = "createrepo creates rpm-metadata for rpms to build the repository"
+SUMMARY = "Creates metadata indexes for RPM package repositories"
 HOMEPAGE = "http://createrepo.baseurl.org/"
 
 LICENSE = "GPLv2+"

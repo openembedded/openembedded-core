@@ -1,4 +1,4 @@
-DESCRIPTION = "Python Bindings for the Cairo canvas library"
+SUMMARY = "Python bindings for the Cairo canvas library"
 HOMEPAGE = "http://cairographics.org/pycairo"
 BUGTRACKER = "http://bugs.freedesktop.org"
 SECTION = "python-devel"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Rotates, compresses, removes and mails system log files"
+SUMMARY = "Rotates, compresses, removes and mails system log files"
 SECTION = "console/utils"
 HOMEPAGE = "https://fedorahosted.org/releases/l/o/logrotate"
 LICENSE = "GPLv2"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Clutter GStreamer"
+SUMMARY = "GStreamer integration library for Clutter"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPLv2+"
 

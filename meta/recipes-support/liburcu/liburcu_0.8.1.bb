@@ -1,4 +1,4 @@
-DESCRIPTION = "The userspace read-copy update library by Mathieu Desnoyers"
+SUMMARY = "Userspace RCU (read-copy-update) library"
 HOMEPAGE = "http://lttng.org/urcu"
 BUGTRACKER = "http://lttng.org/project/issues"
 

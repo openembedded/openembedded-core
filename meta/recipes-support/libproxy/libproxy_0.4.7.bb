@@ -1,4 +1,4 @@
-DESCRIPTION = "A library that provides automatic proxy configuration management"
+SUMMARY = "Library providing automatic proxy configuration management"
 HOMEPAGE = "http://code.google.com/p/libproxy/"
 BUGTRACKER = "http://code.google.com/p/libproxy/issues/list"
 SECTION = "libs"

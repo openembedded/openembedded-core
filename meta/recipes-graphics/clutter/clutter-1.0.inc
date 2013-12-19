@@ -1,4 +1,4 @@
-DESCRIPTION = "Clutter graphics library"
+SUMMARY = "Graphics library for creating hardware-accelerated user interfaces"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPLv2.1+"
 

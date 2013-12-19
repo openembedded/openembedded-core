@@ -1,4 +1,4 @@
-DESCRIPTION = "A simple GTK+ based panel for handheld devices."
+SUMMARY = "Simple GTK+ based panel for handheld devices"
 HOMEPAGE = "http://matchbox-project.org"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

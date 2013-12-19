@@ -1,4 +1,4 @@
-DESCRIPTION = "Rebuild the package index"
+SUMMARY = "Rebuilds the package index"
 LICENSE = "MIT"
 
 INHIBIT_DEFAULT_DEPS = "1"

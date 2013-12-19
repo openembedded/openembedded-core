@@ -1,4 +1,4 @@
-DESCRIPTION = "Python Gstreamer bindings"
+SUMMARY = "Python bindings for the GStreamer multimedia framework"
 SECTION = "devel/python"
 LICENSE = "LGPLv2.1"
 DEPENDS = "gstreamer gst-plugins-base python-pygobject"

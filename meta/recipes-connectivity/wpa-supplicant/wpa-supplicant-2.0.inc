@@ -1,4 +1,4 @@
-DESCRIPTION = "A Client for Wi-Fi Protected Access (WPA)."
+SUMMARY = "Client for Wi-Fi Protected Access (WPA)"
 HOMEPAGE = "http://hostap.epitest.fi/wpa_supplicant/"
 BUGTRACKER = "http://hostap.epitest.fi/bugz/"
 SECTION = "network"

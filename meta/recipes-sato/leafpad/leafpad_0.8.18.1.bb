@@ -1,4 +1,4 @@
-DESCRIPTION = "Simple GTK+ Text Editor"
+SUMMARY = "Simple GTK+ Text Editor"
 HOMEPAGE = "http://tarot.freeshell.org/leafpad/"
 
 LICENSE = "GPLv2 & GPLv2+"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Export your X session on-the-fly via VNC"
+SUMMARY = "Exports your X session on-the-fly via VNC"
 HOMEPAGE = "http://www.karlrunge.com/x11vnc/"
 
 SECTION = "x11/utils"

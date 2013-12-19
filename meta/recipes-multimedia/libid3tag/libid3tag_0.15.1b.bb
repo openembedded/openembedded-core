@@ -1,4 +1,4 @@
-DESCRIPTION = "Library for interacting with ID3 tags."
+SUMMARY = "Library for interacting with ID3 tags in MP3 files"
 HOMEPAGE = "http://sourceforge.net/projects/mad/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=12349&atid=112349"
 LICENSE = "GPLv2+"

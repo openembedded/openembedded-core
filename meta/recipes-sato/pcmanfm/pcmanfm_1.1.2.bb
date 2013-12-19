@@ -1,4 +1,4 @@
-DESCRIPTION = "Fast lightweight tabbed filemanager"
+SUMMARY = "Fast lightweight tabbed filemanager"
 HOMEPAGE = "http://pcmanfm.sourceforge.net/"
 
 LICENSE = "GPLv2 & GPLv2+ & LGPLv2.1+"

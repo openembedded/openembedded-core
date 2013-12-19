@@ -1,4 +1,4 @@
-DESCRIPTION = "Plugins for GStreamer 1.x"
+SUMMARY = "Plugins for the GStreamer multimedia framework 1.x"
 HOMEPAGE = "http://gstreamer.freedesktop.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/enter_bug.cgi?product=Gstreamer"
 SECTION = "multimedia"

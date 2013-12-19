@@ -1,4 +1,4 @@
-DESCRIPTION = "GNOME XSLT library"
+SUMMARY = "GNOME XSLT library"
 HOMEPAGE = "http://xmlsoft.org/XSLT/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 

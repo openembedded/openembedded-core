@@ -1,4 +1,4 @@
-DESCRIPTION = "automate test for lsb"
+SUMMARY = "Automates Linux Standard Base (LSB) tests"
 SECTION = "console/utils"
 LICENSE = "GPLv2"
 PR = "r3"

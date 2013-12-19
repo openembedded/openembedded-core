@@ -1,4 +1,4 @@
-DESCRIPTION = "Python GTK+ 2.17.x Bindings"
+SUMMARY = "Python bindings for the GTK+ UI toolkit"
 SECTION = "devel/python"
 # needs gtk+ 2.17.x
 DEPENDS = "gtk+ libglade python-pycairo python-pygobject"

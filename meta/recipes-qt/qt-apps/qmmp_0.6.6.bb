@@ -1,4 +1,5 @@
-DESCRIPTION = "Qmmp (Qt-based Multimedia Player) is an audio-player, written with help of Qt library"
+SUMMARY = "Qt-based Multimedia Player"
+DESCRIPTION = "Qmmp is an audio player, written with the help of the Qt library. The user interface is similar to Winamp or XMMS."
 HOMEPAGE = "http://qmmp.ylsoftware.com"
 LICENSE = "GPLv2"
 LICENSE_FLAGS = "commercial"

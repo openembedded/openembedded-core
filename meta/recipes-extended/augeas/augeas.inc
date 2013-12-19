@@ -1,4 +1,4 @@
-DESCRIPTION = "Augeas configuration API"
+SUMMARY = "Augeas configuration API"
 HOMEPAGE = "http://augeas.net/"
 BUGTRACKER = "https://fedorahosted.org/augeas/report/1"
 

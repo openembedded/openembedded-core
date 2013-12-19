@@ -1,4 +1,4 @@
-DESCRIPTION = "Apache Portable Runtime (APR) library"
+SUMMARY = "Apache Portable Runtime (APR) library"
 HOMEPAGE = "http://apr.apache.org/"
 SECTION = "libs"
 DEPENDS = "util-linux"

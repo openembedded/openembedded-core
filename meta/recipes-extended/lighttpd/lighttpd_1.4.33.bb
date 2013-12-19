@@ -1,4 +1,4 @@
-DESCRIPTION = "Lightweight high-performance web server"
+SUMMARY = "Lightweight high-performance web server"
 HOMEPAGE = "http://www.lighttpd.net/"
 BUGTRACKER = "http://redmine.lighttpd.net/projects/lighttpd/issues"
 

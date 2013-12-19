@@ -1,4 +1,4 @@
-DESCRIPTION = "ConsoleKit is a framework for defining and tracking users, login sessions, and seats."
+SUMMARY = "Framework for defining and tracking users, login sessions, and seats"
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/ConsoleKit"
 BUGTRACKER="https://bugs.freedesktop.org/buglist.cgi?query_format=specific&product=ConsoleKit"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "Sato desktop folders"
+SUMMARY = "Matchbox desktop folders for the Sato environment"
 HOMEPAGE = "http://matchbox-project.org"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenMAX IL plugins for GStreamer"
+SUMMARY = "OpenMAX IL plugins for GStreamer"
 SECTION = "multimedia"
 LICENSE = "LGPLv2.1"
 LICENSE_FLAGS = "commercial"

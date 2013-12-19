@@ -1,4 +1,4 @@
-DESCRIPTION = "libcurl python bindings."
+SUMMARY = "Python bindings for libcurl"
 HOMEPAGE = "http://pycurl.sourceforge.net/"
 SECTION = "devel/python"
 LICENSE = "LGPLv2.1+ | MIT"

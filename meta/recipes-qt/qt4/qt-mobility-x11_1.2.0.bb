@@ -1,4 +1,4 @@
-DESCRIPTION = "Qt Mobility 1.2.0 - version for Qt/X11"
+SUMMARY = "Mobile device API extensions for Qt/X11 4.x"
 DEPENDS = "qt4-x11-free"
 SECTION = "x11/libs"
 qtm_embedded := ""

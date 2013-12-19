@@ -1,4 +1,4 @@
-DESCRIPTION = "gnupg - GNU privacy guard"
+SUMMARY = "GNU Privacy Guard - encryption and signing tools"
 HOMEPAGE = "http://www.gnupg.org/"
 DEPENDS = "zlib bzip2 readline"
 SECTION = "console/utils"

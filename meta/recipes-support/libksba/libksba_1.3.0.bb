@@ -1,4 +1,4 @@
-DESCRIPTION = "Libksba provides an easy API to create and parse X.509 and CMS related objects."
+SUMMARY = "Easy API to create and parse X.509 and CMS related objects"
 HOMEPAGE = "http://www.gnupg.org/related_software/libksba/"
 LICENSE = "GPLv2+ | LGPLv3+ | GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=fd541d83f75d038c4e0617b672ed8bda \

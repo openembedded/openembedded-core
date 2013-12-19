@@ -1,4 +1,4 @@
-DESCRIPTION = "Matchbox window manager Sato themes"
+SUMMARY = "Matchbox window manager Sato themes"
 HOMEPAGE = "http://www.matchbox-project.org/"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

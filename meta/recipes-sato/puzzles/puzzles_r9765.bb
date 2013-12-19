@@ -1,4 +1,4 @@
-DESCRIPTION="Simon Tatham's Portable Puzzle Collection"
+SUMMARY = "Simon Tatham's Portable Puzzle Collection"
 HOMEPAGE="http://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
 
 DEPENDS = "gtk+ libxt"

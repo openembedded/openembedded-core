@@ -1,4 +1,4 @@
-DESCRIPTION = "a small library that defines common error values for all GnuPG components"
+SUMMARY = "Small library that defines common error values for all GnuPG components"
 HOMEPAGE = "http://www.gnupg.org/related_software/libgpg-error/"
 BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 

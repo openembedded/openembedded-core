@@ -1,4 +1,4 @@
-DESCRIPTION = "Netscape Portable Runtime Library"
+SUMMARY = "Netscape Portable Runtime Library"
 HOMEPAGE =  "http://www.mozilla.org/projects/nspr/"
 LICENSE = "GPL-2.0 | MPL-2.0 | LGPL-2.1"
 LIC_FILES_CHKSUM = "file://configure.in;beginline=3;endline=6;md5=90c2fdee38e45d6302abcfe475c8b5c5 \

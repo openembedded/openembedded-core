@@ -1,11 +1,12 @@
 require alsa-utils_${PV}.bb
 
+SUMMARY = "Shell script that creates ALSA configuration files"
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/alsa-utils:"
 
 PACKAGES = "${PN}"
 RDEPENDS_${PN} += "bash"
 
-DESCRIPTION_${PN}     = "a bash script that creates ALSA configuration files"
 FILES_${PN} = "${sbindir}/alsaconf"
 
 S = "${WORKDIR}/alsa-utils-${PV}"

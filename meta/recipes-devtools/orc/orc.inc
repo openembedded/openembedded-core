@@ -1,4 +1,4 @@
-DESCRIPTION = "orc - The Oil Runtime Compiler"
+SUMMARY = "Optimised Inner Loop Runtime Compiler"
 HOMEPAGE = "http://code.entropywave.com/projects/orc/"
 LICENSE = "BSD-2-Clause & BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1400bd9d09e8af56b9ec982b3d85797e"

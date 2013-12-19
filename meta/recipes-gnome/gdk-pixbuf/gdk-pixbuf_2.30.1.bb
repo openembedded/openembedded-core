@@ -1,4 +1,4 @@
-DESCRIPTION = "Image loading library for GTK+"
+SUMMARY = "Image loading library for GTK+"
 HOMEPAGE = "http://www.gtk.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = " A compact getty program for virtual consoles only"
+SUMMARY = "Compact getty terminal handler for virtual consoles only"
 SECTION = "console/utils"
 HOMEPAGE = "http://sourceforge.net/projects/mingetty/"
 LICENSE = "GPLv2"

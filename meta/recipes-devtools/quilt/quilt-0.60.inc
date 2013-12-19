@@ -1,4 +1,4 @@
-DESCRIPTION = "Tool to work with series of patches."
+SUMMARY = "Tool for working with series of patches"
 HOMEPAGE = "http://savannah.nongnu.org/projects/quilt/"
 SECTION = "devel"
 LICENSE = "GPLv2"

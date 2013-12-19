@@ -1,4 +1,4 @@
-DESCRIPTION = "Transparent xcursor theme for handheld systems"
+SUMMARY = "Transparent X11 cursor theme for touchscreens"
 HOMEPAGE = "http://www.matchbox-project.org/"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

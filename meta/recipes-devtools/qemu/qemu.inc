@@ -1,4 +1,4 @@
-DESCRIPTION = "open source processor emulator"
+SUMMARY = "Fast open source processor emulator"
 HOMEPAGE = "http://qemu.org"
 LICENSE = "GPLv2 & LGPLv2.1"
 DEPENDS = "glib-2.0 zlib alsa-lib virtual/libx11 pixman dtc libsdl"

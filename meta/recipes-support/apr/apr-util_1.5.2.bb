@@ -1,4 +1,4 @@
-DESCRIPTION = "Apache Portable Runtime (APR) companion library"
+SUMMARY = "Apache Portable Runtime (APR) companion library"
 HOMEPAGE = "http://apr.apache.org/"
 SECTION = "libs"
 DEPENDS = "apr expat gdbm"

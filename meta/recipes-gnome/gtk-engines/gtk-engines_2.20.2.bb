@@ -1,4 +1,4 @@
-DESCRIPTION = "GTK theme engines"
+SUMMARY = "GTK+ theme engines"
 HOMEPAGE = "http://www.gnome.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "This package contains keytable files and keyboard utilities"
+SUMMARY = "Keytable files and keyboard utilities"
 # everything minus console-fonts is GPLv2+
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a5fcc36121d93e1f69d96a313078c8b5"

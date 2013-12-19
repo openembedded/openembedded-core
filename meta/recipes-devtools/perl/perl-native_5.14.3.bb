@@ -1,4 +1,4 @@
-DESCRIPTION = "Perl is a popular scripting language."
+SUMMARY = "Perl is a popular scripting language"
 HOMEPAGE = "http://www.perl.org/"
 SECTION = "libs"
 LICENSE = "Artistic-1.0 | GPL-1.0"

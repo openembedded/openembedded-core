@@ -1,4 +1,4 @@
-DESCRIPTION = "Allow safe temporary file creation from shell scripts."
+SUMMARY = "Enables safe temporary file creation from shell scripts"
 HOMEPAGE = "http://www.mktemp.org/"
 BUGTRACKER = "http://www.mktemp.org/bugs"
 SECTION = "console/utils"

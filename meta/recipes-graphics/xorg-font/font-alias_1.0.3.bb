@@ -1,4 +1,4 @@
-DESCRIPTION = "X font aliases."
+SUMMARY = "X font aliases"
 
 require xorg-font-common.inc
 

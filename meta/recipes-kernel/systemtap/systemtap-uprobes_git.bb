@@ -1,4 +1,4 @@
-DESCRIPTION = "UProbes kernel module for SystemTap"
+SUMMARY = "UProbes kernel module for SystemTap"
 
 require systemtap_git.inc
 

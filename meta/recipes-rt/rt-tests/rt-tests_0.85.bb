@@ -1,4 +1,4 @@
-DESCRIPTION = "Real-Time preemption testcases"
+SUMMARY = "Real-Time preemption testcases"
 HOMEPAGE = "https://rt.wiki.kernel.org/index.php/Cyclictest"
 SECTION = "tests"
 DEPENDS = "linux-libc-headers virtual/libc"

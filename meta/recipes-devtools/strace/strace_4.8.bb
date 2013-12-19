@@ -1,4 +1,4 @@
-DESCRIPTION = "strace is a system call tracing tool."
+SUMMARY = "System call tracing tool"
 HOMEPAGE = "http://strace.sourceforge.net"
 SECTION = "console/utils"
 LICENSE = "BSD"

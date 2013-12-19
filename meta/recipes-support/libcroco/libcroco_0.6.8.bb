@@ -1,4 +1,4 @@
-DESCRIPTION = "The Libcroco project is an effort to build a generic Cascading Style Sheet (CSS) parsing and manipulation toolkit"
+SUMMARY = "Cascading Style Sheet (CSS) parsing and manipulation toolkit"
 HOMEPAGE = "http://www.gnome.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 

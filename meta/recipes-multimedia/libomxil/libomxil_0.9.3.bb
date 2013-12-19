@@ -1,4 +1,4 @@
-DESCRIPTION = "Bellagio OpenMAX Integration Layer"
+SUMMARY = "Bellagio OpenMAX Integration Layer"
 HOMEPAGE = "http://omxil.sourceforge.net/"
 LICENSE = "LGPLv2.1+"
 LICENSE_FLAGS = "commercial"

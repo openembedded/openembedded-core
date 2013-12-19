@@ -1,4 +1,4 @@
-DESCRIPTION = "GNU dbm is a set of database routines that use extensible hashing."
+SUMMARY = "Key/value database library with extensible hashing"
 HOMEPAGE = "http://www.gnu.org/software/gdbm/"
 SECTION = "libs"
 LICENSE = "GPLv3"

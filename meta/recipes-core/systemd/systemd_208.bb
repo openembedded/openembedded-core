@@ -1,4 +1,4 @@
-DESCRIPTION = "Systemd a init replacement"
+SUMMARY = "System and service manager for Linux, replacing SysVinit"
 HOMEPAGE = "http://www.freedesktop.org/wiki/Software/systemd"
 
 LICENSE = "GPLv2 & LGPLv2.1 & MIT"

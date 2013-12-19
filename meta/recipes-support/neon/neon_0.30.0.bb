@@ -1,4 +1,4 @@
-DESCRIPTION = "neon is an HTTP and WebDAV client library, with a C interface."
+SUMMARY = "An HTTP and WebDAV client library with a C interface"
 HOMEPAGE = "http://www.webdav.org/neon/"
 SECTION = "libs"
 LICENSE = "LGPLv2+"

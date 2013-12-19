@@ -1,4 +1,4 @@
-DESCRIPTION = "Qemu helper utilities from Poky"
+SUMMARY = "Helper utilities needed by the runqemu script"
 LICENSE = "GPLv2"
 RDEPENDS_${PN} = "qemu-native"
 PR = "r1"

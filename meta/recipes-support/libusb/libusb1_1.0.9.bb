@@ -1,4 +1,4 @@
-DESCRIPTION = "Userspace library to access USB (version 1.0)"
+SUMMARY = "Userspace library to access USB (version 1.0)"
 HOMEPAGE = "http://libusb.sf.net"
 BUGTRACKER = "http://www.libusb.org/report"
 SECTION = "libs"

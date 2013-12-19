@@ -1,4 +1,4 @@
-DESCRIPTION = "A collection of utilities and DSOs to handle compiled objects."
+SUMMARY = "Utilities and libraries for handling compiled object files"
 HOMEPAGE = "https://fedorahosted.org/elfutils"
 SECTION = "base"
 LICENSE = "(GPL-2+ & Elfutils-Exception)"

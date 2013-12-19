@@ -1,4 +1,4 @@
-DESCRIPTION = "A general purpose cryptographic library based on the code from GnuPG"
+SUMMARY = "General purpose cryptographic library based on the code from GnuPG"
 HOMEPAGE = "http://directory.fsf.org/project/libgcrypt/"
 BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 SECTION = "libs"

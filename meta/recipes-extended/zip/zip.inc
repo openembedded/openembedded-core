@@ -1,4 +1,4 @@
-DESCRIPTION = "Archiver for .zip files"
+SUMMARY = "Compressor/archiver for creating and modifying .zip files"
 HOMEPAGE = "http://www.info-zip.org"
 SECTION = "console/utils"
 

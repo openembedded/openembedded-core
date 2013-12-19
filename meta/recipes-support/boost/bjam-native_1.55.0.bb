@@ -1,6 +1,6 @@
 include boost-${PV}.inc
 
-DESCRIPTION = "Portable Boost.Jam build tool for boost"
+SUMMARY = "Portable Boost.Jam build tool for boost"
 SECTION = "devel"
 
 inherit native

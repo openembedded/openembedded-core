@@ -1,5 +1,5 @@
+SUMMARY = "Enables PPP dial-in through a serial connection"
 SECTION = "console/network"
-DESCRIPTION = "Enables PPP dial-in through a serial connection"
 DEPENDS = "ppp"
 RDEPENDS_${PN} = "ppp"
 PR = "r8"

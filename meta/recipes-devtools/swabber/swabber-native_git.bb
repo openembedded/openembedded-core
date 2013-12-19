@@ -1,4 +1,4 @@
-DESCRIPTION = "Swabber is a tool that can help with understanding a program's use of host files."
+SUMMARY = "Tool to monitor and report on host system file usage"
 HOMEPAGE = "http://git.yoctoproject.org/cgit/cgit.cgi/swabber"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"

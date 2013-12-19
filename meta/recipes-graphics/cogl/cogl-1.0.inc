@@ -1,4 +1,4 @@
-DESCRIPTION = "a modern 3D graphics API with associated utility APIs"
+SUMMARY = "Modern 3D graphics API with associated utility APIs"
 HOMEPAGE = "http://wiki.clutter-project.org/wiki/Cogl"
 LICENSE = "LGPLv2.1+"
 

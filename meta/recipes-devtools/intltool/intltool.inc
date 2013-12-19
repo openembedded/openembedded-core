@@ -1,4 +1,4 @@
-DESCRIPTION = "Utility scripts for internationalizing XML"
+SUMMARY = "Utility scripts for internationalizing XML"
 SECTION = "devel"
 LICENSE = "GPLv2"
 

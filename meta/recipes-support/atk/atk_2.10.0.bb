@@ -1,4 +1,4 @@
-DESCRIPTION = "An accessibility toolkit for GNOME."
+SUMMARY = "Accessibility toolkit for GNOME"
 HOMEPAGE = "http://live.gnome.org/GAP/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 SECTION = "x11/libs"

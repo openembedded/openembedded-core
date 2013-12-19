@@ -1,4 +1,4 @@
-DESCRIPTION = "An HTTP library implementation in C"
+SUMMARY = "An HTTP library implementation in C"
 HOMEPAGE = "http://www.gnome.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 

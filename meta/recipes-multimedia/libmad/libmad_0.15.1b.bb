@@ -1,4 +1,4 @@
-DESCRIPTION = "MPEG Audio Decoder Library"
+SUMMARY = "MPEG Audio Decoder library"
 HOMEPAGE = "http://sourceforge.net/projects/mad/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=12349&atid=112349"
 LICENSE = "GPLv2+"

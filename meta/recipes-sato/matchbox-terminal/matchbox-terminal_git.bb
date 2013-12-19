@@ -1,4 +1,4 @@
-DESCRIPTION = "Matchbox Terminal"
+SUMMARY = "Lightweight GTK+ terminal application"
 HOMEPAGE = "http://www.matchbox-project.org/"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

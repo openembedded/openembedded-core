@@ -1,4 +1,4 @@
-DESCRIPTION = "Various benchmarning tests for X"
+SUMMARY = "Various benchmarning tests for X"
 HOMEPAGE = "http://www.o-hand.com"
 SECTION = "devel"
 LICENSE = "Zlib"

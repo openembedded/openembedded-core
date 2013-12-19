@@ -1,4 +1,4 @@
-DESCRIPTION = "Perl script that converts Texinfo to HTML"
+SUMMARY = "Perl script that converts Texinfo to HTML"
 HOMEPAGE    = "http://www.nongnu.org/texi2html/"
 SECTION     = "console/utils"
 LICENSE     = "GPLv2"

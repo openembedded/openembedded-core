@@ -1,4 +1,4 @@
-DESCRIPTION = "Clutter based widget library"
+SUMMARY = "Clutter based UI widget library"
 LICENSE = "LGPLv2.1"
 
 inherit clutter

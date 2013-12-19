@@ -1,4 +1,4 @@
-DESCRIPTION = "The X.Org X server"
+SUMMARY = "The X.Org X server"
 HOMEPAGE = "http://www.x.org"
 SECTION = "x11/base"
 LICENSE = "MIT-X"

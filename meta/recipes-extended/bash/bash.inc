@@ -1,4 +1,4 @@
-DESCRIPTION = "An sh-compatible command language interpreter."
+SUMMARY = "An sh-compatible command language interpreter"
 HOMEPAGE = "http://cnswww.cns.cwru.edu/~chet/bash/bashtop.html"
 SECTION = "base/shell"
 

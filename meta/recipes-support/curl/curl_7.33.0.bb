@@ -1,4 +1,4 @@
-DESCRIPTION = "Command line tool and library for client-side URL transfers."
+SUMMARY = "Command line tool and library for client-side URL transfers"
 HOMEPAGE = "http://curl.haxx.se/"
 BUGTRACKER = "http://curl.haxx.se/mail/list.cgi?list=curl-tracker"
 SECTION = "console/network"

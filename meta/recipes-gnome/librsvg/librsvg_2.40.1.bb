@@ -1,4 +1,4 @@
-DESCRIPTION = "Library for rendering SVG files"
+SUMMARY = "Library for rendering SVG files"
 HOMEPAGE = "http://ftp.gnome.org/pub/GNOME/sources/librsvg/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 

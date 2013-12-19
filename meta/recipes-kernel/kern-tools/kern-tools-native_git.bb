@@ -1,4 +1,4 @@
-DESCRIPTION = "Scripts and utilities for managing Yocto branched kernels."
+SUMMARY = "Tools for managing Yocto Project style branched kernels"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://git/tools/kgit;beginline=5;endline=9;md5=d8d1d729a70cd5f52972f8884b80743d"
 

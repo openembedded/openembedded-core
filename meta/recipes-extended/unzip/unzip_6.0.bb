@@ -1,4 +1,4 @@
-DESCRIPTION = "A (de)compression library for the ZIP format"
+SUMMARY = "Utilities for extracting and viewing files in .zip archives"
 HOMEPAGE = "http://www.info-zip.org"
 SECTION = "console/utils"
 LICENSE = "BSD-3-Clause"

@@ -1,4 +1,4 @@
-DESCRIPTION = "iCal and scheduling (RFC 2445, 2446, 2447) library"
+SUMMARY = "iCal and scheduling (RFC 2445, 2446, 2447) library"
 HOMEPAGE = "http://sourceforge.net/projects/freeassociation/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=16077&atid=116077"
 LICENSE = "LGPLv2.1 | MPL-1"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Tool Command Language"
+SUMMARY = "Tool Command Language"
 LICENSE = "BSD-3-Clause"
 SECTION = "devel/tcltk"
 HOMEPAGE = "http://tcl.sourceforge.net"

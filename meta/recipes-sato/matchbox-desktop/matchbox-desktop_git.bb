@@ -1,4 +1,4 @@
-DESCRIPTION = "Matchbox Window Manager Desktop"
+SUMMARY = "Matchbox Window Manager Desktop"
 HOMEPAGE = "http://matchbox-project.org/"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "TagLib is a library for reading and editing the meta-data of several popular audio formats"
+SUMMARY = "Library for reading and editing the meta-data of popular audio formats"
 SECTION = "libs/multimedia"
 HOMEPAGE = "http://developer.kde.org/~wheeler/taglib.html"
 LICENSE = "LGPLv2.1 | MPL-1"

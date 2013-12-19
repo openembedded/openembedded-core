@@ -1,4 +1,4 @@
-DESCRIPTION = "A collection of GSettings schemas for settings shared by various components of a desktop"
+SUMMARY = "GNOME desktop-wide GSettings schemas"
 HOMEPAGE = "http://live.gnome.org/gsettings-desktop-schemas"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 

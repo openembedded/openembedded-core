@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenedHand Widget Library Audio/Video"
+SUMMARY = "OpenedHand Widget Library Audio/Video"
 HOMEPAGE = "http://www.o-hand.com"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

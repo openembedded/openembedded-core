@@ -1,4 +1,4 @@
-DESCRIPTION = "GNU Portable Threads"
+SUMMARY = "GNU Portable Threads library"
 HOMEPAGE = "http://www.gnu.org/software/pth/"
 SECTION = "libs"
 LICENSE = "GPLv2+"

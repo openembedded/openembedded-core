@@ -1,4 +1,4 @@
-DESCRIPTION = "Mini X session files for poky"
+SUMMARY = "Very simple session manager for X"
 HOMEPAGE = "http://www.yoctoproject.org"
 BUGTRACKER = "http://bugzilla.pokylinux.org"
 

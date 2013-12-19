@@ -1,4 +1,4 @@
-DESCRIPTION = "A file-synchronization tool"
+SUMMARY = "File synchronization tool"
 HOMEPAGE = "http://rsync.samba.org/"
 BUGTRACKER = "http://rsync.samba.org/bugzilla.html"
 SECTION = "console/network"

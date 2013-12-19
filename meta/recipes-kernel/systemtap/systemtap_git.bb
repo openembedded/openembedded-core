@@ -1,4 +1,4 @@
-DESCRIPTION = "SystemTap - script-directed dynamic tracing and performance analysis tool for Linux"
+SUMMARY = "Script-directed dynamic tracing and performance analysis tool for Linux"
 
 require systemtap_git.inc
 

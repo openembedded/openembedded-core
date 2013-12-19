@@ -1,4 +1,4 @@
-DESCRIPTION = "U-Boot - the Universal Boot Loader"
+SUMMARY = "Universal Boot Loader for embedded devices"
 HOMEPAGE = "http://www.denx.de/wiki/U-Boot/WebHome"
 SECTION = "bootloaders"
 PROVIDES = "virtual/bootloader"

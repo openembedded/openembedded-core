@@ -1,4 +1,4 @@
-DESCRIPTION = "SysV init scripts which only is used in an LSB image"
+SUMMARY = "SysV init scripts which are only used in an LSB image"
 SECTION = "base"
 LICENSE = "GPLv2"
 DEPENDS = "popt glib-2.0"

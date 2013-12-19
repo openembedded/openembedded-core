@@ -1,4 +1,4 @@
-DESCRIPTION = "Library and test program for decoding mpeg-2 and mpeg-1 video streams"
+SUMMARY = "Library and test program for decoding MPEG-2 and MPEG-1 video streams"
 HOMEPAGE = "http://libmpeg2.sourceforge.net/"
 SECTION = "libs"
 LICENSE = "GPLv2+"

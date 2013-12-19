@@ -1,4 +1,4 @@
-DESCRIPTION = "Timezone data"
+SUMMARY = "Timezone database"
 HOMEPAGE = "ftp://elsie.nci.nih.gov/pub/"
 SECTION = "base"
 LICENSE = "PD & BSD"

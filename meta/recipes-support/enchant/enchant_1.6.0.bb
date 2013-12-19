@@ -1,4 +1,4 @@
-DESCRIPTION = "Enchant Spell checker API Library"
+SUMMARY = "Enchant Spell checker API Library"
 SECTION     = "libs"
 HOMEPAGE = "http://www.abisource.com/projects/enchant/"
 BUGTRACKER = "http://bugzilla.abisource.com/enter_bug.cgi?product=Enchant"

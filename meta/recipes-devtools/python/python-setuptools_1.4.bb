@@ -1,4 +1,4 @@
-DESCRIPTION = "Download, build, install, upgrade, and uninstall Python packages"
+SUMMARY = "Downloads, builds, installs, upgrades, and uninstalls Python packages"
 HOMEPAGE = "http://cheeseshop.python.org/pypi/setuptools"
 SECTION = "devel/python"
 LICENSE = "PSF"

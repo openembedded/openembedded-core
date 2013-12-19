@@ -1,4 +1,4 @@
-DESCRIPTION = "ClutterGtk"
+SUMMARY = "Library for embedding a Clutter canvas in a GTK+ application"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPLv2+"
 

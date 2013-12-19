@@ -1,4 +1,4 @@
-DESCRIPTION = "Touchscreen calibration data"
+SUMMARY = "Touchscreen calibration data"
 SECTION = "base"
 PR = "r11"
 LICENSE = "MIT"

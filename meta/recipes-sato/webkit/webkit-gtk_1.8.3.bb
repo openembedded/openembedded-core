@@ -1,4 +1,4 @@
-DESCRIPTION = "WebKitGTK+ is the port of the portable web rendering engine WebKitK to the GTK+ platform."
+SUMMARY = "WebKit web rendering engine for the GTK+ platform"
 HOMEPAGE = "http://www.webkitgtk.org/"
 BUGTRACKER = "http://bugs.webkit.org/"
 

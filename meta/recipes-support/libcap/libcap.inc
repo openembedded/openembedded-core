@@ -1,4 +1,4 @@
-DESCRIPTION = "support for getting/setting POSIX.1e capabilities"
+SUMMARY = "Library for getting/setting POSIX.1e capabilities"
 HOMEPAGE = "http://sites.google.com/site/fullycapable/"
 
 # no specific GPL version required

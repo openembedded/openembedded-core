@@ -1,4 +1,4 @@
-DESCRIPTION = "Advanced front-end for dpkg."
+SUMMARY = "Advanced front-end for dpkg"
 LICENSE = "GPLv2.0+"
 SECTION = "base"
 

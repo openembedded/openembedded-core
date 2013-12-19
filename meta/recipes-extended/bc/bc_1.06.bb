@@ -1,4 +1,4 @@
-DESCRIPTION = "An arbitrary precision calculator language."
+SUMMARY = "Arbitrary precision calculator language"
 HOMEPAGE = "http://www.gnu.org/software/bc/bc.html"
 
 LICENSE = "GPLv2+ & LGPLv2.1"

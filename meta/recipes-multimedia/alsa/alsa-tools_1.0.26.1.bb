@@ -1,4 +1,4 @@
-DESCRIPTION = "Alsa Tools package contains advanced tools for certain sound cards."
+SUMMARY = "Advanced tools for certain ALSA sound card drivers"
 HOMEPAGE = "http://www.alsa-project.org"
 BUGTRACKER = "https://bugtrack.alsa-project.org/alsa-bug/login_page.php"
 SECTION = "console/utils"

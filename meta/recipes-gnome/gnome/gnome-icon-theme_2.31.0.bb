@@ -1,4 +1,4 @@
-DESCRIPTION = "GNOME 2 default icon themes"
+SUMMARY = "GNOME 2 default icon themes"
 HOMEPAGE = "http://www.gnome.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 SECTION = "x11/gnome"

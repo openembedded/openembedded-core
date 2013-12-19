@@ -1,4 +1,4 @@
-DESCRIPTION = "Init script for qtdemo"
+SUMMARY = "Init script for qtdemo"
 LICENSE = "MIT"
 SRC_URI = "file://qtdemo-init"
 PR = "r3"

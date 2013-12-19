@@ -1,4 +1,4 @@
-DESCRIPTION = "Free peer-reviewed portable C++ source libraries"
+SUMMARY = "Free peer-reviewed portable C++ source libraries"
 SECTION = "libs"
 DEPENDS = "bjam-native zlib bzip2"
 

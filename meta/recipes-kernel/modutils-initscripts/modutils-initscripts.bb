@@ -1,5 +1,5 @@
+SUMMARY = "Initscript for auto-loading kernel modules on boot"
 SECTION = "base"
-DESCRIPTION = "modutils configuration files"
 LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7bf87fc37976e93ec66ad84fac58c098"
 SRC_URI = "file://modutils.sh \

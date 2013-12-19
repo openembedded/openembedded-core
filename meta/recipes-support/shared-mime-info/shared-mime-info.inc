@@ -1,4 +1,4 @@
-DESCRIPTION = "shared MIME database and spec"
+SUMMARY = "shared MIME database and spec"
 HOMEPAGE = "http://freedesktop.org/wiki/Software/shared-mime-info"
 SECTION = "base"
 

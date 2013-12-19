@@ -1,4 +1,4 @@
-DESCRIPTION = "A daemon for delivering ACPI events."
+SUMMARY = "A daemon for delivering ACPI events"
 HOMEPAGE = "http://sourceforge.net/projects/acpid/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=33140&atid=407341"
 

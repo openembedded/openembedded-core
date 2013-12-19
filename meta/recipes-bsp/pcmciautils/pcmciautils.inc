@@ -1,4 +1,4 @@
-DESCRIPTION = "Linux Kernel 2.6 Userland Utilities for the PCMCIA Subsystem"
+SUMMARY = "Linux kernel userland utilities for the PCMCIA subsystem"
 HOMEPAGE = "http://kernel.org/pub/linux/utils/kernel/pcmcia/pcmcia.html"
 SECTION = "kernel/userland"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "Tools for managing memory technology devices."
+SUMMARY = "Tools for managing memory technology devices"
 SECTION = "base"
 DEPENDS = "zlib lzo e2fsprogs util-linux"
 HOMEPAGE = "http://www.linux-mtd.infradead.org/"

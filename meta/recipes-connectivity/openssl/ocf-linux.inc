@@ -1,4 +1,4 @@
-DESCRIPTION = "Install required headers to enable OCF Linux support"
+SUMMARY = "Installs required headers for OCF-Linux crypto acceleration support"
 LICENSE = "BSD"
 
 LIC_FILES_CHKSUM = "file://README;md5=493ffe65655667614cf24567adf22f11"

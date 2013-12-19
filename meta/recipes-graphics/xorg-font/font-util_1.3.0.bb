@@ -1,4 +1,4 @@
-DESCRIPTION = "X.Org font package creation/installation utilities"
+SUMMARY = "X.Org font package creation/installation utilities"
 
 require xorg-font-common.inc
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "Target Communication Framework"
+SUMMARY = "Target Communication Framework for the Eclipse IDE"
 HOMEPAGE = "http://wiki.eclipse.org/TCF"
 BUGTRACKER = "https://bugs.eclipse.org/bugs/"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "tzcode, timezone zoneinfo utils -- zic, zdump, tzselect"
+SUMMARY = "Timezone zoneinfo utils (zic, zdump, tzselect)"
 LICENSE = "PD & BSD"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/README;md5=0b7570113550eb5d30aa4bd220964b8f"

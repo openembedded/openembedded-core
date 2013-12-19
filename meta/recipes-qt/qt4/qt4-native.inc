@@ -1,4 +1,4 @@
-DESCRIPTION = "Native version of Qt/[X11|Mac|Embedded]"
+SUMMARY = "Qt version 4 tools and support files for the build host"
 DEPENDS = "zlib-native dbus-native"
 SECTION = "libs"
 HOMEPAGE = "http://qt-project.org/"

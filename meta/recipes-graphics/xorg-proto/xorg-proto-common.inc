@@ -1,4 +1,4 @@
-DESCRIPTION = "X protocol headers: ${XORG_PN}"
+SUMMARY = "X protocol headers: ${XORG_PN}"
 HOMEPAGE = "http://www.x.org"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=xorg"
 

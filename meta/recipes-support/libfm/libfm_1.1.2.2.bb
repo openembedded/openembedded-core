@@ -1,4 +1,4 @@
-DESCRIPTION = "Library for file management"
+SUMMARY = "Library for file management"
 HOMEPAGE = "http://pcmanfm.sourceforge.net/"
 
 LICENSE = "GPLv2 & GPLv2+"

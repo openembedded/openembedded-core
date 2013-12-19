@@ -1,4 +1,4 @@
-DESCRIPTION = "ISC Internet Domain Name Server"
+SUMMARY = "ISC Internet Domain Name Server"
 HOMEPAGE = "http://www.isc.org/sw/bind/"
 SECTION = "console/network"
 

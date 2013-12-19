@@ -1,4 +1,4 @@
-DESCRIPTION = "Portable Puzzle Collection"
+SUMMARY = "Portable Puzzle Collection"
 HOMEPAGE = "http://o-hand.com/"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

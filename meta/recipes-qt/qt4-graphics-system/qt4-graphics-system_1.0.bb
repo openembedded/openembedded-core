@@ -1,4 +1,4 @@
-DESCRIPTION = "Set default Qt4 Graphics System to ${QT_GRAPHICS_SYSTEM}"
+SUMMARY = "Sets default Qt4 Graphics System to ${QT_GRAPHICS_SYSTEM}"
 SECTION = "x11/base"
 LICENSE = "MIT-X"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"

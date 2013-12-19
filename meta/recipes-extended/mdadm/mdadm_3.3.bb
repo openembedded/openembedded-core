@@ -1,4 +1,4 @@
-DESCRIPTION = " A tool for managing Soft RAID under Linux"
+SUMMARY = "Tool for managing software RAID under Linux"
 HOMEPAGE = "http://www.kernel.org/pub/linux/utils/raid/mdadm/"
 
 # Some files are GPLv2+ while others are GPLv2.

@@ -1,4 +1,4 @@
-DESCRIPTION = "parted, the GNU partition resizing program"
+SUMMARY = "Disk partition editing/resizing utility"
 HOMEPAGE = "http://www.gnu.org/software/parted/parted.html"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2f31b266d3440dd7ee50f92cf67d8e6c"

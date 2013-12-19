@@ -9,7 +9,7 @@
 # at once - DB3 and DB5 can both be installed on the
 # same system at the same time if really necessary.
 SECTION = "libs"
-DESCRIPTION = "Berkeley DB v5."
+SUMMARY = "Berkeley Database v5"
 HOMEPAGE = "http://www.oracle.com/technology/products/berkeley-db/db/index.html"
 LICENSE = "Sleepycat"
 VIRTUAL_NAME ?= "virtual/db"

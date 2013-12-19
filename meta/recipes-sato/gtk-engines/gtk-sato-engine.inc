@@ -1,4 +1,4 @@
-DESCRIPTION = "Sato theme engine for GTK"
+SUMMARY = "Sato theme engine for GTK+"
 HOMEPAGE = "http://www.o-hand.com"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

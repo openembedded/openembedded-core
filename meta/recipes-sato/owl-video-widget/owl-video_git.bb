@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenedHand Widget Library video widget"
+SUMMARY = "OpenedHand Widget Library video widget"
 HOMEPAGE = "http://o-hand.com/"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 LICENSE = "LGPLv2.1 & GPLv2+"

@@ -1,4 +1,4 @@
-DESCRIPTION = "ALSA sound library"
+SUMMARY = "ALSA sound library"
 HOMEPAGE = "http://www.alsa-project.org"
 BUGTRACKER = "https://bugtrack.alsa-project.org/alsa-bug/login_page.php"
 SECTION = "libs/multimedia"

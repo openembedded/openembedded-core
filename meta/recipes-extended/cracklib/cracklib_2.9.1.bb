@@ -1,4 +1,4 @@
-DESCRIPTION = "A pro-active password checker library"
+SUMMARY = "Password strength checker library"
 HOMEPAGE = "http://sourceforge.net/projects/cracklib"
 
 LICENSE = "LGPLv2.1+"

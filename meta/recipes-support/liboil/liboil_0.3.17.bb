@@ -1,4 +1,4 @@
-DESCRIPTION = "Liboil is a library of simple functions that are optimized for various CPUs."
+SUMMARY = "Library of simple functions optimized for various CPUs"
 HOMEPAGE = "http://liboil.freedesktop.org/"
 BUGTRACKER = "https://bugs.freedesktop.org/"
 

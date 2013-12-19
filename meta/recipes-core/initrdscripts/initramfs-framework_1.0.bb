@@ -1,4 +1,4 @@
-DESCRIPTION = "initramfs modular system"
+SUMMARY = "Modular initramfs system"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 RDEPENDS_${PN} += "busybox"
@@ -42,18 +42,18 @@ PACKAGES = "${PN}-base \
 
 FILES_${PN}-base = "/init /init.d/99-finish"
 
-DESCRIPTION_initramfs-module-mdev = "initramfs support for mdev"
+SUMMARY_initramfs-module-mdev = "initramfs support for mdev"
 RDEPENDS_initramfs-module-mdev = "${PN}-base"
 FILES_initramfs-module-mdev = "/init.d/01-mdev"
 
-DESCRIPTION_initramfs-module-udev = "initramfs support for udev"
+SUMMARY_initramfs-module-udev = "initramfs support for udev"
 RDEPENDS_initramfs-module-udev = "${PN}-base udev udev-utils"
 FILES_initramfs-module-udev = "/init.d/01-udev"
 
-DESCRIPTION_initramfs-module-e2fs = "initramfs support for ext4/ext3/ext2 filesystems"
+SUMMARY_initramfs-module-e2fs = "initramfs support for ext4/ext3/ext2 filesystems"
 RDEPENDS_initramfs-module-e2fs = "${PN}-base"
 FILES_initramfs-module-e2fs = "/init.d/10-e2fs"
 
-DESCRIPTION_initramfs-module-debug = "initramfs dynamic debug support"
+SUMMARY_initramfs-module-debug = "initramfs dynamic debug support"
 RDEPENDS_initramfs-module-debug = "${PN}-base"
 FILES_initramfs-module-debug = "/init.d/00-debug"

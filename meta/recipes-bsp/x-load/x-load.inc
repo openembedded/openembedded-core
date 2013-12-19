@@ -1,4 +1,4 @@
-DESCRIPTION = "x-load bootloader loader"
+SUMMARY = "First level bootloader for OMAP SoCs"
 SECTION = "bootloaders"
 LICENSE = "GPL"
 

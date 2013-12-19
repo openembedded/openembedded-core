@@ -1,4 +1,4 @@
-DESCRIPTION = "Python command-line parsing library"
+SUMMARY = "Python command-line parsing library"
 SECTION = "devel/python"
 LICENSE = "PSF"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=09d08bb5b7047e2688ea3faad6408aa8"

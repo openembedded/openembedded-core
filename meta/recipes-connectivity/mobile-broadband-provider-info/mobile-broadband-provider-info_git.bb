@@ -1,4 +1,4 @@
-DESCRIPTION = "Mobile Broadband Service Provider Database"
+SUMMARY = "Mobile Broadband Service Provider Database"
 SECTION = "network"
 LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=87964579b2a8ece4bc6744d2dc9a8b04"

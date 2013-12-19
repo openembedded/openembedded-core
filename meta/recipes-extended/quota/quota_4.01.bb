@@ -1,4 +1,4 @@
-DESCRIPTION = "display disk usage and limits"
+SUMMARY = "Tools for monitoring & limiting user disk usage per filesystem"
 SECTION = "base"
 HOMEPAGE = "http://sourceforge.net/projects/linuxquota/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=18136&atid=118136"

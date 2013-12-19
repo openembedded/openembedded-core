@@ -1,4 +1,4 @@
-DESCRIPTION = "gtk frontend for connman"
+SUMMARY = "GTK+ frontend for the ConnMan network connection manager"
 HOMEPAGE = "http://connman.net/"
 SECTION = "libs/network"
 LICENSE = "GPLv2 & LGPLv2.1"

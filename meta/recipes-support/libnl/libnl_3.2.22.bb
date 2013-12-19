@@ -1,4 +1,4 @@
-DESCRIPTION = "libnl is a library for applications dealing with netlink sockets."
+SUMMARY = "A library for applications dealing with netlink sockets"
 HOMEPAGE = "http://www.infradead.org/~tgr/libnl/"
 SECTION = "libs/network"
 

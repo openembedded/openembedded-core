@@ -1,4 +1,4 @@
-DESCRIPTION = "User interface to Ftrace"
+SUMMARY = "User interface to Ftrace"
 LICENSE = "GPLv2 & LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://trace-cmd.c;beginline=6;endline=8;md5=2c22c965a649ddd7973d7913c5634a5e \

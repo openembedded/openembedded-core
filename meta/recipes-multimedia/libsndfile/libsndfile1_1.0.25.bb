@@ -1,4 +1,4 @@
-DESCRIPTION = "An audio format Conversion library"
+SUMMARY = "Audio format Conversion library"
 HOMEPAGE = "http://www.mega-nerd.com/libsndfile"
 AUTHOR = "Erik de Castro Lopo"
 DEPENDS = "sqlite3"

@@ -1,4 +1,4 @@
-DESCRIPTION = "An ultra-simple screen capture utility, aimed at handheld devices"
+SUMMARY = "Ultra-simple screen capture utility, aimed at handheld devices"
 HOMEPAGE = "http://www.o-hand.com"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "Libav-based GStreamer 1.x plugin"
+SUMMARY = "Libav-based GStreamer 1.x plugin"
 SECTION = "multimedia"
 LICENSE = "GPLv2+ & LGPLv2+ & ( (GPLv2+ & LGPLv2.1+) | (GPLv3+ & LGPLv3+) )"
 LICENSE_FLAGS = "commercial"

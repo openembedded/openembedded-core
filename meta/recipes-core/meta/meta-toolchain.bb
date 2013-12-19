@@ -1,4 +1,4 @@
-DESCRIPTION = "Meta package for building a installable toolchain"
+SUMMARY = "Meta package for building a installable toolchain"
 LICENSE = "MIT"
 
 PR = "r7"

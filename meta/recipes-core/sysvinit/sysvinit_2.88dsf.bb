@@ -1,4 +1,4 @@
-DESCRIPTION = "System-V like init."
+SUMMARY = "System-V like init"
 DESCRIPTION = "This package is required to boot in most configurations.  It provides the /sbin/init program.  This is the first process started on boot, and the last process terminated before the system halts."
 HOMEPAGE = "http://savannah.nongnu.org/projects/sysvinit/"
 SECTION = "base"

@@ -1,4 +1,4 @@
-DESCRIPTION = "The Python Programming Language"
+SUMMARY = "The Python Programming Language"
 HOMEPAGE = "http://www.python.org"
 LICENSE = "PSFv2"
 SECTION = "devel/python"

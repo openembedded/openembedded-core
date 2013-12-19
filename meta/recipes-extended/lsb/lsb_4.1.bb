@@ -1,4 +1,4 @@
-DESCRIPTION = "LSB support for OpenEmbedded"
+SUMMARY = "LSB support for OpenEmbedded"
 SECTION = "console/utils"
 HOMEPAGE = "http://prdownloads.sourceforge.net/lsb"
 LICENSE = "GPLv2+"

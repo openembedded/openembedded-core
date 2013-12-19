@@ -1,4 +1,4 @@
-DESCRIPTION = "guilt is quilt like tool for git"
+SUMMARY = "quilt-like tool for Git"
 LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=b6f3400dc1a01cebafe8a52b3f344135"

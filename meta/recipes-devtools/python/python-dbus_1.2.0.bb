@@ -1,4 +1,4 @@
-DESCRIPTION = "Python bindings for DBus, a socket-based message bus system for interprocess communication"
+SUMMARY = "Python bindings for the DBus inter-process communication system"
 SECTION = "devel/python"
 HOMEPAGE = "http://www.freedesktop.org/Software/dbus"
 LICENSE = "MIT"

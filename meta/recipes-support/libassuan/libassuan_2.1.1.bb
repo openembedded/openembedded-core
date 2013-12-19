@@ -1,4 +1,4 @@
-DESCRIPTION = "IPC library used by GnuPG and GPGME"
+SUMMARY = "IPC library used by GnuPG and GPGME"
 HOMEPAGE = "http://www.gnupg.org/related_software/libassuan/"
 BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 

@@ -1,4 +1,4 @@
-DESCRIPTION = "Fluendo closed-format GStreamer plug-in"
+SUMMARY = "Fluendo closed-format GStreamer plug-in"
 SECTION = "multimedia"
 HOMEPAGE = "http://www.fluendo.com/resources/source-plugins.php"
 DEPENDS = "gstreamer zlib"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Sato Icon Theme"
+SUMMARY = "Sato icon theme"
 HOMEPAGE = "http://www.o-hand.com"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 

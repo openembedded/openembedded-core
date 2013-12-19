@@ -1,4 +1,4 @@
-DESCRIPTION = "Run postinstall scripts on device"
+SUMMARY = "Runs postinstall scripts on first boot of the target device"
 SECTION = "devel"
 PR = "r9"
 LICENSE = "MIT"

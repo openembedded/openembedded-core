@@ -1,4 +1,4 @@
-DESCRIPTION = "LatencyTOP, a Linux tool measuring and fixing latency"
+SUMMARY = "Linux tool for measuring and fixing latency"
 HOMEPAGE = "http://www.latencytop.org/"
 
 LICENSE = "GPLv2"
