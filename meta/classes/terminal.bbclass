@@ -86,3 +86,5 @@ def oe_terminal(command, title, d):
         bb.fatal('No valid terminal found, unable to open devshell')
     except oe.terminal.ExecutionError as exc:
         bb.fatal('Unable to spawn terminal %s: %s' % (terminal, exc))
+
+oe_terminal[vardepsexclude] = "BB_ORIGENV"
