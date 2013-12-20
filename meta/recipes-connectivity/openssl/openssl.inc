@@ -13,12 +13,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 
 DEPENDS = "perl-native-runtime"
 
-# Adding RDEPENDS for perl scripts
-RDEPENDS_${PN}-misc +="perl"
-
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
           "
 S = "${WORKDIR}/openssl-${PV}"
+
+PACKAGECONFIG[perl] = ",,,"
 
 AR_append = " r"
 # Avoid binaries being marked as requiring an executable stack since it 
@@ -41,6 +40,7 @@ FILES_libcrypto = "${base_libdir}/libcrypto${SOLIBS}"
 FILES_libssl = "${libdir}/libssl.so.*"
 FILES_${PN} =+ " ${libdir}/ssl/*"
 FILES_${PN}-misc = "${libdir}/ssl/misc ${bindir}/c_rehash"
+RDEPENDS_${PN}-misc = "${@base_contains('PACKAGECONFIG', 'perl', 'perl', '', d)}"
 FILES_${PN}-dev += "${base_libdir}/libcrypto${SOLIBSDEV}"
 
 # Add the openssl.cnf file to the openssl-conf package.  Make the libcrypto
@@ -157,11 +157,18 @@ do_install () {
 
 	install -d ${D}${includedir}
 	cp --dereference -R include/openssl ${D}${includedir}
-	sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${libdir}/ssl/misc/CA.pl
 
 	oe_multilib_header openssl/opensslconf.h
-	# The c_rehash utility isn't installed by the normal installation process.
-	install -m 0755 ${S}/tools/c_rehash ${D}${bindir}
+	if [ "${@base_contains('PACKAGECONFIG', 'perl', 'perl', '', d)}" = "perl" ]; then
+		install -m 0755 ${S}/tools/c_rehash ${D}${bindir}
+		sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${bindir}/c_rehash
+		sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${libdir}/ssl/misc/CA.pl
+		sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${libdir}/ssl/misc/tsget
+		# The c_rehash utility isn't installed by the normal installation process.
+	else
+		rm -f ${D}${bindir}/c_rehash
+		rm -f ${D}${libdir}/ssl/misc/CA.pl ${D}${libdir}/ssl/misc/tsget
+	fi
 }
 
 BBCLASSEXTEND = "native nativesdk"
