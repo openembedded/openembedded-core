@@ -6,11 +6,11 @@ RP 2013/03/23
 
 Upstream-Status: Pending
 
-Index: valgrind-3.8.1/configure.in
+Index: valgrind-3.9.0/configure.ac
 ===================================================================
---- valgrind-3.8.1.orig/configure.in	2013-03-23 16:06:58.388793432 +0000
-+++ valgrind-3.8.1/configure.in	2013-03-23 16:46:15.088737377 +0000
-@@ -316,26 +316,26 @@
+--- valgrind-3.9.0.orig/configure.ac
++++ valgrind-3.9.0/configure.ac
+@@ -325,26 +325,26 @@ case "${host_os}" in
  	     9.*)
  		  AC_MSG_RESULT([Darwin 9.x (${kernel}) / Mac OS X 10.5 Leopard])
  		  AC_DEFINE([DARWIN_VERS], DARWIN_10_5, [Darwin / Mac OS X version])
@@ -45,7 +45,7 @@ Index: valgrind-3.8.1/configure.in
  		  ;;
               *) 
  		  AC_MSG_RESULT([unsupported (${kernel})])
-@@ -805,124 +805,124 @@
+@@ -799,124 +799,124 @@ case "${GLIBC_VERSION}" in
       2.2)
  	AC_MSG_RESULT(2.2 family)
  	AC_DEFINE([GLIBC_2_2], 1, [Define to 1 if you're using glibc 2.2.x])
@@ -189,15 +189,6 @@ Index: valgrind-3.8.1/configure.in
 +	DEFAULT_SUPP="$srcdir/glibc-2.34567-NPTL-helgrind.supp ${DEFAULT_SUPP}"
 +	DEFAULT_SUPP="$srcdir/glibc-2.X-drd.supp ${DEFAULT_SUPP}"
  	;;
-      2.16)
- 	AC_MSG_RESULT(2.16 family)
- 	AC_DEFINE([GLIBC_2_16], 1, [Define to 1 if you're using glibc 2.16.x])
- 	DEFAULT_SUPP="glibc-2.X.supp ${DEFAULT_SUPP}"
--	DEFAULT_SUPP="glibc-2.34567-NPTL-helgrind.supp ${DEFAULT_SUPP}"
--	DEFAULT_SUPP="glibc-2.X-drd.supp ${DEFAULT_SUPP}"
-+	DEFAULT_SUPP="$srcdir/glibc-2.34567-NPTL-helgrind.supp ${DEFAULT_SUPP}"
-+	DEFAULT_SUPP="$srcdir/glibc-2.X-drd.supp ${DEFAULT_SUPP}"
- 	;;
       2.17)
  	AC_MSG_RESULT(2.17 family)
  	AC_DEFINE([GLIBC_2_17], 1, [Define to 1 if you're using glibc 2.17.x])
@@ -207,9 +198,18 @@ Index: valgrind-3.8.1/configure.in
 +	DEFAULT_SUPP="$srcdir/glibc-2.34567-NPTL-helgrind.supp ${DEFAULT_SUPP}"
 +	DEFAULT_SUPP="$srcdir/glibc-2.X-drd.supp ${DEFAULT_SUPP}"
  	;;
+      2.18)
+ 	AC_MSG_RESULT(2.18 family)
+ 	AC_DEFINE([GLIBC_2_18], 1, [Define to 1 if you're using glibc 2.18.x])
+ 	DEFAULT_SUPP="glibc-2.X.supp ${DEFAULT_SUPP}"
+-	DEFAULT_SUPP="glibc-2.34567-NPTL-helgrind.supp ${DEFAULT_SUPP}"
+-	DEFAULT_SUPP="glibc-2.X-drd.supp ${DEFAULT_SUPP}"
++	DEFAULT_SUPP="$srcdir/glibc-2.34567-NPTL-helgrind.supp ${DEFAULT_SUPP}"
++	DEFAULT_SUPP="$srcdir/glibc-2.X-drd.supp ${DEFAULT_SUPP}"
+ 	;;
       darwin)
  	AC_MSG_RESULT(Darwin)
-@@ -932,7 +932,7 @@
+@@ -926,7 +926,7 @@ case "${GLIBC_VERSION}" in
       bionic)
  	AC_MSG_RESULT(Bionic)
  	AC_DEFINE([BIONIC_LIBC], 1, [Define to 1 if you're using Bionic])
@@ -218,7 +218,7 @@ Index: valgrind-3.8.1/configure.in
  	;;
  
       *)
-@@ -949,11 +949,11 @@
+@@ -943,11 +943,11 @@ AC_SUBST(GLIBC_VERSION)
  # attempt to detect whether such libraries are installed on the
  # build machine (or even if any X facilities are present); just
  # add the suppressions antidisirregardless.
