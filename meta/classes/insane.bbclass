@@ -604,9 +604,6 @@ def package_qa_check_license(workdir, d):
             raise bb.build.FuncFailed( pn + ": LIC_FILES_CHKSUM points to an invalid file: " + srclicfile)
 
         recipemd5 = parm.get('md5', '')
-        if not recipemd5:
-            bb.error(pn + ": md5 checksum is not specified for ", url)
-            return False
         beginline, endline = 0, 0
         if 'beginline' in parm:
             beginline = int(parm['beginline'])
@@ -638,18 +635,22 @@ def package_qa_check_license(workdir, d):
         if recipemd5 == md5chksum:
             bb.note (pn + ": md5 checksum matched for ", url)
         else:
-            bb.error (pn + ": md5 data is not matching for ", url)
-            bb.error (pn + ": The new md5 checksum is ", md5chksum)
-            if beginline:
-                if endline:
-                    srcfiledesc = "%s (lines %d through to %d)" % (srclicfile, beginline, endline)
+            if recipemd5:
+                bb.error(pn + ": md5 data is not matching for ", url)
+                bb.error(pn + ": The new md5 checksum is ", md5chksum)
+                if beginline:
+                    if endline:
+                        srcfiledesc = "%s (lines %d through to %d)" % (srclicfile, beginline, endline)
+                    else:
+                        srcfiledesc = "%s (beginning on line %d)" % (srclicfile, beginline)
+                elif endline:
+                    srcfiledesc = "%s (ending on line %d)" % (srclicfile, endline)
                 else:
-                    srcfiledesc = "%s (beginning on line %d)" % (srclicfile, beginline)
-            elif endline:
-                srcfiledesc = "%s (ending on line %d)" % (srclicfile, endline)
+                    srcfiledesc = srclicfile
+                bb.error(pn + ": Check if the license information has changed in %s to verify that the LICENSE value \"%s\" remains valid" % (srcfiledesc, lic))
             else:
-                srcfiledesc = srclicfile
-            bb.error(pn + ": Check if the license information has changed in %s to verify that the LICENSE value \"%s\" remains valid" % (srcfiledesc, lic))
+                bb.error(pn + ": md5 checksum is not specified for ", url)
+                bb.error(pn + ": The md5 checksum is ", md5chksum)
             sane = False
 
     return sane
