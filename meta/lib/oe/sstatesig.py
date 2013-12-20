@@ -103,6 +103,9 @@ def find_siginfo(pn, taskname, taskhashlist, d):
         if key.startswith('virtual:native:'):
             pn = pn + '-native'
 
+    if taskname in ['do_fetch', 'do_unpack', 'do_patch', 'do_populate_lic']:
+        pn.replace("-native", "")
+
     filedates = {}
 
     # First search in stamps dir
