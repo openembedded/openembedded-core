@@ -23,7 +23,7 @@ do_configure() {
 	# libcap uses := for compilers, fortunately, it gives us a hint
 	# on what should be replaced with ?=
 	sed -e 's,:=,?=,g' -i Make.Rules
-	sed -e 's,^BUILD_CFLAGS ?= $(CFLAGS),BUILD_CFLAGS := $(BUILD_CFLAGS),' -i Make.Rules
+	sed -e 's,^BUILD_CFLAGS ?= $(.*CFLAGS),BUILD_CFLAGS := $(BUILD_CFLAGS),' -i Make.Rules
 }
 
 EXTRA_OEMAKE = " \
