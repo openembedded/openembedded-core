@@ -300,8 +300,9 @@ def sstate_clean_cachefile(ss, d):
 
 def sstate_clean_cachefiles(d):
     for task in (d.getVar('SSTATETASKS', True) or "").split():
-        ss = sstate_state_fromvars(d, task)
-        sstate_clean_cachefile(ss, d)
+        ld = d.createCopy()
+        ss = sstate_state_fromvars(ld, task)
+        sstate_clean_cachefile(ss, ld)
 
 def sstate_clean_manifest(manifest, d):
     import oe.path
@@ -370,8 +371,9 @@ python sstate_cleanall() {
 
     tasks = d.getVar('SSTATETASKS', True).split()
     for name in tasks:
-        shared_state = sstate_state_fromvars(d, name)
-        sstate_clean(shared_state, d)
+        ld = d.createCopy()
+        shared_state = sstate_state_fromvars(ld, name)
+        sstate_clean(shared_state, ld)
 }
 
 def sstate_hardcode_path(d):
