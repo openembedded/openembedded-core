@@ -1,5 +1,5 @@
 SUMMARY = "High quality MP3 audio encoder"
-HOMEPAGE = "http://sourceforge.net/projects/lame/files/lame/"
+HOMEPAGE = "http://lame.sourceforge.net/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=290&atid=100290"
 SECTION = "console/utils"
 LICENSE = "LGPLv2+"
