@@ -1,5 +1,7 @@
-DESCRIPTION = "A program that you can use to select particular records in a \
-file and perform operations upon them."
+SUMMARY = "GNU awk text processing utility"
+DESCRIPTION = "The GNU version of awk, a text processing utility. \
+Awk interprets a special-purpose programming language to do \
+quick and easy text pattern matching and reformatting jobs."
 HOMEPAGE = "www.gnu.org/software/gawk"
 BUGTRACKER  = "bug-gawk@gnu.org"
 SECTION = "console/utils"
