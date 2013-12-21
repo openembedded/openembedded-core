@@ -1,5 +1,5 @@
 SUMMARY = "An sh-compatible command language interpreter"
-HOMEPAGE = "http://cnswww.cns.cwru.edu/~chet/bash/bashtop.html"
+HOMEPAGE = "http://tiswww.case.edu/php/chet/bash/bashtop.html"
 SECTION = "base/shell"
 
 DEPENDS = "ncurses bison-native"
