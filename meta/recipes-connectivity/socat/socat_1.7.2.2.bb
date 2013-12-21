@@ -1,3 +1,4 @@
+SUMMARY = "Multipurpose relay for bidirectional data transfer"
 DESCRIPTION = "Socat is a relay for bidirectional data \
 transfer between two independent data channels."
 HOMEPAGE = "http://www.dest-unreach.org/socat/"

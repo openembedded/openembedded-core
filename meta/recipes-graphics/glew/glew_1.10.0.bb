@@ -1,3 +1,4 @@
+SUMMARY = "OpenGL extension loading library"
 DESCRIPTION = "The OpenGL Extension Wrangler Library (GLEW) is a cross-platform open-source C/C++ extension loading library."
 HOMEPAGE = "http://glew.sourceforge.net/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=67586"

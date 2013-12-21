@@ -1,3 +1,4 @@
+SUMMARY = "Example DirectFB applications"
 DESCRIPTION = "The DirectFB-examples package contains a set of simple DirectFB \
       applications that can be used to test and demonstrate various DirectFB \
       features"

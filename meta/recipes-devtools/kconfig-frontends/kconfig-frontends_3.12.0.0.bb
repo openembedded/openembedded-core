@@ -1,6 +1,7 @@
 # Copyright (C) 2012 Khem Raj <raj.khem@gmail.com>
 # Released under the MIT license (see COPYING.MIT for the terms)
 
+SUMMARY = "Linux kernel style configuration framework for other projects"
 DESCRIPTION = "The kconfig-frontends project aims at centralising \
 the effort of keeping an up-to-date, out-of-tree, packaging of the \
 kconfig infrastructure, ready for use by third-party projects. \

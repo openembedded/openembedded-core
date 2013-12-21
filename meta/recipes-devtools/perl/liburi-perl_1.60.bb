@@ -1,3 +1,4 @@
+SUMMARY = "Perl module to manipulate and access URI strings"
 DESCRIPTION = "This package contains the URI.pm module with friends. \
 The module implements the URI class. URI objects can be used to access \
 and manipulate the various components that make up these strings."

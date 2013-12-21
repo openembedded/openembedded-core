@@ -1,3 +1,4 @@
+SUMMARY = "GLib networking extensions"
 DESCRIPTION = "glib-networking contains the implementations of certain GLib networking features that cannot be implemented directly in GLib itself because of their dependencies."
 HOMEPAGE = "http://git.gnome.org/browse/glib-networking/"
 BUGTRACKER = "http://bugzilla.gnome.org"

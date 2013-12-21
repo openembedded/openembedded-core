@@ -1,6 +1,7 @@
 # Copyright (C) 2013 Khem Raj <raj.khem@gmail.com>
 # Released under the MIT license (see COPYING.MIT for the terms)
 
+SUMMARY = "Library of utility functions from BSD systems"
 DESCRIPTION = "This library provides useful functions commonly found on BSD systems, \
                and lacking on others like GNU systems, thus making it easier to port \
                projects with strong BSD origins, without needing to embed the same \

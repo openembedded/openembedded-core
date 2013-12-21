@@ -1,3 +1,4 @@
+SUMMARY = "Name Service Switch module for resolving the local hostname"
 DESCRIPTION = "plugin for the GNU Name Service Switch (NSS) functionality of \
 the GNU C Library (glibc) providing host name resolution for the locally \
 configured system hostname as returned by gethostname(2)."

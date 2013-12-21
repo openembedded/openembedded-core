@@ -1,3 +1,4 @@
+SUMMARY = "Library for supporting single instance GTK+ applications"
 DESCRIPTION = "Unique is a library for writing single instance application. If you launch a single instance application twice, the second instance will either just quit or will send a message to the running instance."
 HOMEPAGE = "http://live.gnome.org/LibUnique"
 BUGTRACKER = "https://bugzilla.gnome.org/enter_bug.cgi?product=libunique"

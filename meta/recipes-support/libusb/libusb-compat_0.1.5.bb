@@ -1,3 +1,4 @@
+SUMMARY = "libusb-0.1 compatibility layer for libusb1"
 DESCRIPTION = "libusb-0.1 compatible layer for libusb1, a drop-in replacement \
 that aims to look, feel and behave exactly like libusb-0.1"
 HOMEPAGE = "http://www.libusb.org/"

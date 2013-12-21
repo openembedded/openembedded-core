@@ -1,3 +1,4 @@
+SUMMARY = "Creative photo display application"
 DESCRIPTION = "Fotowall is a creative tool that allows you to layout your photos or pictures \
 in a personal way. You can add pictures, then resize, move, change colors, text, shadows, etc.."
 
