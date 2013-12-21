@@ -1,5 +1,5 @@
 SUMMARY = "DSSSL stylesheets used to transform SGML and XML DocBook files"
-HOMEPAGE= "http://docbook.sourceforge.net"
+HOMEPAGE = "http://docbook.sourceforge.net"
 # Simple persmissive
 LICENSE = "DSSSL"
 LIC_FILES_CHKSUM = "file://README;beginline=41;endline=74;md5=875385159b2ee76ecf56136ae7f542d6"

@@ -1,6 +1,6 @@
 SUMMARY = "Framework for defining and tracking users, login sessions, and seats"
-HOMEPAGE="http://www.freedesktop.org/wiki/Software/ConsoleKit"
-BUGTRACKER="https://bugs.freedesktop.org/buglist.cgi?query_format=specific&product=ConsoleKit"
+HOMEPAGE = "http://www.freedesktop.org/wiki/Software/ConsoleKit"
+BUGTRACKER = "https://bugs.freedesktop.org/buglist.cgi?query_format=specific&product=ConsoleKit"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \

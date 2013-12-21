@@ -1,5 +1,5 @@
 SUMMARY = "Simon Tatham's Portable Puzzle Collection"
-HOMEPAGE="http://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
+HOMEPAGE = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
 
 DEPENDS = "gtk+ libxt"
 MOD_PV = "${@d.getVar('PV',1)[1:]}"

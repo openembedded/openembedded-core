@@ -1,6 +1,6 @@
 SUMMARY = "GNU debugger"
 HOMEPAGE = "http://www.gnu.org/software/gdb/"
-LICENSE="GPLv3+"
+LICENSE = "GPLv3+"
 SECTION = "devel"
 DEPENDS = "expat ncurses readline ${LTTNGUST}"
 

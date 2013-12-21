@@ -4,8 +4,10 @@
 
 SUMMARY = "GNU Aspell spell-checker"
 SECTION = "console/utils"
-LICENSE="LGPLv2 | LGPLv2.1"
+
+LICENSE = "LGPLv2 | LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
+
 PR = "r1"
 
 SRC_URI = "${GNU_MIRROR}/aspell/aspell-${PV}.tar.gz"
