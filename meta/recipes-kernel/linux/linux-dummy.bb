@@ -1,5 +1,8 @@
 SECTION = "kernel"
 SUMMARY = "Dummy Linux kernel"
+DESCRIPTION = "Dummy Linux kernel, to be selected as the preferred \
+provider for virtual/kernel to satisfy dependencies for situations \
+where you wish to build the kernel externally from the build system."
 LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
