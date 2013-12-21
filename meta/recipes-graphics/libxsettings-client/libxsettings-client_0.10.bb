@@ -4,7 +4,7 @@ setting propagation protocol. Controls setting of double click timeout, drag-and
 threshold, and default foreground and background colors for all applications running within a \
 desktop."
 HOMEPAGE = "http://matchbox-project.org/sources/optional-dependencies/"
-BUGTRACKER = "http://bugzilla.openedhand.com/"
+BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 SECTION = "x/libs"
 LICENSE = "MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7cfac9d2d4dc3694cc7eb605cf32a69b \

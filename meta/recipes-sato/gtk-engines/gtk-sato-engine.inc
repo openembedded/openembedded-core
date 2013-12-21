@@ -1,6 +1,6 @@
 DESCRIPTION = "Sato theme engine for GTK"
 HOMEPAGE = "http://www.o-hand.com"
-BUGTRACKER = "http://bugzilla.openedhand.com/"
+BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 
 LICENSE = "LGPLv2.1 & LGPLv2+"
 

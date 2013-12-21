@@ -1,6 +1,6 @@
 DESCRIPTION = "Portable Puzzle Collection"
 HOMEPAGE = "http://o-hand.com/"
-BUGTRACKER = "http://bugzilla.openedhand.com/"
+BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=f56ec6772dd1c7c367067bbea8ea1675 \

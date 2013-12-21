@@ -1,6 +1,6 @@
 DESCRIPTION = "OpenedHand Widget Library video widget"
 HOMEPAGE = "http://o-hand.com/"
-BUGTRACKER = "http://bugzilla.o-hand.com/"
+BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 LICENSE = "LGPLv2.1 & GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ac14b7ca45afea5af040da54db270eb0 \
                     file://src/video.c;endline=22;md5=e8e9f23c3691c11af7d8fc03264ca9da \

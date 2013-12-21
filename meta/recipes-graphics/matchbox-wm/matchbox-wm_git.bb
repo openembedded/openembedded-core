@@ -1,6 +1,6 @@
 DESCRIPTION = "Matchbox window manager"
 HOMEPAGE = "http://matchbox-project.org"
-BUGTRACKER = "http://bugzilla.openedhand.com/"
+BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://src/wm.h;endline=21;md5=a7e844465edbcf79c282369f93caa835 \

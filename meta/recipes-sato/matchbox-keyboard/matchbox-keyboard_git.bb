@@ -1,6 +1,6 @@
 DESCRIPTION = "Matchbox virtual keyboard for X11"
 HOMEPAGE = "http://matchbox-project.org"
-BUGTRACKER = "http://bugzilla.openedhand.com/"
+BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 SECTION = "x11"
 
 LICENSE = "LGPLv2.1"

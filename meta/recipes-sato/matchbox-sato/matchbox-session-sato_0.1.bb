@@ -1,6 +1,6 @@
 DESCRIPTION = "Custom MB session files for poky"
 HOMEPAGE = "http://www.matchbox-project.org/"
-BUGTRACKER = "http://bugzilla.openedhand.com/"
+BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 
 LICENSE = "GPLv2.0+"
 LIC_FILES_CHKSUM = "file://session;endline=3;md5=f8a5c5b9c279e52dc094d10e11c2be63"
