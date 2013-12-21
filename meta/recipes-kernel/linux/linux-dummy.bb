@@ -1,6 +1,6 @@
 SECTION = "kernel"
 SUMMARY = "Dummy Linux kernel"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe"
 
