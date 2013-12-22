@@ -1,14 +1,12 @@
-SUMMARY = "PCI Utilities"
+SUMMARY = "PCI utilities"
 DESCRIPTION = 'The PCI Utilities package contains a library for portable access \
 to PCI bus configuration space and several utilities based on this library.'
-DESCRIPTION_pciutils-ids = 'The list of PCI IDs for pciutils'
 HOMEPAGE = "http://atrey.karlin.mff.cuni.cz/~mj/pciutils.shtml"
 SECTION = "console/utils"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 DEPENDS = "zlib kmod"
-RDEPENDS_${PN} = "${PN}-ids"
 
 SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.bz2 \
            file://configure.patch \
@@ -53,9 +51,12 @@ do_install () {
 	ln -s ../sbin/lspci ${D}${bindir}/lspci
 }
 
-PACKAGES =+ "pciutils-ids libpci libpci-dev libpci-dbg"
-FILES_pciutils-ids = "${datadir}/pci.ids*"
+PACKAGES =+ "${PN}-ids libpci libpci-dev libpci-dbg"
+FILES_${PN}-ids = "${datadir}/pci.ids*"
 FILES_libpci = "${libdir}/libpci.so.*"
 FILES_libpci-dbg = "${libdir}/.debug"
 FILES_libpci-dev = "${libdir}/libpci.a ${libdir}/libpci.la ${libdir}/libpci.so \
                     ${includedir}/pci ${libdir}/pkgconfig"
+SUMMARY_${PN}-ids = "PCI utilities - device ID database"
+DESCRIPTION_${PN}-ids = "Package providing the PCI device ID database for pciutils."
+RDEPENDS_${PN} += "${PN}-ids"
