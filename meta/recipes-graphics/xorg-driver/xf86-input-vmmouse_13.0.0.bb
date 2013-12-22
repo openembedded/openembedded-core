@@ -1,6 +1,11 @@
 require xorg-driver-input.inc
 
-DESCRIPTION = "X.Org X server -- VMWare mouse input driver"
+SUMMARY = "X.Org X server -- VMWare mouse input driver"
+DESCRIPTION = "The vmmouse driver enables support for the special VMMouse \
+protocol that is provided by VMware virtual machines to give absolute \
+pointer positioning. The vmmouse driver is capable of falling back to the \
+standard 'mouse' driver if a VMware virtual machine is not detected."
+
 PR = "${INC_PR}.0"
 
 SRC_URI[md5sum] = "34f9f64ee6a1a51fc8266a9af24e1e07"
