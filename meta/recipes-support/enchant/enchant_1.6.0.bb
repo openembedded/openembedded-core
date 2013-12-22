@@ -24,6 +24,8 @@ EXTRA_OECONF = "--with-aspell-prefix=${STAGING_DIR_HOST}${prefix} \
 
 export CXXFLAGS += " -L${STAGING_LIBDIR} -lstdc++ "
 
+export CXXFLAGS += " -L${STAGING_LIBDIR} -lstdc++ "
+
 FILES_${PN} = "${bindir} ${libdir}/*${SOLIBS} ${datadir}/${BPN} ${libdir}/${BPN}/*.so"
 FILES_${PN}-dev += "${libdir}/${BPN}/*{SOLIBSDEV} ${libdir}/${BPN}/*.la"
 FILES_${PN}-staticdev += "${libdir}/${BPN}/*.a"
