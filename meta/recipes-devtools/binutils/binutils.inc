@@ -1,4 +1,4 @@
-SUMMARY = "A GNU collection of binary utilities"
+SUMMARY = "GNU binary utilities"
 DESCRIPTION = "The GNU Binutils are a collection of binary tools. \
 The main ones are ld (GNU Linker), and as (GNU Assembler). This \
 package also includes addition tools such as addr2line (Converts \

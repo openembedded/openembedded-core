@@ -1,6 +1,6 @@
 inherit cross-canadian
 
-DESCRIPTION = "A GNU collection of cross-canadian binary utilities for ${TARGET_ARCH} target"
+SUMMARY = "GNU binary utilities (cross-canadian for ${TARGET_ARCH} target)"
 PN = "binutils-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 BPN = "binutils"
 
