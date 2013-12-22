@@ -1,3 +1,4 @@
+SUMMARY = "GNU multiprecision arithmetic library"
 DESCRIPTION = "GMP is a free library for arbitrary precision arithmetic, operating on signed integers, rational numbers, and floating point numbers"
 HOMEPAGE = "http://gmplib.org/"
 BUGTRACKER = "http://gmplib.org/mailman/listinfo/gmp-bugs"

@@ -1,5 +1,6 @@
 SECTION = "devel"
-DESCRIPTION = "GNU multiprecision arithmetic library"
+SUMMARY = "GNU multiprecision arithmetic library"
+DESCRIPTION = "GMP is a free library for arbitrary precision arithmetic, operating on signed integers, rational numbers, and floating point numbers"
 HOMEPAGE = "http://gmplib.org/"
 LICENSE = "GPLv3 LGPLv3"
 
