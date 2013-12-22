@@ -1,5 +1,6 @@
-DESCRIPTION = "This is a modified version of the icecc-create-env script in order to\
-make it work with OE."
+SUMMARY = "icecc environment setup script"
+DESCRIPTION = "This is a version of the icecc-create-env script that has \
+been modified in order to make it work with OE."
 SECTION = "base"
 # source file has just a "GPL" word, but upstream is GPLv2+.
 # most probably just GPL would be a mistake
