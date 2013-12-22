@@ -1,6 +1,5 @@
-DESCRIPTION = "A foundational basic image without support for X that can be \
-reasonably used for customization and is suitable for implementations that \
-conform to Linux Standard Base (LSB)."
+DESCRIPTION = "An image containing packages that are required to conform \
+to the Linux Standard Base (LSB) specification."
 
 IMAGE_FEATURES += "splash ssh-server-openssh hwcodecs package-management"
 
