@@ -1,4 +1,5 @@
-DESCRIPTION = "Qt is a versatile cross-platform application framework -- this is the embedded version."
+SUMMARY = "Cross-platform UI toolkit and application framework (framebuffer version)"
+DESCRIPTION = "Qt is a versatile cross-platform application framework -- this is the embedded (framebuffer) version."
 SECTION = "libs"
 HOMEPAGE = "http://qt-project.org/"
 DEPENDS += "directfb tslib"
