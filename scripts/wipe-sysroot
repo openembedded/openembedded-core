@@ -20,6 +20,12 @@
 
 set -e
 
+if [ $# -gt 0 ]; then
+    echo "Wipe all sysroots and sysroot-related stamps for the current build directory." >&2
+    echo "Usage: $0" >&2
+    exit 1
+fi
+
 ENVS=`mktemp --suffix -wipe-sysroot-envs`
 bitbake -p -e > $ENVS
 
@@ -29,9 +35,11 @@ eval `grep -F STAMPS_DIR= $ENVS`
 rm -f $ENVS
 
 if [ -z "$SSTATE_MANIFESTS" -o -z "$STAGING_DIR" -o -z "$STAMPS_DIR" ]; then
-    echo "Could not determine SSTATE_MANIFESTS/STAGING_DIR/STAMPS_DIR, check above for errors"
+    echo "Could not determine SSTATE_MANIFESTS/STAGING_DIR/STAMPS_DIR from bitbake, check above for errors"
     exit 1
 fi
+
+echo "Deleting the sysroots in $STAGING_DIR, and selected stamps in $SSTATE_MANIFESTS and $STAMPS_DIR."
 
 # The sysroots themselves
 rm -rf $STAGING_DIR
