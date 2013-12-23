@@ -120,11 +120,15 @@ do_install_ptest () {
        install ${S}/test/* ${D}${PTEST_PATH}/test
        install -m 0755  ${B}/test-udev ${D}${PTEST_PATH}/
        install -d ${D}${PTEST_PATH}/build-aux
-       cp -rf ${B}/rules ${D}${PTEST_PATH}/
-       cp ${B}/Makefile ${D}${PTEST_PATH}/
        cp ${S}/build-aux/test-driver ${D}${PTEST_PATH}/build-aux/
-       tar -C ${D}${PTEST_PATH}/test -xJf ${S}/test/sys.tar.xz
+       cp -rf ${B}/rules ${D}${PTEST_PATH}/
+       # This directory needs to be there for udev-test.pl to work.
+       install -d ${D}${libdir}/udev/rules.d
+       cp ${B}/Makefile ${D}${PTEST_PATH}/
+       cp ${S}/test/sys.tar.xz ${D}${PTEST_PATH}/test
        sed -i 's/"tree"/"ls"/' ${D}${PTEST_PATH}/test/udev-test.pl
+       sed -i 's#${S}#${PTEST_PATH}#g' ${D}${PTEST_PATH}/Makefile
+       sed -i 's#${B}#${PTEST_PATH}#g' ${D}${PTEST_PATH}/Makefile
 }
 
 python populate_packages_prepend (){
@@ -146,6 +150,10 @@ FILES_${PN}-analyze = "${bindir}/systemd-analyze"
 
 FILES_${PN}-initramfs = "/init"
 RDEPENDS_${PN}-initramfs = "${PN}"
+
+# The test cases need perl and bash to run correctly.
+RDEPENDS_${PN}-ptest += "perl bash"
+FILES_${PN}-ptest += "${libdir}/udev/rules.d"
 
 FILES_${PN}-gui = "${bindir}/systemadm"
 
