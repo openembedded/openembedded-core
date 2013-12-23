@@ -10,7 +10,6 @@ BBCLASSEXTEND = "native nativesdk"
 SECTION = "x11/libs"
 LICENSE = "MIT-X"
 
-PARALLEL_MAKE = ""
 DEPENDS = "xcb-proto xproto libxau libxslt-native xcb-proto-native libpthread-stubs"
 
 SRC_URI = "http://xcb.freedesktop.org/dist/libxcb-${PV}.tar.bz2 \
