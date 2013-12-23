@@ -68,7 +68,6 @@ pkg_postinst_dbus() {
 }
 
 EXTRA_OECONF = "--disable-tests \
-                --disable-checks \
                 --disable-xml-docs \
                 --disable-doxygen-docs \
                 --disable-libaudit \
