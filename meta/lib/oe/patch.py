@@ -203,17 +203,23 @@ class GitApplyTree(PatchTree):
         PatchTree.__init__(self, dir, d)
 
     def _applypatch(self, patch, force = False, reverse = False, run = True):
-        shellcmd = ["git", "--git-dir=.", "apply", "-p%s" % patch['strippath']]
+        def _applypatchhelper(shellcmd, patch, force = False, reverse = False, run = True):
+            if reverse:
+                shellcmd.append('-R')
 
-        if reverse:
-            shellcmd.append('-R')
+            shellcmd.append(patch['file'])
 
-        shellcmd.append(patch['file'])
+            if not run:
+                return "sh" + "-c" + " ".join(shellcmd)
 
-        if not run:
-            return "sh" + "-c" + " ".join(shellcmd)
+            return runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
 
-        return runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+        try:
+            shellcmd = ["git", "--work-tree=.", "am", "-3", "-p%s" % patch['strippath']]
+            return _applypatchhelper(shellcmd, patch, force, reverse, run)
+        except CmdError:
+            shellcmd = ["git", "--git-dir=.", "apply", "-p%s" % patch['strippath']]
+            return _applypatchhelper(shellcmd, patch, force, reverse, run)
 
 
 class QuiltTree(PatchSet):
