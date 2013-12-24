@@ -15,15 +15,15 @@ RCONFLICTS_${PN} = "timezones timezone-africa timezone-america timezone-antarcti
 
 SRC_URI = "ftp://ftp.iana.org/tz/releases/tzdata${PV}.tar.gz;name=tzdata"
 
-SRC_URI[tzdata.md5sum] = "d310abe42cbe87e76ceb69e2c7003c92"
-SRC_URI[tzdata.sha256sum] = "6b9e17e823eec0e09e12f74b452a70be4face1ef14c2fb1917b7c7e60564de27"
+SRC_URI[tzdata.md5sum] = "8bc69eb75bea496ebe1d5a9ab576702d"
+SRC_URI[tzdata.sha256sum] = "1cd56a6ee964143ef0c65229968a5093988335b95e9115235b5e7b7e45e67dda"
 
 S = "${WORKDIR}"
 
 DEFAULT_TIMEZONE ?= "Universal"
 
 TZONES= "africa antarctica asia australasia europe northamerica southamerica  \
-         factory solar87 solar88 solar89 etcetera backward systemv \
+         factory etcetera backward systemv \
         "
 # pacificnew 
 
