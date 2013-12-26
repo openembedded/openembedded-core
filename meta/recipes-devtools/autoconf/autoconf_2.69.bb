@@ -13,7 +13,6 @@ SRC_URI += "file://autoreconf-include.patch \
 	    file://autoreconf-foreign.patch \
 	    file://autoreconf-gnuconfigize.patch \
 	    file://autoheader-nonfatal-warnings.patch \
-	    ${@['file://path_prog_fixes.patch', ''][bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d)]} \
             file://config_site.patch \
             file://remove-usr-local-lib-from-m4.patch \
             file://preferbash.patch \
