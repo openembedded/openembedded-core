@@ -6,14 +6,14 @@ DESCRIPTION = "AutoGen is a tool designed to simplify the creation and\
 HOMEPAGE = "http://www.gnu.org/software/autogen/"
 SECTION = "devel"
 LICENSE = "GPLv3"
-LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504" 
+LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
            file://guile.patch \
            file://increase-timeout-limit.patch"
 
-SRC_URI[md5sum] = "09f074cba57610bf4ef1147e01c8ae90"
-SRC_URI[sha256sum] = "cd2585f4794d0e9d7f2cb0b9af4f2bd429946e718473edf1cf8c49f081ca71ed"
+SRC_URI[md5sum] = "117c4bc5613c57e1b97d760a5d1910a4"
+SRC_URI[sha256sum] = "cc2702dec21ba5b01144865163f6d1a54268d2b72aafc5520ad0e0cb57104068"
 
 DEPENDS = "guile-native libtool-native libxml2-native"
 

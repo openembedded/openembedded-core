@@ -1,14 +1,24 @@
-Disable the autoconf macros that use dpkg (!) and guile-config to determine what 
-version and where guile is installed, and just use pkg-config directly (guile-config is a deprecated wrapper around pkg-config). 
- 
- Signed-off-by: Ross Burton <ross.burton@intel.com> 
- Upstream-Status: Pending (should be submitted)
+remove dpkg and guile-config
+
+Disable the autoconf macros that use dpkg (!) and guile-config to
+determine what version and where guile is installed, and just use
+pkg-config directly (guile-config is a deprecated wrapper around
+pkg-config).
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+Uprade to  5.18.2
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Upstream-Status: Pending [should be submitted]
+---
+ config/ag_macros.m4 | 151 +++-------------------------------------------------
+ 1 file changed, 8 insertions(+), 143 deletions(-)
 
 diff --git a/config/ag_macros.m4 b/config/ag_macros.m4
-index 9914a65..b6db97a 100644
+index c05073e..a8e96da 100644
 --- a/config/ag_macros.m4
 +++ b/config/ag_macros.m4
-@@ -175,123 +175,12 @@ return 0;],
+@@ -180,118 +180,13 @@ return 0;],
  
  
  AC_DEFUN([AG_WITHLIB_GUILE],[
@@ -26,7 +36,12 @@ index 9914a65..b6db97a 100644
 -    ag_cv_with_libguile_cflags=no
 -    ag_cv_with_libguile_libs=no
 -  else
--
++  PKG_PROG_PKG_CONFIG
++  PKG_CHECK_MODULES(LIBGUILE, [guile-2.0])
++  case "${LIBGUILE_LIBS}" in *-L* )
++    LIBGUILE_PATH=`echo ,${LIBGUILE_LIBS} |           sed 's/.*[, ]-L[   ]*//;s/[  ].*//'`
++  ;; * ) LIBGUILE_PATH='' ;; esac
+ 
 -  AC_ARG_WITH([libguile-cflags],
 -    AS_HELP_STRING([--with-libguile-cflags], [libguile compile flags]),
 -    [ag_cv_with_libguile_cflags=${with_libguile_cflags}],
@@ -109,14 +124,10 @@ index 9914a65..b6db97a 100644
 -  AC_MSG_RESULT([${ag_cv_with_libguile}])
 -    AC_SUBST([LIBGUILE_CFLAGS])
 -    AC_SUBST([LIBGUILE_LIBS])
--    AC_SUBST([LIBGUILE_PATH])
 -  if test "X${ag_cv_with_libguile}" != Xno
 -  then[
 -      LIBGUILE_CFLAGS="${ag_cv_with_libguile_cflags}"
--      LIBGUILE_LIBS="${ag_cv_with_libguile_libs}"
--      case "${LIBGUILE_LIBS}" in *-L* )
--        LIBGUILE_PATH=`echo ,${LIBGUILE_LIBS} |           sed 's/.*[, ]-L[ 	]*//;s/[ 	].*//'`
--      ;; * ) LIBGUILE_PATH='' ;; esac]
+-      LIBGUILE_LIBS="${ag_cv_with_libguile_libs}"]
 -          CPPFLAGS="@S|@{ag_save_CPPFLAGS}"
 -      LIBS="@S|@{ag_save_LIBS}"
 -  else
@@ -124,20 +135,14 @@ index 9914a65..b6db97a 100644
 -    LIBS="${ag_save_LIBS}"
 -      LIBGUILE_CFLAGS=''
 -      LIBGUILE_LIBS=''
--      LIBGUILE_PATH=''
 -      AC_MSG_ERROR([Cannot find libguile.  libguile is required.  Perhaps you need to install guile-devel?])
 -  fi
-+  PKG_PROG_PKG_CONFIG
-+  PKG_CHECK_MODULES(LIBGUILE, [guile-2.0])
-+  case "${LIBGUILE_LIBS}" in *-L* )
-+    LIBGUILE_PATH=`echo ,${LIBGUILE_LIBS} |           sed 's/.*[, ]-L[   ]*//;s/[  ].*//'`
-+  ;; * ) LIBGUILE_PATH='' ;; esac
    AC_SUBST([AG_GUILE])
 -
  ]) # end of AC_DEFUN of AG_WITHLIB_GUILE
  
  
-@@ -311,40 +200,10 @@ AC_DEFUN([AG_WITHCONF_GUILE_VER],[
+@@ -311,40 +206,10 @@ AC_DEFUN([AG_WITHCONF_GUILE_VER],[
  
  
  AC_DEFUN([AG_TEST_GUILE_VERSION],[
@@ -181,3 +186,6 @@ index 9914a65..b6db97a 100644
    AC_MSG_RESULT([${ag_cv_test_guile_version}])
    if test "X${ag_cv_test_guile_version}" != Xno
    then
+-- 
+1.8.3.1
+
