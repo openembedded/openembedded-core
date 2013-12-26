@@ -1,6 +1,6 @@
 require automake.inc
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe" 
+LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 DEPENDS_class-native = "autoconf-native"
 
 NAMEVER = "${@oe.utils.trim_version("${PV}", 2)}"
@@ -18,18 +18,12 @@ RDEPENDS_${PN} += "\
 
 RDEPENDS_${PN}_class-native = "autoconf-native perl-native-runtime"
 
-PATHFIXPATCH = "file://path_prog_fixes.patch"
-PATHFIXPATCH_class-native = ""
-PATHFIXPATCH_class-nativesdk = ""
-
-SRC_URI += "${PATHFIXPATCH} \
-	    file://prefer-cpio-over-pax-for-ustar-archives.patch \
-	    file://python-libdir.patch \
+SRC_URI += " file://python-libdir.patch \
             file://py-compile-compile-only-optimized-byte-code.patch \
             file://buildtest.patch"
 
-SRC_URI[md5sum] = "9199e266993a5bbdc914923349d51e3e"
-SRC_URI[sha256sum] = "4c93abc0bff54b296f41f92dd3aa1e73e554265a6f719df465574983ef6f878c"
+SRC_URI[md5sum] = "a3c0d9298c6112f5f2c26c639ccaaed7"
+SRC_URI[sha256sum] = "7847424d4204d1627c129e9c15b81e145836afa2a1bf9003ffe10aa26ea75755"
 
 do_install_append () {
     install -d ${D}${datadir}
