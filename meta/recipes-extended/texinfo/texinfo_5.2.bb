@@ -19,12 +19,11 @@ SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
            file://disable-native-tools.patch \
            file://link-zip.patch \
            file://dont-depend-on-help2man.patch \
-           file://enumerate_greater_than_ten.patch \
            ${TARGET_PATCH} \
           "
 
-SRC_URI[md5sum] = "54e250014fe698fb4832016158747c03"
-SRC_URI[sha256sum] = "50e8067f9758bb2bf175b69600082ac4a27c464cb4bcd48a578edd3127216600"
+SRC_URI[md5sum] = "1b8f98b80a8e6c50422125e07522e8db"
+SRC_URI[sha256sum] = "6b8ca30e9b6f093b54fe04439e5545e564c63698a806a48065c0bba16994cf74"
 
 S = "${WORKDIR}/${BP}"
 tex_texinfo = "texmf/tex/texinfo"
