@@ -22,14 +22,14 @@ PERL_class-native = "${STAGING_BINDIR_NATIVE}/perl-native/perl"
 export PERL_LIBDIR = "${libdir}/perl"
 PERL_LIBDIR_class-native = "${libdir}/perl-native/perl"
 
-EXTRA_OECONF = "--without-static-progs \
-		--without-dselect \
-		--with-start-stop-daemon \
+EXTRA_OECONF = "\
+		--disable-dselect \
+		--enable-start-stop-daemon \
 		--with-zlib \
-		--with-bz2lib \
+		--with-bz2 \
 		--without-liblzma \
 		--without-selinux \
-		--without-sgml-doc"
+		"
 
 do_configure () {
     echo >> ${S}/m4/compiler.m4
