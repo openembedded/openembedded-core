@@ -59,7 +59,7 @@ python populate_packages_prepend () {
 
     for plug_dir in plug_dirs:
         g_plug_dir = os.path.join(qmmp_libdir,plug_dir)
-        do_split_packages(d, g_plug_dir, '^lib(.*)\.so$', 'qmmp-plugin-' + plug_dir.lower() + '-%s', 'Qmmp' + plug_dir  + 'plugin for %s')
+        do_split_packages(d, g_plug_dir, '^lib(.*)\.so$', 'qmmp-plugin-' + plug_dir.lower() + '-%s', 'Qmmp ' + plug_dir  + ' plugin for %s')
 }
 
 FILES_${PN} = "\
