@@ -27,7 +27,7 @@ inherit autotools pkgconfig
 require alsa-fpu.inc
 EXTRA_OECONF += "${@get_alsa_fpu_setting(bb, d)} "
 
-EXTRA_OECONF = "--with-cards=pdaudiocf --with-oss=yes --disable-python"
+EXTRA_OECONF = "--disable-python"
 
 EXTRA_OECONF_append_libc-uclibc = " --with-versioned=no "
 
