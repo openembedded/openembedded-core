@@ -17,6 +17,4 @@ SRC_URI[md5sum] = "2eab54bbd2b59a2ed4274ebb9390cf18"
 SRC_URI[sha256sum] = "9b7c52b375081883738cf049ecabc103b97d094b19c6544fb241267905d88881"
 S = "${WORKDIR}/bluez-hcidump-${PV}"
 
-EXTRA_OECONF = "--with-bluez-libs=${STAGING_LIBDIR} --with-bluez-includes=${STAGING_INCDIR}"
-
 inherit autotools
