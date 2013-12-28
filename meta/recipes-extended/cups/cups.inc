@@ -25,7 +25,6 @@ EXTRA_OECONF = " \
                --enable-dbus \
                --enable-browsing \
                --disable-openssl \
-               --disable-tiff \
                --disable-gssapi \
                --enable-debug \
                --disable-relro \
@@ -34,7 +33,6 @@ EXTRA_OECONF = " \
                --without-perl \
                --without-python \
                --without-java \
-               --with-pdftops=none \
                "
 
 
