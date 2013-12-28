@@ -10,7 +10,11 @@ DEPENDS = "glib-2.0 libxml2 bison-native flex-native"
 inherit autotools pkgconfig gettext
 
 GSTREAMER_1_DEBUG ?= "--disable-debug"
-EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no --disable-examples --disable-tests --disable-valgrind ${GSTREAMER_1_DEBUG}"
+EXTRA_OECONF = "--disable-docbook --disable-gtk-doc \
+                --disable-dependency-tracking --disable-check \
+                --disable-examples --disable-tests \
+                --disable-valgrind ${GSTREAMER_1_DEBUG} \
+                "
 
 RRECOMMENDS_${PN}_qemux86    += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
 RRECOMMENDS_${PN}_qemux86-64 += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
