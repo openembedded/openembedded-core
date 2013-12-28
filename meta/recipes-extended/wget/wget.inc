@@ -8,7 +8,7 @@ INC_PR = "r16"
 
 inherit autotools gettext update-alternatives
 
-EXTRA_OECONF = "--with-libc --enable-ipv6 --with-libssl-prefix=${STAGING_DIR_HOST} \
+EXTRA_OECONF = "--enable-ipv6 --with-libssl-prefix=${STAGING_DIR_HOST} \
                 --with-ssl=openssl --disable-rpath --disable-iri \
                 ac_cv_header_uuid_uuid_h=no"
 
