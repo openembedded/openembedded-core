@@ -21,7 +21,11 @@ SRC_URI[sha256sum] = "e556a529e0a8cf1cd0afd0cab2af5488c9524e7c3f409de29b5d82bb41
 inherit autotools pkgconfig gettext
 
 GSTREAMER_DEBUG ?= "--disable-debug"
-EXTRA_OECONF = "--disable-docs-build --disable-dependency-tracking --with-check=no --disable-examples --disable-tests --disable-valgrind ${GSTREAMER_DEBUG}"
+EXTRA_OECONF = "--disable-docbook --disable-gtk-doc \
+            --disable-dependency-tracking --disable-check \
+            --disable-examples --disable-tests \
+            --disable-valgrind ${GSTREAMER_DEBUG} \
+            "
 
 # apply gstreamer hack after Makefile.in.in in source is replaced by our version from
 # ${STAGING_DATADIR_NATIVE}/gettext/po/Makefile.in.in, but before configure is executed
