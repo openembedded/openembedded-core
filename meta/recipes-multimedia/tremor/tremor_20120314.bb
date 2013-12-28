@@ -17,6 +17,6 @@ S = "${WORKDIR}/Tremor"
 
 inherit autotools
 
-EXTRA_OECONF=" --enable-shared --disable-rpath  "
+EXTRA_OECONF = "--enable-shared"
 
 ARM_INSTRUCTION_SET = "arm"
