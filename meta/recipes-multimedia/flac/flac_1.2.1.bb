@@ -32,13 +32,13 @@ S = "${WORKDIR}/flac-${PV}"
 
 inherit autotools gettext
 
-EXTRA_OECONF = "--disable-oggtest --disable-id3libtest \
+EXTRA_OECONF = "--disable-oggtest \
                 --with-ogg-libraries=${STAGING_LIBDIR} \
                 --with-ogg-includes=${STAGING_INCDIR} \
                 --without-xmms-prefix \
                 --without-xmms-exec-prefix \
                 --without-libiconv-prefix \
-                --without-id3lib"
+                "
 
 EXTRA_OECONF += "${@bb.utils.contains("TUNE_FEATURES", "altivec", " --enable-altivec", " --disable-altivec", d)}"
 
