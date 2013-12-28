@@ -20,5 +20,3 @@ SRC_URI[sha256sum] = "63da4f6e7997278f8a3fef4c6a372d342f705051d1eeb6a46a86b03610
 S = "${WORKDIR}/libid3tag-${PV}"
 
 inherit autotools pkgconfig
-
-EXTRA_OECONF = "-enable-speed"
