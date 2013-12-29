@@ -30,8 +30,6 @@ PACKAGECONFIG[pango]   = "--enable-pango,--disable-pango,pango"
 # cdparanoia and libvisual do not seem to exist anywhere in OE
 EXTRA_OECONF += " \
     --disable-freetypetest \
-    --disable-oggtest \
-    --disable-vorbistest \
     --disable-cdparanoia \
     --disable-libvisual \
     ${GSTREAMER_1_0_ORC} \
