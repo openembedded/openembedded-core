@@ -35,13 +35,15 @@ SRC_URI_class-native = "${SRC_URI_BASE} \
 SRC_URI[md5sum] = "57ebf17c5abcf0fc95a386bfff08c1a4"
 SRC_URI[sha256sum] = "44800d004c53f13192d1b5db413119198ddfc8a11c4d2a030aac2f2fda822ebf"
 
-EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec --without-jasper \
-                --with-fontpath=${datadir}/fonts --with-install-cups --without-libidn"
+EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec \
+                --with-fontpath=${datadir}/fonts --with-install-cups \
+                --without-libidn \
+                "
 
 # Explicity disable libtiff, fontconfig,
 # freetype, cups for ghostscript-native
 EXTRA_OECONF_class-native = "--without-x --with-system-libtiff=no \
-                             --without-jbig2dec --without-jasper \
+                             --without-jbig2dec \
                              --with-fontpath=${datadir}/fonts \
                              --without-libidn --disable-fontconfig \
                              --disable-freetype --disable-cups"
