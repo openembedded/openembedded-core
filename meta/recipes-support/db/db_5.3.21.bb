@@ -17,7 +17,8 @@ RCONFLICTS_${PN} = "db3"
 
 SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz"
 SRC_URI += "file://arm-thumb-mutex_db5.patch;patchdir=.. \
-            file://fix-parallel-build.patch"
+            file://fix-parallel-build.patch \
+           "
 
 SRC_URI[md5sum] = "3fda0b004acdaa6fa350bfc41a3b95ca"
 SRC_URI[sha256sum] = "ddd92a930317df92021054c03992392db9ea5cddba43bef8920d392a82114fb8"
@@ -47,18 +48,22 @@ B = "${WORKDIR}/db-${PV}/build_unix"
 # management on the system.
 inherit lib_package
 
+PACKAGES =+ "${PN}-cxx"
+FILES_${PN}-cxx = "${libdir}/*cxx*so"
+
+
 # The dev package has the .so link (as in db3) and the .a's -
 # it is therefore incompatible (cannot be installed at the
 # same time) as the db3 package
 # sort out the .so since they do version prior to the .so
 SOLIBS = "-5*.so"
-FILES_SOLIBSDEV = "${libdir}/libdb.so"
+FILES_SOLIBSDEV = "${libdir}/libdb.so ${libdir}/libdb_cxx.so"
 
 #configuration - set in local.conf to override
 # All the --disable-* options replace --enable-smallbuild, which breaks a bunch of stuff (eg. postfix)
 DB5_CONFIG ?= "--enable-o_direct --disable-cryptography --disable-queue --disable-replication --disable-verify --disable-compat185 --disable-sql"
 
-EXTRA_OECONF = "${DB5_CONFIG}"
+EXTRA_OECONF = "${DB5_CONFIG} --enable-shared --enable-cxx"
 
 # Override the MUTEX setting here, the POSIX library is
 # the default - "POSIX/pthreads/library".
@@ -80,16 +85,17 @@ do_configure() {
 	oe_runconf
 }
 
+do_compile_prepend() {
+	sed -i -e 's|hardcode_into_libs=yes|hardcode_into_libs=no|' \
+		${B}/libtool
+}
+
 do_install_append() {
 	mkdir -p ${D}/${includedir}/db51
-	#mv ${D}/${includedir}/db_185.h ${D}/${includedir}/db51/.
 	mv ${D}/${includedir}/db.h ${D}/${includedir}/db51/.
 	mv ${D}/${includedir}/db_cxx.h ${D}/${includedir}/db51/.
-	#mv ${D}/${includedir}/dbsql.h ${D}/${includedir}/db51/.
-	#ln -s db51/db_185.h ${D}/${includedir}/db_185.h
 	ln -s db51/db.h ${D}/${includedir}/db.h
 	ln -s db51/db_cxx.h ${D}/${includedir}/db_cxx.h
-	#ln -s db51/dbsql.h ${D}/${includedir}/dbsql.h
 
 	# The docs end up in /usr/docs - not right.
 	if test -d "${D}/${prefix}/docs"
@@ -103,6 +109,7 @@ do_install_append() {
 }
 
 INSANE_SKIP_${PN} = "dev-so"
+INSANE_SKIP_${PN}-cxx = "dev-so"
 
 BBCLASSEXTEND = "native nativesdk"
 
