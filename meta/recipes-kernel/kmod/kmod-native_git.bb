@@ -2,6 +2,9 @@
 # Released under the MIT license (see COPYING.MIT for the terms)
 
 require kmod.inc
+
+DEPENDS += "zlib-native"
+
 inherit native
 
 SRC_URI += "file://0001-Fix-build-with-older-gcc-4.6.patch \
