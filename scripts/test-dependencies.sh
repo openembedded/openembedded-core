@@ -178,14 +178,14 @@ build_every_recipe() {
   # This will be usefull to see which library is pulling new dependency
   echo "Copying do_package logs to ${OUTPUTB}/do_package/"
   mkdir ${OUTPUTB}/do_package
-  find $tmpdir/work/ -name log.do_package | while read f; do
+  find $tmpdir/work/ -name log.do_package 2>/dev/null| while read f; do
     # pn is 3 levels back, but we don't know if there is just one log per pn (only one arch and version)
     # dest=`echo $f | sed 's#^.*/\([^/]*\)/\([^/]*\)/\([^/]*\)/log.do_package#\1#g'`
     dest=`echo $f | sed "s#$tmpdir/work/##g; s#/#_#g"`
     cp $f ${OUTPUTB}/do_package/$dest
   done
-  grep "ERROR: Task.*failed" ${OUTPUTB}/failed/*
-  ls -1 ${OUTPUTB}/failed/* >> ${OUTPUT_BASE}/failed.recipes
+  grep "ERROR: Task.*failed" ${OUTPUTB}/failed/* 2>/dev/null
+  ls -1 ${OUTPUTB}/failed/* >> ${OUTPUT_BASE}/failed.recipes 2>/dev/null
 }
 
 compare_deps() {
