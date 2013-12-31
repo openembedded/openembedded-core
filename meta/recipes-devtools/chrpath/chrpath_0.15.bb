@@ -7,11 +7,11 @@ BUGTRACKER = "http://alioth.debian.org/tracker/?atid=412807&group_id=31052"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 
-SRC_URI = "http://alioth.debian.org/frs/download.php/file/3648/chrpath-${PV}.tar.gz \
+SRC_URI = "http://alioth.debian.org/frs/download.php/file/3968/chrpath-${PV}.tar.gz \
            file://standarddoc.patch"
 
-SRC_URI[md5sum] = "ea6b212b23393bf58b0ef9bcf6491b86"
-SRC_URI[sha256sum] = "a1bc9abc42d2b97efc3a0ced7c5dbed37d5debff600386193750315fa5823eaa"
+SRC_URI[md5sum] = "2d2dc80e25e17425d8af849baae60654"
+SRC_URI[sha256sum] = "f1125f5dd0f7c7eaa4d0b64bf17c5b9cb4ee828722246970e201a18a77e18879"
 
 inherit autotools
 
