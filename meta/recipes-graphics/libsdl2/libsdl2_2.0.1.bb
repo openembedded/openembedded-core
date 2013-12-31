@@ -23,8 +23,8 @@ SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
 
 S = "${WORKDIR}/SDL2-${PV}"
 
-SRC_URI[md5sum] = "beec89afb6edcc6f0abc4114f2e6bcf7"
-SRC_URI[sha256sum] = "6f6ac8153d90e06a118474d5400624ae82b3d3e080915505db27cebc52b27178"
+SRC_URI[md5sum] = "0eb97039488bf463e775295f7b18b227"
+SRC_URI[sha256sum] = "0ae7e902a26777614a011fe7053ca7e8b14843db3c42ca117564d208cf6732f0"
 
 inherit autotools lib_package binconfig pkgconfig
 
