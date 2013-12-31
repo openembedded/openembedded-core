@@ -3,17 +3,13 @@ require e2fsprogs.inc
 
 SRC_URI += "file://acinclude.m4 \
             file://remove.ldconfig.call.patch \
-            file://debugfs-too-short.patch \
-            file://debugfs-sparse-copy.patch \
             file://fix-icache.patch \
-            file://debugfs-extent-header.patch \
             file://populate-extfs.sh \
-            file://e2fsprogs-fix-tests-f_extent_oobounds.patch \
             file://quiet-debugfs.patch \
 "
 
-SRC_URI[md5sum] = "8ef664b6eb698aa6b733df59b17b9ed4"
-SRC_URI[sha256sum] = "b984aaf1fe888d6a4cf8c2e8d397207879599b5368f1d33232c1ec9d68d00c97"
+SRC_URI[md5sum] = "3f8e41e63b432ba114b33f58674563f7"
+SRC_URI[sha256sum] = "2f92ac06e92fa00f2ada3ee67dad012d74d685537527ad1241d82f2d041f2802"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-elf-shlibs --disable-libuuid --disable-uuidd"
 EXTRA_OECONF_darwin = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-bsd-shlibs"
@@ -37,9 +33,7 @@ do_install () {
 	rm -f ${D}${base_sbindir}/blkid
 	rm -f ${D}${base_sbindir}/fsck
 	rm -f ${D}${base_sbindir}/findfs
-}
 
-do_install_append () {
 	# e2initrd_helper and the pkgconfig files belong in libdir
 	if [ ! ${D}${libdir} -ef ${D}${base_libdir} ]; then
 		install -d ${D}${libdir}

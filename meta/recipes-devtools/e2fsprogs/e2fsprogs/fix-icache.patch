@@ -16,11 +16,7 @@ cache[0]: cached ino 15 when bufsize = 156 by ext2fs_read_inode_full()
 Then the ino 14 would hit the cache[1] when bufsize = 128 (but it was
 cached by bufsize = 156), so there would be errors.
 
-Note: the upstream has changed the icache lot, so this patch is
-inappropriate for the upstream, we can drop this patch when we update
-the package.
-
-Upstream-Status: [Inappropriate]
+Upstream-Status: [Submitted]
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
