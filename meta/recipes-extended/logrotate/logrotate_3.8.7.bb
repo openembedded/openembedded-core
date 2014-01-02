@@ -1,6 +1,6 @@
 SUMMARY = "Rotates, compresses, removes and mails system log files"
 SECTION = "console/utils"
-HOMEPAGE = "https://fedorahosted.org/releases/l/o/logrotate"
+HOMEPAGE = "https://fedorahosted.org/logrotate/"
 LICENSE = "GPLv2"
 
 DEPENDS="coreutils popt"
@@ -11,12 +11,10 @@ SRC_URI = "https://fedorahosted.org/releases/l/o/logrotate/logrotate-${PV}.tar.g
            file://act-as-mv-when-rotate.patch \
            file://disable-check-different-filesystems.patch \
            file://update-the-manual.patch \
-           file://logrotate-CVE-2011-1548.patch \
             "
 
-SRC_URI[md5sum] = "bd2e20d8dc644291b08f9215397d28a5"
-SRC_URI[sha256sum] = "c12471e70ae8bc923bd5c4f25e8fd6483b68c6301f3cd79f7cfe37bc5b370169"
-
+SRC_URI[md5sum] = "99e08503ef24c3e2e3ff74cc5f3be213"
+SRC_URI[sha256sum] = "f6ba691f40e30e640efa2752c1f9499a3f9738257660994de70a45fe00d12b64"
 
 EXTRA_OEMAKE = "CC='${CC}'"
 

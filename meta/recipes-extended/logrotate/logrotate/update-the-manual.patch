@@ -1,14 +1,13 @@
 Update the manual
 
-* Update the mannual
-* Fix a bug in the mannual(\f should be \fR)
+Update the manual for rotating on different filesystems.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- logrotate.8 |    9 ++++-----
- 1 files changed, 4 insertions(+), 5 deletions(-)
+ logrotate.8 |    7 +++----
+ 1 files changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/logrotate.8 b/logrotate.8
 index 8b34167..5f15432 100644
@@ -28,15 +27,6 @@ index 8b34167..5f15432 100644
  overridden by the \fBnoolddir\fR option.
  
  .TP
-@@ -435,7 +434,7 @@ Log files are rotated only if they grow bigger then \fIsize\fR bytes. If
- \fIsize\fR is followed by \fIk\fR, the size is assumed to be in kilobytes.
- If the \fIM\fR is used, the size is in megabytes, and if \fIG\fR is used, the
- size is in gigabytes. So \fBsize 100\fR, \fIsize 100k\fR, \fIsize 100M\fR and
--\fIsize 100G\f are all valid.
-+\fIsize 100G\fR are all valid.
- 
- .TP
- \fBsharedscripts\fR
 -- 
 1.7.4.1
 

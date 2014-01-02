@@ -3,7 +3,7 @@ Disable the check for different filesystems
 The logrotate supports rotate log across different filesystems now, so
 disable the check for different filesystems.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
