@@ -6,7 +6,7 @@ SUMMARY = "A toolset that contains most of the native packages."
 DESCRIPTION = "The packagegroup is required to build most native \
 tools, it is useful for testing and collecting the native tools."
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
+LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 inherit native packagegroup
