@@ -14,12 +14,12 @@ inherit autotools gettext
 
 SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
            file://remove-usr-local-lib-from-m4.patch \
-           file://coreutils-build-with-acl.patch \
            file://dummy_help2man.patch \
+           file://fix-for-dummy-man-usage.patch \
           "
 
-SRC_URI[md5sum] = "065ba41828644eca5dd8163446de5d64"
-SRC_URI[sha256sum] = "adaa44bdab3fa5eb352e80d8a31fdbf957b78653d0c2cd30d63e161444288e18"
+SRC_URI[md5sum] = "8fb0ae2267aa6e728958adc38f8163a2"
+SRC_URI[sha256sum] = "5b3e94998152c017e6c75d56b9b994188eb71bf46d4038a642cb9141f6ff1212"
 
 EXTRA_OECONF_class-native = "--without-gmp"
 EXTRA_OECONF_class-target = "--enable-install-program=arch"
