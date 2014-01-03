@@ -16,8 +16,6 @@ S = "${WORKDIR}/cdrtools-3.01"
 
 inherit native
 
-FILESPATH = "${FILE_DIRNAME}/cdrtools-native/"
-
 do_install() {
 	make install GMAKE_NOWARN=true INS_BASE=${prefix} DESTDIR=${D}
 }
