@@ -5,7 +5,7 @@ SRC_URI  = "\
   file://ofono \
 "
 
-SRC_URI[md5sum] = "78112668d8444bc28d4b3359efd866f6"
-SRC_URI[sha256sum] = "3329c0af1e672777122981dfb9728b2c517f30f9d1b997e08e6177eb0109f0d3"
+SRC_URI[md5sum] = "8bc398d86642408cc71d039f59c61538"
+SRC_URI[sha256sum] = "84d28d37cbc47129628a78bf3e17323af1636dceb2494511dd44caa829fb277f"
 
 CFLAGS_append_libc-uclibc = " -D_GNU_SOURCE"
