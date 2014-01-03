@@ -11,8 +11,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/pcre/pcre/${PV}/pcre-${PV}.tar.bz2 \
            file://pcre-cross.patch \
            file://fix-pcre-name-collision.patch"
 
-SRC_URI[md5sum] = "21514018448ac10062ece7a668fca949"
-SRC_URI[sha256sum] = "c603957a4966811c04af5f6048c71cfb4966ec93312d7b3118116ed9f3bc0478"
+SRC_URI[md5sum] = "5439e321351bddd5533551bbce128d07"
+SRC_URI[sha256sum] = "b6043ae1ff2720be665ffa28dc22b7c637cdde96f389a116c0c3020caeae583f"
 
 S = "${WORKDIR}/pcre-${PV}"
 
