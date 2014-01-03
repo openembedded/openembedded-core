@@ -37,6 +37,7 @@ do_install_append () {
 RDEPENDS_${PN} += "perl"
 
 FILES_${PN}-dbg += "${libdir}/${PN}/*/.debug/*"
-RRECOMMENDS_${PN}_powerpc += "${TCLIBC}-dbg"
-RRECOMMENDS_${PN}_powerpc64 += "${TCLIBC}-dbg"
-RRECOMMENDS_${PN}_armv7a += "${TCLIBC}-dbg"
+
+# valgrind needs debug information for ld.so at runtime in order to
+# redirect functions like strlen.
+RRECOMMENDS_${PN} += "${TCLIBC}-dbg"
