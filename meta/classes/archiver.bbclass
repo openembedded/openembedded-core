@@ -36,6 +36,33 @@ COPYLEFT_AVAILABLE_RECIPE_TYPES = 'target native nativesdk cross crosssdk cross-
 COPYLEFT_AVAILABLE_RECIPE_TYPES[type] = 'list'
 COPYLEFT_AVAILABLE_RECIPE_TYPES[doc] = 'Space separated list of available recipe types'
 
+python () {
+    pn = d.getVar('PN', True)
+    packaging = d.getVar('IMAGE_PKGTYPE', True)
+
+    if tar_filter(d):
+        return
+
+    if d.getVar('PACKAGES', True) != '':
+        d.appendVarFlag('do_dumpdata_create_diff_gz', 'depends', ' %s:do_package_write_%s' % (pn, packaging))
+
+    build_deps = ' %s:do_dumpdata_create_diff_gz' % pn
+
+    if d.getVar('SOURCE_ARCHIVE_LOG_WITH_SCRIPTS', True) == 'logs_with_scripts':
+        d.appendVarFlag('do_archive_scripts_logs', 'depends', ' %s:do_package_write_%s' % (pn, packaging))
+        build_deps += ' %s:do_archive_scripts_logs' % pn
+
+    if not not_tarball(d):
+        archiver_mode = d.getVar('ARCHIVER_MODE')
+        d.appendVarFlag('do_compile', 'depends', ' %s:do_archive_%s_sources' % (pn, archiver_mode))
+        build_deps += ' %s:do_archive_%s_sources' % (pn, archiver_mode)
+
+    if bb.data.inherits_class('image', d):
+        d.appendVarFlag('do_rootfs', 'depends', build_deps)
+    else:
+        d.appendVarFlag('do_build', 'depends', build_deps)
+}
+
 def copyleft_recipe_type(d):
     for recipe_type in oe.data.typed_value('COPYLEFT_AVAILABLE_RECIPE_TYPES', d):
         if oe.utils.inherits(d, recipe_type):
@@ -516,7 +543,7 @@ def create_diff_gz(d):
 
 # This function will run when user want to get tarball for sources and
 # patches after do_unpack
-python do_archive_original_sources_patches(){
+python do_archive_original_sources(){
     archive_sources_patches(d, 'prepatch')
 }
 
@@ -567,3 +594,37 @@ python do_delete_tarlist(){
 }
 do_delete_tarlist[deptask] = "do_archive_scripts_logs"
 do_package_write_rpm[postfuncs] += "do_delete_tarlist "
+
+# Get archiving package with temp(logs) and scripts(.bb and .inc files)
+addtask do_archive_scripts_logs
+
+# Get dump date and create diff file
+addtask do_dumpdata_create_diff_gz
+
+ARCHIVE_SSTATE_OUTDIR = "${DEPLOY_DIR}/sources/"
+ARCHIVE_SSTATE_SCRIPTS_LOGS_INDIR = "${WORKDIR}/script-logs/"
+ARCHIVE_SSTATE_DIFFGZ_ENVDATA_INDIR = "${WORKDIR}/diffgz-envdata/"
+
+SSTATETASKS += "do_archive_scripts_logs"
+do_archive_scripts_logs[sstate-inputdirs] = "${ARCHIVE_SSTATE_SCRIPTS_LOGS_INDIR}"
+do_archive_scripts_logs[sstate-outputdirs] = "${ARCHIVE_SSTATE_OUTDIR}"
+
+python do_archive_scripts_logs_setscene () {
+    sstate_setscene(d)
+}
+
+addtask do_archive_scripts_logs_setscene
+
+SSTATETASKS += "do_dumpdata_create_diff_gz"
+do_dumpdata_create_diff_gz[sstate-inputdirs] = "${ARCHIVE_SSTATE_DIFFGZ_ENVDATA_INDIR}"
+do_dumpdata_create_diff_gz[sstate-outputdirs] = "${ARCHIVE_SSTATE_OUTDIR}"
+
+python do_dumpdata_create_diff_gz_setscene () {
+    sstate_setscene(d)
+}
+
+addtask do_dumpdata_create_diff_gz_setscene
+
+addtask do_archive_original_sources after do_unpack
+addtask do_archive_patched_sources after do_patch
+addtask do_archive_configured_sources after do_configure
