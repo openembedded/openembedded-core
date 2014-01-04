@@ -17,7 +17,7 @@ RDEPENDS_${PN} = "base-files"
 PR = "r3"
 
 SRC_URI = "${GNU_MIRROR}/screen/screen-${PV}.tar.gz;name=tarball \
-           ${DEBIAN_MIRROR}/main/s/screen/screen_4.0.3-11+lenny1.diff.gz;name=patch \
+           ${DEBIAN_MIRROR}/main/s/screen/screen_4.0.3-14.diff.gz;name=patch \
            file://configure.patch \
            file://fix-parallel-make.patch \
            ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)}"
@@ -27,8 +27,8 @@ PAM_SRC_URI = "file://screen.pam"
 SRC_URI[tarball.md5sum] = "8506fd205028a96c741e4037de6e3c42"
 SRC_URI[tarball.sha256sum] = "78f0d5b1496084a5902586304d4a73954b2bfe33ea13edceecf21615c39e6c77"
 
-SRC_URI[patch.md5sum] = "9bacd9be1d9c57e2e0381df2775b33e0"
-SRC_URI[patch.sha256sum] = "19130d097e9ed897c84a2c640634dd36ee3233c17b0bf5d18549ed1e064b3073"
+SRC_URI[patch.md5sum] = "5960bdae6782ee9356b7e0e0a1fa7c19"
+SRC_URI[patch.sha256sum] = "10acb274b2fb0bb7137a0d66e52fa0f18125bc5198c7a8d5af381b4b30636316"
 
 inherit autotools
 
