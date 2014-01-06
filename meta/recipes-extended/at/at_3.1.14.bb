@@ -7,9 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4325afd396febcb659c36b49533135d4"
 DEPENDS = "flex flex-native \
            ${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
-VIRTUAL-RUNTIME_initscripts ?= "initscripts"                                                                                                                 
 RDEPENDS_${PN} = "${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_DEPS}', '', d)} \
-                  ${VIRTUAL-RUNTIME_initscripts} \
+                  initscripts-functions \
 "
 
 PAM_DEPS = "libpam libpam-runtime pam-plugin-env pam-plugin-limits"

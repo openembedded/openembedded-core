@@ -229,7 +229,7 @@ PACKAGES =+ "udev-dbg udev udev-utils udev-hwdb"
 
 FILES_udev-dbg += "/lib/udev/.debug"
 
-RDEPENDS_udev += "udev-utils"
+RDEPENDS_udev += "udev-utils initscripts-functions"
 RPROVIDES_udev = "hotplug"
 RRECOMMENDS_udev += "udev-hwdb"
 
