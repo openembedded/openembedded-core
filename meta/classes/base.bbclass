@@ -582,6 +582,10 @@ python () {
     if ".zip" in srcuri:
         d.appendVarFlag('do_unpack', 'depends', ' unzip-native:do_populate_sysroot')
 
+    # file is needed by rpm2cpio.sh
+    if ".src.rpm" in srcuri:
+        d.appendVarFlag('do_unpack', 'depends', ' file-native:do_populate_sysroot')
+
     set_packagetriplet(d)
 
     # 'multimachine' handling
