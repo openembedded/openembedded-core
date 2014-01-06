@@ -7,6 +7,12 @@ DEPENDS += "gconf gconf-native"
 export GCONF_SCHEMA_INSTALL_SOURCE = "xml:merged:${STAGING_DIR_NATIVE}${sysconfdir}/gconf/gconf.xml.defaults"
 export GCONF_BACKEND_DIR = "${STAGING_LIBDIR_NATIVE}/GConf/2"
 
+# Disable install-time schema registration as we're a packaging system so this
+# happens in the postinst script, not at install time.  Set both the configure
+# script option and the traditional envionment variable just to make sure.
+EXTRA_OECONF += "--disable-schemas-install"
+export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL = "1"
+
 gconf_postinst() {
 if [ "x$D" != "x" ]; then
 	export GCONF_CONFIG_SOURCE="xml::$D${sysconfdir}/gconf/gconf.xml.defaults"
