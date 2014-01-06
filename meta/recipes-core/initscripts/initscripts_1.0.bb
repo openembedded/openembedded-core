@@ -42,8 +42,12 @@ KERNEL_VERSION = ""
 inherit update-alternatives
 DEPENDS_append = " update-rc.d-native"
 
-ALTERNATIVE_PRIORITY = "90"
-ALTERNATIVE_${PN} = "functions"
+PACKAGES =+ "${PN}-functions"
+RDEPENDS_${PN} = "${PN}-functions"
+FILES_${PN}-functions = "${sysconfdir}/init.d/functions*"
+
+ALTERNATIVE_PRIORITY_${PN}-functions = "90"
+ALTERNATIVE_${PN}-functions = "functions"
 ALTERNATIVE_LINK_NAME[functions] = "${sysconfdir}/init.d/functions"
 
 HALTARGS ?= "-d -f"
