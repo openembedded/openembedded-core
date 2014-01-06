@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8006d9c814277c1bfc4ca22af94b59ee"
 
 SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "8cab8ca52bcae735af40278423c7c942"
-SRC_URI[sha256sum] = "bf5a834e587974c8c64e71b35b9e75cd21c7ff253c0e7fbfb0a78be794965314"
+SRC_URI[md5sum] = "502350a6c8f7c2b12ee58829e760b44d"
+SRC_URI[sha256sum] = "16dfeb5013d8c9f21f40ccec0936f2c1c6a014c828d30488f0d5c6ef7b551162"
 
 inherit autotools gettext
 
