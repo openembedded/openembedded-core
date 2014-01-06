@@ -16,16 +16,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                    "
 inherit autotools gtk-doc ptest
 
-SRCREV = "18811d22e9923893555b88a482aa967db0e7892a"
+SRCREV = "36c4bb928a6a7962dd0ad3aa64c0b18120ca5b46"
 # Lookout for PV bump too when SRCREV is changed
-PV = "15+git${SRCPV}"
+PV = "16+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
            file://depmod-search.conf \
            file://run-ptest \
            file://ptest.patch \
            file://avoid_parallel_tests.patch \
-           file://fix-seperatebuilddir.patch \
           "
 
 S = "${WORKDIR}/git"

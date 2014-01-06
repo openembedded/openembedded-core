@@ -7,8 +7,7 @@ DEPENDS += "zlib-native"
 
 inherit native
 
-SRC_URI += "file://0001-Fix-build-with-older-gcc-4.6.patch \
-            file://Change-to-calling-bswap_-instead-of-htobe-and-be-toh.patch \
+SRC_URI += "file://Change-to-calling-bswap_-instead-of-htobe-and-be-toh.patch \
            "
 
 do_install_append (){
