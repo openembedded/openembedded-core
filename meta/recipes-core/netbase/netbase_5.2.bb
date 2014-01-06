@@ -9,8 +9,8 @@ PE = "1"
 SRC_URI = "${DEBIAN_MIRROR}/main/n/netbase/netbase_${PV}.tar.gz \
            file://hosts"
 
-SRC_URI[md5sum] = "d9ba76be063eb9b31fc60e14ad8a1206"
-SRC_URI[sha256sum] = "0d291fa48e3f6490601b8e8ad62804c530cc937665a79e5c69510cd3c5ec889e"
+SRC_URI[md5sum] = "3a01bfce6a28e1743412198abd241262"
+SRC_URI[sha256sum] = "d62ba56d62b9b121664828175c2a237a7014ef32df8a4116ea33cff332de3307"
 
 do_install () {
 	install -d ${D}/${mandir}/man8 ${D}${sysconfdir}
