@@ -47,7 +47,7 @@ INITSCRIPT_PARAMS = "defaults 70"
 SYSTEMD_SERVICE_${PN} = "lighttpd.service"
 
 do_install_append() {
-	install -d ${D}${sysconfdir}/init.d ${D}/www/logs ${D}/www/pages/dav ${D}/www/var
+	install -d ${D}${sysconfdir}/init.d ${D}/www/pages/dav
 	install -m 0755 ${WORKDIR}/lighttpd ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/lighttpd.conf ${D}${sysconfdir}
 	install -m 0644 ${WORKDIR}/index.html.lighttpd ${D}/www/pages/index.html
@@ -58,6 +58,9 @@ do_install_append() {
 		-e 's,@SYSCONFDIR@,${sysconfdir},g' \
 		-e 's,@BASE_BINDIR@,${base_bindir},g' \
 		${D}${systemd_unitdir}/system/lighttpd.service
+	#For FHS compliance, create symbolic links to /var/log and /var/tmp for logs and temporary data
+	ln -sf ${localstatedir}/log ${D}/www/logs
+	ln -sf ${localstatedir}/tmp ${D}/www/var
 }
 
 FILES_${PN} += "${sysconfdir} /www"
