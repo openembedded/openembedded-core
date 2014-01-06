@@ -11,6 +11,8 @@ PARALLEL_MAKE = ""
 #DEPENDS = "xcb-proto xproto libxau libxslt-native"
 # DEPENDS += "xsltproc-native gperf-native"
 
+ALLOW_EMPTY_${PN} = "1"
+
 SRC_URI = "http://xcb.freedesktop.org/dist/libpthread-stubs-${PV}.tar.bz2"
 
 SRC_URI[md5sum] = "e8fa31b42e13f87e8f5a7a2b731db7ee"
