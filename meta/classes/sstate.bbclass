@@ -710,7 +710,7 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
                 return False
             continue
         # Native/Cross packages don't exist and are noexec anyway
-        if isNativeCross(taskdependees[dep][0]) and taskdependees[dep][1] in ['do_package_write_deb', 'do_package_write_ipk', 'do_package_write_rpm', 'do_packagedata']:
+        if isNativeCross(taskdependees[dep][0]) and taskdependees[dep][1] in ['do_package_write_deb', 'do_package_write_ipk', 'do_package_write_rpm', 'do_packagedata', 'do_package']:
             continue
 
         # Consider sysroot depending on sysroot tasks
