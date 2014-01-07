@@ -18,5 +18,5 @@ XORG_PN = "libXfont"
 
 BBCLASSEXTEND = "native"
 
-SRC_URI[md5sum] = "351a9b7348d165029bda52c9fdcb5c7a"
-SRC_URI[sha256sum] = "d0cbfe4554dc17ceea413cdad5601d35ed8d05d5b880e60931a8775fd1157e9f"
+SRC_URI[md5sum] = "b21ee5739d5d2e5028b302fbf9fe630b"
+SRC_URI[sha256sum] = "d16ea3541835d296b19cfb05d7e64fc62173d8e7eb93284402ec761b951d1543"
