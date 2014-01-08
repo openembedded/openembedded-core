@@ -1,0 +1,8 @@
+#!/bin/sh
+
+for i in `ls tests/*.test |awk -F/ '{print $2}'`; \
+    do TCL_LIBRARY=library ./tcltest tests/all.tcl -file $i &>$i.tmp; \
+    grep -q "^Files with failing tests:" $i.tmp; \
+    if [ $? == 0 ]; then echo "FAIL: $i"; \
+    else echo "PASS: $i"; rm -f $i.tmp; fi; \
+done

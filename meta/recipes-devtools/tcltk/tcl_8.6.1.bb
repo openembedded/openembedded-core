@@ -20,6 +20,7 @@ SRC_URI = "${BASE_SRC_URI} \
            file://no_packages.patch \
            file://tcl-remove-hardcoded-install-path.patch \
            file://alter-includedir.patch \
+           file://run-ptest \
           "
 SRC_URI[md5sum] = "aae4b701ee527c6e4e1a6f9c7399882e"
 SRC_URI[sha256sum] = "16ee769248e64ba1cae6b4834fcc4e4edd7470d881410e8d58f7dd1434343514"
@@ -30,7 +31,7 @@ S = "${WORKDIR}/tcl${PV}/unix"
 
 VER = "8.6.1"
 
-inherit autotools
+inherit autotools ptest
 
 DEPENDS_class-native = ""
 
@@ -79,3 +80,13 @@ RDEPENDS_${PN} += "tcl-lib"
 RDEPENDS_${PN}_class-native = ""
 
 BBCLASSEXTEND = "native"
+
+do_compile_ptest() {
+	oe_runmake tcltest
+}
+
+do_install_ptest() {
+	cp ${B}/tcltest ${D}${PTEST_PATH}
+	cp -r ${S}/../library ${D}${PTEST_PATH}
+	cp -r ${S}/../tests ${D}${PTEST_PATH}
+}
