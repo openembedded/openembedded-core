@@ -124,18 +124,10 @@ tty62
 tty63
 
 # Local X displays (allows empty passwords with pam_unix's nullok_secure)
-:0
-:0.0
-:0.1
-:1
-:1.0
-:1.1
-:2
-:2.0
-:2.1
-:3
-:3.0
-:3.1
+pts/0
+pts/1
+pts/2
+pts/3
 
 # Embedded Freescale i.MX ports
 ttymxc0
