@@ -19,7 +19,6 @@ SRC_URI = "\
     file://no-strip.patch \
     file://larger_default_ram_size.patch \
     file://disable-grabs.patch \
-    file://linux-user-Handle-SOCK_CLOEXEC-NONBLOCK-if-unavailab.patch \
     "
 
 SRC_URI_append_class-native = "\

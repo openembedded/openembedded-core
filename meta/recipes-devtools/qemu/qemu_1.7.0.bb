@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
 SRC_URI += "file://fxrstorssefix.patch"
 
 SRC_URI_prepend = "http://wiki.qemu.org/download/qemu-${PV}.tar.bz2"
-SRC_URI[md5sum] = "3a897d722457c5a895cd6ac79a28fda0"
-SRC_URI[sha256sum] = "fc736f44aa10478223c881310a7e40fc8386547e9cadf7d01ca4685951605294"
+SRC_URI[md5sum] = "32893941d40d052a5e649efcf06aca06"
+SRC_URI[sha256sum] = "31f333a85f2d14c605a77679904a9668eaeb1b6dc7da53a1665230f46bc21314"
 
 COMPATIBLE_HOST_class-target_mips64 = "null"
 
