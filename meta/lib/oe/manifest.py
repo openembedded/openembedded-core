@@ -33,6 +33,10 @@ class Manifest(object):
         self.initial_manifest = os.path.join(self.manifest_dir, "initial_manifest")
         self.final_manifest = os.path.join(self.manifest_dir, "final_manifest")
 
+        self.var_map = {"PACKAGE_INSTALL": "mip",
+                        "PACKAGE_INSTALL_ATTEMPTONLY": "aop",
+                        "LINGUAS_INSTALL": "lgp"}
+
     """
     This creates a standard initial manifest for core-image-(minimal|sato|sato-sdk).
     This will be used for testing until the class is implemented properly!
@@ -119,8 +123,45 @@ class RpmManifest(Manifest):
 
 
 class OpkgManifest(Manifest):
+    """
+    Returns a dictionary object with mip and mlp packages.
+    """
+    def _split_multilib(self, pkg_list):
+        pkgs = dict()
+
+        for pkg in pkg_list.split():
+            pkg_type = 'mip'
+
+            ml_variants = self.d.getVar('MULTILIB_VARIANTS', True).split()
+
+            for ml_variant in ml_variants:
+                if pkg.startswith(ml_variant + '-'):
+                    pkg_type = 'mlp'
+
+            if not pkg_type in pkgs:
+                pkgs[pkg_type] = pkg
+            else:
+                pkgs[pkg_type] += " " + pkg
+
+        return pkgs
+
     def create_initial(self):
-        self._create_dummy_initial()
+        pkgs = dict()
+
+        with open(self.initial_manifest, "w+") as manifest:
+            manifest.write(self.initial_manifest_file_header)
+
+            for var in self.var_map:
+                if var == "PACKAGE_INSTALL":
+                    split_pkgs = self._split_multilib(self.d.getVar(var, True))
+                    if split_pkgs is not None:
+                        pkgs = dict(pkgs.items() + split_pkgs.items())
+                else:
+                    pkgs[self.var_map[var]] = self.d.getVar(var, True)
+
+            for pkg_type in pkgs:
+                for pkg in pkgs[pkg_type].split():
+                    manifest.write("%s,%s\n" % (pkg_type, pkg))
 
     def create_final(self):
         pass
@@ -128,21 +169,17 @@ class OpkgManifest(Manifest):
 
 class DpkgManifest(Manifest):
     def create_initial(self):
-        var_map = {"PACKAGE_INSTALL": "mip",
-                   "PACKAGE_INSTALL_ATTEMPTONLY": "aop",
-                   "LINGUAS_INSTALL": "lgp"}
-
         with open(self.initial_manifest, "w+") as manifest:
             manifest.write(self.initial_manifest_file_header)
 
-            for var in var_map:
+            for var in self.var_map:
                 pkg_list = self.d.getVar(var, True)
 
                 if pkg_list is None:
                     continue
 
                 for pkg in pkg_list.split():
-                    manifest.write("%s,%s\n" % (var_map[var], pkg))
+                    manifest.write("%s,%s\n" % (self.var_map[var], pkg))
 
     def create_final(self):
         pass
