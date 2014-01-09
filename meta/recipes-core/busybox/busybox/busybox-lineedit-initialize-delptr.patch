@@ -1,0 +1,23 @@
+Derived from:
+http://git.busybox.net/busybox/commit/?id=46031da862a60422f80050a905cea0b67026b021.
+
+In vi mode, the 'p' and 'P' commands caused a segfault when nothing had
+been put in the buffer yet because the delptr was not initialized.
+
+Upstream-Status: Backport
+
+Signed-off-by: Shawn J. Goff <shawn7400@gmail.com>
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+Signed-off-by: Ming Liu <ming.liu@windriver.com>
+
+diff -urpN a/libbb/lineedit.c b/libbb/lineedit.c
+--- a/libbb/lineedit.c
++++ b/libbb/lineedit.c
+@@ -187,6 +187,7 @@ extern struct lineedit_statics *const li
+ 	cmdedit_termw = 80; \
+ 	IF_FEATURE_EDITING_FANCY_PROMPT(num_ok_lines = 1;) \
+ 	IF_USERNAME_OR_HOMEDIR(home_pwd_buf = (char*)null_str;) \
++	IF_FEATURE_EDITING_VI(delptr = delbuf;) \
+ } while (0)
+ 
+ static void deinit_S(void)
