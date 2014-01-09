@@ -32,8 +32,36 @@ class SystemdBasicTests(SystemdTest):
     def test_systemd_list(self):
         self.systemctl('list-unit-files')
 
+    def settle(self):
+        """
+        Block until systemd has finished activating any units being activated,
+        or until two minutes has elapsed.
+
+        Returns a tuple, either (True, None) if all units have finished
+        acitvating, or (False, message string) if there are still units
+        activating (generally, failing units that restart).
+        """
+        import time
+        settled = False
+        endtime = time.time() + (60 * 2)
+        while time.time() < endtime:
+            status = self.target.run('systemctl --state=activating | grep -q "0 loaded units listed"')
+            if status == 0:
+                settled = True
+                break
+            time.sleep(10)
+
+        if settled:
+            return (True, None)
+        else:
+            status, output = self.target.run('systemctl --state=activating')
+        return (settled, output)
+
     @skipUnlessPassed('test_systemd_basic')
     def test_systemd_failed(self):
+        settled, output = self.settle()
+        self.assertTrue(settled, msg="Timed out waiting for systemd to settle:\n" + output)
+
         output = self.systemctl('list-units', '--failed')
         match = re.search("0 loaded units listed", output)
         if not match:
