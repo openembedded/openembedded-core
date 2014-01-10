@@ -424,6 +424,11 @@ do_package_write_ipk[sstate-inputdirs] = "${PKGWRITEDIRIPK}"
 do_package_write_ipk[sstate-outputdirs] = "${DEPLOY_DIR_IPK}"
 
 python do_package_write_ipk_setscene () {
+    tmpdir = d.getVar('TMPDIR', True)
+
+    if os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"), os.R_OK):
+        os.unlink(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"))
+
     sstate_setscene(d)
 }
 addtask do_package_write_ipk_setscene

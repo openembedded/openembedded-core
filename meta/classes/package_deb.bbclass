@@ -275,6 +275,11 @@ do_package_write_deb[sstate-inputdirs] = "${PKGWRITEDIRDEB}"
 do_package_write_deb[sstate-outputdirs] = "${DEPLOY_DIR_DEB}"
 
 python do_package_write_deb_setscene () {
+    tmpdir = d.getVar('TMPDIR', True)
+
+    if os.access(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"),os.R_OK):
+        os.unlink(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"))
+
     sstate_setscene(d)
 }
 addtask do_package_write_deb_setscene
