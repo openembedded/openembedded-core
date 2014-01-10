@@ -11,7 +11,7 @@ RDEPENDS_dbus_class-native = ""
 RDEPENDS_dbus_class-nativesdk = ""
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
-           file://tmpdir.patch; \
+           file://tmpdir.patch \
            file://dbus-1.init \
            file://os-test.patch \
 "
