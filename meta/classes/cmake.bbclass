@@ -1,4 +1,5 @@
 DEPENDS_prepend = "cmake-native "
+B = "${WORKDIR}/build"
 
 # We need to unset CCACHE otherwise cmake gets too confused
 CCACHE = ""
