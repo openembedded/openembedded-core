@@ -18,9 +18,7 @@ do_configure_ptest() {
 }
 
 do_configure_ptest_base() {
-    if [ ${PTEST_ENABLED} = 1 ]; then
-        do_configure_ptest
-    fi
+    do_configure_ptest
 }
 
 do_compile_ptest() {
@@ -28,9 +26,7 @@ do_compile_ptest() {
 }
 
 do_compile_ptest_base() {
-    if [ ${PTEST_ENABLED} = 1 ]; then
-        do_compile_ptest
-    fi
+    do_compile_ptest
 }
 
 do_install_ptest() {
@@ -38,14 +34,12 @@ do_install_ptest() {
 }
 
 do_install_ptest_base() {
-    if [ ${PTEST_ENABLED} = 1 ]; then
-        if [ -f ${WORKDIR}/run-ptest ]; then
-            install -D ${WORKDIR}/run-ptest ${D}${PTEST_PATH}/run-ptest
-            if grep -q install-ptest: Makefile; then
-                oe_runmake DESTDIR=${D}${PTEST_PATH} install-ptest
-            fi
-            do_install_ptest
+    if [ -f ${WORKDIR}/run-ptest ]; then
+        install -D ${WORKDIR}/run-ptest ${D}${PTEST_PATH}/run-ptest
+        if grep -q install-ptest: Makefile; then
+            oe_runmake DESTDIR=${D}${PTEST_PATH} install-ptest
         fi
+        do_install_ptest
     fi
 }
 
@@ -58,4 +52,9 @@ addtask install_ptest_base   after do_install   before do_package do_populate_sy
 python () {
     if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
         d.setVarFlag('do_install_ptest_base', 'fakeroot', 1)
+
+    # Remove all '*ptest_base' tasks when ptest is not enabled
+    if not(d.getVar('PTEST_ENABLED', True) == "1"):
+        for i in filter(lambda k: d.getVarFlag(k, "task") and k.endswith("ptest_base"), d.keys()):
+            bb.build.deltask(i, d)
 }
