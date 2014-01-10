@@ -9,6 +9,11 @@ class Manifest(object):
     """
     __metaclass__ = ABCMeta
 
+    PKG_TYPE_MUST_INSTALL = "mip"
+    PKG_TYPE_MULTILIB = "mlp"
+    PKG_TYPE_LANGUAGE = "lgp"
+    PKG_TYPE_ATTEMPT_ONLY = "aop"
+
     initial_manifest_file_header = \
         "# This file was generated automatically and contains the packages\n" \
         "# passed on to the package manager in order to create the rootfs.\n\n" \
@@ -33,9 +38,9 @@ class Manifest(object):
         self.initial_manifest = os.path.join(self.manifest_dir, "initial_manifest")
         self.final_manifest = os.path.join(self.manifest_dir, "final_manifest")
 
-        self.var_map = {"PACKAGE_INSTALL": "mip",
-                        "PACKAGE_INSTALL_ATTEMPTONLY": "aop",
-                        "LINGUAS_INSTALL": "lgp"}
+        self.var_map = {"PACKAGE_INSTALL": self.PKG_TYPE_MUST_INSTALL,
+                        "PACKAGE_INSTALL_ATTEMPTONLY": self.PKG_TYPE_ATTEMPT_ONLY,
+                        "LINGUAS_INSTALL": self.PKG_TYPE_LANGUAGE}
 
     """
     This creates a standard initial manifest for core-image-(minimal|sato|sato-sdk).
@@ -44,7 +49,7 @@ class Manifest(object):
     def _create_dummy_initial(self):
         pkg_list = dict()
         if self.image_rootfs.find("core-image-sato-sdk") > 0:
-            pkg_list['mip'] = \
+            pkg_list[self.PKG_TYPE_MUST_INSTALL] = \
                 "packagegroup-core-x11-sato-games packagegroup-base-extended " \
                 "packagegroup-core-x11-sato packagegroup-core-x11-base " \
                 "packagegroup-core-sdk packagegroup-core-tools-debug " \
@@ -53,17 +58,17 @@ class Manifest(object):
                 "apt packagegroup-core-tools-profile psplash " \
                 "packagegroup-core-standalone-sdk-target " \
                 "packagegroup-core-ssh-openssh dpkg kernel-dev"
-            pkg_list['lgp'] = \
+            pkg_list[self.PKG_TYPE_LANGUAGE] = \
                 "locale-base-en-us locale-base-en-gb"
         elif self.image_rootfs.find("core-image-sato") > 0:
-            pkg_list['mip'] = \
+            pkg_list[self.PKG_TYPE_MUST_INSTALL] = \
                 "packagegroup-core-ssh-dropbear packagegroup-core-x11-sato-games " \
                 "packagegroup-core-x11-base psplash apt dpkg packagegroup-base-extended " \
                 "packagegroup-core-x11-sato packagegroup-core-boot"
             pkg_list['lgp'] = \
                 "locale-base-en-us locale-base-en-gb"
         elif self.image_rootfs.find("core-image-minimal") > 0:
-            pkg_list['mip'] = "run-postinsts packagegroup-core-boot"
+            pkg_list[self.PKG_TYPE_MUST_INSTALL] = "run-postinsts packagegroup-core-boot"
 
         with open(self.initial_manifest, "w+") as manifest:
             manifest.write(self.initial_manifest_file_header)
@@ -97,7 +102,12 @@ class Manifest(object):
         with open(self.initial_manifest) as manifest:
             for line in manifest.read().split('\n'):
                 comment = re.match("^#.*", line)
-                pkg = re.match("^(mip|aop|mlp|lgp),(.*)$", line)
+                pattern = "^(%s|%s|%s|%s),(.*)$" % \
+                          (self.PKG_TYPE_MUST_INSTALL,
+                           self.PKG_TYPE_ATTEMPT_ONLY,
+                           self.PKG_TYPE_MULTILIB,
+                           self.PKG_TYPE_LANGUAGE)
+                pkg = re.match(pattern, line)
 
                 if comment is not None:
                     continue
@@ -130,13 +140,13 @@ class OpkgManifest(Manifest):
         pkgs = dict()
 
         for pkg in pkg_list.split():
-            pkg_type = 'mip'
+            pkg_type = self.PKG_TYPE_MUST_INSTALL
 
             ml_variants = self.d.getVar('MULTILIB_VARIANTS', True).split()
 
             for ml_variant in ml_variants:
                 if pkg.startswith(ml_variant + '-'):
-                    pkg_type = 'mlp'
+                    pkg_type = self.PKG_TYPE_MULTILIB
 
             if not pkg_type in pkgs:
                 pkgs[pkg_type] = pkg
