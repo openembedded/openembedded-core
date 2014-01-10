@@ -64,6 +64,10 @@ def oe_terminal(command, title, d):
             envdata.setVar(key, str(value))
             envdata.setVarFlag(key, 'export', 1)
 
+    # A complex PS1 might need more escaping of chars.
+    # Lets not export PS1 instead.
+    envdata.delVar("PS1")
+
     # Replace command with an executable wrapper script
     command = emit_terminal_func(command, envdata, d)
 
