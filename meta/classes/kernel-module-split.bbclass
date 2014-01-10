@@ -2,7 +2,9 @@ pkg_postinst_modules () {
 if [ -z "$D" ]; then
 	depmod -a ${KERNEL_VERSION}
 else
-	depmodwrapper -a -b $D ${KERNEL_VERSION}
+	# image.bbclass will call depmodwrapper after everything is installed,
+	# no need to do it here as well
+	:
 fi
 }
 
