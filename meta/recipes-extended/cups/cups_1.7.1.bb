@@ -1,0 +1,6 @@
+require cups.inc
+
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=c5e50cb4b8f24b04636b719683a9102d"
+
+SRC_URI[md5sum] = "55277c40fd4b7183dc3671d39c5c42b7"
+SRC_URI[sha256sum] = "f52bec893d9daf92b6029be79c07e6c516b4c85ffae3e6e01885cc85e9081681"
