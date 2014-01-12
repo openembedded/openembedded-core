@@ -16,6 +16,7 @@ SRC_URI = "http://www.cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz
            file://aarch64-cmake.patch \
            file://aarch64-kwsys.patch \
            file://qt4-fail-silent.patch \
+           file://cmake-2.8.11.2-FindFreetype.patch \
            "
 
 inherit autotools
