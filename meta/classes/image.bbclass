@@ -178,7 +178,7 @@ PSEUDO_PASSWD = "${IMAGE_ROOTFS}"
 
 do_rootfs[dirs] = "${TOPDIR}"
 do_rootfs[lockfiles] += "${IMAGE_ROOTFS}.lock"
-do_rootfs[cleandirs] += "${S} ${WORKDIR}/intercept_scripts"
+do_rootfs[cleandirs] += "${S}"
 
 # Must call real_do_rootfs() from inside here, rather than as a separate
 # task, so that we have a single fakeroot context for the whole process.

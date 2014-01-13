@@ -76,6 +76,8 @@ class Rootfs(object):
         intercepts_dir = os.path.join(self.d.getVar('WORKDIR', True),
                                       "intercept_scripts")
 
+        bb.utils.remove(intercepts_dir, True)
+
         bb.utils.mkdirhier(self.image_rootfs)
 
         bb.utils.mkdirhier(self.deploy_dir_image)
