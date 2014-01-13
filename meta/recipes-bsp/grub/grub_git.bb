@@ -17,10 +17,8 @@ DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_arm = "1"
 
 PV = "2.00+${SRCPV}"
-SRCREV = "3bc1b2daabb9b07a9c08bca386005d96f07147fe"
+SRCREV = "0776112c5311196889a15058a3b1be4c81ba5e05"
 SRC_URI = "git://git.savannah.gnu.org/grub.git \
-           file://0001-fdt-add-grub_fdt_create_empty_tree-function.patch \
-           file://0002-arm64-add-EFI-Linux-loader.patch \                  
            file://40_custom \
           "
 
@@ -33,6 +31,7 @@ inherit gettext
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[grub-mount] = "--enable-grub-mount,--disable-grub-mount,fuse"
+PACKAGECONFIG[device-mapper] = "--enable-device-mapper,--disable-device-mapper,lvm2"
 
 # configure.ac has code to set this automagically from the target tuple
 # but the OE freeform one (core2-foo-bar-linux) don't work with that.
