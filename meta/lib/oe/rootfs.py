@@ -15,17 +15,20 @@ class Rootfs(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, d, manifest_dir=None):
+    def __init__(self, d):
         self.d = d
         self.pm = None
-        self.manifest = None
         self.image_rootfs = self.d.getVar('IMAGE_ROOTFS', True)
         self.deploy_dir_image = self.d.getVar('DEPLOY_DIR_IMAGE', True)
 
         bb.utils.remove(self.image_rootfs, True)
         bb.utils.remove(self.d.getVar('MULTILIB_TEMP_ROOTFS', True), True)
 
-        self.install_order = ["lgp", "mip", "aop", "mlp"]
+        self.install_order = [
+            Manifest.PKG_TYPE_LANGUAGE,
+            Manifest.PKG_TYPE_MUST_INSTALL,
+            Manifest.PKG_TYPE_ATTEMPT_ONLY,
+            Manifest.PKG_TYPE_MULTILIB]
 
     @abstractmethod
     def _create(self):
@@ -225,7 +228,7 @@ class RpmRootfs(Rootfs):
 
 class DpkgRootfs(Rootfs):
     def __init__(self, d, manifest_dir):
-        super(DpkgRootfs, self).__init__(d, manifest_dir)
+        super(DpkgRootfs, self).__init__(d)
 
         self.manifest = DpkgManifest(d, manifest_dir)
         self.pm = DpkgPM(d, d.getVar('IMAGE_ROOTFS', True),
@@ -246,7 +249,7 @@ class DpkgRootfs(Rootfs):
         for pkg_type in self.install_order:
             if pkg_type in pkgs_to_install:
                 self.pm.install(pkgs_to_install[pkg_type],
-                                [False, True][pkg_type == "aop"])
+                                [False, True][pkg_type == Manifest.PKG_TYPE_ATTEMPT_ONLY])
 
         self.pm.install_complementary()
 
@@ -297,11 +300,148 @@ class DpkgRootfs(Rootfs):
 
 
 class OpkgRootfs(Rootfs):
-    def __init__(self, manifest):
-        super(OpkgRootfs, self).__init__(manifest)
+    def __init__(self, d, manifest_dir):
+        super(OpkgRootfs, self).__init__(d)
+
+        self.manifest = OpkgManifest(d, manifest_dir)
+        self.opkg_conf = self.d.getVar("IPKGCONF_TARGET", True)
+        self.pkg_archs = self.d.getVar("ALL_MULTILIB_PACKAGE_ARCHS", True)
+
+        self.pm = OpkgPM(d, self.image_rootfs, self.opkg_conf, self.pkg_archs)
+
     """
-    TBD
+    This function was reused from the old implementation.
+    See commit: "image.bbclass: Added variables for multilib support." by
+    Lianhao Lu.
     """
+    def _multilib_sanity_test(self, dirs):
+        import filecmp
+
+        allow_replace = self.d.getVar("MULTILIBRE_ALLOW_REP", True)
+        if allow_replace is None:
+            allow_replace = ""
+
+        allow_rep = re.compile(re.sub("\|$", "", allow_replace))
+        error_prompt = "Multilib check error:"
+
+        files = {}
+        for dir in dirs:
+            for root, subfolders, subfiles in os.walk(dir):
+                for file in subfiles:
+                    item = os.path.join(root, file)
+                    key = str(os.path.join("/", os.path.relpath(item, dir)))
+
+                    valid = True
+                    if key in files:
+                        #check whether the file is allow to replace
+                        if allow_rep.match(key):
+                            valid = True
+                        else:
+                            if not filecmp.cmp(files[key], item):
+                                valid = False
+                                bb.fatal("%s duplicate files %s %s is not the same\n" %
+                                         (error_prompt, item, files[key]))
+
+                    #pass the check, add to list
+                    if valid:
+                        files[key] = item
+
+    def _multilib_test_install(self, pkgs):
+        ml_temp = self.d.getVar("MULTILIB_TEMP_ROOTFS", True)
+        bb.utils.mkdirhier(ml_temp)
+
+        dirs = [self.image_rootfs]
+
+        for variant in self.d.getVar("MULTILIB_VARIANTS", True).split():
+            ml_target_rootfs = os.path.join(ml_temp, variant)
+
+            bb.utils.remove(ml_target_rootfs, True)
+
+            ml_opkg_conf = os.path.join(ml_temp,
+                                        variant + "-" + os.path.basename(self.opkg_conf))
+
+            ml_pm = OpkgPM(self.d, ml_target_rootfs, ml_opkg_conf, self.pkg_archs)
+
+            ml_pm.update()
+            ml_pm.install(pkgs)
+
+            dirs.append(ml_target_rootfs)
+
+        self._multilib_sanity_test(dirs)
+
+    def _create(self):
+        pkgs_to_install = self.manifest.parse_initial_manifest()
+        opkg_pre_process_cmds = self.d.getVar('OPKG_PREPROCESS_COMMANDS', True)
+        opkg_post_process_cmds = self.d.getVar('OPKG_POSTPROCESS_COMMANDS', True)
+        rootfs_post_install_cmds = self.d.getVar('ROOTFS_POSTINSTALL_COMMAND', True)
+
+        # update PM index files
+        self.pm.write_index()
+
+        execute_pre_post_process(self.d, opkg_pre_process_cmds)
+
+        self.pm.update()
+
+        self.pm.handle_bad_recommendations()
+
+        for pkg_type in self.install_order:
+            if pkg_type in pkgs_to_install:
+                # For multilib, we perform a sanity test before final install
+                # If sanity test fails, it will automatically do a bb.fatal()
+                # and the installation will stop
+                if pkg_type == Manifest.PKG_TYPE_MULTILIB:
+                    self._multilib_test_install(pkgs_to_install[pkg_type])
+
+                self.pm.install(pkgs_to_install[pkg_type],
+                                [False, True][pkg_type == Manifest.PKG_TYPE_ATTEMPT_ONLY])
+
+        self.pm.install_complementary()
+
+        execute_pre_post_process(self.d, opkg_post_process_cmds)
+        execute_pre_post_process(self.d, rootfs_post_install_cmds)
+
+    def _get_delayed_postinsts(self):
+        pkg_list = []
+        status_file = os.path.join(self.image_rootfs,
+                                   self.d.getVar('OPKGLIBDIR', True),
+                                   "opkg", "status")
+
+        with open(status_file) as status:
+            for line in status:
+                m_pkg = re.match("^Package: (.*)", line)
+                m_status = re.match("^Status:.*unpacked", line)
+                if m_pkg is not None:
+                    pkg_name = m_pkg.group(1)
+                elif m_status is not None:
+                    pkg_list.append(pkg_name)
+
+        if len(pkg_list) == 0:
+            return None
+
+        return pkg_list
+
+    def _save_postinsts(self):
+        num = 0
+        for p in self._get_delayed_postinsts():
+            dst_postinst_dir = self.d.expand("${IMAGE_ROOTFS}${sysconfdir}/ipk-postinsts")
+            src_postinst_dir = self.d.expand("${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/info")
+
+            bb.utils.mkdirhier(dst_postinst_dir)
+
+            if os.path.exists(os.path.join(src_postinst_dir, p + ".postinst")):
+                shutil.copy(os.path.join(src_postinst_dir, p + ".postinst"),
+                            os.path.join(dst_postinst_dir, "%03d-%s" % (num, p)))
+
+            num += 1
+
+    def _handle_intercept_failure(self, registered_pkgs):
+        self.pm.mark_packages("unpacked", registered_pkgs.split())
+
+    def _log_check(self):
+        pass
+
+    def _insert_feed_uris(self):
+        pass
 
 
 def create_rootfs(d, manifest_dir=None):
@@ -311,7 +451,7 @@ def create_rootfs(d, manifest_dir=None):
     if img_type == "rpm":
         bb.fatal("RPM backend was not implemented yet...")
     elif img_type == "ipk":
-        bb.fatal("IPK backend was not implemented yet...")
+        OpkgRootfs(d, manifest_dir).create()
     elif img_type == "deb":
         DpkgRootfs(d, manifest_dir).create()
 
