@@ -27,7 +27,8 @@ SRC_URI[sha256sum] = "dd357a968449abc97c7e5fa088a4a384de57cb36564f9d4e0d898ecc63
 PACKAGES =+ "idn"
 FILES_idn = "${bindir}/*"
 
+EXTRA_OECONF = "--disable-csharp"
+
 do_install_append() {
-	rm -rf ${D}${libdir}/Libidn.dll
 	rm -rf ${D}${datadir}/emacs
 }
