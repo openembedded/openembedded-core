@@ -16,7 +16,16 @@ for pm in rpm deb ipk; do
 	fi
 done
 
-[ -z "$pi_dir" ] && exit 0
+remove_rcsd_link () {
+	if [ -n "`which update-rc.d`" ]; then
+		update-rc.d -f run-postinsts remove
+	fi
+}
+
+if [ -z "$pi_dir" ]; then
+	remove_rcsd_link
+	exit 0
+fi
 
 [ -e #SYSCONFDIR#/default/postinst ] && . #SYSCONFDIR#/default/postinst
 
@@ -43,7 +52,5 @@ done
 # and the rcS.d link
 if [ $remove_pi_dir = 1 ]; then
 	rm -rf $pi_dir
-	if [ -n "`which update-rc.d`" ]; then
-		update-rc.d -f run-postinsts remove
-	fi
+	remove_rcsd_link
 fi
