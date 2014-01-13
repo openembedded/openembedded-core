@@ -27,6 +27,8 @@ class PackageManager(object):
 
     def __init__(self, d):
         self.d = d
+        self.deploy_dir = None
+        self.deploy_lock = None
 
     """
     Update the package manager package database.
@@ -110,6 +112,21 @@ class PackageManager(object):
 
         self.install(complementary_pkgs.split(), attempt_only=True)
 
+    def deploy_dir_lock(self):
+        if self.deploy_dir is None:
+            raise RuntimeError("deploy_dir is not set!")
+
+        lock_file_name = os.path.join(self.deploy_dir, "deploy.lock")
+
+        self.deploy_lock = bb.utils.lockfile(lock_file_name)
+
+    def deploy_dir_unlock(self):
+        if self.deploy_lock is None:
+            return
+
+        bb.utils.unlockfile(self.deploy_lock)
+
+        self.deploy_lock = None
 
 class RpmPM(PackageManager):
     def __init__(self):
