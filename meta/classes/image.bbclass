@@ -287,44 +287,6 @@ MULTILIBRE_ALLOW_REP =. "${base_bindir}|${base_sbindir}|${bindir}|${sbindir}|${l
 MULTILIB_CHECK_FILE = "${WORKDIR}/multilib_check.py"
 MULTILIB_TEMP_ROOTFS = "${WORKDIR}/multilib"
 
-multilib_generate_python_file() {
-  cat >${MULTILIB_CHECK_FILE} <<EOF
-import sys, os, os.path
-import re,filecmp
-
-allow_rep=re.compile(re.sub("\|$","","${MULTILIBRE_ALLOW_REP}"))
-error_prompt="Multilib check error:"
-
-files={}
-dirs=raw_input()
-for dir in dirs.split():
-  for root, subfolders, subfiles in os.walk(dir):
-    for file in subfiles:
-      item=os.path.join(root,file)
-      key=str(os.path.join("/",os.path.relpath(item,dir)))
-
-      valid=True;
-      if key in files:
-        #check whether the file is allow to replace
-        if allow_rep.match(key):
-          valid=True
-        else:
-          if not filecmp.cmp(files[key],item):
-             valid=False
-             print("%s duplicate files %s %s is not the same\n" % (error_prompt, item, files[key]))
-             sys.exit(1)
-
-      #pass the check, add to list
-      if valid:
-        files[key]=item
-EOF
-}
-
-multilib_sanity_check() {
-  multilib_generate_python_file
-  echo $@ | python ${MULTILIB_CHECK_FILE}
-}
-
 # This function is intended to disallow empty root password if 'debug-tweaks' is not in IMAGE_FEATURES.
 zap_empty_root_password () {
 	if [ -e ${IMAGE_ROOTFS}/etc/shadow ]; then
