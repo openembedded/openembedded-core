@@ -3,21 +3,16 @@ HOMEPAGE = "http://code.google.com/p/libproxy/"
 BUGTRACKER = "http://code.google.com/p/libproxy/issues/list"
 SECTION = "libs"
 LICENSE = "LGPLv2.1+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=7d7044444a7b1b116e8783edcdb44ff4 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
                     file://utils/proxy.c;beginline=1;endline=18;md5=55152a1006d7dafbef32baf9c30a99c0"
 
 DEPENDS = "gconf glib-2.0"
 
-PR = "r6"
-
 SRC_URI = "http://libproxy.googlecode.com/files/libproxy-${PV}.zip \
-           file://g++-namepace.patch \
-           file://libproxy_fix_for_gcc4.7.patch \
-           file://libproxy-0.4.7-CVE-2012-4504.patch \
           "
 
-SRC_URI[md5sum] = "62585570de17d10f03a5a63b701ffd52"
-SRC_URI[sha256sum] = "429a19c57d9990349d622beecc805b23051caa62a478066bff5d9a312a8937be"
+SRC_URI[md5sum] = "06be230b8b612e64997f8f15af6373aa"
+SRC_URI[sha256sum] = "3175abcb49c0b37fd82c697927783bf7d53de3884a8559bc594e59caa09bdb04"
 
 inherit cmake pkgconfig
 
