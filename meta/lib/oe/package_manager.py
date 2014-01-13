@@ -14,7 +14,7 @@ def create_index(arg):
         subprocess.check_output(index_cmd, shell=True)
     except subprocess.CalledProcessError as e:
         return("Index creation command %s failed with return code %d!" %
-               (' '.join(e.cmd), e.returncode))
+               (e.cmd, e.returncode))
 
     return None
 
@@ -54,8 +54,7 @@ class PackageManager(object):
         pass
 
     """
-    This function creates the Packages.gz files in each arch directory in
-    DEPLOY_DIR_DEB.
+    This function creates the index files
     """
     @abstractmethod
     def write_index(self):
@@ -138,12 +137,215 @@ class RpmPM(PackageManager):
 
 
 class OpkgPM(PackageManager):
-    def __init__(self):
-        super(OpkgPM, self).__init__()
+    def __init__(self, d, target_rootfs, config_file, archs):
+        super(OpkgPM, self).__init__(d)
 
-    """
-    TBD
-    """
+        self.target_rootfs = target_rootfs
+        self.config_file = config_file
+        self.pkg_archs = archs
+
+        self.deploy_dir = self.d.getVar("DEPLOY_DIR_IPK", True)
+        self.deploy_lock_file = os.path.join(self.deploy_dir, "deploy.lock")
+
+        self.opkg_cmd = bb.utils.which(os.getenv('PATH'), "opkg-cl")
+        self.opkg_args = "-f %s -o %s " % (self.config_file, target_rootfs)
+        self.opkg_args += self.d.getVar("OPKG_ARGS", True)
+
+        opkg_lib_dir = self.d.getVar('OPKGLIBDIR', True)
+        if opkg_lib_dir[0] == "/":
+            opkg_lib_dir = opkg_lib_dir[1:]
+
+        self.opkg_dir = os.path.join(target_rootfs, opkg_lib_dir, "opkg")
+
+        bb.utils.mkdirhier(self.opkg_dir)
+
+        self._create_config()
+
+    def _create_config(self):
+        with open(self.config_file, "w+") as config_file:
+            priority = 1
+            for arch in self.pkg_archs.split():
+                config_file.write("arch %s %d\n" % (arch, priority))
+                priority += 5
+
+            config_file.write("src oe file:%s\n" % self.deploy_dir)
+
+            for arch in self.pkg_archs.split():
+                pkgs_dir = os.path.join(self.deploy_dir, arch)
+                if os.path.isdir(pkgs_dir):
+                    config_file.write("src oe-%s file:%s\n" % (arch, pkgs_dir))
+
+    def update(self):
+        self.deploy_dir_lock()
+
+        cmd = "%s %s update" % (self.opkg_cmd, self.opkg_args)
+
+        try:
+            subprocess.check_output(cmd.split())
+        except subprocess.CalledProcessError as e:
+            self.deploy_dir_unlock()
+            bb.fatal("Unable to update the package index files. Command %s "
+                     "returned %d" % (cmd, e.returncode))
+
+        self.deploy_dir_unlock()
+
+    def install(self, pkgs, attempt_only=False):
+        cmd = "%s %s install %s" % (self.opkg_cmd, self.opkg_args, ' '.join(pkgs))
+
+        os.environ['D'] = self.target_rootfs
+        os.environ['OFFLINE_ROOT'] = self.target_rootfs
+        os.environ['IPKG_OFFLINE_ROOT'] = self.target_rootfs
+        os.environ['OPKG_OFFLINE_ROOT'] = self.target_rootfs
+        os.environ['INTERCEPT_DIR'] = os.path.join(self.d.getVar('WORKDIR', True),
+                                                   "intercept_scripts")
+        os.environ['NATIVE_ROOT'] = self.d.getVar('STAGING_DIR_NATIVE', True)
+
+        try:
+            bb.note("Installing the following packages: %s" % ' '.join(pkgs))
+            subprocess.check_output(cmd.split())
+        except subprocess.CalledProcessError as e:
+            (bb.fatal, bb.note)[attempt_only]("Unable to install packages. "
+                                              "Command %s returned %d" %
+                                              (cmd, e.returncode))
+
+    def remove(self, pkgs, with_dependencies=True):
+        if with_dependencies:
+            cmd = "%s %s remove %s" % \
+                (self.opkg_cmd, self.opkg_args, ' '.join(pkgs))
+        else:
+            cmd = "%s %s --force-depends remove %s" % \
+                (self.opkg_cmd, self.opkg_args, ' '.join(pkgs))
+
+        try:
+            subprocess.check_output(cmd.split())
+        except subprocess.CalledProcessError as e:
+            bb.fatal("Unable to remove packages. Command %s "
+                     "returned %d" % (e.cmd, e.returncode))
+
+    def write_index(self):
+        arch_vars = ["ALL_MULTILIB_PACKAGE_ARCHS",
+                     "SDK_PACKAGE_ARCHS",
+                     "MULTILIB_ARCHS"]
+
+        tmpdir = self.d.getVar('TMPDIR', True)
+        if os.path.exists(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN")):
+            return
+
+        self.deploy_dir_lock()
+
+        opkg_index_cmd = bb.utils.which(os.getenv('PATH'), "opkg-make-index")
+
+        if not os.path.exists(os.path.join(self.deploy_dir, "Packages")):
+            open(os.path.join(self.deploy_dir, "Packages"), "w").close()
+
+        index_cmds = []
+        for arch_var in arch_vars:
+            archs = self.d.getVar(arch_var, True)
+            if archs is None:
+                continue
+
+            for arch in archs.split():
+                pkgs_dir = os.path.join(self.deploy_dir, arch)
+                pkgs_file = os.path.join(pkgs_dir, "Packages")
+
+                if not os.path.isdir(pkgs_dir):
+                    continue
+
+                if not os.path.exists(pkgs_file):
+                    open(pkgs_file, "w").close()
+
+                index_cmds.append('%s -r %s -p %s -m %s' %
+                                  (opkg_index_cmd, pkgs_file, pkgs_file, pkgs_dir))
+
+        if len(index_cmds) == 0:
+            self.deploy_dir_unlock()
+            bb.fatal("There are no packages in %s!" % self.deploy_dir)
+
+        nproc = multiprocessing.cpu_count()
+        pool = bb.utils.multiprocessingpool(nproc)
+        results = list(pool.imap(create_index, index_cmds))
+        pool.close()
+        pool.join()
+
+        self.deploy_dir_unlock()
+
+        for result in results:
+            if result is not None:
+                bb.fatal(result)
+
+        open(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"), "w").close()
+
+    def remove_packaging_data(self):
+        bb.utils.remove(self.opkg_dir)
+        # create the directory back, it's needed by PM lock
+        bb.utils.mkdirhier(self.opkg_dir)
+
+    def list_installed(self, format=None):
+        opkg_query_cmd = bb.utils.which(os.getenv('PATH'), "opkg-query-helper.py")
+
+        if format == "arch":
+            cmd = "%s %s status | %s -a" % \
+                (self.opkg_cmd, self.opkg_args, opkg_query_cmd)
+        elif format == "file":
+            cmd = "%s %s status | %s -f" % \
+                (self.opkg_cmd, self.opkg_args, opkg_query_cmd)
+        elif format == "ver":
+            cmd = "%s %s status | %s -v" % \
+                (self.opkg_cmd, self.opkg_args, opkg_query_cmd)
+        else:
+            cmd = "%s %s list_installed | cut -d' ' -f1" % \
+                (self.opkg_cmd, self.opkg_args)
+
+        try:
+            output = subprocess.check_output(cmd, shell=True).strip()
+        except subprocess.CalledProcessError as e:
+            bb.fatal("Cannot get the installed packages list. Command %s "
+                     "returned %d" % (cmd, e.returncode))
+
+        if format == "file":
+            tmp_output = ""
+            for pkg, pkg_file, pkg_arch in tuple(output.split('\n')):
+                full_path = os.path.join(self.deploy_dir, pkg_arch, pkg_file)
+                if os.path.exists(full_path):
+                    tmp_output += "%s %s %s\n" % (pkg, full_path, pkg_arch)
+                else:
+                    tmp_output += "%s %s %s\n" % (pkg, pkg_file, pkg_arch)
+
+            output = tmp_output
+
+        return output
+
+    def handle_bad_recommendations(self):
+        bad_recommendations = self.d.getVar("BAD_RECOMMENDATIONS", True)
+        if bad_recommendations is None:
+            return
+
+        status_file = os.path.join(self.opkg_dir, "status")
+
+        cmd = [self.opkg_cmd, self.opkg_args, "info"]
+
+        with open(status_file, "w+") as status:
+            for pkg in bad_recommendations.split():
+                pkg_info = cmd + [pkg]
+
+                try:
+                    output = subprocess.check_output(pkg_info).strip()
+                except subprocess.CalledProcessError as e:
+                    bb.fatal("Cannot get package info. Command %s "
+                             "returned %d" % (' '.join(pkg_info), e.returncode))
+
+                if output == "":
+                    bb.note("Requested ignored recommendation $i is "
+                            "not a package" % pkg)
+                    continue
+
+                for line in output.split('\n'):
+                    if line.startswith("Package:") or \
+                            line.startswith("Architecture:") or \
+                            line.startswith("Version:"):
+                        status.write(line)
+
+                status.write("Status: deinstall hold not-installed\n")
 
 
 class DpkgPM(PackageManager):
