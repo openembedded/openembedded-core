@@ -35,25 +35,6 @@ do_ar_original[dirs] = "${ARCHIVER_OUTDIR} ${ARCHIVER_WORKDIR}"
 # This is a convenience for the shell script to use it
 
 
-COPYLEFT_LICENSE_INCLUDE ?= 'GPL* LGPL*'
-COPYLEFT_LICENSE_INCLUDE[type] = 'list'
-COPYLEFT_LICENSE_INCLUDE[doc] = 'Space separated list of globs which include licenses'
-
-COPYLEFT_LICENSE_EXCLUDE ?= 'CLOSED Proprietary'
-COPYLEFT_LICENSE_EXCLUDE[type] = 'list'
-COPYLEFT_LICENSE_EXCLUDE[doc] = 'Space separated list of globs which exclude licenses'
-
-COPYLEFT_RECIPE_TYPE ?= '${@copyleft_recipe_type(d)}'
-COPYLEFT_RECIPE_TYPE[doc] = 'The "type" of the current recipe (e.g. target, native, cross)'
-
-COPYLEFT_RECIPE_TYPES ?= 'target'
-COPYLEFT_RECIPE_TYPES[type] = 'list'
-COPYLEFT_RECIPE_TYPES[doc] = 'Space separated list of recipe types to include'
-
-COPYLEFT_AVAILABLE_RECIPE_TYPES = 'target native nativesdk cross crosssdk cross-canadian'
-COPYLEFT_AVAILABLE_RECIPE_TYPES[type] = 'list'
-COPYLEFT_AVAILABLE_RECIPE_TYPES[doc] = 'Space separated list of available recipe types'
-
 python () {
     pn = d.getVar('PN', True)
 
