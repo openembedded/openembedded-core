@@ -6,7 +6,6 @@ RPM="rpm"
 RPMBUILD="rpmbuild"
 
 PKGWRITEDIRRPM = "${WORKDIR}/deploy-rpms"
-PKGWRITEDIRSRPM = "${DEPLOY_DIR}/sources/deploy-srpm"
 
 # Maintaining the perfile dependencies has singificant overhead when writing the 
 # packages. When set, this value merges them for efficiency.
@@ -87,23 +86,26 @@ python write_specfile () {
 
     # append information for logs and patches to %prep
     def add_prep(d,spec_files_bottom):
-        if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
+        if d.getVarFlag('ARCHIVER_MODE', 'srpm', True) == '1' and bb.data.inherits_class('archiver', d):
             spec_files_bottom.append('%%prep -n %s' % d.getVar('PN', True) )
             spec_files_bottom.append('%s' % "echo \"include logs and patches, Please check them in SOURCES\"")
             spec_files_bottom.append('')
 
     # append the name of tarball to key word 'SOURCE' in xxx.spec.
     def tail_source(d):
-        if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
-            source_list = get_package(d)
+        if d.getVarFlag('ARCHIVER_MODE', 'srpm', True) == '1' and bb.data.inherits_class('archiver', d):
+            ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
+            if not os.path.exists(ar_outdir):
+                return
+            source_list = os.listdir(ar_outdir)
             source_number = 0
-            workdir = d.getVar('WORKDIR', True)
             for source in source_list:
                 # The rpmbuild doesn't need the root permission, but it needs
                 # to know the file's user and group name, the only user and
                 # group in fakeroot is "root" when working in fakeroot.
-                os.chown("%s/%s" % (workdir, source), 0, 0)
-                spec_preamble_top.append('Source' + str(source_number) + ': %s' % source)
+                f = os.path.join(ar_outdir, source)
+                os.chown(f, 0, 0)
+                spec_preamble_top.append('Source%s: %s' % (source_number, source))
                 source_number += 1
     # We need a simple way to remove the MLPREFIX from the package name,
     # and dependency information...
@@ -611,15 +613,6 @@ python write_specfile () {
 }
 
 python do_package_rpm () {
-    def creat_srpm_dir(d):
-        if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
-            clean_licenses = get_licenses(d)
-            pkgwritesrpmdir = bb.data.expand('${PKGWRITEDIRSRPM}/${PACKAGE_ARCH_EXTEND}', d)
-            pkgwritesrpmdir = pkgwritesrpmdir + '/' + clean_licenses
-            bb.utils.mkdirhier(pkgwritesrpmdir)
-            os.chmod(pkgwritesrpmdir, 0755)
-            return pkgwritesrpmdir
-            
     # We need a simple way to remove the MLPREFIX from the package name,
     # and dependency information...
     def strip_multilib(name, d):
@@ -687,16 +680,14 @@ python do_package_rpm () {
     cmd = cmd + " --define 'debug_package %{nil}'"
     cmd = cmd + " --define '_rpmfc_magic_path " + magicfile + "'"
     cmd = cmd + " --define '_tmppath " + workdir + "'"
-    if d.getVar('SOURCE_ARCHIVE_PACKAGE_TYPE', True) == 'srpm':
-        cmd = cmd + " --define '_sourcedir " + workdir + "'"
-        cmdsrpm = cmd + " --define '_srcrpmdir " + creat_srpm_dir(d) + "'"
+    if d.getVarFlag('ARCHIVER_MODE', 'srpm', True) == '1' and bb.data.inherits_class('archiver', d):
+        cmd = cmd + " --define '_sourcedir " + d.getVar('ARCHIVER_OUTDIR', True) + "'"
+        cmdsrpm = cmd + " --define '_srcrpmdir " + d.getVar('ARCHIVER_OUTDIR', True) + "'"
         cmdsrpm = cmdsrpm + " -bs " + outspecfile
         # Build the .src.rpm
         d.setVar('SBUILDSPEC', cmdsrpm + "\n")
         d.setVarFlag('SBUILDSPEC', 'func', '1')
         bb.build.exec_func('SBUILDSPEC', d)
-        # Remove the source (SOURCE0, SOURCE1 ...)
-        cmd = cmd + " --rmsource "
     cmd = cmd + " -bb " + outspecfile
 
     # Build the rpm package!
