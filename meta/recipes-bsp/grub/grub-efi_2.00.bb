@@ -22,7 +22,6 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
            file://cfg \
            file://grub-2.00-fpmath-sse-387-fix.patch \
            file://grub-2.00-fix-enable_execute_stack-check.patch \
-           file://grub-2.00-disable-help2man.patch \
            file://check-if-liblzma-is-disabled.patch \
            file://grub-no-unused-result.patch \
            file://grub-2.00-ignore-gnulib-gets-stupidity.patch \
@@ -56,6 +55,7 @@ inherit autotools
 inherit gettext
 inherit deploy
 
+CACHED_CONFIGUREVARS += "ac_cv_path_HELP2MAN="
 EXTRA_OECONF = "--with-platform=efi --disable-grub-mkfont \
                 --enable-efiemu=no --program-prefix='' \
                 --enable-liblzma=no --enable-device-mapper=no --enable-libzfs=no"
