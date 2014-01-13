@@ -155,7 +155,7 @@ class DpkgPM(PackageManager):
         self.apt_conf_file = os.path.join(self.apt_conf_dir, "apt.conf")
         self.apt_get_cmd = bb.utils.which(os.getenv('PATH'), "apt-get")
 
-        self.apt_args = ['', '--no-install-recommends'][d.getVar("NO_RECOMMENDATIONS", True) == "1"]
+        self.apt_args = d.getVar("APT_ARGS", True)
 
         os.environ['APT_CONFIG'] = self.apt_conf_file
 
