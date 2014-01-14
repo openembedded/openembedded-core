@@ -32,7 +32,7 @@ do_configure () {
 
 do_compile_prepend () {
     #Automake dir is not correctly detected in cross compilation case
-    export AUTOMAKE_DIR=${STAGING_DATADIR_NATIVE}/$(ls ${STAGING_DATADIR_NATIVE} | grep automake)
+    export AUTOMAKE_DIR="$(automake --print-libdir)"
     export ACLOCAL_FLAGS="--system-acdir=${ACLOCALDIR}/"
 }
 
