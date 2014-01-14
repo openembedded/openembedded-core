@@ -24,10 +24,14 @@ KEXECTOOLS_powerpc ?= ""
 KEXECTOOLS_e5500-64b ?= ""
 KEXECTOOLS_aarch64 ?= ""
 
+GLTOOLS = "\
+    mesa-demos \
+    piglit \
+    "
+
 X11TOOLS = "\
     fstests \
     owl-video \
-    mesa-demos \
     x11perf \
     xrestop \
     xwininfo \
@@ -48,4 +52,5 @@ RDEPENDS_${PN} = "\
     ltp \
     connman-client \
     ${@base_contains('DISTRO_FEATURES', 'x11', "${X11TOOLS}", "", d)} \
+    ${@base_contains('DISTRO_FEATURES', 'opengl', "${GLTOOLS}", "", d)} \
     "
