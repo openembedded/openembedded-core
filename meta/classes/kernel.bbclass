@@ -87,13 +87,18 @@ copy_initramfs() {
 	mkdir -p ${B}/usr
 	# Find and use the first initramfs image archive type we find
 	rm -f ${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.cpio
-	for img in cpio.gz cpio.lzo cpio.lzma cpio.xz; do
+	for img in cpio.gz cpio.lz4 cpio.lzo cpio.lzma cpio.xz; do
 		if [ -e "${DEPLOY_DIR_IMAGE}/${INITRAMFS_IMAGE}-${MACHINE}.$img" ]; then
 			cp ${DEPLOY_DIR_IMAGE}/${INITRAMFS_IMAGE}-${MACHINE}.$img ${B}/usr/.
 			case $img in
 			*gz)
 				echo "gzip decompressing image"
 				gunzip -f ${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.$img
+				break
+				;;
+			*lz4)
+				echo "lz4 decompressing image"
+				lz4 -df ${B}/usr/${INITRAMFS_IMAGE}-${MACHINE}.$img
 				break
 				;;
 			*lzo)
