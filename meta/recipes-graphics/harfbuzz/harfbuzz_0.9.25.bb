@@ -16,7 +16,7 @@ SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/harfbuzz-${PV}.t
 SRC_URI[md5sum] = "491b631239f51dcd4f7934775306c4e7"
 SRC_URI[sha256sum] = "dc6e5997a569526cd28147a80a0f65466e87ae617753b38704a60184bc6d6bee"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig lib_package
 
 DEPENDS = "glib-2.0 cairo freetype"
 
