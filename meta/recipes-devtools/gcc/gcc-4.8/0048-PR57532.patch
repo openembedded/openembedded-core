@@ -1,0 +1,36 @@
+Upstream-Status: Backport
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+
+r200836 | jason | 2013-07-09 14:52:17 -0300 (Tue, 09 Jul 2013) | 3 lines
+
+        PR c++/57532
+        * parser.c (cp_parser_ref_qualifier_opt): Don't tentatively parse
+        a ref-qualifier in C++98 mode.
+
+Index: gcc/testsuite/g++.dg/parse/ref-qual2.C
+===================================================================
+--- a/gcc/testsuite/g++.dg/parse/ref-qual2.C	(revision 0)
++++ b/gcc/testsuite/g++.dg/parse/ref-qual2.C	(revision 200836)
+@@ -0,0 +1,6 @@
++// PR c++/57532
++
++int main()
++{
++    return (int() & int());
++}
+Index: gcc/cp/parser.c
+===================================================================
+--- a/gcc/cp/parser.c	(revision 200835)
++++ b/gcc/cp/parser.c	(revision 200836)
+@@ -16986,6 +16986,11 @@
+ {
+   cp_ref_qualifier ref_qual = REF_QUAL_NONE;
+   cp_token *token = cp_lexer_peek_token (parser->lexer);
++
++  /* Don't try to parse bitwise '&' as a ref-qualifier (c++/57532).  */
++  if (cxx_dialect < cxx11 && cp_parser_parsing_tentatively (parser))
++    return ref_qual;
++
+   switch (token->type)
+     {
+     case CPP_AND:
