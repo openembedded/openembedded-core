@@ -10,22 +10,19 @@ Signed-off-by: Xiaofeng Yan <xiaofeng.yan@windriver.com>
  options.h | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/options.h b/options.h
-index 71a21c2..305f789 100644
---- a/options.h
-+++ b/options.h
-@@ -174,9 +174,9 @@ much traffic. */
+Index: dropbear-2013.62/options.h
+===================================================================
+--- dropbear-2013.62.orig/options.h	2014-01-14 21:53:02.803262009 +0000
++++ dropbear-2013.62/options.h	2014-01-14 21:53:56.119263462 +0000
+@@ -192,9 +192,9 @@
   * PAM challenge/response.
   * You can't enable both PASSWORD and PAM. */
  
 -#define ENABLE_SVR_PASSWORD_AUTH
-+//#define ENABLE_SVR_PASSWORD_AUTH
++/*#define ENABLE_SVR_PASSWORD_AUTH*/
  /* PAM requires ./configure --enable-pam */
--//#define ENABLE_SVR_PAM_AUTH
+-/*#define ENABLE_SVR_PAM_AUTH */
 +#define ENABLE_SVR_PAM_AUTH
  #define ENABLE_SVR_PUBKEY_AUTH
  
  /* Whether to take public key options in 
--- 
-1.7.11.7
-
