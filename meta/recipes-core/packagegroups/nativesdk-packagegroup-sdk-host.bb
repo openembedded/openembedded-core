@@ -26,8 +26,6 @@ RDEPENDS_${PN} = "\
     "
 
 RDEPENDS_${PN}_darwin = "\
-    odcctools-cross-canadian \
-    llvm-cross-canadian \
     nativesdk-pkgconfig \
     nativesdk-opkg \
     nativesdk-libtool \
