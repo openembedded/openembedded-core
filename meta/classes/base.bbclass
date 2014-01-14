@@ -573,6 +573,11 @@ python () {
     elif "osc://" in srcuri:
         d.appendVarFlag('do_fetch', 'depends', ' osc-native:do_populate_sysroot')
 
+    # *.lz4 should depends on lz4-native for unpacking
+    # Not endswith because of "*.patch.lz4;patch=1". Need bb.fetch.decodeurl in future
+    if '.lz4' in srcuri:
+        d.appendVarFlag('do_unpack', 'depends', ' lz4-native:do_populate_sysroot')
+
     # *.xz should depends on xz-native for unpacking
     # Not endswith because of "*.patch.xz;patch=1". Need bb.fetch.decodeurl in future
     if '.xz' in srcuri:
