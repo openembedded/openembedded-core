@@ -8,7 +8,7 @@ import oeqa.utils.ftools as ftools
 from oeqa.selftest.base import oeSelfTest
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_test_layer
 
-class SStateTests(oeSelfTest):
+class SStateBase(oeSelfTest):
 
     def setUpLocal(self):
         self.temp_sstate_location = None
@@ -51,6 +51,7 @@ class SStateTests(oeSelfTest):
                         result.append(f)
         return result
 
+class SStateTests(SStateBase):
 
     # Test sstate files creation and their location
     def run_test_sstate_creation(self, targets, distro_specific=True, distro_nonspecific=True, temp_sstate_location=True, should_pass=True):
