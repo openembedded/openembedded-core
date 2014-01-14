@@ -55,6 +55,6 @@ python () {
 
     # Remove all '*ptest_base' tasks when ptest is not enabled
     if not(d.getVar('PTEST_ENABLED', True) == "1"):
-        for i in filter(lambda k: d.getVarFlag(k, "task") and k.endswith("ptest_base"), d.keys()):
+        for i in ['do_configure_ptest_base', 'do_compile_ptest_base', 'do_install_ptest_base']:
             bb.build.deltask(i, d)
 }
