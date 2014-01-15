@@ -659,6 +659,9 @@ python write_specfile () {
         # We can race against the ipk/deb backends which create CONTROL or DEBIAN directories
         # when packaging. We just ignore these files which are created in 
         # packages-split/ and not package/
+        # We have the odd situation where the CONTROL/DEBIAN directory can be removed in the middle of
+        # of the walk, the isdir() test would then fail and the walk code would assume its a file
+        # hence we check for the names in files too.
         for rootpath, dirs, files in os.walk(walkpath):
             path = rootpath.replace(walkpath, "")
             if path.endswith("DEBIAN") or path.endswith("CONTROL"):
@@ -669,6 +672,8 @@ python write_specfile () {
                 # All packages own the directories their files are in...
                 target.append('%dir "' + path + '/' + dir + '"')
             for file in files:
+                if file == "CONTROL" or file == "DEBIAN":
+                    continue
                 if conffiles.count(path + '/' + file):
                     target.append('%config "' + path + '/' + file + '"')
                 else:
