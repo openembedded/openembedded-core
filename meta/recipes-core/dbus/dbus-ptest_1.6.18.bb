@@ -39,7 +39,8 @@ EXTRA_OECONF = "--enable-tests \
                 --disable-doxygen-docs \
                 --disable-libaudit \
                 --with-xml=expat \
-                --with-systemdsystemunitdir=${systemd_unitdir}/system/ \
+                --without-systemd \
+                --without-systemdsystemunitdir \
                 --with-dbus-test-dir=${PTEST_PATH} \
                 ${EXTRA_OECONF_X}"
 
