@@ -3,13 +3,13 @@ require recipes-kernel/linux/linux-yocto.inc
 KBRANCH = "standard/preempt-rt/base"
 KBRANCH_qemuppc = "standard/preempt-rt/qemuppc"
 
-SRCREV_machine ?= "ee9480cd91b2b46325a2da9aa6ae779d8e4163c0"
-SRCREV_machine_qemuppc ?= "5c126504c0a2f72d80bae9d96cea7eb9d7854290"
-SRCREV_meta ?= "d9cd83c0292bd4e2a6754a96761027252e726a42"
+SRCREV_machine ?= "957ba6ae6c1d81b57da6a36b93f1b2a0ced2f45d"
+SRCREV_machine_qemuppc ?= "37e40b7017a9c78d676b19716011494dc7cb6369"
+SRCREV_meta ?= "778d5f6259f0b8e28a46d8a764979e20e5a8ffc4"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.10.git;bareclone=1;branch=${KBRANCH},meta;name=machine,meta"
 
-LINUX_VERSION ?= "3.10.19"
+LINUX_VERSION ?= "3.10.25"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
