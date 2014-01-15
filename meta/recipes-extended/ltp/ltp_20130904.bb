@@ -23,6 +23,7 @@ DEPENDS = "attr libaio libcap acl openssl"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-Rename-runtests_noltp.sh-script-so-have-unique-name.patch \
+           file://regen-makefile.patch \
 "
 
 SRCREV = "a8c42db5f9314211811c36275a21f83902830dc5"

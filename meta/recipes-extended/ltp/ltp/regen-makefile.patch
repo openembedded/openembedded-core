@@ -1,0 +1,22 @@
+Fix the dependencies for linux_syscall_numbers.h where in a parallel build it was
+finding the temporary file linux_syscall_numbers.h.[pid].sh (where sh is an
+architecture name).  Instead don't wildcard *.sh as the only .sh we care about
+here is regen.sh, so hard-code that.
+
+Upstream-Status: Pending
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+diff --git a/testcases/kernel/include/Makefile b/testcases/kernel/include/Makefile
+index db21a2a..585eb5e 100644
+--- a/testcases/kernel/include/Makefile
++++ b/testcases/kernel/include/Makefile
+@@ -28,7 +28,7 @@ INSTALL_DIR		:= $(includedir)
+ 
+ MAKE_TARGETS		:= linux_syscall_numbers.h
+ 
+-linux_syscall_numbers.h: $(wildcard $(abs_srcdir)/*.sh $(abs_srcdir)/*.in)
+-	$(SHELL) "$(abs_srcdir)/regen.sh"
++linux_syscall_numbers.h: $(abs_srcdir)/regen.sh $(wildcard $(abs_srcdir)/*.in)
++	$(SHELL) "$<"
+ 
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
