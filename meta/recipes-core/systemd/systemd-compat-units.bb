@@ -23,7 +23,6 @@ do_install() {
 
 SYSTEMD_DISABLED_SYSV_SERVICES = " \
   busybox-udhcpc \
-  dnsmasq \
   hwclock \
   networking \
   syslog.busybox \
