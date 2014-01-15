@@ -78,6 +78,7 @@ RDEPENDS_${PN}-ptest += "\
             tzdata-posix \
             python-pygobject \
             python-dbus \
+            shared-mime-info \
            "
 
 RDEPENDS_${PN}-ptest_append_libc-glibc = "\
@@ -87,6 +88,9 @@ RDEPENDS_${PN}-ptest_append_libc-glibc = "\
             eglibc-charmap-cp1255 \
             eglibc-gconv-utf-32 \
             eglibc-gconv-utf-7 \
+            eglibc-gconv-euc-jp \
+            eglibc-gconv-iso8859-1 \
+            eglibc-gconv-iso8859-15 \
             eglibc-charmap-invariant \
             eglibc-localedata-translit-cjk-variants \
            "
