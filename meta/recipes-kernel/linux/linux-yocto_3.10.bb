@@ -18,7 +18,7 @@ SRCREV_machine_qemux86 ?= "79af968f2f26378798aec7a6d729ff5a371aae5f"
 SRCREV_machine_qemux86-64 ?= "79af968f2f26378798aec7a6d729ff5a371aae5f"
 SRCREV_machine_qemumips64 ?= "67efb2993ec7726df5567e2572fd64e34e29b46d"
 SRCREV_machine ?= "79af968f2f26378798aec7a6d729ff5a371aae5f"
-SRCREV_meta ?= "778d5f6259f0b8e28a46d8a764979e20e5a8ffc4"
+SRCREV_meta ?= "4d658aa580df62232a4a84957b02496436dc17c4"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.10.git;bareclone=1;branch=${KBRANCH},${KMETA};name=machine,meta"
 
