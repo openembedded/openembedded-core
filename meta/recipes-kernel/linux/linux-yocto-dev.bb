@@ -43,7 +43,7 @@ python () {
             d.setVar("SRCREV_meta", "${AUTOREV}")
 }
 
-LINUX_VERSION ?= "3.10+"
+LINUX_VERSION ?= "3.13+"
 LINUX_VERSION_EXTENSION ?= "-yoctodev-${LINUX_KERNEL_TYPE}"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
