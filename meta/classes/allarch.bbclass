@@ -23,6 +23,8 @@ python () {
         d.setVar("TARGET_LD_ARCH", "none")
         d.setVar("TARGET_AS_ARCH", "none")
         d.setVar("PACKAGE_EXTRA_ARCHS", "")
+        d.setVar("SDK_ARCH", "none")
+        d.setVar("SDK_CC_ARCH", "none")
 
         # No need to do shared library processing or debug symbol handling
         d.setVar("EXCLUDE_FROM_SHLIBS", "1")
