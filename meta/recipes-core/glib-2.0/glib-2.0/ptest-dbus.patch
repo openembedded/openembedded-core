@@ -1,0 +1,65 @@
+Fix dbus-appinfo from attempting to use the session's bus, and hanging if there
+isn't one present.
+
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 940fa98290812789d095d93ff1c550cd86fb2428 Mon Sep 17 00:00:00 2001
+From: Xavier Claessens <xavier.claessens@collabora.co.uk>
+Date: Mon, 28 Oct 2013 21:18:54 +0000
+Subject: Tests: add session_bus_run() and use it where possible
+
+This is to avoid having again the subtil bug in dbus-appinfo.c:
+session_bus_down() was called before g_test_run() so the test was
+running on the user's dbus session.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=697348
+---
+diff --git a/gio/tests/dbus-appinfo.c b/gio/tests/dbus-appinfo.c
+index ca11e98..7698429 100644
+--- a/gio/tests/dbus-appinfo.c
++++ b/gio/tests/dbus-appinfo.c
+@@ -280,11 +280,7 @@ main (int argc, char **argv)
+ {
+   g_test_init (&argc, &argv, NULL);
+ 
+-  session_bus_up ();
+-
+   g_test_add_func ("/appinfo/dbusappinfo", test_dbus_appinfo);
+ 
+-  session_bus_down ();
+-
+-  return g_test_run ();
++  return session_bus_run ();
+ }
+diff --git a/gio/tests/gdbus-sessionbus.c b/gio/tests/gdbus-sessionbus.c
+index 68c4449..13c2edb 100644
+--- a/gio/tests/gdbus-sessionbus.c
++++ b/gio/tests/gdbus-sessionbus.c
+@@ -47,3 +47,14 @@ session_bus_down (void)
+   g_clear_object (&singleton);
+ }
+ 
++gint
++session_bus_run (void)
++{
++  gint ret;
++
++  session_bus_up ();
++  ret = g_test_run ();
++  session_bus_down ();
++
++  return ret;
++}
+diff --git a/gio/tests/gdbus-sessionbus.h b/gio/tests/gdbus-sessionbus.h
+index 7ef3abd..284cd00 100644
+--- a/gio/tests/gdbus-sessionbus.h
++++ b/gio/tests/gdbus-sessionbus.h
+@@ -30,6 +30,7 @@ G_BEGIN_DECLS
+ void session_bus_up   (void);
+ void session_bus_stop (void);
+ void session_bus_down (void);
++gint session_bus_run (void);
+ 
+ G_END_DECLS
+ 
