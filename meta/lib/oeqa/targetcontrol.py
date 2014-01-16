@@ -8,18 +8,33 @@ import os
 import shutil
 import subprocess
 import bb
-
+import traceback
 from oeqa.utils.sshcontrol import SSHControl
 from oeqa.utils.qemurunner import QemuRunner
 
 
 def get_target_controller(d):
-    if d.getVar("TEST_TARGET", True) == "qemu":
+    testtarget = d.getVar("TEST_TARGET", True)
+    # old, simple names
+    if testtarget == "qemu":
         return QemuTarget(d)
-    elif d.getVar("TEST_TARGET", True) == "simpleremote":
+    elif testtarget == "simpleremote":
         return SimpleRemoteTarget(d)
     else:
-        bb.fatal("Please set a valid TEST_TARGET")
+        # use the class name
+        try:
+            # is it a core class defined here?
+            controller = getattr(__name__, testtarget)
+        except AttributeError:
+            # nope, perhaps a layer defined one
+            try:
+                module = __import__("oeqa.utils.controllers", globals(), locals(), [testtarget])
+                controller = getattr(module, testtarget)
+            except ImportError as e:
+                bb.fatal("Failed to import oeqa.utils.controllers:\n%s" % traceback.format_exc())
+            except AttributeError:
+                bb.fatal("\"%s\" is not a valid value for TEST_TARGET" % testtarget)
+        return controller(d)
 
 
 class BaseTarget(object):
