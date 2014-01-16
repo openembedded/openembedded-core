@@ -6,7 +6,7 @@ SUMMARY = "Host packages for the standalone SDK or external toolchain"
 PR = "r11"
 LICENSE = "MIT"
 
-inherit nativesdk packagegroup
+inherit packagegroup nativesdk
 
 PACKAGEGROUP_DISABLE_COMPLEMENTARY = "1"
 
