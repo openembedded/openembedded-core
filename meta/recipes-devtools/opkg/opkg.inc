@@ -1,6 +1,5 @@
 SUMMARY = "Open Package Manager"
 SUMMARY_libopkg = "Open Package Manager library"
-SUMMARY_update-alternatives-cworth = "Utility for managing the alternatives system"
 SECTION = "base"
 HOMEPAGE = "http://code.google.com/p/opkg/"
 BUGTRACKER = "http://code.google.com/p/opkg/issues/list"

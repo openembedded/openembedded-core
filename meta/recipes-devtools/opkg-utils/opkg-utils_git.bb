@@ -1,4 +1,5 @@
 SUMMARY = "Additional utilities for the opkg package manager"
+SUMMARY_update-alternatives-opkg = "Utility for managing the alternatives system"
 SECTION = "base"
 HOMEPAGE = "http://code.google.com/p/opkg/"
 LICENSE = "GPLv2+"

@@ -56,7 +56,7 @@ SUMMARY_${PN}-alternatives-doc = "${SUMMARY_${PN}-alternatives} - Documentation 
 DESCRIPTION_${PN}-alternatives-doc = "${DESCRIPTION_${PN}-alternatives}  \
 This package contains documentation."
 RPROVIDES_${PN}-alternatives += "update-alternatives"
-RCONFLICTS_${PN}-alternatives = "update-alternatives-cworth update-alternatives-dpkg"
+RCONFLICTS_${PN}-alternatives = "update-alternatives-opkg update-alternatives-dpkg"
 FILES_${PN}-alternatives = "${sbindir}/alternatives ${sbindir}/update-alternatives \
 			    ${sysconfdir}/alternatives ${localstatedir}/lib/alternatives"
 FILES_${PN}-alternatives-doc = "${mandir}/man8/alternatives.8 \
