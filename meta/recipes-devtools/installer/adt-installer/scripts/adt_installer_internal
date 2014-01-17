@@ -292,7 +292,7 @@ user_inst_type=$1
 install_native_sdk $user_inst_type
 check_result
 
-for arch_type in $YOCTOADT_SUPPORTED_TARGETS; do
+for arch_type in $YOCTOADT_TARGETS; do
   install_target $arch_type
   check_result
 done

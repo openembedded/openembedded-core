@@ -55,7 +55,7 @@ usage ()
     echo_info "# Your rootfs image(s) and target sysroot selections from adt_installer.conf"
     echo_info "##############################################################################"
 prompt=1
-for arch_type in $YOCTOADT_SUPPORTED_TARGETS; do
+for arch_type in $YOCTOADT_TARGETS; do
   download_images $arch_type $prompt
 done
     echo_info "############################################################################\n"
@@ -403,7 +403,7 @@ else
   override_oldfile=0
 fi
 
-for arch_type in $YOCTOADT_SUPPORTED_TARGETS; do
+for arch_type in $YOCTOADT_TARGETS; do
   download_images $arch_type
 done
 
