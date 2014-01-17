@@ -77,7 +77,7 @@ class SSHControl(object):
                         endtime = time.time() + tdelta
 
             # process hasn't returned yet
-            if sshconn.poll() is None:
+            if not eof:
                 sshconn.terminate()
                 time.sleep(3)
                 try:
@@ -86,7 +86,7 @@ class SSHControl(object):
                     pass
                 output += "\n[!!! SSH command killed - no output for %d seconds. Total running time: %d seconds." % (tdelta, time.time() - self._starttime)
 
-        self._ret = sshconn.poll()
+        self._ret = sshconn.wait()
         # strip the last LF so we can test the output
         self._out = output.rstrip()
         self.log("%s" % self._out)
