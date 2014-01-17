@@ -16,6 +16,12 @@ S = "${WORKDIR}/git"
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 
+PYTHONRDEPS = "python python-shell python-io python-math python-crypt python-logging python-fcntl python-subprocess python-pickle python-compression python-textutils python-stringold"
+PYTHONRDEPS_class-native = ""
+
+PACKAGECONFIG = "python"
+PACKAGECONFIG[python] = ",,,${PYTHONRDEPS}"
+
 do_install() {
 	oe_runmake PREFIX=${prefix} DESTDIR=${D} install
 }
@@ -25,9 +31,6 @@ PACKAGES_class-native = ""
 
 PACKAGES =+ "update-alternatives-opkg"
 FILES_update-alternatives-opkg = "${bindir}/update-alternatives"
-
-RDEPENDS_${PN} = "python python-shell python-io python-math python-crypt python-logging python-fcntl python-subprocess python-pickle python-compression python-textutils python-stringold"
-RDEPENDS_${PN}_class-native = ""
 RPROVIDES_update-alternatives-opkg = "update-alternatives"
 
 BBCLASSEXTEND = "native nativesdk"
