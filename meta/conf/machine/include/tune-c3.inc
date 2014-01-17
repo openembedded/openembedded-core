@@ -1,4 +1,4 @@
-require conf/machine/include/ia32/arch-ia32.inc
+require conf/machine/include/x86/arch-x86.inc
 
 TUNEVALID[c3] = "VIA Cyrix III or VIA C3 specific optimizations"
 TUNECONFLICTS[c3] = "m64 mx32"

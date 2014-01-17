@@ -1,9 +1,9 @@
 #
-# base machine settings for ia32-architecture BSPs
+# Base machine settings for X86 architecture BSPs
 #
 
 #
-# common settings for Intel-based machines
+# common settings for X86 machines
 #
 MACHINE_FEATURES += "screen keyboard pci usbhost ext2 ext3 x86 \
                      acpi serial usbgadget alsa"
@@ -25,28 +25,28 @@ PREFERRED_VERSION_linux-yocto ??= "3.0%"
 #
 # XSERVER subcomponents, used to build the XSERVER variable
 #
-XSERVER_IA32_BASE = "xserver-xorg \
+XSERVER_X86_BASE = "xserver-xorg \
            xf86-input-mouse \
            xf86-input-keyboard \
            xf86-input-evdev \
            xf86-input-synaptics \
            "
 
-XSERVER_IA32_EXT = " \
+XSERVER_X86_EXT = " \
            ${@base_contains('DISTRO_FEATURES', 'opengl', 'xserver-xorg-extension-glx', '', d)} \
            xserver-xorg-module-libint10 \
            "
 
-XSERVER_IA32_I915 = "xf86-video-intel \
+XSERVER_X86_I915 = "xf86-video-intel \
            ${@base_contains('DISTRO_FEATURES', 'opengl', 'mesa-driver-i915', '', d)} \
            "
 
-XSERVER_IA32_I965 = "xf86-video-intel \
+XSERVER_X86_I965 = "xf86-video-intel \
            ${@base_contains('DISTRO_FEATURES', 'opengl', 'mesa-driver-i965', '', d)} \
            "
 
-XSERVER_IA32_VESA = "xf86-video-vesa"
+XSERVER_X86_VESA = "xf86-video-vesa"
 
-XSERVER_IA32_FBDEV = "xf86-video-fbdev"
+XSERVER_X86_FBDEV = "xf86-video-fbdev"
 
-XSERVER_IA32_MODESETTING = "xf86-video-modesetting"
+XSERVER_X86_MODESETTING = "xf86-video-modesetting"

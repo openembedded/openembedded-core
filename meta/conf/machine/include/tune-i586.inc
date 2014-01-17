@@ -1,6 +1,6 @@
 DEFAULTTUNE ?= "i586"
 
-require conf/machine/include/ia32/arch-ia32.inc
+require conf/machine/include/x86/arch-x86.inc
 
 # Extra tune features
 TUNEVALID[i586] = "Enable i586 specific processor optimizations"

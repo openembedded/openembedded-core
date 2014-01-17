@@ -1,5 +1,5 @@
 #
-# IA32 Architecture definition
+# X86 Architecture definition (IA32, X86_64, and X32)
 #
 
 DEFAULTTUNE ?= "x86"

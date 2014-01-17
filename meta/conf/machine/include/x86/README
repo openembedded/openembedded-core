@@ -1,12 +1,12 @@
 2012/03/30 - Mark Hatle <mark.hatle@windriver.com>
  - Initial version
 
-Most of the items for the IA architecture are defined in the single 
-arch-ia32 file.
+Most of the items for the X86 architectures are defined in the single
+arch-x86 file.
 
 Three ABIs are define, m32, mx32 and m64.
 
-The following is the list of ia32 specific variables:
+The following is the list of X86 specific variables:
 
 X86ARCH32 - This is the 32-bit architecture GNU canonical arch, TUNE_ARCH.
 
