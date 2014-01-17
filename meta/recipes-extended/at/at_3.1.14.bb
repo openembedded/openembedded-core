@@ -22,6 +22,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
     file://posixtm.h \
     file://file_replacement_with_gplv2.patch \
     file://S99at \
+    file://atd.service \
     ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)}"
 
 PAM_SRC_URI = "file://pam.conf.patch \
@@ -37,7 +38,9 @@ EXTRA_OECONF += "ac_cv_path_SENDMAIL=/bin/true \
                  --with-atspool=/var/spool/at/spool \
                  ac_cv_header_security_pam_appl_h=${@base_contains('DISTRO_FEATURES', 'pam', 'yes', 'no', d)} "
 
-inherit autotools
+inherit autotools systemd
+
+SYSTEMD_SERVICE_${PN} = "atd.service"
 
 PARALLEL_MAKE = ""
 
@@ -52,6 +55,11 @@ do_install () {
 	install -d ${D}${sysconfdir}/rcS.d
 	install -m 0755    ${WORKDIR}/S99at		${D}${sysconfdir}/init.d/atd
 	ln -sf ../init.d/atd ${D}${sysconfdir}/rcS.d/S99at
+
+	# install systemd unit files
+	install -d ${D}${systemd_unitdir}/system
+	install -m 0644 ${WORKDIR}/atd.service ${D}${systemd_unitdir}/system
+	sed -i -e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_unitdir}/system/atd.service
 
 	if [ "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}" = "pam" ]; then
 		install -D -m 0644 ${WORKDIR}/${BP}/pam.conf ${D}${sysconfdir}/pam.d/atd
