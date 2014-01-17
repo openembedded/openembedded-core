@@ -1,6 +1,9 @@
 2012/03/30 - Mark Hatle <mark.hatle@windriver.com>
  - Initial Revision
 
+
+Introduction
+============
 The individual CPU, and ABI tunings are contained in this directory.  A
 number of local and global variables are used to control the way the
 tunings are setup and how they work together to specify an optimized
@@ -79,3 +82,19 @@ configured in the same way that TUNE_CCARGS is.
 BASE_LIB_tune-<tune> - The "/lib" location for a specific ABI.  This is
 used in a multilib configuration to place the libraries in the correct,
 non-conflicting locations.
+
+
+Best Practice
+=============
+The tune infrastructure is designed to be hierarchical. When writing a
+new tune file for a "fast-forward" CPU architecture (one that supports
+everything from a previous generation), it is recommended to require the
+previous generation tune file and specify PACKAGE_EXTRA_ARCHS using the
+previous generation's override and appending the new tune. Note that
+only one previous tune file should be included to avoid mutiple includes
+of the base arch which could lead to a broken configuration due to
+multiple prepend and append assignments.
+
+For example, for x86, there is a common x86/arch-x86.inc which is
+included in the base i586 tune file. The core2 tune builds
+on that, and corei7 builds on core2.
