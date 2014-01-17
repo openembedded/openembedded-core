@@ -22,12 +22,13 @@ SRC_URI = "http://distcc.googlecode.com/files/${BPN}-${PV}.tar.bz2 \
            file://separatebuilddir.patch \
            file://default \
            file://distccmon-gnome.desktop \
-           file://distcc"
+           file://distcc \
+           file://distccd.service"
 
 SRC_URI[md5sum] = "a1a9d3853df7133669fffec2a9aab9f3"
 SRC_URI[sha256sum] = "f55dbafd76bed3ce57e1bbcdab1329227808890d90f4c724fcd2d53f934ddd89"
 
-inherit autotools pkgconfig update-rc.d useradd
+inherit autotools pkgconfig update-rc.d useradd systemd
 
 EXTRA_OECONF += "--disable-Werror PYTHON=/dev/null"
 
@@ -40,11 +41,17 @@ USERADD_PARAM_${PN} = "--system \
 
 INITSCRIPT_NAME = "distcc"
 
+SYSTEMD_PACKAGES = "${PN}"
+SYSTEMD_SERVICE_${PN} = "distccd.service"
+
 do_install_append() {
     install -d ${D}${sysconfdir}/init.d/
     install -d ${D}${sysconfdir}/default
     install -m 0755 ${WORKDIR}/distcc ${D}${sysconfdir}/init.d/
     install -m 0755 ${WORKDIR}/default ${D}${sysconfdir}/default/distcc
+    install -d ${D}${systemd_unitdir}/system/
+    install -m 0644 ${WORKDIR}/distccd.service ${D}${systemd_unitdir}/system
+    sed -i -e 's,@BINDIR@,${bindir},g' ${D}${systemd_unitdir}/system/distccd.service
     ${DESKTOPINSTALL}
 }
 DESKTOPINSTALL = ""
@@ -58,7 +65,8 @@ FILES_${PN} = " ${sysconfdir} \
 		${bindir}/distcc \
     ${bindir}/lsdistcc \
 		${bindir}/distccd \
-		${bindir}/distccmon-text"
+		${bindir}/distccmon-text \
+		${systemd_unitdir}/system/distccd.service"
 FILES_distcc-distmon-gnome = "  ${bindir}/distccmon-gnome \
 				${datadir}/distcc"
 
