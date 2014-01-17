@@ -11,7 +11,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=519e0a18e03f7c023070568c14b077bb \
 
 SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.gz \
            file://configfix.patch \
-           file://configure_fixes.patch"
+           file://configure_fixes.patch \
+           file://run-ptest \
+"
 
 SRC_URI[md5sum] = "eb682cfb8642babba427a4fb391b15e8"
 SRC_URI[sha256sum] = "a1ec5025373815795d2fa5bfac40c0984675feffc88e049be9a162c408c2f613"
@@ -48,3 +50,18 @@ FILES_${PN}     += "${libdir}/apr-util-1/apr_dbm_gdbm-1.so"
 FILES_${PN}-dev += "${libdir}/aprutil.exp ${libdir}/apr-util-1/apr_dbm_gdbm.so* ${libdir}/apr-util-1/apr_dbm_gdbm.la"
 FILES_${PN}-dbg += "${libdir}/apr-util-1/.debug/*"
 FILES_${PN}-staticdev += "${libdir}/apr-util-1/apr_dbm_gdbm.a"
+
+inherit ptest
+
+do_compile_ptest() {
+	cd ${S}/test
+	oe_runmake
+}
+
+do_install_ptest() {
+	t=${D}${PTEST_PATH}/test
+	mkdir $t
+	for i in testall data; do \
+	  cp -r ${S}/test/$i $t; \
+	done
+}
