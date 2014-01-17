@@ -1,10 +1,18 @@
+# Settings for the GCC(1) cpu-type "core2":
+#
+#      Intel Core2 CPU with 64-bit extensions, MMX, SSE, SSE2, SSE3 and SSSE3
+#      instruction set support.
+#
+# This tune is recommended for the Intel Core 2 CPU family, including Conroe,
+# Merom and beyond, as well as the first Atom CPUs, Diamondville, and beyond.
+#
 DEFAULTTUNE ?= "core2"
 
 require conf/machine/include/tune-i586.inc
 
 # Extra tune features
 TUNEVALID[core2] = "Enable core2 specific processor optimizations"
-TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "core2", " -march=core2 -msse3 -mtune=generic -mfpmath=sse", "", d)}"
+TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "core2", " -march=core2 -mtune=core2 -msse3 -mfpmath=sse", "", d)}"
 
 # Extra tune selections
 AVAILTUNES += "core2"
