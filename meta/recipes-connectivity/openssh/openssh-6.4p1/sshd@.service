@@ -1,5 +1,6 @@
 [Unit]
 Description=OpenSSH Per-Connection Daemon
+Wants=sshdgenkeys.service
 After=sshdgenkeys.service
 
 [Service]
