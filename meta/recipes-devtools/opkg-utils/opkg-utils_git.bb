@@ -26,9 +26,6 @@ do_install() {
 	oe_runmake PREFIX=${prefix} DESTDIR=${D} install
 }
 
-# Avoid circular dependencies from package_ipk.bbclass
-PACKAGES_class-native = ""
-
 PACKAGES =+ "update-alternatives-opkg"
 FILES_update-alternatives-opkg = "${bindir}/update-alternatives"
 RPROVIDES_update-alternatives-opkg = "update-alternatives"
