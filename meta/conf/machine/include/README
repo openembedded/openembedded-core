@@ -53,10 +53,10 @@ list should be dynamic! i.e.
 ${@bb.utils.contains("TUNE_FEATURES", "feature", "cflag", "!cflag", d)}
 
 TUNE_ARCH - The GNU canonical arch for a specific architecture.  i.e.
-arm, armeb, mips, mips64, etc.  This value is by bitbake to setup
+arm, armeb, mips, mips64, etc.  This value is used by bitbake to setup
 configure. TUNE_ARCH definitions are specific to a given architecture.
-They may be a single static definitions, or may be dynamically adjusted.
-See each architectures README for details for that CPU family.
+They may be a single static definition, or may be dynamically adjusted.
+See each architecture's README for details for that CPU family.
 
 TUNE_PKGARCH - The package architecture used by the packaging systems to
 define the architecture, abi and tuning of a particular package.
