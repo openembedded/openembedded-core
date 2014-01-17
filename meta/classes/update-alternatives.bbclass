@@ -89,7 +89,7 @@ def ua_extend_depends(d):
 
 python __anonymous() {
     # Update Alternatives only works on target packages...
-    if bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d) or \
+    if bb.data.inherits_class('native', d) or \
        bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or \
        bb.data.inherits_class('cross-canadian', d):
         return
