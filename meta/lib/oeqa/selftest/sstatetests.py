@@ -48,12 +48,15 @@ class SStateTests(SStateBase):
         bitbake(['-ccleansstate'] + targets)
 
         bitbake(targets)
-        file_tracker_1 = self.search_sstate('|'.join(map(str, targets)), distro_specific, distro_nonspecific)
-        self.assertTrue(file_tracker_1, msg="Could not find sstate files for: %s" % ', '.join(map(str, targets)))
+        tgz_created = self.search_sstate('|'.join(map(str, [s + '.*?\.tgz$' for s in targets])), distro_specific, distro_nonspecific)
+        self.assertTrue(tgz_created, msg="Could not find sstate .tgz files for: %s" % ', '.join(map(str, targets)))
+
+        siginfo_created = self.search_sstate('|'.join(map(str, [s + '.*?\.siginfo$' for s in targets])), distro_specific, distro_nonspecific)
+        self.assertTrue(siginfo_created, msg="Could not find sstate .siginfo files for: %s" % ', '.join(map(str, targets)))
 
         bitbake(['-ccleansstate'] + targets)
-        file_tracker_2 = self.search_sstate('|'.join(map(str, targets)), distro_specific, distro_nonspecific)
-        self.assertTrue(not file_tracker_2)
+        tgz_removed = self.search_sstate('|'.join(map(str, [s + '.*?\.tgz$' for s in targets])), distro_specific, distro_nonspecific)
+        self.assertTrue(not tgz_removed, msg="do_cleansstate didn't remove .tgz sstate files for: %s" % ', '.join(map(str, targets)))
 
     def test_cleansstate_task_distro_specific_nonspecific(self):
         self.run_test_cleansstate_task(['binutils-cross', 'binutils-native', 'eglibc-initial'], distro_specific=True, distro_nonspecific=True, temp_sstate_location=True)
@@ -72,9 +75,9 @@ class SStateTests(SStateBase):
         bitbake(['-ccleansstate'] + targets)
 
         bitbake(targets)
-        self.assertTrue(self.search_sstate('|'.join(map(str, targets)), distro_specific=False, distro_nonspecific=True) == [], msg="Found distro non-specific sstate for: %s" % ', '.join(map(str, targets)))
-        file_tracker_1 = self.search_sstate('|'.join(map(str, targets)), distro_specific=True, distro_nonspecific=False)
-        self.assertTrue(len(file_tracker_1) > len(targets), msg = "Not all sstate files ware created for: %s" % ', '.join(map(str, targets)))
+        self.assertTrue(self.search_sstate('|'.join(map(str, [s + '.*?\.tgz$' for s in targets])), distro_specific=False, distro_nonspecific=True) == [], msg="Found distro non-specific sstate for: %s" % ', '.join(map(str, targets)))
+        file_tracker_1 = self.search_sstate('|'.join(map(str, [s + '.*?\.tgz$' for s in targets])), distro_specific=True, distro_nonspecific=False)
+        self.assertTrue(len(file_tracker_1) >= len(targets), msg = "Not all sstate files ware created for: %s" % ', '.join(map(str, targets)))
 
         self.track_for_cleanup(self.distro_specific_sstate + "_old")
         shutil.copytree(self.distro_specific_sstate, self.distro_specific_sstate + "_old")
@@ -82,8 +85,8 @@ class SStateTests(SStateBase):
 
         bitbake(['-cclean'] + targets)
         bitbake(targets)
-        file_tracker_2 = self.search_sstate('|'.join(map(str, targets)), distro_specific=True, distro_nonspecific=False)
-        self.assertTrue(len(file_tracker_2) > len(targets), msg = "Not all sstate files ware created for: %s" % ', '.join(map(str, targets)))
+        file_tracker_2 = self.search_sstate('|'.join(map(str, [s + '.*?\.tgz$' for s in targets])), distro_specific=True, distro_nonspecific=False)
+        self.assertTrue(len(file_tracker_2) >= len(targets), msg = "Not all sstate files ware created for: %s" % ', '.join(map(str, targets)))
 
         not_recreated = [x for x in file_tracker_1 if x not in file_tracker_2]
         self.assertTrue(not_recreated == [], msg="The following sstate files ware not recreated: %s" % ', '.join(map(str, not_recreated)))
@@ -121,18 +124,18 @@ class SStateTests(SStateBase):
             self.append_config(global_config[idx])
             self.append_recipeinc(target, target_config[idx])
             if target_config[idx] == target_config[-1]:
-                target_sstate_before_build = self.search_sstate(target)
+                target_sstate_before_build = self.search_sstate(target + '.*?\.tgz$')
             bitbake("-cclean %s" % target)
             result = bitbake(target, ignore_status=True)
             if target_config[idx] == target_config[-1]:
-                target_sstate_after_build = self.search_sstate(target)
+                target_sstate_after_build = self.search_sstate(target + '.*?\.tgz$')
                 expected_remaining_sstate += [x for x in target_sstate_after_build if x not in target_sstate_before_build]
             self.remove_config(global_config[idx])
             self.remove_recipeinc(target, target_config[idx])
             self.assertEqual(result.status, 0)
 
         runCmd("sstate-cache-management.sh -y --cache-dir=%s --remove-duplicated" % self.sstate_path)
-        actual_remaining_sstate = self.search_sstate(target)
+        actual_remaining_sstate = self.search_sstate(target + '.*?\.tgz$')
 
         actual_not_expected = [x for x in actual_remaining_sstate if x not in expected_remaining_sstate]
         self.assertFalse(actual_not_expected, msg="Files should have been removed but ware not: %s" % ', '.join(map(str, actual_not_expected)))
@@ -175,7 +178,6 @@ class SStateTests(SStateBase):
         global_config.append('MACHINE = "qemux86"')
         target_config.append('')
         self.run_test_sstate_cache_management_script('m4', global_config,  target_config)
-
 
 
 
