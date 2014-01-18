@@ -251,6 +251,8 @@ set_icecc_env() {
 
     ICECC_CC="${@icc_get_and_check_tool(bb, d, "gcc")}"
     ICECC_CXX="${@icc_get_and_check_tool(bb, d, "g++")}"
+    # cannot use icc_get_and_check_tool here because it assumes as without target_sys prefix
+    ICECC_WHICH_AS="${@bb.utils.which(os.getenv('PATH'), 'as')}"
     if [ ! -x "${ICECC_CC}" -o ! -x "${ICECC_CXX}" ]
     then
         bbwarn "Cannot use icecc: could not get ICECC_CC or ICECC_CXX"
@@ -266,9 +268,12 @@ set_icecc_env() {
     fi
 
     ICECC_AS="`${ICECC_CC} -print-prog-name=as`"
+    # for target recipes should return something like:
+    # /OE/tmp-eglibc/sysroots/x86_64-linux/usr/libexec/arm920tt-oe-linux-gnueabi/gcc/arm-oe-linux-gnueabi/4.8.2/as
+    # and just "as" for native, if it returns "as" in current directory (for whatever reason) use "as" from PATH
     if [ "`dirname "${ICECC_AS}"`" = "." ]
     then
-        ICECC_AS="`which as`"
+        ICECC_AS="${ICECC_WHICH_AS}"
     fi
 
     if [ ! -f "${ICECC_VERSION}.done" ]
