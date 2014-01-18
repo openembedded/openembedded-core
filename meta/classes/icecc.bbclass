@@ -142,6 +142,8 @@ def icc_is_native(bb, d):
         bb.data.inherits_class("cross", d) or \
         bb.data.inherits_class("native", d);
 
+# Don't pollute allarch signatures with TARGET_FPU
+icc_version[vardepsexclude] += "TARGET_FPU"
 def icc_version(bb, d):
     if use_icc(bb, d) == "no":
         return ""
@@ -182,6 +184,8 @@ def icc_get_external_tool(bb, d, tool):
     target_prefix = d.expand('${TARGET_PREFIX}')
     return os.path.join(external_toolchain_bindir, '%s%s' % (target_prefix, tool))
 
+# Don't pollute native signatures with target TUNE_PKGARCH through STAGING_BINDIR_TOOLCHAIN
+icc_get_tool[vardepsexclude] += "STAGING_BINDIR_TOOLCHAIN"
 def icc_get_tool(bb, d, tool):
     if icc_is_native(bb, d):
         return bb.utils.which(os.getenv("PATH"), tool)
