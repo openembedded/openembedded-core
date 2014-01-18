@@ -36,10 +36,6 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
     if isPackageGroup(fn):
         return False  
 
-    # Drop native/cross/nativesdk dependencies from target recipes
-    if isNative(depname) or isCross(depname) or isNativeSDK(depname):
-        return False
-
     # Exclude well defined machine specific configurations which don't change ABI
     if depname in siggen.abisaferecipes and not isImage(fn):
         return False
