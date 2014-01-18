@@ -22,6 +22,8 @@ python () {
         d.setVar("TARGET_CC_ARCH", "none")
         d.setVar("TARGET_LD_ARCH", "none")
         d.setVar("TARGET_AS_ARCH", "none")
+        d.setVar("TARGET_FPU", "")
+        d.setVar("TARGET_PREFIX", "")
         d.setVar("PACKAGE_EXTRA_ARCHS", "")
         d.setVar("SDK_ARCH", "none")
         d.setVar("SDK_CC_ARCH", "none")
