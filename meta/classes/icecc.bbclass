@@ -147,7 +147,7 @@ def icc_version(bb, d):
         return ""
 
     parallel = d.getVar('ICECC_PARALLEL_MAKE') or ""
-    if not d.getVar('PARALLEL_MAKE') == "":
+    if not d.getVar('PARALLEL_MAKE') == "" and parallel:
         d.setVar("PARALLEL_MAKE", parallel)
 
     if icc_is_native(bb, d):
