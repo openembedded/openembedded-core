@@ -1352,6 +1352,28 @@ python package_do_shlibs() {
     # Take shared lock since we're only reading, not writing
     lf = bb.utils.lockfile(d.expand("${PACKAGELOCK}"))
 
+    def read_shlib_providers():
+        list_re = re.compile('^(.*)\.list$')
+        # Go from least to most specific since the last one found wins
+        for dir in reversed(shlibs_dirs):
+            if not os.path.exists(dir):
+                continue
+            for file in os.listdir(dir):
+                m = list_re.match(file)
+                if m:
+                    dep_pkg = m.group(1)
+                    fd = open(os.path.join(dir, file))
+                    lines = fd.readlines()
+                    fd.close()
+                    ver_file = os.path.join(dir, dep_pkg + '.ver')
+                    lib_ver = None
+                    if os.path.exists(ver_file):
+                        fd = open(ver_file)
+                        lib_ver = fd.readline().rstrip()
+                        fd.close()
+                    for l in lines:
+                        shlib_provider[l.rstrip()] = (dep_pkg, lib_ver)
+
     def linux_so(file):
         needs_ldconfig = False
         cmd = d.getVar('OBJDUMP', True) + " -p " + pipes.quote(file) + " 2>/dev/null"
@@ -1496,26 +1518,7 @@ python package_do_shlibs() {
             postinst += d.getVar('ldconfig_postinst_fragment', True)
             d.setVar('pkg_postinst_%s' % pkg, postinst)
 
-    list_re = re.compile('^(.*)\.list$')
-    # Go from least to most specific since the last one found wins
-    for dir in reversed(shlibs_dirs):
-        if not os.path.exists(dir):
-            continue
-        for file in os.listdir(dir):
-            m = list_re.match(file)
-            if m:
-                dep_pkg = m.group(1)
-                fd = open(os.path.join(dir, file))
-                lines = fd.readlines()
-                fd.close()
-                ver_file = os.path.join(dir, dep_pkg + '.ver')
-                lib_ver = None
-                if os.path.exists(ver_file):
-                    fd = open(ver_file)
-                    lib_ver = fd.readline().rstrip()
-                    fd.close()
-                for l in lines:
-                    shlib_provider[l.rstrip()] = (dep_pkg, lib_ver)
+    read_shlib_providers()
 
     bb.utils.unlockfile(lf)
 
