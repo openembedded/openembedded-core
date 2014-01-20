@@ -8,5 +8,3 @@ PR = "r1"
 
 SRC_URI = "git://anongit.freedesktop.org/git/xcb/libxcb"
 S = "${WORKDIR}/git"
-
-PACKAGES =+ "libxcb-xinerama"
