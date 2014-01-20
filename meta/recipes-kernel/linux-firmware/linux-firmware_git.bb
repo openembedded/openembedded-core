@@ -61,7 +61,7 @@ do_install() {
 
 
 PACKAGES =+ "${PN}-ralink \
-             ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8787 \
+             ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8787 ${PN}-sd8797 \
              ${PN}-wl12xx ${PN}-vt6656 \
              ${PN}-rtl-license ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
              ${PN}-broadcom-license ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334 \
@@ -119,6 +119,12 @@ FILES_${PN}-sd8787 = " \
   /lib/firmware/mrvl/sd8787_uapsta.bin \
 "
 RDEPENDS_${PN}-sd8787 += "${PN}-marvell-license"
+
+LICENSE_${PN}-sd8797 = "Firmware-Marvell"
+FILES_${PN}-sd8797 = " \
+  /lib/firmware/mrvl/sd8797_uapsta.bin \
+"
+RDEPENDS_${PN}-sd8797 += "${PN}-marvell-license"
 
 FILES_${PN}-rtl-license = " \
   /lib/firmware/LICENCE.rtlwifi_firmware.txt \
