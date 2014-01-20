@@ -331,11 +331,17 @@ def sstate_clean_manifest(manifest, d):
 
 def sstate_clean(ss, d):
     import oe.path
+    import glob
 
     d2 = d.createCopy()
+    stamp_clean = d.getVar("STAMPCLEAN", True)
     extrainf = d.getVarFlag("do_" + ss['task'], 'stamp-extra-info', True)
     if extrainf:
         d2.setVar("SSTATE_MANMACH", extrainf)
+        wildcard_stfile = "%s.do_%s*.%s" % (stamp_clean, ss['task'], extrainf)
+    else:
+        wildcard_stfile = "%s.do_%s*" % (stamp_clean, ss['task'])
+
     manifest = d2.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['name'])
 
     if os.path.exists(manifest):
@@ -350,15 +356,22 @@ def sstate_clean(ss, d):
         for lock in locks:
             bb.utils.unlockfile(lock)
 
-    stfile = d.getVar("STAMP", True) + ".do_" + ss['task']
-    oe.path.remove(stfile)
-    oe.path.remove(stfile + "_setscene")
-    if extrainf:
-        oe.path.remove(stfile + ".*" + extrainf)
-        oe.path.remove(stfile + "_setscene" + ".*" + extrainf)
-    else:
-        oe.path.remove(stfile + ".*")
-        oe.path.remove(stfile + "_setscene" + ".*")
+    # Remove the current and previous stamps, but keep the sigdata.
+    #
+    # The glob() matches do_task* which may match multiple tasks, for
+    # example: do_package and do_package_write_ipk, so we need to
+    # exactly match *.do_task.* and *.do_task_setscene.*
+    rm_stamp = '.do_%s.' % ss['task']
+    rm_setscene = '.do_%s_setscene.' % ss['task']
+    # For BB_SIGNATURE_HANDLER = "noop"
+    rm_nohash = ".do_%s" % ss['task']
+    for stfile in glob.glob(wildcard_stfile):
+        # Keep the sigdata
+        if ".sigdata." in stfile:
+            continue
+        if rm_stamp in stfile or rm_setscene in stfile or \
+                stfile.endswith(rm_nohash):
+            oe.path.remove(stfile)
 
 CLEANFUNCS += "sstate_cleanall"
 
