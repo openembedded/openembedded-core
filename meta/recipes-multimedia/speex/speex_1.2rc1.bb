@@ -19,5 +19,7 @@ PARALLEL_MAKE = ""
 inherit autotools pkgconfig lib_package
 
 EXTRA_OECONF = " --enable-fixed-point --with-ogg-libraries=${STAGING_LIBDIR} \
-                 --disable-float-api --disable-vbr \
                  --with-ogg-includes=${STAGING_INCDIR} --disable-oggtest"
+
+require speex-fpu.inc
+EXTRA_OECONF += "${@get_speex_fpu_setting(bb, d)}"
