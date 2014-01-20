@@ -7,6 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://alsactl/utils.c;beginline=1;endline=20;md5=fe9526b055e246b5558809a5ae25c0b9"
 DEPENDS = "alsa-lib ncurses libsamplerate0 udev"
 
+PACKAGECONFIG ??= "udev"
+PACKAGECONFIG[udev] = "--with-udev-rules-dir=`pkg-config --variable=udevdir udev`/rules.d,,udev"
+
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://0001-alsactl-don-t-let-systemd-unit-restore-the-volume-wh.patch \
           "
@@ -18,7 +21,7 @@ SRC_URI[sha256sum] = "02bfac39092f3b68d743c23ad3d688d6c5aa8df69f2ccd692c5b8282ed
 # http://bugs.openembedded.org/show_bug.cgi?id=2348
 # please close bug and remove this comment when properly fixed
 #
-EXTRA_OECONF = "--disable-xmlto --with-udev-rules-dir=`pkg-config --variable=udevdir udev`/rules.d "
+EXTRA_OECONF = "--disable-xmlto"
 EXTRA_OECONF_append_libc-uclibc = " --disable-nls"
 
 inherit autotools gettext
@@ -82,4 +85,10 @@ do_install() {
 	# We don't ship this here because it requires a dependency on bash.
 	# See alsa-utils-alsaconf_${PV}.bb
 	rm ${D}${sbindir}/alsaconf
+
+	if ${@base_contains('PACKAGECONFIG', 'udev', 'false', 'true', d)}; then
+	   # This is where alsa-utils will install its rules if we don't tell it anything else.
+	   rm -rf ${D}/lib/udev
+	   rmdir --ignore-fail-on-non-empty ${D}/lib
+	fi
 }
