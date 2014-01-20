@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
 
 SECTION = "libs"
 
-DEPENDS = "libpng glib-2.0 jpeg"
+DEPENDS = "glib-2.0"
 DEPENDS_append_linuxstdbase = " virtual/libx11"
 
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
@@ -25,19 +25,22 @@ inherit autotools pkgconfig gettext pixbufcache
 
 LIBV = "2.10.0"
 
-PACKAGECONFIG ??= ""
-PACKAGECONFIG_linuxstdbase = "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
-PACKAGECONFIG_class-native = ""
+GDK_PIXBUF_LOADERS ?= "png jpeg"
+
+PACKAGECONFIG ??= "${GDK_PIXBUF_LOADERS}"
+PACKAGECONFIG_linuxstdbase = "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} ${GDK_PIXBUF_LOADERS}"
+PACKAGECONFIG_class-native = "${GDK_PIXBUF_LOADERS}"
+
+PACKAGECONFIG[png] = "--with-libpng,--without-libpng,libpng"
+PACKAGECONFIG[jpeg] = "--with-libjpeg,--without-libjpeg,jpeg"
+PACKAGECONFIG[tiff] = "--with-libtiff,--without-libtiff,tiff"
+PACKAGECONFIG[jpeg2000] = "--with-libjasper,--without-libjasper,jasper"
 
 # Use GIO to sniff image format instead of trying all loaders
 PACKAGECONFIG[gio-sniff] = "--enable-gio-sniffing,--disable-gio-sniffing,,shared-mime-info"
 PACKAGECONFIG[x11] = "--with-x11,--without-x11,virtual/libx11"
 
 EXTRA_OECONF = "\
-  --with-libpng \
-  --with-libjpeg \
-  --without-libtiff \
-  --without-libjasper \
   --disable-introspection \
 "
 
