@@ -23,7 +23,7 @@ DEBUGFS="debugfs"
 	find $SRCDIR | while read FILE; do
                 TGT="${FILE##*/}"
                 DIR="${FILE#$SRCDIR}"
-                DIR="${DIR%$TGT}"
+                DIR="$(dirname $DIR)"
 
 		# Skip the root dir
 		[ ! -z "$DIR" ] || continue
