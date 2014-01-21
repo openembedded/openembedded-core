@@ -38,6 +38,8 @@ class Trace:
         self.processes = {}
         self.start = {}
         self.end = {}
+        self.min = None
+        self.max = None
         self.headers = None
         self.disk_stats = None
         self.ps_stats = None
@@ -54,6 +56,10 @@ class Trace:
             parse_paths (writer, self, paths)
             if not self.valid():
                 raise ParseError("empty state: '%s' does not contain a valid bootchart" % ", ".join(paths))
+
+            if options.full_time:
+                self.min = min(self.start.keys())
+                self.max = max(self.end.keys())
 
         return
 
@@ -700,12 +706,12 @@ def parse_paths(writer, state, paths):
             state = parse_file(writer, state, path)
     return state
 
-def split_res(res, n):
+def split_res(res, options):
     """ Split the res into n pieces """
     res_list = []
-    if n > 1:
+    if options.num > 1:
         s_list = sorted(res.start.keys())
-        frag_size = len(s_list) / float(n)
+        frag_size = len(s_list) / float(options.num)
         # Need the top value
         if frag_size > int(frag_size):
             frag_size = int(frag_size + 1)
@@ -716,6 +722,9 @@ def split_res(res, n):
         end = frag_size
         while start < end:
             state = Trace(None, [], None)
+            if options.full_time:
+                state.min = min(res.start.keys())
+                state.max = max(res.end.keys())
             for i in range(start, end):
                 # Add this line for reference
                 #state.add_process(pn + ":" + task, start, end)

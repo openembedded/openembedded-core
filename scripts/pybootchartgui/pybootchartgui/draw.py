@@ -314,6 +314,10 @@ def extents(options, xscale, trace):
                         end = trace.processes[proc][1]
                 processes += 1
 
+	if trace.min is not None and trace.max is not None:
+		start = trace.min
+		end = trace.max
+
 	w = int ((end - start) * sec_w_base * xscale) + 2 * off_x
 	h = proc_h * processes + header_h + 2 * off_y
 
@@ -433,7 +437,7 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
 
 	y = curr_y+header_h
 
-        offset = min(trace.start.keys())
+        offset = trace.min or min(trace.start.keys())
         for s in sorted(trace.start.keys()):
             for val in sorted(trace.start[s]):
                 if not options.app_options.show_all and \
