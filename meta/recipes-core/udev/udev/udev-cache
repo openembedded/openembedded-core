@@ -42,19 +42,28 @@ if [ "$ROOTFS_READ_ONLY" = "yes" ]; then
     exit 0
 fi
 
-if [ "$DEVCACHE" != "" -a -e "$DEVCACHE_REGEN" ]; then
-	echo "Populating dev cache"
-	(
-		udevadm control --stop-exec-queue
-		sysconf_cmd > "$SYSCONF_TMP"
-		find /dev -xdev \( -type b -o -type c -o -type l \) | cut -c 2- \
-			| xargs tar cf "${DEVCACHE_TMP}" -T-
-			gzip < "${DEVCACHE_TMP}" > "$DEVCACHE"
-			rm -f "${DEVCACHE_TMP}"
-			mv "$SYSCONF_TMP" "$SYSCONF_CACHED"
-			udevadm control --start-exec-queue
-			rm -f "$DEVCACHE_REGEN"
-	) &
+[ "$DEVCACHE" != "" ] || exit 0
+[ "${VERBOSE}" == "no" ] || echo -n "udev-cache: checking for ${DEVCACHE_REGEN}... "
+if ! [ -e "$DEVCACHE_REGEN" ]; then
+	[ "${VERBOSE}" == "no" ] || echo "not found."
+	exit 0
 fi
+[ "${VERBOSE}" == "no" ] || echo "found."
+echo "Populating dev cache"
+
+(
+	set -e
+	trap 'echo "udev-cache: update failed!"' EXIT
+	udevadm control --stop-exec-queue
+	sysconf_cmd > "$SYSCONF_TMP"
+	find /dev -xdev \( -type b -o -type c -o -type l \) | cut -c 2- \
+		| xargs tar cf "${DEVCACHE_TMP}" -T-
+	gzip < "${DEVCACHE_TMP}" > "$DEVCACHE"
+	rm -f "${DEVCACHE_TMP}"
+	mv "$SYSCONF_TMP" "$SYSCONF_CACHED"
+	udevadm control --start-exec-queue
+	rm -f "$DEVCACHE_REGEN"
+	trap - EXIT
+) &
 
 exit 0
