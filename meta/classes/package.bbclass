@@ -792,8 +792,7 @@ python split_and_strip_files () {
     kernmods = []
     libdir = os.path.abspath(dvar + os.sep + d.getVar("libdir", True))
     baselibdir = os.path.abspath(dvar + os.sep + d.getVar("base_libdir", True))
-    if (d.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT', True) != '1') and \
-            (d.getVar('INHIBIT_PACKAGE_STRIP', True) != '1'):
+    if (d.getVar('INHIBIT_PACKAGE_STRIP', True) != '1'):
         for root, dirs, files in cpath.walk(dvar):
             for f in files:
                 file = os.path.join(root, f)
