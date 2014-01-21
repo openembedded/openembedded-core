@@ -28,6 +28,8 @@ do_install() {
 
 PACKAGES =+ "update-alternatives-opkg"
 FILES_update-alternatives-opkg = "${bindir}/update-alternatives"
-RPROVIDES_update-alternatives-opkg = "update-alternatives"
+RPROVIDES_update-alternatives-opkg = "update-alternatives update-alternatives-cworth"
+RREPLACES_update-alternatives-opkg = "update-alternatives-cworth"
+RCONFLICTS_update-alternatives-opkg = "update-alternatives-cworth"
 
 BBCLASSEXTEND = "native nativesdk"
