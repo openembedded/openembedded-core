@@ -22,11 +22,13 @@ def eglibc_dl_info(d):
         "powerpc-nf": ["ld.so.1", "FLAG_ELF_LIBC6"],
         "powerpc64": ["ld64.so.1", "FLAG_ELF_LIBC6"],
         "powerpc64-nf": ["ld64.so.1", "FLAG_ELF_LIBC6"],
-        "core2": ["ld-linux.so.2", "FLAG_ELF_LIBC6"],
+        "core2-32": ["ld-linux.so.2", "FLAG_ELF_LIBC6"],
         "core2-64": ["ld-linux-x86-64.so.2", "FLAG_ELF_LIBC6"],
         "x86": ["ld-linux.so.2", "FLAG_ELF_LIBC6"],
         "x86-64": ["ld-linux-x86-64.so.2", "FLAG_ELF_LIBC6"],
         "i586": ["ld-linux.so.2", "FLAG_ELF_LIBC6"],
+        "corei7-32": ["ld-linux.so.2", "FLAG_ELF_LIBC6"],
+        "corei7-64": ["ld-linux-x86-64.so.2", "FLAG_ELF_LIBC6"],
     }
 
     infos = {'ldconfig':set(), 'lddrewrite':set()}
