@@ -420,7 +420,7 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
 	draw_legend_box (ctx, "Install", \
 			 TASK_COLOR_INSTALL, off_x+240, curr_y + 45, leg_s)
 	draw_legend_box (ctx, "Populate Sysroot", \
-			 TASK_COLOR_SYSROOT, off_x+480, curr_y + 45, leg_s)
+			 TASK_COLOR_SYSROOT, off_x+360, curr_y + 45, leg_s)
 	draw_legend_box (ctx, "Package", \
 			 TASK_COLOR_PACKAGE, off_x+480, curr_y + 45, leg_s)
 	draw_legend_box (ctx, "Package Write",
