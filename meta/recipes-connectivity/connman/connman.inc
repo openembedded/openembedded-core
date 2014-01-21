@@ -8,7 +8,7 @@ to support all kinds of wired or wireless technologies. Also, \
 configuration methods, like DHCP and domain name resolving, are \
 implemented using plug-ins."
 HOMEPAGE = "http://connman.net/"
-BUGTRACKER = "http://bugs.meego.com/buglist.cgi?quicksearch=connman"
+BUGTRACKER = "https://01.org/jira/browse/CM"
 LICENSE  = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
                     file://src/main.c;beginline=1;endline=20;md5=d6a1ac98a6791c5294e8a7f176ecd66d"
@@ -66,13 +66,10 @@ SYSTEMD_SERVICE_${PN} = "connman.service"
 SYSTEMD_SERVICE_${PN}-vpn = "connman-vpn.service"
 SYSTEMD_WIRED_SETUP = "ExecStartPre=-${libdir}/connman/wired-setup"
 
-UNKNOWN_CONFIGURE_WHITELIST += "--disable-gtk-doc-pdf --disable-gtk-doc-html"
-
-inherit autotools gtk-doc pkgconfig systemd update-rc.d
+inherit autotools pkgconfig systemd update-rc.d
 
 do_configure_append () {
 	sed -i "s#ExecStart=#${SYSTEMD_WIRED_SETUP}\nExecStart=#" ${S}/src/connman.service
-
 }
 
 # This allows *everyone* to access ConnMan over DBus, without any access
