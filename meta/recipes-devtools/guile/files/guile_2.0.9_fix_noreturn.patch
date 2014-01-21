@@ -1,0 +1,65 @@
+From 36c40440078c005cd5e239cca487d29f6f60007d Mon Sep 17 00:00:00 2001
+From: Mark H Weaver <mhw@netris.org>
+Date: Mon, 4 Nov 2013 19:41:52 -0500
+Subject: [PATCH] Don't use the identifier 'noreturn'.
+
+Fixes <http://bugs.gnu.org/15798>.
+Reported by Matt Sicker <boards@gmail.com>.
+
+* libguile/__scm.h (SCM_NORETURN): Use ((__noreturn__)) instead of
+  ((noreturn)).
+
+* libguile/throw.h (scm_ithrow): Rename formal parameter from 'noreturn'
+  to 'no_return'.
+
+* libguile/throw.c (scm_ithrow): Rename formal parameter from 'noreturn'
+  to 'no_return'.
+---
+ libguile/__scm.h |    2 +-
+ libguile/throw.c |    2 +-
+ libguile/throw.h |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+Upstream-Status: Backport
+
+diff --git a/libguile/__scm.h b/libguile/__scm.h
+index ed35d53..a0b02b6 100644
+--- a/libguile/__scm.h
++++ b/libguile/__scm.h
+@@ -77,7 +77,7 @@
+  *   1) int foo (char arg) SCM_NORETURN;
+  */
+ #ifdef __GNUC__
+-#define SCM_NORETURN __attribute__ ((noreturn))
++#define SCM_NORETURN __attribute__ ((__noreturn__))
+ #else
+ #define SCM_NORETURN
+ #endif
+diff --git a/libguile/throw.c b/libguile/throw.c
+index 9c29351..7fc9edf 100644
+--- a/libguile/throw.c
++++ b/libguile/throw.c
+@@ -436,7 +436,7 @@ scm_handle_by_throw (void *handler_data SCM_UNUSED, SCM tag, SCM args)
+ }
+ 
+ SCM
+-scm_ithrow (SCM key, SCM args, int noreturn SCM_UNUSED)
++scm_ithrow (SCM key, SCM args, int no_return SCM_UNUSED)
+ {
+   return scm_throw (key, args);
+ }
+diff --git a/libguile/throw.h b/libguile/throw.h
+index 6cf6790..62592d2 100644
+--- a/libguile/throw.h
++++ b/libguile/throw.h
+@@ -79,7 +79,7 @@ SCM_API int scm_exit_status (SCM args);
+ SCM_API SCM scm_catch_with_pre_unwind_handler (SCM tag, SCM thunk, SCM handler, SCM lazy_handler);
+ SCM_API SCM scm_catch (SCM tag, SCM thunk, SCM handler);
+ SCM_API SCM scm_with_throw_handler (SCM tag, SCM thunk, SCM handler);
+-SCM_API SCM scm_ithrow (SCM key, SCM args, int noreturn);
++SCM_API SCM scm_ithrow (SCM key, SCM args, int no_return);
+ 
+ SCM_API SCM scm_throw (SCM key, SCM args);
+ SCM_INTERNAL void scm_init_throw (void);
+-- 
+1.7.2.5
