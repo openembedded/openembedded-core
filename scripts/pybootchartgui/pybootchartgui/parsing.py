@@ -50,9 +50,10 @@ class Trace:
         self.parent_map = None
         self.mem_stats = None
 
-        parse_paths (writer, self, paths)
-        if not self.valid():
-            raise ParseError("empty state: '%s' does not contain a valid bootchart" % ", ".join(paths))
+        if len(paths):
+            parse_paths (writer, self, paths)
+            if not self.valid():
+                raise ParseError("empty state: '%s' does not contain a valid bootchart" % ", ".join(paths))
 
         return
 
@@ -713,7 +714,7 @@ def split_res(res, n):
         start = 0
         end = frag_size
         while start < end:
-            state = ParserState()
+            state = Trace(None, [], None)
             for i in range(start, end):
                 # Add these lines for reference
                 #state.processes[pn + ":" + task] = [start, end]
