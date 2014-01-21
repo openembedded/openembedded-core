@@ -155,11 +155,13 @@ def main(argv=None):
 			filename = _get_filename(options.output)
 			res_list = parsing.split_res(res, options.num)
 			n = 1
+			width = len(str(len(res_list)))
+			s = "_%%0%dd." % width
 			for r in res_list:
 				if len(res_list) == 1:
 					f = filename + "." + options.format
 				else:
-					f = filename + "_" + str(n) + "." + options.format
+					f = filename + s % n + options.format
 					n = n + 1
 				def render():
 					batch.render(writer, r, options, f)
