@@ -96,6 +96,16 @@ class Trace:
         return self.headers != None and self.disk_stats != None and \
                self.ps_stats != None and self.cpu_stats != None
 
+    def add_process(self, process, start, end):
+        self.processes[process] = [start, end]
+        if start not in self.start:
+            self.start[start] = []
+        if process not in self.start[start]:
+            self.start[start].append(process)
+        if end not in self.end:
+            self.end[end] = []
+        if process not in self.end[end]:
+            self.end[end].append(process)
 
     def compile(self, writer):
 
@@ -645,16 +655,7 @@ def _do_parse(writer, state, filename, file):
         elif line.startswith("Ended:"):
             end = int(float(line.split()[-1]))
     if start and end:
-        k = pn + ":" + task
-        state.processes[pn + ":" + task] = [start, end]
-        if start not in state.start:
-            state.start[start] = []
-        if k not in state.start[start]:
-            state.start[start].append(pn + ":" + task)
-        if end not in state.end:
-            state.end[end] = []
-        if k not in state.end[end]:
-            state.end[end].append(pn + ":" + task)
+        state.add_process(pn + ":" + task, start, end)
     t2 = clock()
     writer.info("  %s seconds" % str(t2-t1))
     return state
@@ -716,22 +717,10 @@ def split_res(res, n):
         while start < end:
             state = Trace(None, [], None)
             for i in range(start, end):
-                # Add these lines for reference
-                #state.processes[pn + ":" + task] = [start, end]
-                #state.start[start] = pn + ":" + task
-                #state.end[end] = pn + ":" + task
+                # Add this line for reference
+                #state.add_process(pn + ":" + task, start, end)
                 for p in res.start[s_list[i]]:
-                    s = s_list[i]
-                    e = res.processes[p][1]
-                    state.processes[p] = [s, e]
-                    if s not in state.start:
-                        state.start[s] = []
-                    if p not in state.start[s]:
-                        state.start[s].append(p)
-                    if e not in state.end:
-                        state.end[e] = []
-                    if p not in state.end[e]:
-                        state.end[e].append(p)
+                    state.add_process(p, s_list[i], res.processes[p][1])
             start = end
             end = end + frag_size
             if end > len(s_list):
