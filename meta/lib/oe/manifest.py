@@ -14,6 +14,33 @@ class Manifest(object):
     PKG_TYPE_LANGUAGE = "lgp"
     PKG_TYPE_ATTEMPT_ONLY = "aop"
 
+    MANIFEST_TYPE_IMAGE = "image"
+    MANIFEST_TYPE_SDK_HOST = "sdk_host"
+    MANIFEST_TYPE_SDK_TARGET = "sdk_target"
+
+    var_maps = {
+        MANIFEST_TYPE_IMAGE: {
+            "PACKAGE_INSTALL": PKG_TYPE_MUST_INSTALL,
+            "PACKAGE_INSTALL_ATTEMPTONLY": PKG_TYPE_ATTEMPT_ONLY,
+            "LINGUAS_INSTALL": PKG_TYPE_LANGUAGE
+        },
+        MANIFEST_TYPE_SDK_HOST: {
+            "TOOLCHAIN_HOST_TASK": PKG_TYPE_MUST_INSTALL,
+            "TOOLCHAIN_HOST_TASK_ATTEMPTONLY": PKG_TYPE_ATTEMPT_ONLY
+        },
+        MANIFEST_TYPE_SDK_TARGET: {
+            "TOOLCHAIN_TARGET_TASK": PKG_TYPE_MUST_INSTALL,
+            "TOOLCHAIN_TARGET_ATTEMPTONLY": PKG_TYPE_ATTEMPT_ONLY
+        }
+    }
+
+    INSTALL_ORDER = [
+        PKG_TYPE_LANGUAGE,
+        PKG_TYPE_MUST_INSTALL,
+        PKG_TYPE_ATTEMPT_ONLY,
+        PKG_TYPE_MULTILIB
+    ]
+
     initial_manifest_file_header = \
         "# This file was generated automatically and contains the packages\n" \
         "# passed on to the package manager in order to create the rootfs.\n\n" \
@@ -26,29 +53,37 @@ class Manifest(object):
         "#      'mlp' = multilib package\n" \
         "#      'lgp' = language package\n\n"
 
-    def __init__(self, d, manifest_dir=None):
+    def __init__(self, d, manifest_dir=None, manifest_type=MANIFEST_TYPE_IMAGE):
         self.d = d
-        self.image_rootfs = d.getVar('IMAGE_ROOTFS', True)
+        self.manifest_type = manifest_type
 
         if manifest_dir is None:
-            self.manifest_dir = self.d.getVar('WORKDIR', True)
+            if manifest_type != self.MANIFEST_TYPE_IMAGE:
+                self.manifest_dir = self.d.getVar('SDK_DIR', True)
+            else:
+                self.manifest_dir = self.d.getVar('WORKDIR', True)
         else:
             self.manifest_dir = manifest_dir
 
-        self.initial_manifest = os.path.join(self.manifest_dir, "initial_manifest")
-        self.final_manifest = os.path.join(self.manifest_dir, "final_manifest")
+        bb.utils.mkdirhier(self.manifest_dir)
 
-        self.var_map = {"PACKAGE_INSTALL": self.PKG_TYPE_MUST_INSTALL,
-                        "PACKAGE_INSTALL_ATTEMPTONLY": self.PKG_TYPE_ATTEMPT_ONLY,
-                        "LINGUAS_INSTALL": self.PKG_TYPE_LANGUAGE}
+        self.initial_manifest = os.path.join(self.manifest_dir, "%s_initial_manifest" % manifest_type)
+        self.final_manifest = os.path.join(self.manifest_dir, "%s_final_manifest" % manifest_type)
+
+        # packages in the following vars will be split in 'must install' and
+        # 'multilib'
+        self.vars_to_split = ["PACKAGE_INSTALL",
+                              "TOOLCHAIN_HOST_TASK",
+                              "TOOLCHAIN_TARGET_TASK"]
 
     """
     This creates a standard initial manifest for core-image-(minimal|sato|sato-sdk).
     This will be used for testing until the class is implemented properly!
     """
     def _create_dummy_initial(self):
+        image_rootfs = self.d.getVar('IMAGE_ROOTFS', True)
         pkg_list = dict()
-        if self.image_rootfs.find("core-image-sato-sdk") > 0:
+        if image_rootfs.find("core-image-sato-sdk") > 0:
             pkg_list[self.PKG_TYPE_MUST_INSTALL] = \
                 "packagegroup-core-x11-sato-games packagegroup-base-extended " \
                 "packagegroup-core-x11-sato packagegroup-core-x11-base " \
@@ -60,14 +95,14 @@ class Manifest(object):
                 "packagegroup-core-ssh-openssh dpkg kernel-dev"
             pkg_list[self.PKG_TYPE_LANGUAGE] = \
                 "locale-base-en-us locale-base-en-gb"
-        elif self.image_rootfs.find("core-image-sato") > 0:
+        elif image_rootfs.find("core-image-sato") > 0:
             pkg_list[self.PKG_TYPE_MUST_INSTALL] = \
                 "packagegroup-core-ssh-dropbear packagegroup-core-x11-sato-games " \
                 "packagegroup-core-x11-base psplash apt dpkg packagegroup-base-extended " \
                 "packagegroup-core-x11-sato packagegroup-core-boot"
             pkg_list['lgp'] = \
                 "locale-base-en-us locale-base-en-gb"
-        elif self.image_rootfs.find("core-image-minimal") > 0:
+        elif image_rootfs.find("core-image-minimal") > 0:
             pkg_list[self.PKG_TYPE_MUST_INSTALL] = "run-postinsts packagegroup-core-boot"
 
         with open(self.initial_manifest, "w+") as manifest:
@@ -161,13 +196,15 @@ class OpkgManifest(Manifest):
         with open(self.initial_manifest, "w+") as manifest:
             manifest.write(self.initial_manifest_file_header)
 
-            for var in self.var_map:
-                if var == "PACKAGE_INSTALL":
+            for var in self.var_maps[self.manifest_type]:
+                if var in self.vars_to_split:
                     split_pkgs = self._split_multilib(self.d.getVar(var, True))
                     if split_pkgs is not None:
                         pkgs = dict(pkgs.items() + split_pkgs.items())
                 else:
-                    pkgs[self.var_map[var]] = self.d.getVar(var, True)
+                    pkg_list = self.d.getVar(var, True)
+                    if pkg_list is not None:
+                        pkgs[self.var_maps[self.manifest_type][var]] = self.d.getVar(var, True)
 
             for pkg_type in pkgs:
                 for pkg in pkgs[pkg_type].split():
@@ -182,25 +219,27 @@ class DpkgManifest(Manifest):
         with open(self.initial_manifest, "w+") as manifest:
             manifest.write(self.initial_manifest_file_header)
 
-            for var in self.var_map:
+            for var in self.var_maps[self.manifest_type]:
                 pkg_list = self.d.getVar(var, True)
 
                 if pkg_list is None:
                     continue
 
                 for pkg in pkg_list.split():
-                    manifest.write("%s,%s\n" % (self.var_map[var], pkg))
+                    manifest.write("%s,%s\n" %
+                                   (self.var_maps[self.manifest_type][var], pkg))
 
     def create_final(self):
         pass
 
 
-def create_manifest(d, final_manifest=False, manifest_dir=None):
+def create_manifest(d, final_manifest=False, manifest_dir=None,
+                    manifest_type=Manifest.MANIFEST_TYPE_IMAGE):
     manifest_map = {'rpm': RpmManifest,
                     'ipk': OpkgManifest,
                     'deb': DpkgManifest}
 
-    manifest = manifest_map[d.getVar('IMAGE_PKGTYPE', True)](d, manifest_dir)
+    manifest = manifest_map[d.getVar('IMAGE_PKGTYPE', True)](d, manifest_dir, manifest_type)
 
     if final_manifest:
         manifest.create_final()
