@@ -15,6 +15,10 @@ SRC_URI = "http://procps.sourceforge.net/procps-${PV}.tar.gz \
 
 inherit autotools update-alternatives
 
+do_install_append() {
+	mv ${D}${bindir}/watch ${D}${bindir}/watch.${BPN}
+}
+
 FILES_${PN} += "${libdir}/*-${PV}.so ${base_libdir}/*-${PV}.so"
 FILES_SOLIBSDEV = ""
 
@@ -22,4 +26,6 @@ ALTERNATIVE_${PN} = "top uptime free pkill pmap kill sysctl ps pgrep pwdx watch"
 ALTERNATIVE_LINK_NAME[kill] = "${base_bindir}/kill"
 ALTERNATIVE_LINK_NAME[sysctl] = "${base_sbindir}/sysctl"
 ALTERNATIVE_LINK_NAME[ps] = "${base_bindir}/ps"
+ALTERNATIVE_LINK_NAME[watch] = "${base_bindir}/watch"
+ALTERNATIVE_TARGET[watch] = "${bindir}/watch.${BPN}"
 ALTERNATIVE_PRIORITY = "110"
