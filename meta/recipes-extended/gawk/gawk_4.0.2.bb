@@ -16,7 +16,9 @@ DEPENDS += "readline"
 RDEPENDS_gawk += "gawk-common"
 RDEPENDS_pgawk += "gawk-common"
 
-SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz"
+SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
+           file://run-ptest \
+"
 
 SRC_URI[md5sum] = "4d505dc2c9f1eb3e9f8d6cac87d4bd1a"
 SRC_URI[sha256sum] = "6e0de117c3713aa8d7fa347fc9fd645b10038ae49d8cf947d8c1d51cbb76141a"
@@ -38,4 +40,13 @@ ALTERNATIVE_PRIORITY = "100"
 do_install_append() {
 	# remove the link since we don't package it
 	rm ${D}${bindir}/awk
+}
+
+inherit ptest
+
+do_install_ptest() {
+	mkdir ${D}${PTEST_PATH}/test
+	for i in `grep -vE "@|^$|#|Gt-dummy" ${S}/test/Maketests |awk -F: '{print $1}'` Maketests; \
+	  do cp ${S}/test/$i* ${D}${PTEST_PATH}/test; \
+	done
 }
