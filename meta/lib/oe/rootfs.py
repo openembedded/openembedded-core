@@ -24,11 +24,7 @@ class Rootfs(object):
         bb.utils.remove(self.image_rootfs, True)
         bb.utils.remove(self.d.getVar('MULTILIB_TEMP_ROOTFS', True), True)
 
-        self.install_order = [
-            Manifest.PKG_TYPE_LANGUAGE,
-            Manifest.PKG_TYPE_MUST_INSTALL,
-            Manifest.PKG_TYPE_ATTEMPT_ONLY,
-            Manifest.PKG_TYPE_MULTILIB]
+        self.install_order = Manifest.INSTALL_ORDER
 
     @abstractmethod
     def _create(self):
