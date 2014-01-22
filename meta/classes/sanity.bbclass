@@ -2,7 +2,8 @@
 # Sanity check the users setup for common misconfigurations
 #
 
-SANITY_REQUIRED_UTILITIES ?= "patch diffstat makeinfo git bzip2 tar gzip gawk chrpath wget cpio"
+SANITY_REQUIRED_UTILITIES ?= "patch diffstat makeinfo git bzip2 tar \
+    gzip gawk chrpath wget cpio perl"
 
 def bblayers_conf_file(d):
     return os.path.join(d.getVar('TOPDIR', True), 'conf/bblayers.conf')
@@ -378,6 +379,17 @@ def check_git_version(sanity_data):
         return "Your version of git is older than 1.7.5 and has bugs which will break builds. Please install a newer version of git.\n"
     return None
 
+# Check the required perl modules which may not be installed by default
+def check_perl_modules(sanity_data):
+    ret = ""
+    modules = ( "Text::ParseWords", "Thread::Queue", "Data::Dumper" )
+    for m in modules:
+        status, result = oe.utils.getstatusoutput("perl -e 'use %s' 2> /dev/null" % m)
+        if status != 0:
+            ret += "%s " % m
+    if ret:
+        return "Required perl module(s) not found: %s\n" % ret
+    return None
 
 def sanity_check_conffiles(status, d):
     # Check we are using a valid local.conf
@@ -488,6 +500,7 @@ def check_sanity_version_change(status, d):
     status.addresult(check_make_version(d))
     status.addresult(check_tar_version(d))
     status.addresult(check_git_version(d))
+    status.addresult(check_perl_modules(d))
 
     missing = ""
 
