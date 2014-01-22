@@ -349,19 +349,20 @@ class OpkgPM(PackageManager):
 
 
 class DpkgPM(PackageManager):
-    def __init__(self, d, target_rootfs, archs, dpkg_arch):
+    def __init__(self, d, target_rootfs, archs, base_archs, apt_conf_dir=None):
         super(DpkgPM, self).__init__(d)
         self.target_rootfs = target_rootfs
         self.deploy_dir = self.d.getVar('DEPLOY_DIR_DEB', True)
-        self.apt_conf_dir = self.d.expand("${APTCONF_TARGET}/apt")
+        if apt_conf_dir is None:
+            self.apt_conf_dir = self.d.expand("${APTCONF_TARGET}/apt")
+        else:
+            self.apt_conf_dir = apt_conf_dir
         self.apt_conf_file = os.path.join(self.apt_conf_dir, "apt.conf")
         self.apt_get_cmd = bb.utils.which(os.getenv('PATH'), "apt-get")
 
         self.apt_args = d.getVar("APT_ARGS", True)
 
-        os.environ['APT_CONFIG'] = self.apt_conf_file
-
-        self._create_configs(archs, dpkg_arch)
+        self._create_configs(archs, base_archs)
 
     """
     This function will change a package's status in /var/lib/dpkg/status file.
@@ -437,6 +438,8 @@ class DpkgPM(PackageManager):
             self.mark_packages("unpacked", failed_pkgs)
 
     def update(self):
+        os.environ['APT_CONFIG'] = self.apt_conf_file
+
         cmd = "%s update" % self.apt_get_cmd
 
         try:
@@ -446,6 +449,8 @@ class DpkgPM(PackageManager):
                      "returned %d" % (e.cmd, e.returncode))
 
     def install(self, pkgs, attempt_only=False):
+        os.environ['APT_CONFIG'] = self.apt_conf_file
+
         cmd = "%s %s install --force-yes --allow-unauthenticated %s" % \
               (self.apt_get_cmd, self.apt_args, ' '.join(pkgs))
 
@@ -474,6 +479,7 @@ class DpkgPM(PackageManager):
 
     def remove(self, pkgs, with_dependencies=True):
         if with_dependencies:
+            os.environ['APT_CONFIG'] = self.apt_conf_file
             cmd = "%s remove %s" % (self.apt_get_cmd, ' '.join(pkgs))
         else:
             cmd = "%s --admindir=%s/var/lib/dpkg --instdir=%s" \
@@ -532,8 +538,8 @@ class DpkgPM(PackageManager):
 
         open(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"), "w+").close()
 
-    def _create_configs(self, archs, dpkg_arch):
-        dpkg_arch = re.sub("_", "-", dpkg_arch)
+    def _create_configs(self, archs, base_archs):
+        base_archs = re.sub("_", "-", base_archs)
 
         if os.path.exists(self.apt_conf_dir):
             bb.utils.remove(self.apt_conf_dir, True)
@@ -573,7 +579,7 @@ class DpkgPM(PackageManager):
             with open(self.d.expand("${STAGING_ETCDIR_NATIVE}/apt/apt.conf.sample")) as apt_conf_sample:
                 for line in apt_conf_sample.read().split("\n"):
                     line = re.sub("Architecture \".*\";",
-                                  "Architecture \"%s\";" % dpkg_arch, line)
+                                  "Architecture \"%s\";" % base_archs, line)
                     line = re.sub("#ROOTFS#", self.target_rootfs, line)
                     line = re.sub("#APTCONF#", self.apt_conf_dir, line)
 
@@ -593,6 +599,8 @@ class DpkgPM(PackageManager):
         bb.utils.remove(self.target_rootfs + "/var/lib/dpkg/", True)
 
     def fix_broken_dependencies(self):
+        os.environ['APT_CONFIG'] = self.apt_conf_file
+
         cmd = "%s %s -f install" % (self.apt_get_cmd, self.apt_args)
 
         try:
