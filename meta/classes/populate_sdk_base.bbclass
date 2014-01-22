@@ -27,10 +27,19 @@ EXCLUDE_FROM_WORLD = "1"
 SDK_PACKAGING_FUNC ?= "create_shar"
 
 fakeroot python do_populate_sdk() {
+    from oe.sdk import populate_sdk
+    from oe.manifest import create_manifest, Manifest
+
     pn = d.getVar('PN', True)
     runtime_mapping_rename("TOOLCHAIN_TARGET_TASK", pn, d)
 
-    bb.build.exec_func("populate_sdk_image", d)
+    # create target/host SDK manifests
+    create_manifest(d, manifest_dir=d.getVar('SDK_DIR', True),
+                    manifest_type=Manifest.MANIFEST_TYPE_SDK_HOST)
+    create_manifest(d, manifest_dir=d.getVar('SDK_DIR', True),
+                    manifest_type=Manifest.MANIFEST_TYPE_SDK_TARGET)
+
+    populate_sdk(d)
 
     # Handle multilibs in the SDK environment, siteconfig, etc files...
     localdata = bb.data.createCopy(d)
@@ -55,37 +64,6 @@ fakeroot python do_populate_sdk() {
     bb.build.exec_func("tar_sdk", d)
 
     bb.build.exec_func(d.getVar("SDK_PACKAGING_FUNC", True), d)
-}
-
-fakeroot populate_sdk_image() {
-	rm -rf ${SDK_OUTPUT}
-	mkdir -p ${SDK_OUTPUT}
-
-	# populate_sdk_<image> is required to construct two images:
-	#  SDK_ARCH-nativesdk - contains the cross compiler and associated tooling
-	#  target - contains a target rootfs configured for the SDK usage
-	#
-	# the output of populate_sdk_<image> should end up in ${SDK_OUTPUT} it is made
-	# up of:
-	#  ${SDK_OUTPUT}/<sdk_arch-nativesdk pkgs>
-	#  ${SDK_OUTPUT}/${SDKTARGETSYSROOT}/<target pkgs>
-
-	populate_sdk_${IMAGE_PKGTYPE}
-
-	# Don't ship any libGL in the SDK
-	rm -rf ${SDK_OUTPUT}/${SDKPATHNATIVE}${libdir_nativesdk}/libGL*
-
-	# Can copy pstage files here
-	# target_pkgs=`cat ${SDK_OUTPUT}/${SDKTARGETSYSROOT}/var/lib/opkg/status | grep Package: | cut -f 2 -d ' '`
-
-	# Fix or remove broken .la files
-	#rm -f ${SDK_OUTPUT}/${SDKPATHNATIVE}/lib/*.la
-	rm -f ${SDK_OUTPUT}/${SDKPATHNATIVE}${libdir_nativesdk}/*.la
-
-	# Link the ld.so.cache file into the hosts filesystem
-	ln -s /etc/ld.so.cache ${SDK_OUTPUT}/${SDKPATHNATIVE}/etc/ld.so.cache
-
-	${SDK_POSTPROCESS_COMMAND}
 }
 
 fakeroot create_sdk_files() {
