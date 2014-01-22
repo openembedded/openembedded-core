@@ -61,6 +61,7 @@ do_install() {
 
 
 PACKAGES =+ "${PN}-ralink \
+             ${PN}-radeon \
              ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8787 ${PN}-sd8797 \
              ${PN}-wl12xx ${PN}-vt6656 \
              ${PN}-rtl-license ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
@@ -103,6 +104,12 @@ LICENSE_${PN}-ralink = "Firmware-ralink"
 FILES_${PN}-ralink = " \
   /lib/firmware/rt*.bin \
   /lib/firmware/LICENCE.ralink-firmware.txt \
+"
+
+LICENSE_${PN}-radeon = "Firmware-radeon"
+FILES_${PN}-radeon = " \
+  /lib/firmware/radeon \
+  /lib/firmware/LICENCE.radeon \
 "
 
 FILES_${PN}-marvell-license = "/lib/firmware/LICENCE.Marvell"
