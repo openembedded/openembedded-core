@@ -1,16 +1,14 @@
 require busybox.inc
 
-SRCREV = "e73f3c1d3d83699b723251f7e6a981021ce75475"
+SRCREV = "d9e0c438e10e2155513e5d26498af472c5137d65"
 # Lookout for PV bump too when SRCREV is changed
-PV = "1.21.1+git${SRCPV}"
+PV = "1.22.1+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
 SRC_URI = "git://busybox.net/busybox.git \
            file://get_header_tar.patch \
            file://busybox-appletlib-dependency.patch \
-           file://run-parts.in.usr-bin.patch \
-           file://watch.in.usr-bin.patch \
            file://busybox-udhcpc-no_deconfig.patch \
            file://find-touchscreen.sh \
            file://busybox-cron \
@@ -28,18 +26,13 @@ SRC_URI = "git://busybox.net/busybox.git \
            file://mdev.conf \
            file://umount.busybox \
            file://defconfig \
-           file://stat-usr-bin.patch \
            file://busybox-syslog.service.in \
            file://busybox-klogd.service.in \
-           file://testsuite-du-du-k-works-fix-false-positive.patch \
            file://fail_on_no_media.patch \
-           file://busybox-sulogin-empty-root-password.patch \
            file://run-ptest \
            file://inetd.conf \
            file://inetd \
            file://login-utilities.cfg \
-           file://busybox-list-suid-and-non-suid-app-configs.patch \
-           file://busybox-sed-fix-sed-clusternewline-testcase.patch \
 "
 
 EXTRA_OEMAKE += "V=1 ARCH=${TARGET_ARCH} CROSS_COMPILE=${TARGET_PREFIX} SKIP_STRIP=y"
