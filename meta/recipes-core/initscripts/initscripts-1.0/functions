@@ -3,6 +3,14 @@
 # functions     This file contains functions to be used by most or all
 #               shell scripts in the /etc/init.d directory.
 #
+
+NORMAL="\\033[0;39m"         # Standard console grey
+SUCCESS="\\033[1;32m"        # Success is green
+WARNING="\\033[1;33m"        # Warnings are yellow
+FAILURE="\\033[1;31m"        # Failures are red
+INFO="\\033[1;36m"           # Information is light cyan
+BRACKET="\\033[1;34m"        # Brackets are blue
+
 # NOTE: The pidofproc () doesn't support the process which is a script unless
 #       the pidof supports "-x" option. If you want to use it for such a
 #       process:
@@ -57,4 +65,27 @@ status() {
         echo "$1 is stopped"
     fi
     return 3
+}
+
+success() {
+    echo -n -e "${BRACKET}[${SUCCESS}  OK  ${BRACKET}]${NORMAL}"
+    return 0
+}
+
+failure() {
+    local rc=$*
+    echo -n -e "${BRACKET}[${FAILURE} FAIL ${BRACKET}]${NORMAL}"
+    return $rc
+}
+
+warning() {
+    local rc=$*
+    echo -n -e "${BRACKET}[${WARNING} WARN ${BRACKET}]${NORMAL}"
+    return $rc
+}
+
+passed() {
+    local rc=$*
+    echo -n -e "${BRACKET}[${SUCCESS} PASS ${BRACKET}]${NORMAL}"
+    return $rc
 }
