@@ -146,7 +146,7 @@ fi
 
 if [ "$YOCTOADT_NFS_UTIL" == "Y" ] || [ "$YOCTOADT_NFS_UTIL" == "y" ]; then
   echo_info "\nInstalling unfs ..."
-  $OPKG_INSTALL_NATIVE_CMD nativesdk-unfs-server &>> $YOCTOADT_INSTALL_LOG_FILE
+  $OPKG_INSTALL_NATIVE_CMD nativesdk-unfs3 &>> $YOCTOADT_INSTALL_LOG_FILE
   check_result
 fi
 

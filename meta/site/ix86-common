@@ -216,7 +216,7 @@ moz_cv_size_of_JS_BYTES_PER_DOUBLE=8
 #ofono
 ac_cv_lib_c_signalfd=${ac_cv_lib_c_signalfd=yes}
 
-#unfs-server
+#unfs3
 nfsd_cv_broken_setfsuid=${nfsd_cv_broken_setfsuid=0}
 nfsd_cv_func_statfs=${nfsd_cv_func_statfs=statfs2_bsize}
 nfsd_cv_bsd_signals=${nfsd_cv_bsd_signals=yes}

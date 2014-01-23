@@ -213,7 +213,7 @@ DEPENDS = "\
     tiff-native \
     tzcode-native \
     u-boot-mkimage-native \
-    unfs-server-native \
+    unfs3-native \
     unifdef-native \
     unzip-native \
     update-rc.d-native \
