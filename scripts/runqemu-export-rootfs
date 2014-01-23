@@ -88,8 +88,7 @@ MOUNT_PORT=$[ 3048 + 2 * $NFS_INSTANCE ]
 
 ## For debugging you would additionally add
 ## --debug all
-MOUNTD_OPTS="--allow-non-root --mount-pid $MOUNTPID -f $EXPORTS --rmtab $RMTAB --prog $NFS_MOUNTPROG -r -P $MOUNT_PORT"
-NFSD_OPTS="--allow-non-root --nfs-pid $NFSPID -f $EXPORTS --prog $NFS_NFSPROG -P $NFS_PORT -r"
+UNFSD_OPTS="-p -N -i $NFSPID -e $EXPORTS -x $NFS_NFSPROG -n $NFS_PORT -y $NFS_MOUNTPROG -m $MOUNT_PORT"
 
 # Setup the exports file
 if [ "$1" = "start" ]; then
@@ -115,51 +114,16 @@ case "$1" in
 		exit 1
 	fi
 
-	echo "Starting User Mode rpc.mountd"
-	echo "  $PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.mountd $MOUNTD_OPTS"
-	$PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.mountd $MOUNTD_OPTS
-	if [ ! $? = 0 ]; then
-		echo "====================="
-		echo "Error starting MOUNTD"
-		echo "====================="
-		if [ ! "x$RPCBIND_RUNNING" = "x" ] ; then
-			echo "  If you see an error above that says:"
-			echo "    RPC: Authentication error; why = Client credential too weak"
-			echo "  You need to add the -i option when running rpcbind"
-			echo "==============================================="
-			echo "For recent Fedora/RedHat hosts:"
-			echo "Add RPCBIND_ARGS=-i to /etc/sysconfig/rpcbind"
-			echo "  or"
-			echo "Add RPCBIND_OPTIONS=-i to /etc/sysconfig/rpcbind"
-			echo "Then run as root: /etc/init.d/rpcbind restart"
-			echo "==============================================="
-			echo "For recent Debian/Ubuntu hosts:"
-			echo "Add OPTIONS=\"-i -w\"  to /etc/default/rpcbind"
-			echo "sudo service portmap restart"
-		fi
-
-		exit 1
-	fi
-
 	echo "Starting User Mode nfsd"
-	echo "  $PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.nfsd $NFSD_OPTS"
-	$PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/rpc.nfsd $NFSD_OPTS
+	echo "  $PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/unfsd $UNFSD_OPTS"
+	$PSEUDO $PSEUDO_OPTS $OECORE_NATIVE_SYSROOT/usr/sbin/unfsd $UNFSD_OPTS
 	if [ ! $? = 0 ]; then
 		echo "Error starting nfsd"
 		exit 1
 	fi
-	# Check to make sure everything started ok.
-	if [ ! -f $MOUNTPID ]; then
-		echo "rpc.mountd did not start correctly"
-		exit 1
-	fi
+	 Check to make sure everything started ok.
 	if [ ! -f $NFSPID ]; then
 		echo "rpc.nfsd did not start correctly"
-		exit 1
-	fi
-	ps -fp `cat $MOUNTPID` > /dev/null 2> /dev/null
-	if [ ! $? = 0 ]; then
-		echo "rpc.mountd did not start correctly"
 		exit 1
 	fi
 	ps -fp `cat $NFSPID` > /dev/null 2> /dev/null
@@ -169,16 +133,9 @@ case "$1" in
 	fi
 	echo " "
 	echo "On your target please remember to add the following options for NFS"
-	echo "nfsroot=IP_ADDRESS:$NFS_EXPORT_DIR,nfsvers=2,mountprog=$NFS_MOUNTPROG,nfsprog=$NFS_NFSPROG,udp"
+	echo "nfsroot=IP_ADDRESS:$NFS_EXPORT_DIR,nfsvers=3,port=$NFSD_PORT,mountprog=$MOUNTD_RPCPORT,nfsprog=$NFSD_RPCPORT,udp,mountport=$MOUNTD_PORT"
 	;;
   stop)
-	if [ -f "$MOUNTPID" ]; then
-		echo "Stopping rpc.mountd"
-		kill `cat $MOUNTPID`
-		rm -f $MOUNTPID
-	else
-		echo "No PID file, not stopping rpc.mountd"
-	fi
 	if [ -f "$NFSPID" ]; then
 		echo "Stopping rpc.nfsd"
 		kill `cat $NFSPID`
