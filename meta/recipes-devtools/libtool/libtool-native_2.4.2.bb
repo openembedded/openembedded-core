@@ -22,3 +22,4 @@ do_install () {
 	install -m 0755 ${HOST_SYS}-libtool ${D}${bindir}/${HOST_SYS}-libtool
 }
 
+export CONFIG_SHELL="/bin/bash"
