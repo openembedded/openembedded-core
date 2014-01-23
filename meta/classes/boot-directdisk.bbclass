@@ -61,6 +61,8 @@ DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
 SYSLINUX_ROOT ?= "root=/dev/sda2"
 SYSLINUX_TIMEOUT ?= "10"
 
+IS_VMDK = '${@base_contains("IMAGE_FSTYPES", "vmdk", "true", "false", d)}'
+
 boot_direct_populate() {
 	dest=$1
 	install -d $dest
@@ -88,10 +90,10 @@ build_boot_dd() {
 		grubefi_hddimg_populate $HDDDIR
 	fi
 
-	if [ ${IMAGE_FSTYPE} = "vmdk" ]; then
-		if [ x${AUTO_SYSLINUXMENU} = x1 ] ; then
+	if [ "${IS_VMDK}" = "true" ]; then
+		if [ "x${AUTO_SYSLINUXMENU}" = "x1" ] ; then
 			install -m 0644 ${STAGING_DIR}/${MACHINE}/usr/share/syslinux/vesamenu.c32 ${HDDDIR}${SYSLINUXDIR}/vesamenu.c32
-			if [ x${SYSLINUX_SPLASH} != x ] ; then
+			if [ "x${SYSLINUX_SPLASH}" != "x" ] ; then
 				install -m 0644 ${SYSLINUX_SPLASH} ${HDDDIR}${SYSLINUXDIR}/splash.lss
 			fi
 		fi
@@ -129,9 +131,7 @@ build_boot_dd() {
 	parted $IMAGE unit B mkpart primary ext2 ${END2}B ${END3}B
 	parted $IMAGE set 1 boot on 
 
-	if [ ${IMAGE_FSTYPE} != "vmdk" ]; then
-		parted $IMAGE print
-	fi
+	parted $IMAGE print
 
 	awk "BEGIN { printf \"$(echo ${DISK_SIGNATURE} | fold -w 2 | tac | paste -sd '' | sed 's/\(..\)/\\x&/g')\" }" | \
 		dd of=$IMAGE bs=1 seek=440 conv=notrunc
@@ -141,10 +141,8 @@ build_boot_dd() {
 		dd if=${STAGING_DATADIR}/syslinux/mbr.bin of=$IMAGE conv=notrunc
 	fi
 
-	if [ ${IMAGE_FSTYPE} != "vmdk" ]; then
-		dd if=$HDDIMG of=$IMAGE conv=notrunc seek=1 bs=512
-		dd if=${ROOTFS} of=$IMAGE conv=notrunc seek=$OFFSET bs=512	
-	fi
+	dd if=$HDDIMG of=$IMAGE conv=notrunc seek=1 bs=512
+	dd if=${ROOTFS} of=$IMAGE conv=notrunc seek=$OFFSET bs=512
 
 	cd ${DEPLOY_DIR_IMAGE}
 	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect
