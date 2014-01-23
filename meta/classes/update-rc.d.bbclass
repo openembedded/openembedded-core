@@ -71,6 +71,16 @@ PACKAGESPLITFUNCS_prepend = "populate_packages_updatercd "
 populate_packages_updatercd[vardeps] += "updatercd_prerm updatercd_postrm updatercd_preinst updatercd_postinst"
 
 python populate_packages_updatercd () {
+    def update_rcd_auto_depend(pkg):
+        import subprocess
+        import os
+        path = d.expand("${D}${INIT_D_DIR}/${INITSCRIPT_NAME}")
+        if not os.path.exists(path):
+            return
+        statement = "grep -q -w '/etc/init.d/functions' %s" % path
+        if subprocess.call(statement, shell=True) == 0:
+            d.appendVar('RDEPENDS_' + pkg, ' initscripts-functions')
+
     def update_rcd_package(pkg):
         bb.debug(1, 'adding update-rc.d calls to preinst/postinst/prerm/postrm for %s' % pkg)
 
@@ -78,6 +88,8 @@ python populate_packages_updatercd () {
         overrides = localdata.getVar("OVERRIDES", True)
         localdata.setVar("OVERRIDES", "%s:%s" % (pkg, overrides))
         bb.data.update_data(localdata)
+
+        update_rcd_auto_depend(pkg)
 
         preinst = d.getVar('pkg_preinst_%s' % pkg, True)
         if not preinst:
