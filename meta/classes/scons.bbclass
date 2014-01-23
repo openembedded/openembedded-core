@@ -3,7 +3,7 @@ DEPENDS += "python-scons-native"
 EXTRA_OESCONS ?= ""
 
 scons_do_compile() {
-        ${STAGING_BINDIR_NATIVE}/scons PREFIX=${prefix} prefix=${prefix} ${EXTRA_OESCONS} || \
+        ${STAGING_BINDIR_NATIVE}/scons ${PARALLEL_MAKE} PREFIX=${prefix} prefix=${prefix} ${EXTRA_OESCONS} || \
         bbfatal "scons build execution failed."
 }
 
