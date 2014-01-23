@@ -15,7 +15,7 @@ SRC_URI = "git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git \
           "
 
 DEPENDS = "util-linux openssl"
-RDEPENDS_${PN} = "bash initscripts-functions"
+RDEPENDS_${PN} = "bash"
 
 S = "${WORKDIR}/git"
 

@@ -39,8 +39,6 @@ PACKAGECONFIG[pam] = "--with-pam,--without-pam,libpam,${PAM_DEPS}"
 INITSCRIPT_NAME = "crond"
 INITSCRIPT_PARAMS = "start 90 2 3 4 5 . stop 60 0 1 6 ."
 
-RDEPENDS_${PN} = "initscripts-functions"
-
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "--system crontab"
 

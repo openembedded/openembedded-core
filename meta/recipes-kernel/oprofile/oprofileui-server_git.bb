@@ -11,7 +11,7 @@ SRC_URI = "git://git.yoctoproject.org/oprofileui \
 
 EXTRA_OECONF += "--disable-client --enable-server"
 
-RDEPENDS_${PN} = "oprofile initscripts-functions"
+RDEPENDS_${PN} = "oprofile"
 
 do_install_append() {
 	install -d ${D}${sysconfdir}/init.d

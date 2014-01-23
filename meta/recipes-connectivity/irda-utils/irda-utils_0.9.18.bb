@@ -24,8 +24,6 @@ inherit autotools update-rc.d
 INITSCRIPT_NAME = "irattach"
 INITSCRIPT_PARAMS = "defaults 20"
 
-RDEPENDS_${PN} += "initscripts-functions"
-
 do_compile () {
     oe_runmake -e -C irattach
     oe_runmake -e -C irdaping

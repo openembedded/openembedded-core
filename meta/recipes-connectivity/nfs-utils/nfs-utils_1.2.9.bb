@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=95f3a93a5c3c7888de623b46ea085a84"
 
 # util-linux for libblkid
 DEPENDS = "libcap libnfsidmap libevent util-linux sqlite3"
-RDEPENDS_${PN}-client = "rpcbind bash initscripts-functions"
-RDEPENDS_${PN} = "${PN}-client bash initscripts-functions"
+RDEPENDS_${PN}-client = "rpcbind bash"
+RDEPENDS_${PN} = "${PN}-client bash"
 RRECOMMENDS_${PN} = "kernel-module-nfsd"
 
 inherit useradd

@@ -37,7 +37,7 @@ PACKAGES += "alsa-states"
 
 RRECOMMENDS_alsa-state = "alsa-states"
 
-RDEPENDS_${PN} = "alsa-utils-alsactl initscripts-functions"
+RDEPENDS_${PN} = "alsa-utils-alsactl"
 FILES_${PN} = "${sysconfdir}/init.d ${sysconfdir}/asound.conf"
 CONFFILES_${PN} = "${sysconfdir}/asound.conf"
 
