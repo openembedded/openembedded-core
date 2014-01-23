@@ -114,7 +114,7 @@ NFSRUNNING="false"
 ORIG_STTY=$(stty -g)
 
 if [ "$SLIRP_ENABLED" = "yes" ]; then
-    KERNEL_NETWORK_CMD=""
+    KERNEL_NETWORK_CMD="ip=dhcp"
     QEMU_TAP_CMD=""
     QEMU_UI_OPTIONS="-show-cursor -usb -usbdevice wacom-tablet"
     if [ "$KVM_ACTIVE" = "yes" ]; then
@@ -301,9 +301,18 @@ if [ "$FSTYPE" != "nfs" -a "$FSTYPE" != "vmdk" -a ! -f "$ROOTFS" ]; then
     return 1
 fi
 
-if [ "$FSTYPE" = "nfs" ]; then
+if [ "$NFS_SERVER" = "" ]; then
     NFS_SERVER="192.168.7.1"
+    if [ "$SLIRP_ENABLED" = "yes" ]; then
+	NFS_SERVER="10.0.2.2"
+    fi
+fi
+
+if [ "$FSTYPE" = "nfs" ]; then
     NFS_DIR=`echo $ROOTFS | sed 's/^[^:]*:\(.*\)/\1/'`
+    if [ "$NFS_INSTANCE" = "" ] ; then
+	NFS_INSTANCE=0
+    fi
     MOUNTD_RPCPORT=$[ 21111 + $NFS_INSTANCE ]
     NFSD_RPCPORT=$[ 11111 + $NFS_INSTANCE ]
     NFSD_PORT=$[ 3049 + 2 * $NFS_INSTANCE ]
@@ -317,15 +326,9 @@ if [ "$FSTYPE" = "nfs" ]; then
     echo "runqemu-export-rootfs restart $ROOTFS"
     runqemu-export-rootfs restart $ROOTFS
     if [ $? != 0 ]; then
-        cleanup
         return 1
     fi
     NFSRUNNING="true"
-fi
-
-if [ "$NFS_SERVER" = "" ]; then
-    NFS_SERVER="192.168.7.1"
-    NFS_DIR=$ROOTFS
 fi
 
 if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarmv7" ]; then

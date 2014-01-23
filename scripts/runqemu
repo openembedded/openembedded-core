@@ -279,10 +279,12 @@ if [ "x$KVM_ENABLED" = "xyes" ]; then
         exit 1;
     fi
     if [ ! -w /dev/vhost-net -o ! -r /dev/vhost-net ]; then
-        echo "You have no rights on /dev/vhost-net."
-        echo "Please change the ownership of this file as described at:"
-        echo "$YOCTO_PARAVIRT_KVM_WIKI";
-        exit 1;
+	if [ "$SLIRP_ENABLED" != "yes" ] ; then
+            echo "You have no rights on /dev/vhost-net."
+            echo "Please change the ownership of this file as described at:"
+            echo "$YOCTO_PARAVIRT_KVM_WIKI";
+            exit 1;
+	fi
     fi
 fi
 
