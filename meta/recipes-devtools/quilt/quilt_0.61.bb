@@ -5,8 +5,6 @@ SRC_URI += "file://aclocal.patch \
             file://gnu_patch_test_fix_target.patch \
            "
 
-CACHED_CONFIGUREVARS += "ac_cv_path_BASH=${base_bindir}/bash"
-
 # fix build-distro specific perl path in the target perl scripts
 do_install_append() {
 	for perlscript in ${D}${datadir}/quilt/scripts/remove-trailing-ws ${D}${datadir}/quilt/scripts/dependency-graph ${D}${datadir}/quilt/scripts/edmail ${D}${bindir}/guards

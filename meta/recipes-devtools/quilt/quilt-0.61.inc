@@ -31,6 +31,8 @@ RDEPENDS_${PN} = "bash"
 EXTRA_OE_MAKE_ARGS_darwin ?= ""
 EXTRA_OE_MAKE_ARGS ?= "BUILD_ROOT=${D}"
 
+CACHED_CONFIGUREVARS += "ac_cv_path_BASH=/bin/bash"
+
 # quilt ignores DESTDIR
 do_install () {
 	oe_runmake ${EXTRA_OE_MAKE_ARGS} install
