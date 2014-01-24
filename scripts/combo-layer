@@ -194,7 +194,8 @@ def action_init(conf, args):
             dest_dir = repo['dest_dir']
             if dest_dir and dest_dir != ".":
                 extract_dir = os.path.join(os.getcwd(), dest_dir)
-                os.makedirs(extract_dir)
+                if not os.path.exists(extract_dir):
+                    os.makedirs(extract_dir)
             else:
                 extract_dir = os.getcwd()
             file_filter = repo.get('file_filter', "")
@@ -354,7 +355,8 @@ def action_update(conf, args):
 
     import uuid
     patch_dir = "patch-%s" % uuid.uuid4()
-    os.mkdir(patch_dir)
+    if not os.path.exists(patch_dir):
+        os.mkdir(patch_dir)
 
     # Step 1: update the component repos
     if conf.nopull:
