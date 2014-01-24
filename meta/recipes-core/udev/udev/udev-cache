@@ -25,9 +25,14 @@ DEVCACHE_REGEN="/dev/shm/udev-regen" # create to request cache regen
 CMP_FILE_LIST="/proc/version /proc/cmdline /proc/devices"
 [ -f /proc/atags ] && CMP_FILE_LIST="$CMP_FILE_LIST /proc/atags"
 
+# List of files whose metadata (size/mtime/name) will be included in cached
+# system state.
+META_FILE_LIST="lib/udev/rules.d/* etc/udev/rules.d/*"
+
 # Command to compute system configuration.
 sysconf_cmd () {
 	cat -- $CMP_FILE_LIST
+	stat -L -c '%s %Y %n' -- $META_FILE_LIST | awk -F/ '{print $1 " " $NF;}'
 }
 
 [ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
