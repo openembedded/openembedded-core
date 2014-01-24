@@ -14,7 +14,13 @@ S = "${WORKDIR}/${BPN}-${PV}"
 
 PARALLEL_MAKE = ""
 
-inherit autotools gettext perlnative pkgconfig
+inherit autotools gettext perlnative pkgconfig systemd
+
+python () {
+    if not oe.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
+        pn = d.getVar('PN', True)
+        d.setVar('SYSTEMD_SERVICE_%s' % (pn), 'dpkg-configure.service')
+}
 
 export PERL = "${bindir}/perl"
 PERL_class-native = "${STAGING_BINDIR_NATIVE}/perl-native/perl"
@@ -48,11 +54,22 @@ do_install_append () {
 		mv ${D}${bindir}/update-alternatives ${D}${sbindir}
 		sed -i -e 's|^#!.*${bindir}/perl-native.*/perl|#!/usr/bin/env perl|' ${D}${bindir}/dpkg-*
 	fi
+
+	if ${@base_contains('DISTRO_FEATURES','sysvinit','false','true',d)};then
+		install -d ${D}${systemd_unitdir}/system
+		install -m 0644 ${WORKDIR}/dpkg-configure.service ${D}${systemd_unitdir}/system/
+		sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+			-e 's,@SYSCONFDIR@,${sysconfdir},g' \
+			-e 's,@BINDIR@,${bindir},g' \
+			-e 's,@SYSTEMD_UNITDIR@,${systemd_unitdir},g' \
+			${D}${systemd_unitdir}/system/dpkg-configure.service
+	fi
 }
 
 pkg_postinst_${PN} () {
 #!/bin/sh
-if [ "x$D" != "x" ] && [ -f $D/var/lib/dpkg/status ]; then
+if ${@base_contains('DISTRO_FEATURES','sysvinit','true','false',d)} && \
+	[ "x$D" != "x" ] && [ -f $D/var/lib/dpkg/status ]; then
 	install -d $D${sysconfdir}/rcS.d
 
 	# this happens at S98 where our good 'ole packages script used to run
