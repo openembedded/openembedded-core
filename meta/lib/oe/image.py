@@ -28,7 +28,7 @@ class Image(object):
         rootfs_alignment = int(self.d.getVar('IMAGE_ROOTFS_ALIGNMENT', True))
         overhead_factor = float(self.d.getVar('IMAGE_OVERHEAD_FACTOR', True))
         rootfs_req_size = int(self.d.getVar('IMAGE_ROOTFS_SIZE', True))
-        rootfs_extra_space = int(self.d.getVar('IMAGE_ROOTFS_EXTRA_SPACE', True))
+        rootfs_extra_space = eval(self.d.getVar('IMAGE_ROOTFS_EXTRA_SPACE', True))
 
         output = subprocess.check_output(['du', '-ks',
                                           self.d.getVar('IMAGE_ROOTFS', True)])
