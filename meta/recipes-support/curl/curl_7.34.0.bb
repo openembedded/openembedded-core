@@ -21,7 +21,7 @@ SRC_URI += " file://configure_ac.patch"
 SRC_URI[md5sum] = "88491df2bb32e9146e776ae6ac2f8327"
 SRC_URI[sha256sum] = "10beade56b48311499e444783df3413405b22f20a147ed4a1d8a8125f1cc829b"
 
-inherit autotools pkgconfig binconfig
+inherit autotools pkgconfig binconfig multilib_header
 
 EXTRA_OECONF = "--with-zlib=${STAGING_LIBDIR}/../ \
                 --without-libssh2 \
@@ -39,6 +39,10 @@ CURLGNUTLS_class-nativesdk = "--without-gnutls --without-ssl"
 
 do_configure_prepend() {
 	sed -i s:OPT_GNUTLS/bin:OPT_GNUTLS:g ${S}/configure.ac
+}
+
+do_install_append() {
+	oe_multilib_header curl/curlbuild.h
 }
 
 PACKAGES =+ "${PN}-certs libcurl libcurl-dev libcurl-staticdev libcurl-doc"
