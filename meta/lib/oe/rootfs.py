@@ -193,7 +193,7 @@ class Rootfs(object):
         kernel_abi_ver_file = os.path.join(self.d.getVar('STAGING_KERNEL_DIR', True),
                                            'kernel-abiversion')
         if os.path.exists(kernel_abi_ver_file):
-            kernel_ver = open(kernel_abi_ver_file).read()
+            kernel_ver = open(kernel_abi_ver_file).read().strip(' \n')
             modules_dir = os.path.join(self.image_rootfs, 'lib', 'modules', kernel_ver)
 
             bb.utils.mkdirhier(modules_dir)
