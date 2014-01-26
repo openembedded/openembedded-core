@@ -121,10 +121,23 @@ class Rootfs(object):
 
         delayed_postinsts = self._get_delayed_postinsts()
         if delayed_postinsts is None:
-            self.pm.remove(["update-rc.d",
-                            "base-passwd",
-                            self.d.getVar("ROOTFS_BOOTSTRAP_INSTALL", True)],
-                           False)
+            installed_pkgs_dir = self.d.expand('${WORKDIR}/installed_pkgs.txt')
+            pkgs_to_remove = list()
+            with open(installed_pkgs_dir, "r+") as installed_pkgs:
+                pkgs_installed = installed_pkgs.read().split('\n')
+                for pkg_installed in pkgs_installed[:]:
+                    pkg = pkg_installed.split()[0]
+                    if pkg in ["update-rc.d",
+                               "base-passwd",
+                               self.d.getVar("ROOTFS_BOOTSTRAP_INSTALL", True)
+                               ]:
+                        pkgs_to_remove.append(pkg)
+                        pkgs_installed.remove(pkg_installed)
+
+            if len(pkgs_to_remove) > 0:
+                self.pm.remove(pkgs_to_remove, False)
+                # Update installed_pkgs.txt
+                open(installed_pkgs_dir, "w+").write('\n'.join(pkgs_installed))
 
             if os.path.exists(self.d.expand("${IMAGE_ROOTFS}${sysconfdir}/init.d/run-postinsts")):
                 self._exec_shell_cmd(["update-rc.d", "-f", "-r",
