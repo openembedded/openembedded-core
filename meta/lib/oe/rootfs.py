@@ -217,11 +217,157 @@ class Rootfs(object):
 
 
 class RpmRootfs(Rootfs):
-    def __init__(self, manifest):
-        super(RpmRootfs, self).__init__(manifest)
-    """
-    TBD
-    """
+    def __init__(self, d, manifest_dir):
+        super(RpmRootfs, self).__init__(d)
+
+        self.manifest = RpmManifest(d, manifest_dir)
+
+        package_archs = {
+            'default': [],
+        }
+        target_os = {
+            'default': "",
+        }
+        package_archs['default'] = self.d.getVar("PACKAGE_ARCHS", True).split()
+        # arch order is reversed.  This ensures the -best- match is
+        # listed first!
+        package_archs['default'].reverse()
+        target_os['default'] = self.d.getVar("TARGET_OS", True).strip()
+        multilibs = self.d.getVar('MULTILIBS', True) or ""
+        for ext in multilibs.split():
+            eext = ext.split(':')
+            if len(eext) > 1 and eext[0] == 'multilib':
+                localdata = bb.data.createCopy(self.d)
+                default_tune_key = "DEFAULTTUNE_virtclass-multilib-" + eext[1]
+                default_tune = localdata.getVar(default_tune_key, False)
+                if default_tune:
+                    localdata.setVar("DEFAULTTUNE", default_tune)
+                    bb.data.update_data(localdata)
+                    package_archs[eext[1]] = localdata.getVar('PACKAGE_ARCHS',
+                                                              True).split()
+                    package_archs[eext[1]].reverse()
+                    target_os[eext[1]] = localdata.getVar("TARGET_OS",
+                                                          True).strip()
+
+        self.pm = RpmPM(d,
+                        d.getVar('IMAGE_ROOTFS', True),
+                        package_archs,
+                        target_os,
+                        self.d.getVar('TARGET_VENDOR', True)
+                        )
+
+        self.inc_rpm_image_gen = self.d.getVar('INC_RPM_IMAGE_GEN', True)
+        if self.inc_rpm_image_gen != "1":
+            bb.utils.remove(self.image_rootfs, True)
+        else:
+            self.pm.recovery_packaging_data()
+        bb.utils.remove(self.d.getVar('MULTILIB_TEMP_ROOTFS', True), True)
+
+        self.pm.create_configs()
+
+    '''
+    While rpm incremental image generation is enabled, it will remove the
+    unneeded pkgs by comparing the new install solution manifest and the
+    old installed manifest.
+    '''
+    def _create_incremental(self, pkgs_initial_install):
+        if self.inc_rpm_image_gen == "1":
+
+            pkgs_to_install = list()
+            for pkg_type in pkgs_initial_install:
+                pkgs_to_install += pkgs_initial_install[pkg_type]
+
+            installed_manifest = self.pm.load_old_install_solution()
+            solution_manifest = self.pm.dump_install_solution(pkgs_to_install)
+
+            pkg_to_remove = list()
+            for pkg in installed_manifest:
+                if pkg not in solution_manifest:
+                    pkg_to_remove.append(pkg)
+
+            self.pm.update()
+
+            bb.note('incremental update -- upgrade packages in place ')
+            self.pm.upgrade()
+            if pkg_to_remove != []:
+                bb.note('incremental removed: %s' % ' '.join(pkg_to_remove))
+                self.pm.remove(pkg_to_remove)
+
+    def _create(self):
+        pkgs_to_install = self.manifest.parse_initial_manifest()
+
+        # update PM index files
+        self.pm.write_index()
+
+        self.pm.dump_all_available_pkgs()
+
+        if self.inc_rpm_image_gen == "1":
+            self._create_incremental(pkgs_to_install)
+
+        self.pm.update()
+
+        for pkg_type in self.install_order:
+            if pkg_type in pkgs_to_install:
+                self.pm.install(pkgs_to_install[pkg_type],
+                                [False, True][pkg_type == "aop"])
+
+        self.pm.install_complementary()
+
+        self._log_check()
+
+        if self.inc_rpm_image_gen == "1":
+            self.pm.backup_packaging_data()
+
+        self.pm.rpm_setup_smart_target_config()
+
+    def _get_delayed_postinsts(self):
+        postinst_dir = self.d.expand("${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts")
+        if os.path.isdir(postinst_dir):
+            files = os.listdir(postinst_dir)
+            for f in files:
+                bb.note('Delayed package scriptlet: %s' % f)
+            return files
+
+        return None
+
+    def _save_postinsts(self):
+        # this is just a stub. For RPM, the failed postinstalls are
+        # already saved in /etc/rpm-postinsts
+        pass
+
+    def _log_check(self):
+        r = re.compile('(unpacking of archive failed|Cannot find package|exit 1|ERR|Fail)')
+        log_path = self.d.expand("${T}/log.do_rootfs")
+        with open(log_path, 'r') as log:
+            found_error = 0
+            message = "\n"
+            for line in log.read().split('\n'):
+                if 'log_check' in line:
+                    continue
+
+                m = r.search(line)
+                if m:
+                    found_error = 1
+                    bb.warn('log_check: There were error messages in the logfile')
+                    bb.warn('log_check: Matched keyword: [%s]\n\n' % m.group())
+
+                if found_error >= 1 and found_error <= 5:
+                    message += line + '\n'
+                    found_error += 1
+
+                if found_error == 6:
+                    bb.fatal(message)
+
+    def _insert_feed_uris(self):
+        pass
+
+    def _handle_intercept_failure(self, registered_pkgs):
+        rpm_postinsts_dir = self.image_rootfs + self.d.expand('${sysconfdir}/rpm-postinsts/')
+        bb.utils.mkdirhier(rpm_postinsts_dir)
+
+        # Save the package postinstalls in /etc/rpm-postinsts
+        for pkg in registered_pkgs:
+            self.pm.save_rpmpostinist(pkg)
 
 
 class DpkgRootfs(Rootfs):
@@ -447,7 +593,7 @@ def create_rootfs(d, manifest_dir=None):
 
     img_type = d.getVar('IMAGE_PKGTYPE', True)
     if img_type == "rpm":
-        bb.fatal("RPM backend was not implemented yet...")
+        RpmRootfs(d, manifest_dir).create()
     elif img_type == "ipk":
         OpkgRootfs(d, manifest_dir).create()
     elif img_type == "deb":
@@ -455,6 +601,59 @@ def create_rootfs(d, manifest_dir=None):
 
     os.environ.clear()
     os.environ.update(env_bkp)
+
+
+def list_installed_packages(d, format=None, rootfs_dir=None):
+    if not rootfs_dir:
+        rootfs_dir = d.getVar('IMAGE_ROOTFS', True)
+
+    img_type = d.getVar('IMAGE_PKGTYPE', True)
+    if img_type == "rpm":
+        package_archs = {
+            'default': [],
+        }
+        target_os = {
+            'default': "",
+        }
+        package_archs['default'] = d.getVar("PACKAGE_ARCHS", True).split()
+        # arch order is reversed.  This ensures the -best- match is
+        # listed first!
+        package_archs['default'].reverse()
+        target_os['default'] = d.getVar("TARGET_OS", True).strip()
+        multilibs = d.getVar('MULTILIBS', True) or ""
+        for ext in multilibs.split():
+            eext = ext.split(':')
+            if len(eext) > 1 and eext[0] == 'multilib':
+                localdata = bb.data.createCopy(d)
+                default_tune_key = "DEFAULTTUNE_virtclass-multilib-" + eext[1]
+                default_tune = localdata.getVar(default_tune_key, False)
+                if default_tune:
+                    localdata.setVar("DEFAULTTUNE", default_tune)
+                    bb.data.update_data(localdata)
+                    package_archs[eext[1]] = localdata.getVar('PACKAGE_ARCHS',
+                                                              True).split()
+                    package_archs[eext[1]].reverse()
+                    target_os[eext[1]] = localdata.getVar("TARGET_OS",
+                                                          True).strip()
+
+        return RpmPM(d,
+                     rootfs_dir,
+                     package_archs,
+                     target_os,
+                     d.getVar('TARGET_VENDOR', True)
+                     ).list_installed(format)
+    elif img_type == "ipk":
+        return OpkgPM(d,
+                      rootfs_dir,
+                      d.getVar("IPKGCONF_TARGET", True),
+                      d.getVar("ALL_MULTILIB_PACKAGE_ARCHS", True)
+                      ).list_installed(format)
+    elif img_type == "deb":
+        return DpkgPM(d,
+                      rootfs_dir,
+                      d.getVar('PACKAGE_ARCHS', True),
+                      d.getVar('DPKG_ARCH', True)
+                      ).list_installed(format)
 
 if __name__ == "__main__":
     """
