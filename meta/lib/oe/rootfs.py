@@ -21,9 +21,6 @@ class Rootfs(object):
         self.image_rootfs = self.d.getVar('IMAGE_ROOTFS', True)
         self.deploy_dir_image = self.d.getVar('DEPLOY_DIR_IMAGE', True)
 
-        bb.utils.remove(self.image_rootfs, True)
-        bb.utils.remove(self.d.getVar('MULTILIB_TEMP_ROOTFS', True), True)
-
         self.install_order = Manifest.INSTALL_ORDER
 
     @abstractmethod
@@ -374,6 +371,8 @@ class DpkgRootfs(Rootfs):
     def __init__(self, d, manifest_dir):
         super(DpkgRootfs, self).__init__(d)
 
+        bb.utils.remove(self.image_rootfs, True)
+        bb.utils.remove(self.d.getVar('MULTILIB_TEMP_ROOTFS', True), True)
         self.manifest = DpkgManifest(d, manifest_dir)
         self.pm = DpkgPM(d, d.getVar('IMAGE_ROOTFS', True),
                          d.getVar('PACKAGE_ARCHS', True),
@@ -447,6 +446,8 @@ class OpkgRootfs(Rootfs):
     def __init__(self, d, manifest_dir):
         super(OpkgRootfs, self).__init__(d)
 
+        bb.utils.remove(self.image_rootfs, True)
+        bb.utils.remove(self.d.getVar('MULTILIB_TEMP_ROOTFS', True), True)
         self.manifest = OpkgManifest(d, manifest_dir)
         self.opkg_conf = self.d.getVar("IPKGCONF_TARGET", True)
         self.pkg_archs = self.d.getVar("ALL_MULTILIB_PACKAGE_ARCHS", True)
