@@ -11,7 +11,7 @@ class SyslogTest(oeRuntimeTest):
     @skipUnlessPassed("test_ssh")
     def test_syslog_help(self):
         (status,output) = self.target.run('/sbin/syslogd --help')
-        self.assertEqual(status, 1, msg="status and output: %s and %s" % (status,output))
+        self.assertEqual(status, 0, msg="status and output: %s and %s" % (status,output))
 
     @skipUnlessPassed("test_syslog_help")
     def test_syslog_running(self):
