@@ -7,58 +7,6 @@ import multiprocessing
 import re
 import bb
 
-DB_CONFIG_CONTENT = '''# ================ Environment
-set_data_dir .
-set_create_dir .
-set_lg_dir ./log
-set_tmp_dir ./tmp
-set_flags db_log_autoremove on
-
-# -- thread_count must be >= 8
-set_thread_count 64
-
-# ================ Logging
-
-# ================ Memory Pool
-set_cachesize 0 1048576 0
-set_mp_mmapsize 268435456
-
-# ================ Locking
-set_lk_max_locks 16384
-set_lk_max_lockers 16384
-set_lk_max_objects 16384
-mutex_set_max 163840
-
-# ================ Replication
-'''
-
-SCRIPTLET_FORMAT = '''#!/bin/bash
-
-export PATH=%s
-export D=%s
-export OFFLINE_ROOT="$D"
-export IPKG_OFFLINE_ROOT="$D"
-export OPKG_OFFLINE_ROOT="$D"
-export INTERCEPT_DIR=%s
-export NATIVE_ROOT=%s
-
-$2 $1/$3 $4
-if [ $? -ne 0 ]; then
-  if [ $4 -eq 1 ]; then
-    mkdir -p $1/etc/rpm-postinsts
-    num=100
-    while [ -e $1/etc/rpm-postinsts/${num}-* ]; do num=$((num + 1)); done
-    name=`head -1 $1/$3 | cut -d\' \' -f 2`
-    echo "#!$2" > $1/etc/rpm-postinsts/${num}-${name}
-    echo "# Arg: $4" >> $1/etc/rpm-postinsts/${num}-${name}
-    cat $1/$3 >> $1/etc/rpm-postinsts/${num}-${name}
-    chmod +x $1/etc/rpm-postinsts/${num}-${name}
-  else
-    echo "Error: pre/post remove scriptlet failed"
-  fi
-fi
-'''
-
 
 # this can be used by all PM backends to create the index files in parallel
 def create_index(arg):
@@ -405,6 +353,31 @@ class RpmPM(PackageManager):
         if not os.path.exists(rpmlib_log):
             bb.utils.mkdirhier(os.path.join(self.image_rpmlib, 'log'))
             open(rpmlib_log, 'w+').close()
+
+        DB_CONFIG_CONTENT = "# ================ Environment\n" \
+            "set_data_dir .\n" \
+            "set_create_dir .\n" \
+            "set_lg_dir ./log\n" \
+            "set_tmp_dir ./tmp\n" \
+            "set_flags db_log_autoremove on\n" \
+            "\n" \
+            "# -- thread_count must be >= 8\n" \
+            "set_thread_count 64\n" \
+            "\n" \
+            "# ================ Logging\n" \
+            "\n" \
+            "# ================ Memory Pool\n" \
+            "set_cachesize 0 1048576 0\n" \
+            "set_mp_mmapsize 268435456\n" \
+            "\n" \
+            "# ================ Locking\n" \
+            "set_lk_max_locks 16384\n" \
+            "set_lk_max_lockers 16384\n" \
+            "set_lk_max_objects 16384\n" \
+            "mutex_set_max 163840\n" \
+            "\n" \
+            "# ================ Replication\n"
+
         db_config_dir = os.path.join(self.image_rpmlib, 'DB_CONFIG')
         if not os.path.exists(db_config_dir):
             open(db_config_dir, 'w+').write(DB_CONFIG_CONTENT)
@@ -469,6 +442,32 @@ class RpmPM(PackageManager):
         # If we ever run into needing more the 899 scripts, we'll have to.
         # change num to start with 1000.
         #
+        SCRIPTLET_FORMAT = "#!/bin/bash\n" \
+            "\n" \
+            "export PATH=%s\n" \
+            "export D=%s\n" \
+            'export OFFLINE_ROOT="$D"\n' \
+            'export IPKG_OFFLINE_ROOT="$D"\n' \
+            'export OPKG_OFFLINE_ROOT="$D"\n' \
+            "export INTERCEPT_DIR=%s\n" \
+            "export NATIVE_ROOT=%s\n" \
+            "\n" \
+            "$2 $1/$3 $4\n" \
+            "if [ $? -ne 0 ]; then\n" \
+            "  if [ $4 -eq 1 ]; then\n" \
+            "    mkdir -p $1/etc/rpm-postinsts\n" \
+            "    num=100\n" \
+            "    while [ -e $1/etc/rpm-postinsts/${num}-* ]; do num=$((num + 1)); done\n" \
+            "    name=`head -1 $1/$3 | cut -d\' \' -f 2`\n" \
+            '    echo "#!$2" > $1/etc/rpm-postinsts/${num}-${name}\n' \
+            '    echo "# Arg: $4" >> $1/etc/rpm-postinsts/${num}-${name}\n' \
+            "    cat $1/$3 >> $1/etc/rpm-postinsts/${num}-${name}\n" \
+            "    chmod +x $1/etc/rpm-postinsts/${num}-${name}\n" \
+            "  else\n" \
+            '    echo "Error: pre/post remove scriptlet failed"\n' \
+            "  fi\n" \
+            "fi\n"
+
         intercept_dir = self.d.expand('${WORKDIR}/intercept_scripts')
         native_root = self.d.getVar('STAGING_DIR_NATIVE', True)
         scriptlet_content = SCRIPTLET_FORMAT % (os.environ['PATH'],
