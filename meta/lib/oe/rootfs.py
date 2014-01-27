@@ -376,7 +376,7 @@ class RpmRootfs(Rootfs):
         bb.utils.mkdirhier(rpm_postinsts_dir)
 
         # Save the package postinstalls in /etc/rpm-postinsts
-        for pkg in registered_pkgs:
+        for pkg in registered_pkgs.split():
             self.pm.save_rpmpostinist(pkg)
 
 
