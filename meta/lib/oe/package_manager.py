@@ -740,11 +740,12 @@ class RpmPM(PackageManager):
                 break
 
         bb.note('  * postponing %s' % new_pkg)
-        saved_dir = self.image_rootfs + self.d.expand('${sysconfdir}/rpm-postinsts/') + new_pkg
+        saved_dir = self.target_rootfs + self.d.expand('${sysconfdir}/rpm-postinsts/') + new_pkg
+
         cmd = self.rpm_cmd + ' -q --scripts --root ' + self.target_rootfs
         cmd += ' --dbpath=/var/lib/rpm ' + new_pkg
         cmd += ' | sed -n -e "/^postinstall scriptlet (using .*):$/,/^.* scriptlet (using .*):$/ {/.*/p}"'
-        cmd += ' | sed -e "s/postinstall scriptlet (using \(.*\)):$/#!\1/"'
+        cmd += ' | sed -e "/postinstall scriptlet (using \(.*\)):$/d"'
         cmd += ' -e "/^.* scriptlet (using .*):$/d" > %s' % saved_dir
 
         try:
