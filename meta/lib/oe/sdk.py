@@ -58,7 +58,141 @@ class Sdk(object):
 
 
 class RpmSdk(Sdk):
-    pass
+    def __init__(self, d, manifest_dir=None):
+        super(RpmSdk, self).__init__(d, manifest_dir)
+
+        self.target_manifest = RpmManifest(d, self.manifest_dir,
+                                           Manifest.MANIFEST_TYPE_SDK_TARGET)
+        self.host_manifest = RpmManifest(d, self.manifest_dir,
+                                         Manifest.MANIFEST_TYPE_SDK_HOST)
+
+        package_archs = {
+            'default': [],
+        }
+        target_os = {
+            'default': "",
+        }
+        package_archs['default'] = self.d.getVar("PACKAGE_ARCHS", True).split()
+        # arch order is reversed.  This ensures the -best- match is
+        # listed first!
+        package_archs['default'].reverse()
+        target_os['default'] = self.d.getVar("TARGET_OS", True).strip()
+        multilibs = self.d.getVar('MULTILIBS', True) or ""
+        for ext in multilibs.split():
+            eext = ext.split(':')
+            if len(eext) > 1 and eext[0] == 'multilib':
+                localdata = bb.data.createCopy(self.d)
+                default_tune_key = "DEFAULTTUNE_virtclass-multilib-" + eext[1]
+                default_tune = localdata.getVar(default_tune_key, False)
+                if default_tune:
+                    localdata.setVar("DEFAULTTUNE", default_tune)
+                    bb.data.update_data(localdata)
+                    package_archs[eext[1]] = localdata.getVar('PACKAGE_ARCHS',
+                                                              True).split()
+                    package_archs[eext[1]].reverse()
+                    target_os[eext[1]] = localdata.getVar("TARGET_OS",
+                                                          True).strip()
+        target_providename = ['/bin/sh',
+                              '/bin/bash',
+                              '/usr/bin/env',
+                              '/usr/bin/perl',
+                              'pkgconfig'
+                              ]
+        self.target_pm = RpmPM(d,
+                               self.sdk_target_sysroot,
+                               package_archs,
+                               target_os,
+                               self.d.getVar('TARGET_VENDOR', True),
+                               'target',
+                               target_providename
+                               )
+
+        sdk_package_archs = {
+            'default': [],
+        }
+        sdk_os = {
+            'default': "",
+        }
+        sdk_package_archs['default'] = self.d.getVar("SDK_PACKAGE_ARCHS",
+                                                     True).split()
+        # arch order is reversed.  This ensures the -best- match is
+        # listed first!
+        sdk_package_archs['default'].reverse()
+        sdk_os['default'] = self.d.getVar("SDK_OS", True).strip()
+        sdk_providename = ['/bin/sh',
+                           '/bin/bash',
+                           '/usr/bin/env',
+                           '/usr/bin/perl',
+                           'pkgconfig',
+                           'libGL.so()(64bit)',
+                           'libGL.so'
+                           ]
+        self.host_pm = RpmPM(d,
+                             self.sdk_host_sysroot,
+                             sdk_package_archs,
+                             sdk_os,
+                             self.d.getVar('SDK_VENDOR', True),
+                             'host',
+                             sdk_providename
+                             )
+
+    def _populate_sysroot(self, pm, manifest):
+        pkgs_to_install = manifest.parse_initial_manifest()
+
+        pm.create_configs()
+        pm.write_index()
+        pm.dump_all_available_pkgs()
+        pm.update()
+
+        for pkg_type in self.install_order:
+            if pkg_type in pkgs_to_install:
+                pm.install(pkgs_to_install[pkg_type],
+                           [False, True][pkg_type == Manifest.PKG_TYPE_ATTEMPT_ONLY])
+
+    def _populate(self):
+        bb.note("Installing TARGET packages")
+        self._populate_sysroot(self.target_pm, self.target_manifest)
+
+        self.target_pm.install_complementary(self.d.getVar('SDKIMAGE_INSTALL_COMPLEMENTARY', True))
+
+        execute_pre_post_process(self.d, self.d.getVar("POPULATE_SDK_POST_TARGET_COMMAND", True))
+
+        self.target_pm.remove_packaging_data()
+
+        bb.note("Installing NATIVESDK packages")
+        self._populate_sysroot(self.host_pm, self.host_manifest)
+
+        execute_pre_post_process(self.d, self.d.getVar("POPULATE_SDK_POST_HOST_COMMAND", True))
+
+        self.host_pm.remove_packaging_data()
+
+        # Move host RPM library data
+        native_rpm_state_dir = os.path.join(self.sdk_output,
+                                            self.sdk_native_path,
+                                            self.d.getVar('localstatedir_nativesdk', True).strip('/'),
+                                            "lib",
+                                            "rpm"
+                                            )
+        bb.utils.mkdirhier(native_rpm_state_dir)
+        for f in glob.glob(os.path.join(self.sdk_output,
+                                        "var",
+                                        "lib",
+                                        "rpm",
+                                        "*")):
+            bb.utils.movefile(f, native_rpm_state_dir)
+
+        bb.utils.remove(os.path.join(self.sdk_output, "var"), True)
+
+        # Move host sysconfig data
+        native_sysconf_dir = os.path.join(self.sdk_output,
+                                          self.sdk_native_path,
+                                          self.d.getVar('sysconfdir',
+                                                        True).strip('/'),
+                                          )
+        bb.utils.mkdirhier(native_sysconf_dir)
+        for f in glob.glob(os.path.join(self.sdk_output, "etc", "*")):
+            bb.utils.movefile(f, native_sysconf_dir)
+        bb.utils.remove(os.path.join(self.sdk_output, "etc"), True)
 
 
 class OpkgSdk(Sdk):
@@ -196,7 +330,7 @@ def populate_sdk(d, manifest_dir=None):
 
     img_type = d.getVar('IMAGE_PKGTYPE', True)
     if img_type == "rpm":
-        bb.fatal("RPM backend was not implemented yet...")
+        RpmSdk(d, manifest_dir).populate()
     elif img_type == "ipk":
         OpkgSdk(d, manifest_dir).populate()
     elif img_type == "deb":
