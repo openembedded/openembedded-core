@@ -343,8 +343,10 @@ make_zimage_symlink_relative () {
 	fi
 }
 
-write_image_manifest () {
-	list_installed_packages ver | sort > ${IMAGE_MANIFEST}
+python write_image_manifest () {
+    from oe.rootfs import list_installed_packages
+    with open(d.getVar('IMAGE_MANIFEST', True), 'w+') as image_manifest:
+        image_manifest.write(list_installed_packages(d, 'ver'))
 }
 
 # Make login manager(s) enable automatic login.

@@ -16,10 +16,16 @@ addtask populate_lic after do_patch before do_build
 do_populate_lic[dirs] = "${LICSSTATEDIR}/${PN}"
 do_populate_lic[cleandirs] = "${LICSSTATEDIR}"
 
-license_create_manifest() {
-	mkdir -p ${LICENSE_DIRECTORY}/${IMAGE_NAME}
+python write_package_manifest() {
 	# Get list of installed packages
-	list_installed_packages |sort > ${LICENSE_DIRECTORY}/${IMAGE_NAME}/package.manifest
+	license_image_dir = d.expand('${LICENSE_DIRECTORY}/${IMAGE_NAME}')
+	bb.utils.mkdirhier(license_image_dir)
+	from oe.rootfs import list_installed_packages
+	open(os.path.join(license_image_dir, 'package.manifest'),
+         'w+').write(list_installed_packages(d))
+}
+
+license_create_manifest() {
 	INSTALLED_PKGS=`cat ${LICENSE_DIRECTORY}/${IMAGE_NAME}/package.manifest`
 	LICENSE_MANIFEST="${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest"
 	# remove existing license.manifest file
@@ -354,7 +360,7 @@ SSTATETASKS += "do_populate_lic"
 do_populate_lic[sstate-inputdirs] = "${LICSSTATEDIR}"
 do_populate_lic[sstate-outputdirs] = "${LICENSE_DIRECTORY}/"
 
-ROOTFS_POSTPROCESS_COMMAND_prepend = "license_create_manifest; "
+ROOTFS_POSTPROCESS_COMMAND_prepend = "write_package_manifest; license_create_manifest; "
 
 python do_populate_lic_setscene () {
     sstate_setscene(d)
