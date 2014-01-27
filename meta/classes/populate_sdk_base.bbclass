@@ -1,4 +1,25 @@
 inherit meta toolchain-scripts
+
+# Wildcards specifying complementary packages to install for every package that has been explicitly
+# installed into the rootfs
+COMPLEMENTARY_GLOB[dev-pkgs] = '*-dev'
+COMPLEMENTARY_GLOB[staticdev-pkgs] = '*-staticdev'
+COMPLEMENTARY_GLOB[doc-pkgs] = '*-doc'
+COMPLEMENTARY_GLOB[dbg-pkgs] = '*-dbg'
+COMPLEMENTARY_GLOB[ptest-pkgs] = '*-ptest'
+
+def complementary_globs(featurevar, d):
+    all_globs = d.getVarFlags('COMPLEMENTARY_GLOB')
+    globs = []
+    features = set((d.getVar(featurevar, True) or '').split())
+    for name, glob in all_globs.items():
+        if name in features:
+            globs.append(glob)
+    return ' '.join(globs)
+
+SDKIMAGE_FEATURES ??= "dev-pkgs dbg-pkgs"
+SDKIMAGE_INSTALL_COMPLEMENTARY = '${@complementary_globs("SDKIMAGE_FEATURES", d)}'
+
 inherit populate_sdk_${IMAGE_PKGTYPE}
 
 SDK_DIR = "${WORKDIR}/sdk"

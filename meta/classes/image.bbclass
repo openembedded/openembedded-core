@@ -35,26 +35,7 @@ FEATURE_INSTALL_OPTIONAL = "${@' '.join(oe.packagegroup.optional_packages(oe.dat
 SPLASH ?= "psplash"
 PACKAGE_GROUP_splash = "${SPLASH}"
 
-# Wildcards specifying complementary packages to install for every package that has been explicitly
-# installed into the rootfs
-COMPLEMENTARY_GLOB[dev-pkgs] = '*-dev'
-COMPLEMENTARY_GLOB[staticdev-pkgs] = '*-staticdev'
-COMPLEMENTARY_GLOB[doc-pkgs] = '*-doc'
-COMPLEMENTARY_GLOB[dbg-pkgs] = '*-dbg'
-COMPLEMENTARY_GLOB[ptest-pkgs] = '*-ptest'
-
-def complementary_globs(featurevar, d):
-    all_globs = d.getVarFlags('COMPLEMENTARY_GLOB')
-    globs = []
-    features = set((d.getVar(featurevar, True) or '').split())
-    for name, glob in all_globs.items():
-        if name in features:
-            globs.append(glob)
-    return ' '.join(globs)
-
 IMAGE_INSTALL_COMPLEMENTARY = '${@complementary_globs("IMAGE_FEATURES", d)}'
-SDKIMAGE_FEATURES ??= "dev-pkgs dbg-pkgs"
-SDKIMAGE_INSTALL_COMPLEMENTARY = '${@complementary_globs("SDKIMAGE_FEATURES", d)}'
 
 def check_image_features(d):
     valid_features = (d.getVarFlag('IMAGE_FEATURES', 'validitems', True) or "").split()
