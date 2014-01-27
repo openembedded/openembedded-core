@@ -378,7 +378,7 @@ class RpmRootfs(Rootfs):
 
         # Save the package postinstalls in /etc/rpm-postinsts
         for pkg in registered_pkgs.split():
-            self.pm.save_rpmpostinist(pkg)
+            self.pm.save_rpmpostinst(pkg)
 
 
 class DpkgRootfs(Rootfs):

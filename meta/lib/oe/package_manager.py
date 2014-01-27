@@ -730,7 +730,7 @@ class RpmPM(PackageManager):
 
         return
 
-    def save_rpmpostinist(self, pkg):
+    def save_rpmpostinst(self, pkg):
         mlibs = self.d.getVar('MULTILIB_GLOBAL_VARIANTS').split()
         new_pkg = pkg
         # Remove any multilib prefix from the package name
@@ -755,7 +755,7 @@ class RpmPM(PackageManager):
             os.chmod(saved_dir, 0755)
             self._unlock_rpm_db()
         except subprocess.CalledProcessError as e:
-            bb.fatal("Invoke save_rpmpostinist failed. Command %s "
+            bb.fatal("Invoke save_rpmpostinst failed. Command %s "
                      "returned %d" % (cmd, e.returncode))
 
     '''Write common configuration for target usage'''
