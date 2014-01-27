@@ -18,11 +18,17 @@
 # option determines how many tasks bitbake should run in parallel:
 #
 #BB_NUMBER_THREADS ?= "4"
+#
+# Default to setting automatically based on cpu count
+BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
 # 
 # The second option controls how many processes make should run in parallel when
 # running compile tasks:
 #
 #PARALLEL_MAKE ?= "-j 4"
+#
+# Default to setting automatically based on cpu count
+PARALLEL_MAKE ?= "-j ${@oe.utils.cpu_count()}"
 #
 # For a quad-core machine, BB_NUMBER_THREADS = "4", PARALLEL_MAKE = "-j 4" would
 # be appropriate for example.
