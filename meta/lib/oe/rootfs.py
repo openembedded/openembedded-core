@@ -153,6 +153,7 @@ class Rootfs(object):
                                       "intercept_scripts")
 
         bb.note("Running intercept scripts:")
+        os.environ['D'] = self.image_rootfs
         for script in os.listdir(intercepts_dir):
             script_full = os.path.join(intercepts_dir, script)
 
