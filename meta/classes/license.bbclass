@@ -85,7 +85,7 @@ license_create_manifest() {
 						if [ ! -f ${IMAGE_ROOTFS}/usr/share/common-licenses/${lic} ]; then
 							cp ${LICENSE_DIRECTORY}/${pkged_pn}/${lic} ${IMAGE_ROOTFS}/usr/share/common-licenses/
 						fi
-						ln -s ../${lic} ${IMAGE_ROOTFS}/usr/share/common-licenses/${pkg}/${lic}
+						ln -sf ../${lic} ${IMAGE_ROOTFS}/usr/share/common-licenses/${pkg}/${lic}
 					fi
 				done
 			done
