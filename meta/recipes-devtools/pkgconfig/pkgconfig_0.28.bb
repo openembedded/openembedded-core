@@ -1,7 +1,6 @@
 require pkgconfig.inc
 
 SRC_URI += " \
-            file://glibconfig-sysdefs.h \
             file://pkg-config-native.in \
             file://fix-glib-configure-libtool-usage.patch \
             file://obsolete_automake_macros.patch \
