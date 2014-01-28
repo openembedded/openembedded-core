@@ -11,108 +11,117 @@ import time
 import os
 import select
 
-class SSHControl(object):
 
-    def __init__(self, ip=None, timeout=300, logfile=None, port=None):
+class SSHProcess(object):
+    def __init__(self, **options):
+
+        self.defaultopts = {
+            "stdout": subprocess.PIPE,
+            "stderr": subprocess.STDOUT,
+            "stdin": None,
+            "shell": False,
+            "bufsize": -1,
+            "preexec_fn": os.setsid,
+        }
+        self.options = dict(self.defaultopts)
+        self.options.update(options)
+        self.status = None
+        self.output = None
+        self.process = None
+        self.starttime = None
+
+    def run(self, command, timeout=None):
+        self.starttime = time.time()
+        output = ''
+        self.process = subprocess.Popen(command, **self.options)
+        if timeout:
+            endtime = self.starttime + timeout
+            eof = False
+            while time.time() < endtime and not eof:
+                if select.select([self.process.stdout], [], [], 5)[0] != []:
+                    data = os.read(self.process.stdout.fileno(), 1024)
+                    if not data:
+                        self.process.stdout.close()
+                        eof = True
+                    else:
+                        output += data
+                        endtime = time.time() + timeout
+
+            # process hasn't returned yet
+            if not eof:
+                self.process.terminate()
+                time.sleep(5)
+                try:
+                    self.process.kill()
+                except OSError:
+                    pass
+                output += "\nProcess killed - no output for %d seconds. Total running time: %d seconds." % (timeout, time.time() - self.starttime)
+        else:
+            output = self.process.communicate()[0]
+
+        self.status = self.process.wait()
+        self.output = output.rstrip()
+        return (self.status, self.output)
+
+
+class SSHControl(object):
+    def __init__(self, ip, logfile=None, timeout=300, user='root', port=None):
         self.ip = ip
-        self.timeout = timeout
-        self._starttime = None
-        self._out = ''
-        self._ret = 126
+        self.defaulttimeout = timeout
+        self.ignore_status = True
         self.logfile = logfile
+        self.user = user
         self.ssh_options = [
                 '-o', 'UserKnownHostsFile=/dev/null',
                 '-o', 'StrictHostKeyChecking=no',
                 '-o', 'LogLevel=ERROR'
                 ]
-        self.ssh = ['ssh', '-l', 'root'] + self.ssh_options
+        self.ssh = ['ssh', '-l', self.user ] + self.ssh_options
+        self.scp = ['scp'] + self.ssh_options
         if port:
-            self.ssh = self.ssh + ['-p', str(port)]
+            self.ssh = self.ssh + [ '-p', port ]
+            self.scp = self.scp + [ '-P', port ]
 
     def log(self, msg):
         if self.logfile:
             with open(self.logfile, "a") as f:
                 f.write("%s\n" % msg)
 
-    def _internal_run(self, cmd):
-        # We need this for a proper PATH
-        cmd = ". /etc/profile; " + cmd
-        command = self.ssh + [self.ip, cmd]
+    def _internal_run(self, command, timeout=None, ignore_status = True):
         self.log("[Running]$ %s" % " ".join(command))
-        self._starttime = time.time()
-        # ssh hangs without os.setsid
-        proc = subprocess.Popen(command, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
-        return proc
 
-    def run(self, cmd, timeout=None):
-        """Run cmd and get it's return code and output.
-        Let it run for timeout seconds and then terminate/kill it,
-        if time is 0 will let cmd run until it finishes.
-        Time can be passed to here or can be set per class instance."""
+        proc = SSHProcess()
+        status, output = proc.run(command, timeout)
 
-        if self.ip:
-            sshconn = self._internal_run(cmd)
-        else:
-            raise Exception("Remote IP hasn't been set, I can't run ssh without one.")
+        self.log("%s" % output)
+        self.log("[Command returned '%d' after %.2f seconds]" % (status, time.time() - proc.starttime))
 
-        # run the command forever
+        if status and not ignore_status:
+            raise AssertionError("Command '%s' returned non-zero exit status %d:\n%s" % (command, status, output))
+
+        return (status, output)
+
+    def run(self, command, timeout=None):
+        """
+        command - ssh command to run
+        timeout=<val> - kill command if there is no output after <val> seconds
+        timeout=None - kill command if there is no output after a default value seconds
+        timeout=0 - no timeout, let command run until it returns
+        """
+
+        # We need to source /etc/profile for a proper PATH on the target
+        command = self.ssh + [self.ip, ' . /etc/profile; ' + command]
+
+        if timeout is None:
+            return self._internal_run(command, self.defaulttimeout, self.ignore_status)
         if timeout == 0:
-            output = sshconn.communicate()[0]
-        else:
-            # use the default timeout
-            if timeout is None:
-                tdelta = self.timeout
-            # use the specified timeout
-            else:
-                tdelta = timeout
-            endtime = self._starttime + tdelta
-            output = ''
-            eof = False
-            while time.time() < endtime and not eof:
-                if select.select([sshconn.stdout], [], [], 5)[0] != []:
-                    data = os.read(sshconn.stdout.fileno(), 1024)
-                    if not data:
-                        sshconn.stdout.close()
-                        eof = True
-                    else:
-                        output += data
-                        endtime = time.time() + tdelta
-
-            # process hasn't returned yet
-            if not eof:
-                sshconn.terminate()
-                time.sleep(3)
-                try:
-                    sshconn.kill()
-                except OSError:
-                    pass
-                output += "\n[!!! SSH command killed - no output for %d seconds. Total running time: %d seconds." % (tdelta, time.time() - self._starttime)
-
-        self._ret = sshconn.wait()
-        # strip the last LF so we can test the output
-        self._out = output.rstrip()
-        self.log("%s" % self._out)
-        self.log("[SSH command returned after %d seconds]: %s" % (time.time() - self._starttime, self._ret))
-        return (self._ret, self._out)
-
-    def _internal_scp(self, cmd):
-        cmd = ['scp'] + self.ssh_options + cmd
-        self.log("[Running SCP]$ %s" % " ".join(cmd))
-        self._starttime = time.time()
-        scpconn = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
-        out = scpconn.communicate()[0]
-        ret = scpconn.poll()
-        self.log("%s" % out)
-        self.log("[SCP command returned after %d seconds]: %s" % (time.time() - self._starttime, ret))
-        if ret != 0:
-            # we raise an exception so that tests fail in setUp and setUpClass without a need for an assert
-            raise Exception("Error running %s, output: %s" % ( " ".join(cmd), out))
-        return (ret, out)
+            return self._internal_run(command, None, self.ignore_status)
+        return self._internal_run(command, timeout, self.ignore_status)
 
     def copy_to(self, localpath, remotepath):
-        actualcmd = [localpath, 'root@%s:%s' % (self.ip, remotepath)]
-        return self._internal_scp(actualcmd)
+        command = self.scp + [localpath, '%s@%s:%s' % (self.user, self.ip, remotepath)]
+        return self._internal_run(command, ignore_status=False)
 
     def copy_from(self, remotepath, localpath):
-        actualcmd = ['root@%s:%s' % (self.ip, remotepath), localpath]
-        return self._internal_scp(actualcmd)
+        command = self.scp + ['%s@%s:%s' % (self.user, self.ip, remotepath), localpath]
+        return self._internal_run(command, ignore_status=False)
