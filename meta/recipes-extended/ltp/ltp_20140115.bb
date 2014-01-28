@@ -43,7 +43,7 @@ do_install(){
     # Copy POSIX test suite into ${D}/opt/ltp/testcases by manual
     cp -r testcases/open_posix_testsuite ${D}/opt/ltp/testcases
 
-    # We need to remove all scripts which depend on /usr/bin/expect, since expect is not supported in poky
+    # We need to remove all scripts which depend on /usr/bin/expect, since expect is not supported in oe-core
     # We will add expect for enhancement in future
     find ${D} -type f -print | xargs grep "\!.*\/usr\/bin\/expect" | awk -F":" '{print $1}' | xargs rm -f
 }
