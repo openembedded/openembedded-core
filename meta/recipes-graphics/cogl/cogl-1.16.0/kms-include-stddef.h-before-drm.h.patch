@@ -1,0 +1,33 @@
+Upstream-Status: Submitted [cogl@lists.freedesktop.org]
+
+From 5e4f4689308732a0570a1631169247157c59f064 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@saftware.de>
+Date: Tue, 28 Jan 2014 18:36:04 +0100
+Subject: [PATCH] kms: include stddef.h before drm.h
+
+Not doing so leads to the following error, if stddef.h is not included
+indirectly through EGL headers:
+
+| libdrm/drm.h:132:2: error: unknown type name 'size_t'
+|   size_t name_len;   /**< Length of name buffer */
+
+Signed-off-by: Andreas Oberritter <obi@saftware.de>
+---
+ cogl/winsys/cogl-winsys-egl-kms.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/cogl/winsys/cogl-winsys-egl-kms.c b/cogl/winsys/cogl-winsys-egl-kms.c
+index f7c9cfb..144ad9b 100644
+--- a/cogl/winsys/cogl-winsys-egl-kms.c
++++ b/cogl/winsys/cogl-winsys-egl-kms.c
+@@ -40,6 +40,7 @@
+ 
+ #include <EGL/egl.h>
+ #include <EGL/eglext.h>
++#include <stddef.h>
+ #include <drm.h>
+ #include <xf86drm.h>
+ #include <xf86drmMode.h>
+-- 
+1.8.3.2
+
