@@ -1397,6 +1397,9 @@ python package_do_shlibs() {
             if m:
                 if m.group(1) not in needed[pkg]:
                     needed[pkg].append(m.group(1))
+                if m.group(1) not in needed_from:
+                    needed_from[m.group(1)] = []
+                needed_from[m.group(1)].append(file)
             m = re.match("\s+SONAME\s+([^\s]*)", l)
             if m:
                 this_soname = m.group(1)
@@ -1469,6 +1472,10 @@ python package_do_shlibs() {
                                 needed[pkg] = []
                             if name and name not in needed[pkg]:
                                 needed[pkg].append(name)
+                            if name not in needed_from:
+                                needed_from[name] = []
+                            if lafile and lafile not in needed_from[name]:
+                                needed_from[name].append(lafile)
                                 #bb.note("Adding %s for %s" % (name, pkg))
 
     if d.getVar('PACKAGE_SNAP_LIB_SYMLINKS', True) == "1":
@@ -1482,6 +1489,7 @@ python package_do_shlibs() {
         use_ldconfig = False
 
     needed = {}
+    needed_from = {}
     shlib_provider = {}
     read_shlib_providers()
 
@@ -1568,7 +1576,7 @@ python package_do_shlibs() {
             if n in shlib_provider.keys():
                 (dep_pkg, ver_needed) = shlib_provider[n]
 
-                bb.debug(2, '%s: Dependency %s requires package %s' % (pkg, n, dep_pkg))
+                bb.debug(2, '%s: Dependency %s requires package %s (used by files: %s)' % (pkg, n, dep_pkg, needed_from[n]))
 
                 if dep_pkg == pkg:
                     continue
@@ -1580,7 +1588,7 @@ python package_do_shlibs() {
                 if not dep in deps:
                     deps.append(dep)
             else:
-                bb.note("Couldn't find shared library provider for %s" % n)
+                bb.note("Couldn't find shared library provider for %s, used by files: %s" % (n, needed_from[n]))
 
         deps_file = os.path.join(pkgdest, pkg + ".shlibdeps")
         if os.path.exists(deps_file):
