@@ -1,0 +1,15 @@
+Get rid of the hardcoded configure call preventing cross-compilation
+
+Upstream-Status: Pending
+Signed-off-by: Fathi Boudra <fathi.boudra@linaro.org>
+
+--- a/utils/Makefile
++++ b/utils/Makefile
+@@ -29,7 +29,6 @@ FILTER_OUT_DIRS		:= $(FFSBDIR)
+ FFSB			:= $(FFSBDIR)/ffsb
+ 
+ $(FFSB): $(FFSBDIR)
+-	cd $^; ./configure
+ 	$(MAKE) -C $^ -f "$(abs_srcdir)/$^/Makefile" all
+ 	cp $(FFSBDIR)/ffsb ffsb
+ 

@@ -25,6 +25,7 @@ SRCREV = "c8b3e28097e7d3208df9daceaf92c25eae87ebf0"
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
     file://0001-Rename-runtests_noltp.sh-script-so-have-unique-name.patch \
     file://regen-makefile.patch \
+    file://ffsb-remove-hardcoded-configure.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -35,6 +36,12 @@ TARGET_CC_ARCH += "${LDFLAGS}"
 
 export prefix = "/opt/ltp"
 export exec_prefix = "/opt/ltp"
+
+# ltp doesn't regenerate ffsb-6.0-rc2 configure and hardcode configure call.
+# we explicitly force regeneration of that directory and pass configure options.
+do_configure_prepend() {
+    (cd utils/ffsb-6.0-rc2; autoreconf -fvi; ./configure ${CONFIGUREOPTS})
+}
 
 do_install(){
     install -d ${D}/opt/ltp/
