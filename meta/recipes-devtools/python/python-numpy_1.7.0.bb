@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=f87832d854acbade6e9f5c601c8b30b1"
 PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/numpy/numpy-${PV}.tar.gz \
+           file://no-host-paths.patch \
            ${CONFIGFILESURI} "
 
 CONFIGFILESURI ?= ""
