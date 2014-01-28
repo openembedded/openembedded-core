@@ -251,7 +251,9 @@ class RpmPM(PackageManager):
         for arch in feed_archs:
             arch = arch.replace('-', '_')
             for p in self.fullpkglist:
-                if pkg in p and '@' + arch in p:
+                regex_match = r"^%s-[^-]*-[^-]*@%s$" % \
+                    (re.escape(pkg), re.escape(arch))
+                if re.match(regex_match, p) is not None:
                     # First found is best match
                     # bb.note('%s -> %s' % (pkg, pkg + '@' + arch))
                     return pkg + '@' + arch
@@ -328,7 +330,7 @@ class RpmPM(PackageManager):
             platform_fd.write(platform + '\n')
             for pt in platform_extra:
                 channel_priority += 5
-                platform_fd.write(pt + '.*\n')
+                platform_fd.write(re.sub("-linux.*$", "-linux.*\n", pt))
 
         # Tell RPM that the "/" directory exist and is available
         bb.note("configuring RPM system provides")
@@ -512,9 +514,8 @@ class RpmPM(PackageManager):
             output = subprocess.check_output(cmd.split())
             bb.note(output)
         except subprocess.CalledProcessError as e:
-            if not attempt_only:
-                bb.note("Unable to install packages. Command %s "
-                        "returned %d" % (cmd, e.returncode))
+            bb.fatal("Unable to install packages. Command %s "
+                     "returned %d" % (cmd, e.returncode))
 
     '''
     Remove pkgs with smart, the pkg name is smart/rpm format
@@ -551,16 +552,14 @@ class RpmPM(PackageManager):
         self._invoke_smart('upgrade')
 
     def write_index(self):
-        arch_list = list()
+        arch_list = set()
         for mlib in self.ml_prefix_list:
             for arch in self.ml_prefix_list[mlib]:
                 if arch not in arch_list:
-                    arch_list.append(arch)
+                    arch_list.add(arch.replace('-', '_'))
 
-        sdk_pkg_archs = self.d.getVar('SDK_PACKAGE_ARCHS', True)
-        if sdk_pkg_archs is not None:
-            arch_list += [i.replace('-', '_') for i in sdk_pkg_archs.split()
-                          if i.replace('-', '_') not in arch_list]
+        sdk_pkg_archs = (self.d.getVar('SDK_PACKAGE_ARCHS', True) or "").replace('-', '_')
+        arch_list = arch_list.union(set(sdk_pkg_archs.split()))
 
         rpm_createrepo = bb.utils.which(os.getenv('PATH'), "createrepo")
         index_cmds = []
@@ -730,7 +729,8 @@ class RpmPM(PackageManager):
         return
 
     def save_rpmpostinst(self, pkg):
-        mlibs = self.d.getVar('MULTILIB_GLOBAL_VARIANTS').split()
+        mlibs = (self.d.getVar('MULTILIB_GLOBAL_VARIANTS') or "").split()
+
         new_pkg = pkg
         # Remove any multilib prefix from the package name
         for mlib in mlibs:
