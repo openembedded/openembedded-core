@@ -26,7 +26,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://regen-makefile.patch \
 "
 
-SRCREV = "a8c42db5f9314211811c36275a21f83902830dc5"
+SRCREV = "c8b3e28097e7d3208df9daceaf92c25eae87ebf0"
 S = "${WORKDIR}/git"
 
 export prefix = "/opt/ltp"
