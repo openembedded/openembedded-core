@@ -120,7 +120,7 @@ python do_package_qa_multilib() {
                 i = i[len('virtual/'):]
             if (not i.startswith('kernel-module')) and (not i.startswith(mlprefix)) and \
                 (not 'cross-canadian' in i) and (not i.startswith("nativesdk-")) and \
-                (not i.startswith("rtld")):
+                (not i.startswith("rtld")) and (not i.startswith('kernel-vmlinux')):
                 candidates.append(i)
         if len(candidates) > 0:
             bb.warn("Multilib QA Issue: %s package %s - suspicious values '%s' in %s" 
