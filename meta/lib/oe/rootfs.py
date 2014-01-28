@@ -165,7 +165,7 @@ class Rootfs(object):
             try:
                 subprocess.check_output(script_full)
             except subprocess.CalledProcessError as e:
-                bb.note("WARNING: intercept script '%s' failed with %d!" %
+                bb.warn("The postinstall intercept hook '%s' failed (exit code: %d)! See log for details!" %
                         (script, e.returncode))
 
                 with open(script_full) as intercept:
@@ -177,7 +177,7 @@ class Rootfs(object):
                             break
 
                     if registered_pkgs is not None:
-                        bb.note("The postinstalls for the following packages "
+                        bb.warn("The postinstalls for the following packages "
                                 "will be postponed for first boot: %s" %
                                 registered_pkgs)
 
