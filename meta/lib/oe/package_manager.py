@@ -1086,6 +1086,8 @@ class DpkgPM(PackageManager):
     def update(self):
         os.environ['APT_CONFIG'] = self.apt_conf_file
 
+        self.deploy_dir_lock()
+
         cmd = "%s update" % self.apt_get_cmd
 
         try:
@@ -1093,6 +1095,8 @@ class DpkgPM(PackageManager):
         except subprocess.CalledProcessError as e:
             bb.fatal("Unable to update the package index files. Command %s "
                      "returned %d" % (e.cmd, e.returncode))
+
+        self.deploy_dir_unlock()
 
     def install(self, pkgs, attempt_only=False):
         os.environ['APT_CONFIG'] = self.apt_conf_file
@@ -1154,6 +1158,8 @@ class DpkgPM(PackageManager):
         dpkg_scanpackages = bb.utils.which(os.getenv('PATH'), "dpkg-scanpackages")
         gzip = bb.utils.which(os.getenv('PATH'), "gzip")
 
+        self.deploy_dir_lock()
+
         index_cmds = []
         deb_dirs_found = False
         for arch in arch_list:
@@ -1177,6 +1183,8 @@ class DpkgPM(PackageManager):
         results = list(pool.imap(create_index, index_cmds))
         pool.close()
         pool.join()
+
+        self.deploy_dir_unlock()
 
         for result in results:
             if result is not None:
