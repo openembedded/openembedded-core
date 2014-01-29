@@ -94,11 +94,15 @@ python toaster_layerinfo_dumpdata() {
 
 def _toaster_load_pkgdatafile(dirpath, filepath):
     import json
+    import re
     pkgdata = {}
     with open(os.path.join(dirpath, filepath), "r") as fin:
         for line in fin:
             try:
                 kn, kv = line.strip().split(": ", 1)
+                m = re.match(r"^PKG_([^A-Z:]*)", kn)
+                if m:
+                    pkgdata['OPKGN'] = m.group(1)
                 kn = "_".join([x for x in kn.split("_") if x.isupper()])
                 pkgdata[kn] = kv.strip()
                 if kn == 'FILES_INFO':
