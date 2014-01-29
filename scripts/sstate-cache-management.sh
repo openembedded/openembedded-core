@@ -320,11 +320,11 @@ rm_by_stamps (){
   echo "Done"
 
   # Save all the state file list to a file
-  find $cache_dir -name 'sstate-*.tgz' | sort -u -o $cache_list
+  find $cache_dir -name 'sstate*.tgz' | sort -u -o $cache_list
 
   echo -n "Figuring out the files which will be removed ... "
   for i in $all_sums; do
-      grep ".*-${i}_.*" $cache_list >>$keep_list
+      grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:${i}_.*" $cache_list >>$keep_list
   done
   echo "Done"
 
@@ -332,7 +332,7 @@ rm_by_stamps (){
       sort -u $keep_list -o $keep_list
       to_del=`comm -1 -3 $keep_list $cache_list`
       gen_rmlist $rm_list "$to_del"
-      let total_deleted=(`cat $rm_list | wc -w`)
+      let total_deleted=`cat $rm_list | wc -w`
       if [ $total_deleted -gt 0 ]; then
           [ $debug -gt 0 ] && cat $rm_list
           read_confirm
