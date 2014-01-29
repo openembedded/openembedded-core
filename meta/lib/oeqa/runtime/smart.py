@@ -59,7 +59,7 @@ class SmartRepoTest(SmartTest):
     def test_smart_channel_add(self):
         image_pkgtype = self.tc.d.getVar('IMAGE_PKGTYPE', True)
         deploy_url = 'http://%s:%s/%s' %(self.target.server_ip, self.repo_server.port, image_pkgtype)
-        pkgarchs = self.tc.d.getVar('PACKAGE_ARCHS', True)
+        pkgarchs = self.tc.d.getVar('PACKAGE_ARCHS', True).replace("-","_").split()
         for arch in os.listdir('%s/%s' % (self.repo_server.root_dir, image_pkgtype)):
             if arch in pkgarchs:
                 self.smart('channel -y --add {a} type=rpm-md baseurl={u}/{a}'.format(a=arch, u=deploy_url))
