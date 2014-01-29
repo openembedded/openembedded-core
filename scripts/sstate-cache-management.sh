@@ -181,23 +181,26 @@ remove_duplicated () {
   # Add the qemu and native archs
   # Use the "_" to substitute "-", e.g., x86-64 to x86_64
   # Sort to remove the duplicated ones
-  all_archs=$(echo $all_archs $all_machines $(uname -m) \
+  # Add allarch
+  all_archs=$(echo allarch $all_archs $all_machines $(uname -m) \
           | sed -e 's/-/_/g' -e 's/ /\n/g' | sort -u)
   echo "Done"
 
   # Save all the sstate files in a file
   sstate_list=`mktemp` || exit 1
-  find $cache_dir -name 'sstate-*.tgz' >$sstate_list
+  find $cache_dir -name 'sstate:*:*:*:*:*:*:*.tgz' >$sstate_list
 
   echo -n "Figuring out the suffixes in the sstate cache dir ... "
-  sstate_suffixes="`sed 's/.*_\([^_]*\)\.tgz$/\1/g' $sstate_list | sort -u`"
+  sstate_suffixes="`sed 's%.*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^_]*_\([^:]*\)\.tgz$%\1%g' $sstate_list | sort -u`"
   echo "Done"
   echo "The following suffixes have been found in the cache dir:"
   echo $sstate_suffixes
 
   echo -n "Figuring out the archs in the sstate cache dir ... "
+  # Using this SSTATE_PKGSPEC definition it's 6th colon separated field
+  # SSTATE_PKGSPEC    = "sstate:${PN}:${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}:${PV}:${PR}:${SSTATE_PKGARCH}:${SSTATE_VERSION}:"
   for arch in $all_archs; do
-      grep -q "\-$arch-" $sstate_list
+      grep -q ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:$arch:[^:]*:[^:]*\.tgz$" $sstate_list
       [ $? -eq 0 ] && ava_archs="$ava_archs $arch"
   done
   echo "Done"
@@ -210,21 +213,20 @@ remove_duplicated () {
 
   for suffix in $sstate_suffixes; do
       # Save the file list to a file, some suffix's file may not exist
-      grep "sstate-.*_$suffix.tgz" $sstate_list >$list_suffix 2>/dev/null
+      grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix.tgz" $sstate_list >$list_suffix 2>/dev/null
       local deleted=0
-      echo -n "Figuring out the sstate-xxx_$suffix.tgz ... "
-      # There are at list 6 dashes (-) after arch, use this to avoid the
-      # greedy match of sed.
-      file_names=`for arch in $ava_archs; do
-          sed -ne 's#.*/\(sstate-.*\)-'"$arch"'-.*-.*-.*-.*-.*-.*#\1#p' $list_suffix
+      echo -n "Figuring out the sstate:xxx_$suffix.tgz ... "
+      # Uniq BPNs
+      file_names=`for arch in $ava_archs ""; do
+          sed -ne "s%.*/sstate:\([^:]*\):[^:]*:[^:]*:[^:]*:$arch:[^:]*:[^:]*\.tgz$%\1%p" $list_suffix
       done | sort -u`
 
       fn_tmp=`mktemp` || exit 1
-      rm_list="$remove_listdir/sstate-xxx_$suffix"
+      rm_list="$remove_listdir/sstate:xxx_$suffix"
       for fn in $file_names; do
-          [ -z "$verbose" ] || echo "Analyzing $fn-xxx_$suffix.tgz"
+          [ -z "$verbose" ] || echo "Analyzing sstate:$fn-xxx_$suffix.tgz"
           for arch in $ava_archs; do
-              grep -h "/$fn-$arch-" $list_suffix >$fn_tmp
+              grep -h ".*/sstate:$fn:[^:]*:[^:]*:[^:]*:$arch:[^:]*:[^:]*\.tgz$" $list_suffix >$fn_tmp
               if [ -s $fn_tmp ] ; then
                   [ $debug -gt 1 ] && echo "Available files for $fn-$arch- with suffix $suffix:" && cat $fn_tmp
                   # Use the modification time
@@ -259,6 +261,14 @@ remove_duplicated () {
       echo "($deleted files will be removed)"
       let total_deleted=$total_deleted+$deleted
   done
+  deleted=0
+  rm_old_list=$remove_listdir/sstate-old-filenames
+  find $cache_dir -name 'sstate-*.tgz' >$rm_old_list
+  [ ! -s "$rm_old_list" ] || deleted=`cat $rm_old_list | wc -l`
+  [ -s "$rm_old_list" -a $debug -gt 0 ] && cat $rm_old_list
+  echo "($deleted files with old sstate-* filenames will be removed)"
+  let total_deleted=$total_deleted+$deleted
+
   rm -f $list_suffix
   rm -f $sstate_list
   if [ $total_deleted -gt 0 ]; then
