@@ -95,7 +95,7 @@ do_nothing () {
 
 # Read the input "y"
 read_confirm () {
-  echo -n "$total_deleted files will be removed! "
+  echo -n "$total_deleted from $total_files files will be removed! "
   if [ "$confirm" != "y" ]; then
       echo -n "Do you want to continue (y/n)? "
       while read confirm; do
@@ -186,6 +186,8 @@ remove_duplicated () {
           | sed -e 's/-/_/g' -e 's/ /\n/g' | sort -u)
   echo "Done"
 
+  # Total number of files including sstate-, sigdata and .done files
+  total_files=`find $cache_dir -name 'sstate*' | wc -l`
   # Save all the sstate files in a file
   sstate_list=`mktemp` || exit 1
   find $cache_dir -name 'sstate:*:*:*:*:*:*:*.tgz' >$sstate_list
@@ -212,6 +214,8 @@ remove_duplicated () {
   local remove_listdir=`mktemp -d` || exit 1
 
   for suffix in $sstate_suffixes; do
+      # Total number of files including sigdata and .done files
+      total_files_suffix=`grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix.*" $sstate_list | wc -l 2>/dev/null`
       # Save the file list to a file, some suffix's file may not exist
       grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix.tgz" $sstate_list >$list_suffix 2>/dev/null
       local deleted=0
@@ -258,7 +262,7 @@ remove_duplicated () {
       done
       [ ! -s "$rm_list" ] || deleted=`cat $rm_list | wc -l`
       [ -s "$rm_list" -a $debug -gt 0 ] && cat $rm_list
-      echo "($deleted files will be removed)"
+      echo "($deleted from $total_files_suffix files for $suffix suffix will be removed)"
       let total_deleted=$total_deleted+$deleted
   done
   deleted=0
@@ -319,6 +323,8 @@ rm_by_stamps (){
   done
   echo "Done"
 
+  # Total number of files including sstate-, sigdata and .done files
+  total_files=`find $cache_dir -name 'sstate*' | wc -l`
   # Save all the state file list to a file
   find $cache_dir -name 'sstate*.tgz' | sort -u -o $cache_list
 
