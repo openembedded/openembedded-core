@@ -320,7 +320,7 @@ rm_by_stamps (){
   local all_sums
 
   suffixes="populate_sysroot populate_lic package_write_ipk \
-            package_write_rpm package_write_deb package deploy"
+            package_write_rpm package_write_deb package packagedata deploy"
 
   # Figure out all the md5sums in the stamps dir.
   echo -n "Figuring out all the md5sums in stamps dir ... "
