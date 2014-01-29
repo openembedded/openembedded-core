@@ -10,7 +10,6 @@ class SudokuTest(oeRuntimeTest):
 
     @classmethod
     def setUpClass(self):
-        self.restartTarget("-m 512")
         self.project = TargetBuildProject(oeRuntimeTest.tc.target,
                         "http://downloads.sourceforge.net/project/sudoku-savant/sudoku-savant/sudoku-savant-1.3/sudoku-savant-1.3.tar.bz2")
         self.project.download_archive()
@@ -26,4 +25,3 @@ class SudokuTest(oeRuntimeTest):
     @classmethod
     def tearDownClass(self):
         self.project.clean()
-        self.restartTarget()

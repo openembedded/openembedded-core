@@ -10,7 +10,6 @@ class BuildCvsTest(oeRuntimeTest):
 
     @classmethod
     def setUpClass(self):
-        self.restartTarget("-m 512")
         self.project = TargetBuildProject(oeRuntimeTest.tc.target,
                         "http://ftp.gnu.org/non-gnu/cvs/source/feature/1.12.13/cvs-1.12.13.tar.bz2")
         self.project.download_archive()
@@ -29,4 +28,3 @@ class BuildCvsTest(oeRuntimeTest):
     @classmethod
     def tearDownClass(self):
         self.project.clean()
-        self.restartTarget()

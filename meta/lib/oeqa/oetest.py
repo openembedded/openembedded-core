@@ -83,10 +83,6 @@ class oeRuntimeTest(oeTest):
         self.target = oeRuntimeTest.tc.target
         super(oeRuntimeTest, self).__init__(methodName)
 
-    @classmethod
-    def restartTarget(self,params=None):
-        oeRuntimeTest.tc.target.restart(params)
-
 
 def getmodule(pos=2):
     # stack returns a list of tuples containg frame information

@@ -10,7 +10,6 @@ class BuildIptablesTest(oeRuntimeTest):
 
     @classmethod
     def setUpClass(self):
-        self.restartTarget("-m 512")
         self.project = TargetBuildProject(oeRuntimeTest.tc.target,
                         "http://netfilter.org/projects/iptables/files/iptables-1.4.13.tar.bz2")
         self.project.download_archive()
@@ -29,4 +28,3 @@ class BuildIptablesTest(oeRuntimeTest):
     @classmethod
     def tearDownClass(self):
         self.project.clean()
-        self.restartTarget()
