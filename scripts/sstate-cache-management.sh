@@ -37,13 +37,19 @@ Options:
         Specify sstate cache directory, will use the environment
         variable SSTATE_CACHE_DIR if it is not specified.
 
+  --extra-archs=<arch1>,<arch2>...<archn>
+        Specify list of architectures which should be tested, this list
+        will be extended with native arch, allarch and empty arch. The
+        script won't be trying to generate list of available archs from
+        AVAILTUNES in tune files.
+
   --extra-layer=<layer1>,<layer2>...<layern>
         Specify the layer which will be used for searching the archs,
         it will search the meta and meta-* layers in the top dir by
         default, and will search meta, meta-*, <layer1>, <layer2>,
         ...<layern> when specified. Use "," as the separator.
 
-        This is useless for --stamps-dir.
+        This is useless for --stamps-dir or when --extra-archs is used.
 
   -d, --remove-duplicated
         Remove the duplicated sstate cache files of one package, only
@@ -170,20 +176,23 @@ remove_duplicated () {
   local fn_tmp
   local list_suffix=`mktemp` || exit 1
 
-  # Find out the archs in all the layers
-  echo -n "Figuring out the archs in the layers ... "
-  oe_core_dir=$(dirname $(dirname $(readlink -e $0)))
-  topdir=$(dirname $oe_core_dir)
-  tunedirs="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/include' 2>/dev/null`"
-  [ -n "$tunedirs" ] || echo_error "Can't find the tune directory"
-  all_machines="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/*' -name '*.conf' 2>/dev/null | sed -e 's/.*\///' -e 's/.conf$//'`"
-  all_archs=`grep -r -h "^AVAILTUNES .*=" $tunedirs | sed -e 's/.*=//' -e 's/\"//g'`
-  # Add the qemu and native archs
-  # Use the "_" to substitute "-", e.g., x86-64 to x86_64
+  if [ -z "$extra_archs" ] ; then
+    # Find out the archs in all the layers
+    echo -n "Figuring out the archs in the layers ... "
+    oe_core_dir=$(dirname $(dirname $(readlink -e $0)))
+    topdir=$(dirname $oe_core_dir)
+    tunedirs="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/include' 2>/dev/null`"
+    [ -n "$tunedirs" ] || echo_error "Can't find the tune directory"
+    all_machines="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/*' -name '*.conf' 2>/dev/null | sed -e 's/.*\///' -e 's/.conf$//'`"
+    all_archs=`grep -r -h "^AVAILTUNES .*=" $tunedirs | sed -e 's/.*=//' -e 's/\"//g'`
+  fi
+
+  # Use the "_" to substitute "-", e.g., x86-64 to x86_64, but not for extra_archs which can be something like cortexa9t2-vfp-neon
   # Sort to remove the duplicated ones
-  # Add allarch
-  all_archs=$(echo allarch $all_archs $all_machines $(uname -m) \
-          | sed -e 's/-/_/g' -e 's/ /\n/g' | sort -u)
+  # Add allarch and builder arch (native)
+  builder_arch=$(uname -m)
+  all_archs="$(echo allarch $all_archs $all_machines $builder_arch \
+          | sed -e 's/-/_/g' -e 's/ /\n/g' | sort -u) $extra_archs"
   echo "Done"
 
   # Total number of files including sstate-, sigdata and .done files
@@ -204,6 +213,9 @@ remove_duplicated () {
   for arch in $all_archs; do
       grep -q ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:$arch:[^:]*:[^:]*\.tgz$" $sstate_list
       [ $? -eq 0 ] && ava_archs="$ava_archs $arch"
+      # ${builder_arch}_$arch used by toolchain sstate
+      grep -q ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:${builder_arch}_$arch:[^:]*:[^:]*\.tgz$" $sstate_list
+      [ $? -eq 0 ] && ava_archs="$ava_archs ${builder_arch}_$arch"
   done
   echo "Done"
   echo "The following archs have been found in the cache dir:"
@@ -229,7 +241,7 @@ remove_duplicated () {
       rm_list="$remove_listdir/sstate:xxx_$suffix"
       for fn in $file_names; do
           [ -z "$verbose" ] || echo "Analyzing sstate:$fn-xxx_$suffix.tgz"
-          for arch in $ava_archs; do
+          for arch in $ava_archs ""; do
               grep -h ".*/sstate:$fn:[^:]*:[^:]*:[^:]*:$arch:[^:]*:[^:]*\.tgz$" $list_suffix >$fn_tmp
               if [ -s $fn_tmp ] ; then
                   [ $debug -gt 1 ] && echo "Available files for $fn-$arch- with suffix $suffix:" && cat $fn_tmp
@@ -384,9 +396,14 @@ while [ -n "$1" ]; do
       fsym="y"
       shift
         ;;
+    --extra-archs=*)
+      extra_archs=`echo $1 | sed -e 's#^--extra-archs=##' -e 's#,# #g'`
+      [ -n "$extra_archs" ] || echo_error "Invalid extra arch parameter"
+      shift
+        ;;
     --extra-layer=*)
       extra_layers=`echo $1 | sed -e 's#^--extra-layer=##' -e 's#,# #g'`
-      [ -n "$extra_layers" ] || echo_error "Invalid extra layer $i"
+      [ -n "$extra_layers" ] || echo_error "Invalid extra layer parameter"
       for i in $extra_layers; do
           l=`readlink -e $i`
           if [ -d "$l" ]; then
