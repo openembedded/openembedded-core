@@ -10,7 +10,7 @@ exports.y:350: warning: large integer implicitly truncated to unsigned type
 
 Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 
-Upstream-Status: Pending
+Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
 
 ---
  Config/exports.l |    3 +++

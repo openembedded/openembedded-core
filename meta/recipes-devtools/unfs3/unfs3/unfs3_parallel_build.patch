@@ -4,7 +4,7 @@ If building with make -j2 the lib.a will not get built in time.
 
 Jason Wessel <jason.wessel@windriver.com>
 
-Upstream-Status: Pending
+Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
 
 ---
  Config/Makefile.in |    2 ++

@@ -3,11 +3,8 @@ SECTION = "console/network"
 LICENSE = "unfs3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=9475885294e17c0cc0067820d042792e"
 
-RDEPENDS_${PN} = "pseudo"
-RDEPENDS_${PN}_class-native = "pseudo-native"
-RDEPENDS_${PN}_class-nativesdk = "pseudo-nativesdk"
-DEPENDS = "flex-native bison-native"
-DEPENDS_class-nativesdk += "flex-nativesdk"
+DEPENDS = "flex-native bison-native flex"
+DEPENDS_append_class-nativesdk += "flex-nativesdk"
 
 SRC_URI[md5sum] = "3687acc4ee992e536472365dd99712a7"
 SRC_URI[sha256sum] = "274b43ada9c6eea1da26eb7010d72889c5278984ba0b50dff4e093057d4d64f8"
@@ -32,13 +29,3 @@ inherit autotools
 # will walk entire file systems and this is a real problem
 # if you have 2 TB of files to walk in your file system
 CACHED_CONFIGUREVARS = "ac_cv_header_mntent_h=no ac_cv_header_sys_mnttab_h=no"
-
-# This recipe is intended for -native and -nativesdk builds only,
-# not target installs:
-python __anonymous () {
-    import re
-
-    pn = d.getVar("PN", True)
-    if not pn.endswith('-native') and not pn.startswith('nativesdk-'):
-        raise bb.parse.SkipPackage("unfs3 is intended for native/nativesdk builds only")
-}

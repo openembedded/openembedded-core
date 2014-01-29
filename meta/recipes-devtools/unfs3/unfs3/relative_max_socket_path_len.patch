@@ -12,7 +12,7 @@ heavy use of named sockets with long names.
 
 Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 
-Upstream-Status: Pending
+Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
 
 ---
  nfs.c |   29 +++++++++++++++++++++++++++--

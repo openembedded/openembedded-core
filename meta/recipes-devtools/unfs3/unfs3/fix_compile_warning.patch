@@ -5,7 +5,7 @@ If this one does fail something is very, very wrong.
 
 Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 
-Upstream-Status: Pending
+Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
 
 ---
  daemon.c |    3 ++-

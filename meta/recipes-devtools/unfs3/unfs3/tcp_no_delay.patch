@@ -2,7 +2,7 @@ daemon.c: Add option for tcp no delay
 
 Allow the NFS tcp sockets to conditionally use TCP_NODELAY
 
-Upstream-Status: Pending
+Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
 
 ---
  daemon.c |    9 ++++++++-

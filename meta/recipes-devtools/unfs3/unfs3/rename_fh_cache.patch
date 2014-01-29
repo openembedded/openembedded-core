@@ -13,7 +13,7 @@ location of the inode, when it moves directories.
 
 Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 
-Upstream-Status: Pending
+Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
 
 ---
  fh_cache.c |   12 ++++++++++++
