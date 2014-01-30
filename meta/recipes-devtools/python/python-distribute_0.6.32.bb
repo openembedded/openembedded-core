@@ -12,6 +12,9 @@ DEPENDS_virtclass-native += "python-native"
 SRC_URI = " \
   http://pypi.python.org/packages/source/d/distribute/${SRCNAME}-${PV}.tar.gz \
 "
+SRC_URI[md5sum] = "acb7a2da81e3612bfb1608abe4f0e568"
+SRC_URI[sha256sum] = "8970cd1e148b5d1fea9430584aea66c45ea22d80e0933393ec49ebc388f718df"
+
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 #  http://python-distribute.org/distribute_setup.py 
@@ -41,7 +44,6 @@ RDEPENDS_${PN} = "\
   python-compression \
 "
 
-SRC_URI[md5sum] = "acb7a2da81e3612bfb1608abe4f0e568"
-SRC_URI[sha256sum] = "8970cd1e148b5d1fea9430584aea66c45ea22d80e0933393ec49ebc388f718df"
+RPROVIDES_${PN} += "python-setuptools"
 
 BBCLASSEXTEND = "native"

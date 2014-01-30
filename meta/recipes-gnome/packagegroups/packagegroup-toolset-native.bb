@@ -185,7 +185,7 @@ DEPENDS = "\
     python-pygobject-native \
     python-pyrex-native \
     python-scons-native \
-    python-setuptools-native \
+    python-distribute-native \
     python-smartpm-native \
     qemu-helper-native \
     qemu-native \
