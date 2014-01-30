@@ -807,6 +807,34 @@ class OpkgPM(PackageManager):
 
         self._create_config()
 
+    """
+    This function will change a package's status in /var/lib/opkg/status file.
+    If 'packages' is None then the new_status will be applied to all
+    packages
+    """
+    def mark_packages(self, status_tag, packages=None):
+        status_file = os.path.join(self.opkg_dir, "status")
+
+        with open(status_file, "r") as sf:
+            with open(status_file + ".tmp", "w+") as tmp_sf:
+                if packages is None:
+                    tmp_sf.write(re.sub(r"Package: (.*?)\n((?:[^\n]+\n)*?)Status: (.*)(?:unpacked|installed)",
+                                        r"Package: \1\n\2Status: \3%s" % status_tag,
+                                        sf.read()))
+                else:
+                    if type(packages).__name__ != "list":
+                        raise TypeError("'packages' should be a list object")
+
+                    status = sf.read()
+                    for pkg in packages:
+                        status = re.sub(r"Package: %s\n((?:[^\n]+\n)*?)Status: (.*)(?:unpacked|installed)" % pkg,
+                                        r"Package: %s\n\1Status: \2%s" % (pkg, status_tag),
+                                        status)
+
+                    tmp_sf.write(status)
+
+        os.rename(status_file + ".tmp", status_file)
+
     def _create_config(self):
         with open(self.config_file, "w+") as config_file:
             priority = 1
@@ -922,7 +950,7 @@ class OpkgPM(PackageManager):
         open(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"), "w").close()
 
     def remove_packaging_data(self):
-        bb.utils.remove(self.opkg_dir)
+        bb.utils.remove(self.opkg_dir, True)
         # create the directory back, it's needed by PM lock
         bb.utils.mkdirhier(self.opkg_dir)
 
@@ -968,17 +996,17 @@ class OpkgPM(PackageManager):
 
         status_file = os.path.join(self.opkg_dir, "status")
 
-        cmd = [self.opkg_cmd, self.opkg_args, "info"]
+        cmd = "%s %s info " % (self.opkg_cmd, self.opkg_args)
 
         with open(status_file, "w+") as status:
             for pkg in bad_recommendations.split():
-                pkg_info = cmd + [pkg]
+                pkg_info = cmd + pkg
 
                 try:
-                    output = subprocess.check_output(pkg_info).strip()
+                    output = subprocess.check_output(pkg_info.split()).strip()
                 except subprocess.CalledProcessError as e:
                     bb.fatal("Cannot get package info. Command %s "
-                             "returned %d" % (' '.join(pkg_info), e.returncode))
+                             "returned %d" % (pkg_info, e.returncode))
 
                 if output == "":
                     bb.note("Requested ignored recommendation $i is "
@@ -1021,8 +1049,8 @@ class DpkgPM(PackageManager):
         with open(status_file, "r") as sf:
             with open(status_file + ".tmp", "w+") as tmp_sf:
                 if packages is None:
-                    tmp_sf.write(re.sub(r"Package: (.*)\nStatus: (.*)(unpacked|installed)",
-                                        r"Package: \1\nStatus: \2%s" % status_tag,
+                    tmp_sf.write(re.sub(r"Package: (.*?)\n((?:[^\n]+\n)*?)Status: (.*)(?:unpacked|installed)",
+                                        r"Package: \1\n\2Status: \3%s" % status_tag,
                                         sf.read()))
                 else:
                     if type(packages).__name__ != "list":
@@ -1030,8 +1058,8 @@ class DpkgPM(PackageManager):
 
                     status = sf.read()
                     for pkg in packages:
-                        status = re.sub(r"Package: %s\nStatus: (.*)(unpacked|installed)" % pkg,
-                                        r"Package: %s\nStatus: \1%s" % (pkg, status_tag),
+                        status = re.sub(r"Package: %s\n((?:[^\n]+\n)*?)Status: (.*)(?:unpacked|installed)" % pkg,
+                                        r"Package: %s\n\1Status: \2%s" % (pkg, status_tag),
                                         status)
 
                     tmp_sf.write(status)
@@ -1244,8 +1272,10 @@ class DpkgPM(PackageManager):
 
         bb.utils.mkdirhier(os.path.join(target_dpkg_dir, "updates"))
 
-        open(os.path.join(target_dpkg_dir, "status"), "w+").close()
-        open(os.path.join(target_dpkg_dir, "available"), "w+").close()
+        if not os.path.exists(os.path.join(target_dpkg_dir, "status")):
+            open(os.path.join(target_dpkg_dir, "status"), "w+").close()
+        if not os.path.exists(os.path.join(target_dpkg_dir, "available")):
+            open(os.path.join(target_dpkg_dir, "available"), "w+").close()
 
     def remove_packaging_data(self):
         bb.utils.remove(os.path.join(self.target_rootfs,
@@ -1275,7 +1305,7 @@ class DpkgPM(PackageManager):
         elif format == "ver":
             cmd.append("-f=${Package} ${PackageArch} ${Version}\n")
         else:
-            cmd.append("-f=${Package}")
+            cmd.append("-f=${Package}\n")
 
         try:
             output = subprocess.check_output(cmd).strip()
