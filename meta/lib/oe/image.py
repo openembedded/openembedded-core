@@ -34,8 +34,8 @@ class Image(object):
                                           self.d.getVar('IMAGE_ROOTFS', True)])
         size_kb = int(output.split()[0])
         base_size = size_kb * overhead_factor
-        if base_size < rootfs_req_size:
-            base_size = rootfs_req_size + rootfs_extra_space
+        base_size = (base_size, rootfs_req_size)[base_size < rootfs_req_size] + \
+            rootfs_extra_space
 
         if base_size != int(base_size):
             base_size = int(base_size + 1)
