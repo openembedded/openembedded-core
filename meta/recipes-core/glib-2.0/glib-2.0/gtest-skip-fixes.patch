@@ -1,0 +1,197 @@
+Fix the handling of skipped tests so that it follows what automake does.
+
+Upstream-Status: Backport [https://bugzilla.gnome.org/show_bug.cgi?id=720263]
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+diff --git a/glib/gtestutils.c b/glib/gtestutils.c
+index bc7bbcf..feaafa3 100644
+--- a/glib/gtestutils.c
++++ b/glib/gtestutils.c
+@@ -607,9 +607,10 @@ static gchar      *test_run_name = "";
+ static GSList    **test_filename_free_list;
+ static guint       test_run_forks = 0;
+ static guint       test_run_count = 0;
++static guint       test_skipped_count = 0;
+ static GTestResult test_run_success = G_TEST_RUN_FAILURE;
+ static gchar      *test_run_msg = NULL;
+-static guint       test_skip_count = 0;
++static guint       test_startup_skip_count = 0;
+ static GTimer     *test_user_timer = NULL;
+ static double      test_user_stamp = 0;
+ static GSList     *test_paths = NULL;
+@@ -765,6 +766,8 @@ g_test_log (GTestLogType lbit,
+             g_print ("Bail out!\n");
+           abort();
+         }
++      if (largs[0] == G_TEST_RUN_SKIPPED)
++        test_skipped_count++;
+       break;
+     case G_TEST_LOG_MIN_RESULT:
+       if (test_tap_log)
+@@ -869,11 +872,11 @@ parse_args (gint    *argc_p,
+         {
+           gchar *equal = argv[i] + 16;
+           if (*equal == '=')
+-            test_skip_count = g_ascii_strtoull (equal + 1, NULL, 0);
++            test_startup_skip_count = g_ascii_strtoull (equal + 1, NULL, 0);
+           else if (i + 1 < argc)
+             {
+               argv[i++] = NULL;
+-              test_skip_count = g_ascii_strtoull (argv[i], NULL, 0);
++              test_startup_skip_count = g_ascii_strtoull (argv[i], NULL, 0);
+             }
+           argv[i] = NULL;
+         }
+@@ -1516,14 +1519,21 @@ g_test_get_root (void)
+  * g_test_run_suite() or g_test_run() may only be called once
+  * in a program.
+  *
+- * Returns: 0 on success
++ * Returns: 0 on success, 1 on failure (assuming it returns at all),
++ *   77 if all tests were skipped with g_test_skip().
+  *
+  * Since: 2.16
+  */
+ int
+ g_test_run (void)
+ {
+-  return g_test_run_suite (g_test_get_root());
++  if (g_test_run_suite (g_test_get_root()) != 0)
++    return 1;
++
++  if (test_run_count > 0 && test_run_count == test_skipped_count)
++    return 77;
++  else
++    return 0;
+ }
+ 
+ /**
+@@ -2063,7 +2073,7 @@ test_case_run (GTestCase *tc)
+         }
+     }
+ 
+-  if (++test_run_count <= test_skip_count)
++  if (++test_run_count <= test_startup_skip_count)
+     g_test_log (G_TEST_LOG_SKIP_CASE, test_run_name, NULL, 0, NULL);
+   else if (test_run_list)
+     {
+@@ -2117,7 +2127,8 @@ test_case_run (GTestCase *tc)
+   g_free (test_uri_base);
+   test_uri_base = old_base;
+ 
+-  return success == G_TEST_RUN_SUCCESS;
++  return (success == G_TEST_RUN_SUCCESS ||
++          success == G_TEST_RUN_SKIPPED);
+ }
+ 
+ static int
+diff --git a/glib/tests/testing.c b/glib/tests/testing.c
+index 20c2e79..1025f12 100644
+--- a/glib/tests/testing.c
++++ b/glib/tests/testing.c
+@@ -575,10 +575,93 @@ test_nonfatal (void)
+   g_test_trap_assert_stdout ("*The End*");
+ }
+ 
++static void
++test_skip (void)
++{
++  g_test_skip ("Skipped should count as passed, not failed");
++}
++
++static void
++test_pass (void)
++{
++}
++
++static const char *argv0;
++
++static void
++test_skip_all (void)
++{
++  GPtrArray *argv;
++  GError *error = NULL;
++  int status;
++
++  argv = g_ptr_array_new ();
++  g_ptr_array_add (argv, (char *) argv0);
++  g_ptr_array_add (argv, "--GTestSubprocess");
++  g_ptr_array_add (argv, "-p");
++  g_ptr_array_add (argv, "/misc/skip");
++  g_ptr_array_add (argv, NULL);
++
++  g_spawn_sync (NULL, (char **) argv->pdata, NULL,
++                G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL,
++                NULL, NULL, NULL, NULL, &status,
++                &error);
++  g_assert_no_error (error);
++
++  g_spawn_check_exit_status (status, &error);
++  g_assert_error (error, G_SPAWN_EXIT_ERROR, 77);
++  g_clear_error (&error);
++
++  g_ptr_array_set_size (argv, 0);
++  g_ptr_array_add (argv, (char *) argv0);
++  g_ptr_array_add (argv, "--GTestSubprocess");
++  g_ptr_array_add (argv, "-p");
++  g_ptr_array_add (argv, "/misc/skip");
++  g_ptr_array_add (argv, "-p");
++  g_ptr_array_add (argv, "/misc/skip-all/subprocess/skip1");
++  g_ptr_array_add (argv, "-p");
++  g_ptr_array_add (argv, "/misc/skip-all/subprocess/skip2");
++  g_ptr_array_add (argv, NULL);
++
++  g_spawn_sync (NULL, (char **) argv->pdata, NULL,
++                G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL,
++                NULL, NULL, NULL, NULL, &status,
++                &error);
++  g_assert_no_error (error);
++
++  g_spawn_check_exit_status (status, &error);
++  g_assert_error (error, G_SPAWN_EXIT_ERROR, 77);
++  g_clear_error (&error);
++
++  g_ptr_array_set_size (argv, 0);
++  g_ptr_array_add (argv, (char *) argv0);
++  g_ptr_array_add (argv, "--GTestSubprocess");
++  g_ptr_array_add (argv, "-p");
++  g_ptr_array_add (argv, "/misc/skip");
++  g_ptr_array_add (argv, "-p");
++  g_ptr_array_add (argv, "/misc/skip-all/subprocess/pass");
++  g_ptr_array_add (argv, "-p");
++  g_ptr_array_add (argv, "/misc/skip-all/subprocess/skip1");
++  g_ptr_array_add (argv, NULL);
++
++  g_spawn_sync (NULL, (char **) argv->pdata, NULL,
++                G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL,
++                NULL, NULL, NULL, NULL, &status,
++                &error);
++  g_assert_no_error (error);
++
++  g_spawn_check_exit_status (status, &error);
++  g_assert_no_error (error);
++
++  g_ptr_array_unref (argv);
++}
++
+ int
+ main (int   argc,
+       char *argv[])
+ {
++  argv0 = argv[0];
++
+   g_test_init (&argc, &argv, NULL);
+ 
+   g_test_add_func ("/random-generator/rand-1", test_rand1);
+@@ -633,5 +716,11 @@ main (int   argc,
+ 
+   g_test_add_func ("/misc/nonfatal", test_nonfatal);
+ 
++  g_test_add_func ("/misc/skip", test_skip);
++  g_test_add_func ("/misc/skip-all", test_skip_all);
++  g_test_add_func ("/misc/skip-all/subprocess/skip1", test_skip);
++  g_test_add_func ("/misc/skip-all/subprocess/skip2", test_skip);
++  g_test_add_func ("/misc/skip-all/subprocess/pass", test_pass);
++
+   return g_test_run();
+ }
