@@ -562,7 +562,7 @@ class OpkgRootfs(Rootfs):
     def _get_delayed_postinsts(self):
         pkg_list = []
         status_file = os.path.join(self.image_rootfs,
-                                   self.d.getVar('OPKGLIBDIR', True),
+                                   self.d.getVar('OPKGLIBDIR', True).strip('/'),
                                    "opkg", "status")
 
         with open(status_file) as status:
