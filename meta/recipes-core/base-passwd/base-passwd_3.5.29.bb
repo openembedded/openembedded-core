@@ -9,6 +9,7 @@ DEPENDS = "docbook-utils-native linuxdoc-tools-native"
 SRC_URI = "${DEBIAN_MIRROR}/main/b/base-passwd/base-passwd_${PV}.tar.gz \
            file://add_shutdown.patch \
            file://nobash.patch \
+           file://noshadow.patch \
            file://input.patch \
            file://disable-docs.patch \
           "
