@@ -11,7 +11,7 @@ import bb
 import traceback
 from oeqa.utils.sshcontrol import SSHControl
 from oeqa.utils.qemurunner import QemuRunner
-
+from oeqa.controllers.testtargetloader import TestTargetLoader
 
 def get_target_controller(d):
     testtarget = d.getVar("TEST_TARGET", True)
@@ -28,12 +28,13 @@ def get_target_controller(d):
         except AttributeError:
             # nope, perhaps a layer defined one
             try:
-                module = __import__("oeqa.utils.controllers", globals(), locals(), [testtarget])
-                controller = getattr(module, testtarget)
+                bbpath = d.getVar("BBPATH", True).split(':')
+                testtargetloader = TestTargetLoader()
+                controller = testtargetloader.get_controller_module(testtarget, bbpath)
             except ImportError as e:
-                bb.fatal("Failed to import oeqa.utils.controllers:\n%s" % traceback.format_exc())
-            except AttributeError:
-                bb.fatal("\"%s\" is not a valid value for TEST_TARGET" % testtarget)
+                bb.fatal("Failed to import {0} from available controller modules:\n{1}".format(testtarget,traceback.format_exc()))
+            except AttributeError as e:
+                bb.fatal("Invalid TEST_TARGET - " + str(e))
         return controller(d)
 
 
