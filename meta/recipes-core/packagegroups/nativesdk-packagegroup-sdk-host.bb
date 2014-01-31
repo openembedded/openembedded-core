@@ -23,6 +23,7 @@ RDEPENDS_${PN} = "\
     nativesdk-shadow \
     nativesdk-makedevs \
     nativesdk-smartpm \
+    nativesdk-postinst-intercept \
     "
 
 RDEPENDS_${PN}_darwin = "\
