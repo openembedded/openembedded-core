@@ -1,0 +1,23 @@
+Backport fix for PR target/58854
+
+2013-11-11  Ramana Radhakrishnan  <ramana.radhakrishnan@arm.com>
+
+       Backported from mainline
+        2013-10-30  Ramana Radhakrishnan  <ramana.radhakrishnan@arm.com>
+
+       PR target/58854
+       * config/arm/arm.c (arm_expand_epilogue_apcs_frame): Emit blockage
+
+
+Upstream-Status: Backport
+
+--- gcc-4_8-branch/gcc/config/arm/arm.c	2013/11/11 08:00:45	204664
++++ gcc-4_8-branch/gcc/config/arm/arm.c	2013/11/11 09:38:14	204665
+@@ -23555,6 +23555,7 @@
+   num_regs = bit_count (saved_regs_mask);
+   if ((offsets->outgoing_args != (1 + num_regs)) || cfun->calls_alloca)
+     {
++      emit_insn (gen_blockage ());
+       /* Unwind the stack to just below the saved registers.  */
+       emit_insn (gen_addsi3 (stack_pointer_rtx,
+                              hard_frame_pointer_rtx,
