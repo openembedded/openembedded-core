@@ -31,3 +31,5 @@ libtoolnativesdk_sysroot_preprocess () {
 	install -d ${SYSROOT_DESTDIR}${bindir_crossscripts}/
 	install -m 755 ${D}${bindir}/${HOST_SYS}-libtool ${SYSROOT_DESTDIR}${bindir_crossscripts}/${HOST_SYS}-libtool
 }
+
+export CONFIG_SHELL="/bin/bash"
