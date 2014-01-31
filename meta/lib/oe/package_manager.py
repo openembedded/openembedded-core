@@ -902,8 +902,6 @@ class OpkgPM(PackageManager):
                      "MULTILIB_ARCHS"]
 
         tmpdir = self.d.getVar('TMPDIR', True)
-        if os.path.exists(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN")):
-            return
 
         self.deploy_dir_lock()
 
@@ -946,8 +944,6 @@ class OpkgPM(PackageManager):
         for result in results:
             if result is not None:
                 bb.fatal(result)
-
-        open(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"), "w").close()
 
     def remove_packaging_data(self):
         bb.utils.remove(self.opkg_dir, True)
@@ -1173,8 +1169,6 @@ class DpkgPM(PackageManager):
 
     def write_index(self):
         tmpdir = self.d.getVar('TMPDIR', True)
-        if os.path.exists(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN")):
-            return
 
         pkg_archs = self.d.getVar('PACKAGE_ARCHS', True)
         if pkg_archs is not None:
@@ -1217,8 +1211,6 @@ class DpkgPM(PackageManager):
         for result in results:
             if result is not None:
                 bb.fatal(result)
-
-        open(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"), "w+").close()
 
     def _create_configs(self, archs, base_archs):
         base_archs = re.sub("_", "-", base_archs)
