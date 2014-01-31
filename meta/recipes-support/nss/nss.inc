@@ -37,6 +37,10 @@ do_compile_prepend_class-native() {
     export NSPR_LIB_DIR=${STAGING_LIBDIR_NATIVE}
 }
 
+do_compile_prepend_class-nativesdk() {
+    export LDFLAGS=""
+}
+
 do_compile() {
     export CROSS_COMPILE=1
     export NATIVE_CC="gcc"
@@ -71,6 +75,11 @@ do_compile() {
 
     make -C ./nss CCC="${CXX}" \
         OS_TEST=${OS_TEST} \
+}
+
+
+do_install_prepend_class-nativesdk() {
+    export LDFLAGS=""
 }
 
 do_install() {
@@ -193,4 +202,4 @@ FILES_${PN}-dbg = "\
     ${libdir}/.debug/* \
     "
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
