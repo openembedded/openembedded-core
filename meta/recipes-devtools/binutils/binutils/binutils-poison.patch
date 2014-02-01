@@ -52,10 +52,10 @@ Code Merged from Sourcery G++ binutils 2.19 - 4.4-277
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 
-Index: binutils-2.22.90/ld/config.in
+Index: binutils-2.24/ld/config.in
 ===================================================================
---- binutils-2.22.90.orig/ld/config.in	2012-05-17 08:13:21.000000000 -0700
-+++ binutils-2.22.90/ld/config.in	2012-08-07 23:09:34.834490113 -0700
+--- binutils-2.24.orig/ld/config.in	2013-12-15 11:46:17.000000000 -0800
++++ binutils-2.24/ld/config.in	2013-12-15 11:46:59.810435651 -0800
 @@ -11,6 +11,9 @@
     language is requested. */
  #undef ENABLE_NLS
@@ -66,11 +66,11 @@ Index: binutils-2.22.90/ld/config.in
  /* Additional extension a shared object might have. */
  #undef EXTRA_SHLIB_EXTENSION
  
-Index: binutils-2.22.90/ld/configure
+Index: binutils-2.24/ld/configure
 ===================================================================
---- binutils-2.22.90.orig/ld/configure	2012-08-07 23:08:50.000000000 -0700
-+++ binutils-2.22.90/ld/configure	2012-08-07 23:09:34.838490177 -0700
-@@ -776,6 +776,7 @@
+--- binutils-2.24.orig/ld/configure	2013-12-15 11:46:17.000000000 -0800
++++ binutils-2.24/ld/configure	2013-12-15 11:46:59.810435651 -0800
+@@ -777,6 +777,7 @@
  enable_targets
  enable_64_bit_bfd
  with_sysroot
@@ -78,7 +78,7 @@ Index: binutils-2.22.90/ld/configure
  enable_gold
  enable_got
  enable_werror
-@@ -1432,6 +1433,8 @@
+@@ -1433,6 +1434,8 @@
  			  (and sometimes confusing) to the casual installer
    --enable-targets        alternative target configurations
    --enable-64-bit-bfd     64-bit support (on hosts with narrower word sizes)
@@ -87,7 +87,7 @@ Index: binutils-2.22.90/ld/configure
    --enable-gold[=ARG]     build gold [ARG={default,yes,no}]
    --enable-got=<type>     GOT handling scheme (target, single, negative,
                            multigot)
-@@ -4344,7 +4347,18 @@
+@@ -4345,7 +4348,18 @@
  fi
  
  
@@ -106,11 +106,11 @@ Index: binutils-2.22.90/ld/configure
  
  # Check whether --enable-got was given.
  if test "${enable_got+set}" = set; then :
-Index: binutils-2.22.90/ld/configure.in
+Index: binutils-2.24/ld/configure.in
 ===================================================================
---- binutils-2.22.90.orig/ld/configure.in	2012-05-17 08:13:23.000000000 -0700
-+++ binutils-2.22.90/ld/configure.in	2012-08-07 23:09:34.838490177 -0700
-@@ -70,6 +70,16 @@
+--- binutils-2.24.orig/ld/configure.in	2013-12-15 11:46:17.000000000 -0800
++++ binutils-2.24/ld/configure.in	2013-12-15 11:46:59.810435651 -0800
+@@ -87,6 +87,16 @@
  AC_SUBST(TARGET_SYSTEM_ROOT)
  AC_SUBST(TARGET_SYSTEM_ROOT_DEFINE)
  
@@ -127,10 +127,10 @@ Index: binutils-2.22.90/ld/configure.in
  dnl Use --enable-gold to decide if this linker should be the default.
  dnl "install_as_default" is set to false if gold is the default linker.
  dnl "installed_linker" is the installed BFD linker name.
-Index: binutils-2.22.90/ld/ldfile.c
+Index: binutils-2.24/ld/ldfile.c
 ===================================================================
---- binutils-2.22.90.orig/ld/ldfile.c	2012-07-13 06:20:26.000000000 -0700
-+++ binutils-2.22.90/ld/ldfile.c	2012-08-07 23:30:35.166538044 -0700
+--- binutils-2.24.orig/ld/ldfile.c	2013-12-15 11:46:17.000000000 -0800
++++ binutils-2.24/ld/ldfile.c	2013-12-15 11:46:59.813768989 -0800
 @@ -116,6 +116,23 @@
      new_dirs->name = concat (ld_sysroot, name + 1, (const char *) NULL);
    else
@@ -155,11 +155,11 @@ Index: binutils-2.22.90/ld/ldfile.c
  }
  
  /* Try to open a BFD for a lang_input_statement.  */
-Index: binutils-2.22.90/ld/ld.h
+Index: binutils-2.24/ld/ld.h
 ===================================================================
---- binutils-2.22.90.orig/ld/ld.h	2012-07-09 23:50:55.000000000 -0700
-+++ binutils-2.22.90/ld/ld.h	2012-08-07 23:09:34.838490177 -0700
-@@ -203,6 +203,14 @@
+--- binutils-2.24.orig/ld/ld.h	2013-12-15 11:46:17.000000000 -0800
++++ binutils-2.24/ld/ld.h	2013-12-15 11:46:59.813768989 -0800
+@@ -180,6 +180,14 @@
    /* If TRUE we'll just print the default output on stdout.  */
    bfd_boolean print_output_format;
  
@@ -174,24 +174,24 @@ Index: binutils-2.22.90/ld/ld.h
    /* Big or little endian as set on command line.  */
    enum endian_enum endian;
  
-Index: binutils-2.22.90/ld/ldmain.c
+Index: binutils-2.24/ld/ldmain.c
 ===================================================================
---- binutils-2.22.90.orig/ld/ldmain.c	2012-07-13 06:20:26.000000000 -0700
-+++ binutils-2.22.90/ld/ldmain.c	2012-08-07 23:09:34.846490172 -0700
-@@ -265,6 +265,8 @@
+--- binutils-2.24.orig/ld/ldmain.c	2013-12-15 11:46:17.000000000 -0800
++++ binutils-2.24/ld/ldmain.c	2013-12-15 11:48:12.087101740 -0800
+@@ -266,6 +266,8 @@
+   command_line.warn_mismatch = TRUE;
    command_line.warn_search_mismatch = TRUE;
    command_line.check_section_addresses = -1;
-   command_line.disable_target_specific_optimizations = -1;
 +  command_line.poison_system_directories = TRUE;
 +  command_line.error_poison_system_directories = FALSE;
  
    /* We initialize DEMANGLING based on the environment variable
       COLLECT_NO_DEMANGLE.  The gcc collect2 program will demangle the
-Index: binutils-2.22.90/ld/ld.texinfo
+Index: binutils-2.24/ld/ld.texinfo
 ===================================================================
---- binutils-2.22.90.orig/ld/ld.texinfo	2012-07-09 23:50:55.000000000 -0700
-+++ binutils-2.22.90/ld/ld.texinfo	2012-08-07 23:09:34.850490143 -0700
-@@ -2147,6 +2147,18 @@
+--- binutils-2.24.orig/ld/ld.texinfo	2013-12-15 11:46:17.000000000 -0800
++++ binutils-2.24/ld/ld.texinfo	2013-12-15 11:46:59.813768989 -0800
+@@ -2175,6 +2175,18 @@
  
  Passing @code{none} for @var{style} disables the setting from any
  @code{--build-id} options earlier on the command line.
@@ -210,26 +210,26 @@ Index: binutils-2.22.90/ld/ld.texinfo
  @end table
  
  @c man end
-Index: binutils-2.22.90/ld/lexsup.c
+Index: binutils-2.24/ld/lexsup.c
 ===================================================================
---- binutils-2.22.90.orig/ld/lexsup.c	2012-07-13 06:20:26.000000000 -0700
-+++ binutils-2.22.90/ld/lexsup.c	2012-08-07 23:09:34.850490143 -0700
-@@ -496,6 +496,14 @@
-     TWO_DASHES },
-   { {"wrap", required_argument, NULL, OPTION_WRAP},
-     '\0', N_("SYMBOL"), N_("Use wrapper functions for SYMBOL"), TWO_DASHES },
+--- binutils-2.24.orig/ld/lexsup.c	2013-12-15 11:46:17.000000000 -0800
++++ binutils-2.24/ld/lexsup.c	2013-12-15 11:49:28.950434490 -0800
+@@ -507,6 +507,14 @@
+     OPTION_IGNORE_UNRESOLVED_SYMBOL},
+     '\0', N_("SYMBOL"),
+     N_("Unresolved SYMBOL will not cause an error or warning"), TWO_DASHES },
 +  { {"no-poison-system-directories", no_argument, NULL,
 +     OPTION_NO_POISON_SYSTEM_DIRECTORIES},
 +    '\0', NULL, N_("Do not warn for -L options using system directories"),
 +    TWO_DASHES },
 +  { {"error-poison-system-directories", no_argument, NULL,
-+     OPTION_ERROR_POISON_SYSTEM_DIRECTORIES},
++    +     OPTION_ERROR_POISON_SYSTEM_DIRECTORIES},
 +    '\0', NULL, N_("Give an error for -L options using system directories"),
 +    TWO_DASHES },
  };
  
  #define OPTION_COUNT ARRAY_SIZE (ld_options)
-@@ -1424,6 +1432,14 @@
+@@ -1442,6 +1450,14 @@
                einfo (_("%P%X: --hash-size needs a numeric argument\n"));
            }
            break;
@@ -244,16 +244,16 @@ Index: binutils-2.22.90/ld/lexsup.c
  	}
      }
  
-Index: binutils-2.22.90/ld/ldlex.h
+Index: binutils-2.24/ld/ldlex.h
 ===================================================================
---- binutils-2.22.90.orig/ld/ldlex.h	2012-05-26 04:13:19.000000000 -0700
-+++ binutils-2.22.90/ld/ldlex.h	2012-08-07 23:34:17.122546581 -0700
-@@ -135,6 +135,8 @@
- #endif /* ENABLE_PLUGINS */
+--- binutils-2.24.orig/ld/ldlex.h	2013-12-15 11:46:17.000000000 -0800
++++ binutils-2.24/ld/ldlex.h	2013-12-15 11:47:43.230435299 -0800
+@@ -138,6 +138,8 @@
    OPTION_DEFAULT_SCRIPT,
    OPTION_PRINT_OUTPUT_FORMAT,
+   OPTION_IGNORE_UNRESOLVED_SYMBOL,
 +  OPTION_NO_POISON_SYSTEM_DIRECTORIES,
-+  OPTION_ERROR_POISON_SYSTEM_DIRECTORIES
++  OPTION_ERROR_POISON_SYSTEM_DIRECTORIES,
  };
  
  /* The initial parser states.  */

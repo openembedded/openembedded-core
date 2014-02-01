@@ -5,10 +5,14 @@ DEPENDS += "flex bison zlib"
 
 EXTRA_OECONF += "--with-sysroot=/ \
                 --enable-install-libbfd \
+                --enable-install-libiberty \
                 --enable-shared \
                 "
 
-EXTRA_OECONF_class-native = "--enable-targets=all --enable-64-bit-bfd --enable-install-libbfd"
+EXTRA_OECONF_class-native = "--enable-targets=all \
+                             --enable-64-bit-bfd \
+                             --enable-install-libiberty \
+                             --enable-install-libbfd"
 
 do_install_class-native () {
 	autotools_do_install

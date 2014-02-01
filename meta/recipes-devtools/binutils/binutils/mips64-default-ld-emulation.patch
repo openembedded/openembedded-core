@@ -5,33 +5,38 @@ Upstream-Status: Inappropriate [ OE configuration Specific]
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Index: binutils-2.22/bfd/config.bfd
+Index: binutils-2.24/bfd/config.bfd
 ===================================================================
---- binutils-2.22.orig/bfd/config.bfd	2011-07-28 15:35:13.000000000 -0700
-+++ binutils-2.22/bfd/config.bfd	2012-04-23 21:07:44.151578222 -0700
-@@ -970,13 +970,13 @@
+--- binutils-2.24.orig/bfd/config.bfd	2013-11-04 07:33:37.000000000 -0800
++++ binutils-2.24/bfd/config.bfd	2013-12-15 11:54:57.113765374 -0800
+@@ -1052,14 +1052,14 @@
+     targ_defvec=bfd_elf32_bigmips_vec
+     targ_selvecs="bfd_elf32_littlemips_vec bfd_elf64_bigmips_vec bfd_elf64_littlemips_vec ecoff_big_vec ecoff_little_vec"
      ;;
- #ifdef BFD64
-   mips64*el-*-linux*)
+-  mips64*el-*-linux*)
 -    targ_defvec=bfd_elf32_ntradlittlemips_vec
 -    targ_selvecs="bfd_elf32_ntradbigmips_vec bfd_elf32_tradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf64_tradlittlemips_vec bfd_elf64_tradbigmips_vec"
-+    targ_defvec=bfd_elf64_tradlittlemips_vec
-+    targ_selvecs="bfd_elf32_ntradbigmips_vec bfd_elf32_ntradlittlemips_vec bfd_elf32_tradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf64_tradbigmips_vec"
-     want64=true
-     ;;
-   mips64*-*-linux*)
+-    ;;
+-  mips64*-*-linux*)
 -    targ_defvec=bfd_elf32_ntradbigmips_vec
 -    targ_selvecs="bfd_elf32_ntradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf32_tradlittlemips_vec bfd_elf64_tradbigmips_vec bfd_elf64_tradlittlemips_vec"
+-    ;;
++   mips64*el-*-linux*)
++    targ_defvec=bfd_elf64_tradlittlemips_vec
++    targ_selvecs="bfd_elf32_ntradbigmips_vec bfd_elf32_ntradlittlemips_vec bfd_elf32_tradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf64_tradbigmips_vec"
++     ;;
++   mips64*-*-linux*)
 +    targ_defvec=bfd_elf64_tradbigmips_vec
 +    targ_selvecs="bfd_elf32_ntradbigmips_vec bfd_elf32_ntradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf32_tradlittlemips_vec bfd_elf64_tradlittlemips_vec"
-     want64=true
-     ;;
- #endif
-Index: binutils-2.22/ld/configure.tgt
++     ;;
+   mips*el-*-linux*)
+     targ_defvec=bfd_elf32_tradlittlemips_vec
+     targ_selvecs="bfd_elf32_tradbigmips_vec ecoff_little_vec ecoff_big_vec bfd_elf32_ntradlittlemips_vec bfd_elf64_tradlittlemips_vec bfd_elf32_ntradbigmips_vec bfd_elf64_tradbigmips_vec"
+Index: binutils-2.24/ld/configure.tgt
 ===================================================================
---- binutils-2.22.orig/ld/configure.tgt	2011-11-21 01:29:37.000000000 -0800
-+++ binutils-2.22/ld/configure.tgt	2012-04-23 21:05:34.183571931 -0700
-@@ -395,11 +395,11 @@
+--- binutils-2.24.orig/ld/configure.tgt	2013-11-26 03:37:33.000000000 -0800
++++ binutils-2.24/ld/configure.tgt	2013-12-15 11:50:52.273766155 -0800
+@@ -471,11 +471,11 @@
  mips*-*-vxworks*)	targ_emul=elf32ebmipvxworks
  		        targ_extra_emuls="elf32elmipvxworks" ;;
  mips*-*-windiss)	targ_emul=elf32mipswindiss ;;

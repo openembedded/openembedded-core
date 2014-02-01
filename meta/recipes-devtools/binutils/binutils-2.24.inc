@@ -1,5 +1,3 @@
-PR = "r4"
-
 LIC_FILES_CHKSUM="\
     file://src-release;endline=17;md5=4830a9ef968f3b18dd5e9f2c00db2d35\
     file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552\
@@ -20,33 +18,15 @@ SRC_URI = "\
      file://binutils-uclibc-300-006_better_file_error.patch \
      file://binutils-uclibc-300-012_check_ldrunpath_length.patch \
      file://binutils-uclibc-gas-needs-libm.patch \
-     file://binutils-x86_64_i386_biarch.patch \
      file://libtool-2.4-update.patch \
      file://libiberty_path_fix.patch \
      file://binutils-poison.patch \
      file://libtool-rpath-fix.patch \
      file://binutils-armv5e.patch \
      file://mips64-default-ld-emulation.patch \
-     ${BACKPORT} \
-     file://binutils-fix-over-array-bounds-issue.patch \
      file://binutils-xlp-support.patch \
+     file://fix-pr15815.patch \
      "
 
-BACKPORT = "\
-     file://backport/0001-doc-binutils.texi-elfedit-Fix-use-of-itemx-in-table.patch \
-     file://backport/0001-ld.texinfo-Replace-with-when-it-is-part-of-the-text.patch \
-     file://backport/binutils-fix-ineffectual-zero-of-cache.patch \
-     file://backport/binutils-replace-strncat-with-strcat.patch  \
-     file://backport/0001-config-tc-ppc.c-md_assemble-Do-not-generate-APUinfo-.patch  \
-     file://backport/binutils-fix-skip-whitespace-pr14887.patch \
-     file://backport/aarch64-crn.patch \
-     file://backport/aarch64-movi.patch \
-     file://backport/0001-config-tc-ppc.c-PPC_VLE_SPLIT16A-Delete-unused-macro.patch \
-     file://backport/0002-config-tc-ppc.c-md_apply_fix-Sign-extend-fieldval-un.patch \
-     file://backport/0001-emultempl-elf32.em-gld-EMULATION_NAME-_before_alloca.patch \
-     file://backport/0002-emultempl-elf32.em-gld-EMULATION_NAME-_before_alloca.patch \
-     file://backport/0003-gold.patch \
-"
-SRC_URI[md5sum] = "4f8fa651e35ef262edc01d60fb45702e"
-SRC_URI[sha256sum] = "fe914e56fed7a9ec2eb45274b1f2e14b0d8b4f41906a5194eac6883cfe5c1097"
-
+SRC_URI[md5sum] = "e0f71a7b2ddab0f8612336ac81d9636b"
+SRC_URI[sha256sum] = "e5e8c5be9664e7f7f96e0d09919110ab5ad597794f5b1809871177a0f0f14137"

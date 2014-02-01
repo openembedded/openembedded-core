@@ -1,0 +1,36 @@
+This patch fixes the problem where libiberty is not installed in spite of
+asking it via --enable-install-libiberty, the problem is that target_header_dir
+is reset explicitly which means libiberty.a will never get installed
+
+also check
+
+https://sourceware.org/bugzilla/show_bug.cgi?id=15815
+
+Upstream-Status: Pending
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: binutils-2.24/libiberty/configure
+===================================================================
+--- binutils-2.24.orig/libiberty/configure	2013-12-16 00:08:09.280103157 -0800
++++ binutils-2.24/libiberty/configure	2013-12-16 00:08:29.753436339 -0800
+@@ -5507,7 +5507,6 @@
+ 
+ setobjs=
+ CHECK=
+-target_header_dir=
+ if test -n "${with_target_subdir}"; then
+ 
+   # We are being configured as a target library.  AC_REPLACE_FUNCS
+Index: binutils-2.24/libiberty/configure.ac
+===================================================================
+--- binutils-2.24.orig/libiberty/configure.ac	2013-11-08 02:13:49.000000000 -0800
++++ binutils-2.24/libiberty/configure.ac	2013-12-16 00:07:45.133436672 -0800
+@@ -405,7 +405,6 @@
+ 
+ setobjs=
+ CHECK=
+-target_header_dir=
+ if test -n "${with_target_subdir}"; then
+ 
+   # We are being configured as a target library.  AC_REPLACE_FUNCS
