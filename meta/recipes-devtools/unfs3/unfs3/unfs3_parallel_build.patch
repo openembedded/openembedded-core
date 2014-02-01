@@ -7,9 +7,9 @@ Jason Wessel <jason.wessel@windriver.com>
 Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
 
 ---
- Config/Makefile.in |    2 ++
+ Config/Makefile.in |    3 +++
  Makefile.in        |    3 ++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
 --- a/Makefile.in
 +++ b/Makefile.in
@@ -25,10 +25,11 @@ Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
  	$(CC) -o $@ $(OBJS) $(CONFOBJ) $(EXTRAOBJ) $(LDFLAGS)
 --- a/Config/Makefile.in
 +++ b/Config/Makefile.in
-@@ -16,6 +16,8 @@ lib.a: $(OBJS)
+@@ -16,6 +16,9 @@ lib.a: $(OBJS)
  	$(AR) crs lib.a $(OBJS)
  
  y.tab.h y.tab.c: $(srcdir)/exports.y
++y.tab.h: y.tab.c
 +
 +y.tab.c: $(srcdir)/exports.y
  	$(YACC) -d $(srcdir)/exports.y
