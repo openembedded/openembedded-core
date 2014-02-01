@@ -7,19 +7,19 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 			file://sample_enc.c;beginline=1;endline=4;md5=838372be07874260b566bae2f6ed33b6"
 SECTION = "base"
 PE = "1"
-PR = "r4"
 
-SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.29.tar.gz \
-	   file://remove.ldconfig.call.patch \
-	   file://man.patch \
-	   file://wireless-tools.if-pre-up \
-	   file://zzz-wireless.if-pre-up \
-	   file://avoid_strip.patch \
-	   file://ldflags.patch"
+SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.${PV}.tar.gz \
+           file://wireless-tools.if-pre-up \
+           file://zzz-wireless.if-pre-up \
+           file://remove.ldconfig.call.patch \
+           file://man.patch \
+           file://avoid_strip.patch \
+           file://ldflags.patch \
+          "
+SRC_URI[md5sum] = "ca91ba7c7eff9bfff6926b1a34a4697d"
+SRC_URI[sha256sum] = "abd9c5c98abf1fdd11892ac2f8a56737544fe101e1be27c6241a564948f34c63"
 
-SRC_URI[md5sum] = "e06c222e186f7cc013fd272d023710cb"
-SRC_URI[sha256sum] = "6fb80935fe208538131ce2c4178221bab1078a1656306bce8909c19887e2e5a1"
-S = "${WORKDIR}/wireless_tools.29"
+S = "${WORKDIR}/wireless_tools.30"
 
 CFLAGS =+ "-I${S}"
 EXTRA_OEMAKE = "-e 'BUILD_SHARED=y' \
