@@ -2,6 +2,7 @@
 #
 # Allow copying of $1 to $2 but if files in $1 disappear during the copy operation,
 # don't error.
+# Also don't error if $1 disappears.
 #
 
 import sys
@@ -47,5 +48,5 @@ try:
     copytree(sys.argv[1], sys.argv[2])
 except shutil.Error:
    pass
-
-
+except OSError:
+   pass
