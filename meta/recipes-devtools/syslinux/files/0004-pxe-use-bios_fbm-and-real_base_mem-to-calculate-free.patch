@@ -1,0 +1,65 @@
+Upstream-Status: Backport [c0ea15936de8378d1da6843d3dbddd8dddba1011]
+Signed-off-by: Jonathan Liu <net147@gmail.com>
+
+From f3347f9b09135d71a4effae1614b22dcdf16a7e2 Mon Sep 17 00:00:00 2001
+From: Matt Fleming <matt.fleming@intel.com>
+Date: Wed, 24 Jul 2013 18:33:14 +0100
+Subject: [PATCH 4/4] pxe: use bios_fbm() and real_base_mem to calculate free
+ space
+
+We don't need to individually add the PXE regions, we already have two
+symbols that denote the memory region that will be freed when calling
+unload_pxe().
+
+This essentially reverts commit 03dda0f1 ("pxe: mark all PXE regions as
+SMT_TERMINAL").
+
+Signed-off-by: Matt Fleming <matt.fleming@intel.com>
+
+Conflicts:
+	core/fs/pxe/bios.c
+---
+ core/fs/pxe/bios.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/core/fs/pxe/bios.c b/core/fs/pxe/bios.c
+index 5f61824..ffdffaf 100644
+--- a/core/fs/pxe/bios.c
++++ b/core/fs/pxe/bios.c
+@@ -94,24 +94,24 @@ static const struct pxenv_t *memory_scan_for_pxenv_struct(void)
+ 
+ static int pxelinux_scan_memory(scan_memory_callback_t callback, void *data)
+ {
++    addr_t start, size;
+     int rv = 0;
+ 
++    if (KeepPXE)
++	return 0;
++
+     /*
+      * If we are planning on calling unload_pxe() and unmapping the PXE
+      * region before we transfer control away from PXELINUX we can mark
+      * that region as SMT_TERMINAL to indicate that the region will
+      * become free at some point in the future.
+      */
+-    if (!KeepPXE) {
+-	dprintf("Marking PXE code region 0x%x - 0x%x as SMT_TERMINAL\n",
+-		pxe_code_start, pxe_code_start + pxe_code_size);
+-	rv = callback(data, pxe_code_start, pxe_code_size, SMT_TERMINAL);
+-
+-	dprintf("Marking PXE data region 0x%x - 0x%x as SMT_TERMINAL\n",
+-		pxe_data_start, pxe_data_start + pxe_data_size);
+-	rv = callback(data, pxe_data_start, pxe_data_size, SMT_TERMINAL);
+-    }
++    start = bios_fbm() << 10;
++    size = (real_base_mem - bios_fbm()) << 10;
++    dprintf("Marking PXE region 0x%x - 0x%x as SMT_TERMINAL\n",
++	start, start + size);
+ 
++    callback(data, start, size, SMT_TERMINAL);
+     return rv;
+ }
+ 
+-- 
+1.8.5.3
+

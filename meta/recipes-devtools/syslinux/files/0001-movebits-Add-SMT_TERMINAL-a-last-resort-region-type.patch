@@ -1,0 +1,50 @@
+Upstream-Status: Backport [ba638fd9bf72b0c786c88909014136cfa641a147]
+Signed-off-by: Jonathan Liu <net147@gmail.com>
+
+From b663fd7257481438256f8267831dc10b06363b22 Mon Sep 17 00:00:00 2001
+From: Matt Fleming <matt.fleming@intel.com>
+Date: Tue, 16 Jul 2013 22:16:11 +0100
+Subject: [PATCH 1/4] movebits: Add SMT_TERMINAL - a last resort region type
+
+Some memory regions are usable, but only as a last resort just before we
+hand over control to a kernel image. Add the necessary movebits
+infrastructure to use these regions when all other options have been
+exhausted.
+
+Signed-off-by: Matt Fleming <matt.fleming@intel.com>
+
+Conflicts:
+	com32/lib/syslinux/zonelist.c
+---
+ com32/include/syslinux/movebits.h | 1 +
+ com32/lib/syslinux/movebits.c     | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/com32/include/syslinux/movebits.h b/com32/include/syslinux/movebits.h
+index 8bcdf3e..114a896 100644
+--- a/com32/include/syslinux/movebits.h
++++ b/com32/include/syslinux/movebits.h
+@@ -34,6 +34,7 @@ enum syslinux_memmap_types {
+     SMT_RESERVED,		/* Unusable memory */
+     SMT_ALLOC,			/* Memory allocated by user */
+     SMT_ZERO,			/* Memory that should be zeroed */
++    SMT_TERMINAL,		/* Memory to be used as a last resort */
+ };
+ 
+ struct syslinux_memmap {
+diff --git a/com32/lib/syslinux/movebits.c b/com32/lib/syslinux/movebits.c
+index 7a05f3c..8ffdc63 100644
+--- a/com32/lib/syslinux/movebits.c
++++ b/com32/lib/syslinux/movebits.c
+@@ -160,7 +160,7 @@ static const struct syslinux_memmap *is_free_zone(const struct syslinux_memmap
+ 	if (list->start <= start) {
+ 	    if (llast >= last) {
+ 		/* Chunk has a single, well-defined type */
+-		if (list->type == SMT_FREE) {
++		if (list->type == SMT_FREE || list->type == SMT_TERMINAL) {
+ 		    dprintf("F: 0x%08x bytes at 0x%08x\n",
+ 			    list->next->start, list->start);
+ 		    return list;	/* It's free */
+-- 
+1.8.5.3
+

@@ -1,0 +1,450 @@
+Upstream-Status: Backport [787d7e568fe08d7080d2cd03cd9ee27c327eca67]
+Signed-off-by: Jonathan Liu <net147@gmail.com>
+
+From 2e05f34c0c5bc0144bb203a169009dfb6837b4e3 Mon Sep 17 00:00:00 2001
+From: Matt Fleming <matt.fleming@intel.com>
+Date: Wed, 17 Jul 2013 12:15:16 +0100
+Subject: [PATCH 2/4] memscan: build a linked list of memory scanners
+
+By registering memory scanners at runtime we can support multiple memory
+scanner functions, which helps us to isolate them and keep things
+modular, only registering them for specific platform/derivative
+combinations. This is preparation for adding a memory scanner that is
+specific to PXELINUX on bios and understands when the memory region
+occupied by the PXE stack can be reused.
+
+Signed-off-by: Matt Fleming <matt.fleming@intel.com>
+
+Conflicts:
+	com32/include/syslinux/memscan.h
+	com32/lib/syslinux/memscan.c
+---
+ com32/include/syslinux/firmware.h |   4 +-
+ com32/include/syslinux/memscan.h  |  14 +++-
+ com32/lib/syslinux/memscan.c      | 143 +++++++-------------------------------
+ core/bios.c                       | 125 ++++++++++++++++++++++++++++++++-
+ efi/main.c                        |  14 ++--
+ 5 files changed, 173 insertions(+), 127 deletions(-)
+
+diff --git a/com32/include/syslinux/firmware.h b/com32/include/syslinux/firmware.h
+index 4a43c86..6cc06a0 100644
+--- a/com32/include/syslinux/firmware.h
++++ b/com32/include/syslinux/firmware.h
+@@ -1,7 +1,8 @@
+ #ifndef _SYSLINUX_FIRMWARE_H
+ #define _SYSLINUX_FIRMWARE_H
+ 
+-#include <syslinux/memscan.h>
++#include <inttypes.h>
++#include <stdbool.h>
+ 
+ struct term_state;
+ 
+@@ -42,7 +43,6 @@ struct mem_ops {
+ 	void *(*malloc)(size_t, enum heap, size_t);
+ 	void *(*realloc)(void *, size_t);
+ 	void (*free)(void *);
+-	int (*scan_memory)(scan_memory_callback_t, void *);
+ };
+ 
+ struct initramfs;
+diff --git a/com32/include/syslinux/memscan.h b/com32/include/syslinux/memscan.h
+index c3ebf84..ab78e28 100644
+--- a/com32/include/syslinux/memscan.h
++++ b/com32/include/syslinux/memscan.h
+@@ -29,11 +29,19 @@
+ #ifndef _SYSLINUX_MEMSCAN_H
+ #define _SYSLINUX_MEMSCAN_H
+ 
+-#include <stdbool.h>
++#include <linux/list.h>
+ #include <syslinux/movebits.h>	/* addr_t */
+ 
+-typedef int (*scan_memory_callback_t) (void *, addr_t, addr_t, bool);
++typedef int (*scan_memory_callback_t) (void *, addr_t, addr_t,
++				       enum syslinux_memmap_types type);
++
++struct syslinux_memscan {
++    int (*func)(scan_memory_callback_t callback, void *data);
++    struct list_head next;
++};
++
++void syslinux_memscan_add(struct syslinux_memscan *entry);
++int syslinux_memscan_new(int (*func)(scan_memory_callback_t cb, void *data));
+ int syslinux_scan_memory(scan_memory_callback_t callback, void *data);
+-int bios_scan_memory(scan_memory_callback_t callback, void *data);
+ 
+ #endif /* _SYSLINUX_MEMSCAN_H */
+diff --git a/com32/lib/syslinux/memscan.c b/com32/lib/syslinux/memscan.c
+index 0ff25d7..fdb7274 100644
+--- a/com32/lib/syslinux/memscan.c
++++ b/com32/lib/syslinux/memscan.c
+@@ -32,133 +32,44 @@
+  * Query the system for free memory
+  */
+ 
+-#include <assert.h>
+-#include <stdbool.h>
+-#include <stdlib.h>
+-#include <string.h>
+-#include <inttypes.h>
+-#include <com32.h>
+-
+ #include <syslinux/memscan.h>
+-#include <syslinux/firmware.h>
+ 
+-struct e820_entry {
+-    uint64_t start;
+-    uint64_t len;
+-    uint32_t type;
+-};
++static LIST_HEAD(syslinux_memscan_head);
+ 
+-int bios_scan_memory(scan_memory_callback_t callback, void *data)
++/*
++ * Add a memscan entry to the list.
++ */
++void syslinux_memscan_add(struct syslinux_memscan *entry)
+ {
+-    static com32sys_t ireg;
+-    com32sys_t oreg;
+-    struct e820_entry *e820buf;
+-    uint64_t start, len, maxlen;
+-    int memfound = 0;
+-    int rv;
+-    addr_t dosmem;
+-    const addr_t bios_data = 0x510;	/* Amount to reserve for BIOS data */
++    list_add(&entry->next, &syslinux_memscan_head);
++}
+ 
+-    /* Use INT 12h to get DOS memory */
+-    __intcall(0x12, &__com32_zero_regs, &oreg);
+-    dosmem = oreg.eax.w[0] << 10;
+-    if (dosmem < 32 * 1024 || dosmem > 640 * 1024) {
+-	/* INT 12h reports nonsense... now what? */
+-	uint16_t ebda_seg = *(uint16_t *) 0x40e;
+-	if (ebda_seg >= 0x8000 && ebda_seg < 0xa000)
+-	    dosmem = ebda_seg << 4;
+-	else
+-	    dosmem = 640 * 1024;	/* Hope for the best... */
+-    }
+-    rv = callback(data, bios_data, dosmem - bios_data, true);
+-    if (rv)
+-	return rv;
++/*
++ * Build a new memscan entry and add it to the list.
++ */
++int syslinux_memscan_new(int func(scan_memory_callback_t, void *data))
++{
++    struct syslinux_memscan *entry;
+ 
+-    /* First try INT 15h AX=E820h */
+-    e820buf = lzalloc(sizeof *e820buf);
+-    if (!e820buf)
++    entry = malloc(sizeof *entry);
++    if (!entry)
+ 	return -1;
+ 
+-    ireg.eax.l = 0xe820;
+-    ireg.edx.l = 0x534d4150;
+-    ireg.ebx.l = 0;
+-    ireg.ecx.l = sizeof(*e820buf);
+-    ireg.es = SEG(e820buf);
+-    ireg.edi.w[0] = OFFS(e820buf);
+-
+-    do {
+-	__intcall(0x15, &ireg, &oreg);
+-
+-	if ((oreg.eflags.l & EFLAGS_CF) ||
+-	    (oreg.eax.l != 0x534d4150) || (oreg.ecx.l < 20))
+-	    break;
+-
+-	start = e820buf->start;
+-	len = e820buf->len;
+-
+-	if (start < 0x100000000ULL) {
+-	    /* Don't rely on E820 being valid for low memory.  Doing so
+-	       could mean stuff like overwriting the PXE stack even when
+-	       using "keeppxe", etc. */
+-	    if (start < 0x100000ULL) {
+-		if (len > 0x100000ULL - start)
+-		    len -= 0x100000ULL - start;
+-		else
+-		    len = 0;
+-		start = 0x100000ULL;
+-	    }
+-
+-	    maxlen = 0x100000000ULL - start;
+-	    if (len > maxlen)
+-		len = maxlen;
+-
+-	    if (len) {
+-		rv = callback(data, (addr_t) start, (addr_t) len,
+-			      e820buf->type == 1);
+-		if (rv)
+-		    return rv;
+-		memfound = 1;
+-	    }
+-	}
+-
+-	ireg.ebx.l = oreg.ebx.l;
+-    } while (oreg.ebx.l);
+-
+-    lfree(e820buf);
+-
+-    if (memfound)
+-	return 0;
+-
+-    /* Next try INT 15h AX=E801h */
+-    ireg.eax.w[0] = 0xe801;
+-    __intcall(0x15, &ireg, &oreg);
+-
+-    if (!(oreg.eflags.l & EFLAGS_CF) && oreg.ecx.w[0]) {
+-	rv = callback(data, (addr_t) 1 << 20, oreg.ecx.w[0] << 10, true);
+-	if (rv)
+-	    return rv;
+-
+-	if (oreg.edx.w[0]) {
+-	    rv = callback(data, (addr_t) 16 << 20, oreg.edx.w[0] << 16, true);
+-	    if (rv)
+-		return rv;
+-	}
+-
+-	return 0;
+-    }
+-
+-    /* Finally try INT 15h AH=88h */
+-    ireg.eax.w[0] = 0x8800;
+-    if (!(oreg.eflags.l & EFLAGS_CF) && oreg.eax.w[0]) {
+-	rv = callback(data, (addr_t) 1 << 20, oreg.ecx.w[0] << 10, true);
+-	if (rv)
+-	    return rv;
+-    }
+-
++    entry->func = func;
++    syslinux_memscan_add(entry);
+     return 0;
+ }
+ 
+ int syslinux_scan_memory(scan_memory_callback_t callback, void *data)
+ {
+-	return firmware->mem->scan_memory(callback, data);
++    struct syslinux_memscan *entry;
++    int rv = 0;
++
++    list_for_each_entry(entry, &syslinux_memscan_head, next) {
++	rv = entry->func(callback, data);
++	if (rv)
++	    break;
++    }
++
++    return rv;
+ }
+diff --git a/core/bios.c b/core/bios.c
+index 53223e8..5344833 100644
+--- a/core/bios.c
++++ b/core/bios.c
+@@ -501,6 +501,129 @@ static inline void bios_timer_init(void)
+ 
+ extern uint16_t *bios_free_mem;
+ 
++struct e820_entry {
++    uint64_t start;
++    uint64_t len;
++    uint32_t type;
++};
++
++static int bios_scan_memory(scan_memory_callback_t callback, void *data)
++{
++    static com32sys_t ireg;
++    com32sys_t oreg;
++    struct e820_entry *e820buf;
++    uint64_t start, len, maxlen;
++    int memfound = 0;
++    int rv;
++    addr_t dosmem;
++    const addr_t bios_data = 0x510;	/* Amount to reserve for BIOS data */
++
++    /* Use INT 12h to get DOS memory */
++    __intcall(0x12, &__com32_zero_regs, &oreg);
++    dosmem = oreg.eax.w[0] << 10;
++    if (dosmem < 32 * 1024 || dosmem > 640 * 1024) {
++	/* INT 12h reports nonsense... now what? */
++	uint16_t ebda_seg = *(uint16_t *) 0x40e;
++	if (ebda_seg >= 0x8000 && ebda_seg < 0xa000)
++	    dosmem = ebda_seg << 4;
++	else
++	    dosmem = 640 * 1024;	/* Hope for the best... */
++    }
++    rv = callback(data, bios_data, dosmem - bios_data, SMT_FREE);
++    if (rv)
++	return rv;
++
++    /* First try INT 15h AX=E820h */
++    e820buf = lzalloc(sizeof *e820buf);
++    if (!e820buf)
++	return -1;
++
++    ireg.eax.l = 0xe820;
++    ireg.edx.l = 0x534d4150;
++    ireg.ebx.l = 0;
++    ireg.ecx.l = sizeof(*e820buf);
++    ireg.es = SEG(e820buf);
++    ireg.edi.w[0] = OFFS(e820buf);
++
++    do {
++	__intcall(0x15, &ireg, &oreg);
++
++	if ((oreg.eflags.l & EFLAGS_CF) ||
++	    (oreg.eax.l != 0x534d4150) || (oreg.ecx.l < 20))
++	    break;
++
++	start = e820buf->start;
++	len = e820buf->len;
++
++	if (start < 0x100000000ULL) {
++	    /* Don't rely on E820 being valid for low memory.  Doing so
++	       could mean stuff like overwriting the PXE stack even when
++	       using "keeppxe", etc. */
++	    if (start < 0x100000ULL) {
++		if (len > 0x100000ULL - start)
++		    len -= 0x100000ULL - start;
++		else
++		    len = 0;
++		start = 0x100000ULL;
++	    }
++
++	    maxlen = 0x100000000ULL - start;
++	    if (len > maxlen)
++		len = maxlen;
++
++	    if (len) {
++		enum syslinux_memmap_types type;
++
++		type = e820buf->type == 1 ? SMT_FREE : SMT_RESERVED;
++		rv = callback(data, (addr_t) start, (addr_t) len, type);
++		if (rv)
++		    return rv;
++		memfound = 1;
++	    }
++	}
++
++	ireg.ebx.l = oreg.ebx.l;
++    } while (oreg.ebx.l);
++
++    lfree(e820buf);
++
++    if (memfound)
++	return 0;
++
++    /* Next try INT 15h AX=E801h */
++    ireg.eax.w[0] = 0xe801;
++    __intcall(0x15, &ireg, &oreg);
++
++    if (!(oreg.eflags.l & EFLAGS_CF) && oreg.ecx.w[0]) {
++	rv = callback(data, (addr_t) 1 << 20, oreg.ecx.w[0] << 10, SMT_FREE);
++	if (rv)
++	    return rv;
++
++	if (oreg.edx.w[0]) {
++	    rv = callback(data, (addr_t) 16 << 20,
++			  oreg.edx.w[0] << 16, SMT_FREE);
++	    if (rv)
++		return rv;
++	}
++
++	return 0;
++    }
++
++    /* Finally try INT 15h AH=88h */
++    ireg.eax.w[0] = 0x8800;
++    if (!(oreg.eflags.l & EFLAGS_CF) && oreg.eax.w[0]) {
++	rv = callback(data, (addr_t) 1 << 20, oreg.ecx.w[0] << 10, SMT_FREE);
++	if (rv)
++	    return rv;
++    }
++
++    return 0;
++}
++
++static struct syslinux_memscan bios_memscan = {
++    .func = bios_scan_memory,
++};
++
+ void bios_init(void)
+ {
+ 	int i;
+@@ -515,6 +638,7 @@ void bios_init(void)
+ 
+ 	/* Init the memory subsystem */
+ 	bios_free_mem = (uint16_t *)0x413;
++	syslinux_memscan_add(&bios_memscan);
+ 	mem_init();
+ 
+ 	/* CPU-dependent initialization and related checks. */
+@@ -534,7 +658,6 @@ struct mem_ops bios_mem_ops = {
+ 	.malloc = bios_malloc,
+ 	.realloc = bios_realloc,
+ 	.free = bios_free,
+-	.scan_memory = bios_scan_memory,
+ };
+ 
+ struct firmware bios_fw = {
+diff --git a/efi/main.c b/efi/main.c
+index 13b9403..fb8cf05 100644
+--- a/efi/main.c
++++ b/efi/main.c
+@@ -296,21 +296,21 @@ int efi_scan_memory(scan_memory_callback_t callback, void *data)
+ 	for (i = 0; i < nr_entries; bufpos += desc_sz, i++) {
+ 		EFI_MEMORY_DESCRIPTOR *m;
+ 		UINT64 region_sz;
+-		int valid;
++		enum syslinux_memmap_types type;
+ 
+ 		m = (EFI_MEMORY_DESCRIPTOR *)bufpos;
+ 		region_sz = m->NumberOfPages * EFI_PAGE_SIZE;
+ 
+ 		switch (m->Type) {
+                 case EfiConventionalMemory:
+-			valid = 1;
++			type = SMT_FREE;
+                         break;
+ 		default:
+-			valid = 0;
++			type = SMT_RESERVED;
+ 			break;
+ 		}
+ 
+-		rv = callback(data, m->PhysicalStart, region_sz, valid);
++		rv = callback(data, m->PhysicalStart, region_sz, type);
+ 		if (rv)
+ 			break;
+ 	}
+@@ -319,11 +319,16 @@ int efi_scan_memory(scan_memory_callback_t callback, void *data)
+ 	return rv;
+ }
+ 
++static struct syslinux_memscan efi_memscan = {
++    .func = efi_scan_memory,
++};
++
+ extern uint16_t *bios_free_mem;
+ void efi_init(void)
+ {
+ 	/* XXX timer */
+ 	*bios_free_mem = 0;
++	syslinux_memscan_add(&efi_memscan);
+ 	mem_init();
+ }
+ 
+@@ -1103,7 +1108,6 @@ struct mem_ops efi_mem_ops = {
+ 	.malloc = efi_malloc,
+ 	.realloc = efi_realloc,
+ 	.free = efi_free,
+-	.scan_memory = efi_scan_memory,
+ };
+ 
+ struct firmware efi_fw = {
+-- 
+1.8.5.3
+
