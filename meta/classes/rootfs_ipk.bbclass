@@ -44,13 +44,7 @@ fakeroot rootfs_ipk_do_rootfs () {
 	for i in ${BAD_RECOMMENDATIONS}; do
 		pkginfo="`opkg-cl ${OPKG_ARGS} info $i`"
 		if [ ! -z "$pkginfo" ]; then
-			# Take just the first package stanza as otherwise only
-			# the last one will have the right Status line.
-			echo "$pkginfo" | awk "/^Package:/ { print } \
-                        		       /^Architecture:/ { print } \
-                        		       /^Version:/ { print } \
-                        		       /^$/ { exit } \
-                        		       END { print \"Status: deinstall hold not-installed\n\" }" - >> $STATUS
+			echo "$pkginfo" | awk "/^Status:/ { print \"Status: deinstall hold not-installed\n\" }" - >> $STATUS
 		else
 			echo "Requested ignored recommendation $i is not a package"
 		fi
