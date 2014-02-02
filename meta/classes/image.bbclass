@@ -536,7 +536,7 @@ rootfs_uninstall_unneeded () {
 			fi
 
 			# Remove package only if it's installed
-			pkgs_to_remove="update-rc.d base-passwd ${ROOTFS_BOOTSTRAP_INSTALL}"
+			pkgs_to_remove="update-rc.d base-passwd update-alternatives shadow ${ROOTFS_BOOTSTRAP_INSTALL}"
 			for pkg in $pkgs_to_remove; do
 			    # regexp for pkg, to be used in grep and sed
 			    pkg_regexp="^`echo $pkg | sed 's/\./\\\./'` "
