@@ -10,8 +10,6 @@
 import os, re, mmap
 import unittest
 import inspect
-import bb
-from oeqa.utils.sshcontrol import SSHControl
 
 
 def loadTests(tc):
@@ -31,13 +29,12 @@ def loadTests(tc):
 def runTests(tc):
 
     suite = loadTests(tc)
-    bb.note("Test modules  %s" % tc.testslist)
-    bb.note("Found %s tests" % suite.countTestCases())
+    print("Test modules  %s" % tc.testslist)
+    print("Found %s tests" % suite.countTestCases())
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
 
     return result
-
 
 
 class oeTest(unittest.TestCase):
@@ -60,18 +57,16 @@ class oeTest(unittest.TestCase):
 
     @classmethod
     def hasPackage(self, pkg):
-        manifest = os.path.join(oeTest.tc.d.getVar("DEPLOY_DIR_IMAGE", True), oeTest.tc.d.getVar("IMAGE_LINK_NAME", True) + ".manifest")
-        with open(manifest) as f:
-            data = f.read()
-        if re.search(pkg, data):
+
+        if re.search(pkg, oeTest.tc.pkgmanifest):
             return True
         return False
 
     @classmethod
     def hasFeature(self,feature):
 
-        if feature in oeTest.tc.d.getVar("IMAGE_FEATURES", True).split() or \
-                feature in oeTest.tc.d.getVar("DISTRO_FEATURES", True).split():
+        if feature in oeTest.tc.imagefeatures or \
+                feature in oeTest.tc.distrofeatures:
             return True
         else:
             return False
