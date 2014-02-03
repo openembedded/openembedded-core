@@ -95,7 +95,7 @@ def package_qa_get_machine_dict():
                         "mips64":     (   8,     0,    0,          False,         64),
                         "mips64el":   (   8,     0,    0,          True,          64),
                         "avr32":      (6317,     0,    0,          False,         32),
-			"sh4":        (42,	 0,    0,          True,          32),
+                        "sh4":        (42,       0,    0,          True,          32),
 
                       },
             "uclinux-uclibc" : {
@@ -309,110 +309,110 @@ def package_qa_check_perm(path,name,d, elf, messages):
 
 QAPATHTEST[unsafe-references-in-binaries] = "package_qa_check_unsafe_references_in_binaries"
 def package_qa_check_unsafe_references_in_binaries(path, name, d, elf, messages):
-	"""
-	Ensure binaries in base_[bindir|sbindir|libdir] do not link to files under exec_prefix
-	"""
-	if unsafe_references_skippable(path, name, d):
-		return
+    """
+    Ensure binaries in base_[bindir|sbindir|libdir] do not link to files under exec_prefix
+    """
+    if unsafe_references_skippable(path, name, d):
+        return
 
-	if elf:
-		import subprocess as sub
-		pn = d.getVar('PN', True)
+    if elf:
+        import subprocess as sub
+        pn = d.getVar('PN', True)
 
-		exec_prefix = d.getVar('exec_prefix', True)
-		sysroot_path = d.getVar('STAGING_DIR_TARGET', True)
-		sysroot_path_usr = sysroot_path + exec_prefix
+        exec_prefix = d.getVar('exec_prefix', True)
+        sysroot_path = d.getVar('STAGING_DIR_TARGET', True)
+        sysroot_path_usr = sysroot_path + exec_prefix
 
-		try:
-			ldd_output = bb.process.Popen(["prelink-rtld", "--root", sysroot_path, path], stdout=sub.PIPE).stdout.read()
-		except bb.process.CmdError:
-			error_msg = pn + ": prelink-rtld aborted when processing %s" % path
-			package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
-			return False
+        try:
+            ldd_output = bb.process.Popen(["prelink-rtld", "--root", sysroot_path, path], stdout=sub.PIPE).stdout.read()
+        except bb.process.CmdError:
+            error_msg = pn + ": prelink-rtld aborted when processing %s" % path
+            package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
+            return False
 
-		if sysroot_path_usr in ldd_output:
-			ldd_output = ldd_output.replace(sysroot_path, "")
+        if sysroot_path_usr in ldd_output:
+            ldd_output = ldd_output.replace(sysroot_path, "")
 
-			pkgdest = d.getVar('PKGDEST', True)
-			packages = d.getVar('PACKAGES', True)
+            pkgdest = d.getVar('PKGDEST', True)
+            packages = d.getVar('PACKAGES', True)
 
-			for package in packages.split():
-				short_path = path.replace('%s/%s' % (pkgdest, package), "", 1)
-				if (short_path != path):
-					break
+            for package in packages.split():
+                short_path = path.replace('%s/%s' % (pkgdest, package), "", 1)
+                if (short_path != path):
+                    break
 
-			base_err = pn + ": %s, installed in the base_prefix, requires a shared library under exec_prefix (%s)" % (short_path, exec_prefix)
-			for line in ldd_output.split('\n'):
-				if exec_prefix in line:
-					error_msg = "%s: %s" % (base_err, line.strip())
-					package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
+            base_err = pn + ": %s, installed in the base_prefix, requires a shared library under exec_prefix (%s)" % (short_path, exec_prefix)
+            for line in ldd_output.split('\n'):
+                if exec_prefix in line:
+                    error_msg = "%s: %s" % (base_err, line.strip())
+                    package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
 
-			return False
+            return False
 
 QAPATHTEST[unsafe-references-in-scripts] = "package_qa_check_unsafe_references_in_scripts"
 def package_qa_check_unsafe_references_in_scripts(path, name, d, elf, messages):
-	"""
-	Warn if scripts in base_[bindir|sbindir|libdir] reference files under exec_prefix
-	"""
-	if unsafe_references_skippable(path, name, d):
-		return
+    """
+    Warn if scripts in base_[bindir|sbindir|libdir] reference files under exec_prefix
+    """
+    if unsafe_references_skippable(path, name, d):
+        return
 
-	if not elf:
-		import stat
-		import subprocess
-		pn = d.getVar('PN', True)
+    if not elf:
+        import stat
+        import subprocess
+        pn = d.getVar('PN', True)
 
-		# Ensure we're checking an executable script
-		statinfo = os.stat(path)
-		if bool(statinfo.st_mode & stat.S_IXUSR):
-			# grep shell scripts for possible references to /exec_prefix/
-			exec_prefix = d.getVar('exec_prefix', True)
-			statement = "grep -e '%s/' %s > /dev/null" % (exec_prefix, path)
-			if subprocess.call(statement, shell=True) == 0:
-				error_msg = pn + ": Found a reference to %s/ in %s" % (exec_prefix, path)
-				package_qa_handle_error("unsafe-references-in-scripts", error_msg, d)
-				error_msg = "Shell scripts in base_bindir and base_sbindir should not reference anything in exec_prefix"
-				package_qa_handle_error("unsafe-references-in-scripts", error_msg, d)
+        # Ensure we're checking an executable script
+        statinfo = os.stat(path)
+        if bool(statinfo.st_mode & stat.S_IXUSR):
+            # grep shell scripts for possible references to /exec_prefix/
+            exec_prefix = d.getVar('exec_prefix', True)
+            statement = "grep -e '%s/' %s > /dev/null" % (exec_prefix, path)
+            if subprocess.call(statement, shell=True) == 0:
+                error_msg = pn + ": Found a reference to %s/ in %s" % (exec_prefix, path)
+                package_qa_handle_error("unsafe-references-in-scripts", error_msg, d)
+                error_msg = "Shell scripts in base_bindir and base_sbindir should not reference anything in exec_prefix"
+                package_qa_handle_error("unsafe-references-in-scripts", error_msg, d)
 
 def unsafe_references_skippable(path, name, d):
-	if bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d):
-		return True
+    if bb.data.inherits_class('native', d) or bb.data.inherits_class('nativesdk', d):
+        return True
 
-	if "-dbg" in name or "-dev" in name:
-		return True
+    if "-dbg" in name or "-dev" in name:
+        return True
 
-	# Other package names to skip:
-	if name.startswith("kernel-module-"):
-		return True
+    # Other package names to skip:
+    if name.startswith("kernel-module-"):
+        return True
 
-	# Skip symlinks
-	if os.path.islink(path):
-		return True
+    # Skip symlinks
+    if os.path.islink(path):
+        return True
 
-	# Skip unusual rootfs layouts which make these tests irrelevant
-	exec_prefix = d.getVar('exec_prefix', True)
-	if exec_prefix == "":
-		return True
+    # Skip unusual rootfs layouts which make these tests irrelevant
+    exec_prefix = d.getVar('exec_prefix', True)
+    if exec_prefix == "":
+        return True
 
-	pkgdest = d.getVar('PKGDEST', True)
-	pkgdest = pkgdest + "/" + name
-	pkgdest = os.path.abspath(pkgdest)
-	base_bindir = pkgdest + d.getVar('base_bindir', True)
-	base_sbindir = pkgdest + d.getVar('base_sbindir', True)
-	base_libdir = pkgdest + d.getVar('base_libdir', True)
-	bindir = pkgdest + d.getVar('bindir', True)
-	sbindir = pkgdest + d.getVar('sbindir', True)
-	libdir = pkgdest + d.getVar('libdir', True)
+    pkgdest = d.getVar('PKGDEST', True)
+    pkgdest = pkgdest + "/" + name
+    pkgdest = os.path.abspath(pkgdest)
+    base_bindir = pkgdest + d.getVar('base_bindir', True)
+    base_sbindir = pkgdest + d.getVar('base_sbindir', True)
+    base_libdir = pkgdest + d.getVar('base_libdir', True)
+    bindir = pkgdest + d.getVar('bindir', True)
+    sbindir = pkgdest + d.getVar('sbindir', True)
+    libdir = pkgdest + d.getVar('libdir', True)
 
-	if base_bindir == bindir and base_sbindir == sbindir and base_libdir == libdir:
-		return True
+    if base_bindir == bindir and base_sbindir == sbindir and base_libdir == libdir:
+        return True
 
-	# Skip files not in base_[bindir|sbindir|libdir]
-	path = os.path.abspath(path)
-	if not (base_bindir in path or base_sbindir in path or base_libdir in path):
-		return True
+    # Skip files not in base_[bindir|sbindir|libdir]
+    path = os.path.abspath(path)
+    if not (base_bindir in path or base_sbindir in path or base_libdir in path):
+        return True
 
-	return False
+    return False
 
 QAPATHTEST[arch] = "package_qa_check_arch"
 def package_qa_check_arch(path,name,d, elf, messages):
@@ -443,11 +443,11 @@ def package_qa_check_arch(path,name,d, elf, messages):
 
     # Check the architecture and endiannes of the binary
     if not ((machine == elf.machine()) or \
-	("virtual/kernel" in provides) and (target_os == "linux-gnux32")):
+        ("virtual/kernel" in provides) and (target_os == "linux-gnux32")):
         messages.append("Architecture did not match (%d to %d) on %s" % \
                  (machine, elf.machine(), package_qa_clean_path(path,d)))
     elif not ((bits == elf.abiSize()) or  \
-	("virtual/kernel" in provides) and (target_os == "linux-gnux32")):
+        ("virtual/kernel" in provides) and (target_os == "linux-gnux32")):
         messages.append("Bit size did not match (%d to %d) %s on %s" % \
                  (bits, elf.abiSize(), bpn, package_qa_clean_path(path,d)))
     elif not littleendian == elf.isLittleEndian():
@@ -949,7 +949,7 @@ Missing inherit gettext?""" % (gt, config))
             whitelist = set(d.getVar("UNKNOWN_CONFIGURE_WHITELIST", True).split())
             options -= whitelist
             if options:
-		pn = d.getVar('PN', True)
+                pn = d.getVar('PN', True)
                 error_msg = pn + ": configure was passed unrecognised options: " + " ".join(options)
                 package_qa_handle_error("unknown-configure-option", error_msg, d)
         except subprocess.CalledProcessError:
