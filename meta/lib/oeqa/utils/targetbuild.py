@@ -4,11 +4,9 @@
 
 # Provides a class for automating build tests for projects
 
-from oeqa.oetest import oeRuntimeTest
-import bb.fetch2
-import bb.data
 import os
 import re
+import subprocess
 
 
 class TargetBuildProject():
@@ -16,26 +14,16 @@ class TargetBuildProject():
     def __init__(self, target, uri, foldername=None):
         self.target = target
         self.uri = uri
-        self.targetdir = "/home/root/"
-
-        self.localdata = bb.data.createCopy(oeRuntimeTest.tc.d)
-        bb.data.update_data(self.localdata)
-
-        if not foldername:
-            self.archive = os.path.basename(uri)
-            self.fname = re.sub(r'.tar.bz2|tar.gz$', '', self.archive)
-        else:
+        self.targetdir = "~/"
+        self.archive = os.path.basename(uri)
+        self.localarchive = "/tmp/" + self.archive
+        self.fname = re.sub(r'.tar.bz2|tar.gz$', '', self.archive)
+        if foldername:
             self.fname = foldername
 
     def download_archive(self):
 
-        try:
-            self.localdata.delVar("BB_STRICT_CHECKSUM")
-            fetcher = bb.fetch2.Fetch([self.uri], self.localdata)
-            fetcher.download()
-            self.localarchive = fetcher.localpath(self.uri)
-        except bb.fetch2.BBFetchException:
-            raise Exception("Failed to download archive: %s" % self.uri)
+        subprocess.check_call("wget -O %s %s" % (self.localarchive, self.uri), shell=True)
 
         (status, output) = self.target.copy_to(self.localarchive, self.targetdir)
         if status != 0:
@@ -61,3 +49,4 @@ class TargetBuildProject():
 
     def clean(self):
         self.target.run('rm -rf %s' % self.targetdir)
+        subprocess.call('rm -f %s' % self.localarchive, shell=True)
