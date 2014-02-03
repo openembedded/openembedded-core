@@ -1010,12 +1010,10 @@ class OpkgPM(PackageManager):
                     continue
 
                 for line in output.split('\n'):
-                    if line.startswith("Package:") or \
-                            line.startswith("Architecture:") or \
-                            line.startswith("Version:"):
-                        status.write(line)
-
-                status.write("Status: deinstall hold not-installed\n")
+                    if line.startswith("Status:"):
+                        status.write("Status: deinstall hold not-installed\n")
+                    else:
+                        status.write(line + "\n")
 
 
 class DpkgPM(PackageManager):
