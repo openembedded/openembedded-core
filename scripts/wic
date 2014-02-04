@@ -98,6 +98,12 @@ def wic_create_subcommand(args, usage_str):
 
     print "Creating image(s)...\n"
 
+    bitbake_env_lines = find_bitbake_env_lines(options.image_name)
+    if not bitbake_env_lines:
+        print "Couldn't get bitbake environment, exiting."
+        sys.exit(1)
+    set_bitbake_env_lines(bitbake_env_lines)
+
     bootimg_dir = staging_data_dir = hdddir = ""
 
     if options.image_name:

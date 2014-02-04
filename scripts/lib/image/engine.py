@@ -60,16 +60,26 @@ def verify_build_env():
     return True
 
 
+def find_bitbake_env_lines(image_name):
+    """
+    If image_name is empty, plugins might still be able to use the
+    environment, so set it regardless.
+    """
+    bitbake_env_cmd = "bitbake -e %s" % image_name
+    rc, bitbake_env_lines = exec_cmd(bitbake_env_cmd)
+    if rc != 0:
+        print "Couldn't get '%s' output." % bitbake_env_cmd
+        return None
+
+    return bitbake_env_lines
+
+
 def find_artifacts(image_name):
     """
     Gather the build artifacts for the current image (the image_name
     e.g. core-image-minimal) for the current MACHINE set in local.conf
     """
-    bitbake_env_cmd = "bitbake -e %s" % image_name
-    rc, bitbake_env_lines = exec_cmd(bitbake_env_cmd)
-    if rc != 0:
-        print "Couldn't get '%s' output, exiting." % bitbake_env_cmd
-        sys.exit(1)
+    bitbake_env_lines = get_bitbake_env_lines()
 
     rootfs_dir = kernel_dir = hdddir = staging_data_dir = native_sysroot = ""
 
