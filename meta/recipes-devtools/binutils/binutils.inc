@@ -40,7 +40,8 @@ USE_ALTERNATIVES_FOR = " \
 	elfedit \
 	gprof \
 	ld \
-	${@base_contains('DISTRO_FEATURES', 'ld-is-gold', 'ld.gold', 'ld.bfd', d)} \
+	ld.bfd \
+	${@base_contains('DISTRO_FEATURES', 'ld-is-gold', 'ld.gold dwp', '', d)} \
 	nm \
 	objcopy \
 	objdump \
