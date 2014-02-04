@@ -35,6 +35,11 @@ from mic.utils.partitionedfs import PartitionedMount
 from mic.utils.errors import CreatorError, MountError
 from mic.imager.baseimager import BaseImageCreator
 from mic.utils.oe.misc import *
+from mic.plugin import pluginmgr
+
+disk_methods = {
+    "do_install_disk":None,
+}
 
 class DirectImageCreator(BaseImageCreator):
     """
@@ -78,7 +83,6 @@ class DirectImageCreator(BaseImageCreator):
         self.native_sysroot = native_sysroot
         self.hdddir = hdddir
         self.staging_data_dir = staging_data_dir
-        self.boot_type = ""
 
     def __write_fstab(self):
         """overriden to generate fstab (temporarily) in rootfs. This
@@ -101,7 +105,7 @@ class DirectImageCreator(BaseImageCreator):
     def _update_fstab(self, fstab_lines, parts):
         """Assume partition order same as in wks"""
         for num, p in enumerate(parts, 1):
-            if p.mountpoint == "/" or p.mountpoint == "/boot":
+            if not p.mountpoint or p.mountpoint == "/" or p.mountpoint == "/boot":
                 continue
             if self._ptable_format == 'msdos' and num > 3:
                 device_name = "/dev/" + p.disk + str(num + 1)
@@ -131,6 +135,15 @@ class DirectImageCreator(BaseImageCreator):
         f.close()
 
         return fstab_contents
+
+    def set_bootimg_dir(self, bootimg_dir):
+        """
+        Accessor for bootimg_dir, the actual location used for the source
+        of the bootimg.  Should be set by source plugins (only if they
+        change the default bootimg source) so the correct info gets
+        displayed for print_outimage_info().
+        """
+        self.bootimg_dir = bootimg_dir
 
     def _get_parts(self):
         if not self.ks:
@@ -182,19 +195,18 @@ class DirectImageCreator(BaseImageCreator):
         """ Construct full file path to a file we generate. """
         return os.path.join(path, self._full_name(name, extention))
 
-    def get_boot_type(self):
-        """ Determine the boot type from fstype and mountpoint. """
-        parts = self._get_parts()
-
-        boot_type = ""
-
-        for p in parts:
-            if p.mountpoint == "/boot":
-                if p.fstype == "msdos":
-                    boot_type = "pcbios"
-                else:
-                    boot_type = p.fstype
-        return boot_type
+    def get_default_source_plugin(self):
+        """
+        The default source plugin i.e. the plugin that's consulted for
+        overall image generation tasks outside of any particular
+        partition.  For convenience, we just hang it off the
+        bootloader handler since it's the one non-partition object in
+        any setup.  By default the default plugin is set to the same
+        plugin as the /boot partition; since we hang it off the
+        bootloader object, the default can be explicitly set using the
+        --source bootloader param.
+        """
+        return self.ks.handler.bootloader.source
 
     #
     # Actual implemention
@@ -231,25 +243,7 @@ class DirectImageCreator(BaseImageCreator):
             if not self.ks.handler.bootloader.source and p.mountpoint == "/boot":
                 self.ks.handler.bootloader.source = p.source
 
-        self.boot_type = self.get_boot_type()
-
-        if not self.bootimg_dir:
-            if self.boot_type == "pcbios":
-                self.bootimg_dir = self.staging_data_dir
-            elif self.boot_type == "efi":
-                self.bootimg_dir = self.hdddir
-
-        if self.boot_type == "pcbios":
-            self._create_syslinux_config()
-        elif self.boot_type == "efi":
-            self._create_grubefi_config()
-        else:
-            raise CreatorError("Failed to detect boot type (no /boot partition?), "
-                               "please check your kickstart setting.")
-
         for p in parts:
-            if p.fstype == "efi":
-                p.fstype = "msdos"
             # need to create the filesystems in order to get their
             # sizes before we can add them and do the layout.
             # PartitionedMount.mount() actually calls __format_disks()
@@ -266,9 +260,8 @@ class DirectImageCreator(BaseImageCreator):
             # when/if we need to actually do package selection we
             # should modify things to use those objects, but for now
             # we can avoid that.
-            p.prepare(self.workdir, self.oe_builddir, self.boot_type,
-                      self.rootfs_dir, self.bootimg_dir, self.kernel_dir,
-                      self.native_sysroot)
+            p.prepare(self, self.workdir, self.oe_builddir, self.rootfs_dir,
+                      self.bootimg_dir, self.kernel_dir, self.native_sysroot)
 
             self.__instimage.add_partition(int(p.size),
                                            p.disk,
@@ -311,8 +304,16 @@ class DirectImageCreator(BaseImageCreator):
         For now, it just prepares the image to be bootable by e.g.
         creating and installing a bootloader configuration.
         """
-        if self.boot_type == "pcbios":
-            self._install_syslinux()
+        source_plugin = self.get_default_source_plugin()
+        if source_plugin:
+            self._source_methods = pluginmgr.get_source_plugin_methods(source_plugin, disk_methods)
+            for disk_name, disk in self.__instimage.disks.items():
+                self._source_methods["do_install_disk"](disk, disk_name, self,
+                                                        self.workdir,
+                                                        self.oe_builddir,
+                                                        self.bootimg_dir,
+                                                        self.kernel_dir,
+                                                        self.native_sysroot)
 
     def print_outimage_info(self):
         """
@@ -351,123 +352,6 @@ class DirectImageCreator(BaseImageCreator):
                 root_part_uuid = p.part_type
 
         return (rootdev, root_part_uuid)
-
-    def _create_syslinux_config(self):
-        hdddir = "%s/hdd/boot" % self.workdir
-        rm_cmd = "rm -rf " + self.workdir
-        exec_cmd(rm_cmd)
-
-        install_cmd = "install -d %s" % hdddir
-        tmp = exec_cmd(install_cmd)
-
-        splash = os.path.join(self.workdir, "/hdd/boot/splash.jpg")
-        if os.path.exists(splash):
-            splashline = "menu background splash.jpg"
-        else:
-            splashline = ""
-
-        (rootdev, root_part_uuid) = self._get_boot_config()
-        options = self.ks.handler.bootloader.appendLine
-
-        syslinux_conf = ""
-        syslinux_conf += "PROMPT 0\n"
-        timeout = kickstart.get_timeout(self.ks)
-        if not timeout:
-            timeout = 0
-        syslinux_conf += "TIMEOUT " + str(timeout) + "\n"
-        syslinux_conf += "\n"
-        syslinux_conf += "ALLOWOPTIONS 1\n"
-        syslinux_conf += "SERIAL 0 115200\n"
-        syslinux_conf += "\n"
-        if splashline:
-            syslinux_conf += "%s\n" % splashline
-        syslinux_conf += "DEFAULT boot\n"
-        syslinux_conf += "LABEL boot\n"
-
-        kernel = "/vmlinuz"
-        syslinux_conf += "KERNEL " + kernel + "\n"
-
-        if self._ptable_format == 'msdos':
-            rootstr = rootdev
-        else:
-            if not root_part_uuid:
-                raise MountError("Cannot find the root GPT partition UUID")
-            rootstr = "PARTUUID=%s" % root_part_uuid
-
-        syslinux_conf += "APPEND label=boot root=%s %s\n" % (rootstr, options)
-
-        msger.debug("Writing syslinux config %s/hdd/boot/syslinux.cfg" \
-                    % self.workdir)
-        cfg = open("%s/hdd/boot/syslinux.cfg" % self.workdir, "w")
-        cfg.write(syslinux_conf)
-        cfg.close()
-
-    def _create_grubefi_config(self):
-        hdddir = "%s/hdd/boot" % self.workdir
-        rm_cmd = "rm -rf %s" % self.workdir
-        exec_cmd(rm_cmd)
-
-        install_cmd = "install -d %s/EFI/BOOT" % hdddir
-        tmp = exec_cmd(install_cmd)
-
-        splash = os.path.join(self.workdir, "/EFI/boot/splash.jpg")
-        if os.path.exists(splash):
-            splashline = "menu background splash.jpg"
-        else:
-            splashline = ""
-
-        (rootdev, root_part_uuid) = self._get_boot_config()
-        options = self.ks.handler.bootloader.appendLine
-
-        grubefi_conf = ""
-        grubefi_conf += "serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1\n"
-        grubefi_conf += "default=boot\n"
-        timeout = kickstart.get_timeout(self.ks)
-        if not timeout:
-            timeout = 0
-        grubefi_conf += "timeout=%s\n" % timeout
-        grubefi_conf += "menuentry 'boot'{\n"
-
-        kernel = "/vmlinuz"
-
-        if self._ptable_format == 'msdos':
-            rootstr = rootdev
-        else:
-            if not root_part_uuid:
-                raise MountError("Cannot find the root GPT partition UUID")
-            rootstr = "PARTUUID=%s" % root_part_uuid
-
-        grubefi_conf += "linux %s root=%s rootwait %s\n" \
-            % (kernel, rootstr, options)
-        grubefi_conf += "}\n"
-        if splashline:
-            syslinux_conf += "%s\n" % splashline
-
-        msger.debug("Writing grubefi config %s/hdd/boot/EFI/BOOT/grub.cfg" \
-                        % self.workdir)
-        cfg = open("%s/hdd/boot/EFI/BOOT/grub.cfg" % self.workdir, "w")
-        cfg.write(grubefi_conf)
-        cfg.close()
-
-    def _install_syslinux(self):
-        mbrfile = "%s/syslinux/" % self.bootimg_dir
-        if self._ptable_format == 'gpt':
-            mbrfile += "gptmbr.bin"
-        else:
-            mbrfile += "mbr.bin"
-
-        if not os.path.exists(mbrfile):
-            msger.error("Couldn't find %s.  If using the -e option, do you have the right MACHINE set in local.conf?  If not, is the bootimg_dir path correct?" % mbrfile)
-
-        for disk_name, disk in self.__instimage.disks.items():
-            full_path = self._full_path(self.__imgdir, disk_name, "direct")
-            msger.debug("Installing MBR on disk %s as %s with size %s bytes" \
-                            % (disk_name, full_path, disk['min_size']))
-
-            rc = runner.show(['dd', 'if=%s' % mbrfile,
-                              'of=%s' % full_path, 'conv=notrunc'])
-            if rc != 0:
-                raise MountError("Unable to set MBR to %s" % full_path)
 
     def _unmount_instroot(self):
         if not self.__instimage is None:

@@ -2,7 +2,7 @@
 # long-description: Creates a partitioned EFI disk image that the user
 # can directly dd to boot media.
 
-part /boot --source bootimg --ondisk sda --fstype=efi --label msdos --active --align 1024
+part /boot --source bootimg-efi --ondisk sda --fstype=msdos --label msdos --active --align 1024
 
 part / --source rootfs --ondisk sda --fstype=ext3 --label platform --align 1024
 

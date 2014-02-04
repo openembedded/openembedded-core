@@ -135,7 +135,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
             if not bootimg_dir:
                 msger.error("Couldn't find STAGING_DATADIR, exiting\n")
             # just so the result notes display it
-            cr.bootimg_dir = bootimg_dir
+            cr.set_bootimg_dir(bootimg_dir)
 
         staging_kernel_dir = kernel_dir
         staging_data_dir = bootimg_dir
@@ -181,7 +181,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         rc, out = exec_cmd(du_cmd)
         bootimg_size = out.split()[0]
 
-        part.size = bootimg_size
-        part.source_file = bootimg
+        part.set_size(bootimg_size)
+        part.set_source_file(bootimg)
 
 

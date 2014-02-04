@@ -28,8 +28,14 @@ import shutil
 
 from pykickstart.commands.partition import *
 from mic.utils.oe.misc import *
-
 from mic.kickstart.custom_commands import *
+from mic.plugin import pluginmgr
+
+partition_methods = {
+    "do_stage_partition":None,
+    "do_prepare_partition":None,
+    "do_configure_partition":None,
+}
 
 class Wic_PartData(Mic_PartData):
     removedKeywords = Mic_PartData.removedKeywords
@@ -50,8 +56,22 @@ class Wic_PartData(Mic_PartData):
 
         return retval
 
-    def prepare(self, cr_workdir, oe_builddir, boot_type, rootfs_dir,
-                bootimg_dir, kernel_dir, native_sysroot):
+    def set_size(self, size):
+        """
+        Accessor for actual partition size, which must be set by source
+        plugins.
+        """
+        self.size = size
+
+    def set_source_file(self, source_file):
+        """
+        Accessor for source_file, the location of the generated partition
+        image, which must be set by source plugins.
+        """
+        self.source_file = source_file
+
+    def prepare(self, cr, cr_workdir, oe_builddir, rootfs_dir, bootimg_dir,
+                kernel_dir, native_sysroot):
         """
         Prepare content for individual partitions, depending on
         partition command parameters.
@@ -65,121 +85,24 @@ class Wic_PartData(Mic_PartData):
                                              native_sysroot)
             return
 
-        if self.source == "bootimg" and boot_type == "pcbios":
-            self.prepare_bootimg_pcbios(cr_workdir, oe_builddir, bootimg_dir,
-                                        kernel_dir, native_sysroot)
-        elif self.source == "bootimg" and boot_type == "efi":
-            self.prepare_bootimg_efi(cr_workdir, oe_builddir, bootimg_dir,
-                                     kernel_dir, native_sysroot)
-        elif self.source.startswith("rootfs"):
+        if self.source.startswith("rootfs"):
             self.prepare_rootfs(cr_workdir, oe_builddir, rootfs_dir,
                                 native_sysroot)
-
-    def prepare_bootimg_pcbios(self, cr_workdir, oe_builddir, bootimg_dir,
-                               kernel_dir, native_sysroot):
-        """
-        Prepare content for a legacy bios boot partition.
-        """
-        staging_kernel_dir = kernel_dir
-        staging_data_dir = bootimg_dir
-
-        hdddir = "%s/hdd/boot" % cr_workdir
-
-        install_cmd = "install -m 0644 %s/bzImage %s/vmlinuz" \
-            % (staging_kernel_dir, hdddir)
-        tmp = exec_cmd(install_cmd)
-
-        install_cmd = "install -m 444 %s/syslinux/ldlinux.sys %s/ldlinux.sys" \
-            % (staging_data_dir, hdddir)
-        tmp = exec_cmd(install_cmd)
-
-        du_cmd = "du -bks %s" % hdddir
-        rc, out = exec_cmd(du_cmd)
-        blocks = int(out.split()[0])
-
-        blocks += BOOTDD_EXTRA_SPACE
-
-        # Ensure total sectors is an integral number of sectors per
-        # track or mcopy will complain. Sectors are 512 bytes, and we
-        # generate images with 32 sectors per track. This calculation is
-        # done in blocks, thus the mod by 16 instead of 32.
-        blocks += (16 - (blocks % 16))
-
-        # dosfs image, created by mkdosfs
-        bootimg = "%s/boot.img" % cr_workdir
-
-        dosfs_cmd = "mkdosfs -n boot -S 512 -C %s %d" % (bootimg, blocks)
-        exec_native_cmd(dosfs_cmd, native_sysroot)
-
-        mcopy_cmd = "mcopy -i %s -s %s/* ::/" % (bootimg, hdddir)
-        exec_native_cmd(mcopy_cmd, native_sysroot)
-
-        syslinux_cmd = "syslinux %s" % bootimg
-        exec_native_cmd(syslinux_cmd, native_sysroot)
-
-        chmod_cmd = "chmod 644 %s" % bootimg
-        exec_cmd(chmod_cmd)
-
-        du_cmd = "du -Lbms %s" % bootimg
-        rc, out = exec_cmd(du_cmd)
-        bootimg_size = out.split()[0]
-
-        self.size = bootimg_size
-        self.source_file = bootimg
-
-    def prepare_bootimg_efi(self, cr_workdir, oe_builddir, bootimg_dir,
-                            kernel_dir, native_sysroot):
-        """
-        Prepare content for an EFI (grub) boot partition.
-        """
-        staging_kernel_dir = kernel_dir
-        staging_data_dir = bootimg_dir
-
-        hdddir = "%s/hdd/boot" % cr_workdir
-
-        install_cmd = "install -m 0644 %s/bzImage %s/vmlinuz" % \
-            (staging_kernel_dir, hdddir)
-        tmp = exec_cmd(install_cmd)
-
-        shutil.copyfile("%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir,
-                        "%s/grub.cfg" % cr_workdir)
-
-        cp_cmd = "cp %s/EFI/BOOT/* %s/EFI/BOOT" % (staging_data_dir, hdddir)
-        exec_cmd(cp_cmd, True)
-
-        shutil.move("%s/grub.cfg" % cr_workdir,
-                    "%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir)
-
-        du_cmd = "du -bks %s" % hdddir
-        rc, out = exec_cmd(du_cmd)
-        blocks = int(out.split()[0])
-
-        blocks += BOOTDD_EXTRA_SPACE
-
-        # Ensure total sectors is an integral number of sectors per
-        # track or mcopy will complain. Sectors are 512 bytes, and we
-        # generate images with 32 sectors per track. This calculation is
-        # done in blocks, thus the mod by 16 instead of 32.
-        blocks += (16 - (blocks % 16))
-
-        # dosfs image, created by mkdosfs
-        bootimg = "%s/boot.img" % cr_workdir
-
-        dosfs_cmd = "mkdosfs -n efi -C %s %d" % (bootimg, blocks)
-        exec_native_cmd(dosfs_cmd, native_sysroot)
-
-        mcopy_cmd = "mcopy -i %s -s %s/* ::/" % (bootimg, hdddir)
-        exec_native_cmd(mcopy_cmd, native_sysroot)
-
-        chmod_cmd = "chmod 644 %s" % bootimg
-        exec_cmd(chmod_cmd)
-
-        du_cmd = "du -Lbms %s" % bootimg
-        rc, out = exec_cmd(du_cmd)
-        bootimg_size = out.split()[0]
-
-        self.size = bootimg_size
-        self.source_file = bootimg
+        else:
+            self._source_methods = pluginmgr.get_source_plugin_methods(self.source, partition_methods)
+            self._source_methods["do_configure_partition"](self, cr, cr_workdir,
+                                                           oe_builddir,
+                                                           bootimg_dir,
+                                                           kernel_dir,
+                                                           native_sysroot)
+            self._source_methods["do_stage_partition"](self, cr, cr_workdir,
+                                                       oe_builddir,
+                                                       bootimg_dir, kernel_dir,
+                                                       native_sysroot)
+            self._source_methods["do_prepare_partition"](self, cr, cr_workdir,
+                                                         oe_builddir,
+                                                         bootimg_dir, kernel_dir,
+                                                         native_sysroot)
 
     def prepare_rootfs_from_fs_image(self, cr_workdir, oe_builddir,
                                      rootfs_dir):
