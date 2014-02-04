@@ -32,7 +32,7 @@ from pykickstart.handlers.control import dataMap
 
 from mic import msger
 from mic.utils import errors, misc, runner, fs_related as fs
-from custom_commands import desktop, micrepo, micboot, partition, installerfw
+from custom_commands import desktop, micrepo, wicboot, partition, installerfw
 
 
 AUTH_URL_PTN = r"(?P<scheme>.*)://(?P<username>.*)(:?P<password>.*)?@(?P<url>.*)"
@@ -98,7 +98,7 @@ def read_kickstart(path):
     using_version = ksversion.DEVEL
     commandMap[using_version]["desktop"] = desktop.Mic_Desktop
     commandMap[using_version]["repo"] = micrepo.Mic_Repo
-    commandMap[using_version]["bootloader"] = micboot.Mic_Bootloader
+    commandMap[using_version]["bootloader"] = wicboot.Wic_Bootloader
     commandMap[using_version]["part"] = partition.Wic_Partition
     commandMap[using_version]["partition"] = partition.Wic_Partition
     commandMap[using_version]["installerfw"] = installerfw.Mic_installerfw

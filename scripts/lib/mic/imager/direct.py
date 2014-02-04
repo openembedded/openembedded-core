@@ -225,6 +225,12 @@ class DirectImageCreator(BaseImageCreator):
 
         fstab = self.__write_fstab()
 
+        for p in parts:
+            # as a convenience, set source to the boot partition source
+            # instead of forcing it to be set via bootloader --source
+            if not self.ks.handler.bootloader.source and p.mountpoint == "/boot":
+                self.ks.handler.bootloader.source = p.source
+
         self.boot_type = self.get_boot_type()
 
         if not self.bootimg_dir:
