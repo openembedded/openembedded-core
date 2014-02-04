@@ -175,7 +175,7 @@ def list_canned_image_help(scripts_path, fullpath):
 
 def wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
                native_sysroot, hdddir, staging_data_dir, scripts_path,
-               image_output_dir, properties_file, properties=None):
+               image_output_dir, debug, properties_file, properties=None):
     """
     Create image
 
@@ -234,6 +234,9 @@ def wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     direct_args.insert(0, hdddir)
     direct_args.insert(0, staging_data_dir)
     direct_args.insert(0, "direct")
+
+    if debug:
+        msger.set_loglevel('debug')
 
     cr = creator.Creator()
 

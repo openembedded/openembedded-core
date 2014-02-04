@@ -69,6 +69,8 @@ def wic_create_subcommand(args, usage_str):
                       action = "store", help = "path to the native sysroot containing the tools to use to build the image")
     parser.add_option("-p", "--skip-build-check", dest = "build_check",
                       action = "store_false", default = True, help = "skip the build check")
+    parser.add_option("-D", "--debug", dest = "debug", action = "store_true",
+                      default = False, help = "output debug information")
 
     (options, args) = parser.parse_args(args)
 
@@ -162,7 +164,7 @@ def wic_create_subcommand(args, usage_str):
 
     wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
                native_sysroot, hdddir, staging_data_dir, scripts_path,
-               image_output_dir, options.properties_file)
+               image_output_dir, options.debug, options.properties_file)
 
 
 def wic_list_subcommand(args, usage_str):
@@ -203,15 +205,8 @@ def main():
                                    usage = wic_usage)
 
     parser.disable_interspersed_args()
-    parser.add_option("-D", "--debug", dest = "debug", action = "store_true",
-                      default = False, help = "output debug information")
 
     (options, args) = parser.parse_args()
-
-    loglevel = logging.INFO
-    if options.debug:
-        loglevel = logging.DEBUG
-    start_logging(loglevel)
 
     if len(args):
         if args[0] == "help":
