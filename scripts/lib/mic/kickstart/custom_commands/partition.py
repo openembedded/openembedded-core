@@ -31,8 +31,6 @@ from mic.utils.oe.misc import *
 
 from mic.kickstart.custom_commands import *
 
-BOOTDD_EXTRA_SPACE = 16384
-
 class Wic_PartData(Mic_PartData):
     removedKeywords = Mic_PartData.removedKeywords
     removedAttrs = Mic_PartData.removedAttrs

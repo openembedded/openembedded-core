@@ -106,3 +106,15 @@ def get_wks_var(key):
 
 def add_wks_var(key, val):
     wks_vars[key] = val
+
+BOOTDD_EXTRA_SPACE = 16384
+
+def get_line_val(line, key):
+    """
+    Extract the value from the VAR="val" string
+    """
+    if line.startswith(key + "="):
+        stripped_line = line.split('=')[1]
+        stripped_line = stripped_line.replace('\"', '')
+        return stripped_line
+    return None

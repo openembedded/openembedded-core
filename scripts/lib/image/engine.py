@@ -60,17 +60,6 @@ def verify_build_env():
     return True
 
 
-def get_line_val(line, key):
-    """
-    Extract the value from the VAR="val" string
-    """
-    if line.startswith(key + "="):
-        stripped_line = line.split('=')[1]
-        stripped_line = stripped_line.replace('\"', '')
-        return stripped_line
-    return None
-
-
 def find_artifacts(image_name):
     """
     Gather the build artifacts for the current image (the image_name
