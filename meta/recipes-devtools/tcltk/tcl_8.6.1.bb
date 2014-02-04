@@ -33,7 +33,7 @@ VER = "8.6.1"
 
 inherit autotools ptest
 
-DEPENDS_class-native = ""
+DEPENDS_class-native = "zlib-native"
 
 EXTRA_OECONF = "--enable-threads --disable-rpath --libdir=${libdir}"
 
