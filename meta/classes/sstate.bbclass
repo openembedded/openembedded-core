@@ -211,6 +211,8 @@ def sstate_install(ss, d):
     for lock in locks:
         bb.utils.unlockfile(lock)
 
+sstate_install[vardepsexclude] = "SSTATE_DUPWHITELIST STATE_MANMACH SSTATE_MANFILEPREFIX"
+
 def sstate_installpkg(ss, d):
     import oe.path
     import subprocess
@@ -372,6 +374,8 @@ def sstate_clean(ss, d):
         if rm_stamp in stfile or rm_setscene in stfile or \
                 stfile.endswith(rm_nohash):
             oe.path.remove(stfile)
+
+sstate_clean[vardepsexclude] = "SSTATE_MANFILEPREFIX"
 
 CLEANFUNCS += "sstate_cleanall"
 
