@@ -1,0 +1,54 @@
+Upstream-Status: Submitted
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From a047a0270ee5faf1d9d6080cbc613defdf52baea Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Tue, 4 Feb 2014 13:15:08 +0000
+Subject: [PATCH] gio/tests: fix race when generating code
+
+There is a race condition in the makefile that can result in build failures like this in parallel builds:
+
+| ./gdbus-test-codegen-generated.h:7:0: error: unterminated #ifndef
+|  #ifndef __GDBUS_TEST_CODEGEN_GENERATED_H__
+
+This is because a rule like this:
+
+x.c x.h: prerequisites
+	@commands
+
+doesn't consider x.c and x.h together. Instead, it expands to two rules, one to
+generate x.c and one to generate x.h, which happen to run the same commands.  In
+the worst case they execute in parallel, overwriting each other's output.
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+https://bugzilla.gnome.org/show_bug.cgi?id=723616
+---
+ gio/tests/Makefile.am |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/gio/tests/Makefile.am b/gio/tests/Makefile.am
+index 0beb239..270faf6 100644
+--- a/gio/tests/Makefile.am
++++ b/gio/tests/Makefile.am
+@@ -436,7 +436,7 @@ gmenumodel_SOURCES                       = $(gdbus_sessionbus_sources) gmenumode
+ gnotification_SOURCES                    = $(gdbus_sessionbus_sources) gnotification.c gnotification-server.h gnotification-server.c
+ 
+ gdbus-test-codegen.o: gdbus-test-codegen-generated.h
+-gdbus-test-codegen-generated.h gdbus-test-codegen-generated.c: test-codegen.xml Makefile $(top_builddir)/gio/gdbus-2.0/codegen/gdbus-codegen
++gdbus-test-codegen-generated.h: test-codegen.xml Makefile $(top_builddir)/gio/gdbus-2.0/codegen/gdbus-codegen
+ 	$(AM_V_GEN) UNINSTALLED_GLIB_SRCDIR=$(top_srcdir) \
+ 		UNINSTALLED_GLIB_BUILDDIR=$(top_builddir) \
+ 		$(PYTHON) $(top_builddir)/gio/gdbus-2.0/codegen/gdbus-codegen \
+@@ -455,6 +455,8 @@ gdbus-test-codegen-generated.h gdbus-test-codegen-generated.c: test-codegen.xml
+ 		--annotate "org.project.Bar::TestSignal[array_of_strings]" Key8 Value8 \
+ 		$(srcdir)/test-codegen.xml \
+ 		$(NULL)
++gdbus-test-codegen-generated.c: gdbus-test-codegen-generated.h
++	@: # Generated as side-effect of .h
+ 
+ EXTRA_DIST += test-codegen.xml
+ CLEANFILES += gdbus-test-codegen-generated.[ch] gdbus-test-codegen-generated-doc-*.xml
+-- 
+1.7.10.4
+
