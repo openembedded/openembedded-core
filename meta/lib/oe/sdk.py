@@ -216,7 +216,9 @@ class OpkgSdk(Sdk):
     def _populate_sysroot(self, pm, manifest):
         pkgs_to_install = manifest.parse_initial_manifest()
 
-        pm.write_index()
+        if (self.d.getVar('BUILD_IMAGES_FROM_FEEDS', True) or "") != "1":
+            pm.write_index()
+
         pm.update()
 
         for pkg_type in self.install_order:

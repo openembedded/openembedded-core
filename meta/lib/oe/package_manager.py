@@ -805,7 +805,10 @@ class OpkgPM(PackageManager):
 
         bb.utils.mkdirhier(self.opkg_dir)
 
-        self._create_config()
+        if (self.d.getVar('BUILD_IMAGES_FROM_FEEDS', True) or "") != "1":
+            self._create_config()
+        else:
+            self._create_custom_config()
 
     """
     This function will change a package's status in /var/lib/opkg/status file.
@@ -835,6 +838,45 @@ class OpkgPM(PackageManager):
 
         os.rename(status_file + ".tmp", status_file)
 
+    def _create_custom_config(self):
+        bb.note("Building from feeds activated!")
+
+        with open(self.config_file, "w+") as config_file:
+            priority = 1
+            for arch in self.pkg_archs.split():
+                config_file.write("arch %s %d\n" % (arch, priority))
+                priority += 5
+
+            for line in (self.d.getVar('IPK_FEED_URIS', True) or "").split():
+                feed_match = re.match("^[ \t]*(.*)##([^ \t]*)[ \t]*$", line)
+
+                if feed_match is not None:
+                    feed_name = feed_match.group(1)
+                    feed_uri = feed_match.group(2)
+
+                    bb.note("Add %s feed with URL %s" % (feed_name, feed_uri))
+
+                    config_file.write("src/gz %s %s\n" % (feed_name, feed_uri))
+
+            """
+            Allow to use package deploy directory contents as quick devel-testing
+            feed. This creates individual feed configs for each arch subdir of those
+            specified as compatible for the current machine.
+            NOTE: Development-helper feature, NOT a full-fledged feed.
+            """
+            if (self.d.getVar('FEED_DEPLOYDIR_BASE_URI', True) or "") != "":
+                for arch in self.pkg_archs.split():
+                    cfg_file_name = os.path.join(self.target_rootfs,
+                                                 self.d.getVar("sysconfdir", True),
+                                                 "opkg",
+                                                 "local-%s-feed.conf" % arch)
+
+                    with open(cfg_file_name, "w+") as cfg_file:
+                        cfg_file.write("src/gz local-%s %s/%s" %
+                                       arch,
+                                       self.d.getVar('FEED_DEPLOYDIR_BASE_URI', True),
+                                       arch)
+
     def _create_config(self):
         with open(self.config_file, "w+") as config_file:
             priority = 1
@@ -847,7 +889,8 @@ class OpkgPM(PackageManager):
             for arch in self.pkg_archs.split():
                 pkgs_dir = os.path.join(self.deploy_dir, arch)
                 if os.path.isdir(pkgs_dir):
-                    config_file.write("src oe-%s file:%s\n" % (arch, pkgs_dir))
+                    config_file.write("src oe-%s file:%s\n" %
+                                      (arch, pkgs_dir))
 
     def update(self):
         self.deploy_dir_lock()
