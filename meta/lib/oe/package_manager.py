@@ -496,7 +496,7 @@ class RpmPM(PackageManager):
     def install(self, pkgs, attempt_only=False):
 
         bb.note("Installing the following packages: %s" % ' '.join(pkgs))
-        if len(pkgs) == 0:
+        if attempt_only and len(pkgs) == 0:
             return
         pkgs = self._pkg_translate_oe_to_smart(pkgs, attempt_only)
 
@@ -907,6 +907,9 @@ class OpkgPM(PackageManager):
         self.deploy_dir_unlock()
 
     def install(self, pkgs, attempt_only=False):
+        if attempt_only and len(pkgs) == 0:
+            return
+
         cmd = "%s %s install %s" % (self.opkg_cmd, self.opkg_args, ' '.join(pkgs))
 
         os.environ['D'] = self.target_rootfs
@@ -1164,6 +1167,9 @@ class DpkgPM(PackageManager):
         self.deploy_dir_unlock()
 
     def install(self, pkgs, attempt_only=False):
+        if attempt_only and len(pkgs) == 0:
+            return
+
         os.environ['APT_CONFIG'] = self.apt_conf_file
 
         cmd = "%s %s install --force-yes --allow-unauthenticated %s" % \
