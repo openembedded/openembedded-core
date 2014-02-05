@@ -13,7 +13,7 @@ do_rootfs[lockfiles] += "${DEPLOY_DIR_DEB}/deb.lock"
 
 python rootfs_deb_bad_recommendations() {
     if d.getVar("BAD_RECOMMENDATIONS", True):
-	bb.warn("Debian package install does not support BAD_RECOMMENDATIONS")
+        bb.warn("Debian package install does not support BAD_RECOMMENDATIONS")
 }
 do_rootfs[prefuncs] += "rootfs_deb_bad_recommendations"
 
