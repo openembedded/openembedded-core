@@ -1,7 +1,6 @@
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
-
-SRCREV = "aa7b1e00e6cb7058071ead0180de0541b1c6eccf"
+SRCREV = "9190b3acfe706d3bfd66dec18133d28f98443321"
 PV = "2.4+git${SRCPV}"
 
 SRC_URI = "git://sourceware.org/git/systemtap.git \
@@ -11,11 +10,8 @@ SRC_URI = "git://sourceware.org/git/systemtap.git \
 
 FILESPATH = "${FILE_DIRNAME}/systemtap"
 
-SRC_URI[md5sum]    = "cb202866ed704c44a876d041f788bdee"
-SRC_URI[sha256sum] = "8ffe35caec0d937bd23fd78a3a8d94b58907cc0de0330b35e38f9f764815c459"
-
 # systemtap doesn't support mips
-COMPATIBLE_HOST = '(x86_64.*|i.86.*|powerpc.*|arm.*)-linux'
+COMPATIBLE_HOST = '(x86_64|i.86|powerpc|arm|aarch64).*-linux'
 
 S = "${WORKDIR}/git"
 
@@ -29,4 +25,3 @@ def get_optimization(d):
     return selected_optimization
 
 SELECTED_OPTIMIZATION := "${@get_optimization(d)}"
-
