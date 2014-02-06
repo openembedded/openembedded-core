@@ -8,5 +8,5 @@ SRC_URI += " file://gdb-fix-cygwin-check-in-configure-script.patch "
 
 S = "${WORKDIR}/${BPN}-${PV}"
 
-SRC_URI[md5sum] = "d42841167fd061d90fddf9a7212a1f9f"
-SRC_URI[sha256sum] = "3ccf7f618536f89648ba89e322fc3c0946bc15c03ca09c32fd9e71bbca68104b"
+SRC_URI[md5sum] = "9ebf09fa76e4ca6034157086e9b20348"
+SRC_URI[sha256sum] = "17f7bcda1b24336aadcb1c5e703c355551e59467e221c6f4353b720dffad73a7"
