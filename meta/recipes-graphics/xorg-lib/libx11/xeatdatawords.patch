@@ -1,0 +1,65 @@
+From 9f5d83706543696fc944c1835a403938c06f2cc5 Mon Sep 17 00:00:00 2001
+From: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date: Sat, 02 Mar 2013 04:54:24 +0000
+Subject: Add _XEatDataWords to discard a given number of 32-bit words of reply data
+
+Matches the units of the length field in X protocol replies, and provides
+a single implementation of overflow checking to avoid having to replicate
+those checks in every caller.
+
+Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+Reviewed-by: Matthieu Herrb <matthieu.herrb@laas.fr>
+
+Upstream-Status: Backport
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+---
+diff --git a/include/X11/Xlibint.h b/include/X11/Xlibint.h
+index 06395b3..d63a534 100644
+--- a/include/X11/Xlibint.h
++++ b/include/X11/Xlibint.h
+@@ -855,6 +855,10 @@ extern void _XEatData(
+     Display*		/* dpy */,
+     unsigned long	/* n */
+ );
++extern void _XEatDataWords(
++    Display*		/* dpy */,
++    unsigned long	/* n */
++);
+ extern char *_XAllocScratch(
+     Display*		/* dpy */,
+     unsigned long	/* nbytes */
+diff --git a/src/xcb_io.c b/src/xcb_io.c
+index 300ef57..727c6c7 100644
+--- a/src/xcb_io.c
++++ b/src/xcb_io.c
+@@ -19,6 +19,7 @@
+ #include <stdint.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <limits.h>
+ #ifdef HAVE_SYS_SELECT_H
+ #include <sys/select.h>
+ #endif
+@@ -757,3 +758,19 @@ void _XEatData(Display *dpy, unsigned long n)
+ 	dpy->xcb->reply_consumed += n;
+ 	_XFreeReplyData(dpy, False);
+ }
++
++/*
++ * Read and discard "n" 32-bit words of data
++ * Matches the units of the length field in X protocol replies, and provides
++ * a single implementation of overflow checking to avoid having to replicate
++ * those checks in every caller.
++ */
++void _XEatDataWords(Display *dpy, unsigned long n)
++{
++	if (n < ((INT_MAX - dpy->xcb->reply_consumed) >> 2))
++		dpy->xcb->reply_consumed += (n << 2);
++	else
++		/* Overflow would happen, so just eat the rest of the reply */
++		dpy->xcb->reply_consumed = dpy->xcb->reply_length;
++	_XFreeReplyData(dpy, False);
++}
+--
+cgit v0.9.0.2-2-gbebe

@@ -7,6 +7,7 @@ BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI += "file://keysymdef_include.patch \
             file://disable_tests.patch \
+            file://xeatdatawords.patch \
            "
 
 SRC_URI[md5sum] = "78b4b3bab4acbdf0abcfca30a8c70cc6"
