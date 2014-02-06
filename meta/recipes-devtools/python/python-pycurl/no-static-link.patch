@@ -1,15 +1,17 @@
 Upstream-Status: Pending
 
-Index: pycurl-7.19.0.2/setup.py
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+
+Index: pycurl-7.19.3/setup.py
 ===================================================================
---- pycurl-7.19.0.2.orig/setup.py	2013-10-08 15:28:53.000000000 +0300
-+++ pycurl-7.19.0.2/setup.py	2013-11-04 13:46:47.928292585 +0200
-@@ -101,7 +101,7 @@
-     # support one or the other of these curl-config options, so gracefully
-     # tolerate failure of either, but not both.
+--- pycurl-7.19.3.orig/setup.py	2014-01-10 08:04:40.000000000 +0200
++++ pycurl-7.19.3/setup.py	2014-02-04 15:09:08.411552887 +0200
+@@ -211,7 +211,7 @@
+     # If neither --libs nor --static-libs work, fail.
      optbuf = ""
+     errtext = ''
 -    for option in ["--libs", "--static-libs"]:
 +    for option in ["--libs"]:
-         p = subprocess.Popen("'%s' %s" % (CURL_CONFIG, option), shell=True,
-             stdout=subprocess.PIPE)
-         (stdout, stderr) = p.communicate()
+         p = subprocess.Popen((CURL_CONFIG, option),
+             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+         stdout, stderr = p.communicate()
