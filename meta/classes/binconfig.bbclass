@@ -5,6 +5,7 @@ def get_binconfig_mangle(d):
 	s = "-e ''"
 	if not bb.data.inherits_class('native', d):
 		optional_quote = r"\(\"\?\)"
+		s += " -e 's:=%s${base_libdir}:=\\1OEBASELIBDIR:;'" % optional_quote
 		s += " -e 's:=%s${libdir}:=\\1OELIBDIR:;'" % optional_quote
 		s += " -e 's:=%s${includedir}:=\\1OEINCDIR:;'" % optional_quote
 		s += " -e 's:=%s${datadir}:=\\1OEDATADIR:'" % optional_quote
@@ -12,6 +13,7 @@ def get_binconfig_mangle(d):
 		s += " -e 's:=%s${exec_prefix}/:=\\1OEEXECPREFIX/:'" % optional_quote
 		s += " -e 's:-L${libdir}:-LOELIBDIR:;'"
 		s += " -e 's:-I${includedir}:-IOEINCDIR:;'"
+		s += " -e 's:OEBASELIBDIR:${STAGING_BASELIBDIR}:;'"
 		s += " -e 's:OELIBDIR:${STAGING_LIBDIR}:;'"
 		s += " -e 's:OEINCDIR:${STAGING_INCDIR}:;'"
 		s += " -e 's:OEDATADIR:${STAGING_DATADIR}:'"
@@ -31,7 +33,8 @@ PACKAGE_PREPROCESS_FUNCS += "binconfig_package_preprocess"
 binconfig_package_preprocess () {
 	for config in `find ${PKGD} -name '${BINCONFIG_GLOB}'`; do
 		sed -i \
-		    -e 's:${STAGING_LIBDIR}:${libdir}:g;' \ 
+		    -e 's:${STAGING_BASELIBDIR}:${base_libdir}:g;' \
+		    -e 's:${STAGING_LIBDIR}:${libdir}:g;' \
 		    -e 's:${STAGING_INCDIR}:${includedir}:g;' \
 		    -e 's:${STAGING_DATADIR}:${datadir}:' \
 		    -e 's:${STAGING_DIR_HOST}${prefix}:${prefix}:' \
@@ -39,6 +42,7 @@ binconfig_package_preprocess () {
 	done
 	for lafile in `find ${PKGD} -name "*.la"` ; do
 		sed -i \
+		    -e 's:${STAGING_BASELIBDIR}:${base_libdir}:g;' \
 		    -e 's:${STAGING_LIBDIR}:${libdir}:g;' \
 		    -e 's:${STAGING_INCDIR}:${includedir}:g;' \
 		    -e 's:${STAGING_DATADIR}:${datadir}:' \
