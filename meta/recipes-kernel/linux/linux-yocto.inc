@@ -31,7 +31,7 @@ inherit kernel
 inherit kernel-yocto
 require linux-dtb.inc
 
-B = "${WORKDIR}/linux-${MACHINE}-${LINUX_KERNEL_TYPE}-build"
+B = "${WORKDIR}/linux-${PACKAGE_ARCH}-${LINUX_KERNEL_TYPE}-build"
 
 do_install_append(){
 	if [ -n "${KMETA}" ]; then
