@@ -497,7 +497,8 @@ python write_specfile () {
     spec_preamble_top.append('License: %s' % srclicense)
     spec_preamble_top.append('Group: %s' % srcsection)
     spec_preamble_top.append('Packager: %s' % srcmaintainer)
-    spec_preamble_top.append('URL: %s' % srchomepage)
+    if srchomepage:
+        spec_preamble_top.append('URL: %s' % srchomepage)
     if srccustomtagschunk:
         spec_preamble_top.append(srccustomtagschunk)
     tail_source(d)

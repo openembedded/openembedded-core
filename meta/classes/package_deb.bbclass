@@ -116,7 +116,8 @@ python do_package_deb () {
         fields.append(["Architecture: %s\n", ['DPKG_ARCH']])
         fields.append(["OE: %s\n", ['PN']])
         fields.append(["PackageArch: %s\n", ['PACKAGE_ARCH']])
-        fields.append(["Homepage: %s\n", ['HOMEPAGE']])
+        if d.getVar('HOMEPAGE', True):
+            fields.append(["Homepage: %s\n", ['HOMEPAGE']])
 
         # Package, Version, Maintainer, Description - mandatory
         # Section, Priority, Essential, Architecture, Source, Depends, Pre-Depends, Recommends, Suggests, Conflicts, Replaces, Provides - Optional

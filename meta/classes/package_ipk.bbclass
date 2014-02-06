@@ -95,7 +95,8 @@ python do_package_ipk () {
         fields.append(["License: %s\n", ['LICENSE']])
         fields.append(["Architecture: %s\n", ['PACKAGE_ARCH']])
         fields.append(["OE: %s\n", ['PN']])
-        fields.append(["Homepage: %s\n", ['HOMEPAGE']])
+        if d.getVar('HOMEPAGE', True):
+            fields.append(["Homepage: %s\n", ['HOMEPAGE']])
 
         def pullData(l, d):
             l2 = []
