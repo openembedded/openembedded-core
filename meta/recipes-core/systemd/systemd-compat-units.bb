@@ -16,7 +16,6 @@ SYSTEMD_DISABLED_SYSV_SERVICES = " \
   hwclock \
   networking \
   syslog.busybox \
-  dbus-1 \
 "
 
 pkg_postinst_${PN} () {
