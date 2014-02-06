@@ -253,6 +253,30 @@
 #usermod -s /bin/sh tester; \
 #"
 
+# Various packages dynamically add users and groups to the system at package
+# install time.  For programs that do not care what the uid/gid is of the
+# resulting users/groups, the order of the install will determine the final
+# uid/gid.  This can lead to non-deterministic uid/gid values from one build
+# to another.  Use the following settings to specify that all user/group adds
+# should be created based on a static passwd/group file.
+#
+# Note, if you enable or disable the useradd-staticids in a configured system,
+# the TMPDIR may contain incorrect uid/gid values.  Clearing the TMPDIR
+# will correct this condition.
+#
+# By default the system looks in the BBPATH for files/passwd and files/group
+# the default can be overriden by spefying USERADD_UID/GID_TABLES.
+#
+#USERADDEXTENSION = "useradd-staticids"
+#USERADD_UID_TABLES = "files/passwd"
+#USERADD_GID_TABLES = "files/group"
+#
+# In order to prevent generating a system where a dynamicly assigned uid/gid
+# can exist, you should enable the following setting.  This will force the
+# system to error out if the user/group name is not defined in the
+# files/passwd or files/group (or specified replacements.)
+#USERADD_ERROR_DYNAMIC = "1"
+
 # Enabling FORTRAN
 # Note this is not officially supported and is just illustrated here to
 # show an example of how it can be done

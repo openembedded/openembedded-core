@@ -202,3 +202,8 @@ fakeroot python populate_packages_prepend () {
         for pkg in useradd_packages.split():
             update_useradd_package(pkg)
 }
+
+# Use the following to extend the useradd with custom functions
+USERADDEXTENSION ?= ""
+
+inherit ${USERADDEXTENSION}
