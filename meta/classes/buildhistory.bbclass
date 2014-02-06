@@ -242,21 +242,25 @@ python buildhistory_emit_pkghistory() {
 
 
 def write_recipehistory(rcpinfo, d):
+    import codecs
+
     bb.debug(2, "Writing recipe history")
 
     pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
 
     infofile = os.path.join(pkghistdir, "latest")
-    with open(infofile, "w") as f:
+    with codecs.open(infofile, "w", encoding='utf8') as f:
         if rcpinfo.pe != "0":
-            f.write("PE = %s\n" %  rcpinfo.pe)
-        f.write("PV = %s\n" %  rcpinfo.pv)
-        f.write("PR = %s\n" %  rcpinfo.pr)
-        f.write("DEPENDS = %s\n" %  rcpinfo.depends)
-        f.write("PACKAGES = %s\n" %  rcpinfo.packages)
+            f.write(u"PE = %s\n" %  rcpinfo.pe)
+        f.write(u"PV = %s\n" %  rcpinfo.pv)
+        f.write(u"PR = %s\n" %  rcpinfo.pr)
+        f.write(u"DEPENDS = %s\n" %  rcpinfo.depends)
+        f.write(u"PACKAGES = %s\n" %  rcpinfo.packages)
 
 
 def write_pkghistory(pkginfo, d):
+    import codecs
+
     bb.debug(2, "Writing package history for package %s" % pkginfo.name)
 
     pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
@@ -266,11 +270,11 @@ def write_pkghistory(pkginfo, d):
         bb.utils.mkdirhier(pkgpath)
 
     infofile = os.path.join(pkgpath, "latest")
-    with open(infofile, "w") as f:
+    with codecs.open(infofile, "w", encoding='utf8') as f:
         if pkginfo.pe != "0":
-            f.write("PE = %s\n" %  pkginfo.pe)
-        f.write("PV = %s\n" %  pkginfo.pv)
-        f.write("PR = %s\n" %  pkginfo.pr)
+            f.write(u"PE = %s\n" %  pkginfo.pe)
+        f.write(u"PV = %s\n" %  pkginfo.pv)
+        f.write(u"PR = %s\n" %  pkginfo.pr)
 
         pkgvars = {}
         pkgvars['PKG'] = pkginfo.pkg if pkginfo.pkg != pkginfo.name else ''
@@ -280,26 +284,26 @@ def write_pkghistory(pkginfo, d):
         for pkgvar in pkgvars:
             val = pkgvars[pkgvar]
             if val:
-                f.write("%s = %s\n" % (pkgvar, val))
+                f.write(u"%s = %s\n" % (pkgvar, val))
 
-        f.write("RPROVIDES = %s\n" %  pkginfo.rprovides)
-        f.write("RDEPENDS = %s\n" %  pkginfo.rdepends)
-        f.write("RRECOMMENDS = %s\n" %  pkginfo.rrecommends)
+        f.write(u"RPROVIDES = %s\n" %  pkginfo.rprovides)
+        f.write(u"RDEPENDS = %s\n" %  pkginfo.rdepends)
+        f.write(u"RRECOMMENDS = %s\n" %  pkginfo.rrecommends)
         if pkginfo.rsuggests:
-            f.write("RSUGGESTS = %s\n" %  pkginfo.rsuggests)
+            f.write(u"RSUGGESTS = %s\n" %  pkginfo.rsuggests)
         if pkginfo.rreplaces:
-            f.write("RREPLACES = %s\n" %  pkginfo.rreplaces)
+            f.write(u"RREPLACES = %s\n" %  pkginfo.rreplaces)
         if pkginfo.rconflicts:
-            f.write("RCONFLICTS = %s\n" %  pkginfo.rconflicts)
-        f.write("PKGSIZE = %d\n" %  pkginfo.size)
-        f.write("FILES = %s\n" %  pkginfo.files)
-        f.write("FILELIST = %s\n" %  pkginfo.filelist)
+            f.write(u"RCONFLICTS = %s\n" %  pkginfo.rconflicts)
+        f.write(u"PKGSIZE = %d\n" %  pkginfo.size)
+        f.write(u"FILES = %s\n" %  pkginfo.files)
+        f.write(u"FILELIST = %s\n" %  pkginfo.filelist)
 
     for filevar in pkginfo.filevars:
         filevarpath = os.path.join(pkgpath, "latest.%s" % filevar)
         val = pkginfo.filevars[filevar]
         if val:
-            with open(filevarpath, "w") as f:
+            with codecs.open(filevarpath, "w", encoding='utf8') as f:
                 f.write(val)
         else:
             if os.path.exists(filevarpath):
