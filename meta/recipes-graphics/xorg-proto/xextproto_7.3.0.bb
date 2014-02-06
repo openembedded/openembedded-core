@@ -20,5 +20,5 @@ EXTRA_OECONF_append = " --enable-specs=no"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "eaac343af094e6b608cf15cfba0f77c5"
-SRC_URI[sha256sum] = "7c53b105407ef3b2eb180a361bd672c1814524a600166a0a7dbbe76b97556d1a"
+SRC_URI[md5sum] = "70c90f313b4b0851758ef77b95019584"
+SRC_URI[sha256sum] = "f3f4b23ac8db9c3a9e0d8edb591713f3d70ef9c3b175970dd8823dfc92aa5bb0"
