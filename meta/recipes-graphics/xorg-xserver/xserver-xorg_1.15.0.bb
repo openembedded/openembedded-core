@@ -7,8 +7,8 @@ SRC_URI += "file://crosscompile.patch \
             file://aarch64.patch \
            "
 
-SRC_URI[md5sum] = "9d68a30258c67faa3c036a4a85e8bf97"
-SRC_URI[sha256sum] = "608ccfaafb845f6e559884a30f946d365209172416710d687b190e9e1ff65dc3"
+SRC_URI[md5sum] = "c2ace3697b32414094cf8c597c39d7d9"
+SRC_URI[sha256sum] = "613b2f2e7ee2a06d2f8e862c836dc70d319c52f1537749e027398f40086aabb8"
 
 # These extensions are now integrated into the server, so declare the migration
 # path for in-place upgrades.
