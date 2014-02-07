@@ -16,12 +16,14 @@ MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://hardcoded_libtool.patch \
            file://extending-libinstall-dependencies.patch \
+           file://run-ptest \
+           file://tests-check.patch \
            "
 
 SRC_URI[md5sum] = "81161cc895eb43afd9ae7354b87e2261"
 SRC_URI[sha256sum] = "c229c53f59573eab9410b53690a4b9db770312c80a4d84ecd6295aa894574494"
 
-inherit autotools pkgconfig gettext pixbufcache
+inherit autotools pkgconfig gettext pixbufcache ptest
 
 LIBV = "2.10.0"
 
@@ -42,6 +44,7 @@ PACKAGECONFIG[x11] = "--with-x11,--without-x11,virtual/libx11"
 
 EXTRA_OECONF = "\
   --disable-introspection \
+  ${@base_contains('DISTRO_FEATURES', 'ptest', '--enable-installed-tests', '--disable-installed-tests', d)} \
 "
 
 PACKAGES =+ "${PN}-xlib"
@@ -64,6 +67,11 @@ FILES_${PN}-dbg += " \
 	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/.debug/* \
 "
 
+FILES_${PN}-ptest += "${libdir}/gdk-pixbuf/installed-tests \
+                      ${datadir}/installed-tests/gdk-pixbuf"
+
+RDEPENDS_${PN}-ptest += "gnome-desktop-testing"
+
 PACKAGES_DYNAMIC += "^gdk-pixbuf-loader-.*"
 PACKAGES_DYNAMIC_class-native = ""
 
@@ -72,7 +80,12 @@ python populate_packages_prepend () {
 
     loaders_root = d.expand('${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders')
 
-    d.setVar('PIXBUF_PACKAGES', ' '.join(do_split_packages(d, loaders_root, '^libpixbufloader-(.*)\.so$', 'gdk-pixbuf-loader-%s', 'GDK pixbuf loader for %s')))
+    packages = ' '.join(do_split_packages(d, loaders_root, '^libpixbufloader-(.*)\.so$', 'gdk-pixbuf-loader-%s', 'GDK pixbuf loader for %s'))
+    d.setVar('PIXBUF_PACKAGES', packages)
+
+    # The test suite exercises all the loaders, so ensure they are all
+    # dependencies of the ptest package.
+    d.appendVar("RDEPENDS_gdk-pixbuf-ptest", " " + packages)
 }
 
 do_install_append_class-native() {
