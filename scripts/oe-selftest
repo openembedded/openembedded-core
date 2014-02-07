@@ -144,8 +144,10 @@ def main():
     add_include()
     result = runner.run(suite)
     log.info("Finished")
-
-    return 0
+    if result.wasSuccessful():
+        return 0
+    else:
+        return 1
 
 if __name__ == "__main__":
     try:
