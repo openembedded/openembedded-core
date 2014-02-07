@@ -131,7 +131,15 @@ class BootimgEFIPlugin(SourcePlugin):
         rc, out = exec_cmd(du_cmd)
         blocks = int(out.split()[0])
 
-        blocks += BOOTDD_EXTRA_SPACE
+        extra_blocks = part.get_extra_block_count(blocks)
+
+        if extra_blocks < BOOTDD_EXTRA_SPACE:
+            extra_blocks = BOOTDD_EXTRA_SPACE
+
+        blocks += extra_blocks
+
+        msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
+                    (extra_blocks, part.mountpoint, blocks))
 
         # Ensure total sectors is an integral number of sectors per
         # track or mcopy will complain. Sectors are 512 bytes, and we

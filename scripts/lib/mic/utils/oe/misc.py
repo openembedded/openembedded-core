@@ -108,6 +108,7 @@ def add_wks_var(key, val):
     wks_vars[key] = val
 
 BOOTDD_EXTRA_SPACE = 16384
+IMAGE_EXTRA_SPACE = 10240
 
 __bitbake_env_lines = ""
 

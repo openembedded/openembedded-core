@@ -56,6 +56,12 @@ class Wic_PartData(Mic_PartData):
 
         return retval
 
+    def get_size(self):
+        """
+        Accessor for partition size, 0 or --size before set_size().
+        """
+        return self.size
+
     def set_size(self, size):
         """
         Accessor for actual partition size, which must be set by source
@@ -69,6 +75,29 @@ class Wic_PartData(Mic_PartData):
         image, which must be set by source plugins.
         """
         self.source_file = source_file
+
+    def get_extra_block_count(self, current_blocks):
+        """
+        The --size param is reflected in self.size (in MB), and we already
+        have current_blocks (1k) blocks, calculate and return the
+        number of (1k) blocks we need to add to get to --size, 0 if
+        we're already there or beyond.
+        """
+        msger.debug("Requested partition size for %s: %d" % \
+                    (self.mountpoint, self.size))
+
+        if not self.size:
+            return 0
+
+        requested_blocks = self.size * 1024
+
+        msger.debug("Requested blocks %d, current_blocks %d" % \
+                    (requested_blocks, current_blocks))
+
+        if requested_blocks > current_blocks:
+            return requested_blocks - current_blocks
+        else:
+            return 0
 
     def prepare(self, cr, cr_workdir, oe_builddir, rootfs_dir, bootimg_dir,
                 kernel_dir, native_sysroot):
@@ -147,16 +176,22 @@ class Wic_PartData(Mic_PartData):
         """
         populate_script = "%s/usr/bin/populate-extfs.sh" % native_sysroot
 
-        image_extra_space = 10240
-
         image_rootfs = rootfs_dir
         rootfs = "%s/rootfs.%s" % (cr_workdir, self.fstype)
 
         du_cmd = "du -ks %s" % image_rootfs
         rc, out = exec_cmd(du_cmd)
-        actual_rootfs_size = out.split()[0]
+        actual_rootfs_size = int(out.split()[0])
 
-        rootfs_size = int(actual_rootfs_size) + image_extra_space
+        extra_blocks = self.get_extra_block_count(actual_rootfs_size)
+
+        if extra_blocks < IMAGE_EXTRA_SPACE:
+            extra_blocks = IMAGE_EXTRA_SPACE
+
+        rootfs_size = actual_rootfs_size + extra_blocks
+
+        msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
+                    (extra_blocks, self.mountpoint, rootfs_size))
 
         dd_cmd = "dd if=/dev/zero of=%s bs=1024 seek=%d count=0 bs=1k" % \
             (rootfs, rootfs_size)
@@ -187,16 +222,22 @@ class Wic_PartData(Mic_PartData):
 
         Currently handles ext2/3/4 and btrfs.
         """
-        image_extra_space = 10240
-
         image_rootfs = rootfs_dir
         rootfs = "%s/rootfs.%s" % (cr_workdir, self.fstype)
 
         du_cmd = "du -ks %s" % image_rootfs
         rc, out = exec_cmd(du_cmd)
-        actual_rootfs_size = out.split()[0]
+        actual_rootfs_size = int(out.split()[0])
 
-        rootfs_size = int(actual_rootfs_size) + image_extra_space
+        extra_blocks = self.get_extra_block_count(actual_rootfs_size)
+
+        if extra_blocks < IMAGE_EXTRA_SPACE:
+            extra_blocks = IMAGE_EXTRA_SPACE
+
+        rootfs_size = actual_rootfs_size + extra_blocks
+
+        msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
+                    (extra_blocks, self.mountpoint, rootfs_size))
 
         dd_cmd = "dd if=/dev/zero of=%s bs=1024 seek=%d count=0 bs=1k" % \
             (rootfs, rootfs_size)
