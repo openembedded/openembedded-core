@@ -15,6 +15,8 @@ SYSTEMD_DISABLED_SYSV_SERVICES = " \
   busybox-udhcpc \
   hwclock \
   networking \
+  nfsserver \
+  nfscommon \
   syslog.busybox \
 "
 
