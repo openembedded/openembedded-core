@@ -19,7 +19,7 @@ do_install() {
 }
 
 def get_libc_fpu_setting(bb, d):
-    if d.getVar('TARGET_FPU', True) in [ 'soft' ]:
+    if d.getVar('TARGET_FPU', True) in [ 'soft', 'ppc-efd' ]:
         return "--without-fp"
     return ""
 
