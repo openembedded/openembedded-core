@@ -10,7 +10,7 @@ class SudokuTest(oeRuntimeTest):
 
     @classmethod
     def setUpClass(self):
-        self.project = TargetBuildProject(oeRuntimeTest.tc.target,
+        self.project = TargetBuildProject(oeRuntimeTest.tc.target, oeRuntimeTest.tc.d,
                         "http://downloads.sourceforge.net/project/sudoku-savant/sudoku-savant/sudoku-savant-1.3/sudoku-savant-1.3.tar.bz2")
         self.project.download_archive()
 

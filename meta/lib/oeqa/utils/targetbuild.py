@@ -11,8 +11,9 @@ import subprocess
 
 class TargetBuildProject():
 
-    def __init__(self, target, uri, foldername=None):
+    def __init__(self, target, d, uri, foldername=None):
         self.target = target
+        self.d = d
         self.uri = uri
         self.targetdir = "~/"
         self.archive = os.path.basename(uri)
@@ -23,7 +24,22 @@ class TargetBuildProject():
 
     def download_archive(self):
 
-        subprocess.check_call("wget -O %s %s" % (self.localarchive, self.uri), shell=True)
+        exportvars = ['HTTP_PROXY', 'http_proxy',
+                      'HTTPS_PROXY', 'https_proxy',
+                      'FTP_PROXY', 'ftp_proxy',
+                      'FTPS_PROXY', 'ftps_proxy',
+                      'NO_PROXY', 'no_proxy',
+                      'ALL_PROXY', 'all_proxy',
+                      'SOCKS5_USER', 'SOCKS5_PASSWD']
+
+        cmd = ''
+        for var in exportvars:
+            val = self.d.getVar(var, True)
+            if val:
+                cmd = 'export ' + var + '=\"%s\"; %s' % (val, cmd)
+
+        cmd = cmd + "wget -O %s %s" % (self.localarchive, self.uri)
+        subprocess.check_call(cmd, shell=True)
 
         (status, output) = self.target.copy_to(self.localarchive, self.targetdir)
         if status != 0:
