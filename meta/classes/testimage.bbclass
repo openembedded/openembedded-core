@@ -185,8 +185,11 @@ def testimage_main(d):
             self.imagefeatures = d.getVar("IMAGE_FEATURES", True).split()
             self.distrofeatures = d.getVar("DISTRO_FEATURES", True).split()
             manifest = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("IMAGE_LINK_NAME", True) + ".manifest")
-            with open(manifest) as f:
-                self.pkgmanifest = f.read()
+            try:
+                with open(manifest) as f:
+                    self.pkgmanifest = f.read()
+            except IOError as e:
+                bb.fatal("No package manifest file found. Did you build the image?\n%s" % e)
 
     # test context
     tc = TestContext()
