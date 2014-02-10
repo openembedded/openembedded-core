@@ -1,6 +1,0 @@
-require sysstat.inc
-
-LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
-
-SRC_URI[md5sum] = "7a6e3df08590385113a27a76ce64a6ff"
-SRC_URI[sha256sum] = "2e0fee87cec7f56ba121c320327843278e2bda30bacd54851628eab0ba09429a"
