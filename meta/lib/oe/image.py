@@ -13,8 +13,8 @@ def generate_image(arg):
     try:
         subprocess.check_output(create_img_cmd)
     except subprocess.CalledProcessError as e:
-        return("Error: The image creation script %s returned %d!" %
-               (e.cmd, e.returncode))
+        return("Error: The image creation script '%s' returned %d:\n%s" %
+               (e.cmd, e.returncode, e.output))
 
     return None
 
