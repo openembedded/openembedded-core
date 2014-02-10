@@ -187,19 +187,18 @@ class RpmPM(PackageManager):
                                 self.ml_os_list['default'])
 
         # List must be prefered to least preferred order
-        default_platform_extra = list()
-        platform_extra = list()
+        default_platform_extra = set()
+        platform_extra = set()
         bbextendvariant = self.d.getVar('BBEXTENDVARIANT', True) or ""
         for mlib in self.ml_os_list:
             for arch in self.ml_prefix_list[mlib]:
                 plt = arch.replace('-', '_') + '-.*-' + self.ml_os_list[mlib]
                 if mlib == bbextendvariant:
-                    if plt not in default_platform_extra:
-                        default_platform_extra.append(plt)
+                        default_platform_extra.add(plt)
                 else:
-                    if plt not in platform_extra:
-                        platform_extra.append(plt)
-        platform_extra = default_platform_extra + platform_extra
+                        platform_extra.add(plt)
+
+        platform_extra = platform_extra.union(default_platform_extra)
 
         self._create_configs(platform, platform_extra)
 
