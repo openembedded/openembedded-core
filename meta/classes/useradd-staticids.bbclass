@@ -134,8 +134,9 @@ def update_useradd_static_config(d):
                             break
 
             # Should be an error if a specific option is set...
-            if d.getVar('USERADD_ERROR_DYNAMIC', True) == '1' and (not uaargs.uid or not uaargs.gid):
-                raise bb.build.FuncFailed("%s - %s: Username %s does not have a static uid/gid defined." % (d.getVar('PN', True), pkg, uaargs.LOGIN))
+            if d.getVar('USERADD_ERROR_DYNAMIC', True) == '1' and not ((uaargs.uid and uaargs.uid.isdigit()) and uaargs.gid):
+                #bb.error("Skipping recipe %s, package %s which adds username %s does not have a static uid defined." % (d.getVar('PN', True),  pkg, uaargs.LOGIN))
+                raise bb.build.FuncFailed("%s - %s: Username %s does not have a static uid defined." % (d.getVar('PN', True), pkg, uaargs.LOGIN))
 
             # Reconstruct the args...
             newparam  = ['', ' --defaults'][uaargs.defaults]
@@ -222,7 +223,8 @@ def update_useradd_static_config(d):
                             gaargs.gid = field[2]
                             break
 
-            if d.getVar('USERADD_ERROR_DYNAMIC', True) == '1' and not gaargs.gid:
+            if d.getVar('USERADD_ERROR_DYNAMIC', True) == '1' and not (gaargs.gid and gaargs.gid.isdigit()):
+                #bb.error("Skipping recipe %s, package %s which adds groupname %s does not have a static gid defined." % (d.getVar('PN', True),  pkg, gaargs.GROUP))
                 raise bb.build.FuncFailed("%s - %s: Groupname %s does not have a static gid defined." % (d.getVar('PN', True), pkg, gaargs.GROUP))
 
             # Reconstruct the args...
