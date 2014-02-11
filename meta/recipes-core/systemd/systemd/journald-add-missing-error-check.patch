@@ -1,0 +1,16 @@
+Upstream-Status: Backport [Fedora]
+
+Index: systemd-208/src/journal/journal-file.c
+===================================================================
+--- systemd-208.orig/src/journal/journal-file.c	2013-08-13 13:02:46.397707086 -0700
++++ systemd-208/src/journal/journal-file.c	2014-02-07 22:29:01.398794277 -0800
+@@ -907,7 +907,8 @@
+ 
+         osize = offsetof(Object, field.payload) + size;
+         r = journal_file_append_object(f, OBJECT_FIELD, osize, &o, &p);
+-
++	if (r < 0)
++		return r;
+         o->field.hash = htole64(hash);
+         memcpy(o->field.payload, field, size);
+ 

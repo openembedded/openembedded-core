@@ -20,6 +20,11 @@ inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-altern
 SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
            file://0001-Use-bin-mkdir-instead-of-host-mkdir-path.patch \
            file://binfmt-install.patch \
+           file://journald-add-missing-error-check.patch \
+           file://journald-fix-minor-memory-leak.patch \
+           file://journal-when-appending-to-journal-file-allocate-larg.patch \
+           file://journal-file-protect-against-alloca-0.patch \
+           file://journal-Add-missing-byte-order-conversions.patch \
            file://touchscreen.rules \
            ${UCLIBCPATCHES} \
            file://00-create-volatile.conf \

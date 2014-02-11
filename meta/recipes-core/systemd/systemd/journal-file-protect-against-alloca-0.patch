@@ -1,0 +1,23 @@
+From a25fd0d4bd3cf652e55c24e7dc873fe530fa111a Mon Sep 17 00:00:00 2001
+From: Thomas Hindoe Paaboel Andersen <phomes@gmail.com>
+Date: Mon, 16 Dec 2013 23:35:30 +0100
+Subject: [PATCH] journal-file: protect against alloca(0)
+
+---
+ src/journal/journal-file.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/journal/journal-file.c b/src/journal/journal-file.c
+index 090cf97..8ea258b 100644
+--- a/src/journal/journal-file.c
++++ b/src/journal/journal-file.c
+@@ -2737,7 +2737,8 @@ int journal_file_copy_entry(JournalFile *from, JournalFile *to, Object *o, uint6
+         ts.realtime = le64toh(o->entry.realtime);
+ 
+         n = journal_file_entry_n_items(o);
+-        items = alloca(sizeof(EntryItem) * n);
++        /* alloca() can't take 0, hence let's allocate at least one */
++        items = alloca(sizeof(EntryItem) * MAX(1u, n));
+ 
+         for (i = 0; i < n; i++) {
+                 uint64_t l, h;
