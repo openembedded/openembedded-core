@@ -3,7 +3,7 @@
 #
 # Based in part on testlab.bbclass and packagehistory.bbclass
 #
-# Copyright (C) 2013 Intel Corporation
+# Copyright (C) 2011-2014 Intel Corporation
 # Copyright (C) 2007-2011 Koen Kooi <koen@openembedded.org>
 #
 
@@ -18,6 +18,8 @@ BUILDHISTORY_COMMIT_AUTHOR ?= "buildhistory <buildhistory@${DISTRO}>"
 BUILDHISTORY_PUSH_REPO ?= ""
 
 SSTATEPOSTINSTFUNCS += "buildhistory_emit_pkghistory"
+# We want to avoid influence the signatures of sstate tasks
+SSTATEPOSTINSTFUNCS[vardepvalue] := "${@d.getVar('SSTATEPOSTINSTFUNCS', False).replace(' buildhistory_emit_pkghistory', '')}"
 
 #
 # Write out metadata about this package for comparision when writing future packages
@@ -595,6 +597,7 @@ def _get_srcrev_values(d):
     return (dict_srcrevs, dict_tag_srcrevs)
 
 do_fetch[postfuncs] += "write_srcrev"
+do_fetch[vardepsexclude] += "write_srcrev"
 python write_srcrev() {
     pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
     srcrevfile = os.path.join(pkghistdir, 'latest_srcrev')
