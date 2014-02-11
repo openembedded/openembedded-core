@@ -41,6 +41,7 @@ KERNEL_VERSION = ""
 
 inherit update-alternatives
 DEPENDS_append = " update-rc.d-native"
+DEPENDS_append = " ${@base_contains('DISTRO_FEATURES','systemd','systemd-systemctl-native','',d)}"
 
 PACKAGES =+ "${PN}-functions"
 RDEPENDS_${PN} = "${PN}-functions"
@@ -133,4 +134,28 @@ do_install () {
 	# We wish to have /var/log ready at this stage so execute this after
 	# populate-volatile.sh
 	update-rc.d -r ${D} dmesg.sh start 38 S .
+}
+
+MASKED_SCRIPTS = " \
+  banner \
+  bootmisc \
+  checkroot \
+  devpts \
+  hostname \
+  mountall \
+  mountnfs \
+  rmnologin \
+  sysfs \
+  urandom"
+
+pkg_postinst_${PN} () {
+	if ${@base_contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+		if [ -n "$D" ]; then
+			OPTS="--root=$D"
+		fi
+		for SERVICE in ${MASKED_SCRIPTS}; do
+			systemctl $OPTS mask $SERVICE.service
+		done
+	fi
+fi
 }
