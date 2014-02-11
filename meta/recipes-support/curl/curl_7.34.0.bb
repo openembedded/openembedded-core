@@ -30,6 +30,7 @@ EXTRA_OECONF = "--with-zlib=${STAGING_LIBDIR}/../ \
                 --enable-crypto-auth \
                 --disable-ldap \
                 --disable-ldaps \
+                --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
                 ${CURLGNUTLS} \
                 "
 
@@ -45,13 +46,10 @@ do_install_append() {
 	oe_multilib_header curl/curlbuild.h
 }
 
-PACKAGES =+ "${PN}-certs libcurl libcurl-dev libcurl-staticdev libcurl-doc"
-
-FILES_${PN}-certs = "${datadir}/curl/curl-*"
-PACKAGE_ARCH_${PN}-certs = "all"
+PACKAGES =+ "libcurl libcurl-dev libcurl-staticdev libcurl-doc"
 
 FILES_lib${BPN} = "${libdir}/lib*.so.*"
-RRECOMMENDS_lib${BPN} += "${PN}-certs"
+RRECOMMENDS_lib${BPN} += "ca-certificates"
 FILES_lib${BPN}-dev = "${includedir} \
                       ${libdir}/lib*.so \
                       ${libdir}/lib*.la \
