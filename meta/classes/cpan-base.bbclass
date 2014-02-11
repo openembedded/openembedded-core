@@ -44,6 +44,7 @@ def is_target(d):
 
 PERLLIBDIRS := "${@perl_get_libdirs(d)}"
 PERLVERSION := "${@get_perl_version(d)}"
+PERLVERSION[vardepvalue] = ""
 
 FILES_${PN}-dbg += "${PERLLIBDIRS}/auto/*/.debug \
                     ${PERLLIBDIRS}/auto/*/*/.debug \
