@@ -26,6 +26,11 @@ python write_package_manifest() {
 }
 
 license_create_manifest() {
+        # Test if BUILD_IMAGES_FROM_FEEDS is defined in env
+        if [ -n "${BUILD_IMAGES_FROM_FEEDS}" ]; then
+          exit 0
+        fi
+
 	INSTALLED_PKGS=`cat ${LICENSE_DIRECTORY}/${IMAGE_NAME}/package.manifest`
 	LICENSE_MANIFEST="${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest"
 	# remove existing license.manifest file
