@@ -5,6 +5,7 @@ BUGTRACKER = "http://redmine.lighttpd.net/projects/lighttpd/issues"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e4dac5c6ab169aa212feb5028853a579"
 
+PR = "r1"
 
 SECTION = "net"
 DEPENDS = "zlib libpcre"
@@ -47,7 +48,7 @@ INITSCRIPT_PARAMS = "defaults 70"
 SYSTEMD_SERVICE_${PN} = "lighttpd.service"
 
 do_install_append() {
-	install -d ${D}${sysconfdir}/init.d ${D}/www/pages/dav
+	install -d ${D}${sysconfdir}/init.d ${D}${sysconfdir}/lighttpd.d ${D}/www/pages/dav
 	install -m 0755 ${WORKDIR}/lighttpd ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/lighttpd.conf ${D}${sysconfdir}
 	install -m 0644 ${WORKDIR}/index.html.lighttpd ${D}/www/pages/index.html
