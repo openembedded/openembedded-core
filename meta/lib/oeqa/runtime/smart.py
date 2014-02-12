@@ -9,6 +9,8 @@ def setUpModule():
         skipModule("Image doesn't have package management feature")
     if not oeRuntimeTest.hasPackage("smart"):
         skipModule("Image doesn't have smart installed")
+    if "package_rpm" != oeRuntimeTest.tc.d.getVar("PACKAGE_CLASSES", True).split()[0]:
+        skipModule("Rpm is not the primary package manager")
 
 class SmartTest(oeRuntimeTest):
 
