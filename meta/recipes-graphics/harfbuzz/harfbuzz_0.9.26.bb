@@ -10,11 +10,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e021dd6dda6ff1e6b1044002fc662b9b \
 
 SECTION = "libs"
 
-SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/harfbuzz-${PV}.tar.bz2 \
+SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/${BP}.tar.bz2 \
 "
 
-SRC_URI[md5sum] = "491b631239f51dcd4f7934775306c4e7"
-SRC_URI[sha256sum] = "dc6e5997a569526cd28147a80a0f65466e87ae617753b38704a60184bc6d6bee"
+SRC_URI[md5sum] = "a2b6cbd437f22dd5dc93d377696c9204"
+SRC_URI[sha256sum] = "5ded7dc3d15fb5c9230d7a224b9256b67b35fde30193b4c3a4c3f6b13110e257"
 
 inherit autotools pkgconfig lib_package
 
