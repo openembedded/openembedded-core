@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://setup.py;beginline=234;endline=234;md5=26f6b02022b737
 SRCNAME = "distribute"
 PR = "ml5"
 DEPENDS += "python"
-DEPENDS_virtclass-native += "python-native"
+DEPENDS_class-native += "python-native"
 
 SRC_URI = " \
   http://pypi.python.org/packages/source/d/distribute/${SRCNAME}-${PV}.tar.gz \

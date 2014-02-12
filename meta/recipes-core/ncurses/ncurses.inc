@@ -33,11 +33,11 @@ base_libdir_class-native = "${libdir}"
 # This was derrived from the upstream debian ncurses which uses
 # these settings for 32 and 64 bit hosts.
 EXCONFIG_ARGS = ""
-EXCONFIG_ARGS_virtclass-native = " \
+EXCONFIG_ARGS_class-native = " \
 		--disable-lp64 \
 		--with-chtype='long' \
 		--with-mmask-t='long'"
-EXCONFIG_ARGS_virtclass-nativesdk = " \
+EXCONFIG_ARGS_class-nativesdk = " \
 		--disable-lp64 \
 		--with-chtype='long' \
 		--with-mmask-t='long'"
@@ -50,11 +50,11 @@ PACKAGES_DYNAMIC = "^${PN}-lib.*"
 # because the sstate had a hard coded search path.  Until this is fixed
 # another way this is deemed good enough.
 EX_TERMCAP = ""
-EX_TERMCAP_virtclass-native = ":/etc/termcap:/usr/share/misc/termcap"
-EX_TERMCAP_virtclass-nativesdk = ":/etc/termcap:/usr/share/misc/termcap"
+EX_TERMCAP_class-native = ":/etc/termcap:/usr/share/misc/termcap"
+EX_TERMCAP_class-nativesdk = ":/etc/termcap:/usr/share/misc/termcap"
 EX_TERMINFO = ""
-EX_TERMINFO_virtclass-native = ":/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo"
-EX_TERMINFO_virtclass-nativesdk = ":/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo"
+EX_TERMINFO_class-native = ":/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo"
+EX_TERMINFO_class-nativesdk = ":/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo"
 
 # Helper function for do_configure to allow multiple configurations
 # $1 the directory to run configure in
