@@ -53,9 +53,13 @@ die() {
 	bbfatal "$*"
 }
 
-oe_runmake() {
+oe_runmake_call() {
 	bbnote ${MAKE} ${EXTRA_OEMAKE} "$@"
-	${MAKE} ${EXTRA_OEMAKE} "$@" || die "oe_runmake failed"
+	${MAKE} ${EXTRA_OEMAKE} "$@"
+}
+
+oe_runmake() {
+	oe_runmake_call "$@" || die "oe_runmake failed"
 }
 
 
