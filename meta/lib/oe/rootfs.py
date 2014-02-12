@@ -496,7 +496,9 @@ class OpkgRootfs(Rootfs):
                         if allow_rep.match(key):
                             valid = True
                         else:
-                            if not filecmp.cmp(files[key], item):
+                            if os.path.exists(files[key]) and \
+                               os.path.exists(item) and \
+                               not filecmp.cmp(files[key], item):
                                 valid = False
                                 bb.fatal("%s duplicate files %s %s is not the same\n" %
                                          (error_prompt, item, files[key]))
