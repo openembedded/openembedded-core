@@ -18,7 +18,7 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG[upower] = "--enable-upower,--disable-upower,upower"
 
 # to select connman or nm you need to use "connectivity" and "connman" or "nm", default is to disable both
-PACKAGECONFIG[connectvity] = ",--with-connectivity=no"
+PACKAGECONFIG[connectivity] = ",--with-connectivity=no"
 PACKAGECONFIG[connman] = "--with-connectivity=connman,,connman"
 PACKAGECONFIG[nm] = "--with-connectivity=nm,,networkmanager"
 
