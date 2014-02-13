@@ -102,9 +102,6 @@ class Image(object):
         # been created, so we add that explicit ordering here.
         addtypedepends("elf", "cpio.gz")
 
-        # jffs2 sumtool'd images need jffs2
-        addtypedepends("sum.jffs2", "jffs2")
-
         # Filter out all the compressed images from alltypes
         for type in alltypes:
             basetype = None
