@@ -23,7 +23,7 @@ SRC_URI_append_class-target = "\
 "
 inherit siteinfo
 PR = "r0"
-DEPENDS = "sqlite3 nspr zlib nss-native virtual/kernel"
+DEPENDS = "sqlite3 nspr zlib nss-native"
 DEPENDS_class-native = "sqlite3-native nspr-native zlib-native"
 RDEPENDS_${PN} = "perl"
 
@@ -55,7 +55,7 @@ do_compile() {
     export NSS_USE_SYSTEM_SQLITE=1
     export NSS_ENABLE_ECC=1
 
-    export OS_RELEASE=`cat ${STAGING_KERNEL_DIR}/kernel-abiversion|sed 's/-.*//'`
+    export OS_RELEASE=3.4
     export OS_TARGET=Linux
     export OS_ARCH=Linux
 
@@ -95,7 +95,7 @@ do_install() {
     export NSS_USE_SYSTEM_SQLITE=1
     export NSS_ENABLE_ECC=1
 
-    export OS_RELEASE=`cat ${STAGING_KERNEL_DIR}/kernel-abiversion|sed 's/-.*//'`
+    export OS_RELEASE=3.4
     export OS_TARGET=Linux
     export OS_ARCH=Linux
 
