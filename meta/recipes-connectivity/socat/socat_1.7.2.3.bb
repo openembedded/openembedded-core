@@ -16,8 +16,8 @@ SRC_URI = "http://www.dest-unreach.org/socat/download/socat-${PV}.tar.bz2 \
            file://compile.patch \
            file://fix-xxx_SHIFT-autoheader.patch"
 
-SRC_URI[md5sum] = "39231e512d8052f328552865df15d42f"
-SRC_URI[sha256sum] = "9a167af11a4d3809cbc66f5e2dcb39b6e371251282ef5de6ea6ff0c4be8a953c"
+SRC_URI[md5sum] = "75008d8baf7c6c9e27aa7afb34a622de"
+SRC_URI[sha256sum] = "0598ac54af7b138cda9e3c141bcf0cc63eeb2ab31f468a772dc3f7eb3896aad0"
 
 PACKAGECONFIG ??= "tcp-wrappers"
 PACKAGECONFIG[tcp-wrappers] = "--enable-libwrap,--disable-libwrap,tcp-wrappers"
