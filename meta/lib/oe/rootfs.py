@@ -317,10 +317,17 @@ class RpmRootfs(Rootfs):
 
         self.pm.update()
 
-        for pkg_type in self.install_order:
-            if pkg_type in pkgs_to_install:
-                self.pm.install(pkgs_to_install[pkg_type],
-                                [False, True][pkg_type == "aop"])
+        pkgs = []
+        pkgs_attempt = []
+        for pkg_type in pkgs_to_install:
+            if pkg_type == Manifest.PKG_TYPE_ATTEMPT_ONLY:
+                pkgs_attempt += pkgs_to_install[pkg_type]
+            else:
+                pkgs += pkgs_to_install[pkg_type]
+
+        self.pm.install(pkgs)
+
+        self.pm.install(pkgs_attempt, True)
 
         self.pm.install_complementary()
 
