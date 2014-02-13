@@ -388,6 +388,14 @@ buildhistory_get_sdk_installed() {
 	buildhistory_get_installed ${BUILDHISTORY_DIR_SDK}/$1 sdk
 }
 
+buildhistory_get_sdk_installed_host() {
+	buildhistory_get_sdk_installed host
+}
+
+buildhistory_get_sdk_installed_target() {
+	buildhistory_get_sdk_installed target
+}
+
 buildhistory_list_files() {
 	# List the files in the specified directory, but exclude date/time etc.
 	# This awk script is somewhat messy, but handles where the size is not printed for device files under pseudo
@@ -449,8 +457,8 @@ ROOTFS_POSTPROCESS_COMMAND =+ "buildhistory_get_image_installed ; "
 IMAGE_POSTPROCESS_COMMAND += " buildhistory_get_imageinfo ; "
 
 # We want these to be the last run so that we get called after complementary package installation
-POPULATE_SDK_POST_TARGET_COMMAND_append = "buildhistory_get_sdk_installed target ; "
-POPULATE_SDK_POST_HOST_COMMAND_append = "buildhistory_get_sdk_installed host ; "
+POPULATE_SDK_POST_TARGET_COMMAND_append = "buildhistory_get_sdk_installed_target ; "
+POPULATE_SDK_POST_HOST_COMMAND_append = "buildhistory_get_sdk_installed_host ; "
 
 SDK_POSTPROCESS_COMMAND += "buildhistory_get_sdkinfo ; "
 
