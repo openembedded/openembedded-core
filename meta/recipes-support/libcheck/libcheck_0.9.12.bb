@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING.LESSER;md5=2d5025d4aa3495befef8f17206a5b0a1"
 SRC_URI = "${SOURCEFORGE_MIRROR}/check/check-${PV}.tar.gz \
           "
 
-SRC_URI[md5sum] = "fd5a03979bcab9fb80ba005b55f54178"
-SRC_URI[sha256sum] = "ea4e8c7ffb00bb4ffb3f59f11744a71f1cc4212c79f3083c7d9a4b0953976936"
+SRC_URI[md5sum] = "46fe540d1a03714c7a1967dbc6d484e7"
+SRC_URI[sha256sum] = "c7d47e55e133a0ca19a52e08a99333ac55cb22618b53719b7f4117a1875b1ea3"
 
 S = "${WORKDIR}/check-${PV}"
 
