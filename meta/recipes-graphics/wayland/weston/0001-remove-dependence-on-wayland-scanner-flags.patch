@@ -1,0 +1,30 @@
+From a0335393ddde2228c84eda1081b5d7b175f78a94 Mon Sep 17 00:00:00 2001
+From: Valentin Popa <valentin.popa@intel.com>
+Date: Fri, 7 Feb 2014 16:59:58 +0200
+Subject: [PATCH] remove dependence on wayland-scanner flags
+
+weston doesn't make use of wayland-scanner flags,
+it only uses the -native- wayland-scanner for protocol.
+
+Upstream-Status: Pending
+Signed-off-by: Valentin Popa <valentin.popa@intel.com>
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index cce1850..8775eb9 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -482,7 +482,7 @@ if test x$wayland_scanner = x; then
+ 	AC_MSG_ERROR([wayland-scanner is needed to compile weston])
+ fi
+ 
+-PKG_CHECK_MODULES(WAYLAND_SCANNER, wayland-scanner)
++#PKG_CHECK_MODULES(WAYLAND_SCANNER, wayland-scanner)
+ AC_PATH_PROG(XMLLINT, xmllint)
+ AC_ARG_WITH([dtddir],
+ 	    AS_HELP_STRING([--with-dtddir],
+-- 
+1.8.3.2
+

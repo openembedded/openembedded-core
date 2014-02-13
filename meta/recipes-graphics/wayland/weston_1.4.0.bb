@@ -7,9 +7,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=275efac2559a224527bd4fd593d38466 \
 
 SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
            file://weston.png \
-           file://weston.desktop"
-SRC_URI[md5sum] = "ffe7c3bc0e7eb39a305cbbea8c7766f3"
-SRC_URI[sha256sum] = "f7141334b141ae1a6435bd03bfdb01b7fb628f39259164f201e7e71c8d815bc7"
+           file://weston.desktop \
+           file://0001-remove-dependence-on-wayland-scanner-flags.patch"
+SRC_URI[md5sum] = "4438d2b1f3c9ba9a4a2b10d89fac6fd0"
+SRC_URI[sha256sum] = "74a2319d98e9cdb1acf24659699719aa89ac268cf549759271e326edc5f9ed64"
 
 
 inherit autotools pkgconfig useradd
@@ -18,18 +19,17 @@ DEPENDS = "libxkbcommon gdk-pixbuf pixman cairo glib-2.0 jpeg"
 DEPENDS += "wayland virtual/egl pango"
 
 EXTRA_OECONF = "--enable-setuid-install \
-                --disable-tablet-shell \
                 --disable-xwayland \
                 --enable-simple-clients \
                 --enable-clients \
-                --enable-demo-clients \
+                --enable-demo-clients-install \
                 --disable-simple-egl-clients \
                 --disable-libunwind \
                 --disable-rpi-compositor \
                 --disable-rdp-compositor"
 
 
-PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'wayland', 'kms wayland', '', d)} \
+PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'wayland', 'kms fbdev wayland', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
                    ${@base_contains('DISTRO_FEATURES', 'pam', 'launch', '', d)} \
                   "
