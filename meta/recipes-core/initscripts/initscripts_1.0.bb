@@ -157,5 +157,4 @@ pkg_postinst_${PN} () {
 			systemctl $OPTS mask $SERVICE.service
 		done
 	fi
-fi
 }
