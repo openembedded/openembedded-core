@@ -1,3 +1,8 @@
+From f674544d4f6f5f763e449207da77a561b22eff97 Mon Sep 17 00:00:00 2001
+From: Valentin Popa <valentin.popa@intel.com>
+Date: Fri, 7 Feb 2014 16:36:47 +0200
+Subject: [PATCH] just scanner
+
 We only build wayland-native for the scanner, so disable the bits we don't
 actually need.  This gives us a small speed up but importantly should allow
 wayland-native to compile on older hosts such as CentOS 5 which currently fails:
@@ -10,22 +15,27 @@ wayland-native to compile on older hosts such as CentOS 5 which currently fails:
 
 Upstream-Status: Inappropriate
 Signed-off-by: Ross Burton <ross.burton@intel.com>
+Signed-off-by: Valentin Popa <valentin.popa@intel.com>
+---
+ Makefile.am     | 2 +-
+ src/Makefile.am | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 306d7b3..571fe89 100644
+index 99607b0..ecce1f1 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -2,7 +2,7 @@ if BUILD_DOCS
  doc_subdir = doc
  endif
  
--SUBDIRS = src protocol $(doc_subdir) tests cursor
-+SUBDIRS = src protocol $(doc_subdir)
+-SUBDIRS = protocol src $(doc_subdir) tests cursor
++SUBDIRS = protocol src $(doc_subdir)
  
  ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
  
 diff --git a/src/Makefile.am b/src/Makefile.am
-index e1d04ea..702342e 100644
+index 15f44a5..b938d17 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
 @@ -1,4 +1,4 @@
@@ -34,3 +44,6 @@ index e1d04ea..702342e 100644
  noinst_LTLIBRARIES = libwayland-util.la
  
  include_HEADERS =				\
+-- 
+1.8.3.2
+

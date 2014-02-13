@@ -11,10 +11,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1d4476a7d98dd5691c53d4d43a510c72 \
                     file://src/wayland-server.c;endline=21;md5=079ae21dbf98ada52ec23744851b0a5c"
 
 SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz"
-SRC_URI[md5sum] = "d16d27081e0871de82d08840c2f133fc"
-SRC_URI[sha256sum] = "2e817685f68a26acd19964d69ddbc4549ba5412114ad95e1a9f5934cce470d6e"
+SRC_URI[md5sum] = "332cf9191837be12638a29265ed7cf46"
+SRC_URI[sha256sum] = "18f33b9f15b4c8b662fb1968e7636e7926b419dfc48de8a164b3a3d7095c5a58"
 
 SRC_URI_append_class-native = " file://just-scanner.patch"
+EXTRA_OECONF_class-native = "--disable-documentation --enable-scanner"
 
 inherit autotools pkgconfig
 
@@ -24,7 +25,6 @@ BBCLASSEXTEND = "native"
 DEPENDS_class-native = "expat-native libffi-native"
 DEPENDS = "expat libffi wayland-native"
 
-EXTRA_OECONF_class-native = "--disable-documentation"
 EXTRA_OECONF = "--disable-documentation --disable-scanner"
 
 # Wayland installs a M4 macro for other projects to use, which uses the target
