@@ -9,8 +9,8 @@ DEPENDS = "util-macros flex-native bison-native"
 
 SRC_URI = "http://xkbcommon.org/download/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "935cf416354bf05210de2e389484f7e8"
-SRC_URI[sha256sum] = "cc378a47b01b00226ecf647b69e07df04091323846124b366cf835e5cdf5a88a"
+SRC_URI[md5sum] = "bb782f1700e45b4f57c84ef513e3cf85"
+SRC_URI[sha256sum] = "2dc018e830d1befaf4822615204138318da3fff0112f78f3a7c638fa617375b8"
 
 inherit autotools pkgconfig
 
