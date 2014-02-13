@@ -9,8 +9,6 @@ RRECOMMENDS_${PN} = "kernel-module-hwlat-detector"
 
 require rt-tests.inc
 
-PR = "${INC_PR}.0"
-
 EXTRA_OEMAKE += "PYLIB=${libdir}/python${PYTHON_BASEVERSION}/dist-packages"
 
 do_compile() {
