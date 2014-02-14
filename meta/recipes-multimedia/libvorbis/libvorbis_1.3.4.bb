@@ -2,22 +2,18 @@ SUMMARY = "Ogg Vorbis Audio Codec"
 DESCRIPTION = "Ogg Vorbis is a high-quality lossy audio codec \
 that is free of intellectual property restrictions. libvorbis \
 is the main vorbis codec library."
-HOMEPAGE = "http://xiph.org/"
-BUGTRACKER = "https://trac.xiph.org/newticket"
+HOMEPAGE = "http://www.vorbis.com/"
+BUGTRACKER = "https://trac.xiph.org"
 SECTION = "libs"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ca77c6c3ea4d29cb68dce8ef5ab0d897 \
                     file://include/vorbis/vorbisenc.h;beginline=1;endline=11;md5=d1c1d138863d6315131193d4046d81cb"
 DEPENDS = "libogg"
 
-PR = "r1"
+SRC_URI = "http://downloads.xiph.org/releases/vorbis/${BP}.tar.xz"
 
-SRC_URI = "http://downloads.xiph.org/releases/vorbis/libvorbis-${PV}.tar.gz \
-           file://obsolete_automake_macros.patch \
-"
-
-SRC_URI[md5sum] = "6b1a36f0d72332fae5130688e65efe1f"
-SRC_URI[sha256sum] = "6d747efe7ac4ad249bf711527882cef79fb61d9194c45b5ca5498aa60f290762"
+SRC_URI[md5sum] = "55f2288055e44754275a17c9a2497391"
+SRC_URI[sha256sum] = "2f05497d29195dc23ee952a24ee3973a74e6277569c4c2eca0ec5968e541f372"
 
 inherit autotools pkgconfig
 
