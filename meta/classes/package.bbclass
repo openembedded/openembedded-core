@@ -126,7 +126,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
     # If the root directory doesn't exist, don't error out later but silently do
     # no splitting.
     if not os.path.exists(dvar + root):
-        return
+        return []
 
     ml = d.getVar("MLPREFIX", True)
     if ml:
