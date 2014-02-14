@@ -734,6 +734,5 @@ do_package_write_rpm[cleandirs] = "${PKGWRITEDIRRPM}"
 do_package_write_rpm[umask] = "022"
 addtask package_write_rpm before do_package_write after do_packagedata do_package
 
-PACKAGEINDEXES += "[ ! -e ${DEPLOY_DIR_RPM} ] || package_update_index_rpm;"
 PACKAGEINDEXDEPS += "rpm-native:do_populate_sysroot"
 PACKAGEINDEXDEPS += "createrepo-native:do_populate_sysroot"

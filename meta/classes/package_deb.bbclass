@@ -309,6 +309,5 @@ do_package_write_deb[umask] = "022"
 addtask package_write_deb before do_package_write after do_packagedata do_package
 
 
-PACKAGEINDEXES += "[ ! -e ${DEPLOY_DIR_DEB} ] || package_update_index_deb;"
 PACKAGEINDEXDEPS += "dpkg-native:do_populate_sysroot"
 PACKAGEINDEXDEPS += "apt-native:do_populate_sysroot"
