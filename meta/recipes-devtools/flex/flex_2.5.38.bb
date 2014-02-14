@@ -5,5 +5,5 @@ BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI += "file://do_not_create_pdf_doc.patch"
 
-SRC_URI[md5sum] = "c75940e1fc25108f2a7b3ef42abdae06"
-SRC_URI[sha256sum] = "17aa7b4ebf19a13bc2dff4115b416365c95f090061539a932a68092349ac052a"
+SRC_URI[md5sum] = "b230c88e65996ff74994d08a2a2e0f27"
+SRC_URI[sha256sum] = "d42a67ce11b649ce977c8e239d04b2ef1bdbffebb8a79f4f65211ad295f274ec"
