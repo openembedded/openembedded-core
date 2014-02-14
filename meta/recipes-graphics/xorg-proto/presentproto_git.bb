@@ -1,13 +1,11 @@
 require xorg-proto-common.inc
 
-SUMMARY = "The Present extension provides a way for applications to update their \
-           window contents from a pixmap in a well defined fashion, synchronizing \
-           with the display refresh and potentially using a more efficient \
-           mechanism than copying the contents of the source pixmap.\
-          "
-
-DESCRIPTION = "This package provides the basic headers for the X Window \
-System."
+SUMMARY = "This package provides the basic headers for the X Window System"
+DESCRIPTION = "The Present extension provides a way for applications to update their \
+               window contents from a pixmap in a well defined fashion, synchronizing \
+               with the display refresh and potentially using a more efficient \
+               mechanism than copying the contents of the source pixmap.\
+              "
 
 LICENSE = "GPLv2"
 

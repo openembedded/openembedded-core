@@ -1,4 +1,4 @@
-SUMMARY = "AutoGen is a tool to manage programs that contain large amounts of repetitious text."
+SUMMARY = "Automated text and program generation tool"
 DESCRIPTION = "AutoGen is a tool designed to simplify the creation and\
  maintenance of programs that contain large amounts of repetitious text.\
  It is especially valuable in programs that have several blocks of text\

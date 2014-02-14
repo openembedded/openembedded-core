@@ -1,4 +1,5 @@
-SUMMARY = "A free software library and application for encoding video streams into the H.264/MPEG-4 AVC format"
+SUMMARY = "H.264/MPEG-4 AVC video encoder"
+DESCRIPTION = "A free software library and application for encoding video streams into the H.264/MPEG-4 AVC format."
 HOMEPAGE = "http://www.videolan.org/developers/x264.html"
 
 LICENSE = "GPLv2"

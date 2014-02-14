@@ -1,4 +1,4 @@
-SUMMARY = "libunistring provides functions for manipulating according to the Unicode standard."
+SUMMARY = "Library for manipulating C and Unicode strings"
 
 DESCRIPTION = "Text files are nowadays usually encoded in Unicode, and may\
  consist of very different scripts from Latin letters to Chinese Hanzi\
