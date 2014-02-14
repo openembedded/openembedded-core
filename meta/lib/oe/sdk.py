@@ -66,59 +66,20 @@ class RpmSdk(Sdk):
         self.host_manifest = RpmManifest(d, self.manifest_dir,
                                          Manifest.MANIFEST_TYPE_SDK_HOST)
 
-        package_archs = {
-            'default': [],
-        }
-        target_os = {
-            'default': "",
-        }
-        package_archs['default'] = self.d.getVar("PACKAGE_ARCHS", True).split()
-        # arch order is reversed.  This ensures the -best- match is
-        # listed first!
-        package_archs['default'].reverse()
-        target_os['default'] = self.d.getVar("TARGET_OS", True).strip()
-        multilibs = self.d.getVar('MULTILIBS', True) or ""
-        for ext in multilibs.split():
-            eext = ext.split(':')
-            if len(eext) > 1 and eext[0] == 'multilib':
-                localdata = bb.data.createCopy(self.d)
-                default_tune_key = "DEFAULTTUNE_virtclass-multilib-" + eext[1]
-                default_tune = localdata.getVar(default_tune_key, False)
-                if default_tune:
-                    localdata.setVar("DEFAULTTUNE", default_tune)
-                    bb.data.update_data(localdata)
-                    package_archs[eext[1]] = localdata.getVar('PACKAGE_ARCHS',
-                                                              True).split()
-                    package_archs[eext[1]].reverse()
-                    target_os[eext[1]] = localdata.getVar("TARGET_OS",
-                                                          True).strip()
         target_providename = ['/bin/sh',
                               '/bin/bash',
                               '/usr/bin/env',
                               '/usr/bin/perl',
                               'pkgconfig'
                               ]
+
         self.target_pm = RpmPM(d,
                                self.sdk_target_sysroot,
-                               package_archs,
-                               target_os,
                                self.d.getVar('TARGET_VENDOR', True),
                                'target',
                                target_providename
                                )
 
-        sdk_package_archs = {
-            'default': [],
-        }
-        sdk_os = {
-            'default': "",
-        }
-        sdk_package_archs['default'] = self.d.getVar("SDK_PACKAGE_ARCHS",
-                                                     True).split()
-        # arch order is reversed.  This ensures the -best- match is
-        # listed first!
-        sdk_package_archs['default'].reverse()
-        sdk_os['default'] = self.d.getVar("SDK_OS", True).strip()
         sdk_providename = ['/bin/sh',
                            '/bin/bash',
                            '/usr/bin/env',
@@ -127,13 +88,14 @@ class RpmSdk(Sdk):
                            'libGL.so()(64bit)',
                            'libGL.so'
                            ]
+
         self.host_pm = RpmPM(d,
                              self.sdk_host_sysroot,
-                             sdk_package_archs,
-                             sdk_os,
                              self.d.getVar('SDK_VENDOR', True),
                              'host',
-                             sdk_providename
+                             sdk_providename,
+                             "SDK_PACKAGE_ARCHS",
+                             "SDK_OS"
                              )
 
     def _populate_sysroot(self, pm, manifest):

@@ -233,37 +233,8 @@ class RpmRootfs(Rootfs):
 
         self.manifest = RpmManifest(d, manifest_dir)
 
-        package_archs = {
-            'default': [],
-        }
-        target_os = {
-            'default': "",
-        }
-        package_archs['default'] = self.d.getVar("PACKAGE_ARCHS", True).split()
-        # arch order is reversed.  This ensures the -best- match is
-        # listed first!
-        package_archs['default'].reverse()
-        target_os['default'] = self.d.getVar("TARGET_OS", True).strip()
-        multilibs = self.d.getVar('MULTILIBS', True) or ""
-        for ext in multilibs.split():
-            eext = ext.split(':')
-            if len(eext) > 1 and eext[0] == 'multilib':
-                localdata = bb.data.createCopy(self.d)
-                default_tune_key = "DEFAULTTUNE_virtclass-multilib-" + eext[1]
-                default_tune = localdata.getVar(default_tune_key, False)
-                if default_tune:
-                    localdata.setVar("DEFAULTTUNE", default_tune)
-                    bb.data.update_data(localdata)
-                    package_archs[eext[1]] = localdata.getVar('PACKAGE_ARCHS',
-                                                              True).split()
-                    package_archs[eext[1]].reverse()
-                    target_os[eext[1]] = localdata.getVar("TARGET_OS",
-                                                          True).strip()
-
         self.pm = RpmPM(d,
                         d.getVar('IMAGE_ROOTFS', True),
-                        package_archs,
-                        target_os,
                         self.d.getVar('TARGET_VENDOR', True)
                         )
 
@@ -634,37 +605,8 @@ def list_installed_packages(d, format=None, rootfs_dir=None):
 
     img_type = d.getVar('IMAGE_PKGTYPE', True)
     if img_type == "rpm":
-        package_archs = {
-            'default': [],
-        }
-        target_os = {
-            'default': "",
-        }
-        package_archs['default'] = d.getVar("PACKAGE_ARCHS", True).split()
-        # arch order is reversed.  This ensures the -best- match is
-        # listed first!
-        package_archs['default'].reverse()
-        target_os['default'] = d.getVar("TARGET_OS", True).strip()
-        multilibs = d.getVar('MULTILIBS', True) or ""
-        for ext in multilibs.split():
-            eext = ext.split(':')
-            if len(eext) > 1 and eext[0] == 'multilib':
-                localdata = bb.data.createCopy(d)
-                default_tune_key = "DEFAULTTUNE_virtclass-multilib-" + eext[1]
-                default_tune = localdata.getVar(default_tune_key, False)
-                if default_tune:
-                    localdata.setVar("DEFAULTTUNE", default_tune)
-                    bb.data.update_data(localdata)
-                    package_archs[eext[1]] = localdata.getVar('PACKAGE_ARCHS',
-                                                              True).split()
-                    package_archs[eext[1]].reverse()
-                    target_os[eext[1]] = localdata.getVar("TARGET_OS",
-                                                          True).strip()
-
         return RpmPM(d,
                      rootfs_dir,
-                     package_archs,
-                     target_os,
                      d.getVar('TARGET_VENDOR', True)
                      ).list_installed(format)
     elif img_type == "ipk":
