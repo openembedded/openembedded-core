@@ -1,0 +1,27 @@
+journald: fix fd leak in journal_file_empty
+Before my previous patch, journal_file_empty wasn't be called with the
+correct filename. Now that it's being called with the correct filename
+it leaks file descriptors. This patch closes the file descriptors before
+returning.
+
+Signed-off-by: George McCollister <george.mccollister@gmail.com>
+
+
+Index: systemd-206/src/journal/journal-vacuum.c
+===================================================================
+--- systemd-206.orig/src/journal/journal-vacuum.c	2013-07-21 19:43:28.146183128 -0300
++++ systemd-206/src/journal/journal-vacuum.c	2014-01-29 20:43:27.492343295 -0200
+@@ -129,9 +129,9 @@
+ }
+ 
+ static int journal_file_empty(int dir_fd, const char *name) {
+-        int fd, r;
++        int r;
+         le64_t n_entries;
+-
++        _cleanup_close_ int fd;
+         fd = openat(dir_fd, name, O_RDONLY|O_CLOEXEC|O_NOFOLLOW|O_NONBLOCK);
+         if (fd < 0)
+                 return -errno;
+
+Upstream-Status: Backport [207]
