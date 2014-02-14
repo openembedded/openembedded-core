@@ -21,10 +21,9 @@ do_populate_sysroot[noexec] = "1"
 do_package_index[nostamp] = "1"
 do_package_index[depends] += "${PACKAGEINDEXDEPS}"
 
-do_package_index() {
-	set -ex
-	${PACKAGEINDEXES}
-	set +ex
+python do_package_index() {
+    from oe.rootfs import generate_index_files
+    generate_index_files(d)
 }
 addtask do_package_index before do_build
 EXCLUDE_FROM_WORLD = "1"
