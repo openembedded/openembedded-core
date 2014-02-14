@@ -1,7 +1,7 @@
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
-SRCREV = "9190b3acfe706d3bfd66dec18133d28f98443321"
-PV = "2.4+git${SRCPV}"
+SRCREV = "508059f04842ed85d10bfbec8a9c688d57368860"
+PV = "2.5+git${SRCPV}"
 
 SRC_URI = "git://sourceware.org/git/systemtap.git \
            file://docproc-build-fix.patch \
