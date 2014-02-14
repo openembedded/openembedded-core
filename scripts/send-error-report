@@ -1,0 +1,78 @@
+#!/usr/bin/env python
+
+# Sends an error report (if the report-error class was enabled) to a remote server.
+#
+# Copyright (C) 2013 Intel Corporation
+# Author: Andreea Proca <andreea.b.proca@intel.com>
+
+
+
+import httplib, urllib, os, sys, json
+
+
+def sendData(json_file, server):
+
+    if os.path.isfile(json_file):
+
+        home = os.path.expanduser("~")
+        userfile = os.path.join(home, ".oe-send-error")
+        if os.path.isfile(userfile):
+            with open(userfile) as g:
+                username = g.readline()
+                email = g.readline()
+        else:
+            print("Please enter your name and your email (optionally), they'll be saved in the file you send.")
+            username = raw_input("Name: ")
+            email = raw_input("E-mail (not required): ")
+            if len(username) > 0 and len(username) < 50:
+                with open(userfile, "w") as g:
+                    g.write(username + "\n")
+                    g.write(email + "\n")
+            else:
+                print("Invalid inputs, try again.")
+                return
+
+        with open(json_file) as f:
+            data = f.read()
+
+        try:
+            jsondata = json.loads(data)
+            jsondata['username'] = username.strip()
+            jsondata['email'] = email.strip()
+            data = json.dumps(jsondata, indent=4, sort_keys=True)
+        except:
+            print("Invalid json data")
+            return
+
+        try:
+            params = urllib.urlencode({'data': data})
+            headers = {"Content-type": "application/json"}
+            conn = httplib.HTTPConnection(server)
+            conn.request("POST", "/ClientPost/", params, headers)
+            response = conn.getresponse()
+            print response.status, response.reason
+            res = response.read()
+            if response.status == 200:
+                print res
+            else:
+                print("There was a problem submiting your data")
+            conn.close()
+        except:
+                print("Server connection failed")
+
+    else:
+        print("No data file found.")
+
+
+if __name__ == '__main__':
+    print ("\nSends an error report (if the report-error class was enabled) to a remote server.")
+    if len(sys.argv) < 2:
+        print("\nThis scripts sends the contents of a file to an upstream server.")
+        print("\nUsage: send-error-report <error_fileName> [server]")
+        print("\nIf this is the first when sending a report you'll be asked for your name and optionally your email address.")
+        print("They will be associated with your report.\n")
+
+    elif len(sys.argv) == 3:
+        sendData(sys.argv[1], sys.argv[2])
+    else:
+        sendData(sys.argv[1], "localhost:8000")
