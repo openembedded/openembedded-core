@@ -35,14 +35,64 @@ class Indexer(object):
 
 
 class RpmIndexer(Indexer):
+    def get_ml_prefix_and_os_list(self, arch_var=None, os_var=None):
+        package_archs = {
+            'default': [],
+        }
+
+        target_os = {
+            'default': "",
+        }
+
+        if arch_var is not None and os_var is not None:
+            package_archs['default'] = self.d.getVar(arch_var, True).split()
+            package_archs['default'].reverse()
+            target_os['default'] = self.d.getVar(os_var, True).strip()
+        else:
+            package_archs['default'] = self.d.getVar("PACKAGE_ARCHS", True).split()
+            # arch order is reversed.  This ensures the -best- match is
+            # listed first!
+            package_archs['default'].reverse()
+            target_os['default'] = self.d.getVar("TARGET_OS", True).strip()
+            multilibs = self.d.getVar('MULTILIBS', True) or ""
+            for ext in multilibs.split():
+                eext = ext.split(':')
+                if len(eext) > 1 and eext[0] == 'multilib':
+                    localdata = bb.data.createCopy(self.d)
+                    default_tune_key = "DEFAULTTUNE_virtclass-multilib-" + eext[1]
+                    default_tune = localdata.getVar(default_tune_key, False)
+                    if default_tune:
+                        localdata.setVar("DEFAULTTUNE", default_tune)
+                        bb.data.update_data(localdata)
+                        package_archs[eext[1]] = localdata.getVar('PACKAGE_ARCHS',
+                                                                  True).split()
+                        package_archs[eext[1]].reverse()
+                        target_os[eext[1]] = localdata.getVar("TARGET_OS",
+                                                              True).strip()
+
+        ml_prefix_list = dict()
+        for mlib in package_archs:
+            if mlib == 'default':
+                ml_prefix_list[mlib] = package_archs[mlib]
+            else:
+                ml_prefix_list[mlib] = list()
+                for arch in package_archs[mlib]:
+                    if arch in ['all', 'noarch', 'any']:
+                        ml_prefix_list[mlib].append(arch)
+                    else:
+                        ml_prefix_list[mlib].append(mlib + "_" + arch)
+
+        return (ml_prefix_list, target_os)
+
     def write_index(self):
         sdk_pkg_archs = (self.d.getVar('SDK_PACKAGE_ARCHS', True) or "").replace('-', '_').split()
-        mlb_prefix_list = (self.d.getVar('MULTILIB_PREFIX_LIST', True) or "").replace('-', '_').split()
         all_mlb_pkg_archs = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS', True) or "").replace('-', '_').split()
+
+        mlb_prefix_list = self.get_ml_prefix_and_os_list()[0]
 
         archs = set()
         for item in mlb_prefix_list:
-            archs = archs.union(set(item.split(':')[1:]))
+            archs = archs.union(set(i.replace('-', '_') for i in mlb_prefix_list[item]))
 
         if len(archs) == 0:
             archs = archs.union(set(all_mlb_pkg_archs))
@@ -303,56 +353,7 @@ class RpmPM(PackageManager):
 
         self.indexer = RpmIndexer(self.d, self.deploy_dir)
 
-        self.ml_prefix_list, self.ml_os_list = self._get_prefix_and_os_list(arch_var, os_var)
-
-    def _get_prefix_and_os_list(self, arch_var, os_var):
-        package_archs = {
-            'default': [],
-        }
-
-        target_os = {
-            'default': "",
-        }
-
-        if arch_var is not None and os_var is not None:
-            package_archs['default'] = self.d.getVar(arch_var, True).split()
-            package_archs['default'].reverse()
-            target_os['default'] = self.d.getVar(os_var, True).strip()
-        else:
-            package_archs['default'] = self.d.getVar("PACKAGE_ARCHS", True).split()
-            # arch order is reversed.  This ensures the -best- match is
-            # listed first!
-            package_archs['default'].reverse()
-            target_os['default'] = self.d.getVar("TARGET_OS", True).strip()
-            multilibs = self.d.getVar('MULTILIBS', True) or ""
-            for ext in multilibs.split():
-                eext = ext.split(':')
-                if len(eext) > 1 and eext[0] == 'multilib':
-                    localdata = bb.data.createCopy(self.d)
-                    default_tune_key = "DEFAULTTUNE_virtclass-multilib-" + eext[1]
-                    default_tune = localdata.getVar(default_tune_key, False)
-                    if default_tune:
-                        localdata.setVar("DEFAULTTUNE", default_tune)
-                        bb.data.update_data(localdata)
-                        package_archs[eext[1]] = localdata.getVar('PACKAGE_ARCHS',
-                                                                  True).split()
-                        package_archs[eext[1]].reverse()
-                        target_os[eext[1]] = localdata.getVar("TARGET_OS",
-                                                              True).strip()
-
-        ml_prefix_list = dict()
-        for mlib in package_archs:
-            if mlib == 'default':
-                ml_prefix_list[mlib] = package_archs[mlib]
-            else:
-                ml_prefix_list[mlib] = list()
-                for arch in package_archs[mlib]:
-                    if arch in ['all', 'noarch', 'any']:
-                        ml_prefix_list[mlib].append(arch)
-                    else:
-                        ml_prefix_list[mlib].append(mlib + "_" + arch)
-
-        return (ml_prefix_list, target_os)
+        self.ml_prefix_list, self.ml_os_list = self.indexer.get_ml_prefix_and_os_list(arch_var, os_var)
 
     '''
     Create configs for rpm and smart, and multilib is supported
