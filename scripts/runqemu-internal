@@ -178,6 +178,10 @@ else
         USE_PRECONF_TAP="no"
         for tap in $POSSIBLE; do
             LOCKFILE="$LOCKDIR/$tap"
+            if [ -e "$LOCKFILE.skip" ]; then
+                echo "Found $LOCKFILE.skip, skipping $tap"
+                continue
+            fi
             echo "Acquiring lockfile for $tap..."
             acquire_lock $LOCKFILE
             if [ $? -eq 0 ]; then
@@ -214,7 +218,7 @@ else
             fi 
         else
             echo "Using preconfigured tap device '$TAP'"
-            echo "If this is not intended, use flock on $LOCKFILE.lock to make runqemu skip $TAP."
+            echo "If this is not intended, touch $LOCKFILE.skip to make runqemu skip $TAP."
         fi
 
         cleanup() {
