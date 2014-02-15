@@ -1,0 +1,67 @@
+Remove tests that require thumb compiler flags
+
+Default compiler options for arm machines are incompatible with the
+'-mthumb' compiler option imposed by the intdiv and lrt test
+applications, so those two are removed from the ptest build.
+
+Upstream-Status: Pending
+
+Signed-off-by: Dave Lerner <dave.lerner@windriver.com>
+
+diff --git a/none/tests/arm/Makefile.am b/none/tests/arm/Makefile.am
+index 2a19f5b..ccdeb77 100644
+--- a/none/tests/arm/Makefile.am
++++ b/none/tests/arm/Makefile.am
+@@ -16,15 +16,16 @@ EXTRA_DIST = \
+ 		vcvt_fixed_float_VFP.vgtest \
+ 	vfp.stdout.exp vfp.stderr.exp vfp.vgtest
+ 
++# For yocto:
++#  Only include tests that don't require Thumb.
++#  Only use CFLAGS passed in by the build system.
++# Some tests may fail, but all tests must compile.
+ check_PROGRAMS = \
+ 	allexec \
+-	intdiv \
+-	ldrt \
+ 	ldrt_arm \
+ 	neon128 \
+ 	neon64 \
+ 	v6intARM \
+-	v6intThumb \
+ 	v6media \
+ 	vcvt_fixed_float_VFP \
+ 	vfp
+@@ -34,32 +35,3 @@ AM_CXXFLAGS  += @FLAG_M32@
+ AM_CCASFLAGS += @FLAG_M32@
+ 
+ allexec_CFLAGS		= $(AM_CFLAGS) @FLAG_W_NO_NONNULL@
+-
+-# These two are specific to their ARM/Thumb respectively and so we
+-# hardwire -marm/-mthumb.  neon64 and neon128 are compilable on both,
+-# however, ask for them to be compiled on thumb, as that looks
+-# like that's going to be the more common use case.  They also
+-# need special helping w.r.t -mfpu and -mfloat-abi, though.
+-# Also force -O0 since -O takes hundreds of MB of memory 
+-# for v6intThumb.c.
+-v6intARM_CFLAGS   = $(AM_CFLAGS) -g -O0 -mcpu=cortex-a8 -marm
+-v6intThumb_CFLAGS = $(AM_CFLAGS) -g -O0 -mcpu=cortex-a8 -mthumb
+-
+-v6media_CFLAGS    = $(AM_CFLAGS) -g -O0 -mcpu=cortex-a8 -mthumb
+-
+-vfp_CFLAGS        = $(AM_CFLAGS) -g -O0 -mcpu=cortex-a8 \
+-			-mfpu=neon \
+-			-mthumb
+-
+-
+-neon128_CFLAGS    = $(AM_CFLAGS) -g -O0 -mcpu=cortex-a8 \
+-			-mfpu=neon \
+-			-mthumb
+-
+-neon64_CFLAGS     = $(AM_CFLAGS) -g -O0 -mcpu=cortex-a8 \
+-			-mfpu=neon \
+-			-mthumb
+-
+-intdiv_CFLAGS	  = $(AM_CFLAGS) -g -mcpu=cortex-a15 -mthumb
+-ldrt_CFLAGS	  = $(AM_CFLAGS) -g -mcpu=cortex-a8 -mthumb
+-ldrt_arm_CFLAGS	  = $(AM_CFLAGS) -g -mcpu=cortex-a8 -marm

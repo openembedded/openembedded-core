@@ -16,6 +16,11 @@ SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
            file://Added-support-for-PPC-instructions-mfatbu-mfatbl.patch \
            file://sepbuildfix.patch \
            file://glibc-2.19.patch \
+           file://force-nostabs.patch \
+           file://remove-arm-variant-specific.patch \
+           file://remove-ppc-tests-failing-build.patch \
+           file://add-ptest.patch \
+           file://run-ptest \
           "
 
 SRC_URI[md5sum] = "0947de8112f946b9ce64764af7be6df2"
@@ -24,7 +29,7 @@ SRC_URI[sha256sum] = "e6af71a06bc2534541b07743e1d58dc3caf744f38205ca3e5b5a0bdf37
 COMPATIBLE_HOST = '(i.86|x86_64|powerpc|powerpc64).*-linux'
 COMPATIBLE_HOST_armv7a = 'arm.*-linux'
 
-inherit autotools
+inherit autotools ptest
 
 EXTRA_OECONF = "--enable-tls --without-mpicc"
 EXTRA_OECONF_armv7a = "--enable-tls -host=armv7-none-linux-gnueabi --without-mpicc"
@@ -42,3 +47,52 @@ FILES_${PN}-dbg += "${libdir}/${PN}/*/.debug/*"
 # valgrind needs debug information for ld.so at runtime in order to
 # redirect functions like strlen.
 RRECOMMENDS_${PN} += "${TCLIBC}-dbg"
+
+RDEPENDS_${PN}-ptest += " sed perl eglibc-utils"
+
+do_compile_ptest() {
+    oe_runmake check
+}
+
+
+do_install_ptest() {
+    chmod +x ${B}/tests/vg_regtest
+
+    # The test application binaries are not automatically installed.
+    # Grab them from the build directory.
+    #
+    # The regression tests require scripts and data files that are not
+    # copied to the build directory.  They must be copied from the
+    # source directory. 
+    saved_dir=$PWD
+    for parent_dir in ${S} ${B} ; do
+        cd $parent_dir
+
+        # exclude shell or the package won't install
+        rm -rf none/tests/shell* 2>/dev/null
+
+        subdirs="tests cachegrind/tests callgrind/tests drd/tests helgrind/tests massif/tests memcheck/tests none/tests"
+
+        # Get the vg test scripts, filters, and expected files
+        for dir in $subdirs ; do
+            find $dir | cpio -pvdu ${D}${PTEST_PATH}
+        done
+        cd $saved_dir
+    done
+
+    # clean out build artifacts before building the rpm
+    find ${D}${PTEST_PATH} \
+         \( -name "Makefile*" \
+        -o -name "*.o" \
+        -o -name "*.c" \
+        -o -name "*.S" \
+        -o -name "*.h" \) \
+        -exec rm {} \;
+
+    # needed by massif tests
+    cp ${B}/massif/ms_print ${D}${PTEST_PATH}/massif/ms_print
+
+    # handle multilib
+    sed -i s:@libdir@:${libdir}:g ${D}${PTEST_PATH}/run-ptest
+}
+
