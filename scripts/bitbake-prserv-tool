@@ -5,8 +5,8 @@ help ()
     base=`basename $0`
     echo -e "Usage: $base command"
     echo "Avaliable commands:"
-    echo -e "\texport <file>: export and lock down the AUTOPR values from the PR service into a file for release."
-    echo -e "\timport <file>: import the AUTOPR values from the exported file into the PR service."
+    echo -e "\texport <file.conf>: export and lock down the AUTOPR values from the PR service into a file for release."
+    echo -e "\timport <file.conf>: import the AUTOPR values from the exported file into the PR service."
 }
 
 clean_cache()
