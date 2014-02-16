@@ -16,8 +16,11 @@ HOST_LOADLIBES = "-lncurses"
 TERMINFO = "${STAGING_DATADIR_NATIVE}/terminfo"
 
 python do_menuconfig() {
+    import shutil
+
     try:
         mtime = os.path.getmtime(".config")
+        shutil.copy(".config", ".config.orig")
     except OSError:
         mtime = 0
 
@@ -38,3 +41,33 @@ do_menuconfig[depends] += "ncurses-native:do_populate_sysroot"
 do_menuconfig[nostamp] = "1"
 addtask menuconfig after do_configure
 
+python do_diffconfig() {
+    import shutil
+    import subprocess
+
+    workdir = d.getVar('WORKDIR', True)
+    fragment = workdir + '/fragment.cfg'
+    configorig = '.config.orig'
+    config = '.config'
+
+    try:
+        md5newconfig = bb.utils.md5_file(configorig)
+        md5config = bb.utils.md5_file(config)
+        isdiff = md5newconfig != md5config
+    except IOError as e:
+        bb.fatal("No config files found. Did you do menuconfig ?\n%s" % e)
+
+    if isdiff:
+        statement = 'diff -Nurp ' + configorig + ' ' + config + '| sed -n "s/^\+//p" >' + fragment
+        subprocess.call(statement, shell=True)
+
+        shutil.copy(configorig, config)
+
+        bb.plain("Config fragment has been dumped into:\n %s" % fragment)
+    else:
+        if os.path.exists(fragment):
+            os.unlink(fragment)
+}
+
+do_diffconfig[nostamp] = "1"
+addtask diffconfig
