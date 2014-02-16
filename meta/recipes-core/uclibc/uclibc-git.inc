@@ -1,4 +1,4 @@
-SRCREV="f22cca4722fa66e424562e69f4afa2bca0af871d"
+SRCREV="19f21a1d974d802f05c43e4cabd6ed6891a8ae50"
 
 PV = "0.9.33+git${SRCPV}"
 
@@ -21,6 +21,5 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master \
 	file://0001-nptl-atfork-Hide-pthread_atfork-in-shared-versions.patch \
 	file://0001-librt-Use-nodefaultlibs-instead-of-nostdlib.patch \
 	file://0001-Revert-utent.c-wtent.c-move-functions-from-utxent.c.patch \
-	file://0001-add-posix_fadvise-for-arm.patch \
 	"
 S = "${WORKDIR}/git"
