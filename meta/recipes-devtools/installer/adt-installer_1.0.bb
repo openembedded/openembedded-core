@@ -55,6 +55,9 @@ SRC_URI[sha256sum] = "81b7055eb4c12c5e5652339305c9236cf357890717d4bea063963f3f43
 
 ADTREPO ?= "http://adtrepo.yoctoproject.org/${SDK_VERSION}"
 
+# This recipe makes no sense as a multilib
+MULTILIBS = ""
+
 do_populate_adt[umask] = "022"
 
 fakeroot do_populate_adt () {
