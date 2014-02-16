@@ -112,7 +112,8 @@ class RpmIndexer(Indexer):
             rpm_dirs_found = True
 
         if not rpm_dirs_found:
-            return("There are no packages in %s" % self.deploy_dir)
+            bb.note("There are no packages in %s" % self.deploy_dir)
+            return
 
         nproc = multiprocessing.cpu_count()
         pool = bb.utils.multiprocessingpool(nproc)
@@ -156,7 +157,8 @@ class OpkgIndexer(Indexer):
                                   (opkg_index_cmd, pkgs_file, pkgs_file, pkgs_dir))
 
         if len(index_cmds) == 0:
-            return("There are no packages in %s!" % self.deploy_dir)
+            bb.note("There are no packages in %s!" % self.deploy_dir)
+            return
 
         nproc = multiprocessing.cpu_count()
         pool = bb.utils.multiprocessingpool(nproc)
@@ -197,7 +199,8 @@ class DpkgIndexer(Indexer):
             deb_dirs_found = True
 
         if not deb_dirs_found:
-            return("There are no packages in %s" % self.deploy_dir)
+            bb.note("There are no packages in %s" % self.deploy_dir)
+            return
 
         nproc = multiprocessing.cpu_count()
         pool = bb.utils.multiprocessingpool(nproc)
