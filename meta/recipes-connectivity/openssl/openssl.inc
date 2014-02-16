@@ -66,6 +66,10 @@ do_configure () {
 		os=linux
 	elif [ "x$os" = "xlinux-uclibceabi" ]; then
 		os=linux
+	elif [ "x$os" = "xlinux-uclibcspe" ]; then
+		os=linux
+	elif [ "x$os" = "xlinux-gnuspe" ]; then
+		os=linux
 	elif [ "x$os" = "xlinux-gnueabi" ]; then
 		os=linux
 	fi
@@ -111,9 +115,6 @@ do_configure () {
                target=linux-mips
                 ;;
 	linux-powerpc)
-		target=linux-ppc
-		;;
-	linux-gnuspe-powerpc)
 		target=linux-ppc
 		;;
 	linux-powerpc64)
