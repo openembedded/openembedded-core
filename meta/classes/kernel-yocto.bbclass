@@ -411,3 +411,5 @@ do_kernel_link_vmlinux() {
 OE_TERMINAL_EXPORTS += "GUILT_BASE KBUILD_OUTPUT"
 GUILT_BASE = "meta"
 KBUILD_OUTPUT = "${B}"
+
+do_diffconfig[depends] += "virtual/kernel:do_kernel_configme"
