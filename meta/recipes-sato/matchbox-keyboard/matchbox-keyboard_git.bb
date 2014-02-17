@@ -16,7 +16,7 @@ PR = "r4"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};branch=matchbox-keyboard-0-1 \
            file://single-instance.patch \
-           file://80matchboxkeyboard.shbg"
+           file://80matchboxkeyboard.sh"
 
 S = "${WORKDIR}/git"
 
@@ -41,7 +41,7 @@ FILES_${PN}-applet = "${libdir}/matchbox-panel/*.so"
 
 do_install_append () {
 	install -d ${D}/${sysconfdir}/X11/Xsession.d/
-	install -m 755 ${WORKDIR}/80matchboxkeyboard.shbg ${D}/${sysconfdir}/X11/Xsession.d/
+	install -m 755 ${WORKDIR}/80matchboxkeyboard.sh ${D}/${sysconfdir}/X11/Xsession.d/
 
 	rm -f ${D}${libdir}/gtk-2.0/*/immodules/*.la
 	rm -f ${D}${libdir}/matchbox-panel/*.la

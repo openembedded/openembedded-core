@@ -13,11 +13,9 @@ elif [ "$DISPLAY_CAN_ROTATE" = "1" ]; then
         CMD="matchbox-keyboard -d -o portrait"
     fi
 fi
-					
 
 if [ "$CMD" ]; then
     # Delay to make sure the window manager is active
     # by waiting for the desktop to say its finished loading
-    dbus-wait org.matchbox_project.desktop Loaded
-    exec $CMD
+    dbus-wait org.matchbox_project.desktop Loaded && $CMD &
 fi
