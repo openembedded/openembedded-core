@@ -333,5 +333,5 @@ populate_sdk_log_check() {
 do_populate_sdk[dirs] = "${TOPDIR}"
 do_populate_sdk[depends] += "${@' '.join([x + ':do_populate_sysroot' for x in d.getVar('SDK_DEPENDS', True).split()])}"
 do_populate_sdk[rdepends] = "${@' '.join([x + ':do_populate_sysroot' for x in d.getVar('SDK_RDEPENDS', True).split()])}"
-do_populate_sdk[recrdeptask] = "do_package_write"
+do_populate_sdk[recrdeptask] += "do_packagedata"
 addtask populate_sdk
