@@ -66,14 +66,10 @@ IMAGE_CMD_squashfs = "mksquashfs ${IMAGE_ROOTFS} ${DEPLOY_DIR_IMAGE}/${IMAGE_NAM
 IMAGE_CMD_squashfs-xz = "mksquashfs ${IMAGE_ROOTFS} ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.squashfs-xz ${EXTRA_IMAGECMD} -noappend -comp xz"
 IMAGE_CMD_tar = "tar -cvf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.tar -C ${IMAGE_ROOTFS} ."
 
-CPIO_TOUCH_INIT () {
-	if [ ! -L ${IMAGE_ROOTFS}/init ]
-	then
-	touch ${IMAGE_ROOTFS}/init
-	fi
-}
 IMAGE_CMD_cpio () {
-	${CPIO_TOUCH_INIT}
+	if [ ! -L ${IMAGE_ROOTFS}/init ]; then
+		touch ${IMAGE_ROOTFS}/init
+	fi
 	cd ${IMAGE_ROOTFS} && (find . | cpio -o -H newc >${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.cpio)
 }
 
