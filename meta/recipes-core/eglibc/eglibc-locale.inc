@@ -35,7 +35,8 @@ PACKAGES = "localedef ${PN}-dbg"
 
 PACKAGES_DYNAMIC = "^locale-base-.* \
                     ^eglibc-gconv-.* ^eglibc-charmap-.* ^eglibc-localedata-.* ^eglibc-binary-localedata-.* \
-                    ^glibc-gconv-.*  ^glibc-charmap-.*  ^glibc-localedata-.*  ^glibc-binary-localedata-.*"
+                    ^glibc-gconv-.*  ^glibc-charmap-.*  ^glibc-localedata-.*  ^glibc-binary-localedata-.* \
+                    ^${MLPREFIX}eglibc-gconv$"
 
 # Create a eglibc-binaries package
 ALLOW_EMPTY_${BPN}-binaries = "1"
