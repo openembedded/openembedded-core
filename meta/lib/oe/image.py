@@ -176,8 +176,8 @@ class Image(object):
             bb.data.update_data(localdata)
             localdata.setVar('type', type)
 
-            cmds.append(localdata.expand("\tcd ${DEPLOY_DIR_IMAGE}"))
             cmds.append("\t" + localdata.getVar("IMAGE_CMD", True))
+            cmds.append(localdata.expand("\tcd ${DEPLOY_DIR_IMAGE}"))
 
             if type in cimages:
                 for ctype in cimages[type]:
