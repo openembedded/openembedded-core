@@ -187,7 +187,7 @@ class Rootfs(object):
                         self._handle_intercept_failure(registered_pkgs)
 
     def _run_ldconfig(self):
-        if self.d.getVar('LDCONFIGDEPEND', True) != "":
+        if self.d.getVar('LDCONFIGDEPEND', True):
             bb.note("Executing: ldconfig -r" + self.image_rootfs + "-c new -v")
             self._exec_shell_cmd(['ldconfig', '-r', self.image_rootfs, '-c',
                                   'new', '-v'])
