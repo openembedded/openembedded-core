@@ -15,3 +15,6 @@ SRC_URI[sha256sum] = "2dc018e830d1befaf4822615204138318da3fff0112f78f3a7c638fa61
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-docs"
+
+PACKAGECONFIG ?= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
+PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,libxcb"
