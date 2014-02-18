@@ -232,4 +232,8 @@ python do_bootimg() {
     bb.build.exec_func('build_iso', d)
 }
 
+IMAGE_TYPEDEP_iso = "ext3"
+IMAGE_TYPEDEP_hddimg = "ext3"
+IMAGE_TYPES_MASKED += "iso hddimg"
+
 addtask bootimg before do_build

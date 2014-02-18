@@ -13,3 +13,6 @@ do_bootimg[depends] += "${INITRD_IMAGE}:do_rootfs"
 do_bootimg[depends] += "${PN}:do_rootfs"
 
 inherit bootimg
+
+IMAGE_TYPEDEP_live = "ext3"
+IMAGE_TYPES_MASKED += "live"
