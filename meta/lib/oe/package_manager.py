@@ -1134,7 +1134,8 @@ class OpkgPM(PackageManager):
 
         if format == "file":
             tmp_output = ""
-            for pkg, pkg_file, pkg_arch in tuple(output.split('\n')):
+            for line in output.split('\n'):
+                pkg, pkg_file, pkg_arch = line.split()
                 full_path = os.path.join(self.deploy_dir, pkg_arch, pkg_file)
                 if os.path.exists(full_path):
                     tmp_output += "%s %s %s\n" % (pkg, full_path, pkg_arch)
@@ -1435,7 +1436,8 @@ class DpkgPM(PackageManager):
 
         if format == "file":
             tmp_output = ""
-            for pkg, pkg_file, pkg_arch in tuple(output.split('\n')):
+            for line in tuple(output.split('\n')):
+                pkg, pkg_file, pkg_arch = line.split()
                 full_path = os.path.join(self.deploy_dir, pkg_arch, pkg_file)
                 if os.path.exists(full_path):
                     tmp_output += "%s %s %s\n" % (pkg, full_path, pkg_arch)
