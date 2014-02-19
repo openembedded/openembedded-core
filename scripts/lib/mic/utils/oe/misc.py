@@ -74,7 +74,7 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch = 3):
     Always need to execute native commands as_shell
     """
     native_paths = \
-        "export PATH=%s/sbin:PATH=%s/usr/sbin:PATH=%s/usr/bin:$PATH" % \
+        "export PATH=%s/sbin:%s/usr/sbin:%s/usr/bin:$PATH" % \
         (native_sysroot, native_sysroot, native_sysroot)
     native_cmd_and_args = "%s;%s" % (native_paths, cmd_and_args)
     msger.debug("exec_native_cmd: %s" % cmd_and_args)
