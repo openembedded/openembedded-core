@@ -84,7 +84,7 @@ Index: trunk/src/opkg-cl.c
  	{"test", 0, 0, ARGS_OPT_NOACTION},
  	{"tmp-dir", 1, 0, 't'},
  	{"tmp_dir", 1, 0, 't'},
-@@ -198,6 +200,17 @@ args_parse(int argc, char *argv[])
+@@ -198,6 +200,18 @@ args_parse(int argc, char *argv[])
  			}
  			free(tuple);
  			break;
@@ -99,10 +99,11 @@ Index: trunk/src/opkg-cl.c
 +				conf->exclude_list = realloc(conf->exclude_list, sizeof(char *) * conf->exclude_count);
 +				conf->exclude_list[conf->exclude_count - 1] = tuple;
 +			}
++			break;
  		case ARGS_OPT_NOACTION:
  			conf->noaction = 1;
  			break;
-@@ -282,6 +295,7 @@ usage()
+@@ -282,6 +296,7 @@ usage()
  	printf("\t--offline-root <dir>	offline installation of packages.\n");
  	printf("\t--add-arch <arch>:<prio>	Register architecture with given priority\n");
  	printf("\t--add-dest <name>:<path>	Register destination with given path\n");
