@@ -1166,7 +1166,7 @@ class OpkgPM(PackageManager):
                              "returned %d:\n%s" % (pkg_info, e.returncode, e.output))
 
                 if output == "":
-                    bb.note("Requested ignored recommendation $i is "
+                    bb.note("Ignored bad recommendation: '%s' is "
                             "not a package" % pkg)
                     continue
 
