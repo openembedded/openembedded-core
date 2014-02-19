@@ -51,7 +51,7 @@ def exec_cmd(cmd_and_args, as_shell = False, catch = 3):
         # parted always fails to reload part table with loop devices. This
         # prevents us from distinguishing real errors based on return
         # code.
-        msger.debug("WARNING: %s returned '%s' instead of 0" % (args[0], rc))
+        msger.warning("WARNING: %s returned '%s' instead of 0" % (cmd_and_args, rc))
 
     return (rc, out)
 
@@ -82,7 +82,14 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch = 3):
     args = cmd_and_args.split()
     msger.debug(args)
 
-    return exec_cmd(native_cmd_and_args, True, catch)
+    rc, out = exec_cmd(native_cmd_and_args, True, catch)
+
+    if rc == 127: # shell command-not-found
+        msger.error("A native (host) program required to build the image "
+                    "was not found (see details above). Please make sure "
+                    "it's installed and try again.")
+
+    return (rc, out)
 
 
 def exec_native_cmd_quiet(cmd_and_args, native_sysroot):
