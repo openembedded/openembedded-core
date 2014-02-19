@@ -1,4 +1,4 @@
-SUMMARY = "JSON-GLib implements a full JSON parser using GLib and GObject."
+SUMMARY = "JSON-GLib implements a full JSON parser using GLib and GObject"
 DESCRIPTION = "Use JSON-GLib it is possible to parse and generate valid JSON\
  data structures, using a DOM-like API. JSON-GLib also offers GObject \
 integration, providing the ability to serialize and deserialize GObject \

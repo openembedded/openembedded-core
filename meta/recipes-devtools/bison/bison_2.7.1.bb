@@ -1,4 +1,4 @@
-SUMMARY = "GNU Project parser generator (yacc replacement)."
+SUMMARY = "GNU Project parser generator (yacc replacement)"
 DESCRIPTION = "Bison is a general-purpose parser generator that converts an annotated context-free grammar into \
 an LALR(1) or GLR parser for that grammar.  Bison is upward compatible with Yacc: all properly-written Yacc \
 grammars ought to work with Bison with no change. Anyone familiar with Yacc should be able to use Bison with \

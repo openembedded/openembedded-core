@@ -1,4 +1,4 @@
-SUMMARY = "A complete, cross-platform solution to record, convert and stream audio and video."
+SUMMARY = "A complete, cross-platform solution to record, convert and stream audio and video"
 HOMEPAGE = "http://libav.org/"
 SECTION = "libs"
 LICENSE = "GPLv2+"

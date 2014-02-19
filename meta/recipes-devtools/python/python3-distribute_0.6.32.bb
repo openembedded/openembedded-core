@@ -1,4 +1,4 @@
-DESCRIPTION = "Download, build, install, upgrade, and uninstall Python packages"
+SUMMARY = "Download, build, install, upgrade, and uninstall Python packages"
 HOMEPAGE = "http://packages.python.org/distribute"
 SECTION = "devel/python"
 LICENSE = "PSF"

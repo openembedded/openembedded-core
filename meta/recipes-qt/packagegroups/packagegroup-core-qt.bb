@@ -2,7 +2,7 @@
 # Copyright (C) 2010  Intel Corporation. All rights reserved
 #
 
-DESCRIPTION = "Qt package groups"
+SUMMARY = "Qt package groups"
 LICENSE = "MIT"
 PR = "r4"
 

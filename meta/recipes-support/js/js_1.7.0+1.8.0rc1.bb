@@ -1,4 +1,4 @@
-DESCRIPTION = "Spidermonkey: a javascript engine written in C"
+SUMMARY = "Spidermonkey: a javascript engine written in C"
 HOMEPAGE = "http://www.mozilla.org/js/spidermonkey/"
 SECTION = "libs"
 

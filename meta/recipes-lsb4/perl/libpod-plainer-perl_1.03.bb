@@ -1,4 +1,4 @@
-SUMMARY = "Perl extension for converting Pod to old-style Pod."
+SUMMARY = "Perl extension for converting Pod to old-style Pod"
 DESCRIPTION = "Pod::Plainer uses Pod::Parser which takes Pod with the (new) 'C<< .. >>' \
 constructs and returns the old(er) style with just 'C<>'; '<' and '>' are replaced by \
 'E<lt>' and 'E<gt>'. \

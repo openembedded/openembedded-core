@@ -2,7 +2,7 @@
 # Copyright (C) 2012 Wind River Ltd
 #
 
-SUMMARY = "A toolset that contains most of the native packages."
+SUMMARY = "A toolset that contains most of the native packages"
 DESCRIPTION = "The packagegroup is required to build most native \
 tools, it is useful for testing and collecting the native tools."
 LICENSE = "MIT"

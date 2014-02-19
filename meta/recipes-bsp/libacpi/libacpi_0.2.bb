@@ -1,4 +1,4 @@
-SUMMARY = "ACPI data gathering library."
+SUMMARY = "ACPI data gathering library"
 DESCRIPTION = "General purpose shared library for programs gathering ACPI data on Linux. \
 Thermal zones, battery infomration, fan information and AC states are implemented."
 SECTION = "base"

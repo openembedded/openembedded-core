@@ -1,4 +1,4 @@
-SUMMARY = "Linux Bluetooth Stack HCI Debugger Tool."
+SUMMARY = "Linux Bluetooth Stack HCI Debugger Tool"
 DESCRIPTION = "The hcidump tool reads raw HCI data coming from and going to a Bluetooth device \
 and displays the commands, events and data in a human-readable form."
 

@@ -1,4 +1,4 @@
-SUMMARY = "Perl module that imports environment variables as scalars or arrays."
+SUMMARY = "Perl module that imports environment variables as scalars or arrays"
 DESCRIPTION = "Perl maintains environment variables in a special hash named %ENV. \
 For when this access method is inconvenient, the Perl module Env allows environment \
 variables to be treated as scalar or array variables."

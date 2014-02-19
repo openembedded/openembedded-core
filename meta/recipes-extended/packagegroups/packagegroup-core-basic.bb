@@ -2,7 +2,7 @@
 # Copyright (C) 2010 Intel Corporation
 #
 
-DESCRIPTION = "Create Basic Image Tasks"
+SUMMARY = "Create Basic Image Tasks"
 PR = "r6"
 LICENSE = "MIT"
 

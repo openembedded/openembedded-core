@@ -1,4 +1,4 @@
-SUMMARY = "mailx is the traditional command-line-mode mail user agent."
+SUMMARY = "mailx is the traditional command-line-mode mail user agent"
 
 DESCRIPTION = "Mailx is derived from Berkeley Mail and is intended provide the \
 functionality of the POSIX mailx command with additional support \

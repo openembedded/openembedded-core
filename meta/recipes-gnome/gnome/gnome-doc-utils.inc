@@ -1,4 +1,4 @@
-SUMMARY = "A collection of documentation utilities for the Gnome project."
+SUMMARY = "A collection of documentation utilities for the Gnome project"
 DESCRIPTION = "The GNOME Documentation Build Utilities (gnome-doc- \
 utils) were created to make it easier for application developers to \
 include and create documentation in their releases. They include the \

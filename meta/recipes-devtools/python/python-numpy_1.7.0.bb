@@ -1,4 +1,4 @@
-DESCRIPTION = "A sophisticated Numeric Processing Package for Python"
+SUMMARY = "A sophisticated Numeric Processing Package for Python"
 SECTION = "devel/python"
 LICENSE = "PSF"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=f87832d854acbade6e9f5c601c8b30b1"

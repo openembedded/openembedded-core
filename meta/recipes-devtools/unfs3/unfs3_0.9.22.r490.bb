@@ -1,4 +1,4 @@
-DESCRIPTION = "Userspace NFS server v3 protocol"
+SUMMARY = "Userspace NFS server v3 protocol"
 SECTION = "console/network"
 LICENSE = "unfs3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=9475885294e17c0cc0067820d042792e"

@@ -1,4 +1,4 @@
-SUMMARY = "libjpeg is a library for handling the JPEG (JFIF) image format."
+SUMMARY = "libjpeg is a library for handling the JPEG (JFIF) image format"
 DESCRIPTION = "libjpeg contains a library for handling the JPEG (JFIF) image format, as well as related programs for accessing the libjpeg functions."
 HOMEPAGE = "http://www.ijg.org/"
 

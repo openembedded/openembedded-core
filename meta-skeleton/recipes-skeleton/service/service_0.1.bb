@@ -1,4 +1,4 @@
-DESCRIPTION = "The canonical example of init scripts"
+SUMMARY = "The canonical example of init scripts"
 SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYRIGHT;md5=349c872e0066155e1818b786938876a4"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Merge machine and distro options to create a basic machine task/package"
+SUMMARY = "Merge machine and distro options to create a basic machine task/package"
 LICENSE = "MIT"
 PR = "r76"
 
@@ -145,7 +145,7 @@ RRECOMMENDS_packagegroup-distro-base = "${DISTRO_EXTRA_RRECOMMENDS}"
 # packages added by machine config
 #
 SUMMARY_packagegroup-machine-base = "${MACHINE} extras"
-DESCRIPTION_packagegroup-machine-base = "Extra packages required to fully support ${MACHINE} hardware"
+SUMMARY_packagegroup-machine-base = "Extra packages required to fully support ${MACHINE} hardware"
 RDEPENDS_packagegroup-machine-base = "${MACHINE_EXTRA_RDEPENDS}"
 RRECOMMENDS_packagegroup-machine-base = "${MACHINE_EXTRA_RRECOMMENDS}"
 

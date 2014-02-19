@@ -1,4 +1,4 @@
-DESCRIPTION = "Target packages for Qt SDK"
+SUMMARY = "Target packages for Qt SDK"
 
 QTLIBPREFIX = ""
 

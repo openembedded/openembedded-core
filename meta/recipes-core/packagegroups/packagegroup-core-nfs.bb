@@ -2,7 +2,7 @@
 # Copyright (C) 2008 OpenedHand Ltd.
 #
 
-DESCRIPTION = "NFS package groups"
+SUMMARY = "NFS package groups"
 LICENSE = "MIT"
 PR = "r2"
 

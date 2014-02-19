@@ -56,7 +56,7 @@ FILES_eglibc-thread-db = "${base_libdir}/libthread_db.so.* ${base_libdir}/libthr
 RPROVIDES_${PN}-dev += "libc-dev"
 RPROVIDES_${PN}-staticdev += "libc-staticdev"
 
-SUMMARY_sln = "The static ln."
+SUMMARY_sln = "The static ln"
 DESCRIPTION_sln = "Similar to the 'ln' utility, but statically linked.  sln is useful to make symbolic links to dynamic libraries if the dynamic linking system, for some reason, is not functional."
 SUMMARY_nscd = "Name service cache daemon"
 DESCRIPTION_nscd = "nscd, name service cache daemon, caches name service lookups for the passwd, group and hosts information.  It can damatically improvide performance with remote, such as NIS or NIS+, name services."

@@ -1,4 +1,4 @@
-SUMMARY = "Miscellaneous files for the base system."
+SUMMARY = "Miscellaneous files for the base system"
 DESCRIPTION = "The base-files package creates the basic system directory structure and provides a small set of key configuration files for the system."
 SECTION = "base"
 PR = "r73"

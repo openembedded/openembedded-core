@@ -1,4 +1,4 @@
-SUMMARY = "Very high-quality data compression program."
+SUMMARY = "Very high-quality data compression program"
 DESCRIPTION = "bzip2 compresses files using the Burrows-Wheeler block-sorting text compression algorithm, and \
 Huffman coding. Compression is generally considerably better than that achieved by more conventional \
 LZ77/LZ78-based compressors, and approaches the performance of the PPM family of statistical compressors."

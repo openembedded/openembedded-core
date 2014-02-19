@@ -1,4 +1,4 @@
-DESCRIPTION = "dummy toolchain"
+SUMMARY = "dummy toolchain"
 LICENSE = "MIT"
 
 PR = "r0"

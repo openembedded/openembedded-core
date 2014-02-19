@@ -1,4 +1,4 @@
-SUMMARY = "Universally Unique Identifier (UUID) library" 
+SUMMARY = "Universally Unique Identifier (UUID) library"
 DESCRIPTION = "OSSP uuid is a ISO-C:1999 application programming interface \
 (API) and corresponding command line interface (CLI) for the generation of \
 DCE 1.1, ISO/IEC 11578:1996 and RFC 4122 compliant Universally Unique \

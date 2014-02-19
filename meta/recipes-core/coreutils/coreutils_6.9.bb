@@ -1,4 +1,4 @@
-SUMMARY = "The basic file, shell and text manipulation utilities."
+SUMMARY = "The basic file, shell and text manipulation utilities"
 DESCRIPTION = "The GNU Core Utilities provide the basic file, shell and text \
 manipulation utilities. These are the core utilities which are expected to exist on \
 every system."

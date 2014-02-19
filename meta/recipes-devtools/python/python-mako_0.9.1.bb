@@ -1,4 +1,4 @@
-DESCRIPTION = "Templating library for Python"
+SUMMARY = "Templating library for Python"
 SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=da2a9d126b93cab0996a8287dacc480b"

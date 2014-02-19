@@ -1,4 +1,4 @@
-SUMMARY = "msmtp is an SMTP client."
+SUMMARY = "msmtp is an SMTP client"
 DESCRIPTION = "A sendmail replacement for use in MTAs like mutt"
 HOMEPAGE = "http://msmtp.sourceforge.net/"
 SECTION = "console/network"

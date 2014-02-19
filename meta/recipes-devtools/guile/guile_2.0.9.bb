@@ -1,4 +1,4 @@
-SUMMARY = "Guile is the GNU Ubiquitous Intelligent Language for Extensions."
+SUMMARY = "Guile is the GNU Ubiquitous Intelligent Language for Extensions"
 DESCRIPTION = "Guile is the GNU Ubiquitous Intelligent Language for Extensions,\
  the official extension language for the GNU operating system.\
  Guile is a library designed to help programmers create flexible applications.\

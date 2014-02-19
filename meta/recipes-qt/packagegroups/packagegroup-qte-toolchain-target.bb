@@ -1,4 +1,4 @@
-DESCRIPTION = "Target packages for Qt Embedded SDK"
+SUMMARY = "Target packages for Qt Embedded SDK"
 
 PR = "r7"
 

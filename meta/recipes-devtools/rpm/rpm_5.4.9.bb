@@ -5,10 +5,10 @@ verifying, querying, and updating software packages. Each software \
 package consists of an archive of files along with information about \
 the package like its version, a description, etc."
 
-SUMMARY_${PN}-libs = "Libraries for manipulating RPM packages."
+SUMMARY_${PN}-libs = "Libraries for manipulating RPM packages"
 DESCRIPTION_${PN}-libs = "This package contains the RPM shared libraries."
 
-SUMMARY_${PN}-dev = "Development files for manipulating RPM packages."
+SUMMARY_${PN}-dev = "Development files for manipulating RPM packages"
 DESCRIPTION_${PN}-dev = "This package contains the RPM C library and header files. These \
 development files will simplify the process of writing programs that \
 manipulate RPM packages and databases. These files are intended to \
@@ -16,20 +16,20 @@ simplify the process of creating graphical package managers or any \
 other tools that need an intimate knowledge of RPM packages in order \
 to function."
 
-SUMMARY_${PN}-common = "Common RPM paths, scripts, documentation and configuration."
+SUMMARY_${PN}-common = "Common RPM paths, scripts, documentation and configuration"
 DESCRIPTION_${PN}-common = "The rpm-common package contains paths, scripts, documentation \
 and configuration common between RPM Package Manager."
 
-SUMMARY_${PN}-build = "Scripts and executable programs used to build packages."
+SUMMARY_${PN}-build = "Scripts and executable programs used to build packages"
 DESCRIPTION_${PN}-build = "The rpm-build packagec ontains the scripts and executable programs \
 that are used to build packages using the RPM Package Manager."
 
-SUMMARY_python-rpm = "Python bindings for apps which will manupulate RPM packages."
+SUMMARY_python-rpm = "Python bindings for apps which will manupulate RPM packages"
 DESCRIPTION_python-rpm = "The rpm-python package contains a module that permits applications \
 written in the Python programming language to use the interface \
 supplied by the RPM Package Manager libraries."
 
-SUMMARY_perl-module-rpm = "Perl bindings for apps which will manipulate RPM packages."
+SUMMARY_perl-module-rpm = "Perl bindings for apps which will manipulate RPM packages"
 DESCRIPTION_perl-modules-rpm = "The perl-modules-rpm package contains a module that permits applications \
 written in the Perl programming language to use the interface \
 supplied by the RPM Package Manager libraries."
