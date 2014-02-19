@@ -311,13 +311,23 @@ def write_pkghistory(pkginfo, d):
             if os.path.exists(filevarpath):
                 os.unlink(filevarpath)
 
+python buildhistory_list_installed() {
+    from oe.rootfs import list_installed_packages
+
+    pkgs_list_file = os.path.join(d.getVar('WORKDIR', True),
+                                  "bh_installed_pkgs.txt")
+
+    with open(pkgs_list_file, 'w') as pkgs_list:
+        pkgs_list.write(list_installed_packages(d, 'file'))
+}
+
 
 buildhistory_get_installed() {
 	mkdir -p $1
 
 	# Get list of installed packages
 	pkgcache="$1/installed-packages.tmp"
-	list_installed_packages file | sort > $pkgcache
+	cat ${WORKDIR}/bh_installed_pkgs.txt | sort > $pkgcache && rm ${WORKDIR}/bh_installed_pkgs.txt
 
 	cat $pkgcache | awk '{ print $1 }' > $1/installed-package-names.txt
 	if [ -s $pkgcache ] ; then
@@ -452,13 +462,16 @@ END
 }
 
 # By prepending we get in before the removal of packaging files
-ROOTFS_POSTPROCESS_COMMAND =+ "buildhistory_get_image_installed ; "
+ROOTFS_POSTPROCESS_COMMAND =+ " buildhistory_list_installed ;\
+                                buildhistory_get_image_installed ; "
 
 IMAGE_POSTPROCESS_COMMAND += " buildhistory_get_imageinfo ; "
 
 # We want these to be the last run so that we get called after complementary package installation
-POPULATE_SDK_POST_TARGET_COMMAND_append = "buildhistory_get_sdk_installed_target ; "
-POPULATE_SDK_POST_HOST_COMMAND_append = "buildhistory_get_sdk_installed_host ; "
+POPULATE_SDK_POST_TARGET_COMMAND_append = " buildhistory_list_installed ;\
+                                            buildhistory_get_sdk_installed_target ; "
+POPULATE_SDK_POST_HOST_COMMAND_append = " buildhistory_list_installed ;\
+                                          buildhistory_get_sdk_installed_host ; "
 
 SDK_POSTPROCESS_COMMAND += "buildhistory_get_sdkinfo ; "
 
