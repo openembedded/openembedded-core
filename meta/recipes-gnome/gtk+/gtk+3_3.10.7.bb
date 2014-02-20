@@ -2,13 +2,12 @@ require gtk+3.inc
 
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
-SRC_URI = "http://download.gnome.org/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar.xz \
+SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar.xz \
            file://hardcoded_libtool.patch \
-           file://no-x11-in-wayland.patch \
-           file://wayland-attach.patch"
+           file://fix-build-when-wayland-backend-enabled.patch"
 
-SRC_URI[md5sum] = "8e878e18fc385f2b813419dc7b40a968"
-SRC_URI[sha256sum] = "1ca80c9c15a1df95d74cefb8c2afe4682ba272a4b489106f04877be2a7aff297"
+SRC_URI[md5sum] = "18a81944a8506231529a76bf2b68372b"
+SRC_URI[sha256sum] = "b7e9de15385031cff43897e7e59f6692eaabf500f36eef80e6b9d6486ad49427"
 
 S = "${WORKDIR}/gtk+-${PV}"
 

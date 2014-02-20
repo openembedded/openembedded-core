@@ -1,0 +1,43 @@
+Fix build when wayland backend enabled
+
+Upstream-Status: Submitted
+https://bugzilla.gnome.org/show_bug.cgi?id=710584
+
+Author: Emilio Pozuelo Monfort
+
+--- gtk+-3.10.7/gtk/gtkapplication.c
++++ gtk+-3.10.7/gtk/gtkapplication.c
+@@ -144,7 +144,6 @@
+ 
+   gboolean register_session;
+ 
+-#ifdef GDK_WINDOWING_X11
+   guint next_id;
+ 
+   GDBusConnection *session_bus;
+@@ -161,7 +160,6 @@
+   GDBusProxy *client_proxy;
+   gchar *app_id;
+   gchar *client_path;
+-#endif
+ 
+ #ifdef GDK_WINDOWING_QUARTZ
+   GMenu *combined;
+@@ -299,6 +297,8 @@
+   g_free (application->priv->client_path);
+ }
+ 
++#endif
++
+ const gchar *
+ gtk_application_get_app_menu_object_path (GtkApplication *application)
+ {
+@@ -311,8 +311,6 @@
+   return application->priv->menubar_path;
+ }
+ 
+-#endif
+-
+ #ifdef GDK_WINDOWING_QUARTZ
+ 
+ typedef struct {
