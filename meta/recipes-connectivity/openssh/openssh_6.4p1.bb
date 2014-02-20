@@ -80,8 +80,8 @@ do_compile_append () {
 
 do_install_append () {
 	if [ "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}" = "pam" ]; then
-		install -d ${D}${sysconfdir}/pam.d
-		install -m 0755 ${WORKDIR}/sshd ${D}${sysconfdir}/pam.d/sshd
+		install -D -m 0755 ${WORKDIR}/sshd ${D}${sysconfdir}/pam.d/sshd
+		sed -i -e 's:#UsePAM no:UsePAM yes:' ${WORKDIR}/sshd_config ${D}${sysconfdir}/ssh/sshd_config
 	fi
 
 	install -d ${D}${sysconfdir}/init.d
