@@ -462,7 +462,9 @@ if [ -z "$ROOTFS" -a "x$FSTYPE" != "xvmdk" ]; then
         error "Unable to determine default rootfs for MACHINE [$MACHINE]"
     fi
 fi
-# ROOTFS is now set for all cases
+# ROOTFS is now set for all cases, now expand it to be an absolute path, it should exist at this point
+
+ROOTFS=`realpath $ROOTFS`
 
 echo ""
 echo "Continuing with the following parameters:"
