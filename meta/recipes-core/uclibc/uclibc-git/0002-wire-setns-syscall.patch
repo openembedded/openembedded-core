@@ -1,0 +1,68 @@
+From db575359d4b8164ad6c2ac5f36c7a50c065a2864 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Thu, 20 Feb 2014 00:44:34 -0800
+Subject: [PATCH 2/3] wire setns syscall
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
+---
+ libc/sysdeps/linux/common/Makefile.in  |  1 +
+ libc/sysdeps/linux/common/bits/sched.h |  4 ++++
+ libc/sysdeps/linux/common/setns.c      | 18 ++++++++++++++++++
+ 3 files changed, 23 insertions(+)
+ create mode 100644 libc/sysdeps/linux/common/setns.c
+
+diff --git a/libc/sysdeps/linux/common/Makefile.in b/libc/sysdeps/linux/common/Makefile.in
+index 45d2e21..10d9884 100644
+--- a/libc/sysdeps/linux/common/Makefile.in
++++ b/libc/sysdeps/linux/common/Makefile.in
+@@ -45,6 +45,7 @@ CSRC-$(UCLIBC_LINUX_SPECIFIC) += \
+ 	sendfile.c \
+ 	setfsgid.c \
+ 	setfsuid.c \
++	setns.c \
+ 	setresgid.c \
+ 	setresuid.c \
+ 	signalfd.c \
+diff --git a/libc/sysdeps/linux/common/bits/sched.h b/libc/sysdeps/linux/common/bits/sched.h
+index a5eb6ee..9436f66 100644
+--- a/libc/sysdeps/linux/common/bits/sched.h
++++ b/libc/sysdeps/linux/common/bits/sched.h
+@@ -85,6 +85,10 @@ extern int unshare (int __flags) __THROW;
+ 
+ /* Get index of currently used CPU.  */
+ extern int sched_getcpu (void) __THROW;
++
++/* Switch process to namespace of type NSTYPE indicated by FD.  */
++extern int setns (int __fd, int __nstype) __THROW;
++
+ #endif
+ 
+ __END_DECLS
+diff --git a/libc/sysdeps/linux/common/setns.c b/libc/sysdeps/linux/common/setns.c
+new file mode 100644
+index 0000000..376bf26
+--- /dev/null
++++ b/libc/sysdeps/linux/common/setns.c
+@@ -0,0 +1,18 @@
++/* vi: set sw=4 ts=4: */
++/*
++ * setns() for uClibc
++ *
++ * Copyright (C) 2014 Khem Raj <raj.khem@gmail.com>
++ *
++ * Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
++ */
++
++#include <sys/syscall.h>
++#include <sched.h>
++
++/*
++ * setns()
++ */
++#ifdef __NR_setns
++_syscall2(int, setns, int, fd, int, nstype)
++#endif
+-- 
+1.9.0
+

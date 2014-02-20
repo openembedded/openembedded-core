@@ -21,5 +21,8 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master \
 	file://0001-nptl-atfork-Hide-pthread_atfork-in-shared-versions.patch \
 	file://0001-librt-Use-nodefaultlibs-instead-of-nostdlib.patch \
 	file://0001-Revert-utent.c-wtent.c-move-functions-from-utxent.c.patch \
+	file://0001-Add-eventfd_read-and-eventfd_write.patch \
+	file://0002-wire-setns-syscall.patch \
+	file://0003-fcntl.h-Define-F_SETPIPE_SZ-and-F_GETPIPE_SZ.patch \
 	"
 S = "${WORKDIR}/git"
