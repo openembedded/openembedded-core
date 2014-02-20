@@ -1,0 +1,17 @@
+#!/bin/sh
+
+basedir=$(dirname $0)
+. $basedir/common
+
+output() {
+  if [ $? -eq 0 ]; \
+    then echo "PASS: $i"; \
+    else echo "FAIL: $i"; \
+  fi;
+}
+
+for i in test_simple_sequence test_undetected_loop; \
+  do $i &>/dev/null ; output; \
+done
+
+rm -rf ${tmpdir}
