@@ -11,7 +11,7 @@ SECTION = "libs"
 PR = "r5"
 DEPENDS = "zlib gdk-pixbuf gtk+"
 
-inherit autotools pkgconfig gnome gtk-doc
+inherit autotools pkgconfig gnomebase gtk-doc
 
 SRC_URI += "file://glade-cruft.patch file://no-xml2.patch file://python_environment.patch"
 
