@@ -3,6 +3,8 @@ from oe.utils import execute_pre_post_process
 from oe.utils import contains as base_contains
 from oe.package_manager import *
 from oe.manifest import *
+import oe.path
+import filecmp
 import shutil
 import os
 import subprocess
@@ -458,13 +460,58 @@ class OpkgRootfs(Rootfs):
 
         bb.utils.remove(self.d.getVar('MULTILIB_TEMP_ROOTFS', True), True)
 
+    def _prelink_file(self, root_dir, filename):
+        bb.note('prelink %s in %s' % (filename, root_dir))
+        prelink_cfg = oe.path.join(root_dir,
+                                   self.d.expand('${sysconfdir}/prelink.conf'))
+        if not os.path.exists(prelink_cfg):
+            shutil.copy(self.d.expand('${STAGING_DIR_NATIVE}${sysconfdir_native}/prelink.conf'),
+                        prelink_cfg)
+
+        cmd_prelink = self.d.expand('${STAGING_DIR_NATIVE}${sbindir_native}/prelink')
+        self._exec_shell_cmd([cmd_prelink,
+                              '--root',
+                              root_dir,
+                              '-amR',
+                              '-N',
+                              '-c',
+                              self.d.expand('${sysconfdir}/prelink.conf')])
+
+    '''
+    Compare two files with the same key twice to see if they are equal.
+    If they are not equal, it means they are duplicated and come from
+    different packages.
+    1st: Comapre them directly;
+    2nd: While incremental image creation is enabled, one of the
+         files could be probaly prelinked in the previous image
+         creation and the file has been changed, so we need to
+         prelink the other one and compare them.
+    '''
+    def _file_equal(self, key, f1, f2):
+
+        # Both of them are not prelinked
+        if filecmp.cmp(f1, f2):
+            return True
+
+        if self.image_rootfs not in f1:
+            self._prelink_file(f1.replace(key, ''), f1)
+
+        if self.image_rootfs not in f2:
+            self._prelink_file(f2.replace(key, ''), f2)
+
+        # Both of them are prelinked
+        if filecmp.cmp(f1, f2):
+            return True
+
+        # Not equal
+        return False
+
     """
     This function was reused from the old implementation.
     See commit: "image.bbclass: Added variables for multilib support." by
     Lianhao Lu.
     """
     def _multilib_sanity_test(self, dirs):
-        import filecmp
 
         allow_replace = self.d.getVar("MULTILIBRE_ALLOW_REP", True)
         if allow_replace is None:
@@ -488,7 +535,7 @@ class OpkgRootfs(Rootfs):
                         else:
                             if os.path.exists(files[key]) and \
                                os.path.exists(item) and \
-                               not filecmp.cmp(files[key], item):
+                               not self._file_equal(key, files[key], item):
                                 valid = False
                                 bb.fatal("%s duplicate files %s %s is not the same\n" %
                                          (error_prompt, item, files[key]))
