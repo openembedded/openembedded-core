@@ -358,31 +358,26 @@ do_validate_branches() {
 		fi
 	done
 
-	## KMETA branch validation
+	## KMETA branch validation.
+	## We do validation if the meta branch exists, and AUTOREV hasn't been set
  	meta_head=`git show-ref -s --heads ${KMETA}`
  	target_meta_head="${SRCREV_meta}"
 	git show-ref --quiet --verify -- "refs/heads/${KMETA}"
-	if [ $? -eq 1 ]; then
-		return
-	fi
-
-	if [ "${target_meta_head}" = "AUTOINC" ]; then
-		return
-	fi
-
-	if [ "$meta_head" != "$target_meta_head" ]; then
-		ref=`git show ${target_meta_head} 2>&1 | head -n1 || true`
-		if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
-			echo "ERROR ${target_meta_head} is not a valid commit ID"
-			echo "The kernel source tree may be out of sync"
-			exit 1
-		else
-			echo "[INFO] Setting branch ${KMETA} to ${target_meta_head}"
-			git branch -m ${KMETA} ${KMETA}-orig
-			git checkout -q -b ${KMETA} ${target_meta_head}
-			if [ $? -ne 0 ];then
-				echo "ERROR: could not checkout ${KMETA} branch from known hash ${target_meta_head}"
+	if [ $? -eq 0 ] && [ "${target_meta_head}" != "AUTOINC" ]; then
+		if [ "$meta_head" != "$target_meta_head" ]; then
+			ref=`git show ${target_meta_head} 2>&1 | head -n1 || true`
+			if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
+				echo "ERROR ${target_meta_head} is not a valid commit ID"
+				echo "The kernel source tree may be out of sync"
 				exit 1
+			else
+				echo "[INFO] Setting branch ${KMETA} to ${target_meta_head}"
+				git branch -m ${KMETA} ${KMETA}-orig
+				git checkout -q -b ${KMETA} ${target_meta_head}
+				if [ $? -ne 0 ];then
+					echo "ERROR: could not checkout ${KMETA} branch from known hash ${target_meta_head}"
+					exit 1
+				fi
 			fi
 		fi
 	fi
