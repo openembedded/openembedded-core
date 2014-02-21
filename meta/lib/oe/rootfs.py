@@ -443,7 +443,7 @@ class OpkgRootfs(Rootfs):
         self.pkg_archs = self.d.getVar("ALL_MULTILIB_PACKAGE_ARCHS", True)
 
         self.inc_opkg_image_gen = self.d.getVar('INC_IPK_IMAGE_GEN', True) or ""
-        if self.inc_opkg_image_gen != "1":
+        if self._remove_old_rootfs():
             bb.utils.remove(self.image_rootfs, True)
             self.pm = OpkgPM(d,
                              self.image_rootfs,
@@ -545,6 +545,33 @@ class OpkgRootfs(Rootfs):
             if pkg_to_remove != []:
                 bb.note('decremental removed: %s' % ' '.join(pkg_to_remove))
                 self.pm.remove(pkg_to_remove)
+
+    '''
+    Compare with previous existing image creation, if some conditions
+    triggered, the previous old image should be removed.
+    The conditions include any of 'PACKAGE_EXCLUDE, NO_RECOMMENDATIONS
+    and BAD_RECOMMENDATIONS' has been changed.
+    '''
+    def _remove_old_rootfs(self):
+        if self.inc_opkg_image_gen != "1":
+            return True
+
+        vars_list_file = self.d.expand('${T}/vars_list')
+
+        old_vars_list = ""
+        if os.path.exists(vars_list_file):
+            old_vars_list = open(vars_list_file, 'r+').read()
+
+        new_vars_list = '%s:%s:%s\n' % \
+                ((self.d.getVar('BAD_RECOMMENDATIONS', True) or '').strip(),
+                 (self.d.getVar('NO_RECOMMENDATIONS', True) or '').strip(),
+                 (self.d.getVar('PACKAGE_EXCLUDE', True) or '').strip())
+        open(vars_list_file, 'w+').write(new_vars_list)
+
+        if old_vars_list != new_vars_list:
+            return True
+
+        return False
 
     def _create(self):
         pkgs_to_install = self.manifest.parse_initial_manifest()
