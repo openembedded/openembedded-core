@@ -1,6 +1,8 @@
 from abc import ABCMeta, abstractmethod
+from oe.package_manager import *
 import os
 import re
+import bb
 
 
 class Manifest(object):
@@ -69,6 +71,7 @@ class Manifest(object):
 
         self.initial_manifest = os.path.join(self.manifest_dir, "%s_initial_manifest" % manifest_type)
         self.final_manifest = os.path.join(self.manifest_dir, "%s_final_manifest" % manifest_type)
+        self.full_manifest = os.path.join(self.manifest_dir, "%s_full_manifest" % manifest_type)
 
         # packages in the following vars will be split in 'must install' and
         # 'multilib'
@@ -128,6 +131,15 @@ class Manifest(object):
         pass
 
     """
+    This creates the manifest after the package in initial manifest has been
+    dummy installed. It lists all *to be installed* packages. There is no real
+    installation, just a test.
+    """
+    @abstractmethod
+    def create_full(self, pm):
+        pass
+
+    """
     The following function parses an initial manifest and returns a dictionary
     object with the must install, attempt only, multilib and language packages.
     """
@@ -157,6 +169,22 @@ class Manifest(object):
                         pkgs[pkg_type].append(pkg_name)
 
         return pkgs
+
+    '''
+    This following function parses a full manifest and return a list
+    object with packages.
+    '''
+    def parse_full_manifest(self):
+        installed_pkgs = list()
+        if not os.path.exists(self.full_manifest):
+            bb.note('full manifest not exist')
+            return installed_pkgs
+
+        with open(self.full_manifest, 'r') as manifest:
+            for pkg in manifest.read().split('\n'):
+                installed_pkgs.append(pkg.strip())
+
+        return installed_pkgs
 
 
 class RpmManifest(Manifest):
@@ -202,8 +230,10 @@ class RpmManifest(Manifest):
                 for pkg in pkgs[pkg_type].split():
                     manifest.write("%s,%s\n" % (pkg_type, pkg))
 
-
     def create_final(self):
+        pass
+
+    def create_full(self, pm):
         pass
 
 
@@ -253,6 +283,28 @@ class OpkgManifest(Manifest):
     def create_final(self):
         pass
 
+    def create_full(self, pm):
+        if not os.path.exists(self.initial_manifest):
+            self.create_initial()
+
+        initial_manifest = self.parse_initial_manifest()
+        pkgs_to_install = list()
+        for pkg_type in initial_manifest:
+            pkgs_to_install += initial_manifest[pkg_type]
+        if len(pkgs_to_install) == 0:
+            return
+
+        output = pm.dummy_install(pkgs_to_install)
+
+        with open(self.full_manifest, 'w+') as manifest:
+            pkg_re = re.compile('^Installing ([^ ]+) [^ ].*')
+            for line in set(output.split('\n')):
+                m = pkg_re.match(line)
+                if m:
+                    manifest.write(m.group(1) + '\n')
+
+        return
+
 
 class DpkgManifest(Manifest):
     def create_initial(self):
@@ -270,6 +322,9 @@ class DpkgManifest(Manifest):
                                    (self.var_maps[self.manifest_type][var], pkg))
 
     def create_final(self):
+        pass
+
+    def create_full(self, pm):
         pass
 
 
