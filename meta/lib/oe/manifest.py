@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-from oe.package_manager import *
 import os
 import re
 import bb
