@@ -934,12 +934,13 @@ class RpmPM(PackageManager):
 
 
 class OpkgPM(PackageManager):
-    def __init__(self, d, target_rootfs, config_file, archs):
+    def __init__(self, d, target_rootfs, config_file, archs, task_name='target'):
         super(OpkgPM, self).__init__(d)
 
         self.target_rootfs = target_rootfs
         self.config_file = config_file
         self.pkg_archs = archs
+        self.task_name = task_name
 
         self.deploy_dir = self.d.getVar("DEPLOY_DIR_IPK", True)
         self.deploy_lock_file = os.path.join(self.deploy_dir, "deploy.lock")
@@ -955,6 +956,10 @@ class OpkgPM(PackageManager):
         self.opkg_dir = os.path.join(target_rootfs, opkg_lib_dir, "opkg")
 
         bb.utils.mkdirhier(self.opkg_dir)
+
+        self.saved_opkg_dir = self.d.expand('${T}/saved/%s' % self.task_name)
+        if not os.path.exists(self.d.expand('${T}/saved')):
+            bb.utils.mkdirhier(self.d.expand('${T}/saved'))
 
         if (self.d.getVar('BUILD_IMAGES_FROM_FEEDS', True) or "") != "1":
             self._create_config()
@@ -1075,7 +1080,9 @@ class OpkgPM(PackageManager):
 
         try:
             bb.note("Installing the following packages: %s" % ' '.join(pkgs))
-            subprocess.check_output(cmd.split())
+            bb.note(cmd)
+            output = subprocess.check_output(cmd.split())
+            bb.note(output)
         except subprocess.CalledProcessError as e:
             (bb.fatal, bb.note)[attempt_only]("Unable to install packages. "
                                               "Command '%s' returned %d:\n%s" %
@@ -1083,14 +1090,16 @@ class OpkgPM(PackageManager):
 
     def remove(self, pkgs, with_dependencies=True):
         if with_dependencies:
-            cmd = "%s %s remove %s" % \
+            cmd = "%s %s --force-depends --force-remove --force-removal-of-dependent-packages remove %s" % \
                 (self.opkg_cmd, self.opkg_args, ' '.join(pkgs))
         else:
             cmd = "%s %s --force-depends remove %s" % \
                 (self.opkg_cmd, self.opkg_args, ' '.join(pkgs))
 
         try:
-            subprocess.check_output(cmd.split())
+            bb.note(cmd)
+            output = subprocess.check_output(cmd.split())
+            bb.note(output)
         except subprocess.CalledProcessError as e:
             bb.fatal("Unable to remove packages. Command '%s' "
                      "returned %d:\n%s" % (e.cmd, e.returncode, e.output))
@@ -1147,11 +1156,16 @@ class OpkgPM(PackageManager):
         return output
 
     def handle_bad_recommendations(self):
-        bad_recommendations = self.d.getVar("BAD_RECOMMENDATIONS", True)
-        if bad_recommendations is None:
+        bad_recommendations = self.d.getVar("BAD_RECOMMENDATIONS", True) or ""
+        if bad_recommendations.strip() == "":
             return
 
         status_file = os.path.join(self.opkg_dir, "status")
+
+        # If status file existed, it means the bad recommendations has already
+        # been handled
+        if os.path.exists(status_file):
+            return
 
         cmd = "%s %s info " % (self.opkg_cmd, self.opkg_args)
 
@@ -1175,6 +1189,61 @@ class OpkgPM(PackageManager):
                         status.write("Status: deinstall hold not-installed\n")
                     else:
                         status.write(line + "\n")
+
+    '''
+    The following function dummy installs pkgs and returns the log of output.
+    '''
+    def dummy_install(self, pkgs):
+        if len(pkgs) == 0:
+            return
+
+        # Create an temp dir as opkg root for dummy installation
+        temp_rootfs = self.d.expand('${T}/opkg')
+        temp_opkg_dir = os.path.join(temp_rootfs, 'var/lib/opkg')
+        bb.utils.mkdirhier(temp_opkg_dir)
+
+        opkg_args = "-f %s -o %s " % (self.config_file, temp_rootfs)
+        opkg_args += self.d.getVar("OPKG_ARGS", True)
+
+        cmd = "%s %s update" % (self.opkg_cmd, opkg_args)
+        try:
+            subprocess.check_output(cmd, shell=True)
+        except subprocess.CalledProcessError as e:
+            bb.fatal("Unable to update. Command '%s' "
+                     "returned %d:\n%s" % (cmd, e.returncode, e.output))
+
+        # Dummy installation
+        cmd = "%s %s --noaction install %s " % (self.opkg_cmd,
+                                                opkg_args,
+                                                ' '.join(pkgs))
+        try:
+            output = subprocess.check_output(cmd, shell=True)
+        except subprocess.CalledProcessError as e:
+            bb.fatal("Unable to dummy install packages. Command '%s' "
+                     "returned %d:\n%s" % (cmd, e.returncode, e.output))
+
+        bb.utils.remove(temp_rootfs, True)
+
+        return output
+
+    def backup_packaging_data(self):
+        # Save the opkglib for increment ipk image generation
+        if os.path.exists(self.saved_opkg_dir):
+            bb.utils.remove(self.saved_opkg_dir, True)
+        shutil.copytree(self.opkg_dir,
+                        self.saved_opkg_dir,
+                        symlinks=True)
+
+    def recover_packaging_data(self):
+        # Move the opkglib back
+        if os.path.exists(self.saved_opkg_dir):
+            if os.path.exists(self.opkg_dir):
+                bb.utils.remove(self.opkg_dir, True)
+
+            bb.note('Recover packaging data')
+            shutil.copytree(self.saved_opkg_dir,
+                            self.opkg_dir,
+                            symlinks=True)
 
 
 class DpkgPM(PackageManager):
