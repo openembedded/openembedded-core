@@ -1,6 +1,7 @@
 require pulseaudio.inc
 
 SRC_URI = "http://freedesktop.org/software/pulseaudio/releases/pulseaudio-${PV}.tar.xz \
+           file://0001-configure.ac-Check-only-for-libsystemd-not-libsystem.patch \
            file://volatiles.04_pulse"
 
 SRC_URI[md5sum] = "591f211db2790a7e4d222f2dc6858db3"
