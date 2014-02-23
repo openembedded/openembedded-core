@@ -54,7 +54,7 @@ def file_translate(file):
     return ft
 
 def filedeprunner(arg):
-    import re
+    import re, subprocess, shlex
 
     (pkg, pkgfiles, rpmdeps, pkgdest) = arg
     provides = {}
@@ -89,8 +89,11 @@ def filedeprunner(arg):
 
         return provides, requires
 
-    dep_pipe = os.popen(rpmdeps + " " + " ".join(pkgfiles))
-
-    provides, requires = process_deps(dep_pipe, pkg, pkgdest, provides, requires)
+    try:
+        dep_popen = subprocess.Popen(shlex.split(rpmdeps) + pkgfiles, stdout=subprocess.PIPE)
+        provides, requires = process_deps(dep_popen.stdout, pkg, pkgdest, provides, requires)
+    except OSError as e:
+        bb.error("rpmdeps: '%s' command failed, '%s'" % (shlex.split(rpmdeps) + pkgfiles, e))
+        raise e
 
     return (pkg, provides, requires)
