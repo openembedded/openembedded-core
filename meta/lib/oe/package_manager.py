@@ -1141,7 +1141,7 @@ class OpkgPM(PackageManager):
             bb.fatal("Cannot get the installed packages list. Command '%s' "
                      "returned %d:\n%s" % (cmd, e.returncode, e.output))
 
-        if format == "file":
+        if output and format == "file":
             tmp_output = ""
             for line in output.split('\n'):
                 pkg, pkg_file, pkg_arch = line.split()
