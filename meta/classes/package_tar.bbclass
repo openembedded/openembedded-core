@@ -41,11 +41,12 @@ python do_package_tar () {
         basedir = os.path.dirname(root)
         tarfn = localdata.expand("${DEPLOY_DIR_TAR}/${PKG}-${PKGV}-${PKGR}.tar.gz")
         os.chdir(root)
-        from glob import glob
-        if not glob('*'):
+        dlist = os.listdir(root)
+        if not dlist:
             bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', True), localdata.getVar('PKGR', True)))
             continue
-        ret = subprocess.call("tar -czf %s %s" % (tarfn, '.'), shell=True)
+        args = "tar -cz --exclude=CONTROL --exclude=DEBIAN -f".split()
+        ret = subprocess.call(args + [tarfn] + dlist)
         if ret != 0:
             bb.error("Creation of tar %s failed." % tarfn)
 }
