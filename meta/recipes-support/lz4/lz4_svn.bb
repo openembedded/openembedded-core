@@ -12,7 +12,7 @@ SRC_URI = "svn://lz4.googlecode.com/svn/;module=trunk;protocol=http"
 
 S = "${WORKDIR}/trunk"
 
-EXTRA_OEMAKE = "PREFIX=${prefix} CC=${TARGET_PREFIX}gcc DESTDIR=${D} LIBDIR=${libdir} INCLUDEDIR=${includedir}"
+EXTRA_OEMAKE = "PREFIX=${prefix} CC='${CC}' DESTDIR=${D} LIBDIR=${libdir} INCLUDEDIR=${includedir}"
 
 do_install() {
 	oe_runmake install
