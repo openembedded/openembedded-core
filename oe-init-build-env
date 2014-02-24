@@ -25,27 +25,31 @@
 # being sourced.   To workaround the shell limitation use "set arg1" prior 
 # to sourcing this script.
 #
-if [ -z "$ZSH_NAME" ] && [ "x$0" = "x./oe-init-build-env" ]; then
-   echo "Error: This script needs to be sourced. Please run as '. ./oe-init-build-env'"
+if [ -n "$BASH_SOURCE" ]; then
+   OEROOT="`dirname $BASH_SOURCE`"
+elif [ -n "$ZSH_NAME" ]; then
+   OEROOT="`dirname $0`"
 else
-   if [ -n "$BASH_SOURCE" ]; then
-      OEROOT="`dirname $BASH_SOURCE`"
-   elif [ -n "$ZSH_NAME" ]; then
-      OEROOT="`dirname $0`"
-   else
-      OEROOT="`pwd`"
-   fi
-   if [ -n "$BBSERVER" ]; then
-      unset BBSERVER
-   fi
-    OEROOT=`readlink -f "$OEROOT"`
-   export OEROOT
-   . $OEROOT/scripts/oe-buildenv-internal && \
-        $OEROOT/scripts/oe-setup-builddir && \
-        [ -n "$BUILDDIR" ] && cd $BUILDDIR
-   unset OEROOT
-   unset BBPATH
+   OEROOT="`pwd`"
 fi
+if [ -n "$BBSERVER" ]; then
+   unset BBSERVER
+fi
+THIS_SCRIPT=$OEROOT/oe-init-build-env
+
+if [ -z "$ZSH_NAME" ] && [ "$0" = "$THIS_SCRIPT" ]; then
+   echo "Error: This script needs to be sourced. Please run as '. $THIS_SCRIPT'"
+   exit 1
+fi
+
+OEROOT=`readlink -f "$OEROOT"`
+export OEROOT
+. $OEROOT/scripts/oe-buildenv-internal && \
+     $OEROOT/scripts/oe-setup-builddir && \
+     [ -n "$BUILDDIR" ] && cd $BUILDDIR
+unset OEROOT
+unset BBPATH
+unset THIS_SCRIPT
 
 # Shutdown any bitbake server if the BBSERVER variable is not set
 if [ -z "$BBSERVER" ] && [ -f bitbake.lock ] ; then
