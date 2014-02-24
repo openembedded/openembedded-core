@@ -37,7 +37,15 @@ fi
 
 cd "$BUILDDIR"
 
-TEMPLATECONF=${TEMPLATECONF:-meta/conf}
+if (test -f "$BUILDDIR/conf/templateconf.cfg") then
+    TEMPLATECONF=$(cat $BUILDDIR/conf/templateconf.cfg)
+fi
+
+source $OEROOT/.templateconf
+
+if ! (test -f "$BUILDDIR/conf/templateconf.cfg") then
+    echo "$TEMPLATECONF" >$BUILDDIR/conf/templateconf.cfg
+fi
 
 # 
 # $TEMPLATECONF can point to a directory for the template local.conf & bblayers.conf
