@@ -736,3 +736,5 @@ addtask package_write_rpm before do_package_write after do_packagedata do_packag
 
 PACKAGEINDEXDEPS += "rpm-native:do_populate_sysroot"
 PACKAGEINDEXDEPS += "createrepo-native:do_populate_sysroot"
+
+do_build[recrdeptask] += "do_package_write_rpm"
