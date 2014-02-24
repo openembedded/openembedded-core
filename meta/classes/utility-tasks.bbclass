@@ -1,13 +1,20 @@
 addtask listtasks
 do_listtasks[nostamp] = "1"
 python do_listtasks() {
-    import sys
-    # emit variables and shell functions
-    #bb.data.emit_env(sys.__stdout__, d)
-    # emit the metadata which isnt valid shell
+    taskdescs = {}
+    maxlen = 0
     for e in d.keys():
         if d.getVarFlag(e, 'task'):
-            bb.plain("%s" % e)
+            maxlen = max(maxlen, len(e))
+            if e.endswith('_setscene'):
+                desc = "%s (setscene version)" % (d.getVarFlag(e[:-9], 'doc') or '')
+            else:
+                desc = d.getVarFlag(e, 'doc') or ''
+            taskdescs[e] = desc
+
+    tasks = sorted(taskdescs.keys())
+    for taskname in tasks:
+        bb.plain("%s  %s" % (taskname.ljust(maxlen), taskdescs[taskname]))
 }
 
 CLEANFUNCS ?= ""
