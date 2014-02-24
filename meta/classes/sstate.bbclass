@@ -375,6 +375,9 @@ def sstate_clean(ss, d):
         # Keep the sigdata
         if ".sigdata." in stfile:
             continue
+        # Preserve taint files in the stamps directory
+        if stfile.endswith('.taint'):
+            continue
         if rm_stamp in stfile or rm_setscene in stfile or \
                 stfile.endswith(rm_nohash):
             oe.path.remove(stfile)
