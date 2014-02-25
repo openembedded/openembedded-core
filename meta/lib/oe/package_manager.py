@@ -1519,19 +1519,25 @@ class DpkgPM(PackageManager):
 
 
 def generate_index_files(d):
-    img_type = d.getVar('IMAGE_PKGTYPE', True)
+    classes = d.getVar('PACKAGE_CLASSES', True).replace("package_", "").split()
+
+    indexer_map = {
+        "rpm": (RpmIndexer, d.getVar('DEPLOY_DIR_RPM', True)),
+        "ipk": (OpkgIndexer, d.getVar('DEPLOY_DIR_IPK', True)),
+        "deb": (DpkgIndexer, d.getVar('DEPLOY_DIR_DEB', True))
+    }
 
     result = None
 
-    if img_type == "rpm":
-        result = RpmIndexer(d, d.getVar('DEPLOY_DIR_RPM', True)).write_index()
-    elif img_type == "ipk":
-        result = OpkgIndexer(d, d.getVar('DEPLOY_DIR_IPK', True)).write_index()
-    elif img_type == "deb":
-        result = DpkgIndexer(d, d.getVar('DEPLOY_DIR_DEB', True)).write_index()
+    for pkg_class in classes:
+        if not pkg_class in indexer_map:
+            continue
 
-    if result is not None:
-        bb.fatal(result)
+        if os.path.exists(indexer_map[pkg_class][1]):
+            result = indexer_map[pkg_class][0](d, indexer_map[pkg_class][1]).write_index()
+
+            if result is not None:
+                bb.fatal(result)
 
 if __name__ == "__main__":
     """
