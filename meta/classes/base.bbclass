@@ -106,11 +106,8 @@ python base_do_fetch() {
     if len(src_uri) == 0:
         return
 
-    localdata = bb.data.createCopy(d)
-    bb.data.update_data(localdata)
-
     try:
-        fetcher = bb.fetch2.Fetch(src_uri, localdata)
+        fetcher = bb.fetch2.Fetch(src_uri, d)
         fetcher.download()
     except bb.fetch2.BBFetchException as e:
         raise bb.build.FuncFailed(e)
@@ -124,13 +121,10 @@ python base_do_unpack() {
     if len(src_uri) == 0:
         return
 
-    localdata = bb.data.createCopy(d)
-    bb.data.update_data(localdata)
-
-    rootdir = localdata.getVar('WORKDIR', True)
+    rootdir = d.getVar('WORKDIR', True)
 
     try:
-        fetcher = bb.fetch2.Fetch(src_uri, localdata)
+        fetcher = bb.fetch2.Fetch(src_uri, d)
         fetcher.unpack(rootdir)
     except bb.fetch2.BBFetchException as e:
         raise bb.build.FuncFailed(e)
@@ -653,11 +647,8 @@ python do_cleanall() {
     if len(src_uri) == 0:
         return
 
-    localdata = bb.data.createCopy(d)
-    bb.data.update_data(localdata)
-
     try:
-        fetcher = bb.fetch2.Fetch(src_uri, localdata)
+        fetcher = bb.fetch2.Fetch(src_uri, d)
         fetcher.clean()
     except bb.fetch2.BBFetchException, e:
         raise bb.build.FuncFailed(e)
