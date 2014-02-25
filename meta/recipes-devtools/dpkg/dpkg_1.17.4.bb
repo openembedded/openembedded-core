@@ -11,6 +11,7 @@ SRC_URI += "file://noman.patch \
             file://arch_pm.patch \
             file://dpkg-configure.service \
             file://glibc2.5-sync_file_range.patch \
+            file://no-vla-warning.patch \
            "
 
 SRC_URI[md5sum] = "cc25086e1e3bd9512a95f14cfe9002e1"

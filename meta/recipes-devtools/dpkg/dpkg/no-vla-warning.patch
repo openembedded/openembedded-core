@@ -1,0 +1,32 @@
+From e94474d805377d67c8b09664a602f20969e12b8a Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Thu, 23 Jan 2014 04:17:23 -0500
+Subject: [PATCH] dpkg-compiler.m4: remove -Wvla
+
+Remove the -Wvla flag from the set of compiler warning flags, since gcc
+on old host systems such as CentOS 5.8 doesn't support it, and it
+causes a build error for dpkg-native.
+
+Upstream-Status: Pending
+
+Signed-off-by: Donn Seeley <donn.seeley@windriver.com>
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ m4/dpkg-compiler.m4 |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/m4/dpkg-compiler.m4 b/m4/dpkg-compiler.m4
+index f1c760b..500b5ad 100644
+--- a/m4/dpkg-compiler.m4
++++ b/m4/dpkg-compiler.m4
+@@ -72,7 +72,6 @@ if test "x$enable_compiler_warnings" = "xyes"; then
+   DPKG_WARNING_ALL([-Wformat-security])
+   DPKG_WARNING_ALL([-Wpointer-arith])
+   DPKG_WARNING_ALL([-Wlogical-op])
+-  DPKG_WARNING_ALL([-Wvla])
+   DPKG_WARNING_ALL([-Winit-self])
+   DPKG_WARNING_ALL([-Wwrite-strings])
+   DPKG_WARNING_ALL([-Wcast-align])
+-- 
+1.7.10.4
+
