@@ -20,6 +20,7 @@ PV = "2.00+${SRCPV}"
 SRCREV = "0776112c5311196889a15058a3b1be4c81ba5e05"
 SRC_URI = "git://git.savannah.gnu.org/grub.git \
            file://40_custom \
+           file://autogen.sh-exclude-pc.patch \
           "
 
 S = "${WORKDIR}/git"
