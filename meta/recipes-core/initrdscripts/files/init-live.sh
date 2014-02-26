@@ -49,6 +49,8 @@ read_args() {
         case $arg in
             root=*)
                 ROOT_DEVICE=$optarg ;;
+            rootimage=*)
+                ROOT_IMAGE=$optarg ;;
             rootfstype=*)
                 modprobe $optarg 2> /dev/null ;;
             LABEL=*)
@@ -133,7 +135,7 @@ do
            mount | grep media
            echo "Available block devices"
            ls /dev/sd*
-           fatal "Cannot find rootfs.img file in /media/* , dropping to a shell "
+           fatal "Cannot find $ROOT_IMAGE file in /media/* , dropping to a shell "
       fi
       C=$(( C + 1 ))
   fi
