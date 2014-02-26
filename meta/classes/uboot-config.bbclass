@@ -9,7 +9,7 @@
 #
 # UBOOT_MACHINE = "config"
 #
-# Copyright 2013 (C) O.S. Systems Software LTDA.
+# Copyright 2013, 2014 (C) O.S. Systems Software LTDA.
 
 python () {
     ubootmachine = d.getVar("UBOOT_MACHINE", True)
@@ -55,5 +55,5 @@ python () {
             # Go out as we found a match!
             break
     else:
-        raise ValueError("UBOOT_CONFIG %s is not supported" % ubootconfig)
+        raise bb.parse.SkipPackage("UBOOT_CONFIG %s is not supported" % ubootconfig)
 }
