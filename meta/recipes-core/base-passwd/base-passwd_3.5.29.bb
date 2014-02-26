@@ -28,8 +28,8 @@ do_install () {
 		${D}${mandir}/pl/man8/update-passwd.8
 	gzip -9 ${D}${mandir}/man8/* ${D}${mandir}/pl/man8/*
 	install -d -m 755 ${D}${datadir}/base-passwd
-	sed -i 's#:/root:#:${ROOT_HOME}:#' ${S}/passwd.master
 	install -o root -g root -p -m 644 ${S}/passwd.master ${D}${datadir}/base-passwd/
+	sed -i 's#:/root:#:${ROOT_HOME}:#' ${D}${datadir}/base-passwd/passwd.master
 	install -o root -g root -p -m 644 ${S}/group.master ${D}${datadir}/base-passwd/
 
 	install -d -m 755 ${D}${docdir}/${BPN}
