@@ -7,7 +7,7 @@ PR = "r1"
 
 DEPENDS = "dbus gtk+"
 
-inherit gnome
+inherit gnomebase
 SRC_URI[archive.md5sum] = "732c9d2cd5eb6a9069264a319d330516"
 SRC_URI[archive.sha256sum] = "73b16a79bb2fed62dcf146b11c4405776cb96a09dce66379ca541da7dbd64210"
 
