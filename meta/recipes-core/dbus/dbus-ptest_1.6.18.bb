@@ -16,6 +16,7 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://dbus-1.init  \
            file://run-ptest \
            file://python-config.patch \
+           file://clear-guid_from_server-if-send_negotiate_unix_f.patch \
            "
 
 SRC_URI[md5sum] = "b02e9c95027a416987b81f9893831061"
