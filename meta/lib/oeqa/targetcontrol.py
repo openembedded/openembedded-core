@@ -12,6 +12,7 @@ import traceback
 from oeqa.utils.sshcontrol import SSHControl
 from oeqa.utils.qemurunner import QemuRunner
 from oeqa.controllers.testtargetloader import TestTargetLoader
+from abc import ABCMeta, abstractmethod
 
 def get_target_controller(d):
     testtarget = d.getVar("TEST_TARGET", True)
@@ -40,6 +41,8 @@ def get_target_controller(d):
 
 class BaseTarget(object):
 
+    __metaclass__ = ABCMeta
+
     def __init__(self, d):
         self.connection = None
         self.ip = None
@@ -48,6 +51,7 @@ class BaseTarget(object):
         self.testdir = d.getVar("TEST_LOG_DIR", True)
         self.pn = d.getVar("PN", True)
 
+    @abstractmethod
     def deploy(self):
 
         self.sshlog = os.path.join(self.testdir, "ssh_target_log.%s" % self.datetime)
@@ -56,6 +60,18 @@ class BaseTarget(object):
             os.unlink(sshloglink)
         os.symlink(self.sshlog, sshloglink)
         bb.note("SSH log file: %s" %  self.sshlog)
+
+    @abstractmethod
+    def start(self, params=None):
+        pass
+
+    @abstractmethod
+    def stop(self):
+        pass
+
+    @abstractmethod
+    def restart(self, params=None):
+        pass
 
     def run(self, cmd, timeout=None):
         return self.connection.run(cmd, timeout)
