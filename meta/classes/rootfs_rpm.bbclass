@@ -23,6 +23,7 @@ do_rootfs[depends] += "createrepo-native:do_populate_sysroot"
 
 do_rootfs[recrdeptask] += "do_package_write_rpm"
 rootfs_rpm_do_rootfs[vardepsexclude] += "BUILDNAME"
+do_rootfs[vardeps] += "PACKAGE_FEED_URIS"
 
 # RPM doesn't work with multiple rootfs generation at once due to collisions in the use of files 
 # in ${DEPLOY_DIR_RPM}. This can be removed if package_update_index_rpm can be called concurrently
