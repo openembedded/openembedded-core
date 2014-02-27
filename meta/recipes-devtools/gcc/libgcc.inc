@@ -17,7 +17,8 @@ FILES_${PN}-dev = " \
   ${libdir}/${TARGET_SYS}/${BINV}/32 \
   ${libdir}/${TARGET_SYS}/${BINV}/x32 \
   ${libdir}/${TARGET_SYS}/${BINV}/n32 \
-  ${libdir}/${TARGET_SYS}/${BINV}/libgcc*"
+  ${libdir}/${TARGET_SYS}/${BINV}/libgcc* \
+  ${@base_conditional('TARGET_SYS_NO_EXTENSION', '${TARGET_SYS}', '', '${libdir}/${TARGET_SYS_NO_EXTENSION}', d)}"
 FILES_libgcov-dev = " \
   ${libdir}/${TARGET_SYS}/${BINV}/libgcov.a \
   "
@@ -140,4 +141,25 @@ python do_multilib_install() {
         if os.path.lexists(dest):
             os.unlink(dest)
         os.symlink(src, dest)
+}
+
+addtask extra_symlinks after do_multilib_install before do_package do_populate_sysroot
+python do_extra_symlinks() {
+    targetsysnoext = d.getVar('TARGET_SYS_NO_EXTENSION', True)
+
+    if targetsysnoext != d.getVar('TARGET_SYS', True):
+        dest = d.getVar('D', True) + d.getVar('libdir', True) + '/' + targetsysnoext
+        src = d.getVar('TARGET_SYS', True)
+        if not os.path.lexists(dest):
+            os.symlink(src, dest)
+}
+
+python () {
+    targetsysnoext = d.getVar('TARGET_SYS', True)
+
+    for suffix in [d.getVar('ABIEXTENSION', True), d.getVar('LIBCEXTENSION', True)]:
+        if suffix and targetsysnoext.endswith(suffix):
+            targetsysnoext = targetsysnoext[:-len(suffix)]
+
+    d.setVar('TARGET_SYS_NO_EXTENSION', targetsysnoext)
 }
