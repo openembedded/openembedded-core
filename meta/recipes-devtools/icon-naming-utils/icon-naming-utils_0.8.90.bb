@@ -18,7 +18,7 @@ SRC_URI = "http://tango.freedesktop.org/releases/icon-naming-utils-${PV}.tar.gz"
 SRC_URI[md5sum] = "2c5c7a418e5eb3268f65e21993277fba"
 SRC_URI[sha256sum] = "044ab2199ed8c6a55ce36fd4fcd8b8021a5e21f5bab028c0a7cdcf52a5902e1c"
 
-inherit autotools allarch perlnative
+inherit autotools-brokensep allarch perlnative
 
 do_configure_append() {
 	# Make sure we use our nativeperl wrapper.

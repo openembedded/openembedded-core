@@ -19,7 +19,7 @@ SRC_URI = "http://www.infradead.org/~tgr/${BPN}/files/${BP}.tar.gz \
 SRC_URI[md5sum] = "2e1c889494d274aca24ce5f6a748e66e"
 SRC_URI[sha256sum] = "c7c5f267dfeae0c1a530bf96b71fb7c8dbbb07d54beef49b6712d8d6166f629b"
 
-inherit autotools pkgconfig
+inherit autotools-brokensep pkgconfig
 
 FILES_${PN} = "${libdir}/libnl-3.so.* \
                ${libdir}/libnl.so.* \

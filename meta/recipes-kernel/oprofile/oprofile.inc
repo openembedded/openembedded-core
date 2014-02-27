@@ -26,7 +26,7 @@ SRC_URI = "file://opstart.patch \
            file://oprofile-root.patch \
            file://acinclude.m4"
 
-inherit autotools
+inherit autotools-brokensep
 
 EXTRA_OECONF = "--with-kernel=${STAGING_KERNEL_DIR}  --without-x"
 do_configure () {

@@ -13,7 +13,7 @@ SRC_URI = "http://download.savannah.gnu.org/releases/quilt/quilt-${PV}.tar.gz \
 SRC_URI[md5sum] = "24417eba5961592b64103bdda001ebf4"
 SRC_URI[sha256sum] = "1eec0a270ac4d41eea0fd5823603c9d2a35ab6b8ab73a90dd92ce1291b2a9fc3"
 
-inherit autotools ptest
+inherit autotools-brokensep ptest
 
 EXTRA_OECONF_darwin += "--without-date \
                         --without-getopt \

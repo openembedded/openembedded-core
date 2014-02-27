@@ -22,7 +22,7 @@ SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.3 \
 
 S = "${WORKDIR}/git"
 
-inherit autotools ptest
+inherit autotools-brokensep ptest
 
 export KERNELDIR="${STAGING_KERNEL_DIR}"
 

@@ -24,7 +24,7 @@ SRC_URI = "\
 "
 S = "${WORKDIR}/bluez-${PV}"
 
-inherit autotools
+inherit autotools-brokensep
 
 EXTRA_OECONF = "\
   --disable-gstreamer \

@@ -13,7 +13,7 @@ EXTRA_OECONF = "--with-perl=${STAGING_BINDIR_NATIVE}/perl-native/perl \
 		--without-tcltk \
 "
 
-inherit autotools perlnative
+inherit autotools-brokensep perlnative
 
 EXTRA_OEMAKE = "NO_PYTHON=1 RUNTIME_PREFIX=1"
 

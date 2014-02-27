@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "726457e11cb153adc3f428aaf1901fc561a374c30e5e7da6742c0742a3
 
 PYTHON_MAJMIN = "2.7"
 
-inherit autotools
+inherit autotools-brokensep
 
 PYTHONLSBOPTS = "--with-wctype-functions"
 PYTHONLSBOPTS_linuxstdbase = "ac_cv_sizeof_off_t=8"

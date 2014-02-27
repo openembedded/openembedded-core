@@ -54,7 +54,7 @@ EXTRA_OECONF_class-native = "--without-x --with-system-libtiff=no \
 CFLAGS += "-DHAVE_SYS_TIME_H=1"
 BUILD_CFLAGS += "-DHAVE_SYS_TIME_H=1"
 
-inherit autotools
+inherit autotools-brokensep
 
 do_configure_prepend () {
 	mkdir -p obj

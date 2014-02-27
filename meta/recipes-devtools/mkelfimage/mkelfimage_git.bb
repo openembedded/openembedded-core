@@ -20,7 +20,7 @@ CFLAGS += "-fno-stack-protector"
 CACHED_CONFIGUREVARS += "HOST_CC='${BUILD_CC}'"
 EXTRA_OEMAKE += "HOST_CPPFLAGS='${BUILD_CPPFLAGS}'"
 
-inherit autotools
+inherit autotools-brokensep
 
 do_install_append() {
 	rmdir ${D}${datadir}/mkelfImage/elf32-i386

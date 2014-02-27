@@ -8,7 +8,7 @@ LICENSE = "GPLv2 & LGPLv2.1"
 DEPENDS = "libxml2 libxslt libxslt-native gnome-doc-utils-native glib-2.0"
 DEPENDS_class-native = "libxml2-native libxslt-native intltool-native glib-2.0-native"
 
-inherit gnome gettext python-dir pythonnative
+inherit gnome gettext python-dir pythonnative autotools-brokensep
 
 EXTRA_OECONF += "--disable-scrollkeeper"
 

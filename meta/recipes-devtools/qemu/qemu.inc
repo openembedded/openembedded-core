@@ -9,7 +9,7 @@ RDEPENDS_${PN}_class-nativesdk = "nativesdk-libsdl"
 RDEPENDS_${PN}_class-target += "bash python"
 
 require qemu-targets.inc
-inherit autotools
+inherit autotools-brokensep
 BBCLASSEXTEND = "native nativesdk"
 
 # QEMU_TARGETS is overridable variable

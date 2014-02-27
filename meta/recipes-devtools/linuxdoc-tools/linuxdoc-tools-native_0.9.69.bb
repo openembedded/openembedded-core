@@ -17,7 +17,7 @@ SRC_URI[sha256sum] = "7103facee18a2ea97186ca459d743d22f7f89ad4b5cd1dfd1c34f83d6b
 
 FILESPATH = "${FILE_DIRNAME}/linuxdoc-tools-native/"
 
-inherit autotools native
+inherit autotools-brokensep native
 
 do_configure () {
 	oe_runconf

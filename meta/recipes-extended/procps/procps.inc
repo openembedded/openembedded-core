@@ -13,7 +13,7 @@ DEPENDS = "ncurses"
 SRC_URI = "http://procps.sourceforge.net/procps-${PV}.tar.gz \
            file://install.patch"
 
-inherit autotools update-alternatives
+inherit autotools-brokensep update-alternatives
 
 do_install_append() {
 	mv ${D}${bindir}/watch ${D}${bindir}/watch.${BPN}

@@ -4,7 +4,7 @@ SECTION = "base/shell"
 
 DEPENDS = "ncurses bison-native"
 
-inherit autotools gettext update-alternatives ptest
+inherit autotools-brokensep gettext update-alternatives ptest
 
 PARALLEL_MAKE = ""
 

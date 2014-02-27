@@ -14,7 +14,7 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-${PV}.tar.gz \
            file://add-pkgconfig-support.patch \
            file://libgcrypt-fix-building-error-with-O2-in-sysroot-path.patch"
 
-inherit autotools binconfig pkgconfig
+inherit autotools-brokensep binconfig pkgconfig
 
 EXTRA_OECONF = "--disable-asm --with-capabilities"
 

@@ -49,7 +49,7 @@ SYSTEMD_SERVICE_${PN}-sshd = "sshd.socket"
 PACKAGECONFIG ??= "tcp-wrappers"
 PACKAGECONFIG[tcp-wrappers] = "--with-tcp-wrappers,,tcp-wrappers"
 
-inherit autotools
+inherit autotools-brokensep
 
 # LFS support:
 CFLAGS += "-D__FILE_OFFSET_BITS=64"

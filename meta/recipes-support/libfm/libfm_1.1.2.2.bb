@@ -17,7 +17,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/libfm-${PV}.tar.gz \
 SRC_URI[md5sum] = "ea3d09b23ef4c37cb84ae57ea16b8f08"
 SRC_URI[sha256sum] = "158e2b6974350d2dab15932b496bb4d448553e60bbf7cdfe4d6e9bd99d19d682"
 
-inherit autotools pkgconfig
+inherit autotools-brokensep pkgconfig
 
 PACKAGES += "${PN}-mime"
 FILES_${PN}-mime = "${datadir}/mime/"

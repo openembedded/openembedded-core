@@ -21,7 +21,7 @@ SRC_URI = "http://downloads.xiph.org/releases/flac/${BP}.tar.xz \
 SRC_URI[md5sum] = "13b5c214cee8373464d3d65dee362cdd"
 SRC_URI[sha256sum] = "fa2d64aac1f77e31dfbb270aeb08f5b32e27036a52ad15e69a77e309528010dc"
 
-inherit autotools gettext
+inherit autotools-brokensep gettext
 
 EXTRA_OECONF = "--disable-oggtest \
                 --with-ogg-libraries=${STAGING_LIBDIR} \

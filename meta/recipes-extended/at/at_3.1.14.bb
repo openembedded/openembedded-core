@@ -39,7 +39,7 @@ EXTRA_OECONF += "ac_cv_path_SENDMAIL=/bin/true \
                  --with-atspool=/var/spool/at/spool \
                  ac_cv_header_security_pam_appl_h=${@base_contains('DISTRO_FEATURES', 'pam', 'yes', 'no', d)} "
 
-inherit autotools systemd
+inherit autotools-brokensep systemd
 
 SYSTEMD_SERVICE_${PN} = "atd.service"
 

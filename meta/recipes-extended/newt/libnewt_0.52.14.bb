@@ -32,7 +32,7 @@ S = "${WORKDIR}/newt-${PV}"
 
 EXTRA_OECONF = "--without-tcl --without-python"
 
-inherit autotools
+inherit autotools-brokensep
 
 export STAGING_INCDIR
 export STAGING_LIBDIR

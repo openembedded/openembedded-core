@@ -14,7 +14,7 @@ FILES_${PN}-dev = "${libdir}/gtk-2.0/*/engines/*.la"
 FILES_${PN}-dbg += " ${libdir}/gtk-2.0/*/engines/.debug"
 FILES_gtk-theme-sato = "${datadir}/icons ${datadir}/themes"
 
-inherit autotools  pkgconfig
+inherit autotools-brokensep pkgconfig
 
 do_configure_prepend() {
 	for i in `ls gtk-common`; do

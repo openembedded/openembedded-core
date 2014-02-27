@@ -21,7 +21,7 @@ S = "${WORKDIR}/js/src"
 
 # use local autoconf script to generate a usable jsautocfg.h
 # don't bother with automake
-inherit autotools
+inherit autotools-brokensep
 
 do_configure_prepend() {
 	cp -f ${WORKDIR}/configure.ac ${S}

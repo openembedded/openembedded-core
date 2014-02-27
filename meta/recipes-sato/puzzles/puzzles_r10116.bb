@@ -11,7 +11,7 @@ SRC_URI = "svn://svn.tartarus.org/sgt;module=puzzles;rev=${MOD_PV}"
 
 S = "${WORKDIR}/${BPN}"
 
-inherit autotools
+inherit autotools-brokensep
 
 do_configure_prepend () {
     ./mkfiles.pl

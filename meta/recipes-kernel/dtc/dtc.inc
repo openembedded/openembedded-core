@@ -4,7 +4,7 @@ SECTION = "bootloader"
 LICENSE = "GPLv2 | BSD"
 DEPENDS = "flex-native bison-native"
 
-inherit autotools
+inherit autotools-brokensep
 
 SRC_URI = "git://www.jdl.com/software/dtc.git \
            file://make_install.patch \

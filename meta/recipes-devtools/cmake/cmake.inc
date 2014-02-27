@@ -19,7 +19,7 @@ SRC_URI = "http://www.cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz
            file://cmake-2.8.11.2-FindFreetype.patch \
            "
 
-inherit autotools
+inherit autotools-brokensep
 
 do_configure () {
 	./configure --prefix=${prefix}

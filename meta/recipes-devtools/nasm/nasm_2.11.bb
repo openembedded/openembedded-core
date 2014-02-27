@@ -9,7 +9,7 @@ SRC_URI = "http://www.nasm.us/pub/nasm/releasebuilds/${PV}/nasm-${PV}.tar.bz2 "
 SRC_URI[md5sum] = "4cd558047ea5ed51fc2c7c94e249c7b8"
 SRC_URI[sha256sum] = "1ce7e897c67255a195367a60c739a90a0b33a4a73f058f7cda3253bcf975642b"
 
-inherit autotools
+inherit autotools-brokensep
 
 do_configure_prepend () {
 	if [ -f ${S}/aclocal.m4 ] && [ ! -f ${S}/acinclude.m4 ]; then

@@ -19,7 +19,7 @@ SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "ce2ab01a0c3cdb71cf0a6326b8654f41"
 SRC_URI[sha256sum] = "61b8d2f8d321c6365ee3d71d0bb41f3a89c44da6124cc5b407a3b8319d660421"
 
-inherit autotools lib_package binconfig multilib_header ptest
+inherit autotools-brokensep lib_package binconfig multilib_header ptest
 
 OE_BINCONFIG_EXTRA_MANGLE = " -e 's:location=source:location=installed:'"
 

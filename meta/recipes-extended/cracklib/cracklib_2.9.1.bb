@@ -16,7 +16,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/cracklib/cracklib-${PV}.tar.gz \
 SRC_URI[md5sum] = "90536219c520add2ceb3c26f0d7da404"
 SRC_URI[sha256sum] = "408905c2539a97dc8cbbb6d7cd2046cb5647a345b4bda399220d9471be16d156"
 
-inherit autotools gettext
+inherit autotools-brokensep gettext
 
 BBCLASSEXTEND = "native"
 

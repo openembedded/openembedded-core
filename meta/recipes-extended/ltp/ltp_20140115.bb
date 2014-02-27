@@ -30,7 +30,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
 
 S = "${WORKDIR}/git"
 
-inherit autotools
+inherit autotools-brokensep
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 

@@ -21,6 +21,6 @@ SRC_URI = "http://portland.freedesktop.org/download/${BPN}-${PV}.tar.gz"
 SRC_URI[md5sum] = "fadf5e7a08e0526fc60dbe3e5b7ef8d6"
 SRC_URI[sha256sum] = "7b05558ae4bb8ede356863cae8c42e3e012aa421bf9d45130a570fd209d79102"
 
-inherit autotools
+inherit autotools-brokensep
 
 RDEPENDS_${PN} += "xprop"

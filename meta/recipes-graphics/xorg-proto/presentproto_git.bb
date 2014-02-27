@@ -17,4 +17,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=47e508ca280fde97906eacb77892c3ac"
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/proto/presentproto"
 S = "${WORKDIR}/git"
 
+inherit autotools-brokensep
+
 BBCLASSEXTEND = "native"

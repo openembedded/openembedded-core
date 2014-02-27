@@ -138,7 +138,7 @@ TESTS = "runtests.pl \
     xnotify \
     zerolen"
 
-inherit autotools
+inherit autotools-brokensep
 
 do_configure() {
 	gnu-configize --force

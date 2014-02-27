@@ -23,4 +23,4 @@ FILES_libpspell = "${libdir}/libpspell.so.*"
 FILES_libpspell-dev = "${libdir}/libpspell* ${bindir}/pspell-config ${includedir}/pspell"
 
 ARM_INSTRUCTION_SET = "arm"
-inherit autotools gettext
+inherit autotools-brokensep gettext

@@ -13,7 +13,7 @@ BBCLASSEXTEND = "native"
 EXTRA_OECONF += "--enable-Bsymbolic=auto"
 PR = "r1"
 
-inherit autotools pkgconfig gnomebase
+inherit autotools-brokensep pkgconfig gnomebase
 
 GNOME_COMPRESS_TYPE = "xz"
 

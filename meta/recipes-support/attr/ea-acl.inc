@@ -3,7 +3,7 @@
 SRC_URI += "file://relative-libdir.patch;striplevel=0 \
            "
 
-inherit autotools gettext
+inherit autotools-brokensep gettext
 
 # the package comes with a custom config.h.in, it cannot be
 # overwritten by autoheader

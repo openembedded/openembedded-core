@@ -8,7 +8,7 @@ SRC_URI = "http://pagesperso-orange.fr/sebastien.godard/sysstat-${PV}.tar.gz \
            file://99_sysstat \
           "
 
-inherit autotools gettext
+inherit autotools-brokensep gettext
 
 EXTRA_OECONF += "--disable-sensors"
 EXTRA_OEMAKE += 'LFLAGS=""'

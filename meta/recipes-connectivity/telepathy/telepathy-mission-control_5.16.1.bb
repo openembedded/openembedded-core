@@ -12,7 +12,7 @@ SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-mission-control/$
 SRC_URI[md5sum] = "421115a35b9e427807326877f86e7f43"
 SRC_URI[sha256sum] = "14ceb7d53535b43d44b8271ad11319d1d0fe6d193d154636b9e62b42799b9723"
 
-inherit autotools pkgconfig pythonnative
+inherit autotools-brokensep pkgconfig pythonnative
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[upower] = "--enable-upower,--disable-upower,upower"

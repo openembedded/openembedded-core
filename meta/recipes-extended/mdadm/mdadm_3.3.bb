@@ -17,7 +17,7 @@ SRC_URI[sha256sum] = "9c07e518bdf3392ebac8874eb686258e10ea3ae0ff7a8acb6d014718a9
 
 CFLAGS += "-fno-strict-aliasing"
 
-inherit autotools
+inherit autotools-brokensep
 
 # We don't DEPEND on binutils for ansidecl.h so ensure we don't use the header
 do_configure_prepend () {
