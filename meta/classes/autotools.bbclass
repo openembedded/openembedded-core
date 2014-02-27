@@ -269,3 +269,5 @@ autotools_do_install() {
 inherit siteconfig
 
 EXPORT_FUNCTIONS do_configure do_install
+
+B = "${WORKDIR}/build"
