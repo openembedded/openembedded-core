@@ -6,11 +6,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d8045f3b8f929c1cb29a1e3fd737b499 \
 SECTION = "libs"
 DEPENDS = "libtelepathy dbus-glib gconf libxslt-native"
 
-SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-mission-control/telepathy-mission-control-${PV}.tar.gz \
-	file://tmc-Makefile-fix-race.patch \
-	"
-SRC_URI[md5sum] = "736ae9d71028d8e6d95017433c07fa06"
-SRC_URI[sha256sum] = "edc3c7265c291343d5d7d47c20add4d426e894068c66c79696795502a4e1c1d0"
+SRC_URI = "http://telepathy.freedesktop.org/releases/telepathy-mission-control/${BP}.tar.gz \
+           file://tmc-Makefile-fix-race.patch \
+          "
+SRC_URI[md5sum] = "421115a35b9e427807326877f86e7f43"
+SRC_URI[sha256sum] = "14ceb7d53535b43d44b8271ad11319d1d0fe6d193d154636b9e62b42799b9723"
 
 inherit autotools pkgconfig pythonnative
 
