@@ -26,10 +26,16 @@ class ImageOptionsTests(oeSelfTest):
         bitbake("core-image-minimal")
         deploydir = get_bb_var("DEPLOY_DIR_IMAGE", target="core-image-minimal")
         imagename = get_bb_var("IMAGE_LINK_NAME", target="core-image-minimal")
-        oldimgpath = os.path.realpath(os.path.join(deploydir, imagename + ".ext3"))
+        deploydir_files = os.listdir(deploydir)
+        track_original_files = []
+        for image_file in deploydir_files:
+            if imagename in image_file and os.path.islink(os.path.join(deploydir, image_file)):
+                track_original_files.append(os.path.realpath(os.path.join(deploydir, image_file)))
         self.append_config("RM_OLD_IMAGE = \"1\"")
-        bitbake("core-image-minimal")
-        self.assertFalse(os.path.exists(oldimgpath), msg="Old image path still exists: %s" % oldimgpath)
+        bitbake("-C rootfs core-image-minimal")
+        deploydir_files = os.listdir(deploydir)
+        remaining_not_expected = [path for path in track_original_files if os.path.basename(path) in deploydir_files]
+        self.assertFalse(remaining_not_expected, msg="\nThe following image files ware not removed: %s" % ', '.join(map(str, remaining_not_expected)))
 
     def test_ccache_tool(self):
         bitbake("ccache-native")
