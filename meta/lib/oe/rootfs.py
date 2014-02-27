@@ -41,9 +41,10 @@ class Rootfs(object):
     def _log_check(self):
         pass
 
-    @abstractmethod
     def _insert_feed_uris(self):
-        pass
+        if base_contains("IMAGE_FEATURES", "package-management",
+                         True, False, self.d):
+            self.pm.insert_feeds_uris()
 
     @abstractmethod
     def _handle_intercept_failure(self, failed_script):
@@ -349,9 +350,6 @@ class RpmRootfs(Rootfs):
                 if found_error == 6:
                     bb.fatal(message)
 
-    def _insert_feed_uris(self):
-        pass
-
     def _handle_intercept_failure(self, registered_pkgs):
         rpm_postinsts_dir = self.image_rootfs + self.d.expand('${sysconfdir}/rpm-postinsts/')
         bb.utils.mkdirhier(rpm_postinsts_dir)
@@ -371,6 +369,7 @@ class DpkgRootfs(Rootfs):
         self.pm = DpkgPM(d, d.getVar('IMAGE_ROOTFS', True),
                          d.getVar('PACKAGE_ARCHS', True),
                          d.getVar('DPKG_ARCH', True))
+
 
     def _create(self):
         pkgs_to_install = self.manifest.parse_initial_manifest()
@@ -430,9 +429,6 @@ class DpkgRootfs(Rootfs):
         self.pm.mark_packages("unpacked", registered_pkgs.split())
 
     def _log_check(self):
-        pass
-
-    def _insert_feed_uris(self):
         pass
 
 
@@ -697,10 +693,6 @@ class OpkgRootfs(Rootfs):
 
     def _log_check(self):
         pass
-
-    def _insert_feed_uris(self):
-        pass
-
 
 def create_rootfs(d, manifest_dir=None):
     env_bkp = os.environ.copy()

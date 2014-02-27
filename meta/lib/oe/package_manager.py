@@ -223,6 +223,7 @@ class PackageManager(object):
         self.d = d
         self.deploy_dir = None
         self.deploy_lock = None
+        self.feed_uris = self.d.getVar('PACKAGE_FEED_URIS', True) or ""
 
     """
     Update the package manager package database.
@@ -260,6 +261,10 @@ class PackageManager(object):
 
     @abstractmethod
     def list_installed(self, format=None):
+        pass
+
+    @abstractmethod
+    def insert_feeds_uris(self):
         pass
 
     """
@@ -357,6 +362,46 @@ class RpmPM(PackageManager):
         self.indexer = RpmIndexer(self.d, self.deploy_dir)
 
         self.ml_prefix_list, self.ml_os_list = self.indexer.get_ml_prefix_and_os_list(arch_var, os_var)
+
+
+    def insert_feeds_uris(self):
+        if self.feed_uris == "":
+            return
+
+        # List must be prefered to least preferred order
+        default_platform_extra = set()
+        platform_extra = set()
+        bbextendvariant = self.d.getVar('BBEXTENDVARIANT', True) or ""
+        for mlib in self.ml_os_list:
+            for arch in self.ml_prefix_list[mlib]:
+                plt = arch.replace('-', '_') + '-.*-' + self.ml_os_list[mlib]
+                if mlib == bbextendvariant:
+                        default_platform_extra.add(plt)
+                else:
+                        platform_extra.add(plt)
+
+        platform_extra = platform_extra.union(default_platform_extra)
+
+        arch_list = []
+        for canonical_arch in platform_extra:
+            arch = canonical_arch.split('-')[0]
+            if not os.path.exists(os.path.join(self.deploy_dir, arch)):
+                continue
+            arch_list.append(arch)
+
+        uri_iterator = 0
+        channel_priority = 10 + 5 * len(self.feed_uris.split()) * len(arch_list)
+
+        for uri in self.feed_uris.split():
+            for arch in arch_list:
+                bb.note('Note: adding Smart channel url%d%s (%s)' %
+                        (uri_iterator, arch, channel_priority))
+                self._invoke_smart('channel --add url%d-%s type=rpm-md baseurl=%s/rpm/%s -y'
+                                   % (uri_iterator, arch, uri, arch))
+                self._invoke_smart('channel --set url%d-%s priority=%d' %
+                                   (uri_iterator, arch, channel_priority))
+                channel_priority -= 5
+            uri_iterator += 1
 
     '''
     Create configs for rpm and smart, and multilib is supported
@@ -964,7 +1009,6 @@ class OpkgPM(PackageManager):
 
         self.deploy_dir = self.d.getVar("DEPLOY_DIR_IPK", True)
         self.deploy_lock_file = os.path.join(self.deploy_dir, "deploy.lock")
-
         self.opkg_cmd = bb.utils.which(os.getenv('PATH'), "opkg-cl")
         self.opkg_args = "-f %s -o %s " % (self.config_file, target_rootfs)
         self.opkg_args += self.d.getVar("OPKG_ARGS", True)
@@ -1069,6 +1113,29 @@ class OpkgPM(PackageManager):
                 if os.path.isdir(pkgs_dir):
                     config_file.write("src oe-%s file:%s\n" %
                                       (arch, pkgs_dir))
+
+    def insert_feeds_uris(self):
+        if self.feed_uris == "":
+            return
+
+        rootfs_config = os.path.join('%s/etc/opkg/base-feeds.conf'
+                                  % self.target_rootfs)
+
+        with open(rootfs_config, "w+") as config_file:
+            uri_iterator = 0
+            for uri in self.feed_uris.split():
+                config_file.write("src/gz url-%d %s/ipk\n" %
+                                  (uri_iterator, uri))
+
+                for arch in self.pkg_archs.split():
+                    if not os.path.exists(os.path.join(self.deploy_dir, arch)):
+                        continue
+                    bb.note('Note: adding opkg channel url-%s-%d (%s)' %
+                        (arch, uri_iterator, uri))
+
+                    config_file.write("src/gz uri-%s-%d %s/ipk/%s\n" %
+                                      (arch, uri_iterator, uri, arch))
+                uri_iterator += 1
 
     def update(self):
         self.deploy_dir_lock()
@@ -1432,6 +1499,26 @@ class DpkgPM(PackageManager):
 
         if result is not None:
             bb.fatal(result)
+
+    def insert_feeds_uris(self):
+        if self.feed_uris == "":
+            return
+
+        sources_conf = os.path.join("%s/etc/apt/sources.list"
+                                    % self.target_rootfs)
+        arch_list = []
+        archs = self.d.getVar('PACKAGE_ARCHS', True)
+        for arch in archs.split():
+            if not os.path.exists(os.path.join(self.deploy_dir, arch)):
+                continue
+            arch_list.append(arch)
+
+        with open(sources_conf, "w+") as sources_file:
+            for uri in self.feed_uris.split():
+                for arch in arch_list:
+                    bb.note('Note: adding dpkg channel at (%s)' % uri)
+                    sources_file.write("deb %s/deb/%s ./\n" %
+                                       (uri, arch))
 
     def _create_configs(self, archs, base_archs):
         base_archs = re.sub("_", "-", base_archs)
