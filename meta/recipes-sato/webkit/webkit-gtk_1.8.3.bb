@@ -85,7 +85,7 @@ CONFIGUREOPT_DEPTRACK = ""
 
 do_configure_append() {
 	# somethings wrong with icu, fix it up manually
-	for makefile in $(find ${S} -name "GNUmakefile") ; do
+	for makefile in $(find ${B} -name "GNUmakefile") ; do
 		sed -i s:-I/usr/include::g $makefile
 	done
 }
