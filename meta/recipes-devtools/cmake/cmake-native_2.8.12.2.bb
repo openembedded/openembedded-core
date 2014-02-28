@@ -6,5 +6,5 @@ DEPENDS += "bzip2-native zlib-native"
 
 SRC_URI += "file://cmlibarchive-disable-ext2fs.patch"
 
-SRC_URI[md5sum] = "9d38cd4e2c94c3cea97d0e2924814acc"
-SRC_URI[sha256sum] = "fa28c12791d64c36ba6b6cb062a4b4bd4223053f6b9ea501b1bdbdf4d5df3a67"
+SRC_URI[md5sum] = "17c6513483d23590cbce6957ec6d1e66"
+SRC_URI[sha256sum] = "8c6574e9afabcb9fc66f463bb1f2f051958d86c85c37fccf067eb1a44a120e5e"
