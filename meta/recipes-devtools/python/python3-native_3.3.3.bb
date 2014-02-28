@@ -23,6 +23,7 @@ file://0001-h2py-Fix-issue-13032-where-it-fails-with-UnicodeDeco.patch \
 file://sysroot-include-headers.patch \
 file://unixccompiler.patch \
 file://fix-ast.h-dependency.patch \
+file://makerace.patch \
 ${DISTRO_SRC_URI} \
 "
 SRC_URI[md5sum] = "f3ebe34d4d8695bf889279b54673e10c"
