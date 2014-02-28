@@ -51,6 +51,9 @@ EXTRA_OEMAKE = '\
   ARCH=${TARGET_ARCH} \
 '
 
+# No ctypes option for python 3
+PYTHONLSBOPTS = ""
+
 do_configure_prepend() {
 	autoreconf --verbose --install --force --exclude=autopoint Modules/_ctypes/libffi || bbnote "_ctypes failed to autoreconf"
 }
