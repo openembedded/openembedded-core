@@ -4,8 +4,8 @@ BUGTRACKER = "http://hostap.epitest.fi/bugz/"
 SECTION = "network"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ab87f20cd7e8c0d0a6539b34d3791d0e \
-                    file://README;md5=5cb758942d25f6f61fd4ac388fd446fa \
-                    file://wpa_supplicant/wpa_supplicant.c;beginline=1;endline=12;md5=cba4fa09fa364da845ca546f21008909"
+                    file://README;beginline=1;endline=56;md5=a07250b28e857455336bb59fc31cb845 \
+                    file://wpa_supplicant/wpa_supplicant.c;beginline=1;endline=12;md5=e8e021e30f3a6ab7c341b66b86626a5a"
 DEPENDS = "gnutls dbus libnl openssl"
 RRECOMMENDS_${PN} = "wpa-supplicant-passphrase wpa-supplicant-cli"
 
@@ -21,7 +21,9 @@ SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
            file://wpa_supplicant.conf-sane \
            file://99_wpa_supplicant \
            file://fix-libnl3-host-contamination.patch \
-           file://register-autoscan-correctly.patch"
+          "
+SRC_URI[md5sum] = "e96b8db5a8171cd17a5b2012d6ad7cc7"
+SRC_URI[sha256sum] = "91632e7e3b49a340ce408e2f978a93546a697383abf2e5a60f146faae9e1b277"
 
 S = "${WORKDIR}/wpa_supplicant-${PV}"
 
