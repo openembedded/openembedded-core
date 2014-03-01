@@ -42,12 +42,16 @@ TEST_SERVER_IP ?= ""
 TESTIMAGEDEPENDS = ""
 TESTIMAGEDEPENDS_qemuall = "qemu-native:do_populate_sysroot qemu-helper-native:do_populate_sysroot"
 
+TESTIMAGELOCK = "${TMPDIR}/testimage.lock"
+TESTIMAGELOCK_qemuall = ""
+
 python do_testimage() {
     testimage_main(d)
 }
 addtask testimage
 do_testimage[nostamp] = "1"
 do_testimage[depends] += "${TESTIMAGEDEPENDS}"
+do_testimage[lockfiles] += "${TESTIMAGELOCK}"
 
 
 def get_tests_list(d):

@@ -20,3 +20,4 @@ python do_testimage_auto() {
 }
 addtask testimage_auto before do_build after do_rootfs
 do_testimage_auto[depends] += "${TESTIMAGEDEPENDS}"
+do_testimage_auto[lockfiles] += "${TESTIMAGELOCK}"
