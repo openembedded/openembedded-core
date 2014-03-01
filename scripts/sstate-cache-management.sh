@@ -224,59 +224,60 @@ remove_duplicated () {
 
   # Save the file list which needs to be removed
   local remove_listdir=`mktemp -d` || exit 1
-
   for suffix in $sstate_suffixes; do
       # Total number of files including .siginfo and .done files
-      total_files_suffix=`grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix.*" $sstate_files_list | wc -l 2>/dev/null`
-      total_tgz_suffix=`grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix.*.tgz$" $sstate_files_list | wc -l 2>/dev/null`
+      total_files_suffix=`grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix\.tgz.*" $sstate_files_list | wc -l 2>/dev/null`
+      total_tgz_suffix=`grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix\.tgz$" $sstate_files_list | wc -l 2>/dev/null`
       # Save the file list to a file, some suffix's file may not exist
-      grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix.tgz$" $sstate_files_list >$list_suffix 2>/dev/null
+      grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix\.tgz.*" $sstate_files_list >$list_suffix 2>/dev/null
       local deleted_tgz=0
       local deleted_files=0
-      echo -n "Figuring out the sstate:xxx_$suffix.tgz ... "
-      # Uniq BPNs
-      file_names=`for arch in $ava_archs ""; do
-          sed -ne "s%.*/sstate:\([^:]*\):[^:]*:[^:]*:[^:]*:$arch:[^:]*:[^:]*\.tgz$%\1%p" $list_suffix
-      done | sort -u`
+      for ext in tgz tgz.siginfo tgz.done; do
+          echo "Figuring out the sstate:xxx_$suffix.$ext ... "
+          # Uniq BPNs
+          file_names=`for arch in $ava_archs ""; do
+              sed -ne "s%.*/sstate:\([^:]*\):[^:]*:[^:]*:[^:]*:$arch:[^:]*:[^:]*\.${ext}$%\1%p" $list_suffix
+          done | sort -u`
 
-      fn_tmp=`mktemp` || exit 1
-      rm_list="$remove_listdir/sstate:xxx_$suffix"
-      for fn in $file_names; do
-          [ -z "$verbose" ] || echo "Analyzing sstate:$fn-xxx_$suffix.tgz"
-          for arch in $ava_archs ""; do
-              grep -h ".*/sstate:$fn:[^:]*:[^:]*:[^:]*:$arch:[^:]*:[^:]*\.tgz$" $list_suffix >$fn_tmp
-              if [ -s $fn_tmp ] ; then
-                  [ $debug -gt 1 ] && echo "Available files for $fn-$arch- with suffix $suffix:" && cat $fn_tmp
-                  # Use the modification time
-                  to_del=$(ls -t $(cat $fn_tmp) | sed -n '1!p')
-                  [ $debug -gt 2 ] && echo "Considering to delete: $to_del"
-                  # The sstate file which is downloaded from the SSTATE_MIRROR is
-                  # put in SSTATE_DIR, and there is a symlink in SSTATE_DIR/??/ to
-                  # it, so filter it out from the remove list if it should not be
-                  # removed.
-                  to_keep=$(ls -t $(cat $fn_tmp) | sed -n '1p')
-                  [ $debug -gt 2 ] && echo "Considering to keep: $to_keep"
-                  for k in $to_keep; do
-                      if [ -L "$k" ]; then
-                          # The symlink's destination
-                          k_dest="`readlink -e $k`"
-                          # Maybe it is the one in cache_dir
-                          k_maybe="$cache_dir/${k##/*/}"
-                          # Remove it from the remove list if they are the same.
-                          if [ "$k_dest" = "$k_maybe" ]; then
-                              to_del="`echo $to_del | sed 's#'\"$k_maybe\"'##g'`"
+          fn_tmp=`mktemp` || exit 1
+          rm_list="$remove_listdir/sstate:xxx_$suffix"
+          for fn in $file_names; do
+              [ -z "$verbose" ] || echo "Analyzing sstate:$fn-xxx_$suffix.${ext}"
+              for arch in $ava_archs ""; do
+                  grep -h ".*/sstate:$fn:[^:]*:[^:]*:[^:]*:$arch:[^:]*:[^:]*\.${ext}$" $list_suffix >$fn_tmp
+                  if [ -s $fn_tmp ] ; then
+                      [ $debug -gt 1 ] && echo "Available files for $fn-$arch- with suffix $suffix.${ext}:" && cat $fn_tmp
+                      # Use the modification time
+                      to_del=$(ls -t $(cat $fn_tmp) | sed -n '1!p')
+                      [ $debug -gt 2 ] && echo "Considering to delete: $to_del"
+                      # The sstate file which is downloaded from the SSTATE_MIRROR is
+                      # put in SSTATE_DIR, and there is a symlink in SSTATE_DIR/??/ to
+                      # it, so filter it out from the remove list if it should not be
+                      # removed.
+                      to_keep=$(ls -t $(cat $fn_tmp) | sed -n '1p')
+                      [ $debug -gt 2 ] && echo "Considering to keep: $to_keep"
+                      for k in $to_keep; do
+                          if [ -L "$k" ]; then
+                              # The symlink's destination
+                              k_dest="`readlink -e $k`"
+                              # Maybe it is the one in cache_dir
+                              k_maybe="$cache_dir/${k##/*/}"
+                              # Remove it from the remove list if they are the same.
+                              if [ "$k_dest" = "$k_maybe" ]; then
+                                  to_del="`echo $to_del | sed 's#'\"$k_maybe\"'##g'`"
+                              fi
                           fi
-                      fi
-                  done
-                  rm -f $fn_tmp
-                  [ $debug -gt 2 ] && echo "Decided to delete: $to_del"
-                  gen_rmlist $rm_list "$to_del"
-              fi
+                      done
+                      rm -f $fn_tmp
+                      [ $debug -gt 2 ] && echo "Decided to delete: $to_del"
+                      gen_rmlist $rm_list.$ext "$to_del"
+                  fi
+              done
           done
       done
-      [ -s "$rm_list" ] && deleted_tgz=`cat $rm_list | grep ".tgz$" | wc -l`
-      [ -s "$rm_list" ] && deleted_files=`cat $rm_list | wc -l`
-      [ -s "$rm_list" -a $debug -gt 0 ] && cat $rm_list
+      deleted_tgz=`cat $rm_list.* 2>/dev/null | grep ".tgz$" | wc -l`
+      deleted_files=`cat $rm_list.* 2>/dev/null | wc -l`
+      [ "$deleted_files" -gt 0 -a $debug -gt 0 ] && cat $rm_list.*
       echo "($deleted_tgz from $total_tgz_suffix .tgz files for $suffix suffix will be removed or $deleted_files from $total_files_suffix when counting also .siginfo and .done files)"
       let total_deleted=$total_deleted+$deleted_files
   done
