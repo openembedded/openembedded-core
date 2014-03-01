@@ -172,7 +172,7 @@ remove_duplicated () {
   local ava_archs
   local arch
   local file_names
-  local sstate_list
+  local sstate_files_list
   local fn_tmp
   local list_suffix=`mktemp` || exit 1
 
@@ -195,14 +195,14 @@ remove_duplicated () {
           | sed -e 's/-/_/g' -e 's/ /\n/g' | sort -u) $extra_archs"
   echo "Done"
 
-  # Total number of files including sstate-, sigdata and .done files
+  # Total number of files including sstate-, .siginfo and .done files
   total_files=`find $cache_dir -name 'sstate*' | wc -l`
   # Save all the sstate files in a file
-  sstate_list=`mktemp` || exit 1
-  find $cache_dir -name 'sstate:*:*:*:*:*:*:*.tgz' >$sstate_list
+  sstate_files_list=`mktemp` || exit 1
+  find $cache_dir -name 'sstate:*:*:*:*:*:*:*.tgz*' >$sstate_files_list
 
   echo -n "Figuring out the suffixes in the sstate cache dir ... "
-  sstate_suffixes="`sed 's%.*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^_]*_\([^:]*\)\.tgz$%\1%g' $sstate_list | sort -u`"
+  sstate_suffixes="`sed 's%.*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^_]*_\([^:]*\)\.tgz.*%\1%g' $sstate_files_list | sort -u`"
   echo "Done"
   echo "The following suffixes have been found in the cache dir:"
   echo $sstate_suffixes
@@ -211,10 +211,10 @@ remove_duplicated () {
   # Using this SSTATE_PKGSPEC definition it's 6th colon separated field
   # SSTATE_PKGSPEC    = "sstate:${PN}:${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}:${PV}:${PR}:${SSTATE_PKGARCH}:${SSTATE_VERSION}:"
   for arch in $all_archs; do
-      grep -q ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:$arch:[^:]*:[^:]*\.tgz$" $sstate_list
+      grep -q ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:$arch:[^:]*:[^:]*\.tgz$" $sstate_files_list
       [ $? -eq 0 ] && ava_archs="$ava_archs $arch"
       # ${builder_arch}_$arch used by toolchain sstate
-      grep -q ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:${builder_arch}_$arch:[^:]*:[^:]*\.tgz$" $sstate_list
+      grep -q ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:${builder_arch}_$arch:[^:]*:[^:]*\.tgz$" $sstate_files_list
       [ $? -eq 0 ] && ava_archs="$ava_archs ${builder_arch}_$arch"
   done
   echo "Done"
@@ -226,11 +226,13 @@ remove_duplicated () {
   local remove_listdir=`mktemp -d` || exit 1
 
   for suffix in $sstate_suffixes; do
-      # Total number of files including sigdata and .done files
-      total_files_suffix=`grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix.*" $sstate_list | wc -l 2>/dev/null`
+      # Total number of files including .siginfo and .done files
+      total_files_suffix=`grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix.*" $sstate_files_list | wc -l 2>/dev/null`
+      total_tgz_suffix=`grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix.*.tgz$" $sstate_files_list | wc -l 2>/dev/null`
       # Save the file list to a file, some suffix's file may not exist
-      grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix.tgz" $sstate_list >$list_suffix 2>/dev/null
-      local deleted=0
+      grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix.tgz$" $sstate_files_list >$list_suffix 2>/dev/null
+      local deleted_tgz=0
+      local deleted_files=0
       echo -n "Figuring out the sstate:xxx_$suffix.tgz ... "
       # Uniq BPNs
       file_names=`for arch in $ava_archs ""; do
@@ -272,21 +274,23 @@ remove_duplicated () {
               fi
           done
       done
-      [ ! -s "$rm_list" ] || deleted=`cat $rm_list | wc -l`
+      [ -s "$rm_list" ] && deleted_tgz=`cat $rm_list | grep ".tgz$" | wc -l`
+      [ -s "$rm_list" ] && deleted_files=`cat $rm_list | wc -l`
       [ -s "$rm_list" -a $debug -gt 0 ] && cat $rm_list
-      echo "($deleted from $total_files_suffix files for $suffix suffix will be removed)"
-      let total_deleted=$total_deleted+$deleted
+      echo "($deleted_tgz from $total_tgz_suffix .tgz files for $suffix suffix will be removed or $deleted_files from $total_files_suffix when counting also .siginfo and .done files)"
+      let total_deleted=$total_deleted+$deleted_files
   done
-  deleted=0
+  deleted_tgz=0
   rm_old_list=$remove_listdir/sstate-old-filenames
   find $cache_dir -name 'sstate-*.tgz' >$rm_old_list
-  [ ! -s "$rm_old_list" ] || deleted=`cat $rm_old_list | wc -l`
+  [ -s "$rm_old_list" ] && deleted_tgz=`cat $rm_old_list | grep ".tgz$" | wc -l`
+  [ -s "$rm_old_list" ] && deleted_files=`cat $rm_old_list | wc -l`
   [ -s "$rm_old_list" -a $debug -gt 0 ] && cat $rm_old_list
-  echo "($deleted files with old sstate-* filenames will be removed)"
-  let total_deleted=$total_deleted+$deleted
+  echo "($deleted_tgz .tgz files with old sstate-* filenames will be removed or $deleted_files when counting also .siginfo and .done files)"
+  let total_deleted=$total_deleted+$deleted_files
 
   rm -f $list_suffix
-  rm -f $sstate_list
+  rm -f $sstate_files_list
   if [ $total_deleted -gt 0 ]; then
       read_confirm
       if [ "$confirm" = "y" -o "$confirm" = "Y" ]; then
@@ -325,17 +329,17 @@ rm_by_stamps (){
   # Figure out all the md5sums in the stamps dir.
   echo -n "Figuring out all the md5sums in stamps dir ... "
   for i in $suffixes; do
-      # There is no "\.sigdata" but "_setcene" when it is mirrored
+      # There is no "\.siginfo" but "_setcene" when it is mirrored
       # from the SSTATE_MIRRORS, use them to figure out the sum.
       sums=`find $stamps -maxdepth 3 -name "*.do_$i.*" \
         -o -name "*.do_${i}_setscene.*" | \
-        sed -ne 's#.*_setscene\.##p' -e 's#.*\.sigdata\.##p' | \
+        sed -ne 's#.*_setscene\.##p' -e 's#.*\.siginfo\.##p' | \
         sed -e 's#\..*##' | sort -u`
       all_sums="$all_sums $sums"
   done
   echo "Done"
 
-  # Total number of files including sstate-, sigdata and .done files
+  # Total number of files including sstate-, .siginfo and .done files
   total_files=`find $cache_dir -name 'sstate*' | wc -l`
   # Save all the state file list to a file
   find $cache_dir -name 'sstate*.tgz' | sort -u -o $cache_list
