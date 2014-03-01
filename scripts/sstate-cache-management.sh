@@ -101,13 +101,13 @@ do_nothing () {
 
 # Read the input "y"
 read_confirm () {
-  echo -n "$total_deleted from $total_files files will be removed! "
+  echo "$total_deleted from $total_files files will be removed! "
   if [ "$confirm" != "y" ]; then
-      echo -n "Do you want to continue (y/n)? "
+      echo "Do you want to continue (y/n)? "
       while read confirm; do
           [ "$confirm" = "Y" -o "$confirm" = "y" -o "$confirm" = "n" \
             -o "$confirm" = "N" ] && break
-          echo -n "Invalid input \"$confirm\", please input 'y' or 'n': "
+          echo "Invalid input \"$confirm\", please input 'y' or 'n': "
       done
   else
       echo
@@ -178,7 +178,7 @@ remove_duplicated () {
 
   if [ -z "$extra_archs" ] ; then
     # Find out the archs in all the layers
-    echo -n "Figuring out the archs in the layers ... "
+    echo "Figuring out the archs in the layers ... "
     oe_core_dir=$(dirname $(dirname $(readlink -e $0)))
     topdir=$(dirname $oe_core_dir)
     tunedirs="`find $topdir/meta* ${oe_core_dir}/meta* $layers -path '*/meta*/conf/machine/include' 2>/dev/null`"
@@ -201,13 +201,13 @@ remove_duplicated () {
   sstate_files_list=`mktemp` || exit 1
   find $cache_dir -name 'sstate:*:*:*:*:*:*:*.tgz*' >$sstate_files_list
 
-  echo -n "Figuring out the suffixes in the sstate cache dir ... "
+  echo "Figuring out the suffixes in the sstate cache dir ... "
   sstate_suffixes="`sed 's%.*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^_]*_\([^:]*\)\.tgz.*%\1%g' $sstate_files_list | sort -u`"
   echo "Done"
   echo "The following suffixes have been found in the cache dir:"
   echo $sstate_suffixes
 
-  echo -n "Figuring out the archs in the sstate cache dir ... "
+  echo "Figuring out the archs in the sstate cache dir ... "
   # Using this SSTATE_PKGSPEC definition it's 6th colon separated field
   # SSTATE_PKGSPEC    = "sstate:${PN}:${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}:${PV}:${PR}:${SSTATE_PKGARCH}:${SSTATE_VERSION}:"
   for arch in $all_archs; do
@@ -296,7 +296,7 @@ remove_duplicated () {
       read_confirm
       if [ "$confirm" = "y" -o "$confirm" = "Y" ]; then
           for list in `ls $remove_listdir/`; do
-              echo -n "Removing $list.tgz (`cat $remove_listdir/$list | wc -w` files) ... "
+              echo "Removing $list.tgz (`cat $remove_listdir/$list | wc -w` files) ... "
               # Remove them one by one to avoid the argument list too long error
               for i in `cat $remove_listdir/$list`; do
                   rm -f $verbose $i
@@ -328,7 +328,7 @@ rm_by_stamps (){
             package_write_rpm package_write_deb package packagedata deploy"
 
   # Figure out all the md5sums in the stamps dir.
-  echo -n "Figuring out all the md5sums in stamps dir ... "
+  echo "Figuring out all the md5sums in stamps dir ... "
   for i in $suffixes; do
       # There is no "\.siginfo" but "_setcene" when it is mirrored
       # from the SSTATE_MIRRORS, use them to figure out the sum.
@@ -345,7 +345,7 @@ rm_by_stamps (){
   # Save all the state file list to a file
   find $cache_dir -name 'sstate*.tgz' | sort -u -o $cache_list
 
-  echo -n "Figuring out the files which will be removed ... "
+  echo "Figuring out the files which will be removed ... "
   for i in $all_sums; do
       grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:${i}_.*" $cache_list >>$keep_list
   done
