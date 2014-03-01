@@ -39,8 +39,16 @@ export exec_prefix = "/opt/ltp"
 
 # ltp doesn't regenerate ffsb-6.0-rc2 configure and hardcode configure call.
 # we explicitly force regeneration of that directory and pass configure options.
-do_configure_prepend() {
+do_configure_append() {
     (cd utils/ffsb-6.0-rc2; autoreconf -fvi; ./configure ${CONFIGUREOPTS})
+}
+
+# The makefiles make excessive use of make -C and several include testcases.mk
+# which triggers a build of the syscall header. To reproduce, build ltp,
+# then delete the header, then "make -j XX" and watch regen.sh run multiple 
+# times. Its easier to generate this once here instead.
+do_compile_prepend () {
+	( make -C ${B}/testcases/kernel include/linux_syscall_numbers.h )
 }
 
 do_install(){
