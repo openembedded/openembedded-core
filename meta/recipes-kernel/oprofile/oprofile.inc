@@ -30,7 +30,7 @@ inherit autotools-brokensep
 
 EXTRA_OECONF = "--with-kernel=${STAGING_KERNEL_DIR}  --without-x"
 do_configure () {
-	find . -wholename './.pc' -prune -o -type f -print | xargs sed -i 's#ROOTHOME#${ROOT_HOME}#'
+	find ${S} -wholename '${S}/.pc' -prune -o -type f -print | xargs sed -i 's#ROOTHOME#${ROOT_HOME}#'
 	cp ${WORKDIR}/acinclude.m4 ${S}/
 	autotools_do_configure
 }
