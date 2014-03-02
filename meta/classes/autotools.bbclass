@@ -130,28 +130,51 @@ autotools_postconfigure(){
 
 EXTRACONFFUNCS ??= ""
 
-do_configure[prefuncs] += "autotools_preconfigure ${EXTRACONFFUNCS}"
+do_configure[prefuncs] += "autotools_preconfigure autotools_copy_aclocals ${EXTRACONFFUNCS}"
 do_configure[postfuncs] += "autotools_postconfigure"
 
 ACLOCALDIR = "${B}/aclocal-copy"
 
-autotools_copy_aclocal () {
-	# Remove any previous copy of the m4 macros
-	rm -rf ${ACLOCALDIR}/
+python autotools_copy_aclocals () {
+    s = d.getVar("S", True)
+    if not os.path.exists(s + "/configure.in") and not os.path.exists(s + "/configure.ac"):
+        return
 
-	# The aclocal directory could get modified by other processes
-	# uninstalling data from the sysroot. See Yocto #861 for details.
-	# We avoid this by taking a copy here and then files cannot disappear.
-	# We copy native first, then target. This avoids certain races since cp-noerror
-	# won't overwrite existing files.
-	mkdir -p ${ACLOCALDIR}/
-	if [ -d ${STAGING_DATADIR_NATIVE}/aclocal ]; then
-		cp-noerror ${STAGING_DATADIR_NATIVE}/aclocal/ ${ACLOCALDIR}/
-	fi
-	if [ -d ${STAGING_DATADIR}/aclocal -a "${STAGING_DATADIR_NATIVE}/aclocal" != "${STAGING_DATADIR}/aclocal" ]; then
-		cp-noerror ${STAGING_DATADIR}/aclocal/ ${ACLOCALDIR}/
-	fi
+    taskdepdata = d.getVar("BB_TASKDEPDATA", False)
+    pn = d.getVar("PN", True)
+    aclocaldir = d.getVar("ACLOCALDIR", True)
+    oe.path.remove(aclocaldir)
+    bb.utils.mkdirhier(aclocaldir)
+    configuredeps = []
+    for dep in taskdepdata:
+        data = taskdepdata[dep]
+        if data[1] == "do_configure" and data[0] != pn:
+            configuredeps.append(data[0])
+
+    cp = []
+    for c in configuredeps:
+        if c.endswith("-native"):
+            manifest = d.expand("${SSTATE_MANIFESTS}/manifest-${BUILD_ARCH}-%s.populate_sysroot" % c)
+        elif c.startswith("nativesdk-"):
+            manifest = d.expand("${SSTATE_MANIFESTS}/manifest-${SDK_ARCH}-%s.populate_sysroot" % c)
+        elif c.endswith("-cross") or c.endswith("-cross-initial") or c.endswith("-crosssdk") or c.endswith("-crosssdk-initial"):
+            continue
+        else:
+            manifest = d.expand("${SSTATE_MANIFESTS}/manifest-${MACHINE}-%s.populate_sysroot" % c)
+        try:
+            f = open(manifest, "r")
+            for l in f:
+                if "/aclocal/" in l and l.strip().endswith(".m4"):
+                    cp.append(l.strip())
+        except:
+            bb.warn("%s not found" % manifest)
+
+    for c in cp:
+        t = os.path.join(aclocaldir, os.path.basename(c))
+        if not os.path.exists(t):
+            os.symlink(c, t)
 }
+autotools_copy_aclocals[vardepsexclude] += "MACHINE"
 
 autotools_do_configure() {
 	# WARNING: gross hack follows:
@@ -168,7 +191,6 @@ autotools_do_configure() {
 	if [ -e ${S}/configure.in -o -e ${S}/configure.ac ]; then
 		olddir=`pwd`
 		cd ${S}
-		autotools_copy_aclocal
 		ACLOCAL="aclocal --system-acdir=${ACLOCALDIR}/"
 		if [ x"${acpaths}" = xdefault ]; then
 			acpaths=
