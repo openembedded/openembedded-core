@@ -27,10 +27,12 @@ ALTERNATIVE_${PN} = "bunzip2 bzcat"
 
 #install binaries to bzip2-native under sysroot for replacement-native
 EXTRA_OECONF_append_class-native = " --bindir=${STAGING_BINDIR_NATIVE}/${PN}"
-do_configure_prepend () {
+do_extraunpack () {
 	cp ${WORKDIR}/configure.ac ${S}/
 	cp ${WORKDIR}/Makefile.am ${S}/
 }
+
+addtask extraunpack after do_unpack before do_patch
 
 do_install_ptest () {
 	sed -i -e "s|^Makefile:|_Makefile:|" ${D}${PTEST_PATH}/Makefile
