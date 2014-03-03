@@ -22,6 +22,7 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
           file://check-if-liblzma-is-disabled.patch \
           file://40_custom \
           file://fix-issue-with-flex-2.5.37.patch \
+          file://grub-2.00-add-oe-kernel.patch \
           "
 
 SRC_URI[md5sum] = "e927540b6eda8b024fb0391eeaa4091c"
