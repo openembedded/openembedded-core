@@ -18,8 +18,10 @@ BUILDHISTORY_COMMIT_AUTHOR ?= "buildhistory <buildhistory@${DISTRO}>"
 BUILDHISTORY_PUSH_REPO ?= ""
 
 SSTATEPOSTINSTFUNCS += "buildhistory_emit_pkghistory"
-# We want to avoid influence the signatures of sstate tasks
-SSTATEPOSTINSTFUNCS[vardepvalue] := "${@d.getVar('SSTATEPOSTINSTFUNCS', False).replace(' buildhistory_emit_pkghistory', '')}"
+# We want to avoid influence the signatures of sstate tasks - first the function itself:
+sstate_install[vardepsexclude] += "buildhistory_emit_pkghistory"
+# then the value added to SSTATEPOSTINSTFUNCS:
+SSTATEPOSTINSTFUNCS[vardepvalueexclude] .= "| buildhistory_emit_pkghistory"
 
 #
 # Write out metadata about this package for comparision when writing future packages
