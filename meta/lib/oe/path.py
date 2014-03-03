@@ -21,23 +21,7 @@ def relative(src, dest):
     foo/bar
     """
 
-    if hasattr(os.path, "relpath"):
-        return os.path.relpath(dest, src)
-    else:
-        destlist = os.path.normpath(dest).split(os.path.sep)
-        srclist = os.path.normpath(src).split(os.path.sep)
-
-        # Find common section of the path
-        common = os.path.commonprefix([destlist, srclist])
-        commonlen = len(common)
-
-        # Climb back to the point where they differentiate
-        relpath = [ os.path.pardir ] * (len(srclist) - commonlen)
-        if commonlen < len(destlist):
-            # Add remaining portion
-            relpath += destlist[commonlen:]
-
-        return os.path.sep.join(relpath)
+    return os.path.relpath(dest, src)
 
 def make_relative_symlink(path):
     """ Convert an absolute symlink to a relative one """
