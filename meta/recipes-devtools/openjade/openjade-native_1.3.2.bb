@@ -42,9 +42,10 @@ SSTATEPOSTINSTFUNCS += "openjade_sstate_postinst"
 SYSROOT_PREPROCESS_FUNCS += "openjade_sysroot_preprocess"
 
 # configure.in needs to be reloacted to trigger reautoconf
-do_configure_prepend () {
+do_extraunpack () {
 	cp ${S}/config/configure.in ${S}/
 }
+addtask extraunpack after do_patch before do_configure
 
 # We need to do this else the source interdependencies aren't generated and
 # build failures can result (e.g. zero size style/Makefile.dep file)
