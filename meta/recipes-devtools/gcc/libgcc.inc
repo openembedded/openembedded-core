@@ -150,7 +150,7 @@ python do_extra_symlinks() {
     if targetsysnoext != d.getVar('TARGET_SYS', True):
         dest = d.getVar('D', True) + d.getVar('libdir', True) + '/' + targetsysnoext
         src = d.getVar('TARGET_SYS', True)
-        if not os.path.lexists(dest):
+        if not os.path.lexists(dest) and os.path.lexists(d.getVar('D', True) + d.getVar('libdir', True)):
             os.symlink(src, dest)
 }
 
