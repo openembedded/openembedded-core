@@ -604,11 +604,11 @@ class RpmPM(PackageManager):
         # self._invoke_smart('config --set rpm-log-level=debug')
         # cmd = 'config --set rpm-log-file=/tmp/smart-debug-logfile'
         # self._invoke_smart(cmd)
-
+        ch_already_added = []
         for canonical_arch in platform_extra:
             arch = canonical_arch.split('-')[0]
             arch_channel = os.path.join(self.deploy_dir, arch)
-            if os.path.exists(arch_channel):
+            if os.path.exists(arch_channel) and not arch in ch_already_added:
                 bb.note('Note: adding Smart channel %s (%s)' %
                         (arch, channel_priority))
                 self._invoke_smart('channel --add %s type=rpm-md baseurl=%s -y'
@@ -616,6 +616,8 @@ class RpmPM(PackageManager):
                 self._invoke_smart('channel --set %s priority=%d' %
                                    (arch, channel_priority))
                 channel_priority -= 5
+
+                ch_already_added.append(arch)
 
         bb.note('adding Smart RPM DB channel')
         self._invoke_smart('channel --add rpmsys type=rpm-sys -y')
