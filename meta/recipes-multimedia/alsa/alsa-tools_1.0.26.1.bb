@@ -25,10 +25,8 @@ EXTRA_OEMAKE += "GITCOMPILE_ARGS='--host=${HOST_SYS} --build=${BUILD_SYS} --targ
 PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'gtk+', '', d)}"
 PACKAGECONFIG[gtk+] = ",,gtk+,"
 
-do_configure () {
-    autotools_do_configure
-    autotools_copy_aclocal
-}
+# configure.ac/.in doesn't exist so force copy
+AUTOTOOLS_COPYACLOCAL = "1"
 
 do_compile_prepend () {
     #Automake dir is not correctly detected in cross compilation case

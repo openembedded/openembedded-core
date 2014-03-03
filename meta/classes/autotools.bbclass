@@ -138,7 +138,8 @@ ACLOCALDIR = "${B}/aclocal-copy"
 python autotools_copy_aclocals () {
     s = d.getVar("S", True)
     if not os.path.exists(s + "/configure.in") and not os.path.exists(s + "/configure.ac"):
-        return
+        if not d.getVar("AUTOTOOLS_COPYACLOCAL"):
+            return
 
     taskdepdata = d.getVar("BB_TASKDEPDATA", False)
     pn = d.getVar("PN", True)
