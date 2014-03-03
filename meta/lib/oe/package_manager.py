@@ -14,7 +14,7 @@ def create_index(arg):
 
     try:
         bb.note("Executing '%s' ..." % index_cmd)
-        subprocess.check_output(index_cmd, shell=True)
+        subprocess.check_output(index_cmd, stderr=subprocess.STDOUT, shell=True)
     except subprocess.CalledProcessError as e:
         return("Index creation command '%s' failed with return code %d:\n%s" %
                (e.cmd, e.returncode, e.output))
@@ -298,7 +298,7 @@ class PackageManager(object):
                globs]
         try:
             bb.note("Installing complementary packages ...")
-            complementary_pkgs = subprocess.check_output(cmd)
+            complementary_pkgs = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             bb.fatal("Could not compute complementary packages list. Command "
                      "'%s' returned %d:\n%s" %
@@ -388,7 +388,9 @@ class RpmPM(PackageManager):
         cmd = "%s %s %s" % (self.smart_cmd, self.smart_opt, args)
         # bb.note(cmd)
         try:
-            complementary_pkgs = subprocess.check_output(cmd, shell=True)
+            complementary_pkgs = subprocess.check_output(cmd,
+                                                         stderr=subprocess.STDOUT,
+                                                         shell=True)
             # bb.note(complementary_pkgs)
             return complementary_pkgs
         except subprocess.CalledProcessError as e:
@@ -570,7 +572,7 @@ class RpmPM(PackageManager):
               self.rpm_cmd,
               self.target_rootfs)
         try:
-            subprocess.check_output(cmd, shell=True)
+            subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
         except subprocess.CalledProcessError as e:
             bb.fatal("Create rpm database failed. Command '%s' "
                      "returned %d:\n%s" % (cmd, e.returncode, e.output))
@@ -694,7 +696,7 @@ class RpmPM(PackageManager):
             cmd = "%s %s install --attempt -y %s" % \
                   (self.smart_cmd, self.smart_opt, ' '.join(pkgs))
         try:
-            output = subprocess.check_output(cmd.split())
+            output = subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
             bb.note(output)
         except subprocess.CalledProcessError as e:
             bb.fatal("Unable to install packages. Command '%s' "
@@ -724,7 +726,7 @@ class RpmPM(PackageManager):
 
         try:
             bb.note(cmd)
-            output = subprocess.check_output(cmd, shell=True)
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
             bb.note(output)
         except subprocess.CalledProcessError as e:
             bb.note("Unable to remove packages. Command '%s' "
@@ -775,7 +777,7 @@ class RpmPM(PackageManager):
 
         try:
             # bb.note(cmd)
-            tmp_output = subprocess.check_output(cmd, shell=True).strip()
+            tmp_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).strip()
             self._unlock_rpm_db()
         except subprocess.CalledProcessError as e:
             bb.fatal("Cannot get the installed packages list. Command '%s' "
@@ -827,7 +829,7 @@ class RpmPM(PackageManager):
             # Disable rpmsys channel for the fake install
             self._invoke_smart('channel --disable rpmsys')
 
-            subprocess.check_output(cmd, shell=True)
+            subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
             with open(self.solution_manifest, 'r') as manifest:
                 for pkg in manifest.read().split('\n'):
                     if '@' in pkg:
@@ -869,7 +871,7 @@ class RpmPM(PackageManager):
         cmd = "%s %s query --output %s" %  \
               (self.smart_cmd, self.smart_opt, available_manifest)
         try:
-            subprocess.check_output(cmd, shell=True)
+            subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
             with open(available_manifest, 'r') as manifest:
                 for pkg in manifest.read().split('\n'):
                     if '@' in pkg:
@@ -903,7 +905,7 @@ class RpmPM(PackageManager):
 
         try:
             bb.note(cmd)
-            output = subprocess.check_output(cmd, shell=True).strip()
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).strip()
             bb.note(output)
             os.chmod(saved_dir, 0755)
             self._unlock_rpm_db()
@@ -1059,7 +1061,7 @@ class OpkgPM(PackageManager):
         cmd = "%s %s update" % (self.opkg_cmd, self.opkg_args)
 
         try:
-            subprocess.check_output(cmd.split())
+            subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             self.deploy_dir_unlock()
             bb.fatal("Unable to update the package index files. Command '%s' "
@@ -1084,7 +1086,7 @@ class OpkgPM(PackageManager):
         try:
             bb.note("Installing the following packages: %s" % ' '.join(pkgs))
             bb.note(cmd)
-            output = subprocess.check_output(cmd.split())
+            output = subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
             bb.note(output)
         except subprocess.CalledProcessError as e:
             (bb.fatal, bb.note)[attempt_only]("Unable to install packages. "
@@ -1101,7 +1103,7 @@ class OpkgPM(PackageManager):
 
         try:
             bb.note(cmd)
-            output = subprocess.check_output(cmd.split())
+            output = subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
             bb.note(output)
         except subprocess.CalledProcessError as e:
             bb.fatal("Unable to remove packages. Command '%s' "
@@ -1139,7 +1141,7 @@ class OpkgPM(PackageManager):
                 (self.opkg_cmd, self.opkg_args)
 
         try:
-            output = subprocess.check_output(cmd, shell=True).strip()
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).strip()
         except subprocess.CalledProcessError as e:
             bb.fatal("Cannot get the installed packages list. Command '%s' "
                      "returned %d:\n%s" % (cmd, e.returncode, e.output))
@@ -1177,7 +1179,7 @@ class OpkgPM(PackageManager):
                 pkg_info = cmd + pkg
 
                 try:
-                    output = subprocess.check_output(pkg_info.split()).strip()
+                    output = subprocess.check_output(pkg_info.split(), stderr=subprocess.STDOUT).strip()
                 except subprocess.CalledProcessError as e:
                     bb.fatal("Cannot get package info. Command '%s' "
                              "returned %d:\n%s" % (pkg_info, e.returncode, e.output))
@@ -1210,7 +1212,7 @@ class OpkgPM(PackageManager):
 
         cmd = "%s %s update" % (self.opkg_cmd, opkg_args)
         try:
-            subprocess.check_output(cmd, shell=True)
+            subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
         except subprocess.CalledProcessError as e:
             bb.fatal("Unable to update. Command '%s' "
                      "returned %d:\n%s" % (cmd, e.returncode, e.output))
@@ -1220,7 +1222,7 @@ class OpkgPM(PackageManager):
                                                 opkg_args,
                                                 ' '.join(pkgs))
         try:
-            output = subprocess.check_output(cmd, shell=True)
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
         except subprocess.CalledProcessError as e:
             bb.fatal("Unable to dummy install packages. Command '%s' "
                      "returned %d:\n%s" % (cmd, e.returncode, e.output))
@@ -1330,7 +1332,7 @@ class DpkgPM(PackageManager):
                     try:
                         bb.note("Executing %s for package: %s ..." %
                                  (suffix[1].lower(), pkg_name))
-                        subprocess.check_output(p_full)
+                        subprocess.check_output(p_full, stderr=subprocess.STDOUT)
                     except subprocess.CalledProcessError as e:
                         bb.note("%s for package %s failed with %d:\n%s" %
                                 (suffix[1], pkg_name, e.returncode, e.output))
@@ -1348,7 +1350,7 @@ class DpkgPM(PackageManager):
         cmd = "%s update" % self.apt_get_cmd
 
         try:
-            subprocess.check_output(cmd.split())
+            subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             bb.fatal("Unable to update the package index files. Command '%s' "
                      "returned %d:\n%s" % (e.cmd, e.returncode, e.output))
@@ -1366,7 +1368,7 @@ class DpkgPM(PackageManager):
 
         try:
             bb.note("Installing the following packages: %s" % ' '.join(pkgs))
-            subprocess.check_output(cmd.split())
+            subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             (bb.fatal, bb.note)[attempt_only]("Unable to install packages. "
                                               "Command '%s' returned %d:\n%s" %
@@ -1398,7 +1400,7 @@ class DpkgPM(PackageManager):
                    self.target_rootfs, self.target_rootfs, ' '.join(pkgs))
 
         try:
-            subprocess.check_output(cmd.split())
+            subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             bb.fatal("Unable to remove packages. Command '%s' "
                      "returned %d:\n%s" % (e.cmd, e.returncode, e.output))
@@ -1481,7 +1483,7 @@ class DpkgPM(PackageManager):
         cmd = "%s %s -f install" % (self.apt_get_cmd, self.apt_args)
 
         try:
-            subprocess.check_output(cmd.split())
+            subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             bb.fatal("Cannot fix broken dependencies. Command '%s' "
                      "returned %d:\n%s" % (cmd, e.returncode, e.output))
@@ -1501,7 +1503,7 @@ class DpkgPM(PackageManager):
             cmd.append("-f=${Package}\n")
 
         try:
-            output = subprocess.check_output(cmd).strip()
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT).strip()
         except subprocess.CalledProcessError as e:
             bb.fatal("Cannot get the installed packages list. Command '%s' "
                      "returned %d:\n%s" % (' '.join(cmd), e.returncode, e.output))

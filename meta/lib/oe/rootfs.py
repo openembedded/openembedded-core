@@ -57,7 +57,7 @@ class Rootfs(object):
             exec_cmd = cmd
 
         try:
-            subprocess.check_output(exec_cmd)
+            subprocess.check_output(exec_cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             return("Command '%s' returned %d:\n%s" % (e.cmd, e.returncode, e.output))
 
