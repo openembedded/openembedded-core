@@ -147,12 +147,7 @@ _install_cfgs = "\
   PKG_CONFIG_LIBDIR='${libdir}/pkgconfig' \
 "
 
-python do_install () {
-    bb.build.exec_func("shell_do_install", d)
-    oe.path.make_relative_symlink(d.expand("${D}${libdir}/libtinfo.so"))
-}
-
-shell_do_install() {
+do_install() {
         # Order of installation is important; widec installs a 'curses.h'
         # header with more definitions and must be installed last hence.
         # Compatibility of these headers will be checked in 'do_test()'.
@@ -226,8 +221,11 @@ shell_do_install() {
 
             mv ${D}${libdir}/libtinfo.so.* ${D}${base_libdir}
             rm ${D}${libdir}/libtinfo.so
-            # We'll turn this into a relative symlink after do_install returns
-            ln -sf ${D}${base_libdir}/libtinfo.so.5 ${D}${libdir}/libtinfo.so
+
+            # Use lnr to ensure this is a relative link despite absolute paths
+            # (as we can't know the relationship between base_libdir and libdir).
+            # At some point we can rely on coreutils 8.16 which has ln -r.
+            lnr ${D}${base_libdir}/libtinfo.so.5 ${D}${libdir}/libtinfo.so
         fi
 
         oe_multilib_header curses.h
