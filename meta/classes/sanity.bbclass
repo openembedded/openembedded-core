@@ -246,6 +246,8 @@ def check_connectivity(d):
     return retval
 
 def check_supported_distro(sanity_data):
+    from fnmatch import fnmatch
+
     tested_distros = sanity_data.getVar('SANITY_TESTED_DISTROS', True)
     if not tested_distros:
         return
@@ -255,11 +257,14 @@ def check_supported_distro(sanity_data):
     except Exception:
         distro = None
 
-    if distro:
-        if distro not in [x.strip() for x in tested_distros.split('\\n')]:
-            bb.warn('Host distribution "%s" has not been validated with this version of the build system; you may possibly experience unexpected failures. It is recommended that you use a tested distribution.' % distro)
-    else:
+    if not distro:
         bb.warn('Host distribution could not be determined; you may possibly experience unexpected failures. It is recommended that you use a tested distribution.')
+
+    for supported in [x.strip() for x in tested_distros.split('\\n')]:
+        if fnmatch(distro, supported):
+            return
+
+    bb.warn('Host distribution "%s" has not been validated with this version of the build system; you may possibly experience unexpected failures. It is recommended that you use a tested distribution.' % distro)
 
 # Checks we should only make if MACHINE is set correctly
 def check_sanity_validmachine(sanity_data):
