@@ -37,7 +37,13 @@ INITSCRIPT_PARAMS = "start 12 2 3 4 5 . stop 60 0 1 6 ."
 SYSTEMD_SERVICE_${PN} = "rpcbind.service"
 SYSTEMD_AUTO_ENABLE = "disable"
 
-EXTRA_OECONF += " --enable-warmstarts "
+inherit useradd
+
+USERADD_PACKAGES = "${PN}"
+USERADD_PARAM_${PN} = "--system --no-create-home \
+                       --shell /bin/false --user-group rpc"
+
+EXTRA_OECONF += " --enable-warmstarts --with-rpcuser=rpc"
 
 do_install_append () {
 	mv ${D}${bindir} ${D}${sbindir}
