@@ -1,4 +1,4 @@
-MAJOR_VERSION = "2.23"
+MAJOR_VERSION = "2.24"
 require util-linux.inc
 
 # To support older hosts, we need to patch and/or revert
@@ -14,8 +14,8 @@ SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             ${OLDHOST} \
 "
 
-SRC_URI[md5sum] = "39a02ad0b3b37824c394f40930b7aa38"
-SRC_URI[sha256sum] = "6c5be3f7beec91b4893de14bbd722886fa2521be5bfa0fc079b749d0018633b1"
+SRC_URI[md5sum] = "88d46ae23ca599ac5af9cf96b531590f"
+SRC_URI[sha256sum] = "835eb6232cfab0118ef2e4fd649de0ba9f5bd1b8cbf9a7d4d84594541dec8410"
 
 CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=as"
 EXTRA_OECONF_class-native = "${SHARED_EXTRA_OECONF} \

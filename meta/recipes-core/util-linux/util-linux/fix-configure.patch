@@ -5,16 +5,16 @@ Upstream-Status: Pending
 
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
-Index: util-linux-2.22.1/configure.ac
+Index: util-linux-2.24.1/configure.ac
 ===================================================================
---- util-linux-2.22.1.orig/configure.ac
-+++ util-linux-2.22.1/configure.ac
-@@ -79,7 +79,7 @@ fi
+--- util-linux-2.24.1.orig/configure.ac
++++ util-linux-2.24.1/configure.ac
+@@ -76,7 +76,7 @@ fi
  AC_SUBST([usrsbin_execdir])
  
- case $libdir in
-- '${exec_prefix}/'* | '${prefix}/'* | /usr/*)
-+ ${exec_prefix}/* | ${prefix}/* | /usr/*)
-     usrlib_execdir=$libdir ;;
-  *)
-     usrlib_execdir='${exec_prefix}'$libdir ;;
+ AS_CASE([$libdir],
+- ['${exec_prefix}/'* | '${prefix}/'* | /usr/*],
++ [${exec_prefix}/* | ${prefix}/* | /usr/*],
+    [usrlib_execdir=$libdir],
+  [usrlib_execdir='${exec_prefix}'$libdir]
+ )

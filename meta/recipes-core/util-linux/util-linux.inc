@@ -7,22 +7,22 @@ SECTION = "base"
 
 LICENSE = "GPLv2+ & LGPLv2.1+ & BSD"
 
-LIC_FILES_CHKSUM = "file://README.licensing;md5=679af3e410ee112a5ec94de6501bf5c3 \
+LIC_FILES_CHKSUM = "file://README.licensing;md5=1715f5ee3e01203ca1e1e0b9ee65918c \
                     file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://Documentation/licenses/COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://Documentation/licenses/COPYING.LGPLv2.1;md5=4fbd65380cdd255951079008b364516c \
                     file://Documentation/licenses/COPYING.BSD-3;md5=58dcd8452651fc8b07d1f65ce07ca8af \
                     file://Documentation/licenses/COPYING.UCB;md5=263860f8968d8bafa5392cab74285262 \
-                    file://libuuid/COPYING;md5=aa3ac5b4a5bcb707f714f78794011b80 \
-                    file://libmount/COPYING;md5=152f98bc301a5ea649769ede7203ac82 \
-                    file://libblkid/COPYING;md5=152f98bc301a5ea649769ede7203ac82"
+                    file://libuuid/COPYING;md5=b442ffb762cf8d3e9df1b99e0bb4af70 \
+                    file://libmount/COPYING;md5=fb93f01d4361069c5616327705373b16 \
+                    file://libblkid/COPYING;md5=fb93f01d4361069c5616327705373b16"
 
 inherit autotools gettext pkgconfig systemd
 DEPENDS = "zlib ncurses"
 DEPENDS_append_class-native = " lzo-native"
 DEPENDS_append_class-nativesdk = " lzo-native"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-linux-${PV}.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-linux-${PV}.tar.xz \
            file://MCONFIG \
            file://defines.h \
            file://make_include \
@@ -39,7 +39,7 @@ PACKAGES =+ "util-linux-agetty util-linux-fdisk util-linux-cfdisk util-linux-sfd
              util-linux-partx ${PN}-bash-completion"
 
 SHARED_EXTRA_OECONF = "--disable-use-tty-group \
-                       --disable-makeinstall-chown --enable-elvtune \
+                       --disable-makeinstall-chown \
                        --enable-kill --enable-last --enable-mesg --enable-partx \
                        --enable-raw --enable-reset --disable-login \
                        --disable-vipw --disable-newgrp --disable-chfn-chsh \
