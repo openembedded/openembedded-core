@@ -36,7 +36,7 @@ create_directories(){
 		umask 077
 		mkdir -p rpc_pipefs
 		mkdir -p sm sm.bak statd
-		chown rpcuser sm sm.bak statd
+		chown rpcuser:rpcuser sm sm.bak statd
 		test -w statd/state || {
 			rm -f statd/state
 			:>statd/state
@@ -50,7 +50,7 @@ create_directories(){
 			}
 		done
 	)
-	chown rpcuser "$NFS_STATEDIR"
+	chown rpcuser:rpcuser "$NFS_STATEDIR"
 	echo done
 }
 
