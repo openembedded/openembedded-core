@@ -1,0 +1,34 @@
+
+From: Gustavo Zacarias
+Subject: bug#16929: [PATCH] ui: switch to new-style readline typedef
+Date: Mon, 3 Mar 2014 10:40:08 -0300
+
+The CPPFunction typedef (among others) have been deprecated in favour of
+specific prototyped typedefs since readline 4.2 (circa 2001).
+It's been working since because compatibility typedefs have been in
+place until they where removed in the recent readline 6.3 release.
+Switch to the new style to avoid build breakage.
+
+Signed-off-by: Gustavo Zacarias <address@hidden>
+
+Upstream-Status: Backport
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+---
+ parted/ui.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/parted/ui.c b/parted/ui.c
+index 786deed..b33f6fc 100644
+--- a/parted/ui.c
++++ b/parted/ui.c
+@@ -1470,7 +1470,7 @@ init_readline (void)
+ #ifdef HAVE_LIBREADLINE
+   if (!opt_script_mode) {
+     rl_initialize ();
+-    rl_attempted_completion_function = (CPPFunction*) complete_function;
++    rl_attempted_completion_function = (rl_completion_func_t *) complete_function;
+     readline_state.in_readline = 0;
+   }
+ #endif

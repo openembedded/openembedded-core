@@ -12,6 +12,7 @@ SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.xz \
            file://fix-git-version-gen.patch \
            file://fix-doc-mandir.patch \
            file://fix-dvh-overflows.patch \
+           file://fix-deprecated-readline.patch \
            file://run-ptest \
            file://Makefile \
 "
