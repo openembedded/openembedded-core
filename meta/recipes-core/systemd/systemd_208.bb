@@ -17,22 +17,20 @@ SECTION = "base/shell"
 
 inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest
 
-SRC_URI = "http://www.freedesktop.org/software/systemd/systemd-${PV}.tar.xz \
-           file://0001-Use-bin-mkdir-instead-of-host-mkdir-path.patch \
+SRCREV = "255eb046a7bcb90e60a3a54302bc1250c1aed26a"
+
+PV = "208+git${SRCPV}"
+
+SRC_URI = "git://anongit.freedesktop.org/systemd/systemd-stable;branch=v208-stable;protocol=git \
            file://binfmt-install.patch \
-           file://journald-add-missing-error-check.patch \
-           file://journald-fix-minor-memory-leak.patch \
-           file://journal-when-appending-to-journal-file-allocate-larg.patch \
-           file://journal-file-protect-against-alloca-0.patch \
-           file://journal-Add-missing-byte-order-conversions.patch \
            file://touchscreen.rules \
            ${UCLIBCPATCHES} \
            file://00-create-volatile.conf \
            file://init \
            file://run-ptest \
           "
-SRC_URI[md5sum] = "df64550d92afbffb4f67a434193ee165"
-SRC_URI[sha256sum] = "aa64fa864466fd5727005c55d61c092828b94b4f857272c0b503695022146390"
+
+S = "${WORKDIR}/git"
 
 UCLIBCPATCHES = ""
 UCLIBCPATCHES_libc-uclibc = "file://systemd-pam-configure-check-uclibc.patch \
@@ -76,7 +74,6 @@ EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --disable-manpages \
                  --disable-coredump \
                  --disable-introspection \
-                 --disable-tcpwrap \
                  --enable-split-usr \
                  --without-python \
                  --with-sysvrcnd-path=${sysconfdir} \
@@ -104,8 +101,8 @@ do_install() {
 	rm ${D}${systemd_unitdir}/system/serial-getty* -f
 
 	# Provide support for initramfs
-	ln -s ${rootlibexecdir}/systemd/systemd ${D}/init
-	ln -s ${rootlibexecdir}/systemd/systemd-udevd ${D}/${base_sbindir}/udevd
+	[ ! -e ${D}/init ] && ln -s ${rootlibexecdir}/systemd/systemd ${D}/init
+	[ ! -e ${D}/${base_sbindir}/udevd ] && ln -s ${rootlibexecdir}/systemd/systemd-udevd ${D}/${base_sbindir}/udevd
 
 	# Create machine-id
 	# 20:12 < mezcalero> koen: you have three options: a) run systemd-machine-id-setup at install time, b) have / read-only and an empty file there (for stateless) and c) boot with / writable
@@ -127,7 +124,7 @@ do_install() {
 
 do_install_ptest () {
        install -d ${D}${PTEST_PATH}/test
-       install ${S}/test/* ${D}${PTEST_PATH}/test
+       cp -rf ${S}/test/* ${D}${PTEST_PATH}/test
        install -m 0755  ${B}/test-udev ${D}${PTEST_PATH}/
        install -d ${D}${PTEST_PATH}/build-aux
        cp ${S}/build-aux/test-driver ${D}${PTEST_PATH}/build-aux/
@@ -165,6 +162,8 @@ RDEPENDS_${PN}-initramfs = "${PN}"
 # The test cases need perl and bash to run correctly.
 RDEPENDS_${PN}-ptest += "perl bash"
 FILES_${PN}-ptest += "${libdir}/udev/rules.d"
+
+FILES_${PN}-dbg += "${libdir}/systemd/ptest/.debug"
 
 FILES_${PN}-gui = "${bindir}/systemadm"
 
