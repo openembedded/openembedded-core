@@ -51,7 +51,7 @@ python __anonymous () {
     d.setVar("GRUB_IMAGE", grubimage)
 }
 
-inherit autotools
+inherit autotools-brokensep
 inherit gettext
 inherit deploy
 
