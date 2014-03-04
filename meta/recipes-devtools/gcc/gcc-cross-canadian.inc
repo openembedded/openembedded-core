@@ -95,7 +95,7 @@ FILES_${PN}-doc = "\
 EXEEXT = ""
 
 # Compute how to get from libexecdir to bindir in python (easier than shell)
-BINRELPATH = "${@oe.path.relative(d.expand("${libexecdir}/gcc/${TARGET_SYS}/${BINV}"), d.expand("${bindir}"))}"
+BINRELPATH = "${@os.path.relpath(d.expand("${bindir}"), d.expand("${libexecdir}/gcc/${TARGET_SYS}/${BINV}"))}"
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install-host
