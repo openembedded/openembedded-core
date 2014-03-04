@@ -3,32 +3,26 @@ HOMEPAGE = "http://www.isc.org/sw/bind/"
 SECTION = "console/network"
 
 LICENSE = "ISC & BSD"
-LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=0fbe2a3ab3c68ac3fea3cad13093877c"
+LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=a3df5f651469919a0e6cb42f84fb6ff1"
 
 DEPENDS = "openssl libcap"
-PR = "r6"
 
 SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://conf.patch \
            file://cross-build-fix.patch \
            file://make-etc-initd-bind-stop-work.patch \
-           file://bind-9.8.1-CVE-2012-5166.patch \
-           file://bind-CVE-2011-4313.patch \
-           file://bind-CVE-2012-1667.patch \
-           file://bind-CVE-2012-3817.patch \
-           file://bind-CVE-2013-2266.patch \
-           file://bind-Fix-CVE-2012-4244.patch \
            file://mips1-not-support-opcode.diff \
+           file://dont-test-on-host.patch \
 	   "
 
-SRC_URI[md5sum] = "cf31117c5d35af34d4c0702970ad9fb7"
-SRC_URI[sha256sum] = "02285dc429cb2a6687a1b2446e9ee22c1df27f2577225b05be5092395ee7c92c"
+SRC_URI[md5sum] = "e676c65cad5234617ee22f48e328c24e"
+SRC_URI[sha256sum] = "d4b64c1dde442145a316679acff2df4008aa117ae52dfa3a6bc69efecc7840d1"
 
 # --enable-exportlib is necessary for building dhcp
 ENABLE_IPV6 = "--enable-ipv6=${@base_contains('DISTRO_FEATURES', 'ipv6', 'yes', 'no', d)}"
 EXTRA_OECONF = " ${ENABLE_IPV6} --with-randomdev=/dev/random --disable-threads \
                  --disable-devpoll --disable-epoll --with-gost=no \
-                 --with-gssapi=no \
+                 --with-gssapi=no --with-ecdsa=yes \
                  --sysconfdir=${sysconfdir}/bind \
                  --with-openssl=${STAGING_LIBDIR}/.. --with-libxml2=${STAGING_LIBDIR}/.. \
                  --enable-exportlib --with-export-includedir=${includedir} --with-export-libdir=${libdir} \
@@ -40,7 +34,9 @@ INITSCRIPT_PARAMS = "defaults"
 
 PARALLEL_MAKE = ""
 
-PACKAGES_prepend = "${PN}-utils "
+RDEPENDS_${PN} = "python-core"
+
+PACKAGES_preprend = " ${PN}-utils "
 FILES_${PN}-utils = "${bindir}/host ${bindir}/dig ${bindir}/nslookup"
 FILES_${PN}-dev += "${bindir}/isc-config.h"
 
@@ -53,6 +49,7 @@ do_install_append() {
 	install -d "${D}${sysconfdir}/init.d"
 	install -m 644 ${S}/conf/* "${D}${sysconfdir}/bind/"
 	install -m 755 "${S}/init.d" "${D}${sysconfdir}/init.d/bind"
+	sed -i -e '1s,#!.*python,#! /usr/bin/env python,' ${D}${sbindir}/dnssec-coverage ${D}${sbindir}/dnssec-checkds
 }
 
 CONFFILES_${PN} = " \
