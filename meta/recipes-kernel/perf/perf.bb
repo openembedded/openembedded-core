@@ -86,10 +86,10 @@ EXTRA_OEMAKE += "\
 	'sysconfdir=${sysconfdir}' \
 	'perfexecdir=${libexecdir}/perf-core' \
 	\
-	'ETC_PERFCONFIG=${@oe.path.relative(prefix, sysconfdir)}' \
-	'sharedir=${@oe.path.relative(prefix, datadir)}' \
-	'mandir=${@oe.path.relative(prefix, mandir)}' \
-	'infodir=${@oe.path.relative(prefix, infodir)}' \
+	'ETC_PERFCONFIG=${@os.path.relpath(sysconfdir, prefix)}' \
+	'sharedir=${@os.path.relpath(datadir, prefix)}' \
+	'mandir=${@os.path.relpath(mandir, prefix)}' \
+	'infodir=${@os.path.relpath(infodir, prefix)}' \
 "
 
 # PPC64 uses long long for u64 in the kernel, but powerpc's asm/types.h
