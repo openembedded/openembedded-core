@@ -1,7 +1,5 @@
 require dhcp.inc
 
-PR = "r4"
-
 SRC_URI += "file://dhcp-3.0.3-dhclient-dbus.patch;striplevel=0 \
             file://fix-external-bind.patch \
             file://link-with-lcrypto.patch \
@@ -9,5 +7,5 @@ SRC_URI += "file://dhcp-3.0.3-dhclient-dbus.patch;striplevel=0 \
             file://dhclient-script-drop-resolv.conf.dhclient.patch \
            "
 
-SRC_URI[md5sum] = "f68e3c1f00a9af5742bc5e71d567cf93"
-SRC_URI[sha256sum] = "59b06c9f5d775e46999b422c45b9229402c462b114ce1685617bfb2b8b028250"
+SRC_URI[md5sum] = "1020d77e1a4c1f01b76279caff9beb80"
+SRC_URI[sha256sum] = "a7b6517d5cf32c5e49d2323a63de00efe5391df7cb0045dfa0ec8f6ee46ebe8a"

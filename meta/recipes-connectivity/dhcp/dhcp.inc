@@ -8,7 +8,7 @@ easier to administer devices."
 HOMEPAGE = "http://www.isc.org/"
 
 LICENSE = "ISC"
-LIC_FILES_CHKSUM = "file://LICENSE;beginline=4;md5=bb6fd41f5895b67088ebea61ad365e74"
+LIC_FILES_CHKSUM = "file://LICENSE;beginline=4;md5=c5c64d696107f84b56fe337d14da1753"
 
 DEPENDS = "openssl bind"
 
