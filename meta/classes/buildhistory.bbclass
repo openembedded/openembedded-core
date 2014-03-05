@@ -321,6 +321,12 @@ python buildhistory_list_installed() {
 
     with open(pkgs_list_file, 'w') as pkgs_list:
         pkgs_list.write(list_installed_packages(d, 'file'))
+
+    pkgs_deps_file = os.path.join(d.getVar('WORKDIR', True),
+                                  "bh_installed_pkgs_deps.txt")
+
+    with open(pkgs_deps_file, 'w') as pkgs_deps:
+        pkgs_deps.write(list_installed_packages(d, 'deps'))
 }
 
 
@@ -340,7 +346,8 @@ buildhistory_get_installed() {
 
 	# Produce dependency graph
 	# First, quote each name to handle characters that cause issues for dot
-	rootfs_list_installed_depends | sed 's:\([^| ]*\):"\1":g' > $1/depends.tmp
+	cat ${WORKDIR}/bh_installed_pkgs_deps.txt | sed 's:\([^| ]*\):"\1":g' > $1/depends.tmp && \
+		rm ${WORKDIR}/bh_installed_pkgs_deps.txt
 	# Change delimiter from pipe to -> and set style for recommend lines
 	sed -i -e 's:|: -> :' -e 's:"\[REC\]":[style=dotted]:' -e 's:$:;:' $1/depends.tmp
 	# Add header, sorted and de-duped contents and footer and then delete the temp file
