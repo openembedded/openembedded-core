@@ -74,6 +74,13 @@ class BitbakeTests(oeSelfTest):
         for f in ['pn-buildlist', 'pn-depends.dot', 'package-depends.dot', 'task-depends.dot']:
             os.remove(f)
 
+    def test_image_manifest(self):
+        bitbake('core-image-minimal')
+        deploydir = get_bb_var("DEPLOY_DIR_IMAGE", target="core-image-minimal")
+        imagename = get_bb_var("IMAGE_LINK_NAME", target="core-image-minimal")
+        manifest = os.path.join(deploydir, imagename + ".manifest")
+        self.assertTrue(os.path.islink(manifest), msg="No manifest file created for image")
+
     def test_invalid_recipe_src_uri(self):
         data = 'SRC_URI = "file://invalid"'
         self.write_recipeinc('man', data)
