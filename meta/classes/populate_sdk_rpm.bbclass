@@ -16,7 +16,3 @@ do_populate_sdk[recrdeptask] += "do_package_write_rpm"
 rpmlibdir = "/var/lib/rpm"
 
 do_populate_sdk[lockfiles] += "${DEPLOY_DIR_RPM}/rpm.lock"
-
-rootfs_list_installed_depends() {
-	rpmresolve -t $INSTALL_ROOTFS_RPM/${rpmlibdir}
-}
