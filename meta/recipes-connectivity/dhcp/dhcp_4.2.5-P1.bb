@@ -6,6 +6,7 @@ SRC_URI += "file://dhcp-3.0.3-dhclient-dbus.patch;striplevel=0 \
             file://fix-external-bind.patch \
             file://link-with-lcrypto.patch \
             file://fixsepbuild.patch \
+            file://dhclient-script-drop-resolv.conf.dhclient.patch \
            "
 
 SRC_URI[md5sum] = "f68e3c1f00a9af5742bc5e71d567cf93"
