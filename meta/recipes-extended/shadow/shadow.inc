@@ -44,7 +44,7 @@ SRC_URI_append_class-nativesdk = " \
 SRC_URI[md5sum] = "b8608d8294ac88974f27b20f991c0e79"
 SRC_URI[sha256sum] = "633f5bb4ea0c88c55f3642c97f9d25cbef74f82e0b4cf8d54e7ad6f9f9caa778"
 
-PR = "r13"
+PR = "r14"
 
 # Additional Policy files for PAM
 PAM_SRC_URI = "file://pam.d/chfn \

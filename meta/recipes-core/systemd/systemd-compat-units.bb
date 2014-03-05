@@ -3,7 +3,7 @@ SUMMARY = "Enhances systemd compatilibity with existing SysVinit scripts"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690"
 
-PR = "r18"
+PR = "r29"
 
 DEPENDS = "systemd-systemctl-native"
 

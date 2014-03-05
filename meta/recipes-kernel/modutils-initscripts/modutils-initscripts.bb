@@ -4,7 +4,7 @@ LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7bf87fc37976e93ec66ad84fac58c098"
 SRC_URI = "file://modutils.sh \
 	   file://PD.patch"
-PR = "r6"
+PR = "r7"
 
 INITSCRIPT_NAME = "modutils.sh"
 INITSCRIPT_PARAMS = "start 05 S ."

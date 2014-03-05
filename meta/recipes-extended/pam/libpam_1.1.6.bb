@@ -42,7 +42,7 @@ EXTRA_OECONF = "--with-db-uniquename=_pam \
 
 CFLAGS_append = " -fPIC "
 
-PR = "r3"
+PR = "r5"
 
 S = "${WORKDIR}/Linux-PAM-${PV}"
 

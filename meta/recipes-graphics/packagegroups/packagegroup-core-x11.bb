@@ -3,7 +3,7 @@
 #
 
 LICENSE = "MIT"
-PR = "r38"
+PR = "r40"
 
 inherit packagegroup
 

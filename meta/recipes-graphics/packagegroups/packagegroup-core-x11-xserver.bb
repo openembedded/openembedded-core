@@ -4,7 +4,7 @@
 
 SUMMARY = "X11 display server"
 LICENSE = "MIT"
-PR = "r39"
+PR = "r40"
 
 inherit packagegroup
 

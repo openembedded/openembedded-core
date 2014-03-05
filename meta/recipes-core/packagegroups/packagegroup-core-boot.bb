@@ -5,7 +5,7 @@
 SUMMARY = "Minimal boot requirements"
 DESCRIPTION = "The minimal set of packages required to boot the system"
 LICENSE = "MIT"
-PR = "r11"
+PR = "r17"
 
 inherit packagegroup
 
