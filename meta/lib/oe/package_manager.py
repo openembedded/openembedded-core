@@ -770,7 +770,22 @@ class RpmPM(PackageManager):
                             self.image_rpmlib,
                             symlinks=True)
 
+    def _list_pkg_deps(self):
+        cmd = [bb.utils.which(os.getenv('PATH'), "rpmresolve"),
+               "-t", self.image_rpmlib]
+
+        try:
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT).strip()
+        except subprocess.CalledProcessError as e:
+            bb.fatal("Cannot get the package dependencies. Command '%s' "
+                     "returned %d:\n%s" % (' '.join(cmd), e.returncode, e.output))
+
+        return output
+
     def list_installed(self, format=None):
+        if format == "deps":
+            return self._list_pkg_deps()
+
         cmd = self.rpm_cmd + ' --root ' + self.target_rootfs
         cmd += ' -D "_dbpath /var/lib/rpm" -qa'
         cmd += " --qf '[%{NAME} %{ARCH} %{VERSION} %{PACKAGEORIGIN}\n]'"
@@ -1136,6 +1151,9 @@ class OpkgPM(PackageManager):
         elif format == "ver":
             cmd = "%s %s status | %s -v" % \
                 (self.opkg_cmd, self.opkg_args, opkg_query_cmd)
+        elif format == "deps":
+            cmd = "%s %s status | %s" % \
+                (self.opkg_cmd, self.opkg_args, opkg_query_cmd)
         else:
             cmd = "%s %s list_installed | cut -d' ' -f1" % \
                 (self.opkg_cmd, self.opkg_args)
@@ -1499,6 +1517,8 @@ class DpkgPM(PackageManager):
             cmd.append("-f=${Package} ${Package}_${Version}_${Architecture}.deb ${PackageArch}\n")
         elif format == "ver":
             cmd.append("-f=${Package} ${PackageArch} ${Version}\n")
+        elif format == "deps":
+            cmd.append("-f=Package: ${Package}\nDepends: ${Depends}\nRecommends: ${Recommends}\n\n")
         else:
             cmd.append("-f=${Package}\n")
 
@@ -1519,6 +1539,17 @@ class DpkgPM(PackageManager):
                     tmp_output += "%s %s %s\n" % (pkg, pkg_file, pkg_arch)
 
             output = tmp_output
+        elif format == "deps":
+            opkg_query_cmd = bb.utils.which(os.getenv('PATH'), "opkg-query-helper.py")
+
+            try:
+                output = subprocess.check_output("echo -e '%s' | %s" %
+                                                 (output, opkg_query_cmd),
+                                                 stderr=subprocess.STDOUT,
+                                                 shell=True)
+            except subprocess.CalledProcessError as e:
+                bb.fatal("Cannot compute packages dependencies. Command '%s' "
+                         "returned %d:\n%s" % (e.cmd, e.returncode, e.output))
 
         return output
 
