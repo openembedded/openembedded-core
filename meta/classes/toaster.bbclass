@@ -241,10 +241,15 @@ python toaster_buildhistory_dump() {
     # scan the build targets for this build
     images = {}
     allpkgs = {}
+    files = {}
     for target in e._pkgs:
         installed_img_path = e.data.expand(os.path.join(BUILDHISTORY_DIR_IMAGE_BASE, target))
         if os.path.exists(installed_img_path):
             images[target] = {}
+            files[target] = {}
+            files[target]['dirs'] = []
+            files[target]['syms'] = []
+            files[target]['files'] = []
             with open("%s/installed-package-sizes.txt" % installed_img_path, "r") as fin:
                 for line in fin:
                     line = line.rstrip(";")
@@ -271,12 +276,22 @@ python toaster_buildhistory_dump() {
                             images[target][dependsname] = {'size': 0, 'depends' : []}
                         images[target][pname]['depends'].append((dependsname, deptype))
 
+            with open("%s/files-in-image.txt" % installed_img_path, "r") as fin:
+                for line in fin:
+                    lc = [ x for x in line.strip().split(" ") if len(x) > 0 ]
+                    if lc[0].startswith("l"):
+                        files[target]['syms'].append(lc)
+                    elif lc[0].startswith("d"):
+                        files[target]['dirs'].append(lc)
+                    else:
+                        files[target]['files'].append(lc)
+
             for pname in images[target]:
                 if not pname in allpkgs:
                     allpkgs[pname] = _toaster_load_pkgdatafile("%s/runtime-reverse/" % pkgdata_dir, pname)
 
 
-    data = { 'pkgdata' : allpkgs, 'imgdata' : images }
+    data = { 'pkgdata' : allpkgs, 'imgdata' : images, 'filedata' : files }
 
     bb.event.fire(bb.event.MetadataEvent("ImagePkgList", data), e.data)
 
