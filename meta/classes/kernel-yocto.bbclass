@@ -263,6 +263,8 @@ do_kernel_configme() {
 	echo "CONFIG_LOCALVERSION="\"${LINUX_VERSION_EXTENSION}\" >> ${B}/.config
 }
 
+addtask kernel_configme after do_patch
+
 python do_kernel_configcheck() {
     import re, string, sys
 
@@ -407,4 +409,8 @@ OE_TERMINAL_EXPORTS += "GUILT_BASE KBUILD_OUTPUT"
 GUILT_BASE = "meta"
 KBUILD_OUTPUT = "${B}"
 
-do_diffconfig[depends] += "virtual/kernel:do_kernel_configme"
+python () {
+    # If diffconfig is available, ensure it runs after kernel_configme
+    if 'do_diffconfig' in d:
+        bb.build.addtask('do_diffconfig', None, 'do_kernel_configme', d)
+}
