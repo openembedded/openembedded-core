@@ -22,7 +22,7 @@ inherit ${TESTIMAGECLASS}
 # IMAGE_FEATURES may contain any available package group
 IMAGE_FEATURES ?= ""
 IMAGE_FEATURES[type] = "list"
-IMAGE_FEATURES[validitems] += "debug-tweaks read-only-rootfs package-management"
+IMAGE_FEATURES[validitems] += "debug-tweaks read-only-rootfs"
 
 # rootfs bootstrap install
 ROOTFS_BOOTSTRAP_INSTALL = "${@base_contains("IMAGE_FEATURES", "package-management", "", "${ROOTFS_PKGMANAGE_BOOTSTRAP}",d)}"
@@ -32,6 +32,7 @@ FEATURE_INSTALL = "${@' '.join(oe.packagegroup.required_packages(oe.data.typed_v
 FEATURE_INSTALL_OPTIONAL = "${@' '.join(oe.packagegroup.optional_packages(oe.data.typed_value('IMAGE_FEATURES', d), d))}"
 
 # Define some very basic feature package groups
+PACKAGE_GROUP_package-management = "${ROOTFS_PKGMANAGE}"
 SPLASH ?= "psplash"
 PACKAGE_GROUP_splash = "${SPLASH}"
 

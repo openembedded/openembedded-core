@@ -43,7 +43,6 @@ PACKAGE_GROUP_tools-sdk = "packagegroup-core-sdk packagegroup-core-standalone-sd
 PACKAGE_GROUP_nfs-server = "packagegroup-core-nfs-server"
 PACKAGE_GROUP_ssh-server-dropbear = "packagegroup-core-ssh-dropbear"
 PACKAGE_GROUP_ssh-server-openssh = "packagegroup-core-ssh-openssh"
-PACKAGE_GROUP_package-management = "${ROOTFS_PKGMANAGE}"
 PACKAGE_GROUP_qt4-pkgs = "packagegroup-core-qt-demoapps"
 PACKAGE_GROUP_hwcodecs = "${MACHINE_HWCODECS}"
 
