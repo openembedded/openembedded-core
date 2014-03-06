@@ -32,19 +32,19 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 # - doc-pkgs            - documentation packages for all installed packages in the rootfs
 # - read-only-rootfs    - tweaks an image to support read-only rootfs
 #
-PACKAGE_GROUP_x11 = "packagegroup-core-x11"
-PACKAGE_GROUP_x11-base = "packagegroup-core-x11-base"
-PACKAGE_GROUP_x11-sato = "packagegroup-core-x11-sato"
-PACKAGE_GROUP_tools-debug = "packagegroup-core-tools-debug"
-PACKAGE_GROUP_eclipse-debug = "packagegroup-core-eclipse-debug"
-PACKAGE_GROUP_tools-profile = "packagegroup-core-tools-profile"
-PACKAGE_GROUP_tools-testapps = "packagegroup-core-tools-testapps"
-PACKAGE_GROUP_tools-sdk = "packagegroup-core-sdk packagegroup-core-standalone-sdk-target"
-PACKAGE_GROUP_nfs-server = "packagegroup-core-nfs-server"
-PACKAGE_GROUP_ssh-server-dropbear = "packagegroup-core-ssh-dropbear"
-PACKAGE_GROUP_ssh-server-openssh = "packagegroup-core-ssh-openssh"
-PACKAGE_GROUP_qt4-pkgs = "packagegroup-core-qt-demoapps"
-PACKAGE_GROUP_hwcodecs = "${MACHINE_HWCODECS}"
+FEATURE_PACKAGES_x11 = "packagegroup-core-x11"
+FEATURE_PACKAGES_x11-base = "packagegroup-core-x11-base"
+FEATURE_PACKAGES_x11-sato = "packagegroup-core-x11-sato"
+FEATURE_PACKAGES_tools-debug = "packagegroup-core-tools-debug"
+FEATURE_PACKAGES_eclipse-debug = "packagegroup-core-eclipse-debug"
+FEATURE_PACKAGES_tools-profile = "packagegroup-core-tools-profile"
+FEATURE_PACKAGES_tools-testapps = "packagegroup-core-tools-testapps"
+FEATURE_PACKAGES_tools-sdk = "packagegroup-core-sdk packagegroup-core-standalone-sdk-target"
+FEATURE_PACKAGES_nfs-server = "packagegroup-core-nfs-server"
+FEATURE_PACKAGES_ssh-server-dropbear = "packagegroup-core-ssh-dropbear"
+FEATURE_PACKAGES_ssh-server-openssh = "packagegroup-core-ssh-openssh"
+FEATURE_PACKAGES_qt4-pkgs = "packagegroup-core-qt-demoapps"
+FEATURE_PACKAGES_hwcodecs = "${MACHINE_HWCODECS}"
 
 
 # IMAGE_FEATURES_REPLACES_foo = 'bar1 bar2'

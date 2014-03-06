@@ -1,19 +1,26 @@
 import itertools
 
-def is_optional(group, d):
-    return bool(d.getVarFlag("PACKAGE_GROUP_%s" % group, "optional"))
+def is_optional(feature, d):
+    packages = d.getVar("FEATURE_PACKAGES_%s" % feature, True)
+    if packages:
+        return bool(d.getVarFlag("FEATURE_PACKAGES_%s" % feature, "optional"))
+    else:
+        return bool(d.getVarFlag("PACKAGE_GROUP_%s" % feature, "optional"))
 
-def packages(groups, d):
-    for group in groups:
-        for pkg in (d.getVar("PACKAGE_GROUP_%s" % group, True) or "").split():
+def packages(features, d):
+    for feature in features:
+        packages = d.getVar("FEATURE_PACKAGES_%s" % feature, True)
+        if not packages:
+            packages = d.getVar("PACKAGE_GROUP_%s" % feature, True)
+        for pkg in (packages or "").split():
             yield pkg
 
-def required_packages(groups, d):
-    req = filter(lambda group: not is_optional(group, d), groups)
+def required_packages(features, d):
+    req = filter(lambda feature: not is_optional(feature, d), features)
     return packages(req, d)
 
-def optional_packages(groups, d):
-    opt = filter(lambda group: is_optional(group, d), groups)
+def optional_packages(features, d):
+    opt = filter(lambda feature: is_optional(feature, d), features)
     return packages(opt, d)
 
 def active_packages(features, d):
