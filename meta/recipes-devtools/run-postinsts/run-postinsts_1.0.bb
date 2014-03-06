@@ -37,6 +37,8 @@ do_install() {
 	sed -i -e 's:#SYSCONFDIR#:${sysconfdir}:g' \
                -e 's:#SBINDIR#:${sbindir}:g' \
                -e 's:#BASE_BINDIR#:${base_bindir}:g' \
+               -e 's:#IMAGE_PKGTYPE#:${IMAGE_PKGTYPE}:g' \
+               -e 's:#PM_INSTALLED#:${@base_contains("IMAGE_FEATURES", "package-management", "true", "false", d)}:g' \
                ${D}${sbindir}/run-postinsts \
                ${D}${systemd_unitdir}/system/run-postinsts.service
 }
