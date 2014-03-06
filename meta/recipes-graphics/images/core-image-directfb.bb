@@ -12,6 +12,6 @@ CONFLICT_DISTRO_FEATURES = "x11"
 
 IMAGE_INSTALL += "\
 	${CORE_IMAGE_BASE_INSTALL} \
-	packagegroup-core-basic \
+	packagegroup-core-full-cmdline \
 	packagegroup-core-directfb \
 "

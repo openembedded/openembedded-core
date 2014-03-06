@@ -5,7 +5,7 @@ IMAGE_FEATURES += "splash ssh-server-openssh hwcodecs package-management"
 
 IMAGE_INSTALL = "\
     ${CORE_IMAGE_BASE_INSTALL} \
-    packagegroup-core-basic \
+    packagegroup-core-full-cmdline \
     packagegroup-core-lsb \
     "
 

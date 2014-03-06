@@ -5,7 +5,7 @@ IMAGE_FEATURES += "splash ssh-server-openssh"
 
 IMAGE_INSTALL = "\
     packagegroup-core-boot \
-    packagegroup-core-basic \
+    packagegroup-core-full-cmdline \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     "
 

@@ -68,7 +68,7 @@ class BitbakeTests(oeSelfTest):
             self.assertTrue(find_task)
 
     def test_bitbake_g(self):
-        result = bitbake('-g core-image-basic')
+        result = bitbake('-g core-image-full-cmdline')
         self.assertTrue('NOTE: PN build list saved to \'pn-buildlist\'' in result.output)
         self.assertTrue('openssh' in ftools.read_file(os.path.join(self.builddir, 'pn-buildlist')))
         for f in ['pn-buildlist', 'pn-depends.dot', 'package-depends.dot', 'task-depends.dot']:
