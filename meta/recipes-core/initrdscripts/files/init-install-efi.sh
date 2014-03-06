@@ -104,6 +104,7 @@ parted /dev/${device} mklabel gpt
 
 echo "Creating boot partition on $bootfs"
 parted /dev/${device} mkpart primary 0% $boot_size
+parted /dev/${device} set 1 boot on
 
 echo "Creating rootfs partition on $rootfs"
 parted /dev/${device} mkpart primary $rootfs_start $rootfs_end
@@ -149,23 +150,41 @@ mount $bootfs /ssd
 
 EFIDIR="/ssd/EFI/BOOT"
 mkdir -p $EFIDIR
-GRUBCFG="$EFIDIR/grub.cfg"
-
 cp /media/$1/vmlinuz /ssd
-# Copy the efi loader and config (booti*.efi and grub.cfg)
-cp /media/$1/EFI/BOOT/* $EFIDIR
+# Copy the efi loader
+cp /media/$1/EFI/BOOT/*.efi $EFIDIR
 
-# Update grub config for the installed image
-# Delete the install entry
-sed -i "/menuentry 'install'/,/^}/d" $GRUBCFG
-# Delete the initrd lines
-sed -i "/initrd /d" $GRUBCFG
-# Delete any LABEL= strings
-sed -i "s/ LABEL=[^ ]*/ /" $GRUBCFG
-# Delete any root= strings
-sed -i "s/ root=[^ ]*/ /" $GRUBCFG
-# Add the root= and other standard boot options
-sed -i "s@linux /vmlinuz *@linux /vmlinuz root=$rootfs rw $rootwait quiet @" $GRUBCFG
+if [ -f /media/$1/EFI/BOOT/grub.cfg ]; then
+    GRUBCFG="$EFIDIR/grub.cfg"
+    cp /media/$1/EFI/BOOT/grub.cfg $GRUBCFG
+    # Update grub config for the installed image
+    # Delete the install entry
+    sed -i "/menuentry 'install'/,/^}/d" $GRUBCFG
+    # Delete the initrd lines
+    sed -i "/initrd /d" $GRUBCFG
+    # Delete any LABEL= strings
+    sed -i "s/ LABEL=[^ ]*/ /" $GRUBCFG
+    # Delete any root= strings
+    sed -i "s/ root=[^ ]*/ /" $GRUBCFG
+    # Add the root= and other standard boot options
+    sed -i "s@linux /vmlinuz *@linux /vmlinuz root=$rootfs rw $rootwait quiet @" $GRUBCFG
+fi
+
+if [ -d /media/$1/loader ]; then
+    GUMMIBOOT_CFGS="/ssd/loader/entries/*.conf"
+    # copy config files for gummiboot
+    cp -dr /media/$1/loader /ssd
+    # delete the install entry
+    rm -f /ssd/loader/entries/install.conf
+    # delete the initrd lines
+    sed -i "/initrd /d" $GUMMIBOOT_CFGS
+    # delete any LABEL= strings
+    sed -i "s/ LABEL=[^ ]*/ /" $GUMMIBOOT_CFGS
+    # delete any root= strings
+    sed -i "s/ root=[^ ]*/ /" $GUMMIBOOT_CFGS
+    # add the root= and other standard boot options
+    sed -i "s@options *@options root=$rootfs rw $rootwait quiet @" $GUMMIBOOT_CFGS
+fi
 
 umount /ssd
 sync
