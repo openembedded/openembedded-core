@@ -26,7 +26,7 @@ GRUB_OPTS ?= "serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1"
 
 EFIDIR = "/EFI/BOOT"
 
-grubefi_populate() {
+efi_populate() {
 	# DEST must be the root of the image so that EFIDIR is not
 	# nested under a top level directory.
 	DEST=$1
@@ -42,9 +42,9 @@ grubefi_populate() {
 	install -m 0644 ${GRUBCFG} ${DEST}${EFIDIR}
 }
 
-grubefi_iso_populate() {
+efi_iso_populate() {
 	iso_dir=$1
-	grubefi_populate $iso_dir
+	efi_populate $iso_dir
 	# Build a EFI directory to create efi.img
 	mkdir -p ${EFIIMGDIR}/${EFIDIR}
 	cp $iso_dir/${EFIDIR}/* ${EFIIMGDIR}${EFIDIR}
@@ -55,11 +55,11 @@ grubefi_iso_populate() {
 	fi
 }
 
-grubefi_hddimg_populate() {
-	grubefi_populate $1
+efi_hddimg_populate() {
+	efi_populate $1
 }
 
-python build_grub_cfg() {
+python build_efi_cfg() {
     import sys
 
     workdir = d.getVar('WORKDIR', True)

@@ -32,7 +32,8 @@ BOOTDD_VOLUME_ID   ?= "boot"
 BOOTDD_EXTRA_SPACE ?= "16384"
 
 EFI = "${@base_contains("MACHINE_FEATURES", "efi", "1", "0", d)}"
-EFI_CLASS = "${@base_contains("MACHINE_FEATURES", "efi", "grub-efi", "", d)}"
+EFI_PROVIDER ?= "grub-efi"
+EFI_CLASS = "${@base_contains("MACHINE_FEATURES", "efi", "${EFI_PROVIDER}", "", d)}"
 
 # Include legacy boot if MACHINE_FEATURES includes "pcbios" or if it does not
 # contain "efi". This way legacy is supported by default if neither is
@@ -87,7 +88,7 @@ build_boot_dd() {
 		syslinux_hddimg_populate $HDDDIR
 	fi
 	if [ "${EFI}" = "1" ]; then
-		grubefi_hddimg_populate $HDDDIR
+		efi_hddimg_populate $HDDDIR
 	fi
 
 	if [ "${IS_VMDK}" = "true" ]; then
@@ -154,7 +155,7 @@ python do_bootdirectdisk() {
     if d.getVar("PCBIOS", True) == "1":
         bb.build.exec_func('build_syslinux_cfg', d)
     if d.getVar("EFI", True) == "1":
-        bb.build.exec_func('build_grub_cfg', d)
+        bb.build.exec_func('build_efi_cfg', d)
     bb.build.exec_func('build_boot_dd', d)
 }
 
