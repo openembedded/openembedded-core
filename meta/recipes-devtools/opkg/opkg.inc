@@ -38,7 +38,7 @@ EXTRA_OECONF = "\
   --with-opkglibdir=${OPKGLIBDIR} \
 "
 
-RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} opkg-config-base"
+RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} opkg-config-base run-postinsts"
 RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN}_class-nativesdk = ""
 RREPLACES_${PN} = "opkg-nogpg"
@@ -73,30 +73,4 @@ do_install_append() {
 	rm ${D}${bindir}/update-alternatives
 }
 
-pkg_postinst_${PN} () {
-#!/bin/sh
-if ${@base_contains('DISTRO_FEATURES','sysvinit','true','false',d)} && \
-	[ "x$D" != "x" ] && [ -f $D${OPKGLIBDIR}/opkg/status ]; then
-	install -d $D${sysconfdir}/rcS.d
-
-	# this happens at S98 where our good 'ole packages script used to run
-	echo "#!/bin/sh
-[ -e ${sysconfdir}/default/postinst ] && . ${sysconfdir}/default/postinst
-if [ \"\$POSTINST_LOGGING\" = \"1\" ]; then
-    opkg-cl configure >\$LOGFILE 2>&1
-else
-    opkg-cl configure
-fi
-rm -f ${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
-" > $D${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
-	chmod 0755 $D${sysconfdir}/rcS.d/S${POSTINSTALL_INITPOSITION}run-postinsts
-fi
-}
-
 BBCLASSEXTEND = "native nativesdk"
-
-# Define a variable to allow distros to run configure earlier.
-# (for example, to enable loading of ethernet kernel modules before networking starts)
-# note: modifying name or default value for POSTINSTALL_INITPOSITION requires
-# changes in systemd-compat-units.bb
-POSTINSTALL_INITPOSITION ?= "98"

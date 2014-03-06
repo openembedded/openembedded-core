@@ -7,7 +7,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/d/dpkg/dpkg_${PV}.tar.xz \
 
 DEPENDS = "zlib bzip2 perl ncurses"
 DEPENDS_class-native = "bzip2-replacement-native zlib-native virtual/update-alternatives-native gettext-native perl-native"
-RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} xz"
+RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} xz run-postinsts"
 RDEPENDS_${PN}_class-native = "xz-native"
 
 S = "${WORKDIR}/${BPN}-${PV}"
@@ -43,8 +43,6 @@ do_configure () {
     autotools_do_configure
 }
 
-DPKG_INIT_POSITION ?= "98"
-
 do_install_append () {
 	if [ "${PN}" = "dpkg-native" ]; then
 		# update-alternatives doesn't have an offline mode
@@ -64,26 +62,6 @@ do_install_append () {
 			-e 's,@SYSTEMD_UNITDIR@,${systemd_unitdir},g' \
 			${D}${systemd_unitdir}/system/dpkg-configure.service
 	fi
-}
-
-pkg_postinst_${PN} () {
-#!/bin/sh
-if ${@base_contains('DISTRO_FEATURES','sysvinit','true','false',d)} && \
-	[ "x$D" != "x" ] && [ -f $D/var/lib/dpkg/status ]; then
-	install -d $D${sysconfdir}/rcS.d
-
-	# this happens at S98 where our good 'ole packages script used to run
-	echo "#!/bin/sh
-[ -e ${sysconfdir}/default/postinst ] && . ${sysconfdir}/default/postinst
-if [ \"\$POSTINST_LOGGING\" = \"1\" ]; then
-    dpkg --configure -a >\$LOGFILE 2>&1
-else
-    dpkg --configure -a
-fi
-rm -f ${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
-" > $D${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
-	chmod 0755 $D${sysconfdir}/rcS.d/S${DPKG_INIT_POSITION}run-postinsts
-fi
 }
 
 PROV = "virtual/update-alternatives"
