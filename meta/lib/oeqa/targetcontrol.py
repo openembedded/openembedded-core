@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import bb
 import traceback
+import sys
 from oeqa.utils.sshcontrol import SSHControl
 from oeqa.utils.qemurunner import QemuRunner
 from oeqa.controllers.testtargetloader import TestTargetLoader
@@ -25,7 +26,7 @@ def get_target_controller(d):
         # use the class name
         try:
             # is it a core class defined here?
-            controller = getattr(__name__, testtarget)
+            controller = getattr(sys.modules[__name__], testtarget)
         except AttributeError:
             # nope, perhaps a layer defined one
             try:
