@@ -133,8 +133,7 @@ class QemuRunner:
                         if data:
                             self.log(data)
                             self.bootlog += data
-                            lastlines = "\n".join(self.bootlog.splitlines()[-2:])
-                            if re.search("login:", lastlines):
+                            if re.search("qemu.* login:", self.bootlog):
                                 stopread = True
                                 reachedlogin = True
                                 bb.note("Reached login banner")
