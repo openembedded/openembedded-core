@@ -14,6 +14,8 @@
 python () {
     ubootmachine = d.getVar("UBOOT_MACHINE", True)
     ubootconfigflags = d.getVarFlags('UBOOT_CONFIG')
+    # The "doc" varflag is special, we don't want to see it here
+    ubootconfigflags.pop('doc', None)
 
     if not ubootmachine and not ubootconfigflags:
         PN = d.getVar("PN", True)
