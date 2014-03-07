@@ -144,7 +144,12 @@ class SimpleRemoteTarget(BaseTarget):
 
     def __init__(self, d):
         super(SimpleRemoteTarget, self).__init__(d)
-        self.ip = d.getVar("TEST_TARGET_IP", True) or bb.fatal('Please set TEST_TARGET_IP with the IP address of the machine you want to run the tests on.')
+        addr = d.getVar("TEST_TARGET_IP", True) or bb.fatal('Please set TEST_TARGET_IP with the IP address of the machine you want to run the tests on.')
+        self.ip = addr.split(":")[0]
+        try:
+            self.port = addr.split(":")[1]
+        except IndexError:
+            self.port = None
         bb.note("Target IP: %s" % self.ip)
         self.server_ip = d.getVar("TEST_SERVER_IP", True)
         if not self.server_ip:
@@ -158,7 +163,7 @@ class SimpleRemoteTarget(BaseTarget):
         super(SimpleRemoteTarget, self).deploy()
 
     def start(self, params=None):
-        self.connection = SSHControl(self.ip, logfile=self.sshlog)
+        self.connection = SSHControl(self.ip, logfile=self.sshlog, port=self.port)
 
     def stop(self):
         self.connection = None
