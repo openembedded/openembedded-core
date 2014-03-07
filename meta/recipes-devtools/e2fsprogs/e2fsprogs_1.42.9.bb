@@ -6,6 +6,17 @@ SRC_URI += "file://acinclude.m4 \
             file://fix-icache.patch \
             file://populate-extfs.sh \
             file://quiet-debugfs.patch \
+            file://0001-mke2fs-add-the-ability-to-copy-files-from-a-given-di.patch \
+            file://0002-misc-create_inode.c-copy-files-recursively.patch \
+            file://0003-misc-create_inode.c-create-special-file.patch \
+            file://0004-misc-create_inode.c-create-symlink.patch \
+            file://0005-misc-create_inode.c-copy-regular-file.patch \
+            file://0006-misc-create_inode.c-create-directory.patch \
+            file://0007-misc-create_inode.c-set-owner-mode-time-for-the-inod.patch \
+            file://0008-mke2fs.c-add-an-option-d-root-directory.patch \
+            file://0009-misc-create_inode.c-handle-hardlinks.patch \
+            file://0010-debugfs-use-the-functions-in-misc-create_inode.c.patch \
+            file://0011-mke2fs.8.in-update-the-manual-for-the-d-option.patch \
 "
 
 SRC_URI[md5sum] = "3f8e41e63b432ba114b33f58674563f7"
