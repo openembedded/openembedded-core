@@ -2,6 +2,7 @@ require iproute2.inc
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BPN}-${PV}.tar.xz \
            file://configure-cross.patch \
+           file://0001-iproute2-de-bash-scripts.patch \
           "
 
 SRC_URI[md5sum] = "45fb5427fc723a0001c72b92c931ba02"
