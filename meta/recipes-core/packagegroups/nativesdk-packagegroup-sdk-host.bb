@@ -3,7 +3,7 @@
 #
 
 SUMMARY = "Host packages for the standalone SDK or external toolchain"
-PR = "r11"
+PR = "r12"
 LICENSE = "MIT"
 
 inherit packagegroup nativesdk
