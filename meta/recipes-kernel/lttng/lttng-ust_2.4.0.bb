@@ -22,6 +22,7 @@ PV = "2.4.0"
 PE = "2"
 
 SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.4 \
+           file://lttng-ust-doc-examples-disable.patch \
 	   "
 
 S = "${WORKDIR}/git"
