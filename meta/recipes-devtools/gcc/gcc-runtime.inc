@@ -12,7 +12,7 @@ ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_INCDIR}"
 EXTRA_OECONF += "--disable-libunwind-exceptions"
 EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"
 
-RUNTIMETARGET = "libssp libstdc++-v3 libgomp"
+RUNTIMETARGET = "libssp libstdc++-v3 libgomp libatomic"
 #  ?
 # libiberty
 # libmudflap
@@ -87,6 +87,9 @@ PACKAGES = "\
   libgomp \
   libgomp-dev \
   libgomp-staticdev \
+  libatomic \
+  libatomic-dev \
+  libatomic-staticdev \
 "
 # The base package doesn't exist, so we clear the recommends.
 RRECOMMENDS_${PN}-dbg = ""
@@ -160,6 +163,13 @@ FILES_libgomp-dev = "\
 FILES_libgomp-staticdev = "\
   ${libdir}/libgomp*.a \
   "
+
+FILES_libatomic = "${libdir}/libatomic.so.*"
+FILES_libatomic-dev = " \
+  ${libdir}/libatomic.so \
+  ${libdir}/libatomic.la"
+FILES_libatomic-staticdev = " \
+  ${libdir}/libatomic.a"
 
 do_package_write_ipk[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 do_package_write_deb[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
