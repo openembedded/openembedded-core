@@ -4,7 +4,6 @@ require e2fsprogs.inc
 SRC_URI += "file://acinclude.m4 \
             file://remove.ldconfig.call.patch \
             file://fix-icache.patch \
-            file://populate-extfs.sh \
             file://quiet-debugfs.patch \
             file://0001-mke2fs-add-the-ability-to-copy-files-from-a-given-di.patch \
             file://0002-misc-create_inode.c-copy-files-recursively.patch \
@@ -51,7 +50,6 @@ do_install () {
 		mv ${D}${base_libdir}/e2initrd_helper ${D}${libdir}
 		mv ${D}${base_libdir}/pkgconfig ${D}${libdir}
 	fi
-	install -m 0755 ${WORKDIR}/populate-extfs.sh ${D}${bindir}
 }
 
 RDEPENDS_e2fsprogs = "e2fsprogs-badblocks"
