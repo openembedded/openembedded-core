@@ -6,14 +6,15 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://include/common.h;beginline=1;endline=17;md5=ba05b07912a44ea2bf81ce409380049c"
 
-SRCREV = "ca39eb1d98e736109c64ff9c1aa2a6ecca222d8f"
+# Use the latest version at 26 Oct, 2013
+SRCREV = "dcea43eba91642939c82739387147da26d572758"
 SRC_URI = "git://git.infradead.org/mtd-utils.git \
-           file://add-exclusion-to-mkfs-jffs2-git-2.patch \
-           file://mtd-utils-fix-corrupt-cleanmarker-with-flash_erase--j-command.patch "
+		file://add-exclusion-to-mkfs-jffs2-git-2.patch \
+"
+
+PV = "1.5.0+git${SRCPV}"
 
 S = "${WORKDIR}/git/"
-
-PR = "r3"
 
 EXTRA_OEMAKE = "'CC=${CC}' 'RANLIB=${RANLIB}' 'AR=${AR}' 'CFLAGS=${CFLAGS} -I${S}/include -DWITHOUT_XATTR' 'BUILDDIR=${S}'"
 
