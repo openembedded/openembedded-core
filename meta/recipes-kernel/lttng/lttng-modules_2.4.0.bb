@@ -13,6 +13,9 @@ inherit module
 SRCREV = "fb2c37799306d16fb590aebee6fad8be431264b7"
 PV = "2.4.0"
 
+# lttng currently blacklists arm with gcc-4.8
+COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips).*-linux'
+
 SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.4 \
            file://lttng-modules-replace-KERNELDIR-with-KERNEL_SRC.patch"
 
