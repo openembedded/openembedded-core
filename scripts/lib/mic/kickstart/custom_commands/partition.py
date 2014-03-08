@@ -174,7 +174,6 @@ class Wic_PartData(Mic_PartData):
         """
         Prepare content for an ext2/3/4 rootfs partition.
         """
-        populate_script = "%s/usr/bin/populate-extfs.sh" % native_sysroot
 
         image_rootfs = rootfs_dir
         rootfs = "%s/rootfs.%s" % (cr_workdir, self.fstype)
@@ -199,11 +198,10 @@ class Wic_PartData(Mic_PartData):
 
         extra_imagecmd = "-i 8192"
 
-        mkfs_cmd = "mkfs.%s -F %s %s" % (self.fstype, extra_imagecmd, rootfs)
+        mkfs_cmd = "mkfs.%s -F %s %s -d %s" % \
+            (self.fstype, extra_imagecmd, rootfs, image_rootfs)
         rc, out = exec_native_cmd(mkfs_cmd, native_sysroot)
 
-        populate_cmd = populate_script + " " + image_rootfs + " " + rootfs
-        rc, out = exec_native_cmd(pseudo + populate_cmd, native_sysroot)
 
         # get the rootfs size in the right units for kickstart (Mb)
         du_cmd = "du -Lbms %s" % rootfs
