@@ -12,7 +12,7 @@ DEPENDS += "gst-plugins-base virtual/libgles2 virtual/egl jpeg libpng glew"
 
 PR = "r4"
 
-inherit gettext gconf
+inherit gettext
 
 # This package doesn't have a configure switch for EGL or GL, so forcibly tell
 # configure that it can't find gl.h so it always uses EGL.  If/when we have some
