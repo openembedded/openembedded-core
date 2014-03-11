@@ -14,7 +14,9 @@ DEPENDS = "util-linux attr e2fsprogs lzo acl"
 
 SRCREV = "8cae1840afb3ea44dcc298f32983e577480dfee4"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs.git \
-           file://weak-defaults.patch"
+           file://weak-defaults.patch \
+           file://allow-relative-path.patch \
+          "
 
 S = "${WORKDIR}/git"
 
