@@ -272,12 +272,12 @@ then
 fi
 
 if ! `grep -F -q "noarch-suse" ${PLATFORM_FILE}`; then
-	if [ ${ARCH} == i686 ];then
+	if [ ${ARCH} = i686 ];then
 		echo "i486-suse" >> ${PLATFORM_FILE}
 		echo "i486-noarch" >> ${PLATFORM_FILE}
 		echo "i486-pc" >> ${PLATFORM_FILE}
 		echo "noarch-suse" >> ${PLATFORM_FILE}
-	elif [ ${ARCH} == x86_64 ]; then
+	elif [ ${ARCH} = x86_64 ]; then
 		echo "i486-suse" >> ${PLATFORM_FILE}
 		echo "i486-noarch" >> ${PLATFORM_FILE}
 		echo "i486-pc" >> ${PLATFORM_FILE}
