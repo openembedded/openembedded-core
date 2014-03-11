@@ -6,8 +6,7 @@ LICENSE = "GPLv2 & GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://check-mime.pl;endline=26;md5=a95b63c92c33d4ca1af61a315888f450"
 
-inherit gnome
-inherit autotools
+inherit gnomebase mime
 PR = "r4"
 
 SRC_URI += "file://pkgconfig.patch"
