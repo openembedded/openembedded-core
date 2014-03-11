@@ -26,6 +26,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
     file://0001-Rename-runtests_noltp.sh-script-so-have-unique-name.patch \
     file://regen-makefile.patch \
     file://ffsb-remove-hardcoded-configure.patch \
+    file://ltp-Do-not-link-against-libfl.patch \
 "
 
 S = "${WORKDIR}/git"
