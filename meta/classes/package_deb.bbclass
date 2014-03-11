@@ -295,6 +295,8 @@ python () {
     darch = d.getVar('DPKG_ARCH', True)
     if darch in ["x86", "i486", "i586", "i686", "pentium"]:
          d.setVar('DPKG_ARCH', 'i386')
+    elif darch == "x86_64":
+         d.setVar('DPKG_ARCH', 'amd64')
     elif darch == "arm":
          d.setVar('DPKG_ARCH', 'armel')
 }
