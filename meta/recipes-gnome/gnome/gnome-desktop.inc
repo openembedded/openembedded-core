@@ -13,7 +13,7 @@ FILES_${PN} += "${datadir}/gnome-about ${datadir}/libgnome-desktop/pnp.ids"
 
 PR = "r6"
 
-inherit gnome pkgconfig
+inherit gnomebase
 
 do_install_append () {
 	sed -i -e's,${STAGING_BINDIR_NATIVE},${bindir},g' ${D}${bindir}/gnome-about
