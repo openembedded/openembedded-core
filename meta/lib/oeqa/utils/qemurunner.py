@@ -163,13 +163,13 @@ class QemuRunner:
 
         if self.runqemu:
             bb.note("Sending SIGTERM to runqemu")
-            os.kill(-self.runqemu.pid,signal.SIGTERM)
+            os.killpg(self.runqemu.pid, signal.SIGTERM)
             endtime = time.time() + self.runqemutime
             while self.runqemu.poll() is None and time.time() < endtime:
                 time.sleep(1)
             if self.runqemu.poll() is None:
                 bb.note("Sending SIGKILL to runqemu")
-                os.kill(-self.runqemu.pid,signal.SIGKILL)
+                os.killpg(self.runqemu.pid, signal.SIGKILL)
             self.runqemu = None
         if self.server_socket:
             self.server_socket.close()
