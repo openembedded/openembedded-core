@@ -8,7 +8,7 @@ PR = "r1"
 
 DEPENDS = "glib-2.0"
 
-inherit gnome gsettings gettext
+inherit gnomebase gsettings gettext
 
 GNOME_COMPRESS_TYPE = "xz"
 
