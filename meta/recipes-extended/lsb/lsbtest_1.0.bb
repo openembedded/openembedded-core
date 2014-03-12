@@ -19,15 +19,15 @@ do_install() {
 	install -d  ${D}/opt/lsb-test
 	install -m 0644 ${S}/packages_list ${D}/opt/lsb-test/packages_list
 	install -m 0644 ${S}/session ${D}/opt/lsb-test/session
-	if [ "${TARGET_ARCH}" == "i586" ];then
+	if [ "${TARGET_ARCH}" = "i586" ];then
 		sed -i -e 's/lsbarch/ia32/g' -e 's/targetarch/i486/g' ${D}/opt/lsb-test/packages_list
 		sed -i -e 's/targetarch/x86/g' ${D}/opt/lsb-test/session
 	fi
-	if [ "${TARGET_ARCH}" == "x86_64" ];then
+	if [ "${TARGET_ARCH}" = "x86_64" ];then
 		sed -i -e 's/lsbarch/amd64/g' -e 's/targetarch/x86_64/g' ${D}/opt/lsb-test/packages_list
 		sed -i -e 's/targetarch/x86-64/g' ${D}/opt/lsb-test/session
 	fi
-	if [ "${TARGET_ARCH}" == "powerpc" ];then
+	if [ "${TARGET_ARCH}" = "powerpc" ];then
 		sed -i -e 's/lsbarch/ppc32/g' -e 's/targetarch/ppc/g' ${D}/opt/lsb-test/packages_list
 		sed -i -e 's/targetarch/PPC32/g' ${D}/opt/lsb-test/session
 	fi
