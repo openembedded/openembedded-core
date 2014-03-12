@@ -58,3 +58,15 @@ docbook_sgml_dtd_sysroot_preprocess () {
     install -m 755 ${STAGING_BINDIR_NATIVE}/install-catalog ${SYSROOT_DESTDIR}${bindir_crossscripts}/install-catalog-docbook-sgml-dtd-${DTD_VERSION}
 }
 
+CLEANFUNCS += "docbook_sgml_dtd_sstate_clean"
+
+docbook_sgml_dtd_sstate_clean () {
+	# Ensure that the catalog file sgml-docbook.cat is properly
+	# updated when the package is removed from sstate cache.
+	if [ -f ${sysconfdir}/sgml/sgml-docbook.bak ]; then
+		sed -i '/'"\/sgml\/sgml-docbook-dtd-${DTD_VERSION}.cat"'/d' \
+			${sysconfdir}/sgml/sgml-docbook.bak
+		sed -i '/'"\/sgml\/sgml-docbook-dtd-${DTD_VERSION}.cat"'/d' \
+			${sysconfdir}/sgml/sgml-docbook.cat
+	fi
+}
