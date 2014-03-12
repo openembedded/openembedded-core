@@ -200,7 +200,7 @@ class Wic_PartData(Mic_PartData):
 
         mkfs_cmd = "mkfs.%s -F %s %s -d %s" % \
             (self.fstype, extra_imagecmd, rootfs, image_rootfs)
-        rc, out = exec_native_cmd(mkfs_cmd, native_sysroot)
+        rc, out = exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
 
 
         # get the rootfs size in the right units for kickstart (Mb)
