@@ -1,12 +1,10 @@
 require directfb.inc
 
-RV = "1.6-0"
-PR = "${INC_PR}.2"
+RV = "1.7-1"
 
 DEPENDS += "sysfsutils"
 
 SRC_URI += "file://fix-compilation-with-zlib.patch \
-            file://rename-no-instrument-function-macro.patch \
             file://fixsepbuild.patch"
 
 EXTRA_OECONF = "\
@@ -20,7 +18,7 @@ EXTRA_OECONF = "\
   --disable-mesa \
 "
 
-LEAD_SONAME = "libdirectfb-1.6.so.0"
+LEAD_SONAME = "libdirectfb-1.7.so.0"
 
-SRC_URI[md5sum] = "641e8e999c017770da647f9b5b890906"
-SRC_URI[sha256sum] = "7a96aced0f69b2ec0810e9923068e61c21e6b19dd593e09394c872414df75e70"
+SRC_URI[md5sum] = "0ef44c16a414312fd38d6764e2cb9893"
+SRC_URI[sha256sum] = "dd7de38b3cd1408411b37ca28ec73e14b7672e5e28256b7bf91826240c81f519"
