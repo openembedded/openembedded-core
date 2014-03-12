@@ -120,6 +120,19 @@ do_install() {
 do_configure_prepend () {
     #kernels before 3.1 do not support WERROR env variable
     sed -i 's,-Werror ,,' ${S}/tools/perf/Makefile
+    if [ -e "${S}/tools/perf/config/Makefile" ]; then
+        sed -i 's,-Werror ,,' ${S}/tools/perf/config/Makefile
+    fi
+
+    # If building a multlib based perf, the incorrect library path will be
+    # detected by perf, since it triggers via: ifeq ($(ARCH),x86_64). In a 32 bit
+    # build, with a 64 bit multilib, the arch won't match and the detection of a 
+    # 64 bit build (and library) are not exected. To ensure that libraries are
+    # installed to the correct location, we can make the substitution in the 
+    # config/Makefile. For non multilib builds, this has no impact.
+    if [ -e "${S}/tools/perf/config/Makefile" ]; then
+        sed -i 's,libdir = $(prefix)/$(lib),libdir = $(prefix)/${baselib},' ${S}/tools/perf/config/Makefile
+    fi
 }
 
 python do_package_prepend() {
@@ -128,6 +141,8 @@ python do_package_prepend() {
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-FILES_${PN} += "${libexecdir}/perf-core"
+FILES_${PN} += "${libexecdir}/perf-core ${exec_prefix}/libexec/perf-core ${libdir}/traceevent"
 FILES_${PN}-dbg += "${libdir}/python*/site-packages/.debug"
 FILES_${PN} += "${libdir}/python*/site-packages"
+
+INHIBIT_PACKAGE_DEBUG_SPLIT="1"
