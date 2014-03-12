@@ -16,7 +16,7 @@ inherit autotools
 # pick up an eglibc patch
 FILESPATH = "${FILE_DIRNAME}/eglibc-${PV}"
 
-SRC_URI = "http://sakrah.homelinux.org/files/eglibc-${PV}-svnr25243.tar.bz2 \
+SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr25243.tar.bz2 \
 	   file://fix_for_centos_5.8.patch;patchdir=.. \
 	  "
 SRC_URI[md5sum] = "197836c2ba42fb146e971222647198dd"
