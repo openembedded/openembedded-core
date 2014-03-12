@@ -10,7 +10,7 @@ DEPENDS += "gnome-common-native"
 
 FILES_${PN} += "${datadir}/application-registry  \
 	${datadir}/mime-info \
-	${datadir}/mime/packages \	
+	${datadir}/mime/packages \
 	${datadir}/mime/application \
 	${datadir}/gnome-2.0 \
 	${datadir}/polkit* \
