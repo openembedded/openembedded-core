@@ -10,10 +10,10 @@ DEPENDS = "taglib libmad libvorbis libogg alsa-lib libsndfile1 libsamplerate0 cu
 
 SRC_URI = "http://qmmp.ylsoftware.com/files/${BPN}-${PV}.tar.bz2 \
            file://no-host-paths.patch \
-           file://no-sessionmanager.patch"
+          "
 
-SRC_URI[md5sum] = "0131a9bf7b98737c1a6fd6e1a897e2b2"
-SRC_URI[sha256sum] = "dfa973cca80c020a85a11bb66701a3804f9fde326440abb179559c98bf3b5b99"
+SRC_URI[md5sum] = "dcc3c9ecd4dfbf0ced91c59cb894d460"
+SRC_URI[sha256sum] = "6066aea939813667dae7cf32ff1d6eb9913894977d132c2cd729fea22d24cf67"
 
 inherit cmake qt4x11
 

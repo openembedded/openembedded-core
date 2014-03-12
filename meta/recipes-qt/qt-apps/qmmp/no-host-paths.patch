@@ -8,16 +8,17 @@ Upstream-Status: Inappropriate [cross]
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -1,12 +1,5 @@
+Update patch for version 0.7.4.
+
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+
+--- qmmp-0.7.4/CMakeLists.txt	2014-01-10 09:59:44.971837746 +0800
++++ qmmp-0.7.4/CMakeLists.txt.new	2014-01-10 10:24:51.855837566 +0800
+@@ -1,9 +1,5 @@
  cmake_minimum_required(VERSION 2.6.0)
  
 -#freebsd support
 -include_directories(SYSTEM /usr/local/include)
--link_directories(/usr/local/lib)
--link_directories(/usr/local/lib32)
--link_directories(/usr/local/lib64)
 -SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} /usr/local/include)
 -
  #extract version from qmmp.h
