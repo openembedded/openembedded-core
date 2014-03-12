@@ -19,17 +19,14 @@ diff -ruN alsa-tools-1.0.24.1-orig//ld10k1/gitcompile alsa-tools-1.0.24.1/ld10k1
 diff -ruN alsa-tools-1.0.24.1-orig//Makefile alsa-tools-1.0.24.1/Makefile
 --- alsa-tools-1.0.24.1-orig//Makefile	2011-07-06 11:27:40.207665000 +0800
 +++ alsa-tools-1.0.24.1/Makefile	2011-07-14 15:08:08.877665009 +0800
-@@ -1,9 +1,9 @@
- VERSION = 1.0.26.1
+@@ -1,8 +1,8 @@
+ VERSION = 1.0.27
  TOP = .
--SUBDIRS = ac3dec as10k1 envy24control hdsploader hdspconf hdspmixer \
--	  mixartloader pcxhrloader rmedigicontrol sb16_csp seq sscape_ctl \
+-SUBDIRS = as10k1 envy24control hdsploader hdspconf hdspmixer \
++SUBDIRS = as10k1 envy24control \
+ 	  mixartloader pcxhrloader rmedigicontrol sb16_csp seq sscape_ctl \
 -	  us428control usx2yloader vxloader echomixer ld10k1 qlo10k1 \
--	  hwmixvolume hdajackretask hda-verb
-+SUBDIRS = ac3dec as10k1 envy24control \
-+	  mixartloader pcxhrloader rmedigicontrol sb16_csp seq sscape_ctl \
 +	  us428control usx2yloader vxloader echomixer \
-+	  hwmixvolume hda-verb
+ 	  hwmixvolume hdajackretask hda-verb
  
  all:
- 	@for i in $(SUBDIRS); do \
