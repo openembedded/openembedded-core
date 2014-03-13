@@ -29,6 +29,10 @@ GLTOOLS = "\
     piglit \
     "
 
+3GTOOLS = "\
+    ofono-tests \
+    "
+
 X11TOOLS = "\
     fstests \
     owl-video \
@@ -53,4 +57,5 @@ RDEPENDS_${PN} = "\
     connman-client \
     ${@base_contains('DISTRO_FEATURES', 'x11', "${X11TOOLS}", "", d)} \
     ${@base_contains('DISTRO_FEATURES', 'opengl', "${GLTOOLS}", "", d)} \
+    ${@base_contains('DISTRO_FEATURES', '3g', "${3GTOOLS}", "", d)} \
     "
