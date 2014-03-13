@@ -54,6 +54,8 @@ RDEPENDS_${PN} = "\
     gst-meta-video \
     gst-meta-audio \
     ltp \
+    connman-tools \
+    connman-tests \
     connman-client \
     ${@base_contains('DISTRO_FEATURES', 'x11', "${X11TOOLS}", "", d)} \
     ${@base_contains('DISTRO_FEATURES', 'opengl', "${GLTOOLS}", "", d)} \
