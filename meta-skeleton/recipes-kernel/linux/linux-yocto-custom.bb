@@ -54,7 +54,7 @@ LINUX_VERSION_EXTENSION ?= "-custom"
 # Override SRCREV to point to a different commit in a bbappend file to
 # build a different release of the Linux kernel.
 # tag: v3.4 76e10d158efb6d4516018846f60c2ab5501900bc
-SRCREV="76e10d158efb6d4516018846f60c2ab5501900bc"
+SRCREV_machine="76e10d158efb6d4516018846f60c2ab5501900bc"
 
 PR = "r1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
