@@ -35,6 +35,7 @@ glib_cv_use_pid_surrogate=${glib_cv_use_pid_surrogate=yes}
 ac_cv_alignof_guint32=4
 ac_cv_alignof_guint64=8
 ac_cv_alignof_unsigned_long=8
+ac_cv_sizeof_ssize_t=8
 
 # libpcap
 ac_cv_linux_vers=${ac_cv_linux_vers=2}
