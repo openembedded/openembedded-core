@@ -1,0 +1,73 @@
+From 8e19e651145554fbcb90179f3dfbc7ea8a07c900 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 15 Mar 2014 09:32:20 -0700
+Subject: [PATCH 4/4] Add clock_adjtime syscall
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ include/sys/timex.h                       |  5 ++++-
+ libc/sysdeps/linux/common/Makefile.in     |  2 +-
+ libc/sysdeps/linux/common/clock_adjtime.c | 15 +++++++++++++++
+ 3 files changed, 20 insertions(+), 2 deletions(-)
+ create mode 100644 libc/sysdeps/linux/common/clock_adjtime.c
+
+diff --git a/include/sys/timex.h b/include/sys/timex.h
+index 621afce..9082a28 100644
+--- a/include/sys/timex.h
++++ b/include/sys/timex.h
+@@ -20,6 +20,7 @@
+ 
+ #include <features.h>
+ #include <sys/time.h>
++#include <time.h>
+ 
+ /* These definitions from linux/timex.h as of 2.2.0.  */
+ 
+@@ -125,7 +126,9 @@ libc_hidden_proto(adjtimex)
+ extern int ntp_gettime (struct ntptimeval *__ntv) __THROW;
+ extern int ntp_adjtime (struct timex *__tntx) __THROW;
+ #endif
+-
++#if defined __UCLIBC_HAS_REALTIME__
++extern int clock_adjtime (clockid_t __clock_id, struct timex *__ntx) __THROW;
++#endif
+ __END_DECLS
+ 
+ #endif /* sys/timex.h */
+diff --git a/libc/sysdeps/linux/common/Makefile.in b/libc/sysdeps/linux/common/Makefile.in
+index 10d9884..bb985b6 100644
+--- a/libc/sysdeps/linux/common/Makefile.in
++++ b/libc/sysdeps/linux/common/Makefile.in
+@@ -84,7 +84,7 @@ CSRC-$(ARCH_USE_MMU) += msync.c
+ CSRC-$(UCLIBC_BSD_SPECIFIC) += mincore.c setdomainname.c
+ CSRC-$(UCLIBC_NTP_LEGACY) += ntp_gettime.c
+ # aio_cancel|aio_error|aio_fsync|aio_read|aio_return|aio_suspend|aio_write|clock_getres|clock_gettime|clock_settime|clock_settime|fdatasync|lio_listio|mlockall|munlockall|mlock|munlock|mq_close|mq_getattr|mq_notify|mq_open|mq_receive|mq_timedreceive|mq_send|mq_timedsend|mq_setattr|mq_unlink|nanosleep|sched_getparam|sched_get_priority_max|sched_get_priority_min|sched_getscheduler|sched_rr_get_interval|sched_setparam|sched_setscheduler|sem_close|sem_destroy|sem_getvalue|sem_init|sem_open|sem_post|sem_trywait|sem_wait|sem_unlink|sem_wait|shm_open|shm_unlink|sigqueue|sigtimedwait|sigwaitinfo|timer_create|timer_delete|timer_getoverrun|timer_gettime|timer_settime
+-CSRC-$(UCLIBC_HAS_REALTIME) += clock_getres.c clock_gettime.c clock_settime.c \
++CSRC-$(UCLIBC_HAS_REALTIME) += clock_adjtime.c clock_getres.c clock_gettime.c clock_settime.c \
+ 	fdatasync.c mlockall.c mlock.c munlockall.c munlock.c \
+ 	nanosleep.c __rt_sigtimedwait.c __rt_sigwaitinfo.c sched_getparam.c \
+ 	sched_get_priority_max.c sched_get_priority_min.c sched_getscheduler.c \
+diff --git a/libc/sysdeps/linux/common/clock_adjtime.c b/libc/sysdeps/linux/common/clock_adjtime.c
+new file mode 100644
+index 0000000..968ec27
+--- /dev/null
++++ b/libc/sysdeps/linux/common/clock_adjtime.c
+@@ -0,0 +1,15 @@
++/*
++ * clock_adjtime() for uClibc
++ *
++ * Copyright (C) 2005 by Peter Kjellerstedt <pkj@axis.com>
++ * Copyright (C) 2000-2006 Erik Andersen <andersen@uclibc.org>
++ *
++ * Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
++ */
++
++#include <sys/syscall.h>
++#include <sys/timex.h>
++
++#ifdef __NR_clock_adjtime
++_syscall2(int, clock_adjtime, clockid_t, clock_id, struct timex*, ntx)
++#endif
+-- 
+1.9.0
+
