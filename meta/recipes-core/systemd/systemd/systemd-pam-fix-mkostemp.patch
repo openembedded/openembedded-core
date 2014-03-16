@@ -1,170 +1,30 @@
 Upstream-Status: Denied [no desire for uclibc support]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Index: systemd-206/src/journal/journal-send.c
+Index: git/src/shared/util.c
 ===================================================================
---- systemd-206.orig/src/journal/journal-send.c	2013-07-21 15:43:28.000000000 -0700
-+++ systemd-206/src/journal/journal-send.c	2013-08-21 08:50:50.825892498 -0700
-@@ -46,6 +46,8 @@
-                 memcpy(*_f + 10, _func, _fl);     \
-         } while(false)
- 
-+#include "config.h"
-+
- /* We open a single fd, and we'll share it with the current process,
-  * all its threads, and all its subprocesses. This means we need to
-  * initialize it atomically, and need to operate on it atomically
-@@ -311,8 +313,13 @@
-         /* Message doesn't fit... Let's dump the data in a temporary
-          * file and just pass a file descriptor of it to the other
-          * side */
--
-+#ifdef HAVE_MKOSTEMP
-         buffer_fd = mkostemp(path, O_CLOEXEC|O_RDWR);
-+#else
-+        buffer_fd = mkstemp(path);
-+        if (buffer_fd >= 0) fcntl(buffer_fd, F_SETFD, FD_CLOEXEC);
-+#endif /* HAVE_MKOSTEMP */
-+
-         if (buffer_fd < 0)
-                 return -errno;
- 
-Index: systemd-206/src/core/manager.c
-===================================================================
---- systemd-206.orig/src/core/manager.c	2013-07-21 15:43:28.000000000 -0700
-+++ systemd-206/src/core/manager.c	2013-08-21 08:51:35.209893331 -0700
-@@ -71,6 +71,7 @@
- #include "audit-fd.h"
- #include "efivars.h"
- #include "env-util.h"
-+#include "config.h"
- 
- /* As soon as 5s passed since a unit was added to our GC queue, make sure to run a gc sweep */
- #define GC_QUEUE_USEC_MAX (10*USEC_PER_SEC)
-@@ -2058,7 +2059,12 @@
-                 return -ENOMEM;
- 
-         RUN_WITH_UMASK(0077) {
-+#ifdef HAVE_MKOSTEMP
-                 fd = mkostemp(path, O_RDWR|O_CLOEXEC);
-+#else
-+                fd = mkstemp(path);
-+                if (fd >= 0) fcntl(fd, F_SETFD, FD_CLOEXEC);
-+#endif /* HAVE_MKOSTEMP */
-         }
- 
-         if (fd < 0) {
-Index: systemd-206/src/shared/util.c
-===================================================================
---- systemd-206.orig/src/shared/util.c	2013-07-21 15:43:28.000000000 -0700
-+++ systemd-206/src/shared/util.c	2013-08-21 08:50:50.829892498 -0700
-@@ -74,6 +74,8 @@
- #include "env-util.h"
- #include "fileio.h"
+--- git.orig/src/shared/util.c	2014-03-15 15:14:21.368160908 -0700
++++ git/src/shared/util.c	2014-03-15 15:44:21.988194688 -0700
+@@ -85,6 +85,8 @@
+ #include "def.h"
+ #include "missing.h"
  
 +#include "config.h"
 +
  int saved_argc = 0;
  char **saved_argv = NULL;
  
-@@ -3980,7 +3982,12 @@
-         t[k] = '.';
-         stpcpy(stpcpy(t+k+1, fn), "XXXXXX");
+@@ -6222,7 +6224,13 @@
+ 
+         u = umask(077);
  
 +#ifdef HAVE_MKOSTEMP
-         fd = mkostemp(t, O_WRONLY|O_CLOEXEC);
+         fd = mkostemp(pattern, flags);
 +#else
-+	fd = mkstemp(t);
-+	if (fd >= 0) fcntl(fd, F_SETFD, FD_CLOEXEC);
-+#endif	/* HAVE_MKOSTEMP */
-         if (fd < 0) {
-                 free(t);
++        fd = mkstemp(pattern);
++        if (fd >= 0) fcntl(fd, F_SETFD, flags);
++#endif /* HAVE_MKOSTEMP */
++
+         if (fd < 0)
                  return -errno;
-Index: systemd-206/src/shared/ask-password-api.c
-===================================================================
---- systemd-206.orig/src/shared/ask-password-api.c	2013-07-21 15:43:28.000000000 -0700
-+++ systemd-206/src/shared/ask-password-api.c	2013-08-21 08:50:50.829892498 -0700
-@@ -37,6 +37,8 @@
  
- #include "ask-password-api.h"
- 
-+#include "config.h"
-+
- static void backspace_chars(int ttyfd, size_t p) {
- 
-         if (ttyfd < 0)
-@@ -325,7 +327,12 @@
-         mkdir_p_label("/run/systemd/ask-password", 0755);
- 
-         RUN_WITH_UMASK(0022) {
-+#ifdef HAVE_MKOSTEMP
-                 fd = mkostemp(temp, O_CLOEXEC|O_CREAT|O_WRONLY);
-+#else
-+                fd = mkstemp(temp);
-+                if (fd >= 0) fcntl(fd, F_SETFD, FD_CLOEXEC);
-+#endif /* HAVE_MKOSTEMP */
-         }
- 
-         if (fd < 0) {
-Index: systemd-206/src/journal/journalctl.c
-===================================================================
---- systemd-206.orig/src/journal/journalctl.c	2013-07-21 15:43:28.000000000 -0700
-+++ systemd-206/src/journal/journalctl.c	2013-08-21 08:50:50.833892498 -0700
-@@ -1005,7 +1005,13 @@
-         n /= arg_interval;
- 
-         close_nointr_nofail(fd);
-+#ifdef HAVE_MKOSTEMP
-         fd = mkostemp(k, O_WRONLY|O_CLOEXEC|O_NOCTTY);
-+#else
-+	fd = mkstemp(k);
-+	if (fd >= 0) fcntl(fd, F_SETFD, FD_CLOEXEC);
-+#endif /* HAVE_MKOSTEMP */
-+
-         if (fd < 0) {
-                 log_error("Failed to open %s: %m", k);
-                 r = -errno;
-Index: systemd-206/src/journal/journal-verify.c
-===================================================================
---- systemd-206.orig/src/journal/journal-verify.c	2013-07-21 15:43:28.000000000 -0700
-+++ systemd-206/src/journal/journal-verify.c	2013-08-21 08:50:50.833892498 -0700
-@@ -811,8 +811,12 @@
- #endif
-         } else if (f->seal)
-                 return -ENOKEY;
--
-+#ifdef HAVE_MKOSTEMP
-         data_fd = mkostemp(data_path, O_CLOEXEC);
-+#else
-+	data_fd = mkstemp(data_path);
-+	if (data_fd >= 0) fcntl(data_fd, F_SETFD, FD_CLOEXEC);
-+#endif	/* HAVE_MKOSTEMP */
-         if (data_fd < 0) {
-                 log_error("Failed to create data file: %m");
-                 r = -errno;
-@@ -820,7 +824,12 @@
-         }
-         unlink(data_path);
- 
-+#ifdef HAVE_MKOSTEMP
-         entry_fd = mkostemp(entry_path, O_CLOEXEC);
-+#else
-+	entry_fd = mkstemp(entry_path);
-+	if (entry_fd >= 0) fcntl(entry_fd, F_SETFD, FD_CLOEXEC);
-+#endif	/* HAVE_MKOSTEMP */
-         if (entry_fd < 0) {
-                 log_error("Failed to create entry file: %m");
-                 r = -errno;
-@@ -828,7 +837,12 @@
-         }
-         unlink(entry_path);
- 
-+#ifdef HAVE_MKOSTEMP
-         entry_array_fd = mkostemp(entry_array_path, O_CLOEXEC);
-+#else
-+	entry_array_fd = mkstemp(entry_array_path);
-+	if (entry_array_fd >= 0) fcntl(entry_array_fd, F_SETFD, FD_CLOEXEC);
-+#endif  /* HAVE_MKOSTEMP */
-         if (entry_array_fd < 0) {
-                 log_error("Failed to create entry array file: %m");
-                 r = -errno;

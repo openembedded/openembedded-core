@@ -7,29 +7,29 @@ Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
  units/serial-getty@.service.m4 |    2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-Index: systemd-206/units/getty@.service.m4
+Index: git/units/getty@.service.m4
 ===================================================================
---- systemd-206.orig/units/getty@.service.m4	2013-07-21 15:43:28.000000000 -0700
-+++ systemd-206/units/getty@.service.m4	2013-08-21 08:45:48.569886828 -0700
+--- git.orig/units/getty@.service.m4	2014-03-15 08:16:17.000000000 -0700
++++ git/units/getty@.service.m4	2014-03-15 08:21:11.007695825 -0700
 @@ -27,7 +27,7 @@
  
  [Service]
  # the VT is cleared by TTYVTDisallocate
--ExecStart=-/sbin/agetty --noclear %I
-+ExecStart=-/sbin/getty -L %I
+-ExecStart=-/sbin/agetty --noclear %I $TERM
++ExecStart=-/sbin/getty -L %I $TERM
  Type=idle
  Restart=always
  RestartSec=0
-Index: systemd-206/units/serial-getty@.service.m4
+Index: git/units/serial-getty@.service.m4
 ===================================================================
---- systemd-206.orig/units/serial-getty@.service.m4	2013-07-21 15:43:28.000000000 -0700
-+++ systemd-206/units/serial-getty@.service.m4	2013-08-21 08:48:52.337890275 -0700
+--- git.orig/units/serial-getty@.service.m4	2014-03-15 08:16:17.000000000 -0700
++++ git/units/serial-getty@.service.m4	2014-03-15 08:22:31.291697331 -0700
 @@ -22,7 +22,7 @@
  IgnoreOnIsolate=yes
  
  [Service]
--ExecStart=-/sbin/agetty --keep-baud %I 115200,38400,9600
-+ExecStart=-/sbin/getty -L %I 115200
+-ExecStart=-/sbin/agetty --keep-baud 115200,38400,9600 %I $TERM
++ExecStart=-/sbin/getty -L 115200 %I $TERM
  Type=idle
  Restart=always
  RestartSec=0

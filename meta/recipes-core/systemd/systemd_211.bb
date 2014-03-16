@@ -17,14 +17,22 @@ SECTION = "base/shell"
 
 inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest
 
-SRCREV = "255eb046a7bcb90e60a3a54302bc1250c1aed26a"
+SRCREV = "3a450ec5c6adf3057bcedd6cc19c10617abc35a5"
 
-PV = "208+git${SRCPV}"
+PV = "211+git${SRCPV}"
 
-SRC_URI = "git://anongit.freedesktop.org/systemd/systemd-stable;branch=v208-stable;protocol=git \
+SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=git \
            file://binfmt-install.patch \
+           file://systemd-pam-configure-check-uclibc.patch \
+           file://systemd-pam-fix-execvpe.patch \
+           file://systemd-pam-fix-fallocate.patch \
+           file://systemd-pam-fix-mkostemp.patch \
+           file://optional_secure_getenv.patch \
+           file://0001-uClibc-doesn-t-implement-pwritev-preadv.patch \
+           file://uclibc-sysinfo_h.patch \
+           file://uclibc-get-physmem.patch \
+           \
            file://touchscreen.rules \
-           ${UCLIBCPATCHES} \
            file://00-create-volatile.conf \
            file://init \
            file://run-ptest \
@@ -32,17 +40,10 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd-stable;branch=v208-stab
 
 S = "${WORKDIR}/git"
 
-UCLIBCPATCHES = ""
-UCLIBCPATCHES_libc-uclibc = "file://systemd-pam-configure-check-uclibc.patch \
-                             file://systemd-pam-fix-execvpe.patch \
-                             file://systemd-pam-fix-fallocate.patch \
+SRC_URI_append_libc-uclibc = "\
                              file://systemd-pam-fix-getty-unit.patch \
-                             file://systemd-pam-fix-mkostemp.patch \
-                             file://systemd-pam-fix-msformat.patch \
-                             file://optional_secure_getenv.patch \
-                             file://0001-uClibc-doesn-t-implement-pwritev-preadv.patch \
                             "
-LDFLAGS_libc-uclibc_append = " -lrt"
+LDFLAGS_append_libc-uclibc = " -lrt"
 
 GTKDOC_DOCDIR = "${S}/docs/"
 
@@ -74,6 +75,7 @@ EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --disable-manpages \
                  --disable-coredump \
                  --disable-introspection \
+                 --disable-kdbus \
                  --enable-split-usr \
                  --without-python \
                  --with-sysvrcnd-path=${sysconfdir} \
@@ -92,6 +94,8 @@ do_configure_prepend() {
 		cp -r ${S}/units ${S}/units.pre_sed
 	fi
 	sed -i -e 's:=/root:=${ROOT_HOME}:g' ${S}/units/*.service*
+	sed -i -e 's:\$(LN_S) --relative -f:lnr:g' ${S}/Makefile.am
+	sed -i -e 's:\$(LN_S) --relative:lnr:g' ${S}/Makefile.am
 }
 
 do_install() {
@@ -215,6 +219,7 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${libdir}/libnss_myhostname.so.2 \
                 /cgroup \
                 ${bindir}/systemd* \
+                ${bindir}/busctl \
                 ${bindir}/localectl \
                 ${bindir}/hostnamectl \
                 ${bindir}/timedatectl \
