@@ -44,4 +44,6 @@ FILES_${PN}-extra = "${libdir}/libgnutls-extra.so.*"
 FILES_${PN}-openssl = "${libdir}/libgnutls-openssl.so.*"
 FILES_${PN}-xx = "${libdir}/libgnutlsxx.so.*"
 
+LDFLAGS_append_libc-uclibc += " -pthread"
+
 BBCLASSEXTEND = "native"
