@@ -17,7 +17,8 @@ SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
 SRC_URI[md5sum] = "88d46ae23ca599ac5af9cf96b531590f"
 SRC_URI[sha256sum] = "835eb6232cfab0118ef2e4fd649de0ba9f5bd1b8cbf9a7d4d84594541dec8410"
 
-CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=as"
+CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=ms"
+
 EXTRA_OECONF_class-native = "${SHARED_EXTRA_OECONF} \
                              --disable-fallocate --disable-use-tty-group \
 "
