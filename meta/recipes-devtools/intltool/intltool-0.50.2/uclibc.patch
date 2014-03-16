@@ -1,0 +1,19 @@
+on uclibc systems localedir should point to /usr/'share' as usual.
+
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: intltool-0.50.2/intltool.m4
+===================================================================
+--- intltool-0.50.2.orig/intltool.m4	2014-03-15 22:09:01.016627665 -0700
++++ intltool-0.50.2/intltool.m4	2014-03-15 22:12:09.732631206 -0700
+@@ -173,6 +173,9 @@
+     AC_CHECK_FUNC(bind_textdomain_codeset,
+       [DATADIRNAME=share], [DATADIRNAME=lib])
+     ;;
++    *-*-*uclibc*)
++    [DATADIRNAME=share]
++    ;;
+     *)
+     [DATADIRNAME=lib]
+     ;;
