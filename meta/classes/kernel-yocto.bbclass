@@ -321,8 +321,8 @@ do_validate_branches() {
 		fi
 	fi
 
-	ref=`git show ${machine_srcrev} 2>&1 | head -n1 || true`
-	if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
+	git cat-file -t ${machine_srcrev} > /dev/null
+	if [ if $? -ne 0 ]; then
 	    echo "ERROR ${machine_srcrev} is not a valid commit ID."
 	    echo "The kernel source tree may be out of sync"
 	    exit 1
@@ -358,8 +358,8 @@ do_validate_branches() {
 	git show-ref --quiet --verify -- "refs/heads/${KMETA}"
 	if [ $? -eq 0 ] && [ "${target_meta_head}" != "AUTOINC" ]; then
 		if [ "$meta_head" != "$target_meta_head" ]; then
-			ref=`git show ${target_meta_head} 2>&1 | head -n1 || true`
-			if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
+			git cat-file -t ${target_meta_head} > /dev/null
+			if [ $? -ne 0 ]; then
 				echo "ERROR ${target_meta_head} is not a valid commit ID"
 				echo "The kernel source tree may be out of sync"
 				exit 1
