@@ -180,7 +180,7 @@ class DpkgIndexer(Indexer):
         if sdk_pkg_archs is not None:
             arch_list += sdk_pkg_archs.split()
 
-        dpkg_scanpackages = bb.utils.which(os.getenv('PATH'), "dpkg-scanpackages")
+        apt_ftparchive = bb.utils.which(os.getenv('PATH'), "apt-ftparchive")
         gzip = bb.utils.which(os.getenv('PATH'), "gzip")
 
         index_cmds = []
@@ -190,11 +190,17 @@ class DpkgIndexer(Indexer):
             if not os.path.isdir(arch_dir):
                 continue
 
+            index_cmds.append("cd %s; PSEUDO_UNLOAD=1 %s packages > Packages" %
+                              (arch_dir, apt_ftparchive))
+
+            index_cmds.append("cd %s; %s Packages -c > Packages.gz" %
+                              (arch_dir, gzip))
+
             with open(os.path.join(arch_dir, "Release"), "w+") as release:
                 release.write("Label: %s" % arch)
 
-            index_cmds.append("cd %s; %s . | %s > Packages.gz" %
-                              (arch_dir, dpkg_scanpackages, gzip))
+            index_cmds.append("cd %s; PSEUDO_UNLOAD=1 %s release >> Release" %
+                              (arch_dir, apt_ftparchive))
 
             deb_dirs_found = True
 
