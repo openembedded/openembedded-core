@@ -20,6 +20,7 @@ mkdir -p $SYSCONFDIR
 HOST_KEY_RSA=$SYSCONFDIR/ssh_host_rsa_key
 HOST_KEY_DSA=$SYSCONFDIR/ssh_host_dsa_key
 HOST_KEY_ECDSA=$SYSCONFDIR/ssh_host_ecdsa_key
+HOST_KEY_ED25519=$SYSCONFDIR/ssh_host_ed25519_key
 
 check_for_no_start() {
     # forget it if we're trying to start, and /etc/ssh/sshd_not_to_be_run exists
@@ -51,9 +52,13 @@ check_keys() {
 		echo "  generating ssh ECDSA key..."
 		ssh-keygen -q -f $HOST_KEY_ECDSA -N '' -t ecdsa
 	fi
-	if [ ! -f /etc/ssh/ssh_host_dsa_key ]; then
+	if [ ! -f $HOST_KEY_DSA ]; then
 		echo "  generating ssh DSA key..."
 		ssh-keygen -q -f $HOST_KEY_DSA -N '' -t dsa
+	fi
+	if [ ! -f $HOST_KEY_ED25519 ]; then
+		echo "  generating ssh ED25519 key..."
+		ssh-keygen -q -f $HOST_KEY_ED25519 -N '' -t ed25519
 	fi
 }
 
