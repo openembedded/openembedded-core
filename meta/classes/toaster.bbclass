@@ -281,6 +281,17 @@ python toaster_buildhistory_dump() {
 
 }
 
+# dump information related to license manifest path
+
+python toaster_licensemanifest_dump() {
+    deploy_dir_image = d.getVar('DEPLOY_DIR_IMAGE', True);
+    image_name = d.getVar('IMAGE_NAME', True);
+
+    data = { 'deploy_dir_image' : deploy_dir_image, 'image_name' : image_name }
+
+    bb.event.fire(bb.event.MetadataEvent("LicenseManifestPath", data), d)
+}
+
 # set event handlers
 addhandler toaster_layerinfo_dumpdata
 toaster_layerinfo_dumpdata[eventmask] = "bb.event.TreeDataPreparationCompleted"
@@ -293,3 +304,4 @@ toaster_buildhistory_dump[eventmask] = "bb.event.BuildCompleted"
 do_package[postfuncs] += "toaster_package_dumpdata "
 
 do_rootfs[postfuncs] += "toaster_image_dumpdata "
+do_rootfs[postfuncs] += "toaster_licensemanifest_dump "
