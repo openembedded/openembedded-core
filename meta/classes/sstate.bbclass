@@ -625,6 +625,7 @@ BB_HASHCHECK_FUNCTION = "sstate_checkhashes"
 def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
 
     ret = []
+    missed = []
 
     def getpathcomponents(task, d):
         # Magic data from BB_HASHFILENAME
@@ -646,11 +647,13 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
         spec, extrapath, tname = getpathcomponents(task, d)
 
         sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, sq_hash[task], d) + "_" + tname + ".tgz.siginfo")
+
         if os.path.exists(sstatefile):
             bb.debug(2, "SState: Found valid sstate file %s" % sstatefile)
             ret.append(task)
             continue
         else:
+            missed.append(task)
             bb.debug(2, "SState: Looked for but didn't find file %s" % sstatefile)
 
     mirrors = d.getVar("SSTATE_MIRRORS", True)
@@ -688,8 +691,16 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
                 bb.debug(2, "SState: Successful fetch test for %s" % srcuri)
                 ret.append(task)
             except:
+                missed.append(task)
                 bb.debug(2, "SState: Unsuccessful fetch test for %s" % srcuri)
                 pass     
+
+    inheritlist = d.getVar("INHERIT", True)
+    if "toaster" in inheritlist:
+        evdata = []
+        for task in missed:
+            evdata.append( (sq_fn[task], sq_task[task], sq_hash[task], generate_sstatefn(spec, sq_hash[task],d) ) )
+        bb.event.fire(bb.event.MetadataEvent("MissedSstate", evdata), d)
 
     return ret
 
