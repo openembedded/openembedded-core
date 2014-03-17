@@ -296,12 +296,14 @@ do_validate_branches() {
 	export KMETA=${KMETA}
 
 	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
+	machine_srcrev="${SRCREV_machine}"
 
 	set +e
 	# if SRCREV is AUTOREV it shows up as AUTOINC there's nothing to
 	# check and we can exit early
-	if [ "${SRCREV_machine}" = "AUTOINC" ] || [ "${SRCREV_machine}" = "INVALID" ] ||
-	   [ "${SRCREV_machine}" = "" ]; then
+	if [ "${machine_srcrev}" = "AUTOINC" ] || [ "${machine_srcrev}" = "INVALID" ] ||
+	   [ "${machine_srcrev}" = "" ]; then
+		bbnote "INFO: SRCREV validation is not required for AUTOREV or empty/invalid settings, returning"
 		return
 	fi
 
@@ -319,27 +321,16 @@ do_validate_branches() {
 		fi
 	fi
 
-	if [ -z "${SRCREV_machine}" ]; then
-		target_branch_head="${SRCREV}"
-	else
-	 	target_branch_head="${SRCREV_machine}"
-	fi
-
-	# $SRCREV could have also been AUTOINC, so check again
-	if [ "${target_branch_head}" = "AUTOINC" ]; then
-		return
-	fi
-
-	ref=`git show ${target_branch_head} 2>&1 | head -n1 || true`
+	ref=`git show ${machine_srcrev} 2>&1 | head -n1 || true`
 	if [ "$ref" = "fatal: bad object ${target_meta_head}" ]; then
-	    echo "ERROR ${target_branch_head} is not a valid commit ID."
+	    echo "ERROR ${machine_srcrev} is not a valid commit ID."
 	    echo "The kernel source tree may be out of sync"
 	    exit 1
 	fi
 
-	containing_branches=`git branch --contains $target_branch_head | sed 's/^..//'`
+	containing_branches=`git branch --contains $machine_srcrev | sed 's/^..//'`
 	if [ -z "$containing_branches" ]; then
-		echo "ERROR: SRCREV was set to \"$target_branch_head\", but no branches"
+		echo "ERROR: SRCREV was set to \"$machine_srcrev\", but no branches"
 		echo "       contain this commit"
 		exit 1
 	fi
@@ -349,13 +340,13 @@ do_validate_branches() {
 	git checkout -q master
 	for b in $containing_branches; do
 		branch_head=`git show-ref -s --heads ${b}`		
-		if [ "$branch_head" != "$target_branch_head" ]; then
-			echo "[INFO] Setting branch $b to ${target_branch_head}"
+		if [ "$branch_head" != "$machine_srcrev" ]; then
+			echo "[INFO] Setting branch $b to ${machine_srcrev}"
 			if [ "$b" = "master" ]; then
-				git reset --hard $target_branch_head > /dev/null
+				git reset --hard $machine_srcrev > /dev/null
 			else
 				git branch -D $b > /dev/null
-				git branch $b $target_branch_head > /dev/null
+				git branch $b $machine_srcrev > /dev/null
 			fi
 		fi
 	done
