@@ -639,18 +639,11 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
         return x.endswith("-native")
     def isNativeCross(x):
         return x.endswith("-native") or x.endswith("-cross") or x.endswith("-cross-initial")
-    def isSafeDep(x):
-        if x in ["quilt-native", "autoconf-native", "automake-native", "gnu-config-native", "libtool-native", "pkgconfig-native", "gcc-cross", "binutils-cross", "gcc-cross-initial"]:
-            return True
-        return False
+
     def isPostInstDep(x):
         if x in ["qemu-native", "gdk-pixbuf-native", "qemuwrapper-cross", "depmodwrapper-cross", "systemd-systemctl-native", "gtk-update-icon-cache-native"]:
             return True
         return False
-
-    # We can skip these "safe" dependencies since the aren't runtime dependencies, just build time
-    if isSafeDep(taskdependees[task][0]) and taskdependees[task][1] == "do_populate_sysroot":
-        return True
 
     # We only need to trigger populate_lic through direct dependencies
     if taskdependees[task][1] == "do_populate_lic":
