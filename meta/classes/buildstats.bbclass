@@ -109,14 +109,17 @@ def get_diskdata(var, dev, data):
         diskdata["End"+key] = str(int(newdiskdata[key]))    
     return diskdata
     
-def set_timedata(var, data):
+def set_timedata(var, data, server_time=None):
     import time
-    time = time.time()
+    if server_time:
+        time = server_time
+    else:
+        time = time.time()
     cputime = get_cputime()
     proctime = get_process_cputime(os.getpid())
     data.setVar(var, (time, cputime, proctime))
 
-def get_timedata(var, data):
+def get_timedata(var, data, server_time=None):
     import time
     timedata = data.getVar(var, False)
     if timedata is None:
@@ -124,7 +127,11 @@ def get_timedata(var, data):
     oldtime, oldcpu, oldproc = timedata
     procdiff = get_process_cputime(os.getpid()) - oldproc
     cpudiff = get_cputime() - oldcpu
-    timediff = time.time() - oldtime
+    if server_time:
+        end_time = server_time
+    else:
+        end_time = time.time()
+    timediff = end_time - oldtime
     if cpudiff > 0:
         cpuperc = float(procdiff) * 100 / cpudiff
     else:
@@ -136,7 +143,7 @@ def write_task_data(status, logfile, dev, e):
     bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
     taskdir = os.path.join(bsdir, e.data.expand("${PF}"))
     file = open(os.path.join(logfile), "a")
-    timedata = get_timedata("__timedata_task", e.data)
+    timedata = get_timedata("__timedata_task", e.data, e.time)
     if timedata:
         elapsedtime, cpu = timedata
         file.write(bb.data.expand("${PF}: %s: Elapsed time: %0.2f seconds \n" %
@@ -160,7 +167,7 @@ def write_task_data(status, logfile, dev, e):
 	    file.write("Status: PASSED \n")
     else:
         file.write("Status: FAILED \n")
-    file.write("Ended: %0.2f \n" % time.time())
+    file.write("Ended: %0.2f \n" % e.time)
     file.close()
 
 python run_buildstats () {
@@ -234,7 +241,7 @@ python run_buildstats () {
         taskdir = os.path.join(bsdir, e.data.expand("${PF}"))
         if device != "NoLogicalDevice":
             set_diskdata("__diskdata_task", device, e.data)
-        set_timedata("__timedata_task", e.data)
+        set_timedata("__timedata_task", e.data, e.time)
         try:
             bb.utils.mkdirhier(taskdir)
         except:
@@ -242,7 +249,7 @@ python run_buildstats () {
         # write into the task event file the name and start time
         file = open(os.path.join(taskdir, e.task), "a")
         file.write("Event: %s \n" % bb.event.getName(e))
-        file.write("Started: %0.2f \n" % time.time())
+        file.write("Started: %0.2f \n" % e.time)
         file.close()
 
     elif isinstance(e, bb.build.TaskSucceeded):
