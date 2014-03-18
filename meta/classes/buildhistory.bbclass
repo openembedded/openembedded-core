@@ -313,22 +313,36 @@ def write_pkghistory(pkginfo, d):
             if os.path.exists(filevarpath):
                 os.unlink(filevarpath)
 
-python buildhistory_list_installed() {
-    from oe.rootfs import list_installed_packages
+#
+# rootfs_type can be: image, sdk_target, sdk_host
+#
+def buildhistory_list_installed(d, rootfs_type="image"):
+    from oe.rootfs import image_list_installed_packages
+    from oe.sdk import sdk_list_installed_packages
 
-    pkgs_list_file = os.path.join(d.getVar('WORKDIR', True),
-                                  "bh_installed_pkgs.txt")
+    process_list = [('file', 'bh_installed_pkgs.txt'),\
+                    ('deps', 'bh_installed_pkgs_deps.txt')]
 
-    with open(pkgs_list_file, 'w') as pkgs_list:
-        pkgs_list.write(list_installed_packages(d, 'file'))
+    for output_type, output_file in process_list:
+        output_file_full = os.path.join(d.getVar('WORKDIR', True), output_file)
 
-    pkgs_deps_file = os.path.join(d.getVar('WORKDIR', True),
-                                  "bh_installed_pkgs_deps.txt")
+        with open(output_file_full, 'w') as output:
+            if rootfs_type == "image":
+                output.write(image_list_installed_packages(d, output_type))
+            else:
+                output.write(sdk_list_installed_packages(d, rootfs_type == "sdk_target", output_type))
 
-    with open(pkgs_deps_file, 'w') as pkgs_deps:
-        pkgs_deps.write(list_installed_packages(d, 'deps'))
+python buildhistory_list_installed_image() {
+    buildhistory_list_installed(d)
 }
 
+python buildhistory_list_installed_sdk_target() {
+    buildhistory_list_installed(d, "sdk_target")
+}
+
+python buildhistory_list_installed_sdk_host() {
+    buildhistory_list_installed(d, "sdk_host")
+}
 
 buildhistory_get_installed() {
 	mkdir -p $1
@@ -471,15 +485,15 @@ END
 }
 
 # By prepending we get in before the removal of packaging files
-ROOTFS_POSTPROCESS_COMMAND =+ " buildhistory_list_installed ;\
+ROOTFS_POSTPROCESS_COMMAND =+ " buildhistory_list_installed_image ;\
                                 buildhistory_get_image_installed ; "
 
 IMAGE_POSTPROCESS_COMMAND += " buildhistory_get_imageinfo ; "
 
 # We want these to be the last run so that we get called after complementary package installation
-POPULATE_SDK_POST_TARGET_COMMAND_append = " buildhistory_list_installed ;\
+POPULATE_SDK_POST_TARGET_COMMAND_append = " buildhistory_list_installed_sdk_target ;\
                                             buildhistory_get_sdk_installed_target ; "
-POPULATE_SDK_POST_HOST_COMMAND_append = " buildhistory_list_installed ;\
+POPULATE_SDK_POST_HOST_COMMAND_append = " buildhistory_list_installed_sdk_host ;\
                                           buildhistory_get_sdk_installed_host ; "
 
 SDK_POSTPROCESS_COMMAND += "buildhistory_get_sdkinfo ; "
