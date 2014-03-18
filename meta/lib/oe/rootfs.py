@@ -709,28 +709,17 @@ def create_rootfs(d, manifest_dir=None):
     os.environ.update(env_bkp)
 
 
-def list_installed_packages(d, format=None, rootfs_dir=None):
+def image_list_installed_packages(d, format=None, rootfs_dir=None):
     if not rootfs_dir:
         rootfs_dir = d.getVar('IMAGE_ROOTFS', True)
 
     img_type = d.getVar('IMAGE_PKGTYPE', True)
     if img_type == "rpm":
-        return RpmPM(d,
-                     rootfs_dir,
-                     d.getVar('TARGET_VENDOR', True)
-                     ).list_installed(format)
+        return RpmPkgsList(d, rootfs_dir).list(format)
     elif img_type == "ipk":
-        return OpkgPM(d,
-                      rootfs_dir,
-                      d.getVar("IPKGCONF_TARGET", True),
-                      d.getVar("ALL_MULTILIB_PACKAGE_ARCHS", True)
-                      ).list_installed(format)
+        return OpkgPkgsList(d, rootfs_dir, d.getVar("IPKGCONF_TARGET", True)).list(format)
     elif img_type == "deb":
-        return DpkgPM(d,
-                      rootfs_dir,
-                      d.getVar('PACKAGE_ARCHS', True),
-                      d.getVar('DPKG_ARCH', True)
-                      ).list_installed(format)
+        return DpkgPkgsList(d, rootfs_dir).list(format)
 
 if __name__ == "__main__":
     """
