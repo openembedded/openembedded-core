@@ -40,6 +40,7 @@ CFLAGS =+ "-I${S}/include"
 
 SSTATEPOSTINSTFUNCS += "openjade_sstate_postinst"
 SYSROOT_PREPROCESS_FUNCS += "openjade_sysroot_preprocess"
+CLEANFUNCS += "openjade_sstate_clean"
 
 # configure.in needs to be reloacted to trigger reautoconf
 do_extraunpack () {
@@ -97,3 +98,11 @@ openjade_sysroot_preprocess () {
     install -m 755 ${STAGING_BINDIR_NATIVE}/install-catalog ${SYSROOT_DESTDIR}${bindir_crossscripts}/install-catalog-openjade
 }
 
+openjade_sstate_clean () {
+	# Ensure that the catalog file sgml-docbook.cat is properly
+	# updated when the package is removed from sstate cache.
+	files="${sysconfdir}/sgml/sgml-docbook.bak ${sysconfdir}/sgml/sgml-docbook.cat"
+	for f in $files; do
+		[ ! -f $f ] || sed -i '/\/sgml\/openjade-${PV}.cat/d' $f
+	done
+}

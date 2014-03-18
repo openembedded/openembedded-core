@@ -19,6 +19,7 @@ inherit native
 
 SSTATEPOSTINSTFUNCS += "docbook_dsssl_stylesheets_sstate_postinst"
 SYSROOT_PREPROCESS_FUNCS += "docbook_dsssl_sysroot_preprocess"
+CLEANFUNCS += "docbook_dsssl_stylesheets_sstate_clean"
 
 
 do_install () {
@@ -57,3 +58,11 @@ docbook_dsssl_sysroot_preprocess () {
     install -m 755 ${STAGING_BINDIR_NATIVE}/install-catalog ${SYSROOT_DESTDIR}${bindir_crossscripts}/install-catalog-docbook-dsssl
 }
 
+docbook_dsssl_stylesheets_sstate_clean () {
+	# Ensure that the catalog file sgml-docbook.cat is properly
+	# updated when the package is removed from sstate cache.
+	files="${sysconfdir}/sgml/sgml-docbook.bak ${sysconfdir}/sgml/sgml-docbook.cat"
+	for f in $files; do
+		[ ! -f $f ] || sed -i '/\/sgml\/dsssl-docbook-stylesheets.cat/d' $f
+	done
+}

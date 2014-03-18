@@ -63,10 +63,8 @@ CLEANFUNCS += "docbook_sgml_dtd_sstate_clean"
 docbook_sgml_dtd_sstate_clean () {
 	# Ensure that the catalog file sgml-docbook.cat is properly
 	# updated when the package is removed from sstate cache.
-	if [ -f ${sysconfdir}/sgml/sgml-docbook.bak ]; then
-		sed -i '/'"\/sgml\/sgml-docbook-dtd-${DTD_VERSION}.cat"'/d' \
-			${sysconfdir}/sgml/sgml-docbook.bak
-		sed -i '/'"\/sgml\/sgml-docbook-dtd-${DTD_VERSION}.cat"'/d' \
-			${sysconfdir}/sgml/sgml-docbook.cat
-	fi
+	files="${sysconfdir}/sgml/sgml-docbook.bak ${sysconfdir}/sgml/sgml-docbook.cat"
+	for f in $files; do
+		[ ! -f $f ] || sed -i '/\/sgml\/sgml-docbook-dtd-${DTD_VERSION}.cat/d' $f
+	done
 }
