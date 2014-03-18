@@ -351,13 +351,6 @@ do_validate_branches() {
 	    exit 1
 	fi
 
-	containing_branches=`git branch --contains $machine_srcrev | sed 's/^..//'`
-	if [ -z "$containing_branches" ]; then
-		echo "ERROR: SRCREV was set to \"$machine_srcrev\", but no branches"
-		echo "       contain this commit"
-		exit 1
-	fi
-
 	## KMETA branch validation.
 	## We do validation if the meta branch exists, and AUTOREV hasn't been set
  	meta_head=`git show-ref -s --heads ${KMETA}`
