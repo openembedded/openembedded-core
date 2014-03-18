@@ -71,6 +71,7 @@ do_patch() {
 	fi
 
 	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
+	machine_srcrev="${SRCREV_machine}"
 
 	# if we have a defined/set meta branch we should not be generating
 	# any meta data. The passed branch has what we need.
@@ -122,12 +123,34 @@ do_patch() {
 		exit 1
 	fi
 
+	# see if the branch we are about to patch has been properly reset to the defined
+	# SRCREV .. if not, we reset it.
+	branch_head=`git rev-parse HEAD`
+	if [ "${machine_srcrev}" != "AUTOINC" ]; then
+	 	if [ "${machine_srcrev}" != "${branch_head}" ]; then
+			current_branch=`git rev-parse --abbrev-ref HEAD`
+			git branch "$current_branch-orig"
+			git reset --hard ${machine_srcrev}
+		fi
+	fi
+
 	# executes and modifies the source tree as required
 	patchme ${KMACHINE}
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not apply patches for ${KMACHINE}."
 		echo "       Patch failures can be resolved in the devshell (bitbake -c devshell ${PN})"
 		exit 1
+	fi
+
+	# check to see if the specified SRCREV is reachable from the final branch.
+	# if it wasn't something wrong has happened, and we should error.
+	if [ "${machine_srcrev}" != "AUTOINC" ]; then
+		git merge-base --is-ancestor ${machine_srcrev} HEAD
+	 	if [ $? -ne 0 ]; then
+			bbnote "ERROR: SRCREV ${machine_srcrev} was specified, but is not reachable"
+			bbnote "       Check the BSP description for incorrect branch selection, or other errors."
+			exit 1
+		fi
 	fi
 
 	# Perform a final check. If something other than the default kernel
@@ -334,22 +357,6 @@ do_validate_branches() {
 		echo "       contain this commit"
 		exit 1
 	fi
-
-	# force the SRCREV in each branch that contains the specified
-	# SRCREV (if it isn't the current HEAD of that branch)
-	git checkout -q master
-	for b in $containing_branches; do
-		branch_head=`git show-ref -s --heads ${b}`		
-		if [ "$branch_head" != "$machine_srcrev" ]; then
-			echo "[INFO] Setting branch $b to ${machine_srcrev}"
-			if [ "$b" = "master" ]; then
-				git reset --hard $machine_srcrev > /dev/null
-			else
-				git branch -D $b > /dev/null
-				git branch $b $machine_srcrev > /dev/null
-			fi
-		fi
-	done
 
 	## KMETA branch validation.
 	## We do validation if the meta branch exists, and AUTOREV hasn't been set
