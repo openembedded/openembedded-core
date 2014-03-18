@@ -22,6 +22,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/expect/Expect/${PV}/${BPN}${PV}.tar.gz \
            file://0001-configure.in.patch \
            file://0002-tcl.m4.patch \
            file://01-example-shebang.patch \
+           file://0001-expect-install-scripts-without-using-the-fixline1-tc.patch \
           "
 SRC_URI[md5sum] = "44e1a4f4c877e9ddc5a542dfa7ecc92b"
 SRC_URI[sha256sum] = "b28dca90428a3b30e650525cdc16255d76bb6ccd65d448be53e620d95d5cc040"
