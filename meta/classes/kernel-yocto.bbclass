@@ -200,20 +200,6 @@ do_kernel_checkout() {
 	fi
 	# end debare
 
-       	# If KMETA is defined, the branch must exist, but a machine branch
-	# can be missing since it may be created later by the tools.
-	if [ -n "${KMETA}" ]; then
-		git branch -a --no-color | grep -q ${KMETA}
-		if [ $? -ne 0 ]; then
-			echo "ERROR. The branch '${KMETA}' is required and was not"
-			echo "found. Ensure that the SRC_URI points to a valid linux-yocto"
-			echo "kernel repository"
-			exit 1
-		fi
-	fi
-	
-	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
-
 	# convert any remote branches to local tracking ones
 	for i in `git branch -a --no-color | grep remotes | grep -v HEAD`; do
 		b=`echo $i | cut -d' ' -f2 | sed 's%remotes/origin/%%'`;
@@ -222,6 +208,20 @@ do_kernel_checkout() {
 			git branch $b $i > /dev/null
 		fi
 	done
+
+       	# If KMETA is defined, the branch must exist, but a machine branch
+	# can be missing since it may be created later by the tools.
+	if [ -n "${KMETA}" ]; then
+		git show-ref --quiet --verify -- "refs/heads/${KMETA}"
+		if [ $? -eq 1 ]; then
+			echo "ERROR. The branch '${KMETA}' is required and was not"
+			echo "found. Ensure that the SRC_URI points to a valid linux-yocto"
+			echo "kernel repository"
+			exit 1
+		fi
+	fi
+	
+	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
 
 	# Create a working tree copy of the kernel by checking out a branch
 	git show-ref --quiet --verify -- "refs/heads/${machine_branch}"
