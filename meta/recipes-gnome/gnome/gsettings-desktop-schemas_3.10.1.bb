@@ -12,5 +12,5 @@ inherit gnome gsettings gettext
 
 GNOME_COMPRESS_TYPE = "xz"
 
-SRC_URI[archive.md5sum] = "6dbede8f6112b7e0dd4864e979b91771"
-SRC_URI[archive.sha256sum] = "1da53e1b960f08ce4b0d472e6f339b7beaf19a7889c15911775abf4efe2ec760"
+SRC_URI[archive.md5sum] = "f9ffca591a984f19a1dd9caeb96b5f23"
+SRC_URI[archive.sha256sum] = "452378c4960a145747ec69f8c6a874e5b7715454df3e2452d1ff1a0a82e76811"
