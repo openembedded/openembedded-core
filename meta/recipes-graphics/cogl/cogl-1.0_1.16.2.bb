@@ -4,5 +4,5 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 SRC_URI += "file://kms-include-stddef.h-before-drm.h.patch"
 
-SRC_URI[archive.md5sum] = "611a61bed04354cbfffa3dc27feb6d4f"
-SRC_URI[archive.sha256sum] = "75c2c4636a050fda7ee8722ce3d9c618b08799ed92bbb72b4fdff3e73b096094"
+SRC_URI[archive.md5sum] = "aaf32bde135cf3815aa3221726bad71e"
+SRC_URI[archive.sha256sum] = "65be91591546ef6fdfec93a71979b2b108eee25edbc20c53190caafc9a92d4e7"
