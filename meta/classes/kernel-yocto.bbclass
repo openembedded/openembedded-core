@@ -230,12 +230,6 @@ do_kernel_checkout() {
 	
 	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
 
-	if [ "${KBRANCH}" != "${machine_branch}" ]; then
-		echo "WARNING: The SRC_URI machine branch and KBRANCH are not the same."
-		echo "	       KBRANCH will be adjusted to match, but this typically is a"
-		echo "	       misconfiguration and should be checked."
-	fi
-
 	# convert any remote branches to local tracking ones
 	for i in `git branch -a --no-color | grep remotes | grep -v HEAD`; do
 		b=`echo $i | cut -d' ' -f2 | sed 's%remotes/origin/%%'`;
