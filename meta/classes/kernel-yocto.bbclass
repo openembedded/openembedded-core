@@ -311,37 +311,36 @@ do_validate_branches() {
 	if [ "${machine_srcrev}" = "AUTOINC" ] || [ "${machine_srcrev}" = "INVALID" ] ||
 	   [ "${machine_srcrev}" = "" ]; then
 		bbnote "INFO: SRCREV validation is not required for AUTOREV or empty/invalid settings, returning"
-		return
-	fi
-
-
-	git cat-file -t ${machine_srcrev} > /dev/null
-	if [ if $? -ne 0 ]; then
-	    echo "ERROR ${machine_srcrev} is not a valid commit ID."
-	    echo "The kernel source tree may be out of sync"
-	    exit 1
+	else
+		git cat-file -t ${machine_srcrev} > /dev/null
+		if [ if $? -ne 0 ]; then
+			echo "ERROR ${machine_srcrev} is not a valid commit ID."
+			echo "The kernel source tree may be out of sync"
+			exit 1
+		fi
 	fi
 
 	## KMETA branch validation.
 	## We do validation if the meta branch exists, and AUTOREV hasn't been set
- 	meta_head=`git show-ref -s --heads ${KMETA}`
- 	target_meta_head="${SRCREV_meta}"
-	git show-ref --quiet --verify -- "refs/heads/${KMETA}"
-	if [ $? -eq 0 ] && [ "${target_meta_head}" != "AUTOINC" ]; then
+	target_meta_head="${SRCREV_meta}"
+	if [ "${target_meta_head}" = "AUTOINC" ] || [ "${target_meta_head}" = "" ]; then
+		bbnote "INFO: SRCREV validation skipped for AUTOREV or empty meta branch"
+	else
+	 	meta_head=`git show-ref -s --heads ${KMETA}`
+
+		git cat-file -t ${target_meta_head} > /dev/null
+		if [ $? -ne 0 ]; then
+			echo "ERROR ${target_meta_head} is not a valid commit ID"
+			echo "The kernel source tree may be out of sync"
+			exit 1
+		fi
 		if [ "$meta_head" != "$target_meta_head" ]; then
-			git cat-file -t ${target_meta_head} > /dev/null
-			if [ $? -ne 0 ]; then
-				echo "ERROR ${target_meta_head} is not a valid commit ID"
-				echo "The kernel source tree may be out of sync"
+			echo "[INFO] Setting branch ${KMETA} to ${target_meta_head}"
+			git branch -m ${KMETA} ${KMETA}-orig
+			git checkout -q -b ${KMETA} ${target_meta_head}
+			if [ $? -ne 0 ];then
+				echo "ERROR: could not checkout ${KMETA} branch from known hash ${target_meta_head}"
 				exit 1
-			else
-				echo "[INFO] Setting branch ${KMETA} to ${target_meta_head}"
-				git branch -m ${KMETA} ${KMETA}-orig
-				git checkout -q -b ${KMETA} ${target_meta_head}
-				if [ $? -ne 0 ];then
-					echo "ERROR: could not checkout ${KMETA} branch from known hash ${target_meta_head}"
-					exit 1
-				fi
 			fi
 		fi
 	fi
