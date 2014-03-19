@@ -221,17 +221,16 @@ do_kernel_checkout() {
 		fi
 	fi
 	
-	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
 
 	# Create a working tree copy of the kernel by checking out a branch
+	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
 	git show-ref --quiet --verify -- "refs/heads/${machine_branch}"
 	if [ $? -eq 0 ]; then
-		# checkout and clobber any unimportant files
-		git checkout -f ${machine_branch}
-	else
-		echo "Not checking out ${machine_branch}, it will be created later"
-		git checkout -f master
+		machine_branch = "master"
 	fi
+
+	# checkout and clobber any unimportant files
+	git checkout -f ${machine_branch}
 }
 do_kernel_checkout[dirs] = "${S}"
 
