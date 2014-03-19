@@ -141,7 +141,7 @@ will be deleted. Be CAUTIOUS.""")
     get_cur_arch_dirs(workdir, cur_arch_dirs)
 
     for workroot, dirs, files in os.walk(workdir):
-        # For the files, they should NOT exist in WORKDIR. Romve them.
+        # For the files, they should NOT exist in WORKDIR. Remove them.
         for f in files:
             obsolete_dirs.append(os.path.join(workroot, f))
 
