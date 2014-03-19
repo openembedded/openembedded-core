@@ -309,13 +309,19 @@ python do_kernel_configcheck() {
 # their SRCREV values. If they are NOT on the right commits, the branches
 # are corrected to the proper commit.
 do_validate_branches() {
+	set +e
 	cd ${S}
 	export KMETA=${KMETA}
 
 	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
 	machine_srcrev="${SRCREV_machine}"
 
-	set +e
+	# if the machine branch doesn't exist, lets build master
+	git show-ref --quiet --verify -- "refs/heads/${machine_branch}"
+	if [ $? -eq 1 ]; then
+		machine_branch = "master"
+	fi
+
 	# if SRCREV is AUTOREV it shows up as AUTOINC there's nothing to
 	# check and we can exit early
 	if [ "${machine_srcrev}" = "AUTOINC" ] || [ "${machine_srcrev}" = "INVALID" ] ||
@@ -324,19 +330,6 @@ do_validate_branches() {
 		return
 	fi
 
-	# If something other than the default branch was requested, it must
-	# exist in the tree, and it's a hard error if it wasn't
-	git show-ref --quiet --verify -- "refs/heads/${machine_branch}"
-	if [ $? -eq 1 ]; then
-		if [ -n "${KBRANCH_DEFAULT}" ] && 
-                      [ "${machine_branch}" != "${KBRANCH_DEFAULT}" ]; then
-			echo "ERROR: branch ${machine_branch} was set for kernel compilation, "
-			echo "       but it does not exist in the kernel repository."
-			echo "       Check the value of KBRANCH and ensure that it describes"
-			echo "       a valid banch in the source kernel repository"
-			exit 1
-		fi
-	fi
 
 	git cat-file -t ${machine_srcrev} > /dev/null
 	if [ if $? -ne 0 ]; then
@@ -369,13 +362,7 @@ do_validate_branches() {
 		fi
 	fi
 
-	git show-ref --quiet --verify -- "refs/heads/${machine_branch}"
-	if [ $? -eq 0 ]; then
-		# restore the branch for builds
-		git checkout -q -f ${machine_branch}
-        else
-	        git checkout -q master
-	fi
+	git checkout -q -f ${machine_branch}
 }
 
 # Many scripts want to look in arch/$arch/boot for the bootable
