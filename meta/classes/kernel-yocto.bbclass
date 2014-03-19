@@ -72,6 +72,10 @@ do_patch() {
 
 	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
 	machine_srcrev="${SRCREV_machine}"
+	if [ -z "${machine_srcrev}" ]; then
+		# fallback to SRCREV if a non machine_meta tree is being built
+		machine_srcrev="${SRCREV}"
+	fi
 
 	# if we have a defined/set meta branch we should not be generating
 	# any meta data. The passed branch has what we need.
@@ -117,17 +121,6 @@ do_patch() {
 	if [ $? -ne 0 ]; then
 		echo "ERROR. Could not update ${machine_branch}"
 		exit 1
-	fi
-
-	# see if the branch we are about to patch has been properly reset to the defined
-	# SRCREV .. if not, we reset it.
-	branch_head=`git rev-parse HEAD`
-	if [ "${machine_srcrev}" != "AUTOINC" ]; then
-	 	if [ "${machine_srcrev}" != "${branch_head}" ]; then
-			current_branch=`git rev-parse --abbrev-ref HEAD`
-			git branch "$current_branch-orig"
-			git reset --hard ${machine_srcrev}
-		fi
 	fi
 
 	# executes and modifies the source tree as required
@@ -299,17 +292,16 @@ do_validate_branches() {
 	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
 	machine_srcrev="${SRCREV_machine}"
 
-	# if the machine branch doesn't exist, lets build master
-	git show-ref --quiet --verify -- "refs/heads/${machine_branch}"
-	if [ $? -eq 1 ]; then
-		machine_branch = "master"
-	fi
-
 	# if SRCREV is AUTOREV it shows up as AUTOINC there's nothing to
 	# check and we can exit early
-	if [ "${machine_srcrev}" = "AUTOINC" ] || [ "${machine_srcrev}" = "INVALID" ] ||
-	   [ "${machine_srcrev}" = "" ]; then
+	if [ "${machine_srcrev}" = "AUTOINC" ]; then
 		bbnote "INFO: SRCREV validation is not required for AUTOREV or empty/invalid settings, returning"
+	elif [ "${machine_srcrev}" = "" ] && [ "${SRCREV}" != "AUTOINC" ]; then
+		# SRCREV_machine_<MACHINE> was not set. This means that a custom recipe
+		# that doesn't use the SRCREV_FORMAT "machine_meta" is being built. In
+		# this case, we need to reset to the give SRCREV before heading to patching
+		bbnote "INFO: custom recipe is being built, forcing SRCREV to ${SRCREV}"
+		force_srcrev="${SRCREV}"
 	else
 		git cat-file -t ${machine_srcrev} > /dev/null
 		if [ if $? -ne 0 ]; then
@@ -317,10 +309,10 @@ do_validate_branches() {
 			echo "The kernel source tree may be out of sync"
 			exit 1
 		fi
+		force_srcrev=${machine_srcrev}
 	fi
 
 	## KMETA branch validation.
-	## We do validation if the meta branch exists, and AUTOREV hasn't been set
 	target_meta_head="${SRCREV_meta}"
 	if [ "${target_meta_head}" = "AUTOINC" ] || [ "${target_meta_head}" = "" ]; then
 		bbnote "INFO: SRCREV validation skipped for AUTOREV or empty meta branch"
@@ -345,6 +337,16 @@ do_validate_branches() {
 	fi
 
 	git checkout -q -f ${machine_branch}
+	if [ -n "${force_srcrev}" ]; then
+		# see if the branch we are about to patch has been properly reset to the defined
+		# SRCREV .. if not, we reset it.
+		branch_head=`git rev-parse HEAD`
+		if [ "${force_srcrev}" != "${branch_head}" ]; then
+			current_branch=`git rev-parse --abbrev-ref HEAD`
+			git branch "$current_branch-orig"
+			git reset --hard ${force_srcrev}
+		fi
+	fi
 }
 
 # Many scripts want to look in arch/$arch/boot for the bootable
