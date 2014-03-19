@@ -111,10 +111,6 @@ do_patch() {
 	    done
 	fi
 
-	if [ "${machine_branch}" != "${KBRANCH_DEFAULT}" ]; then
-		updateme_flags="--branch ${machine_branch}"
-	fi
-
 	# updates or generates the target description
 	updateme ${updateme_flags} -DKDESC=${KMACHINE}:${LINUX_KERNEL_TYPE} \
                          ${includes} ${addon_features} ${ARCH} ${KMACHINE} ${sccs} ${patches}
@@ -151,18 +147,6 @@ do_patch() {
 			bbnote "       Check the BSP description for incorrect branch selection, or other errors."
 			exit 1
 		fi
-	fi
-
-	# Perform a final check. If something other than the default kernel
-	# branch was requested, and that's not where we ended up, then we 
-	# should thrown an error, since we aren't building what was expected
-	final_branch="$(git symbolic-ref HEAD 2>/dev/null)"
-	final_branch=${final_branch##refs/heads/}
-	if [ "${machine_branch}" != "${KBRANCH_DEFAULT}" ] &&
-	   [ "${final_branch}" != "${machine_branch}" ]; then
-		echo "ERROR: branch ${machine_branch} was requested, but was not properly"
-		echo "       configured to be built. The current branch is ${final_branch}"
-		exit 1
 	fi
 }
 
