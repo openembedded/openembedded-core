@@ -1,14 +1,14 @@
 require recipes-kernel/linux/linux-yocto.inc
 
-KBRANCH = "standard/base"
+KBRANCH ?= "standard/base"
 
 # board specific branches
-KBRANCH_qemuarm  = "standard/arm-versatile-926ejs"
-KBRANCH_qemumips = "standard/mti-malta32"
-KBRANCH_qemuppc  = "standard/qemuppc"
-KBRANCH_qemux86  = "standard/common-pc/base"
-KBRANCH_qemux86-64  = "standard/common-pc-64/base"
-KBRANCH_qemumips64 = "standard/mti-malta64"
+KBRANCH_qemuarm  ?= "standard/arm-versatile-926ejs"
+KBRANCH_qemumips ?= "standard/mti-malta32"
+KBRANCH_qemuppc  ?= "standard/qemuppc"
+KBRANCH_qemux86  ?= "standard/common-pc/base"
+KBRANCH_qemux86-64 ?= "standard/common-pc-64/base"
+KBRANCH_qemumips64 ?= "standard/mti-malta64"
 
 SRCREV_machine_qemuarm ?= "92de8060e113e4a13f16c6b4b5333f538e291c6d"
 SRCREV_machine_qemumips ?= "313647599dd3cd7f42374d918a9397f82eed36fb"

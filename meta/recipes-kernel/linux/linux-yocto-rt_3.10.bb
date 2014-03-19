@@ -1,7 +1,7 @@
 require recipes-kernel/linux/linux-yocto.inc
 
-KBRANCH = "standard/preempt-rt/base"
-KBRANCH_qemuppc = "standard/preempt-rt/qemuppc"
+KBRANCH ?= "standard/preempt-rt/base"
+KBRANCH_qemuppc ?= "standard/preempt-rt/qemuppc"
 
 SRCREV_machine ?= "c373b342af7bcbeda346df9598a5b1e9784d362f"
 SRCREV_machine_qemuppc ?= "767da5a30782cc1bc6522cef8aa5fd8130ecc06c"

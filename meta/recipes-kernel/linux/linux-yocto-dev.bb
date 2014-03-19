@@ -23,7 +23,6 @@ python () {
 }
 
 KBRANCH = "standard/base"
-KBRANCH_DEFAULT = "${KBRANCH}"
 KMETA = "meta"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-dev.git;bareclone=1;branch=${KBRANCH},${KMETA};name=machine,meta"
