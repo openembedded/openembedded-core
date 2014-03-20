@@ -7,6 +7,7 @@ DEPENDS += "qemu-native"
 inherit qemu
 
 FONT_PACKAGES ??= "${PN}"
+FONT_EXTRA_RDEPENDS ?= "fontconfig-utils"
 
 fontcache_common() {
 if [ "x$D" != "x" ] ; then
@@ -19,8 +20,11 @@ fi
 
 python populate_packages_append() {
     font_pkgs = d.getVar('FONT_PACKAGES', True).split()
+    deps = d.getVar("FONT_EXTRA_RDEPENDS", True)
 
     for pkg in font_pkgs:
+        if deps: d.appendVar('RDEPENDS_' + pkg, ' '+deps)
+
         bb.note("adding fonts postinst and postrm scripts to %s" % pkg)
         postinst = d.getVar('pkg_postinst_%s' % pkg, True) or d.getVar('pkg_postinst', True)
         if not postinst:
