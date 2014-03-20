@@ -40,6 +40,7 @@ def map_uboot_arch(a, d):
 
     if   re.match('p(pc|owerpc)(|64)', a): return 'ppc'
     elif re.match('i.86$', a): return 'x86'
+    elif re.match('arm64$', a): return 'arm'
     return a
 
 export UBOOT_ARCH = "${@map_uboot_arch(d.getVar('ARCH', True), d)}"
