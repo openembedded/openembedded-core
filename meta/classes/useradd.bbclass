@@ -145,7 +145,8 @@ def update_useradd_after_parse(d):
             bb.fatal("%s inherits useradd but doesn't set USERADD_PARAM, GROUPADD_PARAM or GROUPMEMS_PARAM for package %s" % (d.getVar('FILE'), pkg))
 
 python __anonymous() {
-    if not bb.data.inherits_class('nativesdk', d):
+    if not bb.data.inherits_class('nativesdk', d) \
+        and not bb.data.inherits_class('native', d):
         update_useradd_after_parse(d)
 }
 
@@ -197,7 +198,8 @@ fakeroot python populate_packages_prepend () {
 
     # Add the user/group preinstall scripts and RDEPENDS requirements
     # to packages specified by USERADD_PACKAGES
-    if not bb.data.inherits_class('nativesdk', d):
+    if not bb.data.inherits_class('nativesdk', d) \
+        and not bb.data.inherits_class('native', d):
         useradd_packages = d.getVar('USERADD_PACKAGES', True) or ""
         for pkg in useradd_packages.split():
             update_useradd_package(pkg)

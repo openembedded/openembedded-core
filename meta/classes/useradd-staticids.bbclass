@@ -262,7 +262,8 @@ def update_useradd_static_config(d):
 
 
 python __anonymous() {
-    if not bb.data.inherits_class('nativesdk', d):
+    if not bb.data.inherits_class('nativesdk', d) \
+        and not bb.data.inherits_class('native', d):
         try:
             update_useradd_static_config(d)
         except bb.build.FuncFailed as f:
