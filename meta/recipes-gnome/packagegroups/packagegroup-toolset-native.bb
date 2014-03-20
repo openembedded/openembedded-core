@@ -69,7 +69,6 @@ DEPENDS = "\
     gconf-native \
     gdbm-native \
     gdk-pixbuf-native \
-    genext2fs-native \
     gettext-minimal-native \
     gettext-native \
     ghostscript-native \

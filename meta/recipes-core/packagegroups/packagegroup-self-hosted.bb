@@ -38,7 +38,6 @@ RDEPENDS_packagegroup-self-hosted-host-tools = "\
     e2fsprogs-e2fsck \
     e2fsprogs-mke2fs \
     e2fsprogs-tune2fs \
-    genext2fs \
     hdparm \
     iptables \
     lsb \
