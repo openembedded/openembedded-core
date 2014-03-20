@@ -18,7 +18,7 @@ PV = "r2265+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-inherit lib_package pkgconfig
+inherit lib_package pkgconfig perlnative
 
 X264_DISABLE_ASM = ""
 X264_DISABLE_ASM_armv4 = "--disable-asm"
