@@ -130,6 +130,7 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     minicom \
     mtools \
     ncurses \
+    ncurses-terminfo-base \
     neon \
     nfs-utils \
     nfs-utils-client \
@@ -150,17 +151,21 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     python-core \
     python-curses \
     python-datetime \
+    python-difflib \
     python-distutils \
     python-elementtree \
     python-email \
     python-fcntl \
+    python-json \
     python-logging \
     python-misc \
+    python-mmap \
     python-multiprocessing \
     python-netclient \
     python-netserver \
     python-pickle \
     python-pkgutil \
+    python-pprint \
     python-re \
     python-rpm \
     python-shell \
