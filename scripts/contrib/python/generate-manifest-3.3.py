@@ -106,7 +106,7 @@ class MakefileMaker:
             #
             # write out the description, revision and dependencies
             #
-            self.out( 'DESCRIPTION_%s="%s"' % ( name, desc ) )
+            self.out( 'SUMMARY_%s="%s"' % ( name, desc ) )
             self.out( 'RDEPENDS_%s="%s"' % ( name, deps ) )
 
             line = 'FILES_%s="' % name
@@ -130,7 +130,7 @@ class MakefileMaker:
             self.out( line )
             self.out( "" )
 
-        self.out( 'DESCRIPTION_${PN}-modules="All Python modules"' )
+        self.out( 'SUMMARY_${PN}-modules="All Python modules"' )
         line = 'RDEPENDS_${PN}-modules="'
 
         for name, data in sorted(self.packages.iteritems()):
