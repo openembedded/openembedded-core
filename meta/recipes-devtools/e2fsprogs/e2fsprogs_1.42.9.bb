@@ -17,6 +17,7 @@ SRC_URI += "file://acinclude.m4 \
             file://0010-debugfs-use-the-functions-in-misc-create_inode.c.patch \
             file://0011-mke2fs.8.in-update-the-manual-for-the-d-option.patch \
             file://0001-e2fsprogs-fix-cross-compilation-problem.patch \
+            file://misc-mke2fs.c-return-error-when-failed-to-populate-fs.patch \
 "
 
 SRC_URI[md5sum] = "3f8e41e63b432ba114b33f58674563f7"
