@@ -138,7 +138,7 @@ RDEPENDS_${PN}-mmap="${PN}-core ${PN}-io"
 FILES_${PN}-mmap="${libdir}/python3.3/lib-dynload/mmap.*.so "
 
 SUMMARY_${PN}-multiprocessing="Python multiprocessing support"
-RDEPENDS_${PN}-multiprocessing="${PN}-core ${PN}-io ${PN}-lang"
+RDEPENDS_${PN}-multiprocessing="${PN}-core ${PN}-io ${PN}-lang ${PN}-pickle ${PN}-threading ${PN}-ctypes ${PN}-mmap"
 FILES_${PN}-multiprocessing="${libdir}/python3.3/lib-dynload/_multiprocessing.*.so ${libdir}/python3.3/multiprocessing "
 
 SUMMARY_${PN}-netclient="Python Internet Protocol clients"
@@ -162,7 +162,7 @@ RDEPENDS_${PN}-pkgutil="${PN}-core"
 FILES_${PN}-pkgutil="${libdir}/python3.3/pkgutil.* "
 
 SUMMARY_${PN}-pprint="Python pretty-print support"
-RDEPENDS_${PN}-pprint="${PN}-core"
+RDEPENDS_${PN}-pprint="${PN}-core ${PN}-io"
 FILES_${PN}-pprint="${libdir}/python3.3/pprint.* "
 
 SUMMARY_${PN}-profile="Python basic performance profiling support"
@@ -238,7 +238,7 @@ RDEPENDS_${PN}-tkinter="${PN}-core"
 FILES_${PN}-tkinter="${libdir}/python3.3/lib-dynload/_tkinter.*.so ${libdir}/python3.3/lib-tk ${libdir}/python3.3/tkinter "
 
 SUMMARY_${PN}-unittest="Python unit testing framework"
-RDEPENDS_${PN}-unittest="${PN}-core ${PN}-stringold ${PN}-lang"
+RDEPENDS_${PN}-unittest="${PN}-core ${PN}-stringold ${PN}-lang ${PN}-io ${PN}-difflib ${PN}-pprint ${PN}-shell"
 FILES_${PN}-unittest="${libdir}/python3.3/unittest/ "
 
 SUMMARY_${PN}-unixadmin="Python Unix administration support"
