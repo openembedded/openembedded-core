@@ -150,6 +150,9 @@ while true; do
             SCRIPT_KERNEL_OPT="$SCRIPT_KERNEL_OPT console=ttyS0"
             SERIALSTDIO="1"
             ;;
+	"biosdir="*)
+            CUSTOMBIOSDIR="${arg##biosdir=}"
+	    ;;
         "qemuparams="*)
             SCRIPT_QEMU_EXTRA_OPT="${arg##qemuparams=}"
 
@@ -482,6 +485,22 @@ setup_sysroot
 INTERNAL_SCRIPT="$0-internal"
 if [ ! -f "$INTERNAL_SCRIPT" -o ! -r "$INTERNAL_SCRIPT" ]; then
 INTERNAL_SCRIPT=`which runqemu-internal`
+fi
+
+# Specify directory for BIOS, VGA BIOS and keymaps
+if [ ! -z "$CUSTOMBIOSDIR" ]; then
+    if [ -d "$OECORE_NATIVE_SYSROOT/$CUSTOMBIOSDIR" ]; then
+        echo "Assuming biosdir is $OECORE_NATIVE_SYSROOT/$CUSTOMBIOSDIR"
+        SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -L $OECORE_NATIVE_SYSROOT/$CUSTOMBIOSDIR"
+    else
+        if [ ! -d "$CUSTOMBIOSDIR" ]; then
+            echo "Custom BIOS directory not found. Tried: $CUSTOMBIOSDIR"
+            echo "and $OECORE_NATIVE_SYSROOT/$CUSTOMBIOSDIR"
+            exit 1;
+        fi
+        echo "Assuming biosdir is $CUSTOMBIOSDIR"
+        SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -L $CUSTOMBIOSDIR"
+    fi
 fi
 
 . $INTERNAL_SCRIPT
