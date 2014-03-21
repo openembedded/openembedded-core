@@ -6,7 +6,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 SECTION = "x11/base"
-DEPENDS = "gtk+"
+DEPENDS = "intltool-native gtk+"
 
 PR = "r3"
 
@@ -26,7 +26,7 @@ FILES_${PN}-dbg += "${libdir}/gtk-2.0/*/engines/.debug"
 
 CFLAGS_prepend = "-DHAVE_ANIMATION "
 
-inherit gnome
+inherit gnomebase gtk-icon-cache
 
 python populate_packages_prepend() {
     engines_root = os.path.join(d.getVar('libdir', True), "gtk-2.0/2.10.0/engines")
