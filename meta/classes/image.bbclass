@@ -298,6 +298,10 @@ ssh_allow_empty_password () {
 			printf '\nDROPBEAR_EXTRA_ARGS="-B"\n' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 		fi
 	fi
+
+	if [ -d ${IMAGE_ROOTFS}${sysconfdir}/pam.d ] ; then
+		sed -i 's/nullok_secure/nullok/' ${IMAGE_ROOTFS}${sysconfdir}/pam.d/*
+	fi
 }
 
 # Enable postinst logging if debug-tweaks is enabled
