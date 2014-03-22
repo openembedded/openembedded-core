@@ -345,10 +345,14 @@ class DirectImageCreator(BaseImageCreator):
         parts = self._get_parts()
         for num, p in enumerate(parts, 1):
             if p.mountpoint == "/":
+                part = ''
+                if p.disk.startswith('mmcblk'):
+                    part = 'p'
+
                 if self._ptable_format == 'msdos' and num > 3:
-                    rootdev = "/dev/%s%-d" % (p.disk, num + 1)
+                    rootdev = "/dev/%s%s%-d" % (p.disk, part, num + 1)
                 else:
-                    rootdev = "/dev/%s%-d" % (p.disk, num)
+                    rootdev = "/dev/%s%s%-d" % (p.disk, part, num)
                 root_part_uuid = p.part_type
 
         return (rootdev, root_part_uuid)
