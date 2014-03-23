@@ -88,6 +88,9 @@ EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname "
 
 do_configure_prepend() {
 	export CPP="${HOST_PREFIX}cpp ${TOOLCHAIN_OPTIONS} ${HOST_CC_ARCH}"
+	export NM="${HOST_PREFIX}gcc-nm"
+	export AR="${HOST_PREFIX}gcc-ar"
+	export RANLIB="${HOST_PREFIX}gcc-ranlib"
 	export KMOD="${base_bindir}/kmod"
 	if [ -d ${S}/units.pre_sed ] ; then
 		cp -r ${S}/units.pre_sed ${S}/units
