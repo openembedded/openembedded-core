@@ -12,9 +12,23 @@
 # 5) The environment data, similar to 'bitbake -e recipe':
 #    ARCHIVER_MODE[dumpdata] = "1"
 # 6) The recipe (.bb and .inc): ARCHIVER_MODE[recipe] = "1"
+# 7) Whether output the .src.rpm package:
+#    ARCHIVER_MODE[srpm] = "1"
+# 8) Filter the license, the recipe whose license in
+#    COPYLEFT_LICENSE_INCLUDE will be included, and in
+#    COPYLEFT_LICENSE_EXCLUDE will be excluded.
+#    COPYLEFT_LICENSE_INCLUDE = 'GPL* LGPL*'
+#    COPYLEFT_LICENSE_EXCLUDE = 'CLOSED Proprietary'
+# 9) The recipe type that will be archived:
+#    COPYLEFT_RECIPE_TYPES = 'target'
 #
-# All of the above can be packed into a .src.rpm package: (when PACKAGES != "")
-# ARCHIVER_MODE[srpm] = "1"
+
+# Don't filter the license by default
+COPYLEFT_LICENSE_INCLUDE ?= ''
+COPYLEFT_LICENSE_EXCLUDE ?= ''
+# Create archive for all the recipe types
+COPYLEFT_RECIPE_TYPES ?= 'target native nativesdk cross crosssdk cross-canadian'
+inherit copyleft_filter
 
 ARCHIVER_MODE[srpm] ?= "0"
 ARCHIVER_MODE[src] ?= "patched"
@@ -37,6 +51,15 @@ do_ar_original[dirs] = "${ARCHIVER_OUTDIR} ${ARCHIVER_WORKDIR}"
 
 python () {
     pn = d.getVar('PN', True)
+
+    if d.getVar('COPYLEFT_LICENSE_INCLUDE', True) or \
+            d.getVar('COPYLEFT_LICENSE_EXCLUDE', True):
+        included, reason = copyleft_should_include(d)
+        if not included:
+            bb.debug(1, 'archiver: %s is excluded: %s' % (pn, reason))
+            return
+        else:
+            bb.debug(1, 'archiver: %s is included: %s' % (pn, reason))
 
     ar_src = d.getVarFlag('ARCHIVER_MODE', 'src', True)
     ar_dumpdata = d.getVarFlag('ARCHIVER_MODE', 'dumpdata', True)
