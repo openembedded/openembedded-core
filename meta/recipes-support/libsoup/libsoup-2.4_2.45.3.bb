@@ -15,7 +15,9 @@ PACKAGECONFIG ??= "gnome"
 PACKAGECONFIG[gnome] = "--with-gnome,--without-gnome"
 
 SHRT_VER = "${@bb.data.getVar('PV',d,1).split('.')[0]}.${@bb.data.getVar('PV',d,1).split('.')[1]}"
-SRC_URI = "${GNOME_MIRROR}/libsoup/${SHRT_VER}/libsoup-${PV}.tar.xz"
+SRC_URI = "${GNOME_MIRROR}/libsoup/${SHRT_VER}/libsoup-${PV}.tar.xz \
+           file://fix-compiling-failed-while-mips-gcc-optimization-enabled.patch \
+"
 
 SRC_URI[md5sum] = "fe7ec04784c6b97c5f8ea963c8542f59"
 SRC_URI[sha256sum] = "6ac317b931efd2cff9cdea7122987acb3ecb0c32564a9441ba72e5cce021aa12"

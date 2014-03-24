@@ -1,0 +1,95 @@
+test/header-parsing.c: fix compiling failed while mips-gcc optimization enabled
+
+There was an error about mips-gcc optimization while compiling
+libsoup-2.4 2.45.3 with DEBUG_OPTIMIZATION enabled.
+
+The test code of libsoup-2.4 2.45.3 triggered gcc assert which located
+in gcc/dwarf2out.c:20810:
+...
+20806       gcc_assert (prev
+20807                   && (CALL_P (prev)
+20808                       || (NONJUMP_INSN_P (prev)
+20809                           && GET_CODE (PATTERN (prev)) == SEQUENCE
+20810                           && CALL_P (XVECEXP (PATTERN (prev), 0, 0)))));
+...
+
+The issue test code is the C function 'do_qvalue_tests' located in
+tests/header-parsing.c.
+
+The 2.45.92 have refactored the test code and this issue has been fixed.
+So backport the fix to 2.45.3.
+
+Upstream-Status: backport
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ tests/header-parsing.c |   28 ++--------------------------
+ 1 file changed, 2 insertions(+), 26 deletions(-)
+
+diff --git a/tests/header-parsing.c b/tests/header-parsing.c
+index 5b2950f..00f5a4e 100644
+--- a/tests/header-parsing.c
++++ b/tests/header-parsing.c
+@@ -896,9 +896,7 @@ do_qvalue_tests (void)
+ {
+ 	int i, j;
+ 	GSList *acceptable, *unacceptable, *iter;
+-	gboolean wrong;
+ 
+-	debug_printf (1, "qvalue tests\n");
+ 	for (i = 0; i < num_qvaluetests; i++) {
+ 		debug_printf (1, "%2d. %s:\n", i + 1, qvaluetests[i].header_value);
+ 
+@@ -907,48 +905,26 @@ do_qvalue_tests (void)
+ 							     &unacceptable);
+ 
+ 		debug_printf (1, "    acceptable: ");
+-		wrong = FALSE;
+ 		if (acceptable) {
+ 			for (iter = acceptable, j = 0; iter; iter = iter->next, j++) {
+ 				debug_printf (1, "%s ", (char *)iter->data);
+-				if (!qvaluetests[i].acceptable[j] ||
+-				    strcmp (iter->data, qvaluetests[i].acceptable[j]) != 0)
+-					wrong = TRUE;
++				g_assert_cmpstr (iter->data, ==, qvaluetests[i].acceptable[j]);
+ 			}
+ 			debug_printf (1, "\n");
+ 			soup_header_free_list (acceptable);
+ 		} else
+ 			debug_printf (1, "(none)\n");
+-		if (wrong) {
+-			debug_printf (1, "    WRONG! expected: ");
+-			for (j = 0; qvaluetests[i].acceptable[j]; j++)
+-				debug_printf (1, "%s ", qvaluetests[i].acceptable[j]);
+-			debug_printf (1, "\n");
+-			errors++;
+-		}
+ 
+ 		debug_printf (1, "  unacceptable: ");
+-		wrong = FALSE;
+ 		if (unacceptable) {
+ 			for (iter = unacceptable, j = 0; iter; iter = iter->next, j++) {
+ 				debug_printf (1, "%s ", (char *)iter->data);
+-				if (!qvaluetests[i].unacceptable[j] ||
+-				    strcmp (iter->data, qvaluetests[i].unacceptable[j]) != 0)
+-					wrong = TRUE;
++				g_assert_cmpstr (iter->data, ==, qvaluetests[i].unacceptable[j]);
+ 			}
+ 			debug_printf (1, "\n");
+ 			soup_header_free_list (unacceptable);
+ 		} else
+ 			debug_printf (1, "(none)\n");
+-		if (wrong) {
+-			debug_printf (1, "    WRONG! expected: ");
+-			for (j = 0; qvaluetests[i].unacceptable[j]; j++)
+-				debug_printf (1, "%s ", qvaluetests[i].unacceptable[j]);
+-			debug_printf (1, "\n");
+-			errors++;
+-		}
+-
+-		debug_printf (1, "\n");
+ 	}
+ }
+ 
+-- 
+1.7.9.5
+
