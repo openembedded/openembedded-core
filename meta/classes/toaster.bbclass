@@ -179,7 +179,7 @@ python toaster_collect_task_stats() {
             bn = get_bn(e)
             bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
             taskdir = os.path.join(bsdir, e.data.expand("${PF}"))
-            fout.write("%s:%s:%s\n" % (e.taskfile, e.taskname, os.path.join(taskdir, e.task)))
+            fout.write("%s:%s:%s:%s\n" % (e.taskfile, e.taskname, os.path.join(taskdir, e.task), e.data.expand("${PN}")))
 
         bb.utils.unlockfile(lock)
 
@@ -222,8 +222,8 @@ python toaster_collect_task_stats() {
         events = []
         with open(os.path.join(e.data.getVar('BUILDSTATS_BASE', True), "toasterstatlist"), "r") as fin:
             for line in fin:
-                (taskfile, taskname, filename) = line.strip().split(":")
-                events.append((taskfile, taskname, _read_stats(filename)))
+                (taskfile, taskname, filename, recipename) = line.strip().split(":")
+                events.append((taskfile, taskname, _read_stats(filename), recipename))
         bb.event.fire(bb.event.MetadataEvent("BuildStatsList", events), e.data)
         os.unlink(os.path.join(e.data.getVar('BUILDSTATS_BASE', True), "toasterstatlist"))
 }
