@@ -150,6 +150,19 @@ python do_ar_original() {
             tar = tarfile.open(tarname, 'w:gz')
             tar.add('.')
             tar.close()
+
+    # Emit patch series files for 'original'
+    bb.note('Writing patch series files...')
+    for patch in src_patches(d):
+        _, _, local, _, _, parm = bb.fetch.decodeurl(patch)
+        patchdir = parm.get('patchdir')
+        if patchdir:
+            series = os.path.join(ar_outdir, 'series.subdir.%s' % patchdir.replace('/', '_'))
+        else:
+            series = os.path.join(ar_outdir, 'series')
+
+        with open(series, 'a') as s:
+            s.write('%s -p%s\n' % (os.path.basename(local), parm['striplevel']))
 }
 
 python do_ar_patched() {
