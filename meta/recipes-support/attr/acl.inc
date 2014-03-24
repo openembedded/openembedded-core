@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://doc/COPYING;md5=c781d70ed2b4d48995b790403217a249 \
 DEPENDS = "attr"
 SRC_URI = "http://download.savannah.gnu.org/releases/acl/${BP}.src.tar.gz \
            file://run-ptest \
+           file://acl-fix-the-order-of-expected-output-of-getfacl.patch \
 "
 
 require ea-acl.inc
