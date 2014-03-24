@@ -57,6 +57,9 @@ PACKAGECONFIG[pam] = "--enable-su --enable-runuser,--disable-su --disable-runuse
 # Respect the systemd feature for uuidd
 PACKAGECONFIG[systemd] = "--enable-socket-activation --with-systemdsystemunitdir=${systemd_unitdir}/system/, --disable-socket-activation --without-systemdsystemunitdir"
 
+# Build setpriv requires libcap-ng
+PACKAGECONFIG[libcap-ng] = "--enable-setpriv,--disable-setpriv,libcap-ng,"
+
 FILES_${PN}-bash-completion += "${datadir}/bash-completion"
 FILES_${PN}-doc += "${datadir}/getopt/getopt-*.*"
 
