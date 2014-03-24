@@ -66,10 +66,12 @@ IMAGE_CMD_squashfs-xz = "mksquashfs ${IMAGE_ROOTFS} ${DEPLOY_DIR_IMAGE}/${IMAGE_
 IMAGE_CMD_tar = "tar -cvf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.tar -C ${IMAGE_ROOTFS} ."
 
 IMAGE_CMD_cpio () {
-	if [ ! -L ${IMAGE_ROOTFS}/init ]; then
-		touch ${IMAGE_ROOTFS}/init
-	fi
 	(cd ${IMAGE_ROOTFS} && find . | cpio -o -H newc >${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.cpio)
+	if [ ! -e ${IMAGE_ROOTFS}/init ]; then
+		mkdir -p ${WORKDIR}/cpio_append
+		touch ${WORKDIR}/cpio_append/init
+		(cd  ${WORKDIR}/cpio_append && echo ./init | cpio -oA -H newc -F ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.cpio)
+	fi
 }
 
 ELF_KERNEL ?= "${STAGING_DIR_HOST}/usr/src/kernel/${KERNEL_IMAGETYPE}"
