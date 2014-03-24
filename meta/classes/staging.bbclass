@@ -105,6 +105,8 @@ python do_populate_sysroot () {
             f.write(pn)
 }
 
+do_populate_sysroot[vardeps] += "${SYSROOT_PREPROCESS_FUNCS}"
+
 SSTATETASKS += "do_populate_sysroot"
 do_populate_sysroot[cleandirs] = "${SYSROOT_DESTDIR}"
 do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}"
