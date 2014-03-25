@@ -1,0 +1,75 @@
+From 818d220a6fe3d0512a226188e9164245a02c9185 Mon Sep 17 00:00:00 2001
+From: H.J. Lu <hjl.tools@gmail.com>
+Date: Tue, 14 Jan 2014 16:42:35 -0800
+Subject: [PATCH] Don't discard relocs against __ehdr_start
+
+__ehdr_start will be defined by assign_file_positions_for_non_load_sections
+later.
+
+	PR ld/16428
+	* elf32-i386.c (elf_i386_allocate_dynrelocs): Don't discard relocs
+	against __ehdr_start.
+	* elf64-x86-64.c (elf_x86_64_allocate_dynrelocs): Likewise.
+---
+ bfd/ChangeLog      |    7 +++++++
+ bfd/elf32-i386.c   |    7 +++++--
+ bfd/elf64-x86-64.c |    7 +++++--
+ 3 files changed, 17 insertions(+), 4 deletions(-)
+
+Upstream-Status: Backport
+
+#diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+#index 7d13a35..f4acda0 100644
+#--- a/bfd/ChangeLog
+#+++ b/bfd/ChangeLog
+#@@ -1,5 +1,12 @@
+# 2014-01-14  H.J. Lu  <hongjiu.lu@intel.com>
+# 
+#+	PR ld/16428
+#+	* elf32-i386.c (elf_i386_allocate_dynrelocs): Don't discard relocs
+#+	against __ehdr_start.
+#+	* elf64-x86-64.c (elf_x86_64_allocate_dynrelocs): Likewise.
+#+
+#+2014-01-14  H.J. Lu  <hongjiu.lu@intel.com>
+#+
+# 	* elf32-i386.c (elf_i386_allocate_dynrelocs): Revert the last
+# 	change.
+# 	* elf64-x86-64.c (elf_x86_64_allocate_dynrelocs): Likewise.
+Index: binutils-2.24/bfd/elf32-i386.c
+===================================================================
+--- binutils-2.24.orig/bfd/elf32-i386.c	2014-03-25 10:26:54.818385608 +0000
++++ binutils-2.24/bfd/elf32-i386.c	2014-03-25 10:26:54.814385607 +0000
+@@ -2395,9 +2395,12 @@
+ 	}
+ 
+       /* Also discard relocs on undefined weak syms with non-default
+-    	 visibility.  */
++    	 visibility.   Don't discard relocs against __ehdr_start which
++	 will be defined by assign_file_positions_for_non_load_sections
++	 later.  */
+       if (eh->dyn_relocs != NULL
+-	  && h->root.type == bfd_link_hash_undefweak)
++	  && h->root.type == bfd_link_hash_undefweak
++	  && strcmp (h->root.root.string, "__ehdr_start") != 0)
+ 	{
+ 	  if (ELF_ST_VISIBILITY (h->other) != STV_DEFAULT)
+ 	    eh->dyn_relocs = NULL;
+Index: binutils-2.24/bfd/elf64-x86-64.c
+===================================================================
+--- binutils-2.24.orig/bfd/elf64-x86-64.c	2014-03-25 10:26:54.818385608 +0000
++++ binutils-2.24/bfd/elf64-x86-64.c	2014-03-25 10:26:54.814385607 +0000
+@@ -2478,9 +2478,12 @@
+ 	}
+ 
+       /* Also discard relocs on undefined weak syms with non-default
+-	 visibility.  */
++    	 visibility.   Don't discard relocs against __ehdr_start which
++	 will be defined by assign_file_positions_for_non_load_sections
++	 later.  */
+       if (eh->dyn_relocs != NULL
+-	  && h->root.type == bfd_link_hash_undefweak)
++	  && h->root.type == bfd_link_hash_undefweak
++	  && strcmp (h->root.root.string, "__ehdr_start") != 0)
+ 	{
+ 	  if (ELF_ST_VISIBILITY (h->other) != STV_DEFAULT)
+ 	    eh->dyn_relocs = NULL;

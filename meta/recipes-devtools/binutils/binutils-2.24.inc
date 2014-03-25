@@ -28,6 +28,8 @@ SRC_URI = "\
      file://fix-pr15815.patch \
      file://fix-pr2404.patch \
      file://fix-pr16476.patch \
+     file://fix-pr16428a.patch \
+     file://fix-pr16428b.patch \
      "
 
 SRC_URI[md5sum] = "e0f71a7b2ddab0f8612336ac81d9636b"
