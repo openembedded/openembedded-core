@@ -90,3 +90,6 @@ do_install_ptest() {
 	cp -r ${S}/../library ${D}${PTEST_PATH}
 	cp -r ${S}/../tests ${D}${PTEST_PATH}
 }
+
+# Fix the path in sstate
+SSTATE_SCAN_FILES += "*Config.sh"
