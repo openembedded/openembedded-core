@@ -103,6 +103,7 @@ do_install () {
 	ln -sf /proc/mounts ${D}${sysconfdir}/mtab
 }
 
+DISTRO_VERSION[vardepsexclude] += "DATE"
 do_install_basefilesissue () {
 	if [ "${hostname}" != "" ]; then
 		if [ -n "${MACHINE}" -a "${hostname}" = "openembedded" ]; then
