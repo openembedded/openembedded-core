@@ -36,7 +36,7 @@ PARALLEL_MAKE = ""
 
 RDEPENDS_${PN} = "python-core"
 
-PACKAGES_preprend = " ${PN}-utils "
+PACKAGES_prepend = " ${PN}-utils "
 FILES_${PN}-utils = "${bindir}/host ${bindir}/dig ${bindir}/nslookup"
 FILES_${PN}-dev += "${bindir}/isc-config.h"
 
