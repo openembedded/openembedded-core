@@ -118,3 +118,6 @@ EOF
 	chmod 0755 ${SYSROOT_DESTDIR}${bindir}/../nativeperl
 	cat ${SYSROOT_DESTDIR}${bindir}/../nativeperl
 }
+
+# Fix the path in sstate
+SSTATE_SCAN_FILES += "*.pm *.pod *.h *.pl *.sh"
