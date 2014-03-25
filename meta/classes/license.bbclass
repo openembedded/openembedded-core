@@ -68,15 +68,18 @@ license_create_manifest() {
 		if [ -n "${COPY_LIC_DIRS}" ]; then
 			for pkg in ${INSTALLED_PKGS}; do
 				mkdir -p ${IMAGE_ROOTFS}/usr/share/common-licenses/${pkg}
-				for lic in `ls ${LICENSE_DIRECTORY}/${pkg}`; do
+				pkged_pn="$(sed -n "/^PACKAGE NAME: ${pkg}$/,/^$/ \
+                                           {s/^RECIPE NAME: //; /^PACKAGE NAME:/d; /^PACKAGE VERSION:/d; /^LICENSE:/d; p}" \
+                                           ${LICENSE_MANIFEST})"
+				for lic in `ls ${LICENSE_DIRECTORY}/${pkged_pn}`; do
 					# Really don't need to copy the generics as they're 
 					# represented in the manifest and in the actual pkg licenses
 					# Doing so would make your image quite a bit larger
 					if [ "${lic#generic_}" = "${lic}" ]; then
-						cp ${LICENSE_DIRECTORY}/${pkg}/${lic} ${IMAGE_ROOTFS}/usr/share/common-licenses/${pkg}/${lic}
+						cp ${LICENSE_DIRECTORY}/${pkged_pn}/${lic} ${IMAGE_ROOTFS}/usr/share/common-licenses/${pkg}/${lic}
 					else
 						if [ ! -f ${IMAGE_ROOTFS}/usr/share/common-licenses/${lic} ]; then
-							cp ${LICENSE_DIRECTORY}/${pkg}/${lic} ${IMAGE_ROOTFS}/usr/share/common-licenses/
+							cp ${LICENSE_DIRECTORY}/${pkged_pn}/${lic} ${IMAGE_ROOTFS}/usr/share/common-licenses/
 						fi
 						ln -s ../${lic} ${IMAGE_ROOTFS}/usr/share/common-licenses/${pkg}/${lic}
 					fi
