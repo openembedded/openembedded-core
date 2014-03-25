@@ -33,11 +33,11 @@ do_install() {
 	install -d ${D}${libdir}/piglit/bin
 	install -m 755 ${S}/bin/* ${D}${libdir}/piglit/bin
 
-	cp -a lib/ ${D}${libdir}/piglit/
-	cp -a framework/ ${D}${libdir}/piglit/
-	cp -a generated_tests/ ${D}${libdir}/piglit/
-	cp -a tests/ ${D}${libdir}/piglit/
-	cp -a templates/ ${D}${libdir}/piglit/
+	cp -Pr lib/ ${D}${libdir}/piglit/
+	cp -Pr framework/ ${D}${libdir}/piglit/
+	cp -Pr generated_tests/ ${D}${libdir}/piglit/
+	cp -Pr tests/ ${D}${libdir}/piglit/
+	cp -Pr templates/ ${D}${libdir}/piglit/
 
 	sed -i -e 's|sys.path.append(.*)|sys.path.append("${libdir}/piglit")|' ${D}${bindir}/piglit-*.py
 	sed -i -e 's|^templatedir = .*$|templatedir = "${libdir}/piglit/templates"|' ${D}${bindir}/piglit-summary-html.py
