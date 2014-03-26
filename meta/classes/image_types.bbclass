@@ -210,9 +210,9 @@ JFFS2_ERASEBLOCK ?= "0x40000"
 EXTRA_IMAGECMD_jffs2 ?= "--pad ${JFFS2_ENDIANNESS} --eraseblock=${JFFS2_ERASEBLOCK} --no-cleanmarkers"
 
 # Change these if you want default mkfs behavior (i.e. create minimal inode number)
-EXTRA_IMAGECMD_ext2 ?= "-i 8192"
-EXTRA_IMAGECMD_ext3 ?= "-i 8192"
-EXTRA_IMAGECMD_ext4 ?= "-i 8192"
+EXTRA_IMAGECMD_ext2 ?= "-i 4096"
+EXTRA_IMAGECMD_ext3 ?= "-i 4096"
+EXTRA_IMAGECMD_ext4 ?= "-i 4096"
 EXTRA_IMAGECMD_btrfs ?= ""
 EXTRA_IMAGECMD_elf ?= ""
 
