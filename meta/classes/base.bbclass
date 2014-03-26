@@ -31,8 +31,12 @@ def oe_import(d):
         imported = __import__(toimport)
         inject(toimport.split(".", 1)[0], imported)
 
+    return ""
+
+# We need the oe module name space early (before INHERITs get added)
+OE_IMPORTED := "${@oe_import(d)}"
+
 python oe_import_eh () {
-    oe_import(e.data)
     e.data.setVar("NATIVELSBSTRING", lsb_distro_identifier(e.data))
 }
 
