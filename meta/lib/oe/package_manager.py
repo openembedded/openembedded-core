@@ -1624,6 +1624,8 @@ class DpkgPM(PackageManager):
             bb.utils.remove(self.apt_conf_dir, True)
 
         bb.utils.mkdirhier(self.apt_conf_dir)
+        bb.utils.mkdirhier(self.apt_conf_dir + "/lists/partial/")
+        bb.utils.mkdirhier(self.apt_conf_dir + "/apt.conf.d/")
 
         arch_list = []
         for arch in archs.split():
