@@ -16,6 +16,7 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-${PV}.tar.bz2 \
            file://GnuPG1-CVE-2012-6085.patch \
            file://curl_typeof_fix_backport.patch \
            file://CVE-2013-4351.patch \
+           file://CVE-2013-4576.patch \
 	  "
 
 SRC_URI[md5sum] = "b06a141cca5cd1a55bbdd25ab833303c"
