@@ -4,7 +4,9 @@ require util-linux.inc
 # To support older hosts, we need to patch and/or revert
 # some upstream changes.  Only do this for native packages.
 OLDHOST = ""
-OLDHOST_class-native = "file://util-linux-native.patch"
+OLDHOST_class-native = "file://util-linux-native.patch \
+                        file://util-linux-native-qsort.patch \
+			"
 
 SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             file://util-linux-ng-2.16-mount_lock_path.patch \
