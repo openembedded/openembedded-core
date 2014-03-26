@@ -178,7 +178,9 @@ class DpkgIndexer(Indexer):
             arch_list = pkg_archs.split()
         sdk_pkg_archs = self.d.getVar('SDK_PACKAGE_ARCHS', True)
         if sdk_pkg_archs is not None:
-            arch_list += sdk_pkg_archs.split()
+            for a in sdk_pkg_archs.split():
+                if a not in pkg_archs:
+                    arch_list.append(a)
 
         apt_ftparchive = bb.utils.which(os.getenv('PATH'), "apt-ftparchive")
         gzip = bb.utils.which(os.getenv('PATH'), "gzip")
