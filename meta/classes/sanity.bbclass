@@ -779,20 +779,19 @@ def copy_data(e):
     return sanity_data
 
 addhandler check_sanity_eventhandler
-check_sanity_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.SanityCheck bb.event.NetworkTest"
+check_sanity_eventhandler[eventmask] = "bb.event.SanityCheck bb.event.NetworkTest"
 python check_sanity_eventhandler() {
-    if bb.event.getName(e) == "ConfigParsed" and e.data.getVar("BB_WORKERCONTEXT", True) != "1" and e.data.getVar("DISABLE_SANITY_CHECKS", True) != "1":
+    if bb.event.getName(e) == "SanityCheck":
         sanity_data = copy_data(e)
-        reparse = check_sanity(sanity_data)
-        e.data.setVar("BB_INVALIDCONF", reparse)
-    elif bb.event.getName(e) == "SanityCheck":
-        sanity_data = copy_data(e)
-        sanity_data.setVar("SANITY_USE_EVENTS", "1")
+        if e.generateevents:
+            sanity_data.setVar("SANITY_USE_EVENTS", "1")
         reparse = check_sanity(sanity_data)
         e.data.setVar("BB_INVALIDCONF", reparse)
         bb.event.fire(bb.event.SanityCheckPassed(), e.data)
     elif bb.event.getName(e) == "NetworkTest":
         sanity_data = copy_data(e)
+        if e.generateevents:
+            sanity_data.setVar("SANITY_USE_EVENTS", "1")
         bb.event.fire(bb.event.NetworkTestFailed() if check_connectivity(sanity_data) else bb.event.NetworkTestPassed(), e.data)
 
     return
