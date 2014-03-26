@@ -98,7 +98,7 @@ OUTPUT=${tmpdir}/sstate-diff/`date "+%s"`
 for M in ${machines}; do
   find ${tmpdir}/stamps/ -name \*sigdata\* | xargs rm -f
   mkdir -p ${OUTPUT}/${M}
-  export MACHINE=${M}; bitbake -S ${targets} | tee -a ${OUTPUT}/${M}/log;
+  export MACHINE=${M}; bitbake -S none ${targets} | tee -a ${OUTPUT}/${M}/log;
   cp -ra ${tmpdir}/stamps/* ${OUTPUT}/${M}
   find ${OUTPUT}/${M} -name \*sigdata\* | sed "s#${OUTPUT}/${M}/##g" | sort > ${OUTPUT}/${M}/list
   M_UNDERSCORE=`echo ${M} | sed 's/-/_/g'`

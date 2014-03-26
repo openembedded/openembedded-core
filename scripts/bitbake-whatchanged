@@ -272,7 +272,7 @@ Note:
     try:
         # Generate the new stamps dir
         print("Generating the new stamps ... (need several minutes)")
-        cmdline = "STAMPS_DIR=%s bitbake -S %s" % (new_stampsdir, recipe)
+        cmdline = "STAMPS_DIR=%s bitbake -S none %s" % (new_stampsdir, recipe)
         # FIXME
         # The "bitbake -S" may fail, not fatal error, the stamps will still
         # be generated, this might be a bug of "bitbake -S".
