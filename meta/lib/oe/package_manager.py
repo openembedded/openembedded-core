@@ -192,17 +192,16 @@ class DpkgIndexer(Indexer):
             if not os.path.isdir(arch_dir):
                 continue
 
-            index_cmds.append("cd %s; PSEUDO_UNLOAD=1 %s packages > Packages" %
-                              (arch_dir, apt_ftparchive))
+            cmd = "cd %s; PSEUDO_UNLOAD=1 %s packages . > Packages;" % (arch_dir, apt_ftparchive)
 
-            index_cmds.append("cd %s; %s Packages -c > Packages.gz" %
-                              (arch_dir, gzip))
+            cmd += "%s -fc Packages > Packages.gz;" % gzip
 
             with open(os.path.join(arch_dir, "Release"), "w+") as release:
-                release.write("Label: %s" % arch)
+                release.write("Label: %s\n" % arch)
 
-            index_cmds.append("cd %s; PSEUDO_UNLOAD=1 %s release >> Release" %
-                              (arch_dir, apt_ftparchive))
+            cmd += "PSEUDO_UNLOAD=1 %s release . >> Release" % apt_ftparchive
+            
+            index_cmds.append(cmd)
 
             deb_dirs_found = True
 
