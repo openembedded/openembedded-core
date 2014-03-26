@@ -34,12 +34,24 @@ do_install () {
 	rmdir ${D}${exec_prefix}/lib || true
 }
 
+PERLSEDFIXUP = " \
+	sed -i -e 's#${STAGING_BINDIR_NATIVE}/perl-native/#${bindir}/#' \
+	       -e 's#${libdir}/perl-native/#${libdir}/#' \
+	    ${@d.getVar("PERLTOOLS", True).replace(' /',d.getVar('D', True) + '/')} \
+"
+
+do_install_append_class-target () {
+	${PERLSEDFIXUP}
+}
+
+do_install_append_class-nativesdk () {
+	${PERLSEDFIXUP}
+}
+
 FILES_${PN} += "${datadir}/git-core ${libxecdir}/git-core/"
 FILES_${PN}-dbg += "${libexecdir}/git-core/.debug"
 
-# Git tools requiring perl
-PACKAGES =+ "${PN}-perltools"
-FILES_${PN}-perltools += " \
+PERLTOOLS = " \
     ${libexecdir}/git-core/git-add--interactive \
     ${libexecdir}/git-core/git-archimport \
     ${libexecdir}/git-core/git-cvsexportcommit \
@@ -50,6 +62,19 @@ FILES_${PN}-perltools += " \
     ${libexecdir}/git-core/git-relink \
     ${libexecdir}/git-core/git-send-email \
     ${libexecdir}/git-core/git-svn \
+    ${libexecdir}/git-core/git-instaweb \
+    ${libexecdir}/git-core/git-submodule \
+    ${libexecdir}/git-core/git-am \
+    ${libexecdir}/git-core/git-request-pull \
+    ${datadir}/gitweb/gitweb.cgi \
+    ${datadir}/git-core/templates/hooks/prepare-commit-msg.sample \
+    ${datadir}/git-core/templates/hooks/pre-rebase.sample \
+"
+
+# Git tools requiring perl
+PACKAGES =+ "${PN}-perltools"
+FILES_${PN}-perltools += " \
+    ${PERLTOOLS} \
     ${datadir}/perl \
 "
 RDEPENDS_${PN}-perltools = "${PN} perl perl-module-file-path findutils"
