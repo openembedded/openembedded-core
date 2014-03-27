@@ -8,9 +8,29 @@
 # The following script will run all the scriptlets found in #SYSCONFDIR#/deb-postinsts,
 # #SYSCONFDIR#/ipk-postinsts or #SYSCONFDIR#/rpm-posinsts.
 
-pm=#IMAGE_PKGTYPE#
-pm_installed=#PM_INSTALLED#
-pi_dir=#SYSCONFDIR#/${pm}-postinsts
+# the order of this list is important, do not change!
+backend_list="rpm deb ipk"
+
+pm_installed=false
+
+for pm in $backend_list; do
+	pi_dir="#SYSCONFDIR#/$pm-postinsts"
+
+	[ -d $pi_dir ] && break
+
+	case $pm in
+		"deb")
+			if [ -s "/var/lib/dpkg/status" ]; then
+				pm_installed=true
+				break
+			fi
+			;;
+
+		"ipk")
+			pm_installed=true
+			;;
+	esac
+done
 
 remove_rcsd_link () {
 	if [ -n "`which update-rc.d`" ]; then
@@ -55,10 +75,6 @@ if $pm_installed; then
 
 		"deb")
 			eval dpkg --configure -a $append_log
-			;;
-
-		"rpm")
-			exec_postinst_scriptlets
 			;;
 	esac
 else
