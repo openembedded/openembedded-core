@@ -11,7 +11,9 @@ inherit deploy
 
 PV = "43+git${SRCPV}"
 SRCREV = "4062c51075ba054d4949c714fe06123f9ad3097d"
-SRC_URI = "git://anongit.freedesktop.org/gummiboot"
+SRC_URI = "git://anongit.freedesktop.org/gummiboot \
+           file://fix-objcopy.patch \
+          "
 
 # Note: Add COMPATIBLE_HOST here is only because it depends on gnu-efi
 # which has set the COMPATIBLE_HOST, the gummiboot itself may work on
