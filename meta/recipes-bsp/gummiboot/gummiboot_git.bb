@@ -26,6 +26,8 @@ EXTRA_OECONF = "--disable-manpages --with-efi-includedir=${STAGING_INCDIR} \
                 --with-efi-ldsdir=${STAGING_LIBDIR} \
                 --with-efi-libdir=${STAGING_LIBDIR}"
 
+EXTRA_OEMAKE += "gummibootlibdir=${libdir}/gummiboot"
+
 do_deploy () {
         install ${B}/gummiboot*.efi ${DEPLOYDIR}
 }
