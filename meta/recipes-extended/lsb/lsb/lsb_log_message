@@ -21,11 +21,6 @@ case "$ACTION" in
 	warning "$*"
 	echo
 	;;
-  begin)
-  	echo -n $*
-	begin "$*"
-	echo
-	;;
   *)
   	;;
 esac
