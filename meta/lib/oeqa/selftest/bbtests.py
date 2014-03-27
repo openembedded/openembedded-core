@@ -47,10 +47,10 @@ class BitbakeTests(oeSelfTest):
 
     def test_warnings_errors(self):
         result = bitbake('-b asdf', ignore_status=True)
-        find_warnings = re.search("Summary: There was [1-9][0-9]* WARNING message shown.", result.output)
-        find_errors = re.search("Summary: There was [1-9][0-9]* ERROR message shown.", result.output)
-        self.assertTrue(find_warnings)
-        self.assertTrue(find_errors)
+        find_warnings = re.search("Summary: There w.{2,3}? [1-9][0-9]* WARNING messages* shown", result.output)
+        find_errors = re.search("Summary: There w.{2,3}? [1-9][0-9]* ERROR messages* shown", result.output)
+        self.assertTrue(find_warnings, msg="Did not find the mumber of warnings at the end of the build:\n" + result.output)
+        self.assertTrue(find_errors, msg="Did not find the mumber of errors at the end of the build:\n" + result.output)
 
     def test_invalid_patch(self):
         self.write_recipeinc('man', 'SRC_URI += "file://man-1.5h1-make.patch"')
