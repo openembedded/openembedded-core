@@ -161,7 +161,7 @@ DEPENDS = "\
     nasm-native \
     ncurses-native \
     neon-native \
-    ocf-linux-native \
+    cryptodev-linux-native \
     openjade-native \
     opensp-native \
     openssl-native \
