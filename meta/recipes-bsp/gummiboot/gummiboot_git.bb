@@ -13,6 +13,11 @@ PV = "43+git${SRCPV}"
 SRCREV = "4062c51075ba054d4949c714fe06123f9ad3097d"
 SRC_URI = "git://anongit.freedesktop.org/gummiboot"
 
+# Note: Add COMPATIBLE_HOST here is only because it depends on gnu-efi
+# which has set the COMPATIBLE_HOST, the gummiboot itself may work on
+# more hosts.
+COMPATIBLE_HOST = "(x86_64.*|i.86.*)-linux"
+
 S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--disable-manpages --with-efi-includedir=${STAGING_INCDIR} \
