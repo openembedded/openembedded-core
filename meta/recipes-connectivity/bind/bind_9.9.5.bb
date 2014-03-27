@@ -15,6 +15,7 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://dont-test-on-host.patch \
            file://generate-rndc-key.sh \
            file://named.service \
+           file://init.d-add-support-for-read-only-rootfs.patch \
 	   "
 
 SRC_URI[md5sum] = "e676c65cad5234617ee22f48e328c24e"
@@ -50,6 +51,7 @@ do_install_append() {
 	rm "${D}${mandir}/man1/nslookup.1"
 	rmdir "${D}${localstatedir}/run"
 	rmdir --ignore-fail-on-non-empty "${D}${localstatedir}"
+	install -d "${D}${localstatedir}/cache/bind"
 	install -d "${D}${sysconfdir}/bind"
 	install -d "${D}${sysconfdir}/init.d"
 	install -m 644 ${S}/conf/* "${D}${sysconfdir}/bind/"
