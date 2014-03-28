@@ -16,6 +16,7 @@ SRC_URI = "\
     file://nss-fix-support-cross-compiling.patch \
     file://nss-no-rpath-for-cross-compiling.patch \
     file://nss-fix-incorrect-shebang-of-perl.patch \
+    file://nss-3.15.1-fix-CVE-2013-1741.patch \
 "
 SRC_URI_append_class-target = "\
     file://nss.pc.in \
