@@ -22,7 +22,7 @@ SRC_URI[md5sum] = "8fb0ae2267aa6e728958adc38f8163a2"
 SRC_URI[sha256sum] = "5b3e94998152c017e6c75d56b9b994188eb71bf46d4038a642cb9141f6ff1212"
 
 EXTRA_OECONF_class-native = "--without-gmp"
-EXTRA_OECONF_class-target = "--enable-install-program=arch"
+EXTRA_OECONF_class-target = "--enable-install-program=arch --libexecdir=${libdir}"
 
 # acl is not a default feature
 #
@@ -71,8 +71,6 @@ do_install_append() {
 	# in update-alternatives to fail, therefore use lbracket - the name used
 	# for the actual source file.
 	mv ${D}${bindir}/[ ${D}${bindir}/lbracket.${BPN}
-	install -d ${D}${libdir}/coreutils
-	mv ${D}${libexecdir}/coreutils/libstdbuf.so ${D}${libdir}/coreutils
 }
 
 inherit update-alternatives
