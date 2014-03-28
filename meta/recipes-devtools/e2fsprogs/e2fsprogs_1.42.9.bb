@@ -55,6 +55,7 @@ do_install () {
 }
 
 RDEPENDS_e2fsprogs = "e2fsprogs-badblocks"
+RRECOMMENDS_e2fsprogs = "e2fsprogs-mke2fs e2fsprogs-e2fsck"
 
 PACKAGES =+ "e2fsprogs-e2fsck e2fsprogs-mke2fs e2fsprogs-tune2fs e2fsprogs-badblocks"
 PACKAGES =+ "libcomerr libss libe2p libext2fs"
