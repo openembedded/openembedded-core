@@ -65,7 +65,10 @@ def find_bitbake_env_lines(image_name):
     If image_name is empty, plugins might still be able to use the
     environment, so set it regardless.
     """
-    bitbake_env_cmd = "bitbake -e %s" % image_name
+    if image_name:
+        bitbake_env_cmd = "bitbake -e %s" % image_name
+    else:
+        bitbake_env_cmd = "bitbake -e"
     rc, bitbake_env_lines = exec_cmd(bitbake_env_cmd)
     if rc != 0:
         print "Couldn't get '%s' output." % bitbake_env_cmd
