@@ -192,7 +192,8 @@ class Image(ImageDepGraph):
                 if img.find(self.d.getVar('IMAGE_LINK_NAME', True)) == 0:
                     img = os.path.join(deploy_dir, img)
                     if os.path.islink(img):
-                        if self.d.getVar('RM_OLD_IMAGE', True) == "1":
+                        if self.d.getVar('RM_OLD_IMAGE', True) == "1" and \
+                                os.path.exists(os.path.realpath(img)):
                             os.remove(os.path.realpath(img))
 
                         os.remove(img)
