@@ -24,6 +24,9 @@ do_configure() {
 	# on what should be replaced with ?=
 	sed -e 's,:=,?=,g' -i Make.Rules
 	sed -e 's,^BUILD_CFLAGS ?= $(.*CFLAGS),BUILD_CFLAGS := $(BUILD_CFLAGS),' -i Make.Rules
+
+	# disable gperf detection
+	sed -e '/shell gperf/cifeq (,yes)' -i libcap/Makefile
 }
 
 EXTRA_OEMAKE = " \
