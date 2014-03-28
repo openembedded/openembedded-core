@@ -308,7 +308,7 @@ python do_package_write_deb () {
 do_package_write_deb[dirs] = "${PKGWRITEDIRDEB}"
 do_package_write_deb[cleandirs] = "${PKGWRITEDIRDEB}"
 do_package_write_deb[umask] = "022"
-addtask package_write_deb before do_package_write after do_packagedata do_package
+addtask package_write_deb after do_packagedata do_package
 
 
 PACKAGEINDEXDEPS += "dpkg-native:do_populate_sysroot"
