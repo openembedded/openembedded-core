@@ -25,6 +25,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
            file://run-ptest \
            file://ptest.patch \
            file://avoid_parallel_tests.patch \
+           file://fix-O_CLOEXEC.patch \
           "
 
 S = "${WORKDIR}/git"
