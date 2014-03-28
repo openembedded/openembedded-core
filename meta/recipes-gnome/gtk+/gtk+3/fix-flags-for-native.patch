@@ -1,0 +1,33 @@
+From 5e16904f94b5f5961f8f6e75716e6d7d228de119 Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Fri, 28 Mar 2014 03:10:12 +0000
+Subject: [PATCH] gtk/native/Makefile.am: unset target FLAGS for native build
+
+The target gtk+3 does a native build in its "native" directory, we need
+unset the target FLAGS for native build, otherwise, there might be build
+failures.
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ gtk/native/Makefile.am | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/gtk/native/Makefile.am b/gtk/native/Makefile.am
+index 64899e9..a1c814a 100644
+--- a/gtk/native/Makefile.am
++++ b/gtk/native/Makefile.am
+@@ -3,6 +3,9 @@ AM_CFLAGS = @CFLAGS_FOR_BUILD@
+ CPP = @CPP_FOR_BUILD@
+ AM_CPPFLAGS = @CPPFLAGS_FOR_BUILD@
+ AM_LDFLAGS = @LDFLAGS_FOR_BUILD@
++CFLAGS =
++CPPFLAGS =
++LDFLAGS =
+ 
+ if CROSS_COMPILING
+ if !USE_EXTERNAL_ICON_CACHE
+-- 
+1.8.3.4
+
