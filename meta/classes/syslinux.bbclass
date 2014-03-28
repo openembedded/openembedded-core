@@ -15,6 +15,7 @@
 # ${SYSLINUX_DEFAULT_CONSOLE} - set to "console=ttyX" to change kernel boot default console
 # ${SYSLINUX_SERIAL} - Set an alternate serial port or turn off serial with empty string
 # ${SYSLINUX_SERIAL_TTY} - Set alternate console=tty... kernel boot argument
+# ${SYSLINUX_KERNEL_ARGS} - Add additional kernel arguments
 
 do_bootimg[depends] += "syslinux:do_populate_sysroot \
                         syslinux-native:do_populate_sysroot"
@@ -161,6 +162,10 @@ python build_syslinux_cfg () {
 
         for btype in btypes:
             cfgfile.write('LABEL %s%s\nKERNEL /vmlinuz\n' % (btype[0], label))
+
+            exargs = d.getVar('SYSLINUX_KERNEL_ARGS', True)
+            if exargs:
+                btype[1] += " " + exargs
 
             append = localdata.getVar('APPEND', True)
             initrd = localdata.getVar('INITRD', True)
