@@ -11,8 +11,6 @@ do_populate_sdk[depends] += "opkg-native:do_populate_sysroot"
 # Creating the repo info in do_rootfs
 do_populate_sdk[depends] += "createrepo-native:do_populate_sysroot"
 
-do_populate_sdk[recrdeptask] += "do_package_write_rpm"
-
 rpmlibdir = "/var/lib/rpm"
 
 do_populate_sdk[lockfiles] += "${DEPLOY_DIR_RPM}/rpm.lock"
