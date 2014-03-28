@@ -14,7 +14,9 @@ SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz"
 SRC_URI[md5sum] = "332cf9191837be12638a29265ed7cf46"
 SRC_URI[sha256sum] = "18f33b9f15b4c8b662fb1968e7636e7926b419dfc48de8a164b3a3d7095c5a58"
 
-SRC_URI_append_class-native = " file://just-scanner.patch"
+SRC_URI_append_class-native = " file://just-scanner.patch \
+    file://disable-macro-checks-not-used-for-scanner.patch \
+    "
 EXTRA_OECONF_class-native = "--disable-documentation --enable-scanner"
 
 inherit autotools pkgconfig
