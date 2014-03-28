@@ -50,6 +50,15 @@ class Rootfs(object):
     def _handle_intercept_failure(self, failed_script):
         pass
 
+    """
+    The _cleanup() method should be used to clean-up stuff that we don't really
+    want to end up on target. For example, in the case of RPM, the DB locks.
+    The method is called, once, at the end of create() method.
+    """
+    @abstractmethod
+    def _cleanup(self):
+        pass
+
     def _exec_shell_cmd(self, cmd):
         fakerootcmd = self.d.getVar('FAKEROOT', True)
         if fakerootcmd is not None:
@@ -116,6 +125,8 @@ class Rootfs(object):
         self._run_ldconfig()
 
         self._generate_kernel_module_deps()
+
+        self._cleanup()
 
     def _uninstall_uneeded(self):
         if base_contains("IMAGE_FEATURES", "package-management",
@@ -358,6 +369,13 @@ class RpmRootfs(Rootfs):
         for pkg in registered_pkgs.split():
             self.pm.save_rpmpostinst(pkg)
 
+    def _cleanup(self):
+        # during the execution of postprocess commands, rpm is called several
+        # times to get the files installed, dependencies, etc. This creates the
+        # __db.00* (Berkeley DB files that hold locks, rpm specific environment
+        # settings, etc.), that should not get into the final rootfs
+        self.pm.unlock_rpm_db()
+
 
 class DpkgRootfs(Rootfs):
     def __init__(self, d, manifest_dir):
@@ -429,6 +447,9 @@ class DpkgRootfs(Rootfs):
         self.pm.mark_packages("unpacked", registered_pkgs.split())
 
     def _log_check(self):
+        pass
+
+    def _cleanup(self):
         pass
 
 
@@ -693,6 +714,10 @@ class OpkgRootfs(Rootfs):
 
     def _log_check(self):
         pass
+
+    def _cleanup(self):
+        pass
+
 
 def create_rootfs(d, manifest_dir=None):
     env_bkp = os.environ.copy()
