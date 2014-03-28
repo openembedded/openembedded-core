@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c963eb366b781252b0bf0fdf1624d9e9 \
 inherit autotools lib_package
 
 DEPENDS = "liburcu util-linux"
+RDEPENDS_${PN} = "python"
 
 # For backwards compatibility after rename
 RPROVIDES_${PN} = "lttng2-ust"
