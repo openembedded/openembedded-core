@@ -299,9 +299,6 @@ class RpmPkgsList(PkgsList):
             # bb.note(cmd)
             tmp_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).strip()
 
-            rpm_db_locks = glob.glob('%s/var/lib/rpm/__db.*' % self.rootfs_dir)
-            for f in rpm_db_locks:
-                bb.utils.remove(f, True)
         except subprocess.CalledProcessError as e:
             bb.fatal("Cannot get the installed packages list. Command '%s' "
                      "returned %d:\n%s" % (cmd, e.returncode, e.output))
@@ -1101,7 +1098,6 @@ class RpmPM(PackageManager):
             output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).strip()
             bb.note(output)
             os.chmod(saved_dir, 0755)
-            self._unlock_rpm_db()
         except subprocess.CalledProcessError as e:
             bb.fatal("Invoke save_rpmpostinst failed. Command '%s' "
                      "returned %d:\n%s" % (cmd, e.returncode, e.output))
@@ -1117,14 +1113,12 @@ class RpmPM(PackageManager):
             self._invoke_smart('flag --set ignore-recommends %s' % i)
         self._invoke_smart('channel --add rpmsys type=rpm-sys -y')
 
-        self._unlock_rpm_db()
-
     '''
     The rpm db lock files were produced after invoking rpm to query on
     build system, and they caused the rpm on target didn't work, so we
     need to unlock the rpm db by removing the lock files.
     '''
-    def _unlock_rpm_db(self):
+    def unlock_rpm_db(self):
         # Remove rpm db lock files
         rpm_db_locks = glob.glob('%s/var/lib/rpm/__db.*' % self.target_rootfs)
         for f in rpm_db_locks:
