@@ -225,6 +225,10 @@ remove_duplicated () {
   # Save the file list which needs to be removed
   local remove_listdir=`mktemp -d` || exit 1
   for suffix in $sstate_suffixes; do
+      if [ "$suffix" = "populate_lic" ] ; then
+          echo "Skipping populate_lic, because removing duplicates doesn't work correctly for them (use --stamps-dir instead)"
+          continue
+      fi
       # Total number of files including .siginfo and .done files
       total_files_suffix=`grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix\.tgz.*" $sstate_files_list | wc -l 2>/dev/null`
       total_tgz_suffix=`grep ".*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:_]*_$suffix\.tgz$" $sstate_files_list | wc -l 2>/dev/null`
