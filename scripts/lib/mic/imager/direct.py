@@ -84,16 +84,18 @@ class DirectImageCreator(BaseImageCreator):
         self.hdddir = hdddir
         self.staging_data_dir = staging_data_dir
 
-    def __write_fstab(self):
+    def __write_fstab(self, image_rootfs):
         """overriden to generate fstab (temporarily) in rootfs. This
         is called from mount_instroot, make sure it doesn't get called
         from BaseImage.mount()"""
-
-        image_rootfs = self.rootfs_dir
-
-        parts = self._get_parts()
+        if image_rootfs is None:
+            return None
 
         fstab = image_rootfs + "/etc/fstab"
+        if not os.path.isfile(fstab):
+            return None
+
+        parts = self._get_parts()
 
         self._save_fstab(fstab)
         fstab_lines = self._get_fstab(fstab, parts)
@@ -126,6 +128,8 @@ class DirectImageCreator(BaseImageCreator):
 
     def _restore_fstab(self, fstab):
         """Restore the saved fstab in rootfs"""
+        if fstab is None:
+            return
         shutil.move(fstab + ".orig", fstab)
 
     def _get_fstab(self, fstab, parts):
@@ -235,8 +239,6 @@ class DirectImageCreator(BaseImageCreator):
 
         self.__instimage = PartitionedMount(self._instroot)
 
-        fstab = self.__write_fstab()
-
         for p in parts:
             # as a convenience, set source to the boot partition source
             # instead of forcing it to be set via bootloader --source
@@ -263,6 +265,9 @@ class DirectImageCreator(BaseImageCreator):
             p.prepare(self, self.workdir, self.oe_builddir, self.rootfs_dir,
                       self.bootimg_dir, self.kernel_dir, self.native_sysroot)
 
+            fstab = self.__write_fstab(p.get_rootfs())
+            self._restore_fstab(fstab)
+
             self.__instimage.add_partition(int(p.size),
                                            p.disk,
                                            p.mountpoint,
@@ -273,7 +278,6 @@ class DirectImageCreator(BaseImageCreator):
                                            boot = p.active,
                                            align = p.align,
                                            part_type = p.part_type)
-        self._restore_fstab(fstab)
         self.__instimage.layout_partitions(self._ptable_format)
 
         self.__imgdir = self.workdir

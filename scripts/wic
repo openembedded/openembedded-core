@@ -45,6 +45,30 @@ sys.path = sys.path + [lib_path]
 from image.help import *
 from image.engine import *
 
+def rootfs_dir_to_args(krootfs_dir):
+    """
+    Get a rootfs_dir dict and serialize to string
+    """
+    rootfs_dir = ''
+    for k, v in krootfs_dir.items():
+        rootfs_dir += ' '
+        rootfs_dir += '='.join([k, v])
+    return rootfs_dir.strip()
+
+def callback_rootfs_dir(option, opt, value, parser):
+    """
+    Build a dict using --rootfs_dir connection=dir
+    """
+    if not type(parser.values.rootfs_dir) is dict:
+        parser.values.rootfs_dir = dict()
+
+    if '=' in value:
+        (key, rootfs_dir) = value.split('=')
+    else:
+       key = 'ROOTFS_DIR'
+       rootfs_dir = value
+
+    parser.values.rootfs_dir[key] = rootfs_dir
 
 def wic_create_subcommand(args, usage_str):
     """
@@ -60,7 +84,8 @@ def wic_create_subcommand(args, usage_str):
     parser.add_option("-e", "--image-name", dest = "image_name",
                       action = "store", help = "name of the image to use the artifacts from e.g. core-image-sato")
     parser.add_option("-r", "--rootfs-dir", dest = "rootfs_dir",
-                      action = "store", help = "path to the /rootfs dir to use as the .wks rootfs source")
+                      action = "callback", callback = callback_rootfs_dir, type = "string",
+                      help = "path to the /rootfs dir to use as the .wks rootfs source")
     parser.add_option("-b", "--bootimg-dir", dest = "bootimg_dir",
                       action = "store", help = "path to the dir containing the boot artifacts (e.g. /EFI or /syslinux dirs) to use as the .wks bootimg source")
     parser.add_option("-k", "--kernel-dir", dest = "kernel_dir",
@@ -125,11 +150,13 @@ def wic_create_subcommand(args, usage_str):
         image_output_dir = options.outdir
 
     if not options.image_name:
-        rootfs_dir = options.rootfs_dir
+        rootfs_dir = ''
+        if 'ROOTFS_DIR' in options.rootfs_dir:
+            rootfs_dir = options.rootfs_dir['ROOTFS_DIR']
         bootimg_dir = options.bootimg_dir
         kernel_dir = options.kernel_dir
         native_sysroot = options.native_sysroot
-        if not os.path.isdir(rootfs_dir):
+        if rootfs_dir and not os.path.isdir(rootfs_dir):
             print "--roofs-dir (-r) not found, exiting\n"
             sys.exit(1)
         if not os.path.isdir(bootimg_dir):
@@ -161,6 +188,13 @@ def wic_create_subcommand(args, usage_str):
             print "The artifact that couldn't be found was %s:\n  %s" % \
                 (not_found, not_found_dir)
             sys.exit(1)
+
+    krootfs_dir = options.rootfs_dir
+    if krootfs_dir is None:
+         krootfs_dir = {}
+         krootfs_dir['ROOTFS_DIR'] = rootfs_dir
+
+    rootfs_dir = rootfs_dir_to_args(krootfs_dir)
 
     wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
                native_sysroot, hdddir, staging_data_dir, scripts_path,
