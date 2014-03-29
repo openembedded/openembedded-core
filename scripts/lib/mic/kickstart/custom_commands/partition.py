@@ -114,24 +114,20 @@ class Wic_PartData(Mic_PartData):
                                              native_sysroot)
             return
 
-        if self.source.startswith("rootfs"):
-            self.prepare_rootfs(cr_workdir, oe_builddir, rootfs_dir,
-                                native_sysroot)
-        else:
-            self._source_methods = pluginmgr.get_source_plugin_methods(self.source, partition_methods)
-            self._source_methods["do_configure_partition"](self, cr, cr_workdir,
-                                                           oe_builddir,
-                                                           bootimg_dir,
-                                                           kernel_dir,
-                                                           native_sysroot)
-            self._source_methods["do_stage_partition"](self, cr, cr_workdir,
+        self._source_methods = pluginmgr.get_source_plugin_methods(self.source, partition_methods)
+        self._source_methods["do_configure_partition"](self, cr, cr_workdir,
                                                        oe_builddir,
-                                                       bootimg_dir, kernel_dir,
+                                                       bootimg_dir,
+                                                       kernel_dir,
                                                        native_sysroot)
-            self._source_methods["do_prepare_partition"](self, cr, cr_workdir,
-                                                         oe_builddir,
-                                                         bootimg_dir, kernel_dir,
-                                                         native_sysroot)
+        self._source_methods["do_stage_partition"](self, cr, cr_workdir,
+                                                   oe_builddir,
+                                                   bootimg_dir, kernel_dir,
+                                                   native_sysroot)
+        self._source_methods["do_prepare_partition"](self, cr, cr_workdir,
+                                                     oe_builddir,
+                                                     bootimg_dir, kernel_dir, rootfs_dir,
+                                                     native_sysroot)
 
     def prepare_rootfs_from_fs_image(self, cr_workdir, oe_builddir,
                                      rootfs_dir):
