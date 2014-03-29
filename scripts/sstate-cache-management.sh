@@ -341,9 +341,9 @@ rm_by_stamps (){
   echo "Done"
 
   # Total number of files including sstate-, .siginfo and .done files
-  total_files=`find $cache_dir -name 'sstate*' | wc -l`
+  total_files=`find $cache_dir -type f -name 'sstate*' | wc -l`
   # Save all the state file list to a file
-  find $cache_dir -name 'sstate*.tgz' | sort -u -o $cache_list
+  find $cache_dir -type f -name 'sstate*' | sort -u -o $cache_list
 
   echo "Figuring out the files which will be removed ... "
   for i in $all_sums; do
@@ -355,14 +355,14 @@ rm_by_stamps (){
       sort -u $keep_list -o $keep_list
       to_del=`comm -1 -3 $keep_list $cache_list`
       gen_rmlist $rm_list "$to_del"
-      let total_deleted=`cat $rm_list | wc -w`
+      let total_deleted=`cat $rm_list | sort -u | wc -w`
       if [ $total_deleted -gt 0 ]; then
-          [ $debug -gt 0 ] && cat $rm_list
+          [ $debug -gt 0 ] && cat $rm_list | sort -u
           read_confirm
           if [ "$confirm" = "y" -o "$confirm" = "Y" ]; then
               echo "Removing sstate cache files ... ($total_deleted files)"
               # Remove them one by one to avoid the argument list too long error
-              for i in `cat $rm_list`; do
+              for i in `cat $rm_list | sort -u`; do
                   rm -f $verbose $i
               done
               echo "$total_deleted files have been removed"
