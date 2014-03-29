@@ -45,6 +45,7 @@ class Wic_PartData(Mic_PartData):
         Mic_PartData.__init__(self, *args, **kwargs)
         self.deleteRemovedAttrs()
         self.source = kwargs.get("source", None)
+        self.rootfs = kwargs.get("rootfs-dir", None)
         self.source_file = ""
         self.size = 0
 
@@ -53,6 +54,8 @@ class Wic_PartData(Mic_PartData):
 
         if self.source:
             retval += " --source=%s" % self.source
+            if self.rootfs:
+                retval += " --rootfs-dir=%s" % self.rootfs
 
         return retval
 
@@ -332,4 +335,7 @@ class Wic_Partition(Mic_Partition):
         # and calculate partition size
         op.add_option("--source", type="string", action="store",
                       dest="source", default=None)
+        # use specified rootfs path to fill the partition
+        op.add_option("--rootfs-dir", type="string", action="store",
+                      dest="rootfs", default=None)
         return op
