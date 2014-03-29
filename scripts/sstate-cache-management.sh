@@ -330,11 +330,11 @@ rm_by_stamps (){
   # Figure out all the md5sums in the stamps dir.
   echo "Figuring out all the md5sums in stamps dir ... "
   for i in $suffixes; do
-      # There is no "\.siginfo" but "_setcene" when it is mirrored
+      # There is no "\.sigdata" but "_setcene" when it is mirrored
       # from the SSTATE_MIRRORS, use them to figure out the sum.
       sums=`find $stamps -maxdepth 3 -name "*.do_$i.*" \
         -o -name "*.do_${i}_setscene.*" | \
-        sed -ne 's#.*_setscene\.##p' -e 's#.*\.siginfo\.##p' | \
+        sed -ne 's#.*_setscene\.##p' -e 's#.*\.sigdata\.##p' | \
         sed -e 's#\..*##' | sort -u`
       all_sums="$all_sums $sums"
   done
