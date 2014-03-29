@@ -7,8 +7,6 @@ DESCRIPTION = "Packages required to satisfy the Linux Standard Base (LSB) specif
 PR = "r10"
 LICENSE = "MIT"
 
-COMPATIBLE_HOST_mips64 = "mips64.*-linux-gnun32"
-
 inherit packagegroup
 
 PACKAGES = "\
@@ -203,23 +201,28 @@ def get_libqt3(d):
         bb.warn('a requirement for LSB')
     return ''
 
-SUMMARY_packagegroup-core-lsb-desktop = "LSB Desktop"
-DESCRIPTION_packagegroup-core-lsb-desktop = "Packages required to support libraries \
-    specified in the LSB Desktop specification"
-RDEPENDS_packagegroup-core-lsb-desktop = "\
+QT4PKGS = " \
     libqtcore4 \
     libqtgui4 \
     libqtsql4 \
     libqtsvg4 \
     libqtxml4 \
     libqtnetwork4 \
+    qt4-plugin-sqldriver-sqlite \
+    ${@base_contains("DISTRO_FEATURES", "opengl", "libqtopengl4", "", d)} \
+    "
+QT4PKGS_mips64 = ""
+
+SUMMARY_packagegroup-core-lsb-desktop = "LSB Desktop"
+DESCRIPTION_packagegroup-core-lsb-desktop = "Packages required to support libraries \
+    specified in the LSB Desktop specification"
+RDEPENDS_packagegroup-core-lsb-desktop = "\
     libxt \
     libxxf86vm \
     libdrm \
     libglu \
     libxi \
     libxtst \
-    qt4-plugin-sqldriver-sqlite \
     libx11-locale \
     xorg-minimal-fonts \
     gdk-pixbuf-loader-ico \
@@ -230,7 +233,7 @@ RDEPENDS_packagegroup-core-lsb-desktop = "\
     gtk+ \
     atk \
     libasound \
-    ${@base_contains("DISTRO_FEATURES", "opengl", "libqtopengl4", "", d)} \
+    ${QT4PKGS} \
     ${@get_libqt3(d)} \
 "
 
