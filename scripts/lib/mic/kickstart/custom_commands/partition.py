@@ -172,7 +172,7 @@ class Wic_PartData(Mic_PartData):
         """
 
         image_rootfs = rootfs_dir
-        rootfs = "%s/rootfs.%s" % (cr_workdir, self.fstype)
+        rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label ,self.fstype)
 
         du_cmd = "du -ks %s" % image_rootfs
         rc, out = exec_cmd(du_cmd)
@@ -217,7 +217,7 @@ class Wic_PartData(Mic_PartData):
         Currently handles ext2/3/4 and btrfs.
         """
         image_rootfs = rootfs_dir
-        rootfs = "%s/rootfs.%s" % (cr_workdir, self.fstype)
+        rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label, self.fstype)
 
         du_cmd = "du -ks %s" % image_rootfs
         rc, out = exec_cmd(du_cmd)
