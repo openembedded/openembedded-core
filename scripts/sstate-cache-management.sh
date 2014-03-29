@@ -324,16 +324,23 @@ rm_by_stamps (){
   local cache_list=`mktemp` || exit 1
   local keep_list=`mktemp` || exit 1
   local rm_list=`mktemp` || exit 1
-  local suffixes
   local sums
   local all_sums
 
-  suffixes="populate_sysroot populate_lic package_write_ipk \
-            package_write_rpm package_write_deb package packagedata deploy"
+  # Total number of files including sstate-, .siginfo and .done files
+  total_files=`find $cache_dir -type f -name 'sstate*' | wc -l`
+  # Save all the state file list to a file
+  find $cache_dir -type f -name 'sstate*' | sort -u -o $cache_list
+
+  echo "Figuring out the suffixes in the sstate cache dir ... "
+  local sstate_suffixes="`sed 's%.*/sstate:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^_]*_\([^:]*\)\.tgz.*%\1%g' $cache_list | sort -u`"
+  echo "Done"
+  echo "The following suffixes have been found in the cache dir:"
+  echo $sstate_suffixes
 
   # Figure out all the md5sums in the stamps dir.
   echo "Figuring out all the md5sums in stamps dir ... "
-  for i in $suffixes; do
+  for i in $sstate_suffixes; do
       # There is no "\.sigdata" but "_setcene" when it is mirrored
       # from the SSTATE_MIRRORS, use them to figure out the sum.
       sums=`find $stamps -maxdepth 3 -name "*.do_$i.*" \
@@ -343,11 +350,6 @@ rm_by_stamps (){
       all_sums="$all_sums $sums"
   done
   echo "Done"
-
-  # Total number of files including sstate-, .siginfo and .done files
-  total_files=`find $cache_dir -type f -name 'sstate*' | wc -l`
-  # Save all the state file list to a file
-  find $cache_dir -type f -name 'sstate*' | sort -u -o $cache_list
 
   echo "Figuring out the files which will be removed ... "
   for i in $all_sums; do
