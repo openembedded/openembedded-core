@@ -321,15 +321,25 @@ class DirectImageCreator(BaseImageCreator):
         """
         msg = "The new image(s) can be found here:\n"
 
+        parts = self._get_parts()
+
         for disk_name, disk in self.__instimage.disks.items():
             full_path = self._full_path(self.__imgdir, disk_name, "direct")
             msg += '  %s\n\n' % full_path
 
         msg += 'The following build artifacts were used to create the image(s):\n'
-        msg += '  ROOTFS_DIR:      %s\n' % self.rootfs_dir
-        msg += '  BOOTIMG_DIR:     %s\n' % self.bootimg_dir
-        msg += '  KERNEL_DIR:      %s\n' % self.kernel_dir
-        msg += '  NATIVE_SYSROOT:  %s\n' % self.native_sysroot
+        for p in parts:
+            if p.get_rootfs() is None:
+                continue
+            if p.mountpoint == '/':
+                str = ':'
+            else:
+                str = '["%s"]:' % p.label
+            msg += '  ROOTFS_DIR%s%s\n' % (str.ljust(20), p.get_rootfs())
+
+        msg += '  BOOTIMG_DIR:                  %s\n' % self.bootimg_dir
+        msg += '  KERNEL_DIR:                   %s\n' % self.kernel_dir
+        msg += '  NATIVE_SYSROOT:               %s\n' % self.native_sysroot
 
         msger.info(msg)
 

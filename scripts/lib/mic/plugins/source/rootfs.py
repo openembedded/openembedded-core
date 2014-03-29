@@ -54,5 +54,6 @@ class RootfsPlugin(SourcePlugin):
         if part.rootfs:
             rootfs_dir = part.rootfs 
 
+        part.set_rootfs(rootfs_dir)
         part.prepare_rootfs(cr_workdir, oe_builddir, rootfs_dir, native_sysroot)
 

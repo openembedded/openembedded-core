@@ -59,6 +59,19 @@ class Wic_PartData(Mic_PartData):
 
         return retval
 
+    def get_rootfs(self):
+        """
+        Acessor for rootfs dir
+        """
+        return self.rootfs
+
+    def set_rootfs(self, rootfs):
+        """
+        Acessor for actual rootfs dir, which must be set by source
+        plugins.
+        """
+        self.rootfs = rootfs
+
     def get_size(self):
         """
         Accessor for partition size, 0 or --size before set_size().
