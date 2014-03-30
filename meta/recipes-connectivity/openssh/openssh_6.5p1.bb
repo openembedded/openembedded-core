@@ -61,6 +61,12 @@ EXTRA_OECONF = "${@base_contains('DISTRO_FEATURES', 'pam', '--with-pam', '--with
                 --sysconfdir=${sysconfdir}/ssh \
                 --with-xauth=/usr/bin/xauth"
 
+# Since we do not depend on libbsd, we do not want configure to use it
+# just because it finds libutil.h.  But, specifying --disable-libutil
+# causes compile errors, so...
+#
+CACHED_CONFIGUREVARS += "ac_cv_header_bsd_libutil_h=no ac_cv_header_libutil_h=no"
+
 # This is a workaround for uclibc because including stdio.h
 # pulls in pthreads.h and causes conflicts in function prototypes.
 # This results in compilation failure, so unless this is fixed,
