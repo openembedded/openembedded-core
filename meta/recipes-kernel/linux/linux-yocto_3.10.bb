@@ -11,7 +11,7 @@ KBRANCH_qemux86  = "standard/common-pc/base"
 KBRANCH_qemux86-64  = "standard/common-pc-64/base"
 KBRANCH_qemumips64 = "standard/mti-malta64"
 
-SRCREV_machine_qemuarm ?= "0e99eabbe5b3bec853ace496f94612bc37800260"
+SRCREV_machine_qemuarm ?= "52a6807f42846c7d1442e11227722f59221fc64e"
 SRCREV_machine_qemumips ?= "b6b20f49e9a169a0672b7cc2d7b93d6652ca7873"
 SRCREV_machine_qemuppc ?= "d71b782615b802c78e1586494b94dd40531775c8"
 SRCREV_machine_qemux86 ?= "c7739be126930006e3bfbdb2fb070a967abc5e09"
