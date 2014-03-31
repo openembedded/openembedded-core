@@ -13,8 +13,6 @@ SRC_URI = "http://pkgs.fedoraproject.org/repo/pkgs/zisofs-tools/zisofs-tools-${P
 SRC_URI[md5sum] = "2d0ed8c9a1f60b45f949b136f9be1f6c"
 SRC_URI[sha256sum] = "ae4e53e4914934d41660248fb59d3c8761f1f1fd180d5ec993c17ddb3afd04f3"
 
-DEPENDS = "zlib-native"
-
 inherit native
 
 do_install() {
