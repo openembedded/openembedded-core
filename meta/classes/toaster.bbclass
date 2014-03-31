@@ -284,10 +284,10 @@ python toaster_buildhistory_dump() {
 # dump information related to license manifest path
 
 python toaster_licensemanifest_dump() {
-    deploy_dir_image = d.getVar('DEPLOY_DIR_IMAGE', True);
+    deploy_dir = d.getVar('DEPLOY_DIR', True);
     image_name = d.getVar('IMAGE_NAME', True);
 
-    data = { 'deploy_dir_image' : deploy_dir_image, 'image_name' : image_name }
+    data = { 'deploy_dir' : deploy_dir, 'image_name' : image_name }
 
     bb.event.fire(bb.event.MetadataEvent("LicenseManifestPath", data), d)
 }
