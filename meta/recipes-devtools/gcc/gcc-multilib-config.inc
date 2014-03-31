@@ -148,6 +148,7 @@ python gcc_multilib_setup() {
     options = []
     dirnames = []
     osdirnames = []
+    optsets = []
 
     for ml in ml_list:
         tune = d.getVar(ml, True)
@@ -172,15 +173,30 @@ python gcc_multilib_setup() {
         else:
             bb.error('Unknown libdir (%s) of the tune : %s' % (tune_baselib, tune))
 
-        # take out '-' and march='s from parameters
-        options.append(re.sub(r'march=[^ ]+ *', '',
-                            re.sub(r' +\-+', ' ',
-                                re.sub(r'^ *\-+', '', tune_parameters['ccargs']))))
+        # take out '-' mcpu='s and march='s from parameters
+        options.append(re.sub(r'mcpu=[^ ]+ *', '',
+                         re.sub(r'march=[^ ]+ *', '',
+                           re.sub(r' +\-+', ' ',
+                             re.sub(r'^ *\-+', '', tune_parameters['ccargs'])))))
         if tune_baselib == 'lib':
             dirnames.append('32')  # /lib => 32bit lib
         else:
             dirnames.append(tune_baselib.replace('lib', ''))
         osdirnames.append('../' + tune_baselib)
+
+    if len(options) > 1:
+        for optstr in options:
+            optsets.append(optstr.split())
+
+    #get common options present in all the tune parameters
+        common_opt_set = set.intersection(*map(set, optsets))
+
+    #common options will be added at the end of the options string only once
+        if (len(common_opt_set) > 0):
+            rex = re.compile(''.join(['\\b(', '|'.join(common_opt_set), ')\\W']), re.I)
+            options = [rex.sub("", optstr) for optstr in options]
+            options = [optstr.strip() for optstr in options]
+            options[len(options)-1] = ' '.join((options[len(options)-1], ' '.join(common_opt_set)))
 
     write_config(builddir, target_config_files, options, dirnames, osdirnames)
     write_headers(builddir, header_config_files, libdir32, libdir64, libdirx32, libdirn32)
