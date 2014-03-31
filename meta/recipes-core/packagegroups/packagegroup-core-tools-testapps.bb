@@ -24,7 +24,7 @@ KEXECTOOLS_powerpc ?= ""
 KEXECTOOLS_e5500-64b ?= ""
 KEXECTOOLS_aarch64 ?= ""
 
-GLTOOLS = "\
+X11GLTOOLS = "\
     mesa-demos \
     piglit \
     "
@@ -58,6 +58,6 @@ RDEPENDS_${PN} = "\
     connman-tests \
     connman-client \
     ${@base_contains('DISTRO_FEATURES', 'x11', "${X11TOOLS}", "", d)} \
-    ${@base_contains('DISTRO_FEATURES', 'opengl', "${GLTOOLS}", "", d)} \
+    ${@base_contains('DISTRO_FEATURES', 'x11 opengl', "${X11GLTOOLS}", "", d)} \
     ${@base_contains('DISTRO_FEATURES', '3g', "${3GTOOLS}", "", d)} \
     "
