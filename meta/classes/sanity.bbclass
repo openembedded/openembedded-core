@@ -667,6 +667,8 @@ def check_sanity_everybuild(status, d):
     if d.getVar('SDKMACHINE', True):
         if not check_conf_exists("conf/machine-sdk/${SDKMACHINE}.conf", d):
             status.addresult('Specified SDKMACHINE value is not valid\n')
+        elif d.getVar('SDK_ARCH', False) == "${BUILD_ARCH}":
+            status.addresult('SDKMACHINE is set, but SDK_ARCH has not been changed as a result - SDKMACHINE may have been set too late (e.g. in the distro configuration)\n')
 
     check_supported_distro(d)
 
