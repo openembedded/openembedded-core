@@ -304,6 +304,16 @@ ssh_allow_empty_password () {
 	fi
 }
 
+# Disable DNS lookups, the SSH_DISABLE_DNS_LOOKUP can be overridden to allow
+# distros to choose not to take this change
+SSH_DISABLE_DNS_LOOKUP ?= " ssh_disable_dns_lookup ; "
+ROOTFS_POSTPROCESS_COMMAND_append_qemuall = "${SSH_DISABLE_DNS_LOOKUP}"
+ssh_disable_dns_lookup () {
+	if [ -e ${IMAGE_ROOTFS}${sysconfdir}/ssh/sshd_config ]; then
+		sed -i -e 's:#UseDNS yes:UseDNS no:' ${IMAGE_ROOTFS}${sysconfdir}/ssh/sshd_config
+	fi
+}
+
 # Enable postinst logging if debug-tweaks is enabled
 postinst_enable_logging () {
 	mkdir -p ${IMAGE_ROOTFS}${sysconfdir}/default
