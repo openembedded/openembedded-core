@@ -1,10 +1,12 @@
-SUMMARY = "Bellagio OpenMAX Integration Layer"
+SUMMARY = "Bellagio OpenMAX Integration Layer (IL)"
+DESCRIPTION = "Bellagio is an opensource implementation of the Khronos OpenMAX \
+               Integration Layer API to access multimedia components."
 HOMEPAGE = "http://omxil.sourceforge.net/"
+
 LICENSE = "LGPLv2.1+"
 LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ae6f0f4dbc7ac193b50f323a6ae191cb \
                     file://src/omxcore.h;beginline=1;endline=27;md5=806b1e5566c06486fe8e42b461e03a90"
-
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/omxil/libomxil-bellagio-${PV}.tar.gz \
            file://configure-fix.patch \
@@ -19,7 +21,7 @@ S = "${WORKDIR}/${BPN}-bellagio-${PV}"
 
 inherit autotools
 
-EXTRA_OECONF += "--disable-ffmpegcomponents --disable-Werror"
+EXTRA_OECONF += "--disable-doc --disable-Werror"
 
 FILES_${PN} += "${libdir}/bellagio/*${SOLIBS} \
                 ${libdir}/omxloaders/*${SOLIBS}"
