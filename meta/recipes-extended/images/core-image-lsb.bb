@@ -9,4 +9,6 @@ IMAGE_INSTALL = "\
     packagegroup-core-lsb \
     "
 
-inherit core-image
+inherit core-image distro_features_check
+
+REQUIRED_DISTRO_FEATURES = "pam"
