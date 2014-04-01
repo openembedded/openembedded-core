@@ -18,6 +18,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://extending-libinstall-dependencies.patch \
            file://run-ptest \
            file://tests-check.patch \
+           file://fatal-loader.patch \
            "
 
 SRC_URI[md5sum] = "81161cc895eb43afd9ae7354b87e2261"
