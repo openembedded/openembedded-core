@@ -25,8 +25,6 @@ def sanity_conf_update(fn, lines, version_var_name, new_version):
     with open(fn, "w") as f:
         f.write(''.join(lines))
 
-EXPORT_FUNCTIONS bblayers_conf_file sanity_conf_read sanity_conf_find_line sanity_conf_update
-
 # Functions added to this variable MUST throw an exception (or sys.exit()) unless they
 # successfully changed LCONF_VERSION in bblayers.conf
 BBLAYERS_CONF_UPDATE_FUNCS += "oecore_update_bblayers"

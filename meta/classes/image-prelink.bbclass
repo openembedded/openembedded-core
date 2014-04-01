@@ -31,5 +31,3 @@ prelink_image () {
 	pre_prelink_size=`du -ks ${IMAGE_ROOTFS} | awk '{size = $1 ; print size }'`
 	echo "Size after prelinking $pre_prelink_size."
 }
-
-EXPORT_FUNCTIONS prelink_image

@@ -69,6 +69,3 @@ mklibs_optimize_image() {
 		fi
 	done
 }
-
-
-EXPORT_FUNCTIONS mklibs_optimize_image
