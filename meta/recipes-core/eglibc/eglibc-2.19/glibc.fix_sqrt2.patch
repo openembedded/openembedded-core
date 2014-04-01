@@ -1477,6 +1477,13 @@ Index: libc/sysdeps/unix/sysv/linux/powerpc/powerpc32/603e/fpu/Implies
 +++ libc/sysdeps/unix/sysv/linux/powerpc/powerpc32/603e/fpu/Implies
 @@ -0,0 +1 @@
 +powerpc/powerpc32/603e/fpu
+Index: libc/sysdeps/unix/sysv/linux/powerpc/powerpc32/e300c3/fpu/Implies
+===================================================================
+--- /dev/null
++++ libc/sysdeps/unix/sysv/linux/powerpc/powerpc32/e300c3/fpu/Implies
+@@ -0,0 +1,2 @@
++# e300c3 is a variant of 603e so use the same optimizations for sqrt
++powerpc/powerpc32/603e/fpu
 Index: libc/sysdeps/unix/sysv/linux/powerpc/powerpc32/e500mc/fpu/Implies
 ===================================================================
 --- /dev/null
