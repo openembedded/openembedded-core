@@ -2,7 +2,7 @@ require cmake.inc
 
 inherit cmake
 
-DEPENDS += "curl expat zlib libarchive ncurses"
+DEPENDS += "curl expat zlib libarchive"
 
 SRC_URI += "file://dont-run-cross-binaries.patch"
 
