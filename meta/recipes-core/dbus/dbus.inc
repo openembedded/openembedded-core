@@ -16,6 +16,7 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://os-test.patch \
            file://clear-guid_from_server-if-send_negotiate_unix_f.patch \
            file://Set-correct-address-when-using-address-systemd.patch \
+           file://fixed-memory-freeing-if-error-during-listing-service.patch \
 "
 
 inherit useradd autotools pkgconfig gettext update-rc.d
