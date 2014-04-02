@@ -1,0 +1,17 @@
+Disable building CursesDialog so that cmake-native doesn't have to
+depend on ncurses-native.
+
+Upstream-status: Inappropriate [disable feature]
+
+Signed-off-by: Mike Crowe <mac@mcrowe.com>
+
+--- cmake-2.8.12.2/bootstrap~	2014-01-16 17:15:09.000000000 +0000
++++ cmake-2.8.12.2/bootstrap	2014-04-01 21:27:23.841996822 +0100
+@@ -1578,6 +1578,7 @@ export MAKE
+ 
+ # Run bootstrap CMake to configure real CMake
+ cmake_options="-DCMAKE_BOOTSTRAP=1"
++cmake_options="${cmake_options} -DBUILD_CursesDialog=0"
+ if [ -n "${cmake_verbose}" ]; then
+   cmake_options="${cmake_options} -DCMAKE_VERBOSE_MAKEFILE=1"
+ fi
