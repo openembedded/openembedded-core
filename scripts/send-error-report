@@ -53,9 +53,11 @@ def sendData(json_file, server):
             print response.status, response.reason
             res = response.read()
             if response.status == 200:
-                print res
+                print(res)
             else:
-                print("There was a problem submiting your data")
+                print("There was a problem submiting your data, response written in %s.response.html" % json_file)
+                with open("%s.response.html" % json_file, "w") as f:
+                    f.write(res)
             conn.close()
         except:
                 print("Server connection failed")
