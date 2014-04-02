@@ -672,9 +672,11 @@ def check_sanity_everybuild(status, d):
 
     # Check if DISPLAY is set if TEST_IMAGE is set
     if d.getVar('TEST_IMAGE', True) == '1' or d.getVar('DEFAULT_TEST_SUITES', True):
-        display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True)
-        if not display:
-            status.addresult('testimage needs an X desktop to start qemu, please set DISPLAY correctly (e.g. DISPLAY=:1.0)\n')
+        testtarget = d.getVar('TEST_TARGET', True)
+        if testtarget == 'qemu' or testtarget == 'QemuTarget':
+            display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True)
+            if not display:
+                status.addresult('testimage needs an X desktop to start qemu, please set DISPLAY correctly (e.g. DISPLAY=:1.0)\n')
 
     omask = os.umask(022)
     if omask & 0755:
