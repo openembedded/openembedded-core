@@ -3,13 +3,12 @@ require qemu.inc
 LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
                     file://COPYING.LIB;endline=24;md5=c04def7ae38850e7d3ef548588159913"
 
-SRC_URI += "file://fxrstorssefix.patch \
-            file://qemu-enlarge-env-entry-size.patch \
+SRC_URI += "file://qemu-enlarge-env-entry-size.patch \
             file://Qemu-Arm-versatilepb-Add-memory-size-checking.patch"
 
-SRC_URI_prepend = "http://wiki.qemu.org/download/qemu-${PV}.tar.bz2"
-SRC_URI[md5sum] = "32893941d40d052a5e649efcf06aca06"
-SRC_URI[sha256sum] = "31f333a85f2d14c605a77679904a9668eaeb1b6dc7da53a1665230f46bc21314"
+SRC_URI_prepend = "http://wiki.qemu-project.org/download/${BP}.tar.bz2"
+SRC_URI[md5sum] = "2790f44fd76da5de5024b4aafeb594c2"
+SRC_URI[sha256sum] = "60cc1aa0cad39cec891f970bed60ca8a484f071adad4943123599ac223543a3b"
 
 COMPATIBLE_HOST_class-target_mips64 = "null"
 
