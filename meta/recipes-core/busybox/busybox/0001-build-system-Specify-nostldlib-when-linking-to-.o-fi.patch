@@ -1,0 +1,40 @@
+From 28389e59701c2408e87e886c358f8e1766c677f7 Mon Sep 17 00:00:00 2001
+From: Drew Moseley <drew_moseley@mentor.com>
+Date: Sat, 29 Mar 2014 11:13:16 -0400
+Subject: [PATCH] build system: Specify '-nostldlib' when linking to .o files.
+
+For certain cross build scenarios the LD variable is overridden
+to use the gcc executive to ensure all the target tuning parameters
+are used.  In these cases, the executive errors out as shown below
+but since this step is only linking to a .o file the standard libs
+are not needed.
+
+    $ make LD=gcc applets/built-in.o
+      LD      applets/built-in.o
+    /usr/bin/ld: cannot find -lgcc_s
+    /usr/bin/ld: cannot find -lgcc_s
+    collect2: ld returned 1 exit status
+    make[1]: *** [applets/built-in.o] Error 1
+    make: *** [applets_dir] Error 2
+
+Signed-off-by: Drew Moseley <drew_moseley@mentor.com>
+---
+ scripts/Makefile.build |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 5685b5b..eba69f6 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -256,7 +256,7 @@ ifdef builtin-target
+ quiet_cmd_link_o_target = LD      $@
+ # If the list of objects to link is empty, just create an empty built-in.o
+ cmd_link_o_target = $(if $(strip $(obj-y)),\
+-		$(LD) $(ld_flags) -r -o $@ $(filter $(obj-y), $^),\
++		$(LD) -nostdlib $(ld_flags) -r -o $@ $(filter $(obj-y), $^),\
+ 		rm -f $@; $(AR) rcs $@)
+ 
+ $(builtin-target): $(obj-y) FORCE
+-- 
+1.7.9.5
+
