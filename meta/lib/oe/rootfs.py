@@ -116,7 +116,8 @@ class Rootfs(object):
                          "offline and rootfs is read-only: %s" %
                          delayed_postinsts)
 
-        self._create_devfs()
+        if self.d.getVar('USE_DEVFS', True) != "1":
+            self._create_devfs()
 
         self._uninstall_uneeded()
 
