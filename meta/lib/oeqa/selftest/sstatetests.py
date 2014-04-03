@@ -153,7 +153,7 @@ class SStateTests(SStateBase):
         target_config = []
         global_config.append('')
         target_config.append('PR = "0"')
-        self.run_test_sstate_cache_management_script('m4', global_config,  target_config)
+        self.run_test_sstate_cache_management_script('m4', global_config,  target_config, ignore_patterns=['populate_lic'])
 
     def test_sstate_cache_management_script_using_pr_2(self):
         global_config = []
@@ -162,7 +162,7 @@ class SStateTests(SStateBase):
         target_config.append('PR = "0"')
         global_config.append('')
         target_config.append('PR = "1"')
-        self.run_test_sstate_cache_management_script('m4', global_config,  target_config)
+        self.run_test_sstate_cache_management_script('m4', global_config,  target_config, ignore_patterns=['populate_lic'])
 
     def test_sstate_cache_management_script_using_pr_3(self):
         global_config = []
