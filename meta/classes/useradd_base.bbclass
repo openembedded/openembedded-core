@@ -24,7 +24,6 @@ perform_groupadd () {
 			group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 			if test "x$group_exists" = "x"; then
 				bbwarn "groupadd command did not succeed. Retrying..."
-				sleep 1
 			else
 				break
 			fi
@@ -32,6 +31,7 @@ perform_groupadd () {
 			if test $count = $retries; then
 				bbfatal "Tried running groupadd command $retries times without scucess, giving up"
 			fi
+                        sleep $count
 		done
 	else
 		bbwarn "group $groupname already exists, not re-creating it"
@@ -52,7 +52,6 @@ perform_useradd () {
 		       user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 		       if test "x$user_exists" = "x"; then
 			       bbwarn "useradd command did not succeed. Retrying..."
-			       sleep 1
 		       else
 			       break
 		       fi
@@ -60,6 +59,7 @@ perform_useradd () {
 		       if test $count = $retries; then
 				bbfatal "Tried running useradd command $retries times without scucess, giving up"
 		       fi
+		       sleep $count
 	       done
 	else
 		bbwarn "user $username already exists, not re-creating it"
@@ -90,7 +90,6 @@ perform_groupmems () {
 			mem_exists="`grep "^$groupname:[^:]*:[^:]*:\([^,]*,\)*$username\(,[^,]*\)*" $rootdir/etc/group || true`"
 			if test "x$mem_exists" = "x"; then
 				bbwarn "groupmems command did not succeed. Retrying..."
-				sleep 1
 			else
 				break
 			fi
@@ -102,6 +101,7 @@ perform_groupmems () {
 				fi
 				bbfatal "Tried running groupmems command $retries times without scucess, giving up"
 			fi
+			sleep $count
 		done
 	else
 		bbwarn "group $groupname already contains $username, not re-adding it"
@@ -126,7 +126,6 @@ perform_groupdel () {
 			group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 			if test "x$group_exists" != "x"; then
 				bbwarn "groupdel command did not succeed. Retrying..."
-				sleep 1
 			else
 				break
 			fi
@@ -134,6 +133,7 @@ perform_groupdel () {
 			if test $count = $retries; then
 				bbfatal "Tried running groupdel command $retries times without scucess, giving up"
 			fi
+			sleep $count
 		done
 	else
 		bbwarn "group $groupname doesn't exist, not removing it"
@@ -154,7 +154,6 @@ perform_userdel () {
 		       user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 		       if test "x$user_exists" != "x"; then
 			       bbwarn "userdel command did not succeed. Retrying..."
-			       sleep 1
 		       else
 			       break
 		       fi
@@ -162,6 +161,7 @@ perform_userdel () {
 		       if test $count = $retries; then
 				bbfatal "Tried running userdel command $retries times without scucess, giving up"
 		       fi
+		       sleep $count
 	       done
 	else
 		bbwarn "user $username doesn't exist, not removing it"
@@ -184,7 +184,6 @@ perform_groupmod () {
 			eval $PSEUDO groupmod $opts
 			if test $? != 0; then
 				bbwarn "groupmod command did not succeed. Retrying..."
-				sleep 1
 			else
 				break
 			fi
@@ -192,6 +191,7 @@ perform_groupmod () {
 			if test $count = $retries; then
 				bbfatal "Tried running groupmod command $retries times without scucess, giving up"
 			fi
+			sleep $count
 		done
 	else
 		bbwarn "group $groupname doesn't exist, unable to modify it"
@@ -214,7 +214,6 @@ perform_usermod () {
 		       eval $PSEUDO usermod $opts
 		       if test $? != 0; then
 			       bbwarn "usermod command did not succeed. Retrying..."
-			       sleep 1
 		       else
 			       break
 		       fi
@@ -222,6 +221,7 @@ perform_usermod () {
 		       if test $count = $retries; then
 				bbfatal "Tried running usermod command $retries times without scucess, giving up"
 		       fi
+		       sleep $count
 	       done
 	else
 		bbwarn "user $username doesn't exist, unable to modify it"
