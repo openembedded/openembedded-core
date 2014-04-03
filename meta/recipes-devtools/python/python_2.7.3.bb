@@ -34,6 +34,7 @@ SRC_URI += "\
   file://pypirc-secure.patch \
   file://parallel-makeinst-create-bindir.patch \
   file://python-2.7.3-CVE-2013-1752-smtplib-fix.patch \
+  file://python-fix-build-error-with-Readline-6.3.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"

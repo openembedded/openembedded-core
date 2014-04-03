@@ -20,6 +20,7 @@ file://0001-h2py-Fix-issue-13032-where-it-fails-with-UnicodeDeco.patch \
 file://fix-ast.h-dependency.patch \
 file://makerace.patch \
 ${DISTRO_SRC_URI} \
+file://python3-fix-build-error-with-Readline-6.3.patch \
 "
 
 SRC_URI += "\

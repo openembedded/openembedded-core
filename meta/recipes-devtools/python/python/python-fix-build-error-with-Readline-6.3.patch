@@ -1,0 +1,62 @@
+python: fix build error with Readline 6.3
+
+Backport two patches from upstream:
+
+use new readline function types (closes #20374)
+Issue #20374: Avoid compiler warnings when compiling readline with libedit.
+
+Upstream-Status: Backport
+
+Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
+---
+ Modules/readline.c |   15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/Modules/readline.c b/Modules/readline.c
+index b5e258d..d3f52aa 100644
+--- a/Modules/readline.c
++++ b/Modules/readline.c
+@@ -735,15 +735,24 @@ on_hook(PyObject *func)
+     return result;
+ }
+ 
++
+ static int
++#if defined(_RL_FUNCTION_TYPEDEF)
+ on_startup_hook(void)
++#else
++on_startup_hook()
++#endif
+ {
+     return on_hook(startup_hook);
+ }
+ 
+ #ifdef HAVE_RL_PRE_INPUT_HOOK
+ static int
++#if defined(_RL_FUNCTION_TYPEDEF)
+ on_pre_input_hook(void)
++#else
++on_pre_input_hook()
++#endif
+ {
+     return on_hook(pre_input_hook);
+ }
+@@ -886,12 +895,12 @@ setup_readline(void)
+     rl_bind_key_in_map ('\t', rl_complete, emacs_meta_keymap);
+     rl_bind_key_in_map ('\033', rl_complete, emacs_meta_keymap);
+     /* Set our hook functions */
+-    rl_startup_hook = (Function *)on_startup_hook;
++    rl_startup_hook = (rl_hook_func_t *)on_startup_hook;
+ #ifdef HAVE_RL_PRE_INPUT_HOOK
+-    rl_pre_input_hook = (Function *)on_pre_input_hook;
++    rl_pre_input_hook = (rl_hook_func_t *)on_pre_input_hook;
+ #endif
+     /* Set our completion function */
+-    rl_attempted_completion_function = (CPPFunction *)flex_complete;
++    rl_attempted_completion_function = (rl_completion_func_t *)flex_complete;
+     /* Set Python word break characters */
+     rl_completer_word_break_characters =
+         strdup(" \t\n`~!@#$%^&*()-=+[{]}\\|;:'\",<>/?");
+-- 
+1.7.9.5
+

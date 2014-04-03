@@ -25,6 +25,7 @@ file://unixccompiler.patch \
 file://fix-ast.h-dependency.patch \
 file://makerace.patch \
 ${DISTRO_SRC_URI} \
+file://python3-fix-build-error-with-Readline-6.3.patch \
 "
 SRC_URI[md5sum] = "f3ebe34d4d8695bf889279b54673e10c"
 SRC_URI[sha256sum] = "e526e9b612f623888364d30cc9f3dfc34dcef39065c713bdbcddf47df84d8dcb"
