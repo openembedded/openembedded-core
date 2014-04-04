@@ -137,7 +137,7 @@ build_all() {
   OUTPUT1=${OUTPUT_BASE}/${TYPE}_all
   mkdir -p ${OUTPUT1}
   echo "Logs will be stored in ${OUTPUT1} directory"
-  bitbake -k $targets | tee -a ${OUTPUT1}/complete.log
+  bitbake -k $targets 2>&1 | tee -a ${OUTPUT1}/complete.log
 }
 
 build_every_recipe() {
