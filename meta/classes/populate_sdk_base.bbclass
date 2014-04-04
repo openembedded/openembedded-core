@@ -24,7 +24,7 @@ inherit populate_sdk_${IMAGE_PKGTYPE}
 
 SDK_DIR = "${WORKDIR}/sdk"
 SDK_OUTPUT = "${SDK_DIR}/image"
-SDK_DEPLOY = "${TMPDIR}/deploy/sdk"
+SDK_DEPLOY = "${DEPLOY_DIR}/sdk"
 
 B_task-populate-sdk = "${SDK_DIR}"
 
