@@ -98,6 +98,7 @@ def sstate_state_fromvars(d, task = None):
     name = task
     if task.startswith("do_"):
         name = task[3:]
+        task = name
     inputs = (d.getVarFlag("do_" + task, 'sstate-inputdirs', True) or "").split()
     outputs = (d.getVarFlag("do_" + task, 'sstate-outputdirs', True) or "").split()
     plaindirs = (d.getVarFlag("do_" + task, 'sstate-plaindirs', True) or "").split()
