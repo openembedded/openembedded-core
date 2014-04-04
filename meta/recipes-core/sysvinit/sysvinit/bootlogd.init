@@ -1,12 +1,16 @@
 #! /bin/sh
+### BEGIN INIT INFO
+# Provides:          bootlogd
+# Required-Start:
+# Required-Stop:
+# Default-Start:     S
+# Default-Stop:      2 3 4 5
+# Short-Description: One of the first scripts to be executed. Starts or stops
+#               the bootlogd log program. If this script is called as
+#               "stop-bootlogd", it will stop the daemon instead of
+#               starting it even when called with the "start" argument.
 #
-# bootlogd	One of the first scripts to be executed. Starts or stops
-#		the bootlogd log program. If this script is called as
-#		"stop-bootlogd", it will stop the daemon instead of
-#		starting it even when called with the "start" argument.
-#
-# Version:	@(#)bootlogd  2.85-12  21-Mar-2004  miquels@cistron.nl
-#
+### END INIT INFO
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/sbin/bootlogd
