@@ -78,10 +78,9 @@ python () {
         d.appendVarFlag(task, 'postfuncs', " sstate_task_postfunc")
 }
 
-def sstate_init(name, task, d):
+def sstate_init(task, d):
     ss = {}
     ss['task'] = task
-    ss['name'] = name
     ss['dirs'] = []
     ss['plaindirs'] = []
     ss['lockfiles'] = []
@@ -95,24 +94,22 @@ def sstate_state_fromvars(d, task = None):
             bb.fatal("sstate code running without task context?!")
         task = task.replace("_setscene", "")
 
-    name = task
     if task.startswith("do_"):
-        name = task[3:]
-        task = name
+        task = task[3:]
     inputs = (d.getVarFlag("do_" + task, 'sstate-inputdirs', True) or "").split()
     outputs = (d.getVarFlag("do_" + task, 'sstate-outputdirs', True) or "").split()
     plaindirs = (d.getVarFlag("do_" + task, 'sstate-plaindirs', True) or "").split()
     lockfiles = (d.getVarFlag("do_" + task, 'sstate-lockfile', True) or "").split()
     lockfilesshared = (d.getVarFlag("do_" + task, 'sstate-lockfile-shared', True) or "").split()
     interceptfuncs = (d.getVarFlag("do_" + task, 'sstate-interceptfuncs', True) or "").split()
-    if not name or len(inputs) != len(outputs):
+    if not task or len(inputs) != len(outputs):
         bb.fatal("sstate variables not setup correctly?!")
 
-    if name == "populate_lic":
+    if task == "populate_lic":
         d.setVar("SSTATE_PKGSPEC", "${SSTATE_SWSPEC}")
         d.setVar("SSTATE_EXTRAPATH", "")
 
-    ss = sstate_init(name, task, d)
+    ss = sstate_init(task, d)
     for i in range(len(inputs)):
         sstate_add(ss, inputs[i], outputs[i], d)
     ss['lockfiles'] = lockfiles
@@ -144,7 +141,7 @@ def sstate_install(ss, d):
     extrainf = d.getVarFlag("do_" + ss['task'], 'stamp-extra-info', True)
     if extrainf:
         d2.setVar("SSTATE_MANMACH", extrainf)
-    manifest = d2.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['name'])
+    manifest = d2.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['task'])
 
     if os.access(manifest, os.R_OK):
         bb.fatal("Package already staged (%s)?!" % manifest)
@@ -230,9 +227,9 @@ def sstate_installpkg(ss, d):
         bb.utils.mkdirhier(dir)
         oe.path.remove(dir)
 
-    sstateinst = d.expand("${WORKDIR}/sstate-install-%s/" % ss['name'])
-    sstatefetch = d.getVar('SSTATE_PKGNAME', True) + '_' + ss['name'] + ".tgz"
-    sstatepkg = d.getVar('SSTATE_PKG', True) + '_' + ss['name'] + ".tgz"
+    sstateinst = d.expand("${WORKDIR}/sstate-install-%s/" % ss['task'])
+    sstatefetch = d.getVar('SSTATE_PKGNAME', True) + '_' + ss['task'] + ".tgz"
+    sstatepkg = d.getVar('SSTATE_PKG', True) + '_' + ss['task'] + ".tgz"
 
     if not os.path.exists(sstatepkg):
         pstaging_fetch(sstatefetch, sstatepkg, d)
@@ -302,7 +299,7 @@ def sstate_installpkg(ss, d):
 def sstate_clean_cachefile(ss, d):
     import oe.path
 
-    sstatepkgfile = d.getVar('SSTATE_PATHSPEC', True) + "*_" + ss['name'] + ".tgz*"
+    sstatepkgfile = d.getVar('SSTATE_PATHSPEC', True) + "*_" + ss['task'] + ".tgz*"
     bb.note("Removing %s" % sstatepkgfile)
     oe.path.remove(sstatepkgfile)
 
@@ -350,7 +347,7 @@ def sstate_clean(ss, d):
     else:
         wildcard_stfile = "%s.do_%s*" % (stamp_clean, ss['task'])
 
-    manifest = d2.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['name'])
+    manifest = d2.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['task'])
 
     if os.path.exists(manifest):
         locks = []
@@ -483,8 +480,8 @@ def sstate_package(ss, d):
 
     tmpdir = d.getVar('TMPDIR', True)
 
-    sstatebuild = d.expand("${WORKDIR}/sstate-build-%s/" % ss['name'])
-    sstatepkg = d.getVar('SSTATE_PKG', True) + '_'+ ss['name'] + ".tgz"
+    sstatebuild = d.expand("${WORKDIR}/sstate-build-%s/" % ss['task'])
+    sstatepkg = d.getVar('SSTATE_PKG', True) + '_'+ ss['task'] + ".tgz"
     bb.utils.remove(sstatebuild, recurse=True)
     bb.utils.mkdirhier(sstatebuild)
     bb.utils.mkdirhier(os.path.dirname(sstatepkg))
