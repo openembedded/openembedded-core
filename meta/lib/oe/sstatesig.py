@@ -10,9 +10,9 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
         return x.startswith("nativesdk-")
     def isKernel(fn):
         inherits = " ".join(dataCache.inherits[fn])
-        return inherits.find("module-base.bbclass") != -1 or inherits.find("linux-kernel-base.bbclass") != -1
+        return inherits.find("/module-base.bbclass") != -1 or inherits.find("/linux-kernel-base.bbclass") != -1
     def isImage(fn):
-        return "image.bbclass" in " ".join(dataCache.inherits[fn])
+        return "/image.bbclass" in " ".join(dataCache.inherits[fn])
 
     # Always include our own inter-task dependencies
     if recipename == depname:
