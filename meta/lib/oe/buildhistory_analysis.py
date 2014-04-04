@@ -400,7 +400,7 @@ def process_changes(repopath, revision1, revision2 = 'HEAD', report_all = False)
                     chg = ChangeRecord(path, filename, d.a_blob.data_stream.read(), d.b_blob.data_stream.read(), True)
                     changes.append(chg)
             elif filename == 'image-info.txt':
-                changes.extend(compare_dict_blobs(path, d.a_blob, d.b_blob, report_all, report_ver))
+                changes.extend(compare_dict_blobs(path, d.a_blob, d.b_blob, report_all))
             elif '/image-files/' in path:
                 chg = ChangeRecord(path, filename, d.a_blob.data_stream.read(), d.b_blob.data_stream.read(), True)
                 changes.append(chg)
