@@ -109,6 +109,7 @@ python gcc_multilib_setup() {
         'i586'      : ['gcc/config/i386/t-linux64'],
         'mips'      : ['gcc/config/mips/t-linux64'],
         'powerpc'   : ['gcc/config/rs6000/t-linux64'],
+        'powerpc64' : ['gcc/config/rs6000/t-linux64'],
     }
 
     gcc_header_config_files = {
@@ -116,6 +117,7 @@ python gcc_multilib_setup() {
         'i586'      : ['gcc/config/i386/linux64.h'],
         'mips'      : ['gcc/config/mips/linux64.h'],
         'powerpc'   : ['gcc/config/rs6000/linux64.h'],
+        'powerpc64' : ['gcc/config/rs6000/linux64.h'],
     }
 
     target_arch = (d.getVar('TARGET_ARCH_MULTILIB_ORIGINAL', True) if mlprefix
