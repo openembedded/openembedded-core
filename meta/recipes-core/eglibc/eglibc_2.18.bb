@@ -28,6 +28,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr23
            file://fix-tibetian-locales.patch \
            file://0001-ARM-Pass-dl_hwcap-to-IFUNC-resolver.patch \
            file://make-4.patch \
+           file://ppc-fix-time-related-syscalls.patch \
           "
 SRC_URI[md5sum] = "b395b021422a027d89884992e91734fc"
 SRC_URI[sha256sum] = "15f564b45dc5dd65faf0875579e3447961ae61e876933384ae05d19328539ad4"
