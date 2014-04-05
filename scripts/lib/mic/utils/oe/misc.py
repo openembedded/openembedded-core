@@ -142,6 +142,20 @@ def find_bitbake_env_lines(image_name):
 
     return bitbake_env_lines
 
+def find_artifact(bitbake_env_lines, variable):
+    """
+    Gather the build artifact for the current image (the image_name
+    e.g. core-image-minimal) for the current MACHINE set in local.conf
+    """
+    retval = ""
+
+    for line in bitbake_env_lines.split('\n'):
+        if (get_line_val(line, variable)):
+            retval = get_line_val(line, variable)
+            break
+
+    return retval
+
 def get_line_val(line, key):
     """
     Extract the value from the VAR="val" string
