@@ -153,7 +153,8 @@ python toaster_image_dumpdata() {
     for dirpath, dirnames, filenames in os.walk(deploy_dir_image):
         for fn in filenames:
             if fn.startswith(image_name):
-                image_info_data[dirpath + fn] = os.stat(os.path.join(dirpath, fn)).st_size
+                image_output = os.path.join(dirpath, fn)
+                image_info_data[image_output] = os.stat(image_output).st_size
 
     bb.event.fire(bb.event.MetadataEvent("ImageFileSize",image_info_data), d)
 }
