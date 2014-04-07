@@ -21,7 +21,7 @@ SRC_URI[sha256sum] = "4ff4bd393aa01071ec7b849d035508a505a78f88b2bcf25ff11e58e43c
 
 S = "${WORKDIR}/freetype-${PV}"
 
-inherit autotools-brokensep pkgconfig binconfig
+inherit autotools-brokensep pkgconfig binconfig multilib_header
 
 LIBTOOL = "${S}/builds/unix/${HOST_SYS}-libtool"
 EXTRA_OEMAKE = "'LIBTOOL=${LIBTOOL}'"
@@ -48,6 +48,10 @@ do_configure_class-native() {
 
 do_compile_prepend() {
 	${BUILD_CC} -o objs/apinames src/tools/apinames.c
+}
+
+do_install_append() {
+	oe_multilib_header freetype2/config/ftconfig.h
 }
 
 BBCLASSEXTEND = "native"
