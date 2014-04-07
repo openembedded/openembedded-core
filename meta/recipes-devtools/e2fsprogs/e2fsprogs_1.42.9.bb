@@ -52,6 +52,8 @@ do_install () {
 		mv ${D}${base_libdir}/e2initrd_helper ${D}${libdir}
 		mv ${D}${base_libdir}/pkgconfig ${D}${libdir}
 	fi
+
+	oe_multilib_header ext2fs/ext2_types.h
 }
 
 RDEPENDS_e2fsprogs = "e2fsprogs-badblocks"

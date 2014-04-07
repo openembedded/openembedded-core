@@ -22,5 +22,4 @@ DEPENDS = "util-linux"
 SRC_URI = "${SOURCEFORGE_MIRROR}/e2fsprogs/e2fsprogs-${PV}.tar.gz \
            file://mkdir.patch"
 
-inherit autotools gettext pkgconfig
-
+inherit autotools gettext pkgconfig multilib_header
