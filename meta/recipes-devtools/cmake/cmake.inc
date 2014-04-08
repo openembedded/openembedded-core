@@ -43,6 +43,9 @@ do_configure_prepend() {
 	sed -i 's/^find_package(Qt5Widgets QUIET)/#find_package(Qt5Widgets QUIET)/g' ${S}/Source/QtDialog/CMakeLists.txt
 }
 
+# Extra flags to pass to cmake invoked by bootstrap
+CMAKE_EXTRACONF = ""
+
 do_configure () {
-	./configure --prefix=${prefix}
+	./configure --prefix=${prefix} -- ${CMAKE_EXTRACONF}
 }
