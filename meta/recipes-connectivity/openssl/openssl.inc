@@ -4,9 +4,6 @@ HOMEPAGE = "http://www.openssl.org/"
 BUGTRACKER = "http://www.openssl.org/news/vulnerabilities.html"
 SECTION = "libs/network"
 
-# Big Jump for OpenSSL 1.0 support with meta-oe
-INC_PR = "r15"
-
 # "openssl | SSLeay" dual license
 LICENSE = "openssl"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"

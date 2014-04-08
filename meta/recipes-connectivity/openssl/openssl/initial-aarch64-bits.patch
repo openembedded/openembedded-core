@@ -1,0 +1,119 @@
+From: Andy Polyakov <appro@openssl.org>
+Date: Sun, 13 Oct 2013 17:15:15 +0000 (+0200)
+Subject: Initial aarch64 bits.
+X-Git-Url: http://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff_plain;h=039081b80977e2a5de84e1f88f8b4d025b559956
+
+Initial aarch64 bits.
+---
+ crypto/bn/bn_lcl.h       |    9 +++++++++
+ crypto/md32_common.h     |   18 ++++++++++++++++++
+ crypto/modes/modes_lcl.h |    8 ++++++++
+ crypto/sha/sha512.c      |   13 +++++++++++++
+ 4 files changed, 48 insertions(+)
+
+Index: openssl-1.0.1f/crypto/bn/bn_lcl.h
+===================================================================
+--- openssl-1.0.1f.orig/crypto/bn/bn_lcl.h	2014-01-06 15:47:42.000000000 +0200
++++ openssl-1.0.1f/crypto/bn/bn_lcl.h	2014-02-28 10:37:55.495979037 +0200
+@@ -300,6 +300,15 @@
+ 	     : "r"(a), "r"(b));
+ #    endif
+ #  endif
++# elif defined(__aarch64__) && defined(SIXTY_FOUR_BIT_LONG)
++#  if defined(__GNUC__) && __GNUC__>=2
++#   define BN_UMULT_HIGH(a,b)  ({  \
++   register BN_ULONG ret;      \
++   asm ("umulh %0,%1,%2"   \
++        : "=r"(ret)        \
++        : "r"(a), "r"(b));     \
++   ret;            })
++#  endif
+ # endif		/* cpu */
+ #endif		/* OPENSSL_NO_ASM */
+ 
+Index: openssl-1.0.1f/crypto/md32_common.h
+===================================================================
+--- openssl-1.0.1f.orig/crypto/md32_common.h	2014-01-06 15:47:42.000000000 +0200
++++ openssl-1.0.1f/crypto/md32_common.h	2014-02-28 10:39:21.751979107 +0200
+@@ -213,6 +213,24 @@
+ 				   asm ("bswapl %0":"=r"(r):"0"(r));	\
+ 				   *((unsigned int *)(c))=r; (c)+=4; r;	})
+ #   endif
++#  elif defined(__aarch64__)
++#   if defined(__BYTE_ORDER__)
++#    if defined(__ORDER_LITTLE_ENDIAN__) && __BYTE_ORDER__==__ORDER_LITTLE_ENDIAN__
++#     define HOST_c2l(c,l) ({ unsigned int r;      \
++                  asm ("rev    %w0,%w1"    \
++                   :"=r"(r)        \
++                   :"r"(*((const unsigned int *)(c))));\
++                  (c)+=4; (l)=r;       })
++#     define HOST_l2c(l,c) ({ unsigned int r;      \
++                  asm ("rev    %w0,%w1"    \
++                   :"=r"(r)        \
++                   :"r"((unsigned int)(l)));\
++                  *((unsigned int *)(c))=r; (c)+=4; r; })
++#    elif defined(__ORDER_BIG_ENDIAN__) && __BYTE_ORDER__==__ORDER_BIG_ENDIAN__
++#     define HOST_c2l(c,l) ((l)=*((const unsigned int *)(c)), (c)+=4, (l))
++#     define HOST_l2c(l,c) (*((unsigned int *)(c))=(l), (c)+=4, (l))
++#    endif
++#   endif
+ #  endif
+ # endif
+ #endif
+Index: openssl-1.0.1f/crypto/modes/modes_lcl.h
+===================================================================
+--- openssl-1.0.1f.orig/crypto/modes/modes_lcl.h	2014-02-28 10:47:48.731979011 +0200
++++ openssl-1.0.1f/crypto/modes/modes_lcl.h	2014-02-28 10:48:49.707978919 +0200
+@@ -29,6 +29,7 @@
+ #if defined(__i386)	|| defined(__i386__)	|| \
+     defined(__x86_64)	|| defined(__x86_64__)	|| \
+     defined(_M_IX86)	|| defined(_M_AMD64)	|| defined(_M_X64) || \
++    defined(__aarch64__)           || \
+     defined(__s390__)	|| defined(__s390x__)
+ # undef STRICT_ALIGNMENT
+ #endif
+@@ -50,6 +51,13 @@
+ #  define BSWAP4(x) ({	u32 ret=(x);			\
+ 			asm ("bswapl %0"		\
+ 			: "+r"(ret));	ret;		})
++# elif defined(__aarch64__)
++#  define BSWAP8(x) ({ u64 ret;            \
++           asm ("rev %0,%1"        \
++           : "=r"(ret) : "r"(x)); ret; })
++#  define BSWAP4(x) ({ u32 ret;            \
++           asm ("rev %w0,%w1"      \
++           : "=r"(ret) : "r"(x)); ret; })
+ # elif (defined(__arm__) || defined(__arm)) && !defined(STRICT_ALIGNMENT)
+ #  define BSWAP8(x) ({	u32 lo=(u64)(x)>>32,hi=(x);	\
+ 			asm ("rev %0,%0; rev %1,%1"	\
+Index: openssl-1.0.1f/crypto/sha/sha512.c
+===================================================================
+--- openssl-1.0.1f.orig/crypto/sha/sha512.c	2014-01-06 15:47:42.000000000 +0200
++++ openssl-1.0.1f/crypto/sha/sha512.c	2014-02-28 10:52:14.579978981 +0200
+@@ -55,6 +55,7 @@
+ #if defined(__i386) || defined(__i386__) || defined(_M_IX86) || \
+     defined(__x86_64) || defined(_M_AMD64) || defined(_M_X64) || \
+     defined(__s390__) || defined(__s390x__) || \
++    defined(__aarch64__) || \
+     defined(SHA512_ASM)
+ #define SHA512_BLOCK_CAN_MANAGE_UNALIGNED_DATA
+ #endif
+@@ -347,6 +348,18 @@
+ 				asm ("rotrdi %0,%1,%2"	\
+ 				: "=r"(ret)		\
+ 				: "r"(a),"K"(n)); ret;	})
++#  elif defined(__aarch64__)
++#   define ROTR(a,n)   ({ SHA_LONG64 ret;      \
++               asm ("ror %0,%1,%2" \
++               : "=r"(ret)     \
++               : "r"(a),"I"(n)); ret;  })
++#   if  defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && \
++   __BYTE_ORDER__==__ORDER_LITTLE_ENDIAN__
++#    define PULL64(x)  ({ SHA_LONG64 ret;          \
++               asm ("rev   %0,%1"      \
++               : "=r"(ret)         \
++               : "r"(*((const SHA_LONG64 *)(&(x))))); ret;     })
++#   endif
+ #  endif
+ # elif defined(_MSC_VER)
+ #  if defined(_WIN64)	/* applies to both IA-64 and AMD64 */
