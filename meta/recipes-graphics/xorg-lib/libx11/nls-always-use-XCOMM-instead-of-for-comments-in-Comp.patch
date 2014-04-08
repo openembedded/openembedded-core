@@ -1,0 +1,101 @@
+Upstream-Status: Backport
+
+Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
+
+From b64bee2ddb7b96f00713a8b8435f11ad9ac1c9e0 Mon Sep 17 00:00:00 2001
+From: Ran Benita <ran234@gmail.com>
+Date: Sun, 16 Feb 2014 15:24:58 +0200
+Subject: [PATCH] nls: always use XCOMM instead of # for comments in
+ Compose.pre files
+
+Lines starting with # are considered as preprocessor directives in the
+.pre files.
+
+Fixes warnings like:
+<stdin>:3:0: error: invalid preprocessing directive #Khmer
+
+Signed-off-by: Ran Benita <ran234@gmail.com>
+Signed-off-by: James Cloos <cloos@jhcloos.com>
+---
+ nls/km_KH.UTF-8/Compose.pre |    2 +-
+ nls/sr_CS.UTF-8/Compose.pre |   32 ++++++++++++++++----------------
+ 2 files changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/nls/km_KH.UTF-8/Compose.pre b/nls/km_KH.UTF-8/Compose.pre
+index 77651d0..dc89119 100644
+--- a/nls/km_KH.UTF-8/Compose.pre
++++ b/nls/km_KH.UTF-8/Compose.pre
+@@ -1,6 +1,6 @@
+ include "X11_LOCALEDATADIR/en_US.UTF-8/Compose"
+ 
+-# Khmer digraphs
++XCOMM Khmer digraphs
+ <U17ff>	:	"ាំ"
+ <U17fe>	:	"ោះ"
+ <U17fd>	:	"េះ"
+diff --git a/nls/sr_CS.UTF-8/Compose.pre b/nls/sr_CS.UTF-8/Compose.pre
+index 119e23e..b2397f7 100644
+--- a/nls/sr_CS.UTF-8/Compose.pre
++++ b/nls/sr_CS.UTF-8/Compose.pre
+@@ -1,17 +1,17 @@
+ include "X11_LOCALEDATADIR/en_US.UTF-8/Compose"
+ 
+-# Serbian accented Cyrillic
+-# а А - U+0430, U+0410 Cyrillic_a, Cyrillic_A
+-# е Е - U+0435, U+0415 Cyrillic_e, Cyrillic_E
+-# о О - U+043E, U+041E Cyrillic_o, Cyrillic_O
+-# у У - U+0443, U+0423 Cyrillic_u, Cyrillic_U
+-# и И - U+0438, U+0418 Cyrillic_i, Cyrillic_I
+-#
+-# ̀ - U+0300 <dead_grave>, <combining_grave>, <Multi_key> <grave>
+-# ́ - U+0301   <dead_acute>, <Multi_key> <acute>, <Multi_key> <apostrophe>, <combining_acute>
+-# ̂ - U+0302 <dead_circumflex>, <Multi_key> <asciicircum>
+-# ̏ - U+030F  <dead_diaeresis>, <dead_doubleacute>
+-# ̀ - kratkouzlazni, U+0300 <dead_grave>, <combining_grave>, <Multi_key> <grave>
++XCOMM Serbian accented Cyrillic
++XCOMM а А - U+0430, U+0410 Cyrillic_a, Cyrillic_A
++XCOMM е Е - U+0435, U+0415 Cyrillic_e, Cyrillic_E
++XCOMM о О - U+043E, U+041E Cyrillic_o, Cyrillic_O
++XCOMM у У - U+0443, U+0423 Cyrillic_u, Cyrillic_U
++XCOMM и И - U+0438, U+0418 Cyrillic_i, Cyrillic_I
++XCOMM
++XCOMM ̀ - U+0300 <dead_grave>, <combining_grave>, <Multi_key> <grave>
++XCOMM ́ - U+0301   <dead_acute>, <Multi_key> <acute>, <Multi_key> <apostrophe>, <combining_acute>
++XCOMM ̂ - U+0302 <dead_circumflex>, <Multi_key> <asciicircum>
++XCOMM ̏ - U+030F  <dead_diaeresis>, <dead_doubleacute>
++XCOMM ̀ - kratkouzlazni, U+0300 <dead_grave>, <combining_grave>, <Multi_key> <grave>
+ <dead_grave> <Cyrillic_a>         : "а̀"
+ <combining_grave> <Cyrillic_a>    : "а̀"
+ <Multi_key> <grave> <Cyrillic_a>  : "а̀"
+@@ -42,7 +42,7 @@ include "X11_LOCALEDATADIR/en_US.UTF-8/Compose"
+ <dead_grave> <Cyrillic_U>         : "У̀"
+ <combining_grave> <Cyrillic_U>    : "У̀"
+ <Multi_key> <grave> <Cyrillic_U>  : "У̀"
+-# ́ - dugouzlazni, U+0301   <dead_acute>, <Multi_key> <acute>, <Multi_key> <apostrophe>, <combining_acute>
++XCOMM ́ - dugouzlazni, U+0301   <dead_acute>, <Multi_key> <acute>, <Multi_key> <apostrophe>, <combining_acute>
+ <dead_acute> <Cyrillic_a>              : "а́"
+ <combining_acute> <Cyrillic_a>         : "а́"
+ <Multi_key> <acute> <Cyrillic_a>       : "а́"
+@@ -83,7 +83,7 @@ include "X11_LOCALEDATADIR/en_US.UTF-8/Compose"
+ <combining_acute>        <Cyrillic_U>  : "У́"
+ <Multi_key> <acute>      <Cyrillic_U>  : "У́"
+ <Multi_key> <apostrophe> <Cyrillic_U>  : "У́"
+-# ̂ - dugosilazni, U+0302 <dead_circumflex>, <Multi_key> <asciicircum>
++XCOMM ̂ - dugosilazni, U+0302 <dead_circumflex>, <Multi_key> <asciicircum>
+ <dead_circumflex> <Cyrillic_a>          : "а̂"
+ <Multi_key> <asciicircum> <Cyrillic_a>  : "а̂"
+ <dead_circumflex> <Cyrillic_A>          : "А̂"
+@@ -104,8 +104,8 @@ include "X11_LOCALEDATADIR/en_US.UTF-8/Compose"
+ <Multi_key> <asciicircum> <Cyrillic_u>  : "у̂"
+ <dead_circumflex> <Cyrillic_U>          : "У̂"
+ <Multi_key> <asciicircum> <Cyrillic_U>  : "У̂"
+-# ̏ - kratkosilazni, U+030F  <dead_diaeresis>, <dead_doubleacute>
+-# there's no appropriate dead_doublegrave, so we use these two dead keys
++XCOMM ̏ - kratkosilazni, U+030F  <dead_diaeresis>, <dead_doubleacute>
++XCOMM there's no appropriate dead_doublegrave, so we use these two dead keys
+ <dead_diaeresis>   <Cyrillic_a>  : "а̏"
+ <dead_doubleacute> <Cyrillic_a>  : "а̏"
+ <dead_diaeresis>   <Cyrillic_A>  : "А̏"
+-- 
+1.7.9.5
+
