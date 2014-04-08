@@ -189,7 +189,9 @@ do_install () {
 			install -m 0755 ${B}/busybox.nosuid ${D}${base_bindir}
 			install -m 0644 ${S}/busybox.links.suid ${D}${sysconfdir}
 			install -m 0644 ${S}/busybox.links.nosuid ${D}${sysconfdir}
-			ln -sf busybox.nosuid ${D}${base_bindir}/sh
+			if grep -q "CONFIG_FEATURE_SH_IS_ASH=y" ${B}/.config; then
+				ln -sf busybox.nosuid ${D}${base_bindir}/sh
+			fi
 			# Keep a default busybox for people who want to invoke busybox directly.
 			# This is also useful for the on device upgrade. Because we want
 			# to use the busybox command in postinst.
@@ -201,7 +203,9 @@ do_install () {
 				install -m 0755 ${B}/busybox ${D}${base_bindir}
 			fi
 			install -m 0644 ${S}/busybox.links ${D}${sysconfdir}
-			ln -sf busybox ${D}${base_bindir}/sh
+			if grep -q "CONFIG_FEATURE_SH_IS_ASH=y" ${B}/.config; then
+				ln -sf busybox ${D}${base_bindir}/sh
+			fi
 			# We make this symlink here to eliminate the error when upgrading together
 			# with busybox-syslog. Without this symlink, the opkg may think of the
 			# busybox.nosuid as obsolete and remove it, resulting in dead links like
