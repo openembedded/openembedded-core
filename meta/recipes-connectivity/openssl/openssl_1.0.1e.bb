@@ -33,6 +33,7 @@ SRC_URI += "file://configure-targets.patch \
             file://fix-cipher-des-ede3-cfb1.patch \
             file://find.pl \
             file://0001-Fix-for-TLS-record-tampering-bug-CVE-2013-4353.patch \
+            file://0001-Fix-DTLS-retransmission-from-previous-session.patch \
            "
 
 SRC_URI[md5sum] = "66bf6f10f060d561929de96f9dfe5b8c"
