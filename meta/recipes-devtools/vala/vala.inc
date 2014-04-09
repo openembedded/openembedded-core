@@ -12,7 +12,7 @@ INC_PR = "r1"
 SHRT_VER = "${@d.getVar('PV',1).split('.')[0]}.${@d.getVar('PV',1).split('.')[1]}"
 
 SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/${BPN}/${SHRT_VER}/${BP}.tar.xz"
-inherit autotools-brokensep
+inherit autotools-brokensep pkgconfig
 
 EXTRA_OECONF = "--disable-vapigen"
 
