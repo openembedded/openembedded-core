@@ -62,12 +62,18 @@ FILES_${PN}-xtests = "${datadir}/Linux-PAM/xtests"
 
 PACKAGES_DYNAMIC += "^pam-plugin-.*"
 
-RPROVIDES_${PN} += "libpam-${baselib}"
-RPROVIDES_${PN}-runtime += "libpam-runtime-${baselib}"
+def get_multilib_bit(d):
+    baselib = d.getVar('baselib', True) or ''
+    return baselib.replace('lib', '')
 
-RDEPENDS_${PN}-runtime = "libpam-${baselib} pam-plugin-deny-${baselib} pam-plugin-permit-${baselib} pam-plugin-warn-${baselib} pam-plugin-unix-${baselib}"
-RDEPENDS_${PN}-xtests = "libpam-${baselib} pam-plugin-access-${baselib} pam-plugin-debug-${baselib} pam-plugin-cracklib-${baselib} pam-plugin-pwhistory-${baselib} pam-plugin-succeed-if-${baselib} pam-plugin-time-${baselib} coreutils"
-RRECOMMENDS_${PN} = "libpam-runtime-${baselib}"
+libpam_suffix = "suffix${@get_multilib_bit(d)}"
+
+RPROVIDES_${PN} += "libpam-${libpam_suffix}"
+RPROVIDES_${PN}-runtime += "libpam-runtime-${libpam_suffix}"
+
+RDEPENDS_${PN}-runtime = "libpam-${libpam_suffix} pam-plugin-deny-${libpam_suffix} pam-plugin-permit-${libpam_suffix} pam-plugin-warn-${libpam_suffix} pam-plugin-unix-${libpam_suffix}"
+RDEPENDS_${PN}-xtests = "libpam-${libpam_suffix} pam-plugin-access-${libpam_suffix} pam-plugin-debug-${libpam_suffix} pam-plugin-cracklib-${libpam_suffix} pam-plugin-pwhistory-${libpam_suffix} pam-plugin-succeed-if-${libpam_suffix} pam-plugin-time-${libpam_suffix} coreutils"
+RRECOMMENDS_${PN} = "libpam-runtime-${libpam_suffix}"
 
 python populate_packages_prepend () {
     def pam_plugin_append_file(pn, dir, file):
@@ -78,21 +84,21 @@ python populate_packages_prepend () {
         d.setVar('FILES_' + pn, nf)
 
     def pam_plugin_hook(file, pkg, pattern, format, basename):
-        baselib = d.getVar('baselib', True)
+        libpam_suffix = d.getVar('libpam_suffix', True)
         mlprefix = d.getVar('MLPREFIX', True) or ''
 
         rdeps = d.getVar('RDEPENDS_' + pkg, True)
         if rdeps:
-            rdeps = rdeps + " " + mlprefix + "libpam-" + baselib
+            rdeps = rdeps + " " + mlprefix + "libpam-" + libpam_suffix
         else:
-            rdeps = mlprefix + "libpam-" + baselib
+            rdeps = mlprefix + "libpam-" + libpam_suffix
         d.setVar('RDEPENDS_' + pkg, rdeps)
 
         provides = d.getVar('RPROVIDES_' + pkg, True)
         if provides:
-            provides = provides + " " + pkg + "-" + baselib
+            provides = provides + " " + pkg + "-" + libpam_suffix
         else:
-            provides = pkg + "-" + baselib
+            provides = pkg + "-" + libpam_suffix
         d.setVar('RPROVIDES_' + pkg, provides)
 
     dvar = bb.data.expand('${WORKDIR}/package', d, True)
