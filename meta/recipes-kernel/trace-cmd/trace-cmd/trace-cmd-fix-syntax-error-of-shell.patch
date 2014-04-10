@@ -1,0 +1,30 @@
+trace-cmd: fix syntax error of shell
+
+Delete "<<<" syntax of bash in Makefile, else we would get following error:
+
+       Syntax error: redirection unexpected
+
+Upstream-status: Pending
+
+Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
+---
+ Makefile |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index c1fa906..7973c53 100644
+--- a/Makefile
++++ b/Makefile
+@@ -89,8 +89,7 @@ endif
+ 
+ # $(call test-build, snippet, ret) -> ret if snippet compiles
+ #                                  -> empty otherwise
+-test-build = $(if $(shell $(CC) -o /dev/null -c -x c - > /dev/null 2>&1 \
+-	                  <<<'$1' && echo y), $2)
++test-build = $(if $(shell echo '$1' |$(CC) -o /dev/null -c -x c - > /dev/null 2>&1 && echo y), $2)
+ 
+ # have udis86 disassembler library?
+ udis86-flags := $(call test-build,\#include <udis86.h>,-DHAVE_UDIS86 -ludis86)
+-- 
+1.7.9.5
+

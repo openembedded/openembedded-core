@@ -18,6 +18,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/trace-cmd.git \
            file://trace-cmd-Add-checks-for-invalid-pointers-to-fix-seg.patch \
            file://trace-cmd-Do-not-call-stop_threads-if-doing-latency-.patch \
            file://trace-cmd-Setting-plugin-to-nop-clears-data-before-i.patch \
+           file://trace-cmd-fix-syntax-error-of-shell.patch \
 "
 S = "${WORKDIR}/git"
 
