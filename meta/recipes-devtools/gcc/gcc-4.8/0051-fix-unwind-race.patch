@@ -1,0 +1,33 @@
+These is a race over the installation of files into the include/ directory between:
+
+| (cd `${PWDCMD-pwd}`/include ; \|  tar -cf - .; exit 0) | (cd /home/pokybuild/yocto-autobuilder/yocto-slave/nightly-oecore/build/build/tmp-eglibc/work/armv5te-oe-linux-gnueabi/gcc-cross-initial/4.8.2-r0/image/home/pokybuild/yocto-autobuilder/yocto-slave/nightly-oecore/build/build/tmp-eglibc/sysroots/x86_64-linux/usr/lib/armv5te-oe-linux-gnueabi.gcc-cross-initial/gcc/arm-oe-linux-gnueabi/4.8.2/include; tar xpf - )
+
+and
+
+| /bin/install -c -m 644 unwind.h /home/pokybuild/yocto-autobuilder/yocto-slave/nightly-oecore/build/build/tmp-eglibc/work/armv5te-oe-linux-gnueabi/gcc-cross-initial/4.8.2-r0/image/home/pokybuild/yocto-autobuilder/yocto-slave/nightly-oecore/build/build/tmp-eglibc/sysroots/x86_64-linux/usr/lib/armv5te-oe-linux-gnueabi.gcc-cross-initial/gcc/arm-oe-linux-gnueabi/4.8.2/include
+| /bin/install: cannot create regular file '/home/pokybuild/yocto-autobuilder/yocto-slave/nightly-oecore/build/build/tmp-eglibc/work/armv5te-oe-linux-gnueabi/gcc-cross-initial/4.8.2-r0/image/home/pokybuild/yocto-autobuilder/yocto-slave/nightly-oecore/build/build/tmp-eglibc/sysroots/x86_64-linux/usr/lib/armv5te-oe-linux-gnueabi.gcc-cross-initial/gcc/arm-oe-linux-gnueabi/4.8.2/include/unwind.h': File exists
+| make[1]: *** [install-unwind_h] Error 1
+
+which under the right circumstances leads to the above build failure. Since we don't 
+need two copies of this file and we don't use install-no-fixincludes, we can disable 
+the libgcc installation.
+
+RP 2014/04/10
+
+Upstream-Status: Pending [would need a rewrite into an acceptable patch form]
+
+Index: gcc-4.8.2/libgcc/Makefile.in
+===================================================================
+--- gcc-4.8.2.orig/libgcc/Makefile.in	2013-02-04 19:06:20.000000000 +0000
++++ gcc-4.8.2/libgcc/Makefile.in	2014-04-10 09:58:33.018748787 +0000
+@@ -1020,8 +1020,8 @@
+ # This is however useful for "install-no-fixincludes" case, when only the gcc
+ # internal headers are copied by gcc's install.
+ install-unwind_h:
+-	$(mkinstalldirs) $(DESTDIR)$(libsubdir)/include
+-	$(INSTALL_DATA) unwind.h $(DESTDIR)$(libsubdir)/include
++#	$(mkinstalldirs) $(DESTDIR)$(libsubdir)/include
++#	$(INSTALL_DATA) unwind.h $(DESTDIR)$(libsubdir)/include
+ 
+ all: install-unwind_h-forbuild
+ 
