@@ -60,6 +60,7 @@ inherit autotools gettext
 EXTRA_OECONF += "--without-audit \
                  --without-libcrack \
                  --without-selinux \
+                 --with-group-name-max-length=24 \
                  ${NSCDOPT}"
 
 NSCDOPT = ""
