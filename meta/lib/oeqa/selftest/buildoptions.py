@@ -51,7 +51,7 @@ class ImageOptionsTests(oeSelfTest):
 class DiskMonTest(oeSelfTest):
 
     def test_stoptask_behavior(self):
-        result = runCmd("df -k %s" % os.getcwd())
+        result = runCmd("df -Pk %s" % os.getcwd())
         size = result.output.split("\n")[1].split()[3]
         self.write_config('BB_DISKMON_DIRS = "STOPTASKS,${TMPDIR},%sK,4510K"' % size)
         res = bitbake("m4", ignore_status = True)
