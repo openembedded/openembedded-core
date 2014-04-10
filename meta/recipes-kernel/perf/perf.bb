@@ -133,6 +133,18 @@ do_configure_prepend () {
     if [ -e "${S}/tools/perf/config/Makefile" ]; then
         sed -i 's,libdir = $(prefix)/$(lib),libdir = $(prefix)/${baselib},' ${S}/tools/perf/config/Makefile
     fi
+    # We need to ensure the --sysroot option in CC is preserved
+    if [ -e "${S}/tools/perf/Makefile.perf" ]; then
+        sed -i 's,CC = $(CROSS_COMPILE)gcc,#CC,' ${S}/tools/perf/Makefile.perf
+        sed -i 's,AR = $(CROSS_COMPILE)ar,#AR,' ${S}/tools/perf/Makefile.perf
+    fi
+    if [ -e "${S}/tools/lib/api/Makefile" ]; then
+        sed -i 's,CC = $(CROSS_COMPILE)gcc,#CC,' ${S}/tools/lib/api/Makefile
+        sed -i 's,AR = $(CROSS_COMPILE)ar,#AR,' ${S}/tools/lib/api/Makefile
+    fi
+    if [ -e "${S}/tools/perf/config/feature-checks/Makefile" ]; then
+        sed -i 's,CC := $(CROSS_COMPILE)gcc -MD,CC += -MD,' ${S}/tools/perf/config/feature-checks/Makefile
+    fi
 }
 
 python do_package_prepend() {
