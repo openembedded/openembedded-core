@@ -1,0 +1,69 @@
+From 1980a8f4779a955e73285e7a0d86549b69bea5c8 Mon Sep 17 00:00:00 2001
+From: Yu Zongchun <b40527@freescale.com>
+Date: Sun, 28 Apr 2013 14:39:22 +0800
+Subject: [PATCH] Add the compile and install rules for cryptodev tests folder
+
+This is required to install the cryptodev tests folder to rootfs
+
+Signed-off-by: Yu Zongchun <b40527@freescale.com>
+
+Upstream-Status: Pending
+
+---
+ Makefile       |    6 ++++++
+ tests/Makefile |    8 ++++++++
+ 2 files changed, 14 insertions(+), 0 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 2be8825..4cbb865 100644
+--- a/Makefile
++++ b/Makefile
+@@ -17,6 +17,9 @@ install:
+ 	@echo "Installing cryptodev.h in /usr/include/crypto ..."
+ 	@install -D crypto/cryptodev.h /usr/include/crypto/cryptodev.h
+ 
++install_tests:
++	make -C tests install DESTDIR=$(PREFIX)
++
+ clean:
+ 	make -C $(KERNEL_DIR) SUBDIRS=`pwd` clean
+ 	rm -f $(hostprogs) *~
+@@ -25,6 +28,9 @@ clean:
+ check:
+ 	KERNEL_DIR=$(KERNEL_DIR) make -C tests check
+ 
++testprogs:
++	KERNEL_DIR=$(KERNEL_DIR) make -C tests testprogs
++
+ FILEBASE = cryptodev-linux-$(VERSION)
+ TMPDIR ?= /tmp
+ OUTPUT = $(FILEBASE).tar.gz
+diff --git a/tests/Makefile b/tests/Makefile
+index 87ca3c7..0488cf6 100644
+--- a/tests/Makefile
++++ b/tests/Makefile
+@@ -19,6 +19,12 @@ example-async-hmac-objs := async_hmac.o
+ example-async-speed-objs := async_speed.o
+ example-hashcrypt-speed-objs := hashcrypt_speed.c
+ 
++install:
++	install -d  $(DESTDIR)/usr/bin/tests_cryptodev
++	for bin in $(hostprogs); do \
++		install -m 755 $${bin} $(DESTDIR)/usr/bin/tests_cryptodev/; \
++	done
++
+ check: $(hostprogs)
+ 	./cipher
+ 	./hmac
+@@ -28,6 +34,8 @@ check: $(hostprogs)
+ 	./cipher-gcm
+ 	./cipher-aead
+ 
++testprogs: $(hostprogs)
++
+ clean:
+ 	rm -f *.o *~ $(hostprogs)
+ 
+-- 
+1.7.5.4
+
