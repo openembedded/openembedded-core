@@ -28,7 +28,7 @@
 #Error checking is kept to minimum so double check any parameters you pass to the class
 ###########################################################################################
 
-BB_HASHBASE_WHITELIST += "ICECC_PARALLEL_MAKE ICECC_DISABLED ICECC_USER_PACKAGE_BL ICECC_USER_CLASS_BL ICECC_USER_PACKAGE_WL"
+BB_HASHBASE_WHITELIST += "ICECC_PARALLEL_MAKE ICECC_DISABLED ICECC_USER_PACKAGE_BL ICECC_USER_CLASS_BL ICECC_USER_PACKAGE_WL ICECC_PATH ICECC_ENV_EXEC"
 
 ICECC_ENV_EXEC ?= "${STAGING_BINDIR_NATIVE}/icecc-create-env"
 
@@ -148,6 +148,10 @@ def icc_is_native(bb, d):
 # Don't pollute allarch signatures with TARGET_FPU
 icc_version[vardepsexclude] += "TARGET_FPU"
 def icc_version(bb, d):
+    if d.getVar('ICECC_DISABLED') == "1":
+        # don't even try it, when explicitly disabled
+        return ""
+
     if use_icc(bb, d) == "no":
         return ""
 
@@ -175,6 +179,10 @@ def icc_version(bb, d):
     return tar_file
 
 def icc_path(bb,d):
+    if d.getVar('ICECC_DISABLED') == "1":
+        # don't create unnecessary directories when icecc is disabled
+        return
+
     if icc_is_kernel(bb, d):
         return create_path( [get_cross_kernel_cc(bb,d), ], bb, d)
 
@@ -238,7 +246,7 @@ def set_icecc_env():
     return
 
 set_icecc_env() {
-    if [ "x${ICECC_DISABLED}" != "x" ]
+    if [ "${ICECC_DISABLED}" = "1" ]
     then
         return
     fi
