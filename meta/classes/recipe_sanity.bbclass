@@ -59,7 +59,6 @@ def can_use_autotools_base(cfgdata, d):
 
 def can_delete_FILESPATH(cfgdata, d):
     expected = cfgdata.get("FILESPATH")
-    #expected = "${@':'.join([os.path.normpath(os.path.join(fp, p, o)) for fp in d.getVar('FILESPATHBASE', True).split(':') for p in d.getVar('FILESPATHPKG', True).split(':') for o in (d.getVar('OVERRIDES', True) + ':').split(':') if os.path.exists(os.path.join(fp, p, o))])}:${FILESDIR}"
     expectedpaths = d.expand(expected)
     unexpanded = d.getVar("FILESPATH", 0)
     filespath = d.getVar("FILESPATH", True).split(":")
