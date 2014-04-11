@@ -7,7 +7,39 @@
 
 
 
-import httplib, urllib, os, sys, json
+import httplib, urllib, os, sys, json, base64
+from urllib2 import _parse_proxy as parseproxy
+
+
+def handle_connection(server, data):
+    params = urllib.urlencode({'data': data})
+    headers = {"Content-type": "application/json"}
+    proxyrequired = False
+    if os.environ.get("http_proxy") or os.environ.get("HTTP_PROXY"):
+        proxyrequired = True
+        # we need to check that the server isn't a local one, as in no_proxy
+        try:
+            temp = httplib.HTTPConnection(server, strict=True, timeout=5)
+            temp.request("GET", "/")
+            tempres = temp.getresponse()
+            if tempres.status == 200:
+                proxyrequired = False
+            temp.close()
+        except:
+            pass
+
+    if proxyrequired:
+        proxy = parseproxy(os.environ.get("http_proxy") or os.environ.get("HTTP_PROXY"))
+        if proxy[1] and proxy[2]:
+            auth = base64.encodestring("%s:%s" % (proxy[1], proxy[2]))
+            headers["Authorization"] = "Basic %s" % auth
+        conn = httplib.HTTPConnection(proxy[3])
+        conn.request("POST", "http://%s/ClientPost/" % server, params, headers)
+    else:
+        conn = httplib.HTTPConnection(server)
+        conn.request("POST", "/ClientPost/", params, headers)
+
+    return conn
 
 
 def sendData(json_file, server):
@@ -45,10 +77,7 @@ def sendData(json_file, server):
             return
 
         try:
-            params = urllib.urlencode({'data': data})
-            headers = {"Content-type": "application/json"}
-            conn = httplib.HTTPConnection(server)
-            conn.request("POST", "/ClientPost/", params, headers)
+            conn = handle_connection(server, data)
             response = conn.getresponse()
             print response.status, response.reason
             res = response.read()
@@ -59,8 +88,8 @@ def sendData(json_file, server):
                 with open("%s.response.html" % json_file, "w") as f:
                     f.write(res)
             conn.close()
-        except:
-                print("Server connection failed")
+        except Exception as e:
+                print("Server connection failed: %s" % e)
 
     else:
         print("No data file found.")
