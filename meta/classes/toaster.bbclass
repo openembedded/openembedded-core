@@ -288,7 +288,15 @@ python toaster_buildhistory_dump() {
 
             for pname in images[target]:
                 if not pname in allpkgs:
-                    allpkgs[pname] = _toaster_load_pkgdatafile("%s/runtime-reverse/" % pkgdata_dir, pname)
+                    try:
+                        pkgdata = _toaster_load_pkgdatafile("%s/runtime-reverse/" % pkgdata_dir, pname)
+                    except IOError as err:
+                        if err.errno == 2:
+                            # We expect this e.g. for RRECOMMENDS that are unsatisfied at runtime
+                            continue
+                        else:
+                            raise
+                    allpkgs[pname] = pkgdata
 
 
     data = { 'pkgdata' : allpkgs, 'imgdata' : images, 'filedata' : files }
