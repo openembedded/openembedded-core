@@ -51,17 +51,15 @@ class ImageOptionsTests(oeSelfTest):
 class DiskMonTest(oeSelfTest):
 
     def test_stoptask_behavior(self):
-        result = runCmd("df -Pk %s" % os.getcwd())
-        size = result.output.split("\n")[1].split()[3]
-        self.write_config('BB_DISKMON_DIRS = "STOPTASKS,${TMPDIR},%sK,4510K"' % size)
+        self.write_config('BB_DISKMON_DIRS = "STOPTASKS,${TMPDIR},100000G,100K"')
         res = bitbake("m4", ignore_status = True)
         self.assertTrue('ERROR: No new tasks can be executed since the disk space monitor action is "STOPTASKS"!' in res.output)
         self.assertEqual(res.status, 1)
-        self.write_config('BB_DISKMON_DIRS = "ABORT,${TMPDIR},%sK,4510K"' % size)
+        self.write_config('BB_DISKMON_DIRS = "ABORT,${TMPDIR},100000G,100K"')
         res = bitbake("m4", ignore_status = True)
         self.assertTrue('ERROR: Immediately abort since the disk space monitor action is "ABORT"!' in res.output)
         self.assertEqual(res.status, 1)
-        self.write_config('BB_DISKMON_DIRS = "WARN,${TMPDIR},%sK,4510K"' % size)
+        self.write_config('BB_DISKMON_DIRS = "WARN,${TMPDIR},100000G,100K"')
         res = bitbake("m4")
         self.assertTrue('WARNING: The free space' in res.output)
 
