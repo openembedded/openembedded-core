@@ -10,15 +10,15 @@ DEPENDS = "virtual/kernel"
 
 inherit module
 
-SRCREV = "fb2c37799306d16fb590aebee6fad8be431264b7"
-PV = "2.4.0"
+SRCREV = "afdc6b155161f209fcfadc5288dc017ceab56353"
+PV = "2.4.1"
 
 # lttng currently blacklists arm with gcc-4.8
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips).*-linux'
 
 SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.4 \
            file://lttng-modules-replace-KERNELDIR-with-KERNEL_SRC.patch \
-           file://bio-bvec-iter.patch"
+           "
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 export KERNEL_SRC="${STAGING_KERNEL_DIR}"
