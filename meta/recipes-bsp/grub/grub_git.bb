@@ -53,7 +53,11 @@ do_configure_prepend() {
 do_install_append () {
     install -d ${D}${sysconfdir}/grub.d
     install -m 0755 ${WORKDIR}/40_custom ${D}${sysconfdir}/grub.d/40_custom
+ 
 }
+
+# debugedit chokes on bare metal binaries
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 RDEPENDS_${PN} = "diffutils freetype"
 FILES_${PN}-dbg += "${libdir}/${BPN}/*/.debug"
