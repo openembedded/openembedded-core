@@ -77,4 +77,4 @@ if __name__ == '__main__':
     elif len(sys.argv) == 3:
         sendData(sys.argv[1], sys.argv[2])
     else:
-        sendData(sys.argv[1], "localhost:8000")
+        sendData(sys.argv[1], "errors.yoctoproject.org")
