@@ -60,18 +60,8 @@ class Mate(XTerminal):
     priority = 2
 
 class Xfce(XTerminal):
-    command = 'Terminal -T "{title}" -e "{command}"'
+    command = 'xfce4-terminal -T "{title}" -e "{command}"'
     priority = 2
-
-    def __init__(self, command, title=None, env=None, d=None):
-        # Upstream binary name is Terminal but Debian/Ubuntu use
-        # xfce4-terminal to avoid possible(?) conflicts
-        distro = distro_name()
-        if distro == 'ubuntu' or distro == 'debian':
-            cmd = 'xfce4-terminal -T "{title}" -e "{command}"'
-        else:
-            cmd = command
-        XTerminal.__init__(self, cmd, title, env, d)
 
 class Konsole(XTerminal):
     command = 'konsole -T "{title}" -e {command}'
