@@ -61,6 +61,7 @@ def process_file_darwin(cmd, fpath, rootdir, baseprefix, tmpdir, d):
 def process_dir (rootdir, directory, d):
     import stat
 
+    rootdir = os.path.normpath(rootdir)
     cmd = d.expand('${CHRPATH_BIN}')
     tmpdir = os.path.normpath(d.getVar('TMPDIR'))
     baseprefix = os.path.normpath(d.expand('${base_prefix}'))
