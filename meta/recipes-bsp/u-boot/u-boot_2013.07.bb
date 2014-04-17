@@ -16,7 +16,9 @@ SRCREV = "62c175fbb8a0f9a926c88294ea9f7e88eb898f6c"
 
 PV = "v2013.07+git${SRCPV}"
 
-SRC_URI = "git://git.denx.de/u-boot.git;branch=master"
+SRC_URI = "git://git.denx.de/u-boot.git;branch=master \
+           file://0001-am335x_evm.h-Add-use-DEFAULT_LINUX_BOOT_ENV-environm.patch \
+"
 
 S = "${WORKDIR}/git"
 
