@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
 PR = "r1"
 
-DEPENDS = "dbus gtk+"
+DEPENDS = "dbus gtk+ dbus-glib"
 
 inherit gnomebase
 SRC_URI[archive.md5sum] = "732c9d2cd5eb6a9069264a319d330516"
