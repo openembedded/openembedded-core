@@ -29,8 +29,8 @@ index 6b80caa..3544a36 100644
  			modsig->hash >= PKEY_HASH__LAST ||
  			modsig->id_type >= PKEY_ID_TYPE__LAST)
  		return false;
--	sig_len = be32toh(modsig->sig_len);
-+	sig_len = bswap_32(modsig->sig_len);
+-	sig_len = be32toh(get_unaligned(&modsig->sig_len));
++	sig_len = bswap_32(get_unaligned(&modsig->sig_len));
  	if (size < (off_t)(modsig->signer_len + modsig->key_id_len + sig_len))
  		return false;
  
