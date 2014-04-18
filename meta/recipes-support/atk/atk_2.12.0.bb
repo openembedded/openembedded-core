@@ -14,8 +14,8 @@ inherit gnomebase gtk-doc
 
 GNOME_COMPRESS_TYPE = "xz"
 
-SRC_URI[archive.md5sum] = "e77833d4445ebe6842e9f9a0667b0be7"
-SRC_URI[archive.sha256sum] = "636917a5036bc851d8491194645d284798ec118919a828be5e713b6ecc5b50b0"
+SRC_URI[archive.md5sum] = "930238dec55fdbf8eda9975b44f07b76"
+SRC_URI[archive.sha256sum] = "48a8431974639c5a59c24fcd3ece1a19709872d5dfe78907524d9f5e9993f18f"
 
 BBCLASSEXTEND = "native"
 
