@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e9f288ba982d60518f375b5898283886"
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz"
-SRC_URI[md5sum] = "d4a198201f6189fb248f3edd19efe39c"
-SRC_URI[sha256sum] = "d3da58f84f4c8e4d5fe940ecb52fb27b4d9ea2b4dcdb3e1fae0f46b5eaa2dde1"
+SRC_URI[md5sum] = "b12ad0e0924706f5e7f51216241068ef"
+SRC_URI[sha256sum] = "db550edd98e53b4252521459c2dcaf0f3b060a9bad52489b9dbadbaedad3fb89"
 
 DEPENDS = "dbus glib-2.0 virtual/libx11 libxi libxtst intltool-native"
 
