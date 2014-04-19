@@ -8,12 +8,19 @@ RDEPENDS_${PN} = "ncurses-terminfo"
 
 SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "eb4bdc23abd4fdfa14911d53d65c8186"
-SRC_URI[sha256sum] = "5f4166fe78fbf4b42f51ed526ca7f79fea8c77d04355c2b97d4df2a6bd2a1b1a"
+SRC_URI[md5sum] = "a64c426364bfaee56b628f6c0738aade"
+SRC_URI[sha256sum] = "1054fcc27a488771cbe5b85d7c10135fa1cd1b7682a19930d44b51a023e39396"
 
 inherit autotools gettext pkgconfig
 
-EXTRA_OECONF = "--with-screen=ncurses --without-gpm-mouse --without-x --without-samba"
+#
+# Both Samba (smb) and sftp require package delivered from meta-openembedded
+#
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[smb] = "--enable-vfs-smb,--disable-vfs-smb,samba,"
+PACKAGECONFIG[sftp] = "--enable-vfs-sftp,--disable-vfs-sftp,libssh2,"
+
+EXTRA_OECONF = "--with-screen=ncurses --without-gpm-mouse --without-x"
 
 FILES_${PN}-dbg += "${libexecdir}/mc/.debug/"
 
