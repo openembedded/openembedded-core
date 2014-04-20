@@ -3,6 +3,7 @@ DESCRIPTION = "The nfs-utils package provides a daemon for the kernel \
 NFS server and related tools."
 HOMEPAGE = "http://nfs.sourceforge.net/"
 SECTION = "console/network"
+PR = "r1"
 
 LICENSE = "MIT & GPLv2+ & BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=95f3a93a5c3c7888de623b46ea085a84"

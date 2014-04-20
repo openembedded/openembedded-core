@@ -1,5 +1,6 @@
 MAJOR_VERSION = "2.24"
 require util-linux.inc
+PR = "r1"
 
 # To support older hosts, we need to patch and/or revert
 # some upstream changes.  Only do this for native packages.

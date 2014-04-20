@@ -1,5 +1,7 @@
 require busybox.inc
 
+PR = "r32"
+
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://get_header_tar.patch \
            file://busybox-appletlib-dependency.patch \

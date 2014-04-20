@@ -1,6 +1,6 @@
 require bluez4.inc
 
-PR = "r10"
+PR = "r11"
 
 SRC_URI += "file://bluetooth.conf \
             file://sbc_mmx.patch \
