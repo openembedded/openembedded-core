@@ -13,6 +13,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/lct/console-tools-${PV}.tar.gz \
            file://uclibc-fileno.patch \
            file://nodocs.patch \
            file://fix-libconsole-linking.patch \
+           file://no-dep-on-libfl.patch \
            file://lcmessage.m4 \
            file://Makevars"
 
