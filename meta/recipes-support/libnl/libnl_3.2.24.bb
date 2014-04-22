@@ -13,11 +13,9 @@ SRC_URI = "http://www.infradead.org/~tgr/${BPN}/files/${BP}.tar.gz \
            file://fix-pktloc_syntax_h-race.patch \
            file://fix-pc-file.patch \
            file://fix-lib-cache_mngr.c-two-parentheses-bugs.patch \
-           file://0001-fix-double-free-caused-by-freeing-link-af_data-in-rt.patch \
           "
-
-SRC_URI[md5sum] = "2e1c889494d274aca24ce5f6a748e66e"
-SRC_URI[sha256sum] = "c7c5f267dfeae0c1a530bf96b71fb7c8dbbb07d54beef49b6712d8d6166f629b"
+SRC_URI[md5sum] = "6e0e7bad0674749d930dd9f285343d55"
+SRC_URI[sha256sum] = "fb8d6e5dc8af5b85bc6d00a71582a68a01e6a3f7d1664d4a646e289a99dd6816"
 
 inherit autotools-brokensep pkgconfig
 
@@ -31,11 +29,12 @@ FILES_${PN}-dev += "${libdir}/libnl/cli/*/*.so \
                     ${libdir}/libnl/cli/*/*.la"
 FILES_${PN}-staticdev += "${libdir}/libnl/cli/*/*.a"
 
-PACKAGES += "${PN}-cli ${PN}-route ${PN}-nf ${PN}-genl"
+PACKAGES += "${PN}-cli ${PN}-route ${PN}-nf ${PN}-genl ${PN}-idiag"
 FILES_${PN}-cli   = "${libdir}/libnl-cli-3.so.* \
                      ${libdir}/libnl/cli/*/*.so.* \
                      ${sbindir}/nl-*"
 FILES_${PN}-route = "${libdir}/libnl-route-3.so.*"
+FILES_${PN}-idiag = "${libdir}/libnl-idiag-3.so.*"
 FILES_${PN}-nf    = "${libdir}/libnl-nf-3.so.*"
 FILES_${PN}-genl  = "${libdir}/libnl-genl-3.so.* \
                      ${libdir}/libnl-genl.so.* \
