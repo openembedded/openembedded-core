@@ -97,8 +97,9 @@ def sendData(json_file, server):
 
 if __name__ == '__main__':
     print ("\nSends an error report (if the report-error class was enabled) to a remote server.")
+    print("\nThis scripts sends the contents of the error to a public upstream server.")
+    print("\nPlease remove any identifying information before sending.")
     if len(sys.argv) < 2:
-        print("\nThis scripts sends the contents of a file to an upstream server.")
         print("\nUsage: send-error-report <error_fileName> [server]")
         print("\nIf this is the first when sending a report you'll be asked for your name and optionally your email address.")
         print("They will be associated with your report.\n")
