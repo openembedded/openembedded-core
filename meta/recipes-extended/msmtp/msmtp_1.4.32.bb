@@ -12,8 +12,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SRC_URI = "http://sourceforge.net/projects/msmtp/files/msmtp/${PV}/${BPN}-${PV}.tar.bz2 \
           "
 
-SRC_URI[md5sum] = "792ac0ffa30dc95ea1889a548128186d"
-SRC_URI[sha256sum] = "247af9a95fa22f506e85109fc4268a5d91ca03af9b17eebcc1e46b7cd64c225f"
+SRC_URI[md5sum] = "aa60e22211118f222470439cea60f795"
+SRC_URI[sha256sum] = "2bf0c5c7e78f9905f48de235a75111a1a88238793043bbeae00360b22f1a5f88"
 
 inherit gettext autotools update-alternatives
 
