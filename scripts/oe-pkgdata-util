@@ -303,7 +303,7 @@ Available commands:
         packages''')
 
     parser.add_option("-d", "--debug",
-            help = "Report all SRCREV values, not just ones where AUTOREV has been used",
+            help = "Enable debug output",
             action="store_true", dest="debug", default=False)
 
     options, args = parser.parse_args(sys.argv)
