@@ -50,24 +50,20 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    # Set path to OE lib dir so we can import the buildhistory_analysis module
-    basepath = os.path.abspath(os.path.dirname(os.path.abspath(sys.argv[0])) + '/..')
-    newpath = basepath + '/meta/lib'
-    # Set path to bitbake lib dir so the buildhistory_analysis module can load bb.utils
-    if os.path.exists(basepath + '/bitbake/lib/bb'):
-        bitbakepath = basepath + '/bitbake'
-    else:
-        # look for bitbake/bin dir in PATH
-        bitbakepath = None
-        for pth in os.environ['PATH'].split(':'):
-            if os.path.exists(os.path.join(pth, '../lib/bb')):
-                bitbakepath = os.path.abspath(os.path.join(pth, '..'))
-                break
-        if not bitbakepath:
-            sys.stderr.write("Unable to find bitbake by searching parent directory of this script or PATH\n")
-            sys.exit(1)
+    scripts_path = os.path.abspath(os.path.dirname(os.path.abspath(sys.argv[0])))
+    lib_path = scripts_path + '/lib'
+    sys.path = sys.path + [lib_path]
 
-    sys.path[0:0] = [newpath, bitbakepath + '/lib']
+    import scriptpath
+
+    # Set path to OE lib dir so we can import the buildhistory_analysis module
+    scriptpath.add_oe_lib_path()
+    # Set path to bitbake lib dir so the buildhistory_analysis module can load bb.utils
+    bitbakepath = scriptpath.add_bitbake_lib_path()
+    if not bitbakepath:
+        sys.stderr.write("Unable to find bitbake by searching parent directory of this script or PATH\n")
+        sys.exit(1)
+
     import oe.buildhistory_analysis
 
     fromrev = 'build-minus-1'

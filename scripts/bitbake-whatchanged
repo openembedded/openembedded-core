@@ -27,17 +27,17 @@ import warnings
 import subprocess
 from optparse import OptionParser
 
+scripts_path = os.path.abspath(os.path.dirname(os.path.abspath(sys.argv[0])))
+lib_path = scripts_path + '/lib'
+sys.path = sys.path + [lib_path]
+
+import scriptpath
+
 # Figure out where is the bitbake/lib/bb since we need bb.siggen and bb.process
-p = subprocess.Popen("bash -c 'echo $(dirname $(which bitbake-diffsigs | grep -v \'^alias\'))/../lib'",
-        shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-err = p.stderr.read()
-if err:
-    print("ERROR: Failed to locate bitbake-diffsigs:", file=sys.stderr)
-    print(err, file=sys.stderr)
+bitbakepath = scriptpath.add_bitbake_lib_path()
+if not bitbakepath:
+    sys.stderr.write("Unable to find bitbake by searching parent directory of this script or PATH\n")
     sys.exit(1)
-
-sys.path.insert(0, p.stdout.read().rstrip('\n'))
 
 import bb.siggen
 import bb.process
