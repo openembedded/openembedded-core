@@ -13,6 +13,8 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://make-etc-initd-bind-stop-work.patch \
            file://mips1-not-support-opcode.diff \
            file://dont-test-on-host.patch \
+           file://generate-rndc-key.sh \
+           file://named.service \
 	   "
 
 SRC_URI[md5sum] = "e676c65cad5234617ee22f48e328c24e"
@@ -27,10 +29,12 @@ EXTRA_OECONF = " ${ENABLE_IPV6} --with-randomdev=/dev/random --disable-threads \
                  --with-openssl=${STAGING_LIBDIR}/.. --with-libxml2=${STAGING_LIBDIR}/.. \
                  --enable-exportlib --with-export-includedir=${includedir} --with-export-libdir=${libdir} \
                "
-inherit autotools-brokensep update-rc.d
+inherit autotools-brokensep update-rc.d systemd
 
 INITSCRIPT_NAME = "bind"
 INITSCRIPT_PARAMS = "defaults"
+
+SYSTEMD_SERVICE_${PN} = "named.service"
 
 PARALLEL_MAKE = ""
 
@@ -39,6 +43,7 @@ RDEPENDS_${PN} = "python-core"
 PACKAGES_prepend = " ${PN}-utils "
 FILES_${PN}-utils = "${bindir}/host ${bindir}/dig"
 FILES_${PN}-dev += "${bindir}/isc-config.h"
+FILES_${PN} += "${sbindir}/generate-rndc-key.sh"
 
 do_install_append() {
 	rm "${D}${bindir}/nslookup"
@@ -50,6 +55,16 @@ do_install_append() {
 	install -m 644 ${S}/conf/* "${D}${sysconfdir}/bind/"
 	install -m 755 "${S}/init.d" "${D}${sysconfdir}/init.d/bind"
 	sed -i -e '1s,#!.*python,#! /usr/bin/env python,' ${D}${sbindir}/dnssec-coverage ${D}${sbindir}/dnssec-checkds
+
+	# Install systemd related files
+	install -d ${D}${localstatedir}/cache/bind
+	install -d ${D}${sbindir}
+	install -m 755 ${WORKDIR}/generate-rndc-key.sh ${D}${sbindir}
+	install -d ${D}${systemd_unitdir}/system
+	install -m 0644 ${WORKDIR}/named.service ${D}${systemd_unitdir}/system
+	sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+	       -e 's,@SBINDIR@,${sbindir},g' \
+	       ${D}${systemd_unitdir}/system/named.service
 }
 
 CONFFILES_${PN} = " \
