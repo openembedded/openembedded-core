@@ -12,6 +12,7 @@ PR = "r2"
 SRC_URI = "git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git \
            file://fix_ranlib.patch \
            file://tcf-agent.init \
+           file://tcf-agent.service \
           "
 
 DEPENDS = "util-linux openssl"
@@ -19,7 +20,9 @@ RDEPENDS_${PN} = "bash"
 
 S = "${WORKDIR}/git"
 
-inherit update-rc.d
+inherit update-rc.d systemd
+
+SYSTEMD_SERVICE_${PN} = "tcf-agent.service"
 
 INITSCRIPT_NAME = "tcf-agent"
 INITSCRIPT_PARAMS = "start 99 3 5 . stop 20 0 1 2 6 ."
@@ -44,5 +47,8 @@ do_install() {
 	oe_runmake install INSTALLROOT=${D}
 	install -d ${D}${sysconfdir}/init.d/
 	install -m 0755 ${WORKDIR}/tcf-agent.init ${D}${sysconfdir}/init.d/tcf-agent
+	install -d ${D}${systemd_unitdir}/system
+	install -m 0644 ${WORKDIR}/tcf-agent.service ${D}${systemd_unitdir}/system
+	sed -i -e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_unitdir}/system/tcf-agent.service
 }
 
