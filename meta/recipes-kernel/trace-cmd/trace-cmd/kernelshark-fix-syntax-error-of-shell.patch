@@ -4,7 +4,7 @@ Delete "<<<" syntax of bash in Makefile, else we would get following error:
 
 	Syntax error: redirection unexpected
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
 ---

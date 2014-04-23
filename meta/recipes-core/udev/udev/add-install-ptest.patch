@@ -6,7 +6,7 @@ Adjustements for ptest:
 
 Signed-off-by: Björn Stenberg <bjst@enea.com>
 Signed-off-by: Alexandra Safta <alst@enea.com>
-Upstream-status: Pending
+Upstream-Status: Pending
 
 --- a/Makefile.am	2012-03-18 16:28:14.000000000 +0100
 +++ b/Makefile.am	2013-02-18 10:03:36.531101244 +0100

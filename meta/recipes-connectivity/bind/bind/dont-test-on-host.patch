@@ -1,3 +1,7 @@
+Upstream-Status: Pending
+
+Signed-off-by Saul Wold <sgw@linux.intel.com>
+
 Index: bind-9.9.5/bin/Makefile.in
 ===================================================================
 --- bind-9.9.5.orig/bin/Makefile.in

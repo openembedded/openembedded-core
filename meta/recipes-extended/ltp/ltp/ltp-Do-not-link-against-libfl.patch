@@ -6,7 +6,7 @@ Subject: [PATCH] ltp: Don't link against libfl
 We have already defined yywrap function in scan.l file. After this, we no longer need to
 link against libfl and so no longer get errors about undefined references to yylex.
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
 ---

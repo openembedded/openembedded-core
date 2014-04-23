@@ -1,4 +1,4 @@
-Upstream-status: Pending
+Upstream-Status: Pending
 
 --- quota-tools.orig/configure.in
 +++ quota-tools/configure.in

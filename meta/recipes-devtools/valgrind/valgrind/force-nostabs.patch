@@ -8,7 +8,7 @@ error:
     ../package/usr/lib/valgrind/ptest/memcheck/tests/deep_templates
     ERROR: Function failed: split_and_strip_files
 
-Upstream-status: Inappropriate [gstabs support is appropriate upstream,
+Upstream-Status: Inappropriate [gstabs support is appropriate upstream,
         but not for this distro]
 
 Signed-off-by: Dave Lerner <dave.lerner@windriver.com>
