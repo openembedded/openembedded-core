@@ -19,6 +19,7 @@ SRC_URI = "https://fedorahosted.org/releases/c/r/cronie/cronie-${PV}.tar.gz \
            file://fix-out-of-tree-build.patch \
            file://crond.init \
            file://crontab \
+           file://crond.service \
            ${@base_contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)}"
 
 PAM_SRC_URI = "file://crond_pam_config.patch"
@@ -27,7 +28,7 @@ PAM_DEPS = "libpam libpam-runtime pam-plugin-access pam-plugin-loginuid"
 SRC_URI[md5sum] = "2ba645cf54de17f138ef70312843862f"
 SRC_URI[sha256sum] = "fd08084cedddbb42499f80ddb7f2158195c3555c2ff40ee11d4ece2f9864d7be"
 
-inherit autotools update-rc.d useradd
+inherit autotools update-rc.d useradd systemd
 
 
 PACKAGECONFIG ?= "${@base_contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
@@ -42,11 +43,20 @@ INITSCRIPT_PARAMS = "start 90 2 3 4 5 . stop 60 0 1 6 ."
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "--system crontab"
 
+SYSTEMD_SERVICE_${PN} = "crond.service"
+
 do_install_append () {
 	install -d ${D}${sysconfdir}/sysconfig/
 	install -d ${D}${sysconfdir}/init.d/
 	install -m 0644 ${S}/crond.sysconfig ${D}${sysconfdir}/sysconfig/crond
 	install -m 0755 ${WORKDIR}/crond.init ${D}${sysconfdir}/init.d/crond
+
+	# install systemd unit files
+	install -d ${D}${systemd_unitdir}/system
+	install -m 0644 ${WORKDIR}/crond.service ${D}${systemd_unitdir}/system
+	sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+	       -e 's,@SBINDIR@,${sbindir},g' \
+	       ${D}${systemd_unitdir}/system/crond.service
 
 	# below are necessary for a complete cron environment
 	install -d ${D}${localstatedir}/spool/cron
