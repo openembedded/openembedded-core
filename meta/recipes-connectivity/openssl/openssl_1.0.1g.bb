@@ -34,6 +34,8 @@ SRC_URI += "file://configure-targets.patch \
             file://initial-aarch64-bits.patch \
             file://find.pl \
             file://openssl-fix-des.pod-error.patch \
+            file://Makefiles-ptest.patch \
+            file://run-ptest \
            "
 
 SRC_URI[md5sum] = "de62b43dfcd858e66a74bee1c834e959"
