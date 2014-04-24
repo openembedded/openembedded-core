@@ -178,7 +178,7 @@ do_install () {
 	case ${PN} in
 		*gcc-cross|*gcc-crosssdk)
 			dest=${D}/${includedir}/gcc-build-internal-${MULTIMACH_TARGET_SYS}
-			cp -fpPR . $dest
+			hardlinkdir . $dest
 		;;
 	esac
 }

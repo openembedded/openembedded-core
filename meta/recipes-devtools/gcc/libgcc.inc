@@ -27,7 +27,7 @@ FILES_${PN}-dbg += "${base_libdir}/.debug/"
 do_configure () {
 	target=`echo ${MULTIMACH_TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	install -d ${D}${base_libdir} ${D}${libdir}
-	cp -fpPR ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$target/* ${B}
+	hardlinkdir ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$target/ ${B}
 	mkdir -p ${B}/${BPN}
 	cd ${B}/${BPN}
 	chmod a+x ${S}/${BPN}/configure
