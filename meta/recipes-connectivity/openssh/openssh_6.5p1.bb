@@ -27,7 +27,9 @@ SRC_URI = "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.
            file://sshd.socket \
            file://sshd@.service \
            file://sshdgenkeys.service \
-           file://volatiles.99_sshd "
+           file://volatiles.99_sshd \
+           file://add-test-support-for-busybox.patch \
+           file://run-ptest"
 
 PAM_SRC_URI = "file://sshd"
 
@@ -48,7 +50,7 @@ SYSTEMD_SERVICE_${PN}-sshd = "sshd.socket"
 PACKAGECONFIG ??= "tcp-wrappers"
 PACKAGECONFIG[tcp-wrappers] = "--with-tcp-wrappers,,tcp-wrappers"
 
-inherit autotools-brokensep
+inherit autotools-brokensep ptest
 
 # LFS support:
 CFLAGS += "-D__FILE_OFFSET_BITS=64"
@@ -118,6 +120,11 @@ do_install_append () {
 		${D}${systemd_unitdir}/system/sshd.socket ${D}${systemd_unitdir}/system/*.service
 }
 
+do_install_ptest () {
+	sed -i -e "s|^SFTPSERVER=.*|SFTPSERVER=${libdir}/${PN}/sftp-server|" regress/test-exec.sh
+	cp -r regress ${D}${PTEST_PATH}
+}
+
 ALLOW_EMPTY_${PN} = "1"
 
 PACKAGES =+ "${PN}-keygen ${PN}-scp ${PN}-ssh ${PN}-sshd ${PN}-sftp ${PN}-misc ${PN}-sftp-server"
@@ -132,6 +139,7 @@ FILES_${PN}-keygen = "${bindir}/ssh-keygen"
 
 RDEPENDS_${PN} += "${PN}-scp ${PN}-ssh ${PN}-sshd ${PN}-keygen"
 RDEPENDS_${PN}-sshd += "${PN}-keygen ${@base_contains('DISTRO_FEATURES', 'pam', 'pam-plugin-keyinit pam-plugin-loginuid', '', d)}"
+RDEPENDS_${PN}-ptest += "${PN}-sftp ${PN}-misc ${PN}-sftp-server make"
 
 CONFFILES_${PN}-sshd = "${sysconfdir}/ssh/sshd_config"
 CONFFILES_${PN}-ssh = "${sysconfdir}/ssh/ssh_config"
