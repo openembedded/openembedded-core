@@ -53,8 +53,8 @@ PACKAGECONFIG[cogl-pango] = "--enable-cogl-pango,--disable-cogl-pango,pango"
 # Respect the DISTRO_FEATURES to pull in GLX or Wayland as appropriate by
 # default.
 PACKAGECONFIG ??= "cogl-pango gles2 \
-                   ${@base_contains('DISTRO_FEATURES', 'wayland', 'egl-wayland', '', d)} \
-                   ${@base_contains('DISTRO_FEATURES', 'x11', 'glx', '', d)}"
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'egl-wayland', '', d)} \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'glx', '', d)}"
 
 FILES_${PN}-examples = "${bindir}/* ${datadir}/cogl/examples-data/*"
 FILES_libcogl = "${libdir}/libcogl${SOLIBS}"

@@ -17,7 +17,7 @@ PACKAGECONFIG[tcp-wrappers] = ",,tcp-wrappers"
 
 CPPFLAGS += "-DFACILITY=LOG_DAEMON -DENABLE_DNS -DHOSTS_ACCESS"
 CFLAGS += "-Wall -Wstrict-prototypes -fPIC"
-EXTRA_OEMAKE += "'NO_TCP_WRAPPER=${@base_contains('PACKAGECONFIG', 'tcp-wrappers', '', '1', d)}'"
+EXTRA_OEMAKE += "'NO_TCP_WRAPPER=${@bb.utils.contains('PACKAGECONFIG', 'tcp-wrappers', '', '1', d)}'"
 
 fakeroot do_install() {
     install -d ${D}${mandir}/man8/ ${D}${base_sbindir} ${D}${sysconfdir}/init.d

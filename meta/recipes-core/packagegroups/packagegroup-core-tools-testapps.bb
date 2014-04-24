@@ -57,7 +57,7 @@ RDEPENDS_${PN} = "\
     connman-tools \
     connman-tests \
     connman-client \
-    ${@base_contains('DISTRO_FEATURES', 'x11', "${X11TOOLS}", "", d)} \
-    ${@base_contains('DISTRO_FEATURES', 'x11 opengl', "${X11GLTOOLS}", "", d)} \
-    ${@base_contains('DISTRO_FEATURES', '3g', "${3GTOOLS}", "", d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', "${X11TOOLS}", "", d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'x11 opengl', "${X11GLTOOLS}", "", d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', '3g', "${3GTOOLS}", "", d)} \
     "

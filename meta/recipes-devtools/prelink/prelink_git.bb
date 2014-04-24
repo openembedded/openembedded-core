@@ -63,7 +63,7 @@ pkg_postinst_prelink() {
 #!/bin/sh
 
 if [ "x$D" != "x" ]; then
-  ${@base_contains('USER_CLASSES', 'image-prelink', 'exit 0', 'exit 1', d)}
+  ${@bb.utils.contains('USER_CLASSES', 'image-prelink', 'exit 0', 'exit 1', d)}
 fi
 
 prelink -a

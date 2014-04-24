@@ -19,7 +19,7 @@ ALLOW_EMPTY_gstreamer1.0-meta-debug = "1"
 ALLOW_EMPTY_gstreamer1.0-meta-video = "1"
 
 RDEPENDS_gstreamer1.0-meta-base = "\
-    ${@base_contains('DISTRO_FEATURES', 'x11', 'gstreamer1.0-meta-x11-base', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'gstreamer1.0-meta-x11-base', '', d)} \
     gstreamer1.0 \
     gstreamer1.0-plugins-base-playback \
     gstreamer1.0-plugins-base-gio \

@@ -86,7 +86,7 @@ do_install() {
 	# See alsa-utils-alsaconf_${PV}.bb
 	rm ${D}${sbindir}/alsaconf
 
-	if ${@base_contains('PACKAGECONFIG', 'udev', 'false', 'true', d)}; then
+	if ${@bb.utils.contains('PACKAGECONFIG', 'udev', 'false', 'true', d)}; then
 	   # This is where alsa-utils will install its rules if we don't tell it anything else.
 	   rm -rf ${D}/lib/udev
 	   rmdir --ignore-fail-on-non-empty ${D}/lib

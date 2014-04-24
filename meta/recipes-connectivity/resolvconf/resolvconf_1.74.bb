@@ -26,7 +26,7 @@ do_install () {
 	install -d ${D}${sysconfdir}/default/volatiles
 	echo "d root root 0755 ${localstatedir}/run/${BPN}/interface none" \
 	     > ${D}${sysconfdir}/default/volatiles/99_resolvconf
-	if ${@base_contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
 		install -d ${D}${sysconfdir}/tmpfiles.d
 		echo "d /run/${BPN}/interface - - - -" \
 		     > ${D}${sysconfdir}/tmpfiles.d/resolvconf.conf

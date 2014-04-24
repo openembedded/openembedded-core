@@ -31,17 +31,17 @@ EXCLUDE_FROM_WORLD = "1"
 BOOTDD_VOLUME_ID   ?= "boot"
 BOOTDD_EXTRA_SPACE ?= "16384"
 
-EFI = "${@base_contains("MACHINE_FEATURES", "efi", "1", "0", d)}"
+EFI = "${@bb.utils.contains("MACHINE_FEATURES", "efi", "1", "0", d)}"
 EFI_PROVIDER ?= "grub-efi"
-EFI_CLASS = "${@base_contains("MACHINE_FEATURES", "efi", "${EFI_PROVIDER}", "", d)}"
+EFI_CLASS = "${@bb.utils.contains("MACHINE_FEATURES", "efi", "${EFI_PROVIDER}", "", d)}"
 
 # Include legacy boot if MACHINE_FEATURES includes "pcbios" or if it does not
 # contain "efi". This way legacy is supported by default if neither is
 # specified, maintaining the original behavior.
 def pcbios(d):
-    pcbios = base_contains("MACHINE_FEATURES", "pcbios", "1", "0", d)
+    pcbios = bb.utils.contains("MACHINE_FEATURES", "pcbios", "1", "0", d)
     if pcbios == "0":
-        pcbios = base_contains("MACHINE_FEATURES", "efi", "0", "1", d)
+        pcbios = bb.utils.contains("MACHINE_FEATURES", "efi", "0", "1", d)
     return pcbios
 
 def pcbios_class(d):
@@ -62,7 +62,7 @@ DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
 SYSLINUX_ROOT ?= "root=/dev/sda2"
 SYSLINUX_TIMEOUT ?= "10"
 
-IS_VMDK = '${@base_contains("IMAGE_FSTYPES", "vmdk", "true", "false", d)}'
+IS_VMDK = '${@bb.utils.contains("IMAGE_FSTYPES", "vmdk", "true", "false", d)}'
 
 boot_direct_populate() {
 	dest=$1

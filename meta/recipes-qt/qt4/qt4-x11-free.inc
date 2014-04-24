@@ -10,7 +10,7 @@ QT4DEPENDS = ""
 
 INC_PR = "r50"
 
-QT_GLFLAGS ?= "${@base_contains('DISTRO_FEATURES', 'opengl', '-opengl', '-no-opengl', d)} "
+QT_GLFLAGS ?= "${@bb.utils.contains('DISTRO_FEATURES', 'opengl', '-opengl', '-no-opengl', d)} "
 QT_GLFLAGS_qemux86 = "-opengl"
 QT_GLFLAGS_qemuppc = "-opengl"
 QT_X11_FLAGS ?= "-no-xinerama -no-xkb -no-gtkstyle"

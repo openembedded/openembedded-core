@@ -31,7 +31,7 @@ LIBV = "2.10.0"
 GDK_PIXBUF_LOADERS ?= "png jpeg"
 
 PACKAGECONFIG ??= "${GDK_PIXBUF_LOADERS}"
-PACKAGECONFIG_linuxstdbase = "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} ${GDK_PIXBUF_LOADERS}"
+PACKAGECONFIG_linuxstdbase = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} ${GDK_PIXBUF_LOADERS}"
 PACKAGECONFIG_class-native = "${GDK_PIXBUF_LOADERS}"
 
 PACKAGECONFIG[png] = "--with-libpng,--without-libpng,libpng"
@@ -45,7 +45,7 @@ PACKAGECONFIG[x11] = "--with-x11,--without-x11,virtual/libx11"
 
 EXTRA_OECONF = "\
   --disable-introspection \
-  ${@base_contains('DISTRO_FEATURES', 'ptest', '--enable-installed-tests', '--disable-installed-tests', d)} \
+  ${@bb.utils.contains('DISTRO_FEATURES', 'ptest', '--enable-installed-tests', '--disable-installed-tests', d)} \
 "
 
 PACKAGES =+ "${PN}-xlib"

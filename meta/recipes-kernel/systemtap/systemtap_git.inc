@@ -19,7 +19,7 @@ S = "${WORKDIR}/git"
 # entire image as -O0, we override it with -O2 here and give a note about it.
 def get_optimization(d):
     selected_optimization = d.getVar("SELECTED_OPTIMIZATION", True)
-    if base_contains("SELECTED_OPTIMIZATION", "-O0", "x", "", d) == "x":
+    if bb.utils.contains("SELECTED_OPTIMIZATION", "-O0", "x", "", d) == "x":
         bb.note("systemtap can't be built with -O0, -O2 will be used instead.")
         return selected_optimization.replace("-O0", "-O2")
     return selected_optimization

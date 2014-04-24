@@ -6,7 +6,7 @@ ROOTFS_PKGMANAGE = "rpm smartpm"
 ROOTFS_PKGMANAGE_BOOTSTRAP = "run-postinsts"
 
 # Add 50Meg of extra space for Smart
-IMAGE_ROOTFS_EXTRA_SPACE_append = "${@base_contains("PACKAGE_INSTALL", "smartpm", " + 51200", "" ,d)}"
+IMAGE_ROOTFS_EXTRA_SPACE_append = "${@bb.utils.contains("PACKAGE_INSTALL", "smartpm", " + 51200", "" ,d)}"
 
 # Smart is python based, so be sure python-native is available to us.
 EXTRANATIVEPATH += "python-native"

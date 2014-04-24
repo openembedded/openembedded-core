@@ -1,8 +1,8 @@
 HOMEPAGE = "http://qt-project.org/"
 DEPENDS = "gstreamer util-linux"
 
-PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
-                   ${@base_contains('DISTRO_FEATURES', 'bluetooth', 'bluetooth', '', d)}"
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluetooth', '', d)}"
 PACKAGECONFIG[bluetooth] = ",,bluez4"
 PACKAGECONFIG[pulseaudio] = ",,pulseaudio"
 
@@ -65,12 +65,12 @@ maemo5-contacts_enabled = no
 maemo5-calendar_enabled = no
 maemo6-landmarks_enabled = no
 bme_enabled = no
-bluez_enabled = ${@base_contains('PACKAGECONFIG', 'bluetooth', 'yes', 'no', d)}
+bluez_enabled = ${@bb.utils.contains('PACKAGECONFIG', 'bluetooth', 'yes', 'no', d)}
 proj_enabled = no
 gstreamer-photography_enabled = no
 gstreamer-appsrc_enabled = yes
 blkid_enabled = yes
-pulseaudio_enabled = ${@base_contains('PACKAGECONFIG', 'pulseaudio', 'yes', 'no', d)}
+pulseaudio_enabled = ${@bb.utils.contains('PACKAGECONFIG', 'pulseaudio', 'yes', 'no', d)}
 udev_enabled = yes
 iphb_enabled = no
 nfc_symbian_enabled = no

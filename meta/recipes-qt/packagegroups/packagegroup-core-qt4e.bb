@@ -12,7 +12,7 @@ RPROVIDES_${PN} = "task-qt4e-base"
 RREPLACES_${PN} = "task-qt4e-base"
 RCONFLICTS_${PN} = "task-qt4e-base"
 
-TOUCH = ' ${@base_contains("MACHINE_FEATURES", "touchscreen", "tslib tslib-calibrate tslib-tests", "",d)}'
+TOUCH = ' ${@bb.utils.contains("MACHINE_FEATURES", "touchscreen", "tslib tslib-calibrate tslib-tests", "",d)}'
 
 RDEPENDS_${PN} = " \
 	qt4-embedded \

@@ -7,6 +7,6 @@ DEFAULT_PREFERENCE = "-1"
 
 SRC_URI = "git://git.yoctoproject.org/matchbox-sato"
 
-EXTRA_OECONF += "${@base_contains('MACHINE_FEATURES', 'qvga', '--with-mode=qvga', '',d)}"
+EXTRA_OECONF += "${@bb.utils.contains('MACHINE_FEATURES', 'qvga', '--with-mode=qvga', '',d)}"
 
 S = "${WORKDIR}/git"

@@ -54,7 +54,7 @@ do_install_append() {
 	# We need to create the lock directory
 	install -d ${D}${OPKGLIBDIR}/opkg
 
-	if ${@base_contains('DISTRO_FEATURES','sysvinit','false','true',d)};then
+	if ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','false','true',d)};then
 		install -d ${D}${systemd_unitdir}/system
 		install -m 0644 ${WORKDIR}/opkg-configure.service ${D}${systemd_unitdir}/system/
 		sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \

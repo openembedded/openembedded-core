@@ -36,7 +36,7 @@ SRC_URI[sha256sum] = "89c2895ad157de50e53298b22d91db116ee4e1dd3fdf4019260254e2e3
 
 # acl is not a default feature
 #
-PACKAGECONFIG_class-target ??= "${@base_contains('DISTRO_FEATURES', 'acl', 'acl', '', d)}"
+PACKAGECONFIG_class-target ??= "${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)}"
 PACKAGECONFIG_class-native ??= ""
 
 # with, without, depends, rdepends

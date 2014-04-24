@@ -21,7 +21,7 @@ EXTRA_OECONF = "--with-newlib \
 		--with-sysroot=${STAGING_DIR_TARGET} \
 		--with-build-sysroot=${GCCCROSS_BUILDSYSROOT} \
 		${EXTRA_OECONF_INITIAL} \
-		${@base_contains('DISTRO_FEATURES', 'ld-is-gold', '--with-ld=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld.bfd', '', d)} \
+		${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', '--with-ld=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld.bfd', '', d)} \
 		${EXTRA_OECONF_FPU}"
 
 EXTRA_OECONF += " --with-native-system-header-dir=${SYSTEMHEADERS} "

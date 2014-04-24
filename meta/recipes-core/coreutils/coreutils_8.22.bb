@@ -26,7 +26,7 @@ EXTRA_OECONF_class-target = "--enable-install-program=arch --libexecdir=${libdir
 
 # acl is not a default feature
 #
-PACKAGECONFIG_class-target ??= "${@base_contains('DISTRO_FEATURES', 'acl', 'acl', '', d)}"
+PACKAGECONFIG_class-target ??= "${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)}"
 PACKAGECONFIG_class-native ??= ""
 
 # with, without, depends, rdepends

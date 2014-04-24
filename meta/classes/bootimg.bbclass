@@ -41,17 +41,17 @@ COMPRESSISO ?= "0"
 BOOTIMG_VOLUME_ID   ?= "boot"
 BOOTIMG_EXTRA_SPACE ?= "512"
 
-EFI = "${@base_contains("MACHINE_FEATURES", "efi", "1", "0", d)}"
+EFI = "${@bb.utils.contains("MACHINE_FEATURES", "efi", "1", "0", d)}"
 EFI_PROVIDER ?= "grub-efi"
-EFI_CLASS = "${@base_contains("MACHINE_FEATURES", "efi", "${EFI_PROVIDER}", "", d)}"
+EFI_CLASS = "${@bb.utils.contains("MACHINE_FEATURES", "efi", "${EFI_PROVIDER}", "", d)}"
 
 # Include legacy boot if MACHINE_FEATURES includes "pcbios" or if it does not
 # contain "efi". This way legacy is supported by default if neither is
 # specified, maintaining the original behavior.
 def pcbios(d):
-    pcbios = base_contains("MACHINE_FEATURES", "pcbios", "1", "0", d)
+    pcbios = bb.utils.contains("MACHINE_FEATURES", "pcbios", "1", "0", d)
     if pcbios == "0":
-        pcbios = base_contains("MACHINE_FEATURES", "efi", "0", "1", d)
+        pcbios = bb.utils.contains("MACHINE_FEATURES", "efi", "0", "1", d)
     return pcbios
 
 PCBIOS = "${@pcbios(d)}"

@@ -16,5 +16,5 @@ inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-docs"
 
-PACKAGECONFIG ?= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
+PACKAGECONFIG ?= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,libxcb"

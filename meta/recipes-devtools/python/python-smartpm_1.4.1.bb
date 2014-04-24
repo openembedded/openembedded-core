@@ -85,16 +85,16 @@ do_install_append() {
    # Disable zypper channel support
    rm -f ${D}${libdir}/python*/site-packages/smart/plugins/zyppchannelsync.py*
 
-   if [ -z "${@base_contains('PACKAGECONFIG', 'rpm', 'rpm', '', d)}" ]; then
+   if [ -z "${@bb.utils.contains('PACKAGECONFIG', 'rpm', 'rpm', '', d)}" ]; then
       rm -f ${D}${libdir}/python*/site-packages/smart/plugins/rpmdir.py*
       rm -rf ${D}${libdir}/python*/site-packages/smart/backends/rpm
    fi
 
-   if [ -z "${@base_contains('PACKAGECONFIG', 'qt4', 'qt4', '', d)}" ]; then
+   if [ -z "${@bb.utils.contains('PACKAGECONFIG', 'qt4', 'qt4', '', d)}" ]; then
       rm -rf ${D}${libdir}/python*/site-packages/smart/interfaces/qt4
    fi
 
-   if [ -z "${@base_contains('PACKAGECONFIG', 'gtk+', 'gtk', '', d)}" ]; then
+   if [ -z "${@bb.utils.contains('PACKAGECONFIG', 'gtk+', 'gtk', '', d)}" ]; then
       rm -rf ${D}${libdir}/python*/site-packages/smart/interfaces/gtk
    fi
 }
@@ -115,9 +115,9 @@ do_install_append_class-nativesdk() {
 }
 
 PACKAGES = "${PN}-dev ${PN}-dbg ${PN}-doc smartpm \
-            ${@base_contains('PACKAGECONFIG', 'rpm', '${PN}-backend-rpm', '', d)} \
-            ${@base_contains('PACKAGECONFIG', 'qt4', '${PN}-interface-qt4', '', d)} \
-            ${@base_contains('PACKAGECONFIG', 'gtk', '${PN}-interface-gtk', '', d)} \
+            ${@bb.utils.contains('PACKAGECONFIG', 'rpm', '${PN}-backend-rpm', '', d)} \
+            ${@bb.utils.contains('PACKAGECONFIG', 'qt4', '${PN}-interface-qt4', '', d)} \
+            ${@bb.utils.contains('PACKAGECONFIG', 'gtk', '${PN}-interface-gtk', '', d)} \
             ${PN}-interface-images ${PN}"
 
 RDEPENDS_smartpm = "${PN}"

@@ -17,7 +17,7 @@ EXTRA_OECONF += "--disable-experimental \
                  --disable-vdpau --disable-apexsink"
 
 PACKAGECONFIG ??= "bzip curl \
-                   ${@base_contains('DISTRO_FEATURES', 'x11', 'rsvg', '', d)}"
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'rsvg', '', d)}"
 
 PACKAGECONFIG[bzip] = "--enable-bz2,--disable-bz2,bzip2"
 PACKAGECONFIG[curl] = "--enable-curl,--disable-curl,curl"

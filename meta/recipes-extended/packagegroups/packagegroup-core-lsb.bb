@@ -209,7 +209,7 @@ QT4PKGS = " \
     libqtxml4 \
     libqtnetwork4 \
     qt4-plugin-sqldriver-sqlite \
-    ${@base_contains("DISTRO_FEATURES", "opengl", "libqtopengl4", "", d)} \
+    ${@bb.utils.contains("DISTRO_FEATURES", "opengl", "libqtopengl4", "", d)} \
     "
 QT4PKGS_mips64 = ""
 

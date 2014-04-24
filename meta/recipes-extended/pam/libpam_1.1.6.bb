@@ -131,13 +131,13 @@ do_install() {
 	# The lsb requires unix_chkpwd has setuid permission
 	chmod 4755 ${D}${sbindir}/unix_chkpwd
 
-	if ${@base_contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 		echo "session optional pam_systemd.so" >> ${D}${sysconfdir}/pam.d/common-session
 	fi
 }
 
 python do_pam_sanity () {
-    if not base_contains('DISTRO_FEATURES', 'pam', True, False, d):
+    if not bb.utils.contains('DISTRO_FEATURES', 'pam', True, False, d):
         bb.warn("Building libpam but 'pam' isn't in DISTRO_FEATURES, PAM won't work correctly")
 }
 addtask pam_sanity before do_configure

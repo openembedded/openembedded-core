@@ -28,9 +28,9 @@ EXTRA_OECONF = "--enable-setuid-install \
                 --disable-rdp-compositor"
 
 
-PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'wayland', 'kms fbdev wayland egl', '', d)} \
-                   ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
-                   ${@base_contains('DISTRO_FEATURES', 'pam', 'launch', '', d)} \
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'kms fbdev wayland egl', '', d)} \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'launch', '', d)} \
                   "
 #
 # Compositor choices
@@ -59,7 +59,7 @@ do_install_append() {
 	rm -f ${D}/${libdir}/weston/*.la
 
 	# If X11, ship a desktop file to launch it
-	if [ "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}" = "x11" ]; then
+	if [ "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}" = "x11" ]; then
 		install -d ${D}${datadir}/applications
 		install ${WORKDIR}/weston.desktop ${D}${datadir}/applications
 

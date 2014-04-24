@@ -14,7 +14,7 @@ DEPENDS += "virtual/libx11 drm libpciaccess pixman"
 SRC_URI += "file://compat-api-Map-changes-of-DamageUnregister-API-in-1..patch \
            "
 
-PACKAGECONFIG ??= "sna udev ${@base_contains('DISTRO_FEATURES', 'opengl', 'dri', '', d)}"
+PACKAGECONFIG ??= "sna udev ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'dri', '', d)}"
 
 PACKAGECONFIG[dri] = "--enable-dri,--disable-dri,xf86driproto dri2proto"
 PACKAGECONFIG[sna] = "--enable-sna,--disable-sna"

@@ -7,7 +7,7 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG[python] = "--with-python=${WORKDIR}/python,--without-python,python"
 
 do_configure_prepend() {
-	if [ -n "${@base_contains('PACKAGECONFIG', 'python', 'python', '', d)}" ]; then
+	if [ -n "${@bb.utils.contains('PACKAGECONFIG', 'python', 'python', '', d)}" ]; then
 		cat > ${WORKDIR}/python << EOF
 #!/bin/sh
 case "\$2" in

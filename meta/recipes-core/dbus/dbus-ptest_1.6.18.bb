@@ -27,7 +27,7 @@ FILESPATH = "${FILE_DIRNAME}/dbus"
 
 inherit autotools pkgconfig gettext ptest
 
-EXTRA_OECONF_X = "${@base_contains('DISTRO_FEATURES', 'x11', '--with-x', '--without-x', d)}"
+EXTRA_OECONF_X = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', '--with-x', '--without-x', d)}"
 EXTRA_OECONF_X_class-native = "--without-x"
 
 EXTRA_OECONF = "--enable-tests \

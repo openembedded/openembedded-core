@@ -25,14 +25,14 @@ inherit distutils
 do_compile() {
     export STAGING_LIBDIR=${STAGING_LIBDIR}
     export STAGING_INCDIR=${STAGING_INCDIR}
-    export LCMS_ENABLED=${@base_contains('PACKAGECONFIG', 'lcms', 'True', 'False', d)}
+    export LCMS_ENABLED=${@bb.utils.contains('PACKAGECONFIG', 'lcms', 'True', 'False', d)}
     distutils_do_compile
 }
 
 do_install() {
     export STAGING_LIBDIR=${STAGING_LIBDIR}
     export STAGING_INCDIR=${STAGING_INCDIR}
-    export LCMS_ENABLED=${@base_contains('PACKAGECONFIG', 'lcms', 'True', 'False', d)}
+    export LCMS_ENABLED=${@bb.utils.contains('PACKAGECONFIG', 'lcms', 'True', 'False', d)}
     distutils_do_install
     install -d ${D}${datadir}/doc/${BPN}/html/
     install -m 0644 ${S}/README ${D}${datadir}/doc/${BPN}/

@@ -40,7 +40,7 @@ do_install () {
 
 # sysklogd package has no internal systemd support, so we weigh busybox's
 # sysklogd utility over it in case of systemd
-ALTERNATIVE_PRIORITY = "${@base_contains('DISTRO_FEATURES','systemd','10','100',d)}"
+ALTERNATIVE_PRIORITY = "${@bb.utils.contains('DISTRO_FEATURES','systemd','10','100',d)}"
 
 ALTERNATIVE_${PN} = "syslogd klogd syslog-init syslog-conf"
 

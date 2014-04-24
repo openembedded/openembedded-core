@@ -144,7 +144,7 @@ do_configure() {
                     config.sh-${TARGET_ARCH}-${TARGET_OS}
         fi
 
-	${@base_contains('DISTRO_FEATURES', 'largefile', '', 'do_nolargefile', d)}
+	${@bb.utils.contains('DISTRO_FEATURES', 'largefile', '', 'do_nolargefile', d)}
 
         # Update some paths in the configuration
         sed -i -e 's,@ARCH@-thread-multi,,g' \

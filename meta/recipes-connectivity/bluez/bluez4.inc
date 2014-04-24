@@ -11,8 +11,8 @@ DEPENDS = "udev libusb dbus-glib glib-2.0 libcheck readline libsndfile1"
 RDEPENDS_${PN}-dev = "bluez-hcidump"
 
 PACKAGECONFIG ??= "\
-    ${@base_contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)}\
-    ${@base_contains('DISTRO_FEATURES', 'pie', 'pie', '', d)}\
+    ${@bb.utils.contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)}\
+    ${@bb.utils.contains('DISTRO_FEATURES', 'pie', 'pie', '', d)}\
 "
 PACKAGECONFIG[alsa] = "--enable-alsa,--disable-alsa,alsa-lib"
 PACKAGECONFIG[pie] = "--enable-pie,--disable-pie,"

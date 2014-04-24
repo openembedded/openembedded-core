@@ -8,9 +8,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b4e3ffd607d6686c6cb2f63394370841"
 PACKAGECONFIG ?= "libxml2 zlib bz2"
 
 PACKAGECONFIG_append_class-target = "\
-	${@base_contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
-	${@base_contains('DISTRO_FEATURES', 'xattr', 'xattr', '', d)} \
-	${@base_contains('DISTRO_FEATURES', 'largefile', 'largefile', '', d)} \
+	${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
+	${@bb.utils.contains('DISTRO_FEATURES', 'xattr', 'xattr', '', d)} \
+	${@bb.utils.contains('DISTRO_FEATURES', 'largefile', 'largefile', '', d)} \
 "
 
 PACKAGECONFIG_append_class-nativesdk = " largefile"
