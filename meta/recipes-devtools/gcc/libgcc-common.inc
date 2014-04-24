@@ -7,6 +7,7 @@ do_configure () {
 	install -d ${D}${base_libdir} ${D}${libdir}
 	hardlinkdir ${STAGING_INCDIR_NATIVE}/${LIBGCCBUILDTREENAME}$target/ ${B}
 	mkdir -p ${B}/${BPN}
+	mkdir -p ${B}/$target/${BPN}/
 	cd ${B}/${BPN}
 	chmod a+x ${S}/${BPN}/configure
 	${S}/${BPN}/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
