@@ -12,9 +12,8 @@ SECTION = "libs"
 
 SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/${BP}.tar.bz2 \
 "
-
-SRC_URI[md5sum] = "a2b6cbd437f22dd5dc93d377696c9204"
-SRC_URI[sha256sum] = "5ded7dc3d15fb5c9230d7a224b9256b67b35fde30193b4c3a4c3f6b13110e257"
+SRC_URI[md5sum] = "60e122288c0ea4d66505d4704e376a1c"
+SRC_URI[sha256sum] = "08584ae91c98d5b14d5f2c45b01410a12b030c9397bd73135bd2155297b447db"
 
 inherit autotools pkgconfig lib_package
 
