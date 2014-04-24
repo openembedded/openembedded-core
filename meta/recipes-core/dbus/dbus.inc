@@ -25,7 +25,7 @@ INITSCRIPT_NAME = "dbus-1"
 INITSCRIPT_PARAMS = "start 02 5 3 2 . stop 20 0 1 6 ."
 
 python __anonymous() {
-    if not oe.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
+    if not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
         d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
 }
 

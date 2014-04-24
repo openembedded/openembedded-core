@@ -24,7 +24,7 @@ def base_version_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
     return oe.utils.version_less_or_equal(variable, checkvalue, truevalue, falsevalue, d)
 
 def base_contains(variable, checkvalues, truevalue, falsevalue, d):
-    return oe.utils.contains(variable, checkvalues, truevalue, falsevalue, d)
+    return bb.utils.contains(variable, checkvalues, truevalue, falsevalue, d)
 
 def base_both_contain(variable1, variable2, checkvalue, d):
     return oe.utils.both_contain(variable1, variable2, checkvalue, d)

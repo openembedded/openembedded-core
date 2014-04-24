@@ -99,7 +99,7 @@ do_install_append () {
 
 # As systemd also builds udev, skip this package if we're doing a systemd build.
 python () {
-    if oe.utils.contains ('DISTRO_FEATURES', 'systemd', True, False, d):
+    if bb.utils.contains ('DISTRO_FEATURES', 'systemd', True, False, d):
         raise bb.parse.SkipPackage("'systemd' in DISTRO_FEATURES")
 }
 do_compile_ptest() {

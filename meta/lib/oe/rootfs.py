@@ -1,6 +1,5 @@
 from abc import ABCMeta, abstractmethod
 from oe.utils import execute_pre_post_process
-from oe.utils import contains as base_contains
 from oe.package_manager import *
 from oe.manifest import *
 import oe.path
@@ -42,7 +41,7 @@ class Rootfs(object):
         pass
 
     def _insert_feed_uris(self):
-        if base_contains("IMAGE_FEATURES", "package-management",
+        if bb.utils.contains("IMAGE_FEATURES", "package-management",
                          True, False, self.d):
             self.pm.insert_feeds_uris()
 
@@ -108,7 +107,7 @@ class Rootfs(object):
 
         execute_pre_post_process(self.d, post_process_cmds)
 
-        if base_contains("IMAGE_FEATURES", "read-only-rootfs",
+        if bb.utils.contains("IMAGE_FEATURES", "read-only-rootfs",
                          True, False, self.d):
             delayed_postinsts = self._get_delayed_postinsts()
             if delayed_postinsts is not None:
@@ -130,7 +129,7 @@ class Rootfs(object):
         self._cleanup()
 
     def _uninstall_uneeded(self):
-        if base_contains("IMAGE_FEATURES", "package-management",
+        if bb.utils.contains("IMAGE_FEATURES", "package-management",
                          True, False, self.d):
             return
 

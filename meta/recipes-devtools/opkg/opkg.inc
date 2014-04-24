@@ -17,7 +17,7 @@ do_configure_prepend() {
 inherit autotools pkgconfig systemd
 
 python () {
-    if not oe.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
+    if not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
         pn = d.getVar('PN', True)
         d.setVar('SYSTEMD_SERVICE_%s' % (pn), 'opkg-configure.service')
 }

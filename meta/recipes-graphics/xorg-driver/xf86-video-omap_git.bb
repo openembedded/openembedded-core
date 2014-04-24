@@ -42,7 +42,7 @@ do_compile_prepend_armv7a () {
 }
 
 python () {
-    if not oe.utils.contains ('DISTRO_FEATURES', 'opengl', True, False, d):
+    if not bb.utils.contains ('DISTRO_FEATURES', 'opengl', True, False, d):
         raise bb.parse.SkipPackage("'opengl' not in DISTRO_FEATURES")
 }
 

@@ -17,7 +17,7 @@ PARALLEL_MAKE = ""
 inherit autotools gettext perlnative pkgconfig systemd
 
 python () {
-    if not oe.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
+    if not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
         pn = d.getVar('PN', True)
         d.setVar('SYSTEMD_SERVICE_%s' % (pn), 'dpkg-configure.service')
 }

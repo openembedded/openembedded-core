@@ -19,7 +19,7 @@ def get_gcc_fpu_setting(bb, d):
 get_gcc_fpu_setting[vardepvalue] = "${@get_gcc_fpu_setting(bb, d)}"
 
 def get_gcc_mips_plt_setting(bb, d):
-    if d.getVar('TRANSLATED_TARGET_ARCH', True) in [ 'mips', 'mipsel' ] and oe.utils.contains('DISTRO_FEATURES', 'mplt', True, False, d):
+    if d.getVar('TRANSLATED_TARGET_ARCH', True) in [ 'mips', 'mipsel' ] and bb.utils.contains('DISTRO_FEATURES', 'mplt', True, False, d):
         return "--with-mips-plt"
     return ""
 
@@ -32,7 +32,7 @@ def get_gcc_multiarch_setting(bb, d):
         "sparc":   "--enable-targets=all",
     }
 
-    if oe.utils.contains('DISTRO_FEATURES', 'multiarch', True, False, d):
+    if bb.utils.contains('DISTRO_FEATURES', 'multiarch', True, False, d):
         if target_arch in multiarch_options :
             return multiarch_options[target_arch]
     return ""
