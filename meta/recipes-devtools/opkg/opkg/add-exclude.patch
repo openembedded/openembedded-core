@@ -1,3 +1,8 @@
+From 45a1e33a048f479b15b99d09df3dd1b62fef0253 Mon Sep 17 00:00:00 2001
+From: Paul Barker <paul@paulbarker.me.uk>
+Date: Fri, 28 Mar 2014 15:20:22 +0000
+Subject: [PATCH 2/2] opkg-0.2.x: add-exclude
+
 Add a way to exclude specific packages from the install
 
 When an excluded package is required by another package an error
@@ -11,11 +16,17 @@ Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 Signed-off-by: Jonathan Liu <net147@gmail.com>
+---
+ libopkg/opkg_conf.c   |  1 +
+ libopkg/opkg_conf.h   |  2 ++
+ libopkg/pkg_depends.c | 16 ++++++++++++++++
+ src/opkg-cl.c         | 15 +++++++++++++++
+ 4 files changed, 34 insertions(+)
 
-Index: trunk/libopkg/opkg_conf.c
-===================================================================
---- trunk.orig/libopkg/opkg_conf.c
-+++ trunk/libopkg/opkg_conf.c
+diff --git a/libopkg/opkg_conf.c b/libopkg/opkg_conf.c
+index 1e65bad..9c4c854 100644
+--- a/libopkg/opkg_conf.c
++++ b/libopkg/opkg_conf.c
 @@ -442,6 +442,7 @@ opkg_conf_init(void)
  	pkg_dest_list_init(&conf->pkg_dest_list);
  	pkg_dest_list_init(&conf->tmp_dest_list);
@@ -24,11 +35,11 @@ Index: trunk/libopkg/opkg_conf.c
  
  	return 0;
  }
-Index: trunk/libopkg/opkg_conf.h
-===================================================================
---- trunk.orig/libopkg/opkg_conf.h
-+++ trunk/libopkg/opkg_conf.h
-@@ -49,6 +49,8 @@ struct opkg_conf
+diff --git a/libopkg/opkg_conf.h b/libopkg/opkg_conf.h
+index 6045a58..ad58849 100644
+--- a/libopkg/opkg_conf.h
++++ b/libopkg/opkg_conf.h
+@@ -51,6 +51,8 @@ struct opkg_conf
       pkg_dest_list_t pkg_dest_list;
       pkg_dest_list_t tmp_dest_list;
       nv_pair_list_t arch_list;
@@ -37,11 +48,11 @@ Index: trunk/libopkg/opkg_conf.h
  
       int restrict_to_default_dest;
       pkg_dest_t *default_dest;
-Index: trunk/libopkg/pkg_depends.c
-===================================================================
---- trunk.orig/libopkg/pkg_depends.c
-+++ trunk/libopkg/pkg_depends.c
-@@ -212,6 +212,22 @@ pkg_hash_fetch_unsatisfied_dependencies(
+diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
+index d2d279e..b572e18 100644
+--- a/libopkg/pkg_depends.c
++++ b/libopkg/pkg_depends.c
+@@ -212,6 +212,22 @@ pkg_hash_fetch_unsatisfied_dependencies(pkg_t * pkg, pkg_vec_t *unsatisfied,
  			 continue;
  		    }
  
@@ -64,10 +75,10 @@ Index: trunk/libopkg/pkg_depends.c
  		    opkg_msg(DEBUG, "satisfying_pkg=%p\n", satisfying_pkg);
  		    if (satisfying_pkg != NULL) {
  			 satisfier_entry_pkg = satisfying_pkg;
-Index: trunk/src/opkg-cl.c
-===================================================================
---- trunk.orig/src/opkg-cl.c
-+++ trunk/src/opkg-cl.c
+diff --git a/src/opkg-cl.c b/src/opkg-cl.c
+index 0315d41..0db2794 100644
+--- a/src/opkg-cl.c
++++ b/src/opkg-cl.c
 @@ -45,6 +45,7 @@ enum {
  	ARGS_OPT_PREFER_ARCH_TO_VERSION,
  	ARGS_OPT_ADD_ARCH,
@@ -104,10 +115,13 @@ Index: trunk/src/opkg-cl.c
  			conf->noaction = 1;
  			break;
 @@ -282,6 +296,7 @@ usage()
- 	printf("\t--offline-root <dir>	offline installation of packages.\n");
- 	printf("\t--add-arch <arch>:<prio>	Register architecture with given priority\n");
- 	printf("\t--add-dest <name>:<path>	Register destination with given path\n");
-+	printf("\t--add-exclude <name>		Register package to be excluded from install\n");
- 	printf("\t--prefer-arch-to-version\t 	Use the architecture priority package rather\n");
- 	printf("\t				than the higher version one if more\n");
- 	printf("\t				than one candidate is found.\n");
+ 	printf("\t--offline-root <dir>            offline installation of packages.\n");
+ 	printf("\t--add-arch <arch>:<prio>        Register architecture with given priority\n");
+ 	printf("\t--add-dest <name>:<path>        Register destination with given path\n");
++	printf("\t--add-exclude <name>		  Register package to be excluded from install\n");
+ 	printf("\t--prefer-arch-to-version        Use the architecture priority package rather\n");
+ 	printf("\t                                than the higher version one if more\n");
+ 	printf("\t                                than one candidate is found.\n");
+-- 
+1.9.1
+

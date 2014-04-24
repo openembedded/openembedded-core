@@ -8,5 +8,5 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
 
 S = "${WORKDIR}/${BPN}-${PV}"
 
-SRC_URI[md5sum] = "1881d170b9dfbd7ecf0aa468cb9779c0"
-SRC_URI[sha256sum] = "43c2d95e4cd3ef5e341e233e63de78698ec7522bca446972963160bb0f1e62db"
+SRC_URI[md5sum] = "b3ecef90d67d2aed2a14c2116a027482"
+SRC_URI[sha256sum] = "aa554ce7538544aac4f69e8274a0f9b8b433b8c3b1d00704bd393f713303a12b"
