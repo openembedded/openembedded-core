@@ -292,6 +292,15 @@ END
 	chmod +x $cmd
 }
 
+# Copy files/directories from $1 to $2 but using hardlinks
+# (preserve symlinks)
+hardlinkdir () {
+	from=$1
+	to=$2
+	(cd $from; find . -print0 | cpio --null -pdlu $to)
+}
+
+
 def check_app_exists(app, d):
     app = d.expand(app)
     path = d.getVar('PATH', d, True)
