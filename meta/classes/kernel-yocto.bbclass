@@ -241,7 +241,7 @@ do_kernel_configme() {
 	echo "[INFO] doing kernel configme"
 	export KMETA=${KMETA}
 
-	if [ -n ${KCONFIG_MODE} ]; then
+	if [ -n "${KCONFIG_MODE}" ]; then
 		configmeflags=${KCONFIG_MODE}
 	else
 		# If a defconfig was passed, use =n as the baseline, which is achieved
