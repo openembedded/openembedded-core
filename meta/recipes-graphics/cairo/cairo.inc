@@ -35,3 +35,5 @@ export ac_cv_lib_bfd_bfd_openr="no"
 export ac_cv_lib_lzo2_lzo2a_decompress="no"
 
 BBCLASSEXTEND = "native"
+
+CFLAGS += "-ffat-lto-objects"
