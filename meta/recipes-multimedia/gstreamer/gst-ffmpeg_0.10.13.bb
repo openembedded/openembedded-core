@@ -25,6 +25,7 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://gst-ffmpeg-CVE-2013-3674.patch \
            file://0001-avformat-mpegtsenc-Check-data-array-size-in-mpegts_w.patch \
            file://0001-vqavideo-check-chunk-sizes-before-reading-chunks.patch \
+           file://0001-avcodec-msrle-use-av_image_get_linesize-to-calculate.patch \
 "
 
 SRC_URI[md5sum] = "7f5beacaf1312db2db30a026b36888c4"
