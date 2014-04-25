@@ -1,6 +1,6 @@
 require procps.inc
 
-PR = "r11"
+PR = "r12"
 
 SRC_URI += "file://procmodule.patch \
             file://psmodule.patch \
