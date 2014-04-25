@@ -29,8 +29,15 @@ class SSHProcess(object):
         self.output = None
         self.process = None
         self.starttime = None
+        self.logfile = None
 
-    def run(self, command, timeout=None):
+    def log(self, msg):
+        if self.logfile:
+            with open(self.logfile, "a") as f:
+               f.write("%s" % msg)
+
+    def run(self, command, timeout=None, logfile=None):
+        self.logfile = logfile
         self.starttime = time.time()
         output = ''
         self.process = subprocess.Popen(command, **self.options)
@@ -45,7 +52,9 @@ class SSHProcess(object):
                         eof = True
                     else:
                         output += data
+                        self.log(data)
                         endtime = time.time() + timeout
+
 
             # process hasn't returned yet
             if not eof:
@@ -55,9 +64,12 @@ class SSHProcess(object):
                     self.process.kill()
                 except OSError:
                     pass
-                output += "\nProcess killed - no output for %d seconds. Total running time: %d seconds." % (timeout, time.time() - self.starttime)
+                lastline = "\nProcess killed - no output for %d seconds. Total running time: %d seconds." % (timeout, time.time() - self.starttime)
+                self.log(lastline)
+                output += lastline
         else:
             output = self.process.communicate()[0]
+            self.log(output.rstrip())
 
         self.status = self.process.wait()
         self.output = output.rstrip()
@@ -91,9 +103,8 @@ class SSHControl(object):
         self.log("[Running]$ %s" % " ".join(command))
 
         proc = SSHProcess()
-        status, output = proc.run(command, timeout)
+        status, output = proc.run(command, timeout, logfile=self.logfile)
 
-        self.log("%s" % output)
         self.log("[Command returned '%d' after %.2f seconds]" % (status, time.time() - proc.starttime))
 
         if status and not ignore_status:
