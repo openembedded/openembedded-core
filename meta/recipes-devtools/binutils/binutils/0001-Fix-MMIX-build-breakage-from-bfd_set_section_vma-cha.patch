@@ -1,0 +1,31 @@
+Upstream-Status: Backport
+
+From 0a09fb4a09e80c36fa3ef763ae276fd13d272a36 Mon Sep 17 00:00:00 2001
+From: Hans-Peter Nilsson <hp@bitrange.com>
+Date: Sat, 1 Feb 2014 01:11:28 +0100
+Subject: [PATCH] Fix MMIX build breakage from bfd_set_section_vma change.
+
+	* emultempl/mmix-elfnmmo.em (mmix_after_allocation): Fix typo in
+	call to bfd_set_section_vma exposed by recent bfd_set_section_vma
+	change.
+---
+ ld/ChangeLog                 |    6 ++++++
+ ld/emultempl/mmix-elfnmmo.em |    2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/ld/emultempl/mmix-elfnmmo.em b/ld/emultempl/mmix-elfnmmo.em
+index 0059792..5e9781a 100644
+--- a/ld/emultempl/mmix-elfnmmo.em
++++ b/ld/emultempl/mmix-elfnmmo.em
+@@ -102,7 +102,7 @@ mmix_after_allocation (void)
+      This section is only present when there are register symbols.  */
+   sec = bfd_get_section_by_name (link_info.output_bfd, MMIX_REG_SECTION_NAME);
+   if (sec != NULL)
+-    bfd_set_section_vma (abfd, sec, 0);
++    bfd_set_section_vma (sec->owner, sec, 0);
+ 
+   if (!_bfd_mmix_after_linker_allocation (link_info.output_bfd, &link_info))
+     {
+-- 
+1.7.10.4
+
