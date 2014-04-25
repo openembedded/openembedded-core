@@ -30,6 +30,8 @@ SRC_URI = "\
      ${BACKPORT} \
      file://binutils-fix-over-array-bounds-issue.patch \
      file://binutils-xlp-support.patch \
+     file://replace_macros_with_static_inline.patch \
+     file://0001-Fix-MMIX-build-breakage-from-bfd_set_section_vma-cha.patch \
      "
 
 BACKPORT = "\
