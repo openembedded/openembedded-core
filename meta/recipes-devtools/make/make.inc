@@ -6,6 +6,7 @@ HOMEPAGE = "http://www.gnu.org/software/make/"
 SECTION = "devel"
 
 SRC_URI = "${GNU_MIRROR}/make/make-${PV}.tar.bz2 \
+           file://doc-make.texi-fix-itemx-must-follow-item.patch \
            file://SCCS.patch"
 
 inherit autotools gettext
