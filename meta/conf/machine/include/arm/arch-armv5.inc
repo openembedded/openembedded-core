@@ -14,7 +14,7 @@ require conf/machine/include/arm/feature-arm-vfp.inc
 AVAILTUNES += "armv5 armv5t"
 ARMPKGARCH_tune-armv5 ?= "armv5"
 ARMPKGARCH_tune-armv5t ?= "armv5"
-TUNE_FEATURES_tune-armv5 ?= "armv5"
+TUNE_FEATURES_tune-armv5 ?= "arm armv5"
 TUNE_FEATURES_tune-armv5t ?= "${TUNE_FEATURES_tune-armv5} thumb"
 PACKAGE_EXTRA_ARCHS_tune-armv5 = "${PACKAGE_EXTRA_ARCHS_tune-armv4} armv5"
 PACKAGE_EXTRA_ARCHS_tune-armv5t = "${PACKAGE_EXTRA_ARCHS_tune-armv4t} armv5 armv5t"
