@@ -11,7 +11,7 @@ DEPENDS = "virtual/${TARGET_PREFIX}binutils \
            virtual/${TARGET_PREFIX}gcc-initial \
            virtual/${TARGET_PREFIX}libc-initial \
            linux-libc-headers ncurses-native \
-           kern-tools-native"
+           libgcc-initial kern-tools-native"
 
 RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
 RPROVIDES_${PN}-dev += "libc-dev virtual-libc-dev"
