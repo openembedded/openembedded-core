@@ -20,12 +20,10 @@ LIC_FILES_CHKSUM = "\
 "
 
 DEPENDS = "attr libaio libcap acl openssl"
-SRCREV = "c8b3e28097e7d3208df9daceaf92c25eae87ebf0"
+SRCREV = "f4c3bfe1eab51eb72caeb0f3336d2790c9a8bd1b"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
     file://0001-Rename-runtests_noltp.sh-script-so-have-unique-name.patch \
-    file://regen-makefile.patch \
-    file://ffsb-remove-hardcoded-configure.patch \
     file://ltp-Do-not-link-against-libfl.patch \
 "
 
@@ -46,7 +44,7 @@ do_configure_append() {
 
 # The makefiles make excessive use of make -C and several include testcases.mk
 # which triggers a build of the syscall header. To reproduce, build ltp,
-# then delete the header, then "make -j XX" and watch regen.sh run multiple 
+# then delete the header, then "make -j XX" and watch regen.sh run multiple
 # times. Its easier to generate this once here instead.
 do_compile_prepend () {
 	( make -C ${B}/testcases/kernel include/linux_syscall_numbers.h )
