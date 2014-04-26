@@ -69,17 +69,17 @@ Options:
         Conflicts with --remove-duplicated.
 
   -L, --follow-symlink
-        Rmove both the symbol link and the destination file, default: no.
+        Remove both the symbol link and the destination file, default: no.
 
   -y, --yes
         Automatic yes to prompts; assume "yes" as answer to all prompts
         and run non-interactively.
 
   -v, --verbose
-        explain what is being done
+        Explain what is being done.
 
   -D, --debug
-        show debug info, repeat for more debug info
+        Show debug info, repeat for more debug info.
 
 EOF
 }
