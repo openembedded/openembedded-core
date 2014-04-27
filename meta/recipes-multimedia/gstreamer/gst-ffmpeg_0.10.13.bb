@@ -33,6 +33,7 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0001-atrac3dec-Check-coding-mode-against-channels.patch \
            file://0001-eamad-fix-out-of-array-accesses.patch \
            file://0001-mjpegdec-check-SE.patch \
+           file://0001-alac-fix-nb_samples-order-case.patch \
 "
 
 SRC_URI[md5sum] = "7f5beacaf1312db2db30a026b36888c4"
