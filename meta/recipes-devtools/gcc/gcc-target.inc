@@ -7,8 +7,6 @@ EXTRA_OECONF_PATHS = " \
     --with-native-system-header-dir=${STAGING_DIR_TARGET}${target_includedir} \
     --with-gxx-include-dir=${includedir}/c++/"
 
-ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_INCDIR} -I${B}/gcc/include/ "
-
 PACKAGES = "\
   ${PN} ${PN}-plugins ${PN}-symlinks \
   g++ g++-symlinks \

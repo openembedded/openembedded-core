@@ -68,11 +68,6 @@ CPPFLAGS = ""
 EXTRA_OECONF_append_powerpc = " --with-long-double-128"
 EXTRA_OECONF_append_powerpc64 = " --with-long-double-128"
 
-# Used by configure to define additional values for FLAGS_FOR_TARGET -
-# passed to all the compilers.
-ARCH_FLAGS_FOR_TARGET = "${TARGET_CC_ARCH}"
-EXTRA_OEMAKE += "ARCH_FLAGS_FOR_TARGET='${ARCH_FLAGS_FOR_TARGET}'"
-
 SYSTEMHEADERS = "${target_includedir}"
 SYSTEMLIBS = "${target_base_libdir}/"
 SYSTEMLIBS1 = "${target_libdir}/"
@@ -129,7 +124,6 @@ do_configure () {
 	export CPPFLAGS_FOR_BUILD="${BUILD_CPPFLAGS}"
 	export CXXFLAGS_FOR_BUILD="${BUILD_CXXFLAGS}"
 	export LDFLAGS_FOR_BUILD="${BUILD_LDFLAGS}"
-	export ARCH_FLAGS_FOR_TARGET="${ARCH_FLAGS_FOR_TARGET}"
 	export CFLAGS_FOR_TARGET="${TARGET_CFLAGS}"
 	export CPPFLAGS_FOR_TARGET="${TARGET_CPPFLAGS}"
 	export CXXFLAGS_FOR_TARGET="${TARGET_CXXFLAGS}"
