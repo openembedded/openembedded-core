@@ -98,6 +98,14 @@ _EOF
 	mv ${B}/gcc/defaults.h.new ${B}/gcc/defaults.h
 }
 
+python do_preconfigure () {
+    import subprocess
+    cmd = d.expand('PATH=${PATH} cd ${S} && gnu-configize')
+    subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+}
+addtask do_preconfigure after do_patch before do_configure
+do_preconfigure[depends] += "gnu-config-native:do_populate_sysroot autoconf-native:do_populate_sysroot"
+
 do_configure () {
 	# Setup these vars for cross building only
 	# ... because foo_FOR_TARGET apparently gets misinterpreted inside the
@@ -126,7 +134,7 @@ do_configure () {
 	export CPPFLAGS_FOR_TARGET="${TARGET_CPPFLAGS}"
 	export CXXFLAGS_FOR_TARGET="${TARGET_CXXFLAGS}"
 	export LDFLAGS_FOR_TARGET="${TARGET_LDFLAGS}"
-	(cd ${S} && gnu-configize) || die "failure running gnu-configize"
+
 
 	oe_runconf
 }
