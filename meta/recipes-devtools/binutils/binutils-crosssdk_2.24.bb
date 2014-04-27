@@ -2,6 +2,8 @@ require binutils-cross_${PV}.bb
 
 inherit crosssdk
 
+PN = "binutils-crosssdk-${TARGET_ARCH}"
+
 PROVIDES = "virtual/${TARGET_PREFIX}binutils-crosssdk"
 
 SRC_URI += "file://relocatable_sdk.patch"

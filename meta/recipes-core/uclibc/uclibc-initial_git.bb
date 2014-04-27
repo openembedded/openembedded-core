@@ -8,8 +8,8 @@ PROVIDES = "virtual/${TARGET_PREFIX}libc-initial"
 PACKAGES = ""
 PACKAGES_DYNAMIC = ""
 
-STAGINGCC = "gcc-cross-initial"
-STAGINGCC_class-nativesdk = "gcc-crosssdk-initial"
+STAGINGCC = "gcc-cross-initial-${TARGET_ARCH}"
+STAGINGCC_class-nativesdk = "gcc-crosssdk-initial-${TARGET_ARCH}"
 
 do_install() {
 	# Install initial headers into the cross dir

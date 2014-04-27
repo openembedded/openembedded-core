@@ -9,6 +9,8 @@ python () {
         d.setVar("EXTRADEPENDS", "linux-libc-headers")
 }
 
+PN = "gcc-cross-${TARGET_ARCH}"
+
 require gcc-configure-common.inc
 
 EXTRA_OECONF += " --enable-poison-system-directories"
@@ -138,7 +140,7 @@ STOP
 INHIBIT_PACKAGE_STRIP = "1"
 
 # Compute how to get from libexecdir to bindir in python (easier than shell)
-BINRELPATH = "${@os.path.relpath(d.expand("${STAGING_DIR_NATIVE}${prefix_native}/bin/${MULTIMACH_TARGET_SYS}"), d.expand("${libexecdir}/gcc/${TARGET_SYS}/${BINV}"))}"
+BINRELPATH = "${@os.path.relpath(d.expand("${STAGING_DIR_NATIVE}${prefix_native}/bin/${TARGET_SYS}"), d.expand("${libexecdir}/gcc/${TARGET_SYS}/${BINV}"))}"
 
 do_install () {
 	( cd ${B}/${TARGET_SYS}/libgcc; oe_runmake 'DESTDIR=${D}' install-unwind_h )
@@ -177,8 +179,8 @@ do_install () {
 
 	# gcc-runtime installs libgcc into a special location in staging since it breaks doing a standalone build
 	case ${PN} in
-		*gcc-cross|*gcc-crosssdk)
-			dest=${D}/${includedir}/gcc-build-internal-${MULTIMACH_TARGET_SYS}
+		*gcc-cross-${TARGET_ARCH}|*gcc-crosssdk-${TARGET_ARCH})
+			dest=${D}/${includedir}/gcc-build-internal-${TARGET_SYS}
 			hardlinkdir . $dest
 		;;
 	esac

@@ -3,7 +3,7 @@ BPN = "libgcc"
 INHIBIT_DEFAULT_DEPS = "1"
 
 do_configure () {
-	target=`echo ${MULTIMACH_TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
+	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	install -d ${D}${base_libdir} ${D}${libdir}
 	hardlinkdir ${STAGING_INCDIR_NATIVE}/${LIBGCCBUILDTREENAME}$target/ ${B}
 	mkdir -p ${B}/${BPN}

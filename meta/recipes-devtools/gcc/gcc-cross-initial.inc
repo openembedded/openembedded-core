@@ -5,6 +5,8 @@ PACKAGES = ""
 INHIBIT_AUTOTOOLS_DEPS = "1"
 INHIBIT_DEFAULT_DEPS = "1"
 
+PN = "gcc-cross-initial-${TARGET_ARCH}"
+
 CROSS_TARGET_SYS_DIR_append = ".${PN}"
 
 # This is intended to be a -very- basic config
@@ -68,8 +70,8 @@ do_install () {
 
 	# gcc-runtime installs libgcc into a special location in staging since it breaks doing a standalone build
 	case ${PN} in
-		*gcc-cross-initial|*gcc-crosssdk-initial)
-			dest=${D}/${includedir}/gcc-build-internal-initial-${MULTIMACH_TARGET_SYS}
+		*gcc-cross-initial-${TARGET_ARCH}|*gcc-crosssdk-initial-${TARGET_ARCH})
+			dest=${D}/${includedir}/gcc-build-internal-initial-${TARGET_SYS}
 			hardlinkdir . $dest
 		;;
 	esac

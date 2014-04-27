@@ -19,6 +19,8 @@ HOST_AS_ARCH = "${BUILD_AS_ARCH}"
 
 STAGING_DIR_HOST = "${STAGING_DIR}/${HOST_ARCH}${HOST_VENDOR}-${HOST_OS}"
 
+PACKAGE_ARCH = "${BUILD_ARCH}"
+
 export PKG_CONFIG_DIR = "${STAGING_DIR}/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}${libdir}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR}/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}"
 
@@ -43,7 +45,7 @@ target_libdir = "${target_exec_prefix}/${baselib}"
 target_includedir := "${includedir}"
 
 # Overrides for paths
-CROSS_TARGET_SYS_DIR = "${MULTIMACH_TARGET_SYS}"
+CROSS_TARGET_SYS_DIR = "${TARGET_SYS}"
 prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
 base_prefix = "${STAGING_DIR_NATIVE}"
 exec_prefix = "${STAGING_DIR_NATIVE}${prefix_native}"

@@ -8,6 +8,9 @@ EXTRA_OECONF += "--without-python"
 
 GDBPROPREFIX = ""
 
+PN = "gdb-cross-${TARGET_ARCH}"
+BPN = "gdb"
+
 inherit cross
 inherit gettext
 

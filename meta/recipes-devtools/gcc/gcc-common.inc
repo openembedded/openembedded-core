@@ -7,6 +7,8 @@ NATIVEDEPS = ""
 
 inherit autotools gettext
 
+BPN = "gcc"
+
 def get_gcc_fpu_setting(bb, d):
     if d.getVar('ARMPKGSFX_EABI', True) == "hf" and d.getVar('TRANSLATED_TARGET_ARCH', True) == "arm":
         return "--with-float=hard"
