@@ -102,8 +102,16 @@ FILES_${PN}-doc = "\
   ${gcclibdir}/${TARGET_SYS}/${BINV}/include/README \
 "
 
+do_compile () {
+	oe_runmake all-host
+}
+
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install-host
+
+	# Add unwind.h, it comes from libgcc which we don't want to build again
+	install ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/unwind.h ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/include/
+
 	# Info dir listing isn't interesting at this point so remove it if it exists.
 	if [ -e "${D}${infodir}/dir" ]; then
 		rm -f ${D}${infodir}/dir
