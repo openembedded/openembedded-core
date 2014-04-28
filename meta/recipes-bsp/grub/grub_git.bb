@@ -17,7 +17,7 @@ DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_arm = "1"
 
 PV = "2.00+${SRCPV}"
-SRCREV = "0776112c5311196889a15058a3b1be4c81ba5e05"
+SRCREV = "4b8b9135f1676924a8458da528d264bbc7bbb301"
 SRC_URI = "git://git.savannah.gnu.org/grub.git \
            file://40_custom \
            file://autogen.sh-exclude-pc.patch \
