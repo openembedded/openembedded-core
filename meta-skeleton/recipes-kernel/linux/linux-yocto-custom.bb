@@ -32,6 +32,16 @@
 #   patches: patches can be merged into to the source git tree itself,
 #            added via the SRC_URI, or controlled via a BSP
 #            configuration.
+#
+#   defconfig: When a defconfig is provided, the linux-yocto configuration
+#              uses the filename as a trigger to use a 'allnoconfig' baseline
+#              before merging the defconfig into the build. 
+#
+#              If the defconfig file was created with make_savedefconfig, 
+#              not all options are specified, and should be restored with their
+#              defaults, not set to 'n'. To properly expand a defconfig like
+#              this, specify: KCONFIG_MODE="--alldefconfig" in the kernel
+#              recipe.
 #   
 #   example configuration addition:
 #            SRC_URI += "file://smp.cfg"
