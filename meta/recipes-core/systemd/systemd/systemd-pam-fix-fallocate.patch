@@ -27,7 +27,7 @@ Index: systemd-209/src/journal/journal-file.c
          /* Note that the glibc fallocate() fallback is very
             inefficient, hence we try to minimize the allocation area
             as we can. */
-+#ifdef HAVE_POSIX_ALLOCATE
++#ifdef HAVE_POSIX_FALLOCATE
          r = posix_fallocate(f->fd, old_size, new_size - old_size);
          if (r != 0)
                  return -r;
@@ -66,7 +66,7 @@ Index: systemd-209/src/journal/journald-kmsg.c
          }
 -
 -        if (posix_fallocate(fd, 0, sizeof(uint64_t)) < 0) {
-+#ifdef HAVE_POSIX_ALLOCATE
++#ifdef HAVE_POSIX_FALLOCATE
 +        r = posix_fallocate(fd, 0, sizeof(uint64_t));
 +#else
 +	/* Use good old method to write zeros into the journal file
