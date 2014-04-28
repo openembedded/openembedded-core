@@ -14,16 +14,16 @@ BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=fontconfig"
 LICENSE = "MIT-style & MIT & PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7a0449e9bc5370402a94c00204beca3d \
                     file://src/fcfreetype.c;endline=45;md5=5d9513e3196a1fbfdfa94051c09dfc84 \
-                    file://src/fccache.c;beginline=1131;endline=1146;md5=754c7b855210ee746e5f0b840fad9a9f"
+                    file://src/fccache.c;beginline=1143;endline=1158;md5=0326cfeb4a7333dd4dd25fbbc4b9f27f"
 
 SECTION = "libs"
 
 DEPENDS = "expat freetype zlib"
 
 SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
-           file://sysroot-arg.patch"
-SRC_URI[md5sum] = "84278204cd7f36adbea7ad8094e039ac"
-SRC_URI[sha256sum] = "274c047487b90dacbaa55f4d70b8cdcd556944e7251ce9cf1de442c00a16343b"
+           "
+SRC_URI[md5sum] = "e75e303b4f7756c2b16203a57ac87eba"
+SRC_URI[sha256sum] = "b6b066c7dce3f436fdc0dfbae9d36122b38094f4f53bd8dffd45e195b0540d8d"
 
 PACKAGES =+ "fontconfig-utils"
 FILES_${PN} =+ "${datadir}/xml/*"
