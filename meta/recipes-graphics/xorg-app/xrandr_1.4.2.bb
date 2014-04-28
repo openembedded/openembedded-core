@@ -11,5 +11,5 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=fe1608bdb33cf8c62a4438f7d34679b3"
 DEPENDS += "libxrandr libxrender"
 PE = "1"
 
-SRC_URI[md5sum] = "52c3de0297bf45be6a189dc2e0515638"
-SRC_URI[sha256sum] = "67b554ab975652778bef587f86dab7fec8cb95dfd21c11d98a203dac5c241e50"
+SRC_URI[md5sum] = "78fd973d9b532106f8777a3449176148"
+SRC_URI[sha256sum] = "b2e76ee92ff827f1c52ded7c666fe6f2704ca81cdeef882397da4e3e8ab490bc"
