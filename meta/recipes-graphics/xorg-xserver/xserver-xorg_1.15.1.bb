@@ -8,8 +8,8 @@ SRC_URI += "file://crosscompile.patch \
             file://xorg-CVE-2013-6424.patch \
            "
 
-SRC_URI[md5sum] = "c2ace3697b32414094cf8c597c39d7d9"
-SRC_URI[sha256sum] = "613b2f2e7ee2a06d2f8e862c836dc70d319c52f1537749e027398f40086aabb8"
+SRC_URI[md5sum] = "e4c70262ed89764be8f8f5d699ed9227"
+SRC_URI[sha256sum] = "626db6882602ebe1ff81f7a4231c7ccc6ceb5032f2b5b3954bf749e1567221e2"
 
 # These extensions are now integrated into the server, so declare the migration
 # path for in-place upgrades.
