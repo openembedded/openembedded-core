@@ -1,6 +1,6 @@
 require oprofileui.inc
 
-SRCREV = "f168b8bfdc63660033de1739c6ddad1abd97c379"
+SRCREV = "389e1875af4721d52c7e65cf9cfffb69b0ed6a59"
 PV = "0.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
