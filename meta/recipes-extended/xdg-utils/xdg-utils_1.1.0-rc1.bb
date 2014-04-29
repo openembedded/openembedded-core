@@ -11,12 +11,15 @@ xdg-icon-resource \
 xdg-mime \       
 xdg-open \     
 xdg-screensaver \ 
+xdg-terminal \
 "
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a5367a90934098d6b05af3b746405014"
 
-SRC_URI = "http://portland.freedesktop.org/download/${BPN}-${PV}.tar.gz"
+SRC_URI = "http://portland.freedesktop.org/download/${BPN}-${PV}.tar.gz \
+           file://0001-Reinstate-xdg-terminal.patch \
+          "
 
 SRC_URI[md5sum] = "fadf5e7a08e0526fc60dbe3e5b7ef8d6"
 SRC_URI[sha256sum] = "7b05558ae4bb8ede356863cae8c42e3e012aa421bf9d45130a570fd209d79102"
