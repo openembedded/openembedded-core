@@ -18,8 +18,8 @@ SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             ${OLDHOST} \
 "
 
-SRC_URI[md5sum] = "88d46ae23ca599ac5af9cf96b531590f"
-SRC_URI[sha256sum] = "835eb6232cfab0118ef2e4fd649de0ba9f5bd1b8cbf9a7d4d84594541dec8410"
+SRC_URI[md5sum] = "3f191727a0d28f7204b755cf1b6ea0aa"
+SRC_URI[sha256sum] = "1243d6c07f1c5b38aa4c3814c81a71c24cba7dafe08942916bf216a90a460ff0"
 
 CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=ms"
 

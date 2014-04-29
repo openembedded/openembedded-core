@@ -13,22 +13,21 @@ Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
  libfdisk/src/sun.c | 5 ++---
  1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/libfdisk/src/sun.c b/libfdisk/src/sun.c
-index e73c701..f7899ec 100644
---- a/libfdisk/src/sun.c
-+++ b/libfdisk/src/sun.c
-@@ -427,9 +427,8 @@ static int sun_verify_disklabel(struct fdisk_context *cxt)
-         else
-             array[i] = -1;
+Index: util-linux-2.24.2/libfdisk/src/sun.c
+===================================================================
+--- util-linux-2.24.2.orig/libfdisk/src/sun.c
++++ util-linux-2.24.2/libfdisk/src/sun.c
+@@ -431,10 +431,9 @@ static int sun_verify_disklabel(struct f
      }
+     verify_sun_starts = starts;
+ 
 -    qsort_r(array,ARRAY_SIZE(array),sizeof(array[0]),
 -	  (int (*)(const void *,const void *,void *)) verify_sun_cmp,
 -	  verify_sun_starts);
+-
 +    qsort(array,ARRAY_SIZE(array),sizeof(array[0]),
-+	  (int (*)(const void *,const void *)) verify_sun_cmp);
- 
++         (int (*)(const void *,const void *)) verify_sun_cmp);
++ 
      if (array[0] == -1) {
  	fdisk_info(cxt, _("No partitions defined."));
--- 
-1.8.2.1
-
+ 	return 0;
