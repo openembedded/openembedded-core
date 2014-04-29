@@ -19,6 +19,8 @@ ARM_THUMB_SUFFIX .= "${@bb.utils.contains('TUNE_FEATURES', 'armv7m', 't2', '', d
 ARM_M_OPT = "${@bb.utils.contains('TUNE_FEATURES', 'arm', '${ARM_THUMB_OPT}', 'thumb', d)}"
 python () {
     selected = d.getVar('ARM_INSTRUCTION_SET', True)
+    if selected == None:
+        return
     used = d.getVar('ARM_M_OPT', True)
     if selected != used:
         pn = d.getVar('PN', True)
