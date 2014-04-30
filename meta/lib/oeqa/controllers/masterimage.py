@@ -70,10 +70,12 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget):
         # the command should take as the last argument "off" and "on" and "cycle" (off, on)
         self.powercontrol_cmd = d.getVar("TEST_POWERCONTROL_CMD", True) or None
         self.powercontrol_args = d.getVar("TEST_POWERCONTROL_EXTRA_ARGS") or ""
+
+        self.serialcontrol_cmd = d.getVar("TEST_SERIALCONTROL_CMD", True) or None
+        self.serialcontrol_args = d.getVar("TEST_SERIALCONTROL_EXTRA_ARGS") or ""
+
         self.origenv = os.environ
-        if self.powercontrol_cmd:
-            if self.powercontrol_args:
-                self.powercontrol_cmd = "%s %s" % (self.powercontrol_cmd, self.powercontrol_args)
+        if self.powercontrol_cmd or self.serialcontrol_cmd:
             # the external script for controlling power might use ssh
             # ssh + keys means we need the original user env
             bborigenv = d.getVar("BB_ORIGENV", False) or {}
@@ -81,7 +83,14 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget):
                 val = bborigenv.getVar(key, True)
                 if val is not None:
                     self.origenv[key] = str(val)
+
+        if self.powercontrol_cmd:
+            if self.powercontrol_args:
+                self.powercontrol_cmd = "%s %s" % (self.powercontrol_cmd, self.powercontrol_args)
             self.power_ctl("on")
+        if self.serialcontrol_cmd:
+            if self.serialcontrol_args:
+                self.serialcontrol_cmd = "%s %s" % (self.serialcontrol_cmd, self.serialcontrol_args)
 
     def power_ctl(self, msg):
         if self.powercontrol_cmd:
@@ -172,4 +181,3 @@ class GummibootTarget(MasterImageHardwareTarget):
         self.power_cycle(self.master)
         # there are better ways than a timeout but this should work for now
         time.sleep(120)
-
