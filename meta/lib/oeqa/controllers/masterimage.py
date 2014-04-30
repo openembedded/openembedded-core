@@ -133,9 +133,6 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget):
         bb.plain("%s - reboot/powercycle target" % self.pn)
         self.power_cycle(self.connection)
 
-    def restart(self):
-        pass
-
 
 class GummibootTarget(MasterImageHardwareTarget):
 

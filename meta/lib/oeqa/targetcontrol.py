@@ -70,9 +70,9 @@ class BaseTarget(object):
     def stop(self):
         pass
 
-    @abstractmethod
     def restart(self, params=None):
-        pass
+        self.stop()
+        self.start(params)
 
     def run(self, cmd, timeout=None):
         return self.connection.run(cmd, timeout)
@@ -170,6 +170,3 @@ class SimpleRemoteTarget(BaseTarget):
         self.connection = None
         self.ip = None
         self.server_ip = None
-
-    def restart(self, params=None):
-        pass
