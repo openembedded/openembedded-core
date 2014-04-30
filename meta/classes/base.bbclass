@@ -521,10 +521,10 @@ python () {
         bad_licenses = (d.getVar('INCOMPATIBLE_LICENSE', True) or "").split()
 
         check_license = False if pn.startswith("nativesdk-") else True
-        for t in ["-native", "-cross", "-cross-initial", "-cross-intermediate",
-              "-crosssdk-intermediate", "-crosssdk", "-crosssdk-initial",
-              "-cross-canadian-" + d.getVar('TRANSLATED_TARGET_ARCH', True)]:
-            if pn.endswith(t):
+        for t in ["-native", "-cross-${TARGET_ARCH}", "-cross-initial-${TARGET_ARCH}",
+              "-crosssdk-${SDK_ARCH}", "-crosssdk-initial-${SDK_ARCH}",
+              "-cross-canadian-${TRANSLATED_TARGET_ARCH}"]:
+            if pn.endswith(d.expand(t)):
                 check_license = False
 
         if check_license and bad_licenses:
