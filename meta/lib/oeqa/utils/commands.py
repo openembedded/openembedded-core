@@ -1,4 +1,4 @@
-# Copyright (c) 2013 Intel Corporation
+# Copyright (c) 2013-2014 Intel Corporation
 #
 # Released under the MIT license (see COPYING.MIT)
 
@@ -14,6 +14,7 @@ import signal
 import subprocess
 import threading
 import logging
+from oeqa.utils import CommandError
 
 class Command(object):
     def __init__(self, command, bg=False, timeout=None, data=None, **options):
@@ -84,8 +85,8 @@ class Command(object):
 class Result(object):
     pass
 
-def runCmd(command, ignore_status=False, timeout=None, **options):
 
+def runCmd(command, ignore_status=False, timeout=None, assert_error=True, **options):
     result = Result()
 
     cmd = Command(command, timeout=timeout, **options)
@@ -97,7 +98,10 @@ def runCmd(command, ignore_status=False, timeout=None, **options):
     result.pid = cmd.process.pid
 
     if result.status and not ignore_status:
-        raise AssertionError("Command '%s' returned non-zero exit status %d:\n%s" % (command, result.status, result.output))
+        if assert_error:
+            raise AssertionError("Command '%s' returned non-zero exit status %d:\n%s" % (command, result.status, result.output))
+        else:
+            raise CommandError(result.status, command, result.output)
 
     return result
 

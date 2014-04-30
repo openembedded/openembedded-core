@@ -20,6 +20,7 @@ import subprocess
 import oeqa.targetcontrol
 import oeqa.utils.sshcontrol as sshcontrol
 import oeqa.utils.commands as commands
+from oeqa.utils import CommandError
 
 from abc import ABCMeta, abstractmethod
 
@@ -94,7 +95,10 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget):
     def power_ctl(self, msg):
         if self.powercontrol_cmd:
             cmd = "%s %s" % (self.powercontrol_cmd, msg)
-            commands.runCmd(cmd, preexec_fn=os.setsid, env=self.origenv)
+            try:
+                commands.runCmd(cmd, assert_error=False, preexec_fn=os.setsid, env=self.origenv)
+            except CommandError as e:
+                bb.fatal(str(e))
 
     def power_cycle(self, conn):
         if self.powercontrol_cmd:
