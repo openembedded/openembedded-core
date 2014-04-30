@@ -52,6 +52,7 @@ class Sdk(object):
         # Link the ld.so.cache file into the hosts filesystem
         link_name = os.path.join(self.sdk_output, self.sdk_native_path,
                                  self.sysconfdir, "ld.so.cache")
+        bb.utils.mkdirhier(os.path.dirname(link_name))
         os.symlink("/etc/ld.so.cache", link_name)
 
         execute_pre_post_process(self.d, self.d.getVar('SDK_POSTPROCESS_COMMAND', True))
