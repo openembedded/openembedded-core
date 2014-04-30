@@ -87,7 +87,6 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget):
         if self.powercontrol_cmd:
             if self.powercontrol_args:
                 self.powercontrol_cmd = "%s %s" % (self.powercontrol_cmd, self.powercontrol_args)
-            self.power_ctl("on")
         if self.serialcontrol_cmd:
             if self.serialcontrol_args:
                 self.serialcontrol_cmd = "%s %s" % (self.serialcontrol_cmd, self.serialcontrol_args)
@@ -108,11 +107,23 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget):
             if status != 0:
                 bb.error("Failed rebooting target and no power control command defined. You need to manually reset the device.\n%s" % output)
 
+    def _wait_until_booted(self):
+        ''' Waits until the target device has booted (if we have just power cycled it) '''
+        # Subclasses with better methods of determining boot can override this
+        time.sleep(120)
+
     def deploy(self):
-        bb.plain("%s - deploying image on target" % self.pn)
         # base class just sets the ssh log file for us
         super(MasterImageHardwareTarget, self).deploy()
         self.master = sshcontrol.SSHControl(ip=self.ip, logfile=self.sshlog, timeout=600, port=self.port)
+        status, output = self.master.run("cat /etc/masterimage")
+        if status != 0:
+            # We're not booted into the master image, so try rebooting
+            bb.plain("%s - booting into the master image" % self.pn)
+            self.power_ctl("cycle")
+            self._wait_until_booted()
+
+        bb.plain("%s - deploying image on target" % self.pn)
         status, output = self.master.run("cat /etc/masterimage")
         if status != 0:
             bb.fatal("No ssh connectivity or target isn't running a master image.\n%s" % output)
