@@ -209,8 +209,8 @@ def testimage_main(d):
 
     target.deploy()
 
+    target.start()
     try:
-        target.start()
         if export:
             exportTests(d,tc)
         else:
