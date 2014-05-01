@@ -33,8 +33,7 @@ COMPATIBLE_HOST = '(x86_64.*|i.86.*)-(linux|freebsd.*)'
 FILES_${PN}-dbg += "${libdir}/${BPN}/i386-pc/.debug"
 
 
-inherit autotools
-inherit gettext
+inherit autotools gettext texinfo
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[grub-mount] = "--enable-grub-mount,--disable-grub-mount,fuse"

@@ -29,7 +29,7 @@ SRC_URI[md5sum] = "a69b575d4a633bdd9118f3a4a1e97766"
 SRC_URI[sha256sum] = "f70a38c8d9751f442679bfe61852bba8545af4d4355d037630997c2f37f2895b"
 
 
-inherit autotools gettext
+inherit autotools gettext texinfo
 BBCLASSEXTEND = "native"
 
 DEPENDS = "libunistring bdwgc gmp libtool libffi"

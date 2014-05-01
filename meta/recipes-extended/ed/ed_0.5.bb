@@ -11,7 +11,7 @@ SRC_URI = "http://download.savannah.gnu.org/releases-noredirect/ed/ed-${PV}.tar.
 SRC_URI[md5sum] = "4ee21e9dcc9b5b6012c23038734e1632"
 SRC_URI[sha256sum] = "edef2bbde0fbf0d88232782a0eded323f483a0519d6fde9a3b1809056fd35f3e"
 
-inherit autotools
+inherit autotools texinfo
 
 EXTRA_OECONF = "'CC=${CC}' 'CXX=${CXX}' 'CFLAGS=${CFLAGS}' 'CXXFLAGS=${CXXFLAGS}' 'CPPFLAGS=${CPPFLAGS}' 'LDFLAGS=${LDFLAGS}'"
 

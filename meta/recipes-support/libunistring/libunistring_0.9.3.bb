@@ -28,5 +28,5 @@ SRC_URI[sha256sum] = "610d3ec724fbdaa654afe3cff20b9f4d504be3fd296fded2e0f7f76404
 
 PR = "r3"
 
-inherit autotools
+inherit autotools texinfo
 BBCLASSEXTEND = "native nativesdk"

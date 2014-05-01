@@ -33,7 +33,7 @@ do_compile_prepend () {
 	./config.status
 }
 
-inherit autotools
+inherit autotools texinfo
 EXTRA_AUTORECONF = "--exclude=libtoolize"
 
 DEPENDS = "libtool-native"

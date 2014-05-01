@@ -6,7 +6,7 @@ SECTION = "utils"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
-inherit update-alternatives
+inherit texinfo update-alternatives
 
 ALTERNATIVE_${PN} = "time"
 ALTERNATIVE_PRIORITY = "100"

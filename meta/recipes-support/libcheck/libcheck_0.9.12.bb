@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "c7d47e55e133a0ca19a52e08a99333ac55cb22618b53719b7f4117a187
 
 S = "${WORKDIR}/check-${PV}"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig texinfo
 
 CACHED_CONFIGUREVARS += "ac_cv_path_AWK_PATH=${bindir}/gawk"
 

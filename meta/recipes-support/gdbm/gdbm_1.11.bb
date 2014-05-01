@@ -10,7 +10,7 @@ SRC_URI = "${GNU_MIRROR}/gdbm/gdbm-${PV}.tar.gz"
 SRC_URI[md5sum] = "72c832680cf0999caedbe5b265c8c1bd"
 SRC_URI[sha256sum] = "8d912f44f05d0b15a4a5d96a76f852e905d051bb88022fcdfd98b43be093e3c3"
 
-inherit autotools gettext lib_package
+inherit autotools gettext texinfo lib_package
 
 # Needed for dbm python module
 EXTRA_OECONF = "-enable-libgdbm-compat"

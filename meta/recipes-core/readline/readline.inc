@@ -18,7 +18,7 @@ SRC_URI = "${GNU_MIRROR}/readline/${BPN}-${PV}.tar.gz;name=archive \
 
 S = "${WORKDIR}/${BPN}-${PV}"
 
-inherit autotools
+inherit autotools texinfo
 
 LEAD_SONAME = "libreadline.so"
 

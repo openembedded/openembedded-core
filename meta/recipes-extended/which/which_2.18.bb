@@ -19,7 +19,7 @@ SRC_URI[sha256sum] = "9445cd7e02ec0c26a44fd56098464ded064ba5d93dd2e15ec12410ba56
 
 DEPENDS = "cwautomacros-native"
 
-inherit autotools update-alternatives
+inherit autotools texinfo update-alternatives
 
 do_configure_prepend() {
 	OLD="@ACLOCAL_CWFLAGS@"

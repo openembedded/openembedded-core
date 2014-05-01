@@ -7,7 +7,7 @@ DEPENDS = "openssl zlib libpcre"
 
 INC_PR = "r16"
 
-inherit autotools gettext update-alternatives
+inherit autotools gettext texinfo update-alternatives
 
 EXTRA_OECONF = "--enable-ipv6 --with-libssl-prefix=${STAGING_DIR_HOST} \
                 --with-ssl=openssl --disable-rpath --disable-iri \

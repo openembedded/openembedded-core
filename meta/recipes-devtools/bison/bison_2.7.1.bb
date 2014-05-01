@@ -28,7 +28,7 @@ LDFLAGS_prepend_libc-uclibc = " -lrt "
 DEPENDS_class-native = "gettext-minimal-native"
 SRC_URI_class-native = "${BASE_SRC_URI}"
 
-inherit autotools gettext
+inherit autotools gettext texinfo
 acpaths = "-I ${S}/m4"
 
 do_install_append_class-native() {

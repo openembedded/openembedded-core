@@ -31,7 +31,7 @@ SRC_URI = "${GNU_MIRROR}/mtools/mtools-${PV}.tar.bz2 \
            file://no-x11.gplv3.patch"
 
 
-inherit autotools
+inherit autotools texinfo
 
 EXTRA_OECONF = "--without-x"
 

@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3231f57e8fce0f62f81b03107e788888 \
                     file://lib/idna.h;endline=21;md5=f73089b7f52dd2cb3540e274bd76106d \
                     file://src/idn.c;endline=20;md5=d7797e6cc3a7b48e6050fc0d27104595"
 
-inherit pkgconfig autotools gettext
+inherit pkgconfig autotools gettext texinfo
 
 SRC_URI = "${GNU_MIRROR}/libidn/${BPN}-${PV}.tar.gz \
            file://libidn_fix_for_automake-1.12.patch \

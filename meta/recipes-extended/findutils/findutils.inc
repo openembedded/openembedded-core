@@ -9,7 +9,7 @@ SECTION = "console/utils"
 
 SRC_URI = "${GNU_MIRROR}/findutils/findutils-${PV}.tar.gz"
 
-inherit autotools gettext update-alternatives
+inherit autotools gettext texinfo update-alternatives
 
 ALTERNATIVE_${PN} = "find xargs"
 ALTERNATIVE_PRIORITY = "100"

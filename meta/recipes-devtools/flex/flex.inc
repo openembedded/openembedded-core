@@ -10,7 +10,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/flex/flex-${PV}.tar.bz2 \
            file://run-ptest \
 "
 
-inherit autotools gettext ptest
+inherit autotools gettext texinfo ptest
 
 
 M4 = "${bindir}/m4"

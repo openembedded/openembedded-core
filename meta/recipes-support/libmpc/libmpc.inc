@@ -4,4 +4,4 @@ HOMEPAGE = "http://www.multiprecision.org/"
 LICENSE = "LGPLv3"
 SECTION = "libs"
 
-inherit autotools
+inherit autotools texinfo

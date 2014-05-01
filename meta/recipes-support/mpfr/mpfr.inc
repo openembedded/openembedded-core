@@ -3,4 +3,4 @@ HOMEPAGE = "http://www.mpfr.org/"
 LICENSE = "LGPLv3+"
 SECTION = "devel"
 
-inherit autotools
+inherit autotools texinfo

@@ -4,7 +4,7 @@ sdiff, and cmp utilities. These programs are usually \
 used for creating patch files."
 SECTION = "base"
 
-inherit autotools update-alternatives gettext
+inherit autotools texinfo update-alternatives gettext
 
 # diffutils assumes non-glibc compilation with uclibc and
 # this causes it to generate its own implementations of

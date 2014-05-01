@@ -10,7 +10,7 @@ SRC_URI = "ftp://ftp.gmplib.org/pub/gmp-${PV}/gmp-${PV}${REVISION}.tar.bz2 \
 	   file://configure.patch \
 	   file://amd64.patch "
 
-inherit autotools
+inherit autotools texinfo
 
 ARM_INSTRUCTION_SET = "arm"
 

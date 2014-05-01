@@ -21,7 +21,7 @@ LDFLAGS_prepend_libc-uclibc = " -lrt -lpthread "
 SRC_URI[md5sum] = "241aba309d07aa428252c74b40a818ef"
 SRC_URI[sha256sum] = "d1a4e452d60eb407ab0305976529a45c18124bd518d976971ac6dc7aa8b4c5d7"
 
-inherit autotools
+inherit autotools texinfo
 
 EXTRA_OECONF += "--without-lispdir \
                  --disable-csharp \

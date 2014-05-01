@@ -30,7 +30,7 @@ SRC_URI[sha256sum] = "0bf850d1a079fb5a61f0a47b1a9efd35eb44032255375e1cedb0253bc2
 
 PARALLEL_MAKE = ""
 
-inherit autotools
+inherit autotools texinfo
 
 EXTRA_OECONF += "--without-lisp --disable-csharp --disable-openmp --without-emacs"
 acpaths = '-I ${S}/autoconf-lib-link/m4/ \

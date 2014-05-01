@@ -52,9 +52,7 @@ python __anonymous () {
     d.setVar("GRUB_IMAGE", grubimage)
 }
 
-inherit autotools-brokensep
-inherit gettext
-inherit deploy
+inherit autotools-brokensep gettext texinfo deploy
 
 CACHED_CONFIGUREVARS += "ac_cv_path_HELP2MAN="
 EXTRA_OECONF = "--with-platform=efi --disable-grub-mkfont \

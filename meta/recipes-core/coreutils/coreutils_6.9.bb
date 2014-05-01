@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
 PR = "r5"
 DEPENDS_class-native = "gettext-native"
 
-inherit autotools gettext
+inherit autotools gettext texinfo
 
 SRC_URI_BASE = "${GNU_MIRROR}/coreutils/${BP}.tar.bz2 \
            file://gnulib_m4.patch \

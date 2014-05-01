@@ -38,7 +38,7 @@ SRC_URI[sha256sum] = "af083a73425d664d4607ef6c6564fd9319a0e47ee7c105259a45356cb8
 
 S = "${WORKDIR}/mtools-${PV}"
 
-inherit autotools
+inherit autotools texinfo
 
 EXTRA_OECONF = "--without-x"
 

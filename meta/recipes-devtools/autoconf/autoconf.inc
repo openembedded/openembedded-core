@@ -29,7 +29,7 @@ RDEPENDS_${PN}_class-native = "m4-native gnu-config-native"
 SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.gz \
 	   file://program_prefix.patch"
 
-inherit autotools
+inherit autotools texinfo
 
 do_configure() {
 	oe_runconf

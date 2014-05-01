@@ -17,7 +17,7 @@ SRC_URI[sha256sum] = "1dddde1400c3bcb7749d398071af88c3e4754058d2d4c0b3696c2f82dc
 
 EXTRA_OECONF += "--disable-builddir"
 
-inherit autotools
+inherit autotools texinfo
 
 FILES_${PN}-dev += "${libdir}/libffi-${PV}"
 

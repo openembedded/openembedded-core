@@ -7,7 +7,7 @@ SECTION = "devel"
 
 SRC_URI = "${GNU_MIRROR}/automake/automake-${PV}.tar.gz"
 
-inherit autotools
+inherit autotools texinfo
 
 do_configure() {
 	oe_runconf

@@ -20,7 +20,7 @@ SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "52202fe462770fa6be1bb667bd6cf30c"
 SRC_URI[sha256sum] = "38c8a2bb9223d1fb1b10bdd607cf44830afc92fd451ac4cd07619bf92bdd3132"
 
-inherit autotools gettext
+inherit autotools gettext texinfo
 
 EXTRA_OECONF = "--disable-perl-regexp --disable-ncurses"
 

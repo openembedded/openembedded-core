@@ -6,7 +6,7 @@ SECTION = "base"
 
 SRC_URI = "${GNU_MIRROR}/tar/tar-${PV}.tar.bz2"
 
-inherit autotools gettext
+inherit autotools gettext texinfo
 
 EXTRA_OECONF += "DEFAULT_RMT_DIR=${base_sbindir}"
 

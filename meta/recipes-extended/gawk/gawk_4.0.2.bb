@@ -23,7 +23,7 @@ SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
 SRC_URI[md5sum] = "4d505dc2c9f1eb3e9f8d6cac87d4bd1a"
 SRC_URI[sha256sum] = "6e0de117c3713aa8d7fa347fc9fd645b10038ae49d8cf947d8c1d51cbb76141a"
 
-inherit autotools gettext update-alternatives
+inherit autotools gettext texinfo update-alternatives
 
 PACKAGES += "gawk-common pgawk dgawk"
 

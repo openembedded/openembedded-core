@@ -5,7 +5,7 @@ LICENSE = "GPL"
 
 NATIVEDEPS = ""
 
-inherit autotools gettext
+inherit autotools gettext texinfo
 
 BPN = "gcc"
 

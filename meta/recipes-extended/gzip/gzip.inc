@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 
 SRC_URI = "${GNU_MIRROR}/gzip/${BP}.tar.gz"
 
-inherit autotools
+inherit autotools texinfo
 
 do_install_append () {
 	# Rename and move files into /bin (FHS), which is typical place for gzip

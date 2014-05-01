@@ -22,7 +22,7 @@ SRC_URI[sha256sum] = "5e9cc1f91eaf016e5033d85b9b893fd6d3ffaca532a48de1082df9b942
 
 EXTRA_OECONF = "--disable-device-mapper"
 
-inherit autotools pkgconfig gettext ptest
+inherit autotools pkgconfig gettext texinfo ptest
 
 BBCLASSEXTEND = "native"
 

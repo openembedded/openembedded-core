@@ -10,7 +10,7 @@ PR = "r1"
 
 DEPENDS = "libgpg-error"
 
-inherit autotools binconfig pkgconfig
+inherit autotools binconfig pkgconfig texinfo
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://ksba-add-pkgconfig-support.patch"

@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a \
                     file://src/idn.c;beginline=6;endline=18;md5=56c89e359652a71cda128d75f0ffdac4"
 PR = "r1"
 
-inherit pkgconfig autotools gettext
+inherit pkgconfig autotools gettext texinfo
 
 SRC_URI = "http://alpha.gnu.org/gnu/libidn/${BPN}-${PV}.tar.gz"
 

@@ -10,7 +10,7 @@ SRC_URI = "${GNU_MIRROR}/sed/sed-${PV}.tar.gz"
 SRC_URI[md5sum] = "4111de4faa3b9848a0686b2f260c5056"
 SRC_URI[sha256sum] = "fea0a94d4b605894f3e2d5572e3f96e4413bcad3a085aae7367c2cf07908b2ff"
 
-inherit autotools update-alternatives gettext
+inherit autotools texinfo update-alternatives gettext
 
 EXTRA_OECONF = "--disable-acl"
 
