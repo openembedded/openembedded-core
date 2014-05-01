@@ -7,6 +7,8 @@ EXTRA_OECONF_PATHS = " \
     --with-native-system-header-dir=${STAGING_DIR_TARGET}${target_includedir} \
     --with-gxx-include-dir=${includedir}/c++/"
 
+EXTRA_OECONF_FPU = "${@get_gcc_fpu_setting(bb, d)}"
+
 PACKAGES = "\
   ${PN} ${PN}-plugins ${PN}-symlinks \
   g++ g++-symlinks \

@@ -61,7 +61,7 @@ EXTRA_OECONF_append_libc-uclibc        = " --enable-__cxa_atexit"
 EXTRA_OECONF_append_mips64    = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
 EXTRA_OECONF_append_mips64el    = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
 
-EXTRA_OECONF_FPU = "${@get_gcc_fpu_setting(bb, d)}"
+EXTRA_OECONF_FPU ??= ""
 CPPFLAGS = ""
 
 # powerpc needs this to comply with the ABI
