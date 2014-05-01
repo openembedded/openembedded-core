@@ -284,7 +284,7 @@ def buildcfg_neededvars(d):
         bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
 
 addhandler base_eventhandler
-base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.BuildStarted"
+base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.BuildStarted bb.event.RecipePreFinalise"
 python base_eventhandler() {
     if isinstance(e, bb.event.ConfigParsed):
         e.data.setVar("NATIVELSBSTRING", lsb_distro_identifier(e.data))
@@ -309,6 +309,18 @@ python base_eventhandler() {
 
         statusheader = e.data.getVar('BUILDCFG_HEADER', True)
         bb.plain('\n%s\n%s\n' % (statusheader, '\n'.join(statuslines)))
+
+    # This code is to silence warnings where the SDK variables overwrite the 
+    # target ones and we'd see dulpicate key names overwriting each other
+    # for various PREFERRED_PROVIDERS
+    if isinstance(e, bb.event.RecipePreFinalise):
+        if e.data.getVar("TARGET_PREFIX", True) == e.data.getVar("SDK_PREFIX", True):
+            e.data.delVar("PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}binutils")
+            e.data.delVar("PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-initial")
+            e.data.delVar("PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc")
+            e.data.delVar("PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++")
+            e.data.delVar("PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}compilerlibs")
+
 }
 
 addtask configure after do_patch
