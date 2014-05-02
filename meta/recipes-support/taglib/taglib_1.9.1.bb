@@ -1,6 +1,6 @@
 SUMMARY = "Library for reading and editing the meta-data of popular audio formats"
 SECTION = "libs/multimedia"
-HOMEPAGE = "http://developer.kde.org/~wheeler/taglib.html"
+HOMEPAGE = "http://taglib.github.io/"
 LICENSE = "LGPLv2.1 | MPL-1"
 LIC_FILES_CHKSUM = "file://COPYING.LGPL;md5=4fbd65380cdd255951079008b364516c \
                     file://COPYING.MPL;md5=bfe1f75d606912a4111c90743d6c7325 \
@@ -8,15 +8,11 @@ LIC_FILES_CHKSUM = "file://COPYING.LGPL;md5=4fbd65380cdd255951079008b364516c \
 
 DEPENDS = "zlib"
 
-PR = "r1"
-# http://developer.kde.org/~wheeler/files/src/taglib-${PV}.tar.gz
-SRC_URI = "https://github.com/downloads/taglib/taglib/taglib-1.8.tar.gz \
-           "
+SRC_URI = "http://taglib.github.io/releases/${BP}.tar.gz"
+SRC_URI[md5sum] = "0d35df96822bbd564c5504cb3c2e4d86"
+SRC_URI[sha256sum] = "72d371cd1419a87ae200447a53bff2be219283071e80fd12337928cc967dc71a"
 
-SRC_URI[md5sum] = "dcb8bd1b756f2843e18b1fdf3aaeee15"
-SRC_URI[sha256sum] = "66d33481703c90236a0a9d1c38fd81b584ca7109ded049225f5463dcaffc209a"
-
-S = "${WORKDIR}/taglib-${PV}"
+S = "${WORKDIR}/${BP}"
 
 inherit cmake pkgconfig binconfig
 
