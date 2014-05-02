@@ -9,7 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.bz2 \
-	    file://mdadm-3.2.2_fix_for_x32.patch \
+           file://mdadm-3.2.2_fix_for_x32.patch \
+           file://gcc-4.9.patch \
 	  "
 
 SRC_URI[md5sum] = "8ac04259cdd74b4566c3b6dea9414b57"
