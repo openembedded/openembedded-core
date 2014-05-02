@@ -1,0 +1,123 @@
+Upstream-Status: Backport
+
+From 63b5692aace5ff6022f892822b4bfdc51ed25bfb Mon Sep 17 00:00:00 2001
+From: Alan Modra <amodra@gmail.com>
+Date: Fri, 2 May 2014 07:54:08 -0500
+Subject: [PATCH] Tidy powerpc64 bfd target check
+
+Testing for a bfd_target vector might (will!) break.  See
+https://sourceware.org/ml/binutils/2014-04/msg00283.html
+
+It's safer to ask BFD for the target name.  I left the direct target
+vector checks in configure tests, and updated them, even though the
+target vector is no longer used in oprofile code, because a run-time
+configure test for powerpc64 support in bfd:
+       #include <bfd.h>
+       int main(void)
+       { return !bfd_find_target("elf64-powerpc", (void *)0); }
+unfortunately isn't possible when cross-compiling.
+
+The bfd_target vector tests could be omitted if we aren't bothered by
+the small runtime overhead of a strncmp on targets other than
+powerpc64.
+
+        * libutil++/bfd_support.cpp (get_synth_symbols): Don't check for
+        ppc64 target vector, use bfd_get_target to return the target
+        name instead.
+        * m4/binutils.m4: Modernize bfd_get_synthetic_symtab checks to
+        use AC_LINK_IFELSE.  Check for either powerpc_elf64_vec or
+        bfd_elf64_powerpc_vec.
+
+Signed-off-by: Alan Modra <amodra@gmail.com>
+---
+ libutil++/bfd_support.cpp |   10 +++++++--
+ m4/binutils.m4            |   50 ++++++++++++++++++++++-----------------------
+ 2 files changed, 33 insertions(+), 27 deletions(-)
+
+Index: oprofile-0.9.9/libutil++/bfd_support.cpp
+===================================================================
+--- oprofile-0.9.9.orig/libutil++/bfd_support.cpp	2013-07-29 08:55:06.000000000 -0700
++++ oprofile-0.9.9/libutil++/bfd_support.cpp	2014-05-02 09:12:05.761146347 -0700
+@@ -633,10 +633,16 @@
+ 
+ bool bfd_info::get_synth_symbols()
+ {
+-	extern const bfd_target bfd_elf64_powerpc_vec;
+-	extern const bfd_target bfd_elf64_powerpcle_vec;
+-	bool is_elf64_powerpc_target = (abfd->xvec == &bfd_elf64_powerpc_vec)
+-		|| (abfd->xvec == &bfd_elf64_powerpcle_vec);
++	const char* targname = bfd_get_target(abfd);
++	// Match elf64-powerpc and elf64-powerpc-freebsd, but not
++	// elf64-powerpcle.  elf64-powerpcle is a different ABI without
++	// function descriptors, so we don't need the synthetic
++	// symbols to have function code marked by a symbol.
++	bool is_elf64_powerpc_target = (!strncmp(targname, "elf64-powerpc", 13)
++					&& (targname[13] == 0
++					    || targname[13] == '-'));
++
++
+ 
+ 	if (!is_elf64_powerpc_target)
+ 		return false;
+Index: oprofile-0.9.9/m4/binutils.m4
+===================================================================
+--- oprofile-0.9.9.orig/m4/binutils.m4	2013-07-29 08:55:07.000000000 -0700
++++ oprofile-0.9.9/m4/binutils.m4	2014-05-02 09:07:32.471148147 -0700
+@@ -22,32 +22,32 @@
+ 
+ AC_LANG_PUSH(C)
+ # Determine if bfd_get_synthetic_symtab macro is available
+-OS="`uname`"
+-if test "$OS" = "Linux"; then
+-	AC_MSG_CHECKING([whether bfd_get_synthetic_symtab() exists in BFD library])
+-	rm -f test-for-synth
+-	AC_LANG_CONFTEST(
+-		[AC_LANG_PROGRAM([[#include <bfd.h>]],
+-			[[asymbol * synthsyms;	bfd * ibfd = 0; 
+-			long synth_count = bfd_get_synthetic_symtab(ibfd, 0, 0, 0, 0, &synthsyms);
+-			extern const bfd_target bfd_elf64_powerpc_vec;
+-			extern const bfd_target bfd_elf64_powerpcle_vec;
+-			char * ppc_name = bfd_elf64_powerpc_vec.name;
+-			char * ppcle_name = bfd_elf64_powerpcle_vec.name;
+-			printf("%s %s\n", ppc_name, ppcle_name);]])
+-		])
+-	$CC conftest.$ac_ext $CFLAGS $LDFLAGS $LIBS -o  test-for-synth > /dev/null 2>&1
+-	if test -f test-for-synth; then
+-		echo "yes"
+-		SYNTHESIZE_SYMBOLS='1'
+-	else
+-		echo "no"
+-		SYNTHESIZE_SYMBOLS='0'
+-	fi
+-	AC_DEFINE_UNQUOTED(SYNTHESIZE_SYMBOLS, $SYNTHESIZE_SYMBOLS, [Synthesize special symbols when needed])
+-	rm -f test-for-synth*
++AC_MSG_CHECKING([whether bfd_get_synthetic_symtab() exists in BFD library])
++AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <bfd.h>
++	]],
++	[[asymbol * synthsyms;	bfd * ibfd = 0;
++	long synth_count = bfd_get_synthetic_symtab(ibfd, 0, 0, 0, 0, &synthsyms);
++	extern const bfd_target powerpc_elf64_vec;
++	char *ppc_name = powerpc_elf64_vec.name;
++	printf("%s\n", ppc_name);
++	]])],
++	[AC_MSG_RESULT([yes])
++	SYNTHESIZE_SYMBOLS=2],
++	[AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <bfd.h>
++		]],
++		[[asymbol * synthsyms;	bfd * ibfd = 0;
++		long synth_count = bfd_get_synthetic_symtab(ibfd, 0, 0, 0, 0, &synthsyms);
++		extern const bfd_target bfd_elf64_powerpc_vec;
++		char *ppc_name = bfd_elf64_powerpc_vec.name;
++		printf("%s\n", ppc_name);
++		]])],
++		[AC_MSG_RESULT([yes])
++		SYNTHESIZE_SYMBOLS=1],
++		[AC_MSG_RESULT([no])
++		SYNTHESIZE_SYMBOLS=0])
++	])
++AC_DEFINE_UNQUOTED(SYNTHESIZE_SYMBOLS, $SYNTHESIZE_SYMBOLS, [Synthesize special symbols when needed])
+ 
+-fi
+ AC_LANG_POP(C)
+ ]
+ )
