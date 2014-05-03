@@ -63,7 +63,7 @@ def get_tune_parameters(tune, d):
     retdict['package_extra_archs'] = localdata.getVar('PACKAGE_EXTRA_ARCHS', True)
     return retdict
 
-get_tune_parameters[vardepsexclude] = "AVAILTUNES TUNE_CCARGS"
+get_tune_parameters[vardepsexclude] = "AVAILTUNES TUNE_CCARGS OVERRIDES TUNE_FEATURES BASE_LIB BASELIB TUNE_ARCH ABIEXTENSION TARGET_FPU TUNE_PKGARCH PACKAGE_EXTRA_ARCHS"
 
 DEBIANNAME_${MLPREFIX}libgcc = "libgcc1"
 
