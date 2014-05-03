@@ -11,6 +11,7 @@ SRC_URI += "file://procmodule.patch \
             file://60_linux_version_init.patch \
             file://procps-3.2.7-top-remcpu.patch \
             file://procps-3.2.8-ps-cgroup.patch \
+            file://detect_bitness.patch \
            "
 
 SRC_URI[md5sum] = "9532714b6846013ca9898984ba4cd7e0"
