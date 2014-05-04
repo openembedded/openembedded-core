@@ -29,11 +29,11 @@ class SStateTests(SStateBase):
             self.assertTrue(not file_tracker , msg="Found sstate files in the wrong place for: %s" % ', '.join(map(str, targets)))
 
     def test_sstate_creation_distro_specific_pass(self):
-        targetarch = get_bb_var('TARGET_ARCH')
+        targetarch = get_bb_var('TUNE_ARCH')
         self.run_test_sstate_creation(['binutils-cross-'+ targetarch, 'binutils-native'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)
 
     def test_sstate_creation_distro_specific_fail(self):
-        targetarch = get_bb_var('TARGET_ARCH')
+        targetarch = get_bb_var('TUNE_ARCH')
         self.run_test_sstate_creation(['binutils-cross-'+ targetarch, 'binutils-native'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True, should_pass=False)
 
     def test_sstate_creation_distro_nonspecific_pass(self):
@@ -61,14 +61,14 @@ class SStateTests(SStateBase):
         self.assertTrue(not tgz_removed, msg="do_cleansstate didn't remove .tgz sstate files for: %s" % ', '.join(map(str, targets)))
 
     def test_cleansstate_task_distro_specific_nonspecific(self):
-        targetarch = get_bb_var('TARGET_ARCH')
+        targetarch = get_bb_var('TUNE_ARCH')
         self.run_test_cleansstate_task(['binutils-cross-' + targetarch, 'binutils-native', 'eglibc-initial'], distro_specific=True, distro_nonspecific=True, temp_sstate_location=True)
 
     def test_cleansstate_task_distro_nonspecific(self):
         self.run_test_cleansstate_task(['eglibc-initial'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True)
 
     def test_cleansstate_task_distro_specific(self):
-        targetarch = get_bb_var('TARGET_ARCH')
+        targetarch = get_bb_var('TUNE_ARCH')
         self.run_test_cleansstate_task(['binutils-cross-'+ targetarch, 'binutils-native', 'eglibc-initial'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)
 
 
@@ -99,11 +99,11 @@ class SStateTests(SStateBase):
         self.assertTrue(created_once == [], msg="The following sstate files ware created only in the second run: %s" % ', '.join(map(str, created_once)))
 
     def test_rebuild_distro_specific_sstate_cross_native_targets(self):
-        targetarch = get_bb_var('TARGET_ARCH')
+        targetarch = get_bb_var('TUNE_ARCH')
         self.run_test_rebuild_distro_specific_sstate(['binutils-cross-' + targetarch, 'binutils-native'], temp_sstate_location=True)
 
     def test_rebuild_distro_specific_sstate_cross_target(self):
-        targetarch = get_bb_var('TARGET_ARCH')
+        targetarch = get_bb_var('TUNE_ARCH')
         self.run_test_rebuild_distro_specific_sstate(['binutils-cross-' + targetarch], temp_sstate_location=True)
 
     def test_rebuild_distro_specific_sstate_native_target(self):
