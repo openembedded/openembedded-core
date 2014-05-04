@@ -20,7 +20,8 @@ Before=getty.target
 IgnoreOnIsolate=yes
 
 [Service]
-ExecStart=-/sbin/agetty --keep-baud %I @BAUDRATE@ $TERM
+Environment="TERM=xterm"
+ExecStart=-/sbin/agetty -8 --keep-baud %I @BAUDRATE@ $TERM
 Type=idle
 Restart=always
 RestartSec=0
