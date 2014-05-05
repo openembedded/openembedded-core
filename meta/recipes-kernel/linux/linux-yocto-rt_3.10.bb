@@ -5,7 +5,7 @@ KBRANCH_qemuppc = "standard/preempt-rt/qemuppc"
 
 SRCREV_machine ?= "8aa9023c5e2e2ca4180e971da9a2c139d5b3c79e"
 SRCREV_machine_qemuppc ?= "3dd7fd5d191245ab92889e69060ff732bdec770b"
-SRCREV_meta ?= "1eb79862c2959cfa305773e7f785d6d1810bf190"
+SRCREV_meta ?= "617c6158c3d5b931f0d6131e0b0a7b374c792599"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.10.git;bareclone=1;branch=${KBRANCH},meta;name=machine,meta"
 
