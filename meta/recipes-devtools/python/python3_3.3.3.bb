@@ -8,6 +8,7 @@ DISTRO_SRC_URI ?= "file://sitecustomize.py"
 DISTRO_SRC_URI_linuxstdbase = ""
 SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.bz2 \
 file://12-distutils-prefix-is-inside-staging-area.patch \
+file://python-config.patch \
 file://000-cross-compile.patch \
 file://020-dont-compile-python-files.patch \
 file://030-fixup-include-dirs.patch \
