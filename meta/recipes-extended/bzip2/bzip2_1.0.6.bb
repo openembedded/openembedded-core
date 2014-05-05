@@ -11,7 +11,7 @@ PR = "r5"
 SRC_URI = "http://www.bzip.org/${PV}/${BPN}-${PV}.tar.gz \
            file://configure.ac \
            file://run-ptest \
-	   file://Makefile.am"
+           file://Makefile.am"
 
 SRC_URI[md5sum] = "00b516f4704d4a7cb50a1d97e6e8e15b"
 SRC_URI[sha256sum] = "a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd"
@@ -35,6 +35,7 @@ do_extraunpack () {
 addtask extraunpack after do_unpack before do_patch
 
 do_install_ptest () {
+	cp -f ${B}/Makefile ${D}${PTEST_PATH}/Makefile
 	sed -i -e "s|^Makefile:|_Makefile:|" ${D}${PTEST_PATH}/Makefile
 }
 
