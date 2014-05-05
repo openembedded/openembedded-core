@@ -43,7 +43,10 @@ distutils_do_install() {
 
         # support filenames with *spaces*
         find ${D} -name "*.py" -print0 | while read -d $'\0' i ; do \
-            sed -i -e s:${D}::g "$i"
+            # only modify file if it contains path to avoid recompilation on the target
+            if grep -q "${D}" "$i"; then
+                sed -i -e s:${D}::g "$i"
+            fi
         done
 
         if test -e ${D}${bindir} ; then	
