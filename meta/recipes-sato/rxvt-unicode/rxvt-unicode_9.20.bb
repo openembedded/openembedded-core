@@ -16,8 +16,8 @@ SRC_URI = "http://dist.schmorp.de/rxvt-unicode/Attic/rxvt-unicode-${PV}.tar.bz2 
 	   file://rxvt.desktop \
 	   file://rxvt.png"
 
-SRC_URI[md5sum] = "45ad197eb9b5a840c0f65e3a8131921c"
-SRC_URI[sha256sum] = "d9237cf1973af461ecbeeb708e4d00893294771558e8338b4f33418ed52d3241"
+SRC_URI[md5sum] = "4a5b823f08d21036f94a6c51e94d025b"
+SRC_URI[sha256sum] = "e73e13fe64b59fd3c8e6e20c00f149d388741f141b8155e4700d3ed40aa94b4e"
 
 inherit autotools update-alternatives
 
