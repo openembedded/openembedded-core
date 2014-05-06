@@ -10,10 +10,11 @@ inherit autotools
 
 DEPENDS = "glib-2.0 util-linux popt"
 
-SRCREV = "a386e24609752742b100120db6798d311fab512a"
-PV = "1.1.1+git${SRCPV}"
+SRCREV = "66c2a20b4391fb5c7f870aeb0dde854f0ae1fc79"
+PV = "1.2.1+git${SRCPV}"
 
-SRC_URI = "git://git.efficios.com/babeltrace.git"
+SRC_URI = "git://git.efficios.com/babeltrace.git;branch=stable-1.2 \
+           file://0001-Fix-Support-out-of-tree-builds-in-babeltrace.patch"
 
 S = "${WORKDIR}/git"
 
