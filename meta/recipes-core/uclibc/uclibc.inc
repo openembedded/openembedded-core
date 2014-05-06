@@ -81,6 +81,7 @@ configmangle = '/^KERNEL_HEADERS/d; \
                 s,^DOSTRIP.*,# DOSTRIP is not set,g; \
                 /_[EO]*ABI/d; \
                 /HAS_FPU/d; \
+                ${@["","s,.*MULTILIB_DIR.*,MULTILIB_DIR=\"${baselib}\",;"][d.getVar("baselib", True) != "lib"]} \
                '
 OE_FEATURES := "${@features_to_uclibc_conf(d)}"
 OE_DEL      := "${@features_to_uclibc_del(d)}"

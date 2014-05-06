@@ -123,6 +123,7 @@ UCLIBC_HAS_GNU_GLOB=y
 SHARED_LIB_LOADER_PREFIX="/lib"
 RUNTIME_PREFIX="/"
 DEVEL_PREFIX="//usr"
+MULTILIB_DIR="lib"
 
 #
 # Security options
