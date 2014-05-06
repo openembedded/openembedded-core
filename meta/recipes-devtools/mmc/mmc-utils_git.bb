@@ -8,8 +8,8 @@ SRCREV = "11f2ceabc4ad3f0dd568e0ce68166e4803e0615b"
 
 PV = "0.1"
 
-SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/cjb/mmc-utils.git;protocol=git;branch=${BRANCH}"
-
+SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/cjb/mmc-utils.git;protocol=git;branch=${BRANCH} \
+           file://0001-mmc.h-don-t-include-asm-generic-int-ll64.h.patch"
 
 S = "${WORKDIR}/git"
 
