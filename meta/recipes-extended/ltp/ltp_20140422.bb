@@ -36,6 +36,8 @@ TARGET_CC_ARCH += "${LDFLAGS}"
 export prefix = "/opt/ltp"
 export exec_prefix = "/opt/ltp"
 
+EXTRA_OECONF = " --with-power-management-testsuite --with-realtime-testsuite "
+
 # ltp doesn't regenerate ffsb-6.0-rc2 configure and hardcode configure call.
 # we explicitly force regeneration of that directory and pass configure options.
 do_configure_append() {
