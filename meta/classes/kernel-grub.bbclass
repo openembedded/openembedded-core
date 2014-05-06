@@ -67,7 +67,7 @@ pkg_postinst_kernel-image_prepend () {
 		if [ "${grubcfg##*/}" = "grub.cfg" ]; then
 			cat "$grubcfg"
 		elif [ "${grubcfg##*/}" = "menu.list" ]; then
-			cat "$grubcfg" | sed -e '/^default/d' -e '/^timeout/d'
+			sed -e '/^default/d' -e '/^timeout/d' "$grubcfg"
 		fi
 	}
 
