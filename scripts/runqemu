@@ -355,10 +355,10 @@ setup_path_vars() {
 
         MACHINE=$MACHINE bitbake -e > $BITBAKE_ENV_TMPFILE
         if [ -z "$OE_TMPDIR" ] ; then
-            OE_TMPDIR=`cat $BITBAKE_ENV_TMPFILE | sed -n 's/^TMPDIR=\"\(.*\)\"/\1/p'`
+            OE_TMPDIR=`sed -n 's/^TMPDIR=\"\(.*\)\"/\1/p' $BITBAKE_ENV_TMPFILE`
         fi
         if [ -z "$DEPLOY_DIR_IMAGE" ] ; then
-            DEPLOY_DIR_IMAGE=`cat $BITBAKE_ENV_TMPFILE | sed -n 's/^DEPLOY_DIR_IMAGE=\"\(.*\)\"/\1/p'`
+            DEPLOY_DIR_IMAGE=`sed -n 's/^DEPLOY_DIR_IMAGE=\"\(.*\)\"/\1/p' $BITBAKE_ENV_TMPFILE`
         fi
         if [ -z "$OE_TMPDIR" ]; then
             # Check for errors from bitbake that the user needs to know about
