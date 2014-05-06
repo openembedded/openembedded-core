@@ -13,8 +13,8 @@ SRC_URI = "${GNU_MIRROR}/libtasn1/libtasn1-${PV}.tar.gz \
            file://dont-depend-on-help2man.patch \
            "
 
-SRC_URI[md5sum] = "21ec021c534b0f30b2834ce233c70f15"
-SRC_URI[sha256sum] = "f353507a458fe2372b791016a056c95946eebfc7256b49013851f134a5e6acc8"
+SRC_URI[md5sum] = "62c76352d0e17df1c082fe1c38bad5cf"
+SRC_URI[sha256sum] = "d7fcffbc08b6413533b817d4ede5c2eadcb3dcb21c71cc91de6ece25191519ed"
 
 inherit autotools texinfo binconfig lib_package
 
