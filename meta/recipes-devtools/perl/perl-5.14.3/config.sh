@@ -856,7 +856,7 @@ FileCache Filter/Simple Getopt/Long HTTP/Tiny I18N/Collate I18N/LangTags \
 IO/Compress IO/Zlib IPC/Cmd IPC/Open2 IPC/Open3 JSON/PP Locale/Codes \
 Locale/Maketext Locale/Maketext/Simple Log/Message Log/Message/Simple \
 Math/BigInt Math/BigRat Math/Complex Memoize Module/Build Module/CoreList \
-Module/Load Module/Load/Conditional Module/Loaded Module/Pluggable NEXT Net/Ping \
+Module/Load Module/Load/Conditional Module/Loaded Module/Metadata Module/Pluggable NEXT Net/Ping \
 Object/Accessor Package/Constants Params/Check Parse/CPAN/Meta Perl/OSType \
 PerlIO/via/QuotedPrint Pod/Escapes Pod/Html Pod/LaTeX Pod/Parser Pod/Perldoc \
 Pod/Plainer Pod/Simple Safe SelfLoader Shell Switch Term/ANSIColor Term/Cap \
