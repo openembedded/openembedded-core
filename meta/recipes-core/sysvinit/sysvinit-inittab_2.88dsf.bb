@@ -54,7 +54,7 @@ if [ "x$D" = "x" ] && [ -e /proc/consoles ]; then
 	for i in $tmp
 	do
 		j=`echo ${i} | sed s/^.*\;//g`
-		if [ -z "`cat /proc/consoles | grep ${j}`" ]; then
+		if [ -z "`grep ${j} /proc/consoles`" ]; then
 			sed -i /^.*${j}$/d /etc/inittab
 		fi
 	done
