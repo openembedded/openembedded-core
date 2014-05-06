@@ -46,12 +46,12 @@ CFLAGS += "-DSFTPSERVER_PATH=\\"${libdir}/openssh/sftp-server\\""
 
 do_install() {
 	install -d ${D}${sysconfdir} \
-		   ${D}${sysconfdir}/init.d \
-		   ${D}${sysconfdir}/default \
-		   ${D}${sysconfdir}/dropbear \
-                   ${D}${bindir} \
-		   ${D}${sbindir} \
-		   ${D}${localstatedir}
+		${D}${sysconfdir}/init.d \
+		${D}${sysconfdir}/default \
+		${D}${sysconfdir}/dropbear \
+		${D}${bindir} \
+		${D}${sbindir} \
+		${D}${localstatedir}
 
 	install -m 0755 dropbearmulti ${D}${sbindir}/
 	ln -s ${sbindir}/dropbearmulti ${D}${bindir}/dbclient
@@ -60,11 +60,11 @@ do_install() {
 	do
 		ln -s ./dropbearmulti ${D}${sbindir}/$i
 	done
-	cat ${WORKDIR}/init | sed -e 's,/etc,${sysconfdir},g' \
-				  -e 's,/usr/sbin,${sbindir},g' \
-				  -e 's,/var,${localstatedir},g' \
-				  -e 's,/usr/bin,${bindir},g' \
-				  -e 's,/usr,${prefix},g' > ${D}${sysconfdir}/init.d/dropbear
+	sed -e 's,/etc,${sysconfdir},g' \
+		-e 's,/usr/sbin,${sbindir},g' \
+		-e 's,/var,${localstatedir},g' \
+		-e 's,/usr/bin,${bindir},g' \
+		-e 's,/usr,${prefix},g' ${WORKDIR}/init > ${D}${sysconfdir}/init.d/dropbear
 	chmod 755 ${D}${sysconfdir}/init.d/dropbear
 	if [ "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}" = "pam" ]; then
 		install -d ${D}${sysconfdir}/pam.d
@@ -77,9 +77,9 @@ do_install() {
 	install -m 0644 ${WORKDIR}/dropbear@.service ${D}${systemd_unitdir}/system
 	install -m 0644 ${WORKDIR}/dropbear.socket ${D}${systemd_unitdir}/system
 	sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
-	       -e 's,@BINDIR@,${bindir},g' \
-	       -e 's,@SBINDIR@,${sbindir},g' \
-	       ${D}${systemd_unitdir}/system/dropbear.socket ${D}${systemd_unitdir}/system/*.service
+		-e 's,@BINDIR@,${bindir},g' \
+		-e 's,@SBINDIR@,${sbindir},g' \
+		${D}${systemd_unitdir}/system/dropbear.socket ${D}${systemd_unitdir}/system/*.service
 }
 
 inherit update-alternatives
