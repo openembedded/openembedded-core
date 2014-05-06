@@ -26,7 +26,8 @@ python gcc_multilib_setup() {
 
     bb.utils.remove(build_conf_dir, True)
     ml_globs = ('%s/*/t-linux64' % src_conf_dir,
-                '%s/*/linux64.h' % src_conf_dir)
+                '%s/*/linux64.h' % src_conf_dir,
+                '%s/linux.h' % src_conf_dir)
 
     # copy the target multilib config files to ${B}
     for ml_glob in ml_globs:
@@ -93,6 +94,14 @@ python gcc_multilib_setup() {
                         r'\1' + wrap_libdir(libdirx32) + r'\3'),
                     (r'^(#define\s*GLIBC_DYNAMIC_LINKERN32\s*)(\S+)(\s*\".*\")$',
                         r'\1' + wrap_libdir(libdirn32) + r'\3'),
+                    (r'^(#define\s*UCLIBC_DYNAMIC_LINKER32\s*)(\S+)(\s*\".*\")$',
+                        r'\1' + wrap_libdir(libdir32) + r'\3'),
+                    (r'^(#define\s*UCLIBC_DYNAMIC_LINKER64\s*)(\S+)(\s*\".*\")$',
+                        r'\1' + wrap_libdir(libdir64) + r'\3'),
+                    (r'^(#define\s*UCLIBC_DYNAMIC_LINKERN32\s*)(\S+)(\s*\".*\")$',
+                        r'\1' + wrap_libdir(libdirn32) + r'\3'),
+                    (r'^(#define\s*UCLIBC_DYNAMIC_LINKER\s*)(\S+)(\s*\".*\")$',
+                        r'\1' + wrap_libdir(libdir32) + r'\3'),
                 ]
 
                 for (i, line) in enumerate(filelines):
