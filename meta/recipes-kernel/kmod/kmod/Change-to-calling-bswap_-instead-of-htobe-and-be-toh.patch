@@ -8,6 +8,8 @@ available on older versions of glibc, For example, shipped on Centos 5.5.
 
 Change to directly calling bswap_* as defined in+byteswap.h.
 
+Upstream-Status: Inappropriate
+
 Signed-off-by: Ting Liu <b28495@freescale.com>
 ---
  libkmod/libkmod-signature.c |    3 ++-
