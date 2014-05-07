@@ -17,8 +17,8 @@ GNOME_COMPRESS_TYPE = "xz"
 SRC_URI += "file://gtk-option.patch \
             file://vapigen.m4"
 
-SRC_URI[archive.md5sum] = "a31eb5d66c3fe94d888a6b17a287ea42"
-SRC_URI[archive.sha256sum] = "8813b4fe776d5e7acbce28bacbaed30ccb0cec3734eb3632c711a16ebe2961d7"
+SRC_URI[archive.md5sum] = "acdecdb9f08f3bf662a68bf7dafb8b82"
+SRC_URI[archive.sha256sum] = "48049b643294636df7de1a4b997414d699666f5dc44776945c218a257d2a291c"
 
 EXTRA_OECONF = "--disable-introspection --disable-vala"
 

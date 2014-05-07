@@ -1,3 +1,6 @@
+Upstream-Status: Submitted [https://bugzilla.gnome.org/show_bug.cgi?id=712693]
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
 From 18917f7fd3160afe06019f4b6234aeb78a3fdb4e Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
 Date: Tue, 19 Nov 2013 16:00:29 +0000
