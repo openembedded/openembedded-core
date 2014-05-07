@@ -18,6 +18,7 @@ SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz;name=libtar \
            file://ansidecl.patch \
            file://runtest.patch \
            file://run-ptest \
+           file://libxml2-CVE-2014-0191-fix.patch \
           "
 
 inherit autotools pkgconfig binconfig pythonnative ptest
