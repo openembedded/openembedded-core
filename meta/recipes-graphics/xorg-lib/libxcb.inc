@@ -10,10 +10,11 @@ BBCLASSEXTEND = "native nativesdk"
 SECTION = "x11/libs"
 LICENSE = "MIT-X"
 
-DEPENDS = "xcb-proto xproto libxau libxslt-native xcb-proto-native libpthread-stubs"
+DEPENDS = "xcb-proto xproto libxau xcb-proto-native libpthread-stubs"
 
 SRC_URI = "http://xcb.freedesktop.org/dist/libxcb-${PV}.tar.bz2 \
-           file://xcbincludedir.patch"
+           file://xcbincludedir.patch \
+           file://disable-check.patch"
 
 PACKAGES_DYNAMIC = "^libxcb-.*"
 
