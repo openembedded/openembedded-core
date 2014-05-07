@@ -6,6 +6,7 @@ import shutil
 import multiprocessing
 import re
 import bb
+import tempfile
 
 
 # this can be used by all PM backends to create the index files in parallel
@@ -411,15 +412,21 @@ class DpkgPkgsList(PkgsList):
             output = tmp_output
         elif format == "deps":
             opkg_query_cmd = bb.utils.which(os.getenv('PATH'), "opkg-query-helper.py")
+            file_out = tempfile.NamedTemporaryFile()
+            file_out.write(output)
+            file_out.flush()
 
             try:
-                output = subprocess.check_output("echo -e '%s' | %s" %
-                                                 (output, opkg_query_cmd),
+                output = subprocess.check_output("cat %s | %s" %
+                                                 (file_out.name, opkg_query_cmd),
                                                  stderr=subprocess.STDOUT,
                                                  shell=True)
             except subprocess.CalledProcessError as e:
+                file_out.close()
                 bb.fatal("Cannot compute packages dependencies. Command '%s' "
                          "returned %d:\n%s" % (e.cmd, e.returncode, e.output))
+
+            file_out.close()
 
         return output
 
