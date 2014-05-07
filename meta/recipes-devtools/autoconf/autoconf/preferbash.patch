@@ -8,6 +8,8 @@ This patch puts bash first in the search results which avoids the bash/dash conf
 
 RP 2012/9/23
 
+Upstream-Status: Inappropriate [OE specific configuration]
+
 Index: autoconf-2.69/lib/m4sugar/m4sh.m4
 ===================================================================
 --- autoconf-2.69.orig/lib/m4sugar/m4sh.m4	2012-03-07 17:35:26.000000000 +0000

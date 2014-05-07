@@ -11,6 +11,8 @@ The easiest way to avoid this is to list the dependencies explictly.
 
 RP 28/2/2014
 
+Upstream-Status: Pending
+
 Index: Python-3.3.3/Makefile.pre.in
 ===================================================================
 --- Python-3.3.3.orig/Makefile.pre.in	2014-02-27 14:04:38.268339533 +0000

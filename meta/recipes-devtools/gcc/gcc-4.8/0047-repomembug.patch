@@ -31,7 +31,7 @@ RP 2013/10/9
 
 [YOCTO #5133]
 
-Upstream-State: Pending
+Upstream-Status: Pending
 
 Index: gcc-4.8.1/gcc/toplev.c
 ===================================================================
