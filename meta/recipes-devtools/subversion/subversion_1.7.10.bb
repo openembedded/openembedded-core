@@ -16,6 +16,7 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://neon.m4-fix-includes-and-cflags.patch \
            file://subversion-CVE-2013-4505.patch \
            file://subversion-CVE-2013-4131.patch \
+           file://subversion-CVE-2013-4277.patch \
 "
 SRC_URI[md5sum] = "4088a77e14232876c9b4ff1541e6e200"
 SRC_URI[sha256sum] = "c1df222bec83d014d17785e2ceba6bc80962f64b280967de0285836d8d77a8e7"
