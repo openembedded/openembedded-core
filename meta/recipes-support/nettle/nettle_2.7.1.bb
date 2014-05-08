@@ -13,6 +13,8 @@ SRC_URI = "http://www.lysator.liu.se/~nisse/archive/${BP}.tar.gz"
 SRC_URI[md5sum] = "003d5147911317931dd453520eb234a5"
 SRC_URI[sha256sum] = "bc71ebd43435537d767799e414fce88e521b7278d48c860651216e1fc6555b40"
 
+EXTRA_OECONF = "--disable-openssl"
+
 do_configure_prepend() {
        if [ ! -e ${S}/acinclude.m4 -a -e ${S}/aclocal.m4 ]; then
                cp ${S}/aclocal.m4 ${S}/acinclude.m4
