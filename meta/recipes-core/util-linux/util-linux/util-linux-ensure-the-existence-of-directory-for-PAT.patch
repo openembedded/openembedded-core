@@ -1,0 +1,34 @@
+Upstream-Status: Pending
+
+util-linux: ensure the existence of directory for PATHFILES
+
+When compiling util-linux, it's possible to encounter the following error.
+     /bin/sh: line 2:: misc-utils/uuidd.8.tmp: No such file or directory
+
+This is because that the misc-utils directory doesn't exist when trying to write to
+misc-utils/uuidd.8.tmp.
+
+When generating misc-utils/uuidd.8 (or anything in PATHFILES), its directory
+may not have been created yet. So we need to ensure the existence of the directory
+to avoid the compilation error.
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ Makefile.am |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Makefile.am b/Makefile.am
+index 17f4c33..ca3dc0f 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -123,6 +123,7 @@ EXTRA_DIST += $(PATHFILES:=.in)
+ 
+ $(PATHFILES): Makefile
+ 	@ rm -f $@ $@.tmp
++	@ mkdir -p `dirname $@`
+ 	$(AM_V_GEN) srcdir=''; \
+ 		test -f ./$@.in || srcdir=$(srcdir)/; \
+ 		$(edit_cmd) $${srcdir}$@.in >$@.tmp
+-- 
+1.7.9.5
+

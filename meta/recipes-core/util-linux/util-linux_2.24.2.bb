@@ -15,6 +15,7 @@ SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             file://configure-sbindir.patch \
             file://fix-configure.patch \
             file://fix-parallel-build.patch \
+            file://util-linux-ensure-the-existence-of-directory-for-PAT.patch \
             ${OLDHOST} \
 "
 
