@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 DEPENDS = "gtk+ intltool-native"
 DEPENDS_append_poky = " libowl"
-SRC_URI = "http://savannah.nongnu.org/download/${BPN}/${BPN}-${PV}.tar.gz \
+SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
 	   file://leafpad.desktop"
 
 SRC_URI[md5sum] = "254a72fc67505e3aa52884c729cd7b97"

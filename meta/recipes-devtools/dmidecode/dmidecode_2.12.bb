@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.nongnu.org/dmidecode/"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=393a5ca445f6965873eca0259a17f833"
 
-SRC_URI = "http://savannah.nongnu.org/download/dmidecode/${BP}.tar.bz2"
+SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/dmidecode/${BP}.tar.bz2"
 
 COMPATIBLE_HOST = "(i.86|x86_64|aarch64|arm|powerpc).*-linux"
 
