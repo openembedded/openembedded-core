@@ -52,7 +52,7 @@ class ClassExtender(object):
         return newdata
 
     def map_depends(self, dep):
-        if dep.endswith(("-native", "-native-runtime", "-crosssdk")) or ('nativesdk-' in dep) or ('cross-canadian' in dep):
+        if dep.endswith(("-native", "-native-runtime")) or ('nativesdk-' in dep) or ('cross-canadian' in dep) or ('-crosssdk-' in dep):
             return dep
         else:
             return self.extend_name(dep)
@@ -96,9 +96,9 @@ class ClassExtender(object):
 
 class NativesdkClassExtender(ClassExtender):
     def map_depends(self, dep):
-        if dep.endswith(("-native", "-native-runtime", "-cross", "-crosssdk")) or ('nativesdk-' in dep):
-            return dep
-        elif dep.endswith(("-gcc-intermediate", "-gcc-initial", "-gcc", "-g++")):
+        if dep.endswith(("-gcc-initial", "-gcc", "-g++")):
             return dep + "-crosssdk"
+        elif dep.endswith(("-native", "-native-runtime")) or ('nativesdk-' in dep) or ('-cross-' in dep) or ('-crosssdk-' in dep):
+            return dep
         else:
             return self.extend_name(dep)

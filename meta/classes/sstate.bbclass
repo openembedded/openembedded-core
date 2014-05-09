@@ -715,7 +715,7 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
     bb.debug(2, "Considering setscene task: %s" % (str(taskdependees[task])))
 
     def isNativeCross(x):
-        return x.endswith("-native") or x.endswith("-cross") or x.endswith("-cross-initial") or x.endswith("-crosssdk") or x.endswith("-crosssdk-initial")
+        return x.endswith("-native") or "-cross-" in x or "-crosssdk" in x
 
     def isPostInstDep(x):
         if x in ["qemu-native", "gdk-pixbuf-native", "qemuwrapper-cross", "depmodwrapper-cross", "systemd-systemctl-native", "gtk-update-icon-cache-native"]:
@@ -750,7 +750,7 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
             if taskdependees[dep][0].endswith(("base-passwd", "shadow-sysroot")):
                 continue
             # Nothing need depend on libc-initial/gcc-cross-initial
-            if taskdependees[task][0].endswith("-initial"):
+            if "-initial" in taskdependees[task][0]:
                 continue
             # Native/Cross populate_sysroot need their dependencies
             if isNativeCross(taskdependees[task][0]) and isNativeCross(taskdependees[dep][0]):

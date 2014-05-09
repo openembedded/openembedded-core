@@ -5,7 +5,7 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
     def isNative(x):
         return x.endswith("-native")
     def isCross(x):
-        return x.endswith("-cross") or x.endswith("-cross-initial") or x.endswith("-cross-intermediate")
+        return "-cross-" in x
     def isNativeSDK(x):
         return x.startswith("nativesdk-")
     def isKernel(fn):
@@ -139,7 +139,7 @@ def find_siginfo(pn, taskname, taskhashlist, d):
             localdata.setVar('PV', '*')
             localdata.setVar('PR', '*')
             localdata.setVar('BB_TASKHASH', hashval)
-            if pn.endswith('-native') or pn.endswith('-crosssdk') or pn.endswith('-cross'):
+            if pn.endswith('-native') or "-cross-" in pn or "-crosssdk-" in pn:
                 localdata.setVar('SSTATE_EXTRAPATH', "${NATIVELSBSTRING}/")
             sstatename = taskname[3:]
             filespec = '%s_%s.*.siginfo' % (localdata.getVar('SSTATE_PKG', True), sstatename)
