@@ -1,10 +1,10 @@
 Upstream-Status: Denied [no desire for uclibc support]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Index: systemd-209/src/journal/journal-file.c
+Index: git/src/journal/journal-file.c
 ===================================================================
---- systemd-209.orig/src/journal/journal-file.c	2014-02-12 18:42:33.000000000 -0800
-+++ systemd-209/src/journal/journal-file.c	2014-02-19 23:23:19.464631643 -0800
+--- git.orig/src/journal/journal-file.c	2014-04-22 22:53:05.000000000 -0700
++++ git/src/journal/journal-file.c	2014-04-22 22:53:51.130236707 -0700
 @@ -38,6 +38,8 @@
  #include "compress.h"
  #include "fsprg.h"
@@ -14,7 +14,7 @@ Index: systemd-209/src/journal/journal-file.c
  #define DEFAULT_DATA_HASH_TABLE_SIZE (2047ULL*sizeof(HashItem))
  #define DEFAULT_FIELD_HASH_TABLE_SIZE (333ULL*sizeof(HashItem))
  
-@@ -316,7 +318,7 @@
+@@ -314,7 +316,7 @@
  
  static int journal_file_allocate(JournalFile *f, uint64_t offset, uint64_t size) {
          uint64_t old_size, new_size;
@@ -23,7 +23,7 @@ Index: systemd-209/src/journal/journal-file.c
  
          assert(f);
  
-@@ -364,9 +366,24 @@
+@@ -362,9 +364,24 @@
          /* Note that the glibc fallocate() fallback is very
             inefficient, hence we try to minimize the allocation area
             as we can. */
@@ -48,19 +48,19 @@ Index: systemd-209/src/journal/journal-file.c
  
          if (fstat(f->fd, &f->last_stat) < 0)
                  return -errno;
-Index: systemd-209/src/journal/journald-kmsg.c
+Index: git/src/journal/journald-kmsg.c
 ===================================================================
---- systemd-209.orig/src/journal/journald-kmsg.c	2014-02-19 15:03:09.000000000 -0800
-+++ systemd-209/src/journal/journald-kmsg.c	2014-02-19 23:22:14.396630422 -0800
-@@ -441,6 +441,7 @@
- 
+--- git.orig/src/journal/journald-kmsg.c	2014-04-22 22:53:05.000000000 -0700
++++ git/src/journal/journald-kmsg.c	2014-04-22 22:54:27.830236809 -0700
+@@ -437,6 +437,7 @@
  int server_open_kernel_seqnum(Server *s) {
-         int fd;
-+	int r = 0;
+         _cleanup_close_ int fd;
          uint64_t *p;
++        int r = 0;
  
          assert(s);
-@@ -454,8 +455,19 @@
+ 
+@@ -449,8 +450,19 @@
                  log_error("Failed to open /run/systemd/journal/kernel-seqnum, ignoring: %m");
                  return 0;
          }
@@ -80,5 +80,5 @@ Index: systemd-209/src/journal/journald-kmsg.c
 +#endif /* HAVE_POSIX_FALLOCATE */
 +	if (r < 0) {
                  log_error("Failed to allocate sequential number file, ignoring: %m");
-                 close_nointr_nofail(fd);
                  return 0;
+         }

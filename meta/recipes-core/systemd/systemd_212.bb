@@ -17,9 +17,9 @@ SECTION = "base/shell"
 
 inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest
 
-SRCREV = "3a450ec5c6adf3057bcedd6cc19c10617abc35a5"
+SRCREV = "9b3310b066136b0674a926da094b7fe87a13a58b"
 
-PV = "211+git${SRCPV}"
+PV = "212+git${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=git \
            file://binfmt-install.patch \
@@ -31,7 +31,6 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=
            file://0001-uClibc-doesn-t-implement-pwritev-preadv.patch \
            file://uclibc-sysinfo_h.patch \
            file://uclibc-get-physmem.patch \
-           file://sd-bus-don-t-use-assert_return-to-check-for-disconne.patch \
            \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
@@ -72,7 +71,6 @@ rootlibexecdir = "${rootprefix}/lib"
 EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --with-rootlibdir=${rootlibdir} \
                  ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '--enable-pam', '--disable-pam', d)} \
-                 --enable-xz \
                  --disable-manpages \
                  --disable-coredump \
                  --disable-introspection \
