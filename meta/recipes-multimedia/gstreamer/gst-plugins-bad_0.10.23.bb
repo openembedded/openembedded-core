@@ -34,6 +34,9 @@ PACKAGECONFIG[sndfile] = "--enable-sndfile,--disable-sndfile,libsndfile1"
 PACKAGECONFIG[vp8] = "--enable-vp8,--disable-vp8,libvpx"
 PACKAGECONFIG[ass] = "--enable-assrender,--disable-assrender,libass"
 PACKAGECONFIG[openal] = "--enable-openal,--disable-openal,openal-soft"
+PACKAGECONFIG[schro] = "--enable-schro,--disable-schro,schroedinger"
+PACKAGECONFIG[dc1394] = "--enable-dc1394,--disable-dc1394,libdc1394"
+PACKAGECONFIG[faac] = "--enable-faac,--disable-faac,faac"
 
 ARM_INSTRUCTION_SET = "arm"
 
