@@ -26,3 +26,5 @@ FILES_${PN} = "${bindir}/lame"
 FILES_libmp3lame = "${libdir}/libmp3lame.so.*"
 FILES_libmp3lame-dev = "${includedir} ${libdir}/*"
 FILES_${PN}-dev = ""
+
+CACHED_CONFIGUREVARS_append_i586 = " ac_cv_header_emmintrin_h=no ac_cv_header_xmmintrin_h=no"
