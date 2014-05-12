@@ -16,7 +16,7 @@ SRC_URI = "file://ldconfig-native-2.12.1.tar.bz2 \
 
 PR = "r2"
 
-FILESPATH = "${FILE_DIRNAME}/${PN}-${PV}/"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/${P}:"
 
 inherit native
 

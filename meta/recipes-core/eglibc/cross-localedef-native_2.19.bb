@@ -13,8 +13,7 @@ LIC_FILES_CHKSUM = "file://${LIC_DIR}/LICENSES;md5=e9a558e243b36d3209f380deb394b
 inherit native
 inherit autotools
 
-# pick up an eglibc patch
-FILESPATH = "${FILE_DIRNAME}/eglibc-${PV}"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/${P}:"
 
 SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr25243.tar.bz2 \
 	   file://fix_for_centos_5.8.patch;patchdir=.. \
