@@ -4,7 +4,7 @@ BUGTRACKER = "https://bugzilla.gnome.org/"
 
 LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
-                    file://gdk-pixbuf/gdk-pixbuf.h;endline=26;md5=5066b71daefeff678494fffa3040aba9"
+                    file://gdk-pixbuf/gdk-pixbuf.h;endline=26;md5=72b39da7cbdde2e665329fef618e1d6b"
 
 SECTION = "libs"
 
@@ -17,12 +17,11 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://hardcoded_libtool.patch \
            file://extending-libinstall-dependencies.patch \
            file://run-ptest \
-           file://tests-check.patch \
            file://fatal-loader.patch \
            "
 
-SRC_URI[md5sum] = "81161cc895eb43afd9ae7354b87e2261"
-SRC_URI[sha256sum] = "c229c53f59573eab9410b53690a4b9db770312c80a4d84ecd6295aa894574494"
+SRC_URI[md5sum] = "1195d26f14adfe99ff0878d37678a70a"
+SRC_URI[sha256sum] = "0aafc365eab1083a53f15e4828333b968219ffcb1a995ac6289c0147c9ffad06"
 
 inherit autotools pkgconfig gettext pixbufcache ptest
 
