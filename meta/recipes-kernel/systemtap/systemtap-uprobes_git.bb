@@ -11,6 +11,8 @@ ALLOW_EMPTY_${PN} = "1"
 
 inherit module-base gettext
 
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/systemtap:"
+
 FILES_${PN} += "${datadir}/systemtap/runtime/uprobes"
 
 EXTRA_OEMAKE = ""

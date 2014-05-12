@@ -8,8 +8,6 @@ SRC_URI = "git://sourceware.org/git/systemtap.git \
            file://obsolete_automake_macros.patch \
           "
 
-FILESPATH = "${FILE_DIRNAME}/systemtap"
-
 # systemtap doesn't support mips
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|arm|aarch64).*-linux'
 
