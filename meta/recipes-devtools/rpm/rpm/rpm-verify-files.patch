@@ -1,0 +1,22 @@
+lib/verify.c: Fix rpm -V file processing
+
+rpm -V should verify the md5sum and other values on individual files.
+A logic error in the query for GHOST files prevented this from working.
+
+[ Upstream-Status: Submitted ]
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+Index: rpm-5.4.9/lib/verify.c
+===================================================================
+--- rpm-5.4.9.orig/lib/verify.c
++++ rpm-5.4.9/lib/verify.c
+@@ -587,7 +587,7 @@ uint32_t fc = rpmfiFC(fi);
+ 
+ 	/* If not verifying %ghost, skip ghost files. */
+ 	/* XXX the broken!!! logic disables %ghost queries always. */
+-	if (!(FF_ISSET(qva->qva_fflags, GHOST) && FF_ISSET(fflags, GHOST)))
++	if (!(FF_ISSET(qva->qva_fflags, GHOST)) && FF_ISSET(fflags, GHOST))
+ 	    continue;
+ 
+ 	/* Gather per-file data into a carrier. */
