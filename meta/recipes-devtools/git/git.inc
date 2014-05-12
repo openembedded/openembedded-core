@@ -15,7 +15,8 @@ EXTRA_OECONF = "--with-perl=${STAGING_BINDIR_NATIVE}/perl-native/perl \
 
 inherit autotools-brokensep perlnative
 
-EXTRA_OEMAKE = "NO_PYTHON=1 RUNTIME_PREFIX=1"
+EXTRA_OEMAKE = "NO_PYTHON=1 RUNTIME_PREFIX=1 CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}'"
+EXTRA_OEMAKE_append_class-native = " NO_CROSS_DIRECTORY_HARDLINKS=1"
 
 do_compile_prepend () {
 	# Remove perl/perl.mak to fix the out-of-date perl.mak error
