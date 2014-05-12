@@ -10,15 +10,11 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://add-march-i486-into-CFLAGS-automatically.patch \
            file://glib-2.0-configure-readlink.patch \
            file://run-ptest \
-           file://0001-gio-Fix-Werror-format-string-errors-from-mismatched-.patch \
-           file://ptest-dbus.patch \
            file://ptest-paths.patch \
-           file://gtest-skip-fixes.patch \
-           file://gio-test-race.patch \
            file://uclibc.patch \
           "
 
 SRC_URI_append_class-native = " file://glib-gettextize-dir.patch"
 
-SRC_URI[md5sum] = "26d1d08e478fc48c181ca8be44f5b69f"
-SRC_URI[sha256sum] = "056a9854c0966a0945e16146b3345b7a82562a5ba4d5516fd10398732aea5734"
+SRC_URI[md5sum] = "05fb7cb17eacbc718e90366a1eae60d9"
+SRC_URI[sha256sum] = "0d27f195966ecb1995dcce0754129fd66ebe820c7cd29200d264b02af1aa28b5"
