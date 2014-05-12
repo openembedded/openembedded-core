@@ -1,7 +1,9 @@
 From c5f5c5054c1b15539dccf866e2c3faba7ed68456 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>
 Date: Thu, 25 Apr 2013 00:27:25 +0200
-Subject: [PATCH 3/6] configure
+Subject: [PATCH 3/6] configure: add a variable to allow openpty check to be cached
+
+Upstream-Status: Pending
 
 ---
  configure.ac | 11 ++++++++---
