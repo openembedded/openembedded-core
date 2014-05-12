@@ -27,7 +27,7 @@ Index: mesa-demos-8.0.1/configure.ac
 -		[glutInit],
 -		[],
 -		[glut_enabled=no])
-+	 GLUT_LIBS="-L$withval -lglut"],
++	 GLUT_LIBS="-L$withval/lib -lglut"],
 +	[GLUT_CFLAGS=""
 +	 GLUT_LIBS="-lglut"]
 +        )
