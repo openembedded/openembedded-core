@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
 SRC_URI = "http://gentoo.osuosl.org/distfiles/pax-utils-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "8ae7743ad11500f7604f2e817221d877"
-SRC_URI[sha256sum] = "1ac4cee9a9ca97a723505eb29a25e50adeccffba3f0f0ef4f035cf082caf3b84"
+SRC_URI[md5sum] = "bc42279c5aff3682c12be40f72805cec"
+SRC_URI[sha256sum] = "844ff25b1a11bcef92ef34b22f576f226a772b67196818656f8874513438f5b9"
 
 do_install() {
     oe_runmake PREFIX=${D}${prefix} DESTDIR=${D} install
