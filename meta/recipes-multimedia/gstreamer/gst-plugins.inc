@@ -6,8 +6,6 @@ DEPENDS = "gstreamer"
 
 inherit autotools pkgconfig
 
-FILESPATH =. "${FILE_DIRNAME}/gst-plugins:"
-
 SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2"
 
 GSTREAMER_DEBUG ?= "--disable-debug"

@@ -6,8 +6,6 @@ DEPENDS = "gstreamer1.0"
 
 inherit autotools pkgconfig
 
-FILESPATH =. "${FILE_DIRNAME}/gst-plugins:"
-
 GSTREAMER_1_0_DEBUG ?= "--disable-debug"
 GSTREAMER_1_0_GIT_BRANCH ?= "master"
 EXTRA_OECONF = "--disable-valgrind ${GSTREAMER_1_0_DEBUG} --disable-examples "
