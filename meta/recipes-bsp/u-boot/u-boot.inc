@@ -65,7 +65,6 @@ do_install () {
 }
 
 FILES_${PN} = "/boot ${sysconfdir}"
-FILESPATH =. "${FILE_DIRNAME}/u-boot-git/${MACHINE}:"
 
 do_deploy () {
     install -d ${DEPLOYDIR}
