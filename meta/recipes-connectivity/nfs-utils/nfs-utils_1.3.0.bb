@@ -3,7 +3,6 @@ DESCRIPTION = "The nfs-utils package provides a daemon for the kernel \
 NFS server and related tools."
 HOMEPAGE = "http://nfs.sourceforge.net/"
 SECTION = "console/network"
-PR = "r1"
 
 LICENSE = "MIT & GPLv2+ & BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=95f3a93a5c3c7888de623b46ea085a84"
@@ -20,7 +19,7 @@ USERADD_PACKAGES = "${PN}-client"
 USERADD_PARAM_${PN}-client = "--system  --home-dir /var/lib/nfs \
 			      --shell /bin/false --user-group rpcuser"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.xz \
            file://0001-configure-Allow-to-explicitly-disable-nfsidmap.patch \
            file://nfs-utils-1.0.6-uclibc.patch \
            file://nfs-utils-1.2.3-sm-notify-res_init.patch \
@@ -31,8 +30,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.b
            file://nfs-mountd.service \
            file://nfs-statd.service "
 
-SRC_URI[md5sum] = "18869d16db3f49c053f8c68eba3fe2e0"
-SRC_URI[sha256sum] = "90b76d5692a520b74273e607a4fd69df4cc35f65e242e22e2bc61b58759722f3"
+SRC_URI[md5sum] = "6e93a7997ca3a1eac56bf219adab72a8"
+SRC_URI[sha256sum] = "ab8384d0e487ed6a18c5380d5df28015f7dd98680bf08f3247c97d9f7d99e56f"
 
 PARALLEL_MAKE = ""
 
