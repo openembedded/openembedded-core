@@ -13,13 +13,9 @@ LIC_FILES_CHKSUM = "file://docs/LICENSE.TXT;md5=c017ff17fc6f0794adf93db5559ccd56
 
 SECTION = "libs"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
-"
-
-SRC_URI[md5sum] = "10e8f4d6a019b124088d18bc26123a25"
-SRC_URI[sha256sum] = "4ff4bd393aa01071ec7b849d035508a505a78f88b2bcf25ff11e58e43c0b9def"
-
-S = "${WORKDIR}/freetype-${PV}"
+SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2"
+SRC_URI[md5sum] = "d6b60f06bfc046e43ab2a6cbfd171d65"
+SRC_URI[sha256sum] = "c0848b29d52ef3ca27ad92e08351f023c5e24ce8cea7d8fe69fc96358e65f75e"
 
 inherit autotools-brokensep pkgconfig binconfig multilib_header
 
