@@ -1,3 +1,6 @@
+Upstream-Status: Inappropriate
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+
 --- /tmp/system_info.py	2008-08-22 00:38:16.000000000 +0200
 +++ numpy-1.1.1/numpy/distutils/system_info.py	2008-08-22 00:40:33.013198000 +0200
 @@ -137,11 +137,8 @@
