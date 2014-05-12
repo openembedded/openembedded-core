@@ -8,7 +8,7 @@ require xorg-lib-common.inc
 
 inherit siteinfo
 
-FILESPATH = "${FILE_DIRNAME}/libx11"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/libx11:"
 
 PE = "1"
 
