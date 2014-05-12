@@ -12,9 +12,9 @@ DEPENDS = "glib-2.0"
 
 GNOME_COMPRESS_TYPE = "xz"
 
-SRC_URI[archive.md5sum] = "0c6121741956fc34933a7ebae5868ec2"
-SRC_URI[archive.sha256sum] = "a95475364ec27ab1d2a69303cf579018558bfb6981e3498b3aaf1e6401f7422c"
+SRC_URI[archive.md5sum] = "d13485f5aa3b93227bbeb689ccfb596c"
+SRC_URI[archive.sha256sum] = "dbf558d2da989ab84a27e4e13daa51ceaa97eb959c2c2f80976c9322a8f4cdde"
 
-inherit gnome gettext
+inherit gnome gettext lib_package
 
 EXTRA_OECONF = "--disable-introspection"
