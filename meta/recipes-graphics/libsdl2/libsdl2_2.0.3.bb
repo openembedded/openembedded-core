@@ -8,7 +8,7 @@ BUGTRACKER = "http://bugzilla.libsdl.org/"
 SECTION = "libs"
 
 LICENSE = "Zlib"
-LIC_FILES_CHKSUM = "file://COPYING.txt;md5=0605ca7e995ab1217e0bb988731a87fe"
+LIC_FILES_CHKSUM = "file://COPYING.txt;md5=67dcb7fae16952557bc5f96e9eb5d188"
 
 PROVIDES = "virtual/libsdl2"
 
@@ -23,8 +23,8 @@ SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
 
 S = "${WORKDIR}/SDL2-${PV}"
 
-SRC_URI[md5sum] = "0eb97039488bf463e775295f7b18b227"
-SRC_URI[sha256sum] = "0ae7e902a26777614a011fe7053ca7e8b14843db3c42ca117564d208cf6732f0"
+SRC_URI[md5sum] = "fe6c61d2e9df9ef570e7e80c6e822537"
+SRC_URI[sha256sum] = "a5a69a6abf80bcce713fa873607735fe712f44276a7f048d60a61bb2f6b3c90c"
 
 inherit autotools lib_package binconfig pkgconfig
 
