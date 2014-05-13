@@ -67,4 +67,8 @@ do_install_append_class-nativesdk () {
     SYSROOT="${D}${SDKPATHNATIVE}" update-ca-certificates
 }
 
+do_install_append_class-native () {
+    SYSROOT="${D}${base_prefix}" ${D}${sbindir}/update-ca-certificates
+}
+
 BBCLASSEXTEND += "native nativesdk"
