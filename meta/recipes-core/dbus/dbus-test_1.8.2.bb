@@ -12,7 +12,6 @@ RDEPENDS_${PN}-dev = ""
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch \
-           file://ptest.patch \
            file://dbus-1.init  \
            file://run-ptest \
            file://python-config.patch \
@@ -39,7 +38,6 @@ EXTRA_OECONF = "--enable-tests \
                 --disable-xml-docs \
                 --disable-doxygen-docs \
                 --disable-libaudit \
-                --with-xml=expat \
                 --disable-systemd \
                 --without-systemdsystemunitdir \
                 --with-dbus-test-dir=${PTEST_PATH} \
@@ -49,5 +47,14 @@ do_install() {
 }
 
 do_install_ptest() {
-    find ${D}${PTEST_PATH} -name Makefile | xargs sed -i 's/^Makefile:/_Makefile:/'
+	install -d ${D}${PTEST_PATH}/test
+	case1="shell printf refs syslog"
+	for i in ${case1}; do install ${B}/test/test-$i ${D}${PTEST_PATH}/test; done
+	case2="marshal syntax corrupt dbus-daemon dbus-daemon-eavesdrop loopback relay"
+	for i in ${case2}; do install ${B}/test/.libs/test-$i ${D}${PTEST_PATH}/test; done
+	case3="bus bus-system bus-launch-helper"
+	for i in ${case3}; do install ${B}/bus/test-$i ${D}${PTEST_PATH}/test; done
+	install ${B}/dbus/test-dbus ${D}${PTEST_PATH}/test
+	cp -r ${B}/test/data ${D}${PTEST_PATH}/test
 }
+RDEPENDS_${PN}-ptest += "bash"

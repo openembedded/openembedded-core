@@ -17,8 +17,6 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://dbus-1.init \
            file://os-test.patch \
            file://clear-guid_from_server-if-send_negotiate_unix_f.patch \
-           file://Set-correct-address-when-using-address-systemd.patch \
-           file://fixed-memory-freeing-if-error-during-listing-service.patch \
 "
 
 inherit useradd autotools pkgconfig gettext update-rc.d
@@ -56,6 +54,7 @@ FILES_${PN} = "${bindir}/dbus-daemon* \
                ${bindir}/dbus-send \
                ${bindir}/dbus-monitor \
                ${bindir}/dbus-launch \
+               ${bindir}/dbus-run-session \
                ${libexecdir}/dbus* \
                ${sysconfdir} \
                ${localstatedir} \
@@ -84,7 +83,6 @@ EXTRA_OECONF = "--disable-tests \
                 --disable-xml-docs \
                 --disable-doxygen-docs \
                 --disable-libaudit \
-                --with-xml=expat \
                 --disable-systemd"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)} \
@@ -104,6 +102,16 @@ do_install() {
 		install -d ${D}${sysconfdir}/init.d
 		sed 's:@bindir@:${bindir}:' < ${WORKDIR}/dbus-1.init >${WORKDIR}/dbus-1.init.sh
 		install -m 0755 ${WORKDIR}/dbus-1.init.sh ${D}${sysconfdir}/init.d/dbus-1
+	fi
+
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+		for i in dbus.target.wants sockets.target.wants multi-user.target.wants; do \
+			install -d ${D}${systemd_unitdir}/system/$i; done
+		install ${B}/bus/dbus.service ${B}/bus/dbus.socket ${D}${systemd_unitdir}/system/
+		cd ${D}${systemd_unitdir}/system/dbus.target.wants/
+		ln -fs ../dbus.socket ${D}${systemd_unitdir}/system/dbus.target.wants/dbus.socket
+		ln -fs ../dbus.socket ${D}${systemd_unitdir}/system/sockets.target.wants/dbus.socket
+		ln -fs ../dbus.service ${D}${systemd_unitdir}/system/multi-user.target.wants/dbus.service
 	fi
 
 	install -d ${D}${sysconfdir}/default/volatiles
