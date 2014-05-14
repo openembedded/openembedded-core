@@ -1,0 +1,50 @@
+From 82d28701486ba5a699544a168448bf93b1ccd7b1 Mon Sep 17 00:00:00 2001
+From: Jackie Huang <jackie.huang@windriver.com>
+Date: Thu, 6 Dec 2012 11:26:14 +0800
+Subject: [PATCH] Added missing dependencies
+
+Upstream-Status: Submitted [linux-rt-users]
+
+The following targets missed dependency on librttest.a:
+pi_stress
+rt-migrate-test
+hackbench
+
+Signed-off-by: Jackie Huang <jackie.huang@windriver.com>
+---
+ Makefile |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index fd3cdb3..60707a7 100644
+--- a/Makefile
++++ b/Makefile
+@@ -68,14 +68,14 @@ cyclictest: cyclictest.o librttest.a
+ signaltest: signaltest.o librttest.a
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+ 
+-pi_stress: pi_stress.o
++pi_stress: pi_stress.o librttest.a
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+ 
+ hwlatdetect:  src/hwlatdetect/hwlatdetect.py
+ 	chmod +x src/hwlatdetect/hwlatdetect.py
+ 	ln -s src/hwlatdetect/hwlatdetect.py hwlatdetect
+ 
+-rt-migrate-test: rt-migrate-test.o
++rt-migrate-test: rt-migrate-test.o librttest.a
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+ 
+ ptsematest: ptsematest.o librttest.a
+@@ -96,7 +96,7 @@ sendme: sendme.o librttest.a
+ pip_stress: pip_stress.o librttest.a
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+ 
+-hackbench: hackbench.o
++hackbench: hackbench.o librttest.a
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+ 
+ librttest.a: rt-utils.o error.o rt-get_cpu.o
+-- 
+1.7.9.5
+
