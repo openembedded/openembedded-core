@@ -12,6 +12,7 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://run-ptest \
            file://ptest-paths.patch \
            file://uclibc.patch \
+           file://0001-configure.ac-Do-not-use-readlink-when-cross-compilin.patch \
           "
 
 SRC_URI_append_class-native = " file://glib-gettextize-dir.patch"
