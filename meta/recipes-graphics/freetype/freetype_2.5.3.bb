@@ -26,6 +26,8 @@ EXTRA_OECONF = "--without-zlib --without-bzip2 CC_BUILD='${BUILD_CC}'"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[pixmap] = "--with-png,--without-png,libpng"
+# This results in a circular dependency so enabling is non-trivial
+PACKAGECONFIG[harfbuzz] = "--with-harfbuzz,--without-harfbuzz,harfbuzz"
 
 do_configure() {
 	cd builds/unix
