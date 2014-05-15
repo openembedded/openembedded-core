@@ -12,8 +12,11 @@ LICENSE = "LGPLv2.0+"
 X11DEPENDS = "virtual/libx11 libxft"
 DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv cairo harfbuzz qemu-native"
 
-PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'ptest', 'ptest', '', d)}"
+
 PACKAGECONFIG[x11] = "--with-xft,--without-xft,${X11DEPENDS}"
+PACKAGECONFIG[ptest] = "--enable-installed-tests,--disable-installed-tests,glib-2.0-native"
 
 BBCLASSEXTEND = "native"
 DEPENDS_class-native = "glib-2.0-native cairo-native harfbuzz-native"
@@ -22,7 +25,8 @@ PACKAGES_DYNAMIC += "^pango-module-.*"
 
 RRECOMMENDS_${PN} = "pango-module-basic-fc"
 
-inherit gnomebase gtk-doc qemu
+inherit gnomebase gtk-doc qemu ptest
+
 # Create a pango-modules package
 ALLOW_EMPTY_${BPN}-modules = "1"
 PACKAGES += "${BPN}-modules"
@@ -60,6 +64,13 @@ if [ "x$D" != "x" ]; then
 fi
 }
 
+# This binary needs to be compiled for the host architecture.  This isn't pretty!
+do_compile_prepend () {
+	if ${@base_contains('DISTRO_FEATURES', 'ptest', 'true', 'false', d)}; then
+		make CC="${BUILD_CC}" AM_CPPFLAGS="$(pkg-config-native --cflags glib-2.0)" gen_all_unicode_LDADD="$(pkg-config-native --libs glib-2.0)" -C ${B}/tests gen-all-unicode
+	fi
+}
+
 do_install_append () {
 	if [ "${MLPREFIX}" != "" ]; then
 		mv ${D}/${bindir}/pango-querymodules ${D}/${bindir}/${MLPREFIX}pango-querymodules 
@@ -78,3 +89,9 @@ python populate_packages_prepend () {
 FILES_${PN} = "${sysconfdir}/pango/* ${bindir}/* ${libdir}/libpango*${SOLIBS}"
 FILES_${PN}-dbg += "${libdir}/pango/${LIBV}/modules/.debug"
 FILES_${PN}-dev += "${libdir}/pango/${LIBV}/modules/*.la"
+
+FILES_${PN}-ptest += "${libexecdir}/pango/installed-tests/* \
+                      ${datadir}/installed-tests/pango"
+FILES_${PN}-dbg += "${libexecdir}/pango/installed-tests/.debug"
+
+RDEPENDS_${PN}-ptest += "gnome-desktop-testing liberation-fonts"
