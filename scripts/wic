@@ -214,6 +214,12 @@ def wic_list_subcommand(args, usage_str):
 
     (options, args) = parser.parse_args(args)
 
+    bitbake_env_lines = find_bitbake_env_lines(None)
+    if not bitbake_env_lines:
+        print "Couldn't get bitbake environment, exiting."
+        sys.exit(1)
+    set_bitbake_env_lines(bitbake_env_lines)
+
     if not wic_list(args, scripts_path, options.properties_file):
         logging.error("Bad list arguments, exiting\n")
         parser.print_help()

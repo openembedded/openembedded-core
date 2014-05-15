@@ -90,6 +90,20 @@ def find_artifacts(image_name):
 
 
 CANNED_IMAGE_DIR = "lib/image/canned-wks" # relative to scripts
+SCRIPTS_CANNED_IMAGE_DIR = "scripts/" + CANNED_IMAGE_DIR
+
+def build_canned_image_list(dl):
+    layers_path = get_bitbake_var("BBLAYERS")
+    canned_wks_layer_dirs = []
+
+    for layer_path in layers_path.split():
+        path = os.path.join(layer_path, SCRIPTS_CANNED_IMAGE_DIR)
+        canned_wks_layer_dirs.append(path)
+
+    path = os.path.join(dl, CANNED_IMAGE_DIR)
+    canned_wks_layer_dirs.append(path)
+
+    return canned_wks_layer_dirs
 
 def find_canned_image(scripts_path, wks_file):
     """
@@ -97,15 +111,16 @@ def find_canned_image(scripts_path, wks_file):
 
     Return False if not found
     """
-    canned_wks_dir = os.path.join(scripts_path, CANNED_IMAGE_DIR)
+    layers_canned_wks_dir = build_canned_image_list(scripts_path)
 
-    for root, dirs, files in os.walk(canned_wks_dir):
-        for file in files:
-            if file.endswith("~") or file.endswith("#"):
-                continue
-            if file.endswith(".wks") and wks_file + ".wks" == file:
-                fullpath = os.path.join(canned_wks_dir, file)
-                return fullpath
+    for canned_wks_dir in layers_canned_wks_dir:
+        for root, dirs, files in os.walk(canned_wks_dir):
+            for file in files:
+                if file.endswith("~") or file.endswith("#"):
+                    continue
+                if file.endswith(".wks") and wks_file + ".wks" == file:
+                    fullpath = os.path.join(canned_wks_dir, file)
+                    return fullpath
     return None
 
 
@@ -113,32 +128,31 @@ def list_canned_images(scripts_path):
     """
     List the .wks files in the canned image dir, minus the extension.
     """
-    canned_wks_dir = os.path.join(scripts_path, CANNED_IMAGE_DIR)
+    layers_canned_wks_dir = build_canned_image_list(scripts_path)
 
-    for root, dirs, files in os.walk(canned_wks_dir):
-        for file in files:
-            if file.endswith("~") or file.endswith("#"):
-                continue
-            if file.endswith(".wks"):
-                fullpath = os.path.join(canned_wks_dir, file)
-                f = open(fullpath, "r")
-                lines = f.readlines()
-                for line in lines:
-                    desc = ""
-                    idx = line.find("short-description:")
-                    if idx != -1:
-                        desc = line[idx + len("short-description:"):].strip()
-                        break
-                basename = os.path.splitext(file)[0]
-                print "  %s\t\t%s" % (basename, desc)
+    for canned_wks_dir in layers_canned_wks_dir:
+        for root, dirs, files in os.walk(canned_wks_dir):
+            for file in files:
+                if file.endswith("~") or file.endswith("#"):
+                    continue
+                if file.endswith(".wks"):
+                    fullpath = os.path.join(canned_wks_dir, file)
+                    f = open(fullpath, "r")
+                    lines = f.readlines()
+                    for line in lines:
+                        desc = ""
+                        idx = line.find("short-description:")
+                        if idx != -1:
+                            desc = line[idx + len("short-description:"):].strip()
+                            break
+                    basename = os.path.splitext(file)[0]
+                    print "  %s\t\t%s" % (basename.ljust(30), desc)
 
 
 def list_canned_image_help(scripts_path, fullpath):
     """
     List the help and params in the specified canned image.
     """
-    canned_wks_dir = os.path.join(scripts_path, CANNED_IMAGE_DIR)
-
     f = open(fullpath, "r")
     lines = f.readlines()
     found = False
