@@ -20,12 +20,14 @@ import os, sys
 from mic import msger
 from mic import pluginbase
 from mic.utils import errors
-
+from mic.utils.oe.misc import *
 
 __ALL__ = ['PluginMgr', 'pluginmgr']
 
 PLUGIN_TYPES = ["imager", "source"] # TODO  "hook"
 
+PLUGIN_DIR = "/lib/mic/plugins" # relative to scripts
+SCRIPTS_PLUGIN_DIR = "scripts" + PLUGIN_DIR
 
 class PluginMgr(object):
     plugin_dirs = {}
@@ -42,8 +44,23 @@ class PluginMgr(object):
         mic_path = os.path.dirname(__file__)
         eos = mic_path.find('scripts') + len('scripts')
         scripts_path = mic_path[:eos]
+        self.scripts_path = scripts_path
+        self.plugin_dir = scripts_path + PLUGIN_DIR
+        self.layers_path = None
 
-        self.plugin_dir = scripts_path + "/lib/mic/plugins"
+    def _build_plugin_dir_list(self, dl, ptype):
+        if self.layers_path is None:
+            self.layers_path = get_bitbake_var("BBLAYERS")
+        layer_dirs = []
+
+        for layer_path in self.layers_path.split():
+            path = os.path.join(layer_path, SCRIPTS_PLUGIN_DIR, ptype)
+            layer_dirs.append(path)
+
+            path = os.path.join(dl, ptype)
+            layer_dirs.append(path)
+
+        return layer_dirs
 
     def append_dirs(self, dirs):
         for path in dirs:
@@ -56,7 +73,7 @@ class PluginMgr(object):
         path = os.path.abspath(os.path.expanduser(path))
 
         if not os.path.isdir(path):
-            msger.warning("Plugin dir is not a directory or does not exist: %s"\
+            msger.debug("Plugin dir is not a directory or does not exist: %s"\
                           % path)
             return
 
@@ -93,8 +110,9 @@ class PluginMgr(object):
         if ptype not in PLUGIN_TYPES:
             raise errors.CreatorError('%s is not valid plugin type' % ptype)
 
-        self._add_plugindir(os.path.join(self.plugin_dir, ptype))
-        self._load_all()
+        plugins_dir = self._build_plugin_dir_list(self.plugin_dir, ptype)
+
+        self.append_dirs(plugins_dir)
 
         return pluginbase.get_plugins(ptype)
 
