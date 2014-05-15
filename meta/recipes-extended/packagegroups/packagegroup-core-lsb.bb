@@ -196,9 +196,9 @@ def get_libqt3(d):
         if 'qt3' in d.getVar('BBFILE_COLLECTIONS') or "":
             return 'libqt-mt3'
 
-        bb.warn('The meta-qt3 layer should be added, this layer provides Qt 3.x')
-        bb.warn('libraries. Its intended use is for passing LSB tests as Qt3 is')
-        bb.warn('a requirement for LSB')
+        bb.warn('The meta-qt3 layer should be added, this layer provides Qt 3.x' \
+                'libraries. Its intended use is for passing LSB tests as Qt3 is' \
+                'a requirement for LSB.')
     return ''
 
 QT4PKGS = " \
