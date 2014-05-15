@@ -134,7 +134,7 @@ do
 	   echo "Mounted filesystems"
            mount | grep media
            echo "Available block devices"
-           ls /dev/sd*
+           cat /proc/partitions
            fatal "Cannot find $ROOT_IMAGE file in /media/* , dropping to a shell "
       fi
       C=$(( C + 1 ))
