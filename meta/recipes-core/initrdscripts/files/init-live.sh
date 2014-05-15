@@ -82,9 +82,9 @@ boot_live_root() {
 
     # Move the mount points of some filesystems over to
     # the corresponding directories under the real root filesystem.
-    for dir in `awk '/\/dev.* \/media/{print $2}' /proc/mounts`; do
-        mkdir -p  ${ROOT_MOUNT}/$dir
-        mount -n --move $dir ${ROOT_MOUNT}/$dir
+    for dir in `awk '/\/dev.* \/run\/media/{print $2}' /proc/mounts`; do
+        mkdir -p  ${ROOT_MOUNT}/media/${dir##*/}
+        mount -n --move $dir ${ROOT_MOUNT}/media/${dir##*/}
     done
     mount -n --move /proc ${ROOT_MOUNT}/proc
     mount -n --move /sys ${ROOT_MOUNT}/sys
@@ -113,11 +113,11 @@ echo "Waiting for removable media..."
 C=0
 while true
 do
-  for i in `ls /media 2>/dev/null`; do
-      if [ -f /media/$i/$ROOT_IMAGE ] ; then
+  for i in `ls /run/media 2>/dev/null`; do
+      if [ -f /run/media/$i/$ROOT_IMAGE ] ; then
 		found="yes"
 		break
-	  elif [ -f /media/$i/isolinux/$ROOT_IMAGE ]; then
+	  elif [ -f /run/media/$i/isolinux/$ROOT_IMAGE ]; then
 		found="yes"
 		ISOLINUX="isolinux"
 		break	
@@ -135,7 +135,7 @@ do
            mount | grep media
            echo "Available block devices"
            cat /proc/partitions
-           fatal "Cannot find $ROOT_IMAGE file in /media/* , dropping to a shell "
+           fatal "Cannot find $ROOT_IMAGE file in /run/media/* , dropping to a shell "
       fi
       C=$(( C + 1 ))
   fi
@@ -150,7 +150,7 @@ mount_and_boot() {
     mkdir $ROOT_MOUNT
     mknod /dev/loop0 b 7 0 2>/dev/null
 
-    if ! mount -o rw,loop,noatime,nodiratime /media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
+    if ! mount -o rw,loop,noatime,nodiratime /run/media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
 	fatal "Could not mount rootfs image"
     fi
 
@@ -211,7 +211,7 @@ case $label in
 	mount_and_boot
 	;;
     install|install-efi)
-	if [ -f /media/$i/$ISOLINUX/$ROOT_IMAGE ] ; then
+	if [ -f /run/media/$i/$ISOLINUX/$ROOT_IMAGE ] ; then
 	    ./$label.sh $i/$ISOLINUX $ROOT_IMAGE $video_mode $vga_mode $console_params
 	else
 	    fatal "Could not find $label script"

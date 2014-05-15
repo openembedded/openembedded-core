@@ -151,7 +151,7 @@ mkdir -p /boot
 
 # Handling of the target root partition
 mount $rootfs /tgt_root
-mount -o rw,loop,noatime,nodiratime /media/$1/$2 /src_root
+mount -o rw,loop,noatime,nodiratime /run/media/$1/$2 /src_root
 echo "Copying rootfs files..."
 cp -a /src_root/* /tgt_root
 if [ -d /tgt_root/etc/ ] ; then
@@ -197,7 +197,7 @@ if [ ! -f /boot/grub/grub.cfg ] ; then
     echo "kernel /vmlinuz root=$rootfs rw $3 $4 quiet" >> /boot/grub/menu.lst
 fi
 
-cp /media/$1/vmlinuz /boot/
+cp /run/media/$1/vmlinuz /boot/
 
 umount /boot
 

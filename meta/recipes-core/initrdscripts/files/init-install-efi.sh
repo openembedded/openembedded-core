@@ -128,7 +128,7 @@ mkdir /rootmnt
 mkdir /bootmnt
 
 mount $rootfs /ssd
-mount -o rw,loop,noatime,nodiratime /media/$1/$2 /rootmnt
+mount -o rw,loop,noatime,nodiratime /run/media/$1/$2 /rootmnt
 
 echo "Copying rootfs files..."
 cp -a /rootmnt/* /ssd
@@ -150,13 +150,13 @@ mount $bootfs /ssd
 
 EFIDIR="/ssd/EFI/BOOT"
 mkdir -p $EFIDIR
-cp /media/$1/vmlinuz /ssd
+cp /run/media/$1/vmlinuz /ssd
 # Copy the efi loader
-cp /media/$1/EFI/BOOT/*.efi $EFIDIR
+cp /run/media/$1/EFI/BOOT/*.efi $EFIDIR
 
-if [ -f /media/$1/EFI/BOOT/grub.cfg ]; then
+if [ -f /run/media/$1/EFI/BOOT/grub.cfg ]; then
     GRUBCFG="$EFIDIR/grub.cfg"
-    cp /media/$1/EFI/BOOT/grub.cfg $GRUBCFG
+    cp /run/media/$1/EFI/BOOT/grub.cfg $GRUBCFG
     # Update grub config for the installed image
     # Delete the install entry
     sed -i "/menuentry 'install'/,/^}/d" $GRUBCFG
@@ -170,10 +170,10 @@ if [ -f /media/$1/EFI/BOOT/grub.cfg ]; then
     sed -i "s@linux /vmlinuz *@linux /vmlinuz root=$rootfs rw $rootwait quiet @" $GRUBCFG
 fi
 
-if [ -d /media/$1/loader ]; then
+if [ -d /run/media/$1/loader ]; then
     GUMMIBOOT_CFGS="/ssd/loader/entries/*.conf"
     # copy config files for gummiboot
-    cp -dr /media/$1/loader /ssd
+    cp -dr /run/media/$1/loader /ssd
     # delete the install entry
     rm -f /ssd/loader/entries/install.conf
     # delete the initrd lines
