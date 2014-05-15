@@ -15,7 +15,7 @@ PV = "2.3.3"
 
 SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.3 \
            file://lttng-modules-replace-KERNELDIR-with-KERNEL_SRC.patch \
-           file://fixup_block_driver.patch \
+           file://bio-bvec-iter.patch \
           "
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
