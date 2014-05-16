@@ -10,8 +10,8 @@ SRC_URI = "${SAVANNAH_GNU_MIRROR}/quilt/quilt-${PV}.tar.gz \
         file://Makefile \
 "
 
-SRC_URI[md5sum] = "24417eba5961592b64103bdda001ebf4"
-SRC_URI[sha256sum] = "1eec0a270ac4d41eea0fd5823603c9d2a35ab6b8ab73a90dd92ce1291b2a9fc3"
+SRC_URI[md5sum] = "c0ef4beb58a6fa72563b955e70624b6e"
+SRC_URI[sha256sum] = "2846788221aa8844c54f10239c7cbc5e88031859162bcc285449446c3cfffe52"
 
 inherit autotools-brokensep ptest
 
@@ -55,4 +55,5 @@ do_install_ptest() {
 RDEPENDS_${PN}-ptest = "make file sed gawk diffutils findutils ed perl \
                         perl-module-filehandle perl-module-getopt-std \
                         perl-module-posix perl-module-file-temp \
+                        perl-module-text-parsewords \
 "
