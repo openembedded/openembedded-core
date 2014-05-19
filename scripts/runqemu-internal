@@ -550,7 +550,7 @@ fi
 
 if [ "x$RAMFS" = "xtrue" ]; then
     QEMUOPTIONS="-initrd $ROOTFS -nographic"
-    KERNCMDLINE="root=/dev/ram0 debugshell"
+    KERNCMDLINE="root=/dev/ram0 console=ttyS0 debugshell"
 fi
 
 if [ "x$ISOFS" = "xtrue" ]; then
