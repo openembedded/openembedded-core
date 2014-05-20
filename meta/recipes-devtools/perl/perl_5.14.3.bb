@@ -74,7 +74,8 @@ SRC_URI = "http://www.cpan.org/src/5.0/perl-${PV}.tar.gz \
         file://config.sh-32-be \
         file://config.sh-64 \
         file://config.sh-64-le \
-        file://config.sh-64-be"
+        file://config.sh-64-be \
+        file://perl-5.14.3-fix-CVE-2010-4777.patch "
 #	file://debian/fakeroot.diff
 
 SRC_URI[md5sum] = "f6a3d878c688d111b495c87db56c5be5"
