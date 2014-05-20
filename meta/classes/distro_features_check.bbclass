@@ -15,8 +15,8 @@ python () {
         for f in required_distro_features:
             if f in distro_features:
                 break
-        else:
-            raise bb.parse.SkipPackage("missing required distro feature %s (not in DISTRO_FEATURES)" % required_distro_features)
+            else:
+                raise bb.parse.SkipPackage("missing required distro feature %s (not in DISTRO_FEATURES)" % required_distro_features)
 
     conflict_distro_features = d.getVar('CONFLICT_DISTRO_FEATURES', True)
     if conflict_distro_features:
