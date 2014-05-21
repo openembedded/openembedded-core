@@ -24,5 +24,7 @@ EXTRA_OECMAKE = "-DLIB_SUFFIX=${@d.getVar('baselib', True).replace('lib', '')}"
 do_configure_prepend () {
 	rm -f ${S}/admin/ltmain.sh
 	rm -f ${S}/admin/libtool.m4.in
+	# Don't have a floating dependeny on boost
+	sed -i -e "s/atomic.hpp/atomic-not-exist.hpp/" ${S}/ConfigureChecks.cmake
 }
 
