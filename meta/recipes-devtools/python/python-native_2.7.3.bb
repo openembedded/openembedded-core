@@ -18,6 +18,7 @@ SRC_URI += "\
            file://builddir.patch \
            file://parallel-makeinst-create-bindir.patch \
            file://python-fix-build-error-with-Readline-6.3.patch \
+           file://gcc-4.8-fix-configure-Wformat.patch \
            "
 S = "${WORKDIR}/Python-${PV}"
 
