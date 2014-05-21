@@ -67,4 +67,6 @@ p4://.*/.*      http://sources.openembedded.org/ \n \
 osc://.*/.*     http://sources.openembedded.org/ \n \
 https?$://.*/.* http://sources.openembedded.org/ \n \
 ftp://.*/.*     http://sources.openembedded.org/ \n \
+${CPAN_MIRROR}  http://cpan.metacpan.org/ \n \
+${CPAN_MIRROR}  http://search.cpan.org/CPAN/ \n \
 "
