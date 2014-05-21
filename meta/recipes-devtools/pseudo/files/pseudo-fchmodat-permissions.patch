@@ -1,0 +1,107 @@
+commit 5a6f2896ed44029ced2a33ac64c962737c5171a0
+Author: Peter Seebach <peter.seebach@windriver.com>
+Date:   Fri May 16 15:53:06 2014 -0500
+
+    permissions updates: improve fchmodat, mask out write bits
+
+    Upstream-Status: Backport of several patches from 1.6 branch,
+    combined.
+    
+    Backport from pseudo 1.6 of improvements to fchmodat (handle
+    AT_SYMLINK_NOFOLLOW by rejecting it if the host system does,
+    to make GNU tar happier), also mask out write bits from filesystem
+    modes to avoid security problems.
+
+    The 1.6 patches are:
+
+    87c53ea58befef48677846693aab445df1850e16
+    3c716e0bab4f0cfe4be84caa9ce5fd5e3f5e2a23
+    c98e4f43b5d6499748a5057134408f4ba4854fb4
+
+diff --git a/ChangeLog.txt b/ChangeLog.txt
+index 113f675..fab1033 100644
+--- a/ChangeLog.txt
++++ b/ChangeLog.txt
+@@ -1,3 +1,14 @@
++2014-05-16:
++	* (seebs) fchmodat: don't drop flags, report failures, to improve
++	  compatibility/consistency. Cache the knowledge that
++	  AT_SYMLINK_NOFOLLOW gets ENOTSUP.
++	* (seebs) mask out group/other write bits in real filesystem to
++	  reduce risks when assembling a rootfs including world-writeable
++	  directories.
++
++2014-05-15:
++	* (seebs) drop flags when calling fchmodat() to appease GNU tar.
++
+ 2013-02-27:
+ 	* (seebs) Oh, hey, what if I took out my debug messages?
+ 	* (seebs) update docs a bit to reduce bitrot
+diff --git a/ports/unix/guts/fchmodat.c b/ports/unix/guts/fchmodat.c
+index 59a92ce..69a953c 100644
+--- a/ports/unix/guts/fchmodat.c
++++ b/ports/unix/guts/fchmodat.c
+@@ -8,6 +8,7 @@
+  */
+ 	PSEUDO_STATBUF buf;
+ 	int save_errno = errno;
++	static int picky_fchmodat = 0;
+ 
+ #ifdef PSEUDO_NO_REAL_AT_FUNCTIONS
+ 	if (dirfd != AT_FDCWD) {
+@@ -15,6 +16,16 @@
+ 		return -1;
+ 	}
+ 	if (flags & AT_SYMLINK_NOFOLLOW) {
++		/* Linux, as of this writing, will always reject this.
++		 * GNU tar relies on getting the rejection. To cut down
++		 * on traffic, we check for the failure, and if we saw
++		 * a failure previously, we reject it right away and tell
++		 * the caller to retry.
++		 */
++		if (picky_fchmodat) {
++			errno = ENOTSUP;
++			return -1;
++		}
+ 		rc = base_lstat(path, &buf);
+ 	} else {
+ 		rc = base_stat(path, &buf);
+@@ -50,13 +61,22 @@
+ 
+ 	/* user bits added so "root" can always access files. */
+ #ifdef PSEUDO_NO_REAL_AT_FUNCTIONS
+-	/* note:  if path was a symlink, and AT_NOFOLLOW_SYMLINKS was
++	/* note:  if path was a symlink, and AT_SYMLINK_NOFOLLOW was
+ 	 * specified, we already bailed previously. */
+ 	real_chmod(path, PSEUDO_FS_MODE(mode, S_ISDIR(buf.st_mode)));
+ #else
+-	real_fchmodat(dirfd, path, PSEUDO_FS_MODE(mode, S_ISDIR(buf.st_mode)), flags);
++	rc = real_fchmodat(dirfd, path, PSEUDO_FS_MODE(mode, S_ISDIR(buf.st_mode)), flags);
++	/* AT_SYMLINK_NOFOLLOW isn't supported by fchmodat. GNU tar
++	 * tries to use it anyway, figuring it can just retry if that
++	 * fails. So we want to report that *particular* failure instead
++	 * of doing the fallback.
++	 */
++	if (rc == -1 && errno == ENOTSUP && (flags & AT_SYMLINK_NOFOLLOW)) {
++		picky_fchmodat = 1;
++		return -1;
++	}
+ #endif
+-	/* we ignore a failure from underlying fchmod, because pseudo
++	/* we otherwise ignore failures from underlying fchmod, because pseudo
+ 	 * may believe you are permitted to change modes that the filesystem
+ 	 * doesn't. Note that we also don't need to know whether the
+          * file might be a (pseudo) block device or some such; pseudo
+diff --git a/pseudo_client.h b/pseudo_client.h
+index f36a772..ecb13a6 100644
+--- a/pseudo_client.h
++++ b/pseudo_client.h
+@@ -85,6 +85,6 @@ extern int pseudo_nosymlinkexp;
+  * None of this will behave very sensibly if umask has 0700 bits in it;
+  * this is a known limitation.
+  */
+-#define PSEUDO_FS_MODE(mode, isdir) ((mode) | S_IRUSR | S_IWUSR | ((isdir) ? S_IXUSR : 0))
+-#define PSEUDO_DB_MODE(fs_mode, user_mode) (((fs_mode) & ~0700) | ((user_mode & 0700)))
++#define PSEUDO_FS_MODE(mode, isdir) ((((mode) | S_IRUSR | S_IWUSR | ((isdir) ? S_IXUSR : 0)) & ~(S_IWGRP | S_IWOTH)) & ~(S_IWOTH | S_IWGRP))
++#define PSEUDO_DB_MODE(fs_mode, user_mode) (((fs_mode) & ~0722) | ((user_mode & 0722)))
+ 
