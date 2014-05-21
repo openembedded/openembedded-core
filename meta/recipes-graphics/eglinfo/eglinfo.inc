@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=8d4f33bc3add976f7dfae85dab66f03c"
 DEPENDS = "virtual/egl"
 
 SRC_URI = "git://github.com/dv1/eglinfo.git;branch=master"
-SRCREV = "4a49ff59545d9b6a8222badab64115f89d3a6774"
+SRCREV = "4b317648ec6cf39556a9e5d8078f605bc0edd5de"
 
 S = "${WORKDIR}/git"
 
