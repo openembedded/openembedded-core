@@ -9,7 +9,8 @@ SECTION = "libs"
 DEPENDS = "libxml2"
 
 SRC_URI = "ftp://xmlsoft.org/libxslt//libxslt-${PV}.tar.gz \
-           file://pkgconfig_fix.patch"
+           file://pkgconfig_fix.patch \
+           file://pkgconfig.patch"
 
 SRC_URI[md5sum] = "9667bf6f9310b957254fdcf6596600b7"
 SRC_URI[sha256sum] = "5fc7151a57b89c03d7b825df5a0fae0a8d5f05674c0e7cf2937ecec4d54a028c"
