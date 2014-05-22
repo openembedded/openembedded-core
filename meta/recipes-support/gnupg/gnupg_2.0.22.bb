@@ -10,7 +10,8 @@ PTH_libc-uclibc = "npth"
 
 inherit autotools gettext texinfo
 
-SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2"
+SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
+           file://pkgconfig.patch"
 
 SRC_URI[md5sum] = "ee22e7b4fdbfcb50229c2e6db6db291e"
 SRC_URI[sha256sum] = "437d0ab259854359fc48aa8795af80cff4975e559c111c92c03d0bc91408e251"
@@ -22,6 +23,14 @@ EXTRA_OECONF = "--disable-ldap \
 		--with-bzip2=${STAGING_LIBDIR}/.. \
                 --with-readline=${STAGING_LIBDIR}/.. \
                "
+
+do_configure_prepend () {
+	# Else these could be used in prefernce to those in aclocal-copy
+	rm -f ${S}/m4/gpg-error.m4
+	rm -f ${S}/m4/libassuan.m4
+	rm -f ${S}/m4/ksba.m4
+	rm -f ${S}/m4/libgcrypt.m4
+}
 
 do_install_append() {
 	ln -sf gpg2 ${D}${bindir}/gpg
