@@ -18,6 +18,7 @@ PV = "v2.4.0"
 SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.4 \
            file://runtest-2.4.0.patch \
            file://run-ptest \
+           file://Fix-alignment-problems-on-targets-not-supporting-una.patch \
 	  "
 
 S = "${WORKDIR}/git"
