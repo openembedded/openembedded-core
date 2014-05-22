@@ -18,3 +18,7 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "cd86fad9c9d360b2cf80449f8a4a4075"
 SRC_URI[sha256sum] = "5a61eed50550d4d0dcb47457ce7b6a90f8e719d42a3b25f7e79333e8cd721971"
 
+do_configure_prepend () {
+	# Else these could be used in preference to those in aclocal-copy
+	rm -f ${S}/m4/gpg-error.m4
+}
