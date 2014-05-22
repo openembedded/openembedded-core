@@ -24,7 +24,9 @@ DEPENDS += "bzip2 zlib"
 
 PACKAGECONFIG[pcretest-readline] = "--enable-pcretest-libreadline,--disable-pcretest-libreadline,readline,"
 
-inherit autotools binconfig ptest
+BINCONFIG = "${bindir}/pcre-config"
+
+inherit autotools binconfig-disabled ptest
 
 PARALLEL_MAKE = ""
 

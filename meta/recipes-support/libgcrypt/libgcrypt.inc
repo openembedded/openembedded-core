@@ -16,7 +16,9 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-${PV}.tar.gz \
            file://fix-ICE-failure-on-mips-with-option-O-and-g.patch \
 "
 
-inherit autotools-brokensep texinfo binconfig pkgconfig
+BINCONFIG = "${bindir}/libgcrypt-config"
+
+inherit autotools-brokensep texinfo binconfig-disabled pkgconfig
 
 EXTRA_OECONF = "--disable-asm --with-capabilities"
 

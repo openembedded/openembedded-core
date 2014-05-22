@@ -19,7 +19,9 @@ INC_PR = "r5"
 
 SRC_URI = "http://www.tcpdump.org/release/libpcap-${PV}.tar.gz"
 
-inherit autotools binconfig
+BINCONFIG = "${bindir}/pcap-config"
+
+inherit autotools binconfig-disabled
 
 EXTRA_OECONF = "--with-pcap=linux"
 

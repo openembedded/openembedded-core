@@ -22,7 +22,9 @@ SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz;name=libtar \
            file://python-sitepackages-dir.patch \
           "
 
-inherit autotools pkgconfig binconfig pythonnative ptest
+BINCONFIG = "${bindir}/xml2-config"
+
+inherit autotools pkgconfig binconfig-disabled pythonnative ptest
 
 RDEPENDS_${PN}-ptest_append_libc-glibc += "eglibc-gconv-ebcdic-us eglibc-gconv-ibm1141"
 

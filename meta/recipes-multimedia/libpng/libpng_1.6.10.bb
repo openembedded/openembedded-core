@@ -15,7 +15,9 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/libpng/libpng${LIBV}/${PV}/libpng-${PV}
 SRC_URI[md5sum] = "5f414b20f683b1d96b163c89e3eff768"
 SRC_URI[sha256sum] = "4003f0fd0e36110a2b742fc5b9e1ab93ed7a7ab57ae8dc65f0e8101458775a56"
 
-inherit autotools binconfig pkgconfig
+BINCONFIG = "${bindir}/libpng-config ${bindir}/libpng16-config"
+
+inherit autotools binconfig-disabled pkgconfig
 
 # Work around missing symbols
 EXTRA_OECONF_append_arm = " ${@bb.utils.contains("TUNE_FEATURES", "neon", "--enable-arm-neon=on", "--enable-arm-neon=off" ,d)}"

@@ -16,7 +16,9 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libassuan/libassuan-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "757243cc4a71b30ed8d8dbe784035d36"
 SRC_URI[sha256sum] = "23e2d67779b88e90d29fe1df6b157109f1c2a647d0f1b2a0f4295bb3c0b2039d"
 
-inherit autotools texinfo binconfig pkgconfig
+BINCONFIG = "${bindir}/libassuan-config"
+
+inherit autotools texinfo binconfig-disabled pkgconfig
 
 do_configure_prepend () {
 	# Else these could be used in prefernce to those in aclocal-copy

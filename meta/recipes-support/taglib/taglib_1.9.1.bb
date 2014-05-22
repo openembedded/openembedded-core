@@ -14,7 +14,9 @@ SRC_URI[sha256sum] = "72d371cd1419a87ae200447a53bff2be219283071e80fd12337928cc96
 
 S = "${WORKDIR}/${BP}"
 
-inherit cmake pkgconfig binconfig
+BINCONFIG = "${bindir}/taglib-config"
+
+inherit cmake pkgconfig binconfig-disabled
 
 PACKAGES =+ "${PN}-c"
 FILES_${PN}-c = "${libdir}/libtag_c.so.*"

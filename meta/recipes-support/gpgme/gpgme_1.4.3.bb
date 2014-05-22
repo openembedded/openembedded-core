@@ -19,7 +19,9 @@ DEPENDS = "libgpg-error libassuan"
 
 EXTRA_OECONF = "--with-gpg=${bindir}/gpg --without-gpgsm"
 
-inherit autotools texinfo binconfig pkgconfig
+BINCONFIG = "${bindir}/gpgme-config"
+
+inherit autotools texinfo binconfig-disabled pkgconfig
 
 PACKAGES =+ "${PN}-pthread"
 FILES_${PN}-pthread = "${libdir}/libgpgme-pthread.so.*"

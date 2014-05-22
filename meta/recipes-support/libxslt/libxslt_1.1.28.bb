@@ -16,7 +16,9 @@ SRC_URI[md5sum] = "9667bf6f9310b957254fdcf6596600b7"
 SRC_URI[sha256sum] = "5fc7151a57b89c03d7b825df5a0fae0a8d5f05674c0e7cf2937ecec4d54a028c"
 S = "${WORKDIR}/libxslt-${PV}"
 
-inherit autotools pkgconfig binconfig lib_package
+BINCONFIG = "${bindir}/xslt-config"
+
+inherit autotools pkgconfig binconfig-disabled lib_package
 
 # We don't DEPEND on binutils for ansidecl.h so ensure we don't use the header
 do_configure_prepend () {

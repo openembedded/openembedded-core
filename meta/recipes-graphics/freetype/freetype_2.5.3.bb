@@ -17,7 +17,9 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2"
 SRC_URI[md5sum] = "d6b60f06bfc046e43ab2a6cbfd171d65"
 SRC_URI[sha256sum] = "c0848b29d52ef3ca27ad92e08351f023c5e24ce8cea7d8fe69fc96358e65f75e"
 
-inherit autotools-brokensep pkgconfig binconfig multilib_header
+BINCONFIG = "${bindir}/freetype-config"
+
+inherit autotools-brokensep pkgconfig binconfig-disabled multilib_header
 
 LIBTOOL = "${S}/builds/unix/${HOST_SYS}-libtool"
 EXTRA_OEMAKE = "'LIBTOOL=${LIBTOOL}'"

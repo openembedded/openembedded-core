@@ -19,7 +19,9 @@ S = "${WORKDIR}/DirectFB-${PV}"
 
 LDFLAGS_append =" -lts -lm"
 
-inherit autotools binconfig pkgconfig
+BINCONFIG = "${bindir}/directfb-config"
+
+inherit autotools binconfig-disabled pkgconfig
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[jpeg2000] = "--enable-jpeg2000,--disable-jpeg2000,jasper"

@@ -20,7 +20,9 @@ SRC_URI[sha256sum] = "72353660c5a2caafd601b20e12e75d865fd88f6cf1a088b306a3963f0b
 
 PARALLEL_MAKE=""
 
-inherit autotools binconfig pkgconfig
+BINCONFIG = "${bindir}/pth-config"
+
+inherit autotools binconfig-disabled pkgconfig
 
 do_configure() {
 	( cd ${S}; gnu-configize )
