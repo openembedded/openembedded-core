@@ -321,7 +321,12 @@ python populate_packages_prepend () {
     do_split_packages(d, libdir, 'Module/([^\/]*)\.pm', 'perl-module-%s', 'perl module %s', recursive=True, allow_dirs=False, match_path=True, prepend=False)
     do_split_packages(d, libdir, 'Module/([^\/]*)/.*', 'perl-module-%s', 'perl module %s', recursive=True, allow_dirs=False, match_path=True, prepend=False)
     do_split_packages(d, libdir, '(^(?!(CPAN\/|CPANPLUS\/|Module\/|unicore\/|auto\/)[^\/]).*)\.(pm|pl|e2x)', 'perl-module-%s', 'perl module %s', recursive=True, allow_dirs=False, match_path=True, prepend=False)
-    d.setVar("RRECOMMENDS_${PN}-modules", d.getVar('PACKAGES', True).replace('${PN}-modules ', '').replace('${PN}-dbg ', '').replace('${PN}-misc ', '').replace('${PN}-dev ', '').replace('${PN}-pod ', '').replace('${PN}-doc ', ''))
+
+    # perl-modules should recommend every perl module, and only the
+    # modules. Don't attempt to use the result of do_split_packages() as some
+    # modules are manually split (eg. perl-module-unicore).
+    packages = filter(lambda p: 'perl-module-' in p, d.getVar('PACKAGES', True).split())
+    d.setVar("RRECOMMENDS_${PN}-modules", ' '.join(packages))
 }
 
 PACKAGES_DYNAMIC += "^perl-module-.*"
