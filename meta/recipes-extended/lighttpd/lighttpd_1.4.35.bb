@@ -23,6 +23,7 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
         file://lighttpd.conf \
         file://lighttpd \
         file://lighttpd.service \
+        file://pkgconfig.patch \
         "
 
 SRC_URI[md5sum] = "f7a88130ee9984b421ad8aa80629750a"
