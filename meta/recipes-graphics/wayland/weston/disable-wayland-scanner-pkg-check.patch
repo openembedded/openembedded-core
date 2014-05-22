@@ -1,0 +1,13 @@
+Index: weston-1.5.0/configure.ac
+===================================================================
+--- weston-1.5.0.orig/configure.ac
++++ weston-1.5.0/configure.ac
+@@ -503,7 +503,7 @@ if test x$wayland_scanner = x; then
+ 	AC_MSG_ERROR([wayland-scanner is needed to compile weston])
+ fi
+ 
+-PKG_CHECK_MODULES(WAYLAND_SCANNER, wayland-scanner)
++#PKG_CHECK_MODULES(WAYLAND_SCANNER, wayland-scanner)
+ 
+ AC_CONFIG_FILES([Makefile src/version.h src/weston.pc])
+ 

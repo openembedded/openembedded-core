@@ -8,10 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=275efac2559a224527bd4fd593d38466 \
 SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
            file://weston.png \
            file://weston.desktop \
-           file://0001-remove-dependence-on-wayland-scanner-flags.patch"
-SRC_URI[md5sum] = "4438d2b1f3c9ba9a4a2b10d89fac6fd0"
-SRC_URI[sha256sum] = "74a2319d98e9cdb1acf24659699719aa89ac268cf549759271e326edc5f9ed64"
-
+           file://disable-wayland-scanner-pkg-check.patch \
+           file://make-lcms-configurable.patch"
+SRC_URI[md5sum] = "8eb40d230efc2411f083c20656534780"
+SRC_URI[sha256sum] = "06388ba04ac79aa72d685cc1a8e646ddb2b8cfe11fcc742294f9addac48b7684"
 
 inherit autotools pkgconfig useradd
 
@@ -25,7 +25,8 @@ EXTRA_OECONF = "--enable-setuid-install \
                 --enable-demo-clients-install \
                 --disable-libunwind \
                 --disable-rpi-compositor \
-                --disable-rdp-compositor"
+                --disable-rdp-compositor \
+                --disable-lcms"
 
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'kms fbdev wayland egl', '', d)} \
@@ -53,6 +54,8 @@ PACKAGECONFIG[vaapi] = "--enable-vaapi-recorder,--disable-vaapi-recorder,libva"
 PACKAGECONFIG[egl] = "--enable-egl --enable-simple-egl-clients,--disable-egl --disable-simple-egl-clients,virtual/egl"
 # Weston with cairo glesv2 support
 PACKAGECONFIG[cairo-glesv2] = "--with-cairo-glesv2,--with-cairo=image,cairo"
+# Weston with lcms support
+PACKAGECONFIG[lcms] = "--enable-lcms,--disable-lcms,lcms"
 
 do_install_append() {
 	# Weston doesn't need the .la files to load modules, so wipe them
