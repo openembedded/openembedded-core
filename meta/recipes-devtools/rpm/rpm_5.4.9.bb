@@ -89,6 +89,7 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;ex
 	   file://debugedit-valid-file-to-fix-segment-fault.patch \
 	   file://rpm-platform-file-fix.patch \
 	   file://rpm-lsb-compatibility.patch \
+	   file://rpm-verify-files.patch \
 	  "
 
 # Uncomment the following line to enable platform score debugging
