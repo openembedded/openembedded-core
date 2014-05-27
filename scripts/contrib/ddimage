@@ -1,7 +1,8 @@
 #!/bin/sh
 
-#BLACKLIST_DEVICES="/dev/sda /dev/sdb /dev/sdc /dev/sdd /dev/sde"
-BLACKLIST_DEVICES="/dev/sda"
+# Default to avoiding the first two disks on typical Linux and Mac OS installs
+# Better safe than sorry :-)
+BLACKLIST_DEVICES="/dev/sda /dev/sdb /dev/disk1 /dev/disk2"
 
 # 1MB blocksize
 BLOCKSIZE=1048576
@@ -14,9 +15,15 @@ image_details() {
 	IMG=$1
 	echo "Image details"
 	echo "============="
-	echo "    image: $(stat --printf '%N\n' $IMG)"
-	echo "     size: $(stat -L --printf '%s bytes\n' $IMG)"
-	echo " modified: $(stat -L --printf '%y\n' $IMG)"
+	echo "    image: $(basename $IMG)"
+	# stat format is different on Mac OS and Linux
+	if [ "$(uname)" = "Darwin" ]; then
+		echo "     size: $(stat -L -f '%z bytes' $IMG)"
+		echo " modified: $(stat -L -f '%Sm' $IMG)"
+	else
+		echo "     size: $(stat -L -c '%s bytes' $IMG)"
+		echo " modified: $(stat -L -c '%y' $IMG)"
+	fi
 	echo "     type: $(file -L -b $IMG)"
 	echo ""
 }
@@ -27,6 +34,14 @@ device_details() {
 
 	echo "Device details"
 	echo "=============="
+
+	# Collect disk info using diskutil on Mac OS
+	if [ "$(uname)" = "Darwin" ]; then
+		diskutil info $DEVICE | egrep "(Device Node|Media Name|Total Size)"
+		return
+	fi
+
+	# Default / Linux information collection
 	echo "  device: $DEVICE"
 	if [ -f "/sys/class/block/$DEV/device/vendor" ]; then
 		echo "  vendor: $(cat /sys/class/block/$DEV/device/vendor)"
