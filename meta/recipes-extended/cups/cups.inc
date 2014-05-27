@@ -9,6 +9,7 @@ SRC_URI = "http://www.cups.org/software/${PV}/${BP}-source.tar.bz2 \
            file://0001-don-t-try-to-run-generated-binaries.patch \
            file://cups_serverbin.patch \
            file://cups-no-gcrypt.patch \
+           file://cups-str4402.patch \
 	  "
 
 LEAD_SONAME = "libcupsdriver.so"
