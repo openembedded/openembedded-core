@@ -4,7 +4,7 @@ SECTION = "libs"
 DEPENDS = "util-linux"
 
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=0c35ff3c4c83b89d2f076e315caac28b \
+LIC_FILES_CHKSUM = "file://LICENSE;md5=4dfd4cd216828c8cae5de5a12f3844c8 \
                     file://include/apr_lib.h;endline=17;md5=ee42fa7575dc40580a9e01c1b75fae96"
 
 BBCLASSEXTEND = "native"
@@ -14,10 +14,11 @@ SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.bz2 \
            file://cleanup.patch \
            file://configfix.patch \
            file://run-ptest \
+           file://upgrade-and-fix-1.5.1.patch \
 "
 
-SRC_URI[md5sum] = "ce2ab01a0c3cdb71cf0a6326b8654f41"
-SRC_URI[sha256sum] = "61b8d2f8d321c6365ee3d71d0bb41f3a89c44da6124cc5b407a3b8319d660421"
+SRC_URI[md5sum] = "5486180ec5a23efb5cae6d4292b300ab"
+SRC_URI[sha256sum] = "e94abe431d4da48425fcccdb27b469bd0f8151488f82e5630a56f26590e198ac"
 
 inherit autotools-brokensep lib_package binconfig multilib_header ptest
 
