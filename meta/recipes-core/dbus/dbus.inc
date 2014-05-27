@@ -86,6 +86,8 @@ EXTRA_OECONF = "--disable-tests \
                 --disable-systemd \
                 --without-dbus-glib"
 
+EXTRA_OECONF_class-native = "--disable-selinux"
+
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
 PACKAGECONFIG_class-native = ""
