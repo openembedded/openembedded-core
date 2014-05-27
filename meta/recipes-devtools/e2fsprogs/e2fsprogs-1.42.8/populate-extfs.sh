@@ -36,7 +36,7 @@ DEBUGFS="debugfs"
 		fi
 
 		# Only stat once since stat is a time consuming command
-		STAT=$(stat -c "TYPE=\"%F\";DEVNO=\"0x%t 0x%T\";MODE=\"%f\";U=\"%u\";G=\"%g\"" "$FILE")
+		STAT=$(stat -c "TYPE=\"%F\";DEVNO=\"0x%t 0x%T\";MODE=\"%f\";U=\"%u\";G=\"%g\";AT=\"%x\";MT=\"%y\";CT=\"%z\"" "$FILE")
 		eval $STAT
 
 		case $TYPE in
@@ -70,6 +70,14 @@ DEBUGFS="debugfs"
 		# Set uid and gid
 		echo "sif \"$TGT\" uid $U"
 		echo "sif \"$TGT\" gid $G"
+
+		# Set atime, mtime and ctime
+		AT=`echo $AT | cut -d'.' -f1 | sed -e 's#[- :]##g'`
+		MT=`echo $MT | cut -d'.' -f1 | sed -e 's#[- :]##g'`
+		CT=`echo $CT | cut -d'.' -f1 | sed -e 's#[- :]##g'`
+		echo "sif \"$TGT\" atime $AT"
+		echo "sif \"$TGT\" mtime $MT"
+		echo "sif \"$TGT\" ctime $CT"
 	done
 
 	# Handle the hard links.
