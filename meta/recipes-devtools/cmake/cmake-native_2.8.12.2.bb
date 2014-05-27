@@ -14,4 +14,5 @@ SRC_URI[sha256sum] = "8c6574e9afabcb9fc66f463bb1f2f051958d86c85c37fccf067eb1a44a
 # Disable ccmake since we don't depend on ncurses
 CMAKE_EXTRACONF = "\
     -DBUILD_CursesDialog=0 \
+    -DENABLE_ACL=0 -DHAVE_ACL_LIBACL_H=0 \
 "
