@@ -13,6 +13,7 @@ DEPENDS += "ncurses"
 
 SRC_URI = "${GNU_MIRROR}/readline/${BPN}-${PV}.tar.gz;name=archive \
            file://configure-fix.patch \
+           file://config-dirent-symbols.patch \
            file://norpath.patch \
            file://acinclude.m4"
 
