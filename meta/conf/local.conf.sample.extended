@@ -308,3 +308,26 @@
 #INITRAMFS_IMAGE = "core-image-minimal-initramfs"
 #INITRAMFS_IMAGE_BUNDLE = "1"
 
+#
+# IPK Hierarchical feed
+#
+# In some cases it may be desirable not to have all package files in the same
+# directory. An example would be when package feeds are to be uploaded to a
+# shared webhosting service or transferred to a Windows machine which may have
+# problems with directories containing multiple thousands of files.
+#
+# If the IPK_HIERARCHICAL_FEED variable is set to "1", packages will be split
+# between subdirectories in a similar way to how Debian package feeds are
+# organised. In the hierarchical feed, package files are written to
+# <outdir>/<arch>/<pkg_prefix>/<pkg_subdir>, where pkg_prefix is the first
+# letter of the package file name for non-lib packages or "lib" plus the 4th
+# letter of the package file name for lib packages (eg, 'l' for less, 'libc' for
+# libc6).  pkg_subdir is the root of the package file name, discarding the
+# version and architecture parts and the common suffixes '-dbg', '-dev', '-doc',
+# '-staticdev', '-locale' and '-locale-*' which are listed in
+# meta/conf/bitbake.conf.
+#
+# If IPK_HIERARCHICAL_FEED is unset or set to any other value, the traditional
+# feed layout is used where package files are placed in <outdir>/<arch>/.
+#
+#IPK_HIERARCHICAL_FEED = "1"

@@ -63,7 +63,32 @@ python do_package_ipk () {
         bb.data.update_data(localdata)
         basedir = os.path.join(os.path.dirname(root))
         arch = localdata.getVar('PACKAGE_ARCH', True)
-        pkgoutdir = "%s/%s" % (outdir, arch)
+
+        if localdata.getVar('IPK_HIERARCHICAL_FEED') == "1":
+            # Spread packages across subdirectories so each isn't too crowded
+            if pkgname.startswith('lib'):
+                pkg_prefix = 'lib' + pkgname[3]
+            else:
+                pkg_prefix = pkgname[0]
+
+            # Keep -dbg, -dev, -doc, -staticdev, -locale and -locale-* packages
+            # together. These package suffixes are taken from the definitions of
+            # PACKAGES and PACKAGES_DYNAMIC in meta/conf/bitbake.conf
+            if pkgname[-4:] in ('-dbg', '-dev', '-doc'):
+                pkg_subdir = pkgname[:-4]
+            elif pkgname.endswith('-staticdev'):
+                pkg_subdir = pkgname[:-10]
+            elif pkgname.endswith('-locale'):
+                pkg_subdir = pkgname[:-7]
+            elif '-locale-' in pkgname:
+                pkg_subdir = pkgname[:pkgname.find('-locale-')]
+            else:
+                pkg_subdir = pkgname
+
+            pkgoutdir = "%s/%s/%s/%s" % (outdir, arch, pkg_prefix, pkg_subdir)
+        else:
+            pkgoutdir = "%s/%s" % (outdir, arch)
+
         bb.utils.mkdirhier(pkgoutdir)
         os.chdir(root)
         cleanupcontrol(root)
