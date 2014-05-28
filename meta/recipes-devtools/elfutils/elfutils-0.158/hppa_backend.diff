@@ -1,9 +1,7 @@
-Upstream-Status: Backport
-
-Index: elfutils-0.155/backends/parisc_init.c
+Index: elfutils-0.158/backends/parisc_init.c
 ===================================================================
---- /dev/null
-+++ elfutils-0.155/backends/parisc_init.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ elfutils-0.158/backends/parisc_init.c	2014-04-21 11:12:12.228150280 +0000
 @@ -0,0 +1,74 @@
 +/* Initialization of PA-RISC specific backend library.
 +   Copyright (C) 2002, 2005, 2006 Red Hat, Inc.
@@ -79,10 +77,10 @@ Index: elfutils-0.155/backends/parisc_init.c
 +
 +  return MODVERSION;
 +}
-Index: elfutils-0.155/backends/parisc_regs.c
+Index: elfutils-0.158/backends/parisc_regs.c
 ===================================================================
---- /dev/null
-+++ elfutils-0.155/backends/parisc_regs.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ elfutils-0.158/backends/parisc_regs.c	2014-04-21 11:12:12.228150280 +0000
 @@ -0,0 +1,159 @@
 +/* Register names and numbers for PA-RISC DWARF.
 +   Copyright (C) 2005, 2006 Red Hat, Inc.
@@ -243,10 +241,10 @@ Index: elfutils-0.155/backends/parisc_regs.c
 +  name[namelen++] = '\0';
 +  return namelen;
 +}
-Index: elfutils-0.155/backends/parisc_reloc.def
+Index: elfutils-0.158/backends/parisc_reloc.def
 ===================================================================
---- /dev/null
-+++ elfutils-0.155/backends/parisc_reloc.def
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ elfutils-0.158/backends/parisc_reloc.def	2014-04-21 11:12:12.228150280 +0000
 @@ -0,0 +1,128 @@
 +/* List the relocation types for PA-RISC.  -*- C -*-
 +   Copyright (C) 2005 Red Hat, Inc.
@@ -376,10 +374,10 @@ Index: elfutils-0.155/backends/parisc_reloc.def
 +RELOC_TYPE (TLS_DTPMOD64,	DYN)
 +
 +#define NO_RELATIVE_RELOC       1
-Index: elfutils-0.155/backends/parisc_retval.c
+Index: elfutils-0.158/backends/parisc_retval.c
 ===================================================================
---- /dev/null
-+++ elfutils-0.155/backends/parisc_retval.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ elfutils-0.158/backends/parisc_retval.c	2014-04-21 11:12:12.228150280 +0000
 @@ -0,0 +1,213 @@
 +/* Function return value location for Linux/PA-RISC ABI.
 +   Copyright (C) 2005 Red Hat, Inc.
@@ -594,10 +592,10 @@ Index: elfutils-0.155/backends/parisc_retval.c
 +  return parisc_return_value_location_ (functypedie, locp, 1);
 +}
 +
-Index: elfutils-0.155/backends/parisc_symbol.c
+Index: elfutils-0.158/backends/parisc_symbol.c
 ===================================================================
---- /dev/null
-+++ elfutils-0.155/backends/parisc_symbol.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ elfutils-0.158/backends/parisc_symbol.c	2014-04-21 11:12:12.228150280 +0000
 @@ -0,0 +1,112 @@
 +/* PA-RISC specific symbolic name handling.
 +   Copyright (C) 2002, 2005 Red Hat, Inc.
@@ -711,10 +709,10 @@ Index: elfutils-0.155/backends/parisc_symbol.c
 +      return ELF_T_NUM;
 +    }
 +}
-Index: elfutils-0.155/backends/libebl_parisc.h
+Index: elfutils-0.158/backends/libebl_parisc.h
 ===================================================================
---- /dev/null
-+++ elfutils-0.155/backends/libebl_parisc.h
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ elfutils-0.158/backends/libebl_parisc.h	2014-04-21 11:12:12.228150280 +0000
 @@ -0,0 +1,9 @@
 +#ifndef _LIBEBL_HPPA_H
 +#define _LIBEBL_HPPA_H 1
@@ -725,25 +723,26 @@ Index: elfutils-0.155/backends/libebl_parisc.h
 +extern int parisc_return_value_location_64(Dwarf_Die *, const Dwarf_Op **locp);
 +
 +#endif
-Index: elfutils-0.155/backends/Makefile.am
+Index: elfutils-0.158/backends/Makefile.am
 ===================================================================
---- elfutils-0.155.orig/backends/Makefile.am
-+++ elfutils-0.155/backends/Makefile.am
-@@ -32,11 +32,11 @@
- 	   -I$(top_srcdir)/libelf -I$(top_srcdir)/libdw
+--- elfutils-0.158.orig/backends/Makefile.am	2014-04-21 11:12:12.252149737 +0000
++++ elfutils-0.158/backends/Makefile.am	2014-04-21 11:13:11.910801105 +0000
+@@ -33,11 +33,12 @@
  
  
--modules = i386 sh x86_64 ia64 alpha arm sparc ppc ppc64 s390 tilegx
-+modules = i386 sh x86_64 ia64 alpha arm sparc ppc ppc64 s390 tilegx parisc
- libebl_pic = libebl_i386_pic.a libebl_sh_pic.a libebl_x86_64_pic.a \
- 	     libebl_ia64_pic.a libebl_alpha_pic.a libebl_arm_pic.a \
- 	     libebl_sparc_pic.a libebl_ppc_pic.a libebl_ppc64_pic.a \
--	     libebl_s390_pic.a libebl_tilegx_pic.a
-+	     libebl_s390_pic.a libebl_tilegx_pic.a libebl_parisc_pic.a
+ modules = i386 sh x86_64 ia64 alpha arm aarch64 sparc ppc ppc64 s390 \
+-	  tilegx
++	  tilegx parisc
+ libebl_pic = libebl_i386_pic.a libebl_sh_pic.a libebl_x86_64_pic.a    \
+ 	     libebl_ia64_pic.a libebl_alpha_pic.a libebl_arm_pic.a    \
+ 	     libebl_aarch64_pic.a libebl_sparc_pic.a libebl_ppc_pic.a \
+-	     libebl_ppc64_pic.a libebl_s390_pic.a libebl_tilegx_pic.a
++	     libebl_ppc64_pic.a libebl_s390_pic.a libebl_tilegx_pic.a \
++	     libebl_parisc_pic.a
  noinst_LIBRARIES = $(libebl_pic)
  noinst_DATA = $(libebl_pic:_pic.a=.so)
  
-@@ -103,6 +103,9 @@
+@@ -116,6 +117,9 @@
  libebl_tilegx_pic_a_SOURCES = $(tilegx_SRCS)
  am_libebl_tilegx_pic_a_OBJECTS = $(tilegx_SRCS:.c=.os)
  
@@ -753,11 +752,11 @@ Index: elfutils-0.155/backends/Makefile.am
  
  libebl_%.so libebl_%.map: libebl_%_pic.a $(libelf) $(libdw)
  	@rm -f $(@:.so=.map)
-Index: elfutils-0.155/libelf/elf.h
+Index: elfutils-0.158/libelf/elf.h
 ===================================================================
---- elfutils-0.155.orig/libelf/elf.h
-+++ elfutils-0.155/libelf/elf.h
-@@ -1780,16 +1780,24 @@
+--- elfutils-0.158.orig/libelf/elf.h	2014-04-21 11:12:12.252149737 +0000
++++ elfutils-0.158/libelf/elf.h	2014-04-21 11:12:12.228150280 +0000
+@@ -1814,16 +1814,24 @@
  #define R_PARISC_PCREL17F	12	/* 17 bits of rel. address.  */
  #define R_PARISC_PCREL14R	14	/* Right 14 bits of rel. address.  */
  #define R_PARISC_DPREL21L	18	/* Left 21 bits of rel. address.  */
@@ -782,7 +781,7 @@ Index: elfutils-0.155/libelf/elf.h
  #define R_PARISC_LTOFF_FPTR32	57	/* 32 bits LT-rel. function pointer. */
  #define R_PARISC_LTOFF_FPTR21L	58	/* LT-rel. fct ptr, left 21 bits. */
  #define R_PARISC_LTOFF_FPTR14R	62	/* LT-rel. fct ptr, right 14 bits. */
-@@ -1798,6 +1806,7 @@
+@@ -1832,6 +1840,7 @@
  #define R_PARISC_PLABEL21L	66	/* Left 21 bits of fdesc address.  */
  #define R_PARISC_PLABEL14R	70	/* Right 14 bits of fdesc address.  */
  #define R_PARISC_PCREL64	72	/* 64 bits PC-rel. address.  */
@@ -790,7 +789,7 @@ Index: elfutils-0.155/libelf/elf.h
  #define R_PARISC_PCREL22F	74	/* 22 bits PC-rel. address.  */
  #define R_PARISC_PCREL14WR	75	/* PC-rel. address, right 14 bits.  */
  #define R_PARISC_PCREL14DR	76	/* PC rel. address, right 14 bits.  */
-@@ -1823,6 +1832,8 @@
+@@ -1857,6 +1866,8 @@
  #define R_PARISC_LTOFF16WF	102	/* 16 bits LT-rel. address.  */
  #define R_PARISC_LTOFF16DF	103	/* 16 bits LT-rel. address.  */
  #define R_PARISC_SECREL64	104	/* 64 bits section rel. address.  */

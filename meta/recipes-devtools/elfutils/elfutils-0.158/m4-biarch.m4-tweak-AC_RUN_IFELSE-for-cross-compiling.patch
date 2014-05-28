@@ -1,0 +1,34 @@
+m4/biarch.m4: tweak AC_RUN_IFELSE for cross-compiling
+
+Macro: AC_RUN_IFELSE (input,
+                      [action-if-true],
+                      [action-if-false],
+                      [action-if-cross-compiling])
+
+Add the missing [action-if-cross-compiling] part to support
+cross-compiling.
+
+Upstream-Status: inappropriate [oe specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ m4/biarch.m4 | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/m4/biarch.m4 b/m4/biarch.m4
+--- a/m4/biarch.m4
++++ b/m4/biarch.m4
+@@ -40,7 +40,9 @@ AC_CACHE_CHECK([whether $biarch_CC makes executables we can run],
+ save_CC="$CC"
+ CC="$biarch_CC"
+ AC_RUN_IFELSE([AC_LANG_PROGRAM([], [])],
+-	      utrace_cv_cc_biarch=yes, utrace_cv_cc_biarch=no)
++	      utrace_cv_cc_biarch=yes,
++	      utrace_cv_cc_biarch=no,
++	      utrace_cv_cc_biarch=yes)
+ CC="$save_CC"])], [utrace_cv_cc_biarch=no])
+ AS_IF([test $utrace_cv_cc_biarch != yes], [dnl
+ AC_MSG_WARN([not running biarch tests, $biarch_CC does not work])])])
+-- 
+1.8.1.2
+

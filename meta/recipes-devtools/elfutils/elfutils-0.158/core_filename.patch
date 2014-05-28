@@ -1,0 +1,27 @@
+From: Matthias Klose <doko@ubuntu.com>
+Date: Tue, 7 Jan 2014 10:25:29 +0100
+Subject: [PATCH] tests: backtrace-subr.sh (check_native_core) should check
+ core file name.
+
+Needed when /proc/sys/kernel/core_uses_pid is set to 0. Try to rename
+the core file, and if it does still fail, skip the test.
+
+diff --git a/tests/backtrace-subr.sh b/tests/backtrace-subr.sh
+index e7ece91..62b873c 100644
+--- a/tests/backtrace-subr.sh
++++ b/tests/backtrace-subr.sh
+@@ -111,6 +111,11 @@ check_native_core()
+ 
+   # Skip the test if we cannot adjust core ulimit.
+   core="core.`ulimit -c unlimited || exit 77; set +ex; testrun ${abs_builddir}/$child --gencore; true`"
++  # see if /proc/sys/kernel/core_uses_pid is set to 0
++  if [ -f core ]; then
++    mv core "$core"
++  fi
++  if [ ! -f "$core" ]; then exit 77; fi
+ 
+   if [ "x$SAVED_VALGRIND_CMD" != "x" ]; then
+     VALGRIND_CMD="$SAVED_VALGRIND_CMD"
+-- 
+1.9.2
+

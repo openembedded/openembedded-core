@@ -1,0 +1,256 @@
+From 02cefdaa6429e620d6457fdb3ad9934f194c5a93 Mon Sep 17 00:00:00 2001
+From: Kurt Roeckx <kurt@roeckx.be>
+Date: Tue, 22 Apr 2014 21:46:22 +0200
+Subject: [PATCH] Unwinding is only supported on Linux
+
+Index: elfutils-0.158/backends/i386_initreg.c
+===================================================================
+--- elfutils-0.158.orig/backends/i386_initreg.c	2014-05-01 17:11:18.870616302 +0000
++++ elfutils-0.158/backends/i386_initreg.c	2014-05-01 17:11:18.866616384 +0000
+@@ -44,7 +44,7 @@
+ 			  ebl_tid_registers_t *setfunc __attribute__ ((unused)),
+ 				void *arg __attribute__ ((unused)))
+ {
+-#if !defined __i386__ && !defined __x86_64__
++#if (!defined __i386__ && !defined __x86_64__) || !defined(__linux__)
+   return false;
+ #else /* __i386__ || __x86_64__ */
+   struct user_regs_struct user_regs;
+Index: elfutils-0.158/backends/x86_64_initreg.c
+===================================================================
+--- elfutils-0.158.orig/backends/x86_64_initreg.c	2014-05-01 17:11:18.870616302 +0000
++++ elfutils-0.158/backends/x86_64_initreg.c	2014-05-01 17:11:18.866616384 +0000
+@@ -44,7 +44,7 @@
+ 			  ebl_tid_registers_t *setfunc __attribute__ ((unused)),
+ 				  void *arg __attribute__ ((unused)))
+ {
+-#ifndef __x86_64__
++#if !defined(__x86_64__) || !defined(__linux__)
+   return false;
+ #else /* __x86_64__ */
+   struct user_regs_struct user_regs;
+Index: elfutils-0.158/libdwfl/linux-pid-attach.c
+===================================================================
+--- elfutils-0.158.orig/libdwfl/linux-pid-attach.c	2014-05-01 17:11:18.870616302 +0000
++++ elfutils-0.158/libdwfl/linux-pid-attach.c	2014-05-01 17:12:47.980766442 +0000
+@@ -37,6 +37,8 @@
+ # define MAX(a, b) ((a) > (b) ? (a) : (b))
+ #endif
+ 
++#ifdef __linux__
++
+ struct pid_arg
+ {
+   DIR *dir;
+@@ -358,3 +360,87 @@
+   return 0;
+ }
+ INTDEF (dwfl_linux_proc_attach)
++
++#else	/* __linux__ */
++
++static pid_t
++pid_next_thread (Dwfl *dwfl __attribute__ ((unused)),
++	         void *dwfl_arg __attribute__ ((unused)),
++		 void **thread_argp __attribute__ ((unused)))
++{
++  errno = ENOSYS;
++  __libdwfl_seterrno (DWFL_E_ERRNO);
++  return -1;
++}
++
++static bool
++pid_getthread (Dwfl *dwfl __attribute__ ((unused)),
++	       pid_t tid __attribute__ ((unused)),
++	       void *dwfl_arg __attribute__ ((unused)),
++	       void **thread_argp __attribute__ ((unused)))
++{
++  errno = ENOSYS;
++  __libdwfl_seterrno (DWFL_E_ERRNO);
++  return false;
++}
++
++static bool
++pid_memory_read (Dwfl *dwfl __attribute__ ((unused)),
++                 Dwarf_Addr addr __attribute__ ((unused)),
++	         Dwarf_Word *result __attribute__ ((unused)),
++	         void *arg __attribute__ ((unused)))
++{
++  errno = ENOSYS;
++  __libdwfl_seterrno (DWFL_E_ERRNO);
++  return false;
++}
++
++static bool
++pid_set_initial_registers (Dwfl_Thread *thread __attribute__ ((unused)),
++			   void *thread_arg __attribute__ ((unused)))
++{
++  errno = ENOSYS;
++  __libdwfl_seterrno (DWFL_E_ERRNO);
++  return false;
++}
++
++static void
++pid_detach (Dwfl *dwfl __attribute__ ((unused)),
++	    void *dwfl_arg __attribute__ ((unused)))
++{
++}
++
++static void
++pid_thread_detach (Dwfl_Thread *thread __attribute__ ((unused)),
++		  void *thread_arg __attribute__ ((unused)))
++{
++}
++
++static const Dwfl_Thread_Callbacks pid_thread_callbacks =
++{
++  pid_next_thread,
++  pid_getthread,
++  pid_memory_read,
++  pid_set_initial_registers,
++  pid_detach,
++  pid_thread_detach,
++};
++
++int
++dwfl_linux_proc_attach (Dwfl *dwfl __attribute__ ((unused)),
++			pid_t pid __attribute__ ((unused)),
++			bool assume_ptrace_stopped __attribute__ ((unused)))
++{
++  return ENOSYS;
++}
++INTDEF (dwfl_linux_proc_attach)
++
++struct __libdwfl_pid_arg *
++internal_function
++__libdwfl_get_pid_arg (Dwfl *dwfl __attribute__ ((unused)))
++{
++  return NULL;
++}
++
++#endif /* ! __linux __ */
++
+Index: elfutils-0.158/tests/backtrace-child.c
+===================================================================
+--- elfutils-0.158.orig/tests/backtrace-child.c	2014-05-01 17:11:18.870616302 +0000
++++ elfutils-0.158/tests/backtrace-child.c	2014-05-01 17:11:18.866616384 +0000
+@@ -79,6 +79,18 @@
+ #include <stdio.h>
+ #include <unistd.h>
+ 
++#ifndef __linux__
++
++int
++main (int argc __attribute__ ((unused)), char **argv)
++{
++  fprintf (stderr, "%s: Unwinding not supported for this architecture\n",
++           argv[0]);
++  return 77;
++}
++
++#else /* __linux__ */
++
+ #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)
+ #define NOINLINE_NOCLONE __attribute__ ((noinline, noclone))
+ #else
+@@ -221,3 +233,6 @@
+   /* Not reached.  */
+   abort ();
+ }
++
++#endif /* ! __linux__ */
++
+Index: elfutils-0.158/tests/backtrace-data.c
+===================================================================
+--- elfutils-0.158.orig/tests/backtrace-data.c	2014-05-01 17:11:18.870616302 +0000
++++ elfutils-0.158/tests/backtrace-data.c	2014-05-01 17:11:18.866616384 +0000
+@@ -40,7 +40,7 @@
+ #include <string.h>
+ #include ELFUTILS_HEADER(dwfl)
+ 
+-#ifndef __x86_64__
++#if !defined(__x86_64__) || !defined(__linux__)
+ 
+ int
+ main (int argc __attribute__ ((unused)), char **argv)
+@@ -50,7 +50,7 @@
+   return 77;
+ }
+ 
+-#else /* __x86_64__ */
++#else /* __x86_64__ && __linux__ */
+ 
+ /* The only arch specific code is set_initial_registers.  */
+ 
+Index: elfutils-0.158/tests/backtrace-dwarf.c
+===================================================================
+--- elfutils-0.158.orig/tests/backtrace-dwarf.c	2014-05-01 17:11:18.870616302 +0000
++++ elfutils-0.158/tests/backtrace-dwarf.c	2014-05-01 17:11:18.866616384 +0000
+@@ -25,6 +25,18 @@
+ #include <sys/ptrace.h>
+ #include ELFUTILS_HEADER(dwfl)
+ 
++#ifndef __linux__
++
++int
++main (int argc __attribute__ ((unused)), char **argv)
++{
++  fprintf (stderr, "%s: Unwinding not supported for this architecture\n",
++           argv[0]);
++  return 77;
++}
++
++#else /* __linux__ */
++
+ static void cleanup_13_abort (void);
+ #define main cleanup_13_main
+ #include "cleanup-13.c"
+@@ -148,3 +160,6 @@
+   /* There is an exit (0) call if we find the "main" frame,  */
+   error (1, 0, "dwfl_getthreads: %s", dwfl_errmsg (-1));
+ }
++
++#endif /* ! __linux__ */
++
+Index: elfutils-0.158/tests/backtrace-subr.sh
+===================================================================
+--- elfutils-0.158.orig/tests/backtrace-subr.sh	2014-05-01 17:11:18.870616302 +0000
++++ elfutils-0.158/tests/backtrace-subr.sh	2014-05-01 17:11:18.866616384 +0000
+@@ -84,6 +84,7 @@
+   echo ./backtrace ./backtrace.$arch.{exec,core}
+   testrun ${abs_builddir}/backtrace -e ./backtrace.$arch.exec --core=./backtrace.$arch.core 1>backtrace.$arch.bt 2>backtrace.$arch.err || true
+   cat backtrace.$arch.{bt,err}
++  check_unsupported backtrace.$arch.err backtrace.$arch.core
+   check_all backtrace.$arch.{bt,err} backtrace.$arch.core
+ }
+ 
+Index: elfutils-0.158/tests/backtrace.c
+===================================================================
+--- elfutils-0.158.orig/tests/backtrace.c	2014-05-01 17:11:18.870616302 +0000
++++ elfutils-0.158/tests/backtrace.c	2014-05-01 17:11:18.866616384 +0000
+@@ -39,6 +39,18 @@
+ #include <sys/syscall.h>
+ #include ELFUTILS_HEADER(dwfl)
+ 
++#ifndef __linux__
++
++int
++main (int argc __attribute__ ((unused)), char **argv)
++{
++  fprintf (stderr, "%s: Unwinding not supported for this architecture\n",
++	   argv[0]);
++  return 77;
++}
++
++#else /* __linux__ */
++
+ static int
+ dump_modules (Dwfl_Module *mod, void **userdata __attribute__ ((unused)),
+ 	      const char *name, Dwarf_Addr start,
+@@ -452,3 +464,6 @@
+   dwfl_end (dwfl);
+   return 0;
+ }
++
++#endif /* ! __linux__ */
++

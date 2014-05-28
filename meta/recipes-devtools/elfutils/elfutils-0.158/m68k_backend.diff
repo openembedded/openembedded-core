@@ -1,10 +1,16 @@
-Upstream-Status: Backport
+From: Kurt Roeckx <kurt@roeckx.be>
+From: Thorsten Glaser <tg@mirbsd.de>
+Subject: m68k support
 
-Index: elfutils-0.155/backends/m68k_init.c
+Written by Kurt Roeckx, except for the retval support which was written
+by Thorsten Glaser
+
+
+Index: elfutils-0.158/backends/m68k_init.c
 ===================================================================
---- /dev/null
-+++ elfutils-0.155/backends/m68k_init.c
-@@ -0,0 +1,49 @@
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ elfutils-0.158/backends/m68k_init.c	2014-04-21 11:14:23.813175704 +0000
+@@ -0,0 +1,50 @@
 +/* Initialization of m68k specific backend library.
 +   Copyright (C) 2007 Kurt Roeckx <kurt@roeckx.be>
 +
@@ -50,14 +56,15 @@ Index: elfutils-0.155/backends/m68k_init.c
 +  eh->name = "m68k";
 +  m68k_init_reloc (eh);
 +  HOOK (eh, reloc_simple_type);
++  HOOK (eh, return_value_location);
 +  HOOK (eh, register_info);
 +
 +  return MODVERSION;
 +}
-Index: elfutils-0.155/backends/m68k_regs.c
+Index: elfutils-0.158/backends/m68k_regs.c
 ===================================================================
---- /dev/null
-+++ elfutils-0.155/backends/m68k_regs.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ elfutils-0.158/backends/m68k_regs.c	2014-04-21 11:14:23.813175704 +0000
 @@ -0,0 +1,106 @@
 +/* Register names and numbers for m68k DWARF.
 +   Copyright (C) 2007 Kurt Roeckx <kurt@roeckx.be>
@@ -165,10 +172,10 @@ Index: elfutils-0.155/backends/m68k_regs.c
 +	return namelen;
 +}
 +
-Index: elfutils-0.155/backends/m68k_reloc.def
+Index: elfutils-0.158/backends/m68k_reloc.def
 ===================================================================
---- /dev/null
-+++ elfutils-0.155/backends/m68k_reloc.def
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ elfutils-0.158/backends/m68k_reloc.def	2014-04-21 11:14:23.813175704 +0000
 @@ -0,0 +1,45 @@
 +/* List the relocation types for m68k.  -*- C -*-
 +   Copyright (C) 2007 Kurt Roeckx <kurt@roeckx.be>
@@ -215,11 +222,11 @@ Index: elfutils-0.155/backends/m68k_reloc.def
 +RELOC_TYPE (GNU_VTINHERIT,	REL)
 +RELOC_TYPE (GNU_VTENTRY,	REL)
 +
-Index: elfutils-0.155/libelf/elf.h
+Index: elfutils-0.158/libelf/elf.h
 ===================================================================
---- elfutils-0.155.orig/libelf/elf.h
-+++ elfutils-0.155/libelf/elf.h
-@@ -1126,6 +1126,9 @@
+--- elfutils-0.158.orig/libelf/elf.h	2014-04-21 11:14:23.813175704 +0000
++++ elfutils-0.158/libelf/elf.h	2014-04-21 11:14:23.813175704 +0000
+@@ -1157,6 +1157,9 @@
  #define R_68K_GLOB_DAT	20		/* Create GOT entry */
  #define R_68K_JMP_SLOT	21		/* Create PLT entry */
  #define R_68K_RELATIVE	22		/* Adjust by program base */
@@ -229,40 +236,40 @@ Index: elfutils-0.155/libelf/elf.h
  #define R_68K_TLS_GD32      25          /* 32 bit GOT offset for GD */
  #define R_68K_TLS_GD16      26          /* 16 bit GOT offset for GD */
  #define R_68K_TLS_GD8       27          /* 8 bit GOT offset for GD */
-Index: elfutils-0.155/backends/Makefile.am
+Index: elfutils-0.158/backends/Makefile.am
 ===================================================================
---- elfutils-0.155.orig/backends/Makefile.am
-+++ elfutils-0.155/backends/Makefile.am
-@@ -32,12 +32,12 @@
- 	   -I$(top_srcdir)/libelf -I$(top_srcdir)/libdw
+--- elfutils-0.158.orig/backends/Makefile.am	2014-04-21 11:14:23.813175704 +0000
++++ elfutils-0.158/backends/Makefile.am	2014-04-21 11:14:48.344621167 +0000
+@@ -33,12 +33,12 @@
  
  
--modules = i386 sh x86_64 ia64 alpha arm sparc ppc ppc64 s390 tilegx parisc mips
-+modules = i386 sh x86_64 ia64 alpha arm sparc ppc ppc64 s390 tilegx parisc mips m68k
- libebl_pic = libebl_i386_pic.a libebl_sh_pic.a libebl_x86_64_pic.a \
- 	     libebl_ia64_pic.a libebl_alpha_pic.a libebl_arm_pic.a \
- 	     libebl_sparc_pic.a libebl_ppc_pic.a libebl_ppc64_pic.a \
- 	     libebl_s390_pic.a libebl_tilegx_pic.a libebl_parisc_pic.a \
--	     libebl_mips_pic.a
-+	     libebl_mips_pic.a libebl_m68k_pic.a
+ modules = i386 sh x86_64 ia64 alpha arm aarch64 sparc ppc ppc64 s390 \
+-	  tilegx parisc mips
++	  tilegx parisc mips m68k
+ libebl_pic = libebl_i386_pic.a libebl_sh_pic.a libebl_x86_64_pic.a    \
+ 	     libebl_ia64_pic.a libebl_alpha_pic.a libebl_arm_pic.a    \
+ 	     libebl_aarch64_pic.a libebl_sparc_pic.a libebl_ppc_pic.a \
+ 	     libebl_ppc64_pic.a libebl_s390_pic.a libebl_tilegx_pic.a \
+-	     libebl_parisc_pic.a libebl_mips_pic.a
++	     libebl_parisc_pic.a libebl_mips_pic.a libebl_m68k_pic.a
  noinst_LIBRARIES = $(libebl_pic)
  noinst_DATA = $(libebl_pic:_pic.a=.so)
  
-@@ -112,6 +112,10 @@
+@@ -125,6 +125,10 @@
  libebl_mips_pic_a_SOURCES = $(mips_SRCS)
  am_libebl_mips_pic_a_OBJECTS = $(mips_SRCS:.c=.os)
  
-+m68k_SRCS = m68k_init.c m68k_symbol.c m68k_regs.c
++m68k_SRCS = m68k_init.c m68k_symbol.c m68k_regs.c m68k_retval.c
 +libebl_m68k_pic_a_SOURCES = $(m68k_SRCS)
 +am_libebl_m68k_pic_a_OBJECTS = $(m68k_SRCS:.c=.os)
 +
  libebl_%.so libebl_%.map: libebl_%_pic.a $(libelf) $(libdw)
  	@rm -f $(@:.so=.map)
  	echo 'ELFUTILS_$(PACKAGE_VERSION) { global: $*_init; local: *; };' \
-Index: elfutils-0.155/backends/m68k_symbol.c
+Index: elfutils-0.158/backends/m68k_symbol.c
 ===================================================================
---- /dev/null
-+++ elfutils-0.155/backends/m68k_symbol.c
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ elfutils-0.158/backends/m68k_symbol.c	2014-04-21 11:14:23.813175704 +0000
 @@ -0,0 +1,43 @@
 +/* m68k specific symbolic name handling.
 +   Copyright (C) 2007 Kurt Roeckx <kurt@roeckx.be>
@@ -306,4 +313,181 @@ Index: elfutils-0.155/backends/m68k_symbol.c
 +    default:
 +      return ELF_T_NUM;
 +    }
++}
+Index: elfutils-0.158/backends/m68k_retval.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ elfutils-0.158/backends/m68k_retval.c	2014-04-21 11:14:23.813175704 +0000
+@@ -0,0 +1,172 @@
++/* Function return value location for Linux/m68k ABI.
++   Copyright (C) 2005-2010 Red Hat, Inc.
++   Copyright (c) 2011 Thorsten Glaser, Debian.
++   This file is part of Red Hat elfutils.
++
++   Red Hat elfutils is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by the
++   Free Software Foundation; version 2 of the License.
++
++   Red Hat elfutils is distributed in the hope that it will be useful, but
++   WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   General Public License for more details.
++
++   You should have received a copy of the GNU General Public License along
++   with Red Hat elfutils; if not, write to the Free Software Foundation,
++   Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301 USA.
++
++   Red Hat elfutils is an included package of the Open Invention Network.
++   An included package of the Open Invention Network is a package for which
++   Open Invention Network licensees cross-license their patents.  No patent
++   license is granted, either expressly or impliedly, by designation as an
++   included package.  Should you wish to participate in the Open Invention
++   Network licensing program, please visit www.openinventionnetwork.com
++   <http://www.openinventionnetwork.com>.  */
++
++#ifdef HAVE_CONFIG_H
++# include <config.h>
++#endif
++
++#include <assert.h>
++#include <dwarf.h>
++
++#define BACKEND m68k_
++#include "libebl_CPU.h"
++
++
++/* %d0, or pair %d0, %d1, or %a0 */
++static const Dwarf_Op loc_intreg[] =
++  {
++    { .atom = DW_OP_reg0 }, { .atom = DW_OP_piece, .number = 4 },
++    { .atom = DW_OP_reg1 }, { .atom = DW_OP_piece, .number = 4 },
++  };
++static const Dwarf_Op loc_ptrreg[] =
++  {
++    { .atom = DW_OP_reg8 },
++  };
++#define nloc_intreg	1
++#define nloc_intregpair	4
++#define nloc_ptrreg	1
++
++/* %f0 */
++static const Dwarf_Op loc_fpreg[] =
++  {
++    { .atom = DW_OP_reg16 }
++  };
++#define nloc_fpreg	1
++
++/* Structures are a bit more complicated - small structures are returned
++   in %d0 / %d1 (-freg-struct-return which is enabled by default), large
++   structures use %a1 (in constrast to the SYSV psABI which says %a0) as
++   reentrant storage space indicator.  */
++static const Dwarf_Op loc_aggregate[] =
++  {
++    { .atom = DW_OP_breg9, .number = 0 }
++  };
++#define nloc_aggregate 1
++
++int
++m68k_return_value_location (Dwarf_Die *functypedie, const Dwarf_Op **locp)
++{
++  Dwarf_Word size;
++
++  /* Start with the function's type, and get the DW_AT_type attribute,
++     which is the type of the return value.  */
++
++  Dwarf_Attribute attr_mem;
++  Dwarf_Attribute *attr = dwarf_attr_integrate (functypedie, DW_AT_type,
++						&attr_mem);
++  if (attr == NULL)
++    /* The function has no return value, like a `void' function in C.  */
++    return 0;
++
++  Dwarf_Die die_mem;
++  Dwarf_Die *typedie = dwarf_formref_die (attr, &die_mem);
++  int tag = dwarf_tag (typedie);
++
++  /* Follow typedefs and qualifiers to get to the actual type.  */
++  while (tag == DW_TAG_typedef
++	 || tag == DW_TAG_const_type || tag == DW_TAG_volatile_type
++	 || tag == DW_TAG_restrict_type || tag == DW_TAG_mutable_type)
++    {
++      attr = dwarf_attr_integrate (typedie, DW_AT_type, &attr_mem);
++      typedie = dwarf_formref_die (attr, &die_mem);
++      tag = dwarf_tag (typedie);
++    }
++
++  switch (tag)
++    {
++    case -1:
++      return -1;
++
++    case DW_TAG_subrange_type:
++      if (! dwarf_hasattr_integrate (typedie, DW_AT_byte_size))
++	{
++	  attr = dwarf_attr_integrate (typedie, DW_AT_type, &attr_mem);
++	  typedie = dwarf_formref_die (attr, &die_mem);
++	  tag = dwarf_tag (typedie);
++	}
++      /* Fall through.  */
++
++    case DW_TAG_base_type:
++    case DW_TAG_enumeration_type:
++    case DW_TAG_pointer_type:
++    case DW_TAG_ptr_to_member_type:
++      if (dwarf_formudata (dwarf_attr_integrate (typedie, DW_AT_byte_size,
++						 &attr_mem), &size) != 0)
++	{
++	  if (tag == DW_TAG_pointer_type || tag == DW_TAG_ptr_to_member_type)
++	    size = 4;
++	  else
++	    return -1;
++	}
++      if (tag == DW_TAG_pointer_type || tag == DW_TAG_ptr_to_member_type)
++	{
++	  *locp = loc_ptrreg;
++          return nloc_ptrreg;
++	}
++      if (tag == DW_TAG_base_type)
++	{
++	  Dwarf_Word encoding;
++	  if (dwarf_formudata (dwarf_attr_integrate (typedie, DW_AT_encoding,
++						     &attr_mem),
++			       &encoding) != 0)
++	    return -1;
++	  if (encoding == DW_ATE_float)
++	    {
++	      /* XXX really 10? */
++              if (size > 10)
++                return -2;
++              *locp = loc_fpreg;
++              return nloc_fpreg;
++	    }
++	}
++      if (size <= 8)
++	{
++	intreg:
++	  /* XXX check endianness of dword pair, int64 vs aggregate */
++	  *locp = loc_intreg;
++	  return size <= 4 ? nloc_intreg : nloc_intregpair;
++	}
++
++    aggregate:
++      *locp = loc_aggregate;
++      return nloc_aggregate;
++
++    case DW_TAG_structure_type:
++    case DW_TAG_class_type:
++    case DW_TAG_union_type:
++    case DW_TAG_array_type:
++      if (dwarf_aggregate_size (typedie, &size) == 0
++	  && size > 0 && size <= 8)
++	/* not accurate for a struct whose only member is a float */
++	goto intreg;
++      goto aggregate;
++    }
++
++  /* XXX We don't have a good way to return specific errors from ebl calls.
++     This value means we do not understand the type, but it is well-formed
++     DWARF and might be valid.  */
++  return -2;
 +}

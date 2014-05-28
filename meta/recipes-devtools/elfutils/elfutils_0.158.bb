@@ -7,9 +7,11 @@ DEPENDS = "libtool bzip2 zlib virtual/libintl"
 
 SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/${PV}/elfutils-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "163a5712b86f6bdfebdf233cc6e2192d"
-SRC_URI[sha256sum] = "68444a4526416ffd68852ec3c6a40ceddcca46538297322405319884c5d30ed8"
+SRC_URI[md5sum] = "050a4909e452d01ab4747fd69d4036e0"
+SRC_URI[sha256sum] = "be27af5c21352f53e010342bf1c68e0b9e18232dbf3adec7e2f9b41f6bbe397d"
 
+# Pick patches from debian
+# http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.158-2.debian.tar.xz
 SRC_URI += "\
         file://redhat-portability.diff \
         file://redhat-robustify.diff \
@@ -17,13 +19,21 @@ SRC_URI += "\
         file://arm_backend.diff \
         file://mips_backend.diff \
         file://m68k_backend.diff \
-        file://elf_additions.diff \
-        file://mempcpy.patch \
-	file://dso-link-change.patch \
-	file://nm-Fix-size-passed-to-snprintf-for-invalid-sh_name-case.patch \
-	file://elfutils-ar-c-fix-num-passed-to-memset.patch \
-	file://fix-build-gcc-4.8.patch \
+        file://testsuite-ignore-elflint.diff \
+        file://scanf-format.patch \
+        file://mips_readelf_w.patch \
+        file://core_filename.patch \
+        file://CVE-2014-0172.patch \
+        file://unwind_non_linux.patch \
 "
+
+SRC_URI += " \
+	file://elf_additions.diff \
+	file://mempcpy.patch \
+	file://dso-link-change.patch \
+	file://m4-biarch.m4-tweak-AC_RUN_IFELSE-for-cross-compiling.patch \
+"
+
 # Only apply when building uclibc based target recipe
 SRC_URI_append_libc-uclibc = " file://uclibc-support.patch"
 
