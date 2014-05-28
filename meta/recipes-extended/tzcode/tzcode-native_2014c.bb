@@ -1,4 +1,4 @@
-SUMMARY = "Timezone zoneinfo utils (zic, zdump, tzselect)"
+DESCRIPTION = "tzcode, timezone zoneinfo utils -- zic, zdump, tzselect"
 LICENSE = "PD & BSD"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/README;md5=0b7570113550eb5d30aa4bd220964b8f"
@@ -6,13 +6,12 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/README;md5=0b7570113550eb5d30aa4bd220964b8
 # note that we allow for us to use data later than our code version
 #
 SRC_URI =" ftp://ftp.iana.org/tz/releases/tzcode${PV}.tar.gz;name=tzcode \
-           ftp://ftp.iana.org/tz/releases/tzdata2013i.tar.gz;name=tzdata"
+           ftp://ftp.iana.org/tz/releases/tzdata2014c.tar.gz;name=tzdata"
 
-SRC_URI[tzcode.md5sum] = "86154c8b0cfb47f4e2027ecaa2ec547a"
-SRC_URI[tzcode.sha256sum] = "63bba6790afc1cb2ea0af2b998a35fc237e247608140dbe4e08b4216a8c31358"
-
-SRC_URI[tzdata.md5sum] = "8bc69eb75bea496ebe1d5a9ab576702d"
-SRC_URI[tzdata.sha256sum] = "1cd56a6ee964143ef0c65229968a5093988335b95e9115235b5e7b7e45e67dda"
+SRC_URI[tzcode.md5sum] = "657636f201ae8b561225afde49d274af"
+SRC_URI[tzcode.sha256sum] = "1461e6f6973797ccf516421b272a28082fe26754e8ae94967d8f931a4c8f011b"
+SRC_URI[tzdata.md5sum] = "fa7f3dc1c6f6238253a6f2b850467e2e"
+SRC_URI[tzdata.sha256sum] = "aa2924e012644de3a6cc3160ffff690cb3afecf350af435daefa43bb669fb8f1"
 
 S = "${WORKDIR}"
 
