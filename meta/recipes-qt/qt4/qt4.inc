@@ -275,7 +275,7 @@ do_compile() {
 python populate_packages_prepend() {
     translation_dir = d.expand('${datadir}/${QT_DIR_NAME}/translations/')
     translation_name = d.expand('${QT_BASE_NAME}-translation-%s')
-    do_split_packages(d, translation_dir, '^(assistant|designer|linguist|qt|qtconfig|qvfb)_(.*)\.qm$', translation_name, '${PN} translation for %s', extra_depends='' )
+    do_split_packages(d, translation_dir, '^(assistant|designer|linguist|qt|qtconfig|qvfb|qtscript)_(.*)\.qm$', translation_name, '${PN} translation for %s', extra_depends='' )
  
     phrasebook_dir = d.expand('${datadir}/${QT_DIR_NAME}/phrasebooks/')
     phrasebook_name = d.expand('${QT_BASE_NAME}-phrasebook-%s')

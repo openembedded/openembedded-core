@@ -20,18 +20,13 @@ SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-ever
            file://0017-configure-ensure-we-identify-the-compiler-as-g-in-co.patch \
            file://0018-configure-make-pulseaudio-a-configurable-option.patch \
            file://0019-Fixes-for-gcc-4.7.0-particularly-on-qemux86.patch \
-           file://0020-webkit-disable-the-fuse-ld-gold-flag.patch \
-           file://0022-Fix-drawing-of-0-width-polylines-from-outside-the-de.patch \
-           file://0023-QHttpMultiPart-fix-data-corruption-in-readData-metho.patch \
-           file://0024-Ensure-lastPixel.y-is-also-initalized-to-1-when-nece.patch \
-           file://0025-Fix-misaligned-selection-region-with-text-when-cente.patch \
            file://0027-tools.pro-disable-qmeegographicssystemhelper.patch \
            file://g++.conf \
            file://linux.conf \
            "
 
-SRC_URI[md5sum] = "1864987bdbb2f58f8ae8b350dfdbe133"
-SRC_URI[sha256sum] = "eb728f8268831dc4373be6403b7dd5d5dde03c169ad6882f9a8cb560df6aa138"
+SRC_URI[md5sum] = "2edbe4d6c2eff33ef91732602f3518eb"
+SRC_URI[sha256sum] = "8b14dd91b52862e09b8e6a963507b74bc2580787d171feda197badfa7034032c"
 
 S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 
