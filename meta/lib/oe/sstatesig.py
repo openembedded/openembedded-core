@@ -26,6 +26,10 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
     if depname in excludelist and recipename != depname:
         return False
 
+    # Exclude well defined recipe->dependency
+    if "%s->%s" % (recipename, depname) in siggen.saferecipedeps:
+        return False
+
     # Don't change native/cross/nativesdk recipe dependencies any further
     if isNative(recipename) or isCross(recipename) or isNativeSDK(recipename):
         return True
@@ -38,10 +42,6 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
 
     # Exclude well defined machine specific configurations which don't change ABI
     if depname in siggen.abisaferecipes and not isImage(fn):
-        return False
-
-    # Exclude well defined recipe->dependency
-    if "%s->%s" % (recipename, depname) in siggen.saferecipedeps:
         return False
 
     # Kernel modules are well namespaced. We don't want to depend on the kernel's checksum
