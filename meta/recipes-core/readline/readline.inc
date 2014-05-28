@@ -21,6 +21,8 @@ S = "${WORKDIR}/${BPN}-${PV}"
 
 inherit autotools texinfo
 
+EXTRA_AUTORECONF += "--exclude=autoheader"
+
 LEAD_SONAME = "libreadline.so"
 
 do_configure_prepend () {
