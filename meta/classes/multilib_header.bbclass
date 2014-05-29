@@ -6,6 +6,13 @@ inherit siteinfo
 # all of the ABI variants for that given architecture.
 #
 oe_multilib_header() {
+
+	case ${HOST_OS} in
+	*-musl*)
+		return
+		;;
+	*)
+	esac
         # We use
         # For ARM: We don't support multilib builds.
         # For MIPS: "n32" is a special case, which needs to be
