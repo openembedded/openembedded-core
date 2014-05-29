@@ -26,7 +26,7 @@ EXTRA_OECONF = "--enable-setuid-install \
                 --disable-libunwind \
                 --disable-rpi-compositor \
                 --disable-rdp-compositor \
-                --disable-lcms"
+                "
 
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'kms fbdev wayland egl', '', d)} \
