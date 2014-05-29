@@ -98,10 +98,28 @@ def package_qa_get_machine_dict():
                         "sh4":        (42,       0,    0,          True,          32),
 
                       },
+            "linux-musl" : { 
+                        "arm" :       (  40,    97,    0,          True,          32),
+                        "armeb":      (  40,    97,    0,          False,         32),
+                        "powerpc":    (  20,     0,    0,          False,         32),
+                        "i386":       (   3,     0,    0,          True,          32),
+                        "i486":       (   3,     0,    0,          True,          32),
+                        "i586":       (   3,     0,    0,          True,          32),
+                        "i686":       (   3,     0,    0,          True,          32),
+                        "x86_64":     (  62,     0,    0,          True,          64),
+                        "mips":       (   8,     0,    0,          False,         32),
+                        "mipsel":     (   8,     0,    0,          True,          32),
+                        "mips64":     (   8,     0,    0,          False,         64),
+                        "mips64el":   (   8,     0,    0,          True,          64),
+                      },
             "uclinux-uclibc" : {
                         "bfin":       ( 106,     0,    0,          True,         32),
                       }, 
             "linux-gnueabi" : {
+                        "arm" :       (40,     0,    0,          True,          32),
+                        "armeb" :     (40,     0,    0,          False,         32),
+                      },
+            "linux-musleabi" : {
                         "arm" :       (40,     0,    0,          True,          32),
                         "armeb" :     (40,     0,    0,          False,         32),
                       },
@@ -110,6 +128,9 @@ def package_qa_get_machine_dict():
                         "armeb" :     (40,     0,    0,          False,         32),
                       },
             "linux-gnuspe" : {
+                        "powerpc":    (20,     0,    0,          False,         32),
+                      },
+            "linux-muslspe" : {
                         "powerpc":    (20,     0,    0,          False,         32),
                       },
             "linux-uclibcspe" : {
