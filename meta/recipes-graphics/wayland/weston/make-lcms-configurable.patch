@@ -11,7 +11,7 @@ Index: weston-1.5.0/configure.ac
 +                             [disable lcms support]),,
 +              enable_lcms=yes)
 +
-+AS_IF([test "x$enable_lcms" != "no"], [
++AS_IF([test "x$enable_lcms" != "xno"], [
  PKG_CHECK_MODULES(LCMS, lcms2,
 -                  [have_lcms=yes], [have_lcms=no])
 +                  [have_lcms=yes], [have_lcms=no])],
