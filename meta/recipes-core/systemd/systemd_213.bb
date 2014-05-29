@@ -17,9 +17,9 @@ SECTION = "base/shell"
 
 inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest
 
-SRCREV = "9b3310b066136b0674a926da094b7fe87a13a58b"
+SRCREV = "c9679c652b3c31f2510e8805d81630680ebc7e95"
 
-PV = "212+git${SRCPV}"
+PV = "213+git${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=git \
            file://binfmt-install.patch \
@@ -95,6 +95,7 @@ do_configure_prepend() {
 		cp -r ${S}/units ${S}/units.pre_sed
 	fi
 	sed -i -e 's:=/root:=${ROOT_HOME}:g' ${S}/units/*.service*
+	sed -i '/ln --relative --help/d' ${S}/configure.ac
 	sed -i -e 's:\$(LN_S) --relative -f:lnr:g' ${S}/Makefile.am
 	sed -i -e 's:\$(LN_S) --relative:lnr:g' ${S}/Makefile.am
 }
