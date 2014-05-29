@@ -27,7 +27,9 @@ python () {
     tarch = d.getVar("TARGET_ARCH", True)
     if tarch == "powerpc":
         tos = d.getVar("TARGET_OS", True)
-        if (tos != "linux" and tos != "linux-gnuspe" and tos != "linux-uclibc" and tos != "linux-uclibcspe"):
+        if (tos != "linux" and tos != "linux-gnuspe"
+            and tos != "linux-uclibc" and tos != "linux-uclibcspe"
+            and tos != "linux-musl" and tos != "linux-muslspe"):
             bb.fatal("Building cross-candian powerpc for an unknown TARGET_SYS (%s), please update cross-canadian.bbclass" % d.getVar("TARGET_SYS", True))
         # This is a bit ugly. We need to zero LIBC/ABI extension which will change TARGET_OS
         # however we need the old value in some variables. We expand those here first.
