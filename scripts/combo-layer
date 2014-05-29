@@ -395,7 +395,7 @@ def action_update(conf, args):
         logger.debug("generated patch set:\n%s" % output)
         patchlist = output.splitlines()
 
-        rev_cmd = 'git rev-list --no-merges ' + rev_cmd_range
+        rev_cmd = "git rev-list --no-merges %s -- %s" % (rev_cmd_range, file_filter)
         revlist = runcmd(rev_cmd, ldir).splitlines()
 
         # Step 3: Call repo specific hook to adjust patch
