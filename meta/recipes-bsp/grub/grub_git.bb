@@ -22,6 +22,7 @@ SRC_URI = "git://git.savannah.gnu.org/grub.git \
            file://40_custom \
            file://autogen.sh-exclude-pc.patch \
            file://grub-2.00-add-oe-kernel.patch \
+           file://asciih-fix-build-warning-error.patch \
           "
 
 S = "${WORKDIR}/git"

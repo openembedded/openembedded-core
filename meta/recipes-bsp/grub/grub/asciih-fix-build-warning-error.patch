@@ -1,0 +1,34 @@
+util/grub-gen-asciih.c: fix build warning->error
+
+A potential problem is flagged by the compiler and generates a warning. This
+warning is promoted to an error via -Werror. This patch fixes the original
+issue, avoids the warning, and therefore avoids the build error.
+
+Upstream-Status: Pending
+
+Index: git/util/grub-gen-asciih.c
+===================================================================
+--- git.orig/util/grub-gen-asciih.c
++++ git/util/grub-gen-asciih.c
+@@ -131,6 +131,8 @@ write_font_ascii_bitmap (FILE *file, FT_
+   struct grub_glyph_info glyph;
+   int char_code;
+ 
++  memset (&glyph, 0, sizeof(glyph));
++
+   fprintf (file, "/* THIS CHUNK OF BYTES IS AUTOMATICALLY GENERATED */\n");
+   fprintf (file, "unsigned char ascii_bitmaps[] =\n");
+   fprintf (file, "{\n");
+@@ -144,6 +146,12 @@ write_font_ascii_bitmap (FILE *file, FT_
+ 	return;
+       add_glyph (glyph_idx, face, char_code, &glyph);
+ 
++      if (glyph.bitmap == 0)
++        {
++          fprintf (stderr, "grub-gen-asciih: add_glyph not successful");
++          exit (1);
++        }
++
+       if (glyph.width == 8 && glyph.height == 16
+ 	  && glyph.x_ofs == 0 && glyph.y_ofs == 0)
+ 	{
