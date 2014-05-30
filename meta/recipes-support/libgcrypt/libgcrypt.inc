@@ -12,7 +12,9 @@ DEPENDS = "libgpg-error libcap"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-${PV}.tar.gz \
            file://add-pkgconfig-support.patch \
-           file://libgcrypt-fix-building-error-with-O2-in-sysroot-path.patch"
+           file://libgcrypt-fix-building-error-with-O2-in-sysroot-path.patch \
+           file://fix-ICE-failure-on-mips-with-option-O-and-g.patch \
+"
 
 inherit autotools-brokensep texinfo binconfig pkgconfig
 
