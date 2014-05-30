@@ -7,9 +7,10 @@ LIC_FILES_CHKSUM = "file://README;md5=94ac1971e4f2309dc322d598e7b1f7dd"
 
 DEPENDS = "virtual/kernel"
 RRECOMMENDS_${PN} = "kernel-module-uvesafb"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://distfiles.gentoo.org/distfiles/${BP}.tar.bz2 \
+           file://Update-x86emu-from-X.org.patch \
            file://fbsetup \
            file://ar-from-env.patch"
 
