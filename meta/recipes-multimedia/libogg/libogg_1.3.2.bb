@@ -9,9 +9,9 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=db1b7a668b2a6f47b2af88fb008ad555 \
                     file://include/ogg/ogg.h;beginline=1;endline=11;md5=eda812856f13a3b1326eb8f020cc3b0b"
 
-SRC_URI = "http://downloads.xiph.org/releases/ogg/libogg-${PV}.tar.xz"
+SRC_URI = "http://downloads.xiph.org/releases/ogg/${BP}.tar.xz"
 
-SRC_URI[md5sum] = "ca25d8da0ddfc8c6cbbf78d847a209fe"
-SRC_URI[sha256sum] = "3a5bad78d81afb78908326d11761c0fb1a0662ee7150b6ad587cc586838cdcfa"
+SRC_URI[md5sum] = "5c3a34309d8b98640827e5d0991a4015"
+SRC_URI[sha256sum] = "3f687ccdd5ac8b52d76328fbbfebc70c459a40ea891dbf3dccb74a210826e79b"
 
 inherit autotools pkgconfig
