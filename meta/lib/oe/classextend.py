@@ -9,6 +9,8 @@ class ClassExtender(object):
             return name
         if name.startswith("rtld"):
             return name
+        if name.endswith("-crosssdk"):
+            return name
         if name.endswith("-" + self.extname):
             name = name.replace("-" + self.extname, "")
         if name.startswith("virtual/"):
