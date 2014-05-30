@@ -12,6 +12,8 @@ SRC_URI = "${GNU_MIRROR}/gzip/${BP}.tar.gz"
 
 inherit autotools
 
+EXTRA_OEMAKE_class-target = "GREP=${base_bindir}/grep"
+
 do_install_append () {
 	# Rename and move files into /bin (FHS), which is typical place for gzip
 	install -d ${D}${base_bindir}
