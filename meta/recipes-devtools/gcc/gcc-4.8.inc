@@ -119,21 +119,4 @@ EXTRA_OECONF_PATHS = " \
                       --with-sysroot=${STAGING_DIR_TARGET} \ 
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
 
-do_configure_prepend () {
-        # teach gcc to find correct target includedir when checking libc ssp support
-        mkdir -p ${B}/gcc
-        echo "NATIVE_SYSTEM_HEADER_DIR = ${SYSTEMHEADERS}" > ${B}/gcc/t-oe
-        cat ${S}/gcc/defaults.h | grep -v "\#endif.*GCC_DEFAULTS_H" > ${B}/gcc/defaults.h.new
-        cat >>${B}/gcc/defaults.h.new <<_EOF
-#ifndef STANDARD_STARTFILE_PREFIX_1
-#define STANDARD_STARTFILE_PREFIX_1 "${SYSTEMLIBS}"
-#endif
-#ifndef STANDARD_STARTFILE_PREFIX_2
-#define STANDARD_STARTFILE_PREFIX_2 "${SYSTEMLIBS1}"
-#endif
-#define SYSTEMLIBS_DIR "${SYSTEMLIBS}"
-#endif /* ! GCC_DEFAULTS_H */
-_EOF
-        mv ${B}/gcc/defaults.h.new ${B}/gcc/defaults.h
-}
 
