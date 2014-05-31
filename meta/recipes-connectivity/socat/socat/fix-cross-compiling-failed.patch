@@ -1,0 +1,36 @@
+Fix build during cross-compilation as it fails to detect that our prefixed
+compiler is gcc, and falls back to executing code to determine type sizes:
+
+| configure: using code run method to find basic types
+| checking for equivalent simple type of size_t...
+| configure: error: in `/data/poky-master/tmp/work/core2-32-poky-linux/socat/1.7.2.4-r0/build':
+| configure: error: cannot run test program while cross compiling
+
+This is caused by configure.in assuming that $CC can be literally compared with
+"gcc" to determine if the compiler is GCC.  Our gcc is host-prefixed so this
+test fails, however autoconf provides $GCC for this purpose (which was used up
+to 1.7.2.3).
+
+Upstream-Status: Submitted (via email)
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+---
+ configure.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.in b/configure.in
+--- a/configure.in
++++ b/configure.in
+@@ -41,7 +41,7 @@ AC_CHECK_PROG(AR, ar, ar, gar)
+ # fail
+ AC_LANG_COMPILER_REQUIRE()
+ 
+-if test "$CC" = "gcc"; then
++if test "$GCC" = yes; then
+    CFLAGS="$CFLAGS -D_GNU_SOURCE -Wall -Wno-parentheses"
+    ERRONWARN="-Werror -O0"
+ elif test "$CC" = "clang"; then
+-- 
+1.8.1.2
+
