@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS = "gnu-efi util-linux"
 
-inherit autotools
+inherit autotools pkgconfig
 inherit deploy
 
 PV = "43+git${SRCPV}"

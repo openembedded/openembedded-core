@@ -4,7 +4,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a5fcc36121d93e1f69d96a313078c8b5"
 DEPENDS = "libcheck"
 
-inherit autotools gettext ptest
+inherit autotools gettext ptest pkgconfig
 
 RREPLACES_${PN} = "console-tools"
 RPROVIDES_${PN} = "console-tools"

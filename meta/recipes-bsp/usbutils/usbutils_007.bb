@@ -17,7 +17,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/usb/usbutils/usbutils-${PV}.tar.gz \
 SRC_URI[md5sum] = "be6c42294be5c940f208190d3479d50c"
 SRC_URI[sha256sum] = "e65c234cadf7c81b6b1567c440e3b9b31b44f51c27df3e45741b88848d8b37d3"
 
-inherit autotools gettext
+inherit autotools gettext pkgconfig
 
 do_install_append() {
 	# We only need the compressed copy, remove the uncompressed version

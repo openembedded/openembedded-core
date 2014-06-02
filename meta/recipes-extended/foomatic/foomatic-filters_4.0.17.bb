@@ -20,7 +20,7 @@ SRC_URI = "http://www.openprinting.org/download/foomatic/foomatic-filters-${PV}.
 SRC_URI[md5sum] = "b05f5dcbfe359f198eef3df5b283d896"
 SRC_URI[sha256sum] = "a2e2e53e502571e88eeb9010c45a0d54671f15707ee104f5c9c22b59ea7a33e3"
 
-inherit autotools
+inherit autotools pkgconfig
 
 EXTRA_OECONF += "--disable-file-converter-check --with-file-converter=texttops"
 

@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "db550edd98e53b4252521459c2dcaf0f3b060a9bad52489b9dbadbaeda
 
 DEPENDS = "dbus glib-2.0 virtual/libx11 libxi libxtst intltool-native"
 
-inherit autotools gtk-doc
+inherit autotools gtk-doc pkgconfig
 
 EXTRA_OECONF = "--disable-introspection --disable-xevie"
 

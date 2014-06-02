@@ -17,4 +17,4 @@ SRC_URI_append_mips64 = " file://rmb-mips.patch"
 
 S = "${WORKDIR}/git"
 
-inherit autotools
+inherit autotools pkgconfig

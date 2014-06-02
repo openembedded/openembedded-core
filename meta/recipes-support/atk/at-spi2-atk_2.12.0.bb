@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "3b5467c9f169812bc36a4245355b7deedea0a62eb22153df96ced88dcd
 
 DEPENDS = "dbus glib-2.0 atk at-spi2-core"
 
-inherit autotools
+inherit autotools pkgconfig
 
 PACKAGES =+ "${PN}-gnome ${PN}-gtk2"
 

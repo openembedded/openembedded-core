@@ -18,4 +18,4 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/glew/glew/${PV}/glew-${PV}.tgz \
 SRC_URI[md5sum] = "2f09e5e6cb1b9f3611bcac79bc9c2d5d"
 SRC_URI[sha256sum] = "99c41320b63f6860869b5fb9af9a1854b15582796c64ee3dfd7096dc0c89f307"
 
-inherit autotools lib_package
+inherit autotools lib_package pkgconfig

@@ -7,7 +7,7 @@ DEPENDS = "virtual/libx11 libxi"
 PV = "0.7.5+git${SRCPV}"
 PR = "r6"
 
-inherit autotools
+inherit autotools pkgconfig
 
 SRCREV = "c01c5af807cb4b0157b882ab07a893df9a810111"
 SRC_URI = "git://github.com/tias/xinput_calibrator.git \

@@ -34,6 +34,6 @@ SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
 SRC_URI[md5sum] = "efad5a503f66329bb9d2f4308b5de98a"
 SRC_URI[sha256sum] = "eb87eacd8fe49e8d90c8fdc189813023ccc319c5e752b01fb6ad0cc7b2c53d5e"
 
-inherit autotools-brokensep lib_package
+inherit autotools-brokensep lib_package pkgconfig
 
 BBCLASSEXTEND = "native nativesdk"

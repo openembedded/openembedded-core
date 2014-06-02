@@ -15,7 +15,7 @@ SRC_URI = "http://sourceforge.net/projects/msmtp/files/msmtp/${PV}/${BPN}-${PV}.
 SRC_URI[md5sum] = "aa60e22211118f222470439cea60f795"
 SRC_URI[sha256sum] = "2bf0c5c7e78f9905f48de235a75111a1a88238793043bbeae00360b22f1a5f88"
 
-inherit gettext autotools update-alternatives
+inherit gettext autotools update-alternatives pkgconfig
 
 EXTRA_OECONF += "--without-gnome-keyring --without-libidn"
 

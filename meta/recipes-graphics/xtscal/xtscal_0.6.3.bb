@@ -23,7 +23,7 @@ SRC_URI = "${GPE_MIRROR}/xtscal-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "9bcab80b474d5454477d1ca166a68c34"
 SRC_URI[sha256sum] = "27b9dc2203de9b1706ca39fa6ca80ecab8807909ec901c4a345b8e41178800a1"
 
-inherit autotools
+inherit autotools pkgconfig
 
 do_install_append() {
     install -d ${D}${sysconfdir}/X11/Xsession.d/

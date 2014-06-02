@@ -14,4 +14,4 @@ SRC_URI = "git://git.yoctoproject.org/${BPN}"
 
 S = "${WORKDIR}/git"
 
-inherit autotools
+inherit autotools pkgconfig

@@ -21,4 +21,4 @@ SRC_URI[patch.sha256sum] = "d7923527e1a00984620ab307c9047a653d7ae2856cd20a82de8a
 
 S = "${WORKDIR}/${BPN}-4.orig"
 
-inherit autotools
+inherit autotools pkgconfig
