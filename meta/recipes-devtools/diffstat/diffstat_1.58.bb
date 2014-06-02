@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://install-sh;endline=42;md5=b3549726c1022bee09c174c72a0
 SRC_URI = "ftp://invisible-island.net/diffstat/diffstat-${PV}.tgz \
            file://dirfix.patch \
            file://aclocal.patch \
+           file://aclocal-popen.patch \
            file://run-ptest \
 "
 
