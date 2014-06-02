@@ -5,7 +5,7 @@ SECTION = "console/utils"
 LICENSE = "LGPLv2+"
 LICENSE_FLAGS = "commercial"
 
-DEPENDS = "ncurses"
+DEPENDS = "ncurses gettext-native"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=c46bda00ffbb0ba1dac22f8d087f54d9 \
                     file://include/lame.h;beginline=1;endline=20;md5=a2258182c593c398d15a48262130a92b \
