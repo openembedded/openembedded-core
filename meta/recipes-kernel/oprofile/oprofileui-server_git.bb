@@ -9,6 +9,8 @@ SRC_URI = "git://git.yoctoproject.org/oprofileui \
            file://init \
            file://oprofileui-server.service "
 
+DEPENDS += "intltool-native"
+
 EXTRA_OECONF += "--disable-client --enable-server"
 
 RDEPENDS_${PN} = "oprofile avahi-daemon"
