@@ -11,10 +11,10 @@ AUTHOR = "Thomas Hood"
 HOMEPAGE = "http://packages.debian.org/resolvconf"
 RDEPENDS_${PN} = "bash"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/r/resolvconf/resolvconf_${PV}.tar.gz"
+SRC_URI = "${DEBIAN_MIRROR}/main/r/resolvconf/resolvconf_${PV}.tar.xz"
 
-SRC_URI[md5sum] = "2f190d3bb8960b69157f63590c262e93"
-SRC_URI[sha256sum] = "2e72e6884e9105cbf57101ab0f11e768717b6f76b7f5100c6a2a0cc69bb3d4a0"
+SRC_URI[md5sum] = "4b8bc86a3cf070e3fd0e9aff7eaaba56"
+SRC_URI[sha256sum] = "16167f37a77ef4bc4596dcbefece269b6a10d10fa448594ec55ed3303193086e"
 
 inherit allarch
 
