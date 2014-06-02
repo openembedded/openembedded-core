@@ -550,6 +550,10 @@ def check_sanity_version_change(status, d):
         if not check_app_exists("qemu-arm", d):
             status.addresult("qemu-native was in ASSUME_PROVIDED but the QEMU binaries (qemu-arm) can't be found in PATH")
 
+    if "libsdl-native" in assume_provided:
+        if not check_app_exists("sdl-config", d):
+            status.addresult("libsdl-native is set to be ASSUME_PROVIDED but sdl-config can't be found in PATH. Please either install it, or configure qemu not to require sdl.")
+
     (result, message) = check_gcc_march(d)
     if result and message:
         status.addresult("Your gcc version is older than 4.5, please add the following param to local.conf\n \
