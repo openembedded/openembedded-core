@@ -4,11 +4,11 @@ SECTION = "console/utils"
 HOMEPAGE = "http://www.kernel.org/pub/linux/docs/man-pages"
 LICENSE = "GPLv2+"
 
-LIC_FILES_CHKSUM = "file://README;md5=0422377a748010b2b738342e24f141c1"
+LIC_FILES_CHKSUM = "file://README;md5=8f2a3d43057d458e5066714980567a60"
 SRC_URI = "${KERNELORG_MIRROR}/linux/docs/${BPN}/Archive/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "8d273473a803cbe9f41b29b2294e5fda"
-SRC_URI[sha256sum] = "3e936fb931239882ab2816a1497218b48ddc4834793a9779dfe91328c7587eb0"
+SRC_URI[md5sum] = "b23aa8262f9c999e66a413fb44a0a055"
+SRC_URI[sha256sum] = "ad26df6a8878cb87309e8cb1e5867def3e3bfa731e3cf02af076db7d94f58f1f"
 
 RDEPENDS_${PN} = "man"
 
