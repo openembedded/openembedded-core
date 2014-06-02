@@ -7,13 +7,13 @@ library really only provides the lowest, machine dependent layer of a fully feat
 A layer must exist above `libffi' that handles type conversions for values passed between the two languages."
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=e54c573c49435ccbbd3f6dc9e49a065e"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=3610bb17683a0089ed64055416b2ae1b"
 
-SRC_URI = "ftp://sourceware.org/pub/libffi/${BPN}-${PV}.tar.gz \
+SRC_URI = "ftp://sourceware.org/pub/libffi/${BP}.tar.gz \
            file://fix-libffi.la-location.patch"
 
-SRC_URI[md5sum] = "45f3b6dbc9ee7c7dfbbbc5feba571529"
-SRC_URI[sha256sum] = "1dddde1400c3bcb7749d398071af88c3e4754058d2d4c0b3696c2f82dc5cf11c"
+SRC_URI[md5sum] = "f5898b29bbfd70502831a212d9249d10"
+SRC_URI[sha256sum] = "97feeeadca5e21870fa4433bc953d1b3af3f698d5df8a428f68b73cd60aef6eb"
 
 EXTRA_OECONF += "--disable-builddir"
 
