@@ -8,7 +8,7 @@ The original macro name (AC_ACVERSION) leads to this error:
 | configure.in:9: the top level
 | autom4te: m4 failed with exit status: 1
 
-Upstream-Status: Inappropriate [embedded specific]
+Upstream-Status: Submitted (via email)
 Signed-off-by: Bogdan Marinescu <bogdan.a.marinescu@intel.com>
 
 Index: diffstat-1.58/aclocal.m4

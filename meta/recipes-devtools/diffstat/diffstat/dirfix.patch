@@ -8,7 +8,7 @@ Results in "mkdir: cannot create directory `/usr/lib64': Permission denied"
 
 Since the directory is never used, we can just remove the mkdir.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted (via email)
 
 RP 23/9/2011
 
