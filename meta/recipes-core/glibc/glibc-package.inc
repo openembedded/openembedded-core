@@ -82,9 +82,10 @@ do_install_append () {
 	rm -rf ${D}${localstatedir}
 
 	# remove empty glibc dir
-	if [ -d ${D}${libdir}/glibc -a ! -e ${D}${libdir}/glibc/pt_chown ]; then
-		rmdir ${D}${libdir}/glibc
+	if [ -d ${D}${libexecdir} ]; then
+		rmdir --ignore-fail-on-non-empty ${D}${libexecdir}
 	fi
+
 	oe_multilib_header bits/syscall.h
 
 	if [ -f ${D}${bindir}/mtrace ]; then
