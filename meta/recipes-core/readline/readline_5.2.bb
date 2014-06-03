@@ -28,7 +28,6 @@ SRC_URI = "${GNU_MIRROR}/readline/${BPN}-${PV}.tar.gz;name=archive \
            ${GNU_MIRROR}/readline/readline-5.2-patches/readline52-013;name=patch13;apply=yes;striplevel=0 \
            ${GNU_MIRROR}/readline/readline-5.2-patches/readline52-014;name=patch14;apply=yes;striplevel=0 \
            file://configure-fix.patch \
-           file://acinclude.m4 \
            file://fix-redundant-rpath.patch"
 
 SRC_URI[archive.md5sum] = "e39331f32ad14009b9ff49cc10c5e751"
@@ -70,7 +69,9 @@ inherit autotools
 LEAD_SONAME = "libreadline.so"
 
 do_configure_prepend () {
-	install -m 0644 ${WORKDIR}/acinclude.m4 ${S}/
+	if [ ! -e ${S}/acinclude.m4 ]; then
+		cat ${S}/aclocal.m4 > ${S}/acinclude.m4
+	fi
 }
 
 do_install_append () {
