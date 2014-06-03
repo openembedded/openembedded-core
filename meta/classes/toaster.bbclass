@@ -326,6 +326,8 @@ toaster_collect_task_stats[eventmask] = "bb.event.BuildCompleted bb.build.TaskSu
 addhandler toaster_buildhistory_dump
 toaster_buildhistory_dump[eventmask] = "bb.event.BuildCompleted"
 do_package[postfuncs] += "toaster_package_dumpdata "
+do_package[vardepsexclude] += "toaster_package_dumpdata "
 
 do_rootfs[postfuncs] += "toaster_image_dumpdata "
 do_rootfs[postfuncs] += "toaster_licensemanifest_dump "
+do_rootfs[vardepsexclude] += "toaster_image_dumpdata toaster_licensemanifest_dump"
