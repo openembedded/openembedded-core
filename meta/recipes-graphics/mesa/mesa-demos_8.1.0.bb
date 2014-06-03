@@ -14,7 +14,8 @@ DEPENDS = "virtual/libgl glew"
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/demos/${PV}/${BPN}-${PV}.tar.bz2 \
         file://glut.patch \
         file://egl-mesa-screen-surface-build-fix.patch \
-        file://egl-mesa-screen-surface-query.patch"
+        file://egl-mesa-screen-surface-query.patch \
+        file://0001-mesa-demos-Add-missing-data-files.patch"
 
 SRC_URI[md5sum] = "9df33ba69a26bbfbc7c8148602e59542"
 SRC_URI[sha256sum] = "9703fa0646b32a1e68d2abf5628f936f77bf97c69ffcaac90de380820a87a828"
