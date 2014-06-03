@@ -23,7 +23,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
 SRC_URI[md5sum] = "4fed0d54432f1b69fc6e66e608bd5542"
 SRC_URI[sha256sum] = "4853830616113db4435837992c0aebd94cbb993c44dc55063cee7f72a7bef8be"
 
-inherit autotools pkgconfig gettext pixbufcache ptest
+inherit autotools pkgconfig gettext pixbufcache ptest-gnome
 
 LIBV = "2.10.0"
 
@@ -42,10 +42,7 @@ PACKAGECONFIG[jpeg2000] = "--with-libjasper,--without-libjasper,jasper"
 PACKAGECONFIG[gio-sniff] = "--enable-gio-sniffing,--disable-gio-sniffing,,shared-mime-info"
 PACKAGECONFIG[x11] = "--with-x11,--without-x11,virtual/libx11"
 
-EXTRA_OECONF = "\
-  --disable-introspection \
-  ${@bb.utils.contains('DISTRO_FEATURES', 'ptest', '--enable-installed-tests', '--disable-installed-tests', d)} \
-"
+EXTRA_OECONF = "--disable-introspection"
 
 PACKAGES =+ "${PN}-xlib"
 
@@ -66,11 +63,6 @@ FILES_${PN}-dbg += " \
         ${libdir}/.debug/* \
 	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/.debug/* \
 "
-
-FILES_${PN}-ptest += "${libexecdir}/installed-tests \
-                      ${datadir}/installed-tests/gdk-pixbuf"
-
-RDEPENDS_${PN}-ptest += "gnome-desktop-testing"
 
 PACKAGES_DYNAMIC += "^gdk-pixbuf-loader-.*"
 PACKAGES_DYNAMIC_class-native = ""
