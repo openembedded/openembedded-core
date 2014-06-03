@@ -27,6 +27,8 @@ PACKAGECONFIG ?= "drm osmesa freetype2 gbm egl gles1 gles2 \
 # The Wayland code doesn't work with Wayland 1.0, so disable it for now
 #${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)}"
 
+EXTRA_OECONF = "--with-system-data-files"
+
 PACKAGECONFIG[drm] = "--enable-libdrm,--disable-libdrm,libdrm"
 PACKAGECONFIG[egl] = "--enable-egl,--disable-egl,virtual/egl"
 PACKAGECONFIG[freetype2] = "--enable-freetype2,--disable-freetype2,freetype"
@@ -38,3 +40,12 @@ PACKAGECONFIG[osmesa] = "--enable-osmesa,--disable-osmesa,"
 PACKAGECONFIG[vg] = "--enable-vg,--disable-vg,virtual/libvg"
 PACKAGECONFIG[wayland] = "--enable-wayland,--disable-wayland,virtual/libgl wayland"
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11"
+
+do_install_append () {
+    install -m 0644 ${S}/src/perf/*.frag \
+                    ${S}/src/perf/*.vert \
+                    ${S}/src/glsl/*.frag \
+                    ${S}/src/glsl/*.vert \
+                    ${S}/src/glsl/*.geom \
+                    ${S}/src/glsl/*.glsl ${D}${datadir}/${BPN}
+}
