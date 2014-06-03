@@ -19,5 +19,7 @@ SRC_URI[sha256sum] = "158e2b6974350d2dab15932b496bb4d448553e60bbf7cdfe4d6e9bd99d
 
 inherit autotools-brokensep pkgconfig
 
+do_configure[dirs] =+ "${S}/m4"
+
 PACKAGES += "${PN}-mime"
 FILES_${PN}-mime = "${datadir}/mime/"
