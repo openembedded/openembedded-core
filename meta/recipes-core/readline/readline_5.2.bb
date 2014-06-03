@@ -28,6 +28,7 @@ SRC_URI = "${GNU_MIRROR}/readline/${BPN}-${PV}.tar.gz;name=archive \
            ${GNU_MIRROR}/readline/readline-5.2-patches/readline52-013;name=patch13;apply=yes;striplevel=0 \
            ${GNU_MIRROR}/readline/readline-5.2-patches/readline52-014;name=patch14;apply=yes;striplevel=0 \
            file://configure-fix.patch \
+           file://config-dirent-symbols.patch \
            file://fix-redundant-rpath.patch"
 
 SRC_URI[archive.md5sum] = "e39331f32ad14009b9ff49cc10c5e751"
@@ -65,6 +66,8 @@ SRC_URI[patch14.sha256sum] = "6f1a68320d01522ca1ea5a737124ecc8739f3dcbfea2dee21e
 S = "${WORKDIR}/${BPN}-${PV}"
 
 inherit autotools
+
+EXTRA_AUTORECONF += "--exclude=autoheader"
 
 LEAD_SONAME = "libreadline.so"
 
