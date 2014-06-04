@@ -261,6 +261,9 @@ if __name__ == "__main__":
     m.addPackage( "${PN}-html", "Python HTML processing support", "${PN}-core",
     "formatter.* htmlentitydefs.* htmllib.* markupbase.* sgmllib.* HTMLParser.* " )
 
+    m.addPackage( "${PN}-importlib", "Python import implementation library", "${PN}-core",
+    "importlib" )
+
     m.addPackage( "${PN}-gdbm", "Python GNU database support", "${PN}-core",
     "lib-dynload/_gdbm.*.so" )
 
