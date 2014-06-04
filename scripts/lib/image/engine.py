@@ -96,9 +96,10 @@ def build_canned_image_list(dl):
     layers_path = get_bitbake_var("BBLAYERS")
     canned_wks_layer_dirs = []
 
-    for layer_path in layers_path.split():
-        path = os.path.join(layer_path, SCRIPTS_CANNED_IMAGE_DIR)
-        canned_wks_layer_dirs.append(path)
+    if layers_path is not None:
+        for layer_path in layers_path.split():
+            path = os.path.join(layer_path, SCRIPTS_CANNED_IMAGE_DIR)
+            canned_wks_layer_dirs.append(path)
 
     path = os.path.join(dl, CANNED_IMAGE_DIR)
     canned_wks_layer_dirs.append(path)

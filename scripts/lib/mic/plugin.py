@@ -53,9 +53,10 @@ class PluginMgr(object):
             self.layers_path = get_bitbake_var("BBLAYERS")
         layer_dirs = []
 
-        for layer_path in self.layers_path.split():
-            path = os.path.join(layer_path, SCRIPTS_PLUGIN_DIR, ptype)
-            layer_dirs.append(path)
+        if self.layers_path is not None:
+            for layer_path in self.layers_path.split():
+                path = os.path.join(layer_path, SCRIPTS_PLUGIN_DIR, ptype)
+                layer_dirs.append(path)
 
         path = os.path.join(dl, ptype)
         layer_dirs.append(path)
