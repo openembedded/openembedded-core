@@ -57,8 +57,8 @@ class PluginMgr(object):
             path = os.path.join(layer_path, SCRIPTS_PLUGIN_DIR, ptype)
             layer_dirs.append(path)
 
-            path = os.path.join(dl, ptype)
-            layer_dirs.append(path)
+        path = os.path.join(dl, ptype)
+        layer_dirs.append(path)
 
         return layer_dirs
 
