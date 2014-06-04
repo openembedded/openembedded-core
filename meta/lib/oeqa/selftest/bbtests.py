@@ -102,3 +102,55 @@ class BitbakeTests(oeSelfTest):
         self.assertTrue(os.path.isfile(os.path.join(get_bb_var("DL_DIR"), 'test-aspell.tar.gz')))
         self.assertTrue(os.path.isfile(os.path.join(get_bb_var("DL_DIR"), 'test-aspell.tar.gz.done')))
         bitbake('-ccleanall aspell')
+
+    def test_environment(self):
+	self.append_config("TEST_ENV=\"localconf\"")
+	result = runCmd('bitbake -e | grep TEST_ENV=')
+	self.assertTrue('localconf' in result.output)
+	self.remove_config("TEST_ENV=\"localconf\"")
+
+    def test_dry_run(self):
+	result = runCmd('bitbake -n m4-native')
+	self.assertEqual(0, result.status)
+
+    def test_just_parse(self):
+	result = runCmd('bitbake -p')
+	self.assertEqual(0, result.status)
+
+    def test_version(self):
+	result = runCmd('bitbake -s | grep wget')
+	find = re.search("wget *:([0-9a-zA-Z\.\-]+)", result.output)
+	self.assertTrue(find) 
+
+    def test_prefile(self):
+	preconf = os.path.join(self.builddir, 'conf/prefile.conf')
+	self.track_for_cleanup(preconf)
+	ftools.write_file(preconf ,"TEST_PREFILE=\"prefile\"")
+	result = runCmd('bitbake -r conf/prefile.conf -e | grep TEST_PREFILE=')
+	self.assertTrue('prefile' in result.output)
+	self.append_config("TEST_PREFILE=\"localconf\"")
+	result = runCmd('bitbake -r conf/prefile.conf -e | grep TEST_PREFILE=')
+	self.assertTrue('localconf' in result.output)
+	self.remove_config("TEST_PREFILE=\"localconf\"")
+
+    def test_postfile(self):
+	postconf = os.path.join(self.builddir, 'conf/postfile.conf')
+	self.track_for_cleanup(postconf)
+	ftools.write_file(postconf , "TEST_POSTFILE=\"postfile\"")
+	self.append_config("TEST_POSTFILE=\"localconf\"")
+	result = runCmd('bitbake -R conf/postfile.conf -e | grep TEST_POSTFILE=')
+	self.assertTrue('postfile' in result.output)
+	self.remove_config("TEST_POSTFILE=\"localconf\"")
+
+    def test_checkuri(self):
+	result = runCmd('bitbake -c checkuri m4')
+	self.assertEqual(0, result.status)
+
+    def test_continue(self):
+	self.write_recipeinc('man',"\ndo_fail_task () {\nexit 1 \n}\n\naddtask do_fail_task before do_fetch\n" )
+	runCmd('bitbake -c cleanall man xcursor-transparent-theme')
+	result = runCmd('bitbake man xcursor-transparent-theme -k', ignore_status=True)
+	errorpos = result.output.find('ERROR: Function failed: do_fail_task')
+	manver = re.search("NOTE: recipe xcursor-transparent-theme-(.*?): task do_unpack: Started", result.output)
+	continuepos = result.output.find('NOTE: recipe xcursor-transparent-theme-%s: task do_unpack: Started' % manver.group(1))
+	self.assertLess(errorpos,continuepos)
