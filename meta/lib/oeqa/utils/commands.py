@@ -15,6 +15,7 @@ import subprocess
 import threading
 import logging
 from oeqa.utils import CommandError
+from oeqa.utils import ftools
 
 class Command(object):
     def __init__(self, command, bg=False, timeout=None, data=None, **options):
@@ -106,24 +107,36 @@ def runCmd(command, ignore_status=False, timeout=None, assert_error=True, **opti
     return result
 
 
-def bitbake(command, ignore_status=False, timeout=None, **options):
+def bitbake(command, ignore_status=False, timeout=None, postconfig=None, **options):
+
+    if postconfig:
+	postconfig_file = os.path.join(os.environ.get('BUILDDIR'), 'oeqa-post.conf')
+	ftools.write_file(postconfig_file, postconfig)
+	extra_args = "-R %s" % postconfig_file
+    else:
+	extra_args = ""
+
     if isinstance(command, basestring):
-        cmd = "bitbake " + command
+        cmd = "bitbake " + extra_args + " " + command
     else:
-        cmd = [ "bitbake" ] + command
+        cmd = [ "bitbake" ] + [a for a in (command + extra_args.split(" ")) if a not in [""]]
 
-    return runCmd(cmd, ignore_status, timeout, **options)
+    try:
+	return runCmd(cmd, ignore_status, timeout, **options)
+    finally:
+        if postconfig:
+            os.remove(postconfig_file)
 
 
-def get_bb_env(target=None):
+def get_bb_env(target=None, postconfig=None):
     if target:
-        return runCmd("bitbake -e %s" % target).output
+        return bitbake("-e %s" % target, postconfig=postconfig).output
     else:
-        return runCmd("bitbake -e").output
+        return bitbake("-e", postconfig=postconfig).output
 
-def get_bb_var(var, target=None):
+def get_bb_var(var, target=None, postconfig=None):
     val = None
-    bbenv = get_bb_env(target)
+    bbenv = get_bb_env(target, postconfig=postconfig)
     for line in bbenv.splitlines():
         if line.startswith(var + "="):
             val = line.split('=')[1]
