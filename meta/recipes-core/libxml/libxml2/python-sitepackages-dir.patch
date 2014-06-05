@@ -1,0 +1,21 @@
+Allow us to pass in PYTHON_SITE_PACKAGES
+
+The python binary used when building for nativesdk doesn't give us the
+correct path here so we need to be able to specify it ourselves.
+
+Upstream-Status: Inappropriate [config]
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+--- a/configure.in
++++ b/configure.in
+@@ -743,7 +743,8 @@ dnl
+ 
+ PYTHON_VERSION=
+ PYTHON_INCLUDES=
+-PYTHON_SITE_PACKAGES=
++# Allow this to be set externally
++#PYTHON_SITE_PACKAGES=
+ PYTHON_TESTS=
+ pythondir=
+ if test "$with_python" != "no" ; then
