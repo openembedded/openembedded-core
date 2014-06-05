@@ -8,6 +8,7 @@ SRC_URI += "file://gnutls-openssl.patch \
             file://avoid_AM_PROG_MKDIR_P_warning_error_with_automake_1.12.patch \
             file://CVE-2014-1959-rejection-of-v1-intermediate-cert.patch \
             file://CVE-2014-0092-corrected-return-codes.patch \
+            file://CVE-2014-3466.patch \
             file://25_updatedgdocfrommaster.diff \
             ${@['', 'file://fix-gettext-version.patch'][bb.data.inherits_class('native', d) or (not ((d.getVar("INCOMPATIBLE_LICENSE", True) or "").find("GPLv3") != -1))]} \
            "
