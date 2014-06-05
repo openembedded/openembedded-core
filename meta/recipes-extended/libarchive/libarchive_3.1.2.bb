@@ -5,6 +5,8 @@ SECTION = "devel"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b4e3ffd607d6686c6cb2f63394370841"
 
+DEPENDS = "e2fsprogs-native"
+
 PACKAGECONFIG ?= "libxml2 zlib bz2"
 
 PACKAGECONFIG_append_class-target = "\
@@ -35,5 +37,14 @@ SRC_URI[md5sum] = "efad5a503f66329bb9d2f4308b5de98a"
 SRC_URI[sha256sum] = "eb87eacd8fe49e8d90c8fdc189813023ccc319c5e752b01fb6ad0cc7b2c53d5e"
 
 inherit autotools-brokensep lib_package pkgconfig
+
+CPPFLAGS += "-I${WORKDIR}/extra-includes"
+
+do_configure[cleandirs] += "${WORKDIR}/extra-includes"
+do_configure_prepend() {
+	# We just need the headers for some type constants, so no need to
+	# build all of e2fsprogs for the target
+	cp -R ${STAGING_INCDIR_NATIVE}/ext2fs ${WORKDIR}/extra-includes/
+}
 
 BBCLASSEXTEND = "native nativesdk"
