@@ -1,6 +1,7 @@
 require neard.inc
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/network/nfc/${BPN}-${PV}.tar.xz \
+           file://Fix-snep-send-parallel-build.patch \
            file://neard.in \
            file://neard.service.in \
           "

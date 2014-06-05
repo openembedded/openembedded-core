@@ -1,0 +1,31 @@
+From fbbf600df474865172b47212d94e3dc5013cc2df Mon Sep 17 00:00:00 2001
+From: Cristian Iorga <cristian.iorga@intel.com>
+Date: Wed, 4 Jun 2014 16:40:18 +0300
+Subject: [PATCH] tools: Fix snep-send parallel build
+
+tools/snep-send object might cause a
+parallel build failure,due to undetected
+dependency on dbus.h header file.
+
+Upstream-Status: Pending
+Signed-off-by: Cristian Iorga <cristian.iorga@intel.com>
+---
+ Makefile.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Makefile.am b/Makefile.am
+index 26f49e7..0e4a5b5 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -169,6 +169,8 @@ tools_snep_send_SOURCES = $(gdbus_sources) src/log.c src/dbus.c \
+ 					src/agent.c
+ tools_snep_send_LDADD = ${GLIB_LIBS} ${DBUS_LIBS}
+ 
++tools/snep-send.$(OBJEXT): include/near/dbus.h
++
+ tools_nfctool_nfctool_SOURCES = tools/nfctool/main.c \
+ 					tools/nfctool/nfctool.h \
+ 					tools/nfctool/adapter.h \
+-- 
+1.9.1
+
