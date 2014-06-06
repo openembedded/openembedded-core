@@ -28,9 +28,9 @@ inherit autotools gettext texinfo update-alternatives
 PACKAGES += "gawk-common pgawk dgawk"
 
 FILES_${PN} = "${bindir}/gawk* ${bindir}/igawk"
-FILES_gawk-common += "${datadir}/awk/* ${libexecdir}/awk/* ${libexecdir}/*.so"
+FILES_gawk-common += "${datadir}/awk/* ${libexecdir}/awk/* ${libdir}/${BPN}/*.so"
 FILES_pgawk = "${bindir}/pgawk*"
-FILES_${PN}-dev += "${libexecdir}/*.la"
+FILES_${PN}-dev += "${libdir}/${BPN}/*.la"
 FILES_${PN}-dbg += "${libexecdir}/awk/.debug"
 FILES_dgawk = "${bindir}/dgawk*"
 
