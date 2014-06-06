@@ -1,5 +1,6 @@
 import types
 import bb
+import os
 
 # This class is responsible for loading a test target controller
 class TestTargetLoader:
