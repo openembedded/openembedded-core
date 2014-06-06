@@ -19,7 +19,6 @@ DEFAULT_PREFERENCE_arm = "1"
 PV = "2.00+${SRCPV}"
 SRCREV = "4b8b9135f1676924a8458da528d264bbc7bbb301"
 SRC_URI = "git://git.savannah.gnu.org/grub.git \
-           file://40_custom \
            file://autogen.sh-exclude-pc.patch \
            file://grub-2.00-add-oe-kernel.patch \
            file://asciih-fix-build-warning-error.patch \
@@ -52,7 +51,6 @@ do_configure_prepend() {
 
 do_install_append () {
     install -d ${D}${sysconfdir}/grub.d
-    install -m 0755 ${WORKDIR}/40_custom ${D}${sysconfdir}/grub.d/40_custom
  
 }
 
