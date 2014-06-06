@@ -7,7 +7,7 @@ inherit core-image
 # the deploy code requires bash and
 # normal linux utilities not busybox ones
 IMAGE_INSTALL += "\
-    bash coreutils util-linux tar gzip kmod \
+    bash coreutils util-linux tar gzip bzip2 kmod \
     python-modules python-misc \
     e2fsprogs e2fsprogs-mke2fs parted \
     "
