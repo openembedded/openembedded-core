@@ -119,6 +119,7 @@ do_prepare_config () {
 	  {if(net==2&&$0 !~ /^#/&&$1){print("# "$1" is not set")}else{print}}' \
 		  ${S}/.config.oe-tmp > ${S}/.config
 	fi
+	sed -i 's/CONFIG_IFUPDOWN_UDHCPC_CMD_OPTIONS="-R -n"/CONFIG_IFUPDOWN_UDHCPC_CMD_OPTIONS="-R -b"/' ${S}/.config
 }
 
 # returns all the elements from the src uri that are .cfg files
