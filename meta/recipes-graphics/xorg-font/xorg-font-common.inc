@@ -33,7 +33,6 @@ do_install_append() {
 FILES_${PN} += " ${libdir}/X11/fonts ${datadir}"
 
 pkg_postinst_${PN} () {
-        set -x
         for fontdir in `find $D/usr/lib/X11/fonts -type d`; do
                 mkfontdir $fontdir
                 mkfontscale $fontdir
