@@ -10,10 +10,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
            file://guile.patch \
-           file://increase-timeout-limit.patch"
+           file://increase-timeout-limit.patch \
+           file://mk-tpl-config.sh-force-exit-value-to-be-0-in-subproc.patch"
 
-SRC_URI[md5sum] = "117c4bc5613c57e1b97d760a5d1910a4"
-SRC_URI[sha256sum] = "cc2702dec21ba5b01144865163f6d1a54268d2b72aafc5520ad0e0cb57104068"
+SRC_URI[md5sum] = "0fb6b003423e004d94e0119c2390078f"
+SRC_URI[sha256sum] = "73d05a689105eb9b8be54f32498c99ddbd360776fc61cf45be6a2a4eb4a40039"
 
 DEPENDS = "guile-native libtool-native libxml2-native"
 
