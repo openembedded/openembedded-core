@@ -44,6 +44,8 @@ class BaseTarget(object):
 
     __metaclass__ = ABCMeta
 
+    supported_image_fstypes = []
+
     def __init__(self, d):
         self.connection = None
         self.ip = None
@@ -70,6 +72,16 @@ class BaseTarget(object):
     def stop(self):
         pass
 
+    @classmethod
+    def get_image_fstype(self, d, image_fstypes=None):
+        if not image_fstypes:
+            image_fstypes = d.getVar('IMAGE_FSTYPES', True).split(' ')
+        possible_image_fstypes = [fstype for fstype in self.supported_image_fstypes if fstype in image_fstypes]
+        if possible_image_fstypes:
+            return possible_image_fstypes[0]
+        else:
+            bb.fatal("no possible image_fstype could not be determined. IMAGE_FSTYPES=\"%s\" and supported_image_fstypes=\"%s\": " % (', '.join(map(str, image_fstypes)), ', '.join(map(str, self.supported_image_fstypes))))
+
     def restart(self, params=None):
         self.stop()
         self.start(params)
@@ -87,13 +99,16 @@ class BaseTarget(object):
 
 class QemuTarget(BaseTarget):
 
+    supported_image_fstypes = ['ext3']
+
     def __init__(self, d):
 
         super(QemuTarget, self).__init__(d)
 
+        self.image_fstype = self.get_image_fstype(d)
         self.qemulog = os.path.join(self.testdir, "qemu_boot_log.%s" % self.datetime)
-        self.origrootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),  d.getVar("IMAGE_LINK_NAME", True) + '.ext3')
-        self.rootfs = os.path.join(self.testdir, d.getVar("IMAGE_LINK_NAME", True) + '-testimage.ext3')
+        self.origrootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),  d.getVar("IMAGE_LINK_NAME", True) + '.' + self.image_fstype)
+        self.rootfs = os.path.join(self.testdir, d.getVar("IMAGE_LINK_NAME", True) + '-testimage.' + self.image_fstype)
 
         self.runner = QemuRunner(machine=d.getVar("MACHINE", True),
                         rootfs=self.rootfs,
