@@ -73,6 +73,10 @@ class BaseTarget(object):
         pass
 
     @classmethod
+    def get_extra_files(self):
+        return None
+
+    @classmethod
     def get_image_fstype(self, d, image_fstypes=None):
         if not image_fstypes:
             image_fstypes = d.getVar('IMAGE_FSTYPES', True).split(' ')
