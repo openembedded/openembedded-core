@@ -28,6 +28,8 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget):
 
     __metaclass__ = ABCMeta
 
+    supported_image_fstypes = ['tar.gz', 'tar.bz2']
+
     def __init__(self, d):
         super(MasterImageHardwareTarget, self).__init__(d)
 
@@ -48,7 +50,8 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget):
         bb.note("Server IP: %s" % self.server_ip)
 
         # test rootfs + kernel
-        self.rootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("IMAGE_LINK_NAME", True) + '.tar.gz')
+        self.image_fstype = self.get_image_fstype(d)
+        self.rootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("IMAGE_LINK_NAME", True) + '.' + self.image_fstype)
         self.kernel = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("KERNEL_IMAGETYPE"))
         if not os.path.isfile(self.rootfs):
             # we could've checked that IMAGE_FSTYPES contains tar.gz but the config for running testimage might not be
@@ -177,7 +180,7 @@ class GummibootTarget(MasterImageHardwareTarget):
                 'mount -t efivarfs efivarfs /sys/firmware/efi/efivars',
                 'cp ~/test-kernel /boot',
                 'rm -rf /mnt/testrootfs/*',
-                'tar xzvf ~/test-rootfs.tar.gz -C /mnt/testrootfs',
+                'tar xvf ~/test-rootfs.%s -C /mnt/testrootfs' % self.image_fstype,
                 'printf "%s" > /sys/firmware/efi/efivars/LoaderEntryOneShot-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f' % self.efivarvalue
                 ]
 
@@ -187,7 +190,7 @@ class GummibootTarget(MasterImageHardwareTarget):
         # from now on, every deploy cmd should return 0
         # else an exception will be thrown by sshcontrol
         self.master.ignore_status = False
-        self.master.copy_to(self.rootfs, "~/test-rootfs.tar.gz")
+        self.master.copy_to(self.rootfs, "~/test-rootfs." + self.image_fstype)
         self.master.copy_to(self.kernel, "~/test-kernel")
         for cmd in self.deploy_cmds:
             self.master.run(cmd)
