@@ -167,18 +167,16 @@ umount /src_root
 # Handling of the target boot partition
 mount $bootfs /boot
 echo "Preparing boot partition..."
-if [ -f /etc/grub.d/40_custom ] ; then
+if [ -f /etc/grub.d/00_header ] ; then
     echo "Preparing custom grub2 menu..."
     GRUBCFG="/boot/grub/grub.cfg"
     mkdir -p $(dirname $GRUBCFG)
-    cp /etc/grub.d/40_custom $GRUBCFG
-    sed -i "s@__ROOTFS__@$rootfs $rootwait@g" $GRUBCFG
-    sed -i "s/__VIDEO_MODE__/$3/g" $GRUBCFG
-    sed -i "s/__VGA_MODE__/$4/g" $GRUBCFG
-    sed -i "s/__CONSOLE__/$5/g" $GRUBCFG
-    sed -i "/#/d" $GRUBCFG
-    sed -i "/exec tail/d" $GRUBCFG
-
+    cat >$GRUBCFG <<_EOF 
+menuentry "Linux" {
+    set root=(hd0,1)
+    linux /vmlinuz root=$rootfs $rootwait rw $5 $3 $4 quiet
+}
+_EOF 
     # Add the test label
     echo -ne "\nmenuentry 'test' {\nlinux /test-kernel root=$testfs rw $rootwait quiet\n}\n" >> $GRUBCFG
 
