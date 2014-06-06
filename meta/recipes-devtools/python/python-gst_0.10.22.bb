@@ -21,3 +21,9 @@ EXTRA_OECONF += "--with-python-includes=${STAGING_INCDIR}/../"
 FILES_${PN} += "${datadir}/gst-python"
 FILES_${PN}-dev += "${datadir}/gst-python/0.10/defs"
 FILES_${PN}-dbg += "${libdir}/${PYTHON_DIR}/site-packages/gst-0.10/gst/.debug/ ${libdir}/gstreamer-0.10/.debug/"
+
+do_configure_prepend() {
+	if [ `find ${STAGING_LIBDIR} -name libpython*.so` ]; then
+		ln -sf ${STAGING_LIBDIR}/libpython*.so `find ${STAGING_LIBDIR} -name libpython*.a -exec dirname {} \;`
+	fi
+}
