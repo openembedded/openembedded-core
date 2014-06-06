@@ -27,6 +27,8 @@ LIBTOOL = "${S}/builds/unix/${HOST_SYS}-libtool"
 EXTRA_OEMAKE = "'LIBTOOL=${LIBTOOL}'"
 EXTRA_OEMAKE_class-native = ""
 EXTRA_OECONF = "--without-zlib --without-bzip2 CC_BUILD='${BUILD_CC}'"
+TARGET_CPPFLAGS += "-D_FILE_OFFSET_BITS=64"
+
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[pixmap] = "--with-png,--without-png,libpng"
