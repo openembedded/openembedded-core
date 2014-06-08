@@ -27,12 +27,10 @@
 # Set GLIBC_GENERATE_LOCALES to the locales you wish to generate should you not
 # wish to perform the time-consuming step of generating all LIBC locales.
 # NOTE: If removing en_US.UTF-8 you will also need to uncomment, and set
-# appropriate values for IMAGE_LINGUAS and LIMIT_BUILT_LOCALES
+# appropriate value for IMAGE_LINGUAS.
 # WARNING: this may break localisation!
 #GLIBC_GENERATE_LOCALES = "en_GB.UTF-8 en_US.UTF-8"
-# See message above as to whether setting these is required
 #IMAGE_LINGUAS ?= "en-gb"
-#LIMIT_BUILT_LOCALES ?= "POSIX en_GB"
 
 # The following are used to control options related to debugging.
 #
