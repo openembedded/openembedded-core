@@ -38,6 +38,7 @@ SRC_URI += "file://configure-targets.patch \
             file://openssl-1.0.1e-cve-2014-0198.patch \
             file://openssl-1.0.1e-cve-2014-0221.patch \
             file://openssl-1.0.1e-cve-2014-0224.patch \
+            file://openssl-1.0.1e-cve-2014-3470.patch \
             file://openssl-CVE-2010-5298.patch \
            "
 
