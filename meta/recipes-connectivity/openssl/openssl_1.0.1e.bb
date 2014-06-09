@@ -36,8 +36,8 @@ SRC_URI += "file://configure-targets.patch \
             file://0001-Fix-DTLS-retransmission-from-previous-session.patch \
             file://0001-Use-version-in-SSL_METHOD-not-SSL-structure.patch \
             file://CVE-2014-0160.patch \
-            file://openssl-CVE-2014-0198-fix.patch \
             file://openssl-1.0.1e-cve-2014-0195.patch \
+            file://openssl-1.0.1e-cve-2014-0198.patch \
            "
 
 SRC_URI[md5sum] = "66bf6f10f060d561929de96f9dfe5b8c"
