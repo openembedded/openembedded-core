@@ -51,7 +51,7 @@ FILES_${PN}-dbg += "${datadir}/glib-2.0/gdb ${datadir}/gdb \
 FILES_${PN}-codegen = "${datadir}/glib-2.0/codegen/*.py"
 FILES_${PN}-bash-completion = "${sysconfdir}/bash_completion.d \
                                ${datadir}/bash-completion"
-FILES_${PN}-ptest += "${libdir}/glib-2.0/installed-tests \
+FILES_${PN}-ptest += "${libexecdir}/installed-tests \
                       ${datadir}/installed-tests/glib"
 
 ARM_INSTRUCTION_SET = "arm"
