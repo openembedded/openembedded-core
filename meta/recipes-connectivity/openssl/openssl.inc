@@ -47,7 +47,7 @@ FILES_${PN}-dev += "${base_libdir}/libcrypto${SOLIBSDEV}"
 FILES_openssl-conf = "${libdir}/ssl/openssl.cnf"
 CONFFILES_openssl-conf = "${libdir}/ssl/openssl.cnf"
 RRECOMMENDS_libcrypto += "openssl-conf"
-RDEPENDS_${PN}-ptest += "${PN}-misc make"
+RDEPENDS_${PN}-ptest += "${PN}-misc make perl perl-module-filehandle bc"
 
 do_configure_prepend_darwin () {
 	sed -i -e '/version-script=openssl\.ld/d' Configure
@@ -176,6 +176,7 @@ do_install () {
 
 do_install_ptest () {
 	cp -r Makefile test ${D}${PTEST_PATH}
+	cp -r certs ${D}${PTEST_PATH}
 	mkdir -p ${D}${PTEST_PATH}/apps
 	ln -sf /usr/lib/ssl/misc/CA.sh  ${D}${PTEST_PATH}/apps
 	ln -sf /usr/lib/ssl/openssl.cnf ${D}${PTEST_PATH}/apps
