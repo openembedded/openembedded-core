@@ -67,7 +67,7 @@ FILES_${PN}-dbg += " \
 	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/.debug/* \
 "
 
-FILES_${PN}-ptest += "${libdir}/gdk-pixbuf/installed-tests \
+FILES_${PN}-ptest += "${libexecdir}/installed-tests \
                       ${datadir}/installed-tests/gdk-pixbuf"
 
 RDEPENDS_${PN}-ptest += "gnome-desktop-testing"
