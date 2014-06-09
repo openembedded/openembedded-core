@@ -34,8 +34,8 @@ SRC_URI += "file://configure-targets.patch \
             file://initial-aarch64-bits.patch \
             file://find.pl \
             file://openssl-fix-des.pod-error.patch \
-            file://openssl-CVE-2014-0198-fix.patch \
             file://openssl-1.0.1e-cve-2014-0195.patch \
+            file://openssl-1.0.1e-cve-2014-0198.patch \
             file://openssl-CVE-2010-5298.patch \
            "
 
