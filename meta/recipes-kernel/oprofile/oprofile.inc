@@ -19,16 +19,15 @@ FILES_${PN}-dev += "${libdir}/${BPN}/lib*${SOLIBSDEV} ${libdir}/${BPN}/lib*.la"
 FILES_${PN}-staticdev += "${libdir}/${BPN}/lib*.a"
 
 SRC_URI = "file://opstart.patch \
-           file://oprofile-root.patch \
            file://acinclude.m4 \
            file://oprofile-cross-compile-tests.patch \
-           file://run-ptest"
+           file://run-ptest \
+           file://root-home-dir.patch"
 
 inherit autotools-brokensep pkgconfig ptest
 
 EXTRA_OECONF = "--with-kernel=${STAGING_KERNEL_DIR}  --without-x"
 do_configure () {
-	find ${S} -wholename '${S}/.pc' -prune -o -type f -print | xargs sed -i 's#ROOTHOME#${ROOT_HOME}#'
 	cp ${WORKDIR}/acinclude.m4 ${S}/
 	autotools_do_configure
 }

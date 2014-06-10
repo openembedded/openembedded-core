@@ -1,0 +1,120 @@
+oprofile: Determine the root home directory dynamically
+
+This commit detects the root home directory dynamically with changes to
+the opcontrol script and the oprofile gui app source.
+
+The commit replaces an earlier fix that detected and adjusted a
+'non-standard' root home directory at build time.  The advantage of this
+patch is that the oprofile tools are adjusted to the current run-time
+path to ~root, not the build time path.
+
+Upstream-Status: inappropriate [OE specific]
+
+Signed-off-by: Dave Lerner <dave.lerner@windriver.com>
+
+diff --git a/doc/opcontrol.1.in b/doc/opcontrol.1.in
+index c434704..f57eb76 100644
+--- a/doc/opcontrol.1.in
++++ b/doc/opcontrol.1.in
+@@ -171,7 +171,7 @@ No special environment variables are recognised by opcontrol.
+ 
+ .SH FILES
+ .TP
+-.I /root/.oprofile/daemonrc
++.I ~root/.oprofile/daemonrc
+ Configuration file for opcontrol
+ .TP
+ .I /var/lib/oprofile/samples/
+diff --git a/doc/oprofile.1.in b/doc/oprofile.1.in
+index 3d0f0ed..5c623e1 100644
+--- a/doc/oprofile.1.in
++++ b/doc/oprofile.1.in
+@@ -150,7 +150,7 @@ No special environment variables are recognised by oprofile.
+ .I $HOME/.oprofile/
+ Configuration files
+ .TP
+-.I /root/.oprofile/daemonrc
++.I ~root/.oprofile/daemonrc
+ Configuration file for opcontrol
+ .TP
+ .I @prefix@/share/oprofile/
+diff --git a/doc/oprofile.html b/doc/oprofile.html
+index 128d9f7..d7e4dea 100644
+--- a/doc/oprofile.html
++++ b/doc/oprofile.html
+@@ -1394,7 +1394,7 @@ The <span class="command"><strong>opcontrol</strong></span> script provides the
+               <dd>
+                 <p>
+ 		    Followed by list arguments for profiling set up. List of arguments
+-		    saved in <code class="filename">/root/.oprofile/daemonrc</code>.
++		    saved in <code class="filename">~root/.oprofile/daemonrc</code>.
+ 		    Giving this option is not necessary; you can just directly pass one
+ 		    of the setup options, e.g. <span class="command"><strong>opcontrol --no-vmlinux</strong></span>.
+ 		  </p>
+@@ -1430,7 +1430,7 @@ The <span class="command"><strong>opcontrol</strong></span> script provides the
+               <dd>
+                 <p>
+ 		    Start data collection with either arguments provided by <code class="option">--setup</code>
+-		or information saved in <code class="filename">/root/.oprofile/daemonrc</code>. Specifying
++		or information saved in <code class="filename">~root/.oprofile/daemonrc</code>. Specifying
+ 		the addition <code class="option">--verbose</code> makes the daemon generate lots of debug data
+ 		whilst it is running.
+ 		</p>
+diff --git a/doc/oprofile.xml b/doc/oprofile.xml
+index 6a17c6d..0968d76 100644
+--- a/doc/oprofile.xml
++++ b/doc/oprofile.xml
+@@ -568,7 +568,7 @@ The <command>opcontrol</command> script provides the following actions :
+ 		<term><option>--setup</option></term>
+ 		<listitem><para>
+ 		    Followed by list arguments for profiling set up. List of arguments
+-		    saved in <filename>/root/.oprofile/daemonrc</filename>.
++		    saved in <filename>~root/.oprofile/daemonrc</filename>.
+ 		    Giving this option is not necessary; you can just directly pass one
+ 		    of the setup options, e.g. <command>opcontrol --no-vmlinux</command>.
+ 		  </para></listitem>
+@@ -592,7 +592,7 @@ The <command>opcontrol</command> script provides the following actions :
+ 		<term><option>--start</option></term>
+ 		<listitem><para>
+ 		    Start data collection with either arguments provided by <option>--setup</option>
+-		or information saved in <filename>/root/.oprofile/daemonrc</filename>. Specifying
++		or information saved in <filename>~root/.oprofile/daemonrc</filename>. Specifying
+ 		the addition <option>--verbose</option> makes the daemon generate lots of debug data
+ 		whilst it is running.
+ 		</para></listitem>
+diff --git a/gui/oprof_start_util.cpp b/gui/oprof_start_util.cpp
+index d293431..d13fa8f 100644
+--- a/gui/oprof_start_util.cpp
++++ b/gui/oprof_start_util.cpp
+@@ -20,6 +20,8 @@
+ #include <iostream>
+ #include <fstream>
+ #include <cstdlib>
++#include <sys/types.h>
++#include <pwd.h>
+ 
+ #include <qfiledialog.h>
+ #include <qmessagebox.h>
+@@ -39,7 +41,8 @@ namespace {
+ // return the ~ expansion suffixed with a '/'
+ string const get_config_dir()
+ {
+-	return "/root";
++	struct *pw = getpwnam("root");
++	return pw->pw_dir;
+ }
+ 
+ string daemon_pid;
+diff --git a/utils/opcontrol b/utils/opcontrol
+index 09fa5a7..a8acdae 100644
+--- a/utils/opcontrol
++++ b/utils/opcontrol
+@@ -385,7 +385,7 @@ do_init()
+ 	OPROFILED="$OPDIR/oprofiled"
+ 
+ 	# location for daemon setup information
+-	SETUP_DIR="/root/.oprofile"
++	SETUP_DIR="`grep root /etc/passwd | cut -d: -f6`/.oprofile"
+ 	SETUP_FILE="$SETUP_DIR/daemonrc"
+ 	SEC_SETUP_FILE="$SETUP_DIR/daemonrc_new"
+ 
