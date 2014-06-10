@@ -1,0 +1,144 @@
+If we run builds on a filesystem with 64 bit inodes like XFS, we need to
+map the inode numbers to something 32 bit since the cpio header only allows
+for 32 bit inode values. If we don't do this:
+
+#define SET_NUM_FIELD(phys, val, space) \
+        sprintf(space, "%8.8lx", (unsigned long) (val)); \
+        memcpy(phys, space, 8)
+
+from cpio.c will print larger that 8 character values and then truncate the 
+LSBs. This generates cpio files where hardlinked files may have the same
+inode number. The resulting rpms are then corrupted.
+
+There is a separate patch for the crash the identical inode numbers causes
+when extracting the rpm.
+
+Patch taken from http://git.pld-linux.org/?p=packages/rpm.git;a=commitdiff;h=10526c23aac60b7b636e4c93862887dbef8e8f15
+
+RP 2014/6/10
+
+Upstream-Status: Pending
+
+diff -ur rpm-5.4.10/build/files.c rpm-5.4.10-collision/build/files.c
+--- rpm-5.4.10/build/files.c	2013-03-17 13:17:38.233358389 +0100
++++ rpm-5.4.10-collision/build/files.c	2013-03-17 13:07:37.468483625 +0100
+@@ -1323,6 +1323,26 @@
+     return dalgo;
+ }
+ 
++static int isHardLink(FileListRec flp, FileListRec tlp)
++{
++    return ((S_ISREG(flp->fl_mode) && S_ISREG(tlp->fl_mode)) &&
++            ((flp->fl_nlink > 1) && (flp->fl_nlink == tlp->fl_nlink)) &&
++            (flp->fl_ino == tlp->fl_ino) &&
++            (flp->fl_dev == tlp->fl_dev));
++}
++
++static int seenHardLink(FileList fl, FileListRec flp, ino_t *fileid)
++{
++    FileListRec ilp;
++    for (ilp = fl->fileList; ilp < flp; ilp++) {
++        if (isHardLink(flp, ilp)) {
++            *fileid = ilp - fl->fileList;
++            return 1;
++        }
++    }
++    return 0;
++}
++
+ /**
+  * Add file entries to header.
+  * @todo Should directories have %doc/%config attributes? (#14531)
+@@ -1370,6 +1390,7 @@
+ 
+     for (i = 0, flp = fl->fileList; i < fl->fileListRecsUsed; i++, flp++) {
+ 	const char *s;
++	ino_t fileid = flp - fl->fileList;
+ 
+  	/* Merge duplicate entries. */
+ 	while (i < (fl->fileListRecsUsed - 1) &&
+@@ -1437,6 +1458,13 @@
+ 	/* Leave room for both dirname and basename NUL's */
+ 	dpathlen += (strlen(flp->diskURL) + 2);
+ 
++	/* Excludes and dupes have been filtered out by now. */
++	if (S_ISREG(flp->fl_mode)) {
++	    if (flp->fl_nlink == 1 || !seenHardLink(fl, flp, &fileid)) {
++		fl->totalFileSize += flp->fl_size;
++	    }
++	}
++
+ 	/*
+ 	 * Make the header, the OLDFILENAMES will get converted to a 
+ 	 * compressed file list write before we write the actual package to
+@@ -1519,7 +1547,11 @@
+ 
+ 	/* XXX Hash instead of 64b->32b truncate to prevent aliasing. */
+ 	{   ino_t _ino = flp->fl_ino;
+-	    ui32 = hashFunctionString(0, &_ino, sizeof(_ino));
++	/* don't use hash here, as hash collisions which happen on large packages
++	   cause bus errors in rpmbuild
++	    ui32 = hashFunctionString(0, &_ino, sizeof(_ino));
++	*/
++	    ui32 = fileid + 1;
+ 	}
+ 	he->tag = RPMTAG_FILEINODES;
+ 	he->t = RPM_UINT32_TYPE;
+@@ -1752,39 +1780,6 @@
+ 		IOSM_MAP_TYPE | IOSM_MAP_MODE | IOSM_MAP_UID | IOSM_MAP_GID;
+ 	if (isSrc)
+ 	    fi->fmapflags[i] |= IOSM_FOLLOW_SYMLINKS;
+-
+-	if (S_ISREG(flp->fl_mode)) {
+-	    int bingo = 1;
+-	    /* Hard links need be tallied only once. */
+-	    if (flp->fl_nlink > 1) {
+-		FileListRec jlp = flp + 1;
+-		int j = i + 1;
+-		for (; (unsigned)j < fi->fc; j++, jlp++) {
+-		    /* follow outer loop logic */
+-		    while (((jlp - fl->fileList) < (fl->fileListRecsUsed - 1)) &&
+-			    !strcmp(jlp->fileURL, jlp[1].fileURL))
+-			jlp++;
+-		    if (jlp->flags & RPMFILE_EXCLUDE) {
+-			j--;
+-			/*@innercontinue@*/ continue;
+-		    }
+-		    if (jlp->flags & RPMFILE_GHOST)
+-		        /*@innercontinue@*/ continue;
+-		    if (!S_ISREG(jlp->fl_mode))
+-			/*@innercontinue@*/ continue;
+-		    if (flp->fl_nlink != jlp->fl_nlink)
+-			/*@innercontinue@*/ continue;
+-		    if (flp->fl_ino != jlp->fl_ino)
+-			/*@innercontinue@*/ continue;
+-		    if (flp->fl_dev != jlp->fl_dev)
+-			/*@innercontinue@*/ continue;
+-		    bingo = 0;	/* don't tally hardlink yet. */
+-		    /*@innerbreak@*/ break;
+-		}
+-	    }
+-	    if (bingo)
+-		fl->totalFileSize += flp->fl_size;
+-	}
+     }
+ 
+     ui32 = fl->totalFileSize;
+--- rpm-5.4.10/lib/fsm.c~
++++ rpm-5.4.10/lib/fsm.c
+@@ -898,6 +898,7 @@ int fsmMapAttrs(IOSM_t fsm)
+ 
+     if (fi && i >= 0 && i < (int) fi->fc) {
+ 	mode_t perms = (S_ISDIR(st->st_mode) ? fi->dperms : fi->fperms);
++	ino_t finalInode = (fi->finodes ? (ino_t)fi->finodes[i] : 0);
+ 	mode_t finalMode = (fi->fmodes ? (mode_t)fi->fmodes[i] : perms);
+ 	dev_t finalRdev = (dev_t)(fi->frdevs ? fi->frdevs[i] : 0);
+ 	rpmuint32_t finalMtime = (fi->fmtimes ? fi->fmtimes[i] : 0);
+@@ -937,6 +938,7 @@ int fsmMapAttrs(IOSM_t fsm)
+ 	    if ((S_ISCHR(st->st_mode) || S_ISBLK(st->st_mode))
+ 	    && st->st_nlink == 0)
+ 		st->st_nlink = 1;
++	    st->st_ino = finalInode;
+ 	    st->st_rdev = finalRdev;
+ 	    st->st_mtime = finalMtime;
+ 	}
