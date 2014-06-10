@@ -91,6 +91,8 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;ex
 	   file://rpm-lsb-compatibility.patch \
 	   file://rpm-tag-generate-endian-conversion-fix.patch \
 	   file://rpm-verify-files.patch \
+	   file://rpm-hardlink-segfault-fix.patch \
+	   file://rpm-payload-use-hashed-inode.patch \
 	  "
 
 # Uncomment the following line to enable platform score debugging
