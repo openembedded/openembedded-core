@@ -7,7 +7,9 @@ SECTION = "console/utils"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-DEPENDS = "zlib ncurses texinfo-native"
+PROVIDES_append_class-native = " texinfo-replacement-native"
+
+DEPENDS = "zlib ncurses texinfo-replacement-native"
 DEPENDS_class-native = "zlib-native ncurses-native"
 
 TARGET_PATCH = "file://use_host_makedoc.patch"
