@@ -2,7 +2,7 @@ SUMMARY = "A library on top of GStreamer for building an RTSP server"
 SECTION = "multimedia"
 LICENSE = "LGPLv2"
 HOMEPAGE = "http://cgit.freedesktop.org/gstreamer/gst-rtsp-server/"
-DEPENDS = "gstreamer1.0"
+DEPENDS = "gstreamer1.0 libcgroup gstreamer1.0-plugins-base"
 
 PNREAL = "gst-rtsp-server"
 
