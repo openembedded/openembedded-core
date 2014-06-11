@@ -129,11 +129,19 @@ class Rootfs(object):
         self._cleanup()
 
     def _uninstall_uneeded(self):
+        # Remove unneeded init script symlinks
+        delayed_postinsts = self._get_delayed_postinsts()
+        if delayed_postinsts is None:
+            if os.path.exists(self.d.expand("${IMAGE_ROOTFS}${sysconfdir}/init.d/run-postinsts")):
+                self._exec_shell_cmd(["update-rc.d", "-f", "-r",
+                                      self.d.getVar('IMAGE_ROOTFS', True),
+                                      "run-postinsts", "remove"])
+
+        # Remove unneeded package-management related components
         if bb.utils.contains("IMAGE_FEATURES", "package-management",
                          True, False, self.d):
             return
 
-        delayed_postinsts = self._get_delayed_postinsts()
         if delayed_postinsts is None:
             installed_pkgs_dir = self.d.expand('${WORKDIR}/installed_pkgs.txt')
             pkgs_to_remove = list()
@@ -153,10 +161,6 @@ class Rootfs(object):
                 # Update installed_pkgs.txt
                 open(installed_pkgs_dir, "w+").write('\n'.join(pkgs_installed))
 
-            if os.path.exists(self.d.expand("${IMAGE_ROOTFS}${sysconfdir}/init.d/run-postinsts")):
-                self._exec_shell_cmd(["update-rc.d", "-f", "-r",
-                                      self.d.getVar('IMAGE_ROOTFS', True),
-                                      "run-postinsts", "remove"])
         else:
             self._save_postinsts()
 
