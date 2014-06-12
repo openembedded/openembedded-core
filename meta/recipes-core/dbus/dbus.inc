@@ -108,7 +108,7 @@ do_install() {
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
 		for i in dbus.target.wants sockets.target.wants multi-user.target.wants; do \
 			install -d ${D}${systemd_unitdir}/system/$i; done
-		install ${B}/bus/dbus.service ${B}/bus/dbus.socket ${D}${systemd_unitdir}/system/
+		install -m 0644 ${B}/bus/dbus.service ${B}/bus/dbus.socket ${D}${systemd_unitdir}/system/
 		cd ${D}${systemd_unitdir}/system/dbus.target.wants/
 		ln -fs ../dbus.socket ${D}${systemd_unitdir}/system/dbus.target.wants/dbus.socket
 		ln -fs ../dbus.socket ${D}${systemd_unitdir}/system/sockets.target.wants/dbus.socket
