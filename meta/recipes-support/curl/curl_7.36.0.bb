@@ -40,6 +40,12 @@ CURLGNUTLS = " --with-gnutls=${STAGING_LIBDIR}/../ --without-ssl"
 CURLGNUTLS_class-native = "--without-gnutls --with-ssl"
 CURLGNUTLS_class-nativesdk = "--without-gnutls --without-ssl"
 
+PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "ipv6", "ipv6", "", d)}"
+PACKAGECONFIG_class-native = "ipv6"
+PACKAGECONFIG_class-nativesdk = "ipv6"
+
+PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
+
 do_configure_prepend() {
 	sed -i s:OPT_GNUTLS/bin:OPT_GNUTLS:g ${S}/configure.ac
 }
