@@ -77,7 +77,12 @@ base_prefix = "${STAGING_DIR_NATIVE}"
 prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
 exec_prefix = "${STAGING_DIR_NATIVE}${prefix_native}"
 
-libdir = "${STAGING_DIR_NATIVE}${libdir_native}"
+bindir = "${STAGING_BINDIR_NATIVE}"
+sbindir = "${STAGING_SBINDIR_NATIVE}"
+libdir = "${STAGING_LIBDIR_NATIVE}"
+includedir = "${STAGING_INCDIR_NATIVE}"
+sysconfdir = "${STAGING_ETCDIR_NATIVE}"
+datadir = "${STAGING_DATADIR_NATIVE}"
 
 baselib = "lib"
 
