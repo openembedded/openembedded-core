@@ -1,0 +1,40 @@
+Upstream-Status: Pending
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 488e898300f7a4ab9ba73307967ae9e02b7a6511 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Fri, 13 Jun 2014 17:49:45 +0100
+Subject: [PATCH] Makefile: add missing binaries to dependency on
+ local_headers
+
+seeld and snap_send were missing from the rule that generates the header symlink
+farm, resulting in headers not being available in highly parallel builds.
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ Makefile.am |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index c51351f..8e58ac1 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -254,7 +254,14 @@ se/plugin.$(OBJEXT): se/builtin.h
+ se/builtin.h: src/genbuiltin $(builtin_se_sources)
+ 	$(AM_V_GEN)$(srcdir)/src/genbuiltin $(builtin_se_modules) > $@
+ 
+-$(src_neard_OBJECTS) $(tools_nfctool_nfctool_OBJECTS) $(plugin_objects): $(local_headers)
++$(src_neard_OBJECTS) \
++$(tools_nfctool_nfctool_OBJECTS) \
++$(plugin_objects) \
++$(se_seeld_OBJECTS) \
++$(unit_test_ndef_parse_OBJECTS) \
++$(unit_test_ndef_build_OBJECTS) \
++$(unit_test_snep-read_OBJECTS) \
++$(tools_snep_send_OBJECTS): $(local_headers)
+ 
+ include/near/version.h: include/version.h
+ 	$(AM_V_at)$(MKDIR_P) include/near
+-- 
+1.7.10.4
+
