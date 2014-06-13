@@ -49,7 +49,7 @@ do_install_append_class-nativesdk () {
 	${PERLSEDFIXUP}
 }
 
-FILES_${PN} += "${datadir}/git-core ${libxecdir}/git-core/"
+FILES_${PN} += "${datadir}/git-core ${libexecdir}/git-core/"
 FILES_${PN}-dbg += "${libexecdir}/git-core/.debug"
 
 PERLTOOLS = " \
