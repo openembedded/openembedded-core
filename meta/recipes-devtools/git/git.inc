@@ -15,7 +15,7 @@ EXTRA_OECONF = "--with-perl=${STAGING_BINDIR_NATIVE}/perl-native/perl \
 
 inherit autotools-brokensep perlnative
 
-EXTRA_OEMAKE = "NO_PYTHON=1 RUNTIME_PREFIX=1 CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}'"
+EXTRA_OEMAKE = "NO_PYTHON=1 CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}'"
 EXTRA_OEMAKE_append_class-native = " NO_CROSS_DIRECTORY_HARDLINKS=1"
 
 do_compile_prepend () {
@@ -41,11 +41,23 @@ PERLSEDFIXUP = " \
 	    ${@d.getVar("PERLTOOLS", True).replace(' /',d.getVar('D', True) + '/')} \
 "
 
+REL_GIT_EXEC_PATH = "${@os.path.relpath(libexecdir, bindir)}/git-core"
+REL_GIT_TEMPLATE_DIR = "${@os.path.relpath(datadir, bindir)}/git-core/templates"
+
 do_install_append_class-target () {
 	${PERLSEDFIXUP}
 }
 
-do_install_append_class-nativesdk () {
+do_install_append_class-native() {
+	create_wrapper ${D}${bindir}/git \
+		GIT_EXEC_PATH='`dirname $''realpath`'/${REL_GIT_EXEC_PATH} \
+		GIT_TEMPLATE_DIR='`dirname $''realpath`'/${REL_GIT_TEMPLATE_DIR}
+}
+
+do_install_append_class-nativesdk() {
+	create_wrapper ${D}${bindir}/git \
+		GIT_EXEC_PATH='`dirname $''realpath`'/${REL_GIT_EXEC_PATH} \
+		GIT_TEMPLATE_DIR='`dirname $''realpath`'/${REL_GIT_TEMPLATE_DIR}
 	${PERLSEDFIXUP}
 }
 
