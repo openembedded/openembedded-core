@@ -130,8 +130,11 @@ python split_kernel_module_packages () {
 
         # If autoloading is requested, output /etc/modules-load.d/<name>.conf and append
         # appropriate modprobe commands to the postinst
+        autoloadlist = (d.getVar("KERNEL_MODULE_AUTOLOAD", True) or "").split()
         autoload = d.getVar('module_autoload_%s' % basename, True)
         if autoload:
+            bb.error("KERNEL_MODULE_AUTOLOAD has replaced module_autoload_%s, please replace it!" % basename)
+        if basename in autoloadlist:
             name = '%s/etc/modules-load.d/%s.conf' % (dvar, basename)
             f = open(name, 'w')
             for m in autoload.split():
@@ -144,12 +147,15 @@ python split_kernel_module_packages () {
             d.setVar('pkg_postinst_%s' % pkg, postinst)
 
         # Write out any modconf fragment
+        modconflist = (d.getVar("KERNEL_MODULE_PROBECONF", True) or "").split()
         modconf = d.getVar('module_conf_%s' % basename, True)
-        if modconf:
+        if modconf and basename in modconflist:
             name = '%s/etc/modprobe.d/%s.conf' % (dvar, basename)
             f = open(name, 'w')
             f.write("%s\n" % modconf)
             f.close()
+        elif modconf:
+            bb.error("Please ensure module %s is listed in KERNEL_MODULE_PROBECONF since module_conf_%s is set" % (basename, basename))
 
         files = d.getVar('FILES_%s' % pkg, True)
         files = "%s /etc/modules-load.d/%s.conf /etc/modprobe.d/%s.conf" % (files, basename, basename)
@@ -185,3 +191,5 @@ python split_kernel_module_packages () {
         if len(os.listdir(dir)) == 0:
             os.rmdir(dir)
 }
+
+do_package[vardeps] += '${@" ".join(map(lambda s: "module_conf_" + s, (d.getVar("KERNEL_MODULE_PROBECONF", True) or "").split()))}'
