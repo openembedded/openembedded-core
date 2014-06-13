@@ -33,3 +33,15 @@ def qemu_run_binary(data, rootfs_path, binary):
     return "PSEUDO_UNLOAD=1 " + qemu_binary + " -L " + rootfs_path\
             + " -E LD_LIBRARY_PATH=" + libdir + ":" + base_libdir + " "\
             + rootfs_path + binary
+
+QEMU_OPTIONS = ""
+QEMU_OPTIONS_iwmmxt    = "-cpu pxa270-c5"
+QEMU_OPTIONS_armv6     = "-cpu arm1136"
+QEMU_OPTIONS_armv7a    = "-cpu cortex-a8"
+QEMU_OPTIONS_e500v2    = "-cpu e500v2"
+QEMU_OPTIONS_e500mc    = "-cpu e500mc"
+QEMU_OPTIONS_e5500     = "-cpu e5500"
+QEMU_OPTIONS_e5500-64b = "-cpu e5500"
+QEMU_OPTIONS_e6500     = "-cpu e6500"
+QEMU_OPTIONS_e6500-64b = "-cpu e6500"
+QEMU_OPTIONS_ppc7400   = "-cpu 7400"
