@@ -1,0 +1,86 @@
+From a9f3bd754e9e269099cf7a2c931c632fcc12bd8a Mon Sep 17 00:00:00 2001
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Date: Fri, 13 Jun 2014 13:42:12 -0400
+Subject: [PATCH] extension: Add $(DESTDIR) prefix to remaining pkgextensiondir
+ instances
+
+Commit 976f73ab03569bb836aa5c949be1c1cc973b2d2e ["Use $(DESTDIR) in
+extension/Makefile.am when removing .la files."] fixed an issue
+that manifested itself as follows when cross compiling:
+
+make[4]: Entering directory 'gawk/4.1.1-r0/build/extension'
+for i in filefuncs.la fnmatch.la fork.la inplace.la ordchr.la readdir.la readfi
+le.la revoutput.la revtwoway.la rwarray.la testext.la time.la ; do \
+        rm -f /usr/lib/gawk/$i ; \
+done
+rm: cannot remove '/usr/lib/gawk/filefuncs.la': Permission denied
+rm: cannot remove '/usr/lib/gawk/fnmatch.la': Permission denied
+rm: cannot remove '/usr/lib/gawk/fork.la': Permission denied
+rm: cannot remove '/usr/lib/gawk/inplace.la': Permission denied
+rm: cannot remove '/usr/lib/gawk/ordchr.la': Permission denied
+rm: cannot remove '/usr/lib/gawk/readdir.la': Permission denied
+rm: cannot remove '/usr/lib/gawk/readfile.la': Permission denied
+rm: cannot remove '/usr/lib/gawk/revoutput.la': Permission denied
+rm: cannot remove '/usr/lib/gawk/revtwoway.la': Permission denied
+rm: cannot remove '/usr/lib/gawk/rwarray.la': Permission denied
+rm: cannot remove '/usr/lib/gawk/testext.la': Permission denied
+rm: cannot remove '/usr/lib/gawk/time.la': Permission denied
+Makefile:1235: recipe for target 'install-data-hook' failed
+
+The problem only manifests itself on hosts where the above files
+are already present; for if they are absent then the rm -f does
+not fail with -EPERM.  The fix in 976f73ab0356 ensured that DESTDIR
+was used for the prefix so that it didn't try to delete host files.
+
+However there still remains less used instances of where it is used
+w/o $(DESTDIR) that may still cause similar breakage in the future.
+Here we apply the same change to them.
+
+Upstream-Status: Submitted [http://lists.gnu.org/archive/html/bug-gawk/2014-06/index.html]
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+---
+
+diff --git a/extension/ChangeLog b/extension/ChangeLog
+index f3a1c7a81e7d..b87ac372edc6 100644
+--- a/extension/ChangeLog
++++ b/extension/ChangeLog
+@@ -1,3 +1,10 @@
++2014-06-13         Paul Gortmaker        <paul.gortmaker@windriver.com>
++	* Makefile.am (uninstall-so): Came across below bug while cross
++	compiling, and changed both install-data-hook and uninstall-so
++	to use $(DESTDIR) on v4.1.1 before seeing most of the fix in
++	gawk-4.1.1-3-g976f73ab0356; here we ensure uninstall-so also
++	uses the $(DESTDIR) prefix on its use of pkgextensiondir.
++
+ 2014-04-11         Arnold D. Robbins     <arnold@skeeve.com>
+ 
+ 	* Makefile.am (install-data-hook): Use $(DESTDIR) when removing
+diff --git a/extension/Makefile.am b/extension/Makefile.am
+index 11826e2b315e..b6beaee3fb47 100644
+--- a/extension/Makefile.am
++++ b/extension/Makefile.am
+@@ -105,7 +105,7 @@ install-data-hook:
+ 
+ # Keep the uninstall check working:
+ uninstall-so:
+-	$(RM) $(pkgextensiondir)/*.so
++	$(RM) $(DESTDIR)$(pkgextensiondir)/*.so
+ 
+ uninstall-recursive: uninstall-so
+ 
+diff --git a/extension/Makefile.in b/extension/Makefile.in
+index d81b16960935..294e4f887812 100644
+--- a/extension/Makefile.in
++++ b/extension/Makefile.in
+@@ -1236,7 +1236,7 @@ install-data-hook:
+ 
+ # Keep the uninstall check working:
+ uninstall-so:
+-	$(RM) $(pkgextensiondir)/*.so
++	$(RM) $(DESTDIR)$(pkgextensiondir)/*.so
+ 
+ uninstall-recursive: uninstall-so
+ 
+-- 
+1.9.1
+

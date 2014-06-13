@@ -15,6 +15,8 @@ DEPENDS += "readline"
 
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
            file://run-ptest \
+           file://Use-DESTDIR-in-extension-Makefile.am-when-removing-..patch \
+           file://extension-Add-DESTDIR-prefix-to-remaining-pkgextensi.patch \
 "
 
 SRC_URI[md5sum] = "45f5b09aa87b4744c4c53bf274e96ed0"
