@@ -25,13 +25,11 @@ SRC_URI += "\
         file://core_filename.patch \
         file://CVE-2014-0172.patch \
         file://unwind_non_linux.patch \
-"
-
-SRC_URI += " \
-	file://elf_additions.diff \
-	file://mempcpy.patch \
-	file://dso-link-change.patch \
-	file://m4-biarch.m4-tweak-AC_RUN_IFELSE-for-cross-compiling.patch \
+        file://elf_additions.diff \
+        file://mempcpy.patch \
+        file://dso-link-change.patch \
+        file://m4-biarch.m4-tweak-AC_RUN_IFELSE-for-cross-compiling.patch \
+        file://fixheadercheck.patch \
 "
 
 # Only apply when building uclibc based target recipe

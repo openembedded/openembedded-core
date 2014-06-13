@@ -1,0 +1,24 @@
+For some binaries we can get a invalid section alignment, for example if 
+sh_align = 1 and sh_addralign is 0. In the case of a zero size section like 
+".note.GNU-stack", this is irrelavent as far as I can tell and we shouldn't
+error in this case.
+
+RP 2014/6/11
+
+Upstream-Status: Pending
+
+Index: elfutils-0.158/libelf/elf32_updatenull.c
+===================================================================
+--- elfutils-0.158.orig/libelf/elf32_updatenull.c	2012-12-14 22:40:48.000000000 +0000
++++ elfutils-0.158/libelf/elf32_updatenull.c	2014-06-11 16:35:43.417386291 +0000
+@@ -327,8 +327,8 @@
+ 		     we test for the alignment of the section being large
+ 		     enough for the largest alignment required by a data
+ 		     block.  */
+-		  if (unlikely (! powerof2 (shdr->sh_addralign))
+-		      || unlikely (shdr->sh_addralign < sh_align))
++		  if (shdr->sh_size && (unlikely (! powerof2 (shdr->sh_addralign))
++		      || unlikely (shdr->sh_addralign < sh_align)))
+ 		    {
+ 		      __libelf_seterrno (ELF_E_INVALID_ALIGN);
+ 		      return -1;
