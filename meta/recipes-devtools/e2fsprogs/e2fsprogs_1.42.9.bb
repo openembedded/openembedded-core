@@ -54,6 +54,8 @@ do_install () {
 	fi
 
 	oe_multilib_header ext2fs/ext2_types.h
+	install -d ${D}${base_bindir}
+	mv ${D}${bindir}/chattr ${D}${base_bindir}/chattr.e2fsprogs
 }
 
 RDEPENDS_e2fsprogs = "e2fsprogs-badblocks"
@@ -73,3 +75,10 @@ FILES_libext2fs = "${libdir}/e2initrd_helper ${base_libdir}/libext2fs.so.*"
 FILES_${PN}-dev += "${datadir}/*/*.awk ${datadir}/*/*.sed ${base_libdir}/*.so"
 
 BBCLASSEXTEND = "native"
+
+inherit update-alternatives
+
+ALTERNATIVE_${PN} = "chattr"
+ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_LINK_NAME[chattr] = "${base_bindir}/chattr"
+ALTERNATIVE_TARGET[chattr] = "${base_bindir}/chattr.e2fsprogs"
