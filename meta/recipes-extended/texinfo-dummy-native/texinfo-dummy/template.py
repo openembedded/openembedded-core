@@ -104,7 +104,7 @@ while arg_idx < len (sys.argv):
     
     # Check for functionality that isn't implemented yet.
     else:
-        assert arg[1] == '-' or 'E' not in arg or \
+        assert arg[0] != '-' or arg[1] == '-' or 'E' not in arg or \
                this_binary in simple_binaries, \
                "-E option not yet supported" + stub_msg
         
