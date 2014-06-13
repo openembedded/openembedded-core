@@ -272,18 +272,21 @@ do_install () {
 	fi
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-        install -d ${D}${systemd_unitdir}/system
-        sed 's,@base_sbindir@,${base_sbindir},g' < ${WORKDIR}/busybox-syslog.service.in \
-            > ${D}${systemd_unitdir}/system/busybox-syslog.service
-        sed 's,@base_sbindir@,${base_sbindir},g' < ${WORKDIR}/busybox-klogd.service.in \
-            > ${D}${systemd_unitdir}/system/busybox-klogd.service
-
-        if [ -f ${WORKDIR}/busybox-syslog.default ] ; then
-            install -d ${D}${sysconfdir}/default
-            install -m 0644 ${WORKDIR}/busybox-syslog.default ${D}${sysconfdir}/default/busybox-syslog
+        if grep -q "CONFIG_SYSLOGD=y" ${B}/.config; then
+            install -d ${D}${systemd_unitdir}/system
+            sed 's,@base_sbindir@,${base_sbindir},g' < ${WORKDIR}/busybox-syslog.service.in \
+		> ${D}${systemd_unitdir}/system/busybox-syslog.service
+            if [ -f ${WORKDIR}/busybox-syslog.default ] ; then
+		install -d ${D}${sysconfdir}/default
+		install -m 0644 ${WORKDIR}/busybox-syslog.default ${D}${sysconfdir}/default/busybox-syslog
+            fi
+            ln -sf /dev/null ${D}${systemd_unitdir}/system/syslog.service
         fi
-
-        ln -sf /dev/null ${D}${systemd_unitdir}/system/syslog.service
+        if grep -q "CONFIG_KLOGD=y" ${B}/.config; then
+            install -d ${D}${systemd_unitdir}/system
+            sed 's,@base_sbindir@,${base_sbindir},g' < ${WORKDIR}/busybox-klogd.service.in \
+		> ${D}${systemd_unitdir}/system/busybox-klogd.service
+        fi
     fi
 
     # Remove the sysvinit specific configuration file for systemd systems to avoid confusion
