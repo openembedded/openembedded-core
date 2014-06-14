@@ -4,8 +4,7 @@ RV = "1.7-1"
 
 DEPENDS += "sysfsutils"
 
-SRC_URI += "file://fix-compilation-with-zlib.patch \
-            file://fixsepbuild.patch"
+SRC_URI += "file://fixsepbuild.patch"
 
 EXTRA_OECONF = "\
   --enable-freetype=yes \
