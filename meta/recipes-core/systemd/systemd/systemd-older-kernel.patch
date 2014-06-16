@@ -1,0 +1,56 @@
+From 6109f02dcc4f2d7a461c5772bab494f5753a2203 Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Thu, 29 May 2014 08:09:07 +0000
+Subject: [PATCH] rtnl-types.c: check IFLA_VLAN_PROTOCOL
+
+The older kernel's linux/if_link.h doesn't have IFLA_VLAN_PROTOCOL, we need
+check whether it has been defined or not.
+
+The maintainer said that he would fix it:
+
+http://thread.gmane.org/gmane.comp.sysutils.systemd.devel/18200
+
+Also we need redefine IFLA_MAX from 34 to 35 when define IFLA_CARRIER,
+otherwise there would be error:
+
+| src/libsystemd/sd-rtnl/rtnl-types.c:233:9: error: array index in initializer exceeds array bounds
+|          [IFLA_CARRIER]          = { .type = NLA_U8 },
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ src/libsystemd/sd-rtnl/rtnl-types.c | 2 ++
+ src/shared/missing.h                | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/src/libsystemd/sd-rtnl/rtnl-types.c b/src/libsystemd/sd-rtnl/rtnl-types.c
+index 44ac5ec..ab6161f 100644
+--- a/src/libsystemd/sd-rtnl/rtnl-types.c
++++ b/src/libsystemd/sd-rtnl/rtnl-types.c
+@@ -67,7 +67,9 @@ static const NLType rtnl_link_info_data_vlan_types[IFLA_VLAN_MAX + 1] = {
+         [IFLA_VLAN_EGRESS_QOS]  = { .type = NLA_NESTED },
+         [IFLA_VLAN_INGRESS_QOS] = { .type = NLA_NESTED },
+ */
++#ifdef IFLA_VLAN_PROTOCOL
+         [IFLA_VLAN_PROTOCOL]    = { .type = NLA_U16 },
++#endif
+ };
+ 
+ static const NLType rtnl_link_info_data_bond_types[IFLA_BOND_MAX + 1] = {
+diff --git a/src/shared/missing.h b/src/shared/missing.h
+index d5ec2f8..732853f 100644
+--- a/src/shared/missing.h
++++ b/src/shared/missing.h
+@@ -94,6 +94,8 @@
+ 
+ #ifndef IFLA_CARRIER
+   #define IFLA_CARRIER 33
++  #undef IFLA_MAX
++  #define IFLA_MAX 35
+   #ifndef IFLA_NUM_RX_QUEUES
+     #define IFLA_NUM_RX_QUEUES 32
+     #ifndef IFLA_NUM_TX_QUEUES
+-- 
+1.8.3.4
+
