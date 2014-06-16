@@ -276,6 +276,11 @@ python do_unpack_and_patch() {
     # Change the WORKDIR to make do_unpack do_patch run in another dir.
     d.setVar('WORKDIR', d.getVar('ARCHIVER_WORKDIR', True))
 
+    # The changed 'WORKDIR' also casued 'B' changed, create dir 'B' for the
+    # possibly requiring of the following tasks (such as some recipes's
+    # do_patch required 'B' existed).
+    bb.utils.mkdirhier(d.getVar('B', True))
+
     # The kernel source is ready after do_validate_branches
     if bb.data.inherits_class('kernel-yocto', d):
         bb.build.exec_func('do_unpack', d)
