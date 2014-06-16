@@ -22,8 +22,8 @@ SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
            file://99_wpa_supplicant \
            file://fix-libnl3-host-contamination.patch \
           "
-SRC_URI[md5sum] = "e96b8db5a8171cd17a5b2012d6ad7cc7"
-SRC_URI[sha256sum] = "91632e7e3b49a340ce408e2f978a93546a697383abf2e5a60f146faae9e1b277"
+SRC_URI[md5sum] = "238e8e888bbd558e1a57e3eb28d1dd07"
+SRC_URI[sha256sum] = "e0d8b8fd68a659636eaba246bb2caacbf53d22d53b2b6b90eb4b4fef0993c8ed"
 
 S = "${WORKDIR}/wpa_supplicant-${PV}"
 
