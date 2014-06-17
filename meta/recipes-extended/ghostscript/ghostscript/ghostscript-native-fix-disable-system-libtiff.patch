@@ -7,44 +7,31 @@ disabled.
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 Upstream-Status: Pending
 ---
-diff --git a/base/configure.ac b/base/configure.ac
-index bb05105..4b817ac 100644
---- a/base/configure.ac
-+++ b/base/configure.ac
-@@ -951,17 +951,22 @@
+ configure.ac | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+--- a/configure.ac
++++ b/configure.ac
+@@ -1055,6 +1055,7 @@ Disabling tiff output devices.])
  esac
  
  if test $SHARE_LIBTIFF -eq 0; then
--      echo
--      echo "Running libtiff configure script..."
--      olddir=`pwd`
--      cd "$LIBTIFFDIR" && ./configure --disable-jbig --disable-lzma $SUBCONFIG_OPTS
--      status=$?
--      if test "$status" -ne 0 ; then
--        AC_MSG_ERROR([libtiff configure script failed], $status)
--      fi
--      cd "$olddir"
--      echo
--      echo "Continuing with Ghostscript configuration..."
 +    if test -e $LIBTIFFDIR/configure; then
-+        echo
-+        echo "Running libtiff configure script..."
-+        olddir=`pwd`
-+        cd "$LIBTIFFDIR" && ./configure --disable-jbig --disable-lzma $SUBCONFIG_OPTS
-+        status=$?
-+        if test "$status" -ne 0 ; then
-+            AC_MSG_ERROR([libtiff configure script failed], $status)
-+        fi
-+        cd "$olddir"
-+        echo
-+        echo "Continuing with Ghostscript configuration..."
+       echo
+       echo "Running libtiff configure script..."
+       olddir=`pwd`
+@@ -1069,6 +1070,10 @@ if test $SHARE_LIBTIFF -eq 0; then
+       cd "$olddir"
+       echo
+       echo "Continuing with Ghostscript configuration..."
 +    else
-+        AC_MSG_NOTICE([Could not find local copy of libtiff.
++      AC_MSG_NOTICE([Could not find local copy of libtiff.
 +Disabling tiff output devices.])
 +    fi
  fi
  
  AC_SUBST(SHARE_LIBTIFF)
 -- 
-1.7.10.4
+1.8.1.2
 

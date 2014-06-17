@@ -10,6 +10,8 @@ RP: Extended || true to all CP_ operations, they all can race e.g.:
 | cp -f ./obj/gconfxx.h ./obj/gconfig.h
 | cp: cannot create regular file `./obj/gconfig.h': File exists
 
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+
 diff --git a/base/expat.mak b/base/expat.mak
 index 4ee9c8c..2e16a9d 100644
 --- a/base/expat.mak
@@ -37,7 +39,7 @@ index 16f2b95..409f75b 100644
  # Define the shared version.
  $(FTGEN)freetype_1.dev : $(TOP_MAKEFILES) $(FT_MAK) $(ECHOGS_XE)
 diff --git a/base/gs.mak b/base/gs.mak
-index b804a3e..a343190 100644
+index 7d75fb0..2a9596c 100644
 --- a/base/gs.mak
 +++ b/base/gs.mak
 @@ -433,7 +433,7 @@ $(gconfxx_h) : $(ld_tr)
@@ -408,7 +410,7 @@ index 0f09a3a..36495dd 100644
  # Define the compiled in target
  $(JPEGXR_GEN)jpegxr_0.dev : $(JPEGXR_MAK) $(ECHOGS_XE) $(jpegxr_objs)
 diff --git a/base/lcms.mak b/base/lcms.mak
-index dc7f9e5..2bccacd 100644
+index 18cfa09..269e7ff 100644
 --- a/base/lcms.mak
 +++ b/base/lcms.mak
 @@ -84,7 +84,7 @@ LCMSO_=$(O_)$(LCMSOBJ)
@@ -421,7 +423,7 @@ index dc7f9e5..2bccacd 100644
  # dev file for shared (separately built) lcms library
  $(LCMSGEN)lcms_1.dev : $(TOP_MAKEFILES) $(LCMS_MAK) $(ECHOGS_XE)
 diff --git a/base/lcms2.mak b/base/lcms2.mak
-index 4e25f2e..be29d06 100644
+index 52f750c..33a9c16 100644
 --- a/base/lcms2.mak
 +++ b/base/lcms2.mak
 @@ -85,7 +85,7 @@ LCMS2O_=$(O_)$(LCMS2OBJ)
@@ -481,7 +483,7 @@ index 0bfb3ac..fcdb170 100644
 +	$(CP_) $(LIBCUPSSRC)util.c $(LIBCUPSGEN)cups_util.c || true
  	$(LCUPS_CC) $(LCUPSO_)cups_util.$(OBJ) $(C_) $(LIBCUPSGEN)cups_util.c
 diff --git a/base/lcupsi.mak b/base/lcupsi.mak
-index ae1ecff..96d4003 100644
+index ea4047f..0102d93 100644
 --- a/base/lcupsi.mak
 +++ b/base/lcupsi.mak
 @@ -73,7 +73,7 @@ libcupsi.config-clean :
@@ -507,10 +509,10 @@ index 3f50892..97c76a0 100644
  # external link .dev
  $(LDF_JB2_GEN)ldf_jb2_1.dev : $(TOP_MAKEFILES) $(LDF_JB2_MAK) $(ECHOGS_XE)
 diff --git a/base/lib.mak b/base/lib.mak
-index 7c1677b..179fed0 100644
+index 3ad7db3..87b4f01 100644
 --- a/base/lib.mak
 +++ b/base/lib.mak
-@@ -328,7 +328,7 @@ md5_=$(GLOBJ)md5.$(OBJ)
+@@ -343,7 +343,7 @@ md5_=$(GLOBJ)md5.$(OBJ)
  $(GLOBJ)md5.$(OBJ) : $(GLSRC)md5.c $(AK) $(md5_h) $(std_h) $(MAKEDIRS) $(EXP)$(ECHOGS_XE)
  	$(EXP)$(ECHOGS_XE) -w $(GLGEN)md5.h -x 23 include -x 2022 memory_.h -x 22
  	$(EXP)$(ECHOGS_XE) -a $(GLGEN)md5.h -+R $(GLSRC)md5.h
@@ -519,7 +521,7 @@ index 7c1677b..179fed0 100644
  	$(GLCC) $(GLO_)md5.$(OBJ) $(C_) $(GLGEN)md5.c
  	$(RM_) $(GLGEN)md5.c $(GLGEN)md5.h
  
-@@ -598,19 +598,19 @@ $(GLOBJ)gconfig.$(OBJ) : $(gconfig_h) $(GLSRC)gconf.c $(AK) $(gx_h)\
+@@ -624,19 +624,19 @@ $(GLOBJ)gconfig.$(OBJ) : $(gconfig_h) $(GLSRC)gconf.c $(AK) $(gx_h)\
   $(gxdevice_h) $(gxiclass_h) $(gxiodev_h) $(gxiparam_h) $(TOP_MAKEFILES)\
   $(MAKEDDIRS)
  	$(RM_) $(GLGEN)gconfig.c
@@ -539,10 +541,10 @@ index 7c1677b..179fed0 100644
  	$(RM_) $(AUX)gscdefs.c
 -	$(CP_) $(GLSRC)gscdef.c $(AUX)gscdefs.c
 +	$(CP_) $(GLSRC)gscdef.c $(AUX)gscdefs.c || true
- 	$(GLCCAUX) $(AUXO_)gscdefs.$(OBJ) $(C_) $(AUX)gscdefs.c
+ 	$(GLCCAUX) $(C_) $(AUXO_)gscdefs.$(OBJ) $(AUX)gscdefs.c
  
  $(GLOBJ)gxacpath.$(OBJ) : $(GLSRC)gxacpath.c $(AK) $(gx_h)\
-@@ -1513,7 +1513,7 @@ $(GLOBJ)sjpegc_0.$(OBJ) : $(GLSRC)sjpegc.c $(AK) $(stdio__h) $(string__h)\
+@@ -1527,7 +1527,7 @@ $(GLOBJ)sjpegc_0.$(OBJ) : $(GLSRC)sjpegc.c $(AK) $(stdio__h) $(string__h)\
  	$(GLJCC) $(GLO_)sjpegc_0.$(OBJ) $(C_) $(GLSRC)sjpegc.c
  
  $(GLOBJ)sjpegc.$(OBJ) : $(GLOBJ)sjpegc_$(SHARE_JPEG).$(OBJ)
@@ -551,7 +553,7 @@ index 7c1677b..179fed0 100644
  
  # sdcparam is used by the filter operator and the PS/PDF writer.
  # It is not included automatically in sdcte/d.
-@@ -1541,7 +1541,7 @@ $(GLOBJ)sdcte_0.$(OBJ) : $(GLSRC)sdcte.c $(AK)\
+@@ -1555,7 +1555,7 @@ $(GLOBJ)sdcte_0.$(OBJ) : $(GLSRC)sdcte.c $(AK)\
  	$(GLJCC) $(GLO_)sdcte_0.$(OBJ) $(C_) $(GLSRC)sdcte.c
  
  $(GLOBJ)sdcte.$(OBJ) : $(GLOBJ)sdcte_$(SHARE_JPEG).$(OBJ) $(MAKEDIRS)
@@ -560,7 +562,7 @@ index 7c1677b..179fed0 100644
  
  
  $(GLOBJ)sjpege_1.$(OBJ) : $(GLSRC)sjpege.c $(AK)\
-@@ -1557,7 +1557,7 @@ $(GLOBJ)sjpege_0.$(OBJ) : $(GLSRC)sjpege.c $(AK)\
+@@ -1571,7 +1571,7 @@ $(GLOBJ)sjpege_0.$(OBJ) : $(GLSRC)sjpege.c $(AK)\
  	$(GLJCC) $(GLO_)sjpege_0.$(OBJ) $(C_) $(GLSRC)sjpege.c
  
  $(GLOBJ)sjpege.$(OBJ) : $(GLOBJ)sjpege_$(SHARE_JPEG).$(OBJ) $(MAKEDIRS)
@@ -569,7 +571,7 @@ index 7c1677b..179fed0 100644
  
  # sdeparam is used by the filter operator and the PS/PDF writer.
  # It is not included automatically in sdcte.
-@@ -1589,7 +1589,7 @@ $(GLOBJ)sdctd_0.$(OBJ) : $(GLSRC)sdctd.c $(AK)\
+@@ -1603,7 +1603,7 @@ $(GLOBJ)sdctd_0.$(OBJ) : $(GLSRC)sdctd.c $(AK)\
  	$(GLJCC) $(GLO_)sdctd_0.$(OBJ) $(C_) $(GLSRC)sdctd.c
  
  $(GLOBJ)sdctd.$(OBJ) : $(GLOBJ)sdctd_$(SHARE_JPEG).$(OBJ) $(MAKEDIRS)
@@ -578,7 +580,7 @@ index 7c1677b..179fed0 100644
  
  
  $(GLOBJ)sjpegd_1.$(OBJ) : $(GLSRC)sjpegd.c $(AK)\
-@@ -1606,7 +1606,7 @@ $(GLOBJ)sjpegd_0.$(OBJ) : $(GLSRC)sjpegd.c $(AK)\
+@@ -1620,7 +1620,7 @@ $(GLOBJ)sjpegd_0.$(OBJ) : $(GLSRC)sjpegd.c $(AK)\
  
  
  $(GLOBJ)sjpegd.$(OBJ) : $(GLOBJ)sjpegd_$(SHARE_JPEG).$(OBJ) $(MAKEDIRS)
@@ -587,7 +589,7 @@ index 7c1677b..179fed0 100644
  
  # sddparam is used by the filter operator.
  # It is not included automatically in sdctd.
-@@ -1629,7 +1629,7 @@ $(GLD)lzwe.dev : $(LIB_MAK) $(ECHOGS_XE) $(lzwe_)
+@@ -1643,7 +1643,7 @@ $(GLD)lzwe.dev : $(LIB_MAK) $(ECHOGS_XE) $(lzwe_)
  
  # We need slzwe.dev as a synonym for lzwe.dev for BAND_LIST_STORAGE = memory.
  $(GLD)slzwe.dev : $(GLD)lzwe.dev
@@ -596,7 +598,7 @@ index 7c1677b..179fed0 100644
  
  $(GLOBJ)slzwe.$(OBJ) : $(GLSRC)slzwe.c $(AK) $(stdio__h) $(gdebug_h)\
   $(slzwx_h) $(strimpl_h) $(MAKEDIRS)
-@@ -1645,7 +1645,7 @@ $(GLD)lzwd.dev : $(LIB_MAK) $(ECHOGS_XE) $(lzwd_)
+@@ -1659,7 +1659,7 @@ $(GLD)lzwd.dev : $(LIB_MAK) $(ECHOGS_XE) $(lzwd_)
  
  # We need slzwd.dev as a synonym for lzwd.dev for BAND_LIST_STORAGE = memory.
  $(GLD)slzwd.dev : $(GLD)lzwd.dev
@@ -605,7 +607,7 @@ index 7c1677b..179fed0 100644
  
  $(GLOBJ)slzwd.$(OBJ) : $(GLSRC)slzwd.c $(AK) $(stdio__h) $(gdebug_h)\
   $(slzwx_h) $(strimpl_h) $(MAKEDIRS)
-@@ -1695,7 +1695,7 @@ $(GLOBJ)saes.$(OBJ) : $(GLSRC)saes.c $(AK) $(memory__h)\
+@@ -1709,7 +1709,7 @@ $(GLOBJ)saes.$(OBJ) : $(GLSRC)saes.c $(AK) $(memory__h)\
  # ---------------- JBIG2 compression filter ---------------- #
  
  $(GLD)sjbig2.dev : $(LIB_MAK) $(ECHOGS_XE) $(GLD)sjbig2_$(JBIG2_LIB).dev
@@ -614,7 +616,7 @@ index 7c1677b..179fed0 100644
  
  # jbig2dec version
  sjbig2_jbig2dec=$(GLOBJ)sjbig2.$(OBJ)
-@@ -1731,7 +1731,7 @@ $(GLOBJ)sjbig2_luratech.$(OBJ) : $(GLSRC)sjbig2_luratech.c $(AK) \
+@@ -1745,7 +1745,7 @@ $(GLOBJ)sjbig2_luratech.$(OBJ) : $(GLSRC)sjbig2_luratech.c $(AK) \
  # ---------------- JPEG 2000 compression filter ---------------- #
  
  $(GLD)sjpx.dev : $(LIB_MAK) $(ECHOGS_XE) $(GLD)sjpx_$(JPX_LIB).dev
@@ -623,7 +625,7 @@ index 7c1677b..179fed0 100644
  
  $(GLOBJ)sjpx.$(OBJ) : $(GLSRC)sjpx.c $(AK) \
   $(memory__h) $(gsmalloc_h) \
-@@ -1860,7 +1860,7 @@ $(GLOBJ)szlibc_0.$(OBJ) : $(GLSRC)szlibc.c $(AK) $(std_h)\
+@@ -1874,7 +1874,7 @@ $(GLOBJ)szlibc_0.$(OBJ) : $(GLSRC)szlibc.c $(AK) $(std_h)\
  	$(GLZCC) $(GLO_)szlibc_0.$(OBJ) $(C_) $(GLSRC)szlibc.c
  
  $(GLOBJ)szlibc.$(OBJ) : $(GLOBJ)szlibc_$(SHARE_ZLIB).$(OBJ) $(MAKEDIRS)
@@ -632,7 +634,7 @@ index 7c1677b..179fed0 100644
  
  szlibe_=$(szlibc_) $(GLOBJ)szlibe.$(OBJ)
  $(GLD)szlibe.dev : $(LIB_MAK) $(ECHOGS_XE) $(ZGENDIR)$(D)zlibe.dev $(szlibe_)
-@@ -1876,7 +1876,7 @@ $(GLOBJ)szlibe_0.$(OBJ) : $(GLSRC)szlibe.c $(AK) $(std_h)\
+@@ -1890,7 +1890,7 @@ $(GLOBJ)szlibe_0.$(OBJ) : $(GLSRC)szlibe.c $(AK) $(std_h)\
  	$(GLZCC) $(GLO_)szlibe_0.$(OBJ) $(C_) $(GLSRC)szlibe.c
  
  $(GLOBJ)szlibe.$(OBJ) : $(GLOBJ)szlibe_$(SHARE_ZLIB).$(OBJ)  $(MAKEDIRS)
@@ -641,7 +643,7 @@ index 7c1677b..179fed0 100644
  
  szlibd_=$(szlibc_) $(GLOBJ)szlibd.$(OBJ)
  $(GLD)szlibd.dev : $(LIB_MAK) $(ECHOGS_XE) $(ZGENDIR)$(D)zlibd.dev $(szlibd_)
-@@ -1892,7 +1892,7 @@ $(GLOBJ)szlibd_0.$(OBJ) : $(GLSRC)szlibd.c $(AK) $(std_h) $(memory__h)\
+@@ -1906,7 +1906,7 @@ $(GLOBJ)szlibd_0.$(OBJ) : $(GLSRC)szlibd.c $(AK) $(std_h) $(memory__h)\
  	$(GLZCC) $(GLO_)szlibd_0.$(OBJ) $(C_) $(GLSRC)szlibd.c
  
  $(GLOBJ)szlibd.$(OBJ) : $(GLOBJ)szlibd_$(SHARE_ZLIB).$(OBJ) $(MAKEDIRS)
@@ -650,25 +652,25 @@ index 7c1677b..179fed0 100644
  
  # ---------------- Page devices ---------------- #
  # We include this here, rather than in devs.mak, because it is more like
-@@ -2843,7 +2843,7 @@ $(GLOBJ)gsicc_lcms_0.$(OBJ) : $(GLSRC)gsicc_lcms.c\
+@@ -2796,7 +2796,7 @@ $(GLOBJ)gsicc_lcms_0.$(OBJ) : $(GLSRC)gsicc_lcms.c\
  	$(GLLCMSCC) $(GLO_)gsicc_lcms_0.$(OBJ) $(C_) $(GLSRC)gsicc_lcms.c
  
- $(GLOBJ)gsicc_lcms.$(OBJ) : $(GLOBJ)gsicc_lcms_$(SHARE_LCMS).$(OBJ)
+ $(GLOBJ)gsicc_lcms.$(OBJ) : $(GLOBJ)gsicc_lcms_$(SHARE_LCMS).$(OBJ) $(gp_h)
 -	$(CP_) $(GLOBJ)gsicc_lcms_$(SHARE_LCMS).$(OBJ) $(GLOBJ)gsicc_lcms.$(OBJ)
 +	$(CP_) $(GLOBJ)gsicc_lcms_$(SHARE_LCMS).$(OBJ) $(GLOBJ)gsicc_lcms.$(OBJ) || true
  
  
  $(GLOBJ)gsicc_lcms2_1.$(OBJ) : $(GLSRC)gsicc_lcms2.c\
-@@ -2855,7 +2855,7 @@ $(GLOBJ)gsicc_lcms2_0.$(OBJ) : $(GLSRC)gsicc_lcms2.c\
+@@ -2808,7 +2808,7 @@ $(GLOBJ)gsicc_lcms2_0.$(OBJ) : $(GLSRC)gsicc_lcms2.c\
  	$(GLLCMS2CC) $(GLO_)gsicc_lcms2_0.$(OBJ) $(C_) $(GLSRC)gsicc_lcms2.c
  
- $(GLOBJ)gsicc_lcms2.$(OBJ) : $(GLOBJ)gsicc_lcms2_$(SHARE_LCMS).$(OBJ)
+ $(GLOBJ)gsicc_lcms2.$(OBJ) : $(GLOBJ)gsicc_lcms2_$(SHARE_LCMS).$(OBJ) $(gp_h)
 -	$(CP_) $(GLOBJ)gsicc_lcms2_$(SHARE_LCMS).$(OBJ) $(GLOBJ)gsicc_lcms2.$(OBJ)
 +	$(CP_) $(GLOBJ)gsicc_lcms2_$(SHARE_LCMS).$(OBJ) $(GLOBJ)gsicc_lcms2.$(OBJ) || true
  
  # Note that gsicc_create requires compile with lcms to obtain icc34.h
  # header file that is used for creating ICC structures from PS objects.
-@@ -2875,7 +2875,7 @@ $(GLOBJ)gsicc_create_0.$(OBJ) : $(GLSRC)gsicc_create.c $(AK) $(string__h)\
+@@ -2828,7 +2828,7 @@ $(GLOBJ)gsicc_create_0.$(OBJ) : $(GLSRC)gsicc_create.c $(AK) $(string__h)\
  	$(GLLCMSCC) $(GLO_)gsicc_create_0.$(OBJ) $(C_) $(GLSRC)gsicc_create.c
  
  $(GLOBJ)gsicc_create.$(OBJ) : $(GLOBJ)gsicc_create_$(SHARE_LCMS).$(OBJ) $(MAKEDIRS)
@@ -677,7 +679,7 @@ index 7c1677b..179fed0 100644
  
  
  #include "icc34.h"   /* Note this header is needed even if lcms is not compiled as default CMS */
-@@ -3146,7 +3146,7 @@ $(GLGEN)gsromfs1_1.c : $(MKROMFS_XE) $(PS_ROMFS_DEPS) $(MAKEDIRS)
+@@ -3132,7 +3132,7 @@ $(GLGEN)gsromfs1_1.c : $(MKROMFS_XE) $(PS_ROMFS_DEPS) $(MAKEDIRS)
  	$(PS_ROMFS_ARGS) $(GL_ROMFS_ARGS)
  
  $(GLGEN)gsromfs1.c : $(GLGEN)gsromfs1_$(UFST_BRIDGE).c $(MAKEDIRS)
@@ -686,7 +688,7 @@ index 7c1677b..179fed0 100644
  
  # the following module is only included if the romfs.dev FEATURE is enabled
  $(GLOBJ)gsiorom_1.$(OBJ) : $(GLSRC)gsiorom.c $(gsiorom_h) \
-@@ -3162,7 +3162,7 @@ $(GLOBJ)gsiorom_0.$(OBJ) : $(GLSRC)gsiorom.c $(gsiorom_h) \
+@@ -3148,7 +3148,7 @@ $(GLOBJ)gsiorom_0.$(OBJ) : $(GLSRC)gsiorom.c $(gsiorom_h) \
  	$(GLCC) $(GLO_)gsiorom_0.$(OBJ) $(I_)$(ZI_)$(_I) $(C_) $(GLSRC)gsiorom.c
  
  $(GLOBJ)gsiorom.$(OBJ) : $(GLOBJ)gsiorom_$(SHARE_ZLIB).$(OBJ) $(MAKEDIRS)
@@ -709,10 +711,10 @@ index ca1b7cc..ad6446d 100644
  # external link .dev
  $(LWF_JP2_GEN)lwf_jp2_1.dev : $(TOP_MAKEFILES) $(LWF_JP2_MAK) $(ECHOGS_XE)
 diff --git a/base/macos-mcp.mak b/base/macos-mcp.mak
-index 5387a99..725ec73 100644
+index 4ded7f3..3599ed9 100644
 --- a/base/macos-mcp.mak
 +++ b/base/macos-mcp.mak
-@@ -380,11 +380,11 @@ CWPROJ_XML=./ghostscript.mcp.xml
+@@ -383,11 +383,11 @@ CWPROJ_XML=./ghostscript.mcp.xml
  
  $(CWPROJ_XML): $(gconfigd_h)
  	-mkdir -p obj/sys
@@ -729,15 +731,10 @@ index 5387a99..725ec73 100644
  
  $(GS_XE): $(ld_tr) $(ECHOGS_XE) $(XE_ALL) $(CWPROJ_XML) $(PSOBJ)gsromfs$(COMPILE_INITS).$(OBJ)
 diff --git a/base/openjpeg.mak b/base/openjpeg.mak
-index 489dd3b..60e2015 100644
+index 32be240..4a6b429 100644
 --- a/base/openjpeg.mak
 +++ b/base/openjpeg.mak
-@@ -94,11 +94,11 @@ open_jpeg_HDRS = \
- 	$(OPEN_JPEG_SRC)indexbox_manager.h	\
- 
- $(OPEN_JPEG_CONFIG_H): $(TOP_MAKEFILES) $(JPXSRCDIR)$(D)opj_config.h.in.user
--	$(CP_) $(JPXSRCDIR)$(D)opj_config.h.in.user $(OPEN_JPEG_CONFIG_H)
-+	$(CP_) $(JPXSRCDIR)$(D)opj_config.h.in.user $(OPEN_JPEG_CONFIG_H) || true
+@@ -99,7 +99,7 @@ open_jpeg_HDRS = \
  
  # switch in the selected library .dev
  $(OPEN_JPEG_GEN)openjpeg.dev : $(TOP_MAKEFILES) $(OPEN_JPEG_GEN)openjpeg_$(SHARE_JPX).dev
@@ -747,10 +744,10 @@ index 489dd3b..60e2015 100644
  # external link .dev
  $(OPEN_JPEG_GEN)openjpeg_1.dev : $(TOP_MAKEFILES) $(OPEN_JPEG_MAK) $(ECHOGS_XE)
 diff --git a/base/openvms.mak b/base/openvms.mak
-index 8e4c3dd..117dca4 100644
+index e5ae40b..286ee84 100644
 --- a/base/openvms.mak
 +++ b/base/openvms.mak
-@@ -362,7 +362,7 @@ SH=
+@@ -365,7 +365,7 @@ SH=
  
  # Define generic commands.
  
@@ -760,10 +757,10 @@ index 8e4c3dd..117dca4 100644
  # Define the command for deleting (a) file(s) (including wild cards)
  
 diff --git a/base/png.mak b/base/png.mak
-index 66fc3c8..59535be 100644
+index f01c426..8a89884 100644
 --- a/base/png.mak
 +++ b/base/png.mak
-@@ -77,7 +77,7 @@ png.config-clean :
+@@ -79,7 +79,7 @@ png.config-clean :
  	$(RM_) $(PNGGEN)lpg*.dev
  
  $(pnglibconf_h) : $(PNGSRC)scripts$(D)pnglibconf.h.prebuilt
@@ -772,7 +769,7 @@ index 66fc3c8..59535be 100644
  
  PDEP=$(AK) $(pnglibconf_h)
  
-@@ -132,7 +132,7 @@ $(PNGOBJ)pngget.$(OBJ) : $(PNGSRC)pngget.c $(PDEP)
+@@ -134,7 +134,7 @@ $(PNGOBJ)pngget.$(OBJ) : $(PNGSRC)pngget.c $(PDEP)
  
  # Define the version of libpng.dev that we are actually using.
  $(PNGGEN)libpng.dev : $(TOP_MAKEFILES) $(PNGGEN)libpng_$(SHARE_LIBPNG).dev
@@ -782,33 +779,33 @@ index 66fc3c8..59535be 100644
  # Define the shared version of libpng.
  # Note that it requires libz, which must be searched *after* libpng.
 diff --git a/base/tiff.mak b/base/tiff.mak
-index 22e3906..317fb14 100644
+index 0ea9f9e..80d8926 100644
 --- a/base/tiff.mak
 +++ b/base/tiff.mak
-@@ -49,11 +49,11 @@ tiff_10=$(TIFFOBJ)tif_zip.$(OBJ)
+@@ -53,11 +53,11 @@ tiff_11=$(TIFFOBJ)gstiffio.$(OBJ)
  
  $(TIFFSRC)libtiff$(D)tif_config.unix.h : $(TIFFSRC)libtiff$(D)tif_config.h.in
  	cd $(TIFFSRC) && ./configure
--	$(CP_) $(TIFFSRC)libtiff$(D)tif_config.h $(TIFFSRC)libtiff$(D)tif_config.unix.h
-+	$(CP_) $(TIFFSRC)libtiff$(D)tif_config.h $(TIFFSRC)libtiff$(D)tif_config.unix.h || true
+-	$(CP_) $(TIFFCONF)libtiff$(D)tif_config.h $(TIFFCONF)libtiff$(D)tif_config.unix.h
++	$(CP_) $(TIFFCONF)libtiff$(D)tif_config.h $(TIFFCONF)libtiff$(D)tif_config.unix.h || true
  
  $(TIFFSRC)libtiff$(D)tiffconf.unix.h : $(TIFFSRC)libtiff$(D)tiffconf.h.in
  	cd $(TIFFSRC) && ./configure
--	$(CP_) $(TIFFSRC)libtiff$(D)tiffconf.h $(TIFFSRC)libtiff$(D)tiffconf.unix.h
-+	$(CP_) $(TIFFSRC)libtiff$(D)tiffconf.h $(TIFFSRC)libtiff$(D)tiffconf.unix.h || true
+-	$(CP_) $(TIFFCONF)libtiff$(D)tiffconf.h $(TIFFCONF)libtiff$(D)tiffconf.unix.h
++	$(CP_) $(TIFFCONF)libtiff$(D)tiffconf.h $(TIFFCONF)libtiff$(D)tiffconf.unix.h || true
  
  $(TIFFOBJ)tif_aux.$(OBJ) : $(TIFFSRC)/libtiff/tif_aux.c $(TIFFDEP)
  	$(TIFFCC) $(TIFFO_)tif_aux.$(OBJ) $(C_) $(TIFFSRC)/libtiff/tif_aux.c
-@@ -179,14 +179,14 @@ $(TIFFOBJ)tif_unix.$(OBJ) : $(TIFFSRC)/libtiff/tif_unix.c $(TIFFDEP)
- 	$(TIFFCC) $(TIFFO_)tif_unix.$(OBJ) $(C_) $(TIFFSRC)/libtiff/tif_unix.c
+@@ -189,14 +189,14 @@ $(TIFFOBJ)gstiffio.$(OBJ) : $(GLSRC)gstiffio.c $(gstiffio_h) $(PDEVH) $(stdint__
+ 	$(TIFFCC) $(TIFFO_)gstiffio.$(OBJ) $(D_)SHARE_LIBTIFF=$(SHARE_LIBTIFF) $(C_) $(GLSRC)gstiffio.c
  
- $(TIFFGEN)tif_config.h: $(TIFFCONFIG)
--	$(CP_) $(TIFFCONFIG) $(TIFFGEN)tif_config.h
-+	$(CP_) $(TIFFCONFIG) $(TIFFGEN)tif_config.h || true
+ $(TIFFGEN)tif_config.h: $(TIFFCONFIG_H)
+-	$(CP_) $(TIFFCONFIG_H) $(TIFFGEN)tif_config.h
++	$(CP_) $(TIFFCONFIG_H) $(TIFFGEN)tif_config.h || true
  	
- $(TIFFGEN)tiffconf.h: $(TIFFCONF)
--	$(CP_) $(TIFFCONF) $(TIFFGEN)tiffconf.h
-+	$(CP_) $(TIFFCONF) $(TIFFGEN)tiffconf.h || true
+ $(TIFFGEN)tiffconf.h: $(TIFFCONF_H)
+-	$(CP_) $(TIFFCONF_H) $(TIFFGEN)tiffconf.h
++	$(CP_) $(TIFFCONF_H) $(TIFFGEN)tiffconf.h || true
  	
  # Define the version of libtiff.dev that we are actually using.
  $(TIFFGEN)libtiff.dev : $(TOP_MAKEFILES) $(TIFFGEN)libtiff_$(SHARE_LIBTIFF).dev
@@ -831,10 +828,10 @@ index 1ddad78..6b24422 100644
  # Query the environment to construct gconfig_.h.
  # These are all defined conditionally (except the JasPER one), so that
 diff --git a/base/unixhead.mak b/base/unixhead.mak
-index 67b5434..c4582c1 100644
+index 6aa3599..70a61f8 100644
 --- a/base/unixhead.mak
 +++ b/base/unixhead.mak
-@@ -55,7 +55,7 @@ SH=$(SHELL)
+@@ -53,7 +53,7 @@ SH=$(SHELL)
  
  # Define generic commands.
  
@@ -874,8 +871,21 @@ index 6c50605..7fb8c9b 100644
  
  $(ZGEN)zlibd_1.dev : $(TOP_MAKEFILES) $(ZLIB_MAK) $(ECHOGS_XE)
  	$(SETMOD) $(ZGEN)zlibd_1 -lib $(ZLIB_NAME)
+diff --git a/devices/devs.mak b/devices/devs.mak
+index bc22594..4bd0a11 100644
+--- a/devices/devs.mak
++++ b/devices/devs.mak
+@@ -1555,7 +1555,7 @@ libpng_dev=$(PNGGENDIR)$(D)libpng.dev
+ png_i_=-include $(PNGGENDIR)$(D)libpng
+ 
+ $(DEVOBJ)gdevpng.$(OBJ) : $(DEVSRC)gdevpng.c\
+- $(gdevprn_h) $(gdevpccm_h) $(gscdefs_h) $(png__h)
++ $(gdevprn_h) $(gdevpccm_h) $(gscdefs_h) $(png__h) $(PDEP)
+ 	$(CC_) $(I_)$(DEVI_) $(II)$(PI_)$(_I) $(PCF_) $(GLF_) $(DEVO_)gdevpng.$(OBJ) $(C_) $(DEVSRC)gdevpng.c
+ 
+ $(DD)pngmono.dev : $(DEVS_MAK) $(libpng_dev) $(png_) $(GLD)page.dev $(GDEV)
 diff --git a/psi/int.mak b/psi/int.mak
-index 92f296e..ee6b136 100644
+index 62cba0e..a1e963a 100644
 --- a/psi/int.mak
 +++ b/psi/int.mak
 @@ -274,7 +274,7 @@ $(PSOBJ)iconfig.$(OBJ) : $(gconfig_h) $(PSSRC)iconf.c $(stdio__h)\
@@ -905,7 +915,7 @@ index 92f296e..ee6b136 100644
  
  # We -include dpsand2 first so that geninit will have access to the
  # system name table as soon as possible.
-@@ -1208,7 +1208,7 @@ $(PSOBJ)zfjbig2_luratech.$(OBJ) : $(PSSRC)zfjbig2.c $(OP) $(memory__h)\
+@@ -1193,7 +1193,7 @@ $(PSOBJ)zfjbig2_luratech.$(OBJ) : $(PSSRC)zfjbig2.c $(OP) $(memory__h)\
  # this can be turned on and off with a FEATURE_DEV
  
  $(PSD)jpx.dev : $(INT_MAK) $(ECHOGS_XE) $(PSD)jpx_$(JPX_LIB).dev
@@ -914,16 +924,6 @@ index 92f296e..ee6b136 100644
  
  fjpx_luratech=$(PSOBJ)zfjpx_luratech.$(OBJ)
  
-Index: ghostscript-9.07/base/devs.mak
-===================================================================
---- ghostscript-9.07.orig/base/devs.mak	2013-02-14 07:58:13.000000000 +0000
-+++ ghostscript-9.07/base/devs.mak	2013-09-06 22:50:06.331064815 +0000
-@@ -1511,7 +1511,7 @@
- png_i_=-include $(PNGGENDIR)$(D)libpng
- 
- $(GLOBJ)gdevpng.$(OBJ) : $(GLSRC)gdevpng.c\
-- $(gdevprn_h) $(gdevpccm_h) $(gscdefs_h) $(png__h)
-+ $(gdevprn_h) $(gdevpccm_h) $(gscdefs_h) $(png__h) $(PDEP)
- 	$(CC_) $(I_)$(GLI_) $(II)$(PI_)$(_I) $(PCF_) $(GLF_) $(GLO_)gdevpng.$(OBJ) $(C_) $(GLSRC)gdevpng.c
- 
- $(DD)pngmono.dev : $(DEVS_MAK) $(libpng_dev) $(png_) $(GLD)page.dev $(GDEV)
+-- 
+1.8.1.2
+
