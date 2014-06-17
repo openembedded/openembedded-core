@@ -224,12 +224,12 @@ for e in executables_list:
 
     # Save old size and do a size check at the end. Just a safety measure.
     old_size = os.path.getsize(e)
-
-    arch = get_arch()
-    if arch:
-        parse_elf_header()
-        change_interpreter(e)
-        change_dl_sysdirs()
+    if old_size >= 64:
+        arch = get_arch()
+        if arch:
+            parse_elf_header()
+            change_interpreter(e)
+            change_dl_sysdirs()
 
     """ change permissions back """
     if perms:
