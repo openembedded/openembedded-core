@@ -4,8 +4,6 @@ HOMEPAGE = "http://git.kernel.org/?p=linux/kernel/git/clrkwllms/rt-tests.git"
 SECTION = "tests"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
-RDEPENDS_${PN} = "python python-subprocess python-textutils"
-RRECOMMENDS_${PN} = "kernel-module-hwlat-detector"
 
 require rt-tests.inc
 
@@ -21,3 +19,5 @@ do_install() {
 }
 
 FILES_${PN} += "${libdir}/python${PYTHON_BASEVERSION}/dist-packages/hwlatdetect.py"
+RDEPENDS_${PN} = "python python-subprocess python-textutils"
+RRECOMMENDS_${PN} = "kernel-module-hwlat-detector"
