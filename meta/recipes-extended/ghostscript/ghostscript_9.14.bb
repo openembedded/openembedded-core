@@ -42,6 +42,9 @@ EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec \
                 ${@base_conditional('SITEINFO_ENDIANNESS', 'le', '--enable-little-endian', '--enable-big-endian', d)} \
                 "
 
+EXTRA_OECONF_append_mips = " --with-large_color_index=0"
+EXTRA_OECONF_append_mipsel = " --with-large_color_index=0"
+
 # Explicity disable libtiff, fontconfig,
 # freetype, cups for ghostscript-native
 EXTRA_OECONF_class-native = "--without-x --with-system-libtiff=no \
