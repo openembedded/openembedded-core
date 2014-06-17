@@ -1,4 +1,5 @@
 # Version v0.89
+PV = "0.89"
 SRCREV = "9164ec4db2645f52ffdd20e6d1b72bb0411ab40e"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/clrkwllms/rt-tests.git \
