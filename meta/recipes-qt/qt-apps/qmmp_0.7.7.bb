@@ -12,8 +12,8 @@ SRC_URI = "http://qmmp.ylsoftware.com/files/${BPN}-${PV}.tar.bz2 \
            file://no-host-paths.patch \
           "
 
-SRC_URI[md5sum] = "dcc3c9ecd4dfbf0ced91c59cb894d460"
-SRC_URI[sha256sum] = "6066aea939813667dae7cf32ff1d6eb9913894977d132c2cd729fea22d24cf67"
+SRC_URI[md5sum] = "9376b5d535ed540e97bdff79b42607ae"
+SRC_URI[sha256sum] = "dda66bf60121a8a2cb7175b16b3b948099f8c119ee9a11c671555e8c38caa387"
 
 inherit cmake qt4x11
 
