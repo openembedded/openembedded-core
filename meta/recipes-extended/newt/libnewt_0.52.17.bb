@@ -12,7 +12,7 @@ HOMEPAGE = "https://fedorahosted.org/newt/"
 SECTION = "libs"
 
 LICENSE = "LGPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
+LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 
 # slang needs to be >= 2.2
 DEPENDS = "slang popt"
@@ -23,10 +23,10 @@ SRC_URI = "https://fedorahosted.org/releases/n/e/newt/newt-${PV}.tar.gz \
            file://remove_slang_include.patch \
            file://fix_SHAREDDIR.patch \
            file://cross_ar.patch \
-           file://fix_python_fpic.patch"
+"
 
-SRC_URI[md5sum] = "eb78c6bb658b92ec7198908b5b8d0e37"
-SRC_URI[sha256sum] = "f70f4f58baa60388ddf2e39249ffb00898fb40f2b2767e42e2ab51fe4b40978e"
+SRC_URI[md5sum] = "f36d4d908965a0c89fd6fd8b61a6118b"
+SRC_URI[sha256sum] = "69837973ef2ee2fa644426f1c3e48d2b18785ebcd382ef7fd01eb2e67d2d632b"
 
 S = "${WORKDIR}/newt-${PV}"
 

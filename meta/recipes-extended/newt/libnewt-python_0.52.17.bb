@@ -12,12 +12,12 @@ EXTRA_OEMAKE += "PYTHONVERS=${PYTHON_DIR}"
 
 do_compile () {
 	VERSION="$(sed -n 's/^VERSION = //p' Makefile)"
-	oe_runmake "LIBNEWTSH=${STAGING_LIBDIR}/libnewt.so.$VERSION" _snackmodule.so
+	oe_runmake "LIBNEWTSH=${STAGING_LIBDIR}/libnewt.so.$VERSION" _snack.so
 }
 
 do_install () {
 	install -d ${D}${PYTHON_SITEPACKAGES_DIR}
-	install -m 0755 ${PYTHON_DIR}/_snackmodule.so ${D}${PYTHON_SITEPACKAGES_DIR}/
+	install -m 0755 ${PYTHON_DIR}/_snack.so ${D}${PYTHON_SITEPACKAGES_DIR}/
 	install -m 0644 snack.py ${D}${PYTHON_SITEPACKAGES_DIR}/
 }
 

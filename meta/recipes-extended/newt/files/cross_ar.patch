@@ -12,11 +12,13 @@ Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 
 Upstream-Status: Pending
 
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
- Makefile.in  |    3 ++-
- configure.ac |    4 ++++
+ Makefile.in  | 3 ++-
+ configure.ac | 4 ++++
  2 files changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/Makefile.in b/Makefile.in
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -7,6 +7,7 @@ CFLAGS = @CFLAGS@
@@ -27,8 +29,8 @@ Upstream-Status: Pending
  
  VERSION = @VERSION@
  TAG = r$(subst .,-,$(VERSION))
-@@ -95,7 +96,7 @@ whiptcl.so: $(WHIPTCLOBJS) $(LIBNEWTSH)
- 	$(CC) -shared $(SHCFLAGS) $(LDFLAGS) -o whiptcl.so $(WHIPTCLOBJS) -L. -lnewt  $(LIBTCL) -lpopt $(LIBS)
+@@ -109,7 +110,7 @@ whiptcl.$(SOEXT): $(WHIPTCLOBJS) $(LIBNEWTSH)
+ 	$(CC) -shared $(SHCFLAGS) $(LDFLAGS) -o whiptcl.$(SOEXT) $(WHIPTCLOBJS) -L. -lnewt  $(LIBTCL) -lpopt $(LIBS)
  
  $(LIBNEWT): $(LIBOBJS)
 -	ar rv $@ $^
@@ -36,12 +38,14 @@ Upstream-Status: Pending
  
  newt.o $(SHAREDDIR)/newt.o: newt.c Makefile
  
+diff --git a/configure.ac b/configure.ac
+index 92e6da8..cd83d57 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -14,6 +14,10 @@ AC_PROG_CC
- AC_PROG_INSTALL
+@@ -15,6 +15,10 @@ AC_PROG_INSTALL
  AC_PROG_LN_S
  AC_PROG_GREP
+ AC_SYS_LARGEFILE
 +AN_MAKEVAR([AR], [AC_PROG_AR])
 +AN_PROGRAM([ar], [AC_PROG_AR])
 +AC_DEFUN([AC_PROG_AR], [AC_CHECK_TOOL(AR, ar, :)])
@@ -49,3 +53,6 @@ Upstream-Status: Pending
  
  # Are we using GNU ld?
  AC_MSG_CHECKING([for GNU ld])
+-- 
+1.8.1.2
+
