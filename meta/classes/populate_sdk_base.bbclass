@@ -174,9 +174,8 @@ if [ $verbose = 1 ] ; then
 	set -x
 fi
 
-printf "Enter target directory for SDK (default: $DEFAULT_INSTALL_DIR): "
 if [ "$target_sdk_dir" = "" ]; then
-	read target_sdk_dir
+	read -e -p "Enter target directory for SDK (default: $DEFAULT_INSTALL_DIR): " target_sdk_dir
 	[ "$target_sdk_dir" = "" ] && target_sdk_dir=$DEFAULT_INSTALL_DIR
 else
 	echo "$target_sdk_dir"
