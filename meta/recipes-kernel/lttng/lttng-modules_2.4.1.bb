@@ -10,7 +10,7 @@ DEPENDS = "virtual/kernel"
 
 inherit module
 
-SRCREV = "afdc6b155161f209fcfadc5288dc017ceab56353"
+SRCREV = "a0383def517e3aebbbcebae61fe2bcfb50d31e71"
 PV = "2.4.1"
 
 # lttng currently blacklists arm with gcc-4.8
