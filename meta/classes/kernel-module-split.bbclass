@@ -137,8 +137,7 @@ python split_kernel_module_packages () {
         if basename in autoloadlist:
             name = '%s/etc/modules-load.d/%s.conf' % (dvar, basename)
             f = open(name, 'w')
-            for m in autoload.split():
-                f.write('%s\n' % m)
+            f.write('%s\n' % basename)
             f.close()
             postinst = d.getVar('pkg_postinst_%s' % pkg, True)
             if not postinst:
