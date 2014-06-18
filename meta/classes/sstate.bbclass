@@ -629,7 +629,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
 
         tname = sq_task[task][3:]
 
-        if tname in ["fetch", "unpack", "patch", "populate_lic"] and splithashfn[2]:
+        if tname in ["fetch", "unpack", "patch", "populate_lic", "preconfigure"] and splithashfn[2]:
             spec = splithashfn[2]
             extrapath = ""
 
@@ -784,7 +784,7 @@ python sstate_eventhandler() {
         taskname = d.getVar("BB_RUNTASK", True)[3:]
         spec = d.getVar('SSTATE_PKGSPEC', True)
         swspec = d.getVar('SSTATE_SWSPEC', True)
-        if taskname in ["fetch", "unpack", "patch", "populate_lic"] and swspec:
+        if taskname in ["fetch", "unpack", "patch", "populate_lic", "preconfigure"] and swspec:
             d.setVar("SSTATE_PKGSPEC", "${SSTATE_SWSPEC}")
             d.setVar("SSTATE_EXTRAPATH", "")
         sstatepkg = d.getVar('SSTATE_PKG', True)
