@@ -47,7 +47,7 @@ RDEPENDS_initramfs-module-mdev = "${PN}-base"
 FILES_initramfs-module-mdev = "/init.d/01-mdev"
 
 SUMMARY_initramfs-module-udev = "initramfs support for udev"
-RDEPENDS_initramfs-module-udev = "${PN}-base udev udev-utils"
+RDEPENDS_initramfs-module-udev = "${PN}-base udev"
 FILES_initramfs-module-udev = "/init.d/01-udev"
 
 SUMMARY_initramfs-module-e2fs = "initramfs support for ext4/ext3/ext2 filesystems"
