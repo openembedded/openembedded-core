@@ -47,7 +47,7 @@ EXTRA_OECONF = "--disable-introspection \
                 --without-systemdsystemunitdir \
                "
 
-PACKAGES =+ "udev-utils udev-cache"
+PACKAGES =+ "udev-cache"
 PACKAGES =+ "libudev"
 PACKAGES =+ "libgudev"
 
@@ -57,8 +57,8 @@ INITSCRIPT_PARAMS_udev = "start 04 S ."
 INITSCRIPT_NAME_udev-cache = "udev-cache"
 INITSCRIPT_PARAMS_udev-cache = "start 36 S ."
 
-FILES_${PN} += "${libexecdir} ${libdir}/ConsoleKit ${nonarch_base_libdir}/udev"
-RRECOMMENDS_${PN} += "udev-utils udev-cache"
+FILES_${PN} += "${libexecdir} ${libdir}/ConsoleKit ${nonarch_base_libdir}/udev ${bindir}/udevadm"
+RRECOMMENDS_${PN} += "udev-cache"
 
 FILES_${PN}-dbg += "${libexecdir}/.debug"
 FILES_${PN}-dbg += "${base_libdir}/udev/.debug/"
@@ -72,8 +72,6 @@ FILES_${PN}-dev = "${datadir}/pkgconfig/udev.pc \
 FILES_libudev = "${base_libdir}/libudev.so.*"
 FILES_libgudev = "${base_libdir}/libgudev*.so.* ${libdir}/libgudev*.so.*"
 FILES_udev-cache = "${sysconfdir}/init.d/udev-cache ${sysconfdir}/default/udev-cache"
-
-FILES_udev-utils = "${bindir}/udevadm"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
