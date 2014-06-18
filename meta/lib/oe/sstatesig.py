@@ -125,7 +125,10 @@ def find_siginfo(pn, taskname, taskhashlist, d):
                         foundall = True
                         break
         else:
-            filedates[fullpath] = os.stat(fullpath).st_mtime
+            try:
+                filedates[fullpath] = os.stat(fullpath).st_mtime
+            except OSError:
+                continue
 
     if not taskhashlist or (len(filedates) < 2 and not foundall):
         # That didn't work, look in sstate-cache
@@ -156,7 +159,10 @@ def find_siginfo(pn, taskname, taskhashlist, d):
                         if taskhashlist:
                             hashfiles[hashval] = fullpath
                         else:
-                            filedates[fullpath] = os.stat(fullpath).st_mtime
+                            try:
+                                filedates[fullpath] = os.stat(fullpath).st_mtime
+                            except:
+                                continue
 
     if taskhashlist:
         return hashfiles
