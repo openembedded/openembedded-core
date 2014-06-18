@@ -250,15 +250,12 @@ RRECOMMENDS_${PN} += "systemd-serialgetty systemd-compat-units \
                       kernel-module-autofs4 kernel-module-unix kernel-module-ipv6 \
 "
 
-PACKAGES =+ "udev-dbg udev udev-utils udev-hwdb"
+PACKAGES =+ "udev-dbg udev udev-hwdb"
 
 FILES_udev-dbg += "/lib/udev/.debug"
 
-RDEPENDS_udev += "udev-utils"
 RPROVIDES_udev = "hotplug"
 RRECOMMENDS_udev += "udev-hwdb"
-
-RDEPENDS_udev-hwdb += "udev-utils"
 
 FILES_udev += "${base_sbindir}/udevd \
                ${rootlibexecdir}/systemd/systemd-udevd \
@@ -285,9 +282,9 @@ FILES_udev += "${base_sbindir}/udevd \
                ${sysconfdir}/init.d/systemd-udevd \
                ${systemd_unitdir}/system/*udev* \
                ${systemd_unitdir}/system/*.wants/*udev* \
+               ${base_bindir}/udevadm \
+               ${datadir}/bash-completion/completions/udevadm \
               "
-
-FILES_udev-utils = "${base_bindir}/udevadm ${datadir}/bash-completion/completions/udevadm"
 
 FILES_udev-hwdb = "${rootlibexecdir}/udev/hwdb.d"
 
