@@ -72,10 +72,12 @@ link_file() {
 	if [ -L \"$2\" ]; then
 		[ \"\$(readlink -f \"$2\")\" != \"\$(readlink -f \"$1\")\" ] && { rm -f \"$2\"; ln -sf \"$1\" \"$2\"; };
 	elif [ -d \"$2\" ]; then
-		cp -a $2/* $1 2>/dev/null;
-		cp -a $2/.[!.]* $1 2>/dev/null;
-		rm -rf \"$2\";
-		ln -sf \"$1\" \"$2\";
+		if awk '\$2 == \"$2\" {exit 1}' /proc/mounts; then
+			cp -a $2/* $1 2>/dev/null;
+			cp -a $2/.[!.]* $1 2>/dev/null;
+			rm -rf \"$2\";
+			ln -sf \"$1\" \"$2\";
+		fi
 	else
 		ln -sf \"$1\" \"$2\";
 	fi
