@@ -23,11 +23,12 @@ DEBUGFS="debugfs"
 	find $SRCDIR | while read FILE; do
                 TGT="${FILE##*/}"
                 DIR="${FILE#$SRCDIR}"
-                DIR="${DIR%$TGT}"
 
 		# Skip the root dir
 		[ ! -z "$DIR" ] || continue
 		[ ! -z "$TGT" ] || continue
+
+                DIR="$(dirname $DIR)"
 
 		if [ "$DIR" != "$CWD" ]; then
 			echo "cd $DIR"
