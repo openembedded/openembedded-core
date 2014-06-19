@@ -2,3 +2,4 @@
 
 # Comment this out to disable device cache
 DEVCACHE="/etc/dev.tar"
+PROBE_PLATFORM_BUS="yes"
