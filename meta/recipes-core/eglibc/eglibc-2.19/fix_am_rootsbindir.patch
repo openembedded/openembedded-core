@@ -1,0 +1,32 @@
+sysdeps/gnu/configure.ac: handle correctly $libc_cv_rootsbindir
+
+Upstream-Status:Pending
+Signed-off-by: Matthieu Crapet <Matthieu.Crapet@ingenico.com>
+
+diff --git a/libc/sysdeps/gnu/configure b/libc/sysdeps/gnu/configure
+index e7f0e43..687beab 100644
+--- a/libc/sysdeps/gnu/configure
++++ b/libc/sysdeps/gnu/configure
+@@ -42,6 +42,6 @@ case "$prefix" in
+   else
+     libc_cv_localstatedir=$localstatedir
+    fi
+-  libc_cv_rootsbindir=/sbin
++  test -n "$libc_cv_rootsbindir" || libc_cv_rootsbindir=/sbin
+   ;;
+ esac
+diff --git a/libc/sysdeps/gnu/configure.ac b/libc/sysdeps/gnu/configure.ac
+index ce251df..57c1e77 100644
+--- a/libc/sysdeps/gnu/configure.ac
++++ b/libc/sysdeps/gnu/configure.ac
+@@ -42,6 +42,6 @@ case "$prefix" in
+   else
+     libc_cv_localstatedir=$localstatedir
+    fi
+-  libc_cv_rootsbindir=/sbin
++  test -n "$libc_cv_rootsbindir" || libc_cv_rootsbindir=/sbin
+   ;;
+ esac
+-- 
+2.0.0
+
