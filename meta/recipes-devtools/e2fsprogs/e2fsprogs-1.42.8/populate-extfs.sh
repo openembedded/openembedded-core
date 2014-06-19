@@ -94,4 +94,9 @@ DEBUGFS="debugfs"
 		echo "sif $SRC links_count $LN_CNT"
 	done
 	rm -fr $INODE_DIR
-} | $DEBUGFS -w -f - $DEVICE
+} | $DEBUGFS -w -f - $DEVICE 2>&1 1>/dev/null | grep '.*: .*'
+
+if [ $? = 0 ]; then
+    echo "Some error occured while executing [$DEBUGFS -w -f - $DEVICE]"
+    exit 1
+fi
