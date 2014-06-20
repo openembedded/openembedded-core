@@ -154,8 +154,12 @@ mkdir -p /boot
 # Handling of the target root partition
 mount $rootfs /tgt_root
 mount -o rw,loop,noatime,nodiratime /run/media/$1/$2 /src_root
+
 echo "Copying rootfs files..."
 cp -a /src_root/* /tgt_root
+
+touch /tgt_root/etc/masterimage
+
 if [ -d /tgt_root/etc/ ] ; then
     echo "$bootfs              /boot            ext3       defaults              1  2" >> /tgt_root/etc/fstab
     # We dont want udev to mount our root device while we're booting...
