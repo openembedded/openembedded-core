@@ -1,0 +1,40 @@
+Upstream-Status: Backport
+
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+
+From bc360f8dbdf27bff07bb5db8d0ea9a7b10d8e3d1 Mon Sep 17 00:00:00 2001
+From: Kai Kang <kai.kang@windriver.com>
+Date: Fri, 20 Jun 2014 11:32:11 +0800
+Subject: [PATCH 1/2] isohybrid: fix overflow on 32 bit system
+
+When call isohybrid with option '-u', it overflows on a 32 bits host. It
+seeks to 512 bytes before the end of the image to install gpt header. If
+the size of image is larger than LONG_MAX, it overflows fseek() and
+cause error:
+
+isohybrid: image-x86-64-20140505110100.iso: seek error - 8: Invalid argument
+
+Replace fseek with fseeko to fix this issue.
+
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+Signed-off-by: H. Peter Anvin <hpa@zytor.com>
+---
+ utils/isohybrid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/utils/isohybrid.c b/utils/isohybrid.c
+index 410bb60..23fc6c0 100644
+--- a/utils/isohybrid.c
++++ b/utils/isohybrid.c
+@@ -1126,7 +1126,7 @@ main(int argc, char *argv[])
+ 	 * end of the image
+ 	 */
+ 
+-	if (fseek(fp, (isostat.st_size + padding) - orig_gpt_size - 512,
++	if (fseeko(fp, (isostat.st_size + padding) - orig_gpt_size - 512,
+ 		  SEEK_SET))
+ 	    err(1, "%s: seek error - 8", argv[0]);
+ 
+-- 
+1.9.1
+

@@ -13,7 +13,9 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/6.xx/syslinux-${PV}.tar
            file://0002-memscan-build-a-linked-list-of-memory-scanners.patch \
            file://0003-PXELINUX-Add-bios-memscan-function.patch \
            file://0004-pxe-use-bios_fbm-and-real_base_mem-to-calculate-free.patch \
-           file://syslinux-fix-parallel-building-issue.patch"
+           file://syslinux-fix-parallel-building-issue.patch \
+           file://isohybrid-fix-overflow-on-32-bit-system.patch \
+           "
 
 SRC_URI[md5sum] = "6945ee89e29119d459baed4937bbc534"
 SRC_URI[sha256sum] = "83a04cf81e6a46b80ee5a321926eea095af3498b04317e3674b46c125c7a5b43"
