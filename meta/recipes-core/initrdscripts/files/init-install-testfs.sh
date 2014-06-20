@@ -172,6 +172,11 @@ if [ -f /etc/grub.d/00_header ] ; then
     GRUBCFG="/boot/grub/grub.cfg"
     mkdir -p $(dirname $GRUBCFG)
     cat >$GRUBCFG <<_EOF 
+serial --speed=115200 --unit=0 --word=8 --parity=no --stop=1
+terminal_input --append  serial
+terminal_output --append serial
+set timeout_style=hidden
+set timeout=5
 menuentry "Linux" {
     set root=(hd0,1)
     linux /vmlinuz root=$rootfs $rootwait rw $5 $3 $4 quiet
