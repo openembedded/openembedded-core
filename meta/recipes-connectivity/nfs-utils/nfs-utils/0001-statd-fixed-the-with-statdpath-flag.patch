@@ -1,0 +1,41 @@
+From 3b1457d219ceb1058d44bacc657581f13437ae40 Mon Sep 17 00:00:00 2001
+From: Steve Dickson <steved@redhat.com>
+Date: Tue, 17 Jun 2014 13:28:53 -0400
+Subject: [PATCH] statd: fixed the --with-statdpath= flag
+
+Create the given path set with --with-statdpath
+
+Signed-off-by: chendt.fnst@cn.fujitsu.com
+Reported-by: yaoxp@cn.fujitsu.com
+Signed-off-by: Steve Dickson <steved@redhat.com>
+Upstream-Status: Backport
+---
+ Makefile.am | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index ae7cd16..5824adc 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -54,13 +54,13 @@ install-data-hook:
+ 	touch $(DESTDIR)$(statedir)/xtab; chmod 644 $(DESTDIR)$(statedir)/xtab
+ 	touch $(DESTDIR)$(statedir)/etab; chmod 644 $(DESTDIR)$(statedir)/etab
+ 	touch $(DESTDIR)$(statedir)/rmtab; chmod 644 $(DESTDIR)$(statedir)/rmtab
+-	mkdir -p $(DESTDIR)$(statedir)/sm $(DESTDIR)$(statedir)/sm.bak
+-	touch $(DESTDIR)$(statedir)/state
+-	chmod go-rwx $(DESTDIR)$(statedir)/sm $(DESTDIR)$(statedir)/sm.bak $(DESTDIR)$(statedir)/state
+-	-chown $(statduser) $(DESTDIR)$(statedir)/sm $(DESTDIR)$(statedir)/sm.bak $(DESTDIR)$(statedir)/state
++	mkdir -p $(DESTDIR)$(statdpath)/sm $(DESTDIR)$(statdpath)/sm.bak
++	touch $(DESTDIR)$(statdpath)/state
++	chmod go-rwx $(DESTDIR)$(statdpath)/sm $(DESTDIR)$(statdpath)/sm.bak $(DESTDIR)$(statdpath)/state
++	-chown $(statduser) $(DESTDIR)$(statdpath)/sm $(DESTDIR)$(statdpath)/sm.bak $(DESTDIR)$(statdpath)/state
+ 
+ uninstall-hook:
+ 	rm $(DESTDIR)$(statedir)/xtab
+ 	rm $(DESTDIR)$(statedir)/etab
+ 	rm $(DESTDIR)$(statedir)/rmtab
+-	rm $(DESTDIR)$(statedir)/state
++	rm $(DESTDIR)$(statdpath)/state
+-- 
+1.8.4.2
+
