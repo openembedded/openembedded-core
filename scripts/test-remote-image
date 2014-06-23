@@ -136,7 +136,7 @@ class AutoTargetProfile(BaseTargetProfile):
         self.set_manifest_file()
         self.set_extra_download_files()
 
-
+    # Get the controller object that will be used by bitbake.
     def get_controller(self):
         from oeqa.controllers.testtargetloader import TestTargetLoader
 
@@ -158,8 +158,13 @@ class AutoTargetProfile(BaseTargetProfile):
 
     def set_rootfs_file(self):
         image_fstypes = get_bb_var('IMAGE_FSTYPES').split(' ')
-        fstype = self.controller.get_image_fstype(d=None, image_fstypes=image_fstypes)
-        self.rootfs_file = self.image_name + '.' + fstype
+        # Get a matching value between target's IMAGE_FSTYPES and the image fstypes suppoerted by the target controller.
+        fstype = self.controller.match_image_fstype(d=None, image_fstypes=image_fstypes)
+        if fstype:
+            self.rootfs_file = self.image_name + '.' + fstype
+        else:
+            log.error("Could not get a compatible image fstype. Check that IMAGE_FSTYPES and the target controller's supported_image_fstypes fileds have common values.")
+            sys.exit(1)
 
     def set_manifest_file(self):
         self.manifest_file = self.image_name + ".manifest"
