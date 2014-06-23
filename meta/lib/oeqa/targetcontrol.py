@@ -77,14 +77,21 @@ class BaseTarget(object):
         return None
 
     @classmethod
-    def get_image_fstype(self, d, image_fstypes=None):
+    def match_image_fstype(self, d, image_fstypes=None):
         if not image_fstypes:
             image_fstypes = d.getVar('IMAGE_FSTYPES', True).split(' ')
         possible_image_fstypes = [fstype for fstype in self.supported_image_fstypes if fstype in image_fstypes]
         if possible_image_fstypes:
             return possible_image_fstypes[0]
         else:
-            bb.fatal("no possible image_fstype could not be determined. IMAGE_FSTYPES=\"%s\" and supported_image_fstypes=\"%s\": " % (', '.join(map(str, image_fstypes)), ', '.join(map(str, self.supported_image_fstypes))))
+            return None
+
+    def get_image_fstype(self, d):
+        image_fstype = self.match_image_fstype(d)
+        if image_fstype:
+            return image_fstype
+        else:
+            bb.fatal("IMAGE_FSTYPES should contain a Target Controller supported image fstype: %s " % ', '.join(map(str, self.supported_image_fstypes)))
 
     def restart(self, params=None):
         self.stop()
