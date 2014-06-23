@@ -11,8 +11,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e021dd6dda6ff1e6b1044002fc662b9b \
 SECTION = "libs"
 
 SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/${BP}.tar.bz2"
-SRC_URI[md5sum] = "accbeb679f39d839038b95a87e40870e"
-SRC_URI[sha256sum] = "a567f7c58018af0a9751e18641fd8434bfcef8307122dabe47dd652ce8bde048"
+SRC_URI[md5sum] = "6251eb6d57e8c4e9e855188dbbdf8b6d"
+SRC_URI[sha256sum] = "601cea38c6fa0cf362dd9042c66cf4db711c5f9390de4ca46d6d2fc3f64de390"
 inherit autotools pkgconfig lib_package
 
 DEPENDS = "glib-2.0 cairo freetype"
