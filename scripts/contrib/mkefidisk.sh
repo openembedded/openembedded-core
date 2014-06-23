@@ -98,6 +98,11 @@ DEVICE=$1
 HDDIMG=$2
 TARGET_DEVICE=$3
 
+LINK=$(readlink $DEVICE)
+if [ $? -eq 0 ]; then
+	DEVICE="$LINK"
+fi
+
 if [ ! -w "$DEVICE" ]; then
 	echo "ERROR: Device $DEVICE does not exist or is not writable"
 	usage
