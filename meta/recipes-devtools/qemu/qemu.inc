@@ -20,6 +20,7 @@ SRC_URI = "\
     file://no-strip.patch \
     file://larger_default_ram_size.patch \
     file://disable-grabs.patch \
+    file://exclude-some-arm-EABI-obsolete-syscalls.patch \
     "
 
 SRC_URI_append_class-native = "\
