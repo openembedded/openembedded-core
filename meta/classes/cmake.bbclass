@@ -1,3 +1,6 @@
+# Path to the CMake file to process.
+OECMAKE_SOURCEPATH ?= "${S}"
+
 DEPENDS_prepend = "cmake-native "
 B = "${WORKDIR}/build"
 
@@ -65,8 +68,8 @@ EOF
 addtask generate_toolchain_file after do_patch before do_configure
 
 cmake_do_configure() {
-	if [ "${OECMAKE_BUILDPATH}" -o "${OECMAKE_SOURCEPATH}" ]; then
-		bbnote "cmake.bbclass no longer uses OECMAKE_SOURCEPATH and OECMAKE_BUILDPATH.  The default behaviour is now out-of-tree builds with B=WORKDIR/build."
+	if [ "${OECMAKE_BUILDPATH}" ]; then
+		bbnote "cmake.bbclass no longer uses OECMAKE_BUILDPATH.  The default behaviour is now out-of-tree builds with B=WORKDIR/build."
 	fi
 
 	if [ "${S}" != "${B}" ]; then
@@ -84,7 +87,7 @@ cmake_do_configure() {
 
 	cmake \
 	  ${OECMAKE_SITEFILE} \
-	  ${S} \
+	  ${OECMAKE_SOURCEPATH} \
 	  -DCMAKE_INSTALL_PREFIX:PATH=${prefix} \
 	  -DCMAKE_INSTALL_BINDIR:PATH=${bindir} \
 	  -DCMAKE_INSTALL_SBINDIR:PATH=${sbindir} \
