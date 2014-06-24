@@ -21,3 +21,5 @@ EXTRA_OECONF_append = "\
 do_configure_prepend () {
 	( cd ${S}; gtkdocize --docdir ${GTKDOC_DOCDIR} )
 }
+
+inherit pkgconfig
