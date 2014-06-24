@@ -20,6 +20,7 @@ do_install_append () {
 	mv ${D}${bindir}/gunzip ${D}${base_bindir}/gunzip
 	mv ${D}${bindir}/gzip ${D}${base_bindir}/gzip
 	mv ${D}${bindir}/zcat ${D}${base_bindir}/zcat
+	mv ${D}${bindir}/uncompress ${D}${base_bindir}/uncompress
 }
 
 inherit update-alternatives
