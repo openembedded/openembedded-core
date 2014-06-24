@@ -2,6 +2,7 @@ PREMIRRORS() {
 cvs://.*/.*     ${SOURCE_MIRROR_URL}
 svn://.*/.*     ${SOURCE_MIRROR_URL}
 git://.*/.*     ${SOURCE_MIRROR_URL}
+gitsm://.*/.*   ${SOURCE_MIRROR_URL}
 hg://.*/.*      ${SOURCE_MIRROR_URL}
 bzr://.*/.*     ${SOURCE_MIRROR_URL}
 svk://.*/.*     ${SOURCE_MIRROR_URL}
