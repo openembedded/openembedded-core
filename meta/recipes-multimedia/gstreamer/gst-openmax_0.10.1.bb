@@ -16,7 +16,7 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/gst-openmax/gst-openmax-${PV}.ta
            file://ptr-array.patch \
            "
 
-inherit autotools
+inherit autotools pkgconfig
 
 # Tell configure that this isn't a development snapshot so we don't want
 # -Werror (hopefully fixed in 0.10.2)
