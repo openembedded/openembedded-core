@@ -28,8 +28,7 @@ SRC_URI = "\
      file://fix-pr15815.patch \
      file://fix-pr2404.patch \
      file://fix-pr16476.patch \
-     file://fix-pr16428a.patch \
-     file://fix-pr16428b.patch \
+     file://fix-pr16428.patch \
      file://replace_macros_with_static_inline.patch \
      file://0001-Fix-MMIX-build-breakage-from-bfd_set_section_vma-cha.patch \
      "
