@@ -23,6 +23,7 @@ PR = "r3"
 SRC_URI = "http://www.libsdl.org/release/SDL-${PV}.tar.gz \
            file://configure_tweak.patch \
            file://libsdl-1.2.15-xdata32.patch \
+           file://pkgconfig.patch \
           "
 
 S = "${WORKDIR}/SDL-${PV}"
