@@ -15,7 +15,10 @@ require perf-features.inc
 
 BUILDPERF_libc-uclibc = "no"
 
-TUI_DEPENDS = "${@perf_feature_enabled('perf-tui', 'libnewt', '',d)}"
+# gui support was added with kernel 3.6.35
+# since 3.10 libnewt was replaced by slang
+# to cover a wide range of kernel we add both dependencies
+TUI_DEPENDS = "${@perf_feature_enabled('perf-tui', 'libnewt slang', '',d)}"
 SCRIPTING_DEPENDS = "${@perf_feature_enabled('perf-scripting', 'perl python', '',d)}"
 
 DEPENDS = "virtual/kernel \
