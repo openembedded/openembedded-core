@@ -1,13 +1,13 @@
 [Unit]
-Description=NFC service
+Description=neard service
+Documentation=man:neard(8)
 After=syslog.target
 
 [Service]
 Type=dbus
 BusName=org.neard
-Restart=on-failure
 ExecStart=@installpath@/neard -n
-StandardOutput=null
 
 [Install]
+Alias=dbus-org.neard.service
 WantedBy=multi-user.target
