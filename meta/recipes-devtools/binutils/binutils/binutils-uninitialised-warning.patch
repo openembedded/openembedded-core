@@ -1,0 +1,50 @@
+From f9c316c4d75be236bbaa8464ef803ed2d3859d6d Mon Sep 17 00:00:00 2001
+From: H.J. Lu <hjl.tools@gmail.com>
+Date: Wed, 15 Jan 2014 07:43:19 -0800
+Subject: [PATCH 1/1] Silence uninitialized warning on ehdr_start_save
+
+Older GCC, like 4.1/4.2, will issue an uninitialized warning on
+ehdr_start_save.  This patch silences by using
+
+struct bfd_link_hash_entry ehdr_start_save = ehdr_start_save;
+
+	* emultempl/elf32.em (gld${EMULATION_NAME}_before_allocation):
+	Silence uninitialized warning on ehdr_start_save with older
+	GCC.
+
+Upstream-Status: Backport
+---
+ ld/ChangeLog          |    6 ++++++
+ ld/emultempl/elf32.em |    2 +-
+ 2 files changed, 7 insertions(+), 1 deletions(-)
+
+#diff --git a/ld/ChangeLog b/ld/ChangeLog
+#index eaa6b93..91055de 100644
+#--- a/ld/ChangeLog
+#+++ b/ld/ChangeLog
+#@@ -1,3 +1,9 @@
+#+2014-01-15  H.J. Lu  <hongjiu.lu@intel.com>
+#+
+#+	* emultempl/elf32.em (gld${EMULATION_NAME}_before_allocation):
+#+	Silence uninitialized warning on ehdr_start_save with older
+#+	GCC.
+#+
+# 2014-01-15  Alan Modra  <amodra@gmail.com>
+# 
+# 	* emultempl/elf32.em (gld${EMULATION_NAME}_before_allocation): Define
+diff --git a/ld/emultempl/elf32.em b/ld/emultempl/elf32.em
+index 13f86f0..569c7f7 100644
+--- a/ld/emultempl/elf32.em
++++ b/ld/emultempl/elf32.em
+@@ -1481,7 +1481,7 @@ gld${EMULATION_NAME}_before_allocation (void)
+   asection *sinterp;
+   bfd *abfd;
+   struct elf_link_hash_entry *ehdr_start = NULL;
+-  struct bfd_link_hash_entry ehdr_start_save;
++  struct bfd_link_hash_entry ehdr_start_save = ehdr_start_save;
+ 
+   if (is_elf_hash_table (link_info.hash))
+     {
+-- 
+1.7.1
+
