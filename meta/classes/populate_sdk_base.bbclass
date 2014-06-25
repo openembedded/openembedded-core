@@ -55,6 +55,7 @@ fakeroot python do_populate_sdk() {
 
     pn = d.getVar('PN', True)
     runtime_mapping_rename("TOOLCHAIN_TARGET_TASK", pn, d)
+    runtime_mapping_rename("TOOLCHAIN_TARGET_TASK_ATTEMPTONLY", pn, d)
 
     # create target/host SDK manifests
     create_manifest(d, manifest_dir=d.getVar('SDK_DIR', True),
