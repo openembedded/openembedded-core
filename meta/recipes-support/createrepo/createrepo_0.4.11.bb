@@ -5,6 +5,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=18810669f13b87348459e611d31ab760"
 
 DEPENDS_class-native += "libxml2-native rpm-native"
+RDEPENDS_${PN}_class-target = "libxml2-python"
 
 PR = "r9"
 
