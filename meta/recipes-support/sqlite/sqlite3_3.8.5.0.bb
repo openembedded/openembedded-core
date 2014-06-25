@@ -12,8 +12,8 @@ SRC_URI = "http://www.sqlite.org/2014/sqlite-autoconf-${SQLITE_PV}.tar.gz"
 
 S = "${WORKDIR}/sqlite-autoconf-${SQLITE_PV}"
 
-SRC_URI[md5sum] = "0f5459cde43cb269e5120ecd2c671ced"
-SRC_URI[sha256sum] = "e0e995e23a324a5d6ae95d8a836240382a4d7475d09707fc469c8cafcbd48d65"
+SRC_URI[md5sum] = "0544ef6d7afd8ca797935ccc2685a9ed"
+SRC_URI[sha256sum] = "98c33abe4106e508e73fda648b2657ac9e969fe24695f543dcde68cc71f3091b"
 
 # Provide column meta-data API
 BUILD_CFLAGS += "-DSQLITE_ENABLE_COLUMN_METADATA"
