@@ -23,6 +23,13 @@ SRC_URI[sha256sum] = "24502492de3168b0556d8e1a06f14f7589e57b204917d602a572e14239
 
 inherit autotools pkgconfig binconfig multilib_header
 
+PACKAGECONFIG ??= "gnutls ${@bb.utils.contains("DISTRO_FEATURES", "ipv6", "ipv6", "", d)}"
+PACKAGECONFIG_class-native = "ipv6 ssl"
+PACKAGECONFIG_class-nativesdk = "ipv6"
+PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
+PACKAGECONFIG[ssl] =  "--with-ssl, --without-ssl, ,"
+PACKAGECONFIG[gnutls] =  "--with-gnutls=${STAGING_LIBDIR}/../, --without-gnutls, gnutls,"
+
 EXTRA_OECONF = "--with-zlib=${STAGING_LIBDIR}/../ \
                 --without-libssh2 \
                 --with-random=/dev/urandom \
@@ -31,18 +38,7 @@ EXTRA_OECONF = "--with-zlib=${STAGING_LIBDIR}/../ \
                 --disable-ldap \
                 --disable-ldaps \
                 --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
-                ${CURLGNUTLS} \
                 "
-
-CURLGNUTLS = " --with-gnutls=${STAGING_LIBDIR}/../ --without-ssl"
-CURLGNUTLS_class-native = "--without-gnutls --with-ssl"
-CURLGNUTLS_class-nativesdk = "--without-gnutls --without-ssl"
-
-PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "ipv6", "ipv6", "", d)}"
-PACKAGECONFIG_class-native = "ipv6"
-PACKAGECONFIG_class-nativesdk = "ipv6"
-
-PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
 
 do_configure_prepend() {
 	sed -i s:OPT_GNUTLS/bin:OPT_GNUTLS:g ${S}/configure.ac
