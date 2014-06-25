@@ -1,7 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
-# Used to compare sstate checksums between MACHINES
-# Execute script and compare generated list.M files
+# Used to compare sstate checksums between MACHINES.
+# Execute script and compare generated list.M files.
+# Using bash to have PIPESTATUS variable.
 
 # It's also usefull to keep older sstate checksums
 # to be able to find out why something is rebuilding
@@ -27,6 +28,7 @@ machines=
 targets=
 default_machines="qemuarm qemux86 qemux86-64"
 default_targets="core-image-base"
+analyze="N"
 
 usage () {
   cat << EOF
@@ -48,6 +50,12 @@ Options:
   --targets=<targets>
         List of targets separated by space, will use the environment variable TARGETS if it is not specified.
         Default value is "core-image-base".
+
+  --analyze
+        Show the differences between MACHINEs. It assumes:
+        * First 2 MACHINEs in --machines parameter have the same TUNE_PKGARCH
+        * Third optional MACHINE has different TUNE_PKGARCH - only native and allarch recipes are compared).
+        * Next MACHINEs are ignored
 EOF
 }
 
@@ -72,6 +80,10 @@ while [ -n "$1" ]; do
       targets=`echo $1 | sed -e 's#^--targets="*\([^"]*\)"*#\1#'`
       shift
         ;;
+    --analyze)
+      analyze="Y"
+      shift
+        ;;
     --help|-h)
       usage
       exit 0
@@ -94,14 +106,67 @@ done
 [ -n "$targets" ] || targets=$default_targets
 
 OUTPUT=${tmpdir}/sstate-diff/`date "+%s"`
+declare -i RESULT=0
 
 for M in ${machines}; do
-  find ${tmpdir}/stamps/ -name \*sigdata\* | xargs rm -f
+  [ -d ${tmpdir}/stamps/ ] && find ${tmpdir}/stamps/ -name \*sigdata\* | xargs rm -f
   mkdir -p ${OUTPUT}/${M}
-  export MACHINE=${M}; bitbake -S none ${targets} | tee -a ${OUTPUT}/${M}/log;
-  cp -ra ${tmpdir}/stamps/* ${OUTPUT}/${M}
-  find ${OUTPUT}/${M} -name \*sigdata\* | sed "s#${OUTPUT}/${M}/##g" | sort > ${OUTPUT}/${M}/list
-  M_UNDERSCORE=`echo ${M} | sed 's/-/_/g'`
-  sed "s/${M_UNDERSCORE}/MACHINE/g; s/${M}/MACHINE/g" ${OUTPUT}/${M}/list | sort > ${OUTPUT}/${M}/list.M
-  find ${tmpdir}/stamps/ -name \*sigdata\* | xargs rm -f
+  export MACHINE=${M}
+  bitbake -S none ${targets} 2>&1 | tee -a ${OUTPUT}/${M}/log;
+  RESULT+=${PIPESTATUS[0]}
+  if ls ${tmpdir}/stamps/* >/dev/null 2>/dev/null ; then
+    cp -ra ${tmpdir}/stamps/* ${OUTPUT}/${M}
+    find ${OUTPUT}/${M} -name \*sigdata\* | sed "s#${OUTPUT}/${M}/##g" | sort > ${OUTPUT}/${M}/list
+    M_UNDERSCORE=`echo ${M} | sed 's/-/_/g'`
+    sed "s/${M_UNDERSCORE}/MACHINE/g; s/${M}/MACHINE/g" ${OUTPUT}/${M}/list | sort > ${OUTPUT}/${M}/list.M
+    find ${tmpdir}/stamps/ -name \*sigdata\* | xargs rm -f
+  else
+    printf "ERROR: no sigdata files were generated for MACHINE $M in ${tmpdir}/stamps\n";
+  fi
 done
+
+function compareSignatures() {
+  MACHINE1=$1
+  MACHINE2=$2
+  PATTERN="$3"
+  PRE_PATTERN=""
+  [ -n "${PATTERN}" ] || PRE_PATTERN="-v"
+  [ -n "${PATTERN}" ] || PATTERN="MACHINE"
+  for TASK in do_configure.sigdata do_populate_sysroot.sigdata do_package_write_ipk.sigdata; do
+    printf "\n\n === Comparing signatures for task ${TASK} between ${MACHINE1} and ${MACHINE2} ===\n" | tee -a ${OUTPUT}/signatures.${MACHINE2}.${TASK}.log
+    diff ${OUTPUT}/${MACHINE1}/list.M ${OUTPUT}/${MACHINE2}/list.M | grep ${PRE_PATTERN} "${PATTERN}" | grep ${TASK} > ${OUTPUT}/signatures.${MACHINE2}.${TASK}
+    for i in `cat ${OUTPUT}/signatures.${MACHINE2}.${TASK} | sed 's#[^/]*/\([^/]*\)/.*#\1#g' | sort -u | xargs`; do
+      [ -e ${OUTPUT}/${MACHINE1}/*/$i/*${TASK}* ] || echo "INFO: ${i} task ${TASK} doesn't exist in ${MACHINE1}" >&2
+      [ -e ${OUTPUT}/${MACHINE1}/*/$i/*${TASK}* ] || continue
+      [ -e ${OUTPUT}/${MACHINE2}/*/$i/*${TASK}* ] || echo "INFO: ${i} task ${TASK} doesn't exist in ${MACHINE2}" >&2
+      [ -e ${OUTPUT}/${MACHINE2}/*/$i/*${TASK}* ] || continue
+      printf "ERROR: $i different signature for task ${TASK} between ${MACHINE1} and ${MACHINE2}\n";
+      bitbake-diffsigs ${OUTPUT}/${MACHINE1}/*/$i/*${TASK}* ${OUTPUT}/${MACHINE2}/*/$i/*${TASK}*;
+      echo "$i" >> ${OUTPUT}/failed-recipes.log
+      echo
+    done | tee -a ${OUTPUT}/signatures.${MACHINE2}.${TASK}.log
+    # don't create empty files
+    ERRORS=`grep "^ERROR.*" ${OUTPUT}/signatures.${MACHINE2}.${TASK}.log | wc -l`
+    if [ "${ERRORS}" != "0" ] ; then
+      echo "ERROR: ${ERRORS} errors found in ${OUTPUT}/signatures.${MACHINE2}.${TASK}.log"
+      RESULT+=${ERRORS}
+    fi
+  done
+}
+
+function compareMachines() {
+  [ "$#" -ge 2 ] && compareSignatures $1 $2
+  [ "$#" -ge 3 ] && compareSignatures $1 $3 "\(^< all\)\|\(^< x86_64-linux\)\|\(^< i586-linux\)"
+}
+
+if [ "${analyze}" = "Y" ] ; then
+  compareMachines ${machines}
+fi
+
+if [ "${RESULT}" != "0" -a -f ${OUTPUT}/failed-recipes.log ] ; then
+  cat ${OUTPUT}/failed-recipes.log | sort -u >${OUTPUT}/failed-recipes.log.u && mv ${OUTPUT}/failed-recipes.log.u ${OUTPUT}/failed-recipes.log
+  echo "ERROR: ${RESULT} issues were found in these recipes: `cat ${OUTPUT}/failed-recipes.log | xargs`"
+fi
+
+echo "INFO: Output written in: ${OUTPUT}"
+exit ${RESULT}
