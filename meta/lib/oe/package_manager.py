@@ -739,11 +739,15 @@ class RpmPM(PackageManager):
 
         channel_priority = 5
         platform_dir = os.path.join(self.etcrpm_dir, "platform")
+        sdkos = self.d.getVar("SDK_OS", True)
         with open(platform_dir, "w+") as platform_fd:
             platform_fd.write(platform + '\n')
             for pt in platform_extra:
                 channel_priority += 5
-                platform_fd.write(re.sub("-linux.*$", "-linux.*\n", pt))
+                if sdkos:
+                    tmp = re.sub("-%s$" % sdkos, "-%s\n" % sdkos, pt)
+                tmp = re.sub("-linux.*$", "-linux.*\n", tmp)
+                platform_fd.write(tmp)
 
         # Tell RPM that the "/" directory exist and is available
         bb.note("configuring RPM system provides")
