@@ -11,8 +11,8 @@ BBCLASSEXTEND = "native nativesdk"
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.bz2 \
           "
 
-SRC_URI[md5sum] = "4a6d049923efc6496f1d383054dac1a6"
-SRC_URI[sha256sum] = "c73f5cec45a5de94418da4e151b7232958571926984acfb9bce02b9424e83720"
+SRC_URI[md5sum] = "f9e2bb5879968467e5ca756cb4e1fa7e"
+SRC_URI[sha256sum] = "6c502c816002f90d4f76050a6429c3a7e0d84204222cbff2dce95dd773ba6840"
 
 S = "${WORKDIR}/libusb-${PV}"
 
