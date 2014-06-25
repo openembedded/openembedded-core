@@ -10,7 +10,7 @@ formatting information."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e226ab8db88ac0bc0391673be40c9f91"
 
-DEPENDS += " libxmu virtual/libx11"
+DEPENDS += "libxmu"
 
 PE = "1"
 
