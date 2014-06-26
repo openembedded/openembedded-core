@@ -177,6 +177,7 @@ python patch_do_patch() {
             bb.fatal(str(e))
 
     bb.utils.remove(process_tmpdir, True)
+    del os.environ['TMPDIR']
 }
 patch_do_patch[vardepsexclude] = "PATCHRESOLVE"
 
