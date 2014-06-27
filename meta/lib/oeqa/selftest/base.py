@@ -15,7 +15,9 @@ import errno
 
 import oeqa.utils.ftools as ftools
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_test_layer
+from oeqa.utils.decorators import LogResults
 
+@LogResults
 class oeSelfTest(unittest.TestCase):
 
     log = logging.getLogger("selftest.base")
