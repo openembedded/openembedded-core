@@ -42,12 +42,8 @@ distutils_do_install() {
         bbfatal "${PYTHON_PN} setup.py install execution failed."
 
         # support filenames with *spaces*
-        find ${D} -name "*.py" -print0 | while read -d $'\0' i ; do \
-            # only modify file if it contains path to avoid recompilation on the target
-            if grep -q "${D}" "$i"; then
-                sed -i -e s:${D}::g "$i"
-            fi
-        done
+        # only modify file if it contains path to avoid recompilation on the target
+        find ${D} -name "*.py" -exec grep -q ${D} {} \; -exec sed -i -e s:${D}::g {} \;
 
         if test -e ${D}${bindir} ; then	
             for i in ${D}${bindir}/* ; do \
