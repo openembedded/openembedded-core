@@ -8,6 +8,8 @@ MOUNT="/bin/mount"
 UMOUNT="/bin/umount"
 ISOLINUX=""
 
+ROOT_DISK=""
+
 # Copied from initramfs-framework. The core of this script probably should be
 # turned into initramfs-framework modules to reduce duplication.
 udev_daemon() {
@@ -80,6 +82,10 @@ boot_live_root() {
     udevadm settle --timeout=3 --quiet
     killall "${_UDEV_DAEMON##*/}" 2>/dev/null
 
+    # Allow for identification of the real root even after boot
+    mkdir -p  ${ROOT_MOUNT}/media/realroot
+    mount -n --move "/run/media/${ROOT_DISK}" ${ROOT_MOUNT}/media/realroot
+
     # Move the mount points of some filesystems over to
     # the corresponding directories under the real root filesystem.
     for dir in `awk '/\/dev.* \/run\/media/{print $2}' /proc/mounts`; do
@@ -116,10 +122,12 @@ do
   for i in `ls /run/media 2>/dev/null`; do
       if [ -f /run/media/$i/$ROOT_IMAGE ] ; then
 		found="yes"
+		ROOT_DISK="$i"
 		break
 	  elif [ -f /run/media/$i/isolinux/$ROOT_IMAGE ]; then
 		found="yes"
 		ISOLINUX="isolinux"
+		ROOT_DISK="$i"
 		break	
       fi
   done
@@ -150,7 +158,7 @@ mount_and_boot() {
     mkdir $ROOT_MOUNT
     mknod /dev/loop0 b 7 0 2>/dev/null
 
-    if ! mount -o rw,loop,noatime,nodiratime /run/media/$i/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
+    if ! mount -o rw,loop,noatime,nodiratime /run/media/$ROOT_DISK/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
 	fatal "Could not mount rootfs image"
     fi
 
