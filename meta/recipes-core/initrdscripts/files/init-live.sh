@@ -220,4 +220,8 @@ case $label in
 	# If we're getting here, we failed...
 	fatal "Installation image failed"
 	;;
+    *)
+	# Not sure what boot label is provided.  Try to boot to avoid locking up.
+	mount_and_boot
+	;;
 esac
