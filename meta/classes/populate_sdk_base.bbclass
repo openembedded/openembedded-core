@@ -177,8 +177,6 @@ fi
 if [ "$target_sdk_dir" = "" ]; then
 	read -e -p "Enter target directory for SDK (default: $DEFAULT_INSTALL_DIR): " target_sdk_dir
 	[ "$target_sdk_dir" = "" ] && target_sdk_dir=$DEFAULT_INSTALL_DIR
-else
-	echo "$target_sdk_dir"
 fi
 
 eval target_sdk_dir=$(echo "$target_sdk_dir"|sed 's/ /\\ /g')
