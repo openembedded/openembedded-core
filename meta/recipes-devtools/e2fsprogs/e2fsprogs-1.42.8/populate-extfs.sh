@@ -28,7 +28,7 @@ DEBUGFS="debugfs"
 		[ ! -z "$DIR" ] || continue
 		[ ! -z "$TGT" ] || continue
 
-                DIR="$(dirname $DIR)"
+                DIR="$(dirname "$DIR")"
 
 		if [ "$DIR" != "$CWD" ]; then
 			echo "cd $DIR"
